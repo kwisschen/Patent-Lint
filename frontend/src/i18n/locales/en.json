@@ -1,0 +1,116 @@
+{
+  "header": { "title": "PatentLint", "subtitle": "Patent Draft Quality Checker" },
+  "dropzone": { "title": "Drop your patent .docx here", "subtitle": "or click to browse", "notice": "Currently supports U.S. patent specifications (.docx) only.", "reject": "Only .docx files are accepted" },
+  "summary": { "specParagraphs": "Specification Paragraphs", "totalClaims": "Total Claims", "figures": "Figures", "abstractWords": "Abstract Words", "claimTypes": "Claim Types", "method": "method", "product": "product", "outsideRange": "Outside 50–150 range" },
+  "section": { "specification": "Specification", "claims": "Claims", "drawings": "Description of Drawings", "abstract": "Abstract" },
+  "status": { "pass": "PASS", "verify": "VERIFY", "amend": "AMEND" },
+  "button": { "downloadPdf": "Download PDF Report", "copySummary": "Copy Summary", "copied": "Copied!", "newAnalysis": "New Analysis", "generating": "Generating..." },
+  "diagram": { "show": "Show Diagram", "hide": "Hide Diagram" },
+  "tree": { "productClaims": "Product Claims", "methodClaims": "Method Claims", "independent": "Independent", "dependent": "Dependent", "deps": "deps", "dep": "dep" },
+  "analysis": { "analyzing": "Analyzing patent document...", "label": "Analysis" },
+  "footer": { "disclaimer": "Not legal advice" },
+  "antecedentBasis": { "title": "Antecedent Basis Review", "items": "items", "item": "item" },
+  "triage": { "title": "Priority Summary", "amend": "Action Required", "amendEmpty": "No issues requiring amendment.", "verify": "Expert Review", "verifyEmpty": "No items flagged for review.", "pass": "Passed", "items": "items", "item": "item" },
+  "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
+  "check": {
+    "spec": {
+      "restrictiveWording": {
+        "verify": "Restrictive wording found in specification paragraphs.",
+        "pass": "No restrictive wording found in specification."
+      },
+      "paragraphSequential": {
+        "amend": "Paragraph numbers are not sequential.",
+        "pass": "Paragraph numbers are sequential."
+      },
+      "paragraphEnding": {
+        "amend": "Paragraphs with invalid or missing ending punctuation.",
+        "pass": "All paragraphs have valid ending punctuation."
+      },
+      "sequenceListing": {
+        "amend": "SEQ ID NO referenced but no sequence listing statement found.",
+        "pass": "No sequence listing mismatch."
+      },
+      "crossReference": {
+        "verify": "Cross-reference section cites related applications.",
+        "pass": "No cross-reference citations found."
+      },
+      "priorArt": {
+        "verify": "Background section cites prior art.",
+        "pass": "No prior art citations found in background."
+      },
+      "drawings": "Drawings overview."
+    },
+    "claims": {
+      "restrictiveWording": {
+        "verify": "Restrictive or indefinite wording found in claims.",
+        "pass": "No restrictive or indefinite wording found in claims."
+      },
+      "sequential": {
+        "amend": "Claim numbers are not sequential.",
+        "pass": "Claim numbers are sequential."
+      },
+      "multipleDependent": {
+        "amend": "Multiple-dependent claims found.",
+        "pass": "No multiple-dependent claims."
+      },
+      "selfDependent": {
+        "amend": "Self-dependent claims found.",
+        "pass": "No self-dependent claims."
+      },
+      "missingPeriod": {
+        "amend": "Claims missing a final period.",
+        "pass": "All claims end with a period."
+      },
+      "extraPeriod": {
+        "amend": "Claims with extra or misplaced periods.",
+        "pass": "No extra periods found in claims."
+      },
+      "whereinComma": {
+        "amend": "Incorrect wherein comma usage.",
+        "pass": "Wherein comma usage is correct."
+      },
+      "overview": "Claims overview.",
+      "meansFunction": {
+        "verify": "Claims may invoke 35 U.S.C. § 112(f) means-plus-function.",
+        "pass": "No means-plus-function language detected."
+      },
+      "antecedentBasis": {
+        "verify": "Possible missing antecedent basis found.",
+        "pass": "No antecedent basis issues detected."
+      }
+    },
+    "abstract": {
+      "restrictiveWording": {
+        "verify": "Restrictive or improper wording found in abstract.",
+        "pass": "No restrictive or improper wording found in abstract."
+      },
+      "structure": {
+        "amend": "Abstract has extra paragraphs or invalid ending.",
+        "pass": "Abstract is a single paragraph with valid ending."
+      },
+      "impliedPhrases": {
+        "amend": "Abstract contains implied phrases ('disclosure' or 'provided').",
+        "pass": "No implied phrases found in abstract."
+      },
+      "wordCount": {
+        "amend": "Abstract word count is outside the 50–150 range.",
+        "pass": "Abstract word count is within the 50–150 range."
+      }
+    },
+    "drawings": {
+      "singleFigure": {
+        "amend": "Single-figure patent uses 'FIG. 1' instead of 'The Figure'.",
+        "pass": "Single-figure patent correctly labeled."
+      },
+      "priorArt": {
+        "verify": "Prior art references found in drawings description.",
+        "pass": "No prior art references in drawings description."
+      },
+      "sequential": {
+        "amend": "Figures are not in sequential order.",
+        "pass": "Figures are in sequential order."
+      },
+      "count": "figure(s) found."
+    }
+  }
+}
