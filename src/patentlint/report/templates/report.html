@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PatentLint Analysis Report</title>
+<style>
+  @page {
+    size: letter;
+    margin: 1in 0.75in;
+    @top-right {
+      content: "PatentLint Report";
+      font-size: 9pt;
+      color: #999;
+    }
+    @bottom-center {
+      content: "Page " counter(page) " of " counter(pages);
+      font-size: 9pt;
+      color: #999;
+    }
+  }
+
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 11pt;
+    color: #1a1a1a;
+    line-height: 1.5;
+  }
+
+  h1 {
+    font-size: 20pt;
+    color: #1a1a1a;
+    margin-bottom: 16pt;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 8pt;
+  }
+
+  h2 {
+    font-size: 15pt;
+    color: #333;
+    margin-top: 20pt;
+    margin-bottom: 10pt;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 4pt;
+  }
+
+  h3 {
+    font-size: 12pt;
+    color: #333;
+    margin-top: 14pt;
+    margin-bottom: 6pt;
+  }
+
+  .summary-box {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 12pt 16pt;
+    margin: 12pt 0 20pt 0;
+  }
+
+  .summary-box table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .summary-box td {
+    padding: 3pt 8pt;
+    font-size: 10.5pt;
+  }
+
+  .summary-box td:first-child {
+    font-weight: 600;
+    color: #555;
+    width: 50%;
+  }
+
+  .check-item {
+    margin: 8pt 0;
+    padding: 6pt 10pt;
+    border-left: 3px solid #e5e7eb;
+  }
+
+  .check-item.pass   { border-left-color: #2563eb; }
+  .check-item.verify { border-left-color: #16a34a; }
+  .check-item.amend  { border-left-color: #dc2626; }
+
+  .status-tag {
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 10pt;
+    display: inline-block;
+    margin-right: 4pt;
+  }
+
+  .status-tag.pass   { background: #dbeafe; color: #1e40af; }
+  .status-tag.verify { background: #dcfce7; color: #166534; }
+  .status-tag.amend  { background: #fee2e2; color: #991b1b; }
+
+  .check-item small {
+    color: #555;
+    display: block;
+    margin-top: 2pt;
+  }
+
+  .section-pill {
+    font-size: 9pt;
+    font-weight: 600;
+    background: #f3f4f6;
+    color: #555;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-right: 4pt;
+  }
+
+  table.claim-tree {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 12pt 0;
+    font-size: 10pt;
+  }
+
+  table.claim-tree th, table.claim-tree td {
+    border: 1px solid #d1d5db;
+    padding: 4pt 8pt;
+    text-align: left;
+  }
+
+  table.claim-tree th {
+    background: #f3f4f6;
+    font-weight: 600;
+  }
+
+  table.claim-tree td.claim-text {
+    font-size: 9pt;
+    color: #555;
+    max-width: 250pt;
+  }
+
+  /* Triage section */
+  .triage-group {
+    margin: 8pt 0;
+    padding: 6pt 10pt;
+    border-left: 4px solid #e5e7eb;
+    border-radius: 0 4px 4px 0;
+  }
+  .triage-group.amend {
+    border-left-color: #dc2626;
+    background: #fef2f2;
+  }
+  .triage-group.verify {
+    border-left-color: #16a34a;
+    background: #f0fdf4;
+  }
+  .triage-group.pass {
+    border-left-color: #2563eb;
+    background: #eff6ff;
+  }
+  .triage-group h3 {
+    margin: 0 0 4pt 0;
+    font-size: 11pt;
+  }
+  .triage-group .triage-item {
+    font-size: 10pt;
+    margin: 3pt 0;
+  }
+  .triage-group .triage-item small {
+    color: #555;
+    display: block;
+    margin-top: 1pt;
+    margin-left: 18pt;
+  }
+
+  /* Antecedent basis */
+  .antecedent-basis {
+    margin: 8pt 0;
+    padding: 8pt 10pt;
+    border-left: 4px solid #f59e0b;
+    background: #fffbeb;
+    border-radius: 0 4px 4px 0;
+  }
+  .antecedent-basis h3 {
+    margin: 0 0 4pt 0;
+    font-size: 11pt;
+    color: #92400e;
+  }
+  .antecedent-basis table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 10pt;
+    margin-top: 4pt;
+  }
+  .antecedent-basis th,
+  .antecedent-basis td {
+    border: 1px solid #fcd34d;
+    padding: 3pt 6pt;
+    text-align: left;
+  }
+  .antecedent-basis th {
+    background: #fef3c7;
+    font-weight: 600;
+    color: #92400e;
+  }
+
+  /* Health overview table */
+  table.health-overview {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 8pt 0;
+    font-size: 10pt;
+  }
+  table.health-overview th,
+  table.health-overview td {
+    border: 1px solid #d1d5db;
+    padding: 3pt 6pt;
+    text-align: center;
+  }
+  table.health-overview th {
+    background: #f3f4f6;
+    font-weight: 600;
+  }
+  table.health-overview td:first-child {
+    text-align: left;
+    font-weight: 600;
+  }
+  table.health-overview td.pass { color: #2563eb; }
+  table.health-overview td.verify { color: #166534; }
+  table.health-overview td.amend { color: #dc2626; }
+
+  .disclaimer {
+    margin-top: 30pt;
+    padding-top: 12pt;
+    border-top: 1px solid #e5e7eb;
+    font-size: 9pt;
+    color: #999;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<h1>PatentLint Analysis Report</h1>
+
+{# ========== Summary Box ========== #}
+<div class="summary-box">
+  <table>
+    <tr>
+      <td>Specification Paragraphs</td>
+      <td>{{ data.paragraph_count }}</td>
+    </tr>
+    <tr>
+      <td>Total Claims</td>
+      <td>{{ data.total_claims }} ({{ data.independent_count }} independent, {{ data.dependent_count }} dependent)</td>
+    </tr>
+    <tr>
+      <td>Claim Types</td>
+      <td>
+        {%- set method_count = [] -%}
+        {%- set product_count = [] -%}
+        {%- for group in data.claim_trees -%}
+          {%- if group.label == "Method Claims" -%}
+            {%- set _ = method_count.append(group.rows | length) -%}
+          {%- else -%}
+            {%- set _ = product_count.append(group.rows | length) -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {{ method_count | sum }} method / {{ product_count | sum }} product
+      </td>
+    </tr>
+    <tr>
+      <td>Figures</td>
+      <td>{{ data.figure_count }}</td>
+    </tr>
+    <tr>
+      <td>Abstract Word Count</td>
+      <td>{{ data.abstract_word_count }}</td>
+    </tr>
+  </table>
+</div>
+
+{# ========== Health Overview ========== #}
+<h2>Health Overview</h2>
+{%- set sections = [
+  ("Specification", data.specification_checks),
+  ("Claims", data.claims_checks),
+  ("Description of Drawings", data.drawings_checks),
+  ("Abstract", data.abstract_checks),
+] -%}
+<table class="health-overview">
+  <thead>
+    <tr><th>Section</th><th>Pass</th><th>Verify</th><th>Amend</th></tr>
+  </thead>
+  <tbody>
+    {%- for name, checks in sections %}
+    {%- set p = checks | selectattr("status", "equalto", "pass") | list | length -%}
+    {%- set v = checks | selectattr("status", "equalto", "verify") | list | length -%}
+    {%- set a = checks | selectattr("status", "equalto", "amend") | list | length -%}
+    <tr>
+      <td>{{ name }}</td>
+      <td class="pass">{{ p }}</td>
+      <td class="verify">{{ v }}</td>
+      <td class="amend">{{ a }}</td>
+    </tr>
+    {%- endfor %}
+  </tbody>
+</table>
+
+{# ========== Priority Triage ========== #}
+<h2>Priority Summary</h2>
+{%- set all_checks = [] -%}
+{%- for name, checks in sections -%}
+  {%- for c in checks -%}
+    {%- set _ = all_checks.append({"status": c.status, "message": c.message, "details": c.details, "section": name}) -%}
+  {%- endfor -%}
+{%- endfor -%}
+
+{%- set amend_items = all_checks | selectattr("status", "equalto", "amend") | list -%}
+{%- set verify_items = all_checks | selectattr("status", "equalto", "verify") | list -%}
+{%- set pass_items = all_checks | selectattr("status", "equalto", "pass") | list -%}
+
+<div class="triage-group amend">
+  <h3 style="color: #dc2626;">Action Required ({{ amend_items | length }})</h3>
+  {%- if amend_items | length == 0 %}
+  <p style="font-size: 10pt; color: #166534; margin: 0;">No issues requiring amendment.</p>
+  {%- else %}
+  {%- for item in amend_items %}
+  <div class="triage-item">
+    <span class="section-pill">{{ item.section }}</span> {{ item.message }}
+    {%- if item.details %}<small>{{ item.details }}</small>{%- endif %}
+  </div>
+  {%- endfor %}
+  {%- endif %}
+</div>
+
+<div class="triage-group verify">
+  <h3 style="color: #166534;">Expert Review ({{ verify_items | length }})</h3>
+  {%- if verify_items | length == 0 %}
+  <p style="font-size: 10pt; color: #555; margin: 0;">No items flagged for review.</p>
+  {%- else %}
+  {%- for item in verify_items %}
+  <div class="triage-item">
+    <span class="section-pill">{{ item.section }}</span> {{ item.message }}
+    {%- if item.details %}<small>{{ item.details }}</small>{%- endif %}
+  </div>
+  {%- endfor %}
+  {%- endif %}
+</div>
+
+<div class="triage-group pass">
+  <h3 style="color: #2563eb;">Passed</h3>
+  <p style="font-size: 10pt; margin: 0;">{{ pass_items | length }} checks passed.</p>
+</div>
+
+{# ========== Specification ========== #}
+<h2>Specification</h2>
+{% for check in data.specification_checks %}
+<div class="check-item {{ check.status }}">
+  <span class="status-tag {{ check.status }}">{{ check.status | upper }}</span>
+  {{ check.message }}
+  {% if check.details %}
+  <br><small>{{ check.details }}</small>
+  {% endif %}
+</div>
+{% endfor %}
+
+{# ========== Claims ========== #}
+<h2>Claims</h2>
+{% for check in data.claims_checks %}
+<div class="check-item {{ check.status }}">
+  <span class="status-tag {{ check.status }}">{{ check.status | upper }}</span>
+  {{ check.message }}
+  {% if check.details %}
+  <br><small>{{ check.details }}</small>
+  {% endif %}
+</div>
+{% endfor %}
+
+{# -- Antecedent Basis -- #}
+{% if data.antecedent_basis_issues %}
+<div class="antecedent-basis">
+  <h3>Antecedent Basis Review</h3>
+  {%- set ab_grouped = {} -%}
+  {%- for issue in data.antecedent_basis_issues -%}
+    {%- set cid = issue.claim_id | string -%}
+    {%- if cid not in ab_grouped -%}
+      {%- set _ = ab_grouped.update({cid: []}) -%}
+    {%- endif -%}
+    {%- set _ = ab_grouped[cid].append(issue.term) -%}
+  {%- endfor -%}
+  <table>
+    <thead>
+      <tr><th>Claim</th><th>Flagged Terms</th></tr>
+    </thead>
+    <tbody>
+      {%- for cid, terms in ab_grouped.items() | sort %}
+      <tr>
+        <td>{{ cid }}</td>
+        <td>{{ terms | join(", ") }}</td>
+      </tr>
+      {%- endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+{# -- Claim Trees -- #}
+{% for group in data.claim_trees %}
+<h3>{{ group.label }}</h3>
+<table class="claim-tree">
+  <thead>
+    <tr>
+      <th>Claim</th>
+      <th>Type</th>
+      <th>Dependency Chain</th>
+      <th>Claim Text</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in group.rows %}
+    <tr>
+      <td>{{ row.claim_id }}</td>
+      <td>{{ row.claim_type }}</td>
+      <td>{{ row.chain }}</td>
+      <td class="claim-text">{{ row.claim_text[:100] }}{% if row.claim_text | length > 100 %}...{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endfor %}
+
+{# ========== Description of Drawings ========== #}
+<h2>Description of Drawings</h2>
+{% for check in data.drawings_checks %}
+<div class="check-item {{ check.status }}">
+  <span class="status-tag {{ check.status }}">{{ check.status | upper }}</span>
+  {{ check.message }}
+  {% if check.details %}
+  <br><small>{{ check.details }}</small>
+  {% endif %}
+</div>
+{% endfor %}
+
+{# ========== Abstract ========== #}
+<h2>Abstract</h2>
+{% for check in data.abstract_checks %}
+<div class="check-item {{ check.status }}">
+  <span class="status-tag {{ check.status }}">{{ check.status | upper }}</span>
+  {{ check.message }}
+  {% if check.details %}
+  <br><small>{{ check.details }}</small>
+  {% endif %}
+</div>
+{% endfor %}
+
+<div class="disclaimer">
+  Generated by PatentLint &middot; This report does not constitute legal advice &middot; Review by a qualified patent professional is recommended
+</div>
+
+</body>
+</html>

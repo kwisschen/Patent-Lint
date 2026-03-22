@@ -1,0 +1,116 @@
+{
+  "header": { "title": "PatentLint", "subtitle": "专利文稿质量检查工具" },
+  "dropzone": { "title": "将专利 .docx 文件拖拽至此", "subtitle": "或点击浏览文件", "notice": "目前仅支持美国专利说明书（.docx）。", "reject": "仅接受 .docx 文件" },
+  "summary": { "specParagraphs": "说明书段落", "totalClaims": "权利要求总数", "figures": "附图", "abstractWords": "摘要字数", "claimTypes": "权项类型", "method": "方法", "product": "产品", "outsideRange": "超出 50–150 字范围" },
+  "section": { "specification": "说明书", "claims": "权利要求书", "drawings": "附图说明", "abstract": "摘要" },
+  "status": { "pass": "通过", "verify": "确认", "amend": "修改" },
+  "button": { "downloadPdf": "下载 PDF 报告", "copySummary": "复制摘要", "copied": "已复制！", "newAnalysis": "重新分析", "generating": "生成中..." },
+  "diagram": { "show": "显示图表", "hide": "隐藏图表" },
+  "tree": { "productClaims": "产品权利要求", "methodClaims": "方法权利要求", "independent": "独立权利要求", "dependent": "从属权利要求", "deps": "个从属项", "dep": "个从属项" },
+  "analysis": { "analyzing": "正在分析专利文件...", "label": "分析结果" },
+  "footer": { "disclaimer": "本报告不构成法律意见" },
+  "antecedentBasis": { "title": "先行词基础检查", "items": "项", "item": "项" },
+  "triage": { "title": "优先处理摘要", "amend": "需要修改", "amendEmpty": "无需修改的项目。", "verify": "专家确认", "verifyEmpty": "无需确认的项目。", "pass": "通过", "items": "个项目", "item": "个项目" },
+  "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
+  "check": {
+    "spec": {
+      "restrictiveWording": {
+        "verify": "说明书中发现限制性用语。",
+        "pass": "说明书未发现限制性用语。"
+      },
+      "paragraphSequential": {
+        "amend": "段落编号不连续。",
+        "pass": "段落编号连续。"
+      },
+      "paragraphEnding": {
+        "amend": "段落结尾标点符号无效或缺失。",
+        "pass": "所有段落结尾标点符号正确。"
+      },
+      "sequenceListing": {
+        "amend": "引用了 SEQ ID NO，但缺少序列表声明。",
+        "pass": "无序列表不一致。"
+      },
+      "crossReference": {
+        "verify": "交叉引用列出了相关申请。",
+        "pass": "未发现交叉引用。"
+      },
+      "priorArt": {
+        "verify": "背景技术引用了现有技术专利。",
+        "pass": "背景技术未引用现有技术专利。"
+      },
+      "drawings": "附图概览。"
+    },
+    "claims": {
+      "restrictiveWording": {
+        "verify": "权利要求中发现限制性或不确定用语。",
+        "pass": "权利要求未发现限制性或不确定用语。"
+      },
+      "sequential": {
+        "amend": "权利要求编号不连续。",
+        "pass": "权利要求编号连续。"
+      },
+      "multipleDependent": {
+        "amend": "发现多项从属权利要求。",
+        "pass": "未发现多项从属权利要求。"
+      },
+      "selfDependent": {
+        "amend": "发现自引用权利要求。",
+        "pass": "未发现自引用权利要求。"
+      },
+      "missingPeriod": {
+        "amend": "权利要求缺少句号。",
+        "pass": "所有权利要求均以句号结尾。"
+      },
+      "extraPeriod": {
+        "amend": "权利要求含有多余或错位句号。",
+        "pass": "权利要求未发现多余句号。"
+      },
+      "whereinComma": {
+        "amend": "「wherein」逗号使用不正确。",
+        "pass": "「wherein」逗号使用正确。"
+      },
+      "overview": "权利要求概览。",
+      "meansFunction": {
+        "verify": "权利要求可能援引 35 U.S.C. § 112(f) 功能性限定。",
+        "pass": "未检测到功能性限定用语。"
+      },
+      "antecedentBasis": {
+        "verify": "可能缺少先行词基础（antecedent basis）。",
+        "pass": "未检测到先行词基础问题。"
+      }
+    },
+    "abstract": {
+      "restrictiveWording": {
+        "verify": "摘要中发现限制性或不当用语。",
+        "pass": "摘要未发现限制性或不当用语。"
+      },
+      "structure": {
+        "amend": "摘要含有多余段落或结尾无效。",
+        "pass": "摘要为单一段落且结尾正确。"
+      },
+      "impliedPhrases": {
+        "amend": "摘要含有可省略的措辞（如「disclosure」或「provided」）。",
+        "pass": "摘要未发现可省略的措辞。"
+      },
+      "wordCount": {
+        "amend": "摘要字数超出 50–150 字范围。",
+        "pass": "摘要字数在 50–150 字范围内。"
+      }
+    },
+    "drawings": {
+      "singleFigure": {
+        "amend": "单一附图的专利使用了「图1」而非「附图」。",
+        "pass": "单一附图标注正确。"
+      },
+      "priorArt": {
+        "verify": "附图说明中发现现有技术引用。",
+        "pass": "附图说明中未发现现有技术引用。"
+      },
+      "sequential": {
+        "amend": "附图编号不连续。",
+        "pass": "附图编号连续。"
+      },
+      "count": "个附图。"
+    }
+  }
+}
