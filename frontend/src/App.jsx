@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Loader2 } from 'lucide-react'
 import Header from './components/Header'
 import DropZone from './components/DropZone'
 import AnalysisReport from './components/AnalysisReport'
+import LoadingOnboard from './components/LoadingOnboard'
+import { usePyodide } from './hooks/usePyodide'
 import { analyzeDocument, downloadReport } from './api'
 
 function App() {
@@ -13,6 +15,13 @@ function App() {
   const [file, setFile] = useState(null)
   const [error, setError] = useState(null)
   const [downloading, setDownloading] = useState(false)
+  const [engineReady, setEngineReady] = useState(false)
+
+  const pyodide = usePyodide()
+
+  const handleEngineReady = useCallback(() => {
+    setEngineReady(true)
+  }, [])
 
   const handleFile = async (uploadedFile) => {
     setFile(uploadedFile)
@@ -20,7 +29,14 @@ function App() {
     setState('analyzing')
 
     try {
-      const data = await analyzeDocument(uploadedFile)
+      let data
+      if (pyodide.ready) {
+        // Client-side analysis via Pyodide (no server needed)
+        data = await pyodide.analyze(uploadedFile)
+      } else {
+        // Server fallback (Docker / self-hosted mode)
+        data = await analyzeDocument(uploadedFile)
+      }
       setResult(data)
       setState('results')
     } catch (err) {
@@ -52,6 +68,11 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Loading overlay during Pyodide initialization */}
+      {!engineReady && !pyodide.error && (
+        <LoadingOnboard progress={pyodide.progress} onReady={handleEngineReady} />
+      )}
+
       <Header onReset={handleReset} canReset={state !== 'idle'} />
       <main className="flex-1 mx-auto w-full max-w-5xl px-4 py-8">
         {state === 'idle' && (

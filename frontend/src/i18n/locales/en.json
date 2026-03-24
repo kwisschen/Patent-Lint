@@ -117,6 +117,24 @@
       "count": "figure(s) found."
     }
   },
+  "loading": {
+    "runtime": "Loading Python runtime...",
+    "parser": "Loading document parser...",
+    "engine": "Loading analysis engine...",
+    "patentlint": "Loading PatentLint...",
+    "ready": "Analysis engine loaded",
+    "offline_note": "Works offline after first load",
+    "feature1_title": "No Install. No Account. No Cloud.",
+    "feature1_desc": "Your confidential patent drafts never leave your device. Nothing is uploaded, and PatentLint doesn't even know who you are.",
+    "feature2_title": "MPEP Compliance Checks",
+    "feature2_desc": "Catches restrictive wording, indefinite terms, antecedent basis gaps, means-plus-function issues, and more.",
+    "feature3_title": "Claim Tree Visualization",
+    "feature3_desc": "Interactive dependency tree and Mermaid diagram show your claim structure at a glance.",
+    "feature4_title": "Works Everywhere",
+    "feature4_desc": "Mac, Windows, Linux, iPad — any device with a browser. No Word add-in required. Full UI in English, 繁體中文, 简体中文, and 日本語.",
+    "feature5_title": "Instant Analysis",
+    "feature5_desc": "Drop a .docx file and get results in seconds. Download a PDF report — no cloud round-trip required."
+  },
   "checks": {
     "preamble_cross_category_mismatch": "Cross-category preamble mismatch between dependent and independent claim.",
     "preamble_cross_category_pass": "Claim preambles are consistent.",
