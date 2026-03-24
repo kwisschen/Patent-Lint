@@ -195,9 +195,9 @@ class AnalysisResult(BaseModel):
 
         if self.has_tracked_changes:
             spec_checks.append(CheckItem(
-                status="verify",
+                status="amend",
                 message="Document contains tracked changes (revisions). Accept or reject all changes before filing.",
-                message_key="check.spec.trackedChanges.verify",
+                message_key="check.spec.trackedChanges.amend",
             ))
 
         if self.improper_spec_paragraphs:

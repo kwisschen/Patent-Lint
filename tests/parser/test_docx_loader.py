@@ -3,7 +3,6 @@
 Creates minimal .docx files using python-docx as test fixtures.
 """
 
-import tempfile
 from pathlib import Path
 
 import pytest

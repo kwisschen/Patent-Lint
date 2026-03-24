@@ -41,7 +41,7 @@
       },
       "drawings": "Drawings overview.",
       "trackedChanges": {
-        "verify": "Document contains tracked changes (revisions). Accept or reject all changes before filing."
+        "amend": "Document contains tracked changes (revisions). Accept or reject all changes before filing."
       }
     },
     "claims": {
