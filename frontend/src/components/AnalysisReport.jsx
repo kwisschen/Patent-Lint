@@ -8,6 +8,7 @@ import SectionPanel from './SectionPanel'
 import ClaimTree from './ClaimTree'
 import ClaimDiagram from './ClaimDiagram'
 import AntecedentBasisCard from './AntecedentBasisCard'
+import SpecSupportCard from './SpecSupportCard'
 import { Button } from '@/components/ui/button'
 import { Download, RotateCcw, Copy, Check } from 'lucide-react'
 
@@ -78,9 +79,6 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
           checks={data.claims_checks}
           defaultOpen
         >
-          {data.antecedent_basis_issues?.length > 0 && (
-            <AntecedentBasisCard issues={data.antecedent_basis_issues} claimTrees={data.claim_trees} />
-          )}
           <ClaimTree claimTrees={data.claim_trees} />
           <ClaimDiagram claimTrees={data.claim_trees} />
         </SectionPanel>
@@ -94,6 +92,20 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
           checks={data.abstract_checks}
           defaultOpen
         />
+        {(data.antecedent_basis_issues?.length > 0 || data.unsupported_terms?.length > 0) && (
+          <SectionPanel
+            title={t('section.deepAnalysis')}
+            checks={[]}
+            defaultOpen
+          >
+            {data.antecedent_basis_issues?.length > 0 && (
+              <AntecedentBasisCard issues={data.antecedent_basis_issues} claimTrees={data.claim_trees} />
+            )}
+            {data.unsupported_terms?.length > 0 && (
+              <SpecSupportCard unsupportedTerms={data.unsupported_terms} />
+            )}
+          </SectionPanel>
+        )}
       </div>
 
       {/* Spacer so content isn't hidden behind sticky bar */}

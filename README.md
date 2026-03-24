@@ -1,5 +1,7 @@
 # PatentLint
 
+[![CI](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml/badge.svg)](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml)
+
 A web-based patent specification analyzer that checks U.S. patent application drafts (.docx) against USPTO formatting rules and MPEP guidelines. Upload a draft — get a structured compliance report with actionable findings.
 
 ## Features
@@ -8,10 +10,10 @@ A web-based patent specification analyzer that checks U.S. patent application dr
 
 | Category | Checks | Reference |
 |----------|--------|-----------|
-| Specification | Restrictive wording, paragraph sequentiality, punctuation, sequence listing references, cross-references, prior art citations | MPEP § 2173.01 |
-| Claims | Indefinite terms, numbering, dependencies, self-references, multiple dependencies, period placement, "wherein" comma rules, means-plus-function detection, antecedent basis validation, claim similarity (Jaccard) | MPEP § 2173.05(b), 35 U.S.C. § 112(b)(f) |
+| Specification | Restrictive wording, paragraph sequentiality, punctuation, sequence listing references, cross-references, prior art citations, reference numeral consistency (spec vs drawings) | MPEP § 2173.01 |
+| Claims | Indefinite terms, numbering, dependencies, self-references, multiple dependencies, period placement, "wherein" comma rules, means-plus-function detection, antecedent basis validation, preamble consistency, specification support, claim similarity (Jaccard) | MPEP § 2173.05(b), 35 U.S.C. § 112(b)(d)(f) |
 | Abstract | Word count (50–150), single paragraph, legal phraseology, implied phrases, self-praising terms | MPEP § 608.01(b) |
-| Drawings | Figure count, sequential ordering, single-figure format, prior art references | General |
+| Drawings | Figure count, sequential ordering, single-figure format, prior art references, reference numeral consistency | General |
 
 Each finding is classified as **PASS**, **VERIFY** (needs expert review), or **AMEND** (likely needs correction).
 
@@ -30,8 +32,36 @@ Each finding is classified as **PASS**, **VERIFY** (needs expert review), or **A
 ## Architecture
 
 ```
+                    ┌──────────────────────┐
+                    │   React Frontend     │
+                    │  (Vite + shadcn/ui)  │
+                    └──────────┬───────────┘
+                               │ /api/*
+                    ┌──────────▼───────────┐
+                    │   FastAPI (app.py)    │
+                    └──────────┬───────────┘
+                               │
+                    ┌──────────▼───────────┐
+                    │   pipeline.py        │
+                    │  analyze_file()      │
+                    │  analyze_bytes()     │
+                    └──────────┬───────────┘
+                    ┌──────────▼───────────┐
+          ┌─────────┤   parser/ + analysis/ ├──────────┐
+          │         │  (pure Python, zero   │          │
+          │         │   framework deps)     │          │
+          │         └───────────────────────┘          │
+    ┌─────▼─────┐                             ┌───────▼───────┐
+    │  Click CLI │                             │ PDF Report    │
+    │  (cli.py)  │                             │ (weasyprint)  │
+    └───────────┘                              └───────────────┘
+```
+
+```
 src/patentlint/
 ├── models.py        # Pydantic models (Claim, AnalysisResult, ReportData)
+├── pipeline.py      # Analysis pipeline (zero web-framework deps)
+├── cli.py           # Click CLI (analyze, batch)
 ├── parser/          # Section extraction, claim parsing, .docx loading
 ├── analysis/        # Rule checks — all pure functions, independently testable
 ├── report/          # PDF report generation (Jinja2 + weasyprint)
@@ -73,6 +103,40 @@ uvicorn patentlint.api.app:app --port 8000
 # → http://localhost:8000 (serves both API and frontend)
 ```
 
+## CLI
+
+```bash
+# Analyze a single patent draft
+patentlint analyze patent-draft.docx
+
+# Output JSON to file
+patentlint analyze patent-draft.docx -o report.json
+
+# Generate PDF report
+patentlint analyze patent-draft.docx --format pdf -o report.pdf
+
+# Batch analyze all .docx files in a directory
+patentlint batch ./patents/ --output ./reports/
+
+# Version
+patentlint --version
+```
+
+Exit codes: `0` = clean, `1` = findings detected, `2` = error.
+
+## Docker
+
+```bash
+# Build
+docker build -t patentlint .
+
+# Run (serves web UI + API on port 8000)
+docker run -p 8000:8000 patentlint
+
+# Analyze via API
+curl -X POST http://localhost:8000/api/analyze -F "file=@patent.docx"
+```
+
 ## REST API
 
 ```bash
@@ -100,7 +164,9 @@ curl http://localhost:8000/api/health
 | Frontend | React 18, Vite, Tailwind CSS v4, shadcn/ui |
 | PDF Generation | Jinja2 + weasyprint |
 | Claim Diagrams | Mermaid |
-| Testing | pytest (134 tests) |
+| CLI | Click |
+| Testing | pytest (215+ tests) |
+| CI/CD | GitHub Actions, Docker |
 | i18n | react-i18next |
 
 ## Disclaimer
