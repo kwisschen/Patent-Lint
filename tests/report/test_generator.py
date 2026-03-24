@@ -161,16 +161,16 @@ class TestToReportData:
         assert data.total_claims == 0
         assert data.claim_trees == []
 
-    def test_tracked_changes_adds_verify(self):
-        """When has_tracked_changes=True, spec checks include a VERIFY item."""
+    def test_tracked_changes_adds_amend(self):
+        """When has_tracked_changes=True, spec checks include an AMEND item."""
         result = AnalysisResult(has_tracked_changes=True)
         data = result.to_report_data()
         tc_checks = [c for c in data.specification_checks if "tracked changes" in c.message.lower()]
         assert len(tc_checks) == 1
-        assert tc_checks[0].status == "verify"
-        assert tc_checks[0].message_key == "check.spec.trackedChanges.verify"
+        assert tc_checks[0].status == "amend"
+        assert tc_checks[0].message_key == "check.spec.trackedChanges.amend"
 
-    def test_no_tracked_changes_no_verify(self):
+    def test_no_tracked_changes_no_amend(self):
         """When has_tracked_changes=False, no tracked changes check in spec."""
         result = AnalysisResult(has_tracked_changes=False)
         data = result.to_report_data()

@@ -7,6 +7,12 @@ preamble consistency, and spec support.
 import re
 from typing import Optional
 
+import snowballstemmer as _sb
+
+from patentlint.analysis.utils import (
+    _DEFINITE_REF, _QUANTIFIER_STOPS,
+    extract_introductions, extract_abbreviation_intros, clean_noun_phrase,
+)
 from patentlint.models import Claim, CheckItem, UnsupportedTerm
 
 
@@ -120,11 +126,6 @@ def detect_means_plus_function(claims: list[Claim]) -> list[int]:
     """
     return [c.id for c in claims if _MEANS_PLUS_FUNCTION.search(c.text)]
 
-
-from patentlint.analysis.utils import (
-    _DEFINITE_REF, _INDEFINITE_REF, _QUANTIFIER_STOPS,
-    extract_introductions, extract_abbreviation_intros, clean_noun_phrase,
-)
 
 _SKIP_TERMS = {"invention", "present invention", "same", "following", "above", "below"}
 
@@ -389,8 +390,6 @@ def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
 
 
 # --- Spec support (B3) ---
-
-import snowballstemmer as _sb
 
 _stemmer = _sb.stemmer("english")
 

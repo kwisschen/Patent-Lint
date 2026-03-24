@@ -4,10 +4,7 @@ Uses FastAPI TestClient for endpoint testing with real .docx fixtures.
 """
 
 import io
-import tempfile
-from pathlib import Path
 
-import pytest
 from docx import Document
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement

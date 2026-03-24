@@ -7,7 +7,7 @@ sequence listing references, and reference numeral consistency.
 import re
 from collections import Counter
 
-from patentlint.models import CheckItem, ReferenceNumeral, SpecWordingResult
+from patentlint.models import ReferenceNumeral, SpecWordingResult
 
 _RESTRICTIVE_WORDING = re.compile(
     r"(?i)\b(invention|always|never|must|solely|every|required|essential|critical|key|vital"

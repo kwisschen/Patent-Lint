@@ -6,7 +6,6 @@ from pathlib import Path
 from patentlint.parser.sections import (
     extract_claims_section,
     extract_abstract_section,
-    extract_cross_reference_section,
     extract_background_section,
     extract_description_of_drawings_section,
     extract_detailed_description_section,

@@ -6,7 +6,6 @@ Entry points for CLI and API. This module is also what Pyodide calls in the brow
 from __future__ import annotations
 
 import tempfile
-from pathlib import Path
 
 from patentlint.analysis import abstract as abstract_analysis
 from patentlint.analysis import claims as claims_analysis
