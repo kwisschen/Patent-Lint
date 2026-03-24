@@ -23,3 +23,5 @@ Thumbs.db
 .python-version
 legacy/
 CLAUDE.md
+docs/
+tests/fixtures/*.docx

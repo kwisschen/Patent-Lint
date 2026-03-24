@@ -2,7 +2,7 @@
   "header": { "title": "PatentLint", "subtitle": "专利文稿质量检查工具" },
   "dropzone": { "title": "将专利 .docx 文件拖拽至此", "subtitle": "或点击浏览文件", "notice": "目前仅支持美国专利说明书（.docx）。", "reject": "仅接受 .docx 文件" },
   "summary": { "specParagraphs": "说明书段落", "totalClaims": "权利要求总数", "figures": "附图", "abstractWords": "摘要字数", "claimTypes": "权项类型", "method": "方法", "product": "产品", "outsideRange": "超出 50–150 字范围" },
-  "section": { "specification": "说明书", "claims": "权利要求书", "drawings": "附图说明", "abstract": "摘要" },
+  "section": { "specification": "说明书", "claims": "权利要求书", "drawings": "附图说明", "abstract": "摘要", "deepAnalysis": "深度分析" },
   "status": { "pass": "通过", "verify": "确认", "amend": "修改" },
   "button": { "downloadPdf": "下载 PDF 报告", "copySummary": "复制摘要", "copied": "已复制！", "newAnalysis": "重新分析", "generating": "生成中..." },
   "diagram": { "show": "显示图表", "hide": "隐藏图表" },
@@ -10,6 +10,7 @@
   "analysis": { "analyzing": "正在分析专利文件...", "label": "分析结果" },
   "footer": { "disclaimer": "本报告不构成法律意见" },
   "antecedentBasis": { "title": "先行词基础检查", "items": "项", "item": "项" },
+  "specSupport": { "title": "说明书支持检查", "items": "个术语", "item": "个术语" },
   "triage": { "title": "优先处理摘要", "amend": "需要修改", "amendEmpty": "无需修改的项目。", "verify": "专家确认", "verifyEmpty": "无需确认的项目。", "pass": "通过", "items": "个项目", "item": "个项目" },
   "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
   "check": {
@@ -38,7 +39,10 @@
         "verify": "背景技术引用了现有技术专利。",
         "pass": "背景技术未引用现有技术专利。"
       },
-      "drawings": "附图概览。"
+      "drawings": "附图概览。",
+      "trackedChanges": {
+        "amend": "文档包含修订标记。提交前请接受或拒绝所有更改。"
+      }
     },
     "claims": {
       "restrictiveWording": {
@@ -112,5 +116,13 @@
       },
       "count": "个附图。"
     }
+  },
+  "checks": {
+    "preamble_cross_category_mismatch": "从属权利要求与独立权利要求的前序部分类型不一致（跨类别）。",
+    "preamble_cross_category_pass": "权利要求前序部分一致。",
+    "preamble_noun_mismatch": "从属权利要求与独立权利要求前序名词不同。",
+    "preamble_indefinite_article": "从属权利要求前序使用了不定冠词（应使用「The」）。",
+    "spec_support_unsupported_terms": "权利要求术语在说明书中未找到。",
+    "spec_support_pass": "所有权利要求术语均在说明书中找到。"
   }
 }

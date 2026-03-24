@@ -2,9 +2,61 @@
 
 All functions are pure — no side effects, no I/O.
 Patterns validated against USPTO DOCX Section Headers (May 2022) and MPEP § 608.
+
+IMPORTANT: All section boundary patterns are anchored to standalone paragraph headers
+(^...$, re.MULTILINE). Input text from docx_loader is newline-delimited paragraphs,
+so section headers occupy their own line. This prevents matching header keywords that
+appear inside body text (e.g., "This application claims the benefit of priority...").
 """
 
 import re
+
+# ---------------------------------------------------------------------------
+# Master list of all recognised section headers (standalone paragraph patterns)
+# ---------------------------------------------------------------------------
+
+_SECTION_HEADER_PATTERNS = [
+    r"CROSS[- ]REFERENCES?\s+TO\s+RELATED",
+    r"REFERENCE\s+TO\s+RELATED\s+(?:APPLICATIONS?|PATENTS?)",
+    r"RELATED\s+APPLICATIONS?",
+    r"FIELD\s+OF\s+THE\s+(?:INVENTION|DISCLOSURE)",
+    r"TECHNICAL\s+FIELD",
+    r"FIELD\s+AND\s+BACKGROUND\s+OF\s+(?:THE\s+)?INVENTION",
+    r"BACKGROUND(?:\s+(?:OF\s+(?:THE\s+)?)?(?:DISCLOSURE|INVENTION|ART))?",
+    r"DESCRIPTION\s+OF\s+(?:THE\s+)?(?:RELATED\s+ART|PRIOR\s+ART)",
+    r"PRIOR\s+ART",
+    r"(?:BRIEF\s+)?SUMMARY(?:\s+OF\s+(?:THE\s+)?INVENTION)?",
+    r"OBJECT(?:\s+AND\s+SUMMARY)?\s+OF\s+(?:THE\s+)?INVENTION",
+    r"DISCLOSURE\s+OF\s+INVENTION",
+    r"(?:BRIEF\s+)?DESCRIPTION\s+OF\s+(?:THE\s+)?(?:SEVERAL\s+VIEWS\s+OF\s+(?:THE\s+)?)?(?:DRAWINGS|FIGURES)",
+    r"DETAILED\s+DESCRIPTION(?:\s+OF\s+(?:THE\s+)?(?:EXEMPLARY\s+|PREFERRED\s+)?(?:EMBODIMENTS?|INVENTION))?",
+    r"DESCRIPTION\s+OF\s+(?:THE\s+)?INVENTION",
+    r"BEST\s+MODE\s+FOR\s+CARRYING\s+OUT",
+    r"CLAIMS",
+    r"What\s+is\s+claimed\s+is\s*:?",
+    r"I\s+claim\s*:?",
+    r"We\s+(?:hereby\s+)?claim\s*:?",
+    r"Claimed\s+are\s*:?",
+    r"ABSTRACT(?:\s+OF\s+(?:THE\s+)?(?:DISCLOSURE|INVENTION))?",
+]
+
+# Compiled regex matching ANY section header as a standalone paragraph.
+# Used as the generic "next section" boundary when extracting sections.
+_ANY_SECTION_HEADER = re.compile(
+    r"^[ \t]*(?:" + "|".join(_SECTION_HEADER_PATTERNS) + r")[ \t]*$",
+    re.MULTILINE | re.IGNORECASE,
+)
+
+
+def _find_next_header(text: str, start_pos: int) -> int | None:
+    """Find the start position of the next standalone section header after start_pos."""
+    m = _ANY_SECTION_HEADER.search(text, pos=start_pos)
+    return m.start() if m else None
+
+
+# ---------------------------------------------------------------------------
+# Section extractors
+# ---------------------------------------------------------------------------
 
 
 def extract_claims_section(text: str) -> str:
@@ -12,46 +64,65 @@ def extract_claims_section(text: str) -> str:
 
     Supports all USPTO-recognized claims headers:
     CLAIMS, What is claimed is:, I claim:, We claim:, We hereby claim:, Claimed are:
+
+    The claims start header must be a standalone paragraph (anchored ^...$).
     """
+    # Find standalone CLAIMS header or variant
     start_match = re.search(
-        r"(^\s*("
-        r"CLAIMS([\s\r\n]*(What is claimed is|I claim|We claim|We hereby claim|Claimed are):?)?"
-        r"|What is claimed is:"
-        r"|I claim:"
-        r"|We (hereby )?claim:"
-        r"|Claimed are:"
-        r")[\s\r\n]*1\.\s+[\s\S]*?)",
+        r"^[ \t]*("
+        r"CLAIMS"
+        r"|What\s+is\s+claimed\s+is\s*:?"
+        r"|I\s+claim\s*:?"
+        r"|We\s+(?:hereby\s+)?claim\s*:?"
+        r"|Claimed\s+are\s*:?"
+        r")[ \t]*$",
         text,
         re.IGNORECASE | re.MULTILINE,
     )
-    start = start_match.start() if start_match else -1
+    if not start_match:
+        return ""
 
+    start = start_match.start()
+
+    # Verify claim 1 follows
+    after_header = text[start_match.end():]
+    claim1 = re.search(r"1\.\s+", after_header)
+    if not claim1:
+        return ""
+
+    # End at next standalone ABSTRACT header
     end_match = re.search(
-        r"\bABSTRACT\b(\s+OF\s+(THE\s+)?(DISCLOSURE|INVENTION))?",
-        text,
-        re.IGNORECASE,
+        r"^[ \t]*ABSTRACT(?:\s+OF\s+(?:THE\s+)?(?:DISCLOSURE|INVENTION))?[ \t]*$",
+        text[start:],
+        re.IGNORECASE | re.MULTILINE,
     )
-    end = end_match.start() if end_match else len(text)
+    end = start + end_match.start() if end_match else len(text)
 
-    if start != -1 and start < end:
-        return text[start:end].strip()
-    return ""
+    return text[start:end].strip()
 
 
 def extract_abstract_section(text: str) -> str:
     """Extract the Abstract section, ending before 'reference numerals/numbers'.
 
     Supports: ABSTRACT, ABSTRACT OF THE DISCLOSURE, ABSTRACT OF THE INVENTION.
-    Uses \\Z (absolute end-of-string) to avoid lazy+$ bug where $ in MULTILINE
-    mode matches end-of-line and lazy quantifier returns empty match.
+    The ABSTRACT header must be a standalone paragraph.
     """
-    match = re.search(
-        r"\bABSTRACT\b(\s+OF\s+(THE\s+)?(DISCLOSURE|INVENTION))?"
-        r"[\s\S]*?(?=\b(reference numerals|reference numbers)\b|\Z)",
+    start_match = re.search(
+        r"^[ \t]*ABSTRACT(?:\s+OF\s+(?:THE\s+)?(?:DISCLOSURE|INVENTION))?[ \t]*$",
         text,
-        re.IGNORECASE,
+        re.IGNORECASE | re.MULTILINE,
     )
-    return match.group().strip() if match else ""
+    if not start_match:
+        return ""
+
+    start = start_match.start()
+    rest = text[start:]
+
+    # End at "reference numerals" or end of document
+    end_match = re.search(r"\b(?:reference numerals|reference numbers)\b", rest, re.IGNORECASE)
+    end_text = rest[:end_match.start()] if end_match else rest
+
+    return end_text.strip()
 
 
 def extract_cross_reference_section(text: str) -> str:
@@ -59,51 +130,56 @@ def extract_cross_reference_section(text: str) -> str:
 
     Supports: CROSS-REFERENCE TO RELATED APPLICATIONS, CROSS-REFERENCES,
     REFERENCE TO RELATED APPLICATIONS, RELATED APPLICATIONS,
-    REFERENCE TO RELATED PATENTS
+    REFERENCE TO RELATED PATENTS.
+    Header must be standalone paragraph; ends at next standalone section header.
     """
-    match = re.search(
-        r"\b(cross[- ]?references?\s+to\s+related\s+applications?"
-        r"|reference\s+to\s+related\s+(applications?|patents?)"
-        r"|related\s+applications?"
-        r")\b"
-        r"[\s\S]*?"
-        r"(?=\b("
-        r"field\s+of\s+(the\s+)?(disclosure|invention)"
-        r"|technical\s+field"
-        r"|background"
-        r")\b)",
+    start_match = re.search(
+        r"^[ \t]*("
+        r"CROSS[- ]?REFERENCES?\s+TO\s+RELATED\s+APPLICATIONS?"
+        r"|REFERENCE\s+TO\s+RELATED\s+(?:APPLICATIONS?|PATENTS?)"
+        r"|RELATED\s+APPLICATIONS?"
+        r")[ \t]*$",
         text,
-        re.IGNORECASE,
+        re.IGNORECASE | re.MULTILINE,
     )
-    return match.group().strip() if match else ""
+    if not start_match:
+        return ""
+
+    start = start_match.start()
+    # Find next section header after this one
+    next_hdr = _find_next_header(text, start_match.end())
+    end = next_hdr if next_hdr is not None else len(text)
+
+    return text[start:end].strip()
 
 
 def extract_background_section(text: str) -> str:
     """Extract the Background section.
 
-    Supports: BACKGROUND OF THE INVENTION, BACKGROUND ART,
-    DESCRIPTION OF RELATED ART, DESCRIPTION OF THE RELATED ART,
-    PRIOR ART, DESCRIPTION OF THE PRIOR ART,
-    FIELD AND BACKGROUND OF THE INVENTION
+    Supports: BACKGROUND, BACKGROUND OF THE INVENTION, BACKGROUND ART,
+    BACKGROUND OF THE DISCLOSURE, DESCRIPTION OF RELATED ART,
+    DESCRIPTION OF THE RELATED ART, PRIOR ART, DESCRIPTION OF THE PRIOR ART,
+    FIELD AND BACKGROUND OF THE INVENTION.
+    Header must be standalone paragraph; ends at next standalone section header.
     """
-    match = re.search(
-        r"\b("
-        r"background\s+(of\s+(the\s+)?)?(disclosure|invention|art)"
-        r"|description\s+of\s+(the\s+)?(related\s+art|prior\s+art)"
-        r"|prior\s+art"
-        r"|field\s+and\s+background\s+of\s+(the\s+)?invention"
-        r")\b"
-        r"[\s\S]*?"
-        r"(?=\b("
-        r"(brief\s+)?summary(\s+of\s+(the\s+)?invention)?"
-        r"|object(\s+and\s+summary)?\s+of\s+(the\s+)?invention"
-        r"|brief\s+description\s+of"
-        r"|disclosure\s+of\s+invention"
-        r")\b|\Z)",
+    start_match = re.search(
+        r"^[ \t]*("
+        r"BACKGROUND(?:\s+(?:OF\s+(?:THE\s+)?)?(?:DISCLOSURE|INVENTION|ART))?"
+        r"|DESCRIPTION\s+OF\s+(?:THE\s+)?(?:RELATED\s+ART|PRIOR\s+ART)"
+        r"|PRIOR\s+ART"
+        r"|FIELD\s+AND\s+BACKGROUND\s+OF\s+(?:THE\s+)?INVENTION"
+        r")[ \t]*$",
         text,
-        re.IGNORECASE,
+        re.IGNORECASE | re.MULTILINE,
     )
-    return match.group().strip() if match else ""
+    if not start_match:
+        return ""
+
+    start = start_match.start()
+    next_hdr = _find_next_header(text, start_match.end())
+    end = next_hdr if next_hdr is not None else len(text)
+
+    return text[start:end].strip()
 
 
 def extract_description_of_drawings_section(text: str) -> str:
@@ -111,20 +187,69 @@ def extract_description_of_drawings_section(text: str) -> str:
 
     Supports: BRIEF DESCRIPTION OF DRAWINGS, BRIEF DESCRIPTION OF THE DRAWINGS,
     BRIEF DESCRIPTION OF FIGURES, BRIEF DESCRIPTION OF THE FIGURES,
-    DESCRIPTION OF DRAWINGS
+    DESCRIPTION OF DRAWINGS, BRIEF DESCRIPTION OF THE SEVERAL VIEWS OF THE DRAWINGS.
+    Header must be standalone paragraph; ends at next standalone section header.
     """
-    match = re.search(
-        r"\b(brief\s+)?description\s+of\s+(the\s+)?(drawings|figures)\b"
-        r"[\s\S]*?"
-        r"(?=\b("
-        r"detailed\s+description(\s+of\s+(the\s+)?(\w+\s+)?(embodiment|embodiments|invention|drawings))?"
-        r"|description\s+of\s+(the\s+)?invention"
-        r"|best\s+mode\s+for\s+carrying\s+out"
-        r")\b|\Z)",
+    start_match = re.search(
+        r"^[ \t]*(?:BRIEF\s+)?DESCRIPTION\s+OF\s+(?:THE\s+)?(?:SEVERAL\s+VIEWS\s+OF\s+(?:THE\s+)?)?(?:DRAWINGS|FIGURES)[ \t]*$",
         text,
-        re.IGNORECASE,
+        re.IGNORECASE | re.MULTILINE,
     )
-    return match.group().strip() if match else ""
+    if not start_match:
+        return ""
+
+    start = start_match.start()
+    next_hdr = _find_next_header(text, start_match.end())
+    end = next_hdr if next_hdr is not None else len(text)
+
+    return text[start:end].strip()
+
+
+def extract_detailed_description_section(text: str) -> str:
+    """Extract the Detailed Description section.
+
+    Supports: DETAILED DESCRIPTION, DETAILED DESCRIPTION OF THE INVENTION,
+    DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENT(S),
+    DETAILED DESCRIPTION OF THE EXEMPLARY EMBODIMENT(S).
+    Header must be standalone paragraph; ends at next standalone section header.
+    """
+    start_match = re.search(
+        r"^[ \t]*DETAILED\s+DESCRIPTION"
+        r"(?:\s+OF\s+(?:THE\s+)?(?:EXEMPLARY\s+|PREFERRED\s+)?(?:EMBODIMENTS?|INVENTION))?"
+        r"[ \t]*$",
+        text,
+        re.IGNORECASE | re.MULTILINE,
+    )
+    if not start_match:
+        return ""
+
+    start = start_match.start()
+    next_hdr = _find_next_header(text, start_match.end())
+    end = next_hdr if next_hdr is not None else len(text)
+
+    return text[start:end].strip()
+
+
+def extract_summary_section(text: str) -> str:
+    """Extract the Summary of the Invention section.
+
+    Supports: SUMMARY, SUMMARY OF THE INVENTION, BRIEF SUMMARY,
+    BRIEF SUMMARY OF THE INVENTION.
+    Header must be standalone paragraph; ends at next standalone section header.
+    """
+    start_match = re.search(
+        r"^[ \t]*(?:BRIEF\s+)?SUMMARY(?:\s+OF\s+(?:THE\s+)?INVENTION)?[ \t]*$",
+        text,
+        re.IGNORECASE | re.MULTILINE,
+    )
+    if not start_match:
+        return ""
+
+    start = start_match.start()
+    next_hdr = _find_next_header(text, start_match.end())
+    end = next_hdr if next_hdr is not None else len(text)
+
+    return text[start:end].strip()
 
 
 def detect_prior_art_citations(text: str) -> str:

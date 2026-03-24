@@ -2,7 +2,7 @@
   "header": { "title": "PatentLint", "subtitle": "特許明細書品質チェックツール" },
   "dropzone": { "title": "特許 .docx ファイルをここにドロップ", "subtitle": "またはクリックして参照", "notice": "現在、米国特許明細書（.docx）のみ対応しています。", "reject": ".docx ファイルのみ対応" },
   "summary": { "specParagraphs": "明細書段落数", "totalClaims": "請求項総数", "figures": "図面", "abstractWords": "要約語数", "claimTypes": "請求項種別", "method": "方法", "product": "物", "outsideRange": "50–150語の範囲外" },
-  "section": { "specification": "明細書", "claims": "特許請求の範囲", "drawings": "図面の簡単な説明", "abstract": "要約書" },
+  "section": { "specification": "明細書", "claims": "特許請求の範囲", "drawings": "図面の簡単な説明", "abstract": "要約書", "deepAnalysis": "深度分析" },
   "status": { "pass": "合格", "verify": "確認", "amend": "修正" },
   "button": { "downloadPdf": "PDFレポートをダウンロード", "copySummary": "要約をコピー", "copied": "コピーしました！", "newAnalysis": "再分析", "generating": "生成中..." },
   "diagram": { "show": "図表を表示", "hide": "図表を非表示" },
@@ -10,6 +10,7 @@
   "analysis": { "analyzing": "特許文書を分析中...", "label": "分析結果" },
   "footer": { "disclaimer": "本レポートは法的助言を構成するものではありません" },
   "antecedentBasis": { "title": "先行詞根拠の確認", "items": "件", "item": "件" },
+  "specSupport": { "title": "明細書サポートの確認", "items": "個の用語", "item": "個の用語" },
   "triage": { "title": "優先事項の要約", "amend": "修正が必要", "amendEmpty": "修正が必要な項目はありません。", "verify": "専門家の確認", "verifyEmpty": "確認が必要な項目はありません。", "pass": "合格", "items": "件", "item": "件" },
   "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
   "check": {
@@ -38,7 +39,10 @@
         "verify": "背景技術に先行技術特許が引用されています。",
         "pass": "背景技術に先行技術の引用はありません。"
       },
-      "drawings": "図面の概要。"
+      "drawings": "図面の概要。",
+      "trackedChanges": {
+        "amend": "文書に変更履歴が含まれています。出願前にすべての変更を承認または拒否してください。"
+      }
     },
     "claims": {
       "restrictiveWording": {
@@ -112,5 +116,13 @@
       },
       "count": "個の図面。"
     }
+  },
+  "checks": {
+    "preamble_cross_category_mismatch": "従属項と独立項のプリアンブルの種別が不一致です（カテゴリ間）。",
+    "preamble_cross_category_pass": "請求項のプリアンブルは整合しています。",
+    "preamble_noun_mismatch": "従属項と独立項のプリアンブル名詞が異なります。",
+    "preamble_indefinite_article": "従属項のプリアンブルに不定冠詞が使用されています（「The」を使用すべき）。",
+    "spec_support_unsupported_terms": "請求項の用語が明細書に見つかりません。",
+    "spec_support_pass": "すべての請求項の用語が明細書に見つかりました。"
   }
 }

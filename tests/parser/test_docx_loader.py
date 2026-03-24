@@ -3,7 +3,6 @@
 Creates minimal .docx files using python-docx as test fixtures.
 """
 
-import tempfile
 from pathlib import Path
 
 import pytest
@@ -260,3 +259,66 @@ class TestReturnType:
         assert isinstance(result.missing_ending_paragraphs, list)
         assert isinstance(result.improper_spec_paragraphs, list)
         assert isinstance(result.improper_spec_phrases, str)
+
+
+class TestTrackedChanges:
+    """Tests for tracked changes (revisions) detection (Bug 9)."""
+
+    def test_clean_docx_no_tracked_changes(self, tmp_path):
+        """A normal .docx without revisions -> False."""
+        path = tmp_path / "clean.docx"
+        _create_simple_docx(["Clean paragraph."], path)
+        result = load_docx(path)
+        assert result.has_tracked_changes is False
+
+    def test_docx_with_insertion(self, tmp_path):
+        """A .docx with w:ins element -> True."""
+        doc = Document()
+        doc.add_paragraph("Normal text.")
+        # Inject a w:ins element into the body
+        ins = OxmlElement("w:ins")
+        ins.set(qn("w:id"), "1")
+        ins.set(qn("w:author"), "Test Author")
+        run = OxmlElement("w:r")
+        text_elem = OxmlElement("w:t")
+        text_elem.text = "inserted text"
+        run.append(text_elem)
+        ins.append(run)
+        doc.element.body.append(ins)
+        path = tmp_path / "with_ins.docx"
+        doc.save(str(path))
+        result = load_docx(path)
+        assert result.has_tracked_changes is True
+
+    def test_docx_with_deletion(self, tmp_path):
+        """A .docx with w:del element -> True."""
+        doc = Document()
+        doc.add_paragraph("Normal text.")
+        # Inject a w:del element into the body
+        del_elem = OxmlElement("w:del")
+        del_elem.set(qn("w:id"), "2")
+        del_elem.set(qn("w:author"), "Test Author")
+        run = OxmlElement("w:r")
+        del_text = OxmlElement("w:delText")
+        del_text.text = "deleted text"
+        run.append(del_text)
+        del_elem.append(run)
+        doc.element.body.append(del_elem)
+        path = tmp_path / "with_del.docx"
+        doc.save(str(path))
+        result = load_docx(path)
+        assert result.has_tracked_changes is True
+
+    def test_detect_tracked_changes_function(self):
+        """Direct test of detect_tracked_changes()."""
+        from patentlint.parser.docx_loader import detect_tracked_changes
+
+        doc = Document()
+        doc.add_paragraph("Clean.")
+        assert detect_tracked_changes(doc) is False
+
+        # Add insertion
+        ins = OxmlElement("w:ins")
+        ins.set(qn("w:id"), "1")
+        doc.element.body.append(ins)
+        assert detect_tracked_changes(doc) is True

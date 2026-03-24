@@ -1,0 +1,36 @@
+# ---- Stage 1: Build frontend ----
+FROM node:22-slim AS frontend-build
+WORKDIR /app/frontend
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
+COPY frontend/ ./
+RUN npm run build
+
+# ---- Stage 2: Python runtime ----
+FROM python:3.12-slim AS runtime
+
+# System deps for weasyprint PDF rendering + CJK fonts
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpango-1.0-0 \
+    libpangoft2-1.0-0 \
+    libpangocairo-1.0-0 \
+    libgdk-pixbuf-2.0-0 \
+    libcairo2 \
+    libffi-dev \
+    shared-mime-info \
+    fonts-noto-cjk \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Install Python deps (leverage layer caching)
+COPY pyproject.toml README.md ./
+COPY src/ src/
+RUN pip install --no-cache-dir ".[api]"
+
+# Copy built frontend
+COPY --from=frontend-build /app/frontend/dist frontend/dist
+
+EXPOSE 8000
+
+CMD ["uvicorn", "patentlint.api.app:app", "--host", "0.0.0.0", "--port", "8000"]
