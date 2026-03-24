@@ -6,6 +6,7 @@ dist/
 build/
 .eggs/
 *.egg
+*.whl
 .venv/
 venv/
 .env
@@ -25,3 +26,4 @@ legacy/
 CLAUDE.md
 docs/
 tests/fixtures/*.docx
+smoke-test-pyodide.html

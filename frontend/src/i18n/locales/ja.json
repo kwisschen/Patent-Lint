@@ -117,6 +117,24 @@
       "count": "個の図面。"
     }
   },
+  "loading": {
+    "runtime": "Python ランタイムを読み込み中...",
+    "parser": "文書パーサーを読み込み中...",
+    "engine": "分析エンジンを読み込み中...",
+    "patentlint": "PatentLint を読み込み中...",
+    "ready": "分析エンジンの準備完了",
+    "offline_note": "初回読み込み後はオフラインで使用可能",
+    "feature1_title": "インストール不要。アカウント不要。クラウド不要。",
+    "feature1_desc": "機密性の高い特許原稿はデバイスから出ることはありません。アップロードも一切なく、PatentLint はあなたの身元すら知りません。",
+    "feature2_title": "MPEP 準拠チェック",
+    "feature2_desc": "限定的な表現、不明確な用語、先行詞根拠の欠落、ミーンズ・プラス・ファンクションの問題などを検出します。",
+    "feature3_title": "請求項ツリー表示",
+    "feature3_desc": "インタラクティブな従属関係ツリーと Mermaid 図で、請求項の構造を一目で把握できます。",
+    "feature4_title": "どこでも使える",
+    "feature4_desc": "Mac、Windows、Linux、iPad — ブラウザがあるどのデバイスでも利用可能。Word アドインは不要。English、繁體中文、简体中文、日本語の完全な UI。",
+    "feature5_title": "瞬時の分析",
+    "feature5_desc": ".docx ファイルをドロップするだけで数秒で結果が得られます。PDF レポートのダウンロードもクラウド不要。"
+  },
   "checks": {
     "preamble_cross_category_mismatch": "従属項と独立項のプリアンブルの種別が不一致です（カテゴリ間）。",
     "preamble_cross_category_pass": "請求項のプリアンブルは整合しています。",

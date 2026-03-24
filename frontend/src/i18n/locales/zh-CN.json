@@ -117,6 +117,24 @@
       "count": "个附图。"
     }
   },
+  "loading": {
+    "runtime": "正在加载 Python 运行环境...",
+    "parser": "正在加载文档解析器...",
+    "engine": "正在加载分析引擎...",
+    "patentlint": "正在加载 PatentLint...",
+    "ready": "分析引擎已就绪",
+    "offline_note": "首次加载后可离线使用",
+    "feature1_title": "免安装、免注册、免上传。",
+    "feature1_desc": "您的机密专利文稿不会离开您的设备。不会上传任何内容，PatentLint 也不会知道您的身份。",
+    "feature2_title": "MPEP 合规检查",
+    "feature2_desc": "检测限制性用语、不确定术语、先行词基础缺漏、功能性限定等问题。",
+    "feature3_title": "权利要求树状图",
+    "feature3_desc": "交互式从属关系树状图和 Mermaid 图表，一目了然地呈现权利要求结构。",
+    "feature4_title": "随处可用",
+    "feature4_desc": "Mac、Windows、Linux、iPad — 任何有浏览器的设备均可使用。无需 Word 插件。完整界面支持 English、繁體中文、简体中文 及 日本語。",
+    "feature5_title": "即时分析",
+    "feature5_desc": "拖放 .docx 文件即可在数秒内获得结果。下载 PDF 报告，无需云端往返。"
+  },
   "checks": {
     "preamble_cross_category_mismatch": "从属权利要求与独立权利要求的前序部分类型不一致（跨类别）。",
     "preamble_cross_category_pass": "权利要求前序部分一致。",
