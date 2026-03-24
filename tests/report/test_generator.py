@@ -131,7 +131,7 @@ class TestToReportData:
 
     def test_claims_checks_count(self, sample_result):
         data = sample_result.to_report_data()
-        assert len(data.claims_checks) == 10
+        assert len(data.claims_checks) == 11  # +1 for spec support check
 
     def test_abstract_checks_count(self, sample_result):
         data = sample_result.to_report_data()
@@ -160,3 +160,19 @@ class TestToReportData:
         data = result.to_report_data()
         assert data.total_claims == 0
         assert data.claim_trees == []
+
+    def test_tracked_changes_adds_verify(self):
+        """When has_tracked_changes=True, spec checks include a VERIFY item."""
+        result = AnalysisResult(has_tracked_changes=True)
+        data = result.to_report_data()
+        tc_checks = [c for c in data.specification_checks if "tracked changes" in c.message.lower()]
+        assert len(tc_checks) == 1
+        assert tc_checks[0].status == "verify"
+        assert tc_checks[0].message_key == "check.spec.trackedChanges.verify"
+
+    def test_no_tracked_changes_no_verify(self):
+        """When has_tracked_changes=False, no tracked changes check in spec."""
+        result = AnalysisResult(has_tracked_changes=False)
+        data = result.to_report_data()
+        tc_checks = [c for c in data.specification_checks if "tracked changes" in c.message.lower()]
+        assert len(tc_checks) == 0

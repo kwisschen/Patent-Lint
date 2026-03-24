@@ -56,6 +56,22 @@ class SpecWordingResult(BaseModel):
     formatted_phrases: str = ""
 
 
+class ReferenceNumeral(BaseModel):
+    """A reference numeral extracted from patent text."""
+
+    number: int  # e.g., 102
+    element_name: str  # e.g., "base plate"
+    occurrences: int = 0  # times it appears in spec text
+
+
+class UnsupportedTerm(BaseModel):
+    """A claim term not found in the specification."""
+
+    claim_number: int
+    phrase: str
+    tiers_checked: list[str] = Field(default_factory=list)  # ["exact", "stemmed", "word_window"]
+
+
 class CheckItem(BaseModel):
     """Single check result for report rendering."""
 
@@ -104,6 +120,9 @@ class ReportData(BaseModel):
     # Antecedent basis issues
     antecedent_basis_issues: list[dict] = Field(default_factory=list)
 
+    # Phase 4 additions
+    unsupported_terms: list[UnsupportedTerm] = Field(default_factory=list)
+
 
 class AnalysisResult(BaseModel):
     """Aggregates all analysis findings into a single structured result.
@@ -113,6 +132,7 @@ class AnalysisResult(BaseModel):
     """
 
     # Specification
+    has_tracked_changes: bool = False
     paragraph_count: int = 0
     improper_spec_paragraphs: list[int] = Field(default_factory=list)
     improper_spec_phrases_formatted: str = ""
@@ -146,6 +166,11 @@ class AnalysisResult(BaseModel):
     incorrect_wherein_comma_claims: list[int] = Field(default_factory=list)
     means_plus_function_claims: list[int] = Field(default_factory=list)
     antecedent_basis_issues: list[dict] = Field(default_factory=list)
+    preamble_checks: list[CheckItem] = Field(default_factory=list)
+    unsupported_terms: list[UnsupportedTerm] = Field(default_factory=list)
+
+    # Drawings — reference numerals
+    reference_numerals: list[ReferenceNumeral] = Field(default_factory=list)
 
     # Abstract
     abstract_word_count: int = 0
@@ -167,6 +192,13 @@ class AnalysisResult(BaseModel):
 
         # --- Specification checks ---
         spec_checks: list[CheckItem] = []
+
+        if self.has_tracked_changes:
+            spec_checks.append(CheckItem(
+                status="verify",
+                message="Document contains tracked changes (revisions). Accept or reject all changes before filing.",
+                message_key="check.spec.trackedChanges.verify",
+            ))
 
         if self.improper_spec_paragraphs:
             spec_checks.append(CheckItem(
@@ -403,6 +435,26 @@ class AnalysisResult(BaseModel):
                 message_key="check.claims.antecedentBasis.pass",
             ))
 
+        # Preamble consistency checks
+        for pc in self.preamble_checks:
+            claims_checks.append(pc)
+
+        # Spec support checks
+        if self.unsupported_terms:
+            unique_phrases = sorted(set(ut.phrase for ut in self.unsupported_terms))
+            claims_checks.append(CheckItem(
+                status="verify",
+                message="Claim terms not found in specification.",
+                message_key="checks.spec_support_unsupported_terms",
+                details=f"Terms: {', '.join(unique_phrases[:10])}",
+            ))
+        else:
+            claims_checks.append(CheckItem(
+                status="pass",
+                message="All claim terms found in specification.",
+                message_key="checks.spec_support_pass",
+            ))
+
         claims_checks.append(CheckItem(
             status="pass",
             message="Claims overview.",
@@ -558,4 +610,5 @@ class AnalysisResult(BaseModel):
             drawings_checks=drawings_checks,
             claim_trees=claim_trees,
             antecedent_basis_issues=self.antecedent_basis_issues,
+            unsupported_terms=self.unsupported_terms,
         )

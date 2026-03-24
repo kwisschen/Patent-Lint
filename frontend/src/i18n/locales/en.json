@@ -2,7 +2,7 @@
   "header": { "title": "PatentLint", "subtitle": "Patent Draft Quality Checker" },
   "dropzone": { "title": "Drop your patent .docx here", "subtitle": "or click to browse", "notice": "Currently supports U.S. patent specifications (.docx) only.", "reject": "Only .docx files are accepted" },
   "summary": { "specParagraphs": "Specification Paragraphs", "totalClaims": "Total Claims", "figures": "Figures", "abstractWords": "Abstract Words", "claimTypes": "Claim Types", "method": "method", "product": "product", "outsideRange": "Outside 50–150 range" },
-  "section": { "specification": "Specification", "claims": "Claims", "drawings": "Description of Drawings", "abstract": "Abstract" },
+  "section": { "specification": "Specification", "claims": "Claims", "drawings": "Description of Drawings", "abstract": "Abstract", "deepAnalysis": "Deep Analysis" },
   "status": { "pass": "PASS", "verify": "VERIFY", "amend": "AMEND" },
   "button": { "downloadPdf": "Download PDF Report", "copySummary": "Copy Summary", "copied": "Copied!", "newAnalysis": "New Analysis", "generating": "Generating..." },
   "diagram": { "show": "Show Diagram", "hide": "Hide Diagram" },
@@ -10,6 +10,7 @@
   "analysis": { "analyzing": "Analyzing patent document...", "label": "Analysis" },
   "footer": { "disclaimer": "Not legal advice" },
   "antecedentBasis": { "title": "Antecedent Basis Review", "items": "items", "item": "item" },
+  "specSupport": { "title": "Specification Support Review", "items": "terms", "item": "term" },
   "triage": { "title": "Priority Summary", "amend": "Action Required", "amendEmpty": "No issues requiring amendment.", "verify": "Expert Review", "verifyEmpty": "No items flagged for review.", "pass": "Passed", "items": "items", "item": "item" },
   "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
   "check": {
@@ -38,7 +39,10 @@
         "verify": "Background section cites prior art.",
         "pass": "No prior art citations found in background."
       },
-      "drawings": "Drawings overview."
+      "drawings": "Drawings overview.",
+      "trackedChanges": {
+        "verify": "Document contains tracked changes (revisions). Accept or reject all changes before filing."
+      }
     },
     "claims": {
       "restrictiveWording": {
@@ -112,5 +116,13 @@
       },
       "count": "figure(s) found."
     }
+  },
+  "checks": {
+    "preamble_cross_category_mismatch": "Cross-category preamble mismatch between dependent and independent claim.",
+    "preamble_cross_category_pass": "Claim preambles are consistent.",
+    "preamble_noun_mismatch": "Preamble noun differs between dependent and independent claim.",
+    "preamble_indefinite_article": "Indefinite article in dependent claim preamble (should be 'The').",
+    "spec_support_unsupported_terms": "Claim terms not found in specification.",
+    "spec_support_pass": "All claim terms found in specification."
   }
 }

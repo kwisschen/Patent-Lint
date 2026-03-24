@@ -1,0 +1,207 @@
+"""Tests for noun phrase cleanup and capture width (Bugs 3, 5, 6b, 10, 11, 12)."""
+
+from patentlint.analysis.utils import (
+    clean_noun_phrase, extract_noun_phrases, extract_abbreviation_intros,
+    extract_definite_refs, extract_introductions,
+)
+
+
+class TestStripping:
+    """Trailing verbs, adverbs, and function words should be stripped."""
+
+    def test_trailing_verb_pushes(self):
+        assert clean_noun_phrase("pushing portion pushes") == "pushing portion"
+
+    def test_trailing_adverb_jointly(self):
+        assert clean_noun_phrase("elastic arm jointly") == "elastic arm"
+
+    def test_trailing_multiple_words(self):
+        assert clean_noun_phrase("movable component further includes") == "movable component"
+
+    def test_trailing_thereof(self):
+        assert clean_noun_phrase("inner side thereof") == "inner side"
+
+    def test_trailing_according(self):
+        assert clean_noun_phrase("connector assembly according") == "connector assembly"
+
+    def test_trailing_ed_configured(self):
+        """Morphological -ed detection (software domain)."""
+        assert clean_noun_phrase("processing unit configured") == "processing unit"
+
+    def test_trailing_ed_connected(self):
+        """Morphological -ed detection (electrical domain)."""
+        assert clean_noun_phrase("switching circuit connected") == "switching circuit"
+
+    def test_trailing_ed_disposed(self):
+        """Morphological -ed detection (biotech domain)."""
+        assert clean_noun_phrase("coating layer disposed") == "coating layer"
+
+
+class TestPreservation:
+    """Gerund-derived nouns must NOT be stripped (multi-domain)."""
+
+    def test_accommodating_slot(self):
+        assert clean_noun_phrase("accommodating slot") == "accommodating slot"
+
+    def test_pushing_portion(self):
+        assert clean_noun_phrase("pushing portion") == "pushing portion"
+
+    def test_processing_unit(self):
+        assert clean_noun_phrase("processing unit") == "processing unit"
+
+    def test_computing_device(self):
+        assert clean_noun_phrase("computing device") == "computing device"
+
+    def test_rendering_engine(self):
+        assert clean_noun_phrase("rendering engine") == "rendering engine"
+
+    def test_switching_circuit(self):
+        assert clean_noun_phrase("switching circuit") == "switching circuit"
+
+    def test_grounding_terminal(self):
+        assert clean_noun_phrase("grounding terminal") == "grounding terminal"
+
+    def test_binding_site(self):
+        assert clean_noun_phrase("binding site") == "binding site"
+
+    def test_coating_layer(self):
+        assert clean_noun_phrase("coating layer") == "coating layer"
+
+    def test_standalone_opening(self):
+        assert clean_noun_phrase("opening") == "opening"
+
+    def test_standalone_housing(self):
+        assert clean_noun_phrase("housing") == "housing"
+
+
+class TestCaptureWidth:
+    """Bug 5: Noun phrase capture should handle up to 6 words."""
+
+    def test_four_word_phrase(self):
+        """'two connection terminal assemblies' should be captured in full."""
+        text = "the two connection terminal assemblies are flexible"
+        phrases = extract_noun_phrases(text)
+        assert any("two connection terminal assemblies" in p for p in phrases)
+
+    def test_four_word_ordinal(self):
+        """'first auxiliary engaging structure' should be captured in full."""
+        text = "a first auxiliary engaging structure is provided"
+        phrases = extract_noun_phrases(text)
+        assert any("first auxiliary engaging structure" in p for p in phrases)
+
+    def test_three_word_still_works(self):
+        """Existing 3-word phrases should still be captured (regression)."""
+        text = "a connection terminal assembly is provided"
+        phrases = extract_noun_phrases(text)
+        assert any("connection terminal assembly" in p for p in phrases)
+
+
+class TestModalVerbStripping:
+    """Bug 6b-continued: Modal verbs should be stripped from noun phrases."""
+
+    def test_trailing_must(self):
+        assert clean_noun_phrase("insulating base further must include") == "insulating base"
+
+    def test_trailing_shall(self):
+        assert clean_noun_phrase("conductive element shall") == "conductive element"
+
+    def test_trailing_should(self):
+        assert clean_noun_phrase("filter circuit should") == "filter circuit"
+
+    def test_trailing_can(self):
+        assert clean_noun_phrase("switching device can") == "switching device"
+
+    def test_trailing_may(self):
+        assert clean_noun_phrase("housing assembly may") == "housing assembly"
+
+
+class TestAbbreviationExtraction:
+    """Bug 11: Extract abbreviated forms from parenthetical patterns."""
+
+    def test_ac_source(self):
+        intros = extract_abbreviation_intros("an alternating current (AC) source")
+        assert "ac source" in intros
+        assert "ac" in intros
+
+    def test_pcb_standalone(self):
+        intros = extract_abbreviation_intros("a printed circuit board (PCB)")
+        assert "pcb" in intros
+
+    def test_fpga_device(self):
+        intros = extract_abbreviation_intros("a field-programmable gate array (FPGA) device")
+        assert "fpga device" in intros
+        assert "fpga" in intros
+
+    def test_no_abbreviation(self):
+        intros = extract_abbreviation_intros("a simple device")
+        assert intros == []
+
+
+class TestHyphenatedCompoundCapture:
+    """Bug 12: Hyphenated compound words must be captured as single tokens."""
+
+    def test_multi_stage_filter_circuit(self):
+        refs = extract_definite_refs("the multi-stage filter circuit is grounded")
+        assert "multi-stage filter circuit" in refs
+
+    def test_non_transitory_medium(self):
+        refs = extract_definite_refs("the non-transitory computer-readable storage medium is configured")
+        assert "non-transitory computer-readable storage medium" in refs
+
+    def test_bi_directional_zener_diode(self):
+        refs = extract_definite_refs("the bi-directional Zener diode is connected")
+        assert "bi-directional zener diode" in refs
+
+    def test_self_aligning_bearing_intro(self):
+        intros = extract_introductions("a self-aligning bearing is provided")
+        assert "self-aligning bearing" in intros
+
+    def test_pre_determined_threshold(self):
+        refs = extract_definite_refs("the pre-determined threshold is exceeded")
+        assert "pre-determined threshold" in refs
+
+    def test_cross_sectional_area(self):
+        refs = extract_definite_refs("the cross-sectional area of the housing is circular")
+        assert "cross-sectional area" in refs
+
+    def test_prefix_fragment_not_captured(self):
+        """'multi' alone should NOT appear — full 'multi-stage' should."""
+        refs = extract_definite_refs("the multi-stage filter circuit is grounded")
+        assert "multi" not in refs
+
+    def test_noun_phrases_hyphenated(self):
+        """extract_noun_phrases should also handle hyphens."""
+        phrases = extract_noun_phrases("a non-volatile memory cell is provided in the non-volatile memory cell")
+        assert any("non-volatile memory cell" in p for p in phrases)
+
+
+class TestHyphenatedAntecedentBasis:
+    """Bug 12: Antecedent basis check with hyphenated terms."""
+
+    def test_multi_stage_intro_and_ref(self):
+        from patentlint.analysis.claims import check_antecedent_basis
+        from patentlint.models import Claim
+
+        claims = [Claim(
+            id=1,
+            text="A device comprising a multi-stage filter circuit, wherein the multi-stage filter circuit is grounded.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "multi-stage filter circuit" not in terms
+        assert "multi" not in terms
+
+    def test_non_transitory_intro_and_ref(self):
+        from patentlint.analysis.claims import check_antecedent_basis
+        from patentlint.models import Claim
+
+        claims = [Claim(
+            id=1,
+            text="A non-transitory medium, wherein the non-transitory medium stores instructions.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "non-transitory medium" not in terms
+        assert "non" not in terms
