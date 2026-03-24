@@ -4,10 +4,7 @@ Uses FastAPI TestClient for endpoint testing with real .docx fixtures.
 """
 
 import io
-import tempfile
-from pathlib import Path
 
-import pytest
 from docx import Document
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
@@ -115,7 +112,7 @@ class TestHealthEndpoint:
         assert response.status_code == 200
         data = response.json()
         assert data["status"] == "ok"
-        assert data["version"] == "2.0.0"
+        assert data["version"] == "1.0.0"
 
 
 class TestAnalyzeEndpoint:

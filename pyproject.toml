@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "patentlint"
-version = "2.0.0"
+version = "1.0.0"
 description = "Rule-based patent specification analyzer for USPTO/MPEP compliance"
 readme = "README.md"
 license = "MIT"
@@ -24,18 +24,20 @@ classifiers = [
 dependencies = [
     "pydantic>=2.6,<3",
     "python-docx>=1.1,<2",
+    "snowballstemmer>=2.2",
+    "click>=8.1,<9",
 ]
 
 [project.optional-dependencies]
+pdf = [
+    "weasyprint>=62",
+    "jinja2>=3.1",
+]
 api = [
     "fastapi>=0.111,<1",
     "uvicorn[standard]>=0.29,<1",
     "python-multipart>=0.0.9",
-    "weasyprint>=62",
-    "jinja2>=3.1",
-]
-cli = [
-    "click>=8.1,<9",
+    "patentlint[pdf]",
 ]
 dev = [
     "pytest>=8.1,<9",
@@ -43,7 +45,7 @@ dev = [
     "httpx>=0.27",
     "ruff>=0.4,<1",
 ]
-all = ["patentlint[api,cli,dev]"]
+all = ["patentlint[api,dev]"]
 
 [project.scripts]
 patentlint = "patentlint.cli:main"

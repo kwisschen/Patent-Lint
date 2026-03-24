@@ -32,6 +32,20 @@ class LoadedDocument:
     missing_ending_paragraphs: list[int] = field(default_factory=list)
     improper_spec_paragraphs: list[int] = field(default_factory=list)
     improper_spec_phrases: str = ""
+    has_tracked_changes: bool = False
+
+
+def detect_tracked_changes(doc) -> bool:
+    """Check if a .docx document contains tracked changes (w:del or w:ins).
+
+    Tracked changes mean the document has unresolved revisions that should
+    be accepted or rejected before final filing.
+    """
+    body = doc.element.body
+    return (
+        len(body.findall('.//' + qn('w:del'))) > 0
+        or len(body.findall('.//' + qn('w:ins'))) > 0
+    )
 
 
 def _get_paragraph_num_id(paragraph) -> str | None:
@@ -199,6 +213,8 @@ def load_docx(file_path: str | Path) -> LoadedDocument:
             if paragraph_text:
                 formatted_lines.append(paragraph_text)
 
+    tracked_changes = detect_tracked_changes(doc)
+
     return LoadedDocument(
         full_text="\n".join(formatted_lines),
         paragraph_numberings=paragraph_numberings,
@@ -206,4 +222,5 @@ def load_docx(file_path: str | Path) -> LoadedDocument:
         missing_ending_paragraphs=missing_ending_paragraphs,
         improper_spec_paragraphs=improper_spec_paragraphs,
         improper_spec_phrases="".join(improper_spec_phrases_parts),
+        has_tracked_changes=tracked_changes,
     )

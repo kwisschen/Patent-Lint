@@ -1,0 +1,328 @@
+"""Adversarial tests for analysis/claims — Phase 4 B6 audit."""
+
+from patentlint.models import Claim
+from patentlint.analysis.claims import (
+    check_antecedent_basis,
+    detect_means_plus_function,
+)
+
+
+class TestAntecedentBasisAudit:
+    def test_said_with_prior_introduction(self):
+        """'said base' with prior 'a base' should NOT be flagged."""
+        claims = [Claim(id=1, text="A device comprising a base, wherein said base is flat.", independent=True, method_claim=False)]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "base" not in terms
+
+    def test_chain_walk_grandchild(self):
+        """Grandchild claim should inherit basis from grandparent."""
+        claims = [
+            Claim(id=1, text="A device comprising a base plate.", independent=True, method_claim=False),
+            Claim(id=2, text="The device of claim 1, further comprising a cover.", independent=False, method_claim=False, dependencies=[1]),
+            Claim(id=3, text="The device of claim 2, wherein the base plate is metal.", independent=False, method_claim=False, dependencies=[2]),
+        ]
+        issues = check_antecedent_basis(claims)
+        claim3_terms = [i["term"] for i in issues if i["claim_id"] == 3]
+        assert "base plate" not in claim3_terms
+
+    def test_skip_fig_references(self):
+        """References to 'the figure' should not be flagged."""
+        claims = [Claim(id=1, text="A method as shown in the figure.", independent=True, method_claim=True)]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        # Should be filtered (starts with 'fig')
+        assert not any("figure" in t for t in terms)
+
+
+class TestMeansPlusFunctionAudit:
+    def test_by_means_of_excluded(self):
+        """'by means of' is prepositional, not 112(f)."""
+        claims = [Claim(id=1, text="A device connected by means of a bolt.", independent=True, method_claim=False)]
+        assert detect_means_plus_function(claims) == []
+
+    def test_mechanism_for_detected(self):
+        claims = [Claim(id=1, text="A device comprising a mechanism for fastening components.", independent=True, method_claim=False)]
+        assert detect_means_plus_function(claims) == [1]
+
+    def test_means_without_gerund_not_detected(self):
+        """'means' without 'for [gerund]' should not trigger."""
+        claims = [Claim(id=1, text="A device with electrical means.", independent=True, method_claim=False)]
+        assert detect_means_plus_function(claims) == []
+
+
+class TestAntecedentBasisIntroPatterns:
+    """Bug 2: Expanded introduction patterns for antecedent basis."""
+
+    def test_at_least_one(self):
+        """'at least one conductive component' → 'the conductive component' → no flag."""
+        claims = [Claim(
+            id=1,
+            text="A mechanism comprising at least one conductive component, wherein the conductive component is metal.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "conductive component" not in terms
+
+    def test_one_or_more(self):
+        """'one or more processors' → 'the processors' → no flag."""
+        claims = [Claim(
+            id=1,
+            text="A system comprising one or more processors, wherein the processors execute instructions.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "processors" not in terms
+
+    def test_plurality_of(self):
+        """'a plurality of connection cables' → 'the connection cables' → no flag."""
+        claims = [Claim(
+            id=1,
+            text="A device comprising a plurality of connection cables, wherein the connection cables are flexible.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "connection cables" not in terms
+
+    def test_ordinal_first(self):
+        """'a first engaging structure' → 'the first engaging structure' → no flag."""
+        claims = [Claim(
+            id=1,
+            text="A device comprising a first engaging structure, wherein the first engaging structure is rigid.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "first engaging structure" not in terms
+
+    def test_bare_numeral_two(self):
+        """'two conductive components' → 'the two conductive components' → no flag."""
+        claims = [Claim(
+            id=1,
+            text="A mechanism comprising two conductive components, wherein the conductive components are aligned.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "conductive components" not in terms
+
+    def test_said_with_prior_a(self):
+        """'said movable component' with prior 'a movable component' → no flag."""
+        claims = [Claim(
+            id=1,
+            text="A device comprising a movable component, wherein said movable component slides.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "movable component" not in terms
+
+    def test_no_introduction_still_flagged(self):
+        """'the widget' with NO prior introduction → still flagged (regression)."""
+        claims = [Claim(
+            id=1,
+            text="A device wherein the widget is connected.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "widget" in terms
+
+    def test_nested_introductions(self):
+        """'a device comprising at least one module' → both 'device' and 'module' introduced."""
+        claims = [Claim(
+            id=1,
+            text="A device comprising at least one module, wherein the device houses the module.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "device" not in terms
+        assert "module" not in terms
+
+
+class TestPreambleIntroduction:
+    """Bug 6: Preamble introductions must be registered for antecedent basis."""
+
+    def test_preamble_intro_independent(self):
+        """'A fuse carrying mechanism, comprising:' → 'the fuse carrying mechanism' NOT flagged."""
+        claims = [Claim(
+            id=1,
+            text="A fuse carrying mechanism, comprising: a base plate, wherein the fuse carrying mechanism is durable.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "fuse carrying mechanism" not in terms
+
+    def test_preamble_intro_dependent(self):
+        """Dependent claim referencing parent preamble entity → NOT flagged."""
+        claims = [
+            Claim(id=1, text="A device comprising: a base plate.", independent=True, method_claim=False),
+            Claim(id=2, text="The device of claim 1, wherein the device is metal.", independent=False, method_claim=False, dependencies=[1]),
+        ]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 2]
+        assert "device" not in terms
+
+    def test_method_preamble_intro(self):
+        """'A method comprising: a step of X' → 'the method' NOT flagged."""
+        claims = [Claim(
+            id=1,
+            text="A method comprising: a step of processing, wherein the method is fast.",
+            independent=True, method_claim=True,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "method" not in terms
+
+
+class TestCleanNounPhraseInAntecedentBasis:
+    """Bug 6b: clean_noun_phrase() must be applied to definite refs."""
+
+    def test_trailing_further_stripped(self):
+        """'the conductive component further' → flags 'conductive component', not with 'further'."""
+        claims = [Claim(
+            id=1,
+            text="A device wherein the conductive component further includes a wire.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "conductive component further" not in terms
+        # Should flag "conductive component" (no introduction)
+        assert "conductive component" in terms
+
+    def test_trailing_included_stripped(self):
+        """'the conductive component included' → flags 'conductive component'."""
+        claims = [Claim(
+            id=1,
+            text="A device wherein the conductive component included by the housing.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "conductive component included" not in terms
+
+    def test_cleaned_term_matches_intro(self):
+        """After cleanup, term matches introduction and is NOT flagged."""
+        claims = [Claim(
+            id=1,
+            text="A device comprising a movable component, wherein the movable component further slides.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "movable component" not in terms
+        assert "movable component further" not in terms
+
+
+class TestQuantifierStops:
+    """Bug 10: Standalone quantifiers/pronouns should not be flagged."""
+
+    def test_the_one_not_flagged(self):
+        """'the one of the plurality' → 'one' NOT flagged."""
+        claims = [Claim(
+            id=1,
+            text="A device comprising a plurality of widgets, wherein the one of the plurality is red.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "one" not in terms
+
+    def test_the_another_not_flagged(self):
+        """'the another of the plurality' → 'another' NOT flagged."""
+        claims = [Claim(
+            id=1,
+            text="A device comprising a plurality of inductors, wherein the another of the plurality is blue.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "another" not in terms
+
+    def test_the_plurality_not_flagged(self):
+        """'the plurality' → 'plurality' NOT flagged (standalone quantifier)."""
+        claims = [Claim(
+            id=1,
+            text="A device comprising a plurality of widgets, wherein the plurality is arranged.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "plurality" not in terms
+
+    def test_multiword_with_first_still_captured(self):
+        """'the first filter inductor' → IS captured (multi-word phrase)."""
+        claims = [Claim(
+            id=1,
+            text="A device wherein the first filter inductor is grounded.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "first filter inductor" in terms
+
+    def test_multiword_with_other_still_captured(self):
+        """'the other end' → IS captured (multi-word phrase)."""
+        claims = [Claim(
+            id=1,
+            text="A device wherein the other end is connected.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "other end" in terms
+
+
+class TestAbbreviationIntros:
+    """Bug 11: Parenthetical abbreviations register abbreviated forms."""
+
+    def test_ac_source_not_flagged(self):
+        """'an alternating current (AC) source' → 'the AC source' NOT flagged."""
+        claims = [Claim(
+            id=1,
+            text="A device comprising an alternating current (AC) source, wherein the AC source provides power.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "ac source" not in terms
+
+    def test_pcb_not_flagged(self):
+        """'a printed circuit board (PCB)' → 'the PCB' NOT flagged."""
+        claims = [Claim(
+            id=1,
+            text="A device comprising a printed circuit board (PCB), wherein the PCB is rigid.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "pcb" not in terms
+
+    def test_fpga_device_not_flagged(self):
+        """'a field-programmable gate array (FPGA) device' → 'the FPGA device' NOT flagged."""
+        claims = [Claim(
+            id=1,
+            text="A system comprising a field-programmable gate array (FPGA) device, wherein the FPGA device processes data.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "fpga device" not in terms
+
+    def test_no_abbreviation_still_flagged(self):
+        """'the XYZ module' with no prior '(XYZ)' → still flagged."""
+        claims = [Claim(
+            id=1,
+            text="A device wherein the XYZ module is active.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        # XYZ was never introduced
+        assert any("xyz" in t.lower() for t in terms)
