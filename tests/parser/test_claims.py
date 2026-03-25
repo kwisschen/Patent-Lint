@@ -64,6 +64,36 @@ class TestWhereinComma:
         claims = [Claim(id=1, text="A method wherein at least one element is present.", independent=True, method_claim=True)]
         assert detect_incorrect_wherein_commas(claims) == []
 
+    def test_parenthetical_in_each(self):
+        """'wherein, in each of the groups, the...' — parenthetical prep phrase, not a false positive."""
+        claims = [Claim(id=1, text="A method wherein, in each of the groups, the elements are processed.", independent=True, method_claim=True)]
+        assert detect_incorrect_wherein_commas(claims) == []
+
+    def test_parenthetical_for_each(self):
+        """'wherein, for each item in the list, a value is computed' — parenthetical."""
+        claims = [Claim(id=1, text="A method wherein, for each item in the list, a value is computed.", independent=True, method_claim=True)]
+        assert detect_incorrect_wherein_commas(claims) == []
+
+    def test_parenthetical_during_operation(self):
+        """'wherein, during the operation, the motor rotates' — parenthetical."""
+        claims = [Claim(id=1, text="An apparatus wherein, during the operation, the motor rotates.", independent=True, method_claim=False)]
+        assert detect_incorrect_wherein_commas(claims) == []
+
+    def test_parenthetical_with_respect(self):
+        """'wherein, with respect to the axis, the arm extends' — parenthetical."""
+        claims = [Claim(id=1, text="A device wherein, with respect to the axis, the arm extends.", independent=True, method_claim=False)]
+        assert detect_incorrect_wherein_commas(claims) == []
+
+    def test_real_missing_comma_still_flagged(self):
+        """'wherein when X' (no comma) should still be flagged."""
+        claims = [Claim(id=1, text="A method wherein when the signal is received the output changes.", independent=True, method_claim=True)]
+        assert 1 in detect_incorrect_wherein_commas(claims)
+
+    def test_non_parenthetical_comma_still_flagged(self):
+        """'wherein, the element is large' — comma before non-conditional should be flagged."""
+        claims = [Claim(id=1, text="A method wherein, the element is large.", independent=True, method_claim=True)]
+        assert 1 in detect_incorrect_wherein_commas(claims)
+
 
 class TestImproperWording:
     def test_flags_restrictive(self):

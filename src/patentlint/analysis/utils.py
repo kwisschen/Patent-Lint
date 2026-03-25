@@ -12,11 +12,18 @@ _WORD = r"\w+(?:-\w+)*"
 _STOP_WORDS = (
     r"(?:is|are|was|were|has|have|had|do|does|did|being|been|"
     r"of|to|from|with|and|or|that|which|for|by|on|in|at|"
+    r"along|between|through|within|upon|above|below|across|"
+    r"toward|towards|against|around|during|into|onto|"
+    r"beside|beneath|beyond|behind|before|after|among|about|"
+    r"inside|outside|throughout|until|without|"
+    r"but|if|so|yet|nor|who|whom|whose|where|when|while|"
     r"wherein|comprising|consisting|including|having|configured|"
     r"adapted|arranged|coupled|connected|mounted|disposed|"
     r"extends|provides|receives|generates|produces|performs|"
     r"executes|transmits|operates|determines|defines|forms|"
     r"supports|enables|allows|causes|includes|contains|"
+    r"encompasses|creates|maintains|controls|establishes|"
+    r"represents|surrounds|overlaps|"
     r"a|an|the|said)"
 )
 
@@ -89,6 +96,8 @@ _VERB_STOPS = {
     "connects", "abuts", "faces", "carries", "covers",
     "executes", "transmits", "generates", "determines", "operates",
     "leaves", "allows", "enables", "prevents", "permits",
+    "encompasses", "contains", "produces", "creates", "maintains",
+    "controls", "establishes", "represents", "surrounds", "overlaps",
     # Modal verbs
     "must", "shall", "should", "can", "could", "may", "might", "will", "would",
 }
@@ -102,6 +111,21 @@ _ING_VERB_ONLY = {
 
 # Known -ed words that are nouns, not participles
 _ED_NOUNS = {"bed", "red", "shed", "led", "fed", "infrared", "overhead"}
+
+# Prepositions that should not end a noun phrase
+_PREPOSITION_STOPS = {
+    "along", "between", "through", "within", "upon", "above", "below",
+    "across", "toward", "towards", "against", "around", "during", "into",
+    "onto", "over", "under", "from", "with", "without", "beside", "beneath",
+    "beyond", "behind", "before", "after", "among", "about", "inside",
+    "outside", "throughout", "near", "past", "until",
+}
+
+# Trailing conjunctions and relative pronouns
+_TRAILING_FUNCTION_WORDS = {
+    "and", "or", "but", "that", "which", "who", "whom", "whose",
+    "where", "when", "while", "if", "so", "yet", "nor",
+}
 
 # Quantifiers/pronouns that should NOT be flagged as standalone elements
 _QUANTIFIER_STOPS = {
@@ -133,6 +157,8 @@ def _should_strip_trailing(word: str) -> bool:
         w in _ADVERB_STOPS
         or w in _VERB_STOPS
         or w in _ING_VERB_ONLY
+        or w in _PREPOSITION_STOPS
+        or w in _TRAILING_FUNCTION_WORDS
         or _is_likely_past_participle(w)
     )
 

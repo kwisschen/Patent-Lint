@@ -1,15 +1,16 @@
 {
   "header": { "title": "PatentLint", "subtitle": "特許明細書品質チェックツール" },
   "dropzone": { "title": "特許 .docx ファイルをここにドロップ", "subtitle": "またはクリックして参照", "notice": "現在、米国特許明細書（.docx）のみ対応しています。", "reject": ".docx ファイルのみ対応" },
-  "summary": { "specParagraphs": "明細書段落数", "totalClaims": "請求項総数", "figures": "図面", "abstractWords": "要約語数", "claimTypes": "請求項種別", "method": "方法", "product": "物", "outsideRange": "50–150語の範囲外" },
-  "section": { "specification": "明細書", "claims": "特許請求の範囲", "drawings": "図面の簡単な説明", "abstract": "要約書", "deepAnalysis": "深度分析" },
+  "summary": { "specParagraphs": "明細書段落数", "claims": "請求項", "independent": "独立項", "dependent": "従属項", "figures": "図面", "abstractWords": "要約語数", "claimCategories": "請求項カテゴリ", "method": "方法", "apparatus": "装置", "outsideRange": "50–150語の範囲外" },
+  "section": { "specification": "明細書", "claims": "特許請求の範囲", "drawings": "図面の簡単な説明", "drawingsShort": "図面", "abstract": "要約書" },
   "status": { "pass": "合格", "verify": "確認", "amend": "修正" },
   "button": { "downloadPdf": "PDFレポートをダウンロード", "copySummary": "要約をコピー", "copied": "コピーしました！", "newAnalysis": "再分析", "generating": "生成中..." },
   "diagram": { "show": "図表を表示", "hide": "図表を非表示" },
-  "tree": { "productClaims": "物の請求項", "methodClaims": "方法の請求項", "independent": "独立項", "dependent": "従属項", "deps": "個の従属項", "dep": "個の従属項" },
+  "tree": { "apparatusClaims": "物の請求項", "methodClaims": "方法の請求項", "independent": "独立項", "dependent": "従属項", "deps": "個の従属項", "dep": "個の従属項" },
+  "section112": { "title": "§ 112 分析" },
   "analysis": { "analyzing": "特許文書を分析中...", "label": "分析結果" },
   "footer": { "disclaimer": "本レポートは法的助言を構成するものではありません" },
-  "antecedentBasis": { "title": "先行詞根拠の確認", "items": "件", "item": "件" },
+  "antecedentBasis": { "title": "先行詞根拠の確認", "items": "個の用語", "item": "個の用語" },
   "specSupport": { "title": "明細書サポートの確認", "items": "個の用語", "item": "個の用語" },
   "triage": { "title": "優先事項の要約", "amend": "修正が必要", "amendEmpty": "修正が必要な項目はありません。", "verify": "専門家の確認", "verifyEmpty": "確認が必要な項目はありません。", "pass": "合格", "items": "件", "item": "件" },
   "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
@@ -73,13 +74,12 @@
         "amend": "「wherein」のコンマの使用が不正確です。",
         "pass": "「wherein」のコンマの使用は正確です。"
       },
-      "overview": "請求項の概要。",
       "meansFunction": {
         "verify": "請求項が 35 U.S.C. § 112(f) のミーンズ・プラス・ファンクションに該当する可能性があります。",
         "pass": "ミーンズ・プラス・ファンクション用語は検出されませんでした。"
       },
       "antecedentBasis": {
-        "verify": "先行詞の根拠（antecedent basis）が不足している可能性があります。",
+        "verify": "先行詞の根拠（antecedent basis）の不足が検出されました。",
         "pass": "先行詞の根拠の問題は検出されませんでした。"
       }
     },
@@ -113,8 +113,7 @@
       "sequential": {
         "amend": "図面番号が連続していません。",
         "pass": "図面番号は連続しています。"
-      },
-      "count": "個の図面。"
+      }
     }
   },
   "loading": {

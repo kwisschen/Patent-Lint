@@ -75,7 +75,7 @@ export default function SpecSupportCard({ unsupportedTerms }) {
 
   return (
     <div
-      className="mt-3 rounded-lg border-l-4 border bg-card overflow-hidden"
+      className="rounded-lg border-l-4 border bg-card overflow-hidden"
       style={{ borderLeftColor: 'var(--attention-border)' }}
     >
       <div className="flex items-center gap-3 px-4 py-3">

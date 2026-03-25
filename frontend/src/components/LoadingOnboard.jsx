@@ -18,43 +18,53 @@ export default function LoadingOnboard({ progress, onReady }) {
   const [visible, setVisible] = useState(true)
   const [fading, setFading] = useState(false)
   const [revealCount, setRevealCount] = useState(0)
-  const mountTime = useRef(Date.now())
+  const revealRef = useRef(0)
+  const intervalRef = useRef(null)
 
   // Staggered reveal: show one more feature every STAGGER_MS
   useEffect(() => {
-    const id = setInterval(() => {
-      setRevealCount(c => {
-        if (c >= FEATURES.length) {
-          clearInterval(id)
-          return c
-        }
-        return c + 1
-      })
+    intervalRef.current = setInterval(() => {
+      if (revealRef.current >= FEATURES.length) {
+        clearInterval(intervalRef.current)
+        return
+      }
+      revealRef.current += 1
+      setRevealCount(revealRef.current)
     }, STAGGER_MS)
-    return () => clearInterval(id)
+    return () => clearInterval(intervalRef.current)
   }, [])
 
-  // Handle ready state: pause → fade out → signal parent
+  // Handle ready state: stop interval → finish staggered reveal → fade out → signal parent
   useEffect(() => {
     if (progress.percent < 100) return
 
-    // Reveal any remaining features immediately
-    setRevealCount(FEATURES.length)
+    // Stop the interval so it doesn't race with our scheduled timeouts
+    clearInterval(intervalRef.current)
 
-    const t1 = setTimeout(() => {
-      setFading(true)
-      const t2 = setTimeout(() => {
-        setVisible(false)
-        onReady?.()
-      }, FADE_DURATION_MS)
-      return () => clearTimeout(t2)
-    }, READY_PAUSE_MS)
-    return () => clearTimeout(t1)
-  }, [progress.percent, onReady])
+    // Schedule remaining features at consistent STAGGER_MS intervals, then fade out
+    const remaining = FEATURES.length - revealRef.current
+    const timers = []
+    for (let i = 0; i < remaining; i++) {
+      timers.push(setTimeout(() => {
+        revealRef.current += 1
+        setRevealCount(revealRef.current)
+      }, STAGGER_MS * (i + 1)))
+    }
+    const fadeDelay = STAGGER_MS * remaining + READY_PAUSE_MS
+    timers.push(setTimeout(() => setFading(true), fadeDelay))
+    timers.push(setTimeout(() => { setVisible(false); onReady?.() }, fadeDelay + FADE_DURATION_MS))
+    return () => timers.forEach(clearTimeout)
+  }, [progress.percent >= 100])
 
   if (!visible) return null
 
-  const isReady = progress.percent >= 100
+  // Cap displayed progress so the bar stays in sync with the feature reveal.
+  // It reaches 100% only when all features are visible.
+  const allRevealed = revealCount >= FEATURES.length
+  const displayPercent = allRevealed
+    ? progress.percent
+    : Math.min(progress.percent, 15 + (revealCount / FEATURES.length) * 75)
+  const isReady = allRevealed && progress.percent >= 100
 
   return (
     <div
@@ -74,8 +84,8 @@ export default function LoadingOnboard({ progress, onReady }) {
             <div
               className="h-full rounded-full"
               style={{
-                width: `${progress.percent}%`,
-                transition: 'width 0.3s ease',
+                width: `${displayPercent}%`,
+                transition: 'width 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
                 background: isReady
                   ? 'var(--color-green-500, #22c55e)'
                   : 'linear-gradient(90deg, var(--color-blue-500, #3b82f6), var(--color-cyan-500, #06b6d4))',
@@ -85,7 +95,7 @@ export default function LoadingOnboard({ progress, onReady }) {
           <p className="mt-2 text-sm text-muted-foreground">
             {isReady
               ? `✓ ${t('loading.ready')}`
-              : `${t(`loading.${stageKey(progress.message)}`)} ${progress.percent}%`}
+              : `${t(`loading.${stageKey(progress.message)}`)} ${Math.round(displayPercent)}%`}
           </p>
         </div>
 

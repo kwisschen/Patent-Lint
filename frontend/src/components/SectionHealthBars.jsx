@@ -37,9 +37,9 @@ export default function SectionHealthBars({ data }) {
   const { t } = useTranslation()
   const sections = [
     { label: t('section.specification'), checks: data.specification_checks },
+    { label: t('section.drawingsShort'), checks: data.drawings_checks },
     { label: t('section.claims'), checks: data.claims_checks },
     { label: t('section.abstract'), checks: data.abstract_checks },
-    { label: t('section.drawings'), checks: data.drawings_checks },
   ]
 
   return (

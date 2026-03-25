@@ -593,7 +593,7 @@ class AnalysisResult(BaseModel):
 
         claim_trees: list[ClaimTreeGroup] = []
         if product_rows:
-            claim_trees.append(ClaimTreeGroup(label="Product Claims", rows=product_rows))
+            claim_trees.append(ClaimTreeGroup(label="Apparatus Claims", rows=product_rows))
         if method_rows:
             claim_trees.append(ClaimTreeGroup(label="Method Claims", rows=method_rows))
 

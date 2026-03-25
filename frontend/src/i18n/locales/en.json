@@ -1,15 +1,16 @@
 {
   "header": { "title": "PatentLint", "subtitle": "Patent Draft Quality Checker" },
   "dropzone": { "title": "Drop your patent .docx here", "subtitle": "or click to browse", "notice": "Currently supports U.S. patent specifications (.docx) only.", "reject": "Only .docx files are accepted" },
-  "summary": { "specParagraphs": "Specification Paragraphs", "totalClaims": "Total Claims", "figures": "Figures", "abstractWords": "Abstract Words", "claimTypes": "Claim Types", "method": "method", "product": "product", "outsideRange": "Outside 50–150 range" },
-  "section": { "specification": "Specification", "claims": "Claims", "drawings": "Description of Drawings", "abstract": "Abstract", "deepAnalysis": "Deep Analysis" },
+  "summary": { "specParagraphs": "Specification Paragraphs", "claims": "Claims", "independent": "independent", "dependent": "dependent", "figures": "Figures", "abstractWords": "Abstract Words", "claimCategories": "Claim Categories", "method": "method", "apparatus": "apparatus", "outsideRange": "Outside 50–150 range" },
+  "section": { "specification": "Specification", "claims": "Claims", "drawings": "Brief Description of Drawings", "drawingsShort": "Drawings", "abstract": "Abstract" },
   "status": { "pass": "PASS", "verify": "VERIFY", "amend": "AMEND" },
   "button": { "downloadPdf": "Download PDF Report", "copySummary": "Copy Summary", "copied": "Copied!", "newAnalysis": "New Analysis", "generating": "Generating..." },
   "diagram": { "show": "Show Diagram", "hide": "Hide Diagram" },
-  "tree": { "productClaims": "Product Claims", "methodClaims": "Method Claims", "independent": "Independent", "dependent": "Dependent", "deps": "deps", "dep": "dep" },
+  "tree": { "apparatusClaims": "Apparatus Claims", "methodClaims": "Method Claims", "independent": "Independent", "dependent": "Dependent", "deps": "deps", "dep": "dep" },
+  "section112": { "title": "§ 112 Analysis" },
   "analysis": { "analyzing": "Analyzing patent document...", "label": "Analysis" },
   "footer": { "disclaimer": "Not legal advice" },
-  "antecedentBasis": { "title": "Antecedent Basis Review", "items": "items", "item": "item" },
+  "antecedentBasis": { "title": "Antecedent Basis Review", "items": "terms", "item": "term" },
   "specSupport": { "title": "Specification Support Review", "items": "terms", "item": "term" },
   "triage": { "title": "Priority Summary", "amend": "Action Required", "amendEmpty": "No issues requiring amendment.", "verify": "Expert Review", "verifyEmpty": "No items flagged for review.", "pass": "Passed", "items": "items", "item": "item" },
   "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
@@ -73,13 +74,12 @@
         "amend": "Incorrect wherein comma usage.",
         "pass": "Wherein comma usage is correct."
       },
-      "overview": "Claims overview.",
       "meansFunction": {
         "verify": "Claims may invoke 35 U.S.C. § 112(f) means-plus-function.",
         "pass": "No means-plus-function language detected."
       },
       "antecedentBasis": {
-        "verify": "Possible missing antecedent basis found.",
+        "verify": "Missing antecedent basis detected.",
         "pass": "No antecedent basis issues detected."
       }
     },
@@ -113,8 +113,7 @@
       "sequential": {
         "amend": "Figures are not in sequential order.",
         "pass": "Figures are in sequential order."
-      },
-      "count": "figure(s) found."
+      }
     }
   },
   "loading": {
