@@ -72,7 +72,7 @@ class TestRenderHtml:
         assert "Specification" in html
         assert "Claims" in html
         assert "Abstract" in html
-        assert "Description of Drawings" in html
+        assert "Brief Description of Drawings" in html
 
     def test_contains_status_tags(self, sample_result):
         html = render_html(sample_result)
@@ -88,7 +88,7 @@ class TestRenderHtml:
 
     def test_contains_claim_trees(self, sample_result):
         html = render_html(sample_result)
-        assert "Product Claims" in html
+        assert "Apparatus Claims" in html
         assert "Method Claims" in html
         assert "Independent" in html
         assert "Dependent" in html
@@ -144,12 +144,12 @@ class TestToReportData:
     def test_claim_trees_groups(self, sample_result):
         data = sample_result.to_report_data()
         labels = [g.label for g in data.claim_trees]
-        assert "Product Claims" in labels
+        assert "Apparatus Claims" in labels
         assert "Method Claims" in labels
 
     def test_claim_tree_chain_format(self, sample_result):
         data = sample_result.to_report_data()
-        product_group = next(g for g in data.claim_trees if g.label == "Product Claims")
+        product_group = next(g for g in data.claim_trees if g.label == "Apparatus Claims")
         dep_row = next(r for r in product_group.rows if r.claim_id == 2)
         # Chain should use ← arrows
         assert "\u2190" in dep_row.chain

@@ -74,6 +74,81 @@ class TestPreservation:
         assert clean_noun_phrase("housing") == "housing"
 
 
+class TestTrailingPrepositions:
+    """Trailing prepositions should be stripped from noun phrases."""
+
+    def test_trailing_along(self):
+        assert clean_noun_phrase("alignment glass sheet along") == "alignment glass sheet"
+
+    def test_trailing_between(self):
+        assert clean_noun_phrase("space between") == "space"
+
+    def test_trailing_through(self):
+        assert clean_noun_phrase("passage through") == "passage"
+
+    def test_trailing_upon(self):
+        assert clean_noun_phrase("conductive layer upon") == "conductive layer"
+
+    def test_regex_does_not_capture_along(self):
+        """Regex-level: 'along' should never be part of a captured noun phrase."""
+        refs = extract_definite_refs("the alignment glass sheet along the centerline")
+        assert "alignment glass sheet" in refs
+        assert not any("along" in r for r in refs)
+
+    def test_regex_does_not_capture_between(self):
+        refs = extract_definite_refs("the gap between the walls")
+        assert "gap" in refs
+        assert not any("between" in r for r in refs)
+
+
+class TestTrailingFunctionWords:
+    """Trailing conjunctions and relative pronouns should be stripped."""
+
+    def test_trailing_and(self):
+        assert clean_noun_phrase("mounting bracket and") == "mounting bracket"
+
+    def test_trailing_that(self):
+        assert clean_noun_phrase("filter element that") == "filter element"
+
+    def test_trailing_which(self):
+        assert clean_noun_phrase("housing assembly which") == "housing assembly"
+
+
+class TestNoFalseStripping:
+    """Words that look like function words but are part of the noun should be preserved."""
+
+    def test_sensor_chip(self):
+        assert clean_noun_phrase("sensor chip") == "sensor chip"
+
+    def test_alignment_slot(self):
+        assert clean_noun_phrase("alignment slot") == "alignment slot"
+
+
+class TestTrailingVerbS:
+    """Bug: Third-person present tense verbs (-s/-es) captured as part of noun phrases."""
+
+    def test_trailing_encompasses(self):
+        assert clean_noun_phrase("protective layer encompasses") == "protective layer"
+
+    def test_trailing_contains(self):
+        assert clean_noun_phrase("storage container contains") == "storage container"
+
+    def test_trailing_produces(self):
+        assert clean_noun_phrase("reaction chamber produces") == "reaction chamber"
+
+    def test_trailing_creates(self):
+        assert clean_noun_phrase("processing module creates") == "processing module"
+
+    def test_trailing_maintains(self):
+        assert clean_noun_phrase("control unit maintains") == "control unit"
+
+    def test_trailing_represents(self):
+        assert clean_noun_phrase("data structure represents") == "data structure"
+
+    def test_trailing_overlaps(self):
+        assert clean_noun_phrase("sealing flange overlaps") == "sealing flange"
+
+
 class TestCaptureWidth:
     """Bug 5: Noun phrase capture should handle up to 6 words."""
 
@@ -191,6 +266,37 @@ class TestHyphenatedAntecedentBasis:
         terms = [i["term"] for i in issues if i["claim_id"] == 1]
         assert "multi-stage filter circuit" not in terms
         assert "multi" not in terms
+
+    def test_trailing_preposition_not_in_term(self):
+        """'alignment glass sheet along' — 'along' must not appear in stored term."""
+        from patentlint.analysis.claims import check_antecedent_basis
+        from patentlint.models import Claim
+
+        claims = [Claim(
+            id=7,
+            text="A device comprising an alignment glass sheet along a centerline, wherein the alignment glass sheet along the centerline is transparent.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 7]
+        # "alignment glass sheet" should match intro — no issue reported
+        assert "alignment glass sheet along" not in terms
+        assert "alignment glass sheet" not in terms
+
+    def test_trailing_between_not_in_term(self):
+        """'gap between' — 'between' must not appear in stored term."""
+        from patentlint.analysis.claims import check_antecedent_basis
+        from patentlint.models import Claim
+
+        claims = [Claim(
+            id=1,
+            text="A device comprising a gap between two walls, wherein the gap is sealed.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "gap between" not in terms
+        assert "gap" not in terms
 
     def test_non_transitory_intro_and_ref(self):
         from patentlint.analysis.claims import check_antecedent_basis

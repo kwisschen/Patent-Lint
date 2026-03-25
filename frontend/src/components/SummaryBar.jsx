@@ -13,25 +13,25 @@ function StatCard({ label, value, subtitle }) {
   )
 }
 
-function getClaimTypeSplit(claimTrees) {
+function getClaimCategorySplit(claimTrees) {
   let method = 0
-  let product = 0
+  let apparatus = 0
   if (claimTrees) {
     claimTrees.forEach((group) => {
       if (group.label === 'Method Claims') {
         method = group.rows.length
       } else {
-        product += group.rows.length
+        apparatus += group.rows.length
       }
     })
   }
-  return { method, product }
+  return { method, apparatus }
 }
 
 export default function SummaryBar({ data }) {
   const { t } = useTranslation()
   const abstractOutOfRange = data.abstract_word_count < 50 || data.abstract_word_count > 150
-  const { method, product } = getClaimTypeSplit(data.claim_trees)
+  const { method, apparatus } = getClaimCategorySplit(data.claim_trees)
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
@@ -39,11 +39,36 @@ export default function SummaryBar({ data }) {
         label={t('summary.specParagraphs')}
         value={data.paragraph_count}
       />
-      <StatCard
-        label={t('summary.totalClaims')}
-        value={data.total_claims}
-        subtitle={`${data.independent_count}i / ${data.dependent_count}d`}
-      />
+      <Card>
+        <CardContent className="p-4">
+          <p className="text-sm text-muted-foreground">{t('summary.claims')}</p>
+          <div className="mt-1 space-y-0.5">
+            <p className="flex items-baseline">
+              <span className="text-2xl font-bold">{data.independent_count}</span>
+              <span className="text-sm text-muted-foreground ml-1.5">{t('summary.independent')}</span>
+            </p>
+            <p className="flex items-baseline">
+              <span className="text-2xl font-bold">{data.dependent_count}</span>
+              <span className="text-sm text-muted-foreground ml-1.5">{t('summary.dependent')}</span>
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent className="p-4">
+          <p className="text-sm text-muted-foreground">{t('summary.claimCategories')}</p>
+          <div className="mt-1 space-y-0.5">
+            <p className="flex items-baseline">
+              <span className="text-2xl font-bold">{method}</span>
+              <span className="text-sm text-muted-foreground ml-1.5">{t('summary.method')}</span>
+            </p>
+            <p className="flex items-baseline">
+              <span className="text-2xl font-bold">{apparatus}</span>
+              <span className="text-sm text-muted-foreground ml-1.5">{t('summary.apparatus')}</span>
+            </p>
+          </div>
+        </CardContent>
+      </Card>
       <StatCard
         label={t('summary.figures')}
         value={data.figure_count}
@@ -56,11 +81,6 @@ export default function SummaryBar({ data }) {
           </span>
         }
         subtitle={abstractOutOfRange ? t('summary.outsideRange') : null}
-      />
-      <StatCard
-        label={t('summary.claimTypes')}
-        value={`${method + product}`}
-        subtitle={`${method} ${t('summary.method')} / ${product} ${t('summary.product')}`}
       />
     </div>
   )

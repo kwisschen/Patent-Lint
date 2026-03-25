@@ -121,6 +121,24 @@ def parse_claims(claims_text: str) -> list[Claim]:
     return claims
 
 
+_PARENTHETICAL_PREPS = {"in", "on", "at", "for", "by", "with", "from", "of", "to", "during", "after", "before", "under", "over", "between", "among", "within", "along", "through", "across", "upon"}
+
+
+def _is_parenthetical_prep_phrase(text_after_comma: str) -> bool:
+    """Detect parenthetical prepositional phrases: 'wherein, <prep ...>, <clause>'.
+
+    Pattern: text starts with a preposition and contains another comma
+    within ~60 characters, indicating a parenthetical insertion where both
+    commas are grammatically correct.
+    """
+    stripped = text_after_comma.strip().lower()
+    first_word = stripped.split()[0] if stripped.split() else ""
+    if first_word not in _PARENTHETICAL_PREPS:
+        return False
+    second_comma = stripped.find(",")
+    return 0 < second_comma <= 60
+
+
 def detect_wherein_issue(claim_text: str) -> bool:
     """Check a single claim for wherein comma issues. Returns True if issue found."""
     for match in re.finditer(r"\bwherein\b", claim_text, re.IGNORECASE):
@@ -132,6 +150,10 @@ def detect_wherein_issue(claim_text: str) -> bool:
 
         has_comma = following.startswith(",")
         remaining = following.lstrip(",").strip().lower()
+
+        # Skip parenthetical prepositional phrases: "wherein, in each group, the..."
+        if has_comma and _is_parenthetical_prep_phrase(remaining):
+            continue
 
         requires_comma = False
 

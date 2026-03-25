@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AlertCircle, Search, CheckCircle, ChevronDown } from 'lucide-react'
+import { getCitation } from './CheckItem'
 
 const GROUP_CONFIG = [
   { status: 'amend', titleKey: 'triage.amend', emptyKey: 'triage.amendEmpty', Icon: AlertCircle },
@@ -10,12 +11,18 @@ const GROUP_CONFIG = [
 
 function TriageItem({ check, t, i18n, compact }) {
   const msg = check.message_key && i18n.exists(check.message_key) ? t(check.message_key) : check.message
+  const citation = getCitation(check.message_key)
 
   return (
     <div className="flex items-start gap-2 py-1.5 px-3">
-      <span className="shrink-0 rounded bg-secondary px-1.5 py-0.5 text-[10px] font-medium leading-none text-secondary-foreground mt-0.5">
+      <span className="shrink-0 text-[11px] text-muted-foreground mt-0.5">
         {check.section}
       </span>
+      {citation && (
+        <span className="citation-badge shrink-0 rounded px-1.5 py-0.5 text-[11px] font-mono leading-none mt-0.5">
+          {citation}
+        </span>
+      )}
       <div className="min-w-0">
         <span className="text-sm">{msg}</span>
         {!compact && check.details && (
@@ -70,8 +77,8 @@ export default function TriagePanel({ data }) {
 
   const allChecks = [
     ...(data.specification_checks || []).map((c) => ({ ...c, section: t('section.specification') })),
+    ...(data.drawings_checks || []).map((c) => ({ ...c, section: t('section.drawingsShort') })),
     ...(data.claims_checks || []).map((c) => ({ ...c, section: t('section.claims') })),
-    ...(data.drawings_checks || []).map((c) => ({ ...c, section: t('section.drawings') })),
     ...(data.abstract_checks || []).map((c) => ({ ...c, section: t('section.abstract') })),
   ]
 
