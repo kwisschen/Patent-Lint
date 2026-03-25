@@ -6,10 +6,11 @@ import DropZone from './components/DropZone'
 import AnalysisReport from './components/AnalysisReport'
 import LoadingOnboard from './components/LoadingOnboard'
 import { usePyodide } from './hooks/usePyodide'
-import { analyzeDocument, downloadReport } from './api'
+import { analyzeDocument, downloadReport as downloadReportServer } from './api'
+import { downloadReport as downloadReportClient } from './lib/pdfExport'
 
 function App() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [state, setState] = useState('idle')
   const [result, setResult] = useState(null)
   const [file, setFile] = useState(null)
@@ -49,7 +50,11 @@ function App() {
     if (!file) return
     setDownloading(true)
     try {
-      await downloadReport(file)
+      if (pyodide.ready && result) {
+        await downloadReportClient(result, t, i18n.language, file.name)
+      } else {
+        await downloadReportServer(file)
+      }
     } catch (err) {
       setError(err.message)
     } finally {
