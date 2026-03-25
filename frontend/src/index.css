@@ -187,3 +187,19 @@
   color: #94a3b8;
   border: 1px solid rgba(100, 116, 139, 0.2);
 }
+
+/* Print styles for "Print Report" button */
+@media print {
+  header, .drop-zone, .theme-toggle, .language-switcher,
+  .no-print, footer { display: none !important; }
+
+  /* Hide the sticky bottom action bar entirely when printing */
+  .fixed.bottom-0 { display: none !important; }
+
+  body { background: white !important; color: black !important; }
+
+  .analysis-report, main { max-width: 100% !important; padding: 0 !important; }
+
+  /* Avoid breaking inside section panels */
+  [data-state] { break-inside: avoid; }
+}
