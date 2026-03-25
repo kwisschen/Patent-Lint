@@ -24,7 +24,7 @@ Each finding is classified as **PASS**, **VERIFY** (needs expert review), or **A
 - Mermaid claim dependency diagram
 - Health donut chart and section bar charts
 - Antecedent basis review card with highlighted flagged terms
-- Downloadable PDF report
+- Client-side PDF report generation (pdfmake — no server round-trip)
 - Copy summary to clipboard
 - Dark / light mode
 - Internationalization: English, 繁體中文, 简体中文, 日本語
@@ -32,29 +32,31 @@ Each finding is classified as **PASS**, **VERIFY** (needs expert review), or **A
 ## Architecture
 
 ```
-                    ┌──────────────────────┐
-                    │   React Frontend     │
-                    │  (Vite + shadcn/ui)  │
-                    └──────────┬───────────┘
-                               │ /api/*
-                    ┌──────────▼───────────┐
-                    │   FastAPI (app.py)    │
-                    └──────────┬───────────┘
-                               │
-                    ┌──────────▼───────────┐
-                    │   pipeline.py        │
-                    │  analyze_file()      │
-                    │  analyze_bytes()     │
-                    └──────────┬───────────┘
-                    ┌──────────▼───────────┐
-          ┌─────────┤   parser/ + analysis/ ├──────────┐
-          │         │  (pure Python, zero   │          │
-          │         │   framework deps)     │          │
-          │         └───────────────────────┘          │
-    ┌─────▼─────┐                             ┌───────▼───────┐
-    │  Click CLI │                             │ PDF Report    │
-    │  (cli.py)  │                             │ (weasyprint)  │
-    └───────────┘                              └───────────────┘
+                         ┌──────────────────────┐
+                         │   React Frontend     │
+                         │  (Vite + shadcn/ui)  │
+                         └─────┬──────────┬─────┘
+               Web (default)   │          │   Docker/self-hosted
+          ┌────────────────────┘          └──────────────────┐
+          ▼                                                  ▼
+┌──────────────────┐                              ┌──────────────────┐
+│  Pyodide/WASM    │                              │  FastAPI (app.py) │
+│  (in-browser     │                              └────────┬─────────┘
+│   analysis)      │                                       │
+└────────┬─────────┘                              ┌────────▼─────────┐
+         │                                        │  pipeline.py     │
+         │         ┌───────────────────────┐      │  analyze_file()  │
+         └────────►│  parser/ + analysis/  │◄─────┘  analyze_bytes() │
+                   │  (pure Python, zero   │      └──────────────────┘
+                   │   framework deps)     │
+                   └───────────────────────┘
+                              │
+              ┌───────────────┼───────────────┐
+              ▼               ▼               ▼
+    ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+    │   pdfmake    │ │  weasyprint  │ │  Click CLI   │
+    │ (web, client)│ │ (Docker/CLI) │ │  (cli.py)    │
+    └──────────────┘ └──────────────┘ └──────────────┘
 ```
 
 ```
@@ -162,10 +164,10 @@ curl http://localhost:8000/api/health
 |-------|-----------|
 | Backend | Python 3.12, FastAPI, Pydantic |
 | Frontend | React 18, Vite, Tailwind CSS v4, shadcn/ui |
-| PDF Generation | Jinja2 + weasyprint |
+| PDF Generation | pdfmake (web, client-side) · Jinja2 + weasyprint (Docker/CLI) |
 | Claim Diagrams | Mermaid |
 | CLI | Click |
-| Testing | pytest (215+ tests) |
+| Testing | pytest (321 tests) |
 | CI/CD | GitHub Actions, Docker |
 | i18n | react-i18next |
 
