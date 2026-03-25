@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2025 Christopher Chen
 """Patent document section extraction using regex patterns.
 
 All functions are pure — no side effects, no I/O.

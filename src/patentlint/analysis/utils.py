@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2025 Christopher Chen
 """Shared analysis utilities.
 
 Extracted from analysis/claims.py for reuse across multiple checks.

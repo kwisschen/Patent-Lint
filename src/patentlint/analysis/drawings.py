@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2025 Christopher Chen
 """Brief Description of Drawings analysis.
 
 Figure counting, sequential ordering, single-figure format, and prior art reference detection.

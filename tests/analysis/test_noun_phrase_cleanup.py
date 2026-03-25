@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2025 Christopher Chen
 """Tests for noun phrase cleanup and capture width (Bugs 3, 5, 6b, 10, 11, 12)."""
 
 from patentlint.analysis.utils import (

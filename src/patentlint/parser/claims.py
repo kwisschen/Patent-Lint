@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2025 Christopher Chen
 """Patent claim parsing and analysis.
 
 Parses claim text into structured Claim objects and detects

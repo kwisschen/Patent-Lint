@@ -1,7 +1,9 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "license": "AGPL-3.0-only",
+  "author": "Christopher Chen",
   "type": "module",
   "scripts": {
     "dev": "vite",

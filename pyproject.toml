@@ -7,7 +7,7 @@ name = "patentlint"
 version = "1.0.0"
 description = "Rule-based patent specification analyzer for USPTO/MPEP compliance"
 readme = "README.md"
-license = "MIT"
+license = "AGPL-3.0-only"
 requires-python = ">=3.11"
 authors = [
     { name = "Christopher Chen" },
@@ -16,6 +16,7 @@ keywords = ["patent", "USPTO", "MPEP", "linting", "legal-tech"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Legal Industry",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
     "Topic :: Text Processing :: Linguistic",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",

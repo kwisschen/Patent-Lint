@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2025 Christopher Chen
 """Tests for the DOCX loader module.
 
 Creates minimal .docx files using python-docx as test fixtures.
