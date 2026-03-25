@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2025 Christopher Chen
 """Tests for check_spec_support — Phase 4 B3."""
 
 from patentlint.models import Claim

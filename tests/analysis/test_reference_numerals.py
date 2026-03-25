@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2025 Christopher Chen
 """Tests for reference numeral inventory extraction (Bugs 7 & 8)."""
 
 import pytest

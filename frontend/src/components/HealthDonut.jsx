@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (c) 2025 Christopher Chen
 import { useTranslation } from 'react-i18next'
 
 export default function HealthDonut({ data }) {

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2025 Christopher Chen
 """Adversarial tests for section extraction — Phase 4 B6 audit."""
 
 import pytest

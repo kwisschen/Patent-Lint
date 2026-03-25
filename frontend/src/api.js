@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (c) 2025 Christopher Chen
 const API_BASE = '';
 
 export async function analyzeDocument(file) {

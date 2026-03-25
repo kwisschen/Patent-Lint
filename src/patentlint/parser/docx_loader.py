@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2025 Christopher Chen
 """DOCX document loader using python-docx.
 
 Extracts numbered paragraphs from patent .docx files, tracking paragraph and claim
