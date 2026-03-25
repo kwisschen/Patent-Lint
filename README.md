@@ -177,4 +177,6 @@ This tool does not constitute legal advice. All findings should be reviewed by a
 
 ## License
 
-© 2025 Christopher Chen. All rights reserved.
+AGPL-3.0 — see [LICENSE](LICENSE) for details.
+
+© 2025 Christopher Chen

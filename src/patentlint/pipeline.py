@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2025 Christopher Chen
 """PatentLint analysis pipeline — zero web-framework dependencies.
 
 Entry points for CLI and API. This module is also what Pyodide calls in the browser.

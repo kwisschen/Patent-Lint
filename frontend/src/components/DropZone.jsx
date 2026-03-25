@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (c) 2025 Christopher Chen
 import { useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Upload } from 'lucide-react'

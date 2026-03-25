@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2025 Christopher Chen
 """Tests for patentlint.parser.sections — direct port of Java characterization tests."""
 
 from patentlint.parser.sections import (

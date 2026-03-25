@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (c) 2025 Christopher Chen
 """Abstract section analysis.
 
 Checks word count, structure, implied phrases, and improper wording per MPEP § 608.01(b).
