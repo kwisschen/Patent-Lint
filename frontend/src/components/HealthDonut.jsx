@@ -1,9 +1,20 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2025 Christopher Chen
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useCountUp } from '../hooks/useCountUp'
 
-export default function HealthDonut({ data }) {
+export default function HealthDonut({ data, animate = false }) {
   const { t } = useTranslation()
+  const [drawn, setDrawn] = useState(false)
+
+  useEffect(() => {
+    if (animate) {
+      const timer = setTimeout(() => setDrawn(true), 100)
+      return () => clearTimeout(timer)
+    }
+  }, [animate])
+
   const allChecks = [
     ...(data.specification_checks || []),
     ...(data.claims_checks || []),
@@ -35,10 +46,15 @@ export default function HealthDonut({ data }) {
     const fraction = seg.count / total
     const dash = fraction * circumference
     const gap = circumference - dash
-    const arc = { ...seg, dashArray: `${dash} ${gap}`, dashOffset: -offset }
+    const arc = { ...seg, dashArray: `${dash} ${gap}`, dashOffset: -offset, targetDash: dash }
     offset += dash
     return arc
   })
+
+  const amendCount = useCountUp(counts.amend, 600, animate)
+  const verifyCount = useCountUp(counts.verify, 600, animate)
+  const passCount = useCountUp(counts.pass, 600, animate)
+  const countMap = { amend: amendCount, verify: verifyCount, pass: passCount }
 
   return (
     <div className="flex flex-col items-center gap-3">
@@ -53,10 +69,11 @@ export default function HealthDonut({ data }) {
               fill="none"
               stroke={arc.color}
               strokeWidth={strokeWidth}
-              strokeDasharray={arc.dashArray}
+              strokeDasharray={drawn ? arc.dashArray : `0 ${circumference}`}
               strokeDashoffset={arc.dashOffset}
               strokeLinecap="butt"
               transform={`rotate(-90 ${size / 2} ${size / 2})`}
+              style={{ transition: 'stroke-dasharray 800ms ease-out' }}
             />
           ))}
         </svg>
@@ -72,7 +89,7 @@ export default function HealthDonut({ data }) {
               style={{ backgroundColor: seg.color }}
             />
             <span className="text-muted-foreground">{seg.label}</span>
-            <span className="font-semibold">{seg.count}</span>
+            <span className="font-semibold">{countMap[seg.key]}</span>
           </div>
         ))}
       </div>

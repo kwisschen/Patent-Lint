@@ -1,21 +1,44 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2025 Christopher Chen
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import ThemeToggle from './ThemeToggle'
 import LanguageSwitcher from './LanguageSwitcher'
 
 export default function Header({ onReset, canReset }) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const handleLogoClick = () => {
+    if (canReset) {
+      onReset()
+    }
+    navigate('/')
+  }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header
+      className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
+        scrolled
+          ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm'
+          : 'bg-background border-border'
+      }`}
+    >
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
         <div
-          role={canReset ? 'button' : undefined}
-          tabIndex={canReset ? 0 : undefined}
-          className={canReset ? 'cursor-pointer select-none' : undefined}
-          onClick={canReset ? onReset : undefined}
-          onKeyDown={canReset ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onReset() } } : undefined}
+          role="button"
+          tabIndex={0}
+          className="cursor-pointer select-none logo-hover"
+          onClick={handleLogoClick}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleLogoClick() } }}
         >
           <h1 className="text-lg font-bold tracking-tight">{t('header.title')}</h1>
           <p className="text-xs text-muted-foreground -mt-1">{t('header.subtitle')}</p>

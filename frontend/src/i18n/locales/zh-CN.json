@@ -4,12 +4,12 @@
   "summary": { "specParagraphs": "说明书段落", "claims": "权利要求", "independent": "独立项", "dependent": "从属项", "figures": "附图", "abstractWords": "摘要字数", "claimCategories": "权项类别", "method": "方法", "apparatus": "装置", "outsideRange": "超出 50–150 字范围" },
   "section": { "specification": "说明书", "claims": "权利要求书", "drawings": "附图简要说明", "drawingsShort": "附图", "abstract": "摘要" },
   "status": { "pass": "通过", "verify": "确认", "amend": "修改" },
-  "button": { "downloadPdf": "保存 PDF 报告", "copySummary": "复制摘要", "copied": "已复制！", "newAnalysis": "重新分析", "generating": "保存中..." },
+  "button": { "downloadPdf": "保存 PDF 报告", "newAnalysis": "重新分析", "generating": "保存中..." },
   "diagram": { "show": "显示图表", "hide": "隐藏图表" },
   "tree": { "apparatusClaims": "装置权利要求", "methodClaims": "方法权利要求", "independent": "独立权利要求", "dependent": "从属权利要求", "deps": "个从属项", "dep": "个从属项" },
   "section112": { "title": "§ 112 分析" },
   "analysis": { "analyzing": "正在分析专利文件...", "label": "分析结果" },
-  "footer": { "disclaimer": "本报告不构成法律意见" },
+  "footer": { "disclaimer": "本报告不构成法律意见", "builtBy": "Built by Christopher Chen", "security": "安全性", "about": "关于", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "意见反馈" },
   "antecedentBasis": { "title": "先行词基础检查", "items": "个术语", "item": "个术语" },
   "specSupport": { "title": "说明书支持检查", "items": "个术语", "item": "个术语" },
   "triage": { "title": "优先处理摘要", "amend": "需要修改", "amendEmpty": "无需修改的项目。", "verify": "专家确认", "verifyEmpty": "无需确认的项目。", "pass": "通过", "items": "个项目", "item": "个项目" },
@@ -168,6 +168,12 @@
     "preamble_noun_mismatch": "从属权利要求与独立权利要求前序名词不同。",
     "preamble_indefinite_article": "从属权利要求前序使用了不定冠词（应使用「The」）。",
     "spec_support_unsupported_terms": "权利要求术语在说明书中未找到。",
-    "spec_support_pass": "所有权利要求术语均在说明书中找到。"
+    "spec_support_pass": "所有权利要求术语均在说明书中找到。",
+    "required_sections_pass": "符合 MPEP § 608.01(a) 的所有必要章节均已存在。",
+    "required_sections_missing": "缺少 MPEP § 608.01(a) 规定的必要章节。",
+    "optional_section_missing": "未找到可选章节。如适用，请添加。",
+    "figure_xref_pass": "附图简要说明与 Detailed Description 之间的附图引用一致。",
+    "figure_xref_orphaned_brief": "附图在附图简要说明中描述但未在 Detailed Description 中引用。",
+    "figure_xref_orphaned_detailed": "附图在 Detailed Description 中引用但未在附图简要说明中描述。"
   }
 }

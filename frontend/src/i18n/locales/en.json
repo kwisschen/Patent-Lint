@@ -4,15 +4,42 @@
   "summary": { "specParagraphs": "Specification Paragraphs", "claims": "Claims", "independent": "independent", "dependent": "dependent", "figures": "Figures", "abstractWords": "Abstract Words", "claimCategories": "Claim Categories", "method": "method", "apparatus": "apparatus", "outsideRange": "Outside 50–150 range" },
   "section": { "specification": "Specification", "claims": "Claims", "drawings": "Brief Description of Drawings", "drawingsShort": "Drawings", "abstract": "Abstract" },
   "status": { "pass": "PASS", "verify": "VERIFY", "amend": "AMEND" },
-  "button": { "downloadPdf": "Save PDF Report", "copySummary": "Copy Summary", "copied": "Copied!", "newAnalysis": "New Analysis", "generating": "Saving..." },
+  "button": { "downloadPdf": "Save PDF Report", "newAnalysis": "New Analysis", "generating": "Saving..." },
   "diagram": { "show": "Show Diagram", "hide": "Hide Diagram" },
   "tree": { "apparatusClaims": "Apparatus Claims", "methodClaims": "Method Claims", "independent": "Independent", "dependent": "Dependent", "deps": "deps", "dep": "dep" },
   "section112": { "title": "§ 112 Analysis" },
   "analysis": { "analyzing": "Analyzing patent document...", "label": "Analysis" },
-  "footer": { "disclaimer": "Not legal advice" },
+  "footer": { "disclaimer": "Not legal advice", "builtBy": "Built by Christopher Chen", "security": "Security", "about": "About", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "Feedback" },
   "antecedentBasis": { "title": "Antecedent Basis Review", "items": "terms", "item": "term" },
   "specSupport": { "title": "Specification Support Review", "items": "terms", "item": "term" },
   "triage": { "title": "Priority Summary", "amend": "Action Required", "amendEmpty": "No issues requiring amendment.", "verify": "Expert Review", "verifyEmpty": "No items flagged for review.", "pass": "Passed", "items": "items", "item": "item" },
+  "security": {
+    "badge": {
+      "headline": "No install. No account. No cloud upload.",
+      "description": "Your confidential file is analyzed right here on your device.",
+      "proveIt": "Prove it →"
+    },
+    "results": {
+      "badge": "Analyzed on your device",
+      "networkActive": "Network active",
+      "networkIdle": "No network activity",
+      "howItWorks": "How does this work?"
+    },
+    "prove": {
+      "label1": "Go offline",
+      "label2": "Drop a file",
+      "label3": "It still works",
+      "label4": "The green dot",
+      "step1": "Turn off WiFi or enable airplane mode",
+      "step2": "Drag any .docx into PatentLint",
+      "step3": "No internet means no cloud, no upload, no data sent anywhere",
+      "step4": "Green means your browser sent nothing — verify anytime in DevTools → Network tab",
+      "testHeading": "Don't take our word for it",
+      "testDescription": "Tap the button and watch the request appear in your network activity log below",
+      "testButton": "Send a test request",
+      "logEmpty": "No requests yet"
+    }
+  },
   "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
   "check": {
     "spec": {
@@ -168,6 +195,12 @@
     "preamble_noun_mismatch": "Preamble noun differs between dependent and independent claim.",
     "preamble_indefinite_article": "Indefinite article in dependent claim preamble (should be 'The').",
     "spec_support_unsupported_terms": "Claim terms not found in specification.",
-    "spec_support_pass": "All claim terms found in specification."
+    "spec_support_pass": "All claim terms found in specification.",
+    "required_sections_pass": "All required sections per MPEP § 608.01(a) are present.",
+    "required_sections_missing": "Missing required sections per MPEP § 608.01(a).",
+    "optional_section_missing": "Optional section not found. Include if applicable.",
+    "figure_xref_pass": "All figure references are consistent between Brief Description of Drawings and Detailed Description.",
+    "figure_xref_orphaned_brief": "Figure(s) described in Brief Description of Drawings but not referenced in Detailed Description.",
+    "figure_xref_orphaned_detailed": "Figure(s) referenced in Detailed Description but not described in Brief Description of Drawings."
   }
 }
