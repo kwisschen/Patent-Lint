@@ -8,6 +8,7 @@ from patentlint.analysis.specification import (
     get_last_sequential_index,
     detect_restrictive_wording,
     has_sequence_listing_mismatch,
+    check_required_sections,
 )
 
 
@@ -75,3 +76,147 @@ class TestSequenceListing:
 
     def test_no_seq_id(self):
         assert has_sequence_listing_mismatch("Normal patent text.") is False
+
+
+def _make_full_doc(**overrides):
+    """Build a full patent document with all sections present by default.
+
+    Uses DISCLOSURE variants (modern patent practice) as defaults.
+    """
+    sections = {
+        "title": "WIDGET FOR PROCESSING DATA",
+        "cross_ref": "CROSS-REFERENCE TO RELATED APPLICATIONS\nThis application claims priority to U.S. App 16/123,456.",
+        "background": "BACKGROUND OF THE DISCLOSURE\nWidgets are well known in the art.",
+        "summary": "SUMMARY OF THE DISCLOSURE\nA widget is disclosed.",
+        "brief_drawings": "BRIEF DESCRIPTION OF THE DRAWINGS\nFIG. 1 shows the widget.",
+        "detailed_desc": "DETAILED DESCRIPTION OF THE EXEMPLARY EMBODIMENTS\nThe widget 100 includes a base plate 102.",
+        "claims": "CLAIMS\n1. A widget comprising a base plate.",
+        "abstract": "ABSTRACT OF THE DISCLOSURE\nA widget for processing data is disclosed.",
+    }
+    sections.update(overrides)
+    parts = [v for v in sections.values() if v]
+    return "\n\n".join(parts)
+
+
+class TestRequiredSections:
+    def test_all_sections_present(self):
+        doc = _make_full_doc()
+        results = check_required_sections(doc)
+        statuses = [r.status for r in results]
+        assert "amend" not in statuses
+        assert any(r.message_key == "checks.required_sections_pass" for r in results)
+
+    def test_missing_background_and_summary(self):
+        doc = _make_full_doc(background="", summary="")
+        results = check_required_sections(doc)
+        amend = [r for r in results if r.status == "amend"]
+        assert len(amend) == 1
+        assert "Background of the Invention" in amend[0].message
+        assert "Brief Summary of the Invention" in amend[0].message
+
+    def test_missing_only_cross_reference_is_verify(self):
+        doc = _make_full_doc(cross_ref="")
+        results = check_required_sections(doc)
+        assert not any(r.status == "amend" for r in results)
+        verify = [r for r in results if r.status == "verify"]
+        assert len(verify) == 1
+        assert verify[0].message_key == "checks.optional_section_missing"
+
+    def test_minimal_doc_claims_and_abstract_only(self):
+        doc = (
+            "CLAIMS\n1. A widget comprising a base plate.\n\n"
+            "ABSTRACT OF THE DISCLOSURE\nA widget is disclosed."
+        )
+        results = check_required_sections(doc)
+        amend = [r for r in results if r.status == "amend"]
+        assert len(amend) == 1
+        # Should list multiple missing required sections
+        assert "Background" in amend[0].message
+        assert "Summary" in amend[0].message
+        assert "Detailed Description" in amend[0].message
+        assert "Brief Description of the Drawings" in amend[0].message
+
+    def test_variant_header_spellings(self):
+        doc = "\n\n".join([
+            "METHOD FOR DATA PROCESSING",
+            "BACKGROUND",
+            "Widgets are known.",
+            "SUMMARY",
+            "A method is disclosed.",
+            "DESCRIPTION OF THE DRAWINGS",
+            "FIG. 1 shows the method.",
+            "DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS",
+            "The method includes steps.",
+            "CLAIMS",
+            "1. A method for processing data.",
+            "ABSTRACT",
+            "A method for data processing.",
+        ])
+        results = check_required_sections(doc)
+        assert not any(r.status == "amend" for r in results)
+        assert any(r.message_key == "checks.required_sections_pass" for r in results)
+
+    def test_invention_variants(self):
+        """INVENTION family headers should also be recognized."""
+        doc = "\n\n".join([
+            "APPARATUS FOR SIGNAL PROCESSING",
+            "CROSS-REFERENCE TO RELATED APPLICATIONS",
+            "This claims priority.",
+            "BACKGROUND OF THE INVENTION",
+            "Signal processing is known.",
+            "BRIEF SUMMARY OF THE INVENTION",
+            "An apparatus is disclosed.",
+            "BRIEF DESCRIPTION OF THE DRAWINGS",
+            "FIG. 1 shows the apparatus.",
+            "DETAILED DESCRIPTION OF THE INVENTION",
+            "The apparatus includes a processor.",
+            "CLAIMS",
+            "1. An apparatus for signal processing.",
+            "ABSTRACT OF THE INVENTION",
+            "An apparatus for signal processing is disclosed.",
+        ])
+        results = check_required_sections(doc)
+        assert not any(r.status == "amend" for r in results)
+        assert any(r.message_key == "checks.required_sections_pass" for r in results)
+
+    def test_bare_summary_detected(self):
+        """Plain 'SUMMARY' without qualifier should be detected."""
+        doc = _make_full_doc(summary="SUMMARY\nA widget is disclosed.")
+        results = check_required_sections(doc)
+        assert not any(r.status == "amend" for r in results)
+
+    def test_disclosure_variants(self):
+        """DISCLOSURE family headers (modern practice) should be recognized."""
+        doc = "\n\n".join([
+            "SURGE PROTECTION CIRCUIT",
+            "CROSS-REFERENCE TO RELATED PATENT APPLICATION",
+            "This claims priority to U.S. App 17/456,789.",
+            "BACKGROUND OF THE DISCLOSURE",
+            "Surge protection is known.",
+            "SUMMARY OF THE DISCLOSURE",
+            "A circuit is disclosed.",
+            "BRIEF DESCRIPTION OF THE DRAWINGS",
+            "FIG. 1 shows the circuit.",
+            "DETAILED DESCRIPTION OF THE DISCLOSURE",
+            "The circuit includes a varistor.",
+            "CLAIMS",
+            "1. A surge protection circuit.",
+            "ABSTRACT OF THE DISCLOSURE",
+            "A surge protection circuit is disclosed.",
+        ])
+        results = check_required_sections(doc)
+        assert not any(r.status == "amend" for r in results)
+        assert any(r.message_key == "checks.required_sections_pass" for r in results)
+
+    def test_brief_summary_of_disclosure(self):
+        """'BRIEF SUMMARY OF THE DISCLOSURE' should be detected."""
+        doc = _make_full_doc(summary="BRIEF SUMMARY OF THE DISCLOSURE\nA widget is disclosed.")
+        results = check_required_sections(doc)
+        assert not any(r.status == "amend" for r in results)
+
+    def test_no_recognizable_headers(self):
+        doc = "This is just some random text with no patent structure at all."
+        results = check_required_sections(doc)
+        amend = [r for r in results if r.status == "amend"]
+        assert len(amend) == 1
+        assert amend[0].message_key == "checks.required_sections_missing"
