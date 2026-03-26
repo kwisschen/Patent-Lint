@@ -13,6 +13,140 @@
   "antecedentBasis": { "title": "先行詞基礎檢視", "items": "個術語", "item": "個術語" },
   "specSupport": { "title": "說明書支持檢視", "items": "個術語", "item": "個術語" },
   "triage": { "title": "優先處理摘要", "amend": "需要修改", "amendEmpty": "無需修改之項目。", "verify": "專家確認", "verifyEmpty": "無需確認之項目。", "pass": "通過", "items": "個項目", "item": "個項目" },
+  "security": {
+    "badge": {
+      "headline": "免安裝。免帳號。不上傳雲端。",
+      "description": "您的機密檔案在您的裝置上直接分析。",
+      "proveIt": "證明看看 →"
+    },
+    "results": {
+      "badge": "已在您的裝置上分析",
+      "networkActive": "網路活動中",
+      "networkIdle": "無網路活動",
+      "howItWorks": "如何運作？"
+    },
+    "prove": {
+      "label1": "離線",
+      "label2": "拖入檔案",
+      "label3": "照常運作",
+      "label4": "綠色圓點",
+      "step1": "關閉 WiFi 或開啟飛航模式",
+      "step2": "將任意 .docx 拖入 PatentLint",
+      "step3": "沒有網路代表沒有雲端、沒有上傳、沒有任何資料外傳",
+      "step4": "綠色代表瀏覽器未發送任何請求 — 可隨時在 DevTools → Network tab 驗證",
+      "testHeading": "不必只聽我們說",
+      "testDescription": "點擊按鈕，觀察請求出現在下方的網路活動記錄中",
+      "testButton": "發送測試請求",
+      "logEmpty": "尚無請求"
+    },
+    "page": {
+      "heroTitle": "您的專利稿件絕不離開您的裝置",
+      "heroSubtext": "PatentLint 完全在您的瀏覽器中執行 — 不經過伺服器、不上傳、不使用雲端。您的機密說明書始終留在您的機器上。",
+      "tryIt": "自己試試 →",
+      "compareTitle": "PatentLint 與其他工具的比較",
+      "compareDisclaimer": "本比較表反映一般架構模式。個別產品可能有所不同。「Word 增益集工具」與「雲端工具」為通用類別，並非指特定產品。",
+      "techTitle": "技術細節"
+    },
+    "compare": {
+      "colQuestion": "問題",
+      "colPatentLint": "PatentLint",
+      "colAddin": "Word 增益集工具",
+      "colCloud": "雲端工具",
+      "q1": { "question": "我的檔案會離開我的裝置嗎？", "patentlint": "絕不。100% 在瀏覽器中執行。", "addin": "檔案留在本機，但增益集可能連線回報。", "cloud": "是 — 上傳至遠端伺服器。" },
+      "q2": { "question": "需要帳號嗎？", "patentlint": "不需要。無需註冊、無需登入、無追蹤。", "addin": "通常需要授權或帳號。", "cloud": "是 — 需要帳號。" },
+      "q3": { "question": "可以離線使用嗎？", "patentlint": "可以，首次載入後即可。", "addin": "取決於授權驗證方式。", "cloud": "不行 — 需要網路。" },
+      "q4": { "question": "能驗證隱私聲明嗎？", "patentlint": "可以 — 開啟 DevTools → Network tab，或開啟飛航模式。", "addin": "難以稽核增益集的網路流量。", "cloud": "不行 — 資料在他們的伺服器上。" },
+      "q5": { "question": "支援哪些平台？", "patentlint": "任何支援現代瀏覽器的裝置。", "addin": "僅限 Windows + Microsoft Word。", "cloud": "瀏覽器，但需要上傳。" },
+      "q6": { "question": "原始碼是否公開？", "patentlint": "是 — AGPL-3.0 開源。", "addin": "通常為專有軟體。", "cloud": "通常為專有軟體。" }
+    },
+    "tech": {
+      "architectureTitle": "架構",
+      "architecture": "PatentLint 透過 Pyodide 將 Python 分析引擎編譯為 WebAssembly，完全在瀏覽器的沙盒 JavaScript 環境中執行。文件分析不經過任何伺服器端處理。",
+      "networkTitle": "網路活動",
+      "network": "初次頁面載入（擷取 Pyodide 執行環境和 PatentLint wheel）之後，分析過程中不會發出任何網路請求。您可以在瀏覽器的 DevTools Network tab 中驗證，或在飛航模式下使用 PatentLint。",
+      "pdfTitle": "PDF 生成",
+      "pdf": "PDF 報告使用 pdfmake 在客戶端生成 — 不經過伺服器。Docker/CLI 部署方式則使用 weasyprint 進行伺服器端 PDF 生成，支援 CJK 字型。",
+      "aiTitle": "AI / LLM 使用",
+      "ai": "PatentLint 不使用 AI、機器學習或大型語言模型。所有檢查皆為確定性的規則比對，依據 MPEP 指南執行。您的文字不會被傳送至任何 AI 服務。",
+      "telemetryTitle": "遙測與分析",
+      "telemetry": "PatentLint 不收集任何分析資料、遙測資料或使用數據。沒有 cookies、沒有追蹤像素、沒有第三方腳本。此應用程式不知道您的身份。",
+      "selfHostedTitle": "自行部署選項",
+      "selfHosted": "對於需要額外控管的組織，PatentLint 可透過 Docker 自行部署。提供的 Dockerfile 包含所有相依套件，包括用於多語言 PDF 生成的 CJK 字型。"
+    }
+  },
+  "about": {
+    "productTitle": "什麼是 PatentLint？",
+    "productDesc1": "PatentLint 是免費的開源專利說明書品質檢查工具。將美國專利申請稿（.docx）拖入瀏覽器，即可取得即時合規報告 — 無需上傳、無需帳號、不使用雲端。",
+    "productDesc2": "它依據美國《專利審查程序手冊》(MPEP) 的格式規則進行檢查，偵測常見的撰寫問題，如先行詞基礎缺漏和限制性用語，並將請求項附屬關係以樹狀圖呈現 — 一切只需數秒。",
+    "productDesc3": "PatentLint 由一位長年手動執行這些檢查的專利工程師所建立。目標：自動化繁瑣的部分，讓專利從業人員專注於實質內容。",
+    "usptoTitle": "PatentLint vs. USPTO Patent Center",
+    "usptoSubtitle": "USPTO Patent Center 驗證送件格式。PatentLint 檢查稿件本身。",
+    "uspto": {
+      "colCheck": "檢查項目",
+      "colUSPTO": "USPTO Patent Center",
+      "colPatentLint": "PatentLint",
+      "group1Title": "格式與結構",
+      "group2Title": "USPTO 送件格式檢查",
+      "group3Title": "實質撰寫檢查",
+      "check": {
+        "sectionHeaders": "必要章節標題（MPEP § 608.01(a)）",
+        "paraNumbering": "段落編號連續",
+        "claimPeriods": "請求項以句點結尾",
+        "claimDependencies": "請求項附屬關係驗證",
+        "claimSequentiality": "請求項編號連續",
+        "abstractWordCount": "摘要字數（50–150）",
+        "abstractStructure": "摘要為單一段落且結尾正確",
+        "figureSequential": "圖式編號連續",
+        "singleFigure": "單一圖式標記（「The Figure」）",
+        "priorArtLabeling": "先前技術圖式標記",
+        "specParaEndings": "說明書段落結尾標點",
+        "specParaNumbering": "說明書段落編號格式",
+        "requiredSections": "必要／選擇性章節是否存在",
+        "figureCrossRef": "圖式交互參照一致性",
+        "pdfCompliance": "PDF/A 合規",
+        "marginCheck": "頁面邊界",
+        "fontSizeCheck": "字型大小要求",
+        "lineSpacing": "行距",
+        "pageNumbering": "頁碼",
+        "headerFooter": "頁首／頁尾格式",
+        "filingReceipt": "送件收據產生",
+        "restrictiveWording": "限制性用語（MPEP § 2173.01）",
+        "indefiniteTerms": "不明確術語（MPEP § 2173.05(b)）",
+        "impliedPhrases": "摘要中的隱含用語（MPEP § 608.01(b)）",
+        "whereinCommas": "「wherein」逗號規則",
+        "antecedentBasis": "先行詞基礎（「the X」無先前「a X」）",
+        "meansPlusFunction": "手段功能用語（35 U.S.C. § 112(f)）",
+        "preambleConsistency": "請求項前言一致性（MPEP § 608.01(m)）",
+        "specSupport": "說明書對請求項術語之支持",
+        "legalPhrasesAbstract": "摘要中的法律用語"
+      }
+    },
+    "stats": {
+      "tests": "自動化測試",
+      "checks": "MPEP 檢查",
+      "languages": "介面語言",
+      "cloudRequests": "雲端請求"
+    },
+    "archTitle": "架構",
+    "arch": {
+      "browser": "您的瀏覽器",
+      "optional": "選配：Docker / CLI",
+      "zeroBadge": "分析過程中零網路請求",
+      "selfHostBadge": "自行部署，適用於空隔網路與 ITAR 敏感環境",
+      "tip": {
+        "react": "React 18 + Vite 6 + Tailwind CSS v4",
+        "pyodide": "CPython 編譯為 WebAssembly — 在瀏覽器中執行 Python",
+        "pdfmake": "客戶端 PDF 生成 — 不需要伺服器",
+        "fastapi": "Python REST API，用於伺服器端部署",
+        "cli": "命令列介面，用於批次處理",
+        "weasyprint": "HTML 轉 PDF 引擎，支援 CJK 字型"
+      }
+    },
+    "builderTitle": "誰建立了這個工具？",
+    "builderDesc1": "PatentLint 由 Christopher Chen 創建，他是一位從專利工程師轉型為 ML/AI 工程師的開發者。在多年手動審查數千份專利說明書以比對 MPEP 規則之後，他建立了 PatentLint 來大規模捕捉人眼容易遺漏的問題。",
+    "builderDesc2": "PatentLint 是一款從零開始以 Python 建立的瀏覽器端分析工具，搭配現代 React 前端。所有檔案不會離開您的裝置 — 分析完全透過 WebAssembly 在瀏覽器中執行。",
+    "builderSister": "PatentLint 的姊妹專案「Agentic Patent Analyst」使用 LLM 代理進行先前技術檢索與請求項涵蓋範圍分析。兩款工具設計為搭配使用。"
+  },
   "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
   "check": {
     "spec": {
@@ -172,8 +306,8 @@
     "required_sections_pass": "符合 MPEP § 608.01(a) 之所有必要章節均已存在。",
     "required_sections_missing": "缺少 MPEP § 608.01(a) 規定之必要章節。",
     "optional_section_missing": "未找到選擇性章節。如適用，請加入。",
-    "figure_xref_pass": "圖式簡要說明與 Detailed Description 之間的圖式引用一致。",
-    "figure_xref_orphaned_brief": "圖式在圖式簡要說明中描述但未在 Detailed Description 中引用。",
-    "figure_xref_orphaned_detailed": "圖式在 Detailed Description 中引用但未在圖式簡要說明中描述。"
+    "figure_xref_pass": "圖式簡要說明與實施方式之間的圖式引用一致。",
+    "figure_xref_orphaned_brief": "圖式在圖式簡要說明中描述但未在實施方式中引用。",
+    "figure_xref_orphaned_detailed": "圖式在實施方式中引用但未在圖式簡要說明中描述。"
   }
 }

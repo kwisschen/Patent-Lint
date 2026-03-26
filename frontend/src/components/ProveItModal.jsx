@@ -81,7 +81,7 @@ export default function ProveItModal({ open, onOpenChange }) {
         setNetworkActive(true)
         setEntries((prev) => [...prev, ...newEntries])
         clearTimeout(timeoutRef.current)
-        timeoutRef.current = setTimeout(() => setNetworkActive(false), 500)
+        timeoutRef.current = setTimeout(() => setNetworkActive(false), 1200)
       }
     })
     observer.observe({ type: 'resource', buffered: false })
@@ -120,7 +120,7 @@ export default function ProveItModal({ open, onOpenChange }) {
       count++
       setVisiblePanels(count)
       if (count >= 4) clearInterval(interval)
-    }, 150)
+    }, 250)
     return () => clearInterval(interval)
   }, [open])
 
@@ -171,15 +171,15 @@ export default function ProveItModal({ open, onOpenChange }) {
               variant="outline"
               size="sm"
               onClick={handleTestRequest}
-              className="relative overflow-hidden test-shimmer"
+              className="relative overflow-hidden test-shimmer min-w-[200px]"
             >
               {testSent ? <Check className="h-4 w-4" /> : t('security.prove.testButton')}
             </Button>
 
             {/* Network indicator dot */}
             <div className="flex items-center gap-1.5">
-              <span className={`w-2 h-2 rounded-full transition-colors duration-300 ${networkActive ? 'bg-red-500' : 'bg-green-500'}`} />
-              <span className={`text-xs transition-colors duration-300 ${networkActive ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
+              <span className={`w-2 h-2 rounded-full transition-colors duration-75 ${networkActive ? 'bg-red-500' : 'bg-green-500'}`} />
+              <span className={`text-xs transition-colors duration-75 ${networkActive ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
                 {networkActive ? t('security.results.networkActive') : t('security.results.networkIdle')}
               </span>
             </div>

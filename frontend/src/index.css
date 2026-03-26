@@ -185,14 +185,8 @@
 }
 
 @keyframes pageEnter {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Logo hover bounce */
@@ -209,8 +203,8 @@
 }
 
 @keyframes breathe {
-  0%, 100% { border-color: oklch(0.922 0 0 / 0.35); }
-  50% { border-color: oklch(0.922 0 0 / 0.7); }
+  0%, 100% { border-color: oklch(0.922 0 0 / 0.5); }
+  50% { border-color: oklch(0.922 0 0 / 0.85); }
 }
 
 .dark .dropzone-breathe {
@@ -218,8 +212,8 @@
 }
 
 @keyframes breathe-dark {
-  0%, 100% { border-color: oklch(1 0 0 / 0.04); }
-  50% { border-color: oklch(1 0 0 / 0.12); }
+  0%, 100% { border-color: oklch(1 0 0 / 0.15); }
+  50% { border-color: oklch(1 0 0 / 0.35); }
 }
 
 /* Footer link underline slide-in */

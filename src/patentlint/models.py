@@ -225,7 +225,7 @@ class AnalysisResult(BaseModel):
                 status="amend",
                 message="Paragraph numbers are not sequential.",
                 message_key="check.spec.paragraphSequential.amend",
-                details=f"First gap at index {self.last_sequential_paragraph}",
+                details=f"First gap at position {self.last_sequential_paragraph}",
             ))
         else:
             spec_checks.append(CheckItem(
@@ -337,7 +337,7 @@ class AnalysisResult(BaseModel):
                 status="amend",
                 message="Claim numbers are not sequential.",
                 message_key="check.claims.sequential.amend",
-                details=f"First gap at index {self.last_sequential_claim}",
+                details=f"First gap at position {self.last_sequential_claim}",
             ))
         else:
             claims_checks.append(CheckItem(

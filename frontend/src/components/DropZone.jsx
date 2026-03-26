@@ -39,7 +39,7 @@ export default function DropZone({ onFile, onShowProveIt }) {
           transition-all duration-200
           ${isDragActive
             ? 'border-solid border-[var(--pass-border)] bg-blue-50/50 dark:bg-blue-950/30 scale-[1.015]'
-            : 'border-dashed border-border hover:border-muted-foreground/50 dropzone-breathe'
+            : 'border-dashed border-gray-300 dark:border-gray-600 hover:border-muted-foreground/50 dropzone-breathe'
           }
         `}
         style={isDragActive ? { transitionTimingFunction: 'var(--ease-bounce)' } : undefined}
@@ -58,19 +58,21 @@ export default function DropZone({ onFile, onShowProveIt }) {
         className="flex flex-col gap-1.5 text-sm text-green-600 dark:text-green-400 transition-opacity duration-500"
         style={{ opacity: badgeVisible ? 1 : 0 }}
       >
-        <div className="flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 flex-shrink-0" />
-          <span>
+        <div className="flex items-start gap-2">
+          <ShieldCheck className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <div className="flex flex-col gap-1">
             <strong>{t('security.badge.headline')}</strong>
-            {' '}{t('security.badge.description')}
-          </span>
+            <span className="text-xs text-green-600/80 dark:text-green-400/80">
+              {t('security.badge.description')}{' '}
+              <button
+                onClick={(e) => { e.stopPropagation(); onShowProveIt?.() }}
+                className="underline underline-offset-2 hover:text-green-700 dark:hover:text-green-300 transition-colors"
+              >
+                {t('security.badge.proveIt')}
+              </button>
+            </span>
+          </div>
         </div>
-        <button
-          onClick={(e) => { e.stopPropagation(); onShowProveIt?.() }}
-          className="text-xs ml-6 underline underline-offset-2 hover:text-green-700 dark:hover:text-green-300 transition-colors text-left"
-        >
-          {t('security.badge.proveIt')}
-        </button>
       </div>
 
       {fileRejections.length > 0 && (
