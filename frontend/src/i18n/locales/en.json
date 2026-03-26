@@ -33,7 +33,7 @@
       "step1": "Turn off WiFi or enable airplane mode",
       "step2": "Drag any .docx into PatentLint",
       "step3": "No internet means no cloud, no upload, no data sent anywhere",
-      "step4": "Green means your browser sent nothing — verify anytime in DevTools → Network tab",
+      "step4": "Green means your browser sent nothing. Verify anytime in DevTools → Network tab",
       "testHeading": "Don't take our word for it",
       "testDescription": "Tap the button and watch the request appear in your network activity log below",
       "testButton": "Send a test request",
@@ -52,12 +52,12 @@
       "colPatentLint": "PatentLint",
       "colAddin": "Word Add-in Tools",
       "colCloud": "Cloud-Based Tools",
-      "q1": { "question": "Does my file leave my device?", "patentlint": "Never. Runs 100% in-browser.", "addin": "File stays local, but add-in may phone home.", "cloud": "Yes — uploaded to remote servers." },
-      "q2": { "question": "Do I need an account?", "patentlint": "No. No sign-up, no login, no tracking.", "addin": "Usually requires a license or account.", "cloud": "Yes — account required." },
-      "q3": { "question": "Does it work offline?", "patentlint": "Yes, after first load.", "addin": "Depends on license validation.", "cloud": "No — requires internet." },
-      "q4": { "question": "Can I verify the privacy claim?", "patentlint": "Yes — open DevTools → Network tab, or go airplane mode.", "addin": "Difficult to audit add-in traffic.", "cloud": "No — data is on their servers." },
+      "q1": { "question": "Does my file leave my device?", "patentlint": "Never. Runs 100% in-browser.", "addin": "File stays local, but add-in may phone home.", "cloud": "Yes. Uploaded to remote servers." },
+      "q2": { "question": "Do I need an account?", "patentlint": "No. No sign-up, no login, no tracking.", "addin": "Usually requires a license or account.", "cloud": "Yes. Account required." },
+      "q3": { "question": "Does it work offline?", "patentlint": "Yes, after first load.", "addin": "Depends on license validation.", "cloud": "No. Requires internet." },
+      "q4": { "question": "Can I verify the privacy claim?", "patentlint": "Yes. Open DevTools → Network tab, or go airplane mode.", "addin": "Difficult to audit add-in traffic.", "cloud": "No. Data is on their servers." },
       "q5": { "question": "What platforms are supported?", "patentlint": "Any device with a modern browser.", "addin": "Windows + Microsoft Word only.", "cloud": "Browser-based, but requires upload." },
-      "q6": { "question": "Is the source code available?", "patentlint": "Yes — AGPL-3.0 open source.", "addin": "Typically proprietary.", "cloud": "Typically proprietary." }
+      "q6": { "question": "Is the source code available?", "patentlint": "Yes. AGPL-3.0 open source.", "addin": "Typically proprietary.", "cloud": "Typically proprietary." }
     },
     "tech": {
       "architectureTitle": "Architecture",
@@ -65,7 +65,7 @@
       "networkTitle": "Network Activity",
       "network": "After the initial page load (which fetches the Pyodide runtime and PatentLint wheel), zero network requests are made during analysis. You can verify this in your browser's DevTools Network tab, or by running PatentLint in airplane mode.",
       "pdfTitle": "PDF Generation",
-      "pdf": "PDF reports are generated client-side using pdfmake — no server round-trip. The Docker/CLI deployment tier uses weasyprint for server-side PDF with CJK font support.",
+      "pdf": "PDF reports are generated client-side using pdfmake. No server round-trip. The Docker/CLI deployment tier uses weasyprint for server-side PDF with CJK font support.",
       "aiTitle": "AI / LLM Usage",
       "ai": "PatentLint does not use AI, machine learning, or large language models. All checks are deterministic, rule-based pattern matching against MPEP guidelines. Your text is never sent to any AI service.",
       "telemetryTitle": "Telemetry & Analytics",
@@ -77,7 +77,7 @@
   "about": {
     "productTitle": "What is PatentLint?",
     "productDesc1": "PatentLint is a free, open-source patent specification quality checker. Drop a U.S. patent application draft (.docx) into your browser and get an instant compliance report — no upload, no account, no cloud.",
-    "productDesc2": "It checks formatting rules from the Manual of Patent Examining Procedure (MPEP), catches common drafting issues like missing antecedent basis and restrictive wording, and visualizes your claim dependency tree — all in seconds.",
+    "productDesc2": "It checks formatting rules from the Manual of Patent Examining Procedure (MPEP), catches common drafting issues like missing antecedent basis and restrictive wording, and visualizes your claim dependency tree, all in seconds.",
     "productDesc3": "PatentLint was built by a patent engineer who spent years running these checks by hand. The goal: automate the tedious parts so practitioners can focus on substance.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center validates filing format. PatentLint checks the draft itself.",
@@ -135,8 +135,8 @@
       "selfHostBadge": "Self-hosted for air-gapped and ITAR-sensitive environments",
       "tip": {
         "react": "React 18 + Vite 6 + Tailwind CSS v4",
-        "pyodide": "CPython compiled to WebAssembly — runs Python in the browser",
-        "pdfmake": "Client-side PDF generation — no server needed",
+        "pyodide": "CPython compiled to WebAssembly. Runs Python in the browser",
+        "pdfmake": "Client-side PDF generation, no server needed",
         "fastapi": "Python REST API for server-side deployments",
         "cli": "Command-line interface for batch processing",
         "weasyprint": "HTML-to-PDF engine with CJK font support"
@@ -146,6 +146,22 @@
     "builderDesc1": "PatentLint was created by Christopher Chen, a patent engineer turned ML/AI engineer. After years of reviewing thousands of patent specifications against MPEP rules by hand, he built PatentLint to catch what the human eye misses at scale.",
     "builderDesc2": "PatentLint is a browser-based analysis tool built from the ground up in Python with a modern React frontend. No files leave your device — analysis runs entirely in the browser via WebAssembly.",
     "builderSister": "PatentLint's sister project, the Agentic Patent Analyst, uses LLM agents to perform prior art search and claim coverage analysis. Both tools are designed to work together."
+  },
+  "details": {
+    "paragraphs": "Paragraphs: {{list}}",
+    "claims": "Claims: {{list}}",
+    "terms": "Terms: {{list}}",
+    "figures": "Figures: {{list}}",
+    "firstGapParagraph": "First gap at paragraph {{position}}",
+    "firstGapClaim": "First gap at claim {{position}}",
+    "citations": "{{text}}",
+    "rawText": "{{text}}",
+    "claimsOverview": "{{independent}} independent, {{dependent}} dependent, {{total}} total",
+    "missingSections": "Missing: {{list}}",
+    "sectionName": "{{name}}",
+    "claimDependsOn": "Claim {{claim}} depends on claim {{parent}}",
+    "nounMismatch": "Dependent '{{dependent}}' vs independent '{{independent}}'",
+    "seeSection112": "See § 112 Analysis below for per-claim detail."
   },
   "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
   "check": {
@@ -206,6 +222,7 @@
       },
       "whereinComma": {
         "amend": "Incorrect wherein comma usage.",
+        "verify": "Review wherein comma usage.",
         "pass": "Wherein comma usage is correct."
       },
       "meansFunction": {
@@ -264,9 +281,9 @@
     "feature3_title": "Claim Tree Visualization",
     "feature3_desc": "Interactive dependency tree and Mermaid diagram show your claim structure at a glance.",
     "feature4_title": "Works Everywhere",
-    "feature4_desc": "Mac, Windows, Linux, iPad — any device with a browser. No Word add-in required. Full UI in English, 繁體中文, 简体中文, and 日本語.",
+    "feature4_desc": "Mac, Windows, Linux, iPad: any device with a browser. No Word add-in required. Full UI in English, 繁體中文, 简体中文, and 日本語.",
     "feature5_title": "Instant Analysis",
-    "feature5_desc": "Drop a .docx file and get results in seconds. Download a PDF report — no cloud round-trip required."
+    "feature5_desc": "Drop a .docx file and get results in seconds. Download a PDF report, no cloud round-trip required."
   },
   "pdf": {
     "header": "PatentLint Analysis Report",

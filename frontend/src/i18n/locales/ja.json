@@ -33,15 +33,15 @@
       "step1": "WiFi をオフにするか、機内モードをオンにします",
       "step2": "任意の .docx を PatentLint にドラッグします",
       "step3": "インターネットなし＝クラウドなし、アップロードなし、データ送信なし",
-      "step4": "緑はブラウザが何も送信していないことを意味します — DevTools → Network tab でいつでも確認できます",
-      "testHeading": "私たちの言葉を鵜呑みにしないでください",
+      "step4": "緑はブラウザが何も送信していないことを意味します。DevTools → Network tab でいつでも確認できます",
+      "testHeading": "自分の目で確かめる",
       "testDescription": "ボタンをタップして、下のネットワーク活動ログにリクエストが表示されるのを確認してください",
       "testButton": "テストリクエストを送信",
       "logEmpty": "リクエストはまだありません"
     },
     "page": {
       "heroTitle": "特許原稿がデバイスの外に出ることはありません",
-      "heroSubtext": "PatentLint はブラウザ内で完全に動作します — サーバーなし、アップロードなし、クラウドなし。機密性の高い明細書は常にお使いのマシン上にとどまります。",
+      "heroSubtext": "PatentLint はブラウザ内で完全に動作します。サーバーなし、アップロードなし、クラウドなし。機密性の高い明細書は常にお使いのマシン上にとどまります。",
       "tryIt": "試してみる →",
       "compareTitle": "PatentLint と他のツールの比較",
       "compareDisclaimer": "この比較は一般的なアーキテクチャパターンを反映しています。個々の製品は異なる場合があります。「Word アドインツール」と「クラウドベースツール」は一般的なカテゴリであり、特定の製品を指すものではありません。",
@@ -52,12 +52,12 @@
       "colPatentLint": "PatentLint",
       "colAddin": "Word アドインツール",
       "colCloud": "クラウドベースツール",
-      "q1": { "question": "ファイルはデバイスの外に出ますか？", "patentlint": "一切出ません。100% ブラウザ内で動作します。", "addin": "ファイルはローカルに残りますが、アドインが通信する場合があります。", "cloud": "はい — リモートサーバーにアップロードされます。" },
-      "q2": { "question": "アカウントは必要ですか？", "patentlint": "不要です。登録なし、ログインなし、追跡なし。", "addin": "通常、ライセンスまたはアカウントが必要です。", "cloud": "はい — アカウントが必要です。" },
-      "q3": { "question": "オフラインで使えますか？", "patentlint": "はい、初回読み込み後は可能です。", "addin": "ライセンス認証の方法によります。", "cloud": "いいえ — インターネットが必要です。" },
-      "q4": { "question": "プライバシーの主張を検証できますか？", "patentlint": "はい — DevTools → Network tab を開くか、機内モードで確認できます。", "addin": "アドインの通信を監査するのは困難です。", "cloud": "いいえ — データは先方のサーバー上にあります。" },
+      "q1": { "question": "ファイルはデバイスの外に出ますか？", "patentlint": "一切出ません。100% ブラウザ内で動作します。", "addin": "ファイルはローカルに残りますが、アドインが通信する場合があります。", "cloud": "はい。リモートサーバーにアップロードされます。" },
+      "q2": { "question": "アカウントは必要ですか？", "patentlint": "不要です。登録なし、ログインなし、追跡なし。", "addin": "通常、ライセンスまたはアカウントが必要です。", "cloud": "はい。アカウントが必要です。" },
+      "q3": { "question": "オフラインで使えますか？", "patentlint": "はい、初回読み込み後は可能です。", "addin": "ライセンス認証の方法によります。", "cloud": "いいえ。インターネットが必要です。" },
+      "q4": { "question": "プライバシーの主張を検証できますか？", "patentlint": "はい。DevTools → Network tab を開くか、機内モードで確認できます。", "addin": "アドインの通信を監査するのは困難です。", "cloud": "いいえ。データは先方のサーバー上にあります。" },
       "q5": { "question": "どのプラットフォームに対応していますか？", "patentlint": "モダンブラウザが使えるすべてのデバイス。", "addin": "Windows + Microsoft Word のみ。", "cloud": "ブラウザベースですが、アップロードが必要です。" },
-      "q6": { "question": "ソースコードは公開されていますか？", "patentlint": "はい — AGPL-3.0 オープンソースです。", "addin": "通常、プロプライエタリです。", "cloud": "通常、プロプライエタリです。" }
+      "q6": { "question": "ソースコードは公開されていますか？", "patentlint": "はい。AGPL-3.0 オープンソースです。", "addin": "通常、プロプライエタリです。", "cloud": "通常、プロプライエタリです。" }
     },
     "tech": {
       "architectureTitle": "アーキテクチャ",
@@ -65,7 +65,7 @@
       "networkTitle": "ネットワーク活動",
       "network": "初回のページ読み込み（Pyodide ランタイムと PatentLint wheel の取得）後、分析中にネットワークリクエストは一切発生しません。ブラウザの DevTools Network tab で確認するか、機内モードで PatentLint を使用して検証できます。",
       "pdfTitle": "PDF 生成",
-      "pdf": "PDF レポートは pdfmake を使用してクライアント側で生成されます — サーバーへの通信は不要です。Docker/CLI 展開では、CJK フォントをサポートする weasyprint でサーバー側 PDF 生成を行います。",
+      "pdf": "PDF レポートは pdfmake を使用してクライアント側で生成されます。サーバーへの通信は不要です。Docker/CLI 展開では、CJK フォントをサポートする weasyprint でサーバー側 PDF 生成を行います。",
       "aiTitle": "AI / LLM の使用",
       "ai": "PatentLint は AI、機械学習、大規模言語モデルを一切使用しません。すべてのチェックは MPEP ガイドラインに基づく確定的なルールベースのパターンマッチングです。お客様のテキストが AI サービスに送信されることはありません。",
       "telemetryTitle": "テレメトリとアナリティクス",
@@ -76,8 +76,8 @@
   },
   "about": {
     "productTitle": "PatentLint とは？",
-    "productDesc1": "PatentLint は無料のオープンソース特許明細書品質チェックツールです。米国特許出願原稿（.docx）をブラウザにドロップするだけで、即座にコンプライアンスレポートを取得できます — アップロード不要、アカウント不要、クラウド不要。",
-    "productDesc2": "MPEP（特許審査便覧）のフォーマット規則に基づいてチェックを行い、先行詞根拠の欠落や限定的な表現などの一般的な起案上の問題を検出し、請求項の従属関係をツリー表示で可視化します — すべて数秒で完了します。",
+    "productDesc1": "PatentLint は無料のオープンソース特許明細書品質チェックツールです。米国特許出願原稿（.docx）をブラウザにドロップするだけで、即座にコンプライアンスレポートを取得できます。アップロード不要、アカウント不要、クラウド不要。",
+    "productDesc2": "MPEP（特許審査便覧）のフォーマット規則に基づいてチェックを行い、先行詞根拠の欠落や限定的な表現などの一般的な起案上の問題を検出し、請求項の従属関係をツリー表示で可視化します。すべて数秒で完了します。",
     "productDesc3": "PatentLint は、これらのチェックを長年手作業で行ってきた特許エンジニアによって作られました。目標：煩雑な作業を自動化し、実務者が内容の検討に集中できるようにすること。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center は出願フォーマットを検証します。PatentLint は原稿そのものをチェックします。",
@@ -135,8 +135,8 @@
       "selfHostBadge": "エアギャップおよび ITAR 対応環境向けセルフホスト",
       "tip": {
         "react": "React 18 + Vite 6 + Tailwind CSS v4",
-        "pyodide": "CPython を WebAssembly にコンパイル — ブラウザで Python を実行",
-        "pdfmake": "クライアント側 PDF 生成 — サーバー不要",
+        "pyodide": "CPython を WebAssembly にコンパイル。ブラウザで Python を実行",
+        "pdfmake": "クライアント側 PDF 生成、サーバー不要",
         "fastapi": "Python REST API、サーバー側展開用",
         "cli": "コマンドラインインターフェース、バッチ処理用",
         "weasyprint": "HTML から PDF への変換エンジン、CJK フォント対応"
@@ -144,8 +144,24 @@
     },
     "builderTitle": "誰が作ったのか？",
     "builderDesc1": "PatentLint は Christopher Chen によって作られました。特許エンジニアから ML/AI エンジニアに転身した開発者です。数千件の特許明細書を MPEP 規則に照らして手作業で何年も審査した経験を経て、人の目が見逃す問題を大規模に捕捉するために PatentLint を開発しました。",
-    "builderDesc2": "PatentLint は Python でゼロから構築されたブラウザベースの分析ツールで、モダンな React フロントエンドを備えています。ファイルがデバイスの外に出ることはありません — 分析は WebAssembly を通じてブラウザ内で完全に実行されます。",
+    "builderDesc2": "PatentLint は Python でゼロから構築されたブラウザベースの分析ツールで、モダンな React フロントエンドを備えています。ファイルがデバイスの外に出ることはありません。分析は WebAssembly を通じてブラウザ内で完全に実行されます。",
     "builderSister": "PatentLint の姉妹プロジェクト「Agentic Patent Analyst」は LLM エージェントを使用して先行技術調査と請求項カバレッジ分析を行います。両ツールは連携して使用するよう設計されています。"
+  },
+  "details": {
+    "paragraphs": "段落：{{list}}",
+    "claims": "請求項：{{list}}",
+    "terms": "用語：{{list}}",
+    "figures": "図面：{{list}}",
+    "firstGapParagraph": "最初のギャップは段落 {{position}}",
+    "firstGapClaim": "最初のギャップは請求項 {{position}}",
+    "citations": "{{text}}",
+    "rawText": "{{text}}",
+    "claimsOverview": "独立項 {{independent}}、従属項 {{dependent}}、合計 {{total}}",
+    "missingSections": "不足：{{list}}",
+    "sectionName": "{{name}}",
+    "claimDependsOn": "請求項 {{claim}} は請求項 {{parent}} に従属",
+    "nounMismatch": "従属項「{{dependent}}」と独立項「{{independent}}」が不一致",
+    "seeSection112": "下記の § 112 分析を参照。"
   },
   "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
   "check": {
@@ -206,6 +222,7 @@
       },
       "whereinComma": {
         "amend": "「wherein」のコンマの使用が不正確です。",
+        "verify": "「wherein」のコンマの使用を確認してください。",
         "pass": "「wherein」のコンマの使用は正確です。"
       },
       "meansFunction": {
@@ -264,7 +281,7 @@
     "feature3_title": "請求項ツリー表示",
     "feature3_desc": "インタラクティブな従属関係ツリーと Mermaid 図で、請求項の構造を一目で把握できます。",
     "feature4_title": "どこでも使える",
-    "feature4_desc": "Mac、Windows、Linux、iPad — ブラウザがあるどのデバイスでも利用可能。Word アドインは不要。English、繁體中文、简体中文、日本語の完全な UI。",
+    "feature4_desc": "Mac、Windows、Linux、iPad。ブラウザがあるどのデバイスでも利用可能。Word アドインは不要。English、繁體中文、简体中文、日本語の完全な UI。",
     "feature5_title": "瞬時の分析",
     "feature5_desc": ".docx ファイルをドロップするだけで数秒で結果が得られます。PDF レポートのダウンロードもクラウド不要。"
   },

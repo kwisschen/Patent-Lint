@@ -134,9 +134,12 @@ function buildSectionChecks(sections, t) {
         ],
         margin: [0, 3, 0, 3],
       })
-      if (item.details) {
+      const detailText = item.details_key && t(item.details_key, item.details_params || {}) !== item.details_key
+        ? t(item.details_key, item.details_params || {})
+        : item.details
+      if (detailText) {
         content.push({
-          text: sanitizeText(item.details),
+          text: sanitizeText(detailText),
           fontSize: 9,
           color: '#555555',
           margin: [55, 0, 0, 4],
