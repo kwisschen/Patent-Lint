@@ -225,6 +225,8 @@ def check_required_sections(full_text: str) -> list["CheckItem"]:
             message=f"Missing required sections: {', '.join(missing_required)}",
             message_key="checks.required_sections_missing",
             details=", ".join(missing_required),
+            details_key="details.missingSections",
+            details_params={"list": ", ".join(missing_required)},
         ))
     else:
         results.append(CheckItem(
@@ -241,6 +243,8 @@ def check_required_sections(full_text: str) -> list["CheckItem"]:
                 message=f"Optional section not found: {name}. Include if applicable.",
                 message_key="checks.optional_section_missing",
                 details=name,
+                details_key="details.sectionName",
+                details_params={"name": name},
             ))
 
     return results

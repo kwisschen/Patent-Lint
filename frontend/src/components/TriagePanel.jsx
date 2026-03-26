@@ -27,8 +27,10 @@ function TriageItem({ check, t, i18n, compact }) {
       )}
       <div className="min-w-0">
         <span className="text-sm">{msg}</span>
-        {!compact && check.details && (
-          <p className="text-xs text-muted-foreground mt-0.5">{check.details}</p>
+        {!compact && (check.details || check.details_key) && (
+          <p className="text-xs text-muted-foreground mt-0.5">
+            {check.details_key && i18n.exists(check.details_key) ? t(check.details_key, check.details_params || {}) : check.details}
+          </p>
         )}
       </div>
     </div>

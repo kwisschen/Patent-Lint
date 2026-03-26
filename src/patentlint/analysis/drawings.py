@@ -195,6 +195,8 @@ def check_figure_cross_references(
             message=f"FIG(s). {fig_list} described in Brief Description of Drawings but not referenced in Detailed Description.",
             message_key="checks.figure_xref_orphaned_brief",
             details=fig_list,
+            details_key="details.figures",
+            details_params={"list": fig_list},
         ))
 
     if orphaned_detailed:
@@ -204,6 +206,8 @@ def check_figure_cross_references(
             message=f"FIG(s). {fig_list} referenced in Detailed Description but not described in Brief Description of Drawings.",
             message_key="checks.figure_xref_orphaned_detailed",
             details=fig_list,
+            details_key="details.figures",
+            details_params={"list": fig_list},
         ))
 
     if not orphaned_brief and not orphaned_detailed:
