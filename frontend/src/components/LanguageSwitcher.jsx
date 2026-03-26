@@ -22,7 +22,6 @@ export default function LanguageSwitcher() {
 
   const switchLang = (code) => {
     i18n.changeLanguage(code)
-    localStorage.setItem('patentlint-lang', code)
     setOpen(false)
   }
 

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, GitBranch } from 'lucide-react'
+import { useInView } from '../hooks/useInView'
 import mermaid from 'mermaid'
 
 let renderCounter = 0
@@ -49,6 +50,7 @@ export default function ClaimDiagram({ claimTrees }) {
   const { t } = useTranslation()
   const [showDiagram, setShowDiagram] = useState(false)
   const containerRef = useRef(null)
+  const [diagramRef, diagramInView] = useInView()
 
   const renderDiagram = useCallback(async () => {
     if (!containerRef.current || !claimTrees?.length) return
@@ -94,8 +96,16 @@ export default function ClaimDiagram({ claimTrees }) {
       </button>
       {showDiagram && (
         <div
-          ref={containerRef}
-          className="mt-3 overflow-x-auto rounded-lg border bg-card p-4 [&_svg]:mx-auto animate-in fade-in-0 duration-200"
+          ref={(el) => {
+            containerRef.current = el
+            diagramRef.current = el
+          }}
+          className="mt-3 overflow-x-auto rounded-lg border bg-card p-4 [&_svg]:mx-auto"
+          style={{
+            opacity: diagramInView ? 1 : 0,
+            transform: diagramInView ? 'scale(1)' : 'scale(0.98)',
+            transition: 'opacity 400ms var(--ease-smooth), transform 400ms var(--ease-smooth)',
+          }}
         />
       )}
     </div>
