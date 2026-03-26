@@ -81,7 +81,7 @@ function App() {
         <LoadingOnboard progress={pyodide.progress} onReady={handleEngineReady} />
       )}
 
-      <Layout onReset={handleReset} canReset={homeState !== 'idle'}>
+      <Layout onReset={handleReset} canReset={homeState !== 'idle'} hasActionBar={homeState === 'results'}>
         <Routes>
           <Route path="/" element={
             <div className="mx-auto w-full max-w-5xl px-4 py-8">
@@ -123,7 +123,7 @@ function App() {
           } />
           <Route path="/security" element={
             <div className="mx-auto w-full max-w-5xl px-4 py-8">
-              <SecurityPage />
+              <SecurityPage onShowProveIt={() => setShowProveIt(true)} />
             </div>
           } />
           <Route path="/about" element={

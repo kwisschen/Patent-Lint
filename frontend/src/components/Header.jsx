@@ -2,7 +2,7 @@
 // Copyright (c) 2025 Christopher Chen
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import ThemeToggle from './ThemeToggle'
 import LanguageSwitcher from './LanguageSwitcher'
 
@@ -44,6 +44,10 @@ export default function Header({ onReset, canReset }) {
           <p className="text-xs text-muted-foreground -mt-1">{t('header.subtitle')}</p>
         </div>
         <div className="flex items-center gap-1">
+          <nav className="hidden sm:flex items-center gap-4 text-sm text-muted-foreground mr-3">
+            <Link to="/security" className="hover:text-foreground transition-colors">{t('footer.security')}</Link>
+            <Link to="/about" className="hover:text-foreground transition-colors">{t('footer.about')}</Link>
+          </nav>
           <LanguageSwitcher />
           <ThemeToggle />
         </div>

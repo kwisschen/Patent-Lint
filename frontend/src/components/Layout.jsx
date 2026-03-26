@@ -1,11 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2025 Christopher Chen
+import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import Header from './Header'
 import Footer from './Footer'
 
-export default function Layout({ children, onReset, canReset }) {
+export default function Layout({ children, onReset, canReset, hasActionBar }) {
   const location = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [location.pathname])
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -15,7 +20,7 @@ export default function Layout({ children, onReset, canReset }) {
           {children}
         </div>
       </main>
-      <Footer />
+      <div className={hasActionBar ? 'pb-16' : ''}><Footer /></div>
     </div>
   )
 }
