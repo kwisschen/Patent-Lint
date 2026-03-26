@@ -13,6 +13,140 @@
   "antecedentBasis": { "title": "先行詞根拠の確認", "items": "個の用語", "item": "個の用語" },
   "specSupport": { "title": "明細書サポートの確認", "items": "個の用語", "item": "個の用語" },
   "triage": { "title": "優先事項の要約", "amend": "修正が必要", "amendEmpty": "修正が必要な項目はありません。", "verify": "専門家の確認", "verifyEmpty": "確認が必要な項目はありません。", "pass": "合格", "items": "件", "item": "件" },
+  "security": {
+    "badge": {
+      "headline": "インストール不要。アカウント不要。クラウドへのアップロードなし。",
+      "description": "お客様の機密ファイルはお使いのデバイス上で直接分析されます。",
+      "proveIt": "確かめる →"
+    },
+    "results": {
+      "badge": "お使いのデバイス上で分析済み",
+      "networkActive": "ネットワーク通信中",
+      "networkIdle": "ネットワーク通信なし",
+      "howItWorks": "仕組みを見る"
+    },
+    "prove": {
+      "label1": "オフラインにする",
+      "label2": "ファイルをドロップ",
+      "label3": "そのまま動く",
+      "label4": "緑のドット",
+      "step1": "WiFi をオフにするか、機内モードをオンにします",
+      "step2": "任意の .docx を PatentLint にドラッグします",
+      "step3": "インターネットなし＝クラウドなし、アップロードなし、データ送信なし",
+      "step4": "緑はブラウザが何も送信していないことを意味します — DevTools → Network tab でいつでも確認できます",
+      "testHeading": "私たちの言葉を鵜呑みにしないでください",
+      "testDescription": "ボタンをタップして、下のネットワーク活動ログにリクエストが表示されるのを確認してください",
+      "testButton": "テストリクエストを送信",
+      "logEmpty": "リクエストはまだありません"
+    },
+    "page": {
+      "heroTitle": "特許原稿がデバイスの外に出ることはありません",
+      "heroSubtext": "PatentLint はブラウザ内で完全に動作します — サーバーなし、アップロードなし、クラウドなし。機密性の高い明細書は常にお使いのマシン上にとどまります。",
+      "tryIt": "試してみる →",
+      "compareTitle": "PatentLint と他のツールの比較",
+      "compareDisclaimer": "この比較は一般的なアーキテクチャパターンを反映しています。個々の製品は異なる場合があります。「Word アドインツール」と「クラウドベースツール」は一般的なカテゴリであり、特定の製品を指すものではありません。",
+      "techTitle": "技術的な詳細"
+    },
+    "compare": {
+      "colQuestion": "質問",
+      "colPatentLint": "PatentLint",
+      "colAddin": "Word アドインツール",
+      "colCloud": "クラウドベースツール",
+      "q1": { "question": "ファイルはデバイスの外に出ますか？", "patentlint": "一切出ません。100% ブラウザ内で動作します。", "addin": "ファイルはローカルに残りますが、アドインが通信する場合があります。", "cloud": "はい — リモートサーバーにアップロードされます。" },
+      "q2": { "question": "アカウントは必要ですか？", "patentlint": "不要です。登録なし、ログインなし、追跡なし。", "addin": "通常、ライセンスまたはアカウントが必要です。", "cloud": "はい — アカウントが必要です。" },
+      "q3": { "question": "オフラインで使えますか？", "patentlint": "はい、初回読み込み後は可能です。", "addin": "ライセンス認証の方法によります。", "cloud": "いいえ — インターネットが必要です。" },
+      "q4": { "question": "プライバシーの主張を検証できますか？", "patentlint": "はい — DevTools → Network tab を開くか、機内モードで確認できます。", "addin": "アドインの通信を監査するのは困難です。", "cloud": "いいえ — データは先方のサーバー上にあります。" },
+      "q5": { "question": "どのプラットフォームに対応していますか？", "patentlint": "モダンブラウザが使えるすべてのデバイス。", "addin": "Windows + Microsoft Word のみ。", "cloud": "ブラウザベースですが、アップロードが必要です。" },
+      "q6": { "question": "ソースコードは公開されていますか？", "patentlint": "はい — AGPL-3.0 オープンソースです。", "addin": "通常、プロプライエタリです。", "cloud": "通常、プロプライエタリです。" }
+    },
+    "tech": {
+      "architectureTitle": "アーキテクチャ",
+      "architecture": "PatentLint は Pyodide を使用して Python 分析エンジンを WebAssembly にコンパイルし、ブラウザのサンドボックス化された JavaScript 環境内で完全に動作します。文書分析にサーバー側の処理は一切発生しません。",
+      "networkTitle": "ネットワーク活動",
+      "network": "初回のページ読み込み（Pyodide ランタイムと PatentLint wheel の取得）後、分析中にネットワークリクエストは一切発生しません。ブラウザの DevTools Network tab で確認するか、機内モードで PatentLint を使用して検証できます。",
+      "pdfTitle": "PDF 生成",
+      "pdf": "PDF レポートは pdfmake を使用してクライアント側で生成されます — サーバーへの通信は不要です。Docker/CLI 展開では、CJK フォントをサポートする weasyprint でサーバー側 PDF 生成を行います。",
+      "aiTitle": "AI / LLM の使用",
+      "ai": "PatentLint は AI、機械学習、大規模言語モデルを一切使用しません。すべてのチェックは MPEP ガイドラインに基づく確定的なルールベースのパターンマッチングです。お客様のテキストが AI サービスに送信されることはありません。",
+      "telemetryTitle": "テレメトリとアナリティクス",
+      "telemetry": "PatentLint はアナリティクス、テレメトリ、使用状況データを一切収集しません。Cookie、トラッキングピクセル、サードパーティスクリプトは存在しません。このアプリケーションはお客様の身元を一切把握しません。",
+      "selfHostedTitle": "セルフホストオプション",
+      "selfHosted": "追加の管理が必要な組織向けに、PatentLint は Docker でセルフホスト展開が可能です。提供される Dockerfile には、多言語 PDF 生成のための CJK フォントを含むすべての依存関係が含まれています。"
+    }
+  },
+  "about": {
+    "productTitle": "PatentLint とは？",
+    "productDesc1": "PatentLint は無料のオープンソース特許明細書品質チェックツールです。米国特許出願原稿（.docx）をブラウザにドロップするだけで、即座にコンプライアンスレポートを取得できます — アップロード不要、アカウント不要、クラウド不要。",
+    "productDesc2": "MPEP（特許審査便覧）のフォーマット規則に基づいてチェックを行い、先行詞根拠の欠落や限定的な表現などの一般的な起案上の問題を検出し、請求項の従属関係をツリー表示で可視化します — すべて数秒で完了します。",
+    "productDesc3": "PatentLint は、これらのチェックを長年手作業で行ってきた特許エンジニアによって作られました。目標：煩雑な作業を自動化し、実務者が内容の検討に集中できるようにすること。",
+    "usptoTitle": "PatentLint vs. USPTO Patent Center",
+    "usptoSubtitle": "USPTO Patent Center は出願フォーマットを検証します。PatentLint は原稿そのものをチェックします。",
+    "uspto": {
+      "colCheck": "チェック項目",
+      "colUSPTO": "USPTO Patent Center",
+      "colPatentLint": "PatentLint",
+      "group1Title": "フォーマットと構造",
+      "group2Title": "USPTO 出願フォーマットチェック",
+      "group3Title": "実質的な起案チェック",
+      "check": {
+        "sectionHeaders": "必須セクション見出し（MPEP § 608.01(a)）",
+        "paraNumbering": "段落番号が連続",
+        "claimPeriods": "請求項が句点で終了",
+        "claimDependencies": "請求項の従属関係の検証",
+        "claimSequentiality": "請求項番号が連続",
+        "abstractWordCount": "要約書の語数（50–150）",
+        "abstractStructure": "要約書が単一段落で末尾が正常",
+        "figureSequential": "図面番号が連続",
+        "singleFigure": "単一図面の表記（「The Figure」）",
+        "priorArtLabeling": "先行技術図面の表記",
+        "specParaEndings": "明細書段落の末尾句読点",
+        "specParaNumbering": "明細書段落番号の形式",
+        "requiredSections": "必須／任意セクションの有無",
+        "figureCrossRef": "図面の相互参照の整合性",
+        "pdfCompliance": "PDF/A 準拠",
+        "marginCheck": "ページマージン",
+        "fontSizeCheck": "フォントサイズ要件",
+        "lineSpacing": "行間隔",
+        "pageNumbering": "ページ番号",
+        "headerFooter": "ヘッダー／フッターの形式",
+        "filingReceipt": "出願受領書の生成",
+        "restrictiveWording": "限定的な表現（MPEP § 2173.01）",
+        "indefiniteTerms": "不明確な用語（MPEP § 2173.05(b)）",
+        "impliedPhrases": "要約書の暗示的な表現（MPEP § 608.01(b)）",
+        "whereinCommas": "「wherein」のコンマ規則",
+        "antecedentBasis": "先行詞根拠（「the X」に先行する「a X」がない）",
+        "meansPlusFunction": "ミーンズ・プラス・ファンクション（35 U.S.C. § 112(f)）",
+        "preambleConsistency": "請求項プリアンブルの一貫性（MPEP § 608.01(m)）",
+        "specSupport": "請求項用語に対する明細書のサポート",
+        "legalPhrasesAbstract": "要約書の法律用語"
+      }
+    },
+    "stats": {
+      "tests": "自動テスト",
+      "checks": "MPEP チェック",
+      "languages": "UI 言語",
+      "cloudRequests": "クラウドリクエスト"
+    },
+    "archTitle": "アーキテクチャ",
+    "arch": {
+      "browser": "お使いのブラウザ",
+      "optional": "オプション：Docker / CLI",
+      "zeroBadge": "分析中のネットワークリクエストはゼロ",
+      "selfHostBadge": "エアギャップおよび ITAR 対応環境向けセルフホスト",
+      "tip": {
+        "react": "React 18 + Vite 6 + Tailwind CSS v4",
+        "pyodide": "CPython を WebAssembly にコンパイル — ブラウザで Python を実行",
+        "pdfmake": "クライアント側 PDF 生成 — サーバー不要",
+        "fastapi": "Python REST API、サーバー側展開用",
+        "cli": "コマンドラインインターフェース、バッチ処理用",
+        "weasyprint": "HTML から PDF への変換エンジン、CJK フォント対応"
+      }
+    },
+    "builderTitle": "誰が作ったのか？",
+    "builderDesc1": "PatentLint は Christopher Chen によって作られました。特許エンジニアから ML/AI エンジニアに転身した開発者です。数千件の特許明細書を MPEP 規則に照らして手作業で何年も審査した経験を経て、人の目が見逃す問題を大規模に捕捉するために PatentLint を開発しました。",
+    "builderDesc2": "PatentLint は Python でゼロから構築されたブラウザベースの分析ツールで、モダンな React フロントエンドを備えています。ファイルがデバイスの外に出ることはありません — 分析は WebAssembly を通じてブラウザ内で完全に実行されます。",
+    "builderSister": "PatentLint の姉妹プロジェクト「Agentic Patent Analyst」は LLM エージェントを使用して先行技術調査と請求項カバレッジ分析を行います。両ツールは連携して使用するよう設計されています。"
+  },
   "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
   "check": {
     "spec": {
@@ -93,7 +227,7 @@
         "pass": "要約書は単一段落で末尾も正常です。"
       },
       "impliedPhrases": {
-        "amend": "要約書に省略可能な表現（「開示」または「提供される」）が含まれています。",
+        "amend": "要約書に省略可能な表現（「disclosure」または「provided」）が含まれています。",
         "pass": "要約書に省略可能な表現は見つかりませんでした。"
       },
       "wordCount": {
@@ -172,8 +306,8 @@
     "required_sections_pass": "MPEP § 608.01(a) に基づくすべての必須セクションが存在します。",
     "required_sections_missing": "MPEP § 608.01(a) に基づく必須セクションが不足しています。",
     "optional_section_missing": "任意セクションが見つかりません。該当する場合は追加してください。",
-    "figure_xref_pass": "図面の簡単な説明と Detailed Description の間の図面参照が整合しています。",
-    "figure_xref_orphaned_brief": "図面の簡単な説明に記載されているが Detailed Description で参照されていない図面があります。",
-    "figure_xref_orphaned_detailed": "Detailed Description で参照されているが図面の簡単な説明に記載されていない図面があります。"
+    "figure_xref_pass": "図面の簡単な説明と発明を実施するための形態の間の図面参照が整合しています。",
+    "figure_xref_orphaned_brief": "図面の簡単な説明に記載されているが発明を実施するための形態で参照されていない図面があります。",
+    "figure_xref_orphaned_detailed": "発明を実施するための形態で参照されているが図面の簡単な説明に記載されていない図面があります。"
   }
 }

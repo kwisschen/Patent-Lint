@@ -225,9 +225,9 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
               </div>
               <div className="flex items-center gap-1.5">
                 <span
-                  className={`w-2 h-2 rounded-full transition-colors duration-300 ${networkActive ? 'bg-red-500' : 'bg-green-500'} ${dotPulsed ? '' : 'network-dot-pulse'}`}
+                  className={`w-2 h-2 rounded-full transition-colors duration-75 ${networkActive ? 'bg-red-500' : 'bg-green-500'} ${dotPulsed ? '' : 'network-dot-pulse'}`}
                 />
-                <span className={`transition-colors duration-300 ${
+                <span className={`transition-colors duration-75 ${
                   networkActive ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'
                 }`}>
                   {networkActive ? t('security.results.networkActive') : t('security.results.networkIdle')}

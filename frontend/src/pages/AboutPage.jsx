@@ -1,0 +1,414 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (c) 2025 Christopher Chen
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Check, Linkedin, Github, Mail, ShieldCheck, Server } from 'lucide-react'
+import { useInView } from '../hooks/useInView'
+import { useCountUp } from '../hooks/useCountUp'
+
+/* ────────────────────────────────────────────
+   Section 1: Product Story
+   ──────────────────────────────────────────── */
+function ProductStory({ t }) {
+  const [ref, isInView] = useInView()
+
+  return (
+    <section
+      ref={ref}
+      style={{
+        opacity: isInView ? 1 : 0,
+        transform: isInView ? 'translateY(0)' : 'translateY(24px)',
+        transition: 'opacity 600ms ease, transform 600ms ease',
+      }}
+    >
+      <h2 className="text-3xl font-bold text-foreground mb-6">
+        {t('about.productTitle')}
+      </h2>
+      <div className="space-y-4 text-muted-foreground leading-relaxed">
+        <p>{t('about.productDesc1')}</p>
+        <p>{t('about.productDesc2')}</p>
+        <p>{t('about.productDesc3')}</p>
+      </div>
+    </section>
+  )
+}
+
+/* ────────────────────────────────────────────
+   Section 2: USPTO Comparison Table
+   ──────────────────────────────────────────── */
+const GROUP1_CHECKS = [
+  'sectionHeaders', 'paraNumbering', 'claimPeriods', 'claimDependencies',
+  'claimSequentiality', 'abstractWordCount', 'abstractStructure',
+  'figureSequential', 'singleFigure', 'priorArtLabeling', 'specParaEndings',
+  'specParaNumbering', 'requiredSections', 'figureCrossRef',
+]
+
+const GROUP2_CHECKS = [
+  'pdfCompliance', 'marginCheck', 'fontSizeCheck', 'lineSpacing',
+  'pageNumbering', 'headerFooter', 'filingReceipt',
+]
+
+const GROUP3_CHECKS = [
+  'restrictiveWording', 'indefiniteTerms', 'impliedPhrases',
+  'whereinCommas', 'antecedentBasis', 'meansPlusFunction',
+  'preambleConsistency', 'specSupport', 'legalPhrasesAbstract',
+]
+
+function CheckMark({ active, isPatentLint }) {
+  if (!active) {
+    return <span className="inline-flex justify-center text-muted-foreground/40">—</span>
+  }
+  return (
+    <Check
+      size={18}
+      className={`inline-block ${isPatentLint ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}
+      strokeWidth={2.5}
+    />
+  )
+}
+
+function ComparisonTable({ t }) {
+  const [ref1, inView1] = useInView()
+  const [ref2, inView2] = useInView()
+  const [ref3, inView3] = useInView()
+
+  const renderGroup = (ref, inView, titleKey, checks, uspto, patentlint, highlight, delay) => (
+    <tbody
+      ref={ref}
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(16px)',
+        transition: `opacity 500ms ease ${delay}ms, transform 500ms ease ${delay}ms`,
+      }}
+    >
+      <tr>
+        <td
+          colSpan={3}
+          className="pt-6 pb-2 px-4 text-sm font-semibold text-muted-foreground uppercase tracking-wider"
+        >
+          {t(titleKey)}
+        </td>
+      </tr>
+      {checks.map((key) => (
+        <tr
+          key={key}
+          className={`border-b border-border/50 hover:bg-muted/50 transition-colors ${
+            highlight ? 'border-l-2 border-l-green-200 dark:border-l-green-800' : ''
+          }`}
+        >
+          <td className="px-4 py-2.5 text-sm text-foreground">
+            {t(`about.uspto.check.${key}`)}
+          </td>
+          <td className="px-4 py-2.5 text-center w-40">
+            <CheckMark active={uspto} isPatentLint={false} />
+          </td>
+          <td className="px-4 py-2.5 text-center w-40">
+            <CheckMark active={patentlint} isPatentLint={true} />
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  )
+
+  return (
+    <section>
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold text-foreground mb-2">
+          {t('about.usptoTitle')}
+        </h2>
+        <p className="text-muted-foreground">{t('about.usptoSubtitle')}</p>
+      </div>
+      <div className="rounded-lg border border-border">
+        <table className="w-full text-left">
+          <thead>
+            <tr className="border-b border-border bg-muted/30">
+              <th className="px-4 py-3 text-sm font-semibold text-foreground">
+                {t('about.uspto.colCheck')}
+              </th>
+              <th className="px-4 py-3 text-sm font-semibold text-foreground text-center whitespace-nowrap w-40">
+                {t('about.uspto.colUSPTO')}
+              </th>
+              <th className="px-4 py-3 text-sm font-semibold text-foreground text-center whitespace-nowrap w-40">
+                {t('about.uspto.colPatentLint')}
+              </th>
+            </tr>
+          </thead>
+          {renderGroup(ref1, inView1, 'about.uspto.group1Title', GROUP1_CHECKS, true, true, false, 0)}
+          {renderGroup(ref2, inView2, 'about.uspto.group2Title', GROUP2_CHECKS, true, false, false, 150)}
+          {renderGroup(ref3, inView3, 'about.uspto.group3Title', GROUP3_CHECKS, false, true, true, 300)}
+        </table>
+      </div>
+    </section>
+  )
+}
+
+/* ────────────────────────────────────────────
+   Section 3a: Stats Cards
+   ──────────────────────────────────────────── */
+function StatCard({ value, suffix, label, delay }) {
+  const [ref, inView] = useInView()
+  const count = useCountUp(value, 800, inView)
+
+  return (
+    <div
+      ref={ref}
+      className="border border-border rounded-lg p-6 text-center shadow-sm hover:translate-y-[-2px] transition-all duration-200"
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? undefined : 'translateY(16px)',
+        transition: `opacity 400ms ease ${delay}ms, transform 400ms ease ${delay}ms`,
+      }}
+    >
+      <div className="text-3xl font-bold text-foreground">
+        {count}{suffix}
+      </div>
+      <div className="text-sm text-muted-foreground mt-1">{label}</div>
+    </div>
+  )
+}
+
+function StatsGrid({ t }) {
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <StatCard value={340} suffix="+" label={t('about.stats.tests')} delay={0} />
+      <StatCard value={20} suffix="+" label={t('about.stats.checks')} delay={100} />
+      <StatCard value={4} suffix="" label={t('about.stats.languages')} delay={200} />
+      <StatCard value={0} suffix="" label={t('about.stats.cloudRequests')} delay={300} />
+    </div>
+  )
+}
+
+/* ────────────────────────────────────────────
+   Section 3b: Architecture Diagram
+   ──────────────────────────────────────────── */
+const BROWSER_NODES = [
+  { id: 'react', label: 'React Frontend', tipKey: 'about.arch.tip.react' },
+  { id: 'pyodide', label: 'Pyodide / WebAssembly', tipKey: 'about.arch.tip.pyodide' },
+  { id: 'patentlint', label: 'patentlint', tipKey: null },
+  { id: 'pdfmake', label: 'pdfmake', tipKey: 'about.arch.tip.pdfmake' },
+]
+
+const OPTIONAL_NODES_LEFT = [
+  { id: 'fastapi', label: 'FastAPI', tipKey: 'about.arch.tip.fastapi' },
+  { id: 'cli', label: 'CLI', tipKey: 'about.arch.tip.cli' },
+]
+
+const OPTIONAL_NODES_RIGHT = [
+  { id: 'weasyprint', label: 'weasyprint', tipKey: 'about.arch.tip.weasyprint' },
+]
+
+function ArchNode({ label, tipKey, t }) {
+  const [hovered, setHovered] = useState(false)
+  const tip = tipKey ? t(tipKey) : null
+
+  return (
+    <div className="relative flex flex-col items-center">
+      <div
+        className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all duration-200 cursor-default select-none ${
+          hovered
+            ? 'border-primary scale-[1.02] shadow-md text-foreground'
+            : 'border-border text-foreground bg-card'
+        }`}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        {label}
+      </div>
+      {tip && hovered && (
+        <div className="absolute top-full mt-2 px-3 py-1.5 text-xs text-muted-foreground bg-muted rounded shadow-lg whitespace-nowrap z-10">
+          {tip}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ArchitectureDiagram({ t }) {
+  const [ref, inView] = useInView()
+  const nodeH = 40
+  const gap = 12
+  const step = nodeH + gap
+  const railX = 12
+  const stubLen = 16
+  const dotR = 3
+
+  const browserRailHeight = (BROWSER_NODES.length - 1) * step
+  const totalDrawDelay = 300
+
+  return (
+    <div ref={ref} className="mt-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Browser group */}
+        <div className="border-l-4 border-l-green-600 dark:border-l-green-500 pl-6 py-4">
+          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+            {t('about.arch.browser')}
+          </h3>
+          <div className="relative" style={{ paddingLeft: railX + stubLen + 8 }}>
+            {/* Rail + stubs SVG */}
+            <svg
+              className="absolute left-0 top-0 pointer-events-none"
+              width={railX + stubLen + 4}
+              height={browserRailHeight + nodeH}
+              style={{ overflow: 'visible' }}
+            >
+              {/* Vertical rail */}
+              <line
+                x1={railX} y1={nodeH / 2} x2={railX} y2={browserRailHeight + nodeH / 2}
+                stroke="var(--color-green-600, #16a34a)"
+                strokeWidth="2"
+                strokeDasharray={browserRailHeight + nodeH}
+                strokeDashoffset={inView ? 0 : browserRailHeight + nodeH}
+                style={{ transition: `stroke-dashoffset 800ms ease ${totalDrawDelay}ms` }}
+              />
+              {/* Horizontal stubs + junction dots */}
+              {BROWSER_NODES.map((_, i) => {
+                const cy = i * step + nodeH / 2
+                const drawDelay = totalDrawDelay + 200 + i * 150
+                return (
+                  <g key={i}>
+                    <line
+                      x1={railX} y1={cy} x2={railX + stubLen} y2={cy}
+                      stroke="var(--color-green-600, #16a34a)"
+                      strokeWidth="2"
+                      strokeDasharray={stubLen}
+                      strokeDashoffset={inView ? 0 : stubLen}
+                      style={{ transition: `stroke-dashoffset 400ms ease ${drawDelay}ms` }}
+                    />
+                    <circle
+                      cx={railX} cy={cy} r={dotR}
+                      fill="var(--color-green-600, #16a34a)"
+                      style={{
+                        opacity: inView ? 1 : 0,
+                        transform: inView ? 'scale(1)' : 'scale(0)',
+                        transformOrigin: `${railX}px ${cy}px`,
+                        transition: `opacity 200ms ease ${drawDelay}ms, transform 300ms var(--ease-bounce) ${drawDelay}ms`,
+                      }}
+                    />
+                  </g>
+                )
+              })}
+            </svg>
+            {/* Nodes */}
+            <div className="flex flex-col" style={{ gap: `${gap}px` }}>
+              {BROWSER_NODES.map((node) => (
+                <div key={node.id} style={{ height: nodeH }} className="flex items-center">
+                  <ArchNode label={node.label} tipKey={node.tipKey} t={t} />
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center gap-1.5 mt-4 text-xs text-green-600 dark:text-green-400">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>{t('about.arch.zeroBadge')}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Optional group */}
+        <div className="border-l-4 border-l-slate-400/40 dark:border-l-slate-500/30 pl-6 py-4">
+          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+            {t('about.arch.optional')}
+          </h3>
+          <div className="space-y-6">
+            {[
+              { left: 'FastAPI', leftTip: 'about.arch.tip.fastapi', right: 'weasyprint', rightTip: 'about.arch.tip.weasyprint', delay: 600 },
+              { left: 'CLI', leftTip: 'about.arch.tip.cli', right: 'weasyprint', rightTip: 'about.arch.tip.weasyprint', delay: 800 },
+            ].map(({ left, leftTip, right, rightTip, delay }, idx) => (
+              <div key={idx} className="flex items-center gap-3">
+                <ArchNode label={left} tipKey={leftTip} t={t} />
+                <svg width="40" height="16" className="shrink-0" style={{ overflow: 'visible' }}>
+                  <line
+                    x1="2" y1="8" x2="34" y2="8"
+                    stroke="currentColor" strokeWidth="1.5" className="text-slate-400 dark:text-slate-500"
+                    strokeDasharray="5 4"
+                    strokeDashoffset={inView ? 0 : 36}
+                    style={{ transition: `stroke-dashoffset 600ms ease ${delay}ms` }}
+                  />
+                  <circle cx="2" cy="8" r={dotR - 1} className="fill-slate-400 dark:fill-slate-500"
+                    style={{ opacity: inView ? 1 : 0, transition: `opacity 200ms ease ${delay}ms` }}
+                  />
+                  <polygon points="32,4 38,8 32,12" className="fill-slate-400 dark:fill-slate-500"
+                    style={{ opacity: inView ? 1 : 0, transition: `opacity 200ms ease ${delay + 300}ms` }}
+                  />
+                </svg>
+                <ArchNode label={right} tipKey={rightTip} t={t} />
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center gap-1.5 mt-4 text-xs text-muted-foreground">
+            <Server className="w-3.5 h-3.5" />
+            <span>{t('about.arch.selfHostBadge')}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ────────────────────────────────────────────
+   Section 4: Builder Story
+   ──────────────────────────────────────────── */
+function BuilderStory({ t }) {
+  const [ref, inView] = useInView()
+
+  const links = [
+    { href: 'https://linkedin.com/in/kwisschen', icon: Linkedin, label: 'LinkedIn' },
+    { href: 'https://github.com/kwisschen', icon: Github, label: 'GitHub' },
+    { href: 'mailto:kwisschen@gmail.com', icon: Mail, label: 'Email' },
+  ]
+
+  return (
+    <section
+      ref={ref}
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(24px)',
+        transition: 'opacity 600ms ease, transform 600ms ease',
+      }}
+    >
+      <h2 className="text-3xl font-bold text-foreground mb-6">
+        {t('about.builderTitle')}
+      </h2>
+      <div className="space-y-4 text-muted-foreground leading-relaxed">
+        <p>{t('about.builderDesc1')}</p>
+        <p>{t('about.builderDesc2')}</p>
+        <p>{t('about.builderSister')}</p>
+      </div>
+      <div className="flex flex-wrap gap-3 mt-8">
+        {links.map(({ href, icon: Icon, label }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-border text-sm font-medium text-foreground bg-card hover:shadow-md transition-all duration-200"
+            style={{ transitionTimingFunction: 'var(--ease-bounce)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)' }}
+          >
+            <Icon size={16} />
+            {label}
+          </a>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+/* ────────────────────────────────────────────
+   Main About Page
+   ──────────────────────────────────────────── */
+export default function AboutPage() {
+  const { t } = useTranslation()
+
+  return (
+    <div className="w-full max-w-5xl mx-auto px-4 py-16 space-y-24">
+      <ProductStory t={t} />
+      <ComparisonTable t={t} />
+      <section>
+        <StatsGrid t={t} />
+        <ArchitectureDiagram t={t} />
+      </section>
+      <BuilderStory t={t} />
+    </div>
+  )
+}
