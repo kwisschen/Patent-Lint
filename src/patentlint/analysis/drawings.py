@@ -132,6 +132,102 @@ def uses_wrong_label_for_single_figure(text: str) -> bool:
     return bool(re.search(r"(?i)(FIG\.?|Fig\.?|Figure)\s*1", text))
 
 
+def _extract_figure_ids(text: str) -> set[str]:
+    """Extract all figure identifiers from text as a normalized set.
+
+    Handles: FIG. N, FIGS. N-M, FIGS. N and M, FIG. Na / FIG. N(a),
+    Figure N (full word). Returns identifiers like "1", "2A", "3".
+    """
+    ids: set[str] = set()
+    for m in _FIGURE_PATTERN.finditer(text):
+        start_num = int(m.group(2))
+        start_suffix = _extract_suffix(m.group(3), m.group(4))
+
+        end_fig_str = m.group(6)
+        end_suffix = _extract_suffix(m.group(7), m.group(8))
+
+        if end_fig_str is not None:
+            end_num = int(end_fig_str)
+            if start_num == end_num and start_suffix and end_suffix:
+                # Alpha range: FIG. 2A-2D
+                for alpha in range(ord(start_suffix[0]), ord(end_suffix[0]) + 1):
+                    ids.add(f"{start_num}{chr(alpha)}")
+            else:
+                # Numeric range: FIG. 1-5
+                for i in range(start_num, end_num + 1):
+                    ids.add(str(i))
+        else:
+            if start_suffix:
+                ids.add(f"{start_num}{start_suffix}")
+            else:
+                ids.add(str(start_num))
+
+    return ids
+
+
+def check_figure_cross_references(
+    brief_description: str, detailed_description: str
+) -> list["CheckItem"]:
+    """Check figure reference consistency between Brief Description and Detailed Description.
+
+    Returns CheckItems for orphaned or undescribed figure references.
+    """
+    from patentlint.models import CheckItem
+
+    if not brief_description.strip() and not detailed_description.strip():
+        return []
+
+    brief_figs = _extract_figure_ids(brief_description)
+    detailed_figs = _extract_figure_ids(detailed_description)
+
+    if not brief_figs and not detailed_figs:
+        return []
+
+    results: list[CheckItem] = []
+
+    orphaned_brief = sorted(brief_figs - detailed_figs, key=_sort_fig_id)
+    orphaned_detailed = sorted(detailed_figs - brief_figs, key=_sort_fig_id)
+
+    if orphaned_brief:
+        fig_list = ", ".join(orphaned_brief)
+        results.append(CheckItem(
+            status="verify",
+            message=f"FIG(s). {fig_list} described in Brief Description of Drawings but not referenced in Detailed Description.",
+            message_key="checks.figure_xref_orphaned_brief",
+            details=fig_list,
+        ))
+
+    if orphaned_detailed:
+        fig_list = ", ".join(orphaned_detailed)
+        results.append(CheckItem(
+            status="verify",
+            message=f"FIG(s). {fig_list} referenced in Detailed Description but not described in Brief Description of Drawings.",
+            message_key="checks.figure_xref_orphaned_detailed",
+            details=fig_list,
+        ))
+
+    if not orphaned_brief and not orphaned_detailed:
+        results.append(CheckItem(
+            status="pass",
+            message="All figure references are consistent between Brief Description of Drawings and Detailed Description.",
+            message_key="checks.figure_xref_pass",
+        ))
+
+    return results
+
+
+def _sort_fig_id(fig_id: str) -> tuple[int, str]:
+    """Sort key for figure IDs: numeric part first, then alpha suffix."""
+    num_part = ""
+    alpha_part = ""
+    for ch in fig_id:
+        if ch.isdigit():
+            num_part += ch
+        else:
+            alpha_part += ch
+    return (int(num_part) if num_part else 0, alpha_part)
+
+
 def contains_prior_art_references(text: str) -> bool:
     """True if drawings section contains prior art references."""
     return bool(re.search(r"\bart\b|\bconventional\b|\btraditional\b|\bprior art\b", text, re.IGNORECASE))

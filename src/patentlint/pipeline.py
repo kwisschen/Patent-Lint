@@ -87,6 +87,14 @@ def _run_pipeline(loaded, full_text: str) -> AnalysisResult:
     abstract_implied = abstract_analysis.has_implied_phrase(abstract_section) if abstract_section else False
     abstract_wording = abstract_analysis.detect_improper_wording(abstract_section) if abstract_section else ""
 
+    # --- Required sections check ---
+    required_sections_checks = spec_analysis.check_required_sections(full_text)
+
+    # --- Figure cross-reference consistency ---
+    figure_xref_checks = drawings_analysis.check_figure_cross_references(
+        drawings_section or "", detailed_desc_section or "",
+    )
+
     # --- Specification analysis ---
     para_nums = loaded.paragraph_numberings
     para_seq = spec_analysis.are_paragraphs_sequential(para_nums)
@@ -135,6 +143,9 @@ def _run_pipeline(loaded, full_text: str) -> AnalysisResult:
         unsupported_terms=unsupported_terms,
         # Drawings — reference numerals
         reference_numerals=ref_numerals,
+        # Phase 5 — Issue #2 & #3
+        required_sections_checks=required_sections_checks,
+        figure_xref_checks=figure_xref_checks,
         # Abstract
         abstract_word_count=abstract_word_count,
         abstract_structure_good=abstract_structure,

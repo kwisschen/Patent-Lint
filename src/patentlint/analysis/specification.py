@@ -164,6 +164,88 @@ def extract_reference_numeral_inventory(
     return result
 
 
+def check_required_sections(full_text: str) -> list["CheckItem"]:
+    """Check for required and optional sections per MPEP § 608.01(a).
+
+    Uses existing section extractors where available, regex header matching
+    for Title detection.
+    """
+    from patentlint.models import CheckItem
+    from patentlint.parser.sections import (
+        extract_cross_reference_section,
+        extract_background_section,
+        extract_summary_section,
+        extract_description_of_drawings_section,
+        extract_detailed_description_section,
+        extract_claims_section,
+        extract_abstract_section,
+        _ANY_SECTION_HEADER,
+    )
+
+    results: list[CheckItem] = []
+
+    # --- Title detection ---
+    # Title is typically text before the first section header.
+    first_header = _ANY_SECTION_HEADER.search(full_text)
+    title_text = full_text[:first_header.start()].strip() if first_header else full_text.strip()
+    has_title = bool(title_text) and len(title_text) < 500  # sanity: title shouldn't be huge
+
+    # --- Detect each section ---
+    section_results: dict[str, bool] = {
+        "Title of the Invention": has_title,
+        "Cross-Reference to Related Applications": bool(extract_cross_reference_section(full_text)),
+        "Background of the Invention": bool(extract_background_section(full_text)),
+        "Brief Summary of the Invention": bool(extract_summary_section(full_text)),
+        "Brief Description of the Drawings": bool(extract_description_of_drawings_section(full_text)),
+        "Detailed Description of the Invention": bool(extract_detailed_description_section(full_text)),
+        "Claims": bool(extract_claims_section(full_text)),
+        "Abstract of the Disclosure": bool(extract_abstract_section(full_text)),
+    }
+
+    # Required sections (all except Cross-Reference which is optional)
+    required = [
+        "Title of the Invention",
+        "Background of the Invention",
+        "Brief Summary of the Invention",
+        "Brief Description of the Drawings",
+        "Detailed Description of the Invention",
+        "Claims",
+        "Abstract of the Disclosure",
+    ]
+
+    optional = [
+        "Cross-Reference to Related Applications",
+    ]
+
+    missing_required = [name for name in required if not section_results[name]]
+
+    if missing_required:
+        results.append(CheckItem(
+            status="amend",
+            message=f"Missing required sections: {', '.join(missing_required)}",
+            message_key="checks.required_sections_missing",
+            details=", ".join(missing_required),
+        ))
+    else:
+        results.append(CheckItem(
+            status="pass",
+            message="All required sections per MPEP § 608.01(a) are present.",
+            message_key="checks.required_sections_pass",
+        ))
+
+    # Optional sections
+    for name in optional:
+        if not section_results[name]:
+            results.append(CheckItem(
+                status="verify",
+                message=f"Optional section not found: {name}. Include if applicable.",
+                message_key="checks.optional_section_missing",
+                details=name,
+            ))
+
+    return results
+
+
 def has_sequence_listing_mismatch(full_text: str) -> bool:
     """Check if spec mentions SEQ ID NO but lacks a sequence listing statement."""
     mentions_seq = bool(re.search(r"(?i)SEQ\.?\s*(ID|NO)\.?\s*(NO\.)?", full_text))

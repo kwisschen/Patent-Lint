@@ -9,6 +9,7 @@ from patentlint.analysis.drawings import (
     uses_wrong_label_for_single_figure,
     contains_prior_art_references,
     count_figure_range,
+    check_figure_cross_references,
 )
 
 
@@ -71,3 +72,85 @@ class TestFigureRange:
 
     def test_alpha(self):
         assert count_figure_range("2", "2", "A", "D") == 4
+
+
+class TestFigureCrossReferences:
+    def test_all_consistent(self):
+        brief = "FIG. 1 shows X.\nFIG. 2 shows Y.\nFIG. 3 shows Z.\nFIG. 4 shows W.\nFIG. 5 shows V."
+        detailed = "As shown in FIG. 1, the widget. FIG. 2 illustrates. FIG. 3 depicts. FIG. 4 shows. FIG. 5 details."
+        results = check_figure_cross_references(brief, detailed)
+        assert len(results) == 1
+        assert results[0].status == "pass"
+        assert results[0].message_key == "checks.figure_xref_pass"
+
+    def test_brief_has_extra(self):
+        brief = "FIG. 1 shows X.\nFIG. 2 shows Y.\nFIG. 3 shows Z.\nFIG. 4 shows W.\nFIG. 5 shows V."
+        detailed = "FIG. 1 shows X. FIG. 2 shows Y. FIG. 3 shows Z."
+        results = check_figure_cross_references(brief, detailed)
+        orphaned = [r for r in results if r.message_key == "checks.figure_xref_orphaned_brief"]
+        assert len(orphaned) == 1
+        assert "4" in orphaned[0].details
+        assert "5" in orphaned[0].details
+
+    def test_detailed_has_extra(self):
+        brief = "FIG. 1 shows X.\nFIG. 2 shows Y.\nFIG. 3 shows Z.\nFIG. 4 shows W.\nFIG. 5 shows V."
+        detailed = "FIG. 1 shows X. FIG. 2 shows Y. FIG. 3 shows Z. FIG. 4 shows W. FIG. 5 shows V. FIG. 6 shows U. FIG. 7 shows T. FIG. 8 shows S."
+        results = check_figure_cross_references(brief, detailed)
+        orphaned = [r for r in results if r.message_key == "checks.figure_xref_orphaned_detailed"]
+        assert len(orphaned) == 1
+        assert "6" in orphaned[0].details
+        assert "7" in orphaned[0].details
+        assert "8" in orphaned[0].details
+
+    def test_both_directions_mismatch(self):
+        brief = "FIG. 1 shows X.\nFIG. 2 shows Y."
+        detailed = "FIG. 1 shows X. FIG. 3 shows Z."
+        results = check_figure_cross_references(brief, detailed)
+        assert len(results) == 2
+        keys = {r.message_key for r in results}
+        assert "checks.figure_xref_orphaned_brief" in keys
+        assert "checks.figure_xref_orphaned_detailed" in keys
+
+    def test_letter_suffixes(self):
+        brief = "FIG. 2A shows X.\nFIG. 2B shows Y."
+        detailed = "As shown in FIG. 2A and FIG. 2B."
+        results = check_figure_cross_references(brief, detailed)
+        assert len(results) == 1
+        assert results[0].status == "pass"
+
+    def test_range_notation(self):
+        brief = "FIGS. 3-5 show various views."
+        detailed = "FIG. 3 shows X. FIG. 4 shows Y. FIG. 5 shows Z."
+        results = check_figure_cross_references(brief, detailed)
+        assert len(results) == 1
+        assert results[0].status == "pass"
+
+    def test_and_notation(self):
+        brief = "FIGS. 1 and 2 show the device."
+        detailed = "FIG. 1 shows X. FIG. 2 shows Y."
+        results = check_figure_cross_references(brief, detailed)
+        assert len(results) == 1
+        assert results[0].status == "pass"
+
+    def test_both_empty(self):
+        results = check_figure_cross_references("", "")
+        assert results == []
+
+    def test_one_empty_one_has_refs(self):
+        brief = ""
+        detailed = "FIG. 1 shows X. FIG. 2 shows Y."
+        results = check_figure_cross_references(brief, detailed)
+        orphaned = [r for r in results if r.message_key == "checks.figure_xref_orphaned_detailed"]
+        assert len(orphaned) == 1
+        assert "1" in orphaned[0].details
+        assert "2" in orphaned[0].details
+
+    def test_range_vs_individual_partial(self):
+        brief = "FIGS. 5-7 show the cooling assembly."
+        detailed = "As shown in FIG. 5, the housing includes... Referring to FIG. 6, the inlet valve..."
+        results = check_figure_cross_references(brief, detailed)
+        orphaned = [r for r in results if r.message_key == "checks.figure_xref_orphaned_brief"]
+        assert len(orphaned) == 1
+        assert "7" in orphaned[0].details
+        assert "5" not in orphaned[0].details
+        assert "6" not in orphaned[0].details
