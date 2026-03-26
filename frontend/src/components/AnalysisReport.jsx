@@ -68,6 +68,8 @@ function consolidateClaimsChecks(checks) {
         message: `Preamble noun mismatch: ${count} dependent claim${count !== 1 ? 's' : ''} differ from Claim ${rootId}`,
         message_key: 'checks.preamble_noun_mismatch',
         details: `Independent: '${indepNoun}' — Dependents: '${depNoun}'`,
+        details_key: 'details.nounMismatch',
+        details_params: { dependent: depNoun, independent: indepNoun },
       })
     }
   }
@@ -79,6 +81,7 @@ function consolidateClaimsChecks(checks) {
       message: 'Missing antecedent basis detected.',
       message_key: 'check.claims.antecedentBasis.verify',
       details: 'See § 112 Analysis below for per-claim detail.',
+      details_key: 'details.seeSection112',
     })
   } else if (hasAntecedentPass) {
     consolidated.push({

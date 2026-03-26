@@ -33,16 +33,16 @@
       "step1": "关闭 WiFi 或开启飞行模式",
       "step2": "将任意 .docx 拖入 PatentLint",
       "step3": "没有网络意味着没有云端、没有上传、没有任何数据外传",
-      "step4": "绿色表示浏览器未发送任何请求 — 可随时在 DevTools → Network tab 验证",
-      "testHeading": "不必只听我们说",
+      "step4": "绿色表示浏览器未发送任何请求，可随时在 DevTools → Network tab 验证",
+      "testHeading": "眼见为实",
       "testDescription": "点击按钮，观察请求出现在下方的网络活动记录中",
       "testButton": "发送测试请求",
       "logEmpty": "暂无请求"
     },
     "page": {
       "heroTitle": "您的专利文稿绝不离开您的设备",
-      "heroSubtext": "PatentLint 完全在您的浏览器中运行 — 不经过服务器、不上传、不使用云端。您的机密说明书始终留在您的机器上。",
-      "tryIt": "自己试试 →",
+      "heroSubtext": "PatentLint 完全在您的浏览器中运行，不经过服务器、不上传、不使用云端。您的机密说明书始终留在您的机器上。",
+      "tryIt": "自己试试看 →",
       "compareTitle": "PatentLint 与其他工具的比较",
       "compareDisclaimer": "本比较表反映一般架构模式。各产品可能有所不同。「Word 插件工具」与「云端工具」为通用类别，并非指特定产品。",
       "techTitle": "技术细节"
@@ -52,12 +52,12 @@
       "colPatentLint": "PatentLint",
       "colAddin": "Word 插件工具",
       "colCloud": "云端工具",
-      "q1": { "question": "我的文件会离开我的设备吗？", "patentlint": "绝不。100% 在浏览器中运行。", "addin": "文件留在本地，但插件可能联网回传。", "cloud": "是 — 上传至远程服务器。" },
-      "q2": { "question": "需要账号吗？", "patentlint": "不需要。无需注册、无需登录、无追踪。", "addin": "通常需要许可证或账号。", "cloud": "是 — 需要账号。" },
-      "q3": { "question": "可以离线使用吗？", "patentlint": "可以，首次加载后即可。", "addin": "取决于许可证验证方式。", "cloud": "不行 — 需要网络。" },
-      "q4": { "question": "能验证隐私声明吗？", "patentlint": "可以 — 打开 DevTools → Network tab，或开启飞行模式。", "addin": "难以审计插件的网络流量。", "cloud": "不行 — 数据在他们的服务器上。" },
+      "q1": { "question": "我的文件会离开我的设备吗？", "patentlint": "绝不。100% 在浏览器中运行。", "addin": "文件留在本地，但插件可能联网回传。", "cloud": "是，上传至远程服务器。" },
+      "q2": { "question": "需要账号吗？", "patentlint": "不需要。无需注册、无需登录、无追踪。", "addin": "通常需要许可证或账号。", "cloud": "是，需要账号。" },
+      "q3": { "question": "可以离线使用吗？", "patentlint": "可以，首次加载后即可。", "addin": "取决于许可证验证方式。", "cloud": "不行，需要网络。" },
+      "q4": { "question": "能验证隐私声明吗？", "patentlint": "可以。打开 DevTools → Network tab，或开启飞行模式。", "addin": "难以审计插件的网络流量。", "cloud": "不行，数据在他们的服务器上。" },
       "q5": { "question": "支持哪些平台？", "patentlint": "任何支持现代浏览器的设备。", "addin": "仅限 Windows + Microsoft Word。", "cloud": "浏览器端，但需要上传。" },
-      "q6": { "question": "源代码是否公开？", "patentlint": "是 — AGPL-3.0 开源。", "addin": "通常为专有软件。", "cloud": "通常为专有软件。" }
+      "q6": { "question": "源代码是否公开？", "patentlint": "是，AGPL-3.0 开源。", "addin": "通常为专有软件。", "cloud": "通常为专有软件。" }
     },
     "tech": {
       "architectureTitle": "架构",
@@ -65,7 +65,7 @@
       "networkTitle": "网络活动",
       "network": "初次页面加载（获取 Pyodide 运行环境和 PatentLint wheel）之后，分析过程中不会发出任何网络请求。您可以在浏览器的 DevTools Network tab 中验证，或在飞行模式下使用 PatentLint。",
       "pdfTitle": "PDF 生成",
-      "pdf": "PDF 报告使用 pdfmake 在客户端生成 — 不经过服务器。Docker/CLI 部署方式则使用 weasyprint 进行服务器端 PDF 生成，支持 CJK 字体。",
+      "pdf": "PDF 报告使用 pdfmake 在客户端生成，不经过服务器。Docker/CLI 部署方式则使用 weasyprint 进行服务器端 PDF 生成，支持 CJK 字体。",
       "aiTitle": "AI / LLM 使用",
       "ai": "PatentLint 不使用 AI、机器学习或大型语言模型。所有检查均为确定性的规则匹配，依据 MPEP 指南执行。您的文本不会被发送至任何 AI 服务。",
       "telemetryTitle": "遥测与分析",
@@ -76,8 +76,8 @@
   },
   "about": {
     "productTitle": "什么是 PatentLint？",
-    "productDesc1": "PatentLint 是免费的开源专利说明书质量检查工具。将美国专利申请文稿（.docx）拖入浏览器，即可获得即时合规报告 — 无需上传、无需账号、不使用云端。",
-    "productDesc2": "它依据美国《专利审查程序手册》(MPEP) 的格式规则进行检查，检测常见的撰写问题，如先行词基础缺漏和限制性用语，并将权利要求从属关系以树状图呈现 — 一切只需数秒。",
+    "productDesc1": "PatentLint 是免费的开源专利说明书质量检查工具。将美国专利申请文稿（.docx）拖入浏览器，即可获得即时合规报告。无需上传、无需账号、不使用云端。",
+    "productDesc2": "它依据美国《专利审查程序手册》(MPEP) 的格式规则进行检查，检测常见的撰写问题，如先行词基础缺漏和限制性用语，并将权利要求从属关系以树状图呈现，一切只需数秒。",
     "productDesc3": "PatentLint 由一位长年手动执行这些检查的专利工程师所创建。目标：自动化繁琐的部分，让专利从业人员专注于实质内容。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查文稿本身。",
@@ -132,11 +132,11 @@
       "browser": "您的浏览器",
       "optional": "可选：Docker / CLI",
       "zeroBadge": "分析过程中零网络请求",
-      "selfHostBadge": "自托管部署，适用于隔离网络与 ITAR 敏感环境",
+      "selfHostBadge": "自托管部署，适用于物理隔离网络与 ITAR 敏感环境",
       "tip": {
         "react": "React 18 + Vite 6 + Tailwind CSS v4",
-        "pyodide": "CPython 编译为 WebAssembly — 在浏览器中运行 Python",
-        "pdfmake": "客户端 PDF 生成 — 不需要服务器",
+        "pyodide": "CPython 编译为 WebAssembly，在浏览器中运行 Python",
+        "pdfmake": "客户端 PDF 生成，不需要服务器",
         "fastapi": "Python REST API，用于服务器端部署",
         "cli": "命令行界面，用于批量处理",
         "weasyprint": "HTML 转 PDF 引擎，支持 CJK 字体"
@@ -144,8 +144,24 @@
     },
     "builderTitle": "谁创建了这个工具？",
     "builderDesc1": "PatentLint 由 Christopher Chen 创建，他是一位从专利工程师转型为 ML/AI 工程师的开发者。在多年手动审查数千份专利说明书以比对 MPEP 规则之后，他创建了 PatentLint 来大规模捕捉人眼容易遗漏的问题。",
-    "builderDesc2": "PatentLint 是一款从零开始以 Python 构建的浏览器端分析工具，搭配现代 React 前端。所有文件不会离开您的设备 — 分析完全通过 WebAssembly 在浏览器中运行。",
+    "builderDesc2": "PatentLint 是一款从零开始以 Python 构建的浏览器端分析工具，搭配现代 React 前端。所有文件不会离开您的设备，分析完全通过 WebAssembly 在浏览器中运行。",
     "builderSister": "PatentLint 的姊妹项目「Agentic Patent Analyst」使用 LLM 代理进行现有技术检索与权利要求覆盖范围分析。两款工具设计为搭配使用。"
+  },
+  "details": {
+    "paragraphs": "段落：{{list}}",
+    "claims": "权利要求：{{list}}",
+    "terms": "术语：{{list}}",
+    "figures": "附图：{{list}}",
+    "firstGapParagraph": "首个间隔位于第 {{position}} 段",
+    "firstGapClaim": "首个间隔位于第 {{position}} 项",
+    "citations": "{{text}}",
+    "rawText": "{{text}}",
+    "claimsOverview": "{{independent}} 个独立项、{{dependent}} 个从属项，共 {{total}} 项",
+    "missingSections": "缺少：{{list}}",
+    "sectionName": "{{name}}",
+    "claimDependsOn": "权利要求 {{claim}} 从属于权利要求 {{parent}}",
+    "nounMismatch": "从属项「{{dependent}}」与独立项「{{independent}}」不一致",
+    "seeSection112": "详见下方 § 112 分析。"
   },
   "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
   "check": {
@@ -206,6 +222,7 @@
       },
       "whereinComma": {
         "amend": "「wherein」逗号使用不正确。",
+        "verify": "请确认「wherein」逗号使用。",
         "pass": "「wherein」逗号使用正确。"
       },
       "meansFunction": {
@@ -264,7 +281,7 @@
     "feature3_title": "权利要求树状图",
     "feature3_desc": "交互式从属关系树状图和 Mermaid 图表，一目了然地呈现权利要求结构。",
     "feature4_title": "随处可用",
-    "feature4_desc": "Mac、Windows、Linux、iPad — 任何有浏览器的设备均可使用。无需 Word 插件。完整界面支持 English、繁體中文、简体中文 及 日本語。",
+    "feature4_desc": "Mac、Windows、Linux、iPad，任何有浏览器的设备均可使用。无需 Word 插件。完整界面支持 English、繁體中文、简体中文 及 日本語。",
     "feature5_title": "即时分析",
     "feature5_desc": "拖放 .docx 文件即可在数秒内获得结果。下载 PDF 报告，无需云端往返。"
   },

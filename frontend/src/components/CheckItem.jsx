@@ -45,9 +45,10 @@ function getCitation(messageKey) {
 
 export { getCitation }
 
-export default function CheckItem({ status, message, message_key, details }) {
+export default function CheckItem({ status, message, message_key, details, details_key, details_params }) {
   const { t, i18n } = useTranslation()
   const displayMessage = message_key && i18n.exists(message_key) ? t(message_key) : message
+  const displayDetails = details_key && i18n.exists(details_key) ? t(details_key, details_params || {}) : details
   const citation = getCitation(message_key)
 
   return (
@@ -72,8 +73,8 @@ export default function CheckItem({ status, message, message_key, details }) {
         )}
         <span className="text-sm">{displayMessage}</span>
       </div>
-      {details && (
-        <p className="text-xs text-muted-foreground mt-1 ml-[52px]">{details}</p>
+      {displayDetails && (
+        <p className="text-xs text-muted-foreground mt-1 ml-[52px]">{displayDetails}</p>
       )}
     </div>
   )

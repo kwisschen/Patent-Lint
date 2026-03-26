@@ -81,6 +81,8 @@ class CheckItem(BaseModel):
     message: str  # English fallback
     message_key: str = ""  # i18n key for frontend
     details: str | None = None
+    details_key: str | None = None
+    details_params: dict[str, str] | None = None
 
 
 class ClaimTreeRow(BaseModel):
@@ -212,6 +214,8 @@ class AnalysisResult(BaseModel):
                 message="Restrictive wording found in specification paragraphs.",
                 message_key="check.spec.restrictiveWording.verify",
                 details=f"Paragraphs: {self.improper_spec_paragraphs}",
+                details_key="details.paragraphs",
+                details_params={"list": str(self.improper_spec_paragraphs)},
             ))
         else:
             spec_checks.append(CheckItem(
@@ -226,6 +230,8 @@ class AnalysisResult(BaseModel):
                 message="Paragraph numbers are not sequential.",
                 message_key="check.spec.paragraphSequential.amend",
                 details=f"First gap at position {self.last_sequential_paragraph}",
+                details_key="details.firstGapParagraph",
+                details_params={"position": str(self.last_sequential_paragraph)},
             ))
         else:
             spec_checks.append(CheckItem(
@@ -240,6 +246,8 @@ class AnalysisResult(BaseModel):
                 message="Paragraphs with invalid or missing ending punctuation.",
                 message_key="check.spec.paragraphEnding.amend",
                 details=f"Paragraphs: {self.missing_ending_paragraphs}",
+                details_key="details.paragraphs",
+                details_params={"list": str(self.missing_ending_paragraphs)},
             ))
         else:
             spec_checks.append(CheckItem(
@@ -267,6 +275,8 @@ class AnalysisResult(BaseModel):
                 message="Cross-reference section cites related applications.",
                 message_key="check.spec.crossReference.verify",
                 details=self.cross_reference_citations,
+                details_key="details.citations",
+                details_params={"text": self.cross_reference_citations},
             ))
         else:
             spec_checks.append(CheckItem(
@@ -281,6 +291,8 @@ class AnalysisResult(BaseModel):
                 message="Background section cites prior art.",
                 message_key="check.spec.priorArt.verify",
                 details=self.prior_art_citations,
+                details_key="details.citations",
+                details_params={"text": self.prior_art_citations},
             ))
         else:
             spec_checks.append(CheckItem(
@@ -313,6 +325,8 @@ class AnalysisResult(BaseModel):
             message="Drawings overview.",
             message_key="check.spec.drawings",
             details=" ".join(drawings_parts),
+            details_key="details.rawText",
+            details_params={"text": " ".join(drawings_parts)},
         ))
 
         # --- Claims checks ---
@@ -324,6 +338,8 @@ class AnalysisResult(BaseModel):
                 message="Restrictive or indefinite wording found in claims.",
                 message_key="check.claims.restrictiveWording.verify",
                 details=f"Claims: {self.improper_claims}",
+                details_key="details.claims",
+                details_params={"list": str(self.improper_claims)},
             ))
         else:
             claims_checks.append(CheckItem(
@@ -338,6 +354,8 @@ class AnalysisResult(BaseModel):
                 message="Claim numbers are not sequential.",
                 message_key="check.claims.sequential.amend",
                 details=f"First gap at position {self.last_sequential_claim}",
+                details_key="details.firstGapClaim",
+                details_params={"position": str(self.last_sequential_claim)},
             ))
         else:
             claims_checks.append(CheckItem(
@@ -352,6 +370,8 @@ class AnalysisResult(BaseModel):
                 message="Multiple-dependent claims found.",
                 message_key="check.claims.multipleDependent.amend",
                 details=f"Claims: {self.multiple_dependent_claims}",
+                details_key="details.claims",
+                details_params={"list": str(self.multiple_dependent_claims)},
             ))
         else:
             claims_checks.append(CheckItem(
@@ -366,6 +386,8 @@ class AnalysisResult(BaseModel):
                 message="Self-dependent claims found.",
                 message_key="check.claims.selfDependent.amend",
                 details=f"Claims: {self.self_dependent_claims}",
+                details_key="details.claims",
+                details_params={"list": str(self.self_dependent_claims)},
             ))
         else:
             claims_checks.append(CheckItem(
@@ -380,6 +402,8 @@ class AnalysisResult(BaseModel):
                 message="Claims missing a final period.",
                 message_key="check.claims.missingPeriod.amend",
                 details=f"Claims: {self.missing_period_claims}",
+                details_key="details.claims",
+                details_params={"list": str(self.missing_period_claims)},
             ))
         else:
             claims_checks.append(CheckItem(
@@ -394,6 +418,8 @@ class AnalysisResult(BaseModel):
                 message="Claims with extra or misplaced periods.",
                 message_key="check.claims.extraPeriod.amend",
                 details=f"Claims: {self.extra_periods_claims}",
+                details_key="details.claims",
+                details_params={"list": str(self.extra_periods_claims)},
             ))
         else:
             claims_checks.append(CheckItem(
@@ -404,10 +430,12 @@ class AnalysisResult(BaseModel):
 
         if self.incorrect_wherein_comma_claims:
             claims_checks.append(CheckItem(
-                status="amend",
-                message="Incorrect wherein comma usage.",
-                message_key="check.claims.whereinComma.amend",
+                status="verify",
+                message="Review wherein comma usage.",
+                message_key="check.claims.whereinComma.verify",
                 details=f"Claims: {self.incorrect_wherein_comma_claims}",
+                details_key="details.claims",
+                details_params={"list": str(self.incorrect_wherein_comma_claims)},
             ))
         else:
             claims_checks.append(CheckItem(
@@ -422,6 +450,8 @@ class AnalysisResult(BaseModel):
                 message="Claims may invoke 35 U.S.C. § 112(f) means-plus-function.",
                 message_key="check.claims.meansFunction.verify",
                 details=f"Claims: {self.means_plus_function_claims}",
+                details_key="details.claims",
+                details_params={"list": str(self.means_plus_function_claims)},
             ))
         else:
             claims_checks.append(CheckItem(
@@ -437,6 +467,8 @@ class AnalysisResult(BaseModel):
                 message="Possible missing antecedent basis found.",
                 message_key="check.claims.antecedentBasis.verify",
                 details=f"Terms: {', '.join(unique_terms)}",
+                details_key="details.terms",
+                details_params={"list": ", ".join(unique_terms)},
             ))
         else:
             claims_checks.append(CheckItem(
@@ -457,6 +489,8 @@ class AnalysisResult(BaseModel):
                 message="Claim terms not found in specification.",
                 message_key="checks.spec_support_unsupported_terms",
                 details=f"Terms: {', '.join(unique_phrases[:10])}",
+                details_key="details.terms",
+                details_params={"list": ", ".join(unique_phrases[:10])},
             ))
         else:
             claims_checks.append(CheckItem(
@@ -474,6 +508,12 @@ class AnalysisResult(BaseModel):
                 f"{self.dependent_claims_count} dependent, "
                 f"{self.total_claims} total"
             ),
+            details_key="details.claimsOverview",
+            details_params={
+                "independent": str(self.independent_claims_count),
+                "dependent": str(self.dependent_claims_count),
+                "total": str(self.total_claims),
+            },
         ))
 
         # --- Abstract checks ---
@@ -485,6 +525,8 @@ class AnalysisResult(BaseModel):
                 message="Restrictive or improper wording found in abstract.",
                 message_key="check.abstract.restrictiveWording.verify",
                 details=self.improper_abstract_phrases_formatted.strip(),
+                details_key="details.rawText",
+                details_params={"text": self.improper_abstract_phrases_formatted.strip()},
             ))
         else:
             abstract_checks.append(CheckItem(
