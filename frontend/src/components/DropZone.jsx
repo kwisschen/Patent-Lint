@@ -1,12 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2025 Christopher Chen
-import { useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Upload } from 'lucide-react'
+import { Upload, ShieldCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-export default function DropZone({ onFile }) {
+export default function DropZone({ onFile, onShowProveIt }) {
   const { t } = useTranslation()
+  const [badgeVisible, setBadgeVisible] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setBadgeVisible(true), 500)
+    return () => clearTimeout(timer)
+  }, [])
 
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles.length > 0) {
@@ -29,22 +35,44 @@ export default function DropZone({ onFile }) {
         className={`
           flex flex-col items-center justify-center gap-4
           w-full max-w-lg p-12 rounded-lg
-          border-2 border-dashed cursor-pointer
-          transition-colors duration-200
+          border-2 cursor-pointer
+          transition-all duration-200
           ${isDragActive
-            ? 'border-[var(--pass-border)] bg-[var(--pass-bg)]/30'
-            : 'border-border hover:border-muted-foreground/50'
+            ? 'border-solid border-[var(--pass-border)] bg-blue-50/50 dark:bg-blue-950/30 scale-[1.015]'
+            : 'border-dashed border-border hover:border-muted-foreground/50 dropzone-breathe'
           }
         `}
+        style={isDragActive ? { transitionTimingFunction: 'var(--ease-bounce)' } : undefined}
       >
         <input {...getInputProps()} />
-        <Upload className={`h-10 w-10 ${isDragActive ? 'text-[var(--pass-text)]' : 'text-muted-foreground'}`} />
+        <Upload className={`h-10 w-10 transition-colors duration-200 ${isDragActive ? 'text-[var(--pass-text)]' : 'text-muted-foreground'}`} />
         <div className="text-center">
           <p className="text-base font-medium">{t('dropzone.title')}</p>
           <p className="text-sm text-muted-foreground mt-1">{t('dropzone.subtitle')}</p>
           <p className="text-xs text-muted-foreground mt-2">{t('dropzone.notice')}</p>
         </div>
       </div>
+
+      {/* Security badge */}
+      <div
+        className="flex flex-col gap-1.5 text-sm text-green-600 dark:text-green-400 transition-opacity duration-500"
+        style={{ opacity: badgeVisible ? 1 : 0 }}
+      >
+        <div className="flex items-center gap-2">
+          <ShieldCheck className="w-4 h-4 flex-shrink-0" />
+          <span>
+            <strong>{t('security.badge.headline')}</strong>
+            {' '}{t('security.badge.description')}
+          </span>
+        </div>
+        <button
+          onClick={(e) => { e.stopPropagation(); onShowProveIt?.() }}
+          className="text-xs ml-6 underline underline-offset-2 hover:text-green-700 dark:hover:text-green-300 transition-colors text-left"
+        >
+          {t('security.badge.proveIt')}
+        </button>
+      </div>
+
       {fileRejections.length > 0 && (
         <p className="text-sm text-[var(--amend-text)]">
           {t('dropzone.reject')}

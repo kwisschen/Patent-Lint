@@ -4,12 +4,12 @@
   "summary": { "specParagraphs": "明細書段落数", "claims": "請求項", "independent": "独立項", "dependent": "従属項", "figures": "図面", "abstractWords": "要約語数", "claimCategories": "請求項カテゴリ", "method": "方法", "apparatus": "装置", "outsideRange": "50–150語の範囲外" },
   "section": { "specification": "明細書", "claims": "特許請求の範囲", "drawings": "図面の簡単な説明", "drawingsShort": "図面", "abstract": "要約書" },
   "status": { "pass": "合格", "verify": "確認", "amend": "修正" },
-  "button": { "downloadPdf": "PDFレポートを保存", "copySummary": "要約をコピー", "copied": "コピーしました！", "newAnalysis": "再分析", "generating": "保存中..." },
+  "button": { "downloadPdf": "PDFレポートを保存", "newAnalysis": "再分析", "generating": "保存中..." },
   "diagram": { "show": "図表を表示", "hide": "図表を非表示" },
   "tree": { "apparatusClaims": "物の請求項", "methodClaims": "方法の請求項", "independent": "独立項", "dependent": "従属項", "deps": "個の従属項", "dep": "個の従属項" },
   "section112": { "title": "§ 112 分析" },
   "analysis": { "analyzing": "特許文書を分析中...", "label": "分析結果" },
-  "footer": { "disclaimer": "本レポートは法的助言を構成するものではありません" },
+  "footer": { "disclaimer": "本レポートは法的助言を構成するものではありません", "builtBy": "Built by Christopher Chen", "security": "セキュリティ", "about": "概要", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "フィードバック" },
   "antecedentBasis": { "title": "先行詞根拠の確認", "items": "個の用語", "item": "個の用語" },
   "specSupport": { "title": "明細書サポートの確認", "items": "個の用語", "item": "個の用語" },
   "triage": { "title": "優先事項の要約", "amend": "修正が必要", "amendEmpty": "修正が必要な項目はありません。", "verify": "専門家の確認", "verifyEmpty": "確認が必要な項目はありません。", "pass": "合格", "items": "件", "item": "件" },
@@ -168,6 +168,12 @@
     "preamble_noun_mismatch": "従属項と独立項のプリアンブル名詞が異なります。",
     "preamble_indefinite_article": "従属項のプリアンブルに不定冠詞が使用されています（「The」を使用すべき）。",
     "spec_support_unsupported_terms": "請求項の用語が明細書に見つかりません。",
-    "spec_support_pass": "すべての請求項の用語が明細書に見つかりました。"
+    "spec_support_pass": "すべての請求項の用語が明細書に見つかりました。",
+    "required_sections_pass": "MPEP § 608.01(a) に基づくすべての必須セクションが存在します。",
+    "required_sections_missing": "MPEP § 608.01(a) に基づく必須セクションが不足しています。",
+    "optional_section_missing": "任意セクションが見つかりません。該当する場合は追加してください。",
+    "figure_xref_pass": "図面の簡単な説明と Detailed Description の間の図面参照が整合しています。",
+    "figure_xref_orphaned_brief": "図面の簡単な説明に記載されているが Detailed Description で参照されていない図面があります。",
+    "figure_xref_orphaned_detailed": "Detailed Description で参照されているが図面の簡単な説明に記載されていない図面があります。"
   }
 }

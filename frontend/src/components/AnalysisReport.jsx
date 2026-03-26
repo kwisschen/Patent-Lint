@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2025 Christopher Chen
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import HealthDonut from './HealthDonut'
 import SectionHealthBars from './SectionHealthBars'
@@ -13,7 +13,8 @@ import AntecedentBasisCard from './AntecedentBasisCard'
 import SpecSupportCard from './SpecSupportCard'
 import Section112Container from './Section112Container'
 import { Button } from '@/components/ui/button'
-import { Download, RotateCcw, Copy, Check } from 'lucide-react'
+import { Download, RotateCcw, ShieldCheck } from 'lucide-react'
+import { useNetworkMonitor } from '../hooks/useNetworkMonitor'
 
 /**
  * Consolidate claims_checks to reduce visual noise:
@@ -25,12 +26,11 @@ function consolidateClaimsChecks(checks) {
   if (!checks) return []
 
   const consolidated = []
-  const nounMismatches = []  // message_key === 'checks.preamble_noun_mismatch'
-  const antecedentItems = [] // message_key starts with 'check.claims.antecedentBasis'
+  const nounMismatches = []
+  const antecedentItems = []
   let hasAntecedentPass = false
 
   for (const check of checks) {
-    // Filter out redundant claims overview (stat cards show this info)
     if (check.message_key === 'check.claims.overview') {
       continue
     }
@@ -47,11 +47,9 @@ function consolidateClaimsChecks(checks) {
     }
   }
 
-  // Group noun mismatches by root independent claim
   if (nounMismatches.length > 0) {
     const byRoot = {}
     for (const nm of nounMismatches) {
-      // details format: "Claim {dep} depends on claim {root}"
       const rootMatch = nm.details?.match(/depends on claim (\d+)/)
       const rootId = rootMatch ? rootMatch[1] : 'unknown'
       if (!byRoot[rootId]) byRoot[rootId] = { items: [], message: nm.message }
@@ -59,8 +57,6 @@ function consolidateClaimsChecks(checks) {
     }
 
     for (const [rootId, group] of Object.entries(byRoot)) {
-      // Extract nouns from first item's message
-      // message format: "Claim N: preamble noun 'X' differs from independent claim 'Y'."
       const first = group.items[0]
       const nounMatch = first.message.match(/preamble noun '([^']+)' differs from independent claim '([^']+)'/)
       const depNoun = nounMatch ? nounMatch[1] : '?'
@@ -76,7 +72,6 @@ function consolidateClaimsChecks(checks) {
     }
   }
 
-  // Keep antecedent basis as a single summary item pointing to the card below
   if (antecedentItems.length > 0) {
     const worst = antecedentItems.some(c => c.status === 'amend') ? 'amend' : 'verify'
     consolidated.push({
@@ -96,45 +91,33 @@ function consolidateClaimsChecks(checks) {
   return consolidated
 }
 
-function buildSummaryText(data, t, i18n) {
-  const sections = [
-    { key: 'section.specification', checks: data.specification_checks || [] },
-    { key: 'section.drawings', checks: data.drawings_checks || [] },
-    { key: 'section.claims', checks: data.claims_checks || [] },
-    { key: 'section.abstract', checks: data.abstract_checks || [] },
-  ]
-  const allChecks = sections.flatMap((s) => s.checks)
-  const amendCount = allChecks.filter((c) => c.status === 'amend').length
-  const verifyCount = allChecks.filter((c) => c.status === 'verify').length
-  const passCount = allChecks.filter((c) => c.status === 'pass').length
+export default function AnalysisReport({ data, filename, onDownloadPdf, onReset, downloading, onShowProveIt, pyodideReady }) {
+  const { t } = useTranslation()
+  const { active: networkActive } = useNetworkMonitor()
 
-  const triage = [
-    `--- ${t('triage.title')} ---`,
-    `${t('triage.amend')}: ${amendCount} ${amendCount === 1 ? t('triage.item') : t('triage.items')}`,
-    `${t('triage.verify')}: ${verifyCount} ${verifyCount === 1 ? t('triage.item') : t('triage.items')}`,
-    `${t('triage.pass')}: ${passCount} ${passCount === 1 ? t('triage.item') : t('triage.items')}`,
-  ].join('\n')
+  // Stagger cascade for summary cards
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    const timer = setTimeout(() => setMounted(true), 50)
+    return () => clearTimeout(timer)
+  }, [])
 
-  const detail = sections
-    .map(({ key, checks }) => {
-      const header = `=== ${t(key)} ===`
-      const lines = checks.map((c) => {
-        const statusLabel = t(`status.${c.status}`)
-        const msg = c.message_key && i18n.exists(c.message_key) ? t(c.message_key) : c.message
-        return `[${statusLabel}] ${msg}${c.details ? ` — ${c.details}` : ''}`
-      })
-      return `${header}\n${lines.join('\n')}`
-    })
-    .join('\n\n')
+  // Sticky action bar entrance
+  const [barVisible, setBarVisible] = useState(false)
+  useEffect(() => {
+    const timer = setTimeout(() => setBarVisible(true), 300)
+    return () => clearTimeout(timer)
+  }, [])
 
-  return `${triage}\n\n${detail}`
-}
+  // Green dot mount pulse
+  const [dotPulsed, setDotPulsed] = useState(false)
+  useEffect(() => {
+    if (pyodideReady) {
+      const timer = setTimeout(() => setDotPulsed(true), 100)
+      return () => clearTimeout(timer)
+    }
+  }, [pyodideReady])
 
-export default function AnalysisReport({ data, filename, onDownloadPdf, onReset, downloading }) {
-  const { t, i18n } = useTranslation()
-  const [copied, setCopied] = useState(false)
-
-  // Consolidate checks once, use everywhere
   const consolidatedData = useMemo(() => ({
     ...data,
     specification_checks: (data.specification_checks || []).filter(
@@ -146,15 +129,14 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
     ),
   }), [data])
 
-  const handleCopy = async () => {
-    const text = buildSummaryText(consolidatedData, t, i18n)
-    await navigator.clipboard.writeText(text)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
   const hasAntecedentIssues = data.antecedent_basis_issues?.length > 0
   const hasUnsupportedTerms = data.unsupported_terms?.length > 0
+
+  const cascadeDelay = (i) => ({
+    opacity: mounted ? 1 : 0,
+    transform: mounted ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.95)',
+    transition: `opacity 400ms var(--ease-bounce) ${i * 100}ms, transform 400ms var(--ease-bounce) ${i * 100}ms`,
+  })
 
   return (
     <div className="space-y-4">
@@ -162,12 +144,21 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
         <p className="text-sm text-muted-foreground">{t('analysis.label')}: {filename}</p>
       )}
 
-      <HealthDonut data={consolidatedData} />
-      <SectionHealthBars data={consolidatedData} />
-      <SummaryBar data={consolidatedData} />
-      <TriagePanel data={consolidatedData} />
+      {/* Summary cards with stagger cascade */}
+      <div style={cascadeDelay(0)}>
+        <HealthDonut data={consolidatedData} animate={mounted} />
+      </div>
+      <div style={cascadeDelay(1)}>
+        <SectionHealthBars data={consolidatedData} animate={mounted} />
+      </div>
+      <div style={cascadeDelay(2)}>
+        <SummaryBar data={consolidatedData} animate={mounted} />
+      </div>
+      <div style={cascadeDelay(3)}>
+        <TriagePanel data={consolidatedData} />
+      </div>
 
-      <div className="space-y-3">
+      <div className="space-y-3" style={cascadeDelay(4)}>
         <SectionPanel
           title={t('section.specification')}
           checks={consolidatedData.specification_checks}
@@ -204,20 +195,52 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
       {/* Spacer so content isn't hidden behind sticky bar */}
       <div className="h-16" />
 
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-3 px-4 py-3">
-          <Button className="no-print" onClick={onDownloadPdf} disabled={downloading}>
-            <Download className="h-4 w-4" />
-            {downloading ? t('button.generating') : t('button.downloadPdf')}
-          </Button>
-          <Button variant="outline" onClick={handleCopy}>
-            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            {copied ? t('button.copied') : t('button.copySummary')}
-          </Button>
-          <Button variant="outline" onClick={onReset}>
-            <RotateCcw className="h-4 w-4" />
-            {t('button.newAnalysis')}
-          </Button>
+      {/* Single-row action bar with security status */}
+      <div
+        className="fixed bottom-0 left-0 right-0 z-40 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-transform duration-300"
+        style={{
+          transform: barVisible ? 'translateY(0)' : 'translateY(100%)',
+          transitionTimingFunction: 'var(--ease-smooth)',
+        }}
+      >
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
+          {/* Left: action buttons */}
+          <div className="flex items-center gap-2">
+            <Button className="no-print" onClick={onDownloadPdf} disabled={downloading}>
+              <Download className="h-4 w-4" />
+              {downloading ? t('button.generating') : t('button.downloadPdf')}
+            </Button>
+            <Button variant="outline" onClick={onReset}>
+              <RotateCcw className="h-4 w-4" />
+              {t('button.newAnalysis')}
+            </Button>
+          </div>
+
+          {/* Right: security status */}
+          {pyodideReady && (
+            <div className="flex items-center gap-3 text-xs">
+              <div className="flex items-center gap-1.5 text-green-600 dark:text-green-400">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>{t('security.results.badge')}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span
+                  className={`w-2 h-2 rounded-full transition-colors duration-300 ${networkActive ? 'bg-red-500' : 'bg-green-500'} ${dotPulsed ? '' : 'network-dot-pulse'}`}
+                />
+                <span className={`transition-colors duration-300 ${
+                  networkActive ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'
+                }`}>
+                  {networkActive ? t('security.results.networkActive') : t('security.results.networkIdle')}
+                </span>
+              </div>
+              <button
+                onClick={() => onShowProveIt?.()}
+                className="text-xs underline underline-offset-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-400 transition-colors"
+              >
+                {t('security.results.howItWorks')}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

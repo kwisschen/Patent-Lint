@@ -1,6 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2025 Christopher Chen
-function HealthBar({ label, checks = [] }) {
+import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+
+function HealthBar({ label, checks = [], animate, delay = 0 }) {
+  const [grown, setGrown] = useState(false)
+
+  useEffect(() => {
+    if (animate) {
+      const timer = setTimeout(() => setGrown(true), delay)
+      return () => clearTimeout(timer)
+    }
+  }, [animate, delay])
+
   const counts = { pass: 0, verify: 0, amend: 0 }
   checks.forEach((c) => {
     if (counts[c.status] !== undefined) counts[c.status]++
@@ -21,10 +33,11 @@ function HealthBar({ label, checks = [] }) {
         {segments.map((seg) => (
           <div
             key={seg.key}
-            className="h-full transition-all duration-500"
+            className="h-full"
             style={{
-              width: `${(seg.count / total) * 100}%`,
+              width: grown ? `${(seg.count / total) * 100}%` : '0%',
               backgroundColor: seg.color,
+              transition: `width 500ms var(--ease-bounce)`,
             }}
           />
         ))}
@@ -33,9 +46,7 @@ function HealthBar({ label, checks = [] }) {
   )
 }
 
-import { useTranslation } from 'react-i18next'
-
-export default function SectionHealthBars({ data }) {
+export default function SectionHealthBars({ data, animate = false }) {
   const { t } = useTranslation()
   const sections = [
     { label: t('section.specification'), checks: data.specification_checks },
@@ -46,8 +57,8 @@ export default function SectionHealthBars({ data }) {
 
   return (
     <div className="space-y-2">
-      {sections.map((s) => (
-        <HealthBar key={s.label} label={s.label} checks={s.checks} />
+      {sections.map((s, i) => (
+        <HealthBar key={s.label} label={s.label} checks={s.checks} animate={animate} delay={i * 100} />
       ))}
     </div>
   )
