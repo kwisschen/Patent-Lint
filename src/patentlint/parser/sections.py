@@ -18,7 +18,7 @@ import re
 # ---------------------------------------------------------------------------
 
 _SECTION_HEADER_PATTERNS = [
-    r"CROSS[- ]REFERENCES?\s+TO\s+RELATED",
+    r"CROSS[- ]REFERENCES?\s+TO\s+RELATED(?:\s+(?:PATENT\s+)?APPLICATIONS?)?",
     r"REFERENCE\s+TO\s+RELATED\s+(?:APPLICATIONS?|PATENTS?)",
     r"RELATED\s+APPLICATIONS?",
     r"FIELD\s+OF\s+THE\s+(?:INVENTION|DISCLOSURE)",
@@ -27,11 +27,11 @@ _SECTION_HEADER_PATTERNS = [
     r"BACKGROUND(?:\s+(?:OF\s+(?:THE\s+)?)?(?:DISCLOSURE|INVENTION|ART))?",
     r"DESCRIPTION\s+OF\s+(?:THE\s+)?(?:RELATED\s+ART|PRIOR\s+ART)",
     r"PRIOR\s+ART",
-    r"(?:BRIEF\s+)?SUMMARY(?:\s+OF\s+(?:THE\s+)?INVENTION)?",
+    r"(?:BRIEF\s+)?SUMMARY(?:\s+OF\s+(?:THE\s+)?(?:INVENTION|DISCLOSURE))?",
     r"OBJECT(?:\s+AND\s+SUMMARY)?\s+OF\s+(?:THE\s+)?INVENTION",
     r"DISCLOSURE\s+OF\s+INVENTION",
     r"(?:BRIEF\s+)?DESCRIPTION\s+OF\s+(?:THE\s+)?(?:SEVERAL\s+VIEWS\s+OF\s+(?:THE\s+)?)?(?:DRAWINGS|FIGURES)",
-    r"DETAILED\s+DESCRIPTION(?:\s+OF\s+(?:THE\s+)?(?:EXEMPLARY\s+|PREFERRED\s+)?(?:EMBODIMENTS?|INVENTION))?",
+    r"DETAILED\s+DESCRIPTION(?:\s+OF\s+(?:THE\s+)?(?:EXEMPLARY\s+|PREFERRED\s+)?(?:EMBODIMENTS?|INVENTION|DISCLOSURE))?",
     r"DESCRIPTION\s+OF\s+(?:THE\s+)?INVENTION",
     r"BEST\s+MODE\s+FOR\s+CARRYING\s+OUT",
     r"CLAIMS",
@@ -137,7 +137,7 @@ def extract_cross_reference_section(text: str) -> str:
     """
     start_match = re.search(
         r"^[ \t]*("
-        r"CROSS[- ]?REFERENCES?\s+TO\s+RELATED\s+APPLICATIONS?"
+        r"CROSS[- ]?REFERENCES?\s+TO\s+RELATED\s+(?:PATENT\s+)?APPLICATIONS?"
         r"|REFERENCE\s+TO\s+RELATED\s+(?:APPLICATIONS?|PATENTS?)"
         r"|RELATED\s+APPLICATIONS?"
         r")[ \t]*$",
@@ -211,13 +211,14 @@ def extract_detailed_description_section(text: str) -> str:
     """Extract the Detailed Description section.
 
     Supports: DETAILED DESCRIPTION, DETAILED DESCRIPTION OF THE INVENTION,
+    DETAILED DESCRIPTION OF THE DISCLOSURE,
     DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENT(S),
     DETAILED DESCRIPTION OF THE EXEMPLARY EMBODIMENT(S).
     Header must be standalone paragraph; ends at next standalone section header.
     """
     start_match = re.search(
         r"^[ \t]*DETAILED\s+DESCRIPTION"
-        r"(?:\s+OF\s+(?:THE\s+)?(?:EXEMPLARY\s+|PREFERRED\s+)?(?:EMBODIMENTS?|INVENTION))?"
+        r"(?:\s+OF\s+(?:THE\s+)?(?:EXEMPLARY\s+|PREFERRED\s+)?(?:EMBODIMENTS?|INVENTION|DISCLOSURE))?"
         r"[ \t]*$",
         text,
         re.IGNORECASE | re.MULTILINE,
@@ -235,12 +236,12 @@ def extract_detailed_description_section(text: str) -> str:
 def extract_summary_section(text: str) -> str:
     """Extract the Summary of the Invention section.
 
-    Supports: SUMMARY, SUMMARY OF THE INVENTION, BRIEF SUMMARY,
-    BRIEF SUMMARY OF THE INVENTION.
+    Supports: SUMMARY, SUMMARY OF THE INVENTION, SUMMARY OF THE DISCLOSURE,
+    BRIEF SUMMARY, BRIEF SUMMARY OF THE INVENTION, BRIEF SUMMARY OF THE DISCLOSURE.
     Header must be standalone paragraph; ends at next standalone section header.
     """
     start_match = re.search(
-        r"^[ \t]*(?:BRIEF\s+)?SUMMARY(?:\s+OF\s+(?:THE\s+)?INVENTION)?[ \t]*$",
+        r"^[ \t]*(?:BRIEF\s+)?SUMMARY(?:\s+OF\s+(?:THE\s+)?(?:INVENTION|DISCLOSURE))?[ \t]*$",
         text,
         re.IGNORECASE | re.MULTILINE,
     )

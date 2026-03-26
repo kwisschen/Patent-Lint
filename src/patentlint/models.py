@@ -174,6 +174,10 @@ class AnalysisResult(BaseModel):
     # Drawings — reference numerals
     reference_numerals: list[ReferenceNumeral] = Field(default_factory=list)
 
+    # Issue #2 & #3 — required sections + figure cross-references
+    required_sections_checks: list[CheckItem] = Field(default_factory=list)
+    figure_xref_checks: list[CheckItem] = Field(default_factory=list)
+
     # Abstract
     abstract_word_count: int = 0
     abstract_structure_good: bool = True
@@ -284,6 +288,10 @@ class AnalysisResult(BaseModel):
                 message="No prior art citations found in background.",
                 message_key="check.spec.priorArt.pass",
             ))
+
+        # Required sections checks (Issue #2)
+        for rc in self.required_sections_checks:
+            spec_checks.append(rc)
 
         # Drawings overview in specification section
         drawings_parts: list[str] = []
@@ -572,6 +580,10 @@ class AnalysisResult(BaseModel):
             message=f"{self.figures_count} figure(s) found.",
             message_key="check.drawings.count",
         ))
+
+        # Figure cross-reference checks (Issue #3)
+        for fc in self.figure_xref_checks:
+            drawings_checks.append(fc)
 
         # --- Claim trees ---
         product_rows: list[ClaimTreeRow] = []
