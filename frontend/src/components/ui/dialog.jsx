@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright (c) 2025 Christopher Chen
 "use client"
 
 import * as React from "react"
