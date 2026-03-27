@@ -39,14 +39,12 @@ def _run_pipeline(loaded, full_text: str) -> AnalysisResult:
 
     if claims:
         claim_ids = [c.id for c in claims]
-        missing_periods = claims_analysis.find_missing_periods(claims)
-        extra_periods = claims_analysis.find_extra_periods(claims)
+        punctuation_checks = claims_analysis.check_claim_punctuation(claims)
         multiple_deps = claims_analysis.find_multiple_dependents(claims)
         self_deps = claims_analysis.find_self_dependent_claims(claims)
         claims_seq = claims_analysis.are_claims_sequential(claim_ids)
         last_seq_claim = claims_analysis.get_last_sequential_index(claim_ids)
         wording = claims_parser.detect_improper_claim_wording(claims)
-        wherein_issues = claims_parser.detect_incorrect_wherein_commas(claims)
         means_plus_function = claims_analysis.detect_means_plus_function(claims)
         antecedent_basis = claims_analysis.check_antecedent_basis(claims)
         preamble_checks = claims_analysis.check_preamble_consistency(claims)
@@ -60,14 +58,12 @@ def _run_pipeline(loaded, full_text: str) -> AnalysisResult:
         dependent_count = claims_analysis.count_dependent(claims)
     else:
         claim_ids = []
-        missing_periods = []
-        extra_periods = []
+        punctuation_checks = []
         multiple_deps = []
         self_deps = []
         claims_seq = True
         last_seq_claim = 0
         wording = claims_parser.detect_improper_claim_wording([])
-        wherein_issues = []
         means_plus_function = []
         antecedent_basis = []
         preamble_checks = []
@@ -141,11 +137,9 @@ def _run_pipeline(loaded, full_text: str) -> AnalysisResult:
         dependent_claims_count=dependent_count,
         claims_sequential=claims_seq,
         last_sequential_claim=last_seq_claim,
-        missing_period_claims=missing_periods,
-        extra_periods_claims=extra_periods,
+        punctuation_checks=punctuation_checks,
         multiple_dependent_claims=multiple_deps,
         self_dependent_claims=self_deps,
-        incorrect_wherein_comma_claims=wherein_issues,
         means_plus_function_claims=means_plus_function,
         antecedent_basis_issues=antecedent_basis,
         preamble_checks=preamble_checks,

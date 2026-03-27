@@ -8,7 +8,7 @@ from unittest.mock import patch
 from click.testing import CliRunner
 
 from patentlint.cli import main
-from patentlint.models import AnalysisResult
+from patentlint.models import AnalysisResult, CheckItem
 
 
 def _mock_result():
@@ -72,7 +72,11 @@ class TestAnalyzeCommand:
         docx_file.touch()
 
         mock_result = _mock_result()
-        mock_result.missing_period_claims = [1]  # This creates an AMEND finding
+        mock_result.punctuation_checks = [CheckItem(
+            status="amend",
+            message="Claim 1 does not end with a period.",
+            message_key="claims.missingPeriod",
+        )]  # This creates an AMEND finding
 
         runner = CliRunner()
         with patch("patentlint.cli.analyze_file", return_value=mock_result):

@@ -26,6 +26,10 @@ const CITATION_MAP = {
   'checks.preamble_cross_category_pass': '§ 112(d)',
   'check.claims.missingTransition': '§ 112(b)',
   'check.claims.transitionsPresent': '§ 112(b)',
+  'claims.missingPeriod': '§ 608.01(m)',
+  'claims.extraPeriod': '§ 608.01(m)',
+  'claims.whereinComma': '§ 608.01(m)',
+  'claims.punctuationPass': '§ 608.01(m)',
   'claims.jepsonPriorArt': '§ 2129',
   'claims.crmNonTransitory': '§ 101',
   'claims.markushOpenTransition': '§ 2117',
@@ -53,7 +57,7 @@ export { getCitation }
 
 export default function CheckItem({ status, message, message_key, details, details_key, details_params }) {
   const { t, i18n } = useTranslation()
-  const displayMessage = message_key && i18n.exists(message_key) ? t(message_key) : message
+  const displayMessage = message_key && i18n.exists(message_key) ? t(message_key, details_params || {}) : message
   const displayDetails = details_key && i18n.exists(details_key) ? t(details_key, details_params || {}) : details
   const citation = getCitation(message_key)
 

@@ -34,7 +34,7 @@ function ClaimNode({ row, isIndependent, t }) {
   const typeLabel = isIndependent ? t('tree.independent') : t('tree.dependent')
 
   return (
-    <div className={`py-1.5 ${isIndependent ? '' : 'ml-6'}`}>
+    <div className={`flex-1 min-w-0 py-1.5 ${isIndependent ? '' : 'ml-6'}`}>
       <div className="flex items-center gap-2">
         {!isIndependent && (
           <div className="w-4 border-l-2 border-b-2 border-border h-4 -mt-3 rounded-bl-sm" />

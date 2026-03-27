@@ -12,7 +12,7 @@ const GROUP_CONFIG = [
 ]
 
 function TriageItem({ check, t, i18n, compact }) {
-  const msg = check.message_key && i18n.exists(check.message_key) ? t(check.message_key) : check.message
+  const msg = check.message_key && i18n.exists(check.message_key) ? t(check.message_key, check.details_params || {}) : check.message
   const citation = getCitation(check.message_key)
 
   return (

@@ -81,7 +81,7 @@
   },
   "about": {
     "productTitle": "What is PatentLint?",
-    "productDesc1": "PatentLint is a free, open-source patent specification quality checker. Drop a U.S. patent application draft (.docx) into your browser and get an instant compliance report — no upload, no account, no cloud. The name comes from \"linting\" — a software development term for automatically catching errors before they become problems.",
+    "productDesc1": "PatentLint is a free, open-source patent specification quality checker. Drop a U.S. patent application draft (.docx) into your browser and get an instant compliance report — no upload, no account, no cloud. The name comes from \"linting,\" a software development term for automatically catching errors before they become problems.",
     "productDesc2": "It checks formatting rules from the Manual of Patent Examining Procedure (MPEP), catches common drafting issues like missing antecedent basis and restrictive wording, and visualizes your claim dependency tree, all in seconds.",
     "productDesc3": "PatentLint was built by a patent engineer who spent years reviewing thousands of patent drafts and catching the same formatting errors and MPEP violations by hand. The goal: automate the tedious parts so practitioners can focus on substance.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
@@ -128,7 +128,9 @@
         "checkJepsonPriorArt": "Jepson prior art concession (§ 2129)",
         "checkCrmNonTransitory": "CRM non-transitory qualifier (§ 101)",
         "checkMarkushTransition": "Markush group transitional phrase (§ 2117)",
-        "checkOmnibusClaim": "Omnibus claim detection (§ 112(b))"
+        "checkOmnibusClaim": "Omnibus claim detection (§ 112(b))",
+        "checkClaimPunctuation": "Claim punctuation (§ 608.01(m))",
+        "checkSequenceListing": "Sequence listing compliance (§ 2422)"
       }
     },
     "stats": {
@@ -348,6 +350,14 @@
     "markushOpenTransition": "Claim {{claimNumber}}: Markush group uses open-ended '{{transition}}' instead of 'consisting of'",
     "markushOpenTransitionDetails": "Claim {{claimNumber}} contains a Markush group using '{{transition}}' instead of the required 'consisting of'. Markush groups must use closed transitional language per MPEP § 2117. Using open-ended language may result in an improper Markush grouping rejection.",
     "omnibusClaim": "Claim {{claimNumber}} appears to be an omnibus claim",
-    "omnibusClaimDetails": "Claim {{claimNumber}} references the description or drawings without reciting specific technical features. Omnibus claims are categorically rejected under 35 U.S.C. § 112(b) in U.S. utility patents (MPEP § 2173.05(r)). Rewrite the claim to recite specific structural or method limitations."
+    "omnibusClaimDetails": "Claim {{claimNumber}} references the description or drawings without reciting specific technical features. Omnibus claims are categorically rejected under 35 U.S.C. § 112(b) in U.S. utility patents (MPEP § 2173.05(r)). Rewrite the claim to recite specific structural or method limitations.",
+    "specialFormatsPass": "No special claim format issues detected.",
+    "missingPeriod": "Claim {{claimNumber}} does not end with a period.",
+    "missingPeriodDetails": "Claim {{claimNumber}} is missing its final period. Every claim must end with a single period per MPEP § 608.01(m).",
+    "extraPeriod": "Claim {{claimNumber}} contains extra or misplaced periods.",
+    "extraPeriodDetails": "Claim {{claimNumber}} has periods in unexpected positions. A claim should contain only one period at the very end per MPEP § 608.01(m).",
+    "whereinComma": "Claim {{claimNumber}}: review comma usage before 'wherein' clause.",
+    "whereinCommaDetails": "Claim {{claimNumber}} may have incorrect comma placement around a 'wherein' clause. Review punctuation per MPEP § 608.01(m).",
+    "punctuationPass": "Claim punctuation is correct."
   }
 }
