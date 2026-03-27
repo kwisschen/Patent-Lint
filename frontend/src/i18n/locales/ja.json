@@ -170,6 +170,7 @@
     "citations": "{{text}}",
     "rawText": "{{text}}",
     "claimsOverview": "独立項 {{independent}}、従属項 {{dependent}}、合計 {{total}}",
+    "figureCount": "{{count}} 個の図面が見つかりました。",
     "missingSections": "不足：{{list}}",
     "sectionName": "{{name}}",
     "claimDependsOn": "請求項 {{claim}} は請求項 {{parent}} に従属",
@@ -248,7 +249,8 @@
       },
       "missingTransition": "請求項 {{claimNumber}} にトランジションフレーズがありません（例：'comprising'、'consisting of'）",
       "missingTransitionDetails": "請求項 {{claimNumber}} に公認のトランジションフレーズが含まれていません。各請求項には、前文と本体の間に 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' または 'characterized in that' などのトランジションフレーズが必要です。",
-      "transitionsPresent": "すべての請求項にトランジションフレーズが含まれています。"
+      "transitionsPresent": "すべての請求項にトランジションフレーズが含まれています。",
+      "overview": "特許請求の範囲の概要。"
     },
     "abstract": {
       "restrictiveWording": {
@@ -280,7 +282,8 @@
       "sequential": {
         "amend": "図面番号が連続していません。",
         "pass": "図面番号は連続しています。"
-      }
+      },
+      "count": "{{count}} 個の図面が見つかりました。"
     }
   },
   "loading": {

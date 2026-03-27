@@ -170,6 +170,7 @@
     "citations": "{{text}}",
     "rawText": "{{text}}",
     "claimsOverview": "{{independent}} 个独立项、{{dependent}} 个从属项，共 {{total}} 项",
+    "figureCount": "发现 {{count}} 张附图。",
     "missingSections": "缺少：{{list}}",
     "sectionName": "{{name}}",
     "claimDependsOn": "权利要求 {{claim}} 从属于权利要求 {{parent}}",
@@ -248,7 +249,8 @@
       },
       "missingTransition": "权利要求 {{claimNumber}} 缺少过渡用语（例如 'comprising'、'consisting of'）",
       "missingTransitionDetails": "权利要求 {{claimNumber}} 未包含任何公认的过渡用语。每项权利要求必须在前序部分与主体之间包含过渡用语，例如 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' 或 'characterized in that'。",
-      "transitionsPresent": "所有权利要求均包含过渡用语。"
+      "transitionsPresent": "所有权利要求均包含过渡用语。",
+      "overview": "权利要求概览。"
     },
     "abstract": {
       "restrictiveWording": {
@@ -280,7 +282,8 @@
       "sequential": {
         "amend": "附图编号不连续。",
         "pass": "附图编号连续。"
-      }
+      },
+      "count": "发现 {{count}} 张附图。"
     }
   },
   "loading": {

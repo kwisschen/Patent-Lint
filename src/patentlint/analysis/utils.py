@@ -13,6 +13,7 @@ _WORD = r"\w+(?:-\w+)*"
 # Captures noun phrases (up to 6 words) after "the"/"said" or "a"/"an".
 _STOP_WORDS = (
     r"(?:is|are|was|were|has|have|had|do|does|did|being|been|"
+    r"can|could|may|might|will|would|shall|should|must|"
     r"of|to|from|with|and|or|that|which|for|by|on|in|at|"
     r"along|between|through|within|upon|above|below|across|"
     r"toward|towards|against|around|during|into|onto|"
@@ -71,6 +72,8 @@ _ADVERB_STOPS = {
     "jointly", "collectively", "simultaneously", "preferably",
     "optionally", "selectively", "removably", "rotatably",
     "slidably", "pivotally", "movably", "fixedly",
+    "substantially", "essentially", "approximately",
+    "typically", "normally", "merely", "primarily",
     # Patent function words
     "thereof", "therein", "thereto", "thereby", "therefrom",
     "thereon", "therethrough", "therebetween",

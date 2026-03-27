@@ -170,6 +170,7 @@
     "citations": "{{text}}",
     "rawText": "{{text}}",
     "claimsOverview": "{{independent}} independent, {{dependent}} dependent, {{total}} total",
+    "figureCount": "{{count}} figure(s) found.",
     "missingSections": "Missing: {{list}}",
     "sectionName": "{{name}}",
     "claimDependsOn": "Claim {{claim}} depends on claim {{parent}}",
@@ -248,7 +249,8 @@
       },
       "missingTransition": "Claim {{claimNumber}} is missing a transitional phrase (e.g., 'comprising', 'consisting of')",
       "missingTransitionDetails": "Claim {{claimNumber}} does not contain a recognized transitional phrase. Every claim must include a transitional phrase such as 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by', or 'characterized in that' between the preamble and the claim body.",
-      "transitionsPresent": "All claims contain transitional phrases."
+      "transitionsPresent": "All claims contain transitional phrases.",
+      "overview": "Claims overview."
     },
     "abstract": {
       "restrictiveWording": {
@@ -280,7 +282,8 @@
       "sequential": {
         "amend": "Figures are not in sequential order.",
         "pass": "Figures are in sequential order."
-      }
+      },
+      "count": "{{count}} figure(s) found."
     }
   },
   "loading": {

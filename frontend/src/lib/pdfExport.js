@@ -67,6 +67,14 @@ async function loadCjkFont(language) {
   return base64
 }
 
+export async function prefetchCjkFont(language) {
+  try {
+    await loadCjkFont(language)
+  } catch {
+    // Silent prefetch failure — will retry at save time
+  }
+}
+
 // --- PDF content builders ---
 
 function translateMessage(item, t) {
@@ -314,7 +322,11 @@ export async function downloadReport(reportData, t, language, originalFilename) 
   const isCjk = !!CJK_FONT_URLS[language]
   let cjkBase64 = null
   if (isCjk) {
-    cjkBase64 = await loadCjkFont(language)
+    try {
+      cjkBase64 = await loadCjkFont(language)
+    } catch {
+      console.warn('CJK font unavailable (offline?) — falling back to default font')
+    }
   }
 
   const docDefinition = {
@@ -440,11 +452,11 @@ export async function downloadReport(reportData, t, language, originalFilename) 
     },
     defaultStyle: {
       fontSize: 10,
-      ...(isCjk ? { font: 'CJK' } : {}),
+      ...(isCjk && cjkBase64 ? { font: 'CJK' } : {}),
     },
   }
 
-  if (isCjk) {
+  if (isCjk && cjkBase64) {
     const vfsName = 'NotoSansCJK.ttf'
 
     // Write CJK font data into pdfmake's internal VirtualFileSystem

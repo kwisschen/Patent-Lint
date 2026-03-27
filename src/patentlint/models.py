@@ -312,15 +312,6 @@ class AnalysisResult(BaseModel):
             spec_checks.append(rc)
 
         # Drawings overview in specification section
-        drawings_parts: list[str] = []
-        drawings_parts.append(f"{self.figures_count} figure(s) found.")
-        if self.single_figure and self.wrong_label_for_single_figure:
-            drawings_parts.append("Single-figure patent uses 'FIG. 1' instead of 'The Figure'.")
-        if self.contains_prior_art_in_drawings:
-            drawings_parts.append("Prior art references found in drawings description.")
-        if not self.figures_sequential:
-            drawings_parts.append("Figures are not in sequential order.")
-
         has_drawing_issue = (
             (self.single_figure and self.wrong_label_for_single_figure)
             or self.contains_prior_art_in_drawings
@@ -330,9 +321,9 @@ class AnalysisResult(BaseModel):
             status="verify" if has_drawing_issue else "pass",
             message="Drawings overview.",
             message_key="check.spec.drawings",
-            details=" ".join(drawings_parts),
-            details_key="details.rawText",
-            details_params={"text": " ".join(drawings_parts)},
+            details=f"{self.figures_count} figure(s) found.",
+            details_key="details.figureCount",
+            details_params={"count": str(self.figures_count)},
         ))
 
         # --- Claims checks ---
@@ -591,6 +582,7 @@ class AnalysisResult(BaseModel):
             status="pass",
             message=f"{self.figures_count} figure(s) found.",
             message_key="check.drawings.count",
+            details_params={"count": str(self.figures_count)},
         ))
 
         # Figure cross-reference checks (Issue #3)
