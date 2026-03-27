@@ -37,10 +37,11 @@ function ProductStory({ t }) {
    Section 2: USPTO Comparison Table
    ──────────────────────────────────────────── */
 const GROUP1_CHECKS = [
-  'sectionHeaders', 'paraNumbering', 'claimPeriods', 'claimDependencies',
+  'sectionHeaders', 'paraNumbering', 'claimDependencies',
   'claimSequentiality', 'abstractWordCount', 'abstractStructure',
   'figureSequential', 'singleFigure', 'priorArtLabeling', 'specParaEndings',
   'specParaNumbering', 'requiredSections', 'figureCrossRef',
+  'checkSequenceListing',
 ]
 
 const GROUP2_CHECKS = [
@@ -50,7 +51,7 @@ const GROUP2_CHECKS = [
 
 const GROUP3_CHECKS = [
   'restrictiveWording', 'indefiniteTerms', 'impliedPhrases',
-  'whereinCommas', 'antecedentBasis', 'meansPlusFunction',
+  'checkClaimPunctuation', 'antecedentBasis', 'meansPlusFunction',
   'preambleConsistency', 'specSupport', 'legalPhrasesAbstract',
   'transitionPhrase', 'checkJepsonPriorArt', 'checkCrmNonTransitory',
   'checkMarkushTransition', 'checkOmnibusClaim',

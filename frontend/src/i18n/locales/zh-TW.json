@@ -128,7 +128,9 @@
         "checkJepsonPriorArt": "Jepson 先前技術承認（§ 2129）",
         "checkCrmNonTransitory": "電腦可讀媒體 non-transitory 限定（§ 101）",
         "checkMarkushTransition": "Markush 群組過渡用語（§ 2117）",
-        "checkOmnibusClaim": "概括請求項檢測（§ 112(b)）"
+        "checkOmnibusClaim": "概括請求項檢測（§ 112(b)）",
+        "checkClaimPunctuation": "請求項標點符號（§ 608.01(m)）",
+        "checkSequenceListing": "序列表合規性（§ 2422）"
       }
     },
     "stats": {
@@ -348,6 +350,14 @@
     "markushOpenTransition": "請求項 {{claimNumber}}：Markush 群組使用開放式用語 '{{transition}}'，而非 'consisting of'",
     "markushOpenTransitionDetails": "請求項 {{claimNumber}} 中之 Markush 群組使用 '{{transition}}'，而非規定之 'consisting of'。依據 MPEP § 2117，Markush 群組須使用封閉式過渡用語。使用開放式用語可能導致不當 Markush 群組核駁。",
     "omnibusClaim": "請求項 {{claimNumber}} 疑似為概括請求項",
-    "omnibusClaimDetails": "請求項 {{claimNumber}} 引用說明書或圖式但未記載具體技術特徵。概括請求項在美國發明專利中依 35 U.S.C. § 112(b) 一律核駁（MPEP § 2173.05(r)）。請改寫請求項以記載具體之結構或方法限定。"
+    "omnibusClaimDetails": "請求項 {{claimNumber}} 引用說明書或圖式但未記載具體技術特徵。概括請求項在美國發明專利中依 35 U.S.C. § 112(b) 一律核駁（MPEP § 2173.05(r)）。請改寫請求項以記載具體之結構或方法限定。",
+    "specialFormatsPass": "未檢測到特殊請求項格式問題。",
+    "missingPeriod": "請求項 {{claimNumber}} 未以句號結尾。",
+    "missingPeriodDetails": "請求項 {{claimNumber}} 缺少結尾句號。依據 MPEP § 608.01(m)，每項請求項必須以單一句號結尾。",
+    "extraPeriod": "請求項 {{claimNumber}} 包含多餘或位置不當的句號。",
+    "extraPeriodDetails": "請求項 {{claimNumber}} 在非預期位置出現句號。依據 MPEP § 608.01(m)，請求項僅應在末尾包含一個句號。",
+    "whereinComma": "請求項 {{claimNumber}}：請檢查 'wherein' 子句前的逗號用法。",
+    "whereinCommaDetails": "請求項 {{claimNumber}} 的 'wherein' 子句前後逗號使用可能不正確。請依據 MPEP § 608.01(m) 檢查標點符號。",
+    "punctuationPass": "請求項標點符號正確。"
   }
 }
