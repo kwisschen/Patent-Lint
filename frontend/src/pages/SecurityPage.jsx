@@ -17,6 +17,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Shield, Check, ChevronDown } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
+import PageCTA from '../components/PageCTA'
 
 /* ------------------------------------------------------------------ */
 /*  Section 1 — Hero                                                   */
@@ -248,6 +249,7 @@ export default function SecurityPage({ onShowProveIt }) {
       <HeroSection onShowProveIt={onShowProveIt} />
       <ComparisonSection />
       <TechDetailsSection />
+      <PageCTA />
     </div>
   )
 }
