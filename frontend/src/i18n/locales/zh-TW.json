@@ -170,6 +170,7 @@
     "citations": "{{text}}",
     "rawText": "{{text}}",
     "claimsOverview": "{{independent}} 個獨立項、{{dependent}} 個附屬項，共 {{total}} 項",
+    "figureCount": "發現 {{count}} 張圖式。",
     "missingSections": "缺少：{{list}}",
     "sectionName": "{{name}}",
     "claimDependsOn": "請求項 {{claim}} 附屬於請求項 {{parent}}",
@@ -248,7 +249,8 @@
       },
       "missingTransition": "請求項 {{claimNumber}} 缺少過渡用語（例如 'comprising'、'consisting of'）",
       "missingTransitionDetails": "請求項 {{claimNumber}} 未包含任何公認的過渡用語。每項請求項必須在前言與主體之間包含過渡用語，例如 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' 或 'characterized in that'。",
-      "transitionsPresent": "所有請求項均包含過渡用語。"
+      "transitionsPresent": "所有請求項均包含過渡用語。",
+      "overview": "申請專利範圍概覽。"
     },
     "abstract": {
       "restrictiveWording": {
@@ -280,7 +282,8 @@
       "sequential": {
         "amend": "圖式編號非連續。",
         "pass": "圖式編號為連續。"
-      }
+      },
+      "count": "發現 {{count}} 張圖式。"
     }
   },
   "loading": {
