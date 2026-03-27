@@ -9,7 +9,7 @@ sequence listing references, and reference numeral consistency.
 import re
 from collections import Counter
 
-from patentlint.models import ReferenceNumeral, SpecWordingResult
+from patentlint.models import CheckItem, ReferenceNumeral, SpecWordingResult
 
 _RESTRICTIVE_WORDING = re.compile(
     r"(?i)\b(invention|always|never|must|solely|every|required|essential|critical|key|vital"
@@ -164,7 +164,7 @@ def extract_reference_numeral_inventory(
     return result
 
 
-def check_required_sections(full_text: str) -> list["CheckItem"]:
+def check_required_sections(full_text: str) -> list[CheckItem]:
     """Check for required and optional sections per MPEP § 608.01(a).
 
     Uses existing section extractors where available, regex header matching
