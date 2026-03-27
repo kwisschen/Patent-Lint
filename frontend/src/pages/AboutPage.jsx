@@ -52,6 +52,8 @@ const GROUP3_CHECKS = [
   'restrictiveWording', 'indefiniteTerms', 'impliedPhrases',
   'whereinCommas', 'antecedentBasis', 'meansPlusFunction',
   'preambleConsistency', 'specSupport', 'legalPhrasesAbstract',
+  'transitionPhrase', 'checkJepsonPriorArt', 'checkCrmNonTransitory',
+  'checkMarkushTransition', 'checkOmnibusClaim',
 ]
 
 function CheckMark({ active, isPatentLint }) {

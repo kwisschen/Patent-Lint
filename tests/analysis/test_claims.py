@@ -15,6 +15,8 @@ from patentlint.analysis.claims import (
     count_dependent,
     detect_means_plus_function,
     check_antecedent_basis,
+    check_claim_transitions,
+    check_special_claim_formats,
 )
 
 
@@ -152,6 +154,255 @@ class TestAntecedentBasis:
         issues = check_antecedent_basis(claims)
         flagged_terms = [i["term"] for i in issues if i["claim_id"] == 1]
         assert any("processor" in t for t in flagged_terms)
+
+
+class TestClaimTransitions:
+    def test_comprising_passes(self):
+        """Single independent claim with 'comprising' → PASS."""
+        claims = [Claim(id=1, text="A method comprising step A.", independent=True, method_claim=True)]
+        results = check_claim_transitions(claims)
+        assert len(results) == 1
+        assert results[0].status == "pass"
+
+    def test_consisting_of_passes(self):
+        """Single independent claim with 'consisting of' → PASS."""
+        claims = [Claim(id=1, text="A widget consisting of a base and a lid.", independent=True)]
+        results = check_claim_transitions(claims)
+        assert len(results) == 1
+        assert results[0].status == "pass"
+
+    def test_no_transition_amend(self):
+        """Independent claim with no transition → AMEND."""
+        claims = [Claim(id=1, text="A widget with a base and a lid.", independent=True)]
+        results = check_claim_transitions(claims)
+        assert len(results) == 1
+        assert results[0].status == "amend"
+        assert "1" in results[0].message
+
+    def test_dependent_not_checked(self):
+        """Dependent claim with 'wherein' only — parent has 'comprising' → PASS."""
+        claims = [
+            Claim(id=1, text="A device comprising a base.", independent=True),
+            Claim(id=2, text="The device of claim 1, wherein the base is flat.", independent=False, dependencies=[1]),
+        ]
+        results = check_claim_transitions(claims)
+        assert len(results) == 1
+        assert results[0].status == "pass"
+
+    def test_jepson_claim_passes(self):
+        """Jepson claim with 'comprising' → PASS."""
+        claims = [Claim(id=1, text="In a widget, the improvement comprising a new lid.", independent=True)]
+        results = check_claim_transitions(claims)
+        assert len(results) == 1
+        assert results[0].status == "pass"
+
+    def test_having_passes(self):
+        """Claim with 'having' as transition → PASS."""
+        claims = [Claim(id=1, text="A device having a processor and a memory.", independent=True)]
+        results = check_claim_transitions(claims)
+        assert len(results) == 1
+        assert results[0].status == "pass"
+
+    def test_mixed_one_missing(self):
+        """Multiple independent claims: one with transition, one without → one AMEND."""
+        claims = [
+            Claim(id=1, text="A method comprising step A.", independent=True, method_claim=True),
+            Claim(id=2, text="A widget with a base.", independent=True),
+        ]
+        results = check_claim_transitions(claims)
+        assert len(results) == 1
+        assert results[0].status == "amend"
+        assert "2" in results[0].message
+
+    def test_including_passes(self):
+        """Claim with 'including' → PASS."""
+        claims = [Claim(id=1, text="A system including a processor.", independent=True)]
+        results = check_claim_transitions(claims)
+        assert len(results) == 1
+        assert results[0].status == "pass"
+
+    def test_consists_essentially_of_passes(self):
+        """Claim with 'consists essentially of' → PASS."""
+        claims = [Claim(id=1, text="A composition consists essentially of compound A and compound B.", independent=True)]
+        results = check_claim_transitions(claims)
+        assert len(results) == 1
+        assert results[0].status == "pass"
+
+    def test_contains_passes(self):
+        """Claim with 'contains' → PASS."""
+        claims = [Claim(id=1, text="A vessel contains a fluid.", independent=True)]
+        results = check_claim_transitions(claims)
+        assert len(results) == 1
+        assert results[0].status == "pass"
+
+    def test_characterized_by_passes(self):
+        """Claim with 'characterized by' → PASS."""
+        claims = [Claim(id=1, text="A device characterized by a lid attached to a base.", independent=True)]
+        results = check_claim_transitions(claims)
+        assert len(results) == 1
+        assert results[0].status == "pass"
+
+    def test_characterized_in_that_passes(self):
+        """Claim with 'characterized in that' (PCT/EPO two-part format) → PASS."""
+        claims = [Claim(id=1, text="A widget of the type having a base, characterized in that the base includes a groove.", independent=True)]
+        results = check_claim_transitions(claims)
+        assert len(results) == 1
+        assert results[0].status == "pass"
+
+
+class TestSpecialClaimFormats:
+    # --- Jepson (5 tests) ---
+
+    def test_jepson_improvement_comprising(self):
+        """Independent claim with 'the improvement comprising' -> VERIFY."""
+        claims = [Claim(id=1, text="In a widget having a base, the improvement comprising a lid attached to the base.", independent=True)]
+        results = check_special_claim_formats(claims)
+        assert len(results) == 1
+        assert results[0].status == "verify"
+        assert results[0].message_key == "claims.jepsonPriorArt"
+
+    def test_jepson_wherein_improvement_comprises(self):
+        """Independent claim with 'wherein the improvement comprises' -> VERIFY."""
+        claims = [Claim(id=1, text="In a device having a housing, wherein the improvement comprises a sensor mounted on the housing.", independent=True)]
+        results = check_special_claim_formats(claims)
+        assert len(results) == 1
+        assert results[0].status == "verify"
+        assert results[0].message_key == "claims.jepsonPriorArt"
+
+    def test_jepson_normal_claim_no_finding(self):
+        """Normal independent claim (no Jepson language) -> empty list."""
+        claims = [Claim(id=1, text="A method comprising step A and step B.", independent=True, method_claim=True)]
+        results = check_special_claim_formats(claims)
+        assert len(results) == 0
+
+    def test_jepson_dependent_not_checked(self):
+        """Dependent claim with Jepson-like language -> empty list."""
+        claims = [Claim(id=2, text="The device of claim 1, the improvement comprising a seal.", independent=False, dependencies=[1])]
+        results = check_special_claim_formats(claims)
+        jepson = [r for r in results if r.message_key == "claims.jepsonPriorArt"]
+        assert len(jepson) == 0
+
+    def test_jepson_multiple_independent_one_jepson(self):
+        """Two independent claims, one Jepson one normal -> exactly one VERIFY."""
+        claims = [
+            Claim(id=1, text="A method comprising step A.", independent=True, method_claim=True),
+            Claim(id=2, text="In a widget having a base, the improvement comprising a lid.", independent=True),
+        ]
+        results = check_special_claim_formats(claims)
+        jepson = [r for r in results if r.message_key == "claims.jepsonPriorArt"]
+        assert len(jepson) == 1
+        assert "2" in jepson[0].message
+
+    # --- CRM non-transitory (5 tests) ---
+
+    def test_crm_with_non_transitory_passes(self):
+        """'A non-transitory computer-readable medium...' -> empty list."""
+        claims = [Claim(id=1, text="A non-transitory computer-readable medium storing instructions that cause a processor to perform a method.", independent=True)]
+        results = check_special_claim_formats(claims)
+        crm = [r for r in results if r.message_key == "claims.crmNonTransitory"]
+        assert len(crm) == 0
+
+    def test_crm_missing_non_transitory_amend(self):
+        """'A computer-readable medium...' without non-transitory -> AMEND."""
+        claims = [Claim(id=1, text="A computer-readable medium storing instructions that cause a processor to perform a method.", independent=True)]
+        results = check_special_claim_formats(claims)
+        crm = [r for r in results if r.message_key == "claims.crmNonTransitory"]
+        assert len(crm) == 1
+        assert crm[0].status == "amend"
+
+    def test_crm_no_hyphen_non_transitory_passes(self):
+        """'A non transitory machine-readable medium...' (no hyphen) -> empty list."""
+        claims = [Claim(id=1, text="A non transitory machine-readable medium storing code.", independent=True)]
+        results = check_special_claim_formats(claims)
+        crm = [r for r in results if r.message_key == "claims.crmNonTransitory"]
+        assert len(crm) == 0
+
+    def test_crm_storage_medium_missing_qualifier(self):
+        """'A computer-readable storage medium...' without non-transitory -> AMEND."""
+        claims = [Claim(id=1, text="A computer-readable storage medium having instructions stored thereon.", independent=True)]
+        results = check_special_claim_formats(claims)
+        crm = [r for r in results if r.message_key == "claims.crmNonTransitory"]
+        assert len(crm) == 1
+        assert crm[0].status == "amend"
+
+    def test_crm_normal_apparatus_no_finding(self):
+        """Normal apparatus claim (no CRM language) -> empty list."""
+        claims = [Claim(id=1, text="An apparatus comprising a processor and a memory.", independent=True)]
+        results = check_special_claim_formats(claims)
+        crm = [r for r in results if r.message_key == "claims.crmNonTransitory"]
+        assert len(crm) == 0
+
+    # --- Markush (4 tests) ---
+
+    def test_markush_consisting_of_correct(self):
+        """'selected from the group consisting of A, B, and C' -> empty list."""
+        claims = [Claim(id=1, text="A composition comprising a metal selected from the group consisting of gold, silver, and copper.", independent=True)]
+        results = check_special_claim_formats(claims)
+        markush = [r for r in results if r.message_key == "claims.markushOpenTransition"]
+        assert len(markush) == 0
+
+    def test_markush_comprising_flagged(self):
+        """'selected from the group comprising A, B, and C' -> VERIFY."""
+        claims = [Claim(id=1, text="A composition comprising a metal selected from the group comprising gold, silver, and copper.", independent=True)]
+        results = check_special_claim_formats(claims)
+        markush = [r for r in results if r.message_key == "claims.markushOpenTransition"]
+        assert len(markush) == 1
+        assert markush[0].status == "verify"
+        assert markush[0].details_params["transition"] == "comprising"
+
+    def test_markush_including_flagged(self):
+        """'selected from a group including X, Y, or Z' -> VERIFY."""
+        claims = [Claim(id=2, text="The device of claim 1, wherein the material is selected from a group including aluminum, titanium, or steel.", independent=False, dependencies=[1])]
+        results = check_special_claim_formats(claims)
+        markush = [r for r in results if r.message_key == "claims.markushOpenTransition"]
+        assert len(markush) == 1
+        assert markush[0].details_params["transition"] == "including"
+
+    def test_markush_no_markush_language(self):
+        """Claim with no Markush language -> empty list."""
+        claims = [Claim(id=1, text="A device comprising a base and a lid.", independent=True)]
+        results = check_special_claim_formats(claims)
+        markush = [r for r in results if r.message_key == "claims.markushOpenTransition"]
+        assert len(markush) == 0
+
+    # --- Omnibus (4 tests) ---
+
+    def test_omnibus_short_substantially_as_shown(self):
+        """Short claim 'substantially as shown and described' -> AMEND."""
+        claims = [Claim(id=1, text="A device substantially as shown and described.", independent=True)]
+        results = check_special_claim_formats(claims)
+        omnibus = [r for r in results if r.message_key == "claims.omnibusClaim"]
+        assert len(omnibus) == 1
+        assert omnibus[0].status == "amend"
+
+    def test_omnibus_short_as_herein_described(self):
+        """Short claim 'as herein described' -> AMEND."""
+        claims = [Claim(id=1, text="The invention as herein described.", independent=True)]
+        results = check_special_claim_formats(claims)
+        omnibus = [r for r in results if r.message_key == "claims.omnibusClaim"]
+        assert len(omnibus) == 1
+        assert omnibus[0].status == "amend"
+
+    def test_omnibus_long_claim_not_flagged(self):
+        """Long claim (60+ words) with 'as shown in FIG. 3' -> empty list (not omnibus)."""
+        long_text = (
+            "A semiconductor device comprising: a substrate having a first surface and a second surface; "
+            "a plurality of transistors formed on the first surface of the substrate; an interconnect layer "
+            "disposed above the plurality of transistors, the interconnect layer comprising a plurality of "
+            "metal lines and vias; and a passivation layer disposed above the interconnect layer, "
+            "as shown in FIG. 3, wherein the passivation layer protects the metal lines from oxidation."
+        )
+        claims = [Claim(id=1, text=long_text, independent=True)]
+        results = check_special_claim_formats(claims)
+        omnibus = [r for r in results if r.message_key == "claims.omnibusClaim"]
+        assert len(omnibus) == 0
+
+    def test_omnibus_normal_claim_no_finding(self):
+        """Normal claim with no omnibus language -> empty list."""
+        claims = [Claim(id=1, text="A method comprising receiving data and processing the data.", independent=True, method_claim=True)]
+        results = check_special_claim_formats(claims)
+        omnibus = [r for r in results if r.message_key == "claims.omnibusClaim"]
+        assert len(omnibus) == 0
 
 
 class TestCounts:

@@ -401,6 +401,183 @@ def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
 
 _stemmer = _sb.stemmer("english")
 
+# --- Claim transition phrase check (Issue #4) ---
+
+_TRANSITION_PHRASES = re.compile(
+    r"\b(?:"
+    r"comprising|comprises"
+    r"|consisting\s+essentially\s+of|consists\s+essentially\s+of"
+    r"|consisting\s+of|consists\s+of"
+    r"|including|includes"
+    r"|containing|contains"
+    r"|having"
+    r"|characterized\s+in\s+that"
+    r"|characterized\s+by"
+    r")\b",
+    re.IGNORECASE,
+)
+
+
+def check_claim_transitions(claims: list[Claim]) -> list[CheckItem]:
+    """Check that every independent claim contains a recognized transition phrase.
+
+    Returns one AMEND CheckItem per independent claim missing a transition,
+    or a single PASS if all independent claims have transitions.
+    """
+    results: list[CheckItem] = []
+
+    for claim in claims:
+        if not claim.independent:
+            continue
+        if not _TRANSITION_PHRASES.search(claim.text):
+            results.append(CheckItem(
+                status="amend",
+                message=f"Claim {claim.id} is missing a transitional phrase (e.g., 'comprising', 'consisting of')",
+                message_key="check.claims.missingTransition",
+                details=f"Claim {claim.id} does not contain a recognized transitional phrase. Every claim must include a transitional phrase such as 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by', or 'characterized in that' between the preamble and the claim body.",
+                details_key="check.claims.missingTransitionDetails",
+                details_params={"claimNumber": str(claim.id)},
+            ))
+
+    if not results:
+        results.append(CheckItem(
+            status="pass",
+            message="All claims contain transitional phrases.",
+            message_key="check.claims.transitionsPresent",
+        ))
+
+    return results
+
+
+# --- Special claim format checks (Issue #6) ---
+
+_JEPSON_SPECIAL = re.compile(
+    r"\b(?:"
+    r"the\s+improvement\s+(?:comprising|which\s+comprises|wherein)"
+    r"|wherein\s+the\s+improvement(?:\s+comprises)?"
+    r")\b",
+    re.IGNORECASE,
+)
+
+_CRM_MEDIUM = re.compile(
+    r"\b(?:computer[- ]?readable|machine[- ]?readable)\s+(?:storage\s+)?medium"
+    r"|\b(?:storage|recording)\s+medium",
+    re.IGNORECASE,
+)
+
+_NON_TRANSITORY = re.compile(r"\bnon[- ]?transitory\b", re.IGNORECASE)
+
+_MARKUSH_OPEN = re.compile(
+    r"selected\s+from\s+(?:the|a)\s+group\s+"
+    r"(comprising|including|containing)",
+    re.IGNORECASE,
+)
+
+_OMNIBUS_LANG = re.compile(
+    r"\bsubstantially\s+as\s+(?:shown|described|illustrated)\b"
+    r"|\bas\s+(?:herein|hereinbefore|hereinabove)\s+described\b"
+    r"|\bas\s+(?:shown|described|illustrated|depicted)\s+in\s+(?:the\s+)?(?:figures?|drawings?|FIG)\b"
+    r"|\bthe\s+invention\s+as\s+described\b",
+    re.IGNORECASE,
+)
+
+
+def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
+    """Detect special claim formats and emit actionable warnings.
+
+    Returns CheckItems only for detected formats — no PASS when nothing found.
+
+    Checks:
+    1. Jepson claims — prior art concession warning (VERIFY)
+    2. CRM claims missing "non-transitory" (AMEND)
+    3. Markush groups with open transitional phrase (VERIFY)
+    4. Omnibus claims (AMEND)
+    """
+    results: list[CheckItem] = []
+
+    for claim in claims:
+        # 1. Jepson — independent only
+        if claim.independent and _JEPSON_SPECIAL.search(claim.text):
+            results.append(CheckItem(
+                status="verify",
+                message=(
+                    f"Claim {claim.id} uses Jepson format — preamble elements "
+                    f"are treated as admitted prior art (MPEP § 2129)"
+                ),
+                message_key="claims.jepsonPriorArt",
+                details=(
+                    f"Claim {claim.id} is drafted in Jepson format. Under MPEP § 2129, "
+                    f"the elements recited in the preamble of a Jepson claim are treated "
+                    f"as an implied admission that they are prior art. Verify that this "
+                    f"admission is intentional."
+                ),
+                details_key="claims.jepsonPriorArtDetails",
+                details_params={"claimNumber": str(claim.id)},
+            ))
+
+        # 2. CRM non-transitory — independent only
+        if claim.independent and _CRM_MEDIUM.search(claim.text):
+            if not _NON_TRANSITORY.search(claim.text):
+                results.append(CheckItem(
+                    status="amend",
+                    message=(
+                        f"Claim {claim.id}: computer-readable medium claim "
+                        f"is missing 'non-transitory' qualifier"
+                    ),
+                    message_key="claims.crmNonTransitory",
+                    details=(
+                        f"Claim {claim.id} recites a computer-readable medium without "
+                        f"the 'non-transitory' qualifier. Without this qualifier, the "
+                        f"claim covers transitory signals (e.g., carrier waves), which "
+                        f"are not patent-eligible subject matter under 35 U.S.C. § 101. "
+                        f"Add 'non-transitory' before the medium term."
+                    ),
+                    details_key="claims.crmNonTransitoryDetails",
+                    details_params={"claimNumber": str(claim.id)},
+                ))
+
+        # 3. Markush — all claims
+        markush_match = _MARKUSH_OPEN.search(claim.text)
+        if markush_match:
+            transition = markush_match.group(1)
+            results.append(CheckItem(
+                status="verify",
+                message=(
+                    f"Claim {claim.id}: Markush group uses open-ended "
+                    f"'{transition}' instead of 'consisting of'"
+                ),
+                message_key="claims.markushOpenTransition",
+                details=(
+                    f"Claim {claim.id} contains a Markush group using '{transition}' "
+                    f"instead of the required 'consisting of'. Markush groups must use "
+                    f"closed transitional language per MPEP § 2117. Using open-ended "
+                    f"language may result in an improper Markush grouping rejection."
+                ),
+                details_key="claims.markushOpenTransitionDetails",
+                details_params={"claimNumber": str(claim.id), "transition": transition},
+            ))
+
+        # 4. Omnibus — all claims, requires short text + omnibus language
+        word_count = len(claim.text.split())
+        if word_count < 50 and _OMNIBUS_LANG.search(claim.text):
+            results.append(CheckItem(
+                status="amend",
+                message=f"Claim {claim.id} appears to be an omnibus claim",
+                message_key="claims.omnibusClaim",
+                details=(
+                    f"Claim {claim.id} references the description or drawings without "
+                    f"reciting specific technical features. Omnibus claims are "
+                    f"categorically rejected under 35 U.S.C. § 112(b) in U.S. utility "
+                    f"patents (MPEP § 2173.05(r)). Rewrite the claim to recite specific "
+                    f"structural or method limitations."
+                ),
+                details_key="claims.omnibusClaimDetails",
+                details_params={"claimNumber": str(claim.id)},
+            ))
+
+    return results
+
+
 _GENERIC_TERMS = {
     "system", "device", "method", "apparatus", "means", "step", "element",
     "member", "portion", "surface", "end", "side", "part",

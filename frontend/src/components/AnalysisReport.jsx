@@ -12,6 +12,7 @@ import ClaimDiagram from './ClaimDiagram'
 import AntecedentBasisCard from './AntecedentBasisCard'
 import SpecSupportCard from './SpecSupportCard'
 import Section112Container from './Section112Container'
+import NonPatentBanner from './NonPatentBanner'
 import { Button } from '@/components/ui/button'
 import { Download, RotateCcw, ShieldCheck } from 'lucide-react'
 import { useNetworkMonitor } from '../hooks/useNetworkMonitor'
@@ -98,6 +99,10 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
   const { t } = useTranslation()
   const { active: networkActive } = useNetworkMonitor()
 
+  // Non-patent document gate
+  const isNonPatent = data.likely_patent === false
+  const [showResults, setShowResults] = useState(!isNonPatent)
+
   // Stagger cascade for summary cards
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
@@ -140,6 +145,19 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
     transform: mounted ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.95)',
     transition: `opacity 400ms var(--ease-bounce) ${i * 100}ms, transform 400ms var(--ease-bounce) ${i * 100}ms`,
   })
+
+  if (!showResults) {
+    return (
+      <NonPatentBanner onShowResults={() => {
+        setShowResults(true)
+        // Reset cascade so results animate in fresh
+        setMounted(false)
+        setBarVisible(false)
+        setTimeout(() => setMounted(true), 50)
+        setTimeout(() => setBarVisible(true), 300)
+      }} />
+    )
+  }
 
   return (
     <div className="space-y-4">

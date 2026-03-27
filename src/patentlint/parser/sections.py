@@ -255,6 +255,28 @@ def extract_summary_section(text: str) -> str:
     return text[start:end].strip()
 
 
+def detect_patent_document(full_text: str) -> bool:
+    """Heuristic check for whether the document appears to be a patent specification.
+
+    Returns True if patent indicators are found, False otherwise.
+    Errs on the side of True — false positives are much less harmful than
+    false negatives (flagging a real patent as non-patent).
+    """
+    # 1. Recognized section header
+    if _ANY_SECTION_HEADER.search(full_text):
+        return True
+
+    # 2. Numbered claims pattern: "1. A ..." or "1. An ..."
+    if re.search(r"^\s*\d+\.\s+(?:A|An|The)\s+", full_text, re.MULTILINE | re.IGNORECASE):
+        return True
+
+    # 3. Bracketed paragraph numbers [0001] style — need 3+
+    if len(re.findall(r"\[\d{4}\]", full_text)) >= 3:
+        return True
+
+    return False
+
+
 def detect_prior_art_citations(text: str) -> str:
     """Detect prior art patent citations in text.
 
