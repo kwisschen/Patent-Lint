@@ -575,6 +575,67 @@ def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
                 details_params={"claimNumber": str(claim.id)},
             ))
 
+    if not results:
+        results.append(CheckItem(
+            status="pass",
+            message="No special claim format issues detected.",
+            message_key="claims.specialFormatsPass",
+        ))
+
+    return results
+
+
+def check_claim_punctuation(claims: list[Claim]) -> list[CheckItem]:
+    """Check claim punctuation rules per MPEP § 608.01(m).
+
+    Sub-checks:
+    1. Missing final period — every claim must end with a period
+    2. Extra periods — claims should not contain misplaced periods mid-claim
+    3. Wherein comma — 'wherein' clauses require correct comma placement
+
+    Emits individual AMEND/VERIFY per finding, or single PASS if all clean.
+    """
+    from patentlint.parser.claims import detect_incorrect_wherein_commas
+
+    results: list[CheckItem] = []
+
+    for claim_id in find_missing_periods(claims):
+        results.append(CheckItem(
+            status="amend",
+            message=f"Claim {claim_id} does not end with a period.",
+            message_key="claims.missingPeriod",
+            details=f"Claim {claim_id} is missing its final period. Every claim must end with a single period per MPEP § 608.01(m).",
+            details_key="claims.missingPeriodDetails",
+            details_params={"claimNumber": str(claim_id)},
+        ))
+
+    for claim_id in find_extra_periods(claims):
+        results.append(CheckItem(
+            status="amend",
+            message=f"Claim {claim_id} contains extra or misplaced periods.",
+            message_key="claims.extraPeriod",
+            details=f"Claim {claim_id} has periods in unexpected positions. A claim should contain only one period at the very end per MPEP § 608.01(m).",
+            details_key="claims.extraPeriodDetails",
+            details_params={"claimNumber": str(claim_id)},
+        ))
+
+    for claim_id in detect_incorrect_wherein_commas(claims):
+        results.append(CheckItem(
+            status="verify",
+            message=f"Claim {claim_id}: review comma usage before 'wherein' clause.",
+            message_key="claims.whereinComma",
+            details=f"Claim {claim_id} may have incorrect comma placement around a 'wherein' clause. Review punctuation per MPEP § 608.01(m).",
+            details_key="claims.whereinCommaDetails",
+            details_params={"claimNumber": str(claim_id)},
+        ))
+
+    if not results:
+        results.append(CheckItem(
+            status="pass",
+            message="Claim punctuation is correct.",
+            message_key="claims.punctuationPass",
+        ))
+
     return results
 
 

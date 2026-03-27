@@ -71,7 +71,7 @@ async function loadCjkFont(language) {
 
 function translateMessage(item, t) {
   if (item.message_key) {
-    const translated = t(item.message_key, { defaultValue: '' })
+    const translated = t(item.message_key, { ...item.details_params, defaultValue: '' })
     if (translated && translated !== item.message_key) return translated
   }
   return item.message

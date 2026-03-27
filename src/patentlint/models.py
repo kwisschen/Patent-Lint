@@ -166,11 +166,9 @@ class AnalysisResult(BaseModel):
     dependent_claims_count: int = 0
     claims_sequential: bool = True
     last_sequential_claim: int = 0
-    missing_period_claims: list[int] = Field(default_factory=list)
-    extra_periods_claims: list[int] = Field(default_factory=list)
+    punctuation_checks: list[CheckItem] = Field(default_factory=list)
     multiple_dependent_claims: list[int] = Field(default_factory=list)
     self_dependent_claims: list[int] = Field(default_factory=list)
-    incorrect_wherein_comma_claims: list[int] = Field(default_factory=list)
     means_plus_function_claims: list[int] = Field(default_factory=list)
     antecedent_basis_issues: list[dict] = Field(default_factory=list)
     preamble_checks: list[CheckItem] = Field(default_factory=list)
@@ -404,53 +402,9 @@ class AnalysisResult(BaseModel):
                 message_key="check.claims.selfDependent.pass",
             ))
 
-        if self.missing_period_claims:
-            claims_checks.append(CheckItem(
-                status="amend",
-                message="Claims missing a final period.",
-                message_key="check.claims.missingPeriod.amend",
-                details=f"Claims: {self.missing_period_claims}",
-                details_key="details.claims",
-                details_params={"list": str(self.missing_period_claims)},
-            ))
-        else:
-            claims_checks.append(CheckItem(
-                status="pass",
-                message="All claims end with a period.",
-                message_key="check.claims.missingPeriod.pass",
-            ))
-
-        if self.extra_periods_claims:
-            claims_checks.append(CheckItem(
-                status="amend",
-                message="Claims with extra or misplaced periods.",
-                message_key="check.claims.extraPeriod.amend",
-                details=f"Claims: {self.extra_periods_claims}",
-                details_key="details.claims",
-                details_params={"list": str(self.extra_periods_claims)},
-            ))
-        else:
-            claims_checks.append(CheckItem(
-                status="pass",
-                message="No extra periods found in claims.",
-                message_key="check.claims.extraPeriod.pass",
-            ))
-
-        if self.incorrect_wherein_comma_claims:
-            claims_checks.append(CheckItem(
-                status="verify",
-                message="Review wherein comma usage.",
-                message_key="check.claims.whereinComma.verify",
-                details=f"Claims: {self.incorrect_wherein_comma_claims}",
-                details_key="details.claims",
-                details_params={"list": str(self.incorrect_wherein_comma_claims)},
-            ))
-        else:
-            claims_checks.append(CheckItem(
-                status="pass",
-                message="Wherein comma usage is correct.",
-                message_key="check.claims.whereinComma.pass",
-            ))
+        # Claim punctuation checks
+        for pc in self.punctuation_checks:
+            claims_checks.append(pc)
 
         if self.means_plus_function_claims:
             claims_checks.append(CheckItem(

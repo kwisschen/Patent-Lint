@@ -17,6 +17,7 @@ from patentlint.analysis.claims import (
     check_antecedent_basis,
     check_claim_transitions,
     check_special_claim_formats,
+    check_claim_punctuation,
 )
 
 
@@ -45,6 +46,52 @@ class TestExtraPeriods:
 
     def test_clean(self):
         assert has_extra_periods("A method comprising:\nstep A;\nstep B.") is False
+
+
+class TestClaimPunctuation:
+    def test_missing_period_detected(self):
+        claims = [
+            Claim(id=1, text="A method comprising step A.", independent=True, method_claim=True),
+            Claim(id=2, text="The method of claim 1 with step B", independent=False, method_claim=True, dependencies=[1]),
+        ]
+        results = check_claim_punctuation(claims)
+        assert any(r.message_key == "claims.missingPeriod" and r.status == "amend" for r in results)
+        assert any("2" in (r.details_params or {}).get("claimNumber", "") for r in results)
+
+    def test_extra_period_detected(self):
+        claims = [
+            Claim(id=1, text="A method comprising..\nstep A.", independent=True, method_claim=True),
+        ]
+        results = check_claim_punctuation(claims)
+        assert any(r.message_key == "claims.extraPeriod" and r.status == "amend" for r in results)
+
+    def test_wherein_comma_detected(self):
+        claims = [
+            Claim(id=1, text="A method wherein when the input is received, processing occurs.", independent=True, method_claim=True),
+        ]
+        results = check_claim_punctuation(claims)
+        assert any(r.message_key == "claims.whereinComma" and r.status == "verify" for r in results)
+
+    def test_all_clean_returns_pass(self):
+        claims = [
+            Claim(id=1, text="A method comprising step A.", independent=True, method_claim=True),
+            Claim(id=2, text="The method of claim 1, wherein the step A is repeated.", independent=False, method_claim=True, dependencies=[1]),
+        ]
+        results = check_claim_punctuation(claims)
+        assert len(results) == 1
+        assert results[0].status == "pass"
+        assert results[0].message_key == "claims.punctuationPass"
+
+    def test_multiple_issues_multiple_items(self):
+        claims = [
+            Claim(id=1, text="A method comprising step A", independent=True, method_claim=True),  # missing period
+            Claim(id=2, text="The method of claim 1 comprising..\nstep B.", independent=False, method_claim=True, dependencies=[1]),  # extra period
+        ]
+        results = check_claim_punctuation(claims)
+        assert len(results) >= 2
+        keys = [r.message_key for r in results]
+        assert "claims.missingPeriod" in keys
+        assert "claims.extraPeriod" in keys
 
 
 class TestSelfDependency:
@@ -270,10 +317,12 @@ class TestSpecialClaimFormats:
         assert results[0].message_key == "claims.jepsonPriorArt"
 
     def test_jepson_normal_claim_no_finding(self):
-        """Normal independent claim (no Jepson language) -> empty list."""
+        """Normal independent claim (no Jepson language) -> PASS."""
         claims = [Claim(id=1, text="A method comprising step A and step B.", independent=True, method_claim=True)]
         results = check_special_claim_formats(claims)
-        assert len(results) == 0
+        assert len(results) == 1
+        assert results[0].status == "pass"
+        assert results[0].message_key == "claims.specialFormatsPass"
 
     def test_jepson_dependent_not_checked(self):
         """Dependent claim with Jepson-like language -> empty list."""

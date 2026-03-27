@@ -53,11 +53,8 @@ def sample_result():
         dependent_claims_count=1,
         claims_sequential=True,
         last_sequential_claim=3,
-        missing_period_claims=[],
-        extra_periods_claims=[],
         multiple_dependent_claims=[],
         self_dependent_claims=[],
-        incorrect_wherein_comma_claims=[],
         # Abstract
         abstract_word_count=85,
         abstract_structure_good=True,
@@ -133,7 +130,7 @@ class TestToReportData:
 
     def test_claims_checks_count(self, sample_result):
         data = sample_result.to_report_data()
-        assert len(data.claims_checks) == 11  # +1 for spec support check
+        assert len(data.claims_checks) == 8  # punctuation_checks empty by default
 
     def test_abstract_checks_count(self, sample_result):
         data = sample_result.to_report_data()

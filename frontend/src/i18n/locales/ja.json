@@ -128,7 +128,9 @@
         "checkJepsonPriorArt": "Jepson 先行技術の承認（§ 2129）",
         "checkCrmNonTransitory": "コンピュータ可読媒体 non-transitory 限定（§ 101）",
         "checkMarkushTransition": "Markush グループ移行句（§ 2117）",
-        "checkOmnibusClaim": "概括請求項の検出（§ 112(b)）"
+        "checkOmnibusClaim": "概括請求項の検出（§ 112(b)）",
+        "checkClaimPunctuation": "請求項の句読点（§ 608.01(m)）",
+        "checkSequenceListing": "配列表の準拠性（§ 2422）"
       }
     },
     "stats": {
@@ -348,6 +350,14 @@
     "markushOpenTransition": "請求項 {{claimNumber}}：Markush グループが 'consisting of' ではなく開放的な '{{transition}}' を使用しています",
     "markushOpenTransitionDetails": "請求項 {{claimNumber}} の Markush グループが 'consisting of' ではなく '{{transition}}' を使用しています。MPEP § 2117 に基づき、Markush グループは閉鎖的な移行句を使用する必要があります。開放的な用語の使用は不適切な Markush グループとして拒絶される可能性があります。",
     "omnibusClaim": "請求項 {{claimNumber}} は概括請求項の可能性があります",
-    "omnibusClaimDetails": "請求項 {{claimNumber}} は明細書または図面を参照していますが、具体的な技術的特徴を記載していません。概括請求項は米国実用特許において 35 U.S.C. § 112(b) に基づき一律に拒絶されます（MPEP § 2173.05(r)）。具体的な構造または方法の限定を記載するよう請求項を書き直してください。"
+    "omnibusClaimDetails": "請求項 {{claimNumber}} は明細書または図面を参照していますが、具体的な技術的特徴を記載していません。概括請求項は米国実用特許において 35 U.S.C. § 112(b) に基づき一律に拒絶されます（MPEP § 2173.05(r)）。具体的な構造または方法の限定を記載するよう請求項を書き直してください。",
+    "specialFormatsPass": "特殊な請求項形式の問題は検出されませんでした。",
+    "missingPeriod": "請求項 {{claimNumber}} がピリオドで終わっていません。",
+    "missingPeriodDetails": "請求項 {{claimNumber}} に末尾のピリオドがありません。MPEP § 608.01(m) に基づき、各請求項は単一のピリオドで終わる必要があります。",
+    "extraPeriod": "請求項 {{claimNumber}} に余分または誤配置のピリオドがあります。",
+    "extraPeriodDetails": "請求項 {{claimNumber}} の予期しない位置にピリオドがあります。MPEP § 608.01(m) に基づき、請求項のピリオドは末尾に一つだけ配置すべきです。",
+    "whereinComma": "請求項 {{claimNumber}}：'wherein' 節の前のコンマの使用を確認してください。",
+    "whereinCommaDetails": "請求項 {{claimNumber}} の 'wherein' 節前後のコンマの使用が正しくない可能性があります。MPEP § 608.01(m) に基づき句読点を確認してください。",
+    "punctuationPass": "請求項の句読点は正確です。"
   }
 }
