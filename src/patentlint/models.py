@@ -127,6 +127,9 @@ class ReportData(BaseModel):
     # Phase 4 additions
     unsupported_terms: list[UnsupportedTerm] = Field(default_factory=list)
 
+    # Document-level flag
+    likely_patent: bool = True
+
 
 class AnalysisResult(BaseModel):
     """Aggregates all analysis findings into a single structured result.
@@ -171,6 +174,8 @@ class AnalysisResult(BaseModel):
     means_plus_function_claims: list[int] = Field(default_factory=list)
     antecedent_basis_issues: list[dict] = Field(default_factory=list)
     preamble_checks: list[CheckItem] = Field(default_factory=list)
+    transition_checks: list[CheckItem] = Field(default_factory=list)
+    special_format_checks: list[CheckItem] = Field(default_factory=list)
     unsupported_terms: list[UnsupportedTerm] = Field(default_factory=list)
 
     # Drawings — reference numerals
@@ -179,6 +184,9 @@ class AnalysisResult(BaseModel):
     # Issue #2 & #3 — required sections + figure cross-references
     required_sections_checks: list[CheckItem] = Field(default_factory=list)
     figure_xref_checks: list[CheckItem] = Field(default_factory=list)
+
+    # Document-level flag
+    likely_patent: bool = True
 
     # Abstract
     abstract_word_count: int = 0
@@ -481,6 +489,14 @@ class AnalysisResult(BaseModel):
         for pc in self.preamble_checks:
             claims_checks.append(pc)
 
+        # Transition phrase checks
+        for tc in self.transition_checks:
+            claims_checks.append(tc)
+
+        # Special claim format checks
+        for sc in self.special_format_checks:
+            claims_checks.append(sc)
+
         # Spec support checks
         if self.unsupported_terms:
             unique_phrases = sorted(set(ut.phrase for ut in self.unsupported_terms))
@@ -667,4 +683,5 @@ class AnalysisResult(BaseModel):
             claim_trees=claim_trees,
             antecedent_basis_issues=self.antecedent_basis_issues,
             unsupported_terms=self.unsupported_terms,
+            likely_patent=self.likely_patent,
         )
