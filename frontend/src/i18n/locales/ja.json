@@ -8,8 +8,13 @@
   "diagram": { "show": "図表を表示", "hide": "図表を非表示" },
   "tree": { "apparatusClaims": "物の請求項", "methodClaims": "方法の請求項", "independent": "独立項", "dependent": "従属項", "deps": "個の従属項", "dep": "個の従属項" },
   "section112": { "title": "§ 112 分析" },
+  "results": {
+    "nonPatentWarning": "この文書は特許明細書ではない可能性があります",
+    "nonPatentWarningDetails": "PatentLint は米国特許出願の草稿用に設計されています。このファイルには標準的な特許セクション、番号付き請求項、または段落番号が含まれていないため、非特許文書に対する分析結果は有意でない場合があります。",
+    "showResultsAnyway": "結果を表示する"
+  },
   "analysis": { "analyzing": "特許文書を分析中...", "label": "分析結果" },
-  "footer": { "disclaimer": "本レポートは法的助言を構成するものではありません", "builtBy": "Built by Christopher Chen", "security": "セキュリティ", "about": "概要", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "フィードバック" },
+  "footer": { "disclaimer": "本レポートは法的助言を構成するものではありません", "builtBy": "© 2025 Christopher Chen", "security": "セキュリティ", "about": "概要", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "フィードバック" },
   "antecedentBasis": { "title": "先行詞根拠の確認", "items": "個の用語", "item": "個の用語" },
   "specSupport": { "title": "明細書サポートの確認", "items": "個の用語", "item": "個の用語" },
   "triage": { "title": "優先事項の要約", "amend": "修正が必要", "amendEmpty": "修正が必要な項目はありません。", "verify": "専門家の確認", "verifyEmpty": "確認が必要な項目はありません。", "pass": "合格", "items": "件", "item": "件" },
@@ -76,9 +81,9 @@
   },
   "about": {
     "productTitle": "PatentLint とは？",
-    "productDesc1": "PatentLint は無料のオープンソース特許明細書品質チェックツールです。米国特許出願原稿（.docx）をブラウザにドロップするだけで、即座にコンプライアンスレポートを取得できます。アップロード不要、アカウント不要、クラウド不要。",
+    "productDesc1": "PatentLint は無料のオープンソース特許明細書品質チェックツールです。米国特許出願原稿（.docx）をブラウザにドロップするだけで、即座にコンプライアンスレポートを取得できます。アップロード不要、アカウント不要、クラウド不要。その名前はソフトウェア開発用語の「linting」に由来します。問題が発生する前にエラーを自動的に検出する手法を指します。",
     "productDesc2": "MPEP（特許審査便覧）のフォーマット規則に基づいてチェックを行い、先行詞根拠の欠落や限定的な表現などの一般的な起案上の問題を検出し、請求項の従属関係をツリー表示で可視化します。すべて数秒で完了します。",
-    "productDesc3": "PatentLint は、これらのチェックを長年手作業で行ってきた特許エンジニアによって作られました。目標：煩雑な作業を自動化し、実務者が内容の検討に集中できるようにすること。",
+    "productDesc3": "PatentLint は、数千件の特許原稿を審査し、同じフォーマットエラーや MPEP 違反を何年も手作業で発見し続けてきた特許エンジニアによって作られました。目標：煩雑な作業を自動化し、実務者が内容の検討に集中できるようにすること。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center は出願フォーマットを検証します。PatentLint は原稿そのものをチェックします。",
     "uspto": {
@@ -118,7 +123,12 @@
         "meansPlusFunction": "ミーンズ・プラス・ファンクション（35 U.S.C. § 112(f)）",
         "preambleConsistency": "請求項プリアンブルの一貫性（MPEP § 608.01(m)）",
         "specSupport": "請求項用語に対する明細書のサポート",
-        "legalPhrasesAbstract": "要約書の法律用語"
+        "legalPhrasesAbstract": "要約書の法律用語",
+        "transitionPhrase": "請求項トランジションフレーズ（§ 112）",
+        "checkJepsonPriorArt": "Jepson 先行技術の承認（§ 2129）",
+        "checkCrmNonTransitory": "コンピュータ可読媒体 non-transitory 限定（§ 101）",
+        "checkMarkushTransition": "Markush グループ移行句（§ 2117）",
+        "checkOmnibusClaim": "概括請求項の検出（§ 112(b)）"
       }
     },
     "stats": {
@@ -142,10 +152,10 @@
         "weasyprint": "HTML から PDF への変換エンジン、CJK フォント対応"
       }
     },
-    "builderTitle": "誰が作ったのか？",
-    "builderDesc1": "PatentLint は Christopher Chen によって作られました。特許エンジニアから ML/AI エンジニアに転身した開発者です。数千件の特許明細書を MPEP 規則に照らして手作業で何年も審査した経験を経て、人の目が見逃す問題を大規模に捕捉するために PatentLint を開発しました。",
-    "builderDesc2": "PatentLint は Python でゼロから構築されたブラウザベースの分析ツールで、モダンな React フロントエンドを備えています。ファイルがデバイスの外に出ることはありません。分析は WebAssembly を通じてブラウザ内で完全に実行されます。",
-    "builderSister": "PatentLint の姉妹プロジェクト「Agentic Patent Analyst」は LLM エージェントを使用して先行技術調査と請求項カバレッジ分析を行います。両ツールは連携して使用するよう設計されています。"
+    "builderTitle": "背景",
+    "builderDesc1": "PatentLint は、半導体、光電子、電気、機械、化学の各特許分野で10年以上の経験を持つ特許エンジニアによって開発されました。",
+    "builderDesc2": "分析エンジン全体は Python で記述され、WebAssembly にコンパイルされてブラウザ上で直接実行されます。サーバー不要、アップロード不要、ファイルがデバイスの外に出ることはありません。既存ツールは Windows 専用のインストールが必要か、ドキュメントをクラウドサーバーにアップロードする必要があります。PatentLint はそのどちらも不要です。",
+    "builderSister": "姉妹プロジェクトの Agentic Patent Analyst は、LLM エージェントを使用して先行技術調査と請求項カバレッジ分析を行います。"
   },
   "details": {
     "paragraphs": "段落：{{list}}",
@@ -232,7 +242,10 @@
       "antecedentBasis": {
         "verify": "先行詞の根拠（antecedent basis）の不足が検出されました。",
         "pass": "先行詞の根拠の問題は検出されませんでした。"
-      }
+      },
+      "missingTransition": "請求項 {{claimNumber}} にトランジションフレーズがありません（例：'comprising'、'consisting of'）",
+      "missingTransitionDetails": "請求項 {{claimNumber}} に公認のトランジションフレーズが含まれていません。各請求項には、前文と本体の間に 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' または 'characterized in that' などのトランジションフレーズが必要です。",
+      "transitionsPresent": "すべての請求項にトランジションフレーズが含まれています。"
     },
     "abstract": {
       "restrictiveWording": {
@@ -326,5 +339,15 @@
     "figure_xref_pass": "図面の簡単な説明と発明を実施するための形態の間の図面参照が整合しています。",
     "figure_xref_orphaned_brief": "図面の簡単な説明に記載されているが発明を実施するための形態で参照されていない図面があります。",
     "figure_xref_orphaned_detailed": "発明を実施するための形態で参照されているが図面の簡単な説明に記載されていない図面があります。"
+  },
+  "claims": {
+    "jepsonPriorArt": "請求項 {{claimNumber}} は Jepson 形式を使用しており、前文の構成要素は先行技術として認めたものと扱われます（MPEP § 2129）",
+    "jepsonPriorArtDetails": "請求項 {{claimNumber}} は Jepson 形式で作成されています。MPEP § 2129 に基づき、Jepson 請求項の前文に記載された構成要素は先行技術であると黙示的に認めたものと扱われます。この認定が意図的であることをご確認ください。",
+    "crmNonTransitory": "請求項 {{claimNumber}}：コンピュータ可読媒体の請求項に 'non-transitory' の限定がありません",
+    "crmNonTransitoryDetails": "請求項 {{claimNumber}} はコンピュータ可読媒体を記載していますが、'non-transitory' の限定がありません。この限定がない場合、請求項は一時的信号（搬送波など）を含み、35 U.S.C. § 101 の特許適格性を満たしません。媒体の用語の前に 'non-transitory' を追加してください。",
+    "markushOpenTransition": "請求項 {{claimNumber}}：Markush グループが 'consisting of' ではなく開放的な '{{transition}}' を使用しています",
+    "markushOpenTransitionDetails": "請求項 {{claimNumber}} の Markush グループが 'consisting of' ではなく '{{transition}}' を使用しています。MPEP § 2117 に基づき、Markush グループは閉鎖的な移行句を使用する必要があります。開放的な用語の使用は不適切な Markush グループとして拒絶される可能性があります。",
+    "omnibusClaim": "請求項 {{claimNumber}} は概括請求項の可能性があります",
+    "omnibusClaimDetails": "請求項 {{claimNumber}} は明細書または図面を参照していますが、具体的な技術的特徴を記載していません。概括請求項は米国実用特許において 35 U.S.C. § 112(b) に基づき一律に拒絶されます（MPEP § 2173.05(r)）。具体的な構造または方法の限定を記載するよう請求項を書き直してください。"
   }
 }

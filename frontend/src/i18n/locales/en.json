@@ -8,8 +8,13 @@
   "diagram": { "show": "Show Diagram", "hide": "Hide Diagram" },
   "tree": { "apparatusClaims": "Apparatus Claims", "methodClaims": "Method Claims", "independent": "Independent", "dependent": "Dependent", "deps": "deps", "dep": "dep" },
   "section112": { "title": "§ 112 Analysis" },
+  "results": {
+    "nonPatentWarning": "This document may not be a patent specification",
+    "nonPatentWarningDetails": "PatentLint is designed for U.S. patent application drafts. This file does not appear to contain standard patent sections, numbered claims, or paragraph numbering. Analysis results may not be meaningful for non-patent documents.",
+    "showResultsAnyway": "Show results anyway"
+  },
   "analysis": { "analyzing": "Analyzing patent document...", "label": "Analysis" },
-  "footer": { "disclaimer": "Not legal advice", "builtBy": "Built by Christopher Chen", "security": "Security", "about": "About", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "Feedback" },
+  "footer": { "disclaimer": "Not legal advice", "builtBy": "© 2025 Christopher Chen", "security": "Security", "about": "About", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "Feedback" },
   "antecedentBasis": { "title": "Antecedent Basis Review", "items": "terms", "item": "term" },
   "specSupport": { "title": "Specification Support Review", "items": "terms", "item": "term" },
   "triage": { "title": "Priority Summary", "amend": "Action Required", "amendEmpty": "No issues requiring amendment.", "verify": "Expert Review", "verifyEmpty": "No items flagged for review.", "pass": "Passed", "items": "items", "item": "item" },
@@ -76,9 +81,9 @@
   },
   "about": {
     "productTitle": "What is PatentLint?",
-    "productDesc1": "PatentLint is a free, open-source patent specification quality checker. Drop a U.S. patent application draft (.docx) into your browser and get an instant compliance report — no upload, no account, no cloud.",
+    "productDesc1": "PatentLint is a free, open-source patent specification quality checker. Drop a U.S. patent application draft (.docx) into your browser and get an instant compliance report — no upload, no account, no cloud. The name comes from \"linting\" — a software development term for automatically catching errors before they become problems.",
     "productDesc2": "It checks formatting rules from the Manual of Patent Examining Procedure (MPEP), catches common drafting issues like missing antecedent basis and restrictive wording, and visualizes your claim dependency tree, all in seconds.",
-    "productDesc3": "PatentLint was built by a patent engineer who spent years running these checks by hand. The goal: automate the tedious parts so practitioners can focus on substance.",
+    "productDesc3": "PatentLint was built by a patent engineer who spent years reviewing thousands of patent drafts and catching the same formatting errors and MPEP violations by hand. The goal: automate the tedious parts so practitioners can focus on substance.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center validates filing format. PatentLint checks the draft itself.",
     "uspto": {
@@ -118,7 +123,12 @@
         "meansPlusFunction": "Means-plus-function (35 U.S.C. § 112(f))",
         "preambleConsistency": "Claim preamble consistency (MPEP § 608.01(m))",
         "specSupport": "Specification support for claim terms",
-        "legalPhrasesAbstract": "Legal phraseology in abstract"
+        "legalPhrasesAbstract": "Legal phraseology in abstract",
+        "transitionPhrase": "Claim transitional phrase (§ 112)",
+        "checkJepsonPriorArt": "Jepson prior art concession (§ 2129)",
+        "checkCrmNonTransitory": "CRM non-transitory qualifier (§ 101)",
+        "checkMarkushTransition": "Markush group transitional phrase (§ 2117)",
+        "checkOmnibusClaim": "Omnibus claim detection (§ 112(b))"
       }
     },
     "stats": {
@@ -142,10 +152,10 @@
         "weasyprint": "HTML-to-PDF engine with CJK font support"
       }
     },
-    "builderTitle": "Who Built This?",
-    "builderDesc1": "PatentLint was created by Christopher Chen, a patent engineer turned ML/AI engineer. After years of reviewing thousands of patent specifications against MPEP rules by hand, he built PatentLint to catch what the human eye misses at scale.",
-    "builderDesc2": "PatentLint is a browser-based analysis tool built from the ground up in Python with a modern React frontend. No files leave your device — analysis runs entirely in the browser via WebAssembly.",
-    "builderSister": "PatentLint's sister project, the Agentic Patent Analyst, uses LLM agents to perform prior art search and claim coverage analysis. Both tools are designed to work together."
+    "builderTitle": "Background",
+    "builderDesc1": "PatentLint was developed by a patent engineer with over a decade of experience across semiconductor, optoelectronics, electrical, mechanical, and chemical patent portfolios.",
+    "builderDesc2": "The entire analysis engine, written in Python, compiles to WebAssembly and runs directly in your browser. No server, no upload, no files leaving your device. Existing tools either require Windows-only installation or upload documents to cloud servers. PatentLint needs neither.",
+    "builderSister": "Its companion project, the Agentic Patent Analyst, uses LLM agents for prior art search and claim coverage analysis."
   },
   "details": {
     "paragraphs": "Paragraphs: {{list}}",
@@ -232,7 +242,10 @@
       "antecedentBasis": {
         "verify": "Missing antecedent basis detected.",
         "pass": "No antecedent basis issues detected."
-      }
+      },
+      "missingTransition": "Claim {{claimNumber}} is missing a transitional phrase (e.g., 'comprising', 'consisting of')",
+      "missingTransitionDetails": "Claim {{claimNumber}} does not contain a recognized transitional phrase. Every claim must include a transitional phrase such as 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by', or 'characterized in that' between the preamble and the claim body.",
+      "transitionsPresent": "All claims contain transitional phrases."
     },
     "abstract": {
       "restrictiveWording": {
@@ -326,5 +339,15 @@
     "figure_xref_pass": "All figure references are consistent between Brief Description of Drawings and Detailed Description.",
     "figure_xref_orphaned_brief": "Figure(s) described in Brief Description of Drawings but not referenced in Detailed Description.",
     "figure_xref_orphaned_detailed": "Figure(s) referenced in Detailed Description but not described in Brief Description of Drawings."
+  },
+  "claims": {
+    "jepsonPriorArt": "Claim {{claimNumber}} uses Jepson format — preamble elements are treated as admitted prior art (MPEP § 2129)",
+    "jepsonPriorArtDetails": "Claim {{claimNumber}} is drafted in Jepson format. Under MPEP § 2129, the elements recited in the preamble of a Jepson claim are treated as an implied admission that they are prior art. Verify that this admission is intentional.",
+    "crmNonTransitory": "Claim {{claimNumber}}: computer-readable medium claim is missing 'non-transitory' qualifier",
+    "crmNonTransitoryDetails": "Claim {{claimNumber}} recites a computer-readable medium without the 'non-transitory' qualifier. Without this qualifier, the claim covers transitory signals (e.g., carrier waves), which are not patent-eligible subject matter under 35 U.S.C. § 101. Add 'non-transitory' before the medium term.",
+    "markushOpenTransition": "Claim {{claimNumber}}: Markush group uses open-ended '{{transition}}' instead of 'consisting of'",
+    "markushOpenTransitionDetails": "Claim {{claimNumber}} contains a Markush group using '{{transition}}' instead of the required 'consisting of'. Markush groups must use closed transitional language per MPEP § 2117. Using open-ended language may result in an improper Markush grouping rejection.",
+    "omnibusClaim": "Claim {{claimNumber}} appears to be an omnibus claim",
+    "omnibusClaimDetails": "Claim {{claimNumber}} references the description or drawings without reciting specific technical features. Omnibus claims are categorically rejected under 35 U.S.C. § 112(b) in U.S. utility patents (MPEP § 2173.05(r)). Rewrite the claim to recite specific structural or method limitations."
   }
 }

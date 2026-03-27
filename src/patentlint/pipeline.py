@@ -22,6 +22,9 @@ from patentlint.parser.docx_loader import load_docx
 def _run_pipeline(loaded, full_text: str) -> AnalysisResult:
     """Core pipeline logic shared by analyze_file and analyze_bytes."""
 
+    # --- Document type detection ---
+    likely_patent = sections.detect_patent_document(full_text)
+
     # --- Section extraction ---
     claims_section = sections.extract_claims_section(full_text)
     abstract_section = sections.extract_abstract_section(full_text)
@@ -47,6 +50,8 @@ def _run_pipeline(loaded, full_text: str) -> AnalysisResult:
         means_plus_function = claims_analysis.detect_means_plus_function(claims)
         antecedent_basis = claims_analysis.check_antecedent_basis(claims)
         preamble_checks = claims_analysis.check_preamble_consistency(claims)
+        transition_checks = claims_analysis.check_claim_transitions(claims)
+        special_format_checks = claims_analysis.check_special_claim_formats(claims)
         spec_text = (summary_section or "") + "\n" + (detailed_desc_section or "")
         unsupported_terms = claims_analysis.check_spec_support(
             claims, spec_text, antecedent_flagged=antecedent_basis,
@@ -66,6 +71,8 @@ def _run_pipeline(loaded, full_text: str) -> AnalysisResult:
         means_plus_function = []
         antecedent_basis = []
         preamble_checks = []
+        transition_checks = []
+        special_format_checks = []
         unsupported_terms = []
         independent_count = 0
         dependent_count = 0
@@ -106,6 +113,8 @@ def _run_pipeline(loaded, full_text: str) -> AnalysisResult:
     prior_art_citations = sections.detect_prior_art_citations(background_section) if background_section else ""
 
     return AnalysisResult(
+        # Document-level flag
+        likely_patent=likely_patent,
         # Specification
         has_tracked_changes=loaded.has_tracked_changes,
         paragraph_count=len(para_nums),
@@ -140,6 +149,8 @@ def _run_pipeline(loaded, full_text: str) -> AnalysisResult:
         means_plus_function_claims=means_plus_function,
         antecedent_basis_issues=antecedent_basis,
         preamble_checks=preamble_checks,
+        transition_checks=transition_checks,
+        special_format_checks=special_format_checks,
         unsupported_terms=unsupported_terms,
         # Drawings — reference numerals
         reference_numerals=ref_numerals,

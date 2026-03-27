@@ -345,6 +345,24 @@ export async function downloadReport(reportData, t, language, originalFilename) 
         style: 'securityNote',
       },
 
+      // Non-patent warning (if applicable)
+      ...(reportData.likely_patent === false ? [
+        {
+          text: `${sanitizeText(t('results.nonPatentWarning'))}`,
+          bold: true,
+          fontSize: 12,
+          color: '#b45309',
+          margin: [0, 0, 0, 4],
+        },
+        {
+          text: sanitizeText(t('results.nonPatentWarningDetails')),
+          fontSize: 9,
+          color: '#92400e',
+          margin: [0, 0, 0, 16],
+          italics: true,
+        },
+      ] : []),
+
       // Summary stats
       {
         text: t('pdf.summaryStats'),

@@ -8,8 +8,13 @@
   "diagram": { "show": "显示图表", "hide": "隐藏图表" },
   "tree": { "apparatusClaims": "装置权利要求", "methodClaims": "方法权利要求", "independent": "独立权利要求", "dependent": "从属权利要求", "deps": "个从属项", "dep": "个从属项" },
   "section112": { "title": "§ 112 分析" },
+  "results": {
+    "nonPatentWarning": "此文档可能不是专利说明书",
+    "nonPatentWarningDetails": "PatentLint 专为美国专利申请草稿设计。此文件未包含标准专利章节、编号权利要求或段落编号，分析结果对非专利文件可能不具参考价值。",
+    "showResultsAnyway": "仍然显示结果"
+  },
   "analysis": { "analyzing": "正在分析专利文件...", "label": "分析结果" },
-  "footer": { "disclaimer": "本报告不构成法律意见", "builtBy": "Built by Christopher Chen", "security": "安全性", "about": "关于", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "意见反馈" },
+  "footer": { "disclaimer": "本报告不构成法律意见", "builtBy": "© 2025 Christopher Chen", "security": "安全性", "about": "关于", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "意见反馈" },
   "antecedentBasis": { "title": "先行词基础检查", "items": "个术语", "item": "个术语" },
   "specSupport": { "title": "说明书支持检查", "items": "个术语", "item": "个术语" },
   "triage": { "title": "优先处理摘要", "amend": "需要修改", "amendEmpty": "无需修改的项目。", "verify": "专家确认", "verifyEmpty": "无需确认的项目。", "pass": "通过", "items": "个项目", "item": "个项目" },
@@ -75,10 +80,10 @@
     }
   },
   "about": {
-    "productTitle": "什么是 PatentLint？",
-    "productDesc1": "PatentLint 是免费的开源专利说明书质量检查工具。将美国专利申请文稿（.docx）拖入浏览器，即可获得即时合规报告。无需上传、无需账号、不使用云端。",
+    "productTitle": "PatentLint是什么？",
+    "productDesc1": "PatentLint 是免费的开源专利说明书质量检查工具。将美国专利申请文稿（.docx）拖入浏览器，即可获得即时合规报告。无需上传、无需账号、不使用云端。其名称源自「linting」，这是软件开发中用于在错误发生前自动检测问题的术语。",
     "productDesc2": "它依据美国《专利审查程序手册》(MPEP) 的格式规则进行检查，检测常见的撰写问题，如先行词基础缺漏和限制性用语，并将权利要求从属关系以树状图呈现，一切只需数秒。",
-    "productDesc3": "PatentLint 由一位长年手动执行这些检查的专利工程师所创建。目标：自动化繁琐的部分，让专利从业人员专注于实质内容。",
+    "productDesc3": "PatentLint 由一位花费多年审阅数千份专利草稿、反复手动发现相同格式错误与 MPEP 违规的专利工程师所创建。目标：自动化繁琐的部分，让从业人员专注于实质内容。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查文稿本身。",
     "uspto": {
@@ -118,7 +123,12 @@
         "meansPlusFunction": "功能性限定（35 U.S.C. § 112(f)）",
         "preambleConsistency": "权利要求前序一致性（MPEP § 608.01(m)）",
         "specSupport": "说明书对权利要求术语的支持",
-        "legalPhrasesAbstract": "摘要中的法律用语"
+        "legalPhrasesAbstract": "摘要中的法律用语",
+        "transitionPhrase": "权利要求过渡用语（§ 112）",
+        "checkJepsonPriorArt": "Jepson 现有技术承认（§ 2129）",
+        "checkCrmNonTransitory": "计算机可读介质 non-transitory 限定（§ 101）",
+        "checkMarkushTransition": "Markush 群组过渡用语（§ 2117）",
+        "checkOmnibusClaim": "概括权利要求检测（§ 112(b)）"
       }
     },
     "stats": {
@@ -142,10 +152,10 @@
         "weasyprint": "HTML 转 PDF 引擎，支持 CJK 字体"
       }
     },
-    "builderTitle": "谁创建了这个工具？",
-    "builderDesc1": "PatentLint 由 Christopher Chen 创建，他是一位从专利工程师转型为 ML/AI 工程师的开发者。在多年手动审查数千份专利说明书以比对 MPEP 规则之后，他创建了 PatentLint 来大规模捕捉人眼容易遗漏的问题。",
-    "builderDesc2": "PatentLint 是一款从零开始以 Python 构建的浏览器端分析工具，搭配现代 React 前端。所有文件不会离开您的设备，分析完全通过 WebAssembly 在浏览器中运行。",
-    "builderSister": "PatentLint 的姊妹项目「Agentic Patent Analyst」使用 LLM 代理进行现有技术检索与权利要求覆盖范围分析。两款工具设计为搭配使用。"
+    "builderTitle": "背景",
+    "builderDesc1": "PatentLint 由一位在半导体、光电、电子、机械及化学专利领域拥有十余年经验的专利工程师所开发。",
+    "builderDesc2": "整个分析引擎以 Python 编写，编译为 WebAssembly 并直接在您的浏览器中运行。无服务器、无上传、文件不会离开您的设备。现有工具不是需要安装 Windows 专用软件，就是将文档上传至云端服务器。PatentLint 两者皆不需要。",
+    "builderSister": "其姊妹项目 Agentic Patent Analyst 使用 LLM 代理进行现有技术检索与权利要求覆盖范围分析。"
   },
   "details": {
     "paragraphs": "段落：{{list}}",
@@ -232,7 +242,10 @@
       "antecedentBasis": {
         "verify": "检测到缺少先行词基础（antecedent basis）。",
         "pass": "未检测到先行词基础问题。"
-      }
+      },
+      "missingTransition": "权利要求 {{claimNumber}} 缺少过渡用语（例如 'comprising'、'consisting of'）",
+      "missingTransitionDetails": "权利要求 {{claimNumber}} 未包含任何公认的过渡用语。每项权利要求必须在前序部分与主体之间包含过渡用语，例如 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' 或 'characterized in that'。",
+      "transitionsPresent": "所有权利要求均包含过渡用语。"
     },
     "abstract": {
       "restrictiveWording": {
@@ -326,5 +339,15 @@
     "figure_xref_pass": "附图说明与具体实施方式之间的附图引用一致。",
     "figure_xref_orphaned_brief": "附图在附图说明中描述但未在具体实施方式中引用。",
     "figure_xref_orphaned_detailed": "附图在具体实施方式中引用但未在附图说明中描述。"
+  },
+  "claims": {
+    "jepsonPriorArt": "权利要求 {{claimNumber}} 使用 Jepson 格式，前序部分的特征视为承认的现有技术（MPEP § 2129）",
+    "jepsonPriorArtDetails": "权利要求 {{claimNumber}} 以 Jepson 格式撰写。依据 MPEP § 2129，Jepson 权利要求前序部分记载的特征被视为默示承认为现有技术。请确认此承认系有意为之。",
+    "crmNonTransitory": "权利要求 {{claimNumber}}：计算机可读介质权利要求缺少 'non-transitory' 限定词",
+    "crmNonTransitoryDetails": "权利要求 {{claimNumber}} 记载计算机可读介质但未包含 'non-transitory' 限定词。缺少此限定词时，权利要求涵盖瞬态信号（如载波），不符合 35 U.S.C. § 101 的可专利主题要求。请在介质用语前加入 'non-transitory'。",
+    "markushOpenTransition": "权利要求 {{claimNumber}}：Markush 群组使用开放式用语 '{{transition}}'，而非 'consisting of'",
+    "markushOpenTransitionDetails": "权利要求 {{claimNumber}} 中的 Markush 群组使用 '{{transition}}'，而非规定的 'consisting of'。依据 MPEP § 2117，Markush 群组须使用封闭式过渡用语。使用开放式用语可能导致不当 Markush 群组驳回。",
+    "omnibusClaim": "权利要求 {{claimNumber}} 疑似为概括权利要求",
+    "omnibusClaimDetails": "权利要求 {{claimNumber}} 引用说明书或附图但未记载具体技术特征。概括权利要求在美国发明专利中依 35 U.S.C. § 112(b) 一律驳回（MPEP § 2173.05(r)）。请改写权利要求以记载具体的结构或方法限定。"
   }
 }

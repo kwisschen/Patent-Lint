@@ -9,6 +9,7 @@ from patentlint.parser.sections import (
     extract_background_section,
     extract_description_of_drawings_section,
     detect_prior_art_citations,
+    detect_patent_document,
 )
 
 
@@ -75,6 +76,44 @@ class TestExtractDrawings:
         result = extract_description_of_drawings_section(doc)
         assert "FIG. 1 shows a widget." in result
         assert "FIG. 2 shows a gadget." in result
+
+
+class TestDetectPatentDocument:
+    def test_claims_header(self):
+        """Text with CLAIMS section header → True."""
+        assert detect_patent_document("Some text.\nCLAIMS\n1. A method.") is True
+
+    def test_abstract_header(self):
+        """Text with ABSTRACT OF THE DISCLOSURE header → True."""
+        assert detect_patent_document("ABSTRACT OF THE DISCLOSURE\nA method is disclosed.") is True
+
+    def test_detailed_description_header(self):
+        """Text with DETAILED DESCRIPTION header → True."""
+        assert detect_patent_document("DETAILED DESCRIPTION\nThe widget includes a base.") is True
+
+    def test_numbered_claims_pattern(self):
+        """Text with numbered claims pattern → True."""
+        assert detect_patent_document("Preamble text.\n1. A method comprising step A.\n2. The method of claim 1.") is True
+
+    def test_bracketed_paragraph_numbers(self):
+        """Text with 3+ bracketed paragraph numbers [0001] → True."""
+        text = "[0001] First paragraph.\n[0002] Second paragraph.\n[0003] Third paragraph."
+        assert detect_patent_document(text) is True
+
+    def test_plain_essay(self):
+        """Plain essay text with no patent indicators → False."""
+        text = "This is an essay about technology. It discusses various topics. The conclusion follows."
+        assert detect_patent_document(text) is False
+
+    def test_business_letter(self):
+        """Business letter text → False."""
+        text = "Dear Mr. Smith,\nPlease find attached the requested documents.\nBest regards,\nJane Doe"
+        assert detect_patent_document(text) is False
+
+    def test_single_bracket_not_four_digit(self):
+        """Text with only 1 bracketed number (not 4-digit format) → False."""
+        text = "See reference [1] for details. Also [2] is relevant."
+        assert detect_patent_document(text) is False
 
 
 class TestDetectPriorArtCitations:
