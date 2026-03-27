@@ -7,7 +7,7 @@ Figure counting, sequential ordering, single-figure format, and prior art refere
 
 import re
 
-from patentlint.models import FigureReference
+from patentlint.models import CheckItem, FigureReference
 
 _FIGURE_PATTERN = re.compile(
     r"(FIG(?:S)?\.?|Figure(?:s)?)\s*(\d+)(?:\(([a-zA-Z])\)|([a-zA-Z]))?"
@@ -167,7 +167,7 @@ def _extract_figure_ids(text: str) -> set[str]:
 
 def check_figure_cross_references(
     brief_description: str, detailed_description: str
-) -> list["CheckItem"]:
+) -> list[CheckItem]:
     """Check figure reference consistency between Brief Description and Detailed Description.
 
     Returns CheckItems for orphaned or undescribed figure references.
