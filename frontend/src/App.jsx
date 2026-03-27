@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2025 Christopher Chen
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Loader2 } from 'lucide-react'
@@ -13,7 +13,7 @@ import SecurityPage from './pages/SecurityPage'
 import AboutPage from './pages/AboutPage'
 import { usePyodide } from './hooks/usePyodide'
 import { analyzeDocument, downloadReport as downloadReportServer } from './api'
-import { downloadReport as downloadReportClient } from './lib/pdfExport'
+import { downloadReport as downloadReportClient, prefetchCjkFont } from './lib/pdfExport'
 
 function App() {
   const { t, i18n } = useTranslation()
@@ -24,6 +24,10 @@ function App() {
   const handleEngineReady = useCallback(() => {
     setEngineReady(true)
   }, [])
+
+  useEffect(() => {
+    prefetchCjkFont(i18n.language)
+  }, [i18n.language])
 
   // Home page state
   const [homeState, setHomeState] = useState('idle')
