@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Check, Linkedin, Github, Mail, ShieldCheck, Server } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
+import PageCTA from '../components/PageCTA'
 import { useCountUp } from '../hooks/useCountUp'
 
 /* ────────────────────────────────────────────
@@ -412,6 +413,7 @@ export default function AboutPage() {
         <ArchitectureDiagram t={t} />
       </section>
       <BuilderStory t={t} />
+      <PageCTA />
     </div>
   )
 }
