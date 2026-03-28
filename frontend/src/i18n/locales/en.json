@@ -69,15 +69,18 @@
       "architectureTitle": "Architecture",
       "architecture": "PatentLint compiles its Python analysis engine to WebAssembly via Pyodide and runs it entirely inside your browser's sandboxed JavaScript environment. No server-side processing occurs for document analysis.",
       "networkTitle": "Network Activity",
-      "network": "After the initial page load (which fetches the Pyodide runtime and PatentLint wheel), zero network requests are made during analysis. You can verify this in your browser's DevTools Network, or by running PatentLint in airplane mode.",
+      "network": "After the initial page load (which loads the analysis engine), zero network requests are made during analysis. Verify this in your browser's DevTools Network tab, or simply turn on airplane mode.",
       "pdfTitle": "PDF Generation",
-      "pdf": "PDF reports are generated client-side using pdfmake. No server round-trip. The Docker/CLI deployment tier uses weasyprint for server-side PDF with CJK font support.",
+      "pdf": "PDF reports are generated entirely in your browser using pdfmake. Your document content never leaves your device, not even for the report.",
       "aiTitle": "AI / LLM Usage",
       "ai": "PatentLint does not use AI, machine learning, or large language models. All checks are deterministic, rule-based pattern matching against MPEP guidelines. Your text is never sent to any AI service.",
       "telemetryTitle": "Telemetry & Analytics",
       "telemetry": "PatentLint collects zero analytics, zero telemetry, and zero usage data. There are no cookies, no tracking pixels, and no third-party scripts. The application does not know who you are.",
       "selfHostedTitle": "Self-Hosted Option",
-      "selfHosted": "For organizations requiring additional control, PatentLint can be self-hosted via Docker. The provided Dockerfile includes all dependencies including CJK fonts for multilingual PDF generation."
+      "selfHosted": "For organizations with strict data sovereignty requirements, such as ITAR-controlled environments or air-gapped networks, PatentLint can be self-hosted via Docker with all dependencies included.",
+      "contactEnterprise": "Contact for enterprise deployment",
+      "openSourceTitle": "Open Source",
+      "openSource": "PatentLint is open source under the AGPL-3.0 license. Every line of analysis code is publicly auditable. You don't have to trust our claims. You can read the source."
     }
   },
   "about": {

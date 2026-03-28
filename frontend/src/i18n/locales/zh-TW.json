@@ -69,15 +69,18 @@
       "architectureTitle": "架構",
       "architecture": "PatentLint 透過 Pyodide 將 Python 分析引擎編譯為 WebAssembly，完全在瀏覽器的沙盒 JavaScript 環境中執行。文件分析不經過任何伺服器端處理。",
       "networkTitle": "網路活動",
-      "network": "初次頁面載入（擷取 Pyodide 執行環境和 PatentLint wheel）之後，分析過程中不會發出任何網路請求。您可以在瀏覽器的 DevTools Network 中驗證，或在飛航模式下使用 PatentLint。",
+      "network": "初次頁面載入（載入分析引擎）之後，分析過程中不會發出任何網路請求。您可以在瀏覽器的 DevTools Network 分頁中驗證，或直接開啟飛航模式。",
       "pdfTitle": "PDF 生成",
-      "pdf": "PDF 報告使用 pdfmake 在客戶端生成，不經過伺服器。Docker/CLI 部署方式則使用 weasyprint 進行伺服器端 PDF 生成，支援 CJK 字型。",
+      "pdf": "PDF 報告完全在您的瀏覽器中使用 pdfmake 生成。您的文件內容絕不離開您的裝置，即使是生成報告也不例外。",
       "aiTitle": "AI / LLM 使用",
       "ai": "PatentLint 不使用 AI、機器學習或大型語言模型。所有檢查皆為確定性的規則比對，依據 MPEP 指南執行。您的文字不會被傳送至任何 AI 服務。",
       "telemetryTitle": "遙測與分析",
       "telemetry": "PatentLint 不收集任何分析資料、遙測資料或使用數據。沒有 cookies、沒有追蹤像素、沒有第三方腳本。此應用程式不知道您的身份。",
       "selfHostedTitle": "自行部署選項",
-      "selfHosted": "對於需要額外控管的組織，PatentLint 可透過 Docker 自行部署。提供的 Dockerfile 包含所有相依套件，包括用於多語言 PDF 生成的 CJK 字型。"
+      "selfHosted": "對於有嚴格資料主權要求的組織，例如 ITAR 管制環境或實體隔離網路，PatentLint 可透過 Docker 自行部署於地端，所有相依套件皆已包含。",
+      "contactEnterprise": "洽詢企業部署方案",
+      "openSourceTitle": "開放原始碼",
+      "openSource": "PatentLint 以 AGPL-3.0 授權開放原始碼。每一行分析程式碼皆可公開審閱。您無需信任我們的聲明，可以直接閱讀原始碼。"
     }
   },
   "about": {

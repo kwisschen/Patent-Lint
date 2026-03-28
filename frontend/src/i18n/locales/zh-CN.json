@@ -69,15 +69,18 @@
       "architectureTitle": "架构",
       "architecture": "PatentLint 通过 Pyodide 将 Python 分析引擎编译为 WebAssembly，完全在浏览器的沙盒 JavaScript 环境中运行。文档分析不经过任何服务器端处理。",
       "networkTitle": "网络活动",
-      "network": "初次页面加载（获取 Pyodide 运行环境和 PatentLint wheel）之后，分析过程中不会发出任何网络请求。您可以在浏览器的 DevTools Network 中验证，或在飞行模式下使用 PatentLint。",
+      "network": "初次页面加载（加载分析引擎）之后，分析过程中不会发出任何网络请求。您可以在浏览器的 DevTools Network 标签页中验证，或直接开启飞行模式。",
       "pdfTitle": "PDF 生成",
-      "pdf": "PDF 报告使用 pdfmake 在客户端生成，不经过服务器。Docker/CLI 部署方式则使用 weasyprint 进行服务器端 PDF 生成，支持 CJK 字体。",
+      "pdf": "PDF 报告完全在您的浏览器中使用 pdfmake 生成。您的文件内容绝不离开您的设备，即使是生成报告也不例外。",
       "aiTitle": "AI / LLM 使用",
       "ai": "PatentLint 不使用 AI、机器学习或大型语言模型。所有检查均为确定性的规则匹配，依据 MPEP 指南执行。您的文本不会被发送至任何 AI 服务。",
       "telemetryTitle": "遥测与分析",
       "telemetry": "PatentLint 不收集任何分析数据、遥测数据或使用数据。没有 cookies、没有追踪像素、没有第三方脚本。此应用程序不知道您的身份。",
       "selfHostedTitle": "自托管选项",
-      "selfHosted": "对于需要额外管控的组织，PatentLint 可通过 Docker 自托管部署。提供的 Dockerfile 包含所有依赖项，包括用于多语言 PDF 生成的 CJK 字体。"
+      "selfHosted": "对于有严格数据主权要求的组织，例如 ITAR 管控环境或物理隔离网络，PatentLint 可通过 Docker 自托管部署于本地，所有依赖项均已包含。",
+      "contactEnterprise": "咨询企业部署方案",
+      "openSourceTitle": "开放源代码",
+      "openSource": "PatentLint 以 AGPL-3.0 许可证开放源代码。每一行分析代码均可公开审查。您无需信任我们的声明，可以直接阅读源代码。"
     }
   },
   "about": {
