@@ -8,19 +8,30 @@ import { useTranslation } from 'react-i18next'
 export default function DropZone({ onFile, onShowProveIt }) {
   const { t } = useTranslation()
   const [badgeVisible, setBadgeVisible] = useState(false)
+  const [rejectMsg, setRejectMsg] = useState('')
 
   useEffect(() => {
     const timer = setTimeout(() => setBadgeVisible(true), 500)
     return () => clearTimeout(timer)
   }, [])
 
-  const onDrop = useCallback((acceptedFiles) => {
+  const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
+    setRejectMsg('')
     if (acceptedFiles.length > 0) {
       onFile(acceptedFiles[0])
+      return
     }
-  }, [onFile])
+    const hasTypeError = rejectedFiles.some(r => r.errors.some(e => e.code === 'file-invalid-type'))
+    if (rejectedFiles.length > 1 && hasTypeError) {
+      setRejectMsg(t('dropzone.rejectMultipleType'))
+    } else if (rejectedFiles.length > 1) {
+      setRejectMsg(t('dropzone.rejectMultiple'))
+    } else {
+      setRejectMsg(t('dropzone.reject'))
+    }
+  }, [onFile, t])
 
-  const { getRootProps, getInputProps, isDragActive, fileRejections } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
@@ -75,9 +86,9 @@ export default function DropZone({ onFile, onShowProveIt }) {
         </div>
       </div>
 
-      {fileRejections.length > 0 && (
+      {rejectMsg && (
         <p className="text-sm text-[var(--amend-text)]">
-          {t('dropzone.reject')}
+          {rejectMsg}
         </p>
       )}
     </div>

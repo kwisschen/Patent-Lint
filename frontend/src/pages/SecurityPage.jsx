@@ -13,7 +13,7 @@
 // - [ ] Chrome (latest, Android)
 // If any browser fails, update the "any device with a browser" claim accordingly.
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Shield, Check, ChevronDown } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
@@ -237,6 +237,8 @@ function TechDetailsSection() {
 /* ------------------------------------------------------------------ */
 
 export default function SecurityPage({ onShowProveIt }) {
+  useEffect(() => { window.scrollTo(0, 0) }, [])
+
   return (
     <div className="max-w-4xl mx-auto">
       <style>{`

@@ -81,7 +81,7 @@ export default function ProveItModal({ open, onOpenChange }) {
         setNetworkActive(true)
         setEntries((prev) => [...prev, ...newEntries])
         clearTimeout(timeoutRef.current)
-        timeoutRef.current = setTimeout(() => setNetworkActive(false), 1200)
+        timeoutRef.current = setTimeout(() => setNetworkActive(false), 800)
       }
     })
     observer.observe({ type: 'resource', buffered: false })

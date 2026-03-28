@@ -1,6 +1,6 @@
 {
   "header": { "title": "PatentLint", "subtitle": "Patent Draft Quality Checker" },
-  "dropzone": { "title": "Drop your patent .docx here", "subtitle": "or click to browse", "notice": "Currently supports U.S. patent specifications (.docx) only.", "reject": "Only .docx files are accepted" },
+  "dropzone": { "title": "Drop your patent .docx here", "subtitle": "or click to browse", "notice": "Currently supports U.S. patent specifications (.docx) only.", "reject": "Only .docx files are accepted", "rejectMultiple": "Please drop one file at a time.", "rejectMultipleType": "Please drop a single .docx file." },
   "summary": { "specParagraphs": "Specification Paragraphs", "claims": "Claims", "independent": "independent", "dependent": "dependent", "figures": "Figures", "abstractWords": "Abstract Words", "claimCategories": "Claim Categories", "method": "method", "apparatus": "apparatus", "outsideRange": "Outside 50–150 range" },
   "section": { "specification": "Specification", "claims": "Claims", "drawings": "Brief Description of Drawings", "drawingsShort": "Drawings", "abstract": "Abstract" },
   "status": { "pass": "PASS", "verify": "VERIFY", "amend": "AMEND" },
@@ -295,8 +295,8 @@
     "offline_note": "Works offline after first load",
     "feature1_title": "No Install. No Account. No Cloud.",
     "feature1_desc": "Your confidential patent drafts never leave your device. Nothing is uploaded, and PatentLint doesn't even know who you are.",
-    "feature2_title": "MPEP Compliance Checks",
-    "feature2_desc": "Catches restrictive wording, indefinite terms, antecedent basis gaps, means-plus-function issues, and more.",
+    "feature2_title": "MPEP Checks & Claim Tree",
+    "feature2_desc": "Catches restrictive wording, indefinite terms, and antecedent basis gaps. Visualizes claim dependencies with an interactive tree.",
     "feature3_title": "Claim Tree Visualization",
     "feature3_desc": "Interactive dependency tree and Mermaid diagram show your claim structure at a glance.",
     "feature4_title": "Works Everywhere",
