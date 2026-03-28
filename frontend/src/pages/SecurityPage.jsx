@@ -174,6 +174,7 @@ const techSections = [
   'ai',
   'telemetry',
   'selfHosted',
+  'openSource',
 ]
 
 function TechDetailsSection() {
@@ -224,6 +225,14 @@ function TechDetailsSection() {
               <p className="text-muted-foreground leading-relaxed">
                 {t(`security.tech.${key}`)}
               </p>
+              {key === 'selfHosted' && (
+                <a
+                  href="mailto:kwisschen@gmail.com"
+                  className="inline-flex items-center gap-1 text-sm text-primary underline underline-offset-4 hover:text-primary/80 mt-2"
+                >
+                  {t('security.tech.contactEnterprise')}
+                </a>
+              )}
             </div>
           ))}
         </div>
