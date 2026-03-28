@@ -40,7 +40,10 @@ export default function Header({ onReset, canReset }) {
           onClick={handleLogoClick}
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleLogoClick() } }}
         >
-          <h1 className="text-lg font-bold tracking-tight">{t('header.title')}</h1>
+          <h1 className="text-lg font-bold tracking-tight flex items-center gap-2">
+            <img src="/logo.png" alt="PatentLint" className="w-6 h-6" />
+            {t('header.title')}
+          </h1>
           <p className="text-xs text-muted-foreground -mt-1">{t('header.subtitle')}</p>
         </div>
         <div className="flex items-center gap-1">
