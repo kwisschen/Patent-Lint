@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2025 Christopher Chen
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Check, Linkedin, Github, Mail, ShieldCheck, Server } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
@@ -403,6 +403,7 @@ function BuilderStory({ t }) {
    ──────────────────────────────────────────── */
 export default function AboutPage() {
   const { t } = useTranslation()
+  useEffect(() => { window.scrollTo(0, 0) }, [])
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-16 space-y-24">
