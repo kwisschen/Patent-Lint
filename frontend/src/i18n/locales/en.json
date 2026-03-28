@@ -47,7 +47,7 @@
     },
     "page": {
       "heroTitle": "Your Patent Draft Never Leaves Your Device",
-      "heroSubtext": "PatentLint runs entirely in your browser — no server, no upload, no cloud. Your confidential specification stays on your machine, always.",
+      "heroSubtext": "PatentLint runs entirely inside your browser — no server, no upload, no cloud. Your confidential specification stays on your machine, always.",
       "tryIt": "Try it yourself →",
       "compareTitle": "How Does PatentLint Compare?",
       "compareDisclaimer": "Comparison reflects general architecture patterns. Individual products may vary. \"Word Add-in Tools\" and \"Cloud-Based Tools\" are generic categories, not specific products.",
