@@ -11,7 +11,9 @@
   "results": {
     "nonPatentWarning": "This document may not be a patent specification",
     "nonPatentWarningDetails": "PatentLint is designed for U.S. patent application drafts. This file does not appear to contain standard patent sections, numbered claims, or paragraph numbering. Analysis results may not be meaningful for non-patent documents.",
-    "showResultsAnyway": "Show results anyway"
+    "showResultsAnyway": "Show results anyway",
+    "trackedChangesWarning": "This document contains tracked changes, which may affect analysis accuracy. Accept or reject all changes in your word processor, then analyze again.",
+    "analyzeAgain": "Analyze Again"
   },
   "analysis": { "analyzing": "Analyzing patent document...", "label": "Analysis" },
   "footer": { "disclaimer": "Not legal advice", "builtBy": "© 2025 Christopher Chen", "security": "Security", "about": "About", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "Feedback" },
