@@ -23,7 +23,7 @@ Thumbs.db
 .vscode/
 .python-version
 legacy/
-CLAUDE.md
 docs/
 tests/fixtures/*.docx
 smoke-test-pyodide.html
+temp/
