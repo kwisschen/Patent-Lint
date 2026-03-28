@@ -11,8 +11,7 @@ PatentLint checks U.S. patent application drafts (.docx) against USPTO formattin
 
 **[Try it →](https://patentlint.com)**
 
-<!-- TODO: hero screenshot (dark mode results page) -->
-<!-- ![PatentLint](docs/screenshot-hero.png) -->
+![PatentLint analysis results](https://patentlint.com/screenshot-hero.png)
 
 ---
 
