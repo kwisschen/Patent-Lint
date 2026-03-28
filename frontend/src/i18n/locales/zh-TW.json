@@ -11,7 +11,9 @@
   "results": {
     "nonPatentWarning": "此文件可能不是專利說明書",
     "nonPatentWarningDetails": "PatentLint 專為美國專利申請草稿設計。此檔案未包含標準專利章節、編號請求項或段落編號，分析結果對非專利文件可能不具參考價值。",
-    "showResultsAnyway": "仍然顯示結果"
+    "showResultsAnyway": "仍然顯示結果",
+    "trackedChangesWarning": "此文件包含追蹤修訂，可能影響分析準確性。請在文書處理軟體中接受或拒絕所有變更後，重新進行分析。",
+    "analyzeAgain": "重新分析"
   },
   "analysis": { "analyzing": "正在分析專利文件...", "label": "分析結果" },
   "footer": { "disclaimer": "本報告不構成法律意見", "builtBy": "© 2025 Christopher Chen", "security": "安全性", "about": "關於", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "意見回饋" },

@@ -11,7 +11,9 @@
   "results": {
     "nonPatentWarning": "この文書は特許明細書ではない可能性があります",
     "nonPatentWarningDetails": "PatentLint は米国特許出願の草稿用に設計されています。このファイルには標準的な特許セクション、番号付き請求項、または段落番号が含まれていないため、非特許文書に対する分析結果は有意でない場合があります。",
-    "showResultsAnyway": "結果を表示する"
+    "showResultsAnyway": "結果を表示する",
+    "trackedChangesWarning": "この文書には変更履歴が含まれており、分析精度に影響する可能性があります。ワープロソフトですべての変更を承認または拒否してから、再度分析を行ってください。",
+    "analyzeAgain": "再分析"
   },
   "analysis": { "analyzing": "特許文書を分析中...", "label": "分析結果" },
   "footer": { "disclaimer": "本レポートは法的助言を構成するものではありません", "builtBy": "© 2025 Christopher Chen", "security": "セキュリティ", "about": "概要", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "フィードバック" },
