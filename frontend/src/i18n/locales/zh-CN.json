@@ -15,7 +15,7 @@
   },
   "analysis": { "analyzing": "正在分析专利文件...", "label": "分析结果" },
   "footer": { "disclaimer": "本报告不构成法律意见", "builtBy": "© 2025 Christopher Chen", "security": "安全性", "about": "关于", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "意见反馈" },
-  "cta": { "heading": "准备好检查您的专利稿件了吗？", "subtext": "拖入 .docx 文件，即时获取分析结果。无需上传，无需账号。", "button": "分析稿件" },
+  "cta": { "heading": "准备好检查您的专利稿件了吗？", "subtext": "拖放 .docx 文件，即时获取分析结果。无需上传，无需账号。", "button": "分析稿件" },
   "antecedentBasis": { "title": "先行词基础检查", "items": "个术语", "item": "个术语" },
   "specSupport": { "title": "说明书支持检查", "items": "个术语", "item": "个术语" },
   "triage": { "title": "优先处理摘要", "amend": "需要修改", "amendEmpty": "无需修改的项目。", "verify": "专家确认", "verifyEmpty": "无需确认的项目。", "pass": "通过", "items": "个项目", "item": "个项目" },
@@ -33,11 +33,11 @@
     },
     "prove": {
       "label1": "断开网络",
-      "label2": "拖入文件",
+      "label2": "拖放文件",
       "label3": "照常运行",
       "label4": "绿色圆点",
       "step1": "关闭 WiFi 或开启飞行模式",
-      "step2": "将任意 .docx 拖入 PatentLint",
+      "step2": "将任意 .docx 拖放至 PatentLint",
       "step3": "没有网络意味着没有云端、没有上传、没有任何数据外传",
       "step4": "绿色表示浏览器未发送任何请求，可随时在 DevTools → Network 验证",
       "testHeading": "眼见为实",
@@ -46,8 +46,8 @@
       "logEmpty": "暂无请求"
     },
     "page": {
-      "heroTitle": "您的专利文稿绝不离开您的设备",
-      "heroSubtext": "PatentLint 完全在您的浏览器中运行，不经过服务器、不上传、不使用云端。您的机密说明书始终留在您的机器上。",
+      "heroTitle": "专利文稿绝不离开您的设备",
+      "heroSubtext": "PatentLint 完全在您的浏览器内部运行，不经过服务器、不上传、不使用云端。您的说明书机密始终都留在您的机器上。",
       "tryIt": "自己试试看 →",
       "compareTitle": "PatentLint 与其他工具的比较",
       "compareDisclaimer": "本比较表反映一般架构模式。各产品可能有所不同。「Word 插件工具」与「云端工具」为通用类别，并非指特定产品。",
@@ -62,7 +62,7 @@
       "q2": { "question": "需要账号吗？", "patentlint": "不需要。无需注册、无需登录、无追踪。", "addin": "通常需要许可证或账号。", "cloud": "是，需要账号。" },
       "q3": { "question": "可以离线使用吗？", "patentlint": "可以，首次加载后即可。", "addin": "取决于许可证验证方式。", "cloud": "不行，需要网络。" },
       "q4": { "question": "能验证隐私声明吗？", "patentlint": "可以。打开 DevTools → Network，或开启飞行模式。", "addin": "难以审计插件的网络流量。", "cloud": "不行，数据在他们的服务器上。" },
-      "q5": { "question": "支持哪些平台？", "patentlint": "任何支持现代浏览器的设备。", "addin": "仅限 Windows + Microsoft Word。", "cloud": "浏览器端，但需要上传。" },
+      "q5": { "question": "支持哪些平台？", "patentlint": "任何支持现代浏览器的设备。", "addin": "仅限 Windows + Microsoft Word。", "cloud": "浏览器端，但需要上传资料。" },
       "q6": { "question": "源代码是否公开？", "patentlint": "是，AGPL-3.0 开源。", "addin": "通常为专有软件。", "cloud": "通常为专有软件。" }
     },
     "tech": {
@@ -82,9 +82,9 @@
   },
   "about": {
     "productTitle": "PatentLint是什么？",
-    "productDesc1": "PatentLint 是免费的开源专利说明书质量检查工具。将美国专利申请文稿（.docx）拖入浏览器，即可获得即时合规报告。无需上传、无需账号、不使用云端。其名称源自「linting」，这是软件开发中用于在错误发生前自动检测问题的术语。",
-    "productDesc2": "它依据美国《专利审查程序手册》(MPEP) 的格式规则进行检查，检测常见的撰写问题，如先行词基础缺漏和限制性用语，并将权利要求从属关系以树状图呈现，一切只需数秒。",
-    "productDesc3": "PatentLint 由一位花费多年审阅数千份专利草稿、反复手动发现相同格式错误与 MPEP 违规的专利工程师所创建。目标：自动化繁琐的部分，让从业人员专注于实质内容。",
+    "productDesc1": "PatentLint 是免费的开源专利说明书质量检查工具。将美国专利申请文稿（.docx）拖放至浏览器，即可获得即时合规报告。无需上传、无需账号、不使用云端。其名称源自「linting」，为软件开发中用于在错误发生前自动检测问题的术语。",
+    "productDesc2": "它依据美国《专利审查程序手册》(MPEP) 的格式规则进行检查，检测常见的撰稿问题，如缺乏先行词基础和限制性用语，并将权利要求从属关系以树状图呈现，且皆只需数秒。",
+    "productDesc3": "PatentLint 由一位花费多年审阅数千份专利草稿、反复手动发现相同格式错误与 MPEP 违规的专利工程师所研发。目标：将繁琐的部分自动化，让从业人员能专注于实质内容。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查文稿本身。",
     "uspto": {
@@ -156,8 +156,8 @@
       }
     },
     "builderTitle": "背景",
-    "builderDesc1": "PatentLint 由一位在半导体、光电、电子、机械及化学专利领域拥有十余年经验的专利工程师所开发。",
-    "builderDesc2": "整个分析引擎以 Python 编写，编译为 WebAssembly 并直接在您的浏览器中运行。无服务器、无上传、文件不会离开您的设备。现有工具不是需要安装 Windows 专用软件，就是将文档上传至云端服务器。PatentLint 两者皆不需要。",
+    "builderDesc1": "PatentLint 由一位在半导体、光电、电子、机械及化学专利组合拥有十余年经验的专利工程师所开发。",
+    "builderDesc2": "整个分析引擎以 Python 编写，再编译为 WebAssembly 并直接在您的浏览器中运行。无服务器、无上传、文件不会离开您的设备。现有工具不是需要安装 Windows 专用软件，就是将文档上传至云端服务器。PatentLint 两者皆不需要。",
     "builderSister": "其姊妹项目 Agentic Patent Analyst 使用 LLM 代理进行现有技术检索与权利要求覆盖范围分析。"
   },
   "details": {
@@ -296,7 +296,7 @@
     "feature1_title": "免安装、免注册、免上传。",
     "feature1_desc": "您的机密专利文稿不会离开您的设备。不会上传任何内容，PatentLint 也不会知道您的身份。",
     "feature2_title": "MPEP 合规检查",
-    "feature2_desc": "检测限制性用语、不确定术语、先行词基础缺漏、功能性限定等问题。",
+    "feature2_desc": "检测限制性用语、不确定术语、缺乏先行词基础、功能性限定等问题。",
     "feature3_title": "权利要求树状图",
     "feature3_desc": "交互式从属关系树状图和 Mermaid 图表，一目了然地呈现权利要求结构。",
     "feature4_title": "随处可用",
