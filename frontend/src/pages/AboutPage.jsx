@@ -122,8 +122,9 @@ function ComparisonTable({ t }) {
         </h2>
         <p className="text-muted-foreground">{t('about.usptoSubtitle')}</p>
       </div>
-      <div className="rounded-lg border border-border">
-        <table className="w-full text-left">
+      <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+       <div className="rounded-lg border border-border">
+        <table className="min-w-[500px] w-full text-left">
           <thead>
             <tr className="border-b border-border bg-muted/30">
               <th className="px-4 py-3 text-sm font-semibold text-foreground">
@@ -141,6 +142,7 @@ function ComparisonTable({ t }) {
           {renderGroup(ref2, inView2, 'about.uspto.group2Title', GROUP2_CHECKS, true, false, false, 150)}
           {renderGroup(ref3, inView3, 'about.uspto.group3Title', GROUP3_CHECKS, false, true, true, 300)}
         </table>
+       </div>
       </div>
     </section>
   )

@@ -130,8 +130,9 @@ function ComparisonSection() {
         {t('security.page.compareTitle')}
       </h2>
 
-      <div className="rounded-lg border border-border">
-        <table className="w-full text-sm border-collapse">
+      <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+       <div className="rounded-lg border border-border">
+        <table className="min-w-[600px] w-full text-sm border-collapse">
           <thead>
             <tr className="border-b border-border bg-muted/30">
               <th className="py-3 px-4 text-left text-muted-foreground font-semibold">
@@ -154,6 +155,7 @@ function ComparisonSection() {
             ))}
           </tbody>
         </table>
+       </div>
       </div>
 
       <p className="mt-6 text-xs text-muted-foreground text-center">
