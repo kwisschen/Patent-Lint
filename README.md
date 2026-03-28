@@ -1,33 +1,64 @@
 # PatentLint
 
 [![CI](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml/badge.svg)](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml)
+[![Live Demo](https://img.shields.io/badge/demo-patentlint.com-blue)](https://patentlint.com)
+[![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-green)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-384-brightgreen)](#)
 
-A web-based patent specification analyzer that checks U.S. patent application drafts (.docx) against USPTO formatting rules and MPEP guidelines. Upload a draft — get a structured compliance report with actionable findings.
+**No install. No account. No cloud upload.**
 
-## Features
+PatentLint checks U.S. patent application drafts (.docx) against USPTO formatting rules and MPEP guidelines — entirely in your browser. Your file never leaves your device.
 
-**MPEP Compliance Checks**
+**[Try it →](https://patentlint.com)**
 
-| Category | Checks | Reference |
-|----------|--------|-----------|
-| Specification | Restrictive wording, paragraph sequentiality, punctuation, sequence listing references, cross-references, prior art citations, reference numeral consistency (spec vs drawings) | MPEP § 2173.01 |
-| Claims | Indefinite terms, numbering, dependencies, self-references, multiple dependencies, period placement, "wherein" comma rules, means-plus-function detection, antecedent basis validation, preamble consistency, specification support, claim similarity (Jaccard) | MPEP § 2173.05(b), 35 U.S.C. § 112(b)(d)(f) |
-| Abstract | Word count (50–150), single paragraph, legal phraseology, implied phrases, self-praising terms | MPEP § 608.01(b) |
-| Drawings | Figure count, sequential ordering, single-figure format, prior art references, reference numeral consistency | General |
+<!-- TODO: hero screenshot (dark mode results page) -->
+<!-- ![PatentLint](docs/screenshot-hero.png) -->
 
-Each finding is classified as **PASS**, **VERIFY** (needs expert review), or **AMEND** (likely needs correction).
+---
 
-**Web Frontend**
-- Drag-and-drop .docx upload
-- Priority triage panel — issues grouped by urgency (Action Required → Expert Review → Passed)
-- Interactive claim dependency tree with full claim text expansion
-- Mermaid claim dependency diagram
-- Health donut chart and section bar charts
-- Antecedent basis review card with highlighted flagged terms
-- Client-side PDF report generation (pdfmake — no server round-trip)
-- Copy summary to clipboard
-- Dark / light mode
-- Internationalization: English, 繁體中文, 简体中文, 日本語
+## How It Works
+
+1. **Drop** a .docx patent draft into the browser
+2. **Analyze** — 33 checks run instantly via WebAssembly (no server, no upload)
+3. **Report** — download a PDF or copy a summary to clipboard
+
+---
+
+## Security
+
+PatentLint's analysis engine is compiled to WebAssembly and runs entirely in your browser tab. No server receives your file. No network requests are made during analysis.
+
+**You don't have to take our word for it.** Turn on airplane mode after your first visit, drop a file, and watch it work. [See the proof →](https://patentlint.com/security)
+
+<!-- TODO: airplane mode GIF -->
+<!-- ![Airplane mode proof](docs/airplane-mode.gif) -->
+
+---
+
+## What It Checks
+
+33 automated checks across four sections, each classified as **PASS**, **VERIFY**, or **AMEND**.
+
+| Section | Checks | Reference |
+|---------|--------|-----------|
+| **Specification** | Required sections, paragraph numbering, restrictive wording, sequence listing, prior art citations, figure cross-reference consistency | MPEP § 608.01(a)(m)(p), § 2173.01 |
+| **Drawings** | Figure count, sequential numbering, single-figure format, prior art labeling, reference numeral consistency (spec ↔ drawings) | MPEP § 608.02 |
+| **Claims** | Numbering, dependencies, periods, punctuation, indefinite terms, transitional phrases, means-plus-function (§ 112(f)), antecedent basis (§ 112(b)), preamble consistency (§ 112(d)), specification support (§ 112(a)), claim similarity, special formats (Jepson / CRM / Markush / omnibus) | 35 U.S.C. § 101, § 112; MPEP § 2117–2173 |
+| **Abstract** | Word count (50–150), single paragraph, legal phraseology, implied phrases, self-praising language | MPEP § 608.01(b) |
+
+Full inventory: [CHECKS.md](CHECKS.md)
+
+---
+
+## Deployment Tiers
+
+| Tier | Analysis | PDF | Server? | Trust Model |
+|------|----------|-----|---------|-------------|
+| **Web** (default) | Pyodide/WASM in browser | pdfmake (client-side) | No — static hosting | Zero-trust: airplane mode verifiable |
+| **Docker** | Local FastAPI | weasyprint | Yes (your machine) | On-premise |
+| **Cloud API** (future) | Hosted FastAPI | weasyprint | Yes (our infra) | Process + discard |
+
+---
 
 ## Architecture
 
@@ -36,7 +67,7 @@ Each finding is classified as **PASS**, **VERIFY** (needs expert review), or **A
                          │   React Frontend     │
                          │  (Vite + shadcn/ui)  │
                          └─────┬──────────┬─────┘
-               Web (default)   │          │   Docker/self-hosted
+               Web (default)   │          │   Docker / CLI
           ┌────────────────────┘          └──────────────────┐
           ▼                                                  ▼
 ┌──────────────────┐                              ┌──────────────────┐
@@ -69,114 +100,104 @@ src/patentlint/
 ├── report/          # PDF report generation (Jinja2 + weasyprint)
 └── api/             # FastAPI REST endpoints
 
-frontend/            # React + Tailwind + shadcn/ui
-├── src/components/  # DropZone, ClaimTree, TriagePanel, HealthDonut, etc.
+frontend/
+├── src/components/  # DropZone, ClaimTree, TriagePanel, HealthDonut, …
+├── src/lib/         # pdfExport.js (client-side PDF via pdfmake)
+├── src/pages/       # SecurityPage, AboutPage
+├── src/hooks/       # usePyodide, useNetworkMonitor
 └── src/i18n/        # Locale files (en, zh-TW, zh-CN, ja)
 ```
 
-The `parser/` and `analysis/` packages have **zero framework dependencies** — they can be imported and tested independently of FastAPI or any web layer.
+The `parser/` and `analysis/` packages have **zero framework dependencies** — they run identically in Pyodide (browser), FastAPI (Docker), and Click (CLI).
+
+---
 
 ## Quick Start
 
-**Prerequisites**
-- Python 3.11+
-- Node.js 22+
-- pango (`brew install pango` on macOS — required for PDF generation)
+### Web (recommended)
 
-**Backend**
+Visit **[patentlint.com](https://patentlint.com)** — nothing to install.
+
+### Local Development
+
+**Prerequisites:** Python 3.12+, Node.js 22+, pango (`brew install pango` on macOS)
+
 ```bash
+# Backend
 pip install -e ".[api,dev]"
-pytest -v
+pytest -v                    # 384 tests
 uvicorn patentlint.api.app:app --port 8000 --reload
-```
 
-**Frontend**
-```bash
-cd frontend
-npm install
-npm run dev
+# Frontend (separate terminal)
+cd frontend && npm install && npm run dev
 # → http://localhost:5173
 ```
 
-**Production (single server)**
+### CLI
+
 ```bash
-cd frontend && npm run build && cd ..
-uvicorn patentlint.api.app:app --port 8000
-# → http://localhost:8000 (serves both API and frontend)
+patentlint analyze patent-draft.docx                             # JSON to stdout
+patentlint analyze patent-draft.docx -o report.json              # JSON to file
+patentlint analyze patent-draft.docx --format pdf -o report.pdf  # PDF report
+patentlint batch ./patents/ --output ./reports/                  # Batch mode
 ```
 
-## CLI
+Exit codes: `0` clean, `1` findings, `2` error.
+
+### Docker
 
 ```bash
-# Analyze a single patent draft
-patentlint analyze patent-draft.docx
-
-# Output JSON to file
-patentlint analyze patent-draft.docx -o report.json
-
-# Generate PDF report
-patentlint analyze patent-draft.docx --format pdf -o report.pdf
-
-# Batch analyze all .docx files in a directory
-patentlint batch ./patents/ --output ./reports/
-
-# Version
-patentlint --version
-```
-
-Exit codes: `0` = clean, `1` = findings detected, `2` = error.
-
-## Docker
-
-```bash
-# Build
 docker build -t patentlint .
-
-# Run (serves web UI + API on port 8000)
 docker run -p 8000:8000 patentlint
-
-# Analyze via API
-curl -X POST http://localhost:8000/api/analyze -F "file=@patent.docx"
+# → http://localhost:8000 (web UI + API)
 ```
 
-## REST API
+### REST API
 
 ```bash
-# Analyze a patent draft (JSON response)
-curl -X POST http://localhost:8000/api/analyze \
-  -F "file=@patent-draft.docx"
-
-# Analyze with report-formatted response
-curl -X POST http://localhost:8000/api/analyze?format=report \
-  -F "file=@patent-draft.docx"
-
-# Download PDF report
-curl -X POST http://localhost:8000/api/analyze/report \
-  -F "file=@patent-draft.docx" -o report.pdf
-
-# Health check
+curl -X POST http://localhost:8000/api/analyze -F "file=@draft.docx"
+curl -X POST http://localhost:8000/api/analyze?format=report -F "file=@draft.docx"
+curl -X POST http://localhost:8000/api/analyze/report -F "file=@draft.docx" -o report.pdf
 curl http://localhost:8000/api/health
 ```
+
+---
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Backend | Python 3.12, FastAPI, Pydantic |
-| Frontend | React 18, Vite, Tailwind CSS v4, shadcn/ui |
-| PDF Generation | pdfmake (web, client-side) · Jinja2 + weasyprint (Docker/CLI) |
-| Claim Diagrams | Mermaid |
+| Analysis Engine | Python 3.12 (pure functions, zero framework deps) |
+| Client-Side Runtime | Pyodide 0.27.7 (CPython → WebAssembly) |
+| Backend | FastAPI, Pydantic (Docker/CLI tier) |
+| Frontend | React 18, Vite 6, Tailwind CSS v4, shadcn/ui |
+| PDF | pdfmake (web) · weasyprint (Docker/CLI) |
 | CLI | Click |
-| Testing | pytest (321 tests) |
-| CI/CD | GitHub Actions, Docker |
-| i18n | react-i18next |
+| Testing | pytest (384 tests) |
+| CI/CD | GitHub Actions → Cloudflare Pages |
+| i18n | react-i18next (English, 繁體中文, 简体中文, 日本語) |
+
+---
+
+## Languages
+
+PatentLint's UI is available in four languages. Patent-specific terms follow official terminology from each jurisdiction's patent office.
+
+| Language | Patent Office | Terminology Standard |
+|----------|--------------|---------------------|
+| English | USPTO | MPEP |
+| 繁體中文 | TIPO (經濟部智慧財產局) | 專利審查基準 |
+| 简体中文 | CNIPA (国家知识产权局) | 专利审查指南 |
+| 日本語 | JPO (特許庁) | 特許・実用新案審査基準 |
+
+---
 
 ## Disclaimer
 
-This tool does not constitute legal advice. All findings should be reviewed by a qualified patent professional before use in any filing or legal proceeding.
+This tool does not constitute legal advice. All findings should be reviewed by a qualified patent professional before filing.
 
 ## License
 
-AGPL-3.0 — see [LICENSE](LICENSE) for details.
+AGPL-3.0-only — see [LICENSE](LICENSE) for details.
 
 © 2025 Christopher Chen
