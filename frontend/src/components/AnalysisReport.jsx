@@ -13,6 +13,7 @@ import AntecedentBasisCard from './AntecedentBasisCard'
 import SpecSupportCard from './SpecSupportCard'
 import Section112Container from './Section112Container'
 import NonPatentBanner from './NonPatentBanner'
+import TrackedChangesBanner from './TrackedChangesBanner'
 import { Button } from '@/components/ui/button'
 import { Download, RotateCcw, ShieldCheck } from 'lucide-react'
 import { useNetworkMonitor } from '../hooks/useNetworkMonitor'
@@ -103,6 +104,10 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
   const isNonPatent = data.likely_patent === false
   const [showResults, setShowResults] = useState(!isNonPatent)
 
+  // Tracked changes gate
+  const hasTrackedChanges = data.has_tracked_changes === true
+  const [dismissedTracked, setDismissedTracked] = useState(false)
+
   // Stagger cascade for summary cards
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
@@ -156,6 +161,22 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
         setTimeout(() => setMounted(true), 50)
         setTimeout(() => setBarVisible(true), 300)
       }} />
+    )
+  }
+
+  if (hasTrackedChanges && !dismissedTracked) {
+    return (
+      <TrackedChangesBanner
+        onAnalyzeAgain={onReset}
+        onShowResults={() => {
+          setDismissedTracked(true)
+          // Reset cascade so results animate in fresh
+          setMounted(false)
+          setBarVisible(false)
+          setTimeout(() => setMounted(true), 50)
+          setTimeout(() => setBarVisible(true), 300)
+        }}
+      />
     )
   }
 

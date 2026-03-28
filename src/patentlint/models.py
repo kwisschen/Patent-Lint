@@ -127,8 +127,9 @@ class ReportData(BaseModel):
     # Phase 4 additions
     unsupported_terms: list[UnsupportedTerm] = Field(default_factory=list)
 
-    # Document-level flag
+    # Document-level flags
     likely_patent: bool = True
+    has_tracked_changes: bool = False
 
 
 class AnalysisResult(BaseModel):
@@ -630,4 +631,5 @@ class AnalysisResult(BaseModel):
             antecedent_basis_issues=self.antecedent_basis_issues,
             unsupported_terms=self.unsupported_terms,
             likely_patent=self.likely_patent,
+            has_tracked_changes=self.has_tracked_changes,
         )
