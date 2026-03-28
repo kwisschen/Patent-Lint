@@ -72,12 +72,28 @@ function App() {
     }
   }
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setHomeState('idle')
     setResult(null)
     setFile(null)
     setError(null)
-  }
+  }, [])
+
+  useEffect(() => {
+    if (homeState === 'results') {
+      window.history.pushState({ patentlint: 'results' }, '')
+    }
+  }, [homeState])
+
+  useEffect(() => {
+    const handlePopState = (e) => {
+      if (homeState === 'results') {
+        handleReset()
+      }
+    }
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [homeState, handleReset])
 
   return (
     <>
