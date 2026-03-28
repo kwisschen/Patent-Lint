@@ -88,7 +88,7 @@ function ComparisonTable({ t }) {
       <tr>
         <td
           colSpan={3}
-          className="pt-6 pb-2 px-4 text-sm font-semibold text-muted-foreground uppercase tracking-wider"
+          className="pt-6 pb-2 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wider"
         >
           {t(titleKey)}
         </td>
@@ -100,13 +100,13 @@ function ComparisonTable({ t }) {
             highlight ? 'border-l-2 border-l-green-200 dark:border-l-green-800' : ''
           }`}
         >
-          <td className="px-4 py-2.5 text-sm text-foreground">
+          <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm text-foreground">
             {t(`about.uspto.check.${key}`)}
           </td>
-          <td className="px-4 py-2.5 text-center w-40">
+          <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-center sm:w-40">
             <CheckMark active={uspto} isPatentLint={false} />
           </td>
-          <td className="px-4 py-2.5 text-center w-40">
+          <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-center sm:w-40">
             <CheckMark active={patentlint} isPatentLint={true} />
           </td>
         </tr>
@@ -122,18 +122,17 @@ function ComparisonTable({ t }) {
         </h2>
         <p className="text-muted-foreground">{t('about.usptoSubtitle')}</p>
       </div>
-      <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
-       <div className="rounded-lg border border-border">
-        <table className="min-w-[500px] w-full text-left">
+      <div className="rounded-lg border border-border">
+        <table className="w-full text-left">
           <thead>
             <tr className="border-b border-border bg-muted/30">
-              <th className="px-4 py-3 text-sm font-semibold text-foreground">
+              <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
                 {t('about.uspto.colCheck')}
               </th>
-              <th className="px-4 py-3 text-sm font-semibold text-foreground text-center whitespace-nowrap w-40">
+              <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
                 {t('about.uspto.colUSPTO')}
               </th>
-              <th className="px-4 py-3 text-sm font-semibold text-foreground text-center whitespace-nowrap w-40">
+              <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
                 {t('about.uspto.colPatentLint')}
               </th>
             </tr>
@@ -142,7 +141,6 @@ function ComparisonTable({ t }) {
           {renderGroup(ref2, inView2, 'about.uspto.group2Title', GROUP2_CHECKS, true, false, false, 150)}
           {renderGroup(ref3, inView3, 'about.uspto.group3Title', GROUP3_CHECKS, false, true, true, 300)}
         </table>
-       </div>
       </div>
     </section>
   )

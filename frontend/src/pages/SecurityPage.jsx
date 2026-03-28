@@ -85,10 +85,10 @@ function ComparisonRow({ index, qKey }) {
         transition: `opacity 0.5s var(--ease-bounce) ${index * 80}ms, transform 0.5s var(--ease-bounce) ${index * 80}ms`,
       }}
     >
-      <td className="py-3 px-4 text-foreground font-medium">
+      <td className="py-2 px-2 sm:py-3 sm:px-4 text-xs sm:text-sm text-foreground font-medium">
         {t(`security.compare.${qKey}.question`)}
       </td>
-      <td className="py-3 px-4 text-green-500 font-bold">
+      <td className="py-2 px-2 sm:py-3 sm:px-4 text-xs sm:text-sm text-green-500 font-bold">
         <span className="inline-flex items-center gap-1.5">
           <Check
             size={16}
@@ -100,10 +100,10 @@ function ComparisonRow({ index, qKey }) {
           {t(`security.compare.${qKey}.patentlint`)}
         </span>
       </td>
-      <td className="py-3 px-4 text-muted-foreground">
+      <td className="hidden sm:table-cell py-3 px-4 text-sm text-muted-foreground">
         {t(`security.compare.${qKey}.addin`)}
       </td>
-      <td className="py-3 px-4 text-muted-foreground">
+      <td className="hidden sm:table-cell py-3 px-4 text-sm text-muted-foreground">
         {t(`security.compare.${qKey}.cloud`)}
       </td>
     </tr>
@@ -130,21 +130,20 @@ function ComparisonSection() {
         {t('security.page.compareTitle')}
       </h2>
 
-      <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
-       <div className="rounded-lg border border-border">
-        <table className="min-w-[600px] w-full text-sm border-collapse">
+      <div className="rounded-lg border border-border">
+        <table className="w-full text-sm border-collapse">
           <thead>
             <tr className="border-b border-border bg-muted/30">
-              <th className="py-3 px-4 text-left text-muted-foreground font-semibold">
+              <th className="py-2 px-2 sm:py-3 sm:px-4 text-left text-xs sm:text-sm text-muted-foreground font-semibold">
                 {t('security.compare.colQuestion')}
               </th>
-              <th className="py-3 px-4 text-left text-green-500 font-semibold w-48">
+              <th className="py-2 px-2 sm:py-3 sm:px-4 text-left text-xs sm:text-sm text-green-500 font-semibold sm:w-48">
                 {t('security.compare.colPatentLint')}
               </th>
-              <th className="py-3 px-4 text-left text-muted-foreground font-semibold w-48">
+              <th className="hidden sm:table-cell py-3 px-4 text-left text-sm text-muted-foreground font-semibold w-48">
                 {t('security.compare.colAddin')}
               </th>
-              <th className="py-3 px-4 text-left text-muted-foreground font-semibold w-48">
+              <th className="hidden sm:table-cell py-3 px-4 text-left text-sm text-muted-foreground font-semibold w-48">
                 {t('security.compare.colCloud')}
               </th>
             </tr>
@@ -155,7 +154,6 @@ function ComparisonSection() {
             ))}
           </tbody>
         </table>
-       </div>
       </div>
 
       <p className="mt-6 text-xs text-muted-foreground text-center">
