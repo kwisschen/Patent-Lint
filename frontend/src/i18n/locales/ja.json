@@ -1,6 +1,6 @@
 {
   "header": { "title": "PatentLint", "subtitle": "特許明細書品質チェックツール" },
-  "dropzone": { "title": "特許 .docx ファイルをここにドロップ", "subtitle": "またはクリックして参照", "notice": "現在、米国特許明細書（.docx）のみ対応しています。", "reject": ".docx ファイルのみ対応" },
+  "dropzone": { "title": "特許 .docx ファイルをここにドロップ", "subtitle": "またはクリックして参照", "notice": "現在、米国特許明細書（.docx）のみ対応しています。", "reject": ".docx ファイルのみ対応", "rejectMultiple": "ファイルは一つずつドロップしてください。", "rejectMultipleType": "一つの .docx ファイルをドロップしてください。" },
   "summary": { "specParagraphs": "明細書段落数", "claims": "請求項", "independent": "独立項", "dependent": "従属項", "figures": "図面", "abstractWords": "要約語数", "claimCategories": "請求項カテゴリ", "method": "方法", "apparatus": "装置", "outsideRange": "50–150語の範囲外" },
   "section": { "specification": "明細書", "claims": "特許請求の範囲", "drawings": "図面の簡単な説明", "drawingsShort": "図面", "abstract": "要約書" },
   "status": { "pass": "合格", "verify": "確認", "amend": "修正" },
@@ -295,8 +295,8 @@
     "offline_note": "初回読み込み後はオフラインで使用可能",
     "feature1_title": "インストール不要。アカウント不要。クラウド不要。",
     "feature1_desc": "機密性の高い特許原稿はデバイスから出ることはありません。アップロードも一切なく、PatentLint はあなたの身元すら知りません。",
-    "feature2_title": "MPEP 準拠チェック",
-    "feature2_desc": "限定的な表現、不明確な用語、先行詞根拠の欠落、ミーンズ・プラス・ファンクションの問題などを検出します。",
+    "feature2_title": "MPEP チェック＆請求項ツリー",
+    "feature2_desc": "限定的な表現、不明確な用語、先行詞根拠の欠落などを検出。請求項の従属関係をインタラクティブなツリーで表示します。",
     "feature3_title": "請求項ツリー表示",
     "feature3_desc": "インタラクティブな従属関係ツリーと Mermaid 図で、請求項の構造を一目で把握できます。",
     "feature4_title": "どこでも使える",

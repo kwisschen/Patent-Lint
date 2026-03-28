@@ -2,16 +2,15 @@
 // Copyright (c) 2025 Christopher Chen
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ShieldCheck, FileSearch, GitBranch, Globe } from 'lucide-react'
+import { ShieldCheck, FileSearch, Globe } from 'lucide-react'
 
 const FEATURES = [
   { icon: ShieldCheck, titleKey: 'loading.feature1_title', descKey: 'loading.feature1_desc' },
   { icon: FileSearch, titleKey: 'loading.feature2_title', descKey: 'loading.feature2_desc' },
-  { icon: GitBranch, titleKey: 'loading.feature3_title', descKey: 'loading.feature3_desc' },
   { icon: Globe, titleKey: 'loading.feature4_title', descKey: 'loading.feature4_desc' },
 ]
 
-const STAGGER_MS = 700
+const STAGGER_MS = 1000
 const READY_PAUSE_MS = 600
 const FADE_DURATION_MS = 300
 
@@ -23,17 +22,21 @@ export default function LoadingOnboard({ progress, onReady }) {
   const revealRef = useRef(0)
   const intervalRef = useRef(null)
 
-  // Staggered reveal: show one more feature every STAGGER_MS
+  // Staggered reveal: first card after 500ms, then every STAGGER_MS
   useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      if (revealRef.current >= FEATURES.length) {
-        clearInterval(intervalRef.current)
-        return
-      }
-      revealRef.current += 1
-      setRevealCount(revealRef.current)
-    }, STAGGER_MS)
-    return () => clearInterval(intervalRef.current)
+    const initialTimer = setTimeout(() => {
+      revealRef.current = 1
+      setRevealCount(1)
+      intervalRef.current = setInterval(() => {
+        if (revealRef.current >= FEATURES.length) {
+          clearInterval(intervalRef.current)
+          return
+        }
+        revealRef.current += 1
+        setRevealCount(revealRef.current)
+      }, STAGGER_MS)
+    }, 500)
+    return () => { clearTimeout(initialTimer); clearInterval(intervalRef.current) }
   }, [])
 
   // Handle ready state: stop interval → finish staggered reveal → fade out → signal parent
