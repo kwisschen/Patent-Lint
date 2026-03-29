@@ -296,6 +296,43 @@ class TestClaimTransitions:
         assert len(results) == 1
         assert results[0].status == "pass"
 
+    def test_transition_not_at_boundary(self):
+        """Issue #7: 'containing' in body should not satisfy transition check."""
+        claims = [
+            Claim(id=1, text="A semiconductor device with: a substrate; and a layer containing copper deposited on the substrate.", independent=True),
+        ]
+        results = check_claim_transitions(claims)
+        amends = [r for r in results if r.status == "amend"]
+        assert len(amends) == 1
+        assert "1" in amends[0].message
+
+    def test_transition_at_boundary_ignores_body(self):
+        """'comprising:' at boundary passes even if 'containing' appears in body."""
+        claims = [
+            Claim(id=1, text="A semiconductor device comprising: a substrate; and a layer containing copper deposited on the substrate.", independent=True),
+        ]
+        results = check_claim_transitions(claims)
+        passes = [r for r in results if r.status == "pass"]
+        assert len(passes) == 1
+
+    def test_characterized_in_that_no_colon(self):
+        """EPO/PCT two-part claim with 'characterized in that' (no colon)."""
+        claims = [
+            Claim(id=1, text="A semiconductor device characterized in that a substrate is disposed on a base.", independent=True),
+        ]
+        results = check_claim_transitions(claims)
+        passes = [r for r in results if r.status == "pass"]
+        assert len(passes) == 1
+
+    def test_no_colon_fallback(self):
+        """Claim with no colon uses full-text fallback."""
+        claims = [
+            Claim(id=1, text="A method of manufacturing a device, comprising depositing a layer on a substrate.", independent=True, method_claim=True),
+        ]
+        results = check_claim_transitions(claims)
+        passes = [r for r in results if r.status == "pass"]
+        assert len(passes) == 1
+
 
 class TestSpecialClaimFormats:
     # --- Jepson (5 tests) ---

@@ -417,6 +417,20 @@ _TRANSITION_PHRASES = re.compile(
     re.IGNORECASE,
 )
 
+_TRANSITION_AT_BOUNDARY = re.compile(
+    r"\b(?:"
+    r"(?:comprising|comprises)\s*(?:the\s+steps?\s+of\s*)?"
+    r"|(?:consisting|consists)\s+essentially\s+of"
+    r"|(?:consisting|consists)\s+of"
+    r"|including|includes"
+    r"|containing|contains"
+    r"|having"
+    r"|characterized\s+by"
+    r")\s*:"
+    r"|\bcharacterized\s+in\s+that\b",
+    re.IGNORECASE,
+)
+
 
 def check_claim_transitions(claims: list[Claim]) -> list[CheckItem]:
     """Check that every independent claim contains a recognized transition phrase.
@@ -429,7 +443,11 @@ def check_claim_transitions(claims: list[Claim]) -> list[CheckItem]:
     for claim in claims:
         if not claim.independent:
             continue
-        if not _TRANSITION_PHRASES.search(claim.text):
+        has_transition = _TRANSITION_AT_BOUNDARY.search(claim.text)
+        if not has_transition:
+            if ":" not in claim.text:
+                has_transition = _TRANSITION_PHRASES.search(claim.text)
+        if not has_transition:
             results.append(CheckItem(
                 status="amend",
                 message=f"Claim {claim.id} is missing a transitional phrase (e.g., 'comprising', 'consisting of')",
