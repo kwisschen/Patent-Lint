@@ -451,8 +451,8 @@ class AnalysisResult(BaseModel):
                 message="Claim terms not found in specification.",
                 message_key="checks.spec_support_unsupported_terms",
                 details=f"Terms: {', '.join(unique_phrases[:10])}",
-                details_key="details.terms",
-                details_params={"list": ", ".join(unique_phrases[:10])},
+                details_key="details.specSupportUnsupported",
+                details_params={"count": str(len(unique_phrases))},
             ))
         else:
             claims_checks.append(CheckItem(
