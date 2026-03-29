@@ -180,7 +180,8 @@
     "sectionName": "{{name}}",
     "claimDependsOn": "請求項 {{claim}} は請求項 {{parent}} に従属",
     "nounMismatch": "従属項「{{dependent}}」と独立項「{{independent}}」が不一致",
-    "seeSection112": "下記の § 112 分析を参照。"
+    "seeSection112": "下記の § 112 分析を参照。",
+    "specSupportUnsupported": "{{count}} 件の請求項用語が明細書に見つかりませんでした。"
   },
   "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
   "check": {

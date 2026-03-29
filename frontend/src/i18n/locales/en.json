@@ -180,7 +180,8 @@
     "sectionName": "{{name}}",
     "claimDependsOn": "Claim {{claim}} depends on claim {{parent}}",
     "nounMismatch": "Dependent '{{dependent}}' vs independent '{{independent}}'",
-    "seeSection112": "See § 112 Analysis below for per-claim detail."
+    "seeSection112": "See § 112 Analysis below for per-claim detail.",
+    "specSupportUnsupported": "{{count}} claim term(s) not found in the specification."
   },
   "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
   "check": {
