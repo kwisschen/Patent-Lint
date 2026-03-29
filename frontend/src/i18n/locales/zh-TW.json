@@ -23,6 +23,7 @@
   "specSupport": { "title": "說明書支持檢視", "items": "個術語", "item": "個術語" },
   "triage": { "title": "優先處理摘要", "amend": "需要修改", "amendEmpty": "無需修改之項目。", "verify": "專家確認", "verifyEmpty": "無需確認之項目。", "pass": "通過", "items": "個項目", "item": "個項目" },
   "security": {
+    "airplaneDemoAlt": "示範：在飛航模式下無網路連線分析專利稿件",
     "badge": {
       "headline": "免安裝。免帳號。不上傳雲端。",
       "description": "您的機密檔案在您的裝置上直接分析。",
@@ -35,18 +36,19 @@
       "howItWorks": "如何運作？"
     },
     "prove": {
-      "label1": "離線",
+      "label1": "主動離線",
       "label2": "拖放檔案",
       "label3": "照常運作",
       "label4": "綠色圓點",
       "step1": "關閉 WiFi 或開啟飛航模式",
       "step2": "將任意 .docx 拖放至 PatentLint",
       "step3": "沒有網路代表沒有雲端、沒有上傳、沒有任何資料外傳",
-      "step4": "綠色代表瀏覽器未發送任何請求，可隨時在 DevTools → Network 驗證",
+      "step4": "分析後，結果頁面的綠色圓點可確認零網路活動。",
       "testHeading": "眼見為憑",
-      "testDescription": "點擊按鈕，觀察請求出現在下方的網路活動記錄中",
-      "testButton": "發送測試請求",
-      "logEmpty": "尚無請求"
+      "testDescription": "此按鈕會抓取 PatentLint 標誌。請觀察下方紀錄，了解 PatentLint 如何偵測網路活動。",
+      "testButton": "抓取標誌",
+      "logEmpty": "尚無請求",
+      "noActivity": "未偵測到活動"
     },
     "page": {
       "heroTitle": "專利稿件絕不離開您的裝置",
