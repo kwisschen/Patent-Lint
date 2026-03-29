@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import LogoIcon from './LogoIcon'
 
 const PANELS = [
   { icon: WifiOff, colorClass: 'text-amber-500', labelKey: 'security.prove.label1', textKey: 'security.prove.step1' },
@@ -54,8 +55,11 @@ export default function ProveItModal({ open, onOpenChange }) {
   const [entries, setEntries] = useState([])
   const [testSent, setTestSent] = useState(false)
   const [networkActive, setNetworkActive] = useState(false)
+  const [noActivityDetected, setNoActivityDetected] = useState(false)
   const logRef = useRef(null)
   const timeoutRef = useRef(null)
+  const noActivityTimeoutRef = useRef(null)
+  const noActivityClearRef = useRef(null)
   const entryIdRef = useRef(0)
 
   // Own local PerformanceObserver — starts fresh on mount
@@ -64,19 +68,24 @@ export default function ProveItModal({ open, onOpenChange }) {
       setEntries([])
       setTestSent(false)
       setNetworkActive(false)
+      setNoActivityDetected(false)
+      clearTimeout(noActivityTimeoutRef.current)
+      clearTimeout(noActivityClearRef.current)
       return
     }
 
     const observer = new PerformanceObserver((list) => {
-      const newEntries = list.getEntries().map((e) => {
-        entryIdRef.current += 1
-        return {
-          id: entryIdRef.current,
-          url: e.name,
-          timestamp: new Date().toLocaleTimeString(),
-          duration: Math.round(e.duration),
-        }
-      })
+      const newEntries = list.getEntries()
+        .filter((e) => !e.name.includes('favicon.svg'))
+        .map((e) => {
+          entryIdRef.current += 1
+          return {
+            id: entryIdRef.current,
+            url: e.name,
+            timestamp: new Date().toLocaleTimeString(),
+            duration: Math.round(e.duration),
+          }
+        })
       if (newEntries.length > 0) {
         setNetworkActive(true)
         setEntries((prev) => [...prev, ...newEntries])
@@ -99,14 +108,39 @@ export default function ProveItModal({ open, onOpenChange }) {
   }, [entries])
 
   const handleTestRequest = useCallback(async () => {
+    const lengthBefore = entries.length
+    setNoActivityDetected(false)
+    clearTimeout(noActivityTimeoutRef.current)
+    clearTimeout(noActivityClearRef.current)
     try {
-      await fetch(`/favicon.ico?t=${Date.now()}`)
+      const response = await fetch(`/favicon.svg?t=${Date.now()}`, { cache: 'no-store' })
+      if (response.ok) {
+        entryIdRef.current += 1
+        setEntries((prev) => [...prev, {
+          id: entryIdRef.current,
+          url: response.url,
+          timestamp: new Date().toLocaleTimeString(),
+          duration: 0,
+        }])
+        setNetworkActive(true)
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = setTimeout(() => setNetworkActive(false), 800)
+      }
     } catch {
-      // Expected to fail if offline — that's the point
+      // Offline — no entry added, which is correct
     }
     setTestSent(true)
     setTimeout(() => setTestSent(false), 500)
-  }, [])
+    noActivityTimeoutRef.current = setTimeout(() => {
+      setEntries((current) => {
+        if (current.length === lengthBefore) {
+          setNoActivityDetected(true)
+          noActivityClearRef.current = setTimeout(() => setNoActivityDetected(false), 3000)
+        }
+        return current
+      })
+    }, 800)
+  }, [entries.length])
 
   // Stagger panels
   const [visiblePanels, setVisiblePanels] = useState(0)
@@ -162,7 +196,10 @@ export default function ProveItModal({ open, onOpenChange }) {
         {/* Interactive proof section */}
         <div className="space-y-3">
           <div>
-            <p className="text-sm font-semibold">{t('security.prove.testHeading')}</p>
+            <p className="text-sm font-semibold flex items-center gap-2">
+              {t('security.prove.testHeading')}
+              <LogoIcon className="w-5 h-5" />
+            </p>
             <p className="text-xs text-muted-foreground mt-0.5">{t('security.prove.testDescription')}</p>
           </div>
 
@@ -184,6 +221,13 @@ export default function ProveItModal({ open, onOpenChange }) {
               </span>
             </div>
           </div>
+
+          <p
+            className="text-xs text-muted-foreground transition-opacity duration-300"
+            style={{ opacity: noActivityDetected ? 1 : 0, height: noActivityDetected ? 'auto' : 0, overflow: 'hidden' }}
+          >
+            {t('security.prove.noActivity')}
+          </p>
 
           {/* Live activity log */}
           <div
