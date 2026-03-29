@@ -27,7 +27,7 @@ export default function LanguageSwitcher() {
 
   return (
     <div className="relative" ref={ref}>
-      <Button variant="ghost" size="icon" onClick={() => setOpen(!open)} aria-label="Change language">
+      <Button variant="ghost" size="icon" onClick={() => setOpen(!open)} aria-label={t('common.changeLanguage')}>
         <Globe className="h-4 w-4" />
       </Button>
       {open && (

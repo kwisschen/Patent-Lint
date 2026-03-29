@@ -33,9 +33,9 @@ function highlightTerms(text, terms) {
  * Format a sorted list of claim IDs into a compact range string.
  * e.g. [2,3,4,5,8,10,11,12] → "Claims 2–5, 8, 10–12"
  */
-function formatClaimRange(ids) {
+function formatClaimRange(ids, t) {
   if (ids.length === 0) return ''
-  if (ids.length === 1) return `Claim ${ids[0]}`
+  if (ids.length === 1) return t('claimDiagram.claimLabel', { id: ids[0] })
 
   const ranges = []
   let start = ids[0]
@@ -52,12 +52,12 @@ function formatClaimRange(ids) {
   }
   ranges.push(start === end ? `${start}` : `${start}–${end}`)
 
-  return `Claims ${ranges.join(', ')}`
+  return t('claimDiagram.claimsLabel', { range: ranges.join(', ') })
 }
 
 function ClaimGroupRow({ claimIds, terms, claimTextMap, t }) {
   const [expanded, setExpanded] = useState(false)
-  const label = formatClaimRange(claimIds)
+  const label = formatClaimRange(claimIds, t)
   const termCount = terms.length
   const hasText = claimIds.some((id) => claimTextMap[id])
 

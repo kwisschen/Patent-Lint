@@ -6,6 +6,7 @@
   "status": { "pass": "PASS", "verify": "VERIFY", "amend": "AMEND" },
   "button": { "downloadPdf": "Save PDF Report", "newAnalysis": "New Analysis", "generating": "Saving..." },
   "diagram": { "show": "Show Diagram", "hide": "Hide Diagram" },
+  "claimDiagram": { "renderError": "Could not render diagram", "independent": "Independent", "dependent": "Dependent", "claimLabel": "Claim {{id}}", "claimsLabel": "Claims {{range}}" },
   "tree": { "apparatusClaims": "Apparatus Claims", "methodClaims": "Method Claims", "independent": "Independent", "dependent": "Dependent", "deps": "deps", "dep": "dep" },
   "section112": { "title": "§ 112 Analysis" },
   "results": {
@@ -183,6 +184,8 @@
     "seeSection112": "See § 112 Analysis below for per-claim detail.",
     "specSupportUnsupported": "{{count}} claim term(s) not found in the specification."
   },
+  "common": { "close": "Close", "toggleTheme": "Toggle theme", "changeLanguage": "Change language" },
+  "consolidation": { "nounMismatchSummary": "Preamble noun mismatch: {{count}} dependent claim(s) differ from Claim {{rootId}}" },
   "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
   "check": {
     "spec": {
