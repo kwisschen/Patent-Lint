@@ -14,14 +14,14 @@ _WORD = r"\w+(?:-\w+)*"
 _STOP_WORDS = (
     r"(?:is|are|was|were|has|have|had|do|does|did|being|been|"
     r"can|could|may|might|will|would|shall|should|must|"
-    r"of|to|from|with|and|or|that|which|for|by|on|in|at|"
+    r"of|to|from|with|and|or|that|which|for|by|on|in|at|as|"
     r"along|between|through|within|upon|above|below|across|"
     r"toward|towards|against|around|during|into|onto|"
     r"beside|beneath|beyond|behind|before|after|among|about|"
     r"inside|outside|throughout|until|without|"
     r"but|if|so|yet|nor|who|whom|whose|where|when|while|"
     r"wherein|comprising|consisting|including|having|configured|"
-    r"adapted|arranged|coupled|connected|mounted|disposed|"
+    r"adapted|arranged|coupled|connected|mounted|disposed|storing|determining|corresponding|"
     r"extends|provides|receives|generates|produces|performs|"
     r"executes|transmits|operates|determines|defines|forms|"
     r"supports|enables|allows|causes|includes|contains|"
@@ -123,7 +123,7 @@ _PREPOSITION_STOPS = {
     "across", "toward", "towards", "against", "around", "during", "into",
     "onto", "over", "under", "from", "with", "without", "beside", "beneath",
     "beyond", "behind", "before", "after", "among", "about", "inside",
-    "outside", "throughout", "near", "past", "until",
+    "outside", "throughout", "near", "past", "until", "as", "via",
 }
 
 # Trailing conjunctions and relative pronouns
@@ -156,6 +156,49 @@ def _is_likely_past_participle(word: str) -> bool:
     return len(word) >= 5
 
 
+# Known -es words that are nouns, not 3rd-person verbs
+_ES_NOUNS = {
+    "devices", "interfaces", "surfaces", "instances", "sequences",
+    "databases", "voltages", "packages", "images", "edges", "bridges",
+    "ridges", "passages", "stages", "ranges", "changes", "charges",
+    "exchanges", "resources", "sources", "forces", "services",
+    "grooves", "pieces", "valves", "processes", "addresses",
+    "matrices", "indices", "vertices", "appendices",
+    "lenses", "buses", "gases", "axes", "bases", "cases",
+    "phases", "cables", "tables", "modules", "nodes", "modes",
+    "types", "tubes", "plates", "gates", "states", "rates",
+    "wires", "cores", "pores", "stores", "frames", "names",
+    "files", "tiles", "holes", "poles", "roles", "rules",
+    "lines", "zones", "tones", "sides", "guides", "codes",
+    "diodes", "anodes", "cathodes", "electrodes",
+}
+
+
+def _is_likely_third_person_verb(word: str) -> bool:
+    """Detect -s/-es words that are likely 3rd-person present verbs, not nouns."""
+    if len(word) < 6:
+        return False
+    if word in _ES_NOUNS:
+        return False
+    verb_suffixes = ('ates', 'izes', 'ifies', 'ects', 'uces', 'ases', 'oses',
+                     'ures', 'ises', 'ples', 'bles', 'ades', 'odes', 'udes',
+                     'eases')
+    return any(word.endswith(s) for s in verb_suffixes)
+
+
+# Known -ing words that are legitimate nouns in patent context
+_ING_NOUNS = {
+    "ring", "spring", "string", "wiring", "bearing", "housing",
+    "coating", "opening", "coupling", "mounting", "casing", "tubing",
+    "spacing", "sealing", "shielding", "plating", "grounding",
+    "bonding", "molding", "shaping", "imaging", "computing",
+    "processing", "printing", "recording", "building", "ceiling",
+    "setting", "fitting", "cutting", "routing", "lighting",
+    "padding", "mapping", "logging", "binding", "lining",
+    "timing", "rating", "loading", "testing",
+}
+
+
 def _should_strip_trailing(word: str) -> bool:
     w = word.lower().rstrip(".,;:")
     return (
@@ -165,6 +208,7 @@ def _should_strip_trailing(word: str) -> bool:
         or w in _PREPOSITION_STOPS
         or w in _TRAILING_FUNCTION_WORDS
         or _is_likely_past_participle(w)
+        or _is_likely_third_person_verb(w)
     )
 
 
@@ -173,7 +217,15 @@ def clean_noun_phrase(phrase: str) -> str:
     words = phrase.strip().split()
     while words and _should_strip_trailing(words[-1]):
         words.pop()
-    return " ".join(words) if words else phrase
+    result = " ".join(words) if words else phrase
+    # Reject single-word results that are likely verbs/adjectives, not nouns
+    if len(result.split()) == 1:
+        w = result.lower().rstrip(".,;:")
+        if w in _ING_VERB_ONLY:
+            return ""
+        if w.endswith("ing") and len(w) >= 6 and w not in _ING_NOUNS:
+            return ""
+    return result
 
 
 # Abbreviation pattern: "full term (ABBREV) trailing_noun"
