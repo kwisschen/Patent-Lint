@@ -3,7 +3,7 @@
 [![CI](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml/badge.svg)](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml)
 [![Live Demo](https://img.shields.io/badge/demo-patentlint.com-blue)](https://patentlint.com)
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-green)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-384-brightgreen)](#)
+[![Tests](https://img.shields.io/badge/tests-388-brightgreen)](#)
 
 **No install. No account. No cloud upload.**
 
@@ -12,6 +12,10 @@ PatentLint checks U.S. patent application drafts (.docx) against USPTO formattin
 **[Try it →](https://patentlint.com)**
 
 ![PatentLint analysis results](https://patentlint.com/screenshot-hero.png)
+
+### Zero-Trust Proof
+
+> Your documents never leave your browser — verifiable in airplane mode.
 
 ![Airplane mode demo](frontend/public/airplane-demo.gif)
 
@@ -123,7 +127,7 @@ Visit **[patentlint.com](https://patentlint.com)** — nothing to install.
 ```bash
 # Backend
 pip install -e ".[api,dev]"
-pytest -v                    # 384 tests
+pytest -v                    # 388 tests
 uvicorn patentlint.api.app:app --port 8000 --reload
 
 # Frontend (separate terminal)
@@ -171,7 +175,7 @@ curl http://localhost:8000/api/health
 | Frontend | React 18, Vite 6, Tailwind CSS v4, shadcn/ui |
 | PDF | pdfmake (web) · weasyprint (Docker/CLI) |
 | CLI | Click |
-| Testing | pytest (384 tests) |
+| Testing | pytest (388 tests) |
 | CI/CD | GitHub Actions → Cloudflare Pages |
 | i18n | react-i18next (English, 繁體中文, 简体中文, 日本語) |
 
