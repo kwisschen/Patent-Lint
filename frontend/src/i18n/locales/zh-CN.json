@@ -180,7 +180,8 @@
     "sectionName": "{{name}}",
     "claimDependsOn": "权利要求 {{claim}} 从属于权利要求 {{parent}}",
     "nounMismatch": "从属项「{{dependent}}」与独立项「{{independent}}」不一致",
-    "seeSection112": "详见下方 § 112 分析。"
+    "seeSection112": "详见下方 § 112 分析。",
+    "specSupportUnsupported": "{{count}} 个权利要求术语未在说明书中找到。"
   },
   "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
   "check": {

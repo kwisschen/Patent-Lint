@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { FileSearch, ChevronRight } from 'lucide-react'
 
 function ClaimRow({ claimNumber, phrases }) {
+  const { t } = useTranslation()
   const [expanded, setExpanded] = useState(false)
 
   return (
@@ -52,7 +53,7 @@ function ClaimRow({ claimNumber, phrases }) {
           backgroundColor: 'var(--attention-bg)',
         }}>
           <p className="text-muted-foreground">
-            {phrases.length} unsupported {phrases.length === 1 ? 'term' : 'terms'} not found in specification via exact, stemmed, or word-window matching.
+            {t('details.specSupportUnsupported', { count: phrases.length })}
           </p>
         </div>
       )}
