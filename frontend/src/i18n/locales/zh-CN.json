@@ -6,6 +6,7 @@
   "status": { "pass": "通过", "verify": "确认", "amend": "修改" },
   "button": { "downloadPdf": "保存 PDF 报告", "newAnalysis": "重新分析", "generating": "保存中..." },
   "diagram": { "show": "显示图表", "hide": "隐藏图表" },
+  "claimDiagram": { "renderError": "无法绘制图表", "independent": "独立项", "dependent": "从属项", "claimLabel": "权利要求 {{id}}", "claimsLabel": "权利要求 {{range}}" },
   "tree": { "apparatusClaims": "装置权利要求", "methodClaims": "方法权利要求", "independent": "独立权利要求", "dependent": "从属权利要求", "deps": "个从属项", "dep": "个从属项" },
   "section112": { "title": "§ 112 分析" },
   "results": {
@@ -183,6 +184,8 @@
     "seeSection112": "详见下方 § 112 分析。",
     "specSupportUnsupported": "{{count}} 个权利要求术语未在说明书中找到。"
   },
+  "common": { "close": "关闭", "toggleTheme": "切换主题", "changeLanguage": "切换语言" },
+  "consolidation": { "nounMismatchSummary": "前序名词不一致：{{count}} 个从属项与权利要求 {{rootId}} 不同" },
   "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
   "check": {
     "spec": {
