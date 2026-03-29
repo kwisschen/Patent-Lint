@@ -23,6 +23,7 @@
   "specSupport": { "title": "说明书支持检查", "items": "个术语", "item": "个术语" },
   "triage": { "title": "优先处理摘要", "amend": "需要修改", "amendEmpty": "无需修改的项目。", "verify": "专家确认", "verifyEmpty": "无需确认的项目。", "pass": "通过", "items": "个项目", "item": "个项目" },
   "security": {
+    "airplaneDemoAlt": "演示：在飞行模式下无网络连接分析专利稿件",
     "badge": {
       "headline": "免安装。免账号。不上传云端。",
       "description": "您的机密文件在您的设备上直接分析。",
@@ -42,11 +43,12 @@
       "step1": "关闭 WiFi 或开启飞行模式",
       "step2": "将任意 .docx 拖放至 PatentLint",
       "step3": "没有网络意味着没有云端、没有上传、没有任何数据外传",
-      "step4": "绿色表示浏览器未发送任何请求，可随时在 DevTools → Network 验证",
+      "step4": "分析后，结果页面的绿色圆点可确认零网络活动。",
       "testHeading": "眼见为实",
-      "testDescription": "点击按钮，观察请求出现在下方的网络活动记录中",
-      "testButton": "发送测试请求",
-      "logEmpty": "暂无请求"
+      "testDescription": "此按钮会获取 PatentLint 标志。请观察下方记录，了解 PatentLint 如何检测网络活动。",
+      "testButton": "获取标志",
+      "logEmpty": "暂无请求",
+      "noActivity": "未检测到活动"
     },
     "page": {
       "heroTitle": "专利文稿绝不离开您的设备",

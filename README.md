@@ -13,6 +13,8 @@ PatentLint checks U.S. patent application drafts (.docx) against USPTO formattin
 
 ![PatentLint analysis results](https://patentlint.com/screenshot-hero.png)
 
+![Airplane mode demo](frontend/public/airplane-demo.gif)
+
 ---
 
 ## How It Works
@@ -28,9 +30,6 @@ PatentLint checks U.S. patent application drafts (.docx) against USPTO formattin
 PatentLint's analysis engine is compiled to WebAssembly and runs entirely in your browser tab. No server receives your file. No network requests are made during analysis.
 
 **You don't have to take our word for it.** Turn on airplane mode after your first visit, drop a file, and watch it work. [See the proof →](https://patentlint.com/security)
-
-<!-- TODO: airplane mode GIF -->
-<!-- ![Airplane mode proof](docs/airplane-mode.gif) -->
 
 ---
 

@@ -14,6 +14,7 @@
 // If any browser fails, update the "any device with a browser" claim accordingly.
 
 import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Shield, Check, ChevronDown } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
@@ -25,7 +26,13 @@ import PageCTA from '../components/PageCTA'
 
 function HeroSection({ onShowProveIt }) {
   const { t } = useTranslation()
+  const location = useLocation()
   const [ref, isInView] = useInView()
+  const [gifKey, setGifKey] = useState(Date.now())
+
+  useEffect(() => {
+    setGifKey(Date.now())
+  }, [location.key])
 
   return (
     <section
@@ -53,10 +60,12 @@ function HeroSection({ onShowProveIt }) {
         {t('security.page.heroSubtext')}
       </p>
 
-      {/* TODO: Replace placeholder with actual airplane-mode screen recording GIF */}
-      <div className="w-full max-w-2xl aspect-video rounded-xl border border-border flex items-center justify-center text-muted-foreground bg-muted/30">
-        Airplane mode demo — coming soon
-      </div>
+      <img
+        key={gifKey}
+        src={`/airplane-demo.gif?v=${gifKey}`}
+        alt={t('security.airplaneDemoAlt')}
+        className="rounded-lg border border-border shadow-md w-full max-w-2xl mx-auto"
+      />
 
       <button
         onClick={() => onShowProveIt?.()}
