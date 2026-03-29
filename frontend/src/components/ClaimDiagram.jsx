@@ -13,15 +13,27 @@ mermaid.initialize({
   flowchart: { curve: 'basis', padding: 10 },
 })
 
-function buildMermaidSyntax(claimTrees) {
+// Force eager load of Mermaid's flowchart renderer chunk so it works offline
+;(async () => {
+  try {
+    await mermaid.render('init-check', 'flowchart TD\n  A["init"]')
+    document.getElementById('init-check')?.remove()
+    document.querySelector('[id^="dinit-check"]')?.remove()
+  } catch {
+    // Ignore — this just forces the dynamic import
+  }
+})()
+
+function buildMermaidSyntax(claimTrees, t) {
   const lines = ['flowchart TD']
 
   claimTrees.forEach((group) => {
     group.rows.forEach((row) => {
       const nodeId = `c${row.claim_id}`
-      const label = row.claim_type === 'Independent'
-        ? `Claim ${row.claim_id} - Independent`
-        : `Claim ${row.claim_id} - Dependent`
+      const typeLabel = row.claim_type === 'Independent'
+        ? t('claimDiagram.independent')
+        : t('claimDiagram.dependent')
+      const label = `${t('claimDiagram.claimLabel', { id: row.claim_id })} - ${typeLabel}`
       lines.push(`  ${nodeId}["${label}"]`)
 
       if (row.claim_type === 'Independent') {
@@ -53,7 +65,7 @@ export default function ClaimDiagram({ claimTrees }) {
   const renderDiagram = useCallback(async () => {
     if (!containerRef.current || !claimTrees?.length) return
 
-    const syntax = buildMermaidSyntax(claimTrees)
+    const syntax = buildMermaidSyntax(claimTrees, t)
     renderCounter += 1
     const id = `mermaid-diagram-${renderCounter}`
 
@@ -69,10 +81,10 @@ export default function ClaimDiagram({ claimTrees }) {
       console.error('Mermaid render error:', err)
       if (containerRef.current) {
         containerRef.current.innerHTML =
-          '<p class="text-sm text-muted-foreground">Could not render diagram</p>'
+          `<p class="text-sm text-muted-foreground">${t('claimDiagram.renderError')}</p>`
       }
     }
-  }, [claimTrees])
+  }, [claimTrees, t])
 
   useEffect(() => {
     if (showDiagram) {

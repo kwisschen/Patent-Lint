@@ -68,10 +68,10 @@ function consolidateClaimsChecks(checks) {
       consolidated.push({
         status: 'verify',
         message: `Preamble noun mismatch: ${count} dependent claim${count !== 1 ? 's' : ''} differ from Claim ${rootId}`,
-        message_key: 'checks.preamble_noun_mismatch',
+        message_key: 'consolidation.nounMismatchSummary',
         details: `Independent: '${indepNoun}' — Dependents: '${depNoun}'`,
         details_key: 'details.nounMismatch',
-        details_params: { dependent: depNoun, independent: indepNoun },
+        details_params: { count: String(count), rootId, dependent: depNoun, independent: indepNoun },
       })
     }
   }

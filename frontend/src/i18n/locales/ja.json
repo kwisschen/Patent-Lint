@@ -6,6 +6,7 @@
   "status": { "pass": "合格", "verify": "確認", "amend": "修正" },
   "button": { "downloadPdf": "PDFレポートを保存", "newAnalysis": "再分析", "generating": "保存中..." },
   "diagram": { "show": "図表を表示", "hide": "図表を非表示" },
+  "claimDiagram": { "renderError": "図を表示できませんでした", "independent": "独立項", "dependent": "従属項", "claimLabel": "請求項 {{id}}", "claimsLabel": "請求項 {{range}}" },
   "tree": { "apparatusClaims": "物の請求項", "methodClaims": "方法の請求項", "independent": "独立項", "dependent": "従属項", "deps": "個の従属項", "dep": "個の従属項" },
   "section112": { "title": "§ 112 分析" },
   "results": {
@@ -183,6 +184,8 @@
     "seeSection112": "下記の § 112 分析を参照。",
     "specSupportUnsupported": "{{count}} 件の請求項用語が明細書に見つかりませんでした。"
   },
+  "common": { "close": "閉じる", "toggleTheme": "テーマ切替", "changeLanguage": "言語切替" },
+  "consolidation": { "nounMismatchSummary": "プリアンブル名詞の不一致：{{count}} 個の従属項が請求項 {{rootId}} と異なります" },
   "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
   "check": {
     "spec": {

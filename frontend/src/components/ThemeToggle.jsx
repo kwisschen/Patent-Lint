@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2025 Christopher Chen
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Sun, Moon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -22,12 +23,14 @@ export default function ThemeToggle() {
     localStorage.setItem('patentlint-theme', dark ? 'dark' : 'light')
   }, [dark])
 
+  const { t } = useTranslation()
+
   return (
     <Button
       variant="ghost"
       size="icon"
       onClick={() => setDark(!dark)}
-      aria-label="Toggle theme"
+      aria-label={t('common.toggleTheme')}
     >
       <span className={`inline-flex transition-transform duration-300 ${dark ? 'rotate-180' : 'rotate-0'}`}>
         {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
