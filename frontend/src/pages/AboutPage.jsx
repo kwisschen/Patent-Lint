@@ -28,7 +28,6 @@ function ProductStory({ t }) {
       <div className="space-y-4 text-muted-foreground leading-relaxed">
         <p>{t('about.productDesc1')}</p>
         <p>{t('about.productDesc2')}</p>
-        <p>{t('about.productDesc3')}</p>
       </div>
     </section>
   )
@@ -343,6 +342,11 @@ function ArchitectureDiagram({ t }) {
             <span>{t('about.arch.selfHostBadge')}</span>
           </div>
         </div>
+      </div>
+      <div className="mt-3 text-center">
+        <a href="mailto:kwisschen@gmail.com" className="text-sm text-muted-foreground underline hover:text-foreground transition-colors">
+          {t('about.enterpriseContact')}
+        </a>
       </div>
     </div>
   )

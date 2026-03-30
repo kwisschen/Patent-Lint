@@ -88,9 +88,8 @@
   },
   "about": {
     "productTitle": "What is PatentLint?",
-    "productDesc1": "PatentLint is a free patent specification quality checker. Drop a U.S. patent application draft (.docx) into your browser and get an instant compliance report — no upload, no account, no cloud. The name comes from \"linting,\" a software development term for automatically catching errors before they become problems.",
-    "productDesc2": "It checks formatting rules from the Manual of Patent Examining Procedure (MPEP), catches common drafting issues like missing antecedent basis and restrictive wording, and visualizes your claim dependency tree, all in seconds.",
-    "productDesc3": "PatentLint was built by a patent engineer who spent years reviewing thousands of patent drafts and catching the same formatting errors and MPEP violations by hand. The goal: automate the tedious parts so practitioners can focus on substance.",
+    "productDesc1": "PatentLint is a free patent specification quality checker. Drop a U.S. patent draft into your browser and get an instant compliance report — no upload, no account, no cloud.",
+    "productDesc2": "It checks formatting rules from the Manual of Patent Examining Procedure (MPEP), catches common drafting issues like missing antecedent basis and restrictive wording, and visualizes your claim dependency tree.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center validates filing format. PatentLint checks the draft itself.",
     "uspto": {
@@ -165,8 +164,9 @@
         "weasyprint": "HTML-to-PDF engine with CJK font support"
       }
     },
+    "enterpriseContact": "Enterprise deployment →",
     "builderTitle": "Background",
-    "builderDesc1": "PatentLint was developed by a patent engineer with over a decade of experience across semiconductor, optoelectronics, electrical, mechanical, and chemical patent portfolios.",
+    "builderDesc1": "PatentLint was built by a patent engineer who spent years reviewing thousands of patent drafts and catching the same formatting errors and MPEP violations by hand. The goal: automate the tedious parts so practitioners can focus on substance.",
     "builderDesc2": "The entire analysis engine, written in Python, compiles to WebAssembly and runs directly in your browser. No server, no upload, no files leaving your device. Existing tools either require Windows-only installation or upload documents to cloud servers. PatentLint needs neither.",
     "builderSister": "Its companion project, the Agentic Patent Analyst, uses LLM agents for prior art search and claim coverage analysis."
   },
