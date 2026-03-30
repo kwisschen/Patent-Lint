@@ -10,7 +10,7 @@ const FEATURES = [
   { icon: Globe, titleKey: 'loading.feature4_title', descKey: 'loading.feature4_desc' },
 ]
 
-const STAGGER_MS = 1000
+const STAGGER_MS = 700
 const READY_PAUSE_MS = 600
 const FADE_DURATION_MS = 300
 

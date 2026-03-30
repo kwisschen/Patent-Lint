@@ -89,7 +89,7 @@
   "about": {
     "productTitle": "PatentLint是什么？",
     "productDesc1": "PatentLint 是免费的专利说明书质量检查工具。将美国专利申请文稿拖放至浏览器，即可获得即时合规报告。无需上传、无需账号、不使用云端。",
-    "productDesc2": "依据《专利审查程序手册》(MPEP) 格式规则进行检查，检测常见的撰稿问题，如缺乏先行词基础和限制性用语，并将权利要求从属关系以树状图呈现。",
+    "productDesc2": "它依据《专利审查程序手册》(MPEP) 格式规则进行检查，检测常见的撰稿问题，如缺乏先行词基础和限制性用语，并将权利要求从属关系以树状图呈现。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查文稿本身。",
     "uspto": {
