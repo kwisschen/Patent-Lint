@@ -152,6 +152,10 @@
       "optional": "オプション：Docker / CLI",
       "zeroBadge": "分析中のネットワークリクエストはゼロ",
       "selfHostBadge": "エアギャップおよび ITAR 対応環境向けセルフホスト",
+      "node": {
+        "analysisEngine": "分析エンジン",
+        "pdfReport": "PDFレポート"
+      },
       "tip": {
         "react": "React 18 + Vite 6 + Tailwind CSS v4",
         "pyodide": "CPython を WebAssembly にコンパイル。ブラウザで Python を実行",
