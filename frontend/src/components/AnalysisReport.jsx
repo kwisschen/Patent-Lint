@@ -235,7 +235,7 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
       </div>
 
       {/* Spacer so content isn't hidden behind sticky bar */}
-      <div className="h-16" />
+      <div className="h-28" />
 
       {/* Single-row action bar with security status */}
       <div
