@@ -1,6 +1,6 @@
 {
-  "header": { "title": "PatentLint", "subtitle": "特許明細書品質チェックツール" },
-  "dropzone": { "tagline": "33 項目の USPTO 書式規則に対して原稿を即座にチェック。", "title": "特許 .docx をドロップして検査開始", "subtitle": "またはクリックして参照", "notice": "現在、米国特許明細書（.docx）のみ対応しています。", "reject": ".docx ファイルのみ対応", "rejectMultiple": "ファイルは一つずつドロップしてください。", "rejectMultipleType": "一つの .docx ファイルをドロップしてください。" },
+  "header": { "title": "PatentLint", "subtitle": "特許原稿品質チェックツール" },
+  "dropzone": { "tagline": "33 項目の USPTO 作成ルールに対して特許原稿を即座にチェック。", "title": "特許 .docx をドロップして検査開始", "subtitle": "またはクリックして参照", "notice": "現在、米国特許明細書（.docx）のみ対応しています。", "reject": ".docx ファイルのみ対応", "rejectMultiple": "ファイルは一つずつドロップしてください。", "rejectMultipleType": "一つの .docx ファイルをドロップしてください。" },
   "summary": { "specParagraphs": "明細書段落数", "claims": "請求項", "independent": "独立項", "dependent": "従属項", "figures": "図面", "abstractWords": "要約語数", "claimCategories": "請求項カテゴリ", "method": "方法", "apparatus": "装置", "outsideRange": "50–150語の範囲外" },
   "section": { "specification": "明細書", "claims": "特許請求の範囲", "drawings": "図面の簡単な説明", "drawingsShort": "図面", "abstract": "要約書" },
   "status": { "pass": "合格", "verify": "確認", "amend": "修正" },
@@ -10,7 +10,7 @@
   "tree": { "apparatusClaims": "物の請求項", "methodClaims": "方法の請求項", "independent": "独立項", "dependent": "従属項", "deps": "個の従属項", "dep": "個の従属項" },
   "section112": { "title": "§ 112 分析" },
   "results": {
-    "nonPatentWarning": "この文書は特許明細書ではない可能性があります",
+    "nonPatentWarning": "この文書は特許原稿ではない可能性があります",
     "nonPatentWarningDetails": "PatentLint は米国特許出願の草稿用に設計されています。このファイルには標準的な特許セクション、番号付き請求項、または段落番号が含まれていないため、非特許文書に対する分析結果は有意でない場合があります。",
     "showResultsAnyway": "結果を表示する",
     "trackedChangesWarning": "この文書には変更履歴が含まれており、分析精度に影響する可能性があります。ワープロソフトですべての変更を承認または拒否してから、再度分析を行ってください。",
@@ -18,7 +18,7 @@
   },
   "analysis": { "analyzing": "特許文書を分析中...", "label": "分析結果" },
   "footer": { "disclaimer": "本レポートは法的助言を構成するものではありません", "builtBy": "© 2025 Christopher Chen", "security": "セキュリティ", "about": "概要", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "フィードバック" },
-  "cta": { "heading": "明細書をチェックする準備はできましたか？", "subtext": ".docx ファイルをドロップするだけで即座に結果を取得。アップロード不要、アカウント不要。", "button": "明細書を分析" },
+  "cta": { "heading": "特許原稿をチェックする準備はできましたか？", "subtext": ".docx ファイルをドロップするだけで即座に結果を取得。アップロード不要、アカウント不要。", "button": "特許原稿を分析" },
   "antecedentBasis": { "title": "先行詞根拠の確認", "items": "個の用語", "item": "個の用語" },
   "specSupport": { "title": "明細書サポートの確認", "items": "個の用語", "item": "個の用語" },
   "triage": { "title": "優先事項の要約", "amend": "修正が必要", "amendEmpty": "修正が必要な項目はありません。", "verify": "専門家の確認", "verifyEmpty": "確認が必要な項目はありません。", "pass": "合格", "items": "件", "item": "件" },
@@ -52,7 +52,7 @@
     },
     "page": {
       "heroTitle": "特許原稿がデバイスの外に出ることはありません",
-      "heroSubtext": "PatentLint はブラウザ内で完全に動作します。サーバーなし、アップロードなし、クラウドなし。機密性の高い明細書は常にお使いのマシン上にとどまります。",
+      "heroSubtext": "PatentLint はブラウザ内で完全に動作します。サーバーなし、アップロードなし、クラウドなし。機密性の高い特許原稿は常にお使いのマシン上にとどまります。",
       "tryIt": "試してみる →",
       "compareTitle": "PatentLint と他のツールの比較",
       "compareDisclaimer": "この比較は一般的なアーキテクチャパターンを反映しています。個々の製品は異なる場合があります。「Word アドインツール」と「クラウドベースツール」は一般的なカテゴリであり、特定の製品を指すものではありません。",
@@ -88,8 +88,8 @@
   },
   "about": {
     "productTitle": "PatentLint とは？",
-    "productDesc1": "PatentLint は無料の特許明細書品質チェックツールです。米国特許出願原稿をブラウザにドロップするだけで、即座にコンプライアンスレポートを取得できます。アップロード不要、アカウント不要、クラウド不要。",
-    "productDesc2": "MPEP（特許審査便覧）のフォーマット規則に基づいてチェックを行い、先行詞根拠の欠落や限定的な表現などの起案上の問題を検出し、請求項の従属関係をツリー表示で可視化します。",
+    "productDesc1": "PatentLint は無料の特許原稿品質チェックツールです。米国特許出願原稿をブラウザにドロップするだけで、即座にコンプライアンスレポートを取得できます。アップロード不要、アカウント不要、クラウド不要。",
+    "productDesc2": "MPEP（特許審査便覧）の作成ルールに基づいてチェックを行い、先行詞根拠の欠落や限定的な表現などの作成上の問題を検出し、請求項の従属関係をツリー表示で可視化します。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center は出願フォーマットを検証します。PatentLint は原稿そのものをチェックします。",
     "uspto": {

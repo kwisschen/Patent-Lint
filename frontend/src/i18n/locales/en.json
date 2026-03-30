@@ -1,6 +1,6 @@
 {
   "header": { "title": "PatentLint", "subtitle": "Patent Draft Quality Checker" },
-  "dropzone": { "tagline": "Instantly check your draft against 33 USPTO formatting rules.", "title": "Drop your patent .docx to start checking", "subtitle": "or click to browse", "notice": "Currently supports U.S. patent specifications (.docx) only.", "reject": "Only .docx files are accepted", "rejectMultiple": "Please drop one file at a time.", "rejectMultipleType": "Please drop a single .docx file." },
+  "dropzone": { "tagline": "Instantly check your specification against 33 USPTO drafting rules.", "title": "Drop your patent .docx to start checking", "subtitle": "or click to browse", "notice": "Currently supports U.S. patent specifications (.docx) only.", "reject": "Only .docx files are accepted", "rejectMultiple": "Please drop one file at a time.", "rejectMultipleType": "Please drop a single .docx file." },
   "summary": { "specParagraphs": "Specification Paragraphs", "claims": "Claims", "independent": "independent", "dependent": "dependent", "figures": "Figures", "abstractWords": "Abstract Words", "claimCategories": "Claim Categories", "method": "method", "apparatus": "apparatus", "outsideRange": "Outside 50–150 range" },
   "section": { "specification": "Specification", "claims": "Claims", "drawings": "Brief Description of Drawings", "drawingsShort": "Drawings", "abstract": "Abstract" },
   "status": { "pass": "PASS", "verify": "VERIFY", "amend": "AMEND" },
@@ -89,7 +89,7 @@
   "about": {
     "productTitle": "What is PatentLint?",
     "productDesc1": "PatentLint is a free patent specification quality checker. Drop a U.S. patent draft into your browser and get an instant compliance report — no upload, no account, no cloud.",
-    "productDesc2": "It checks formatting rules from the Manual of Patent Examining Procedure (MPEP), catches common drafting issues like missing antecedent basis and restrictive wording, and visualizes your claim dependency tree.",
+    "productDesc2": "It checks drafting rules from the Manual of Patent Examining Procedure (MPEP), catches common issues like missing antecedent basis and restrictive wording, and visualizes your claim dependency tree.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center validates filing format. PatentLint checks the draft itself.",
     "uspto": {
