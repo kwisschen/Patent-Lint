@@ -345,7 +345,7 @@ function ArchitectureDiagram({ t }) {
       </div>
       <div className="mt-3 text-center">
         <a href="mailto:kwisschen@gmail.com" className="text-sm text-muted-foreground underline hover:text-foreground transition-colors">
-          {t('about.enterpriseContact')}
+          {t('security.tech.contactEnterprise')}
         </a>
       </div>
     </div>
