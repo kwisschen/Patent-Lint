@@ -68,7 +68,7 @@
       "q3": { "question": "Does it work offline?", "patentlint": "Yes, after first load.", "addin": "Depends on license validation.", "cloud": "No. Requires internet." },
       "q4": { "question": "Can I verify the privacy claim?", "patentlint": "Yes. Open DevTools → Network, or go airplane mode.", "addin": "Difficult to audit add-in traffic.", "cloud": "No. Data is on their servers." },
       "q5": { "question": "What platforms are supported?", "patentlint": "Any device with a modern browser.", "addin": "Windows + Microsoft Word only.", "cloud": "Browser-based, but requires upload." },
-      "q6": { "question": "Is the source code available?", "patentlint": "Yes. AGPL-3.0 open source.", "addin": "Typically proprietary.", "cloud": "Typically proprietary." }
+      "q6": { "question": "What does it cost?", "patentlint": "Free — no fees, no subscription, no usage limits.", "addin": "Typically requires a paid license.", "cloud": "Typically requires a subscription." }
     },
     "tech": {
       "architectureTitle": "Architecture",
@@ -83,14 +83,12 @@
       "telemetry": "PatentLint collects zero analytics, zero telemetry, and zero usage data. There are no cookies, no tracking pixels, and no third-party scripts. The application does not know who you are.",
       "selfHostedTitle": "Self-Hosted Option",
       "selfHosted": "For organizations with strict data sovereignty requirements, such as ITAR-controlled environments or air-gapped networks, PatentLint can be self-hosted via Docker with all dependencies included.",
-      "contactEnterprise": "Contact for enterprise deployment",
-      "openSourceTitle": "Open Source",
-      "openSource": "PatentLint is open source under the AGPL-3.0 license. Every line of analysis code is publicly auditable. You don't have to trust our claims. You can read the source."
+      "contactEnterprise": "Contact for enterprise deployment"
     }
   },
   "about": {
     "productTitle": "What is PatentLint?",
-    "productDesc1": "PatentLint is a free, open-source patent specification quality checker. Drop a U.S. patent application draft (.docx) into your browser and get an instant compliance report — no upload, no account, no cloud. The name comes from \"linting,\" a software development term for automatically catching errors before they become problems.",
+    "productDesc1": "PatentLint is a free patent specification quality checker. Drop a U.S. patent application draft (.docx) into your browser and get an instant compliance report — no upload, no account, no cloud. The name comes from \"linting,\" a software development term for automatically catching errors before they become problems.",
     "productDesc2": "It checks formatting rules from the Manual of Patent Examining Procedure (MPEP), catches common drafting issues like missing antecedent basis and restrictive wording, and visualizes your claim dependency tree, all in seconds.",
     "productDesc3": "PatentLint was built by a patent engineer who spent years reviewing thousands of patent drafts and catching the same formatting errors and MPEP violations by hand. The goal: automate the tedious parts so practitioners can focus on substance.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
