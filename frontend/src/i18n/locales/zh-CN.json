@@ -88,9 +88,8 @@
   },
   "about": {
     "productTitle": "PatentLint是什么？",
-    "productDesc1": "PatentLint 是免费的专利说明书质量检查工具。将美国专利申请文稿（.docx）拖放至浏览器，即可获得即时合规报告。无需上传、无需账号、不使用云端。其名称源自「linting」，为软件开发中用于在错误发生前自动检测问题的术语。",
-    "productDesc2": "它依据美国《专利审查程序手册》(MPEP) 的格式规则进行检查，检测常见的撰稿问题，如缺乏先行词基础和限制性用语，并将权利要求从属关系以树状图呈现，且皆只需数秒。",
-    "productDesc3": "PatentLint 由一位花费多年审阅数千份专利草稿、反复手动发现相同格式错误与 MPEP 违规的专利工程师所研发。目标：将繁琐的部分自动化，让从业人员能专注于实质内容。",
+    "productDesc1": "PatentLint 是免费的专利说明书质量检查工具。将美国专利申请文稿拖放至浏览器，即可获得即时合规报告。无需上传、无需账号、不使用云端。",
+    "productDesc2": "依据《专利审查程序手册》(MPEP) 格式规则进行检查，检测常见的撰稿问题，如缺乏先行词基础和限制性用语，并将权利要求从属关系以树状图呈现。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查文稿本身。",
     "uspto": {
@@ -165,8 +164,9 @@
         "weasyprint": "HTML 转 PDF 引擎，支持 CJK 字体"
       }
     },
+    "enterpriseContact": "企业部署咨询 →",
     "builderTitle": "背景",
-    "builderDesc1": "PatentLint 由一位在半导体、光电、电子、机械及化学专利组合拥有十余年经验的专利工程师所开发。",
+    "builderDesc1": "PatentLint 由一位花费多年审阅数千份专利稿件、反复手动发现相同格式错误与 MPEP 违规的专利工程师所研发。目标：将繁琐的部分自动化，让从业人员能专注于实质内容。",
     "builderDesc2": "整个分析引擎以 Python 编写，再编译为 WebAssembly 并直接在您的浏览器中运行。无服务器、无上传、文件不会离开您的设备。现有工具不是需要安装 Windows 专用软件，就是将文档上传至云端服务器。PatentLint 两者皆不需要。",
     "builderSister": "其姊妹项目 Agentic Patent Analyst 使用 LLM 代理进行现有技术检索与权利要求覆盖范围分析。"
   },
