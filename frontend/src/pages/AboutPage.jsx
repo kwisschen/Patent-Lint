@@ -341,12 +341,10 @@ function ArchitectureDiagram({ t }) {
             <Server className="w-3.5 h-3.5" />
             <span>{t('about.arch.selfHostBadge')}</span>
           </div>
+          <a href="mailto:kwisschen@gmail.com" className="inline-block mt-3 text-sm text-muted-foreground underline hover:text-foreground transition-colors">
+            {t('security.tech.contactEnterprise')}
+          </a>
         </div>
-      </div>
-      <div className="mt-3 text-center">
-        <a href="mailto:kwisschen@gmail.com" className="text-sm text-muted-foreground underline hover:text-foreground transition-colors">
-          {t('security.tech.contactEnterprise')}
-        </a>
       </div>
     </div>
   )
