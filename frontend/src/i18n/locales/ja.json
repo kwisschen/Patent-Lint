@@ -1,6 +1,6 @@
 {
   "header": { "title": "PatentLint", "subtitle": "特許明細書品質チェックツール" },
-  "dropzone": { "title": "特許 .docx ファイルをここにドロップ", "subtitle": "またはクリックして参照", "notice": "現在、米国特許明細書（.docx）のみ対応しています。", "reject": ".docx ファイルのみ対応", "rejectMultiple": "ファイルは一つずつドロップしてください。", "rejectMultipleType": "一つの .docx ファイルをドロップしてください。" },
+  "dropzone": { "tagline": "33 項目の USPTO 書式規則に対して原稿を即座にチェック。", "title": "特許 .docx をドロップして検査開始", "subtitle": "またはクリックして参照", "notice": "現在、米国特許明細書（.docx）のみ対応しています。", "reject": ".docx ファイルのみ対応", "rejectMultiple": "ファイルは一つずつドロップしてください。", "rejectMultipleType": "一つの .docx ファイルをドロップしてください。" },
   "summary": { "specParagraphs": "明細書段落数", "claims": "請求項", "independent": "独立項", "dependent": "従属項", "figures": "図面", "abstractWords": "要約語数", "claimCategories": "請求項カテゴリ", "method": "方法", "apparatus": "装置", "outsideRange": "50–150語の範囲外" },
   "section": { "specification": "明細書", "claims": "特許請求の範囲", "drawings": "図面の簡単な説明", "drawingsShort": "図面", "abstract": "要約書" },
   "status": { "pass": "合格", "verify": "確認", "amend": "修正" },
