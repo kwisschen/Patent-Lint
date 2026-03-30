@@ -7,7 +7,7 @@
 
 **No install. No account. No cloud upload.**
 
-PatentLint checks U.S. patent application drafts (.docx) against USPTO formatting rules and MPEP guidelines — entirely in your browser. Your file never leaves your device.
+PatentLint checks U.S. patent application drafts (.docx) against USPTO drafting rules and MPEP guidelines — entirely in your browser. Your file never leaves your device.
 
 **[Try it →](https://patentlint.com)**
 
