@@ -106,7 +106,8 @@ function App() {
           <Route path="/" element={
             <div className="mx-auto w-full max-w-5xl px-4 py-8">
               {homeState === 'idle' && (
-                <div className="flex flex-col items-center justify-center min-h-[60vh]">
+                <div className="flex flex-col items-center justify-center min-h-[40vh] sm:min-h-[60vh]">
+                  <p className="text-base sm:text-lg text-muted-foreground text-center mb-4">{t('dropzone.tagline')}</p>
                   <DropZone onFile={handleFile} onShowProveIt={() => setShowProveIt(true)} />
                 </div>
               )}

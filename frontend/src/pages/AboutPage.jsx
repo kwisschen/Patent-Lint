@@ -237,7 +237,7 @@ function ArchitectureDiagram({ t }) {
   const dotR = 3
 
   const browserRailHeight = (BROWSER_NODES.length - 1) * step
-  const totalDrawDelay = 300
+  const totalDrawDelay = 500
 
   return (
     <div ref={ref} className="mt-12">
@@ -262,12 +262,12 @@ function ArchitectureDiagram({ t }) {
                 strokeWidth="2"
                 strokeDasharray={browserRailHeight + nodeH}
                 strokeDashoffset={inView ? 0 : browserRailHeight + nodeH}
-                style={{ transition: `stroke-dashoffset 800ms ease ${totalDrawDelay}ms` }}
+                style={{ transition: `stroke-dashoffset 1300ms ease ${totalDrawDelay}ms` }}
               />
               {/* Horizontal stubs + junction dots */}
               {BROWSER_NODES.map((_, i) => {
                 const cy = i * step + nodeH / 2
-                const drawDelay = totalDrawDelay + 200 + i * 150
+                const drawDelay = totalDrawDelay + 300 + i * 250
                 return (
                   <g key={i}>
                     <line
@@ -276,7 +276,7 @@ function ArchitectureDiagram({ t }) {
                       strokeWidth="2"
                       strokeDasharray={stubLen}
                       strokeDashoffset={inView ? 0 : stubLen}
-                      style={{ transition: `stroke-dashoffset 400ms ease ${drawDelay}ms` }}
+                      style={{ transition: `stroke-dashoffset 650ms ease ${drawDelay}ms` }}
                     />
                     <circle
                       cx={railX} cy={cy} r={dotR}
@@ -285,7 +285,7 @@ function ArchitectureDiagram({ t }) {
                         opacity: inView ? 1 : 0,
                         transform: inView ? 'scale(1)' : 'scale(0)',
                         transformOrigin: `${railX}px ${cy}px`,
-                        transition: `opacity 200ms ease ${drawDelay}ms, transform 300ms var(--ease-bounce) ${drawDelay}ms`,
+                        transition: `opacity 300ms ease ${drawDelay}ms, transform 500ms var(--ease-bounce) ${drawDelay}ms`,
                       }}
                     />
                   </g>
@@ -314,8 +314,8 @@ function ArchitectureDiagram({ t }) {
           </h3>
           <div className="space-y-6">
             {[
-              { left: 'FastAPI', leftTip: 'about.arch.tip.fastapi', right: 'weasyprint', rightTip: 'about.arch.tip.weasyprint', delay: 600 },
-              { left: 'CLI', leftTip: 'about.arch.tip.cli', right: 'weasyprint', rightTip: 'about.arch.tip.weasyprint', delay: 800 },
+              { left: 'FastAPI', leftTip: 'about.arch.tip.fastapi', right: 'weasyprint', rightTip: 'about.arch.tip.weasyprint', delay: 1000 },
+              { left: 'CLI', leftTip: 'about.arch.tip.cli', right: 'weasyprint', rightTip: 'about.arch.tip.weasyprint', delay: 1300 },
             ].map(({ left, leftTip, right, rightTip, delay }, idx) => (
               <div key={idx} className="flex items-center gap-3">
                 <ArchNode label={left} tipKey={leftTip} t={t} />
@@ -325,13 +325,13 @@ function ArchitectureDiagram({ t }) {
                     stroke="currentColor" strokeWidth="1.5" className="text-slate-400 dark:text-slate-500"
                     strokeDasharray="5 4"
                     strokeDashoffset={inView ? 0 : 36}
-                    style={{ transition: `stroke-dashoffset 600ms ease ${delay}ms` }}
+                    style={{ transition: `stroke-dashoffset 1000ms ease ${delay}ms` }}
                   />
                   <circle cx="2" cy="8" r={dotR - 1} className="fill-slate-400 dark:fill-slate-500"
-                    style={{ opacity: inView ? 1 : 0, transition: `opacity 200ms ease ${delay}ms` }}
+                    style={{ opacity: inView ? 1 : 0, transition: `opacity 300ms ease ${delay}ms` }}
                   />
                   <polygon points="32,4 38,8 32,12" className="fill-slate-400 dark:fill-slate-500"
-                    style={{ opacity: inView ? 1 : 0, transition: `opacity 200ms ease ${delay + 300}ms` }}
+                    style={{ opacity: inView ? 1 : 0, transition: `opacity 300ms ease ${delay + 500}ms` }}
                   />
                 </svg>
                 <ArchNode label={right} tipKey={rightTip} t={t} />

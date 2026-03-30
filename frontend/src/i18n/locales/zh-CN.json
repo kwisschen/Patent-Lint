@@ -1,6 +1,6 @@
 {
   "header": { "title": "PatentLint", "subtitle": "专利文稿质量检查工具" },
-  "dropzone": { "title": "将专利 .docx 文件拖拽至此", "subtitle": "或点击浏览文件", "notice": "目前仅支持美国专利说明书（.docx）。", "reject": "仅接受 .docx 文件", "rejectMultiple": "请一次拖放一个文件。", "rejectMultipleType": "请拖放单个 .docx 文件。" },
+  "dropzone": { "tagline": "即时检查您的稿件是否符合 33 项 USPTO 格式规范。", "title": "拖放专利 .docx 开始检查", "subtitle": "或点击浏览文件", "notice": "目前仅支持美国专利说明书（.docx）。", "reject": "仅接受 .docx 文件", "rejectMultiple": "请一次拖放一个文件。", "rejectMultipleType": "请拖放单个 .docx 文件。" },
   "summary": { "specParagraphs": "说明书段落", "claims": "权利要求", "independent": "独立项", "dependent": "从属项", "figures": "附图", "abstractWords": "摘要字数", "claimCategories": "权项类别", "method": "方法", "apparatus": "装置", "outsideRange": "超出 50–150 字范围" },
   "section": { "specification": "说明书", "claims": "权利要求书", "drawings": "附图说明", "drawingsShort": "附图", "abstract": "摘要" },
   "status": { "pass": "通过", "verify": "确认", "amend": "修改" },
