@@ -45,10 +45,10 @@ export default function Header({ onReset, canReset }) {
             <LogoIcon className="w-6 h-6" />
             {t('header.title')}
           </h1>
-          <p className="text-xs text-muted-foreground -mt-1">{t('header.subtitle')}</p>
+          <p className="hidden sm:block text-xs text-muted-foreground -mt-1">{t('header.subtitle')}</p>
         </div>
         <div className="flex items-center gap-1">
-          <nav className="hidden sm:flex items-center gap-4 text-sm text-muted-foreground mr-3">
+          <nav className="flex items-center gap-4 text-sm text-muted-foreground mr-3">
             <Link to="/security" className="hover:text-foreground transition-colors">{t('footer.security')}</Link>
             <Link to="/about" className="hover:text-foreground transition-colors">{t('footer.about')}</Link>
           </nav>
