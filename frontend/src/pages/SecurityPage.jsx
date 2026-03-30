@@ -183,7 +183,6 @@ const techSections = [
   'ai',
   'telemetry',
   'selfHosted',
-  'openSource',
 ]
 
 function TechDetailsSection() {

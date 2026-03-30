@@ -68,7 +68,7 @@
       "q3": { "question": "可以离线使用吗？", "patentlint": "可以，首次加载后即可。", "addin": "取决于许可证验证方式。", "cloud": "不行，需要网络。" },
       "q4": { "question": "能验证隐私声明吗？", "patentlint": "可以。打开 DevTools → Network，或开启飞行模式。", "addin": "难以审计插件的网络流量。", "cloud": "不行，数据在他们的服务器上。" },
       "q5": { "question": "支持哪些平台？", "patentlint": "任何支持现代浏览器的设备。", "addin": "仅限 Windows + Microsoft Word。", "cloud": "浏览器端，但需要上传资料。" },
-      "q6": { "question": "源代码是否公开？", "patentlint": "是，AGPL-3.0 开源。", "addin": "通常为专有软件。", "cloud": "通常为专有软件。" }
+      "q6": { "question": "费用是多少？", "patentlint": "免费使用，无需付费、无需订阅、无用量限制。", "addin": "通常需要付费许可。", "cloud": "通常需要订阅。" }
     },
     "tech": {
       "architectureTitle": "架构",
@@ -83,14 +83,12 @@
       "telemetry": "PatentLint 不收集任何分析数据、遥测数据或使用数据。没有 cookies、没有追踪像素、没有第三方脚本。此应用程序不知道您的身份。",
       "selfHostedTitle": "自托管选项",
       "selfHosted": "对于有严格数据主权要求的组织，例如 ITAR 管控环境或物理隔离网络，PatentLint 可通过 Docker 自托管部署于本地，所有依赖项均已包含。",
-      "contactEnterprise": "咨询企业部署方案",
-      "openSourceTitle": "开放源代码",
-      "openSource": "PatentLint 以 AGPL-3.0 许可证开放源代码。每一行分析代码均可公开审查。您无需信任我们的声明，可以直接阅读源代码。"
+      "contactEnterprise": "咨询企业部署方案"
     }
   },
   "about": {
     "productTitle": "PatentLint是什么？",
-    "productDesc1": "PatentLint 是免费的开源专利说明书质量检查工具。将美国专利申请文稿（.docx）拖放至浏览器，即可获得即时合规报告。无需上传、无需账号、不使用云端。其名称源自「linting」，为软件开发中用于在错误发生前自动检测问题的术语。",
+    "productDesc1": "PatentLint 是免费的专利说明书质量检查工具。将美国专利申请文稿（.docx）拖放至浏览器，即可获得即时合规报告。无需上传、无需账号、不使用云端。其名称源自「linting」，为软件开发中用于在错误发生前自动检测问题的术语。",
     "productDesc2": "它依据美国《专利审查程序手册》(MPEP) 的格式规则进行检查，检测常见的撰稿问题，如缺乏先行词基础和限制性用语，并将权利要求从属关系以树状图呈现，且皆只需数秒。",
     "productDesc3": "PatentLint 由一位花费多年审阅数千份专利草稿、反复手动发现相同格式错误与 MPEP 违规的专利工程师所研发。目标：将繁琐的部分自动化，让从业人员能专注于实质内容。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
