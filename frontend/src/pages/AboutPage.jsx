@@ -188,8 +188,8 @@ function StatsGrid({ t }) {
 const BROWSER_NODES = [
   { id: 'react', label: 'React Frontend', tipKey: 'about.arch.tip.react' },
   { id: 'pyodide', label: 'Pyodide / WebAssembly', tipKey: 'about.arch.tip.pyodide' },
-  { id: 'patentlint', label: 'patentlint', tipKey: null },
-  { id: 'pdfmake', label: 'pdfmake', tipKey: 'about.arch.tip.pdfmake' },
+  { id: 'patentlint', labelKey: 'about.arch.node.analysisEngine', tipKey: null },
+  { id: 'pdfmake', labelKey: 'about.arch.node.pdfReport', tipKey: 'about.arch.tip.pdfmake' },
 ]
 
 const OPTIONAL_NODES_LEFT = [
@@ -296,7 +296,7 @@ function ArchitectureDiagram({ t }) {
             <div className="flex flex-col" style={{ gap: `${gap}px` }}>
               {BROWSER_NODES.map((node) => (
                 <div key={node.id} style={{ height: nodeH }} className="flex items-center">
-                  <ArchNode label={node.label} tipKey={node.tipKey} t={t} />
+                  <ArchNode label={node.labelKey ? t(node.labelKey) : node.label} tipKey={node.tipKey} t={t} />
                 </div>
               ))}
             </div>

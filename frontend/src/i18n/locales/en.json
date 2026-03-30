@@ -152,6 +152,10 @@
       "optional": "Optional: Docker / CLI",
       "zeroBadge": "Zero network requests during analysis",
       "selfHostBadge": "Self-hosted for air-gapped and ITAR-sensitive environments",
+      "node": {
+        "analysisEngine": "Analysis Engine",
+        "pdfReport": "PDF Report"
+      },
       "tip": {
         "react": "React 18 + Vite 6 + Tailwind CSS v4",
         "pyodide": "CPython compiled to WebAssembly. Runs Python in the browser",
