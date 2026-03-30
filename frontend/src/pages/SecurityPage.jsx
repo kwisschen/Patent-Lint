@@ -238,7 +238,7 @@ function TechDetailsSection() {
                   href="mailto:kwisschen@gmail.com"
                   className="inline-flex items-center gap-1 text-sm text-primary underline underline-offset-4 hover:text-primary/80 mt-2"
                 >
-                  {t('security.tech.contactEnterprise')}
+                  {t('about.enterpriseContact')}
                 </a>
               )}
             </div>
