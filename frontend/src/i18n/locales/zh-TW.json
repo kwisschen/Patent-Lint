@@ -152,6 +152,10 @@
       "optional": "選配：Docker / CLI",
       "zeroBadge": "分析過程中零網路請求",
       "selfHostBadge": "自行部署，適用於實體隔離網路與 ITAR 敏感環境",
+      "node": {
+        "analysisEngine": "分析引擎",
+        "pdfReport": "PDF 報告"
+      },
       "tip": {
         "react": "React 18 + Vite 6 + Tailwind CSS v4",
         "pyodide": "CPython 編譯為 WebAssembly，在瀏覽器中執行 Python",
