@@ -1,6 +1,6 @@
 {
-  "header": { "title": "PatentLint", "subtitle": "专利文稿质量检查工具" },
-  "dropzone": { "tagline": "即时检查您的稿件是否符合 33 项 USPTO 格式规范。", "title": "拖放专利 .docx 开始检查", "subtitle": "或点击浏览文件", "notice": "目前仅支持美国专利说明书（.docx）。", "reject": "仅接受 .docx 文件", "rejectMultiple": "请一次拖放一个文件。", "rejectMultipleType": "请拖放单个 .docx 文件。" },
+  "header": { "title": "PatentLint", "subtitle": "专利稿件质量检查工具" },
+  "dropzone": { "tagline": "即时检查您的专利稿件是否符合 33 项 USPTO 撰写规则。", "title": "拖放专利 .docx 开始检查", "subtitle": "或点击浏览文件", "notice": "目前仅支持美国专利说明书（.docx）。", "reject": "仅接受 .docx 文件", "rejectMultiple": "请一次拖放一个文件。", "rejectMultipleType": "请拖放单个 .docx 文件。" },
   "summary": { "specParagraphs": "说明书段落", "claims": "权利要求", "independent": "独立项", "dependent": "从属项", "figures": "附图", "abstractWords": "摘要字数", "claimCategories": "权项类别", "method": "方法", "apparatus": "装置", "outsideRange": "超出 50–150 字范围" },
   "section": { "specification": "说明书", "claims": "权利要求书", "drawings": "附图说明", "drawingsShort": "附图", "abstract": "摘要" },
   "status": { "pass": "通过", "verify": "确认", "amend": "修改" },
@@ -10,7 +10,7 @@
   "tree": { "apparatusClaims": "装置权利要求", "methodClaims": "方法权利要求", "independent": "独立权利要求", "dependent": "从属权利要求", "deps": "个从属项", "dep": "个从属项" },
   "section112": { "title": "§ 112 分析" },
   "results": {
-    "nonPatentWarning": "此文档可能不是专利说明书",
+    "nonPatentWarning": "此文档可能不是专利稿件",
     "nonPatentWarningDetails": "PatentLint 专为美国专利申请草稿设计。此文件未包含标准专利章节、编号权利要求或段落编号，分析结果对非专利文件可能不具参考价值。",
     "showResultsAnyway": "仍然显示结果",
     "trackedChangesWarning": "此文档包含修订标记，可能影响分析准确性。请在文字处理软件中接受或拒绝所有更改后，重新进行分析。",
@@ -52,7 +52,7 @@
     },
     "page": {
       "heroTitle": "专利文稿绝不离开您的设备",
-      "heroSubtext": "PatentLint 完全在您的浏览器内部运行，不经过服务器、不上传、不使用云端。您的说明书机密始终都留在您的机器上。",
+      "heroSubtext": "PatentLint 完全在您的浏览器内部运行，不经过服务器、不上传、不使用云端。您的专利稿件机密始终都留在您的机器上。",
       "tryIt": "自己试试看 →",
       "compareTitle": "PatentLint 与其他工具的比较",
       "compareDisclaimer": "本比较表反映一般架构模式。各产品可能有所不同。「Word 插件工具」与「云端工具」为通用类别，并非指特定产品。",
@@ -88,8 +88,8 @@
   },
   "about": {
     "productTitle": "PatentLint是什么？",
-    "productDesc1": "PatentLint 是免费的专利说明书质量检查工具。将美国专利申请文稿拖放至浏览器，即可获得即时合规报告。无需上传、无需账号、不使用云端。",
-    "productDesc2": "它依据《专利审查程序手册》(MPEP) 格式规则进行检查，检测常见的撰稿问题，如缺乏先行词基础和限制性用语，并将权利要求从属关系以树状图呈现。",
+    "productDesc1": "PatentLint 是免费的专利稿件质量检查工具。将美国专利申请文稿拖放至浏览器，即可获得即时合规报告。无需上传、无需账号、不使用云端。",
+    "productDesc2": "它依据《专利审查程序手册》(MPEP) 撰写规则进行检查，检测常见的撰写问题，如缺乏先行词基础和限制性用语，并将权利要求从属关系以树状图呈现。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查文稿本身。",
     "uspto": {
