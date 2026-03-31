@@ -1,5 +1,5 @@
 {
-  "header": { "title": "PatentLint", "subtitle": "Patent Draft Analyzer" },
+  "header": { "title": "PatentLint", "subtitle": "Patent Specification Checker" },
   "dropzone": { "tagline": "Check your specification against 30+ USPTO drafting rules", "title": "Drop your patent .docx to begin local analysis", "subtitle": "or click to browse", "notice": "Currently supports U.S. patent specifications (.docx) only.", "reject": "Only .docx files are accepted", "rejectMultiple": "Please drop one file at a time.", "rejectMultipleType": "Please drop a single .docx file." },
   "summary": { "specParagraphs": "Specification Paragraphs", "claims": "Claims", "independent": "independent", "dependent": "dependent", "figures": "Figures", "abstractWords": "Abstract Words", "claimCategories": "Claim Categories", "method": "method", "apparatus": "apparatus", "outsideRange": "Outside 50–150 range", "noParagraphs": "No numbering found" },
   "section": { "specification": "Specification", "claims": "Claims", "drawings": "Brief Description of Drawings", "drawingsShort": "Drawings", "abstract": "Abstract" },
