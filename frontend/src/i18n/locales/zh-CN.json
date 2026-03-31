@@ -1,7 +1,7 @@
 {
   "header": { "title": "PatentLint", "subtitle": "专利稿件分析工具" },
   "dropzone": { "tagline": "依据30多项USPTO撰稿规则检查您的专利稿件", "title": "拖放您的专利 .docx 开始本地分析", "subtitle": "或点击浏览文件", "notice": "目前仅支持美国专利说明书（.docx）。", "reject": "仅接受 .docx 文件", "rejectMultiple": "请一次拖放一个文件。", "rejectMultipleType": "请拖放单个 .docx 文件。" },
-  "summary": { "specParagraphs": "说明书段落", "claims": "权利要求", "independent": "独立项", "dependent": "从属项", "figures": "附图", "abstractWords": "摘要字数", "claimCategories": "权项类别", "method": "方法", "apparatus": "装置", "outsideRange": "超出 50–150 字范围" },
+  "summary": { "specParagraphs": "说明书段落", "claims": "权利要求", "independent": "独立项", "dependent": "从属项", "figures": "附图", "abstractWords": "摘要字数", "claimCategories": "权项类别", "method": "方法", "apparatus": "装置", "outsideRange": "超出 50–150 字范围", "noParagraphs": "未发现段落编号" },
   "section": { "specification": "说明书", "claims": "权利要求书", "drawings": "附图说明", "drawingsShort": "附图", "abstract": "摘要" },
   "status": { "pass": "通过", "verify": "确认", "amend": "修改" },
   "button": { "downloadPdf": "保存 PDF 报告", "newAnalysis": "重新分析", "generating": "保存中..." },
@@ -198,6 +198,7 @@
         "pass": "说明书未发现限制性用语。"
       },
       "paragraphSequential": {
+        "missing": "说明书中未发现段落编号。",
         "amend": "段落编号不连续。",
         "pass": "段落编号连续。"
       },
