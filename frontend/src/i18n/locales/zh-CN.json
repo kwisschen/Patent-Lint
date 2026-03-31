@@ -1,6 +1,6 @@
 {
-  "header": { "title": "PatentLint", "subtitle": "专利稿件质量检查工具" },
-  "dropzone": { "tagline": "即时检查您的专利稿件是否符合 33 项 USPTO 撰写规则。", "title": "拖放专利 .docx 开始检查", "subtitle": "或点击浏览文件", "notice": "目前仅支持美国专利说明书（.docx）。", "reject": "仅接受 .docx 文件", "rejectMultiple": "请一次拖放一个文件。", "rejectMultipleType": "请拖放单个 .docx 文件。" },
+  "header": { "title": "PatentLint", "subtitle": "专利稿件分析工具" },
+  "dropzone": { "tagline": "依据30多项USPTO撰稿规则检查您的专利稿件。", "title": "拖放您的专利 .docx 以开始本地分析", "subtitle": "或点击浏览文件", "notice": "目前仅支持美国专利说明书（.docx）。", "reject": "仅接受 .docx 文件", "rejectMultiple": "请一次拖放一个文件。", "rejectMultipleType": "请拖放单个 .docx 文件。" },
   "summary": { "specParagraphs": "说明书段落", "claims": "权利要求", "independent": "独立项", "dependent": "从属项", "figures": "附图", "abstractWords": "摘要字数", "claimCategories": "权项类别", "method": "方法", "apparatus": "装置", "outsideRange": "超出 50–150 字范围" },
   "section": { "specification": "说明书", "claims": "权利要求书", "drawings": "附图说明", "drawingsShort": "附图", "abstract": "摘要" },
   "status": { "pass": "通过", "verify": "确认", "amend": "修改" },
@@ -25,8 +25,8 @@
   "security": {
     "airplaneDemoAlt": "演示：在飞行模式下无网络连接分析专利稿件",
     "badge": {
-      "headline": "免安装。免账号。不上传云端。",
-      "description": "您的机密文件在您的设备上直接分析。",
+      "headline": "无需账号。无需安装。无需上传。",
+      "description": "您的文件不会离开您的设备。",
       "proveIt": "验证一下 →"
     },
     "results": {
@@ -306,7 +306,7 @@
     "patentlint": "正在加载 PatentLint...",
     "ready": "分析引擎已就绪",
     "offline_note": "首次加载后可离线使用",
-    "feature1_title": "免安装、免注册、免上传。",
+    "feature1_title": "无需账号。无需安装。无需上传。",
     "feature1_desc": "您的机密专利文稿不会离开您的设备。不会上传任何内容，PatentLint 也不会知道您的身份。",
     "feature2_title": "MPEP 检查与权利要求树状图",
     "feature2_desc": "检测限制性用语、不确定术语及缺乏先行词基础等问题，并以交互式树状图呈现权利要求从属关系。",

@@ -5,7 +5,7 @@
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-green)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-388-brightgreen)](#)
 
-**No install. No account. No cloud upload.**
+**No account. No install. No upload.**
 
 PatentLint checks U.S. patent application drafts (.docx) against USPTO drafting rules and MPEP guidelines — entirely in your browser. Your file never leaves your device.
 
