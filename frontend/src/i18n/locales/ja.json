@@ -1,5 +1,5 @@
 {
-  "header": { "title": "PatentLint", "subtitle": "特許原稿アナライザー" },
+  "header": { "title": "PatentLint", "subtitle": "特許原稿チェックツール" },
   "dropzone": { "tagline": "30以上のUSPTO起草ルールに基づき特許原稿を分析", "title": "特許 .docx をドロップしてローカル分析を開始", "subtitle": "またはクリックして参照", "notice": "現在、米国特許明細書（.docx）のみ対応しています。", "reject": ".docx ファイルのみ対応", "rejectMultiple": "ファイルは一つずつドロップしてください。", "rejectMultipleType": "一つの .docx ファイルをドロップしてください。" },
   "summary": { "specParagraphs": "明細書段落数", "claims": "請求項", "independent": "独立項", "dependent": "従属項", "figures": "図面", "abstractWords": "要約語数", "claimCategories": "請求項カテゴリ", "method": "方法", "apparatus": "装置", "outsideRange": "50–150語の範囲外", "noParagraphs": "段落番号なし" },
   "section": { "specification": "明細書", "claims": "特許請求の範囲", "drawings": "図面の簡単な説明", "drawingsShort": "図面", "abstract": "要約書" },
