@@ -13,13 +13,13 @@
     "nonPatentWarning": "この文書は特許原稿ではない可能性があります",
     "nonPatentWarningDetails": "PatentLint は米国特許出願の草稿用に設計されています。このファイルには標準的な特許セクション、番号付き請求項、または段落番号が含まれていないため、非特許文書に対する分析結果は有意でない場合があります。",
     "showResultsAnyway": "結果を表示する",
-    "trackedChangesWarning": "この文書には変更履歴が含まれており、分析精度に影響する可能性があります。ワープロソフトですべての変更を承認または拒否してから、再度分析を行ってください。",
+    "trackedChangesWarning": "この文書には変更履歴が含まれており、分析精度に影響する可能性があります。Wordですべての変更を承認または拒否してから、再度分析を行ってください。",
     "analyzeAgain": "再分析"
   },
   "analysis": { "analyzing": "特許文書を分析中...", "label": "分析結果" },
   "footer": { "disclaimer": "本レポートは法的助言を構成するものではありません", "builtBy": "© 2025 Christopher Chen", "security": "セキュリティ", "about": "概要", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "フィードバック" },
   "cta": { "heading": "特許原稿をチェックする準備はできましたか？", "subtext": ".docx ファイルをドロップするだけで即座に結果を取得。アップロード不要、アカウント不要。", "button": "特許原稿を分析" },
-  "antecedentBasis": { "title": "先行詞根拠の確認", "items": "個の用語", "item": "個の用語" },
+  "antecedentBasis": { "title": "先行詞の根拠の確認", "items": "個の用語", "item": "個の用語" },
   "specSupport": { "title": "明細書サポートの確認", "items": "個の用語", "item": "個の用語" },
   "triage": { "title": "優先事項の要約", "amend": "修正が必要", "amendEmpty": "修正が必要な項目はありません。", "verify": "専門家の確認", "verifyEmpty": "確認が必要な項目はありません。", "pass": "合格", "items": "件", "item": "件" },
   "security": {
@@ -43,7 +43,7 @@
       "step1": "WiFi をオフにするか、機内モードをオンにします",
       "step2": "任意の .docx を PatentLint にドラッグします",
       "step3": "インターネットなし＝クラウドなし、アップロードなし、データ送信なし",
-      "step4": "分析後、結果ページの緑のドットがネットワーク活動ゼロを確認します。",
+      "step4": "分析後、結果ページの緑のドットがネットワーク通信がないことを示します。",
       "testHeading": "自分の目で確かめる",
       "testDescription": "このボタンは PatentLint のロゴを取得します。下のログで PatentLint がネットワーク活動をどのように検出するかご確認ください。",
       "testButton": "ロゴを取得",
@@ -52,7 +52,7 @@
     },
     "page": {
       "heroTitle": "特許原稿がデバイスの外に出ることはありません",
-      "heroSubtext": "PatentLint はブラウザ内で完全に動作します。サーバーなし、アップロードなし、クラウドなし。機密性の高い特許原稿は常にお使いのマシン上にとどまります。",
+      "heroSubtext": "PatentLint はブラウザ内で完全に動作します。サーバーなし、アップロードなし、クラウドなし。機密性の高い特許原稿は常にお使いのデバイス上にとどまります。",
       "tryIt": "試してみる →",
       "compareTitle": "PatentLint と他のツールの比較",
       "compareDisclaimer": "この比較は一般的なアーキテクチャパターンを反映しています。個々の製品は異なる場合があります。「Word アドインツール」と「クラウドベースツール」は一般的なカテゴリであり、特定の製品を指すものではありません。",
@@ -68,7 +68,7 @@
       "q3": { "question": "オフラインで使えますか？", "patentlint": "はい、初回読み込み後は可能です。", "addin": "ライセンス認証の方法によります。", "cloud": "いいえ。インターネットが必要です。" },
       "q4": { "question": "プライバシーの主張を検証できますか？", "patentlint": "はい。DevTools → Network を開くか、機内モードで確認できます。", "addin": "アドインの通信を監査するのは困難です。", "cloud": "いいえ。データは先方のサーバー上にあります。" },
       "q5": { "question": "どのプラットフォームに対応していますか？", "patentlint": "モダンブラウザが使えるすべてのデバイス。", "addin": "Windows + Microsoft Word のみ。", "cloud": "ブラウザベースですが、アップロードが必要です。" },
-      "q6": { "question": "費用はいくらですか？", "patentlint": "無料、課金不要、サブスクリプション不要、使用制限なし。", "addin": "通常、有料ライセンスが必要です。", "cloud": "通常、サブスクリプションが必要です。" }
+      "q6": { "question": "費用はいくらですか？", "patentlint": "無料、費用不要、サブスクリプション不要、使用制限なし。", "addin": "通常、有料ライセンスが必要です。", "cloud": "通常、サブスクリプションが必要です。" }
     },
     "tech": {
       "architectureTitle": "アーキテクチャ",
@@ -89,7 +89,7 @@
   "about": {
     "productTitle": "PatentLint とは？",
     "productDesc1": "PatentLint は無料の特許原稿品質チェックツールです。米国特許出願原稿をブラウザにドロップするだけで、即座にコンプライアンスレポートを取得できます。アップロード不要、アカウント不要、クラウド不要。",
-    "productDesc2": "MPEP（特許審査便覧）の作成ルールに基づいてチェックを行い、先行詞根拠の欠落や限定的な表現などの作成上の問題を検出し、請求項の従属関係をツリー表示で可視化します。",
+    "productDesc2": "MPEP（特許審査便覧）の作成ルールに基づいてチェックを行い、先行詞の根拠の欠落や限定的な表現などの作成上の問題を検出し、請求項の従属関係をツリー表示で可視化します。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center は出願フォーマットを検証します。PatentLint は原稿そのものをチェックします。",
     "uspto": {
@@ -166,7 +166,7 @@
     },
     "enterpriseContact": "エンタープライズ導入 →",
     "builderTitle": "背景",
-    "builderDesc1": "PatentLint は、数千件の特許原稿を審査し、同じフォーマットエラーや MPEP 違反を何年も手作業で発見し続けてきた特許エンジニアによって作られました。目標：煩雑な作業を自動化し、実務者が内容の検討に集中できるようにすること。",
+    "builderDesc1": "PatentLint は、数千件の特許原稿を確認し、同じフォーマットエラーや MPEP 違反を何年も手作業で発見し続けてきた特許エンジニアによって作られました。目標：煩雑な作業を自動化し、実務者が内容の検討に集中できるようにすること。",
     "builderDesc2": "分析エンジン全体は Python で記述され、WebAssembly にコンパイルされてブラウザ上で直接実行されます。サーバー不要、アップロード不要、ファイルがデバイスの外に出ることはありません。既存ツールは Windows 専用のインストールが必要か、ドキュメントをクラウドサーバーにアップロードする必要があります。PatentLint はそのどちらも不要です。",
     "builderSister": "姉妹プロジェクトの Agentic Patent Analyst は、LLM エージェントを使用して先行技術調査と請求項カバレッジ分析を行います。"
   },
@@ -175,8 +175,8 @@
     "claims": "請求項：{{list}}",
     "terms": "用語：{{list}}",
     "figures": "図面：{{list}}",
-    "firstGapParagraph": "最初のギャップは段落 {{position}}",
-    "firstGapClaim": "最初のギャップは請求項 {{position}}",
+    "firstGapParagraph": "最初の欠番は段落 {{position}}",
+    "firstGapClaim": "最初の欠番は請求項 {{position}}",
     "citations": "{{text}}",
     "rawText": "{{text}}",
     "claimsOverview": "独立項 {{independent}}、従属項 {{dependent}}、合計 {{total}}",
@@ -241,12 +241,12 @@
         "pass": "自己従属請求項はありません。"
       },
       "missingPeriod": {
-        "amend": "請求項に句点が欠落しています。",
-        "pass": "すべての請求項は句点で終わっています。"
+        "amend": "請求項にピリオドが欠落しています。",
+        "pass": "すべての請求項はピリオドで終わっています。"
       },
       "extraPeriod": {
-        "amend": "請求項に余分または誤配置の句点があります。",
-        "pass": "請求項に余分な句点はありません。"
+        "amend": "請求項に余分または誤配置のピリオドがあります。",
+        "pass": "請求項に余分なピリオドはありません。"
       },
       "whereinComma": {
         "amend": "「wherein」のコンマの使用が不正確です。",
@@ -276,8 +276,8 @@
         "pass": "要約書は単一段落で末尾も正常です。"
       },
       "impliedPhrases": {
-        "amend": "要約書に省略可能な表現（「disclosure」または「provided」）が含まれています。",
-        "pass": "要約書に省略可能な表現は見つかりませんでした。"
+        "amend": "要約書に暗示的な表現（「disclosure」または「provided」）が含まれています。",
+        "pass": "要約書に暗示的な表現は見つかりませんでした。"
       },
       "wordCount": {
         "amend": "要約書の語数が 50〜150 語の範囲外です。",
@@ -308,13 +308,13 @@
     "ready": "分析エンジンの準備完了",
     "offline_note": "初回読み込み後はオフラインで使用可能",
     "feature1_title": "アカウント不要。インストール不要。アップロード不要。",
-    "feature1_desc": "機密性の高い特許原稿はデバイスから出ることはありません。アップロードも一切なく、PatentLint はあなたの身元すら知りません。",
+    "feature1_desc": "機密性の高い特許原稿はデバイスから出ることはありません。アップロードも一切なく、PatentLint はお客様の身元すら知りません。",
     "feature2_title": "MPEP チェック＆請求項ツリー",
-    "feature2_desc": "限定的な表現、不明確な用語、先行詞根拠の欠落などを検出。請求項の従属関係をインタラクティブなツリーで表示します。",
+    "feature2_desc": "限定的な表現、不明確な用語、先行詞の根拠の欠落などを検出。請求項の従属関係をインタラクティブなツリーで表示します。",
     "feature3_title": "請求項ツリー表示",
     "feature3_desc": "インタラクティブな従属関係ツリーと Mermaid 図で、請求項の構造を一目で把握できます。",
     "feature4_title": "どこでも使える",
-    "feature4_desc": "Mac、Windows、Linux、iPad。ブラウザがあるどのデバイスでも利用可能。Word アドインは不要。English、繁體中文、简体中文、日本語の完全な UI。",
+    "feature4_desc": "Mac、Windows、Linux、iPad。ブラウザがあるどのデバイスでも利用可能。Word アドインは不要。English、繁體中文、简体中文、日本語の多言語対応の UI。",
     "feature5_title": "瞬時の分析",
     "feature5_desc": ".docx ファイルをドロップするだけで数秒で結果が得られます。PDF レポートのダウンロードもクラウド不要。"
   },
@@ -334,7 +334,7 @@
     "claimText": "請求項の内容",
     "independent": "独立項",
     "dependent": "従属項",
-    "antecedentBasis": "先行詞根拠の確認",
+    "antecedentBasis": "先行詞の根拠の確認",
     "antecedentTerm": "用語",
     "antecedentTerms": "未参照の用語",
     "specSupport": "明細書サポートの確認",
@@ -347,7 +347,7 @@
     "disclaimer": "PatentLint により生成。本レポートは法的助言を構成するものではありません。資格のある特許専門家による確認を推奨します。"
   },
   "checks": {
-    "preamble_cross_category_mismatch": "従属項と独立項のプリアンブルの種別が不一致です（カテゴリ間）。",
+    "preamble_cross_category_mismatch": "従属項と独立項のプリアンブルの種別が不一致です（物／方法のカテゴリ不一致）。",
     "preamble_cross_category_pass": "請求項のプリアンブルは整合しています。",
     "preamble_noun_mismatch": "従属項と独立項のプリアンブル名詞が異なります。",
     "preamble_indefinite_article": "従属項のプリアンブルに不定冠詞が使用されています（「The」を使用すべき）。",
