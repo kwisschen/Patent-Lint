@@ -10,6 +10,7 @@ from patentlint.analysis.specification import (
     has_sequence_listing_mismatch,
     check_required_sections,
 )
+from patentlint.models import AnalysisResult
 
 
 class TestValidEnding:
@@ -44,6 +45,50 @@ class TestParagraphSequentiality:
 
     def test_last_index(self):
         assert get_last_sequential_index([1, 2, 3, 5, 6]) == 3
+
+
+class TestParagraphSequentialCheck:
+    """Tests for the paragraph sequential check logic in AnalysisResult.to_report_data()."""
+
+    def _get_paragraph_check(self, result):
+        report = result.to_report_data()
+        return next(
+            (c for c in report.specification_checks
+             if c.message_key and c.message_key.startswith("check.spec.paragraphSequential")),
+            None,
+        )
+
+    def test_zero_paragraphs_patent_emits_amend(self):
+        result = AnalysisResult(paragraph_count=0, likely_patent=True)
+        check = self._get_paragraph_check(result)
+        assert check is not None
+        assert check.status == "amend"
+        assert check.message_key == "check.spec.paragraphSequential.missing"
+
+    def test_zero_paragraphs_non_patent_no_amend(self):
+        result = AnalysisResult(paragraph_count=0, likely_patent=False)
+        check = self._get_paragraph_check(result)
+        assert check is not None
+        assert check.status != "amend"
+
+    def test_sequential_paragraphs_pass(self):
+        result = AnalysisResult(
+            paragraph_count=5, paragraphs_sequential=True, likely_patent=True,
+        )
+        check = self._get_paragraph_check(result)
+        assert check is not None
+        assert check.status == "pass"
+        assert check.message_key == "check.spec.paragraphSequential.pass"
+
+    def test_non_sequential_paragraphs_amend(self):
+        result = AnalysisResult(
+            paragraph_count=5, paragraphs_sequential=False,
+            last_sequential_paragraph=3, likely_patent=True,
+        )
+        check = self._get_paragraph_check(result)
+        assert check is not None
+        assert check.status == "amend"
+        assert check.message_key == "check.spec.paragraphSequential.amend"
 
 
 class TestRestrictiveWording:

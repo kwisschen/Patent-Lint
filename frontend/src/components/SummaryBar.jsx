@@ -36,6 +36,7 @@ export default function SummaryBar({ data, animate = false }) {
   const { t } = useTranslation()
   const [ref, isInView] = useInView()
   const shouldAnimate = animate && isInView
+  const noParagraphs = data.paragraph_count === 0
   const abstractOutOfRange = data.abstract_word_count < 50 || data.abstract_word_count > 150
   const { method, apparatus } = getClaimCategorySplit(data.claim_trees)
 
@@ -51,7 +52,12 @@ export default function SummaryBar({ data, animate = false }) {
     <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
       <StatCard
         label={t('summary.specParagraphs')}
-        value={paragraphCount}
+        value={
+          <span className={noParagraphs ? 'text-[var(--amend-text)]' : ''}>
+            {paragraphCount}
+          </span>
+        }
+        subtitle={noParagraphs ? t('summary.noParagraphs') : null}
       />
       <Card>
         <CardContent className="p-4">

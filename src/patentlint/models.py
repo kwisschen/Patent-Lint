@@ -231,7 +231,13 @@ class AnalysisResult(BaseModel):
                 message_key="check.spec.restrictiveWording.pass",
             ))
 
-        if not self.paragraphs_sequential:
+        if self.paragraph_count == 0 and self.likely_patent:
+            spec_checks.append(CheckItem(
+                status="amend",
+                message="No paragraph numbering found in specification.",
+                message_key="check.spec.paragraphSequential.missing",
+            ))
+        elif not self.paragraphs_sequential:
             spec_checks.append(CheckItem(
                 status="amend",
                 message="Paragraph numbers are not sequential.",
