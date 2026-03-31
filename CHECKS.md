@@ -8,7 +8,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 |-------|-----------|----------|-------------|-------------|
 | Tracked changes | — | AMEND | `check.spec.trackedChanges.amend` | Document contains tracked changes (revisions) |
 | Restrictive wording | § 112(b) | VERIFY / PASS | `check.spec.restrictiveWording` | Restrictive wording in specification paragraphs |
-| Paragraph sequential | § 608.01(p) | AMEND / PASS | `check.spec.paragraphSequential` | Paragraph numbers are sequential |
+| Paragraph sequential | § 608.01(p) | AMEND / PASS | `check.spec.paragraphSequential` / `check.spec.paragraphSequential.missing` | Paragraph numbers are sequential; no paragraph numbering found (patent documents only) |
 | Paragraph ending | § 608.01(p) | AMEND / PASS | `check.spec.paragraphEnding` | Paragraphs have valid ending punctuation |
 | Sequence listing | § 2422 | AMEND / PASS | `check.spec.sequenceListing` | SEQ ID NO referenced but no sequence listing statement |
 | Cross-reference | § 608.01 | VERIFY / PASS | `check.spec.crossReference` | Cross-reference section cites related applications |
