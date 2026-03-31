@@ -1,6 +1,6 @@
 {
-  "header": { "title": "PatentLint", "subtitle": "Patent Draft Quality Checker" },
-  "dropzone": { "tagline": "Instantly check your specification against 33 USPTO drafting rules.", "title": "Drop your patent .docx to start checking", "subtitle": "or click to browse", "notice": "Currently supports U.S. patent specifications (.docx) only.", "reject": "Only .docx files are accepted", "rejectMultiple": "Please drop one file at a time.", "rejectMultipleType": "Please drop a single .docx file." },
+  "header": { "title": "PatentLint", "subtitle": "Patent Draft Analyzer" },
+  "dropzone": { "tagline": "Check your specification against 30+ USPTO drafting rules.", "title": "Drop your patent .docx to begin local analysis", "subtitle": "or click to browse", "notice": "Currently supports U.S. patent specifications (.docx) only.", "reject": "Only .docx files are accepted", "rejectMultiple": "Please drop one file at a time.", "rejectMultipleType": "Please drop a single .docx file." },
   "summary": { "specParagraphs": "Specification Paragraphs", "claims": "Claims", "independent": "independent", "dependent": "dependent", "figures": "Figures", "abstractWords": "Abstract Words", "claimCategories": "Claim Categories", "method": "method", "apparatus": "apparatus", "outsideRange": "Outside 50–150 range" },
   "section": { "specification": "Specification", "claims": "Claims", "drawings": "Brief Description of Drawings", "drawingsShort": "Drawings", "abstract": "Abstract" },
   "status": { "pass": "PASS", "verify": "VERIFY", "amend": "AMEND" },
@@ -25,8 +25,8 @@
   "security": {
     "airplaneDemoAlt": "Demo: analyzing a patent draft in airplane mode with no network connection",
     "badge": {
-      "headline": "No install. No account. No cloud upload.",
-      "description": "Your confidential file is analyzed right here on your device.",
+      "headline": "No account. No install. No upload.",
+      "description": "Your file never leaves your device.",
       "proveIt": "Prove it →"
     },
     "results": {
@@ -306,7 +306,7 @@
     "patentlint": "Loading PatentLint...",
     "ready": "Analysis engine loaded",
     "offline_note": "Works offline after first load",
-    "feature1_title": "No Install. No Account. No Cloud.",
+    "feature1_title": "No Account. No Install. No Upload.",
     "feature1_desc": "Your confidential patent drafts never leave your device. Nothing is uploaded, and PatentLint doesn't even know who you are.",
     "feature2_title": "MPEP Checks & Claim Tree",
     "feature2_desc": "Catches restrictive wording, indefinite terms, and antecedent basis gaps. Visualizes claim dependencies with an interactive tree.",
