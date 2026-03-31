@@ -1,6 +1,6 @@
 {
-  "header": { "title": "PatentLint", "subtitle": "專利稿件品質檢查工具" },
-  "dropzone": { "tagline": "即時檢查您的專利稿件是否符合 33 項 USPTO 撰稿規則。", "title": "拖放專利 .docx 開始檢查", "subtitle": "或點擊瀏覽檔案", "notice": "目前僅支援美國專利說明書（.docx）。", "reject": "僅接受 .docx 檔案", "rejectMultiple": "請一次拖放一個檔案。", "rejectMultipleType": "請拖放單一 .docx 檔案。" },
+  "header": { "title": "PatentLint", "subtitle": "專利稿件分析工具" },
+  "dropzone": { "tagline": "依據30多項USPTO撰稿規則檢查您的專利稿件。", "title": "拖放您的專利 .docx 以開始本機分析", "subtitle": "或點擊瀏覽檔案", "notice": "目前僅支援美國專利說明書（.docx）。", "reject": "僅接受 .docx 檔案", "rejectMultiple": "請一次拖放一個檔案。", "rejectMultipleType": "請拖放單一 .docx 檔案。" },
   "summary": { "specParagraphs": "說明書段落", "claims": "請求項", "independent": "獨立項", "dependent": "附屬項", "figures": "圖式", "abstractWords": "摘要字數", "claimCategories": "請求項類別", "method": "方法", "apparatus": "裝置", "outsideRange": "超出 50–150 字範圍" },
   "section": { "specification": "說明書", "claims": "申請專利範圍", "drawings": "圖式簡要說明", "drawingsShort": "圖式", "abstract": "摘要" },
   "status": { "pass": "通過", "verify": "確認", "amend": "修改" },
@@ -25,8 +25,8 @@
   "security": {
     "airplaneDemoAlt": "示範：在飛航模式下無網路連線分析專利稿件",
     "badge": {
-      "headline": "免安裝。免帳號。不上傳雲端。",
-      "description": "您的機密檔案在您的裝置上直接分析。",
+      "headline": "無需帳號。無需安裝。無需上傳。",
+      "description": "您的檔案不會離開您的裝置。",
       "proveIt": "來驗證 →"
     },
     "results": {
@@ -306,7 +306,7 @@
     "patentlint": "正在載入 PatentLint...",
     "ready": "分析引擎已就緒",
     "offline_note": "首次載入後可離線使用",
-    "feature1_title": "免安裝、免註冊、免上傳。",
+    "feature1_title": "無需帳號。無需安裝。無需上傳。",
     "feature1_desc": "您的機密專利稿件不會離開您的裝置。不會上傳任何內容，PatentLint 也不會知道您的身份。",
     "feature2_title": "MPEP 檢查與請求項樹狀圖",
     "feature2_desc": "偵測限制性用語、不明確術語及缺乏先行詞基礎等問題，並以互動式樹狀圖呈現請求項附屬關係。",
