@@ -48,7 +48,8 @@
       "testDescription": "此按钮会获取 PatentLint 标志。请观察下方记录，了解 PatentLint 如何检测网络活动。",
       "testButton": "获取标志",
       "logEmpty": "暂无请求",
-      "noActivity": "未检测到活动"
+      "noActivity": "未检测到活动",
+      "tryNow": "立即试试 →"
     },
     "page": {
       "heroTitle": "无服务器。无上传。无例外。",

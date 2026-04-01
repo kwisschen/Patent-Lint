@@ -48,7 +48,8 @@
       "testDescription": "This button fetches the PatentLint logo. Watch the log below to see how PatentLint detects network activity.",
       "testButton": "Fetch logo",
       "logEmpty": "No requests yet",
-      "noActivity": "No activity detected"
+      "noActivity": "No activity detected",
+      "tryNow": "Try it →"
     },
     "page": {
       "heroTitle": "No Server. No Upload. No Exceptions.",
