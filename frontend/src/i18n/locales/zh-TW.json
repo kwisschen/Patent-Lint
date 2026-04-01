@@ -21,7 +21,7 @@
   "cta": { "heading": "準備好檢查您的專利稿件了嗎？", "subtext": "拖放 .docx 檔案，即時取得分析結果。無需上傳，無需帳號。", "button": "分析稿件" },
   "antecedentBasis": { "title": "先行詞基礎檢視", "items": "個術語", "item": "個術語" },
   "specSupport": { "title": "說明書支持檢視", "items": "個術語", "item": "個術語" },
-  "triage": { "title": "優先處理摘要", "amend": "需要修改", "amendEmpty": "無需修改之項目。", "verify": "專家確認", "verifyEmpty": "無需確認之項目。", "pass": "通過", "items": "個項目", "item": "個項目" },
+  "triage": { "title": "優先處理摘要", "amend": "需要修改", "amendEmpty": "無需修改之項目。", "verify": "待專家確認", "verifyEmpty": "無需確認之項目。", "pass": "通過", "items": "個項目", "item": "個項目" },
   "security": {
     "airplaneDemoAlt": "示範：在飛航模式下無網路連線分析專利稿件",
     "badge": {
@@ -51,8 +51,8 @@
       "noActivity": "未偵測到活動"
     },
     "page": {
-      "heroTitle": "專利稿件絕不離開您的裝置",
-      "heroSubtext": "PatentLint 完全在您的瀏覽器內部執行，不經過伺服器、不上傳、不使用雲端。您的專利稿件機密始終都留在您的機器上。",
+      "heroTitle": "無伺服器。無上傳。無例外。",
+      "heroSubtext": "PatentLint 完全在您的瀏覽器中運作，專利稿件絕不會離開您的裝置。任何機密資訊始終保留在您的裝置上。",
       "tryIt": "自己試試看 →",
       "compareTitle": "PatentLint 與其他工具的比較",
       "compareDisclaimer": "本比較表反映一般架構模式。個別產品可能有所不同。「Word 增益集工具」與「雲端工具」為通用類別，並非指特定產品。",
@@ -66,7 +66,7 @@
       "q1": { "question": "我的檔案會離開我的裝置嗎？", "patentlint": "絕不。100% 在瀏覽器中執行。", "addin": "檔案留在本機，但增益集可能連線回報。", "cloud": "是，上傳至遠端伺服器。" },
       "q2": { "question": "需要帳號嗎？", "patentlint": "不需要。無需註冊、無需登入、無追蹤。", "addin": "通常需要授權或帳號。", "cloud": "是，需要帳號。" },
       "q3": { "question": "可以離線使用嗎？", "patentlint": "可以，首次載入後即可。", "addin": "取決於授權驗證方式。", "cloud": "不行，需要網路。" },
-      "q4": { "question": "能驗證隱私聲明嗎？", "patentlint": "可以。開啟 DevTools → Network，或開啟飛航模式。", "addin": "難以稽核增益集的網路流量。", "cloud": "不行，資料在他們的伺服器上。" },
+      "q4": { "question": "能驗證隱私聲明嗎？", "patentlint": "可以。開啟開發人員工具 → 網路，或開啟飛航模式。", "addin": "難以稽核增益集的網路流量。", "cloud": "不行，資料在他們的伺服器上。" },
       "q5": { "question": "支援哪些平台？", "patentlint": "任何支援現代瀏覽器的裝置。", "addin": "僅限 Windows + Microsoft Word。", "cloud": "瀏覽器，但需要上傳資料。" },
       "q6": { "question": "費用是多少？", "patentlint": "免費使用，無需付費、無需訂閱、無用量限制。", "addin": "通常需要付費授權。", "cloud": "通常需要訂閱。" }
     },
@@ -74,7 +74,7 @@
       "architectureTitle": "架構",
       "architecture": "PatentLint 透過 Pyodide 將 Python 分析引擎編譯為 WebAssembly，完全在瀏覽器的沙盒 JavaScript 環境中執行。文件分析不經過任何伺服器端處理。",
       "networkTitle": "網路活動",
-      "network": "初次頁面載入（載入分析引擎）之後，分析過程中不會發出任何網路請求。您可以在瀏覽器的 DevTools Network 分頁中驗證，或直接開啟飛航模式。",
+      "network": "初次頁面載入（載入分析引擎）之後，分析過程中不會發出任何網路請求。您可以在瀏覽器的 開發人員工具「網路」分頁中驗證，或直接開啟飛航模式。",
       "pdfTitle": "PDF 生成",
       "pdf": "PDF 報告完全在您的瀏覽器中使用 pdfmake 生成。您的文件內容絕不離開您的裝置，即使是生成報告也不例外。",
       "aiTitle": "AI / LLM 使用",

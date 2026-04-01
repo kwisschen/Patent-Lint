@@ -21,7 +21,7 @@
   "cta": { "heading": "Ready to check your draft?", "subtext": "Drop a .docx file and get instant results. No upload. No account.", "button": "Analyze a draft" },
   "antecedentBasis": { "title": "Antecedent Basis Review", "items": "terms", "item": "term" },
   "specSupport": { "title": "Specification Support Review", "items": "terms", "item": "term" },
-  "triage": { "title": "Priority Summary", "amend": "Action Required", "amendEmpty": "No issues requiring amendment.", "verify": "Expert Review", "verifyEmpty": "No items flagged for review.", "pass": "Passed", "items": "items", "item": "item" },
+  "triage": { "title": "Priority Summary", "amend": "Action Required", "amendEmpty": "No issues requiring amendment.", "verify": "Expert Review Needed", "verifyEmpty": "No items flagged for review.", "pass": "Passed", "items": "items", "item": "item" },
   "security": {
     "airplaneDemoAlt": "Demo: analyzing a patent draft in airplane mode with no network connection",
     "badge": {
@@ -51,8 +51,8 @@
       "noActivity": "No activity detected"
     },
     "page": {
-      "heroTitle": "Your Patent Draft Never Leaves Your Device",
-      "heroSubtext": "PatentLint runs entirely inside your browser — no server, no upload, no cloud. Your confidential specification stays on your machine, always.",
+      "heroTitle": "No Server. No Upload. No Exceptions.",
+      "heroSubtext": "PatentLint runs entirely inside your browser — your patent draft never leaves your device. Any confidential information stays on your machine, always.",
       "tryIt": "Try it yourself →",
       "compareTitle": "How Does PatentLint Compare?",
       "compareDisclaimer": "Comparison reflects general architecture patterns. Individual products may vary. \"Word Add-in Tools\" and \"Cloud-Based Tools\" are generic categories, not specific products.",
