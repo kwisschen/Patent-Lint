@@ -21,7 +21,7 @@
   "cta": { "heading": "准备好检查您的专利稿件了吗？", "subtext": "拖放 .docx 文件，即时获取分析结果。无需上传，无需账号。", "button": "分析稿件" },
   "antecedentBasis": { "title": "先行词基础检查", "items": "个术语", "item": "个术语" },
   "specSupport": { "title": "说明书支持检查", "items": "个术语", "item": "个术语" },
-  "triage": { "title": "优先处理摘要", "amend": "需要修改", "amendEmpty": "无需修改的项目。", "verify": "专家确认", "verifyEmpty": "无需确认的项目。", "pass": "通过", "items": "个项目", "item": "个项目" },
+  "triage": { "title": "优先处理摘要", "amend": "需要修改", "amendEmpty": "无需修改的项目。", "verify": "待专家确认", "verifyEmpty": "无需确认的项目。", "pass": "通过", "items": "个项目", "item": "个项目" },
   "security": {
     "airplaneDemoAlt": "演示：在飞行模式下无网络连接分析专利稿件",
     "badge": {
@@ -51,8 +51,8 @@
       "noActivity": "未检测到活动"
     },
     "page": {
-      "heroTitle": "专利文稿绝不离开您的设备",
-      "heroSubtext": "PatentLint 完全在您的浏览器内部运行，不经过服务器、不上传、不使用云端。您的专利稿件机密始终都留在您的机器上。",
+      "heroTitle": "无服务器。无上传。无例外。",
+      "heroSubtext": "PatentLint 完全在您的浏览器中运行，专利稿件绝不会离开您的设备。任何机密信息始终保留在您的设备上。",
       "tryIt": "自己试试看 →",
       "compareTitle": "PatentLint 与其他工具的比较",
       "compareDisclaimer": "本比较表反映一般架构模式。各产品可能有所不同。「Word 插件工具」与「云端工具」为通用类别，并非指特定产品。",
@@ -66,7 +66,7 @@
       "q1": { "question": "我的文件会离开我的设备吗？", "patentlint": "绝不。100% 在浏览器中运行。", "addin": "文件留在本地，但插件可能联网回传。", "cloud": "是，上传至远程服务器。" },
       "q2": { "question": "需要账号吗？", "patentlint": "不需要。无需注册、无需登录、无追踪。", "addin": "通常需要许可证或账号。", "cloud": "是，需要账号。" },
       "q3": { "question": "可以离线使用吗？", "patentlint": "可以，首次加载后即可。", "addin": "取决于许可证验证方式。", "cloud": "不行，需要网络。" },
-      "q4": { "question": "能验证隐私声明吗？", "patentlint": "可以。打开 DevTools → Network，或开启飞行模式。", "addin": "难以审计插件的网络流量。", "cloud": "不行，数据在他们的服务器上。" },
+      "q4": { "question": "能验证隐私声明吗？", "patentlint": "可以。打开开发者工具 → 网络，或开启飞行模式。", "addin": "难以审计插件的网络流量。", "cloud": "不行，数据在他们的服务器上。" },
       "q5": { "question": "支持哪些平台？", "patentlint": "任何支持现代浏览器的设备。", "addin": "仅限 Windows + Microsoft Word。", "cloud": "浏览器端，但需要上传资料。" },
       "q6": { "question": "费用是多少？", "patentlint": "免费使用，无需付费、无需订阅、无用量限制。", "addin": "通常需要付费许可。", "cloud": "通常需要订阅。" }
     },
@@ -74,7 +74,7 @@
       "architectureTitle": "架构",
       "architecture": "PatentLint 通过 Pyodide 将 Python 分析引擎编译为 WebAssembly，完全在浏览器的沙盒 JavaScript 环境中运行。文档分析不经过任何服务器端处理。",
       "networkTitle": "网络活动",
-      "network": "初次页面加载（加载分析引擎）之后，分析过程中不会发出任何网络请求。您可以在浏览器的 DevTools Network 标签页中验证，或直接开启飞行模式。",
+      "network": "初次页面加载（加载分析引擎）之后，分析过程中不会发出任何网络请求。您可以在浏览器的 开发者工具「网络」标签页中验证，或直接开启飞行模式。",
       "pdfTitle": "PDF 生成",
       "pdf": "PDF 报告完全在您的浏览器中使用 pdfmake 生成。您的文件内容绝不离开您的设备，即使是生成报告也不例外。",
       "aiTitle": "AI / LLM 使用",
