@@ -48,7 +48,8 @@
       "testDescription": "此按鈕會抓取 PatentLint 標誌。請觀察下方紀錄，了解 PatentLint 如何偵測網路活動。",
       "testButton": "抓取標誌",
       "logEmpty": "尚無請求",
-      "noActivity": "未偵測到活動"
+      "noActivity": "未偵測到活動",
+      "tryNow": "立即試試 →"
     },
     "page": {
       "heroTitle": "無伺服器。無上傳。無例外。",

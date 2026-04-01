@@ -2,6 +2,7 @@
 // Copyright (c) 2025 Christopher Chen
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { WifiOff, FileText, CheckCircle, Activity, Check } from 'lucide-react'
 import {
   Dialog,
@@ -52,6 +53,7 @@ function LogEntry({ entry, isNew }) {
 
 export default function ProveItModal({ open, onOpenChange }) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const [entries, setEntries] = useState([])
   const [testSent, setTestSent] = useState(false)
   const [networkActive, setNetworkActive] = useState(false)
@@ -170,10 +172,25 @@ export default function ProveItModal({ open, onOpenChange }) {
           {PANELS.map((panel, i) => {
             const Icon = panel.icon
             const visible = i < visiblePanels
+            const isDropCard = i === 1
+
+            const handleDropCardClick = () => {
+              onOpenChange(false)
+              navigate('/')
+            }
+
             return (
               <div
                 key={panel.labelKey}
-                className="flex items-start gap-3 rounded-lg border p-3 transition-all duration-300"
+                role={isDropCard ? 'button' : undefined}
+                tabIndex={isDropCard ? 0 : undefined}
+                onClick={isDropCard ? handleDropCardClick : undefined}
+                onKeyDown={isDropCard ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleDropCardClick() } } : undefined}
+                className={`flex items-start gap-3 rounded-lg border p-3 transition-all duration-300 ${
+                  isDropCard
+                    ? 'cursor-pointer border-blue-300 dark:border-blue-700 bg-blue-50/50 dark:bg-blue-950/30 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md hover:shadow-blue-500/10 hover:scale-[1.02] active:scale-[0.98]'
+                    : ''
+                }`}
                 style={{
                   opacity: visible ? 1 : 0,
                   transform: visible ? 'translateY(0) scale(1)' : 'translateY(8px) scale(0.95)',
@@ -184,6 +201,11 @@ export default function ProveItModal({ open, onOpenChange }) {
                 <div>
                   <p className="text-sm font-semibold">{t(panel.labelKey)}</p>
                   <p className="text-xs text-muted-foreground mt-0.5">{t(panel.textKey)}</p>
+                  {isDropCard && (
+                    <p className="text-xs font-medium text-blue-600 dark:text-blue-400 mt-1.5">
+                      {t('security.prove.tryNow')}
+                    </p>
+                  )}
                 </div>
               </div>
             )

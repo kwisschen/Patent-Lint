@@ -48,7 +48,8 @@
       "testDescription": "このボタンは PatentLint のロゴを取得します。下のログで PatentLint がネットワーク活動をどのように検出するかご確認ください。",
       "testButton": "ロゴを取得",
       "logEmpty": "リクエストはまだありません",
-      "noActivity": "ネットワーク活動は検出されませんでした"
+      "noActivity": "ネットワーク活動は検出されませんでした",
+      "tryNow": "今すぐ試す →"
     },
     "page": {
       "heroTitle": "サーバーなし。アップロードなし。例外なし。",
