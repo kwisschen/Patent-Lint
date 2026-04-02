@@ -191,7 +191,7 @@
   },
   "common": { "close": "關閉", "toggleTheme": "切換主題", "changeLanguage": "切換語言" },
   "consolidation": { "nounMismatchSummary": "前言名詞不一致：{{count}} 個附屬項與請求項 {{rootId}} 不同" },
-  "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
+  "lang": { "en": "English", "zh-CN": "简体中文", "zh-TW": "繁體中文", "ja": "日本語", "ko": "한국어" },
   "check": {
     "spec": {
       "restrictiveWording": {
@@ -315,7 +315,7 @@
     "feature3_title": "請求項樹狀圖",
     "feature3_desc": "互動式附屬關係樹狀圖和 Mermaid 圖表，一目了然地呈現請求項結構。",
     "feature4_title": "隨處可用",
-    "feature4_desc": "Mac、Windows、Linux、iPad，任何有瀏覽器的裝置皆可使用。無需 Word 增益集。完整介面支援 English、繁體中文、简体中文 及 日本語。",
+    "feature4_desc": "Mac、Windows、Linux、iPad，任何有瀏覽器的裝置皆可使用。無需 Word 增益集。完整介面支援 English、繁體中文、简体中文、日本語 及 한국어。",
     "feature5_title": "即時分析",
     "feature5_desc": "拖放 .docx 檔案即可在數秒內取得結果。下載 PDF 報告，無需雲端往返。"
   },

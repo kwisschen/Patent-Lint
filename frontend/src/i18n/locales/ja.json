@@ -191,7 +191,7 @@
   },
   "common": { "close": "閉じる", "toggleTheme": "テーマ切替", "changeLanguage": "言語切替" },
   "consolidation": { "nounMismatchSummary": "プリアンブル名詞の不一致：{{count}} 個の従属項が請求項 {{rootId}} と異なります" },
-  "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
+  "lang": { "en": "English", "zh-CN": "简体中文", "zh-TW": "繁體中文", "ja": "日本語", "ko": "한국어" },
   "check": {
     "spec": {
       "restrictiveWording": {
@@ -315,7 +315,7 @@
     "feature3_title": "請求項ツリー表示",
     "feature3_desc": "インタラクティブな従属関係ツリーと Mermaid 図で、請求項の構造を一目で把握できます。",
     "feature4_title": "どこでも使える",
-    "feature4_desc": "Mac、Windows、Linux、iPad。ブラウザがあるどのデバイスでも利用可能。Word アドインは不要。English、繁體中文、简体中文、日本語の多言語対応の UI。",
+    "feature4_desc": "Mac、Windows、Linux、iPad。ブラウザがあるどのデバイスでも利用可能。Word アドインは不要。English、繁體中文、简体中文、日本語、한국어の多言語対応の UI。",
     "feature5_title": "瞬時の分析",
     "feature5_desc": ".docx ファイルをドロップするだけで数秒で結果が得られます。PDF レポートのダウンロードもクラウド不要。"
   },
