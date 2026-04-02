@@ -243,7 +243,7 @@ def check_required_sections(full_text: str) -> list[CheckItem]:
                 message=f"Optional section not found: {name}. Include if applicable.",
                 message_key="checks.optional_section_missing",
                 details=name,
-                details_key="details.sectionName",
+                details_key="details.optionalSectionGuidance",
                 details_params={"name": name},
             ))
 

@@ -176,18 +176,41 @@
     "claims": "Claims: {{list}}",
     "terms": "Terms: {{list}}",
     "figures": "Figures: {{list}}",
-    "firstGapParagraph": "First gap at paragraph {{position}}",
-    "firstGapClaim": "First gap at claim {{position}}",
+    "firstGapParagraph": "First gap at paragraph {{position}}. Renumber to restore sequential order per MPEP § 608.01(p).",
+    "firstGapClaim": "First gap at claim {{position}}. Renumber claims sequentially per MPEP § 608.01(j).",
     "citations": "{{text}}",
     "rawText": "{{text}}",
     "claimsOverview": "{{independent}} independent, {{dependent}} dependent, {{total}} total",
     "figureCount": "{{count}} figure(s) found.",
-    "missingSections": "Missing: {{list}}",
+    "missingSections": "Missing: {{list}}. Add these sections before filing.",
     "sectionName": "{{name}}",
     "claimDependsOn": "Claim {{claim}} depends on claim {{parent}}",
-    "nounMismatch": "Dependent '{{dependent}}' vs independent '{{independent}}'",
+    "nounMismatch": "Dependent '{{dependent}}' vs independent '{{independent}}'. A dependent claim must be of the same statutory category as its parent (e.g., both apparatus or both method). Correct the preamble noun.",
     "seeSection112": "See § 112 Analysis below for per-claim detail.",
-    "specSupportUnsupported": "{{count}} claim term(s) not found in the specification."
+    "specSupportUnsupported": "{{count}} claim term(s) not found in the specification. Under § 112(a), each claim term should have written description support. Review the § 112 Analysis below for per-term details.",
+    "restrictiveWordingSpec": "Paragraphs: {{list}}. Terms like \"must,\" \"always,\" or \"invention\" may be treated as indefinite or limiting under § 2173.05(b). Review each flagged paragraph and consider whether the term unduly limits scope or introduces indefiniteness.",
+    "paragraphNumberingMissing": "Add sequential [0001]-style numbering per MPEP § 608.01(p).",
+    "paragraphEnding": "Paragraphs: {{list}}. Each specification paragraph must end with a period per MPEP § 608.01(p).",
+    "sequenceListingFix": "Add a \"Statement Regarding Sequence Listing\" section per 37 C.F.R. § 1.821–1.825.",
+    "crossReferenceCitations": "{{text}}. Verify serial numbers are correct and the priority chain is complete (continuations, CIPs, provisionals, divisionals).",
+    "priorArtCitations": "{{text}}. Verify patent/publication numbers are accurate. Characterizations of prior art may be treated as admissions during prosecution.",
+    "optionalSectionGuidance": "Include this section if applicable to your application.",
+    "restrictiveWordingClaims": "Claims: {{list}}. Terms like \"must,\" \"essential,\" or \"invention\" may trigger a § 112(b) indefiniteness rejection. Review each flagged claim and consider whether the term is necessary.",
+    "multipleDependentClaims": "Claims: {{list}}. Multiple-dependent claims incur additional fees and must not depend on other multiple-dependent claims (35 U.S.C. § 112(e)). Verify this is intentional.",
+    "selfDependentClaims": "Claims: {{list}}. A claim cannot depend on itself. Correct the dependency reference.",
+    "meansFunctionClaims": "Claims: {{list}}. Under § 112(f), claim scope is limited to the corresponding structure disclosed in the specification and equivalents. Verify that the specification describes sufficient structure for each means-plus-function limitation.",
+    "antecedentBasisTerms": "Terms: {{list}}. Each definite reference (\"the X\" or \"said X\") must have a prior indefinite introduction (\"a X\" or \"an X\"). Missing antecedent basis may result in a § 112(b) indefiniteness rejection.",
+    "preambleNounMismatch": "Claim {{claim}} depends on claim {{parent}}. The preamble nouns differ but may be acceptable if they refer to the same entity. Verify consistency.",
+    "preambleIndefiniteArticle": "Claim {{claim}} depends on claim {{parent}}. Dependent claims must use the definite article \"The\" to refer back to the independent claim entity, not \"A\" or \"An.\"",
+    "singleFigureFix": "Replace all instances of \"FIG. 1\" with \"The Figure\" or \"the drawing\" per MPEP § 608.02.",
+    "drawingsPriorArt": "Figures depicting prior art must be designated with the legend \"Prior Art\" per MPEP § 608.02(g). Verify each prior art figure is correctly labeled.",
+    "figuresSequentialFix": "Renumber figures in ascending order per MPEP § 608.02.",
+    "orphanedBriefFigures": "Figures: {{list}}. Either add a reference to these figures in the Detailed Description or remove them from the Brief Description.",
+    "orphanedDetailedFigures": "Figures: {{list}}. Either add a description for these figures in the Brief Description of Drawings or remove the reference from the Detailed Description.",
+    "restrictiveWordingAbstract": "{{text}}. The abstract should avoid legal phraseology (\"comprising,\" \"said,\" \"means\"), merit language (\"novel,\" \"innovative\"), and restrictive terms (\"must,\" \"essential\") per MPEP § 608.01(b). Rephrase flagged terms.",
+    "abstractStructureFix": "The abstract must be a single paragraph ending with a period, exclamation point, or question mark, and must appear as the last section of the specification per MPEP § 608.01(b).",
+    "abstractImpliedPhrasesFix": "Phrases like \"This disclosure provides...\" or \"A method is provided...\" are considered implied phraseology per MPEP § 608.01(b). Rewrite to describe the invention directly (e.g., \"A method that...\").",
+    "abstractWordCountFix": "The abstract must be between 50 and 150 words per MPEP § 608.01(b). Revise to meet this range."
   },
   "common": { "close": "Close", "toggleTheme": "Toggle theme", "changeLanguage": "Change language" },
   "consolidation": { "nounMismatchSummary": "Preamble noun mismatch: {{count}} dependent claim(s) differ from Claim {{rootId}}" },
@@ -195,7 +218,7 @@
   "check": {
     "spec": {
       "restrictiveWording": {
-        "verify": "Restrictive wording found in specification paragraphs.",
+        "verify": "Restrictive wording found in specification.",
         "pass": "No restrictive wording found in specification."
       },
       "paragraphSequential": {
@@ -212,11 +235,11 @@
         "pass": "No sequence listing mismatch."
       },
       "crossReference": {
-        "verify": "Cross-reference section cites related applications.",
+        "verify": "Cross-reference section cites related applications — verify completeness.",
         "pass": "No cross-reference citations found."
       },
       "priorArt": {
-        "verify": "Background section cites prior art.",
+        "verify": "Background section cites prior art — review characterizations.",
         "pass": "No prior art citations found in background."
       },
       "drawings": "Drawings overview.",
@@ -259,7 +282,7 @@
         "pass": "No means-plus-function language detected."
       },
       "antecedentBasis": {
-        "verify": "Missing antecedent basis detected.",
+        "verify": "Possible missing antecedent basis detected.",
         "pass": "No antecedent basis issues detected."
       },
       "missingTransition": "Claim {{claimNumber}} is missing a transitional phrase (e.g., 'comprising', 'consisting of')",
@@ -291,7 +314,7 @@
         "pass": "Single-figure patent correctly labeled."
       },
       "priorArt": {
-        "verify": "Prior art references found in drawings description.",
+        "verify": "Prior art references found in drawings description — verify figure labeling.",
         "pass": "No prior art references in drawings description."
       },
       "sequential": {
@@ -356,7 +379,7 @@
     "spec_support_pass": "All claim terms found in specification.",
     "required_sections_pass": "All required sections per MPEP § 608.01(a) are present.",
     "required_sections_missing": "Missing required sections per MPEP § 608.01(a).",
-    "optional_section_missing": "Optional section not found. Include if applicable.",
+    "optional_section_missing": "Optional section \"{{name}}\" not found.",
     "figure_xref_pass": "All figure references are consistent between Brief Description of Drawings and Detailed Description.",
     "figure_xref_orphaned_brief": "Figure(s) described in Brief Description of Drawings but not referenced in Detailed Description.",
     "figure_xref_orphaned_detailed": "Figure(s) referenced in Detailed Description but not described in Brief Description of Drawings."
@@ -377,6 +400,6 @@
     "extraPeriodDetails": "Claim {{claimNumber}} has periods in unexpected positions. A claim should contain only one period at the very end per MPEP § 608.01(m).",
     "whereinComma": "Claim {{claimNumber}}: review comma usage before 'wherein' clause.",
     "whereinCommaDetails": "Claim {{claimNumber}} may have incorrect comma placement around a 'wherein' clause. Review punctuation per MPEP § 608.01(m).",
-    "punctuationPass": "Claim punctuation is correct."
+    "punctuationPass": "All claims have correct punctuation."
   }
 }

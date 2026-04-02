@@ -221,7 +221,7 @@ class AnalysisResult(BaseModel):
                 message="Restrictive wording found in specification paragraphs.",
                 message_key="check.spec.restrictiveWording.verify",
                 details=f"Paragraphs: {self.improper_spec_paragraphs}",
-                details_key="details.paragraphs",
+                details_key="details.restrictiveWordingSpec",
                 details_params={"list": str(self.improper_spec_paragraphs)},
             ))
         else:
@@ -236,6 +236,7 @@ class AnalysisResult(BaseModel):
                 status="amend",
                 message="No paragraph numbering found in specification.",
                 message_key="check.spec.paragraphSequential.missing",
+                details_key="details.paragraphNumberingMissing",
             ))
         elif not self.paragraphs_sequential:
             spec_checks.append(CheckItem(
@@ -259,7 +260,7 @@ class AnalysisResult(BaseModel):
                 message="Paragraphs with invalid or missing ending punctuation.",
                 message_key="check.spec.paragraphEnding.amend",
                 details=f"Paragraphs: {self.missing_ending_paragraphs}",
-                details_key="details.paragraphs",
+                details_key="details.paragraphEnding",
                 details_params={"list": str(self.missing_ending_paragraphs)},
             ))
         else:
@@ -274,6 +275,7 @@ class AnalysisResult(BaseModel):
                 status="amend",
                 message="SEQ ID NO referenced but no sequence listing statement found.",
                 message_key="check.spec.sequenceListing.amend",
+                details_key="details.sequenceListingFix",
             ))
         else:
             spec_checks.append(CheckItem(
@@ -288,7 +290,7 @@ class AnalysisResult(BaseModel):
                 message="Cross-reference section cites related applications.",
                 message_key="check.spec.crossReference.verify",
                 details=self.cross_reference_citations,
-                details_key="details.citations",
+                details_key="details.crossReferenceCitations",
                 details_params={"text": self.cross_reference_citations},
             ))
         else:
@@ -304,7 +306,7 @@ class AnalysisResult(BaseModel):
                 message="Background section cites prior art.",
                 message_key="check.spec.priorArt.verify",
                 details=self.prior_art_citations,
-                details_key="details.citations",
+                details_key="details.priorArtCitations",
                 details_params={"text": self.prior_art_citations},
             ))
         else:
@@ -342,7 +344,7 @@ class AnalysisResult(BaseModel):
                 message="Restrictive or indefinite wording found in claims.",
                 message_key="check.claims.restrictiveWording.verify",
                 details=f"Claims: {self.improper_claims}",
-                details_key="details.claims",
+                details_key="details.restrictiveWordingClaims",
                 details_params={"list": str(self.improper_claims)},
             ))
         else:
@@ -374,7 +376,7 @@ class AnalysisResult(BaseModel):
                 message="Multiple-dependent claims found.",
                 message_key="check.claims.multipleDependent.amend",
                 details=f"Claims: {self.multiple_dependent_claims}",
-                details_key="details.claims",
+                details_key="details.multipleDependentClaims",
                 details_params={"list": str(self.multiple_dependent_claims)},
             ))
         else:
@@ -390,7 +392,7 @@ class AnalysisResult(BaseModel):
                 message="Self-dependent claims found.",
                 message_key="check.claims.selfDependent.amend",
                 details=f"Claims: {self.self_dependent_claims}",
-                details_key="details.claims",
+                details_key="details.selfDependentClaims",
                 details_params={"list": str(self.self_dependent_claims)},
             ))
         else:
@@ -410,7 +412,7 @@ class AnalysisResult(BaseModel):
                 message="Claims may invoke 35 U.S.C. § 112(f) means-plus-function.",
                 message_key="check.claims.meansFunction.verify",
                 details=f"Claims: {self.means_plus_function_claims}",
-                details_key="details.claims",
+                details_key="details.meansFunctionClaims",
                 details_params={"list": str(self.means_plus_function_claims)},
             ))
         else:
@@ -427,7 +429,7 @@ class AnalysisResult(BaseModel):
                 message="Possible missing antecedent basis found.",
                 message_key="check.claims.antecedentBasis.verify",
                 details=f"Terms: {', '.join(unique_terms)}",
-                details_key="details.terms",
+                details_key="details.antecedentBasisTerms",
                 details_params={"list": ", ".join(unique_terms)},
             ))
         else:
@@ -493,7 +495,7 @@ class AnalysisResult(BaseModel):
                 message="Restrictive or improper wording found in abstract.",
                 message_key="check.abstract.restrictiveWording.verify",
                 details=self.improper_abstract_phrases_formatted.strip(),
-                details_key="details.rawText",
+                details_key="details.restrictiveWordingAbstract",
                 details_params={"text": self.improper_abstract_phrases_formatted.strip()},
             ))
         else:
@@ -508,6 +510,7 @@ class AnalysisResult(BaseModel):
                 status="amend",
                 message="Abstract has extra paragraphs or invalid ending.",
                 message_key="check.abstract.structure.amend",
+                details_key="details.abstractStructureFix",
             ))
         else:
             abstract_checks.append(CheckItem(
@@ -521,6 +524,7 @@ class AnalysisResult(BaseModel):
                 status="amend",
                 message="Abstract contains implied phrases ('disclosure' or 'provided').",
                 message_key="check.abstract.impliedPhrases.amend",
+                details_key="details.abstractImpliedPhrasesFix",
             ))
         else:
             abstract_checks.append(CheckItem(
@@ -535,6 +539,7 @@ class AnalysisResult(BaseModel):
                 status="amend",
                 message=f"Abstract word count ({wc}) is outside the 50\u2013150 range.",
                 message_key="check.abstract.wordCount.amend",
+                details_key="details.abstractWordCountFix",
             ))
         else:
             abstract_checks.append(CheckItem(
@@ -551,6 +556,7 @@ class AnalysisResult(BaseModel):
                 status="amend",
                 message="Single-figure patent uses 'FIG. 1' instead of 'The Figure'.",
                 message_key="check.drawings.singleFigure.amend",
+                details_key="details.singleFigureFix",
             ))
         elif self.single_figure:
             drawings_checks.append(CheckItem(
@@ -564,6 +570,7 @@ class AnalysisResult(BaseModel):
                 status="verify",
                 message="Prior art references found in drawings description.",
                 message_key="check.drawings.priorArt.verify",
+                details_key="details.drawingsPriorArt",
             ))
         else:
             drawings_checks.append(CheckItem(
@@ -577,6 +584,7 @@ class AnalysisResult(BaseModel):
                 status="amend",
                 message="Figures are not in sequential order.",
                 message_key="check.drawings.sequential.amend",
+                details_key="details.figuresSequentialFix",
             ))
         else:
             drawings_checks.append(CheckItem(
