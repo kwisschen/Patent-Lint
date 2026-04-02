@@ -89,8 +89,8 @@
   },
   "about": {
     "productTitle": "What is PatentLint?",
-    "productDesc1": "PatentLint is a free patent specification checker. Drop a U.S. patent draft into your browser and get an instant compliance report — no upload, no account, no cloud.",
-    "productDesc2": "It checks drafting rules from the Manual of Patent Examining Procedure (MPEP), catches common issues like missing antecedent basis and restrictive wording, and visualizes your claim dependency tree.",
+    "productDesc1": "PatentLint is a free patent specification checker that catches issues before the examiner does. Drop a U.S. patent draft into your browser and get an instant compliance report — no upload, no account, no cloud.",
+    "productDesc2": "It checks drafting rules from the Manual of Patent Examining Procedure (MPEP), detects common issues like missing antecedent basis and restrictive wording, and visualizes your claim dependency tree.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center validates filing format. PatentLint checks the draft itself.",
     "uspto": {
