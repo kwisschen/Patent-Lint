@@ -176,18 +176,41 @@
     "claims": "청구항: {{list}}",
     "terms": "용어: {{list}}",
     "figures": "도면: {{list}}",
-    "firstGapParagraph": "첫 번째 누락: 단락 {{position}}",
-    "firstGapClaim": "첫 번째 누락: 청구항 {{position}}",
+    "firstGapParagraph": "첫 번째 누락: 단락 {{position}}. MPEP § 608.01(p)에 따라 순차적 순서를 복원하도록 재번호 부여하세요.",
+    "firstGapClaim": "첫 번째 누락: 청구항 {{position}}. MPEP § 608.01(j)에 따라 청구항을 순차적으로 재번호 부여하세요.",
     "citations": "{{text}}",
     "rawText": "{{text}}",
     "claimsOverview": "독립항 {{independent}}개, 종속항 {{dependent}}개, 총 {{total}}개",
     "figureCount": "도면 {{count}}개 발견.",
-    "missingSections": "누락: {{list}}",
+    "missingSections": "누락: {{list}}. 출원 전에 이 섹션들을 추가하세요.",
     "sectionName": "{{name}}",
     "claimDependsOn": "청구항 {{claim}}은(는) 청구항 {{parent}}에 종속",
-    "nounMismatch": "종속항 '{{dependent}}' vs 독립항 '{{independent}}'",
+    "nounMismatch": "종속항 '{{dependent}}' vs 독립항 '{{independent}}'. 종속항은 모항과 동일한 법정 범주(예: 둘 다 장치 또는 둘 다 방법)에 속해야 합니다. 전제부 명사를 수정하세요.",
     "seeSection112": "청구항별 세부 사항은 아래 § 112 분석을 참조하세요.",
-    "specSupportUnsupported": "명세서에서 찾을 수 없는 청구항 용어 {{count}}개."
+    "specSupportUnsupported": "명세서에서 찾을 수 없는 청구항 용어 {{count}}건. § 112(a)에 따라 각 청구항 용어는 기재 요건의 뒷받침이 필요합니다. 용어별 세부 사항은 아래 § 112 분석을 참조하세요.",
+    "restrictiveWordingSpec": "단락: {{list}}. \"must\", \"always\" 또는 \"invention\" 등의 용어는 § 2173.05(b)에 따라 불명확하거나 범위를 제한하는 것으로 취급될 수 있습니다. 각 표시된 단락을 검토하여 해당 용어가 부당하게 범위를 제한하거나 불명확성을 초래하는지 확인하세요.",
+    "paragraphNumberingMissing": "MPEP § 608.01(p)에 따라 [0001] 형식의 순차적 단락 번호를 추가하세요.",
+    "paragraphEnding": "단락: {{list}}. MPEP § 608.01(p)에 따라 명세서의 각 단락은 마침표로 끝나야 합니다.",
+    "sequenceListingFix": "37 C.F.R. § 1.821–1.825에 따라 \"Statement Regarding Sequence Listing\" 섹션을 추가하세요.",
+    "crossReferenceCitations": "{{text}}. 출원번호가 정확하고 우선권 체인(계속출원, CIP, 가출원, 분할출원)이 완전한지 확인하세요.",
+    "priorArtCitations": "{{text}}. 특허/공개번호가 정확한지 확인하세요. 선행 기술에 대한 기술(記述)은 심사 중 자인으로 취급될 수 있습니다.",
+    "optionalSectionGuidance": "출원에 해당하는 경우 이 섹션을 포함하세요.",
+    "restrictiveWordingClaims": "청구항: {{list}}. \"must\", \"essential\" 또는 \"invention\" 등의 용어는 § 112(b) 불명확성 거절을 유발할 수 있습니다. 각 표시된 청구항을 검토하여 해당 용어가 필요한지 확인하세요.",
+    "multipleDependentClaims": "청구항: {{list}}. 다중 종속항은 추가 수수료가 발생하며 다른 다중 종속항에 종속될 수 없습니다 (35 U.S.C. § 112(e)). 의도적인지 확인하세요.",
+    "selfDependentClaims": "청구항: {{list}}. 청구항은 자기 자신에 종속될 수 없습니다. 종속 관계 참조를 수정하세요.",
+    "meansFunctionClaims": "청구항: {{list}}. § 112(f)에 따라 청구항 범위는 명세서에 개시된 대응 구조 및 균등물로 한정됩니다. 각 기능식 한정에 대해 명세서가 충분한 구조를 기재하고 있는지 확인하세요.",
+    "antecedentBasisTerms": "용어: {{list}}. 각 한정적 참조(\"the X\" 또는 \"said X\")에는 선행하는 부정적 도입(\"a X\" 또는 \"an X\")이 필요합니다. 선행사 기초 누락은 § 112(b) 불명확성 거절로 이어질 수 있습니다.",
+    "preambleNounMismatch": "청구항 {{claim}}은(는) 청구항 {{parent}}에 종속됩니다. 전제부 명사가 다르지만 동일 실체를 지칭하는 경우 허용될 수 있습니다. 일관성을 확인하세요.",
+    "preambleIndefiniteArticle": "청구항 {{claim}}은(는) 청구항 {{parent}}에 종속됩니다. 종속항은 독립항 실체를 지칭할 때 정관사 \"The\"를 사용해야 하며, \"A\" 또는 \"An\"은 부적절합니다.",
+    "singleFigureFix": "MPEP § 608.02에 따라 모든 \"FIG. 1\"을 \"The Figure\" 또는 \"the drawing\"으로 변경하세요.",
+    "drawingsPriorArt": "선행 기술을 묘사하는 도면은 MPEP § 608.02(g)에 따라 \"Prior Art\" 범례를 표시해야 합니다. 각 선행 기술 도면이 올바르게 표기되었는지 확인하세요.",
+    "figuresSequentialFix": "MPEP § 608.02에 따라 도면을 오름차순으로 재번호 부여하세요.",
+    "orphanedBriefFigures": "도면: {{list}}. 발명의 상세한 설명에 이 도면에 대한 참조를 추가하거나, 도면의 간단한 설명에서 제거하세요.",
+    "orphanedDetailedFigures": "도면: {{list}}. 도면의 간단한 설명에 이 도면에 대한 설명을 추가하거나, 발명의 상세한 설명에서 참조를 제거하세요.",
+    "restrictiveWordingAbstract": "{{text}}. MPEP § 608.01(b)에 따라 요약서에는 법률 용어(\"comprising\", \"said\", \"means\"), 평가적 용어(\"novel\", \"innovative\") 및 제한적 용어(\"must\", \"essential\")를 사용하지 않아야 합니다. 표시된 용어를 수정하세요.",
+    "abstractStructureFix": "MPEP § 608.01(b)에 따라 요약서는 마침표, 느낌표 또는 물음표로 끝나는 단일 단락이어야 하며, 특허 명세서의 마지막 섹션으로 배치되어야 합니다.",
+    "abstractImpliedPhrasesFix": "\"This disclosure provides...\" 또는 \"A method is provided...\" 등의 문구는 MPEP § 608.01(b)에 따른 암시적 문구에 해당합니다. 발명을 직접 기술하도록 다시 작성하세요(예: \"A method that...\").",
+    "abstractWordCountFix": "MPEP § 608.01(b)에 따라 요약서는 50~150단어 범위 이내여야 합니다. 이 범위를 충족하도록 수정하세요."
   },
   "common": { "close": "닫기", "toggleTheme": "테마 전환", "changeLanguage": "언어 변경" },
   "consolidation": { "nounMismatchSummary": "전제부 명사 불일치: 종속항 {{count}}개가 청구항 {{rootId}}과(와) 다름" },
@@ -195,7 +218,7 @@
   "check": {
     "spec": {
       "restrictiveWording": {
-        "verify": "명세서 단락에서 제한적 표현이 발견되었습니다.",
+        "verify": "명세서에서 제한적 표현이 발견되었습니다.",
         "pass": "명세서에서 제한적 표현이 발견되지 않았습니다."
       },
       "paragraphSequential": {
@@ -212,11 +235,11 @@
         "pass": "서열 목록 불일치가 없습니다."
       },
       "crossReference": {
-        "verify": "상호 참조 섹션이 관련 출원을 인용하고 있습니다.",
+        "verify": "상호 참조 섹션이 관련 출원을 인용하고 있습니다. 완전성을 확인하세요.",
         "pass": "상호 참조 인용이 발견되지 않았습니다."
       },
       "priorArt": {
-        "verify": "배경 기술 섹션이 선행 기술을 인용하고 있습니다.",
+        "verify": "배경 기술 섹션이 선행 기술을 인용하고 있습니다. 기술 내용을 검토하세요.",
         "pass": "배경 기술에서 선행 기술 인용이 발견되지 않았습니다."
       },
       "drawings": "도면 개요.",
@@ -259,7 +282,7 @@
         "pass": "기능식 청구항 표현이 검출되지 않았습니다."
       },
       "antecedentBasis": {
-        "verify": "선행사 기초 누락이 검출되었습니다.",
+        "verify": "선행사 기초 누락 가능성이 검출되었습니다.",
         "pass": "선행사 기초 문제가 검출되지 않았습니다."
       },
       "missingTransition": "청구항 {{claimNumber}}에 전환어(예: 'comprising', 'consisting of')가 누락되었습니다",
@@ -291,7 +314,7 @@
         "pass": "단일 도면 특허의 표기가 올바릅니다."
       },
       "priorArt": {
-        "verify": "도면 설명에서 선행 기술 참조가 발견되었습니다.",
+        "verify": "도면 설명에서 선행 기술 참조가 발견되었습니다. 도면 표기를 확인하세요.",
         "pass": "도면 설명에서 선행 기술 참조가 없습니다."
       },
       "sequential": {
@@ -356,7 +379,7 @@
     "spec_support_pass": "모든 청구항 용어가 명세서에서 발견되었습니다.",
     "required_sections_pass": "MPEP § 608.01(a)에 따른 모든 필수 섹션이 존재합니다.",
     "required_sections_missing": "MPEP § 608.01(a)에 따른 필수 섹션이 누락되었습니다.",
-    "optional_section_missing": "선택 섹션이 발견되지 않았습니다. 해당하는 경우 포함하세요.",
+    "optional_section_missing": "선택 섹션 \"{{name}}\"이(가) 발견되지 않았습니다.",
     "figure_xref_pass": "도면의 간단한 설명과 발명의 상세한 설명 간 모든 도면 참조가 일관적입니다.",
     "figure_xref_orphaned_brief": "도면의 간단한 설명에 기재되었으나 발명의 상세한 설명에서 참조되지 않는 도면이 있습니다.",
     "figure_xref_orphaned_detailed": "발명의 상세한 설명에서 참조되었으나 도면의 간단한 설명에 기재되지 않은 도면이 있습니다."
@@ -377,6 +400,6 @@
     "extraPeriodDetails": "청구항 {{claimNumber}}에 예상치 않은 위치에 마침표가 있습니다. MPEP § 608.01(m)에 따라 청구항에는 맨 끝에 마침표가 하나만 있어야 합니다.",
     "whereinComma": "청구항 {{claimNumber}}: 'wherein' 절 앞의 쉼표 사용을 검토하세요.",
     "whereinCommaDetails": "청구항 {{claimNumber}}의 'wherein' 절 주변에 쉼표가 잘못 배치되었을 수 있습니다. MPEP § 608.01(m)에 따라 부호를 검토하세요.",
-    "punctuationPass": "청구항 부호가 올바릅니다."
+    "punctuationPass": "모든 청구항의 부호가 올바릅니다."
   }
 }

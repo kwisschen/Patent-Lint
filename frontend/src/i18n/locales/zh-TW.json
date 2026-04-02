@@ -176,18 +176,41 @@
     "claims": "請求項：{{list}}",
     "terms": "術語：{{list}}",
     "figures": "圖式：{{list}}",
-    "firstGapParagraph": "首個間隔位於第 {{position}} 段",
-    "firstGapClaim": "首個間隔位於第 {{position}} 項",
+    "firstGapParagraph": "首個間隔位於第 {{position}} 段。請依 MPEP § 608.01(p) 重新編號以恢復連續順序。",
+    "firstGapClaim": "首個間隔位於第 {{position}} 項。請依 MPEP § 608.01(j) 將請求項重新編號為連續。",
     "citations": "{{text}}",
     "rawText": "{{text}}",
     "claimsOverview": "{{independent}} 個獨立項、{{dependent}} 個附屬項，共 {{total}} 項",
     "figureCount": "發現 {{count}} 張圖式。",
-    "missingSections": "缺少：{{list}}",
+    "missingSections": "缺少：{{list}}。請在送件前加入這些章節。",
     "sectionName": "{{name}}",
     "claimDependsOn": "請求項 {{claim}} 附屬於請求項 {{parent}}",
-    "nounMismatch": "附屬項「{{dependent}}」與獨立項「{{independent}}」不一致",
+    "nounMismatch": "附屬項「{{dependent}}」與獨立項「{{independent}}」不一致。附屬項須與母項屬於相同法定類別（例如同為裝置或同為方法）。請修正前言名詞。",
     "seeSection112": "詳見下方 § 112 分析。",
-    "specSupportUnsupported": "{{count}} 個請求項術語未在說明書中出現。"
+    "specSupportUnsupported": "{{count}} 個請求項術語未在說明書中出現。依 § 112(a)，各請求項術語應有書面描述支持。請參閱下方 § 112 分析以查看逐項詳情。",
+    "restrictiveWordingSpec": "段落：{{list}}。「must」、「always」或「invention」等用語可能依 § 2173.05(b) 被視為不明確或限制範圍。請檢視各標記段落，考量該用語是否不當限縮範圍或造成不明確。",
+    "paragraphNumberingMissing": "請依 MPEP § 608.01(p) 新增 [0001] 格式的連續段落編號。",
+    "paragraphEnding": "段落：{{list}}。說明書各段落須依 MPEP § 608.01(p) 以句號結尾。",
+    "sequenceListingFix": "請依 37 C.F.R. § 1.821–1.825 新增「Statement Regarding Sequence Listing」章節。",
+    "crossReferenceCitations": "{{text}}。請確認序號正確，且優先權鏈完整（延續案、CIP、臨時案、分割案）。",
+    "priorArtCitations": "{{text}}。請確認專利／公開號碼正確。對先前技術的描述可能在審查中被視為自認。",
+    "optionalSectionGuidance": "如適用於您的申請案，請加入此章節。",
+    "restrictiveWordingClaims": "請求項：{{list}}。「must」、「essential」或「invention」等用語可能觸發 § 112(b) 不明確核駁。請檢視各標記請求項，考量該用語是否必要。",
+    "multipleDependentClaims": "請求項：{{list}}。多項附屬請求項會產生額外費用，且不得附屬於其他多項附屬請求項（35 U.S.C. § 112(e)）。請確認此為有意為之。",
+    "selfDependentClaims": "請求項：{{list}}。請求項不得自我依附。請修正附屬關係引用。",
+    "meansFunctionClaims": "請求項：{{list}}。依 § 112(f)，請求項範圍限於說明書所揭露的對應結構及等效物。請確認說明書就各手段功能限定揭露了充分的結構。",
+    "antecedentBasisTerms": "術語：{{list}}。每個確定引用（「the X」或「said X」）須有先前不定引用（「a X」或「an X」）。缺乏先行詞基礎可能導致 § 112(b) 不明確核駁。",
+    "preambleNounMismatch": "請求項 {{claim}} 附屬於請求項 {{parent}}。前言名詞不同，但若指涉同一實體則可能無誤。請確認一致性。",
+    "preambleIndefiniteArticle": "請求項 {{claim}} 附屬於請求項 {{parent}}。附屬項須使用定冠詞「The」引用獨立項實體，而非「A」或「An」。",
+    "singleFigureFix": "請依 MPEP § 608.02 將所有「FIG. 1」改為「The Figure」或「the drawing」。",
+    "drawingsPriorArt": "描繪先前技術的圖式須依 MPEP § 608.02(g) 標示「Prior Art」圖例。請確認各先前技術圖式已正確標記。",
+    "figuresSequentialFix": "請依 MPEP § 608.02 將圖式重新編號為遞增順序。",
+    "orphanedBriefFigures": "圖式：{{list}}。請在實施方式中新增對這些圖式的引用，或從圖式簡要說明中移除。",
+    "orphanedDetailedFigures": "圖式：{{list}}。請在圖式簡要說明中新增對這些圖式的描述，或從實施方式中移除引用。",
+    "restrictiveWordingAbstract": "{{text}}。摘要應避免法律用語（「comprising」、「said」、「means」）、評價性用語（「novel」、「innovative」）及限制性用語（「must」、「essential」），依 MPEP § 608.01(b)。請修改標記用語。",
+    "abstractStructureFix": "摘要須為單一段落，以句號、驚嘆號或問號結尾，且須作為專利稿件最後一章，依 MPEP § 608.01(b)。",
+    "abstractImpliedPhrasesFix": "「This disclosure provides...」或「A method is provided...」等用語依 MPEP § 608.01(b) 屬於隱含用語。請改為直接描述發明（例如「A method that...」）。",
+    "abstractWordCountFix": "摘要須介於 50 至 150 字之間，依 MPEP § 608.01(b)。請修改至符合此範圍。"
   },
   "common": { "close": "關閉", "toggleTheme": "切換主題", "changeLanguage": "切換語言" },
   "consolidation": { "nounMismatchSummary": "前言名詞不一致：{{count}} 個附屬項與請求項 {{rootId}} 不同" },
@@ -212,11 +235,11 @@
         "pass": "無序列表不一致。"
       },
       "crossReference": {
-        "verify": "交互參照引用了相關申請案。",
+        "verify": "交互參照引用了相關申請案，請確認完整性。",
         "pass": "未發現交互參照引用。"
       },
       "priorArt": {
-        "verify": "先前技術中引用了先前專利。",
+        "verify": "先前技術中引用了先前專利，請檢視相關描述。",
         "pass": "先前技術中未引用先前專利。"
       },
       "drawings": "圖式概覽。",
@@ -259,7 +282,7 @@
         "pass": "未偵測到手段功能用語。"
       },
       "antecedentBasis": {
-        "verify": "偵測到缺少先行詞基礎（antecedent basis）。",
+        "verify": "偵測到可能缺少先行詞基礎（antecedent basis）。",
         "pass": "未偵測到先行詞基礎問題。"
       },
       "missingTransition": "請求項 {{claimNumber}} 缺少過渡用語（例如 'comprising'、'consisting of'）",
@@ -291,7 +314,7 @@
         "pass": "單一圖式標記正確。"
       },
       "priorArt": {
-        "verify": "圖式說明中發現先前技術引用。",
+        "verify": "圖式說明中發現先前技術引用，請確認圖式標記。",
         "pass": "圖式說明中未發現先前技術引用。"
       },
       "sequential": {
@@ -356,7 +379,7 @@
     "spec_support_pass": "所有請求項術語均在說明書中找到。",
     "required_sections_pass": "符合 MPEP § 608.01(a) 之所有必要章節均已存在。",
     "required_sections_missing": "缺少 MPEP § 608.01(a) 規定之必要章節。",
-    "optional_section_missing": "未找到選擇性章節。如適用，請加入。",
+    "optional_section_missing": "選擇性章節「{{name}}」未找到。",
     "figure_xref_pass": "圖式簡要說明與實施方式之間的圖式引用一致。",
     "figure_xref_orphaned_brief": "圖式在圖式簡要說明中描述但未在實施方式中引用。",
     "figure_xref_orphaned_detailed": "圖式在實施方式中引用但未在圖式簡要說明中描述。"
@@ -377,6 +400,6 @@
     "extraPeriodDetails": "請求項 {{claimNumber}} 在非預期位置出現句號。依據 MPEP § 608.01(m)，請求項僅應在末尾包含一個句號。",
     "whereinComma": "請求項 {{claimNumber}}：請檢查 'wherein' 子句前的逗號用法。",
     "whereinCommaDetails": "請求項 {{claimNumber}} 的 'wherein' 子句前後逗號使用可能不正確。請依據 MPEP § 608.01(m) 檢查標點符號。",
-    "punctuationPass": "請求項標點符號正確。"
+    "punctuationPass": "所有請求項標點符號正確。"
   }
 }
