@@ -176,18 +176,41 @@
     "claims": "請求項：{{list}}",
     "terms": "用語：{{list}}",
     "figures": "図面：{{list}}",
-    "firstGapParagraph": "最初の欠番は段落 {{position}}",
-    "firstGapClaim": "最初の欠番は請求項 {{position}}",
+    "firstGapParagraph": "最初の欠番は段落 {{position}}。MPEP § 608.01(p) に従い、連続順序を復元するよう再番号付けしてください。",
+    "firstGapClaim": "最初の欠番は請求項 {{position}}。MPEP § 608.01(j) に従い、請求項を連続的に再番号付けしてください。",
     "citations": "{{text}}",
     "rawText": "{{text}}",
     "claimsOverview": "独立項 {{independent}}、従属項 {{dependent}}、合計 {{total}}",
     "figureCount": "{{count}} 個の図面が見つかりました。",
-    "missingSections": "不足：{{list}}",
+    "missingSections": "不足：{{list}}。出願前にこれらのセクションを追加してください。",
     "sectionName": "{{name}}",
     "claimDependsOn": "請求項 {{claim}} は請求項 {{parent}} に従属",
-    "nounMismatch": "従属項「{{dependent}}」と独立項「{{independent}}」が不一致",
+    "nounMismatch": "従属項「{{dependent}}」と独立項「{{independent}}」が不一致。従属請求項は親請求項と同じ法定カテゴリ（例：共に装置または共に方法）でなければなりません。プリアンブルの名詞を修正してください。",
     "seeSection112": "下記の § 112 分析を参照。",
-    "specSupportUnsupported": "{{count}} 件の請求項用語が明細書に見つかりませんでした。"
+    "specSupportUnsupported": "{{count}} 件の請求項用語が明細書に見つかりませんでした。§ 112(a) に基づき、各請求項用語には記載要件のサポートが必要です。用語ごとの詳細は下記の § 112 分析を参照してください。",
+    "restrictiveWordingSpec": "段落：{{list}}。\"must\"、\"always\"、\"invention\" などの用語は § 2173.05(b) に基づき、不明確または範囲を制限するものとして扱われる可能性があります。各フラグ付き段落を確認し、その用語が過度に範囲を制限するか不明確性を生じさせるか検討してください。",
+    "paragraphNumberingMissing": "MPEP § 608.01(p) に従い、[0001] 形式の連続した段落番号を追加してください。",
+    "paragraphEnding": "段落：{{list}}。MPEP § 608.01(p) に従い、明細書の各段落はピリオドで終了する必要があります。",
+    "sequenceListingFix": "37 C.F.R. § 1.821–1.825 に従い、\"Statement Regarding Sequence Listing\" セクションを追加してください。",
+    "crossReferenceCitations": "{{text}}。出願番号が正確であり、優先権チェーン（継続出願、CIP、仮出願、分割出願）が完全であることを確認してください。",
+    "priorArtCitations": "{{text}}。特許/公開番号が正確であることを確認してください。先行技術の特性評価は審査中に自認として扱われる可能性があります。",
+    "optionalSectionGuidance": "出願に該当する場合はこのセクションを追加してください。",
+    "restrictiveWordingClaims": "請求項：{{list}}。\"must\"、\"essential\"、\"invention\" などの用語は § 112(b) の不明確拒絶を引き起こす可能性があります。各フラグ付き請求項を確認し、その用語が必要か検討してください。",
+    "multipleDependentClaims": "請求項：{{list}}。多数項従属請求項は追加手数料が発生し、他の多数項従属請求項に従属することはできません（35 U.S.C. § 112(e)）。意図的であることを確認してください。",
+    "selfDependentClaims": "請求項：{{list}}。請求項は自身に従属できません。従属関係の参照を修正してください。",
+    "meansFunctionClaims": "請求項：{{list}}。§ 112(f) に基づき、請求項の範囲は明細書に開示された対応する構造およびその均等物に限定されます。各ミーンズ・プラス・ファンクション限定について、明細書が十分な構造を記載していることを確認してください。",
+    "antecedentBasisTerms": "用語：{{list}}。各確定的参照（\"the X\" または \"said X\"）には、先行する不定的導入（\"a X\" または \"an X\"）が必要です。先行詞の根拠の欠落は § 112(b) の不明確拒絶につながる可能性があります。",
+    "preambleNounMismatch": "請求項 {{claim}} は請求項 {{parent}} に従属しています。プリアンブルの名詞は異なりますが、同一の実体を指す場合は許容される可能性があります。整合性を確認してください。",
+    "preambleIndefiniteArticle": "請求項 {{claim}} は請求項 {{parent}} に従属しています。従属項は独立項の実体を指す際に定冠詞 \"The\" を使用する必要があり、\"A\" または \"An\" は不適切です。",
+    "singleFigureFix": "MPEP § 608.02 に従い、すべての \"FIG. 1\" を \"The Figure\" または \"the drawing\" に置換してください。",
+    "drawingsPriorArt": "先行技術を描いた図面は MPEP § 608.02(g) に従い \"Prior Art\" の凡例を付す必要があります。各先行技術図面が正しく表記されていることを確認してください。",
+    "figuresSequentialFix": "MPEP § 608.02 に従い、図面を昇順に再番号付けしてください。",
+    "orphanedBriefFigures": "図面：{{list}}。発明を実施するための形態でこれらの図面への参照を追加するか、図面の簡単な説明から削除してください。",
+    "orphanedDetailedFigures": "図面：{{list}}。図面の簡単な説明でこれらの図面の説明を追加するか、発明を実施するための形態から参照を削除してください。",
+    "restrictiveWordingAbstract": "{{text}}。MPEP § 608.01(b) に従い、要約書では法律用語（\"comprising\"、\"said\"、\"means\"）、評価的用語（\"novel\"、\"innovative\"）、限定的用語（\"must\"、\"essential\"）を避けるべきです。フラグ付き用語を修正してください。",
+    "abstractStructureFix": "MPEP § 608.01(b) に従い、要約書はピリオド、感嘆符、または疑問符で終わる単一段落であり、特許明細書の最後のセクションとして配置される必要があります。",
+    "abstractImpliedPhrasesFix": "\"This disclosure provides...\" や \"A method is provided...\" などの表現は MPEP § 608.01(b) に基づく暗示的表現に該当します。発明を直接記述するように書き換えてください（例：\"A method that...\"）。",
+    "abstractWordCountFix": "MPEP § 608.01(b) に従い、要約書は 50 語から 150 語の範囲内である必要があります。この範囲を満たすよう修正してください。"
   },
   "common": { "close": "閉じる", "toggleTheme": "テーマ切替", "changeLanguage": "言語切替" },
   "consolidation": { "nounMismatchSummary": "プリアンブル名詞の不一致：{{count}} 個の従属項が請求項 {{rootId}} と異なります" },
@@ -212,11 +235,11 @@
         "pass": "配列表の不一致はありません。"
       },
       "crossReference": {
-        "verify": "相互参照に関連出願が記載されています。",
+        "verify": "相互参照に関連出願が記載されています。完全性を確認してください。",
         "pass": "相互参照の引用は見つかりませんでした。"
       },
       "priorArt": {
-        "verify": "背景技術に先行技術特許が引用されています。",
+        "verify": "背景技術に先行技術特許が引用されています。記述内容を確認してください。",
         "pass": "背景技術に先行技術の引用はありません。"
       },
       "drawings": "図面の概要。",
@@ -259,7 +282,7 @@
         "pass": "ミーンズ・プラス・ファンクション用語は検出されませんでした。"
       },
       "antecedentBasis": {
-        "verify": "先行詞の根拠（antecedent basis）の不足が検出されました。",
+        "verify": "先行詞の根拠（antecedent basis）の不足の可能性が検出されました。",
         "pass": "先行詞の根拠の問題は検出されませんでした。"
       },
       "missingTransition": "請求項 {{claimNumber}} にトランジションフレーズがありません（例：'comprising'、'consisting of'）",
@@ -291,7 +314,7 @@
         "pass": "単一図面の表記は正確です。"
       },
       "priorArt": {
-        "verify": "図面の説明に先行技術の引用が含まれています。",
+        "verify": "図面の説明に先行技術の引用が含まれています。図面の表記を確認してください。",
         "pass": "図面の説明に先行技術の引用はありません。"
       },
       "sequential": {
@@ -356,7 +379,7 @@
     "spec_support_pass": "すべての請求項の用語が明細書に見つかりました。",
     "required_sections_pass": "MPEP § 608.01(a) に基づくすべての必須セクションが存在します。",
     "required_sections_missing": "MPEP § 608.01(a) に基づく必須セクションが不足しています。",
-    "optional_section_missing": "任意セクションが見つかりません。該当する場合は追加してください。",
+    "optional_section_missing": "任意セクション「{{name}}」が見つかりません。",
     "figure_xref_pass": "図面の簡単な説明と発明を実施するための形態の間の図面参照が整合しています。",
     "figure_xref_orphaned_brief": "図面の簡単な説明に記載されているが発明を実施するための形態で参照されていない図面があります。",
     "figure_xref_orphaned_detailed": "発明を実施するための形態で参照されているが図面の簡単な説明に記載されていない図面があります。"
@@ -377,6 +400,6 @@
     "extraPeriodDetails": "請求項 {{claimNumber}} の予期しない位置にピリオドがあります。MPEP § 608.01(m) に基づき、請求項のピリオドは末尾に一つだけ配置すべきです。",
     "whereinComma": "請求項 {{claimNumber}}：'wherein' 節の前のコンマの使用を確認してください。",
     "whereinCommaDetails": "請求項 {{claimNumber}} の 'wherein' 節前後のコンマの使用が正しくない可能性があります。MPEP § 608.01(m) に基づき句読点を確認してください。",
-    "punctuationPass": "請求項の句読点は正確です。"
+    "punctuationPass": "すべての請求項の句読点は正確です。"
   }
 }
