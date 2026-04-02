@@ -356,7 +356,7 @@ def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
                 message=f"Claim {claim.id}: indefinite article '{article}' in dependent claim preamble (should be 'The').",
                 message_key="checks.preamble_indefinite_article",
                 details=f"Claim {claim.id} depends on claim {parent_claim_num}",
-                details_key="details.claimDependsOn",
+                details_key="details.preambleIndefiniteArticle",
                 details_params={"claim": str(claim.id), "parent": str(parent_claim_num)},
             ))
             has_issue = True
@@ -382,7 +382,7 @@ def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
                 message=f"Claim {claim.id}: preamble noun '{dep_noun_raw}' differs from independent claim '{root_noun}'.",
                 message_key="checks.preamble_noun_mismatch",
                 details=f"Claim {claim.id} depends on claim {root.id}",
-                details_key="details.claimDependsOn",
+                details_key="details.preambleNounMismatch",
                 details_params={"claim": str(claim.id), "parent": str(root.id)},
             ))
             has_issue = True
