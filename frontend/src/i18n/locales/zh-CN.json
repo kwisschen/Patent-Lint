@@ -10,8 +10,8 @@
   "tree": { "apparatusClaims": "装置权利要求", "methodClaims": "方法权利要求", "independent": "独立权利要求", "dependent": "从属权利要求", "deps": "个从属项", "dep": "个从属项" },
   "section112": { "title": "§ 112 分析" },
   "results": {
-    "nonPatentWarning": "此文档可能不是专利稿件",
-    "nonPatentWarningDetails": "PatentLint 专为美国专利申请草稿设计。此文件未包含标准专利章节、编号权利要求或段落编号，分析结果对非专利文件可能不具参考价值。",
+    "nonPatentWarning": "此文档可能不是美国专利稿件",
+    "nonPatentWarningDetails": "PatentLint 专为美国专利申请草稿设计。此文件未包含标准专利章节、编号权利要求或段落编号，分析结果对非美国或非专利文件可能不具参考价值。",
     "showResultsAnyway": "仍然显示结果",
     "trackedChangesWarning": "此文档包含修订标记，可能影响分析准确性。请在文字处理软件中接受或拒绝所有更改后，重新进行分析。",
     "analyzeAgain": "重新分析"
