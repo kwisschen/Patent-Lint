@@ -10,8 +10,8 @@
   "tree": { "apparatusClaims": "物之請求項", "methodClaims": "方法之請求項", "independent": "獨立項", "dependent": "附屬項", "deps": "個附屬項", "dep": "個附屬項" },
   "section112": { "title": "§ 112 分析" },
   "results": {
-    "nonPatentWarning": "此文件可能不是專利稿件",
-    "nonPatentWarningDetails": "PatentLint 專為美國專利申請草稿設計。此檔案未包含標準專利章節、編號請求項或段落編號，分析結果對非專利文件可能不具參考價值。",
+    "nonPatentWarning": "此文件可能不是美國專利稿件",
+    "nonPatentWarningDetails": "PatentLint 專為美國專利申請草稿設計。此檔案未包含標準專利章節、編號請求項或段落編號，分析結果對非美國或非專利文件可能不具參考價值。",
     "showResultsAnyway": "仍然顯示結果",
     "trackedChangesWarning": "此文件包含追蹤修訂，可能影響分析準確性。請在文書處理軟體中接受或拒絕所有變更後，重新進行分析。",
     "analyzeAgain": "重新分析"
