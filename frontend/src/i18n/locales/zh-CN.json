@@ -191,7 +191,7 @@
   },
   "common": { "close": "关闭", "toggleTheme": "切换主题", "changeLanguage": "切换语言" },
   "consolidation": { "nounMismatchSummary": "前序名词不一致：{{count}} 个从属项与权利要求 {{rootId}} 不同" },
-  "lang": { "en": "English", "zh-TW": "繁體中文", "zh-CN": "简体中文", "ja": "日本語" },
+  "lang": { "en": "English", "zh-CN": "简体中文", "zh-TW": "繁體中文", "ja": "日本語", "ko": "한국어" },
   "check": {
     "spec": {
       "restrictiveWording": {
@@ -315,7 +315,7 @@
     "feature3_title": "权利要求树状图",
     "feature3_desc": "交互式从属关系树状图和 Mermaid 图表，一目了然地呈现权利要求结构。",
     "feature4_title": "随处可用",
-    "feature4_desc": "Mac、Windows、Linux、iPad，任何有浏览器的设备均可使用。无需 Word 插件。完整界面支持 English、繁體中文、简体中文 及 日本語。",
+    "feature4_desc": "Mac、Windows、Linux、iPad，任何有浏览器的设备均可使用。无需 Word 插件。完整界面支持 English、繁體中文、简体中文、日本語 及 한국어。",
     "feature5_title": "即时分析",
     "feature5_desc": "拖放 .docx 文件即可在数秒内获得结果。下载 PDF 报告，无需云端往返。"
   },

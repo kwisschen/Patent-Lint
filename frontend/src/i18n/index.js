@@ -7,6 +7,7 @@ import en from './locales/en.json'
 import zhCN from './locales/zh-CN.json'
 import zhTW from './locales/zh-TW.json'
 import ja from './locales/ja.json'
+import ko from './locales/ko.json'
 
 // Migrate from old localStorage key if present
 const oldKey = 'patentlint-lang'
@@ -28,8 +29,9 @@ i18n
       'zh-CN': { translation: zhCN },
       'zh-TW': { translation: zhTW },
       ja: { translation: ja },
+      ko: { translation: ko },
     },
-    supportedLngs: ['en', 'zh-CN', 'zh-TW', 'ja'],
+    supportedLngs: ['en', 'zh-CN', 'zh-TW', 'ja', 'ko'],
     fallbackLng: 'en',
     detection: {
       order: ['localStorage', 'navigator'],
