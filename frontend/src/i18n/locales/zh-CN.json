@@ -176,18 +176,41 @@
     "claims": "权利要求：{{list}}",
     "terms": "术语：{{list}}",
     "figures": "附图：{{list}}",
-    "firstGapParagraph": "首个间隔位于第 {{position}} 段",
-    "firstGapClaim": "首个间隔位于第 {{position}} 项",
+    "firstGapParagraph": "首个间隔位于第 {{position}} 段。请依 MPEP § 608.01(p) 重新编号以恢复连续顺序。",
+    "firstGapClaim": "首个间隔位于第 {{position}} 项。请依 MPEP § 608.01(j) 将权利要求重新编号为连续。",
     "citations": "{{text}}",
     "rawText": "{{text}}",
     "claimsOverview": "{{independent}} 个独立项、{{dependent}} 个从属项，共 {{total}} 项",
     "figureCount": "发现 {{count}} 张附图。",
-    "missingSections": "缺少：{{list}}",
+    "missingSections": "缺少：{{list}}。请在提交前添加这些部分。",
     "sectionName": "{{name}}",
     "claimDependsOn": "权利要求 {{claim}} 从属于权利要求 {{parent}}",
-    "nounMismatch": "从属项「{{dependent}}」与独立项「{{independent}}」不一致",
+    "nounMismatch": "从属项「{{dependent}}」与独立项「{{independent}}」不一致。从属权利要求须与母权利要求属于相同法定类别（例如同为装置或同为方法）。请修正前序名词。",
     "seeSection112": "详见下方 § 112 分析。",
-    "specSupportUnsupported": "{{count}} 个权利要求术语未在说明书中找到。"
+    "specSupportUnsupported": "{{count}} 个权利要求术语未在说明书中找到。依 § 112(a)，各权利要求术语应有书面描述支持。请参阅下方 § 112 分析以查看逐项详情。",
+    "restrictiveWordingSpec": "段落：{{list}}。\"must\"、\"always\"或\"invention\"等用语可能依 § 2173.05(b) 被视为不确定或限制范围。请检查各标记段落，考虑该用语是否过度限缩范围或引入不确定性。",
+    "paragraphNumberingMissing": "请依 MPEP § 608.01(p) 添加 [0001] 格式的连续段落编号。",
+    "paragraphEnding": "段落：{{list}}。说明书各段落须依 MPEP § 608.01(p) 以句号结尾。",
+    "sequenceListingFix": "请依 37 C.F.R. § 1.821–1.825 添加\"Statement Regarding Sequence Listing\"部分。",
+    "crossReferenceCitations": "{{text}}。请确认序列号正确，且优先权链完整（延续案、CIP、临时申请、分案）。",
+    "priorArtCitations": "{{text}}。请确认专利/公开号准确。对现有技术的描述可能在审查中被视为自认。",
+    "optionalSectionGuidance": "如适用于您的申请，请添加此部分。",
+    "restrictiveWordingClaims": "权利要求：{{list}}。\"must\"、\"essential\"或\"invention\"等用语可能触发 § 112(b) 不确定性驳回。请检查各标记权利要求，考虑该用语是否必要。",
+    "multipleDependentClaims": "权利要求：{{list}}。多项从属权利要求会产生额外费用，且不得从属于其他多项从属权利要求（35 U.S.C. § 112(e)）。请确认此为有意为之。",
+    "selfDependentClaims": "权利要求：{{list}}。权利要求不得从属于自身。请修正从属关系引用。",
+    "meansFunctionClaims": "权利要求：{{list}}。依 § 112(f)，权利要求范围限于说明书中公开的对应结构及等同物。请确认说明书针对各功能性限定公开了充分的结构。",
+    "antecedentBasisTerms": "术语：{{list}}。每个确定引用（\"the X\"或\"said X\"）须有先前的不定引用（\"a X\"或\"an X\"）。缺少先行词基础可能导致 § 112(b) 不确定性驳回。",
+    "preambleNounMismatch": "权利要求 {{claim}} 从属于权利要求 {{parent}}。前序名词不同，但若指代同一实体则可能合理。请确认一致性。",
+    "preambleIndefiniteArticle": "权利要求 {{claim}} 从属于权利要求 {{parent}}。从属权利要求须使用定冠词\"The\"指代独立权利要求实体，而非\"A\"或\"An\"。",
+    "singleFigureFix": "请依 MPEP § 608.02 将所有\"FIG. 1\"替换为\"The Figure\"或\"the drawing\"。",
+    "drawingsPriorArt": "描绘现有技术的附图须依 MPEP § 608.02(g) 标注\"Prior Art\"图例。请确认各现有技术附图已正确标注。",
+    "figuresSequentialFix": "请依 MPEP § 608.02 将附图重新编号为递增顺序。",
+    "orphanedBriefFigures": "附图：{{list}}。请在具体实施方式中添加对这些附图的引用，或从附图说明中移除。",
+    "orphanedDetailedFigures": "附图：{{list}}。请在附图说明中添加对这些附图的描述，或从具体实施方式中移除引用。",
+    "restrictiveWordingAbstract": "{{text}}。摘要应避免法律用语（\"comprising\"、\"said\"、\"means\"）、评价性用语（\"novel\"、\"innovative\"）及限制性用语（\"must\"、\"essential\"），依 MPEP § 608.01(b)。请修改标记用语。",
+    "abstractStructureFix": "摘要须为单一段落，以句号、感叹号或问号结尾，且须作为专利稿件最后一部分，依 MPEP § 608.01(b)。",
+    "abstractImpliedPhrasesFix": "\"This disclosure provides...\"或\"A method is provided...\"等措辞依 MPEP § 608.01(b) 属于隐含措辞。请改为直接描述发明（例如\"A method that...\"）。",
+    "abstractWordCountFix": "摘要须介于 50 至 150 字之间，依 MPEP § 608.01(b)。请修改以符合此范围。"
   },
   "common": { "close": "关闭", "toggleTheme": "切换主题", "changeLanguage": "切换语言" },
   "consolidation": { "nounMismatchSummary": "前序名词不一致：{{count}} 个从属项与权利要求 {{rootId}} 不同" },
@@ -212,11 +235,11 @@
         "pass": "无序列表不一致。"
       },
       "crossReference": {
-        "verify": "交叉引用列出了相关申请。",
+        "verify": "交叉引用列出了相关申请，请确认完整性。",
         "pass": "未发现交叉引用。"
       },
       "priorArt": {
-        "verify": "背景技术引用了现有技术专利。",
+        "verify": "背景技术引用了现有技术专利，请审查相关描述。",
         "pass": "背景技术未引用现有技术专利。"
       },
       "drawings": "附图概览。",
@@ -259,7 +282,7 @@
         "pass": "未检测到功能性限定用语。"
       },
       "antecedentBasis": {
-        "verify": "检测到缺少先行词基础（antecedent basis）。",
+        "verify": "检测到可能缺少先行词基础（antecedent basis）。",
         "pass": "未检测到先行词基础问题。"
       },
       "missingTransition": "权利要求 {{claimNumber}} 缺少过渡用语（例如 'comprising'、'consisting of'）",
@@ -291,7 +314,7 @@
         "pass": "单一附图标注正确。"
       },
       "priorArt": {
-        "verify": "附图说明中发现现有技术引用。",
+        "verify": "附图说明中发现现有技术引用，请确认附图标注。",
         "pass": "附图说明中未发现现有技术引用。"
       },
       "sequential": {
@@ -356,7 +379,7 @@
     "spec_support_pass": "所有权利要求术语均在说明书中找到。",
     "required_sections_pass": "符合 MPEP § 608.01(a) 的所有必要章节均已存在。",
     "required_sections_missing": "缺少 MPEP § 608.01(a) 规定的必要章节。",
-    "optional_section_missing": "未找到可选章节。如适用，请添加。",
+    "optional_section_missing": "可选部分\"{{name}}\"未找到。",
     "figure_xref_pass": "附图说明与具体实施方式之间的附图引用一致。",
     "figure_xref_orphaned_brief": "附图在附图说明中描述但未在具体实施方式中引用。",
     "figure_xref_orphaned_detailed": "附图在具体实施方式中引用但未在附图说明中描述。"
@@ -377,6 +400,6 @@
     "extraPeriodDetails": "权利要求 {{claimNumber}} 在非预期位置出现句号。依据 MPEP § 608.01(m)，权利要求应仅在末尾包含一个句号。",
     "whereinComma": "权利要求 {{claimNumber}}：请检查 'wherein' 子句前的逗号用法。",
     "whereinCommaDetails": "权利要求 {{claimNumber}} 的 'wherein' 子句前后逗号使用可能不正确。请依据 MPEP § 608.01(m) 检查标点符号。",
-    "punctuationPass": "权利要求标点符号正确。"
+    "punctuationPass": "所有权利要求标点符号正确。"
   }
 }
