@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Globe } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-const LANGUAGES = ['en', 'zh-TW', 'zh-CN', 'ja']
+const LANGUAGES = ['en', 'zh-CN', 'zh-TW', 'ja']
 
 export default function LanguageSwitcher() {
   const { t, i18n } = useTranslation()
