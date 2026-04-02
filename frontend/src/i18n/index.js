@@ -4,8 +4,8 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import en from './locales/en.json'
-import zhTW from './locales/zh-TW.json'
 import zhCN from './locales/zh-CN.json'
+import zhTW from './locales/zh-TW.json'
 import ja from './locales/ja.json'
 
 // Migrate from old localStorage key if present
@@ -25,11 +25,11 @@ i18n
   .init({
     resources: {
       en: { translation: en },
-      'zh-TW': { translation: zhTW },
       'zh-CN': { translation: zhCN },
+      'zh-TW': { translation: zhTW },
       ja: { translation: ja },
     },
-    supportedLngs: ['en', 'zh-TW', 'zh-CN', 'ja'],
+    supportedLngs: ['en', 'zh-CN', 'zh-TW', 'ja'],
     fallbackLng: 'en',
     detection: {
       order: ['localStorage', 'navigator'],
