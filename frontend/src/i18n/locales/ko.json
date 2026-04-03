@@ -29,10 +29,12 @@
     "dependent": "종속항",
     "figures": "도면",
     "abstractWords": "요약서 단어 수",
+    "abstractChars": "요약서 글자 수",
     "claimCategories": "청구항 유형",
     "method": "방법",
     "apparatus": "장치",
     "outsideRange": "50–150 범위 밖",
+    "outsideRangeCn": "300자 초과",
     "noParagraphs": "단락 번호 없음"
   },
   "section": {

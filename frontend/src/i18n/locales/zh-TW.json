@@ -29,10 +29,12 @@
     "dependent": "附屬項",
     "figures": "圖式",
     "abstractWords": "摘要字數",
+    "abstractChars": "摘要字數",
     "claimCategories": "請求項類別",
     "method": "方法",
     "apparatus": "裝置",
     "outsideRange": "超出 50–150 字範圍",
+    "outsideRangeCn": "超出300字上限",
     "noParagraphs": "未發現段落編號"
   },
   "section": {
