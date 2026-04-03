@@ -16,6 +16,7 @@ from pathlib import Path
 
 import click
 
+from patentlint.models import Jurisdiction
 from patentlint.pipeline import analyze_file
 
 EXIT_SUCCESS = 0
@@ -33,14 +34,22 @@ def main():
 @click.argument("file", type=click.Path(exists=True, dir_okay=False))
 @click.option("--format", "fmt", type=click.Choice(["json", "pdf"]), default="json", help="Output format.")
 @click.option("-o", "--output", type=click.Path(), default=None, help="Output file path (required for PDF).")
-def analyze(file: str, fmt: str, output: str | None):
+@click.option(
+    "--jurisdiction",
+    type=click.Choice(["us", "cn"], case_sensitive=False),
+    default="us",
+    help="Patent jurisdiction (us or cn).",
+)
+def analyze(file: str, fmt: str, output: str | None, jurisdiction: str):
     """Analyze a single patent .docx file."""
     if fmt == "pdf" and output is None:
         click.echo("PDF output requires -o/--output. Example: patentlint analyze file.docx --format pdf -o report.pdf", err=True)
         raise SystemExit(EXIT_ERROR)
 
+    j = Jurisdiction(jurisdiction.upper())
+
     try:
-        result = analyze_file(file)
+        result = analyze_file(file, jurisdiction=j)
     except (FileNotFoundError, ValueError) as e:
         click.echo(f"Error: {e}", err=True)
         raise SystemExit(EXIT_ERROR)
@@ -79,7 +88,13 @@ def analyze(file: str, fmt: str, output: str | None):
 @click.argument("directory", type=click.Path(exists=True, file_okay=False))
 @click.option("--output", "-o", required=True, type=click.Path(), help="Output directory for reports.")
 @click.option("--format", "fmt", type=click.Choice(["json", "pdf"]), default="json", help="Output format.")
-def batch(directory: str, output: str, fmt: str):
+@click.option(
+    "--jurisdiction",
+    type=click.Choice(["us", "cn"], case_sensitive=False),
+    default="us",
+    help="Patent jurisdiction (us or cn).",
+)
+def batch(directory: str, output: str, fmt: str, jurisdiction: str):
     """Analyze all .docx files in a directory."""
     os.makedirs(output, exist_ok=True)
 
@@ -95,6 +110,8 @@ def batch(directory: str, output: str, fmt: str):
             click.echo("PDF output requires weasyprint. Install with: pip install patentlint[pdf]", err=True)
             raise SystemExit(EXIT_ERROR)
 
+    j = Jurisdiction(jurisdiction.upper())
+
     has_errors = False
     has_findings = False
 
@@ -102,7 +119,7 @@ def batch(directory: str, output: str, fmt: str):
         for docx_path in bar:
             stem = docx_path.stem
             try:
-                result = analyze_file(str(docx_path))
+                result = analyze_file(str(docx_path), jurisdiction=j)
             except Exception as e:
                 click.echo(f"\nError processing {docx_path.name}: {e}", err=True)
                 has_errors = True
