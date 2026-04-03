@@ -160,6 +160,7 @@ class ReportData(BaseModel):
     # Document-level flags
     likely_patent: bool = True
     has_tracked_changes: bool = False
+    has_scanned_fallback: bool = False
 
 
 class AnalysisResult(BaseModel):
@@ -221,8 +222,9 @@ class AnalysisResult(BaseModel):
     cn_abstract_checks: list[CheckItem] = Field(default_factory=list)
     cn_drawings_checks: list[CheckItem] = Field(default_factory=list)
 
-    # Document-level flag
+    # Document-level flags
     likely_patent: bool = True
+    has_scanned_fallback: bool = False
 
     # Abstract
     abstract_word_count: int = 0
@@ -260,6 +262,7 @@ class AnalysisResult(BaseModel):
             drawings_checks=list(self.cn_drawings_checks),
             claim_trees=[],
             likely_patent=self.likely_patent,
+            has_scanned_fallback=self.has_scanned_fallback,
         )
 
     def _to_us_report_data(self) -> ReportData:

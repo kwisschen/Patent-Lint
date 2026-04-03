@@ -81,7 +81,9 @@
     "nonPatentWarningDetails": "PatentLint 專為美國專利申請草稿設計。此檔案未包含標準專利章節、編號請求項或段落編號，分析結果對非美國或非專利文件可能不具參考價值。",
     "showResultsAnyway": "仍然顯示結果",
     "trackedChangesWarning": "此文件包含追蹤修訂，可能影響分析準確性。請在文書處理軟體中接受或拒絕所有變更後，重新進行分析。",
-    "analyzeAgain": "重新分析"
+    "analyzeAgain": "重新分析",
+    "scannedDocWarning": "此檔案僅包含掃描文件頁面",
+    "scannedDocWarningDetails": "上傳的檔案包含掃描文件影像，沒有可讀的專利文本。PatentLint需要結構化文字進行分析。請上傳原始申請XML或.docx草稿。"
   },
   "analysis": {
     "analyzing": "正在分析專利文件...",
@@ -643,6 +645,7 @@
     "totalClaims": "請求項總數",
     "figures": "圖式",
     "abstractWordCount": "摘要字數",
+    "abstractCharCount": "摘要字數",
     "disclaimer": "由 PatentLint 產生。本報告不構成法律意見。建議由合格專利專業人員審查。"
   },
   "checks": {
