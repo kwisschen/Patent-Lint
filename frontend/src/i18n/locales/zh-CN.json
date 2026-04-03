@@ -81,7 +81,9 @@
     "nonPatentWarningDetails": "PatentLint 专为美国专利申请草稿设计。此文件未包含标准专利章节、编号权利要求或段落编号，分析结果对非美国或非专利文件可能不具参考价值。",
     "showResultsAnyway": "仍然显示结果",
     "trackedChangesWarning": "此文档包含修订标记，可能影响分析准确性。请在文字处理软件中接受或拒绝所有更改后，重新进行分析。",
-    "analyzeAgain": "重新分析"
+    "analyzeAgain": "重新分析",
+    "scannedDocWarning": "此文件仅包含扫描文档页面",
+    "scannedDocWarningDetails": "上传的文件包含扫描文档图像，没有可读的专利文本。PatentLint需要结构化文本进行分析。请上传原始申请XML或.docx草稿。"
   },
   "analysis": {
     "analyzing": "正在分析专利文件...",
@@ -643,6 +645,7 @@
     "totalClaims": "权利要求总数",
     "figures": "附图",
     "abstractWordCount": "摘要字数",
+    "abstractCharCount": "摘要字数",
     "disclaimer": "由 PatentLint 生成。本报告不构成法律意见。建议由合格专利专业人员审查。"
   },
   "checks": {
