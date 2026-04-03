@@ -29,10 +29,12 @@
     "dependent": "从属项",
     "figures": "附图",
     "abstractWords": "摘要字数",
+    "abstractChars": "摘要字数",
     "claimCategories": "权项类别",
     "method": "方法",
     "apparatus": "装置",
     "outsideRange": "超出 50–150 字范围",
+    "outsideRangeCn": "超出300字上限",
     "noParagraphs": "未发现段落编号"
   },
   "section": {

@@ -29,10 +29,12 @@
     "dependent": "dependent",
     "figures": "Figures",
     "abstractWords": "Abstract Words",
+    "abstractChars": "Abstract Characters",
     "claimCategories": "Claim Categories",
     "method": "method",
     "apparatus": "apparatus",
     "outsideRange": "Outside 50–150 range",
+    "outsideRangeCn": "Exceeds 300 characters",
     "noParagraphs": "No numbering found"
   },
   "section": {
