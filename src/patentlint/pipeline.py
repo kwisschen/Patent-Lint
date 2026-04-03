@@ -13,17 +13,37 @@ from patentlint.analysis import abstract as abstract_analysis
 from patentlint.analysis import claims as claims_analysis
 from patentlint.analysis import drawings as drawings_analysis
 from patentlint.analysis import specification as spec_analysis
-from patentlint.models import AnalysisResult, Jurisdiction
+from patentlint.models import AnalysisResult, CnPatentDocument, Jurisdiction
 from patentlint.parser import claims as claims_parser
 from patentlint.parser import sections
-from patentlint.parser.docx_loader import load_docx
+from patentlint.parser.docx_loader import load_docx, load_docx_cn
+from patentlint.parser.sections_cn import extract_cn_sections_from_docx
+from patentlint.parser.xml_loader import extract_cn_xml_from_zip, parse_cnipa_xml
+
+
+def _run_cn_pipeline(cn_doc: CnPatentDocument) -> AnalysisResult:
+    """Run CN analysis pipeline. Checks will be added in Track 6C."""
+    para_count = len(cn_doc.paragraph_numbers) if cn_doc.paragraph_numbers else (
+        len(cn_doc.technical_field)
+        + len(cn_doc.background)
+        + len(cn_doc.summary)
+        + len(cn_doc.drawings_description)
+        + len(cn_doc.detailed_description)
+    )
+    return AnalysisResult(
+        jurisdiction=Jurisdiction.CN,
+        paragraph_count=para_count,
+        claims=cn_doc.claims,
+        independent_claims_count=sum(1 for c in cn_doc.claims if c.independent),
+        dependent_claims_count=sum(1 for c in cn_doc.claims if not c.independent),
+        figures_count=cn_doc.figure_count,
+        abstract_word_count=cn_doc.abstract_char_count,
+        likely_patent=True,
+    )
 
 
 def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisdiction.US) -> AnalysisResult:
     """Core pipeline logic shared by analyze_file and analyze_bytes."""
-
-    if jurisdiction == Jurisdiction.CN:
-        raise NotImplementedError("CN analysis checks not yet implemented")
 
     # --- Document type detection ---
     likely_patent = sections.detect_patent_document(full_text)
@@ -164,19 +184,55 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
 
 
 def analyze_file(file_path: str, jurisdiction: Jurisdiction = Jurisdiction.US) -> AnalysisResult:
-    """Run the full analysis pipeline on a .docx file path."""
+    """Analyze a patent document file."""
+    lower = file_path.lower()
+
+    if jurisdiction == Jurisdiction.CN:
+        if lower.endswith(".xml"):
+            with open(file_path, "rb") as f:
+                cn_doc = parse_cnipa_xml(f.read())
+            return _run_cn_pipeline(cn_doc)
+        if lower.endswith(".zip"):
+            with open(file_path, "rb") as f:
+                xml_data, _ = extract_cn_xml_from_zip(f.read())
+            cn_doc = parse_cnipa_xml(xml_data)
+            return _run_cn_pipeline(cn_doc)
+        if lower.endswith(".docx"):
+            sections_list = load_docx_cn(file_path)
+            cn_doc = extract_cn_sections_from_docx(sections_list)
+            return _run_cn_pipeline(cn_doc)
+        msg = f"Unsupported file type for CN jurisdiction: {file_path}"
+        raise ValueError(msg)
+
+    # US jurisdiction (existing behavior, unchanged)
     loaded = load_docx(file_path)
     return _run_pipeline(loaded, loaded.full_text, jurisdiction=jurisdiction)
 
 
 def analyze_bytes(content: bytes, filename: str, jurisdiction: Jurisdiction = Jurisdiction.US) -> AnalysisResult:
-    """Run the full analysis pipeline on in-memory bytes."""
-    if jurisdiction == Jurisdiction.CN:
-        if filename.endswith(".xml") or filename.endswith(".zip"):
-            raise NotImplementedError("CN XML/ZIP parsing not yet implemented")
-        # CN .docx falls through to load_docx, then routes in _run_pipeline
+    """Analyze patent document from raw bytes."""
+    lower = filename.lower()
 
-    if not filename.endswith(".docx"):
+    if jurisdiction == Jurisdiction.CN:
+        if lower.endswith(".zip"):
+            xml_data, _ = extract_cn_xml_from_zip(content)
+            cn_doc = parse_cnipa_xml(xml_data)
+            return _run_cn_pipeline(cn_doc)
+        if lower.endswith(".xml"):
+            cn_doc = parse_cnipa_xml(content)
+            return _run_cn_pipeline(cn_doc)
+        if lower.endswith(".docx"):
+            with tempfile.NamedTemporaryFile(suffix=".docx", delete=True) as tmp:
+                tmp.write(content)
+                tmp.flush()
+                sections_list = load_docx_cn(tmp.name)
+            cn_doc = extract_cn_sections_from_docx(sections_list)
+            return _run_cn_pipeline(cn_doc)
+        msg = f"Unsupported file type for CN jurisdiction: {filename}"
+        raise ValueError(msg)
+
+    # US jurisdiction
+    if not lower.endswith(".docx"):
         msg = f"Unsupported file type: {filename}"
         raise ValueError(msg)
 
@@ -184,5 +240,4 @@ def analyze_bytes(content: bytes, filename: str, jurisdiction: Jurisdiction = Ju
         tmp.write(content)
         tmp.flush()
         loaded = load_docx(tmp.name)
-
     return _run_pipeline(loaded, loaded.full_text, jurisdiction=jurisdiction)
