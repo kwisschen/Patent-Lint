@@ -91,6 +91,67 @@ const CN_DRAWINGS_CHECKS = [
   'figureCount',
 ]
 
+function CnCheckTable({ t }) {
+  const [cnRef1, cnInView1] = useInView()
+  const [cnRef2, cnInView2] = useInView()
+  const [cnRef3, cnInView3] = useInView()
+  const [cnRef4, cnInView4] = useInView()
+
+  const renderCnGroup = (ref, inView, titleKey, checks, delay) => (
+    <tbody
+      ref={ref}
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(16px)',
+        transition: `opacity 500ms ease ${delay}ms, transform 500ms ease ${delay}ms`,
+      }}
+    >
+      <tr>
+        <td
+          colSpan={2}
+          className="pt-6 pb-2 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wider"
+        >
+          {t(titleKey)}
+        </td>
+      </tr>
+      {checks.map((key) => (
+        <tr
+          key={key}
+          className="border-b border-border/50 hover:bg-muted/50 transition-colors border-l-2 border-l-green-200 dark:border-l-green-800"
+        >
+          <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm text-foreground">
+            {t(`about.cnChecks.${key}`)}
+          </td>
+          <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-center sm:w-40">
+            <CheckMark active isPatentLint />
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  )
+
+  return (
+    <div className="rounded-lg border border-border">
+      <table className="w-full text-left">
+        <thead>
+          <tr className="border-b border-border bg-muted/30">
+            <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
+              {t('about.uspto.colCheck')}
+            </th>
+            <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
+              {t('about.uspto.colPatentLint')}
+            </th>
+          </tr>
+        </thead>
+        {renderCnGroup(cnRef1, cnInView1, 'about.cnGroups.specification', CN_SPEC_CHECKS, 0)}
+        {renderCnGroup(cnRef2, cnInView2, 'about.cnGroups.claims', CN_CLAIMS_CHECKS, 150)}
+        {renderCnGroup(cnRef3, cnInView3, 'about.cnGroups.abstract', CN_ABSTRACT_CHECKS, 300)}
+        {renderCnGroup(cnRef4, cnInView4, 'about.cnGroups.drawings', CN_DRAWINGS_CHECKS, 400)}
+      </table>
+    </div>
+  )
+}
+
 function ComparisonTable({ t }) {
   const [activeTab, setActiveTab] = useState('US')
   const [ref1, inView1] = useInView()
@@ -134,44 +195,6 @@ function ComparisonTable({ t }) {
       ))}
     </tbody>
   )
-
-  const renderCnGroup = (ref, inView, titleKey, checks, delay) => (
-    <tbody
-      ref={ref}
-      style={{
-        opacity: inView ? 1 : 0,
-        transform: inView ? 'translateY(0)' : 'translateY(16px)',
-        transition: `opacity 500ms ease ${delay}ms, transform 500ms ease ${delay}ms`,
-      }}
-    >
-      <tr>
-        <td
-          colSpan={2}
-          className="pt-6 pb-2 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wider"
-        >
-          {t(titleKey)}
-        </td>
-      </tr>
-      {checks.map((key) => (
-        <tr
-          key={key}
-          className="border-b border-border/50 hover:bg-muted/50 transition-colors border-l-2 border-l-green-200 dark:border-l-green-800"
-        >
-          <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm text-foreground">
-            {t(`about.cnChecks.${key}`)}
-          </td>
-          <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-center sm:w-40">
-            <CheckMark active isPatentLint />
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  )
-
-  const [cnRef1, cnInView1] = useInView()
-  const [cnRef2, cnInView2] = useInView()
-  const [cnRef3, cnInView3] = useInView()
-  const [cnRef4, cnInView4] = useInView()
 
   return (
     <section>
@@ -233,26 +256,7 @@ function ComparisonTable({ t }) {
         </div>
       )}
 
-      {activeTab === 'CN' && (
-        <div className="rounded-lg border border-border">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b border-border bg-muted/30">
-                <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
-                  {t('about.uspto.colCheck')}
-                </th>
-                <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
-                  {t('about.uspto.colPatentLint')}
-                </th>
-              </tr>
-            </thead>
-            {renderCnGroup(cnRef1, cnInView1, 'about.cnGroups.specification', CN_SPEC_CHECKS, 0)}
-            {renderCnGroup(cnRef2, cnInView2, 'about.cnGroups.claims', CN_CLAIMS_CHECKS, 150)}
-            {renderCnGroup(cnRef3, cnInView3, 'about.cnGroups.abstract', CN_ABSTRACT_CHECKS, 300)}
-            {renderCnGroup(cnRef4, cnInView4, 'about.cnGroups.drawings', CN_DRAWINGS_CHECKS, 400)}
-          </table>
-        </div>
-      )}
+      {activeTab === 'CN' && <CnCheckTable t={t} />}
     </section>
   )
 }
