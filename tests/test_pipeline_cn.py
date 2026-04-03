@@ -27,6 +27,34 @@ class TestCnXmlAnalyzeBytes:
         assert result.dependent_claims_count == 1
         assert result.figures_count == 1
 
+    def test_cn_checks_populated(self):
+        """All 24 CN checks should produce at least one CheckItem each."""
+        data = (FIXTURES / "cn_minimal_pass.xml").read_bytes()
+        result = analyze_bytes(data, "test.xml", jurisdiction=Jurisdiction.CN)
+        # 8 spec + 12 claims + 3 abstract + 1 drawings = 24 minimum
+        total = (
+            len(result.cn_specification_checks)
+            + len(result.cn_claims_checks)
+            + len(result.cn_abstract_checks)
+            + len(result.cn_drawings_checks)
+        )
+        assert total >= 24
+        assert len(result.cn_specification_checks) >= 8
+        assert len(result.cn_claims_checks) >= 12
+        assert len(result.cn_abstract_checks) >= 3
+        assert len(result.cn_drawings_checks) >= 1
+
+    def test_cn_report_data(self):
+        """to_report_data() should route CN results correctly."""
+        data = (FIXTURES / "cn_minimal_pass.xml").read_bytes()
+        result = analyze_bytes(data, "test.xml", jurisdiction=Jurisdiction.CN)
+        report = result.to_report_data()
+        assert report.jurisdiction == Jurisdiction.CN
+        assert len(report.specification_checks) >= 8
+        assert len(report.claims_checks) >= 12
+        assert len(report.abstract_checks) >= 3
+        assert len(report.drawings_checks) >= 1
+
 
 class TestCnXmlDocPage:
     def test_cn_xml_doc_page(self):
