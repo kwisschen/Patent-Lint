@@ -1,15 +1,79 @@
 {
-  "header": { "title": "PatentLint", "subtitle": "Patent Specification Checker" },
-  "jurisdiction": { "us": "U.S. Patent", "cn": "CN Patent", "label": "Jurisdiction" },
-  "dropzone": { "tagline": "Check your specification against 30+ USPTO drafting rules", "title": "Drop your patent .docx to begin local analysis", "subtitle": "or click to browse", "notice": "Currently supports U.S. patent specifications (.docx) only.", "reject": "Only .docx files are accepted", "rejectMultiple": "Please drop one file at a time.", "rejectMultipleType": "Please drop a single .docx file.", "taglineCn": "Check your specification against 20+ CNIPA drafting rules", "titleCn": "Drop your patent file to begin local analysis", "noticeCn": "Supports Chinese patent specifications (.docx, .xml, .zip).", "rejectCn": "Only .docx, .xml, and .zip files are accepted", "rejectMultipleTypeCn": "Please drop a single .docx, .xml, or .zip file." },
-  "summary": { "specParagraphs": "Specification Paragraphs", "claims": "Claims", "independent": "independent", "dependent": "dependent", "figures": "Figures", "abstractWords": "Abstract Words", "claimCategories": "Claim Categories", "method": "method", "apparatus": "apparatus", "outsideRange": "Outside 50–150 range", "noParagraphs": "No numbering found" },
-  "section": { "specification": "Specification", "claims": "Claims", "drawings": "Brief Description of Drawings", "drawingsShort": "Drawings", "abstract": "Abstract" },
-  "status": { "pass": "PASS", "verify": "VERIFY", "amend": "AMEND" },
-  "button": { "downloadPdf": "Save PDF Report", "newAnalysis": "New Analysis", "generating": "Saving..." },
-  "diagram": { "show": "Show Diagram", "hide": "Hide Diagram" },
-  "claimDiagram": { "renderError": "Could not render diagram", "independent": "Independent", "dependent": "Dependent", "claimLabel": "Claim {{id}}", "claimsLabel": "Claims {{range}}" },
-  "tree": { "apparatusClaims": "Apparatus Claims", "methodClaims": "Method Claims", "independent": "Independent", "dependent": "Dependent", "deps": "deps", "dep": "dep" },
-  "section112": { "title": "§ 112 Analysis" },
+  "header": {
+    "title": "PatentLint",
+    "subtitle": "Patent Specification Checker"
+  },
+  "jurisdiction": {
+    "us": "U.S. Patent",
+    "cn": "CN Patent",
+    "label": "Jurisdiction"
+  },
+  "dropzone": {
+    "tagline": "Check your specification against 30+ USPTO drafting rules",
+    "title": "Drop your patent .docx to begin local analysis",
+    "subtitle": "or click to browse",
+    "notice": "Currently supports U.S. patent specifications (.docx) only.",
+    "reject": "Only .docx files are accepted",
+    "rejectMultiple": "Please drop one file at a time.",
+    "rejectMultipleType": "Please drop a single .docx file.",
+    "taglineCn": "Check your specification against 20+ CNIPA drafting rules",
+    "titleCn": "Drop your patent file to begin local analysis",
+    "noticeCn": "Supports Chinese patent specifications (.docx, .xml, .zip).",
+    "rejectCn": "Only .docx, .xml, and .zip files are accepted",
+    "rejectMultipleTypeCn": "Please drop a single .docx, .xml, or .zip file."
+  },
+  "summary": {
+    "specParagraphs": "Specification Paragraphs",
+    "claims": "Claims",
+    "independent": "independent",
+    "dependent": "dependent",
+    "figures": "Figures",
+    "abstractWords": "Abstract Words",
+    "claimCategories": "Claim Categories",
+    "method": "method",
+    "apparatus": "apparatus",
+    "outsideRange": "Outside 50–150 range",
+    "noParagraphs": "No numbering found"
+  },
+  "section": {
+    "specification": "Specification",
+    "claims": "Claims",
+    "drawings": "Brief Description of Drawings",
+    "drawingsShort": "Drawings",
+    "abstract": "Abstract"
+  },
+  "status": {
+    "pass": "PASS",
+    "verify": "VERIFY",
+    "amend": "AMEND"
+  },
+  "button": {
+    "downloadPdf": "Save PDF Report",
+    "newAnalysis": "New Analysis",
+    "generating": "Saving..."
+  },
+  "diagram": {
+    "show": "Show Diagram",
+    "hide": "Hide Diagram"
+  },
+  "claimDiagram": {
+    "renderError": "Could not render diagram",
+    "independent": "Independent",
+    "dependent": "Dependent",
+    "claimLabel": "Claim {{id}}",
+    "claimsLabel": "Claims {{range}}"
+  },
+  "tree": {
+    "apparatusClaims": "Apparatus Claims",
+    "methodClaims": "Method Claims",
+    "independent": "Independent",
+    "dependent": "Dependent",
+    "deps": "deps",
+    "dep": "dep"
+  },
+  "section112": {
+    "title": "§ 112 Analysis"
+  },
   "results": {
     "nonPatentWarning": "This document may not be a U.S. patent specification",
     "nonPatentWarningDetails": "PatentLint is designed for U.S. patent application drafts. This file does not appear to contain standard patent sections, numbered claims, or paragraph numbering. Analysis results may not be meaningful for non-U.S. or non-patent documents.",
@@ -17,12 +81,44 @@
     "trackedChangesWarning": "This document contains tracked changes, which may affect analysis accuracy. Accept or reject all changes in your word processor, then analyze again.",
     "analyzeAgain": "Analyze Again"
   },
-  "analysis": { "analyzing": "Analyzing patent document...", "label": "Analysis" },
-  "footer": { "disclaimer": "Not legal advice", "builtBy": "© 2025 Christopher Chen", "security": "Security", "about": "About", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "Feedback" },
-  "cta": { "heading": "Ready to check your draft?", "subtext": "Drop a .docx file and get instant results. No upload. No account.", "button": "Analyze a draft" },
-  "antecedentBasis": { "title": "Antecedent Basis Review", "items": "terms", "item": "term" },
-  "specSupport": { "title": "Specification Support Review", "items": "terms", "item": "term" },
-  "triage": { "title": "Priority Summary", "amend": "Action Required", "amendEmpty": "No issues requiring amendment.", "verify": "Expert Review Needed", "verifyEmpty": "No items flagged for review.", "pass": "Passed", "items": "items", "item": "item" },
+  "analysis": {
+    "analyzing": "Analyzing patent document...",
+    "label": "Analysis"
+  },
+  "footer": {
+    "disclaimer": "Not legal advice",
+    "builtBy": "© 2025 Christopher Chen",
+    "security": "Security",
+    "about": "About",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "feedback": "Feedback"
+  },
+  "cta": {
+    "heading": "Ready to check your draft?",
+    "subtext": "Drop a .docx file and get instant results. No upload. No account.",
+    "button": "Analyze a draft"
+  },
+  "antecedentBasis": {
+    "title": "Antecedent Basis Review",
+    "items": "terms",
+    "item": "term"
+  },
+  "specSupport": {
+    "title": "Specification Support Review",
+    "items": "terms",
+    "item": "term"
+  },
+  "triage": {
+    "title": "Priority Summary",
+    "amend": "Action Required",
+    "amendEmpty": "No issues requiring amendment.",
+    "verify": "Expert Review Needed",
+    "verifyEmpty": "No items flagged for review.",
+    "pass": "Passed",
+    "items": "items",
+    "item": "item"
+  },
   "security": {
     "airplaneDemoAlt": "Demo: analyzing a patent draft in airplane mode with no network connection",
     "badge": {
@@ -65,12 +161,42 @@
       "colPatentLint": "PatentLint",
       "colAddin": "Word Add-in Tools",
       "colCloud": "Cloud-Based Tools",
-      "q1": { "question": "Does my file leave my device?", "patentlint": "Never. Runs 100% in-browser.", "addin": "File stays local, but add-in may phone home.", "cloud": "Yes. Uploaded to remote servers." },
-      "q2": { "question": "Do I need an account?", "patentlint": "No. No sign-up, no login, no tracking.", "addin": "Usually requires a license or account.", "cloud": "Yes. Account required." },
-      "q3": { "question": "Does it work offline?", "patentlint": "Yes, after first load.", "addin": "Depends on license validation.", "cloud": "No. Requires internet." },
-      "q4": { "question": "Can I verify the privacy claim?", "patentlint": "Yes. Open DevTools → Network, or go airplane mode.", "addin": "Difficult to audit add-in traffic.", "cloud": "No. Data is on their servers." },
-      "q5": { "question": "What platforms are supported?", "patentlint": "Any device with a modern browser.", "addin": "Windows + Microsoft Word only.", "cloud": "Browser-based, but requires upload." },
-      "q6": { "question": "What does it cost?", "patentlint": "Free — no fees, no subscription, no usage limits.", "addin": "Typically requires a paid license.", "cloud": "Typically requires a subscription." }
+      "q1": {
+        "question": "Does my file leave my device?",
+        "patentlint": "Never. Runs 100% in-browser.",
+        "addin": "File stays local, but add-in may phone home.",
+        "cloud": "Yes. Uploaded to remote servers."
+      },
+      "q2": {
+        "question": "Do I need an account?",
+        "patentlint": "No. No sign-up, no login, no tracking.",
+        "addin": "Usually requires a license or account.",
+        "cloud": "Yes. Account required."
+      },
+      "q3": {
+        "question": "Does it work offline?",
+        "patentlint": "Yes, after first load.",
+        "addin": "Depends on license validation.",
+        "cloud": "No. Requires internet."
+      },
+      "q4": {
+        "question": "Can I verify the privacy claim?",
+        "patentlint": "Yes. Open DevTools → Network, or go airplane mode.",
+        "addin": "Difficult to audit add-in traffic.",
+        "cloud": "No. Data is on their servers."
+      },
+      "q5": {
+        "question": "What platforms are supported?",
+        "patentlint": "Any device with a modern browser.",
+        "addin": "Windows + Microsoft Word only.",
+        "cloud": "Browser-based, but requires upload."
+      },
+      "q6": {
+        "question": "What does it cost?",
+        "patentlint": "Free — no fees, no subscription, no usage limits.",
+        "addin": "Typically requires a paid license.",
+        "cloud": "Typically requires a subscription."
+      }
     },
     "tech": {
       "architectureTitle": "Architecture",
@@ -211,11 +337,50 @@
     "restrictiveWordingAbstract": "{{text}}. The abstract should avoid legal phraseology (\"comprising,\" \"said,\" \"means\"), merit language (\"novel,\" \"innovative\"), and restrictive terms (\"must,\" \"essential\") per MPEP § 608.01(b). Rephrase flagged terms.",
     "abstractStructureFix": "The abstract must be a single paragraph ending with a period, exclamation point, or question mark, and must appear as the last section of the specification per MPEP § 608.01(b).",
     "abstractImpliedPhrasesFix": "Phrases like \"This disclosure provides...\" or \"A method is provided...\" are considered implied phraseology per MPEP § 608.01(b). Rewrite to describe the invention directly (e.g., \"A method that...\").",
-    "abstractWordCountFix": "The abstract must be between 50 and 150 words per MPEP § 608.01(b). Revise to meet this range."
+    "abstractWordCountFix": "The abstract must be between 50 and 150 words per MPEP § 608.01(b). Revise to meet this range.",
+    "cn": {
+      "requiredSections": "CNIPA requires 技术领域, 背景技术, 发明内容, and 具体实施方式 per 专利法实施细则 §17. Add the missing sections before filing.",
+      "sectionOrdering": "Prescribed order: 技术领域 → 背景技术 → 发明内容 → 附图说明 → 具体实施方式. Reorder sections to match.",
+      "paragraphNumberingXml": "Per 审查指南, paragraph numbers must be sequential and zero-padded (0001, 0002, ...). Fix the numbering sequence.",
+      "paragraphNumberingDocx": "Per CNIPA guidelines, specifications must not contain paragraph numbering. The WORD转XML编辑器 adds numbering automatically during conversion. Remove all manually added paragraph numbers.",
+      "paragraphEnding": "Per 审查指南, specification paragraphs must end with Chinese sentence-final punctuation (。, ！, or ？). Check the flagged paragraphs.",
+      "figureRefConsistency": "Per 审查指南, figures described in 附图说明 should be referenced in 具体实施方式 and vice versa. Verify the flagged references are intentional.",
+      "patentTypeTerminology": "Per 审查指南, invention applications should use 本发明 (not 本实用新型), and utility model applications vice versa. Verify the terminology matches your filing type.",
+      "titleLength": "Per 审查指南 第一部分第一章, the title (发明名称) must not exceed 25 Chinese characters. Shorten the title.",
+      "titleContent": "Per 审查指南, the title must not contain trademarks, model numbers, personal names, or commercial/advertising language. Remove the prohibited content.",
+      "specClaimReference": "Per 专利法实施细则 §17, the specification must not use language such as '如权利要求……所述的……' to reference claims. Remove claim references from the specification.",
+      "claimsSequential": "Per 审查指南, claims must be numbered sequentially starting from 1. Fix the numbering.",
+      "dependencyFormat": "Per 专利法实施细则 §22, dependent claims must use the format '如权利要求N所述的……' to reference parent claims. Fix the flagged claims.",
+      "selfDependent": "Per 专利法实施细则 §22, a claim cannot depend on itself. Correct the dependency reference.",
+      "forwardDependency": "Per 专利法实施细则 §22, dependent claims must only reference preceding claims. Change the dependency to reference an earlier claim.",
+      "singleSentence": "Per 审查指南 第二部分第二章, each claim must be a single sentence ending with one 。. Remove mid-claim periods or restructure into separate claims.",
+      "refNumeralParens": "Per 审查指南, reference numerals in claims should be enclosed in parentheses, e.g., (101) not 101. Verify the flagged claims.",
+      "subjectConsistency": "Per 审查指南 第二部分第二章, the subject name (主题名称) of a dependent claim should match its parent claim's subject name. Verify the flagged claims.",
+      "transitionPhrase": "Per 审查指南, independent claims should contain a characterizing transition such as '其特征在于' to delineate known elements from novel features. Verify the flagged claims.",
+      "twTerminology": "CNIPA uses '权利要求' for claims. '请求项' is Taiwan (TIPO) patent terminology. Replace all instances for CNIPA filing.",
+      "claimsSpecReference": "Per 审查指南 第二部分第二章, claims must not use '如说明书……所述' or '如图……所示' to define their scope. Claims must be self-contained. Remove these references.",
+      "multiMultiDep": "Per 专利法实施细则 §22, a multiple-dependent claim must not serve as the basis for another multiple-dependent claim. Restructure the dependency chain.",
+      "dependentOrdering": "Per 审查指南 第二部分第二章, all claims depending on an independent claim should appear consecutively before the next independent claim. Reorder claims.",
+      "abstractCharCount": "Per 专利法实施细则 §23, the abstract must not exceed 300 Chinese characters. Shorten the abstract.",
+      "abstractTitleMatch": "Per 审查指南, the abstract should be consistent with the title (发明名称). Verify the abstract reflects the invention title.",
+      "commercialLanguage": "Per 专利法实施细则 §23, the abstract must not contain commercial advertising language (商业性宣传用语). Remove terms like 最优, 最佳, 世界领先, 国际领先, 国内首创, 填补空白, etc."
+    }
   },
-  "common": { "close": "Close", "toggleTheme": "Toggle theme", "changeLanguage": "Change language" },
-  "consolidation": { "nounMismatchSummary": "Preamble noun mismatch: {{count}} dependent claim(s) differ from Claim {{rootId}}" },
-  "lang": { "en": "English", "zh-CN": "简体中文", "zh-TW": "繁體中文", "ja": "日本語", "ko": "한국어" },
+  "common": {
+    "close": "Close",
+    "toggleTheme": "Toggle theme",
+    "changeLanguage": "Change language"
+  },
+  "consolidation": {
+    "nounMismatchSummary": "Preamble noun mismatch: {{count}} dependent claim(s) differ from Claim {{rootId}}"
+  },
+  "lang": {
+    "en": "English",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "ja": "日本語",
+    "ko": "한국어"
+  },
   "check": {
     "spec": {
       "restrictiveWording": {
@@ -323,6 +488,113 @@
         "pass": "Figures are in sequential order."
       },
       "count": "{{count}} figure(s) found."
+    },
+    "cn": {
+      "spec": {
+        "requiredSections": {
+          "amend": "Missing required sections: {{sections}} (专利法实施细则 §17).",
+          "pass": "All required specification sections present."
+        },
+        "sectionOrdering": {
+          "amend": "Specification sections are out of prescribed order (专利法实施细则 §17).",
+          "pass": "Specification sections are in correct order."
+        },
+        "paragraphNumbering": {
+          "amendXml": "Paragraph numbering is not sequential ({{detail}}).",
+          "amendDocx": "Specification contains user-added paragraph numbering.",
+          "pass": "Paragraph numbering is correct."
+        },
+        "paragraphEnding": {
+          "amend": "{{count}} paragraph(s) do not end with valid Chinese punctuation.",
+          "pass": "All specification paragraphs end with valid punctuation."
+        },
+        "figureRefConsistency": {
+          "verify": "Figure references in 具体实施方式 and 附图说明 are inconsistent ({{detail}}).",
+          "pass": "Figure references are consistent across sections."
+        },
+        "patentTypeTerminology": {
+          "verify": "Found '{{term}}' — verify this matches the patent type (invention vs. utility model).",
+          "pass": "Patent type terminology is consistent."
+        },
+        "title": {
+          "amendLength": "Title exceeds 25 Chinese characters ({{count}} found).",
+          "amendContent": "Title contains prohibited content: {{detail}}.",
+          "pass": "Title meets CNIPA requirements."
+        },
+        "claimReference": {
+          "amend": "Specification references claims ({{detail}}).",
+          "pass": "Specification does not reference claims."
+        }
+      },
+      "claims": {
+        "sequential": {
+          "amend": "Claim numbers are not sequential ({{detail}}).",
+          "pass": "Claim numbers are sequential."
+        },
+        "dependencyFormat": {
+          "amend": "{{count}} claim(s) use incorrect dependency format.",
+          "pass": "All dependent claims use correct dependency format."
+        },
+        "selfDependent": {
+          "amend": "Claim {{claims}} depend(s) on itself.",
+          "pass": "No self-dependent claims found."
+        },
+        "forwardDependency": {
+          "amend": "Claim {{claims}} reference(s) a later claim (forward dependency).",
+          "pass": "No forward dependencies found."
+        },
+        "singleSentence": {
+          "amend": "{{count}} claim(s) contain multiple sentences.",
+          "pass": "All claims are single sentences."
+        },
+        "refNumeralParens": {
+          "verify": "{{count}} claim(s) contain reference numerals not enclosed in parentheses.",
+          "pass": "All reference numerals in claims are properly enclosed."
+        },
+        "subjectConsistency": {
+          "verify": "{{count}} dependent claim(s) have subject names inconsistent with their parent.",
+          "pass": "Dependent claim subject names are consistent."
+        },
+        "transitionPhrase": {
+          "verify": "{{count}} independent claim(s) may lack a characterizing transition (其特征在于).",
+          "pass": "All independent claims contain a characterizing transition."
+        },
+        "twTerminology": {
+          "verify": "Found Taiwan patent terminology '请求项' — use '权利要求' for CNIPA filings.",
+          "pass": "Claims use correct CNIPA terminology (权利要求)."
+        },
+        "specReference": {
+          "amend": "{{count}} claim(s) reference the specification or drawings to define scope.",
+          "pass": "No claims reference the specification or drawings."
+        },
+        "multiMultiDep": {
+          "amend": "Claim {{claims}}: a multiple-dependent claim depends on another multiple-dependent claim.",
+          "pass": "No chained multiple-dependent claims found."
+        },
+        "dependentOrdering": {
+          "amend": "Dependent claims are not grouped after their independent claim.",
+          "pass": "Dependent claims are properly ordered."
+        }
+      },
+      "abstract": {
+        "charCount": {
+          "amend": "Abstract exceeds 300 characters ({{count}} found).",
+          "pass": "Abstract is within 300 characters ({{count}})."
+        },
+        "titleMatch": {
+          "verify": "Title (发明名称) not found in abstract text.",
+          "pass": "Title appears in abstract."
+        },
+        "commercialLanguage": {
+          "amend": "Abstract contains commercial/advertising language: {{terms}}.",
+          "pass": "No commercial/advertising language found in abstract."
+        }
+      },
+      "drawings": {
+        "figureCount": {
+          "pass": "{{count}} figure(s) found."
+        }
+      }
     }
   },
   "loading": {
