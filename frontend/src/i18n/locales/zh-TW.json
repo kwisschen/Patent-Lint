@@ -271,9 +271,43 @@
         "checkSequenceListing": "序列表合規性（§ 2422）"
       }
     },
+    "cnTitle": "PatentLint 中國專利檢查清單",
+    "cnSubtitle": "20餘項結構性檢查，依據CNIPA撰稿規則（专利法实施细则、审查指南）。",
+    "cnGroups": {
+      "specification": "說明書",
+      "claims": "權利要求",
+      "abstract": "摘要",
+      "drawings": "附圖"
+    },
+    "cnChecks": {
+      "requiredSections": "必要章節（专利法实施细则 §17）",
+      "sectionOrdering": "章節順序",
+      "paragraphNumbering": "段落編號",
+      "paragraphEnding": "段落結尾標點",
+      "figureRefConsistency": "附圖引用一致性",
+      "patentTypeTerminology": "專利類型用語",
+      "titleRequirements": "標題要求",
+      "specClaimReference": "說明書不得引用權利要求",
+      "claimsSequential": "權利要求編號連續",
+      "dependencyFormat": "從屬格式",
+      "selfDependent": "自引用權利要求",
+      "forwardDependency": "前向引用",
+      "singleSentence": "每項權利要求一句話",
+      "refNumeralParens": "附圖標記加括號",
+      "subjectNameConsistency": "主題名稱一致性",
+      "transitionPhrase": "過渡短語（其特征在于）",
+      "cnTwTerminology": "大陸/臺灣用語",
+      "claimsSpecReference": "權利要求不得引用說明書/附圖",
+      "multiMultiDependency": "多重從屬的從屬",
+      "dependentOrdering": "從屬權利要求排序",
+      "abstractCharCount": "摘要字數（≤300）",
+      "titleInAbstract": "標題出現在摘要中",
+      "commercialLanguage": "商業性用語",
+      "figureCount": "附圖數量"
+    },
     "stats": {
       "tests": "自動化測試",
-      "checks": "MPEP 檢查",
+      "checks": "撰稿檢查",
       "languages": "介面語言",
       "cloudRequests": "雲端請求"
     },
