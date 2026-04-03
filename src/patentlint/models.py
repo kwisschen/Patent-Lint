@@ -215,6 +215,12 @@ class AnalysisResult(BaseModel):
     required_sections_checks: list[CheckItem] = Field(default_factory=list)
     figure_xref_checks: list[CheckItem] = Field(default_factory=list)
 
+    # CN check results (populated by _run_cn_pipeline, empty for US)
+    cn_specification_checks: list[CheckItem] = Field(default_factory=list)
+    cn_claims_checks: list[CheckItem] = Field(default_factory=list)
+    cn_abstract_checks: list[CheckItem] = Field(default_factory=list)
+    cn_drawings_checks: list[CheckItem] = Field(default_factory=list)
+
     # Document-level flag
     likely_patent: bool = True
 
@@ -234,6 +240,30 @@ class AnalysisResult(BaseModel):
         This is a presentation adapter — it does not change any existing
         fields or behavior.
         """
+        if self.jurisdiction == Jurisdiction.CN:
+            return self._to_cn_report_data()
+        return self._to_us_report_data()
+
+    def _to_cn_report_data(self) -> ReportData:
+        """Build ReportData for CN jurisdiction from pre-computed check lists."""
+        return ReportData(
+            jurisdiction=self.jurisdiction,
+            paragraph_count=self.paragraph_count,
+            total_claims=self.total_claims,
+            independent_count=self.independent_claims_count,
+            dependent_count=self.dependent_claims_count,
+            figure_count=self.figures_count,
+            abstract_word_count=self.abstract_word_count,
+            specification_checks=list(self.cn_specification_checks),
+            claims_checks=list(self.cn_claims_checks),
+            abstract_checks=list(self.cn_abstract_checks),
+            drawings_checks=list(self.cn_drawings_checks),
+            claim_trees=[],
+            likely_patent=self.likely_patent,
+        )
+
+    def _to_us_report_data(self) -> ReportData:
+        """Build ReportData for US jurisdiction from flat analysis fields."""
         from patentlint.analysis.claims import get_dependency_chain
 
         # --- Specification checks ---
