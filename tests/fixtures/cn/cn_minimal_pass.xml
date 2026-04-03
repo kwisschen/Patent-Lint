@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cn-application-body lang="zh" country="CN" dtd-version="1.0" file="test" status="new">
+  <description>
+    <invention-title>一种测试装置</invention-title>
+    <technical-field>
+      <p id="p0001" num="0001" Italic="0">本发明涉及一种测试装置。</p>
+    </technical-field>
+    <background-art>
+      <p id="p0002" num="0002" Italic="0">现有技术中存在一些问题。</p>
+    </background-art>
+    <disclosure>
+      <p id="p0003" num="0003" Italic="0">本发明提供一种测试装置，以解决上述问题。</p>
+    </disclosure>
+    <description-of-drawings>
+      <p id="p0004" num="0004" Italic="0"><figref idref="f0001" num="1">图1</figref>是测试装置的结构示意图。</p>
+    </description-of-drawings>
+    <mode-for-invention>
+      <p id="p0005" num="0005" Italic="0">如<figref idref="f0001" num="1">图1</figref>所示，测试装置包括第一组件（101）和第二组件（102）。</p>
+    </mode-for-invention>
+  </description>
+  <cn-claims>
+    <claim id="cl0001" num="0001" claim-type="independent">
+      <claim-text>一种测试装置，其特征在于，包括：<claim-text>第一组件（101）；和</claim-text><claim-text>第二组件（102）。</claim-text></claim-text>
+    </claim>
+    <claim id="cl0002" num="0002" claim-type="dependent">
+      <claim-text>如<claim-ref idref="cl0001">权利要求1</claim-ref>所述的测试装置，其特征在于，所述第一组件为金属材料制成。</claim-text>
+    </claim>
+  </cn-claims>
+  <cn-drawings>
+    <figure id="f0001" num="0001" figure-labels="图1">
+      <img file="f0001.tif" he="200mm" wi="150mm" img-content="drawing" img-format="tif"/>
+    </figure>
+  </cn-drawings>
+  <cn-abstract id="abst">
+    <p id="p0001a" num="0001" Italic="0">本发明公开了一种测试装置，包括第一组件和第二组件。</p>
+  </cn-abstract>
+</cn-application-body>
