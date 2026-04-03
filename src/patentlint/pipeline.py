@@ -11,6 +11,9 @@ import tempfile
 
 from patentlint.analysis import abstract as abstract_analysis
 from patentlint.analysis import claims as claims_analysis
+from patentlint.analysis import cn_abstract as cn_abstract_analysis
+from patentlint.analysis import cn_claims as cn_claims_analysis
+from patentlint.analysis import cn_specification as cn_spec_analysis
 from patentlint.analysis import drawings as drawings_analysis
 from patentlint.analysis import specification as spec_analysis
 from patentlint.models import AnalysisResult, CnPatentDocument, Jurisdiction
@@ -22,7 +25,7 @@ from patentlint.parser.xml_loader import extract_cn_xml_from_zip, parse_cnipa_xm
 
 
 def _run_cn_pipeline(cn_doc: CnPatentDocument) -> AnalysisResult:
-    """Run CN analysis pipeline. Checks will be added in Track 6C."""
+    """Run CN analysis pipeline with all 24 checks."""
     para_count = len(cn_doc.paragraph_numbers) if cn_doc.paragraph_numbers else (
         len(cn_doc.technical_field)
         + len(cn_doc.background)
@@ -30,6 +33,45 @@ def _run_cn_pipeline(cn_doc: CnPatentDocument) -> AnalysisResult:
         + len(cn_doc.drawings_description)
         + len(cn_doc.detailed_description)
     )
+
+    # --- Specification checks (1–8) ---
+    spec_checks = (
+        cn_spec_analysis.check_required_sections(cn_doc)
+        + cn_spec_analysis.check_section_ordering(cn_doc)
+        + cn_spec_analysis.check_paragraph_numbering(cn_doc)
+        + cn_spec_analysis.check_paragraph_ending(cn_doc)
+        + cn_spec_analysis.check_figure_reference_consistency(cn_doc)
+        + cn_spec_analysis.check_patent_type_terminology(cn_doc)
+        + cn_spec_analysis.check_title(cn_doc)
+        + cn_spec_analysis.check_spec_claim_reference(cn_doc)
+    )
+
+    # --- Claims checks (9–20) ---
+    claims_checks = (
+        cn_claims_analysis.check_claims_sequential(cn_doc)
+        + cn_claims_analysis.check_dependency_format(cn_doc)
+        + cn_claims_analysis.check_self_dependent(cn_doc)
+        + cn_claims_analysis.check_forward_dependency(cn_doc)
+        + cn_claims_analysis.check_single_sentence(cn_doc)
+        + cn_claims_analysis.check_reference_numeral_parentheses(cn_doc)
+        + cn_claims_analysis.check_subject_name_consistency(cn_doc)
+        + cn_claims_analysis.check_transition_phrase(cn_doc)
+        + cn_claims_analysis.check_tw_terminology(cn_doc)
+        + cn_claims_analysis.check_claims_spec_reference(cn_doc)
+        + cn_claims_analysis.check_multi_multi_dependency(cn_doc)
+        + cn_claims_analysis.check_dependent_ordering(cn_doc)
+    )
+
+    # --- Abstract checks (21–23) ---
+    abstract_checks = (
+        cn_abstract_analysis.check_abstract_char_count(cn_doc)
+        + cn_abstract_analysis.check_abstract_title_match(cn_doc)
+        + cn_abstract_analysis.check_commercial_language(cn_doc)
+    )
+
+    # --- Drawings checks (24) ---
+    drawings_checks = cn_abstract_analysis.check_figure_count(cn_doc)
+
     return AnalysisResult(
         jurisdiction=Jurisdiction.CN,
         paragraph_count=para_count,
@@ -39,6 +81,10 @@ def _run_cn_pipeline(cn_doc: CnPatentDocument) -> AnalysisResult:
         figures_count=cn_doc.figure_count,
         abstract_word_count=cn_doc.abstract_char_count,
         likely_patent=True,
+        cn_specification_checks=spec_checks,
+        cn_claims_checks=claims_checks,
+        cn_abstract_checks=abstract_checks,
+        cn_drawings_checks=drawings_checks,
     )
 
 
