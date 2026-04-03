@@ -70,7 +70,29 @@ function CheckMark({ active, isPatentLint }) {
   )
 }
 
+const CN_SPEC_CHECKS = [
+  'requiredSections', 'sectionOrdering', 'paragraphNumbering',
+  'paragraphEnding', 'figureRefConsistency', 'patentTypeTerminology',
+  'titleRequirements', 'specClaimReference',
+]
+
+const CN_CLAIMS_CHECKS = [
+  'claimsSequential', 'dependencyFormat', 'selfDependent',
+  'forwardDependency', 'singleSentence', 'refNumeralParens',
+  'subjectNameConsistency', 'transitionPhrase', 'cnTwTerminology',
+  'claimsSpecReference', 'multiMultiDependency', 'dependentOrdering',
+]
+
+const CN_ABSTRACT_CHECKS = [
+  'abstractCharCount', 'titleInAbstract', 'commercialLanguage',
+]
+
+const CN_DRAWINGS_CHECKS = [
+  'figureCount',
+]
+
 function ComparisonTable({ t }) {
+  const [activeTab, setActiveTab] = useState('US')
   const [ref1, inView1] = useInView()
   const [ref2, inView2] = useInView()
   const [ref3, inView3] = useInView()
@@ -113,34 +135,124 @@ function ComparisonTable({ t }) {
     </tbody>
   )
 
+  const renderCnGroup = (ref, inView, titleKey, checks, delay) => (
+    <tbody
+      ref={ref}
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(16px)',
+        transition: `opacity 500ms ease ${delay}ms, transform 500ms ease ${delay}ms`,
+      }}
+    >
+      <tr>
+        <td
+          colSpan={2}
+          className="pt-6 pb-2 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wider"
+        >
+          {t(titleKey)}
+        </td>
+      </tr>
+      {checks.map((key) => (
+        <tr
+          key={key}
+          className="border-b border-border/50 hover:bg-muted/50 transition-colors border-l-2 border-l-green-200 dark:border-l-green-800"
+        >
+          <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm text-foreground">
+            {t(`about.cnChecks.${key}`)}
+          </td>
+          <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-center sm:w-40">
+            <CheckMark active isPatentLint />
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  )
+
+  const [cnRef1, cnInView1] = useInView()
+  const [cnRef2, cnInView2] = useInView()
+  const [cnRef3, cnInView3] = useInView()
+  const [cnRef4, cnInView4] = useInView()
+
   return (
     <section>
       <div className="text-center mb-8">
+        <div className="flex items-center justify-center gap-1 rounded-lg bg-muted p-1 mb-4 w-fit mx-auto" role="radiogroup" aria-label={t('jurisdiction.label')}>
+          <button
+            role="radio"
+            aria-checked={activeTab === 'US'}
+            onClick={() => setActiveTab('US')}
+            className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+              activeTab === 'US'
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            {t('jurisdiction.us')}
+          </button>
+          <button
+            role="radio"
+            aria-checked={activeTab === 'CN'}
+            onClick={() => setActiveTab('CN')}
+            className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+              activeTab === 'CN'
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            {t('jurisdiction.cn')}
+          </button>
+        </div>
         <h2 className="text-3xl font-bold text-foreground mb-2">
-          {t('about.usptoTitle')}
+          {t(activeTab === 'CN' ? 'about.cnTitle' : 'about.usptoTitle')}
         </h2>
-        <p className="text-muted-foreground">{t('about.usptoSubtitle')}</p>
+        <p className="text-muted-foreground">
+          {t(activeTab === 'CN' ? 'about.cnSubtitle' : 'about.usptoSubtitle')}
+        </p>
       </div>
-      <div className="rounded-lg border border-border">
-        <table className="w-full text-left">
-          <thead>
-            <tr className="border-b border-border bg-muted/30">
-              <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
-                {t('about.uspto.colCheck')}
-              </th>
-              <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
-                {t('about.uspto.colUSPTO')}
-              </th>
-              <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
-                {t('about.uspto.colPatentLint')}
-              </th>
-            </tr>
-          </thead>
-          {renderGroup(ref1, inView1, 'about.uspto.group1Title', GROUP1_CHECKS, true, true, false, 0)}
-          {renderGroup(ref2, inView2, 'about.uspto.group2Title', GROUP2_CHECKS, true, false, false, 150)}
-          {renderGroup(ref3, inView3, 'about.uspto.group3Title', GROUP3_CHECKS, false, true, true, 300)}
-        </table>
-      </div>
+
+      {activeTab === 'US' && (
+        <div className="rounded-lg border border-border">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
+                  {t('about.uspto.colCheck')}
+                </th>
+                <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
+                  {t('about.uspto.colUSPTO')}
+                </th>
+                <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
+                  {t('about.uspto.colPatentLint')}
+                </th>
+              </tr>
+            </thead>
+            {renderGroup(ref1, inView1, 'about.uspto.group1Title', GROUP1_CHECKS, true, true, false, 0)}
+            {renderGroup(ref2, inView2, 'about.uspto.group2Title', GROUP2_CHECKS, true, false, false, 150)}
+            {renderGroup(ref3, inView3, 'about.uspto.group3Title', GROUP3_CHECKS, false, true, true, 300)}
+          </table>
+        </div>
+      )}
+
+      {activeTab === 'CN' && (
+        <div className="rounded-lg border border-border">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
+                  {t('about.uspto.colCheck')}
+                </th>
+                <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
+                  {t('about.uspto.colPatentLint')}
+                </th>
+              </tr>
+            </thead>
+            {renderCnGroup(cnRef1, cnInView1, 'about.cnGroups.specification', CN_SPEC_CHECKS, 0)}
+            {renderCnGroup(cnRef2, cnInView2, 'about.cnGroups.claims', CN_CLAIMS_CHECKS, 150)}
+            {renderCnGroup(cnRef3, cnInView3, 'about.cnGroups.abstract', CN_ABSTRACT_CHECKS, 300)}
+            {renderCnGroup(cnRef4, cnInView4, 'about.cnGroups.drawings', CN_DRAWINGS_CHECKS, 400)}
+          </table>
+        </div>
+      )}
     </section>
   )
 }
@@ -173,8 +285,8 @@ function StatCard({ value, suffix, label, delay }) {
 function StatsGrid({ t }) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      <StatCard value={380} suffix="+" label={t('about.stats.tests')} delay={0} />
-      <StatCard value={30} suffix="+" label={t('about.stats.checks')} delay={100} />
+      <StatCard value={540} suffix="+" label={t('about.stats.tests')} delay={0} />
+      <StatCard value={50} suffix="+" label={t('about.stats.checks')} delay={100} />
       <StatCard value={5} suffix="" label={t('about.stats.languages')} delay={200} />
       <StatCard value={0} suffix="" label={t('about.stats.cloudRequests')} delay={300} />
     </div>

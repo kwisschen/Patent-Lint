@@ -271,9 +271,43 @@
         "checkSequenceListing": "序列表合规性（§ 2422）"
       }
     },
+    "cnTitle": "PatentLint 中国专利检查清单",
+    "cnSubtitle": "20余项结构性检查，依据CNIPA撰写规则（专利法实施细则、审查指南）。",
+    "cnGroups": {
+      "specification": "说明书",
+      "claims": "权利要求",
+      "abstract": "摘要",
+      "drawings": "附图"
+    },
+    "cnChecks": {
+      "requiredSections": "必要章节（专利法实施细则 §17）",
+      "sectionOrdering": "章节顺序",
+      "paragraphNumbering": "段落编号",
+      "paragraphEnding": "段落结尾标点",
+      "figureRefConsistency": "附图引用一致性",
+      "patentTypeTerminology": "专利类型用语",
+      "titleRequirements": "标题要求",
+      "specClaimReference": "说明书不得引用权利要求",
+      "claimsSequential": "权利要求编号连续",
+      "dependencyFormat": "从属格式",
+      "selfDependent": "自引用权利要求",
+      "forwardDependency": "前向引用",
+      "singleSentence": "每项权利要求一句话",
+      "refNumeralParens": "附图标记加括号",
+      "subjectNameConsistency": "主题名称一致性",
+      "transitionPhrase": "过渡短语（其特征在于）",
+      "cnTwTerminology": "大陆/台湾用语",
+      "claimsSpecReference": "权利要求不得引用说明书/附图",
+      "multiMultiDependency": "多重从属的从属",
+      "dependentOrdering": "从属权利要求排序",
+      "abstractCharCount": "摘要字数（≤300）",
+      "titleInAbstract": "标题出现在摘要中",
+      "commercialLanguage": "商业性用语",
+      "figureCount": "附图数量"
+    },
     "stats": {
       "tests": "自动化测试",
-      "checks": "MPEP 检查",
+      "checks": "撰写检查",
       "languages": "界面语言",
       "cloudRequests": "云端请求"
     },

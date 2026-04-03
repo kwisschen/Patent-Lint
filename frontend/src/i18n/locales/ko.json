@@ -271,9 +271,43 @@
         "checkSequenceListing": "서열 목록 규정 준수 (§ 2422)"
       }
     },
+    "cnTitle": "PatentLint 중국 특허 검사 목록",
+    "cnSubtitle": "CNIPA 작성 규칙(专利法实施细则, 审查指南)에 따른 20건 이상의 구조 검사.",
+    "cnGroups": {
+      "specification": "명세서(说明书)",
+      "claims": "청구항(权利要求)",
+      "abstract": "요약서(摘要)",
+      "drawings": "도면(附图)"
+    },
+    "cnChecks": {
+      "requiredSections": "필수 섹션(专利法实施细则 §17)",
+      "sectionOrdering": "섹션 순서",
+      "paragraphNumbering": "단락 번호",
+      "paragraphEnding": "단락 끝 구두점",
+      "figureRefConsistency": "도면 참조 일관성",
+      "patentTypeTerminology": "특허 유형 용어",
+      "titleRequirements": "제목 요건",
+      "specClaimReference": "명세서에서 청구항 참조 금지",
+      "claimsSequential": "청구항 번호 연속성",
+      "dependencyFormat": "종속 형식",
+      "selfDependent": "자기 종속 청구항",
+      "forwardDependency": "전방 종속",
+      "singleSentence": "청구항당 한 문장",
+      "refNumeralParens": "도면 부호 괄호",
+      "subjectNameConsistency": "주제명 일관성",
+      "transitionPhrase": "전환 구문(其特征在于)",
+      "cnTwTerminology": "중국 대륙/대만 용어",
+      "claimsSpecReference": "청구항에서 명세서/도면 참조 금지",
+      "multiMultiDependency": "다중 종속의 다중 종속",
+      "dependentOrdering": "종속 청구항 순서",
+      "abstractCharCount": "요약서 글자 수(300자 이하)",
+      "titleInAbstract": "제목이 요약서에 포함",
+      "commercialLanguage": "상업적 표현",
+      "figureCount": "도면 수"
+    },
     "stats": {
       "tests": "자동화 테스트",
-      "checks": "MPEP 검사",
+      "checks": "작성 검사",
       "languages": "UI 언어",
       "cloudRequests": "클라우드 요청"
     },

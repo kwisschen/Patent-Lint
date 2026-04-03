@@ -271,9 +271,43 @@
         "checkSequenceListing": "配列表の準拠性（§ 2422）"
       }
     },
+    "cnTitle": "PatentLint 中国特許チェック一覧",
+    "cnSubtitle": "CNIPA起草規則（专利法实施细则、审查指南）に基づく20+の構造チェック。",
+    "cnGroups": {
+      "specification": "明細書（说明书）",
+      "claims": "特許請求の範囲（权利要求）",
+      "abstract": "要約（摘要）",
+      "drawings": "図面（附图）"
+    },
+    "cnChecks": {
+      "requiredSections": "必須セクション（专利法实施细则 §17）",
+      "sectionOrdering": "セクション順序",
+      "paragraphNumbering": "段落番号",
+      "paragraphEnding": "段落末尾の句読点",
+      "figureRefConsistency": "図面参照の一貫性",
+      "patentTypeTerminology": "特許タイプの用語",
+      "titleRequirements": "タイトル要件",
+      "specClaimReference": "明細書は請求項を引用してはならない",
+      "claimsSequential": "請求項番号の連続性",
+      "dependencyFormat": "従属形式",
+      "selfDependent": "自己従属の請求項",
+      "forwardDependency": "前方従属",
+      "singleSentence": "請求項ごとに一文",
+      "refNumeralParens": "参照番号の括弧",
+      "subjectNameConsistency": "主題名の一貫性",
+      "transitionPhrase": "移行フレーズ（其特征在于）",
+      "cnTwTerminology": "中国大陸/台湾の用語",
+      "claimsSpecReference": "請求項は明細書/図面を引用してはならない",
+      "multiMultiDependency": "多項従属の多項従属",
+      "dependentOrdering": "従属請求項の順序",
+      "abstractCharCount": "要約文字数（300字以下）",
+      "titleInAbstract": "タイトルが要約に含まれている",
+      "commercialLanguage": "商業的表現",
+      "figureCount": "図面数"
+    },
     "stats": {
       "tests": "自動テスト",
-      "checks": "MPEP チェック",
+      "checks": "作成チェック",
       "languages": "UI 言語",
       "cloudRequests": "クラウドリクエスト"
     },
