@@ -110,6 +110,7 @@ class CheckItem(BaseModel):
     details: str | None = None
     details_key: str | None = None
     details_params: dict[str, str] | None = None
+    reference: str | None = None
 
 
 class ClaimTreeRow(BaseModel):
