@@ -13,14 +13,17 @@ from patentlint.analysis import abstract as abstract_analysis
 from patentlint.analysis import claims as claims_analysis
 from patentlint.analysis import drawings as drawings_analysis
 from patentlint.analysis import specification as spec_analysis
-from patentlint.models import AnalysisResult
+from patentlint.models import AnalysisResult, Jurisdiction
 from patentlint.parser import claims as claims_parser
 from patentlint.parser import sections
 from patentlint.parser.docx_loader import load_docx
 
 
-def _run_pipeline(loaded, full_text: str) -> AnalysisResult:
+def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisdiction.US) -> AnalysisResult:
     """Core pipeline logic shared by analyze_file and analyze_bytes."""
+
+    if jurisdiction == Jurisdiction.CN:
+        raise NotImplementedError("CN analysis checks not yet implemented")
 
     # --- Document type detection ---
     likely_patent = sections.detect_patent_document(full_text)
@@ -109,6 +112,7 @@ def _run_pipeline(loaded, full_text: str) -> AnalysisResult:
     prior_art_citations = sections.detect_prior_art_citations(background_section) if background_section else ""
 
     return AnalysisResult(
+        jurisdiction=jurisdiction,
         # Document-level flag
         likely_patent=likely_patent,
         # Specification
@@ -159,20 +163,26 @@ def _run_pipeline(loaded, full_text: str) -> AnalysisResult:
     )
 
 
-def analyze_file(file_path: str) -> AnalysisResult:
+def analyze_file(file_path: str, jurisdiction: Jurisdiction = Jurisdiction.US) -> AnalysisResult:
     """Run the full analysis pipeline on a .docx file path."""
     loaded = load_docx(file_path)
-    return _run_pipeline(loaded, loaded.full_text)
+    return _run_pipeline(loaded, loaded.full_text, jurisdiction=jurisdiction)
 
 
-def analyze_bytes(content: bytes, filename: str) -> AnalysisResult:
+def analyze_bytes(content: bytes, filename: str, jurisdiction: Jurisdiction = Jurisdiction.US) -> AnalysisResult:
     """Run the full analysis pipeline on in-memory bytes."""
-    if not filename.lower().endswith(".docx"):
-        raise ValueError("File must be a .docx document")
+    if jurisdiction == Jurisdiction.CN:
+        if filename.endswith(".xml") or filename.endswith(".zip"):
+            raise NotImplementedError("CN XML/ZIP parsing not yet implemented")
+        # CN .docx falls through to load_docx, then routes in _run_pipeline
+
+    if not filename.endswith(".docx"):
+        msg = f"Unsupported file type: {filename}"
+        raise ValueError(msg)
 
     with tempfile.NamedTemporaryFile(suffix=".docx", delete=True) as tmp:
         tmp.write(content)
         tmp.flush()
         loaded = load_docx(tmp.name)
 
-    return _run_pipeline(loaded, loaded.full_text)
+    return _run_pipeline(loaded, loaded.full_text, jurisdiction=jurisdiction)
