@@ -29,10 +29,12 @@
     "dependent": "従属項",
     "figures": "図面",
     "abstractWords": "要約語数",
+    "abstractChars": "要約文字数",
     "claimCategories": "請求項カテゴリ",
     "method": "方法",
     "apparatus": "装置",
     "outsideRange": "50–150語の範囲外",
+    "outsideRangeCn": "300文字を超過",
     "noParagraphs": "段落番号なし"
   },
   "section": {
