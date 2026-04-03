@@ -271,9 +271,43 @@
         "checkSequenceListing": "Sequence listing compliance (§ 2422)"
       }
     },
+    "cnTitle": "PatentLint CN Check Inventory",
+    "cnSubtitle": "20+ structural checks against CNIPA drafting rules (\u4e13\u5229\u6cd5\u5b9e\u65bd\u7ec6\u5219, \u5ba1\u67e5\u6307\u5357).",
+    "cnGroups": {
+      "specification": "Specification (\u8bf4\u660e\u4e66)",
+      "claims": "Claims (\u6743\u5229\u8981\u6c42)",
+      "abstract": "Abstract (\u6458\u8981)",
+      "drawings": "Drawings (\u9644\u56fe)"
+    },
+    "cnChecks": {
+      "requiredSections": "Required sections (\u4e13\u5229\u6cd5\u5b9e\u65bd\u7ec6\u5219 \u00a717)",
+      "sectionOrdering": "Section ordering",
+      "paragraphNumbering": "Paragraph numbering",
+      "paragraphEnding": "Paragraph ending punctuation",
+      "figureRefConsistency": "Figure reference consistency",
+      "patentTypeTerminology": "Patent type terminology",
+      "titleRequirements": "Title requirements",
+      "specClaimReference": "Specification must not reference claims",
+      "claimsSequential": "Claims sequential",
+      "dependencyFormat": "Dependency format",
+      "selfDependent": "Self-dependent claims",
+      "forwardDependency": "Forward dependency",
+      "singleSentence": "Single sentence per claim",
+      "refNumeralParens": "Reference numerals in parentheses",
+      "subjectNameConsistency": "Subject name consistency",
+      "transitionPhrase": "Transition phrase (\u5176\u7279\u5f81\u5728\u4e8e)",
+      "cnTwTerminology": "CN/TW terminology",
+      "claimsSpecReference": "Claims must not reference spec/drawings",
+      "multiMultiDependency": "Multi-multi dependency",
+      "dependentOrdering": "Dependent claim ordering",
+      "abstractCharCount": "Abstract character count (\u2264300)",
+      "titleInAbstract": "Title in abstract",
+      "commercialLanguage": "Commercial language",
+      "figureCount": "Figure count"
+    },
     "stats": {
       "tests": "Automated Tests",
-      "checks": "MPEP Checks",
+      "checks": "Drafting Checks",
       "languages": "UI Languages",
       "cloudRequests": "Cloud Requests"
     },
