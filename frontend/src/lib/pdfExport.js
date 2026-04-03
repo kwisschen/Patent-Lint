@@ -300,6 +300,7 @@ function buildSpecSupport(unsupportedTerms, t) {
 
 export async function downloadReport(reportData, t, language, originalFilename) {
   const filename = originalFilename || reportData.filename || 'report'
+  const isCN = reportData.jurisdiction === 'CN'
 
   const sections = [
     { name: t('section.specification'), items: reportData.specification_checks || [] },
@@ -403,7 +404,7 @@ export async function downloadReport(reportData, t, language, originalFilename) 
               { text: String(reportData.figure_count ?? 0), fontSize: 10 },
             ],
             [
-              { text: t('pdf.abstractWordCount'), bold: true, color: '#555555', fontSize: 10 },
+              { text: t(isCN ? 'pdf.abstractCharCount' : 'pdf.abstractWordCount'), bold: true, color: '#555555', fontSize: 10 },
               { text: String(reportData.abstract_word_count ?? 0), fontSize: 10 },
             ],
           ],

@@ -81,6 +81,7 @@ def _run_cn_pipeline(cn_doc: CnPatentDocument) -> AnalysisResult:
         figures_count=cn_doc.figure_count,
         abstract_word_count=cn_doc.abstract_char_count,
         likely_patent=True,
+        has_scanned_fallback=cn_doc.has_doc_page_fallback,
         cn_specification_checks=spec_checks,
         cn_claims_checks=claims_checks,
         cn_abstract_checks=abstract_checks,

@@ -7,6 +7,7 @@ import { Loader2 } from 'lucide-react'
 import Layout from './components/Layout'
 import DropZone from './components/DropZone'
 import AnalysisReport from './components/AnalysisReport'
+import ScannedDocBanner from './components/ScannedDocBanner'
 import LoadingOnboard from './components/LoadingOnboard'
 import ProveItModal from './components/ProveItModal'
 import SecurityPage from './pages/SecurityPage'
@@ -147,15 +148,19 @@ function App() {
               )}
 
               {homeState === 'results' && result && (
-                <AnalysisReport
-                  data={result}
-                  filename={file?.name}
-                  onDownloadPdf={handleDownloadPdf}
-                  onReset={handleReset}
-                  downloading={downloading}
-                  onShowProveIt={() => setShowProveIt(true)}
-                  pyodideReady={pyodide.ready}
-                />
+                result.has_scanned_fallback ? (
+                  <ScannedDocBanner onReset={handleReset} />
+                ) : (
+                  <AnalysisReport
+                    data={result}
+                    filename={file?.name}
+                    onDownloadPdf={handleDownloadPdf}
+                    onReset={handleReset}
+                    downloading={downloading}
+                    onShowProveIt={() => setShowProveIt(true)}
+                    pyodideReady={pyodide.ready}
+                  />
+                )
               )}
 
               {error && (
