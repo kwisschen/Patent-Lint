@@ -8,7 +8,15 @@ These are designed to be shareable with the Agentic Patent Analyst project.
 
 from __future__ import annotations
 
+from enum import Enum
+
 from pydantic import BaseModel, Field
+
+
+class Jurisdiction(str, Enum):
+    """Patent jurisdiction for analysis routing."""
+    US = "US"
+    CN = "CN"
 
 
 class Claim(BaseModel):
@@ -74,6 +82,25 @@ class UnsupportedTerm(BaseModel):
     tiers_checked: list[str] = Field(default_factory=list)  # ["exact", "stemmed", "word_window"]
 
 
+class CnPatentDocument(BaseModel):
+    """Parsed Chinese patent document (from CNIPA XML or .docx)."""
+    title: str = ""
+    technical_field: list[str] = Field(default_factory=list)
+    background: list[str] = Field(default_factory=list)
+    summary: list[str] = Field(default_factory=list)
+    drawings_description: list[str] = Field(default_factory=list)
+    detailed_description: list[str] = Field(default_factory=list)
+    claims: list[Claim] = Field(default_factory=list)
+    abstract_text: str = ""
+    abstract_char_count: int = 0
+    paragraph_numbers: list[int] = Field(default_factory=list)
+    figure_count: int = 0
+    figure_refs: list[str] = Field(default_factory=list)
+    has_paragraph_numbering: bool = False
+    input_format: str = "docx"
+    has_doc_page_fallback: bool = False
+
+
 class CheckItem(BaseModel):
     """Single check result for report rendering."""
 
@@ -103,6 +130,8 @@ class ClaimTreeGroup(BaseModel):
 
 class ReportData(BaseModel):
     """Structured report data for template rendering."""
+
+    jurisdiction: Jurisdiction = Jurisdiction.US
 
     # Summary stats
     paragraph_count: int
@@ -140,6 +169,7 @@ class AnalysisResult(BaseModel):
     """
 
     # Specification
+    jurisdiction: Jurisdiction = Jurisdiction.US
     has_tracked_changes: bool = False
     paragraph_count: int = 0
     improper_spec_paragraphs: list[int] = Field(default_factory=list)
@@ -631,6 +661,7 @@ class AnalysisResult(BaseModel):
             claim_trees.append(ClaimTreeGroup(label="Method Claims", rows=method_rows))
 
         return ReportData(
+            jurisdiction=self.jurisdiction,
             paragraph_count=self.paragraph_count,
             total_claims=self.total_claims,
             independent_count=self.independent_claims_count,

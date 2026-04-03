@@ -16,7 +16,7 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, Response
 
-from patentlint.models import AnalysisResult
+from patentlint.models import AnalysisResult, Jurisdiction
 from patentlint.pipeline import analyze_bytes
 from patentlint.report.generator import render_pdf
 
@@ -33,10 +33,21 @@ app.add_middleware(
 )
 
 
-async def _run_analysis_pipeline(upload_file: UploadFile) -> AnalysisResult:
+async def _run_analysis_pipeline(
+    upload_file: UploadFile,
+    jurisdiction: Jurisdiction = Jurisdiction.US,
+) -> AnalysisResult:
     """Validate upload, read bytes, delegate to pipeline.analyze_bytes()."""
-    if not upload_file.filename or not upload_file.filename.lower().endswith(".docx"):
-        raise HTTPException(status_code=400, detail="File must be a .docx document")
+    if jurisdiction == Jurisdiction.CN:
+        valid_extensions = (".docx", ".xml", ".zip")
+    else:
+        valid_extensions = (".docx",)
+    if not upload_file.filename or not upload_file.filename.lower().endswith(valid_extensions):
+        exts = ", ".join(valid_extensions)
+        raise HTTPException(
+            status_code=400,
+            detail=f"File must be {exts} for {jurisdiction.value} jurisdiction",
+        )
 
     try:
         contents = await upload_file.read()
@@ -44,7 +55,7 @@ async def _run_analysis_pipeline(upload_file: UploadFile) -> AnalysisResult:
         raise HTTPException(status_code=400, detail="Could not read uploaded file")
 
     try:
-        return analyze_bytes(contents, upload_file.filename)
+        return analyze_bytes(contents, upload_file.filename, jurisdiction=jurisdiction)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -55,22 +66,32 @@ def health():
 
 
 @app.post("/api/analyze")
-async def analyze(file: UploadFile = File(...), format: str = "raw"):
+async def analyze(
+    file: UploadFile = File(...),
+    format: str = "raw",
+    jurisdiction: str = "us",
+):
     """Analyze a patent .docx file and return structured results.
 
     Query params:
         format: "raw" (default) returns AnalysisResult, "report" returns ReportData.
+        jurisdiction: "us" (default) or "cn".
     """
-    result = await _run_analysis_pipeline(file)
+    j = Jurisdiction(jurisdiction.upper())
+    result = await _run_analysis_pipeline(file, jurisdiction=j)
     if format == "report":
         return result.to_report_data().model_dump()
     return result.model_dump()
 
 
 @app.post("/api/analyze/report")
-async def analyze_report(file: UploadFile = File(...)):
+async def analyze_report(
+    file: UploadFile = File(...),
+    jurisdiction: str = "us",
+):
     """Upload .docx -> full analysis -> PDF report download."""
-    result = await _run_analysis_pipeline(file)
+    j = Jurisdiction(jurisdiction.upper())
+    result = await _run_analysis_pipeline(file, jurisdiction=j)
     pdf_bytes = render_pdf(result)
     return Response(
         content=pdf_bytes,
