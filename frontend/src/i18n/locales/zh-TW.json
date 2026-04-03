@@ -1,15 +1,79 @@
 {
-  "header": { "title": "PatentLint", "subtitle": "專利稿件檢查工具" },
-  "jurisdiction": { "us": "美國專利", "cn": "中國專利", "label": "管轄區" },
-  "dropzone": { "tagline": "依據30多項USPTO撰稿規則檢查您的專利稿件", "title": "拖放您的專利 .docx 開始本機分析", "subtitle": "或點擊瀏覽檔案", "notice": "目前僅支援美國專利說明書（.docx）。", "reject": "僅接受 .docx 檔案", "rejectMultiple": "請一次拖放一個檔案。", "rejectMultipleType": "請拖放單一 .docx 檔案。", "taglineCn": "依據20多項CNIPA撰稿規則檢查您的專利稿件", "titleCn": "拖放您的專利檔案開始本機分析", "noticeCn": "支援中國專利稿件（.docx、.xml、.zip）。", "rejectCn": "僅接受 .docx、.xml 及 .zip 檔案", "rejectMultipleTypeCn": "請拖放單一 .docx、.xml 或 .zip 檔案。" },
-  "summary": { "specParagraphs": "說明書段落", "claims": "請求項", "independent": "獨立項", "dependent": "附屬項", "figures": "圖式", "abstractWords": "摘要字數", "claimCategories": "請求項類別", "method": "方法", "apparatus": "裝置", "outsideRange": "超出 50–150 字範圍", "noParagraphs": "未發現段落編號" },
-  "section": { "specification": "說明書", "claims": "申請專利範圍", "drawings": "圖式簡要說明", "drawingsShort": "圖式", "abstract": "摘要" },
-  "status": { "pass": "通過", "verify": "確認", "amend": "修改" },
-  "button": { "downloadPdf": "儲存 PDF 報告", "newAnalysis": "重新分析", "generating": "儲存中..." },
-  "diagram": { "show": "顯示圖表", "hide": "隱藏圖表" },
-  "claimDiagram": { "renderError": "無法繪製圖表", "independent": "獨立項", "dependent": "附屬項", "claimLabel": "請求項 {{id}}", "claimsLabel": "請求項 {{range}}" },
-  "tree": { "apparatusClaims": "物之請求項", "methodClaims": "方法之請求項", "independent": "獨立項", "dependent": "附屬項", "deps": "個附屬項", "dep": "個附屬項" },
-  "section112": { "title": "§ 112 分析" },
+  "header": {
+    "title": "PatentLint",
+    "subtitle": "專利稿件檢查工具"
+  },
+  "jurisdiction": {
+    "us": "美國專利",
+    "cn": "中國專利",
+    "label": "管轄區"
+  },
+  "dropzone": {
+    "tagline": "依據30多項USPTO撰稿規則檢查您的專利稿件",
+    "title": "拖放您的專利 .docx 開始本機分析",
+    "subtitle": "或點擊瀏覽檔案",
+    "notice": "目前僅支援美國專利說明書（.docx）。",
+    "reject": "僅接受 .docx 檔案",
+    "rejectMultiple": "請一次拖放一個檔案。",
+    "rejectMultipleType": "請拖放單一 .docx 檔案。",
+    "taglineCn": "依據20多項CNIPA撰稿規則檢查您的專利稿件",
+    "titleCn": "拖放您的專利檔案開始本機分析",
+    "noticeCn": "支援中國專利稿件（.docx、.xml、.zip）。",
+    "rejectCn": "僅接受 .docx、.xml 及 .zip 檔案",
+    "rejectMultipleTypeCn": "請拖放單一 .docx、.xml 或 .zip 檔案。"
+  },
+  "summary": {
+    "specParagraphs": "說明書段落",
+    "claims": "請求項",
+    "independent": "獨立項",
+    "dependent": "附屬項",
+    "figures": "圖式",
+    "abstractWords": "摘要字數",
+    "claimCategories": "請求項類別",
+    "method": "方法",
+    "apparatus": "裝置",
+    "outsideRange": "超出 50–150 字範圍",
+    "noParagraphs": "未發現段落編號"
+  },
+  "section": {
+    "specification": "說明書",
+    "claims": "申請專利範圍",
+    "drawings": "圖式簡要說明",
+    "drawingsShort": "圖式",
+    "abstract": "摘要"
+  },
+  "status": {
+    "pass": "通過",
+    "verify": "確認",
+    "amend": "修改"
+  },
+  "button": {
+    "downloadPdf": "儲存 PDF 報告",
+    "newAnalysis": "重新分析",
+    "generating": "儲存中..."
+  },
+  "diagram": {
+    "show": "顯示圖表",
+    "hide": "隱藏圖表"
+  },
+  "claimDiagram": {
+    "renderError": "無法繪製圖表",
+    "independent": "獨立項",
+    "dependent": "附屬項",
+    "claimLabel": "請求項 {{id}}",
+    "claimsLabel": "請求項 {{range}}"
+  },
+  "tree": {
+    "apparatusClaims": "物之請求項",
+    "methodClaims": "方法之請求項",
+    "independent": "獨立項",
+    "dependent": "附屬項",
+    "deps": "個附屬項",
+    "dep": "個附屬項"
+  },
+  "section112": {
+    "title": "§ 112 分析"
+  },
   "results": {
     "nonPatentWarning": "此文件可能不是美國專利稿件",
     "nonPatentWarningDetails": "PatentLint 專為美國專利申請草稿設計。此檔案未包含標準專利章節、編號請求項或段落編號，分析結果對非美國或非專利文件可能不具參考價值。",
@@ -17,12 +81,44 @@
     "trackedChangesWarning": "此文件包含追蹤修訂，可能影響分析準確性。請在文書處理軟體中接受或拒絕所有變更後，重新進行分析。",
     "analyzeAgain": "重新分析"
   },
-  "analysis": { "analyzing": "正在分析專利文件...", "label": "分析結果" },
-  "footer": { "disclaimer": "本報告不構成法律意見", "builtBy": "© 2025 Christopher Chen", "security": "安全性", "about": "關於", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "意見回饋" },
-  "cta": { "heading": "準備好檢查您的專利稿件了嗎？", "subtext": "拖放 .docx 檔案，即時取得分析結果。無需上傳，無需帳號。", "button": "分析稿件" },
-  "antecedentBasis": { "title": "先行詞基礎檢視", "items": "個術語", "item": "個術語" },
-  "specSupport": { "title": "說明書支持檢視", "items": "個術語", "item": "個術語" },
-  "triage": { "title": "優先處理摘要", "amend": "需要修改", "amendEmpty": "無需修改之項目。", "verify": "待專家確認", "verifyEmpty": "無需確認之項目。", "pass": "通過", "items": "個項目", "item": "個項目" },
+  "analysis": {
+    "analyzing": "正在分析專利文件...",
+    "label": "分析結果"
+  },
+  "footer": {
+    "disclaimer": "本報告不構成法律意見",
+    "builtBy": "© 2025 Christopher Chen",
+    "security": "安全性",
+    "about": "關於",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "feedback": "意見回饋"
+  },
+  "cta": {
+    "heading": "準備好檢查您的專利稿件了嗎？",
+    "subtext": "拖放 .docx 檔案，即時取得分析結果。無需上傳，無需帳號。",
+    "button": "分析稿件"
+  },
+  "antecedentBasis": {
+    "title": "先行詞基礎檢視",
+    "items": "個術語",
+    "item": "個術語"
+  },
+  "specSupport": {
+    "title": "說明書支持檢視",
+    "items": "個術語",
+    "item": "個術語"
+  },
+  "triage": {
+    "title": "優先處理摘要",
+    "amend": "需要修改",
+    "amendEmpty": "無需修改之項目。",
+    "verify": "待專家確認",
+    "verifyEmpty": "無需確認之項目。",
+    "pass": "通過",
+    "items": "個項目",
+    "item": "個項目"
+  },
   "security": {
     "airplaneDemoAlt": "示範：在飛航模式下無網路連線分析專利稿件",
     "badge": {
@@ -65,12 +161,42 @@
       "colPatentLint": "PatentLint",
       "colAddin": "Word 增益集工具",
       "colCloud": "雲端工具",
-      "q1": { "question": "我的檔案會離開我的裝置嗎？", "patentlint": "絕不。100% 在瀏覽器中執行。", "addin": "檔案留在本機，但增益集可能連線回報。", "cloud": "是，上傳至遠端伺服器。" },
-      "q2": { "question": "需要帳號嗎？", "patentlint": "不需要。無需註冊、無需登入、無追蹤。", "addin": "通常需要授權或帳號。", "cloud": "是，需要帳號。" },
-      "q3": { "question": "可以離線使用嗎？", "patentlint": "可以，首次載入後即可。", "addin": "取決於授權驗證方式。", "cloud": "不行，需要網路。" },
-      "q4": { "question": "能驗證隱私聲明嗎？", "patentlint": "可以。開啟開發人員工具 → 網路，或開啟飛航模式。", "addin": "難以稽核增益集的網路流量。", "cloud": "不行，資料在他們的伺服器上。" },
-      "q5": { "question": "支援哪些平台？", "patentlint": "任何支援現代瀏覽器的裝置。", "addin": "僅限 Windows + Microsoft Word。", "cloud": "瀏覽器，但需要上傳資料。" },
-      "q6": { "question": "費用是多少？", "patentlint": "免費使用，無需付費、無需訂閱、無用量限制。", "addin": "通常需要付費授權。", "cloud": "通常需要訂閱。" }
+      "q1": {
+        "question": "我的檔案會離開我的裝置嗎？",
+        "patentlint": "絕不。100% 在瀏覽器中執行。",
+        "addin": "檔案留在本機，但增益集可能連線回報。",
+        "cloud": "是，上傳至遠端伺服器。"
+      },
+      "q2": {
+        "question": "需要帳號嗎？",
+        "patentlint": "不需要。無需註冊、無需登入、無追蹤。",
+        "addin": "通常需要授權或帳號。",
+        "cloud": "是，需要帳號。"
+      },
+      "q3": {
+        "question": "可以離線使用嗎？",
+        "patentlint": "可以，首次載入後即可。",
+        "addin": "取決於授權驗證方式。",
+        "cloud": "不行，需要網路。"
+      },
+      "q4": {
+        "question": "能驗證隱私聲明嗎？",
+        "patentlint": "可以。開啟開發人員工具 → 網路，或開啟飛航模式。",
+        "addin": "難以稽核增益集的網路流量。",
+        "cloud": "不行，資料在他們的伺服器上。"
+      },
+      "q5": {
+        "question": "支援哪些平台？",
+        "patentlint": "任何支援現代瀏覽器的裝置。",
+        "addin": "僅限 Windows + Microsoft Word。",
+        "cloud": "瀏覽器，但需要上傳資料。"
+      },
+      "q6": {
+        "question": "費用是多少？",
+        "patentlint": "免費使用，無需付費、無需訂閱、無用量限制。",
+        "addin": "通常需要付費授權。",
+        "cloud": "通常需要訂閱。"
+      }
     },
     "tech": {
       "architectureTitle": "架構",
@@ -211,11 +337,50 @@
     "restrictiveWordingAbstract": "{{text}}。摘要應避免法律用語（「comprising」、「said」、「means」）、評價性用語（「novel」、「innovative」）及限制性用語（「must」、「essential」），依 MPEP § 608.01(b)。請修改標記用語。",
     "abstractStructureFix": "摘要須為單一段落，以句號、驚嘆號或問號結尾，且須作為專利稿件最後一章，依 MPEP § 608.01(b)。",
     "abstractImpliedPhrasesFix": "「This disclosure provides...」或「A method is provided...」等用語依 MPEP § 608.01(b) 屬於隱含用語。請改為直接描述發明（例如「A method that...」）。",
-    "abstractWordCountFix": "摘要須介於 50 至 150 字之間，依 MPEP § 608.01(b)。請修改至符合此範圍。"
+    "abstractWordCountFix": "摘要須介於 50 至 150 字之間，依 MPEP § 608.01(b)。請修改至符合此範圍。",
+    "cn": {
+      "requiredSections": "根據专利法实施细则 §17，說明書應包含技術領域、背景技術、發明內容和具體實施方式。請補充缺少的章節。",
+      "sectionOrdering": "規定順序：技術領域 → 背景技術 → 發明內容 → 附圖說明 → 具體實施方式。請調整章節順序。",
+      "paragraphNumberingXml": "根據审查指南，段落編號應連續且為四位零填充格式（0001、0002……）。請修正編號順序。",
+      "paragraphNumberingDocx": "根據CNIPA規定，說明書不應添加任何形式的段落編號。WORD转XML编辑器在轉換時會自動添加編號。請刪除所有手動添加的段落編號。",
+      "paragraphEnding": "根據审查指南，說明書段落應以中文句末標點（。、！或？）結尾。請檢查標記的段落。",
+      "figureRefConsistency": "根據审查指南，附圖說明中描述的附圖應在具體實施方式中引用，反之亦然。請確認標記的引用是否正確。",
+      "patentTypeTerminology": "根據审查指南，發明專利申請應使用「本发明」（而非「本实用新型」），實用新型申請反之。請確認用語與申請類型一致。",
+      "titleLength": "根據审查指南 第一部分第一章，發明名稱不應超過25個漢字。請縮短發明名稱。",
+      "titleContent": "根據审查指南，發明名稱不得包含商標、型號、人名或商業性宣傳用語。請刪除禁止內容。",
+      "specClaimReference": "根據专利法实施细则 §17，說明書不得使用「如权利要求……所述的……」等語言引用權利要求。請刪除說明書中的權利要求引用。",
+      "claimsSequential": "根據审查指南，權利要求應從1開始連續編號。請修正編號。",
+      "dependencyFormat": "根據专利法实施细则 §22，從屬權利要求應使用「如权利要求N所述的……」的格式引用在前的權利要求。請修正標記的權利要求。",
+      "selfDependent": "根據专利法实施细则 §22，權利要求不得引用自身。請修正引用關係。",
+      "forwardDependency": "根據专利法实施细则 §22，從屬權利要求只能引用在前的權利要求。請修改引用關係。",
+      "singleSentence": "根據审查指南 第二部分第二章，每項權利要求應為一個以句號（。）結尾的完整句子。請刪除句中多餘的句號或拆分為多項權利要求。",
+      "refNumeralParens": "根據审查指南，權利要求中的附圖標記應加括號，例如（101）而非101。請檢查標記的權利要求。",
+      "subjectConsistency": "根據审查指南 第二部分第二章，從屬權利要求的主題名稱應與其引用的權利要求的主題名稱一致。請檢查標記的權利要求。",
+      "transitionPhrase": "根據审查指南，獨立權利要求應包含「其特征在于」等特徵部分過渡語，用以區分已知要素與新穎特徵。請檢查標記的權利要求。",
+      "twTerminology": "CNIPA使用「权利要求」表示claims，「请求项」為台灣（TIPO）專利用語。請替換所有「请求项」。",
+      "claimsSpecReference": "根據审查指南 第二部分第二章，權利要求不得使用「如说明书……所述」或「如图……所示」來限定保護範圍。權利要求應當自成一體。請刪除相關引用。",
+      "multiMultiDep": "根據专利法实施细则 §22，多項從屬權利要求不得作為另一多項從屬權利要求的引用基礎。請調整引用關係。",
+      "dependentOrdering": "根據审查指南 第二部分第二章，引用同一獨立權利要求的所有從屬權利要求應連續排列在下一項獨立權利要求之前。請調整排列順序。",
+      "abstractCharCount": "根據专利法实施细则 §23，摘要不得超過300個漢字。請縮短摘要。",
+      "abstractTitleMatch": "根據审查指南，摘要應與發明名稱一致。請確認摘要是否體現了發明名稱。",
+      "commercialLanguage": "根據专利法实施细则 §23，摘要不得包含商業性宣傳用語。請刪除「最优」「最佳」「世界领先」「国际领先」「国内首创」「填补空白」等用語。"
+    }
   },
-  "common": { "close": "關閉", "toggleTheme": "切換主題", "changeLanguage": "切換語言" },
-  "consolidation": { "nounMismatchSummary": "前言名詞不一致：{{count}} 個附屬項與請求項 {{rootId}} 不同" },
-  "lang": { "en": "English", "zh-CN": "简体中文", "zh-TW": "繁體中文", "ja": "日本語", "ko": "한국어" },
+  "common": {
+    "close": "關閉",
+    "toggleTheme": "切換主題",
+    "changeLanguage": "切換語言"
+  },
+  "consolidation": {
+    "nounMismatchSummary": "前言名詞不一致：{{count}} 個附屬項與請求項 {{rootId}} 不同"
+  },
+  "lang": {
+    "en": "English",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "ja": "日本語",
+    "ko": "한국어"
+  },
   "check": {
     "spec": {
       "restrictiveWording": {
@@ -323,6 +488,113 @@
         "pass": "圖式編號為連續。"
       },
       "count": "發現 {{count}} 張圖式。"
+    },
+    "cn": {
+      "spec": {
+        "requiredSections": {
+          "amend": "缺少必要章節：{{sections}}（专利法实施细则 §17）。",
+          "pass": "說明書包含所有必要章節。"
+        },
+        "sectionOrdering": {
+          "amend": "說明書章節順序不符合規定（专利法实施细则 §17）。",
+          "pass": "說明書章節順序正確。"
+        },
+        "paragraphNumbering": {
+          "amendXml": "段落編號不連續（{{detail}}）。",
+          "amendDocx": "說明書包含手動添加的段落編號。",
+          "pass": "段落編號正確。"
+        },
+        "paragraphEnding": {
+          "amend": "{{count}} 個段落未以有效中文標點結尾。",
+          "pass": "所有段落均以有效標點結尾。"
+        },
+        "figureRefConsistency": {
+          "verify": "具體實施方式與附圖說明中的附圖引用不一致（{{detail}}）。",
+          "pass": "各章節附圖引用一致。"
+        },
+        "patentTypeTerminology": {
+          "verify": "發現「{{term}}」，請確認是否與專利類型（發明／實用新型）一致。",
+          "pass": "專利類型用語一致。"
+        },
+        "title": {
+          "amendLength": "發明名稱超過25個漢字（共{{count}}個字）。",
+          "amendContent": "發明名稱包含禁止內容：{{detail}}。",
+          "pass": "發明名稱符合要求。"
+        },
+        "claimReference": {
+          "amend": "說明書引用了權利要求（{{detail}}）。",
+          "pass": "說明書未引用權利要求。"
+        }
+      },
+      "claims": {
+        "sequential": {
+          "amend": "權利要求編號不連續（{{detail}}）。",
+          "pass": "權利要求編號連續。"
+        },
+        "dependencyFormat": {
+          "amend": "{{count}} 項權利要求的引用格式不正確。",
+          "pass": "所有從屬權利要求的引用格式正確。"
+        },
+        "selfDependent": {
+          "amend": "權利要求 {{claims}} 引用了自身。",
+          "pass": "未發現自引用權利要求。"
+        },
+        "forwardDependency": {
+          "amend": "權利要求 {{claims}} 引用了在後的權利要求（正向引用）。",
+          "pass": "未發現正向引用。"
+        },
+        "singleSentence": {
+          "amend": "{{count}} 項權利要求包含多個句子。",
+          "pass": "所有權利要求均為單句。"
+        },
+        "refNumeralParens": {
+          "verify": "{{count}} 項權利要求中的附圖標記未加括號。",
+          "pass": "權利要求中所有附圖標記均已加括號。"
+        },
+        "subjectConsistency": {
+          "verify": "{{count}} 項從屬權利要求的主題名稱與其引用的權利要求不一致。",
+          "pass": "從屬權利要求的主題名稱一致。"
+        },
+        "transitionPhrase": {
+          "verify": "{{count}} 項獨立權利要求可能缺少特徵部分過渡語（其特征在于）。",
+          "pass": "所有獨立權利要求均包含特徵部分過渡語。"
+        },
+        "twTerminology": {
+          "verify": "發現台灣專利用語「請求項」，CNIPA申請應使用「权利要求」。",
+          "pass": "權利要求用語符合CNIPA規範。"
+        },
+        "specReference": {
+          "amend": "{{count}} 項權利要求引用了說明書或附圖來限定保護範圍。",
+          "pass": "權利要求未引用說明書或附圖。"
+        },
+        "multiMultiDep": {
+          "amend": "權利要求 {{claims}}：多項從屬權利要求引用了另一多項從屬權利要求。",
+          "pass": "未發現多項從屬權利要求的鏈式引用。"
+        },
+        "dependentOrdering": {
+          "amend": "從屬權利要求未緊隨其引用的獨立權利要求排列。",
+          "pass": "從屬權利要求排列順序正確。"
+        }
+      },
+      "abstract": {
+        "charCount": {
+          "amend": "摘要超過300字（共{{count}}字）。",
+          "pass": "摘要字數在300字以內（{{count}}字）。"
+        },
+        "titleMatch": {
+          "verify": "摘要中未出現發明名稱。",
+          "pass": "摘要中包含發明名稱。"
+        },
+        "commercialLanguage": {
+          "amend": "摘要包含商業性宣傳用語：{{terms}}。",
+          "pass": "摘要中未發現商業性宣傳用語。"
+        }
+      },
+      "drawings": {
+        "figureCount": {
+          "pass": "共 {{count}} 張附圖。"
+        }
+      }
     }
   },
   "loading": {
