@@ -63,6 +63,58 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 ---
 
-**Total checks: 33** (10 Specification + 14 Claims + 5 Drawings + 4 Abstract)
+**Total US checks: 33** (10 Specification + 14 Claims + 5 Drawings + 4 Abstract)
+
+† Internal: not rendered as a CheckItem card in the web UI. Used for stats aggregation, PDF report, and CLI output only.
+
+---
+
+## CN Specification (说明书)
+
+| Check | Reference | Severity | message_key | Description |
+|-------|-----------|----------|-------------|-------------|
+| Required sections | 专利法实施细则 §17 | AMEND / PASS | `check.cn.spec.requiredSections` | Required sections present (技术领域, 背景技术, 发明内容, 具体实施方式) |
+| Section ordering | 专利法实施细则 §17 | AMEND / PASS | `check.cn.spec.sectionOrdering` | Sections in prescribed order |
+| Paragraph numbering | 审查指南 | AMEND / PASS | `check.cn.spec.paragraphNumbering` | XML: sequential `<p num>` tags; docx: `[NNNN]` format present |
+| Paragraph ending | 审查指南 | AMEND / PASS | `check.cn.spec.paragraphEnding` | Paragraphs end with Chinese punctuation (。！？) |
+| Figure ref consistency | 审查指南 | VERIFY / PASS | `check.cn.spec.figureRefConsistency` | Figure references match between 附图说明 and 具体实施方式 |
+| Patent type terminology | 审查指南 | VERIFY / PASS | `check.cn.spec.patentTypeTerminology` | 本发明 vs 本实用新型 consistency |
+| Title requirements | 审查指南 第一部分第一章 | AMEND / PASS | `check.cn.spec.title` | Title ≤25 CJK chars, no trademarks/model numbers |
+| Spec must not reference claims | 专利法实施细则 §17 | AMEND / PASS | `check.cn.spec.claimReference` | No 如权利要求N所述 in specification |
+
+## CN Claims (权利要求)
+
+| Check | Reference | Severity | message_key | Description |
+|-------|-----------|----------|-------------|-------------|
+| Claims sequential | 审查指南 | AMEND / PASS | `check.cn.claims.sequential` | Claim numbers sequential from 1 |
+| Dependency format | 专利法实施细则 §22 | AMEND / PASS | `check.cn.claims.dependencyFormat` | Dependencies use 如权利要求N所述的 format |
+| Self-dependent | 专利法实施细则 §22 | AMEND / PASS | `check.cn.claims.selfDependent` | Claim does not depend on itself |
+| Forward dependency | 专利法实施细则 §22 | AMEND / PASS | `check.cn.claims.forwardDependency` | No references to later claims |
+| Single sentence | 审查指南 第二部分第二章 | AMEND / PASS | `check.cn.claims.singleSentence` | Each claim is one sentence ending with 。 |
+| Reference numeral parentheses | 审查指南 | VERIFY / PASS | `check.cn.claims.refNumeralParens` | Reference numerals in parentheses, e.g. (101) |
+| Subject name consistency | 审查指南 第二部分第二章 | VERIFY / PASS | `check.cn.claims.subjectConsistency` | Dependent claim subject matches parent |
+| Transition phrase | 审查指南 | VERIFY / PASS | `check.cn.claims.transitionPhrase` | Independent claims contain 其特征在于 |
+| TW terminology | — | VERIFY / PASS | `check.cn.claims.twTerminology` | Flags 请求项 (TIPO) vs 权利要求 (CNIPA) |
+| Claims must not reference spec/drawings | 审查指南 第二部分第二章 | AMEND / PASS | `check.cn.claims.specDrawingRef` | No references to 说明书 or 附图 in claims |
+| Multi-dep on multi-dep | 专利法实施细则 §22 | AMEND / PASS | `check.cn.claims.multiDepOnMultiDep` | Multi-dep claim cannot reference another multi-dep |
+| Dependent claim ordering | 审查指南 第二部分第二章 | AMEND / PASS | `check.cn.claims.dependentOrdering` | Dependents grouped after their independent claim |
+
+## CN Abstract (摘要)
+
+| Check | Reference | Severity | message_key | Description |
+|-------|-----------|----------|-------------|-------------|
+| Character count | 专利法实施细则 §23 | AMEND / PASS | `check.cn.abstract.charCount` | Abstract ≤300 Chinese characters |
+| Title match | 审查指南 | VERIFY / PASS | `check.cn.abstract.titleMatch` | 发明名称 appears in abstract |
+| Commercial language | 专利法实施细则 §23 | AMEND / PASS | `check.cn.abstract.commercialLanguage` | No 最优, 最佳, 世界领先, etc. |
+
+## CN Drawings (附图)
+
+| Check | Reference | Severity | message_key | Description |
+|-------|-----------|----------|-------------|-------------|
+| Figure count † | 审查指南 | PASS | `check.cn.drawings.figureCount` | Number of figures found |
+
+---
+
+**Total checks: 57** (33 US + 24 CN)
 
 † Internal: not rendered as a CheckItem card in the web UI. Used for stats aggregation, PDF report, and CLI output only.
