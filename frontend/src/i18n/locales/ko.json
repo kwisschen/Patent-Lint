@@ -1,6 +1,7 @@
 {
   "header": { "title": "PatentLint", "subtitle": "특허 명세서 검사 도구" },
-  "dropzone": { "tagline": "30개 이상의 USPTO 작성 규칙으로 명세서를 검사합니다", "title": "특허 .docx 파일을 드롭하여 로컬 분석을 시작하세요", "subtitle": "또는 클릭하여 파일 탐색", "notice": "현재 미국 특허 명세서(.docx)만 지원합니다.", "reject": ".docx 파일만 허용됩니다", "rejectMultiple": "파일을 하나씩 드롭해 주세요.", "rejectMultipleType": "단일 .docx 파일을 드롭해 주세요." },
+  "jurisdiction": { "us": "미국 특허", "cn": "중국 특허", "label": "관할" },
+  "dropzone": { "tagline": "30개 이상의 USPTO 작성 규칙으로 명세서를 검사합니다", "title": "특허 .docx 파일을 드롭하여 로컬 분석을 시작하세요", "subtitle": "또는 클릭하여 파일 탐색", "notice": "현재 미국 특허 명세서(.docx)만 지원합니다.", "reject": ".docx 파일만 허용됩니다", "rejectMultiple": "파일을 하나씩 드롭해 주세요.", "rejectMultipleType": "단일 .docx 파일을 드롭해 주세요.", "taglineCn": "20건 이상의 CNIPA 작성 규칙으로 명세서를 검사합니다", "titleCn": "특허 파일을 드롭하여 로컬 분석을 시작하세요", "noticeCn": "중국 특허 명세서(.docx, .xml, .zip)를 지원합니다.", "rejectCn": ".docx, .xml, .zip 파일만 허용됩니다", "rejectMultipleTypeCn": "단일 .docx, .xml 또는 .zip 파일을 드롭해 주세요." },
   "summary": { "specParagraphs": "명세서 단락", "claims": "청구항", "independent": "독립항", "dependent": "종속항", "figures": "도면", "abstractWords": "요약서 단어 수", "claimCategories": "청구항 유형", "method": "방법", "apparatus": "장치", "outsideRange": "50–150 범위 밖", "noParagraphs": "단락 번호 없음" },
   "section": { "specification": "명세서", "claims": "청구항", "drawings": "도면의 간단한 설명", "drawingsShort": "도면", "abstract": "요약서" },
   "status": { "pass": "PASS", "verify": "VERIFY", "amend": "AMEND" },
