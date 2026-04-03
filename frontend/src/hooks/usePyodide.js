@@ -33,7 +33,7 @@ export function usePyodide() {
         return () => worker.terminate();
     }, []);
 
-    const analyze = useCallback((file) => {
+    const analyze = useCallback((file, jurisdiction) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = () => {
@@ -49,7 +49,7 @@ export function usePyodide() {
                 };
                 workerRef.current.addEventListener('message', handler);
                 workerRef.current.postMessage(
-                    { type: 'analyze', payload: reader.result, filename: file.name },
+                    { type: 'analyze', payload: reader.result, filename: file.name, jurisdiction: jurisdiction || 'US' },
                     [reader.result]  // Transfer ArrayBuffer (zero-copy)
                 );
             };
