@@ -55,11 +55,11 @@ function getCitation(messageKey) {
 
 export { getCitation }
 
-export default function CheckItem({ status, message, message_key, details, details_key, details_params }) {
+export default function CheckItem({ status, message, message_key, details, details_key, details_params, reference }) {
   const { t, i18n } = useTranslation()
   const displayMessage = message_key && i18n.exists(message_key) ? t(message_key, details_params || {}) : message
   const displayDetails = details_key && i18n.exists(details_key) ? t(details_key, details_params || {}) : details
-  const citation = getCitation(message_key)
+  const citation = getCitation(message_key) || reference || null
 
   return (
     <div

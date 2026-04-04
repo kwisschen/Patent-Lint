@@ -1,27 +1,128 @@
 {
-  "header": { "title": "PatentLint", "subtitle": "특허 명세서 검사 도구" },
-  "dropzone": { "tagline": "30개 이상의 USPTO 작성 규칙으로 명세서를 검사합니다", "title": "특허 .docx 파일을 드롭하여 로컬 분석을 시작하세요", "subtitle": "또는 클릭하여 파일 탐색", "notice": "현재 미국 특허 명세서(.docx)만 지원합니다.", "reject": ".docx 파일만 허용됩니다", "rejectMultiple": "파일을 하나씩 드롭해 주세요.", "rejectMultipleType": "단일 .docx 파일을 드롭해 주세요." },
-  "summary": { "specParagraphs": "명세서 단락", "claims": "청구항", "independent": "독립항", "dependent": "종속항", "figures": "도면", "abstractWords": "요약서 단어 수", "claimCategories": "청구항 유형", "method": "방법", "apparatus": "장치", "outsideRange": "50–150 범위 밖", "noParagraphs": "단락 번호 없음" },
-  "section": { "specification": "명세서", "claims": "청구항", "drawings": "도면의 간단한 설명", "drawingsShort": "도면", "abstract": "요약서" },
-  "status": { "pass": "PASS", "verify": "VERIFY", "amend": "AMEND" },
-  "button": { "downloadPdf": "PDF 보고서 저장", "newAnalysis": "새 분석", "generating": "저장 중..." },
-  "diagram": { "show": "다이어그램 보기", "hide": "다이어그램 숨기기" },
-  "claimDiagram": { "renderError": "다이어그램을 렌더링할 수 없습니다", "independent": "독립항", "dependent": "종속항", "claimLabel": "청구항 {{id}}", "claimsLabel": "청구항 {{range}}" },
-  "tree": { "apparatusClaims": "장치 청구항", "methodClaims": "방법 청구항", "independent": "독립항", "dependent": "종속항", "deps": "종속", "dep": "종속" },
-  "section112": { "title": "§ 112 분석" },
+  "header": {
+    "title": "PatentLint",
+    "subtitle": "특허 명세서 검사 도구"
+  },
+  "jurisdiction": {
+    "us": "🇺🇸 미국 특허",
+    "cn": "🇨🇳 중국 특허",
+    "label": "관할"
+  },
+  "dropzone": {
+    "tagline": "30개 이상의 USPTO 작성 규칙으로 명세서를 검사합니다",
+    "title": "특허 .docx 파일을 드롭하여 로컬 분석을 시작하세요",
+    "subtitle": "또는 클릭하여 파일 탐색",
+    "notice": "현재 미국 특허 명세서(.docx)만 지원합니다.",
+    "reject": ".docx 파일만 허용됩니다",
+    "rejectMultiple": "파일을 하나씩 드롭해 주세요.",
+    "rejectMultipleType": "단일 .docx 파일을 드롭해 주세요.",
+    "taglineCn": "20건 이상의 CNIPA 작성 규칙으로 명세서를 검사합니다",
+    "titleCn": "특허 파일을 드롭하여 로컬 분석을 시작하세요",
+    "noticeCn": "중국 특허 명세서(.docx, .xml, .zip)를 지원합니다.",
+    "rejectCn": ".docx, .xml, .zip 파일만 허용됩니다",
+    "rejectMultipleTypeCn": "단일 .docx, .xml 또는 .zip 파일을 드롭해 주세요."
+  },
+  "summary": {
+    "specParagraphs": "명세서 단락",
+    "claims": "청구항",
+    "independent": "독립항",
+    "dependent": "종속항",
+    "figures": "도면",
+    "abstractWords": "요약서 단어 수",
+    "abstractChars": "요약서 글자 수",
+    "claimCategories": "청구항 유형",
+    "method": "방법",
+    "apparatus": "장치",
+    "outsideRange": "50–150 범위 밖",
+    "outsideRangeCn": "300자 초과",
+    "noParagraphs": "단락 번호 없음"
+  },
+  "section": {
+    "specification": "명세서",
+    "claims": "청구항",
+    "drawings": "도면의 간단한 설명",
+    "drawingsShort": "도면",
+    "abstract": "요약서"
+  },
+  "status": {
+    "pass": "PASS",
+    "verify": "VERIFY",
+    "amend": "AMEND"
+  },
+  "button": {
+    "downloadPdf": "PDF 보고서 저장",
+    "newAnalysis": "새 분석",
+    "generating": "저장 중..."
+  },
+  "diagram": {
+    "show": "다이어그램 보기",
+    "hide": "다이어그램 숨기기"
+  },
+  "claimDiagram": {
+    "renderError": "다이어그램을 렌더링할 수 없습니다",
+    "independent": "독립항",
+    "dependent": "종속항",
+    "claimLabel": "청구항 {{id}}",
+    "claimsLabel": "청구항 {{range}}"
+  },
+  "tree": {
+    "apparatusClaims": "장치 청구항",
+    "methodClaims": "방법 청구항",
+    "independent": "독립항",
+    "dependent": "종속항",
+    "deps": "종속",
+    "dep": "종속"
+  },
+  "section112": {
+    "title": "§ 112 분석"
+  },
   "results": {
     "nonPatentWarning": "이 문서는 미국 특허 명세서가 아닐 수 있습니다",
     "nonPatentWarningDetails": "PatentLint는 미국 특허 출원 초안용으로 설계되었습니다. 이 파일에는 표준 특허 섹션, 번호가 매겨진 청구항 또는 단락 번호가 포함되어 있지 않습니다. 미국 이외의 특허 또는 비특허 문서에 대한 분석 결과는 유의미하지 않을 수 있습니다.",
     "showResultsAnyway": "결과 보기",
     "trackedChangesWarning": "이 문서에 변경 내용 추적이 포함되어 있어 분석 정확도에 영향을 줄 수 있습니다. 워드 프로세서에서 모든 변경 내용을 수락 또는 거부한 후 다시 분석하세요.",
-    "analyzeAgain": "다시 분석"
+    "analyzeAgain": "다시 분석",
+    "scannedDocWarning": "이 파일에는 스캔된 문서 페이지만 포함되어 있습니다",
+    "scannedDocWarningDetails": "업로드된 파일에는 스캔 문서 이미지만 포함되어 있으며, 기계 판독 가능한 특허 텍스트가 없습니다. PatentLint는 구조화된 텍스트가 필요합니다. 원본 출원 XML 또는 .docx 초안을 업로드하세요."
   },
-  "analysis": { "analyzing": "특허 문서 분석 중...", "label": "분석" },
-  "footer": { "disclaimer": "법률 자문이 아닙니다", "builtBy": "© 2025 Christopher Chen", "security": "보안", "about": "소개", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "피드백" },
-  "cta": { "heading": "초안을 검사할 준비가 되셨나요?", "subtext": ".docx 파일을 드롭하면 즉시 결과를 확인할 수 있습니다. 업로드 없음. 계정 없음.", "button": "초안 분석하기" },
-  "antecedentBasis": { "title": "선행사 기초 검토", "items": "건", "item": "건" },
-  "specSupport": { "title": "명세서 뒷받침 검토", "items": "건", "item": "건" },
-  "triage": { "title": "우선순위 요약", "amend": "조치 필요", "amendEmpty": "수정이 필요한 사항이 없습니다.", "verify": "전문가 검토 필요", "verifyEmpty": "검토 대상 항목이 없습니다.", "pass": "통과", "items": "건", "item": "건" },
+  "analysis": {
+    "analyzing": "특허 문서 분석 중...",
+    "label": "분석"
+  },
+  "footer": {
+    "disclaimer": "법률 자문이 아닙니다",
+    "builtBy": "© 2025 Christopher Chen",
+    "security": "보안",
+    "about": "소개",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "feedback": "피드백"
+  },
+  "cta": {
+    "heading": "초안을 검사할 준비가 되셨나요?",
+    "subtext": ".docx 파일을 드롭하면 즉시 결과를 확인할 수 있습니다. 업로드 없음. 계정 없음.",
+    "button": "초안 분석하기"
+  },
+  "antecedentBasis": {
+    "title": "선행사 기초 검토",
+    "items": "건",
+    "item": "건"
+  },
+  "specSupport": {
+    "title": "명세서 뒷받침 검토",
+    "items": "건",
+    "item": "건"
+  },
+  "triage": {
+    "title": "우선순위 요약",
+    "amend": "조치 필요",
+    "amendEmpty": "수정이 필요한 사항이 없습니다.",
+    "verify": "전문가 검토 필요",
+    "verifyEmpty": "검토 대상 항목이 없습니다.",
+    "pass": "통과",
+    "items": "건",
+    "item": "건"
+  },
   "security": {
     "airplaneDemoAlt": "데모: 네트워크 연결 없이 비행기 모드에서 특허 초안을 분석하는 모습",
     "badge": {
@@ -64,12 +165,42 @@
       "colPatentLint": "PatentLint",
       "colAddin": "Word 추가 기능 도구",
       "colCloud": "클라우드 기반 도구",
-      "q1": { "question": "파일이 기기 밖으로 나가나요?", "patentlint": "절대 아닙니다. 100% 브라우저에서 실행됩니다.", "addin": "파일은 로컬에 남지만 추가 기능이 외부에 연결할 수 있습니다.", "cloud": "네. 원격 서버에 업로드됩니다." },
-      "q2": { "question": "계정이 필요한가요?", "patentlint": "아니요. 가입, 로그인, 추적이 없습니다.", "addin": "보통 라이선스 또는 계정이 필요합니다.", "cloud": "네. 계정이 필요합니다." },
-      "q3": { "question": "오프라인에서 작동하나요?", "patentlint": "네, 첫 로드 후 가능합니다.", "addin": "라이선스 검증 방식에 따라 다릅니다.", "cloud": "아니요. 인터넷이 필요합니다." },
-      "q4": { "question": "개인정보 보호를 검증할 수 있나요?", "patentlint": "네. 개발자 도구 → 네트워크를 열거나 비행기 모드를 켜세요.", "addin": "추가 기능의 네트워크 트래픽을 감사하기 어렵습니다.", "cloud": "아니요. 데이터가 해당 서버에 있습니다." },
-      "q5": { "question": "어떤 플랫폼을 지원하나요?", "patentlint": "최신 브라우저가 있는 모든 기기.", "addin": "Windows + Microsoft Word 전용.", "cloud": "브라우저 기반이지만 업로드가 필요합니다." },
-      "q6": { "question": "비용이 얼마인가요?", "patentlint": "무료. 요금, 구독, 사용 제한 없음.", "addin": "보통 유료 라이선스가 필요합니다.", "cloud": "보통 구독이 필요합니다." }
+      "q1": {
+        "question": "파일이 기기 밖으로 나가나요?",
+        "patentlint": "절대 아닙니다. 100% 브라우저에서 실행됩니다.",
+        "addin": "파일은 로컬에 남지만 추가 기능이 외부에 연결할 수 있습니다.",
+        "cloud": "네. 원격 서버에 업로드됩니다."
+      },
+      "q2": {
+        "question": "계정이 필요한가요?",
+        "patentlint": "아니요. 가입, 로그인, 추적이 없습니다.",
+        "addin": "보통 라이선스 또는 계정이 필요합니다.",
+        "cloud": "네. 계정이 필요합니다."
+      },
+      "q3": {
+        "question": "오프라인에서 작동하나요?",
+        "patentlint": "네, 첫 로드 후 가능합니다.",
+        "addin": "라이선스 검증 방식에 따라 다릅니다.",
+        "cloud": "아니요. 인터넷이 필요합니다."
+      },
+      "q4": {
+        "question": "개인정보 보호를 검증할 수 있나요?",
+        "patentlint": "네. 개발자 도구 → 네트워크를 열거나 비행기 모드를 켜세요.",
+        "addin": "추가 기능의 네트워크 트래픽을 감사하기 어렵습니다.",
+        "cloud": "아니요. 데이터가 해당 서버에 있습니다."
+      },
+      "q5": {
+        "question": "어떤 플랫폼을 지원하나요?",
+        "patentlint": "최신 브라우저가 있는 모든 기기.",
+        "addin": "Windows + Microsoft Word 전용.",
+        "cloud": "브라우저 기반이지만 업로드가 필요합니다."
+      },
+      "q6": {
+        "question": "비용이 얼마인가요?",
+        "patentlint": "무료. 요금, 구독, 사용 제한 없음.",
+        "addin": "보통 유료 라이선스가 필요합니다.",
+        "cloud": "보통 구독이 필요합니다."
+      }
     },
     "tech": {
       "architectureTitle": "아키텍처",
@@ -89,8 +220,8 @@
   },
   "about": {
     "productTitle": "PatentLint란?",
-    "productDesc1": "PatentLint는 심사관보다 먼저 문제를 발견하는 무료 특허 초안 검사 도구입니다. 미국 특허 명세서를 브라우저에 드롭하면 즉시 규정 준수 보고서를 받을 수 있습니다. 업로드 없음, 계정 없음, 클라우드 없음.",
-    "productDesc2": "MPEP(특허심사편람)의 작성 규칙을 검사하고, 선행사 기초 누락 및 제한적 표현 등 일반적인 문제를 검출하며, 청구항 종속 관계를 트리 형태로 시각화합니다.",
+    "productDesc1": "PatentLint는 심사관보다 먼저 문제를 발견하는 무료 특허 초안 검사 도구입니다. 미국 또는 중국 특허 명세서를 브라우저에 드롭하면 즉시 규정 준수 보고서를 받을 수 있습니다. 업로드 없음, 계정 없음, 클라우드 없음.",
+    "productDesc2": "MPEP(미국) 및 CNIPA 규칙(中国)의 작성 규칙을 검사하고, 선행사 기초 누락, 부정확한 청구항 구조, 제한적 표현 등 일반적인 문제를 검출합니다.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center는 출원 형식을 검증합니다. PatentLint는 초안 자체를 검사합니다.",
     "uspto": {
@@ -140,9 +271,43 @@
         "checkSequenceListing": "서열 목록 규정 준수 (§ 2422)"
       }
     },
+    "cnTitle": "PatentLint CNIPA 작성 규칙 검사",
+    "cnSubtitle": "CNIPA 작성 규칙(专利法实施细则, 审查指南)에 따른 20건 이상의 구조 검사.",
+    "cnGroups": {
+      "specification": "명세서(说明书)",
+      "claims": "청구항(权利要求)",
+      "abstract": "요약서(摘要)",
+      "drawings": "도면(附图)"
+    },
+    "cnChecks": {
+      "requiredSections": "필수 섹션(专利法实施细则 §17)",
+      "sectionOrdering": "섹션 순서",
+      "paragraphNumbering": "단락 번호",
+      "paragraphEnding": "단락 끝 구두점",
+      "figureRefConsistency": "도면 참조 일관성",
+      "patentTypeTerminology": "특허 유형 용어",
+      "titleRequirements": "제목 요건",
+      "specClaimReference": "명세서에서 청구항 참조 금지",
+      "claimsSequential": "청구항 번호 연속성",
+      "dependencyFormat": "종속 형식",
+      "selfDependent": "자기 종속 청구항",
+      "forwardDependency": "전방 종속",
+      "singleSentence": "청구항당 한 문장",
+      "refNumeralParens": "도면 부호 괄호",
+      "subjectNameConsistency": "주제명 일관성",
+      "transitionPhrase": "전환 구문(其特征在于)",
+      "cnTwTerminology": "중국 대륙/대만 용어",
+      "claimsSpecReference": "청구항에서 명세서/도면 참조 금지",
+      "multiMultiDependency": "다중 종속의 다중 종속",
+      "dependentOrdering": "종속 청구항 순서",
+      "abstractCharCount": "요약서 글자 수(300자 이하)",
+      "titleInAbstract": "제목이 요약서에 포함",
+      "commercialLanguage": "상업적 표현",
+      "figureCount": "도면 수"
+    },
     "stats": {
       "tests": "자동화 테스트",
-      "checks": "MPEP 검사",
+      "checks": "작성 검사",
       "languages": "UI 언어",
       "cloudRequests": "클라우드 요청"
     },
@@ -210,11 +375,50 @@
     "restrictiveWordingAbstract": "{{text}}. MPEP § 608.01(b)에 따라 요약서에는 법률 용어(\"comprising\", \"said\", \"means\"), 평가적 용어(\"novel\", \"innovative\") 및 제한적 용어(\"must\", \"essential\")를 사용하지 않아야 합니다. 표시된 용어를 수정하세요.",
     "abstractStructureFix": "MPEP § 608.01(b)에 따라 요약서는 마침표, 느낌표 또는 물음표로 끝나는 단일 단락이어야 하며, 특허 명세서의 마지막 섹션으로 배치되어야 합니다.",
     "abstractImpliedPhrasesFix": "\"This disclosure provides...\" 또는 \"A method is provided...\" 등의 문구는 MPEP § 608.01(b)에 따른 암시적 문구에 해당합니다. 발명을 직접 기술하도록 다시 작성하세요(예: \"A method that...\").",
-    "abstractWordCountFix": "MPEP § 608.01(b)에 따라 요약서는 50~150단어 범위 이내여야 합니다. 이 범위를 충족하도록 수정하세요."
+    "abstractWordCountFix": "MPEP § 608.01(b)에 따라 요약서는 50~150단어 범위 이내여야 합니다. 이 범위를 충족하도록 수정하세요.",
+    "cn": {
+      "requiredSections": "专利法实施细则 §17에 따라 명세서에는 技术领域, 背景技术, 发明内容, 具体实施方式가 포함되어야 합니다. 누락된 섹션을 추가하세요.",
+      "sectionOrdering": "규정 순서: 技术领域 → 背景技术 → 发明内容 → 附图说明 → 具体实施方式. 섹션 순서를 수정하세요.",
+      "paragraphNumberingXml": "审查指南에 따라 단락 번호는 연속적이고 4자리 영(0) 채움 형식(0001, 0002…)이어야 합니다. 번호 순서를 수정하세요.",
+      "paragraphNumberingDocx": "CNIPA 규정에 따라 명세서에 단락 번호를 추가해서는 안 됩니다. WORD转XML编辑器가 변환 시 자동으로 번호를 부여합니다. 수동으로 추가한 모든 단락 번호를 삭제하세요.",
+      "paragraphEnding": "审查指南에 따라 명세서 단락은 중국어 문장 종결 부호(。, ！ 또는 ？)로 끝나야 합니다. 해당 단락을 확인하세요.",
+      "figureRefConsistency": "审查指南에 따라 附图说明에서 기재된 도면은 具体实施方式에서 인용되어야 하며, 그 반대도 마찬가지입니다. 해당 인용이 올바른지 확인하세요.",
+      "patentTypeTerminology": "审查指南에 따라 발명 특허 출원은 '本发明'을 사용해야 하며 ('本实用新型' 아님), 실용신안 출원은 반대입니다. 용어가 출원 유형과 일치하는지 확인하세요.",
+      "titleLength": "审查指南 第一部分第一章에 따라 발명 명칭은 한자 25자를 초과할 수 없습니다. 명칭을 줄이세요.",
+      "titleContent": "审查指南에 따라 발명 명칭에는 상표, 모델 번호, 인명 또는 상업적 광고 용어를 포함할 수 없습니다. 금지 내용을 삭제하세요.",
+      "specClaimReference": "专利法实施细则 §17에 따라 명세서에서 '如权利要求……所述的……' 등의 표현으로 청구항을 인용해서는 안 됩니다. 명세서에서 청구항 인용을 삭제하세요.",
+      "claimsSequential": "审查指南에 따라 청구항은 1부터 연속 번호를 부여해야 합니다. 번호를 수정하세요.",
+      "dependencyFormat": "专利法实施细则 §22에 따라 종속 청구항은 '如权利要求N所述的……' 형식으로 선행 청구항을 인용해야 합니다. 해당 청구항을 수정하세요.",
+      "selfDependent": "专利法实施细则 §22에 따라 청구항은 자기 자신을 인용할 수 없습니다. 인용 관계를 수정하세요.",
+      "forwardDependency": "专利法实施细则 §22에 따라 종속 청구항은 선행 청구항만 인용할 수 있습니다. 인용 관계를 수정하세요.",
+      "singleSentence": "审查指南 第二部分第二章에 따라 각 청구항은 마침표(。)로 끝나는 단일 문장이어야 합니다. 문장 중간의 불필요한 마침표를 삭제하거나 여러 청구항으로 분리하세요.",
+      "refNumeralParens": "审查指南에 따라 청구항 내 참조 부호는 괄호로 묶어야 합니다. 예: 101이 아닌 (101). 해당 청구항을 확인하세요.",
+      "subjectConsistency": "审查指南 第二部分第二章에 따라 종속 청구항의 주제 명칭은 인용 대상 청구항의 주제 명칭과 일치해야 합니다. 해당 청구항을 확인하세요.",
+      "transitionPhrase": "审查指南에 따라 독립 청구항에는 '其特征在于' 등의 특징 부분 전환어를 포함하여 공지 요소와 신규 특징을 구분해야 합니다. 해당 청구항을 확인하세요.",
+      "twTerminology": "CNIPA에서는 청구항을 '权利要求'로 표기합니다. '请求项'은 대만(TIPO) 특허 용어입니다. 모두 교체하세요.",
+      "claimsSpecReference": "审查指南 第二部分第二章에 따라 청구항은 '如说明书……所述' 또는 '如图……所示'로 보호 범위를 한정해서는 안 됩니다. 청구항은 자체적으로 완결되어야 합니다. 해당 인용을 삭제하세요.",
+      "multiMultiDep": "专利法实施细则 §22에 따라 다항 종속 청구항은 다른 다항 종속 청구항의 인용 기초가 될 수 없습니다. 인용 관계를 재구성하세요.",
+      "dependentOrdering": "审查指南 第二部分第二章에 따라 동일한 독립 청구항을 인용하는 모든 종속 청구항은 다음 독립 청구항 앞에 연속 배치되어야 합니다. 순서를 조정하세요.",
+      "abstractCharCount": "专利法实施细则 §23에 따라 요약서는 300자를 초과할 수 없습니다. 요약서를 줄이세요.",
+      "abstractTitleMatch": "审查指南에 따라 요약서는 발명 명칭과 일치해야 합니다. 요약서가 발명 명칭을 반영하는지 확인하세요.",
+      "commercialLanguage": "专利法实施细则 §23에 따라 요약서에 상업적 광고 용어(商业性宣传用语)를 포함해서는 안 됩니다. 最优, 最佳, 世界领先, 国际领先, 国内首创, 填补空白 등의 용어를 삭제하세요."
+    }
   },
-  "common": { "close": "닫기", "toggleTheme": "테마 전환", "changeLanguage": "언어 변경" },
-  "consolidation": { "nounMismatchSummary": "전제부 명사 불일치: 종속항 {{count}}개가 청구항 {{rootId}}과(와) 다름" },
-  "lang": { "en": "English", "zh-CN": "简体中文", "zh-TW": "繁體中文", "ja": "日本語", "ko": "한국어" },
+  "common": {
+    "close": "닫기",
+    "toggleTheme": "테마 전환",
+    "changeLanguage": "언어 변경"
+  },
+  "consolidation": {
+    "nounMismatchSummary": "전제부 명사 불일치: 종속항 {{count}}개가 청구항 {{rootId}}과(와) 다름"
+  },
+  "lang": {
+    "en": "English",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "ja": "日本語",
+    "ko": "한국어"
+  },
   "check": {
     "spec": {
       "restrictiveWording": {
@@ -322,6 +526,113 @@
         "pass": "도면이 순차적 순서입니다."
       },
       "count": "도면 {{count}}개 발견."
+    },
+    "cn": {
+      "spec": {
+        "requiredSections": {
+          "amend": "필수 섹션 누락: {{sections}} (专利法实施细则 §17).",
+          "pass": "모든 필수 명세서 섹션이 포함되어 있습니다."
+        },
+        "sectionOrdering": {
+          "amend": "명세서 섹션 순서가 규정에 맞지 않습니다 (专利法实施细则 §17).",
+          "pass": "명세서 섹션 순서가 올바릅니다."
+        },
+        "paragraphNumbering": {
+          "amendXml": "단락 번호가 연속적이지 않습니다 ({{detail}}).",
+          "amendDocx": "명세서에 수동으로 추가된 단락 번호가 포함되어 있습니다.",
+          "pass": "단락 번호가 올바릅니다."
+        },
+        "paragraphEnding": {
+          "amend": "{{count}}개 단락이 유효한 중국어 문장부호로 끝나지 않습니다.",
+          "pass": "모든 단락이 유효한 문장부호로 끝납니다."
+        },
+        "figureRefConsistency": {
+          "verify": "具体实施方式와 附图说明의 도면 참조가 불일치합니다 ({{detail}}).",
+          "pass": "각 섹션의 도면 참조가 일치합니다."
+        },
+        "patentTypeTerminology": {
+          "verify": "'{{term}}'이(가) 발견되었습니다. 특허 유형(발명/실용신안)과 일치하는지 확인하세요.",
+          "pass": "특허 유형 용어가 일치합니다."
+        },
+        "title": {
+          "amendLength": "발명 명칭이 한자 25자를 초과합니다 ({{count}}자).",
+          "amendContent": "발명 명칭에 금지 내용이 포함되어 있습니다: {{detail}}.",
+          "pass": "발명 명칭이 CNIPA 요건을 충족합니다."
+        },
+        "claimReference": {
+          "amend": "명세서가 청구항을 인용하고 있습니다 ({{detail}}).",
+          "pass": "명세서가 청구항을 인용하지 않습니다."
+        }
+      },
+      "claims": {
+        "sequential": {
+          "amend": "청구항 번호가 연속적이지 않습니다 ({{detail}}).",
+          "pass": "청구항 번호가 연속적입니다."
+        },
+        "dependencyFormat": {
+          "amend": "{{count}}건의 청구항이 잘못된 인용 형식을 사용합니다.",
+          "pass": "모든 종속 청구항의 인용 형식이 올바릅니다."
+        },
+        "selfDependent": {
+          "amend": "청구항 {{claims}}이(가) 자기 자신을 인용합니다.",
+          "pass": "자기 인용 청구항이 발견되지 않았습니다."
+        },
+        "forwardDependency": {
+          "amend": "청구항 {{claims}}이(가) 후속 청구항을 인용합니다 (전방 인용).",
+          "pass": "전방 인용이 발견되지 않았습니다."
+        },
+        "singleSentence": {
+          "amend": "{{count}}건의 청구항에 복수의 문장이 포함되어 있습니다.",
+          "pass": "모든 청구항이 단일 문장입니다."
+        },
+        "refNumeralParens": {
+          "verify": "{{count}}건의 청구항에서 참조 부호가 괄호로 묶이지 않았습니다.",
+          "pass": "청구항 내 모든 참조 부호가 괄호로 묶여 있습니다."
+        },
+        "subjectConsistency": {
+          "verify": "{{count}}건의 종속 청구항의 주제 명칭이 인용 대상과 불일치합니다.",
+          "pass": "종속 청구항의 주제 명칭이 일치합니다."
+        },
+        "transitionPhrase": {
+          "verify": "{{count}}건의 독립 청구항에 특징 부분 전환어(其特征在于)가 누락되었을 수 있습니다.",
+          "pass": "모든 독립 청구항에 특징 부분 전환어가 포함되어 있습니다."
+        },
+        "twTerminology": {
+          "verify": "대만 특허 용어 '请求项'이 발견되었습니다. CNIPA 출원에는 '权利要求'를 사용하세요.",
+          "pass": "청구항 용어가 CNIPA 규범에 적합합니다."
+        },
+        "specReference": {
+          "amend": "{{count}}건의 청구항이 명세서 또는 도면을 인용하여 보호 범위를 한정하고 있습니다.",
+          "pass": "명세서 또는 도면을 인용하는 청구항이 없습니다."
+        },
+        "multiMultiDep": {
+          "amend": "청구항 {{claims}}: 다항 종속 청구항이 다른 다항 종속 청구항을 인용합니다.",
+          "pass": "다항 종속 청구항의 연쇄 인용이 발견되지 않았습니다."
+        },
+        "dependentOrdering": {
+          "amend": "종속 청구항이 인용 대상 독립 청구항 바로 뒤에 배치되지 않았습니다.",
+          "pass": "종속 청구항 배치 순서가 올바릅니다."
+        }
+      },
+      "abstract": {
+        "charCount": {
+          "amend": "요약서가 300자를 초과합니다 ({{count}}자).",
+          "pass": "요약서가 300자 이내입니다 ({{count}}자)."
+        },
+        "titleMatch": {
+          "verify": "요약서에 발명 명칭이 포함되어 있지 않습니다.",
+          "pass": "요약서에 발명 명칭이 포함되어 있습니다."
+        },
+        "commercialLanguage": {
+          "amend": "요약서에 상업적 광고 용어가 포함되어 있습니다: {{terms}}.",
+          "pass": "요약서에 상업적 광고 용어가 발견되지 않았습니다."
+        }
+      },
+      "drawings": {
+        "figureCount": {
+          "pass": "도면 {{count}}장."
+        }
+      }
     }
   },
   "loading": {
@@ -345,10 +656,7 @@
   "pdf": {
     "header": "PatentLint 분석 보고서",
     "securityNote": "기기에서 분석 완료. 클라우드에 업로드되지 않았습니다.",
-    "triageSummary": "분류 요약",
-    "category": "범주",
-    "count": "건수",
-    "amend": "조치 필요 (AMEND)",
+"amend": "조치 필요 (AMEND)",
     "verify": "전문가 검토 (VERIFY)",
     "pass": "통과 (PASS)",
     "claimDependency": "청구항 종속 트리",
@@ -368,7 +676,14 @@
     "totalClaims": "총 청구항",
     "figures": "도면",
     "abstractWordCount": "요약서 단어 수",
-    "disclaimer": "PatentLint에 의해 생성되었습니다. 이 보고서는 법률 자문을 구성하지 않습니다. 자격을 갖춘 특허 전문가의 검토를 권장합니다."
+    "abstractCharCount": "요약서 글자 수",
+    "disclaimer": "PatentLint에 의해 생성되었습니다. 이 보고서는 법률 자문을 구성하지 않습니다. 자격을 갖춘 특허 전문가의 검토를 권장합니다.",
+    "triage": {
+      "title": "우선 조치 사항"
+    },
+    "passedSummary": {
+      "title": "통과 항목"
+    }
   },
   "checks": {
     "preamble_cross_category_mismatch": "종속항과 독립항 간 청구항 유형 불일치.",

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application-body lang="zh" country="CN" dtd-version="1.0" file="wipo" status="new">
+  <description>
+    <invention-title>一种测试方法</invention-title>
+    <technical-field>
+      <p id="p0001" num="0001" Italic="0">本发明涉及一种测试方法。</p>
+    </technical-field>
+    <background-art>
+      <p id="p0002" num="0002" Italic="0">背景技术描述。</p>
+    </background-art>
+    <disclosure>
+      <p id="p0003" num="0003" Italic="0">发明内容描述。</p>
+    </disclosure>
+    <mode-for-invention>
+      <p id="p0004" num="0004" Italic="0">具体实施方式描述。</p>
+    </mode-for-invention>
+  </description>
+  <claims>
+    <claim id="cl0001" num="0001">
+      <claim-text>一种测试方法，其特征在于，包括步骤A。</claim-text>
+    </claim>
+  </claims>
+  <abstract>
+    <p id="p0001a" num="0001" Italic="0">一种测试方法的摘要。</p>
+  </abstract>
+</application-body>

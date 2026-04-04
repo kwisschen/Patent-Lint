@@ -86,40 +86,88 @@ function translateMessage(item, t) {
   return item.message
 }
 
-function buildTriageTable(sections, t) {
-  const allChecks = sections.flatMap((s) => s.items)
-  const amendCount = allChecks.filter((c) => c.status === 'amend').length
-  const verifyCount = allChecks.filter((c) => c.status === 'verify').length
-  const passCount = allChecks.filter((c) => c.status === 'pass').length
+// message_keys for UI-internal checks — excluded from PDF entirely
+const INTERNAL_CHECK_KEYS = new Set([
+  'check.drawings.count',
+  'check.spec.drawings',
+  'check.claims.overview',
+])
 
-  return [
-    { text: t('pdf.triageSummary'), style: 'sectionHeader' },
+function filterInternalChecks(sections) {
+  return sections.map((s) => ({
+    ...s,
+    items: s.items.filter((c) => !INTERNAL_CHECK_KEYS.has(c.message_key)),
+  }))
+}
+
+function buildTriagePanel(sections, t) {
+  const content = [{ text: t('pdf.triage.title'), style: 'sectionHeader' }]
+
+  for (const severity of ['amend', 'verify']) {
+    const items = []
+    for (const section of sections) {
+      for (const item of section.items) {
+        if (item.status === severity) {
+          items.push({ item, sectionName: section.name })
+        }
+      }
+    }
+
+    const label = severity === 'amend' ? t('pdf.amend') : t('pdf.verify')
+    const color = severity === 'amend' ? STATUS_COLORS.AMEND : STATUS_COLORS.VERIFY
+
+    content.push({
+      text: `${label} (${items.length})`,
+      bold: true,
+      color,
+      fontSize: 11,
+      margin: [0, 8, 0, 4],
+    })
+
+    for (const { item, sectionName } of items) {
+      const heading = sanitizeText(translateMessage(item, t))
+      content.push({
+        text: `${heading} (${sectionName})`,
+        fontSize: 10,
+        margin: [8, 2, 0, 2],
+      })
+    }
+  }
+
+  return content
+}
+
+function buildPassSummary(sections, t) {
+  const passItems = []
+  for (const section of sections) {
+    const passed = section.items.filter((c) => c.status === 'pass')
+    if (passed.length > 0) {
+      passItems.push({ sectionName: section.name, items: passed })
+    }
+  }
+
+  const totalCount = passItems.reduce((sum, g) => sum + g.items.length, 0)
+  if (totalCount === 0) return []
+
+  const content = [
     {
-      layout: 'lightHorizontalLines',
-      table: {
-        headerRows: 1,
-        widths: ['*', 'auto'],
-        body: [
-          [
-            { text: t('pdf.category'), bold: true },
-            { text: t('pdf.count'), bold: true, alignment: 'center' },
-          ],
-          [
-            { text: t('pdf.amend'), color: STATUS_COLORS.AMEND, bold: true },
-            { text: String(amendCount), alignment: 'center', color: STATUS_COLORS.AMEND },
-          ],
-          [
-            { text: t('pdf.verify'), color: STATUS_COLORS.VERIFY, bold: true },
-            { text: String(verifyCount), alignment: 'center', color: STATUS_COLORS.VERIFY },
-          ],
-          [
-            { text: t('pdf.pass'), color: STATUS_COLORS.PASS, bold: true },
-            { text: String(passCount), alignment: 'center', color: STATUS_COLORS.PASS },
-          ],
-        ],
-      },
+      text: `${t('pdf.passedSummary.title')} (${totalCount})`,
+      style: 'sectionHeader',
     },
   ]
+
+  for (const group of passItems) {
+    const headings = group.items.map((item) => sanitizeText(translateMessage(item, t)))
+    content.push({
+      text: [
+        { text: `${group.sectionName}: `, bold: true, fontSize: 10 },
+        { text: headings.join(' '), fontSize: 10 },
+      ],
+      margin: [0, 2, 0, 2],
+    })
+  }
+
+  return content
 }
 
 function buildSectionChecks(sections, t) {
@@ -127,8 +175,14 @@ function buildSectionChecks(sections, t) {
 
   const content = []
   for (const section of sections) {
+    // Only AMEND then VERIFY — no PASS items in section details
+    const amendItems = section.items.filter((c) => c.status === 'amend')
+    const verifyItems = section.items.filter((c) => c.status === 'verify')
+    const orderedItems = [...amendItems, ...verifyItems]
+    if (orderedItems.length === 0) continue
+
     content.push({ text: section.name, style: 'sectionHeader' })
-    for (const item of section.items) {
+    for (const item of orderedItems) {
       const msg = sanitizeText(translateMessage(item, t))
       content.push({
         columns: [
@@ -300,13 +354,14 @@ function buildSpecSupport(unsupportedTerms, t) {
 
 export async function downloadReport(reportData, t, language, originalFilename) {
   const filename = originalFilename || reportData.filename || 'report'
+  const isCN = reportData.jurisdiction === 'CN'
 
-  const sections = [
+  const sections = filterInternalChecks([
     { name: t('section.specification'), items: reportData.specification_checks || [] },
     { name: t('section.drawings'), items: reportData.drawings_checks || [] },
     { name: t('section.claims'), items: reportData.claims_checks || [] },
     { name: t('section.abstract'), items: reportData.abstract_checks || [] },
-  ]
+  ])
 
   const now = new Date()
   const dateStr = now.toLocaleDateString(language === 'en' ? 'en-US' : language, {
@@ -319,12 +374,16 @@ export async function downloadReport(reportData, t, language, originalFilename) 
 
   const pdfFilename = `patentlint-${filename}.pdf`
 
-  // Load CJK font if needed (font fetch happens before docDefinition is built)
-  const isCjk = !!CJK_FONT_URLS[language]
+  // Load CJK font if needed (font fetch happens before docDefinition is built).
+  // CN jurisdiction content contains simplified Chinese (section names, CNIPA refs)
+  // regardless of UI language, so always load Noto Sans SC for CN reports.
+  const isCjkLocale = !!CJK_FONT_URLS[language]
+  const needsCjk = isCjkLocale || isCN
+  const cjkLanguage = isCjkLocale ? language : (isCN ? 'zh-CN' : null)
   let cjkBase64 = null
-  if (isCjk) {
+  if (needsCjk && cjkLanguage) {
     try {
-      cjkBase64 = await loadCjkFont(language)
+      cjkBase64 = await loadCjkFont(cjkLanguage)
     } catch {
       console.warn('CJK font unavailable (offline?) — falling back to default font')
     }
@@ -403,18 +462,21 @@ export async function downloadReport(reportData, t, language, originalFilename) 
               { text: String(reportData.figure_count ?? 0), fontSize: 10 },
             ],
             [
-              { text: t('pdf.abstractWordCount'), bold: true, color: '#555555', fontSize: 10 },
+              { text: t(isCN ? 'pdf.abstractCharCount' : 'pdf.abstractWordCount'), bold: true, color: '#555555', fontSize: 10 },
               { text: String(reportData.abstract_word_count ?? 0), fontSize: 10 },
             ],
           ],
         },
       },
 
-      // Triage summary
-      ...buildTriageTable(sections, t),
+      // Actionable triage panel
+      ...buildTriagePanel(sections, t),
 
-      // Per-section checks
+      // Per-section checks (AMEND then VERIFY, no PASS)
       ...buildSectionChecks(sections, t),
+
+      // PASS summary
+      ...buildPassSummary(sections, t),
 
       // Claim trees
       ...buildClaimTable(reportData.claim_trees, t),
@@ -453,11 +515,11 @@ export async function downloadReport(reportData, t, language, originalFilename) 
     },
     defaultStyle: {
       fontSize: 10,
-      ...(isCjk && cjkBase64 ? { font: 'CJK' } : {}),
+      ...(needsCjk && cjkBase64 ? { font: 'CJK' } : {}),
     },
   }
 
-  if (isCjk && cjkBase64) {
+  if (needsCjk && cjkBase64) {
     const vfsName = 'NotoSansCJK.ttf'
 
     // Write CJK font data into pdfmake's internal VirtualFileSystem

@@ -1,27 +1,128 @@
 {
-  "header": { "title": "PatentLint", "subtitle": "特許原稿チェックツール" },
-  "dropzone": { "tagline": "30以上のUSPTO起草ルールに基づき特許原稿を分析", "title": "特許 .docx をドロップしてローカル分析を開始", "subtitle": "またはクリックして参照", "notice": "現在、米国特許明細書（.docx）のみ対応しています。", "reject": ".docx ファイルのみ対応", "rejectMultiple": "ファイルは一つずつドロップしてください。", "rejectMultipleType": "一つの .docx ファイルをドロップしてください。" },
-  "summary": { "specParagraphs": "明細書段落数", "claims": "請求項", "independent": "独立項", "dependent": "従属項", "figures": "図面", "abstractWords": "要約語数", "claimCategories": "請求項カテゴリ", "method": "方法", "apparatus": "装置", "outsideRange": "50–150語の範囲外", "noParagraphs": "段落番号なし" },
-  "section": { "specification": "明細書", "claims": "特許請求の範囲", "drawings": "図面の簡単な説明", "drawingsShort": "図面", "abstract": "要約書" },
-  "status": { "pass": "合格", "verify": "確認", "amend": "修正" },
-  "button": { "downloadPdf": "PDFレポートを保存", "newAnalysis": "再分析", "generating": "保存中..." },
-  "diagram": { "show": "図表を表示", "hide": "図表を非表示" },
-  "claimDiagram": { "renderError": "図を表示できませんでした", "independent": "独立項", "dependent": "従属項", "claimLabel": "請求項 {{id}}", "claimsLabel": "請求項 {{range}}" },
-  "tree": { "apparatusClaims": "物の請求項", "methodClaims": "方法の請求項", "independent": "独立項", "dependent": "従属項", "deps": "個の従属項", "dep": "個の従属項" },
-  "section112": { "title": "§ 112 分析" },
+  "header": {
+    "title": "PatentLint",
+    "subtitle": "特許原稿チェックツール"
+  },
+  "jurisdiction": {
+    "us": "🇺🇸 米国特許",
+    "cn": "🇨🇳 中国特許",
+    "label": "管轄"
+  },
+  "dropzone": {
+    "tagline": "30以上のUSPTO作成ルールに基づき特許原稿をチェック",
+    "title": "特許 .docx をドロップしてローカル分析を開始",
+    "subtitle": "またはクリックして参照",
+    "notice": "現在、米国特許明細書（.docx）のみ対応しています。",
+    "reject": ".docx ファイルのみ対応",
+    "rejectMultiple": "ファイルは一つずつドロップしてください。",
+    "rejectMultipleType": "一つの .docx ファイルをドロップしてください。",
+    "taglineCn": "20以上のCNIPA作成ルールに基づき特許原稿をチェック",
+    "titleCn": "特許ファイルをドロップしてローカル分析を開始",
+    "noticeCn": "中国特許原稿（.docx、.xml、.zip）に対応しています。",
+    "rejectCn": ".docx、.xml、.zip ファイルのみ対応",
+    "rejectMultipleTypeCn": "一つの .docx、.xml、または .zip ファイルをドロップしてください。"
+  },
+  "summary": {
+    "specParagraphs": "明細書段落数",
+    "claims": "請求項",
+    "independent": "独立項",
+    "dependent": "従属項",
+    "figures": "図面",
+    "abstractWords": "要約語数",
+    "abstractChars": "要約文字数",
+    "claimCategories": "請求項カテゴリ",
+    "method": "方法",
+    "apparatus": "装置",
+    "outsideRange": "50–150語の範囲外",
+    "outsideRangeCn": "300文字を超過",
+    "noParagraphs": "段落番号なし"
+  },
+  "section": {
+    "specification": "明細書",
+    "claims": "特許請求の範囲",
+    "drawings": "図面の簡単な説明",
+    "drawingsShort": "図面",
+    "abstract": "要約書"
+  },
+  "status": {
+    "pass": "合格",
+    "verify": "確認",
+    "amend": "修正"
+  },
+  "button": {
+    "downloadPdf": "PDFレポートを保存",
+    "newAnalysis": "再分析",
+    "generating": "保存中..."
+  },
+  "diagram": {
+    "show": "図表を表示",
+    "hide": "図表を非表示"
+  },
+  "claimDiagram": {
+    "renderError": "図を表示できませんでした",
+    "independent": "独立項",
+    "dependent": "従属項",
+    "claimLabel": "請求項 {{id}}",
+    "claimsLabel": "請求項 {{range}}"
+  },
+  "tree": {
+    "apparatusClaims": "物の請求項",
+    "methodClaims": "方法の請求項",
+    "independent": "独立項",
+    "dependent": "従属項",
+    "deps": "個の従属項",
+    "dep": "個の従属項"
+  },
+  "section112": {
+    "title": "§ 112 分析"
+  },
   "results": {
     "nonPatentWarning": "この文書は米国特許原稿ではない可能性があります",
     "nonPatentWarningDetails": "PatentLint は米国特許出願の草稿用に設計されています。このファイルには標準的な特許セクション、番号付き請求項、または段落番号が含まれていないため、米国以外または非特許文書に対する分析結果は有意でない場合があります。",
     "showResultsAnyway": "結果を表示する",
     "trackedChangesWarning": "この文書には変更履歴が含まれており、分析精度に影響する可能性があります。Wordですべての変更を承認または拒否してから、再度分析を行ってください。",
-    "analyzeAgain": "再分析"
+    "analyzeAgain": "再分析",
+    "scannedDocWarning": "このファイルにはスキャン画像のみが含まれており、構造化テキストがありません",
+    "scannedDocWarningDetails": "アップロードされたファイルにはスキャン文書画像のみが含まれており、機械可読な特許テキストがありません。PatentLintは構造化テキストが必要です。元の出願XMLまたは.docx草稿をアップロードしてください。"
   },
-  "analysis": { "analyzing": "特許文書を分析中...", "label": "分析結果" },
-  "footer": { "disclaimer": "本レポートは法的助言を構成するものではありません", "builtBy": "© 2025 Christopher Chen", "security": "セキュリティ", "about": "概要", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "フィードバック" },
-  "cta": { "heading": "特許原稿をチェックする準備はできましたか？", "subtext": ".docx ファイルをドロップするだけで即座に結果を取得。アップロード不要、アカウント不要。", "button": "特許原稿を分析" },
-  "antecedentBasis": { "title": "先行詞の根拠の確認", "items": "個の用語", "item": "個の用語" },
-  "specSupport": { "title": "明細書サポートの確認", "items": "個の用語", "item": "個の用語" },
-  "triage": { "title": "優先事項の要約", "amend": "修正が必要", "amendEmpty": "修正が必要な項目はありません。", "verify": "専門家の確認が必要", "verifyEmpty": "確認が必要な項目はありません。", "pass": "合格", "items": "件", "item": "件" },
+  "analysis": {
+    "analyzing": "特許文書を分析中...",
+    "label": "分析結果"
+  },
+  "footer": {
+    "disclaimer": "本レポートは法的助言を構成するものではありません",
+    "builtBy": "© 2025 Christopher Chen",
+    "security": "セキュリティ",
+    "about": "概要",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "feedback": "フィードバック"
+  },
+  "cta": {
+    "heading": "特許原稿をチェックする準備はできましたか？",
+    "subtext": ".docx ファイルをドロップするだけで即座に結果を取得できます。アップロードおよびアカウント登録は不要です。",
+    "button": "特許原稿を分析"
+  },
+  "antecedentBasis": {
+    "title": "先行詞の根拠の確認",
+    "items": "個の用語",
+    "item": "個の用語"
+  },
+  "specSupport": {
+    "title": "明細書サポートの確認",
+    "items": "個の用語",
+    "item": "個の用語"
+  },
+  "triage": {
+    "title": "優先事項の要約",
+    "amend": "修正が必要",
+    "amendEmpty": "修正が必要な項目はありません。",
+    "verify": "専門家の確認が必要",
+    "verifyEmpty": "確認が必要な項目はありません。",
+    "pass": "合格",
+    "items": "件",
+    "item": "件"
+  },
   "security": {
     "airplaneDemoAlt": "デモ：機内モードでネットワーク接続なしに特許原稿を分析",
     "badge": {
@@ -42,7 +143,7 @@
       "label4": "緑のドット",
       "step1": "WiFi をオフにするか、機内モードをオンにします",
       "step2": "任意の .docx を PatentLint にドラッグします",
-      "step3": "インターネットなし — クラウドなし、アップロードなし、データ送信なし",
+      "step3": "インターネット接続なしで動作します。クラウド通信、アップロード、データ送信は一切発生しません。",
       "step4": "分析後、結果ページの緑のドットがネットワーク通信がないことを示します。",
       "testHeading": "自分の目で確かめる",
       "testDescription": "このボタンは PatentLint のロゴを取得します。下のログで PatentLint がネットワーク活動をどのように検出するかご確認ください。",
@@ -55,8 +156,8 @@
       "heroTitle": "サーバーなし。アップロードなし。例外なし。",
       "heroSubtext": "PatentLintはすべてお使いのブラウザ内で動作し、特許原稿がお使いの端末から外部に送信されることは一切ありません。機密データは、常にお使いの端末内に保持されます。",
       "tryIt": "試してみる →",
-      "compareTitle": "PatentLint と他のツールの比較",
-      "compareDisclaimer": "この比較は一般的なアーキテクチャパターンを反映しています。個々の製品は異なる場合があります。「Word アドインツール」と「クラウドベースツール」は一般的なカテゴリであり、特定の製品を指すものではありません。",
+      "compareTitle": "PatentLint と他ツールとの比較",
+      "compareDisclaimer": "本比較は一般的なアーキテクチャ構成の違いを示したものです。個々の製品の仕様はそれぞれ異なる場合があります。「Wordアドイン型ツール」および「クラウドベースツール」は一般的なカテゴリ名称であり、特定の製品を指すものではありません。",
       "techTitle": "技術的な詳細"
     },
     "compare": {
@@ -64,12 +165,42 @@
       "colPatentLint": "PatentLint",
       "colAddin": "Word アドインツール",
       "colCloud": "クラウドベースツール",
-      "q1": { "question": "ファイルはデバイスの外に出ますか？", "patentlint": "一切出ません。100% ブラウザ内で動作します。", "addin": "ファイルはローカルに残りますが、アドインが通信する場合があります。", "cloud": "はい。リモートサーバーにアップロードされます。" },
-      "q2": { "question": "アカウントは必要ですか？", "patentlint": "不要です。登録なし、ログインなし、追跡なし。", "addin": "通常、ライセンスまたはアカウントが必要です。", "cloud": "はい。アカウントが必要です。" },
-      "q3": { "question": "オフラインで使えますか？", "patentlint": "はい、初回読み込み後は可能です。", "addin": "ライセンス認証の方法によります。", "cloud": "いいえ。インターネットが必要です。" },
-      "q4": { "question": "プライバシーに関する説明を検証できますか？", "patentlint": "はい。開発者ツール → ネットワークを開くか、機内モードで確認できます。", "addin": "アドインの通信を監査するのは困難です。", "cloud": "いいえ。データは提供元のサーバー上にあります。" },
-      "q5": { "question": "どのプラットフォームに対応していますか？", "patentlint": "モダンブラウザが使えるすべてのデバイス。", "addin": "Windows + Microsoft Word のみ。", "cloud": "ブラウザベースですが、アップロードが必要です。" },
-      "q6": { "question": "費用はいくらですか？", "patentlint": "無料、費用不要、サブスクリプション不要、使用制限なし。", "addin": "通常、有料ライセンスが必要です。", "cloud": "通常、サブスクリプションが必要です。" }
+      "q1": {
+        "question": "ファイルはデバイスの外に出ますか？",
+        "patentlint": "ファイルが外部サーバーへ送信されることはありません。すべての処理はブラウザ内で完結します。",
+        "addin": "ファイルはローカルに残りますが、アドインが通信する場合があります。",
+        "cloud": "リモートサーバーへアップロードされます。"
+      },
+      "q2": {
+        "question": "アカウントは必要ですか？",
+        "patentlint": "アカウント登録は不要です。ログイン機能およびトラッキングも行っていません。",
+        "addin": "通常、ライセンスまたはアカウントが必要です。",
+        "cloud": "アカウントの作成が必要です。"
+      },
+      "q3": {
+        "question": "オフラインで使えますか？",
+        "patentlint": "初回読み込み後は、オフライン環境でもご利用いただけます。",
+        "addin": "ライセンス認証の方法によります。",
+        "cloud": "オフラインではご利用いただけません。インターネット接続が必要です。"
+      },
+      "q4": {
+        "question": "プライバシーに関する説明を検証できますか？",
+        "patentlint": "ブラウザの開発者ツール（ネットワークタブ）または機内モードをご利用いただくことで、外部通信が行われていないことをご確認いただけます。",
+        "addin": "アドインの通信を監査するのは困難です。",
+        "cloud": "データは提供元のサーバー上にあるため、外部からの検証は困難です。"
+      },
+      "q5": {
+        "question": "どのプラットフォームに対応していますか？",
+        "patentlint": "モダンブラウザが利用可能なすべてのデバイスに対応しています。",
+        "addin": "Windows + Microsoft Word のみ。",
+        "cloud": "ブラウザベースですが、アップロードが必要です。"
+      },
+      "q6": {
+        "question": "費用はいくらですか？",
+        "patentlint": "本ツールは完全無料でご利用いただけます。サブスクリプション契約も不要であり、使用制限も設けていません。",
+        "addin": "通常、有料ライセンスが必要です。",
+        "cloud": "通常、サブスクリプションが必要です。"
+      }
     },
     "tech": {
       "architectureTitle": "アーキテクチャ",
@@ -89,8 +220,8 @@
   },
   "about": {
     "productTitle": "PatentLint とは？",
-    "productDesc1": "PatentLint は、審査官より先に問題を発見する無料の特許原稿チェックツールです。米国特許明細書をブラウザにドロップするだけで、即座にコンプライアンスレポートを取得できます。アップロード不要、アカウント不要、クラウド不要。",
-    "productDesc2": "MPEP（特許審査便覧）の作成ルールに基づいてチェックを行い、先行詞の根拠の欠落や限定的な表現などの作成上の問題を検出し、請求項の従属関係をツリー表示で可視化します。",
+    "productDesc1": "PatentLint は、審査官より先に問題を発見する無料の特許原稿チェックツールです。米国または中国特許原稿をブラウザにドロップするだけで、即座にコンプライアンスレポートを取得できます。アップロード不要、アカウント不要、クラウド不要。",
+    "productDesc2": "MPEP（米国）および CNIPA 規則（中国）の作成ルールに基づいてチェックを行い、先行詞の根拠の欠落、不正確な請求項構造、限定的な表現などの一般的な問題を検出します。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center は出願フォーマットを検証します。PatentLint は原稿そのものをチェックします。",
     "uspto": {
@@ -140,9 +271,43 @@
         "checkSequenceListing": "配列表の準拠性（§ 2422）"
       }
     },
+    "cnTitle": "PatentLint CNIPA 作成規則チェック",
+    "cnSubtitle": "CNIPA作成規則（专利法实施细则、审查指南）に基づく20+の構造チェック。",
+    "cnGroups": {
+      "specification": "明細書（说明书）",
+      "claims": "特許請求の範囲（权利要求）",
+      "abstract": "要約（摘要）",
+      "drawings": "図面（附图）"
+    },
+    "cnChecks": {
+      "requiredSections": "必須セクション（专利法实施细则 §17）",
+      "sectionOrdering": "セクション順序",
+      "paragraphNumbering": "段落番号",
+      "paragraphEnding": "段落末尾の句読点",
+      "figureRefConsistency": "図面参照の一貫性",
+      "patentTypeTerminology": "特許タイプの用語",
+      "titleRequirements": "タイトル要件",
+      "specClaimReference": "明細書は請求項を引用してはならない",
+      "claimsSequential": "請求項番号の連続性",
+      "dependencyFormat": "従属形式",
+      "selfDependent": "自己従属の請求項",
+      "forwardDependency": "前方従属",
+      "singleSentence": "請求項ごとに一文",
+      "refNumeralParens": "参照番号の括弧",
+      "subjectNameConsistency": "主題名の一貫性",
+      "transitionPhrase": "移行フレーズ（其特征在于）",
+      "cnTwTerminology": "中国大陸/台湾の用語",
+      "claimsSpecReference": "請求項は明細書/図面を引用してはならない",
+      "multiMultiDependency": "多項従属の多項従属",
+      "dependentOrdering": "従属請求項の順序",
+      "abstractCharCount": "要約文字数（300字以下）",
+      "titleInAbstract": "タイトルが要約に含まれている",
+      "commercialLanguage": "商業的表現",
+      "figureCount": "図面数"
+    },
     "stats": {
       "tests": "自動テスト",
-      "checks": "MPEP チェック",
+      "checks": "作成チェック",
       "languages": "UI 言語",
       "cloudRequests": "クラウドリクエスト"
     },
@@ -210,11 +375,50 @@
     "restrictiveWordingAbstract": "{{text}}。MPEP § 608.01(b) に従い、要約書では法律用語（\"comprising\"、\"said\"、\"means\"）、評価的用語（\"novel\"、\"innovative\"）、限定的用語（\"must\"、\"essential\"）を避けるべきです。フラグ付き用語を修正してください。",
     "abstractStructureFix": "MPEP § 608.01(b) に従い、要約書はピリオド、感嘆符、または疑問符で終わる単一段落であり、特許明細書の最後のセクションとして配置される必要があります。",
     "abstractImpliedPhrasesFix": "\"This disclosure provides...\" や \"A method is provided...\" などの表現は MPEP § 608.01(b) に基づく暗示的表現に該当します。発明を直接記述するように書き換えてください（例：\"A method that...\"）。",
-    "abstractWordCountFix": "MPEP § 608.01(b) に従い、要約書は 50 語から 150 語の範囲内である必要があります。この範囲を満たすよう修正してください。"
+    "abstractWordCountFix": "MPEP § 608.01(b) に従い、要約書は 50 語から 150 語の範囲内である必要があります。この範囲を満たすよう修正してください。",
+    "cn": {
+      "requiredSections": "专利法实施细则 §17に基づき、明細書には技术领域、背景技术、发明内容、具体实施方式が必要です。不足しているセクションを追加してください。",
+      "sectionOrdering": "規定順序：技术领域 → 背景技术 → 发明内容 → 附图说明 → 具体实施方式。セクションの順序を修正してください。",
+      "paragraphNumberingXml": "审查指南に基づき、段落番号は連続的かつ4桁ゼロ埋め（0001、0002…）である必要があります。番号順序を修正してください。",
+      "paragraphNumberingDocx": "CNIPAの規定により、明細書には段落番号を追加してはなりません。WORD转XML编辑器が変換時に自動的に番号を付与します。手動で追加したすべての段落番号を削除してください。",
+      "paragraphEnding": "审查指南に基づき、明細書の段落は中国語の文末句読点（。、！または？）で終わる必要があります。該当段落を確認してください。",
+      "figureRefConsistency": "审查指南に基づき、附图说明で記載された図面は具体实施方式で引用され、逆も同様です。該当する引用が正しいか確認してください。",
+      "patentTypeTerminology": "审查指南に基づき、発明特許出願は「本发明」（「本实用新型」ではなく）を使用し、実用新型出願は逆に使用すべきです。用語が出願種別と一致しているか確認してください。",
+      "titleLength": "审查指南 第一部分第一章に基づき、発明名称は漢字25文字を超えてはなりません。名称を短縮してください。",
+      "titleContent": "审查指南に基づき、発明名称には商標、型番、人名、商業的宣伝用語を含めてはなりません。禁止事項を削除してください。",
+      "specClaimReference": "专利法实施细则 §17に基づき、明細書は「如权利要求……所述的……」などの表現で特許請求の範囲を引用してはなりません。明細書から請求項引用を削除してください。",
+      "claimsSequential": "审查指南に基づき、請求項は1から連続番号を付す必要があります。番号を修正してください。",
+      "dependencyFormat": "专利法实施细则 §22に基づき、従属請求項は「如权利要求N所述的……」の形式で引用する必要があります。該当請求項を修正してください。",
+      "selfDependent": "专利法实施细则 §22に基づき、請求項は自身を引用することができません。引用関係を修正してください。",
+      "forwardDependency": "专利法实施细则 §22に基づき、従属請求項は先行する請求項のみを引用できます。引用関係を修正してください。",
+      "singleSentence": "审查指南 第二部分第二章に基づき、各請求項は句点（。）で終わる1文でなければなりません。文中の余分な句点を削除するか、複数の請求項に分割してください。",
+      "refNumeralParens": "审查指南に基づき、請求項内の参照符号は括弧で囲む必要があります（例：101ではなく（101））。該当請求項を確認してください。",
+      "subjectConsistency": "审查指南 第二部分第二章に基づき、従属請求項の主題名称は引用元の請求項の主題名称と一致すべきです。該当請求項を確認してください。",
+      "transitionPhrase": "审查指南に基づき、独立請求項には「其特征在于」などの特徴部分の移行語を含め、既知要素と新規特徴を区別すべきです。該当請求項を確認してください。",
+      "twTerminology": "CNIPAでは請求項を「权利要求」と表記します。「请求项」は台湾（TIPO）の特許用語です。すべて置き換えてください。",
+      "claimsSpecReference": "审查指南 第二部分第二章に基づき、請求項は「如说明书……所述」や「如图……所示」で保護範囲を限定してはなりません。請求項は独立していなければなりません。該当引用を削除してください。",
+      "multiMultiDep": "专利法实施细则 §22に基づき、多項従属請求項は別の多項従属請求項の引用基礎にすることができません。引用関係を再構成してください。",
+      "dependentOrdering": "审查指南 第二部分第二章に基づき、同一の独立請求項を引用するすべての従属請求項は次の独立請求項の前に連続して配置すべきです。順序を調整してください。",
+      "abstractCharCount": "专利法实施细则 §23に基づき、要約は300文字を超えてはなりません。要約を短縮してください。",
+      "abstractTitleMatch": "审查指南に基づき、要約は発明名称と一致すべきです。要約が発明名称を反映しているか確認してください。",
+      "commercialLanguage": "专利法实施细则 §23に基づき、要約に商業的宣伝用語（商业性宣传用语）を含めてはなりません。最优、最佳、世界领先、国际领先、国内首创、填补空白などの用語を削除してください。"
+    }
   },
-  "common": { "close": "閉じる", "toggleTheme": "テーマ切替", "changeLanguage": "言語切替" },
-  "consolidation": { "nounMismatchSummary": "プリアンブル名詞の不一致：{{count}} 個の従属項が請求項 {{rootId}} と異なります" },
-  "lang": { "en": "English", "zh-CN": "简体中文", "zh-TW": "繁體中文", "ja": "日本語", "ko": "한국어" },
+  "common": {
+    "close": "閉じる",
+    "toggleTheme": "テーマ切替",
+    "changeLanguage": "言語切替"
+  },
+  "consolidation": {
+    "nounMismatchSummary": "プリアンブル名詞の不一致：{{count}} 個の従属項が請求項 {{rootId}} と異なります"
+  },
+  "lang": {
+    "en": "English",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "ja": "日本語",
+    "ko": "한국어"
+  },
   "check": {
     "spec": {
       "restrictiveWording": {
@@ -322,6 +526,113 @@
         "pass": "図面番号は連続しています。"
       },
       "count": "{{count}} 個の図面が見つかりました。"
+    },
+    "cn": {
+      "spec": {
+        "requiredSections": {
+          "amend": "必須セクションが不足しています：{{sections}}（专利法实施细则 §17）。",
+          "pass": "すべての必須セクションが含まれています。"
+        },
+        "sectionOrdering": {
+          "amend": "明細書のセクション順序が規定に適合していません（专利法实施细则 §17）。",
+          "pass": "明細書のセクション順序は正確です。"
+        },
+        "paragraphNumbering": {
+          "amendXml": "段落番号が連続していません（{{detail}}）。",
+          "amendDocx": "明細書に手動で追加された段落番号が含まれています。",
+          "pass": "段落番号は正確です。"
+        },
+        "paragraphEnding": {
+          "amend": "{{count}} 個の段落が有効な中国語句読点で終わっていません。",
+          "pass": "すべての段落が有効な句読点で終わっています。"
+        },
+        "figureRefConsistency": {
+          "verify": "具体实施方式と附图说明の図面参照が不一致です（{{detail}}）。",
+          "pass": "各セクションの図面参照は一致しています。"
+        },
+        "patentTypeTerminology": {
+          "verify": "「{{term}}」が見つかりました。特許種別（発明／実用新型）との整合性を確認してください。",
+          "pass": "特許種別の用語は一致しています。"
+        },
+        "title": {
+          "amendLength": "発明名称が漢字25文字を超えています（{{count}}文字）。",
+          "amendContent": "発明名称に禁止事項が含まれています：{{detail}}。",
+          "pass": "発明名称はCNIPAの要件を満たしています。"
+        },
+        "claimReference": {
+          "amend": "明細書が特許請求の範囲を引用しています（{{detail}}）。",
+          "pass": "明細書は特許請求の範囲を引用していません。"
+        }
+      },
+      "claims": {
+        "sequential": {
+          "amend": "請求項番号が連続していません（{{detail}}）。",
+          "pass": "請求項番号は連続しています。"
+        },
+        "dependencyFormat": {
+          "amend": "{{count}} 項の請求項の引用形式が不正確です。",
+          "pass": "すべての従属請求項の引用形式は正確です。"
+        },
+        "selfDependent": {
+          "amend": "請求項 {{claims}} が自身を引用しています。",
+          "pass": "自己引用の請求項は見つかりませんでした。"
+        },
+        "forwardDependency": {
+          "amend": "請求項 {{claims}} が後方の請求項を引用しています（前方引用）。",
+          "pass": "前方引用は見つかりませんでした。"
+        },
+        "singleSentence": {
+          "amend": "{{count}} 項の請求項が複数の文を含んでいます。",
+          "pass": "すべての請求項は単文です。"
+        },
+        "refNumeralParens": {
+          "verify": "{{count}} 項の請求項で参照符号が括弧で囲まれていません。",
+          "pass": "請求項内のすべての参照符号が括弧で囲まれています。"
+        },
+        "subjectConsistency": {
+          "verify": "{{count}} 項の従属請求項の主題名称が引用元と不一致です。",
+          "pass": "従属請求項の主題名称は一致しています。"
+        },
+        "transitionPhrase": {
+          "verify": "{{count}} 項の独立請求項に特徴部分の移行語（其特征在于）が欠けている可能性があります。",
+          "pass": "すべての独立請求項に特徴部分の移行語が含まれています。"
+        },
+        "twTerminology": {
+          "verify": "台湾特許用語「请求项」が見つかりました。CNIPA出願では「权利要求」を使用してください。",
+          "pass": "請求項の用語はCNIPAの規範に適合しています。"
+        },
+        "specReference": {
+          "amend": "{{count}} 項の請求項が明細書または図面を引用して保護範囲を限定しています。",
+          "pass": "明細書または図面を引用している請求項はありません。"
+        },
+        "multiMultiDep": {
+          "amend": "請求項 {{claims}}：多項従属請求項が別の多項従属請求項を引用しています。",
+          "pass": "多項従属請求項の連鎖引用は見つかりませんでした。"
+        },
+        "dependentOrdering": {
+          "amend": "従属請求項が引用元の独立請求項の直後に配置されていません。",
+          "pass": "従属請求項の配列順序は正確です。"
+        }
+      },
+      "abstract": {
+        "charCount": {
+          "amend": "要約が300文字を超えています（{{count}}文字）。",
+          "pass": "要約は300文字以内です（{{count}}文字）。"
+        },
+        "titleMatch": {
+          "verify": "要約に発明名称が含まれていません。",
+          "pass": "要約に発明名称が含まれています。"
+        },
+        "commercialLanguage": {
+          "amend": "要約に商業的宣伝用語が含まれています：{{terms}}。",
+          "pass": "要約に商業的宣伝用語は見つかりませんでした。"
+        }
+      },
+      "drawings": {
+        "figureCount": {
+          "pass": "図面 {{count}} 枚。"
+        }
+      }
     }
   },
   "loading": {
@@ -338,17 +649,14 @@
     "feature3_title": "請求項ツリー表示",
     "feature3_desc": "インタラクティブな従属関係ツリーと Mermaid 図で、請求項の構造を一目で把握できます。",
     "feature4_title": "どこでも使える",
-    "feature4_desc": "Mac、Windows、Linux、iPad。ブラウザがあるどのデバイスでも利用可能。Word アドインは不要。English、繁體中文、简体中文、日本語、한국어の多言語対応の UI。",
+    "feature4_desc": "Mac、Windows、Linux、iPadなど、モダンブラウザが利用可能なすべてのデバイスでご利用いただけます。Wordアドインは不要です。English、繁體中文、简体中文、日本語、한국어の多言語UIに対応しています。",
     "feature5_title": "瞬時の分析",
     "feature5_desc": ".docx ファイルをドロップするだけで数秒で結果が得られます。PDF レポートのダウンロードもクラウド不要。"
   },
   "pdf": {
     "header": "PatentLint 分析レポート",
     "securityNote": "お使いのデバイス上で分析しました。クラウドへのアップロードはありません。",
-    "triageSummary": "優先事項の要約",
-    "category": "カテゴリ",
-    "count": "件数",
-    "amend": "修正が必要（AMEND）",
+"amend": "修正が必要（AMEND）",
     "verify": "専門家の確認（VERIFY）",
     "pass": "合格（PASS）",
     "claimDependency": "請求項従属関係表",
@@ -368,7 +676,14 @@
     "totalClaims": "請求項の合計",
     "figures": "図面",
     "abstractWordCount": "要約書の語数",
-    "disclaimer": "PatentLint により生成。本レポートは法的助言を構成するものではありません。資格のある特許専門家による確認を推奨します。"
+    "abstractCharCount": "要約文字数",
+    "disclaimer": "PatentLint により生成。本レポートは法的助言を構成するものではありません。資格のある特許専門家による確認を推奨します。",
+    "triage": {
+      "title": "優先対応事項"
+    },
+    "passedSummary": {
+      "title": "合格項目"
+    }
   },
   "checks": {
     "preamble_cross_category_mismatch": "従属項と独立項のプリアンブルの種別が不一致です（物／方法のカテゴリ不一致）。",
