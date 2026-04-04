@@ -5,7 +5,7 @@ import { useDropzone } from 'react-dropzone'
 import { Upload, ShieldCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-export default function DropZone({ onFile, onShowProveIt }) {
+export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' }) {
   const { t } = useTranslation()
   const [badgeVisible, setBadgeVisible] = useState(false)
   const [rejectMsg, setRejectMsg] = useState('')
@@ -15,6 +15,8 @@ export default function DropZone({ onFile, onShowProveIt }) {
     return () => clearTimeout(timer)
   }, [])
 
+  const isCN = jurisdiction === 'CN'
+
   const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
     setRejectMsg('')
     if (acceptedFiles.length > 0) {
@@ -23,19 +25,28 @@ export default function DropZone({ onFile, onShowProveIt }) {
     }
     const hasTypeError = rejectedFiles.some(r => r.errors.some(e => e.code === 'file-invalid-type'))
     if (rejectedFiles.length > 1 && hasTypeError) {
-      setRejectMsg(t('dropzone.rejectMultipleType'))
+      setRejectMsg(t(isCN ? 'dropzone.rejectMultipleTypeCn' : 'dropzone.rejectMultipleType'))
     } else if (rejectedFiles.length > 1) {
       setRejectMsg(t('dropzone.rejectMultiple'))
     } else {
-      setRejectMsg(t('dropzone.reject'))
+      setRejectMsg(t(isCN ? 'dropzone.rejectCn' : 'dropzone.reject'))
     }
-  }, [onFile, t])
+  }, [onFile, t, isCN])
+
+  const acceptedTypes = isCN
+    ? {
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
+        'application/xml': ['.xml'],
+        'text/xml': ['.xml'],
+        'application/zip': ['.zip'],
+      }
+    : {
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
+      }
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: {
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
-    },
+    accept: acceptedTypes,
     maxFiles: 1,
   })
 
@@ -58,9 +69,9 @@ export default function DropZone({ onFile, onShowProveIt }) {
         <input {...getInputProps()} />
         <Upload className={`h-10 w-10 transition-colors duration-200 ${isDragActive ? 'text-[var(--pass-text)]' : 'text-muted-foreground'}`} />
         <div className="text-center">
-          <p className="text-base font-medium">{t('dropzone.title')}</p>
+          <p className="text-base font-medium">{t(isCN ? 'dropzone.titleCn' : 'dropzone.title')}</p>
           <p className="text-sm text-muted-foreground mt-1">{t('dropzone.subtitle')}</p>
-          <p className="text-xs text-muted-foreground mt-2">{t('dropzone.notice')}</p>
+          <p className="text-xs text-muted-foreground mt-2">{t(isCN ? 'dropzone.noticeCn' : 'dropzone.notice')}</p>
         </div>
       </div>
 

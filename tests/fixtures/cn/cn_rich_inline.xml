@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cn-application-body lang="zh" country="CN" dtd-version="1.0" file="rich" status="new">
+  <description>
+    <invention-title>内联标记测试</invention-title>
+    <technical-field>
+      <p id="p0001" num="0001" Italic="0">本发明涉及<b>重要的</b>技术，包括<i>特殊</i>处理和H<sub>2</sub>O及E=mc<sup>2</sup>等概念。</p>
+    </technical-field>
+    <background-art>
+      <p id="p0002" num="0002" Italic="0">参见<figref idref="f0001" num="1">图1</figref>所示的现有技术。</p>
+    </background-art>
+    <disclosure>
+      <p id="p0003" num="0003" Italic="0">发明内容。</p>
+    </disclosure>
+    <mode-for-invention>
+      <p id="p0004" num="0004" Italic="0">实施方式。</p>
+    </mode-for-invention>
+  </description>
+  <cn-claims>
+    <claim id="cl0001" num="0001">
+      <claim-text>一种装置。</claim-text>
+    </claim>
+  </cn-claims>
+  <cn-abstract id="abst">
+    <p id="p0001a" num="0001" Italic="0">摘要文本。</p>
+  </cn-abstract>
+</cn-application-body>

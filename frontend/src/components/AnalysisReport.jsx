@@ -131,16 +131,24 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
     }
   }, [pyodideReady])
 
+  const isCN = data.jurisdiction === 'CN'
+
   const consolidatedData = useMemo(() => ({
     ...data,
-    specification_checks: (data.specification_checks || []).filter(
-      (c) => c.message_key !== 'check.spec.drawings'
-    ),
-    claims_checks: consolidateClaimsChecks(data.claims_checks),
-    drawings_checks: (data.drawings_checks || []).filter(
-      (c) => c.message_key !== 'check.drawings.count'
-    ),
-  }), [data])
+    specification_checks: isCN
+      ? data.specification_checks || []
+      : (data.specification_checks || []).filter(
+          (c) => c.message_key !== 'check.spec.drawings'
+        ),
+    claims_checks: isCN
+      ? data.claims_checks || []
+      : consolidateClaimsChecks(data.claims_checks),
+    drawings_checks: isCN
+      ? data.drawings_checks || []
+      : (data.drawings_checks || []).filter(
+          (c) => c.message_key !== 'check.drawings.count'
+        ),
+  }), [data, isCN])
 
   const hasAntecedentIssues = data.antecedent_basis_issues?.length > 0
   const hasUnsupportedTerms = data.unsupported_terms?.length > 0
@@ -216,16 +224,20 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
           checks={consolidatedData.claims_checks}
           defaultOpen
         >
-          <ClaimTree claimTrees={data.claim_trees} />
-          <ClaimDiagram claimTrees={data.claim_trees} />
+          {!isCN && (
+            <>
+              <ClaimTree claimTrees={data.claim_trees} />
+              <ClaimDiagram claimTrees={data.claim_trees} />
 
-          <Section112Container
-            hasAntecedentIssues={hasAntecedentIssues}
-            hasUnsupportedTerms={hasUnsupportedTerms}
-            antecedentBasisIssues={data.antecedent_basis_issues}
-            unsupportedTerms={data.unsupported_terms}
-            claimTrees={data.claim_trees}
-          />
+              <Section112Container
+                hasAntecedentIssues={hasAntecedentIssues}
+                hasUnsupportedTerms={hasUnsupportedTerms}
+                antecedentBasisIssues={data.antecedent_basis_issues}
+                unsupportedTerms={data.unsupported_terms}
+                claimTrees={data.claim_trees}
+              />
+            </>
+          )}
         </SectionPanel>
         <SectionPanel
           title={t('section.abstract')}

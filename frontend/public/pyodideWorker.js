@@ -45,14 +45,18 @@ self.onmessage = async (event) => {
         try {
             // payload is ArrayBuffer of the .docx file
             const uint8 = new Uint8Array(payload);
+            const jurisdiction = event.data.jurisdiction || 'US';
             // Pass bytes to Python
             pyodide.globals.set('docx_bytes', pyodide.toPy(uint8));
             pyodide.globals.set('filename', event.data.filename);
+            pyodide.globals.set('jurisdiction_str', jurisdiction);
 
             const resultJson = await pyodide.runPythonAsync(`
                 from patentlint.pipeline import analyze_bytes
+                from patentlint.models import Jurisdiction
 
-                result = analyze_bytes(bytes(docx_bytes), filename)
+                j = Jurisdiction(jurisdiction_str)
+                result = analyze_bytes(bytes(docx_bytes), filename, jurisdiction=j)
                 report_data = result.to_report_data()
                 report_data.model_dump_json()
             `);

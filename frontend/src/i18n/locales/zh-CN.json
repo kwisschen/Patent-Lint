@@ -1,27 +1,128 @@
 {
-  "header": { "title": "PatentLint", "subtitle": "专利稿件检查工具" },
-  "dropzone": { "tagline": "依据30多项USPTO撰稿规则检查您的专利稿件", "title": "拖放您的专利 .docx 开始本地分析", "subtitle": "或点击浏览文件", "notice": "目前仅支持美国专利说明书（.docx）。", "reject": "仅接受 .docx 文件", "rejectMultiple": "请一次拖放一个文件。", "rejectMultipleType": "请拖放单个 .docx 文件。" },
-  "summary": { "specParagraphs": "说明书段落", "claims": "权利要求", "independent": "独立项", "dependent": "从属项", "figures": "附图", "abstractWords": "摘要字数", "claimCategories": "权项类别", "method": "方法", "apparatus": "装置", "outsideRange": "超出 50–150 字范围", "noParagraphs": "未发现段落编号" },
-  "section": { "specification": "说明书", "claims": "权利要求书", "drawings": "附图说明", "drawingsShort": "附图", "abstract": "摘要" },
-  "status": { "pass": "通过", "verify": "确认", "amend": "修改" },
-  "button": { "downloadPdf": "保存 PDF 报告", "newAnalysis": "重新分析", "generating": "保存中..." },
-  "diagram": { "show": "显示图表", "hide": "隐藏图表" },
-  "claimDiagram": { "renderError": "无法绘制图表", "independent": "独立项", "dependent": "从属项", "claimLabel": "权利要求 {{id}}", "claimsLabel": "权利要求 {{range}}" },
-  "tree": { "apparatusClaims": "装置权利要求", "methodClaims": "方法权利要求", "independent": "独立权利要求", "dependent": "从属权利要求", "deps": "个从属项", "dep": "个从属项" },
-  "section112": { "title": "§ 112 分析" },
+  "header": {
+    "title": "PatentLint",
+    "subtitle": "专利稿件检查工具"
+  },
+  "jurisdiction": {
+    "us": "🇺🇸 美国专利",
+    "cn": "🇨🇳 中国专利",
+    "label": "管辖区"
+  },
+  "dropzone": {
+    "tagline": "依据30多项USPTO撰稿规则检查您的专利稿件",
+    "title": "拖放您的专利 .docx 开始本地分析",
+    "subtitle": "或点击浏览文件",
+    "notice": "目前仅支持美国专利说明书（.docx）。",
+    "reject": "仅接受 .docx 文件",
+    "rejectMultiple": "请一次拖放一个文件。",
+    "rejectMultipleType": "请拖放单个 .docx 文件。",
+    "taglineCn": "依据20多项CNIPA撰稿规则检查您的专利稿件",
+    "titleCn": "拖放您的专利文件开始本地分析",
+    "noticeCn": "支持中国专利稿件（.docx、.xml、.zip）。",
+    "rejectCn": "仅接受 .docx、.xml 及 .zip 文件",
+    "rejectMultipleTypeCn": "请拖放单个 .docx、.xml 或 .zip 文件。"
+  },
+  "summary": {
+    "specParagraphs": "说明书段落",
+    "claims": "权利要求",
+    "independent": "独立项",
+    "dependent": "从属项",
+    "figures": "附图",
+    "abstractWords": "摘要字数",
+    "abstractChars": "摘要字数",
+    "claimCategories": "权项类别",
+    "method": "方法",
+    "apparatus": "装置",
+    "outsideRange": "超出 50–150 字范围",
+    "outsideRangeCn": "超出300字上限",
+    "noParagraphs": "未发现段落编号"
+  },
+  "section": {
+    "specification": "说明书",
+    "claims": "权利要求书",
+    "drawings": "附图说明",
+    "drawingsShort": "附图",
+    "abstract": "摘要"
+  },
+  "status": {
+    "pass": "通过",
+    "verify": "确认",
+    "amend": "修改"
+  },
+  "button": {
+    "downloadPdf": "保存 PDF 报告",
+    "newAnalysis": "重新分析",
+    "generating": "保存中..."
+  },
+  "diagram": {
+    "show": "显示图表",
+    "hide": "隐藏图表"
+  },
+  "claimDiagram": {
+    "renderError": "无法绘制图表",
+    "independent": "独立项",
+    "dependent": "从属项",
+    "claimLabel": "权利要求 {{id}}",
+    "claimsLabel": "权利要求 {{range}}"
+  },
+  "tree": {
+    "apparatusClaims": "装置权利要求",
+    "methodClaims": "方法权利要求",
+    "independent": "独立权利要求",
+    "dependent": "从属权利要求",
+    "deps": "个从属项",
+    "dep": "个从属项"
+  },
+  "section112": {
+    "title": "§ 112 分析"
+  },
   "results": {
     "nonPatentWarning": "此文档可能不是美国专利稿件",
     "nonPatentWarningDetails": "PatentLint 专为美国专利申请草稿设计。此文件未包含标准专利章节、编号权利要求或段落编号，分析结果对非美国或非专利文件可能不具参考价值。",
     "showResultsAnyway": "仍然显示结果",
     "trackedChangesWarning": "此文档包含修订标记，可能影响分析准确性。请在文字处理软件中接受或拒绝所有更改后，重新进行分析。",
-    "analyzeAgain": "重新分析"
+    "analyzeAgain": "重新分析",
+    "scannedDocWarning": "此文件仅包含扫描文档页面",
+    "scannedDocWarningDetails": "上传的文件包含扫描文档图像，没有可读的专利文本。PatentLint需要结构化文本进行分析。请上传原始申请XML或.docx草稿。"
   },
-  "analysis": { "analyzing": "正在分析专利文件...", "label": "分析结果" },
-  "footer": { "disclaimer": "本报告不构成法律意见", "builtBy": "© 2025 Christopher Chen", "security": "安全性", "about": "关于", "github": "GitHub", "linkedin": "LinkedIn", "feedback": "意见反馈" },
-  "cta": { "heading": "准备好检查您的专利稿件了吗？", "subtext": "拖放 .docx 文件，即时获取分析结果。无需上传，无需账号。", "button": "分析稿件" },
-  "antecedentBasis": { "title": "先行词基础检查", "items": "个术语", "item": "个术语" },
-  "specSupport": { "title": "说明书支持检查", "items": "个术语", "item": "个术语" },
-  "triage": { "title": "优先处理摘要", "amend": "需要修改", "amendEmpty": "无需修改的项目。", "verify": "待专家确认", "verifyEmpty": "无需确认的项目。", "pass": "通过", "items": "个项目", "item": "个项目" },
+  "analysis": {
+    "analyzing": "正在分析专利文件...",
+    "label": "分析结果"
+  },
+  "footer": {
+    "disclaimer": "本报告不构成法律意见",
+    "builtBy": "© 2025 Christopher Chen",
+    "security": "安全性",
+    "about": "关于",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "feedback": "意见反馈"
+  },
+  "cta": {
+    "heading": "准备好检查您的专利稿件了吗？",
+    "subtext": "拖放 .docx 文件，即时获取分析结果。无需上传，无需账号。",
+    "button": "分析稿件"
+  },
+  "antecedentBasis": {
+    "title": "先行词基础检查",
+    "items": "个术语",
+    "item": "个术语"
+  },
+  "specSupport": {
+    "title": "说明书支持检查",
+    "items": "个术语",
+    "item": "个术语"
+  },
+  "triage": {
+    "title": "优先处理摘要",
+    "amend": "需要修改",
+    "amendEmpty": "无需修改的项目。",
+    "verify": "待专家确认",
+    "verifyEmpty": "无需确认的项目。",
+    "pass": "通过",
+    "items": "个项目",
+    "item": "个项目"
+  },
   "security": {
     "airplaneDemoAlt": "演示：在飞行模式下无网络连接分析专利稿件",
     "badge": {
@@ -64,12 +165,42 @@
       "colPatentLint": "PatentLint",
       "colAddin": "Word 插件工具",
       "colCloud": "云端工具",
-      "q1": { "question": "我的文件会离开我的设备吗？", "patentlint": "绝不。100% 在浏览器中运行。", "addin": "文件留在本地，但插件可能联网回传。", "cloud": "是，上传至远程服务器。" },
-      "q2": { "question": "需要账号吗？", "patentlint": "不需要。无需注册、无需登录、无追踪。", "addin": "通常需要许可证或账号。", "cloud": "是，需要账号。" },
-      "q3": { "question": "可以离线使用吗？", "patentlint": "可以，首次加载后即可。", "addin": "取决于许可证验证方式。", "cloud": "不行，需要网络。" },
-      "q4": { "question": "能验证隐私声明吗？", "patentlint": "可以。打开开发者工具 → 网络，或开启飞行模式。", "addin": "难以审计插件的网络流量。", "cloud": "不行，数据在他们的服务器上。" },
-      "q5": { "question": "支持哪些平台？", "patentlint": "任何支持现代浏览器的设备。", "addin": "仅限 Windows + Microsoft Word。", "cloud": "浏览器端，但需要上传资料。" },
-      "q6": { "question": "费用是多少？", "patentlint": "免费使用，无需付费、无需订阅、无用量限制。", "addin": "通常需要付费许可。", "cloud": "通常需要订阅。" }
+      "q1": {
+        "question": "我的文件会离开我的设备吗？",
+        "patentlint": "绝不。100% 在浏览器中运行。",
+        "addin": "文件留在本地，但插件可能联网回传。",
+        "cloud": "是，上传至远程服务器。"
+      },
+      "q2": {
+        "question": "需要账号吗？",
+        "patentlint": "不需要。无需注册、无需登录、无追踪。",
+        "addin": "通常需要许可证或账号。",
+        "cloud": "是，需要账号。"
+      },
+      "q3": {
+        "question": "可以离线使用吗？",
+        "patentlint": "可以，首次加载后即可。",
+        "addin": "取决于许可证验证方式。",
+        "cloud": "不行，需要网络。"
+      },
+      "q4": {
+        "question": "能验证隐私声明吗？",
+        "patentlint": "可以。打开开发者工具 → 网络，或开启飞行模式。",
+        "addin": "难以审计插件的网络流量。",
+        "cloud": "不行，数据在他们的服务器上。"
+      },
+      "q5": {
+        "question": "支持哪些平台？",
+        "patentlint": "任何支持现代浏览器的设备。",
+        "addin": "仅限 Windows + Microsoft Word。",
+        "cloud": "浏览器端，但需要上传资料。"
+      },
+      "q6": {
+        "question": "费用是多少？",
+        "patentlint": "免费使用，无需付费、无需订阅、无用量限制。",
+        "addin": "通常需要付费许可。",
+        "cloud": "通常需要订阅。"
+      }
     },
     "tech": {
       "architectureTitle": "架构",
@@ -89,8 +220,8 @@
   },
   "about": {
     "productTitle": "PatentLint是什么？",
-    "productDesc1": "PatentLint 是免费的专利稿件检查工具，在审查员替你找出问题之前先一步发现它们。将美国专利说明书拖放至浏览器，即可获得即时合规报告。无需上传、无需账号、不使用云端。",
-    "productDesc2": "它依据《专利审查程序手册》(MPEP) 撰写规则进行检查，检测常见的撰写问题，如缺乏先行词基础和限制性用语，并将权利要求从属关系以树状图呈现。",
+    "productDesc1": "PatentLint 是免费的专利稿件检查工具，在审查员替你找出问题之前先一步发现它们。将美国或中国专利稿件拖放至浏览器，即可获得即时合规报告。无需上传、无需账号、不使用云端。",
+    "productDesc2": "它依据 MPEP（美国）及 CNIPA 规则（中国）进行撰写规则检查，检测常见问题，如缺乏先行词基础、不正确的权利要求结构和限制性用语。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查文稿本身。",
     "uspto": {
@@ -140,9 +271,43 @@
         "checkSequenceListing": "序列表合规性（§ 2422）"
       }
     },
+    "cnTitle": "PatentLint CNIPA 撰写规则检查",
+    "cnSubtitle": "20余项结构性检查，依据CNIPA撰写规则（专利法实施细则、审查指南）。",
+    "cnGroups": {
+      "specification": "说明书",
+      "claims": "权利要求",
+      "abstract": "摘要",
+      "drawings": "附图"
+    },
+    "cnChecks": {
+      "requiredSections": "必要章节（专利法实施细则 §17）",
+      "sectionOrdering": "章节顺序",
+      "paragraphNumbering": "段落编号",
+      "paragraphEnding": "段落结尾标点",
+      "figureRefConsistency": "附图引用一致性",
+      "patentTypeTerminology": "专利类型用语",
+      "titleRequirements": "标题要求",
+      "specClaimReference": "说明书不得引用权利要求",
+      "claimsSequential": "权利要求编号连续",
+      "dependencyFormat": "从属格式",
+      "selfDependent": "自引用权利要求",
+      "forwardDependency": "前向引用",
+      "singleSentence": "每项权利要求一句话",
+      "refNumeralParens": "附图标记加括号",
+      "subjectNameConsistency": "主题名称一致性",
+      "transitionPhrase": "过渡短语（其特征在于）",
+      "cnTwTerminology": "大陆/台湾用语",
+      "claimsSpecReference": "权利要求不得引用说明书/附图",
+      "multiMultiDependency": "多重从属的从属",
+      "dependentOrdering": "从属权利要求排序",
+      "abstractCharCount": "摘要字数（≤300）",
+      "titleInAbstract": "标题出现在摘要中",
+      "commercialLanguage": "商业性用语",
+      "figureCount": "附图数量"
+    },
     "stats": {
       "tests": "自动化测试",
-      "checks": "MPEP 检查",
+      "checks": "撰写检查",
       "languages": "界面语言",
       "cloudRequests": "云端请求"
     },
@@ -210,11 +375,50 @@
     "restrictiveWordingAbstract": "{{text}}。摘要应避免法律用语（\"comprising\"、\"said\"、\"means\"）、评价性用语（\"novel\"、\"innovative\"）及限制性用语（\"must\"、\"essential\"），依 MPEP § 608.01(b)。请修改标记用语。",
     "abstractStructureFix": "摘要须为单一段落，以句号、感叹号或问号结尾，且须作为专利稿件最后一部分，依 MPEP § 608.01(b)。",
     "abstractImpliedPhrasesFix": "\"This disclosure provides...\"或\"A method is provided...\"等措辞依 MPEP § 608.01(b) 属于隐含措辞。请改为直接描述发明（例如\"A method that...\"）。",
-    "abstractWordCountFix": "摘要须介于 50 至 150 字之间，依 MPEP § 608.01(b)。请修改以符合此范围。"
+    "abstractWordCountFix": "摘要须介于 50 至 150 字之间，依 MPEP § 608.01(b)。请修改以符合此范围。",
+    "cn": {
+      "requiredSections": "根据专利法实施细则 §17，说明书应包含技术领域、背景技术、发明内容和具体实施方式。请补充缺少的章节。",
+      "sectionOrdering": "规定顺序：技术领域 → 背景技术 → 发明内容 → 附图说明 → 具体实施方式。请调整章节顺序。",
+      "paragraphNumberingXml": "根据审查指南，段落编号应连续且为四位零填充格式（0001、0002……）。请修正编号顺序。",
+      "paragraphNumberingDocx": "根据CNIPA规定，说明书不应添加任何形式的段落编号。WORD转XML编辑器在转换时会自动添加编号。请删除所有手动添加的段落编号。",
+      "paragraphEnding": "根据审查指南，说明书段落应以中文句末标点（。、！或？）结尾。请检查标记的段落。",
+      "figureRefConsistency": "根据审查指南，附图说明中描述的附图应在具体实施方式中引用，反之亦然。请确认标记的引用是否正确。",
+      "patentTypeTerminology": "根据审查指南，发明专利申请应使用\"本发明\"（而非\"本实用新型\"），实用新型申请反之。请确认用语与申请类型一致。",
+      "titleLength": "根据审查指南 第一部分第一章，发明名称不应超过25个汉字。请缩短发明名称。",
+      "titleContent": "根据审查指南，发明名称不得包含商标、型号、人名或商业性宣传用语。请删除禁止内容。",
+      "specClaimReference": "根据专利法实施细则 §17，说明书不得使用\"如权利要求……所述的……\"等语言引用权利要求。请删除说明书中的权利要求引用。",
+      "claimsSequential": "根据审查指南，权利要求应从1开始连续编号。请修正编号。",
+      "dependencyFormat": "根据专利法实施细则 §22，从属权利要求应使用\"如权利要求N所述的……\"的格式引用在前的权利要求。请修正标记的权利要求。",
+      "selfDependent": "根据专利法实施细则 §22，权利要求不得引用自身。请修正引用关系。",
+      "forwardDependency": "根据专利法实施细则 §22，从属权利要求只能引用在前的权利要求。请修改引用关系。",
+      "singleSentence": "根据审查指南 第二部分第二章，每项权利要求应为一个以句号（。）结尾的完整句子。请删除句中多余的句号或拆分为多项权利要求。",
+      "refNumeralParens": "根据审查指南，权利要求中的附图标记应加括号，例如（101）而非101。请检查标记的权利要求。",
+      "subjectConsistency": "根据审查指南 第二部分第二章，从属权利要求的主题名称应与其引用的权利要求的主题名称一致。请检查标记的权利要求。",
+      "transitionPhrase": "根据审查指南，独立权利要求应包含\"其特征在于\"等特征部分过渡语，用以区分已知要素与新颖特征。请检查标记的权利要求。",
+      "twTerminology": "CNIPA使用\"权利要求\"表示claims，\"请求项\"为台湾（TIPO）专利用语。请替换所有\"请求项\"。",
+      "claimsSpecReference": "根据审查指南 第二部分第二章，权利要求不得使用\"如说明书……所述\"或\"如图……所示\"来限定保护范围。权利要求应当自成一体。请删除相关引用。",
+      "multiMultiDep": "根据专利法实施细则 §22，多项从属权利要求不得作为另一多项从属权利要求的引用基础。请调整引用关系。",
+      "dependentOrdering": "根据审查指南 第二部分第二章，引用同一独立权利要求的所有从属权利要求应连续排列在下一项独立权利要求之前。请调整排列顺序。",
+      "abstractCharCount": "根据专利法实施细则 §23，摘要不得超过300个汉字。请缩短摘要。",
+      "abstractTitleMatch": "根据审查指南，摘要应与发明名称一致。请确认摘要是否体现了发明名称。",
+      "commercialLanguage": "根据专利法实施细则 §23，摘要不得包含商业性宣传用语。请删除\"最优\"\"最佳\"\"世界领先\"\"国际领先\"\"国内首创\"\"填补空白\"等用语。"
+    }
   },
-  "common": { "close": "关闭", "toggleTheme": "切换主题", "changeLanguage": "切换语言" },
-  "consolidation": { "nounMismatchSummary": "前序名词不一致：{{count}} 个从属项与权利要求 {{rootId}} 不同" },
-  "lang": { "en": "English", "zh-CN": "简体中文", "zh-TW": "繁體中文", "ja": "日本語", "ko": "한국어" },
+  "common": {
+    "close": "关闭",
+    "toggleTheme": "切换主题",
+    "changeLanguage": "切换语言"
+  },
+  "consolidation": {
+    "nounMismatchSummary": "前序名词不一致：{{count}} 个从属项与权利要求 {{rootId}} 不同"
+  },
+  "lang": {
+    "en": "English",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "ja": "日本語",
+    "ko": "한국어"
+  },
   "check": {
     "spec": {
       "restrictiveWording": {
@@ -322,6 +526,113 @@
         "pass": "附图编号连续。"
       },
       "count": "发现 {{count}} 张附图。"
+    },
+    "cn": {
+      "spec": {
+        "requiredSections": {
+          "amend": "缺少必要章节：{{sections}}（专利法实施细则 §17）。",
+          "pass": "说明书包含所有必要章节。"
+        },
+        "sectionOrdering": {
+          "amend": "说明书章节顺序不符合规定（专利法实施细则 §17）。",
+          "pass": "说明书章节顺序正确。"
+        },
+        "paragraphNumbering": {
+          "amendXml": "段落编号不连续（{{detail}}）。",
+          "amendDocx": "说明书包含手动添加的段落编号。",
+          "pass": "段落编号正确。"
+        },
+        "paragraphEnding": {
+          "amend": "{{count}} 个段落未以有效中文标点结尾。",
+          "pass": "所有段落均以有效标点结尾。"
+        },
+        "figureRefConsistency": {
+          "verify": "具体实施方式与附图说明中的附图引用不一致（{{detail}}）。",
+          "pass": "各章节附图引用一致。"
+        },
+        "patentTypeTerminology": {
+          "verify": "发现\"{{term}}\"，请确认是否与专利类型（发明/实用新型）一致。",
+          "pass": "专利类型用语一致。"
+        },
+        "title": {
+          "amendLength": "发明名称超过25个汉字（共{{count}}个字）。",
+          "amendContent": "发明名称包含禁止内容：{{detail}}。",
+          "pass": "发明名称符合要求。"
+        },
+        "claimReference": {
+          "amend": "说明书引用了权利要求（{{detail}}）。",
+          "pass": "说明书未引用权利要求。"
+        }
+      },
+      "claims": {
+        "sequential": {
+          "amend": "权利要求编号不连续（{{detail}}）。",
+          "pass": "权利要求编号连续。"
+        },
+        "dependencyFormat": {
+          "amend": "{{count}} 项权利要求的引用格式不正确。",
+          "pass": "所有从属权利要求的引用格式正确。"
+        },
+        "selfDependent": {
+          "amend": "权利要求 {{claims}} 引用了自身。",
+          "pass": "未发现自引用权利要求。"
+        },
+        "forwardDependency": {
+          "amend": "权利要求 {{claims}} 引用了在后的权利要求（正向引用）。",
+          "pass": "未发现正向引用。"
+        },
+        "singleSentence": {
+          "amend": "{{count}} 项权利要求包含多个句子。",
+          "pass": "所有权利要求均为单句。"
+        },
+        "refNumeralParens": {
+          "verify": "{{count}} 项权利要求中的附图标记未加括号。",
+          "pass": "权利要求中所有附图标记均已加括号。"
+        },
+        "subjectConsistency": {
+          "verify": "{{count}} 项从属权利要求的主题名称与其引用的权利要求不一致。",
+          "pass": "从属权利要求的主题名称一致。"
+        },
+        "transitionPhrase": {
+          "verify": "{{count}} 项独立权利要求可能缺少特征部分过渡语（其特征在于）。",
+          "pass": "所有独立权利要求均包含特征部分过渡语。"
+        },
+        "twTerminology": {
+          "verify": "发现台湾专利用语\"请求项\"，CNIPA申请应使用\"权利要求\"。",
+          "pass": "权利要求用语符合CNIPA规范。"
+        },
+        "specReference": {
+          "amend": "{{count}} 项权利要求引用了说明书或附图来限定保护范围。",
+          "pass": "权利要求未引用说明书或附图。"
+        },
+        "multiMultiDep": {
+          "amend": "权利要求 {{claims}}：多项从属权利要求引用了另一多项从属权利要求。",
+          "pass": "未发现多项从属权利要求的链式引用。"
+        },
+        "dependentOrdering": {
+          "amend": "从属权利要求未紧随其引用的独立权利要求排列。",
+          "pass": "从属权利要求排列顺序正确。"
+        }
+      },
+      "abstract": {
+        "charCount": {
+          "amend": "摘要超过300字（共{{count}}字）。",
+          "pass": "摘要字数在300字以内（{{count}}字）。"
+        },
+        "titleMatch": {
+          "verify": "摘要中未出现发明名称。",
+          "pass": "摘要中包含发明名称。"
+        },
+        "commercialLanguage": {
+          "amend": "摘要包含商业性宣传用语：{{terms}}。",
+          "pass": "摘要中未发现商业性宣传用语。"
+        }
+      },
+      "drawings": {
+        "figureCount": {
+          "pass": "共 {{count}} 张附图。"
+        }
+      }
     }
   },
   "loading": {
@@ -345,10 +656,7 @@
   "pdf": {
     "header": "PatentLint 分析报告",
     "securityNote": "已在您的设备上分析，未上传至云端。",
-    "triageSummary": "优先处理摘要",
-    "category": "类别",
-    "count": "数量",
-    "amend": "需要修改（AMEND）",
+"amend": "需要修改（AMEND）",
     "verify": "专家确认（VERIFY）",
     "pass": "通过（PASS）",
     "claimDependency": "权利要求从属关系表",
@@ -368,7 +676,14 @@
     "totalClaims": "权利要求总数",
     "figures": "附图",
     "abstractWordCount": "摘要字数",
-    "disclaimer": "由 PatentLint 生成。本报告不构成法律意见。建议由合格专利专业人员审查。"
+    "abstractCharCount": "摘要字数",
+    "disclaimer": "由 PatentLint 生成。本报告不构成法律意见。建议由合格专利专业人员审查。",
+    "triage": {
+      "title": "优先处理项目"
+    },
+    "passedSummary": {
+      "title": "通过项目"
+    }
   },
   "checks": {
     "preamble_cross_category_mismatch": "从属权利要求与独立权利要求的前序部分类型不一致（跨类别）。",

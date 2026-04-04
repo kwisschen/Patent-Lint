@@ -278,35 +278,27 @@
   </table>
 </div>
 
-{# ========== Health Overview ========== #}
-<h2>Health Overview</h2>
-{%- set sections = [
+{# ========== Internal check filter ========== #}
+{%- set internal_keys = ["check.drawings.count", "check.spec.drawings", "check.claims.overview"] -%}
+{%- set raw_sections = [
   ("Specification", data.specification_checks),
   ("Brief Description of Drawings", data.drawings_checks),
   ("Claims", data.claims_checks),
   ("Abstract", data.abstract_checks),
 ] -%}
-<table class="health-overview">
-  <thead>
-    <tr><th>Section</th><th>Pass</th><th>Verify</th><th>Amend</th></tr>
-  </thead>
-  <tbody>
-    {%- for name, checks in sections %}
-    {%- set p = checks | selectattr("status", "equalto", "pass") | list | length -%}
-    {%- set v = checks | selectattr("status", "equalto", "verify") | list | length -%}
-    {%- set a = checks | selectattr("status", "equalto", "amend") | list | length -%}
-    <tr>
-      <td>{{ name }}</td>
-      <td class="pass">{{ p }}</td>
-      <td class="verify">{{ v }}</td>
-      <td class="amend">{{ a }}</td>
-    </tr>
-    {%- endfor %}
-  </tbody>
-</table>
+{%- set sections = [] -%}
+{%- for name, checks in raw_sections -%}
+  {%- set ns = namespace(filtered=[]) -%}
+  {%- for c in checks -%}
+    {%- if c.message_key not in internal_keys -%}
+      {%- set ns.filtered = ns.filtered + [c] -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- set _ = sections.append((name, ns.filtered)) -%}
+{%- endfor -%}
 
-{# ========== Priority Triage ========== #}
-<h2>Priority Summary</h2>
+{# ========== Actionable Triage Panel ========== #}
+<h2>Priority Actions</h2>
 {%- set all_checks = [] -%}
 {%- for name, checks in sections -%}
   {%- for c in checks -%}
@@ -325,7 +317,7 @@
   {%- else %}
   {%- for item in amend_items %}
   <div class="triage-item">
-    <span class="section-pill">{{ item.section }}</span> {{ item.message }}
+    {{ item.message }} ({{ item.section }})
     {%- if item.details %}<small>{{ item.details }}</small>{%- endif %}
   </div>
   {%- endfor %}
@@ -339,21 +331,21 @@
   {%- else %}
   {%- for item in verify_items %}
   <div class="triage-item">
-    <span class="section-pill">{{ item.section }}</span> {{ item.message }}
+    {{ item.message }} ({{ item.section }})
     {%- if item.details %}<small>{{ item.details }}</small>{%- endif %}
   </div>
   {%- endfor %}
   {%- endif %}
 </div>
 
-<div class="triage-group pass">
-  <h3 style="color: #2563eb;">Passed</h3>
-  <p style="font-size: 10pt; margin: 0;">{{ pass_items | length }} checks passed.</p>
-</div>
-
-{# ========== Specification ========== #}
-<h2>Specification</h2>
-{% for check in data.specification_checks %}
+{# ========== Section Details (AMEND then VERIFY, no PASS) ========== #}
+{%- for name, checks in sections %}
+{%- set amend_checks = checks | selectattr("status", "equalto", "amend") | list -%}
+{%- set verify_checks = checks | selectattr("status", "equalto", "verify") | list -%}
+{%- set ordered_checks = amend_checks + verify_checks -%}
+{%- if ordered_checks | length > 0 %}
+<h2>{{ name }}</h2>
+{% for check in ordered_checks %}
 <div class="check-item {{ check.status }}">
   <span class="status-tag {{ check.status }}">{{ check.status | upper }}</span>
   {{ check.message }}
@@ -362,30 +354,19 @@
   {% endif %}
 </div>
 {% endfor %}
+{%- endif %}
+{%- endfor %}
 
-{# ========== Brief Description of Drawings ========== #}
-<h2>Brief Description of Drawings</h2>
-{% for check in data.drawings_checks %}
-<div class="check-item {{ check.status }}">
-  <span class="status-tag {{ check.status }}">{{ check.status | upper }}</span>
-  {{ check.message }}
-  {% if check.details %}
-  <br><small>{{ check.details }}</small>
-  {% endif %}
-</div>
-{% endfor %}
-
-{# ========== Claims ========== #}
-<h2>Claims</h2>
-{% for check in data.claims_checks %}
-<div class="check-item {{ check.status }}">
-  <span class="status-tag {{ check.status }}">{{ check.status | upper }}</span>
-  {{ check.message }}
-  {% if check.details %}
-  <br><small>{{ check.details }}</small>
-  {% endif %}
-</div>
-{% endfor %}
+{# ========== PASS Summary ========== #}
+{%- if pass_items | length > 0 %}
+<h2>Passed Checks ({{ pass_items | length }})</h2>
+{%- for name, checks in sections %}
+{%- set passed = checks | selectattr("status", "equalto", "pass") | list -%}
+{%- if passed | length > 0 %}
+<p style="font-size: 10pt; margin: 4pt 0;"><strong>{{ name }}:</strong> {{ passed | map(attribute="message") | join(", ") }}</p>
+{%- endif %}
+{%- endfor %}
+{%- endif %}
 
 {# -- Claim Trees -- #}
 {% for group in data.claim_trees %}
@@ -467,18 +448,6 @@
   </table>
 </div>
 {% endif %}
-
-{# ========== Abstract ========== #}
-<h2>Abstract</h2>
-{% for check in data.abstract_checks %}
-<div class="check-item {{ check.status }}">
-  <span class="status-tag {{ check.status }}">{{ check.status | upper }}</span>
-  {{ check.message }}
-  {% if check.details %}
-  <br><small>{{ check.details }}</small>
-  {% endif %}
-</div>
-{% endfor %}
 
 <div class="disclaimer">
   Generated by PatentLint &middot; This report does not constitute legal advice &middot; Review by a qualified patent professional is recommended
