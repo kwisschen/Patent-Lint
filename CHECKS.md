@@ -65,7 +65,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 **Total US checks: 33** (10 Specification + 14 Claims + 5 Drawings + 4 Abstract)
 
-† Internal: not rendered as a CheckItem card in the web UI. Used for stats aggregation, PDF report, and CLI output only.
+† Internal: not rendered as a CheckItem card in the web UI or PDF report. Used for stats aggregation and CLI output only.
 
 ---
 
@@ -117,4 +117,4 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 **Total checks: 57** (33 US + 24 CN)
 
-† Internal: not rendered as a CheckItem card in the web UI. Used for stats aggregation, PDF report, and CLI output only.
+† Internal: not rendered as a CheckItem card in the web UI or PDF report. Used for stats aggregation and CLI output only.
