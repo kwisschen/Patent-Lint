@@ -9,14 +9,14 @@
     "label": "管轄"
   },
   "dropzone": {
-    "tagline": "30以上のUSPTO起草ルールに基づき特許原稿を分析",
+    "tagline": "30以上のUSPTO作成ルールに基づき特許原稿をチェック",
     "title": "特許 .docx をドロップしてローカル分析を開始",
     "subtitle": "またはクリックして参照",
     "notice": "現在、米国特許明細書（.docx）のみ対応しています。",
     "reject": ".docx ファイルのみ対応",
     "rejectMultiple": "ファイルは一つずつドロップしてください。",
     "rejectMultipleType": "一つの .docx ファイルをドロップしてください。",
-    "taglineCn": "20以上のCNIPA起草ルールに基づき特許原稿を分析",
+    "taglineCn": "20以上のCNIPA作成ルールに基づき特許原稿をチェック",
     "titleCn": "特許ファイルをドロップしてローカル分析を開始",
     "noticeCn": "中国特許原稿（.docx、.xml、.zip）に対応しています。",
     "rejectCn": ".docx、.xml、.zip ファイルのみ対応",
@@ -220,8 +220,8 @@
   },
   "about": {
     "productTitle": "PatentLint とは？",
-    "productDesc1": "PatentLint は、審査官より先に問題を発見する無料の特許原稿チェックツールです。米国特許明細書をブラウザにドロップするだけで、即座にコンプライアンスレポートを取得できます。アップロード不要、アカウント不要、クラウド不要。",
-    "productDesc2": "MPEP（特許審査便覧）の作成ルールに基づいてチェックを行い、先行詞の根拠の欠落や限定的な表現などの作成上の問題を検出し、請求項の従属関係をツリー表示で可視化します。",
+    "productDesc1": "PatentLint は、審査官より先に問題を発見する無料の特許原稿チェックツールです。米国または中国特許原稿をブラウザにドロップするだけで、即座にコンプライアンスレポートを取得できます。アップロード不要、アカウント不要、クラウド不要。",
+    "productDesc2": "MPEP（米国）および CNIPA 規則（中国）の作成ルールに基づいてチェックを行い、先行詞の根拠の欠落、不正確な請求項構造、限定的な表現などの一般的な問題を検出します。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center は出願フォーマットを検証します。PatentLint は原稿そのものをチェックします。",
     "uspto": {
@@ -271,8 +271,8 @@
         "checkSequenceListing": "配列表の準拠性（§ 2422）"
       }
     },
-    "cnTitle": "PatentLint 中国特許チェック一覧",
-    "cnSubtitle": "CNIPA起草規則（专利法实施细则、审查指南）に基づく20+の構造チェック。",
+    "cnTitle": "PatentLint CNIPA 作成規則チェック",
+    "cnSubtitle": "CNIPA作成規則（专利法实施细则、审查指南）に基づく20+の構造チェック。",
     "cnGroups": {
       "specification": "明細書（说明书）",
       "claims": "特許請求の範囲（权利要求）",
