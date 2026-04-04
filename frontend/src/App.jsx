@@ -15,6 +15,7 @@ import AboutPage from './pages/AboutPage'
 import { usePyodide } from './hooks/usePyodide'
 import { analyzeDocument, downloadReport as downloadReportServer } from './api'
 import { downloadReport as downloadReportClient, prefetchCjkFont } from './lib/pdfExport'
+import { getJurisdictionConfig } from './lib/jurisdictionConfig'
 
 function App() {
   const { t, i18n } = useTranslation()
@@ -110,32 +111,23 @@ function App() {
               {homeState === 'idle' && (
                 <div className="flex flex-col items-center justify-center min-h-[40vh] sm:min-h-[60vh]">
                   <div className="flex items-center justify-center gap-1 rounded-lg bg-muted p-1 mb-4" role="radiogroup" aria-label={t('jurisdiction.label')}>
-                    <button
-                      role="radio"
-                      aria-checked={jurisdiction === 'US'}
-                      onClick={() => setJurisdiction('US')}
-                      className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
-                        jurisdiction === 'US'
-                          ? 'bg-background text-foreground shadow-sm'
-                          : 'text-muted-foreground hover:text-foreground'
-                      }`}
-                    >
-                      {t('jurisdiction.us')}
-                    </button>
-                    <button
-                      role="radio"
-                      aria-checked={jurisdiction === 'CN'}
-                      onClick={() => setJurisdiction('CN')}
-                      className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
-                        jurisdiction === 'CN'
-                          ? 'bg-background text-foreground shadow-sm'
-                          : 'text-muted-foreground hover:text-foreground'
-                      }`}
-                    >
-                      {t('jurisdiction.cn')}
-                    </button>
+                    {['US', 'CN', 'TW'].map((j) => (
+                      <button
+                        key={j}
+                        role="radio"
+                        aria-checked={jurisdiction === j}
+                        onClick={() => setJurisdiction(j)}
+                        className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+                          jurisdiction === j
+                            ? 'bg-background text-foreground shadow-sm'
+                            : 'text-muted-foreground hover:text-foreground'
+                        }`}
+                      >
+                        {t(`jurisdiction.${j.toLowerCase()}`)}
+                      </button>
+                    ))}
                   </div>
-                  <p className="text-base sm:text-lg text-muted-foreground text-center mb-4">{t(jurisdiction === 'CN' ? 'dropzone.taglineCn' : 'dropzone.tagline')}</p>
+                  <p className="text-base sm:text-lg text-muted-foreground text-center mb-4">{t(getJurisdictionConfig(jurisdiction).taglineKey)}</p>
                   <DropZone onFile={handleFile} onShowProveIt={() => setShowProveIt(true)} jurisdiction={jurisdiction} />
                 </div>
               )}

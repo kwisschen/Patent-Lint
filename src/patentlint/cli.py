@@ -36,9 +36,9 @@ def main():
 @click.option("-o", "--output", type=click.Path(), default=None, help="Output file path (required for PDF).")
 @click.option(
     "--jurisdiction",
-    type=click.Choice(["us", "cn"], case_sensitive=False),
+    type=click.Choice(["us", "cn", "tw"], case_sensitive=False),
     default="us",
-    help="Patent jurisdiction (us or cn).",
+    help="Patent jurisdiction (us, cn, or tw).",
 )
 def analyze(file: str, fmt: str, output: str | None, jurisdiction: str):
     """Analyze a single patent .docx file."""
@@ -90,9 +90,9 @@ def analyze(file: str, fmt: str, output: str | None, jurisdiction: str):
 @click.option("--format", "fmt", type=click.Choice(["json", "pdf"]), default="json", help="Output format.")
 @click.option(
     "--jurisdiction",
-    type=click.Choice(["us", "cn"], case_sensitive=False),
+    type=click.Choice(["us", "cn", "tw"], case_sensitive=False),
     default="us",
-    help="Patent jurisdiction (us or cn).",
+    help="Patent jurisdiction (us, cn, or tw).",
 )
 def batch(directory: str, output: str, fmt: str, jurisdiction: str):
     """Analyze all .docx files in a directory."""

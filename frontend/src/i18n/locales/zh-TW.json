@@ -6,7 +6,8 @@
   "jurisdiction": {
     "us": "🇺🇸 美國專利",
     "cn": "🇨🇳 中國專利",
-    "label": "管轄區"
+    "tw": "🇹🇼 台灣專利",
+    "label": "管��區"
   },
   "dropzone": {
     "tagline": "依據30多項USPTO撰稿規則檢查您的專利稿件",
@@ -20,7 +21,12 @@
     "titleCn": "拖放您的專利檔案開始本機分析",
     "noticeCn": "支援中國專利稿件（.docx、.xml、.zip）。",
     "rejectCn": "僅接受 .docx、.xml 及 .zip 檔案",
-    "rejectMultipleTypeCn": "請拖放單一 .docx、.xml 或 .zip 檔案。"
+    "rejectMultipleTypeCn": "請拖放單一 .docx、.xml 或 .zip 檔案。",
+    "taglineTw": "依據TIPO撰稿規則檢查您的專利稿件",
+    "titleTw": "拖放您的專利 .docx 開始本機分析",
+    "noticeTw": "支援台灣專利稿件（.docx）。",
+    "rejectTw": "僅接受 .docx 檔案",
+    "rejectMultipleTypeTw": "請拖放單一 .docx 檔案。"
   },
   "summary": {
     "specParagraphs": "說明書段落",
@@ -35,14 +41,25 @@
     "apparatus": "裝置",
     "outsideRange": "超出 50–150 字範圍",
     "outsideRangeCn": "超出300字上限",
+    "outsideRangeTw": "超出250字上限",
     "noParagraphs": "未發現段落編號"
   },
   "section": {
     "specification": "說明書",
     "claims": "申請專利範圍",
-    "drawings": "圖式簡要說明",
+    "drawings": "圖式簡單說明",
     "drawingsShort": "圖式",
-    "abstract": "摘要"
+    "abstract": "摘要",
+    "tw": {
+      "technicalField": "技術領域",
+      "priorArt": "先前技術",
+      "disclosure": "發明內容",
+      "drawingsDescription": "圖式簡單說明",
+      "embodiment": "實施方式",
+      "symbolTable": "符號說明",
+      "claims": "申請專利範圍",
+      "abstract": "摘要"
+    }
   },
   "status": {
     "pass": "通過",
@@ -370,8 +387,8 @@
     "singleFigureFix": "請依 MPEP § 608.02 將所有「FIG. 1」改為「The Figure」或「the drawing」。",
     "drawingsPriorArt": "描繪先前技術的圖式須依 MPEP § 608.02(g) 標示「Prior Art」圖例。請確認各先前技術圖式已正確標記。",
     "figuresSequentialFix": "請依 MPEP § 608.02 將圖式重新編號為遞增順序。",
-    "orphanedBriefFigures": "圖式：{{list}}。請在實施方式中新增對這些圖式的引用，或從圖式簡要說明中移除。",
-    "orphanedDetailedFigures": "圖式：{{list}}。請在圖式簡要說明中新增對這些圖式的描述，或從實施方式中移除引用。",
+    "orphanedBriefFigures": "圖式：{{list}}。請在實施方式中新增對這些圖式的引用，或從圖式簡單說明中移除。",
+    "orphanedDetailedFigures": "圖式：{{list}}。請在圖式簡單說明中新增對這些圖式的描述，或從實施方式中移除引用。",
     "restrictiveWordingAbstract": "{{text}}。摘要應避免法律用語（「comprising」、「said」、「means」）、評價性用語（「novel」、「innovative」）及限制性用語（「must」、「essential」），依 MPEP § 608.01(b)。請修改標記用語。",
     "abstractStructureFix": "摘要須為單一段落，以句號、驚嘆號或問號結尾，且須作為專利稿件最後一章，依 MPEP § 608.01(b)。",
     "abstractImpliedPhrasesFix": "「This disclosure provides...」或「A method is provided...」等用語依 MPEP § 608.01(b) 屬於隱含用語。請改為直接描述發明（例如「A method that...」）。",
@@ -695,9 +712,9 @@
     "required_sections_pass": "符合 MPEP § 608.01(a) 之所有必要章節均已存在。",
     "required_sections_missing": "缺少 MPEP § 608.01(a) 規定之必要章節。",
     "optional_section_missing": "選擇性章節「{{name}}」未找到。",
-    "figure_xref_pass": "圖式簡要說明與實施方式之間的圖式引用一致。",
-    "figure_xref_orphaned_brief": "圖式在圖式簡要說明中描述但未在實施方式中引用。",
-    "figure_xref_orphaned_detailed": "圖式在實施方式中引用但未在圖式簡要說明中描述。"
+    "figure_xref_pass": "圖式簡單說明與實施方式之間的圖式引用一致。",
+    "figure_xref_orphaned_brief": "圖式在圖式簡單說明中描述但未在實施方式中引用。",
+    "figure_xref_orphaned_detailed": "圖式在實施方式中引用但未在圖式簡單說明中描述。"
   },
   "claims": {
     "jepsonPriorArt": "請求項 {{claimNumber}} 使用 Jepson 格式，前言部分之元件視為承認之先前技術（MPEP § 2129）",

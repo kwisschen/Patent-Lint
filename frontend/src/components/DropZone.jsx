@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Upload, ShieldCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
 
 export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' }) {
   const { t } = useTranslation()
@@ -15,7 +16,7 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
     return () => clearTimeout(timer)
   }, [])
 
-  const isCN = jurisdiction === 'CN'
+  const jConfig = getJurisdictionConfig(jurisdiction)
 
   const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
     setRejectMsg('')
@@ -25,24 +26,15 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
     }
     const hasTypeError = rejectedFiles.some(r => r.errors.some(e => e.code === 'file-invalid-type'))
     if (rejectedFiles.length > 1 && hasTypeError) {
-      setRejectMsg(t(isCN ? 'dropzone.rejectMultipleTypeCn' : 'dropzone.rejectMultipleType'))
+      setRejectMsg(t(jConfig.rejectMultipleTypeKey))
     } else if (rejectedFiles.length > 1) {
       setRejectMsg(t('dropzone.rejectMultiple'))
     } else {
-      setRejectMsg(t(isCN ? 'dropzone.rejectCn' : 'dropzone.reject'))
+      setRejectMsg(t(jConfig.rejectKey))
     }
-  }, [onFile, t, isCN])
+  }, [onFile, t, jConfig])
 
-  const acceptedTypes = isCN
-    ? {
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
-        'application/xml': ['.xml'],
-        'text/xml': ['.xml'],
-        'application/zip': ['.zip'],
-      }
-    : {
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
-      }
+  const acceptedTypes = jConfig.acceptedFormats
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -69,9 +61,9 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
         <input {...getInputProps()} />
         <Upload className={`h-10 w-10 transition-colors duration-200 ${isDragActive ? 'text-[var(--pass-text)]' : 'text-muted-foreground'}`} />
         <div className="text-center">
-          <p className="text-base font-medium">{t(isCN ? 'dropzone.titleCn' : 'dropzone.title')}</p>
+          <p className="text-base font-medium">{t(jConfig.titleKey)}</p>
           <p className="text-sm text-muted-foreground mt-1">{t('dropzone.subtitle')}</p>
-          <p className="text-xs text-muted-foreground mt-2">{t(isCN ? 'dropzone.noticeCn' : 'dropzone.notice')}</p>
+          <p className="text-xs text-muted-foreground mt-2">{t(jConfig.noticeKey)}</p>
         </div>
       </div>
 
