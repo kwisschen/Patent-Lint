@@ -656,10 +656,7 @@
   "pdf": {
     "header": "PatentLint 分析报告",
     "securityNote": "已在您的设备上分析，未上传至云端。",
-    "triageSummary": "优先处理摘要",
-    "category": "类别",
-    "count": "数量",
-    "amend": "需要修改（AMEND）",
+"amend": "需要修改（AMEND）",
     "verify": "专家确认（VERIFY）",
     "pass": "通过（PASS）",
     "claimDependency": "权利要求从属关系表",

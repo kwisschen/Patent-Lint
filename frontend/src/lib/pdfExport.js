@@ -124,22 +124,13 @@ function buildTriagePanel(sections, t) {
       margin: [0, 8, 0, 4],
     })
 
-    if (items.length === 0) {
+    for (const { item, sectionName } of items) {
+      const heading = sanitizeText(translateMessage(item, t))
       content.push({
-        text: severity === 'amend' ? t('triage.amendEmpty') : t('triage.verifyEmpty'),
-        fontSize: 9,
-        color: '#555555',
-        margin: [0, 0, 0, 4],
+        text: `${heading} (${sectionName})`,
+        fontSize: 10,
+        margin: [8, 2, 0, 2],
       })
-    } else {
-      for (const { item, sectionName } of items) {
-        const heading = sanitizeText(translateMessage(item, t))
-        content.push({
-          text: `${heading} (${sectionName})`,
-          fontSize: 10,
-          margin: [8, 2, 0, 2],
-        })
-      }
     }
   }
 

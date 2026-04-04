@@ -656,10 +656,7 @@
   "pdf": {
     "header": "PatentLint Analysis Report",
     "securityNote": "Analyzed on your device -- not uploaded to the cloud.",
-    "triageSummary": "Triage Summary",
-    "category": "Category",
-    "count": "Count",
-    "amend": "Action Required (AMEND)",
+"amend": "Action Required (AMEND)",
     "verify": "Expert Review (VERIFY)",
     "pass": "Passed (PASS)",
     "claimDependency": "Claim Dependency Tree",

@@ -656,10 +656,7 @@
   "pdf": {
     "header": "PatentLint 分析レポート",
     "securityNote": "お使いのデバイス上で分析しました。クラウドへのアップロードはありません。",
-    "triageSummary": "優先事項の要約",
-    "category": "カテゴリ",
-    "count": "件数",
-    "amend": "修正が必要（AMEND）",
+"amend": "修正が必要（AMEND）",
     "verify": "専門家の確認（VERIFY）",
     "pass": "合格（PASS）",
     "claimDependency": "請求項従属関係表",
