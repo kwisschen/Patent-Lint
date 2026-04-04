@@ -75,7 +75,7 @@ def check_abstract_title_match(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
 _COMMERCIAL_TERMS = [
     "最优", "最佳", "世界领先", "国际领先", "国内领先",
-    "国内首创", "填补空白", "首次发现", "首次提出", "独家", "第一",
+    "国内首创", "填补空白", "首次发现", "首次提出", "独家",
 ]
 
 
