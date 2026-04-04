@@ -353,8 +353,9 @@ function buildSpecSupport(unsupportedTerms, t) {
 // --- Main export ---
 
 export async function downloadReport(reportData, t, language, originalFilename) {
+  const { getJurisdictionConfig } = await import('./jurisdictionConfig.js')
+  const jConfig = getJurisdictionConfig(reportData.jurisdiction)
   const filename = originalFilename || reportData.filename || 'report'
-  const isCN = reportData.jurisdiction === 'CN'
 
   const sections = filterInternalChecks([
     { name: t('section.specification'), items: reportData.specification_checks || [] },
@@ -375,11 +376,11 @@ export async function downloadReport(reportData, t, language, originalFilename) 
   const pdfFilename = `patentlint-${filename}.pdf`
 
   // Load CJK font if needed (font fetch happens before docDefinition is built).
-  // CN jurisdiction content contains simplified Chinese (section names, CNIPA refs)
-  // regardless of UI language, so always load Noto Sans SC for CN reports.
+  // CN/TW jurisdiction content contains CJK characters regardless of UI language,
+  // so always load the appropriate CJK font for non-US reports.
   const isCjkLocale = !!CJK_FONT_URLS[language]
-  const needsCjk = isCjkLocale || isCN
-  const cjkLanguage = isCjkLocale ? language : (isCN ? 'zh-CN' : null)
+  const needsCjk = isCjkLocale || !!jConfig.cjkFont
+  const cjkLanguage = isCjkLocale ? language : jConfig.cjkFont
   let cjkBase64 = null
   if (needsCjk && cjkLanguage) {
     try {
@@ -462,7 +463,7 @@ export async function downloadReport(reportData, t, language, originalFilename) 
               { text: String(reportData.figure_count ?? 0), fontSize: 10 },
             ],
             [
-              { text: t(isCN ? 'pdf.abstractCharCount' : 'pdf.abstractWordCount'), bold: true, color: '#555555', fontSize: 10 },
+              { text: t(jConfig.pdfAbstractKey), bold: true, color: '#555555', fontSize: 10 },
               { text: String(reportData.abstract_word_count ?? 0), fontSize: 10 },
             ],
           ],

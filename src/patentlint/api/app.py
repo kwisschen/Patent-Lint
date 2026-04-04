@@ -41,7 +41,7 @@ async def _run_analysis_pipeline(
     if jurisdiction == Jurisdiction.CN:
         valid_extensions = (".docx", ".xml", ".zip")
     else:
-        valid_extensions = (".docx",)
+        valid_extensions = (".docx",)  # US and TW both accept .docx only
     if not upload_file.filename or not upload_file.filename.lower().endswith(valid_extensions):
         exts = ", ".join(valid_extensions)
         raise HTTPException(

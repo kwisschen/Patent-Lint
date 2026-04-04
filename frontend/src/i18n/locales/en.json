@@ -6,6 +6,7 @@
   "jurisdiction": {
     "us": "🇺🇸 US Patent",
     "cn": "🇨🇳 CN Patent",
+    "tw": "🇹🇼 TW Patent",
     "label": "Jurisdiction"
   },
   "dropzone": {
@@ -20,7 +21,12 @@
     "titleCn": "Drop your patent file to begin local analysis",
     "noticeCn": "Supports Chinese patent specifications (.docx, .xml, .zip).",
     "rejectCn": "Only .docx, .xml, and .zip files are accepted",
-    "rejectMultipleTypeCn": "Please drop a single .docx, .xml, or .zip file."
+    "rejectMultipleTypeCn": "Please drop a single .docx, .xml, or .zip file.",
+    "taglineTw": "Check your specification against TIPO drafting rules",
+    "titleTw": "Drop your patent .docx to begin local analysis",
+    "noticeTw": "Supports Taiwan patent specifications (.docx).",
+    "rejectTw": "Only .docx files are accepted",
+    "rejectMultipleTypeTw": "Please drop a single .docx file."
   },
   "summary": {
     "specParagraphs": "Specification Paragraphs",
@@ -35,6 +41,7 @@
     "apparatus": "apparatus",
     "outsideRange": "Outside 50–150 range",
     "outsideRangeCn": "Exceeds 300 characters",
+    "outsideRangeTw": "Exceeds 250 characters",
     "noParagraphs": "No numbering found"
   },
   "section": {
@@ -42,7 +49,17 @@
     "claims": "Claims",
     "drawings": "Brief Description of Drawings",
     "drawingsShort": "Drawings",
-    "abstract": "Abstract"
+    "abstract": "Abstract",
+    "tw": {
+      "technicalField": "Technical Field",
+      "priorArt": "Prior Art",
+      "disclosure": "Disclosure",
+      "drawingsDescription": "Brief Description of Drawings",
+      "embodiment": "Embodiment",
+      "symbolTable": "Symbol Description",
+      "claims": "Claims",
+      "abstract": "Abstract"
+    }
   },
   "status": {
     "pass": "PASS",

@@ -6,6 +6,7 @@
   "jurisdiction": {
     "us": "🇺🇸 美国专利",
     "cn": "🇨🇳 中国专利",
+    "tw": "🇹🇼 台湾专利",
     "label": "管辖区"
   },
   "dropzone": {
@@ -20,7 +21,12 @@
     "titleCn": "拖放您的专利文件开始本地分析",
     "noticeCn": "支持中国专利稿件（.docx、.xml、.zip）。",
     "rejectCn": "仅接受 .docx、.xml 及 .zip 文件",
-    "rejectMultipleTypeCn": "请拖放单个 .docx、.xml 或 .zip 文件。"
+    "rejectMultipleTypeCn": "请拖放单个 .docx、.xml 或 .zip 文件。",
+    "taglineTw": "依据TIPO撰稿规则检查您的专利稿件",
+    "titleTw": "拖放您的专利 .docx 开始本地分析",
+    "noticeTw": "支持台湾专利稿件（.docx）。",
+    "rejectTw": "仅接受 .docx 文件",
+    "rejectMultipleTypeTw": "请拖放单个 .docx 文件。"
   },
   "summary": {
     "specParagraphs": "说明书段落",
@@ -35,6 +41,7 @@
     "apparatus": "装置",
     "outsideRange": "超出 50–150 字范围",
     "outsideRangeCn": "超出300字上限",
+    "outsideRangeTw": "超出250字上限",
     "noParagraphs": "未发现段落编号"
   },
   "section": {
@@ -42,7 +49,17 @@
     "claims": "权利要求书",
     "drawings": "附图说明",
     "drawingsShort": "附图",
-    "abstract": "摘要"
+    "abstract": "摘要",
+    "tw": {
+      "technicalField": "技术领域",
+      "priorArt": "先前技术",
+      "disclosure": "发明内容",
+      "drawingsDescription": "图式简单说明",
+      "embodiment": "实施方式",
+      "symbolTable": "符号说明",
+      "claims": "申请专利范围",
+      "abstract": "摘要"
+    }
   },
   "status": {
     "pass": "通过",

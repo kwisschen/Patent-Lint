@@ -6,6 +6,7 @@
   "jurisdiction": {
     "us": "🇺🇸 米国特許",
     "cn": "🇨🇳 中国特許",
+    "tw": "🇹🇼 台湾特許",
     "label": "管轄"
   },
   "dropzone": {
@@ -20,7 +21,12 @@
     "titleCn": "特許ファイルをドロップしてローカル分析を開始",
     "noticeCn": "中国特許原稿（.docx、.xml、.zip）に対応しています。",
     "rejectCn": ".docx、.xml、.zip ファイルのみ対応",
-    "rejectMultipleTypeCn": "一つの .docx、.xml、または .zip ファイルをドロップしてください。"
+    "rejectMultipleTypeCn": "一つの .docx、.xml、または .zip ファイルをドロップしてください。",
+    "taglineTw": "TIPOの作成ルールに基づき特許原稿をチェック",
+    "titleTw": "特許 .docx をドロップしてローカル分析を開始",
+    "noticeTw": "台湾特許原稿（.docx）に対応しています。",
+    "rejectTw": ".docx ファイルのみ対応",
+    "rejectMultipleTypeTw": "一つの .docx ファイルをドロップしてください。"
   },
   "summary": {
     "specParagraphs": "明細書段落数",
@@ -35,6 +41,7 @@
     "apparatus": "装置",
     "outsideRange": "50–150語の範囲外",
     "outsideRangeCn": "300文字を超過",
+    "outsideRangeTw": "250文字を超過",
     "noParagraphs": "段落番号なし"
   },
   "section": {
@@ -42,7 +49,17 @@
     "claims": "特許請求の範囲",
     "drawings": "図面の簡単な説明",
     "drawingsShort": "図面",
-    "abstract": "要約書"
+    "abstract": "要約書",
+    "tw": {
+      "technicalField": "技術分野",
+      "priorArt": "先行技術",
+      "disclosure": "発明の内容",
+      "drawingsDescription": "図面の簡単な説明",
+      "embodiment": "実施形態",
+      "symbolTable": "符号の説明",
+      "claims": "特許請求の範囲",
+      "abstract": "要約書"
+    }
   },
   "status": {
     "pass": "合格",

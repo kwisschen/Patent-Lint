@@ -16,11 +16,12 @@ from patentlint.analysis import cn_claims as cn_claims_analysis
 from patentlint.analysis import cn_specification as cn_spec_analysis
 from patentlint.analysis import drawings as drawings_analysis
 from patentlint.analysis import specification as spec_analysis
-from patentlint.models import AnalysisResult, CnPatentDocument, Jurisdiction
+from patentlint.models import AnalysisResult, CnPatentDocument, Jurisdiction, TwPatentDocument
 from patentlint.parser import claims as claims_parser
 from patentlint.parser import sections
 from patentlint.parser.docx_loader import load_docx, load_docx_cn
 from patentlint.parser.sections_cn import extract_cn_sections_from_docx
+from patentlint.parser.sections_tw import extract_tw_sections
 from patentlint.parser.xml_loader import extract_cn_xml_from_zip, parse_cnipa_xml
 
 
@@ -233,9 +234,40 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
     )
 
 
+def _run_tw_pipeline(tw_doc: TwPatentDocument) -> AnalysisResult:
+    """Run TW pipeline — parsing done, checks come in Phase 7C."""
+    para_count = len(tw_doc.paragraph_numbers) if tw_doc.paragraph_numbers else (
+        len(tw_doc.technical_field)
+        + len(tw_doc.prior_art)
+        + len(tw_doc.disclosure)
+        + len(tw_doc.drawings_description)
+        + len(tw_doc.embodiment)
+    )
+
+    return AnalysisResult(
+        jurisdiction=Jurisdiction.TW,
+        paragraph_count=para_count,
+        claims=tw_doc.claims,
+        independent_claims_count=sum(1 for c in tw_doc.claims if c.independent),
+        dependent_claims_count=sum(1 for c in tw_doc.claims if not c.independent),
+        figures_count=len(set(tw_doc.figure_refs)),
+        abstract_word_count=tw_doc.abstract_char_count,
+        likely_patent=True,
+    )
+
+
 def analyze_file(file_path: str, jurisdiction: Jurisdiction = Jurisdiction.US) -> AnalysisResult:
     """Analyze a patent document file."""
     lower = file_path.lower()
+
+    if jurisdiction == Jurisdiction.TW:
+        if not lower.endswith(".docx"):
+            msg = f"Unsupported file type for TW jurisdiction: {file_path}"
+            raise ValueError(msg)
+        loaded = load_docx(file_path)
+        paragraphs = [line for line in loaded.full_text.split("\n") if line.strip()]
+        tw_doc = extract_tw_sections(paragraphs)
+        return _run_tw_pipeline(tw_doc)
 
     if jurisdiction == Jurisdiction.CN:
         if lower.endswith(".xml"):
@@ -262,6 +294,18 @@ def analyze_file(file_path: str, jurisdiction: Jurisdiction = Jurisdiction.US) -
 def analyze_bytes(content: bytes, filename: str, jurisdiction: Jurisdiction = Jurisdiction.US) -> AnalysisResult:
     """Analyze patent document from raw bytes."""
     lower = filename.lower()
+
+    if jurisdiction == Jurisdiction.TW:
+        if not lower.endswith(".docx"):
+            msg = f"Unsupported file type for TW jurisdiction: {filename}"
+            raise ValueError(msg)
+        with tempfile.NamedTemporaryFile(suffix=".docx", delete=True) as tmp:
+            tmp.write(content)
+            tmp.flush()
+            loaded = load_docx(tmp.name)
+        paragraphs = [line for line in loaded.full_text.split("\n") if line.strip()]
+        tw_doc = extract_tw_sections(paragraphs)
+        return _run_tw_pipeline(tw_doc)
 
     if jurisdiction == Jurisdiction.CN:
         if lower.endswith(".zip"):
