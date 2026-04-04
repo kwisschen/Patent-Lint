@@ -164,6 +164,7 @@ _ES_NOUNS = {
     "exchanges", "resources", "sources", "forces", "services",
     "grooves", "pieces", "valves", "processes", "addresses",
     "matrices", "indices", "vertices", "appendices",
+    "structures",
     "lenses", "buses", "gases", "axes", "bases", "cases",
     "phases", "cables", "tables", "modules", "nodes", "modes",
     "types", "tubes", "plates", "gates", "states", "rates",
