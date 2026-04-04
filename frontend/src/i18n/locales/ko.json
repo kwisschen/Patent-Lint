@@ -680,7 +680,13 @@
     "figures": "도면",
     "abstractWordCount": "요약서 단어 수",
     "abstractCharCount": "요약서 글자 수",
-    "disclaimer": "PatentLint에 의해 생성되었습니다. 이 보고서는 법률 자문을 구성하지 않습니다. 자격을 갖춘 특허 전문가의 검토를 권장합니다."
+    "disclaimer": "PatentLint에 의해 생성되었습니다. 이 보고서는 법률 자문을 구성하지 않습니다. 자격을 갖춘 특허 전문가의 검토를 권장합니다.",
+    "triage": {
+      "title": "우선 조치 사항"
+    },
+    "passedSummary": {
+      "title": "통과 항목"
+    }
   },
   "checks": {
     "preamble_cross_category_mismatch": "종속항과 독립항 간 청구항 유형 불일치.",

@@ -75,7 +75,7 @@ class TestRenderHtml:
 
     def test_contains_status_tags(self, sample_result):
         html = render_html(sample_result)
-        assert "PASS" in html
+        assert "Passed Checks" in html  # PASS summary section
         assert "VERIFY" in html
         assert "AMEND" in html
 
