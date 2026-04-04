@@ -125,6 +125,14 @@ class TestNoFalseStripping:
     def test_alignment_slot(self):
         assert clean_noun_phrase("alignment slot") == "alignment slot"
 
+    def test_two_engaging_structures(self):
+        """Bug: 'structures' was wrongly stripped by suffix-based verb detection."""
+        assert clean_noun_phrase("two engaging structures") == "two engaging structures"
+
+    def test_engaging_structures(self):
+        """Head noun 'structures' must be retained after adjective."""
+        assert clean_noun_phrase("engaging structures") == "engaging structures"
+
 
 class TestTrailingVerbS:
     """Bug: Third-person present tense verbs (-s/-es) captured as part of noun phrases."""
