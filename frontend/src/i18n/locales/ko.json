@@ -656,10 +656,7 @@
   "pdf": {
     "header": "PatentLint 분석 보고서",
     "securityNote": "기기에서 분석 완료. 클라우드에 업로드되지 않았습니다.",
-    "triageSummary": "분류 요약",
-    "category": "범주",
-    "count": "건수",
-    "amend": "조치 필요 (AMEND)",
+"amend": "조치 필요 (AMEND)",
     "verify": "전문가 검토 (VERIFY)",
     "pass": "통과 (PASS)",
     "claimDependency": "청구항 종속 트리",
