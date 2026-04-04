@@ -157,11 +157,11 @@ function buildPassSummary(sections, t) {
   ]
 
   for (const group of passItems) {
-    const headings = group.items.map((item) => sanitizeText(translateMessage(item, t))?.replace(/\.\s*$/, ''))
+    const headings = group.items.map((item) => sanitizeText(translateMessage(item, t)))
     content.push({
       text: [
         { text: `${group.sectionName}: `, bold: true, fontSize: 10 },
-        { text: headings.join('; '), fontSize: 10 },
+        { text: headings.join(' '), fontSize: 10 },
       ],
       margin: [0, 2, 0, 2],
     })
