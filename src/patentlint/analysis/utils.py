@@ -202,7 +202,7 @@ _ING_NOUNS = {
 
 def _should_strip_trailing(word: str) -> bool:
     w = word.lower().rstrip(".,;:")
-    return (
+    if (
         w in _ADVERB_STOPS
         or w in _VERB_STOPS
         or w in _ING_VERB_ONLY
@@ -210,7 +210,12 @@ def _should_strip_trailing(word: str) -> bool:
         or w in _TRAILING_FUNCTION_WORDS
         or _is_likely_past_participle(w)
         or _is_likely_third_person_verb(w)
-    )
+    ):
+        return True
+    # Strip trailing -ing verbs/gerunds (mirrors single-word rejection at clean_noun_phrase)
+    if w.endswith("ing") and len(w) >= 6 and w not in _ING_NOUNS:
+        return True
+    return False
 
 
 def clean_noun_phrase(phrase: str) -> str:
