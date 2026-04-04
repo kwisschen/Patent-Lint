@@ -11,15 +11,88 @@ import tempfile
 
 from patentlint.analysis import abstract as abstract_analysis
 from patentlint.analysis import claims as claims_analysis
+from patentlint.analysis import cn_abstract as cn_abstract_analysis
+from patentlint.analysis import cn_claims as cn_claims_analysis
+from patentlint.analysis import cn_specification as cn_spec_analysis
 from patentlint.analysis import drawings as drawings_analysis
 from patentlint.analysis import specification as spec_analysis
-from patentlint.models import AnalysisResult
+from patentlint.models import AnalysisResult, CnPatentDocument, Jurisdiction
 from patentlint.parser import claims as claims_parser
 from patentlint.parser import sections
-from patentlint.parser.docx_loader import load_docx
+from patentlint.parser.docx_loader import load_docx, load_docx_cn
+from patentlint.parser.sections_cn import extract_cn_sections_from_docx
+from patentlint.parser.xml_loader import extract_cn_xml_from_zip, parse_cnipa_xml
 
 
-def _run_pipeline(loaded, full_text: str) -> AnalysisResult:
+# TODO Phase 7: Add language mismatch detection (English content in CN mode, Chinese content in US mode)
+
+
+def _run_cn_pipeline(cn_doc: CnPatentDocument) -> AnalysisResult:
+    """Run CN analysis pipeline with all 24 checks."""
+    para_count = len(cn_doc.paragraph_numbers) if cn_doc.paragraph_numbers else (
+        len(cn_doc.technical_field)
+        + len(cn_doc.background)
+        + len(cn_doc.summary)
+        + len(cn_doc.drawings_description)
+        + len(cn_doc.detailed_description)
+    )
+
+    # --- Specification checks (1–8) ---
+    spec_checks = (
+        cn_spec_analysis.check_required_sections(cn_doc)
+        + cn_spec_analysis.check_section_ordering(cn_doc)
+        + cn_spec_analysis.check_paragraph_numbering(cn_doc)
+        + cn_spec_analysis.check_paragraph_ending(cn_doc)
+        + cn_spec_analysis.check_figure_reference_consistency(cn_doc)
+        + cn_spec_analysis.check_patent_type_terminology(cn_doc)
+        + cn_spec_analysis.check_title(cn_doc)
+        + cn_spec_analysis.check_spec_claim_reference(cn_doc)
+    )
+
+    # --- Claims checks (9–20) ---
+    claims_checks = (
+        cn_claims_analysis.check_claims_sequential(cn_doc)
+        + cn_claims_analysis.check_dependency_format(cn_doc)
+        + cn_claims_analysis.check_self_dependent(cn_doc)
+        + cn_claims_analysis.check_forward_dependency(cn_doc)
+        + cn_claims_analysis.check_single_sentence(cn_doc)
+        + cn_claims_analysis.check_reference_numeral_parentheses(cn_doc)
+        + cn_claims_analysis.check_subject_name_consistency(cn_doc)
+        + cn_claims_analysis.check_transition_phrase(cn_doc)
+        + cn_claims_analysis.check_tw_terminology(cn_doc)
+        + cn_claims_analysis.check_claims_spec_reference(cn_doc)
+        + cn_claims_analysis.check_multi_multi_dependency(cn_doc)
+        + cn_claims_analysis.check_dependent_ordering(cn_doc)
+    )
+
+    # --- Abstract checks (21–23) ---
+    abstract_checks = (
+        cn_abstract_analysis.check_abstract_char_count(cn_doc)
+        + cn_abstract_analysis.check_abstract_title_match(cn_doc)
+        + cn_abstract_analysis.check_commercial_language(cn_doc)
+    )
+
+    # --- Drawings checks (24) ---
+    drawings_checks = cn_abstract_analysis.check_figure_count(cn_doc)
+
+    return AnalysisResult(
+        jurisdiction=Jurisdiction.CN,
+        paragraph_count=para_count,
+        claims=cn_doc.claims,
+        independent_claims_count=sum(1 for c in cn_doc.claims if c.independent),
+        dependent_claims_count=sum(1 for c in cn_doc.claims if not c.independent),
+        figures_count=cn_doc.figure_count,
+        abstract_word_count=cn_doc.abstract_char_count,
+        likely_patent=True,
+        has_scanned_fallback=cn_doc.has_doc_page_fallback,
+        cn_specification_checks=spec_checks,
+        cn_claims_checks=claims_checks,
+        cn_abstract_checks=abstract_checks,
+        cn_drawings_checks=drawings_checks,
+    )
+
+
+def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisdiction.US) -> AnalysisResult:
     """Core pipeline logic shared by analyze_file and analyze_bytes."""
 
     # --- Document type detection ---
@@ -109,6 +182,7 @@ def _run_pipeline(loaded, full_text: str) -> AnalysisResult:
     prior_art_citations = sections.detect_prior_art_citations(background_section) if background_section else ""
 
     return AnalysisResult(
+        jurisdiction=jurisdiction,
         # Document-level flag
         likely_patent=likely_patent,
         # Specification
@@ -159,20 +233,61 @@ def _run_pipeline(loaded, full_text: str) -> AnalysisResult:
     )
 
 
-def analyze_file(file_path: str) -> AnalysisResult:
-    """Run the full analysis pipeline on a .docx file path."""
+def analyze_file(file_path: str, jurisdiction: Jurisdiction = Jurisdiction.US) -> AnalysisResult:
+    """Analyze a patent document file."""
+    lower = file_path.lower()
+
+    if jurisdiction == Jurisdiction.CN:
+        if lower.endswith(".xml"):
+            with open(file_path, "rb") as f:
+                cn_doc = parse_cnipa_xml(f.read())
+            return _run_cn_pipeline(cn_doc)
+        if lower.endswith(".zip"):
+            with open(file_path, "rb") as f:
+                xml_data, _ = extract_cn_xml_from_zip(f.read())
+            cn_doc = parse_cnipa_xml(xml_data)
+            return _run_cn_pipeline(cn_doc)
+        if lower.endswith(".docx"):
+            sections_list = load_docx_cn(file_path)
+            cn_doc = extract_cn_sections_from_docx(sections_list)
+            return _run_cn_pipeline(cn_doc)
+        msg = f"Unsupported file type for CN jurisdiction: {file_path}"
+        raise ValueError(msg)
+
+    # US jurisdiction (existing behavior, unchanged)
     loaded = load_docx(file_path)
-    return _run_pipeline(loaded, loaded.full_text)
+    return _run_pipeline(loaded, loaded.full_text, jurisdiction=jurisdiction)
 
 
-def analyze_bytes(content: bytes, filename: str) -> AnalysisResult:
-    """Run the full analysis pipeline on in-memory bytes."""
-    if not filename.lower().endswith(".docx"):
-        raise ValueError("File must be a .docx document")
+def analyze_bytes(content: bytes, filename: str, jurisdiction: Jurisdiction = Jurisdiction.US) -> AnalysisResult:
+    """Analyze patent document from raw bytes."""
+    lower = filename.lower()
+
+    if jurisdiction == Jurisdiction.CN:
+        if lower.endswith(".zip"):
+            xml_data, _ = extract_cn_xml_from_zip(content)
+            cn_doc = parse_cnipa_xml(xml_data)
+            return _run_cn_pipeline(cn_doc)
+        if lower.endswith(".xml"):
+            cn_doc = parse_cnipa_xml(content)
+            return _run_cn_pipeline(cn_doc)
+        if lower.endswith(".docx"):
+            with tempfile.NamedTemporaryFile(suffix=".docx", delete=True) as tmp:
+                tmp.write(content)
+                tmp.flush()
+                sections_list = load_docx_cn(tmp.name)
+            cn_doc = extract_cn_sections_from_docx(sections_list)
+            return _run_cn_pipeline(cn_doc)
+        msg = f"Unsupported file type for CN jurisdiction: {filename}"
+        raise ValueError(msg)
+
+    # US jurisdiction
+    if not lower.endswith(".docx"):
+        msg = f"Unsupported file type: {filename}"
+        raise ValueError(msg)
 
     with tempfile.NamedTemporaryFile(suffix=".docx", delete=True) as tmp:
         tmp.write(content)
         tmp.flush()
         loaded = load_docx(tmp.name)
-
-    return _run_pipeline(loaded, loaded.full_text)
+    return _run_pipeline(loaded, loaded.full_text, jurisdiction=jurisdiction)

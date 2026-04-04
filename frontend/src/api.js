@@ -2,11 +2,12 @@
 // Copyright (c) 2025 Christopher Chen
 const API_BASE = '';
 
-export async function analyzeDocument(file) {
+export async function analyzeDocument(file, jurisdiction) {
   const formData = new FormData();
   formData.append('file', file);
 
-  const response = await fetch(`${API_BASE}/api/analyze?format=report`, {
+  const j = (jurisdiction || 'US').toLowerCase();
+  const response = await fetch(`${API_BASE}/api/analyze?format=report&jurisdiction=${j}`, {
     method: 'POST',
     body: formData,
   });

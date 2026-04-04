@@ -8,7 +8,15 @@ These are designed to be shareable with the Agentic Patent Analyst project.
 
 from __future__ import annotations
 
+from enum import Enum
+
 from pydantic import BaseModel, Field
+
+
+class Jurisdiction(str, Enum):
+    """Patent jurisdiction for analysis routing."""
+    US = "US"
+    CN = "CN"
 
 
 class Claim(BaseModel):
@@ -74,6 +82,25 @@ class UnsupportedTerm(BaseModel):
     tiers_checked: list[str] = Field(default_factory=list)  # ["exact", "stemmed", "word_window"]
 
 
+class CnPatentDocument(BaseModel):
+    """Parsed Chinese patent document (from CNIPA XML or .docx)."""
+    title: str = ""
+    technical_field: list[str] = Field(default_factory=list)
+    background: list[str] = Field(default_factory=list)
+    summary: list[str] = Field(default_factory=list)
+    drawings_description: list[str] = Field(default_factory=list)
+    detailed_description: list[str] = Field(default_factory=list)
+    claims: list[Claim] = Field(default_factory=list)
+    abstract_text: str = ""
+    abstract_char_count: int = 0
+    paragraph_numbers: list[int] = Field(default_factory=list)
+    figure_count: int = 0
+    figure_refs: list[str] = Field(default_factory=list)
+    has_paragraph_numbering: bool = False
+    input_format: str = "docx"
+    has_doc_page_fallback: bool = False
+
+
 class CheckItem(BaseModel):
     """Single check result for report rendering."""
 
@@ -83,6 +110,7 @@ class CheckItem(BaseModel):
     details: str | None = None
     details_key: str | None = None
     details_params: dict[str, str] | None = None
+    reference: str | None = None
 
 
 class ClaimTreeRow(BaseModel):
@@ -103,6 +131,8 @@ class ClaimTreeGroup(BaseModel):
 
 class ReportData(BaseModel):
     """Structured report data for template rendering."""
+
+    jurisdiction: Jurisdiction = Jurisdiction.US
 
     # Summary stats
     paragraph_count: int
@@ -130,6 +160,7 @@ class ReportData(BaseModel):
     # Document-level flags
     likely_patent: bool = True
     has_tracked_changes: bool = False
+    has_scanned_fallback: bool = False
 
 
 class AnalysisResult(BaseModel):
@@ -140,6 +171,7 @@ class AnalysisResult(BaseModel):
     """
 
     # Specification
+    jurisdiction: Jurisdiction = Jurisdiction.US
     has_tracked_changes: bool = False
     paragraph_count: int = 0
     improper_spec_paragraphs: list[int] = Field(default_factory=list)
@@ -184,8 +216,15 @@ class AnalysisResult(BaseModel):
     required_sections_checks: list[CheckItem] = Field(default_factory=list)
     figure_xref_checks: list[CheckItem] = Field(default_factory=list)
 
-    # Document-level flag
+    # CN check results (populated by _run_cn_pipeline, empty for US)
+    cn_specification_checks: list[CheckItem] = Field(default_factory=list)
+    cn_claims_checks: list[CheckItem] = Field(default_factory=list)
+    cn_abstract_checks: list[CheckItem] = Field(default_factory=list)
+    cn_drawings_checks: list[CheckItem] = Field(default_factory=list)
+
+    # Document-level flags
     likely_patent: bool = True
+    has_scanned_fallback: bool = False
 
     # Abstract
     abstract_word_count: int = 0
@@ -203,6 +242,31 @@ class AnalysisResult(BaseModel):
         This is a presentation adapter — it does not change any existing
         fields or behavior.
         """
+        if self.jurisdiction == Jurisdiction.CN:
+            return self._to_cn_report_data()
+        return self._to_us_report_data()
+
+    def _to_cn_report_data(self) -> ReportData:
+        """Build ReportData for CN jurisdiction from pre-computed check lists."""
+        return ReportData(
+            jurisdiction=self.jurisdiction,
+            paragraph_count=self.paragraph_count,
+            total_claims=self.total_claims,
+            independent_count=self.independent_claims_count,
+            dependent_count=self.dependent_claims_count,
+            figure_count=self.figures_count,
+            abstract_word_count=self.abstract_word_count,
+            specification_checks=list(self.cn_specification_checks),
+            claims_checks=list(self.cn_claims_checks),
+            abstract_checks=list(self.cn_abstract_checks),
+            drawings_checks=list(self.cn_drawings_checks),
+            claim_trees=[],
+            likely_patent=self.likely_patent,
+            has_scanned_fallback=self.has_scanned_fallback,
+        )
+
+    def _to_us_report_data(self) -> ReportData:
+        """Build ReportData for US jurisdiction from flat analysis fields."""
         from patentlint.analysis.claims import get_dependency_chain
 
         # --- Specification checks ---
@@ -631,6 +695,7 @@ class AnalysisResult(BaseModel):
             claim_trees.append(ClaimTreeGroup(label="Method Claims", rows=method_rows))
 
         return ReportData(
+            jurisdiction=self.jurisdiction,
             paragraph_count=self.paragraph_count,
             total_claims=self.total_claims,
             independent_count=self.independent_claims_count,

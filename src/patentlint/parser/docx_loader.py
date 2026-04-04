@@ -37,6 +37,14 @@ class LoadedDocument:
     has_tracked_changes: bool = False
 
 
+@dataclass
+class DocxSection:
+    """A Word document section with its page header text and body paragraphs."""
+
+    header_text: str = ""
+    paragraphs: list[str] = field(default_factory=list)
+
+
 def detect_tracked_changes(doc) -> bool:
     """Check if a .docx document contains tracked changes (w:del or w:ins).
 
@@ -226,3 +234,62 @@ def load_docx(file_path: str | Path) -> LoadedDocument:
         improper_spec_phrases="".join(improper_spec_phrases_parts),
         has_tracked_changes=tracked_changes,
     )
+
+
+def load_docx_cn(file_path: str | Path) -> list[DocxSection]:
+    """Load a CN patent .docx and return paragraphs grouped by Word section.
+
+    The 五書模板 format uses Word section breaks to separate the five patent
+    documents. Section titles appear in page headers (黑体 16pt centered),
+    not in body text. This function reads those headers and groups body
+    paragraphs by their containing Word section.
+    """
+    path = Path(file_path)
+    if not path.exists():
+        msg = f"File not found: {path}"
+        raise FileNotFoundError(msg)
+    if path.suffix.lower() != ".docx":
+        msg = f"Not a .docx file: {path}"
+        raise ValueError(msg)
+
+    try:
+        doc = Document(str(path))
+    except Exception as exc:
+        msg = f"Failed to open .docx: {exc}"
+        raise ValueError(msg) from exc
+
+    # Collect default header text for each Word section.
+    # The 五書模板 uses different-first-page headers (first page empty,
+    # default header has section title). We read the default header.
+    section_headers: list[str] = []
+    for section in doc.sections:
+        header_text = "\n".join(
+            p.text.strip() for p in section.header.paragraphs if p.text.strip()
+        )
+        section_headers.append(header_text)
+
+    # Group paragraphs by Word section boundary.
+    # Section breaks are marked by <w:sectPr> inside a paragraph's <w:pPr>.
+    # The last section's <w:sectPr> is a direct child of <w:body> (no pPr).
+    result: list[DocxSection] = []
+    current_paras: list[str] = []
+    section_idx = 0
+
+    for para in doc.paragraphs:
+        text = para.text.strip()
+        if text:
+            current_paras.append(text)
+
+        # Check for section break in this paragraph
+        pPr = para._element.find(qn("w:pPr"))
+        if pPr is not None and pPr.find(qn("w:sectPr")) is not None:
+            header = section_headers[section_idx] if section_idx < len(section_headers) else ""
+            result.append(DocxSection(header_text=header, paragraphs=current_paras))
+            current_paras = []
+            section_idx += 1
+
+    # Last section (body-level sectPr, not inside any paragraph)
+    header = section_headers[section_idx] if section_idx < len(section_headers) else ""
+    result.append(DocxSection(header_text=header, paragraphs=current_paras))
+
+    return result

@@ -7,6 +7,7 @@ import { Loader2 } from 'lucide-react'
 import Layout from './components/Layout'
 import DropZone from './components/DropZone'
 import AnalysisReport from './components/AnalysisReport'
+import ScannedDocBanner from './components/ScannedDocBanner'
 import LoadingOnboard from './components/LoadingOnboard'
 import ProveItModal from './components/ProveItModal'
 import SecurityPage from './pages/SecurityPage'
@@ -30,6 +31,7 @@ function App() {
   }, [i18n.language])
 
   // Home page state
+  const [jurisdiction, setJurisdiction] = useState('US')
   const [homeState, setHomeState] = useState('idle')
   const [result, setResult] = useState(null)
   const [file, setFile] = useState(null)
@@ -44,9 +46,9 @@ function App() {
     try {
       let data
       if (pyodide.ready) {
-        data = await pyodide.analyze(uploadedFile)
+        data = await pyodide.analyze(uploadedFile, jurisdiction)
       } else {
-        data = await analyzeDocument(uploadedFile)
+        data = await analyzeDocument(uploadedFile, jurisdiction)
       }
       setResult(data)
       setHomeState('results')
@@ -107,8 +109,34 @@ function App() {
             <div className="mx-auto w-full max-w-5xl px-4 py-8">
               {homeState === 'idle' && (
                 <div className="flex flex-col items-center justify-center min-h-[40vh] sm:min-h-[60vh]">
-                  <p className="text-base sm:text-lg text-muted-foreground text-center mb-4">{t('dropzone.tagline')}</p>
-                  <DropZone onFile={handleFile} onShowProveIt={() => setShowProveIt(true)} />
+                  <div className="flex items-center justify-center gap-1 rounded-lg bg-muted p-1 mb-4" role="radiogroup" aria-label={t('jurisdiction.label')}>
+                    <button
+                      role="radio"
+                      aria-checked={jurisdiction === 'US'}
+                      onClick={() => setJurisdiction('US')}
+                      className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+                        jurisdiction === 'US'
+                          ? 'bg-background text-foreground shadow-sm'
+                          : 'text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      {t('jurisdiction.us')}
+                    </button>
+                    <button
+                      role="radio"
+                      aria-checked={jurisdiction === 'CN'}
+                      onClick={() => setJurisdiction('CN')}
+                      className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+                        jurisdiction === 'CN'
+                          ? 'bg-background text-foreground shadow-sm'
+                          : 'text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      {t('jurisdiction.cn')}
+                    </button>
+                  </div>
+                  <p className="text-base sm:text-lg text-muted-foreground text-center mb-4">{t(jurisdiction === 'CN' ? 'dropzone.taglineCn' : 'dropzone.tagline')}</p>
+                  <DropZone onFile={handleFile} onShowProveIt={() => setShowProveIt(true)} jurisdiction={jurisdiction} />
                 </div>
               )}
 
@@ -120,15 +148,19 @@ function App() {
               )}
 
               {homeState === 'results' && result && (
-                <AnalysisReport
-                  data={result}
-                  filename={file?.name}
-                  onDownloadPdf={handleDownloadPdf}
-                  onReset={handleReset}
-                  downloading={downloading}
-                  onShowProveIt={() => setShowProveIt(true)}
-                  pyodideReady={pyodide.ready}
-                />
+                result.has_scanned_fallback ? (
+                  <ScannedDocBanner onReset={handleReset} />
+                ) : (
+                  <AnalysisReport
+                    data={result}
+                    filename={file?.name}
+                    onDownloadPdf={handleDownloadPdf}
+                    onReset={handleReset}
+                    downloading={downloading}
+                    onShowProveIt={() => setShowProveIt(true)}
+                    pyodideReady={pyodide.ready}
+                  />
+                )
               )}
 
               {error && (

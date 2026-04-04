@@ -36,8 +36,11 @@ export default function SummaryBar({ data, animate = false }) {
   const { t } = useTranslation()
   const [ref, isInView] = useInView()
   const shouldAnimate = animate && isInView
+  const isCN = data.jurisdiction === 'CN'
   const noParagraphs = data.paragraph_count === 0
-  const abstractOutOfRange = data.abstract_word_count < 50 || data.abstract_word_count > 150
+  const abstractOutOfRange = isCN
+    ? data.abstract_word_count > 300
+    : (data.abstract_word_count < 50 || data.abstract_word_count > 150)
   const { method, apparatus } = getClaimCategorySplit(data.claim_trees)
 
   const paragraphCount = useCountUp(data.paragraph_count, 600, shouldAnimate)
@@ -74,33 +77,35 @@ export default function SummaryBar({ data, animate = false }) {
           </div>
         </CardContent>
       </Card>
-      <Card>
-        <CardContent className="p-4">
-          <p className="text-sm text-muted-foreground">{t('summary.claimCategories')}</p>
-          <div className="mt-1 space-y-0.5">
-            <p className="flex items-baseline">
-              <span className="text-2xl font-bold">{methodCount}</span>
-              <span className="text-sm text-muted-foreground ml-1.5">{t('summary.method')}</span>
-            </p>
-            <p className="flex items-baseline">
-              <span className="text-2xl font-bold">{apparatusCount}</span>
-              <span className="text-sm text-muted-foreground ml-1.5">{t('summary.apparatus')}</span>
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      {data.claim_trees?.length > 0 && (
+        <Card>
+          <CardContent className="p-4">
+            <p className="text-sm text-muted-foreground">{t('summary.claimCategories')}</p>
+            <div className="mt-1 space-y-0.5">
+              <p className="flex items-baseline">
+                <span className="text-2xl font-bold">{methodCount}</span>
+                <span className="text-sm text-muted-foreground ml-1.5">{t('summary.method')}</span>
+              </p>
+              <p className="flex items-baseline">
+                <span className="text-2xl font-bold">{apparatusCount}</span>
+                <span className="text-sm text-muted-foreground ml-1.5">{t('summary.apparatus')}</span>
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
       <StatCard
         label={t('summary.figures')}
         value={figureCount}
       />
       <StatCard
-        label={t('summary.abstractWords')}
+        label={t(isCN ? 'summary.abstractChars' : 'summary.abstractWords')}
         value={
           <span className={abstractOutOfRange ? 'text-[var(--amend-text)]' : ''}>
             {abstractCount}
           </span>
         }
-        subtitle={abstractOutOfRange ? t('summary.outsideRange') : null}
+        subtitle={abstractOutOfRange ? t(isCN ? 'summary.outsideRangeCn' : 'summary.outsideRange') : null}
       />
     </div>
   )
