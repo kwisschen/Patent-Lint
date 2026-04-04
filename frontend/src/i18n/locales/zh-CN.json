@@ -680,7 +680,13 @@
     "figures": "附图",
     "abstractWordCount": "摘要字数",
     "abstractCharCount": "摘要字数",
-    "disclaimer": "由 PatentLint 生成。本报告不构成法律意见。建议由合格专利专业人员审查。"
+    "disclaimer": "由 PatentLint 生成。本报告不构成法律意见。建议由合格专利专业人员审查。",
+    "triage": {
+      "title": "优先处理项目"
+    },
+    "passedSummary": {
+      "title": "通过项目"
+    }
   },
   "checks": {
     "preamble_cross_category_mismatch": "从属权利要求与独立权利要求的前序部分类型不一致（跨类别）。",
