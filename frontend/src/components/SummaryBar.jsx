@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Card, CardContent } from '@/components/ui/card'
 import { useCountUp } from '../hooks/useCountUp'
 import { useInView } from '../hooks/useInView'
+import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
 
 function StatCard({ label, value, subtitle }) {
   return (
@@ -36,11 +37,9 @@ export default function SummaryBar({ data, animate = false }) {
   const { t } = useTranslation()
   const [ref, isInView] = useInView()
   const shouldAnimate = animate && isInView
-  const isCN = data.jurisdiction === 'CN'
+  const jConfig = getJurisdictionConfig(data.jurisdiction)
   const noParagraphs = data.paragraph_count === 0
-  const abstractOutOfRange = isCN
-    ? data.abstract_word_count > 300
-    : (data.abstract_word_count < 50 || data.abstract_word_count > 150)
+  const abstractOutOfRange = jConfig.abstractOutOfRange(data.abstract_word_count)
   const { method, apparatus } = getClaimCategorySplit(data.claim_trees)
 
   const paragraphCount = useCountUp(data.paragraph_count, 600, shouldAnimate)
@@ -99,13 +98,13 @@ export default function SummaryBar({ data, animate = false }) {
         value={figureCount}
       />
       <StatCard
-        label={t(isCN ? 'summary.abstractChars' : 'summary.abstractWords')}
+        label={t(jConfig.abstractLabelKey)}
         value={
           <span className={abstractOutOfRange ? 'text-[var(--amend-text)]' : ''}>
             {abstractCount}
           </span>
         }
-        subtitle={abstractOutOfRange ? t(isCN ? 'summary.outsideRangeCn' : 'summary.outsideRange') : null}
+        subtitle={abstractOutOfRange ? t(jConfig.abstractRangeKey) : null}
       />
     </div>
   )

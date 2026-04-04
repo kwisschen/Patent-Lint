@@ -17,6 +17,13 @@ class Jurisdiction(str, Enum):
     """Patent jurisdiction for analysis routing."""
     US = "US"
     CN = "CN"
+    TW = "TW"
+
+
+class TwPatentType(str, Enum):
+    """Taiwan patent application type."""
+    INVENTION = "INVENTION"
+    UTILITY_MODEL = "UTILITY_MODEL"
 
 
 class Claim(BaseModel):
@@ -99,6 +106,33 @@ class CnPatentDocument(BaseModel):
     has_paragraph_numbering: bool = False
     input_format: str = "docx"
     has_doc_page_fallback: bool = False
+
+
+class SymbolEntry(BaseModel):
+    """A symbol table entry (numeral + element name) for TW patents."""
+    numeral: str
+    name: str
+
+
+class TwPatentDocument(BaseModel):
+    """Parsed Taiwan patent document (from TIPO .docx)."""
+    patent_type: TwPatentType = TwPatentType.INVENTION
+    title: str = ""
+    technical_field: list[str] = Field(default_factory=list)
+    prior_art: list[str] = Field(default_factory=list)
+    disclosure: list[str] = Field(default_factory=list)
+    drawings_description: list[str] = Field(default_factory=list)
+    embodiment: list[str] = Field(default_factory=list)
+    symbol_table: list[SymbolEntry] = Field(default_factory=list)
+    claims: list[Claim] = Field(default_factory=list)
+    abstract_text: str = ""
+    abstract_char_count: int = 0
+    representative_drawing: str | None = None
+    representative_drawing_symbols: list[SymbolEntry] = Field(default_factory=list)
+    figure_refs: list[str] = Field(default_factory=list)
+    paragraph_numbers: list[str] = Field(default_factory=list)
+    has_paragraph_numbering: bool = False
+    input_format: str = "docx"
 
 
 class CheckItem(BaseModel):
@@ -222,6 +256,12 @@ class AnalysisResult(BaseModel):
     cn_abstract_checks: list[CheckItem] = Field(default_factory=list)
     cn_drawings_checks: list[CheckItem] = Field(default_factory=list)
 
+    # TW check results (populated by _run_tw_pipeline, empty for US/CN)
+    tw_specification_checks: list[CheckItem] = Field(default_factory=list)
+    tw_claims_checks: list[CheckItem] = Field(default_factory=list)
+    tw_abstract_checks: list[CheckItem] = Field(default_factory=list)
+    tw_drawings_checks: list[CheckItem] = Field(default_factory=list)
+
     # Document-level flags
     likely_patent: bool = True
     has_scanned_fallback: bool = False
@@ -244,6 +284,8 @@ class AnalysisResult(BaseModel):
         """
         if self.jurisdiction == Jurisdiction.CN:
             return self._to_cn_report_data()
+        if self.jurisdiction == Jurisdiction.TW:
+            return self._to_tw_report_data()
         return self._to_us_report_data()
 
     def _to_cn_report_data(self) -> ReportData:
@@ -263,6 +305,24 @@ class AnalysisResult(BaseModel):
             claim_trees=[],
             likely_patent=self.likely_patent,
             has_scanned_fallback=self.has_scanned_fallback,
+        )
+
+    def _to_tw_report_data(self) -> ReportData:
+        """Build ReportData for TW jurisdiction (stub — checks added in Phase 7C)."""
+        return ReportData(
+            jurisdiction=self.jurisdiction,
+            paragraph_count=self.paragraph_count,
+            total_claims=self.total_claims,
+            independent_count=self.independent_claims_count,
+            dependent_count=self.dependent_claims_count,
+            figure_count=self.figures_count,
+            abstract_word_count=self.abstract_word_count,
+            specification_checks=[],
+            claims_checks=[],
+            abstract_checks=[],
+            drawings_checks=[],
+            claim_trees=[],
+            likely_patent=self.likely_patent,
         )
 
     def _to_us_report_data(self) -> ReportData:

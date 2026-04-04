@@ -17,6 +17,7 @@ import TrackedChangesBanner from './TrackedChangesBanner'
 import { Button } from '@/components/ui/button'
 import { Download, RotateCcw, ShieldCheck } from 'lucide-react'
 import { useNetworkMonitor } from '../hooks/useNetworkMonitor'
+import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
 
 /**
  * Consolidate claims_checks to reduce visual noise:
@@ -131,24 +132,24 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
     }
   }, [pyodideReady])
 
-  const isCN = data.jurisdiction === 'CN'
+  const jConfig = getJurisdictionConfig(data.jurisdiction)
 
   const consolidatedData = useMemo(() => ({
     ...data,
-    specification_checks: isCN
-      ? data.specification_checks || []
-      : (data.specification_checks || []).filter(
+    specification_checks: jConfig.filterInternalSpecChecks
+      ? (data.specification_checks || []).filter(
           (c) => c.message_key !== 'check.spec.drawings'
-        ),
-    claims_checks: isCN
-      ? data.claims_checks || []
-      : consolidateClaimsChecks(data.claims_checks),
-    drawings_checks: isCN
-      ? data.drawings_checks || []
-      : (data.drawings_checks || []).filter(
+        )
+      : data.specification_checks || [],
+    claims_checks: jConfig.consolidateClaimsChecks
+      ? consolidateClaimsChecks(data.claims_checks)
+      : data.claims_checks || [],
+    drawings_checks: jConfig.filterInternalDrawingsChecks
+      ? (data.drawings_checks || []).filter(
           (c) => c.message_key !== 'check.drawings.count'
-        ),
-  }), [data, isCN])
+        )
+      : data.drawings_checks || [],
+  }), [data, jConfig])
 
   const hasAntecedentIssues = data.antecedent_basis_issues?.length > 0
   const hasUnsupportedTerms = data.unsupported_terms?.length > 0
@@ -224,7 +225,7 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
           checks={consolidatedData.claims_checks}
           defaultOpen
         >
-          {!isCN && (
+          {jConfig.showClaimTree && (
             <>
               <ClaimTree claimTrees={data.claim_trees} />
               <ClaimDiagram claimTrees={data.claim_trees} />
