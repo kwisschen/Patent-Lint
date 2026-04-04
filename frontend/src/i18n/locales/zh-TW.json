@@ -680,7 +680,13 @@
     "figures": "圖式",
     "abstractWordCount": "摘要字數",
     "abstractCharCount": "摘要字數",
-    "disclaimer": "由 PatentLint 產生。本報告不構成法律意見。建議由合格專利專業人員審查。"
+    "disclaimer": "由 PatentLint 產生。本報告不構成法律意見。建議由合格專利專業人員審查。",
+    "triage": {
+      "title": "優先處理項目"
+    },
+    "passedSummary": {
+      "title": "通過項目"
+    }
   },
   "checks": {
     "preamble_cross_category_mismatch": "附屬項與獨立項之前言類型不一致（跨類別）。",
