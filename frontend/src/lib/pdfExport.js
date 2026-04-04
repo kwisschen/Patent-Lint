@@ -157,11 +157,11 @@ function buildPassSummary(sections, t) {
   ]
 
   for (const group of passItems) {
-    const headings = group.items.map((item) => sanitizeText(translateMessage(item, t)))
+    const headings = group.items.map((item) => sanitizeText(translateMessage(item, t))?.replace(/\.\s*$/, ''))
     content.push({
       text: [
         { text: `${group.sectionName}: `, bold: true, fontSize: 10 },
-        { text: headings.join(', '), fontSize: 10 },
+        { text: headings.join('; '), fontSize: 10 },
       ],
       margin: [0, 2, 0, 2],
     })
@@ -374,12 +374,16 @@ export async function downloadReport(reportData, t, language, originalFilename) 
 
   const pdfFilename = `patentlint-${filename}.pdf`
 
-  // Load CJK font if needed (font fetch happens before docDefinition is built)
-  const isCjk = !!CJK_FONT_URLS[language]
+  // Load CJK font if needed (font fetch happens before docDefinition is built).
+  // CN jurisdiction content contains simplified Chinese (section names, CNIPA refs)
+  // regardless of UI language, so always load Noto Sans SC for CN reports.
+  const isCjkLocale = !!CJK_FONT_URLS[language]
+  const needsCjk = isCjkLocale || isCN
+  const cjkLanguage = isCjkLocale ? language : (isCN ? 'zh-CN' : null)
   let cjkBase64 = null
-  if (isCjk) {
+  if (needsCjk && cjkLanguage) {
     try {
-      cjkBase64 = await loadCjkFont(language)
+      cjkBase64 = await loadCjkFont(cjkLanguage)
     } catch {
       console.warn('CJK font unavailable (offline?) — falling back to default font')
     }
@@ -511,11 +515,11 @@ export async function downloadReport(reportData, t, language, originalFilename) 
     },
     defaultStyle: {
       fontSize: 10,
-      ...(isCjk && cjkBase64 ? { font: 'CJK' } : {}),
+      ...(needsCjk && cjkBase64 ? { font: 'CJK' } : {}),
     },
   }
 
-  if (isCjk && cjkBase64) {
+  if (needsCjk && cjkBase64) {
     const vfsName = 'NotoSansCJK.ttf'
 
     // Write CJK font data into pdfmake's internal VirtualFileSystem

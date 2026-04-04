@@ -220,8 +220,8 @@
   },
   "about": {
     "productTitle": "What is PatentLint?",
-    "productDesc1": "PatentLint is a free patent draft checker that catches issues before the examiner does. Drop a U.S. patent specification into your browser and get an instant compliance report — no upload, no account, no cloud.",
-    "productDesc2": "It checks drafting rules from the Manual of Patent Examining Procedure (MPEP), detects common issues like missing antecedent basis and restrictive wording, and visualizes your claim dependency tree.",
+    "productDesc1": "PatentLint is a free patent draft checker that catches issues before the examiner does. Drop a U.S. or Chinese patent specification into your browser and get an instant compliance report — no upload, no account, no cloud.",
+    "productDesc2": "It checks drafting rules from the MPEP (U.S.) and CNIPA rules (中国), and detects common issues like missing antecedent basis, incorrect claim structure, and restrictive wording.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center validates filing format. PatentLint checks the draft itself.",
     "uspto": {
@@ -271,7 +271,7 @@
         "checkSequenceListing": "Sequence listing compliance (§ 2422)"
       }
     },
-    "cnTitle": "PatentLint CN Check Inventory",
+    "cnTitle": "PatentLint CNIPA Drafting Checks",
     "cnSubtitle": "20+ structural checks against CNIPA drafting rules (\u4e13\u5229\u6cd5\u5b9e\u65bd\u7ec6\u5219, \u5ba1\u67e5\u6307\u5357).",
     "cnGroups": {
       "specification": "Specification (\u8bf4\u660e\u4e66)",
