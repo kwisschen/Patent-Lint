@@ -3,11 +3,11 @@
 [![CI](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml/badge.svg)](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml)
 [![Live Demo](https://img.shields.io/badge/demo-patentlint.com-blue)](https://patentlint.com)
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-green)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-388-brightgreen)](#)
+[![Tests](https://img.shields.io/badge/tests-542-brightgreen)](#)
 
 **No account. No install. No upload.**
 
-PatentLint checks U.S. patent application drafts (.docx) against USPTO drafting rules and MPEP guidelines — entirely in your browser. Your file never leaves your device.
+PatentLint checks U.S. and Chinese patent application drafts against USPTO and CNIPA drafting rules — entirely in your browser. Your file never leaves your device.
 
 **[Try it →](https://patentlint.com)**
 
@@ -23,8 +23,8 @@ PatentLint checks U.S. patent application drafts (.docx) against USPTO drafting 
 
 ## How It Works
 
-1. **Drop** a .docx patent draft into the browser
-2. **Analyze** — 33 checks run instantly via WebAssembly (no server, no upload)
+1. **Drop** a patent draft into the browser (.docx for US, .docx/.xml/.zip for CN)
+2. **Analyze** — 57 checks run instantly via WebAssembly (no server, no upload)
 3. **Report** — download a PDF or copy a summary to clipboard
 
 ---
@@ -39,7 +39,9 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 
 ## What It Checks
 
-33 automated checks across four sections, each classified as **PASS**, **VERIFY**, or **AMEND**.
+57 automated checks across two jurisdictions, each classified as **PASS**, **VERIFY**, or **AMEND**.
+
+### U.S. Patent Applications (33 checks)
 
 | Section | Checks | Reference |
 |---------|--------|-----------|
@@ -47,6 +49,17 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 | **Drawings** | Figure count, sequential numbering, single-figure format, prior art labeling, reference numeral consistency (spec ↔ drawings) | MPEP § 608.02 |
 | **Claims** | Numbering, dependencies, periods, punctuation, indefinite terms, transitional phrases, means-plus-function (§ 112(f)), antecedent basis (§ 112(b)), preamble consistency (§ 112(d)), specification support (§ 112(a)), claim similarity, special formats (Jepson / CRM / Markush / omnibus) | 35 U.S.C. § 101, § 112; MPEP § 2117–2173 |
 | **Abstract** | Word count (50–150), single paragraph, legal phraseology, implied phrases, self-praising language | MPEP § 608.01(b) |
+
+### Chinese Patent Applications (24 checks)
+
+| Section | Checks | Reference |
+|---------|--------|-----------|
+| **Specification** | Required sections, section ordering, paragraph numbering/ending, figure reference consistency, patent type terminology, title, claim references in spec | 专利法实施细则 §17, 审查指南 |
+| **Claims** | Sequential numbering, dependency format, self/forward dependencies, single sentence, reference numeral parentheses, subject consistency, transition phrases, Taiwan terminology, spec/drawing references, chained multi-dependencies, dependent ordering | 专利法实施细则 §22, 审查指南 |
+| **Abstract** | Character count (≤300), title match, commercial language | 专利法实施细则 §23 |
+| **Drawings** | Figure count | 审查指南 |
+
+Supported input: .docx for US; .docx, CNIPA filing XML (.xml), and .zip archives for CN.
 
 Full inventory: [CHECKS.md](CHECKS.md)
 
@@ -97,8 +110,8 @@ src/patentlint/
 ├── models.py        # Pydantic models (Claim, AnalysisResult, ReportData)
 ├── pipeline.py      # Analysis pipeline (zero web-framework deps)
 ├── cli.py           # Click CLI (analyze, batch)
-├── parser/          # Section extraction, claim parsing, .docx loading
-├── analysis/        # Rule checks — all pure functions, independently testable
+├── parser/          # Section extraction, claim parsing, .docx/.xml/.zip loading
+├── analysis/        # Rule checks (US + CN) — all pure functions, independently testable
 ├── report/          # PDF report generation (Jinja2 + weasyprint)
 └── api/             # FastAPI REST endpoints
 
@@ -107,10 +120,10 @@ frontend/
 ├── src/lib/         # pdfExport.js (client-side PDF via pdfmake)
 ├── src/pages/       # SecurityPage, AboutPage
 ├── src/hooks/       # usePyodide, useNetworkMonitor
-└── src/i18n/        # Locale files (en, zh-TW, zh-CN, ja)
+└── src/i18n/        # Locale files (en, zh-TW, zh-CN, ja, ko)
 ```
 
-The `parser/` and `analysis/` packages have **zero framework dependencies** — they run identically in Pyodide (browser), FastAPI (Docker), and Click (CLI).
+The `parser/` and `analysis/` packages have **zero framework dependencies** — they run identically in Pyodide (browser), FastAPI (Docker), and Click (CLI). The same engine handles both US and CN jurisdictions; `pipeline.py` routes to the appropriate parser and check modules.
 
 ---
 
@@ -127,7 +140,7 @@ Visit **[patentlint.com](https://patentlint.com)** — nothing to install.
 ```bash
 # Backend
 pip install -e ".[api,dev]"
-pytest -v                    # 388 tests
+pytest -v                    # 542 tests
 uvicorn patentlint.api.app:app --port 8000 --reload
 
 # Frontend (separate terminal)
@@ -138,10 +151,11 @@ cd frontend && npm install && npm run dev
 ### CLI
 
 ```bash
-patentlint analyze patent-draft.docx                             # JSON to stdout
-patentlint analyze patent-draft.docx -o report.json              # JSON to file
-patentlint analyze patent-draft.docx --format pdf -o report.pdf  # PDF report
-patentlint batch ./patents/ --output ./reports/                  # Batch mode
+patentlint analyze patent-draft.docx                                          # US (default)
+patentlint analyze filing.xml --jurisdiction cn                               # CN filing XML
+patentlint analyze patent-draft.docx -o report.json                           # JSON to file
+patentlint analyze patent-draft.docx --format pdf -o report.pdf               # PDF report
+patentlint batch ./patents/ --output ./reports/                               # Batch mode
 ```
 
 Exit codes: `0` clean, `1` findings, `2` error.
@@ -175,15 +189,15 @@ curl http://localhost:8000/api/health
 | Frontend | React 18, Vite 6, Tailwind CSS v4, shadcn/ui |
 | PDF | pdfmake (web) · weasyprint (Docker/CLI) |
 | CLI | Click |
-| Testing | pytest (388 tests) |
+| Testing | pytest (542 tests) |
 | CI/CD | GitHub Actions → Cloudflare Pages |
-| i18n | react-i18next (English, 繁體中文, 简体中文, 日本語) |
+| i18n | react-i18next (English, 繁體中文, 简体中文, 日本語, 한국어) |
 
 ---
 
 ## Languages
 
-PatentLint's UI is available in four languages. Patent-specific terms follow official terminology from each jurisdiction's patent office.
+PatentLint's UI is available in five languages. Patent-specific terms follow official terminology from each jurisdiction's patent office.
 
 | Language | Patent Office | Terminology Standard |
 |----------|--------------|---------------------|
@@ -191,6 +205,7 @@ PatentLint's UI is available in four languages. Patent-specific terms follow off
 | 繁體中文 | TIPO (經濟部智慧財產局) | 專利審查基準 |
 | 简体中文 | CNIPA (国家知识产权局) | 专利审查指南 |
 | 日本語 | JPO (特許庁) | 特許・実用新案審査基準 |
+| 한국어 | KIPO (특허청) | 특허·실용신안 심사기준 |
 
 ---
 
