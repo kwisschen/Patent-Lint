@@ -245,7 +245,7 @@
         "specParaEndings": "說明書段落結尾標點",
         "specParaNumbering": "說明書段落編號格式",
         "requiredSections": "必要／選擇性章節是否存在",
-        "figureCrossRef": "圖式交互參照一致性",
+        "figureCrossRef": "圖式相關案之交叉參照一致性",
         "pdfCompliance": "PDF/A 合規",
         "marginCheck": "頁面邊界",
         "fontSizeCheck": "字型大小要求",
@@ -439,8 +439,8 @@
         "pass": "無序列表不一致。"
       },
       "crossReference": {
-        "verify": "交互參照引用了相關申請案，請確認完整性。",
-        "pass": "未發現交互參照引用。"
+        "verify": "相關案之交叉參照引用了相關申請案，請確認完整性。",
+        "pass": "未發現相關案之交叉參照引用。"
       },
       "priorArt": {
         "verify": "先前技術中引用了先前專利，請檢視相關描述。",
