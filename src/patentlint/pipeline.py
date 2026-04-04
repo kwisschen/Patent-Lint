@@ -24,6 +24,9 @@ from patentlint.parser.sections_cn import extract_cn_sections_from_docx
 from patentlint.parser.xml_loader import extract_cn_xml_from_zip, parse_cnipa_xml
 
 
+# TODO Phase 7: Add language mismatch detection (English content in CN mode, Chinese content in US mode)
+
+
 def _run_cn_pipeline(cn_doc: CnPatentDocument) -> AnalysisResult:
     """Run CN analysis pipeline with all 24 checks."""
     para_count = len(cn_doc.paragraph_numbers) if cn_doc.paragraph_numbers else (
