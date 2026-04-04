@@ -4,8 +4,8 @@
     "subtitle": "특허 명세서 검사 도구"
   },
   "jurisdiction": {
-    "us": "미국 특허",
-    "cn": "중국 특허",
+    "us": "🇺🇸 미국 특허",
+    "cn": "🇨🇳 중국 특허",
     "label": "관할"
   },
   "dropzone": {

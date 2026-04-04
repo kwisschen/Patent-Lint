@@ -4,8 +4,8 @@
     "subtitle": "專利稿件檢查工具"
   },
   "jurisdiction": {
-    "us": "美國專利",
-    "cn": "中國專利",
+    "us": "🇺🇸 美國專利",
+    "cn": "🇨🇳 中國專利",
     "label": "管轄區"
   },
   "dropzone": {
