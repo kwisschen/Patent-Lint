@@ -230,15 +230,62 @@ def check_paragraph_numbering(doc: TwPatentDocument) -> list[CheckItem]:
 # ── Check 4 ──────────────────────────────────────────────────────────────
 
 
+_BRACKET_SUBHEADING = re.compile(r"^\[.+\]$")
+_SYMBOL_TABLE_ENTRY = re.compile(
+    r"^[A-Za-z0-9~\-]+\s*(?:[‧·.…：:\t]\s*[‧·.…]*\s*|\s{2,}).+"
+)
+
+
+def _is_skip_paragraph_ending(text: str) -> bool:
+    """Check if paragraph should be excluded from ending punctuation check."""
+    # Half-width bracket sub-headings: [第一實施例]
+    if _BRACKET_SUBHEADING.match(text):
+        return True
+    # Symbol table entry patterns: numeral + separator + name
+    if _SYMBOL_TABLE_ENTRY.match(text):
+        return True
+    return False
+
+
 def check_paragraph_ending(doc: TwPatentDocument) -> list[CheckItem]:
-    """Check each specification paragraph ends with valid Chinese punctuation."""
+    """Check each specification paragraph ends with valid Chinese punctuation.
+
+    Excludes 符號說明 section, half-width bracket sub-headings, and
+    symbol table entry patterns from the check.
+    """
+    # Relaxed endings for 圖式簡單說明, 發明內容/新型內容, 實施方式
+    # (semicolons and colons allowed for enumerations and step descriptions)
+    _RELAXED_VALID = _VALID_ENDINGS | frozenset("；：")
+
+    def _has_valid_ending_tw(text: str, relaxed: bool) -> bool:
+        endings = _RELAXED_VALID if relaxed else _VALID_ENDINGS
+        if text[-1] in endings:
+            return True
+        # Allow "；以及" and "；及" endings (penultimate list item)
+        if relaxed and (text.endswith("；以及") or text.endswith("；及")):
+            return True
+        return False
+
+    # Only check body sections, NOT 符號說明.
+    # Strict (。！？ only) for 技術領域 and 先前技術.
+    # Relaxed (+ ；：) for 發明內容, 圖式簡單說明, 實施方式.
+    sections_to_check = [
+        (doc.technical_field, False),
+        (doc.prior_art, False),
+        (doc.disclosure, True),
+        (doc.drawings_description, True),
+        (doc.embodiment, True),
+    ]
     bad_count = 0
-    for para in _all_spec_sections(doc):
-        stripped = para.strip()
-        if not stripped:
-            continue
-        if stripped[-1] not in _VALID_ENDINGS:
-            bad_count += 1
+    for section_paras, relaxed in sections_to_check:
+        for para in section_paras:
+            stripped = para.strip()
+            if not stripped:
+                continue
+            if _is_skip_paragraph_ending(stripped):
+                continue
+            if not _has_valid_ending_tw(stripped, relaxed):
+                bad_count += 1
 
     if bad_count:
         return [CheckItem(
