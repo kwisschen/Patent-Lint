@@ -8,7 +8,9 @@ Each fixture is built programmatically with python-docx. No binary .docx files a
 from __future__ import annotations
 
 import io
+from pathlib import Path
 
+import pytest
 from docx import Document
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
@@ -755,3 +757,67 @@ class TestTwSymbolTableRangeNumerals:
             if "symbolTable" in c.message_key and "Consistency" in c.message_key
         ]
         assert len(consistency_checks) > 0, "symbolTableConsistency check not found"
+
+
+# ---------------------------------------------------------------------------
+# Real TW patent fixture tests (firm-variant format)
+# ---------------------------------------------------------------------------
+
+class TestTwRealFixtures:
+    """Integration tests using real TW patent .docx files from a Taiwan patent firm.
+
+    These files use firm-variant headers (【中文發明名稱】, 【發明申請專利範圍】, etc.)
+    and Word numbering (w:numPr) for claims.
+    """
+
+    REAL_FIXTURE_DIR = Path(__file__).parent / "fixtures" / "tw"
+    REAL_PATTERNS = sorted(REAL_FIXTURE_DIR.glob("*派譯版*"))
+
+    @pytest.fixture(params=[p.name for p in REAL_PATTERNS], ids=[p.stem[:30] for p in REAL_PATTERNS])
+    def tw_result(self, request):
+        fpath = self.REAL_FIXTURE_DIR / request.param
+        with open(fpath, "rb") as f:
+            data = f.read()
+        return analyze_bytes(data, request.param, Jurisdiction.TW)
+
+    def test_is_patent(self, tw_result):
+        assert tw_result.likely_patent is True
+
+    def test_claims_detected(self, tw_result):
+        assert len(tw_result.claims) > 0, "No claims detected"
+        assert tw_result.independent_claims_count > 0
+
+    def test_abstract_populated(self, tw_result):
+        assert tw_result.abstract_word_count > 0, "Abstract char count is 0"
+
+    def test_title_not_falsely_flagged(self, tw_result):
+        title_checks = [
+            c for c in tw_result.tw_specification_checks
+            if "title" in c.message_key
+        ]
+        for check in title_checks:
+            if check.status == "amend":
+                assert "prohibited" not in (check.message or "").lower(), (
+                    f"False positive title check: {check.message}"
+                )
+
+
+class TestTwRealFixtureUtilityModel:
+    """Verify patent type detection for the utility model fixture."""
+
+    def test_utility_model_detection(self):
+        fpath = Path(__file__).parent / "fixtures" / "tw" / "110P000840US.JP.DE派譯版-FV.DOCX"
+        if not fpath.exists():
+            pytest.skip("Utility model fixture not available")
+        with open(fpath, "rb") as f:
+            data = f.read()
+        result = analyze_bytes(data, fpath.name, Jurisdiction.TW)
+        # Check patent type via specification checks — utility model terms
+        # should not trigger type terminology mismatch
+        type_checks = [
+            c for c in result.tw_specification_checks
+            if "patentTypeTerminology" in c.message_key
+        ]
+        assert any(c.status == "pass" for c in type_checks), (
+            "Utility model patent type terminology check should pass"
+        )
