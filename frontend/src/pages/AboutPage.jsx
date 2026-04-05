@@ -292,31 +292,33 @@ function ComparisonTable({ t }) {
         </p>
       </div>
 
-      {activeTab === 'US' && (
-        <div className="rounded-lg border border-border">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b border-border bg-muted/30">
-                <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
-                  {t('about.uspto.colCheck')}
-                </th>
-                <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
-                  {t('about.uspto.colUSPTO')}
-                </th>
-                <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
-                  {t('about.uspto.colPatentLint')}
-                </th>
-              </tr>
-            </thead>
-            {renderGroup(ref1, inView1, 'about.uspto.group1Title', GROUP1_CHECKS, true, true, false, 0)}
-            {renderGroup(ref2, inView2, 'about.uspto.group2Title', GROUP2_CHECKS, true, false, false, 150)}
-            {renderGroup(ref3, inView3, 'about.uspto.group3Title', GROUP3_CHECKS, false, true, true, 300)}
-          </table>
-        </div>
-      )}
+      <div key={activeTab}>
+        {activeTab === 'US' && (
+          <div className="rounded-lg border border-border">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-border bg-muted/30">
+                  <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
+                    {t('about.uspto.colCheck')}
+                  </th>
+                  <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
+                    {t('about.uspto.colUSPTO')}
+                  </th>
+                  <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
+                    {t('about.uspto.colPatentLint')}
+                  </th>
+                </tr>
+              </thead>
+              {renderGroup(ref1, inView1, 'about.uspto.group1Title', GROUP1_CHECKS, true, true, false, 0)}
+              {renderGroup(ref2, inView2, 'about.uspto.group2Title', GROUP2_CHECKS, true, false, false, 150)}
+              {renderGroup(ref3, inView3, 'about.uspto.group3Title', GROUP3_CHECKS, false, true, true, 300)}
+            </table>
+          </div>
+        )}
 
-      {activeTab === 'CN' && <CnCheckTable t={t} />}
-      {activeTab === 'TW' && <TwCompareTable t={t} />}
+        {activeTab === 'CN' && <CnCheckTable t={t} />}
+        {activeTab === 'TW' && <TwCompareTable t={t} />}
+      </div>
     </section>
   )
 }
