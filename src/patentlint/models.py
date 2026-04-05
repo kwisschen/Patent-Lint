@@ -20,6 +20,12 @@ class Jurisdiction(str, Enum):
     TW = "TW"
 
 
+class CnPatentType(str, Enum):
+    """Chinese patent application type."""
+    INVENTION = "INVENTION"           # 发明
+    UTILITY_MODEL = "UTILITY_MODEL"   # 实用新型
+
+
 class TwPatentType(str, Enum):
     """Taiwan patent application type."""
     INVENTION = "INVENTION"
@@ -91,6 +97,7 @@ class UnsupportedTerm(BaseModel):
 
 class CnPatentDocument(BaseModel):
     """Parsed Chinese patent document (from CNIPA XML or .docx)."""
+    patent_type: CnPatentType = CnPatentType.INVENTION
     title: str = ""
     technical_field: list[str] = Field(default_factory=list)
     background: list[str] = Field(default_factory=list)
@@ -167,6 +174,7 @@ class ReportData(BaseModel):
     """Structured report data for template rendering."""
 
     jurisdiction: Jurisdiction = Jurisdiction.US
+    patent_type: str | None = None
 
     # Summary stats
     paragraph_count: int
@@ -206,6 +214,7 @@ class AnalysisResult(BaseModel):
 
     # Specification
     jurisdiction: Jurisdiction = Jurisdiction.US
+    patent_type: str | None = None
     has_tracked_changes: bool = False
     paragraph_count: int = 0
     improper_spec_paragraphs: list[int] = Field(default_factory=list)
@@ -292,6 +301,7 @@ class AnalysisResult(BaseModel):
         """Build ReportData for CN jurisdiction from pre-computed check lists."""
         return ReportData(
             jurisdiction=self.jurisdiction,
+            patent_type=self.patent_type,
             paragraph_count=self.paragraph_count,
             total_claims=self.total_claims,
             independent_count=self.independent_claims_count,
@@ -311,6 +321,7 @@ class AnalysisResult(BaseModel):
         """Build ReportData for TW jurisdiction from pre-computed check lists."""
         return ReportData(
             jurisdiction=self.jurisdiction,
+            patent_type=self.patent_type,
             paragraph_count=self.paragraph_count,
             total_claims=self.total_claims,
             independent_count=self.independent_claims_count,

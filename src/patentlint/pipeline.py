@@ -82,6 +82,7 @@ def _run_cn_pipeline(cn_doc: CnPatentDocument) -> AnalysisResult:
 
     return AnalysisResult(
         jurisdiction=Jurisdiction.CN,
+        patent_type=cn_doc.patent_type.value,
         paragraph_count=para_count,
         claims=cn_doc.claims,
         independent_claims_count=sum(1 for c in cn_doc.claims if c.independent),
@@ -301,6 +302,7 @@ def _run_tw_pipeline(tw_doc: TwPatentDocument) -> AnalysisResult:
 
     return AnalysisResult(
         jurisdiction=Jurisdiction.TW,
+        patent_type=tw_doc.patent_type.value,
         paragraph_count=para_count,
         claims=tw_doc.claims,
         independent_claims_count=sum(1 for c in tw_doc.claims if c.independent),

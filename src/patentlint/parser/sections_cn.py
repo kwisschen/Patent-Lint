@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import re
 
-from patentlint.models import CnPatentDocument
+from patentlint.models import CnPatentDocument, CnPatentType
 from patentlint.parser.claims_cn import parse_cn_claims_docx
 from patentlint.parser.docx_loader import DocxSection
 
@@ -198,7 +198,15 @@ def extract_cn_sections_from_docx(sections: list[DocxSection]) -> CnPatentDocume
     figure_refs = _extract_figure_refs(all_refs_text)
     figure_count = _count_figures_from_descriptions(subsections["drawings_description"])
 
+    # Patent type heuristic: count 本实用新型 vs 本发明 in body text
+    body_text = " ".join(all_spec_paras)
+    if body_text.count("本实用新型") > body_text.count("本发明"):
+        patent_type = CnPatentType.UTILITY_MODEL
+    else:
+        patent_type = CnPatentType.INVENTION
+
     return CnPatentDocument(
+        patent_type=patent_type,
         title=title,
         technical_field=subsections["technical_field"],
         background=subsections["background"],
