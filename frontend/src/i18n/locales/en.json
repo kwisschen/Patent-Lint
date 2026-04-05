@@ -357,13 +357,13 @@
         "patentTypes": "Invention + Utility Model",
         "inputFormat": "Any .docx",
         "checks": "33",
-        "privacy": "Offline, zero-trust",
-        "languages": "5 (EN, ZH-TW, ZH-CN, JA, KO)",
+        "privacy": "Fully offline",
+        "languages": "English, Simp. Chinese, Trad. Chinese, Japanese, Korean",
         "cost": "Free",
         "specChecks": "Yes",
         "abstractChecks": "Yes",
         "symbolTableCrossRef": "Yes",
-        "antecedentBasis": "Yes (regex-based)",
+        "antecedentBasis": "Yes",
         "claimTree": "Yes"
       },
       "tipo": {
@@ -375,8 +375,8 @@
         "cost": "Free",
         "specChecks": "No",
         "abstractChecks": "No",
-        "symbolTableCrossRef": "Yes (core strength)",
-        "antecedentBasis": "Yes (\u5148\u884c\u8a5e)",
+        "symbolTableCrossRef": "Yes",
+        "antecedentBasis": "Yes",
         "claimTree": "No"
       }
     },

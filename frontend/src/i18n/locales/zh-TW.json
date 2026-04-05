@@ -357,13 +357,13 @@
         "patentTypes": "發明 + 新型",
         "inputFormat": "任意 .docx",
         "checks": "33",
-        "privacy": "離線、零信任",
-        "languages": "5 (EN, ZH-TW, ZH-CN, JA, KO)",
+        "privacy": "完全離線",
+        "languages": "英、簡中、繁中、日、韓",
         "cost": "免費",
         "specChecks": "有",
         "abstractChecks": "有",
         "symbolTableCrossRef": "有",
-        "antecedentBasis": "有 (正規表達式)",
+        "antecedentBasis": "有",
         "claimTree": "有"
       },
       "tipo": {
@@ -375,8 +375,8 @@
         "cost": "免費",
         "specChecks": "無",
         "abstractChecks": "無",
-        "symbolTableCrossRef": "有 (核心功能)",
-        "antecedentBasis": "有 (先行詞)",
+        "symbolTableCrossRef": "有",
+        "antecedentBasis": "有",
         "claimTree": "無"
       }
     },
