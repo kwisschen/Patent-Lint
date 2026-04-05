@@ -16,7 +16,9 @@ from patentlint.analysis import cn_claims as cn_claims_analysis
 from patentlint.analysis import cn_specification as cn_spec_analysis
 from patentlint.analysis import drawings as drawings_analysis
 from patentlint.analysis import specification as spec_analysis
+from patentlint.analysis import tw_abstract as tw_abstract_analysis
 from patentlint.analysis import tw_claims as tw_claims_analysis
+from patentlint.analysis import tw_cross_reference as tw_cross_ref_analysis
 from patentlint.analysis import tw_specification as tw_spec_analysis
 from patentlint.models import AnalysisResult, CnPatentDocument, Jurisdiction, TwPatentDocument
 from patentlint.parser import claims as claims_parser
@@ -280,6 +282,23 @@ def _run_tw_pipeline(tw_doc: TwPatentDocument) -> AnalysisResult:
         + tw_claims_analysis.check_antecedent_basis(tw_doc)
     )
 
+    # --- Abstract checks (27–30) ---
+    abstract_checks = (
+        tw_abstract_analysis.check_abstract_char_count(tw_doc)
+        + tw_abstract_analysis.check_abstract_title_match(tw_doc)
+        + tw_abstract_analysis.check_commercial_language(tw_doc)
+        + tw_abstract_analysis.check_representative_drawing(tw_doc)
+    )
+
+    # --- Cross-reference checks (31–32) → spec-level ---
+    spec_checks = list(spec_checks) + (
+        tw_cross_ref_analysis.check_symbol_vs_rep_drawing(tw_doc)
+        + tw_cross_ref_analysis.check_bracket_format(tw_doc)
+    )
+
+    # --- Drawings checks (33) ---
+    drawings_checks = tw_cross_ref_analysis.check_figure_count(tw_doc)
+
     return AnalysisResult(
         jurisdiction=Jurisdiction.TW,
         paragraph_count=para_count,
@@ -291,6 +310,8 @@ def _run_tw_pipeline(tw_doc: TwPatentDocument) -> AnalysisResult:
         likely_patent=True,
         tw_specification_checks=spec_checks,
         tw_claims_checks=claims_checks,
+        tw_abstract_checks=abstract_checks,
+        tw_drawings_checks=drawings_checks,
     )
 
 

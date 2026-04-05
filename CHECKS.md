@@ -115,6 +115,66 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 ---
 
-**Total checks: 57** (33 US + 24 CN)
+## TW Specification (說明書)
+
+| Check | Reference | Severity | message_key | Description |
+|-------|-----------|----------|-------------|-------------|
+| Required sections | 專利法施行細則 §17 | AMEND / PASS | `check.tw.spec.requiredSections` | Required sections present (技術領域, 先前技術, 發明內容/新型內容, 實施方式) |
+| Section ordering | 專利法施行細則 §17 | AMEND / PASS | `check.tw.spec.sectionOrdering` | Sections in prescribed order |
+| Paragraph numbering format | 專利法施行細則 §17 | AMEND / PASS | `check.tw.spec.paragraphNumbering` | If present: 【NNNN】format, sequential, no gaps |
+| Paragraph ending punctuation | 專利審查基準 | AMEND / PASS | `check.tw.spec.paragraphEnding` | Paragraphs end with valid Chinese punctuation (。！？) |
+| Figure reference consistency | 專利審查基準 | VERIFY / PASS | `check.tw.spec.figureRefConsistency` | Figure references match between 圖式簡單說明 and 實施方式 |
+| Patent type terminology | 專利審查基準 | VERIFY / PASS | `check.tw.spec.patentTypeTerminology` | 本發明 vs 本新型 consistency |
+| Title requirements | 專利審查基準 | AMEND / PASS | `check.tw.spec.title` | Title concise, no trademarks or model numbers |
+| Spec must not reference claims | 專利法施行細則 §17 | AMEND / PASS | `check.tw.spec.claimReference` | No 如請求項N所述 in specification |
+| 符號說明 presence | 專利法施行細則 §17 | AMEND / PASS | `check.tw.spec.symbolTablePresence` | 符號說明 required when 圖式簡單說明 exists |
+| 符號說明 vs spec consistency | 專利審查基準 | VERIFY / PASS | `check.tw.spec.symbolTableConsistency` | Symbols in 符號說明 appear in 實施方式 |
+
+## TW Claims (申請專利範圍)
+
+| Check | Reference | Severity | message_key | Description |
+|-------|-----------|----------|-------------|-------------|
+| Claims sequential | 專利審查基準 | AMEND / PASS | `check.tw.claims.sequential` | Claim numbers sequential from 1 |
+| Dependency format | 專利法施行細則 §18 | AMEND / PASS | `check.tw.claims.dependencyFormat` | Dependencies use recognized format |
+| Self-dependent | 專利法施行細則 §18 | AMEND / PASS | `check.tw.claims.selfDependent` | Claim does not depend on itself |
+| Circular dependency | 專利法施行細則 §18 | AMEND / PASS | `check.tw.claims.circularDependency` | No circular dependency chains |
+| Forward dependency | 專利法施行細則 §18 | AMEND / PASS | `check.tw.claims.forwardDependency` | Dependent claim only references preceding claims |
+| Single sentence | 專利法施行細則 §18 | AMEND / PASS | `check.tw.claims.singleSentence` | Each claim has exactly one 。 at end |
+| Reference numerals in parentheses | 專利法施行細則 §19 | VERIFY / PASS | `check.tw.claims.refNumeralParens` | Reference numerals enclosed in parentheses |
+| Subject name consistency | 專利審查基準 | VERIFY / PASS | `check.tw.claims.subjectConsistency` | Dependent claim subject matches parent |
+| Transition phrase detection | 專利法施行細則 §20 | VERIFY / PASS | `check.tw.claims.transitionPhrase` | Independent claims contain 其特徵在於 or equivalent |
+| CN terminology flag | — | VERIFY / PASS | `check.tw.claims.cnTerminology` | Flags CNIPA terminology in TW document |
+| Claims must not reference spec/drawings | 專利法施行細則 §19 | AMEND / PASS | `check.tw.claims.specDrawingRef` | No 如說明書所述, 如圖所示 in claims |
+| Multi-multi dependency prohibited | 專利法施行細則 §18 | AMEND / PASS | `check.tw.claims.multiDepOnMultiDep` | Multi-dep cannot depend on another multi-dep |
+| Multi-dep alternative form | 專利法施行細則 §18 | AMEND / PASS | `check.tw.claims.multiDepAlternative` | Multi-dep claims must use alternative form |
+| Title vs claims subject | 專利審查基準 | VERIFY / PASS | `check.tw.claims.titleSubjectMatch` | 發明名稱/新型名稱 consistent with independent claim subjects |
+| Claims vs 符號說明 consistency | 專利審查基準 | VERIFY / PASS | `check.tw.claims.symbolTableConsistency` | Reference numerals in claims match 符號說明 |
+| Antecedent basis (先行詞) | 專利審查基準 | VERIFY / PASS | `check.tw.claims.antecedentBasis` | 該/所述/前述 + noun has matching 一 + noun introduction |
+
+## TW Abstract (摘要)
+
+| Check | Reference | Severity | message_key | Description |
+|-------|-----------|----------|-------------|-------------|
+| Character count | 專利法施行細則 §21 | VERIFY / PASS | `check.tw.abstract.charCount` | Abstract within 250 characters |
+| Title match | 專利審查基準 | VERIFY / PASS | `check.tw.abstract.titleMatch` | 發明名稱/新型名稱 appears in abstract |
+| Commercial language | 專利法施行細則 §21 | AMEND / PASS | `check.tw.abstract.commercialLanguage` | No 商業性宣傳用語 (最優, 最佳, 世界領先, etc.) |
+| Representative drawing | 專利法施行細則 §21 | VERIFY / PASS | `check.tw.abstract.representativeDrawing` | 代表圖 designation present when drawings exist |
+
+## TW Cross-Reference
+
+| Check | Reference | Severity | message_key | Description |
+|-------|-----------|----------|-------------|-------------|
+| 符號說明 vs 代表圖 consistency | 專利審查基準 | VERIFY / PASS | `check.tw.crossRef.symbolVsRepDrawing` | Symbols in 代表圖之符號簡單說明 match 符號說明 |
+| Section header bracket format | 專利法施行細則 §17 | VERIFY / PASS | `check.tw.crossRef.bracketFormat` | Section headers use proper 【】brackets |
+
+## TW Drawings (圖式)
+
+| Check | Reference | Severity | message_key | Description |
+|-------|-----------|----------|-------------|-------------|
+| Figure count † | 專利審查基準 | PASS | `check.tw.drawings.figureCount` | Number of figures found |
+
+---
+
+**Total checks: 90** (33 US + 24 CN + 33 TW)
 
 † Internal: not rendered as a CheckItem card in the web UI or PDF report. Used for stats aggregation and CLI output only.
