@@ -106,8 +106,8 @@ class TestTwPipelineRouting:
         assert report.jurisdiction == Jurisdiction.TW
         # 10 specification checks wired in Phase 7C-1
         assert len(report.specification_checks) == 10
-        # 9 claims checks wired in Phase 7C-2
-        assert len(report.claims_checks) == 9
+        # 16 claims checks wired in Phase 7C-2 + 7C-3
+        assert len(report.claims_checks) == 16
         assert report.abstract_checks == []
         assert report.drawings_checks == []
 
