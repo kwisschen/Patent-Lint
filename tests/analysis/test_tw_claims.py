@@ -7,17 +7,24 @@ from __future__ import annotations
 import pytest
 
 from patentlint.analysis.tw_claims import (
+    check_antecedent_basis,
     check_circular_dependency,
     check_claims_sequential,
+    check_claims_symbol_table_consistency,
+    check_cn_terminology,
     check_dependency_format,
     check_forward_dependency,
+    check_multi_dep_alternative,
+    check_multi_dep_on_multi_dep,
     check_ref_numeral_parens,
     check_self_dependent,
     check_single_sentence,
+    check_spec_drawing_ref,
     check_subject_consistency,
+    check_title_subject_match,
     check_transition_phrase,
 )
-from patentlint.models import Claim, TwPatentDocument, TwPatentType
+from patentlint.models import Claim, SymbolEntry, TwPatentDocument, TwPatentType
 
 
 def _make_doc(**kwargs) -> TwPatentDocument:
@@ -389,3 +396,388 @@ class TestTransitionPhrase:
         ])
         result = check_transition_phrase(doc)
         assert result[0].status == "pass"
+
+
+# ── Check 20: CN Terminology ───────────────────────────────────────────────
+
+
+class TestCnTerminology:
+    def test_no_cn_terms_pass(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，其特徵在於包含一基座。"),
+        ])
+        result = check_cn_terminology(doc)
+        assert result[0].status == "pass"
+
+    def test_single_cn_term_verify(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，如权利要求1所述。"),
+        ])
+        result = check_cn_terminology(doc)
+        assert result[0].status == "verify"
+        assert "权利要求" in result[0].details_params["detail"]
+
+    def test_multiple_cn_terms_verify(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，如权利要求1所述，背景技术中提及。"),
+        ])
+        result = check_cn_terminology(doc)
+        assert result[0].status == "verify"
+        assert "权利要求" in result[0].details_params["detail"]
+        assert "背景技术" in result[0].details_params["detail"]
+
+    def test_reference_is_none(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置。"),
+        ])
+        result = check_cn_terminology(doc)
+        assert result[0].reference is None
+
+    def test_no_claims_pass(self):
+        doc = _make_doc(claims=[])
+        result = check_cn_terminology(doc)
+        assert result[0].status == "pass"
+
+
+# ── Check 21: Spec/Drawing Reference ──────────────────────────────────────
+
+
+class TestSpecDrawingRef:
+    def test_clean_claims_pass(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，其特徵在於包含一基座。"),
+        ])
+        result = check_spec_drawing_ref(doc)
+        assert result[0].status == "pass"
+
+    def test_如圖所示_amend(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，如圖所示包含一基座。"),
+        ])
+        result = check_spec_drawing_ref(doc)
+        assert result[0].status == "amend"
+        assert "如圖所示" in result[0].details_params["detail"]
+
+    def test_如圖N所示_amend(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，如圖1所示包含一基座。"),
+        ])
+        result = check_spec_drawing_ref(doc)
+        assert result[0].status == "amend"
+        assert "如圖1所示" in result[0].details_params["detail"]
+
+    def test_如說明書所述_amend(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，如說明書所述包含一基座。"),
+        ])
+        result = check_spec_drawing_ref(doc)
+        assert result[0].status == "amend"
+        assert "如說明書所述" in result[0].details_params["detail"]
+
+    def test_參見圖_amend(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，參見圖3中之結構。"),
+        ])
+        result = check_spec_drawing_ref(doc)
+        assert result[0].status == "amend"
+
+    def test_no_claims_pass(self):
+        doc = _make_doc(claims=[])
+        result = check_spec_drawing_ref(doc)
+        assert result[0].status == "pass"
+
+
+# ── Check 22: Multi-dep on Multi-dep ──────────────────────────────────────
+
+
+class TestMultiDepOnMultiDep:
+    def test_no_multi_deps_pass(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置。"),
+            _claim(2, "2. 如請求項1所述之裝置。", independent=False, deps=[1]),
+        ])
+        result = check_multi_dep_on_multi_dep(doc)
+        assert result[0].status == "pass"
+
+    def test_multi_dep_on_single_dep_pass(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置。"),
+            _claim(2, "2. 如請求項1所述之裝置。", independent=False, deps=[1]),
+            _claim(3, "3. 如請求項1或2中任一項所述之裝置。",
+                   independent=False, deps=[1, 2], multi_dep=True),
+        ])
+        result = check_multi_dep_on_multi_dep(doc)
+        assert result[0].status == "pass"
+
+    def test_direct_multi_on_multi_amend(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置。"),
+            _claim(2, "2. 如請求項1所述之裝置。", independent=False, deps=[1]),
+            _claim(3, "3. 如請求項1或2中任一項所述之裝置。",
+                   independent=False, deps=[1, 2], multi_dep=True),
+            _claim(5, "5. 如請求項3或2中任一項所述之裝置。",
+                   independent=False, deps=[3, 2], multi_dep=True),
+        ])
+        result = check_multi_dep_on_multi_dep(doc)
+        assert result[0].status == "amend"
+        assert "5" in result[0].details_params["claims"]
+
+    def test_indirect_multi_on_multi_amend(self):
+        """Claim 5 (multi) → claim 4 (single) → claim 3 (multi) → claim 1."""
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置。"),
+            _claim(2, "2. 如請求項1所述之裝置。", independent=False, deps=[1]),
+            _claim(3, "3. 如請求項1或2中任一項所述之裝置。",
+                   independent=False, deps=[1, 2], multi_dep=True),
+            _claim(4, "4. 如請求項3所述之裝置。", independent=False, deps=[3]),
+            _claim(5, "5. 如請求項2或4中任一項所述之裝置。",
+                   independent=False, deps=[2, 4], multi_dep=True),
+        ])
+        result = check_multi_dep_on_multi_dep(doc)
+        assert result[0].status == "amend"
+        assert "5" in result[0].details_params["claims"]
+
+    def test_no_claims_pass(self):
+        doc = _make_doc(claims=[])
+        result = check_multi_dep_on_multi_dep(doc)
+        assert result[0].status == "pass"
+
+
+# ── Check 23: Multi-dep Alternative Form ──────────────────────────────────
+
+
+class TestMultiDepAlternative:
+    def test_no_multi_deps_pass(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置。"),
+        ])
+        result = check_multi_dep_alternative(doc)
+        assert result[0].status == "pass"
+
+    def test_with_或_pass(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置。"),
+            _claim(2, "2. 如請求項1所述之裝置。", independent=False, deps=[1]),
+            _claim(3, "3. 如請求項1或2所述之裝置。",
+                   independent=False, deps=[1, 2], multi_dep=True),
+        ])
+        result = check_multi_dep_alternative(doc)
+        assert result[0].status == "pass"
+
+    def test_with_任一項_pass(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置。"),
+            _claim(2, "2. 如請求項1所述之裝置。", independent=False, deps=[1]),
+            _claim(3, "3. 如請求項1至2中任一項所述之裝置。",
+                   independent=False, deps=[1, 2], multi_dep=True),
+        ])
+        result = check_multi_dep_alternative(doc)
+        assert result[0].status == "pass"
+
+    def test_conjunctive_form_amend(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置。"),
+            _claim(2, "2. 如請求項1所述之裝置。", independent=False, deps=[1]),
+            _claim(3, "3. 如請求項1及2所述之裝置。",
+                   independent=False, deps=[1, 2], multi_dep=True),
+        ])
+        result = check_multi_dep_alternative(doc)
+        assert result[0].status == "amend"
+        assert "3" in result[0].details_params["claims"]
+
+    def test_no_claims_pass(self):
+        doc = _make_doc(claims=[])
+        result = check_multi_dep_alternative(doc)
+        assert result[0].status == "pass"
+
+
+# ── Check 24: Title Subject Match ─────────────────────────────────────────
+
+
+class TestTitleSubjectMatch:
+    def test_title_matches_pass(self):
+        doc = _make_doc(
+            title="一種裝置",
+            claims=[_claim(1, "1. 一種裝置，其特徵在於包含一基座。")],
+        )
+        result = check_title_subject_match(doc)
+        assert result[0].status == "pass"
+
+    def test_title_no_overlap_verify(self):
+        doc = _make_doc(
+            title="一種通訊系統",
+            claims=[_claim(1, "1. 一種裝置，其特徵在於包含一基座。")],
+        )
+        result = check_title_subject_match(doc)
+        assert result[0].status == "verify"
+        assert "detail" in result[0].details_params
+
+    def test_title_partial_overlap_pass(self):
+        doc = _make_doc(
+            title="裝置",
+            claims=[_claim(1, "1. 一種裝置，其特徵在於包含一基座。")],
+        )
+        result = check_title_subject_match(doc)
+        assert result[0].status == "pass"
+
+    def test_no_title_pass(self):
+        doc = _make_doc(
+            title="",
+            claims=[_claim(1, "1. 一種裝置。")],
+        )
+        result = check_title_subject_match(doc)
+        assert result[0].status == "pass"
+
+    def test_no_claims_pass(self):
+        doc = _make_doc(title="一種裝置", claims=[])
+        result = check_title_subject_match(doc)
+        assert result[0].status == "pass"
+
+
+# ── Check 25: Claims Symbol Table Consistency ─────────────────────────────
+
+
+class TestClaimsSymbolTableConsistency:
+    def test_all_consistent_pass(self):
+        doc = _make_doc(
+            claims=[_claim(1, "1. 一種裝置，包含一基座(101)及一蓋板(102)。")],
+            symbol_table=[
+                SymbolEntry(numeral="101", name="基座"),
+                SymbolEntry(numeral="102", name="蓋板"),
+            ],
+        )
+        result = check_claims_symbol_table_consistency(doc)
+        assert result[0].status == "pass"
+
+    def test_numeral_in_claims_not_table_verify(self):
+        doc = _make_doc(
+            claims=[_claim(1, "1. 一種裝置，包含一基座(101)及一蓋板(102)。")],
+            symbol_table=[
+                SymbolEntry(numeral="101", name="基座"),
+            ],
+        )
+        result = check_claims_symbol_table_consistency(doc)
+        assert result[0].status == "verify"
+        assert "102" in result[0].details
+
+    def test_empty_symbol_table_pass(self):
+        doc = _make_doc(
+            claims=[_claim(1, "1. 一種裝置，包含一基座(101)。")],
+            symbol_table=[],
+        )
+        result = check_claims_symbol_table_consistency(doc)
+        assert result[0].status == "pass"
+
+    def test_numeral_in_table_not_claims_verify(self):
+        doc = _make_doc(
+            claims=[_claim(1, "1. 一種裝置，包含一基座(101)。")],
+            symbol_table=[
+                SymbolEntry(numeral="101", name="基座"),
+                SymbolEntry(numeral="200", name="外殼"),
+            ],
+        )
+        result = check_claims_symbol_table_consistency(doc)
+        assert result[0].status == "verify"
+        assert "200" in result[0].details
+
+    def test_no_claims_pass(self):
+        doc = _make_doc(
+            claims=[],
+            symbol_table=[SymbolEntry(numeral="101", name="基座")],
+        )
+        result = check_claims_symbol_table_consistency(doc)
+        assert result[0].status == "verify"
+
+
+# ── Check 26: Antecedent Basis ────────────────────────────────────────────
+
+
+class TestAntecedentBasis:
+    def test_all_have_basis_pass(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，其特徵在於包含一底座，該底座設有一孔洞。"),
+        ])
+        result = check_antecedent_basis(doc)
+        assert result[0].status == "pass"
+
+    def test_missing_basis_verify(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，其特徵在於該底座設有一孔洞。"),
+        ])
+        result = check_antecedent_basis(doc)
+        assert result[0].status == "verify"
+
+    def test_所述_without_intro_verify(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，其特徵在於包含一基座。"),
+            _claim(2, "2. 如請求項1所述之裝置，其中所述框架為金屬。",
+                   independent=False, deps=[1]),
+        ])
+        result = check_antecedent_basis(doc)
+        assert result[0].status == "verify"
+
+    def test_所述_with_intro_in_parent_pass(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，其特徵在於包含一框架。"),
+            _claim(2, "2. 如請求項1所述之裝置，其中所述框架為金屬。",
+                   independent=False, deps=[1]),
+        ])
+        result = check_antecedent_basis(doc)
+        assert result[0].status == "pass"
+
+    def test_前述_without_intro_verify(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，其特徵在於包含一基座。"),
+            _claim(2, "2. 如請求項1所述之裝置，其中前述方法為加熱。",
+                   independent=False, deps=[1]),
+        ])
+        result = check_antecedent_basis(doc)
+        assert result[0].status == "verify"
+
+    def test_independent_self_contained_pass(self):
+        """Independent claim with 一底座...該底座 — self-contained."""
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，其特徵在於包含一底座及一蓋板，該底座設有一凹槽，該蓋板覆蓋該凹槽。"),
+        ])
+        result = check_antecedent_basis(doc)
+        assert result[0].status == "pass"
+
+    def test_multiple_flagged_terms(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，其特徵在於該框架為金屬，該底板為塑膠。"),
+        ])
+        result = check_antecedent_basis(doc)
+        assert result[0].status == "verify"
+        count = int(result[0].details_params["count"])
+        assert count >= 2
+
+    def test_no_claims_pass(self):
+        doc = _make_doc(claims=[])
+        result = check_antecedent_basis(doc)
+        assert result[0].status == "pass"
+
+    def test_severity_is_verify(self):
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，其特徵在於該底座為金屬。"),
+        ])
+        result = check_antecedent_basis(doc)
+        assert result[0].status == "verify"
+
+    def test_details_key_no_interpolation(self):
+        """details_key should be static (no interpolation params)."""
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，其特徵在於該底座為金屬。"),
+        ])
+        result = check_antecedent_basis(doc)
+        # The details_key itself has no {{}} placeholders — only count in message_key
+        assert result[0].details_key == "details.tw.antecedentBasis"
+        assert "count" in result[0].details_params
+
+    def test_flagged_terms_in_raw_details(self):
+        """Raw details field should list the flagged terms."""
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，其特徵在於該底座為金屬。"),
+        ])
+        result = check_antecedent_basis(doc)
+        assert result[0].details is not None
+        assert len(result[0].details) > 0

@@ -439,7 +439,14 @@
       "singleSentence": "Per 專利法施行細則 §18, each claim must be one sentence with exactly one 。 at the end. Review flagged claims.",
       "refNumeralParens": "Per 專利法施行細則 §19, reference numerals in claims should be enclosed in parentheses, e.g., (101). Review flagged claims.",
       "subjectConsistency": "Dependent claim subject name should match the parent claim's subject name. Review flagged claims.",
-      "transitionPhrase": "Per 專利法施行細則 §20, independent claims should contain a transitional phrase such as 其特徵在於 or 其改良在於. Review flagged claims."
+      "transitionPhrase": "Per 專利法施行細則 §20, independent claims should contain a transitional phrase such as 其特徵在於 or 其改良在於. Review flagged claims.",
+      "cnTerminology": "Found simplified Chinese patent terminology: {{detail}}. TW documents should use TIPO terms (請求項, 說明書, 先前技術, 實施方式, etc.), not CNIPA terms (权利要求, 说明书, 背景技术, 具体实施方式, etc.).",
+      "specDrawingRef": "Per 專利法施行細則 §19, claims must not reference the specification or drawings (e.g., 如說明書所述, 如圖所示). Found: {{detail}}.",
+      "multiDepOnMultiDep": "Per 專利法施行細則 §18, a multi-dependent claim cannot directly or indirectly depend on another multi-dependent claim. Flagged: 請求項 {{claims}}.",
+      "multiDepAlternative": "Per 專利法施行細則 §18, multi-dependent claims must use alternative form (或/任一項). Flagged: 請求項 {{claims}}.",
+      "titleSubjectMatch": "發明名稱/新型名稱 should be consistent with the subject names of independent claims. Title: {{detail}}.",
+      "symbolTableConsistency": "Reference numerals used in claims should match 符號說明 entries. {{detail}}. Verify completeness.",
+      "antecedentBasis": "該/所述/前述 + noun should have a matching 一 + noun introduction in the same claim or a parent claim. Flagged terms may need review. Regex-based detection is approximate."
     }
   },
   "common": {
@@ -751,6 +758,34 @@
         "transitionPhrase": {
           "verify": "{{count}} independent claim(s) missing transitional phrase.",
           "pass": "All independent claims contain a transitional phrase."
+        },
+        "cnTerminology": {
+          "verify": "CNIPA terminology found in TW document.",
+          "pass": "Claims use correct TIPO terminology."
+        },
+        "specDrawingRef": {
+          "amend": "Claims reference specification or drawings.",
+          "pass": "No specification or drawing references in claims."
+        },
+        "multiDepOnMultiDep": {
+          "amend": "Multi-dependent claim depends on another multi-dependent claim.",
+          "pass": "No multi-dependent-on-multi-dependent claims."
+        },
+        "multiDepAlternative": {
+          "amend": "Multi-dependent claim(s) not in alternative form.",
+          "pass": "All multi-dependent claims use alternative form."
+        },
+        "titleSubjectMatch": {
+          "verify": "Title may not match independent claim subjects.",
+          "pass": "Title consistent with independent claim subjects."
+        },
+        "symbolTableConsistency": {
+          "verify": "Reference numerals in claims inconsistent with 符號說明.",
+          "pass": "Reference numerals in claims consistent with 符號說明."
+        },
+        "antecedentBasis": {
+          "verify": "{{count}} term(s) may lack antecedent basis.",
+          "pass": "All referenced terms have antecedent basis."
         }
       }
     }
