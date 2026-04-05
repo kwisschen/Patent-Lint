@@ -50,6 +50,13 @@
     "drawings": "도면의 간단한 설명",
     "drawingsShort": "도면",
     "abstract": "요약서",
+    "cn": {
+      "specification": "설명서",
+      "claims": "특허청구범위",
+      "drawings": "도면",
+      "drawingsShort": "도면",
+      "abstract": "요약"
+    },
     "tw": {
       "technicalField": "기술 분야",
       "priorArt": "선행 기술",
