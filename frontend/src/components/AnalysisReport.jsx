@@ -236,6 +236,7 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
                 antecedentBasisIssues={data.antecedent_basis_issues}
                 unsupportedTerms={data.unsupported_terms}
                 claimTrees={data.claim_trees}
+                jurisdiction={data.jurisdiction}
               />
             </>
           )}
