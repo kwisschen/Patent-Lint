@@ -42,7 +42,10 @@
     "outsideRange": "50–150語の範囲外",
     "outsideRangeCn": "300文字を超過",
     "outsideRangeTw": "250文字を超過",
-    "noParagraphs": "段落番号なし"
+    "noParagraphs": "段落番号なし",
+    "patentType": "特許種別",
+    "patentTypeInvention": "発明",
+    "patentTypeUtilityModel": "実用新案"
   },
   "section": {
     "specification": "明細書",
@@ -927,6 +930,7 @@
     "figures": "図面",
     "abstractWordCount": "要約書の語数",
     "abstractCharCount": "要約文字数",
+    "patentType": "特許種別",
     "disclaimer": "PatentLint により生成。本レポートは法的助言を構成するものではありません。資格のある特許専門家による確認を推奨します。",
     "triage": {
       "title": "優先対応事項"

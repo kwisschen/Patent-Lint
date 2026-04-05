@@ -41,6 +41,9 @@ export default function SummaryBar({ data, animate = false }) {
   const noParagraphs = data.paragraph_count === 0
   const abstractOutOfRange = jConfig.abstractOutOfRange(data.abstract_word_count)
   const { method, apparatus } = getClaimCategorySplit(data.claim_trees)
+  const patentTypeValue = data.patent_type === 'UTILITY_MODEL'
+    ? t('summary.patentTypeUtilityModel')
+    : t('summary.patentTypeInvention')
 
   const paragraphCount = useCountUp(data.paragraph_count, 600, shouldAnimate)
   const indepCount = useCountUp(data.independent_count, 600, shouldAnimate)
@@ -52,30 +55,6 @@ export default function SummaryBar({ data, animate = false }) {
 
   return (
     <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-      <StatCard
-        label={t('summary.specParagraphs')}
-        value={
-          <span className={noParagraphs ? 'text-[var(--amend-text)]' : ''}>
-            {paragraphCount}
-          </span>
-        }
-        subtitle={noParagraphs ? t('summary.noParagraphs') : null}
-      />
-      <Card>
-        <CardContent className="p-4">
-          <p className="text-sm text-muted-foreground">{t('summary.claims')}</p>
-          <div className="mt-1 space-y-0.5">
-            <p className="flex items-baseline">
-              <span className="text-2xl font-bold">{indepCount}</span>
-              <span className="text-sm text-muted-foreground ml-1.5">{t('summary.independent')}</span>
-            </p>
-            <p className="flex items-baseline">
-              <span className="text-2xl font-bold">{depCount}</span>
-              <span className="text-sm text-muted-foreground ml-1.5">{t('summary.dependent')}</span>
-            </p>
-          </div>
-        </CardContent>
-      </Card>
       {data.claim_trees?.length > 0 && (
         <Card>
           <CardContent className="p-4">
@@ -93,9 +72,39 @@ export default function SummaryBar({ data, animate = false }) {
           </CardContent>
         </Card>
       )}
+      {jConfig.showPatentType && (
+        <StatCard
+          label={t('summary.patentType')}
+          value={patentTypeValue}
+        />
+      )}
+      <Card>
+        <CardContent className="p-4">
+          <p className="text-sm text-muted-foreground">{t('summary.claims')}</p>
+          <div className="mt-1 space-y-0.5">
+            <p className="flex items-baseline">
+              <span className="text-2xl font-bold">{indepCount}</span>
+              <span className="text-sm text-muted-foreground ml-1.5">{t('summary.independent')}</span>
+            </p>
+            <p className="flex items-baseline">
+              <span className="text-2xl font-bold">{depCount}</span>
+              <span className="text-sm text-muted-foreground ml-1.5">{t('summary.dependent')}</span>
+            </p>
+          </div>
+        </CardContent>
+      </Card>
       <StatCard
         label={t('summary.figures')}
         value={figureCount}
+      />
+      <StatCard
+        label={t('summary.specParagraphs')}
+        value={
+          <span className={noParagraphs ? 'text-[var(--amend-text)]' : ''}>
+            {paragraphCount}
+          </span>
+        }
+        subtitle={noParagraphs ? t('summary.noParagraphs') : null}
       />
       <StatCard
         label={t(jConfig.abstractLabelKey)}
