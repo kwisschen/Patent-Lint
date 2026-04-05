@@ -219,8 +219,7 @@ function TwCompareTable({ t }) {
   )
 }
 
-function ComparisonTable({ t }) {
-  const [activeTab, setActiveTab] = useState('US')
+function UsComparisonTable({ t }) {
   const [ref1, inView1] = useInView()
   const [ref2, inView2] = useInView()
   const [ref3, inView3] = useInView()
@@ -264,6 +263,33 @@ function ComparisonTable({ t }) {
   )
 
   return (
+    <div className="rounded-lg border border-border">
+      <table className="w-full text-left">
+        <thead>
+          <tr className="border-b border-border bg-muted/30">
+            <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
+              {t('about.uspto.colCheck')}
+            </th>
+            <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
+              {t('about.uspto.colUSPTO')}
+            </th>
+            <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
+              {t('about.uspto.colPatentLint')}
+            </th>
+          </tr>
+        </thead>
+        {renderGroup(ref1, inView1, 'about.uspto.group1Title', GROUP1_CHECKS, true, true, false, 0)}
+        {renderGroup(ref2, inView2, 'about.uspto.group2Title', GROUP2_CHECKS, true, false, false, 150)}
+        {renderGroup(ref3, inView3, 'about.uspto.group3Title', GROUP3_CHECKS, false, true, true, 300)}
+      </table>
+    </div>
+  )
+}
+
+function ComparisonTable({ t }) {
+  const [activeTab, setActiveTab] = useState('US')
+
+  return (
     <section>
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-1 rounded-lg bg-muted p-1 mb-4 w-fit mx-auto" role="radiogroup" aria-label={t('jurisdiction.label')}>
@@ -292,33 +318,9 @@ function ComparisonTable({ t }) {
         </p>
       </div>
 
-      <div key={activeTab}>
-        {activeTab === 'US' && (
-          <div className="rounded-lg border border-border">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="border-b border-border bg-muted/30">
-                  <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
-                    {t('about.uspto.colCheck')}
-                  </th>
-                  <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
-                    {t('about.uspto.colUSPTO')}
-                  </th>
-                  <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
-                    {t('about.uspto.colPatentLint')}
-                  </th>
-                </tr>
-              </thead>
-              {renderGroup(ref1, inView1, 'about.uspto.group1Title', GROUP1_CHECKS, true, true, false, 0)}
-              {renderGroup(ref2, inView2, 'about.uspto.group2Title', GROUP2_CHECKS, true, false, false, 150)}
-              {renderGroup(ref3, inView3, 'about.uspto.group3Title', GROUP3_CHECKS, false, true, true, 300)}
-            </table>
-          </div>
-        )}
-
-        {activeTab === 'CN' && <CnCheckTable t={t} />}
-        {activeTab === 'TW' && <TwCompareTable t={t} />}
-      </div>
+      {activeTab === 'US' && <UsComparisonTable t={t} />}
+      {activeTab === 'CN' && <CnCheckTable t={t} />}
+      {activeTab === 'TW' && <TwCompareTable t={t} />}
     </section>
   )
 }
