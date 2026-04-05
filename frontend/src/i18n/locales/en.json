@@ -419,6 +419,18 @@
       "abstractCharCount": "Per 专利法实施细则 §23, the abstract must not exceed 300 Chinese characters. Shorten the abstract.",
       "abstractTitleMatch": "Per 审查指南, the abstract should be consistent with the title (发明名称). Verify the abstract reflects the invention title.",
       "commercialLanguage": "Per 专利法实施细则 §23, the abstract must not contain commercial advertising language (商业性宣传用语). Remove terms like 最优, 最佳, 世界领先, 国际领先, 国内首创, 填补空白, etc."
+    },
+    "tw": {
+      "requiredSections": "TIPO requires: 技術領域, 先前技術, 發明內容/新型內容, 實施方式. When drawings are present, 圖式簡單說明 and 符號說明 are also required. Missing: {{sections}}.",
+      "sectionOrdering": "專利法施行細則 §17 prescribes: 技術領域 → 先前技術 → 發明內容/新型內容 → 圖式簡單說明 → 實施方式 → 符號說明. Reorder to match.",
+      "paragraphNumbering": "When present, paragraph numbers must use 【NNNN】 format with sequential four-digit numbers. Numbering is optional per 專利法施行細則 §17. Found: {{detail}}.",
+      "paragraphEnding": "Specification paragraphs should end with Chinese punctuation (。！？). Review flagged paragraphs.",
+      "figureRefConsistency": "Figure references differ between 圖式簡單說明 and 實施方式. {{detail}}. Verify completeness.",
+      "patentTypeTerminology": "Invention patents (發明) should use 本發明, not 本新型. Utility models (新型) should use 本新型, not 本發明. Found: {{term}}.",
+      "title": "發明名稱/新型名稱 should be concise with no trademarks, model numbers, or irrelevant text. Found: {{detail}}.",
+      "claimReference": "Per 專利法施行細則 §17, the specification must not reference specific claims (e.g., 如請求項N所述). Found: {{detail}}.",
+      "symbolTablePresence": "Per 專利法施行細則 §17, when 圖式簡單說明 is present, 符號說明 must also be included. Add a 符號說明 section listing reference numerals and component names.",
+      "symbolTableConsistency": "符號說明 entries inconsistent with 實施方式. {{detail}}. Verify completeness."
     }
   },
   "common": {
@@ -648,6 +660,50 @@
       "drawings": {
         "figureCount": {
           "pass": "{{count}} figure(s) found."
+        }
+      }
+    },
+    "tw": {
+      "spec": {
+        "requiredSections": {
+          "amend": "Required sections missing per 專利法施行細則 §17.",
+          "pass": "All required sections present."
+        },
+        "sectionOrdering": {
+          "amend": "Sections out of prescribed order per 專利法施行細則 §17.",
+          "pass": "Sections in correct order."
+        },
+        "paragraphNumbering": {
+          "amend": "Paragraph numbering format incorrect.",
+          "pass": "Paragraph numbering correct or absent."
+        },
+        "paragraphEnding": {
+          "amend": "{{count}} paragraph(s) missing ending punctuation.",
+          "pass": "All paragraphs end with valid punctuation."
+        },
+        "figureRefConsistency": {
+          "verify": "Figure reference mismatch between 圖式簡單說明 and 實施方式.",
+          "pass": "Figure references consistent across sections."
+        },
+        "patentTypeTerminology": {
+          "verify": "Patent type terminology mismatch detected.",
+          "pass": "Patent type terminology consistent."
+        },
+        "title": {
+          "amend": "Title contains prohibited content.",
+          "pass": "Title meets requirements."
+        },
+        "claimReference": {
+          "amend": "Specification references claims.",
+          "pass": "No claim references in specification."
+        },
+        "symbolTablePresence": {
+          "amend": "符號說明 section missing.",
+          "pass": "符號說明 section present."
+        },
+        "symbolTableConsistency": {
+          "verify": "符號說明 entries inconsistent with 實施方式.",
+          "pass": "符號說明 entries consistent with specification."
         }
       }
     }

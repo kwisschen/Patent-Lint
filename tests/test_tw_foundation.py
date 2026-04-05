@@ -104,8 +104,9 @@ class TestTwPipelineRouting:
         result = analyze_bytes(data, "test.docx", jurisdiction=Jurisdiction.TW)
         report = result.to_report_data()
         assert report.jurisdiction == Jurisdiction.TW
-        # Phase 7C will populate these — for now they're empty
-        assert report.specification_checks == []
+        # 10 specification checks wired in Phase 7C-1
+        assert len(report.specification_checks) == 10
+        # Claims, abstract, drawings checks come in later phases
         assert report.claims_checks == []
         assert report.abstract_checks == []
         assert report.drawings_checks == []

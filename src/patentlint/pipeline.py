@@ -16,6 +16,7 @@ from patentlint.analysis import cn_claims as cn_claims_analysis
 from patentlint.analysis import cn_specification as cn_spec_analysis
 from patentlint.analysis import drawings as drawings_analysis
 from patentlint.analysis import specification as spec_analysis
+from patentlint.analysis import tw_specification as tw_spec_analysis
 from patentlint.models import AnalysisResult, CnPatentDocument, Jurisdiction, TwPatentDocument
 from patentlint.parser import claims as claims_parser
 from patentlint.parser import sections
@@ -235,13 +236,27 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
 
 
 def _run_tw_pipeline(tw_doc: TwPatentDocument) -> AnalysisResult:
-    """Run TW pipeline — parsing done, checks come in Phase 7C."""
+    """Run TW pipeline with specification checks."""
     para_count = len(tw_doc.paragraph_numbers) if tw_doc.paragraph_numbers else (
         len(tw_doc.technical_field)
         + len(tw_doc.prior_art)
         + len(tw_doc.disclosure)
         + len(tw_doc.drawings_description)
         + len(tw_doc.embodiment)
+    )
+
+    # --- Specification checks (1–10) ---
+    spec_checks = (
+        tw_spec_analysis.check_required_sections(tw_doc)
+        + tw_spec_analysis.check_section_ordering(tw_doc)
+        + tw_spec_analysis.check_paragraph_numbering(tw_doc)
+        + tw_spec_analysis.check_paragraph_ending(tw_doc)
+        + tw_spec_analysis.check_figure_ref_consistency(tw_doc)
+        + tw_spec_analysis.check_patent_type_terminology(tw_doc)
+        + tw_spec_analysis.check_title(tw_doc)
+        + tw_spec_analysis.check_spec_claim_reference(tw_doc)
+        + tw_spec_analysis.check_symbol_table_presence(tw_doc)
+        + tw_spec_analysis.check_symbol_table_consistency(tw_doc)
     )
 
     return AnalysisResult(
@@ -253,6 +268,7 @@ def _run_tw_pipeline(tw_doc: TwPatentDocument) -> AnalysisResult:
         figures_count=len(set(tw_doc.figure_refs)),
         abstract_word_count=tw_doc.abstract_char_count,
         likely_patent=True,
+        tw_specification_checks=spec_checks,
     )
 
 
