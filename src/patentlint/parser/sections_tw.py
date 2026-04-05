@@ -14,12 +14,18 @@ from patentlint.parser.symbol_table_tw import parse_tw_symbol_table
 # Bracket header patterns — 【section_name】
 # ---------------------------------------------------------------------------
 
-_BRACKET_HEADER = re.compile(r"^【(.+?)】\s*$")
+# Match bracket headers but NOT paragraph numbers 【0001】
+_BRACKET_HEADER = re.compile(r"^【([^\d].+?)】(.*)$")
 
-# Map bracket header content to TwPatentDocument field names
+# Map bracket header content to TwPatentDocument field names.
+# Includes both statute-standard headers and firm-variant prefixed headers.
 _SECTION_MAP: dict[str, str] = {
+    # Title variants
     "發明名稱": "title",
     "新型名稱": "title",
+    "中文發明名稱": "title",
+    "中文新型名稱": "title",
+    # Body sections
     "技術領域": "technical_field",
     "先前技術": "prior_art",
     "發明內容": "disclosure",
@@ -27,14 +33,30 @@ _SECTION_MAP: dict[str, str] = {
     "圖式簡單說明": "drawings_description",
     "實施方式": "embodiment",
     "符號說明": "symbol_table",
+    # Claims variants
     "申請專利範圍": "claims",
+    "發明申請專利範圍": "claims",
+    "新型申請專利範圍": "claims",
+    # Abstract variants
     "摘要": "abstract",
+    "發明摘要": "abstract",
+    "新型摘要": "abstract",
+    # Representative drawing
     "代表圖": "representative_drawing",
+    "指定代表圖": "representative_drawing",
     "代表圖之符號簡單說明": "representative_drawing_symbols",
 }
 
-# Headers that indicate utility model
-_UTILITY_MODEL_HEADERS = {"新型名稱", "新型內容"}
+# Headers to skip (not content sections — top-level dividers or English titles)
+_SKIP_HEADERS: set[str] = {
+    "發明說明書",
+    "新型說明書",
+    "英文發明名稱",
+    "英文新型名稱",
+}
+
+# Headers that indicate utility model (any header containing 新型)
+_UTILITY_MODEL_KEYWORDS = {"新型摘要", "新型說明書", "新型內容", "新型申請專利範圍", "新型名稱", "中文新型名稱"}
 
 # ---------------------------------------------------------------------------
 # Paragraph numbering: 【NNNN】 at start of body text
@@ -97,6 +119,9 @@ def extract_tw_sections(paragraphs: list[str]) -> TwPatentDocument:
 
     Scans paragraphs for bracket-delimited section headers and collects
     content into the corresponding TwPatentDocument fields.
+
+    Handles both statute-standard headers (【發明名稱】) and firm-variant
+    prefixed headers (【中文發明名稱】, 【發明申請專利範圍】, etc.).
     """
     # Accumulate paragraphs per section
     section_content: dict[str, list[str]] = {
@@ -115,6 +140,10 @@ def extract_tw_sections(paragraphs: list[str]) -> TwPatentDocument:
 
     is_utility_model = False
     current_section: str | None = None
+    in_spec_body = False  # Track whether we're inside 【發明說明書】/【新型說明書】
+    waiting_for_abstract_text = False  # After 【中文】, next non-empty para is abstract
+    spec_title: str | None = None  # Title from spec body (preferred)
+    abstract_title: str | None = None  # Title from abstract preamble (fallback)
 
     for para in paragraphs:
         stripped = para.strip()
@@ -125,14 +154,57 @@ def extract_tw_sections(paragraphs: list[str]) -> TwPatentDocument:
         m = _BRACKET_HEADER.match(stripped)
         if m:
             header_text = m.group(1).strip()
+            inline_text = m.group(2).strip()
+
+            # Handle 【中文】 — abstract text marker
+            if header_text == "中文":
+                waiting_for_abstract_text = True
+                current_section = "abstract"
+                continue
+
+            # Stop waiting for abstract text on any new header
+            waiting_for_abstract_text = False
+
+            # Skip headers (top-level dividers, English titles)
+            if header_text in _SKIP_HEADERS:
+                if header_text in ("發明說明書", "新型說明書"):
+                    in_spec_body = True
+                if header_text in _UTILITY_MODEL_KEYWORDS:
+                    is_utility_model = True
+                current_section = None
+                continue
+
+            # Check utility model
+            if header_text in _UTILITY_MODEL_KEYWORDS:
+                is_utility_model = True
+
             mapped = _SECTION_MAP.get(header_text)
             if mapped is not None:
                 current_section = mapped
-                if header_text in _UTILITY_MODEL_HEADERS:
-                    is_utility_model = True
+
+                # Handle inline text after header (e.g., 【中文發明名稱】高頻基板用...)
+                if inline_text:
+                    if mapped == "title":
+                        if in_spec_body:
+                            spec_title = inline_text
+                        else:
+                            abstract_title = inline_text
+                    elif mapped == "representative_drawing":
+                        section_content[mapped].append(inline_text)
+                    # For other sections, inline text is just content
+                    elif mapped not in ("title",):
+                        section_content[mapped].append(inline_text)
                 continue
+
             # Unknown header — stop accumulating into current section
             current_section = None
+            continue
+
+        # Handle abstract text after 【中文】 marker
+        if waiting_for_abstract_text:
+            section_content["abstract"].append(stripped)
+            waiting_for_abstract_text = False
+            current_section = "abstract"
             continue
 
         if current_section is not None:
@@ -141,8 +213,15 @@ def extract_tw_sections(paragraphs: list[str]) -> TwPatentDocument:
     # --- Patent type ---
     patent_type = TwPatentType.UTILITY_MODEL if is_utility_model else TwPatentType.INVENTION
 
-    # --- Title ---
-    title = " ".join(section_content["title"]).strip()
+    # --- Title: prefer spec body title over abstract preamble title ---
+    if spec_title:
+        title = spec_title
+    elif abstract_title:
+        title = abstract_title
+    elif section_content["title"]:
+        title = " ".join(section_content["title"]).strip()
+    else:
+        title = ""
 
     # --- Paragraph numbering (from body sections) ---
     body_sections = (
