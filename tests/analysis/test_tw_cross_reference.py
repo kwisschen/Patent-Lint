@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-import pytest
-
 from patentlint.analysis.tw_cross_reference import (
     check_bracket_format,
     check_figure_count,

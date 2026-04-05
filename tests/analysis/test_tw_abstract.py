@@ -4,15 +4,13 @@
 
 from __future__ import annotations
 
-import pytest
-
 from patentlint.analysis.tw_abstract import (
     check_abstract_char_count,
     check_abstract_title_match,
     check_commercial_language,
     check_representative_drawing,
 )
-from patentlint.models import SymbolEntry, TwPatentDocument
+from patentlint.models import TwPatentDocument
 
 
 class TestCheckAbstractCharCount:

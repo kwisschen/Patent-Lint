@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-import pytest
-
 from patentlint.analysis.tw_claims import (
     check_antecedent_basis,
     check_circular_dependency,
