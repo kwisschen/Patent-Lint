@@ -439,7 +439,14 @@
       "singleSentence": "依专利法施行细则 §18，每一請求項须为单句，仅于末尾有一个句号（。）。请检查标记之請求項。",
       "refNumeralParens": "依专利法施行细则 §19，請求項中之元件符号应加括号，例如(101)。请检查标记之請求項。",
       "subjectConsistency": "附属项之主题名称应与所依附之母项主题名称一致。请检查标记之請求項。",
-      "transitionPhrase": "依专利法施行细则 §20，独立项应包含特征连接词，如「其特徵在於」或「其改良在於」。请检查标记之請求項。"
+      "transitionPhrase": "依专利法施行细则 §20，独立项应包含特征连接词，如「其特徵在於」或「其改良在於」。请检查标记之請求項。",
+      "cnTerminology": "发现简体中文专利用语：{{detail}}。台湾专利稿件应使用TIPO用语（請求項、說明書、先前技術、實施方式等），而非CNIPA用语（权利要求、说明书、背景技术、具体实施方式等）。",
+      "specDrawingRef": "依专利法施行细则 §19，請求項不得引用说明书或图式（如「如說明書所述」「如圖所示」）。发现：{{detail}}。",
+      "multiDepOnMultiDep": "依专利法施行细则 §18，多项附属项不得直接或间接依附于另一多项附属项。标记：請求項 {{claims}}。",
+      "multiDepAlternative": "依专利法施行细则 §18，多项附属项须使用择一形式（或/任一项）。标记：請求項 {{claims}}。",
+      "titleSubjectMatch": "发明名称/新型名称应与独立项之主题名称一致。标题：{{detail}}。",
+      "symbolTableConsistency": "請求項中之元件符号应与符號說明一致。{{detail}}。请确认完整性。",
+      "antecedentBasis": "「该」「所述」「前述」加名词，须于同一请求项或母项中以「一」加名词导入。以正则表达式检测，结果为近似值，请自行确认。"
     }
   },
   "common": {
@@ -751,6 +758,34 @@
         "transitionPhrase": {
           "verify": "{{count}}项独立项缺少特征连接词。",
           "pass": "所有独立项均包含特征连接词。"
+        },
+        "cnTerminology": {
+          "verify": "在台湾专利稿件中发现大陆专利用语。",
+          "pass": "請求項使用正确之TIPO用语。"
+        },
+        "specDrawingRef": {
+          "amend": "請求項中引用了说明书或图式。",
+          "pass": "請求項中未引用说明书或图式。"
+        },
+        "multiDepOnMultiDep": {
+          "amend": "多项附属项依附于另一多项附属项。",
+          "pass": "无多项附属项依附多项附属项之情形。"
+        },
+        "multiDepAlternative": {
+          "amend": "多项附属项未使用择一形式。",
+          "pass": "所有多项附属项均使用择一形式。"
+        },
+        "titleSubjectMatch": {
+          "verify": "发明名称/新型名称可能与独立项主题不一致。",
+          "pass": "发明名称/新型名称与独立项主题一致。"
+        },
+        "symbolTableConsistency": {
+          "verify": "請求項中之元件符号与符號說明不一致。",
+          "pass": "請求項中之元件符号与符號說明一致。"
+        },
+        "antecedentBasis": {
+          "verify": "{{count}}个用语可能缺少先行词。",
+          "pass": "所有引用之用语均有先行词。"
         }
       }
     }

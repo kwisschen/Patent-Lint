@@ -260,7 +260,7 @@ def _run_tw_pipeline(tw_doc: TwPatentDocument) -> AnalysisResult:
         + tw_spec_analysis.check_symbol_table_consistency(tw_doc)
     )
 
-    # --- Claims checks (11–19) ---
+    # --- Claims checks (11–26) ---
     claims_checks = (
         tw_claims_analysis.check_claims_sequential(tw_doc)
         + tw_claims_analysis.check_dependency_format(tw_doc)
@@ -271,6 +271,13 @@ def _run_tw_pipeline(tw_doc: TwPatentDocument) -> AnalysisResult:
         + tw_claims_analysis.check_ref_numeral_parens(tw_doc)
         + tw_claims_analysis.check_subject_consistency(tw_doc)
         + tw_claims_analysis.check_transition_phrase(tw_doc)
+        + tw_claims_analysis.check_cn_terminology(tw_doc)
+        + tw_claims_analysis.check_spec_drawing_ref(tw_doc)
+        + tw_claims_analysis.check_multi_dep_on_multi_dep(tw_doc)
+        + tw_claims_analysis.check_multi_dep_alternative(tw_doc)
+        + tw_claims_analysis.check_title_subject_match(tw_doc)
+        + tw_claims_analysis.check_claims_symbol_table_consistency(tw_doc)
+        + tw_claims_analysis.check_antecedent_basis(tw_doc)
     )
 
     return AnalysisResult(
