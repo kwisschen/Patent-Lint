@@ -240,8 +240,8 @@
   },
   "about": {
     "productTitle": "PatentLint とは？",
-    "productDesc1": "PatentLint は、審査官より先に問題を発見する無料の特許原稿チェックツールです。米国または中国特許原稿をブラウザにドロップするだけで、即座にコンプライアンスレポートを取得できます。アップロード不要、アカウント不要、クラウド不要。",
-    "productDesc2": "MPEP（米国）および CNIPA 規則（中国）の作成ルールに基づいてチェックを行い、先行詞の根拠の欠落、不正確な請求項構造、限定的な表現などの一般的な問題を検出します。",
+    "productDesc1": "PatentLint は、審査官より先に問題を発見する無料の特許原稿チェックツールです。米国、中国、または台湾の特許原稿をブラウザにドロップするだけで、即座にコンプライアンスレポートを取得できます。アップロード不要、アカウント不要、クラウド不要。",
+    "productDesc2": "MPEP（米国）、CNIPA 規則（中国）、および TIPO 規則（台灣）の作成ルールに基づいてチェックを行い、先行詞の根拠の欠落、不正確な請求項構造、限定的な表現などの一般的な問題を検出します。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center は出願フォーマットを検証します。PatentLint は原稿そのものをチェックします。",
     "uspto": {
@@ -324,6 +324,50 @@
       "titleInAbstract": "タイトルが要約に含まれている",
       "commercialLanguage": "商業的表現",
       "figureCount": "図面数"
+    },
+    "twTitle": "PatentLint vs. TIPO 偵錯系統",
+    "twSubtitle": "TIPO規則（專利法施行細則、專利審查基準）に基づく33件の作成チェック。",
+    "twCompare": {
+      "colTipo": "TIPO 偵錯系統",
+      "feature": {
+        "patentTypes": "特許種別",
+        "inputFormat": "入力形式",
+        "checks": "チェック項目",
+        "privacy": "プライバシー",
+        "languages": "言語",
+        "cost": "費用",
+        "specChecks": "明細書チェック",
+        "abstractChecks": "要約チェック",
+        "symbolTableCrossRef": "符号の説明クロスリファレンス",
+        "antecedentBasis": "先行詞",
+        "claimTree": "ClaimTree 可視化"
+      },
+      "patentlint": {
+        "patentTypes": "発明 + 実用新案",
+        "inputFormat": "任意の .docx",
+        "checks": "33",
+        "privacy": "オフライン、ゼロトラスト",
+        "languages": "5 (EN, ZH-TW, ZH-CN, JA, KO)",
+        "cost": "無料",
+        "specChecks": "あり",
+        "abstractChecks": "あり",
+        "symbolTableCrossRef": "あり",
+        "antecedentBasis": "あり (正規表現)",
+        "claimTree": "あり"
+      },
+      "tipo": {
+        "patentTypes": "実用新案中心",
+        "inputFormat": "TIPO テンプレートのみ",
+        "checks": "20",
+        "privacy": "サーバーサイド",
+        "languages": "中国語のみ",
+        "cost": "無料",
+        "specChecks": "なし",
+        "abstractChecks": "なし",
+        "symbolTableCrossRef": "あり (主要機能)",
+        "antecedentBasis": "あり (先行詞)",
+        "claimTree": "なし"
+      }
     },
     "stats": {
       "tests": "自動テスト",
