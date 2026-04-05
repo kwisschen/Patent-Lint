@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import re
 
-from patentlint.models import CheckItem, SymbolEntry, TwPatentDocument
+from patentlint.models import CheckItem, TwPatentDocument
 
 # Recognized TW dependency format patterns
 _TW_DEP_FORMAT = re.compile(
