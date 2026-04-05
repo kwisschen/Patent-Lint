@@ -419,6 +419,18 @@
       "abstractCharCount": "根据专利法实施细则 §23，摘要不得超过300个汉字。请缩短摘要。",
       "abstractTitleMatch": "根据审查指南，摘要应与发明名称一致。请确认摘要是否体现了发明名称。",
       "commercialLanguage": "根据专利法实施细则 §23，摘要不得包含商业性宣传用语。请删除\"最优\"\"最佳\"\"世界领先\"\"国际领先\"\"国内首创\"\"填补空白\"等用语。"
+    },
+    "tw": {
+      "requiredSections": "TIPO规定必须包含：技術領域、先前技術、發明內容/新型內容、實施方式。有图式时须包含圖式簡單說明及符號說明。缺少：{{sections}}。",
+      "sectionOrdering": "专利法施行细则 §17规定顺序：技術領域→先前技術→發明內容/新型內容→圖式簡單說明→實施方式→符號說明。请重新排列。",
+      "paragraphNumbering": "使用段落编号时，须采【NNNN】格式，四位数连续编号。依专利法施行细则 §17，段落编号为选用。发现：{{detail}}。",
+      "paragraphEnding": "说明书段落应以中文标点（。！？）结尾。请检查标记之段落。",
+      "figureRefConsistency": "圖式簡單說明与實施方式之间的图式引用不同。{{detail}}。请确认完整性。",
+      "patentTypeTerminology": "发明专利应使用「本發明」而非「本新型」。新型专利应使用「本新型」而非「本發明」。发现：{{term}}。",
+      "title": "发明名称/新型名称应简洁，不得包含商标、型号或无关文字。发现：{{detail}}。",
+      "claimReference": "依专利法施行细则 §17，说明书不得引用特定請求項（如「如請求項N所述」）。发现：{{detail}}。",
+      "symbolTablePresence": "依专利法施行细则 §17，有圖式簡單說明时，须包含符號說明章节，列出元件符号及名称。",
+      "symbolTableConsistency": "符號說明内容与實施方式不一致。{{detail}}。请确认完整性。"
     }
   },
   "common": {
@@ -648,6 +660,50 @@
       "drawings": {
         "figureCount": {
           "pass": "共 {{count}} 张附图。"
+        }
+      }
+    },
+    "tw": {
+      "spec": {
+        "requiredSections": {
+          "amend": "依专利法施行细则 §17，缺少必要章节。",
+          "pass": "所有必要章节均已包含。"
+        },
+        "sectionOrdering": {
+          "amend": "依专利法施行细则 §17，章节顺序不正确。",
+          "pass": "章节顺序正确。"
+        },
+        "paragraphNumbering": {
+          "amend": "段落编号格式不正确。",
+          "pass": "段落编号正确或未使用编号。"
+        },
+        "paragraphEnding": {
+          "amend": "{{count}}个段落缺少结尾标点。",
+          "pass": "所有段落均以正确标点结尾。"
+        },
+        "figureRefConsistency": {
+          "verify": "圖式簡單說明与實施方式之间的图式引用不一致。",
+          "pass": "各章节之图式引用一致。"
+        },
+        "patentTypeTerminology": {
+          "verify": "检测到专利类型用语不一致。",
+          "pass": "专利类型用语一致。"
+        },
+        "title": {
+          "amend": "发明名称/新型名称包含不当内容。",
+          "pass": "发明名称/新型名称符合要求。"
+        },
+        "claimReference": {
+          "amend": "说明书中引用了請求項。",
+          "pass": "说明书中未引用請求項。"
+        },
+        "symbolTablePresence": {
+          "amend": "缺少符號說明章节。",
+          "pass": "符號說明章节已包含。"
+        },
+        "symbolTableConsistency": {
+          "verify": "符號說明内容与實施方式不一致。",
+          "pass": "符號說明内容与说明书一致。"
         }
       }
     }

@@ -308,7 +308,7 @@ class AnalysisResult(BaseModel):
         )
 
     def _to_tw_report_data(self) -> ReportData:
-        """Build ReportData for TW jurisdiction (stub — checks added in Phase 7C)."""
+        """Build ReportData for TW jurisdiction from pre-computed check lists."""
         return ReportData(
             jurisdiction=self.jurisdiction,
             paragraph_count=self.paragraph_count,
@@ -317,10 +317,10 @@ class AnalysisResult(BaseModel):
             dependent_count=self.dependent_claims_count,
             figure_count=self.figures_count,
             abstract_word_count=self.abstract_word_count,
-            specification_checks=[],
-            claims_checks=[],
-            abstract_checks=[],
-            drawings_checks=[],
+            specification_checks=list(self.tw_specification_checks),
+            claims_checks=list(self.tw_claims_checks),
+            abstract_checks=list(self.tw_abstract_checks),
+            drawings_checks=list(self.tw_drawings_checks),
             claim_trees=[],
             likely_patent=self.likely_patent,
         )
