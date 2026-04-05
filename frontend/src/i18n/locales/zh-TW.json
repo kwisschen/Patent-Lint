@@ -240,8 +240,8 @@
   },
   "about": {
     "productTitle": "PatentLint是什麼？",
-    "productDesc1": "PatentLint 是免費的專利稿件檢查工具，在審查委員替你找出問題之前先一步發現它們。將美國或中國專利稿件拖放至瀏覽器，即可取得即時合規報告。無需上傳、無需帳號、不使用雲端。",
-    "productDesc2": "它依據 MPEP（美國）及 CNIPA 規則（中国）進行撰稿規則檢查，偵測常見問題，如缺乏先行詞基礎、不正確的請求項結構和限制性用語。",
+    "productDesc1": "PatentLint 是免費的專利稿件檢查工具，在審查委員替你找出問題之前先一步發現它們。將美國、中國或台灣專利稿件拖放至瀏覽器，即可取得即時合規報告。無需上傳、無需帳號、不使用雲端。",
+    "productDesc2": "它依據 MPEP（美國）、CNIPA 規則（中国）及 TIPO 規則（台灣）進行撰稿規則檢查，偵測常見問題，如缺乏先行詞基礎、不正確的請求項結構和限制性用語。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 驗證送件格式。PatentLint 檢查稿件本身。",
     "uspto": {
@@ -324,6 +324,50 @@
       "titleInAbstract": "標題出現在摘要中",
       "commercialLanguage": "商業性用語",
       "figureCount": "附圖數量"
+    },
+    "twTitle": "PatentLint vs. TIPO 偵錯系統",
+    "twSubtitle": "33項撰稿檢查，依據TIPO規則（專利法施行細則、專利審查基準）。",
+    "twCompare": {
+      "colTipo": "TIPO 偵錯系統",
+      "feature": {
+        "patentTypes": "專利類型",
+        "inputFormat": "輸入格式",
+        "checks": "檢查項目",
+        "privacy": "隱私",
+        "languages": "語言",
+        "cost": "費用",
+        "specChecks": "說明書檢查",
+        "abstractChecks": "摘要檢查",
+        "symbolTableCrossRef": "符號說明交叉比對",
+        "antecedentBasis": "先行詞",
+        "claimTree": "ClaimTree 視覺化"
+      },
+      "patentlint": {
+        "patentTypes": "發明 + 新型",
+        "inputFormat": "任意 .docx",
+        "checks": "33",
+        "privacy": "離線、零信任",
+        "languages": "5 (EN, ZH-TW, ZH-CN, JA, KO)",
+        "cost": "免費",
+        "specChecks": "有",
+        "abstractChecks": "有",
+        "symbolTableCrossRef": "有",
+        "antecedentBasis": "有 (正規表達式)",
+        "claimTree": "有"
+      },
+      "tipo": {
+        "patentTypes": "以新型為主",
+        "inputFormat": "僅限 TIPO 範本",
+        "checks": "20",
+        "privacy": "伺服器端",
+        "languages": "僅中文",
+        "cost": "免費",
+        "specChecks": "無",
+        "abstractChecks": "無",
+        "symbolTableCrossRef": "有 (核心功能)",
+        "antecedentBasis": "有 (先行詞)",
+        "claimTree": "無"
+      }
     },
     "stats": {
       "tests": "自動化測試",
