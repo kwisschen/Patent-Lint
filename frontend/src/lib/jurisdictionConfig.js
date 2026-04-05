@@ -30,6 +30,7 @@ const JURISDICTION_CONFIG = {
     drawingsSectionKey: 'section.drawings',
     drawingsShortKey: 'section.drawingsShort',
     abstractSectionKey: 'section.abstract',
+    section112TitleKey: 'section112.title',
     pdfHeaderKey: 'pdf.header',
   },
   CN: {
@@ -59,6 +60,7 @@ const JURISDICTION_CONFIG = {
     drawingsSectionKey: 'section.cn.drawings',
     drawingsShortKey: 'section.cn.drawingsShort',
     abstractSectionKey: 'section.cn.abstract',
+    section112TitleKey: 'section112.title',
     pdfHeaderKey: 'pdf.header',
   },
   TW: {
@@ -85,6 +87,7 @@ const JURISDICTION_CONFIG = {
     drawingsSectionKey: 'section.tw.drawings',
     drawingsShortKey: 'section.tw.drawingsShort',
     abstractSectionKey: 'section.tw.abstract',
+    section112TitleKey: 'section112.titleTw',
     pdfHeaderKey: 'pdf.headerTw',
   },
 }
