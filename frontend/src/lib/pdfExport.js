@@ -390,6 +390,8 @@ export async function downloadReport(reportData, t, language, originalFilename) 
     }
   }
 
+  const fontName = needsCjk && cjkBase64 ? 'CJK' : undefined
+
   const docDefinition = {
     pageSize: 'LETTER',
     pageMargins: [40, 60, 40, 60],
@@ -400,6 +402,7 @@ export async function downloadReport(reportData, t, language, originalFilename) 
       fontSize: 8,
       color: '#999999',
       margin: [0, 20, 40, 0],
+      ...(fontName ? { font: fontName } : {}),
     },
 
     footer: (currentPage, pageCount) => ({
@@ -408,6 +411,7 @@ export async function downloadReport(reportData, t, language, originalFilename) 
       fontSize: 8,
       color: '#999999',
       margin: [0, 20, 0, 0],
+      ...(fontName ? { font: fontName } : {}),
     }),
 
     content: [
@@ -499,24 +503,26 @@ export async function downloadReport(reportData, t, language, originalFilename) 
     ],
 
     styles: {
-      title: { fontSize: 18, bold: true, margin: [0, 0, 0, 8] },
-      subtitle: { fontSize: 10, color: '#666666', margin: [0, 0, 0, 4] },
+      title: { fontSize: 18, bold: true, margin: [0, 0, 0, 8], ...(fontName ? { font: fontName } : {}) },
+      subtitle: { fontSize: 10, color: '#666666', margin: [0, 0, 0, 4], ...(fontName ? { font: fontName } : {}) },
       securityNote: {
         fontSize: 8,
         color: '#16a34a',
         italics: true,
         margin: [0, 0, 0, 20],
+        ...(fontName ? { font: fontName } : {}),
       },
       sectionHeader: {
         fontSize: 14,
         bold: true,
         margin: [0, 20, 0, 8],
         color: '#1e293b',
+        ...(fontName ? { font: fontName } : {}),
       },
     },
     defaultStyle: {
       fontSize: 10,
-      ...(needsCjk && cjkBase64 ? { font: 'CJK' } : {}),
+      ...(fontName ? { font: fontName } : {}),
     },
   }
 
