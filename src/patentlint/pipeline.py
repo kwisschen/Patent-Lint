@@ -16,6 +16,7 @@ from patentlint.analysis import cn_claims as cn_claims_analysis
 from patentlint.analysis import cn_specification as cn_spec_analysis
 from patentlint.analysis import drawings as drawings_analysis
 from patentlint.analysis import specification as spec_analysis
+from patentlint.analysis import tw_claims as tw_claims_analysis
 from patentlint.analysis import tw_specification as tw_spec_analysis
 from patentlint.models import AnalysisResult, CnPatentDocument, Jurisdiction, TwPatentDocument
 from patentlint.parser import claims as claims_parser
@@ -259,6 +260,19 @@ def _run_tw_pipeline(tw_doc: TwPatentDocument) -> AnalysisResult:
         + tw_spec_analysis.check_symbol_table_consistency(tw_doc)
     )
 
+    # --- Claims checks (11–19) ---
+    claims_checks = (
+        tw_claims_analysis.check_claims_sequential(tw_doc)
+        + tw_claims_analysis.check_dependency_format(tw_doc)
+        + tw_claims_analysis.check_self_dependent(tw_doc)
+        + tw_claims_analysis.check_circular_dependency(tw_doc)
+        + tw_claims_analysis.check_forward_dependency(tw_doc)
+        + tw_claims_analysis.check_single_sentence(tw_doc)
+        + tw_claims_analysis.check_ref_numeral_parens(tw_doc)
+        + tw_claims_analysis.check_subject_consistency(tw_doc)
+        + tw_claims_analysis.check_transition_phrase(tw_doc)
+    )
+
     return AnalysisResult(
         jurisdiction=Jurisdiction.TW,
         paragraph_count=para_count,
@@ -269,6 +283,7 @@ def _run_tw_pipeline(tw_doc: TwPatentDocument) -> AnalysisResult:
         abstract_word_count=tw_doc.abstract_char_count,
         likely_patent=True,
         tw_specification_checks=spec_checks,
+        tw_claims_checks=claims_checks,
     )
 
 

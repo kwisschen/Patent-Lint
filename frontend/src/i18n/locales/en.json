@@ -430,7 +430,16 @@
       "title": "發明名稱/新型名稱 should be concise with no trademarks, model numbers, or irrelevant text. Found: {{detail}}.",
       "claimReference": "Per 專利法施行細則 §17, the specification must not reference specific claims (e.g., 如請求項N所述). Found: {{detail}}.",
       "symbolTablePresence": "Per 專利法施行細則 §17, when 圖式簡單說明 is present, 符號說明 must also be included. Add a 符號說明 section listing reference numerals and component names.",
-      "symbolTableConsistency": "符號說明 entries inconsistent with 實施方式. {{detail}}. Verify completeness."
+      "symbolTableConsistency": "符號說明 entries inconsistent with 實施方式. {{detail}}. Verify completeness.",
+      "claimsSequential": "請求項 numbers must be sequential starting from 1. {{detail}}.",
+      "dependencyFormat": "Per 專利法施行細則 §18, dependencies must use a recognized format (如請求項N所述之, 如請求項N之, etc.). Review flagged claims.",
+      "selfDependent": "Per 專利法施行細則 §18, a claim cannot depend on itself. Self-dependent: 請求項 {{claims}}.",
+      "circularDependency": "Per 專利法施行細則 §18, claims must not form circular dependency chains. Circular chain: 請求項 {{claims}}.",
+      "forwardDependency": "Per 專利法施行細則 §18, dependent claims must only reference preceding claims. Forward references: 請求項 {{claims}}.",
+      "singleSentence": "Per 專利法施行細則 §18, each claim must be one sentence with exactly one 。 at the end. Review flagged claims.",
+      "refNumeralParens": "Per 專利法施行細則 §19, reference numerals in claims should be enclosed in parentheses, e.g., (101). Review flagged claims.",
+      "subjectConsistency": "Dependent claim subject name should match the parent claim's subject name. Review flagged claims.",
+      "transitionPhrase": "Per 專利法施行細則 §20, independent claims should contain a transitional phrase such as 其特徵在於 or 其改良在於. Review flagged claims."
     }
   },
   "common": {
@@ -704,6 +713,44 @@
         "symbolTableConsistency": {
           "verify": "符號說明 entries inconsistent with 實施方式.",
           "pass": "符號說明 entries consistent with specification."
+        }
+      },
+      "claims": {
+        "sequential": {
+          "amend": "Claim numbers not sequential.",
+          "pass": "Claim numbers sequential."
+        },
+        "dependencyFormat": {
+          "amend": "{{count}} claim(s) with unrecognized dependency format.",
+          "pass": "All dependency references use recognized format."
+        },
+        "selfDependent": {
+          "amend": "Self-dependent claim(s) found.",
+          "pass": "No self-dependent claims."
+        },
+        "circularDependency": {
+          "amend": "Circular dependency chain found.",
+          "pass": "No circular dependencies."
+        },
+        "forwardDependency": {
+          "amend": "Forward dependency found.",
+          "pass": "No forward dependencies."
+        },
+        "singleSentence": {
+          "amend": "{{count}} claim(s) not written as a single sentence.",
+          "pass": "All claims are single sentences."
+        },
+        "refNumeralParens": {
+          "verify": "{{count}} claim(s) with reference numerals not in parentheses.",
+          "pass": "All reference numerals in claims are in parentheses."
+        },
+        "subjectConsistency": {
+          "verify": "{{count}} dependent claim(s) with inconsistent subject name.",
+          "pass": "All dependent claim subjects match parent."
+        },
+        "transitionPhrase": {
+          "verify": "{{count}} independent claim(s) missing transitional phrase.",
+          "pass": "All independent claims contain a transitional phrase."
         }
       }
     }
