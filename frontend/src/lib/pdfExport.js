@@ -358,10 +358,10 @@ export async function downloadReport(reportData, t, language, originalFilename) 
   const filename = originalFilename || reportData.filename || 'report'
 
   const sections = filterInternalChecks([
-    { name: t('section.specification'), items: reportData.specification_checks || [] },
-    { name: t('section.drawings'), items: reportData.drawings_checks || [] },
-    { name: t('section.claims'), items: reportData.claims_checks || [] },
-    { name: t('section.abstract'), items: reportData.abstract_checks || [] },
+    { name: t(jConfig.specSectionKey), items: reportData.specification_checks || [] },
+    { name: t(jConfig.drawingsSectionKey), items: reportData.drawings_checks || [] },
+    { name: t(jConfig.claimsSectionKey), items: reportData.claims_checks || [] },
+    { name: t(jConfig.abstractSectionKey), items: reportData.abstract_checks || [] },
   ])
 
   const now = new Date()
@@ -395,7 +395,7 @@ export async function downloadReport(reportData, t, language, originalFilename) 
     pageMargins: [40, 60, 40, 60],
 
     header: {
-      text: t('pdf.header'),
+      text: t(jConfig.pdfHeaderKey),
       alignment: 'right',
       fontSize: 8,
       color: '#999999',

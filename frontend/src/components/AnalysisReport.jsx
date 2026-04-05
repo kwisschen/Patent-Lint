@@ -211,17 +211,17 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
 
       <div className="space-y-3" style={cascadeDelay(4)}>
         <SectionPanel
-          title={t('section.specification')}
+          title={t(jConfig.specSectionKey)}
           checks={consolidatedData.specification_checks}
           defaultOpen
         />
         <SectionPanel
-          title={t('section.drawings')}
+          title={t(jConfig.drawingsSectionKey)}
           checks={consolidatedData.drawings_checks}
           defaultOpen
         />
         <SectionPanel
-          title={t('section.claims')}
+          title={t(jConfig.claimsSectionKey)}
           checks={consolidatedData.claims_checks}
           defaultOpen
         >
@@ -241,7 +241,7 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
           )}
         </SectionPanel>
         <SectionPanel
-          title={t('section.abstract')}
+          title={t(jConfig.abstractSectionKey)}
           checks={consolidatedData.abstract_checks}
           defaultOpen
         />

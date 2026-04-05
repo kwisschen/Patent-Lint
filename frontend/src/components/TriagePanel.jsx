@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AlertCircle, Search, CheckCircle, ChevronDown } from 'lucide-react'
 import { getCitation } from './CheckItem'
+import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
 
 const GROUP_CONFIG = [
   { status: 'amend', titleKey: 'triage.amend', emptyKey: 'triage.amendEmpty', Icon: AlertCircle },
@@ -79,11 +80,12 @@ function TriageGroup({ status, title, emptyMessage, Icon, items, defaultOpen, t,
 export default function TriagePanel({ data }) {
   const { t, i18n } = useTranslation()
 
+  const jConfig = getJurisdictionConfig(data.jurisdiction)
   const allChecks = [
-    ...(data.specification_checks || []).map((c) => ({ ...c, section: t('section.specification') })),
-    ...(data.drawings_checks || []).map((c) => ({ ...c, section: t('section.drawingsShort') })),
-    ...(data.claims_checks || []).map((c) => ({ ...c, section: t('section.claims') })),
-    ...(data.abstract_checks || []).map((c) => ({ ...c, section: t('section.abstract') })),
+    ...(data.specification_checks || []).map((c) => ({ ...c, section: t(jConfig.specSectionKey) })),
+    ...(data.drawings_checks || []).map((c) => ({ ...c, section: t(jConfig.drawingsShortKey) })),
+    ...(data.claims_checks || []).map((c) => ({ ...c, section: t(jConfig.claimsSectionKey) })),
+    ...(data.abstract_checks || []).map((c) => ({ ...c, section: t(jConfig.abstractSectionKey) })),
   ]
 
   const byStatus = {

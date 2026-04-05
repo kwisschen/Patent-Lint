@@ -22,7 +22,7 @@
     "noticeCn": "支持中国专利稿件（.docx、.xml、.zip）。",
     "rejectCn": "仅接受 .docx、.xml 及 .zip 文件",
     "rejectMultipleTypeCn": "请拖放单个 .docx、.xml 或 .zip 文件。",
-    "taglineTw": "依据TIPO撰稿规则检查您的专利稿件",
+    "taglineTw": "立即对照 33 条 TIPO 撰稿规则，检查您的专利稿件。",
     "titleTw": "拖放您的专利 .docx 开始本地分析",
     "noticeTw": "支持台湾专利稿件（.docx）。",
     "rejectTw": "仅接受 .docx 文件",
@@ -56,6 +56,9 @@
       "disclosure": "发明内容",
       "drawingsDescription": "图式简单说明",
       "embodiment": "实施方式",
+      "specification": "说明书",
+      "drawings": "图式",
+      "drawingsShort": "图式",
       "symbolTable": "符号说明",
       "claims": "申请专利范围",
       "abstract": "摘要"
@@ -849,6 +852,7 @@
   },
   "pdf": {
     "header": "PatentLint 分析报告",
+    "headerTw": "PatentLint — 台湾专利稿件检查报告",
     "securityNote": "已在您的设备上分析，未上传至云端。",
 "amend": "需要修改（AMEND）",
     "verify": "专家确认（VERIFY）",

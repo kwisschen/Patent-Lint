@@ -6,7 +6,7 @@
   "jurisdiction": {
     "us": "🇺🇸 US Patent",
     "cn": "🇨🇳 CN Patent",
-    "tw": "🇹🇼 TW Patent",
+    "tw": "🇹🇼 台灣專利 TW Patent",
     "label": "Jurisdiction"
   },
   "dropzone": {
@@ -22,7 +22,7 @@
     "noticeCn": "Supports Chinese patent specifications (.docx, .xml, .zip).",
     "rejectCn": "Only .docx, .xml, and .zip files are accepted",
     "rejectMultipleTypeCn": "Please drop a single .docx, .xml, or .zip file.",
-    "taglineTw": "Check your specification against TIPO drafting rules",
+    "taglineTw": "Instantly check your specification against 33 TIPO drafting rules.",
     "titleTw": "Drop your patent .docx to begin local analysis",
     "noticeTw": "Supports Taiwan patent specifications (.docx).",
     "rejectTw": "Only .docx files are accepted",
@@ -56,7 +56,10 @@
       "disclosure": "Disclosure",
       "drawingsDescription": "Brief Description of Drawings",
       "embodiment": "Embodiment",
-      "symbolTable": "Symbol Description",
+      "specification": "Description",
+      "drawings": "Drawings",
+      "drawingsShort": "Drawings",
+      "symbolTable": "Symbol Table",
       "claims": "Claims",
       "abstract": "Abstract"
     }
@@ -849,6 +852,7 @@
   },
   "pdf": {
     "header": "PatentLint Analysis Report",
+    "headerTw": "PatentLint — Taiwan Patent Specification Report",
     "securityNote": "Analyzed on your device -- not uploaded to the cloud.",
 "amend": "Action Required (AMEND)",
     "verify": "Expert Review (VERIFY)",
