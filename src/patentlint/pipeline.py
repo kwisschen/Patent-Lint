@@ -23,7 +23,7 @@ from patentlint.analysis import tw_specification as tw_spec_analysis
 from patentlint.models import AnalysisResult, CnPatentDocument, Jurisdiction, TwPatentDocument
 from patentlint.parser import claims as claims_parser
 from patentlint.parser import sections
-from patentlint.parser.docx_loader import load_docx, load_docx_cn
+from patentlint.parser.docx_loader import load_docx, load_docx_cn, load_docx_tw
 from patentlint.parser.sections_cn import extract_cn_sections_from_docx
 from patentlint.parser.sections_tw import extract_tw_sections
 from patentlint.parser.xml_loader import extract_cn_xml_from_zip, parse_cnipa_xml
@@ -323,8 +323,7 @@ def analyze_file(file_path: str, jurisdiction: Jurisdiction = Jurisdiction.US) -
         if not lower.endswith(".docx"):
             msg = f"Unsupported file type for TW jurisdiction: {file_path}"
             raise ValueError(msg)
-        loaded = load_docx(file_path)
-        paragraphs = [line for line in loaded.full_text.split("\n") if line.strip()]
+        paragraphs = load_docx_tw(file_path)
         tw_doc = extract_tw_sections(paragraphs)
         return _run_tw_pipeline(tw_doc)
 
@@ -361,8 +360,7 @@ def analyze_bytes(content: bytes, filename: str, jurisdiction: Jurisdiction = Ju
         with tempfile.NamedTemporaryFile(suffix=".docx", delete=True) as tmp:
             tmp.write(content)
             tmp.flush()
-            loaded = load_docx(tmp.name)
-        paragraphs = [line for line in loaded.full_text.split("\n") if line.strip()]
+            paragraphs = load_docx_tw(tmp.name)
         tw_doc = extract_tw_sections(paragraphs)
         return _run_tw_pipeline(tw_doc)
 
