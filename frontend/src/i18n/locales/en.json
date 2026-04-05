@@ -446,7 +446,13 @@
       "multiDepAlternative": "Per 專利法施行細則 §18, multi-dependent claims must use alternative form (或/任一項). Flagged: 請求項 {{claims}}.",
       "titleSubjectMatch": "發明名稱/新型名稱 should be consistent with the subject names of independent claims. Title: {{detail}}.",
       "symbolTableConsistency": "Reference numerals used in claims should match 符號說明 entries. {{detail}}. Verify completeness.",
-      "antecedentBasis": "該/所述/前述 + noun should have a matching 一 + noun introduction in the same claim or a parent claim. Flagged terms may need review. Regex-based detection is approximate."
+      "antecedentBasis": "該/所述/前述 + noun should have a matching 一 + noun introduction in the same claim or a parent claim. Flagged terms may need review. Regex-based detection is approximate.",
+      "abstractCharCount": "Per 專利法施行細則 §21, the abstract should be within 250 characters. TIPO may not reject on length alone, but review for conciseness.",
+      "abstractTitleMatch": "Per 專利審查基準, the abstract should reference the 發明名稱/新型名稱. Verify the abstract reflects the title. Title: {{detail}}.",
+      "commercialLanguage": "Per 專利法施行細則 §21, the abstract must not contain commercial advertising language (商業性宣傳用語). Found: {{terms}}.",
+      "representativeDrawing": "Per 專利法施行細則 §21, when drawings exist, a 代表圖 should be designated. Review whether a representative drawing designation is needed.",
+      "symbolVsRepDrawing": "Symbols listed in 代表圖之符號簡單說明 should match entries in 符號說明. {{detail}}. Verify completeness.",
+      "bracketFormat": "Per 專利法施行細則 §17, section headers should use full-width brackets 【】. Found: {{detail}}."
     }
   },
   "common": {
@@ -786,6 +792,39 @@
         "antecedentBasis": {
           "verify": "{{count}} term(s) may lack antecedent basis.",
           "pass": "All referenced terms have antecedent basis."
+        }
+      },
+      "abstract": {
+        "charCount": {
+          "verify": "Abstract exceeds 250 characters ({{count}} characters).",
+          "pass": "Abstract within 250 characters ({{count}} characters)."
+        },
+        "titleMatch": {
+          "verify": "發明名稱/新型名稱 may not appear in abstract.",
+          "pass": "發明名稱/新型名稱 appears in abstract."
+        },
+        "commercialLanguage": {
+          "amend": "Abstract contains commercial language.",
+          "pass": "No commercial language in abstract."
+        },
+        "representativeDrawing": {
+          "verify": "No 代表圖 designation found.",
+          "pass": "代表圖 designation present."
+        }
+      },
+      "crossRef": {
+        "symbolVsRepDrawing": {
+          "verify": "代表圖之符號簡單說明 inconsistent with 符號說明.",
+          "pass": "代表圖之符號簡單說明 consistent with 符號說明."
+        },
+        "bracketFormat": {
+          "verify": "Section headers may not use proper 【】bracket format.",
+          "pass": "All section headers use proper 【】bracket format."
+        }
+      },
+      "drawings": {
+        "figureCount": {
+          "pass": "{{count}} figure(s) found."
         }
       }
     }

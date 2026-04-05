@@ -446,7 +446,13 @@
       "multiDepAlternative": "依專利法施行細則 §18，多項附屬項須使用擇一形式（或/任一項）。標記：請求項 {{claims}}。",
       "titleSubjectMatch": "發明名稱/新型名稱應與獨立項之主題名稱一致。標題：{{detail}}。",
       "symbolTableConsistency": "請求項中之元件符號應與符號說明一致。{{detail}}。請確認完整性。",
-      "antecedentBasis": "「該」「所述」「前述」加名詞，須於同一請求項或母項中以「一」加名詞導入。以正規表達式偵測，結果為近似值，請自行確認。"
+      "antecedentBasis": "「該」「所述」「前述」加名詞，須於同一請求項或母項中以「一」加名詞導入。以正規表達式偵測，結果為近似值，請自行確認。",
+      "abstractCharCount": "依專利法施行細則 §21，摘要應在250字以內。TIPO不會僅因字數超限而核駁，但請檢查是否可精簡。",
+      "abstractTitleMatch": "依專利審查基準，摘要應提及發明名稱/新型名稱。請確認摘要是否反映標題。標題：{{detail}}。",
+      "commercialLanguage": "依專利法施行細則 §21，摘要不得包含商業性宣傳用語。發現：{{terms}}。",
+      "representativeDrawing": "依專利法施行細則 §21，有圖式時應指定代表圖。請確認是否需要指定代表圖。",
+      "symbolVsRepDrawing": "代表圖之符號簡單說明中列出之符號應與符號說明一致。{{detail}}。請確認完整性。",
+      "bracketFormat": "依專利法施行細則 §17，章節標題應使用全形方括號【】。發現：{{detail}}。"
     }
   },
   "common": {
@@ -786,6 +792,39 @@
         "antecedentBasis": {
           "verify": "{{count}}個用語可能缺少先行詞。",
           "pass": "所有引用之用語皆有先行詞。"
+        }
+      },
+      "abstract": {
+        "charCount": {
+          "verify": "摘要超過250字（{{count}}字）。",
+          "pass": "摘要在250字以內（{{count}}字）。"
+        },
+        "titleMatch": {
+          "verify": "摘要中可能未包含發明名稱/新型名稱。",
+          "pass": "摘要中包含發明名稱/新型名稱。"
+        },
+        "commercialLanguage": {
+          "amend": "摘要包含商業性宣傳用語。",
+          "pass": "摘要未包含商業性宣傳用語。"
+        },
+        "representativeDrawing": {
+          "verify": "未發現代表圖指定。",
+          "pass": "已指定代表圖。"
+        }
+      },
+      "crossRef": {
+        "symbolVsRepDrawing": {
+          "verify": "代表圖之符號簡單說明與符號說明不一致。",
+          "pass": "代表圖之符號簡單說明與符號說明一致。"
+        },
+        "bracketFormat": {
+          "verify": "章節標題可能未使用正確之【】格式。",
+          "pass": "所有章節標題皆使用正確之【】格式。"
+        }
+      },
+      "drawings": {
+        "figureCount": {
+          "pass": "共 {{count}} 張圖式。"
         }
       }
     }
