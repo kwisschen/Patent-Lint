@@ -38,7 +38,13 @@ _TRADEMARK_RE = re.compile(r"[®™©]")
 _MODEL_NUMBER_RE = re.compile(r"[A-Z]{2,}-\d{2,}", re.IGNORECASE)
 _CLAIM_REF_RE = re.compile(r"如請求項\s*\d+")
 _FIGURE_REF_RE = re.compile(r"(?:第\s*(\d+)\s*圖|圖\s*(\d+))")
-_REF_NUMERAL_RE = re.compile(r"(?<![【\d])(\d{2,4})(?![】\d])")
+_REF_NUMERAL_RE = re.compile(
+    r"(?<![【\d])"      # not preceded by 【 or digit
+    r"(?<!第)"          # not ordinal 第N
+    r"(\d{2,4})"        # 2-4 digit number
+    r"(?![】\d])"       # not followed by 】 or digit
+    r"(?![°℃%a-zA-Z])" # not followed by unit/measurement
+)
 
 
 def _all_spec_sections(doc: TwPatentDocument) -> list[str]:
@@ -450,11 +456,23 @@ def check_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckItem]:
     # Check defined but unreferenced
     unreferenced = []
     for entry in doc.symbol_table:
-        if entry.numeral not in embodiment_text:
+        # For range numerals (e.g., S21~S25, 3001~3010), check if any
+        # component appears in the text
+        parts = re.split(r"[~\-]", entry.numeral)
+        found = any(p in embodiment_text for p in parts if p.strip())
+        if not found:
             unreferenced.append(entry.numeral)
 
     # Check reference numerals in embodiment not defined in symbol_table
-    defined_numerals = {entry.numeral for entry in doc.symbol_table}
+    # Build set of all individual numerals covered by symbol_table entries
+    defined_numerals: set[str] = set()
+    for entry in doc.symbol_table:
+        defined_numerals.add(entry.numeral)
+        # Also add individual parts of range numerals
+        for part in re.split(r"[~\-]", entry.numeral):
+            part = part.strip()
+            if part:
+                defined_numerals.add(part)
     embodiment_numerals = set(_REF_NUMERAL_RE.findall(embodiment_text))
     undefined = sorted(embodiment_numerals - defined_numerals)
 

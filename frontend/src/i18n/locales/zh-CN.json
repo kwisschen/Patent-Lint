@@ -430,7 +430,16 @@
       "title": "发明名称/新型名称应简洁，不得包含商标、型号或无关文字。发现：{{detail}}。",
       "claimReference": "依专利法施行细则 §17，说明书不得引用特定請求項（如「如請求項N所述」）。发现：{{detail}}。",
       "symbolTablePresence": "依专利法施行细则 §17，有圖式簡單說明时，须包含符號說明章节，列出元件符号及名称。",
-      "symbolTableConsistency": "符號說明内容与實施方式不一致。{{detail}}。请确认完整性。"
+      "symbolTableConsistency": "符號說明内容与實施方式不一致。{{detail}}。请确认完整性。",
+      "claimsSequential": "請求項编号须从1开始连续编列。{{detail}}。",
+      "dependencyFormat": "依专利法施行细则 §18，依附须使用正确格式（如請求項N所述之、如請求項N之等）。请检查标记之請求項。",
+      "selfDependent": "依专利法施行细则 §18，請求項不得依附于自身。自我依附：請求項 {{claims}}。",
+      "circularDependency": "依专利法施行细则 §18，請求項不得形成循环依附链。循环链：請求項 {{claims}}。",
+      "forwardDependency": "依专利法施行细则 §18，附属项仅得引用在前之請求項。向前引用：請求項 {{claims}}。",
+      "singleSentence": "依专利法施行细则 §18，每一請求項须为单句，仅于末尾有一个句号（。）。请检查标记之請求項。",
+      "refNumeralParens": "依专利法施行细则 §19，請求項中之元件符号应加括号，例如(101)。请检查标记之請求項。",
+      "subjectConsistency": "附属项之主题名称应与所依附之母项主题名称一致。请检查标记之請求項。",
+      "transitionPhrase": "依专利法施行细则 §20，独立项应包含特征连接词，如「其特徵在於」或「其改良在於」。请检查标记之請求項。"
     }
   },
   "common": {
@@ -704,6 +713,44 @@
         "symbolTableConsistency": {
           "verify": "符號說明内容与實施方式不一致。",
           "pass": "符號說明内容与说明书一致。"
+        }
+      },
+      "claims": {
+        "sequential": {
+          "amend": "請求項编号不连续。",
+          "pass": "請求項编号连续。"
+        },
+        "dependencyFormat": {
+          "amend": "{{count}}项請求項之依附格式无法辨识。",
+          "pass": "所有依附引用均使用正确格式。"
+        },
+        "selfDependent": {
+          "amend": "发现自我依附之請求項。",
+          "pass": "无自我依附之請求項。"
+        },
+        "circularDependency": {
+          "amend": "发现循环依附。",
+          "pass": "无循环依附。"
+        },
+        "forwardDependency": {
+          "amend": "发现向前依附。",
+          "pass": "无向前依附。"
+        },
+        "singleSentence": {
+          "amend": "{{count}}项請求項非单句撰写。",
+          "pass": "所有請求項均为单句。"
+        },
+        "refNumeralParens": {
+          "verify": "{{count}}项請求項之元件符号未加括号。",
+          "pass": "所有請求項之元件符号均已加括号。"
+        },
+        "subjectConsistency": {
+          "verify": "{{count}}项附属项之主题名称与母项不一致。",
+          "pass": "所有附属项之主题名称均与母项一致。"
+        },
+        "transitionPhrase": {
+          "verify": "{{count}}项独立项缺少特征连接词。",
+          "pass": "所有独立项均包含特征连接词。"
         }
       }
     }
