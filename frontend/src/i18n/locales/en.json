@@ -4,9 +4,9 @@
     "subtitle": "Patent Specification Checker"
   },
   "jurisdiction": {
-    "us": "🇺🇸 US Patent",
-    "cn": "🇨🇳 CN Patent",
-    "tw": "🇹🇼 TW Patent",
+    "us": "US Patent",
+    "cn": "CN Patent",
+    "tw": "TW Patent",
     "label": "Jurisdiction"
   },
   "dropzone": {

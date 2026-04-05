@@ -7,6 +7,19 @@ import { useInView } from '../hooks/useInView'
 import PageCTA from '../components/PageCTA'
 import { useCountUp } from '../hooks/useCountUp'
 
+const JURISDICTION_COLORS = { US: '#2563EB', CN: '#DC2626', TW: '#0D9488' }
+
+function JurisdictionBadge({ code }) {
+  return (
+    <span
+      className="inline-flex items-center justify-center w-6 h-6 rounded-full text-[9px] font-bold text-white shrink-0"
+      style={{ backgroundColor: JURISDICTION_COLORS[code] }}
+    >
+      {code}
+    </span>
+  )
+}
+
 /* ────────────────────────────────────────────
    Section 1: Product Story
    ──────────────────────────────────────────── */
@@ -260,12 +273,13 @@ function ComparisonTable({ t }) {
               role="radio"
               aria-checked={activeTab === j}
               onClick={() => setActiveTab(j)}
-              className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+              className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                 activeTab === j
                   ? 'bg-background text-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
+              <JurisdictionBadge code={j} />
               {t(`jurisdiction.${j.toLowerCase()}`)}
             </button>
           ))}
