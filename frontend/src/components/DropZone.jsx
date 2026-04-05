@@ -62,7 +62,7 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
         <Upload className={`h-10 w-10 transition-colors duration-200 ${isDragActive ? 'text-[var(--pass-text)]' : 'text-muted-foreground'}`} />
         <div className="text-center">
           <p className="text-base font-medium">{t(jConfig.titleKey)}</p>
-          <p className="text-sm text-muted-foreground mt-1">{t('dropzone.subtitle')}</p>
+          <p className="text-sm text-muted-foreground mt-1">{t(jConfig.taglineKey)}</p>
           <p className="text-xs text-muted-foreground mt-2">{t(jConfig.noticeKey)}</p>
         </div>
       </div>

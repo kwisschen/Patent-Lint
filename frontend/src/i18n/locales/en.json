@@ -50,6 +50,13 @@
     "drawings": "Brief Description of Drawings",
     "drawingsShort": "Drawings",
     "abstract": "Abstract",
+    "cn": {
+      "specification": "Description",
+      "claims": "Claims",
+      "drawings": "Drawings",
+      "drawingsShort": "Drawings",
+      "abstract": "Abstract"
+    },
     "tw": {
       "technicalField": "Technical Field",
       "priorArt": "Prior Art",

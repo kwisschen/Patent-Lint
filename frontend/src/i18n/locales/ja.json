@@ -50,6 +50,13 @@
     "drawings": "図面の簡単な説明",
     "drawingsShort": "図面",
     "abstract": "要約書",
+    "cn": {
+      "specification": "説明書",
+      "claims": "特許請求の範囲",
+      "drawings": "図面",
+      "drawingsShort": "図面",
+      "abstract": "要約"
+    },
     "tw": {
       "technicalField": "技術分野",
       "priorArt": "先行技術",
