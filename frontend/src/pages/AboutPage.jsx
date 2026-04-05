@@ -335,7 +335,7 @@ function StatCard({ value, suffix, label, delay }) {
 function StatsGrid({ t }) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      <StatCard value={791} suffix="+" label={t('about.stats.tests')} delay={0} />
+      <StatCard value={800} suffix="+" label={t('about.stats.tests')} delay={0} />
       <StatCard value={90} suffix="+" label={t('about.stats.checks')} delay={100} />
       <StatCard value={5} suffix="" label={t('about.stats.languages')} delay={200} />
       <StatCard value={0} suffix="" label={t('about.stats.cloudRequests')} delay={300} />
