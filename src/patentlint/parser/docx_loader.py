@@ -236,6 +236,71 @@ def load_docx(file_path: str | Path) -> LoadedDocument:
     )
 
 
+def load_docx_tw(file_path: str | Path) -> list[str]:
+    """Load a TW patent .docx and return paragraph texts with claim numbering.
+
+    TW .docx files use 【】bracket headers for sections and Word numbering
+    (w:numPr) for claims. This function:
+    - Extracts paragraph text as-is for section extraction
+    - Detects claim paragraphs (w:numPr after a claims header) and prepends
+      sequential ``N. `` so claims_tw.py can parse them
+    """
+    path = Path(file_path)
+    if not path.exists():
+        msg = f"File not found: {path}"
+        raise FileNotFoundError(msg)
+    if path.suffix.lower() != ".docx":
+        msg = f"Not a .docx file: {path}"
+        raise ValueError(msg)
+
+    try:
+        doc = Document(str(path))
+    except Exception as exc:
+        msg = f"Failed to open .docx: {exc}"
+        raise ValueError(msg) from exc
+
+    # Claims section headers (same variants as sections_tw._SECTION_MAP)
+    _TW_CLAIMS_HEADERS = {"申請專利範圍", "發明申請專利範圍", "新型申請專利範圍"}
+    _TW_BRACKET_RE = re.compile(r"^【(.+?)】")
+
+    paragraphs: list[str] = []
+    in_claims = False
+    claim_counter = 0
+
+    for para in doc.paragraphs:
+        text = para.text.strip()
+        if not text:
+            continue
+
+        # Check for bracket headers to detect claims section boundary
+        hm = _TW_BRACKET_RE.match(text)
+        if hm:
+            header = hm.group(1).strip()
+            if header in _TW_CLAIMS_HEADERS:
+                in_claims = True
+                claim_counter = 0
+                paragraphs.append(text)
+                continue
+            elif in_claims:
+                # Any other bracket header ends the claims section
+                in_claims = False
+
+        if in_claims:
+            # Check for Word numbering on this paragraph
+            has_num = _get_paragraph_num_id(para) is not None
+            if has_num:
+                claim_counter += 1
+                # Prepend claim number in the format claims_tw expects
+                paragraphs.append(f"{claim_counter}. {text}")
+            else:
+                # Sub-paragraph (continuation of preceding claim)
+                paragraphs.append(text)
+        else:
+            paragraphs.append(text)
+
+    return paragraphs
+
+
 def load_docx_cn(file_path: str | Path) -> list[DocxSection]:
     """Load a CN patent .docx and return paragraphs grouped by Word section.
 
