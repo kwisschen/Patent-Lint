@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-import pytest
-
 from patentlint.analysis.tw_specification import (
     check_figure_ref_consistency,
     check_paragraph_ending,
@@ -115,6 +113,7 @@ class TestSectionOrdering:
             drawings_description=["圖式簡單說明。"],
         )
         items = check_section_ordering(doc)
+        assert items[0].status == "pass"  # in-order → pass
         # drawings_description (idx 3) comes before embodiment (idx 4), but
         # since disclosure (idx 2) is empty and drawings (idx 3) and embodiment (idx 4) are present,
         # order is 0, 3, 4 which is sorted → pass
