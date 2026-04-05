@@ -42,7 +42,10 @@
     "outsideRange": "50–150 범위 밖",
     "outsideRangeCn": "300자 초과",
     "outsideRangeTw": "250자 초과",
-    "noParagraphs": "단락 번호 없음"
+    "noParagraphs": "단락 번호 없음",
+    "patentType": "특허 유형",
+    "patentTypeInvention": "발명",
+    "patentTypeUtilityModel": "실용신안"
   },
   "section": {
     "specification": "명세서",
@@ -927,6 +930,7 @@
     "figures": "도면",
     "abstractWordCount": "요약서 단어 수",
     "abstractCharCount": "요약서 글자 수",
+    "patentType": "특허 유형",
     "disclaimer": "PatentLint에 의해 생성되었습니다. 이 보고서는 법률 자문을 구성하지 않습니다. 자격을 갖춘 특허 전문가의 검토를 권장합니다.",
     "triage": {
       "title": "우선 조치 사항"

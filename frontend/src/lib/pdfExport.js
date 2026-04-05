@@ -100,7 +100,7 @@ function filterInternalChecks(sections) {
   }))
 }
 
-function buildTriagePanel(sections, t) {
+function buildTriagePanel(sections, t, fontName) {
   const content = [{ text: t('pdf.triage.title'), style: 'sectionHeader' }]
 
   for (const severity of ['amend', 'verify']) {
@@ -137,7 +137,7 @@ function buildTriagePanel(sections, t) {
   return content
 }
 
-function buildPassSummary(sections, t) {
+function buildPassSummary(sections, t, fontName) {
   const passItems = []
   for (const section of sections) {
     const passed = section.items.filter((c) => c.status === 'pass')
@@ -164,13 +164,14 @@ function buildPassSummary(sections, t) {
         { text: headings.join(' '), fontSize: 10 },
       ],
       margin: [0, 2, 0, 2],
+      ...(fontName ? { font: fontName } : {}),
     })
   }
 
   return content
 }
 
-function buildSectionChecks(sections, t) {
+function buildSectionChecks(sections, t, fontName) {
   if (!sections || sections.length === 0) return []
 
   const content = []
@@ -196,6 +197,7 @@ function buildSectionChecks(sections, t) {
           { width: '*', text: msg, fontSize: 10 },
         ],
         margin: [0, 3, 0, 3],
+        ...(fontName ? { font: fontName } : {}),
       })
       const detailText = item.details_key && t(item.details_key, item.details_params || {}) !== item.details_key
         ? t(item.details_key, item.details_params || {})
@@ -376,11 +378,11 @@ export async function downloadReport(reportData, t, language, originalFilename) 
   const pdfFilename = `patentlint-${filename}.pdf`
 
   // Load CJK font if needed (font fetch happens before docDefinition is built).
-  // CN/TW jurisdiction content contains CJK characters regardless of UI language,
-  // so always load the appropriate CJK font for non-US reports.
+  // Jurisdiction dictates font: CN → SC (superset covering both simplified+traditional),
+  // TW → TC. For US, fall back to locale-based selection for CJK UI languages.
   const isCjkLocale = !!CJK_FONT_URLS[language]
   const needsCjk = isCjkLocale || !!jConfig.cjkFont
-  const cjkLanguage = isCjkLocale ? language : jConfig.cjkFont
+  const cjkLanguage = jConfig.cjkFont || (isCjkLocale ? language : null)
   let cjkBase64 = null
   if (needsCjk && cjkLanguage) {
     try {
@@ -451,6 +453,10 @@ export async function downloadReport(reportData, t, language, originalFilename) 
         table: {
           widths: ['50%', '*'],
           body: [
+            ...(jConfig.showPatentType ? [[
+              { text: t('pdf.patentType'), bold: true, color: '#555555', fontSize: 10 },
+              { text: reportData.patent_type === 'UTILITY_MODEL' ? t('summary.patentTypeUtilityModel') : t('summary.patentTypeInvention'), fontSize: 10 },
+            ]] : []),
             [
               { text: t('pdf.specParagraphs'), bold: true, color: '#555555', fontSize: 10 },
               { text: String(reportData.paragraph_count ?? 0), fontSize: 10 },
@@ -475,13 +481,13 @@ export async function downloadReport(reportData, t, language, originalFilename) 
       },
 
       // Actionable triage panel
-      ...buildTriagePanel(sections, t),
+      ...buildTriagePanel(sections, t, fontName),
 
       // Per-section checks (AMEND then VERIFY, no PASS)
-      ...buildSectionChecks(sections, t),
+      ...buildSectionChecks(sections, t, fontName),
 
       // PASS summary
-      ...buildPassSummary(sections, t),
+      ...buildPassSummary(sections, t, fontName),
 
       // Claim trees
       ...buildClaimTable(reportData.claim_trees, t),

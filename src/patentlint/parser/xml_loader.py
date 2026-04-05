@@ -9,7 +9,7 @@ import zipfile
 
 from lxml import etree
 
-from patentlint.models import Claim, CnPatentDocument
+from patentlint.models import Claim, CnPatentDocument, CnPatentType
 
 
 def _iter_text(element) -> str:
@@ -153,6 +153,14 @@ def parse_cnipa_xml(data: bytes) -> CnPatentDocument:
     if has_doc_pages and not has_description:
         return CnPatentDocument(has_doc_page_fallback=True, input_format="xml")
 
+    # Patent type detection from application-reference/@appl-type
+    appl_ref = root.find(".//application-reference")
+    appl_type_str = appl_ref.get("appl-type", "") if appl_ref is not None else ""
+    if "utility" in appl_type_str.lower():
+        patent_type = CnPatentType.UTILITY_MODEL
+    else:
+        patent_type = CnPatentType.INVENTION
+
     # Description sections
     desc = root.find(".//description")
     title_el = desc.find("invention-title") if desc is not None else None
@@ -163,6 +171,12 @@ def parse_cnipa_xml(data: bytes) -> CnPatentDocument:
     summary = _extract_paragraphs(desc, "disclosure")
     drawings_description = _extract_paragraphs(desc, "description-of-drawings")
     detailed_description = _extract_paragraphs(desc, "mode-for-invention")
+
+    # Body text heuristic fallback when appl-type absent
+    if not appl_type_str:
+        body = " ".join(technical_field + background + summary + detailed_description)
+        if body.count("本实用新型") > body.count("本发明"):
+            patent_type = CnPatentType.UTILITY_MODEL
 
     # Paragraph numbers from p/@num
     paragraph_numbers = _extract_paragraph_numbers(desc)
@@ -184,6 +198,7 @@ def parse_cnipa_xml(data: bytes) -> CnPatentDocument:
     figure_refs = _extract_figure_refs(root)
 
     return CnPatentDocument(
+        patent_type=patent_type,
         title=title,
         technical_field=technical_field,
         background=background,

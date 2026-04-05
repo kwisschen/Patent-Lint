@@ -42,7 +42,10 @@
     "outsideRange": "超出 50–150 字范围",
     "outsideRangeCn": "超出300字上限",
     "outsideRangeTw": "超出250字上限",
-    "noParagraphs": "未发现段落编号"
+    "noParagraphs": "未发现段落编号",
+    "patentType": "专利类型",
+    "patentTypeInvention": "发明",
+    "patentTypeUtilityModel": "实用新型"
   },
   "section": {
     "specification": "说明书",
@@ -927,6 +930,7 @@
     "figures": "附图",
     "abstractWordCount": "摘要字数",
     "abstractCharCount": "摘要字数",
+    "patentType": "专利类型",
     "disclaimer": "由 PatentLint 生成。本报告不构成法律意见。建议由合格专利专业人员审查。",
     "triage": {
       "title": "优先处理项目"
