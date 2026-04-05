@@ -50,6 +50,13 @@
     "drawings": "圖式簡單說明",
     "drawingsShort": "圖式",
     "abstract": "摘要",
+    "cn": {
+      "specification": "说明书",
+      "claims": "权利要求",
+      "drawings": "附图",
+      "drawingsShort": "附图",
+      "abstract": "摘要"
+    },
     "tw": {
       "technicalField": "技術領域",
       "priorArt": "先前技術",
