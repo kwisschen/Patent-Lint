@@ -25,6 +25,12 @@ const JURISDICTION_CONFIG = {
     abstractLabelKey: 'summary.abstractWords',
     abstractRangeKey: 'summary.outsideRange',
     pdfAbstractKey: 'pdf.abstractWordCount',
+    specSectionKey: 'section.specification',
+    claimsSectionKey: 'section.claims',
+    drawingsSectionKey: 'section.drawings',
+    drawingsShortKey: 'section.drawingsShort',
+    abstractSectionKey: 'section.abstract',
+    pdfHeaderKey: 'pdf.header',
   },
   CN: {
     acceptedFormats: {
@@ -48,6 +54,12 @@ const JURISDICTION_CONFIG = {
     abstractLabelKey: 'summary.abstractChars',
     abstractRangeKey: 'summary.outsideRangeCn',
     pdfAbstractKey: 'pdf.abstractCharCount',
+    specSectionKey: 'section.specification',
+    claimsSectionKey: 'section.claims',
+    drawingsSectionKey: 'section.drawings',
+    drawingsShortKey: 'section.drawingsShort',
+    abstractSectionKey: 'section.abstract',
+    pdfHeaderKey: 'pdf.header',
   },
   TW: {
     acceptedFormats: {
@@ -68,6 +80,12 @@ const JURISDICTION_CONFIG = {
     abstractLabelKey: 'summary.abstractChars',
     abstractRangeKey: 'summary.outsideRangeTw',
     pdfAbstractKey: 'pdf.abstractCharCount',
+    specSectionKey: 'section.tw.specification',
+    claimsSectionKey: 'section.tw.claims',
+    drawingsSectionKey: 'section.tw.drawings',
+    drawingsShortKey: 'section.tw.drawingsShort',
+    abstractSectionKey: 'section.tw.abstract',
+    pdfHeaderKey: 'pdf.headerTw',
   },
 }
 
