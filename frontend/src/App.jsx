@@ -17,6 +17,19 @@ import { analyzeDocument, downloadReport as downloadReportServer } from './api'
 import { downloadReport as downloadReportClient, prefetchCjkFont } from './lib/pdfExport'
 import { getJurisdictionConfig } from './lib/jurisdictionConfig'
 
+const JURISDICTION_COLORS = { US: '#2563EB', CN: '#DC2626', TW: '#0D9488' }
+
+function JurisdictionBadge({ code }) {
+  return (
+    <span
+      className="inline-flex items-center justify-center w-6 h-6 rounded-full text-[9px] font-bold text-white shrink-0"
+      style={{ backgroundColor: JURISDICTION_COLORS[code] }}
+    >
+      {code}
+    </span>
+  )
+}
+
 function App() {
   const { t, i18n } = useTranslation()
   const pyodide = usePyodide()
@@ -125,12 +138,13 @@ function App() {
                         role="radio"
                         aria-checked={jurisdiction === j}
                         onClick={() => setJurisdiction(j)}
-                        className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+                        className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                           jurisdiction === j
                             ? 'bg-background text-foreground shadow-sm'
                             : 'text-muted-foreground hover:text-foreground'
                         }`}
                       >
+                        <JurisdictionBadge code={j} />
                         {t(`jurisdiction.${j.toLowerCase()}`)}
                       </button>
                     ))}
