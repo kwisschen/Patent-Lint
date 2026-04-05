@@ -6,7 +6,7 @@
   "jurisdiction": {
     "us": "🇺🇸 米国特許",
     "cn": "🇨🇳 中国特許",
-    "tw": "🇹🇼 台湾特許",
+    "tw": "🇹🇼 台湾特許 TW Patent",
     "label": "管轄"
   },
   "dropzone": {
@@ -22,7 +22,7 @@
     "noticeCn": "中国特許原稿（.docx、.xml、.zip）に対応しています。",
     "rejectCn": ".docx、.xml、.zip ファイルのみ対応",
     "rejectMultipleTypeCn": "一つの .docx、.xml、または .zip ファイルをドロップしてください。",
-    "taglineTw": "TIPOの作成ルールに基づき特許原稿をチェック",
+    "taglineTw": "33 件の TIPO 作成規則に基づき、特許原稿を即座にチェック。",
     "titleTw": "特許 .docx をドロップしてローカル分析を開始",
     "noticeTw": "台湾特許原稿（.docx）に対応しています。",
     "rejectTw": ".docx ファイルのみ対応",
@@ -56,9 +56,12 @@
       "disclosure": "発明の内容",
       "drawingsDescription": "図面の簡単な説明",
       "embodiment": "実施形態",
+      "specification": "明細書",
+      "drawings": "図面",
+      "drawingsShort": "図面",
       "symbolTable": "符号の説明",
       "claims": "特許請求の範囲",
-      "abstract": "要約書"
+      "abstract": "要約"
     }
   },
   "status": {
@@ -849,6 +852,7 @@
   },
   "pdf": {
     "header": "PatentLint 分析レポート",
+    "headerTw": "PatentLint — 台湾特許原稿検査レポート",
     "securityNote": "お使いのデバイス上で分析しました。クラウドへのアップロードはありません。",
 "amend": "修正が必要（AMEND）",
     "verify": "専門家の確認（VERIFY）",

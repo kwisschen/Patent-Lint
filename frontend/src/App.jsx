@@ -33,6 +33,14 @@ function App() {
 
   // Home page state
   const [jurisdiction, setJurisdiction] = useState('US')
+
+  // Prefetch CJK font for jurisdiction (CN/TW content always contains CJK)
+  useEffect(() => {
+    const jConfig = getJurisdictionConfig(jurisdiction)
+    if (jConfig.cjkFont) {
+      prefetchCjkFont(jConfig.cjkFont)
+    }
+  }, [jurisdiction])
   const [homeState, setHomeState] = useState('idle')
   const [result, setResult] = useState(null)
   const [file, setFile] = useState(null)

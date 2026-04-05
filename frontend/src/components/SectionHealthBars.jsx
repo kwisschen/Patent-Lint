@@ -2,6 +2,7 @@
 // Copyright (c) 2025 Christopher Chen
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
 
 function HealthBar({ label, checks = [], animate, delay = 0 }) {
   const [grown, setGrown] = useState(false)
@@ -48,11 +49,12 @@ function HealthBar({ label, checks = [], animate, delay = 0 }) {
 
 export default function SectionHealthBars({ data, animate = false }) {
   const { t } = useTranslation()
+  const jConfig = getJurisdictionConfig(data.jurisdiction)
   const sections = [
-    { label: t('section.specification'), checks: data.specification_checks },
-    { label: t('section.drawingsShort'), checks: data.drawings_checks },
-    { label: t('section.claims'), checks: data.claims_checks },
-    { label: t('section.abstract'), checks: data.abstract_checks },
+    { label: t(jConfig.specSectionKey), checks: data.specification_checks },
+    { label: t(jConfig.drawingsShortKey), checks: data.drawings_checks },
+    { label: t(jConfig.claimsSectionKey), checks: data.claims_checks },
+    { label: t(jConfig.abstractSectionKey), checks: data.abstract_checks },
   ]
 
   return (
