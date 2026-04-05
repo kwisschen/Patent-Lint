@@ -303,7 +303,7 @@
       }
     },
     "cnTitle": "PatentLint CNIPA 작성 규칙 검사",
-    "cnSubtitle": "CNIPA 작성 규칙(专利法实施细则, 审查指南)에 따른 20건 이상의 구조 검사.",
+    "cnSubtitle": "CNIPA 작성 규칙(专利法实施细则, 审查指南)에 따른 20여 건의 구조 검사.",
     "cnGroups": {
       "specification": "명세서(说明书)",
       "claims": "청구항(权利要求)",
@@ -337,7 +337,7 @@
       "figureCount": "도면 수"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
-    "twSubtitle": "TIPO 규칙(專利法施行細則, 專利審查基準)에 따른 33건의 작성 검사.",
+    "twSubtitle": "TIPO 규칙(專利法施行細則, 專利審查基準)에 따른 30여 건의 작성 검사.",
     "twCompare": {
       "colTipo": "TIPO 偵錯系統",
       "feature": {

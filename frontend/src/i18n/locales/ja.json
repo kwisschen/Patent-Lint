@@ -303,7 +303,7 @@
       }
     },
     "cnTitle": "PatentLint CNIPA 作成規則チェック",
-    "cnSubtitle": "CNIPA作成規則（专利法实施细则、审查指南）に基づく20+の構造チェック。",
+    "cnSubtitle": "CNIPA作成規則（专利法实施细则、审查指南）に基づく20余件の構造チェック。",
     "cnGroups": {
       "specification": "明細書（说明书）",
       "claims": "特許請求の範囲（权利要求）",
@@ -337,7 +337,7 @@
       "figureCount": "図面数"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
-    "twSubtitle": "TIPO規則（專利法施行細則、專利審查基準）に基づく33件の作成チェック。",
+    "twSubtitle": "TIPO規則（專利法施行細則、專利審查基準）に基づく30余件の作成チェック。",
     "twCompare": {
       "colTipo": "TIPO 偵錯系統",
       "feature": {
