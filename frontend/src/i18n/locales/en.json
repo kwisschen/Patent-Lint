@@ -240,8 +240,8 @@
   },
   "about": {
     "productTitle": "What is PatentLint?",
-    "productDesc1": "PatentLint is a free patent draft checker that catches issues before the examiner does. Drop a U.S. or Chinese patent specification into your browser and get an instant compliance report — no upload, no account, no cloud.",
-    "productDesc2": "It checks drafting rules from the MPEP (U.S.) and CNIPA rules (中国), and detects common issues like missing antecedent basis, incorrect claim structure, and restrictive wording.",
+    "productDesc1": "PatentLint is a free patent draft checker that catches issues before the examiner does. Drop a U.S., Chinese, or Taiwanese patent specification into your browser and get an instant compliance report — no upload, no account, no cloud.",
+    "productDesc2": "It checks drafting rules from the MPEP (U.S.), CNIPA rules (中国), and TIPO rules (台灣), detecting common issues like missing antecedent basis, incorrect claim structure, and restrictive wording.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center validates filing format. PatentLint checks the draft itself.",
     "uspto": {
@@ -324,6 +324,50 @@
       "titleInAbstract": "Title in abstract",
       "commercialLanguage": "Commercial language",
       "figureCount": "Figure count"
+    },
+    "twTitle": "PatentLint vs. TIPO \u5075\u932f\u7cfb\u7d71",
+    "twSubtitle": "33 drafting checks against TIPO rules (\u5c08\u5229\u6cd5\u65bd\u884c\u7d30\u5247, \u5c08\u5229\u5be9\u67e5\u57fa\u6e96).",
+    "twCompare": {
+      "colTipo": "TIPO \u5075\u932f\u7cfb\u7d71",
+      "feature": {
+        "patentTypes": "Patent types",
+        "inputFormat": "Input format",
+        "checks": "Checks",
+        "privacy": "Privacy",
+        "languages": "Languages",
+        "cost": "Cost",
+        "specChecks": "Spec-level checks",
+        "abstractChecks": "Abstract checks",
+        "symbolTableCrossRef": "Symbol table cross-ref",
+        "antecedentBasis": "Antecedent basis",
+        "claimTree": "ClaimTree visualization"
+      },
+      "patentlint": {
+        "patentTypes": "Invention + Utility Model",
+        "inputFormat": "Any .docx",
+        "checks": "33",
+        "privacy": "Offline, zero-trust",
+        "languages": "5 (EN, ZH-TW, ZH-CN, JA, KO)",
+        "cost": "Free",
+        "specChecks": "Yes",
+        "abstractChecks": "Yes",
+        "symbolTableCrossRef": "Yes",
+        "antecedentBasis": "Yes (regex-based)",
+        "claimTree": "Yes"
+      },
+      "tipo": {
+        "patentTypes": "Utility model focused",
+        "inputFormat": "TIPO template only",
+        "checks": "20",
+        "privacy": "Server-side",
+        "languages": "Chinese only",
+        "cost": "Free",
+        "specChecks": "No",
+        "abstractChecks": "No",
+        "symbolTableCrossRef": "Yes (core strength)",
+        "antecedentBasis": "Yes (\u5148\u884c\u8a5e)",
+        "claimTree": "No"
+      }
     },
     "stats": {
       "tests": "Automated Tests",

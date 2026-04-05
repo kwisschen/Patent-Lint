@@ -240,8 +240,8 @@
   },
   "about": {
     "productTitle": "PatentLint是什么？",
-    "productDesc1": "PatentLint 是免费的专利稿件检查工具，在审查员替你找出问题之前先一步发现它们。将美国或中国专利稿件拖放至浏览器，即可获得即时合规报告。无需上传、无需账号、不使用云端。",
-    "productDesc2": "它依据 MPEP（美国）及 CNIPA 规则（中国）进行撰写规则检查，检测常见问题，如缺乏先行词基础、不正确的权利要求结构和限制性用语。",
+    "productDesc1": "PatentLint 是免费的专利稿件检查工具，在审查员替你找出问题之前先一步发现它们。将美国、中国或台湾专利稿件拖放至浏览器，即可获得即时合规报告。无需上传、无需账号、不使用云端。",
+    "productDesc2": "它依据 MPEP（美国）、CNIPA 规则（中国）及 TIPO 规则（台灣）进行撰写规则检查，检测常见问题，如缺乏先行词基础、不正确的权利要求结构和限制性用语。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查文稿本身。",
     "uspto": {
@@ -324,6 +324,50 @@
       "titleInAbstract": "标题出现在摘要中",
       "commercialLanguage": "商业性用语",
       "figureCount": "附图数量"
+    },
+    "twTitle": "PatentLint vs. TIPO 偵錯系統",
+    "twSubtitle": "33项撰稿检查，依据TIPO规则（專利法施行細則、專利審查基準）。",
+    "twCompare": {
+      "colTipo": "TIPO 偵錯系統",
+      "feature": {
+        "patentTypes": "专利类型",
+        "inputFormat": "输入格式",
+        "checks": "检查项目",
+        "privacy": "隐私",
+        "languages": "语言",
+        "cost": "费用",
+        "specChecks": "说明书检查",
+        "abstractChecks": "摘要检查",
+        "symbolTableCrossRef": "符号说明交叉比对",
+        "antecedentBasis": "先行词",
+        "claimTree": "ClaimTree 可视化"
+      },
+      "patentlint": {
+        "patentTypes": "发明 + 实用新型",
+        "inputFormat": "任意 .docx",
+        "checks": "33",
+        "privacy": "离线、零信任",
+        "languages": "5 (EN, ZH-TW, ZH-CN, JA, KO)",
+        "cost": "免费",
+        "specChecks": "有",
+        "abstractChecks": "有",
+        "symbolTableCrossRef": "有",
+        "antecedentBasis": "有 (正则表达式)",
+        "claimTree": "有"
+      },
+      "tipo": {
+        "patentTypes": "以实用新型为主",
+        "inputFormat": "仅限 TIPO 模板",
+        "checks": "20",
+        "privacy": "服务器端",
+        "languages": "仅中文",
+        "cost": "免费",
+        "specChecks": "无",
+        "abstractChecks": "无",
+        "symbolTableCrossRef": "有 (核心功能)",
+        "antecedentBasis": "有 (先行詞)",
+        "claimTree": "无"
+      }
     },
     "stats": {
       "tests": "自动化测试",
