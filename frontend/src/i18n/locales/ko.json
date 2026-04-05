@@ -357,13 +357,13 @@
         "patentTypes": "발명 + 실용신안",
         "inputFormat": "모든 .docx",
         "checks": "33",
-        "privacy": "오프라인, 제로트러스트",
-        "languages": "5 (EN, ZH-TW, ZH-CN, JA, KO)",
+        "privacy": "완전 오프라인",
+        "languages": "영・간중・번중・일・한",
         "cost": "무료",
         "specChecks": "있음",
         "abstractChecks": "있음",
         "symbolTableCrossRef": "있음",
-        "antecedentBasis": "있음 (정규식)",
+        "antecedentBasis": "있음",
         "claimTree": "있음"
       },
       "tipo": {
@@ -375,8 +375,8 @@
         "cost": "무료",
         "specChecks": "없음",
         "abstractChecks": "없음",
-        "symbolTableCrossRef": "있음 (핵심 기능)",
-        "antecedentBasis": "있음 (先行詞)",
+        "symbolTableCrossRef": "있음",
+        "antecedentBasis": "있음",
         "claimTree": "없음"
       }
     },

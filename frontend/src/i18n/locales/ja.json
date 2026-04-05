@@ -357,13 +357,13 @@
         "patentTypes": "発明 + 実用新案",
         "inputFormat": "任意の .docx",
         "checks": "33",
-        "privacy": "オフライン、ゼロトラスト",
-        "languages": "5 (EN, ZH-TW, ZH-CN, JA, KO)",
+        "privacy": "完全オフライン",
+        "languages": "英・簡中・繁中・日・韓",
         "cost": "無料",
         "specChecks": "あり",
         "abstractChecks": "あり",
         "symbolTableCrossRef": "あり",
-        "antecedentBasis": "あり (正規表現)",
+        "antecedentBasis": "あり",
         "claimTree": "あり"
       },
       "tipo": {
@@ -375,8 +375,8 @@
         "cost": "無料",
         "specChecks": "なし",
         "abstractChecks": "なし",
-        "symbolTableCrossRef": "あり (主要機能)",
-        "antecedentBasis": "あり (先行詞)",
+        "symbolTableCrossRef": "あり",
+        "antecedentBasis": "あり",
         "claimTree": "なし"
       }
     },
