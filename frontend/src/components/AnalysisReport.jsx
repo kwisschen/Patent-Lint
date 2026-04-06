@@ -198,13 +198,13 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
           <p className="min-w-0 text-sm text-muted-foreground">{t('analysis.label')}: {filename}</p>
           {data.jurisdiction && (
             <span
-              className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-medium text-muted-foreground"
-              style={{ borderColor: `${JURISDICTION_COLORS[data.jurisdiction]}40` }}
+              className="whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold tracking-wide"
+              style={{
+                background: `linear-gradient(135deg, ${JURISDICTION_COLORS[data.jurisdiction]}, ${JURISDICTION_COLORS[data.jurisdiction]}cc)`,
+                color: '#fff',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.2), 0 1px 3px rgba(0,0,0,0.2)',
+              }}
             >
-              <span
-                className="w-2 h-2 rounded-full shrink-0"
-                style={{ backgroundColor: JURISDICTION_COLORS[data.jurisdiction] }}
-              />
               {t(JURISDICTION_I18N[data.jurisdiction])}
             </span>
           )}
