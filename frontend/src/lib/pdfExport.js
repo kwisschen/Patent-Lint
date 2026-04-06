@@ -220,9 +220,15 @@ function buildClaimTable(claimTrees, t) {
 
   const content = [{ text: t('pdf.claimDependency'), style: 'sectionHeader' }]
 
+  const labelKey = (label) => label === 'Method Claims'
+    ? 'tree.methodClaims'
+    : label === 'Claims'
+      ? 'tree.claims'
+      : 'tree.apparatusClaims'
+
   for (const group of claimTrees) {
     content.push({
-      text: group.label,
+      text: t(labelKey(group.label)),
       bold: true,
       fontSize: 12,
       margin: [0, 10, 0, 6],

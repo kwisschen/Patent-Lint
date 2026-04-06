@@ -297,6 +297,42 @@ class AnalysisResult(BaseModel):
             return self._to_tw_report_data()
         return self._to_us_report_data()
 
+    def _build_claim_trees(self) -> list[ClaimTreeGroup]:
+        """Build claim tree groups from self.claims."""
+        from patentlint.analysis.claims import get_dependency_chain
+
+        product_rows: list[ClaimTreeRow] = []
+        method_rows: list[ClaimTreeRow] = []
+
+        for claim in self.claims:
+            chain = get_dependency_chain(claim, self.claims)
+            chain_display = chain.replace(" \u2192 ", " \u2190 ")
+            claim_type = "Independent" if claim.independent else "Dependent"
+            row = ClaimTreeRow(
+                claim_id=claim.id,
+                claim_type=claim_type,
+                chain=chain_display,
+                claim_text=claim.text,
+            )
+            if claim.method_claim:
+                method_rows.append(row)
+            else:
+                product_rows.append(row)
+
+        all_rows = product_rows + method_rows
+        if not all_rows:
+            return []
+
+        if self.jurisdiction != Jurisdiction.US:
+            return [ClaimTreeGroup(label="Claims", rows=all_rows)]
+
+        claim_trees: list[ClaimTreeGroup] = []
+        if product_rows:
+            claim_trees.append(ClaimTreeGroup(label="Apparatus Claims", rows=product_rows))
+        if method_rows:
+            claim_trees.append(ClaimTreeGroup(label="Method Claims", rows=method_rows))
+        return claim_trees
+
     def _to_cn_report_data(self) -> ReportData:
         """Build ReportData for CN jurisdiction from pre-computed check lists."""
         return ReportData(
@@ -312,7 +348,7 @@ class AnalysisResult(BaseModel):
             claims_checks=list(self.cn_claims_checks),
             abstract_checks=list(self.cn_abstract_checks),
             drawings_checks=list(self.cn_drawings_checks),
-            claim_trees=[],
+            claim_trees=self._build_claim_trees(),
             likely_patent=self.likely_patent,
             has_scanned_fallback=self.has_scanned_fallback,
         )
@@ -332,14 +368,12 @@ class AnalysisResult(BaseModel):
             claims_checks=list(self.tw_claims_checks),
             abstract_checks=list(self.tw_abstract_checks),
             drawings_checks=list(self.tw_drawings_checks),
-            claim_trees=[],
+            claim_trees=self._build_claim_trees(),
             likely_patent=self.likely_patent,
         )
 
     def _to_us_report_data(self) -> ReportData:
         """Build ReportData for US jurisdiction from flat analysis fields."""
-        from patentlint.analysis.claims import get_dependency_chain
-
         # --- Specification checks ---
         spec_checks: list[CheckItem] = []
 
@@ -739,32 +773,6 @@ class AnalysisResult(BaseModel):
         for fc in self.figure_xref_checks:
             drawings_checks.append(fc)
 
-        # --- Claim trees ---
-        product_rows: list[ClaimTreeRow] = []
-        method_rows: list[ClaimTreeRow] = []
-
-        for claim in self.claims:
-            chain = get_dependency_chain(claim, self.claims)
-            # Convert → to ← for report display
-            chain_display = chain.replace(" \u2192 ", " \u2190 ")
-            claim_type = "Independent" if claim.independent else "Dependent"
-            row = ClaimTreeRow(
-                claim_id=claim.id,
-                claim_type=claim_type,
-                chain=chain_display,
-                claim_text=claim.text,
-            )
-            if claim.method_claim:
-                method_rows.append(row)
-            else:
-                product_rows.append(row)
-
-        claim_trees: list[ClaimTreeGroup] = []
-        if product_rows:
-            claim_trees.append(ClaimTreeGroup(label="Apparatus Claims", rows=product_rows))
-        if method_rows:
-            claim_trees.append(ClaimTreeGroup(label="Method Claims", rows=method_rows))
-
         return ReportData(
             jurisdiction=self.jurisdiction,
             paragraph_count=self.paragraph_count,
@@ -777,7 +785,7 @@ class AnalysisResult(BaseModel):
             claims_checks=claims_checks,
             abstract_checks=abstract_checks,
             drawings_checks=drawings_checks,
-            claim_trees=claim_trees,
+            claim_trees=self._build_claim_trees(),
             antecedent_basis_issues=self.antecedent_basis_issues,
             unsupported_terms=self.unsupported_terms,
             likely_patent=self.likely_patent,
