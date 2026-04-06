@@ -4,8 +4,16 @@ import { useTranslation } from 'react-i18next'
 import { AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-export default function NonPatentBanner({ onShowResults }) {
+export default function NonPatentBanner({ onShowResults, jurisdiction }) {
   const { t } = useTranslation()
+
+  const warningKey = jurisdiction === 'CN' ? 'results.nonPatentWarningCn'
+                   : jurisdiction === 'TW' ? 'results.nonPatentWarningTw'
+                   : 'results.nonPatentWarning'
+
+  const detailsKey = jurisdiction === 'CN' ? 'results.nonPatentWarningDetailsCn'
+                   : jurisdiction === 'TW' ? 'results.nonPatentWarningDetailsTw'
+                   : 'results.nonPatentWarningDetails'
 
   return (
     <div className="flex items-center justify-center min-h-[60vh]">
@@ -14,10 +22,10 @@ export default function NonPatentBanner({ onShowResults }) {
       >
         <AlertTriangle className="mx-auto h-12 w-12 text-amber-500 dark:text-amber-400 mb-4" />
         <h2 className="text-xl font-bold text-amber-900 dark:text-amber-100 mb-3">
-          {t('results.nonPatentWarning')}
+          {t(warningKey)}
         </h2>
         <p className="text-sm text-amber-800 dark:text-amber-200/80 leading-relaxed mb-6">
-          {t('results.nonPatentWarningDetails')}
+          {t(detailsKey)}
         </p>
         <Button
           variant="outline"

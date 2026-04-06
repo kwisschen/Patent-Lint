@@ -114,6 +114,35 @@ def _extract_figure_refs(text: str) -> list[str]:
 # ---------------------------------------------------------------------------
 
 
+def detect_patent_document_tw(paragraphs: list[str]) -> bool:
+    """Heuristic check for whether a TW .docx appears to be a patent specification.
+
+    Returns True if patent indicators are found, False otherwise.
+    OR logic — returns True on first match.
+    """
+    para_num_count = 0
+    for para in paragraphs:
+        stripped = para.strip()
+
+        # 1. Any 【】bracket section header (non-digit content)
+        if _BRACKET_HEADER.match(stripped):
+            return True
+
+        # 2. 請求項 claims keyword
+        if "請求項" in stripped:
+            return True
+
+        # 3. Count bracketed paragraph numbers 【NNNN】
+        if _PARA_NUM_PATTERN.match(stripped):
+            para_num_count += 1
+
+    # 3+ bracketed paragraph numbers
+    if para_num_count >= 3:
+        return True
+
+    return False
+
+
 def extract_tw_sections(paragraphs: list[str]) -> TwPatentDocument:
     """Extract TW patent sections from .docx paragraphs using 【】bracket headers.
 

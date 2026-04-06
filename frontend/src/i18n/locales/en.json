@@ -110,7 +110,11 @@
   },
   "results": {
     "nonPatentWarning": "This document may not be a U.S. patent specification",
-    "nonPatentWarningDetails": "PatentLint is designed for U.S. patent application drafts. This file does not appear to contain standard patent sections, numbered claims, or paragraph numbering. Analysis results may not be meaningful for non-U.S. or non-patent documents.",
+    "nonPatentWarningDetails": "PatentLint is designed for patent application drafts. This file does not appear to contain standard patent sections, numbered claims, or paragraph numbering. Analysis results may not be meaningful for non-U.S. or non-patent documents.",
+    "nonPatentWarningCn": "This document may not be a Chinese patent specification",
+    "nonPatentWarningDetailsCn": "PatentLint is designed for patent application drafts. This file does not appear to contain standard specification sections (技术领域, 背景技术, etc.), numbered claims, or recognized formatting. Analysis results may not be meaningful for non-Chinese or non-patent documents.",
+    "nonPatentWarningTw": "This document may not be a Taiwanese patent specification",
+    "nonPatentWarningDetailsTw": "PatentLint is designed for patent application drafts. This file does not appear to contain standard specification sections (【技術領域】, 【先前技術】, etc.), numbered claims (請求項), or paragraph numbering. Analysis results may not be meaningful for non-Taiwanese or non-patent documents.",
     "showResultsAnyway": "Show results anyway",
     "trackedChangesWarning": "This document contains tracked changes, which may affect analysis accuracy. Accept or reject all changes in your word processor, then analyze again.",
     "analyzeAgain": "Analyze Again",
