@@ -17,7 +17,9 @@ import TrackedChangesBanner from './TrackedChangesBanner'
 import { Button } from '@/components/ui/button'
 import { Download, RotateCcw, ShieldCheck } from 'lucide-react'
 import { useNetworkMonitor } from '../hooks/useNetworkMonitor'
-import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
+import { getJurisdictionConfig, JURISDICTION_COLORS } from '../lib/jurisdictionConfig'
+
+const JURISDICTION_I18N = { US: 'jurisdiction.us', CN: 'jurisdiction.cn', TW: 'jurisdiction.tw' }
 
 /**
  * Consolidate claims_checks to reduce visual noise:
@@ -192,7 +194,21 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
   return (
     <div className="space-y-4">
       {filename && (
-        <p className="text-sm text-muted-foreground">{t('analysis.label')}: {filename}</p>
+        <div className="flex items-center justify-between gap-3">
+          <p className="min-w-0 text-sm text-muted-foreground">{t('analysis.label')}: {filename}</p>
+          {data.jurisdiction && (
+            <span
+              className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-medium text-muted-foreground"
+              style={{ borderColor: `${JURISDICTION_COLORS[data.jurisdiction]}40` }}
+            >
+              <span
+                className="w-2 h-2 rounded-full shrink-0"
+                style={{ backgroundColor: JURISDICTION_COLORS[data.jurisdiction] }}
+              />
+              {t(JURISDICTION_I18N[data.jurisdiction])}
+            </span>
+          )}
+        </div>
       )}
 
       {/* Summary cards with stagger cascade */}

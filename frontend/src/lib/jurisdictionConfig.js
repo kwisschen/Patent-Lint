@@ -70,6 +70,7 @@ const JURISDICTION_CONFIG = {
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
     },
     cjkFont: 'zh-TW',
+    cjkFontLocaleAware: true,
     showPatentType: true,
     showClaimTree: true,
     abstractUnit: 'chars',
@@ -94,6 +95,8 @@ const JURISDICTION_CONFIG = {
     pdfHeaderKey: 'pdf.headerTw',
   },
 }
+
+export const JURISDICTION_COLORS = { US: '#2563EB', CN: '#DC2626', TW: '#0D9488' }
 
 export function getJurisdictionConfig(jurisdiction) {
   return JURISDICTION_CONFIG[jurisdiction] || JURISDICTION_CONFIG.US

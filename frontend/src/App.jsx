@@ -15,9 +15,7 @@ import AboutPage from './pages/AboutPage'
 import { usePyodide } from './hooks/usePyodide'
 import { analyzeDocument, downloadReport as downloadReportServer } from './api'
 import { downloadReport as downloadReportClient, prefetchCjkFont } from './lib/pdfExport'
-import { getJurisdictionConfig } from './lib/jurisdictionConfig'
-
-const JURISDICTION_COLORS = { US: '#2563EB', CN: '#DC2626', TW: '#0D9488' }
+import { getJurisdictionConfig, JURISDICTION_COLORS } from './lib/jurisdictionConfig'
 
 function JurisdictionBadge({ code }) {
   return (
