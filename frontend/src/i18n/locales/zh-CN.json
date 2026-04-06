@@ -98,6 +98,7 @@
   "tree": {
     "apparatusClaims": "装置权利要求",
     "methodClaims": "方法权利要求",
+    "claims": "权利要求",
     "independent": "独立权利要求",
     "dependent": "从属权利要求",
     "deps": "个从属项",
