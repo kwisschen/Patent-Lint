@@ -12,7 +12,14 @@ from docx import Document
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 
-from patentlint.parser.docx_loader import load_docx, LoadedDocument
+from patentlint.parser.docx_loader import (
+    LoadedCnDocument,
+    LoadedDocument,
+    LoadedTwDocument,
+    load_docx,
+    load_docx_cn,
+    load_docx_tw,
+)
 
 
 def _create_simple_docx(paragraphs: list[str], path: Path) -> Path:
@@ -324,3 +331,63 @@ class TestTrackedChanges:
         ins.set(qn("w:id"), "1")
         doc.element.body.append(ins)
         assert detect_tracked_changes(doc) is True
+
+
+class TestLoadDocxTwTrackedChanges:
+    """Tests for tracked changes detection in load_docx_tw."""
+
+    def test_clean_tw_docx_no_tracked_changes(self, tmp_path):
+        """A normal TW .docx without revisions -> has_tracked_changes=False."""
+        doc = Document()
+        doc.add_paragraph("【技術領域】")
+        doc.add_paragraph("本發明涉及測試。")
+        path = tmp_path / "tw_clean.docx"
+        doc.save(str(path))
+        result = load_docx_tw(path)
+        assert isinstance(result, LoadedTwDocument)
+        assert result.has_tracked_changes is False
+        assert len(result.paragraphs) > 0
+
+    def test_tw_docx_with_tracked_changes(self, tmp_path):
+        """A TW .docx with w:ins -> has_tracked_changes=True."""
+        doc = Document()
+        doc.add_paragraph("【技術領域】")
+        ins = OxmlElement("w:ins")
+        ins.set(qn("w:id"), "1")
+        ins.set(qn("w:author"), "Test")
+        doc.element.body.append(ins)
+        path = tmp_path / "tw_tracked.docx"
+        doc.save(str(path))
+        result = load_docx_tw(path)
+        assert isinstance(result, LoadedTwDocument)
+        assert result.has_tracked_changes is True
+
+
+class TestLoadDocxCnTrackedChanges:
+    """Tests for tracked changes detection in load_docx_cn."""
+
+    def test_clean_cn_docx_no_tracked_changes(self, tmp_path):
+        """A normal CN .docx without revisions -> has_tracked_changes=False."""
+        doc = Document()
+        doc.add_paragraph("技术领域")
+        doc.add_paragraph("本发明涉及测试。")
+        path = tmp_path / "cn_clean.docx"
+        doc.save(str(path))
+        result = load_docx_cn(path)
+        assert isinstance(result, LoadedCnDocument)
+        assert result.has_tracked_changes is False
+        assert len(result.sections) > 0
+
+    def test_cn_docx_with_tracked_changes(self, tmp_path):
+        """A CN .docx with w:del -> has_tracked_changes=True."""
+        doc = Document()
+        doc.add_paragraph("技术领域")
+        del_elem = OxmlElement("w:del")
+        del_elem.set(qn("w:id"), "1")
+        del_elem.set(qn("w:author"), "Test")
+        doc.element.body.append(del_elem)
+        path = tmp_path / "cn_tracked.docx"
+        doc.save(str(path))
+        result = load_docx_cn(path)
+        assert isinstance(result, LoadedCnDocument)
+        assert result.has_tracked_changes is True
