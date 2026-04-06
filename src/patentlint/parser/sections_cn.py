@@ -150,6 +150,32 @@ def _count_figures_from_descriptions(paragraphs: list[str]) -> int:
 # ---------------------------------------------------------------------------
 
 
+def detect_patent_document_cn(paragraphs: list[str]) -> bool:
+    """Heuristic check for whether a CN .docx appears to be a patent specification.
+
+    Returns True if patent indicators are found, False otherwise.
+    OR logic — returns True on first match.
+    """
+    for para in paragraphs:
+        stripped = para.strip()
+
+        # 1. CN spec sub-section header (技术领域, 背景技术, etc.)
+        for _, pattern in _SPEC_SUBSECTIONS:
+            if pattern.match(stripped):
+                return True
+
+        # 2. 五書模板 boundary markers
+        if stripped in ("权利要求书", "说明书摘要"):
+            return True
+
+    # 3. Numbered claims: 3+ lines starting with Arabic numeral + period variant
+    full_text = "\n".join(paragraphs)
+    if len(re.findall(r"^\s*\d+[.．。]\s*", full_text, re.MULTILINE)) >= 3:
+        return True
+
+    return False
+
+
 def extract_cn_sections_from_docx(sections: list[DocxSection]) -> CnPatentDocument:
     """Extract CN patent document structure from Word sections.
 

@@ -10,7 +10,7 @@ import pytest
 
 from patentlint.models import TwPatentType
 from patentlint.parser.docx_loader import load_docx
-from patentlint.parser.sections_tw import extract_tw_sections, _count_cjk_chars
+from patentlint.parser.sections_tw import detect_patent_document_tw, extract_tw_sections, _count_cjk_chars
 
 FIXTURES = Path(__file__).parent.parent / "fixtures" / "tw"
 
@@ -191,3 +191,36 @@ class TestExtractTwSectionsFromRawParagraphs:
             "本新型提供某裝置。",
         ])
         assert doc.patent_type == TwPatentType.UTILITY_MODEL
+
+
+class TestDetectPatentDocumentTw:
+    def test_true_with_bracket_header(self):
+        assert detect_patent_document_tw(["【技術領域】", "本發明涉及測試。"]) is True
+
+    def test_true_with_claims_keyword(self):
+        assert detect_patent_document_tw(["如請求項1所述之裝置。"]) is True
+
+    def test_true_with_paragraph_numbers(self):
+        paragraphs = [
+            "【0001】第一段。",
+            "【0002】第二段。",
+            "【0003】第三段。",
+        ]
+        assert detect_patent_document_tw(paragraphs) is True
+
+    def test_false_generic_document(self):
+        paragraphs = [
+            "會議紀錄",
+            "日期：2025年3月1日",
+            "出席人員：王先生、陳小姐",
+            "討論事項：專案進度。",
+        ]
+        assert detect_patent_document_tw(paragraphs) is False
+
+    def test_or_logic_single_signal(self):
+        # Only bracket header, no claims or para numbers
+        assert detect_patent_document_tw(["【先前技術】", "先前技術段落。"]) is True
+
+    def test_fewer_than_three_para_nums_not_enough(self):
+        paragraphs = ["【0001】第一段。", "【0002】第二段。"]
+        assert detect_patent_document_tw(paragraphs) is False

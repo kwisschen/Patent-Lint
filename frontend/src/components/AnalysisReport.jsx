@@ -164,7 +164,7 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
 
   if (!showResults) {
     return (
-      <NonPatentBanner onShowResults={() => {
+      <NonPatentBanner jurisdiction={data.jurisdiction} onShowResults={() => {
         setShowResults(true)
         // Reset cascade so results animate in fresh
         setMounted(false)
