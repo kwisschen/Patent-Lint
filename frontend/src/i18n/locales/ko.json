@@ -98,6 +98,7 @@
   "tree": {
     "apparatusClaims": "장치 청구항",
     "methodClaims": "방법 청구항",
+    "claims": "청구항",
     "independent": "독립항",
     "dependent": "종속항",
     "deps": "종속",

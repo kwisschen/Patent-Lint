@@ -98,6 +98,7 @@
   "tree": {
     "apparatusClaims": "物の請求項",
     "methodClaims": "方法の請求項",
+    "claims": "請求項",
     "independent": "独立項",
     "dependent": "従属項",
     "deps": "個の従属項",

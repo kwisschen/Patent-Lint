@@ -43,7 +43,7 @@ const JURISDICTION_CONFIG = {
     },
     cjkFont: 'zh-CN',
     showPatentType: true,
-    showClaimTree: false,
+    showClaimTree: true,
     abstractUnit: 'chars',
     abstractOutOfRange: (count) => count > 300,
     consolidateClaimsChecks: false,

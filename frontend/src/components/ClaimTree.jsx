@@ -83,7 +83,11 @@ function ClaimGroup({ group, t }) {
     setExpandedRoots((prev) => ({ ...prev, [id]: !prev[id] }))
   }
 
-  const groupLabel = group.label === 'Method Claims' ? t('tree.methodClaims') : t('tree.apparatusClaims')
+  const groupLabel = group.label === 'Method Claims'
+    ? t('tree.methodClaims')
+    : group.label === 'Claims'
+      ? t('tree.claims')
+      : t('tree.apparatusClaims')
 
   return (
     <div className="mt-3">

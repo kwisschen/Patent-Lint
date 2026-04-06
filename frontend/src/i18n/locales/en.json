@@ -98,6 +98,7 @@
   "tree": {
     "apparatusClaims": "Apparatus Claims",
     "methodClaims": "Method Claims",
+    "claims": "Claims",
     "independent": "Independent",
     "dependent": "Dependent",
     "deps": "deps",
@@ -339,7 +340,7 @@
     "twTitle": "PatentLint vs. TIPO \u5075\u932f\u7cfb\u7d71",
     "twSubtitle": "30+ drafting checks against TIPO rules (\u5c08\u5229\u6cd5\u65bd\u884c\u7d30\u5247, \u5c08\u5229\u5be9\u67e5\u57fa\u6e96).",
     "twCompare": {
-      "colTipo": "TIPO \u5075\u932f\u7cfb\u7d71",
+      "colTipo": "TIPO Error Detection System",
       "feature": {
         "patentTypes": "Patent types",
         "inputFormat": "Input format",
