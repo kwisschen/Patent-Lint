@@ -341,10 +341,10 @@
       "commercialLanguage": "商業的表現",
       "figureCount": "図面数"
     },
-    "twTitle": "PatentLint vs. TIPO 偵錯系統",
+    "twTitle": "PatentLint vs. TIPO エラー検出システム",
     "twSubtitle": "TIPO規則（專利法施行細則、專利審查基準）に基づく30余件の作成チェック。",
     "twCompare": {
-      "colTipo": "TIPO 偵錯系統",
+      "colTipo": "TIPO エラー検出システム",
       "feature": {
         "patentTypes": "特許種別",
         "inputFormat": "入力形式",
