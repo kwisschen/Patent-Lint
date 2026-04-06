@@ -10,6 +10,7 @@ from patentlint.parser.sections_cn import (
     _extract_title,
     _identify_section,
     _split_spec_subsections,
+    detect_patent_document_cn,
     extract_cn_sections_from_docx,
 )
 
@@ -224,3 +225,55 @@ class TestExtractCnSectionsFromDocx:
         doc = extract_cn_sections_from_docx(sections)
         assert len(doc.figure_refs) > 0
         assert doc.figure_count >= 2
+
+
+# ---------------------------------------------------------------------------
+# detect_patent_document_cn
+# ---------------------------------------------------------------------------
+
+
+class TestDetectPatentDocumentCn:
+    def test_true_with_spec_subsection_header(self):
+        assert detect_patent_document_cn(["技术领域", "本发明涉及测试。"]) is True
+
+    def test_true_with_background_header(self):
+        assert detect_patent_document_cn(["背景技术", "现有方案存在问题。"]) is True
+
+    def test_true_with_wushu_boundary_claims(self):
+        assert detect_patent_document_cn(["权利要求书", "1. 一种装置。"]) is True
+
+    def test_true_with_wushu_boundary_abstract(self):
+        assert detect_patent_document_cn(["说明书摘要", "摘要内容。"]) is True
+
+    def test_true_with_numbered_claims(self):
+        paragraphs = [
+            "1. 一种装置，其特征在于，包括组件。",
+            "2. 如权利要求1所述的装置。",
+            "3. 如权利要求2所述的装置。",
+        ]
+        assert detect_patent_document_cn(paragraphs) is True
+
+    def test_true_with_fullwidth_period_claims(self):
+        paragraphs = [
+            "1．一种装置。",
+            "2．如权利要求1所述。",
+            "3．如权利要求2所述。",
+        ]
+        assert detect_patent_document_cn(paragraphs) is True
+
+    def test_false_generic_document(self):
+        paragraphs = [
+            "会议纪要",
+            "日期：2025年3月1日",
+            "参会人员：张三、李四",
+            "讨论事项：项目进展。",
+        ]
+        assert detect_patent_document_cn(paragraphs) is False
+
+    def test_or_logic_single_signal(self):
+        # Only sub-section header, no claims or boundary markers
+        assert detect_patent_document_cn(["具体实施方式", "描述段落。"]) is True
+
+    def test_fewer_than_three_claims_not_enough(self):
+        paragraphs = ["1. 第一项。", "2. 第二项。"]
+        assert detect_patent_document_cn(paragraphs) is False
