@@ -45,6 +45,22 @@ class DocxSection:
     paragraphs: list[str] = field(default_factory=list)
 
 
+@dataclass
+class LoadedTwDocument:
+    """Structured result of loading a TW patent .docx file."""
+
+    paragraphs: list[str] = field(default_factory=list)
+    has_tracked_changes: bool = False
+
+
+@dataclass
+class LoadedCnDocument:
+    """Structured result of loading a CN patent .docx file."""
+
+    sections: list[DocxSection] = field(default_factory=list)
+    has_tracked_changes: bool = False
+
+
 def detect_tracked_changes(doc) -> bool:
     """Check if a .docx document contains tracked changes (w:del or w:ins).
 
@@ -236,7 +252,7 @@ def load_docx(file_path: str | Path) -> LoadedDocument:
     )
 
 
-def load_docx_tw(file_path: str | Path) -> list[str]:
+def load_docx_tw(file_path: str | Path) -> LoadedTwDocument:
     """Load a TW patent .docx and return paragraph texts with claim numbering.
 
     TW .docx files use 【】bracket headers for sections and Word numbering
@@ -244,6 +260,7 @@ def load_docx_tw(file_path: str | Path) -> list[str]:
     - Extracts paragraph text as-is for section extraction
     - Detects claim paragraphs (w:numPr after a claims header) and prepends
       sequential ``N. `` so claims_tw.py can parse them
+    - Detects tracked changes (w:del / w:ins)
     """
     path = Path(file_path)
     if not path.exists():
@@ -298,16 +315,17 @@ def load_docx_tw(file_path: str | Path) -> list[str]:
         else:
             paragraphs.append(text)
 
-    return paragraphs
+    tracked_changes = detect_tracked_changes(doc)
+    return LoadedTwDocument(paragraphs=paragraphs, has_tracked_changes=tracked_changes)
 
 
-def load_docx_cn(file_path: str | Path) -> list[DocxSection]:
+def load_docx_cn(file_path: str | Path) -> LoadedCnDocument:
     """Load a CN patent .docx and return paragraphs grouped by Word section.
 
     The 五書模板 format uses Word section breaks to separate the five patent
     documents. Section titles appear in page headers (黑体 16pt centered),
     not in body text. This function reads those headers and groups body
-    paragraphs by their containing Word section.
+    paragraphs by their containing Word section. Also detects tracked changes.
     """
     path = Path(file_path)
     if not path.exists():
@@ -357,4 +375,5 @@ def load_docx_cn(file_path: str | Path) -> list[DocxSection]:
     header = section_headers[section_idx] if section_idx < len(section_headers) else ""
     result.append(DocxSection(header_text=header, paragraphs=current_paras))
 
-    return result
+    tracked_changes = detect_tracked_changes(doc)
+    return LoadedCnDocument(sections=result, has_tracked_changes=tracked_changes)

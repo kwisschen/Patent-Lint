@@ -32,7 +32,7 @@ from patentlint.parser.xml_loader import extract_cn_xml_from_zip, parse_cnipa_xm
 # TODO Phase 7: Add language mismatch detection (English content in CN mode, Chinese content in US mode)
 
 
-def _run_cn_pipeline(cn_doc: CnPatentDocument, *, likely_patent: bool = True) -> AnalysisResult:
+def _run_cn_pipeline(cn_doc: CnPatentDocument, *, likely_patent: bool = True, has_tracked_changes: bool = False) -> AnalysisResult:
     """Run CN analysis pipeline with all 24 checks."""
     para_count = len(cn_doc.paragraph_numbers) if cn_doc.paragraph_numbers else (
         len(cn_doc.technical_field)
@@ -90,6 +90,7 @@ def _run_cn_pipeline(cn_doc: CnPatentDocument, *, likely_patent: bool = True) ->
         figures_count=cn_doc.figure_count,
         abstract_word_count=cn_doc.abstract_char_count,
         likely_patent=likely_patent,
+        has_tracked_changes=has_tracked_changes,
         has_scanned_fallback=cn_doc.has_doc_page_fallback,
         cn_specification_checks=spec_checks,
         cn_claims_checks=claims_checks,
@@ -239,7 +240,7 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
     )
 
 
-def _run_tw_pipeline(tw_doc: TwPatentDocument, *, likely_patent: bool = True) -> AnalysisResult:
+def _run_tw_pipeline(tw_doc: TwPatentDocument, *, likely_patent: bool = True, has_tracked_changes: bool = False) -> AnalysisResult:
     """Run TW pipeline with specification checks."""
     para_count = len(tw_doc.paragraph_numbers) if tw_doc.paragraph_numbers else (
         len(tw_doc.technical_field)
@@ -310,6 +311,7 @@ def _run_tw_pipeline(tw_doc: TwPatentDocument, *, likely_patent: bool = True) ->
         figures_count=len(set(tw_doc.figure_refs)),
         abstract_word_count=tw_doc.abstract_char_count,
         likely_patent=likely_patent,
+        has_tracked_changes=has_tracked_changes,
         tw_specification_checks=spec_checks,
         tw_claims_checks=claims_checks,
         tw_abstract_checks=abstract_checks,
@@ -325,10 +327,10 @@ def analyze_file(file_path: str, jurisdiction: Jurisdiction = Jurisdiction.US) -
         if not lower.endswith(".docx"):
             msg = f"Unsupported file type for TW jurisdiction: {file_path}"
             raise ValueError(msg)
-        paragraphs = load_docx_tw(file_path)
-        likely_patent = detect_patent_document_tw(paragraphs)
-        tw_doc = extract_tw_sections(paragraphs)
-        return _run_tw_pipeline(tw_doc, likely_patent=likely_patent)
+        loaded_tw = load_docx_tw(file_path)
+        likely_patent = detect_patent_document_tw(loaded_tw.paragraphs)
+        tw_doc = extract_tw_sections(loaded_tw.paragraphs)
+        return _run_tw_pipeline(tw_doc, likely_patent=likely_patent, has_tracked_changes=loaded_tw.has_tracked_changes)
 
     if jurisdiction == Jurisdiction.CN:
         if lower.endswith(".xml"):
@@ -341,11 +343,11 @@ def analyze_file(file_path: str, jurisdiction: Jurisdiction = Jurisdiction.US) -
             cn_doc = parse_cnipa_xml(xml_data)
             return _run_cn_pipeline(cn_doc)
         if lower.endswith(".docx"):
-            sections_list = load_docx_cn(file_path)
-            all_cn_paragraphs = [p for s in sections_list for p in s.paragraphs]
+            loaded_cn = load_docx_cn(file_path)
+            all_cn_paragraphs = [p for s in loaded_cn.sections for p in s.paragraphs]
             likely_patent = detect_patent_document_cn(all_cn_paragraphs)
-            cn_doc = extract_cn_sections_from_docx(sections_list)
-            return _run_cn_pipeline(cn_doc, likely_patent=likely_patent)
+            cn_doc = extract_cn_sections_from_docx(loaded_cn.sections)
+            return _run_cn_pipeline(cn_doc, likely_patent=likely_patent, has_tracked_changes=loaded_cn.has_tracked_changes)
         msg = f"Unsupported file type for CN jurisdiction: {file_path}"
         raise ValueError(msg)
 
@@ -365,10 +367,10 @@ def analyze_bytes(content: bytes, filename: str, jurisdiction: Jurisdiction = Ju
         with tempfile.NamedTemporaryFile(suffix=".docx", delete=True) as tmp:
             tmp.write(content)
             tmp.flush()
-            paragraphs = load_docx_tw(tmp.name)
-        likely_patent = detect_patent_document_tw(paragraphs)
-        tw_doc = extract_tw_sections(paragraphs)
-        return _run_tw_pipeline(tw_doc, likely_patent=likely_patent)
+            loaded_tw = load_docx_tw(tmp.name)
+        likely_patent = detect_patent_document_tw(loaded_tw.paragraphs)
+        tw_doc = extract_tw_sections(loaded_tw.paragraphs)
+        return _run_tw_pipeline(tw_doc, likely_patent=likely_patent, has_tracked_changes=loaded_tw.has_tracked_changes)
 
     if jurisdiction == Jurisdiction.CN:
         if lower.endswith(".zip"):
@@ -382,11 +384,11 @@ def analyze_bytes(content: bytes, filename: str, jurisdiction: Jurisdiction = Ju
             with tempfile.NamedTemporaryFile(suffix=".docx", delete=True) as tmp:
                 tmp.write(content)
                 tmp.flush()
-                sections_list = load_docx_cn(tmp.name)
-            all_cn_paragraphs = [p for s in sections_list for p in s.paragraphs]
+                loaded_cn = load_docx_cn(tmp.name)
+            all_cn_paragraphs = [p for s in loaded_cn.sections for p in s.paragraphs]
             likely_patent = detect_patent_document_cn(all_cn_paragraphs)
-            cn_doc = extract_cn_sections_from_docx(sections_list)
-            return _run_cn_pipeline(cn_doc, likely_patent=likely_patent)
+            cn_doc = extract_cn_sections_from_docx(loaded_cn.sections)
+            return _run_cn_pipeline(cn_doc, likely_patent=likely_patent, has_tracked_changes=loaded_cn.has_tracked_changes)
         msg = f"Unsupported file type for CN jurisdiction: {filename}"
         raise ValueError(msg)
 
