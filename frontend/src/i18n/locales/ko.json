@@ -341,10 +341,10 @@
       "commercialLanguage": "상업적 표현",
       "figureCount": "도면 수"
     },
-    "twTitle": "PatentLint vs. TIPO 偵錯系統",
+    "twTitle": "PatentLint vs. TIPO 오류 검출 시스템",
     "twSubtitle": "TIPO 규칙(專利法施行細則, 專利審查基準)에 따른 30여 건의 작성 검사.",
     "twCompare": {
-      "colTipo": "TIPO 偵錯系統",
+      "colTipo": "TIPO 오류 검출 시스템",
       "feature": {
         "patentTypes": "특허 유형",
         "inputFormat": "입력 형식",
