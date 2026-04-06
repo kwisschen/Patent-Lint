@@ -378,11 +378,14 @@ export async function downloadReport(reportData, t, language, originalFilename) 
   const pdfFilename = `patentlint-${filename}.pdf`
 
   // Load CJK font if needed (font fetch happens before docDefinition is built).
-  // Jurisdiction dictates font: CN → SC (superset covering both simplified+traditional),
-  // TW → TC. For US, fall back to locale-based selection for CJK UI languages.
+  // CN → always SC (superset covering simplified+traditional).
+  // TW → locale-aware: zh-TW→TC, zh-CN→SC, ja→JP, ko→KR, en→TC (for TIPO terms).
+  // US → locale-based selection for CJK UI languages.
   const isCjkLocale = !!CJK_FONT_URLS[language]
   const needsCjk = isCjkLocale || !!jConfig.cjkFont
-  const cjkLanguage = jConfig.cjkFont || (isCjkLocale ? language : null)
+  const cjkLanguage = (jConfig.cjkFont && !jConfig.cjkFontLocaleAware)
+    ? jConfig.cjkFont
+    : (isCjkLocale ? language : jConfig.cjkFont)
   let cjkBase64 = null
   if (needsCjk && cjkLanguage) {
     try {

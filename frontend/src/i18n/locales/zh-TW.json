@@ -54,10 +54,10 @@
     "drawingsShort": "圖式",
     "abstract": "摘要",
     "cn": {
-      "specification": "说明书",
-      "claims": "权利要求",
-      "drawings": "附图",
-      "drawingsShort": "附图",
+      "specification": "說明書",
+      "claims": "權利要求",
+      "drawings": "附圖",
+      "drawingsShort": "附圖",
       "abstract": "摘要"
     },
     "tw": {

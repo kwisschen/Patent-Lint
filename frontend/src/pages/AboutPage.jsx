@@ -6,8 +6,7 @@ import { Check, Linkedin, Github, Mail, ShieldCheck, Server } from 'lucide-react
 import { useInView } from '../hooks/useInView'
 import PageCTA from '../components/PageCTA'
 import { useCountUp } from '../hooks/useCountUp'
-
-const JURISDICTION_COLORS = { US: '#2563EB', CN: '#DC2626', TW: '#0D9488' }
+import { JURISDICTION_COLORS } from '../lib/jurisdictionConfig'
 
 function JurisdictionBadge({ code }) {
   return (
