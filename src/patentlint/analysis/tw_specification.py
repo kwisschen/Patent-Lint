@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import re
 
+from patentlint.analysis.figure_refs import TW_PARSER
 from patentlint.models import CheckItem, TwPatentDocument, TwPatentType
 
 # Canonical section order per 專利法施行細則 §17
@@ -37,7 +38,6 @@ _VALID_ENDINGS = frozenset("。！？")
 _TRADEMARK_RE = re.compile(r"[®™©]")
 _MODEL_NUMBER_RE = re.compile(r"[A-Z]{2,}-\d{2,}", re.IGNORECASE)
 _CLAIM_REF_RE = re.compile(r"如請求項\s*\d+")
-_FIGURE_REF_RE = re.compile(r"(?:第\s*(\d+)\s*圖|圖\s*(\d+))")
 _REF_NUMERAL_RE = re.compile(
     r"(?<![【\d])"      # not preceded by 【 or digit
     r"(?<!第)"          # not ordinal 第N
@@ -73,13 +73,12 @@ def _section_has_content(items: list) -> bool:
     return True
 
 
-def _extract_figure_numbers(text: str) -> set[str]:
-    """Extract figure numbers from text using TW figure reference patterns."""
-    numbers: set[str] = set()
-    for match in _FIGURE_REF_RE.finditer(text):
-        num = match.group(1) or match.group(2)
-        numbers.add(num)
-    return numbers
+def _fig_sort_key(fig_id: str) -> tuple[int, str]:
+    """Sort key for figure IDs that may have alpha suffixes (e.g. '5A')."""
+    m = re.match(r"(\d+)([A-Z]?)$", fig_id)
+    if m:
+        return (int(m.group(1)), m.group(2))
+    return (0, fig_id)
 
 
 # ── Check 1 ──────────────────────────────────────────────────────────────
@@ -321,11 +320,11 @@ def check_figure_ref_consistency(doc: TwPatentDocument) -> list[CheckItem]:
             reference="專利審查基準",
         )]
 
-    drawings_figs = _extract_figure_numbers(drawings_text)
-    embodiment_figs = _extract_figure_numbers(embodiment_text)
+    drawings_figs = TW_PARSER.extract(drawings_text).ids
+    embodiment_figs = TW_PARSER.extract(embodiment_text).ids
 
-    only_drawings = sorted(drawings_figs - embodiment_figs, key=int)
-    only_embodiment = sorted(embodiment_figs - drawings_figs, key=int)
+    only_drawings = sorted(drawings_figs - embodiment_figs, key=_fig_sort_key)
+    only_embodiment = sorted(embodiment_figs - drawings_figs, key=_fig_sort_key)
 
     if only_drawings or only_embodiment:
         parts = []
