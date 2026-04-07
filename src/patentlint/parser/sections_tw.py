@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import re
 
+from patentlint.analysis.figure_refs import TW_PARSER
 from patentlint.models import TwPatentDocument, TwPatentType
 from patentlint.parser.claims_tw import parse_tw_claims
 from patentlint.parser.symbol_table_tw import parse_tw_symbol_table
@@ -65,13 +66,6 @@ _UTILITY_MODEL_KEYWORDS = {"新型摘要", "新型說明書", "新型內容", "�
 _PARA_NUM_PATTERN = re.compile(r"^【(\d{4})】")
 
 # ---------------------------------------------------------------------------
-# Figure reference patterns for TW: 圖N, 第N圖, 圖式N
-# ---------------------------------------------------------------------------
-
-_FIGURE_REF_PATTERN = re.compile(r"(?:第\s*(\d+)\s*圖|圖式?\s*(\d+[a-zA-Z]?))")
-
-
-# ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
@@ -99,14 +93,6 @@ def _count_cjk_chars(text: str) -> int:
         ):
             count += 1
     return count
-
-
-def _extract_figure_refs(text: str) -> list[str]:
-    """Extract figure reference strings from text."""
-    refs: list[str] = []
-    for m in _FIGURE_REF_PATTERN.finditer(text):
-        refs.append(m.group(0))
-    return refs
 
 
 # ---------------------------------------------------------------------------
@@ -289,7 +275,8 @@ def extract_tw_sections(paragraphs: list[str]) -> TwPatentDocument:
     # --- Figure references ---
     drawings_text = "\n".join(section_content["drawings_description"])
     embodiment_text = "\n".join(section_content["embodiment"])
-    figure_refs = _extract_figure_refs(drawings_text + "\n" + embodiment_text)
+    combined_text = drawings_text + "\n" + embodiment_text
+    figure_refs = list(TW_PARSER.extract(combined_text).ordered)
 
     return TwPatentDocument(
         patent_type=patent_type,
