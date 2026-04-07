@@ -656,7 +656,9 @@ class TestClaimsSymbolTableConsistency:
         )
         result = check_claims_symbol_table_consistency(doc)
         assert result[0].status == "verify"
-        assert "102" in result[0].details
+        payload = result[0].details_params["numerals_with_locations"]
+        assert isinstance(payload, list)
+        assert payload == [{"numeral": "102", "claims": [1]}]
 
     def test_empty_symbol_table_pass(self):
         doc = _make_doc(
@@ -666,7 +668,8 @@ class TestClaimsSymbolTableConsistency:
         result = check_claims_symbol_table_consistency(doc)
         assert result[0].status == "pass"
 
-    def test_numeral_in_table_not_claims_verify(self):
+    def test_table_has_extra_numerals_passes(self):
+        """Symbol table entries not used in claims are NOT a defect."""
         doc = _make_doc(
             claims=[_claim(1, "1. 一種裝置，包含一基座(101)。")],
             symbol_table=[
@@ -675,16 +678,77 @@ class TestClaimsSymbolTableConsistency:
             ],
         )
         result = check_claims_symbol_table_consistency(doc)
-        assert result[0].status == "verify"
-        assert "200" in result[0].details
+        assert result[0].status == "pass"
 
-    def test_no_claims_pass(self):
+    def test_no_claims_numerals_pass(self):
+        """No claims means no claim numerals — early return pass."""
         doc = _make_doc(
             claims=[],
             symbol_table=[SymbolEntry(numeral="101", name="基座")],
         )
         result = check_claims_symbol_table_consistency(doc)
+        assert result[0].status == "pass"
+        assert result[0].message_key == "check.tw.claims.symbolTableConsistency.noClaimNumerals"
+
+    def test_zero_claim_numerals_with_populated_table_passes(self):
+        """Regression for 110P000368: claims have no (N) refs, symbol table populated.
+
+        Per 施行細則 §19, reference numerals in claims are optional. The
+        consistency check must early-return PASS, not flag every symbol
+        table entry as 'in 符號說明 but not claims'.
+        """
+        doc = _make_doc(
+            claims=[
+                _claim(1, "1. 一種裝置，包括一底座及一框架。"),
+            ],
+            symbol_table=[
+                SymbolEntry(numeral="10", name="底座"),
+                SymbolEntry(numeral="20", name="框架"),
+                SymbolEntry(numeral="30", name="支撐件"),
+            ],
+        )
+        result = check_claims_symbol_table_consistency(doc)
+        assert len(result) == 1
+        assert result[0].status == "pass"
+        assert result[0].message_key == "check.tw.claims.symbolTableConsistency.noClaimNumerals"
+
+    def test_structured_details_params_with_locations(self):
+        """Verify structured details_params includes claim-number locations."""
+        doc = _make_doc(
+            claims=[
+                _claim(1, "1. 一種裝置，包括一底座(99)。"),
+                _claim(3, "3. 如請求項1所述的裝置，其中該底座(99)及框架(100)。",
+                       independent=False, deps=[1]),
+            ],
+            symbol_table=[
+                SymbolEntry(numeral="10", name="底座"),
+            ],
+        )
+        result = check_claims_symbol_table_consistency(doc)
         assert result[0].status == "verify"
+        payload = result[0].details_params["numerals_with_locations"]
+        assert isinstance(payload, list)
+        # Numerals sorted numerically: 99, 100 (not lexically: 100, 99)
+        assert payload == [
+            {"numeral": "99", "claims": [1, 3]},
+            {"numeral": "100", "claims": [3]},
+        ]
+
+    def test_structured_payload_uses_correct_key_name(self):
+        """The details_params key must be 'numerals_with_locations'.
+
+        This name is the registry key in detailsFormatter.js. If renamed,
+        the frontend formatter will not detect the structured payload and
+        will pass it raw to t(), producing '[object Object]' in output.
+        """
+        doc = _make_doc(
+            claims=[
+                _claim(1, "1. 一種裝置(99)。"),
+            ],
+            symbol_table=[SymbolEntry(numeral="10", name="底座")],
+        )
+        result = check_claims_symbol_table_consistency(doc)
+        assert "numerals_with_locations" in result[0].details_params
 
 
 # ── Check 26: Antecedent Basis ────────────────────────────────────────────

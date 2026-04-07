@@ -508,7 +508,11 @@
       "multiDepOnMultiDep": "依專利法施行細則 §18，多項附屬項不得直接或間接依附於另一多項附屬項。標記：請求項 {{claims}}。",
       "multiDepAlternative": "依專利法施行細則 §18，多項附屬項須使用擇一形式（或/任一項）。標記：請求項 {{claims}}。",
       "titleSubjectMatch": "發明名稱/新型名稱應與獨立項之主題名稱一致。標題：{{detail}}。",
-      "symbolTableConsistency": "請求項中之元件符號應與符號說明一致。{{detail}}。請確認完整性。",
+      "claims": {
+        "symbolTableConsistency": {
+          "missingFromTable": "請求項中之元件符號未於符號說明中定義：{{numerals_with_locations}}"
+        }
+      },
       "antecedentBasis": "「該」「所述」「前述」加名詞，須於同一請求項或母項中以「一」加名詞導入。以正規表達式偵測，結果為近似值，請自行確認。",
       "abstractCharCount": "依專利法施行細則 §21，摘要應在250字以內。TIPO不會僅因字數超限而核駁，但請檢查是否可精簡。",
       "abstractTitleMatch": "依專利審查基準，摘要應提及發明名稱/新型名稱。請確認摘要是否反映標題。標題：{{detail}}。",
@@ -850,7 +854,8 @@
         },
         "symbolTableConsistency": {
           "verify": "請求項中之元件符號與符號說明不一致。",
-          "pass": "請求項中之元件符號與符號說明一致。"
+          "pass": "請求項中之元件符號與符號說明一致。",
+          "noClaimNumerals": "請求項未使用元件符號（施行細則 §19 允許），無需檢查一致性。"
         },
         "antecedentBasis": {
           "verify": "{{count}}個用語可能缺少先行詞。",
@@ -975,5 +980,16 @@
     "whereinComma": "請求項 {{claimNumber}}：請檢查 'wherein' 子句前的逗號用法。",
     "whereinCommaDetails": "請求項 {{claimNumber}} 的 'wherein' 子句前後逗號使用可能不正確。請依據 MPEP § 608.01(m) 檢查標點符號。",
     "punctuationPass": "所有請求項標點符號正確。"
+  },
+  "term": {
+    "claim": {
+      "numbered": "請求項{{n}}"
+    },
+    "figure": {
+      "numbered": "圖{{n}}"
+    },
+    "paragraph": {
+      "numbered": "段落{{n}}"
+    }
   }
 }

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2025 Christopher Chen
 import { useTranslation } from 'react-i18next'
+import { formatDetails } from "../lib/detailsFormatter"
 
 const CITATION_MAP = {
   'check.spec.restrictiveWording': '§ 112(b)',
@@ -57,8 +58,8 @@ export { getCitation }
 
 export default function CheckItem({ status, message, message_key, details, details_key, details_params, reference }) {
   const { t, i18n } = useTranslation()
-  const displayMessage = message_key && i18n.exists(message_key) ? t(message_key, details_params || {}) : message
-  const displayDetails = details_key && i18n.exists(details_key) ? t(details_key, details_params || {}) : details
+  const displayMessage = message_key && i18n.exists(message_key) ? formatDetails(message_key, details_params, t) : message
+  const displayDetails = details_key && i18n.exists(details_key) ? formatDetails(details_key, details_params, t) : details
   const citation = getCitation(message_key) || reference || null
 
   return (

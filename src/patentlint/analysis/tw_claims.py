@@ -617,53 +617,84 @@ _CLAIM_NUMERAL = re.compile(r"\((\d+)\)")
 
 
 def check_claims_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckItem]:
-    """Compare reference numerals in claims against symbol_table entries."""
+    """Verify reference numerals in claims are defined in 符號說明.
+
+    Per 專利法施行細則 §19, reference numerals in claims are optional.
+    When absent, the check passes vacuously. When present, every numeral
+    used in claims must be defined in 符號說明; the reverse direction
+    (符號說明 entries not used in claims) is NOT a defect — symbol
+    tables legitimately cover all figure elements regardless of which
+    appear in claim language.
+
+    Emits structured details_params with claim-number locations for
+    each undefined numeral, allowing the frontend formatter to render
+    "99 (claim 1, claim 3), 100 (claim 5)" in the user's locale.
+    """
     if not doc.symbol_table:
         return [CheckItem(
             status="pass",
-            message="Reference numerals in claims consistent with 符號說明.",
+            message="No 符號說明 entries to check against claims.",
             message_key="check.tw.claims.symbolTableConsistency.pass",
-            reference="專利審查基準",
+            reference="專利法施行細則 §19",
         )]
 
-    # Collect numerals from claims
-    claim_numerals: set[str] = set()
+    # Collect numerals from claims (parenthesized form only, per §19),
+    # tracking which claim numbers contain each numeral.
+    numeral_to_claims: dict[str, list[int]] = {}
     for claim in doc.claims:
         for m in _CLAIM_NUMERAL.finditer(claim.text):
-            claim_numerals.add(m.group(1))
+            numeral = m.group(1)
+            if numeral not in numeral_to_claims:
+                numeral_to_claims[numeral] = []
+            if claim.id not in numeral_to_claims[numeral]:
+                numeral_to_claims[numeral].append(claim.id)
 
-    # Collect numerals from symbol table
+    claim_numerals = set(numeral_to_claims.keys())
+
+    # Early return: claims contain no reference numerals (allowed by §19).
+    if not claim_numerals:
+        return [CheckItem(
+            status="pass",
+            message="Claims contain no reference numerals; consistency check not applicable.",
+            message_key="check.tw.claims.symbolTableConsistency.noClaimNumerals",
+            reference="專利法施行細則 §19",
+        )]
+
+    # Collect numerals from symbol table (handle ranges like S21~S25)
     symbol_numerals: set[str] = set()
     for entry in doc.symbol_table:
-        # Handle ranges like "S21~S25" — extract individual numbers
         nums = re.findall(r"\d+", entry.numeral)
         symbol_numerals.update(nums)
 
-    in_claims_not_table = claim_numerals - symbol_numerals
-    in_table_not_claims = symbol_numerals - claim_numerals
+    # Only flag the directionally meaningful case: numerals used in claims
+    # but undefined in 符號說明. The reverse is allowed.
+    missing_numerals = sorted(claim_numerals - symbol_numerals, key=int)
 
-    if in_claims_not_table or in_table_not_claims:
-        parts = []
-        if in_claims_not_table:
-            parts.append(f"In claims but not 符號說明: {', '.join(sorted(in_claims_not_table))}")
-        if in_table_not_claims:
-            parts.append(f"In 符號說明 but not claims: {', '.join(sorted(in_table_not_claims))}")
-        detail = "; ".join(parts)
+    if missing_numerals:
+        # Build structured payload: list of {numeral, claims} dicts.
+        # Frontend formatter will render this as
+        # "99 (claim 1, claim 3), 100 (claim 5)" in the user's locale.
+        numerals_with_locations = [
+            {
+                "numeral": n,
+                "claims": sorted(numeral_to_claims[n]),
+            }
+            for n in missing_numerals
+        ]
         return [CheckItem(
             status="verify",
-            message="Reference numerals in claims inconsistent with 符號說明.",
+            message=f"Reference numerals in claims undefined in 符號說明: {', '.join(missing_numerals)}",
             message_key="check.tw.claims.symbolTableConsistency.verify",
-            details=detail,
-            details_key="details.tw.symbolTableConsistency",
-            details_params={"detail": detail},
-            reference="專利審查基準",
+            details_key="details.tw.claims.symbolTableConsistency.missingFromTable",
+            details_params={"numerals_with_locations": numerals_with_locations},
+            reference="專利法施行細則 §19",
         )]
 
     return [CheckItem(
         status="pass",
-        message="Reference numerals in claims consistent with 符號說明.",
+        message="All reference numerals in claims are defined in 符號說明.",
         message_key="check.tw.claims.symbolTableConsistency.pass",
-        reference="專利審查基準",
+        reference="專利法施行細則 §19",
     )]
 
 
