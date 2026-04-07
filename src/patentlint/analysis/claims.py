@@ -96,6 +96,8 @@ def get_dependency_chain(claim: Claim, all_claims: list[Claim]) -> str:
     if claim.independent:
         return str(claim.id)
 
+        # Renders the primary (first-parent) chain only; multi-parent claims
+        # show one of N possible chains.  UX decision, not a bug.
     if claim.dependencies:
         parent_id = claim.dependencies[0]
 
@@ -312,19 +314,29 @@ def _classify_entity(head_noun: str, full_preamble: str) -> str:
 
 
 def _find_root_independent(claim: Claim, all_claims: list[Claim]) -> Claim | None:
-    """Walk dependency chain to find the root independent claim."""
-    visited: set[int] = set()
-    current = claim
-    while not current.independent and current.dependencies:
-        parent_id = current.dependencies[0]
+    """Walk dependency graph (BFS) to find the first reachable independent claim.
+
+    If a dependent claim has multiple independent roots with conflicting
+    preamble entity types (rare in multi-dep claims), only the first
+    BFS-reached root is returned.  This is a known limitation.
+    """
+    if claim.independent:
+        return claim
+    claims_by_id = {c.id: c for c in all_claims}
+    visited: set[int] = {claim.id}
+    queue = list(claim.dependencies)
+    while queue:
+        parent_id = queue.pop(0)
         if parent_id in visited:
-            break
+            continue
         visited.add(parent_id)
-        parent = _find_claim_by_id(parent_id, all_claims)
+        parent = claims_by_id.get(parent_id)
         if parent is None:
-            break
-        current = parent
-    return current if current.independent else None
+            continue
+        if parent.independent:
+            return parent
+        queue.extend(parent.dependencies)
+    return None
 
 
 def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
