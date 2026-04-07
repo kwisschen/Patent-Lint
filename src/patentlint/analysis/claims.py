@@ -96,9 +96,9 @@ def get_dependency_chain(claim: Claim, all_claims: list[Claim]) -> str:
     if claim.independent:
         return str(claim.id)
 
+    if claim.dependencies:
         # Renders the primary (first-parent) chain only; multi-parent claims
         # show one of N possible chains.  UX decision, not a bug.
-    if claim.dependencies:
         parent_id = claim.dependencies[0]
 
         if parent_id == claim.id:
