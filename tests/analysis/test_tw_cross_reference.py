@@ -116,7 +116,7 @@ class TestCheckFigureCount:
     """Check #33 (Internal †): Figure count."""
 
     def test_figures_exist(self):
-        doc = TwPatentDocument(figure_refs=["第1圖", "第2圖", "第3圖"])
+        doc = TwPatentDocument(figure_refs=["1", "2", "3"])
         result = check_figure_count(doc)
         assert result[0].status == "pass"
         assert result[0].details_params == {"count": "3"}
@@ -127,13 +127,13 @@ class TestCheckFigureCount:
         assert result[0].status == "pass"
         assert result[0].details_params == {"count": "0"}
 
-    def test_duplicate_figure_refs_deduplicated(self):
-        doc = TwPatentDocument(figure_refs=["第1圖", "第1圖", "第2圖"])
+    def test_unique_ids_counted_directly(self):
+        doc = TwPatentDocument(figure_refs=["1", "2"])
         result = check_figure_count(doc)
         assert result[0].details_params == {"count": "2"}
 
     def test_message_key(self):
-        doc = TwPatentDocument(figure_refs=["第1圖"])
+        doc = TwPatentDocument(figure_refs=["1"])
         result = check_figure_count(doc)
         assert result[0].message_key == "check.tw.drawings.figureCount.pass"
 
