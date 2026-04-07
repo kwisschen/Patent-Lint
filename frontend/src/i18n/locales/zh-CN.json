@@ -508,7 +508,11 @@
       "multiDepOnMultiDep": "依专利法施行细则 §18，多项附属项不得直接或间接依附于另一多项附属项。标记：請求項 {{claims}}。",
       "multiDepAlternative": "依专利法施行细则 §18，多项附属项须使用择一形式（或/任一项）。标记：請求項 {{claims}}。",
       "titleSubjectMatch": "发明名称/新型名称应与独立项之主题名称一致。标题：{{detail}}。",
-      "symbolTableConsistency": "請求項中之元件符号应与符號說明一致。{{detail}}。请确认完整性。",
+      "claims": {
+        "symbolTableConsistency": {
+          "missingFromTable": "权利要求中的元件符号未在符号说明中定义：{{numerals_with_locations}}"
+        }
+      },
       "antecedentBasis": "「该」「所述」「前述」加名词，须于同一请求项或母项中以「一」加名词导入。以正则表达式检测，结果为近似值，请自行确认。",
       "abstractCharCount": "依专利法施行细则 §21，摘要应在250字以内。TIPO不会仅因字数超限而驳回，但请检查是否可精简。",
       "abstractTitleMatch": "依专利审查基准，摘要应提及发明名称/新型名称。请确认摘要是否反映标题。标题：{{detail}}。",
@@ -850,7 +854,8 @@
         },
         "symbolTableConsistency": {
           "verify": "請求項中之元件符号与符號說明不一致。",
-          "pass": "請求項中之元件符号与符號說明一致。"
+          "pass": "請求項中之元件符号与符號說明一致。",
+          "noClaimNumerals": "权利要求未使用元件符号（施行细则 §19 允许），无需检查一致性。"
         },
         "antecedentBasis": {
           "verify": "{{count}}个用语可能缺少先行词。",
@@ -975,5 +980,16 @@
     "whereinComma": "权利要求 {{claimNumber}}：请检查 'wherein' 子句前的逗号用法。",
     "whereinCommaDetails": "权利要求 {{claimNumber}} 的 'wherein' 子句前后逗号使用可能不正确。请依据 MPEP § 608.01(m) 检查标点符号。",
     "punctuationPass": "所有权利要求标点符号正确。"
+  },
+  "term": {
+    "claim": {
+      "numbered": "权利要求{{n}}"
+    },
+    "figure": {
+      "numbered": "图{{n}}"
+    },
+    "paragraph": {
+      "numbered": "段落{{n}}"
+    }
   }
 }

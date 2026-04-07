@@ -9,6 +9,7 @@ These are designed to be shareable with the Agentic Patent Analyst project.
 from __future__ import annotations
 
 from enum import Enum
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -150,7 +151,7 @@ class CheckItem(BaseModel):
     message_key: str = ""  # i18n key for frontend
     details: str | None = None
     details_key: str | None = None
-    details_params: dict[str, str] | None = None
+    details_params: dict[str, Any] | None = None
     reference: str | None = None
 
 

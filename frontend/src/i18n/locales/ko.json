@@ -508,7 +508,11 @@
       "multiDepOnMultiDep": "專利法施行細則 §18에 따라 다항 종속항은 직접 또는 간접적으로 다른 다항 종속항에 종속될 수 없습니다. 해당: 請求項 {{claims}}.",
       "multiDepAlternative": "專利法施行細則 §18에 따라 다항 종속항은 택일 형식(或/任一項)을 사용해야 합니다. 해당: 請求項 {{claims}}.",
       "titleSubjectMatch": "發明名稱/新型名稱은 독립항의 주제명과 일치해야 합니다. 제목: {{detail}}.",
-      "symbolTableConsistency": "請求項의 부호는 符號說明과 일치해야 합니다. {{detail}}. 완전성을 확인하십시오.",
+      "claims": {
+        "symbolTableConsistency": {
+          "missingFromTable": "청구항의 참조 부호가 부호 설명에 미정의: {{numerals_with_locations}}"
+        }
+      },
       "antecedentBasis": "「該」「所述」「前述」+ 명사는 동일 請求項 또는 모항에서 「一」+ 명사로 도입되어야 합니다. 정규식 기반 검출이므로 근사 결과입니다. 직접 확인하십시오.",
       "abstractCharCount": "專利法施行細則 §21에 따라 요약은 250자 이내가 권장됩니다. TIPO는 글자 수 초과만으로 거절하지 않지만 간결성을 확인하십시오.",
       "abstractTitleMatch": "專利審查基準에 따라 요약은 發明名稱/新型名稱을 언급해야 합니다. 요약이 제목을 반영하는지 확인하십시오. 제목: {{detail}}.",
@@ -850,7 +854,8 @@
         },
         "symbolTableConsistency": {
           "verify": "請求項의 부호가 符號說明과 일치하지 않습니다.",
-          "pass": "請求項의 부호가 符號說明과 일치합니다."
+          "pass": "請求項의 부호가 符號說明과 일치합니다.",
+          "noClaimNumerals": "청구항에 참조 부호가 없습니다(시행규칙 §19 허용). 일관성 검사 미적용."
         },
         "antecedentBasis": {
           "verify": "{{count}}개 용어에 선행사가 없을 수 있습니다.",
@@ -975,5 +980,16 @@
     "whereinComma": "청구항 {{claimNumber}}: 'wherein' 절 앞의 쉼표 사용을 검토하세요.",
     "whereinCommaDetails": "청구항 {{claimNumber}}의 'wherein' 절 주변에 쉼표가 잘못 배치되었을 수 있습니다. MPEP § 608.01(m)에 따라 부호를 검토하세요.",
     "punctuationPass": "모든 청구항의 부호가 올바릅니다."
+  },
+  "term": {
+    "claim": {
+      "numbered": "청구항 {{n}}"
+    },
+    "figure": {
+      "numbered": "도 {{n}}"
+    },
+    "paragraph": {
+      "numbered": "단락 {{n}}"
+    }
   }
 }

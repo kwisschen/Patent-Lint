@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { AlertCircle, Search, CheckCircle, ChevronDown } from 'lucide-react'
 import { getCitation } from './CheckItem'
 import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
+import { formatDetails } from '../lib/detailsFormatter'
 
 const GROUP_CONFIG = [
   { status: 'amend', titleKey: 'triage.amend', emptyKey: 'triage.amendEmpty', Icon: AlertCircle },
@@ -13,7 +14,7 @@ const GROUP_CONFIG = [
 ]
 
 function TriageItem({ check, t, i18n, compact }) {
-  const msg = check.message_key && i18n.exists(check.message_key) ? t(check.message_key, check.details_params || {}) : check.message
+  const msg = check.message_key && i18n.exists(check.message_key) ? formatDetails(check.message_key, check.details_params, t) : check.message
   const citation = getCitation(check.message_key) || check.reference || null
 
   return (
@@ -30,7 +31,7 @@ function TriageItem({ check, t, i18n, compact }) {
         <span className="text-sm">{msg}</span>
         {!compact && (check.details || check.details_key) && (
           <p className="text-xs text-muted-foreground mt-0.5">
-            {check.details_key && i18n.exists(check.details_key) ? t(check.details_key, check.details_params || {}) : check.details}
+            {check.details_key && i18n.exists(check.details_key) ? formatDetails(check.details_key, check.details_params, t) : check.details}
           </p>
         )}
       </div>
