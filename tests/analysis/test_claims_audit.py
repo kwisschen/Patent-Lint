@@ -427,3 +427,105 @@ class TestMultiParentDependencies:
         issues = check_antecedent_basis(claims)
         terms = [i["term"] for i in issues if i["claim_id"] == 5]
         assert "base" in terms
+
+
+class TestFindingShape:
+    """Finding dicts include claim_id, term, reference_form, claim_text."""
+
+    def test_finding_has_claim_id_and_term(self):
+        """Backward compat: claim_id and term always present."""
+        claims = [Claim(id=1, text="A device wherein the widget is active.", independent=True)]
+        issues = check_antecedent_basis(claims)
+        assert len(issues) >= 1
+        assert "claim_id" in issues[0]
+        assert "term" in issues[0]
+
+    def test_finding_has_reference_form(self):
+        claims = [Claim(id=1, text="A device wherein the widget is active.", independent=True)]
+        issues = check_antecedent_basis(claims)
+        assert "reference_form" in issues[0]
+
+    def test_finding_has_claim_text(self):
+        claim_text = "A device wherein the widget is active."
+        claims = [Claim(id=1, text=claim_text, independent=True)]
+        issues = check_antecedent_basis(claims)
+        assert issues[0]["claim_text"] == claim_text
+
+    def test_reference_form_preserves_prefix(self):
+        """reference_form should be 'the base plate', not 'base plate'."""
+        claims = [Claim(id=1, text="A device wherein the base plate is flat.", independent=True)]
+        issues = check_antecedent_basis(claims)
+        issue = next(i for i in issues if i["term"] == "base plate")
+        assert issue["reference_form"] == "the base plate"
+
+    def test_reference_form_strips_trailing_junk(self):
+        """'the base plate further comprising' → reference_form='the base plate'."""
+        claims = [Claim(id=1, text="A device wherein the base plate further comprising a lid.", independent=True)]
+        issues = check_antecedent_basis(claims)
+        issue = next(i for i in issues if i["term"] == "base plate")
+        assert issue["reference_form"] == "the base plate"
+
+    def test_said_prefix_preserved_in_reference_form(self):
+        claims = [Claim(id=1, text="A device comprising a memory, wherein said processor executes code.", independent=True)]
+        issues = check_antecedent_basis(claims)
+        issue = next(i for i in issues if "processor" in i["term"])
+        assert issue["reference_form"].startswith("said ")
+
+
+class TestAntecedentBasisDedup:
+    """Dedup within-claim by (term, reference_form), keep across claims."""
+
+    def test_same_term_same_form_within_claim_deduped(self):
+        """'the base ... the base' in one claim → 1 finding."""
+        claims = [Claim(
+            id=3,
+            text="A device wherein the base is flat and the base is wide.",
+            independent=True,
+        )]
+        issues = check_antecedent_basis(claims)
+        base_issues = [i for i in issues if i["term"] == "base" and i["claim_id"] == 3]
+        assert len(base_issues) == 1
+
+    def test_same_term_different_forms_within_claim_kept(self):
+        """'the base' and 'said base' in one claim → 2 findings."""
+        claims = [Claim(
+            id=3,
+            text="A device wherein the base is flat and said base is wide.",
+            independent=True,
+        )]
+        issues = check_antecedent_basis(claims)
+        base_issues = [i for i in issues if i["term"] == "base" and i["claim_id"] == 3]
+        assert len(base_issues) == 2
+        forms = {i["reference_form"] for i in base_issues}
+        assert "the base" in forms
+        assert "said base" in forms
+
+    def test_same_term_across_claims_kept(self):
+        """Same unmatched term in claim 3 and claim 7 → 2 findings."""
+        claims = [
+            Claim(id=3, text="A device wherein the widget is flat.", independent=True),
+            Claim(id=7, text="A device wherein the widget is wide.", independent=True),
+        ]
+        issues = check_antecedent_basis(claims)
+        widget_issues = [i for i in issues if i["term"] == "widget"]
+        claim_ids = [i["claim_id"] for i in widget_issues]
+        assert 3 in claim_ids
+        assert 7 in claim_ids
+
+    def test_findings_sorted_by_claim_then_term_then_form(self):
+        """Findings sorted by (claim_id, term, reference_form) — all three keys exercised."""
+        claims = [
+            # Claim 3 first in list (out of ID order), two terms: "widget" and "base"
+            Claim(id=3, text="A device wherein the widget is red and said base is flat.", independent=True),
+            # Claim 1: same term "widget" with both "said" and "the" forms
+            Claim(id=1, text="A device wherein said widget is blue and the widget is green.", independent=True),
+        ]
+        issues = check_antecedent_basis(claims)
+        actual = [(i["claim_id"], i["term"], i["reference_form"]) for i in issues]
+        expected = [
+            (1, "widget", "said widget"),   # claim 1, term "widget", form "said"
+            (1, "widget", "the widget"),     # claim 1, term "widget", form "the"
+            (3, "base", "said base"),        # claim 3, term "base" < "widget"
+            (3, "widget", "the widget"),     # claim 3, term "widget"
+        ]
+        assert actual == expected
