@@ -463,3 +463,61 @@ class TestSymbolTableConsistency:
         detail = items[0].details_params["detail"]
         assert "unreferenced" in detail.lower() or "Defined" in detail
         assert "undefined" in detail.lower() or "Referenced" in detail
+
+
+# ── A2 regression: 110P000368 figure-ref consistency ────────────────────
+
+
+class TestFigureRefConsistency110P000368Regression:
+    """Regression test for real-world TW docx 110P000368.
+
+    The old singleton regex incorrectly extracted 100, 504, 510, 511, 701,
+    801 from compound nouns like 世界地圖100, 電子地圖510, 連結縮圖511,
+    代表縮圖701, 使用者縮圖801 in the 實施方式 section. The shared
+    TW_PARSER with blocklist guards correctly ignores these.
+    """
+
+    _BRIEF = """圖1顯示推薦適地性數位內容的系統架構實施例圖；
+圖2顯示推薦適地性數位內容的系統中伺服系統與使用者裝置之功能元件實施例圖；
+圖3顯示推薦適地性數位內容的方法中形成使用者喜好的實施例流程圖；
+圖4顯示推薦適地性數位內容的方法實施例流程圖；
+圖5顯示實現推薦適地性數位內容的方法的軟體程式的主頁實施例示意圖；
+圖6顯示推薦適地性數位內容的方法中播放數位內容的實施例流程圖；
+圖7顯示實現推薦適地性數位內容的方法的軟體程式的數位內容預覽頁面實施例示意圖；
+圖8顯示實現推薦適地性數位內容的方法的軟體程式的數位內容播放頁實施例示意圖；
+圖9顯示推薦適地性數位內容的方法中形成推薦的主題標籤的實施例流程圖；以及
+圖10顯示形成推薦的主題標籤的方法中採用位置區塊的實施例流程圖。"""
+
+    _DETAILED = """圖1顯示推薦適地性數位內容的系統架構實施例圖，如圖所示，系統提出一個伺服系統12，通過網路10向終端各種使用者裝置101, 103提供數位內容服務。
+圖2顯示推薦適地性數位內容的系統中伺服系統與使用者裝置之功能元件實施例圖。
+圖3顯示推薦適地性數位內容的方法中形成使用者喜好的實施例流程圖。
+圖5顯示實現推薦適地性數位內容的方法的軟體程式的主頁實施例示意圖，其中執行於使用者裝置中的瀏覽程式啟始以一電子地圖510為背景的圖形使用者介面。
+主頁50的影像，其中可以電子地圖510為背景影像。
+圖中顯示主頁50中包括多個連結縮圖511、513、515。
+圖6顯示推薦適地性數位內容的方法中播放數位內容的實施例流程圖。
+預覽頁面可參考圖7顯示的數位內容預覽頁面實施例示意圖，其中顯示一數位內容預覽頁面70，畫面中範例顯示有代表縮圖701與主題標籤703。
+圖8顯示一數位內容播放頁80，其中顯示播放中的數位內容，其他資訊還有使用者縮圖801。
+根據圖9所示形成推薦的主題標籤的實施例流程圖，可參考圖10顯示採用位置區塊的實施例圖，將世界地圖100切割為多個區塊。
+圖4顯示推薦適地性數位內容的方法實施例流程圖。"""
+
+    def test_no_false_positives_from_compound_nouns(self):
+        doc = _make_doc(
+            drawings_description=[self._BRIEF],
+            embodiment=[self._DETAILED],
+        )
+        items = check_figure_ref_consistency(doc)
+        assert len(items) == 1
+        assert items[0].status == "pass", (
+            f"Expected PASS, got {items[0].status}. "
+            f"Details: {items[0].details_params}"
+        )
+
+    def test_legitimate_mismatch_still_flagged(self):
+        """Sanity check: if brief has 圖1-3 and detailed only has 圖1-2, flag it."""
+        doc = _make_doc(
+            drawings_description=["圖1為A。\n圖2為B。\n圖3為C。"],
+            embodiment=["如圖1所示，參見圖2。"],
+        )
+        items = check_figure_ref_consistency(doc)
+        assert items[0].status == "verify"
+        assert "3" in items[0].details_params["detail"]
