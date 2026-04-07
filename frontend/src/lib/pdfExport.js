@@ -281,7 +281,7 @@ function buildAntecedentBasis(issues, t) {
   for (const issue of issues) {
     const cid = String(issue.claim_id)
     if (!grouped[cid]) grouped[cid] = []
-    grouped[cid].push(sanitizeText(issue.term))
+    grouped[cid].push(sanitizeText(issue.reference_form || issue.term))
   }
 
   const body = [
