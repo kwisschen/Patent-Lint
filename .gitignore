@@ -24,6 +24,8 @@ Thumbs.db
 .python-version
 legacy/
 docs/
-tests/fixtures/*.docx
+tests/fixtures/**/*.docx
+tests/fixtures/**/*.DOCX
+tests/fixtures/**/*.pdf
 smoke-test-pyodide.html
 temp/
