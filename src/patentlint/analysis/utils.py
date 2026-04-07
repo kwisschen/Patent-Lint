@@ -30,10 +30,11 @@ _STOP_WORDS = (
     r"a|an|the|said)"
 )
 
-_NP_CAPTURE = rf"((?:(?!{_STOP_WORDS}\b){_WORD}\s+){{0,5}}(?:(?!{_STOP_WORDS}\b){_WORD}))"
+_NP_CORE = rf"(?:(?!{_STOP_WORDS}\b){_WORD}\s+){{0,5}}(?:(?!{_STOP_WORDS}\b){_WORD})"
+_NP_CAPTURE = rf"({_NP_CORE})"
 
 _DEFINITE_REF = re.compile(
-    rf"\b(?:the|said)\s+{_NP_CAPTURE}",
+    rf"\b(?P<prefix>the|said)\s+(?P<noun>{_NP_CORE})",
     re.IGNORECASE,
 )
 
@@ -293,7 +294,7 @@ def extract_noun_phrases(text: str) -> list[str]:
         if cleaned:
             phrases.add(cleaned)
     for m in _DEFINITE_REF.finditer(text.lower()):
-        cleaned = clean_noun_phrase(m.group(1).strip())
+        cleaned = clean_noun_phrase(m.group("noun").strip())
         if cleaned:
             phrases.add(cleaned)
     return sorted(phrases)
@@ -303,7 +304,7 @@ def extract_definite_refs(text: str) -> list[str]:
     """Extract definite references ('the X', 'said X') from text."""
     refs: list[str] = []
     for m in _DEFINITE_REF.finditer(text.lower()):
-        cleaned = clean_noun_phrase(m.group(1).strip())
+        cleaned = clean_noun_phrase(m.group("noun").strip())
         if cleaned:
             refs.append(cleaned)
     return refs

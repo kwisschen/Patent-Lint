@@ -133,14 +133,25 @@ _SKIP_TERMS = {"invention", "present invention", "same", "following", "above", "
 
 
 def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
-    """Check for missing antecedent basis in claims.
+    """Check claims for antecedent basis issues.
 
-    For each claim, find "the [noun phrase]" and "said [noun phrase]".
-    Check whether an introduction (a/an, at least one, a plurality of,
-    ordinals, bare numerals) appears earlier in the same claim or any
-    ancestor claim.
+    A finding is emitted when a definite reference ("the X" or "said X") in
+    a claim does not have a matching prior introduction ("a X", "an X", "at
+    least one X", etc.) in the same claim or any of its ancestor claims
+    (walking the full multi-parent dependency graph).
 
-    Returns: [{"claim_id": int, "term": str}, ...]
+    Returns: list of dicts with keys claim_id, term, reference_form, claim_text.
+    Findings are deduped by (claim_id, term, reference_form) and sorted.
+
+    Known limitations (deferred):
+    - Morphological introductions: "receiving data" does not introduce "the
+      received data". Lemmatization is out of scope.
+    - Generic terms ("the user", "the step", "the output") are flagged
+      unconditionally even when they may be implicit. A confidence-bucketing
+      pass is future work.
+    - Possessive constructions are normalized by stripping 's, but complex
+      possessives ("the second device's first housing") may still produce
+      unexpected captures.
     """
     def get_ancestor_texts(claim: Claim, all_claims: list[Claim]) -> tuple[str, str]:
         """Return (lowered_text, original_text) for claim + all ancestors.
@@ -184,8 +195,9 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
             intros.add(abbrev_intro)
 
         # Find definite references ("the X" and "said X") in this claim
+        seen: set[tuple[str, str]] = set()
         for m in _DEFINITE_REF.finditer(claim_text_lower):
-            term = clean_noun_phrase(m.group(1).strip())
+            term = clean_noun_phrase(m.group("noun").strip())
             if not term:
                 continue
             # Skip standalone quantifiers/pronouns ("the one", "the another")
@@ -194,8 +206,19 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
             has_basis = any(term in intro or intro in term for intro in intros)
             if not has_basis:
                 if term not in _SKIP_TERMS and not term.startswith("fig") and not term.startswith("claim"):
-                    issues.append({"claim_id": claim.id, "term": term})
+                    prefix = m.group("prefix").lower()
+                    reference_form = f"{prefix} {term}"
+                    dedup_key = (term, reference_form)
+                    if dedup_key not in seen:
+                        seen.add(dedup_key)
+                        issues.append({
+                            "claim_id": claim.id,
+                            "term": term,
+                            "reference_form": reference_form,
+                            "claim_text": claim.text,
+                        })
 
+    issues.sort(key=lambda x: (x["claim_id"], x["term"], x["reference_form"]))
     return issues
 
 
