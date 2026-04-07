@@ -444,7 +444,7 @@
     "multipleDependentClaims": "청구항: {{list}}. 다중 종속항은 추가 수수료가 발생하며 다른 다중 종속항에 종속될 수 없습니다 (35 U.S.C. § 112(e)). 의도적인지 확인하세요.",
     "selfDependentClaims": "청구항: {{list}}. 청구항은 자기 자신에 종속될 수 없습니다. 종속 관계 참조를 수정하세요.",
     "meansFunctionClaims": "청구항: {{list}}. § 112(f)에 따라 청구항 범위는 명세서에 개시된 대응 구조 및 균등물로 한정됩니다. 각 기능식 한정에 대해 명세서가 충분한 구조를 기재하고 있는지 확인하세요.",
-    "antecedentBasisTerms": "용어: {{list}}. 각 한정적 참조(\"the X\" 또는 \"said X\")에는 선행하는 부정적 도입(\"a X\" 또는 \"an X\")이 필요합니다. 선행사 기초 누락은 § 112(b) 불명확성 거절로 이어질 수 있습니다.",
+    "antecedentBasisTerms": "{{count}}건의 선행사 기초 문제가 {{claims}}건의 청구항에 있습니다. 각 한정적 참조(\"the X\" 또는 \"said X\")에는 선행하는 부정적 도입(\"a X\" 또는 \"an X\")이 필요합니다. 선행사 기초 누락은 § 112(b) 불명확성 거절로 이어질 수 있습니다.",
     "preambleNounMismatch": "청구항 {{claim}}은(는) 청구항 {{parent}}에 종속됩니다. 전제부 명사가 다르지만 동일 실체를 지칭하는 경우 허용될 수 있습니다. 일관성을 확인하세요.",
     "preambleIndefiniteArticle": "청구항 {{claim}}은(는) 청구항 {{parent}}에 종속됩니다. 종속항은 독립항 실체를 지칭할 때 정관사 \"The\"를 사용해야 하며, \"A\" 또는 \"An\"은 부적절합니다.",
     "singleFigureFix": "MPEP § 608.02에 따라 모든 \"FIG. 1\"을 \"The Figure\" 또는 \"the drawing\"으로 변경하세요.",
