@@ -595,14 +595,15 @@ class AnalysisResult(BaseModel):
             ))
 
         if self.antecedent_basis_issues:
-            unique_terms = sorted(set(item["term"] for item in self.antecedent_basis_issues))
+            issue_count = len(self.antecedent_basis_issues)
+            claim_count = len(set(item["claim_id"] for item in self.antecedent_basis_issues))
             claims_checks.append(CheckItem(
                 status="verify",
                 message="Possible missing antecedent basis found.",
                 message_key="check.claims.antecedentBasis.verify",
-                details=f"Terms: {', '.join(unique_terms)}",
+                details=f"{issue_count} issues across {claim_count} claims",
                 details_key="details.antecedentBasisTerms",
-                details_params={"list": ", ".join(unique_terms)},
+                details_params={"count": str(issue_count), "claims": str(claim_count)},
             ))
         else:
             claims_checks.append(CheckItem(

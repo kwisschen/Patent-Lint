@@ -444,7 +444,7 @@
     "multipleDependentClaims": "請求項：{{list}}。多項附屬請求項會產生額外費用，且不得附屬於其他多項附屬請求項（35 U.S.C. § 112(e)）。請確認此為有意為之。",
     "selfDependentClaims": "請求項：{{list}}。請求項不得自我依附。請修正附屬關係引用。",
     "meansFunctionClaims": "請求項：{{list}}。依 § 112(f)，請求項範圍限於說明書所揭露的對應結構及等效物。請確認說明書就各手段功能限定揭露了充分的結構。",
-    "antecedentBasisTerms": "術語：{{list}}。每個確定引用（「the X」或「said X」）須有先前不定引用（「a X」或「an X」）。缺乏先行詞基礎可能導致 § 112(b) 不明確核駁。",
+    "antecedentBasisTerms": "{{count}}項先行詞基礎問題，涉及{{claims}}項請求項。每個確定引用（「the X」或「said X」）須有先前不定引用（「a X」或「an X」）。缺乏先行詞基礎可能導致 § 112(b) 不明確核駁。",
     "preambleNounMismatch": "請求項 {{claim}} 附屬於請求項 {{parent}}。前言名詞不同，但若指涉同一實體則可能無誤。請確認一致性。",
     "preambleIndefiniteArticle": "請求項 {{claim}} 附屬於請求項 {{parent}}。附屬項須使用定冠詞「The」引用獨立項實體，而非「A」或「An」。",
     "singleFigureFix": "請依 MPEP § 608.02 將所有「FIG. 1」改為「The Figure」或「the drawing」。",

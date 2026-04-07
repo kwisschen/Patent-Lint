@@ -444,7 +444,7 @@
     "multipleDependentClaims": "Claims: {{list}}. Multiple-dependent claims incur additional fees and must not depend on other multiple-dependent claims (35 U.S.C. § 112(e)). Verify this is intentional.",
     "selfDependentClaims": "Claims: {{list}}. A claim cannot depend on itself. Correct the dependency reference.",
     "meansFunctionClaims": "Claims: {{list}}. Under § 112(f), claim scope is limited to the corresponding structure disclosed in the specification and equivalents. Verify that the specification describes sufficient structure for each means-plus-function limitation.",
-    "antecedentBasisTerms": "Terms: {{list}}. Each definite reference (\"the X\" or \"said X\") must have a prior indefinite introduction (\"a X\" or \"an X\"). Missing antecedent basis may result in a § 112(b) indefiniteness rejection.",
+    "antecedentBasisTerms": "{{count}} potential antecedent basis issues across {{claims}} claims. Each definite reference (\"the X\" or \"said X\") must have a prior indefinite introduction (\"a X\" or \"an X\"). Missing antecedent basis may result in a § 112(b) indefiniteness rejection.",
     "preambleNounMismatch": "Claim {{claim}} depends on claim {{parent}}. The preamble nouns differ but may be acceptable if they refer to the same entity. Verify consistency.",
     "preambleIndefiniteArticle": "Claim {{claim}} depends on claim {{parent}}. Dependent claims must use the definite article \"The\" to refer back to the independent claim entity, not \"A\" or \"An.\"",
     "singleFigureFix": "Replace all instances of \"FIG. 1\" with \"The Figure\" or \"the drawing\" per MPEP § 608.02.",
