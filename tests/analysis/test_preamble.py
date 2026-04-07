@@ -3,7 +3,7 @@
 """Tests for check_preamble_consistency — Phase 4 B1."""
 
 from patentlint.models import Claim
-from patentlint.analysis.claims import check_preamble_consistency
+from patentlint.analysis.claims import check_preamble_consistency, _find_root_independent
 
 
 def _make_claims(*specs):
@@ -136,3 +136,67 @@ class TestPreambleConsistency:
         )
         results = check_preamble_consistency(claims)
         assert all(r.status == "pass" for r in results)
+
+
+class TestFindRootIndependent:
+    """Tests for _find_root_independent BFS multi-parent walking."""
+
+    def test_single_parent_chain(self):
+        """Standard linear chain: 3 → 2 → 1 (independent)."""
+        claims = _make_claims(
+            (1, "A device.", True, False, []),
+            (2, "The device of claim 1.", False, False, [1]),
+            (3, "The device of claim 2.", False, False, [2]),
+        )
+        root = _find_root_independent(claims[2], claims)
+        assert root is not None
+        assert root.id == 1
+
+    def test_multi_parent_first_is_independent(self):
+        """Claim depends on [1, 3]; claim 1 is independent → returns 1."""
+        claims = _make_claims(
+            (1, "A device.", True, False, []),
+            (3, "A method.", True, True, []),
+            (5, "The device of claims 1 and 3.", False, False, [1, 3]),
+        )
+        root = _find_root_independent(claims[2], claims)
+        assert root is not None
+        assert root.id == 1
+
+    def test_multi_parent_second_leads_to_root(self):
+        """Claim depends on [2, 3]; claim 2 is dependent with missing parent,
+        claim 3 is independent → BFS finds 3."""
+        claims = _make_claims(
+            (2, "The widget of claim 99.", False, False, [99]),
+            (3, "A method.", True, True, []),
+            (5, "The device of claims 2 and 3.", False, False, [2, 3]),
+        )
+        root = _find_root_independent(claims[2], claims)
+        assert root is not None
+        assert root.id == 3
+
+    def test_cycle_protection(self):
+        """Circular dependency: 2 → 3 → 2.  Should not hang."""
+        claims = _make_claims(
+            (2, "The device of claim 3.", False, False, [3]),
+            (3, "The device of claim 2.", False, False, [2]),
+        )
+        root = _find_root_independent(claims[0], claims)
+        assert root is None
+
+    def test_nonexistent_parent(self):
+        """Parent ID doesn't exist in the claim list."""
+        claims = _make_claims(
+            (5, "The device of claim 99.", False, False, [99]),
+        )
+        root = _find_root_independent(claims[0], claims)
+        assert root is None
+
+    def test_independent_claim_returns_self(self):
+        """An independent claim is its own root."""
+        claims = _make_claims(
+            (1, "A device.", True, False, []),
+        )
+        root = _find_root_independent(claims[0], claims)
+        assert root is not None
+        assert root.id == 1
