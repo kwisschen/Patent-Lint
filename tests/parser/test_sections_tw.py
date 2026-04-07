@@ -81,10 +81,9 @@ class TestInventionComplete:
 
     def test_figure_refs(self):
         # 圖1, 圖2, 圖3 from drawings desc + 圖1, 圖2 from embodiment
-        assert len(self.doc.figure_refs) == 5
-        ref_texts = [r for r in self.doc.figure_refs]
-        assert any("圖1" in r for r in ref_texts)
-        assert any("圖3" in r for r in ref_texts)
+        # Now returns unique normalized IDs in first-appearance order
+        assert set(self.doc.figure_refs) == {"1", "2", "3"}
+        assert len(self.doc.figure_refs) == 3
 
     def test_paragraph_numbering(self):
         assert self.doc.has_paragraph_numbering is True
@@ -224,3 +223,41 @@ class TestDetectPatentDocumentTw:
     def test_fewer_than_three_para_nums_not_enough(self):
         paragraphs = ["【0001】第一段。", "【0002】第二段。"]
         assert detect_patent_document_tw(paragraphs) is False
+
+
+# NOTE: This test loads a real patent docx that is gitignored under
+# tests/fixtures/tw/. The fixture is NEVER committed. Test skips cleanly
+# when the fixture is absent (e.g. in CI). Primary regression coverage
+# for the 110P000368 bug lives in the synthetic test in
+# tests/analysis/test_tw_specification.py::TestFigureRefConsistency110P000368Regression
+# which runs without any external fixture.
+class TestFigureRefs110P000368Regression:
+    """Real-world regression: 110P000368 docx has 10 figures, not 16.
+
+    The old singleton regex extracted 100, 504, 510, 511, 701, 801 from
+    compound nouns (地圖100, 縮圖511, etc.) in the 實施方式 section,
+    inflating the figure count to 16. The shared TW_PARSER with
+    blocklist guards correctly ignores these.
+    """
+
+    def test_figure_refs_110P000368_regression(self):
+        from patentlint.parser.docx_loader import load_docx_tw
+
+        fixture_path = FIXTURES / "110P000368US-JP,KR案派譯版-FV.DOCX"
+        if not fixture_path.exists():
+            pytest.skip(f"Fixture not found: {fixture_path}")
+
+        loaded = load_docx_tw(str(fixture_path))
+        paragraphs = [line for line in loaded.paragraphs if line.strip()]
+        doc = extract_tw_sections(paragraphs)
+
+        expected = {str(i) for i in range(1, 11)}
+        false_positives = {"100", "504", "510", "511", "701", "801"}
+
+        assert set(doc.figure_refs) == expected, (
+            f"Expected {expected}, got {set(doc.figure_refs)}"
+        )
+        assert set(doc.figure_refs) & false_positives == set(), (
+            f"False positives found: {set(doc.figure_refs) & false_positives}"
+        )
+        assert len(doc.figure_refs) == 10

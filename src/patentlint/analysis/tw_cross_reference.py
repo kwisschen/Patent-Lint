@@ -81,7 +81,7 @@ def check_bracket_format(doc: TwPatentDocument) -> list[CheckItem]:
 
 def check_figure_count(doc: TwPatentDocument) -> list[CheckItem]:
     """Report figure count (UI-internal stats check, always PASS)."""
-    count = len(set(doc.figure_refs))
+    count = len(doc.figure_refs)
     return [CheckItem(
         status="pass",
         message=f"{count} figure(s) found.",

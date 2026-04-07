@@ -164,7 +164,7 @@ class TestCheckRepresentativeDrawing:
 
     def test_drawings_exist_no_rep_drawing_verify(self):
         doc = TwPatentDocument(
-            figure_refs=["第1圖", "第2圖"],
+            figure_refs=["1", "2"],
             representative_drawing=None,
         )
         result = check_representative_drawing(doc)
@@ -172,7 +172,7 @@ class TestCheckRepresentativeDrawing:
 
     def test_drawings_exist_rep_drawing_present_pass(self):
         doc = TwPatentDocument(
-            figure_refs=["第1圖", "第2圖"],
+            figure_refs=["1", "2"],
             representative_drawing="第1圖",
         )
         result = check_representative_drawing(doc)
@@ -185,18 +185,18 @@ class TestCheckRepresentativeDrawing:
 
     def test_empty_rep_drawing_string_verify(self):
         doc = TwPatentDocument(
-            figure_refs=["第1圖"],
+            figure_refs=["1"],
             representative_drawing="",
         )
         result = check_representative_drawing(doc)
         assert result[0].status == "verify"
 
     def test_message_key(self):
-        doc = TwPatentDocument(figure_refs=["第1圖"], representative_drawing=None)
+        doc = TwPatentDocument(figure_refs=["1"], representative_drawing=None)
         result = check_representative_drawing(doc)
         assert result[0].message_key == "check.tw.abstract.representativeDrawing.verify"
 
     def test_reference(self):
-        doc = TwPatentDocument(figure_refs=["第1圖"], representative_drawing=None)
+        doc = TwPatentDocument(figure_refs=["1"], representative_drawing=None)
         result = check_representative_drawing(doc)
         assert result[0].reference == "專利法施行細則 §21"
