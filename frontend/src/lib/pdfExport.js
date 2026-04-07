@@ -2,6 +2,7 @@
 // Copyright (c) 2025 Christopher Chen
 import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
+import { formatDetails } from './detailsFormatter'
 
 // Register bundled Roboto fonts into pdfmake's internal VirtualFileSystem.
 // In module/bundler context, vfs_fonts.js does NOT auto-register — we must
@@ -80,7 +81,7 @@ export async function prefetchCjkFont(language) {
 
 function translateMessage(item, t) {
   if (item.message_key) {
-    const translated = t(item.message_key, { ...item.details_params, defaultValue: '' })
+    const translated = formatDetails(item.message_key, item.details_params, t)
     if (translated && translated !== item.message_key) return translated
   }
   return item.message
@@ -199,8 +200,8 @@ function buildSectionChecks(sections, t, fontName) {
         margin: [0, 3, 0, 3],
         ...(fontName ? { font: fontName } : {}),
       })
-      const detailText = item.details_key && t(item.details_key, item.details_params || {}) !== item.details_key
-        ? t(item.details_key, item.details_params || {})
+      const detailText = item.details_key && formatDetails(item.details_key, item.details_params, t) !== item.details_key
+        ? formatDetails(item.details_key, item.details_params, t)
         : item.details
       if (detailText) {
         content.push({
