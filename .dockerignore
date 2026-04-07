@@ -11,6 +11,11 @@ frontend/node_modules
 .env
 .env.*
 *.docx
+!tests/fixtures/tw/claim_dependencies.docx
+!tests/fixtures/tw/invention_complete.docx
+!tests/fixtures/tw/missing_sections.docx
+!tests/fixtures/tw/symbol_table_variants.docx
+!tests/fixtures/tw/utility_model_complete.docx
 test_snapshots/
 training_data/
 gold_standard/
