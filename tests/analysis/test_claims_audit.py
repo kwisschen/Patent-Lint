@@ -221,6 +221,30 @@ class TestCleanNounPhraseInAntecedentBasis:
         assert "movable component" not in terms
         assert "movable component further" not in terms
 
+    def test_possessive_s_stripped(self):
+        """'the device's housing' with 'a device' and 'a housing' introduced → no finding."""
+        claims = [Claim(
+            id=1,
+            text="A device comprising a housing, wherein the device's housing is sealed.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "device's housing" not in terms
+        assert "device housing" not in terms  # both words introduced separately
+
+    def test_trailing_apostrophe_stripped(self):
+        """'the users' devices' with 'a user' and 'a device' introduced → no finding."""
+        claims = [Claim(
+            id=1,
+            text="A system comprising a user and a device, wherein the users' devices are connected.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "users'" not in terms
+        assert "users' devices" not in terms
+
 
 class TestQuantifierStops:
     """Bug 10: Standalone quantifiers/pronouns should not be flagged."""

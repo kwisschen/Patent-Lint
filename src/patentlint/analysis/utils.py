@@ -223,6 +223,10 @@ def clean_noun_phrase(phrase: str) -> str:
     words = phrase.strip().split()
     while words and _should_strip_trailing(words[-1]):
         words.pop()
+    # Strip possessives: "device's" → "device", "users'" → "users"
+    words = [w.replace("\u2019s", "").replace("'s", "").rstrip("\u2019'") for w in words]
+    # Remove any tokens that became empty after stripping
+    words = [w for w in words if w]
     result = " ".join(words) if words else phrase
     # Reject single-word results that are likely verbs/adjectives, not nouns
     if len(result.split()) == 1:
