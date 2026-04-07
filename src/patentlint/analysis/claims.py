@@ -143,22 +143,28 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
     Returns: [{"claim_id": int, "term": str}, ...]
     """
     def get_ancestor_texts(claim: Claim, all_claims: list[Claim]) -> tuple[str, str]:
-        """Return (lowered_text, original_text) for claim + ancestors."""
+        """Return (lowered_text, original_text) for claim + all ancestors.
+
+        Walks the full multi-parent dependency graph (BFS) so that
+        multi-dependent claims (e.g., "claim 5 of claim 1 or claim 3")
+        collect introductions from every ancestor path.
+        """
+        claims_by_id = {c.id: c for c in all_claims}
         texts_lower = [claim.text.lower()]
         texts_orig = [claim.text]
         visited = {claim.id}
-        current = claim
-        while current.dependencies:
-            parent_id = current.dependencies[0]
+        queue = list(claim.dependencies)
+        while queue:
+            parent_id = queue.pop(0)
             if parent_id in visited:
-                break
+                continue
             visited.add(parent_id)
-            parent = next((c for c in all_claims if c.id == parent_id), None)
+            parent = claims_by_id.get(parent_id)
             if parent is None:
-                break
+                continue
             texts_lower.append(parent.text.lower())
             texts_orig.append(parent.text)
-            current = parent
+            queue.extend(parent.dependencies)
         return " ".join(texts_lower), " ".join(texts_orig)
 
     issues: list[dict] = []

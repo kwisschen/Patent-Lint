@@ -352,3 +352,78 @@ class TestAbbreviationIntros:
         terms = [i["term"] for i in issues if i["claim_id"] == 1]
         # XYZ was never introduced
         assert any("xyz" in t.lower() for t in terms)
+
+
+class TestMultiParentDependencies:
+    """Multi-parent dependency walking for antecedent basis."""
+
+    def test_two_parent_or_dependency_either_introduces(self):
+        """Claim 3 depends on [1, 2]. Claim 1 introduces 'a base'. → no finding."""
+        claims = [
+            Claim(id=1, text="A device comprising a base.", independent=True),
+            Claim(id=2, text="A method comprising a step.", independent=True, method_claim=True),
+            Claim(id=3, text="The device of claim 1 or claim 2, wherein the base is flat.",
+                  independent=False, dependencies=[1, 2]),
+        ]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 3]
+        assert "base" not in terms
+
+    def test_two_parent_or_dependency_only_second_introduces(self):
+        """Claim 3 depends on [1, 2]. Only claim 2 introduces 'a widget'. → no finding."""
+        claims = [
+            Claim(id=1, text="A device comprising a base.", independent=True),
+            Claim(id=2, text="A device comprising a widget.", independent=True),
+            Claim(id=3, text="The device of claim 1 or claim 2, wherein the widget is red.",
+                  independent=False, dependencies=[1, 2]),
+        ]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 3]
+        assert "widget" not in terms
+
+    def test_two_parent_or_dependency_neither_introduces(self):
+        """Neither parent introduces 'a sensor'. → finding emitted."""
+        claims = [
+            Claim(id=1, text="A device comprising a base.", independent=True),
+            Claim(id=2, text="A device comprising a widget.", independent=True),
+            Claim(id=3, text="The device of claim 1 or claim 2, wherein the sensor is active.",
+                  independent=False, dependencies=[1, 2]),
+        ]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 3]
+        assert "sensor" in terms
+
+    def test_three_parent_dependency(self):
+        """Claim 4 depends on [1, 2, 3]. Only claim 3 introduces. → no finding."""
+        claims = [
+            Claim(id=1, text="A device comprising a base.", independent=True),
+            Claim(id=2, text="A device comprising a lid.", independent=True),
+            Claim(id=3, text="A device comprising a relay.", independent=True),
+            Claim(id=4, text="The device of claim 1, 2, or 3, wherein the relay is active.",
+                  independent=False, dependencies=[1, 2, 3]),
+        ]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 4]
+        assert "relay" not in terms
+
+    def test_dependency_cycle_does_not_loop(self):
+        """Pathological cycle: claim 2 → claim 3 → claim 2. Should not infinite-loop."""
+        claims = [
+            Claim(id=2, text="The device of claim 3, wherein the widget is red.",
+                  independent=False, dependencies=[3]),
+            Claim(id=3, text="The device of claim 2, wherein the sensor is blue.",
+                  independent=False, dependencies=[2]),
+        ]
+        # Should complete without hanging; findings expected since no introductions
+        issues = check_antecedent_basis(claims)
+        assert isinstance(issues, list)
+
+    def test_nonexistent_parent_id_skipped(self):
+        """Dependency on non-existent claim 99. Should not crash."""
+        claims = [
+            Claim(id=5, text="The device of claim 99, wherein the base is flat.",
+                  independent=False, dependencies=[99]),
+        ]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 5]
+        assert "base" in terms
