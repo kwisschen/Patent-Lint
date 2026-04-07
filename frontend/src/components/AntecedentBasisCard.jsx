@@ -7,8 +7,22 @@ import { AlertTriangle, ChevronRight } from 'lucide-react'
 function highlightTerms(text, terms) {
   if (!terms.length) return text
 
-  const escaped = terms.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-  const pattern = new RegExp(`\\b(the|said)\\s+(${escaped.join('|')})\\b`, 'gi')
+  // Split terms: reference_forms already include prefix (the/said), bare terms need it added
+  const refFormParts = []
+  const bareParts = []
+  for (const t of terms) {
+    const escaped = t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    if (/^(?:the|said)\s+/i.test(t)) {
+      refFormParts.push(escaped)
+    } else {
+      bareParts.push(escaped)
+    }
+  }
+  const alternatives = [...refFormParts]
+  if (bareParts.length) {
+    alternatives.push(`(?:the|said)\\s+(?:${bareParts.join('|')})`)
+  }
+  const pattern = new RegExp(`\\b(?:${alternatives.join('|')})\\b`, 'gi')
 
   const parts = []
   let lastIndex = 0
@@ -139,11 +153,11 @@ export default function AntecedentBasisCard({ issues, claimTrees }) {
 
   if (!issues || issues.length === 0) return null
 
-  // Group by claim_id → Set of terms
+  // Group by claim_id → Set of display labels (reference_form when available, else term)
   const byClaim = {}
-  issues.forEach(({ claim_id, term }) => {
+  issues.forEach(({ claim_id, term, reference_form }) => {
     if (!byClaim[claim_id]) byClaim[claim_id] = new Set()
-    byClaim[claim_id].add(term)
+    byClaim[claim_id].add(reference_form || term)
   })
 
   // Build claim text lookup
