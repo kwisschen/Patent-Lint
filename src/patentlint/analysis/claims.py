@@ -351,7 +351,7 @@ _TRANSITIONS = re.compile(
 )
 
 _DEP_PREAMBLE = re.compile(
-    r"^(The|An?)\s+(.*?)\s+(?:of|according\s+to)\s+claim\s+(\d+)",
+    r"^(The|An?)\s+(.*?)\s+(?:of|according\s+to)\s+claims?\s+(\d+)",
     re.IGNORECASE,
 )
 
@@ -370,7 +370,7 @@ _CRM_CONTEXT = {"readable", "transitory", "non-transitory"}
 # of the preamble (e.g., "motor driver for adjusting power based on
 # common voltage" → "motor driver" instead of the whole string).
 _PREAMBLE_STOP = re.compile(
-    r"\b(for|of|to|with|having|comprising|including"
+    r"\b(for|of|to|with|having|comprising|including|that|which"
     r"|based\s+on|adapted\s+to|configured\s+to|capable\s+of|storing)\b",
     re.IGNORECASE,
 )
@@ -441,38 +441,107 @@ def _find_root_independent(claim: Claim, all_claims: list[Claim]) -> Claim | Non
     return None
 
 
+def _find_immediate_parent(claim: Claim, all_claims: list[Claim]) -> Claim | None:
+    """Return the first existing immediate parent from claim.dependencies.
+
+    For multi-dependent claims (dependencies = [1, 5]), callers should iterate
+    all dependencies via _find_all_immediate_parents to unflag when ANY parent
+    head matches. This helper returns only the first existing parent.
+
+    Unlike _find_root_independent (which walks the full dependency graph BFS
+    to find the transitive root), this helper walks exactly one hop. Used by
+    check_preamble_consistency per ADR-092: the comparison target for
+    §608.01(m) indefinite-article and noun-mismatch branches is the immediate
+    parent, not the transitive root. Cross-category dependents (MPEP
+    608.01(n)(III)) may introduce new entities that incorporate their parent,
+    and the article rule applies relative to the nearest ancestor, not the
+    original independent.
+    """
+    if claim.independent:
+        return None
+    claims_by_id = {c.id: c for c in all_claims}
+    for parent_id in claim.dependencies:
+        parent = claims_by_id.get(parent_id)
+        if parent is not None:
+            return parent
+    return None
+
+
+def _find_all_immediate_parents(claim: Claim, all_claims: list[Claim]) -> list[Claim]:
+    """Return all existing immediate parent claims (multi-dependent support).
+
+    Multi-dependent claim unflagging rule: check_preamble_consistency unflags
+    when the dep head noun matches ANY immediate parent's head noun.
+    """
+    if claim.independent:
+        return []
+    claims_by_id = {c.id: c for c in all_claims}
+    parents: list[Claim] = []
+    for parent_id in claim.dependencies:
+        parent = claims_by_id.get(parent_id)
+        if parent is not None:
+            parents.append(parent)
+    return parents
+
+
+def _preamble_head_info(claim: Claim) -> tuple[str, str] | None:
+    """Return (head_noun, entity_type) for any claim (independent or dependent).
+
+    Independent claims: extract the head noun from the preamble text before
+    the transitional phrase. Dependent claims: use the noun phrase captured
+    between the leading article and "of claim N" / "according to claim N"
+    in the dependent preamble, then normalize via _extract_head_noun so the
+    comma stop and stop-word tail trimming apply consistently.
+    """
+    if claim.independent:
+        tm = _TRANSITIONS.search(claim.text)
+        if not tm:
+            return None
+        preamble_text = claim.text[:tm.start()].strip()
+        head = _extract_head_noun(preamble_text)
+        if not head:
+            return None
+        return head, _classify_entity(head, preamble_text)
+
+    dm = _DEP_PREAMBLE.match(claim.text)
+    if not dm:
+        return None
+    dep_raw = dm.group(2).strip()
+    head = _extract_head_noun(dep_raw)
+    if not head:
+        return None
+    return head, _classify_entity(head, dep_raw)
+
+
+def _heads_match(dep_head: str, parent_head: str) -> bool:
+    """Case-insensitive exact-or-substring match per ADR-092 v1 semantics.
+
+    Hyponym detection is deferred; exact and substring containment are
+    sufficient for observed cross-category dependents.
+    """
+    if not dep_head or not parent_head:
+        return False
+    a = dep_head.lower().strip()
+    b = parent_head.lower().strip()
+    if a == b:
+        return True
+    return a in b or b in a
+
+
 def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
-    """Check that dependent claims reference the same entity type as their parent.
+    """Check that dependent claims reference the same entity type as their
+    immediate parent (ADR-092).
+
+    Both branches (indefinite-article §608.01(m) and noun/entity mismatch)
+    compare the dependent claim's head noun against its immediate parent(s),
+    not the transitive root independent. For multi-dependent claims, a match
+    against ANY existing immediate parent unflags the finding.
 
     Returns CheckItem per finding (PASS if no issues, AMEND/VERIFY per problem).
     """
     results: list[CheckItem] = []
-
-    # Build map of independent claim preambles
-    indep_preambles: dict[int, tuple[str, str]] = {}  # claim_id -> (head_noun, entity_type)
-
-    for claim in claims:
-        if not claim.independent:
-            continue
-
-        # Jepson claim
-        if _JEPSON_PATTERN.match(claim.text):
-            # Extract improvement entity (skip for now — just mark the root)
-            pass
-
-        # Find transition
-        tm = _TRANSITIONS.search(claim.text)
-        if not tm:
-            continue
-
-        preamble_text = claim.text[:tm.start()].strip()
-        head = _extract_head_noun(preamble_text)
-        if head:
-            entity = _classify_entity(head, preamble_text)
-            indep_preambles[claim.id] = (head, entity)
-
-    # Check each dependent claim
     has_issue = False
+
     for claim in claims:
         if claim.independent:
             continue
@@ -482,51 +551,70 @@ def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
             continue
 
         article = dm.group(1)
-        dep_noun_raw = dm.group(2).strip().lower()
         parent_claim_num = int(dm.group(3))
 
-        # Find root independent claim
-        root = _find_root_independent(claim, claims)
-        if root is None or root.id not in indep_preambles:
+        dep_info = _preamble_head_info(claim)
+        if dep_info is None:
+            continue
+        dep_noun, dep_entity = dep_info
+
+        parents = _find_all_immediate_parents(claim, claims)
+        parent_infos = [
+            info for info in (_preamble_head_info(p) for p in parents) if info is not None
+        ]
+        if not parent_infos:
             continue
 
-        root_noun, root_entity = indep_preambles[root.id]
-
-        # Check indefinite article (should be "The", not "A"/"An")
+        # §608.01(m) indefinite-article branch. Per MPEP 608.01(n)(III), a
+        # dependent claim may introduce a new entity that incorporates its
+        # parent — in that case "A/An" is mandatory. Only flag when the dep
+        # head noun matches an immediate parent's head noun (i.e., same
+        # entity, user typed the wrong article).
         if article.lower() in ("a", "an"):
-            results.append(CheckItem(
-                status="amend",
-                message=f"Claim {claim.id}: indefinite article '{article}' in dependent claim preamble (should be 'The').",
-                message_key="checks.preamble_indefinite_article",
-                details=f"Claim {claim.id} depends on claim {parent_claim_num}",
-                details_key="details.preambleIndefiniteArticle",
-                details_params={"claim": str(claim.id), "parent": str(parent_claim_num)},
-            ))
-            has_issue = True
+            matches_parent = any(
+                _heads_match(dep_noun, p_noun) for p_noun, _ in parent_infos
+            )
+            if matches_parent:
+                results.append(CheckItem(
+                    status="amend",
+                    message=f"Claim {claim.id}: indefinite article '{article}' in dependent claim preamble (should be 'The').",
+                    message_key="checks.preamble_indefinite_article",
+                    details=f"Claim {claim.id} depends on claim {parent_claim_num}",
+                    details_key="details.preambleIndefiniteArticle",
+                    details_params={"claim": str(claim.id), "parent": str(parent_claim_num)},
+                ))
+                has_issue = True
             continue
 
-        dep_entity = _classify_entity(dep_noun_raw, dep_noun_raw)
+        # Noun/entity mismatch branch. Unflag if any immediate parent matches
+        # both head noun and entity type.
+        if any(
+            _heads_match(dep_noun, p_noun) and dep_entity == p_entity
+            for p_noun, p_entity in parent_infos
+        ):
+            continue
 
-        # Cross-category mismatch
-        if dep_entity != root_entity:
+        # No immediate parent matched — report against the first parent.
+        p_noun, p_entity = parent_infos[0]
+
+        if dep_entity != p_entity:
             results.append(CheckItem(
                 status="amend",
-                message=f"Claim {claim.id}: cross-category mismatch ({dep_entity} depends on {root_entity} claim {root.id}).",
+                message=f"Claim {claim.id}: cross-category mismatch ({dep_entity} depends on {p_entity} claim {parent_claim_num}).",
                 message_key="checks.preamble_cross_category_mismatch",
-                details=f"Dependent '{dep_noun_raw}' vs independent '{root_noun}'",
+                details=f"Dependent '{dep_noun}' vs parent '{p_noun}'",
                 details_key="details.nounMismatch",
-                details_params={"dependent": dep_noun_raw, "independent": root_noun},
+                details_params={"dependent": dep_noun, "independent": p_noun},
             ))
             has_issue = True
-        elif dep_noun_raw != root_noun:
-            # Same category, different noun
+        elif dep_noun != p_noun:
             results.append(CheckItem(
                 status="verify",
-                message=f"Claim {claim.id}: preamble noun '{dep_noun_raw}' differs from independent claim '{root_noun}'.",
+                message=f"Claim {claim.id}: preamble noun '{dep_noun}' differs from parent claim '{p_noun}'.",
                 message_key="checks.preamble_noun_mismatch",
-                details=f"Claim {claim.id} depends on claim {root.id}",
+                details=f"Claim {claim.id} depends on claim {parent_claim_num}",
                 details_key="details.preambleNounMismatch",
-                details_params={"claim": str(claim.id), "parent": str(root.id)},
+                details_params={"claim": str(claim.id), "parent": str(parent_claim_num)},
             ))
             has_issue = True
 

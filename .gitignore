@@ -32,5 +32,6 @@ tests/fixtures/**/*.pdf
 !tests/fixtures/tw/missing_sections.docx
 !tests/fixtures/tw/symbol_table_variants.docx
 !tests/fixtures/tw/utility_model_complete.docx
+!tests/fixtures/us/cross_category_dependent.docx
 smoke-test-pyodide.html
 temp/
