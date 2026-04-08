@@ -7,7 +7,11 @@ from pathlib import Path
 import pytest
 
 from patentlint.models import Claim
-from patentlint.analysis.claims import check_spec_support
+from patentlint.analysis.claims import (
+    attach_cross_references,
+    check_antecedent_basis,
+    check_spec_support,
+)
 
 
 def _make_claim(cid, text, indep=True, method=False, deps=None):
@@ -55,14 +59,31 @@ class TestSpecSupport:
         phrases = [u.phrase for u in unsupported]
         assert "device" not in phrases
 
-    def test_already_flagged_by_antecedent_not_double_flagged(self):
-        """Phrase already flagged by antecedent basis -> not double-flagged."""
-        claims = [_make_claim(1, "A device comprising: a widget, wherein the connector is attached.")]
-        spec = "No mention of connectors."
-        ab = [{"claim_id": 1, "term": "connector"}]
-        unsupported = check_spec_support(claims, spec, antecedent_flagged=ab)
+    def test_option_y_no_suppression_cross_ref_attached(self):
+        """ADR-091: spec_support no longer suppresses antecedent-flagged terms.
+
+        Both checks emit independently; ``attach_cross_references`` then
+        annotates each side with a ``cross_ref`` pointing at its sibling so
+        the frontend can render hint lines.
+        """
+        claims = [_make_claim(
+            1,
+            "A device comprising: a widget, wherein the quantum resonator is attached."
+        )]
+        spec = "The widget is described in detail and various parts are present."
+        unsupported = check_spec_support(claims, spec)
         phrases = [u.phrase for u in unsupported]
-        assert "connector" not in phrases
+        # Option Y: 'quantum resonator' IS flagged by spec support now (no suppression).
+        assert "quantum resonator" in phrases
+        # And after cross-ref attachment, the spec-support finding is
+        # annotated with cross_ref="antecedent"
+        ab = check_antecedent_basis(claims)
+        attach_cross_references(ab, unsupported)
+        target_term = next(u for u in unsupported if u.phrase == "quantum resonator")
+        assert target_term.cross_ref == "antecedent"
+        # And the antecedent finding is annotated with cross_ref="spec_support"
+        target_ab = next(i for i in ab if i["term"] == "quantum resonator")
+        assert target_ab["cross_ref"] == "spec_support"
 
     def test_dependent_claim_new_term(self):
         """Dependent claim introduces new term not in spec -> flagged."""

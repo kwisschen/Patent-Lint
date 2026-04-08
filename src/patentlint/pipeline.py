@@ -131,9 +131,11 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
         transition_checks = claims_analysis.check_claim_transitions(claims)
         special_format_checks = claims_analysis.check_special_claim_formats(claims)
         spec_text = (summary_section or "") + "\n" + (detailed_desc_section or "")
-        unsupported_terms = claims_analysis.check_spec_support(
-            claims, spec_text, antecedent_flagged=antecedent_basis,
-        )
+        unsupported_terms = claims_analysis.check_spec_support(claims, spec_text)
+        # ADR-091 (Option Y): both checks emit independently; compute the
+        # cross-reference set so the frontend can render hint lines linking
+        # related findings rather than silently hiding one branch.
+        claims_analysis.attach_cross_references(antecedent_basis, unsupported_terms)
         independent_count = claims_analysis.count_independent(claims)
         dependent_count = claims_analysis.count_dependent(claims)
     else:

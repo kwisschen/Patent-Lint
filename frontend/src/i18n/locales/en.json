@@ -144,10 +144,15 @@
     "items": "terms",
     "item": "term"
   },
+  "antecedent": {
+    "didYouMean": "Did you mean *{{term}}* (introduced in claim {{claim_id}})?",
+    "crossRefSpecSupport": "Also flagged for spec support — see § 112(a) card."
+  },
   "specSupport": {
     "title": "Specification Support Review",
     "items": "terms",
-    "item": "term"
+    "item": "term",
+    "crossRefAntecedent": "Also flagged for antecedent basis — see § 112(b) card."
   },
   "triage": {
     "title": "Priority Summary",

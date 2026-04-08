@@ -144,10 +144,15 @@
     "items": "건",
     "item": "건"
   },
+  "antecedent": {
+    "didYouMean": "혹시 '{{term}}' (청구항 {{claim_id}}에서 도입됨)을 의미하셨나요?",
+    "crossRefSpecSupport": "명세서 뒷받침에서도 플래그됨 — § 112(a) 카드를 참조하세요."
+  },
   "specSupport": {
     "title": "명세서 뒷받침 검토",
     "items": "건",
-    "item": "건"
+    "item": "건",
+    "crossRefAntecedent": "선행 근거 분석에서도 플래그됨 — § 112(b) 카드를 참조하세요."
   },
   "triage": {
     "title": "우선순위 요약",

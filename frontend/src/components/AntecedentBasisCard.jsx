@@ -69,11 +69,26 @@ function formatClaimRange(ids, t) {
   return t('claimDiagram.claimsLabel', { range: ranges.join(', ') })
 }
 
-function ClaimGroupRow({ claimIds, terms, claimTextMap, t }) {
+function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t }) {
   const [expanded, setExpanded] = useState(false)
   const label = formatClaimRange(claimIds, t)
   const termCount = terms.length
   const hasText = claimIds.some((id) => claimTextMap[id])
+
+  // Hint lines (did-you-mean + cross-ref) live on individual findings.
+  // Aggregate by display label so each row in the expanded panel can render
+  // the hints applicable to its term once.
+  const hintsByLabel = {}
+  for (const f of findings) {
+    const label = f.reference_form || f.term
+    if (!hintsByLabel[label]) hintsByLabel[label] = { didYouMean: null, crossRef: null }
+    if (f.suggested_match && !hintsByLabel[label].didYouMean) {
+      hintsByLabel[label].didYouMean = f.suggested_match
+    }
+    if (f.cross_ref === 'spec_support') {
+      hintsByLabel[label].crossRef = 'spec_support'
+    }
+  }
 
   return (
     <div>
@@ -143,6 +158,30 @@ function ClaimGroupRow({ claimIds, terms, claimTextMap, t }) {
             </div>
           )
         })}
+        {terms.map((label) => {
+          const hints = hintsByLabel[label]
+          if (!hints || (!hints.didYouMean && !hints.crossRef)) return null
+          return (
+            <div
+              key={`hints-${label}`}
+              className="mx-3 mb-1.5 px-3 py-1.5 text-[11px] leading-snug italic"
+              style={{ color: 'var(--attention-text)' }}
+            >
+              <div className="font-medium not-italic mb-0.5">"{label}"</div>
+              {hints.didYouMean && (
+                <div>
+                  {t('antecedent.didYouMean', {
+                    term: hints.didYouMean.term,
+                    claim_id: hints.didYouMean.claim_id,
+                  })}
+                </div>
+              )}
+              {hints.crossRef === 'spec_support' && (
+                <div>{t('antecedent.crossRefSpecSupport')}</div>
+              )}
+            </div>
+          )
+        })}
       </div>
     </div>
   )
@@ -155,7 +194,8 @@ export default function AntecedentBasisCard({ issues, claimTrees }) {
 
   // Group by claim_id → Set of display labels (reference_form when available, else term)
   const byClaim = {}
-  issues.forEach(({ claim_id, term, reference_form }) => {
+  issues.forEach((issue) => {
+    const { claim_id, term, reference_form } = issue
     if (!byClaim[claim_id]) byClaim[claim_id] = new Set()
     byClaim[claim_id].add(reference_form || term)
   })
@@ -170,14 +210,24 @@ export default function AntecedentBasisCard({ issues, claimTrees }) {
     })
   }
 
-  // Super-group: claims sharing the exact same term set → one row
+  // Super-group: claims sharing the exact same term set → one row.
+  // Each group also collects the underlying findings so the expanded
+  // panel can render did-you-mean and cross-reference hints.
   const termKeyToGroup = {}
   for (const [claimId, termSet] of Object.entries(byClaim)) {
     const key = [...termSet].sort().join('\0')
     if (!termKeyToGroup[key]) {
-      termKeyToGroup[key] = { claimIds: [], terms: [...termSet].sort() }
+      termKeyToGroup[key] = { claimIds: [], terms: [...termSet].sort(), findings: [] }
     }
     termKeyToGroup[key].claimIds.push(Number(claimId))
+  }
+  for (const issue of issues) {
+    const claimSet = byClaim[issue.claim_id]
+    if (!claimSet) continue
+    const key = [...claimSet].sort().join('\0')
+    if (termKeyToGroup[key]) {
+      termKeyToGroup[key].findings.push(issue)
+    }
   }
 
   // Sort groups by first claim ID
@@ -208,6 +258,7 @@ export default function AntecedentBasisCard({ issues, claimTrees }) {
             key={i}
             claimIds={group.claimIds}
             terms={group.terms}
+            findings={group.findings}
             claimTextMap={claimTextMap}
             t={t}
           />

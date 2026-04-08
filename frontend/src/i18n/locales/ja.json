@@ -144,10 +144,15 @@
     "items": "個の用語",
     "item": "個の用語"
   },
+  "antecedent": {
+    "didYouMean": "もしかして「{{term}}」（請求項{{claim_id}}で導入）ですか？",
+    "crossRefSpecSupport": "明細書サポートでもフラグされています — § 112(a) カードをご確認ください。"
+  },
   "specSupport": {
     "title": "明細書サポートの確認",
     "items": "個の用語",
-    "item": "個の用語"
+    "item": "個の用語",
+    "crossRefAntecedent": "先行詞解析でもフラグされています — § 112(b) カードをご確認ください。"
   },
   "triage": {
     "title": "優先事項の要約",

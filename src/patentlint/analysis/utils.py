@@ -407,3 +407,21 @@ def extract_indefinite_refs(text: str) -> list[str]:
         if cleaned:
             refs.append(cleaned)
     return refs
+
+
+def token_set_jaccard(a: str, b: str) -> float:
+    """Token-set Jaccard similarity over whitespace-split lowercase tokens.
+
+    Used by the antecedent walker's did-you-mean suggestion layer (commit 10):
+    when a definite reference has no exact-match introduction, the highest
+    Jaccard intro in the same claim's ancestor set is offered as a hint when
+    similarity is at least 0.5. Morphological variants such as "common voltage
+    difference calculation circuit" vs "common voltage difference calculating
+    circuit" share four of five tokens (Jaccard 0.667) and surface as a
+    suggestion rather than being silently matched.
+    """
+    tokens_a = set(a.lower().split())
+    tokens_b = set(b.lower().split())
+    if not tokens_a or not tokens_b:
+        return 0.0
+    return len(tokens_a & tokens_b) / len(tokens_a | tokens_b)

@@ -755,3 +755,148 @@ class TestAntecedentBasisDedup:
             (3, "widget", "the widget"),     # claim 3, term "widget"
         ]
         assert actual == expected
+
+
+class TestTokenSetJaccard:
+    """Commit 10: Token-set Jaccard helper for did-you-mean suggestion layer."""
+
+    def test_morphological_pair_above_threshold(self):
+        """The motivating case: calculation/calculating differ in one token of five."""
+        from patentlint.analysis.utils import token_set_jaccard
+        a = "common voltage difference calculation circuit"
+        b = "common voltage difference calculating circuit"
+        assert token_set_jaccard(a, b) >= 0.5
+
+    def test_unrelated_terms_zero(self):
+        """Disjoint token sets → Jaccard 0.0."""
+        from patentlint.analysis.utils import token_set_jaccard
+        assert token_set_jaccard("widget", "sprocket") == 0.0
+
+    def test_empty_string_zero(self):
+        """Empty input → 0.0 (avoids ZeroDivisionError)."""
+        from patentlint.analysis.utils import token_set_jaccard
+        assert token_set_jaccard("", "widget") == 0.0
+        assert token_set_jaccard("widget", "") == 0.0
+
+    def test_identical_strings_one(self):
+        """Identical token sets → 1.0."""
+        from patentlint.analysis.utils import token_set_jaccard
+        assert token_set_jaccard("base plate", "base plate") == 1.0
+
+    def test_case_insensitive(self):
+        """Case differences do not affect the score."""
+        from patentlint.analysis.utils import token_set_jaccard
+        assert token_set_jaccard("Base PLATE", "base plate") == 1.0
+
+
+class TestSuggestedMatchOnFinding:
+    """Commit 10: walker attaches suggested_match for morphological near-misses."""
+
+    def test_calculation_calculating_pair_attaches_suggestion(self):
+        """The motivating case: 'calculation' intro, 'calculating' reference.
+
+        Both share the same long base phrase; word-boundary AND-match
+        does not suppress the finding (one token differs), and Jaccard ≥ 0.5
+        attaches a suggested_match pointing at the introduced phrase.
+        """
+        claims = [Claim(
+            id=1,
+            text=(
+                "A device comprising a common voltage difference calculation circuit, "
+                "wherein the common voltage difference calculating circuit is active."
+            ),
+            independent=True,
+            method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        target = next(
+            (i for i in issues if "calculating circuit" in i["term"]),
+            None,
+        )
+        assert target is not None, "expected unmatched 'calculating circuit' finding"
+        assert target["suggested_match"] is not None
+        assert "calculation" in target["suggested_match"]["term"]
+        assert target["suggested_match"]["claim_id"] == 1
+
+    def test_no_near_match_no_suggestion(self):
+        """If no intro is within Jaccard ≥ 0.5, suggested_match is None."""
+        claims = [Claim(
+            id=1,
+            text="A device comprising a base, wherein the sprocket is sharp.",
+            independent=True,
+            method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        target = next((i for i in issues if i["term"] == "sprocket"), None)
+        assert target is not None
+        assert target["suggested_match"] is None
+
+    def test_suggestion_carries_introducing_claim_id(self):
+        """Multi-claim chain: suggestion carries the ancestor claim ID."""
+        claims = [
+            Claim(
+                id=1,
+                text="A device comprising a common voltage difference calculation circuit.",
+                independent=True,
+                method_claim=False,
+            ),
+            Claim(
+                id=2,
+                text="The device of claim 1, wherein the common voltage difference calculating circuit is active.",
+                independent=False,
+                method_claim=False,
+                dependencies=[1],
+            ),
+        ]
+        issues = check_antecedent_basis(claims)
+        target = next(
+            (i for i in issues if i["claim_id"] == 2 and "calculating" in i["term"]),
+            None,
+        )
+        assert target is not None
+        assert target["suggested_match"] is not None
+        # Suggested match originates from claim 1, not claim 2
+        assert target["suggested_match"]["claim_id"] == 1
+
+
+class TestAttachCrossReferences:
+    """Commit 10: cross-reference annotation across the two checks."""
+
+    def test_same_term_in_both_lists_gets_cross_ref(self):
+        from patentlint.analysis.claims import (
+            attach_cross_references,
+            check_antecedent_basis,
+            check_spec_support,
+        )
+        claims = [Claim(
+            id=1,
+            text="A device comprising a base, wherein the connector is flat.",
+            independent=True,
+            method_claim=False,
+        )]
+        ab = check_antecedent_basis(claims)
+        ss = check_spec_support(claims, "no mention here")
+        attach_cross_references(ab, ss)
+        connector_ab = next(i for i in ab if i["term"] == "connector")
+        connector_ss = next(u for u in ss if u.phrase == "connector")
+        assert connector_ab["cross_ref"] == "spec_support"
+        assert connector_ss.cross_ref == "antecedent"
+
+    def test_term_only_in_antecedent_no_cross_ref(self):
+        from patentlint.analysis.claims import (
+            attach_cross_references,
+            check_antecedent_basis,
+            check_spec_support,
+        )
+        claims = [Claim(
+            id=1,
+            text="A device comprising a base, wherein the widget is flat.",
+            independent=True,
+            method_claim=False,
+        )]
+        ab = check_antecedent_basis(claims)
+        # Spec mentions widget so it is supported, but no antecedent intro
+        ss = check_spec_support(claims, "the widget is described in detail here.")
+        attach_cross_references(ab, ss)
+        widget_ab = next(i for i in ab if i["term"] == "widget")
+        assert widget_ab["cross_ref"] is None

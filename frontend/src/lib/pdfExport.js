@@ -276,12 +276,13 @@ function buildClaimTable(claimTrees, t) {
 function buildAntecedentBasis(issues, t) {
   if (!issues || issues.length === 0) return []
 
-  // Group by claim_id
+  // Group by claim_id; preserve per-finding hints (suggested_match, cross_ref)
+  // for an inline hint cell rendered below the term cell.
   const grouped = {}
   for (const issue of issues) {
     const cid = String(issue.claim_id)
     if (!grouped[cid]) grouped[cid] = []
-    grouped[cid].push(sanitizeText(issue.reference_form || issue.term))
+    grouped[cid].push(issue)
   }
 
   const body = [
@@ -292,9 +293,40 @@ function buildAntecedentBasis(issues, t) {
   ]
 
   for (const cid of Object.keys(grouped).sort((a, b) => Number(a) - Number(b))) {
+    const findings = grouped[cid]
+    const termsText = sanitizeText(
+      findings.map((f) => f.reference_form || f.term).join(', ')
+    )
+    const hintLines = []
+    for (const f of findings) {
+      if (f.suggested_match) {
+        hintLines.push(
+          sanitizeText(
+            t('antecedent.didYouMean', {
+              term: f.suggested_match.term,
+              claim_id: f.suggested_match.claim_id,
+            })
+          )
+        )
+      }
+      if (f.cross_ref === 'spec_support') {
+        hintLines.push(sanitizeText(t('antecedent.crossRefSpecSupport')))
+      }
+    }
+
+    const cellStack = [{ text: termsText, fontSize: 9 }]
+    if (hintLines.length > 0) {
+      cellStack.push({
+        text: hintLines.join('\n'),
+        fontSize: 8,
+        italics: true,
+        color: '#92400e',
+        margin: [0, 2, 0, 0],
+      })
+    }
     body.push([
       { text: cid, fontSize: 9 },
-      { text: sanitizeText(grouped[cid].join(', ')), fontSize: 9 },
+      { stack: cellStack },
     ])
   }
 
@@ -319,12 +351,17 @@ function buildAntecedentBasis(issues, t) {
 function buildSpecSupport(unsupportedTerms, t) {
   if (!unsupportedTerms || unsupportedTerms.length === 0) return []
 
-  // Group by claim_number
+  // Group by claim_number; track whether any finding in the group carries
+  // a cross-reference hint to the antecedent-basis card.
   const grouped = {}
+  const hasCrossRef = {}
   for (const ut of unsupportedTerms) {
     const cid = String(ut.claim_number)
     if (!grouped[cid]) grouped[cid] = []
     grouped[cid].push(sanitizeText(ut.phrase))
+    if (ut.cross_ref === 'antecedent') {
+      hasCrossRef[cid] = true
+    }
   }
 
   const body = [
@@ -335,9 +372,19 @@ function buildSpecSupport(unsupportedTerms, t) {
   ]
 
   for (const cid of Object.keys(grouped).sort((a, b) => Number(a) - Number(b))) {
+    const cellStack = [{ text: grouped[cid].join(', '), fontSize: 9 }]
+    if (hasCrossRef[cid]) {
+      cellStack.push({
+        text: sanitizeText(t('specSupport.crossRefAntecedent')),
+        fontSize: 8,
+        italics: true,
+        color: '#92400e',
+        margin: [0, 2, 0, 0],
+      })
+    }
     body.push([
       { text: cid, fontSize: 9 },
-      { text: sanitizeText(grouped[cid].join(', ')), fontSize: 9 },
+      { stack: cellStack },
     ])
   }
 
