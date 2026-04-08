@@ -46,17 +46,21 @@ _INDEFINITE_REF = re.compile(
 # Extended introduction patterns for antecedent basis.
 # Matches all standard patent element-introduction phrases:
 #   a/an X, at least one/a/an X, one or more X, a plurality of X,
-#   a first/second/third X, two/three/four X
+#   two/three/four X. Ordinals (first..tenth and beyond) are NOT consumed
+#   as a prefix — they fall through to the generic ``(?:a|an)\s+`` arm and
+#   are picked up by ``_NP_CORE`` as the leading word of the captured noun
+#   phrase, so "a first engaging structure" yields the full phrase
+#   "first engaging structure" rather than dropping the ordinal.
 _INTRO_PATTERNS = re.compile(
     r"\b(?:"
     # Specific multi-word patterns first (before generic a/an)
     r"at\s+least\s+(?:one|a|an)\s+"        # at least one widget
     r"|one\s+or\s+more\s+"                  # one or more widgets
     r"|a\s+plurality\s+of\s+"              # a plurality of widgets
-    r"|a\s+(?:first|second|third)\s+"      # a first widget
     r"|(?:two|three|four)\s+"              # two widgets
-    # Generic a/an last
-    r"|(?:a|an)\s+"                          # a widget, an apparatus
+    # Generic a/an last — captures any following noun phrase, including
+    # ones that begin with an ordinal (first/second/.../tenth/...)
+    r"|(?:a|an)\s+"                          # a widget, a first widget, an apparatus
     r")" + _NP_CAPTURE,
     re.IGNORECASE,
 )

@@ -90,15 +90,13 @@ class TestAntecedentBasisIntroPatterns:
         assert "connection cables" not in terms
 
     def test_ordinal_first(self):
-        """'a first engaging structure' → 'the first engaging structure' → flagged
-        until commit 7 (ordinal preservation) lands.
+        """'a first engaging structure' → 'the first engaging structure' → no flag.
 
-        After commit 6 (word-boundary matching), the introduction extractor
-        still drops the ordinal: 'a first engaging structure' captures only
-        'engaging structure'. Strict word-boundary equivalence then refuses
-        to match the longer reference 'first engaging structure', so the
-        finding is emitted. Commit 7 restores no-flag behavior by moving
-        the ordinal into the captured group.
+        Commit 7 dropped the explicit ``a\\s+(?:first|second|third)\\s+``
+        prefix arm so ordinals fall through to the generic ``a/an`` arm and
+        are captured by ``_NP_CORE`` as the leading word of the noun phrase.
+        The introduction now reads "first engaging structure" and matches
+        the reference exactly under word-boundary equivalence.
         """
         claims = [Claim(
             id=1,
@@ -107,7 +105,31 @@ class TestAntecedentBasisIntroPatterns:
         )]
         issues = check_antecedent_basis(claims)
         terms = [i["term"] for i in issues if i["claim_id"] == 1]
-        assert "first engaging structure" in terms
+        assert "first engaging structure" not in terms
+
+    def test_ordinal_fourth(self):
+        """Ordinals beyond the old 'first/second/third' list (e.g., fourth)
+        must also be preserved in the captured noun phrase.
+        """
+        claims = [Claim(
+            id=1,
+            text="A device comprising a fourth bracket, wherein the fourth bracket is rigid.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "fourth bracket" not in terms
+
+    def test_ordinal_tenth(self):
+        """Tenth-and-higher ordinals must work too (no explicit list cap)."""
+        claims = [Claim(
+            id=1,
+            text="A system comprising a tenth processor, wherein the tenth processor handles overflow.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "tenth processor" not in terms
 
     def test_bare_numeral_two(self):
         """'two conductive components' → 'the two conductive components' → no flag."""
