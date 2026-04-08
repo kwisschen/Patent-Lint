@@ -19,6 +19,27 @@ from docx.oxml.ns import qn
 from patentlint.analysis.specification import detect_restrictive_wording, has_valid_ending
 from patentlint.parser.sections import extract_description_of_drawings_section
 
+_INVISIBLE_CHARS = {
+    "\u200b": "",   # ZWSP (zero-width space)
+    "\u200c": "",   # ZWNJ (zero-width non-joiner)
+    "\u200d": "",   # ZWJ (zero-width joiner)
+    "\ufeff": "",   # BOM (byte order mark)
+    "\u00a0": " ",  # NBSP (non-breaking space) -> regular space
+}
+
+
+def _normalize_unicode(text: str) -> str:
+    """Strip invisible whitespace and replace NBSP with a regular space.
+
+    Patent drafts pasted from PDFs or web sources frequently contain
+    zero-width characters that silently break downstream string matching.
+    Scope is strictly the 5 chars in ``_INVISIBLE_CHARS``; CJK punctuation
+    and full-width characters are left untouched.
+    """
+    for src, dst in _INVISIBLE_CHARS.items():
+        text = text.replace(src, dst)
+    return text
+
 
 @dataclass
 class LoadedDocument:
@@ -178,7 +199,7 @@ def load_docx(file_path: str | Path) -> LoadedDocument:
     # Build full document text first (for section extraction)
     full_text_lines: list[str] = []
     for para in doc.paragraphs:
-        full_text_lines.append(para.text.strip())
+        full_text_lines.append(_normalize_unicode(para.text).strip())
     full_text = "\n".join(full_text_lines)
 
     # Extract drawings section for relaxed ending rules
@@ -195,7 +216,7 @@ def load_docx(file_path: str | Path) -> LoadedDocument:
     formatted_lines: list[str] = []
 
     for para in doc.paragraphs:
-        paragraph_text = para.text.strip()
+        paragraph_text = _normalize_unicode(para.text).strip()
 
         # Check for CLAIMS header
         if _CLAIMS_HEADER.match(paragraph_text):
@@ -285,7 +306,7 @@ def load_docx_tw(file_path: str | Path) -> LoadedTwDocument:
     claim_counter = 0
 
     for para in doc.paragraphs:
-        text = para.text.strip()
+        text = _normalize_unicode(para.text).strip()
         if not text:
             continue
 
@@ -347,7 +368,9 @@ def load_docx_cn(file_path: str | Path) -> LoadedCnDocument:
     section_headers: list[str] = []
     for section in doc.sections:
         header_text = "\n".join(
-            p.text.strip() for p in section.header.paragraphs if p.text.strip()
+            _normalize_unicode(p.text).strip()
+            for p in section.header.paragraphs
+            if _normalize_unicode(p.text).strip()
         )
         section_headers.append(header_text)
 
@@ -359,7 +382,7 @@ def load_docx_cn(file_path: str | Path) -> LoadedCnDocument:
     section_idx = 0
 
     for para in doc.paragraphs:
-        text = para.text.strip()
+        text = _normalize_unicode(para.text).strip()
         if text:
             current_paras.append(text)
 
