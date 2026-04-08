@@ -144,10 +144,15 @@
     "items": "個術語",
     "item": "個術語"
   },
+  "antecedent": {
+    "didYouMean": "您是否指的是「{{term}}」（於請求項{{claim_id}}中導入）？",
+    "crossRefSpecSupport": "亦已於說明書支持中標記，請參見 § 112(a) 卡片。"
+  },
   "specSupport": {
     "title": "說明書支持檢視",
     "items": "個術語",
-    "item": "個術語"
+    "item": "個術語",
+    "crossRefAntecedent": "亦已於先行詞分析中標記，請參見 § 112(b) 卡片。"
   },
   "triage": {
     "title": "優先處理摘要",

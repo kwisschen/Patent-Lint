@@ -4,9 +4,10 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FileSearch, ChevronRight } from 'lucide-react'
 
-function ClaimRow({ claimNumber, phrases }) {
+function ClaimRow({ claimNumber, phrases, crossRefPhrases }) {
   const { t } = useTranslation()
   const [expanded, setExpanded] = useState(false)
+  const hasCrossRef = crossRefPhrases.length > 0
 
   return (
     <div>
@@ -55,6 +56,11 @@ function ClaimRow({ claimNumber, phrases }) {
           <p className="text-muted-foreground">
             {t('details.specSupportUnsupported', { count: phrases.length })}
           </p>
+          {hasCrossRef && (
+            <p className="mt-1.5 italic" style={{ color: 'var(--attention-text)' }}>
+              {t('specSupport.crossRefAntecedent')}
+            </p>
+          )}
         </div>
       )}
     </div>
@@ -66,11 +72,17 @@ export default function SpecSupportCard({ unsupportedTerms }) {
 
   if (!unsupportedTerms || unsupportedTerms.length === 0) return null
 
-  // Group by claim_number
+  // Group by claim_number, also tracking which phrases carry a cross-reference
+  // hint to the antecedent-basis card.
   const grouped = {}
-  unsupportedTerms.forEach(({ claim_number, phrase }) => {
+  const crossRefByClaim = {}
+  unsupportedTerms.forEach(({ claim_number, phrase, cross_ref }) => {
     if (!grouped[claim_number]) grouped[claim_number] = new Set()
     grouped[claim_number].add(phrase)
+    if (cross_ref === 'antecedent') {
+      if (!crossRefByClaim[claim_number]) crossRefByClaim[claim_number] = []
+      crossRefByClaim[claim_number].push(phrase)
+    }
   })
 
   const claimIds = Object.keys(grouped).map(Number).sort((a, b) => a - b)
@@ -97,7 +109,12 @@ export default function SpecSupportCard({ unsupportedTerms }) {
       </div>
       <div className="border-t px-1 py-1">
         {claimIds.map((id) => (
-          <ClaimRow key={id} claimNumber={id} phrases={[...grouped[id]]} />
+          <ClaimRow
+            key={id}
+            claimNumber={id}
+            phrases={[...grouped[id]]}
+            crossRefPhrases={crossRefByClaim[id] || []}
+          />
         ))}
       </div>
     </div>
