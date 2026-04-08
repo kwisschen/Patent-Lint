@@ -530,7 +530,11 @@
   "common": {
     "close": "닫기",
     "toggleTheme": "테마 전환",
-    "changeLanguage": "언어 변경"
+    "changeLanguage": "언어 변경",
+    "betaBadge": {
+      "label": "BETA",
+      "tooltip": "베타: 일부 검사 항목은 개발 중입니다"
+    }
   },
   "consolidation": {
     "nounMismatchSummary": "전제부 명사 불일치: 종속항 {{count}}개가 청구항 {{rootId}}과(와) 다름"

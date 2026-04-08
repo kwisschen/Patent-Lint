@@ -530,7 +530,11 @@
   "common": {
     "close": "關閉",
     "toggleTheme": "切換主題",
-    "changeLanguage": "切換語言"
+    "changeLanguage": "切換語言",
+    "betaBadge": {
+      "label": "BETA",
+      "tooltip": "測試中：部分檢查項目仍在開發"
+    }
   },
   "consolidation": {
     "nounMismatchSummary": "前言名詞不一致：{{count}} 個附屬項與請求項 {{rootId}} 不同"
