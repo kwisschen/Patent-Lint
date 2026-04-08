@@ -6,11 +6,11 @@ export default function BetaBadge() {
   const { t } = useTranslation()
   return (
     <span
-      className="ml-1.5 inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold tracking-wider leading-none rounded-sm border uppercase align-middle"
+      className="inline-flex items-center px-1 py-px text-[8px] font-bold tracking-wider leading-none rounded-sm border uppercase shadow-sm"
       style={{
         color: 'var(--attention-text)',
         borderColor: 'var(--attention-text)',
-        backgroundColor: 'transparent',
+        backgroundColor: 'var(--background)',
       }}
       title={t('common.betaBadge.tooltip')}
       aria-label={t('common.betaBadge.tooltip')}
