@@ -57,7 +57,7 @@ _INTRO_PATTERNS = re.compile(
     r"at\s+least\s+(?:one|a|an)\s+"        # at least one widget
     r"|one\s+or\s+more\s+"                  # one or more widgets
     r"|a\s+plurality\s+of\s+"              # a plurality of widgets
-    r"|(?:two|three|four)\s+"              # two widgets
+    r"|(?:one|two|three|four|five|six|seven|eight|nine|ten)\s+"  # five widgets
     # Generic a/an last — captures any following noun phrase, including
     # ones that begin with an ordinal (first/second/.../tenth/...)
     r"|(?:a|an)\s+"                          # a widget, a first widget, an apparatus
@@ -188,7 +188,10 @@ def _is_likely_third_person_verb(word: str) -> bool:
         return False
     verb_suffixes = ('ates', 'izes', 'ifies', 'ects', 'uces', 'ases', 'oses',
                      'ures', 'ises', 'ples', 'bles', 'ades', 'odes', 'udes',
-                     'eases')
+                     'eases',
+                     # Commit 9d: catch verbs like 'subtracts' (-cts),
+                     # 'accepts' (-pts), 'converts' (-rts), 'consists' (-sts).
+                     'cts', 'pts', 'rts', 'sts')
     return any(word.endswith(s) for s in verb_suffixes)
 
 

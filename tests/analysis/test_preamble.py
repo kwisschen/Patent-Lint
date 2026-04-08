@@ -3,7 +3,11 @@
 """Tests for check_preamble_consistency — Phase 4 B1."""
 
 from patentlint.models import Claim
-from patentlint.analysis.claims import check_preamble_consistency, _find_root_independent
+from patentlint.analysis.claims import (
+    _extract_head_noun,
+    _find_root_independent,
+    check_preamble_consistency,
+)
 
 
 def _make_claims(*specs):
@@ -200,3 +204,43 @@ class TestFindRootIndependent:
         root = _find_root_independent(claims[0], claims)
         assert root is not None
         assert root.id == 1
+
+
+class TestExtractHeadNoun:
+    """Commit 9a: head noun extraction stops at the first qualifier."""
+
+    def test_stops_at_for(self):
+        """'A motor driver for adjusting power' → 'motor driver'."""
+        assert _extract_head_noun("A motor driver for adjusting power") == "motor driver"
+
+    def test_stops_at_with(self):
+        """'A device with a sensor' → 'device'."""
+        assert _extract_head_noun("A device with a sensor") == "device"
+
+    def test_stops_at_having(self):
+        """'A circuit having multiple inputs' → 'circuit'."""
+        assert _extract_head_noun("A circuit having multiple inputs") == "circuit"
+
+    def test_stops_at_comprising(self):
+        """'A device comprising a base' → 'device'."""
+        assert _extract_head_noun("A device comprising a base") == "device"
+
+    def test_stops_at_including(self):
+        """'A device including a frame' → 'device'."""
+        assert _extract_head_noun("A device including a frame") == "device"
+
+    def test_stops_at_based_on(self):
+        """'A driver based on common voltage' → 'driver'."""
+        assert _extract_head_noun("A driver based on common voltage") == "driver"
+
+    def test_long_qualifier_chain(self):
+        """The fixture-shaped case: 'motor driver for adjusting power based on
+        common voltage' should still extract just 'motor driver'.
+        """
+        assert _extract_head_noun(
+            "A motor driver for adjusting power based on common voltage"
+        ) == "motor driver"
+
+    def test_simple_unchanged(self):
+        """Bare preamble with no qualifier still returns the whole noun phrase."""
+        assert _extract_head_noun("A device") == "device"

@@ -389,3 +389,62 @@ class TestExtractBareNounIntros:
         assert "base" in intros
         assert "pivot" in intros
         assert "arm" in intros
+
+
+class TestExpandedNumeralIntros:
+    """Commit 9c: numeral pattern expanded from two..four to one..ten."""
+
+    def test_one_widget(self):
+        """'one widget' → 'widget' captured."""
+        intros = extract_introductions("a device with one widget mounted on top.")
+        assert "widget" in intros
+
+    def test_five_widgets(self):
+        """'five widgets' → 'widgets' captured."""
+        intros = extract_introductions("five widgets are arranged in a row.")
+        assert "widgets" in intros
+
+    def test_ten_processors(self):
+        """'ten processors' → 'processors' captured."""
+        intros = extract_introductions("ten processors are mounted on the board.")
+        # "are" is a stop word so capture ends at "processors"
+        assert "processors" in intros
+
+    def test_expanded_numeral_walker_no_flag(self):
+        """End-to-end: 'five widgets' intro suppresses 'the widgets' reference."""
+        from patentlint.analysis.claims import check_antecedent_basis
+        from patentlint.models import Claim
+
+        claims = [Claim(
+            id=1,
+            text="A device comprising five widgets, wherein the widgets are aligned.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "widgets" not in terms
+
+
+class TestExpandedVerbSuffixes:
+    """Commit 9d: -cts/-pts/-rts/-sts trailing verbs are stripped."""
+
+    def test_cts_subtracts(self):
+        """'circuit subtracts' → 'circuit' (subtracts is a verb)."""
+        assert clean_noun_phrase("circuit subtracts") == "circuit"
+
+    def test_pts_accepts(self):
+        """'driver accepts' → 'driver' (accepts is a verb)."""
+        assert clean_noun_phrase("driver accepts") == "driver"
+
+    def test_rts_converts(self):
+        """'controller converts' → 'controller' (converts is a verb)."""
+        assert clean_noun_phrase("controller converts") == "controller"
+
+    def test_sts_consists(self):
+        """'composition consists' → 'composition' (consists is a verb)."""
+        assert clean_noun_phrase("composition consists") == "composition"
+
+    def test_short_word_not_stripped(self):
+        """Short -sts words (<6 chars) are not stripped."""
+        # 'lists' is 5 chars → _is_likely_third_person_verb returns False
+        assert clean_noun_phrase("input lists") == "input lists"
