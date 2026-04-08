@@ -1008,6 +1008,31 @@ class TestUtsVerbSuffix:
         from patentlint.analysis.utils import clean_noun_phrase
         assert clean_noun_phrase("circuit outputs") == "circuit"
 
+    def test_uts_guard_preserves_head_noun_after_article(self):
+        """Commit 10c guard: 'inputs' / 'outputs' as plural head nouns
+        following an article or 'of' must NOT be stripped. Without this
+        guard the -uts suffix rule destroyed legitimate noun references
+        like 'the inputs' → 'the' and 'plurality of outputs' → 'plurality
+        of'. The verb-form case ('the circuit outputs the signal') still
+        strips because the preceding token is a content noun, not an
+        article or preposition.
+        """
+        from patentlint.analysis.utils import clean_noun_phrase
+        # Head-noun cases — preserved by the guard
+        assert clean_noun_phrase("the inputs") == "the inputs"
+        assert clean_noun_phrase("the outputs") == "the outputs"
+        assert clean_noun_phrase("said outputs") == "said outputs"
+        assert clean_noun_phrase("plurality of outputs") == "plurality of outputs"
+        assert clean_noun_phrase("a plurality of inputs") == "a plurality of inputs"
+        assert clean_noun_phrase("outputs") == "outputs"
+        # Verb-form cases — still stripped (testspec5 regression guarded
+        # against by the asymmetric "preceder must be article/of" rule)
+        assert clean_noun_phrase("the circuit outputs") == "the circuit"
+        assert (
+            clean_noun_phrase("the surge detection driver circuit outputs")
+            == "the surge detection driver circuit"
+        )
+
     def test_real_fixture_testspec5_no_outputs_capture(self):
         """Real fixture: testspec5 claim 2 no longer captures
         'the surge detection driver circuit outputs' as a finding.
