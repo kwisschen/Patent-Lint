@@ -272,6 +272,46 @@ class TestAntecedentWordBoundaryWalker:
         )
 
 
+class TestMarkushGroupSkip:
+    """Commit 9b: 'the group consisting of ...' must not flag 'group'."""
+
+    def test_group_consisting_of_not_flagged(self):
+        """'the group consisting of A, B, and C' → no finding for 'group'."""
+        claims = [Claim(
+            id=1,
+            text=(
+                "A composition selected from the group consisting of methanol, "
+                "ethanol, and propanol."
+            ),
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "group" not in terms
+
+    def test_group_of_not_flagged(self):
+        """'the group of X' (without 'consisting') → no finding for 'group'."""
+        claims = [Claim(
+            id=1,
+            text="A device comprising the group of resistors and capacitors.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "group" not in terms
+
+    def test_bare_group_still_flagged(self):
+        """'the group' with no Markush trail → still flagged (regression)."""
+        claims = [Claim(
+            id=1,
+            text="A device wherein the group is active.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "group" in terms
+
+
 class TestBareNounListIntroductions:
     """Commit 8: bare-noun list-context extraction in the antecedent walker."""
 

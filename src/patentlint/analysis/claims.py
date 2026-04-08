@@ -133,6 +133,13 @@ def detect_means_plus_function(claims: list[Claim]) -> list[int]:
 
 _SKIP_TERMS = {"invention", "present invention", "same", "following", "above", "below"}
 
+# Markush "the group" trailing context: when a "the X" reference where
+# X is exactly "group" is followed by "consisting of" or "of", the term
+# is the head noun of a Markush group definition rather than a missing
+# antecedent. Walk-time skip rather than extraction-time carve-out so
+# the heuristic stays narrow and inspectable.
+_MARKUSH_GROUP_TRAIL = re.compile(r"^\s+(?:consisting\s+of|of)\b", re.IGNORECASE)
+
 
 def _word_boundary_match(needle: str, haystack: str) -> bool:
     """Return True iff ``needle`` appears in ``haystack`` as a complete
@@ -221,6 +228,12 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
             # Skip standalone quantifiers/pronouns ("the one", "the another")
             if term.lower() in _QUANTIFIER_STOPS:
                 continue
+            # Markush "the group consisting of A, B, C" — 'group' is the
+            # head of the Markush definition, not a missing antecedent.
+            if term.lower() == "group" and _MARKUSH_GROUP_TRAIL.match(
+                claim_text_lower[m.end():]
+            ):
+                continue
             # Word-boundary equivalence: an introduction suppresses a
             # reference only when both reference the SAME word sequence.
             # The previous bidirectional substring match let short intros
@@ -295,9 +308,14 @@ _METHOD_NOUNS = {"method", "process", "technique", "procedure", "step"}
 _CRM_NOUNS = {"medium", "memory", "storage"}
 _CRM_CONTEXT = {"readable", "transitory", "non-transitory"}
 
-# Stop words for head noun extraction
+# Stop words for head noun extraction.
+# Includes prepositional / participial phrase markers so the head noun
+# extractor stops at the first qualifier rather than swallowing the rest
+# of the preamble (e.g., "motor driver for adjusting power based on
+# common voltage" → "motor driver" instead of the whole string).
 _PREAMBLE_STOP = re.compile(
-    r"\b(for|of|to|adapted\s+to|configured\s+to|capable\s+of|storing)\b",
+    r"\b(for|of|to|with|having|comprising|including"
+    r"|based\s+on|adapted\s+to|configured\s+to|capable\s+of|storing)\b",
     re.IGNORECASE,
 )
 
