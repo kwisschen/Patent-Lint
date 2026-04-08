@@ -363,6 +363,72 @@ class TestLoadDocxTwTrackedChanges:
         assert result.has_tracked_changes is True
 
 
+class TestUnicodeNormalization:
+    """Tests for invisible-whitespace normalization at extraction time.
+
+    The loader strips ZWSP/ZWNJ/ZWJ/BOM and replaces NBSP (u00a0) with a
+    regular space so downstream string matching is not silently broken by
+    invisible characters pasted in from PDF or web sources.
+    """
+
+    @pytest.mark.parametrize(
+        "invisible_char,name,replacement",
+        [
+            ("\u200b", "ZWSP", ""),
+            ("\u200c", "ZWNJ", ""),
+            ("\u200d", "ZWJ", ""),
+            ("\ufeff", "BOM", ""),
+            ("\u00a0", "NBSP", " "),
+        ],
+    )
+    def test_load_docx_normalizes_invisible_chars(
+        self, tmp_path, invisible_char, name, replacement
+    ):
+        spec_text = f"This{invisible_char}is the first paragraph."
+        claim_text = f"A device{invisible_char}comprising a widget."
+        path = tmp_path / f"patent_{name.lower()}.docx"
+        _create_numbered_patent_docx(
+            path,
+            spec_paragraphs=[spec_text],
+            claims=[claim_text],
+        )
+        result = load_docx(path)
+        assert invisible_char not in result.full_text
+        expected_spec = f"This{replacement}is the first paragraph."
+        expected_claim = f"A device{replacement}comprising a widget."
+        assert expected_spec in result.full_text
+        assert expected_claim in result.full_text
+
+    def test_load_docx_tw_normalizes_invisible_chars(self, tmp_path):
+        # Cover all 5 chars in one TW doc.
+        doc = Document()
+        doc.add_paragraph("【技術領域】")
+        doc.add_paragraph("本發明涉及\u200b測試與\u00a0儀器。")
+        doc.add_paragraph("含有\u200c零\u200d寬\ufeff字。")
+        path = tmp_path / "tw_invisible.docx"
+        doc.save(str(path))
+        result = load_docx_tw(path)
+        joined = "\n".join(result.paragraphs)
+        for ch in ("\u200b", "\u200c", "\u200d", "\ufeff"):
+            assert ch not in joined
+        # NBSP -> regular space
+        assert "\u00a0" not in joined
+        assert "涉及測試與 儀器。" in joined
+        assert "含有零寬字。" in joined
+
+    def test_load_docx_cn_normalizes_invisible_chars(self, tmp_path):
+        doc = Document()
+        doc.add_paragraph("技术领域")
+        doc.add_paragraph("本发明涉及\u200b一种\u00a0装置。")
+        path = tmp_path / "cn_invisible.docx"
+        doc.save(str(path))
+        result = load_docx_cn(path)
+        all_text = "\n".join(p for s in result.sections for p in s.paragraphs)
+        assert "\u200b" not in all_text
+        assert "\u00a0" not in all_text
+        assert "本发明涉及一种 装置。" in all_text
+
+
 class TestLoadDocxCnTrackedChanges:
     """Tests for tracked changes detection in load_docx_cn."""
 
