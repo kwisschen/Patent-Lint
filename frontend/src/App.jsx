@@ -21,7 +21,7 @@ import { getJurisdictionConfig, JURISDICTION_COLORS } from './lib/jurisdictionCo
 function JurisdictionBadge({ code }) {
   return (
     <span
-      className="inline-flex items-center justify-center w-6 h-6 rounded-full text-[9px] font-bold text-white shrink-0"
+      className="inline-flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full text-[8px] sm:text-[9px] font-bold text-white shrink-0"
       style={{ backgroundColor: JURISDICTION_COLORS[code] }}
     >
       {code}
@@ -130,14 +130,14 @@ function App() {
             <div className="mx-auto w-full max-w-5xl px-4 py-8">
               {homeState === 'idle' && (
                 <div className="flex flex-col items-center justify-center min-h-[40vh] sm:min-h-[60vh]">
-                  <div className="flex items-center justify-center gap-1 rounded-lg bg-muted p-1 mb-4" role="radiogroup" aria-label={t('jurisdiction.label')}>
+                  <div className="flex items-center justify-center gap-1 rounded-lg bg-muted p-1 mt-3 mb-4" role="radiogroup" aria-label={t('jurisdiction.label')}>
                     {['US', 'CN', 'TW'].map((j) => (
                       <button
                         key={j}
                         role="radio"
                         aria-checked={jurisdiction === j}
                         onClick={() => setJurisdiction(j)}
-                        className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                        className={`relative flex items-center gap-1 sm:gap-1.5 rounded-md px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium whitespace-nowrap transition-colors ${
                           jurisdiction === j
                             ? 'bg-background text-foreground shadow-sm'
                             : 'text-muted-foreground hover:text-foreground'
@@ -145,7 +145,11 @@ function App() {
                       >
                         <JurisdictionBadge code={j} />
                         {t(`jurisdiction.${j.toLowerCase()}`)}
-                        {(j === 'CN' || j === 'TW') && <BetaBadge />}
+                        {(j === 'CN' || j === 'TW') && (
+                          <span className="absolute -top-2 right-0 pointer-events-none">
+                            <BetaBadge />
+                          </span>
+                        )}
                       </button>
                     ))}
                   </div>
