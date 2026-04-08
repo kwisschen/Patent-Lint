@@ -244,12 +244,15 @@ def calculate_similarity(text1: str, text2: str) -> float:
 
 _TRANSITIONS = re.compile(
     r",?\s*(?:"
+    r"(?:"
     r"comprising\s*(?:the\s+steps?\s+of\s*)?"
     r"|consisting\s+essentially\s+of"
     r"|consisting\s+of"
     r"|including"
     r"|having"
-    r")\s*:",
+    r")\s*:"
+    r"|wherein\b"
+    r")",
     re.IGNORECASE,
 )
 
