@@ -900,3 +900,135 @@ class TestAttachCrossReferences:
         attach_cross_references(ab, ss)
         widget_ab = next(i for i in ab if i["term"] == "widget")
         assert widget_ab["cross_ref"] is None
+
+
+class TestSuggestedMatchTiebreak:
+    """Commit 10b: stemmed-symmetric-difference tiebreak for did-you-mean.
+
+    When two intros tie at the same Jaccard score, the morphologically
+    related candidate (smaller stemmed symmetric difference) wins.
+    Surfaced by the testspec5 browser smoke test where 'surge protecting
+    circuit' was tied between 'surge protection circuit' (correct
+    morphological pair) and 'surge suppressor circuit' (coincidental
+    overlap), and the strict ``>`` loop picked whichever arrived first.
+    """
+
+    def test_stemmed_pair_beats_unrelated_at_same_jaccard(self):
+        """Two intros tie at Jaccard 0.5; the stemmed-pair candidate wins.
+
+        Reference: 'surge protecting circuit' (stems: surg, protect, circuit).
+        Intro A:  'surge protection circuit' (stems: surg, protect, circuit)
+                  → sym_diff = {'protecting', 'protection'}, both stem to
+                  'protect', stem_sym_diff size = 1.
+        Intro B:  'surge suppressor circuit' (stems: surg, suppressor, circuit)
+                  → sym_diff = {'protecting', 'suppressor'}, two distinct
+                  stems, stem_sym_diff size = 2.
+
+        Lower stem_sym_diff wins → A is the suggestion.
+        """
+        # Inject the suppressor candidate FIRST so without the tiebreak it
+        # would beat the protection candidate.
+        claims = [Claim(
+            id=1,
+            text=(
+                "A device comprising a surge suppressor circuit and a surge "
+                "protection circuit, wherein the surge protecting circuit is active."
+            ),
+            independent=True,
+            method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        target = next(
+            (i for i in issues if i["term"] == "surge protecting circuit"),
+            None,
+        )
+        assert target is not None
+        assert target["suggested_match"] is not None
+        assert target["suggested_match"]["term"] == "surge protection circuit"
+
+    def test_calculation_calculating_pair_still_resolves(self):
+        """Regression: testspec2's pair has only one candidate at ≥0.5,
+        so the tiebreak is a no-op and the suggestion still lands.
+        """
+        claims = [Claim(
+            id=1,
+            text=(
+                "A device comprising a common voltage difference calculation circuit, "
+                "wherein the common voltage difference calculating circuit is active."
+            ),
+            independent=True,
+            method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        target = next(
+            (i for i in issues if "calculating circuit" in i["term"]),
+            None,
+        )
+        assert target is not None
+        assert target["suggested_match"]["term"] == "common voltage difference calculation circuit"
+
+    def test_real_fixture_testspec5_surge_protecting(self):
+        """Real fixture: every 'surge protecting circuit' finding on testspec5
+        suggests 'surge protection circuit', not 'surge suppressor circuit'.
+        Skipped if the gitignored fixture is not present.
+        """
+        import pytest
+        from pathlib import Path
+        from patentlint.pipeline import analyze_file
+        from patentlint.models import Jurisdiction
+
+        fixture = Path(
+            "tests/fixtures/us/local/testspec5_surge_nested_lists.docx"
+        )
+        if not fixture.exists():
+            pytest.skip("real fixture not present")
+        result = analyze_file(str(fixture), jurisdiction=Jurisdiction.US)
+        targets = [
+            f for f in result.antecedent_basis_issues
+            if f["term"] == "surge protecting circuit"
+        ]
+        assert len(targets) > 0, "expected at least one surge protecting circuit finding"
+        for f in targets:
+            sm = f["suggested_match"]
+            assert sm is not None
+            assert sm["term"] == "surge protection circuit", (
+                f"claim {f['claim_id']} suggested {sm['term']!r} "
+                f"instead of 'surge protection circuit'"
+            )
+
+
+class TestUtsVerbSuffix:
+    """Commit 10b: -uts trailing verbs (e.g., 'outputs') stripped.
+
+    Surfaced by the testspec5 smoke test where claim 2 captured
+    'the surge detection driver circuit outputs' as a reference term.
+    """
+
+    def test_circuit_outputs_stripped(self):
+        from patentlint.analysis.utils import clean_noun_phrase
+        assert clean_noun_phrase("circuit outputs") == "circuit"
+
+    def test_real_fixture_testspec5_no_outputs_capture(self):
+        """Real fixture: testspec5 claim 2 no longer captures
+        'the surge detection driver circuit outputs' as a finding.
+        Skipped if the gitignored fixture is not present.
+        """
+        import pytest
+        from pathlib import Path
+        from patentlint.pipeline import analyze_file
+        from patentlint.models import Jurisdiction
+
+        fixture = Path(
+            "tests/fixtures/us/local/testspec5_surge_nested_lists.docx"
+        )
+        if not fixture.exists():
+            pytest.skip("real fixture not present")
+        result = analyze_file(str(fixture), jurisdiction=Jurisdiction.US)
+        outputs_findings = [
+            f for f in result.antecedent_basis_issues
+            if "outputs" in f["term"]
+        ]
+        assert outputs_findings == [], (
+            f"expected no -outputs findings, got: "
+            f"{[(f['claim_id'], f['term']) for f in outputs_findings]}"
+        )

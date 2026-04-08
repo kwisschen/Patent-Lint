@@ -191,7 +191,13 @@ def _is_likely_third_person_verb(word: str) -> bool:
                      'eases',
                      # Commit 9d: catch verbs like 'subtracts' (-cts),
                      # 'accepts' (-pts), 'converts' (-rts), 'consists' (-sts).
-                     'cts', 'pts', 'rts', 'sts')
+                     'cts', 'pts', 'rts', 'sts',
+                     # Commit 10b: catch 'outputs' (-uts). Surfaced by the
+                     # testspec5 browser smoke test where claim 2 captured
+                     # 'the surge detection driver circuit outputs' as a
+                     # reference term. Other gaps (-its, -rns, -ops, -ies)
+                     # deferred to Phase 9.
+                     'uts')
     return any(word.endswith(s) for s in verb_suffixes)
 
 
