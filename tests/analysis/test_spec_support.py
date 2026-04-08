@@ -2,6 +2,10 @@
 # Copyright (c) 2025 Christopher Chen
 """Tests for check_spec_support — Phase 4 B3."""
 
+from pathlib import Path
+
+import pytest
+
 from patentlint.models import Claim
 from patentlint.analysis.claims import check_spec_support
 
@@ -106,3 +110,89 @@ class TestSpecSupport:
         """No claims should return empty."""
         unsupported = check_spec_support([], "Some spec text.")
         assert unsupported == []
+
+
+class TestSpecSupportTier2SlidingWindow:
+    """Tier 2 must enforce stem proximity within a sliding window.
+
+    Before this fix, Tier 2 used ``set.issubset()`` over a bag of stems
+    spanning the entire spec — any multi-word claim term whose individual
+    stems each appeared somewhere passed silently, regardless of distance.
+    """
+
+    def test_scattered_stems_no_longer_match(self):
+        """Stems for 'circulating line head' scattered across the spec must NOT match."""
+        # 'circul' (from circulating), 'line', 'head' each appear unrelatedly
+        # in different sentences. The bag-of-stems issubset would have passed
+        # this; the sliding window must reject it.
+        claims = [_make_claim(1, "A device comprising: a circulating line head.")]
+        spec = (
+            "The water is circulating through the cooling jacket. "
+            "Connect the power line to the inlet valve. "
+            "The pressure head must remain below threshold during operation. "
+            "Monitor the gauge for safety."
+        )
+        unsupported = check_spec_support(claims, spec)
+        phrases = [u.phrase for u in unsupported]
+        assert any("circulating line head" in p for p in phrases)
+
+    def test_far_apart_stems_no_match(self):
+        """Two stems separated by more than WINDOW_SIZE words must not match."""
+        claims = [_make_claim(1, "A device comprising: a thermal coupling.")]
+        # 'thermal' at the start, 'coupling' (or 'couple') 30+ words later.
+        spec = (
+            "The thermal management subsystem regulates heat in the assembly. "
+            + " ".join(["filler"] * 40)
+            + " A coupling between the inlet and outlet provides flow control."
+        )
+        unsupported = check_spec_support(claims, spec)
+        phrases = [u.phrase for u in unsupported]
+        assert any("thermal coupling" in p for p in phrases)
+
+    def test_adjacent_stems_match(self):
+        """Stems within a contiguous window must still match."""
+        claims = [_make_claim(1, "A device comprising: a fastening mechanism.")]
+        spec = "The fastened mechanism holds the parts together securely."
+        unsupported = check_spec_support(claims, spec)
+        phrases = [u.phrase for u in unsupported]
+        assert "fastening mechanism" not in phrases
+
+    def test_stems_within_window_match(self):
+        """Stems separated by a few words but within the window must match."""
+        claims = [_make_claim(1, "A device comprising: a heat exchanger.")]
+        # 'heat' and 'exchang' (from exchanger) within WINDOW_SIZE words.
+        spec = "The heat is dissipated by the exchanger over time."
+        unsupported = check_spec_support(claims, spec)
+        phrases = [u.phrase for u in unsupported]
+        assert "heat exchanger" not in phrases
+
+    def test_test6_chemistry_circulating_line_head_flagged(self):
+        """Real fixture: deliberately stripped 'circulating line head' must be flagged."""
+        from patentlint.parser import sections
+        from patentlint.parser.claims import parse_claims
+        from patentlint.parser.docx_loader import load_docx
+
+        fixture = Path(__file__).parent.parent / "fixtures" / "us" / "local" / "test6_chemistry_bare_noun_list.docx"
+        if not fixture.exists():
+            pytest.skip(f"Real US patent fixture not present: {fixture}")
+
+        loaded = load_docx(fixture)
+        full_text = loaded.full_text
+
+        # Mirror pipeline.py: spec_text is summary + detailed description.
+        summary = sections.extract_summary_section(full_text) or ""
+        detailed = sections.extract_detailed_description_section(full_text) or ""
+        spec_text = summary + "\n" + detailed
+
+        claims_section = sections.extract_claims_section(full_text)
+        claims = parse_claims(claims_section) if claims_section else []
+        if not claims:
+            pytest.skip("Fixture loaded but no claims parsed")
+
+        unsupported = check_spec_support(claims, spec_text)
+        phrases_lower = [u.phrase.lower() for u in unsupported]
+        # The deliberately stripped phrase must surface as unsupported.
+        assert any("circulating line head" in p for p in phrases_lower), (
+            f"Expected 'circulating line head' to be flagged after Tier 2 fix; "
+            f"got phrases: {phrases_lower[:30]}"
+        )

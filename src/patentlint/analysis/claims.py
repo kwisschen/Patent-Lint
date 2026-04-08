@@ -710,6 +710,10 @@ _BOILERPLATE_TERMS = {
     "plurality", "embodiment", "thereof", "herein", "foregoing",
 }
 
+# Sliding-window size for spec-support proximity matching (Tier 2 stemmed,
+# Tier 3 raw). Hoisted so both tiers share a single constant.
+WINDOW_SIZE = 10
+
 
 def check_spec_support(
     claims: list[Claim],
@@ -725,8 +729,10 @@ def check_spec_support(
     spec_lower = spec_text.lower()
     spec_words = spec_lower.split()
 
-    # Pre-stem spec words for tier 2
-    spec_stemmed = set(_stemmer.stemWords(spec_words))
+    # Pre-stem spec words for Tier 2. Order-preserving list (not a set) so
+    # the Tier 2 sliding window can enforce proximity rather than checking
+    # set membership across the entire spec.
+    spec_stems = list(_stemmer.stemWords(spec_words))
 
     # Build set of already-flagged antecedent basis terms
     ab_flagged: set[str] = set()
@@ -769,19 +775,33 @@ def check_spec_support(
             if phrase_lower in spec_lower:
                 continue
 
-            # Tier 2: Stemmed match
+            # Tier 2: Stemmed sliding window. All phrase stems must appear
+            # together inside a single window. Window size grows to fit the
+            # phrase if the phrase is longer than WINDOW_SIZE; otherwise the
+            # window is fixed at WINDOW_SIZE so multi-word terms whose stems
+            # are scattered across the spec are NOT silently matched.
             tiers_checked.append("stemmed")
-            phrase_stems = set(_stemmer.stemWords(phrase_lower.split()))
-            if phrase_stems and phrase_stems.issubset(spec_stemmed):
-                continue
+            phrase_stems = list(_stemmer.stemWords(phrase_lower.split()))
+            if phrase_stems:
+                phrase_stem_set = set(phrase_stems)
+                window_size = max(len(phrase_stems), WINDOW_SIZE)
+                stem_loop_end = max(1, len(spec_stems) - window_size + 1)
+                found_stem_window = False
+                for i in range(stem_loop_end):
+                    window = set(spec_stems[i:i + window_size])
+                    if phrase_stem_set.issubset(window):
+                        found_stem_window = True
+                        break
+                if found_stem_window:
+                    continue
 
-            # Tier 3: Word window (all words appear within 10-word window)
+            # Tier 3: Word window (all words appear within WINDOW_SIZE-word window)
             tiers_checked.append("word_window")
             phrase_words = phrase_lower.split()
             if len(phrase_words) >= 2:
                 found_window = False
                 for i in range(len(spec_words) - len(phrase_words) + 1):
-                    window = set(spec_words[i:i + 10])
+                    window = set(spec_words[i:i + WINDOW_SIZE])
                     if all(w in window for w in phrase_words):
                         found_window = True
                         break
