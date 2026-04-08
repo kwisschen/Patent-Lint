@@ -201,6 +201,13 @@ def _is_likely_third_person_verb(word: str) -> bool:
     return any(word.endswith(s) for s in verb_suffixes)
 
 
+# Tokens that, when sitting immediately before a -uts word, mean the
+# -uts word is the head noun and must NOT be stripped. Articles and
+# the prepositional 'of' are the load-bearing cases ('the outputs',
+# 'plurality of inputs'). See the guard in clean_noun_phrase.
+_UTS_GUARD_PRECEDERS = {"the", "a", "an", "said", "of"}
+
+
 # Known -ing words that are legitimate nouns in patent context
 _ING_NOUNS = {
     "ring", "spring", "string", "wiring", "bearing", "housing",
@@ -236,6 +243,21 @@ def clean_noun_phrase(phrase: str) -> str:
     """Strip trailing verbs, adverbs, and function words from a noun phrase."""
     words = phrase.strip().split()
     while words and _should_strip_trailing(words[-1]):
+        # Guard for the -uts suffix: 'inputs' / 'outputs' are ambiguous
+        # between verb ('the circuit outputs the signal') and plural noun
+        # ('the inputs', 'plurality of outputs'). The general suffix rule
+        # cannot tell them apart, so apply this disambiguator: only strip
+        # the -uts word when popping would leave a real noun behind. If
+        # the remaining phrase would end on an article or preposition,
+        # the -uts word IS the head noun — keep it.
+        candidate = words[-1].lower().rstrip(".,;:")
+        if candidate.endswith("uts") and len(words) >= 2:
+            prev = words[-2].lower().rstrip(".,;:")
+            if prev in _UTS_GUARD_PRECEDERS:
+                break
+        if candidate.endswith("uts") and len(words) < 2:
+            # Standalone 'outputs' / 'inputs' is also a head noun, not a verb.
+            break
         words.pop()
     # Strip possessives: "device's" → "device", "users'" → "users"
     words = [w.replace("\u2019s", "").replace("'s", "").rstrip("\u2019'") for w in words]
