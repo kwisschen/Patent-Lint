@@ -134,6 +134,22 @@ def detect_means_plus_function(claims: list[Claim]) -> list[int]:
 _SKIP_TERMS = {"invention", "present invention", "same", "following", "above", "below"}
 
 
+def _word_boundary_match(needle: str, haystack: str) -> bool:
+    """Return True iff ``needle`` appears in ``haystack`` as a complete
+    word sequence (case-insensitive, anchored on word boundaries).
+
+    Used by the antecedent walker to suppress findings only when an
+    introduction and a reference share the same word sequence — short
+    introductions like 'common voltage' must NOT silently mask longer
+    references like 'the common voltage difference calculation circuit'.
+    """
+    needle = needle.strip()
+    if not needle:
+        return False
+    pattern = r"\b" + re.escape(needle) + r"\b"
+    return re.search(pattern, haystack, re.IGNORECASE) is not None
+
+
 def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
     """Check claims for antecedent basis issues.
 
@@ -205,7 +221,16 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
             # Skip standalone quantifiers/pronouns ("the one", "the another")
             if term.lower() in _QUANTIFIER_STOPS:
                 continue
-            has_basis = any(term in intro or intro in term for intro in intros)
+            # Word-boundary equivalence: an introduction suppresses a
+            # reference only when both reference the SAME word sequence.
+            # The previous bidirectional substring match let short intros
+            # like 'common voltage' silently mask longer references like
+            # 'common voltage difference calculation circuit', hiding
+            # morphological variant issues across real US patents.
+            has_basis = any(
+                _word_boundary_match(intro, term) and _word_boundary_match(term, intro)
+                for intro in intros
+            )
             if not has_basis:
                 if term not in _SKIP_TERMS and not term.startswith("fig") and not term.startswith("claim"):
                     prefix = m.group("prefix").lower()
