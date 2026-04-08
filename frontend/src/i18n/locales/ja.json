@@ -530,7 +530,11 @@
   "common": {
     "close": "閉じる",
     "toggleTheme": "テーマ切替",
-    "changeLanguage": "言語切替"
+    "changeLanguage": "言語切替",
+    "betaBadge": {
+      "label": "BETA",
+      "tooltip": "ベータ版：一部のチェック項目は開発中です"
+    }
   },
   "consolidation": {
     "nounMismatchSummary": "プリアンブル名詞の不一致：{{count}} 個の従属項が請求項 {{rootId}} と異なります"

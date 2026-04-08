@@ -530,7 +530,11 @@
   "common": {
     "close": "Close",
     "toggleTheme": "Toggle theme",
-    "changeLanguage": "Change language"
+    "changeLanguage": "Change language",
+    "betaBadge": {
+      "label": "BETA",
+      "tooltip": "Beta: some checks are still in development"
+    }
   },
   "consolidation": {
     "nounMismatchSummary": "Preamble noun mismatch: {{count}} dependent claim(s) differ from Claim {{rootId}}"
