@@ -271,11 +271,92 @@ def extract_abbreviation_intros(text: str) -> list[str]:
 # ---------------------------------------------------------------------------
 
 
+# List-context introduction extraction.
+#
+# Patents commonly drop articles for the second-and-later items of a list:
+#   "comprising a base, pivot, and arm"
+#   "includes a base; pivot; and arm"
+#   "selected from the group consisting of methanol, ethanol, and propanol"
+# The bare nouns ('pivot', 'arm', 'ethanol', 'propanol') are introductions
+# but the existing _INTRO_PATTERNS regex requires an article prefix and
+# misses them. We capture the run after a list-context trigger word, then
+# split on commas/semicolons/and/or to recover each list item.
+#
+# Extraction is *gated* on a list-context trigger so arbitrary commas
+# elsewhere in claim text do not produce noise.
+_LIST_CONTEXT_PATTERN = re.compile(
+    r"\b(?:"
+    r"includes?"
+    r"|including"
+    r"|comprises?"
+    r"|comprising"
+    r"|consisting(?:\s+essentially)?\s+of"
+    r"|selected\s+from(?:\s+the\s+group(?:\s+consisting\s+of)?)?"
+    r")\s*:?\s+"
+    r"(?P<list>[^.\n]+)",
+    re.IGNORECASE,
+)
+
+_LIST_ITEM_SPLIT = re.compile(r"[,;]|\s+and\s+|\s+or\s+", re.IGNORECASE)
+_LEADING_ARTICLE = re.compile(r"^(?:a|an|the)\s+", re.IGNORECASE)
+_LIST_CONTEXT_BREAKER = re.compile(r"\bwherein\b", re.IGNORECASE)
+
+
+def extract_bare_noun_intros(text: str) -> list[str]:
+    """Extract introductions from bare-noun list contexts.
+
+    Three patterns previously missed by ``_INTRO_PATTERNS``:
+
+    1. Semicolon-separated bare-noun lists::
+
+           "the assembly includes a base; pivot; and arm"
+
+       ``pivot`` and ``arm`` are bare nouns following an established list
+       separator and inherit introduction status.
+
+    2. Comma-separated preamble lists::
+
+           "An apparatus comprising base, pivot, and arm"
+
+       Same shape, comma instead of semicolon, no leading article on
+       second-and-later items.
+
+    3. Markush group members::
+
+           "selected from the group consisting of methanol, ethanol, and propanol"
+
+       Each chemical name is an introduction. The bare ``group`` itself
+       should not be flagged as missing an antecedent — that false-positive
+       is handled at the walker level in commit 9b.
+
+    The captured run is truncated at ``wherein`` so wherein-clauses do not
+    bleed into the list. Items are then split on ``,``/``;``/``and``/``or``,
+    article-stripped, and run through ``clean_noun_phrase``.
+    """
+    refs: list[str] = []
+    for m in _LIST_CONTEXT_PATTERN.finditer(text):
+        list_text = m.group("list")
+        breaker = _LIST_CONTEXT_BREAKER.search(list_text)
+        if breaker:
+            list_text = list_text[: breaker.start()]
+        for raw in _LIST_ITEM_SPLIT.split(list_text):
+            item = raw.strip()
+            if not item:
+                continue
+            item = _LEADING_ARTICLE.sub("", item).strip()
+            cleaned = clean_noun_phrase(item)
+            if cleaned:
+                refs.append(cleaned.lower())
+    return refs
+
+
 def extract_introductions(text: str) -> list[str]:
     """Extract all element-introduction noun phrases from patent text.
 
-    Covers standard patent quantifiers: a/an, at least one, one or more,
-    a plurality of, ordinals (first/second/third), bare numerals.
+    Covers standard patent quantifiers (a/an, at least one, one or more,
+    a plurality of, ordinals, bare numerals) AND bare-noun list contexts
+    (comprising / includes / consisting of / selected from … X, Y, and Z).
+
     Returns list of lowercase noun phrases (may contain duplicates).
     """
     refs: list[str] = []
@@ -283,6 +364,7 @@ def extract_introductions(text: str) -> list[str]:
         cleaned = clean_noun_phrase(m.group(1).strip())
         if cleaned:
             refs.append(cleaned)
+    refs.extend(extract_bare_noun_intros(text.lower()))
     return refs
 
 

@@ -272,6 +272,66 @@ class TestAntecedentWordBoundaryWalker:
         )
 
 
+class TestBareNounListIntroductions:
+    """Commit 8: bare-noun list-context extraction in the antecedent walker."""
+
+    def test_semicolon_list_walker_no_flag(self):
+        """'includes a base; pivot; and arm' followed by 'the pivot' → no flag."""
+        claims = [Claim(
+            id=1,
+            text="An assembly that includes a base; pivot; and arm, wherein the pivot is rigid.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "pivot" not in terms
+
+    def test_comma_preamble_list_walker_no_flag(self):
+        """'comprising base, pivot, and arm' followed by 'the arm' → no flag."""
+        claims = [Claim(
+            id=1,
+            text="An apparatus comprising base, pivot, and arm, wherein the arm is movable.",
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "arm" not in terms
+
+    def test_markush_member_walker_no_flag(self):
+        """'selected from the group consisting of methanol, ethanol, and propanol'
+        followed by 'the ethanol' → no flag.
+        """
+        claims = [Claim(
+            id=1,
+            text=(
+                "A composition selected from the group consisting of methanol, "
+                "ethanol, and propanol, wherein the ethanol is the dominant component."
+            ),
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "ethanol" not in terms
+
+    def test_dependent_claim_can_reference_bare_list_member(self):
+        """Dependent claim referencing a bare-noun list member from parent → no flag."""
+        claims = [
+            Claim(
+                id=1,
+                text="An apparatus comprising base, pivot, and arm.",
+                independent=True, method_claim=False,
+            ),
+            Claim(
+                id=2,
+                text="The apparatus of claim 1, wherein the pivot is hinged.",
+                independent=False, method_claim=False, dependencies=[1],
+            ),
+        ]
+        issues = check_antecedent_basis(claims)
+        claim2_terms = [i["term"] for i in issues if i["claim_id"] == 2]
+        assert "pivot" not in claim2_terms
+
+
 class TestPreambleIntroduction:
     """Bug 6: Preamble introductions must be registered for antecedent basis."""
 

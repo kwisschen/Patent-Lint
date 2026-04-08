@@ -4,7 +4,7 @@
 
 from patentlint.analysis.utils import (
     clean_noun_phrase, extract_noun_phrases, extract_abbreviation_intros,
-    extract_definite_refs, extract_introductions,
+    extract_definite_refs, extract_introductions, extract_bare_noun_intros,
 )
 
 
@@ -321,3 +321,71 @@ class TestHyphenatedAntecedentBasis:
         terms = [i["term"] for i in issues if i["claim_id"] == 1]
         assert "non-transitory medium" not in terms
         assert "non" not in terms
+
+
+class TestExtractBareNounIntros:
+    """Commit 8: bare-noun list-context introduction extraction."""
+
+    def test_semicolon_list_after_includes(self):
+        """'includes a base; pivot; and arm' → all three are introductions."""
+        intros = extract_bare_noun_intros("the assembly includes a base; pivot; and arm.")
+        assert "base" in intros
+        assert "pivot" in intros
+        assert "arm" in intros
+
+    def test_comma_preamble_list(self):
+        """'comprising base, pivot, and arm' → all three are introductions."""
+        intros = extract_bare_noun_intros("an apparatus comprising base, pivot, and arm.")
+        assert "base" in intros
+        assert "pivot" in intros
+        assert "arm" in intros
+
+    def test_markush_group_members(self):
+        """'selected from the group consisting of methanol, ethanol, and propanol' →
+        each chemical is an introduction.
+        """
+        intros = extract_bare_noun_intros(
+            "selected from the group consisting of methanol, ethanol, and propanol."
+        )
+        assert "methanol" in intros
+        assert "ethanol" in intros
+        assert "propanol" in intros
+
+    def test_truncates_at_wherein(self):
+        """List run is truncated at 'wherein' so the wherein-clause does not
+        bleed into the list and produce noise like 'the device is flat'.
+        """
+        intros = extract_bare_noun_intros(
+            "comprising a base, wherein the device is flat."
+        )
+        assert "base" in intros
+        # Words after 'wherein' must NOT have been split into list items
+        assert "the device is flat" not in intros
+        assert "device is flat" not in intros
+
+    def test_no_list_context_no_extraction(self):
+        """Arbitrary commas outside a list context produce nothing."""
+        intros = extract_bare_noun_intros("the widget moves, slides, and rotates.")
+        # No trigger word matched → empty extraction
+        assert intros == []
+
+    def test_consisting_essentially_of(self):
+        """'consisting essentially of A, B, and C' is also a list context."""
+        intros = extract_bare_noun_intros(
+            "consisting essentially of copper, iron, and zinc."
+        )
+        assert "copper" in intros
+        assert "iron" in intros
+        assert "zinc" in intros
+
+    def test_extract_introductions_includes_bare_nouns(self):
+        """Top-level extract_introductions should include bare-noun intros
+        additively (existing _INTRO_PATTERNS arm still runs).
+        """
+        intros = extract_introductions(
+            "an apparatus comprising a base, pivot, and arm."
+        )
+        # 'a base' captured by both arms; 'pivot' and 'arm' only by bare-noun
+        assert "base" in intros
+        assert "pivot" in intros
+        assert "arm" in intros
