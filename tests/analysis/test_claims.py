@@ -19,6 +19,7 @@ from patentlint.analysis.claims import (
     check_claim_transitions,
     check_special_claim_formats,
     check_claim_punctuation,
+    _TRANSITIONS,
 )
 
 
@@ -228,6 +229,36 @@ class TestAntecedentBasis:
         issues = check_antecedent_basis(claims)
         flagged_terms = [i["term"] for i in issues if i["claim_id"] == 1]
         assert any("processor" in t for t in flagged_terms)
+
+
+class TestTransitionsRegexWherein:
+    """`_TRANSITIONS` recognizes `wherein` (no colon) as a preamble/body boundary."""
+
+    def test_wherein_no_colon_matches(self):
+        text = "1. An apparatus comprising a widget, wherein the widget is blue."
+        match = _TRANSITIONS.search(text)
+        assert match is not None
+        # Preamble (text before the matched transition) should not include 'wherein'.
+        preamble = text[: match.start()]
+        body = text[match.end():]
+        assert "wherein" not in preamble
+        assert "the widget is blue" in body
+
+    def test_comprising_with_colon_still_matches_first(self):
+        # When both a colon-style transition and a `wherein` exist, the
+        # leftmost (colon-style) match wins so existing behavior is preserved.
+        text = "1. An apparatus comprising: a widget, wherein the widget is blue."
+        match = _TRANSITIONS.search(text)
+        assert match is not None
+        preamble = text[: match.start()]
+        body = text[match.end():]
+        assert "comprising" not in body  # transition was consumed
+        assert "a widget, wherein the widget is blue" in body
+        assert "An apparatus" in preamble
+
+    def test_no_transition_no_match(self):
+        text = "1. An apparatus that is blue."
+        assert _TRANSITIONS.search(text) is None
 
 
 class TestClaimTransitions:
