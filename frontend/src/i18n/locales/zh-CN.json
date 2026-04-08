@@ -144,10 +144,15 @@
     "items": "个术语",
     "item": "个术语"
   },
+  "antecedent": {
+    "didYouMean": "您是否指的是\"{{term}}\"（于权利要求{{claim_id}}中引入）？",
+    "crossRefSpecSupport": "亦已于说明书支持中标记,请参见 § 112(a) 卡片。"
+  },
   "specSupport": {
     "title": "说明书支持检查",
     "items": "个术语",
-    "item": "个术语"
+    "item": "个术语",
+    "crossRefAntecedent": "亦已于先行词分析中标记,请参见 § 112(b) 卡片。"
   },
   "triage": {
     "title": "优先处理摘要",

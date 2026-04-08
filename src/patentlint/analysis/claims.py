@@ -14,6 +14,7 @@ import snowballstemmer as _sb
 from patentlint.analysis.utils import (
     _DEFINITE_REF, _QUANTIFIER_STOPS,
     extract_introductions, extract_abbreviation_intros, clean_noun_phrase,
+    token_set_jaccard,
 )
 from patentlint.models import Claim, CheckItem, UnsupportedTerm
 
@@ -165,12 +166,14 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
     least one X", etc.) in the same claim or any of its ancestor claims
     (walking the full multi-parent dependency graph).
 
-    Returns: list of dicts with keys claim_id, term, reference_form, claim_text.
-    Findings are deduped by (claim_id, term, reference_form) and sorted.
+    Returns: list of dicts with keys claim_id, term, reference_form,
+    claim_text, suggested_match. ``suggested_match`` is None for findings
+    with no near-match introduction in the ancestor set, otherwise a dict
+    ``{"term": <intro_term>, "claim_id": <intro_claim_id>}`` carrying the
+    highest-Jaccard introduction (≥ 0.5). Findings are deduped by
+    (claim_id, term, reference_form) and sorted.
 
     Known limitations (deferred):
-    - Morphological introductions: "receiving data" does not introduce "the
-      received data". Lemmatization is out of scope.
     - Generic terms ("the user", "the step", "the output") are flagged
       unconditionally even when they may be implicit. A confidence-bucketing
       pass is future work.
@@ -178,16 +181,14 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
       possessives ("the second device's first housing") may still produce
       unexpected captures.
     """
-    def get_ancestor_texts(claim: Claim, all_claims: list[Claim]) -> tuple[str, str]:
-        """Return (lowered_text, original_text) for claim + all ancestors.
+    def get_ancestor_chain(claim: Claim, all_claims: list[Claim]) -> list[Claim]:
+        """Return [claim, ...ancestors] walking the full multi-parent BFS.
 
-        Walks the full multi-parent dependency graph (BFS) so that
-        multi-dependent claims (e.g., "claim 5 of claim 1 or claim 3")
+        Multi-dependent claims (e.g., "claim 5 of claim 1 or claim 3")
         collect introductions from every ancestor path.
         """
         claims_by_id = {c.id: c for c in all_claims}
-        texts_lower = [claim.text.lower()]
-        texts_orig = [claim.text]
+        chain = [claim]
         visited = {claim.id}
         queue = list(claim.dependencies)
         while queue:
@@ -198,26 +199,28 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
             parent = claims_by_id.get(parent_id)
             if parent is None:
                 continue
-            texts_lower.append(parent.text.lower())
-            texts_orig.append(parent.text)
+            chain.append(parent)
             queue.extend(parent.dependencies)
-        return " ".join(texts_lower), " ".join(texts_orig)
+        return chain
 
     issues: list[dict] = []
 
     for claim in claims:
-        full_text, full_text_orig = get_ancestor_texts(claim, claims)
+        chain = get_ancestor_chain(claim, claims)
         claim_text_lower = claim.text.lower()
 
-        # Gather ALL introductions (a/an, at least one, plurality, ordinals, numerals)
-        intros: set[str] = set()
-        for phrase in extract_introductions(full_text):
-            intros.add(phrase)
+        # Gather all introductions, tracking the ancestor claim each came from.
+        # If the same intro phrase appears in multiple ancestors, the deepest
+        # (earliest = closest to root) wins via dict update order.
+        intros_by_term: dict[str, int] = {}
+        for ancestor in chain:
+            ancestor_lower = ancestor.text.lower()
+            for phrase in extract_introductions(ancestor_lower):
+                intros_by_term.setdefault(phrase, ancestor.id)
+            for abbrev_intro in extract_abbreviation_intros(ancestor.text):
+                intros_by_term.setdefault(abbrev_intro, ancestor.id)
 
-        # Register abbreviated forms: "alternating current (AC) source" → "ac source"
-        # Use original-case text so uppercase abbreviations are detected
-        for abbrev_intro in extract_abbreviation_intros(full_text_orig):
-            intros.add(abbrev_intro)
+        intros = set(intros_by_term.keys())
 
         # Find definite references ("the X" and "said X") in this claim
         seen: set[tuple[str, str]] = set()
@@ -251,11 +254,27 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                     dedup_key = (term, reference_form)
                     if dedup_key not in seen:
                         seen.add(dedup_key)
+                        # Did-you-mean: highest-Jaccard intro in ancestor set
+                        # at threshold ≥ 0.5. Surfaces morphological variants
+                        # (calculation/calculating, protection/protecting)
+                        # without silently matching them.
+                        suggested_match: Optional[dict] = None
+                        best_score = 0.0
+                        for intro in intros:
+                            score = token_set_jaccard(term, intro)
+                            if score >= 0.5 and score > best_score:
+                                best_score = score
+                                suggested_match = {
+                                    "term": intro,
+                                    "claim_id": intros_by_term[intro],
+                                }
                         issues.append({
                             "claim_id": claim.id,
                             "term": term,
                             "reference_form": reference_form,
                             "claim_text": claim.text,
+                            "suggested_match": suggested_match,
+                            "cross_ref": None,
                         })
 
     issues.sort(key=lambda x: (x["claim_id"], x["term"], x["reference_form"]))
@@ -761,11 +780,16 @@ WINDOW_SIZE = 10
 def check_spec_support(
     claims: list[Claim],
     spec_text: str,
-    antecedent_flagged: list[dict] | None = None,
 ) -> list[UnsupportedTerm]:
     """Check that claim noun phrases have support in the specification.
 
     Three-tier matching: exact, stemmed, word-window.
+
+    Per ADR-091 (Option Y), this check no longer suppresses phrases already
+    flagged by ``check_antecedent_basis``. Both checks now emit findings
+    independently; the pipeline computes a cross-reference set so the
+    frontend can render hint lines linking related findings instead of
+    silently hiding one branch.
     """
     from patentlint.analysis.utils import extract_noun_phrases
 
@@ -776,12 +800,6 @@ def check_spec_support(
     # the Tier 2 sliding window can enforce proximity rather than checking
     # set membership across the entire spec.
     spec_stems = list(_stemmer.stemWords(spec_words))
-
-    # Build set of already-flagged antecedent basis terms
-    ab_flagged: set[str] = set()
-    if antecedent_flagged:
-        for item in antecedent_flagged:
-            ab_flagged.add(item["term"].lower())
 
     unsupported: list[UnsupportedTerm] = []
 
@@ -805,10 +823,6 @@ def check_spec_support(
 
             # Skip single common words
             if len(phrase_lower.split()) == 1 and phrase_lower in _GENERIC_TERMS:
-                continue
-
-            # Skip if already flagged by antecedent basis
-            if phrase_lower in ab_flagged:
                 continue
 
             tiers_checked: list[str] = []
@@ -858,3 +872,39 @@ def check_spec_support(
             ))
 
     return unsupported
+
+
+def attach_cross_references(
+    antecedent_findings: list[dict],
+    unsupported_terms: list[UnsupportedTerm],
+) -> None:
+    """Cross-link antecedent and spec-support findings on the same term.
+
+    Per ADR-091 (Option Y), the spec-support check no longer suppresses
+    phrases already flagged by antecedent basis. Instead, when the same
+    ``(claim_id, term)`` pair appears in both lists, each finding is
+    annotated with a ``cross_ref`` pointing at the sibling check so the
+    frontend can render a hint line:
+
+    - ``cross_ref="spec_support"`` on antecedent findings → "Also flagged
+      for spec support — see § 112(a) card."
+    - ``cross_ref="antecedent"`` on spec-support findings → "Also flagged
+      for antecedent basis — see § 112(b) card."
+
+    Mutates both lists in place. Comparison is case-insensitive on the
+    bare term.
+    """
+    ab_pairs: set[tuple[int, str]] = {
+        (item["claim_id"], item["term"].lower()) for item in antecedent_findings
+    }
+    spec_pairs: set[tuple[int, str]] = {
+        (ut.claim_number, ut.phrase.lower()) for ut in unsupported_terms
+    }
+
+    for item in antecedent_findings:
+        if (item["claim_id"], item["term"].lower()) in spec_pairs:
+            item["cross_ref"] = "spec_support"
+
+    for ut in unsupported_terms:
+        if (ut.claim_number, ut.phrase.lower()) in ab_pairs:
+            ut.cross_ref = "antecedent"

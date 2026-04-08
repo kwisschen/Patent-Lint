@@ -9,7 +9,7 @@ These are designed to be shareable with the Agentic Patent Analyst project.
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any
+from typing import Any, Optional
 
 from pydantic import BaseModel, Field
 
@@ -94,6 +94,10 @@ class UnsupportedTerm(BaseModel):
     claim_number: int
     phrase: str
     tiers_checked: list[str] = Field(default_factory=list)  # ["exact", "stemmed", "word_window"]
+    # ADR-091: when the same (claim, phrase) is also flagged by the
+    # antecedent-basis check, ``cross_ref`` is set to "antecedent" so the
+    # frontend can render a hint line linking to the § 112(b) card.
+    cross_ref: Optional[str] = None
 
 
 class CnPatentDocument(BaseModel):
