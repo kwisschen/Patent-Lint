@@ -196,6 +196,12 @@
     padding: 3pt 6pt;
     text-align: left;
   }
+  .antecedent-basis .hint {
+    margin-top: 2pt;
+    font-size: 8pt;
+    font-style: italic;
+    color: #78350f;
+  }
   .antecedent-basis th {
     background: #fef3c7;
     font-weight: 600;
@@ -394,26 +400,31 @@
 {% endfor %}
 
 {# -- Antecedent Basis (in Claims section) -- #}
+{# C11: render the richer finding shape — reference_form (the actual    #}
+{# 'the X' phrase as it appears in the claim), suggested_match did-     #}
+{# you-mean hint, and cross_ref pointer to the spec-support card. Each  #}
+{# finding gets its own row so per-finding hints have somewhere to     #}
+{# live; claim id is repeated in the leftmost cell.                     #}
 {% if data.antecedent_basis_issues %}
 <div class="antecedent-basis">
   <h3>Antecedent Basis Review</h3>
-  {%- set ab_grouped = {} -%}
-  {%- for issue in data.antecedent_basis_issues -%}
-    {%- set cid = issue.claim_id | string -%}
-    {%- if cid not in ab_grouped -%}
-      {%- set _ = ab_grouped.update({cid: []}) -%}
-    {%- endif -%}
-    {%- set _ = ab_grouped[cid].append(issue.term) -%}
-  {%- endfor -%}
   <table>
     <thead>
-      <tr><th>Claim</th><th>Flagged Terms</th></tr>
+      <tr><th>Claim</th><th>Flagged Reference</th></tr>
     </thead>
     <tbody>
-      {%- for cid, terms in ab_grouped.items() | sort %}
+      {%- for issue in data.antecedent_basis_issues %}
       <tr>
-        <td>{{ cid }}</td>
-        <td>{{ terms | join(", ") }}</td>
+        <td>{{ issue.claim_id }}</td>
+        <td>
+          <strong>{{ issue.reference_form or issue.term }}</strong>
+          {%- if issue.suggested_match %}
+          <div class="hint">Did you mean &ldquo;{{ issue.suggested_match.term }}&rdquo; (introduced in claim {{ issue.suggested_match.claim_id }})?</div>
+          {%- endif %}
+          {%- if issue.cross_ref == "spec_support" %}
+          <div class="hint">Also flagged by specification support &mdash; see Specification Support Review below.</div>
+          {%- endif %}
+        </td>
       </tr>
       {%- endfor %}
     </tbody>
@@ -425,23 +436,20 @@
 {% if data.unsupported_terms %}
 <div class="antecedent-basis">
   <h3>Specification Support Review</h3>
-  {%- set ut_grouped = {} -%}
-  {%- for ut in data.unsupported_terms -%}
-    {%- set cid = ut.claim_number | string -%}
-    {%- if cid not in ut_grouped -%}
-      {%- set _ = ut_grouped.update({cid: []}) -%}
-    {%- endif -%}
-    {%- set _ = ut_grouped[cid].append(ut.phrase) -%}
-  {%- endfor -%}
   <table>
     <thead>
-      <tr><th>Claim</th><th>Unsupported Terms</th></tr>
+      <tr><th>Claim</th><th>Unsupported Term</th></tr>
     </thead>
     <tbody>
-      {%- for cid, phrases in ut_grouped.items() | sort %}
+      {%- for ut in data.unsupported_terms %}
       <tr>
-        <td>{{ cid }}</td>
-        <td>{{ phrases | join(", ") }}</td>
+        <td>{{ ut.claim_number }}</td>
+        <td>
+          <strong>{{ ut.phrase }}</strong>
+          {%- if ut.cross_ref == "antecedent" %}
+          <div class="hint">Also flagged by antecedent basis &mdash; see Antecedent Basis Review above.</div>
+          {%- endif %}
+        </td>
       </tr>
       {%- endfor %}
     </tbody>
