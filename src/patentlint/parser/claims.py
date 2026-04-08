@@ -79,11 +79,19 @@ def is_method_claim(text: str) -> bool:
     return method_idx != -1 and (comma_idx == -1 or method_idx < comma_idx)
 
 
-def parse_dependencies(text: str, independent: bool) -> list[int]:
-    """Extract dependency claim numbers from claim text."""
+def parse_dependencies(text: str, independent: bool, claim_number: int) -> list[int]:
+    """Extract dependency claim numbers from claim text.
+
+    Self-references (e.g., claim 11 listing itself as a parent) are silently
+    dropped: such input is parser noise from malformed source, but it causes
+    infinite loops in BFS antecedent walkers.
+    """
     if independent:
         return []
-    return [int(m.group(1)) for m in re.finditer(r"\bclaims?\s*(\d+)\b", text, re.IGNORECASE)]
+    dependencies = [
+        int(m.group(1)) for m in re.finditer(r"\bclaims?\s*(\d+)\b", text, re.IGNORECASE)
+    ]
+    return [d for d in dependencies if d != claim_number]
 
 
 def parse_claims(claims_text: str) -> list[Claim]:
@@ -109,7 +117,7 @@ def parse_claims(claims_text: str) -> list[Claim]:
         independent = not _DEP_REF.search(claim_text)
         multiple_dependent = bool(_MULTIPLE_DEP.search(claim_text))
         method = is_method_claim(claim_text)
-        dependencies = parse_dependencies(claim_text, independent)
+        dependencies = parse_dependencies(claim_text, independent, claim_number)
 
         claims.append(Claim(
             id=claim_number,

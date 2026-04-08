@@ -3,6 +3,7 @@
 """Tests for patentlint.analysis.claims."""
 
 from patentlint.models import Claim
+from patentlint.parser.claims import parse_claims, parse_dependencies
 from patentlint.analysis.claims import (
     find_missing_periods,
     has_extra_periods,
@@ -101,6 +102,32 @@ class TestSelfDependency:
             Claim(id=2, text="The method of claim 2.", independent=False, method_claim=True, dependencies=[2]),
         ]
         assert find_self_dependent_claims(claims) == [2]
+
+
+class TestParseDependenciesSelfDependent:
+    """Self-references in parsed dependencies are silently dropped."""
+
+    def test_only_self_yields_empty_dependencies(self):
+        text = "The apparatus of claim 11, wherein the apparatus is blue."
+        assert parse_dependencies(text, independent=False, claim_number=11) == []
+
+    def test_self_and_other_drops_only_self(self):
+        text = "The apparatus of claims 10 and 11, wherein the apparatus is blue."
+        assert parse_dependencies(text, independent=False, claim_number=11) == [10]
+
+    def test_no_self_unchanged(self):
+        text = "The apparatus of claim 1, wherein the apparatus is blue."
+        assert parse_dependencies(text, independent=False, claim_number=2) == [1]
+
+    def test_parse_claims_drops_self_reference(self):
+        # End-to-end via parse_claims: a self-dependent claim emits dependencies=[].
+        claims_text = (
+            "1. An apparatus.\n"
+            "11. The apparatus of claim 11, wherein the apparatus is blue.\n"
+        )
+        claims = parse_claims(claims_text)
+        claim_11 = next(c for c in claims if c.id == 11)
+        assert claim_11.dependencies == []
 
 
 class TestSequentiality:
