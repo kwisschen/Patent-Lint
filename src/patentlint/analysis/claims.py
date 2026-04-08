@@ -258,12 +258,49 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                         # at threshold ≥ 0.5. Surfaces morphological variants
                         # (calculation/calculating, protection/protecting)
                         # without silently matching them.
+                        # Did-you-mean: pick the highest-Jaccard intro at
+                        # threshold ≥ 0.5, with a stemmed-symmetric-difference
+                        # tiebreak so morphological pairs (protection/protecting,
+                        # both stem to 'protect') beat coincidental token
+                        # overlaps with unrelated nouns.
+                        #
+                        # Tiebreak rationale: when two candidates tie on
+                        # Jaccard, the one whose differing tokens stem to the
+                        # SAME root as the reference's differing tokens is the
+                        # morphological pair we want to surface. On testspec5,
+                        # 'surge protecting circuit' ties with both 'surge
+                        # protection circuit' (stem_sym_diff = ∅, perfect pair)
+                        # and 'surge suppressor circuit' (stem_sym_diff = 2,
+                        # unrelated). Stemmed comparison picks the former.
+                        #
+                        # ADR-090 not violated: this only chooses a BETTER hint
+                        # within an already-emitted finding. The reference is
+                        # still flagged; stemming never silently masks anything.
                         suggested_match: Optional[dict] = None
                         best_score = 0.0
+                        best_stem_diff: Optional[int] = None
+                        term_tokens = set(term.lower().split())
                         for intro in intros:
                             score = token_set_jaccard(term, intro)
-                            if score >= 0.5 and score > best_score:
+                            if score < 0.5:
+                                continue
+                            intro_tokens = set(intro.lower().split())
+                            sym_diff = term_tokens ^ intro_tokens
+                            stem_sym_diff = len(
+                                set(_stemmer.stemWords(list(sym_diff)))
+                            )
+                            if (
+                                score > best_score
+                                or (
+                                    score == best_score
+                                    and (
+                                        best_stem_diff is None
+                                        or stem_sym_diff < best_stem_diff
+                                    )
+                                )
+                            ):
                                 best_score = score
+                                best_stem_diff = stem_sym_diff
                                 suggested_match = {
                                     "term": intro,
                                     "claim_id": intros_by_term[intro],
