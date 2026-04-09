@@ -5,7 +5,6 @@
 from __future__ import annotations
 
 from patentlint.analysis.tw_claims import (
-    check_antecedent_basis,
     check_circular_dependency,
     check_claims_sequential,
     check_claims_symbol_table_consistency,
@@ -754,92 +753,6 @@ class TestClaimsSymbolTableConsistency:
 # ── Check 26: Antecedent Basis ────────────────────────────────────────────
 
 
-class TestAntecedentBasis:
-    def test_all_have_basis_pass(self):
-        doc = _make_doc(claims=[
-            _claim(1, "1. 一種裝置，其特徵在於包含一底座，該底座設有一孔洞。"),
-        ])
-        result = check_antecedent_basis(doc)
-        assert result[0].status == "pass"
-
-    def test_missing_basis_verify(self):
-        doc = _make_doc(claims=[
-            _claim(1, "1. 一種裝置，其特徵在於該底座設有一孔洞。"),
-        ])
-        result = check_antecedent_basis(doc)
-        assert result[0].status == "verify"
-
-    def test_所述_without_intro_verify(self):
-        doc = _make_doc(claims=[
-            _claim(1, "1. 一種裝置，其特徵在於包含一基座。"),
-            _claim(2, "2. 如請求項1所述之裝置，其中所述框架為金屬。",
-                   independent=False, deps=[1]),
-        ])
-        result = check_antecedent_basis(doc)
-        assert result[0].status == "verify"
-
-    def test_所述_with_intro_in_parent_pass(self):
-        doc = _make_doc(claims=[
-            _claim(1, "1. 一種裝置，其特徵在於包含一框架。"),
-            _claim(2, "2. 如請求項1所述之裝置，其中所述框架為金屬。",
-                   independent=False, deps=[1]),
-        ])
-        result = check_antecedent_basis(doc)
-        assert result[0].status == "pass"
-
-    def test_前述_without_intro_verify(self):
-        doc = _make_doc(claims=[
-            _claim(1, "1. 一種裝置，其特徵在於包含一基座。"),
-            _claim(2, "2. 如請求項1所述之裝置，其中前述方法為加熱。",
-                   independent=False, deps=[1]),
-        ])
-        result = check_antecedent_basis(doc)
-        assert result[0].status == "verify"
-
-    def test_independent_self_contained_pass(self):
-        """Independent claim with 一底座...該底座 — self-contained."""
-        doc = _make_doc(claims=[
-            _claim(1, "1. 一種裝置，其特徵在於包含一底座及一蓋板，該底座設有一凹槽，該蓋板覆蓋該凹槽。"),
-        ])
-        result = check_antecedent_basis(doc)
-        assert result[0].status == "pass"
-
-    def test_multiple_flagged_terms(self):
-        doc = _make_doc(claims=[
-            _claim(1, "1. 一種裝置，其特徵在於該框架為金屬，該底板為塑膠。"),
-        ])
-        result = check_antecedent_basis(doc)
-        assert result[0].status == "verify"
-        count = int(result[0].details_params["count"])
-        assert count >= 2
-
-    def test_no_claims_pass(self):
-        doc = _make_doc(claims=[])
-        result = check_antecedent_basis(doc)
-        assert result[0].status == "pass"
-
-    def test_severity_is_verify(self):
-        doc = _make_doc(claims=[
-            _claim(1, "1. 一種裝置，其特徵在於該底座為金屬。"),
-        ])
-        result = check_antecedent_basis(doc)
-        assert result[0].status == "verify"
-
-    def test_details_key_no_interpolation(self):
-        """details_key should be static (no interpolation params)."""
-        doc = _make_doc(claims=[
-            _claim(1, "1. 一種裝置，其特徵在於該底座為金屬。"),
-        ])
-        result = check_antecedent_basis(doc)
-        # The details_key itself has no {{}} placeholders — only count in message_key
-        assert result[0].details_key == "details.tw.antecedentBasis"
-        assert "count" in result[0].details_params
-
-    def test_flagged_terms_in_raw_details(self):
-        """Raw details field should list the flagged terms."""
-        doc = _make_doc(claims=[
-            _claim(1, "1. 一種裝置，其特徵在於該底座為金屬。"),
-        ])
-        result = check_antecedent_basis(doc)
-        assert result[0].details is not None
-        assert len(result[0].details) > 0
+# TestAntecedentBasis removed in Phase 8b — the legacy check returned a
+# CheckItem; the new BFS walker returns list[dict] of per-occurrence
+# findings. Walker tests live in tests/analysis/test_tw_walker.py.

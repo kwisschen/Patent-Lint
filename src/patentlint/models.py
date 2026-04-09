@@ -360,7 +360,13 @@ class AnalysisResult(BaseModel):
         )
 
     def _to_tw_report_data(self) -> ReportData:
-        """Build ReportData for TW jurisdiction from pre-computed check lists."""
+        """Build ReportData for TW jurisdiction from pre-computed check lists.
+
+        Phase 8b: ``antecedent_basis_issues`` carries the walker's
+        per-occurrence findings (used by the Section112 frontend card);
+        the summary CheckItem is already inside ``tw_claims_checks``,
+        synthesized by the pipeline alongside the walker call.
+        """
         return ReportData(
             jurisdiction=self.jurisdiction,
             patent_type=self.patent_type,
@@ -375,6 +381,7 @@ class AnalysisResult(BaseModel):
             abstract_checks=list(self.tw_abstract_checks),
             drawings_checks=list(self.tw_drawings_checks),
             claim_trees=self._build_claim_trees(),
+            antecedent_basis_issues=self.antecedent_basis_issues,
             likely_patent=self.likely_patent,
             has_tracked_changes=self.has_tracked_changes,
         )

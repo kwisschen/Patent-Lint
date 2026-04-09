@@ -163,6 +163,44 @@ def create_claim_dependencies() -> None:
     doc.save(str(FIXTURES_DIR / "claim_dependencies.docx"))
 
 
+def create_cross_category_dependent_tw() -> None:
+    """Synthetic TW fixture mirroring US cross_category_dependent.docx.
+
+    Exercises ADR-092's immediate-parent invariant in TW vocabulary: a
+    three-claim chain where each claim depends on its parent and
+    introduces a new sub-component via 引用記載型式. The walker must
+    resolve all references in the chain to zero findings because each
+    sub-component IS introduced somewhere in the ancestor chain, just
+    not at the root.
+    """
+    doc = Document()
+
+    lines = [
+        "【發明名稱】",
+        "諧波減速裝置",
+        "【技術領域】",
+        "本發明係關於一種諧波減速裝置。",
+        "【發明內容】",
+        "本發明提供一種諧波減速裝置。",
+        "【實施方式】",
+        "本發明之諧波減速裝置包含波產生器、柔輪及第一剛輪。",
+        "【申請專利範圍】",
+        # Claim 1 — root independent, introduces 波產生器 and 柔輪
+        "1. 一種諧波減速裝置，包含一波產生器及一柔輪。",
+        # Claim 2 — dependent on 1, introduces 第一剛輪 (new component)
+        "2. 如請求項1所述之諧波減速裝置，其中更包含一第一剛輪，所述第一剛輪與該柔輪相嚙合。",
+        # Claim 3 — dependent on 2, references 第一剛輪 (defined in claim 2)
+        "3. 如請求項2所述之諧波減速裝置，其中所述第一剛輪包含複數個齒狀結構。",
+        # Claim 4 — dependent on 3, references 齒狀結構 (plural intro in 3)
+        "4. 如請求項3所述之諧波減速裝置，其中所述齒狀結構為漸開線齒形。",
+        "【摘要】",
+        "本發明提供一種諧波減速裝置。",
+    ]
+
+    _add_paragraphs(doc, lines)
+    doc.save(str(FIXTURES_DIR / "cross_category_dependent_tw.docx"))
+
+
 def create_symbol_table_variants() -> None:
     """Symbol table with different separator styles."""
     doc = Document()
@@ -202,5 +240,6 @@ if __name__ == "__main__":
     create_utility_model_complete()
     create_missing_sections()
     create_claim_dependencies()
+    create_cross_category_dependent_tw()
     create_symbol_table_variants()
     print(f"Created fixtures in {FIXTURES_DIR}")
