@@ -813,6 +813,12 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         # because it appears overwhelmingly as a prefix in patent
         # Chinese, not a suffix (see the comment on the constant).
         "所", "前",
+        # Resultative particles (added 2026-04-09)
+        "到", "出",
+        # Adverbs that ended up trailing after interior cut
+        "分別", "皆",
+        # Positional particle (parallel to 時)
+        "處",
     ),
     key=len,
     reverse=True,
@@ -899,16 +905,98 @@ _PLURAL_REFERENCE_PREFIXES: tuple[str, ...] = tuple(sorted(
 # Ordered longest-first so 設有/包含 strip before single-char tokens.
 _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
     (
-        # Verbs
+        # === Existing entries (preserve) ===
         "設有", "包含", "包括", "具有", "含有", "具備",
-        "係為", "係於",
-        "為", "是", "係",
+        "係為", "係於", "為", "是", "係",
         # Reference-form prefixes (multi-char)
         "所述", "前述", "該等", "該些",
+
+        # === Added 2026-04-09 from smoke-test fixtures ===
+        # Verb phrases (longest-first; exact tokens observed in fixtures)
+        "傳送接收到", "傳送一顯示影像資", "輸出一解鎖指令至",
+        "通訊連接時", "電性連接", "被帶動而向", "分別定義",
+        "無法存取", "設置有", "拔除時",
+        "連接一第一電子裝", "擷取一使用者",
+
+        # 3-char verb phrases
+        "電性連", "所施予", "將帶動", "被帶動",
+
+        # 2-char unambiguous verbs (NOT noun-internal in any common
+        # compound observed in 2026-04-09 fixtures)
+        "對應", "相對", "相反", "響應", "解鎖",
+        "讀取", "寫入", "計算", "處理", "感測",
+        "偵測", "監控", "監測", "調整", "修改",
+        "更新", "刪除", "增加", "減少", "選擇",
+        "決定", "判別", "辨識", "驅動",
+
+        # NOT added (interior to legitimate noun compounds):
+        # 連接 (連接器/連接部), 編碼 (編碼器), 識別 (識別碼/識別資料),
+        # 通訊 (通訊模組), 傳動 (傳動件), 旋轉 (旋轉編碼器),
+        # 接收 (接收器), 輸出 (輸出裝置), 輸入 (輸入裝置),
+        # 儲存 (儲存器), 認證 (認證單元), 銜接 (第一銜接部)
+        # These are caught by their LONGER multi-char forms above
+        # (傳送接收到, 連接一第一電子裝, etc.) which are unambiguous.
     ),
     key=len,
     reverse=True,
 ))
+
+
+# Exception set: compound nouns containing interior-verb tokens that
+# should NOT be cut. When the captured text (or any prefix of it) is
+# in this set, clean_noun_phrase_tw skips the interior-cut pass entirely
+# and proceeds straight to the trailing-strip phase.
+#
+# Maintenance philosophy: false negatives (missing exception → walker
+# doesn't find an antecedent) are the cheap failure mode. The risk
+# of having too few entries is verb-contamination, which is the
+# expensive failure mode (visible garbage findings).
+#
+# Seeded from compound nouns observed in 2026-04-09 fixtures.
+_INTERIOR_CUT_EXCEPTIONS: frozenset[str] = frozenset({
+    # Connection / connector compounds
+    "連接器", "連接部", "連接埠", "連接點", "連接線",
+    "第一連接部", "第二連接部", "第三連接部",
+    "電連接器", "電性連接部",
+
+    # Encoder / decoder
+    "編碼器", "解碼器", "旋轉編碼器", "光學編碼器",
+
+    # Identification compounds
+    "識別碼", "識別資料", "識別資訊", "識別號", "識別子",
+
+    # Communication module compounds
+    "通訊模組", "通訊埠", "通訊單元", "通訊介面",
+    "行動通訊模組", "無線通訊模組", "有線通訊模組",
+    "第一通訊模組", "第二通訊模組",
+    "第一無線通訊模組", "第二無線通訊模組", "第三無線通訊模組",
+
+    # Transmission compounds
+    "傳送器", "接收器", "發射器", "發送器", "收發器",
+
+    # Authentication compounds
+    "認證單元", "認證模組", "認證裝置", "認證功能單元",
+
+    # Engagement / connection part compounds (from screenshot 1)
+    "銜接部", "第一銜接部", "第二銜接部", "第三銜接部",
+    "扣接部", "第一扣接部", "第二扣接部",
+
+    # Wheel / structural compounds (from screenshot 2)
+    "後輪", "前輪", "傳動輪", "從動輪", "主動輪",
+    "曲柄", "踏板", "弧面", "第一弧面", "第二弧面",
+    "輪軸", "傳動件",
+
+    # Misc structural compounds observed in TW patent claims
+    "上端邊緣", "下端邊緣", "外側邊緣", "內側邊緣",
+    "容納部", "容置部", "容置杯體", "杯體",
+    "環形壓接部", "壓接部", "壓接環",
+    "開口部", "封閉部",
+    "頂壁", "底壁", "側壁", "頂部", "底部", "側部",
+
+    # Method-claim compounds
+    "數位內容", "適地性數位內容", "主題標籤",
+    "瀏覽程式", "伺服器", "使用者介面",
+})
 
 
 def clean_noun_phrase_tw(text: str) -> str:
@@ -920,6 +1008,11 @@ def clean_noun_phrase_tw(text: str) -> str:
        ``_INTERIOR_VERB_BOUNDARIES`` token and cut everything from that
        position onward. Recovers ``底座`` from greedy regex captures
        like ``底座設有一孔洞``.
+
+       Skipped if the captured text (or any prefix of it) is in
+       ``_INTERIOR_CUT_EXCEPTIONS`` — that means the captured text is a
+       known compound noun that contains an interior-verb token as
+       part of its identity, not as a clause boundary.
 
     2. Trailing-verb stripping — iteratively remove the longest matching
        suffix in ``_TRAILING_VERB_DENYLIST``. Handles parser-bug
@@ -937,15 +1030,34 @@ def clean_noun_phrase_tw(text: str) -> str:
     if not text:
         return text
 
-    # Phase 1: interior-verb truncation. Find the EARLIEST verb-boundary
-    # occurrence so multi-verb texts cut at the first verb only.
-    earliest_idx: int | None = None
-    for verb in _INTERIOR_VERB_BOUNDARIES:
-        idx = text.find(verb)
-        if idx > 1:  # require ≥2 chars before the verb
-            if earliest_idx is None or idx < earliest_idx:
-                earliest_idx = idx
-    current = text[:earliest_idx] if earliest_idx is not None else text
+    # Phase 1: interior-verb truncation, with exception protection.
+    # Skip the interior cut if the full text OR any of its prefixes is
+    # in the exceptions set. The prefix check handles cases where the
+    # capture extends past a known compound noun (e.g. 連接部設有 —
+    # 連接部 is in exceptions, so don't cut 設有 because the head noun
+    # is 連接部 and we want trailing-strip to handle 設有 instead).
+    def _is_protected(s: str) -> bool:
+        if s in _INTERIOR_CUT_EXCEPTIONS:
+            return True
+        # Check prefixes from longest to shortest, looking for a match
+        # in the exceptions set. This is O(n) per call but n is small.
+        for i in range(len(s), 1, -1):
+            if s[:i] in _INTERIOR_CUT_EXCEPTIONS:
+                return True
+        return False
+
+    if not _is_protected(text):
+        # Find the EARLIEST verb-boundary occurrence so multi-verb texts
+        # cut at the first verb only.
+        earliest_idx: int | None = None
+        for verb in _INTERIOR_VERB_BOUNDARIES:
+            idx = text.find(verb)
+            if idx > 1:  # require ≥2 chars before the verb
+                if earliest_idx is None or idx < earliest_idx:
+                    earliest_idx = idx
+        current = text[:earliest_idx] if earliest_idx is not None else text
+    else:
+        current = text
 
     # Phase 2: trailing-verb stripping (iterative).
     # Safety bound to prevent pathological iteration.
