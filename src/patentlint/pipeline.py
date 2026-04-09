@@ -242,7 +242,13 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
     )
 
 
-def _run_tw_pipeline(tw_doc: TwPatentDocument, *, likely_patent: bool = True, has_tracked_changes: bool = False) -> AnalysisResult:
+def _run_tw_pipeline(
+    tw_doc: TwPatentDocument,
+    *,
+    likely_patent: bool = True,
+    has_tracked_changes: bool = False,
+    strict_plural_reference_matching: bool = False,
+) -> AnalysisResult:
     """Run TW pipeline with specification checks."""
     para_count = len(tw_doc.paragraph_numbers) if tw_doc.paragraph_numbers else (
         len(tw_doc.technical_field)
@@ -289,7 +295,10 @@ def _run_tw_pipeline(tw_doc: TwPatentDocument, *, likely_patent: bool = True, ha
     # CheckItem summary tile (appended below) and the structured payload
     # (passed via AnalysisResult.antecedent_basis_issues for the
     # Section112 frontend card) come from the same walker call.
-    tw_antecedent_basis = tw_claims_analysis.check_antecedent_basis(tw_doc)
+    tw_antecedent_basis = tw_claims_analysis.check_antecedent_basis(
+        tw_doc,
+        strict_plural_reference_matching=strict_plural_reference_matching,
+    )
     if tw_antecedent_basis:
         issue_count = len(tw_antecedent_basis)
         claim_count = len({item["claim_id"] for item in tw_antecedent_basis})
@@ -353,7 +362,12 @@ def _run_tw_pipeline(tw_doc: TwPatentDocument, *, likely_patent: bool = True, ha
     )
 
 
-def analyze_file(file_path: str, jurisdiction: Jurisdiction = Jurisdiction.US) -> AnalysisResult:
+def analyze_file(
+    file_path: str,
+    jurisdiction: Jurisdiction = Jurisdiction.US,
+    *,
+    tw_strict_plural_reference_matching: bool = False,
+) -> AnalysisResult:
     """Analyze a patent document file."""
     lower = file_path.lower()
 
@@ -364,7 +378,12 @@ def analyze_file(file_path: str, jurisdiction: Jurisdiction = Jurisdiction.US) -
         loaded_tw = load_docx_tw(file_path)
         likely_patent = detect_patent_document_tw(loaded_tw.paragraphs)
         tw_doc = extract_tw_sections(loaded_tw.paragraphs)
-        return _run_tw_pipeline(tw_doc, likely_patent=likely_patent, has_tracked_changes=loaded_tw.has_tracked_changes)
+        return _run_tw_pipeline(
+            tw_doc,
+            likely_patent=likely_patent,
+            has_tracked_changes=loaded_tw.has_tracked_changes,
+            strict_plural_reference_matching=tw_strict_plural_reference_matching,
+        )
 
     if jurisdiction == Jurisdiction.CN:
         if lower.endswith(".xml"):
@@ -390,7 +409,13 @@ def analyze_file(file_path: str, jurisdiction: Jurisdiction = Jurisdiction.US) -
     return _run_pipeline(loaded, loaded.full_text, jurisdiction=jurisdiction)
 
 
-def analyze_bytes(content: bytes, filename: str, jurisdiction: Jurisdiction = Jurisdiction.US) -> AnalysisResult:
+def analyze_bytes(
+    content: bytes,
+    filename: str,
+    jurisdiction: Jurisdiction = Jurisdiction.US,
+    *,
+    tw_strict_plural_reference_matching: bool = False,
+) -> AnalysisResult:
     """Analyze patent document from raw bytes."""
     lower = filename.lower()
 
@@ -404,7 +429,12 @@ def analyze_bytes(content: bytes, filename: str, jurisdiction: Jurisdiction = Ju
             loaded_tw = load_docx_tw(tmp.name)
         likely_patent = detect_patent_document_tw(loaded_tw.paragraphs)
         tw_doc = extract_tw_sections(loaded_tw.paragraphs)
-        return _run_tw_pipeline(tw_doc, likely_patent=likely_patent, has_tracked_changes=loaded_tw.has_tracked_changes)
+        return _run_tw_pipeline(
+            tw_doc,
+            likely_patent=likely_patent,
+            has_tracked_changes=loaded_tw.has_tracked_changes,
+            strict_plural_reference_matching=tw_strict_plural_reference_matching,
+        )
 
     if jurisdiction == Jurisdiction.CN:
         if lower.endswith(".zip"):
