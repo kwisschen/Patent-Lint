@@ -32,6 +32,7 @@ const JURISDICTION_CONFIG = {
     drawingsShortKey: 'section.drawingsShort',
     abstractSectionKey: 'section.abstract',
     section112TitleKey: 'section112.title',
+    section112PassKey: 'check.claims.antecedentBasis.pass',
     pdfHeaderKey: 'pdf.header',
   },
   CN: {
@@ -63,6 +64,7 @@ const JURISDICTION_CONFIG = {
     drawingsShortKey: 'section.cn.drawingsShort',
     abstractSectionKey: 'section.cn.abstract',
     section112TitleKey: 'section112.title',
+    section112PassKey: 'check.claims.antecedentBasis.pass',
     pdfHeaderKey: 'pdf.header',
   },
   TW: {
@@ -92,7 +94,14 @@ const JURISDICTION_CONFIG = {
     drawingsShortKey: 'section.tw.drawingsShort',
     abstractSectionKey: 'section.tw.abstract',
     section112TitleKey: 'section112.titleTw',
+    section112PassKey: 'check.tw.claims.antecedentBasis.pass',
     pdfHeaderKey: 'pdf.headerTw',
+    // Phase 8b walker escape hatch (ADR-095). Default False: walker
+    // treats 該X / 所述X / 該等X / 該些X as number-neutral and accepts a
+    // singular intro for a plural reference. Strict True: walker also
+    // flags references that explicitly mark plural antecedence when the
+    // matched intro was singular. Plumbed through pipeline in Commit 6.
+    strict_plural_reference_matching: false,
   },
 }
 

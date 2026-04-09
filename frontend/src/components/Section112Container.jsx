@@ -42,7 +42,7 @@ export default function Section112Container({
       {hasAntecedentIssues ? (
         <AntecedentBasisCard issues={antecedentBasisIssues} claimTrees={claimTrees} />
       ) : (
-        <PassConfirmation messageKey="check.claims.antecedentBasis.pass" />
+        <PassConfirmation messageKey={jConfig.section112PassKey} />
       )}
 
       {isUS && (hasUnsupportedTerms ? (

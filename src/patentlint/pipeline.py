@@ -20,7 +20,7 @@ from patentlint.analysis import tw_abstract as tw_abstract_analysis
 from patentlint.analysis import tw_claims as tw_claims_analysis
 from patentlint.analysis import tw_cross_reference as tw_cross_ref_analysis
 from patentlint.analysis import tw_specification as tw_spec_analysis
-from patentlint.models import AnalysisResult, CnPatentDocument, Jurisdiction, TwPatentDocument
+from patentlint.models import AnalysisResult, CheckItem, CnPatentDocument, Jurisdiction, TwPatentDocument
 from patentlint.parser import claims as claims_parser
 from patentlint.parser import sections
 from patentlint.parser.docx_loader import load_docx, load_docx_cn, load_docx_tw
@@ -283,8 +283,39 @@ def _run_tw_pipeline(tw_doc: TwPatentDocument, *, likely_patent: bool = True, ha
         + tw_claims_analysis.check_multi_dep_alternative(tw_doc)
         + tw_claims_analysis.check_title_subject_match(tw_doc)
         + tw_claims_analysis.check_claims_symbol_table_consistency(tw_doc)
-        + tw_claims_analysis.check_antecedent_basis(tw_doc)
     )
+
+    # Phase 8b: walker emits structured per-occurrence findings. Both the
+    # CheckItem summary tile (appended below) and the structured payload
+    # (passed via AnalysisResult.antecedent_basis_issues for the
+    # Section112 frontend card) come from the same walker call.
+    tw_antecedent_basis = tw_claims_analysis.check_antecedent_basis(tw_doc)
+    if tw_antecedent_basis:
+        issue_count = len(tw_antecedent_basis)
+        claim_count = len({item["claim_id"] for item in tw_antecedent_basis})
+        claims_checks = list(claims_checks) + [
+            CheckItem(
+                status="verify",
+                message="Possible missing antecedent basis found.",
+                message_key="check.tw.claims.antecedentBasis.verify",
+                details=f"{issue_count} issues across {claim_count} claims",
+                details_key="details.tw.antecedentBasisTerms",
+                details_params={
+                    "count": str(issue_count),
+                    "claims": str(claim_count),
+                },
+                reference="專利審查基準",
+            )
+        ]
+    else:
+        claims_checks = list(claims_checks) + [
+            CheckItem(
+                status="pass",
+                message="All referenced terms have antecedent basis.",
+                message_key="check.tw.claims.antecedentBasis.pass",
+                reference="專利審查基準",
+            )
+        ]
 
     # --- Abstract checks (27–30) ---
     abstract_checks = (
@@ -318,6 +349,7 @@ def _run_tw_pipeline(tw_doc: TwPatentDocument, *, likely_patent: bool = True, ha
         tw_claims_checks=claims_checks,
         tw_abstract_checks=abstract_checks,
         tw_drawings_checks=drawings_checks,
+        antecedent_basis_issues=tw_antecedent_basis,
     )
 
 
