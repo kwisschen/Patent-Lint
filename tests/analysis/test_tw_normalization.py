@@ -127,8 +127,26 @@ class TestNormalizeCandidateIntro:
     def test_strips_fu_shu(self):
         assert normalize_candidate_intro("複數外齒狀結構") == "外齒狀結構"
 
+    def test_strips_leaked_reference_form_prefix(self):
+        # Round 3 fix: when ``_INTRO_PATTERN`` greedily matches a
+        # quantifier (e.g. ``一個`` in ``一個所述第一弧面``), the bare
+        # noun group still carries the ``所述`` prefix. Without
+        # symmetric stripping, the intro is keyed under
+        # ``所述第一弧面`` while the reference normalizes to
+        # ``第一弧面``, the exact-match path fails, and did-you-mean
+        # surfaces a self-suggestion (110P000641 c15/c19 弧面).
+        assert normalize_candidate_intro("所述第一弧面") == "第一弧面"
+        assert normalize_candidate_intro("該齒輪") == "齒輪"
+        assert normalize_candidate_intro("前述樹脂組成物") == "樹脂組成物"
+
     def test_idempotent(self):
-        for term in ["多個外齒狀結構", "一種樹脂組成物", "電極"]:
+        for term in [
+            "多個外齒狀結構",
+            "一種樹脂組成物",
+            "電極",
+            "所述第一弧面",
+            "該齒輪",
+        ]:
             once = normalize_candidate_intro(term)
             assert normalize_candidate_intro(once) == once
 

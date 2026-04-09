@@ -1329,10 +1329,25 @@ def normalize_candidate_intro(
         strip_leading_qualifier        (NEW — for symmetry with refs)
         → clean_noun_phrase_tw
         → strip_leading_quantifier
+        → strip_reference_form_prefix  (round 3 fix — symmetry with
+          ``normalize_reference_term``)
+
+    The trailing ``strip_reference_form_prefix`` is load-bearing for
+    intro spans like ``一個所述第一弧面`` (110P000641 c15/c19): the
+    ``_INTRO_PATTERN`` greedily matches ``一個`` as the quantifier and
+    captures ``所述第一弧面`` as the bare noun group. Without this
+    strip, the intro lands in ``intros_by_term`` keyed as
+    ``所述第一弧面`` while the corresponding reference normalizes to
+    ``第一弧面``, the exact-match path fails, and did-you-mean surfaces
+    a structurally meaningless ``所述第一弧面 → 所述第一弧面``
+    suggestion. Stripping the reference-form prefix here restores the
+    invariant that the intro and reference normalize to the same
+    string when they refer to the same entity.
     """
     t = strip_leading_qualifier(text, strict_qualifier_matching=strict_qualifier_matching)
     t = clean_noun_phrase_tw(t)
     t = strip_leading_quantifier(t)
+    t = strip_reference_form_prefix(t)
     return t
 
 
@@ -1595,6 +1610,20 @@ def check_antecedent_basis(
                             "term": intro_term,
                             "claim_id": ancestor_id,
                         }
+
+            # Self-suggest filter (round 3 fix): suppress suggestions
+            # where the candidate term is byte-identical to the
+            # normalized reference term. These are structurally
+            # meaningless ("did you mean X? — yes, you wrote X") and
+            # surface when the dedup layer can't catch them because
+            # the displayed reference_form differs from the normalized
+            # term. Architectural correctness fix, not a vocabulary
+            # patch — universal across CJK.
+            if (
+                suggested_match is not None
+                and suggested_match["term"] == normalized_term
+            ):
+                suggested_match = None
 
             issues.append(
                 {
