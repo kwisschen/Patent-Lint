@@ -169,6 +169,46 @@ class TestExactMatchBypassesJaccard:
         ])
         assert check_antecedent_basis(doc) == []
 
+    def test_leaked_reference_form_in_intro_resolves_exact(self):
+        """Round 3 regression: 一個所述第一弧面 / 所述第一弧面 — the
+        intro pattern greedily matches 一個 as quantifier, capturing
+        所述第一弧面 as the bare noun group. Symmetric reference-form
+        stripping in ``normalize_candidate_intro`` ensures the intro
+        normalizes to 第一弧面 (matching the reference's normalized
+        form), so the exact-match path resolves and no finding is
+        emitted.
+
+        Pre-fix: this surfaced as ``所述第一弧面 → suggests
+        所述第一弧面`` (110P000641 c15/c19 in the local fixtures).
+        """
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種裝置，包含複數凹槽，各個凹槽具有兩個第一弧面，"
+                "其中所述第一凹槽位於相鄰兩個第一凸出結構之間。",
+            ),
+            _claim(
+                2,
+                "2. 如請求項1所述之裝置，其中各個所述第一滾柱將位於"
+                "其中一個所述第一弧面及所述第一環狀壁之間。",
+                independent=False,
+                deps=[1],
+            ),
+        ])
+        issues = check_antecedent_basis(doc)
+        # The flagged-self-suggestion bug would emit
+        #   term='第一弧面', suggested_match['term']='所述第一弧面'
+        # for claim 2. After the fix, claim 2's 所述第一弧面 resolves
+        # via exact match to claim 2's own 一個所述第一弧面 intro.
+        self_suggest = [
+            i for i in issues
+            if i["term"] == "第一弧面"
+            and (i.get("suggested_match") or {}).get("term", "").endswith("第一弧面")
+        ]
+        assert self_suggest == [], (
+            f"self-suggestion regression: {self_suggest}"
+        )
+
 
 # ─────────────────────────────────────────────────────────────────────────
 # Ancestor-proximity tiebreak
