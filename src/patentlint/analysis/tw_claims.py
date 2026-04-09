@@ -709,6 +709,180 @@ _INTRO_PATTERN = re.compile(r"一([^\s，。；：、及與和之的]{2,8})")
 _REF_PATTERN = re.compile(r"(?:該|所述|前述)([^\s，。；：、及與和之的]{2,8})")
 
 
+# ── Phase 8b TW walker — reference-term normalization (ADR-095) ──────────
+#
+# Three sequential transformations applied before computing antecedent
+# matches or did-you-mean similarity scores:
+#
+#   1. Trailing-verb strip (parser correctness fix, ADR-095 Rule 1)
+#   2. Leading-quantifier strip (ADR-095 Rule 2)
+#   3. Number-neutral antecedent matching (implicit in symmetric stripping)
+#
+# ``normalize_reference_term`` composes all three for the reference side;
+# ``normalize_candidate_intro`` applies the same normalization to intro
+# candidates. Both sides are stripped symmetrically so number-neutral
+# matching works (複數外齒狀結構 ↔ 該外齒狀結構 → both normalize to 外齒狀結構).
+
+# ADR-095 Rule 1: trailing-verb denylist.
+# Ordered longest-first so greedy matching strips 還包含 as one token
+# before 還 strips as another. Tuple form is required because
+# ``sorted(..., key=len, reverse=True)`` is applied once at import time.
+_TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
+    (
+        # Verb suffixes
+        "包含", "包括", "含有", "具有", "係", "為", "是", "設有", "具備",
+        # Preposition-verbs
+        "通過", "經由", "藉由", "基於", "透過", "根據", "依據",
+        # Conjunction starters (multi-char longest)
+        "還包含", "還包括",
+        "並且", "以及",
+        "並", "且", "其", "其中", "還", "另",
+        # Partial captures — single-character fragments that indicate the
+        # regex stopped mid-word. Ordered after multi-char tokens.
+        "包", "通", "經", "藉",
+    ),
+    key=len,
+    reverse=True,
+))
+
+# ADR-095 Rule 2: leading quantifiers (stripped from both sides).
+# Ordered longest-first so 至少一個 is stripped as a single token before
+# 至少一 is stripped.
+_LEADING_QUANTIFIER_DENYLIST: tuple[str, ...] = tuple(sorted(
+    (
+        "至少一個", "至少一",
+        "一個", "一種", "一對",
+        "複數個", "多個", "數個",
+        "複數",
+        "一",
+    ),
+    key=len,
+    reverse=True,
+))
+
+# Reference-form prefixes: stripped from reference terms only. The walker
+# strips these before applying the leading-quantifier pass, so 該第一電極
+# becomes 第一電極 (quantifier strip leaves 第一電極 since 第一 is not in
+# _LEADING_QUANTIFIER_DENYLIST — ordinals are part of the head noun).
+_REFERENCE_FORM_PREFIXES: tuple[str, ...] = tuple(sorted(
+    ("該等", "該些", "所述", "前述", "該"),
+    key=len,
+    reverse=True,
+))
+
+# Plural reference-form prefixes — a strict subset of reference-form
+# prefixes that explicitly mark plural reference. These are used by the
+# strict_plural_reference_matching escape hatch (default False per
+# ADR-095) and by the ``detect_plural_reference`` helper below.
+_PLURAL_REFERENCE_PREFIXES: tuple[str, ...] = tuple(sorted(
+    ("該等", "該些", "前述複數", "所述複數", "所述多個"),
+    key=len,
+    reverse=True,
+))
+
+
+def clean_noun_phrase_tw(text: str) -> str:
+    """Strip trailing verbs and conjunction fragments from a TW reference term.
+
+    Iteratively strips the longest matching suffix in
+    ``_TRAILING_VERB_DENYLIST``. Repeats until no further match is found.
+    This handles parser-bug captures like ``諧波減速模組還包`` (strips
+    ``包`` → ``諧波減速模組還`` → strips ``還`` → ``諧波減速模組``).
+
+    Note: the walker MAY leave a leading char of the next clause when
+    that char does not match any denylist entry (e.g., ``遊戲控制器通過第``
+    strips ``過`` → ``遊戲控制器通第`` → strips ``通`` (single-char
+    trailing token) → ``遊戲控制器第``, leaving a stray ``第`` because ``第``
+    is not a verb fragment). This is acceptable for the walker: leftover
+    fragments produce mismatches at comparison time and are surfaced via
+    the did-you-mean hint if similarity is high enough.
+    """
+    if not text:
+        return text
+    current = text
+    # Safety bound to prevent pathological iteration.
+    for _ in range(16):
+        stripped = False
+        for verb in _TRAILING_VERB_DENYLIST:
+            if current.endswith(verb) and len(current) > len(verb):
+                current = current[: -len(verb)]
+                stripped = True
+                break
+        if not stripped:
+            break
+    return current
+
+
+def strip_leading_quantifier(text: str) -> str:
+    """Strip one matching leading quantifier (ADR-095 Rule 2).
+
+    Applied symmetrically to both reference terms and candidate intros
+    so 複數外齒狀結構 ↔ 該外齒狀結構 both normalize to 外齒狀結構. Strip
+    is NOT iterative — applied once per term — so compound terms where
+    a quantifier-like morpheme is part of the head noun (e.g., 一次性
+    starting with 一) are not over-stripped.
+    """
+    if not text:
+        return text
+    for q in _LEADING_QUANTIFIER_DENYLIST:
+        if text.startswith(q) and len(text) > len(q):
+            return text[len(q):]
+    return text
+
+
+def strip_reference_form_prefix(text: str) -> str:
+    """Strip one matching reference-form prefix (該/所述/前述/該等/該些).
+
+    Applied only to reference terms (the walker's flagged side). Intros
+    do not carry reference-form prefixes, so
+    ``normalize_candidate_intro`` skips this step.
+    """
+    if not text:
+        return text
+    for prefix in _REFERENCE_FORM_PREFIXES:
+        if text.startswith(prefix) and len(text) > len(prefix):
+            return text[len(prefix):]
+    return text
+
+
+def normalize_reference_term(text: str) -> str:
+    """Normalize a flagged reference term for antecedent matching.
+
+    Composes: strip_reference_form_prefix → clean_noun_phrase_tw →
+    strip_leading_quantifier. The reference-form strip runs first so
+    that a term like 該第一電極 loses its 該 marker and the walker's
+    comparison sees 第一電極.
+    """
+    t = strip_reference_form_prefix(text)
+    t = clean_noun_phrase_tw(t)
+    t = strip_leading_quantifier(t)
+    return t
+
+
+def normalize_candidate_intro(text: str) -> str:
+    """Normalize an introduction candidate for antecedent matching.
+
+    Composes: clean_noun_phrase_tw → strip_leading_quantifier. No
+    reference-form prefix strip because intros do not carry 該/所述/前述
+    markers.
+    """
+    t = clean_noun_phrase_tw(text)
+    t = strip_leading_quantifier(t)
+    return t
+
+
+def detect_plural_reference(text: str) -> bool:
+    """Return True iff ``text`` starts with a plural reference-form prefix.
+
+    Used by the strict_plural_reference_matching escape hatch to flag
+    plural reference forms even when the underlying antecedent match
+    is number-neutral. Default walker behaviour (strict=False) does
+    NOT flag these; this helper exists so the strict mode path can
+    detect and warn. See ADR-095 for the decision rationale.
+    """
+    return any(text.startswith(p) for p in _PLURAL_REFERENCE_PREFIXES)
+
+
 def check_antecedent_basis(doc: TwPatentDocument) -> list[CheckItem]:
     """Check antecedent basis: 該/所述/前述 + noun needs matching 一 + noun in chain."""
     claims = doc.claims
