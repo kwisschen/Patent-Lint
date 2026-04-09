@@ -721,7 +721,9 @@ def check_claims_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckIt
 #   references from being captured as one noun span)
 # - Auxiliary verbs / adverbs: 將 能 須 應 皆 (added 2026-04-09)
 # - Passive marker: 被 (added 2026-04-09)
-# - Prepositions: 於 以 用 (用 added 2026-04-09 round 2 — Bug B)
+# - Prepositions: 於 以 用 在 (用 added 2026-04-09 round 2 — Bug B;
+#   在 added 2026-04-09 round 3 — high-frequency preposition that
+#   was contaminating findings like 該識別資料在 in 110P000868)
 # - Connectives: 或 並 且 其 而 還 另 (added 2026-04-09)
 # - Temporal particle: 時 (added 2026-04-09)
 #
@@ -745,7 +747,7 @@ def check_claims_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckIt
 # 該所述前述 prefix is stripped before this regex applies). 12 leaves
 # headroom for ordinal+qualifier+head-noun compounds without permitting
 # the runaway captures observed in the 2026-04-09 smoke test.
-_NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以或並且其而還另時用]{2,12}"
+_NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以或並且其而還另時用在]{2,12}"
 
 # Introduction patterns — ordered longest-first so 至少一個 / 複數個 are
 # matched as single tokens before their shorter prefixes (一 / 複數). The
