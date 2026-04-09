@@ -102,6 +102,13 @@ const JURISDICTION_CONFIG = {
     // flags references that explicitly mark plural antecedence when the
     // matched intro was singular. Plumbed through pipeline in Commit 6.
     strict_plural_reference_matching: false,
+    // Phase 8b walker escape hatch (ADR-095 addendum 2026-04-09).
+    // Default False: walker strips leading qualifiers (對應X, 相應X,
+    // 前一X, ...) so qualified references resolve against the bare-noun
+    // antecedent. Strict True: qualifier strip is disabled and
+    // qualified references must have their own explicit antecedent.
+    // For firms with stricter house rules. Plumbed through pipeline.
+    strict_qualifier_matching: false,
   },
 }
 

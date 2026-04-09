@@ -248,6 +248,7 @@ def _run_tw_pipeline(
     likely_patent: bool = True,
     has_tracked_changes: bool = False,
     strict_plural_reference_matching: bool = False,
+    strict_qualifier_matching: bool = False,
 ) -> AnalysisResult:
     """Run TW pipeline with specification checks."""
     para_count = len(tw_doc.paragraph_numbers) if tw_doc.paragraph_numbers else (
@@ -298,6 +299,7 @@ def _run_tw_pipeline(
     tw_antecedent_basis = tw_claims_analysis.check_antecedent_basis(
         tw_doc,
         strict_plural_reference_matching=strict_plural_reference_matching,
+        strict_qualifier_matching=strict_qualifier_matching,
     )
     if tw_antecedent_basis:
         issue_count = len(tw_antecedent_basis)
@@ -367,6 +369,7 @@ def analyze_file(
     jurisdiction: Jurisdiction = Jurisdiction.US,
     *,
     tw_strict_plural_reference_matching: bool = False,
+    tw_strict_qualifier_matching: bool = False,
 ) -> AnalysisResult:
     """Analyze a patent document file."""
     lower = file_path.lower()
@@ -383,6 +386,7 @@ def analyze_file(
             likely_patent=likely_patent,
             has_tracked_changes=loaded_tw.has_tracked_changes,
             strict_plural_reference_matching=tw_strict_plural_reference_matching,
+            strict_qualifier_matching=tw_strict_qualifier_matching,
         )
 
     if jurisdiction == Jurisdiction.CN:
@@ -415,6 +419,7 @@ def analyze_bytes(
     jurisdiction: Jurisdiction = Jurisdiction.US,
     *,
     tw_strict_plural_reference_matching: bool = False,
+    tw_strict_qualifier_matching: bool = False,
 ) -> AnalysisResult:
     """Analyze patent document from raw bytes."""
     lower = filename.lower()
@@ -434,6 +439,7 @@ def analyze_bytes(
             likely_patent=likely_patent,
             has_tracked_changes=loaded_tw.has_tracked_changes,
             strict_plural_reference_matching=tw_strict_plural_reference_matching,
+            strict_qualifier_matching=tw_strict_qualifier_matching,
         )
 
     if jurisdiction == Jurisdiction.CN:
