@@ -757,6 +757,20 @@ _NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以或
 # so it does NOT match the ordinal ``第一X`` (otherwise ``第一剛輪`` would
 # be parsed as quantifier ``一`` + noun ``剛輪`` and the legitimate
 # ``一第一剛輪`` introduction would be mis-attributed to ``剛輪``).
+#
+# It additionally carries a negative lookahead for ``同`` and ``體`` so
+# it does NOT match the idiomatic compound prefixes ``一同`` ("together
+# with") and ``一體`` ("as one body"), which are adverbial constructions
+# rather than element introductions. Without this guard,
+# ``與一柔性軸承一同構成一波產生器`` matched at the ``一`` in ``一同`` and
+# captured ``同構成一波產生器`` as group 1, producing the contaminated
+# intro ``同構成一波產生器`` (Bug C2 from 2026-04-09 phase8b diagnosis).
+#
+# Other potentially-idiomatic forms (一側, 一端) are NOT excluded
+# because they ARE legitimate noun introductions in many claims
+# (一第一端, 一第二端, 一側面). Their contaminated forms (一側設置...,
+# 一端透過樞軸...) require lazy regex matching and are deferred to
+# Phase 9.
 _INTRO_MULTI_QUANTIFIERS = (
     "至少一個", "至少一",
     "一個", "一種", "一對",
@@ -764,7 +778,7 @@ _INTRO_MULTI_QUANTIFIERS = (
     "複數",
 )
 _INTRO_PATTERN = re.compile(
-    r"(?:" + "|".join(_INTRO_MULTI_QUANTIFIERS) + r"|(?<!第)一)"
+    r"(?:" + "|".join(_INTRO_MULTI_QUANTIFIERS) + r"|(?<!第)一(?![同體]))"
     + f"({_NOUN_CHARS})"
 )
 
