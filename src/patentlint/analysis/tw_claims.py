@@ -10,7 +10,16 @@ from __future__ import annotations
 
 import re
 
+from patentlint.analysis.cjk_ordinal_guard import ordinal_guard
+from patentlint.analysis.cjk_tokenize import jaccard, tokenize_tw
 from patentlint.models import CheckItem, Claim, TwPatentDocument
+
+# Did-you-mean Jaccard threshold (ADR-094). Char-bigram Jaccard at 0.40
+# is the calibration v2 sweet spot: high enough to suppress noise pairs,
+# low enough to surface morphological/quantifier variants the exact-match
+# pass missed. The threshold is fixed at the analysis layer; the strict-
+# plural escape hatch in the walker is the only knob exposed to callers.
+_DIDYOUMEAN_THRESHOLD = 0.40
 
 # Recognized TW dependency format patterns
 _TW_DEP_FORMAT = re.compile(
@@ -1073,13 +1082,16 @@ def check_antecedent_basis(
     for claim in claims:
         chain = get_ancestor_chain_tw(claim, claims)
 
-        # Map normalized intro term → shallowest ancestor claim id.
-        # Iteration order (chain[0] = current claim, chain[1] = nearest
-        # parent, ...) means setdefault preserves the shallowest.
-        intros_by_term: dict[str, int] = {}
-        for ancestor in chain:
+        # Map normalized intro term → (shallowest ancestor id, BFS depth).
+        # Iteration order (chain[0] = current claim @ depth 0, chain[1] =
+        # nearest parent @ depth 1, ...) means setdefault preserves the
+        # shallowest occurrence. Depth is later used by the did-you-mean
+        # tiebreaker so when two candidates score identically the nearer
+        # ancestor wins.
+        intros_by_term: dict[str, tuple[int, int]] = {}
+        for depth, ancestor in enumerate(chain):
             for _, normalized in extract_introductions_tw(ancestor):
-                intros_by_term.setdefault(normalized, ancestor.id)
+                intros_by_term.setdefault(normalized, (ancestor.id, depth))
 
         # Dedup by normalized term within a claim — repeated greedy
         # captures of the same head noun (``該齒輪為金屬, 該齒輪設有齒``)
@@ -1131,7 +1143,7 @@ def check_antecedent_basis(
                     continue
                 if not detect_plural_reference(full_ref):
                     continue
-                ancestor_id = intros_by_term[resolved_intro]
+                ancestor_id, _ = intros_by_term[resolved_intro]
                 ancestor_claim = next(
                     (c for c in chain if c.id == ancestor_id), None
                 )
@@ -1148,13 +1160,49 @@ def check_antecedent_basis(
                 if intro_was_plural:
                     continue
 
+            # Did-you-mean layer (ADR-094): when neither exact match nor
+            # longest-prefix fallback resolved the term, try character-
+            # bigram Jaccard similarity against every ancestor intro. The
+            # ordinal_guard pre-filter blocks pairs that differ only in
+            # ordinal/polarity prefix (第一電極 vs 第二電極 score ~0.67 by
+            # Jaccard but are intentionally distinct components).
+            #
+            # Tie-break: highest score wins; on ties the nearer ancestor
+            # (smaller depth) wins; on remaining ties the dict insertion
+            # order (source order within an ancestor) wins because dict
+            # iteration is insertion-ordered in Python 3.7+.
+            suggested_match: dict | None = None
+            if resolved_intro is None:
+                ref_tokens = tokenize_tw(normalized_term)
+                best_score = 0.0
+                best_depth: int | None = None
+                for intro_term, (ancestor_id, depth) in intros_by_term.items():
+                    if ordinal_guard(normalized_term, intro_term):
+                        continue
+                    score = jaccard(ref_tokens, tokenize_tw(intro_term))
+                    if score < _DIDYOUMEAN_THRESHOLD:
+                        continue
+                    if (
+                        score > best_score
+                        or (
+                            score == best_score
+                            and (best_depth is None or depth < best_depth)
+                        )
+                    ):
+                        best_score = score
+                        best_depth = depth
+                        suggested_match = {
+                            "term": intro_term,
+                            "claim_id": ancestor_id,
+                        }
+
             issues.append(
                 {
                     "claim_id": claim.id,
                     "term": normalized_term,
                     "reference_form": reference_form,
                     "claim_text": claim.text,
-                    "suggested_match": None,
+                    "suggested_match": suggested_match,
                     "cross_ref": None,
                 }
             )
