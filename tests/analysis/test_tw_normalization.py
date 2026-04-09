@@ -172,3 +172,46 @@ class TestDetectPluralReference:
     ])
     def test_detect_plural_reference(self, term, expected):
         assert detect_plural_reference(term) is expected
+
+
+class TestTrailingStripPreservesLegitimate所Suffixes:
+    """ADR-095 Rule 1 trailing-verb strip includes 所 to handle
+    reference-prefix fragments like 電子組件所包含 → 電子組件. This
+    class locks in the tradeoff that 所-terminated compound nouns
+    (研究所, 場所, 事務所) must not be over-stripped when they appear
+    as standalone reference terms.
+
+    If any of these tests start failing, the trailing-strip rule has
+    become too aggressive and needs a compound-noun allowlist or
+    minimum-length guard.
+    """
+
+    def test_research_institute_preserved(self):
+        """研究所 must not strip to 研究."""
+        assert clean_noun_phrase_tw("研究所") == "研究所"
+
+    def test_location_preserved(self):
+        """場所 must not strip to 場."""
+        assert clean_noun_phrase_tw("場所") == "場所"
+
+    def test_law_firm_preserved(self):
+        """事務所 must not strip to 事務."""
+        assert clean_noun_phrase_tw("事務所") == "事務所"
+
+    def test_fragment_still_stripped(self):
+        """電子組件所 (reference-prefix fragment) should still strip to 電子組件."""
+        assert clean_noun_phrase_tw("電子組件所") == "電子組件"
+
+    def test_before_as_compound_suffix_preserved(self):
+        """以前 (before) and 之前 (prior) must not over-strip.
+
+        These are rare in claim language but possible in method
+        claims describing temporal ordering. Edge cases — document
+        current behavior with the weaker assertion (len > 0) so the
+        observed value goes in the writeup for review rather than
+        forcing a specific output.
+        """
+        result_yi = clean_noun_phrase_tw("以前")
+        result_zhi = clean_noun_phrase_tw("之前")
+        assert len(result_yi) > 0, "以前 stripped to empty string"
+        assert len(result_zhi) > 0, "之前 stripped to empty string"

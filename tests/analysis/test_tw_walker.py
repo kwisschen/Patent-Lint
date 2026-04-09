@@ -14,6 +14,7 @@ test_tw_walker_strict_mode.py (Commit 6).
 from __future__ import annotations
 
 from patentlint.analysis.tw_claims import (
+    _INTRO_PATTERN,
     check_antecedent_basis,
     extract_introductions_tw,
     get_ancestor_chain_tw,
@@ -294,3 +295,114 @@ class TestCrossCategoryDependent:
         # Number-neutral matching (Rule 3) lets 所述齒狀結構 (claim 4)
         # resolve to 複數個齒狀結構 (claim 3).
         assert check_antecedent_basis(doc) == []
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# Regex invariants — pattern-level isolation tests
+# ─────────────────────────────────────────────────────────────────────────
+
+
+class TestRegexInvariants:
+    def test_bare_yi_does_not_match_after_ordinal(self):
+        """ADR-095 Commit 4 fix: ``_INTRO_PATTERN``'s bare 一 alternative
+        must not match after 第 (would cause 第一剛輪 to parse as
+        quantifier 一 + noun 剛輪, breaking the cross-category dependent
+        fixture).
+
+        This test isolates the regex behavior at the pattern level so a
+        failure is diagnostic ('you broke the 第一 negative lookbehind')
+        rather than mysterious ('cross-category dependent fixture
+        started failing').
+        """
+        # Should NOT match 一 as an intro inside 第一剛輪
+        matches = list(_INTRO_PATTERN.finditer("第一剛輪"))
+        bare_yi_matches = [
+            m for m in matches
+            if m.group(0).startswith("一")
+            and not m.group(0).startswith("一種")
+            and not m.group(0).startswith("一個")
+            and not m.group(0).startswith("一對")
+        ]
+        assert len(bare_yi_matches) == 0, (
+            f"Bare 一 matched after 第 in '第一剛輪': {bare_yi_matches}. "
+            f"The (?<!第) negative lookbehind on bare 一 is broken."
+        )
+
+        # Should still match bare 一 when NOT preceded by 第
+        matches = list(_INTRO_PATTERN.finditer("一剛輪"))
+        assert len(matches) >= 1, (
+            "Bare 一 should still match when not preceded by 第"
+        )
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# 110P000633 determinism canary scar-tissue test
+# ─────────────────────────────────────────────────────────────────────────
+
+
+class Test110P000633DeterminismCanary:
+    """Scar-tissue test: the 110P000633 fixture exists as two files
+    (..._FV.DOCX and ..._FV_1.DOCX) that have different .docx
+    container metadata but character-identical claim text. The walker
+    MUST produce byte-identical findings when run against both files —
+    any divergence is a walker non-determinism bug, not a fixture
+    difference.
+
+    This test is SKIPPED in CI because the fixtures are gitignored
+    (real patents). It runs locally whenever the fixtures are present.
+    See docs/phase8b-baseline.md for the observation that originated
+    this invariant.
+    """
+
+    def test_determinism_canary(self):
+        import pytest
+        from pathlib import Path
+
+        fixture_a = Path(
+            "tests/fixtures/tw/local/110P000633US.JP派譯版-FV.DOCX"
+        )
+        fixture_b = Path(
+            "tests/fixtures/tw/local/110P000633US.JP派譯版-FV_1.DOCX"
+        )
+
+        if not fixture_a.exists() or not fixture_b.exists():
+            pytest.skip("110P000633 fixture pair not present (local-only)")
+
+        from patentlint.parser.docx_loader import load_docx_tw
+        from patentlint.parser.sections_tw import extract_tw_sections
+
+        doc_a = extract_tw_sections(load_docx_tw(str(fixture_a)).paragraphs)
+        doc_b = extract_tw_sections(load_docx_tw(str(fixture_b)).paragraphs)
+
+        findings_a = check_antecedent_basis(doc_a)
+        findings_b = check_antecedent_basis(doc_b)
+
+        # Assertion 1: same count
+        assert len(findings_a) == len(findings_b), (
+            f"Determinism canary failed: {len(findings_a)} findings in A, "
+            f"{len(findings_b)} in B. Walker is non-deterministic on "
+            f"character-identical claim text."
+        )
+
+        # Assertion 2: sorted tuples byte-identical. Findings are dicts
+        # (not dataclasses) so use dict-key access. ``suggested_match``
+        # is itself a dict|None — convert to a tuple for hashable
+        # ordering.
+        def _key(f: dict) -> tuple:
+            sm = f["suggested_match"]
+            sm_tuple = (
+                (sm["term"], sm["claim_id"]) if sm is not None else None
+            )
+            return (
+                f["claim_id"],
+                f["term"],
+                f["reference_form"],
+                sm_tuple,
+            )
+
+        sorted_a = sorted(_key(f) for f in findings_a)
+        sorted_b = sorted(_key(f) for f in findings_b)
+        assert sorted_a == sorted_b, (
+            "Determinism canary failed: sorted findings differ between "
+            "A and B. This is a walker non-determinism bug."
+        )
