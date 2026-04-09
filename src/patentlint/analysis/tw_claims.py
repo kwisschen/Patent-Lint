@@ -721,9 +721,15 @@ def check_claims_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckIt
 #   references from being captured as one noun span)
 # - Auxiliary verbs / adverbs: 將 能 須 應 皆 (added 2026-04-09)
 # - Passive marker: 被 (added 2026-04-09)
-# - Prepositions: 於 以 (added 2026-04-09)
+# - Prepositions: 於 以 用 (用 added 2026-04-09 round 2 — Bug B)
 # - Connectives: 或 並 且 其 而 還 另 (added 2026-04-09)
 # - Temporal particle: 時 (added 2026-04-09)
+#
+# Bug B note (2026-04-09 round 2): 用 added because 第二無線通訊模組用
+# was capturing past the head noun, defeating the ordinal guard's
+# suffix-strict comparison and producing the misleading suggestion
+# "所述第二無線通訊模組用 → 第一無線通訊模組". With 用 excluded the
+# guard receives clean inputs and fires correctly.
 #
 # NOT excluded (would break legitimate compound nouns):
 # - 一 (would break 第一X ordinals — handled by _INTRO_PATTERN's negative
@@ -739,7 +745,7 @@ def check_claims_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckIt
 # 該所述前述 prefix is stripped before this regex applies). 12 leaves
 # headroom for ordinal+qualifier+head-noun compounds without permitting
 # the runaway captures observed in the 2026-04-09 smoke test.
-_NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以或並且其而還另時]{2,12}"
+_NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以或並且其而還另時用]{2,12}"
 
 # Introduction patterns — ordered longest-first so 至少一個 / 複數個 are
 # matched as single tokens before their shorter prefixes (一 / 複數). The
@@ -929,6 +935,44 @@ _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
         "更新", "刪除", "增加", "減少", "選擇",
         "決定", "判別", "辨識", "驅動",
 
+        # === Added 2026-04-09 round 2 (Bug A1 + C1 from diagnosis) ===
+        # Verbs observed in real fixtures during Phase 8b round 1 smoke
+        # test that contaminated reference and intro captures. Each was
+        # risk-reviewed against _INTERIOR_CUT_EXCEPTIONS membership and
+        # against the 10 fixtures' noun compounds:
+        #   定義: not interior to any common compound — safe.
+        #   啟始: not interior — safe.
+        #   判斷: 判斷器 not present in fixtures — safe.
+        #   持續: not interior — safe.
+        #   涵蓋: not interior — safe.
+        #   放大: 放大器 IS present (108P001015 ×1) — added to
+        #         exceptions below.
+        #   存取: not interior — safe.
+        #   構成: not interior to common compounds — safe.
+        #   設置: catches cases where 設置有 isn't present — safe.
+        #   透過/通過/經由/藉由: preposition-verbs (already in trailing
+        #         denylist) — adding to interior boundaries cuts greedy
+        #         capture mid-phrase, parallel to 設有/包含 split.
+        #   基於/根據/依據: connective preposition-verbs — same.
+        #   染色: 染色墨水 IS present (110P000633 ×40) — added to
+        #         exceptions below as a coordinated change.
+        #   識別: 識別碼/識別資料/識別資訊/識別號/識別子 are already in
+        #         _INTERIOR_CUT_EXCEPTIONS from Phase 8b round 1.
+        #         Commit 1's prefix-aware protection lets cuts fire on
+        #         the remainder past the protected compound, so a
+        #         capture like 識別資料識別 preserves 識別資料 via the
+        #         exception prefix and cuts at the second 識別 via the
+        #         remainder search.
+        #   傳送: 傳送器 is already in _INTERIOR_CUT_EXCEPTIONS — same
+        #         prefix-aware protection logic applies.
+        #   接收: 接收器 is already in _INTERIOR_CUT_EXCEPTIONS — same.
+        "定義", "啟始", "判斷", "持續", "涵蓋", "放大", "存取",
+        "構成", "設置",
+        "透過", "通過", "經由", "藉由",
+        "基於", "根據", "依據",
+        "染色",
+        "識別", "傳送", "接收",
+
         # NOT added (interior to legitimate noun compounds):
         # 連接 (連接器/連接部), 編碼 (編碼器), 識別 (識別碼/識別資料),
         # 通訊 (通訊模組), 傳動 (傳動件), 旋轉 (旋轉編碼器),
@@ -996,6 +1040,14 @@ _INTERIOR_CUT_EXCEPTIONS: frozenset[str] = frozenset({
     # Method-claim compounds
     "數位內容", "適地性數位內容", "主題標籤",
     "瀏覽程式", "伺服器", "使用者介面",
+
+    # === Added 2026-04-09 round 2 (coordinated with new boundary verbs) ===
+    # When 放大 / 染色 are added as interior-cut verbs, these compound
+    # nouns must be protected first so the cut doesn't damage them.
+    # 放大器: 108P001015 fixture has 1 occurrence.
+    # 染色墨水: 110P000633 fixture has 40 occurrences.
+    "放大器",
+    "染色墨水",
 })
 
 
