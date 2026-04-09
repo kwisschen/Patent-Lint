@@ -145,7 +145,7 @@ function App() {
                       >
                         <JurisdictionBadge code={j} />
                         {t(`jurisdiction.${j.toLowerCase()}`)}
-                        {(j === 'CN' || j === 'TW') && (
+                        {j === 'CN' && (
                           <span className="absolute -top-2 right-0 pointer-events-none">
                             <BetaBadge />
                           </span>
