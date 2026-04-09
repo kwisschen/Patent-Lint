@@ -783,13 +783,21 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         # Reference-form prefix fragments stranded by interior cuts.
         # When clean_noun_phrase_tw cuts ``電子組件所包含`` at 包含, the
         # leading-of-the-stripped-prefix character ``所`` is left behind
-        # as a stray. Same for 前 (start of 前述). Risk: 場所/研究所 end
-        # in 所 — false positive is rare in claim language.
+        # as a stray. Same for 前 (start of 前述). Compound nouns ending
+        # in these suffixes (研究所, 場所, 事務所, 以前, 之前) are
+        # protected by the residual ≥ 3 guard in clean_noun_phrase_tw —
+        # see _NOUNLIKE_SINGLE_CHAR_SUFFIXES below.
         "所", "前",
     ),
     key=len,
     reverse=True,
 ))
+
+# Noun-like single-char trailing suffixes that get the residual ≥ 3 guard
+# in clean_noun_phrase_tw. These are the denylist members where the
+# 1-char form is itself a productive noun-suffix morpheme rather than a
+# verb fragment, so a too-eager strip damages real compound nouns.
+_NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset({"所", "前"})
 
 # ADR-095 Rule 2: leading quantifiers (stripped from both sides).
 # Ordered longest-first so 至少一個 is stripped as a single token before
@@ -905,10 +913,25 @@ def clean_noun_phrase_tw(text: str) -> str:
     for _ in range(16):
         stripped = False
         for verb in _TRAILING_VERB_DENYLIST:
-            if current.endswith(verb) and len(current) > len(verb):
-                current = current[: -len(verb)]
-                stripped = True
-                break
+            if not current.endswith(verb):
+                continue
+            # General floor: never strip to empty.
+            if len(current) <= len(verb):
+                continue
+            # Noun-like single-char suffixes (所, 前) require residual ≥ 3
+            # to preserve 2- and 3-char compound nouns that legitimately
+            # end in the suffix: 場所 (2), 研究所 (3), 事務所 (3), 避難所
+            # (3), 以前 (2), 之前 (2). Verb-like single-char fragments
+            # (包/通/經/藉/還/並/且/其/另/係/為/是) keep the looser
+            # residual ≥ 1 floor — they are statute boilerplate or parser
+            # cuts, not noun morphemes, so 齒輪還 → 齒輪 must still strip.
+            # Multi-char tokens (包含, 包括) don't need the guard because
+            # their over-strip residuals are longer by construction.
+            if verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES and (len(current) - len(verb)) < 3:
+                continue
+            current = current[: -len(verb)]
+            stripped = True
+            break
         if not stripped:
             break
     return current
@@ -1105,6 +1128,20 @@ def check_antecedent_basis(
         # collapse to one finding. The displayable reference_form is
         # ``prefix + normalized_term`` so identical references print
         # identically across the report.
+        #
+        # Divergence from US walker: claims.py:254 keys dedup on the
+        # raw two-tuple ``(term, reference_form)``. The TW walker uses
+        # a single-key form on the *normalized* noun because the TW
+        # regex captures multi-character noun spans greedily — the same
+        # logical reference is captured with different trailing
+        # fragments across occurrences (``該齒輪為``, ``該齒輪設``,
+        # ``該齒輪所``), and a naive two-key dedup over those raw
+        # fragments would inflate the finding count. Synthesizing a
+        # canonical reference_form post-normalization (Option C from
+        # the 2026-04-09 follow-up session) restores parity with the US
+        # shape and is deferred to Phase 9, gated on a measured
+        # baseline delta. See docs/architectural-decisions.md ADR-095
+        # and the 2026-04-09 follow-up writeup for the decision trail.
         seen_terms: set[str] = set()
         for m in _REF_PATTERN_CAPTURE.finditer(claim.text):
             prefix = m.group("prefix")
