@@ -261,7 +261,7 @@
   },
   "about": {
     "productTitle": "PatentLint是什麼？",
-    "productDesc1": "PatentLint 是免費的專利稿件檢查工具，在審查委員替你找出問題之前先一步發現它們。將美國、中國或台灣專利稿件拖放至瀏覽器，即可取得即時合規報告。無需上傳、無需帳號、不使用雲端。",
+    "productDesc1": "PatentLint 是免費的專利稿件檢查工具，替您在審查委員找出問題之前先一步發現它們。將美國、中國或台灣專利稿件拖放至瀏覽器，便可即時取得於本機運行的合規報告。無需上傳、無需帳號、不使用雲端。",
     "productDesc2": "它依據 MPEP（美國）、CNIPA 規則（中国）及 TIPO 規則（台灣）進行撰稿規則檢查，偵測常見問題，如缺乏先行詞基礎、不正確的請求項結構和限制性用語。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 驗證送件格式。PatentLint 檢查稿件本身。",

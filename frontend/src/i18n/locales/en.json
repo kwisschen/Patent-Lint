@@ -261,7 +261,7 @@
   },
   "about": {
     "productTitle": "What is PatentLint?",
-    "productDesc1": "PatentLint is a free patent draft checker that catches issues before the examiner does. Drop a U.S., Chinese, or Taiwanese patent specification into your browser and get an instant compliance report — no upload, no account, no cloud.",
+    "productDesc1": "PatentLint is a free patent draft checker that catches issues for you before examiners do. Drop a U.S., Chinese, or Taiwanese patent draft into your browser for an instant compliance report that runs locally. No uploads, no accounts, no cloud.",
     "productDesc2": "It checks drafting rules from the MPEP (U.S.), CNIPA rules (中国), and TIPO rules (台灣), detecting common issues like missing antecedent basis, incorrect claim structure, and restrictive wording.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center validates filing format. PatentLint checks the draft itself.",
