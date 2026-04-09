@@ -709,14 +709,37 @@ def check_claims_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckIt
 
 # ── Check 26 ─────────────────────────────────────────────────────────────
 
-# Phase 8b walker noun-character boundary set. Extends the phase7.md base
-# pattern with conjunctions (及與和) and particles (之的) that act as noun
-# boundaries in TW patent claims, plus 該 (literary determiner — never a
-# noun morpheme) so consecutive references like ``該控制器讀取該感測器``
-# split into two captures instead of one greedy span. The 2-16 character
-# window captures legitimate compound patent nouns like
-# 高頻基板用樹脂組成物 that the previous {2,8} cap truncated mid-word.
-_NOUN_CHARS = r"[^\s，。；：、及與和之的該]{2,16}"
+# Boundary character class for the noun-phrase regex captures.
+#
+# Excluded categories (characters that NEVER appear inside a legitimate
+# patent reference noun phrase, so the regex can safely terminate at them):
+#
+# - Whitespace and punctuation: \s ， 。 ； ： 、 (existing)
+# - Conjunctions: 及 與 和 (existing)
+# - Genitive markers: 之 的 (existing)
+# - Reference-form prefix start: 該 (existing — prevents two adjacent
+#   references from being captured as one noun span)
+# - Auxiliary verbs / adverbs: 將 能 須 應 皆 (added 2026-04-09)
+# - Passive marker: 被 (added 2026-04-09)
+# - Prepositions: 於 以 (added 2026-04-09)
+# - Connectives: 或 並 且 其 而 還 另 (added 2026-04-09)
+# - Temporal particle: 時 (added 2026-04-09)
+#
+# NOT excluded (would break legitimate compound nouns):
+# - 一 (would break 第一X ordinals — handled by _INTRO_PATTERN's negative
+#   lookbehind on bare 一; for _REF_PATTERN_CAPTURE the ordinal forms are
+#   protected because they don't begin with 一)
+# - 中 上 下 內 外 前 後 (positional g-strip layer)
+# - 連 編 識 通 傳 旋 接 設 (verb characters that ARE inside compounds
+#   like 連接器, 編碼器, 識別碼, 通訊模組, 傳動件 — handled at the
+#   interior-cut layer with an exceptions set)
+#
+# Upper bound reduced from 16 to 12 because real reference noun phrases
+# rarely exceed 8 chars (longest plausible: 第二無線通訊模組 = 8 chars,
+# 該所述前述 prefix is stripped before this regex applies). 12 leaves
+# headroom for ordinal+qualifier+head-noun compounds without permitting
+# the runaway captures observed in the 2026-04-09 smoke test.
+_NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以或並且其而還另時]{2,12}"
 
 # Introduction patterns — ordered longest-first so 至少一個 / 複數個 are
 # matched as single tokens before their shorter prefixes (一 / 複數). The
