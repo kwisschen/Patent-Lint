@@ -27,17 +27,14 @@ class TestCleanNounPhraseTw:
         # 動力輸出系統包含 → 動力輸出系統
         assert clean_noun_phrase_tw("動力輸出系統包含") == "動力輸出系統"
 
-    def test_strips_preposition_verb_leaves_stray_head(self):
-        # 遊戲控制器通過第 — clean_noun_phrase_tw only strips TRAILING
-        # tokens matching the denylist. The last character here is 第
-        # (an ordinal prefix, not a verb), so the function stops
-        # immediately and returns the input unchanged. This is the
-        # observed behaviour, documented by the ADR-095 prompt:
-        # "the walker MAY leave leading chars of the next clause if
-        # they don't match any denylist entry." The leftover produces
-        # a mismatch at comparison time, which is surfaced via the
-        # did-you-mean hint if similarity is high enough.
-        assert clean_noun_phrase_tw("遊戲控制器通過第") == "遊戲控制器通過第"
+    def test_strips_preposition_verb_at_interior_boundary(self):
+        # 遊戲控制器通過第 — pre-2026-04-09 round 2, this returned
+        # unchanged because clean_noun_phrase_tw only stripped trailing
+        # tokens, and the trailing 第 didn't match any denylist entry.
+        # Round 2 (Bug A1/C1 fix) added 通過 to _INTERIOR_VERB_BOUNDARIES
+        # so the interior-cut pass now correctly truncates at 通過 and
+        # returns the head noun cleanly.
+        assert clean_noun_phrase_tw("遊戲控制器通過第") == "遊戲控制器"
 
     def test_strips_preposition_verb_when_trailing(self):
         # When 通過 IS at the trailing edge, it strips cleanly.
