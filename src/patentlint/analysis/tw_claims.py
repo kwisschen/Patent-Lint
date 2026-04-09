@@ -989,6 +989,18 @@ _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
         "染色",
         "識別", "傳送", "接收",
 
+        # === Added 2026-04-09 round 3 (round 2 spot-check residuals) ===
+        # Verbs visible in round 2 residual contamination with no
+        # compound-noun risk per the 10-fixture grep:
+        #   到: resultative particle ("arrive at"). 到器 absent (0).
+        #       到達 present (7) but always as verb compound
+        #       (狀態到達限制條件, 扭力到達預定扭力時) — cutting at 到
+        #       correctly extracts the head noun in those cases.
+        #   形成: "to form". 形成器/形成物 absent (0).
+        #   鎖合: "to lock". 鎖合器/鎖合件 absent (0).
+        #   傳輸: "to transmit". 傳輸器/傳輸線/傳輸帶 absent (0).
+        "到", "形成", "鎖合", "傳輸",
+
         # NOT added (interior to legitimate noun compounds):
         # 連接 (連接器/連接部), 編碼 (編碼器), 識別 (識別碼/識別資料),
         # 通訊 (通訊模組), 傳動 (傳動件), 旋轉 (旋轉編碼器),
