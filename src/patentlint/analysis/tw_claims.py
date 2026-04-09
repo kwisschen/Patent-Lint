@@ -783,10 +783,12 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         # Reference-form prefix fragments stranded by interior cuts.
         # When clean_noun_phrase_tw cuts ``電子組件所包含`` at 包含, the
         # leading-of-the-stripped-prefix character ``所`` is left behind
-        # as a stray. Same for 前 (start of 前述). Compound nouns ending
-        # in these suffixes (研究所, 場所, 事務所, 以前, 之前) are
-        # protected by the residual ≥ 3 guard in clean_noun_phrase_tw —
-        # see _NOUNLIKE_SINGLE_CHAR_SUFFIXES below.
+        # as a stray. Same for 前 (start of 前述). 所-terminated
+        # compound nouns (研究所, 場所, 事務所) are protected by the
+        # residual ≥ 3 guard in clean_noun_phrase_tw via
+        # _NOUNLIKE_SINGLE_CHAR_SUFFIXES below; 前 has no such guard
+        # because it appears overwhelmingly as a prefix in patent
+        # Chinese, not a suffix (see the comment on the constant).
         "所", "前",
     ),
     key=len,
@@ -797,7 +799,21 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
 # in clean_noun_phrase_tw. These are the denylist members where the
 # 1-char form is itself a productive noun-suffix morpheme rather than a
 # verb fragment, so a too-eager strip damages real compound nouns.
-_NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset({"所", "前"})
+#
+# 所 stays here because its compound-noun forms (研究所, 場所, 事務所,
+# 避難所) are all position-[-1] suffixes of the compound.
+#
+# 前 is NOT in this set despite being a noun morpheme in 以前/之前,
+# because those grammatical adverbs are rare in claim text while 前
+# appears overwhelmingly as a PREFIX in mechanical patent terms
+# (前端, 前述, 前方, 前蓋, 前緣). Keeping 前 in this set would preserve
+# 齒輪前 fragments that should strip to 齒輪. Compound prefixes like
+# 前端 are unaffected because they don't end in 前 — only the
+# trailing-strip codepath cares about this set. The 以前/之前 over-strip
+# (以/之) is accepted as a known limit; a Phase 9 follow-up may
+# generalize this set into a compound-noun allowlist that handles
+# both 所-suffix and 前-suffix cases without the prefix/suffix conflict.
+_NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset({"所"})
 
 # ADR-095 Rule 2: leading quantifiers (stripped from both sides).
 # Ordered longest-first so 至少一個 is stripped as a single token before
@@ -918,15 +934,17 @@ def clean_noun_phrase_tw(text: str) -> str:
             # General floor: never strip to empty.
             if len(current) <= len(verb):
                 continue
-            # Noun-like single-char suffixes (所, 前) require residual ≥ 3
-            # to preserve 2- and 3-char compound nouns that legitimately
-            # end in the suffix: 場所 (2), 研究所 (3), 事務所 (3), 避難所
-            # (3), 以前 (2), 之前 (2). Verb-like single-char fragments
-            # (包/通/經/藉/還/並/且/其/另/係/為/是) keep the looser
-            # residual ≥ 1 floor — they are statute boilerplate or parser
-            # cuts, not noun morphemes, so 齒輪還 → 齒輪 must still strip.
-            # Multi-char tokens (包含, 包括) don't need the guard because
-            # their over-strip residuals are longer by construction.
+            # Noun-like single-char suffixes (所) require residual ≥ 3 to
+            # preserve 2- and 3-char compound nouns that legitimately end
+            # in the suffix: 場所 (2), 研究所 (3), 事務所 (3), 避難所 (3).
+            # 前 is NOT in this set — see _NOUNLIKE_SINGLE_CHAR_SUFFIXES
+            # for the prefix-vs-suffix rationale. Verb-like single-char
+            # fragments (包/通/經/藉/還/並/且/其/另/係/為/是) keep the
+            # looser residual ≥ 1 floor — they are statute boilerplate
+            # or parser cuts, not noun morphemes, so 齒輪還 → 齒輪 must
+            # still strip. Multi-char tokens (包含, 包括) don't need the
+            # guard because their over-strip residuals are longer by
+            # construction.
             if verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES and (len(current) - len(verb)) < 3:
                 continue
             current = current[: -len(verb)]

@@ -203,15 +203,39 @@ class TestTrailingStripPreservesLegitimate所Suffixes:
         assert clean_noun_phrase_tw("電子組件所") == "電子組件"
 
     def test_before_as_compound_suffix_preserved(self):
-        """以前 (before) and 之前 (prior) must not over-strip.
+        """以前 (before) and 之前 (prior) must not over-strip to empty.
 
         These are rare in claim language but possible in method
         claims describing temporal ordering. Edge cases — document
         current behavior with the weaker assertion (len > 0) so the
         observed value goes in the writeup for review rather than
-        forcing a specific output.
+        forcing a specific output. Post-2026-04-09: 前 was removed
+        from _NOUNLIKE_SINGLE_CHAR_SUFFIXES (see
+        test_qian_strips_as_verb_fragment below), so these now strip
+        to 1 char (以/之), still satisfying the > 0 floor.
         """
         result_yi = clean_noun_phrase_tw("以前")
         result_zhi = clean_noun_phrase_tw("之前")
         assert len(result_yi) > 0, "以前 stripped to empty string"
         assert len(result_zhi) > 0, "之前 stripped to empty string"
+
+    def test_qian_strips_as_verb_fragment(self):
+        """前 is NOT in _NOUNLIKE_SINGLE_CHAR_SUFFIXES because it is
+        overwhelmingly a prefix in patent Chinese (前端, 前述, 前方,
+        前蓋, 前緣), not a suffix. 以前/之前 are grammatical adverbs
+        rare in claims; if they appear they over-strip to 1 char,
+        accepted as known behavior. Compound prefixes like 前端 are
+        unaffected because they don't end in 前.
+        """
+        # 前端/前述/前方 end in 端/述/方 — not in the trailing-strip
+        # denylist, so the trailing-strip codepath doesn't touch them.
+        assert clean_noun_phrase_tw("前端") == "前端"
+        assert clean_noun_phrase_tw("前述") == "前述"
+        assert clean_noun_phrase_tw("前方") == "前方"
+        # 以前/之前 over-strip to 1 char — accepted as known limit
+        # for rare grammatical adverbs in claim text.
+        assert clean_noun_phrase_tw("以前") == "以"
+        assert clean_noun_phrase_tw("之前") == "之"
+        # Fragment case: 齒輪前 (front-of-the-gear, captured fragment)
+        # strips to 齒輪 — the correct head noun for resolution.
+        assert clean_noun_phrase_tw("齒輪前") == "齒輪"
