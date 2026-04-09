@@ -1030,34 +1030,46 @@ def clean_noun_phrase_tw(text: str) -> str:
     if not text:
         return text
 
-    # Phase 1: interior-verb truncation, with exception protection.
-    # Skip the interior cut if the full text OR any of its prefixes is
-    # in the exceptions set. The prefix check handles cases where the
-    # capture extends past a known compound noun (e.g. 連接部設有 —
-    # 連接部 is in exceptions, so don't cut 設有 because the head noun
-    # is 連接部 and we want trailing-strip to handle 設有 instead).
-    def _is_protected(s: str) -> bool:
-        if s in _INTERIOR_CUT_EXCEPTIONS:
-            return True
-        # Check prefixes from longest to shortest, looking for a match
-        # in the exceptions set. This is O(n) per call but n is small.
+    # Phase 1: interior-verb truncation, with prefix-aware exception
+    # protection.
+    #
+    # If the captured text starts with a protected compound noun (e.g.
+    # 容置杯體 in 容置杯體設置有多數孔隙), we PRESERVE the compound but
+    # still cut at any verb that appears AFTER the compound. The
+    # interior-cut search runs on text[protected_prefix_len:] only, and
+    # any cut position is offset back to the original string by adding
+    # protected_prefix_len. When the entire captured text is itself a
+    # protected compound, protected_prefix_len == len(text) and the
+    # remainder is empty, so no cut fires.
+    def _longest_protected_prefix(s: str) -> int:
+        """Return the length of the longest prefix of ``s`` that is in
+        ``_INTERIOR_CUT_EXCEPTIONS``, or 0 if no prefix matches.
+
+        Walks from longest to shortest so the first match returned is
+        the longest one. The exact-match case (entire ``s`` is in
+        exceptions) is handled by the loop starting at ``len(s)``.
+        """
         for i in range(len(s), 1, -1):
             if s[:i] in _INTERIOR_CUT_EXCEPTIONS:
-                return True
-        return False
+                return i
+        return 0
 
-    if not _is_protected(text):
-        # Find the EARLIEST verb-boundary occurrence so multi-verb texts
-        # cut at the first verb only.
-        earliest_idx: int | None = None
-        for verb in _INTERIOR_VERB_BOUNDARIES:
-            idx = text.find(verb)
-            if idx > 1:  # require ≥2 chars before the verb
-                if earliest_idx is None or idx < earliest_idx:
-                    earliest_idx = idx
-        current = text[:earliest_idx] if earliest_idx is not None else text
-    else:
-        current = text
+    protected_prefix_len = _longest_protected_prefix(text)
+    search_text = text[protected_prefix_len:]
+    search_offset = protected_prefix_len
+
+    earliest_idx: int | None = None
+    for verb in _INTERIOR_VERB_BOUNDARIES:
+        idx = search_text.find(verb)
+        # Require ≥1 char before the verb in the search remainder (so
+        # the verb isn't at position 0 of the remainder), AND ≥2 chars
+        # total before the verb in the absolute original text.
+        if idx >= 0 and (idx + search_offset) > 1:
+            absolute_idx = idx + search_offset
+            if earliest_idx is None or absolute_idx < earliest_idx:
+                earliest_idx = absolute_idx
+
+    current = text[:earliest_idx] if earliest_idx is not None else text
 
     # Phase 2: trailing-verb stripping (iterative).
     # Safety bound to prevent pathological iteration.
