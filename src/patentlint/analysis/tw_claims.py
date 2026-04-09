@@ -721,23 +721,44 @@ def check_claims_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckIt
 #   references from being captured as one noun span)
 # - Auxiliary verbs / adverbs: 將 能 須 應 皆 (added 2026-04-09)
 # - Passive marker: 被 (added 2026-04-09)
-# - Prepositions: 於 以 用 在 (用 added 2026-04-09 round 2 — Bug B;
-#   在 added 2026-04-09 round 3 — high-frequency preposition that
-#   was contaminating findings like 該識別資料在 in 110P000868)
-# - Connectives: 或 並 且 其 而 還 另 (added 2026-04-09)
+# - Prepositions: 於 以 在 (在 added 2026-04-09 round 3 — high-frequency
+#   preposition that was contaminating findings like 該識別資料在 in
+#   110P000868). 用 was added in round 2 (Bug B) but REMOVED in round 5 —
+#   it was breaking 使用者 compounds (該多個使用者 captured as 多個使
+#   then normalized to 使). See round 5 note below.
+# - Connectives: 並 且 其 而 還 另 (或 added in round 2 but REMOVED in
+#   round 5 — was breaking 一或多個 quantifier; see round 5 note)
 # - Temporal particle: 時 (added 2026-04-09)
 #
-# Bug B note (2026-04-09 round 2): 用 added because 第二無線通訊模組用
+# Round 2 Bug B note: 用 was originally added because 第二無線通訊模組用
 # was capturing past the head noun, defeating the ordinal guard's
 # suffix-strict comparison and producing the misleading suggestion
-# "所述第二無線通訊模組用 → 第一無線通訊模組". With 用 excluded the
-# guard receives clean inputs and fires correctly.
+# "所述第二無線通訊模組用 → 第一無線通訊模組".
+#
+# Round 5 reversal of round 2 Bug B (2026-04-09): 用 removed because the
+# round 2 fix had a worse failure mode — it broke 使用者/使用/應用/適用
+# compounds. In 110P000368 Claim 7 the regex captured 該多個使 (stopping
+# at 用 in 使用者) instead of 該多個使用者. The trailing-strip + residual
+# ≥ 3 guard via _NOUNLIKE_SINGLE_CHAR_SUFFIXES handles trailing 用
+# contamination instead: 第二無線通訊模組用 → 第二無線通訊模組 (residual
+# 7 ≥ 3, strip allowed); 應用 / 適用 / 使用 (2-char compounds, residual
+# 1, strip blocked) preserved. Grep confirms 使用者 ×269, 使用 ×364,
+# 應用 ×102, 適用 ×9 in the 10-fixture corpus, all preserved.
+#
+# Round 5 reversal of round 2 連接ive 或 (2026-04-09): 或 removed
+# because the round 2 fix terminated 一或多個 quantifier mid-capture in
+# references like 該前一或多個主題標籤 (110P000368). Trailing 或
+# contamination is handled by _TRAILING_VERB_DENYLIST instead. Grep
+# confirms 或門/或物/或非門/或邏輯 all 0 in the 10-fixture corpus, so
+# no compound-noun risk and no exception coordination needed.
 #
 # NOT excluded (would break legitimate compound nouns):
 # - 一 (would break 第一X ordinals — handled by _INTRO_PATTERN's negative
 #   lookbehind on bare 一; for _REF_PATTERN_CAPTURE the ordinal forms are
 #   protected because they don't begin with 一)
-# - 中 上 下 內 外 前 後 (positional g-strip layer)
+# - 中 上 下 內 外 前 後 (positional g-strip layer; 中 and 後 have
+#   trailing-strip + residual guard added in round 5 for fragments like
+#   該資料庫中 / 該瀏覽程式產生後)
 # - 連 編 識 通 傳 旋 接 設 (verb characters that ARE inside compounds
 #   like 連接器, 編碼器, 識別碼, 通訊模組, 傳動件 — handled at the
 #   interior-cut layer with an exceptions set)
@@ -747,7 +768,7 @@ def check_claims_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckIt
 # 該所述前述 prefix is stripped before this regex applies). 12 leaves
 # headroom for ordinal+qualifier+head-noun compounds without permitting
 # the runaway captures observed in the 2026-04-09 smoke test.
-_NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以或並且其而還另時用在]{2,12}"
+_NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以並且其而還另時在]{2,12}"
 
 # Introduction patterns — ordered longest-first so 至少一個 / 複數個 are
 # matched as single tokens before their shorter prefixes (一 / 複數). The
@@ -774,6 +795,13 @@ _NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以或
 # 一端透過樞軸...) require lazy regex matching and are deferred to
 # Phase 9.
 _INTRO_MULTI_QUANTIFIERS = (
+    # Round 5 addition: multi-char quantifier "one or more X" — common
+    # in JP-origin TW translations. Grep confirms 一或多個 ×59 in
+    # 110P000368 + 110P000868 (variants 一或更多 / 一或一個以上 /
+    # 一或者多個 all 0). Coordinated with the round 5 removal of 或
+    # from _NOUN_CHARS exclusion — without that removal, the regex
+    # would still terminate at 或 mid-quantifier even with this entry.
+    "一或多個",
     "至少一個", "至少一",
     "一個", "一種", "一對",
     "複數個", "多個", "數個",
@@ -843,6 +871,61 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         # 位置/位元/數位/第一位/第二位 are protected by the residual ≥ 3
         # guard via _NOUNLIKE_SINGLE_CHAR_SUFFIXES below.
         "位",
+        # === Added 2026-04-09 round 5 ===
+        # 或: connective ("or"). Removed from _NOUN_CHARS in round 5 to
+        #     unblock the 一或多個 quantifier; trailing 或 contamination
+        #     (該全世界或) is handled here instead. Grep confirms
+        #     或門/或物/或非門/或邏輯 all 0 in the 10-fixture corpus —
+        #     no compound-noun risk, no residual guard needed (general
+        #     residual ≥ 1 floor suffices).
+        "或",
+        # 中: positional particle ("inside/within"). Stranded at the
+        #     trailing edge of captures like 該資料庫中. Compound forms
+        #     中心/中央/中文/中段/中部/中層/中環/中間 are 2-char with 中
+        #     at position 0; protected by residual ≥ 3 guard via
+        #     _NOUNLIKE_SINGLE_CHAR_SUFFIXES below. Grep: 中心 ×93,
+        #     中央 ×10, 中文 ×30 — all preserved.
+        "中",
+        # 後: positional particle ("after/behind"). Stranded at the
+        #     trailing edge of captures like 該瀏覽程式產生後. Compound
+        #     forms 後輪/後方/後續 (and the unobserved 後端/後蓋/後座)
+        #     are 2-char with 後 at position 0; protected by residual
+        #     ≥ 3 guard. Grep: 後輪 ×11, 後方 ×1, 後續 ×14 — all
+        #     preserved. Note: 後 also appears as a leading qualifier
+        #     in 後一X patterns ("the next X"), handled by
+        #     strip_leading_qualifier — different code path, no conflict.
+        "後",
+        # 用: preposition ("use/for"). Removed from _NOUN_CHARS in
+        #     round 5 (reversal of round 2 Bug B fix); trailing 用
+        #     contamination (第二無線通訊模組用 → 第二無線通訊模組)
+        #     handled here with residual ≥ 3 guard. Compound forms
+        #     使用/應用/適用/作用/信用/通用 are 2-char and protected
+        #     by the guard (residual after stripping ≤ 1, < 3).
+        #     使用者 (3-char) is protected at the regex level —
+        #     it doesn't END in 用, so the trailing strip never
+        #     applies to it. Grep: 使用 ×364, 應用 ×102, 適用 ×9,
+        #     作用 ×2, 使用者 ×269 — all preserved.
+        "用",
+        # === Round 5 cascade additions ===
+        # Surfaced after the round 5 removal of 用/或 from _NOUN_CHARS
+        # unblocked the regex to capture longer noun spans that include
+        # trailing positional particles 上/內 (previously hidden because
+        # the regex stopped at 用 in 使用者介面上 / at 或 in 全世界或地域內).
+        #
+        # 上: positional particle ("on/above"). Stranded at the trailing
+        #     edge of captures like 該使用者介面上 (110P000368). Compound
+        #     forms 上方/上端/上述/上層/上部 are 2-char with 上 at
+        #     position 0; protected by residual ≥ 3 guard via
+        #     _NOUNLIKE_SINGLE_CHAR_SUFFIXES. Grep: 上方 ×20, 上端 ×65,
+        #     上述 ×45, 上下 ×3 — all preserved.
+        "上",
+        # 內: positional particle ("inside/within"). Stranded at the
+        #     trailing edge of captures like 該地域內 (110P000368).
+        #     Compound forms 內部/內側/內徑/內側面 have 內 at position 0
+        #     of a 2- or 3-char compound; protected by residual ≥ 3
+        #     guard. Grep: 內部 ×40, 內側 ×76, 內徑 ×3, 內側面 ×2 —
+        #     all preserved.
+        "內",
         # Adverbs that ended up trailing after interior cut
         "分別", "皆",
         # Positional particle (parallel to 時)
@@ -880,13 +963,89 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
 # (以/之) is accepted as a known limit; a Phase 9 follow-up may
 # generalize this set into a compound-noun allowlist that handles
 # both 所-suffix and 前-suffix cases without the prefix/suffix conflict.
-_NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset({"所", "位"})
+#
+# 中 added 2026-04-09 round 5: positional particle ("inside/within")
+# stranded at the trailing edge of captures like 該資料庫中. Compound
+# forms 中心/中央/中文 (and the absent-from-corpus 中段/中部/中層/中環/
+# 中間) all have 中 at position 0 of a 2-char compound, so residual after
+# stripping is ≤ 1 (中心 → 心 → 1, 中央 → 央 → 1) — protected by
+# residual ≥ 3 guard. Grep confirms 中心 ×93, 中央 ×10, 中文 ×30 in
+# the 10-fixture corpus, all preserved.
+#
+# 後 added 2026-04-09 round 5: positional particle ("after/behind")
+# stranded at the trailing edge of captures like 該瀏覽程式產生後. Compound
+# forms 後輪/後方/後續 (and the absent-from-corpus 後端/後蓋/後座/後背/
+# 後門) all have 後 at position 0 of a 2-char compound, so residual after
+# stripping is ≤ 1 — protected by the same guard. Grep: 後輪 ×11,
+# 後方 ×1, 後續 ×14 in the corpus, all preserved. Note that 後 ALSO
+# appears as a leading qualifier in patterns like 後一X ("the next X"),
+# handled by strip_leading_qualifier on the leading-position codepath
+# — different from this trailing-position guard, no conflict.
+#
+# 用 added 2026-04-09 round 5: preposition ("use/for"). Removed from
+# _NOUN_CHARS in round 5 (reversal of round 2 Bug B fix) so that
+# 使用者 compounds capture cleanly. Trailing 用 contamination
+# (第二無線通訊模組用 → 第二無線通訊模組, residual 7 ≥ 3) handled
+# here with the residual ≥ 3 guard. Compound forms 使用/應用/適用/
+# 作用/信用/通用 are all 2-char with 用 at position [-1]; residual
+# after stripping is 1 → preserved. 使用者 (3 chars) does NOT end
+# in 用 so the trailing strip never applies. Grep: 使用 ×364,
+# 應用 ×102, 適用 ×9, 作用 ×2, 使用者 ×269 — all preserved.
+#
+# 上 added 2026-04-09 round 5 cascade: positional particle ("on/
+# above") stranded at the trailing edge of captures like 該使用者介面上.
+# Surfaced after the round 5 用 removal unblocked the regex past 用
+# in 使用者介面上 — pre-cascade the regex stopped at 用 and 該使用者介面上
+# was never captured at all. Compound forms 上方/上端/上述/上層/上部
+# all have 上 at position 0 of a 2-char compound — protected by the
+# trailing-strip's position check (endswith fires only at position -1),
+# NOT by the residual guard. Grep: 上方 ×20, 上端 ×65, 上述 ×45, 上下 ×3
+# in the corpus, all preserved. Listed in _NOUNLIKE_RELAXED_SUFFIXES
+# (residual ≥ 2 instead of ≥ 3) — see below for why.
+#
+# 內 added 2026-04-09 round 5 cascade: positional particle ("inside/
+# within") stranded at the trailing edge of captures like 該地域內.
+# Surfaced after the round 5 或 removal unblocked the regex past 或
+# in 全世界或地域內. Compound forms 內部/內側/內徑 have 內 at position 0
+# of a 2-char compound (protected by position check, not residual guard);
+# 內側面 is 3-char with 內 at position 0 (same protection). Listed in
+# _NOUNLIKE_RELAXED_SUFFIXES — see below.
+_NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset(
+    {"所", "位", "中", "後", "用", "上", "內"}
+)
+
+# Relaxed-guard subset: members of _NOUNLIKE_SINGLE_CHAR_SUFFIXES that
+# get residual ≥ 2 instead of the default ≥ 3. The default ≥ 3 protects
+# 3-char compounds where the suffix sits at position -1 of a productive
+# noun (研究所, 第一位). The relaxed ≥ 2 lets 3-char positional fragments
+# (地域內 → 地域, 範圍內 → 範圍, 基板上 → 基板, 面上 → 面) strip correctly
+# while still protecting 2-char productive compounds ending in 上/內
+# (室內/國內/海上/桌上 — residual 1, blocked by ≥ 2).
+#
+# Why 上/內 specifically: their productive 2-char compound forms put the
+# particle at position 0 (上方/上端/內側/內部), so the trailing-strip
+# never even considers them — the position check alone protects those.
+# At position -1 they appear almost exclusively as positional fragments
+# in patent claim text ("within the X" / "on the X"), not as standalone
+# nouns. Corpus grep for 室內/國內/海上/桌上 etc. on the 10-fixture set
+# returned 0 hits; 範圍內 ×3 and 基板上 ×4 are the only 3-char position-(-1)
+# matches and both should strip.
+#
+# 所/位/中/後/用 stay at the strict ≥ 3 guard because they DO have
+# productive 3-char compounds ending in the suffix (研究所, 第一位) or
+# because the corpus is too small to confidently relax (中/後/用).
+_NOUNLIKE_RELAXED_SUFFIXES: frozenset[str] = frozenset({"上", "內"})
 
 # ADR-095 Rule 2: leading quantifiers (stripped from both sides).
 # Ordered longest-first so 至少一個 is stripped as a single token before
 # 至少一 is stripped.
 _LEADING_QUANTIFIER_DENYLIST: tuple[str, ...] = tuple(sorted(
     (
+        # Round 5 addition: 一或多個 multi-char quantifier (parallel to
+        # _INTRO_MULTI_QUANTIFIERS). Stripped from both reference and
+        # intro sides so 該前一或多個主題標籤 ↔ 該主題標籤 normalize to
+        # the same head noun.
+        "一或多個",
         "至少一個", "至少一",
         "一個", "一種", "一對",
         "複數個", "多個", "數個",
@@ -1038,6 +1197,50 @@ _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
         #         compound-noun risk, no new exceptions needed.
         "連接", "旋轉", "帶動", "篩選",
 
+        # === Added 2026-04-09 round 5 (110P000368 manual review residuals) ===
+        # 區分: "to distinguish/divide" verb in method claims. Observed
+        #       in 110P000368 Claim 6 contaminating 該地域區分 → should
+        #       cut at 區分 to extract 該地域. Risk-reviewed:
+        #       區分器/區分件/區分碼 all absent (0) in the 10-fixture
+        #       grep — no exception coordination needed.
+        "區分",
+
+        # === Added 2026-04-09 round 5 cascade ===
+        # Verbs that became visible after the round 5 用/或 removal
+        # from _NOUN_CHARS unblocked longer regex captures. Each
+        # risk-reviewed against the 10-fixture grep:
+        #   顯示: "to display" — 顯示器 ×9, 顯示裝置 ×32, 顯示單元 ×3
+        #         all added to _INTERIOR_CUT_EXCEPTIONS in the round 5
+        #         cascade block above. Round 2's prefix-aware protection
+        #         lets a captured 顯示器顯示 preserve 顯示器 via the
+        #         exception prefix and cut at the second 顯示 via the
+        #         remainder search.
+        #   上傳: "to upload" — 上傳器/件/介面/區/功能/模組 all 0 per
+        #         grep, no exception coordination needed.
+        #   瀏覽: "to browse" — 瀏覽器 ×2 added to exceptions above;
+        #         瀏覽程式 ×56 already present in exceptions from
+        #         the original method-claim block. Both compounds
+        #         protected by prefix-aware exception logic.
+        "顯示", "上傳", "瀏覽",
+
+        # === Added 2026-04-09 round 5 cascade tail ===
+        # Surfaced by 110P000368 production smoke test after the
+        # initial cascade landed: contamination patterns 瀏覽程式產生
+        # (intro side) and 地域內各地 (reference side) needed dedicated
+        # cuts to bring the fixture's count below the round 4 baseline.
+        #   產生: "to generate/produce" — 110P000368 c1 captures
+        #         一瀏覽程式產生的 as the noun span; cut at 產生 leaves
+        #         瀏覽程式 (in exceptions). Risk-reviewed: 產生器 ×40
+        #         in 110P000641 (波產生器), all naturally protected by
+        #         the position-2 check (產生 at position 1 of 波產生器
+        #         fails idx > 1). 波產生器 also added to exceptions
+        #         above as documented insurance.
+        #   各地: "various places" — 110P000368 c6/c10 reference
+        #         該地域內各地 normalizes to 地域 only after cutting at
+        #         各地. Grep: 各地 ×3 (all in 110P000368, all
+        #         contamination patterns). 各地區/各地方 ×0 — safe.
+        "產生", "各地",
+
         # NOT added (interior to legitimate noun compounds):
         # 編碼 (編碼器), 識別 (識別碼/識別資料),
         # 通訊 (通訊模組), 傳動 (傳動件),
@@ -1120,6 +1323,29 @@ _INTERIOR_CUT_EXCEPTIONS: frozenset[str] = frozenset({
     # Other 帶動X compounds (帶動器, 帶動件) absent (0) per grep —
     # not added speculatively.
     "帶動輪",
+
+    # === Added 2026-04-09 round 5 cascade ===
+    # Coordinated with the cascade-added interior boundary verbs
+    # 顯示/上傳/瀏覽. Each compound was risk-grepped against the
+    # 10-fixture corpus before adding the bare verb to the boundaries:
+    #   顯示器 ×9 in 4 fixtures
+    #   顯示裝置 ×32 in 2 fixtures
+    #   顯示單元 ×3 in 1 fixture
+    #   瀏覽器 ×2 in 1 fixture (瀏覽程式 already present above)
+    # 上傳器/件/介面/區/功能/模組 all 0 per grep — no exceptions
+    # needed for 上傳.
+    "顯示器", "顯示裝置", "顯示單元",
+    "瀏覽器",
+
+    # === Added 2026-04-09 round 5 cascade tail (產生 boundary) ===
+    # Coordinated with the addition of 產生 to interior verbs.
+    # 波產生器 ×40 across the corpus (110P000641 harmonic-reducer
+    # patent: 波產生器, 一波產生器, 所述波產生器, 成一波產生器, etc.) —
+    # the only 產生器 compound observed. Bare 波產生器 is naturally
+    # protected by the position-2 check (產生 sits at position 1 of
+    # 波產生器, fails the > 1 check), but adding to the exception
+    # set is documented insurance for any longer captured spans.
+    "波產生器",
 })
 
 
@@ -1216,8 +1442,17 @@ def clean_noun_phrase_tw(text: str) -> str:
             # still strip. Multi-char tokens (包含, 包括) don't need the
             # guard because their over-strip residuals are longer by
             # construction.
-            if verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES and (len(current) - len(verb)) < 3:
-                continue
+            #
+            # Relaxed-guard subset (上, 內) uses ≥ 2 instead of ≥ 3 so
+            # 3-char positional fragments (地域內 → 地域, 範圍內 → 範圍,
+            # 基板上 → 基板) strip while 2-char productive compounds
+            # (their corpus count is 0) and position-0 compounds
+            # (內側/上方, protected by the endswith position check) are
+            # unaffected. See _NOUNLIKE_RELAXED_SUFFIXES for rationale.
+            if verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES:
+                min_residual = 2 if verb in _NOUNLIKE_RELAXED_SUFFIXES else 3
+                if (len(current) - len(verb)) < min_residual:
+                    continue
             current = current[: -len(verb)]
             stripped = True
             break
@@ -1291,6 +1526,11 @@ _LEADING_RELATIONAL_QUALIFIERS: tuple[str, ...] = (
 # what distinguishes qualifier-use (前一X) from compound-use (前端).
 _LEADING_POSITION_QUALIFIERS: tuple[str, ...] = ("前", "後")
 _QUANTIFIER_AFTER_POSITION: tuple[str, ...] = (
+    # Round 5 addition: 一或多個 must come BEFORE bare 一 so the
+    # multi-char form is matched as a unit (前一或多個X strips the
+    # qualifier+quantifier and leaves X). The strip iterates this tuple
+    # in order and uses .startswith(), so longest-first matters.
+    "一或多個",
     "一", "二", "三", "四", "五", "六", "七", "八", "九", "十",
     "1", "2", "3", "4", "5", "6", "7", "8", "9",
     "複數", "多個", "數個", "至少",
