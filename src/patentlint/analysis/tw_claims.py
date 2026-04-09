@@ -1122,28 +1122,124 @@ def strip_reference_form_prefix(text: str) -> str:
     return text
 
 
-def normalize_reference_term(text: str) -> str:
+# Leading qualifier strip — handles definite-article-plus-qualifier
+# patterns where the qualifier is a positional or relational modifier
+# that doesn't introduce a new claim element.
+#
+# Legal basis: US Federal Circuit case law on "the corresponding X" and
+# "the previous X" treats these as scope-clarifying qualifiers, not new
+# elements requiring their own antecedent. TIPO general principles in
+# 專利侵權判斷要點 are consistent with this reading. JP-origin TW
+# translations frequently use 對應/前 patterns because Japanese claim
+# style standardizes them (対応する, 前記).
+#
+# The walker strips these qualifiers as part of normalization so the
+# bare noun matches the ancestor chain. Strict mode (per
+# strict_qualifier_matching config flag) disables this strip and treats
+# qualified references as distinct elements requiring their own
+# antecedent — for firms with stricter house rules.
+
+# Relational qualifiers: strip unconditionally when they appear at
+# the start of a normalized term. Each can have an optional 地 or 的
+# adverbial suffix.
+_LEADING_RELATIONAL_QUALIFIERS: tuple[str, ...] = (
+    "對應地", "對應的", "對應",
+    "相應地", "相應的", "相應",
+    "相對地", "相對的", "相對",
+    "相關地", "相關的", "相關",
+)
+
+# Position qualifiers: strip ONLY when followed by a quantifier
+# (一/二/.../複數/多個/etc.). 前/後 form compound nouns when followed
+# by other characters (前端, 後輪), so the quantifier lookahead is
+# what distinguishes qualifier-use (前一X) from compound-use (前端).
+_LEADING_POSITION_QUALIFIERS: tuple[str, ...] = ("前", "後")
+_QUANTIFIER_AFTER_POSITION: tuple[str, ...] = (
+    "一", "二", "三", "四", "五", "六", "七", "八", "九", "十",
+    "1", "2", "3", "4", "5", "6", "7", "8", "9",
+    "複數", "多個", "數個", "至少",
+)
+
+
+def strip_leading_qualifier(
+    text: str,
+    *,
+    strict_qualifier_matching: bool = False,
+) -> str:
+    """Strip leading qualifier modifiers from a normalized reference term.
+
+    Handles two patterns per ADR-095 addendum (2026-04-09):
+
+    1. Relational qualifiers: 對應X, 相應X, 相對X, 相關X (with optional
+       adverbial suffix 地/的). Stripped unconditionally — these never
+       form compound nouns with the following character in patent claim
+       text.
+
+    2. Position qualifiers: 前X, 後X — but ONLY when X starts with a
+       quantifier (一/二/.../複數/多個). 前一X = "previous one X" is
+       a qualifier; 前端 = "front end" is a compound noun. The
+       quantifier lookahead distinguishes the two cases.
+
+    When strict_qualifier_matching is True the strip is disabled entirely
+    and qualified references are treated as distinct elements. Default
+    is False (lenient). Per ADR-095 the strict mode exists as an escape
+    hatch for firms with stricter house rules; the default matches US
+    Federal Circuit precedent and TIPO general principles.
+    """
+    if strict_qualifier_matching or not text:
+        return text
+
+    # Try relational qualifiers first (longest-first via the ordering
+    # in _LEADING_RELATIONAL_QUALIFIERS).
+    for q in _LEADING_RELATIONAL_QUALIFIERS:
+        if text.startswith(q) and len(text) > len(q):
+            return text[len(q):]
+
+    # Try position qualifiers with quantifier lookahead.
+    for q in _LEADING_POSITION_QUALIFIERS:
+        if text.startswith(q) and len(text) > len(q):
+            remainder = text[len(q):]
+            for quant in _QUANTIFIER_AFTER_POSITION:
+                if remainder.startswith(quant):
+                    return remainder
+
+    return text
+
+
+def normalize_reference_term(
+    text: str,
+    *,
+    strict_qualifier_matching: bool = False,
+) -> str:
     """Normalize a flagged reference term for antecedent matching.
 
-    Composes: strip_reference_form_prefix → clean_noun_phrase_tw →
-    strip_leading_quantifier. The reference-form strip runs first so
-    that a term like 該第一電極 loses its 該 marker and the walker's
-    comparison sees 第一電極.
+    Composes:
+        strip_reference_form_prefix    (該/所述/前述/該等/該些)
+        → strip_leading_qualifier      (對應/相應/前+quantifier — NEW)
+        → clean_noun_phrase_tw         (interior cut + trailing strip)
+        → strip_leading_quantifier     (一/一個/複數/...)
     """
     t = strip_reference_form_prefix(text)
+    t = strip_leading_qualifier(t, strict_qualifier_matching=strict_qualifier_matching)
     t = clean_noun_phrase_tw(t)
     t = strip_leading_quantifier(t)
     return t
 
 
-def normalize_candidate_intro(text: str) -> str:
+def normalize_candidate_intro(
+    text: str,
+    *,
+    strict_qualifier_matching: bool = False,
+) -> str:
     """Normalize an introduction candidate for antecedent matching.
 
-    Composes: clean_noun_phrase_tw → strip_leading_quantifier. No
-    reference-form prefix strip because intros do not carry 該/所述/前述
-    markers.
+    Composes:
+        strip_leading_qualifier        (NEW — for symmetry with refs)
+        → clean_noun_phrase_tw
+        → strip_leading_quantifier
     """
-    t = clean_noun_phrase_tw(text)
+    t = strip_leading_qualifier(text, strict_qualifier_matching=strict_qualifier_matching)
+    t = clean_noun_phrase_tw(t)
     t = strip_leading_quantifier(t)
     return t
 
@@ -1191,7 +1287,11 @@ def get_ancestor_chain_tw(claim: Claim, all_claims: list[Claim]) -> list[Claim]:
     return chain
 
 
-def extract_introductions_tw(claim: Claim) -> list[tuple[str, str]]:
+def extract_introductions_tw(
+    claim: Claim,
+    *,
+    strict_qualifier_matching: bool = False,
+) -> list[tuple[str, str]]:
     """Extract introductions from a TW claim as (original, normalized) pairs.
 
     ``original`` is the FULL intro span captured by ``_INTRO_PATTERN``,
@@ -1210,7 +1310,10 @@ def extract_introductions_tw(claim: Claim) -> list[tuple[str, str]]:
     for m in _INTRO_PATTERN.finditer(claim.text):
         original = m.group(0)
         bare_noun = m.group(1)
-        normalized = normalize_candidate_intro(bare_noun)
+        normalized = normalize_candidate_intro(
+            bare_noun,
+            strict_qualifier_matching=strict_qualifier_matching,
+        )
         if normalized:
             pairs.append((original, normalized))
     return pairs
@@ -1220,6 +1323,7 @@ def check_antecedent_basis(
     doc: TwPatentDocument,
     *,
     strict_plural_reference_matching: bool = False,
+    strict_qualifier_matching: bool = False,
 ) -> list[dict]:
     """TW antecedent-basis BFS walker (Phase 8b, ADR-092 + ADR-095).
 
@@ -1273,7 +1377,10 @@ def check_antecedent_basis(
         # ancestor wins.
         intros_by_term: dict[str, tuple[int, int]] = {}
         for depth, ancestor in enumerate(chain):
-            for _, normalized in extract_introductions_tw(ancestor):
+            for _, normalized in extract_introductions_tw(
+                ancestor,
+                strict_qualifier_matching=strict_qualifier_matching,
+            ):
                 intros_by_term.setdefault(normalized, (ancestor.id, depth))
 
         # Dedup by normalized term within a claim — repeated greedy
@@ -1303,7 +1410,10 @@ def check_antecedent_basis(
                 continue
 
             full_ref = f"{prefix}{raw_noun}"
-            normalized_term = normalize_reference_term(full_ref)
+            normalized_term = normalize_reference_term(
+                full_ref,
+                strict_qualifier_matching=strict_qualifier_matching,
+            )
             if not normalized_term:
                 continue
 
@@ -1347,7 +1457,8 @@ def check_antecedent_basis(
                 intro_was_plural = False
                 if ancestor_claim is not None:
                     for original, normalized in extract_introductions_tw(
-                        ancestor_claim
+                        ancestor_claim,
+                        strict_qualifier_matching=strict_qualifier_matching,
                     ):
                         if normalized != resolved_intro:
                             continue
