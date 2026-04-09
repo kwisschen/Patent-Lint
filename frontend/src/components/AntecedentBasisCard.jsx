@@ -4,25 +4,50 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AlertTriangle, ChevronRight } from 'lucide-react'
 
+// CJK reference-form prefixes used by the TW walker (該/所述/前述/該等/該些).
+// Matched without word boundaries because CJK text has no whitespace
+// breaks; the regex relies on the prefix character itself as the anchor.
+const CJK_REF_PREFIXES = ['該等', '該些', '所述', '前述', '該']
+
+function isCjkRefForm(term) {
+  return CJK_REF_PREFIXES.some((p) => term.startsWith(p))
+}
+
 function highlightTerms(text, terms) {
   if (!terms.length) return text
 
-  // Split terms: reference_forms already include prefix (the/said), bare terms need it added
+  // Split terms by language family. CJK reference forms are matched
+  // verbatim (no word boundaries, no the/said synthesis); English/Latin
+  // terms keep the original ``the X`` / ``said X`` synthesis path.
+  const cjkParts = []
   const refFormParts = []
   const bareParts = []
   for (const t of terms) {
     const escaped = t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-    if (/^(?:the|said)\s+/i.test(t)) {
+    if (isCjkRefForm(t)) {
+      cjkParts.push(escaped)
+    } else if (/^(?:the|said)\s+/i.test(t)) {
       refFormParts.push(escaped)
     } else {
       bareParts.push(escaped)
     }
   }
-  const alternatives = [...refFormParts]
+  const englishAlternatives = [...refFormParts]
   if (bareParts.length) {
-    alternatives.push(`(?:the|said)\\s+(?:${bareParts.join('|')})`)
+    englishAlternatives.push(`(?:the|said)\\s+(?:${bareParts.join('|')})`)
   }
-  const pattern = new RegExp(`\\b(?:${alternatives.join('|')})\\b`, 'gi')
+
+  // Build a single combined pattern: CJK alternatives match verbatim
+  // (no \b around them because \b doesn't fire between CJK chars in
+  // JavaScript regex), English alternatives are wrapped in word
+  // boundaries via a non-capturing alternation branch.
+  const cjkBranch = cjkParts.length ? `(?:${cjkParts.join('|')})` : null
+  const englishBranch = englishAlternatives.length
+    ? `(?:\\b(?:${englishAlternatives.join('|')})\\b)`
+    : null
+  const branches = [cjkBranch, englishBranch].filter(Boolean)
+  if (!branches.length) return text
+  const pattern = new RegExp(branches.join('|'), 'gi')
 
   const parts = []
   let lastIndex = 0
