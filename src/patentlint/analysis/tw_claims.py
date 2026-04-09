@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import re
 
-from patentlint.models import CheckItem, TwPatentDocument
+from patentlint.models import CheckItem, Claim, TwPatentDocument
 
 # Recognized TW dependency format patterns
 _TW_DEP_FORMAT = re.compile(
@@ -700,13 +700,44 @@ def check_claims_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckIt
 
 # ── Check 26 ─────────────────────────────────────────────────────────────
 
-# Introduction: 一 + noun (2-8 CJK characters)
-# Exclusion set extends phase7.md base pattern with conjunctions (及與和)
-# and particles (之的) that act as noun boundaries in patent claims.
-_INTRO_PATTERN = re.compile(r"一([^\s，。；：、及與和之的]{2,8})")
+# Phase 8b walker noun-character boundary set. Extends the phase7.md base
+# pattern with conjunctions (及與和) and particles (之的) that act as noun
+# boundaries in TW patent claims, plus 該 (literary determiner — never a
+# noun morpheme) so consecutive references like ``該控制器讀取該感測器``
+# split into two captures instead of one greedy span. The 2-16 character
+# window captures legitimate compound patent nouns like
+# 高頻基板用樹脂組成物 that the previous {2,8} cap truncated mid-word.
+_NOUN_CHARS = r"[^\s，。；：、及與和之的該]{2,16}"
 
-# Reference: 該/所述/前述 + noun (2-8 CJK characters)
-_REF_PATTERN = re.compile(r"(?:該|所述|前述)([^\s，。；：、及與和之的]{2,8})")
+# Introduction patterns — ordered longest-first so 至少一個 / 複數個 are
+# matched as single tokens before their shorter prefixes (一 / 複數). The
+# regex returns the noun via group 1; the (?:...) alternation in group 0
+# carries the quantifier prefix (used by the walker only for diagnostic
+# purposes).
+#
+# The bare ``一`` alternative carries a negative lookbehind for ``第``
+# so it does NOT match the ordinal ``第一X`` (otherwise ``第一剛輪`` would
+# be parsed as quantifier ``一`` + noun ``剛輪`` and the legitimate
+# ``一第一剛輪`` introduction would be mis-attributed to ``剛輪``).
+_INTRO_MULTI_QUANTIFIERS = (
+    "至少一個", "至少一",
+    "一個", "一種", "一對",
+    "複數個", "多個", "數個",
+    "複數",
+)
+_INTRO_PATTERN = re.compile(
+    r"(?:" + "|".join(_INTRO_MULTI_QUANTIFIERS) + r"|(?<!第)一)"
+    + f"({_NOUN_CHARS})"
+)
+
+# Reference: 該/所述/前述/該等/該些 + noun (2-16 CJK characters). Captured
+# with named groups so the walker can preserve the original prefix when
+# constructing finding records.
+_REFERENCE_PREFIXES = ("該等", "該些", "所述", "前述", "該")
+_REF_PATTERN_CAPTURE = re.compile(
+    r"(?P<prefix>" + "|".join(_REFERENCE_PREFIXES) + r")"
+    + f"(?P<noun>{_NOUN_CHARS})"
+)
 
 
 # ── Phase 8b TW walker — reference-term normalization (ADR-095) ──────────
@@ -740,6 +771,12 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         # Partial captures — single-character fragments that indicate the
         # regex stopped mid-word. Ordered after multi-char tokens.
         "包", "通", "經", "藉",
+        # Reference-form prefix fragments stranded by interior cuts.
+        # When clean_noun_phrase_tw cuts ``電子組件所包含`` at 包含, the
+        # leading-of-the-stripped-prefix character ``所`` is left behind
+        # as a stray. Same for 前 (start of 前述). Risk: 場所/研究所 end
+        # in 所 — false positive is rare in claim language.
+        "所", "前",
     ),
     key=len,
     reverse=True,
@@ -781,13 +818,57 @@ _PLURAL_REFERENCE_PREFIXES: tuple[str, ...] = tuple(sorted(
 ))
 
 
+# Interior-boundary tokens — when one of these multi-char tokens appears
+# mid-noun the walker truncates the noun at that point. Distinct from
+# ``_TRAILING_VERB_DENYLIST`` (suffix stripping); these are interior cuts
+# applied BEFORE the trailing-strip pass. Necessary because the regex
+# noun capture is greedy: ``該底座設有一孔洞`` captures
+# ``底座設有一孔洞``, and the trailing-strip alone cannot recover
+# ``底座`` because the trailing token is ``孔洞`` (a real noun, not a
+# verb).
+#
+# Two families:
+#   1. Verb tokens (設有/包含/...) — split greedy noun spans at the verb.
+#   2. Reference-form prefixes (所述/前述/該等/該些) — split greedy noun
+#      spans when a downstream reference begins inside the captured
+#      window. The single-char 該 is handled in the regex character
+#      class itself; multi-char prefixes need this interior cut because
+#      the regex would otherwise consume past them.
+#
+# In-claim verbs like 驅動/讀取/輸出/連接 are NOT in this set: they
+# legitimately appear inside compound nouns (動力輸出系統, 連接器, 數據輸出
+# 介面). The walker handles those cases via longest-intro-prefix matching
+# instead — see ``check_antecedent_basis``.
+#
+# Ordered longest-first so 設有/包含 strip before single-char tokens.
+_INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
+    (
+        # Verbs
+        "設有", "包含", "包括", "具有", "含有", "具備",
+        "係為", "係於",
+        "為", "是", "係",
+        # Reference-form prefixes (multi-char)
+        "所述", "前述", "該等", "該些",
+    ),
+    key=len,
+    reverse=True,
+))
+
+
 def clean_noun_phrase_tw(text: str) -> str:
     """Strip trailing verbs and conjunction fragments from a TW reference term.
 
-    Iteratively strips the longest matching suffix in
-    ``_TRAILING_VERB_DENYLIST``. Repeats until no further match is found.
-    This handles parser-bug captures like ``諧波減速模組還包`` (strips
-    ``包`` → ``諧波減速模組還`` → strips ``還`` → ``諧波減速模組``).
+    Two-phase cleanup:
+
+    1. Interior-verb truncation — find the first occurrence of any
+       ``_INTERIOR_VERB_BOUNDARIES`` token and cut everything from that
+       position onward. Recovers ``底座`` from greedy regex captures
+       like ``底座設有一孔洞``.
+
+    2. Trailing-verb stripping — iteratively remove the longest matching
+       suffix in ``_TRAILING_VERB_DENYLIST``. Handles parser-bug
+       captures like ``諧波減速模組還包`` (strips ``包`` → ``諧波減速模組還``
+       → strips ``還`` → ``諧波減速模組``).
 
     Note: the walker MAY leave a leading char of the next clause when
     that char does not match any denylist entry (e.g., ``遊戲控制器通過第``
@@ -799,7 +880,18 @@ def clean_noun_phrase_tw(text: str) -> str:
     """
     if not text:
         return text
-    current = text
+
+    # Phase 1: interior-verb truncation. Find the EARLIEST verb-boundary
+    # occurrence so multi-verb texts cut at the first verb only.
+    earliest_idx: int | None = None
+    for verb in _INTERIOR_VERB_BOUNDARIES:
+        idx = text.find(verb)
+        if idx > 1:  # require ≥2 chars before the verb
+            if earliest_idx is None or idx < earliest_idx:
+                earliest_idx = idx
+    current = text[:earliest_idx] if earliest_idx is not None else text
+
+    # Phase 2: trailing-verb stripping (iterative).
     # Safety bound to prevent pathological iteration.
     for _ in range(16):
         stripped = False
@@ -883,61 +975,199 @@ def detect_plural_reference(text: str) -> bool:
     return any(text.startswith(p) for p in _PLURAL_REFERENCE_PREFIXES)
 
 
-def check_antecedent_basis(doc: TwPatentDocument) -> list[CheckItem]:
-    """Check antecedent basis: 該/所述/前述 + noun needs matching 一 + noun in chain."""
+def get_ancestor_chain_tw(claim: Claim, all_claims: list[Claim]) -> list[Claim]:
+    """Return [claim, ...ancestors] walking the full multi-parent BFS.
+
+    Mirrors ``claims.get_ancestor_chain`` (US walker) — multi-dependent
+    claims (e.g. ``如請求項1或3所述``) collect introductions from every
+    ancestor path. Cycle protection via the ``visited`` set means a
+    self-referencing or circular dependency cannot loop forever.
+
+    Per ADR-092, the walker uses the FULL ancestor chain (not just the
+    immediate parent) to resolve introductions, while preamble checks use
+    the immediate parent. This is intentional: 引用記載型式 cross-category
+    dependents legitimately reference components introduced in any
+    ancestor along the chain.
+    """
+    claims_by_id = {c.id: c for c in all_claims}
+    chain: list[Claim] = [claim]
+    visited: set[int] = {claim.id}
+    queue: list[int] = list(claim.dependencies)
+    while queue:
+        parent_id = queue.pop(0)
+        if parent_id in visited:
+            continue
+        visited.add(parent_id)
+        parent = claims_by_id.get(parent_id)
+        if parent is None:
+            continue
+        chain.append(parent)
+        queue.extend(parent.dependencies)
+    return chain
+
+
+def extract_introductions_tw(claim: Claim) -> list[tuple[str, str]]:
+    """Extract introductions from a TW claim as (original, normalized) pairs.
+
+    Returns the bare noun captured after the quantifier (e.g.
+    ``一第一電極`` → original=``第一電極``, normalized=
+    ``normalize_candidate_intro("第一電極")``). Both fields are surfaced
+    so the walker can present the writer's original phrasing in
+    diagnostic output while keeping the normalized form for matching.
+    """
+    pairs: list[tuple[str, str]] = []
+    for m in _INTRO_PATTERN.finditer(claim.text):
+        original = m.group(1)
+        normalized = normalize_candidate_intro(original)
+        if normalized:
+            pairs.append((original, normalized))
+    return pairs
+
+
+def check_antecedent_basis(
+    doc: TwPatentDocument,
+    *,
+    strict_plural_reference_matching: bool = False,
+) -> list[dict]:
+    """TW antecedent-basis BFS walker (Phase 8b, ADR-092 + ADR-095).
+
+    Replaces the legacy regex-based check with a per-occurrence walker
+    that mirrors the US walker's six-field finding shape:
+
+        {
+            "claim_id":       int,
+            "term":           str,   # normalized noun (matching key)
+            "reference_form": str,   # 該/所述/前述 + original noun
+            "claim_text":     str,
+            "suggested_match": dict | None,  # filled by Commit 5
+            "cross_ref":      None,
+        }
+
+    Resolution algorithm:
+      1. For each claim C, walk the full ancestor BFS chain
+         (``get_ancestor_chain_tw``) per ADR-092.
+      2. Collect introductions from every ancestor as a dict
+         ``intros_by_term`` keyed on the normalized noun, with the
+         shallowest (first-seen) ancestor claim id as the value.
+      3. For each definite reference (該/所述/前述 + noun) in C, normalize
+         via ``normalize_reference_term`` and look up the normalized term
+         in ``intros_by_term``. If the term is absent, emit a finding.
+      4. The strict_plural_reference_matching escape hatch (default
+         False) additionally flags references that explicitly mark plural
+         antecedence (該等/該些/...) when the matched intro was singular.
+
+    Findings are deduped by ``(claim_id, term, reference_form)`` and
+    sorted by ``(claim_id, term, reference_form)``.
+
+    The walker is the data source: ``pipeline._run_tw_pipeline``
+    populates ``AnalysisResult.antecedent_basis_issues`` with the return
+    value, then ``to_report_data`` converts it into a CheckItem in the
+    same way as US.
+    """
     claims = doc.claims
     if not claims:
-        return [CheckItem(
-            status="pass",
-            message="All referenced terms have antecedent basis.",
-            message_key="check.tw.claims.antecedentBasis.pass",
-            reference="專利審查基準",
-        )]
+        return []
 
-    claims_by_id = {c.id: c for c in claims}
+    issues: list[dict] = []
 
-    def _collect_introductions(claim_id: int, visited: set[int] | None = None) -> set[str]:
-        """Collect all 一+noun introductions from claim and its parent chain."""
-        if visited is None:
-            visited = set()
-        if claim_id in visited:
-            return set()
-        visited.add(claim_id)
-        claim = claims_by_id.get(claim_id)
-        if not claim:
-            return set()
-        intros = set(_INTRO_PATTERN.findall(claim.text))
-        for dep_id in claim.dependencies:
-            intros |= _collect_introductions(dep_id, visited)
-        return intros
-
-    flagged_terms: set[str] = set()
     for claim in claims:
-        intros = _collect_introductions(claim.id)
-        refs = _REF_PATTERN.findall(claim.text)
-        for ref_noun in refs:
-            # Greedy regex may capture beyond the noun (e.g., "底座設有一凹槽"
-            # instead of "底座"). Use 2-char prefix matching: Chinese nouns
-            # are typically 2+ chars, so matching first 2 chars is sufficient.
-            ref_head = ref_noun[:2]
-            if not any(intro[:2] == ref_head for intro in intros):
-                flagged_terms.add(ref_noun)
+        chain = get_ancestor_chain_tw(claim, claims)
 
-    if flagged_terms:
-        sorted_terms = sorted(flagged_terms)
-        return [CheckItem(
-            status="verify",
-            message=f"{len(sorted_terms)} term(s) may lack antecedent basis.",
-            message_key="check.tw.claims.antecedentBasis.verify",
-            details=", ".join(sorted_terms),
-            details_key="details.tw.antecedentBasis",
-            details_params={"count": str(len(sorted_terms))},
-            reference="專利審查基準",
-        )]
+        # Map normalized intro term → shallowest ancestor claim id.
+        # Iteration order (chain[0] = current claim, chain[1] = nearest
+        # parent, ...) means setdefault preserves the shallowest.
+        intros_by_term: dict[str, int] = {}
+        for ancestor in chain:
+            for _, normalized in extract_introductions_tw(ancestor):
+                intros_by_term.setdefault(normalized, ancestor.id)
 
-    return [CheckItem(
-        status="pass",
-        message="All referenced terms have antecedent basis.",
-        message_key="check.tw.claims.antecedentBasis.pass",
-        reference="專利審查基準",
-    )]
+        # Dedup by normalized term within a claim — repeated greedy
+        # captures of the same head noun (``該齒輪為金屬, 該齒輪設有齒``)
+        # collapse to one finding. The displayable reference_form is
+        # ``prefix + normalized_term`` so identical references print
+        # identically across the report.
+        seen_terms: set[str] = set()
+        for m in _REF_PATTERN_CAPTURE.finditer(claim.text):
+            prefix = m.group("prefix")
+            raw_noun = m.group("noun")
+            if not raw_noun:
+                continue
+
+            full_ref = f"{prefix}{raw_noun}"
+            normalized_term = normalize_reference_term(full_ref)
+            if not normalized_term:
+                continue
+
+            if normalized_term in seen_terms:
+                continue
+            seen_terms.add(normalized_term)
+
+            reference_form = f"{prefix}{normalized_term}"
+
+            # Resolution order:
+            #   1. Exact normalized match against any ancestor intro.
+            #   2. Longest-intro-prefix match — handles greedy regex
+            #      captures that grabbed an in-claim verb past the head
+            #      noun (e.g. captured ``控制器讀取`` vs intro 控制器).
+            resolved_intro: str | None = None
+            if normalized_term in intros_by_term:
+                resolved_intro = normalized_term
+            else:
+                best_len = 0
+                for intro in intros_by_term:
+                    if (
+                        len(intro) >= 2
+                        and len(intro) > best_len
+                        and normalized_term.startswith(intro)
+                    ):
+                        best_len = len(intro)
+                        resolved_intro = intro
+
+            if resolved_intro is not None:
+                # Number-neutral match satisfies the antecedent under
+                # default semantics. Strict mode additionally requires
+                # the reference's plurality to match the intro's.
+                if not strict_plural_reference_matching:
+                    continue
+                if not detect_plural_reference(full_ref):
+                    continue
+                ancestor_id = intros_by_term[resolved_intro]
+                ancestor_claim = next(
+                    (c for c in chain if c.id == ancestor_id), None
+                )
+                intro_was_plural = False
+                if ancestor_claim is not None:
+                    for original, normalized in extract_introductions_tw(
+                        ancestor_claim
+                    ):
+                        if normalized != resolved_intro:
+                            continue
+                        if full_ref_starts_with_plural(original):
+                            intro_was_plural = True
+                            break
+                if intro_was_plural:
+                    continue
+
+            issues.append(
+                {
+                    "claim_id": claim.id,
+                    "term": normalized_term,
+                    "reference_form": reference_form,
+                    "claim_text": claim.text,
+                    "suggested_match": None,
+                    "cross_ref": None,
+                }
+            )
+
+    issues.sort(key=lambda x: (x["claim_id"], x["term"], x["reference_form"]))
+    return issues
+
+
+def full_ref_starts_with_plural(text: str) -> bool:
+    """True iff ``text`` begins with a plural quantifier marker.
+
+    Helper for the strict_plural_reference_matching escape hatch. Kept
+    module-level (not nested in the walker) so the import surface stays
+    flat for tests.
+    """
+    return text.startswith(("複數", "多個", "數個", "複數個"))
