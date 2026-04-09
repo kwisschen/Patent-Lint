@@ -1018,16 +1018,23 @@ def get_ancestor_chain_tw(claim: Claim, all_claims: list[Claim]) -> list[Claim]:
 def extract_introductions_tw(claim: Claim) -> list[tuple[str, str]]:
     """Extract introductions from a TW claim as (original, normalized) pairs.
 
-    Returns the bare noun captured after the quantifier (e.g.
-    ``一第一電極`` → original=``第一電極``, normalized=
-    ``normalize_candidate_intro("第一電極")``). Both fields are surfaced
-    so the walker can present the writer's original phrasing in
-    diagnostic output while keeping the normalized form for matching.
+    ``original`` is the FULL intro span captured by ``_INTRO_PATTERN``,
+    quantifier prefix included (e.g. ``一第一電極`` → original=``一第一電極``,
+    ``複數齒輪`` → original=``複數齒輪``). Preserving the quantifier lets
+    the walker's strict-plural escape hatch detect whether the intro was
+    plural by inspecting the leading characters via
+    ``full_ref_starts_with_plural``.
+
+    ``normalized`` is the result of running ``normalize_candidate_intro``
+    on the bare noun (group 1), which strips quantifiers and trailing
+    verbs so it can be compared symmetrically against normalized
+    reference terms.
     """
     pairs: list[tuple[str, str]] = []
     for m in _INTRO_PATTERN.finditer(claim.text):
-        original = m.group(1)
-        normalized = normalize_candidate_intro(original)
+        original = m.group(0)
+        bare_noun = m.group(1)
+        normalized = normalize_candidate_intro(bare_noun)
         if normalized:
             pairs.append((original, normalized))
     return pairs
