@@ -837,6 +837,12 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         "所", "前",
         # Resultative particles (added 2026-04-09)
         "到", "出",
+        # === Added 2026-04-09 round 4 ===
+        # 位 fragment of truncated 位於 verb (regex stopped at 於 which
+        # is in the _NOUN_CHARS exclusion class). Compound nouns
+        # 位置/位元/數位/第一位/第二位 are protected by the residual ≥ 3
+        # guard via _NOUNLIKE_SINGLE_CHAR_SUFFIXES below.
+        "位",
         # Adverbs that ended up trailing after interior cut
         "分別", "皆",
         # Positional particle (parallel to 時)
@@ -854,6 +860,16 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
 # 所 stays here because its compound-noun forms (研究所, 場所, 事務所,
 # 避難所) are all position-[-1] suffixes of the compound.
 #
+# 位 added 2026-04-09 round 4: 位 appears as the fragment of a
+# truncated 位於 verb when the regex stops at 於 (which is already in
+# the _NOUN_CHARS exclusion class). Adding it to trailing strip with
+# the residual ≥ 3 guard catches the truncation
+# (第二容置空間(225)位 → 第二容置空間(225)) while preserving compound
+# forms 位置/位元/數位/第一位/第二位 because their residual after
+# stripping 位 would be ≤ 2 (位置 → 1, 第一位 → 2). Grep confirmed
+# 位置 ×392, 數位 ×197, 第一位 ×3, 第二位 ×2 in the 10-fixture corpus,
+# all preserved by the guard.
+#
 # 前 is NOT in this set despite being a noun morpheme in 以前/之前,
 # because those grammatical adverbs are rare in claim text while 前
 # appears overwhelmingly as a PREFIX in mechanical patent terms
@@ -864,7 +880,7 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
 # (以/之) is accepted as a known limit; a Phase 9 follow-up may
 # generalize this set into a compound-noun allowlist that handles
 # both 所-suffix and 前-suffix cases without the prefix/suffix conflict.
-_NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset({"所"})
+_NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset({"所", "位"})
 
 # ADR-095 Rule 2: leading quantifiers (stripped from both sides).
 # Ordered longest-first so 至少一個 is stripped as a single token before
@@ -1001,9 +1017,30 @@ _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
         #   傳輸: "to transmit". 傳輸器/傳輸線/傳輸帶 absent (0).
         "到", "形成", "鎖合", "傳輸",
 
+        # === Added 2026-04-09 round 4 (round 3 spot-check residuals) ===
+        # Each verb risk-reviewed against the 10-fixture grep:
+        #   連接: 連接器/連接部/第一連接部/第二連接部/第三連接部
+        #         already in _INTERIOR_CUT_EXCEPTIONS (round 1; grep
+        #         confirms 連接器 ×4, 連接部 ×72, 第一/第二/第三連接部
+        #         ×13/13/21 in 109P001046). Round 2's prefix-aware
+        #         protection covers all 連接X compounds — a captured
+        #         X連接部連接 preserves X連接部 via the exception
+        #         prefix and cuts at the second 連接 via the remainder
+        #         search (load-bearing test: 第一連接部連接 → 第一連接部).
+        #   旋轉: 旋轉編碼器 already in exceptions (round 1; grep
+        #         confirms ×5 in 110P000641). Other 旋轉X compounds
+        #         (旋轉軸/件/器/盤/座) absent (0) per grep — no new
+        #         exceptions needed.
+        #   帶動: 帶動輪 ×2 in 110P000641 per grep — added to
+        #         _INTERIOR_CUT_EXCEPTIONS in round 4 block below.
+        #         帶動器/帶動件 absent (0).
+        #   篩選: 篩選器/篩選件/篩選網 all absent (0) per grep — no
+        #         compound-noun risk, no new exceptions needed.
+        "連接", "旋轉", "帶動", "篩選",
+
         # NOT added (interior to legitimate noun compounds):
-        # 連接 (連接器/連接部), 編碼 (編碼器), 識別 (識別碼/識別資料),
-        # 通訊 (通訊模組), 傳動 (傳動件), 旋轉 (旋轉編碼器),
+        # 編碼 (編碼器), 識別 (識別碼/識別資料),
+        # 通訊 (通訊模組), 傳動 (傳動件),
         # 接收 (接收器), 輸出 (輸出裝置), 輸入 (輸入裝置),
         # 儲存 (儲存器), 認證 (認證單元), 銜接 (第一銜接部)
         # These are caught by their LONGER multi-char forms above
@@ -1076,6 +1113,13 @@ _INTERIOR_CUT_EXCEPTIONS: frozenset[str] = frozenset({
     # 染色墨水: 110P000633 fixture has 40 occurrences.
     "放大器",
     "染色墨水",
+
+    # === Added 2026-04-09 round 4 (coordinated with new boundary verbs) ===
+    # When 帶動 is added as an interior-cut verb, 帶動輪 must be
+    # protected first. Grep confirmed 帶動輪 ×2 in 110P000641.
+    # Other 帶動X compounds (帶動器, 帶動件) absent (0) per grep —
+    # not added speculatively.
+    "帶動輪",
 })
 
 
