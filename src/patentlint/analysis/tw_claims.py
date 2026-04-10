@@ -1927,7 +1927,19 @@ _DE_NOUN_RE = re.compile(
 )
 
 _BARE_AFTER_VERB_PATTERN = re.compile(
-    r'(?:具有|設置|形成)'
+    r'(?:'
+    # Structural
+    r'具有|包含|包括|含有|設有'
+    r'|'
+    # Installation
+    r'設置|配置|安裝|裝設'
+    r'|'
+    # Formation
+    r'形成|構成'
+    r'|'
+    # Provision/connection
+    r'提供|連接|連結'
+    r')'
     r'(第[一二三四五六七八九十\d]+' + _CJK_NO_DE + r'+(?:\([A-Za-z0-9]+\))?'
     r'|' + _CJK_NO_DE + r'+\([A-Za-z0-9]+\))'
     r'(?![的之])'

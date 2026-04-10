@@ -1063,6 +1063,48 @@ class TestSupplementaryIntrosF6:
         norms = [n for _, n in intros]
         assert norms.count("第一扣接部") == 1
 
+    def test_bare_verb_bao_han(self):
+        """包含第一元件 → introduces 第一元件."""
+        text = "所述基板包含第一元件"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "第一元件" in norms
+
+    def test_bare_verb_she_you(self):
+        """設有第一凹槽(301) → introduces 第一凹槽."""
+        text = "所述框架設有第一凹槽(301)"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "第一凹槽" in norms
+
+    def test_bare_verb_pei_zhi(self):
+        """配置第一電極 → introduces 第一電極."""
+        text = "所述控制模組配置第一電極"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "第一電極" in norms
+
+    def test_bare_verb_an_zhuang(self):
+        """安裝第一螺栓(50) → introduces 第一螺栓."""
+        text = "所述蓋體安裝第一螺栓(50)"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "第一螺栓" in norms
+
+    def test_bare_verb_lian_jie(self):
+        """連接第一端子(101) → introduces 第一端子."""
+        text = "所述導線連接第一端子(101)"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "第一端子" in norms
+
+    def test_bare_verb_ti_gong(self):
+        """提供第一信號 → introduces 第一信號."""
+        text = "所述處理器提供第一信號"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "第一信號" in norms
+
 
 class TestSupplementaryIntrosF5a:
     """F5a: Ref-prefix possessive 所述X的Y."""
