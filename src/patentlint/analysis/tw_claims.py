@@ -1901,6 +1901,25 @@ _VP_MODIFIER_PATTERN = re.compile(
     r'相配合的([\u4e00-\u9fff]{2,}(?:\([A-Za-z0-9]+\))?)',
 )
 
+# CJK char class excluding 的 (U+7684) — prevents captures spanning through 的
+_CJK_NO_DE = r'[\u4e00-\u7683\u7685-\u9fff]'
+
+_PARTICIPIAL_YI_DE_PATTERN = re.compile(
+    r'一[\u4e00-\u9fff]+?的(' + _CJK_NO_DE + r'{2,}(?:\([A-Za-z0-9]+\))?)'
+)
+
+_POST_DE_ORDINAL_PATTERN = re.compile(
+    r'的(第[一二三四五六七八九十\d]+' + _CJK_NO_DE + r'+(?:\([A-Za-z0-9]+\))?)'
+)
+
+_DE_NOUN_RE = re.compile(
+    r'的(' + _CJK_NO_DE + r'{2,}(?:\([A-Za-z0-9]+\))?)'
+)
+
+_CLAUSE_BOUNDARY_RE = re.compile(r'[；，、。]')
+
+_REF_PREFIX_SET = ('所述', '該', '前述')
+
 
 def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
     """Extract bare-noun introductions from supplementary patterns.
@@ -1933,6 +1952,50 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
         cjk_len = sum(1 for c in normalized if '\u4e00' <= c <= '\u9fff')
         if cjk_len < 3:
             continue
+        results.append((m.group(0), normalized))
+
+    # F7a: 形成於X的Y — locative intro (last 的NOUN before clause boundary)
+    for pos in (i for i, ch in enumerate(text) if text[i:i + 3] == '形成於'):
+        clause_start = pos + 3
+        boundary = _CLAUSE_BOUNDARY_RE.search(text, clause_start)
+        clause_end = boundary.start() if boundary else len(text)
+        clause = text[clause_start:clause_end]
+        # Find ALL 的NOUN in the clause, take the last
+        last_noun = None
+        last_original = None
+        for dm in _DE_NOUN_RE.finditer(clause):
+            last_noun = dm.group(1)
+            last_original = text[clause_start + dm.start():clause_start + dm.end()]
+        if last_noun is None:
+            continue
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', last_noun)
+        # Scoping: ≥3 CJK chars AND no ref prefix
+        cjk_len = sum(1 for c in normalized if '\u4e00' <= c <= '\u9fff')
+        if cjk_len < 3:
+            continue
+        if any(normalized.startswith(p) for p in _REF_PREFIX_SET):
+            continue
+        results.append((last_original, normalized))
+
+    # F7b: 一V的Y — participial intro
+    for m in _PARTICIPIAL_YI_DE_PATTERN.finditer(text):
+        noun = m.group(1)
+        stripped = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        # Run through clean_noun_phrase_tw to strip trailing verbs
+        normalized = clean_noun_phrase_tw(stripped)
+        if not normalized:
+            continue
+        has_numeral = '(' in noun
+        has_ordinal = normalized.startswith('第')
+        cjk_len = sum(1 for c in normalized if '\u4e00' <= c <= '\u9fff')
+        if not (has_ordinal or has_numeral or cjk_len >= 3):
+            continue
+        results.append((m.group(0), normalized))
+
+    # F7c: 的第Y — post-的 ordinal noun
+    for m in _POST_DE_ORDINAL_PATTERN.finditer(text):
+        noun = m.group(1)
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
         results.append((m.group(0), normalized))
 
     return results
