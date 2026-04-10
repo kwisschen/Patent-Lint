@@ -882,6 +882,14 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         "所", "前",
         # Resultative particles (added 2026-04-09)
         "到", "出",
+        # === Added 2026-04-10 F2 ===
+        # 介: verb particle from 介於 ("falls between"). Corpus
+        #     attestation: 第一夾角介於 on 110P000158 c1/c3. Compound
+        #     nouns with medial 介 (使用者介面, 操作介面, 介電) have 介
+        #     in non-trailing position — unaffected by trailing strip.
+        #     中介裝置 (介 at pos 1) has residual 中 (1 char < 3),
+        #     protected by general residual guard.
+        "介",
         # === Added 2026-04-09 round 4 ===
         # 位 fragment of truncated 位於 verb (regex stopped at 於 which
         # is in the _NOUN_CHARS exclusion class). Compound nouns

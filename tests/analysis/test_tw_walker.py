@@ -567,3 +567,48 @@ class TestDefinitionalIntro:
         assert any("第二長度" in t for t in terms), (
             "Expected finding for 第二長度(L2) but got: " + str(terms)
         )
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# Trailing verb 介 (F2)
+# ─────────────────────────────────────────────────────────────────────────
+
+
+class TestTrailingVerb介:
+    """Tests for 介 in _TRAILING_VERB_DENYLIST."""
+
+    def test_介_stripped_from_intro(self):
+        """一第一夾角介於 → introduces 第一夾角 (介 stripped)."""
+        pairs = extract_introductions_tw(
+            _claim(1, "1. 一種裝置，其與一水平線的一第一夾角介於0.1至5度之間。"),
+        )
+        nouns = [n for _, n in pairs]
+        assert "第一夾角" in nouns, f"Expected 第一夾角 in {nouns}"
+
+    def test_中介_not_stripped(self):
+        """中介裝置 — residual guard protects: 中 is 1 char < 3."""
+        pairs = extract_introductions_tw(
+            _claim(1, "1. 一種系統，包含一中介裝置。"),
+        )
+        nouns = [n for _, n in pairs]
+        assert "中介裝置" in nouns, f"Expected 中介裝置 in {nouns}"
+
+    def test_antecedent_resolved_via_介_strip(self):
+        """Claim 1 一第一夾角介於...; claim 2 所述第一夾角 — 0 findings."""
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種裝置，其與一水平線的一第一夾角介於0.1至5度之間。",
+            ),
+            _claim(
+                2,
+                "2. 如請求項1所述之裝置，其中所述第一夾角為2度。",
+                independent=False,
+                deps=[1],
+            ),
+        ])
+        findings = check_antecedent_basis(doc)
+        assert findings == [], (
+            f"Expected 0 findings but got {len(findings)}: "
+            + ", ".join(f["term"] for f in findings)
+        )
