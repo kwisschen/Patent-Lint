@@ -1041,7 +1041,7 @@ class TestSupplementaryIntrosF6:
         text = "聚苯醚樹脂具有至少一改性基"
         intros = extract_introductions_tw(_claim(1, text))
         norms = [n for _, n in intros]
-        # 改性基 might be captured by _INTRO_PATTERN via 一改性基, but NOT by F6
+        assert "改性基" in norms  # captured by _INTRO_PATTERN via 一改性基, not F6
 
     def test_bare_verb_reject_attributive(self):
         """具有第一直徑的管道 → 第一直徑 NOT captured (followed by 的)."""
@@ -1173,10 +1173,8 @@ class TestSupplementaryIntrosF5b:
         This might be captured by F7b instead, but F5b specifically requires X(N)."""
         text = "一容器本體的開口部"
         intros = extract_introductions_tw(_claim(1, text))
-        # F7b would capture this: 一容器本體的(開口部) — lazy match
-        # F5b requires (numeral) on X, so F5b doesn't fire
-        # But F7b does fire → 開口部 IS in norms (via F7b, not F5b)
-        # This test just verifies the function works overall
+        norms = [n for _, n in intros]
+        assert "開口部" in norms  # captured by F7b, not F5b
 
     def test_yi_paren_verb_cleaned(self):
         """一容器(100)的蓋體連接於本體 → 蓋體 captured (連接 stripped by clean)."""
