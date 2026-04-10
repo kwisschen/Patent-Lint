@@ -955,6 +955,22 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         "分別", "皆",
         # Positional particle (parallel to 時)
         "處",
+        # === Added 2026-04-10 F3 ===
+        # 至: preposition ("to/until") from V至 patterns like 解鎖指令至
+        #     (110P000868 c8) and 傳送至 (109P001046 c12). Corpus safety:
+        #     min residual 6 across 65 occurrences. No compound-noun risk.
+        "至",
+        # 依序: adverb ("in order") from 第二方向依序 (110P000633 c10/c19).
+        #     Corpus safety: min residual 15 across 12 occurrences. No
+        #     compound-noun risk.
+        "依序",
+        # 擷取: verb ("capture/acquire") from 影像擷取裝置擷取
+        #     (110P000633 c3 after ref-marker truncation). Corpus safety:
+        #     min residual 2 (影像擷取 → 影像). Protected by residual ≥ 3
+        #     guard via _NOUNLIKE_GUARDED_SUFFIXES below — 影像擷取 (4 chars,
+        #     residual 2 < 3) preserved, 影像擷取裝置擷取 (8 chars, residual
+        #     6 ≥ 3) stripped.
+        "擷取",
     ),
     key=len,
     reverse=True,
@@ -1036,7 +1052,11 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
 # 內側面 is 3-char with 內 at position 0 (same protection). Listed in
 # _NOUNLIKE_RELAXED_SUFFIXES — see below.
 _NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset(
-    {"所", "位", "中", "後", "用", "上", "內"}
+    {"所", "位", "中", "後", "用", "上", "內",
+     # F3: 擷取 (2-char) — despite the set name, the residual guard
+     # mechanism works with any length. 影像擷取 (4 chars, residual 2)
+     # protected; 影像擷取裝置擷取 (8 chars, residual 6) strips correctly.
+     "擷取"}
 )
 
 # Relaxed-guard subset: members of _NOUNLIKE_SINGLE_CHAR_SUFFIXES that
@@ -1265,6 +1285,15 @@ _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
         #         各地. Grep: 各地 ×3 (all in 110P000368, all
         #         contamination patterns). 各地區/各地方 ×0 — safe.
         "產生", "各地",
+
+        # === Added 2026-04-10 F3 ===
+        # 依序: adverb ("in order") in V依序V patterns. Needed as
+        #       interior cut (not just trailing strip) because the
+        #       greedy {2,12} capture extends past 依序 into the
+        #       following clause: 第二方向依序對多個所述焊 → should cut
+        #       at 依序 to extract 第二方向. Risk: 依序器/依序件 all 0 in
+        #       10-fixture corpus, no exception coordination needed.
+        "依序",
 
         # NOT added (interior to legitimate noun compounds):
         # 編碼 (編碼器), 識別 (識別碼/識別資料),
