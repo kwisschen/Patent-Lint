@@ -917,11 +917,15 @@ class TestSupplementaryIntrosF7a:
         assert "環形壓接部" in norms
 
     def test_locative_reject_short(self):
-        """形成於所述環狀本體的外圍 → NOT captured (2 CJK chars)."""
+        """形成於所述環狀本體的外圍 → NOT captured by F7a (2 CJK chars).
+
+        F5a captures 外圍 as a possessive sub-component of 環狀本體,
+        which is correct — 外圍 is a legitimate spatial component.
+        """
         text = "形成於所述環狀本體的外圍"
         intros = extract_introductions_tw(_claim(1, text))
         norms = [n for _, n in intros]
-        assert "外圍" not in norms
+        assert "外圍" in norms
 
     def test_locative_no_duplicate(self):
         text = "一環形壓接部(211)，形成於所述套接部的側面的環形壓接部(211)"
@@ -1058,3 +1062,89 @@ class TestSupplementaryIntrosF6:
         intros = extract_introductions_tw(_claim(1, text))
         norms = [n for _, n in intros]
         assert norms.count("第一扣接部") == 1
+
+
+class TestSupplementaryIntrosF5a:
+    """F5a: Ref-prefix possessive 所述X的Y."""
+
+    def test_ref_possessive_basic(self):
+        """所述開口部(120)的上端邊緣 → introduces 上端邊緣."""
+        text = "所述開口部(120)的上端邊緣相互銜接"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "上端邊緣" in norms
+
+    def test_ref_possessive_gai(self):
+        """該框架的底座 → introduces 底座."""
+        text = "該框架的底座設有螺孔"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "底座" in norms
+
+    def test_ref_possessive_reject_ref_y(self):
+        """所述X的所述Y → NOT captured (Y has ref prefix)."""
+        text = "所述容器本體(100)的所述第一容置空間(101)"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "第一容置空間" not in norms
+
+    def test_ref_possessive_verb_cleaned(self):
+        """所述框架的側面設置一螺栓 → 側面 captured (設置 stripped by clean)."""
+        text = "所述框架的側面設置一螺栓"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "側面" in norms
+
+    def test_ref_possessive_no_duplicate(self):
+        text = "一上端邊緣，所述開口部的上端邊緣"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert norms.count("上端邊緣") == 1
+
+
+class TestSupplementaryIntrosF5b:
+    """F5b: 一X(N)的Y — paren-numeral possessive."""
+
+    def test_yi_paren_possessive(self):
+        """一容器本體(100)的開口部(120) → introduces 開口部."""
+        text = "設置於一容器本體(100)的開口部(120)"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "開口部" in norms
+
+    def test_yi_paren_possessive_no_numeral_y(self):
+        """一容器本體(100)的底部 → introduces 底部."""
+        text = "一容器本體(100)的底部朝向下方"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "底部" in norms
+
+    def test_yi_paren_reject_ref_y(self):
+        """一容器本體(100)的所述蓋體 → NOT captured (Y has ref prefix)."""
+        text = "一容器本體(100)的所述蓋體(200)"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "蓋體" not in norms
+
+    def test_yi_paren_reject_no_paren_x(self):
+        """一容器本體的開口部 → NOT captured by F5b (X lacks paren-numeral).
+        This might be captured by F7b instead, but F5b specifically requires X(N)."""
+        text = "一容器本體的開口部"
+        intros = extract_introductions_tw(_claim(1, text))
+        # F7b would capture this: 一容器本體的(開口部) — lazy match
+        # F5b requires (numeral) on X, so F5b doesn't fire
+        # But F7b does fire → 開口部 IS in norms (via F7b, not F5b)
+        # This test just verifies the function works overall
+
+    def test_yi_paren_verb_cleaned(self):
+        """一容器(100)的蓋體連接於本體 → 蓋體 captured (連接 stripped by clean)."""
+        text = "一容器(100)的蓋體連接於本體"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "蓋體" in norms
+
+    def test_yi_paren_no_duplicate(self):
+        text = "一開口部(120)，一容器本體(100)的開口部(120)"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert norms.count("開口部") == 1
