@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "schema_version": 8,
+    "schema_version": 9,
     "created": "2026-04-10",
     "source_baseline": "tests/fixtures/tw/local/baseline_phase8b_postship.json",
     "source_commit": "4462bcafbded03f332773823052a4c1c7d898aa4",
@@ -76,7 +76,7 @@
         "description": "Cannot be categorized from the excerpt alone. Requires reading the full claim text to disambiguate. Schema v2 pass eliminated all v1 ambig entries; category preserved for future fixture additions."
       }
     ],
-    "notes": "The source check emits a single aggregate CheckItem per document (set of unique flagged terms). Per-finding records in this snapshot are produced by an audit-only re-walk that replicates the check's internal loop (imports _INTRO_PATTERN from the source module; uses a capturing variant of _REF_PATTERN so reference_form can be exposed). Each fixture record includes a canonical_unique_terms array and a cross_check_ok boolean asserting that the set of unique terms in the audit findings equals the canonical CheckItem.details term set. Finding IDs use claim_{id}_{sha256(term)[:8]}_{within_claim_idx} to remain stable across reruns. | Schema v2 (2026-04-10): ambig resolution pass — all 13 v1 ambig entries recategorized by reading full claim text. Category miss_intro.mid_sentence_verb_object renamed to miss_intro.inline_one_prefix (fix-agnostic name; the corpus pattern is any 一X appearing inline, and the fix shape is a left-anchor denylist conversion rather than a verb-allowlist extension). New category walker_bug.noun_boundary_overgreedy added for 108P001015 c4 聚苯醚成分 (walker extends past a legitimate noun boundary into the fresh N+V clause 成分包括). protect:true count 5 → 8 (+3: 110P000868 c1/c3/c5 電子裝置 — drafter conflated 電子裝置 with 行動裝置; claim never introduces 電子裝置 despite the symbol table listing 800:電子裝置). Proposed walker_bug.conjunction_split_intro category was rejected and collapsed into miss_intro.inline_one_prefix after recognizing the 4 第二方向 findings are the same left-anchor rejection as 為一容置杯體 and 輸出一解鎖指令; one generalized fix covers all sites. | Schema v4 (2026-04-10): relabeled 110P000158 c2/c4 from miss_intro.definitional to walker_bug.trailing_verb_gap (new category). Actual root cause is 介 missing from _TRAILING_VERB_DENYLIST — the intro 一第一夾角介於 captures 第一夾角介 but trailing 介 is not stripped. miss_intro.definitional drops from 3→1. | Schema v5 (2026-04-10): resolved_by for F2 session — 5 entries resolved: 1 miss_intro.definitional (F2_definitional), 2 miss_intro.bare_noun_possessive (F2_definitional_cascade via 上端 prefix match), 2 walker_bug.trailing_verb_gap (F2_trailing_verb_gap). Active: 70, resolved: 14. | Schema v6 (2026-04-10): relabeled 15 miss_intro.inline_one_prefix entries after root-cause analysis on full claim text revealed 4 distinct bugs: walker_bug.greedy_yi_consumption (7), walker_bug.ref_marker_overcapture (2), walker_bug.paren_numeral_asymmetry (1), and 5 additional walker_bug.trailing_verb_gap entries (至/依序/擷取). miss_intro.inline_one_prefix: 15→0. Category count: 14→17. | Schema v7 (2026-04-10): resolved_by for F3 session — 24 entries resolved. Active: 46, resolved: 38. protect:true count unchanged at 8. | Schema v8 (2026-04-10): reclassified 110P000631 c11 第一銜接部銜接(222) from walker_bug.paren_overgreedy to legit_drafting_error (numeral (222) placed after verb 銜接 instead of before — c5 has correct form 第一銜接部(222)銜接). protect:true: 8→9. 108P001015 c4 聚苯醚成分 (noun_boundary_overgreedy): deferred to Phase 9 — N+V boundary detection for 1 entry not worth the risk."
+    "notes": "The source check emits a single aggregate CheckItem per document (set of unique flagged terms). Per-finding records in this snapshot are produced by an audit-only re-walk that replicates the check's internal loop (imports _INTRO_PATTERN from the source module; uses a capturing variant of _REF_PATTERN so reference_form can be exposed). Each fixture record includes a canonical_unique_terms array and a cross_check_ok boolean asserting that the set of unique terms in the audit findings equals the canonical CheckItem.details term set. Finding IDs use claim_{id}_{sha256(term)[:8]}_{within_claim_idx} to remain stable across reruns. | Schema v2 (2026-04-10): ambig resolution pass — all 13 v1 ambig entries recategorized by reading full claim text. Category miss_intro.mid_sentence_verb_object renamed to miss_intro.inline_one_prefix (fix-agnostic name; the corpus pattern is any 一X appearing inline, and the fix shape is a left-anchor denylist conversion rather than a verb-allowlist extension). New category walker_bug.noun_boundary_overgreedy added for 108P001015 c4 聚苯醚成分 (walker extends past a legitimate noun boundary into the fresh N+V clause 成分包括). protect:true count 5 → 8 (+3: 110P000868 c1/c3/c5 電子裝置 — drafter conflated 電子裝置 with 行動裝置; claim never introduces 電子裝置 despite the symbol table listing 800:電子裝置). Proposed walker_bug.conjunction_split_intro category was rejected and collapsed into miss_intro.inline_one_prefix after recognizing the 4 第二方向 findings are the same left-anchor rejection as 為一容置杯體 and 輸出一解鎖指令; one generalized fix covers all sites. | Schema v4 (2026-04-10): relabeled 110P000158 c2/c4 from miss_intro.definitional to walker_bug.trailing_verb_gap (new category). Actual root cause is 介 missing from _TRAILING_VERB_DENYLIST — the intro 一第一夾角介於 captures 第一夾角介 but trailing 介 is not stripped. miss_intro.definitional drops from 3→1. | Schema v5 (2026-04-10): resolved_by for F2 session — 5 entries resolved: 1 miss_intro.definitional (F2_definitional), 2 miss_intro.bare_noun_possessive (F2_definitional_cascade via 上端 prefix match), 2 walker_bug.trailing_verb_gap (F2_trailing_verb_gap). Active: 70, resolved: 14. | Schema v6 (2026-04-10): relabeled 15 miss_intro.inline_one_prefix entries after root-cause analysis on full claim text revealed 4 distinct bugs: walker_bug.greedy_yi_consumption (7), walker_bug.ref_marker_overcapture (2), walker_bug.paren_numeral_asymmetry (1), and 5 additional walker_bug.trailing_verb_gap entries (至/依序/擷取). miss_intro.inline_one_prefix: 15→0. Category count: 14→17. | Schema v7 (2026-04-10): resolved_by for F3 session — 24 entries resolved. Active: 46, resolved: 38. protect:true count unchanged at 8. | Schema v8 (2026-04-10): reclassified 110P000631 c11 第一銜接部銜接(222) from walker_bug.paren_overgreedy to legit_drafting_error (numeral (222) placed after verb 銜接 instead of before — c5 has correct form 第一銜接部(222)銜接). protect:true: 8→9. 108P001015 c4 聚苯醚成分 (noun_boundary_overgreedy): deferred to Phase 9 — N+V boundary detection for 1 entry not worth the risk. | Schema v9 (2026-04-10): resolved_by for F4 + walker bug fix — 5 entries resolved (3 miss_intro.quantifier_list via F4_quantifier_list, 2 walker_bug.regex_noun_class_narrow via F4_連接面_exception). 2 new miss_intro.quantifier_list entries surfaced (158 c1/c3 第一連接面/第二連接面). Active: 43, resolved: 43. protect:true count unchanged at 9."
   },
   "labels": [
     {
@@ -257,7 +257,8 @@
       "category": "walker_bug.regex_noun_class_narrow",
       "protect": false,
       "confidence": "high",
-      "notes": "walker captured bare ordinal 第一; intended term is 第一剛輪 or 第一交線 — regex noun class fails on next char. SCHEMA V8: root cause is interior-verb 連接 in 第一連接面 truncates to bare 第一. Fix: add 連接面 to _INTERIOR_CUT_EXCEPTIONS."
+      "notes": "walker captured bare ordinal 第一; intended term is 第一剛輪 or 第一交線 — regex noun class fails on next char. SCHEMA V8: root cause is interior-verb 連接 in 第一連接面 truncates to bare 第一. Fix: add 連接面 to _INTERIOR_CUT_EXCEPTIONS.",
+      "resolved_by": "F4_連接面_exception"
     },
     {
       "fixture": "110P000158US.JP.EPC派譯版-FV",
@@ -288,7 +289,8 @@
       "category": "walker_bug.regex_noun_class_narrow",
       "protect": false,
       "confidence": "high",
-      "notes": "same bug as c1 第一 — bare ordinal capture. SCHEMA V8: root cause is interior-verb 連接 in 第二連接面 truncates to bare 第二."
+      "notes": "same bug as c1 第一 — bare ordinal capture. SCHEMA V8: root cause is interior-verb 連接 in 第二連接面 truncates to bare 第二.",
+      "resolved_by": "F4_連接面_exception"
     },
     {
       "fixture": "110P000158US.JP.EPC派譯版-FV",
@@ -721,7 +723,8 @@
       "category": "miss_intro.quantifier_list",
       "protect": false,
       "confidence": "high",
-      "notes": "intro via 包含至少三個軸承 — 至少N個X not in _INTRO_MULTI_QUANTIFIERS"
+      "notes": "intro via 包含至少三個軸承 — 至少N個X not in _INTRO_MULTI_QUANTIFIERS",
+      "resolved_by": "F4_quantifier_list"
     },
     {
       "fixture": "110P000641JP派譯版-FV",
@@ -731,7 +734,8 @@
       "category": "miss_intro.quantifier_list",
       "protect": false,
       "confidence": "high",
-      "notes": "intro via 包含至少四個軸承 — same pattern as c3"
+      "notes": "intro via 包含至少四個軸承 — same pattern as c3",
+      "resolved_by": "F4_quantifier_list"
     },
     {
       "fixture": "110P000641JP派譯版-FV",
@@ -752,7 +756,8 @@
       "category": "miss_intro.quantifier_list",
       "protect": false,
       "confidence": "high",
-      "notes": "intro via 兩曲柄 — 兩X quantifier without 個 counter"
+      "notes": "intro via 兩曲柄 — 兩X quantifier without 個 counter",
+      "resolved_by": "F4_quantifier_list"
     },
     {
       "fixture": "110P000840US.JP.DE派譯版-FV",
