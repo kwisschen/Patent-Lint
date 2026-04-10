@@ -179,6 +179,41 @@ class TestNumberNeutralMatching:
         ])
         assert check_antecedent_basis(doc) == []
 
+    def test_至少三個_intro_resolves(self):
+        """F4: generalized 至少N個 pattern — 至少三個軸承."""
+        doc = _make_doc([
+            _claim(1, "1. 一種裝置，包含至少三個軸承，所述軸承為密封式。"),
+        ])
+        assert check_antecedent_basis(doc) == []
+
+    def test_至少四個_intro_resolves(self):
+        """F4: generalized 至少N個 pattern — 至少四個軸承."""
+        doc = _make_doc([
+            _claim(1, "1. 一種裝置，包含至少四個軸承，所述軸承為密封式。"),
+        ])
+        assert check_antecedent_basis(doc) == []
+
+    def test_兩_bare_intro_resolves(self):
+        """F4: 兩X (bare two without counter) introduces noun."""
+        doc = _make_doc([
+            _claim(1, "1. 一種裝置，包含兩曲柄，其連接於所述曲柄。"),
+        ])
+        assert check_antecedent_basis(doc) == []
+
+    def test_兩個_intro_resolves(self):
+        """F4: 兩個X (two with counter) introduces noun."""
+        doc = _make_doc([
+            _claim(1, "1. 一種裝置，包含兩個電極，分別設置於所述電極上。"),
+        ])
+        assert check_antecedent_basis(doc) == []
+
+    def test_至少一_no_counter_regression(self):
+        """F4 regression: 至少一焊墊 (no counter) must still introduce."""
+        doc = _make_doc([
+            _claim(1, "1. 一種裝置，包含至少一焊墊，該焊墊為金屬。"),
+        ])
+        assert check_antecedent_basis(doc) == []
+
 
 # ─────────────────────────────────────────────────────────────────────────
 # BFS multi-parent traversal

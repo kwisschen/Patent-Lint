@@ -802,7 +802,15 @@ _INTRO_MULTI_QUANTIFIERS = (
     # from _NOUN_CHARS exclusion — without that removal, the regex
     # would still terminate at 或 mid-quantifier even with this entry.
     "一或多個",
-    "至少一個", "至少一",
+    # F4: generalized 至少N個? — covers 至少一個, 至少一, 至少三個,
+    # 至少四個, etc. Replaces old 至少一個/至少一 literals.
+    r"至少[一二三四五六七八九十百千\d]+個?",
+    # F4: bare-two quantifier. 兩個X (with counter) is unambiguous.
+    # Bare 兩X (without counter) needs a negative lookahead: 兩端 (both
+    # ends) and 兩側 (both sides) are body-part compounds, NOT intros.
+    # Corpus: 兩曲柄 ×1 (intro), 兩端 ×3, 兩側 ×2 (all non-intro).
+    "兩個",
+    r"兩(?![端側])",
     "一個", "一種", "一對",
     "複數個", "多個", "數個",
     "複數",
