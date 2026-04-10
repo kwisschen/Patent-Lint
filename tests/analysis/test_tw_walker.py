@@ -859,3 +859,45 @@ class TestSupplementaryIntrosF9:
         intros = extract_introductions_tw(_claim(1, text))
         norms = [n for _, n in intros]
         assert "卡扣" in norms
+
+
+# ── F8: 相配合的Y VP modifier pattern ───────────────────────────────────
+
+
+class TestSupplementaryIntrosF8:
+    """F8: 相配合的Y VP modifier pattern."""
+
+    def test_vp_modifier_ordinal(self):
+        """相配合的第二螺紋部 → introduces 第二螺紋部."""
+        text = "設置和所述第一螺紋部(2121a)相配合的第二螺紋部"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "第二螺紋部" in norms
+
+    def test_vp_modifier_with_numeral(self):
+        """相配合的第二螺紋部(2211a) → introduces 第二螺紋部."""
+        text = "設置和所述第一螺紋部(2121a)相配合的第二螺紋部(2211a)"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "第二螺紋部" in norms
+
+    def test_vp_modifier_rejects_shape(self):
+        """相配合的圓柱形 → NOT introduced (shape descriptor, < 3 CJK)."""
+        text = "和所述開口部(212)相配合的圓柱形"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "圓柱形" not in norms
+
+    def test_vp_modifier_rejects_no_ordinal_no_numeral(self):
+        """相配合的卡扣結構 without ordinal/numeral → NOT introduced."""
+        text = "和所述框架相配合的卡扣結構"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "卡扣結構" not in norms
+
+    def test_vp_modifier_no_duplicate(self):
+        """If 一第二螺紋部 already captured, supplementary doesn't duplicate."""
+        text = "一第二螺紋部，和所述第一螺紋部相配合的第二螺紋部"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert norms.count("第二螺紋部") == 1
