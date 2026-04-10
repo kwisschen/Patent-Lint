@@ -1916,6 +1916,13 @@ _DE_NOUN_RE = re.compile(
     r'的(' + _CJK_NO_DE + r'{2,}(?:\([A-Za-z0-9]+\))?)'
 )
 
+_BARE_AFTER_VERB_PATTERN = re.compile(
+    r'(?:具有|設置|形成)'
+    r'(第[一二三四五六七八九十\d]+' + _CJK_NO_DE + r'+(?:\([A-Za-z0-9]+\))?'
+    r'|' + _CJK_NO_DE + r'+\([A-Za-z0-9]+\))'
+    r'(?![的之])'
+)
+
 _CLAUSE_BOUNDARY_RE = re.compile(r'[；，、。]')
 
 _REF_PREFIX_SET = ('所述', '該', '前述')
@@ -1994,6 +2001,12 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
 
     # F7c: 的第Y — post-的 ordinal noun
     for m in _POST_DE_ORDINAL_PATTERN.finditer(text):
+        noun = m.group(1)
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        results.append((m.group(0), normalized))
+
+    # F6: 具有/設置/形成 + Y — bare-after-verb intro
+    for m in _BARE_AFTER_VERB_PATTERN.finditer(text):
         noun = m.group(1)
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
         results.append((m.group(0), normalized))

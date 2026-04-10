@@ -1003,3 +1003,58 @@ class TestSupplementaryIntrosF7c:
         intros = extract_introductions_tw(_claim(1, text))
         norms = [n for _, n in intros]
         assert norms.count("第二容納空間") == 1
+
+
+# ── F6: 具有/設置/形成 + Y bare-after-verb pattern ──────────────────────
+
+
+class TestSupplementaryIntrosF6:
+    """F6: Bare-after-verb 具有/設置/形成 + Y."""
+
+    def test_bare_verb_ju_you(self):
+        """具有第一扣接部 → introduces 第一扣接部."""
+        text = "所述第一定位構件(215)具有第一扣接部"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "第一扣接部" in norms
+
+    def test_bare_verb_she_zhi(self):
+        """設置第一螺紋部(2121a) → introduces 第一螺紋部."""
+        text = "所述開口部(212)內側設置第一螺紋部(2121a)"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "第一螺紋部" in norms
+
+    def test_bare_verb_xing_cheng(self):
+        """形成第一容置空間(101) → introduces 第一容置空間."""
+        text = "所述容器本體(100)內部形成第一容置空間(101)"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "第一容置空間" in norms
+
+    def test_bare_verb_reject_descriptive(self):
+        """具有至少一改性基 → 改性基 NOT captured by F6 (no ordinal, no numeral)."""
+        text = "聚苯醚樹脂具有至少一改性基"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        # 改性基 might be captured by _INTRO_PATTERN via 一改性基, but NOT by F6
+
+    def test_bare_verb_reject_attributive(self):
+        """具有第一直徑的管道 → 第一直徑 NOT captured (followed by 的)."""
+        text = "具有第一直徑的管道"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "第一直徑" not in norms
+
+    def test_bare_verb_numeral_only(self):
+        """形成容置空間(101) → introduces 容置空間 (has numeral, no ordinal)."""
+        text = "所述本體內部形成容置空間(101)"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "容置空間" in norms
+
+    def test_bare_verb_no_duplicate(self):
+        text = "一第一扣接部，所述構件具有第一扣接部"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert norms.count("第一扣接部") == 1
