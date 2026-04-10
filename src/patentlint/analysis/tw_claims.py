@@ -807,8 +807,18 @@ _INTRO_MULTI_QUANTIFIERS = (
     "複數個", "多個", "數個",
     "複數",
 )
+# Weight/molar composition intro: N重量份(至M重量份)的X introduces noun X.
+# Units: 重量份, 重量百分比, 莫耳, wt%, mol%.  Only 重量份 appears in the
+# current 10-fixture corpus; others included for forward-compat.
+_WEIGHT_UNITS = r"(?:重量份|重量百分比|莫耳|wt%|mol%)"
+_WEIGHT_COMPOSITION_PREFIX = (
+    r"\d+(?:\.\d+)?" + _WEIGHT_UNITS
+    + r"(?:至\d+(?:\.\d+)?" + _WEIGHT_UNITS + r")?的"
+)
 _INTRO_PATTERN = re.compile(
-    r"(?:" + "|".join(_INTRO_MULTI_QUANTIFIERS) + r"|(?<!第)一(?![同體]))"
+    r"(?:"
+    + _WEIGHT_COMPOSITION_PREFIX
+    + r"|(?:" + "|".join(_INTRO_MULTI_QUANTIFIERS) + r"|(?<!第)一(?![同體])))"
     + f"({_NOUN_CHARS})"
 )
 

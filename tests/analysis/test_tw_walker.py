@@ -406,3 +406,83 @@ class Test110P000633DeterminismCanary:
             "Determinism canary failed: sorted findings differ between "
             "A and B. This is a walker non-determinism bug."
         )
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# F1: Weight-composition intro pattern
+# ─────────────────────────────────────────────────────────────────────────
+
+
+class TestWeightCompositionIntro:
+    """N重量份(至M重量份)的X should introduce noun X."""
+
+    def test_range_form_introduces_noun(self):
+        """20重量份至70重量份的聚苯醚樹脂 → introduces 聚苯醚樹脂."""
+        c = _claim(1, "1. 一種組成物，包括20重量份至70重量份的聚苯醚樹脂。")
+        pairs = extract_introductions_tw(c)
+        normalized = {n for _, n in pairs}
+        assert "聚苯醚樹脂" in normalized
+
+    def test_single_value_introduces_noun(self):
+        """5重量份的聚丁二烯樹脂 → introduces 聚丁二烯樹脂."""
+        c = _claim(1, "1. 一種組成物，包括5重量份的聚丁二烯樹脂。")
+        pairs = extract_introductions_tw(c)
+        normalized = {n for _, n in pairs}
+        assert "聚丁二烯樹脂" in normalized
+
+    def test_measurement_no_intro(self):
+        """100重量百分比 without 的+noun does NOT introduce anything."""
+        c = _claim(2, "2. 如請求項1所述之組成物，其中以所述聚丁二烯樹脂的總含量為100重量百分比。")
+        pairs = extract_introductions_tw(c)
+        # The only possible intro here is from the quantifier pattern,
+        # not from weight-composition.  重量百分比 ends the clause.
+        normalized = {n for _, n in pairs}
+        assert "重量百分比" not in normalized
+
+    def test_antecedent_resolved_via_weight_intro(self):
+        """Claim 2 references 所述聚苯醚樹脂; claim 1 introduces it via
+        weight-composition.  Should produce 0 findings."""
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種組成物，其包括：20重量份至70重量份的聚苯醚樹脂。",
+            ),
+            _claim(
+                2,
+                "2. 如請求項1所述的組成物，其中，所述聚苯醚樹脂的重均分子量為1000。",
+                independent=False,
+                deps=[1],
+            ),
+        ])
+        findings = check_antecedent_basis(doc)
+        assert findings == [], (
+            f"Expected 0 findings but got {len(findings)}: "
+            + ", ".join(f["term"] for f in findings)
+        )
+
+    def test_multiple_weight_intros_all_resolved(self):
+        """Multiple weight-composition nouns in claim 1, all referenced
+        in claim 2 — should produce 0 findings."""
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種組成物，其包括："
+                "20重量份至70重量份的聚苯醚樹脂；"
+                "5重量份至40重量份的聚丁二烯樹脂；以及"
+                "5重量份至30重量份的雙馬來醯亞胺。",
+            ),
+            _claim(
+                2,
+                "2. 如請求項1所述的組成物，其中，"
+                "所述聚苯醚樹脂的重均分子量為1000，"
+                "所述聚丁二烯樹脂的含量小於25，"
+                "所述雙馬來醯亞胺為改性雙馬來醯亞胺。",
+                independent=False,
+                deps=[1],
+            ),
+        ])
+        findings = check_antecedent_basis(doc)
+        assert findings == [], (
+            f"Expected 0 findings but got {len(findings)}: "
+            + ", ".join(f["term"] for f in findings)
+        )
