@@ -207,6 +207,28 @@ class TestNumberNeutralMatching:
         ])
         assert check_antecedent_basis(doc) == []
 
+    def test_bare_N個_intro_resolves(self):
+        """F4b: 四個X (bare CJK numeral+個) introduces noun."""
+        doc = _make_doc([
+            _claim(1, "1. 一種結構，包含四個第一連接面，四個所述第一連接面與頂面連接。"),
+        ])
+        # 四個第一連接面 → intro; 四個所述第一連接面 → F3 Rule 1a discards
+        assert check_antecedent_basis(doc) == []
+
+    def test_bare_N個_三個_intro(self):
+        """F4b: 三個X introduces noun; 三個所述X is reference (discarded)."""
+        doc = _make_doc([
+            _claim(1, "1. 一種裝置，包含三個軸承，三個所述軸承分別安裝。"),
+        ])
+        assert check_antecedent_basis(doc) == []
+
+    def test_bare_N個_至少_takes_priority(self):
+        """Regression: 至少三個軸承 still resolved by 至少 branch."""
+        doc = _make_doc([
+            _claim(1, "1. 一種裝置，包含至少三個軸承，該軸承為滾珠軸承。"),
+        ])
+        assert check_antecedent_basis(doc) == []
+
     def test_至少一_no_counter_regression(self):
         """F4 regression: 至少一焊墊 (no counter) must still introduce."""
         doc = _make_doc([
