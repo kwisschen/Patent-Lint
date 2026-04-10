@@ -973,20 +973,22 @@
       "claim_id": 6,
       "term": "識別資料",
       "reference_form": "該識別資料",
-      "category": "miss_intro.bare_noun_possessive",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "high",
-      "notes": "SCHEMA V2: ambig resolved. c1 introduces via 所述的無線通訊上鎖的隨身碟的識別資料 bare-noun possessive. Standard TIPO drafting style; not a legit error."
+      "notes": "Deep possessive chain — 識別資料 never introduced with 一. Genuine drafting error.",
+      "resolved_by": null
     },
     {
       "fixture": "110P000868US.JP派譯版-FV",
       "claim_id": 7,
       "term": "識別資料",
       "reference_form": "該識別資料",
-      "category": "miss_intro.bare_noun_possessive",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "high",
-      "notes": "SCHEMA V2: same as c6 — intro via c1 bare-noun possessive"
+      "notes": "Deep possessive chain — 識別資料 never introduced with 一. Genuine drafting error.",
+      "resolved_by": null
     },
     {
       "fixture": "110P000868US.JP派譯版-FV",
@@ -1004,10 +1006,11 @@
       "claim_id": 8,
       "term": "識別資料",
       "reference_form": "該識別資料",
-      "category": "miss_intro.bare_noun_possessive",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "high",
-      "notes": "SCHEMA V2: same as c6/c7"
+      "notes": "Deep possessive chain — 識別資料 never introduced with 一. Genuine drafting error.",
+      "resolved_by": null
     }
   ]
 }
