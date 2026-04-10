@@ -824,3 +824,38 @@ class TestTrailingVerb介:
             f"Expected 0 findings but got {len(findings)}: "
             + ", ".join(f["term"] for f in findings)
         )
+
+
+# ── F9: 透過Y連接 instrumental pattern ──────────────────────────────────
+
+
+class TestSupplementaryIntrosF9:
+    """F9: 透過Y連接 instrumental pattern."""
+
+    def test_instrumental_basic(self):
+        """透過樞軸(2221)連接 → introduces 樞軸."""
+        text = "所述連接臂(222)相對於所述柱塞構件(221)的一端透過樞軸(2221)連接於所述樞接部(216)"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "樞軸" in norms
+
+    def test_instrumental_no_numeral(self):
+        """透過螺栓連結 → introduces 螺栓."""
+        text = "所述蓋體透過螺栓連結於所述本體"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "螺栓" in norms
+
+    def test_instrumental_no_duplicate(self):
+        """If 一螺栓 already captured by _INTRO_PATTERN, supplementary doesn't duplicate."""
+        text = "設置一螺栓，透過螺栓連接於所述本體"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert norms.count("螺栓") == 1
+
+    def test_instrumental_with_lian_jie(self):
+        """透過Y連結 (variant verb) also works."""
+        text = "透過卡扣(30)連結於所述框架"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "卡扣" in norms
