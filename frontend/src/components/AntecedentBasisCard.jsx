@@ -97,7 +97,11 @@ function formatClaimRange(ids, t) {
 function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t }) {
   const [expanded, setExpanded] = useState(false)
   const label = formatClaimRange(claimIds, t)
-  const termCount = terms.length
+  // Row badge counts findings (one per claim-term pair), not distinct terms.
+  // A row that groups claims 1/2/3/5 all sharing the single term 該使用者介面
+  // represents 4 findings, not 1 — the header total must reconcile with the
+  // sum of row badges.
+  const findingCount = findings.length
   const hasText = claimIds.some((id) => claimTextMap[id])
 
   // Hint lines (did-you-mean + cross-ref) live on individual findings.
@@ -146,7 +150,7 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t }) {
           className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold"
           style={{ backgroundColor: 'var(--attention-bg)', color: 'var(--attention-text)', border: '1px solid var(--attention-border)' }}
         >
-          {termCount} {termCount === 1 ? t('antecedentBasis.item') : t('antecedentBasis.items')}
+          {findingCount} {findingCount === 1 ? t('antecedentBasis.finding') : t('antecedentBasis.findings')}
         </span>
       </div>
       <div className={`overflow-hidden transition-all duration-200 ease-in-out ${expanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
@@ -260,7 +264,7 @@ export default function AntecedentBasisCard({ issues, claimTrees }) {
   groups.forEach((g) => g.claimIds.sort((a, b) => a - b))
   groups.sort((a, b) => a.claimIds[0] - b.claimIds[0])
 
-  const totalItems = issues.length
+  const totalFindings = issues.length
 
   return (
     <div
@@ -274,7 +278,7 @@ export default function AntecedentBasisCard({ issues, claimTrees }) {
           className="rounded-full px-2.5 py-0.5 text-xs font-bold"
           style={{ backgroundColor: 'var(--attention-bg)', color: 'var(--attention-text)', border: '1px solid var(--attention-border)' }}
         >
-          {totalItems} {totalItems !== 1 ? t('antecedentBasis.items') : t('antecedentBasis.item')}
+          {totalFindings} {totalFindings !== 1 ? t('antecedentBasis.findings') : t('antecedentBasis.finding')}
         </span>
       </div>
       <div className="border-t px-1 py-1">

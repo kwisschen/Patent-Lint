@@ -141,8 +141,8 @@
   },
   "antecedentBasis": {
     "title": "先行詞の根拠の確認",
-    "items": "個の用語",
-    "item": "個の用語"
+    "findings": "件",
+    "finding": "件"
   },
   "antecedent": {
     "didYouMean": "もしかして「{{term}}」（請求項{{claim_id}}で導入）ですか？",
