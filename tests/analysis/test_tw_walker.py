@@ -486,3 +486,84 @@ class TestWeightCompositionIntro:
             f"Expected 0 findings but got {len(findings)}: "
             + ", ".join(f["term"] for f in findings)
         )
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# Definitional intro pattern (F2)
+# ─────────────────────────────────────────────────────────────────────────
+
+
+class TestDefinitionalIntro:
+    """Tests for 定義為/稱為/記為/表示為 intro prefix recognition."""
+
+    def test_定義為_introduces_noun(self):
+        """距離定義為第一長度(L1) → introduces 第一長度(L1)."""
+        pairs = extract_introductions_tw(
+            _claim(1, "1. 一種裝置，其距離定義為第一長度(L1)。"),
+        )
+        nouns = [n for _, n in pairs]
+        assert "第一長度(L1)" in nouns or "第一長度" in nouns
+
+    def test_定義為一_introduces_noun(self):
+        """分別定義為一第一剛輪及一第二剛輪 → introduces 第一剛輪
+        (一 consumed by 一?, 及 stops capture)."""
+        pairs = extract_introductions_tw(
+            _claim(1, "1. 一種裝置，其分別定義為一第一剛輪及一第二剛輪。"),
+        )
+        nouns = [n for _, n in pairs]
+        assert "第一剛輪" in nouns
+
+    def test_稱為_introduces_noun(self):
+        """稱為 variant — forward-compat."""
+        pairs = extract_introductions_tw(
+            _claim(1, "1. 一種裝置，其元件稱為第一接頭。"),
+        )
+        nouns = [n for _, n in pairs]
+        assert "第一接頭" in nouns
+
+    def test_表示為_introduces_noun(self):
+        """表示為 variant — forward-compat."""
+        pairs = extract_introductions_tw(
+            _claim(1, "1. 一種裝置，其長度表示為第一距離。"),
+        )
+        nouns = [n for _, n in pairs]
+        assert "第一距離" in nouns
+
+    def test_antecedent_resolved_via_definitional_intro(self):
+        """Claim 1 defines 第一長度(L1) via 定義為; claim 2 references
+        所述第一長度(L1) — 0 findings."""
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種裝置，其距離定義為第一長度(L1)，"
+                "所述第一長度(L1)和底面之間。",
+            ),
+            _claim(
+                2,
+                "2. 如請求項1所述之裝置，其中所述第一長度(L1)大於10mm。",
+                independent=False,
+                deps=[1],
+            ),
+        ])
+        findings = check_antecedent_basis(doc)
+        assert findings == [], (
+            f"Expected 0 findings but got {len(findings)}: "
+            + ", ".join(f["term"] for f in findings)
+        )
+
+    def test_protect_true_typo_persists(self):
+        """Protect:true gate — 定義為第二長度(L1) intro does NOT resolve
+        所述第二長度(L2) reference because (L1) ≠ (L2)."""
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種裝置，其距離定義為第一長度(L1)，"
+                "其距離定義為第二長度(L1)，"
+                "所述第一長度(L1)和所述第二長度(L2)之間。",
+            ),
+        ])
+        findings = check_antecedent_basis(doc)
+        terms = [f["term"] for f in findings]
+        assert any("第二長度" in t for t in terms), (
+            "Expected finding for 第二長度(L2) but got: " + str(terms)
+        )
