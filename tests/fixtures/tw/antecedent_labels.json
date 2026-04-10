@@ -4,7 +4,7 @@
     "created": "2026-04-10",
     "source_baseline": "tests/fixtures/tw/local/baseline_phase8b_postship.json",
     "source_commit": "4462bcafbded03f332773823052a4c1c7d898aa4",
-    "total_labeled": 84,
+    "total_labeled": 86,
     "key_format": "(fixture, claim_id, term, reference_form) tuple; decoupled from finding_id hash format for forward-compat with Phase 9 dedup key normalization",
     "categories": [
       {
@@ -257,7 +257,17 @@
       "category": "walker_bug.regex_noun_class_narrow",
       "protect": false,
       "confidence": "high",
-      "notes": "walker captured bare ordinal 第一; intended term is 第一剛輪 or 第一交線 — regex noun class fails on next char"
+      "notes": "walker captured bare ordinal 第一; intended term is 第一剛輪 or 第一交線 — regex noun class fails on next char. SCHEMA V8: root cause is interior-verb 連接 in 第一連接面 truncates to bare 第一. Fix: add 連接面 to _INTERIOR_CUT_EXCEPTIONS."
+    },
+    {
+      "fixture": "110P000158US.JP.EPC派譯版-FV",
+      "claim_id": 1,
+      "term": "第一連接面",
+      "reference_form": "所述第一連接面",
+      "category": "miss_intro.quantifier_list",
+      "protect": false,
+      "confidence": "high",
+      "notes": "SCHEMA V8: surfaced after regex_noun_class_narrow fix. Intro via 四個第一連接面 — bare N個 quantifier not in _INTRO_MULTI_QUANTIFIERS. Previously hidden because 連接 interior-verb cut reduced 第一連接面 to bare ordinal 第一."
     },
     {
       "fixture": "110P000158US.JP.EPC派譯版-FV",
@@ -278,7 +288,17 @@
       "category": "walker_bug.regex_noun_class_narrow",
       "protect": false,
       "confidence": "high",
-      "notes": "same bug as c1 第一 — bare ordinal capture"
+      "notes": "same bug as c1 第一 — bare ordinal capture. SCHEMA V8: root cause is interior-verb 連接 in 第二連接面 truncates to bare 第二."
+    },
+    {
+      "fixture": "110P000158US.JP.EPC派譯版-FV",
+      "claim_id": 3,
+      "term": "第二連接面",
+      "reference_form": "所述第二連接面",
+      "category": "miss_intro.quantifier_list",
+      "protect": false,
+      "confidence": "high",
+      "notes": "SCHEMA V8: surfaced after regex_noun_class_narrow fix. Intro via 四個第二連接面 — bare N個 quantifier. Symmetric to c1 第一連接面."
     },
     {
       "fixture": "110P000158US.JP.EPC派譯版-FV",
