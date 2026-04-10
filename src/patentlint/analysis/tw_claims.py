@@ -815,9 +815,16 @@ _WEIGHT_COMPOSITION_PREFIX = (
     r"\d+(?:\.\d+)?" + _WEIGHT_UNITS
     + r"(?:至\d+(?:\.\d+)?" + _WEIGHT_UNITS + r")?的"
 )
+# Definitional intro: 定義為X, 稱為X, 記為X, 表示為X — introduces noun X.
+# Optional 一 handles both 定義為X and 定義為一X uniformly.
+# Corpus attestation: 定義為 ×22 across 110P000158/110P000631/110P000633;
+# 稱為/記為/表示為 have 0 corpus occurrences but are standard TIPO drafting
+# patterns included for forward-compat.
+_DEFINITIONAL_PREFIX = r"(?:定義為|稱為|記為|表示為)一?"
 _INTRO_PATTERN = re.compile(
     r"(?:"
     + _WEIGHT_COMPOSITION_PREFIX
+    + r"|" + _DEFINITIONAL_PREFIX
     + r"|(?:" + "|".join(_INTRO_MULTI_QUANTIFIERS) + r"|(?<!第)一(?![同體])))"
     + f"({_NOUN_CHARS})"
 )
