@@ -141,8 +141,8 @@
   },
   "antecedentBasis": {
     "title": "先行詞基礎檢視",
-    "items": "個術語",
-    "item": "個術語"
+    "findings": "項問題",
+    "finding": "項問題"
   },
   "antecedent": {
     "didYouMean": "您是否指的是「{{term}}」（於請求項{{claim_id}}中導入）？",
