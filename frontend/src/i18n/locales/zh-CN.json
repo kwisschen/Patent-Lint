@@ -141,8 +141,8 @@
   },
   "antecedentBasis": {
     "title": "先行词基础检查",
-    "items": "个术语",
-    "item": "个术语"
+    "findings": "项问题",
+    "finding": "项问题"
   },
   "antecedent": {
     "didYouMean": "您是否指的是\"{{term}}\"（于权利要求{{claim_id}}中引入）？",

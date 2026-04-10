@@ -141,8 +141,8 @@
   },
   "antecedentBasis": {
     "title": "Antecedent Basis Review",
-    "items": "terms",
-    "item": "term"
+    "findings": "findings",
+    "finding": "finding"
   },
   "antecedent": {
     "didYouMean": "Did you mean *{{term}}* (introduced in claim {{claim_id}})?",
