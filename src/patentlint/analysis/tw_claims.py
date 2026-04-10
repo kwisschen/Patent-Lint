@@ -1987,11 +1987,7 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
     # F7b: 一V的Y — participial intro
     for m in _PARTICIPIAL_YI_DE_PATTERN.finditer(text):
         noun = m.group(1)
-        stripped = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
-        # Run through clean_noun_phrase_tw to strip trailing verbs
-        normalized = clean_noun_phrase_tw(stripped)
-        if not normalized:
-            continue
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
         has_numeral = '(' in noun
         has_ordinal = normalized.startswith('第')
         cjk_len = sum(1 for c in normalized if '\u4e00' <= c <= '\u9fff')
@@ -2011,7 +2007,13 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
         results.append((m.group(0), normalized))
 
-    return results
+    # Uniform trailing-verb cleanup for all supplementary captures
+    cleaned: list[tuple[str, str]] = []
+    for orig, norm in results:
+        cleaned_norm = clean_noun_phrase_tw(norm)
+        if cleaned_norm and len(cleaned_norm) >= 2:
+            cleaned.append((orig, cleaned_norm))
+    return cleaned
 
 
 def extract_introductions_tw(
