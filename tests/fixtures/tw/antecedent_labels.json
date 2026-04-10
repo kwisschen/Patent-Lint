@@ -775,7 +775,8 @@
       "category": "miss_intro.bare_noun_possessive",
       "protect": false,
       "confidence": "high",
-      "notes": "intro via 透過樞軸(2221)連接 — bare noun in instrumental/possessive"
+      "notes": "intro via 透過樞軸(2221)連接 — bare noun in instrumental/possessive",
+      "resolved_by": "F9_instrumental"
     },
     {
       "fixture": "110P000840US.JP.DE派譯版-FV",
@@ -836,7 +837,8 @@
       "category": "miss_intro.bare_noun_possessive",
       "protect": false,
       "confidence": "medium",
-      "notes": "paired with 第一螺紋部"
+      "notes": "paired with 第一螺紋部",
+      "resolved_by": "F8_vp_modifier"
     },
     {
       "fixture": "110P000840US.JP.DE派譯版-FV",
@@ -856,7 +858,8 @@
       "category": "propagation_gap",
       "protect": false,
       "confidence": "high",
-      "notes": "c7 is indep claim restating c1 structure — cross-indep propagation | F4b diagnostic: UPSTREAM MISS — bare_noun_possessive in ancestor, no intro pattern captures this term anywhere in claims"
+      "notes": "c7 is indep claim restating c1 structure — cross-indep propagation | F4b diagnostic: UPSTREAM MISS — bare_noun_possessive in ancestor, no intro pattern captures this term anywhere in claims",
+      "resolved_by": "F9_instrumental"
     },
     {
       "fixture": "110P000840US.JP.DE派譯版-FV",
@@ -917,7 +920,8 @@
       "category": "miss_intro.bare_noun_possessive",
       "protect": false,
       "confidence": "medium",
-      "notes": "c10 parallel to c5"
+      "notes": "c10 parallel to c5",
+      "resolved_by": "F8_vp_modifier"
     },
     {
       "fixture": "110P000868US.JP派譯版-FV",
