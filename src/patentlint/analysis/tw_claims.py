@@ -1703,6 +1703,142 @@ def get_ancestor_chain_tw(claim: Claim, all_claims: list[Claim]) -> list[Claim]:
     return chain
 
 
+# Characters that indicate word-internal 一 (not a separate intro site).
+# Corpus-verified list: 第 (ordinal), 另/任/某/唯/同/單/統 (compound
+# quantifier prefixes where 一 is bound to the preceding morpheme).
+_WORD_INTERNAL_YI_PREDECESSORS = frozenset("第另任某唯同單統")
+
+# Regex for capturing the noun after a split 一 position, using the same
+# character class as _NOUN_CHARS but as a standalone pattern.
+_SPLIT_YI_NOUN_RE = re.compile(r"一(" + _NOUN_CHARS + r")")
+
+
+def _postprocess_intro_capture(
+    bare_noun: str,
+    match: re.Match,  # type: ignore[type-arg]
+    claim_text: str,
+) -> list[str]:
+    """Post-process a greedy _INTRO_PATTERN capture to repair over-captures.
+
+    Returns a list of candidate noun strings, each to be passed through
+    ``clean_noun_phrase_tw`` + ``normalize_candidate_intro`` via the
+    existing pipeline.
+
+    Three repair rules, applied in order:
+
+    Rule 1 — Reference-marker check:
+      If the bare noun starts with a reference-form prefix, the entire
+      capture is a false intro.  Discard but re-scan the full matched
+      span for embedded 一 positions (Rule 3).
+      If the bare noun contains a reference-form prefix at position > 0,
+      truncate at that position.
+
+    Rule 2 — Embedded 一 splitting:
+      After Rule 1's truncation (if any), check the resulting candidate
+      for non-word-internal 一 at positions > 0 and split.
+
+    Rule 3 — Re-scan discarded spans:
+      If Rule 1 discarded the entire noun, re-scan the full matched span
+      for 一 positions and extract nouns after them.
+    """
+    # Rule 1a: starts with ref prefix → try re-scan first; if no
+    # recovery sites found, strip the prefix and return the remainder
+    # (preserves the existing normalize_candidate_intro strip for cases
+    # like 一個所述第一弧面 where the 所述 is a greedy-capture artifact
+    # and the real intro is 第一弧面).
+    for prefix in _REFERENCE_FORM_PREFIXES:
+        if bare_noun.startswith(prefix):
+            # Re-scan the full matched span for 一 sites
+            recovered = _rescan_for_yi(
+                match.group(0), match.start(), claim_text,
+            )
+            if recovered:
+                return recovered
+            # No 一 recovery sites — strip the ref prefix and return
+            # the remainder for normal normalization.
+            remainder = bare_noun[len(prefix):]
+            return [remainder] if remainder else []
+
+    # Rule 1b: contains ref prefix at position > 0 → truncate
+    for prefix in _REFERENCE_FORM_PREFIXES:
+        idx = bare_noun.find(prefix)
+        if idx > 0:
+            bare_noun = bare_noun[:idx]
+            break
+
+    # Rule 2: embedded 一 splitting
+    candidates: list[str] = []
+    yi_positions = [i for i, ch in enumerate(bare_noun) if ch == "一" and i > 0]
+
+    if not yi_positions:
+        return [bare_noun]
+
+    # Find the first non-word-internal 一
+    split_pos: int | None = None
+    for pos in yi_positions:
+        preceding_char = bare_noun[pos - 1]
+        if preceding_char not in _WORD_INTERNAL_YI_PREDECESSORS:
+            split_pos = pos
+            break
+
+    if split_pos is None:
+        return [bare_noun]
+
+    # The part before the split 一 is one candidate
+    leading_part = bare_noun[:split_pos]
+    if leading_part:
+        candidates.append(leading_part)
+
+    # The noun after 一 — re-extract from claim_text at the absolute
+    # position to get the full noun span (the bare_noun may have been
+    # truncated by the {2,12} upper bound).
+    abs_start = match.start() + (len(match.group(0)) - len(match.group(1))) + split_pos
+    remaining_text = claim_text[abs_start:]
+    yi_match = _SPLIT_YI_NOUN_RE.match(remaining_text)
+    if yi_match:
+        candidates.append(yi_match.group(1))
+    elif split_pos + 1 < len(bare_noun):
+        # Fallback: use what's left in bare_noun after 一
+        candidates.append(bare_noun[split_pos + 1:])
+
+    return candidates
+
+
+def _rescan_for_yi(
+    full_span: str,
+    span_start: int,
+    claim_text: str,
+) -> list[str]:
+    """Re-scan a full matched span for 一 intro sites.
+
+    Used when Rule 1a discards the entire noun because it starts with
+    a reference-form prefix. Recovers intro sites like 旋轉編碼器 from
+    spans like ``一個所述感測器為一旋轉編碼器``.
+
+    Skips any extracted noun that starts with a reference-form prefix
+    (catches the quantifier-prefix ``一`` at position 0, whose noun
+    ``個所述...`` inherits the ref prefix that triggered the discard).
+    """
+    candidates: list[str] = []
+    for i, ch in enumerate(full_span):
+        if ch != "一":
+            continue
+        # Skip the first 一 at position 0 — it is always the quantifier
+        # prefix (一/一個/一種/...) that triggered the original match.
+        if i == 0:
+            continue
+        # Skip word-internal 一 (preceded by 第/另/etc.)
+        if full_span[i - 1] in _WORD_INTERNAL_YI_PREDECESSORS:
+            continue
+        # Extract noun after this 一 from the claim text
+        abs_pos = span_start + i
+        remaining = claim_text[abs_pos:]
+        yi_match = _SPLIT_YI_NOUN_RE.match(remaining)
+        if yi_match:
+            candidates.append(yi_match.group(1))
+    return candidates
+
+
 def extract_introductions_tw(
     claim: Claim,
     *,
@@ -1721,17 +1857,32 @@ def extract_introductions_tw(
     on the bare noun (group 1), which strips quantifiers and trailing
     verbs so it can be compared symmetrically against normalized
     reference terms.
+
+    Post-processing (F3) repairs three classes of greedy over-capture:
+      1. Reference-marker truncation/discard + re-scan
+      2. Embedded 一 splitting at non-word-internal positions
+      3. Paren-numeral variant registration
     """
     pairs: list[tuple[str, str]] = []
+    seen: set[str] = set()
     for m in _INTRO_PATTERN.finditer(claim.text):
         original = m.group(0)
         bare_noun = m.group(1)
-        normalized = normalize_candidate_intro(
-            bare_noun,
-            strict_qualifier_matching=strict_qualifier_matching,
-        )
-        if normalized:
-            pairs.append((original, normalized))
+
+        # F3 post-processing: may produce multiple candidates from one match
+        candidates = _postprocess_intro_capture(bare_noun, m, claim.text)
+
+        for candidate in candidates:
+            normalized = normalize_candidate_intro(
+                candidate,
+                strict_qualifier_matching=strict_qualifier_matching,
+            )
+            if not normalized:
+                continue
+            if normalized not in seen:
+                seen.add(normalized)
+                pairs.append((original, normalized))
+
     return pairs
 
 
@@ -1841,13 +1992,26 @@ def check_antecedent_basis(
 
             # Resolution order:
             #   1. Exact normalized match against any ancestor intro.
-            #   2. Longest-intro-prefix match — handles greedy regex
+            #   2. Paren-numeral asymmetry (F3 Rule 4): if the reference
+            #      has NO trailing (...) but an intro has the same base
+            #      noun WITH trailing (...), resolve. Guarded: if the
+            #      reference itself has a paren numeral, it must match
+            #      exactly (preserves L1/L2 typo detection).
+            #   3. Longest-intro-prefix match — handles greedy regex
             #      captures that grabbed an in-claim verb past the head
             #      noun (e.g. captured ``控制器讀取`` vs intro 控制器).
             resolved_intro: str | None = None
             if normalized_term in intros_by_term:
                 resolved_intro = normalized_term
-            else:
+            elif not re.search(r"\([^)]+\)$", normalized_term):
+                # Reference has no paren numeral — try matching against
+                # paren-stripped intro forms.
+                for intro in intros_by_term:
+                    stripped_intro = re.sub(r"\([^)]+\)$", "", intro)
+                    if stripped_intro != intro and stripped_intro == normalized_term:
+                        resolved_intro = intro
+                        break
+            if resolved_intro is None:
                 best_len = 0
                 for intro in intros_by_term:
                     if (

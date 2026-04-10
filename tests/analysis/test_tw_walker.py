@@ -574,6 +574,112 @@ class TestDefinitionalIntro:
 # ─────────────────────────────────────────────────────────────────────────
 
 
+# ─────────────────────────────────────────────────────────────────────────
+# F3: Post-processing — 一 splitting, ref-marker truncation, paren variant
+# ─────────────────────────────────────────────────────────────────────────
+
+
+class TestPostProcessYiSplitting:
+    """Embedded 一 in greedy captures is split into separate intro sites."""
+
+    def test_yi_splitting_染色墨水(self):
+        """電子組件通過浸泡一染色墨水 → split at 一 → 染色墨水 introduced."""
+        c = _claim(1, "1. 一種方法，包括將一電子組件通過浸泡一染色墨水的步驟。")
+        pairs = extract_introductions_tw(c)
+        normalized = {n for _, n in pairs}
+        assert "染色墨水" in normalized
+        assert "電子組件" in normalized
+
+    def test_yi_splitting_second_fragment(self):
+        """Longer synthetic: two nouns separated by verb + 一."""
+        c = _claim(1, "1. 一種裝置，包含一感測模組偵測一目標物體。")
+        pairs = extract_introductions_tw(c)
+        normalized = {n for _, n in pairs}
+        assert "目標物體" in normalized
+
+
+class TestPostProcessRefMarkerDiscard:
+    """Reference-marker discard + re-scan recovers 一 intro sites."""
+
+    def test_ref_marker_discard_rescan(self):
+        """一個所述感測器為一旋轉編碼器 → discard 所述感測器, recover 旋轉編碼器."""
+        c = _claim(10, "10. 如請求項9所述之裝置，其中一個所述感測器為一旋轉編碼器。")
+        pairs = extract_introductions_tw(c)
+        normalized = {n for _, n in pairs}
+        assert "旋轉編碼器" in normalized
+        # 所述感測器 should NOT appear as an intro
+        assert "感測器" not in normalized or "所述感測器" not in normalized
+
+
+class TestPostProcessRefMarkerTruncation:
+    """Reference-marker truncation at embedded 所述."""
+
+    def test_ref_marker_truncation(self):
+        """一影像擷取裝置擷取所述基板 → truncate at 所述 → 影像擷取裝置擷取.
+        After commit 3 adds 擷取 to denylist, this will normalize to
+        影像擷取裝置. For now, check 所述基板 is NOT in intros."""
+        c = _claim(3, "3. 方法，利用一影像擷取裝置擷取所述基板的影像。")
+        pairs = extract_introductions_tw(c)
+        normalized = {n for _, n in pairs}
+        # The 所述基板 portion must not be captured as an intro
+        assert "基板" not in normalized
+        # Some form of 影像擷取裝置 should be present
+        assert any("影像擷取裝置" in n for n in normalized)
+
+
+class TestPostProcessParenVariant:
+    """Paren-numeral asymmetry resolution (F3 Rule 4)."""
+
+    def test_paren_numeral_intro_registered(self):
+        """容置杯體(420) is registered as an intro with the paren numeral."""
+        c = _claim(6, "6. 裝置，所述蓋體配件為一容置杯體(420)設置有多數孔隙。")
+        pairs = extract_introductions_tw(c)
+        normalized = {n for _, n in pairs}
+        assert "容置杯體(420)" in normalized
+
+    def test_paren_numeral_resolves_reference_without_numeral(self):
+        """所述容置杯體 (no numeral) resolves against intro 容置杯體(420)."""
+        doc = _make_doc([
+            _claim(6, "6. 一種裝置，包含一蓋體配件，該蓋體配件為一容置杯體(420)。"),
+            _claim(7, "7. 如請求項6所述之裝置，其中所述容置杯體為金屬。",
+                   independent=False, deps=[6]),
+        ])
+        findings = check_antecedent_basis(doc)
+        assert findings == [], (
+            f"Expected 0 findings but got {len(findings)}: "
+            + ", ".join(f["term"] for f in findings)
+        )
+
+    def test_paren_numeral_mismatch_not_resolved(self):
+        """第二長度(L2) reference must NOT resolve against intro 第二長度(L1).
+        Protects the L1/L2 typo detection (protect:true gate)."""
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種裝置，其距離定義為第一長度(L1)，"
+                "其距離定義為第二長度(L1)，"
+                "所述第一長度(L1)和所述第二長度(L2)之間。",
+            ),
+        ])
+        findings = check_antecedent_basis(doc)
+        terms = [f["term"] for f in findings]
+        assert any("第二長度" in t for t in terms), (
+            "Expected finding for 第二長度(L2) but got: " + str(terms)
+        )
+
+
+class TestPostProcessWordInternalYi:
+    """Word-internal 一 (after 第/另/任/某/唯/同/單/統) is NOT split."""
+
+    def test_另一端部_not_split(self):
+        """另一端部 — 一 after 另 is word-internal, no split."""
+        c = _claim(1, "1. 一種裝置，包含另一端部及一連接件。")
+        pairs = extract_introductions_tw(c)
+        normalized = {n for _, n in pairs}
+        assert "連接件" in normalized
+        assert "端部" in normalized
+
+
 class TestTrailingVerb介:
     """Tests for 介 in _TRAILING_VERB_DENYLIST."""
 
