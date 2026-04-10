@@ -402,7 +402,8 @@
       "category": "propagation_gap",
       "protect": false,
       "confidence": "high",
-      "notes": "c7 is cross-category system claim; c1 method claim introduces 瀏覽程式 but walker does not cross method→system boundary | F4b diagnostic: CROSS-INDEPENDENT — intro in c1 (method claim) but c7 is independent system claim, not in ancestor chain"
+      "notes": "c7 is cross-category system claim; c1 method claim introduces 瀏覽程式 but walker does not cross method→system boundary | F4b diagnostic: CROSS-INDEPENDENT — intro in c1 (method claim) but c7 is independent system claim, not in ancestor chain",
+      "resolved_by": "F7_participial"
     },
     {
       "fixture": "110P000368US-JP,KR案派譯版-FV",
@@ -423,7 +424,8 @@
       "category": "propagation_gap",
       "protect": false,
       "confidence": "high",
-      "notes": "cross-category gap same as c7 | F4b diagnostic: CROSS-INDEPENDENT — intro in c1 via c7 (independent), c8 deps=[7]"
+      "notes": "cross-category gap same as c7 | F4b diagnostic: CROSS-INDEPENDENT — intro in c1 via c7 (independent), c8 deps=[7]",
+      "resolved_by": "F7_participial"
     },
     {
       "fixture": "110P000368US-JP,KR案派譯版-FV",
@@ -476,7 +478,8 @@
       "category": "miss_intro.bare_noun_possessive",
       "protect": false,
       "confidence": "high",
-      "notes": "intro via 形成於所述套接部(220)的側面的環形壓接部(211) — bare noun with paren numeral"
+      "notes": "intro via 形成於所述套接部(220)的側面的環形壓接部(211) — bare noun with paren numeral",
+      "resolved_by": "F7_locative"
     },
     {
       "fixture": "110P000631US.JP.DE派譯版-FV",
@@ -518,7 +521,8 @@
       "category": "miss_intro.bare_noun_possessive",
       "protect": false,
       "confidence": "high",
-      "notes": "intro via 凹入的第二容納空間(230) — possessive bare noun"
+      "notes": "intro via 凹入的第二容納空間(230) — possessive bare noun",
+      "resolved_by": "F7_post_de_ordinal"
     },
     {
       "fixture": "110P000631US.JP.DE派譯版-FV",
@@ -539,7 +543,8 @@
       "category": "miss_intro.bare_noun_possessive",
       "protect": false,
       "confidence": "high",
-      "notes": "c9 is indep claim restating c1 structure; same bare-noun pattern"
+      "notes": "c9 is indep claim restating c1 structure; same bare-noun pattern",
+      "resolved_by": "F7_locative"
     },
     {
       "fixture": "110P000631US.JP.DE派譯版-FV",
@@ -589,7 +594,8 @@
       "category": "propagation_gap",
       "protect": false,
       "confidence": "high",
-      "notes": "c11 dep of c10→c9→c5 chain | F4b diagnostic: UPSTREAM MISS — bare_noun_possessive in ancestor, no intro pattern captures this term anywhere in claims"
+      "notes": "c11 dep of c10→c9→c5 chain | F4b diagnostic: UPSTREAM MISS — bare_noun_possessive in ancestor, no intro pattern captures this term anywhere in claims",
+      "resolved_by": "F7_post_de_ordinal"
     },
     {
       "fixture": "110P000633US.JP派譯版-FV",
@@ -786,7 +792,8 @@
       "category": "miss_intro.bare_noun_possessive",
       "protect": false,
       "confidence": "high",
-      "notes": "possessive bare-noun intro"
+      "notes": "possessive bare-noun intro",
+      "resolved_by": "F7_participial"
     },
     {
       "fixture": "110P000840US.JP.DE派譯版-FV",
@@ -796,7 +803,8 @@
       "category": "propagation_gap",
       "protect": false,
       "confidence": "high",
-      "notes": "c2 dep of c1 which has the bare-noun intro | F4b diagnostic: UPSTREAM MISS — bare_noun_possessive in ancestor, no intro pattern captures this term anywhere in claims"
+      "notes": "c2 dep of c1 which has the bare-noun intro | F4b diagnostic: UPSTREAM MISS — bare_noun_possessive in ancestor, no intro pattern captures this term anywhere in claims",
+      "resolved_by": "F7_participial"
     },
     {
       "fixture": "110P000840US.JP.DE派譯版-FV",
@@ -806,7 +814,8 @@
       "category": "miss_intro.bare_noun_possessive",
       "protect": false,
       "confidence": "medium",
-      "notes": "intro within c4 likely bare-noun; eyeball recommended"
+      "notes": "intro within c4 likely bare-noun; eyeball recommended",
+      "resolved_by": "F6_bare_after_verb"
     },
     {
       "fixture": "110P000840US.JP.DE派譯版-FV",
@@ -827,7 +836,8 @@
       "category": "miss_intro.bare_noun_possessive",
       "protect": false,
       "confidence": "medium",
-      "notes": "provisional bare-noun; intro could be possessive within c5"
+      "notes": "provisional bare-noun; intro could be possessive within c5",
+      "resolved_by": "F6_bare_after_verb"
     },
     {
       "fixture": "110P000840US.JP.DE派譯版-FV",
@@ -848,7 +858,8 @@
       "category": "miss_intro.bare_noun_possessive",
       "protect": false,
       "confidence": "high",
-      "notes": "intro via 所述容器本體(100)的所述第一容置空間(101) possessive"
+      "notes": "intro via 所述容器本體(100)的所述第一容置空間(101) possessive",
+      "resolved_by": "F6_bare_after_verb"
     },
     {
       "fixture": "110P000840US.JP.DE派譯版-FV",
@@ -869,7 +880,8 @@
       "category": "propagation_gap",
       "protect": false,
       "confidence": "high",
-      "notes": "same as 樞軸 c7 | F4b diagnostic: UPSTREAM MISS — bare_noun_possessive in ancestor, no intro pattern captures this term anywhere in claims"
+      "notes": "same as 樞軸 c7 | F4b diagnostic: UPSTREAM MISS — bare_noun_possessive in ancestor, no intro pattern captures this term anywhere in claims",
+      "resolved_by": "F7_participial"
     },
     {
       "fixture": "110P000840US.JP.DE派譯版-FV",
@@ -879,7 +891,8 @@
       "category": "propagation_gap",
       "protect": false,
       "confidence": "high",
-      "notes": "c8 dep of c7 | F4b diagnostic: UPSTREAM MISS — bare_noun_possessive in ancestor, no intro pattern captures this term anywhere in claims"
+      "notes": "c8 dep of c7 | F4b diagnostic: UPSTREAM MISS — bare_noun_possessive in ancestor, no intro pattern captures this term anywhere in claims",
+      "resolved_by": "F7_participial"
     },
     {
       "fixture": "110P000840US.JP.DE派譯版-FV",
@@ -889,7 +902,8 @@
       "category": "miss_intro.bare_noun_possessive",
       "protect": false,
       "confidence": "medium",
-      "notes": "c9 parallel to c4 but with numeral"
+      "notes": "c9 parallel to c4 but with numeral",
+      "resolved_by": "F6_bare_after_verb"
     },
     {
       "fixture": "110P000840US.JP.DE派譯版-FV",
@@ -910,7 +924,8 @@
       "category": "miss_intro.bare_noun_possessive",
       "protect": false,
       "confidence": "medium",
-      "notes": "c10 parallel to c5"
+      "notes": "c10 parallel to c5",
+      "resolved_by": "F6_bare_after_verb"
     },
     {
       "fixture": "110P000840US.JP.DE派譯版-FV",
