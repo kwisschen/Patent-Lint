@@ -1308,6 +1308,16 @@ _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
         #       10-fixture corpus, no exception coordination needed.
         "依序",
 
+        # === Added 2026-04-10 F5 ===
+        # 相互: adverb "mutually" — 上端邊緣相互銜接 should cut at 相互
+        #       to extract 上端邊緣. 相互作用 has 相互 at START, never
+        #       interior. Grep: X相互 ×0 as compound noun — safe.
+        # 朝向: verb/preposition "face toward" — 底部朝向下方 should cut
+        #       at 朝向 to extract 底部. 朝向 as standalone noun
+        #       ("orientation") is the head noun, never mid-compound.
+        #       Grep: X朝向 as compound noun ×0 — safe.
+        "相互", "朝向",
+
         # NOT added (interior to legitimate noun compounds):
         # 編碼 (編碼器), 識別 (識別碼/識別資料),
         # 通訊 (通訊模組), 傳動 (傳動件),
@@ -1927,6 +1937,35 @@ _CLAUSE_BOUNDARY_RE = re.compile(r'[；，、。]')
 
 _REF_PREFIX_SET = ('所述', '該', '前述')
 
+# F5a: Ref-prefix possessive (所述|該|前述)X的Y
+# Split into two variants to prevent verb-contaminated X:
+# - With paren-numeral on X: no CJK length limit (numeral anchors boundary)
+# - Without paren-numeral: X limited to 2-4 CJK (rejects 框架相配合 etc.)
+_REF_POSSESSIVE_WITH_NUM = re.compile(
+    r'(?:所述|該|前述)'
+    r'[\u4e00-\u7683\u7685-\u9fff]{2,}\([A-Za-z0-9]+\)'
+    r'的'
+    r'([\u4e00-\u7683\u7685-\u9fff]{2,}(?:\([A-Za-z0-9]+\))?)'
+)
+_REF_POSSESSIVE_NO_NUM = re.compile(
+    r'(?:所述|該|前述)'
+    r'[\u4e00-\u7683\u7685-\u9fff]{2,4}'
+    r'的'
+    r'([\u4e00-\u7683\u7685-\u9fff]{2,}(?:\([A-Za-z0-9]+\))?)'
+)
+
+# F5b: 一X(N)的Y — intro with paren-numeral possessive
+_YI_NOUN_PAREN_DE_PATTERN = re.compile(
+    r'一[\u4e00-\u7683\u7685-\u9fff]{2,}\([A-Za-z0-9]+\)'
+    r'的'
+    r'([\u4e00-\u7683\u7685-\u9fff]{2,}(?:\([A-Za-z0-9]+\))?)'
+)
+
+_POSSESSIVE_VERB_DENYLIST = {
+    '包括', '包含', '具有', '是', '為', '大於', '小於', '等於',
+    '設置', '形成', '連接', '連結',
+}
+
 
 def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
     """Extract bare-noun introductions from supplementary patterns.
@@ -2005,6 +2044,38 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
     for m in _BARE_AFTER_VERB_PATTERN.finditer(text):
         noun = m.group(1)
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        results.append((m.group(0), normalized))
+
+    # F5a: Ref-prefix possessive 所述X的Y (two variants)
+    for pattern in (_REF_POSSESSIVE_WITH_NUM, _REF_POSSESSIVE_NO_NUM):
+        for m in pattern.finditer(text):
+            noun = m.group(1)
+            normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+            cjk_len = sum(1 for c in normalized if '\u4e00' <= c <= '\u9fff')
+            if cjk_len < 2:
+                continue
+            if normalized.startswith(('所述', '該', '前述')):
+                continue
+            # Check follower — reject if followed by content verb
+            end_pos = m.end()
+            follower = text[end_pos:end_pos + 2]
+            if follower in _POSSESSIVE_VERB_DENYLIST:
+                continue
+            results.append((m.group(0), normalized))
+
+    # F5b: 一X(N)的Y — intro with paren-numeral possessive
+    for m in _YI_NOUN_PAREN_DE_PATTERN.finditer(text):
+        noun = m.group(1)
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        cjk_len = sum(1 for c in normalized if '\u4e00' <= c <= '\u9fff')
+        if cjk_len < 2:
+            continue
+        if normalized.startswith(('所述', '該', '前述')):
+            continue
+        end_pos = m.end()
+        follower = text[end_pos:end_pos + 2]
+        if follower in _POSSESSIVE_VERB_DENYLIST:
+            continue
         results.append((m.group(0), normalized))
 
     # Uniform trailing-verb cleanup for all supplementary captures
