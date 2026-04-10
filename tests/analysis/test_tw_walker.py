@@ -901,3 +901,105 @@ class TestSupplementaryIntrosF8:
         intros = extract_introductions_tw(_claim(1, text))
         norms = [n for _, n in intros]
         assert norms.count("第二螺紋部") == 1
+
+
+# ── F7a: 形成於...的Y locative pattern ──────────────────────────────────
+
+
+class TestSupplementaryIntrosF7a:
+    """F7a: Locative 形成於...的Y."""
+
+    def test_locative_basic(self):
+        """形成於所述套接部(220)的側面的環形壓接部(211) → introduces 環形壓接部."""
+        text = "以及形成於所述套接部(220)的側面的環形壓接部(211)；"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "環形壓接部" in norms
+
+    def test_locative_reject_short(self):
+        """形成於所述環狀本體的外圍 → NOT captured (2 CJK chars)."""
+        text = "形成於所述環狀本體的外圍"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "外圍" not in norms
+
+    def test_locative_no_duplicate(self):
+        text = "一環形壓接部(211)，形成於所述套接部的側面的環形壓接部(211)"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert norms.count("環形壓接部") == 1
+
+
+# ── F7b: 一V的Y participial pattern ─────────────────────────────────────
+
+
+class TestSupplementaryIntrosF7b:
+    """F7b: Participial 一V的Y."""
+
+    def test_participial_ordinal(self):
+        """一開口向下的第二容置空間(225) → introduces 第二容置空間."""
+        text = "形成一開口向下的第二容置空間(225)"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "第二容置空間" in norms
+
+    def test_participial_long_vp(self):
+        """一執行於一使用者裝置的瀏覽程式 → introduces 瀏覽程式."""
+        text = "一執行於一使用者裝置的瀏覽程式產生"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "瀏覽程式" in norms
+
+    def test_participial_reject_short(self):
+        """一種的方法 → 方法 NOT captured (2 CJK, no ordinal, no numeral)."""
+        text = "一種的方法"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "方法" not in norms
+
+    def test_participial_no_duplicate(self):
+        text = "一第二容置空間(225)，形成一開口向下的第二容置空間(225)"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert norms.count("第二容置空間") == 1
+
+
+# ── F7c: 的第Y post-的 ordinal noun ─────────────────────────────────────
+
+
+class TestSupplementaryIntrosF7c:
+    """F7c: Post-的 ordinal noun 的第Y."""
+
+    def test_post_de_ordinal(self):
+        """凹入的第二容納空間(230) → introduces 第二容納空間."""
+        text = "從所述套接部底部凹入的第二容納空間(230)"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "第二容納空間" in norms
+
+    def test_post_de_ordinal_no_numeral(self):
+        """加工的第一面板 → introduces 第一面板."""
+        text = "加工的第一面板"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "第一面板" in norms
+
+    def test_post_de_reject_non_ordinal(self):
+        """凹入的底部 → NOT captured (no 第)."""
+        text = "凹入的底部"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "底部" not in norms
+
+    def test_post_de_reject_ref_between(self):
+        """所述X的所述第Y → NOT captured (所述 between 的 and 第)."""
+        text = "所述套接部的所述第二容納空間"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert "第二容納空間" not in norms
+
+    def test_post_de_no_duplicate(self):
+        text = "一第二容納空間(230)，凹入的第二容納空間(230)"
+        intros = extract_introductions_tw(_claim(1, text))
+        norms = [n for _, n in intros]
+        assert norms.count("第二容納空間") == 1
