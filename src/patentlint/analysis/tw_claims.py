@@ -1897,6 +1897,11 @@ _INSTRUMENTAL_PATTERN = re.compile(
     r'透過([\u4e00-\u9fff]{2,}(?:\([A-Za-z0-9]+\))?)(?:連接|連結)',
 )
 
+_VP_MODIFIER_PATTERN = re.compile(
+    r'相配合的([\u4e00-\u9fff]{2,}(?:\([A-Za-z0-9]+\))?)',
+)
+
+
 def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
     """Extract bare-noun introductions from supplementary patterns.
 
@@ -1912,6 +1917,23 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
         # Normalize: strip paren-numeral for the normalized form
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
         results.append((original, normalized))
+
+    # F8: 相配合的Y — VP modifier intro
+    # Scoped: Y must start with ordinal 第 OR contain paren-numeral
+    for m in _VP_MODIFIER_PATTERN.finditer(text):
+        noun = m.group(1)
+        # Strip paren-numeral for normalized form
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        # Scoping: Y must start with 第 (ordinal) OR original had paren-numeral
+        has_numeral = '(' in noun
+        has_ordinal = normalized.startswith('第')
+        if not (has_numeral or has_ordinal):
+            continue
+        # Floor: normalized Y must be ≥3 CJK chars (rejects 圓形, 圓柱 shape descriptors)
+        cjk_len = sum(1 for c in normalized if '\u4e00' <= c <= '\u9fff')
+        if cjk_len < 3:
+            continue
+        results.append((m.group(0), normalized))
 
     return results
 
