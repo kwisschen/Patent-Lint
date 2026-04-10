@@ -1888,6 +1888,34 @@ def _rescan_for_yi(
     return candidates
 
 
+# --- Supplementary bare-noun intro patterns (F9/F8/F7/F6/F5) ---
+# These capture intro sites that _INTRO_PATTERN misses because the noun
+# lacks a 一/quantifier prefix. Each pattern is narrowly scoped to
+# minimize false positives.
+
+_INSTRUMENTAL_PATTERN = re.compile(
+    r'透過([\u4e00-\u9fff]{2,}(?:\([A-Za-z0-9]+\))?)(?:連接|連結)',
+)
+
+def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
+    """Extract bare-noun introductions from supplementary patterns.
+
+    Returns (original_span, normalized_term) pairs, same contract as
+    extract_introductions_tw's main loop.
+    """
+    results: list[tuple[str, str]] = []
+
+    # F9: 透過Y連接/連結 — instrumental intro
+    for m in _INSTRUMENTAL_PATTERN.finditer(text):
+        noun = m.group(1)
+        original = m.group(0)  # full matched span
+        # Normalize: strip paren-numeral for the normalized form
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        results.append((original, normalized))
+
+    return results
+
+
 def extract_introductions_tw(
     claim: Claim,
     *,
@@ -1931,6 +1959,13 @@ def extract_introductions_tw(
             if normalized not in seen:
                 seen.add(normalized)
                 pairs.append((original, normalized))
+
+    # --- Supplementary patterns (bare-noun intros without 一 prefix) ---
+    supplementary = _extract_supplementary_intros(claim.text)
+    for orig, norm in supplementary:
+        if norm not in seen:
+            seen.add(norm)
+            pairs.append((orig, norm))
 
     return pairs
 
