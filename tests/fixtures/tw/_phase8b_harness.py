@@ -22,7 +22,7 @@ Exit codes
 * 0 — all gates pass
 * 1 — protect_violations > 0 (HARD FAIL)
 * 2 — new_findings > 0 (HALT for labeling)
-* 3 — fixture or labels file missing
+* 3 — fixture or labels file missing, OR structural invariant violation
 """
 
 from __future__ import annotations
@@ -117,14 +117,34 @@ def _walker_actual_set(index: dict) -> tuple[dict[tuple, dict], int]:
     return actual, fixture_count
 
 
+def _check_structural_invariants(labels: list[dict]) -> None:
+    """Exit 3 if any label has both protect:true and resolved_by set."""
+    for lab in labels:
+        if lab.get("protect") and lab.get("resolved_by"):
+            tup = (
+                lab["fixture"],
+                lab["claim_id"],
+                lab["term"],
+                lab["reference_form"],
+            )
+            print(
+                f"STRUCTURAL FAIL: protect:true entry has resolved_by set: {tup}",
+                file=sys.stderr,
+            )
+            sys.exit(3)
+
+
 def _compute_diff(labels_doc: dict, actual: dict[tuple, dict]) -> dict:
     """Build the diff payload (gates + per-category stats + delta lists)."""
     labels = labels_doc["labels"]
     categories = labels_doc["metadata"]["categories"]
 
+    active_labels = [lab for lab in labels if not lab.get("resolved_by")]
+    resolved_labels = [lab for lab in labels if lab.get("resolved_by")]
+
     expected_map: dict[tuple, dict] = {}
     protected: set[tuple] = set()
-    for lab in labels:
+    for lab in active_labels:
         key = (
             lab["fixture"],
             lab["claim_id"],
@@ -179,6 +199,9 @@ def _compute_diff(labels_doc: dict, actual: dict[tuple, dict]) -> dict:
         "removed_findings": removed_findings,
         "protect_violations": protect_violations,
         "protected": protected,
+        "active_count": len(active_labels),
+        "resolved_count": len(resolved_labels),
+        "resolved_labels": resolved_labels,
     }
 
 
@@ -210,7 +233,12 @@ def _render_markdown(
     out.append("")
     out.append(f"**Commit**: {commit}")
     out.append(f"**Labels version**: {schema_version}")
-    out.append(f"**Label count**: {len(labels)}")
+    active_count = diff["active_count"]
+    resolved_count = diff["resolved_count"]
+    out.append(
+        f"**Label count**: {len(labels)} "
+        f"({active_count} active, {resolved_count} resolved)"
+    )
     out.append(f"**Fixture count**: {fixture_count}")
     out.append(f"**Walker finding count**: {len(actual_keys)}")
     out.append("")
@@ -238,6 +266,20 @@ def _render_markdown(
             f"| {cid} | {s['labeled']} | {s['still_flagged']} | "
             f"{s['removed']} | {s['removed_protected']} |"
         )
+    out.append("")
+    out.append("## Resolved entries")
+    out.append("")
+    resolved_labels = diff["resolved_labels"]
+    if resolved_labels:
+        out.append("| fixture | claim | term | category | resolved_by |")
+        out.append("|---|---|---|---|---|")
+        for lab in resolved_labels:
+            out.append(
+                f"| {lab['fixture']} | {lab['claim_id']} | {lab['term']} | "
+                f"{lab['category']} | {lab['resolved_by']} |"
+            )
+    else:
+        out.append("None")
     out.append("")
     out.append("## New findings (unlabeled) — HALT if any")
     out.append("")
@@ -295,10 +337,14 @@ def _render_json(
     cat_stats = diff["cat_stats"]
     expected_map = diff["expected_map"]
 
+    active_count = diff["active_count"]
+    resolved_count = diff["resolved_count"]
     payload = {
         "commit": commit,
         "labels_version": schema_version,
         "label_count": len(labels),
+        "active_count": active_count,
+        "resolved_count": resolved_count,
         "fixture_count": fixture_count,
         "walker_finding_count": len(actual_keys),
         "gates": {
@@ -345,6 +391,17 @@ def _render_json(
             }
             for k in protect_violations
         ],
+        "resolved_entries": [
+            {
+                "fixture": lab["fixture"],
+                "claim_id": lab["claim_id"],
+                "term": lab["term"],
+                "reference_form": lab["reference_form"],
+                "category": lab["category"],
+                "resolved_by": lab["resolved_by"],
+            }
+            for lab in diff["resolved_labels"]
+        ],
         "exit_code": exit_code,
     }
     return json.dumps(payload, indent=2, ensure_ascii=False)
@@ -366,6 +423,7 @@ def main() -> int:
     args = parser.parse_args()
 
     labels_doc = _load_labels()
+    _check_structural_invariants(labels_doc["labels"])
     index = _load_fixture_index()
     actual, fixture_count = _walker_actual_set(index)
     diff = _compute_diff(labels_doc, actual)
