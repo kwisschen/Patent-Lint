@@ -680,6 +680,55 @@ class TestPostProcessWordInternalYi:
         assert "端部" in normalized
 
 
+# ─────────────────────────────────────────────────────────────────────────
+# F3: Trailing verbs — 至, 依序, 擷取
+# ─────────────────────────────────────────────────────────────────────────
+
+
+class TestTrailingVerb至:
+    """Tests for 至 in _TRAILING_VERB_DENYLIST."""
+
+    def test_至_stripped_from_intro(self):
+        """一解鎖指令至 → introduces 解鎖指令 (至 stripped)."""
+        pairs = extract_introductions_tw(
+            _claim(8, "8. 裝置，該模組輸出一解鎖指令至該通訊模組。"),
+        )
+        nouns = [n for _, n in pairs]
+        assert "解鎖指令" in nouns, f"Expected 解鎖指令 in {nouns}"
+
+
+class TestTrailingVerb依序:
+    """Tests for 依序 in _TRAILING_VERB_DENYLIST."""
+
+    def test_依序_stripped_from_intro(self):
+        """一第二方向依序 → introduces 第二方向 (依序 stripped)."""
+        pairs = extract_introductions_tw(
+            _claim(10, "10. 方法，依據一第二方向依序，將元件排列。"),
+        )
+        nouns = [n for _, n in pairs]
+        assert "第二方向" in nouns, f"Expected 第二方向 in {nouns}"
+
+
+class TestTrailingVerb擷取:
+    """Tests for 擷取 in _TRAILING_VERB_DENYLIST."""
+
+    def test_擷取_stripped_from_long_noun(self):
+        """影像擷取裝置擷取 → 影像擷取裝置 (residual 6 ≥ 3, strip)."""
+        pairs = extract_introductions_tw(
+            _claim(3, "3. 方法，利用一影像擷取裝置擷取所述基板的影像。"),
+        )
+        nouns = [n for _, n in pairs]
+        assert "影像擷取裝置" in nouns, f"Expected 影像擷取裝置 in {nouns}"
+
+    def test_影像擷取_preserved(self):
+        """影像擷取 (4 chars) — residual 2 < 3, guard protects."""
+        pairs = extract_introductions_tw(
+            _claim(1, "1. 一種系統，包含一影像擷取。"),
+        )
+        nouns = [n for _, n in pairs]
+        assert "影像擷取" in nouns, f"Expected 影像擷取 in {nouns}"
+
+
 class TestTrailingVerb介:
     """Tests for 介 in _TRAILING_VERB_DENYLIST."""
 
