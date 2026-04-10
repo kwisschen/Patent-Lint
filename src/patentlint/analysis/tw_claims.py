@@ -1408,6 +1408,13 @@ _INTERIOR_CUT_EXCEPTIONS: frozenset[str] = frozenset({
     # 波產生器, fails the > 1 check), but adding to the exception
     # set is documented insurance for any longer captured spans.
     "波產生器",
+
+    # === Added F4 session: 連接面 (connecting surface) ===
+    # 110P000158 has 第一連接面 / 第二連接面 ×4. Without protection,
+    # interior verb 連接 truncates 第一連接面 → 第一 (bare ordinal).
+    # Root cause of walker_bug.regex_noun_class_narrow — the label
+    # name was misleading; the actual bug is interior-verb overcutting.
+    "連接面", "第一連接面", "第二連接面",
 })
 
 

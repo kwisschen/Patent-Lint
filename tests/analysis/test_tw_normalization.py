@@ -254,3 +254,14 @@ class TestTrailingStripPreservesLegitimate所Suffixes:
         # Fragment case: 齒輪前 (front-of-the-gear, captured fragment)
         # strips to 齒輪 — the correct head noun for resolution.
         assert clean_noun_phrase_tw("齒輪前") == "齒輪"
+
+    def test_連接面_compound_preserved(self):
+        """F4 fix: 連接面 (connecting surface) is a compound noun, not
+        a verb+residual. Interior verb 連接 must not truncate 第一連接面
+        to bare ordinal 第一. Root cause of walker_bug.regex_noun_class_narrow.
+        """
+        assert clean_noun_phrase_tw("第一連接面") == "第一連接面"
+        assert clean_noun_phrase_tw("第二連接面") == "第二連接面"
+        assert clean_noun_phrase_tw("連接面") == "連接面"
+        # Regression: 連接 as a verb should still cut
+        assert clean_noun_phrase_tw("焊墊連接") == "焊墊"
