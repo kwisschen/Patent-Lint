@@ -554,7 +554,8 @@
       "category": "miss_intro.bare_noun_possessive",
       "protect": false,
       "confidence": "high",
-      "notes": "intro via 設置於一容器本體(100)的開口部(120) — possessive"
+      "notes": "intro via 設置於一容器本體(100)的開口部(120) — possessive",
+      "resolved_by": "F5_yi_paren_possessive"
     },
     {
       "fixture": "110P000631US.JP.DE派譯版-FV",
@@ -564,7 +565,8 @@
       "category": "miss_intro.bare_noun_possessive",
       "protect": false,
       "confidence": "high",
-      "notes": "c10 dep of c9"
+      "notes": "c10 dep of c9",
+      "resolved_by": "F5_ref_possessive"
     },
     {
       "fixture": "110P000631US.JP.DE派譯版-FV",
@@ -574,7 +576,8 @@
       "category": "propagation_gap",
       "protect": false,
       "confidence": "high",
-      "notes": "c10 dep of c9 which introduces 開口部(120) | F4b diagnostic: CROSS-INDEPENDENT — intro in c1 (一開口部(120)) but c10 deps=[9] and c9 is a separate independent claim that uses 開口部 bare"
+      "notes": "c10 dep of c9 which introduces 開口部(120) | F4b diagnostic: CROSS-INDEPENDENT — intro in c1 (一開口部(120)) but c10 deps=[9] and c9 is a separate independent claim that uses 開口部 bare",
+      "resolved_by": "F5_yi_paren_possessive"
     },
     {
       "fixture": "110P000631US.JP.DE派譯版-FV",
