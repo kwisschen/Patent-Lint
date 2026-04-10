@@ -811,6 +811,11 @@ _INTRO_MULTI_QUANTIFIERS = (
     # Corpus: 兩曲柄 ×1 (intro), 兩端 ×3, 兩側 ×2 (all non-intro).
     "兩個",
     r"兩(?![端側])",
+    # F4b: bare N個 quantifier (CJK numerals only). Arabic digits
+    # excluded — 100個 etc. are measurements, not intros. Safe from
+    # N個所述X false positives because F3 Rule 1a discards captures
+    # starting with 所述.
+    r"[二三四五六七八九十]+個",
     "一個", "一種", "一對",
     "複數個", "多個", "數個",
     "複數",
