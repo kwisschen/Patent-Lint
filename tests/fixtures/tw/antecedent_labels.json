@@ -95,10 +95,11 @@
       "claim_id": 4,
       "term": "聚苯醚成分",
       "reference_form": "所述聚苯醚成分",
-      "category": "walker_bug.noun_boundary_overgreedy",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "high",
-      "notes": "SCHEMA V2: ambig resolved. c4 text reads 所述聚苯醚|成分包括一第一聚苯醚和一第二聚苯醚; correct noun boundary falls between 聚苯醚 and 成分 (成分包括 is a fresh N+V predicate). Walker should capture 聚苯醚 not 聚苯醚成分. Fix is right-boundary lookahead for content-verb followers (包括/包含/是/為/etc). | SCHEMA V8: Deferred to Phase 9 — N+V boundary detection needed (成分包括 is a clause boundary but the walker captures 聚苯醚成分 as one noun). Only 1 entry, not worth the heuristic complexity."
+      "notes": "Reclassified: drafter switched from 聚苯醚樹脂 (c1) to 聚苯醚成分 (c4) — terminology inconsistency",
+      "resolved_by": null
     },
     {
       "fixture": "108P001015JP派譯版-FV",
@@ -193,40 +194,44 @@
       "claim_id": 4,
       "term": "第二控制模組",
       "reference_form": "所述第二控制模組",
-      "category": "propagation_gap",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "medium",
-      "notes": "likely introduced in c2 or c3 parent; multi-parent BFS gap candidate | F4b diagnostic: UPSTREAM MISS — bare_noun_possessive in ancestor, no intro pattern captures this term anywhere in claims"
+      "notes": "Reclassified: 第二控制模組 never introduced — genuine omission",
+      "resolved_by": null
     },
     {
       "fixture": "109P001046US.DE.JP派譯版-FV",
       "claim_id": 4,
       "term": "第二無線通訊模組",
       "reference_form": "所述第二無線通訊模組",
-      "category": "propagation_gap",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "medium",
-      "notes": "same propagation class as 第二控制模組 | F4b diagnostic: UPSTREAM MISS — bare_noun_possessive in ancestor, no intro pattern captures this term anywhere in claims"
+      "notes": "Reclassified: drafter introduced 第二通訊模組 but referenced 第二無線通訊模組 — naming mismatch",
+      "resolved_by": null
     },
     {
       "fixture": "109P001046US.DE.JP派譯版-FV",
       "claim_id": 6,
       "term": "第二無線通訊模組",
       "reference_form": "所述第二無線通訊模組",
-      "category": "propagation_gap",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "medium",
-      "notes": "c6 dep of c5 | F4b diagnostic: UPSTREAM MISS — bare_noun_possessive in ancestor, no intro pattern captures this term anywhere in claims"
+      "notes": "Reclassified: same naming mismatch as c4 (第二通訊模組 vs 第二無線通訊模組)",
+      "resolved_by": null
     },
     {
       "fixture": "109P001046US.DE.JP派譯版-FV",
       "claim_id": 7,
       "term": "第二無線通訊模組",
       "reference_form": "所述第二無線通訊模組",
-      "category": "propagation_gap",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "medium",
-      "notes": "c7 dep of c4 | F4b diagnostic: UPSTREAM MISS — bare_noun_possessive in ancestor, no intro pattern captures this term anywhere in claims"
+      "notes": "Reclassified: same naming mismatch as c4 (第二通訊模組 vs 第二無線通訊模組)",
+      "resolved_by": null
     },
     {
       "fixture": "109P001046US.DE.JP派譯版-FV",
@@ -244,10 +249,11 @@
       "claim_id": 10,
       "term": "第二無線通訊模組",
       "reference_form": "所述第二無線通訊模組",
-      "category": "propagation_gap",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "medium",
-      "notes": "c10 dep of c4 | F4b diagnostic: UPSTREAM MISS — bare_noun_possessive in ancestor, no intro pattern captures this term anywhere in claims"
+      "notes": "Reclassified: same naming mismatch as c4 (第二通訊模組 vs 第二無線通訊模組)",
+      "resolved_by": null
     },
     {
       "fixture": "110P000158US.JP.EPC派譯版-FV",
