@@ -233,6 +233,11 @@ function TechDetailsSection() {
               <p className="text-muted-foreground leading-relaxed">
                 {t(`security.tech.${key}`)}
               </p>
+              {key === 'telemetry' && (
+                <p className="text-muted-foreground leading-relaxed mt-3">
+                  {t('security.tech.extensionNote')}
+                </p>
+              )}
               {key === 'selfHosted' && (
                 <a
                   href="mailto:kwisschen@gmail.com"
