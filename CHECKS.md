@@ -149,7 +149,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Multi-dep alternative form | 專利法施行細則 §18 | AMEND / PASS | `check.tw.claims.multiDepAlternative` | Multi-dep claims must use alternative form |
 | Title vs claims subject | 專利審查基準 | VERIFY / PASS | `check.tw.claims.titleSubjectMatch` | 發明名稱/新型名稱 consistent with independent claim subjects |
 | Claims vs 符號說明 consistency | 專利法施行細則 §19 | VERIFY / PASS | `check.tw.claims.symbolTableConsistency` | Numerals in claims undefined in 符號說明 (reverse direction not flagged; zero-numeral claims early-return PASS) |
-| Antecedent basis (先行詞) | 專利審查基準 | VERIFY / PASS | `check.tw.claims.antecedentBasis` | 該/所述/前述 + noun has matching 一 + noun introduction |
+| Antecedent basis (先行詞) | 專利審查基準 | VERIFY / PASS | `check.tw.claims.antecedentBasis` | BFS ancestor-chain walker with cycle protection; char-bigram Jaccard tokenization (threshold 0.40) with CJK ordinal guard pre-filter; did-you-mean suggestion layer on borderline misses; known limitations: semantic-disjunction intro regex, bigram Jaccard precision ceiling, multi-hop chain-walking gaps (Phase 9) |
 
 ## TW Abstract (摘要)
 
