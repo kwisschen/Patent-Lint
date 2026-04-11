@@ -992,6 +992,11 @@
     "whereinCommaDetails": "Claim {{claimNumber}} may have incorrect comma placement around a 'wherein' clause. Review punctuation per MPEP § 608.01(m).",
     "punctuationPass": "All claims have correct punctuation."
   },
+  "updates": {
+    "available": "A new version is available",
+    "reload": "Reload",
+    "dismiss": "Later"
+  },
   "term": {
     "claim": {
       "numbered": "claim {{n}}"

@@ -992,6 +992,11 @@
     "whereinCommaDetails": "청구항 {{claimNumber}}의 'wherein' 절 주변에 쉼표가 잘못 배치되었을 수 있습니다. MPEP § 608.01(m)에 따라 부호를 검토하세요.",
     "punctuationPass": "모든 청구항의 부호가 올바릅니다."
   },
+  "updates": {
+    "available": "새 버전이 사용 가능합니다",
+    "reload": "새로고침",
+    "dismiss": "나중에"
+  },
   "term": {
     "claim": {
       "numbered": "청구항 {{n}}"
