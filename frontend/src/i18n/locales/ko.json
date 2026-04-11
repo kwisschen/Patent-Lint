@@ -167,7 +167,7 @@
   "security": {
     "airplaneDemoAlt": "데모: 네트워크 연결 없이 비행기 모드에서 특허 초안을 분석하는 모습",
     "badge": {
-      "headline": "계정 불필요. 설치 불필요. 업로드 불필요.",
+      "headline": "업로드 불필요. 계정 불필요. 설치 불필요.",
       "description": "파일이 기기를 벗어나지 않습니다.",
       "proveIt": "직접 확인 →"
     },
@@ -254,6 +254,7 @@
       "ai": "PatentLint는 AI, 머신러닝 또는 대규모 언어 모델을 사용하지 않습니다. 모든 검사는 MPEP 지침에 따른 결정론적 규칙 기반 패턴 매칭입니다. 텍스트가 AI 서비스로 전송되지 않습니다.",
       "telemetryTitle": "텔레메트리 및 분석",
       "telemetry": "PatentLint는 분석 데이터, 텔레메트리, 사용 데이터를 일체 수집하지 않습니다. 쿠키, 추적 픽셀, 서드파티 스크립트가 없습니다. 이 애플리케이션은 사용자의 신원을 알지 못합니다.",
+      "extensionNote": "DevTools로 본 사이트를 감사할 때 익숙하지 않은 네트워크 활동이 보인다면, chrome://extensions를 확인해 주세요. 브라우저 확장 프로그램(광고 차단기, 비밀번호 관리자, 화면 녹화 도구 등)은 본 사이트를 포함하여 사용자가 방문하는 모든 페이지에 콘텐츠 스크립트를 주입합니다. PatentLint 자체는 자사 에셋과 Pyodide 의존 패키지만 로드합니다.",
       "selfHostedTitle": "자체 호스팅 옵션",
       "selfHosted": "ITAR 관리 환경이나 에어갭 네트워크 등 엄격한 데이터 주권 요건이 있는 조직을 위해, PatentLint는 모든 종속 항목을 포함한 Docker로 자체 호스팅 배포할 수 있습니다.",
       "contactEnterprise": "엔터프라이즈 배포 문의"
@@ -261,8 +262,9 @@
   },
   "about": {
     "productTitle": "PatentLint란?",
-    "productDesc1": "PatentLint은 무료 특허 명세서 검사 도구로, 심사관이 문제를 찾기 전에 먼저 발견해 드립니다. 미국, 중국 또는 대만 특허 명세서를 브라우저에 끌어다 놓으면 로컬에서 실행되는 컴플라이언스 보고서를 즉시 받아볼 수 있습니다. 업로드 불필요, 계정 불필요, 클라우드 미사용.",
-    "productDesc2": "MPEP(미국), CNIPA 규칙(中国) 및 TIPO 규칙(台灣)의 작성 규칙을 검사하고, 선행사 기초 누락, 부정확한 청구항 구조, 제한적 표현 등 일반적인 문제를 검출합니다.",
+    "productTagline": "사용자의 브라우저 내에서 로컬로 동작하는, 업계 최초의 특허 명세서 검사 도구.",
+    "productDesc1": "PatentLint은 무료 특허 명세서 검사 도구로, 심사관이 문제를 찾기 전에 먼저 발견해 드립니다. 미국, 중국 또는 대만 특허 명세서를 끌어다 놓으면 컴플라이언스 보고서를 즉시 받아볼 수 있으며, 모든 처리가 사용자의 기기에서 이루어집니다. 업로드 불필요, 계정 불필요, 클라우드 미사용.",
+    "productDesc2": "PatentLint은 MPEP(미국), CNIPA 규칙(중국) 및 TIPO 규칙(대만)의 작성 규칙을 검사하고, 선행사 기초 누락, 부정확한 청구항 구조, 제한적 표현 등 일반적인 문제를 검출합니다.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center는 출원 형식을 검증합니다. PatentLint는 초안 자체를 검사합니다.",
     "uspto": {
@@ -913,7 +915,7 @@
     "patentlint": "PatentLint 로딩 중...",
     "ready": "분석 엔진 로드 완료",
     "offline_note": "첫 로드 후 오프라인 사용 가능",
-    "feature1_title": "계정 불필요. 설치 불필요. 업로드 불필요.",
+    "feature1_title": "업로드 불필요. 계정 불필요. 설치 불필요.",
     "feature1_desc": "기밀 특허 초안이 기기를 벗어나지 않습니다. 아무것도 업로드되지 않으며, PatentLint는 사용자의 신원조차 알지 못합니다.",
     "feature2_title": "MPEP 검사 및 청구항 트리",
     "feature2_desc": "제한적 표현, 불명확한 용어 및 선행사 기초 누락을 검출합니다. 인터랙티브 트리로 청구항 종속 관계를 시각화합니다.",
