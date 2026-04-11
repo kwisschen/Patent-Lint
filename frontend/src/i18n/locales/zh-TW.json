@@ -992,6 +992,11 @@
     "whereinCommaDetails": "請求項 {{claimNumber}} 的 'wherein' 子句前後逗號使用可能不正確。請依據 MPEP § 608.01(m) 檢查標點符號。",
     "punctuationPass": "所有請求項標點符號正確。"
   },
+  "updates": {
+    "available": "有新版本可用",
+    "reload": "重新載入",
+    "dismiss": "稍後"
+  },
   "term": {
     "claim": {
       "numbered": "請求項{{n}}"

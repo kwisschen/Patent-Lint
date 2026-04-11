@@ -14,6 +14,8 @@ import ProveItModal from './components/ProveItModal'
 import SecurityPage from './pages/SecurityPage'
 import AboutPage from './pages/AboutPage'
 import { usePyodide } from './hooks/usePyodide'
+import { useUpdateCheck } from './hooks/useUpdateCheck'
+import { Toaster } from './components/ui/sonner'
 import { analyzeDocument, downloadReport as downloadReportServer } from './api'
 import { downloadReport as downloadReportClient, prefetchCjkFont } from './lib/pdfExport'
 import { getJurisdictionConfig, JURISDICTION_COLORS } from './lib/jurisdictionConfig'
@@ -31,6 +33,7 @@ function JurisdictionBadge({ code }) {
 
 function App() {
   const { t, i18n } = useTranslation()
+  useUpdateCheck()
   const pyodide = usePyodide()
   const [engineReady, setEngineReady] = useState(false)
   const [showProveIt, setShowProveIt] = useState(false)
@@ -206,6 +209,7 @@ function App() {
       </Layout>
 
       <ProveItModal open={showProveIt} onOpenChange={setShowProveIt} />
+      <Toaster />
     </>
   )
 }
