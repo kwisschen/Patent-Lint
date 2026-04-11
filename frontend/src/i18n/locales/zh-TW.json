@@ -167,7 +167,7 @@
   "security": {
     "airplaneDemoAlt": "示範：在飛航模式下無網路連線分析專利稿件",
     "badge": {
-      "headline": "無需帳號。無需安裝。無需上傳。",
+      "headline": "無需上傳。無需帳號。無需安裝。",
       "description": "您的檔案不會離開您的裝置。",
       "proveIt": "來驗證 →"
     },
@@ -195,7 +195,7 @@
     },
     "page": {
       "heroTitle": "無伺服器。無上傳。無例外。",
-      "heroSubtext": "PatentLint 完全在您的瀏覽器中運作，專利稿件絕不會離開您的裝置。機密資料始終保留在您的裝置上。",
+      "heroSubtext": "PatentLint 完全在您的瀏覽器中本機運作，專利稿件絕不會離開您的裝置。機密資料始終保留在您的裝置上。",
       "tryIt": "自己試試看 →",
       "compareTitle": "PatentLint 與其他工具的比較",
       "compareDisclaimer": "本比較表反映一般架構模式。個別產品可能有所不同。「Word 增益集工具」與「雲端工具」為通用類別，並非指特定產品。",
@@ -254,15 +254,17 @@
       "ai": "PatentLint 不使用 AI、機器學習或大型語言模型。所有檢查皆為確定性的規則比對，依據 MPEP 指南執行。您的文字不會被傳送至任何 AI 服務。",
       "telemetryTitle": "遙測與分析",
       "telemetry": "PatentLint 不收集任何分析資料、遙測資料或使用數據。沒有 cookies、沒有追蹤像素、沒有第三方腳本。此應用程式不知道您的身份。",
+      "extensionNote": "若您透過 DevTools 稽核本站並看到不熟悉的網路活動，請檢查 chrome://extensions。瀏覽器擴充功能（如廣告阻擋器、密碼管理員、螢幕錄影工具）會將內容腳本注入您所造訪的每個頁面，包括本站。PatentLint 本身僅載入自己的資源與 Pyodide 相依套件。",
       "selfHostedTitle": "自行部署選項",
       "selfHosted": "對於有嚴格資料主權要求的組織，例如 ITAR 管制環境或實體隔離網路，PatentLint 可透過 Docker 自行部署於地端，所有相依套件皆已包含。",
       "contactEnterprise": "洽詢企業部署方案"
     }
   },
   "about": {
-    "productTitle": "PatentLint是什麼？",
-    "productDesc1": "PatentLint 是免費的專利稿件檢查工具，替您在審查委員找出問題之前先一步發現它們。將美國、中國或台灣專利稿件拖放至瀏覽器，便可即時取得於本機運行的合規報告。無需上傳、無需帳號、不使用雲端。",
-    "productDesc2": "它依據 MPEP（美國）、CNIPA 規則（中国）及 TIPO 規則（台灣）進行撰稿規則檢查，偵測常見問題，如缺乏先行詞基礎、不正確的請求項結構和限制性用語。",
+    "productTitle": "PatentLint 是什麼？",
+    "productTagline": "同類首創的專利稿件檢查工具，完全在您的瀏覽器中本機運行。",
+    "productDesc1": "PatentLint 是免費的專利稿件檢查工具，替您在審查委員找出問題之前先一步發現它們。拖放美國、中國或台灣專利稿件，便可即時取得合規報告，全程於本機運行。無需上傳、無需帳號、不使用雲端。",
+    "productDesc2": "PatentLint 依據 MPEP（美國）、CNIPA 規則（中國）及 TIPO 規則（台灣）進行撰稿規則檢查，偵測常見問題，如缺乏先行詞基礎、不正確的請求項結構和限制性用語。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 驗證送件格式。PatentLint 檢查稿件本身。",
     "uspto": {
@@ -913,7 +915,7 @@
     "patentlint": "正在載入 PatentLint...",
     "ready": "分析引擎已就緒",
     "offline_note": "首次載入後可離線使用",
-    "feature1_title": "無需帳號。無需安裝。無需上傳。",
+    "feature1_title": "無需上傳。無需帳號。無需安裝。",
     "feature1_desc": "您的機密專利稿件不會離開您的裝置。不會上傳任何內容，PatentLint 也不會知道您的身份。",
     "feature2_title": "MPEP 檢查與請求項樹狀圖",
     "feature2_desc": "偵測限制性用語、不明確術語及缺乏先行詞基礎等問題，並以互動式樹狀圖呈現請求項附屬關係。",
