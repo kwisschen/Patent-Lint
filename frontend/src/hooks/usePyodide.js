@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright (c) 2025 Christopher Chen
+/* global __BUILD_HASH__ */
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 export function usePyodide() {
@@ -12,7 +13,12 @@ export function usePyodide() {
     useEffect(() => {
         const worker = new Worker('/pyodideWorker.js');
         workerRef.current = worker;
-        worker.postMessage({ type: 'init' });
+        worker.postMessage({
+          type: 'init',
+          payload: {
+            wheelUrl: `/patentlint-1.0.0-py3-none-any.whl?v=${__BUILD_HASH__}`,
+          },
+        });
         worker.onmessage = (e) => {
             if (e.data.type === 'progress') {
                 setProgress({ percent: e.data.percent, message: e.data.message });
