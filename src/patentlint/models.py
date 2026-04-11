@@ -209,6 +209,20 @@ class ReportData(BaseModel):
     has_tracked_changes: bool = False
     has_scanned_fallback: bool = False
 
+    @property
+    def all_checks(self) -> list[CheckItem]:
+        """Return a flat list of every CheckItem across all sections in
+        declaration order. Useful for diagnostic scripts, snapshot
+        comparisons, and cross-section analyses that don't care about
+        section boundaries.
+        """
+        return (
+            list(self.specification_checks)
+            + list(self.claims_checks)
+            + list(self.abstract_checks)
+            + list(self.drawings_checks)
+        )
+
 
 class AnalysisResult(BaseModel):
     """Aggregates all analysis findings into a single structured result.
