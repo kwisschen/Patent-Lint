@@ -37,6 +37,9 @@ function ProductStory({ t }) {
       <h2 className="text-3xl font-bold text-foreground mb-6">
         {t('about.productTitle')}
       </h2>
+      <p className="text-lg font-medium text-primary mb-4">
+        {t('about.productTagline')}
+      </p>
       <div className="space-y-4 text-muted-foreground leading-relaxed">
         <p>{t('about.productDesc1')}</p>
         <p>{t('about.productDesc2')}</p>
@@ -352,7 +355,7 @@ function StatCard({ value, suffix, label, delay }) {
 function StatsGrid({ t }) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      <StatCard value={800} suffix="+" label={t('about.stats.tests')} delay={0} />
+      <StatCard value={1200} suffix="+" label={t('about.stats.tests')} delay={0} />
       <StatCard value={90} suffix="+" label={t('about.stats.checks')} delay={100} />
       <StatCard value={5} suffix="" label={t('about.stats.languages')} delay={200} />
       <StatCard value={0} suffix="" label={t('about.stats.cloudRequests')} delay={300} />

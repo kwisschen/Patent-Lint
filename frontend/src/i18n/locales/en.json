@@ -167,7 +167,7 @@
   "security": {
     "airplaneDemoAlt": "Demo: analyzing a patent draft in airplane mode with no network connection",
     "badge": {
-      "headline": "No account. No install. No upload.",
+      "headline": "No upload. No account. No install.",
       "description": "Your file never leaves your device.",
       "proveIt": "Prove it →"
     },
@@ -195,7 +195,7 @@
     },
     "page": {
       "heroTitle": "No Server. No Upload. No Exceptions.",
-      "heroSubtext": "PatentLint runs entirely inside your browser — your patent draft never leaves your device. Confidential data stays on your machine, always.",
+      "heroSubtext": "PatentLint runs entirely inside your browser. Your patent draft never leaves your device, and confidential data stays on your machine, always.",
       "tryIt": "Try it yourself →",
       "compareTitle": "How Does PatentLint Compare?",
       "compareDisclaimer": "Comparison reflects general architecture patterns. Individual products may vary. \"Word Add-in Tools\" and \"Cloud-Based Tools\" are generic categories, not specific products.",
@@ -254,6 +254,7 @@
       "ai": "PatentLint does not use AI, machine learning, or large language models. All checks are deterministic, rule-based pattern matching against MPEP guidelines. Your text is never sent to any AI service.",
       "telemetryTitle": "Telemetry & Analytics",
       "telemetry": "PatentLint collects zero analytics, zero telemetry, and zero usage data. There are no cookies, no tracking pixels, and no third-party scripts. The application does not know who you are.",
+      "extensionNote": "If you audit this site in DevTools and see network activity you don't recognize, check chrome://extensions. Browser extensions (ad blockers, password managers, screen recorders) inject content scripts into every page you visit, including this one. PatentLint itself loads only its own assets and Pyodide dependencies.",
       "selfHostedTitle": "Self-Hosted Option",
       "selfHosted": "For organizations with strict data sovereignty requirements, such as ITAR-controlled environments or air-gapped networks, PatentLint can be self-hosted via Docker with all dependencies included.",
       "contactEnterprise": "Contact for enterprise deployment"
@@ -261,8 +262,9 @@
   },
   "about": {
     "productTitle": "What is PatentLint?",
-    "productDesc1": "PatentLint is a free patent draft checker that catches issues for you before examiners do. Drop a U.S., Chinese, or Taiwanese patent draft into your browser for an instant compliance report that runs locally. No uploads, no accounts, no cloud.",
-    "productDesc2": "It checks drafting rules from the MPEP (U.S.), CNIPA rules (中国), and TIPO rules (台灣), detecting common issues like missing antecedent basis, incorrect claim structure, and restrictive wording.",
+    "productTagline": "A first-of-its-kind patent draft checker that runs locally in your own browser.",
+    "productDesc1": "PatentLint is a free patent draft checker that catches issues for you before the examiner does. Drop a U.S., Chinese, or Taiwanese patent draft for an instant compliance report, processed entirely on your own device. No uploads, no accounts, no cloud.",
+    "productDesc2": "PatentLint checks drafting rules from the MPEP (U.S.), CNIPA rules (China), and TIPO rules (Taiwan), detecting common issues such as missing antecedent basis, incorrect claim structure, and restrictive wording.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center validates filing format. PatentLint checks the draft itself.",
     "uspto": {
@@ -913,7 +915,7 @@
     "patentlint": "Loading PatentLint...",
     "ready": "Analysis engine loaded",
     "offline_note": "Works offline after first load",
-    "feature1_title": "No Account. No Install. No Upload.",
+    "feature1_title": "No Upload. No Account. No Install.",
     "feature1_desc": "Your confidential patent drafts never leave your device. Nothing is uploaded, and PatentLint doesn't even know who you are.",
     "feature2_title": "MPEP Checks & Claim Tree",
     "feature2_desc": "Catches restrictive wording, indefinite terms, and antecedent basis gaps. Visualizes claim dependencies with an interactive tree.",
