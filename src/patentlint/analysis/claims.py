@@ -11,6 +11,7 @@ from typing import Optional
 
 import snowballstemmer as _sb
 
+from patentlint.analysis.en_normalize import en_number_key
 from patentlint.analysis.utils import (
     _DEFINITE_REF, _QUANTIFIER_STOPS,
     extract_introductions, extract_abbreviation_intros, clean_noun_phrase,
@@ -222,6 +223,11 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
 
         intros = set(intros_by_term.keys())
 
+        intros_by_number_key: dict[str, int] = {}
+        for phrase, phrase_claim_id in intros_by_term.items():
+            key = en_number_key(phrase)
+            intros_by_number_key.setdefault(key, phrase_claim_id)
+
         # Find definite references ("the X" and "said X") in this claim
         seen: set[tuple[str, str]] = set()
         for m in _DEFINITE_REF.finditer(claim_text_lower):
@@ -237,16 +243,14 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                 claim_text_lower[m.end():]
             ):
                 continue
-            # Word-boundary equivalence: an introduction suppresses a
-            # reference only when both reference the SAME word sequence.
-            # The previous bidirectional substring match let short intros
-            # like 'common voltage' silently mask longer references like
-            # 'common voltage difference calculation circuit', hiding
-            # morphological variant issues across real US patents.
+            # Primary: bidirectional word-boundary exact match.
+            # Fallback: ADR-095 Rule 3 analogue — number-agnostic key match
+            # for plural-intro / singular-reference pairs.
             has_basis = any(
                 _word_boundary_match(intro, term) and _word_boundary_match(term, intro)
                 for intro in intros
-            )
+            ) or en_number_key(term) in intros_by_number_key
+
             if not has_basis:
                 if term not in _SKIP_TERMS and not term.startswith("fig") and not term.startswith("claim"):
                     prefix = m.group("prefix").lower()
