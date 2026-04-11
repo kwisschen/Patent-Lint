@@ -167,7 +167,7 @@
   "security": {
     "airplaneDemoAlt": "演示：在飞行模式下无网络连接分析专利稿件",
     "badge": {
-      "headline": "无需账号。无需安装。无需上传。",
+      "headline": "无需上传。无需账号。无需安装。",
       "description": "您的文件不会离开您的设备。",
       "proveIt": "验证一下 →"
     },
@@ -195,7 +195,7 @@
     },
     "page": {
       "heroTitle": "无服务器。无上传。无例外。",
-      "heroSubtext": "PatentLint 完全在您的浏览器中运行，专利稿件绝不会离开您的设备。机密数据始终保留在您的设备上。",
+      "heroSubtext": "PatentLint 完全在您的浏览器中本地运行，专利稿件绝不会离开您的设备。机密数据始终保留在您的设备上。",
       "tryIt": "自己试试看 →",
       "compareTitle": "PatentLint 与其他工具的比较",
       "compareDisclaimer": "本比较表反映一般架构模式。各产品可能有所不同。「Word 插件工具」与「云端工具」为通用类别，并非指特定产品。",
@@ -254,15 +254,17 @@
       "ai": "PatentLint 不使用 AI、机器学习或大型语言模型。所有检查均为确定性的规则匹配，依据 MPEP 指南执行。您的文本不会被发送至任何 AI 服务。",
       "telemetryTitle": "遥测与分析",
       "telemetry": "PatentLint 不收集任何分析数据、遥测数据或使用数据。没有 cookies、没有追踪像素、没有第三方脚本。此应用程序不知道您的身份。",
+      "extensionNote": "若您通过 DevTools 审查本站并看到不熟悉的网络活动，请检查 chrome://extensions。浏览器扩展（如广告拦截器、密码管理器、屏幕录制工具）会将内容脚本注入您所访问的每个页面，包括本站。PatentLint 本身仅加载自己的资源与 Pyodide 依赖包。",
       "selfHostedTitle": "自托管选项",
       "selfHosted": "对于有严格数据主权要求的组织，例如 ITAR 管控环境或物理隔离网络，PatentLint 可通过 Docker 自托管部署于本地，所有依赖项均已包含。",
       "contactEnterprise": "咨询企业部署方案"
     }
   },
   "about": {
-    "productTitle": "PatentLint是什么？",
-    "productDesc1": "PatentLint 是免费的专利稿件检查工具，替您在审查员找出问题之前先一步发现它们。将美国、中国或台湾专利稿件拖放至浏览器，便可即时获取于本机运行的合规报告。无需上传、无需账号、不使用云端。",
-    "productDesc2": "它依据 MPEP（美国）、CNIPA 规则（中国）及 TIPO 规则（台灣）进行撰写规则检查，检测常见问题，如缺乏先行词基础、不正确的权利要求结构和限制性用语。",
+    "productTitle": "PatentLint 是什么？",
+    "productTagline": "同类首创的专利稿件检查工具，完全在您的浏览器中本地运行。",
+    "productDesc1": "PatentLint 是免费的专利稿件检查工具，替您在审查员找出问题之前先一步发现它们。拖放美国、中国或台湾专利稿件，便可即时获取合规报告，全程于本地运行。无需上传、无需账号、不使用云端。",
+    "productDesc2": "PatentLint 依据 MPEP（美国）、CNIPA 规则（中国）及 TIPO 规则（台湾）进行撰写规则检查，检测常见问题，如缺乏先行词基础、不正确的权利要求结构和限制性用语。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查文稿本身。",
     "uspto": {
@@ -913,7 +915,7 @@
     "patentlint": "正在加载 PatentLint...",
     "ready": "分析引擎已就绪",
     "offline_note": "首次加载后可离线使用",
-    "feature1_title": "无需账号。无需安装。无需上传。",
+    "feature1_title": "无需上传。无需账号。无需安装。",
     "feature1_desc": "您的机密专利文稿不会离开您的设备。不会上传任何内容，PatentLint 也不会知道您的身份。",
     "feature2_title": "MPEP 检查与权利要求树状图",
     "feature2_desc": "检测限制性用语、不确定术语及缺乏先行词基础等问题，并以交互式树状图呈现权利要求从属关系。",
