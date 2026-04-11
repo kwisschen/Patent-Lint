@@ -1057,3 +1057,130 @@ class TestUtsVerbSuffix:
             f"expected no -outputs findings, got: "
             f"{[(f['claim_id'], f['term']) for f in outputs_findings]}"
         )
+
+
+class TestAntecedentNumberNeutral:
+    """Number-neutral resolution: plural intro ↔ singular reference (and vice versa).
+
+    Uses en_number_key at the comparison boundary (ADR-095 Rule 3 analogue).
+    """
+
+    def test_plural_intro_singular_reference(self):
+        """'a plurality of first filter inductors' → 'the first filter inductor' → no flag."""
+        claims = [Claim(
+            id=1,
+            text=(
+                "A device comprising a plurality of first filter inductors, "
+                "wherein a first terminal of the first filter inductor is "
+                "connected to an AC source."
+            ),
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "first filter inductor" not in terms
+
+    def test_singular_intro_plural_reference(self):
+        """'a processor' → 'the processors' → no flag (reverse direction)."""
+        claims = [Claim(
+            id=1,
+            text=(
+                "A device comprising a processor, "
+                "wherein the processors are arranged in parallel."
+            ),
+            independent=True, method_claim=False,
+        )]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        assert "processors" not in terms
+
+    def test_ancestor_scope_negative(self):
+        """Number-key lookup must respect ancestor-chain scoping.
+
+        Claim 3 (independent) introduces 'widgets'. Claim 5 (independent,
+        no dependency on claim 3) references 'the widget'. Claim 5 should
+        STILL produce a finding — the intro is not in its ancestor chain.
+        """
+        claims = [
+            Claim(id=3, text="A system comprising a plurality of widgets.",
+                  independent=True, method_claim=False),
+            Claim(id=5, text="An apparatus wherein the widget is connected.",
+                  independent=True, method_claim=False),
+        ]
+        issues = check_antecedent_basis(claims)
+        c5_terms = [i["term"] for i in issues if i["claim_id"] == 5]
+        assert "widget" in c5_terms
+
+    def test_guard_bus(self):
+        """'a bus' → 'the bus' → no flag (bus must not be mis-stripped)."""
+        claims = [
+            Claim(id=1, text="A system comprising a bus.",
+                  independent=True, method_claim=False),
+            Claim(id=2, text="The system of claim 1, wherein the bus carries data.",
+                  independent=False, method_claim=False, dependencies=[1]),
+        ]
+        issues = check_antecedent_basis(claims)
+        c2_terms = [i["term"] for i in issues if i["claim_id"] == 2]
+        assert "bus" not in c2_terms
+
+    def test_guard_apparatus(self):
+        """'an apparatus' → 'the apparatus' → no flag."""
+        claims = [
+            Claim(id=1, text="An apparatus comprising a housing.",
+                  independent=True, method_claim=False),
+            Claim(id=2, text="The apparatus of claim 1, wherein the apparatus is sealed.",
+                  independent=False, method_claim=False, dependencies=[1]),
+        ]
+        issues = check_antecedent_basis(claims)
+        c2_terms = [i["term"] for i in issues if i["claim_id"] == 2]
+        assert "apparatus" not in c2_terms
+
+    def test_rules_1_2_3_integration(self):
+        """Rules 1-3: bodies/body, processes/process, switches/switch."""
+        claims = [
+            Claim(
+                id=1,
+                text=(
+                    "A device comprising a plurality of bodies, "
+                    "a plurality of processes, and a plurality of switches."
+                ),
+                independent=True, method_claim=False,
+            ),
+            Claim(
+                id=2,
+                text=(
+                    "The device of claim 1, wherein the body is hollow, "
+                    "the process is automated, and the switch is toggled."
+                ),
+                independent=False, method_claim=False, dependencies=[1],
+            ),
+        ]
+        issues = check_antecedent_basis(claims)
+        c2_terms = [i["term"] for i in issues if i["claim_id"] == 2]
+        assert "body" not in c2_terms
+        assert "process" not in c2_terms
+        assert "switch" not in c2_terms
+
+    def test_stemming_not_elevated(self):
+        # ADR-090 guard: stemming-level similarity (control/controlling) must
+        # NOT be elevated to primary resolution. Only number morphology is.
+        # Phrase pair chosen for Jaccard = 4/6 ≈ 0.67 (comfortably above the
+        # 0.5 did-you-mean threshold, not at the boundary) and to be
+        # non-plural-adjacent so en_number_key cannot accidentally resolve it.
+        claims = [
+            Claim(id=1, text="A device comprising a power control circuit driver module.",
+                  independent=True, method_claim=False),
+            Claim(id=2, text="The device of claim 1, wherein the power controlling circuit driver module is disposed adjacent to a heat sink.",
+                  independent=False, method_claim=False, dependencies=[1]),
+        ]
+        issues = check_antecedent_basis(claims)
+        c2_terms = [i["term"] for i in issues if i["claim_id"] == 2]
+        # Must STILL be flagged — number normalization does not help here
+        assert "power controlling circuit driver module" in c2_terms
+        # suggested_match should point to 'power control circuit driver module' via Jaccard
+        match_issue = next(
+            i for i in issues
+            if i["claim_id"] == 2 and i["term"] == "power controlling circuit driver module"
+        )
+        assert match_issue["suggested_match"] is not None
+        assert match_issue["suggested_match"]["term"] == "power control circuit driver module"
