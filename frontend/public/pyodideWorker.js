@@ -7,6 +7,10 @@ self.onmessage = async (event) => {
 
     if (type === 'init') {
         try {
+            // Accept wheelUrl from main thread (for cache-busting with ?v=hash).
+            // Fall back to hardcoded URL for backwards compatibility.
+            const wheelUrl = payload?.wheelUrl || '/patentlint-1.0.0-py3-none-any.whl';
+
             // Load Pyodide script from CDN
             importScripts('https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js');
 
@@ -29,9 +33,10 @@ self.onmessage = async (event) => {
 
             // Stage 4: Load patentlint wheel (built and hosted as static asset)
             self.postMessage({ type: 'progress', stage: 'patentlint', percent: 85, message: 'Loading PatentLint...' });
+            pyodide.globals.set('patentlint_wheel_url', wheelUrl);
             await pyodide.runPythonAsync(`
                 import micropip
-                await micropip.install('/patentlint-1.0.0-py3-none-any.whl')
+                await micropip.install(patentlint_wheel_url)
             `);
 
             self.postMessage({ type: 'progress', stage: 'ready', percent: 100, message: 'Ready!' });
