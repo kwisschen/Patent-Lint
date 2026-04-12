@@ -20,7 +20,6 @@ import re
 import unicodedata
 from pathlib import Path
 
-import pytest
 from lxml import etree
 
 from patentlint.parser.docx_loader import load_docx_cn
@@ -72,11 +71,6 @@ def _load_xml_claims(xml_path: Path):
     return parse_cnipa_xml(xml_path.read_bytes()).claims
 
 
-@pytest.mark.xfail(
-    reason="Pair A body-anchor path requires Task 1 section-ID fallback (commit 3). "
-    "Flip to passing in the loader-fix commit.",
-    strict=True,
-)
 def test_pair_a_apparatus_method_minimal_parity():
     """Pair A — typed-prefix claims, body-anchor 五书 layout, 5 claims.
 
@@ -102,11 +96,6 @@ def test_pair_a_apparatus_method_minimal_parity():
         )
 
 
-@pytest.mark.xfail(
-    reason="Pair B w:numPr backfill requires Task 1 loader wiring (commit 3). "
-    "Flip to passing in the loader-fix commit.",
-    strict=True,
-)
 def test_pair_b_numbering_multidep_markush_parity():
     """Pair B — w:numPr auto-numbering, Markush, multi-dep, 4 claims.
 

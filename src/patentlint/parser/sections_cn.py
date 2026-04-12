@@ -39,6 +39,71 @@ _SPEC_SUBSECTIONS = [
 _PARA_NUM_PATTERN = re.compile(r"^\[(\d{4})\]")
 
 # ---------------------------------------------------------------------------
+# Body-anchor patterns — Phase 8c Tier 1 (ADR-109)
+# ---------------------------------------------------------------------------
+# Real CNIPA .docx downloads carry 五书 section titles as standalone body
+# paragraphs, not in Word page headers. Examples seen in the 10-fixture
+# corpus: '权\t利\t要\t求\t书\t1/2 页', '说\t明\t书\t摘要', bare
+# '权利要求书'. The anchor regexes tolerate interior whitespace/tabs and
+# an optional trailing 'N/M 页' page indicator.
+
+_BA_COMPACT = re.compile(r"\s+")
+
+
+def _compact(text: str) -> str:
+    """Collapse all whitespace (including tabs + full-width U+3000)."""
+    return _BA_COMPACT.sub("", text).strip()
+
+
+# Compact-form anchor tokens. Matched after whitespace collapse.
+_BA_CLAIMS_RE = re.compile(r"^权利要求书(?:\d+/\d+页)?$")
+_BA_SPEC_RE = re.compile(r"^说明书(?:\d+/\d+页)?$")
+_BA_ABSTRACT_RE = re.compile(r"^(?:说明书摘要|摘要)(?:\d+/\d+页)?$")
+_BA_ABSTRACT_DRAWING_RE = re.compile(r"^(?:说明书)?摘要附图(?:\d+/\d+页)?$")
+_BA_DRAWINGS_RE = re.compile(r"^(?:说明书)?附图(?:\d+/\d+页)?$")
+
+# Doc-page structural token guard — never treat these short fragments as
+# section anchors even if their compact form happens to prefix-match a
+# 五书 name. (The XML <doc-page> content model is handled by xml_loader;
+# this guard is defensive for any docx that happens to embed such text.)
+_DOC_PAGE_GUARD_RE = re.compile(r"^doc-?page", re.IGNORECASE)
+
+
+def _classify_body_anchor(text: str) -> str | None:
+    """Classify a paragraph as one of the 五书 anchors, or None.
+
+    Anchors are compared on the whitespace-compacted form so that
+    real-world variants like '权\\t利\\t要\\t求\\t书\\t1/2 页' match
+    the bare '权利要求书' token with an optional page indicator.
+    """
+    if not text:
+        return None
+    if _DOC_PAGE_GUARD_RE.match(text):
+        return None
+    compact = _compact(text)
+    if not compact:
+        return None
+    # Order matters — more-specific patterns before their superstrings.
+    if _BA_ABSTRACT_DRAWING_RE.match(compact):
+        return "abstract_drawing"
+    if _BA_ABSTRACT_RE.match(compact):
+        return "abstract"
+    if _BA_DRAWINGS_RE.match(compact):
+        return "drawings"
+    if _BA_CLAIMS_RE.match(compact):
+        return "claims"
+    if _BA_SPEC_RE.match(compact):
+        return "specification"
+    return None
+
+
+# Claim-density tier — a contiguous run of paragraphs matching the CN
+# claim-start pattern (typed prefix OR w:numPr-backfilled) is likely the
+# claims section. Minimum density is 3 consecutive matches.
+_CLAIM_START_RE = re.compile(r"^\s*\d+\s*[.．。、]")
+_CLAIM_DENSITY_MIN = 3
+
+# ---------------------------------------------------------------------------
 # Figure reference patterns
 # ---------------------------------------------------------------------------
 
@@ -176,24 +241,260 @@ def detect_patent_document_cn(paragraphs: list[str]) -> bool:
     return False
 
 
-def extract_cn_sections_from_docx(sections: list[DocxSection]) -> CnPatentDocument:
-    """Extract CN patent document structure from Word sections.
+def _collect_by_page_header(
+    sections: list[DocxSection],
+) -> tuple[list[str], list[str], list[str], list[bool]]:
+    """Tier 4 (legacy) — classify sections by Word page-header text.
 
-    Maps Word section headers to document parts (说明书, 权利要求书, etc.),
-    then extracts spec sub-sections via regex on body text.
+    Returns (spec_paragraphs, claims_paragraphs, abstract_paragraphs,
+    claims_numpr_flags). Any tier may return empty lists if its heuristic
+    does not fire.
     """
-    spec_paragraphs: list[str] = []
-    claims_paragraphs: list[str] = []
-    abstract_paragraphs: list[str] = []
+    spec: list[str] = []
+    claims: list[str] = []
+    claims_numpr: list[bool] = []
+    abstract: list[str] = []
 
     for section in sections:
         doc_part = _identify_section(section.header_text)
         if doc_part == "specification":
-            spec_paragraphs = section.paragraphs
+            spec = list(section.paragraphs)
         elif doc_part == "claims":
-            claims_paragraphs = section.paragraphs
+            claims = list(section.paragraphs)
+            claims_numpr = list(section.numpr_flags) if section.numpr_flags else [False] * len(claims)
         elif doc_part == "abstract":
-            abstract_paragraphs = section.paragraphs
+            abstract = list(section.paragraphs)
+    return spec, claims, abstract, claims_numpr
+
+
+def _collect_by_body_anchor(
+    sections: list[DocxSection],
+) -> tuple[list[str], list[str], list[str], list[bool], int]:
+    """Tier 1 — walk flattened paragraphs, classify by body-anchor scan.
+
+    Returns (spec, claims, abstract, claims_numpr_flags, anchors_found_count).
+    Anchors recognized: 权利要求书, 说明书, 说明书摘要/摘要,
+    说明书附图, 摘要附图, and the spec sub-section headers (技术领域 etc.)
+    which implicitly mark the start of the specification.
+    """
+    spec: list[str] = []
+    claims: list[str] = []
+    claims_numpr: list[bool] = []
+    abstract: list[str] = []
+
+    # Flatten paragraphs + numPr flags across all Word sections.
+    flat_paras: list[str] = []
+    flat_numpr: list[bool] = []
+    for section in sections:
+        flags = section.numpr_flags or [False] * len(section.paragraphs)
+        # Guard against mismatched lengths (older callers).
+        if len(flags) != len(section.paragraphs):
+            flags = [False] * len(section.paragraphs)
+        flat_paras.extend(section.paragraphs)
+        flat_numpr.extend(flags)
+
+    current: str | None = None
+    anchor_count = 0
+    seen_anchors: set[str] = set()
+
+    for para, has_numpr in zip(flat_paras, flat_numpr, strict=True):
+        anchor = _classify_body_anchor(para)
+        # Spec sub-section headers (技术领域 etc.) are an implicit
+        # spec anchor — they only appear inside the specification.
+        sub_match = False
+        for _, pat in _SPEC_SUBSECTIONS:
+            if pat.match(para):
+                sub_match = True
+                break
+
+        if anchor is not None:
+            if anchor not in seen_anchors:
+                anchor_count += 1
+                seen_anchors.add(anchor)
+            if anchor == "claims":
+                current = "claims"
+                continue  # skip the anchor paragraph itself
+            if anchor == "specification":
+                current = "specification"
+                continue
+            if anchor == "abstract":
+                current = "abstract"
+                continue
+            if anchor in ("drawings", "abstract_drawing"):
+                # Transition out of claims/spec; we don't aggregate
+                # these separately here (drawings_description is derived
+                # from the spec sub-section).
+                current = None
+                continue
+
+        if sub_match:
+            # Spec sub-section header implies we're in the specification.
+            # It also counts as an implicit "specification" anchor for
+            # the ≥2-distinct-anchors promotion gate (real CNIPA
+            # downloads have a 权利要求书 heading but no standalone
+            # 说明书 heading — the spec is identified by its sub-sections).
+            if "specification" not in seen_anchors:
+                seen_anchors.add("specification")
+                anchor_count += 1
+            current = "specification"
+
+        if current == "claims":
+            claims.append(para)
+            claims_numpr.append(has_numpr)
+        elif current == "specification":
+            spec.append(para)
+        elif current == "abstract":
+            abstract.append(para)
+
+    return spec, claims, abstract, claims_numpr, anchor_count
+
+
+def _collect_by_claim_density(
+    sections: list[DocxSection],
+) -> tuple[list[str], list[bool]]:
+    """Tier 3 — find the densest contiguous run of claim-start paragraphs.
+
+    Only returns the claims span; spec/abstract detection requires a
+    structural anchor and is not recoverable from pure density.
+    """
+    flat_paras: list[str] = []
+    flat_numpr: list[bool] = []
+    for section in sections:
+        flags = section.numpr_flags or [False] * len(section.paragraphs)
+        if len(flags) != len(section.paragraphs):
+            flags = [False] * len(section.paragraphs)
+        flat_paras.extend(section.paragraphs)
+        flat_numpr.extend(flags)
+
+    best_start = -1
+    best_end = -1
+    best_len = 0
+    i = 0
+    while i < len(flat_paras):
+        # A paragraph is claim-like if it has a typed N. prefix OR
+        # w:numPr auto-numbering.
+        if _CLAIM_START_RE.match(flat_paras[i]) or flat_numpr[i]:
+            j = i
+            # Extend run — include continuation (non-claim-start) paragraphs
+            # between claim starts, but the run is bounded by the last
+            # claim-start + 1 (we don't know where it ends without an anchor).
+            last_claim_start = i
+            starts = 1
+            j = i + 1
+            while j < len(flat_paras):
+                if _CLAIM_START_RE.match(flat_paras[j]) or flat_numpr[j]:
+                    last_claim_start = j
+                    starts += 1
+                    j += 1
+                    continue
+                # Allow a small gap of continuation paragraphs, but abort
+                # on a clear spec anchor or long stretch of non-claim text.
+                if _classify_body_anchor(flat_paras[j]) is not None:
+                    break
+                sub_hit = any(pat.match(flat_paras[j]) for _, pat in _SPEC_SUBSECTIONS)
+                if sub_hit:
+                    break
+                j += 1
+            if starts >= _CLAIM_DENSITY_MIN and starts > best_len:
+                best_start = i
+                best_end = last_claim_start + 1
+                best_len = starts
+            i = j + 1
+        else:
+            i += 1
+
+    if best_start < 0:
+        return [], []
+    return flat_paras[best_start:best_end], flat_numpr[best_start:best_end]
+
+
+def _backfill_numpr_prefixes(paragraphs: list[str], numpr_flags: list[bool]) -> list[str]:
+    """Prepend synthetic 'N. ' claim numbers to numPr paragraphs that
+    lack a typed prefix.
+
+    Mirrors ``load_docx_tw``'s behavior (ADR-109). The counter is
+    incremented for each claim start observed — either a typed-prefix
+    paragraph or a numPr paragraph. Continuation paragraphs (no typed
+    prefix, no numPr) are left untouched so the downstream claim parser
+    attaches them to the preceding claim.
+    """
+    if not paragraphs:
+        return paragraphs
+    out: list[str] = []
+    counter = 0
+    for para, has_numpr in zip(paragraphs, numpr_flags, strict=True):
+        typed = _CLAIM_START_RE.match(para)
+        if typed:
+            # Let the parser read the embedded number directly.
+            out.append(para)
+            counter = int(re.match(r"\s*(\d+)", para).group(1))
+            continue
+        if has_numpr:
+            counter += 1
+            out.append(f"{counter}. {para}")
+            continue
+        out.append(para)
+    return out
+
+
+def extract_cn_sections_from_docx(sections: list[DocxSection]) -> CnPatentDocument:
+    """Extract CN patent document structure from Word sections.
+
+    Phase 8c (ADR-109) — four-tier section-ID fallback chain:
+
+    1. **Tier 1 body_anchor** — flatten paragraphs across Word sections
+       and classify by standalone 五书 markers (权利要求书, 说明书, etc.).
+    2. **Tier 2 template_substyle** — on the 五书模板 Word-section layout
+       with non-empty page headers, trust the legacy mapping.
+    3. **Tier 3 claim_density** — if no structural anchor is found, scan
+       for runs of ≥3 consecutive claim-start paragraphs.
+    4. **Tier 4 page_header** — legacy Word-page-header mapping. Last
+       resort; page-header tier is a smell for real CNIPA downloads.
+
+    The winning tier is recorded on ``section_id_strategy``.
+    """
+    # --- Run tiers ---
+    ba_spec, ba_claims, ba_abstract, ba_numpr, ba_anchor_count = _collect_by_body_anchor(sections)
+    ph_spec, ph_claims, ph_abstract, ph_numpr = _collect_by_page_header(sections)
+
+    strategy = "none"
+    spec_paragraphs: list[str]
+    claims_paragraphs: list[str]
+    claims_numpr_flags: list[bool]
+    abstract_paragraphs: list[str]
+
+    if ba_anchor_count >= 2 and ba_claims:
+        strategy = "body_anchor"
+        spec_paragraphs = ba_spec
+        claims_paragraphs = ba_claims
+        claims_numpr_flags = ba_numpr
+        abstract_paragraphs = ba_abstract
+    elif ph_claims or ph_spec:
+        # Page-header (template_substyle) branch — works for the 五书模板
+        # Word export where page headers carry section titles.
+        strategy = "template_substyle" if ba_anchor_count >= 1 else "page_header"
+        spec_paragraphs = ph_spec
+        claims_paragraphs = ph_claims
+        claims_numpr_flags = ph_numpr
+        abstract_paragraphs = ph_abstract
+    else:
+        # Tier 3 — claim-density heuristic recovers claims only.
+        cd_claims, cd_numpr = _collect_by_claim_density(sections)
+        if cd_claims:
+            strategy = "claim_density"
+            spec_paragraphs = ba_spec  # best-effort (may be empty)
+            claims_paragraphs = cd_claims
+            claims_numpr_flags = cd_numpr
+            abstract_paragraphs = ba_abstract
+        else:
+            strategy = "none"
+            spec_paragraphs = []
+            claims_paragraphs = []
+            claims_numpr_flags = []
+            abstract_paragraphs = []
+
+    # Backfill synthetic N. prefixes on numPr claims (ADR-109).
+    claims_paragraphs = _backfill_numpr_prefixes(claims_paragraphs, claims_numpr_flags)
 
     # Split specification into sub-sections
     subsections = _split_spec_subsections(spec_paragraphs)
@@ -248,4 +549,5 @@ def extract_cn_sections_from_docx(sections: list[DocxSection]) -> CnPatentDocume
         has_paragraph_numbering=has_numbering,
         input_format="docx",
         has_doc_page_fallback=False,
+        section_id_strategy=strategy,
     )
