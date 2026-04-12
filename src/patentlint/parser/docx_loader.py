@@ -113,6 +113,29 @@ def _get_paragraph_num_id(paragraph) -> str | None:
     return val
 
 
+def _extract_numpr_claim_number(paragraph) -> int | None:
+    """Probe whether a paragraph carries Word auto-numbering (``w:numPr``).
+
+    Returns ``1`` as a sentinel when auto-numbering is present so the caller
+    can backfill a synthetic ``"N. "`` prefix using a running counter
+    (matching the TW/CN claim parser contract — both parsers rely on an
+    Arabic-numeral + period prefix at paragraph start). Returns ``None``
+    when the paragraph has no ``w:numPr`` or an explicit ``numId="0"``
+    (which Word treats as "no numbering").
+
+    Extracted from ``load_docx_tw`` at Phase 8c so ``load_docx_cn`` can
+    share the same detection path.
+    """
+    num_id = _get_paragraph_num_id(paragraph)
+    if num_id is None:
+        return None
+    # Sentinel value — the caller assigns the actual sequential claim
+    # number. Word's numbering-start XML is not consulted because CN/TW
+    # claim lists routinely restart per page-break section, which produces
+    # misleading start values.
+    return 1
+
+
 def _get_paragraph_ilvl(paragraph) -> int:
     """Extract the indentation level from a paragraph's numbering properties."""
     pPr = paragraph._element.find(qn("w:pPr"))
@@ -324,9 +347,11 @@ def load_docx_tw(file_path: str | Path) -> LoadedTwDocument:
                 in_claims = False
 
         if in_claims:
-            # Check for Word numbering on this paragraph
-            has_num = _get_paragraph_num_id(para) is not None
-            if has_num:
+            # Check for Word numbering on this paragraph via the shared
+            # helper (ADR-109 / Phase 8c): a truthy return means the
+            # paragraph needs a synthetic "N. " prefix so claims_tw.py
+            # can parse it.
+            if _extract_numpr_claim_number(para) is not None:
                 claim_counter += 1
                 # Prepend claim number in the format claims_tw expects
                 paragraphs.append(f"{claim_counter}. {text}")
