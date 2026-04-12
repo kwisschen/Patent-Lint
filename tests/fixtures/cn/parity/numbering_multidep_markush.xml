@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cn-application-body lang="zh" country="CN" dtd-version="1.0" file="pair-b" status="new">
+  <description>
+    <invention-title>一种聚合物组合物</invention-title>
+    <technical-field>
+      <p id="p0001" num="0001" Italic="0">本发明涉及高分子材料领域。</p>
+    </technical-field>
+    <background-art>
+      <p id="p0002" num="0002" Italic="0">现有聚合物组合物在高温环境下稳定性不佳。</p>
+    </background-art>
+    <disclosure>
+      <p id="p0003" num="0003" Italic="0">本发明通过添加多种功能性添加剂改善聚合物组合物的稳定性。</p>
+    </disclosure>
+    <description-of-drawings>
+      <p id="p0004" num="0004" Italic="0">无附图。</p>
+    </description-of-drawings>
+    <mode-for-invention>
+      <p id="p0005" num="0005" Italic="0">下面对本发明的聚合物组合物进行详细说明。所述聚合物基体可采用聚乙烯或聚丙烯。</p>
+    </mode-for-invention>
+  </description>
+  <cn-claims>
+    <claim id="cl0001" num="0001" claim-type="independent"><claim-text>一种聚合物组合物，其包含：聚合物基体；和添加剂，所述添加剂选自由抗氧化剂、紫外线稳定剂和阻燃剂所组成的群组。</claim-text></claim>
+    <claim id="cl0002" num="0002" claim-type="dependent"><claim-text>根据<claim-ref idref="cl0001">权利要求1</claim-ref>所述的聚合物组合物，其中所述聚合物基体包括聚乙烯或聚丙烯。</claim-text></claim>
+    <claim id="cl0003" num="0003" claim-type="dependent"><claim-text>根据<claim-ref idref="cl0001">权利要求1</claim-ref>所述的聚合物组合物，其中所述添加剂的含量为组合物总重量的0.1至5重量百分比。</claim-text></claim>
+    <claim id="cl0004" num="0004" claim-type="dependent"><claim-text>根据<claim-ref idref="cl0001">权利要求1</claim-ref>至<claim-ref idref="cl0003">3</claim-ref>中任一项所述的聚合物组合物，其还包含填料，其中所述填料为二氧化硅或碳酸钙。</claim-text></claim>
+  </cn-claims>
+  <cn-abstract id="abst">
+    <p id="p0001a" num="0001" Italic="0">本发明公开了一种聚合物组合物，其包含聚合物基体和添加剂。</p>
+  </cn-abstract>
+</cn-application-body>
