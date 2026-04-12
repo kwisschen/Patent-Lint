@@ -60,10 +60,19 @@ class LoadedDocument:
 
 @dataclass
 class DocxSection:
-    """A Word document section with its page header text and body paragraphs."""
+    """A Word document section with its page header text and body paragraphs.
+
+    ``numpr_flags`` is a parallel list of booleans (same length as
+    ``paragraphs``) flagging which paragraphs carry Word ``w:numPr``
+    auto-numbering. It is populated by ``load_docx_cn`` (Phase 8c) so the
+    downstream section-ID fallback chain can backfill synthetic ``"N. "``
+    prefixes on claim paragraphs that lack a typed prefix. Older callers
+    (and the minimal ``extract_cn_xml_from_zip`` path) can leave it empty.
+    """
 
     header_text: str = ""
     paragraphs: list[str] = field(default_factory=list)
+    numpr_flags: list[bool] = field(default_factory=list)
 
 
 @dataclass
@@ -404,24 +413,38 @@ def load_docx_cn(file_path: str | Path) -> LoadedCnDocument:
     # The last section's <w:sectPr> is a direct child of <w:body> (no pPr).
     result: list[DocxSection] = []
     current_paras: list[str] = []
+    current_numpr: list[bool] = []
     section_idx = 0
 
     for para in doc.paragraphs:
         text = _normalize_unicode(para.text).strip()
         if text:
             current_paras.append(text)
+            # Parallel numPr flag — used by sections_cn to backfill
+            # synthetic "N. " prefixes on claim paragraphs that lack a
+            # typed number prefix (ADR-109).
+            current_numpr.append(_extract_numpr_claim_number(para) is not None)
 
         # Check for section break in this paragraph
         pPr = para._element.find(qn("w:pPr"))
         if pPr is not None and pPr.find(qn("w:sectPr")) is not None:
             header = section_headers[section_idx] if section_idx < len(section_headers) else ""
-            result.append(DocxSection(header_text=header, paragraphs=current_paras))
+            result.append(DocxSection(
+                header_text=header,
+                paragraphs=current_paras,
+                numpr_flags=current_numpr,
+            ))
             current_paras = []
+            current_numpr = []
             section_idx += 1
 
     # Last section (body-level sectPr, not inside any paragraph)
     header = section_headers[section_idx] if section_idx < len(section_headers) else ""
-    result.append(DocxSection(header_text=header, paragraphs=current_paras))
+    result.append(DocxSection(
+        header_text=header,
+        paragraphs=current_paras,
+        numpr_flags=current_numpr,
+    ))
 
     tracked_changes = detect_tracked_changes(doc)
     return LoadedCnDocument(sections=result, has_tracked_changes=tracked_changes)
