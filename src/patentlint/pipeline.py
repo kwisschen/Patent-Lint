@@ -32,7 +32,14 @@ from patentlint.parser.xml_loader import extract_cn_xml_from_zip, parse_cnipa_xm
 # TODO Phase 7: Add language mismatch detection (English content in CN mode, Chinese content in US mode)
 
 
-def _run_cn_pipeline(cn_doc: CnPatentDocument, *, likely_patent: bool = True, has_tracked_changes: bool = False) -> AnalysisResult:
+def _run_cn_pipeline(
+    cn_doc: CnPatentDocument,
+    *,
+    likely_patent: bool = True,
+    has_tracked_changes: bool = False,
+    strict_plural_reference_matching: bool = False,
+    strict_qualifier_matching: bool = False,
+) -> AnalysisResult:
     """Run CN analysis pipeline with all 24 checks."""
     para_count = len(cn_doc.paragraph_numbers) if cn_doc.paragraph_numbers else (
         len(cn_doc.technical_field)
@@ -70,6 +77,40 @@ def _run_cn_pipeline(cn_doc: CnPatentDocument, *, likely_patent: bool = True, ha
         + cn_claims_analysis.check_dependent_ordering(cn_doc)
     )
 
+    # Phase 8c: CN antecedent walker (parallel to TW). Emits structured
+    # per-occurrence findings; the CheckItem summary tile aggregates.
+    cn_antecedent_basis = cn_claims_analysis.check_antecedent_basis_cn(
+        cn_doc,
+        strict_plural_reference_matching=strict_plural_reference_matching,
+        strict_qualifier_matching=strict_qualifier_matching,
+    )
+    if cn_antecedent_basis:
+        issue_count = len(cn_antecedent_basis)
+        claim_count = len({item["claim_id"] for item in cn_antecedent_basis})
+        claims_checks = list(claims_checks) + [
+            CheckItem(
+                status="verify",
+                message="Possible missing antecedent basis found.",
+                message_key="check.cn.claims.antecedentBasis.verify",
+                details=f"{issue_count} issues across {claim_count} claims",
+                details_key="details.cn.antecedentBasisTerms",
+                details_params={
+                    "count": str(issue_count),
+                    "claims": str(claim_count),
+                },
+                reference="审查指南",
+            )
+        ]
+    else:
+        claims_checks = list(claims_checks) + [
+            CheckItem(
+                status="pass",
+                message="All referenced terms have antecedent basis.",
+                message_key="check.cn.claims.antecedentBasis.pass",
+                reference="审查指南",
+            )
+        ]
+
     # --- Abstract checks (21–23) ---
     abstract_checks = (
         cn_abstract_analysis.check_abstract_char_count(cn_doc)
@@ -96,6 +137,7 @@ def _run_cn_pipeline(cn_doc: CnPatentDocument, *, likely_patent: bool = True, ha
         cn_claims_checks=claims_checks,
         cn_abstract_checks=abstract_checks,
         cn_drawings_checks=drawings_checks,
+        antecedent_basis_issues=cn_antecedent_basis,
     )
 
 
@@ -370,6 +412,8 @@ def analyze_file(
     *,
     tw_strict_plural_reference_matching: bool = False,
     tw_strict_qualifier_matching: bool = False,
+    cn_strict_plural_reference_matching: bool = False,
+    cn_strict_qualifier_matching: bool = False,
 ) -> AnalysisResult:
     """Analyze a patent document file."""
     lower = file_path.lower()
@@ -393,18 +437,32 @@ def analyze_file(
         if lower.endswith(".xml"):
             with open(file_path, "rb") as f:
                 cn_doc = parse_cnipa_xml(f.read())
-            return _run_cn_pipeline(cn_doc)
+            return _run_cn_pipeline(
+                cn_doc,
+                strict_plural_reference_matching=cn_strict_plural_reference_matching,
+                strict_qualifier_matching=cn_strict_qualifier_matching,
+            )
         if lower.endswith(".zip"):
             with open(file_path, "rb") as f:
                 xml_data, _ = extract_cn_xml_from_zip(f.read())
             cn_doc = parse_cnipa_xml(xml_data)
-            return _run_cn_pipeline(cn_doc)
+            return _run_cn_pipeline(
+                cn_doc,
+                strict_plural_reference_matching=cn_strict_plural_reference_matching,
+                strict_qualifier_matching=cn_strict_qualifier_matching,
+            )
         if lower.endswith(".docx"):
             loaded_cn = load_docx_cn(file_path)
             all_cn_paragraphs = [p for s in loaded_cn.sections for p in s.paragraphs]
             likely_patent = detect_patent_document_cn(all_cn_paragraphs)
             cn_doc = extract_cn_sections_from_docx(loaded_cn.sections)
-            return _run_cn_pipeline(cn_doc, likely_patent=likely_patent, has_tracked_changes=loaded_cn.has_tracked_changes)
+            return _run_cn_pipeline(
+                cn_doc,
+                likely_patent=likely_patent,
+                has_tracked_changes=loaded_cn.has_tracked_changes,
+                strict_plural_reference_matching=cn_strict_plural_reference_matching,
+                strict_qualifier_matching=cn_strict_qualifier_matching,
+            )
         msg = f"Unsupported file type for CN jurisdiction: {file_path}"
         raise ValueError(msg)
 
@@ -420,6 +478,8 @@ def analyze_bytes(
     *,
     tw_strict_plural_reference_matching: bool = False,
     tw_strict_qualifier_matching: bool = False,
+    cn_strict_plural_reference_matching: bool = False,
+    cn_strict_qualifier_matching: bool = False,
 ) -> AnalysisResult:
     """Analyze patent document from raw bytes."""
     lower = filename.lower()
@@ -446,10 +506,18 @@ def analyze_bytes(
         if lower.endswith(".zip"):
             xml_data, _ = extract_cn_xml_from_zip(content)
             cn_doc = parse_cnipa_xml(xml_data)
-            return _run_cn_pipeline(cn_doc)
+            return _run_cn_pipeline(
+                cn_doc,
+                strict_plural_reference_matching=cn_strict_plural_reference_matching,
+                strict_qualifier_matching=cn_strict_qualifier_matching,
+            )
         if lower.endswith(".xml"):
             cn_doc = parse_cnipa_xml(content)
-            return _run_cn_pipeline(cn_doc)
+            return _run_cn_pipeline(
+                cn_doc,
+                strict_plural_reference_matching=cn_strict_plural_reference_matching,
+                strict_qualifier_matching=cn_strict_qualifier_matching,
+            )
         if lower.endswith(".docx"):
             with tempfile.NamedTemporaryFile(suffix=".docx", delete=True) as tmp:
                 tmp.write(content)
@@ -458,7 +526,13 @@ def analyze_bytes(
             all_cn_paragraphs = [p for s in loaded_cn.sections for p in s.paragraphs]
             likely_patent = detect_patent_document_cn(all_cn_paragraphs)
             cn_doc = extract_cn_sections_from_docx(loaded_cn.sections)
-            return _run_cn_pipeline(cn_doc, likely_patent=likely_patent, has_tracked_changes=loaded_cn.has_tracked_changes)
+            return _run_cn_pipeline(
+                cn_doc,
+                likely_patent=likely_patent,
+                has_tracked_changes=loaded_cn.has_tracked_changes,
+                strict_plural_reference_matching=cn_strict_plural_reference_matching,
+                strict_qualifier_matching=cn_strict_qualifier_matching,
+            )
         msg = f"Unsupported file type for CN jurisdiction: {filename}"
         raise ValueError(msg)
 
