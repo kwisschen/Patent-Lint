@@ -46,7 +46,7 @@ import re
 # The captured group is the numeral token (used only for equality check;
 # the guard fires regardless of whether the two numerals are the same
 # string — it fires when they DIFFER).
-_CJK_DIGITS = "一二三四五六七八九十百千萬兩零"
+_CJK_DIGITS = "一二三四五六七八九十百千萬兩零万两"
 _NUMERIC_ORDINAL = re.compile(rf"^第([{_CJK_DIGITS}]+|\d+)(.*)$")
 
 
@@ -57,14 +57,14 @@ _NUMERIC_ORDINAL = re.compile(rf"^第([{_CJK_DIGITS}]+|\d+)(.*)$")
 # Each frozenset represents a binary polarity family. A pair is guarded
 # only if the two terms start with DIFFERENT members of the same family.
 _POLARITY_FAMILIES: tuple[frozenset[str], ...] = (
-    frozenset({"陽", "陰"}),
-    frozenset({"正", "負"}),
+    frozenset({"陽", "陰", "阳", "阴"}),
+    frozenset({"正", "負", "负"}),
     frozenset({"凸", "凹"}),
     frozenset({"主", "副"}),
-    frozenset({"內", "外"}),
+    frozenset({"內", "外", "内"}),
     frozenset({"上", "下"}),
     frozenset({"左", "右"}),
-    frozenset({"前", "後"}),
+    frozenset({"前", "後", "后"}),
 )
 
 
