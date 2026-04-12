@@ -17,7 +17,7 @@ from patentlint.models import CheckItem, Claim, CnPatentDocument
 # ADR-103 (Phase 8c Stage 2): CN antecedent walker adopts tuple dedup
 # (normalized_term, normalized_reference_form) from day 1. TW uses single-key
 # dedup pending Phase 9 parity migration. See CLAUDE.md Phase 8c locked
-# decision Q3 and Phase 9 follow-up #1.
+# decision Q3 and Phase 9 follow-up #2.
 
 # Did-you-mean Jaccard threshold (ADR-094). Char-bigram Jaccard at 0.40
 # is the calibration v2 sweet spot from the TW walker; inherited for CN.
@@ -1266,17 +1266,28 @@ def check_antecedent_basis_cn(
             raw_noun = m.group("noun")
             if not raw_noun:
                 continue
-            issues.append(
-                {
-                    "claim_id": claim.id,
-                    "term": raw_noun,
-                    "reference_form": prefix,
-                    "claim_text": claim.text,
-                    "suggested_match": None,
-                    "cross_ref": None,
-                    "category": "tw_contamination",
-                }
+            # Run the captured tail through the same cleanup pipeline as
+            # the normal path (strip_reference_form_prefix →
+            # strip_leading_qualifier → clean_noun_phrase →
+            # strip_leading_quantifier), skipping resolution. The Q1
+            # regex already split prefix (该等/该些) from noun, so we
+            # normalize raw_noun directly.
+            normalized_term = normalize_reference_term_cn(
+                raw_noun,
+                strict_qualifier_matching=strict_qualifier_matching,
             )
+            finding: dict = {
+                "claim_id": claim.id,
+                "term": normalized_term or raw_noun,
+                "reference_form": prefix,
+                "claim_text": claim.text,
+                "suggested_match": None,
+                "cross_ref": None,
+                "category": "tw_contamination",
+            }
+            if not normalized_term:
+                finding["note"] = "cleanup_empty"
+            issues.append(finding)
 
         # Q3 tuple dedup (ADR-103): the key is the pair
         # (normalized_term, normalized_reference_form). See the
