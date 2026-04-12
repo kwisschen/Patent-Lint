@@ -122,3 +122,107 @@ class TestAlternativeDependencyFormat:
         claims = parse_cn_claims_docx(text)
         assert claims[4].dependencies == [2, 3, 4]
         assert claims[4].multiple_dependent is True
+
+
+class TestDependencyPrefixVariants:
+    """Each prefix variant (如 / 根据 / 依据 / bare) must extract the
+    parent claim number correctly. 根据 is the dominant form in real
+    CNIPA filings; the Stage 1 regex only covered 如 which is why Stage
+    1.5 had to ship this extension before the Stage 2 walker port."""
+
+    def _parse(self, dep_text: str) -> list[int]:
+        text = (
+            "1. 一种装置，包括第一组件。\n"
+            f"2. {dep_text}，改进A。"
+        )
+        return parse_cn_claims_docx(text)[1].dependencies
+
+    def test_prefix_ru(self):
+        assert self._parse("如权利要求1所述的装置") == [1]
+
+    def test_prefix_genju(self):
+        assert self._parse("根据权利要求1所述的装置") == [1]
+
+    def test_prefix_yiju(self):
+        assert self._parse("依据权利要求1所述的装置") == [1]
+
+    def test_prefix_bare(self):
+        # Bare form seen in older filings.
+        assert self._parse("权利要求1的装置") == [1]
+
+
+class TestDependencyRangeMultidep:
+    def test_genju_range_any_one(self):
+        text = (
+            "1. 一种装置。\n"
+            "2. 如权利要求1所述的装置。\n"
+            "3. 如权利要求1所述的装置。\n"
+            "4. 如权利要求1所述的装置。\n"
+            "5. 根据权利要求1至5中任一项所述的装置。"
+        )
+        claims = parse_cn_claims_docx(text)
+        # Self-references stripped — claim 5 cannot depend on itself.
+        assert claims[4].dependencies == [1, 2, 3, 4]
+        assert claims[4].multiple_dependent is True
+
+    def test_range_without_any_one(self):
+        # Some filings omit 任一项 — range still expands.
+        text = (
+            "1. 一种装置。\n"
+            "2. 如权利要求1所述的装置。\n"
+            "3. 如权利要求1所述的装置。\n"
+            "4. 根据权利要求1至3所述的装置。"
+        )
+        claims = parse_cn_claims_docx(text)
+        assert claims[3].dependencies == [1, 2, 3]
+
+
+class TestDependencyDisjunction:
+    def test_genju_disjunction(self):
+        text = (
+            "1. 一种装置。\n"
+            "2. 一种装置的变体。\n"
+            "3. 一种装置的另一变体。\n"
+            "4. 根据权利要求1或3所述的装置。"
+        )
+        claims = parse_cn_claims_docx(text)
+        assert claims[3].dependencies == [1, 3]
+        assert claims[3].multiple_dependent is True
+
+
+class TestDependencyEnumeration:
+    def test_genju_enumeration(self):
+        text = (
+            "1. 一种装置。\n"
+            "2. 一种装置的变体。\n"
+            "3. 一种装置的另一变体。\n"
+            "4. 根据权利要求1、2或3所述的装置。"
+        )
+        claims = parse_cn_claims_docx(text)
+        assert claims[3].dependencies == [1, 2, 3]
+        assert claims[3].multiple_dependent is True
+
+    def test_enumeration_without_or(self):
+        text = (
+            "1. 一种装置。\n"
+            "2. 一种装置的变体。\n"
+            "3. 一种装置的另一变体。\n"
+            "4. 根据权利要求1、2、3所述的装置。"
+        )
+        claims = parse_cn_claims_docx(text)
+        assert claims[3].dependencies == [1, 2, 3]
+
+
+class TestNonClaimTextNotMatched:
+    def test_quanli_yaoqiu_shu_not_matched(self):
+        """Spec text referencing '权利要求书' (the document, not a claim
+        number) must not be mistaken for a dependency. The regex requires
+        a digit after 权利要求 so this is a digit-absence guard."""
+        text = (
+            "1. 一种装置。\n"
+            "2. 如权利要求书所载的装置实施例。"
+        )
+        claims = parse_cn_claims_docx(text)
+        # Claim 2 has no numeric dependency — must parse as independent.
+        assert claims[1].dependencies == []
+        assert claims[1].independent is True
