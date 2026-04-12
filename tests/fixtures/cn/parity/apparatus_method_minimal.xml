@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cn-application-body lang="zh" country="CN" dtd-version="1.0" file="pair-a" status="new">
+  <description>
+    <invention-title>一种数据处理装置及其方法</invention-title>
+    <technical-field>
+      <p id="p0001" num="0001" Italic="0">本发明涉及数据处理领域，特别涉及一种数据处理装置及其方法。</p>
+    </technical-field>
+    <background-art>
+      <p id="p0002" num="0002" Italic="0">现有的数据处理装置在处理多路输入信号时存在效率不高的问题。</p>
+    </background-art>
+    <disclosure>
+      <p id="p0003" num="0003" Italic="0">本发明提供一种具有多核处理器的数据处理装置，以提高输入信号的处理效率。</p>
+    </disclosure>
+    <description-of-drawings>
+      <p id="p0004" num="0004" Italic="0">图1为本发明实施例的数据处理装置结构示意图。</p>
+    </description-of-drawings>
+    <mode-for-invention>
+      <p id="p0005" num="0005" Italic="0">下面结合实施例对本发明进行详细说明。本发明的数据处理装置包括处理器、存储器和通信接口。</p>
+    </mode-for-invention>
+  </description>
+  <cn-claims>
+    <claim id="cl0001" num="0001"><claim-text>一种数据处理装置，包括：处理器；存储器，与所述处理器耦接；和通信接口，配置为接收输入信号。</claim-text></claim>
+    <claim id="cl0002" num="0002"><claim-text>根据权利要求1所述的数据处理装置，其中所述处理器包括第一核心和第二核心。</claim-text></claim>
+    <claim id="cl0003" num="0003"><claim-text>根据权利要求2所述的数据处理装置，其中所述第一核心的时钟频率高于所述第二核心。</claim-text></claim>
+    <claim id="cl0004" num="0004"><claim-text>根据权利要求1所述的数据处理装置，其中所述存储器包括易失性存储区和非易失性存储区。</claim-text></claim>
+    <claim id="cl0005" num="0005"><claim-text>一种数据处理方法，包括：通过通信接口接收输入信号；通过处理器对所述输入信号进行处理；和将处理结果存储到存储器中。</claim-text></claim>
+  </cn-claims>
+  <cn-abstract id="abst">
+    <p id="p0001a" num="0001" Italic="0">本发明公开了一种数据处理装置及其方法。所述数据处理装置包括处理器、存储器和通信接口。</p>
+  </cn-abstract>
+</cn-application-body>
