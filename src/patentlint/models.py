@@ -118,6 +118,11 @@ class CnPatentDocument(BaseModel):
     has_paragraph_numbering: bool = False
     input_format: str = "docx"
     has_doc_page_fallback: bool = False
+    # Which section-ID fallback tier classified the .docx body into
+    # 五书 parts. One of "body_anchor", "template_substyle",
+    # "claim_density", "page_header", or "none" (Phase 8c ADR-109).
+    # For XML input this field is always "none".
+    section_id_strategy: str = "none"
 
 
 class SymbolEntry(BaseModel):
