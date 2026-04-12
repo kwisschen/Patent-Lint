@@ -118,11 +118,17 @@ class CnPatentDocument(BaseModel):
     has_paragraph_numbering: bool = False
     input_format: str = "docx"
     has_doc_page_fallback: bool = False
-    # Which section-ID fallback tier classified the .docx body into
-    # 五书 parts. One of "body_anchor", "template_substyle",
-    # "claim_density", "page_header", or "none" (Phase 8c ADR-109).
-    # For XML input this field is always "none".
-    section_id_strategy: str = "none"
+    # Per-section record of which section-ID fallback tier classified
+    # each 五书 part of a .docx body (Phase 8c ADR-109, revised in
+    # Stage 1.5 from a top-level str to a per-section dict). Keys are
+    # ``"claims"``, ``"specification"``, and ``"abstract"``; values are
+    # one of ``"body_anchor"``, ``"claim_density"``, ``"page_header"``,
+    # or ``"none"``. A document can have mixed strategies (e.g., claims
+    # via body_anchor, abstract via page_header fallback). For XML input
+    # all three entries are ``"none"``. Empty default dict handles
+    # pre-Phase-8c callers that still construct ``CnPatentDocument``
+    # without populating this field (XML path).
+    section_source_strategies: dict[str, str] = Field(default_factory=dict)
 
 
 class SymbolEntry(BaseModel):

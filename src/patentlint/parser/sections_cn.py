@@ -440,54 +440,81 @@ def _backfill_numpr_prefixes(paragraphs: list[str], numpr_flags: list[bool]) -> 
 def extract_cn_sections_from_docx(sections: list[DocxSection]) -> CnPatentDocument:
     """Extract CN patent document structure from Word sections.
 
-    Phase 8c (ADR-109) — four-tier section-ID fallback chain:
+    Phase 8c (ADR-109) — three-tier section-ID fallback chain:
 
     1. **Tier 1 body_anchor** — flatten paragraphs across Word sections
        and classify by standalone 五书 markers (权利要求书, 说明书, etc.).
-    2. **Tier 2 template_substyle** — on the 五书模板 Word-section layout
-       with non-empty page headers, trust the legacy mapping.
-    3. **Tier 3 claim_density** — if no structural anchor is found, scan
-       for runs of ≥3 consecutive claim-start paragraphs.
-    4. **Tier 4 page_header** — legacy Word-page-header mapping. Last
-       resort; page-header tier is a smell for real CNIPA downloads.
+       Primary tier; fires for real CNIPA downloads.
+    2. **Tier 2 claim_density** — if no structural anchor is found, scan
+       for runs of ≥3 consecutive claim-start paragraphs. Recovers the
+       claims span when body anchors have been stripped.
+    3. **Tier 3 page_header** — legacy Word-page-header mapping. Last
+       resort; fires for 五书模板 Word exports where section titles live
+       in page headers rather than body paragraphs.
 
-    The winning tier is recorded on ``section_id_strategy``.
+    Stage 1 shipped a fourth `template_substyle` tier but it never fired
+    on the real 10-fixture corpus or the two synthetic parity pairs;
+    deleted in Stage 1.5 rather than "implicitly covered" (same
+    rationalization that let Phase 8b's `用` exclusion rot).
+
+    The winning tier is recorded per-section on
+    ``CnPatentDocument.section_source_strategies``, keyed by
+    ``"claims"`` / ``"specification"`` / ``"abstract"``. A document can
+    have mixed strategies (e.g., claims via body_anchor, abstract via
+    page_header fallback).
     """
     # --- Run tiers ---
     ba_spec, ba_claims, ba_abstract, ba_numpr, ba_anchor_count = _collect_by_body_anchor(sections)
     ph_spec, ph_claims, ph_abstract, ph_numpr = _collect_by_page_header(sections)
 
-    strategy = "none"
+    strategies: dict[str, str] = {
+        "claims": "none",
+        "specification": "none",
+        "abstract": "none",
+    }
     spec_paragraphs: list[str]
     claims_paragraphs: list[str]
     claims_numpr_flags: list[bool]
     abstract_paragraphs: list[str]
 
     if ba_anchor_count >= 2 and ba_claims:
-        strategy = "body_anchor"
         spec_paragraphs = ba_spec
         claims_paragraphs = ba_claims
         claims_numpr_flags = ba_numpr
         abstract_paragraphs = ba_abstract
+        if ba_claims:
+            strategies["claims"] = "body_anchor"
+        if ba_spec:
+            strategies["specification"] = "body_anchor"
+        if ba_abstract:
+            strategies["abstract"] = "body_anchor"
     elif ph_claims or ph_spec:
-        # Page-header (template_substyle) branch — works for the 五书模板
-        # Word export where page headers carry section titles.
-        strategy = "template_substyle" if ba_anchor_count >= 1 else "page_header"
+        # Page-header branch — fires for 五书模板 Word exports where
+        # section titles live in page headers.
         spec_paragraphs = ph_spec
         claims_paragraphs = ph_claims
         claims_numpr_flags = ph_numpr
         abstract_paragraphs = ph_abstract
+        if ph_claims:
+            strategies["claims"] = "page_header"
+        if ph_spec:
+            strategies["specification"] = "page_header"
+        if ph_abstract:
+            strategies["abstract"] = "page_header"
     else:
         # Tier 3 — claim-density heuristic recovers claims only.
         cd_claims, cd_numpr = _collect_by_claim_density(sections)
         if cd_claims:
-            strategy = "claim_density"
             spec_paragraphs = ba_spec  # best-effort (may be empty)
             claims_paragraphs = cd_claims
             claims_numpr_flags = cd_numpr
             abstract_paragraphs = ba_abstract
+            strategies["claims"] = "claim_density"
+            if ba_spec:
+                strategies["specification"] = "body_anchor"
+            if ba_abstract:
+                strategies["abstract"] = "body_anchor"
         else:
-            strategy = "none"
             spec_paragraphs = []
             claims_paragraphs = []
             claims_numpr_flags = []
@@ -549,5 +576,5 @@ def extract_cn_sections_from_docx(sections: list[DocxSection]) -> CnPatentDocume
         has_paragraph_numbering=has_numbering,
         input_format="docx",
         has_doc_page_fallback=False,
-        section_id_strategy=strategy,
+        section_source_strategies=strategies,
     )
