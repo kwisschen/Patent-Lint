@@ -41,5 +41,8 @@ tests/fixtures/*/local/**
 !tests/fixtures/us/cross_category_dependent.docx
 !tests/fixtures/cn/parity/apparatus_method_minimal.docx
 !tests/fixtures/cn/parity/numbering_multidep_markush.docx
+!tests/fixtures/cn/synthetic/tw_contamination_simple.docx
+!tests/fixtures/cn/synthetic/tw_contamination_plural.docx
+!tests/fixtures/cn/synthetic/tw_contamination_mixed.docx
 smoke-test-pyodide.html
 temp/
