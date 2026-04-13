@@ -135,11 +135,12 @@ def test_main_exits_3_on_unknown_category(monkeypatch, tmp_path, capsys):
 
 
 def test_additions_resolved_by_current_round_exit_0():
-    """A new finding whose key matches a current-round resolved_by → exit 0."""
+    """A walker emission whose key matches a resolved_by label is durably
+    expected (ADR-111 revision 2026-04-13) → no new_finding, exit 0."""
     labels = [
         # Active baseline label (matches actual, stays flagged).
         _label("F", 1, "a", "所述a"),
-        # Resolved-by label for the new finding, round 2 = current_round.
+        # Resolved-by label for the emission, round 2 = current_round.
         _label(
             "F", 2, "b", "所述b",
             category="unclassified",
@@ -150,7 +151,10 @@ def test_additions_resolved_by_current_round_exit_0():
     doc = _labels_doc(labels, current_round=2)
     actual = _actual([("F", 1, "a", "所述a"), ("F", 2, "b", "所述b")])
     diff = harness._compute_diff(doc, actual)
-    assert diff["new_findings"] == [("F", 2, "b", "所述b")]
+    # ADR-111 revision: resolved labels are DURABLY expected across
+    # rounds, so (F,2,b) is not a new_finding even though it is
+    # resolved_by-tagged.
+    assert diff["new_findings"] == []
     assert diff["unresolved_new"] == []
     assert harness._exit_code(diff) == 0
 
@@ -202,9 +206,12 @@ def test_drops_without_resolved_by_exit_2():
 # ── ADR-111: stale round ─────────────────────────────────────────────────
 
 
-def test_stale_round_does_not_satisfy_halt():
-    """A resolved_by entry whose round != current_round is stale and does
-    NOT satisfy the halt. The new finding should remain unresolved."""
+def test_stale_round_resolved_label_is_durably_expected():
+    """ADR-111 revision 2026-04-13: a resolved_by entry with a stale round
+    is still DURABLY expected. The corresponding walker emission matches
+    expected and is not a new_finding. Stale-round scoping only applies
+    to the bidirectional halt's satisfaction check for genuinely new
+    originals, not to the expected set."""
     labels = [
         _label("F", 1, "a", "所述a"),
         # Stale resolution: round 1, current_round = 2.
@@ -217,11 +224,35 @@ def test_stale_round_does_not_satisfy_halt():
     doc = _labels_doc(labels, current_round=2)
     actual = _actual([("F", 1, "a", "所述a"), ("F", 2, "b", "所述b")])
     diff = harness._compute_diff(doc, actual)
-    # (F,2,b) is a new_finding because its resolved_by removes it from
-    # `expected`. Stale round means it does NOT count toward halt
-    # satisfaction.
-    assert diff["new_findings"] == [("F", 2, "b", "所述b")]
-    assert diff["unresolved_new"] == [("F", 2, "b", "所述b")]
+    # (F,2,b) is durably expected via its prior-round resolved_by.
+    assert diff["new_findings"] == []
+    assert diff["unresolved_new"] == []
+    assert harness._exit_code(diff) == 0
+
+
+def test_stale_round_does_not_satisfy_halt_for_unlabeled_key():
+    """ADR-111 revision 2026-04-13: current_round scoping still applies
+    to halt satisfaction for genuinely unlabeled new keys. A stale
+    resolved_by entry for key K does NOT satisfy the halt for a
+    different key K' that is truly unexpected."""
+    labels = [
+        _label("F", 1, "a", "所述a"),
+        # Stale resolution on a different key.
+        _label(
+            "F", 2, "b", "所述b",
+            resolved_by="F1_fix",
+            round_=1,
+        ),
+    ]
+    doc = _labels_doc(labels, current_round=2)
+    # Walker emits an unexpected key (F,9,z) that is NOT covered by any
+    # label — current_round_resolutions is empty, so halt fires.
+    actual = _actual(
+        [("F", 1, "a", "所述a"), ("F", 2, "b", "所述b"), ("F", 9, "z", "所述z")]
+    )
+    diff = harness._compute_diff(doc, actual)
+    assert diff["new_findings"] == [("F", 9, "z", "所述z")]
+    assert diff["unresolved_new"] == [("F", 9, "z", "所述z")]
     assert harness._exit_code(diff) == 2
 
 
