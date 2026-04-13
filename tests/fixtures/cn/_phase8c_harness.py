@@ -238,6 +238,14 @@ def _compute_diff(labels_doc: dict, actual: dict[tuple, dict]) -> dict:
         expected_map[key] = lab
         if lab.get("protect") is True:
             protected.add(key)
+    # ADR-111 revision 2026-04-13: resolved labels are DURABLY expected
+    # across rounds. current_round scoping applies only to the
+    # bidirectional halt satisfaction check (see current_round_resolutions
+    # below), not to the expected set. Without this, round-N new-shape
+    # labels become ghosts the moment current_round advances to N+1.
+    for lab in resolved_labels:
+        key = _label_key(lab)
+        expected_map[key] = lab
 
     expected = set(expected_map.keys())
     actual_keys = set(actual.keys())
@@ -246,22 +254,34 @@ def _compute_diff(labels_doc: dict, actual: dict[tuple, dict]) -> dict:
     removed_findings = sorted(expected - actual_keys)
     protect_violations = [k for k in removed_findings if k in protected]
 
-    # ADR-111: only resolved_by entries with round == current_round satisfy
-    # the halt. Stale (prior-round) resolutions still partition out of
-    # `expected` but do not count toward current-round satisfaction.
+    # ADR-111 revision 2026-04-13: current_round_resolutions is used only
+    # for UI classification (telling the reader which drops/additions were
+    # satisfied by the round currently in flight). Halt satisfaction is
+    # durable across rounds: once a label is resolved_by-tagged, its key
+    # is permanently in `expected` (additions side) and permanently
+    # excluded from unresolved_removed (drops side).
     current_round_resolutions: dict[tuple, dict] = {
         _label_key(lab): lab
         for lab in labels
         if lab.get("resolved_by") and lab.get("round") == current_round
     }
     resolved_keys_current = set(current_round_resolutions.keys())
+    resolved_keys_all = {
+        _label_key(lab) for lab in labels if lab.get("resolved_by")
+    }
 
+    # Additions: any emission NOT in expected is "new". Since expected
+    # already includes resolved labels durably, true new_findings are by
+    # construction unresolved. Halt unless a current-round resolved_by
+    # entry explicitly credits the emission (kept for R1-style seeding
+    # where the walker emits a key not yet in the label file).
     unresolved_new = [k for k in new_findings if k not in resolved_keys_current]
-    # Unprotected drops only — protected drops take the exit-1 path with
+    # Drops: unprotected drops halt unless the label is resolved_by-tagged
+    # in ANY round (durable). Protected drops take the exit-1 path with
     # no escape hatch.
     unprotected_removed = [k for k in removed_findings if k not in protected]
     unresolved_removed = [
-        k for k in unprotected_removed if k not in resolved_keys_current
+        k for k in unprotected_removed if k not in resolved_keys_all
     ]
 
     cat_stats: dict[str, dict[str, int]] = {

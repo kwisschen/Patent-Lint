@@ -686,10 +686,19 @@ _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
         "产生", "各地",
         "依序",
         "相互", "朝向",
+        # Stage 4 R2' D1a — 调出 cuts after 处理器指令 prefix (Huawei c3)
+        "调出",
     ),
     key=len,
     reverse=True,
 ))
+
+# Stage 4 R2' D3 — 1-char noun prefixes get a relaxed position gate
+# (>= 1 instead of > 1) so interior-verb cuts can fire at idx 1. Without
+# this, captures like 边包括实线边 / L具有选自 can never be truncated.
+_ONE_CHAR_NOUN_PREFIXES_CN: frozenset[str] = frozenset(
+    {"边", "面", "体", "键", "L", "X", "Y", "Z", "M", "N", "R"}
+)
 
 # Interior-cut exception set — mechanical TC→SC swap per v2 swap table;
 # compound-level re-seeding deferred to Stage 4.
@@ -724,6 +733,8 @@ _INTERIOR_CUT_EXCEPTIONS_CN: frozenset[str] = frozenset({
     "浏览器",
     "波产生器",
     "连接面", "第一连接面", "第二连接面",
+    # Stage 4 R2' D1a — Huawei CN113939805B 处理器指令 compound
+    "第一处理器指令", "第二处理器指令",
 })
 
 
@@ -752,10 +763,21 @@ def clean_noun_phrase_cn(text: str) -> str:
     search_text = text[protected_prefix_len:]
     search_offset = protected_prefix_len
 
+    # Stage 4 R2' D3 (ADR-112): 1-char noun prefixes (边/L/etc.) relax the
+    # position gate from > 1 to >= 1 so interior-verb cuts at idx 1 can
+    # fire. Without this, a capture like 边包括实线边 cannot be truncated
+    # because 包括 sits at idx 1 and the original gate blocks it.
+    is_one_char_noun_prefix = (
+        len(text) > 0
+        and text[0] in _ONE_CHAR_NOUN_PREFIXES_CN
+        and protected_prefix_len == 0
+    )
+    min_absolute_idx = 1 if is_one_char_noun_prefix else 2
+
     earliest_idx: int | None = None
     for verb in _INTERIOR_VERB_BOUNDARIES_CN:
         idx = search_text.find(verb)
-        if idx >= 0 and (idx + search_offset) > 1:
+        if idx >= 0 and (idx + search_offset) >= min_absolute_idx:
             absolute_idx = idx + search_offset
             if earliest_idx is None or absolute_idx < earliest_idx:
                 earliest_idx = absolute_idx
