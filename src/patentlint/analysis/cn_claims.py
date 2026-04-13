@@ -607,6 +607,8 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "至",
         "依序",
         "撷取",
+        # Stage 4 R1 D4a — ADR-100 pattern, CN-specific extensions
+        "相关", "有关",
     ),
     key=len,
     reverse=True,
@@ -618,7 +620,10 @@ _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN: frozenset[str] = frozenset(
 )
 
 # Relaxed-guard subset (residual ≥ 2 instead of ≥ 3).
-_NOUNLIKE_RELAXED_SUFFIXES_CN: frozenset[str] = frozenset({"上", "内"})
+# Stage 4 R1 D4a — relaxed residual ≥ 2 guard for 2-char-stem residue strip
+_NOUNLIKE_RELAXED_SUFFIXES_CN: frozenset[str] = frozenset(
+    {"上", "内", "后", "中", "用"}
+)
 
 # Leading quantifier denylist (TC→SC).
 _LEADING_QUANTIFIER_DENYLIST_CN: tuple[str, ...] = tuple(sorted(

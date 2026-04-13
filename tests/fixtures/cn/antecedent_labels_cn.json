@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 0,
+    "current_round": 1,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -39,8 +39,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -51,8 +51,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -87,8 +87,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -195,8 +195,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -291,8 +291,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -303,8 +303,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -339,8 +339,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -435,8 +435,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -1083,8 +1083,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1527,8 +1527,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -3051,8 +3051,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN115485995B",
@@ -5151,8 +5151,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN115485995B",
@@ -6711,8 +6711,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN115485995B",
@@ -8967,8 +8967,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN115485995B",
@@ -10647,8 +10647,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN115952274B",
@@ -10923,8 +10923,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN115952274B",
@@ -10935,8 +10935,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN115952274B",
@@ -11019,8 +11019,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN115952274B",
@@ -11031,8 +11031,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN115952274B",
@@ -11343,8 +11343,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN115952274B",
@@ -11547,8 +11547,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN115952274B",
@@ -11775,8 +11775,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN115952274B",
@@ -12123,8 +12123,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN115952274B",
@@ -12231,8 +12231,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN115952274B",
@@ -12579,8 +12579,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN115952274B",
@@ -12759,8 +12759,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     },
     {
       "fixture": "CN115952274B",
@@ -14609,6 +14609,344 @@
       "notes": "Synthetic fixture — Q1 tw_contamination rejection by construction. Walker output MUST preserve.",
       "resolved_by": null,
       "round": 0
+    },
+    {
+      "fixture": "CN110276410B (BOE)",
+      "claim_id": 1,
+      "term": "不良",
+      "reference_form": "所述不良",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN110276410B (BOE)",
+      "claim_id": 1,
+      "term": "不良",
+      "reference_form": "所述不良",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN110276410B (BOE)",
+      "claim_id": 1,
+      "term": "已知不良",
+      "reference_form": "所述已知不良",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN110276410B (BOE)",
+      "claim_id": 2,
+      "term": "已知不良",
+      "reference_form": "所述已知不良",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN110276410B (BOE)",
+      "claim_id": 4,
+      "term": "不良",
+      "reference_form": "所述不良",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN110276410B (BOE)",
+      "claim_id": 4,
+      "term": "不良",
+      "reference_form": "所述不良",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN110276410B (BOE)",
+      "claim_id": 4,
+      "term": "已知不良",
+      "reference_form": "所述已知不良",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN110276410B (BOE)",
+      "claim_id": 5,
+      "term": "已知不良",
+      "reference_form": "所述已知不良",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN113939805B (Huawei)",
+      "claim_id": 3,
+      "term": "PC",
+      "reference_form": "所述PC",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN113939805B (Huawei)",
+      "claim_id": 9,
+      "term": "PC",
+      "reference_form": "所述PC",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 2,
+      "term": "第三信号",
+      "reference_form": "所述第三信号",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 44,
+      "term": "第三信号",
+      "reference_form": "所述第三信号",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 81,
+      "term": "第三信号",
+      "reference_form": "所述第三信号",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 123,
+      "term": "第三信号",
+      "reference_form": "所述第三信号",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 2,
+      "term": "用户",
+      "reference_form": "所述用户",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 9,
+      "term": "用户",
+      "reference_form": "所述用户",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 9,
+      "term": "确定",
+      "reference_form": "所述确定",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 11,
+      "term": "用户",
+      "reference_form": "所述用户",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 11,
+      "term": "确定",
+      "reference_form": "所述确定",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 18,
+      "term": "用户",
+      "reference_form": "所述用户",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 21,
+      "term": "更新",
+      "reference_form": "所述更新",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 24,
+      "term": "用户",
+      "reference_form": "所述用户",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 32,
+      "term": "用户",
+      "reference_form": "所述用户",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 34,
+      "term": "用户",
+      "reference_form": "所述用户",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 41,
+      "term": "用户",
+      "reference_form": "所述用户",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 43,
+      "term": "更新",
+      "reference_form": "所述更新",
+      "claim_text": "",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 4 R1 D4a over-predict new-shape label (may be phantom if walker absorbs).",
+      "resolved_by": "round_1_d4a_trailing_phrase",
+      "round": 1
     }
   ]
 }
