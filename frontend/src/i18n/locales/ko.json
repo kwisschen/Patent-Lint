@@ -489,7 +489,8 @@
       "abstractCharCount": "专利法实施细则 §23에 따라 요약서는 300자를 초과할 수 없습니다. 요약서를 줄이세요.",
       "abstractTitleMatch": "审查指南에 따라 요약서는 발명 명칭과 일치해야 합니다. 요약서가 발명 명칭을 반영하는지 확인하세요.",
       "commercialLanguage": "专利法实施细则 §23에 따라 요약서에 상업적 광고 용어(商业性宣传用语)를 포함해서는 안 됩니다. 最优, 最佳, 世界领先, 国际领先, 国内首创, 填补空白 등의 용어를 삭제하세요.",
-      "antecedentBasisTerms": "{{claim_count}}개 청구항에서 {{issue_count}}개 용어가 선행사를 결여할 수 있습니다。"
+      "antecedentBasisTerms": "{{claim_count}}개 청구항에서 {{issue_count}}개 용어가 선행사를 결여할 수 있습니다。",
+      "titleMissing": "심사지남 제1부 제1장에 따라, 명세서에는 발명의 명칭을 기재하여야 합니다. 명세서 첫머리에 발명의 명칭을 추가해 주십시오."
     },
     "tw": {
       "requiredSections": "TIPO 요건: 技術領域, 先前技術, 發明內容/新型內容, 實施方式. 도면이 있는 경우 圖式簡單說明 및 符號說明도 필요합니다. 누락: {{sections}}.",
@@ -528,7 +529,8 @@
       "representativeDrawing": "專利法施行細則 §21에 따라 도면이 있는 경우 代表圖를 지정해야 합니다. 代表圖 지정이 필요한지 확인하십시오.",
       "symbolVsRepDrawing": "代表圖之符號簡單說明에 기재된 부호는 符號說明과 일치해야 합니다. {{detail}}. 완전성을 확인하십시오.",
       "bracketFormat": "專利法施行細則 §17에 따라 섹션 제목은 전각 대괄호 【】를 사용해야 합니다. 발견: {{detail}}.",
-      "antecedentBasisTerms": "{{claim_count}}개 청구항에서 {{issue_count}}개 용어가 선행사를 결여할 수 있습니다。"
+      "antecedentBasisTerms": "{{claim_count}}개 청구항에서 {{issue_count}}개 용어가 선행사를 결여할 수 있습니다。",
+      "titleMissing": "특허심사기준에 따라, 명세서에는 발명의 명칭 또는 신형의 명칭을 기재하여야 합니다. 명세서 첫머리에 추가해 주십시오."
     }
   },
   "common": {

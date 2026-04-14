@@ -489,7 +489,8 @@
       "abstractCharCount": "Per 专利法实施细则 §23, the abstract must not exceed 300 Chinese characters. Shorten the abstract.",
       "abstractTitleMatch": "Per 审查指南, the abstract should be consistent with the title (发明名称). Verify the abstract reflects the invention title.",
       "commercialLanguage": "Per 专利法实施细则 §23, the abstract must not contain commercial advertising language (商业性宣传用语). Remove terms like 最优, 最佳, 世界领先, 国际领先, 国内首创, 填补空白, etc.",
-      "antecedentBasisTerms": "{{issue_count}} term(s) may lack antecedent basis across {{claim_count}} claim(s)."
+      "antecedentBasisTerms": "{{issue_count}} term(s) may lack antecedent basis across {{claim_count}} claim(s).",
+      "titleMissing": "Per CNIPA 审查指南 第一部分第一章, the specification must contain a 发明名称 (title of invention). Add a title to the specification header."
     },
     "tw": {
       "requiredSections": "TIPO requires: 技術領域, 先前技術, 發明內容/新型內容, 實施方式. When drawings are present, 圖式簡單說明 and 符號說明 are also required. Missing: {{sections}}.",
@@ -528,7 +529,8 @@
       "representativeDrawing": "Per 專利法施行細則 §21, when drawings exist, a 代表圖 should be designated. Review whether a representative drawing designation is needed.",
       "symbolVsRepDrawing": "Symbols listed in 代表圖之符號簡單說明 should match entries in 符號說明. {{detail}}. Verify completeness.",
       "bracketFormat": "Per 專利法施行細則 §17, section headers should use full-width brackets 【】. Found: {{detail}}.",
-      "antecedentBasisTerms": "{{issue_count}} term(s) may lack antecedent basis across {{claim_count}} claim(s)."
+      "antecedentBasisTerms": "{{issue_count}} term(s) may lack antecedent basis across {{claim_count}} claim(s).",
+      "titleMissing": "Per TIPO 專利審查基準, the specification must contain a 發明名稱/新型名稱 (title of invention or utility model). Add one to the specification header."
     }
   },
   "common": {
