@@ -151,7 +151,7 @@ class TestSelfDependent:
         ])
         result = check_self_dependent(doc)
         assert result[0].status == "amend"
-        assert "2" in result[0].details_params["claims"]
+        assert 2 in result[0].details_params["claims"]
 
     def test_no_claims_pass(self):
         doc = _make_doc(claims=[])
@@ -524,7 +524,7 @@ class TestMultiDepOnMultiDep:
         ])
         result = check_multi_dep_on_multi_dep(doc)
         assert result[0].status == "amend"
-        assert "5" in result[0].details_params["claims"]
+        assert 5 in result[0].details_params["claims"]
 
     def test_indirect_multi_on_multi_amend(self):
         """Claim 5 (multi) → claim 4 (single) → claim 3 (multi) → claim 1."""
@@ -539,7 +539,7 @@ class TestMultiDepOnMultiDep:
         ])
         result = check_multi_dep_on_multi_dep(doc)
         assert result[0].status == "amend"
-        assert "5" in result[0].details_params["claims"]
+        assert 5 in result[0].details_params["claims"]
 
     def test_no_claims_pass(self):
         doc = _make_doc(claims=[])
@@ -587,7 +587,7 @@ class TestMultiDepAlternative:
         ])
         result = check_multi_dep_alternative(doc)
         assert result[0].status == "amend"
-        assert "3" in result[0].details_params["claims"]
+        assert 3 in result[0].details_params["claims"]
 
     def test_no_claims_pass(self):
         doc = _make_doc(claims=[])

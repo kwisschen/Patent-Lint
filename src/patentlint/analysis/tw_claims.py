@@ -166,7 +166,7 @@ def check_self_dependent(doc: TwPatentDocument) -> list[CheckItem]:
             message_key="check.tw.claims.selfDependent.amend",
             details=claims_str,
             details_key="details.tw.selfDependent",
-            details_params={"claims": claims_str},
+            details_params={"claims": bad},
             reference="專利法施行細則 §18",
         )]
 
@@ -509,7 +509,7 @@ def check_multi_dep_on_multi_dep(doc: TwPatentDocument) -> list[CheckItem]:
             message_key="check.tw.claims.multiDepOnMultiDep.amend",
             details=claims_str,
             details_key="details.tw.multiDepOnMultiDep",
-            details_params={"claims": claims_str},
+            details_params={"claims": bad},
             reference="專利法施行細則 §18",
         )]
 
@@ -548,7 +548,7 @@ def check_multi_dep_alternative(doc: TwPatentDocument) -> list[CheckItem]:
             message_key="check.tw.claims.multiDepAlternative.amend",
             details=claims_str,
             details_key="details.tw.multiDepAlternative",
-            details_params={"claims": claims_str},
+            details_params={"claims": bad},
             reference="專利法施行細則 §18",
         )]
 

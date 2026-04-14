@@ -509,17 +509,17 @@
       "symbolTableConsistency": "依专利审查基准，符号说明条目应与实施方式中使用的参考符号一致。请确认完整性。",
       "claimsSequential": "依专利审查基准，请求项编号须从1开始连续编列。",
       "dependencyFormat": "依专利法施行细则 §18，依附须使用正确格式（如請求項N所述之、如請求項N之等）。请检查标记之請求項。",
-      "selfDependent": "依专利法施行细则 §18，請求項不得依附于自身。自我依附：請求項 {{claims}}。",
+      "selfDependent": "依专利法施行细则 §18，請求項不得依附于自身。自我依附：{{claims}}。",
       "circularDependency": "依专利法施行细则 §18，請求項不得形成循环依附链。循环链：請求項 {{claims}}。",
-      "forwardDependency": "依专利法施行细则 §18，附属项仅得引用在前之請求項。向前引用：請求項 {{claims}}。",
+      "forwardDependency": "依专利法施行细则 §18，附属项仅得引用在前之請求項。向前引用：{{claims}}。",
       "singleSentence": "依专利法施行细则 §18，每一請求項须为单句，仅于末尾有一个句号（。）。请检查标记之請求項。",
       "refNumeralParens": "依专利法施行细则 §19，請求項中之元件符号应加括号，例如(101)。请检查标记之請求項。",
       "subjectConsistency": "附属项之主题名称应与所依附之母项主题名称一致。请检查标记之請求項。",
       "transitionPhrase": "依专利法施行细则 §20，独立项应包含特征连接词，如「其特徵在於」或「其改良在於」。请检查标记之請求項。",
       "cnTerminology": "发现简体中文专利用语：{{detail}}。台湾专利稿件应使用TIPO用语（請求項、說明書、先前技術、實施方式等），而非CNIPA用语（权利要求、说明书、背景技术、具体实施方式等）。",
       "specDrawingRef": "依专利法施行细则 §19，請求項不得引用说明书或图式（如「如說明書所述」「如圖所示」）。发现：{{detail}}。",
-      "multiDepOnMultiDep": "依专利法施行细则 §18，多项附属项不得直接或间接依附于另一多项附属项。标记：請求項 {{claims}}。",
-      "multiDepAlternative": "依专利法施行细则 §18，多项附属项须使用择一形式（或/任一项）。标记：請求項 {{claims}}。",
+      "multiDepOnMultiDep": "依专利法施行细则 §18，多项附属项不得直接或间接依附于另一多项附属项。标记：{{claims}}。",
+      "multiDepAlternative": "依专利法施行细则 §18，多项附属项须使用择一形式（或/任一项）。标记：{{claims}}。",
       "titleSubjectMatch": "依专利审查基准，发明名称/新型名称应与独立项之主题名称一致。请检查标记之请求项。",
       "claims": {
         "symbolTableConsistency": {
@@ -730,11 +730,11 @@
           "pass": "权利要求编号连续。"
         },
         "dependencyFormat": {
-          "amend": "{{count}} 项权利要求的引用格式不正确：权利要求 {{claims}}。",
+          "amend": "{{count}} 项权利要求的引用格式不正确：{{claims}}。",
           "pass": "所有从属权利要求的引用格式正确。"
         },
         "selfDependent": {
-          "amend": "权利要求 {{claims}} 引用了自身。",
+          "amend": "{{claims}} 引用了自身。",
           "pass": "未发现自引用权利要求。"
         },
         "forwardDependency": {
@@ -742,19 +742,19 @@
           "pass": "未发现正向引用。"
         },
         "singleSentence": {
-          "amend": "{{count}} 项权利要求包含多个句子：权利要求 {{claims}}。",
+          "amend": "{{count}} 项权利要求包含多个句子：{{claims}}。",
           "pass": "所有权利要求均为单句。"
         },
         "refNumeralParens": {
-          "verify": "{{count}} 项权利要求中的附图标记未加括号：权利要求 {{claims}}。",
+          "verify": "{{count}} 项权利要求中的附图标记未加括号：{{claims}}。",
           "pass": "权利要求中所有附图标记均已加括号。"
         },
         "subjectConsistency": {
-          "verify": "权利要求 {{claims}} 的主题名称与母项不一致（共 {{count}} 项）。",
+          "verify": "{{claims}} 的主题名称与母项不一致（共 {{count}} 项）。",
           "pass": "从属权利要求的主题名称一致。"
         },
         "transitionPhrase": {
-          "verify": "{{count}} 项独立权利要求可能缺少特征部分过渡语：权利要求 {{claims}}。",
+          "verify": "{{count}} 项独立权利要求可能缺少特征部分过渡语：{{claims}}。",
           "pass": "所有独立权利要求均包含特征部分过渡语。"
         },
         "twTerminology": {
@@ -762,16 +762,20 @@
           "pass": "权利要求用语符合CNIPA规范。"
         },
         "specReference": {
-          "amend": "{{count}} 项权利要求引用了说明书或附图：权利要求 {{claims}}。",
+          "amend": "{{count}} 项权利要求引用了说明书或附图：{{claims}}。",
           "pass": "权利要求未引用说明书或附图。"
         },
         "multiMultiDep": {
-          "amend": "权利要求 {{claims}}：多项从属权利要求引用了另一多项从属权利要求。",
+          "amend": "{{claims}}：多项从属权利要求引用了另一多项从属权利要求。",
           "pass": "未发现多项从属权利要求的链式引用。"
         },
         "dependentOrdering": {
           "amend": "从属权利要求未紧随其引用的独立权利要求排列。",
           "pass": "从属权利要求排列顺序正确。"
+        },
+        "antecedentBasis": {
+          "verify": "{{issue_count}}个用语可能缺少先行词。",
+          "pass": "所有引用之用语皆有先行词。"
         }
       },
       "abstract": {
@@ -845,7 +849,7 @@
           "pass": "請求項编号连续。"
         },
         "dependencyFormat": {
-          "amend": "{{count}}项请求项之依附格式无法识别：请求项 {{claims}}。",
+          "amend": "{{count}}项请求项之依附格式无法识别：{{claims}}。",
           "pass": "所有依附引用均使用正确格式。"
         },
         "selfDependent": {
@@ -861,19 +865,19 @@
           "pass": "无向前依附。"
         },
         "singleSentence": {
-          "amend": "{{count}}项请求项非单句撰写：请求项 {{claims}}。",
+          "amend": "{{count}}项请求项非单句撰写：{{claims}}。",
           "pass": "所有請求項均为单句。"
         },
         "refNumeralParens": {
-          "verify": "{{count}}项请求项之元件符号未加括号：请求项 {{claims}}。",
+          "verify": "{{count}}项请求项之元件符号未加括号：{{claims}}。",
           "pass": "所有請求項之元件符号均已加括号。"
         },
         "subjectConsistency": {
-          "verify": "请求项 {{claims}} 的主题名称与母项不一致（共 {{count}} 项）。",
+          "verify": "{{claims}} 的主题名称与母项不一致（共 {{count}} 项）。",
           "pass": "所有附属项之主题名称均与母项一致。"
         },
         "transitionPhrase": {
-          "verify": "{{count}}项独立项缺少特征连接词：请求项 {{claims}}。",
+          "verify": "{{count}}项独立项缺少特征连接词：{{claims}}。",
           "pass": "所有独立项均包含特征连接词。"
         },
         "cnTerminology": {
@@ -902,7 +906,7 @@
           "noClaimNumerals": "权利要求未使用元件符号（施行细则 §19 允许），无需检查一致性。"
         },
         "antecedentBasis": {
-          "verify": "{{count}}个用语可能缺少先行词。",
+          "verify": "{{issue_count}}个用语可能缺少先行词。",
           "pass": "所有引用之用语均有先行词。"
         }
       },
