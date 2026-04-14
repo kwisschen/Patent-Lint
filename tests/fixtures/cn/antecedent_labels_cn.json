@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 2,
+    "current_round": 3,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -231,8 +231,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -471,8 +471,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -495,8 +495,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -855,8 +855,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -975,8 +975,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1071,8 +1071,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1107,8 +1107,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1287,8 +1287,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1299,8 +1299,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1311,8 +1311,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1419,8 +1419,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1551,8 +1551,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1574,9 +1574,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "resolved (hybrid DEDUP+ABSORB: collapse into pre-existing active label)",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1586,9 +1586,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "resolved (hybrid DEDUP+ABSORB: collapse into pre-existing active label)",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1695,8 +1695,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1743,8 +1743,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1779,8 +1779,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -2055,8 +2055,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN114357105B",
@@ -2151,8 +2151,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN114357105B",
@@ -2235,8 +2235,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN114357105B",
@@ -2511,8 +2511,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN114357105B",
@@ -2619,8 +2619,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN114357105B",
@@ -2727,8 +2727,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN114357105B",
@@ -2883,8 +2883,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -3015,8 +3015,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -3027,8 +3027,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -3207,8 +3207,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -3231,8 +3231,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -3243,8 +3243,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -3267,8 +3267,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -3291,8 +3291,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -3411,8 +3411,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -3507,8 +3507,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -3555,8 +3555,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -3651,8 +3651,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -3879,8 +3879,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -3891,8 +3891,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -3927,8 +3927,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -3975,8 +3975,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -4011,8 +4011,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -4047,8 +4047,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -4083,8 +4083,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -4119,8 +4119,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -4167,8 +4167,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -4203,8 +4203,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -4263,8 +4263,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -4479,8 +4479,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -4646,9 +4646,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "resolved (hybrid DEDUP+ABSORB: collapse into pre-existing active label)",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -4658,9 +4658,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "resolved (hybrid DEDUP+ABSORB: collapse into pre-existing active label)",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -4719,8 +4719,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -5115,8 +5115,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -5127,8 +5127,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -5283,8 +5283,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -5307,8 +5307,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -5319,8 +5319,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -5331,8 +5331,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -5403,8 +5403,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -5427,8 +5427,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -5487,8 +5487,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -5631,8 +5631,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -5667,8 +5667,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -5750,9 +5750,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "resolved (hybrid DEDUP+ABSORB: collapse into pre-existing active label)",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -5762,9 +5762,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "resolved (hybrid DEDUP+ABSORB: collapse into pre-existing active label)",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -5799,8 +5799,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -5955,8 +5955,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -6171,8 +6171,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -6219,8 +6219,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -6267,8 +6267,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -6375,8 +6375,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -6434,9 +6434,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "resolved (hybrid DEDUP+ABSORB: collapse into pre-existing active label)",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -6446,9 +6446,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "resolved (hybrid DEDUP+ABSORB: collapse into pre-existing active label)",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -6591,8 +6591,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -6651,8 +6651,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -6663,8 +6663,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -6867,8 +6867,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -6891,8 +6891,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -6903,8 +6903,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -6927,8 +6927,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -6951,8 +6951,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -7071,8 +7071,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -7215,8 +7215,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -7263,8 +7263,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -7371,8 +7371,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -7514,9 +7514,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "resolved (hybrid DEDUP+ABSORB: collapse into pre-existing active label)",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -7526,9 +7526,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "resolved (hybrid DEDUP+ABSORB: collapse into pre-existing active label)",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -7611,8 +7611,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -7623,8 +7623,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -7659,8 +7659,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -7707,8 +7707,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -7731,8 +7731,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -7767,8 +7767,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -7815,8 +7815,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -7887,8 +7887,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -7923,8 +7923,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -7971,8 +7971,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -8007,8 +8007,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -8223,8 +8223,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -8247,8 +8247,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -8283,8 +8283,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -8295,8 +8295,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -8403,8 +8403,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -8415,8 +8415,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -8427,8 +8427,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -8499,8 +8499,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -8931,8 +8931,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -8943,8 +8943,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9075,8 +9075,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9099,8 +9099,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9111,8 +9111,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9123,8 +9123,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9159,8 +9159,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9267,8 +9267,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9387,8 +9387,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9423,8 +9423,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9494,9 +9494,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "resolved (hybrid DEDUP+ABSORB: collapse into pre-existing active label)",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9506,9 +9506,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "resolved (hybrid DEDUP+ABSORB: collapse into pre-existing active label)",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9543,8 +9543,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9603,8 +9603,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9627,8 +9627,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9687,8 +9687,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9759,8 +9759,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9795,8 +9795,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9807,8 +9807,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9855,8 +9855,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -9939,8 +9939,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -10059,8 +10059,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -10083,8 +10083,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -10119,8 +10119,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -10131,8 +10131,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -10251,8 +10251,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -10263,8 +10263,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -10275,8 +10275,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -10323,8 +10323,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115485995B",
@@ -10527,8 +10527,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -10551,8 +10551,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -10610,9 +10610,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "cascade drop — intro-registration side effect of R-CO-2 WQ1a denylist extension",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -10623,8 +10623,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -10778,9 +10778,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "cascade drop — intro-registration side effect of R-CO-2 WQ1a denylist extension",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -10863,8 +10863,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -10887,8 +10887,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -10959,8 +10959,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -10971,8 +10971,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -10983,8 +10983,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11067,8 +11067,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11115,8 +11115,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11151,8 +11151,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11199,8 +11199,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11295,8 +11295,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11307,8 +11307,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11354,9 +11354,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "cascade drop — intro-registration side effect of R-CO-2 WQ1a denylist extension",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11367,8 +11367,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11426,9 +11426,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "cascade drop — intro-registration side effect of R-CO-2 WQ1a denylist extension",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11438,9 +11438,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "cascade drop — intro-registration side effect of R-CO-2 WQ1a denylist extension",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11450,9 +11450,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "cascade drop — intro-registration side effect of R-CO-2 WQ1a denylist extension",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11462,9 +11462,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "cascade drop — intro-registration side effect of R-CO-2 WQ1a denylist extension",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11474,9 +11474,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "cascade drop — intro-registration side effect of R-CO-2 WQ1a denylist extension",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11522,9 +11522,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "cascade drop — intro-registration side effect of R-CO-2 WQ1a denylist extension",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11583,8 +11583,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11607,8 +11607,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11678,9 +11678,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "cascade drop — intro-registration side effect of R-CO-2 WQ1a denylist extension",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11690,9 +11690,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "cascade drop — intro-registration side effect of R-CO-2 WQ1a denylist extension",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -11751,8 +11751,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -12075,8 +12075,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -12099,8 +12099,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -12159,8 +12159,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -12183,8 +12183,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -12195,8 +12195,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -12279,8 +12279,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -12327,8 +12327,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -12374,9 +12374,9 @@
       "category": "unclassified",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "cascade drop — intro-registration side effect of R-CO-2 WQ1a denylist extension",
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -12531,8 +12531,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -12543,8 +12543,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -12603,8 +12603,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -12939,8 +12939,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN115952274B",
@@ -13215,8 +13215,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN116662522B",
@@ -13551,8 +13551,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN116662522B",
@@ -14439,8 +14439,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN213655447U (BYD)",
@@ -14511,8 +14511,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3
     },
     {
       "fixture": "CN213655447U (BYD)",
@@ -15067,6 +15067,1139 @@
       "notes": "Stage 4 R2' new-shape emission (post-fix clean form).",
       "resolved_by": "round_2_d3_position_gate",
       "round": 2
+    },
+    {
+      "fixture": "CN110276410B (BOE)",
+      "claim_id": 2,
+      "term": "生产设备参数",
+      "reference_form": "所述生产设备参数",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['输入', '分别']"
+    },
+    {
+      "fixture": "CN110276410B (BOE)",
+      "claim_id": 5,
+      "term": "生产设备参数",
+      "reference_form": "所述生产设备参数",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['输入', '分别']"
+    },
+    {
+      "fixture": "CN110276410B (BOE)",
+      "claim_id": 6,
+      "term": "处理器",
+      "reference_form": "所述处理器",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['执行']"
+    },
+    {
+      "fixture": "CN113939805B (Huawei)",
+      "claim_id": 10,
+      "term": "处理器核",
+      "reference_form": "所述处理器核",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['恢复运行']"
+    },
+    {
+      "fixture": "CN113939805B (Huawei)",
+      "claim_id": 11,
+      "term": "处理器核",
+      "reference_form": "所述处理器核",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['运行']"
+    },
+    {
+      "fixture": "CN114357105B",
+      "claim_id": 3,
+      "term": "虚线边",
+      "reference_form": "所述虚线边",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['表征']"
+    },
+    {
+      "fixture": "CN114357105B",
+      "claim_id": 4,
+      "term": "随机游走算法",
+      "reference_form": "所述随机游走算法",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['生成']"
+    },
+    {
+      "fixture": "CN114357105B",
+      "claim_id": 7,
+      "term": "用户调查问卷",
+      "reference_form": "所述用户调查问卷",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['生成']"
+    },
+    {
+      "fixture": "CN114357105B",
+      "claim_id": 11,
+      "term": "虚线边",
+      "reference_form": "所述虚线边",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['表征']"
+    },
+    {
+      "fixture": "CN114357105B",
+      "claim_id": 12,
+      "term": "随机游走算法",
+      "reference_form": "所述随机游走算法",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['生成']"
+    },
+    {
+      "fixture": "CN114357105B",
+      "claim_id": 15,
+      "term": "用户调查问卷",
+      "reference_form": "所述用户调查问卷",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['生成']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 1,
+      "term": "第一设备",
+      "reference_form": "所述第一设备",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['向']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 2,
+      "term": "第一设备对第一信号",
+      "reference_form": "所述第一设备对第一信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 2,
+      "term": "第一设备对第三信号",
+      "reference_form": "所述第一设备对第三信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 5,
+      "term": "第一信号",
+      "reference_form": "所述第一信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 5,
+      "term": "第二信号",
+      "reference_form": "所述第二信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 6,
+      "term": "第三信号",
+      "reference_form": "所述第三信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 6,
+      "term": "第四信号",
+      "reference_form": "所述第四信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 13,
+      "term": "第一设备",
+      "reference_form": "所述第一设备",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['确定']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 14,
+      "term": "第一设备",
+      "reference_form": "所述第一设备",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['向']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 22,
+      "term": "第一设备向第二设备",
+      "reference_form": "所述第一设备向第二设备",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['发送']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 23,
+      "term": "第二设备",
+      "reference_form": "所述第二设备",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['发送']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 25,
+      "term": "第二设备",
+      "reference_form": "所述第二设备",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['发送']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 26,
+      "term": "第二设备",
+      "reference_form": "所述第二设备",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['发送']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 27,
+      "term": "第一设备",
+      "reference_form": "所述第一设备",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['向']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 44,
+      "term": "第一设备对第一信号",
+      "reference_form": "所述第一设备对第一信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 44,
+      "term": "第一设备对第三信号",
+      "reference_form": "所述第一设备对第三信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 47,
+      "term": "第一信号",
+      "reference_form": "所述第一信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 47,
+      "term": "第二信号",
+      "reference_form": "所述第二信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 48,
+      "term": "第三信号",
+      "reference_form": "所述第三信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 48,
+      "term": "第四信号",
+      "reference_form": "所述第四信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 62,
+      "term": "第二设备",
+      "reference_form": "所述第二设备",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['发送']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 74,
+      "term": "第二设备",
+      "reference_form": "所述第二设备",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['向']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 80,
+      "term": "第二设备",
+      "reference_form": "所述第二设备",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['发送']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 81,
+      "term": "处理单元对第一信号",
+      "reference_form": "所述处理单元对第一信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 81,
+      "term": "处理单元对第三信号",
+      "reference_form": "所述处理单元对第三信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 83,
+      "term": "第一信号",
+      "reference_form": "所述第一信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 83,
+      "term": "第二信号",
+      "reference_form": "所述第二信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 84,
+      "term": "第三信号",
+      "reference_form": "所述第三信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 84,
+      "term": "第四信号",
+      "reference_form": "所述第四信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 93,
+      "term": "处理单元",
+      "reference_form": "所述处理单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['确定']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 95,
+      "term": "第二设备",
+      "reference_form": "所述第二设备",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['发送']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 101,
+      "term": "接收单元",
+      "reference_form": "所述接收单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['接收']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 102,
+      "term": "接收单元",
+      "reference_form": "所述接收单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['接收']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 102,
+      "term": "第二设备",
+      "reference_form": "所述第二设备",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['发送']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 104,
+      "term": "第二设备",
+      "reference_form": "所述第二设备",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['发送']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 105,
+      "term": "第二设备",
+      "reference_form": "所述第二设备",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['发送']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 107,
+      "term": "发送单元",
+      "reference_form": "所述发送单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['向']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 112,
+      "term": "发送单元",
+      "reference_form": "所述发送单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['向']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 112,
+      "term": "接收单元",
+      "reference_form": "所述接收单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['来自', '接收']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 113,
+      "term": "发送单元",
+      "reference_form": "所述发送单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['向']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 113,
+      "term": "接收单元",
+      "reference_form": "所述接收单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['来自', '接收']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 118,
+      "term": "接收单元",
+      "reference_form": "所述接收单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['来自', '接收']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 123,
+      "term": "第一设备对第一信号",
+      "reference_form": "所述第一设备对第一信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 123,
+      "term": "第一设备对第三信号",
+      "reference_form": "所述第一设备对第三信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 125,
+      "term": "第一信号",
+      "reference_form": "所述第一信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 125,
+      "term": "第二信号",
+      "reference_form": "所述第二信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 127,
+      "term": "第三信号",
+      "reference_form": "所述第三信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 127,
+      "term": "第四信号",
+      "reference_form": "所述第四信号",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['进行']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 128,
+      "term": "接收单元",
+      "reference_form": "所述接收单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['来自', '接收']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 134,
+      "term": "接收单元",
+      "reference_form": "所述接收单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['接收']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 140,
+      "term": "发送单元",
+      "reference_form": "所述发送单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['发送']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 141,
+      "term": "发送单元",
+      "reference_form": "所述发送单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['发送']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 145,
+      "term": "接收单元",
+      "reference_form": "所述接收单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['来自', '接收']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 147,
+      "term": "接收单元",
+      "reference_form": "所述接收单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['来自', '接收']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 150,
+      "term": "发送单元",
+      "reference_form": "所述发送单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['向']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 150,
+      "term": "接收单元",
+      "reference_form": "所述接收单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['来自', '接收']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 151,
+      "term": "发送单元",
+      "reference_form": "所述发送单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['向']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 151,
+      "term": "接收单元",
+      "reference_form": "所述接收单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['来自', '接收']"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 156,
+      "term": "接收单元",
+      "reference_form": "所述接收单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['来自', '接收']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 2,
+      "term": "外部记忆库",
+      "reference_form": "所述外部记忆库",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['存储有', '中']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 9,
+      "term": "初始",
+      "reference_form": "所述初始",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['输入']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 9,
+      "term": "外部记忆库",
+      "reference_form": "所述外部记忆库",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['存储有', '中']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 10,
+      "term": "初始",
+      "reference_form": "所述初始",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['输入']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 11,
+      "term": "初始",
+      "reference_form": "所述初始",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['输入']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 11,
+      "term": "外部记忆库",
+      "reference_form": "所述外部记忆库",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['存储有', '中']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 13,
+      "term": "深度学习模型",
+      "reference_form": "所述深度学习模型",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['联合训练']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 15,
+      "term": "初始",
+      "reference_form": "所述初始",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['输入']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 16,
+      "term": "初始",
+      "reference_form": "所述初始",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['输入']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 17,
+      "term": "初始",
+      "reference_form": "所述初始",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['输入']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 18,
+      "term": "外部记忆库",
+      "reference_form": "所述外部记忆库",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['存储有', '中']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 18,
+      "term": "深度学习模型",
+      "reference_form": "所述深度学习模型",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['联合训练']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 19,
+      "term": "第一样本初始",
+      "reference_form": "所述第一样本初始",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['输入']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 24,
+      "term": "外部记忆库",
+      "reference_form": "所述外部记忆库",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['存储有', '中']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 32,
+      "term": "初始",
+      "reference_form": "所述初始",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['输入']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 32,
+      "term": "外部记忆库",
+      "reference_form": "所述外部记忆库",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['存储有', '中']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 33,
+      "term": "初始",
+      "reference_form": "所述初始",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['输入']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 34,
+      "term": "初始",
+      "reference_form": "所述初始",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['输入']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 34,
+      "term": "外部记忆库",
+      "reference_form": "所述外部记忆库",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['存储有', '中']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 36,
+      "term": "深度学习模型",
+      "reference_form": "所述深度学习模型",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['联合训练']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 38,
+      "term": "初始",
+      "reference_form": "所述初始",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['输入']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 41,
+      "term": "外部记忆库",
+      "reference_form": "所述外部记忆库",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['存储有', '中']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 41,
+      "term": "深度学习模型",
+      "reference_form": "所述深度学习模型",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['联合训练']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 42,
+      "term": "第一样本初始",
+      "reference_form": "所述第一样本初始",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['输入']"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 48,
+      "term": "计算机",
+      "reference_form": "所述计算机",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['执行']"
+    },
+    {
+      "fixture": "CN116662522B",
+      "claim_id": 12,
+      "term": "程序",
+      "reference_form": "所述程序",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape from R-CO-2 WQ1a strip of ['运行']"
+    },
+    {
+      "fixture": "CN113939805B (Huawei)",
+      "claim_id": 7,
+      "term": "处理器核",
+      "reference_form": "所述处理器核",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape dedup group from R-CO-2 WQ1a"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 118,
+      "term": "发送单元",
+      "reference_form": "所述发送单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape dedup group from R-CO-2 WQ1a"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 144,
+      "term": "接收单元",
+      "reference_form": "所述接收单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape dedup group from R-CO-2 WQ1a"
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 156,
+      "term": "发送单元",
+      "reference_form": "所述发送单元",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape dedup group from R-CO-2 WQ1a"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 1,
+      "term": "初始",
+      "reference_form": "所述初始",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape dedup group from R-CO-2 WQ1a"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 23,
+      "term": "初始",
+      "reference_form": "所述初始",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "new-shape dedup group from R-CO-2 WQ1a"
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 45,
+      "term": "第四样本初始",
+      "reference_form": "所述第四样本初始",
+      "category": "unclassified",
+      "protect": false,
+      "resolved_by": "round_3_wq1a_multichar_verbs",
+      "round": 3,
+      "notes": "cascade new-shape from R-CO-2 WQ1a intro-registration side effect"
     }
   ]
 }

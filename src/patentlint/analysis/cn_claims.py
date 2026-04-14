@@ -609,6 +609,15 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "撷取",
         # Stage 4 R1 D4a — ADR-100 pattern, CN-specific extensions
         "相关", "有关",
+        # Phase 8c close-out R-CO-2 WQ1a — multi-char trailing verbs
+        # Walker false positives where capture trails into a verb phrase.
+        # Length-desc strip order: 联合训练 / 恢复运行 fire before bare 训练 / 运行.
+        "联合训练", "恢复运行",
+        "存储有",
+        "进行", "接收", "发送", "输入", "来自", "需要",
+        "运行", "执行", "确定", "提供", "匹配", "表征",
+        "生成", "获取", "获得",
+        "向",
     ),
     key=len,
     reverse=True,
