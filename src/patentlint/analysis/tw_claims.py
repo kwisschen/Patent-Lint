@@ -231,14 +231,13 @@ def check_forward_dependency(doc: TwPatentDocument) -> list[CheckItem]:
     bad = [c.id for c in doc.claims if any(d > c.id for d in c.dependencies)]
 
     if bad:
-        claims_str = ", ".join(str(i) for i in bad)
         return [CheckItem(
             status="amend",
-            message=f"Forward-referencing claims found: {claims_str}.",
+            message=f"Forward-referencing claims found: {', '.join(str(i) for i in bad)}.",
             message_key="check.tw.claims.forwardDependency.amend",
-            details=claims_str,
+            details=", ".join(str(i) for i in bad),
             details_key="details.tw.forwardDependency",
-            details_params={"claims": claims_str},
+            details_params={"claims": bad},
             reference="專利法施行細則 §18",
         )]
 
