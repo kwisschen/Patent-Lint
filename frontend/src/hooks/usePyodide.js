@@ -16,7 +16,7 @@ export function usePyodide() {
         worker.postMessage({
           type: 'init',
           payload: {
-            wheelUrl: `/patentlint-1.0.0-py3-none-any.whl?v=${__BUILD_HASH__}`,
+            wheelUrl: `/patentlint-1.0.0-py3-none-any.whl?b=${__BUILD_HASH__}`,
           },
         });
         worker.onmessage = (e) => {
