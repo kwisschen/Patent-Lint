@@ -509,17 +509,17 @@
       "symbolTableConsistency": "依專利審查基準，符號說明條目應與實施方式中使用之參考符號一致。請確認完整性。",
       "claimsSequential": "依專利審查基準，請求項編號須從1開始連續編列。",
       "dependencyFormat": "依專利法施行細則 §18，依附須使用正確格式（如請求項N所述之、如請求項N之等）。請檢查標記之請求項。",
-      "selfDependent": "依專利法施行細則 §18，請求項不得依附於自身。自我依附：請求項 {{claims}}。",
+      "selfDependent": "依專利法施行細則 §18，請求項不得依附於自身。自我依附：{{claims}}。",
       "circularDependency": "依專利法施行細則 §18，請求項不得形成循環依附鏈。循環鏈：請求項 {{claims}}。",
-      "forwardDependency": "依專利法施行細則 §18，附屬項僅得引用在前之請求項。向前引用：請求項 {{claims}}。",
+      "forwardDependency": "依專利法施行細則 §18，附屬項僅得引用在前之請求項。向前引用：{{claims}}。",
       "singleSentence": "依專利法施行細則 §18，每一請求項須為單句，僅於末尾有一個句號（。）。請檢查標記之請求項。",
       "refNumeralParens": "依專利法施行細則 §19，請求項中之元件符號應加括號，例如(101)。請檢查標記之請求項。",
       "subjectConsistency": "附屬項之主題名稱應與所依附之母項主題名稱一致。請檢查標記之請求項。",
       "transitionPhrase": "依專利法施行細則 §20，獨立項應包含特徵連接詞，如「其特徵在於」或「其改良在於」。請檢查標記之請求項。",
       "cnTerminology": "發現簡體中文專利用語：{{detail}}。台灣專利稿件應使用TIPO用語（請求項、說明書、先前技術、實施方式等），而非CNIPA用語（权利要求、说明书、背景技术、具体实施方式等）。",
       "specDrawingRef": "依專利法施行細則 §19，請求項不得引用說明書或圖式（如「如說明書所述」「如圖所示」）。發現：{{detail}}。",
-      "multiDepOnMultiDep": "依專利法施行細則 §18，多項附屬項不得直接或間接依附於另一多項附屬項。標記：請求項 {{claims}}。",
-      "multiDepAlternative": "依專利法施行細則 §18，多項附屬項須使用擇一形式（或/任一項）。標記：請求項 {{claims}}。",
+      "multiDepOnMultiDep": "依專利法施行細則 §18，多項附屬項不得直接或間接依附於另一多項附屬項。標記：{{claims}}。",
+      "multiDepAlternative": "依專利法施行細則 §18，多項附屬項須使用擇一形式（或/任一項）。標記：{{claims}}。",
       "titleSubjectMatch": "依專利審查基準，發明名稱/新型名稱應與獨立項之主題名稱一致。請檢查標記之請求項。",
       "claims": {
         "symbolTableConsistency": {
@@ -730,11 +730,11 @@
           "pass": "權利要求編號連續。"
         },
         "dependencyFormat": {
-          "amend": "{{count}}項權利要求的引用格式不正確：權利要求 {{claims}}。",
+          "amend": "{{count}}項權利要求的引用格式不正確：{{claims}}。",
           "pass": "所有從屬權利要求的引用格式正確。"
         },
         "selfDependent": {
-          "amend": "權利要求 {{claims}} 引用了自身。",
+          "amend": "{{claims}} 引用了自身。",
           "pass": "未發現自引用權利要求。"
         },
         "forwardDependency": {
@@ -742,19 +742,19 @@
           "pass": "未發現正向引用。"
         },
         "singleSentence": {
-          "amend": "{{count}}項權利要求包含多個句子：權利要求 {{claims}}。",
+          "amend": "{{count}}項權利要求包含多個句子：{{claims}}。",
           "pass": "所有權利要求均為單句。"
         },
         "refNumeralParens": {
-          "verify": "{{count}}項權利要求中的附圖標記未加括號：權利要求 {{claims}}。",
+          "verify": "{{count}}項權利要求中的附圖標記未加括號：{{claims}}。",
           "pass": "權利要求中所有附圖標記均已加括號。"
         },
         "subjectConsistency": {
-          "verify": "權利要求 {{claims}} 的主題名稱與母項不一致（共 {{count}} 項）。",
+          "verify": "{{claims}} 的主題名稱與母項不一致（共 {{count}} 項）。",
           "pass": "從屬權利要求的主題名稱一致。"
         },
         "transitionPhrase": {
-          "verify": "{{count}}項獨立權利要求可能缺少特徵部分過渡語：權利要求 {{claims}}。",
+          "verify": "{{count}}項獨立權利要求可能缺少特徵部分過渡語：{{claims}}。",
           "pass": "所有獨立權利要求均包含特徵部分過渡語。"
         },
         "twTerminology": {
@@ -762,16 +762,20 @@
           "pass": "權利要求用語符合CNIPA規範。"
         },
         "specReference": {
-          "amend": "{{count}}項權利要求引用了說明書或附圖：權利要求 {{claims}}。",
+          "amend": "{{count}}項權利要求引用了說明書或附圖：{{claims}}。",
           "pass": "權利要求未引用說明書或附圖。"
         },
         "multiMultiDep": {
-          "amend": "權利要求 {{claims}}：多項從屬權利要求引用了另一多項從屬權利要求。",
+          "amend": "{{claims}}：多項從屬權利要求引用了另一多項從屬權利要求。",
           "pass": "未發現多項從屬權利要求的鏈式引用。"
         },
         "dependentOrdering": {
           "amend": "從屬權利要求未緊隨其引用的獨立權利要求排列。",
           "pass": "從屬權利要求排列順序正確。"
+        },
+        "antecedentBasis": {
+          "verify": "{{issue_count}}個用語可能缺少先行詞。",
+          "pass": "所有引用之用語皆有先行詞。"
         }
       },
       "abstract": {
@@ -845,7 +849,7 @@
           "pass": "請求項編號連續。"
         },
         "dependencyFormat": {
-          "amend": "{{count}}項請求項之依附格式無法辨識：請求項 {{claims}}。",
+          "amend": "{{count}}項請求項之依附格式無法辨識：{{claims}}。",
           "pass": "所有依附引用皆使用正確格式。"
         },
         "selfDependent": {
@@ -861,19 +865,19 @@
           "pass": "無向前依附。"
         },
         "singleSentence": {
-          "amend": "{{count}}項請求項非單句撰寫：請求項 {{claims}}。",
+          "amend": "{{count}}項請求項非單句撰寫：{{claims}}。",
           "pass": "所有請求項皆為單句。"
         },
         "refNumeralParens": {
-          "verify": "{{count}}項請求項之元件符號未加括號：請求項 {{claims}}。",
+          "verify": "{{count}}項請求項之元件符號未加括號：{{claims}}。",
           "pass": "所有請求項之元件符號皆已加括號。"
         },
         "subjectConsistency": {
-          "verify": "請求項 {{claims}} 的主題名稱與母項不一致（共 {{count}} 項）。",
+          "verify": "{{claims}} 的主題名稱與母項不一致（共 {{count}} 項）。",
           "pass": "所有附屬項之主題名稱皆與母項一致。"
         },
         "transitionPhrase": {
-          "verify": "{{count}}項獨立項缺少特徵連接詞：請求項 {{claims}}。",
+          "verify": "{{count}}項獨立項缺少特徵連接詞：{{claims}}。",
           "pass": "所有獨立項皆包含特徵連接詞。"
         },
         "cnTerminology": {
@@ -902,7 +906,7 @@
           "noClaimNumerals": "請求項未使用元件符號（施行細則 §19 允許），無需檢查一致性。"
         },
         "antecedentBasis": {
-          "verify": "{{count}}個用語可能缺少先行詞。",
+          "verify": "{{issue_count}}個用語可能缺少先行詞。",
           "pass": "所有引用之用語皆有先行詞。"
         }
       },
