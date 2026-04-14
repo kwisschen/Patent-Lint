@@ -509,17 +509,17 @@
       "symbolTableConsistency": "특허심사기준에 따라, 부호설명 항목은 실시방식에서 사용된 참조 부호와 일치해야 합니다. 완전성을 확인해 주십시오.",
       "claimsSequential": "특허심사기준에 따라, 청구항 번호는 1부터 연속이어야 합니다.",
       "dependencyFormat": "專利法施行細則 §18에 따라 종속은 올바른 형식(如請求項N所述之, 如請求項N之 등)을 사용해야 합니다. 표시된 請求項을 확인하십시오.",
-      "selfDependent": "專利法施行細則 §18에 따라 請求項은 자신에게 종속될 수 없습니다. 자기 종속: 請求項 {{claims}}.",
+      "selfDependent": "專利法施行細則 §18에 따라 請求項은 자신에게 종속될 수 없습니다. 자기 종속: {{claims}}.",
       "circularDependency": "專利法施行細則 §18에 따라 請求項은 순환 종속 체인을 형성할 수 없습니다. 순환 체인: 請求項 {{claims}}.",
-      "forwardDependency": "專利法施行細則 §18에 따라 종속항은 선행하는 請求項만 참조할 수 있습니다. 전방 참조: 請求項 {{claims}}.",
+      "forwardDependency": "專利法施行細則 §18에 따라 종속항은 선행하는 請求項만 참조할 수 있습니다. 전방 참조: {{claims}}.",
       "singleSentence": "專利法施行細則 §18에 따라 각 請求項은 끝에 마침표(。)가 하나만 있는 단일 문장이어야 합니다. 표시된 請求項을 확인하십시오.",
       "refNumeralParens": "專利法施行細則 §19에 따라 請求項의 부호는 괄호로 둘러싸야 합니다(예: (101)). 표시된 請求項을 확인하십시오.",
       "subjectConsistency": "종속항의 주제명은 모항의 주제명과 일치해야 합니다. 표시된 請求項을 확인하십시오.",
       "transitionPhrase": "專利法施行細則 §20에 따라 독립항에는 「其特徵在於」 또는 「其改良在於」 등의 전환 문구가 포함되어야 합니다. 표시된 請求項을 확인하십시오.",
       "cnTerminology": "간체자 중국어 특허 용어가 발견되었습니다: {{detail}}. TW 문서는 TIPO 용어(請求項, 說明書, 先前技術, 實施方式 등)를 사용해야 하며 CNIPA 용어(权利要求, 说明书, 背景技术, 具体实施方式 등)는 사용할 수 없습니다.",
       "specDrawingRef": "專利法施行細則 §19에 따라 請求項에서 명세서 또는 도면을 참조(예: 「如說明書所述」「如圖所示」)할 수 없습니다. 발견: {{detail}}.",
-      "multiDepOnMultiDep": "專利法施行細則 §18에 따라 다항 종속항은 직접 또는 간접적으로 다른 다항 종속항에 종속될 수 없습니다. 해당: 請求項 {{claims}}.",
-      "multiDepAlternative": "專利法施行細則 §18에 따라 다항 종속항은 택일 형식(或/任一項)을 사용해야 합니다. 해당: 請求項 {{claims}}.",
+      "multiDepOnMultiDep": "專利法施行細則 §18에 따라 다항 종속항은 직접 또는 간접적으로 다른 다항 종속항에 종속될 수 없습니다. 해당: {{claims}}.",
+      "multiDepAlternative": "專利法施行細則 §18에 따라 다항 종속항은 택일 형식(或/任一項)을 사용해야 합니다. 해당: {{claims}}.",
       "titleSubjectMatch": "특허심사기준에 따라, 발명의 명칭은 독립 청구항의 주제와 일치해야 합니다. 표시된 청구항을 확인해 주십시오.",
       "claims": {
         "symbolTableConsistency": {
@@ -730,11 +730,11 @@
           "pass": "청구항 번호가 연속적입니다."
         },
         "dependencyFormat": {
-          "amend": "{{count}}개 청구항의 인용 형식이 올바르지 않습니다: 청구항 {{claims}}.",
+          "amend": "{{count}}개 청구항의 인용 형식이 올바르지 않습니다: {{claims}}.",
           "pass": "모든 종속 청구항의 인용 형식이 올바릅니다."
         },
         "selfDependent": {
-          "amend": "청구항 {{claims}}이(가) 자기 자신을 인용합니다.",
+          "amend": "{{claims}}이(가) 자기 자신을 인용합니다.",
           "pass": "자기 인용 청구항이 발견되지 않았습니다."
         },
         "forwardDependency": {
@@ -742,19 +742,19 @@
           "pass": "전방 인용이 발견되지 않았습니다."
         },
         "singleSentence": {
-          "amend": "{{count}}개 청구항이 여러 문장을 포함합니다: 청구항 {{claims}}.",
+          "amend": "{{count}}개 청구항이 여러 문장을 포함합니다: {{claims}}.",
           "pass": "모든 청구항이 단일 문장입니다."
         },
         "refNumeralParens": {
-          "verify": "{{count}}개 청구항의 도면 부호가 괄호로 표시되지 않았습니다: 청구항 {{claims}}.",
+          "verify": "{{count}}개 청구항의 도면 부호가 괄호로 표시되지 않았습니다: {{claims}}.",
           "pass": "청구항 내 모든 참조 부호가 괄호로 묶여 있습니다."
         },
         "subjectConsistency": {
-          "verify": "청구항 {{claims}}의 주제명이 부모 청구항과 일치하지 않습니다 (총 {{count}}개).",
+          "verify": "{{claims}}의 주제명이 부모 청구항과 일치하지 않습니다 (총 {{count}}개).",
           "pass": "종속 청구항의 주제 명칭이 일치합니다."
         },
         "transitionPhrase": {
-          "verify": "{{count}}개 독립 청구항에 특징부 전이 문구가 없을 수 있습니다: 청구항 {{claims}}.",
+          "verify": "{{count}}개 독립 청구항에 특징부 전이 문구가 없을 수 있습니다: {{claims}}.",
           "pass": "모든 독립 청구항에 특징 부분 전환어가 포함되어 있습니다."
         },
         "twTerminology": {
@@ -762,16 +762,20 @@
           "pass": "청구항 용어가 CNIPA 규범에 적합합니다."
         },
         "specReference": {
-          "amend": "{{count}}개 청구항이 명세서 또는 도면을 인용합니다: 청구항 {{claims}}.",
+          "amend": "{{count}}개 청구항이 명세서 또는 도면을 인용합니다: {{claims}}.",
           "pass": "명세서 또는 도면을 인용하는 청구항이 없습니다."
         },
         "multiMultiDep": {
-          "amend": "청구항 {{claims}}: 다항 종속 청구항이 다른 다항 종속 청구항을 인용합니다.",
+          "amend": "{{claims}}: 다항 종속 청구항이 다른 다항 종속 청구항을 인용합니다.",
           "pass": "다항 종속 청구항의 연쇄 인용이 발견되지 않았습니다."
         },
         "dependentOrdering": {
           "amend": "종속 청구항이 인용 대상 독립 청구항 바로 뒤에 배치되지 않았습니다.",
           "pass": "종속 청구항 배치 순서가 올바릅니다."
+        },
+        "antecedentBasis": {
+          "verify": "{{issue_count}}개 용어에 선행사가 없을 수 있습니다.",
+          "pass": "모든 인용 용어에 선행사가 있습니다."
         }
       },
       "abstract": {
@@ -845,7 +849,7 @@
           "pass": "請求項 번호가 연속적입니다."
         },
         "dependencyFormat": {
-          "amend": "{{count}}개 청구항의 종속 형식을 인식할 수 없습니다: 청구항 {{claims}}.",
+          "amend": "{{count}}개 청구항의 종속 형식을 인식할 수 없습니다: {{claims}}.",
           "pass": "모든 종속 참조가 올바른 형식을 사용합니다."
         },
         "selfDependent": {
@@ -861,19 +865,19 @@
           "pass": "전방 종속이 없습니다."
         },
         "singleSentence": {
-          "amend": "{{count}}개 청구항이 단일 문장으로 작성되지 않았습니다: 청구항 {{claims}}.",
+          "amend": "{{count}}개 청구항이 단일 문장으로 작성되지 않았습니다: {{claims}}.",
           "pass": "모든 請求項이 단일 문장입니다."
         },
         "refNumeralParens": {
-          "verify": "{{count}}개 청구항의 구성요소 부호가 괄호로 표시되지 않았습니다: 청구항 {{claims}}.",
+          "verify": "{{count}}개 청구항의 구성요소 부호가 괄호로 표시되지 않았습니다: {{claims}}.",
           "pass": "모든 請求項의 부호가 괄호로 둘러싸여 있습니다."
         },
         "subjectConsistency": {
-          "verify": "청구항 {{claims}}의 주제명이 부모 청구항과 일치하지 않습니다 (총 {{count}}개).",
+          "verify": "{{claims}}의 주제명이 부모 청구항과 일치하지 않습니다 (총 {{count}}개).",
           "pass": "모든 종속항의 주제명이 모항과 일치합니다."
         },
         "transitionPhrase": {
-          "verify": "{{count}}개 독립항에 특징 연결어가 없습니다: 청구항 {{claims}}.",
+          "verify": "{{count}}개 독립항에 특징 연결어가 없습니다: {{claims}}.",
           "pass": "모든 독립항에 전환 문구가 포함되어 있습니다."
         },
         "cnTerminology": {
@@ -902,7 +906,7 @@
           "noClaimNumerals": "청구항에 참조 부호가 없습니다(시행규칙 §19 허용). 일관성 검사 미적용."
         },
         "antecedentBasis": {
-          "verify": "{{count}}개 용어에 선행사가 없을 수 있습니다.",
+          "verify": "{{issue_count}}개 용어에 선행사가 없을 수 있습니다.",
           "pass": "모든 참조 용어에 선행사가 있습니다."
         }
       },

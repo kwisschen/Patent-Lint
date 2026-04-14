@@ -114,7 +114,7 @@ class TestSelfDependent:
         ])
         results = check_self_dependent(doc)
         assert results[0].status == "amend"
-        assert "2" in results[0].details_params["claims"]
+        assert 2 in results[0].details_params["claims"]
 
 
 # ── Check 12: Forward dependency ──────────────────────────────────────────
@@ -341,7 +341,7 @@ class TestMultiMultiDependency:
         ])
         results = check_multi_multi_dependency(doc)
         assert results[0].status == "amend"
-        assert "4" in results[0].details_params["claims"]
+        assert 4 in results[0].details_params["claims"]
 
     def test_single_dep_on_multi_pass(self):
         """Single-dependent on a multi-dependent is fine."""

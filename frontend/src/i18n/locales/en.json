@@ -509,17 +509,17 @@
       "symbolTableConsistency": "Per 專利審查基準, 符號說明 entries should match reference numerals used in 實施方式. Verify completeness.",
       "claimsSequential": "Per 專利審查基準, claim numbers must be sequential starting from 1.",
       "dependencyFormat": "Per 專利法施行細則 §18, dependencies must use a recognized format (如請求項N所述之, 如請求項N之, etc.). Review flagged claims.",
-      "selfDependent": "Per 專利法施行細則 §18, a claim cannot depend on itself. Self-dependent: 請求項 {{claims}}.",
+      "selfDependent": "Per 專利法施行細則 §18, a claim cannot depend on itself. Self-dependent: {{claims}}.",
       "circularDependency": "Per 專利法施行細則 §18, claims must not form circular dependency chains. Circular chain: 請求項 {{claims}}.",
-      "forwardDependency": "Per 專利法施行細則 §18, dependent claims must only reference preceding claims. Forward references: 請求項 {{claims}}.",
+      "forwardDependency": "Per 專利法施行細則 §18, dependent claims must only reference preceding claims. Forward references: {{claims}}.",
       "singleSentence": "Per 專利法施行細則 §18, each claim must be one sentence with exactly one 。 at the end. Review flagged claims.",
       "refNumeralParens": "Per 專利法施行細則 §19, reference numerals in claims should be enclosed in parentheses, e.g., (101). Review flagged claims.",
       "subjectConsistency": "Dependent claim subject name should match the parent claim's subject name. Review flagged claims.",
       "transitionPhrase": "Per 專利法施行細則 §20, independent claims should contain a transitional phrase such as 其特徵在於 or 其改良在於. Review flagged claims.",
       "cnTerminology": "Found simplified Chinese patent terminology: {{detail}}. TW documents should use TIPO terms (請求項, 說明書, 先前技術, 實施方式, etc.), not CNIPA terms (权利要求, 说明书, 背景技术, 具体实施方式, etc.).",
       "specDrawingRef": "Per 專利法施行細則 §19, claims must not reference the specification or drawings (e.g., 如說明書所述, 如圖所示). Found: {{detail}}.",
-      "multiDepOnMultiDep": "Per 專利法施行細則 §18, a multi-dependent claim cannot directly or indirectly depend on another multi-dependent claim. Flagged: 請求項 {{claims}}.",
-      "multiDepAlternative": "Per 專利法施行細則 §18, multi-dependent claims must use alternative form (或/任一項). Flagged: 請求項 {{claims}}.",
+      "multiDepOnMultiDep": "Per 專利法施行細則 §18, a multi-dependent claim cannot directly or indirectly depend on another multi-dependent claim. Flagged: {{claims}}.",
+      "multiDepAlternative": "Per 專利法施行細則 §18, multi-dependent claims must use alternative form (或/任一項). Flagged: {{claims}}.",
       "titleSubjectMatch": "Per TIPO 專利審查基準, the title should match the subject of independent claims. Review flagged claims.",
       "claims": {
         "symbolTableConsistency": {
@@ -730,11 +730,11 @@
           "pass": "Claim numbers are sequential."
         },
         "dependencyFormat": {
-          "amend": "{{count}} claim(s) use incorrect dependency format: claims {{claims}}.",
+          "amend": "{{count}} claim(s) use incorrect dependency format: {{claims}}.",
           "pass": "All dependent claims use correct dependency format."
         },
         "selfDependent": {
-          "amend": "Claim {{claims}} depend(s) on itself.",
+          "amend": "{{claims}} depend(s) on itself.",
           "pass": "No self-dependent claims found."
         },
         "forwardDependency": {
@@ -742,19 +742,19 @@
           "pass": "No forward dependencies found."
         },
         "singleSentence": {
-          "amend": "{{count}} claim(s) contain multiple sentences: claims {{claims}}.",
+          "amend": "{{count}} claim(s) contain multiple sentences: {{claims}}.",
           "pass": "All claims are single sentences."
         },
         "refNumeralParens": {
-          "verify": "{{count}} claim(s) have reference numerals without parentheses: claims {{claims}}.",
+          "verify": "{{count}} claim(s) have reference numerals without parentheses: {{claims}}.",
           "pass": "All reference numerals in claims are properly enclosed."
         },
         "subjectConsistency": {
-          "verify": "Claim(s) {{claims}} have subject name inconsistent with parent ({{count}} total).",
+          "verify": "{{claims}} have subject name inconsistent with parent ({{count}} total).",
           "pass": "Dependent claim subject names are consistent."
         },
         "transitionPhrase": {
-          "verify": "{{count}} independent claim(s) may lack transitional phrase: claims {{claims}}.",
+          "verify": "{{count}} independent claim(s) may lack transitional phrase: {{claims}}.",
           "pass": "All independent claims contain a characterizing transition."
         },
         "twTerminology": {
@@ -762,16 +762,20 @@
           "pass": "Claims use correct CNIPA terminology (权利要求)."
         },
         "specReference": {
-          "amend": "{{count}} claim(s) reference specification or drawings: claims {{claims}}.",
+          "amend": "{{count}} claim(s) reference specification or drawings: {{claims}}.",
           "pass": "No claims reference the specification or drawings."
         },
         "multiMultiDep": {
-          "amend": "Claim {{claims}}: a multiple-dependent claim depends on another multiple-dependent claim.",
+          "amend": "{{claims}}: a multiple-dependent claim depends on another multiple-dependent claim.",
           "pass": "No chained multiple-dependent claims found."
         },
         "dependentOrdering": {
           "amend": "Dependent claims are not grouped after their independent claim.",
           "pass": "Dependent claims are properly ordered."
+        },
+        "antecedentBasis": {
+          "verify": "{{issue_count}} term(s) may lack antecedent basis.",
+          "pass": "All referenced terms have antecedent basis."
         }
       },
       "abstract": {
@@ -845,7 +849,7 @@
           "pass": "Claim numbers sequential."
         },
         "dependencyFormat": {
-          "amend": "{{count}} claim(s) have unrecognized dependency format: claims {{claims}}.",
+          "amend": "{{count}} claim(s) have unrecognized dependency format: {{claims}}.",
           "pass": "All dependency references use recognized format."
         },
         "selfDependent": {
@@ -861,19 +865,19 @@
           "pass": "No forward dependencies."
         },
         "singleSentence": {
-          "amend": "{{count}} claim(s) are not single-sentence: claims {{claims}}.",
+          "amend": "{{count}} claim(s) are not single-sentence: {{claims}}.",
           "pass": "All claims are single sentences."
         },
         "refNumeralParens": {
-          "verify": "{{count}} claim(s) have reference numerals without parentheses: claims {{claims}}.",
+          "verify": "{{count}} claim(s) have reference numerals without parentheses: {{claims}}.",
           "pass": "All reference numerals in claims are in parentheses."
         },
         "subjectConsistency": {
-          "verify": "Claim(s) {{claims}} have subject name inconsistent with parent ({{count}} total).",
+          "verify": "{{claims}} have subject name inconsistent with parent ({{count}} total).",
           "pass": "All dependent claim subjects match parent."
         },
         "transitionPhrase": {
-          "verify": "{{count}} independent claim(s) lack transition phrase: claims {{claims}}.",
+          "verify": "{{count}} independent claim(s) lack transition phrase: {{claims}}.",
           "pass": "All independent claims contain a transitional phrase."
         },
         "cnTerminology": {
@@ -902,7 +906,7 @@
           "noClaimNumerals": "Claims contain no reference numerals; consistency check not applicable."
         },
         "antecedentBasis": {
-          "verify": "{{count}} term(s) may lack antecedent basis.",
+          "verify": "{{issue_count}} term(s) may lack antecedent basis.",
           "pass": "All referenced terms have antecedent basis."
         }
       },

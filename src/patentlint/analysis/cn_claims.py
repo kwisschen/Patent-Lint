@@ -120,7 +120,7 @@ def check_self_dependent(cn_doc: CnPatentDocument) -> list[CheckItem]:
             message_key="check.cn.claims.selfDependent.amend",
             details=claims_str,
             details_key="details.cn.selfDependent",
-            details_params={"claims": claims_str},
+            details_params={"claims": bad},
             reference="专利法实施细则 §22",
         )]
 
@@ -418,7 +418,7 @@ def check_multi_multi_dependency(cn_doc: CnPatentDocument) -> list[CheckItem]:
             message_key="check.cn.claims.multiMultiDep.amend",
             details=claims_str,
             details_key="details.cn.multiMultiDep",
-            details_params={"claims": claims_str},
+            details_params={"claims": bad},
             reference="专利法实施细则 §22",
         )]
 
