@@ -1242,6 +1242,31 @@ def full_ref_starts_with_plural_cn(text: str) -> bool:
     return text.startswith(("复数", "多个", "数个", "复数个"))
 
 
+_BARE_GENUS_NOUNS_CN: frozenset[str] = frozenset({
+    "方法", "装置", "系统", "设备", "组件",
+    "模块", "单元", "电路", "部件", "芯片",
+})
+
+_GENUS_PREAMBLE_RE_CN: re.Pattern[str] = re.compile(
+    r"(?:(?:如|根据)权利要求[^，。\n]*?所述的[^，。\n]*?|一种[^，。\n]*?)"
+    r"(?:方法|装置|系统|设备|组件|模块|单元|电路|部件|芯片)[，,\s]"
+)
+
+
+def _is_bare_genus_self_reference_cn(term: str, claim_text: str) -> bool:
+    """Suppress bare-genus self-references in claim preambles (WQ5).
+
+    When the claim's preamble declares the genus as its subject — either
+    the dependent form ``(如|根据)权利要求N所述的<genus>`` or the independent
+    form ``一种...<genus>，`` — a bare ``所述<genus>`` later in the body is
+    a trivial self-reference, not a missing antecedent. Phase 8c close-out
+    R1.
+    """
+    if term not in _BARE_GENUS_NOUNS_CN:
+        return False
+    return bool(_GENUS_PREAMBLE_RE_CN.search(claim_text))
+
+
 def check_antecedent_basis_cn(
     doc: CnPatentDocument,
     *,
@@ -1415,6 +1440,9 @@ def check_antecedent_basis_cn(
                 and suggested_match["term"] == normalized_term
             ):
                 suggested_match = None
+
+            if _is_bare_genus_self_reference_cn(normalized_term, claim.text):
+                continue
 
             issues.append(
                 {
