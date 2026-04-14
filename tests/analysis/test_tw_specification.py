@@ -178,7 +178,9 @@ class TestParagraphNumbering:
         )
         items = check_paragraph_numbering(doc)
         assert items[0].status == "amend"
-        assert "detail" in items[0].details_params
+        assert items[0].message_key == "check.tw.spec.paragraphNumbering.amendGap"
+        assert items[0].details_params["prev"] == "0002"
+        assert items[0].details_params["next"] == "0005"
 
     def test_non_4digit_format_amend(self):
         doc = _make_doc(
@@ -187,7 +189,9 @@ class TestParagraphNumbering:
         )
         items = check_paragraph_numbering(doc)
         assert items[0].status == "amend"
-        assert "detail" in items[0].details_params
+        assert items[0].message_key == "check.tw.spec.paragraphNumbering.amendFormat"
+        assert items[0].details_params["count"] == 3
+        assert "examples" in items[0].details_params
 
     def test_has_numbering_true_but_empty_list_pass(self):
         doc = _make_doc(has_paragraph_numbering=True, paragraph_numbers=[])
@@ -260,7 +264,7 @@ class TestFigureRefConsistency:
         )
         items = check_figure_ref_consistency(doc)
         assert items[0].status == "verify"
-        assert "detail" in items[0].details_params
+        assert "figure_ref_inconsistency" in items[0].details_params
 
     def test_di_n_tu_format(self):
         """Test 第N圖 format recognition."""
@@ -331,13 +335,15 @@ class TestTitle:
         doc = _make_doc(title="一種iPhone®裝置")
         items = check_title(doc)
         assert items[0].status == "amend"
-        assert "Trademark" in items[0].details_params["detail"]
+        kinds = [i["kind"] for i in items[0].details_params["title_prohibited_items"]["items"]]
+        assert "trademark" in kinds
 
     def test_model_number_amend(self):
         doc = _make_doc(title="一種XY-1234裝置")
         items = check_title(doc)
         assert items[0].status == "amend"
-        assert "Model number" in items[0].details_params["detail"]
+        kinds = [i["kind"] for i in items[0].details_params["title_prohibited_items"]["items"]]
+        assert "model" in kinds
 
     def test_no_character_limit(self):
         """TW has no character limit unlike CN's 25."""
@@ -437,7 +443,8 @@ class TestSymbolTableConsistency:
         )
         items = check_symbol_table_consistency(doc)
         assert items[0].status == "verify"
-        assert "20" in items[0].details_params["detail"]
+        payload = items[0].details_params["symbol_table_inconsistency"]
+        assert "20" in payload["unreferenced"]
 
     def test_undefined_numeral_verify(self):
         doc = _make_doc(
@@ -448,7 +455,8 @@ class TestSymbolTableConsistency:
         )
         items = check_symbol_table_consistency(doc)
         assert items[0].status == "verify"
-        assert "30" in items[0].details_params["detail"]
+        payload = items[0].details_params["symbol_table_inconsistency"]
+        assert "30" in payload["undefined"]
 
     def test_both_unreferenced_and_undefined(self):
         doc = _make_doc(
@@ -460,9 +468,9 @@ class TestSymbolTableConsistency:
         )
         items = check_symbol_table_consistency(doc)
         assert items[0].status == "verify"
-        detail = items[0].details_params["detail"]
-        assert "unreferenced" in detail.lower() or "Defined" in detail
-        assert "undefined" in detail.lower() or "Referenced" in detail
+        payload = items[0].details_params["symbol_table_inconsistency"]
+        assert payload["unreferenced"]
+        assert payload["undefined"]
 
 
 # ── A2 regression: 110P000368 figure-ref consistency ────────────────────
@@ -520,4 +528,5 @@ class TestFigureRefConsistency110P000368Regression:
         )
         items = check_figure_ref_consistency(doc)
         assert items[0].status == "verify"
-        assert "3" in items[0].details_params["detail"]
+        payload = items[0].details_params["figure_ref_inconsistency"]
+        assert 3 in payload["only_drawings"]

@@ -490,20 +490,24 @@
       "abstractTitleMatch": "审查指南に基づき、要約は発明名称と一致すべきです。要約が発明名称を反映しているか確認してください。",
       "commercialLanguage": "专利法实施细则 §23に基づき、要約に商業的宣伝用語（商业性宣传用语）を含めてはなりません。最优、最佳、世界领先、国际领先、国内首创、填补空白などの用語を削除してください。",
       "antecedentBasisTerms": "{{claim_count}}項の請求項にわたり、{{issue_count}}個の用語が先行詞を欠く可能性があります。",
-      "titleMissing": "審査指南 第一部第一章により、明細書には発明の名称を記載する必要があります。明細書の冒頭に発明の名称を追加してください。"
+      "titleMissing": "審査指南 第一部第一章により、明細書には発明の名称を記載する必要があります。明細書の冒頭に発明の名称を追加してください。",
+      "figureRefInconsistency": {
+        "onlyDrawings": "附図説明でのみ言及:{{figs}}",
+        "onlyEmbodiment": "具体的実施形態でのみ言及:{{figs}}"
+      }
     },
     "tw": {
       "requiredSections": "TIPOの要件：技術領域、先前技術、發明內容/新型內容、實施方式。図面がある場合は圖式簡單說明および符號說明も必要です。不足：{{sections}}。",
       "sectionOrdering": "專利法施行細則 §17の規定順序：技術領域→先前技術→發明內容/新型內容→圖式簡單說明→實施方式→符號說明。順序を修正してください。",
-      "paragraphNumbering": "段落番号を使用する場合は【NNNN】形式で4桁の連番が必要です。專利法施行細則 §17により段落番号は任意です。検出：{{detail}}。",
+      "paragraphNumbering": "段落番号を使用する場合、【NNNN】四桁連続形式を使用してください。特許法施行細則 §17により、番号付けは任意です。",
       "paragraphEnding": "明細書の段落は中国語の句読点（。！？）で終わる必要があります。該当段落を確認してください。",
-      "figureRefConsistency": "圖式簡單說明と實施方式の間で図面参照が異なります。{{detail}}。完全性を確認してください。",
+      "figureRefConsistency": "特許審査基準により、図面の簡単な説明で記載された図面は実施形態で言及され、その逆も同様です。マークされた引用を確認してください。",
       "patentTypeTerminology": "發明専利は「本發明」を使用し、「本新型」は不可。新型専利は「本新型」を使用し、「本發明」は不可。検出：{{term}}。",
-      "title": "發明名稱/新型名稱は簡潔で、商標、型番、無関係な文言を含めないでください。検出：{{detail}}。",
+      "title": "発明の名称/新型の名称は簡潔にし、商標、型番、無関係な文字を含めないでください。",
       "claimReference": "專利法施行細則 §17により、明細書に特定の請求項を参照する記載（「如請求項N所述」等）は不可です。検出：{{detail}}。",
       "symbolTablePresence": "專利法施行細則 §17により、圖式簡單說明がある場合は符號說明セクションを含め、符号と部品名を記載する必要があります。",
-      "symbolTableConsistency": "符號說明の内容が實施方式と一致しません。{{detail}}。完全性を確認してください。",
-      "claimsSequential": "請求項の番号は1から連番である必要があります。{{detail}}。",
+      "symbolTableConsistency": "特許審査基準により、符号説明の項目は実施形態で使用される参照符号と一致する必要があります。完全性を確認してください。",
+      "claimsSequential": "特許審査基準により、請求項番号は1から連続していなければなりません。",
       "dependencyFormat": "專利法施行細則 §18により、依存は正しい形式（如請求項N所述之、如請求項N之等）を使用する必要があります。該当する請求項を確認してください。",
       "selfDependent": "專利法施行細則 §18により、請求項は自身に依存できません。自己依存：請求項 {{claims}}。",
       "circularDependency": "專利法施行細則 §18により、請求項は循環依存チェーンを形成できません。循環チェーン：請求項 {{claims}}。",
@@ -516,7 +520,7 @@
       "specDrawingRef": "專利法施行細則 §19により、請求項に明細書または図面を参照する記載（「如說明書所述」「如圖所示」等）は不可です。検出：{{detail}}。",
       "multiDepOnMultiDep": "專利法施行細則 §18により、多項従属項は直接または間接的に別の多項従属項に依存できません。該当：請求項 {{claims}}。",
       "multiDepAlternative": "專利法施行細則 §18により、多項従属項は択一形式（或/任一項）を使用する必要があります。該当：請求項 {{claims}}。",
-      "titleSubjectMatch": "發明名稱/新型名稱は独立項の主題名と一致する必要があります。タイトル：{{detail}}。",
+      "titleSubjectMatch": "特許審査基準により、発明の名称は独立請求項の主題と一致すべきです。マークされた請求項を確認してください。",
       "claims": {
         "symbolTableConsistency": {
           "missingFromTable": "請求項中の参照符号が符号説明に未定義：{{numerals_with_locations}}"
@@ -527,10 +531,29 @@
       "abstractTitleMatch": "專利審查基準により、要約は發明名稱/新型名稱に言及すべきです。要約がタイトルを反映しているか確認してください。タイトル：{{detail}}。",
       "commercialLanguage": "專利法施行細則 §21により、要約に商業的宣伝用語（商業性宣傳用語）を含めてはなりません。検出：{{terms}}。",
       "representativeDrawing": "專利法施行細則 §21により、図面がある場合は代表圖を指定する必要があります。代表圖の指定が必要か確認してください。",
-      "symbolVsRepDrawing": "代表圖之符號簡單說明に記載された符号は符號說明と一致する必要があります。{{detail}}。完全性を確認してください。",
+      "symbolVsRepDrawing": {
+        "notInTable": "{{numeral}}({{name}})が符号説明に定義されていません",
+        "nameMismatch": "{{numeral}}:代表図は「{{rep_name}}」、符号説明は「{{table_name}}」"
+      },
       "bracketFormat": "專利法施行細則 §17により、セクションヘッダーは全角括弧【】を使用する必要があります。検出：{{detail}}。",
       "antecedentBasisTerms": "{{claim_count}}項の請求項にわたり、{{issue_count}}個の用語が先行詞を欠く可能性があります。",
-      "titleMissing": "特許審査基準により、明細書には発明の名称又は新型の名称を記載する必要があります。明細書の冒頭に追加してください。"
+      "titleMissing": "特許審査基準により、明細書には発明の名称又は新型の名称を記載する必要があります。明細書の冒頭に追加してください。",
+      "figureRefInconsistency": {
+        "onlyDrawings": "図面の簡単な説明でのみ言及:{{figs}}",
+        "onlyEmbodiment": "実施形態でのみ言及:{{figs}}"
+      },
+      "symbolTableInconsistency": {
+        "unreferenced": "符号説明に定義されているが実施形態で言及されていない:{{symbols}}",
+        "undefined": "実施形態で言及されているが符号説明に定義されていない:{{symbols}}"
+      }
+    },
+    "titleProhibited": {
+      "trademark": "商標記号「{{token}}」",
+      "commercial": "商業的宣伝文言「{{token}}」",
+      "model": "型番「{{token}}」"
+    },
+    "paragraphFormat": {
+      "examples": "{{count}}個の段落が【NNNN】形式を使用していません。例:{{examples}}"
     }
   },
   "common": {
@@ -673,14 +696,16 @@
         "paragraphNumbering": {
           "amendXml": "段落番号が連続していません（{{detail}}）。",
           "amendDocx": "明細書に手動で追加された段落番号が含まれています。",
-          "pass": "段落番号は正確です。"
+          "pass": "段落番号は正確です。",
+          "amendXmlGap": "段落番号が連続していません:第{{prev}}段落の次が第{{next}}段落になっています。",
+          "amendXmlDuplicate": "重複する段落番号が検出されました。"
         },
         "paragraphEnding": {
           "amend": "{{count}} 個の段落が有効な中国語句読点で終わっていません。",
           "pass": "すべての段落が有効な句読点で終わっています。"
         },
         "figureRefConsistency": {
-          "verify": "具体实施方式と附图说明の図面参照が不一致です（{{detail}}）。",
+          "verify": "附図説明と具体的実施形態の間で図面の引用が一致していません。{{figure_ref_inconsistency}}",
           "pass": "各セクションの図面参照は一致しています。"
         },
         "patentTypeTerminology": {
@@ -689,7 +714,7 @@
         },
         "title": {
           "amendLength": "発明名称が漢字25文字を超えています（{{count}}文字）。",
-          "amendContent": "発明名称に禁止事項が含まれています：{{detail}}。",
+          "amendContent": "発明の名称に禁止された内容が含まれています:{{title_prohibited_items}}",
           "pass": "発明名称はCNIPAの要件を満たしています。",
           "amendMissing": "発明の名称が見つかりません。"
         },
@@ -700,7 +725,7 @@
       },
       "claims": {
         "sequential": {
-          "amend": "請求項番号が連続していません（{{detail}}）。",
+          "amend": "請求項の番号が連続していません:予想第{{expected}}項、実際は第{{found}}項。",
           "pass": "請求項番号は連続しています。"
         },
         "dependencyFormat": {
@@ -779,15 +804,16 @@
           "pass": "セクション順序は正しいです。"
         },
         "paragraphNumbering": {
-          "amend": "段落番号の形式が正しくありません。",
-          "pass": "段落番号は正しいか、番号なしです。"
+          "pass": "段落番号は正しいか、番号なしです。",
+          "amendGap": "段落番号が連続していません:【{{prev}}】の次が【{{next}}】になっています。",
+          "amendFormat": "{{count}}個の段落が【NNNN】形式を使用していません。例:{{examples}}。"
         },
         "paragraphEnding": {
           "amend": "{{count}}個の段落に終止符がありません。",
           "pass": "すべての段落が正しい句読点で終わっています。"
         },
         "figureRefConsistency": {
-          "verify": "圖式簡單說明と實施方式の間で図面参照が一致しません。",
+          "verify": "図面の簡単な説明と実施形態の間で図面の引用が一致していません。{{figure_ref_inconsistency}}",
           "pass": "各セクション間の図面参照が一致しています。"
         },
         "patentTypeTerminology": {
@@ -795,7 +821,7 @@
           "pass": "特許類型の用語が一致しています。"
         },
         "title": {
-          "amendContent": "發明名稱/新型名稱に不適切な内容が含まれています。",
+          "amendContent": "発明の名称又は新型の名称に不適切な内容が含まれています:{{title_prohibited_items}}",
           "pass": "發明名稱/新型名稱は要件を満たしています。",
           "amendMissing": "発明の名称が見つかりません。"
         },
@@ -808,13 +834,13 @@
           "pass": "符號說明セクションが含まれています。"
         },
         "symbolTableConsistency": {
-          "verify": "符號說明の内容が實施方式と一致しません。",
+          "verify": "符号説明の内容が実施形態と一致していません:{{symbol_table_inconsistency}}",
           "pass": "符號說明の内容が明細書と一致しています。"
         }
       },
       "claims": {
         "sequential": {
-          "amend": "請求項の番号が連続していません。",
+          "amend": "請求項の番号が連続していません:予想第{{expected}}項、実際は第{{found}}項。",
           "pass": "請求項の番号が連続しています。"
         },
         "dependencyFormat": {
@@ -866,7 +892,7 @@
           "pass": "すべての多項従属項が択一形式を使用しています。"
         },
         "titleSubjectMatch": {
-          "verify": "發明名稱/新型名稱が独立項の主題と一致しない可能性があります。",
+          "verify": "発明の名称「{{title}}」が独立項の主題「{{subjects}}」と一致していない可能性があります。",
           "pass": "發明名稱/新型名稱が独立項の主題と一致しています。"
         },
         "symbolTableConsistency": {
@@ -899,7 +925,7 @@
       },
       "crossRef": {
         "symbolVsRepDrawing": {
-          "verify": "代表圖之符號簡單說明が符號說明と一致しません。",
+          "verify": "代表図の符号説明と符号説明が一致していません:{{symbol_mismatch_triples}}",
           "pass": "代表圖之符號簡單說明が符號說明と一致しています。"
         },
         "bracketFormat": {
@@ -1013,5 +1039,9 @@
     "paragraph": {
       "numbered": "段落{{n}}"
     }
+  },
+  "punct": {
+    "listSeparator": "、",
+    "sentenceSeparator": "；"
   }
 }
