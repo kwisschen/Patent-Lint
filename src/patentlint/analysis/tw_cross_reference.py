@@ -47,6 +47,7 @@ def check_symbol_vs_rep_drawing(doc: TwPatentDocument) -> list[CheckItem]:
             status="verify",
             message="Representative drawing symbols inconsistent with symbol table.",
             message_key="check.tw.crossRef.symbolVsRepDrawing.verify",
+            details_key="details.tw.symbolVsRepDrawing.description",
             details_params={"symbol_mismatch_triples": {"mismatches": mismatches[:10]}},
             reference="專利審查基準",
         )]
@@ -55,6 +56,7 @@ def check_symbol_vs_rep_drawing(doc: TwPatentDocument) -> list[CheckItem]:
         status="pass",
         message="Representative drawing symbols consistent with symbol table.",
         message_key="check.tw.crossRef.symbolVsRepDrawing.pass",
+        details_key="details.tw.symbolVsRepDrawing.description",
         reference="專利審查基準",
     )]
 

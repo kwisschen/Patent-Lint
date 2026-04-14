@@ -533,7 +533,8 @@
       "representativeDrawing": "專利法施行細則 §21により、図面がある場合は代表圖を指定する必要があります。代表圖の指定が必要か確認してください。",
       "symbolVsRepDrawing": {
         "notInTable": "{{numeral}}({{name}})が符号説明に定義されていません",
-        "nameMismatch": "{{numeral}}：代表図は「{{rep_name}}」、符号説明は「{{table_name}}」"
+        "nameMismatch": "{{numeral}}：代表図の符号簡単説明は「{{rep_name}}」、符号説明は「{{table_name}}」",
+        "description": "代表図の符号簡単説明に記載された符号は符号説明の定義と一致する必要があります。マークされた項目を確認してください。"
       },
       "bracketFormat": "專利法施行細則 §17により、セクションヘッダーは全角括弧【】を使用する必要があります。検出：{{detail}}。",
       "antecedentBasisTerms": "{{claim_count}}項の請求項にわたり、{{issue_count}}個の用語が先行詞を欠く可能性があります。",
@@ -737,7 +738,7 @@
           "pass": "自己引用の請求項は見つかりませんでした。"
         },
         "forwardDependency": {
-          "amend": "請求項 {{claims}} が前方依存しています（後の請求項を引用）。",
+          "amend": "{{claims}} が前方依存しています（後の請求項を引用）。",
           "pass": "前方引用は見つかりませんでした。"
         },
         "singleSentence": {
@@ -856,7 +857,7 @@
           "pass": "循環依存はありません。"
         },
         "forwardDependency": {
-          "amend": "請求項 {{claims}} が前方依存しています（後の請求項を引用）。",
+          "amend": "{{claims}} が前方依存しています（後の請求項を引用）。",
           "pass": "前方依存はありません。"
         },
         "singleSentence": {
@@ -925,8 +926,8 @@
       },
       "crossRef": {
         "symbolVsRepDrawing": {
-          "verify": "代表図の符号説明と符号説明が一致していません：{{symbol_mismatch_triples}}",
-          "pass": "代表圖之符號簡單說明が符號說明と一致しています。"
+          "verify": "代表図の符号簡単説明が符号説明と一致していません：{{symbol_mismatch_triples}}",
+          "pass": "代表図の符号簡単説明が符号説明と一致しています。"
         },
         "bracketFormat": {
           "verify": "セクションヘッダーが正しい【】形式を使用していない可能性があります。",
