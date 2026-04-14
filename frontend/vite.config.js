@@ -5,13 +5,24 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 import { execSync } from 'child_process'
+import { statSync } from 'fs'
 
-// Compute build hash once at config load. Used to cache-bust the Pyodide
-// wheel URL and to power the "new version available" check. Falls back to
-// 'dev' if git is unavailable (shouldn't happen in production or CI).
+// Compute build hash. In production (CI builds, deploys), use git SHA
+// for stable cache keys tied to commits. In dev, use the wheel file's
+// mtime so that rebuilding the wheel locally (without committing)
+// produces a new cache-bust value and Pyodide's micropip cache actually
+// re-fetches. Falls back to 'dev' if git/stat unavailable.
 const buildHash = (() => {
+  if (process.env.NODE_ENV === 'production') {
+    try {
+      return execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).trim()
+    } catch (e) {
+      return 'dev'
+    }
+  }
   try {
-    return execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).trim()
+    const wheelPath = path.resolve(__dirname, 'public/patentlint-1.0.0-py3-none-any.whl')
+    return `dev${statSync(wheelPath).mtimeMs}`
   } catch (e) {
     return 'dev'
   }
