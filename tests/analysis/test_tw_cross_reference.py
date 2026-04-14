@@ -60,13 +60,13 @@ class TestCheckSymbolVsRepDrawing:
         assert m["rep_name"] == "基座"
         assert m["table_name"] == "框架"
 
-    def test_empty_rep_drawing_symbols_pass(self):
+    def test_empty_rep_drawing_symbols_suppressed(self):
         doc = TwPatentDocument(
             representative_drawing_symbols=[],
             symbol_table=[SymbolEntry(numeral="10", name="框架")],
         )
         result = check_symbol_vs_rep_drawing(doc)
-        assert result[0].status == "pass"
+        assert result == []
 
     def test_empty_symbol_table_verify(self):
         doc = TwPatentDocument(
@@ -94,7 +94,10 @@ class TestCheckSymbolVsRepDrawing:
         assert result[0].status == "verify"
 
     def test_reference(self):
-        doc = TwPatentDocument(representative_drawing_symbols=[])
+        doc = TwPatentDocument(
+            representative_drawing_symbols=[SymbolEntry(numeral="10", name="框架")],
+            symbol_table=[SymbolEntry(numeral="10", name="框架")],
+        )
         result = check_symbol_vs_rep_drawing(doc)
         assert result[0].reference == "專利審查基準"
 
