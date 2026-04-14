@@ -95,8 +95,8 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Subject name consistency | 审查指南 第二部分第二章 | VERIFY / PASS | `check.cn.claims.subjectConsistency` | Dependent claim subject matches parent |
 | Transition phrase | 审查指南 | VERIFY / PASS | `check.cn.claims.transitionPhrase` | Independent claims contain 其特征在于 |
 | TW terminology | — | VERIFY / PASS | `check.cn.claims.twTerminology` | Flags 请求项 (TIPO) vs 权利要求 (CNIPA) |
-| Claims must not reference spec/drawings | 审查指南 第二部分第二章 | AMEND / PASS | `check.cn.claims.specDrawingRef` | No references to 说明书 or 附图 in claims |
-| Multi-dep on multi-dep | 专利法实施细则 §22 | AMEND / PASS | `check.cn.claims.multiDepOnMultiDep` | Multi-dep claim cannot reference another multi-dep |
+| Claims must not reference spec/drawings | 审查指南 第二部分第二章 | AMEND / PASS | `check.cn.claims.specReference` | No references to 说明书 or 附图 in claims |
+| Multi-dep on multi-dep | 专利法实施细则 §22 | AMEND / PASS | `check.cn.claims.multiMultiDep` | Multi-dep claim cannot reference another multi-dep |
 | Dependent claim ordering | 审查指南 第二部分第二章 | AMEND / PASS | `check.cn.claims.dependentOrdering` | Dependents grouped after their independent claim |
 
 ## CN Abstract (摘要)

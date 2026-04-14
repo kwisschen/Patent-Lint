@@ -488,7 +488,8 @@
       "dependentOrdering": "根据审查指南 第二部分第二章，引用同一独立权利要求的所有从属权利要求应连续排列在下一项独立权利要求之前。请调整排列顺序。",
       "abstractCharCount": "根据专利法实施细则 §23，摘要不得超过300个汉字。请缩短摘要。",
       "abstractTitleMatch": "根据审查指南，摘要应与发明名称一致。请确认摘要是否体现了发明名称。",
-      "commercialLanguage": "根据专利法实施细则 §23，摘要不得包含商业性宣传用语。请删除\"最优\"\"最佳\"\"世界领先\"\"国际领先\"\"国内首创\"\"填补空白\"等用语。"
+      "commercialLanguage": "根据专利法实施细则 §23，摘要不得包含商业性宣传用语。请删除\"最优\"\"最佳\"\"世界领先\"\"国际领先\"\"国内首创\"\"填补空白\"等用语。",
+      "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语可能缺少先行词。"
     },
     "tw": {
       "requiredSections": "TIPO规定必须包含：技術領域、先前技術、發明內容/新型內容、實施方式。有图式时须包含圖式簡單說明及符號說明。缺少：{{sections}}。",
@@ -526,7 +527,8 @@
       "commercialLanguage": "依专利法施行细则 §21，摘要不得包含商业性宣传用语。发现：{{terms}}。",
       "representativeDrawing": "依专利法施行细则 §21，有图式时应指定代表圖。请确认是否需要指定代表圖。",
       "symbolVsRepDrawing": "代表圖之符號簡單說明中列出之符号应与符號說明一致。{{detail}}。请确认完整性。",
-      "bracketFormat": "依专利法施行细则 §17，章节标题应使用全角方括号【】。发现：{{detail}}。"
+      "bracketFormat": "依专利法施行细则 §17，章节标题应使用全角方括号【】。发现：{{detail}}。",
+      "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语可能缺少先行词。"
     }
   },
   "common": {
@@ -686,7 +688,8 @@
         "title": {
           "amendLength": "发明名称超过25个汉字（共{{count}}个字）。",
           "amendContent": "发明名称包含禁止内容：{{detail}}。",
-          "pass": "发明名称符合要求。"
+          "pass": "发明名称符合要求。",
+          "amendMissing": "未发现发明名称。"
         },
         "claimReference": {
           "amend": "说明书引用了权利要求（{{detail}}）。",
@@ -790,8 +793,9 @@
           "pass": "专利类型用语一致。"
         },
         "title": {
-          "amend": "发明名称/新型名称包含不当内容。",
-          "pass": "发明名称/新型名称符合要求。"
+          "amendContent": "发明名称/新型名称包含不当内容。",
+          "pass": "发明名称/新型名称符合要求。",
+          "amendMissing": "未发现发明名称/新型名称。"
         },
         "claimReference": {
           "amend": "说明书中引用了請求項。",
@@ -930,7 +934,7 @@
     "header": "PatentLint 分析报告",
     "headerTw": "PatentLint — 台湾专利稿件检查报告",
     "securityNote": "已在您的设备上分析，未上传至云端。",
-"amend": "需要修改",
+    "amend": "需要修改",
     "verify": "待专家确认",
     "pass": "通过",
     "claimDependency": "权利要求从属关系表",

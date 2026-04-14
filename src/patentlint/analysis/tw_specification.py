@@ -364,7 +364,7 @@ def check_patent_type_terminology(doc: TwPatentDocument) -> list[CheckItem]:
                 status="verify",
                 message="Invention patent contains utility model terminology.",
                 message_key="check.tw.spec.patentTypeTerminology.verify",
-                details="Found 本新型 in invention patent",
+                details="Patent type mismatch: 本新型",
                 details_key="details.tw.patentTypeTerminology",
                 details_params={"term": "本新型"},
                 reference="專利審查基準",
@@ -375,7 +375,7 @@ def check_patent_type_terminology(doc: TwPatentDocument) -> list[CheckItem]:
                 status="verify",
                 message="Utility model contains invention patent terminology.",
                 message_key="check.tw.spec.patentTypeTerminology.verify",
-                details="Found 本發明 in utility model",
+                details="Patent type mismatch: 本發明",
                 details_key="details.tw.patentTypeTerminology",
                 details_params={"term": "本發明"},
                 reference="專利審查基準",
@@ -399,10 +399,8 @@ def check_title(doc: TwPatentDocument) -> list[CheckItem]:
         return [CheckItem(
             status="amend",
             message="Title is missing.",
-            message_key="check.tw.spec.title.amend",
+            message_key="check.tw.spec.title.amendMissing",
             details="No title found",
-            details_key="details.tw.title",
-            details_params={"detail": "No title found"},
             reference="專利審查基準",
         )]
 
@@ -419,7 +417,7 @@ def check_title(doc: TwPatentDocument) -> list[CheckItem]:
         return [CheckItem(
             status="amend",
             message="Title contains prohibited content.",
-            message_key="check.tw.spec.title.amend",
+            message_key="check.tw.spec.title.amendContent",
             details=detail,
             details_key="details.tw.title",
             details_params={"detail": detail},

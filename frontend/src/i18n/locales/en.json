@@ -315,15 +315,15 @@
       }
     },
     "cnTitle": "PatentLint CNIPA Drafting Checks",
-    "cnSubtitle": "20+ structural checks against CNIPA drafting rules (\u4e13\u5229\u6cd5\u5b9e\u65bd\u7ec6\u5219, \u5ba1\u67e5\u6307\u5357).",
+    "cnSubtitle": "20+ structural checks against CNIPA drafting rules (专利法实施细则, 审查指南).",
     "cnGroups": {
-      "specification": "Specification (\u8bf4\u660e\u4e66)",
-      "claims": "Claims (\u6743\u5229\u8981\u6c42)",
-      "abstract": "Abstract (\u6458\u8981)",
-      "drawings": "Drawings (\u9644\u56fe)"
+      "specification": "Specification (说明书)",
+      "claims": "Claims (权利要求)",
+      "abstract": "Abstract (摘要)",
+      "drawings": "Drawings (附图)"
     },
     "cnChecks": {
-      "requiredSections": "Required sections (\u4e13\u5229\u6cd5\u5b9e\u65bd\u7ec6\u5219 \u00a717)",
+      "requiredSections": "Required sections (专利法实施细则 §17)",
       "sectionOrdering": "Section ordering",
       "paragraphNumbering": "Paragraph numbering",
       "paragraphEnding": "Paragraph ending punctuation",
@@ -338,18 +338,18 @@
       "singleSentence": "Single sentence per claim",
       "refNumeralParens": "Reference numerals in parentheses",
       "subjectNameConsistency": "Subject name consistency",
-      "transitionPhrase": "Transition phrase (\u5176\u7279\u5f81\u5728\u4e8e)",
+      "transitionPhrase": "Transition phrase (其特征在于)",
       "cnTwTerminology": "CN/TW terminology",
       "claimsSpecReference": "Claims must not reference spec/drawings",
       "multiMultiDependency": "Multi-multi dependency",
       "dependentOrdering": "Dependent claim ordering",
-      "abstractCharCount": "Abstract character count (\u2264300)",
+      "abstractCharCount": "Abstract character count (≤300)",
       "titleInAbstract": "Title in abstract",
       "commercialLanguage": "Commercial language",
       "figureCount": "Figure count"
     },
     "twTitle": "PatentLint vs. TIPO Error Detection System",
-    "twSubtitle": "30+ drafting checks against TIPO rules (\u5c08\u5229\u6cd5\u65bd\u884c\u7d30\u5247, \u5c08\u5229\u5be9\u67e5\u57fa\u6e96).",
+    "twSubtitle": "30+ drafting checks against TIPO rules (專利法施行細則, 專利審查基準).",
     "twCompare": {
       "colTipo": "TIPO Error Detection System",
       "feature": {
@@ -488,7 +488,8 @@
       "dependentOrdering": "Per 审查指南 第二部分第二章, all claims depending on an independent claim should appear consecutively before the next independent claim. Reorder claims.",
       "abstractCharCount": "Per 专利法实施细则 §23, the abstract must not exceed 300 Chinese characters. Shorten the abstract.",
       "abstractTitleMatch": "Per 审查指南, the abstract should be consistent with the title (发明名称). Verify the abstract reflects the invention title.",
-      "commercialLanguage": "Per 专利法实施细则 §23, the abstract must not contain commercial advertising language (商业性宣传用语). Remove terms like 最优, 最佳, 世界领先, 国际领先, 国内首创, 填补空白, etc."
+      "commercialLanguage": "Per 专利法实施细则 §23, the abstract must not contain commercial advertising language (商业性宣传用语). Remove terms like 最优, 最佳, 世界领先, 国际领先, 国内首创, 填补空白, etc.",
+      "antecedentBasisTerms": "{{issue_count}} term(s) may lack antecedent basis across {{claim_count}} claim(s)."
     },
     "tw": {
       "requiredSections": "TIPO requires: 技術領域, 先前技術, 發明內容/新型內容, 實施方式. When drawings are present, 圖式簡單說明 and 符號說明 are also required. Missing: {{sections}}.",
@@ -526,7 +527,8 @@
       "commercialLanguage": "Per 專利法施行細則 §21, the abstract must not contain commercial advertising language (商業性宣傳用語). Found: {{terms}}.",
       "representativeDrawing": "Per 專利法施行細則 §21, when drawings exist, a 代表圖 should be designated. Review whether a representative drawing designation is needed.",
       "symbolVsRepDrawing": "Symbols listed in 代表圖之符號簡單說明 should match entries in 符號說明. {{detail}}. Verify completeness.",
-      "bracketFormat": "Per 專利法施行細則 §17, section headers should use full-width brackets 【】. Found: {{detail}}."
+      "bracketFormat": "Per 專利法施行細則 §17, section headers should use full-width brackets 【】. Found: {{detail}}.",
+      "antecedentBasisTerms": "{{issue_count}} term(s) may lack antecedent basis across {{claim_count}} claim(s)."
     }
   },
   "common": {
@@ -686,7 +688,8 @@
         "title": {
           "amendLength": "Title exceeds 25 Chinese characters ({{count}} found).",
           "amendContent": "Title contains prohibited content: {{detail}}.",
-          "pass": "Title meets CNIPA requirements."
+          "pass": "Title meets CNIPA requirements.",
+          "amendMissing": "No title found."
         },
         "claimReference": {
           "amend": "Specification references claims ({{detail}}).",
@@ -790,8 +793,9 @@
           "pass": "Patent type terminology consistent."
         },
         "title": {
-          "amend": "Title contains prohibited content.",
-          "pass": "Title meets requirements."
+          "amendContent": "Title contains prohibited content.",
+          "pass": "Title meets requirements.",
+          "amendMissing": "No title found."
         },
         "claimReference": {
           "amend": "Specification references claims.",
@@ -930,7 +934,7 @@
     "header": "PatentLint Analysis Report",
     "headerTw": "PatentLint — Taiwan Patent Specification Report",
     "securityNote": "Analyzed on your device -- not uploaded to the cloud.",
-"amend": "Action Required",
+    "amend": "Action Required",
     "verify": "Expert Review Needed",
     "pass": "Passed",
     "claimDependency": "Claim Dependency Tree",
