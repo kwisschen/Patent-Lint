@@ -40,14 +40,12 @@ def check_claims_sequential(cn_doc: CnPatentDocument) -> list[CheckItem]:
     for i, claim in enumerate(claims):
         expected = i + 1
         if claim.id != expected:
-            detail = f"expected {expected}, found {claim.id}"
             return [CheckItem(
                 status="amend",
-                message=f"Claim numbering is not sequential: {detail}.",
+                message=f"Claim numbering is not sequential: expected {expected}, found {claim.id}.",
                 message_key="check.cn.claims.sequential.amend",
-                details=detail,
                 details_key="details.cn.claimsSequential",
-                details_params={"detail": detail},
+                details_params={"expected": expected, "found": claim.id},
                 reference="审查指南",
             )]
 

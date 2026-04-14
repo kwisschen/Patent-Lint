@@ -577,7 +577,7 @@ class TestTwInventionMultiFail:
 
         expected_keys = {
             "check.tw.spec.symbolTablePresence.amend",
-            "check.tw.spec.paragraphNumbering.amend",
+            "check.tw.spec.paragraphNumbering.amendGap",
             "check.tw.claims.forwardDependency.amend",
             "check.tw.abstract.commercialLanguage.amend",
         }

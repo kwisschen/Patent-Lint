@@ -27,25 +27,28 @@ def check_symbol_vs_rep_drawing(doc: TwPatentDocument) -> list[CheckItem]:
     # Build lookup from symbol_table: numeral -> name
     symbol_map = {entry.numeral: entry.name for entry in doc.symbol_table}
 
-    mismatches = []
+    mismatches: list[dict] = []
     for sym in doc.representative_drawing_symbols:
         if sym.numeral not in symbol_map:
-            mismatches.append(f"{sym.numeral} ({sym.name}) not in 符號說明")
+            mismatches.append({
+                "kind": "not_in_table",
+                "numeral": sym.numeral,
+                "rep_name": sym.name,
+            })
         elif symbol_map[sym.numeral] != sym.name:
-            mismatches.append(
-                f"{sym.numeral}: 代表圖 has '{sym.name}', "
-                f"符號說明 has '{symbol_map[sym.numeral]}'"
-            )
+            mismatches.append({
+                "kind": "name_mismatch",
+                "numeral": sym.numeral,
+                "rep_name": sym.name,
+                "table_name": symbol_map[sym.numeral],
+            })
 
     if mismatches:
-        detail = "; ".join(mismatches[:5])
         return [CheckItem(
             status="verify",
             message="Representative drawing symbols inconsistent with symbol table.",
             message_key="check.tw.crossRef.symbolVsRepDrawing.verify",
-            details=detail,
-            details_key="details.tw.symbolVsRepDrawing",
-            details_params={"detail": detail},
+            details_params={"symbol_mismatch_triples": {"mismatches": mismatches[:10]}},
             reference="專利審查基準",
         )]
 
