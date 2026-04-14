@@ -705,7 +705,7 @@
           "pass": "All specification paragraphs end with valid punctuation."
         },
         "figureRefConsistency": {
-          "verify": "Figure references inconsistent between 附图说明 and 具体实施方式. {{figure_ref_inconsistency}}",
+          "verify": "Figure references inconsistent: {{figure_ref_inconsistency}}",
           "pass": "Figure references are consistent across sections."
         },
         "patentTypeTerminology": {
@@ -737,7 +737,7 @@
           "pass": "No self-dependent claims found."
         },
         "forwardDependency": {
-          "amend": "Claim {{claims}} reference(s) a later claim (forward dependency).",
+          "amend": "Claim(s) {{claims}} have forward dependency (reference later claims).",
           "pass": "No forward dependencies found."
         },
         "singleSentence": {
@@ -749,7 +749,7 @@
           "pass": "All reference numerals in claims are properly enclosed."
         },
         "subjectConsistency": {
-          "verify": "{{count}} dependent claim(s) have subject name inconsistent with parent: claims {{claims}}.",
+          "verify": "Claim(s) {{claims}} have subject name inconsistent with parent ({{count}} total).",
           "pass": "Dependent claim subject names are consistent."
         },
         "transitionPhrase": {
@@ -813,7 +813,7 @@
           "pass": "All paragraphs end with valid punctuation."
         },
         "figureRefConsistency": {
-          "verify": "Figure references inconsistent between 圖式簡單說明 and 實施方式. {{figure_ref_inconsistency}}",
+          "verify": "Figure references inconsistent: {{figure_ref_inconsistency}}",
           "pass": "Figure references consistent across sections."
         },
         "patentTypeTerminology": {
@@ -856,7 +856,7 @@
           "pass": "No circular dependencies."
         },
         "forwardDependency": {
-          "amend": "Forward dependency found.",
+          "amend": "Claim(s) {{claims}} have forward dependency (reference later claims).",
           "pass": "No forward dependencies."
         },
         "singleSentence": {
@@ -868,7 +868,7 @@
           "pass": "All reference numerals in claims are in parentheses."
         },
         "subjectConsistency": {
-          "verify": "{{count}} dependent claim(s) have subject name inconsistent with parent: claims {{claims}}.",
+          "verify": "Claim(s) {{claims}} have subject name inconsistent with parent ({{count}} total).",
           "pass": "All dependent claim subjects match parent."
         },
         "transitionPhrase": {
@@ -885,7 +885,7 @@
         },
         "multiDepOnMultiDep": {
           "amend": "Multi-dependent claim depends on another multi-dependent claim.",
-          "pass": "No multi-dependent-on-multi-dependent claims."
+          "pass": "Multi-dependent claims have valid dependency structure."
         },
         "multiDepAlternative": {
           "amend": "Multi-dependent claim(s) not in alternative form.",
