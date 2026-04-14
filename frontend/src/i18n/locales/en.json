@@ -256,7 +256,7 @@
       "telemetry": "PatentLint collects zero analytics, zero telemetry, and zero usage data. There are no cookies, no tracking pixels, and no third-party scripts. The application does not know who you are.",
       "extensionNote": "If you audit this site in DevTools and see network activity you don't recognize, check chrome://extensions. Browser extensions (ad blockers, password managers, screen recorders) inject content scripts into every page you visit, including this one. PatentLint itself loads only its own assets and Pyodide dependencies.",
       "selfHostedTitle": "Self-Hosted Option",
-      "selfHosted": "For organizations with strict data sovereignty requirements, such as ITAR-controlled environments or air-gapped networks, PatentLint can be self-hosted via Docker with all dependencies included.",
+      "selfHosted": "On-premises deployment is available on private inquiry. Compliance with any specific regulatory regime remains the organization's own determination.",
       "contactEnterprise": "Contact for enterprise deployment"
     }
   },
@@ -490,20 +490,24 @@
       "abstractTitleMatch": "Per 审查指南, the abstract should be consistent with the title (发明名称). Verify the abstract reflects the invention title.",
       "commercialLanguage": "Per 专利法实施细则 §23, the abstract must not contain commercial advertising language (商业性宣传用语). Remove terms like 最优, 最佳, 世界领先, 国际领先, 国内首创, 填补空白, etc.",
       "antecedentBasisTerms": "{{issue_count}} term(s) may lack antecedent basis across {{claim_count}} claim(s).",
-      "titleMissing": "Per CNIPA 审查指南 第一部分第一章, the specification must contain a 发明名称 (title of invention). Add a title to the specification header."
+      "titleMissing": "Per CNIPA 审查指南 第一部分第一章, the specification must contain a 发明名称 (title of invention). Add a title to the specification header.",
+      "figureRefInconsistency": {
+        "onlyDrawings": "Only cited in 附图说明: {{figs}}",
+        "onlyEmbodiment": "Only cited in 具体实施方式: {{figs}}"
+      }
     },
     "tw": {
       "requiredSections": "TIPO requires: 技術領域, 先前技術, 發明內容/新型內容, 實施方式. When drawings are present, 圖式簡單說明 and 符號說明 are also required. Missing: {{sections}}.",
       "sectionOrdering": "專利法施行細則 §17 prescribes: 技術領域 → 先前技術 → 發明內容/新型內容 → 圖式簡單說明 → 實施方式 → 符號說明. Reorder to match.",
-      "paragraphNumbering": "When present, paragraph numbers must use 【NNNN】 format with sequential four-digit numbers. Numbering is optional per 專利法施行細則 §17. Found: {{detail}}.",
+      "paragraphNumbering": "When present, paragraph numbers must use 【NNNN】 format with sequential four-digit numbers. Numbering is optional per 專利法施行細則 §17.",
       "paragraphEnding": "Specification paragraphs should end with Chinese punctuation (。！？). Review flagged paragraphs.",
-      "figureRefConsistency": "Figure references differ between 圖式簡單說明 and 實施方式. {{detail}}. Verify completeness.",
+      "figureRefConsistency": "Per 專利審查基準, figures described in 圖式簡單說明 should be referenced in 實施方式 and vice versa. Verify the flagged references are intentional.",
       "patentTypeTerminology": "Invention patents (發明) should use 本發明, not 本新型. Utility models (新型) should use 本新型, not 本發明. Found: {{term}}.",
-      "title": "發明名稱/新型名稱 should be concise with no trademarks, model numbers, or irrelevant text. Found: {{detail}}.",
+      "title": "發明名稱/新型名稱 should be concise with no trademarks, model numbers, or irrelevant text.",
       "claimReference": "Per 專利法施行細則 §17, the specification must not reference specific claims (e.g., 如請求項N所述). Found: {{detail}}.",
       "symbolTablePresence": "Per 專利法施行細則 §17, when 圖式簡單說明 is present, 符號說明 must also be included. Add a 符號說明 section listing reference numerals and component names.",
-      "symbolTableConsistency": "符號說明 entries inconsistent with 實施方式. {{detail}}. Verify completeness.",
-      "claimsSequential": "請求項 numbers must be sequential starting from 1. {{detail}}.",
+      "symbolTableConsistency": "Per 專利審查基準, 符號說明 entries should match reference numerals used in 實施方式. Verify completeness.",
+      "claimsSequential": "Per 專利審查基準, claim numbers must be sequential starting from 1.",
       "dependencyFormat": "Per 專利法施行細則 §18, dependencies must use a recognized format (如請求項N所述之, 如請求項N之, etc.). Review flagged claims.",
       "selfDependent": "Per 專利法施行細則 §18, a claim cannot depend on itself. Self-dependent: 請求項 {{claims}}.",
       "circularDependency": "Per 專利法施行細則 §18, claims must not form circular dependency chains. Circular chain: 請求項 {{claims}}.",
@@ -516,7 +520,7 @@
       "specDrawingRef": "Per 專利法施行細則 §19, claims must not reference the specification or drawings (e.g., 如說明書所述, 如圖所示). Found: {{detail}}.",
       "multiDepOnMultiDep": "Per 專利法施行細則 §18, a multi-dependent claim cannot directly or indirectly depend on another multi-dependent claim. Flagged: 請求項 {{claims}}.",
       "multiDepAlternative": "Per 專利法施行細則 §18, multi-dependent claims must use alternative form (或/任一項). Flagged: 請求項 {{claims}}.",
-      "titleSubjectMatch": "發明名稱/新型名稱 should be consistent with the subject names of independent claims. Title: {{detail}}.",
+      "titleSubjectMatch": "Per TIPO 專利審查基準, the title should match the subject of independent claims. Review flagged claims.",
       "claims": {
         "symbolTableConsistency": {
           "missingFromTable": "Numerals in claims undefined in 符號說明: {{numerals_with_locations}}"
@@ -527,10 +531,29 @@
       "abstractTitleMatch": "Per 專利審查基準, the abstract should reference the 發明名稱/新型名稱. Verify the abstract reflects the title. Title: {{detail}}.",
       "commercialLanguage": "Per 專利法施行細則 §21, the abstract must not contain commercial advertising language (商業性宣傳用語). Found: {{terms}}.",
       "representativeDrawing": "Per 專利法施行細則 §21, when drawings exist, a 代表圖 should be designated. Review whether a representative drawing designation is needed.",
-      "symbolVsRepDrawing": "Symbols listed in 代表圖之符號簡單說明 should match entries in 符號說明. {{detail}}. Verify completeness.",
+      "symbolVsRepDrawing": {
+        "notInTable": "{{numeral}} ({{name}}) not in 符號說明",
+        "nameMismatch": "{{numeral}}: 代表圖 has \"{{rep_name}}\", 符號說明 has \"{{table_name}}\""
+      },
       "bracketFormat": "Per 專利法施行細則 §17, section headers should use full-width brackets 【】. Found: {{detail}}.",
       "antecedentBasisTerms": "{{issue_count}} term(s) may lack antecedent basis across {{claim_count}} claim(s).",
-      "titleMissing": "Per TIPO 專利審查基準, the specification must contain a 發明名稱/新型名稱 (title of invention or utility model). Add one to the specification header."
+      "titleMissing": "Per TIPO 專利審查基準, the specification must contain a 發明名稱/新型名稱 (title of invention or utility model). Add one to the specification header.",
+      "figureRefInconsistency": {
+        "onlyDrawings": "Only cited in 圖式簡單說明: {{figs}}",
+        "onlyEmbodiment": "Only cited in 實施方式: {{figs}}"
+      },
+      "symbolTableInconsistency": {
+        "unreferenced": "Defined in 符號說明 but not referenced in 實施方式: {{symbols}}",
+        "undefined": "Referenced in 實施方式 but not defined in 符號說明: {{symbols}}"
+      }
+    },
+    "titleProhibited": {
+      "trademark": "Trademark symbol \"{{token}}\"",
+      "commercial": "Commercial language \"{{token}}\"",
+      "model": "Model number \"{{token}}\""
+    },
+    "paragraphFormat": {
+      "examples": "{{count}} paragraph(s) use non-[NNNN] format. Examples: {{examples}}"
     }
   },
   "common": {
@@ -673,14 +696,16 @@
         "paragraphNumbering": {
           "amendXml": "Paragraph numbering is not sequential ({{detail}}).",
           "amendDocx": "Specification contains user-added paragraph numbering.",
-          "pass": "Paragraph numbering is correct."
+          "pass": "Paragraph numbering is correct.",
+          "amendXmlGap": "Paragraph numbering has a gap: paragraph {{prev}} is followed by {{next}}.",
+          "amendXmlDuplicate": "Duplicate paragraph numbers detected."
         },
         "paragraphEnding": {
           "amend": "{{count}} paragraph(s) do not end with valid Chinese punctuation.",
           "pass": "All specification paragraphs end with valid punctuation."
         },
         "figureRefConsistency": {
-          "verify": "Figure references in 具体实施方式 and 附图说明 are inconsistent ({{detail}}).",
+          "verify": "Figure references inconsistent between 附图说明 and 具体实施方式. {{figure_ref_inconsistency}}",
           "pass": "Figure references are consistent across sections."
         },
         "patentTypeTerminology": {
@@ -689,7 +714,7 @@
         },
         "title": {
           "amendLength": "Title exceeds 25 Chinese characters ({{count}} found).",
-          "amendContent": "Title contains prohibited content: {{detail}}.",
+          "amendContent": "Title contains prohibited content: {{title_prohibited_items}}",
           "pass": "Title meets CNIPA requirements.",
           "amendMissing": "No title found."
         },
@@ -700,7 +725,7 @@
       },
       "claims": {
         "sequential": {
-          "amend": "Claim numbers are not sequential ({{detail}}).",
+          "amend": "Claim numbering is not sequential: expected {{expected}}, found {{found}}.",
           "pass": "Claim numbers are sequential."
         },
         "dependencyFormat": {
@@ -779,15 +804,16 @@
           "pass": "Sections in correct order."
         },
         "paragraphNumbering": {
-          "amend": "Paragraph numbering format incorrect.",
-          "pass": "Paragraph numbering correct or absent."
+          "pass": "Paragraph numbering correct or absent.",
+          "amendGap": "Paragraph numbering has a gap: 【{{prev}}】 is followed by 【{{next}}】.",
+          "amendFormat": "{{count}} paragraph(s) use non-[NNNN] format. Examples: {{examples}}."
         },
         "paragraphEnding": {
           "amend": "{{count}} paragraph(s) missing ending punctuation.",
           "pass": "All paragraphs end with valid punctuation."
         },
         "figureRefConsistency": {
-          "verify": "Figure reference mismatch between 圖式簡單說明 and 實施方式.",
+          "verify": "Figure references inconsistent between 圖式簡單說明 and 實施方式. {{figure_ref_inconsistency}}",
           "pass": "Figure references consistent across sections."
         },
         "patentTypeTerminology": {
@@ -795,7 +821,7 @@
           "pass": "Patent type terminology consistent."
         },
         "title": {
-          "amendContent": "Title contains prohibited content.",
+          "amendContent": "Title contains prohibited content: {{title_prohibited_items}}",
           "pass": "Title meets requirements.",
           "amendMissing": "No title found."
         },
@@ -808,13 +834,13 @@
           "pass": "符號說明 section present."
         },
         "symbolTableConsistency": {
-          "verify": "符號說明 entries inconsistent with 實施方式.",
+          "verify": "Symbol table inconsistent with 實施方式: {{symbol_table_inconsistency}}",
           "pass": "符號說明 entries consistent with specification."
         }
       },
       "claims": {
         "sequential": {
-          "amend": "Claim numbers not sequential.",
+          "amend": "Claim numbering is not sequential: expected {{expected}}, found {{found}}.",
           "pass": "Claim numbers sequential."
         },
         "dependencyFormat": {
@@ -866,7 +892,7 @@
           "pass": "All multi-dependent claims use alternative form."
         },
         "titleSubjectMatch": {
-          "verify": "Title may not match independent claim subjects.",
+          "verify": "Title \"{{title}}\" may not match independent claim subjects: {{subjects}}.",
           "pass": "Title consistent with independent claim subjects."
         },
         "symbolTableConsistency": {
@@ -899,7 +925,7 @@
       },
       "crossRef": {
         "symbolVsRepDrawing": {
-          "verify": "代表圖之符號簡單說明 inconsistent with 符號說明.",
+          "verify": "Representative drawing symbols inconsistent with 符號說明: {{symbol_mismatch_triples}}",
           "pass": "代表圖之符號簡單說明 consistent with 符號說明."
         },
         "bracketFormat": {
@@ -1013,5 +1039,9 @@
     "paragraph": {
       "numbered": "paragraph {{n}}"
     }
+  },
+  "punct": {
+    "listSeparator": ", ",
+    "sentenceSeparator": "; "
   }
 }

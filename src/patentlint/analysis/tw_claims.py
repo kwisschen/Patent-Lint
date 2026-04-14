@@ -95,14 +95,12 @@ def check_claims_sequential(doc: TwPatentDocument) -> list[CheckItem]:
     for i, claim in enumerate(claims):
         expected = i + 1
         if claim.id != expected:
-            detail = f"expected {expected}, found {claim.id}"
             return [CheckItem(
                 status="amend",
-                message=f"Claim numbering is not sequential: {detail}.",
+                message=f"Claim numbering is not sequential: expected {expected}, found {claim.id}.",
                 message_key="check.tw.claims.sequential.amend",
-                details=detail,
                 details_key="details.tw.claimsSequential",
-                details_params={"detail": detail},
+                details_params={"expected": expected, "found": claim.id},
                 reference="專利審查基準",
             )]
 
@@ -444,12 +442,11 @@ def check_spec_drawing_ref(doc: TwPatentDocument) -> list[CheckItem]:
         found_refs.extend(matches)
 
     if found_refs:
-        detail = ", ".join(sorted(set(found_refs)))
+        detail = "、".join(sorted(set(found_refs)))
         return [CheckItem(
             status="amend",
-            message=f"Claims reference specification or drawings: {detail}.",
+            message="Claims reference specification or drawings.",
             message_key="check.tw.claims.specDrawingRef.amend",
-            details=detail,
             details_key="details.tw.specDrawingRef",
             details_params={"detail": detail},
             reference="專利法施行細則 §19",
@@ -606,15 +603,13 @@ def check_title_subject_match(doc: TwPatentDocument) -> list[CheckItem]:
                 reference="專利審查基準",
             )]
 
-    subjects_str = ", ".join(subjects)
-    detail = f"Title: {doc.title}; Independent claim subjects: {subjects_str}"
+    subjects_str = "、".join(subjects)
     return [CheckItem(
         status="verify",
-        message="Title may not match independent claim subjects.",
+        message=f"Title '{doc.title}' may not match independent claim subjects: {subjects_str}.",
         message_key="check.tw.claims.titleSubjectMatch.verify",
-        details=detail,
         details_key="details.tw.titleSubjectMatch",
-        details_params={"detail": detail},
+        details_params={"title": doc.title, "subjects": subjects_str},
         reference="專利審查基準",
     )]
 
@@ -692,7 +687,7 @@ def check_claims_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckIt
         ]
         return [CheckItem(
             status="verify",
-            message=f"Reference numerals in claims undefined in 符號說明: {', '.join(missing_numerals)}",
+            message="Reference numerals in claims undefined in 符號說明.",
             message_key="check.tw.claims.symbolTableConsistency.verify",
             details_key="details.tw.claims.symbolTableConsistency.missingFromTable",
             details_params={"numerals_with_locations": numerals_with_locations},

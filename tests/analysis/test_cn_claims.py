@@ -46,7 +46,8 @@ class TestClaimsSequential:
         doc = _cn_doc([_claim(1, "A。"), _claim(2, "B。"), _claim(5, "C。")])
         results = check_claims_sequential(doc)
         assert results[0].status == "amend"
-        assert "expected 3" in results[0].details_params["detail"]
+        assert results[0].details_params["expected"] == 3
+        assert results[0].details_params["found"] == 5
 
     def test_empty_pass(self):
         doc = _cn_doc([])

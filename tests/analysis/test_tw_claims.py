@@ -78,7 +78,8 @@ class TestClaimsSequential:
         ])
         result = check_claims_sequential(doc)
         assert result[0].status == "amend"
-        assert "expected 3" in result[0].details
+        assert result[0].details_params["expected"] == 3
+        assert result[0].details_params["found"] == 4
 
     def test_no_claims_pass(self):
         doc = _make_doc(claims=[])
@@ -607,7 +608,8 @@ class TestTitleSubjectMatch:
         )
         result = check_title_subject_match(doc)
         assert result[0].status == "verify"
-        assert "detail" in result[0].details_params
+        assert "title" in result[0].details_params
+        assert "subjects" in result[0].details_params
 
     def test_title_partial_overlap_pass(self):
         doc = _make_doc(

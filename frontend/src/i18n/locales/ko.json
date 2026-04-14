@@ -256,7 +256,7 @@
       "telemetry": "PatentLint는 분석 데이터, 텔레메트리, 사용 데이터를 일체 수집하지 않습니다. 쿠키, 추적 픽셀, 서드파티 스크립트가 없습니다. 이 애플리케이션은 사용자의 신원을 알지 못합니다.",
       "extensionNote": "DevTools로 본 사이트를 감사할 때 익숙하지 않은 네트워크 활동이 보인다면, chrome://extensions를 확인해 주세요. 브라우저 확장 프로그램(광고 차단기, 비밀번호 관리자, 화면 녹화 도구 등)은 본 사이트를 포함하여 사용자가 방문하는 모든 페이지에 콘텐츠 스크립트를 주입합니다. PatentLint 자체는 자사 에셋과 Pyodide 의존 패키지만 로드합니다.",
       "selfHostedTitle": "자체 호스팅 옵션",
-      "selfHosted": "ITAR 관리 환경이나 에어갭 네트워크 등 엄격한 데이터 주권 요건이 있는 조직을 위해, PatentLint는 모든 종속 항목을 포함한 Docker로 자체 호스팅 배포할 수 있습니다.",
+      "selfHosted": "On-premises deployment is available on private inquiry. Compliance with any specific regulatory regime remains the organization's own determination.",
       "contactEnterprise": "엔터프라이즈 배포 문의"
     }
   },
@@ -490,20 +490,24 @@
       "abstractTitleMatch": "审查指南에 따라 요약서는 발명 명칭과 일치해야 합니다. 요약서가 발명 명칭을 반영하는지 확인하세요.",
       "commercialLanguage": "专利法实施细则 §23에 따라 요약서에 상업적 광고 용어(商业性宣传用语)를 포함해서는 안 됩니다. 最优, 最佳, 世界领先, 国际领先, 国内首创, 填补空白 등의 용어를 삭제하세요.",
       "antecedentBasisTerms": "{{claim_count}}개 청구항에서 {{issue_count}}개 용어가 선행사를 결여할 수 있습니다。",
-      "titleMissing": "심사지남 제1부 제1장에 따라, 명세서에는 발명의 명칭을 기재하여야 합니다. 명세서 첫머리에 발명의 명칭을 추가해 주십시오."
+      "titleMissing": "심사지남 제1부 제1장에 따라, 명세서에는 발명의 명칭을 기재하여야 합니다. 명세서 첫머리에 발명의 명칭을 추가해 주십시오.",
+      "figureRefInconsistency": {
+        "onlyDrawings": "부도설명에만 언급: {{figs}}",
+        "onlyEmbodiment": "구체적 실시방식에만 언급: {{figs}}"
+      }
     },
     "tw": {
       "requiredSections": "TIPO 요건: 技術領域, 先前技術, 發明內容/新型內容, 實施方式. 도면이 있는 경우 圖式簡單說明 및 符號說明도 필요합니다. 누락: {{sections}}.",
       "sectionOrdering": "專利法施行細則 §17 규정 순서: 技術領域→先前技術→發明內容/新型內容→圖式簡單說明→實施方式→符號說明. 순서를 수정하십시오.",
-      "paragraphNumbering": "단락 번호 사용 시 【NNNN】 형식의 4자리 연속 번호가 필요합니다. 專利法施行細則 §17에 따라 단락 번호는 선택 사항입니다. 발견: {{detail}}.",
+      "paragraphNumbering": "단락 번호를 사용하는 경우, 【NNNN】 네 자리 숫자 연속 형식을 사용해야 합니다. 특허법 시행규칙 §17에 따라 번호 부여는 선택사항입니다.",
       "paragraphEnding": "명세서 단락은 중국어 문장부호(。！？)로 끝나야 합니다. 표시된 단락을 확인하십시오.",
-      "figureRefConsistency": "圖式簡單說明과 實施方式 간의 도면 참조가 다릅니다. {{detail}}. 완전성을 확인하십시오.",
+      "figureRefConsistency": "특허심사기준에 따라, 도면의 간단한 설명에 기재된 도면은 실시방식에서 언급되어야 하며, 그 반대도 마찬가지입니다. 표시된 인용을 확인해 주십시오.",
       "patentTypeTerminology": "발명특허는 「本發明」을 사용하고 「本新型」은 사용 불가. 신형특허는 「本新型」을 사용하고 「本發明」은 사용 불가. 발견: {{term}}.",
-      "title": "發明名稱/新型名稱은 간결해야 하며 상표, 모델 번호 또는 무관한 텍스트를 포함할 수 없습니다. 발견: {{detail}}.",
+      "title": "발명의 명칭/신형의 명칭은 간결해야 하며, 상표, 모델 번호, 관련 없는 문구를 포함해서는 안 됩니다.",
       "claimReference": "專利法施行細則 §17에 따라 명세서에서 특정 請求項을 참조(예: 「如請求項N所述」)할 수 없습니다. 발견: {{detail}}.",
       "symbolTablePresence": "專利法施行細則 §17에 따라 圖式簡單說明이 있는 경우 符號說明 섹션을 포함하여 부호 및 부품명을 기재해야 합니다.",
-      "symbolTableConsistency": "符號說明 내용이 實施方式와 일치하지 않습니다. {{detail}}. 완전성을 확인하십시오.",
-      "claimsSequential": "請求項 번호는 1부터 연속이어야 합니다. {{detail}}.",
+      "symbolTableConsistency": "특허심사기준에 따라, 부호설명 항목은 실시방식에서 사용된 참조 부호와 일치해야 합니다. 완전성을 확인해 주십시오.",
+      "claimsSequential": "특허심사기준에 따라, 청구항 번호는 1부터 연속이어야 합니다.",
       "dependencyFormat": "專利法施行細則 §18에 따라 종속은 올바른 형식(如請求項N所述之, 如請求項N之 등)을 사용해야 합니다. 표시된 請求項을 확인하십시오.",
       "selfDependent": "專利法施行細則 §18에 따라 請求項은 자신에게 종속될 수 없습니다. 자기 종속: 請求項 {{claims}}.",
       "circularDependency": "專利法施行細則 §18에 따라 請求項은 순환 종속 체인을 형성할 수 없습니다. 순환 체인: 請求項 {{claims}}.",
@@ -516,7 +520,7 @@
       "specDrawingRef": "專利法施行細則 §19에 따라 請求項에서 명세서 또는 도면을 참조(예: 「如說明書所述」「如圖所示」)할 수 없습니다. 발견: {{detail}}.",
       "multiDepOnMultiDep": "專利法施行細則 §18에 따라 다항 종속항은 직접 또는 간접적으로 다른 다항 종속항에 종속될 수 없습니다. 해당: 請求項 {{claims}}.",
       "multiDepAlternative": "專利法施行細則 §18에 따라 다항 종속항은 택일 형식(或/任一項)을 사용해야 합니다. 해당: 請求項 {{claims}}.",
-      "titleSubjectMatch": "發明名稱/新型名稱은 독립항의 주제명과 일치해야 합니다. 제목: {{detail}}.",
+      "titleSubjectMatch": "특허심사기준에 따라, 발명의 명칭은 독립 청구항의 주제와 일치해야 합니다. 표시된 청구항을 확인해 주십시오.",
       "claims": {
         "symbolTableConsistency": {
           "missingFromTable": "청구항의 참조 부호가 부호 설명에 미정의: {{numerals_with_locations}}"
@@ -527,10 +531,29 @@
       "abstractTitleMatch": "專利審查基準에 따라 요약은 發明名稱/新型名稱을 언급해야 합니다. 요약이 제목을 반영하는지 확인하십시오. 제목: {{detail}}.",
       "commercialLanguage": "專利法施行細則 §21에 따라 요약에 상업적 광고 용어(商業性宣傳用語)를 포함할 수 없습니다. 발견: {{terms}}.",
       "representativeDrawing": "專利法施行細則 §21에 따라 도면이 있는 경우 代表圖를 지정해야 합니다. 代表圖 지정이 필요한지 확인하십시오.",
-      "symbolVsRepDrawing": "代表圖之符號簡單說明에 기재된 부호는 符號說明과 일치해야 합니다. {{detail}}. 완전성을 확인하십시오.",
+      "symbolVsRepDrawing": {
+        "notInTable": "{{numeral}}({{name}})가 부호설명에 정의되지 않음",
+        "nameMismatch": "{{numeral}}: 대표도는「{{rep_name}}」, 부호설명은「{{table_name}}」"
+      },
       "bracketFormat": "專利法施行細則 §17에 따라 섹션 제목은 전각 대괄호 【】를 사용해야 합니다. 발견: {{detail}}.",
       "antecedentBasisTerms": "{{claim_count}}개 청구항에서 {{issue_count}}개 용어가 선행사를 결여할 수 있습니다。",
-      "titleMissing": "특허심사기준에 따라, 명세서에는 발명의 명칭 또는 신형의 명칭을 기재하여야 합니다. 명세서 첫머리에 추가해 주십시오."
+      "titleMissing": "특허심사기준에 따라, 명세서에는 발명의 명칭 또는 신형의 명칭을 기재하여야 합니다. 명세서 첫머리에 추가해 주십시오.",
+      "figureRefInconsistency": {
+        "onlyDrawings": "도면의 간단한 설명에만 언급: {{figs}}",
+        "onlyEmbodiment": "실시방식에만 언급: {{figs}}"
+      },
+      "symbolTableInconsistency": {
+        "unreferenced": "부호설명에 정의되었으나 실시방식에서 언급되지 않음: {{symbols}}",
+        "undefined": "실시방식에서 언급되었으나 부호설명에 정의되지 않음: {{symbols}}"
+      }
+    },
+    "titleProhibited": {
+      "trademark": "상표 기호「{{token}}」",
+      "commercial": "상업적 홍보 문구「{{token}}」",
+      "model": "모델 번호「{{token}}」"
+    },
+    "paragraphFormat": {
+      "examples": "{{count}}개 단락이 【NNNN】 형식을 사용하지 않습니다. 예: {{examples}}"
     }
   },
   "common": {
@@ -673,14 +696,16 @@
         "paragraphNumbering": {
           "amendXml": "단락 번호가 연속적이지 않습니다 ({{detail}}).",
           "amendDocx": "명세서에 수동으로 추가된 단락 번호가 포함되어 있습니다.",
-          "pass": "단락 번호가 올바릅니다."
+          "pass": "단락 번호가 올바릅니다.",
+          "amendXmlGap": "단락 번호가 연속되지 않습니다: 제{{prev}}단락 다음이 제{{next}}단락입니다.",
+          "amendXmlDuplicate": "중복된 단락 번호가 감지되었습니다."
         },
         "paragraphEnding": {
           "amend": "{{count}}개 단락이 유효한 중국어 문장부호로 끝나지 않습니다.",
           "pass": "모든 단락이 유효한 문장부호로 끝납니다."
         },
         "figureRefConsistency": {
-          "verify": "具体实施方式와 附图说明의 도면 참조가 불일치합니다 ({{detail}}).",
+          "verify": "부도설명과 구체적 실시방식 간의 도면 인용이 일치하지 않습니다. {{figure_ref_inconsistency}}",
           "pass": "각 섹션의 도면 참조가 일치합니다."
         },
         "patentTypeTerminology": {
@@ -689,7 +714,7 @@
         },
         "title": {
           "amendLength": "발명 명칭이 한자 25자를 초과합니다 ({{count}}자).",
-          "amendContent": "발명 명칭에 금지 내용이 포함되어 있습니다: {{detail}}.",
+          "amendContent": "발명의 명칭에 금지된 내용이 포함되어 있습니다: {{title_prohibited_items}}",
           "pass": "발명 명칭이 CNIPA 요건을 충족합니다.",
           "amendMissing": "발명의 명칭을 찾을 수 없습니다."
         },
@@ -700,7 +725,7 @@
       },
       "claims": {
         "sequential": {
-          "amend": "청구항 번호가 연속적이지 않습니다 ({{detail}}).",
+          "amend": "청구항 번호가 연속되지 않습니다: 예상 제{{expected}}항, 실제 제{{found}}항.",
           "pass": "청구항 번호가 연속적입니다."
         },
         "dependencyFormat": {
@@ -779,15 +804,16 @@
           "pass": "섹션 순서가 올바릅니다."
         },
         "paragraphNumbering": {
-          "amend": "단락 번호 형식이 올바르지 않습니다.",
-          "pass": "단락 번호가 올바르거나 번호가 없습니다."
+          "pass": "단락 번호가 올바르거나 번호가 없습니다.",
+          "amendGap": "단락 번호가 연속되지 않습니다: 【{{prev}}】 다음이 【{{next}}】입니다.",
+          "amendFormat": "{{count}}개 단락이 【NNNN】 형식을 사용하지 않습니다. 예: {{examples}}."
         },
         "paragraphEnding": {
           "amend": "{{count}}개 단락에 끝 문장부호가 없습니다.",
           "pass": "모든 단락이 올바른 문장부호로 끝납니다."
         },
         "figureRefConsistency": {
-          "verify": "圖式簡單說明과 實施方式 간의 도면 참조가 일치하지 않습니다.",
+          "verify": "도면의 간단한 설명과 실시방식 간의 도면 인용이 일치하지 않습니다. {{figure_ref_inconsistency}}",
           "pass": "각 섹션 간의 도면 참조가 일치합니다."
         },
         "patentTypeTerminology": {
@@ -795,7 +821,7 @@
           "pass": "특허 유형 용어가 일치합니다."
         },
         "title": {
-          "amendContent": "發明名稱/新型名稱에 부적절한 내용이 포함되어 있습니다.",
+          "amendContent": "발명의 명칭 또는 신형의 명칭에 부적절한 내용이 포함되어 있습니다: {{title_prohibited_items}}",
           "pass": "發明名稱/新型名稱이 요건을 충족합니다.",
           "amendMissing": "발명의 명칭을 찾을 수 없습니다."
         },
@@ -808,13 +834,13 @@
           "pass": "符號說明 섹션이 포함되어 있습니다."
         },
         "symbolTableConsistency": {
-          "verify": "符號說明 내용이 實施方式와 일치하지 않습니다.",
+          "verify": "부호설명 내용이 실시방식과 일치하지 않습니다: {{symbol_table_inconsistency}}",
           "pass": "符號說明 내용이 명세서와 일치합니다."
         }
       },
       "claims": {
         "sequential": {
-          "amend": "請求項 번호가 연속적이지 않습니다.",
+          "amend": "청구항 번호가 연속되지 않습니다: 예상 제{{expected}}항, 실제 제{{found}}항.",
           "pass": "請求項 번호가 연속적입니다."
         },
         "dependencyFormat": {
@@ -866,7 +892,7 @@
           "pass": "모든 다항 종속항이 택일 형식을 사용합니다."
         },
         "titleSubjectMatch": {
-          "verify": "發明名稱/新型名稱이 독립항 주제와 일치하지 않을 수 있습니다.",
+          "verify": "발명의 명칭「{{title}}」이 독립항 주제「{{subjects}}」와 일치하지 않을 수 있습니다.",
           "pass": "發明名稱/新型名稱이 독립항 주제와 일치합니다."
         },
         "symbolTableConsistency": {
@@ -899,7 +925,7 @@
       },
       "crossRef": {
         "symbolVsRepDrawing": {
-          "verify": "代表圖之符號簡單說明이 符號說明과 일치하지 않습니다.",
+          "verify": "대표도의 부호설명과 부호설명이 일치하지 않습니다: {{symbol_mismatch_triples}}",
           "pass": "代表圖之符號簡單說明이 符號說明과 일치합니다."
         },
         "bracketFormat": {
@@ -1013,5 +1039,9 @@
     "paragraph": {
       "numbered": "단락 {{n}}"
     }
+  },
+  "punct": {
+    "listSeparator": ", ",
+    "sentenceSeparator": "; "
   }
 }
