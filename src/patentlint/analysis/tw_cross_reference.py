@@ -15,14 +15,13 @@ from patentlint.models import CheckItem, TwPatentDocument
 
 
 def check_symbol_vs_rep_drawing(doc: TwPatentDocument) -> list[CheckItem]:
-    """Compare representative drawing symbols against symbol table entries."""
+    """Compare representative drawing symbols against symbol table entries.
+
+    Returns an empty list when the document does not carry a 代表圖之符號簡單說明
+    section, suppressing the check card entirely for that document.
+    """
     if not doc.representative_drawing_symbols:
-        return [CheckItem(
-            status="pass",
-            message="No representative drawing symbols to check.",
-            message_key="check.tw.crossRef.symbolVsRepDrawing.pass",
-            reference="專利審查基準",
-        )]
+        return []
 
     # Build lookup from symbol_table: numeral -> name
     symbol_map = {entry.numeral: entry.name for entry in doc.symbol_table}
