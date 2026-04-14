@@ -92,11 +92,11 @@ def _run_cn_pipeline(
                 status="verify",
                 message="Possible missing antecedent basis found.",
                 message_key="check.cn.claims.antecedentBasis.verify",
-                details=f"{issue_count} issues across {claim_count} claims",
+                details=f"{issue_count} term(s) may lack antecedent basis across {claim_count} claim(s).",
                 details_key="details.cn.antecedentBasisTerms",
                 details_params={
-                    "count": str(issue_count),
-                    "claims": str(claim_count),
+                    "issue_count": issue_count,
+                    "claim_count": claim_count,
                 },
                 reference="审查指南",
             )
@@ -351,11 +351,11 @@ def _run_tw_pipeline(
                 status="verify",
                 message="Possible missing antecedent basis found.",
                 message_key="check.tw.claims.antecedentBasis.verify",
-                details=f"{issue_count} issues across {claim_count} claims",
+                details=f"{issue_count} term(s) may lack antecedent basis across {claim_count} claim(s).",
                 details_key="details.tw.antecedentBasisTerms",
                 details_params={
-                    "count": str(issue_count),
-                    "claims": str(claim_count),
+                    "issue_count": issue_count,
+                    "claim_count": claim_count,
                 },
                 reference="專利審查基準",
             )
