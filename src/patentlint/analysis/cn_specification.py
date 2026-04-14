@@ -288,7 +288,8 @@ def check_title(cn_doc: CnPatentDocument) -> list[CheckItem]:
             status="amend",
             message="Title is missing.",
             message_key="check.cn.spec.title.amendMissing",
-            details="No title found",
+            details_key="details.cn.titleMissing",
+            details="",
             reference="审查指南 第一部分第一章",
         )]
 
