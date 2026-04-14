@@ -492,22 +492,22 @@
       "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語可能缺少先行詞。",
       "titleMissing": "根據審查指南 第一部分第一章，說明書必須包含發明名稱。請於說明書首部添加發明名稱。",
       "figureRefInconsistency": {
-        "onlyDrawings": "僅於附图说明中提及:{{figs}}",
-        "onlyEmbodiment": "僅於具体实施方式中提及:{{figs}}"
+        "onlyDrawings": "僅於附图说明中提及：{{figs}}",
+        "onlyEmbodiment": "僅於具体实施方式中提及：{{figs}}"
       }
     },
     "tw": {
       "requiredSections": "TIPO規定必須包含：技術領域、先前技術、發明內容/新型內容、實施方式。有圖式時須包含圖式簡單說明及符號說明。缺少：{{sections}}。",
       "sectionOrdering": "專利法施行細則 §17規定順序：技術領域→先前技術→發明內容/新型內容→圖式簡單說明→實施方式→符號說明。請重新排列。",
-      "paragraphNumbering": "若使用段落編號,應採用【NNNN】四位數字連續格式。依專利法施行細則 §17,編號為選用。",
+      "paragraphNumbering": "若使用段落編號，應採用【NNNN】四位數字連續格式。依專利法施行細則 §17,編號為選用。",
       "paragraphEnding": "說明書段落應以中文標點（。！？）結尾。請檢查標記之段落。",
-      "figureRefConsistency": "依專利審查基準,圖式簡單說明中描述的圖式應在實施方式中引用,反之亦然。請確認標記的引用是否正確。",
+      "figureRefConsistency": "依專利審查基準，圖式簡單說明中描述的圖式應在實施方式中引用，反之亦然。請確認標記的引用是否正確。",
       "patentTypeTerminology": "發明專利應使用「本發明」而非「本新型」。新型專利應使用「本新型」而非「本發明」。發現：{{term}}。",
-      "title": "發明名稱/新型名稱應簡潔,不得包含商標、型號或無關文字。",
+      "title": "發明名稱/新型名稱應簡潔，不得包含商標、型號或無關文字。",
       "claimReference": "依專利法施行細則 §17，說明書不得引用特定請求項（如「如請求項N所述」）。發現：{{detail}}。",
       "symbolTablePresence": "依專利法施行細則 §17，有圖式簡單說明時，須包含符號說明章節，列出元件符號及名稱。",
-      "symbolTableConsistency": "依專利審查基準,符號說明條目應與實施方式中使用之參考符號一致。請確認完整性。",
-      "claimsSequential": "依專利審查基準,請求項編號須從1開始連續編列。",
+      "symbolTableConsistency": "依專利審查基準，符號說明條目應與實施方式中使用之參考符號一致。請確認完整性。",
+      "claimsSequential": "依專利審查基準，請求項編號須從1開始連續編列。",
       "dependencyFormat": "依專利法施行細則 §18，依附須使用正確格式（如請求項N所述之、如請求項N之等）。請檢查標記之請求項。",
       "selfDependent": "依專利法施行細則 §18，請求項不得依附於自身。自我依附：請求項 {{claims}}。",
       "circularDependency": "依專利法施行細則 §18，請求項不得形成循環依附鏈。循環鏈：請求項 {{claims}}。",
@@ -520,7 +520,7 @@
       "specDrawingRef": "依專利法施行細則 §19，請求項不得引用說明書或圖式（如「如說明書所述」「如圖所示」）。發現：{{detail}}。",
       "multiDepOnMultiDep": "依專利法施行細則 §18，多項附屬項不得直接或間接依附於另一多項附屬項。標記：請求項 {{claims}}。",
       "multiDepAlternative": "依專利法施行細則 §18，多項附屬項須使用擇一形式（或/任一項）。標記：請求項 {{claims}}。",
-      "titleSubjectMatch": "依專利審查基準,發明名稱/新型名稱應與獨立項之主題名稱一致。請檢查標記之請求項。",
+      "titleSubjectMatch": "依專利審查基準，發明名稱/新型名稱應與獨立項之主題名稱一致。請檢查標記之請求項。",
       "claims": {
         "symbolTableConsistency": {
           "missingFromTable": "請求項中之元件符號未於符號說明中定義：{{numerals_with_locations}}"
@@ -533,18 +533,18 @@
       "representativeDrawing": "依專利法施行細則 §21，有圖式時應指定代表圖。請確認是否需要指定代表圖。",
       "symbolVsRepDrawing": {
         "notInTable": "{{numeral}}({{name}})未於符號說明中定義",
-        "nameMismatch": "{{numeral}}:代表圖為「{{rep_name}}」,符號說明為「{{table_name}}」"
+        "nameMismatch": "{{numeral}}：代表圖為「{{rep_name}}」,符號說明為「{{table_name}}」"
       },
       "bracketFormat": "依專利法施行細則 §17，章節標題應使用全形方括號【】。發現：{{detail}}。",
       "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語可能缺少先行詞。",
       "titleMissing": "依專利審查基準，說明書必須包含發明名稱/新型名稱。請於說明書首部添加。",
       "figureRefInconsistency": {
-        "onlyDrawings": "僅於圖式簡單說明中提及:{{figs}}",
-        "onlyEmbodiment": "僅於實施方式中提及:{{figs}}"
+        "onlyDrawings": "僅於圖式簡單說明中提及：{{figs}}",
+        "onlyEmbodiment": "僅於實施方式中提及：{{figs}}"
       },
       "symbolTableInconsistency": {
-        "unreferenced": "符號說明已定義但實施方式未引用:{{symbols}}",
-        "undefined": "實施方式已引用但符號說明未定義:{{symbols}}"
+        "unreferenced": "符號說明已定義但實施方式未引用：{{symbols}}",
+        "undefined": "實施方式已引用但符號說明未定義：{{symbols}}"
       }
     },
     "titleProhibited": {
@@ -553,7 +553,7 @@
       "model": "型號「{{token}}」"
     },
     "paragraphFormat": {
-      "examples": "{{count}}個段落未使用【NNNN】格式。範例:{{examples}}"
+      "examples": "{{count}}個段落未使用【NNNN】格式。範例：{{examples}}"
     }
   },
   "common": {
@@ -697,7 +697,7 @@
           "amendXml": "段落編號不連續（{{detail}}）。",
           "amendDocx": "說明書包含手動添加的段落編號。",
           "pass": "段落編號正確。",
-          "amendXmlGap": "段落編號不連續:第{{prev}}段後為第{{next}}段。",
+          "amendXmlGap": "段落編號不連續：第{{prev}}段後為第{{next}}段。",
           "amendXmlDuplicate": "檢測到{{count}}個重複的段落編號：段落 {{paragraphs}}。"
         },
         "paragraphEnding": {
@@ -705,7 +705,7 @@
           "pass": "所有段落均以有效標點結尾。"
         },
         "figureRefConsistency": {
-          "verify": "附图说明與具体实施方式之間的附圖引用不一致。{{figure_ref_inconsistency}}",
+          "verify": "附圖引用不一致：{{figure_ref_inconsistency}}",
           "pass": "各章節附圖引用一致。"
         },
         "patentTypeTerminology": {
@@ -714,7 +714,7 @@
         },
         "title": {
           "amendLength": "發明名稱超過25個漢字（共{{count}}個字）。",
-          "amendContent": "發明名稱包含禁止內容:{{title_prohibited_items}}",
+          "amendContent": "發明名稱包含禁止內容：{{title_prohibited_items}}",
           "pass": "發明名稱符合要求。",
           "amendMissing": "未發現發明名稱。"
         },
@@ -725,7 +725,7 @@
       },
       "claims": {
         "sequential": {
-          "amend": "權利要求編號不連續:預期第{{expected}}項,實際為第{{found}}項。",
+          "amend": "權利要求編號不連續：預期第{{expected}}項，實際為第{{found}}項。",
           "pass": "權利要求編號連續。"
         },
         "dependencyFormat": {
@@ -737,7 +737,7 @@
           "pass": "未發現自引用權利要求。"
         },
         "forwardDependency": {
-          "amend": "權利要求 {{claims}} 引用了在後的權利要求（正向引用）。",
+          "amend": "權利要求 {{claims}} 向前依附（引用後項權利要求）。",
           "pass": "未發現正向引用。"
         },
         "singleSentence": {
@@ -749,7 +749,7 @@
           "pass": "權利要求中所有附圖標記均已加括號。"
         },
         "subjectConsistency": {
-          "verify": "{{count}}項從屬權利要求的主題名稱與母項不一致：權利要求 {{claims}}。",
+          "verify": "權利要求 {{claims}} 的主題名稱與母項不一致（共 {{count}} 項）。",
           "pass": "從屬權利要求的主題名稱一致。"
         },
         "transitionPhrase": {
@@ -806,14 +806,14 @@
         "paragraphNumbering": {
           "pass": "段落編號正確或未使用編號。",
           "amendGap": "段落編號不連續:【{{prev}}】後為【{{next}}】。",
-          "amendFormat": "{{count}}個段落未使用【NNNN】格式。範例:{{examples}}。"
+          "amendFormat": "{{count}}個段落未使用【NNNN】格式。範例：{{examples}}。"
         },
         "paragraphEnding": {
           "amend": "{{count}}個段落缺少結尾標點：段落 {{paragraphs}}。",
           "pass": "所有段落皆以正確標點結尾。"
         },
         "figureRefConsistency": {
-          "verify": "圖式簡單說明與實施方式之間的圖式引用不一致。{{figure_ref_inconsistency}}",
+          "verify": "圖式引用不一致：{{figure_ref_inconsistency}}",
           "pass": "各章節之圖式引用一致。"
         },
         "patentTypeTerminology": {
@@ -821,7 +821,7 @@
           "pass": "專利類型用語一致。"
         },
         "title": {
-          "amendContent": "發明名稱/新型名稱包含不當內容:{{title_prohibited_items}}",
+          "amendContent": "發明名稱/新型名稱包含不當內容：{{title_prohibited_items}}",
           "pass": "發明名稱/新型名稱符合要求。",
           "amendMissing": "未發現發明名稱/新型名稱。"
         },
@@ -834,13 +834,13 @@
           "pass": "符號說明章節已包含。"
         },
         "symbolTableConsistency": {
-          "verify": "符號說明內容與實施方式不一致:{{symbol_table_inconsistency}}",
+          "verify": "符號說明內容與實施方式不一致：{{symbol_table_inconsistency}}",
           "pass": "符號說明內容與說明書一致。"
         }
       },
       "claims": {
         "sequential": {
-          "amend": "請求項編號須從1開始連續編列。預期第{{expected}}項,實際為第{{found}}項。",
+          "amend": "請求項編號須從1開始連續編列。預期第{{expected}}項，實際為第{{found}}項。",
           "pass": "請求項編號連續。"
         },
         "dependencyFormat": {
@@ -856,7 +856,7 @@
           "pass": "無循環依附。"
         },
         "forwardDependency": {
-          "amend": "發現向前依附。",
+          "amend": "請求項 {{claims}} 向前依附（引用後項請求項）。",
           "pass": "無向前依附。"
         },
         "singleSentence": {
@@ -868,7 +868,7 @@
           "pass": "所有請求項之元件符號皆已加括號。"
         },
         "subjectConsistency": {
-          "verify": "{{count}}項附屬項之主題名稱與母項不一致：請求項 {{claims}}。",
+          "verify": "請求項 {{claims}} 的主題名稱與母項不一致（共 {{count}} 項）。",
           "pass": "所有附屬項之主題名稱皆與母項一致。"
         },
         "transitionPhrase": {
@@ -885,7 +885,7 @@
         },
         "multiDepOnMultiDep": {
           "amend": "多項附屬項依附於另一多項附屬項。",
-          "pass": "無多項附屬項依附多項附屬項之情形。"
+          "pass": "多項附屬項之依附關係正確。"
         },
         "multiDepAlternative": {
           "amend": "多項附屬項未使用擇一形式。",
@@ -925,7 +925,7 @@
       },
       "crossRef": {
         "symbolVsRepDrawing": {
-          "verify": "代表圖之符號簡單說明與符號說明不一致:{{symbol_mismatch_triples}}",
+          "verify": "代表圖之符號簡單說明與符號說明不一致：{{symbol_mismatch_triples}}",
           "pass": "代表圖之符號簡單說明與符號說明一致。"
         },
         "bracketFormat": {

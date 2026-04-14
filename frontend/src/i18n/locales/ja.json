@@ -492,8 +492,8 @@
       "antecedentBasisTerms": "{{claim_count}}項の請求項にわたり、{{issue_count}}個の用語が先行詞を欠く可能性があります。",
       "titleMissing": "審査指南 第一部第一章により、明細書には発明の名称を記載する必要があります。明細書の冒頭に発明の名称を追加してください。",
       "figureRefInconsistency": {
-        "onlyDrawings": "附図説明でのみ言及:{{figs}}",
-        "onlyEmbodiment": "具体的実施形態でのみ言及:{{figs}}"
+        "onlyDrawings": "附図説明でのみ言及：{{figs}}",
+        "onlyEmbodiment": "具体的実施形態でのみ言及：{{figs}}"
       }
     },
     "tw": {
@@ -533,18 +533,18 @@
       "representativeDrawing": "專利法施行細則 §21により、図面がある場合は代表圖を指定する必要があります。代表圖の指定が必要か確認してください。",
       "symbolVsRepDrawing": {
         "notInTable": "{{numeral}}({{name}})が符号説明に定義されていません",
-        "nameMismatch": "{{numeral}}:代表図は「{{rep_name}}」、符号説明は「{{table_name}}」"
+        "nameMismatch": "{{numeral}}：代表図は「{{rep_name}}」、符号説明は「{{table_name}}」"
       },
       "bracketFormat": "專利法施行細則 §17により、セクションヘッダーは全角括弧【】を使用する必要があります。検出：{{detail}}。",
       "antecedentBasisTerms": "{{claim_count}}項の請求項にわたり、{{issue_count}}個の用語が先行詞を欠く可能性があります。",
       "titleMissing": "特許審査基準により、明細書には発明の名称又は新型の名称を記載する必要があります。明細書の冒頭に追加してください。",
       "figureRefInconsistency": {
-        "onlyDrawings": "図面の簡単な説明でのみ言及:{{figs}}",
-        "onlyEmbodiment": "実施形態でのみ言及:{{figs}}"
+        "onlyDrawings": "図面の簡単な説明でのみ言及：{{figs}}",
+        "onlyEmbodiment": "実施形態でのみ言及：{{figs}}"
       },
       "symbolTableInconsistency": {
-        "unreferenced": "符号説明に定義されているが実施形態で言及されていない:{{symbols}}",
-        "undefined": "実施形態で言及されているが符号説明に定義されていない:{{symbols}}"
+        "unreferenced": "符号説明に定義されているが実施形態で言及されていない：{{symbols}}",
+        "undefined": "実施形態で言及されているが符号説明に定義されていない：{{symbols}}"
       }
     },
     "titleProhibited": {
@@ -553,7 +553,7 @@
       "model": "型番「{{token}}」"
     },
     "paragraphFormat": {
-      "examples": "{{count}}個の段落が【NNNN】形式を使用していません。例:{{examples}}"
+      "examples": "{{count}}個の段落が【NNNN】形式を使用していません。例：{{examples}}"
     }
   },
   "common": {
@@ -697,7 +697,7 @@
           "amendXml": "段落番号が連続していません（{{detail}}）。",
           "amendDocx": "明細書に手動で追加された段落番号が含まれています。",
           "pass": "段落番号は正確です。",
-          "amendXmlGap": "段落番号が連続していません:第{{prev}}段落の次が第{{next}}段落になっています。",
+          "amendXmlGap": "段落番号が連続していません：第{{prev}}段落の次が第{{next}}段落になっています。",
           "amendXmlDuplicate": "{{count}}個の重複する段落番号が検出されました：段落 {{paragraphs}}。"
         },
         "paragraphEnding": {
@@ -705,7 +705,7 @@
           "pass": "すべての段落が有効な句読点で終わっています。"
         },
         "figureRefConsistency": {
-          "verify": "附図説明と具体的実施形態の間で図面の引用が一致していません。{{figure_ref_inconsistency}}",
+          "verify": "図面の引用が一致していません：{{figure_ref_inconsistency}}",
           "pass": "各セクションの図面参照は一致しています。"
         },
         "patentTypeTerminology": {
@@ -714,7 +714,7 @@
         },
         "title": {
           "amendLength": "発明名称が漢字25文字を超えています（{{count}}文字）。",
-          "amendContent": "発明の名称に禁止された内容が含まれています:{{title_prohibited_items}}",
+          "amendContent": "発明の名称に禁止された内容が含まれています：{{title_prohibited_items}}",
           "pass": "発明名称はCNIPAの要件を満たしています。",
           "amendMissing": "発明の名称が見つかりません。"
         },
@@ -725,7 +725,7 @@
       },
       "claims": {
         "sequential": {
-          "amend": "請求項の番号が連続していません:予想第{{expected}}項、実際は第{{found}}項。",
+          "amend": "請求項の番号が連続していません：予想第{{expected}}項、実際は第{{found}}項。",
           "pass": "請求項番号は連続しています。"
         },
         "dependencyFormat": {
@@ -737,7 +737,7 @@
           "pass": "自己引用の請求項は見つかりませんでした。"
         },
         "forwardDependency": {
-          "amend": "請求項 {{claims}} が後方の請求項を引用しています（前方引用）。",
+          "amend": "請求項 {{claims}} が前方依存しています（後の請求項を引用）。",
           "pass": "前方引用は見つかりませんでした。"
         },
         "singleSentence": {
@@ -749,7 +749,7 @@
           "pass": "請求項内のすべての参照符号が括弧で囲まれています。"
         },
         "subjectConsistency": {
-          "verify": "{{count}}項の従属請求項の主題名称が母項と一致していません：請求項 {{claims}}。",
+          "verify": "請求項 {{claims}} の主題名称が母項と一致していません（計 {{count}} 項）。",
           "pass": "従属請求項の主題名称は一致しています。"
         },
         "transitionPhrase": {
@@ -806,14 +806,14 @@
         "paragraphNumbering": {
           "pass": "段落番号は正しいか、番号なしです。",
           "amendGap": "段落番号が連続していません:【{{prev}}】の次が【{{next}}】になっています。",
-          "amendFormat": "{{count}}個の段落が【NNNN】形式を使用していません。例:{{examples}}。"
+          "amendFormat": "{{count}}個の段落が【NNNN】形式を使用していません。例：{{examples}}。"
         },
         "paragraphEnding": {
           "amend": "{{count}}個の段落に終わりの句読点がありません：段落 {{paragraphs}}。",
           "pass": "すべての段落が正しい句読点で終わっています。"
         },
         "figureRefConsistency": {
-          "verify": "図面の簡単な説明と実施形態の間で図面の引用が一致していません。{{figure_ref_inconsistency}}",
+          "verify": "図面の引用が一致していません：{{figure_ref_inconsistency}}",
           "pass": "各セクション間の図面参照が一致しています。"
         },
         "patentTypeTerminology": {
@@ -821,7 +821,7 @@
           "pass": "特許類型の用語が一致しています。"
         },
         "title": {
-          "amendContent": "発明の名称又は新型の名称に不適切な内容が含まれています:{{title_prohibited_items}}",
+          "amendContent": "発明の名称又は新型の名称に不適切な内容が含まれています：{{title_prohibited_items}}",
           "pass": "發明名稱/新型名稱は要件を満たしています。",
           "amendMissing": "発明の名称が見つかりません。"
         },
@@ -834,13 +834,13 @@
           "pass": "符號說明セクションが含まれています。"
         },
         "symbolTableConsistency": {
-          "verify": "符号説明の内容が実施形態と一致していません:{{symbol_table_inconsistency}}",
+          "verify": "符号説明の内容が実施形態と一致していません：{{symbol_table_inconsistency}}",
           "pass": "符號說明の内容が明細書と一致しています。"
         }
       },
       "claims": {
         "sequential": {
-          "amend": "請求項の番号が連続していません:予想第{{expected}}項、実際は第{{found}}項。",
+          "amend": "請求項の番号が連続していません：予想第{{expected}}項、実際は第{{found}}項。",
           "pass": "請求項の番号が連続しています。"
         },
         "dependencyFormat": {
@@ -856,7 +856,7 @@
           "pass": "循環依存はありません。"
         },
         "forwardDependency": {
-          "amend": "前方依存が見つかりました。",
+          "amend": "請求項 {{claims}} が前方依存しています（後の請求項を引用）。",
           "pass": "前方依存はありません。"
         },
         "singleSentence": {
@@ -868,7 +868,7 @@
           "pass": "すべての請求項の符号が括弧に囲まれています。"
         },
         "subjectConsistency": {
-          "verify": "{{count}}項の従属項の主題名称が母項と一致していません：請求項 {{claims}}。",
+          "verify": "請求項 {{claims}} の主題名称が母項と一致していません（計 {{count}} 項）。",
           "pass": "すべての従属項の主題名が親項と一致しています。"
         },
         "transitionPhrase": {
@@ -885,7 +885,7 @@
         },
         "multiDepOnMultiDep": {
           "amend": "多項従属項が別の多項従属項に依存しています。",
-          "pass": "多項従属項が別の多項従属項に依存する事例はありません。"
+          "pass": "多項従属項の従属関係は正常です。"
         },
         "multiDepAlternative": {
           "amend": "多項従属項が択一形式を使用していません。",
@@ -925,7 +925,7 @@
       },
       "crossRef": {
         "symbolVsRepDrawing": {
-          "verify": "代表図の符号説明と符号説明が一致していません:{{symbol_mismatch_triples}}",
+          "verify": "代表図の符号説明と符号説明が一致していません：{{symbol_mismatch_triples}}",
           "pass": "代表圖之符號簡單說明が符號說明と一致しています。"
         },
         "bracketFormat": {

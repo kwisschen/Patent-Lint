@@ -705,7 +705,7 @@
           "pass": "모든 단락이 유효한 문장부호로 끝납니다."
         },
         "figureRefConsistency": {
-          "verify": "부도설명과 구체적 실시방식 간의 도면 인용이 일치하지 않습니다. {{figure_ref_inconsistency}}",
+          "verify": "도면 인용이 일치하지 않습니다: {{figure_ref_inconsistency}}",
           "pass": "각 섹션의 도면 참조가 일치합니다."
         },
         "patentTypeTerminology": {
@@ -737,7 +737,7 @@
           "pass": "자기 인용 청구항이 발견되지 않았습니다."
         },
         "forwardDependency": {
-          "amend": "청구항 {{claims}}이(가) 후속 청구항을 인용합니다 (전방 인용).",
+          "amend": "청구항 {{claims}}이(가) 전방 종속입니다(후순위 청구항 인용).",
           "pass": "전방 인용이 발견되지 않았습니다."
         },
         "singleSentence": {
@@ -749,7 +749,7 @@
           "pass": "청구항 내 모든 참조 부호가 괄호로 묶여 있습니다."
         },
         "subjectConsistency": {
-          "verify": "{{count}}개 종속 청구항의 주제명이 부모 청구항과 일치하지 않습니다: 청구항 {{claims}}.",
+          "verify": "청구항 {{claims}}의 주제명이 부모 청구항과 일치하지 않습니다 (총 {{count}}개).",
           "pass": "종속 청구항의 주제 명칭이 일치합니다."
         },
         "transitionPhrase": {
@@ -813,7 +813,7 @@
           "pass": "모든 단락이 올바른 문장부호로 끝납니다."
         },
         "figureRefConsistency": {
-          "verify": "도면의 간단한 설명과 실시방식 간의 도면 인용이 일치하지 않습니다. {{figure_ref_inconsistency}}",
+          "verify": "도면 인용이 일치하지 않습니다: {{figure_ref_inconsistency}}",
           "pass": "각 섹션 간의 도면 참조가 일치합니다."
         },
         "patentTypeTerminology": {
@@ -856,7 +856,7 @@
           "pass": "순환 종속이 없습니다."
         },
         "forwardDependency": {
-          "amend": "전방 종속이 발견되었습니다.",
+          "amend": "청구항 {{claims}}이(가) 전방 종속입니다(후순위 청구항 인용).",
           "pass": "전방 종속이 없습니다."
         },
         "singleSentence": {
@@ -868,7 +868,7 @@
           "pass": "모든 請求項의 부호가 괄호로 둘러싸여 있습니다."
         },
         "subjectConsistency": {
-          "verify": "{{count}}개 종속항의 주제명이 모항과 일치하지 않습니다: 청구항 {{claims}}.",
+          "verify": "청구항 {{claims}}의 주제명이 부모 청구항과 일치하지 않습니다 (총 {{count}}개).",
           "pass": "모든 종속항의 주제명이 모항과 일치합니다."
         },
         "transitionPhrase": {
@@ -885,7 +885,7 @@
         },
         "multiDepOnMultiDep": {
           "amend": "다항 종속항이 다른 다항 종속항에 종속되어 있습니다.",
-          "pass": "다항 종속항이 다른 다항 종속항에 종속되는 경우가 없습니다."
+          "pass": "다항 종속항의 종속 관계가 정상입니다."
         },
         "multiDepAlternative": {
           "amend": "다항 종속항이 택일 형식을 사용하지 않습니다.",
