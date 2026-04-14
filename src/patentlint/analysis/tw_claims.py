@@ -126,19 +126,20 @@ def check_dependency_format(doc: TwPatentDocument) -> list[CheckItem]:
             reference="專利法施行細則 §18",
         )]
 
-    bad_count = 0
+    bad_claim_ids: list[int] = []
     for claim in dependents:
         if not _TW_DEP_FORMAT.search(claim.text):
-            bad_count += 1
+            bad_claim_ids.append(claim.id)
 
-    if bad_count:
+    if bad_claim_ids:
+        claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="amend",
-            message=f"{bad_count} claim(s) with unrecognized dependency format.",
+            message=f"{len(bad_claim_ids)} claim(s) with unrecognized dependency format (claims: {claims_str}).",
             message_key="check.tw.claims.dependencyFormat.amend",
-            details=f"{bad_count} claims",
+            details=f"{len(bad_claim_ids)} claims",
             details_key="details.tw.dependencyFormat",
-            details_params={"count": str(bad_count)},
+            details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="專利法施行細則 §18",
         )]
 
@@ -254,21 +255,22 @@ def check_forward_dependency(doc: TwPatentDocument) -> list[CheckItem]:
 
 def check_single_sentence(doc: TwPatentDocument) -> list[CheckItem]:
     """Each claim must have exactly one 。 at end, no 。 in middle."""
-    bad_count = 0
+    bad_claim_ids: list[int] = []
     for claim in doc.claims:
         text = claim.text.strip()
         period_count = text.count("。")
         if period_count != 1 or not text.endswith("。"):
-            bad_count += 1
+            bad_claim_ids.append(claim.id)
 
-    if bad_count:
+    if bad_claim_ids:
+        claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="amend",
-            message=f"{bad_count} claim(s) not written as a single sentence.",
+            message=f"{len(bad_claim_ids)} claim(s) not written as a single sentence (claims: {claims_str}).",
             message_key="check.tw.claims.singleSentence.amend",
-            details=f"{bad_count} claims",
+            details=f"{len(bad_claim_ids)} claims",
             details_key="details.tw.singleSentence",
-            details_params={"count": str(bad_count)},
+            details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="專利法施行細則 §18",
         )]
 
@@ -285,19 +287,20 @@ def check_single_sentence(doc: TwPatentDocument) -> list[CheckItem]:
 
 def check_ref_numeral_parens(doc: TwPatentDocument) -> list[CheckItem]:
     """Find reference numerals in claims not enclosed in parentheses."""
-    bad_count = 0
+    bad_claim_ids: list[int] = []
     for claim in doc.claims:
         if _BARE_NUMERAL.search(claim.text):
-            bad_count += 1
+            bad_claim_ids.append(claim.id)
 
-    if bad_count:
+    if bad_claim_ids:
+        claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="verify",
-            message=f"{bad_count} claim(s) with reference numerals not in parentheses.",
+            message=f"{len(bad_claim_ids)} claim(s) with reference numerals not in parentheses (claims: {claims_str}).",
             message_key="check.tw.claims.refNumeralParens.verify",
-            details=f"{bad_count} claims",
+            details=f"{len(bad_claim_ids)} claims",
             details_key="details.tw.refNumeralParens",
-            details_params={"count": str(bad_count)},
+            details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="專利法施行細則 §19",
         )]
 
@@ -325,7 +328,7 @@ def check_subject_consistency(doc: TwPatentDocument) -> list[CheckItem]:
             reference="專利審查基準",
         )]
 
-    bad_count = 0
+    bad_claim_ids: list[int] = []
     for claim in dependents:
         if not claim.dependencies:
             continue
@@ -338,16 +341,17 @@ def check_subject_consistency(doc: TwPatentDocument) -> list[CheckItem]:
         parent_subject = _normalize_subject(_extract_subject(parent.text))
 
         if dep_subject and parent_subject and dep_subject != parent_subject:
-            bad_count += 1
+            bad_claim_ids.append(claim.id)
 
-    if bad_count:
+    if bad_claim_ids:
+        claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="verify",
-            message=f"{bad_count} dependent claim(s) with inconsistent subject name.",
+            message=f"{len(bad_claim_ids)} dependent claim(s) with inconsistent subject name (claims: {claims_str}).",
             message_key="check.tw.claims.subjectConsistency.verify",
-            details=f"{bad_count} claims",
+            details=f"{len(bad_claim_ids)} claims",
             details_key="details.tw.subjectConsistency",
-            details_params={"count": str(bad_count)},
+            details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="專利審查基準",
         )]
 
@@ -373,19 +377,20 @@ def check_transition_phrase(doc: TwPatentDocument) -> list[CheckItem]:
             reference="專利法施行細則 §20",
         )]
 
-    bad_count = 0
+    bad_claim_ids: list[int] = []
     for claim in independents:
         if not any(phrase in claim.text for phrase in _TRANSITION_PHRASES):
-            bad_count += 1
+            bad_claim_ids.append(claim.id)
 
-    if bad_count:
+    if bad_claim_ids:
+        claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="verify",
-            message=f"{bad_count} independent claim(s) missing transitional phrase.",
+            message=f"{len(bad_claim_ids)} independent claim(s) missing transitional phrase (claims: {claims_str}).",
             message_key="check.tw.claims.transitionPhrase.verify",
-            details=f"{bad_count} claims",
+            details=f"{len(bad_claim_ids)} claims",
             details_key="details.tw.transitionPhrase",
-            details_params={"count": str(bad_count)},
+            details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="專利法施行細則 §20",
         )]
 

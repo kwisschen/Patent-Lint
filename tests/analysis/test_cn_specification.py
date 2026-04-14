@@ -125,6 +125,11 @@ class TestParagraphNumbering:
         doc = _make_cn_doc(input_format="xml", paragraph_numbers=[1, 2, 2, 3])
         results = check_paragraph_numbering(doc)
         assert results[0].status == "amend"
+        # Duplicate detection runs BEFORE gap detection, so [1, 2, 2, 3]
+        # fires .amendXmlDuplicate (not .amendXmlGap).
+        assert results[0].message_key == "check.cn.spec.paragraphNumbering.amendXmlDuplicate"
+        assert results[0].details_params["paragraphs"] == [2]
+        assert results[0].details_params["count"] == 1
 
     def test_xml_empty_pass(self):
         doc = _make_cn_doc(input_format="xml", paragraph_numbers=[])
@@ -164,7 +169,8 @@ class TestParagraphEnding:
         )
         results = check_paragraph_ending(doc)
         assert results[0].status == "amend"
-        assert results[0].details_params["count"] == "1"
+        assert results[0].details_params["count"] == 1
+        assert results[0].details_params["paragraphs"] == [1]
 
     def test_multiple_bad_endings(self):
         doc = _make_cn_doc(
@@ -174,7 +180,8 @@ class TestParagraphEnding:
         )
         results = check_paragraph_ending(doc)
         assert results[0].status == "amend"
-        assert results[0].details_params["count"] == "2"
+        assert results[0].details_params["count"] == 2
+        assert results[0].details_params["paragraphs"] == [1, 2]
 
     def test_empty_paragraphs_skipped(self):
         doc = _make_cn_doc(
@@ -308,7 +315,9 @@ class TestSpecClaimReference:
         results = check_spec_claim_reference(doc)
         assert results[0].status == "amend"
         assert results[0].message_key == "check.cn.spec.claimReference.amend"
-        assert "权利要求" in results[0].details_params["detail"]
+        assert "权利要求" in results[0].details_params["snippet"]
+        assert results[0].details_params["count"] == 1
+        assert results[0].details_params["paragraphs"] == [5]
 
     def test_claim_reference_with_spaces(self):
         doc = _make_cn_doc(

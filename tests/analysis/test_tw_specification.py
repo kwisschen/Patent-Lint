@@ -220,7 +220,8 @@ class TestParagraphEnding:
         )
         items = check_paragraph_ending(doc)
         assert items[0].status == "amend"
-        assert items[0].details_params["count"] == "1"
+        assert items[0].details_params["count"] == 1
+        assert items[0].details_params["paragraphs"] == [1]
 
     def test_multiple_bad_endings(self):
         doc = _make_doc(
@@ -229,7 +230,8 @@ class TestParagraphEnding:
         )
         items = check_paragraph_ending(doc)
         assert items[0].status == "amend"
-        assert items[0].details_params["count"] == "2"
+        assert items[0].details_params["count"] == 2
+        assert items[0].details_params["paragraphs"] == [1, 2]
 
     def test_exclamation_question_valid(self):
         doc = _make_doc(

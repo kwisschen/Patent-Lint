@@ -272,25 +272,28 @@ def check_paragraph_ending(doc: TwPatentDocument) -> list[CheckItem]:
         (doc.drawings_description, True),
         (doc.embodiment, True),
     ]
-    bad_count = 0
+    bad_paragraphs: list[int] = []
+    ordinal = 0
     for section_paras, relaxed in sections_to_check:
         for para in section_paras:
             stripped = para.strip()
             if not stripped:
                 continue
+            ordinal += 1
             if _is_skip_paragraph_ending(stripped):
                 continue
             if not _has_valid_ending_tw(stripped, relaxed):
-                bad_count += 1
+                bad_paragraphs.append(ordinal)
 
-    if bad_count:
+    if bad_paragraphs:
+        paras_str = ", ".join(str(n) for n in bad_paragraphs)
         return [CheckItem(
             status="amend",
-            message=f"{bad_count} paragraph(s) have invalid ending punctuation.",
+            message=f"{len(bad_paragraphs)} paragraph(s) have invalid ending punctuation (paragraphs: {paras_str}).",
             message_key="check.tw.spec.paragraphEnding.amend",
-            details=f"{bad_count} paragraphs",
+            details=f"{len(bad_paragraphs)} paragraphs",
             details_key="details.tw.paragraphEnding",
-            details_params={"count": str(bad_count)},
+            details_params={"count": len(bad_paragraphs), "paragraphs": bad_paragraphs},
             reference="專利審查基準",
         )]
     return [CheckItem(

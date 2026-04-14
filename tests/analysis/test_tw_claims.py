@@ -108,7 +108,8 @@ class TestDependencyFormat:
         ])
         result = check_dependency_format(doc)
         assert result[0].status == "amend"
-        assert result[0].details_params["count"] == "1"
+        assert result[0].details_params["count"] == 1
+        assert result[0].details_params["claims"] == [2]
 
     def test_mixed_formats(self):
         doc = _make_doc(claims=[
@@ -120,7 +121,8 @@ class TestDependencyFormat:
         ])
         result = check_dependency_format(doc)
         assert result[0].status == "amend"
-        assert result[0].details_params["count"] == "1"
+        assert result[0].details_params["count"] == 1
+        assert result[0].details_params["claims"] == [3]
 
     def test_no_dependents_pass(self):
         doc = _make_doc(claims=[
@@ -231,7 +233,8 @@ class TestSingleSentence:
         ])
         result = check_single_sentence(doc)
         assert result[0].status == "amend"
-        assert result[0].details_params["count"] == "1"
+        assert result[0].details_params["count"] == 1
+        assert result[0].details_params["claims"] == [1]
 
     def test_no_period_amend(self):
         doc = _make_doc(claims=[
@@ -263,7 +266,8 @@ class TestRefNumeralParens:
         ])
         result = check_ref_numeral_parens(doc)
         assert result[0].status == "verify"
-        assert result[0].details_params["count"] == "1"
+        assert result[0].details_params["count"] == 1
+        assert result[0].details_params["claims"] == [1]
 
     def test_no_numerals_pass(self):
         doc = _make_doc(claims=[
@@ -310,7 +314,8 @@ class TestSubjectConsistency:
         ])
         result = check_subject_consistency(doc)
         assert result[0].status == "verify"
-        assert result[0].details_params["count"] == "1"
+        assert result[0].details_params["count"] == 1
+        assert result[0].details_params["claims"] == [2]
 
     def test_bare_之_format_pass(self):
         """如請求項N之裝置 — bare 之 without 所述."""
@@ -368,7 +373,8 @@ class TestTransitionPhrase:
         ])
         result = check_transition_phrase(doc)
         assert result[0].status == "verify"
-        assert result[0].details_params["count"] == "1"
+        assert result[0].details_params["count"] == 1
+        assert result[0].details_params["claims"] == [1]
 
     def test_only_dependents_pass(self):
         doc = _make_doc(claims=[
