@@ -698,10 +698,10 @@
           "amendDocx": "明細書に手動で追加された段落番号が含まれています。",
           "pass": "段落番号は正確です。",
           "amendXmlGap": "段落番号が連続していません:第{{prev}}段落の次が第{{next}}段落になっています。",
-          "amendXmlDuplicate": "重複する段落番号が検出されました。"
+          "amendXmlDuplicate": "{{count}}個の重複する段落番号が検出されました：段落 {{paragraphs}}。"
         },
         "paragraphEnding": {
-          "amend": "{{count}} 個の段落が有効な中国語句読点で終わっていません。",
+          "amend": "{{count}}個の段落が有効な中国語の句読点で終わっていません：段落 {{paragraphs}}。",
           "pass": "すべての段落が有効な句読点で終わっています。"
         },
         "figureRefConsistency": {
@@ -719,7 +719,7 @@
           "amendMissing": "発明の名称が見つかりません。"
         },
         "claimReference": {
-          "amend": "明細書が特許請求の範囲を引用しています（{{detail}}）。",
+          "amend": "明細書が{{count}}個の段落で請求項を引用しています（段落 {{paragraphs}}）。例：{{snippet}}",
           "pass": "明細書は特許請求の範囲を引用していません。"
         }
       },
@@ -729,7 +729,7 @@
           "pass": "請求項番号は連続しています。"
         },
         "dependencyFormat": {
-          "amend": "{{count}} 項の請求項の引用形式が不正確です。",
+          "amend": "{{count}}項の請求項の引用形式が正しくありません：請求項 {{claims}}。",
           "pass": "すべての従属請求項の引用形式は正確です。"
         },
         "selfDependent": {
@@ -741,19 +741,19 @@
           "pass": "前方引用は見つかりませんでした。"
         },
         "singleSentence": {
-          "amend": "{{count}} 項の請求項が複数の文を含んでいます。",
+          "amend": "{{count}}項の請求項が複数の文を含んでいます：請求項 {{claims}}。",
           "pass": "すべての請求項は単文です。"
         },
         "refNumeralParens": {
-          "verify": "{{count}} 項の請求項で参照符号が括弧で囲まれていません。",
+          "verify": "{{count}}項の請求項の図面記号が括弧で囲まれていません：請求項 {{claims}}。",
           "pass": "請求項内のすべての参照符号が括弧で囲まれています。"
         },
         "subjectConsistency": {
-          "verify": "{{count}} 項の従属請求項の主題名称が引用元と不一致です。",
+          "verify": "{{count}}項の従属請求項の主題名称が母項と一致していません：請求項 {{claims}}。",
           "pass": "従属請求項の主題名称は一致しています。"
         },
         "transitionPhrase": {
-          "verify": "{{count}} 項の独立請求項に特徴部分の移行語（其特征在于）が欠けている可能性があります。",
+          "verify": "{{count}}項の独立請求項が特徴部の接続語を欠いている可能性があります：請求項 {{claims}}。",
           "pass": "すべての独立請求項に特徴部分の移行語が含まれています。"
         },
         "twTerminology": {
@@ -761,7 +761,7 @@
           "pass": "請求項の用語はCNIPAの規範に適合しています。"
         },
         "specReference": {
-          "amend": "{{count}} 項の請求項が明細書または図面を引用して保護範囲を限定しています。",
+          "amend": "{{count}}項の請求項が明細書又は図面を引用しています：請求項 {{claims}}。",
           "pass": "明細書または図面を引用している請求項はありません。"
         },
         "multiMultiDep": {
@@ -809,7 +809,7 @@
           "amendFormat": "{{count}}個の段落が【NNNN】形式を使用していません。例:{{examples}}。"
         },
         "paragraphEnding": {
-          "amend": "{{count}}個の段落に終止符がありません。",
+          "amend": "{{count}}個の段落に終わりの句読点がありません：段落 {{paragraphs}}。",
           "pass": "すべての段落が正しい句読点で終わっています。"
         },
         "figureRefConsistency": {
@@ -844,7 +844,7 @@
           "pass": "請求項の番号が連続しています。"
         },
         "dependencyFormat": {
-          "amend": "{{count}}件の請求項で依存形式が認識できません。",
+          "amend": "{{count}}項の請求項の依存形式が認識できません：請求項 {{claims}}。",
           "pass": "すべての依存参照が正しい形式を使用しています。"
         },
         "selfDependent": {
@@ -860,19 +860,19 @@
           "pass": "前方依存はありません。"
         },
         "singleSentence": {
-          "amend": "{{count}}件の請求項が単文ではありません。",
+          "amend": "{{count}}項の請求項が単文で記載されていません：請求項 {{claims}}。",
           "pass": "すべての請求項が単文です。"
         },
         "refNumeralParens": {
-          "verify": "{{count}}件の請求項で符号が括弧に囲まれていません。",
+          "verify": "{{count}}項の請求項の構成要素符号が括弧で囲まれていません：請求項 {{claims}}。",
           "pass": "すべての請求項の符号が括弧に囲まれています。"
         },
         "subjectConsistency": {
-          "verify": "{{count}}件の従属項で主題名が親項と一致しません。",
+          "verify": "{{count}}項の従属項の主題名称が母項と一致していません：請求項 {{claims}}。",
           "pass": "すべての従属項の主題名が親項と一致しています。"
         },
         "transitionPhrase": {
-          "verify": "{{count}}件の独立項に移行句がありません。",
+          "verify": "{{count}}項の独立項に特徴接続詞がありません：請求項 {{claims}}。",
           "pass": "すべての独立項に移行句が含まれています。"
         },
         "cnTerminology": {
@@ -1042,6 +1042,7 @@
   },
   "punct": {
     "listSeparator": "、",
-    "sentenceSeparator": "；"
+    "sentenceSeparator": "；",
+    "ellipsis": "……"
   }
 }

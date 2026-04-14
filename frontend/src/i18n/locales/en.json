@@ -698,10 +698,10 @@
           "amendDocx": "Specification contains user-added paragraph numbering.",
           "pass": "Paragraph numbering is correct.",
           "amendXmlGap": "Paragraph numbering has a gap: paragraph {{prev}} is followed by {{next}}.",
-          "amendXmlDuplicate": "Duplicate paragraph numbers detected."
+          "amendXmlDuplicate": "Detected {{count}} duplicate paragraph number(s): paragraphs {{paragraphs}}."
         },
         "paragraphEnding": {
-          "amend": "{{count}} paragraph(s) do not end with valid Chinese punctuation.",
+          "amend": "{{count}} paragraph(s) do not end with valid Chinese punctuation: paragraphs {{paragraphs}}.",
           "pass": "All specification paragraphs end with valid punctuation."
         },
         "figureRefConsistency": {
@@ -719,7 +719,7 @@
           "amendMissing": "No title found."
         },
         "claimReference": {
-          "amend": "Specification references claims ({{detail}}).",
+          "amend": "Specification references claims in {{count}} paragraph(s) (paragraphs {{paragraphs}}). Example: {{snippet}}",
           "pass": "Specification does not reference claims."
         }
       },
@@ -729,7 +729,7 @@
           "pass": "Claim numbers are sequential."
         },
         "dependencyFormat": {
-          "amend": "{{count}} claim(s) use incorrect dependency format.",
+          "amend": "{{count}} claim(s) use incorrect dependency format: claims {{claims}}.",
           "pass": "All dependent claims use correct dependency format."
         },
         "selfDependent": {
@@ -741,19 +741,19 @@
           "pass": "No forward dependencies found."
         },
         "singleSentence": {
-          "amend": "{{count}} claim(s) contain multiple sentences.",
+          "amend": "{{count}} claim(s) contain multiple sentences: claims {{claims}}.",
           "pass": "All claims are single sentences."
         },
         "refNumeralParens": {
-          "verify": "{{count}} claim(s) contain reference numerals not enclosed in parentheses.",
+          "verify": "{{count}} claim(s) have reference numerals without parentheses: claims {{claims}}.",
           "pass": "All reference numerals in claims are properly enclosed."
         },
         "subjectConsistency": {
-          "verify": "{{count}} dependent claim(s) have subject names inconsistent with their parent.",
+          "verify": "{{count}} dependent claim(s) have subject name inconsistent with parent: claims {{claims}}.",
           "pass": "Dependent claim subject names are consistent."
         },
         "transitionPhrase": {
-          "verify": "{{count}} independent claim(s) may lack a characterizing transition (其特征在于).",
+          "verify": "{{count}} independent claim(s) may lack transitional phrase: claims {{claims}}.",
           "pass": "All independent claims contain a characterizing transition."
         },
         "twTerminology": {
@@ -761,7 +761,7 @@
           "pass": "Claims use correct CNIPA terminology (权利要求)."
         },
         "specReference": {
-          "amend": "{{count}} claim(s) reference the specification or drawings to define scope.",
+          "amend": "{{count}} claim(s) reference specification or drawings: claims {{claims}}.",
           "pass": "No claims reference the specification or drawings."
         },
         "multiMultiDep": {
@@ -809,7 +809,7 @@
           "amendFormat": "{{count}} paragraph(s) use non-[NNNN] format. Examples: {{examples}}."
         },
         "paragraphEnding": {
-          "amend": "{{count}} paragraph(s) missing ending punctuation.",
+          "amend": "{{count}} paragraph(s) lack ending punctuation: paragraphs {{paragraphs}}.",
           "pass": "All paragraphs end with valid punctuation."
         },
         "figureRefConsistency": {
@@ -844,7 +844,7 @@
           "pass": "Claim numbers sequential."
         },
         "dependencyFormat": {
-          "amend": "{{count}} claim(s) with unrecognized dependency format.",
+          "amend": "{{count}} claim(s) have unrecognized dependency format: claims {{claims}}.",
           "pass": "All dependency references use recognized format."
         },
         "selfDependent": {
@@ -860,19 +860,19 @@
           "pass": "No forward dependencies."
         },
         "singleSentence": {
-          "amend": "{{count}} claim(s) not written as a single sentence.",
+          "amend": "{{count}} claim(s) are not single-sentence: claims {{claims}}.",
           "pass": "All claims are single sentences."
         },
         "refNumeralParens": {
-          "verify": "{{count}} claim(s) with reference numerals not in parentheses.",
+          "verify": "{{count}} claim(s) have reference numerals without parentheses: claims {{claims}}.",
           "pass": "All reference numerals in claims are in parentheses."
         },
         "subjectConsistency": {
-          "verify": "{{count}} dependent claim(s) with inconsistent subject name.",
+          "verify": "{{count}} dependent claim(s) have subject name inconsistent with parent: claims {{claims}}.",
           "pass": "All dependent claim subjects match parent."
         },
         "transitionPhrase": {
-          "verify": "{{count}} independent claim(s) missing transitional phrase.",
+          "verify": "{{count}} independent claim(s) lack transition phrase: claims {{claims}}.",
           "pass": "All independent claims contain a transitional phrase."
         },
         "cnTerminology": {
@@ -1042,6 +1042,7 @@
   },
   "punct": {
     "listSeparator": ", ",
-    "sentenceSeparator": "; "
+    "sentenceSeparator": "; ",
+    "ellipsis": ", ..."
   }
 }

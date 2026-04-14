@@ -698,10 +698,10 @@
           "amendDocx": "명세서에 수동으로 추가된 단락 번호가 포함되어 있습니다.",
           "pass": "단락 번호가 올바릅니다.",
           "amendXmlGap": "단락 번호가 연속되지 않습니다: 제{{prev}}단락 다음이 제{{next}}단락입니다.",
-          "amendXmlDuplicate": "중복된 단락 번호가 감지되었습니다."
+          "amendXmlDuplicate": "{{count}}개의 중복 단락 번호가 감지되었습니다: 단락 {{paragraphs}}."
         },
         "paragraphEnding": {
-          "amend": "{{count}}개 단락이 유효한 중국어 문장부호로 끝나지 않습니다.",
+          "amend": "{{count}}개 단락이 유효한 중국어 문장 부호로 끝나지 않습니다: 단락 {{paragraphs}}.",
           "pass": "모든 단락이 유효한 문장부호로 끝납니다."
         },
         "figureRefConsistency": {
@@ -719,7 +719,7 @@
           "amendMissing": "발명의 명칭을 찾을 수 없습니다."
         },
         "claimReference": {
-          "amend": "명세서가 청구항을 인용하고 있습니다 ({{detail}}).",
+          "amend": "명세서가 {{count}}개 단락에서 청구항을 인용합니다(단락 {{paragraphs}}). 예: {{snippet}}",
           "pass": "명세서가 청구항을 인용하지 않습니다."
         }
       },
@@ -729,7 +729,7 @@
           "pass": "청구항 번호가 연속적입니다."
         },
         "dependencyFormat": {
-          "amend": "{{count}}건의 청구항이 잘못된 인용 형식을 사용합니다.",
+          "amend": "{{count}}개 청구항의 인용 형식이 올바르지 않습니다: 청구항 {{claims}}.",
           "pass": "모든 종속 청구항의 인용 형식이 올바릅니다."
         },
         "selfDependent": {
@@ -741,19 +741,19 @@
           "pass": "전방 인용이 발견되지 않았습니다."
         },
         "singleSentence": {
-          "amend": "{{count}}건의 청구항에 복수의 문장이 포함되어 있습니다.",
+          "amend": "{{count}}개 청구항이 여러 문장을 포함합니다: 청구항 {{claims}}.",
           "pass": "모든 청구항이 단일 문장입니다."
         },
         "refNumeralParens": {
-          "verify": "{{count}}건의 청구항에서 참조 부호가 괄호로 묶이지 않았습니다.",
+          "verify": "{{count}}개 청구항의 도면 부호가 괄호로 표시되지 않았습니다: 청구항 {{claims}}.",
           "pass": "청구항 내 모든 참조 부호가 괄호로 묶여 있습니다."
         },
         "subjectConsistency": {
-          "verify": "{{count}}건의 종속 청구항의 주제 명칭이 인용 대상과 불일치합니다.",
+          "verify": "{{count}}개 종속 청구항의 주제명이 부모 청구항과 일치하지 않습니다: 청구항 {{claims}}.",
           "pass": "종속 청구항의 주제 명칭이 일치합니다."
         },
         "transitionPhrase": {
-          "verify": "{{count}}건의 독립 청구항에 특징 부분 전환어(其特征在于)가 누락되었을 수 있습니다.",
+          "verify": "{{count}}개 독립 청구항에 특징부 전이 문구가 없을 수 있습니다: 청구항 {{claims}}.",
           "pass": "모든 독립 청구항에 특징 부분 전환어가 포함되어 있습니다."
         },
         "twTerminology": {
@@ -761,7 +761,7 @@
           "pass": "청구항 용어가 CNIPA 규범에 적합합니다."
         },
         "specReference": {
-          "amend": "{{count}}건의 청구항이 명세서 또는 도면을 인용하여 보호 범위를 한정하고 있습니다.",
+          "amend": "{{count}}개 청구항이 명세서 또는 도면을 인용합니다: 청구항 {{claims}}.",
           "pass": "명세서 또는 도면을 인용하는 청구항이 없습니다."
         },
         "multiMultiDep": {
@@ -809,7 +809,7 @@
           "amendFormat": "{{count}}개 단락이 【NNNN】 형식을 사용하지 않습니다. 예: {{examples}}."
         },
         "paragraphEnding": {
-          "amend": "{{count}}개 단락에 끝 문장부호가 없습니다.",
+          "amend": "{{count}}개 단락에 종결 부호가 없습니다: 단락 {{paragraphs}}.",
           "pass": "모든 단락이 올바른 문장부호로 끝납니다."
         },
         "figureRefConsistency": {
@@ -844,7 +844,7 @@
           "pass": "請求項 번호가 연속적입니다."
         },
         "dependencyFormat": {
-          "amend": "{{count}}건의 請求項에서 종속 형식을 인식할 수 없습니다.",
+          "amend": "{{count}}개 청구항의 종속 형식을 인식할 수 없습니다: 청구항 {{claims}}.",
           "pass": "모든 종속 참조가 올바른 형식을 사용합니다."
         },
         "selfDependent": {
@@ -860,19 +860,19 @@
           "pass": "전방 종속이 없습니다."
         },
         "singleSentence": {
-          "amend": "{{count}}건의 請求項이 단일 문장이 아닙니다.",
+          "amend": "{{count}}개 청구항이 단일 문장으로 작성되지 않았습니다: 청구항 {{claims}}.",
           "pass": "모든 請求項이 단일 문장입니다."
         },
         "refNumeralParens": {
-          "verify": "{{count}}건의 請求項에서 부호가 괄호로 둘러싸여 있지 않습니다.",
+          "verify": "{{count}}개 청구항의 구성요소 부호가 괄호로 표시되지 않았습니다: 청구항 {{claims}}.",
           "pass": "모든 請求項의 부호가 괄호로 둘러싸여 있습니다."
         },
         "subjectConsistency": {
-          "verify": "{{count}}건의 종속항에서 주제명이 모항과 일치하지 않습니다.",
+          "verify": "{{count}}개 종속항의 주제명이 모항과 일치하지 않습니다: 청구항 {{claims}}.",
           "pass": "모든 종속항의 주제명이 모항과 일치합니다."
         },
         "transitionPhrase": {
-          "verify": "{{count}}건의 독립항에 전환 문구가 없습니다.",
+          "verify": "{{count}}개 독립항에 특징 연결어가 없습니다: 청구항 {{claims}}.",
           "pass": "모든 독립항에 전환 문구가 포함되어 있습니다."
         },
         "cnTerminology": {
@@ -1042,6 +1042,7 @@
   },
   "punct": {
     "listSeparator": ", ",
-    "sentenceSeparator": "; "
+    "sentenceSeparator": "; ",
+    "ellipsis": " ..."
   }
 }

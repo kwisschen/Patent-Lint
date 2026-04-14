@@ -9,6 +9,7 @@ against CNIPA rules (专利法实施细则 and 审查指南).
 from __future__ import annotations
 
 import re
+from collections import Counter
 
 from patentlint.models import CheckItem, CnPatentDocument
 
@@ -115,6 +116,21 @@ def check_paragraph_numbering(cn_doc: CnPatentDocument) -> list[CheckItem]:
     if cn_doc.input_format == "xml":
         nums = cn_doc.paragraph_numbers
         if nums:
+            # Duplicate detection runs BEFORE gap detection — a pattern like
+            # [1, 2, 2, 3] otherwise fires .amendXmlGap with prev==next and
+            # the .amendXmlDuplicate key becomes unreachable.
+            counts = Counter(nums)
+            duplicates = sorted(n for n, c in counts.items() if c > 1)
+            if duplicates:
+                dup_str = ", ".join(str(n) for n in duplicates)
+                return [CheckItem(
+                    status="amend",
+                    message=f"Duplicate paragraph numbers detected: paragraphs {dup_str}.",
+                    message_key="check.cn.spec.paragraphNumbering.amendXmlDuplicate",
+                    details_key="details.cn.paragraphNumberingXml",
+                    details_params={"count": len(duplicates), "paragraphs": duplicates},
+                    reference="审查指南",
+                )]
             for i in range(1, len(nums)):
                 if nums[i] != nums[i - 1] + 1:
                     return [CheckItem(
@@ -125,15 +141,6 @@ def check_paragraph_numbering(cn_doc: CnPatentDocument) -> list[CheckItem]:
                         details_params={"prev": nums[i - 1], "next": nums[i]},
                         reference="审查指南",
                     )]
-            # Check for duplicates
-            if len(set(nums)) != len(nums):
-                return [CheckItem(
-                    status="amend",
-                    message="Duplicate paragraph numbers detected.",
-                    message_key="check.cn.spec.paragraphNumbering.amendXmlDuplicate",
-                    details_key="details.cn.paragraphNumberingXml",
-                    reference="审查指南",
-                )]
     elif cn_doc.input_format == "docx":
         if cn_doc.has_paragraph_numbering:
             return [CheckItem(
@@ -157,23 +164,26 @@ def check_paragraph_numbering(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
 def check_paragraph_ending(cn_doc: CnPatentDocument) -> list[CheckItem]:
     """Check each paragraph ends with valid Chinese punctuation."""
-    bad_count = 0
+    bad_paragraphs: list[int] = []
+    ordinal = 0
     for para in _all_paragraphs(cn_doc):
         stripped = para.strip()
         if not stripped:
             continue
+        ordinal += 1
         last_char = stripped[-1]
         if last_char not in _VALID_ENDINGS:
-            bad_count += 1
+            bad_paragraphs.append(ordinal)
 
-    if bad_count:
+    if bad_paragraphs:
+        paras_str = ", ".join(str(n) for n in bad_paragraphs)
         return [CheckItem(
             status="amend",
-            message=f"{bad_count} paragraph(s) have invalid ending punctuation.",
+            message=f"{len(bad_paragraphs)} paragraph(s) have invalid ending punctuation (paragraphs: {paras_str}).",
             message_key="check.cn.spec.paragraphEnding.amend",
-            details=f"{bad_count} paragraphs",
+            details=f"{len(bad_paragraphs)} paragraphs",
             details_key="details.cn.paragraphEnding",
-            details_params={"count": str(bad_count)},
+            details_params={"count": len(bad_paragraphs), "paragraphs": bad_paragraphs},
             reference="审查指南",
         )]
     return [CheckItem(
@@ -338,18 +348,33 @@ _CLAIM_REF_RE = re.compile(r"如权利要求\s*\d+[\s\S]*?所述")
 
 def check_spec_claim_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
     """Flag specification text that references specific claims."""
-    text = _all_spec_text(cn_doc)
-    match = _CLAIM_REF_RE.search(text)
+    bad_paragraphs: list[int] = []
+    first_snippet = ""
+    ordinal = 0
+    for para in _all_paragraphs(cn_doc):
+        stripped = para.strip()
+        if not stripped:
+            continue
+        ordinal += 1
+        match = _CLAIM_REF_RE.search(stripped)
+        if match:
+            bad_paragraphs.append(ordinal)
+            if not first_snippet:
+                first_snippet = match.group()[:50]
 
-    if match:
-        snippet = match.group()[:50]
+    if bad_paragraphs:
+        paras_str = ", ".join(str(n) for n in bad_paragraphs)
         return [CheckItem(
             status="amend",
-            message="Specification references a specific claim number.",
+            message=f"Specification references claims in {len(bad_paragraphs)} paragraph(s) (paragraphs: {paras_str}).",
             message_key="check.cn.spec.claimReference.amend",
-            details=snippet,
+            details=first_snippet,
             details_key="details.cn.specClaimReference",
-            details_params={"detail": snippet},
+            details_params={
+                "count": len(bad_paragraphs),
+                "paragraphs": bad_paragraphs,
+                "snippet": first_snippet,
+            },
             reference="专利法实施细则 §17",
         )]
 

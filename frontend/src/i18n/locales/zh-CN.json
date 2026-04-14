@@ -698,10 +698,10 @@
           "amendDocx": "说明书包含手动添加的段落编号。",
           "pass": "段落编号正确。",
           "amendXmlGap": "段落编号不连续:第{{prev}}段后为第{{next}}段。",
-          "amendXmlDuplicate": "检测到重复的段落编号。"
+          "amendXmlDuplicate": "检测到 {{count}} 个重复的段落编号：段落 {{paragraphs}}。"
         },
         "paragraphEnding": {
-          "amend": "{{count}} 个段落未以有效中文标点结尾。",
+          "amend": "{{count}} 个段落未以有效中文标点结尾：段落 {{paragraphs}}。",
           "pass": "所有段落均以有效标点结尾。"
         },
         "figureRefConsistency": {
@@ -719,7 +719,7 @@
           "amendMissing": "未发现发明名称。"
         },
         "claimReference": {
-          "amend": "说明书引用了权利要求（{{detail}}）。",
+          "amend": "说明书在 {{count}} 个段落中引用了权利要求（段落 {{paragraphs}}）。示例：{{snippet}}",
           "pass": "说明书未引用权利要求。"
         }
       },
@@ -729,7 +729,7 @@
           "pass": "权利要求编号连续。"
         },
         "dependencyFormat": {
-          "amend": "{{count}} 项权利要求的引用格式不正确。",
+          "amend": "{{count}} 项权利要求的引用格式不正确：权利要求 {{claims}}。",
           "pass": "所有从属权利要求的引用格式正确。"
         },
         "selfDependent": {
@@ -741,19 +741,19 @@
           "pass": "未发现正向引用。"
         },
         "singleSentence": {
-          "amend": "{{count}} 项权利要求包含多个句子。",
+          "amend": "{{count}} 项权利要求包含多个句子：权利要求 {{claims}}。",
           "pass": "所有权利要求均为单句。"
         },
         "refNumeralParens": {
-          "verify": "{{count}} 项权利要求中的附图标记未加括号。",
+          "verify": "{{count}} 项权利要求中的附图标记未加括号：权利要求 {{claims}}。",
           "pass": "权利要求中所有附图标记均已加括号。"
         },
         "subjectConsistency": {
-          "verify": "{{count}} 项从属权利要求的主题名称与其引用的权利要求不一致。",
+          "verify": "{{count}} 项从属权利要求的主题名称与母项不一致：权利要求 {{claims}}。",
           "pass": "从属权利要求的主题名称一致。"
         },
         "transitionPhrase": {
-          "verify": "{{count}} 项独立权利要求可能缺少特征部分过渡语（其特征在于）。",
+          "verify": "{{count}} 项独立权利要求可能缺少特征部分过渡语：权利要求 {{claims}}。",
           "pass": "所有独立权利要求均包含特征部分过渡语。"
         },
         "twTerminology": {
@@ -761,7 +761,7 @@
           "pass": "权利要求用语符合CNIPA规范。"
         },
         "specReference": {
-          "amend": "{{count}} 项权利要求引用了说明书或附图来限定保护范围。",
+          "amend": "{{count}} 项权利要求引用了说明书或附图：权利要求 {{claims}}。",
           "pass": "权利要求未引用说明书或附图。"
         },
         "multiMultiDep": {
@@ -809,7 +809,7 @@
           "amendFormat": "{{count}}个段落未使用【NNNN】格式。示例:{{examples}}。"
         },
         "paragraphEnding": {
-          "amend": "{{count}}个段落缺少结尾标点。",
+          "amend": "{{count}}个段落缺少结尾标点：段落 {{paragraphs}}。",
           "pass": "所有段落均以正确标点结尾。"
         },
         "figureRefConsistency": {
@@ -844,7 +844,7 @@
           "pass": "請求項编号连续。"
         },
         "dependencyFormat": {
-          "amend": "{{count}}项請求項之依附格式无法辨识。",
+          "amend": "{{count}}项请求项之依附格式无法识别：请求项 {{claims}}。",
           "pass": "所有依附引用均使用正确格式。"
         },
         "selfDependent": {
@@ -860,19 +860,19 @@
           "pass": "无向前依附。"
         },
         "singleSentence": {
-          "amend": "{{count}}项請求項非单句撰写。",
+          "amend": "{{count}}项请求项非单句撰写：请求项 {{claims}}。",
           "pass": "所有請求項均为单句。"
         },
         "refNumeralParens": {
-          "verify": "{{count}}项請求項之元件符号未加括号。",
+          "verify": "{{count}}项请求项之元件符号未加括号：请求项 {{claims}}。",
           "pass": "所有請求項之元件符号均已加括号。"
         },
         "subjectConsistency": {
-          "verify": "{{count}}项附属项之主题名称与母项不一致。",
+          "verify": "{{count}}项附属项之主题名称与母项不一致：请求项 {{claims}}。",
           "pass": "所有附属项之主题名称均与母项一致。"
         },
         "transitionPhrase": {
-          "verify": "{{count}}项独立项缺少特征连接词。",
+          "verify": "{{count}}项独立项缺少特征连接词：请求项 {{claims}}。",
           "pass": "所有独立项均包含特征连接词。"
         },
         "cnTerminology": {
@@ -1042,6 +1042,7 @@
   },
   "punct": {
     "listSeparator": "、",
-    "sentenceSeparator": "；"
+    "sentenceSeparator": "；",
+    "ellipsis": "……"
   }
 }
