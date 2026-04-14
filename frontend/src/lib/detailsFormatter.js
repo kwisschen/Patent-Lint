@@ -50,25 +50,37 @@ function formatParagraphList(arr, t) {
   return arr.map(n => t("term.paragraph.numbered", { n })).join(", ")
 }
 
-// Primitive list formatters
+// Primitive list formatters (truncate at 10 + localized ellipsis)
 function formatFigureList(figs, t) {
   if (!Array.isArray(figs) || figs.length === 0) return ""
-  return figs.map(n => t("term.figure.numbered", { n })).join(t("punct.listSeparator"))
+  const truncated = figs.length > 10
+  const shown = figs.slice(0, 10)
+  const rendered = shown.map(n => t("term.figure.numbered", { n })).join(t("punct.listSeparator"))
+  return truncated ? rendered + t("punct.ellipsis") : rendered
 }
 
 function formatClaimList(claims, t) {
   if (!Array.isArray(claims) || claims.length === 0) return ""
-  return claims.map(n => t("term.claim.numbered", { n })).join(t("punct.listSeparator"))
+  const truncated = claims.length > 10
+  const shown = claims.slice(0, 10)
+  const rendered = shown.map(n => t("term.claim.numbered", { n })).join(t("punct.listSeparator"))
+  return truncated ? rendered + t("punct.ellipsis") : rendered
 }
 
 function formatParagraphListSimple(paras, t) {
   if (!Array.isArray(paras) || paras.length === 0) return ""
-  return paras.map(n => t("term.paragraph.numbered", { n })).join(t("punct.listSeparator"))
+  const truncated = paras.length > 10
+  const shown = paras.slice(0, 10)
+  const rendered = shown.map(n => t("term.paragraph.numbered", { n })).join(t("punct.listSeparator"))
+  return truncated ? rendered + t("punct.ellipsis") : rendered
 }
 
 function formatNumeralList(nums, t) {
   if (!Array.isArray(nums) || nums.length === 0) return ""
-  return nums.join(t("punct.listSeparator"))
+  const truncated = nums.length > 10
+  const shown = nums.slice(0, 10)
+  const rendered = shown.join(t("punct.listSeparator"))
+  return truncated ? rendered + t("punct.ellipsis") : rendered
 }
 
 // Figure reference inconsistency — two-direction mismatch
@@ -156,6 +168,11 @@ const STRUCTURED_FORMATTERS = {
   claim_list: formatClaimList,
   paragraph_list_simple: formatParagraphListSimple,
   numeral_list: formatNumeralList,
+  // Semantic aliases: allow Python emit sites to name fields by what they
+  // contain ("claims", "paragraphs", "duplicates") while reusing the same
+  // formatter functions.
+  claims: formatClaimList,
+  paragraphs: formatParagraphListSimple,
   figure_ref_inconsistency: formatFigureRefInconsistency,
   symbol_table_inconsistency: formatSymbolTableInconsistency,
   symbol_mismatch_triples: formatSymbolMismatchTriples,
@@ -172,6 +189,8 @@ const ARRAY_FORMATTER_FIELDS = new Set([
   "claim_list",
   "paragraph_list_simple",
   "numeral_list",
+  "claims",
+  "paragraphs",
 ])
 
 /**

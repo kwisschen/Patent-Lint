@@ -76,7 +76,8 @@ class TestDependencyFormat:
         ])
         results = check_dependency_format(doc)
         assert results[0].status == "amend"
-        assert results[0].details_params["count"] == "1"
+        assert results[0].details_params["count"] == 1
+        assert results[0].details_params["claims"] == [2]
 
     def test_multi_dep_format_pass(self):
         doc = _cn_doc([
@@ -156,7 +157,8 @@ class TestSingleSentence:
         ])
         results = check_single_sentence(doc)
         assert results[0].status == "amend"
-        assert results[0].details_params["count"] == "1"
+        assert results[0].details_params["count"] == 1
+        assert results[0].details_params["claims"] == [1]
 
     def test_no_period_amend(self):
         doc = _cn_doc([
@@ -191,7 +193,8 @@ class TestRefNumeralParentheses:
         ])
         results = check_reference_numeral_parentheses(doc)
         assert results[0].status == "verify"
-        assert results[0].details_params["count"] == "1"
+        assert results[0].details_params["count"] == 1
+        assert results[0].details_params["claims"] == [1]
 
     def test_no_numerals_pass(self):
         doc = _cn_doc([
@@ -208,7 +211,8 @@ class TestRefNumeralParentheses:
         ])
         results = check_reference_numeral_parentheses(doc)
         assert results[0].status == "verify"
-        assert results[0].details_params["count"] == "1"
+        assert results[0].details_params["count"] == 1
+        assert results[0].details_params["claims"] == [2]
 
 
 # ── Check 15: Subject name consistency ────────────────────────────────────
@@ -256,7 +260,8 @@ class TestTransitionPhrase:
         ])
         results = check_transition_phrase(doc)
         assert results[0].status == "verify"
-        assert results[0].details_params["count"] == "1"
+        assert results[0].details_params["count"] == 1
+        assert results[0].details_params["claims"] == [1]
 
     def test_alternative_transitions(self):
         doc = _cn_doc([

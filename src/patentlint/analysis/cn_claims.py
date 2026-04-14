@@ -76,23 +76,24 @@ def check_dependency_format(cn_doc: CnPatentDocument) -> list[CheckItem]:
             reference="专利法实施细则 §22",
         )]
 
-    bad_count = 0
+    bad_claim_ids: list[int] = []
     for claim in dependents:
         if claim.multiple_dependent:
             if not _DEP_FORMAT_MULTI.search(claim.text):
-                bad_count += 1
+                bad_claim_ids.append(claim.id)
         else:
             if not _DEP_FORMAT_SINGLE.search(claim.text):
-                bad_count += 1
+                bad_claim_ids.append(claim.id)
 
-    if bad_count:
+    if bad_claim_ids:
+        claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="amend",
-            message=f"{bad_count} dependent claim(s) lack proper dependency format.",
+            message=f"{len(bad_claim_ids)} dependent claim(s) lack proper dependency format (claims: {claims_str}).",
             message_key="check.cn.claims.dependencyFormat.amend",
-            details=f"{bad_count} claims",
+            details=f"{len(bad_claim_ids)} claims",
             details_key="details.cn.dependencyFormat",
-            details_params={"count": str(bad_count)},
+            details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="专利法实施细则 §22",
         )]
 
@@ -163,21 +164,22 @@ def check_forward_dependency(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
 def check_single_sentence(cn_doc: CnPatentDocument) -> list[CheckItem]:
     """Each claim must have exactly one 。 at the end."""
-    bad_count = 0
+    bad_claim_ids: list[int] = []
     for claim in cn_doc.claims:
         text = claim.text.strip()
         period_count = text.count("。")
         if period_count != 1 or not text.endswith("。"):
-            bad_count += 1
+            bad_claim_ids.append(claim.id)
 
-    if bad_count:
+    if bad_claim_ids:
+        claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="amend",
-            message=f"{bad_count} claim(s) have invalid sentence structure.",
+            message=f"{len(bad_claim_ids)} claim(s) have invalid sentence structure (claims: {claims_str}).",
             message_key="check.cn.claims.singleSentence.amend",
-            details=f"{bad_count} claims",
+            details=f"{len(bad_claim_ids)} claims",
             details_key="details.cn.singleSentence",
-            details_params={"count": str(bad_count)},
+            details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="审查指南 第二部分第二章",
         )]
 
@@ -199,19 +201,20 @@ _BARE_NUMERAL = re.compile(
 
 def check_reference_numeral_parentheses(cn_doc: CnPatentDocument) -> list[CheckItem]:
     """Find reference numerals in claims not enclosed in parentheses."""
-    bad_count = 0
+    bad_claim_ids: list[int] = []
     for claim in cn_doc.claims:
         if _BARE_NUMERAL.search(claim.text):
-            bad_count += 1
+            bad_claim_ids.append(claim.id)
 
-    if bad_count:
+    if bad_claim_ids:
+        claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="verify",
-            message=f"{bad_count} claim(s) have unparenthesized reference numerals.",
+            message=f"{len(bad_claim_ids)} claim(s) have unparenthesized reference numerals (claims: {claims_str}).",
             message_key="check.cn.claims.refNumeralParens.verify",
-            details=f"{bad_count} claims",
+            details=f"{len(bad_claim_ids)} claims",
             details_key="details.cn.refNumeralParens",
-            details_params={"count": str(bad_count)},
+            details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="审查指南",
         )]
 
@@ -256,7 +259,7 @@ def check_subject_name_consistency(cn_doc: CnPatentDocument) -> list[CheckItem]:
             reference="审查指南 第二部分第二章",
         )]
 
-    bad_count = 0
+    bad_claim_ids: list[int] = []
     for claim in dependents:
         dep_subject = _extract_subject(claim.text)
         if not dep_subject or not claim.dependencies:
@@ -276,16 +279,17 @@ def check_subject_name_consistency(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
         if (dep_subject and parent_subject
                 and _normalize_subject(dep_subject) != _normalize_subject(parent_subject)):
-            bad_count += 1
+            bad_claim_ids.append(claim.id)
 
-    if bad_count:
+    if bad_claim_ids:
+        claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="verify",
-            message=f"{bad_count} dependent claim(s) have inconsistent subject names.",
+            message=f"{len(bad_claim_ids)} dependent claim(s) have inconsistent subject names (claims: {claims_str}).",
             message_key="check.cn.claims.subjectConsistency.verify",
-            details=f"{bad_count} claims",
+            details=f"{len(bad_claim_ids)} claims",
             details_key="details.cn.subjectConsistency",
-            details_params={"count": str(bad_count)},
+            details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="审查指南 第二部分第二章",
         )]
 
@@ -313,19 +317,20 @@ def check_transition_phrase(cn_doc: CnPatentDocument) -> list[CheckItem]:
             reference="审查指南",
         )]
 
-    bad_count = 0
+    bad_claim_ids: list[int] = []
     for claim in independents:
         if not _TRANSITION_PHRASES.search(claim.text):
-            bad_count += 1
+            bad_claim_ids.append(claim.id)
 
-    if bad_count:
+    if bad_claim_ids:
+        claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="verify",
-            message=f"{bad_count} independent claim(s) lack a transition phrase.",
+            message=f"{len(bad_claim_ids)} independent claim(s) lack a transition phrase (claims: {claims_str}).",
             message_key="check.cn.claims.transitionPhrase.verify",
-            details=f"{bad_count} claims",
+            details=f"{len(bad_claim_ids)} claims",
             details_key="details.cn.transitionPhrase",
-            details_params={"count": str(bad_count)},
+            details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="审查指南",
         )]
 
@@ -369,19 +374,20 @@ _SPEC_REF = re.compile(r"如说明书|如图|参见说明书|参见图|参照说
 
 def check_claims_spec_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
     """Check if claims reference the specification or drawings for scope."""
-    bad_count = 0
+    bad_claim_ids: list[int] = []
     for claim in cn_doc.claims:
         if _SPEC_REF.search(claim.text):
-            bad_count += 1
+            bad_claim_ids.append(claim.id)
 
-    if bad_count:
+    if bad_claim_ids:
+        claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="amend",
-            message=f"{bad_count} claim(s) reference the specification or drawings.",
+            message=f"{len(bad_claim_ids)} claim(s) reference the specification or drawings (claims: {claims_str}).",
             message_key="check.cn.claims.specReference.amend",
-            details=f"{bad_count} claims",
+            details=f"{len(bad_claim_ids)} claims",
             details_key="details.cn.claimsSpecReference",
-            details_params={"count": str(bad_count)},
+            details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="审查指南 第二部分第二章",
         )]
 
