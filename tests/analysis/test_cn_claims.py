@@ -137,7 +137,7 @@ class TestForwardDependency:
         ])
         results = check_forward_dependency(doc)
         assert results[0].status == "amend"
-        assert "1" in results[0].details_params["claims"]
+        assert 1 in results[0].details_params["claims"]
 
 
 # ── Check 13: Single sentence ────────────────────────────────────────────
