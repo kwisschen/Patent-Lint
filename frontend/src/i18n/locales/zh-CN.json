@@ -490,20 +490,24 @@
       "abstractTitleMatch": "根据审查指南，摘要应与发明名称一致。请确认摘要是否体现了发明名称。",
       "commercialLanguage": "根据专利法实施细则 §23，摘要不得包含商业性宣传用语。请删除\"最优\"\"最佳\"\"世界领先\"\"国际领先\"\"国内首创\"\"填补空白\"等用语。",
       "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语可能缺少先行词。",
-      "titleMissing": "根据审查指南 第一部分第一章，说明书必须包含发明名称。请于说明书首部添加发明名称。"
+      "titleMissing": "根据审查指南 第一部分第一章，说明书必须包含发明名称。请于说明书首部添加发明名称。",
+      "figureRefInconsistency": {
+        "onlyDrawings": "仅在附图说明中提及:{{figs}}",
+        "onlyEmbodiment": "仅在具体实施方式中提及:{{figs}}"
+      }
     },
     "tw": {
       "requiredSections": "TIPO规定必须包含：技術領域、先前技術、發明內容/新型內容、實施方式。有图式时须包含圖式簡單說明及符號說明。缺少：{{sections}}。",
       "sectionOrdering": "专利法施行细则 §17规定顺序：技術領域→先前技術→發明內容/新型內容→圖式簡單說明→實施方式→符號說明。请重新排列。",
-      "paragraphNumbering": "使用段落编号时，须采【NNNN】格式，四位数连续编号。依专利法施行细则 §17，段落编号为选用。发现：{{detail}}。",
+      "paragraphNumbering": "如使用段落编号,应采用【NNNN】四位数字连续格式。依专利法施行细则 §17,编号为选用。",
       "paragraphEnding": "说明书段落应以中文标点（。！？）结尾。请检查标记之段落。",
-      "figureRefConsistency": "圖式簡單說明与實施方式之间的图式引用不同。{{detail}}。请确认完整性。",
+      "figureRefConsistency": "依专利审查基准,圖式簡單說明中描述的图式应在實施方式中引用,反之亦然。请确认标记的引用是否正确。",
       "patentTypeTerminology": "发明专利应使用「本發明」而非「本新型」。新型专利应使用「本新型」而非「本發明」。发现：{{term}}。",
-      "title": "发明名称/新型名称应简洁，不得包含商标、型号或无关文字。发现：{{detail}}。",
+      "title": "发明名称/新型名称应简洁,不得包含商标、型号或无关文字。",
       "claimReference": "依专利法施行细则 §17，说明书不得引用特定請求項（如「如請求項N所述」）。发现：{{detail}}。",
       "symbolTablePresence": "依专利法施行细则 §17，有圖式簡單說明时，须包含符號說明章节，列出元件符号及名称。",
-      "symbolTableConsistency": "符號說明内容与實施方式不一致。{{detail}}。请确认完整性。",
-      "claimsSequential": "請求項编号须从1开始连续编列。{{detail}}。",
+      "symbolTableConsistency": "依专利审查基准,符号说明条目应与实施方式中使用的参考符号一致。请确认完整性。",
+      "claimsSequential": "依专利审查基准,请求项编号须从1开始连续编列。",
       "dependencyFormat": "依专利法施行细则 §18，依附须使用正确格式（如請求項N所述之、如請求項N之等）。请检查标记之請求項。",
       "selfDependent": "依专利法施行细则 §18，請求項不得依附于自身。自我依附：請求項 {{claims}}。",
       "circularDependency": "依专利法施行细则 §18，請求項不得形成循环依附链。循环链：請求項 {{claims}}。",
@@ -516,7 +520,7 @@
       "specDrawingRef": "依专利法施行细则 §19，請求項不得引用说明书或图式（如「如說明書所述」「如圖所示」）。发现：{{detail}}。",
       "multiDepOnMultiDep": "依专利法施行细则 §18，多项附属项不得直接或间接依附于另一多项附属项。标记：請求項 {{claims}}。",
       "multiDepAlternative": "依专利法施行细则 §18，多项附属项须使用择一形式（或/任一项）。标记：請求項 {{claims}}。",
-      "titleSubjectMatch": "发明名称/新型名称应与独立项之主题名称一致。标题：{{detail}}。",
+      "titleSubjectMatch": "依专利审查基准,发明名称/新型名称应与独立项之主题名称一致。请检查标记之请求项。",
       "claims": {
         "symbolTableConsistency": {
           "missingFromTable": "权利要求中的元件符号未在符号说明中定义：{{numerals_with_locations}}"
@@ -527,10 +531,29 @@
       "abstractTitleMatch": "依专利审查基准，摘要应提及发明名称/新型名称。请确认摘要是否反映标题。标题：{{detail}}。",
       "commercialLanguage": "依专利法施行细则 §21，摘要不得包含商业性宣传用语。发现：{{terms}}。",
       "representativeDrawing": "依专利法施行细则 §21，有图式时应指定代表圖。请确认是否需要指定代表圖。",
-      "symbolVsRepDrawing": "代表圖之符號簡單說明中列出之符号应与符號說明一致。{{detail}}。请确认完整性。",
+      "symbolVsRepDrawing": {
+        "notInTable": "{{numeral}}({{name}})未于符号说明中定义",
+        "nameMismatch": "{{numeral}}:代表图为「{{rep_name}}」,符号说明为「{{table_name}}」"
+      },
       "bracketFormat": "依专利法施行细则 §17，章节标题应使用全角方括号【】。发现：{{detail}}。",
       "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语可能缺少先行词。",
-      "titleMissing": "依专利审查基准，说明书必须包含发明名称/新型名称。请于说明书首部添加。"
+      "titleMissing": "依专利审查基准，说明书必须包含发明名称/新型名称。请于说明书首部添加。",
+      "figureRefInconsistency": {
+        "onlyDrawings": "仅在圖式簡單說明中提及:{{figs}}",
+        "onlyEmbodiment": "仅在實施方式中提及:{{figs}}"
+      },
+      "symbolTableInconsistency": {
+        "unreferenced": "符号说明已定义但实施方式未引用:{{symbols}}",
+        "undefined": "实施方式已引用但符号说明未定义:{{symbols}}"
+      }
+    },
+    "titleProhibited": {
+      "trademark": "商标符号「{{token}}」",
+      "commercial": "商业性宣传用语「{{token}}」",
+      "model": "型号「{{token}}」"
+    },
+    "paragraphFormat": {
+      "examples": "{{count}}个段落未使用【NNNN】格式。示例:{{examples}}"
     }
   },
   "common": {
@@ -673,14 +696,16 @@
         "paragraphNumbering": {
           "amendXml": "段落编号不连续（{{detail}}）。",
           "amendDocx": "说明书包含手动添加的段落编号。",
-          "pass": "段落编号正确。"
+          "pass": "段落编号正确。",
+          "amendXmlGap": "段落编号不连续:第{{prev}}段后为第{{next}}段。",
+          "amendXmlDuplicate": "检测到重复的段落编号。"
         },
         "paragraphEnding": {
           "amend": "{{count}} 个段落未以有效中文标点结尾。",
           "pass": "所有段落均以有效标点结尾。"
         },
         "figureRefConsistency": {
-          "verify": "具体实施方式与附图说明中的附图引用不一致（{{detail}}）。",
+          "verify": "附图说明与具体实施方式之间的附图引用不一致。{{figure_ref_inconsistency}}",
           "pass": "各章节附图引用一致。"
         },
         "patentTypeTerminology": {
@@ -689,7 +714,7 @@
         },
         "title": {
           "amendLength": "发明名称超过25个汉字（共{{count}}个字）。",
-          "amendContent": "发明名称包含禁止内容：{{detail}}。",
+          "amendContent": "发明名称包含禁止内容:{{title_prohibited_items}}",
           "pass": "发明名称符合要求。",
           "amendMissing": "未发现发明名称。"
         },
@@ -700,7 +725,7 @@
       },
       "claims": {
         "sequential": {
-          "amend": "权利要求编号不连续（{{detail}}）。",
+          "amend": "权利要求编号不连续:预期第{{expected}}项,实际为第{{found}}项。",
           "pass": "权利要求编号连续。"
         },
         "dependencyFormat": {
@@ -779,15 +804,16 @@
           "pass": "章节顺序正确。"
         },
         "paragraphNumbering": {
-          "amend": "段落编号格式不正确。",
-          "pass": "段落编号正确或未使用编号。"
+          "pass": "段落编号正确或未使用编号。",
+          "amendGap": "段落编号不连续:【{{prev}}】后为【{{next}}】。",
+          "amendFormat": "{{count}}个段落未使用【NNNN】格式。示例:{{examples}}。"
         },
         "paragraphEnding": {
           "amend": "{{count}}个段落缺少结尾标点。",
           "pass": "所有段落均以正确标点结尾。"
         },
         "figureRefConsistency": {
-          "verify": "圖式簡單說明与實施方式之间的图式引用不一致。",
+          "verify": "圖式簡單說明与實施方式之间的图式引用不一致。{{figure_ref_inconsistency}}",
           "pass": "各章节之图式引用一致。"
         },
         "patentTypeTerminology": {
@@ -795,7 +821,7 @@
           "pass": "专利类型用语一致。"
         },
         "title": {
-          "amendContent": "发明名称/新型名称包含不当内容。",
+          "amendContent": "发明名称/新型名称包含不当内容:{{title_prohibited_items}}",
           "pass": "发明名称/新型名称符合要求。",
           "amendMissing": "未发现发明名称/新型名称。"
         },
@@ -808,13 +834,13 @@
           "pass": "符號說明章节已包含。"
         },
         "symbolTableConsistency": {
-          "verify": "符號說明内容与實施方式不一致。",
+          "verify": "符号说明内容与实施方式不一致:{{symbol_table_inconsistency}}",
           "pass": "符號說明内容与说明书一致。"
         }
       },
       "claims": {
         "sequential": {
-          "amend": "請求項编号不连续。",
+          "amend": "请求项编号不连续:预期第{{expected}}项,实际为第{{found}}项。",
           "pass": "請求項编号连续。"
         },
         "dependencyFormat": {
@@ -866,7 +892,7 @@
           "pass": "所有多项附属项均使用择一形式。"
         },
         "titleSubjectMatch": {
-          "verify": "发明名称/新型名称可能与独立项主题不一致。",
+          "verify": "发明名称/新型名称「{{title}}」可能与独立项主题「{{subjects}}」不一致。",
           "pass": "发明名称/新型名称与独立项主题一致。"
         },
         "symbolTableConsistency": {
@@ -899,7 +925,7 @@
       },
       "crossRef": {
         "symbolVsRepDrawing": {
-          "verify": "代表圖之符號簡單說明与符號說明不一致。",
+          "verify": "代表图之符号简单说明与符号说明不一致:{{symbol_mismatch_triples}}",
           "pass": "代表圖之符號簡單說明与符號說明一致。"
         },
         "bracketFormat": {
@@ -1013,5 +1039,9 @@
     "paragraph": {
       "numbered": "段落{{n}}"
     }
+  },
+  "punct": {
+    "listSeparator": "、",
+    "sentenceSeparator": "；"
   }
 }

@@ -117,26 +117,21 @@ def check_paragraph_numbering(cn_doc: CnPatentDocument) -> list[CheckItem]:
         if nums:
             for i in range(1, len(nums)):
                 if nums[i] != nums[i - 1] + 1:
-                    detail = f"Gap after paragraph {nums[i - 1]}: next is {nums[i]}"
                     return [CheckItem(
                         status="amend",
-                        message="Paragraph numbering is not sequential.",
-                        message_key="check.cn.spec.paragraphNumbering.amendXml",
-                        details=detail,
+                        message=f"Paragraph numbering has a gap: paragraph {nums[i - 1]} is followed by {nums[i]}.",
+                        message_key="check.cn.spec.paragraphNumbering.amendXmlGap",
                         details_key="details.cn.paragraphNumberingXml",
-                        details_params={"detail": detail},
+                        details_params={"prev": nums[i - 1], "next": nums[i]},
                         reference="审查指南",
                     )]
             # Check for duplicates
             if len(set(nums)) != len(nums):
-                detail = "Duplicate paragraph numbers found"
                 return [CheckItem(
                     status="amend",
-                    message="Duplicate paragraph numbers found.",
-                    message_key="check.cn.spec.paragraphNumbering.amendXml",
-                    details=detail,
+                    message="Duplicate paragraph numbers detected.",
+                    message_key="check.cn.spec.paragraphNumbering.amendXmlDuplicate",
                     details_key="details.cn.paragraphNumberingXml",
-                    details_params={"detail": detail},
                     reference="审查指南",
                 )]
     elif cn_doc.input_format == "docx":
@@ -214,19 +209,18 @@ def check_figure_reference_consistency(cn_doc: CnPatentDocument) -> list[CheckIt
     only_detail = sorted(detail_figs - drawings_figs, key=int)
 
     if only_drawings or only_detail:
-        parts = []
-        if only_drawings:
-            parts.append("图" + ", 图".join(only_drawings) + " in 附图说明 only")
-        if only_detail:
-            parts.append("图" + ", 图".join(only_detail) + " in 具体实施方式 only")
-        detail = "; ".join(parts)
         return [CheckItem(
             status="verify",
             message="Figure references differ between 附图说明 and 具体实施方式.",
             message_key="check.cn.spec.figureRefConsistency.verify",
-            details=detail,
             details_key="details.cn.figureRefConsistency",
-            details_params={"detail": detail},
+            details_params={
+                "figure_ref_inconsistency": {
+                    "only_drawings": [int(x) for x in only_drawings],
+                    "only_embodiment": [int(x) for x in only_detail],
+                    "jurisdiction": "cn",
+                },
+            },
             reference="审查指南",
         )]
 
@@ -302,30 +296,27 @@ def check_title(cn_doc: CnPatentDocument) -> list[CheckItem]:
             status="amend",
             message=f"Title has {cjk_count} Chinese characters (max 25).",
             message_key="check.cn.spec.title.amendLength",
-            details=f"{cjk_count} characters",
             details_key="details.cn.titleLength",
-            details_params={"count": str(cjk_count)},
+            details_params={"count": cjk_count},
             reference="审查指南 第一部分第一章",
         ))
 
     # Content check
-    found = []
+    items: list[dict] = []
     tm_match = _TRADEMARK_RE.search(title)
     if tm_match:
-        found.append(f"Trademark symbol: {tm_match.group()}")
+        items.append({"kind": "trademark", "token": tm_match.group()})
     comm_match = _COMMERCIAL_PATTERN.search(title)
     if comm_match:
-        found.append(f"Commercial designation: {comm_match.group()}")
+        items.append({"kind": "commercial", "token": comm_match.group()})
 
-    if found:
-        detail = "; ".join(found)
+    if items:
         results.append(CheckItem(
             status="amend",
             message="Title contains prohibited content.",
             message_key="check.cn.spec.title.amendContent",
-            details=detail,
             details_key="details.cn.titleContent",
-            details_params={"detail": detail},
+            details_params={"title_prohibited_items": {"items": items}},
             reference="审查指南 第一部分第一章",
         ))
 

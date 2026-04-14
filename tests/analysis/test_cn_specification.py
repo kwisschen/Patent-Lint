@@ -117,8 +117,9 @@ class TestParagraphNumbering:
         doc = _make_cn_doc(input_format="xml", paragraph_numbers=[1, 2, 4, 5])
         results = check_paragraph_numbering(doc)
         assert results[0].status == "amend"
-        assert results[0].message_key == "check.cn.spec.paragraphNumbering.amendXml"
-        assert "Gap" in results[0].details_params["detail"]
+        assert results[0].message_key == "check.cn.spec.paragraphNumbering.amendXmlGap"
+        assert results[0].details_params["prev"] == 2
+        assert results[0].details_params["next"] == 4
 
     def test_xml_duplicate_amend(self):
         doc = _make_cn_doc(input_format="xml", paragraph_numbers=[1, 2, 2, 3])
@@ -207,8 +208,10 @@ class TestFigureReferenceConsistency:
         )
         results = check_figure_reference_consistency(doc)
         assert results[0].status == "verify"
-        assert "图3" in results[0].details
-        assert "图5" in results[0].details
+        payload = results[0].details_params["figure_ref_inconsistency"]
+        assert 3 in payload["only_drawings"]
+        assert 5 in payload["only_embodiment"]
+        assert payload["jurisdiction"] == "cn"
 
     def test_both_empty_pass(self):
         doc = _make_cn_doc(drawings_description=[], detailed_description=[])

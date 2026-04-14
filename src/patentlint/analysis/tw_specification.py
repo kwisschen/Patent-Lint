@@ -192,14 +192,13 @@ def check_paragraph_numbering(doc: TwPatentDocument) -> list[CheckItem]:
     four_digit_re = re.compile(r"^\d{4}$")
     bad_format = [n for n in nums if not four_digit_re.match(n)]
     if bad_format:
-        detail = f"Non-4-digit format: {', '.join(bad_format[:5])}"
+        examples_str = ", ".join(bad_format[:5])
         return [CheckItem(
             status="amend",
-            message="Paragraph numbering format incorrect.",
-            message_key="check.tw.spec.paragraphNumbering.amend",
-            details=detail,
+            message=f"{len(bad_format)} paragraph(s) use non-[NNNN] format.",
+            message_key="check.tw.spec.paragraphNumbering.amendFormat",
             details_key="details.tw.paragraphNumbering",
-            details_params={"detail": detail},
+            details_params={"count": len(bad_format), "examples": examples_str},
             reference="專利法施行細則 §17",
         )]
 
@@ -207,14 +206,12 @@ def check_paragraph_numbering(doc: TwPatentDocument) -> list[CheckItem]:
     int_nums = [int(n) for n in nums]
     for i in range(1, len(int_nums)):
         if int_nums[i] != int_nums[i - 1] + 1:
-            detail = f"Gap after 【{nums[i - 1]}】: next is 【{nums[i]}】"
             return [CheckItem(
                 status="amend",
-                message="Paragraph numbering has gaps.",
-                message_key="check.tw.spec.paragraphNumbering.amend",
-                details=detail,
+                message=f"Paragraph numbering has a gap: [{nums[i - 1]}] is followed by [{nums[i]}].",
+                message_key="check.tw.spec.paragraphNumbering.amendGap",
                 details_key="details.tw.paragraphNumbering",
-                details_params={"detail": detail},
+                details_params={"prev": nums[i - 1], "next": nums[i]},
                 reference="專利法施行細則 §17",
             )]
 
@@ -327,19 +324,27 @@ def check_figure_ref_consistency(doc: TwPatentDocument) -> list[CheckItem]:
     only_embodiment = sorted(embodiment_figs - drawings_figs, key=_fig_sort_key)
 
     if only_drawings or only_embodiment:
-        parts = []
-        if only_drawings:
-            parts.append("圖" + ", 圖".join(only_drawings) + " in 圖式簡單說明 only")
-        if only_embodiment:
-            parts.append("圖" + ", 圖".join(only_embodiment) + " in 實施方式 only")
-        detail = "; ".join(parts)
+        def _to_int_safe(xs: list[str]) -> list[int]:
+            out: list[int] = []
+            for x in xs:
+                try:
+                    out.append(int(x))
+                except (TypeError, ValueError):
+                    continue
+            return out
+
         return [CheckItem(
             status="verify",
             message="Figure references differ between 圖式簡單說明 and 實施方式.",
             message_key="check.tw.spec.figureRefConsistency.verify",
-            details=detail,
             details_key="details.tw.figureRefConsistency",
-            details_params={"detail": detail},
+            details_params={
+                "figure_ref_inconsistency": {
+                    "only_drawings": _to_int_safe(only_drawings),
+                    "only_embodiment": _to_int_safe(only_embodiment),
+                    "jurisdiction": "tw",
+                },
+            },
             reference="專利審查基準",
         )]
 
@@ -405,23 +410,21 @@ def check_title(doc: TwPatentDocument) -> list[CheckItem]:
             reference="專利審查基準",
         )]
 
-    found = []
+    items: list[dict] = []
     tm_match = _TRADEMARK_RE.search(title)
     if tm_match:
-        found.append(f"Trademark symbol: {tm_match.group()}")
+        items.append({"kind": "trademark", "token": tm_match.group()})
     model_match = _MODEL_NUMBER_RE.search(title)
     if model_match:
-        found.append(f"Model number: {model_match.group()}")
+        items.append({"kind": "model", "token": model_match.group()})
 
-    if found:
-        detail = "; ".join(found)
+    if items:
         return [CheckItem(
             status="amend",
             message="Title contains prohibited content.",
             message_key="check.tw.spec.title.amendContent",
-            details=detail,
             details_key="details.tw.title",
-            details_params={"detail": detail},
+            details_params={"title_prohibited_items": {"items": items}},
             reference="專利審查基準",
         )]
 
@@ -522,19 +525,17 @@ def check_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckItem]:
     undefined = sorted(embodiment_numerals - defined_numerals)
 
     if unreferenced or undefined:
-        parts = []
-        if unreferenced:
-            parts.append(f"Defined but unreferenced: {', '.join(unreferenced[:10])}")
-        if undefined:
-            parts.append(f"Referenced but undefined: {', '.join(undefined[:10])}")
-        detail = "; ".join(parts)
         return [CheckItem(
             status="verify",
             message="符號說明 entries inconsistent with 實施方式.",
             message_key="check.tw.spec.symbolTableConsistency.verify",
-            details=detail,
             details_key="details.tw.symbolTableConsistency",
-            details_params={"detail": detail},
+            details_params={
+                "symbol_table_inconsistency": {
+                    "unreferenced": sorted(unreferenced)[:10],
+                    "undefined": sorted(undefined)[:10],
+                },
+            },
             reference="專利審查基準",
         )]
 

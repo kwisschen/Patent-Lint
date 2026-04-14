@@ -41,7 +41,8 @@ class TestCheckSymbolVsRepDrawing:
         )
         result = check_symbol_vs_rep_drawing(doc)
         assert result[0].status == "verify"
-        assert "99" in result[0].details_params["detail"]
+        mismatches = result[0].details_params["symbol_mismatch_triples"]["mismatches"]
+        assert any(m["numeral"] == "99" for m in mismatches)
 
     def test_name_mismatch_verify(self):
         doc = TwPatentDocument(
@@ -54,8 +55,10 @@ class TestCheckSymbolVsRepDrawing:
         )
         result = check_symbol_vs_rep_drawing(doc)
         assert result[0].status == "verify"
-        assert "基座" in result[0].details_params["detail"]
-        assert "框架" in result[0].details_params["detail"]
+        mismatches = result[0].details_params["symbol_mismatch_triples"]["mismatches"]
+        m = mismatches[0]
+        assert m["rep_name"] == "基座"
+        assert m["table_name"] == "框架"
 
     def test_empty_rep_drawing_symbols_pass(self):
         doc = TwPatentDocument(
