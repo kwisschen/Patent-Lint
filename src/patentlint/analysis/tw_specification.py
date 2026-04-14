@@ -400,7 +400,8 @@ def check_title(doc: TwPatentDocument) -> list[CheckItem]:
             status="amend",
             message="Title is missing.",
             message_key="check.tw.spec.title.amendMissing",
-            details="No title found",
+            details_key="details.tw.titleMissing",
+            details="",
             reference="專利審查基準",
         )]
 

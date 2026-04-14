@@ -489,7 +489,8 @@
       "abstractCharCount": "根據专利法实施细则 §23，摘要不得超過300個漢字。請縮短摘要。",
       "abstractTitleMatch": "根據审查指南，摘要應與發明名稱一致。請確認摘要是否體現了發明名稱。",
       "commercialLanguage": "根據专利法实施细则 §23，摘要不得包含商業性宣傳用語。請刪除「最优」「最佳」「世界领先」「国际领先」「国内首创」「填补空白」等用語。",
-      "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語可能缺少先行詞。"
+      "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語可能缺少先行詞。",
+      "titleMissing": "根據審查指南 第一部分第一章，說明書必須包含發明名稱。請於說明書首部添加發明名稱。"
     },
     "tw": {
       "requiredSections": "TIPO規定必須包含：技術領域、先前技術、發明內容/新型內容、實施方式。有圖式時須包含圖式簡單說明及符號說明。缺少：{{sections}}。",
@@ -528,7 +529,8 @@
       "representativeDrawing": "依專利法施行細則 §21，有圖式時應指定代表圖。請確認是否需要指定代表圖。",
       "symbolVsRepDrawing": "代表圖之符號簡單說明中列出之符號應與符號說明一致。{{detail}}。請確認完整性。",
       "bracketFormat": "依專利法施行細則 §17，章節標題應使用全形方括號【】。發現：{{detail}}。",
-      "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語可能缺少先行詞。"
+      "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語可能缺少先行詞。",
+      "titleMissing": "依專利審查基準，說明書必須包含發明名稱/新型名稱。請於說明書首部添加。"
     }
   },
   "common": {
