@@ -208,7 +208,7 @@ class TestForwardDependency:
         ])
         result = check_forward_dependency(doc)
         assert result[0].status == "amend"
-        assert "2" in result[0].details_params["claims"]
+        assert 2 in result[0].details_params["claims"]
 
     def test_no_claims_pass(self):
         doc = _make_doc(claims=[])

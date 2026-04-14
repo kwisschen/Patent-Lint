@@ -533,7 +533,8 @@
       "representativeDrawing": "專利法施行細則 §21에 따라 도면이 있는 경우 代表圖를 지정해야 합니다. 代表圖 지정이 필요한지 확인하십시오.",
       "symbolVsRepDrawing": {
         "notInTable": "{{numeral}}({{name}})가 부호설명에 정의되지 않음",
-        "nameMismatch": "{{numeral}}: 대표도는「{{rep_name}}」, 부호설명은「{{table_name}}」"
+        "nameMismatch": "{{numeral}}: 대표도 부호 간단 설명은「{{rep_name}}」, 부호 설명은「{{table_name}}」",
+        "description": "대표도 부호 간단 설명에 기재된 부호는 부호 설명의 정의와 일치해야 합니다. 표시된 항목을 확인해 주십시오."
       },
       "bracketFormat": "專利法施行細則 §17에 따라 섹션 제목은 전각 대괄호 【】를 사용해야 합니다. 발견: {{detail}}.",
       "antecedentBasisTerms": "{{claim_count}}개 청구항에서 {{issue_count}}개 용어가 선행사를 결여할 수 있습니다。",
@@ -737,7 +738,7 @@
           "pass": "자기 인용 청구항이 발견되지 않았습니다."
         },
         "forwardDependency": {
-          "amend": "청구항 {{claims}}이(가) 전방 종속입니다(후순위 청구항 인용).",
+          "amend": "{{claims}}이(가) 전방 종속입니다(후순위 청구항 인용).",
           "pass": "전방 인용이 발견되지 않았습니다."
         },
         "singleSentence": {
@@ -856,7 +857,7 @@
           "pass": "순환 종속이 없습니다."
         },
         "forwardDependency": {
-          "amend": "청구항 {{claims}}이(가) 전방 종속입니다(후순위 청구항 인용).",
+          "amend": "{{claims}}이(가) 전방 종속입니다(후순위 청구항 인용).",
           "pass": "전방 종속이 없습니다."
         },
         "singleSentence": {
@@ -925,8 +926,8 @@
       },
       "crossRef": {
         "symbolVsRepDrawing": {
-          "verify": "대표도의 부호설명과 부호설명이 일치하지 않습니다: {{symbol_mismatch_triples}}",
-          "pass": "代表圖之符號簡單說明이 符號說明과 일치합니다."
+          "verify": "대표도 부호 간단 설명이 부호 설명과 일치하지 않습니다: {{symbol_mismatch_triples}}",
+          "pass": "대표도 부호 간단 설명이 부호 설명과 일치합니다."
         },
         "bracketFormat": {
           "verify": "섹션 제목이 올바른 【】 형식을 사용하지 않을 수 있습니다.",

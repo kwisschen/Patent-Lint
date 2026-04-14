@@ -533,7 +533,8 @@
       "representativeDrawing": "依專利法施行細則 §21，有圖式時應指定代表圖。請確認是否需要指定代表圖。",
       "symbolVsRepDrawing": {
         "notInTable": "{{numeral}}({{name}})未於符號說明中定義",
-        "nameMismatch": "{{numeral}}：代表圖為「{{rep_name}}」,符號說明為「{{table_name}}」"
+        "nameMismatch": "{{numeral}}：代表圖符號簡單說明為「{{rep_name}}」，符號說明為「{{table_name}}」",
+        "description": "代表圖符號簡單說明中列出之符號應與符號說明中之定義一致。請確認標記的項目。"
       },
       "bracketFormat": "依專利法施行細則 §17，章節標題應使用全形方括號【】。發現：{{detail}}。",
       "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語可能缺少先行詞。",
@@ -737,7 +738,7 @@
           "pass": "未發現自引用權利要求。"
         },
         "forwardDependency": {
-          "amend": "權利要求 {{claims}} 向前依附（引用後項權利要求）。",
+          "amend": "{{claims}} 向前依附（引用後項權利要求）。",
           "pass": "未發現正向引用。"
         },
         "singleSentence": {
@@ -856,7 +857,7 @@
           "pass": "無循環依附。"
         },
         "forwardDependency": {
-          "amend": "請求項 {{claims}} 向前依附（引用後項請求項）。",
+          "amend": "{{claims}} 向前依附（引用後項請求項）。",
           "pass": "無向前依附。"
         },
         "singleSentence": {

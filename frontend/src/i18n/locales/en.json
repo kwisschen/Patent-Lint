@@ -533,7 +533,8 @@
       "representativeDrawing": "Per 專利法施行細則 §21, when drawings exist, a 代表圖 should be designated. Review whether a representative drawing designation is needed.",
       "symbolVsRepDrawing": {
         "notInTable": "{{numeral}} ({{name}}) not in 符號說明",
-        "nameMismatch": "{{numeral}}: 代表圖 has \"{{rep_name}}\", 符號說明 has \"{{table_name}}\""
+        "nameMismatch": "{{numeral}}: representative drawing symbol description has \"{{rep_name}}\", 符號說明 has \"{{table_name}}\"",
+        "description": "Symbols listed in the representative drawing symbol description should match the definitions in 符號說明. Verify the flagged items."
       },
       "bracketFormat": "Per 專利法施行細則 §17, section headers should use full-width brackets 【】. Found: {{detail}}.",
       "antecedentBasisTerms": "{{issue_count}} term(s) may lack antecedent basis across {{claim_count}} claim(s).",
@@ -737,7 +738,7 @@
           "pass": "No self-dependent claims found."
         },
         "forwardDependency": {
-          "amend": "Claim(s) {{claims}} have forward dependency (reference later claims).",
+          "amend": "{{claims}} have forward dependency (reference later claims).",
           "pass": "No forward dependencies found."
         },
         "singleSentence": {
@@ -856,7 +857,7 @@
           "pass": "No circular dependencies."
         },
         "forwardDependency": {
-          "amend": "Claim(s) {{claims}} have forward dependency (reference later claims).",
+          "amend": "{{claims}} have forward dependency (reference later claims).",
           "pass": "No forward dependencies."
         },
         "singleSentence": {
@@ -926,7 +927,7 @@
       "crossRef": {
         "symbolVsRepDrawing": {
           "verify": "Representative drawing symbols inconsistent with 符號說明: {{symbol_mismatch_triples}}",
-          "pass": "代表圖之符號簡單說明 consistent with 符號說明."
+          "pass": "Representative drawing symbol description consistent with 符號說明."
         },
         "bracketFormat": {
           "verify": "Section headers may not use proper 【】bracket format.",

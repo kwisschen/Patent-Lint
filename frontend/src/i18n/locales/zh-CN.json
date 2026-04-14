@@ -533,7 +533,8 @@
       "representativeDrawing": "依专利法施行细则 §21，有图式时应指定代表圖。请确认是否需要指定代表圖。",
       "symbolVsRepDrawing": {
         "notInTable": "{{numeral}}({{name}})未于符号说明中定义",
-        "nameMismatch": "{{numeral}}：代表图为「{{rep_name}}」,符号说明为「{{table_name}}」"
+        "nameMismatch": "{{numeral}}：代表图符号简单说明为「{{rep_name}}」，符号说明为「{{table_name}}」",
+        "description": "代表图符号简单说明中列出之符号应与符号说明中之定义一致。请确认标记的项目。"
       },
       "bracketFormat": "依专利法施行细则 §17，章节标题应使用全角方括号【】。发现：{{detail}}。",
       "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语可能缺少先行词。",
@@ -737,7 +738,7 @@
           "pass": "未发现自引用权利要求。"
         },
         "forwardDependency": {
-          "amend": "权利要求 {{claims}} 向前依附（引用后项权利要求）。",
+          "amend": "{{claims}} 向前依附（引用后项权利要求）。",
           "pass": "未发现正向引用。"
         },
         "singleSentence": {
@@ -856,7 +857,7 @@
           "pass": "无循环依附。"
         },
         "forwardDependency": {
-          "amend": "请求项 {{claims}} 向前依附（引用后项请求项）。",
+          "amend": "{{claims}} 向前依附（引用后项请求项）。",
           "pass": "无向前依附。"
         },
         "singleSentence": {
@@ -926,7 +927,7 @@
       "crossRef": {
         "symbolVsRepDrawing": {
           "verify": "代表图之符号简单说明与符号说明不一致：{{symbol_mismatch_triples}}",
-          "pass": "代表圖之符號簡單說明与符號說明一致。"
+          "pass": "代表图之符号简单说明与符号说明一致。"
         },
         "bracketFormat": {
           "verify": "章节标题可能未使用正确之【】格式。",
