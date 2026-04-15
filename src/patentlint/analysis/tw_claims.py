@@ -31,15 +31,23 @@ _TW_DEP_FORMAT = re.compile(
 )
 
 # Bare reference numeral: CJK char followed by 2-4 digits not in parens.
-# Exclude: ordinals (第N), measurements (digits followed by unit chars/°),
-# and dependency refs (請求項N).
+# Exclude: ordinals (第N), measurements (digits followed by Latin or CJK unit
+# tokens like 重量份, 重量百分比, 莫耳, etc.), and dependency refs (請求項N).
+_CJK_UNIT_TOKENS = (
+    r"重量百分比|重量份|重量比|"
+    r"莫耳百分比|莫耳比|莫耳|"
+    r"體積百分比|體積比|質量百分比|原子百分比|"
+    r"毫克|公克|毫升|公升|微升|微米|奈米|公分|公釐|公尺|"
+    r"克|升|倍率|倍|份|個|顆|片"
+)
 _BARE_NUMERAL = re.compile(
     r"(?<!\()(?<=[\u4e00-\u9fff])"  # preceded by CJK, not by (
-    r"(?<!第)(?<!請求項)"            # not ordinal 第N or 請求項N
+    r"(?<!第)(?<!請求項)(?<!至)"     # not ordinal 第N / 請求項N / range 至N
     r"\s?\d{2,4}"                    # 2-4 digit number
     r"(?!\))"                        # not followed by )
     r"(?!\d)"                        # must match full number, no partial
-    r"(?![°℃%a-zA-Z])"              # not followed by unit/measurement
+    r"(?!\s*[°℃%a-zA-Z])"           # not followed by Latin unit/measurement
+    r"(?!\s*(?:" + _CJK_UNIT_TOKENS + r"))"  # not followed by CJK unit token
 )
 
 # Subject extraction: text before 其特徵在於 or first comma
@@ -47,6 +55,18 @@ _PREAMBLE_END = re.compile(r"(?:其特徵在於|其改良在於|，|,)")
 
 # Dependent claim subject: text after 所述之/所述的 or bare 之 (如請求項N之)
 _DEP_SUBJECT = re.compile(r"(?:所述[之的]|(?<=\d)[之的])(.+?)(?:，|,|其特徵|其改良|$)")
+
+# Dependent-claim preamble (anchored at start) so body-text occurrences of
+# 所述的 inside independent claims do not hijack subject extraction.
+_DEP_PREFIX_RE = re.compile(
+    r"^(?:如|根據|依)請求項\s*\d+"
+    r"(?:\s*(?:~|至|到)\s*\d+)?"
+    r"(?:\s*(?:或|、)\s*\d+)*"
+    r"(?:\s*中\s*任一?項)?"
+    r"\s*所?述?[之的]"
+)
+_INDEP_PREFIX_RE = re.compile(r"^(?:一種|一個)\s*")
+_SUBJECT_END_RE = re.compile(r"(?:[，,]|其特徵在於|其改良在於|其中)")
 
 # Leading quantifier for normalization
 _LEADING_QUANTIFIER = re.compile(r"^(?:一種|一個|該|所述|所述的)\s*")
@@ -59,18 +79,26 @@ _SPEC_REF = re.compile(r"如說明書|如圖|參見說明書|參見圖|參照說
 
 
 def _extract_subject(claim_text: str) -> str:
-    """Extract subject name from claim preamble."""
-    # Strip leading claim number pattern (e.g., "1. ")
-    text = re.sub(r"^\s*\d+\s*[.．]\s*", "", claim_text)
-    # For dependent claims: extract subject after 所述之/所述的/之
-    dep_match = _DEP_SUBJECT.search(text)
-    if dep_match:
-        return dep_match.group(1).strip()
-    # For independent claims: text before 其特徵在於 or first comma
-    match = _PREAMBLE_END.search(text)
-    if match:
-        return text[:match.start()].strip()
-    return ""
+    """Extract subject name from claim preamble.
+
+    Dependent-claim preambles like 如請求項1所述的X are anchored at the
+    start of the claim so that body-text occurrences of 所述的 inside an
+    independent claim do not hijack the extraction. Independent-claim
+    preambles (一種X / 一個X) fall through to the anchored independent
+    prefix path; both paths then read the noun phrase up to the first
+    comma / 其中 / 其特徵在於 boundary.
+    """
+    text = re.sub(r"^\s*\d+\s*[.．]\s*", "", claim_text).strip()
+    dep_m = _DEP_PREFIX_RE.match(text)
+    if dep_m:
+        remainder = text[dep_m.end():]
+        end_m = _SUBJECT_END_RE.search(remainder)
+        return (remainder[:end_m.start()] if end_m else remainder).strip()
+    indep_m = _INDEP_PREFIX_RE.match(text)
+    if indep_m:
+        text = text[indep_m.end():]
+    end_m = _SUBJECT_END_RE.search(text)
+    return (text[:end_m.start()] if end_m else text).strip()
 
 
 def _normalize_subject(subject: str) -> str:

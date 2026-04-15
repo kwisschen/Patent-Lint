@@ -489,7 +489,7 @@
       "abstractCharCount": "专利法实施细则 §23に基づき、要約は300文字を超えてはなりません。要約を短縮してください。",
       "abstractTitleMatch": "审查指南に基づき、要約は発明名称と一致すべきです。要約が発明名称を反映しているか確認してください。",
       "commercialLanguage": "专利法实施细则 §23に基づき、要約に商業的宣伝用語（商业性宣传用语）を含めてはなりません。最优、最佳、世界领先、国际领先、国内首创、填补空白などの用語を削除してください。",
-      "antecedentBasisTerms": "{{claim_count}}項の請求項にわたり、{{issue_count}}個の用語が先行詞を欠く可能性があります。",
+      "antecedentBasisTerms": "{{claim_count}}項の請求項に合計{{issue_count}}個の先行詞がない可能性のある用語があります。詳細は下の「先行詞の根拠の確認」セクションを参照してください。",
       "titleMissing": "審査指南 第一部第一章により、明細書には発明の名称を記載する必要があります。明細書の冒頭に発明の名称を追加してください。",
       "figureRefInconsistency": {
         "onlyDrawings": "附図説明でのみ言及：{{figs}}",
@@ -537,7 +537,7 @@
         "description": "代表図の符号簡単説明に記載された符号は符号説明の定義と一致する必要があります。マークされた項目を確認してください。"
       },
       "bracketFormat": "專利法施行細則 §17により、セクションヘッダーは全角括弧【】を使用する必要があります。検出：{{detail}}。",
-      "antecedentBasisTerms": "{{claim_count}}項の請求項にわたり、{{issue_count}}個の用語が先行詞を欠く可能性があります。",
+      "antecedentBasisTerms": "{{claim_count}}項の請求項に合計{{issue_count}}個の先行詞がない可能性のある用語があります。詳細は下の「先行詞の根拠の確認」セクションを参照してください。",
       "titleMissing": "特許審査基準により、明細書には発明の名称又は新型の名称を記載する必要があります。明細書の冒頭に追加してください。",
       "figureRefInconsistency": {
         "onlyDrawings": "図面の簡単な説明でのみ言及：{{figs}}",
@@ -774,7 +774,7 @@
           "pass": "従属請求項の配列順序は正確です。"
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}}個の用語に先行詞がない可能性があります。",
+          "verify": "{{claims}} に先行詞がない用語が合計 {{issue_count}} 個ある可能性があります。",
           "pass": "すべての引用用語に先行詞があります。"
         }
       },
@@ -906,7 +906,7 @@
           "noClaimNumerals": "請求項に参照符号が含まれていません（施行細則 §19 で許容）。整合性チェックは適用されません。"
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}}個の用語に先行詞がない可能性があります。",
+          "verify": "{{claims}} に先行詞がない用語が合計 {{issue_count}} 個ある可能性があります。",
           "pass": "すべての参照用語に先行詞があります。"
         }
       },
