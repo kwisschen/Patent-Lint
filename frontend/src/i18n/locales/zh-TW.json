@@ -362,11 +362,11 @@
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "30餘項撰稿檢查，依據TIPO規則（專利法施行細則、專利審查基準）。",
-    "twGroups": {
-      "spec": "說明書",
-      "claims": "申請專利範圍",
-      "abstract": "摘要",
-      "crossRef": "交叉比對"
+    "tw": {
+      "group1Title": "共同檢查項目",
+      "group2Title": "僅 TIPO 偵錯系統",
+      "group3Title": "僅 PatentLint",
+      "colTipo": "TIPO 偵錯系統"
     },
     "twChecks": {
       "symbolTablePresence": "有圖式簡單說明時須提供符號說明（專利法施行細則 §17）",
@@ -400,49 +400,10 @@
       "commercialLanguage": "商業性宣傳用語",
       "representativeDrawing": "代表圖指定",
       "symbolVsRepDrawing": "符號說明與代表圖之符號一致性",
-      "bracketFormat": "章節標題使用【】括號"
-    },
-    "twCompare": {
-      "colTipo": "TIPO 偵錯系統",
-      "feature": {
-        "patentTypes": "專利類型",
-        "inputFormat": "輸入格式",
-        "checks": "檢查項目",
-        "privacy": "隱私",
-        "languages": "語言",
-        "cost": "費用",
-        "specChecks": "說明書檢查",
-        "abstractChecks": "摘要檢查",
-        "symbolTableCrossRef": "符號說明交叉比對",
-        "antecedentBasis": "先行詞",
-        "claimTree": "ClaimTree 視覺化"
-      },
-      "patentlint": {
-        "patentTypes": "發明 + 新型",
-        "inputFormat": "任意 .docx",
-        "checks": "33",
-        "privacy": "完全離線",
-        "languages": "英、簡中、繁中、日、韓",
-        "cost": "免費",
-        "specChecks": "有",
-        "abstractChecks": "有",
-        "symbolTableCrossRef": "有",
-        "antecedentBasis": "有",
-        "claimTree": "有"
-      },
-      "tipo": {
-        "patentTypes": "以新型為主",
-        "inputFormat": "僅限 TIPO 範本",
-        "checks": "20",
-        "privacy": "伺服器端",
-        "languages": "僅中文",
-        "cost": "免費",
-        "specChecks": "無",
-        "abstractChecks": "無",
-        "symbolTableCrossRef": "有",
-        "antecedentBasis": "有",
-        "claimTree": "無"
-      }
+      "bracketFormat": "章節標題使用【】括號",
+      "tipoComponentChain": "組件於母項鏈中之相依性（組件相依性）",
+      "tipoConnectionRelationships": "獨立項組件之連接關係",
+      "tipoIndigenous": "原住民族用語檢查"
     },
     "stats": {
       "tests": "自動化測試",

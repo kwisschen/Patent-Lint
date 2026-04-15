@@ -362,11 +362,11 @@
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "30余项撰写检查，依据TIPO规则（專利法施行細則、專利審查基準）。",
-    "twGroups": {
-      "spec": "說明書",
-      "claims": "申請專利範圍",
-      "abstract": "摘要",
-      "crossRef": "交叉比对"
+    "tw": {
+      "group1Title": "共同检查项目",
+      "group2Title": "仅 TIPO 偵錯系統",
+      "group3Title": "仅 PatentLint",
+      "colTipo": "TIPO 偵錯系統"
     },
     "twChecks": {
       "symbolTablePresence": "存在圖式簡單說明时须提供符號說明（專利法施行細則 §17）",
@@ -400,49 +400,10 @@
       "commercialLanguage": "商业性宣传用语",
       "representativeDrawing": "代表圖指定",
       "symbolVsRepDrawing": "符號說明与代表圖之符号一致性",
-      "bracketFormat": "章节标题使用【】括号"
-    },
-    "twCompare": {
-      "colTipo": "TIPO 偵錯系統",
-      "feature": {
-        "patentTypes": "专利类型",
-        "inputFormat": "输入格式",
-        "checks": "检查项目",
-        "privacy": "隐私",
-        "languages": "语言",
-        "cost": "费用",
-        "specChecks": "说明书检查",
-        "abstractChecks": "摘要检查",
-        "symbolTableCrossRef": "符号说明交叉比对",
-        "antecedentBasis": "先行词",
-        "claimTree": "ClaimTree 可视化"
-      },
-      "patentlint": {
-        "patentTypes": "发明 + 实用新型",
-        "inputFormat": "任意 .docx",
-        "checks": "33",
-        "privacy": "完全离线",
-        "languages": "英、简中、繁中、日、韩",
-        "cost": "免费",
-        "specChecks": "有",
-        "abstractChecks": "有",
-        "symbolTableCrossRef": "有",
-        "antecedentBasis": "有",
-        "claimTree": "有"
-      },
-      "tipo": {
-        "patentTypes": "以实用新型为主",
-        "inputFormat": "仅限 TIPO 模板",
-        "checks": "20",
-        "privacy": "服务器端",
-        "languages": "仅中文",
-        "cost": "免费",
-        "specChecks": "无",
-        "abstractChecks": "无",
-        "symbolTableCrossRef": "有",
-        "antecedentBasis": "有",
-        "claimTree": "无"
-      }
+      "bracketFormat": "章节标题使用【】括号",
+      "tipoComponentChain": "组件在母项链中之相依性（組件相依性）",
+      "tipoConnectionRelationships": "独立项组件之连接关系",
+      "tipoIndigenous": "原住民族用语检查"
     },
     "stats": {
       "tests": "自动化测试",
