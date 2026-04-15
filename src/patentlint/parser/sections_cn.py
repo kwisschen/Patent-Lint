@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 # Copyright (c) 2025 Christopher Chen
 """CN patent .docx section extraction — 五書模板 format."""
 
