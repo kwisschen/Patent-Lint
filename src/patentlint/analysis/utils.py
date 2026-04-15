@@ -108,6 +108,15 @@ _VERB_STOPS = {
     "leaves", "allows", "enables", "prevents", "permits",
     "encompasses", "contains", "produces", "creates", "maintains",
     "controls", "establishes", "represents", "surrounds", "overlaps",
+    # Additional 3sg verb forms observed over-capturing NP boundaries in
+    # US fixtures (testspec2/3/6, test6, testspec9). Empirical denylist —
+    # each form verified against the fixture that surfaced it.
+    "exhibit", "exhibits", "exhibited", "exhibiting",
+    "compare", "compares", "compared", "comparing",
+    "apply", "applies", "applied", "applying",
+    "turn", "turns", "turned", "turning",
+    "stop", "stops", "stopped", "stopping",
+    "multiply", "multiplies", "multiplied", "multiplying",
     # Modal verbs
     "must", "shall", "should", "can", "could", "may", "might", "will", "would",
 }
@@ -135,6 +144,15 @@ _PREPOSITION_STOPS = {
 _TRAILING_FUNCTION_WORDS = {
     "and", "or", "but", "that", "which", "who", "whom", "whose",
     "where", "when", "while", "if", "so", "yet", "nor",
+}
+
+# Trailing bare cardinals — strip when the captured NP ends on a cardinal
+# because the regex bled past a verb+numeral chain (e.g. "respectively
+# define two"). Only applied when the phrase has additional tokens so a
+# standalone "two" / "three" captured from "the two" / "the three" is
+# preserved and handled elsewhere.
+_TRAILING_CARDINAL_STOPS = {
+    "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
 }
 
 # Quantifiers/pronouns that should NOT be flagged as standalone elements
@@ -242,7 +260,17 @@ def _should_strip_trailing(word: str) -> bool:
 def clean_noun_phrase(phrase: str) -> str:
     """Strip trailing verbs, adverbs, and function words from a noun phrase."""
     words = phrase.strip().split()
-    while words and _should_strip_trailing(words[-1]):
+    while words:
+        last = words[-1].lower().rstrip(".,;:")
+        # Trailing bare cardinal ("respectively define two") — strip only
+        # when the phrase has other tokens, so standalone "two" captured
+        # from "the two" survives to be handled by the walker's quantifier
+        # stop-list.
+        if last in _TRAILING_CARDINAL_STOPS and len(words) > 1:
+            words.pop()
+            continue
+        if not _should_strip_trailing(words[-1]):
+            break
         # Guard for the -uts suffix: 'inputs' / 'outputs' are ambiguous
         # between verb ('the circuit outputs the signal') and plural noun
         # ('the inputs', 'plurality of outputs'). The general suffix rule
