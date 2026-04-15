@@ -233,6 +233,17 @@ _LY_NOUN_ALLOWLIST = {
 }
 
 
+# Trailing distributive quantifiers ("the four unit regions each",
+# "the groups each having X") — these are post-modifier quantifiers, not part
+# of the noun phrase. Stripping them bilaterally (intro + reference) dedups
+# distributive references against plain plural intros.
+_DISTRIBUTIVE_QUANTIFIERS = frozenset({"each", "both", "all", "every"})
+
+
+def _is_trailing_distributive(word: str) -> bool:
+    return word in _DISTRIBUTIVE_QUANTIFIERS
+
+
 def _is_trailing_ly_adverb(word: str) -> bool:
     """Detect -ly adverbs that terminate over-captured NPs.
 
@@ -272,6 +283,7 @@ def _should_strip_trailing(word: str) -> bool:
         or _is_likely_past_participle(w)
         or _is_likely_third_person_verb(w)
         or _is_trailing_ly_adverb(w)
+        or _is_trailing_distributive(w)
     ):
         return True
     # Strip trailing -ing verbs/gerunds (mirrors single-word rejection at clean_noun_phrase)
