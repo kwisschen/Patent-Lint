@@ -362,11 +362,11 @@
     },
     "twTitle": "PatentLint vs. TIPO 오류 검출 시스템",
     "twSubtitle": "TIPO 규칙(專利法施行細則, 專利審查基準)에 따른 30여 건의 작성 검사.",
-    "twGroups": {
-      "spec": "명세서(說明書)",
-      "claims": "청구범위(申請專利範圍)",
-      "abstract": "요약서(摘要)",
-      "crossRef": "상호 참조"
+    "tw": {
+      "group1Title": "공통 검사",
+      "group2Title": "TIPO 전용",
+      "group3Title": "PatentLint 전용",
+      "colTipo": "TIPO 偵錯系統"
     },
     "twChecks": {
       "symbolTablePresence": "圖式簡單說明이 있을 때 符號說明 필수(專利法施行細則 §17)",
@@ -400,49 +400,10 @@
       "commercialLanguage": "상업적 선전 용어",
       "representativeDrawing": "代表圖 지정",
       "symbolVsRepDrawing": "符號說明과 代表圖 부호 일관성",
-      "bracketFormat": "섹션 제목에 【】 사용"
-    },
-    "twCompare": {
-      "colTipo": "TIPO 오류 검출 시스템",
-      "feature": {
-        "patentTypes": "특허 유형",
-        "inputFormat": "입력 형식",
-        "checks": "검사 항목",
-        "privacy": "개인정보 보호",
-        "languages": "언어",
-        "cost": "비용",
-        "specChecks": "명세서 검사",
-        "abstractChecks": "요약 검사",
-        "symbolTableCrossRef": "부호 설명 교차 참조",
-        "antecedentBasis": "선행사",
-        "claimTree": "ClaimTree 시각화"
-      },
-      "patentlint": {
-        "patentTypes": "발명 + 실용신안",
-        "inputFormat": "모든 .docx",
-        "checks": "33",
-        "privacy": "완전 오프라인",
-        "languages": "영・간중・번중・일・한",
-        "cost": "무료",
-        "specChecks": "있음",
-        "abstractChecks": "있음",
-        "symbolTableCrossRef": "있음",
-        "antecedentBasis": "있음",
-        "claimTree": "있음"
-      },
-      "tipo": {
-        "patentTypes": "실용신안 중심",
-        "inputFormat": "TIPO 템플릿만",
-        "checks": "20",
-        "privacy": "서버 측",
-        "languages": "중국어만",
-        "cost": "무료",
-        "specChecks": "없음",
-        "abstractChecks": "없음",
-        "symbolTableCrossRef": "있음",
-        "antecedentBasis": "있음",
-        "claimTree": "없음"
-      }
+      "bracketFormat": "섹션 제목에 【】 사용",
+      "tipoComponentChain": "상위 청구항 연쇄 내 구성요소 종속성(組件相依性)",
+      "tipoConnectionRelationships": "독립 청구항 구성요소의 연결 관계",
+      "tipoIndigenous": "원주민족 용어 검사(原住民族)"
     },
     "stats": {
       "tests": "자동화 테스트",
