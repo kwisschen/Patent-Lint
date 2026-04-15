@@ -305,19 +305,32 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                         # ADR-090 not violated: this only chooses a BETTER hint
                         # within an already-emitted finding. The reference is
                         # still flagged; stemming never silently masks anything.
+                        # Quality threshold (#57): require Jaccard ≥ 2/3
+                        # (≥2-of-3 token overlap), with a carveout admitting
+                        # 0.5 ≤ score < 2/3 IFF stemming collapsed the
+                        # symmetric difference (stem_sym_diff < raw_sym_diff) —
+                        # pure morphological variants like protecting/protection
+                        # or resister/resistor stay surfaced, while coincidental
+                        # 2-of-4-token overlaps ("duty cycle threshold" ↔
+                        # "specified duty cycle") drop out.
+                        _MIN_JACCARD = 2.0 / 3.0
+                        def _accept(score: float, raw_diff: int, stem_diff: int) -> bool:
+                            if score + 1e-9 >= _MIN_JACCARD:
+                                return True
+                            return score >= 0.5 and stem_diff < raw_diff
                         suggested_match: Optional[dict] = None
                         best_score = 0.0
                         best_stem_diff: Optional[int] = None
                         term_tokens = set(term.lower().split())
                         for intro in intros:
                             score = token_set_jaccard(term, intro)
-                            if score < 0.5:
-                                continue
                             intro_tokens = set(intro.lower().split())
                             sym_diff = term_tokens ^ intro_tokens
                             stem_sym_diff = len(
                                 set(_stemmer.stemWords(list(sym_diff)))
                             )
+                            if not _accept(score, len(sym_diff), stem_sym_diff):
+                                continue
                             if (
                                 score > best_score
                                 or (
@@ -334,43 +347,47 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                                     "term": intro,
                                     "claim_id": intros_by_term[intro],
                                 }
-                        # Fix #47 fallback: if no ancestor-chain suggestion
-                        # surfaced, scan the all-prior-claims registry for a
-                        # cross-branch intro from an earlier-numbered claim.
+                        # Fix #47 fallback + cross-branch exact-match override:
+                        # scan all-prior-claims registry for a cross-branch intro
+                        # from an earlier-numbered claim. Promote when (a) no
+                        # ancestor suggestion surfaced, OR (b) the cross-branch
+                        # candidate strictly outscores the ancestor pick — this
+                        # lets a Jaccard=1.0 cross-branch exact match override a
+                        # loose ancestor-chain pairing (e.g. "duty cycle threshold"
+                        # in c10 beats "current duty cycle" in c9 ancestor chain).
                         # Informational only; finding remains flagged because
                         # §112 ¶2 antecedent basis requires an ancestor intro.
-                        if suggested_match is None:
-                            fb_best_score = 0.0
-                            fb_best_stem_diff: Optional[int] = None
-                            for fb_intro, fb_cid in all_intros_registry.items():
-                                if fb_cid >= claim.id:
-                                    continue
-                                if fb_intro in intros_by_term:
-                                    continue
-                                fb_score = token_set_jaccard(term, fb_intro)
-                                if fb_score < 0.5:
-                                    continue
-                                fb_intro_tokens = set(fb_intro.lower().split())
-                                fb_sym_diff = term_tokens ^ fb_intro_tokens
-                                fb_stem_sym_diff = len(
-                                    set(_stemmer.stemWords(list(fb_sym_diff)))
-                                )
-                                if (
-                                    fb_score > fb_best_score
-                                    or (
-                                        fb_score == fb_best_score
-                                        and (
-                                            fb_best_stem_diff is None
-                                            or fb_stem_sym_diff < fb_best_stem_diff
-                                        )
+                        fb_best_score = best_score
+                        fb_best_stem_diff: Optional[int] = best_stem_diff
+                        for fb_intro, fb_cid in all_intros_registry.items():
+                            if fb_cid >= claim.id:
+                                continue
+                            if fb_intro in intros_by_term:
+                                continue
+                            fb_score = token_set_jaccard(term, fb_intro)
+                            fb_intro_tokens = set(fb_intro.lower().split())
+                            fb_sym_diff = term_tokens ^ fb_intro_tokens
+                            fb_stem_sym_diff = len(
+                                set(_stemmer.stemWords(list(fb_sym_diff)))
+                            )
+                            if not _accept(fb_score, len(fb_sym_diff), fb_stem_sym_diff):
+                                continue
+                            if (
+                                fb_score > fb_best_score
+                                or (
+                                    fb_score == fb_best_score
+                                    and (
+                                        fb_best_stem_diff is None
+                                        or fb_stem_sym_diff < fb_best_stem_diff
                                     )
-                                ):
-                                    fb_best_score = fb_score
-                                    fb_best_stem_diff = fb_stem_sym_diff
-                                    suggested_match = {
-                                        "term": fb_intro,
-                                        "claim_id": fb_cid,
-                                    }
+                                )
+                            ):
+                                fb_best_score = fb_score
+                                fb_best_stem_diff = fb_stem_sym_diff
+                                suggested_match = {
+                                    "term": fb_intro,
+                                    "claim_id": fb_cid,
+                                }
                         issues.append({
                             "claim_id": claim.id,
                             "term": term,
