@@ -333,7 +333,8 @@
     "cnGroups": {
       "specification": "명세서(说明书)",
       "claims": "청구항(权利要求)",
-      "abstract": "요약서(摘要)"
+      "abstract": "요약서(摘要)",
+      "drawings": "도면(附图)"
     },
     "cnChecks": {
       "requiredSections": "필수 섹션(专利法实施细则 §17)",
@@ -358,14 +359,15 @@
       "dependentOrdering": "종속 청구항 순서",
       "abstractCharCount": "요약서 글자 수(300자 이하)",
       "titleInAbstract": "제목이 요약서에 포함",
-      "commercialLanguage": "상업적 표현"
+      "commercialLanguage": "상업적 표현",
+      "figuresSequential": "도면 번호 연속성"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統은 대만 고유 용어를 검증합니다. PatentLint는 보다 광범위한 작성 규칙을 포괄합니다.",
     "tw": {
       "group1Title": "공통 검사",
-      "group2Title": "TIPO 대만 특화 검사",
-      "group3Title": "PatentLint 전용",
+      "group2Title": "TIPO 專屬檢查",
+      "group3Title": "PatentLint 專屬檢查",
       "colTipo": "TIPO 偵錯系統"
     },
     "twChecks": {
@@ -402,7 +404,8 @@
       "symbolVsRepDrawing": "符號說明과 代表圖 부호 일관성",
       "bracketFormat": "섹션 제목에 【】 사용",
       "tipoConnectionRelationships": "독립 청구항 구성요소의 連接關係",
-      "tipoIndigenous": "원주민 관련 용어 검사"
+      "tipoIndigenous": "원주민 관련 용어 검사",
+      "figuresSequential": "도면 번호 연속성"
     },
     "stats": {
       "tests": "자동화 테스트",
@@ -807,6 +810,10 @@
       "drawings": {
         "figureCount": {
           "pass": "도면 {{count}}장."
+        },
+        "figuresSequential": {
+          "pass": "도면 1–{{found_max}}이 연속적으로 번호가 매겨져 있습니다.",
+          "amend": "도면 번호가 연속적이지 않습니다. 누락: {{figure_list}}."
         }
       }
     },
@@ -953,6 +960,10 @@
       "drawings": {
         "figureCount": {
           "pass": "도면 {{count}}장."
+        },
+        "figuresSequential": {
+          "pass": "도면 1–{{found_max}}이 연속적으로 번호가 매겨져 있습니다.",
+          "amend": "도면 번호가 연속적이지 않습니다. 누락: {{figure_list}}."
         }
       }
     }

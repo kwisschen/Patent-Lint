@@ -71,14 +71,6 @@ def _section_has_content(items: list) -> bool:
     return True
 
 
-def _fig_sort_key(fig_id: str) -> tuple[int, str]:
-    """Sort key for figure IDs that may have alpha suffixes (e.g. '5A')."""
-    m = re.match(r"(\d+)([A-Z]?)$", fig_id)
-    if m:
-        return (int(m.group(1)), m.group(2))
-    return (0, fig_id)
-
-
 # ── Check 1 ──────────────────────────────────────────────────────────────
 
 
@@ -321,19 +313,22 @@ def check_figure_ref_consistency(doc: TwPatentDocument) -> list[CheckItem]:
     drawings_figs = TW_PARSER.extract(drawings_text).ids
     embodiment_figs = TW_PARSER.extract(embodiment_text).ids
 
-    only_drawings = sorted(drawings_figs - embodiment_figs, key=_fig_sort_key)
-    only_embodiment = sorted(embodiment_figs - drawings_figs, key=_fig_sort_key)
+    # Collapse sub-figure suffixes onto the parent figure number so that
+    # 圖12, 圖12(A), 圖12A all compare as figure 12. Without this, a drawings
+    # section listing 圖12(A) and 圖12(B) would not match an embodiment
+    # reference to bare 圖12, and the old ``_to_int_safe`` filter silently
+    # dropped suffix IDs from the rendered mismatch list.
+    def _parent_num(fid: str) -> int | None:
+        m = re.match(r"(\d+)", fid)
+        return int(m.group(1)) if m else None
+
+    drawings_parents = {p for p in (_parent_num(f) for f in drawings_figs) if p is not None}
+    embodiment_parents = {p for p in (_parent_num(f) for f in embodiment_figs) if p is not None}
+
+    only_drawings = sorted(drawings_parents - embodiment_parents)
+    only_embodiment = sorted(embodiment_parents - drawings_parents)
 
     if only_drawings or only_embodiment:
-        def _to_int_safe(xs: list[str]) -> list[int]:
-            out: list[int] = []
-            for x in xs:
-                try:
-                    out.append(int(x))
-                except (TypeError, ValueError):
-                    continue
-            return out
-
         return [CheckItem(
             status="verify",
             message="Figure references differ between 圖式簡單說明 and 實施方式.",
@@ -341,8 +336,8 @@ def check_figure_ref_consistency(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.figureRefConsistency",
             details_params={
                 "figure_ref_inconsistency": {
-                    "only_drawings": _to_int_safe(only_drawings),
-                    "only_embodiment": _to_int_safe(only_embodiment),
+                    "only_drawings": only_drawings,
+                    "only_embodiment": only_embodiment,
                     "jurisdiction": "tw",
                 },
             },

@@ -112,6 +112,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
 | Figure count † | 审查指南 | PASS | `check.cn.drawings.figureCount` | Number of figures found |
+| Figures sequential | 审查指南 | AMEND / PASS | `check.cn.drawings.figuresSequential` | Figure numbers form a contiguous 1..N set (sub-figure suffixes collapsed) |
 
 ---
 
@@ -172,9 +173,10 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
 | Figure count † | 專利審查基準 | PASS | `check.tw.drawings.figureCount` | Number of figures found |
+| Figures sequential | 專利審查基準 | AMEND / PASS | `check.tw.drawings.figuresSequential` | Figure numbers form a contiguous 1..N set (sub-figure suffixes collapsed) |
 
 ---
 
-**Total checks: 90** (33 US + 24 CN + 33 TW)
+**Total checks: 92** (33 US + 25 CN + 34 TW)
 
 † Internal: not rendered as a CheckItem card in the web UI or PDF report. Used for stats aggregation and CLI output only.

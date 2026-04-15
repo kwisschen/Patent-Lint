@@ -333,7 +333,8 @@
     "cnGroups": {
       "specification": "說明書",
       "claims": "權利要求",
-      "abstract": "摘要"
+      "abstract": "摘要",
+      "drawings": "附圖"
     },
     "cnChecks": {
       "requiredSections": "必要章節（专利法实施细则 §17）",
@@ -358,14 +359,15 @@
       "dependentOrdering": "從屬權利要求排序",
       "abstractCharCount": "摘要字數（≤300）",
       "titleInAbstract": "標題出現在摘要中",
-      "commercialLanguage": "商業性用語"
+      "commercialLanguage": "商業性用語",
+      "figuresSequential": "附圖編號連續"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統專查台灣特有用語。PatentLint 擴及更廣的撰稿規範。",
     "tw": {
       "group1Title": "共同檢查項目",
-      "group2Title": "TIPO 台灣專屬檢查",
-      "group3Title": "僅 PatentLint",
+      "group2Title": "TIPO 專屬檢查",
+      "group3Title": "PatentLint 專屬檢查",
       "colTipo": "TIPO 偵錯系統"
     },
     "twChecks": {
@@ -402,7 +404,8 @@
       "symbolVsRepDrawing": "符號說明與代表圖之符號一致性",
       "bracketFormat": "章節標題使用【】括號",
       "tipoConnectionRelationships": "獨立項組件之連接關係",
-      "tipoIndigenous": "原住民族用語檢查"
+      "tipoIndigenous": "原住民族用語檢查",
+      "figuresSequential": "圖號連續"
     },
     "stats": {
       "tests": "自動化測試",
@@ -807,6 +810,10 @@
       "drawings": {
         "figureCount": {
           "pass": "共 {{count}} 張附圖。"
+        },
+        "figuresSequential": {
+          "pass": "附圖 1–{{found_max}} 編號連續。",
+          "amend": "附圖編號不連續，缺漏：{{figure_list}}。"
         }
       }
     },
@@ -953,6 +960,10 @@
       "drawings": {
         "figureCount": {
           "pass": "共 {{count}} 張圖式。"
+        },
+        "figuresSequential": {
+          "pass": "圖 1–{{found_max}} 編號連續。",
+          "amend": "圖號不連續，缺漏：{{figure_list}}。"
         }
       }
     }
