@@ -152,25 +152,25 @@ def main() -> int:
             rows.append((p.name, -1, -1, 0, f"GT-ERROR: {exc}"))
             continue
         try:
-            l = loader_count(p)
+            loader = loader_count(p)
         except Exception as exc:
             rows.append((p.name, -1, g, 0, f"LOADER-ERROR: {exc}"))
             continue
-        delta = l - g
+        delta = loader - g
         pct = (abs(delta) / g * 100.0) if g else 0.0
         status = "OK" if pct < 5.0 else f"DELTA {pct:.1f}%"
-        rows.append((p.name, l, g, delta, status))
+        rows.append((p.name, loader, g, delta, status))
 
     # Markdown table
     print("| Fixture | Loader | Ground-truth | Delta | Status |")
     print("|---|---:|---:|---:|---|")
-    for name, l, g, d, s in rows:
-        print(f"| {name} | {l} | {g} | {d:+d} | {s} |")
+    for name, loader, g, d, s in rows:
+        print(f"| {name} | {loader} | {g} | {d:+d} | {s} |")
 
     worst = 0.0
-    for _, l, g, _, _ in rows:
+    for _, loader, g, _, _ in rows:
         if g > 0:
-            worst = max(worst, abs(l - g) / g * 100.0)
+            worst = max(worst, abs(loader - g) / g * 100.0)
     print(f"\nWorst delta: {worst:.2f}%")
     return 0 if worst < 5.0 else 2
 
