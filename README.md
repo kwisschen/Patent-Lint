@@ -2,7 +2,6 @@
 
 [![CI](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml/badge.svg)](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml)
 [![Live Demo](https://img.shields.io/badge/demo-patentlint.com-blue)](https://patentlint.com)
-[![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-green)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-542-brightgreen)](#)
 
 **No account. No install. No upload.**
@@ -215,6 +214,6 @@ This tool does not constitute legal advice. All findings should be reviewed by a
 
 ## License
 
-AGPL-3.0-only — see [LICENSE](LICENSE) for details.
+PolyForm Noncommercial 1.0.0 — see [LICENSE](LICENSE) for the full terms. Commercial use (including internal use by law firms or corporate legal departments) requires a separate license; see [COMMERCIAL-LICENSE.md](COMMERCIAL-LICENSE.md).
 
 © 2025 Christopher Chen

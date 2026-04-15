@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 // Copyright (c) 2025 Christopher Chen
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'

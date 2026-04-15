@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 # Copyright (c) 2025 Christopher Chen
 """Tests for noun phrase cleanup and capture width (Bugs 3, 5, 6b, 10, 11, 12)."""
 
