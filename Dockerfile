@@ -18,6 +18,7 @@ RUN npx vite build
 
 # ---- Stage 3: Python runtime ----
 FROM python:3.12-slim AS runtime
+LABEL org.opencontainers.image.licenses="PolyForm-Noncommercial-1.0.0"
 
 # System deps for weasyprint PDF rendering + CJK fonts
 RUN apt-get update && apt-get install -y --no-install-recommends \

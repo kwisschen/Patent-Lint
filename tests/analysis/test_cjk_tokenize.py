@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 # Copyright (c) 2025 Christopher Chen
 """Tests for src/patentlint/analysis/cjk_tokenize.py (ADR-094)."""
 
