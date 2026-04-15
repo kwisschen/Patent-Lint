@@ -360,11 +360,11 @@
       "titleInAbstract": "タイトルが要約に含まれている",
       "commercialLanguage": "商業的表現"
     },
-    "twTitle": "PatentLint vs. TIPO エラー検出システム",
-    "twSubtitle": "TIPO規則（專利法施行細則、專利審查基準）に基づく30余件の作成チェック。",
+    "twTitle": "PatentLint vs. TIPO 偵錯系統",
+    "twSubtitle": "TIPO 偵錯系統は台湾固有の用語と構造規約を検証し、PatentLint は汎用的な作成ルールに焦点を当てます。",
     "tw": {
       "group1Title": "共通チェック",
-      "group2Title": "TIPO のみ",
+      "group2Title": "TIPO 台湾固有チェック",
       "group3Title": "PatentLint のみ",
       "colTipo": "TIPO 偵錯系統"
     },
@@ -401,9 +401,8 @@
       "representativeDrawing": "代表圖の指定",
       "symbolVsRepDrawing": "符號說明と代表圖の符号一貫性",
       "bracketFormat": "セクション見出しに【】を使用",
-      "tipoComponentChain": "親クレームの連鎖における構成要素の依存性（組件相依性）",
-      "tipoConnectionRelationships": "独立クレーム構成要素の接続関係",
-      "tipoIndigenous": "先住民族用語チェック（原住民族）"
+      "tipoConnectionRelationships": "独立クレーム構成要素の連接關係",
+      "tipoIndigenous": "先住民族関連用語のチェック"
     },
     "stats": {
       "tests": "自動テスト",
