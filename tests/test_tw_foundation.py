@@ -110,8 +110,8 @@ class TestTwPipelineRouting:
         assert len(report.claims_checks) == 16
         # 4 abstract checks wired in Phase 7C-4
         assert len(report.abstract_checks) == 4
-        # 1 drawings check (figure count) wired in Phase 7C-4
-        assert len(report.drawings_checks) == 1
+        # 2 drawings checks (figures sequential + figure count)
+        assert len(report.drawings_checks) == 2
 
 
 class TestTwCli:

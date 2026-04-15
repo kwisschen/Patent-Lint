@@ -333,7 +333,8 @@
     "cnGroups": {
       "specification": "明細書（说明书）",
       "claims": "特許請求の範囲（权利要求）",
-      "abstract": "要約（摘要）"
+      "abstract": "要約（摘要）",
+      "drawings": "図面（附图）"
     },
     "cnChecks": {
       "requiredSections": "必須セクション（专利法实施细则 §17）",
@@ -358,14 +359,15 @@
       "dependentOrdering": "従属請求項の順序",
       "abstractCharCount": "要約文字数（300字以下）",
       "titleInAbstract": "タイトルが要約に含まれている",
-      "commercialLanguage": "商業的表現"
+      "commercialLanguage": "商業的表現",
+      "figuresSequential": "図面番号が連続"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統は台湾固有の用語をチェックします。PatentLint はより広範な作成ルールをカバーします。",
     "tw": {
       "group1Title": "共通チェック",
-      "group2Title": "TIPO 台湾固有チェック",
-      "group3Title": "PatentLint のみ",
+      "group2Title": "TIPO 專屬檢查",
+      "group3Title": "PatentLint 專屬檢查",
       "colTipo": "TIPO 偵錯系統"
     },
     "twChecks": {
@@ -402,7 +404,8 @@
       "symbolVsRepDrawing": "符號說明と代表圖の符号一貫性",
       "bracketFormat": "セクション見出しに【】を使用",
       "tipoConnectionRelationships": "独立クレーム構成要素の連接關係",
-      "tipoIndigenous": "先住民族関連用語のチェック"
+      "tipoIndigenous": "先住民族関連用語のチェック",
+      "figuresSequential": "図番号が連続"
     },
     "stats": {
       "tests": "自動テスト",
@@ -807,6 +810,10 @@
       "drawings": {
         "figureCount": {
           "pass": "図面 {{count}} 枚。"
+        },
+        "figuresSequential": {
+          "pass": "図 1–{{found_max}} の番号は連続しています。",
+          "amend": "図番号が連続していません。欠番：{{figure_list}}。"
         }
       }
     },
@@ -953,6 +960,10 @@
       "drawings": {
         "figureCount": {
           "pass": "図面 {{count}} 枚。"
+        },
+        "figuresSequential": {
+          "pass": "図 1–{{found_max}} の番号は連続しています。",
+          "amend": "図番号が連続していません。欠番：{{figure_list}}。"
         }
       }
     }
