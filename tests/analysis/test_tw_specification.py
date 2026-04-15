@@ -277,6 +277,38 @@ class TestFigureRefConsistency:
         items = check_figure_ref_consistency(doc)
         assert items[0].status == "pass"
 
+    def test_subfigure_parent_match_pass(self):
+        """圖12(A)/(B) in drawings satisfy a bare 圖12 reference in embodiment."""
+        doc = _make_doc(
+            drawings_description=[
+                "圖12(A)為第一視圖。",
+                "圖12(B)為第二視圖。",
+            ],
+            embodiment=["參閱圖12，本實施例..."],
+        )
+        items = check_figure_ref_consistency(doc)
+        assert items[0].status == "pass"
+
+    def test_bare_parent_matches_subfigure_embodiment(self):
+        """Bare 圖12 in drawings satisfies 圖12(A)/(B) references in embodiment."""
+        doc = _make_doc(
+            drawings_description=["圖12為組合視圖。"],
+            embodiment=["如圖12(A)及圖12(B)所示..."],
+        )
+        items = check_figure_ref_consistency(doc)
+        assert items[0].status == "pass"
+
+    def test_missing_parent_family_flags(self):
+        """If figure 12 family is absent from drawings entirely, embodiment refs to 圖12(A)/(B) flag as missing 12."""
+        doc = _make_doc(
+            drawings_description=["圖1為示意圖。", "圖2為截面圖。"],
+            embodiment=["如圖1所示...進一步參閱圖12(A)及圖12(B)。"],
+        )
+        items = check_figure_ref_consistency(doc)
+        assert items[0].status == "verify"
+        inconsist = items[0].details_params["figure_ref_inconsistency"]
+        assert inconsist["only_embodiment"] == [12]
+
 
 # ── Check 6: Patent Type Terminology ────────────────────────────────────
 

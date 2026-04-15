@@ -333,7 +333,8 @@
     "cnGroups": {
       "specification": "说明书",
       "claims": "权利要求",
-      "abstract": "摘要"
+      "abstract": "摘要",
+      "drawings": "附图"
     },
     "cnChecks": {
       "requiredSections": "必要章节（专利法实施细则 §17）",
@@ -358,14 +359,15 @@
       "dependentOrdering": "从属权利要求排序",
       "abstractCharCount": "摘要字数（≤300）",
       "titleInAbstract": "标题出现在摘要中",
-      "commercialLanguage": "商业性用语"
+      "commercialLanguage": "商业性用语",
+      "figuresSequential": "附图编号连续"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統专查台湾特有用语。PatentLint 扩及更广的撰写规范。",
     "tw": {
       "group1Title": "共同检查项目",
-      "group2Title": "TIPO 台湾专属检查",
-      "group3Title": "仅 PatentLint",
+      "group2Title": "TIPO 專屬檢查",
+      "group3Title": "PatentLint 專屬檢查",
       "colTipo": "TIPO 偵錯系統"
     },
     "twChecks": {
@@ -402,7 +404,8 @@
       "symbolVsRepDrawing": "符號說明与代表圖之符号一致性",
       "bracketFormat": "章节标题使用【】括号",
       "tipoConnectionRelationships": "独立项组件之連接關係",
-      "tipoIndigenous": "原住民族用语检查"
+      "tipoIndigenous": "原住民族用语检查",
+      "figuresSequential": "图号连续"
     },
     "stats": {
       "tests": "自动化测试",
@@ -807,6 +810,10 @@
       "drawings": {
         "figureCount": {
           "pass": "共 {{count}} 张附图。"
+        },
+        "figuresSequential": {
+          "pass": "附图 1–{{found_max}} 编号连续。",
+          "amend": "附图编号不连续，缺失：{{figure_list}}。"
         }
       }
     },
@@ -953,6 +960,10 @@
       "drawings": {
         "figureCount": {
           "pass": "共 {{count}} 张图式。"
+        },
+        "figuresSequential": {
+          "pass": "图 1–{{found_max}} 编号连续。",
+          "amend": "图号不连续，缺失：{{figure_list}}。"
         }
       }
     }

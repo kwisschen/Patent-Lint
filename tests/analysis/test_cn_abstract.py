@@ -7,6 +7,7 @@ from patentlint.analysis.cn_abstract import (
     check_abstract_title_match,
     check_commercial_language,
     check_figure_count,
+    check_figures_sequential,
 )
 from patentlint.models import CnPatentDocument
 
@@ -126,3 +127,49 @@ class TestFigureCount:
         results = check_figure_count(doc)
         assert results[0].status == "pass"
         assert results[0].details_params["count"] == "0"
+
+
+# ── Check 25: Figures sequential ──────────────────────────────────────────
+
+
+class TestFiguresSequential:
+    def test_contiguous_passes(self):
+        doc = _cn_doc(figure_refs=["图1", "图2", "图3"])
+        results = check_figures_sequential(doc)
+        assert results[0].status == "pass"
+        assert results[0].details_params == {"found_max": "3"}
+
+    def test_subfigure_suffixes_collapse(self):
+        doc = _cn_doc(figure_refs=["图1", "图1a", "图1b", "图2", "图2A"])
+        results = check_figures_sequential(doc)
+        assert results[0].status == "pass"
+
+    def test_fuzhu_prefix_accepted(self):
+        # 附图 prefix occurs in some drafting styles
+        doc = _cn_doc(figure_refs=["附图1", "附图2", "附图3"])
+        results = check_figures_sequential(doc)
+        assert results[0].status == "pass"
+
+    def test_gap_amends(self):
+        doc = _cn_doc(figure_refs=["图1", "图2", "图4"])
+        results = check_figures_sequential(doc)
+        assert results[0].status == "amend"
+        assert results[0].details_params["figure_list"] == [3]
+        assert results[0].details_params["found_max"] == "4"
+
+    def test_missing_one_amends(self):
+        doc = _cn_doc(figure_refs=["图2", "图3"])
+        results = check_figures_sequential(doc)
+        assert results[0].status == "amend"
+        assert results[0].details_params["figure_list"] == [1]
+
+    def test_no_figures_passes(self):
+        doc = _cn_doc(figure_refs=[])
+        results = check_figures_sequential(doc)
+        assert results[0].status == "pass"
+        assert results[0].message_key == "check.cn.drawings.figuresSequential.pass"
+
+    def test_reference(self):
+        doc = _cn_doc(figure_refs=["图1", "图3"])
+        results = check_figures_sequential(doc)
+        assert results[0].reference == "审查指南"

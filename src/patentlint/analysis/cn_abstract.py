@@ -8,7 +8,11 @@ against CNIPA rules (专利法实施细则 and 审查指南).
 
 from __future__ import annotations
 
+import re
+
 from patentlint.models import CheckItem, CnPatentDocument
+
+_CN_FIG_NUM_RE = re.compile(r"(?:图|附图)\s*(\d+)")
 
 # ── Check 21 ─────────────────────────────────────────────────────────────
 
@@ -115,5 +119,55 @@ def check_figure_count(cn_doc: CnPatentDocument) -> list[CheckItem]:
         message=f"{count} figure(s) found.",
         message_key="check.cn.drawings.figureCount.pass",
         details_params={"count": str(count)},
+        reference="审查指南",
+    )]
+
+
+# ── Check 25 ─────────────────────────────────────────────────────────────
+
+
+def check_figures_sequential(cn_doc: CnPatentDocument) -> list[CheckItem]:
+    """Check that figure numbers form a contiguous 1..N set with no gaps.
+
+    Sub-figure suffixes (图1a, 图1b, 附图2A) are collapsed onto their parent
+    number. Accepts both ``图N`` and ``附图N`` prefixes; the entries in
+    ``cn_doc.figure_refs`` are the raw match strings from
+    ``_extract_figure_refs`` (e.g. ``"图1"``, ``"图3a"``).
+    """
+    numbers: set[int] = set()
+    for fid in cn_doc.figure_refs:
+        m = _CN_FIG_NUM_RE.search(fid)
+        if m:
+            numbers.add(int(m.group(1)))
+
+    if not numbers:
+        return [CheckItem(
+            status="pass",
+            message="No figures to check for sequential order.",
+            message_key="check.cn.drawings.figuresSequential.pass",
+            reference="审查指南",
+        )]
+
+    max_n = max(numbers)
+    expected = set(range(1, max_n + 1))
+    missing = sorted(expected - numbers)
+
+    if missing:
+        return [CheckItem(
+            status="amend",
+            message=f"Figure numbers are not sequential; missing: {missing}.",
+            message_key="check.cn.drawings.figuresSequential.amend",
+            details_params={
+                "figure_list": missing,
+                "found_max": str(max_n),
+            },
+            reference="审查指南",
+        )]
+
+    return [CheckItem(
+        status="pass",
+        message=f"Figures 1–{max_n} are numbered sequentially.",
+        message_key="check.cn.drawings.figuresSequential.pass",
+        details_params={"found_max": str(max_n)},
         reference="审查指南",
     )]
