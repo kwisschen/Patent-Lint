@@ -194,7 +194,7 @@ function triageCard(severity, items, t, fontName) {
       const heading = sanitizeText(translateMessage(item, t))
       return {
         text: [
-          { text: '\u25B8  ', color: accent, bold: true },
+          { text: '\u2022  ', color: accent, bold: true },
           { text: heading, color: '#1e293b' },
           { text: `   \u2014 ${sectionName}`, color: '#64748b', italics: true, fontSize: 9 },
         ],
