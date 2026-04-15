@@ -14,7 +14,8 @@ import snowballstemmer as _sb
 from patentlint.analysis.en_normalize import en_number_key
 from patentlint.analysis.utils import (
     _DEFINITE_REF, _QUANTIFIER_STOPS,
-    extract_introductions, extract_abbreviation_intros, clean_noun_phrase,
+    extract_introductions, extract_introductions_permissive,
+    extract_abbreviation_intros, clean_noun_phrase,
     strip_contextual_verb, token_set_jaccard,
 )
 from patentlint.models import Claim, CheckItem, UnsupportedTerm
@@ -204,6 +205,21 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
             queue.extend(parent.dependencies)
         return chain
 
+    # All-prior-claims intro registry (Fix #47). Used ONLY as a secondary
+    # did-you-mean fallback when the ancestor-chain suggestion is None, so a
+    # cross-branch intro (e.g., testspec9 c12 introduces "extending lines"
+    # but c13 depends on c9) still surfaces as a hint. Emission decisions
+    # remain driven by the ancestor chain — a cross-branch term has no
+    # antecedent basis under §112 ¶2 and stays flagged.
+    all_intros_registry: dict[str, int] = {}
+    for _c in sorted(claims, key=lambda x: x.id):
+        for _phrase in extract_introductions_permissive(_c.text):
+            if _phrase not in all_intros_registry:
+                all_intros_registry[_phrase] = _c.id
+        for _abbrev in extract_abbreviation_intros(_c.text):
+            if _abbrev not in all_intros_registry:
+                all_intros_registry[_abbrev] = _c.id
+
     issues: list[dict] = []
 
     for claim in claims:
@@ -318,6 +334,43 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                                     "term": intro,
                                     "claim_id": intros_by_term[intro],
                                 }
+                        # Fix #47 fallback: if no ancestor-chain suggestion
+                        # surfaced, scan the all-prior-claims registry for a
+                        # cross-branch intro from an earlier-numbered claim.
+                        # Informational only; finding remains flagged because
+                        # §112 ¶2 antecedent basis requires an ancestor intro.
+                        if suggested_match is None:
+                            fb_best_score = 0.0
+                            fb_best_stem_diff: Optional[int] = None
+                            for fb_intro, fb_cid in all_intros_registry.items():
+                                if fb_cid >= claim.id:
+                                    continue
+                                if fb_intro in intros_by_term:
+                                    continue
+                                fb_score = token_set_jaccard(term, fb_intro)
+                                if fb_score < 0.5:
+                                    continue
+                                fb_intro_tokens = set(fb_intro.lower().split())
+                                fb_sym_diff = term_tokens ^ fb_intro_tokens
+                                fb_stem_sym_diff = len(
+                                    set(_stemmer.stemWords(list(fb_sym_diff)))
+                                )
+                                if (
+                                    fb_score > fb_best_score
+                                    or (
+                                        fb_score == fb_best_score
+                                        and (
+                                            fb_best_stem_diff is None
+                                            or fb_stem_sym_diff < fb_best_stem_diff
+                                        )
+                                    )
+                                ):
+                                    fb_best_score = fb_score
+                                    fb_best_stem_diff = fb_stem_sym_diff
+                                    suggested_match = {
+                                        "term": fb_intro,
+                                        "claim_id": fb_cid,
+                                    }
                         issues.append({
                             "claim_id": claim.id,
                             "term": term,

@@ -549,6 +549,33 @@ def extract_introductions(text: str) -> list[str]:
     return refs
 
 
+def extract_introductions_permissive(text: str) -> list[str]:
+    """Variant of extract_introductions used by the cross-claim fallback
+    registry (Fix #47). When an intro match is filtered (preceded by
+    ``the``/``said``), advances by a single char rather than consuming past
+    the match — so a later unfiltered trigger inside the filtered span
+    (e.g. ``the two X ... two Y``) still surfaces. Emission-path extraction
+    stays unchanged.
+    """
+    lowered = text.lower()
+    refs: list[str] = []
+    pos = 0
+    while pos < len(lowered):
+        m = _INTRO_PATTERNS.search(lowered, pos)
+        if not m:
+            break
+        preceding = lowered[max(0, m.start() - 8) : m.start()]
+        if _DEFINITE_PRECEDER.search(preceding):
+            pos = m.start() + 1
+            continue
+        cleaned = clean_noun_phrase(m.group(1).strip())
+        if cleaned:
+            refs.append(cleaned)
+        pos = m.end()
+    refs.extend(extract_bare_noun_intros(lowered))
+    return refs
+
+
 def extract_noun_phrases(text: str) -> list[str]:
     """Extract meaningful noun phrases from patent text.
 
