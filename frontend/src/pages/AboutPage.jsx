@@ -209,7 +209,7 @@ const TW_GROUP1_CHECKS = [
 ]
 
 const TW_GROUP2_CHECKS = [
-  'tipoComponentChain', 'tipoConnectionRelationships', 'tipoIndigenous',
+  'tipoConnectionRelationships', 'tipoIndigenous',
 ]
 
 const TW_GROUP3_CHECKS = [
@@ -226,7 +226,7 @@ function TwComparisonTable({ t }) {
   const [ref2, inView2] = useInView()
   const [ref3, inView3] = useInView()
 
-  const renderGroup = (ref, inView, titleKey, checks, patentlint, tipo, highlight, delay) => (
+  const renderGroup = (ref, inView, titleKey, checks, tipo, patentlint, highlight, delay) => (
     <tbody
       ref={ref}
       style={{
@@ -254,10 +254,10 @@ function TwComparisonTable({ t }) {
             {t(`about.twChecks.${key}`)}
           </td>
           <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-center sm:w-40">
-            <CheckMark active={patentlint} isPatentLint={true} />
+            <CheckMark active={tipo} isPatentLint={false} />
           </td>
           <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-center sm:w-40">
-            <CheckMark active={tipo} isPatentLint={false} />
+            <CheckMark active={patentlint} isPatentLint={true} />
           </td>
         </tr>
       ))}
@@ -273,16 +273,16 @@ function TwComparisonTable({ t }) {
               {t('about.uspto.colCheck')}
             </th>
             <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
-              {t('about.uspto.colPatentLint')}
+              {t('about.tw.colTipo')}
             </th>
             <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
-              {t('about.tw.colTipo')}
+              {t('about.uspto.colPatentLint')}
             </th>
           </tr>
         </thead>
         {renderGroup(ref1, inView1, 'about.tw.group1Title', TW_GROUP1_CHECKS, true, true, false, 0)}
-        {renderGroup(ref2, inView2, 'about.tw.group2Title', TW_GROUP2_CHECKS, false, true, false, 150)}
-        {renderGroup(ref3, inView3, 'about.tw.group3Title', TW_GROUP3_CHECKS, true, false, true, 300)}
+        {renderGroup(ref2, inView2, 'about.tw.group2Title', TW_GROUP2_CHECKS, true, false, false, 150)}
+        {renderGroup(ref3, inView3, 'about.tw.group3Title', TW_GROUP3_CHECKS, false, true, true, 300)}
       </table>
     </div>
   )
