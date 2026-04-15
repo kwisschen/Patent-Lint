@@ -7,6 +7,7 @@ from __future__ import annotations
 from patentlint.analysis.tw_cross_reference import (
     check_bracket_format,
     check_figure_count,
+    check_figures_sequential,
     check_symbol_vs_rep_drawing,
 )
 from patentlint.models import SymbolEntry, TwPatentDocument
@@ -146,4 +147,54 @@ class TestCheckFigureCount:
     def test_reference(self):
         doc = TwPatentDocument(figure_refs=[])
         result = check_figure_count(doc)
+        assert result[0].reference == "專利審查基準"
+
+
+class TestCheckFiguresSequential:
+    """Check #34: Figures sequential numbering."""
+
+    def test_contiguous_passes(self):
+        doc = TwPatentDocument(figure_refs=["1", "2", "3", "4"])
+        result = check_figures_sequential(doc)
+        assert result[0].status == "pass"
+        assert result[0].details_params == {"found_max": "4"}
+
+    def test_subfigure_suffixes_collapse(self):
+        doc = TwPatentDocument(figure_refs=["1", "1A", "1B", "2", "2A"])
+        result = check_figures_sequential(doc)
+        assert result[0].status == "pass"
+
+    def test_gap_amends(self):
+        doc = TwPatentDocument(figure_refs=["1", "2", "4", "5"])
+        result = check_figures_sequential(doc)
+        assert result[0].status == "amend"
+        assert result[0].details_params["figure_list"] == [3]
+        assert result[0].details_params["found_max"] == "5"
+
+    def test_missing_fig_one_amends(self):
+        doc = TwPatentDocument(figure_refs=["2", "3"])
+        result = check_figures_sequential(doc)
+        assert result[0].status == "amend"
+        assert result[0].details_params["figure_list"] == [1]
+
+    def test_multiple_gaps(self):
+        doc = TwPatentDocument(figure_refs=["1", "3", "5"])
+        result = check_figures_sequential(doc)
+        assert result[0].status == "amend"
+        assert result[0].details_params["figure_list"] == [2, 4]
+
+    def test_no_figures_passes(self):
+        doc = TwPatentDocument(figure_refs=[])
+        result = check_figures_sequential(doc)
+        assert result[0].status == "pass"
+        assert result[0].message_key == "check.tw.drawings.figuresSequential.pass"
+
+    def test_single_figure_passes(self):
+        doc = TwPatentDocument(figure_refs=["1"])
+        result = check_figures_sequential(doc)
+        assert result[0].status == "pass"
+
+    def test_reference(self):
+        doc = TwPatentDocument(figure_refs=["1", "3"])
+        result = check_figures_sequential(doc)
         assert result[0].reference == "專利審查基準"

@@ -102,10 +102,15 @@ const CN_ABSTRACT_CHECKS = [
   'abstractCharCount', 'titleInAbstract', 'commercialLanguage',
 ]
 
+const CN_DRAWINGS_CHECKS = [
+  'figuresSequential',
+]
+
 function CnCheckTable({ t }) {
   const [cnRef1, cnInView1] = useInView()
   const [cnRef2, cnInView2] = useInView()
   const [cnRef3, cnInView3] = useInView()
+  const [cnRef4, cnInView4] = useInView()
 
   const renderCnGroup = (ref, inView, titleKey, checks, delay) => (
     <tbody
@@ -156,6 +161,7 @@ function CnCheckTable({ t }) {
         {renderCnGroup(cnRef1, cnInView1, 'about.cnGroups.specification', CN_SPEC_CHECKS, 0)}
         {renderCnGroup(cnRef2, cnInView2, 'about.cnGroups.claims', CN_CLAIMS_CHECKS, 150)}
         {renderCnGroup(cnRef3, cnInView3, 'about.cnGroups.abstract', CN_ABSTRACT_CHECKS, 300)}
+        {renderCnGroup(cnRef4, cnInView4, 'about.cnGroups.drawings', CN_DRAWINGS_CHECKS, 450)}
       </table>
     </div>
   )
@@ -218,7 +224,7 @@ const TW_GROUP3_CHECKS = [
   'sequential', 'selfDependent', 'circularDependency',
   'transitionPhrase', 'specDrawingRef',
   'charCount', 'titleMatch', 'commercialLanguage', 'representativeDrawing',
-  'bracketFormat',
+  'bracketFormat', 'figuresSequential',
 ]
 
 function TwComparisonTable({ t }) {

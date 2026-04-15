@@ -120,8 +120,11 @@ def _run_cn_pipeline(
         + cn_abstract_analysis.check_commercial_language(cn_doc)
     )
 
-    # --- Drawings checks (24) ---
-    drawings_checks = cn_abstract_analysis.check_figure_count(cn_doc)
+    # --- Drawings checks (24–25) ---
+    drawings_checks = (
+        cn_abstract_analysis.check_figures_sequential(cn_doc)
+        + cn_abstract_analysis.check_figure_count(cn_doc)
+    )
 
     return AnalysisResult(
         jurisdiction=Jurisdiction.CN,
@@ -388,8 +391,11 @@ def _run_tw_pipeline(
         + tw_cross_ref_analysis.check_bracket_format(tw_doc)
     )
 
-    # --- Drawings checks (33) ---
-    drawings_checks = tw_cross_ref_analysis.check_figure_count(tw_doc)
+    # --- Drawings checks (33–34) ---
+    drawings_checks = (
+        tw_cross_ref_analysis.check_figures_sequential(tw_doc)
+        + tw_cross_ref_analysis.check_figure_count(tw_doc)
+    )
 
     return AnalysisResult(
         jurisdiction=Jurisdiction.TW,

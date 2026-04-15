@@ -333,7 +333,8 @@
     "cnGroups": {
       "specification": "Specification (说明书)",
       "claims": "Claims (权利要求)",
-      "abstract": "Abstract (摘要)"
+      "abstract": "Abstract (摘要)",
+      "drawings": "Drawings (附图)"
     },
     "cnChecks": {
       "requiredSections": "Required sections (专利法实施细则 §17)",
@@ -358,14 +359,15 @@
       "dependentOrdering": "Dependent claim ordering",
       "abstractCharCount": "Abstract character count (≤300)",
       "titleInAbstract": "Title in abstract",
-      "commercialLanguage": "Commercial language"
+      "commercialLanguage": "Commercial language",
+      "figuresSequential": "Figures numbered sequentially"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統 covers Taiwan-specific terminology. PatentLint covers broader drafting rules.",
     "tw": {
       "group1Title": "Shared Checks",
-      "group2Title": "TIPO Taiwan-Specific Checks",
-      "group3Title": "PatentLint Only",
+      "group2Title": "TIPO 專屬檢查",
+      "group3Title": "PatentLint 專屬檢查",
       "colTipo": "TIPO 偵錯系統"
     },
     "twChecks": {
@@ -402,7 +404,8 @@
       "symbolVsRepDrawing": "符號說明 vs 代表圖 symbol consistency",
       "bracketFormat": "Section header 【】 bracket format",
       "tipoConnectionRelationships": "Independent claim component connection relationships (連接關係)",
-      "tipoIndigenous": "Indigenous peoples terminology (原住民族)"
+      "tipoIndigenous": "Indigenous peoples terminology (原住民族)",
+      "figuresSequential": "Figures numbered sequentially"
     },
     "stats": {
       "tests": "Automated Tests",
@@ -807,6 +810,10 @@
       "drawings": {
         "figureCount": {
           "pass": "{{count}} figure(s) found."
+        },
+        "figuresSequential": {
+          "pass": "Figures 1–{{found_max}} are numbered sequentially.",
+          "amend": "Figure numbers are not sequential; missing: {{figure_list}}."
         }
       }
     },
@@ -953,6 +960,10 @@
       "drawings": {
         "figureCount": {
           "pass": "{{count}} figure(s) found."
+        },
+        "figuresSequential": {
+          "pass": "Figures 1–{{found_max}} are numbered sequentially.",
+          "amend": "Figure numbers are not sequential; missing: {{figure_list}}."
         }
       }
     }
