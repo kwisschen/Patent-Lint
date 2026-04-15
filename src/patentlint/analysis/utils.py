@@ -375,12 +375,24 @@ _LIST_CONTEXT_PATTERN = re.compile(
     r"|consisting(?:\s+essentially)?\s+of"
     r"|selected\s+from(?:\s+the\s+group(?:\s+consisting\s+of)?)?"
     r")\s*:?\s+"
-    r"(?P<list>[^.\n]+)",
-    re.IGNORECASE,
+    # Allow the list run to span newlines; patent drafters put each list
+    # item on its own line ("comprising:\n  a pigment;\n  polyurethane
+    # microparticles ..."). The period is still a hard boundary, and the
+    # capture stops at ``wherein`` so an outer ``comprising`` trigger
+    # doesn't swallow inner ``includes`` triggers later in the same claim.
+    r"(?P<list>(?:(?!\bwherein\b)[^.])+)",
+    re.IGNORECASE | re.DOTALL,
 )
 
 _LIST_ITEM_SPLIT = re.compile(r"[,;]|\s+and\s+|\s+or\s+", re.IGNORECASE)
-_LEADING_ARTICLE = re.compile(r"^(?:a|an|the)\s+", re.IGNORECASE)
+# Semicolon-dominant lists (multi-line "comprising:" / "includes:" blocks)
+# split on ``;`` only, so internal commas/"and" inside a single item do not
+# fragment the item (e.g. "X connected to A, B, and C" stays one item).
+_SEMICOLON_SPLIT = re.compile(r";")
+_LEADING_AND = re.compile(r"^\s*and\s+", re.IGNORECASE)
+# Only ``a``/``an`` are stripped — list items starting with ``the`` are
+# back-references, not introductions, and must not be re-registered.
+_LEADING_ARTICLE = re.compile(r"^(?:a|an)\s+", re.IGNORECASE)
 _LIST_CONTEXT_BREAKER = re.compile(r"\bwherein\b", re.IGNORECASE)
 
 
@@ -421,12 +433,33 @@ def extract_bare_noun_intros(text: str) -> list[str]:
         breaker = _LIST_CONTEXT_BREAKER.search(list_text)
         if breaker:
             list_text = list_text[: breaker.start()]
-        for raw in _LIST_ITEM_SPLIT.split(list_text):
-            item = raw.strip()
+        # Pick the list separator. When semicolons are present the list
+        # is a semicolon-dominant enumeration where a single item can
+        # contain internal commas and "and" ("X connected to A, B, and
+        # C"), so splitting on commas/and would mis-fragment items and
+        # surface back-references like "the <X>" as false intros. Fall
+        # back to comma/and/or only for pure-comma lists (Markush groups
+        # and single-line "comprising a, b, and c" preambles).
+        if ";" in list_text:
+            raw_items = _SEMICOLON_SPLIT.split(list_text)
+        else:
+            raw_items = _LIST_ITEM_SPLIT.split(list_text)
+        for raw in raw_items:
+            item = _LEADING_AND.sub("", raw.strip()).strip()
             if not item:
                 continue
             item = _LEADING_ARTICLE.sub("", item).strip()
-            cleaned = clean_noun_phrase(item)
+            # Reduce each item to its head NP via the core NP pattern so
+            # multi-line list items like "polyurethane microparticles
+            # having a glass transition temperature of 40°C" collapse to
+            # "polyurethane microparticles" (stops at the post-modifier
+            # "having"). Items whose first token is a stop word (e.g.
+            # "when the impermeable medium contains...") produce no NP
+            # match and are skipped.
+            np_match = re.match(rf"\s*({_NP_CORE})", item, re.IGNORECASE)
+            if not np_match:
+                continue
+            cleaned = clean_noun_phrase(np_match.group(1).strip())
             if cleaned:
                 refs.append(cleaned.lower())
     return refs
