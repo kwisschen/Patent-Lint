@@ -360,11 +360,11 @@
       "titleInAbstract": "Title in abstract",
       "commercialLanguage": "Commercial language"
     },
-    "twTitle": "PatentLint vs. TIPO Error Detection System",
-    "twSubtitle": "30+ drafting checks against TIPO rules (專利法施行細則, 專利審查基準).",
+    "twTitle": "PatentLint vs. TIPO 偵錯系統",
+    "twSubtitle": "TIPO enforces Taiwan-specific terminology and structural conventions. PatentLint focuses on universal drafting rules.",
     "tw": {
       "group1Title": "Shared Checks",
-      "group2Title": "TIPO Only",
+      "group2Title": "TIPO Taiwan-Specific Checks",
       "group3Title": "PatentLint Only",
       "colTipo": "TIPO 偵錯系統"
     },
@@ -401,7 +401,6 @@
       "representativeDrawing": "Representative drawing (代表圖) designation",
       "symbolVsRepDrawing": "符號說明 vs 代表圖 symbol consistency",
       "bracketFormat": "Section header 【】 bracket format",
-      "tipoComponentChain": "Component dependency in parent claim chain (組件相依性)",
       "tipoConnectionRelationships": "Independent claim component connection relationships (連接關係)",
       "tipoIndigenous": "Indigenous peoples terminology (原住民族)"
     },

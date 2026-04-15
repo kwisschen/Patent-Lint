@@ -361,10 +361,10 @@
       "commercialLanguage": "商業性用語"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
-    "twSubtitle": "30餘項撰稿檢查，依據TIPO規則（專利法施行細則、專利審查基準）。",
+    "twSubtitle": "TIPO 偵錯系統著重台灣專屬用語與結構慣例，PatentLint 則聚焦於跨司法管轄區皆適用的撰稿規則。",
     "tw": {
       "group1Title": "共同檢查項目",
-      "group2Title": "僅 TIPO 偵錯系統",
+      "group2Title": "TIPO 台灣專屬檢查",
       "group3Title": "僅 PatentLint",
       "colTipo": "TIPO 偵錯系統"
     },
@@ -401,7 +401,6 @@
       "representativeDrawing": "代表圖指定",
       "symbolVsRepDrawing": "符號說明與代表圖之符號一致性",
       "bracketFormat": "章節標題使用【】括號",
-      "tipoComponentChain": "組件於母項鏈中之相依性（組件相依性）",
       "tipoConnectionRelationships": "獨立項組件之連接關係",
       "tipoIndigenous": "原住民族用語檢查"
     },
