@@ -273,7 +273,7 @@
       "colPatentLint": "PatentLint",
       "group1Title": "フォーマットと構造",
       "group2Title": "USPTO 出願フォーマットチェック",
-      "group3Title": "実質的な起案チェック",
+      "group3Title": "実質的な作成チェック",
       "check": {
         "sectionHeaders": "必須セクション見出し（MPEP § 608.01(a)）",
         "paraNumbering": "段落番号が連続",
@@ -316,11 +316,25 @@
     },
     "cnTitle": "PatentLint CNIPA 作成規則チェック",
     "cnSubtitle": "CNIPA作成規則（专利法实施细则、审查指南）に基づく20余件の構造チェック。",
+    "cnFeatures": {
+      "title": "インタラクティブな中国特許分析",
+      "claimTree": {
+        "title": "請求項従属ツリー",
+        "description": "多重従属および多重独立の請求項構造を、インタラクティブなツリーと依存グラフで可視化します。"
+      },
+      "didYouMean": {
+        "title": "もしかして候補",
+        "description": "参照語に正確な先行詞が存在しない場合、最も近い候補を提示し、表記の揺れを検出します。"
+      },
+      "antecedentBasis": {
+        "title": "先行詞チェーン解析",
+        "description": "幅優先探索による祖先チェーン解析器が、バイグラム分割と序数ガードを併用し、請求項ツリー全体で先行詞の欠落を検出します。"
+      }
+    },
     "cnGroups": {
       "specification": "明細書（说明书）",
       "claims": "特許請求の範囲（权利要求）",
-      "abstract": "要約（摘要）",
-      "drawings": "図面（附图）"
+      "abstract": "要約（摘要）"
     },
     "cnChecks": {
       "requiredSections": "必須セクション（专利法实施细则 §17）",
@@ -345,8 +359,7 @@
       "dependentOrdering": "従属請求項の順序",
       "abstractCharCount": "要約文字数（300字以下）",
       "titleInAbstract": "タイトルが要約に含まれている",
-      "commercialLanguage": "商業的表現",
-      "figureCount": "図面数"
+      "commercialLanguage": "商業的表現"
     },
     "twTitle": "PatentLint vs. TIPO エラー検出システム",
     "twSubtitle": "TIPO規則（專利法施行細則、專利審查基準）に基づく30余件の作成チェック。",

@@ -316,11 +316,25 @@
     },
     "cnTitle": "PatentLint CNIPA Drafting Checks",
     "cnSubtitle": "20+ structural checks against CNIPA drafting rules (专利法实施细则, 审查指南).",
+    "cnFeatures": {
+      "title": "Interactive CN analysis",
+      "claimTree": {
+        "title": "Claim dependency tree",
+        "description": "Visualize multi-dependent and multi-independent claim structures with an interactive tree and dependency graph."
+      },
+      "didYouMean": {
+        "title": "Did-you-mean suggestions",
+        "description": "When a reference term has no exact antecedent, the walker offers the closest candidate to help you spot typos and drafting drift."
+      },
+      "antecedentBasis": {
+        "title": "Antecedent-basis chain walker",
+        "description": "BFS ancestor-chain walker with bigram tokenization and ordinal guard catches missing antecedent basis across the full claim tree."
+      }
+    },
     "cnGroups": {
       "specification": "Specification (说明书)",
       "claims": "Claims (权利要求)",
-      "abstract": "Abstract (摘要)",
-      "drawings": "Drawings (附图)"
+      "abstract": "Abstract (摘要)"
     },
     "cnChecks": {
       "requiredSections": "Required sections (专利法实施细则 §17)",
@@ -345,8 +359,7 @@
       "dependentOrdering": "Dependent claim ordering",
       "abstractCharCount": "Abstract character count (≤300)",
       "titleInAbstract": "Title in abstract",
-      "commercialLanguage": "Commercial language",
-      "figureCount": "Figure count"
+      "commercialLanguage": "Commercial language"
     },
     "twTitle": "PatentLint vs. TIPO Error Detection System",
     "twSubtitle": "30+ drafting checks against TIPO rules (專利法施行細則, 專利審查基準).",
