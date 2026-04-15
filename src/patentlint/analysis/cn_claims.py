@@ -192,9 +192,19 @@ def check_single_sentence(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
 # ── Check 14 ─────────────────────────────────────────────────────────────
 
-# CJK char followed by optional space then 2-4 digits, not in parentheses
+# CJK char followed by optional space then 2-4 digits, not in parentheses.
+# Exclude CJK unit tokens like 重量份, 重量百分比 etc. to avoid chemistry
+# false positives (mirror of tw_claims._BARE_NUMERAL CJK unit exclusion).
+_CJK_UNIT_TOKENS_CN = (
+    r"重量百分比|重量份|重量比|"
+    r"摩尔百分比|摩尔比|摩尔|"
+    r"体积百分比|体积比|质量百分比|原子百分比|"
+    r"毫克|公克|毫升|公升|微升|微米|纳米|公分|公釐|公尺|"
+    r"克|升|倍率|倍|份|个|颗|片"
+)
 _BARE_NUMERAL = re.compile(
     r"(?<!\()(?<=[\u4e00-\u9fff])\s?\d{2,4}(?!\))"
+    r"(?!\s*(?:" + _CJK_UNIT_TOKENS_CN + r"))"
 )
 
 
@@ -231,13 +241,43 @@ def check_reference_numeral_parentheses(cn_doc: CnPatentDocument) -> list[CheckI
 _SUBJECT_RE = re.compile(r"所述的(.+?)(?:[，,]|$)")
 _LEADING_QUANTIFIER = re.compile(r"^(?:一种|一个|该|所述|所述的)\s*")
 
+# Dependent-claim preamble anchored at start (CN mirror of TW fix): prevents
+# body-text 所述的 inside independent claims from hijacking extraction.
+_DEP_PREFIX_RE_CN = re.compile(
+    r"^(?:如|根据|依)权利要求\s*\d+"
+    r"(?:\s*(?:~|至|到)\s*\d+)?"
+    r"(?:\s*(?:或|、)\s*\d+)*"
+    r"(?:\s*中\s*任一?项)?"
+    r"\s*所?述?的?"
+)
+_INDEP_PREFIX_RE_CN = re.compile(r"^(?:一种|一个)\s*")
+_SUBJECT_END_RE_CN = re.compile(r"(?:[，,]|其特征在于|其改良在于|其中)")
+
 
 def _extract_subject(claim_text: str) -> str:
-    """Extract the subject name from a claim — text after last 所述的 before comma/end."""
+    """Extract the subject name from a claim preamble.
+
+    Dependent-claim preambles (如权利要求N所述的X) are anchored at start so
+    that body-text 所述的 occurrences inside independent claims do not
+    hijack extraction. Mirrors the TW `_extract_subject` shape.
+    """
+    text = re.sub(r"^\s*\d+\s*[.．]\s*", "", claim_text).strip()
+    dep_m = _DEP_PREFIX_RE_CN.match(text)
+    if dep_m:
+        remainder = text[dep_m.end():]
+        end_m = _SUBJECT_END_RE_CN.search(remainder)
+        return (remainder[:end_m.start()] if end_m else remainder).strip()
+    indep_m = _INDEP_PREFIX_RE_CN.match(text)
+    if indep_m:
+        text = text[indep_m.end():]
+    end_m = _SUBJECT_END_RE_CN.search(text)
+    if end_m:
+        return text[:end_m.start()].strip()
+    # Fallback: legacy 所述的 body scan for claims that don't match preamble shapes
     match = _SUBJECT_RE.search(claim_text)
     if match:
         return match.group(1).strip()
-    return ""
+    return text.strip()
 
 
 def _normalize_subject(subject: str) -> str:

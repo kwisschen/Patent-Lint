@@ -86,7 +86,8 @@ def _run_cn_pipeline(
     )
     if cn_antecedent_basis:
         issue_count = len(cn_antecedent_basis)
-        claim_count = len({item["claim_id"] for item in cn_antecedent_basis})
+        claim_ids = sorted({item["claim_id"] for item in cn_antecedent_basis})
+        claim_count = len(claim_ids)
         claims_checks = list(claims_checks) + [
             CheckItem(
                 status="verify",
@@ -97,6 +98,7 @@ def _run_cn_pipeline(
                 details_params={
                     "issue_count": issue_count,
                     "claim_count": claim_count,
+                    "claims": claim_ids,
                 },
                 reference="审查指南",
             )
@@ -345,7 +347,8 @@ def _run_tw_pipeline(
     )
     if tw_antecedent_basis:
         issue_count = len(tw_antecedent_basis)
-        claim_count = len({item["claim_id"] for item in tw_antecedent_basis})
+        claim_ids = sorted({item["claim_id"] for item in tw_antecedent_basis})
+        claim_count = len(claim_ids)
         claims_checks = list(claims_checks) + [
             CheckItem(
                 status="verify",
@@ -356,6 +359,7 @@ def _run_tw_pipeline(
                 details_params={
                     "issue_count": issue_count,
                     "claim_count": claim_count,
+                    "claims": claim_ids,
                 },
                 reference="專利審查基準",
             )

@@ -489,7 +489,7 @@
       "abstractCharCount": "Per 专利法实施细则 §23, the abstract must not exceed 300 Chinese characters. Shorten the abstract.",
       "abstractTitleMatch": "Per 审查指南, the abstract should be consistent with the title (发明名称). Verify the abstract reflects the invention title.",
       "commercialLanguage": "Per 专利法实施细则 §23, the abstract must not contain commercial advertising language (商业性宣传用语). Remove terms like 最优, 最佳, 世界领先, 国际领先, 国内首创, 填补空白, etc.",
-      "antecedentBasisTerms": "{{issue_count}} term(s) may lack antecedent basis across {{claim_count}} claim(s).",
+      "antecedentBasisTerms": "{{issue_count}} term(s) across {{claim_count}} claim(s) may lack antecedent basis. See the \"Antecedent Basis Review\" section below for the full per-term breakdown.",
       "titleMissing": "Per CNIPA 审查指南 第一部分第一章, the specification must contain a 发明名称 (title of invention). Add a title to the specification header.",
       "figureRefInconsistency": {
         "onlyDrawings": "Only cited in 附图说明: {{figs}}",
@@ -537,7 +537,7 @@
         "description": "Symbols listed in the representative drawing symbol description should match the definitions in 符號說明. Verify the flagged items."
       },
       "bracketFormat": "Per 專利法施行細則 §17, section headers should use full-width brackets 【】. Found: {{detail}}.",
-      "antecedentBasisTerms": "{{issue_count}} term(s) may lack antecedent basis across {{claim_count}} claim(s).",
+      "antecedentBasisTerms": "{{issue_count}} term(s) across {{claim_count}} claim(s) may lack antecedent basis. See the \"Antecedent Basis Review\" section below for the full per-term breakdown.",
       "titleMissing": "Per TIPO 專利審查基準, the specification must contain a 發明名稱/新型名稱 (title of invention or utility model). Add one to the specification header.",
       "figureRefInconsistency": {
         "onlyDrawings": "Only cited in 圖式簡單說明: {{figs}}",
@@ -774,7 +774,7 @@
           "pass": "Dependent claims are properly ordered."
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}} term(s) may lack antecedent basis.",
+          "verify": "{{claims}} may have {{issue_count}} term(s) lacking antecedent basis.",
           "pass": "All referenced terms have antecedent basis."
         }
       },
@@ -906,7 +906,7 @@
           "noClaimNumerals": "Claims contain no reference numerals; consistency check not applicable."
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}} term(s) may lack antecedent basis.",
+          "verify": "{{claims}} may have {{issue_count}} term(s) lacking antecedent basis.",
           "pass": "All referenced terms have antecedent basis."
         }
       },
