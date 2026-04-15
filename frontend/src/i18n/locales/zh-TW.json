@@ -347,11 +347,11 @@
       "claimsSequential": "權利要求編號連續",
       "dependencyFormat": "從屬格式",
       "selfDependent": "自引用權利要求",
-      "forwardDependency": "前向引用",
+      "forwardDependency": "引用在前之權利要求",
       "singleSentence": "每項權利要求一句話",
       "refNumeralParens": "附圖標記加括號",
       "subjectNameConsistency": "主題名稱一致性",
-      "transitionPhrase": "過渡短語（其特征在于）",
+      "transitionPhrase": "連接詞（其特征在于）",
       "cnTwTerminology": "大陸/臺灣用語",
       "claimsSpecReference": "權利要求不得引用說明書/附圖",
       "multiMultiDependency": "多重從屬的從屬",
@@ -361,7 +361,7 @@
       "commercialLanguage": "商業性用語"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
-    "twSubtitle": "TIPO 偵錯系統著重台灣專屬用語與結構慣例，PatentLint 則聚焦於跨司法管轄區皆適用的撰稿規則。",
+    "twSubtitle": "TIPO 偵錯系統專查台灣特有用語。PatentLint 擴及更廣的撰稿規範。",
     "tw": {
       "group1Title": "共同檢查項目",
       "group2Title": "TIPO 台灣專屬檢查",
@@ -384,16 +384,16 @@
       "dependencyFormat": "附屬格式（專利法施行細則 §18）",
       "selfDependent": "自我附屬請求項",
       "circularDependency": "循環附屬鏈",
-      "forwardDependency": "向前附屬",
+      "forwardDependency": "依附在前",
       "singleSentence": "每項請求項一句話",
       "refNumeralParens": "圖號以括號標示（專利法施行細則 §19）",
-      "subjectConsistency": "主題名稱一致性",
-      "transitionPhrase": "過渡片語（其特徵在於）",
+      "subjectConsistency": "標的名稱一致性",
+      "transitionPhrase": "連接詞（其特徵在於）",
       "cnTerminology": "兩岸用語辨識",
       "specDrawingRef": "請求項不得引用說明書或圖式",
       "multiDepOnMultiDep": "多重附屬項不得附屬於另一多重附屬項",
       "multiDepAlternative": "多重附屬項須採擇一形式",
-      "titleSubjectMatch": "發明名稱與請求項主題一致",
+      "titleSubjectMatch": "發明名稱與請求項標的一致",
       "antecedentBasis": "先行詞分析（BFS 祖先鏈走訪器）",
       "charCount": "摘要字數（250字以下）",
       "titleMatch": "發明名稱出現於摘要中",
@@ -493,7 +493,7 @@
       "singleSentence": "根據审查指南 第二部分第二章，每項權利要求應為一個以句號（。）結尾的完整句子。請刪除句中多餘的句號或拆分為多項權利要求。",
       "refNumeralParens": "根據审查指南，權利要求中的附圖標記應加括號，例如（101）而非101。請檢查標記的權利要求。",
       "subjectConsistency": "根據审查指南 第二部分第二章，從屬權利要求的主題名稱應與其引用的權利要求的主題名稱一致。請檢查標記的權利要求。",
-      "transitionPhrase": "根據审查指南，獨立權利要求應包含「其特征在于」等特徵部分過渡語，用以區分已知要素與新穎特徵。請檢查標記的權利要求。",
+      "transitionPhrase": "根據审查指南，獨立權利要求應包含「其特征在于」等特徵部分連接詞，用以區分已知要素與新穎特徵。請檢查標記的權利要求。",
       "twTerminology": "CNIPA使用「权利要求」表示claims，「请求项」為台灣（TIPO）專利用語。請替換所有「请求项」。",
       "claimsSpecReference": "根據审查指南 第二部分第二章，權利要求不得使用「如说明书……所述」或「如图……所示」來限定保護範圍。權利要求應當自成一體。請刪除相關引用。",
       "multiMultiDep": "根據专利法实施细则 §22，多項從屬權利要求不得作為另一多項從屬權利要求的引用基礎。請調整引用關係。",
@@ -523,7 +523,7 @@
       "dependencyFormat": "依專利法施行細則 §18，依附須使用正確格式（如請求項N所述之、如請求項N之等）。請檢查標記之請求項。",
       "selfDependent": "依專利法施行細則 §18，請求項不得依附於自身。自我依附：{{claims}}。",
       "circularDependency": "依專利法施行細則 §18，請求項不得形成循環依附鏈。循環鏈：請求項 {{claims}}。",
-      "forwardDependency": "依專利法施行細則 §18，附屬項僅得引用在前之請求項。向前引用：{{claims}}。",
+      "forwardDependency": "依專利法施行細則 §18，附屬項僅得依附在前之請求項。依附在後：{{claims}}。",
       "singleSentence": "依專利法施行細則 §18，每一請求項須為單句，僅於末尾有一個句號（。）。請檢查標記之請求項。",
       "refNumeralParens": "依專利法施行細則 §19，請求項中之元件符號應加括號，例如(101)。請檢查標記之請求項。",
       "subjectConsistency": "附屬項之標的名稱應與所依附之母項標的名稱一致。請檢查標記之請求項。",
@@ -750,8 +750,8 @@
           "pass": "未發現自引用權利要求。"
         },
         "forwardDependency": {
-          "amend": "{{claims}} 向前依附（引用後項權利要求）。",
-          "pass": "未發現正向引用。"
+          "amend": "{{claims}} 引用在後之權利要求。",
+          "pass": "未發現引用在後之情形。"
         },
         "singleSentence": {
           "amend": "{{count}}項權利要求包含多個句子：{{claims}}。",
@@ -766,8 +766,8 @@
           "pass": "從屬權利要求的主題名稱一致。"
         },
         "transitionPhrase": {
-          "verify": "{{count}}項獨立權利要求可能缺少特徵部分過渡語：{{claims}}。",
-          "pass": "所有獨立權利要求均包含特徵部分過渡語。"
+          "verify": "{{count}}項獨立權利要求可能缺少特徵部分連接詞：{{claims}}。",
+          "pass": "所有獨立權利要求均包含特徵部分連接詞。"
         },
         "twTerminology": {
           "verify": "發現台灣專利用語「請求項」，CNIPA申請應使用「权利要求」。",
@@ -873,8 +873,8 @@
           "pass": "無循環依附。"
         },
         "forwardDependency": {
-          "amend": "{{claims}} 向前依附（引用後項請求項）。",
-          "pass": "無向前依附。"
+          "amend": "{{claims}} 依附在後之請求項。",
+          "pass": "無依附在後之情形。"
         },
         "singleSentence": {
           "amend": "{{count}}項請求項非單句撰寫：{{claims}}。",
@@ -909,8 +909,8 @@
           "pass": "所有多項附屬項皆使用擇一形式。"
         },
         "titleSubjectMatch": {
-          "verify": "發明名稱/新型名稱「{{title}}」可能與獨立項主題「{{subjects}}」不一致。",
-          "pass": "發明名稱/新型名稱與獨立項主題一致。"
+          "verify": "發明名稱/新型名稱「{{title}}」可能與獨立項標的「{{subjects}}」不一致。",
+          "pass": "發明名稱/新型名稱與獨立項標的一致。"
         },
         "symbolTableConsistency": {
           "verify": "請求項中之元件符號與符號說明不一致。",
