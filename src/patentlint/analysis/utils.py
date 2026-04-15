@@ -465,6 +465,9 @@ def extract_bare_noun_intros(text: str) -> list[str]:
     return refs
 
 
+_DEFINITE_PRECEDER = re.compile(r"(?:\bthe|\bsaid)\s+$", re.IGNORECASE)
+
+
 def extract_introductions(text: str) -> list[str]:
     """Extract all element-introduction noun phrases from patent text.
 
@@ -473,13 +476,23 @@ def extract_introductions(text: str) -> list[str]:
     (comprising / includes / consisting of / selected from … X, Y, and Z).
 
     Returns list of lowercase noun phrases (may contain duplicates).
+
+    Matches preceded by ``the`` or ``said`` are back-references, not
+    introductions, and are filtered out. This prevents quantified
+    back-references like ``the two second edges`` from re-introducing
+    ``second edges`` in downstream claims and masking the real earlier
+    intro.
     """
+    lowered = text.lower()
     refs: list[str] = []
-    for m in _INTRO_PATTERNS.finditer(text.lower()):
+    for m in _INTRO_PATTERNS.finditer(lowered):
+        preceding = lowered[max(0, m.start() - 8) : m.start()]
+        if _DEFINITE_PRECEDER.search(preceding):
+            continue
         cleaned = clean_noun_phrase(m.group(1).strip())
         if cleaned:
             refs.append(cleaned)
-    refs.extend(extract_bare_noun_intros(text.lower()))
+    refs.extend(extract_bare_noun_intros(lowered))
     return refs
 
 

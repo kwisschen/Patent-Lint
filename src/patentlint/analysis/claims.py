@@ -211,15 +211,23 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
         claim_text_lower = claim.text.lower()
 
         # Gather all introductions, tracking the ancestor claim each came from.
-        # If the same intro phrase appears in multiple ancestors, the deepest
-        # (earliest = closest to root) wins via dict update order.
+        # When the same intro phrase appears in multiple ancestors, prefer the
+        # lowest claim id (the earliest claim that introduced the term) so
+        # did-you-mean attributes references to the original intro, not a
+        # re-mention in a nearer ancestor.
         intros_by_term: dict[str, int] = {}
+
+        def _record(phrase: str, ancestor_id: int) -> None:
+            existing = intros_by_term.get(phrase)
+            if existing is None or ancestor_id < existing:
+                intros_by_term[phrase] = ancestor_id
+
         for ancestor in chain:
             ancestor_lower = ancestor.text.lower()
             for phrase in extract_introductions(ancestor_lower):
-                intros_by_term.setdefault(phrase, ancestor.id)
+                _record(phrase, ancestor.id)
             for abbrev_intro in extract_abbreviation_intros(ancestor.text):
-                intros_by_term.setdefault(abbrev_intro, ancestor.id)
+                _record(abbrev_intro, ancestor.id)
 
         intros = set(intros_by_term.keys())
 
