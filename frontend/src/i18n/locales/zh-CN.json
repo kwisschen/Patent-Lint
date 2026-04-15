@@ -489,7 +489,7 @@
       "abstractCharCount": "根据专利法实施细则 §23，摘要不得超过300个汉字。请缩短摘要。",
       "abstractTitleMatch": "根据审查指南，摘要应与发明名称一致。请确认摘要是否体现了发明名称。",
       "commercialLanguage": "根据专利法实施细则 §23，摘要不得包含商业性宣传用语。请删除\"最优\"\"最佳\"\"世界领先\"\"国际领先\"\"国内首创\"\"填补空白\"等用语。",
-      "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语可能缺少先行词。",
+      "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语可能缺少先行词。详见下方「先行词基础检查」区块。",
       "titleMissing": "根据审查指南 第一部分第一章，说明书必须包含发明名称。请于说明书首部添加发明名称。",
       "figureRefInconsistency": {
         "onlyDrawings": "仅在附图说明中提及：{{figs}}",
@@ -499,7 +499,7 @@
     "tw": {
       "requiredSections": "TIPO规定必须包含：技術領域、先前技術、發明內容/新型內容、實施方式。有图式时须包含圖式簡單說明及符號說明。缺少：{{sections}}。",
       "sectionOrdering": "专利法施行细则 §17规定顺序：技術領域→先前技術→發明內容/新型內容→圖式簡單說明→實施方式→符號說明。请重新排列。",
-      "paragraphNumbering": "如使用段落编号，应采用【NNNN】四位数字连续格式。依专利法施行细则 §17,编号为选用。",
+      "paragraphNumbering": "如使用段落编号，应采用【NNNN】四位数字连续格式。依专利法施行细则 §17，编号为选用。",
       "paragraphEnding": "说明书段落应以中文标点（。！？）结尾。请检查标记之段落。",
       "figureRefConsistency": "依专利审查基准，圖式簡單說明中描述的图式应在實施方式中引用，反之亦然。请确认标记的引用是否正确。",
       "patentTypeTerminology": "发明专利应使用「本發明」而非「本新型」。新型专利应使用「本新型」而非「本發明」。发现：{{term}}。",
@@ -537,7 +537,7 @@
         "description": "代表图符号简单说明中列出之符号应与符号说明中之定义一致。请确认标记的项目。"
       },
       "bracketFormat": "依专利法施行细则 §17，章节标题应使用全角方括号【】。发现：{{detail}}。",
-      "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语可能缺少先行词。",
+      "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语可能缺少先行词。详见下方「先行词基础检查」区块。",
       "titleMissing": "依专利审查基准，说明书必须包含发明名称/新型名称。请于说明书首部添加。",
       "figureRefInconsistency": {
         "onlyDrawings": "仅在圖式簡單說明中提及：{{figs}}",
@@ -774,7 +774,7 @@
           "pass": "从属权利要求排列顺序正确。"
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}}个用语可能缺少先行词。",
+          "verify": "{{claims}} 可能共有 {{issue_count}} 个用语缺少先行词。",
           "pass": "所有引用之用语皆有先行词。"
         }
       },
@@ -906,7 +906,7 @@
           "noClaimNumerals": "权利要求未使用元件符号（施行细则 §19 允许），无需检查一致性。"
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}}个用语可能缺少先行词。",
+          "verify": "{{claims}} 可能共有 {{issue_count}} 个用语缺少先行词。",
           "pass": "所有引用之用语均有先行词。"
         }
       },

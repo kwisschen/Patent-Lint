@@ -489,7 +489,7 @@
       "abstractCharCount": "根據专利法实施细则 §23，摘要不得超過300個漢字。請縮短摘要。",
       "abstractTitleMatch": "根據审查指南，摘要應與發明名稱一致。請確認摘要是否體現了發明名稱。",
       "commercialLanguage": "根據专利法实施细则 §23，摘要不得包含商業性宣傳用語。請刪除「最优」「最佳」「世界领先」「国际领先」「国内首创」「填补空白」等用語。",
-      "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語可能缺少先行詞。",
+      "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語可能缺少先行詞。詳見下方「先行詞基礎檢視」區塊。",
       "titleMissing": "根據審查指南 第一部分第一章，說明書必須包含發明名稱。請於說明書首部添加發明名稱。",
       "figureRefInconsistency": {
         "onlyDrawings": "僅於附图说明中提及：{{figs}}",
@@ -514,13 +514,13 @@
       "forwardDependency": "依專利法施行細則 §18，附屬項僅得引用在前之請求項。向前引用：{{claims}}。",
       "singleSentence": "依專利法施行細則 §18，每一請求項須為單句，僅於末尾有一個句號（。）。請檢查標記之請求項。",
       "refNumeralParens": "依專利法施行細則 §19，請求項中之元件符號應加括號，例如(101)。請檢查標記之請求項。",
-      "subjectConsistency": "附屬項之主題名稱應與所依附之母項主題名稱一致。請檢查標記之請求項。",
+      "subjectConsistency": "附屬項之標的名稱應與所依附之母項標的名稱一致。請檢查標記之請求項。",
       "transitionPhrase": "依專利法施行細則 §20，獨立項應包含特徵連接詞，如「其特徵在於」或「其改良在於」。請檢查標記之請求項。",
       "cnTerminology": "發現簡體中文專利用語：{{detail}}。台灣專利稿件應使用TIPO用語（請求項、說明書、先前技術、實施方式等），而非CNIPA用語（权利要求、说明书、背景技术、具体实施方式等）。",
       "specDrawingRef": "依專利法施行細則 §19，請求項不得引用說明書或圖式（如「如說明書所述」「如圖所示」）。發現：{{detail}}。",
       "multiDepOnMultiDep": "依專利法施行細則 §18，多項附屬項不得直接或間接依附於另一多項附屬項。標記：{{claims}}。",
       "multiDepAlternative": "依專利法施行細則 §18，多項附屬項須使用擇一形式（或/任一項）。標記：{{claims}}。",
-      "titleSubjectMatch": "依專利審查基準，發明名稱/新型名稱應與獨立項之主題名稱一致。請檢查標記之請求項。",
+      "titleSubjectMatch": "依專利審查基準，發明名稱/新型名稱應與獨立項之標的名稱一致。請檢查標記之請求項。",
       "claims": {
         "symbolTableConsistency": {
           "missingFromTable": "請求項中之元件符號未於符號說明中定義：{{numerals_with_locations}}"
@@ -537,7 +537,7 @@
         "description": "代表圖符號簡單說明中列出之符號應與符號說明中之定義一致。請確認標記的項目。"
       },
       "bracketFormat": "依專利法施行細則 §17，章節標題應使用全形方括號【】。發現：{{detail}}。",
-      "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語可能缺少先行詞。",
+      "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語可能缺少先行詞。詳見下方「先行詞基礎檢視」區塊。",
       "titleMissing": "依專利審查基準，說明書必須包含發明名稱/新型名稱。請於說明書首部添加。",
       "figureRefInconsistency": {
         "onlyDrawings": "僅於圖式簡單說明中提及：{{figs}}",
@@ -774,7 +774,7 @@
           "pass": "從屬權利要求排列順序正確。"
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}}個用語可能缺少先行詞。",
+          "verify": "{{claims}} 可能共有 {{issue_count}} 個用語缺少先行詞。",
           "pass": "所有引用之用語皆有先行詞。"
         }
       },
@@ -873,8 +873,8 @@
           "pass": "所有請求項之元件符號皆已加括號。"
         },
         "subjectConsistency": {
-          "verify": "{{claims}} 的主題名稱與母項不一致（共 {{count}} 項）。",
-          "pass": "所有附屬項之主題名稱皆與母項一致。"
+          "verify": "{{claims}} 的標的名稱與母項不一致（共 {{count}} 項）。",
+          "pass": "所有附屬項之標的名稱皆與母項一致。"
         },
         "transitionPhrase": {
           "verify": "{{count}}項獨立項缺少特徵連接詞：{{claims}}。",
@@ -906,7 +906,7 @@
           "noClaimNumerals": "請求項未使用元件符號（施行細則 §19 允許），無需檢查一致性。"
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}}個用語可能缺少先行詞。",
+          "verify": "{{claims}} 可能共有 {{issue_count}} 個用語缺少先行詞。",
           "pass": "所有引用之用語皆有先行詞。"
         }
       },
