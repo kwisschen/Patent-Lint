@@ -292,6 +292,43 @@ def _should_strip_trailing(word: str) -> bool:
     return False
 
 
+# Contextual verb stops: words that are ambiguous between noun and verb use
+# (irregular past participles like `output`/`input`; verb/plural-noun pairs
+# like `range`/`ranges`). Strip from the trailing position of a captured NP
+# only when the source-text token immediately following the span is in the
+# complement set — that signals verb use ("the signals output TO the driver",
+# "the agent ranges FROM X to Y"). Plain "the outputs" / "the temperature
+# ranges" (no following complement) keeps the head noun.
+_CONTEXTUAL_VERB_STOPS = {
+    "output":  frozenset({"to", "from", "by", "with", "via", "on", "into", "onto", "toward", "towards"}),
+    "input":   frozenset({"to", "from", "by", "with", "via", "on", "into", "onto"}),
+}
+
+_NEXT_WORD_RE = re.compile(r"\s*([A-Za-z][A-Za-z'\u2019-]*)")
+
+
+def strip_contextual_verb(term: str, following_text: str) -> str:
+    """Strip a trailing ambiguous verb form when following text confirms verb use.
+
+    ``following_text`` is the source text immediately after the captured span.
+    """
+    if not term:
+        return term
+    words = term.split()
+    if not words:
+        return term
+    last = words[-1].lower().rstrip(".,;:")
+    complements = _CONTEXTUAL_VERB_STOPS.get(last)
+    if not complements:
+        return term
+    m = _NEXT_WORD_RE.match(following_text)
+    if not m:
+        return term
+    if m.group(1).lower() not in complements:
+        return term
+    return " ".join(words[:-1])
+
+
 def clean_noun_phrase(phrase: str) -> str:
     """Strip trailing verbs, adverbs, and function words from a noun phrase."""
     words = phrase.strip().split()
