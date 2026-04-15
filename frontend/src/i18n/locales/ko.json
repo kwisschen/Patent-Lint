@@ -316,11 +316,25 @@
     },
     "cnTitle": "PatentLint CNIPA 작성 규칙 검사",
     "cnSubtitle": "CNIPA 작성 규칙(专利法实施细则, 审查指南)에 따른 20여 건의 구조 검사.",
+    "cnFeatures": {
+      "title": "인터랙티브 CN 분석",
+      "claimTree": {
+        "title": "청구항 종속 트리",
+        "description": "다중 종속 및 다중 독립 청구항 구조를 인터랙티브 트리와 의존 그래프로 시각화합니다."
+      },
+      "didYouMean": {
+        "title": "유사 매칭 제안",
+        "description": "참조 용어의 정확한 선행어가 없을 때 가장 가까운 후보를 제안하여 오타와 작성 편차를 찾도록 돕습니다."
+      },
+      "antecedentBasis": {
+        "title": "선행어 체인 분석",
+        "description": "너비 우선 탐색 기반 조상 체인 분석기가 바이그램 토큰화와 서수 가드를 결합해 청구항 트리 전반의 선행어 누락을 탐지합니다."
+      }
+    },
     "cnGroups": {
       "specification": "명세서(说明书)",
       "claims": "청구항(权利要求)",
-      "abstract": "요약서(摘要)",
-      "drawings": "도면(附图)"
+      "abstract": "요약서(摘要)"
     },
     "cnChecks": {
       "requiredSections": "필수 섹션(专利法实施细则 §17)",
@@ -345,8 +359,7 @@
       "dependentOrdering": "종속 청구항 순서",
       "abstractCharCount": "요약서 글자 수(300자 이하)",
       "titleInAbstract": "제목이 요약서에 포함",
-      "commercialLanguage": "상업적 표현",
-      "figureCount": "도면 수"
+      "commercialLanguage": "상업적 표현"
     },
     "twTitle": "PatentLint vs. TIPO 오류 검출 시스템",
     "twSubtitle": "TIPO 규칙(專利法施行細則, 專利審查基準)에 따른 30여 건의 작성 검사.",

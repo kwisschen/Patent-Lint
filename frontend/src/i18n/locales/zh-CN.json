@@ -316,11 +316,25 @@
     },
     "cnTitle": "PatentLint CNIPA 撰写规则检查",
     "cnSubtitle": "20余项结构性检查，依据CNIPA撰写规则（专利法实施细则、审查指南）。",
+    "cnFeatures": {
+      "title": "交互式中国专利分析",
+      "claimTree": {
+        "title": "权利要求依赖树",
+        "description": "通过交互式树形视图与依赖图，展现多重从属和多重独立权利要求的结构。"
+      },
+      "didYouMean": {
+        "title": "相似匹配建议",
+        "description": "当引用术语没有精确先行词时，分析器会给出最接近的候选词，帮助发现拼写错误与撰写漂移。"
+      },
+      "antecedentBasis": {
+        "title": "先行词链分析",
+        "description": "基于广度优先搜索的祖先链分析器，结合二元分词与序数保护，跨整棵权利要求树检测缺失先行词。"
+      }
+    },
     "cnGroups": {
       "specification": "说明书",
       "claims": "权利要求",
-      "abstract": "摘要",
-      "drawings": "附图"
+      "abstract": "摘要"
     },
     "cnChecks": {
       "requiredSections": "必要章节（专利法实施细则 §17）",
@@ -345,8 +359,7 @@
       "dependentOrdering": "从属权利要求排序",
       "abstractCharCount": "摘要字数（≤300）",
       "titleInAbstract": "标题出现在摘要中",
-      "commercialLanguage": "商业性用语",
-      "figureCount": "附图数量"
+      "commercialLanguage": "商业性用语"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "30余项撰写检查，依据TIPO规则（專利法施行細則、專利審查基準）。",
