@@ -225,6 +225,28 @@ def _is_likely_third_person_verb(word: str) -> bool:
 # 'plurality of inputs'). See the guard in clean_noun_phrase.
 _UTS_GUARD_PRECEDERS = {"the", "a", "an", "said", "of"}
 
+# -ly words that are nouns in patent context. Trailing -ly adverbs are
+# stripped unless the word is in this allowlist.
+_LY_NOUN_ALLOWLIST = {
+    "supply", "assembly", "family", "anomaly", "reply", "ally", "rally",
+    "subassembly", "resupply",
+}
+
+
+def _is_trailing_ly_adverb(word: str) -> bool:
+    """Detect -ly adverbs that terminate over-captured NPs.
+
+    Patent intro / reference captures routinely bleed past a noun into an
+    adverb+participle post-modifier ("a microphone electrically connected to
+    …"). The `_STOP_WORDS` regex stops at the participle ("connected") but
+    leaves the -ly adverb attached to the noun. Strip when trailing.
+    """
+    if len(word) < 5 or not word.endswith("ly"):
+        return False
+    if word in _LY_NOUN_ALLOWLIST:
+        return False
+    return True
+
 
 # Known -ing words that are legitimate nouns in patent context
 _ING_NOUNS = {
@@ -249,6 +271,7 @@ def _should_strip_trailing(word: str) -> bool:
         or w in _TRAILING_FUNCTION_WORDS
         or _is_likely_past_participle(w)
         or _is_likely_third_person_verb(w)
+        or _is_trailing_ly_adverb(w)
     ):
         return True
     # Strip trailing -ing verbs/gerunds (mirrors single-word rejection at clean_noun_phrase)
