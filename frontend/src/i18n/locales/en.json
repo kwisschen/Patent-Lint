@@ -351,7 +351,7 @@
       "singleSentence": "Single sentence per claim",
       "refNumeralParens": "Reference numerals in parentheses",
       "subjectNameConsistency": "Subject name consistency",
-      "transitionPhrase": "Transition phrase (其特征在于)",
+      "transitionPhrase": "Transitional phrase (其特征在于)",
       "cnTwTerminology": "CN/TW terminology",
       "claimsSpecReference": "Claims must not reference spec/drawings",
       "multiMultiDependency": "Multi-multi dependency",
@@ -361,7 +361,7 @@
       "commercialLanguage": "Commercial language"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
-    "twSubtitle": "TIPO enforces Taiwan-specific terminology and structural conventions. PatentLint focuses on universal drafting rules.",
+    "twSubtitle": "TIPO 偵錯系統 covers Taiwan-specific terminology. PatentLint covers broader drafting rules.",
     "tw": {
       "group1Title": "Shared Checks",
       "group2Title": "TIPO Taiwan-Specific Checks",
@@ -388,7 +388,7 @@
       "singleSentence": "Single sentence per claim",
       "refNumeralParens": "Reference numerals in parentheses (專利法施行細則 §19)",
       "subjectConsistency": "Subject name consistency",
-      "transitionPhrase": "Transition phrase (其特徵在於)",
+      "transitionPhrase": "Transitional phrase (其特徵在於)",
       "cnTerminology": "CN / TW terminology",
       "specDrawingRef": "Claims must not reference spec or drawings",
       "multiDepOnMultiDep": "Multi-dep claim cannot depend on another multi-dep",
@@ -889,7 +889,7 @@
           "pass": "All dependent claim subjects match parent."
         },
         "transitionPhrase": {
-          "verify": "{{count}} independent claim(s) lack transition phrase: {{claims}}.",
+          "verify": "{{count}} independent claim(s) lack transitional phrase: {{claims}}.",
           "pass": "All independent claims contain a transitional phrase."
         },
         "cnTerminology": {
