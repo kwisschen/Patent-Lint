@@ -198,37 +198,35 @@ function CnFeatureBlock({ t }) {
   )
 }
 
-const TW_SPEC_CHECKS = [
+const TW_GROUP1_CHECKS = [
+  'figureRefConsistency', 'patentTypeTerminology',
   'symbolTablePresence', 'symbolTableConsistency',
+  'dependencyFormat', 'forwardDependency', 'singleSentence',
+  'refNumeralParens', 'subjectConsistency', 'cnTerminology',
+  'multiDepOnMultiDep', 'multiDepAlternative', 'titleSubjectMatch',
+  'claimsSymbolTableConsistency', 'antecedentBasis',
+  'symbolVsRepDrawing',
+]
+
+const TW_GROUP2_CHECKS = [
+  'tipoComponentChain', 'tipoConnectionRelationships', 'tipoIndigenous',
+]
+
+const TW_GROUP3_CHECKS = [
   'requiredSections', 'sectionOrdering', 'paragraphNumbering',
-  'paragraphEnding', 'figureRefConsistency', 'patentTypeTerminology',
-  'title', 'claimReference',
-]
-
-const TW_CLAIMS_CHECKS = [
-  'claimsSymbolTableConsistency',
-  'sequential', 'dependencyFormat', 'selfDependent', 'circularDependency',
-  'forwardDependency', 'singleSentence', 'refNumeralParens',
-  'subjectConsistency', 'transitionPhrase', 'cnTerminology',
-  'specDrawingRef', 'multiDepOnMultiDep', 'multiDepAlternative',
-  'titleSubjectMatch', 'antecedentBasis',
-]
-
-const TW_ABSTRACT_CHECKS = [
+  'paragraphEnding', 'title', 'claimReference',
+  'sequential', 'selfDependent', 'circularDependency',
+  'transitionPhrase', 'specDrawingRef',
   'charCount', 'titleMatch', 'commercialLanguage', 'representativeDrawing',
+  'bracketFormat',
 ]
 
-const TW_CROSSREF_CHECKS = [
-  'symbolVsRepDrawing', 'bracketFormat',
-]
+function TwComparisonTable({ t }) {
+  const [ref1, inView1] = useInView()
+  const [ref2, inView2] = useInView()
+  const [ref3, inView3] = useInView()
 
-function TwCheckTable({ t }) {
-  const [twRef1, twInView1] = useInView()
-  const [twRef2, twInView2] = useInView()
-  const [twRef3, twInView3] = useInView()
-  const [twRef4, twInView4] = useInView()
-
-  const renderTwGroup = (ref, inView, titleKey, checks, delay) => (
+  const renderGroup = (ref, inView, titleKey, checks, patentlint, tipo, highlight, delay) => (
     <tbody
       ref={ref}
       style={{
@@ -239,7 +237,7 @@ function TwCheckTable({ t }) {
     >
       <tr>
         <td
-          colSpan={2}
+          colSpan={3}
           className="pt-6 pb-2 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wider"
         >
           {t(titleKey)}
@@ -248,48 +246,23 @@ function TwCheckTable({ t }) {
       {checks.map((key) => (
         <tr
           key={key}
-          className="border-b border-border/50 hover:bg-muted/50 transition-colors border-l-2 border-l-green-200 dark:border-l-green-800"
+          className={`border-b border-border/50 hover:bg-muted/50 transition-colors ${
+            highlight ? 'border-l-2 border-l-green-200 dark:border-l-green-800' : ''
+          }`}
         >
           <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm text-foreground">
             {t(`about.twChecks.${key}`)}
           </td>
           <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-center sm:w-40">
-            <CheckMark active isPatentLint />
+            <CheckMark active={patentlint} isPatentLint={true} />
+          </td>
+          <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-center sm:w-40">
+            <CheckMark active={tipo} isPatentLint={false} />
           </td>
         </tr>
       ))}
     </tbody>
   )
-
-  return (
-    <div className="rounded-lg border border-border mb-8">
-      <table className="w-full text-left">
-        <thead>
-          <tr className="border-b border-border bg-muted/30">
-            <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
-              {t('about.uspto.colCheck')}
-            </th>
-            <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
-              {t('about.uspto.colPatentLint')}
-            </th>
-          </tr>
-        </thead>
-        {renderTwGroup(twRef1, twInView1, 'about.twGroups.spec', TW_SPEC_CHECKS, 0)}
-        {renderTwGroup(twRef2, twInView2, 'about.twGroups.claims', TW_CLAIMS_CHECKS, 150)}
-        {renderTwGroup(twRef3, twInView3, 'about.twGroups.abstract', TW_ABSTRACT_CHECKS, 300)}
-        {renderTwGroup(twRef4, twInView4, 'about.twGroups.crossRef', TW_CROSSREF_CHECKS, 450)}
-      </table>
-    </div>
-  )
-}
-
-const TW_COMPARE_ROWS = [
-  'patentTypes', 'inputFormat', 'checks', 'privacy', 'languages', 'cost',
-  'specChecks', 'abstractChecks', 'symbolTableCrossRef', 'antecedentBasis', 'claimTree',
-]
-
-function TwCompareTable({ t }) {
-  const [ref, inView] = useInView()
 
   return (
     <div className="rounded-lg border border-border">
@@ -303,35 +276,13 @@ function TwCompareTable({ t }) {
               {t('about.uspto.colPatentLint')}
             </th>
             <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
-              {t('about.twCompare.colTipo')}
+              {t('about.tw.colTipo')}
             </th>
           </tr>
         </thead>
-        <tbody
-          ref={ref}
-          style={{
-            opacity: inView ? 1 : 0,
-            transform: inView ? 'translateY(0)' : 'translateY(16px)',
-            transition: 'opacity 500ms ease, transform 500ms ease',
-          }}
-        >
-          {TW_COMPARE_ROWS.map((key) => (
-            <tr
-              key={key}
-              className="border-b border-border/50 hover:bg-muted/50 transition-colors"
-            >
-              <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm text-foreground">
-                {t(`about.twCompare.feature.${key}`)}
-              </td>
-              <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm text-center sm:w-40 text-green-600 dark:text-green-400">
-                {t(`about.twCompare.patentlint.${key}`)}
-              </td>
-              <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm text-center sm:w-40 text-muted-foreground">
-                {t(`about.twCompare.tipo.${key}`)}
-              </td>
-            </tr>
-          ))}
-        </tbody>
+        {renderGroup(ref1, inView1, 'about.tw.group1Title', TW_GROUP1_CHECKS, true, true, false, 0)}
+        {renderGroup(ref2, inView2, 'about.tw.group2Title', TW_GROUP2_CHECKS, false, true, false, 150)}
+        {renderGroup(ref3, inView3, 'about.tw.group3Title', TW_GROUP3_CHECKS, true, false, true, 300)}
       </table>
     </div>
   )
@@ -443,12 +394,7 @@ function ComparisonTable({ t }) {
           <CnCheckTable t={t} />
         </>
       )}
-      {activeTab === 'TW' && (
-        <>
-          <TwCheckTable t={t} />
-          <TwCompareTable t={t} />
-        </>
-      )}
+      {activeTab === 'TW' && <TwComparisonTable t={t} />}
     </section>
   )
 }
