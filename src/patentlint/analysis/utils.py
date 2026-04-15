@@ -302,6 +302,10 @@ def _should_strip_trailing(word: str) -> bool:
 _CONTEXTUAL_VERB_STOPS = {
     "output":  frozenset({"to", "from", "by", "with", "via", "on", "into", "onto", "toward", "towards"}),
     "input":   frozenset({"to", "from", "by", "with", "via", "on", "into", "onto"}),
+    "range":   frozenset({"from", "between", "to", "over", "in", "through"}),
+    "ranges":  frozenset({"from", "between", "to", "over", "in", "through"}),
+    "ranged":  frozenset({"from", "between", "to", "over", "in", "through"}),
+    "ranging": frozenset({"from", "between", "to", "over", "in", "through"}),
 }
 
 _NEXT_WORD_RE = re.compile(r"\s*([A-Za-z][A-Za-z'\u2019-]*)")
