@@ -39,11 +39,9 @@ _TRADEMARK_RE = re.compile(r"[®™©]")
 _MODEL_NUMBER_RE = re.compile(r"[A-Z]{2,}-\d{2,}", re.IGNORECASE)
 _CLAIM_REF_RE = re.compile(r"如請求項\s*\d+")
 _REF_NUMERAL_RE = re.compile(
-    r"(?<![【\d])"      # not preceded by 【 or digit
-    r"(?<!第)"          # not ordinal 第N
-    r"(\d{2,4})"        # 2-4 digit number
-    r"(?![】\d])"       # not followed by 】 or digit
-    r"(?![°℃%a-zA-Z])" # not followed by unit/measurement
+    r"[(（]"                # require opening paren (ASCII or fullwidth)
+    r"(\d{1,4}[a-zA-Z]?)"   # 1-4 digit + optional single letter suffix
+    r"[)）]"                # require closing paren
 )
 
 
