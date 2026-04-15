@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 # Copyright (c) 2025 Christopher Chen
 """Phase 8c Stage 1.5 ground-truth claim-count audit.
 

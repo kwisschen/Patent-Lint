@@ -2,7 +2,7 @@
   "name": "frontend",
   "private": true,
   "version": "1.0.0",
-  "license": "AGPL-3.0-only",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "author": "Christopher Chen",
   "type": "module",
   "scripts": {
