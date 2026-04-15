@@ -15,7 +15,7 @@ from patentlint.analysis.en_normalize import en_number_key
 from patentlint.analysis.utils import (
     _DEFINITE_REF, _QUANTIFIER_STOPS,
     extract_introductions, extract_abbreviation_intros, clean_noun_phrase,
-    token_set_jaccard,
+    strip_contextual_verb, token_set_jaccard,
 )
 from patentlint.models import Claim, CheckItem, UnsupportedTerm
 
@@ -240,6 +240,7 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
         seen: set[tuple[str, str]] = set()
         for m in _DEFINITE_REF.finditer(claim_text_lower):
             term = clean_noun_phrase(m.group("noun").strip())
+            term = strip_contextual_verb(term, claim_text_lower[m.end():])
             if not term:
                 continue
             # Skip standalone quantifiers/pronouns ("the one", "the another")
