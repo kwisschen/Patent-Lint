@@ -360,11 +360,11 @@
       "titleInAbstract": "제목이 요약서에 포함",
       "commercialLanguage": "상업적 표현"
     },
-    "twTitle": "PatentLint vs. TIPO 오류 검출 시스템",
-    "twSubtitle": "TIPO 규칙(專利法施行細則, 專利審查基準)에 따른 30여 건의 작성 검사.",
+    "twTitle": "PatentLint vs. TIPO 偵錯系統",
+    "twSubtitle": "TIPO 偵錯系統은 대만 고유 용어와 구조 규약을 검증하며, PatentLint는 범용 작성 규칙에 초점을 맞춥니다.",
     "tw": {
       "group1Title": "공통 검사",
-      "group2Title": "TIPO 전용",
+      "group2Title": "TIPO 대만 특화 검사",
       "group3Title": "PatentLint 전용",
       "colTipo": "TIPO 偵錯系統"
     },
@@ -401,9 +401,8 @@
       "representativeDrawing": "代表圖 지정",
       "symbolVsRepDrawing": "符號說明과 代表圖 부호 일관성",
       "bracketFormat": "섹션 제목에 【】 사용",
-      "tipoComponentChain": "상위 청구항 연쇄 내 구성요소 종속성(組件相依性)",
-      "tipoConnectionRelationships": "독립 청구항 구성요소의 연결 관계",
-      "tipoIndigenous": "원주민족 용어 검사(原住民族)"
+      "tipoConnectionRelationships": "독립 청구항 구성요소의 連接關係",
+      "tipoIndigenous": "원주민 관련 용어 검사"
     },
     "stats": {
       "tests": "자동화 테스트",
