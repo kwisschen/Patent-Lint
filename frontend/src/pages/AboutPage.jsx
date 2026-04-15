@@ -66,9 +66,9 @@ const GROUP2_CHECKS = [
 
 const GROUP3_CHECKS = [
   'restrictiveWording', 'indefiniteTerms', 'impliedPhrases',
-  'checkClaimPunctuation', 'antecedentBasis', 'meansPlusFunction',
+  'checkClaimPunctuation', 'claimPeriods', 'antecedentBasis', 'meansPlusFunction',
   'preambleConsistency', 'specSupport', 'legalPhrasesAbstract',
-  'transitionPhrase', 'checkJepsonPriorArt', 'checkCrmNonTransitory',
+  'transitionPhrase', 'whereinCommas', 'checkJepsonPriorArt', 'checkCrmNonTransitory',
   'checkMarkushTransition', 'checkOmnibusClaim',
 ]
 
@@ -102,15 +102,10 @@ const CN_ABSTRACT_CHECKS = [
   'abstractCharCount', 'titleInAbstract', 'commercialLanguage',
 ]
 
-const CN_DRAWINGS_CHECKS = [
-  'figureCount',
-]
-
 function CnCheckTable({ t }) {
   const [cnRef1, cnInView1] = useInView()
   const [cnRef2, cnInView2] = useInView()
   const [cnRef3, cnInView3] = useInView()
-  const [cnRef4, cnInView4] = useInView()
 
   const renderCnGroup = (ref, inView, titleKey, checks, delay) => (
     <tbody
@@ -161,8 +156,44 @@ function CnCheckTable({ t }) {
         {renderCnGroup(cnRef1, cnInView1, 'about.cnGroups.specification', CN_SPEC_CHECKS, 0)}
         {renderCnGroup(cnRef2, cnInView2, 'about.cnGroups.claims', CN_CLAIMS_CHECKS, 150)}
         {renderCnGroup(cnRef3, cnInView3, 'about.cnGroups.abstract', CN_ABSTRACT_CHECKS, 300)}
-        {renderCnGroup(cnRef4, cnInView4, 'about.cnGroups.drawings', CN_DRAWINGS_CHECKS, 400)}
       </table>
+    </div>
+  )
+}
+
+const CN_FEATURE_KEYS = ['claimTree', 'didYouMean', 'antecedentBasis']
+
+function CnFeatureBlock({ t }) {
+  const [ref, inView] = useInView()
+
+  return (
+    <div
+      ref={ref}
+      className="mb-8"
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(16px)',
+        transition: 'opacity 500ms ease, transform 500ms ease',
+      }}
+    >
+      <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+        {t('about.cnFeatures.title')}
+      </h3>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {CN_FEATURE_KEYS.map((key) => (
+          <div
+            key={key}
+            className="border border-border rounded-lg p-4 bg-card border-l-2 border-l-green-200 dark:border-l-green-800"
+          >
+            <div className="text-sm font-semibold text-foreground mb-2">
+              {t(`about.cnFeatures.${key}.title`)}
+            </div>
+            <div className="text-xs text-muted-foreground leading-relaxed">
+              {t(`about.cnFeatures.${key}.description`)}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
@@ -321,7 +352,12 @@ function ComparisonTable({ t }) {
       </div>
 
       {activeTab === 'US' && <UsComparisonTable t={t} />}
-      {activeTab === 'CN' && <CnCheckTable t={t} />}
+      {activeTab === 'CN' && (
+        <>
+          <CnFeatureBlock t={t} />
+          <CnCheckTable t={t} />
+        </>
+      )}
       {activeTab === 'TW' && <TwCompareTable t={t} />}
     </section>
   )
