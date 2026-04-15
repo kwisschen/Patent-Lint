@@ -32,8 +32,18 @@ const STATUS_COLORS = {
   PASS: '#2563eb',
 }
 
+const STATUS_TINTS = {
+  AMEND: '#fef2f2',
+  VERIFY: '#fffbeb',
+  PASS: '#eff6ff',
+}
+
 function statusColor(status) {
   return STATUS_COLORS[status?.toUpperCase()] || '#666666'
+}
+
+function statusTint(status) {
+  return STATUS_TINTS[status?.toUpperCase()] || '#f8fafc'
 }
 
 // --- CJK font lazy-loading ---
@@ -101,40 +111,135 @@ function filterInternalChecks(sections) {
   }))
 }
 
-function buildTriagePanel(sections, t, fontName) {
-  const content = [{ text: t('pdf.triage.title'), style: 'sectionHeader' }]
+// --- Shared presentation helpers ---
 
-  for (const severity of ['amend', 'verify']) {
-    const items = []
-    for (const section of sections) {
-      for (const item of section.items) {
-        if (item.status === severity) {
-          items.push({ item, sectionName: section.name })
-        }
-      }
-    }
+// Section header with colored accent underline (48pt bar).
+function accentedHeader(text, accentColor, fontName) {
+  return {
+    stack: [
+      {
+        text,
+        fontSize: 14,
+        bold: true,
+        color: '#1e293b',
+        margin: [0, 0, 0, 4],
+        ...(fontName ? { font: fontName } : {}),
+      },
+      {
+        canvas: [{ type: 'line', x1: 0, y1: 0, x2: 48, y2: 0, lineWidth: 2.5, lineColor: accentColor }],
+      },
+    ],
+    margin: [0, 18, 0, 10],
+  }
+}
 
-    const label = severity === 'amend' ? t('pdf.amend') : t('pdf.verify')
-    const color = severity === 'amend' ? STATUS_COLORS.AMEND : STATUS_COLORS.VERIFY
+// Compact filled pill showing the status label (AMEND / VERIFY).
+function statusPill(status, t, fontName) {
+  const label = t(`status.${status}`)
+  return {
+    width: 'auto',
+    table: {
+      widths: ['auto'],
+      body: [[
+        {
+          text: label,
+          color: 'white',
+          bold: true,
+          fontSize: 8,
+          alignment: 'center',
+          ...(fontName ? { font: fontName } : {}),
+        },
+      ]],
+    },
+    layout: {
+      hLineWidth: () => 0,
+      vLineWidth: () => 0,
+      fillColor: () => statusColor(status),
+      paddingLeft: () => 6,
+      paddingRight: () => 6,
+      paddingTop: () => 3,
+      paddingBottom: () => 3,
+    },
+  }
+}
 
-    content.push({
-      text: `${label} (${items.length})`,
-      bold: true,
-      color,
-      fontSize: 11,
-      margin: [0, 8, 0, 4],
-    })
+// Two-cell callout card: 3pt colored strip + tinted content. Used for the
+// AMEND / VERIFY triage groups. Renders "— None" for an empty group.
+function triageCard(severity, items, t, fontName) {
+  const label = severity === 'amend' ? t('pdf.amend') : t('pdf.verify')
+  const accent = statusColor(severity)
+  const bg = statusTint(severity)
 
-    for (const { item, sectionName } of items) {
+  const header = {
+    text: [
+      { text: label, color: accent, bold: true, fontSize: 11 },
+      { text: `  (${items.length})`, color: '#64748b', fontSize: 10 },
+    ],
+    margin: [0, 0, 0, items.length === 0 ? 0 : 6],
+    ...(fontName ? { font: fontName } : {}),
+  }
+
+  let bodyContent
+  if (items.length === 0) {
+    bodyContent = [{
+      text: '—',
+      italics: true,
+      color: '#94a3b8',
+      fontSize: 10,
+      margin: [0, 4, 0, 0],
+      ...(fontName ? { font: fontName } : {}),
+    }]
+  } else {
+    bodyContent = items.map(({ item, sectionName }) => {
       const heading = sanitizeText(translateMessage(item, t))
-      content.push({
-        text: `${heading} (${sectionName})`,
+      return {
+        text: [
+          { text: '\u25B8  ', color: accent, bold: true },
+          { text: heading, color: '#1e293b' },
+          { text: `   \u2014 ${sectionName}`, color: '#64748b', italics: true, fontSize: 9 },
+        ],
         fontSize: 10,
-        margin: [8, 2, 0, 2],
-      })
+        margin: [0, 2, 0, 2],
+        ...(fontName ? { font: fontName } : {}),
+      }
+    })
+  }
+
+  return {
+    table: {
+      widths: [3, '*'],
+      body: [[
+        { text: '', fillColor: accent },
+        { stack: [header, ...bodyContent], fillColor: bg, margin: [12, 10, 12, 10] },
+      ]],
+    },
+    layout: {
+      hLineWidth: () => 0,
+      vLineWidth: () => 0,
+      paddingLeft: () => 0,
+      paddingRight: () => 0,
+      paddingTop: () => 0,
+      paddingBottom: () => 0,
+    },
+    margin: [0, 0, 0, 10],
+  }
+}
+
+// --- Main section builders ---
+
+function buildTriagePanel(sections, t, fontName) {
+  const groups = { amend: [], verify: [] }
+  for (const section of sections) {
+    for (const item of section.items) {
+      if (groups[item.status]) {
+        groups[item.status].push({ item, sectionName: section.name })
+      }
     }
   }
 
+  const content = [accentedHeader(t('pdf.triage.title'), STATUS_COLORS.AMEND, fontName)]
+  content.push(triageCard('amend', groups.amend, t, fontName))
+  content.push(triageCard('verify', groups.verify, t, fontName))
   return content
 }
 
@@ -151,21 +256,32 @@ function buildPassSummary(sections, t, fontName) {
   if (totalCount === 0) return []
 
   const content = [
-    {
-      text: `${t('pdf.passedSummary.title')} (${totalCount})`,
-      style: 'sectionHeader',
-    },
+    accentedHeader(`${t('pdf.passedSummary.title')} (${totalCount})`, STATUS_COLORS.PASS, fontName),
   ]
 
   for (const group of passItems) {
     const headings = group.items.map((item) => sanitizeText(translateMessage(item, t)))
     content.push({
-      text: [
-        { text: `${group.sectionName}: `, bold: true, fontSize: 10 },
-        { text: headings.join(' '), fontSize: 10 },
+      stack: [
+        {
+          text: group.sectionName,
+          bold: true,
+          fontSize: 10,
+          color: '#334155',
+          margin: [0, 6, 0, 2],
+          ...(fontName ? { font: fontName } : {}),
+        },
+        {
+          ul: headings.map((h) => ({
+            text: h,
+            fontSize: 9,
+            color: '#475569',
+            ...(fontName ? { font: fontName } : {}),
+          })),
+          color: '#94a3b8',
+          margin: [6, 0, 0, 0],
+        },
       ],
-      margin: [0, 2, 0, 2],
-      ...(fontName ? { font: fontName } : {}),
     })
   }
 
@@ -183,22 +299,24 @@ function buildSectionChecks(sections, t, fontName) {
     const orderedItems = [...amendItems, ...verifyItems]
     if (orderedItems.length === 0) continue
 
-    content.push({ text: section.name, style: 'sectionHeader' })
-    for (const item of orderedItems) {
+    content.push(accentedHeader(section.name, '#3b82f6', fontName))
+
+    orderedItems.forEach((item, idx) => {
       const msg = sanitizeText(translateMessage(item, t))
       content.push({
         columns: [
+          statusPill(item.status, t, fontName),
           {
-            width: 55,
-            text: ` ${t(`status.${item.status}`)} `,
-            bold: true,
-            color: statusColor(item.status),
-            fontSize: 9,
+            width: '*',
+            text: msg,
+            fontSize: 10,
+            color: '#1e293b',
+            margin: [8, 2, 0, 0],
+            ...(fontName ? { font: fontName } : {}),
           },
-          { width: '*', text: msg, fontSize: 10 },
         ],
-        margin: [0, 3, 0, 3],
-        ...(fontName ? { font: fontName } : {}),
+        columnGap: 0,
+        margin: [0, 4, 0, 2],
       })
       const detailText = item.details_key && formatDetails(item.details_key, item.details_params, t) !== item.details_key
         ? formatDetails(item.details_key, item.details_params, t)
@@ -207,11 +325,18 @@ function buildSectionChecks(sections, t, fontName) {
         content.push({
           text: sanitizeText(detailText),
           fontSize: 9,
-          color: '#555555',
-          margin: [55, 0, 0, 4],
+          color: '#64748b',
+          margin: [60, 2, 0, 4],
+          ...(fontName ? { font: fontName } : {}),
         })
       }
-    }
+      if (idx < orderedItems.length - 1) {
+        content.push({
+          canvas: [{ type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5, lineColor: '#f1f5f9' }],
+          margin: [0, 4, 0, 0],
+        })
+      }
+    })
   }
   return content
 }
@@ -219,7 +344,7 @@ function buildSectionChecks(sections, t, fontName) {
 function buildClaimTable(claimTrees, t) {
   if (!claimTrees || claimTrees.length === 0) return []
 
-  const content = [{ text: t('pdf.claimDependency'), style: 'sectionHeader' }]
+  const content = [accentedHeader(t('pdf.claimDependency'), '#64748b', undefined)]
 
   const labelKey = (label) => label === 'Method Claims'
     ? 'tree.methodClaims'
@@ -331,7 +456,7 @@ function buildAntecedentBasis(issues, t) {
   }
 
   return [
-    { text: t('pdf.antecedentBasis'), style: 'sectionHeader' },
+    accentedHeader(t('pdf.antecedentBasis'), '#f59e0b', undefined),
     {
       table: {
         headerRows: 1,
@@ -389,7 +514,7 @@ function buildSpecSupport(unsupportedTerms, t) {
   }
 
   return [
-    { text: t('pdf.specSupport'), style: 'sectionHeader' },
+    accentedHeader(t('pdf.specSupport'), '#f59e0b', undefined),
     {
       table: {
         headerRows: 1,
@@ -500,10 +625,7 @@ export async function downloadReport(reportData, t, language, originalFilename) 
       ] : []),
 
       // Summary stats
-      {
-        text: t('pdf.summaryStats'),
-        style: 'sectionHeader',
-      },
+      accentedHeader(t('pdf.summaryStats'), '#64748b', fontName),
       {
         layout: 'lightHorizontalLines',
         margin: [0, 0, 0, 16],

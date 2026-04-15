@@ -156,19 +156,48 @@
     border-left-color: #2563eb;
     background: #eff6ff;
   }
-  .triage-group h3 {
-    margin: 0 0 4pt 0;
-    font-size: 11pt;
-  }
   .triage-group .triage-item {
     font-size: 10pt;
-    margin: 3pt 0;
+    margin: 4pt 0;
+    padding-left: 2pt;
+  }
+  .triage-group .triage-item::before {
+    content: "▸";
+    font-weight: 700;
+    margin-right: 6pt;
+    display: inline-block;
+  }
+  .triage-group.amend .triage-item::before { color: #dc2626; }
+  .triage-group.verify .triage-item::before { color: #16a34a; }
+  .triage-group .section-tag {
+    color: #64748b;
+    font-style: italic;
+    font-size: 9pt;
+    margin-left: 6pt;
   }
   .triage-group .triage-item small {
     color: #555;
     display: block;
-    margin-top: 1pt;
-    margin-left: 18pt;
+    margin-top: 2pt;
+    margin-left: 20pt;
+  }
+  .triage-group .triage-heading {
+    margin: 0 0 4pt 0;
+    font-size: 11pt;
+    font-weight: 700;
+  }
+  .triage-group.amend .triage-heading { color: #dc2626; }
+  .triage-group.verify .triage-heading { color: #166534; }
+  .triage-group .triage-count {
+    color: #64748b;
+    font-weight: 500;
+    margin-left: 4pt;
+  }
+  .triage-group .triage-empty {
+    font-size: 10pt;
+    color: #94a3b8;
+    font-style: italic;
+    margin: 0;
   }
 
   /* Antecedent basis */
@@ -317,13 +346,13 @@
 {%- set pass_items = all_checks | selectattr("status", "equalto", "pass") | list -%}
 
 <div class="triage-group amend">
-  <h3 style="color: #dc2626;">Action Required ({{ amend_items | length }})</h3>
+  <h3 class="triage-heading">Action Required<span class="triage-count">({{ amend_items | length }})</span></h3>
   {%- if amend_items | length == 0 %}
-  <p style="font-size: 10pt; color: #166534; margin: 0;">No issues requiring amendment.</p>
+  <p class="triage-empty">&mdash;</p>
   {%- else %}
   {%- for item in amend_items %}
   <div class="triage-item">
-    {{ item.message }} ({{ item.section }})
+    {{ item.message }}<span class="section-tag">&mdash; {{ item.section }}</span>
     {%- if item.details %}<small>{{ item.details }}</small>{%- endif %}
   </div>
   {%- endfor %}
@@ -331,13 +360,13 @@
 </div>
 
 <div class="triage-group verify">
-  <h3 style="color: #166534;">Expert Review ({{ verify_items | length }})</h3>
+  <h3 class="triage-heading">Expert Review<span class="triage-count">({{ verify_items | length }})</span></h3>
   {%- if verify_items | length == 0 %}
-  <p style="font-size: 10pt; color: #555; margin: 0;">No items flagged for review.</p>
+  <p class="triage-empty">&mdash;</p>
   {%- else %}
   {%- for item in verify_items %}
   <div class="triage-item">
-    {{ item.message }} ({{ item.section }})
+    {{ item.message }}<span class="section-tag">&mdash; {{ item.section }}</span>
     {%- if item.details %}<small>{{ item.details }}</small>{%- endif %}
   </div>
   {%- endfor %}
