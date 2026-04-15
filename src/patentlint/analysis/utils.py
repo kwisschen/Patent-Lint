@@ -244,6 +244,17 @@ def _is_trailing_distributive(word: str) -> bool:
     return word in _DISTRIBUTIVE_QUANTIFIERS
 
 
+# Trailing arithmetic operators ("the current duty cycle minus an adjusted …",
+# "the first value plus …"). These are math operators / prepositions, not part
+# of the NP head. `over` omitted — commonly a spatial preposition in claims
+# ("the layer over the substrate").
+_ARITHMETIC_OPERATORS = frozenset({"minus", "plus", "times", "divided", "modulo", "mod"})
+
+
+def _is_trailing_arithmetic(word: str) -> bool:
+    return word in _ARITHMETIC_OPERATORS
+
+
 def _is_trailing_ly_adverb(word: str) -> bool:
     """Detect -ly adverbs that terminate over-captured NPs.
 
@@ -284,6 +295,7 @@ def _should_strip_trailing(word: str) -> bool:
         or _is_likely_third_person_verb(w)
         or _is_trailing_ly_adverb(w)
         or _is_trailing_distributive(w)
+        or _is_trailing_arithmetic(w)
     ):
         return True
     # Strip trailing -ing verbs/gerunds (mirrors single-word rejection at clean_noun_phrase)
