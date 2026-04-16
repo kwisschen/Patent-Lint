@@ -1114,7 +1114,7 @@ _BARE_AFTER_VERB_PATTERN_CN = re.compile(
     r'|'
     r'获取|获得|得到|生成|产生|发出'
     r'|'
-    r'发送|接收|输出|输入|传送|存储|确定'
+    r'发送|接收|输出|输入|传送|存储|确定|涉及'
     r')'
     r'(第[一二三四五六七八九十\d]+' + _CJK_NO_DE_ZHI_CN + r'+(?:\([A-Za-z0-9]+\))?'
     r'|' + _CJK_NO_DE_ZHI_CN + r'+\([A-Za-z0-9]+\))'
@@ -1228,10 +1228,14 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
     for m in _BARE_AFTER_VERB_PATTERN_CN.finditer(text):
         noun = m.group(1)
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
-        pre_cleaned = clean_noun_phrase_cn(normalized)
-        if pre_cleaned and pre_cleaned.startswith('第') and len(pre_cleaned) < 4:
-            continue
         results.append((m.group(0), normalized))
+        # Also split conjunctions (和/与/及/、) into individual intros
+        parts = _F11_LIST_SPLIT_CN.split(normalized)
+        if len(parts) > 1:
+            for part in parts:
+                part = part.strip()
+                if part:
+                    results.append((m.group(0), part))
 
     # F5a: ref-prefix possessive (two variants)
     for pattern in (_REF_POSSESSIVE_WITH_NUM_CN, _REF_POSSESSIVE_NO_NUM_CN):
@@ -1284,8 +1288,11 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
     cleaned: list[tuple[str, str]] = []
     for orig, norm in results:
         cleaned_norm = clean_noun_phrase_cn(norm)
-        if cleaned_norm and len(cleaned_norm) >= 2:
-            cleaned.append((orig, cleaned_norm))
+        if not cleaned_norm or len(cleaned_norm) < 2:
+            continue
+        if cleaned_norm.startswith('第') and len(cleaned_norm) < 4:
+            continue
+        cleaned.append((orig, cleaned_norm))
     return cleaned
 
 
