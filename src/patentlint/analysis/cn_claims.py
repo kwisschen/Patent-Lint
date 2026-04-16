@@ -1523,6 +1523,51 @@ _BARE_ORDINAL_RE_CN: re.Pattern[str] = re.compile(
 )
 
 
+# Phase 8c R21 — DYM quality gate. Audit (docs/8c/suggested-match-audit.md,
+# Phase 9 #57) showed 85% of corpus DYMs have substring-relationship with
+# the reference; ~30% of those are over-captured garbage the walker's intro
+# extraction pool emitted as legitimate intros. These filters reject DYM
+# candidates the Jaccard loop already picked, without changing the finding
+# pool. Non-shifting — `suggested_match` is terminal-only.
+_DYM_LEADING_REJECTS_CN: tuple[str, ...] = (
+    "能够由", "响应于", "针对", "基于",
+    "对", "从", "向", "为", "在",
+    "与", "和", "以", "于", "且", "还", "由", "被",
+)
+
+_DYM_STOP_PARTICLES_CN: tuple[str, ...] = (
+    "的", "于", "在", "为", "对", "从", "向",
+    "与", "和", "以", "且", "还", "由", "被",
+    "所述", "前述", "该",
+    "能够由", "响应于", "针对", "基于",
+    "初始化时", "之前", "之后",
+)
+
+
+def _dym_quality_reject_cn(ref: str, dym: str) -> bool:
+    """True if DYM should be suppressed.
+
+    Three filters:
+      1. `len(dym) > 2 * len(ref)` — disproportionate expansion.
+      2. DYM starts with a token in `_DYM_LEADING_REJECTS_CN` — walker
+         captured a prep/particle-headed fragment, not a clean NP.
+      3. `ref in dym` strict substring AND the wrapping chars contain any
+         stop-particle — walker captured the ref + noise.
+    """
+    if len(dym) > 2 * len(ref):
+        return True
+    for prefix in _DYM_LEADING_REJECTS_CN:
+        if dym.startswith(prefix):
+            return True
+    if len(ref) < len(dym) and ref in dym:
+        idx = dym.index(ref)
+        before = dym[:idx]
+        after = dym[idx + len(ref):]
+        if any(p in before or p in after for p in _DYM_STOP_PARTICLES_CN):
+            return True
+    return False
+
+
 def _is_bare_genus_self_reference_cn(term: str, claim_text: str) -> bool:
     """Suppress bare-genus self-references in claim preambles (WQ5).
 
@@ -1708,6 +1753,15 @@ def check_antecedent_basis_cn(
             if (
                 suggested_match is not None
                 and suggested_match["term"] == normalized_term
+            ):
+                suggested_match = None
+
+            # Phase 8c R21 — DYM quality gate
+            if (
+                suggested_match is not None
+                and _dym_quality_reject_cn(
+                    normalized_term, suggested_match["term"]
+                )
             ):
                 suggested_match = None
 
