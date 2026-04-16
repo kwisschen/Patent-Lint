@@ -664,21 +664,32 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # Phase 8c R9 — additional trailing verbs from re-sampling analysis
         "针对", "支持", "调用", "采用", "作为",
         "对",
+        # Phase 8c R22 — single-char preposition residues from BYD-style
+        # paren-numeral terms (从动凸轮(320)由, 凹部(322)沿, 辅助层沿).
+        "由", "沿",
     ),
     key=len,
     reverse=True,
 ))
 
 # Noun-like single-char trailing suffixes with residual ≥ 3 guard.
+# R22 adds 由/沿 with relaxed-residual subset participation below.
 _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN: frozenset[str] = frozenset(
-    {"所", "位", "中", "后", "用", "上", "内", "撷取", "对"}
+    {"所", "位", "中", "后", "用", "上", "内", "撷取", "对", "由", "沿"}
 )
 
 # Relaxed-guard subset (residual ≥ 2 instead of ≥ 3).
-# Stage 4 R1 D4a — relaxed residual ≥ 2 guard for 2-char-stem residue strip
+# Stage 4 R1 D4a — relaxed residual ≥ 2 guard for 2-char-stem residue strip.
+# R22 adds 由/沿 (mirrors trailing-verb denylist registration).
 _NOUNLIKE_RELAXED_SUFFIXES_CN: frozenset[str] = frozenset(
-    {"上", "内", "后", "中", "用", "对"}
+    {"上", "内", "后", "中", "用", "对", "由", "沿"}
 )
+
+# Phase 8c R22 — `中` very-relaxed (residual ≥ 1) for 2-char locative
+# phrases like 组中. The post-strip 1-char residual is then filtered by
+# the `len(normalized_term) == 1` emit guard. Empirically scoped: only
+# 2 corpus terms (组中 ×2 in CN115952274B) hit this path.
+_NOUNLIKE_VERY_RELAXED_SUFFIXES_CN: frozenset[str] = frozenset({"中"})
 
 # Phase 8c R10 — char-exclusion residue map.
 # Keys: residue chars left at end of terms because _NOUN_CHARS_CN excludes
@@ -869,7 +880,12 @@ def clean_noun_phrase_cn(text: str) -> str:
             if len(current) <= len(verb):
                 continue
             if verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN:
-                min_residual = 2 if verb in _NOUNLIKE_RELAXED_SUFFIXES_CN else 3
+                if verb in _NOUNLIKE_VERY_RELAXED_SUFFIXES_CN:
+                    min_residual = 1
+                elif verb in _NOUNLIKE_RELAXED_SUFFIXES_CN:
+                    min_residual = 2
+                else:
+                    min_residual = 3
                 if (len(current) - len(verb)) < min_residual:
                     continue
             current = current[: -len(verb)]
@@ -1517,6 +1533,19 @@ _GENUS_PREAMBLE_RE_CN: re.Pattern[str] = re.compile(
 )
 
 
+# Phase 8c R22 — chemistry formula reference like 式(1) / 式(L-4) / 式(I).
+# These are bibliographic-style references to formulae defined elsewhere in
+# the spec, not noun terms; missing-antecedent doesn't apply.
+_FORMULA_REFERENCE_RE_CN: re.Pattern[str] = re.compile(r"^式\([^)]+\)$")
+
+# Phase 8c R22 — verb-predicate term suppression. Walker captured a bare
+# verbal idiom (e.g., 安装有 from 使得安装有X的Y); the trailing-strip already
+# eliminated the noun head, leaving the pure predicate as the term.
+_VERB_PREDICATE_TERMS_CN: frozenset[str] = frozenset({
+    "安装有", "存储有", "形成有", "设置有",
+})
+
+
 _FORMULA_ORDINAL_RE_CN: re.Pattern[str] = re.compile(r"^第[A-Za-z]")
 _BARE_ORDINAL_RE_CN: re.Pattern[str] = re.compile(
     r"^第[一二三四五六七八九十\d]+$"
@@ -1778,6 +1807,13 @@ def check_antecedent_basis_cn(
                 continue
 
             if _BARE_ORDINAL_RE_CN.match(normalized_term):
+                continue
+
+            # Phase 8c R22 — chemistry formula reference + verb-predicate suppression
+            if _FORMULA_REFERENCE_RE_CN.match(normalized_term):
+                continue
+
+            if normalized_term in _VERB_PREDICATE_TERMS_CN:
                 continue
 
             issues.append(

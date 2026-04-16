@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 21,
+    "current_round": 22,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -811,8 +811,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_22_fragment_residue_cleanup",
+      "round": 22
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -10543,8 +10543,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R-ambig triage: term shape (fragment / single-char or non-noun short) — walker capture FP",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_22_fragment_residue_cleanup",
+      "round": 22
     },
     {
       "fixture": "CN115952274B",
@@ -10831,8 +10831,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_22_fragment_residue_cleanup",
+      "round": 22
     },
     {
       "fixture": "CN115952274B",
@@ -12019,8 +12019,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_22_fragment_residue_cleanup",
+      "round": 22
     },
     {
       "fixture": "CN115952274B",
@@ -14047,8 +14047,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_22_fragment_residue_cleanup",
+      "round": 22
     },
     {
       "fixture": "CN120266060A",
@@ -14059,8 +14059,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_22_fragment_residue_cleanup",
+      "round": 22
     },
     {
       "fixture": "CN120266060A",
@@ -14095,8 +14095,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_22_fragment_residue_cleanup",
+      "round": 22
     },
     {
       "fixture": "CN120266060A",
@@ -14107,8 +14107,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_22_fragment_residue_cleanup",
+      "round": 22
     },
     {
       "fixture": "CN120266060A",
@@ -14131,8 +14131,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_22_fragment_residue_cleanup",
+      "round": 22
     },
     {
       "fixture": "CN120266060A",
@@ -14215,8 +14215,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_22_fragment_residue_cleanup",
+      "round": 22
     },
     {
       "fixture": "CN213655447U (BYD)",
@@ -14479,8 +14479,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R-ambig triage: term shape (trailing residue char '由') — walker capture FP",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_22_fragment_residue_cleanup",
+      "round": 22
     },
     {
       "fixture": "CN213655447U (BYD)",
@@ -14563,8 +14563,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R-ambig triage: term shape (trailing residue char '沿') — walker capture FP",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_22_fragment_residue_cleanup",
+      "round": 22
     },
     {
       "fixture": "CN213655447U (BYD)",
@@ -17822,6 +17822,18 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Surfaced by parser-fix (mid-paragraph claim boundary). Previously hidden inside adjacent claim text.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN112271269B",
+      "claim_id": 11,
+      "term": "辅助层",
+      "reference_form": "所述辅助层",
+      "category": "miss_intro.coverage_gap",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R22 cascade: 辅助层沿 → strip 沿 → 辅助层. Bare intro in c10 (\"形成有辅助层\") but walker has no F-pattern for V+有 noun-of-existence yet (R14a F13 covers 应用于/位于/作用于 family but not V+有).",
       "resolved_by": null,
       "round": 0
     }
