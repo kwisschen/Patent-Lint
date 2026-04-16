@@ -1085,6 +1085,10 @@ _VP_MODIFIER_PATTERN_CN = re.compile(
 
 # CJK char class excluding 的 (U+7684); jurisdiction-invariant.
 _CJK_NO_DE_CN = r'[\u4e00-\u7683\u7685-\u9fff]'
+# F6-specific: also excludes 之 (U+4E4B) to prevent captures extending into
+# temporal markers like 之后/之前. Removes the need for (?![的之]) lookahead
+# which caused backtracking truncation before 的.
+_CJK_NO_DE_ZHI_CN = r'[\u4e00-\u4e4a\u4e4c-\u7683\u7685-\u9fff]'
 
 _PARTICIPIAL_YI_DE_PATTERN_CN = re.compile(
     r'一[\u4e00-\u9fff]+?的(' + _CJK_NO_DE_CN + r'{2,}(?:\([A-Za-z0-9]+\))?)'
@@ -1107,10 +1111,13 @@ _BARE_AFTER_VERB_PATTERN_CN = re.compile(
     r'形成|构成'
     r'|'
     r'提供|连接|连结'
+    r'|'
+    r'获取|获得|得到|生成|产生|发出'
+    r'|'
+    r'发送|接收|输出|输入|传送|存储|确定'
     r')'
-    r'(第[一二三四五六七八九十\d]+' + _CJK_NO_DE_CN + r'+(?:\([A-Za-z0-9]+\))?'
-    r'|' + _CJK_NO_DE_CN + r'+\([A-Za-z0-9]+\))'
-    r'(?![的之])'
+    r'(第[一二三四五六七八九十\d]+' + _CJK_NO_DE_ZHI_CN + r'+(?:\([A-Za-z0-9]+\))?'
+    r'|' + _CJK_NO_DE_ZHI_CN + r'+\([A-Za-z0-9]+\))'
 )
 
 _CLAUSE_BOUNDARY_RE_CN = re.compile(r'[；，、。]')
@@ -1221,6 +1228,9 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
     for m in _BARE_AFTER_VERB_PATTERN_CN.finditer(text):
         noun = m.group(1)
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        pre_cleaned = clean_noun_phrase_cn(normalized)
+        if pre_cleaned and pre_cleaned.startswith('第') and len(pre_cleaned) < 4:
+            continue
         results.append((m.group(0), normalized))
 
     # F5a: ref-prefix possessive (two variants)
