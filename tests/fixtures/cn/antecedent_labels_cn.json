@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 24,
+    "current_round": 25,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -91,8 +91,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [4]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -283,8 +283,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -343,8 +343,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -547,8 +547,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN112271269B",
@@ -571,8 +571,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R-ambig triage: term IS introduced bare in ancestor(s) [1]; walker F-family miss",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN112271269B",
@@ -655,8 +655,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R-ambig triage: term IS introduced bare in ancestor(s) [4]; walker F-family miss",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN112271269B",
@@ -667,8 +667,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R-ambig triage: term IS introduced bare in ancestor(s) [4]; walker F-family miss",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN112271269B",
@@ -799,8 +799,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R-ambig triage: term IS introduced bare in ancestor(s) [10]; walker F-family miss",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN112271269B",
@@ -943,8 +943,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [7]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1027,8 +1027,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1159,8 +1159,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1171,8 +1171,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1231,8 +1231,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1267,8 +1267,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1399,8 +1399,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1471,8 +1471,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1639,8 +1639,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1735,8 +1735,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1819,8 +1819,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1891,8 +1891,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [9]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN114357105B",
@@ -1915,8 +1915,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [9]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN114357105B",
@@ -2143,8 +2143,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN114357105B",
@@ -2347,8 +2347,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN114357105B",
@@ -2371,8 +2371,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN114357105B",
@@ -2599,8 +2599,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN114357105B",
@@ -2611,8 +2611,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN114357105B",
@@ -4411,8 +4411,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115485995B",
@@ -4447,8 +4447,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115485995B",
@@ -4855,8 +4855,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115485995B",
@@ -6115,8 +6115,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115485995B",
@@ -6163,8 +6163,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115485995B",
@@ -6535,8 +6535,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115485995B",
@@ -8203,8 +8203,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115485995B",
@@ -8239,8 +8239,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115485995B",
@@ -8647,8 +8647,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115485995B",
@@ -10039,8 +10039,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115485995B",
@@ -10075,8 +10075,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115485995B",
@@ -10483,8 +10483,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115485995B",
@@ -10531,8 +10531,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115485995B",
@@ -10591,8 +10591,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [24, 25]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115952274B",
@@ -10711,8 +10711,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115952274B",
@@ -10759,8 +10759,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115952274B",
@@ -11191,8 +11191,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115952274B",
@@ -11239,8 +11239,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115952274B",
@@ -11515,8 +11515,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115952274B",
@@ -11587,8 +11587,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115952274B",
@@ -11647,8 +11647,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | parser-fix migration: c23→c24",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115952274B",
@@ -12751,8 +12751,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115952274B",
@@ -12835,8 +12835,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115952274B",
@@ -12991,8 +12991,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [10, 13]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13003,8 +13003,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [13]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13027,8 +13027,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [10, 13]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13051,8 +13051,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [10, 13]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13123,8 +13123,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13147,8 +13147,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R-ambig triage: term IS introduced bare in ancestor(s) [3]; walker F-family miss",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13159,8 +13159,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R-ambig triage: term IS introduced bare in ancestor(s) [4]; walker F-family miss",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13183,8 +13183,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13195,8 +13195,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R-ambig triage: term IS introduced bare in ancestor(s) [5]; walker F-family miss",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13231,8 +13231,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13411,8 +13411,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13447,8 +13447,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 13]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13459,8 +13459,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13483,8 +13483,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 13]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13519,8 +13519,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 13]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13543,8 +13543,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13591,8 +13591,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 10]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13627,8 +13627,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13651,8 +13651,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 10]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13675,8 +13675,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 10]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -13843,8 +13843,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN117427144B",
@@ -13891,8 +13891,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN117427144B",
@@ -13939,8 +13939,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN117427144B",
@@ -14011,8 +14011,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN117427144B",
@@ -14035,8 +14035,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN120266060A",
@@ -14227,8 +14227,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R-ambig triage: term IS introduced bare in ancestor(s) [1]; walker F-family miss",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN213655447U (BYD)",
@@ -14239,8 +14239,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN213655447U (BYD)",
@@ -14395,8 +14395,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN213655447U (BYD)",
@@ -14407,8 +14407,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN213655447U (BYD)",
@@ -14419,8 +14419,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN213655447U (BYD)",
@@ -14431,8 +14431,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R-ambig triage: term IS introduced bare in ancestor(s) [6]; walker F-family miss",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN213655447U (BYD)",
@@ -14503,8 +14503,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R-ambig triage: term IS introduced bare in ancestor(s) [6]; walker F-family miss",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN213655447U (BYD)",
@@ -14575,8 +14575,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN213655447U (BYD)",
@@ -14587,8 +14587,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN213655447U (BYD)",
@@ -17030,8 +17030,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -17042,8 +17042,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN120266060A",
@@ -17054,8 +17054,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split. | R-ambig triage: term IS introduced bare in ancestor(s) [9]; walker F-family miss",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN120266060A",
@@ -17066,8 +17066,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN114357105B",
@@ -17222,8 +17222,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R9 shifting: resurfaced from trailing verb strip. | R20 re-triage: independent claim references term introduced only in parallel independent claims [10, 13]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -17234,8 +17234,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R9 shifting: resurfaced from trailing verb strip. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 13]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -17246,8 +17246,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R9 shifting: resurfaced from trailing verb strip. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 10]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN114357105B",
@@ -17258,8 +17258,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN114357105B",
@@ -17270,8 +17270,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115485995B",
@@ -17738,8 +17738,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R12 shifting: resurfaced from interior verb split. | R20 re-triage: independent claim references term introduced only in parallel independent claims [4]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -17750,8 +17750,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R12 shifting: resurfaced from interior verb split. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -17762,8 +17762,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R12 shifting: resurfaced from interior verb split. | R20 re-triage: independent claim references term introduced only in parallel independent claims [7]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -17774,8 +17774,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R12 shifting: resurfaced from interior verb split. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115485995B",
@@ -17810,8 +17810,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Surfaced by parser-fix (mid-paragraph claim boundary). Previously hidden inside adjacent claim text.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN116662522B",
@@ -17822,8 +17822,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Surfaced by parser-fix (mid-paragraph claim boundary). Previously hidden inside adjacent claim text.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN112271269B",
@@ -17846,8 +17846,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R23 over_capture extension: 18 multi-char trailing verbs + 7 interior verbs + 2 cascade verb-predicates | cascade from R23: bare in ancestor(s) [1]",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -17858,8 +17858,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R23 over_capture extension: 18 multi-char trailing verbs + 7 interior verbs + 2 cascade verb-predicates | cascade from R23: bare in ancestor(s) [4]",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN112271269B",
@@ -17894,8 +17894,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R23 over_capture extension: 18 multi-char trailing verbs + 7 interior verbs + 2 cascade verb-predicates | cascade from R23: bare in ancestor(s) [8, 1]",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN112271269B",
@@ -17906,8 +17906,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R23 over_capture extension: 18 multi-char trailing verbs + 7 interior verbs + 2 cascade verb-predicates | cascade from R23: bare in ancestor(s) [1]",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN114357105B",
@@ -17918,8 +17918,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R23 over_capture extension: 18 multi-char trailing verbs + 7 interior verbs + 2 cascade verb-predicates | cascade from R23: bare in ancestor(s) [4]",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN114357105B",
@@ -17930,8 +17930,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R23 over_capture extension: 18 multi-char trailing verbs + 7 interior verbs + 2 cascade verb-predicates | cascade from R23: bare in ancestor(s) [12]",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_25_r14c2_f6_bare_noun",
+      "round": 25
     },
     {
       "fixture": "CN115952274B",
