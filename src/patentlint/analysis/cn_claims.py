@@ -661,6 +661,9 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "运行", "执行", "确定", "提供", "匹配", "表征",
         "生成", "获取", "获得",
         "向",
+        # Phase 8c R9 — additional trailing verbs from re-sampling analysis
+        "针对", "支持", "调用", "采用", "作为",
+        "对",
     ),
     key=len,
     reverse=True,
@@ -668,13 +671,13 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
 
 # Noun-like single-char trailing suffixes with residual ≥ 3 guard.
 _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN: frozenset[str] = frozenset(
-    {"所", "位", "中", "后", "用", "上", "内", "撷取"}
+    {"所", "位", "中", "后", "用", "上", "内", "撷取", "对"}
 )
 
 # Relaxed-guard subset (residual ≥ 2 instead of ≥ 3).
 # Stage 4 R1 D4a — relaxed residual ≥ 2 guard for 2-char-stem residue strip
 _NOUNLIKE_RELAXED_SUFFIXES_CN: frozenset[str] = frozenset(
-    {"上", "内", "后", "中", "用"}
+    {"上", "内", "后", "中", "用", "对"}
 )
 
 # Leading quantifier denylist (TC→SC).
