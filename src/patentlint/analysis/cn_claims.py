@@ -1178,6 +1178,41 @@ _F13_LOCATIVE_SUFFIXES_CN: tuple[str, ...] = (
     '侧', '端', '方', '处', '面', '内', '外', '上', '下', '中',
 )
 
+# F12: copula + 基于/来自 intro family. Phase 8c R14d.
+# Three tiers to balance coverage vs. predicate-adjective false positives:
+#  - Tier A (unconditional): 转变为|变为|转为|划分为|分为 — always register RHS
+#    as intro. Risk is minimal — these verbs are only used for noun transitions.
+#  - Tier B (noun-gated): 基于|来自 — register RHS if ≥2 CJK and doesn't start
+#    with an adjectival/verb-phrase prefix (_F12_ADJ_REJECTS_CN).
+#  - Tier C (two-branch 为|是): (1) ordinal-prefix or paren-numeral RHS
+#    (unconditional); (2) bare-noun RHS ≥4 CJK with the same ADJ reject filter.
+#    Splits because `A为可光照交联` (adjectival predicate) and `A是经过...`
+#    (verb phrase) must be rejected; ordinal-prefix RHS is safe regardless.
+_F12_TIER_A_RE_CN: re.Pattern[str] = re.compile(
+    r'(?:转变为|变为|转为|划分为|分为)'
+    r'([\u4e00-\u7683\u7685-\u9fff]{2,12}(?:\([A-Za-z0-9]+\))?)'
+)
+_F12_TIER_B_RE_CN: re.Pattern[str] = re.compile(
+    r'(?:基于|来自)'
+    r'([\u4e00-\u7683\u7685-\u9fff]{2,12}(?:\([A-Za-z0-9]+\))?)'
+)
+_F12_TIER_C_ORDINAL_RE_CN: re.Pattern[str] = re.compile(
+    r'(?:为|是)'
+    r'(第[一二三四五六七八九十\d]+[\u4e00-\u7683\u7685-\u9fff]{1,10}'
+    r'(?:\([A-Za-z0-9]+\))?'
+    r'|[\u4e00-\u7683\u7685-\u9fff]{2,10}\([A-Za-z0-9]+\))'
+)
+_F12_TIER_C_BARE_RE_CN: re.Pattern[str] = re.compile(
+    r'(?:为|是)'
+    r'([\u4e00-\u7683\u7685-\u9fff]{4,12}(?:\([A-Za-z0-9]+\))?)'
+)
+_F12_ADJ_REJECTS_CN: tuple[str, ...] = (
+    '可', '具有', '具', '经过', '由', '属于', '用于', '来自',
+    '能够', '能', '会',
+    '进行', '获得', '获取', '接收', '存储', '输出', '输入',
+    '基于', '根据',
+)
+
 # F5a ref-prefix set (Q1: 该等/该些 excluded).
 _REF_PREFIX_SET_CN = ('所述', '该', '前述')
 
@@ -1349,6 +1384,47 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
         if len(normalized) < 2:
             continue
         if normalized.startswith(_REF_PREFIX_SET_CN):
+            continue
+        results.append((m.group(0), normalized))
+
+    # F12: copula + 基于/来自 intro family. R14d.
+    for m in _F12_TIER_A_RE_CN.finditer(text):
+        raw = m.group(1)
+        if raw.startswith(_REF_PREFIX_SET_CN):
+            continue
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', raw)
+        if len(normalized) < 2:
+            continue
+        results.append((m.group(0), normalized))
+
+    for m in _F12_TIER_B_RE_CN.finditer(text):
+        raw = m.group(1)
+        if raw.startswith(_REF_PREFIX_SET_CN):
+            continue
+        if raw.startswith(_F12_ADJ_REJECTS_CN):
+            continue
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', raw)
+        if len(normalized) < 2:
+            continue
+        results.append((m.group(0), normalized))
+
+    for m in _F12_TIER_C_ORDINAL_RE_CN.finditer(text):
+        raw = m.group(1)
+        if raw.startswith(_REF_PREFIX_SET_CN):
+            continue
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', raw)
+        if len(normalized) < 2:
+            continue
+        results.append((m.group(0), normalized))
+
+    for m in _F12_TIER_C_BARE_RE_CN.finditer(text):
+        raw = m.group(1)
+        if raw.startswith(_REF_PREFIX_SET_CN):
+            continue
+        if raw.startswith(_F12_ADJ_REJECTS_CN):
+            continue
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', raw)
+        if len(normalized) < 4:
             continue
         results.append((m.group(0), normalized))
 
