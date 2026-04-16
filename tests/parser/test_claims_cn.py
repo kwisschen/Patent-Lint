@@ -226,3 +226,39 @@ class TestNonClaimTextNotMatched:
         # Claim 2 has no numeric dependency — must parse as independent.
         assert claims[1].dependencies == []
         assert claims[1].independent is True
+
+
+class TestMidParagraphClaimBoundary:
+    """Real CNIPA filings sometimes pack two claims into one Word
+    paragraph with no newline between them. The preprocessing pass
+    must recover these boundaries without false-positives on
+    step references or inline enumerations."""
+
+    def test_two_claims_one_paragraph_sentence_end(self):
+        text = "1. 一种装置，包括组件A。 2. 如权利要求1所述的装置，其特征在于，包括组件B。"
+        claims = parse_cn_claims_docx(text)
+        assert [c.id for c in claims] == [1, 2]
+        assert claims[1].dependencies == [1]
+
+    def test_two_claims_one_paragraph_double_space(self):
+        text = "1 .一种方法，包括步骤A。  2 .根据权利要求1所述的方法，其特征在于，包括步骤B。"
+        claims = parse_cn_claims_docx(text)
+        assert [c.id for c in claims] == [1, 2]
+        assert claims[1].dependencies == [1]
+
+    def test_step_reference_not_mid_boundary(self):
+        """`步骤S2` or `2.3中` inside a claim body must not create a
+        spurious claim boundary. The lookahead `[一如根其权依包对将在本]`
+        guards against this."""
+        text = "1 .一种方法，其特征在于，步骤S1中制备培养基；步骤S2中分离细胞。"
+        claims = parse_cn_claims_docx(text)
+        assert len(claims) == 1
+        assert claims[0].id == 1
+
+    def test_new_independent_claim_after_sentence_end(self):
+        """Second independent claim (`一种X`) following first claim's
+        period+space must be recovered."""
+        text = "1. 一种方法，包括步骤A。 2. 一种装置，包括组件A。"
+        claims = parse_cn_claims_docx(text)
+        assert [c.id for c in claims] == [1, 2]
+        assert claims[1].independent is True
