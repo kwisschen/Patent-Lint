@@ -230,7 +230,7 @@ def main() -> int:
         fh.write("\n")
 
     print()
-    print(f"Ingestion summary:")
+    print("Ingestion summary:")
     print(f"  manifest: {'UPDATED' if manifest_changed else 'unchanged'} "
           f"({manifest['metadata']['fixture_count']} total fixtures)")
     print(f"  labels: +{total_added} added, {total_skipped} skipped "
