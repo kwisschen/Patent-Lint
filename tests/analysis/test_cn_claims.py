@@ -393,3 +393,33 @@ class TestDependentOrdering:
         doc = _cn_doc([])
         results = check_dependent_ordering(doc)
         assert results[0].status == "pass"
+
+
+class TestDymQualityGate:
+    """R21 — `_dym_quality_reject_cn` filters out over-captured DYMs."""
+
+    def _reject(self, ref: str, dym: str) -> bool:
+        from patentlint.analysis.cn_claims import _dym_quality_reject_cn
+        return _dym_quality_reject_cn(ref, dym)
+
+    def test_length_ratio_rejects_disproportionate(self):
+        assert self._reject("IPC引擎硬件", "处理器核在IPC引擎硬件初始化时")
+
+    def test_leading_particle_rejects_locative(self):
+        assert self._reject("客户端进程", "在所述客户端进程")
+
+    def test_leading_particle_rejects_preposition(self):
+        assert self._reject("输入数据", "对历史输入数据项")
+
+    def test_substring_wrap_rejects_trailing_conjunction(self):
+        assert self._reject("第一训练信号", "第一训练信号与")
+        assert self._reject("信息", "信息和")
+
+    def test_legitimate_typo_dym_kept(self):
+        assert not self._reject("第一预设", "第一预测")
+
+    def test_legitimate_base_suffix_kept(self):
+        assert not self._reject("初始地理预训练模型", "地理预训练模型")
+
+    def test_same_length_kept(self):
+        assert not self._reject("数据组", "数据集")
