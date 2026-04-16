@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 15,
+    "current_round": 16,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -135,8 +135,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -267,8 +267,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -375,8 +375,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -723,8 +723,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN112271269B",
@@ -891,8 +891,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1023,8 +1023,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1347,8 +1347,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1467,8 +1467,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1971,8 +1971,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN114357105B",
@@ -2187,8 +2187,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN114357105B",
@@ -2223,8 +2223,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN114357105B",
@@ -2283,8 +2283,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN114357105B",
@@ -2427,8 +2427,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN114357105B",
@@ -2655,8 +2655,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN114357105B",
@@ -2691,8 +2691,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN114357105B",
@@ -2703,8 +2703,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN114357105B",
@@ -2715,8 +2715,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN114357105B",
@@ -2763,8 +2763,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN114357105B",
@@ -2787,8 +2787,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN114357105B",
@@ -2799,8 +2799,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN114357105B",
@@ -10875,8 +10875,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN115952274B",
@@ -12087,8 +12087,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN115952274B",
@@ -12927,8 +12927,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN115952274B",
@@ -13239,8 +13239,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN116662522B",
@@ -13395,8 +13395,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN116662522B",
@@ -13527,8 +13527,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN116662522B",
@@ -13959,8 +13959,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN117427144B",
@@ -14343,8 +14343,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_16_f7d_participial",
+      "round": 16
     },
     {
       "fixture": "CN213655447U (BYD)",
