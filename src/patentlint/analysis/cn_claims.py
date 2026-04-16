@@ -1518,6 +1518,9 @@ def check_antecedent_basis_cn(
             if _is_bare_genus_self_reference_cn(normalized_term, claim.text):
                 continue
 
+            if "权利要求" in normalized_term:
+                continue
+
             issues.append(
                 {
                     "claim_id": claim.id,
