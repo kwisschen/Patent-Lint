@@ -34,7 +34,18 @@ class TwPatentType(str, Enum):
 
 
 class Claim(BaseModel):
-    """A single patent claim with metadata and dependency info."""
+    """A single patent claim with metadata and dependency info.
+
+    ``dependencies`` tracks statutory parent-claim references derived from
+    the **preamble** form (``如請求項N所述的X...``). ``quoted_references``
+    tracks 引用記載型式 body-embedded references (``一種Y，具備如請求項
+    N所述的X``) — semantically incorporation-by-reference of claim N's
+    sub-component definition, not a claim dependency. Keeping them in
+    separate fields lets statutory checks (subject consistency, dependency
+    format, multi-dep limits) key off ``dependencies`` while the antecedent
+    walker's ancestor-chain can walk both so body-embedded references
+    propagate intros for antecedent-basis resolution.
+    """
 
     id: int
     text: str
@@ -42,6 +53,7 @@ class Claim(BaseModel):
     multiple_dependent: bool = False
     method_claim: bool = False
     dependencies: list[int] = Field(default_factory=list)
+    quoted_references: list[int] = Field(default_factory=list)
 
 
 class FigureReference(BaseModel):
