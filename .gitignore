@@ -44,5 +44,14 @@ tests/fixtures/*/local/**
 !tests/fixtures/cn/synthetic/tw_contamination_simple.docx
 !tests/fixtures/cn/synthetic/tw_contamination_plural.docx
 !tests/fixtures/cn/synthetic/tw_contamination_mixed.docx
+!tests/fixtures/tw/synthetic/tw_adversarial_negatives.docx
+!tests/fixtures/tw/synthetic/tw_copula_tiers.docx
+!tests/fixtures/tw/synthetic/tw_dym_edge_cases.docx
+!tests/fixtures/tw/synthetic/tw_formula_reference.docx
+!tests/fixtures/tw/synthetic/tw_jepson_two_part.docx
+!tests/fixtures/tw/synthetic/tw_markush.docx
+!tests/fixtures/tw/synthetic/tw_plural_prefix.docx
+!tests/fixtures/tw/synthetic/tw_quoted_reference.docx
+!tests/fixtures/tw/synthetic/tw_symbol_table.docx
 smoke-test-pyodide.html
 temp/
