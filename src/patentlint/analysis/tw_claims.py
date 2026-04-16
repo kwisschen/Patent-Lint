@@ -1331,6 +1331,20 @@ _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
         #     walker captures through the verb+式(N) span. Interior cut at
         #     滿足式 reduces capture to 電容值. No compound-noun risk.
         "滿足式",
+        # === Phase F F4 — Added 2026-04-17 (browser-verification retrospective) ===
+        # 旋動: rotate/pivot verb. Observed in spec1 claim 1
+        #     `一鉸鏈部旋動自如地安裝於所述蓋本體` where _INTRO_PATTERN greedy-
+        #     captures `一鉸鏈部旋動自如地安裝` past the noun boundary.
+        #     Interior cut at 旋動 reduces intro capture to 鉸鏈部
+        #     (clean NP). Corpus scan: 旋動器/旋動軸/旋動件 all 0 across
+        #     11 real fixtures — no compound-noun risk.
+        "旋動",
+        # 自如: adverbial modifier ("freely", as in 旋動自如). TIPO
+        #     drafting idiom X-V-自如 means "can V freely". Observed in
+        #     spec1 claim 1 and many hinge/mechanical claims. No
+        #     compound-noun risk: 自如 only appears as V-complement in
+        #     patent drafting.
+        "自如",
         # === Existing entries (preserve) ===
         "設有", "包含", "包括", "具有", "含有", "具備",
         "係為", "係於", "為", "是", "係",
@@ -2136,7 +2150,16 @@ _F6_VERB_ALT_TW = (
     r'|提供|連接|連結'
     r'|獲取|獲得|得到|生成|產生|發出'
     r'|發送|接收|輸出|輸入|傳送|存儲|確定|涉及'
-    r'|進行|調用|運行|調整|建立|構建|製得|根據|存在|使用|執行'
+    r'|進行|調用|運行|調整|建立|構建|製得|根據|存在|執行'
+    # NOTE: 使用 intentionally omitted from TW port. TW corpus contains
+    # compound nouns 使用者介面 (GUI), 使用者, 使用期限 that the CN-ported
+    # F6 bare-noun arm incorrectly mis-captures (使用 + 者介面 → registers
+    # 者介面 as phantom intro, which then DYMs against real 使用者介面
+    # references). Phase F retrospective audit 2026-04-17 confirmed 4
+    # walker_fp.* findings on 110P000368 caused by this. CN doesn't have
+    # the same risk because 使用 + CN noun compounds (使用场景/使用效果) don't
+    # collide with the ref-prefix shape 使用+者X. TW port omits until a
+    # safer boundary check is designed.
 )
 
 # Phase C2 F12 ADJ rejects — shared between F6 arm3 emission gate and
