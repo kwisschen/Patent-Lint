@@ -21,6 +21,55 @@ from patentlint.models import CheckItem, Claim, TwPatentDocument
 # plural escape hatch in the walker is the only knob exposed to callers.
 _DIDYOUMEAN_THRESHOLD = 0.40
 
+# Phase B3 — DYM quality gate (R21-analog port from CN). Filters noisy
+# DYM suggestions the Jaccard loop already picked. Non-shifting: walker
+# finding count unchanged; only suggested_match is suppressed.
+#
+# TW adaptations vs CN list: Traditional character forms + TIPO
+# reference-prefix vocabulary (該/所述/前述/該等/該些), classical
+# possessive 之 alongside 的 in stop-particle set.
+_DYM_LEADING_REJECTS_TW: tuple[str, ...] = (
+    "能夠由", "響應於", "針對", "基於",
+    "對", "從", "向", "為", "在",
+    "與", "和", "以", "於", "且", "還", "由", "被",
+    "該", "所述", "前述", "該等", "該些",
+)
+
+_DYM_STOP_PARTICLES_TW: tuple[str, ...] = (
+    "的", "之",
+    "於", "在", "為", "對", "從", "向",
+    "與", "和", "以", "且", "還", "由", "被",
+    "所述", "前述", "該", "該等", "該些",
+    "能夠由", "響應於", "針對", "基於",
+    "初始化時", "之前", "之後",
+)
+
+
+def _dym_quality_reject_tw(ref: str, dym: str) -> bool:
+    """True if DYM should be suppressed per Phase B3 filters.
+
+    Three filters (mirrors CN R21):
+      1. ``len(dym) > 2 * len(ref)`` — disproportionate expansion.
+      2. DYM starts with a token in ``_DYM_LEADING_REJECTS_TW`` — walker
+         captured a prep/particle-headed or reference-prefix-headed
+         fragment, not a clean NP.
+      3. ``ref in dym`` strict substring AND the wrapping chars contain
+         any stop-particle — walker captured the ref + noise.
+    """
+    if len(dym) > 2 * len(ref):
+        return True
+    for prefix in _DYM_LEADING_REJECTS_TW:
+        if dym.startswith(prefix):
+            return True
+    if len(ref) < len(dym) and ref in dym:
+        idx = dym.index(ref)
+        before = dym[:idx]
+        after = dym[idx + len(ref):]
+        if any(p in before or p in after for p in _DYM_STOP_PARTICLES_TW):
+            return True
+    return False
+
+
 # Recognized TW dependency format patterns
 _TW_DEP_FORMAT = re.compile(
     r"如請求項\s*\d+"
@@ -2429,6 +2478,18 @@ def check_antecedent_basis(
             if (
                 suggested_match is not None
                 and suggested_match["term"] == normalized_term
+            ):
+                suggested_match = None
+
+            # Phase B3 — DYM quality gate (R21-analog). Suppress DYM
+            # candidates that are likely walker-extraction noise rather
+            # than legitimate intros (length-ratio, leading-particle,
+            # substring-wrap with stop-particle). Terminal-only.
+            if (
+                suggested_match is not None
+                and _dym_quality_reject_tw(
+                    normalized_term, suggested_match["term"]
+                )
             ):
                 suggested_match = None
 
