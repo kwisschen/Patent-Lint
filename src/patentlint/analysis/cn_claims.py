@@ -1168,6 +1168,17 @@ _F11_COLON_LIST_ANCHOR_CN: re.Pattern[str] = re.compile(
 )
 _F11_LIST_SPLIT_CN: re.Pattern[str] = re.compile(r'[、，,和与及]')
 
+# Phase 8c R14e — F11 no-colon extension. Matches no-colon enum lists
+# `(?:包括|包含|含有)(Y(?:、Y)+)` where ≥2 `、`-separated CJK elements
+# follow the verb directly. Mutually exclusive with the colon anchor
+# because the character after the verb must be CJK (not `：:`), and
+# requires the enum-list shape so single-noun `包括Y` doesn't fire
+# (that case belongs to F6 / elsewhere).
+_F11_NO_COLON_LIST_ANCHOR_CN: re.Pattern[str] = re.compile(
+    r'(?:包括|包含|含有)'
+    r'([\u4e00-\u7683\u7685-\u9fff]{2,}(?:、[\u4e00-\u7683\u7685-\u9fff]{2,})+)'
+)
+
 # F13: locative-verb + bare noun (+ optional locative suffix). Phase 8c R14a.
 # Registers Y from `X应用于Y侧` / `X位于Y` as an intro, stripping a trailing
 # locative suffix (侧/端/方/处/面/内/外/上/下/中) when present. The locative
@@ -1376,19 +1387,22 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
 
     # F11: list-after-包括 — colon-anchored preamble lists register each
     # element as a bare-noun intro. WQ8 / Phase 8c close-out R3.
-    for m in _F11_COLON_LIST_ANCHOR_CN.finditer(text):
-        list_text = m.group(1).split('；')[0].split('。')[0]
-        for element in _F11_LIST_SPLIT_CN.split(list_text):
-            element = element.strip()
-            if not element:
-                continue
-            normalized = re.sub(r'\([A-Za-z0-9]+\)', '', element)
-            cjk_len = sum(1 for c in normalized if '\u4e00' <= c <= '\u9fff')
-            if cjk_len < 2:
-                continue
-            if normalized.startswith(_REF_PREFIX_SET_CN):
-                continue
-            results.append((element, normalized))
+    # R14e extends with a no-colon sibling pattern gated on ≥2 `、`-
+    # separated elements.
+    for anchor_re in (_F11_COLON_LIST_ANCHOR_CN, _F11_NO_COLON_LIST_ANCHOR_CN):
+        for m in anchor_re.finditer(text):
+            list_text = m.group(1).split('；')[0].split('。')[0]
+            for element in _F11_LIST_SPLIT_CN.split(list_text):
+                element = element.strip()
+                if not element:
+                    continue
+                normalized = re.sub(r'\([A-Za-z0-9]+\)', '', element)
+                cjk_len = sum(1 for c in normalized if '\u4e00' <= c <= '\u9fff')
+                if cjk_len < 2:
+                    continue
+                if normalized.startswith(_REF_PREFIX_SET_CN):
+                    continue
+                results.append((element, normalized))
 
     # F13: locative-verb + bare noun (+ optional locative suffix). R14a.
     for m in _F13_LOCATIVE_VERB_PATTERN_CN.finditer(text):
