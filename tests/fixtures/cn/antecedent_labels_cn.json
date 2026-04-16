@@ -8,7 +8,7 @@
     "total_labeled": 1215,
     "real_findings": 1212,
     "synthetic_findings": 3,
-    "key_format": "(fixture, claim_id, term, reference_form) tuple — parity with TW schema v11. ADR-103 tuple dedup is handled inside the walker, not here.",
+    "key_format": "(fixture, claim_id, term, reference_form) tuple — parity with TW schema v11. ADR-107 tuple dedup is handled inside the walker, not here.",
     "categories": [
       {
         "id": "legit_drafting_error",
