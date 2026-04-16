@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 9,
+    "current_round": 10,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -1995,8 +1995,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN114357105B",
@@ -2451,8 +2451,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN114357105B",
@@ -3003,8 +3003,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -3111,8 +3111,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -3687,8 +3687,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -3711,8 +3711,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -4299,8 +4299,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -4671,8 +4671,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -4731,8 +4731,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -5103,8 +5103,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -5199,8 +5199,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -5967,8 +5967,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -6387,8 +6387,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -6459,8 +6459,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -6771,8 +6771,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -8055,8 +8055,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -8511,8 +8511,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -8547,8 +8547,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -8871,8 +8871,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -8919,8 +8919,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -9843,8 +9843,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -10347,8 +10347,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -10407,8 +10407,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115485995B",
@@ -10539,8 +10539,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115952274B",
@@ -10635,8 +10635,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115952274B",
@@ -10911,8 +10911,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115952274B",
@@ -11007,8 +11007,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115952274B",
@@ -11091,8 +11091,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115952274B",
@@ -11319,8 +11319,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115952274B",
@@ -11331,8 +11331,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115952274B",
@@ -11595,8 +11595,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115952274B",
@@ -11763,8 +11763,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115952274B",
@@ -12111,8 +12111,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115952274B",
@@ -12219,8 +12219,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115952274B",
@@ -12303,8 +12303,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115952274B",
@@ -12555,8 +12555,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115952274B",
@@ -12567,8 +12567,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN115952274B",
@@ -13011,8 +13011,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN116662522B",
@@ -13479,8 +13479,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN116662522B",
@@ -13635,8 +13635,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_10_trailing_verb_extension",
+      "round": 10
     },
     {
       "fixture": "CN116662522B",
@@ -17038,6 +17038,186 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN114357105B",
+      "claim_id": 1,
+      "term": "预设位置编码",
+      "reference_form": "所述预设位置编码",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R9 shifting: resurfaced from trailing verb strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN114357105B",
+      "claim_id": 9,
+      "term": "预设位置编码",
+      "reference_form": "所述预设位置编码",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R9 shifting: resurfaced from trailing verb strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 17,
+      "term": "第一神经网络",
+      "reference_form": "所述第一神经网络",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R9 shifting: resurfaced from trailing verb strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 28,
+      "term": "第二设备",
+      "reference_form": "所述第二设备",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R9 shifting: resurfaced from trailing verb strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 145,
+      "term": "处理单元",
+      "reference_form": "所述处理单元",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R9 shifting: resurfaced from trailing verb strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 1,
+      "term": "初始输入生成回复",
+      "reference_form": "所述初始输入生成回复",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R9 shifting: resurfaced from trailing verb strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 2,
+      "term": "深度学习模型",
+      "reference_form": "所述深度学习模型",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R9 shifting: resurfaced from trailing verb strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 14,
+      "term": "深度学习模型",
+      "reference_form": "所述深度学习模型",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R9 shifting: resurfaced from trailing verb strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 23,
+      "term": "初始输入生成回复",
+      "reference_form": "所述初始输入生成回复",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R9 shifting: resurfaced from trailing verb strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 24,
+      "term": "深度学习模型",
+      "reference_form": "所述深度学习模型",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R9 shifting: resurfaced from trailing verb strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 32,
+      "term": "深度学习模型",
+      "reference_form": "所述深度学习模型",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R9 shifting: resurfaced from trailing verb strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 37,
+      "term": "深度学习模型",
+      "reference_form": "所述深度学习模型",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R9 shifting: resurfaced from trailing verb strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN116662522B",
+      "claim_id": 1,
+      "term": "结构化知识",
+      "reference_form": "所述结构化知识",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R9 shifting: resurfaced from trailing verb strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN116662522B",
+      "claim_id": 10,
+      "term": "结构化知识",
+      "reference_form": "所述结构化知识",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R9 shifting: resurfaced from trailing verb strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN116662522B",
+      "claim_id": 13,
+      "term": "结构化知识",
+      "reference_form": "所述结构化知识",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R9 shifting: resurfaced from trailing verb strip.",
       "resolved_by": null,
       "round": 0
     }
