@@ -5,10 +5,26 @@
 Loads ``tests/fixtures/tw/antecedent_labels.json`` and runs
 ``check_antecedent_basis`` on the 10-fixture corpus, then diffs walker
 output against the labels by ``(fixture, claim_id, term, reference_form)``
-tuple. Hard-fails on protect-violations; halts on new (unlabeled)
-findings.
+tuple.
 
-This is a standalone test utility, not a pytest test. Underscore-prefixed
+Two documented divergences from the original Phase 8b harness (both
+backported from the CN harness on 2026-04-16 per Phase 9 #18 + #19):
+
+* **ADR-110** — strict category validation. Unknown ``category`` values
+  exit 3 at load time. Original Phase 8b harness silently passed them
+  through. Validator lives inside ``_check_structural_invariants_tw``.
+
+* **ADR-111** — ``round`` field + bidirectional halt with per-round
+  ``resolved_by`` satisfaction. Additions halt unless every new finding
+  matches a current-round ``resolved_by``; unprotected drops halt unless
+  every removed finding is resolved_by-tagged in any round.
+  Protect_violations (protected drops) remain hard-fail exit 1 with NO
+  ``resolved_by`` escape hatch even if round matches. All 86 pre-existing
+  labels carry ``round: 0`` as the sentinel (pre-ADR-111 resolutions);
+  ``current_round`` starts at 0 and bumps only when the TW walker-round
+  skill lands its first TW round.
+
+Standalone test utility, not a pytest test. Underscore-prefixed filename
 so pytest does not collect it.
 
 Run from the project root::
@@ -20,9 +36,10 @@ Exit codes
 ==========
 
 * 0 — all gates pass
-* 1 — protect_violations > 0 (HARD FAIL)
-* 2 — new_findings > 0 (HALT for labeling)
+* 1 — protect_violations > 0 (HARD FAIL, no resolved_by escape hatch)
+* 2 — unresolved new/removed findings > 0 (HALT for labeling)
 * 3 — fixture or labels file missing, OR structural invariant violation
+      (includes unknown category id per ADR-110)
 """
 
 from __future__ import annotations
@@ -117,9 +134,50 @@ def _walker_actual_set(index: dict) -> tuple[dict[tuple, dict], int]:
     return actual, fixture_count
 
 
-def _check_structural_invariants(labels: list[dict]) -> None:
-    """Exit 3 if any label has both protect:true and resolved_by set."""
-    for lab in labels:
+def _validate_category_enum(labels_doc: dict) -> None:
+    """ADR-110: strict reject of labels whose ``category`` is not in the
+    schema-declared metadata.categories[].id set. Diverges from the
+    original Phase 8b harness which silently passed unknown categories.
+    """
+    valid_ids = {c["id"] for c in labels_doc["metadata"]["categories"]}
+    for lab in labels_doc["labels"]:
+        if lab.get("category") not in valid_ids:
+            tup = (
+                lab.get("fixture"),
+                lab.get("claim_id"),
+                lab.get("term"),
+                lab.get("reference_form"),
+            )
+            print(
+                f"STRUCTURAL FAIL: label has unknown category "
+                f"{lab.get('category')!r} (not in metadata.categories): {tup}",
+                file=sys.stderr,
+            )
+            sys.exit(3)
+
+
+def _check_structural_invariants_tw(labels_doc: dict) -> None:
+    """Exit 3 on any of:
+
+    1. (TW-inherited) label has both protect:true and resolved_by set.
+    2. (ADR-110) label has unknown category.
+    3. (ADR-111) label is missing the round field, or metadata is missing
+       current_round.
+    """
+    _validate_category_enum(labels_doc)
+
+    metadata = labels_doc["metadata"]
+    if "current_round" not in metadata or not isinstance(
+        metadata["current_round"], int
+    ):
+        print(
+            "STRUCTURAL FAIL: metadata.current_round missing or not int "
+            "(ADR-111)",
+            file=sys.stderr,
+        )
+        sys.exit(3)
+
+    for lab in labels_doc["labels"]:
         if lab.get("protect") and lab.get("resolved_by"):
             tup = (
                 lab["fixture"],
@@ -128,16 +186,47 @@ def _check_structural_invariants(labels: list[dict]) -> None:
                 lab["reference_form"],
             )
             print(
-                f"STRUCTURAL FAIL: protect:true entry has resolved_by set: {tup}",
+                f"STRUCTURAL FAIL: protect:true entry has resolved_by set: "
+                f"{tup}",
+                file=sys.stderr,
+            )
+            sys.exit(3)
+        if "round" not in lab or not isinstance(lab["round"], int):
+            tup = (
+                lab.get("fixture"),
+                lab.get("claim_id"),
+                lab.get("term"),
+                lab.get("reference_form"),
+            )
+            print(
+                f"STRUCTURAL FAIL: label missing int round field "
+                f"(ADR-111): {tup}",
                 file=sys.stderr,
             )
             sys.exit(3)
 
 
+def _label_key(lab: dict) -> tuple:
+    return (
+        lab["fixture"],
+        lab["claim_id"],
+        lab["term"],
+        lab["reference_form"],
+    )
+
+
 def _compute_diff(labels_doc: dict, actual: dict[tuple, dict]) -> dict:
-    """Build the diff payload (gates + per-category stats + delta lists)."""
+    """Build the diff payload (gates + per-category stats + delta lists).
+
+    ADR-111: ``current_round`` scopes which resolved_by entries satisfy
+    the halt. Additions and unprotected drops both halt unless every
+    delta finding matches a current-round resolved_by entry.
+    Protect_violations (protected drops) remain hard-fail with no
+    resolved_by escape hatch.
+    """
     labels = labels_doc["labels"]
     categories = labels_doc["metadata"]["categories"]
+    current_round = labels_doc["metadata"]["current_round"]
 
     active_labels = [lab for lab in labels if not lab.get("resolved_by")]
     resolved_labels = [lab for lab in labels if lab.get("resolved_by")]
@@ -145,15 +234,18 @@ def _compute_diff(labels_doc: dict, actual: dict[tuple, dict]) -> dict:
     expected_map: dict[tuple, dict] = {}
     protected: set[tuple] = set()
     for lab in active_labels:
-        key = (
-            lab["fixture"],
-            lab["claim_id"],
-            lab["term"],
-            lab["reference_form"],
-        )
+        key = _label_key(lab)
         expected_map[key] = lab
         if lab.get("protect") is True:
             protected.add(key)
+    # ADR-111 revision 2026-04-13: resolved labels are DURABLY expected
+    # across rounds. current_round scoping applies only to the
+    # bidirectional halt satisfaction check (see current_round_resolutions
+    # below), not to the expected set. Without this, round-N new-shape
+    # labels become ghosts the moment current_round advances to N+1.
+    for lab in resolved_labels:
+        key = _label_key(lab)
+        expected_map[key] = lab
 
     expected = set(expected_map.keys())
     actual_keys = set(actual.keys())
@@ -161,6 +253,36 @@ def _compute_diff(labels_doc: dict, actual: dict[tuple, dict]) -> dict:
     new_findings = sorted(actual_keys - expected)
     removed_findings = sorted(expected - actual_keys)
     protect_violations = [k for k in removed_findings if k in protected]
+
+    # ADR-111 revision 2026-04-13: current_round_resolutions is used only
+    # for UI classification (telling the reader which drops/additions were
+    # satisfied by the round currently in flight). Halt satisfaction is
+    # durable across rounds: once a label is resolved_by-tagged, its key
+    # is permanently in `expected` (additions side) and permanently
+    # excluded from unresolved_removed (drops side).
+    current_round_resolutions: dict[tuple, dict] = {
+        _label_key(lab): lab
+        for lab in labels
+        if lab.get("resolved_by") and lab.get("round") == current_round
+    }
+    resolved_keys_current = set(current_round_resolutions.keys())
+    resolved_keys_all = {
+        _label_key(lab) for lab in labels if lab.get("resolved_by")
+    }
+
+    # Additions: any emission NOT in expected is "new". Since expected
+    # already includes resolved labels durably, true new_findings are by
+    # construction unresolved. Halt unless a current-round resolved_by
+    # entry explicitly credits the emission (kept for R1-style seeding
+    # where the walker emits a key not yet in the label file).
+    unresolved_new = [k for k in new_findings if k not in resolved_keys_current]
+    # Drops: unprotected drops halt unless the label is resolved_by-tagged
+    # in ANY round (durable). Protected drops take the exit-1 path with
+    # no escape hatch.
+    unprotected_removed = [k for k in removed_findings if k not in protected]
+    unresolved_removed = [
+        k for k in unprotected_removed if k not in resolved_keys_all
+    ]
 
     cat_stats: dict[str, dict[str, int]] = {
         cat["id"]: {
@@ -173,15 +295,9 @@ def _compute_diff(labels_doc: dict, actual: dict[tuple, dict]) -> dict:
     }
     for lab in labels:
         cid = lab["category"]
-        if cid not in cat_stats:
-            continue
+        # ADR-110 guarantees cid is in cat_stats by load-time validation.
         cat_stats[cid]["labeled"] += 1
-        key = (
-            lab["fixture"],
-            lab["claim_id"],
-            lab["term"],
-            lab["reference_form"],
-        )
+        key = _label_key(lab)
         if key in actual_keys:
             cat_stats[cid]["still_flagged"] += 1
         else:
@@ -198,17 +314,22 @@ def _compute_diff(labels_doc: dict, actual: dict[tuple, dict]) -> dict:
         "new_findings": new_findings,
         "removed_findings": removed_findings,
         "protect_violations": protect_violations,
+        "unresolved_new": unresolved_new,
+        "unresolved_removed": unresolved_removed,
         "protected": protected,
         "active_count": len(active_labels),
         "resolved_count": len(resolved_labels),
         "resolved_labels": resolved_labels,
+        "current_round": current_round,
+        "current_round_resolution_count": len(current_round_resolutions),
     }
 
 
 def _exit_code(diff: dict) -> int:
+    # ADR-111: protect_violations hard-fail has no resolved_by escape hatch.
     if diff["protect_violations"]:
         return 1
-    if diff["new_findings"]:
+    if diff["unresolved_new"] or diff["unresolved_removed"]:
         return 2
     return 0
 
@@ -225,14 +346,20 @@ def _render_markdown(
     new_findings = diff["new_findings"]
     removed_findings = diff["removed_findings"]
     protect_violations = diff["protect_violations"]
+    unresolved_new = diff["unresolved_new"]
+    unresolved_removed = diff["unresolved_removed"]
     cat_stats = diff["cat_stats"]
     expected_map = diff["expected_map"]
 
     out: list[str] = []
-    out.append("# Phase 8b harness report")
+    out.append("# Phase 8b harness report (TW)")
     out.append("")
     out.append(f"**Commit**: {commit}")
     out.append(f"**Labels version**: {schema_version}")
+    out.append(f"**Current round (ADR-111)**: {diff['current_round']}")
+    out.append(
+        f"**Current-round resolutions**: {diff['current_round_resolution_count']}"
+    )
     active_count = diff["active_count"]
     resolved_count = diff["resolved_count"]
     out.append(
@@ -244,14 +371,20 @@ def _render_markdown(
     out.append("")
     out.append("## Gates")
     out.append("")
-    nf_status = "PASS" if not new_findings else "FAIL"
+    un_status = "PASS" if not unresolved_new else "FAIL"
+    ur_status = "PASS" if not unresolved_removed else "FAIL"
     pv_status = "PASS" if not protect_violations else "FAIL"
     out.append(
-        f"- [{nf_status}] new_findings: {len(new_findings)} (HALT if > 0)"
+        f"- [{un_status}] unresolved_new: {len(unresolved_new)} "
+        f"(HALT if > 0; additions satisfied by current-round resolved_by)"
+    )
+    out.append(
+        f"- [{ur_status}] unresolved_removed: {len(unresolved_removed)} "
+        f"(HALT if > 0; unprotected drops satisfied by current-round resolved_by)"
     )
     out.append(
         f"- [{pv_status}] protect_violations: {len(protect_violations)} "
-        f"(HARD FAIL if > 0)"
+        f"(HARD FAIL if > 0; no resolved_by escape hatch)"
     )
     out.append("")
     out.append("## Category distribution")
@@ -271,23 +404,25 @@ def _render_markdown(
     out.append("")
     resolved_labels = diff["resolved_labels"]
     if resolved_labels:
-        out.append("| fixture | claim | term | category | resolved_by |")
-        out.append("|---|---|---|---|---|")
+        out.append("| fixture | claim | term | category | round | resolved_by |")
+        out.append("|---|---|---|---|---:|---|")
         for lab in resolved_labels:
             out.append(
                 f"| {lab['fixture']} | {lab['claim_id']} | {lab['term']} | "
-                f"{lab['category']} | {lab['resolved_by']} |"
+                f"{lab['category']} | {lab.get('round', '')} | "
+                f"{lab['resolved_by']} |"
             )
     else:
         out.append("None")
     out.append("")
-    out.append("## New findings (unlabeled) — HALT if any")
+    out.append("## New findings (unlabeled) — HALT if unresolved")
     out.append("")
     if new_findings:
-        out.append("| fixture | claim | term | ref_form |")
-        out.append("|---|---|---|---|")
+        out.append("| fixture | claim | term | ref_form | resolved? |")
+        out.append("|---|---|---|---|---|")
         for k in new_findings:
-            out.append(f"| {k[0]} | {k[1]} | {k[2]} | {k[3]} |")
+            tag = "current-round" if k not in unresolved_new else "UNRESOLVED"
+            out.append(f"| {k[0]} | {k[1]} | {k[2]} | {k[3]} | {tag} |")
     else:
         out.append("None")
     out.append("")
@@ -295,14 +430,21 @@ def _render_markdown(
     out.append("")
     if removed_findings:
         out.append(
-            "| fixture | claim | term | ref_form | category | protected |"
+            "| fixture | claim | term | ref_form | category | protected | resolved? |"
         )
-        out.append("|---|---|---|---|---|---|")
+        out.append("|---|---|---|---|---|---|---|")
         for k in removed_findings:
             lab = expected_map[k]
+            is_prot = lab.get("protect", False)
+            if is_prot:
+                tag = "PROTECT_VIOLATION"
+            elif k in unresolved_removed:
+                tag = "UNRESOLVED"
+            else:
+                tag = "current-round"
             out.append(
                 f"| {k[0]} | {k[1]} | {k[2]} | {k[3]} | "
-                f"{lab['category']} | {lab.get('protect', False)} |"
+                f"{lab['category']} | {is_prot} | {tag} |"
             )
     else:
         out.append("None")
@@ -326,7 +468,11 @@ def _render_markdown(
 
 
 def _render_json(
-    labels_doc: dict, diff: dict, fixture_count: int, commit: str, exit_code: int
+    labels_doc: dict,
+    diff: dict,
+    fixture_count: int,
+    commit: str,
+    exit_code: int,
 ) -> str:
     labels = labels_doc["labels"]
     schema_version = labels_doc["metadata"]["schema_version"]
@@ -334,6 +480,8 @@ def _render_json(
     new_findings = diff["new_findings"]
     removed_findings = diff["removed_findings"]
     protect_violations = diff["protect_violations"]
+    unresolved_new = diff["unresolved_new"]
+    unresolved_removed = diff["unresolved_removed"]
     cat_stats = diff["cat_stats"]
     expected_map = diff["expected_map"]
 
@@ -342,15 +490,21 @@ def _render_json(
     payload = {
         "commit": commit,
         "labels_version": schema_version,
+        "current_round": diff["current_round"],
+        "current_round_resolution_count": diff["current_round_resolution_count"],
         "label_count": len(labels),
         "active_count": active_count,
         "resolved_count": resolved_count,
         "fixture_count": fixture_count,
         "walker_finding_count": len(actual_keys),
         "gates": {
-            "new_findings": {
-                "count": len(new_findings),
-                "pass": len(new_findings) == 0,
+            "unresolved_new": {
+                "count": len(unresolved_new),
+                "pass": len(unresolved_new) == 0,
+            },
+            "unresolved_removed": {
+                "count": len(unresolved_removed),
+                "pass": len(unresolved_removed) == 0,
             },
             "protect_violations": {
                 "count": len(protect_violations),
@@ -366,6 +520,7 @@ def _render_json(
                 "claim_id": k[1],
                 "term": k[2],
                 "reference_form": k[3],
+                "resolved_this_round": k not in unresolved_new,
             }
             for k in new_findings
         ],
@@ -377,6 +532,10 @@ def _render_json(
                 "reference_form": k[3],
                 "category": expected_map[k]["category"],
                 "protect": expected_map[k].get("protect", False),
+                "resolved_this_round": (
+                    expected_map[k].get("protect", False) is False
+                    and k not in unresolved_removed
+                ),
             }
             for k in removed_findings
         ],
@@ -398,6 +557,7 @@ def _render_json(
                 "term": lab["term"],
                 "reference_form": lab["reference_form"],
                 "category": lab["category"],
+                "round": lab.get("round"),
                 "resolved_by": lab["resolved_by"],
             }
             for lab in diff["resolved_labels"]
@@ -423,7 +583,7 @@ def main() -> int:
     args = parser.parse_args()
 
     labels_doc = _load_labels()
-    _check_structural_invariants(labels_doc["labels"])
+    _check_structural_invariants_tw(labels_doc)
     index = _load_fixture_index()
     actual, fixture_count = _walker_actual_set(index)
     diff = _compute_diff(labels_doc, actual)
