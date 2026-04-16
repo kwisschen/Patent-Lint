@@ -675,22 +675,32 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "体外培养", "胰蛋白酶消化", "铰接", "选自", "代替", "交联",
         "检查", "查询", "保存", "固定", "回复", "消化",
         "恢复",
+        # Phase 8c R24 — single-char trailing residues from over_capture
+        # pool (16 active labels post-R23). Compound-noun risk audited:
+        # all noun compounds (作用/不良/相应/均匀/得到) appear at PREFIX
+        # position in corpus; suffix-position usage is uniformly verb/
+        # particle. All 16 emit-terms ending in these chars match the
+        # 16 targets exactly (zero collateral).
+        "作", "不", "相", "均", "得",
     ),
     key=len,
     reverse=True,
 ))
 
 # Noun-like single-char trailing suffixes with residual ≥ 3 guard.
-# R22 adds 由/沿 with relaxed-residual subset participation below.
+# R22 adds 由/沿; R24 adds 作/不/相/均/得 with relaxed-residual subset
+# participation below.
 _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN: frozenset[str] = frozenset(
-    {"所", "位", "中", "后", "用", "上", "内", "撷取", "对", "由", "沿"}
+    {"所", "位", "中", "后", "用", "上", "内", "撷取", "对", "由", "沿",
+     "作", "不", "相", "均", "得"}
 )
 
 # Relaxed-guard subset (residual ≥ 2 instead of ≥ 3).
 # Stage 4 R1 D4a — relaxed residual ≥ 2 guard for 2-char-stem residue strip.
-# R22 adds 由/沿 (mirrors trailing-verb denylist registration).
+# R22 adds 由/沿; R24 adds 作/不/相/均/得 (mirrors trailing-verb registration).
 _NOUNLIKE_RELAXED_SUFFIXES_CN: frozenset[str] = frozenset(
-    {"上", "内", "后", "中", "用", "对", "由", "沿"}
+    {"上", "内", "后", "中", "用", "对", "由", "沿",
+     "作", "不", "相", "均", "得"}
 )
 
 # Phase 8c R22 — `中` very-relaxed (residual ≥ 1) for 2-char locative

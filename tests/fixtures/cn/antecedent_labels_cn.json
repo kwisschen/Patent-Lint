@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 23,
+    "current_round": 24,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -1291,8 +1291,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_24_single_char_trailing",
+      "round": 24
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1867,8 +1867,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_24_single_char_trailing",
+      "round": 24
     },
     {
       "fixture": "CN114357105B",
@@ -1927,8 +1927,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_24_single_char_trailing",
+      "round": 24
     },
     {
       "fixture": "CN114357105B",
@@ -2383,8 +2383,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_24_single_char_trailing",
+      "round": 24
     },
     {
       "fixture": "CN114357105B",
@@ -7087,8 +7087,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_24_single_char_trailing",
+      "round": 24
     },
     {
       "fixture": "CN115485995B",
@@ -12451,8 +12451,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_24_single_char_trailing",
+      "round": 24
     },
     {
       "fixture": "CN115952274B",
@@ -12463,8 +12463,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_24_single_char_trailing",
+      "round": 24
     },
     {
       "fixture": "CN115952274B",
@@ -16706,8 +16706,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_24_single_char_trailing",
+      "round": 24
     },
     {
       "fixture": "CN115952274B",
@@ -16718,8 +16718,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_24_single_char_trailing",
+      "round": 24
     },
     {
       "fixture": "CN115952274B",
@@ -16754,8 +16754,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_24_single_char_trailing",
+      "round": 24
     },
     {
       "fixture": "CN115952274B",
@@ -16766,8 +16766,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_24_single_char_trailing",
+      "round": 24
     },
     {
       "fixture": "CN115952274B",
@@ -16778,8 +16778,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_24_single_char_trailing",
+      "round": 24
     },
     {
       "fixture": "CN115952274B",
@@ -16802,8 +16802,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5). | parser-fix migration: c23→c24",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_24_single_char_trailing",
+      "round": 24
     },
     {
       "fixture": "CN115952274B",
@@ -16814,8 +16814,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5). | parser-fix migration: c23→c24",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_24_single_char_trailing",
+      "round": 24
     },
     {
       "fixture": "CN115952274B",
@@ -16850,8 +16850,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5). | parser-fix migration: c23→c24",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_24_single_char_trailing",
+      "round": 24
     },
     {
       "fixture": "CN115952274B",
@@ -16862,8 +16862,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5). | parser-fix migration: c23→c24",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_24_single_char_trailing",
+      "round": 24
     },
     {
       "fixture": "CN115485995B",
@@ -18038,6 +18038,30 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R23 over_capture extension: 18 multi-char trailing verbs + 7 interior verbs + 2 cascade verb-predicates | cascade from R23: bare in ancestor(s) [2]",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN113939805B (Huawei)",
+      "claim_id": 5,
+      "term": "返回指令",
+      "reference_form": "所述返回指令",
+      "category": "miss_intro.coverage_gap",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R24 single-char trailing: 作/不/相/均/得 added to denylist + relaxed-residual subset | cascade from R24: bare in ancestor(s) [1]",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN113939805B (Huawei)",
+      "claim_id": 12,
+      "term": "返回指令",
+      "reference_form": "所述返回指令",
+      "category": "miss_intro.coverage_gap",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R24 single-char trailing: 作/不/相/均/得 added to denylist + relaxed-residual subset | cascade from R24: bare in ancestor(s) [7]",
       "resolved_by": null,
       "round": 0
     }
