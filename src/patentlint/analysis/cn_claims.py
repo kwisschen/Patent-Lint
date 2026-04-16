@@ -688,6 +688,7 @@ _CHAR_EXCLUSION_RESIDUE_CN: dict[str, int] = {
     '\u57fa': 3,  # 基 (from 基于) — guard ≥3 protects 培养基
     '\u54cd': 2,  # 响 (from 响应)
     '\u529f': 2,  # 功 (from 功能)
+    '\u8f93': 2,  # 输 (from 输出 where 出 is in trailing denylist)
 }
 
 # Chemistry chars that legitimately precede 基 (functional-group suffix).
@@ -1379,6 +1380,9 @@ _GENUS_PREAMBLE_RE_CN: re.Pattern[str] = re.compile(
 
 
 _FORMULA_ORDINAL_RE_CN: re.Pattern[str] = re.compile(r"^第[A-Za-z]")
+_BARE_ORDINAL_RE_CN: re.Pattern[str] = re.compile(
+    r"^第[一二三四五六七八九十\d]+$"
+)
 
 
 def _is_bare_genus_self_reference_cn(term: str, claim_text: str) -> bool:
@@ -1579,6 +1583,9 @@ def check_antecedent_basis_cn(
                 continue
 
             if _FORMULA_ORDINAL_RE_CN.match(normalized_term):
+                continue
+
+            if _BARE_ORDINAL_RE_CN.match(normalized_term):
                 continue
 
             issues.append(
