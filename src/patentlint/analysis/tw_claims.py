@@ -71,8 +71,16 @@ _SUBJECT_END_RE = re.compile(r"(?:[，,]|其特徵在於|其改良在於|其中)
 # Leading quantifier for normalization
 _LEADING_QUANTIFIER = re.compile(r"^(?:一種|一個|該|所述|所述的)\s*")
 
-# Transitional phrases (broader set per prompt)
-_TRANSITION_PHRASES = ("其特徵在於", "其改良在於", "包含", "包括", "其中包括")
+# Transitional phrases (broader set per prompt).
+# 具備 / 具有 are added for 引用記載型式 (quoted-reference) independent
+# claims that declare a new subject and incorporate claim N's component:
+# `一種X，具備如請求項N所述的Y、以及Z。` — 具備 is the standard TIPO
+# transition in this drafting form.
+_TRANSITION_PHRASES = (
+    "其特徵在於", "其改良在於",
+    "包含", "包括", "其中包括",
+    "具備", "具有",
+)
 
 # Spec/drawing reference patterns in claims
 _SPEC_REF = re.compile(r"如說明書|如圖|參見說明書|參見圖|參照說明書|參照附圖|如圖所示")
