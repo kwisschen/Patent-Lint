@@ -14,7 +14,7 @@ from patentlint.analysis.cjk_ordinal_guard import ordinal_guard
 from patentlint.analysis.cjk_tokenize import jaccard, tokenize_cn
 from patentlint.models import CheckItem, Claim, CnPatentDocument
 
-# ADR-103 (Phase 8c Stage 2): CN antecedent walker adopts tuple dedup
+# ADR-107 (Phase 8c Stage 2): CN antecedent walker adopts tuple dedup
 # (normalized_term, normalized_reference_form) from day 1. TW uses single-key
 # dedup pending Phase 9 parity migration. See CLAUDE.md Phase 8c locked
 # decision Q3 and Phase 9 follow-up #2.
@@ -570,7 +570,7 @@ def check_dependent_ordering(cn_doc: CnPatentDocument) -> list[CheckItem]:
 #   Q2: 朝向 retained in _INTERIOR_VERB_BOUNDARIES_CN (carried over by
 #       construction — already in TW set at tw_claims.py line 1319).
 #   Q3: tuple dedup (normalized_term, normalized_reference_form) from
-#       day 1 (ADR-103). TW uses single-key; parity migration is a
+#       day 1 (ADR-107). TW uses single-key; parity migration is a
 #       Phase 9 follow-up.
 #   Q4: 独 added to _WORD_INTERNAL_YI_PREDECESSORS_CN defensively.
 #
@@ -1110,15 +1110,13 @@ def _rescan_for_yi_cn(
     return candidates
 
 
-# ── Supplementary bare-noun intro patterns (F9/F8/F7/F6/F5) ──────────────
-
-_INSTRUMENTAL_PATTERN_CN = re.compile(
-    r'透过([\u4e00-\u9fff]{2,}(?:\([A-Za-z0-9]+\))?)(?:连接|连结)',
-)
-
-_VP_MODIFIER_PATTERN_CN = re.compile(
-    r'相配合的([\u4e00-\u9fff]{2,}(?:\([A-Za-z0-9]+\))?)',
-)
+# ── Supplementary bare-noun intro patterns (F5/F6/F7b/F7c/F7d/F11/F12/F13) ─
+#
+# F7a/F8/F9 removed 2026-04-16: the R14 investigation confirmed zero matches
+# across the 10-fixture corpus. Their shapes (形成于X的Y, 相配合的Y, 透过Y连接)
+# are TW-specific drafting patterns; CN tends toward 位于/设于 (now covered
+# by F13) and 包括/包含 (covered by F11). If future fixtures surface any of
+# these shapes, re-add with empirical grounding.
 
 # CJK char class excluding 的 (U+7684); jurisdiction-invariant.
 _CJK_NO_DE_CN = r'[\u4e00-\u7683\u7685-\u9fff]'
@@ -1133,10 +1131,6 @@ _PARTICIPIAL_YI_DE_PATTERN_CN = re.compile(
 
 _POST_DE_ORDINAL_PATTERN_CN = re.compile(
     r'的(第[一二三四五六七八九十\d]+' + _CJK_NO_DE_CN + r'+(?:\([A-Za-z0-9]+\))?)'
-)
-
-_DE_NOUN_RE_CN = re.compile(
-    r'的(' + _CJK_NO_DE_CN + r'{2,}(?:\([A-Za-z0-9]+\))?)'
 )
 
 _BARE_AFTER_VERB_PATTERN_CN = re.compile(
@@ -1159,8 +1153,6 @@ _BARE_AFTER_VERB_PATTERN_CN = re.compile(
     r'(第[一二三四五六七八九十\d]+' + _CJK_NO_DE_ZHI_CN + r'+(?:\([A-Za-z0-9]+\))?'
     r'|' + _CJK_NO_DE_ZHI_CN + r'+\([A-Za-z0-9]+\))'
 )
-
-_CLAUSE_BOUNDARY_RE_CN = re.compile(r'[；，、。]')
 
 # F11: colon-anchored list-after-包括/包含/含有 (WQ8 / R3).
 _F11_COLON_LIST_ANCHOR_CN: re.Pattern[str] = re.compile(
@@ -1276,53 +1268,13 @@ _POSSESSIVE_VERB_DENYLIST_CN = {
 def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
     """Extract bare-noun introductions from supplementary CN patterns.
 
-    Returns (original_span, normalized_term) pairs. Eight pattern
-    families (F5a/F5b/F6/F7a/F7b/F7c/F8/F9) with uniform
+    Returns (original_span, normalized_term) pairs. Active families:
+    F5a/F5b, F6, F7b/F7c/F7d, F11 (colon + no-colon), F12, F13. Uniform
     ``clean_noun_phrase_cn`` cleanup. See tw_claims.py lines 1982–2099
-    for per-family rationale.
+    for per-family rationale. F7a/F8/F9 removed after zero-coverage
+    R14 investigation confirmed CN corpus never exercises them.
     """
     results: list[tuple[str, str]] = []
-
-    # F9: 透过Y连接/连结 — instrumental
-    for m in _INSTRUMENTAL_PATTERN_CN.finditer(text):
-        noun = m.group(1)
-        original = m.group(0)
-        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
-        results.append((original, normalized))
-
-    # F8: 相配合的Y — VP modifier
-    for m in _VP_MODIFIER_PATTERN_CN.finditer(text):
-        noun = m.group(1)
-        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
-        has_numeral = '(' in noun
-        has_ordinal = normalized.startswith('第')
-        if not (has_numeral or has_ordinal):
-            continue
-        cjk_len = sum(1 for c in normalized if '\u4e00' <= c <= '\u9fff')
-        if cjk_len < 3:
-            continue
-        results.append((m.group(0), normalized))
-
-    # F7a: 形成于X的Y — locative
-    for pos in (i for i, ch in enumerate(text) if text[i:i + 3] == '形成于'):
-        clause_start = pos + 3
-        boundary = _CLAUSE_BOUNDARY_RE_CN.search(text, clause_start)
-        clause_end = boundary.start() if boundary else len(text)
-        clause = text[clause_start:clause_end]
-        last_noun = None
-        last_original = None
-        for dm in _DE_NOUN_RE_CN.finditer(clause):
-            last_noun = dm.group(1)
-            last_original = text[clause_start + dm.start():clause_start + dm.end()]
-        if last_noun is None:
-            continue
-        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', last_noun)
-        cjk_len = sum(1 for c in normalized if '\u4e00' <= c <= '\u9fff')
-        if cjk_len < 3:
-            continue
-        if any(normalized.startswith(p) for p in _REF_PREFIX_SET_CN):
-            continue
-        results.append((last_original, normalized))
 
     # F7b: 一V的Y — participial
     for m in _PARTICIPIAL_YI_DE_PATTERN_CN.finditer(text):
@@ -1571,7 +1523,7 @@ def check_antecedent_basis_cn(
         and bypass normal resolution.
       * Q3: dedup key is the tuple
         ``(normalized_term, normalized_reference_form)`` from day 1
-        (ADR-103). TW uses single-key dedup pending Phase 9 parity.
+        (ADR-107). TW uses single-key dedup pending Phase 9 parity.
 
     Returns a list of dicts, 6-field ``{claim_id, term, reference_form,
     claim_text, suggested_match, cross_ref}`` for normal findings; the
@@ -1629,9 +1581,9 @@ def check_antecedent_basis_cn(
                 finding["note"] = "cleanup_empty"
             issues.append(finding)
 
-        # Q3 tuple dedup (ADR-103): the key is the pair
+        # Q3 tuple dedup (ADR-107): the key is the pair
         # (normalized_term, normalized_reference_form). See the
-        # module-header ADR-103 comment for the parity rationale.
+        # module-header ADR-107 comment for the parity rationale.
         seen_terms: set[tuple[str, str]] = set()
         for m in _REF_PATTERN_CAPTURE_CN.finditer(claim.text):
             prefix = m.group("prefix")
