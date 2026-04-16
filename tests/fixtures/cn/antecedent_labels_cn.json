@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 8,
+    "current_round": 9,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -147,8 +147,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -279,8 +279,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -387,8 +387,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -2907,8 +2907,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -2955,8 +2955,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -3039,8 +3039,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -3123,8 +3123,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -4887,8 +4887,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -4959,8 +4959,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -5019,8 +5019,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -5067,8 +5067,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -5139,8 +5139,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -5211,8 +5211,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -5931,8 +5931,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -6603,8 +6603,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -6783,8 +6783,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -8679,8 +8679,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -8763,8 +8763,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -8775,8 +8775,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -8835,8 +8835,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -8883,8 +8883,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -8955,8 +8955,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -9891,8 +9891,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN115485995B",
@@ -12987,8 +12987,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN116662522B",
@@ -13071,8 +13071,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN116662522B",
@@ -13083,8 +13083,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN116662522B",
@@ -13179,8 +13179,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN116662522B",
@@ -13227,8 +13227,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN116662522B",
@@ -13263,8 +13263,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN116662522B",
@@ -13443,8 +13443,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN116662522B",
@@ -13611,8 +13611,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN116662522B",
@@ -14127,8 +14127,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN120266060A",
@@ -14139,8 +14139,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN120266060A",
@@ -14151,8 +14151,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_9_jinxing_interior_verb",
+      "round": 9
     },
     {
       "fixture": "CN120266060A",
@@ -16834,6 +16834,210 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 1,
+      "term": "第二设备",
+      "reference_form": "所述第二设备",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 2,
+      "term": "第一设备",
+      "reference_form": "所述第一设备",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 2,
+      "term": "第二设备",
+      "reference_form": "所述第二设备",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 42,
+      "term": "第一设备",
+      "reference_form": "所述第一设备",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 43,
+      "term": "第一设备",
+      "reference_form": "所述第一设备",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 44,
+      "term": "第一设备",
+      "reference_form": "所述第一设备",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 44,
+      "term": "第二设备",
+      "reference_form": "所述第二设备",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 66,
+      "term": "第三神经网络",
+      "reference_form": "所述第三神经网络",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 81,
+      "term": "第二设备",
+      "reference_form": "所述第二设备",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 122,
+      "term": "处理单元",
+      "reference_form": "所述处理单元",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 123,
+      "term": "处理单元",
+      "reference_form": "所述处理单元",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 123,
+      "term": "第一设备",
+      "reference_form": "所述第一设备",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 145,
+      "term": "第三神经网络",
+      "reference_form": "所述第三神经网络",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN116662522B",
+      "claim_id": 2,
+      "term": "待回答问题",
+      "reference_form": "所述待回答问题",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN116662522B",
+      "claim_id": 5,
+      "term": "识别结果",
+      "reference_form": "所述识别结果",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN120266060A",
+      "claim_id": 9,
+      "term": "抗蚀剂膜",
+      "reference_form": "所述抗蚀剂膜",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN120266060A",
+      "claim_id": 10,
+      "term": "抗蚀剂膜",
+      "reference_form": "所述抗蚀剂膜",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
       "resolved_by": null,
       "round": 0
     }
