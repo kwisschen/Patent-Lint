@@ -11,6 +11,18 @@ from patentlint.models import Claim
 # Claim number: "1." or "1．" or "1。" at start of line
 _CN_CLAIM_NUM = re.compile(r"^[\s\u3000]*(\d+)\s*[.．。]\s*", re.MULTILINE)
 
+# Mid-paragraph claim boundary: drafters sometimes pack two claims into one
+# Word paragraph (no newline between them). Preprocessing inserts a newline
+# before a digit+dot token that is preceded by sentence-end punctuation +
+# whitespace OR by ≥2 whitespace chars, AND followed by a claim-start
+# content character. The lookahead guards against false positives on
+# step references (`步骤S2`, `2.3`), inline enumerations, and formulas.
+_MID_PARAGRAPH_CLAIM_BOUNDARY = re.compile(
+    r"(?:(?<=[。；！？])[\s\u3000]+|(?<=[\s\u3000]{2}))"
+    r"(\d+)[\s\u3000]*[.．。][\s\u3000]*"
+    r"(?=[一如根其权依包对将在本])"
+)
+
 # Dependency — covers all real-world CN dependent-claim forms:
 #   prefix   : 如 | 根据 | 依据 | bare (dominant form in real CNIPA
 #              filings is 根据权利要求N所述的; bare form seen in older
@@ -67,6 +79,10 @@ def parse_cn_claims_docx(text: str) -> list[Claim]:
     """
     if not text.strip():
         return []
+
+    text = _MID_PARAGRAPH_CLAIM_BOUNDARY.sub(
+        lambda m: "\n" + m.group(0).lstrip(), text
+    )
 
     # Find all claim boundaries by number pattern
     matches = list(_CN_CLAIM_NUM.finditer(text))
