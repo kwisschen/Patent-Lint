@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 10,
+    "current_round": 11,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -1911,8 +1911,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN114357105B",
@@ -2031,8 +2031,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN114357105B",
@@ -2367,8 +2367,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN114357105B",
@@ -2487,8 +2487,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN114357105B",
@@ -3375,8 +3375,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -3471,8 +3471,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -3543,8 +3543,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -4947,8 +4947,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -5523,8 +5523,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -5607,8 +5607,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -5679,8 +5679,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -6255,8 +6255,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -6279,8 +6279,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -7011,8 +7011,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -9339,8 +9339,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -9411,8 +9411,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -9519,8 +9519,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -9555,8 +9555,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -9591,8 +9591,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -10167,8 +10167,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -10179,8 +10179,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -10203,8 +10203,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -10587,8 +10587,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115952274B",
@@ -10599,8 +10599,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115952274B",
@@ -10659,8 +10659,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115952274B",
@@ -11055,8 +11055,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115952274B",
@@ -11079,8 +11079,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115952274B",
@@ -11103,8 +11103,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115952274B",
@@ -11415,8 +11415,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115952274B",
@@ -11667,8 +11667,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115952274B",
@@ -11787,8 +11787,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115952274B",
@@ -11811,8 +11811,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115952274B",
@@ -12015,8 +12015,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115952274B",
@@ -12267,8 +12267,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115952274B",
@@ -12291,8 +12291,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115952274B",
@@ -12315,8 +12315,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115952274B",
@@ -12591,8 +12591,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115952274B",
@@ -12651,8 +12651,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115952274B",
@@ -16258,8 +16258,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -16282,8 +16282,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -16354,8 +16354,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -16366,8 +16366,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -16438,8 +16438,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -16534,8 +16534,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -16546,8 +16546,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -16570,8 +16570,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -16594,8 +16594,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_11_char_exclusion_residue",
+      "round": 11
     },
     {
       "fixture": "CN115485995B",
@@ -17218,6 +17218,486 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R9 shifting: resurfaced from trailing verb strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN114357105B",
+      "claim_id": 3,
+      "term": "实线边",
+      "reference_form": "所述实线边",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN114357105B",
+      "claim_id": 11,
+      "term": "实线边",
+      "reference_form": "所述实线边",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 11,
+      "term": "第一设备",
+      "reference_form": "所述第一设备",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 20,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 21,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 36,
+      "term": "第二",
+      "reference_form": "所述第二",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 37,
+      "term": "第二",
+      "reference_form": "所述第二",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 54,
+      "term": "第二设备",
+      "reference_form": "所述第二设备",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 59,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 60,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 74,
+      "term": "第二",
+      "reference_form": "所述第二",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 75,
+      "term": "第二",
+      "reference_form": "所述第二",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 99,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 100,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 115,
+      "term": "第二",
+      "reference_form": "所述第二",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 116,
+      "term": "第二",
+      "reference_form": "所述第二",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 133,
+      "term": "处理单元",
+      "reference_form": "所述处理单元",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 138,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 138,
+      "term": "第一设备发送第一",
+      "reference_form": "所述第一设备发送第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 139,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 153,
+      "term": "第一设备发送第二",
+      "reference_form": "所述第一设备发送第二",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 153,
+      "term": "第二",
+      "reference_form": "所述第二",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 154,
+      "term": "第二",
+      "reference_form": "所述第二",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 1,
+      "term": "深度学习模型确定",
+      "reference_form": "所述深度学习模型确定",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 1,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 2,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 12,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 13,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 14,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 18,
+      "term": "第二",
+      "reference_form": "所述第二",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 19,
+      "term": "第一预设",
+      "reference_form": "所述第一预设",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 23,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 24,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 25,
+      "term": "第一中间问询",
+      "reference_form": "所述第一中间问询",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 30,
+      "term": "第一中间问询",
+      "reference_form": "所述第一中间问询",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 35,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 36,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 37,
+      "term": "第一",
+      "reference_form": "所述第一",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 41,
+      "term": "第二",
+      "reference_form": "所述第二",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 42,
+      "term": "第一预设",
+      "reference_form": "所述第一预设",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
       "resolved_by": null,
       "round": 0
     }
