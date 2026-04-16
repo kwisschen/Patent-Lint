@@ -561,7 +561,9 @@
       "symbolTableInconsistency": {
         "unreferenced": "부호설명에 정의되었으나 실시방식에서 언급되지 않음: {{symbols}}",
         "undefined": "실시방식에서 언급되었으나 부호설명에 정의되지 않음: {{symbols}}"
-      }
+      },
+      "singleSentenceMissingPeriod": "專利法施行細則 §18에 따라 각 請求項은 끝에 마침표(。)가 하나 있어야 합니다. 표시된 請求項에 마침표를 추가하십시오.",
+      "singleSentenceMultiSentence": "專利法施行細則 §18에 따라 각 請求項은 끝에 마침표(。)가 하나만 있는 단일 문장이어야 합니다. 중간의 마침표를 제거하거나 표시된 請求項을 분할하십시오."
     },
     "titleProhibited": {
       "trademark": "상표 기호「{{token}}」",
@@ -885,7 +887,9 @@
         },
         "singleSentence": {
           "amend": "{{count}}개 청구항이 단일 문장으로 작성되지 않았습니다: {{claims}}.",
-          "pass": "모든 請求項이 단일 문장입니다."
+          "pass": "모든 請求項이 단일 문장입니다.",
+          "amendMissingPeriod": "{{count}}개 청구항에 마침표가 없습니다: {{claims}}.",
+          "amendMultiSentence": "{{count}}개 청구항이 단일 문장으로 작성되지 않았습니다: {{claims}}."
         },
         "refNumeralParens": {
           "verify": "{{count}}개 청구항의 구성요소 부호가 괄호로 표시되지 않았습니다: {{claims}}.",

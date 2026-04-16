@@ -561,7 +561,9 @@
       "symbolTableInconsistency": {
         "unreferenced": "符號說明已定義但實施方式未引用：{{symbols}}",
         "undefined": "實施方式已引用但符號說明未定義：{{symbols}}"
-      }
+      },
+      "singleSentenceMissingPeriod": "依專利法施行細則 §18，每一請求項須以單一句號（。）結尾。請為標記之請求項補上句末句號。",
+      "singleSentenceMultiSentence": "依專利法施行細則 §18，每一請求項須為單句，僅於末尾有一個句號（。）。請移除句中之句號或重新拆分標記之請求項。"
     },
     "titleProhibited": {
       "trademark": "商標符號「{{token}}」",
@@ -885,7 +887,9 @@
         },
         "singleSentence": {
           "amend": "{{count}}項請求項非單句撰寫：{{claims}}。",
-          "pass": "所有請求項皆為單句。"
+          "pass": "所有請求項皆為單句。",
+          "amendMissingPeriod": "{{count}}項請求項缺少句末句號：{{claims}}。",
+          "amendMultiSentence": "{{count}}項請求項非單句撰寫：{{claims}}。"
         },
         "refNumeralParens": {
           "verify": "{{count}}項請求項之元件符號未加括號：{{claims}}。",

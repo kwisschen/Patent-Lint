@@ -561,7 +561,9 @@
       "symbolTableInconsistency": {
         "unreferenced": "符号説明に定義されているが実施形態で言及されていない：{{symbols}}",
         "undefined": "実施形態で言及されているが符号説明に定義されていない：{{symbols}}"
-      }
+      },
+      "singleSentenceMissingPeriod": "專利法施行細則 §18により、各請求項は末尾に句点（。）を1つ付ける必要があります。該当する請求項に句点を追加してください。",
+      "singleSentenceMultiSentence": "專利法施行細則 §18により、各請求項は末尾に句点（。）が1つだけの単文である必要があります。途中の句点を削除するか、該当する請求項を分割してください。"
     },
     "titleProhibited": {
       "trademark": "商標記号「{{token}}」",
@@ -885,7 +887,9 @@
         },
         "singleSentence": {
           "amend": "{{count}}項の請求項が単文で記載されていません：{{claims}}。",
-          "pass": "すべての請求項が単文です。"
+          "pass": "すべての請求項が単文です。",
+          "amendMissingPeriod": "{{count}}項の請求項に末尾の句点がありません：{{claims}}。",
+          "amendMultiSentence": "{{count}}項の請求項が単文で記載されていません：{{claims}}。"
         },
         "refNumeralParens": {
           "verify": "{{count}}項の請求項の構成要素符号が括弧で囲まれていません：{{claims}}。",
