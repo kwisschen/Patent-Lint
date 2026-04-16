@@ -281,25 +281,50 @@ def check_forward_dependency(doc: TwPatentDocument) -> list[CheckItem]:
 
 
 def check_single_sentence(doc: TwPatentDocument) -> list[CheckItem]:
-    """Each claim must have exactly one 。 at end, no 。 in middle."""
-    bad_claim_ids: list[int] = []
+    """Each claim must have exactly one 。 at the end, no 。 in the middle.
+
+    Two distinct failure modes per §18:
+      - missing ending period (claim has zero 。)
+      - not a single sentence (claim has 2+ 。, or a single 。 mid-claim)
+
+    Emit separate findings so the amend copy tells the drafter what to fix
+    rather than collapsing both into a generic "not a single sentence".
+    """
+    missing_period: list[int] = []
+    multi_sentence: list[int] = []
     for claim in doc.claims:
         text = claim.text.strip()
         period_count = text.count("。")
-        if period_count != 1 or not text.endswith("。"):
-            bad_claim_ids.append(claim.id)
+        if period_count == 0:
+            missing_period.append(claim.id)
+        elif period_count > 1 or not text.endswith("。"):
+            multi_sentence.append(claim.id)
 
-    if bad_claim_ids:
-        claims_str = ", ".join(str(i) for i in bad_claim_ids)
-        return [CheckItem(
+    items: list[CheckItem] = []
+    if missing_period:
+        claims_str = ", ".join(str(i) for i in missing_period)
+        items.append(CheckItem(
             status="amend",
-            message=f"{len(bad_claim_ids)} claim(s) not written as a single sentence (claims: {claims_str}).",
-            message_key="check.tw.claims.singleSentence.amend",
-            details=f"{len(bad_claim_ids)} claims",
-            details_key="details.tw.singleSentence",
-            details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
+            message=f"{len(missing_period)} claim(s) missing ending period (claims: {claims_str}).",
+            message_key="check.tw.claims.singleSentence.amendMissingPeriod",
+            details=f"{len(missing_period)} claims",
+            details_key="details.tw.singleSentenceMissingPeriod",
+            details_params={"count": len(missing_period), "claims": missing_period},
             reference="專利法施行細則 §18",
-        )]
+        ))
+    if multi_sentence:
+        claims_str = ", ".join(str(i) for i in multi_sentence)
+        items.append(CheckItem(
+            status="amend",
+            message=f"{len(multi_sentence)} claim(s) not written as a single sentence (claims: {claims_str}).",
+            message_key="check.tw.claims.singleSentence.amendMultiSentence",
+            details=f"{len(multi_sentence)} claims",
+            details_key="details.tw.singleSentenceMultiSentence",
+            details_params={"count": len(multi_sentence), "claims": multi_sentence},
+            reference="專利法施行細則 §18",
+        ))
+    if items:
+        return items
 
     return [CheckItem(
         status="pass",
