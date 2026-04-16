@@ -1301,6 +1301,66 @@
       "notes": "Synthetic coverage gap for B3_dym_quality_reject.",
       "resolved_by": null,
       "round": 0
+    },
+    {
+      "fixture": "spec1",
+      "claim_id": 2,
+      "term": "第一卡止部",
+      "reference_form": "所述第一卡止部",
+      "category": "legit_drafting_error",
+      "protect": true,
+      "confidence": "spec1_baseline",
+      "notes": "Claim 2 refs 所述外筒構件的所述第一卡止部 but 第一卡止部 is never introduced; 第二卡止部 IS introduced with 一 prefix in same clause. Drafting asymmetry.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "spec1",
+      "claim_id": 8,
+      "term": "嵌合凸部",
+      "reference_form": "該嵌合凸部",
+      "category": "miss_intro.coverage_gap",
+      "protect": false,
+      "confidence": "spec1_baseline",
+      "notes": "Claim 8 intros 嵌合凸部 via 所述栓部具有嵌合凸部 (F6 bare-noun-after-verb). C6 F6 port target.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "spec1",
+      "claim_id": 8,
+      "term": "嵌合凸部嵌合",
+      "reference_form": "所述嵌合凸部嵌合",
+      "category": "walker_fp.over_capture",
+      "protect": false,
+      "confidence": "spec1_baseline",
+      "notes": "Walker captured 嵌合凸部 + trailing verb 嵌合; should strip trailing.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "spec1",
+      "claim_id": 8,
+      "term": "嵌合凹部",
+      "reference_form": "該嵌合凹部",
+      "category": "miss_intro.coverage_gap",
+      "protect": false,
+      "confidence": "spec1_baseline",
+      "notes": "Claim 8 intros 嵌合凹部 via 所述蓋襯墊具有嵌合凹部 (F6 bare-noun-after-verb). C6 F6 port target.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "spec1",
+      "claim_id": 9,
+      "term": "鉸鏈部",
+      "reference_form": "所述鉸鏈部",
+      "category": "miss_intro.coverage_gap",
+      "protect": false,
+      "confidence": "spec1_baseline",
+      "notes": "Ancestor claim 1 intros 鉸鏈部 via 透過一鉸鏈部; walker supplementary-intro family doesn't register this shape. Coverage gap.",
+      "resolved_by": null,
+      "round": 0
     }
   ]
 }
