@@ -708,247 +708,247 @@
           "pass": "All required specification sections present."
         },
         "sectionOrdering": {
-          "amend": "Specification sections are out of prescribed order (专利法实施细则 §17).",
-          "pass": "Specification sections are in correct order."
+          "amend": "Specification sections out of prescribed order (专利法实施细则 §17).",
+          "pass": "Specification sections in prescribed order."
         },
         "paragraphNumbering": {
-          "amendXml": "Paragraph numbering is not sequential ({{detail}}).",
-          "amendDocx": "Specification contains user-added paragraph numbering.",
-          "pass": "Paragraph numbering is correct.",
-          "amendXmlGap": "Paragraph numbering has a gap: paragraph {{prev}} is followed by {{next}}.",
-          "amendXmlDuplicate": "Detected {{count}} duplicate paragraph number(s): paragraphs {{paragraphs}}."
+          "amendXml": "Non-sequential paragraph numbering ({{detail}}).",
+          "amendDocx": "Specification contains manually-added paragraph numbering (must be removed for CNIPA filing).",
+          "pass": "Paragraph numbering sequential.",
+          "amendXmlGap": "Gap in paragraph numbering — {{prev}} followed by {{next}}.",
+          "amendXmlDuplicate": "{{count}} duplicate paragraph number(s): {{paragraphs}}."
         },
         "paragraphEnding": {
-          "amend": "{{count}} paragraph(s) do not end with valid Chinese punctuation: paragraphs {{paragraphs}}.",
-          "pass": "All specification paragraphs end with valid punctuation."
+          "amend": "{{count}} paragraph(s) not ending with valid Chinese punctuation: {{paragraphs}}.",
+          "pass": "All specification paragraphs end with valid Chinese punctuation."
         },
         "figureRefConsistency": {
-          "verify": "Figure references inconsistent: {{figure_ref_inconsistency}}",
-          "pass": "Figure references are consistent across sections."
+          "verify": "Inconsistent figure references: {{figure_ref_inconsistency}}",
+          "pass": "Figure references consistent across sections."
         },
         "patentTypeTerminology": {
-          "verify": "Found '{{term}}' — verify this matches the patent type (invention vs. utility model).",
-          "pass": "Patent type terminology is consistent."
+          "verify": "'{{term}}' detected — verify this matches the filing type (invention vs. utility model).",
+          "pass": "Patent-type terminology consistent."
         },
         "title": {
-          "amendLength": "Title exceeds 25 Chinese characters ({{count}} found).",
-          "amendContent": "Title contains prohibited content: {{title_prohibited_items}}",
+          "amendLength": "Title over the 25-character limit ({{count}} characters).",
+          "amendContent": "Prohibited content in title: {{title_prohibited_items}}.",
           "pass": "Title meets CNIPA requirements.",
-          "amendMissing": "No title found."
+          "amendMissing": "Title missing from specification."
         },
         "claimReference": {
-          "amend": "Specification references claims in {{count}} paragraph(s) (paragraphs {{paragraphs}}). Example: {{snippet}}",
-          "pass": "Specification does not reference claims."
+          "amend": "Specification references claims in {{count}} paragraph(s) ({{paragraphs}}). Example: {{snippet}}",
+          "pass": "Specification does not reference the claims."
         }
       },
       "claims": {
         "sequential": {
-          "amend": "Claim numbering is not sequential: expected {{expected}}, found {{found}}.",
-          "pass": "Claim numbers are sequential."
+          "amend": "Non-sequential claim numbering: expected {{expected}}, found {{found}}.",
+          "pass": "Claims numbered sequentially."
         },
         "dependencyFormat": {
-          "amend": "{{count}} claim(s) use incorrect dependency format: {{claims}}.",
-          "pass": "All dependent claims use correct dependency format."
+          "amend": "Incorrect dependency format in {{count}} claim(s): {{claims}}.",
+          "pass": "All dependency references correctly formatted."
         },
         "selfDependent": {
-          "amend": "{{claims}} depend(s) on itself.",
-          "pass": "No self-dependent claims found."
+          "amend": "Self-dependency in {{claims}}.",
+          "pass": "No self-dependent claims."
         },
         "forwardDependency": {
-          "amend": "{{claims}} have forward dependency (reference later claims).",
-          "pass": "No forward dependencies found."
+          "amend": "{{claims}} reference(s) a subsequent claim (forward dependency).",
+          "pass": "All dependencies reference preceding claims."
         },
         "singleSentence": {
-          "amend": "{{count}} claim(s) contain multiple sentences: {{claims}}.",
-          "pass": "All claims are single sentences."
+          "amend": "{{count}} multi-sentence claim(s): {{claims}}.",
+          "pass": "All claims formed as single sentences."
         },
         "refNumeralParens": {
-          "verify": "{{count}} claim(s) have reference numerals without parentheses: {{claims}}.",
-          "pass": "All reference numerals in claims are properly enclosed."
+          "verify": "Reference numerals not in parentheses in {{count}} claim(s): {{claims}}.",
+          "pass": "All reference numerals enclosed in parentheses."
         },
         "subjectConsistency": {
-          "verify": "{{claims}} have subject name inconsistent with parent ({{count}} total).",
-          "pass": "Dependent claim subject names are consistent."
+          "verify": "Subject name inconsistent with parent in {{claims}} ({{count}} total).",
+          "pass": "All dependent claim subjects match their parent."
         },
         "transitionPhrase": {
-          "verify": "{{count}} independent claim(s) may lack transitional phrase: {{claims}}.",
-          "pass": "All independent claims contain a characterizing transition."
+          "verify": "{{count}} independent claim(s) may lack a transition phrase: {{claims}}.",
+          "pass": "All independent claims contain a transition phrase."
         },
         "twTerminology": {
-          "verify": "Found Taiwan patent terminology '请求项' — use '权利要求' for CNIPA filings.",
-          "pass": "Claims use correct CNIPA terminology (权利要求)."
+          "verify": "TIPO terminology '请求项' detected — CNIPA filings must use '权利要求'.",
+          "pass": "Claims use CNIPA terminology (权利要求)."
         },
         "specReference": {
-          "amend": "{{count}} claim(s) reference specification or drawings: {{claims}}.",
-          "pass": "No claims reference the specification or drawings."
+          "amend": "{{count}} claim(s) reference the specification or drawings: {{claims}}.",
+          "pass": "No claim references to the specification or drawings."
         },
         "multiMultiDep": {
-          "amend": "{{claims}}: a multiple-dependent claim depends on another multiple-dependent claim.",
-          "pass": "No chained multiple-dependent claims found."
+          "amend": "Multi-multi dependency in {{claims}}: a multiple-dependent claim depends on another multiple-dependent claim.",
+          "pass": "No chained multiple-dependent claims."
         },
         "dependentOrdering": {
-          "amend": "Dependent claims are not grouped after their independent claim.",
-          "pass": "Dependent claims are properly ordered."
+          "amend": "Dependent claims not grouped after their independent claim.",
+          "pass": "Dependent claims correctly grouped after their independent claim."
         },
         "antecedentBasis": {
-          "verify": "{{claims}} may have {{issue_count}} term(s) lacking antecedent basis.",
-          "pass": "All referenced terms have antecedent basis."
+          "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis.",
+          "pass": "All claim terms have antecedent basis."
         }
       },
       "abstract": {
         "charCount": {
-          "amend": "Abstract exceeds 300 characters ({{count}} found).",
-          "pass": "Abstract is within 300 characters ({{count}})."
+          "amend": "Abstract over the 300-character limit ({{count}} characters).",
+          "pass": "Abstract within the 300-character limit ({{count}} characters)."
         },
         "titleMatch": {
-          "verify": "Title (发明名称) not found in abstract text.",
-          "pass": "Title appears in abstract."
+          "verify": "Abstract does not reference the invention title (发明名称).",
+          "pass": "Invention title referenced in abstract."
         },
         "commercialLanguage": {
-          "amend": "Abstract contains commercial/advertising language: {{terms}}.",
-          "pass": "No commercial/advertising language found in abstract."
+          "amend": "Commercial or advertising language in abstract: {{terms}}.",
+          "pass": "Abstract free of commercial or advertising language."
         }
       },
       "drawings": {
         "figureCount": {
-          "pass": "{{count}} figure(s) found."
+          "pass": "{{count}} figure(s) detected."
         },
         "figuresSequential": {
-          "pass": "Figures 1–{{found_max}} are numbered sequentially.",
-          "amend": "Figure numbers are not sequential; missing: {{figure_list}}."
+          "pass": "Figures 1–{{found_max}} numbered sequentially.",
+          "amend": "Non-sequential figure numbering — missing: {{figure_list}}."
         }
       }
     },
     "tw": {
       "spec": {
         "requiredSections": {
-          "amend": "Required sections missing per 專利法施行細則 §17.",
-          "pass": "All required sections present."
+          "amend": "Missing required sections (專利法施行細則 §17).",
+          "pass": "All required specification sections present."
         },
         "sectionOrdering": {
-          "amend": "Sections out of prescribed order per 專利法施行細則 §17.",
-          "pass": "Sections in correct order."
+          "amend": "Specification sections out of prescribed order (專利法施行細則 §17).",
+          "pass": "Specification sections in prescribed order."
         },
         "paragraphNumbering": {
-          "pass": "Paragraph numbering correct or absent.",
-          "amendGap": "Paragraph numbering has a gap: 【{{prev}}】 is followed by 【{{next}}】.",
-          "amendFormat": "{{count}} paragraph(s) use non-[NNNN] format. Examples: {{examples}}."
+          "pass": "Paragraph numbering sequential (or absent).",
+          "amendGap": "Gap in paragraph numbering — 【{{prev}}】 followed by 【{{next}}】.",
+          "amendFormat": "{{count}} paragraph(s) not in 【NNNN】 format. Examples: {{examples}}."
         },
         "paragraphEnding": {
-          "amend": "{{count}} paragraph(s) lack ending punctuation: paragraphs {{paragraphs}}.",
-          "pass": "All paragraphs end with valid punctuation."
+          "amend": "{{count}} paragraph(s) missing ending punctuation: {{paragraphs}}.",
+          "pass": "All specification paragraphs end with valid punctuation."
         },
         "figureRefConsistency": {
-          "verify": "Figure references inconsistent: {{figure_ref_inconsistency}}",
+          "verify": "Inconsistent figure references: {{figure_ref_inconsistency}}",
           "pass": "Figure references consistent across sections."
         },
         "patentTypeTerminology": {
-          "verify": "Patent type terminology mismatch detected.",
-          "pass": "Patent type terminology consistent."
+          "verify": "Patent-type terminology mismatch detected (invention vs. utility model).",
+          "pass": "Patent-type terminology consistent."
         },
         "title": {
-          "amendContent": "Title contains prohibited content: {{title_prohibited_items}}",
-          "pass": "Title meets requirements.",
-          "amendMissing": "No title found."
+          "amendContent": "Prohibited content in title: {{title_prohibited_items}}.",
+          "pass": "Title meets TIPO requirements.",
+          "amendMissing": "Title missing from specification."
         },
         "claimReference": {
-          "amend": "Specification references claims.",
-          "pass": "No claim references in specification."
+          "amend": "Specification references the claims.",
+          "pass": "Specification does not reference the claims."
         },
         "symbolTablePresence": {
-          "amend": "符號說明 section missing.",
+          "amend": "Required 符號說明 section missing.",
           "pass": "符號說明 section present."
         },
         "symbolTableConsistency": {
-          "verify": "Symbol table inconsistent with 實施方式: {{symbol_table_inconsistency}}",
-          "pass": "符號說明 entries consistent with specification."
+          "verify": "符號說明 entries inconsistent with 實施方式: {{symbol_table_inconsistency}}",
+          "pass": "符號說明 entries consistent with 實施方式."
         }
       },
       "claims": {
         "sequential": {
-          "amend": "Claim numbering is not sequential: expected {{expected}}, found {{found}}.",
-          "pass": "Claim numbers sequential."
+          "amend": "Non-sequential claim numbering: expected {{expected}}, found {{found}}.",
+          "pass": "Claims numbered sequentially."
         },
         "dependencyFormat": {
-          "amend": "{{count}} claim(s) have unrecognized dependency format: {{claims}}.",
-          "pass": "All dependency references use recognized format."
+          "amend": "Unrecognized dependency format in {{count}} claim(s): {{claims}}.",
+          "pass": "All dependency references correctly formatted."
         },
         "selfDependent": {
-          "amend": "Self-dependent claim(s) found.",
+          "amend": "Self-dependent claim(s) detected.",
           "pass": "No self-dependent claims."
         },
         "circularDependency": {
-          "amend": "Circular dependency chain found.",
-          "pass": "No circular dependencies."
+          "amend": "Circular dependency chain detected.",
+          "pass": "No circular dependency chains."
         },
         "forwardDependency": {
-          "amend": "{{claims}} have forward dependency (reference later claims).",
-          "pass": "No forward dependencies."
+          "amend": "{{claims}} reference(s) a subsequent claim (forward dependency).",
+          "pass": "All dependencies reference preceding claims."
         },
         "singleSentence": {
-          "amend": "{{count}} claim(s) are not single-sentence: {{claims}}.",
-          "pass": "All claims are single sentences.",
-          "amendMissingPeriod": "{{count}} claim(s) missing ending period: {{claims}}.",
-          "amendMultiSentence": "{{count}} claim(s) are not single-sentence: {{claims}}."
+          "amend": "{{count}} multi-sentence claim(s): {{claims}}.",
+          "pass": "All claims formed as single sentences.",
+          "amendMissingPeriod": "{{count}} claim(s) missing the ending period: {{claims}}.",
+          "amendMultiSentence": "{{count}} multi-sentence claim(s): {{claims}}."
         },
         "refNumeralParens": {
-          "verify": "{{count}} claim(s) have reference numerals without parentheses: {{claims}}.",
-          "pass": "All reference numerals in claims are in parentheses."
+          "verify": "Reference numerals not in parentheses in {{count}} claim(s): {{claims}}.",
+          "pass": "All reference numerals enclosed in parentheses."
         },
         "subjectConsistency": {
-          "verify": "{{claims}} have subject name inconsistent with parent ({{count}} total).",
-          "pass": "All dependent claim subjects match parent."
+          "verify": "Subject name inconsistent with parent in {{claims}} ({{count}} total).",
+          "pass": "All dependent claim subjects match their parent."
         },
         "transitionPhrase": {
-          "verify": "{{count}} independent claim(s) lack transitional phrase: {{claims}}.",
-          "pass": "All independent claims contain a transitional phrase."
+          "verify": "{{count}} independent claim(s) missing a transition phrase: {{claims}}.",
+          "pass": "All independent claims contain a transition phrase."
         },
         "cnTerminology": {
-          "verify": "CNIPA terminology found in TW document.",
-          "pass": "Claims use correct TIPO terminology."
+          "verify": "CNIPA terminology detected in TW document.",
+          "pass": "Claims use TIPO terminology."
         },
         "specDrawingRef": {
-          "amend": "Claims reference specification or drawings.",
-          "pass": "No specification or drawing references in claims."
+          "amend": "Claim(s) reference the specification or drawings.",
+          "pass": "No claim references to the specification or drawings."
         },
         "multiDepOnMultiDep": {
-          "amend": "Multi-dependent claim depends on another multi-dependent claim.",
-          "pass": "Multi-dependent claims have valid dependency structure."
+          "amend": "Multi-multi dependency: a multi-dependent claim depends on another multi-dependent claim.",
+          "pass": "All multi-dependent claims have a valid dependency structure."
         },
         "multiDepAlternative": {
-          "amend": "Multi-dependent claim(s) not in alternative form.",
-          "pass": "All multi-dependent claims use alternative form."
+          "amend": "Multi-dependent claim(s) not drafted in alternative form.",
+          "pass": "All multi-dependent claims drafted in alternative form."
         },
         "titleSubjectMatch": {
-          "verify": "Title \"{{title}}\" may not match independent claim subjects: {{subjects}}.",
+          "verify": "Title \"{{title}}\" may not match the independent claim subjects: {{subjects}}.",
           "pass": "Title consistent with independent claim subjects."
         },
         "symbolTableConsistency": {
           "verify": "Reference numerals in claims inconsistent with 符號說明.",
           "pass": "Reference numerals in claims consistent with 符號說明.",
-          "noClaimNumerals": "Claims contain no reference numerals; consistency check not applicable."
+          "noClaimNumerals": "No reference numerals in claims; consistency check not applicable."
         },
         "antecedentBasis": {
-          "verify": "{{claims}} may have {{issue_count}} term(s) lacking antecedent basis.",
-          "pass": "All referenced terms have antecedent basis."
+          "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis.",
+          "pass": "All claim terms have antecedent basis."
         }
       },
       "abstract": {
         "charCount": {
-          "verify": "Abstract exceeds 250 characters ({{count}} characters).",
-          "pass": "Abstract within 250 characters ({{count}} characters)."
+          "verify": "Abstract over the 250-character limit ({{count}} characters).",
+          "pass": "Abstract within the 250-character limit ({{count}} characters)."
         },
         "titleMatch": {
-          "verify": "發明名稱/新型名稱 may not appear in abstract.",
-          "pass": "發明名稱/新型名稱 appears in abstract."
+          "verify": "Abstract may not reference the invention/utility-model title (發明名稱/新型名稱).",
+          "pass": "Invention/utility-model title referenced in abstract."
         },
         "commercialLanguage": {
-          "amend": "Abstract contains commercial language.",
-          "pass": "No commercial language in abstract."
+          "amend": "Commercial or advertising language in abstract.",
+          "pass": "Abstract free of commercial or advertising language."
         },
         "representativeDrawing": {
-          "verify": "No 代表圖 designation found.",
-          "pass": "代表圖 designation present."
+          "verify": "No representative drawing (代表圖) designated.",
+          "pass": "Representative drawing (代表圖) designated."
         }
       },
       "crossRef": {
@@ -963,11 +963,11 @@
       },
       "drawings": {
         "figureCount": {
-          "pass": "{{count}} figure(s) found."
+          "pass": "{{count}} figure(s) detected."
         },
         "figuresSequential": {
-          "pass": "Figures 1–{{found_max}} are numbered sequentially.",
-          "amend": "Figure numbers are not sequential; missing: {{figure_list}}."
+          "pass": "Figures 1–{{found_max}} numbered sequentially.",
+          "amend": "Non-sequential figure numbering — missing: {{figure_list}}."
         }
       }
     }
