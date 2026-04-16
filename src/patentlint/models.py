@@ -155,6 +155,16 @@ class TwPatentDocument(BaseModel):
     figure_refs: list[str] = Field(default_factory=list)
     paragraph_numbers: list[str] = Field(default_factory=list)
     has_paragraph_numbering: bool = False
+    # Parallel list aligned with the concatenation of
+    # (technical_field + prior_art + disclosure + drawings_description + embodiment),
+    # carrying the 【NNNN】-format auto-numbering Word renders for each
+    # body paragraph (or None if the paragraph isn't Word-auto-numbered).
+    # Populated by ``extract_tw_sections`` when the loader supplies Word
+    # numbering; empty when the pipeline received a non-docx input that
+    # can't surface numbering metadata. Downstream checks surface this
+    # value instead of a PatentLint-internal ordinal so flagged paragraphs
+    # match the drafter's 【NNNN】 labels in Word.
+    body_paragraph_word_numbers: list[str | None] = Field(default_factory=list)
     input_format: str = "docx"
 
 

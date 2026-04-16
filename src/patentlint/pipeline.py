@@ -434,7 +434,10 @@ def analyze_file(
             raise ValueError(msg)
         loaded_tw = load_docx_tw(file_path)
         likely_patent = detect_patent_document_tw(loaded_tw.paragraphs)
-        tw_doc = extract_tw_sections(loaded_tw.paragraphs)
+        tw_doc = extract_tw_sections(
+            loaded_tw.paragraphs,
+            loaded_tw.paragraph_word_numbers,
+        )
         return _run_tw_pipeline(
             tw_doc,
             likely_patent=likely_patent,
@@ -503,7 +506,10 @@ def analyze_bytes(
             tmp.flush()
             loaded_tw = load_docx_tw(tmp.name)
         likely_patent = detect_patent_document_tw(loaded_tw.paragraphs)
-        tw_doc = extract_tw_sections(loaded_tw.paragraphs)
+        tw_doc = extract_tw_sections(
+            loaded_tw.paragraphs,
+            loaded_tw.paragraph_word_numbers,
+        )
         return _run_tw_pipeline(
             tw_doc,
             likely_patent=likely_patent,

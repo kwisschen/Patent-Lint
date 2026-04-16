@@ -275,7 +275,13 @@ def check_paragraph_ending(doc: TwPatentDocument) -> list[CheckItem]:
         (doc.drawings_description, True),
         (doc.embodiment, True),
     ]
-    bad_paragraphs: list[int] = []
+    # Parallel word-numbers aligned with the same concatenation order used
+    # by sections_to_check. Populated by extract_tw_sections for .docx
+    # input; may be empty for other input paths (XML, legacy callers), in
+    # which case the check falls back to an internal ordinal.
+    word_numbers = doc.body_paragraph_word_numbers
+
+    bad_paragraphs: list[int | str] = []
     ordinal = 0
     for section_paras, relaxed in sections_to_check:
         in_claim_unit = False
@@ -301,7 +307,15 @@ def check_paragraph_ending(doc: TwPatentDocument) -> list[CheckItem]:
                     in_claim_unit = False
                 continue
             if not has_valid:
-                bad_paragraphs.append(ordinal)
+                # Prefer the Word 【NNNN】 auto-number when the drafter's
+                # file carried it; fall back to the internal ordinal
+                # otherwise so XML/legacy paths still produce useful output.
+                label: int | str = ordinal
+                if ordinal - 1 < len(word_numbers):
+                    wn = word_numbers[ordinal - 1]
+                    if wn is not None:
+                        label = wn
+                bad_paragraphs.append(label)
 
     if bad_paragraphs:
         paras_str = ", ".join(str(n) for n in bad_paragraphs)
