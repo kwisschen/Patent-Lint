@@ -1115,6 +1115,12 @@ _BARE_AFTER_VERB_PATTERN_CN = re.compile(
 
 _CLAUSE_BOUNDARY_RE_CN = re.compile(r'[；，、。]')
 
+# F11: colon-anchored list-after-包括/包含/含有 (WQ8 / R3).
+_F11_COLON_LIST_ANCHOR_CN: re.Pattern[str] = re.compile(
+    r'(?:包括|包含|含有)[：:]\s*([^。；]+)'
+)
+_F11_LIST_SPLIT_CN: re.Pattern[str] = re.compile(r'[、，,和与及]')
+
 # F5a ref-prefix set (Q1: 该等/该些 excluded).
 _REF_PREFIX_SET_CN = ('所述', '该', '前述')
 
@@ -1247,6 +1253,22 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
         if follower in _POSSESSIVE_VERB_DENYLIST_CN:
             continue
         results.append((m.group(0), normalized))
+
+    # F11: list-after-包括 — colon-anchored preamble lists register each
+    # element as a bare-noun intro. WQ8 / Phase 8c close-out R3.
+    for m in _F11_COLON_LIST_ANCHOR_CN.finditer(text):
+        list_text = m.group(1).split('；')[0].split('。')[0]
+        for element in _F11_LIST_SPLIT_CN.split(list_text):
+            element = element.strip()
+            if not element:
+                continue
+            normalized = re.sub(r'\([A-Za-z0-9]+\)', '', element)
+            cjk_len = sum(1 for c in normalized if '\u4e00' <= c <= '\u9fff')
+            if cjk_len < 2:
+                continue
+            if normalized.startswith(_REF_PREFIX_SET_CN):
+                continue
+            results.append((element, normalized))
 
     # Uniform trailing-verb cleanup
     cleaned: list[tuple[str, str]] = []
