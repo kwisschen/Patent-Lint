@@ -45,6 +45,28 @@ _DYM_STOP_PARTICLES_TW: tuple[str, ...] = (
 )
 
 
+# Phase F F3 — emit-suppression sets for walker degenerate captures.
+# Silence findings whose normalized term is structurally not a noun
+# phrase. The pre-capture cleanup (clean_noun_phrase_tw) leaves these
+# fragments behind in edge cases; rather than complicate the cleanup
+# chain for each edge case, suppress emission at the walker boundary.
+_BARE_QUANTIFIER_TERMS_TW: frozenset[str] = frozenset({
+    "複數", "多個", "若干", "一些", "至少一", "至少兩",
+})
+
+# Walker degenerate 2-char fragments observed in Phase F triage. Add
+# entries here only with empirical grounding: observed walker output,
+# verified as structurally-invalid NP, compound-noun risk audited.
+_WALKER_DEGENERATE_FRAGMENTS_TW: frozenset[str] = frozenset({
+    # 測量: observed in tw_dym_edge_cases c4 from 該測量到的溫度感測值.
+    # Interior-cut truncated past 到的 boundary leaving 2-char verb
+    # fragment. 測量 as a standalone noun appears in TIPO claim drafts
+    # only as part of compound 測量值/測量模組 (NOT captured as bare
+    # term). Safe to suppress bare 測量 emissions.
+    "測量",
+})
+
+
 # Phase B4 — R14f-analog conjunction-split. Final-pass splitter over
 # supplementary-intro results so `X和Y` / `X與Y` / `X及Y` / `X以及Y` intros
 # register each side as its own intro (≥2 CJK chars on each side).
@@ -1114,6 +1136,13 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         #     residual 2 < 3) preserved, 影像擷取裝置擷取 (8 chars, residual
         #     6 ≥ 3) stripped.
         "擷取",
+        # === Phase F F2 — Added 2026-04-17 ===
+        # 來自一: preposition + quantifier fragment. Observed in
+        #     tw_copula_tiers c2 (synthetic) `所述輸入訊號來自一感測器模組`.
+        #     Walker over-captures `輸入訊號來自一` as term. No compound-
+        #     noun risk: 來自 is always prep-verb in TW drafting; the
+        #     trailing 一 quantifier only appears in prepositional phrases.
+        "來自一",
     ),
     key=len,
     reverse=True,
@@ -1290,6 +1319,18 @@ _PLURAL_REFERENCE_PREFIXES: tuple[str, ...] = tuple(sorted(
 # Ordered longest-first so 設有/包含 strip before single-char tokens.
 _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
     (
+        # === Phase F F2 — Added 2026-04-17 ===
+        # 選自由: Markush group verb phrase ("selected from"). Observed in
+        #     tw_markush c3 (synthetic) `該模組選自由語音識別模組、...` where
+        #     walker over-captures `模組選自由語音` as term. Interior cut at
+        #     選自由 reduces capture to 模組 (clean NP). No compound-noun
+        #     risk: 選自由 only appears in Markush claim drafting.
+        "選自由",
+        # 滿足式: verb + formula-reference head. Observed in
+        #     tw_formula_reference c4 (synthetic) `所述電容值滿足式(R1)` where
+        #     walker captures through the verb+式(N) span. Interior cut at
+        #     滿足式 reduces capture to 電容值. No compound-noun risk.
+        "滿足式",
         # === Existing entries (preserve) ===
         "設有", "包含", "包括", "具有", "含有", "具備",
         "係為", "係於", "為", "是", "係",
@@ -1560,6 +1601,17 @@ _INTERIOR_CUT_EXCEPTIONS: frozenset[str] = frozenset({
     # Root cause of walker_bug.regex_noun_class_narrow — the label
     # name was misleading; the actual bug is interior-verb overcutting.
     "連接面", "第一連接面", "第二連接面",
+
+    # === Phase F F2 — Added 2026-04-17 ===
+    # 感測/偵測/監測 are verbs in _INTERIOR_VERB_BOUNDARIES (sense /
+    # detect / monitor). Their + 器 suffix forms the compound noun
+    # "sensor / detector / monitor device" which is common in TW
+    # drafting. Without protection, 感測器 truncates to 感 at the 感測
+    # boundary. Quantifier compounds 複數感測器 (synthetic) and future
+    # corpus entries with these suffixes are covered here.
+    "感測器", "偵測器", "監測器",
+    "光感測器", "溫度感測器", "壓力感測器", "影像感測器",
+    "複數感測器", "複數控制器", "複數偵測器",
 })
 
 
@@ -2467,6 +2519,21 @@ def check_antecedent_basis(
                 strict_qualifier_matching=strict_qualifier_matching,
             )
             if not normalized_term:
+                continue
+
+            # Phase F F3 — Emit-suppression for walker degenerate captures.
+            # Reject findings where the normalized term is structurally
+            # not a noun phrase: bare reference prefix (該/所述/前述/該等/該些)
+            # left behind by single-pass prefix strip on 該所述處理器, bare
+            # quantifier (複數/多個/若干) left behind by interior-cut, or
+            # common 2-char verb fragments the walker occasionally captures
+            # from degenerate intro contexts (測量 from 該測量到的溫度感測值
+            # where interior cut truncates past 到的 boundary).
+            if normalized_term in _REFERENCE_PREFIXES:
+                continue
+            if normalized_term in _BARE_QUANTIFIER_TERMS_TW:
+                continue
+            if normalized_term in _WALKER_DEGENERATE_FRAGMENTS_TW:
                 continue
 
             if normalized_term in seen_terms:
