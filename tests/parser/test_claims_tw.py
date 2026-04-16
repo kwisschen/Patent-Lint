@@ -138,3 +138,35 @@ class TestParseTwClaimsUnit:
         """Text without claim number pattern returns empty."""
         claims = parse_tw_claims(["這不是請求項。"])
         assert claims == []
+
+    def test_quoted_reference_independent_claim(self):
+        """引用記載型式: `一種X，具備如請求項N所述的Y` — independent per §18.
+
+        The `如請求項N` in the body is incorporation-by-reference of a
+        sub-component, not a claim dependency. Preamble `一種X` with a new
+        subject is the statutory marker of independence.
+        """
+        claims = parse_tw_claims([
+            "1. 一種蓋組件，包括一蓋本體。",
+            "2. 如請求項1所述的蓋組件，更包括一鎖定構件。",
+            "3. 一種帶蓋容器，具備如請求項1或2所述的蓋組件、以及一容器本體。",
+        ])
+        assert len(claims) == 3
+        assert claims[0].independent is True
+        assert claims[1].independent is False
+        assert claims[1].dependencies == [1]
+        # Claim 3: new subject 帶蓋容器, body-embedded reference to 1 or 2.
+        assert claims[2].independent is True
+        assert claims[2].dependencies == []
+        assert claims[2].multiple_dependent is False
+
+    def test_quoted_reference_with_range(self):
+        """引用記載型式 with range: `一種X，具備如請求項1至9中任一項所述的Y`."""
+        claims = parse_tw_claims([
+            "1. 一種蓋組件。",
+            "2. 如請求項1所述的蓋組件。",
+            "3. 一種帶蓋容器，具備如請求項1至2中任一項所述的蓋組件。",
+        ])
+        assert claims[2].independent is True
+        assert claims[2].dependencies == []
+        assert claims[2].multiple_dependent is False
