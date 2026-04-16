@@ -170,3 +170,32 @@ class TestParseTwClaimsUnit:
         assert claims[2].independent is True
         assert claims[2].dependencies == []
         assert claims[2].multiple_dependent is False
+        # Body-embedded range populates quoted_references so the walker's
+        # ancestor-chain can still propagate intros from claims 1/2.
+        assert claims[2].quoted_references == [1, 2]
+
+    def test_quoted_reference_range_with_explicit_request_word(self):
+        """Range tail may repeat ``請求項`` before the end number:
+        ``如請求項4至請求項10中任一項所述``. Both halves must be captured."""
+        claims = parse_tw_claims([
+            "1. 一種X。",
+            "2. 一種Y，具備如請求項1至請求項1中任一項所述的X。",
+            "3. 如請求項1至請求項2中任一項所述的裝置。",
+        ])
+        # Second claim: 引用記載型式, range should expand despite 請求項 prefix
+        assert claims[1].independent is True
+        assert claims[1].quoted_references == [1]
+        # Third claim: true multi-dep, range captures both endpoints
+        assert claims[2].independent is False
+        assert claims[2].dependencies == [1, 2]
+        assert claims[2].multiple_dependent is True
+
+    def test_standard_dependent_has_no_quoted_references(self):
+        """Standard dependent claims keep refs in ``dependencies``, not
+        ``quoted_references``. The split only matters for 引用記載型式."""
+        claims = parse_tw_claims([
+            "1. 一種裝置。",
+            "2. 如請求項1所述之裝置。",
+        ])
+        assert claims[1].dependencies == [1]
+        assert claims[1].quoted_references == []
