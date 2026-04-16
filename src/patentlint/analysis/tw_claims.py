@@ -52,6 +52,20 @@ _DYM_STOP_PARTICLES_TW: tuple[str, ...] = (
 _CONJ_SPLIT_RE_TW: re.Pattern[str] = re.compile(r'(.+?)(?:以及|和|與|及)(.+)')
 
 
+# Phase C2 F12 — copula intros (Tier A/B/C). Ports CN R14d (6745eef).
+# Tier A (unconditional): 轉變為/變為/轉為/劃分為/分為 family.
+# Tier B (+ADJ_REJECTS):  基於/來自 family.
+# Tier C is omitted in TW port as it routinely over-captures "X為Y" /
+# "X是Y" forms that are predicates, not intros. If corpus evolution
+# surfaces Tier C need, port selectively with per-claim gating.
+_F12_TIER_A_RE_TW: re.Pattern[str] = re.compile(
+    r'(?:轉變為|變為|轉為|劃分為|分為)([\u4e00-\u9fff]{2,10})'
+)
+_F12_TIER_B_RE_TW: re.Pattern[str] = re.compile(
+    r'(?:基於|來自)([\u4e00-\u9fff]{2,10})'
+)
+
+
 def _dym_quality_reject_tw(ref: str, dym: str) -> bool:
     """True if DYM should be suppressed per Phase B3 filters.
 
@@ -2220,6 +2234,23 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
             continue
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
         results.append((m.group(0), normalized))
+
+    # F12: copula intros (C2, Tier A + Tier B ports).
+    # Tier A unconditional (轉變為/變為/分為-family): register Y from X轉變為Y.
+    for m in _F12_TIER_A_RE_TW.finditer(text):
+        noun = m.group(1)
+        if noun.startswith(('所述', '該', '前述', '該等', '該些')):
+            continue
+        results.append((m.group(0), noun))
+    # Tier B + ADJ_REJECTS (基於/來自): register Y from X基於Y / X來自Y
+    # unless Y starts with a predicate-adjective or verb-phrase head.
+    for m in _F12_TIER_B_RE_TW.finditer(text):
+        noun = m.group(1)
+        if noun.startswith(('所述', '該', '前述', '該等', '該些')):
+            continue
+        if noun.startswith(_F12_ADJ_REJECTS_TW):
+            continue
+        results.append((m.group(0), noun))
 
     # F5a: Ref-prefix possessive 所述X的Y (two variants)
     for pattern in (_REF_POSSESSIVE_WITH_NUM, _REF_POSSESSIVE_NO_NUM):
