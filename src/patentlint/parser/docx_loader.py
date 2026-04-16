@@ -77,9 +77,18 @@ class DocxSection:
 
 @dataclass
 class LoadedTwDocument:
-    """Structured result of loading a TW patent .docx file."""
+    """Structured result of loading a TW patent .docx file.
+
+    ``paragraph_word_numbers`` is a parallel list aligned with ``paragraphs``.
+    Each entry is the Word auto-numbering string (``"0001"``, ``"0109"``, …)
+    Word would render for that paragraph, or ``None`` if the paragraph is
+    not Word-auto-numbered. Populated by ``load_docx_tw`` so downstream
+    checks can report flagged paragraphs using the same 【NNNN】 identifiers
+    the drafter sees in Word rather than PatentLint-internal ordinals.
+    """
 
     paragraphs: list[str] = field(default_factory=list)
+    paragraph_word_numbers: list[str | None] = field(default_factory=list)
     has_tracked_changes: bool = False
 
 
@@ -334,6 +343,16 @@ def load_docx_tw(file_path: str | Path) -> LoadedTwDocument:
     _TW_BRACKET_RE = re.compile(r"^【(.+?)】")
 
     paragraphs: list[str] = []
+    paragraph_word_numbers: list[str | None] = []
+    # Word auto-numbering runs one counter per numId. For TW patents the
+    # 【NNNN】 paragraph-numbering format is typically a single numId applied
+    # across the body; claim-list paragraphs use a separate numId and a
+    # different format (e.g. N.) that we don't want to surface as the
+    # body-paragraph 【NNNN】 label. Restrict the word-number channel to the
+    # first body-scope numId encountered OUTSIDE the claims section so a
+    # stray claim-list numId doesn't pollute the body numbering counter.
+    body_num_id: str | None = None
+    num_counters: dict[str, int] = {}
     in_claims = False
     claim_counter = 0
 
@@ -341,6 +360,9 @@ def load_docx_tw(file_path: str | Path) -> LoadedTwDocument:
         text = _normalize_unicode(para.text).strip()
         if not text:
             continue
+
+        # Resolve the paragraph's Word numId (None for unnumbered paragraphs).
+        para_num_id = _get_paragraph_num_id(para)
 
         # Check for bracket headers to detect claims section boundary
         hm = _TW_BRACKET_RE.match(text)
@@ -350,10 +372,25 @@ def load_docx_tw(file_path: str | Path) -> LoadedTwDocument:
                 in_claims = True
                 claim_counter = 0
                 paragraphs.append(text)
+                paragraph_word_numbers.append(None)
                 continue
             elif in_claims:
                 # Any other bracket header ends the claims section
                 in_claims = False
+
+        # Compute the body-scope 【NNNN】 label for this paragraph. Only a
+        # single numId (the first encountered outside the claims section)
+        # contributes to the public label channel; other numIds are ignored
+        # for labeling purposes so claim-list numbering can't poison the
+        # body counter.
+        word_num: str | None = None
+        if para_num_id is not None and not in_claims:
+            if body_num_id is None:
+                body_num_id = para_num_id
+            if para_num_id == body_num_id:
+                count = num_counters.get(para_num_id, 0) + 1
+                num_counters[para_num_id] = count
+                word_num = f"{count:04d}"
 
         if in_claims:
             # Check for Word numbering on this paragraph via the shared
@@ -362,16 +399,20 @@ def load_docx_tw(file_path: str | Path) -> LoadedTwDocument:
             # can parse it.
             if _extract_numpr_claim_number(para) is not None:
                 claim_counter += 1
-                # Prepend claim number in the format claims_tw expects
                 paragraphs.append(f"{claim_counter}. {text}")
             else:
-                # Sub-paragraph (continuation of preceding claim)
                 paragraphs.append(text)
+            paragraph_word_numbers.append(None)
         else:
             paragraphs.append(text)
+            paragraph_word_numbers.append(word_num)
 
     tracked_changes = detect_tracked_changes(doc)
-    return LoadedTwDocument(paragraphs=paragraphs, has_tracked_changes=tracked_changes)
+    return LoadedTwDocument(
+        paragraphs=paragraphs,
+        paragraph_word_numbers=paragraph_word_numbers,
+        has_tracked_changes=tracked_changes,
+    )
 
 
 def load_docx_cn(file_path: str | Path) -> LoadedCnDocument:

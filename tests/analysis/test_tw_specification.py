@@ -233,6 +233,51 @@ class TestParagraphEnding:
         assert items[0].details_params["count"] == 2
         assert items[0].details_params["paragraphs"] == [1, 2]
 
+    def test_uses_word_auto_number_when_available(self):
+        """When the loader surfaces Word 【NNNN】 auto-numbers, the check
+        reports flagged paragraphs by that label (matching what the drafter
+        sees in Word) rather than a PatentLint-internal ordinal."""
+        doc = _make_doc(
+            technical_field=["段落一", "段落二"],
+            prior_art=["段落三。"],
+            body_paragraph_word_numbers=["0012", "0013", "0014"],
+        )
+        items = check_paragraph_ending(doc)
+        assert items[0].status == "amend"
+        assert items[0].details_params["paragraphs"] == ["0012", "0013"]
+
+    def test_mixed_word_numbers_and_ordinals(self):
+        """Unnumbered paragraphs fall back to ordinal so XML/legacy paths
+        still produce useful output."""
+        doc = _make_doc(
+            technical_field=["段落一", "段落二"],
+            prior_art=["段落三。"],
+            body_paragraph_word_numbers=["0005", None, "0006"],
+        )
+        items = check_paragraph_ending(doc)
+        assert items[0].details_params["paragraphs"] == ["0005", 2]
+
+    def test_bracket_subclaim_continuation_skipped(self):
+        """JP-translation [N]-numbered sub-claim bodies may span multiple
+        Word paragraphs with intermediate ，/； endings; only the closing
+        paragraph of each unit needs a valid ending."""
+        doc = _make_doc(
+            technical_field=[],
+            prior_art=[],
+            disclosure=[
+                "[用以解決課題之手段] 為了達成上述目的，本發明提供以下技術手段：",
+                "[1]一種蓋組件，可拆裝自如地安裝於容器本體，包括：",
+                "蓋本體，用於封閉所述容器本體的上部開口部；",
+                "所述口拆裝機構通過將所述口形成構件相對於所述外筒構件內側的下表面進行滑動。",
+                "[2]如所述[1]記載的蓋組件，",
+                "當使所述口形成構件相對於所述外筒構件之內側的下表面滑動時，所述第二卡止部對所述第一卡止部進行卡止。",
+            ],
+            drawings_description=[],
+            embodiment=["實施方式段落。"],
+        )
+        items = check_paragraph_ending(doc)
+        assert items[0].status == "pass"
+
     def test_exclamation_question_valid(self):
         doc = _make_doc(
             technical_field=["測試！"],
