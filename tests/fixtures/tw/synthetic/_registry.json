@@ -1,11 +1,111 @@
 {
   "schema_version": 1,
-  "description": "TW synthetic-fixture registry. Maps each synthetic .docx to its target walker mechanism, retirement threshold, and over-fit audit provenance. Re-read by Phase G invocations to drive synthetic retirement when real-corpus coverage reaches thresholds. Initial state is empty; Phase A2 populates this file as synthetics are authored. Plan reference: /Users/chrischen/.claude/plans/structured-cuddling-parnas.md Phase A0.",
+  "description": "TW synthetic-fixture registry. Maps each synthetic .docx to its target walker mechanism, retirement threshold, and over-fit audit provenance. Re-read by Phase G invocations to drive synthetic retirement when real-corpus coverage reaches thresholds. Plan reference: /Users/chrischen/.claude/plans/structured-cuddling-parnas.md Phase A0/A2.",
   "status_lifecycle": {
     "active": "Target mechanism not yet shipped. Synthetic drives Phase C round viability.",
     "regression_only": "Mechanism shipped; synthetic stays in harness as protected regression test.",
-    "retired": "Real corpus has ≥N hits (per retirement_threshold); synthetic removed from harness manifest but build script still reproduces it for audit."
+    "retired": "Real corpus has reached retirement_threshold; synthetic removed from harness manifest but build script still reproduces it for audit."
   },
-  "synthetic_fixtures": [],
+  "synthetic_fixtures": [
+    {
+      "key": "tw_adversarial_negatives",
+      "path": "tests/fixtures/tw/synthetic/tw_adversarial_negatives.docx",
+      "target_mechanism": "over_fit_guardrail",
+      "authored_date": "2026-04-17",
+      "variant_drafts": 3,
+      "retirement_threshold": { "real_corpus_hit_count": 999 },
+      "overfit_audit_notes": "GLOBAL GUARDRAIL. Claims 2/3/4 reference 該機殼/所述導熱材/該溫控電路 with NO antecedent intro. Walker emits 3 findings; all protect:true. If any round silences one, the mechanism is over-relaxed. Never retire.",
+      "expected_emissions": 3,
+      "status": "active"
+    },
+    {
+      "key": "tw_copula_tiers",
+      "path": "tests/fixtures/tw/synthetic/tw_copula_tiers.docx",
+      "target_mechanism": "C2_F12_tier_a_and_b",
+      "authored_date": "2026-04-17",
+      "variant_drafts": 3,
+      "retirement_threshold": { "real_corpus_hit_count": 6 },
+      "overfit_audit_notes": "Drafted TW-first. Tier A (轉變為/分為) in chemistry; Tier B (基於/來自) in software; Tier C (為/是) in mechanical. 3 emissions represent coverage gaps F12 port should resolve. c1 'so述輸入訊號' (bare, no 一 intro) may be legit_drafting_error.",
+      "expected_emissions": 3,
+      "status": "active"
+    },
+    {
+      "key": "tw_formula_reference",
+      "path": "tests/fixtures/tw/synthetic/tw_formula_reference.docx",
+      "target_mechanism": "C8_formula_reference",
+      "authored_date": "2026-04-17",
+      "variant_drafts": 2,
+      "retirement_threshold": { "real_corpus_hit_count": 3 },
+      "overfit_audit_notes": "CAVEAT: C8 formula-reference mechanism may be N/A to TW drafting — TIPO convention does not use 所述式(N), so walker never emits bare 式(X) as term. 2 emissions are over-capture artifacts, not formula references. Consider dropping C8 port; document finding in Phase 9.",
+      "expected_emissions": 2,
+      "status": "active"
+    },
+    {
+      "key": "tw_markush",
+      "path": "tests/fixtures/tw/synthetic/tw_markush.docx",
+      "target_mechanism": "domain_markush",
+      "authored_date": "2026-04-17",
+      "variant_drafts": 2,
+      "retirement_threshold": { "real_corpus_hit_count": 3 },
+      "overfit_audit_notes": "Markush group 選自由...所組成之群組 in chemistry + software variants. 3 emissions: 2 coverage gaps (第一化合物, 語音) + 1 walker over-capture (選自由). Exercises F-family intro registration over Markush members.",
+      "expected_emissions": 3,
+      "status": "active"
+    },
+    {
+      "key": "tw_plural_prefix",
+      "path": "tests/fixtures/tw/synthetic/tw_plural_prefix.docx",
+      "target_mechanism": "tw_plural_prefix_valid_path",
+      "authored_date": "2026-04-17",
+      "variant_drafts": 3,
+      "retirement_threshold": { "real_corpus_hit_count": 3 },
+      "overfit_audit_notes": "REGRESSION TEST. Claims 2/3/4 reference 該等感測器 / 該些控制器 (TW-valid plural). Walker emits 0 on those refs (correct). 1 emission on c1 due to colon-list F11 coverage gap — C4 F11 port will silence. TW-valid path confirmed: 該等/該些 NOT flagged as tw_contamination.",
+      "expected_emissions": 1,
+      "status": "active"
+    },
+    {
+      "key": "tw_quoted_reference",
+      "path": "tests/fixtures/tw/synthetic/tw_quoted_reference.docx",
+      "target_mechanism": "quoted_reference_variants_regression",
+      "authored_date": "2026-04-17",
+      "variant_drafts": 4,
+      "retirement_threshold": { "real_corpus_hit_count": 3 },
+      "overfit_audit_notes": "REGRESSION for commit 8287c24. Claims 2/3/4 are independent (一種X preamble) with body-embedded 執行/根據/實施 如請求項1 refs. Walker emits 0 findings: ancestor-chain walk correctly propagates via quoted_references field.",
+      "expected_emissions": 0,
+      "status": "active"
+    },
+    {
+      "key": "tw_symbol_table",
+      "path": "tests/fixtures/tw/synthetic/tw_symbol_table.docx",
+      "target_mechanism": "symbol_table_sub_figure_regression",
+      "authored_date": "2026-04-17",
+      "variant_drafts": 4,
+      "retirement_threshold": { "real_corpus_hit_count": 3 },
+      "overfit_audit_notes": "REGRESSION TEST for check_claims_symbol_table_consistency. 符號說明 uses sub-figure notation 圖1A/圖1B/圖2(a)/圖2(b). Walker emits 0 antecedent findings: all reference numerals properly introduced + defined.",
+      "expected_emissions": 0,
+      "status": "active"
+    },
+    {
+      "key": "tw_jepson_two_part",
+      "path": "tests/fixtures/tw/synthetic/tw_jepson_two_part.docx",
+      "target_mechanism": "domain_jepson_two_part",
+      "authored_date": "2026-04-17",
+      "variant_drafts": 2,
+      "retirement_threshold": { "real_corpus_hit_count": 3 },
+      "overfit_audit_notes": "Jepson two-part claims with 其特徵在於 (invention) + 其改良在於 (improvement). Walker emits 0 findings: transition phrases recognized, both-part intros registered.",
+      "expected_emissions": 0,
+      "status": "active"
+    },
+    {
+      "key": "tw_dym_edge_cases",
+      "path": "tests/fixtures/tw/synthetic/tw_dym_edge_cases.docx",
+      "target_mechanism": "B3_dym_quality_reject",
+      "authored_date": "2026-04-17",
+      "variant_drafts": 3,
+      "retirement_threshold": { "real_corpus_hit_count": 3 },
+      "overfit_audit_notes": "PARTIAL TEST. 3 intended filter cases: length-ratio, leading-particle, substring-wrap. Only 2 emissions — walker strips some refs that were intended as test cases. B3 filter coverage remains dominated by real-corpus emissions; this fixture is a regression gate, not a complete filter exercise.",
+      "expected_emissions": 2,
+      "status": "active"
+    }
+  ],
   "retirement_log": []
 }
