@@ -1165,6 +1165,19 @@ _F11_COLON_LIST_ANCHOR_CN: re.Pattern[str] = re.compile(
 )
 _F11_LIST_SPLIT_CN: re.Pattern[str] = re.compile(r'[、，,和与及]')
 
+# F13: locative-verb + bare noun (+ optional locative suffix). Phase 8c R14a.
+# Registers Y from `X应用于Y侧` / `X位于Y` as an intro, stripping a trailing
+# locative suffix (侧/端/方/处/面/内/外/上/下/中) when present. The locative
+# strip is required because walker resolution is reference.startswith(intro);
+# a reference to `第一设备` cannot resolve to a longer intro `第一设备侧`.
+_F13_LOCATIVE_VERB_PATTERN_CN: re.Pattern[str] = re.compile(
+    r'(?:应用于|作用于|位于|置于|设于|布置于|设置于|固定于)'
+    r'([\u4e00-\u7683\u7685-\u9fff]{2,12}(?:\([A-Za-z0-9]+\))?)'
+)
+_F13_LOCATIVE_SUFFIXES_CN: tuple[str, ...] = (
+    '侧', '端', '方', '处', '面', '内', '外', '上', '下', '中',
+)
+
 # F5a ref-prefix set (Q1: 该等/该些 excluded).
 _REF_PREFIX_SET_CN = ('所述', '该', '前述')
 
@@ -1320,6 +1333,24 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
             if normalized.startswith(_REF_PREFIX_SET_CN):
                 continue
             results.append((element, normalized))
+
+    # F13: locative-verb + bare noun (+ optional locative suffix). R14a.
+    for m in _F13_LOCATIVE_VERB_PATTERN_CN.finditer(text):
+        raw = m.group(1)
+        if raw.startswith(_REF_PREFIX_SET_CN):
+            continue
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', raw)
+        if (
+            normalized
+            and normalized[-1] in _F13_LOCATIVE_SUFFIXES_CN
+            and len(normalized) >= 3
+        ):
+            normalized = normalized[:-1]
+        if len(normalized) < 2:
+            continue
+        if normalized.startswith(_REF_PREFIX_SET_CN):
+            continue
+        results.append((m.group(0), normalized))
 
     # Uniform trailing-verb cleanup
     cleaned: list[tuple[str, str]] = []

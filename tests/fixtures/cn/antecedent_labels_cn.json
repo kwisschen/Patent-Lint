@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 13,
+    "current_round": 14,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -2895,8 +2895,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -3279,8 +3279,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -3351,8 +3351,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -3363,8 +3363,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -3831,8 +3831,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -3867,8 +3867,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -3915,8 +3915,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -3951,8 +3951,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -3999,8 +3999,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -4071,8 +4071,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -4191,8 +4191,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -4251,8 +4251,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -4467,8 +4467,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -4527,8 +4527,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -4563,8 +4563,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -4575,8 +4575,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -4635,8 +4635,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -4707,8 +4707,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -4935,8 +4935,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -5055,8 +5055,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -5367,8 +5367,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -5415,8 +5415,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -5499,8 +5499,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -5511,8 +5511,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -5619,8 +5619,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -5655,8 +5655,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -5703,8 +5703,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -5739,8 +5739,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -5775,8 +5775,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -5823,8 +5823,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -5847,8 +5847,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -5871,8 +5871,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -5895,8 +5895,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -5943,8 +5943,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -6051,8 +6051,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -6063,8 +6063,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -6123,8 +6123,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -6159,8 +6159,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -6207,8 +6207,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -6291,8 +6291,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -6303,8 +6303,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -6363,8 +6363,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -6423,8 +6423,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -7551,8 +7551,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -7563,8 +7563,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -7647,8 +7647,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -7959,8 +7959,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -7983,8 +7983,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -8043,8 +8043,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -8139,8 +8139,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -8367,8 +8367,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -8487,8 +8487,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -8667,8 +8667,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -8823,8 +8823,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -9195,8 +9195,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -9207,8 +9207,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -9219,8 +9219,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -9531,8 +9531,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -9639,8 +9639,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -9651,8 +9651,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -9711,8 +9711,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -9771,8 +9771,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -9819,8 +9819,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -9867,8 +9867,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -10215,8 +10215,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -10311,8 +10311,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -10335,8 +10335,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16222,8 +16222,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16234,8 +16234,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16270,8 +16270,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16306,8 +16306,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16318,8 +16318,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16330,8 +16330,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16342,8 +16342,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16402,8 +16402,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16462,8 +16462,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16474,8 +16474,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16582,8 +16582,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16846,8 +16846,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16858,8 +16858,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16870,8 +16870,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16882,8 +16882,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16894,8 +16894,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16906,8 +16906,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16918,8 +16918,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16942,8 +16942,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -16978,8 +16978,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -17086,8 +17086,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R9 shifting: resurfaced from trailing verb strip.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -17314,8 +17314,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -17446,8 +17446,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
@@ -17470,8 +17470,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_14_f13_locative_verb",
+      "round": 14
     },
     {
       "fixture": "CN115485995B",
