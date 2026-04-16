@@ -1152,6 +1152,9 @@ _BARE_AFTER_VERB_PATTERN_CN = re.compile(
     r'获取|获得|得到|生成|产生|发出'
     r'|'
     r'发送|接收|输出|输入|传送|存储|确定|涉及'
+    r'|'
+    # Phase 8c R14c.1 — F6 verb-set extension
+    r'进行|调用|运行|调整|建立|构建|制得|根据|存在|使用'
     r')'
     r'(第[一二三四五六七八九十\d]+' + _CJK_NO_DE_ZHI_CN + r'+(?:\([A-Za-z0-9]+\))?'
     r'|' + _CJK_NO_DE_ZHI_CN + r'+\([A-Za-z0-9]+\))'
