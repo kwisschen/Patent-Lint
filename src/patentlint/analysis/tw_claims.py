@@ -89,15 +89,22 @@ _F12_TIER_B_RE_TW: re.Pattern[str] = re.compile(
 
 
 def _dym_quality_reject_tw(ref: str, dym: str) -> bool:
-    """True if DYM should be suppressed per Phase B3 filters.
+    """True if DYM should be suppressed per Phase B3/F5 filters.
 
-    Three filters (mirrors CN R21):
+    Four filters:
       1. ``len(dym) > 2 * len(ref)`` — disproportionate expansion.
       2. DYM starts with a token in ``_DYM_LEADING_REJECTS_TW`` — walker
          captured a prep/particle-headed or reference-prefix-headed
          fragment, not a clean NP.
       3. ``ref in dym`` strict substring AND the wrapping chars contain
          any stop-particle — walker captured the ref + noise.
+      4. (F5) ``ref in dym`` strict substring AND the non-overlap span
+         (before OR after) contains ≥2 CJK chars — DYM is a modifier-
+         expanded form of ref (e.g., 圖形使用者介面 ⊃ 使用者介面). Such
+         expansions are almost always walker noise or compound-noun
+         siblings rather than the drafter's intent. Suppressing allows
+         the morphological-prefix fallback to surface a better match
+         (e.g., 使用者裝置 sharing 使用者 prefix).
     """
     if len(dym) > 2 * len(ref):
         return True
@@ -110,7 +117,68 @@ def _dym_quality_reject_tw(ref: str, dym: str) -> bool:
         after = dym[idx + len(ref):]
         if any(p in before or p in after for p in _DYM_STOP_PARTICLES_TW):
             return True
+        # F5 — reject modifier-expanded superset DYMs
+        before_cjk = sum(1 for c in before if '\u4e00' <= c <= '\u9fff')
+        after_cjk = sum(1 for c in after if '\u4e00' <= c <= '\u9fff')
+        if before_cjk >= 2 or after_cjk >= 2:
+            return True
     return False
+
+
+def _morphological_prefix_fallback_tw(
+    ref: str,
+    intros_by_term: dict,
+    *,
+    min_shared_prefix: int = 2,
+    min_term_len: int = 3,
+) -> dict | None:
+    """Phase F5 — morphological-prefix fallback DYM.
+
+    When the primary Jaccard + quality-gate pipeline produces no DYM,
+    look for ancestor intros that share a leading prefix of ≥2 CJK
+    chars with the reference. Intuition: drafting errors often produce
+    same-stem / different-suffix typos (使用者介面 ↔ 使用者裝置,
+    第二控制模組 ↔ 第二通訊模組) where character-bigram Jaccard is
+    below threshold but the shared morphological stem makes the intent
+    clear.
+
+    Returns ``{"term": intro_term, "claim_id": ancestor_id}`` for the
+    longest-shared-prefix match, or ``None`` if no candidate qualifies.
+    Ties broken by nearer ancestor (smaller depth), then by insertion
+    order.
+    """
+    if len(ref) < min_term_len:
+        return None
+
+    best_prefix_len = 0
+    best_depth: int | None = None
+    best: dict | None = None
+    for intro_term, (ancestor_id, depth) in intros_by_term.items():
+        if len(intro_term) < min_term_len:
+            continue
+        if intro_term == ref:
+            continue
+        shared = 0
+        for a, b in zip(ref, intro_term):
+            if a != b:
+                break
+            if '\u4e00' <= a <= '\u9fff':
+                shared += 1
+            else:
+                break
+        if shared < min_shared_prefix:
+            continue
+        if (
+            shared > best_prefix_len
+            or (
+                shared == best_prefix_len
+                and (best_depth is None or depth < best_depth)
+            )
+        ):
+            best_prefix_len = shared
+            best_depth = depth
+            best = {"term": intro_term, "claim_id": ancestor_id}
+    return best
 
 
 # Recognized TW dependency format patterns
@@ -2676,7 +2744,8 @@ def check_antecedent_basis(
             # Phase B3 — DYM quality gate (R21-analog). Suppress DYM
             # candidates that are likely walker-extraction noise rather
             # than legitimate intros (length-ratio, leading-particle,
-            # substring-wrap with stop-particle). Terminal-only.
+            # substring-wrap with stop-particle, modifier-expanded
+            # superset per F5). Terminal-only.
             if (
                 suggested_match is not None
                 and _dym_quality_reject_tw(
@@ -2684,6 +2753,20 @@ def check_antecedent_basis(
                 )
             ):
                 suggested_match = None
+
+            # Phase F5 — morphological-prefix fallback. When primary
+            # DYM is absent (including after quality-gate suppression),
+            # surface an ancestor intro sharing a leading CJK prefix of
+            # ≥2 chars. Catches same-stem / different-suffix typos like
+            # 使用者介面 (typo) → 使用者裝置 (intended) that fall below
+            # the 0.40 Jaccard threshold due to differing suffix but
+            # share a meaningful morphological stem.
+            if suggested_match is None and resolved_intro is None:
+                fallback = _morphological_prefix_fallback_tw(
+                    normalized_term, intros_by_term
+                )
+                if fallback is not None:
+                    suggested_match = fallback
 
             issues.append(
                 {
