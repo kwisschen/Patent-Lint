@@ -704,251 +704,251 @@
     "cn": {
       "spec": {
         "requiredSections": {
-          "amend": "필수 섹션 누락: {{sections}} (专利法实施细则 §17).",
-          "pass": "모든 필수 명세서 섹션이 포함되어 있습니다."
+          "amend": "필수 섹션이 누락되었습니다: {{sections}} (专利法实施细则 §17).",
+          "pass": "명세서의 모든 필수 섹션이 존재합니다."
         },
         "sectionOrdering": {
-          "amend": "명세서 섹션 순서가 규정에 맞지 않습니다 (专利法实施细则 §17).",
-          "pass": "명세서 섹션 순서가 올바릅니다."
+          "amend": "명세서 섹션이 규정된 순서와 다릅니다 (专利法实施细则 §17).",
+          "pass": "명세서 섹션이 규정된 순서에 따릅니다."
         },
         "paragraphNumbering": {
-          "amendXml": "단락 번호가 연속적이지 않습니다 ({{detail}}).",
-          "amendDocx": "명세서에 수동으로 추가된 단락 번호가 포함되어 있습니다.",
-          "pass": "단락 번호가 올바릅니다.",
-          "amendXmlGap": "단락 번호가 연속되지 않습니다: 제{{prev}}단락 다음이 제{{next}}단락입니다.",
-          "amendXmlDuplicate": "{{count}}개의 중복 단락 번호가 감지되었습니다: 단락 {{paragraphs}}."
+          "amendXml": "단락 번호가 순차적이지 않습니다 ({{detail}}).",
+          "amendDocx": "명세서에 수동으로 추가된 단락 번호가 포함되어 있습니다 (CNIPA 출원 시 제거 필요).",
+          "pass": "단락 번호가 순차적입니다.",
+          "amendXmlGap": "단락 번호에 누락이 있습니다 — {{prev}} 다음에 {{next}}.",
+          "amendXmlDuplicate": "중복된 단락 번호가 {{count}}개 있습니다: {{paragraphs}}."
         },
         "paragraphEnding": {
-          "amend": "{{count}}개 단락이 유효한 중국어 문장 부호로 끝나지 않습니다: 단락 {{paragraphs}}.",
-          "pass": "모든 단락이 유효한 문장부호로 끝납니다."
+          "amend": "중국어 문장 종결 부호로 끝나지 않는 단락이 {{count}}개 있습니다: {{paragraphs}}.",
+          "pass": "모든 명세서 단락이 중국어 문장 종결 부호로 끝납니다."
         },
         "figureRefConsistency": {
-          "verify": "도면 인용이 일치하지 않습니다: {{figure_ref_inconsistency}}",
-          "pass": "각 섹션의 도면 참조가 일치합니다."
+          "verify": "도면 참조에 불일치가 있습니다: {{figure_ref_inconsistency}}",
+          "pass": "섹션 간 도면 참조가 일관됩니다."
         },
         "patentTypeTerminology": {
-          "verify": "'{{term}}'이(가) 발견되었습니다. 특허 유형(발명/실용신안)과 일치하는지 확인하세요.",
-          "pass": "특허 유형 용어가 일치합니다."
+          "verify": "'{{term}}' 검출 — 출원 종류(발명·실용신안)와 일치하는지 확인하십시오.",
+          "pass": "출원 종류 용어가 일관됩니다."
         },
         "title": {
-          "amendLength": "발명 명칭이 한자 25자를 초과합니다 ({{count}}자).",
-          "amendContent": "발명의 명칭에 금지된 내용이 포함되어 있습니다: {{title_prohibited_items}}",
-          "pass": "발명 명칭이 CNIPA 요건을 충족합니다.",
-          "amendMissing": "발명의 명칭을 찾을 수 없습니다."
+          "amendLength": "명칭이 25자 제한을 초과합니다 ({{count}}자).",
+          "amendContent": "명칭에 금지된 내용이 포함되어 있습니다: {{title_prohibited_items}}.",
+          "pass": "명칭이 CNIPA 요건을 충족합니다.",
+          "amendMissing": "명세서에 명칭이 누락되어 있습니다."
         },
         "claimReference": {
-          "amend": "명세서가 {{count}}개 단락에서 청구항을 인용합니다(단락 {{paragraphs}}). 예: {{snippet}}",
-          "pass": "명세서가 청구항을 인용하지 않습니다."
+          "amend": "명세서가 {{count}}개 단락에서 청구항을 참조합니다 ({{paragraphs}}). 예: {{snippet}}",
+          "pass": "명세서가 청구항을 참조하지 않습니다."
         }
       },
       "claims": {
         "sequential": {
-          "amend": "청구항 번호가 연속되지 않습니다: 예상 제{{expected}}항, 실제 제{{found}}항.",
-          "pass": "청구항 번호가 연속적입니다."
+          "amend": "청구항 번호가 순차적이지 않습니다: 예상 {{expected}}, 실제 {{found}}.",
+          "pass": "청구항이 순차적으로 번호 매겨져 있습니다."
         },
         "dependencyFormat": {
-          "amend": "{{count}}개 청구항의 인용 형식이 올바르지 않습니다: {{claims}}.",
-          "pass": "모든 종속 청구항의 인용 형식이 올바릅니다."
+          "amend": "{{count}}개 청구항의 종속 형식이 잘못되었습니다: {{claims}}.",
+          "pass": "모든 종속 참조가 올바른 형식입니다."
         },
         "selfDependent": {
-          "amend": "{{claims}}이(가) 자기 자신을 인용합니다.",
-          "pass": "자기 인용 청구항이 발견되지 않았습니다."
+          "amend": "{{claims}}이(가) 자기 자신에 종속됩니다.",
+          "pass": "자기 종속 청구항이 없습니다."
         },
         "forwardDependency": {
-          "amend": "{{claims}}이(가) 후행 청구항을 인용합니다.",
-          "pass": "후행 인용이 발견되지 않았습니다."
+          "amend": "{{claims}}이(가) 후행 청구항을 참조합니다 (전방 종속).",
+          "pass": "모든 종속이 선행 청구항을 참조합니다."
         },
         "singleSentence": {
-          "amend": "{{count}}개 청구항이 여러 문장을 포함합니다: {{claims}}.",
-          "pass": "모든 청구항이 단일 문장입니다."
+          "amend": "다문장 청구항이 {{count}}개 있습니다: {{claims}}.",
+          "pass": "모든 청구항이 단일 문장으로 작성되어 있습니다."
         },
         "refNumeralParens": {
-          "verify": "{{count}}개 청구항의 도면 부호가 괄호로 표시되지 않았습니다: {{claims}}.",
-          "pass": "청구항 내 모든 참조 부호가 괄호로 묶여 있습니다."
+          "verify": "{{count}}개 청구항에서 참조 부호가 괄호로 둘러싸여 있지 않습니다: {{claims}}.",
+          "pass": "모든 참조 부호가 괄호로 둘러싸여 있습니다."
         },
         "subjectConsistency": {
-          "verify": "{{claims}}의 주제명이 부모 청구항과 일치하지 않습니다 (총 {{count}}개).",
-          "pass": "종속 청구항의 주제 명칭이 일치합니다."
+          "verify": "{{claims}}의 주제명이 모항과 일치하지 않습니다 (총 {{count}}개).",
+          "pass": "종속 청구항의 주제명이 모항과 일치합니다."
         },
         "transitionPhrase": {
-          "verify": "{{count}}개 독립 청구항에 특징부 連接詞가 없을 수 있습니다: {{claims}}.",
-          "pass": "모든 독립 청구항에 특징 부분 連接詞가 포함되어 있습니다."
+          "verify": "{{count}}개 독립 청구항에 연결 어구가 누락되었을 수 있습니다: {{claims}}.",
+          "pass": "모든 독립 청구항에 연결 어구가 포함되어 있습니다."
         },
         "twTerminology": {
-          "verify": "대만 특허 용어 '请求项'이 발견되었습니다. CNIPA 출원에는 '权利要求'를 사용하세요.",
-          "pass": "청구항 용어가 CNIPA 규범에 적합합니다."
+          "verify": "대만 특허 용어 '请求项' 검출 — CNIPA 출원은 '权利要求'를 사용해야 합니다.",
+          "pass": "청구항이 CNIPA 용어(权利要求)를 사용합니다."
         },
         "specReference": {
-          "amend": "{{count}}개 청구항이 명세서 또는 도면을 인용합니다: {{claims}}.",
-          "pass": "명세서 또는 도면을 인용하는 청구항이 없습니다."
+          "amend": "{{count}}개 청구항이 명세서 또는 도면을 참조합니다: {{claims}}.",
+          "pass": "명세서나 도면을 참조하는 청구항이 없습니다."
         },
         "multiMultiDep": {
-          "amend": "{{claims}}: 다항 종속 청구항이 다른 다항 종속 청구항을 인용합니다.",
-          "pass": "다항 종속 청구항의 연쇄 인용이 발견되지 않았습니다."
+          "amend": "{{claims}}: 다항 종속 청구항이 다른 다항 종속 청구항을 참조합니다.",
+          "pass": "다항 종속의 연쇄 참조가 없습니다."
         },
         "dependentOrdering": {
-          "amend": "종속 청구항이 인용 대상 독립 청구항 바로 뒤에 배치되지 않았습니다.",
-          "pass": "종속 청구항 배치 순서가 올바릅니다."
+          "amend": "종속 청구항이 해당 독립 청구항 직후에 묶여 있지 않습니다.",
+          "pass": "종속 청구항이 독립 청구항 직후에 올바르게 묶여 있습니다."
         },
         "antecedentBasis": {
-          "verify": "{{claims}}에 선행사가 없는 용어가 총 {{issue_count}}개 있을 가능성이 있습니다.",
-          "pass": "모든 인용 용어에 선행사가 있습니다."
+          "verify": "{{claims}}에서 선행사가 없을 수 있는 용어가 {{issue_count}}개 있습니다.",
+          "pass": "모든 청구항 용어에 선행사가 있습니다."
         }
       },
       "abstract": {
         "charCount": {
-          "amend": "요약서가 300자를 초과합니다 ({{count}}자).",
+          "amend": "요약서가 300자 제한을 초과합니다 ({{count}}자).",
           "pass": "요약서가 300자 이내입니다 ({{count}}자)."
         },
         "titleMatch": {
-          "verify": "요약서에 발명 명칭이 포함되어 있지 않습니다.",
-          "pass": "요약서에 발명 명칭이 포함되어 있습니다."
+          "verify": "요약서가 발명의 명칭(发明名称)을 언급하지 않습니다.",
+          "pass": "요약서에 발명의 명칭이 포함되어 있습니다."
         },
         "commercialLanguage": {
-          "amend": "요약서에 상업적 광고 용어가 포함되어 있습니다: {{terms}}.",
-          "pass": "요약서에 상업적 광고 용어가 발견되지 않았습니다."
+          "amend": "요약서에 상업적·광고성 표현이 포함되어 있습니다: {{terms}}.",
+          "pass": "요약서에 상업적·광고성 표현이 없습니다."
         }
       },
       "drawings": {
         "figureCount": {
-          "pass": "도면 {{count}}장."
+          "pass": "도면 {{count}}개가 검출되었습니다."
         },
         "figuresSequential": {
-          "pass": "도면 1–{{found_max}}이 연속적으로 번호가 매겨져 있습니다.",
-          "amend": "도면 번호가 연속적이지 않습니다. 누락: {{figure_list}}."
+          "pass": "도 1–{{found_max}}이(가) 순차적으로 번호 매겨져 있습니다.",
+          "amend": "도면 번호가 순차적이지 않습니다 — 누락: {{figure_list}}."
         }
       }
     },
     "tw": {
       "spec": {
         "requiredSections": {
-          "amend": "專利法施行細則 §17에 따라 필수 섹션이 누락되었습니다.",
-          "pass": "모든 필수 섹션이 포함되어 있습니다."
+          "amend": "필수 섹션이 누락되었습니다 (專利法施行細則 §17).",
+          "pass": "명세서의 모든 필수 섹션이 존재합니다."
         },
         "sectionOrdering": {
-          "amend": "專利法施行細則 §17에 따라 섹션 순서가 올바르지 않습니다.",
-          "pass": "섹션 순서가 올바릅니다."
+          "amend": "명세서 섹션이 규정된 순서와 다릅니다 (專利法施行細則 §17).",
+          "pass": "명세서 섹션이 규정된 순서에 따릅니다."
         },
         "paragraphNumbering": {
-          "pass": "단락 번호가 올바르거나 번호가 없습니다.",
-          "amendGap": "단락 번호가 연속되지 않습니다: 【{{prev}}】 다음이 【{{next}}】입니다.",
-          "amendFormat": "{{count}}개 단락이 【NNNN】 형식을 사용하지 않습니다. 예: {{examples}}."
+          "pass": "단락 번호가 순차적입니다 (또는 부재).",
+          "amendGap": "단락 번호에 누락이 있습니다 — 【{{prev}}】 다음에 【{{next}}】.",
+          "amendFormat": "【NNNN】 형식이 아닌 단락이 {{count}}개 있습니다. 예: {{examples}}."
         },
         "paragraphEnding": {
-          "amend": "{{count}}개 단락에 종결 부호가 없습니다: 단락 {{paragraphs}}.",
-          "pass": "모든 단락이 올바른 문장부호로 끝납니다."
+          "amend": "종결 부호가 누락된 단락이 {{count}}개 있습니다: {{paragraphs}}.",
+          "pass": "모든 명세서 단락이 중국어 문장 종결 부호로 끝납니다."
         },
         "figureRefConsistency": {
-          "verify": "도면 인용이 일치하지 않습니다: {{figure_ref_inconsistency}}",
-          "pass": "각 섹션 간의 도면 참조가 일치합니다."
+          "verify": "도면 참조에 불일치가 있습니다: {{figure_ref_inconsistency}}",
+          "pass": "섹션 간 도면 참조가 일관됩니다."
         },
         "patentTypeTerminology": {
-          "verify": "특허 유형 용어 불일치가 감지되었습니다.",
-          "pass": "특허 유형 용어가 일치합니다."
+          "verify": "출원 종류(발명·신형) 용어 불일치가 검출되었습니다.",
+          "pass": "출원 종류 용어가 일관됩니다."
         },
         "title": {
-          "amendContent": "발명의 명칭 또는 신형의 명칭에 부적절한 내용이 포함되어 있습니다: {{title_prohibited_items}}",
-          "pass": "發明名稱/新型名稱이 요건을 충족합니다.",
-          "amendMissing": "발명의 명칭을 찾을 수 없습니다."
+          "amendContent": "명칭에 금지된 내용이 포함되어 있습니다: {{title_prohibited_items}}.",
+          "pass": "명칭이 TIPO 요건을 충족합니다.",
+          "amendMissing": "명세서에 명칭이 누락되어 있습니다."
         },
         "claimReference": {
-          "amend": "명세서에 請求項 참조가 포함되어 있습니다.",
-          "pass": "명세서에 請求項 참조가 없습니다."
+          "amend": "명세서가 청구항을 참조합니다.",
+          "pass": "명세서가 청구항을 참조하지 않습니다."
         },
         "symbolTablePresence": {
-          "amend": "符號說明 섹션이 누락되었습니다.",
-          "pass": "符號說明 섹션이 포함되어 있습니다."
+          "amend": "필수 符號說明 섹션이 누락되었습니다.",
+          "pass": "符號說明 섹션이 존재합니다."
         },
         "symbolTableConsistency": {
-          "verify": "부호설명 내용이 실시방식과 일치하지 않습니다: {{symbol_table_inconsistency}}",
-          "pass": "符號說明 내용이 명세서와 일치합니다."
+          "verify": "符號說明 항목이 實施方式과 일치하지 않습니다: {{symbol_table_inconsistency}}",
+          "pass": "符號說明 항목이 實施方式과 일치합니다."
         }
       },
       "claims": {
         "sequential": {
-          "amend": "청구항 번호가 연속되지 않습니다: 예상 제{{expected}}항, 실제 제{{found}}항.",
-          "pass": "請求項 번호가 연속적입니다."
+          "amend": "청구항 번호가 순차적이지 않습니다: 예상 {{expected}}, 실제 {{found}}.",
+          "pass": "청구항이 순차적으로 번호 매겨져 있습니다."
         },
         "dependencyFormat": {
-          "amend": "{{count}}개 청구항의 종속 형식을 인식할 수 없습니다: {{claims}}.",
-          "pass": "모든 종속 참조가 올바른 형식을 사용합니다."
+          "amend": "{{count}}개 청구항에서 종속 형식을 인식할 수 없습니다: {{claims}}.",
+          "pass": "모든 종속 참조가 인식 가능한 형식입니다."
         },
         "selfDependent": {
-          "amend": "자기 종속 請求項이 발견되었습니다.",
-          "pass": "자기 종속 請求項이 없습니다."
+          "amend": "자기 종속 청구항이 검출되었습니다.",
+          "pass": "자기 종속 청구항이 없습니다."
         },
         "circularDependency": {
-          "amend": "순환 종속이 발견되었습니다.",
-          "pass": "순환 종속이 없습니다."
+          "amend": "순환 종속 체인이 검출되었습니다.",
+          "pass": "순환 종속 체인이 없습니다."
         },
         "forwardDependency": {
-          "amend": "{{claims}}이(가) 후행 請求項을 인용합니다.",
-          "pass": "후행 請求項 인용이 없습니다."
+          "amend": "{{claims}}이(가) 후행 청구항을 참조합니다 (전방 종속).",
+          "pass": "모든 종속이 선행 청구항을 참조합니다."
         },
         "singleSentence": {
-          "amend": "{{count}}개 청구항이 단일 문장으로 작성되지 않았습니다: {{claims}}.",
-          "pass": "모든 請求項이 단일 문장입니다.",
-          "amendMissingPeriod": "{{count}}개 청구항에 마침표가 없습니다: {{claims}}.",
-          "amendMultiSentence": "{{count}}개 청구항이 단일 문장으로 작성되지 않았습니다: {{claims}}."
+          "amend": "다문장 청구항이 {{count}}개 있습니다: {{claims}}.",
+          "pass": "모든 청구항이 단일 문장으로 작성되어 있습니다.",
+          "amendMissingPeriod": "{{count}}개 청구항에 종결 마침표가 누락되었습니다: {{claims}}.",
+          "amendMultiSentence": "다문장 청구항이 {{count}}개 있습니다: {{claims}}."
         },
         "refNumeralParens": {
-          "verify": "{{count}}개 청구항의 구성요소 부호가 괄호로 표시되지 않았습니다: {{claims}}.",
-          "pass": "모든 請求項의 부호가 괄호로 둘러싸여 있습니다."
+          "verify": "{{count}}개 청구항에서 참조 부호가 괄호로 둘러싸여 있지 않습니다: {{claims}}.",
+          "pass": "모든 참조 부호가 괄호로 둘러싸여 있습니다."
         },
         "subjectConsistency": {
-          "verify": "{{claims}}의 標的名稱이 부모 청구항과 일치하지 않습니다 (총 {{count}}개).",
-          "pass": "모든 종속항의 標的名稱이 모항과 일치합니다."
+          "verify": "{{claims}}의 주제명이 모항과 일치하지 않습니다 (총 {{count}}개).",
+          "pass": "종속 청구항의 주제명이 모항과 일치합니다."
         },
         "transitionPhrase": {
-          "verify": "{{count}}개 독립항에 특징 連接詞가 없습니다: {{claims}}.",
-          "pass": "모든 독립항에 連接詞가 포함되어 있습니다."
+          "verify": "{{count}}개 독립 청구항에 연결 어구가 누락되어 있습니다: {{claims}}.",
+          "pass": "모든 독립 청구항에 연결 어구가 포함되어 있습니다."
         },
         "cnTerminology": {
-          "verify": "TW 문서에서 CNIPA 용어가 발견되었습니다.",
-          "pass": "請求項이 올바른 TIPO 용어를 사용합니다."
+          "verify": "TW 문서에서 CNIPA 용어가 검출되었습니다.",
+          "pass": "청구항이 TIPO 용어를 사용합니다."
         },
         "specDrawingRef": {
-          "amend": "請求項에 명세서 또는 도면 참조가 포함되어 있습니다.",
-          "pass": "請求項에 명세서 또는 도면 참조가 없습니다."
+          "amend": "청구항이 명세서 또는 도면을 참조합니다.",
+          "pass": "명세서나 도면을 참조하는 청구항이 없습니다."
         },
         "multiDepOnMultiDep": {
-          "amend": "다항 종속항이 다른 다항 종속항에 종속되어 있습니다.",
-          "pass": "다항 종속항의 종속 관계가 정상입니다."
+          "amend": "다항 종속 청구항이 다른 다항 종속 청구항에 종속됩니다.",
+          "pass": "모든 다항 종속 청구항이 유효한 종속 구조를 가집니다."
         },
         "multiDepAlternative": {
-          "amend": "다항 종속항이 택일 형식을 사용하지 않습니다.",
-          "pass": "모든 다항 종속항이 택일 형식을 사용합니다."
+          "amend": "택일 형식으로 작성되지 않은 다항 종속 청구항이 있습니다.",
+          "pass": "모든 다항 종속 청구항이 택일 형식으로 작성되어 있습니다."
         },
         "titleSubjectMatch": {
-          "verify": "발명의 명칭「{{title}}」이 독립항 標的「{{subjects}}」와 일치하지 않을 수 있습니다.",
-          "pass": "發明名稱/新型名稱이 독립항 標的과 일치합니다."
+          "verify": "명칭 \"{{title}}\"이(가) 독립 청구항의 주제와 일치하지 않을 수 있습니다: {{subjects}}.",
+          "pass": "명칭이 독립 청구항의 주제와 일치합니다."
         },
         "symbolTableConsistency": {
-          "verify": "請求項의 부호가 符號說明과 일치하지 않습니다.",
-          "pass": "請求項의 부호가 符號說明과 일치합니다.",
-          "noClaimNumerals": "청구항에 참조 부호가 없습니다(시행규칙 §19 허용). 일관성 검사 미적용."
+          "verify": "청구항 내 참조 부호가 符號說明과 일치하지 않습니다.",
+          "pass": "청구항 내 참조 부호가 符號說明과 일치합니다.",
+          "noClaimNumerals": "청구항에 참조 부호가 없어 일치성 검증 대상이 아닙니다."
         },
         "antecedentBasis": {
-          "verify": "{{claims}}에 선행사가 없는 용어가 총 {{issue_count}}개 있을 가능성이 있습니다.",
-          "pass": "모든 참조 용어에 선행사가 있습니다."
+          "verify": "{{claims}}에서 선행사가 없을 수 있는 용어가 {{issue_count}}개 있습니다.",
+          "pass": "모든 청구항 용어에 선행사가 있습니다."
         }
       },
       "abstract": {
         "charCount": {
-          "verify": "요약이 250자를 초과합니다({{count}}자).",
-          "pass": "요약이 250자 이내입니다({{count}}자)."
+          "verify": "요약서가 250자 제한을 초과합니다 ({{count}}자).",
+          "pass": "요약서가 250자 이내입니다 ({{count}}자)."
         },
         "titleMatch": {
-          "verify": "요약에 發明名稱/新型名稱이 포함되지 않았을 수 있습니다.",
-          "pass": "요약에 發明名稱/新型名稱이 포함되어 있습니다."
+          "verify": "요약서가 發明名稱/新型名稱을 언급하지 않을 수 있습니다.",
+          "pass": "요약서에 發明名稱/新型名稱이 포함되어 있습니다."
         },
         "commercialLanguage": {
-          "amend": "요약에 상업적 광고 용어가 포함되어 있습니다.",
-          "pass": "요약에 상업적 광고 용어가 없습니다."
+          "amend": "요약서에 상업적 표현이 포함되어 있습니다.",
+          "pass": "요약서에 상업적 표현이 없습니다."
         },
         "representativeDrawing": {
-          "verify": "代表圖 지정이 발견되지 않습니다.",
-          "pass": "代表圖가 지정되어 있습니다."
+          "verify": "대표도(代表圖) 지정이 없습니다.",
+          "pass": "대표도(代表圖)가 지정되어 있습니다."
         }
       },
       "crossRef": {
@@ -963,11 +963,11 @@
       },
       "drawings": {
         "figureCount": {
-          "pass": "도면 {{count}}장."
+          "pass": "도면 {{count}}개가 검출되었습니다."
         },
         "figuresSequential": {
-          "pass": "도면 1–{{found_max}}이 연속적으로 번호가 매겨져 있습니다.",
-          "amend": "도면 번호가 연속적이지 않습니다. 누락: {{figure_list}}."
+          "pass": "도 1–{{found_max}}이(가) 순차적으로 번호 매겨져 있습니다.",
+          "amend": "도면 번호가 순차적이지 않습니다 — 누락: {{figure_list}}."
         }
       }
     }
