@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "description": "TW synthetic-fixture registry. Maps each synthetic .docx to its target walker mechanism, retirement threshold, and over-fit audit provenance. Re-read by Phase G invocations to drive synthetic retirement when real-corpus coverage reaches thresholds. Initial state is empty; Phase A2 populates this file as synthetics are authored. Plan reference: /Users/chrischen/.claude/plans/structured-cuddling-parnas.md Phase A0.",
+  "status_lifecycle": {
+    "active": "Target mechanism not yet shipped. Synthetic drives Phase C round viability.",
+    "regression_only": "Mechanism shipped; synthetic stays in harness as protected regression test.",
+    "retired": "Real corpus has ≥N hits (per retirement_threshold); synthetic removed from harness manifest but build script still reproduces it for audit."
+  },
+  "synthetic_fixtures": [],
+  "retirement_log": []
+}
