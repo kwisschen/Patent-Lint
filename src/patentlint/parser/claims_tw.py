@@ -17,8 +17,10 @@ _TW_CLAIM_NUM = re.compile(r"^[\s\u3000]*(\d+)\s*[.．]\s*", re.MULTILINE)
 _TW_DEP_PATTERN = re.compile(
     r"如請求項\s*"
     r"(\d+)"
-    r"(?:\s*(?:~|至|到)\s*(\d+))?"
-    r"((?:\s*(?:或|、)\s*\d+)*)"
+    # Range tail: allow an explicit ``請求項`` before the end number
+    # (e.g. ``如請求項4至請求項10中任一項所述``).
+    r"(?:\s*(?:~|至|到)\s*(?:請求項\s*)?(\d+))?"
+    r"((?:\s*(?:或|、)\s*(?:請求項\s*)?\d+)*)"
     r"(?:\s*中\s*任一?項)?"
     r"\s*所?述?[之的]?"
 )
@@ -69,38 +71,52 @@ def parse_tw_claims(paragraphs: list[str]) -> list[Claim]:
         body = _TW_CLAIM_NUM.sub("", claim_text, count=1).lstrip()
         has_indep_preamble = bool(_TW_INDEP_PREAMBLE.match(body))
 
-        deps: list[int] = []
-        if not has_indep_preamble:
-            # Only extract deps on non-`一種`/`一個` preambles. For quoted-
-            # reference independent claims the `如請求項N` tokens in the
-            # body are incorporation-by-reference, not dependencies.
-            for dep_match in _TW_DEP_PATTERN.finditer(claim_text):
-                dep_start = int(dep_match.group(1))
-                dep_end_str = dep_match.group(2)
-                or_tail = dep_match.group(3)
+        # Scan the full claim text for ``如請求項N所述`` refs. These are
+        # routed to either ``dependencies`` (statutory parent) or
+        # ``quoted_references`` (引用記載型式 incorporation-by-reference)
+        # depending on the preamble form.
+        refs: list[int] = []
+        for dep_match in _TW_DEP_PATTERN.finditer(claim_text):
+            dep_start = int(dep_match.group(1))
+            dep_end_str = dep_match.group(2)
+            or_tail = dep_match.group(3)
 
-                if dep_end_str:
-                    # Range: 請求項1~3
-                    dep_end = int(dep_end_str)
-                    deps.extend(range(dep_start, dep_end + 1))
-                else:
-                    deps.append(dep_start)
+            if dep_end_str:
+                # Range: 請求項1~3
+                dep_end = int(dep_end_str)
+                refs.extend(range(dep_start, dep_end + 1))
+            else:
+                refs.append(dep_start)
 
-                # Additional numbers from "或N、N" tail
-                if or_tail:
-                    for m in _OR_NUMS.finditer(or_tail):
-                        deps.append(int(m.group(1)))
+            # Additional numbers from "或N、N" tail
+            if or_tail:
+                for m in _OR_NUMS.finditer(or_tail):
+                    refs.append(int(m.group(1)))
 
-            # Deduplicate (keep self-refs for check detection downstream)
-            deps = sorted(set(deps))
+        # Deduplicate (keep self-refs for check detection downstream)
+        refs = sorted(set(refs))
 
-        is_independent = has_indep_preamble or len(deps) == 0
+        if has_indep_preamble:
+            # 引用記載型式 / pure independent: preamble declares a new
+            # subject. Any 如請求項N in the body is incorporation-by-
+            # reference for the walker's ancestor chain, NOT a statutory
+            # dependency.
+            deps: list[int] = []
+            quoted_refs: list[int] = refs
+            is_independent = True
+        else:
+            # Standard dependent (or multi-dependent) preamble: the refs
+            # are statutory parent claims.
+            deps = refs
+            quoted_refs = []
+            is_independent = len(deps) == 0
 
         claims.append(Claim(
             id=num,
             text=claim_text,
             independent=is_independent,
             dependencies=deps,
+            quoted_references=quoted_refs,
             multiple_dependent=len(deps) > 1,
             method_claim=False,
         ))
