@@ -1213,6 +1213,24 @@ _F12_ADJ_REJECTS_CN: tuple[str, ...] = (
     '基于', '根据',
 )
 
+# F7d: participial `<tail>的Y` intro family. Phase 8c R14b.
+# Stative-participle tails that introduce a new noun Y after 的. Intentionally
+# narrow allowlist — DE_POSSESSIVE is heterogeneous and a broad `V的Y` regex
+# would over-fire. Post-capture cleanup via clean_noun_phrase_cn handles
+# trailing-verb overcaptures (e.g., 训练目标进行训练 → 训练目标 via interior-verb
+# truncation at 进行 from R8).
+_F7D_PARTICIPIAL_TAILS_CN: tuple[str, ...] = (
+    '所对应', '按照预设', '相对应', '接收到',
+    '预设', '所需', '相关', '对应', '匹配',
+    '得到', '制得', '执行', '制造', '相连',
+    '生成', '连接', '形成', '组成',
+)
+_F7D_PATTERN_CN: re.Pattern[str] = re.compile(
+    r'(?:' + '|'.join(re.escape(t) for t in _F7D_PARTICIPIAL_TAILS_CN) + r')'
+    r'的([\u4e00-\u7683\u7685-\u9fff]{2,12}(?:\([A-Za-z0-9]+\))?)'
+)
+# Reuses _F12_ADJ_REJECTS_CN.
+
 # F5a ref-prefix set (Q1: 该等/该些 excluded).
 _REF_PREFIX_SET_CN = ('所述', '该', '前述')
 
@@ -1425,6 +1443,18 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
             continue
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', raw)
         if len(normalized) < 4:
+            continue
+        results.append((m.group(0), normalized))
+
+    # F7d: participial <tail>的Y. R14b.
+    for m in _F7D_PATTERN_CN.finditer(text):
+        raw = m.group(1)
+        if raw.startswith(_REF_PREFIX_SET_CN):
+            continue
+        if raw.startswith(_F12_ADJ_REJECTS_CN):
+            continue
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', raw)
+        if len(normalized) < 2:
             continue
         results.append((m.group(0), normalized))
 
