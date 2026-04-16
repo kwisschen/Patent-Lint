@@ -26,12 +26,29 @@ _TW_DEP_PATTERN = re.compile(
 # Extract individual numbers from the "或N、N" tail
 _OR_NUMS = re.compile(r"(\d+)")
 
+# Independent-claim preamble: `一種X` / `一個X` at the start of the claim
+# body (after the "N. " number prefix). Per TIPO 專利法施行細則 §18, the
+# statutory marker of an independent claim is the preamble subject form,
+# not the absence of 如請求項N references — claims in 引用記載型式
+# (quoted-reference format) use `一種X，具備如請求項N所述的Y` to declare
+# a new invention subject X while incorporating claim N's Y by reference.
+_TW_INDEP_PREAMBLE = re.compile(r"^(?:一種|一個)\s*")
+
 
 def parse_tw_claims(paragraphs: list[str]) -> list[Claim]:
     """Parse TW claims into Claim model objects.
 
     TW claims use Arabic numerals: '1.', '2.', etc.
     Dependencies use '如請求項N所述之' format.
+
+    Claim independence is classified by **preamble**, not by the absence of
+    ``如請求項N`` references: claims in 引用記載型式 (quoted-reference
+    format) have both a `一種X` preamble declaring a new subject AND a
+    body-embedded `如請求項N所述的Y` that incorporates Y from claim N as a
+    sub-component. Such claims are independent per §18 — the embedded
+    reference is incorporation-by-reference, not a dependency. Treating
+    them as dependent produces spurious subject-consistency, dependency-
+    format, and multi-dep flags.
     """
     text = "\n".join(paragraphs)
     if not text.strip():
@@ -48,31 +65,41 @@ def parse_tw_claims(paragraphs: list[str]) -> list[Claim]:
         end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
         claim_text = text[start:end].strip()
 
+        # Strip the "N. " prefix to isolate the body for preamble check.
+        body = _TW_CLAIM_NUM.sub("", claim_text, count=1).lstrip()
+        has_indep_preamble = bool(_TW_INDEP_PREAMBLE.match(body))
+
         deps: list[int] = []
-        for dep_match in _TW_DEP_PATTERN.finditer(claim_text):
-            dep_start = int(dep_match.group(1))
-            dep_end_str = dep_match.group(2)
-            or_tail = dep_match.group(3)
+        if not has_indep_preamble:
+            # Only extract deps on non-`一種`/`一個` preambles. For quoted-
+            # reference independent claims the `如請求項N` tokens in the
+            # body are incorporation-by-reference, not dependencies.
+            for dep_match in _TW_DEP_PATTERN.finditer(claim_text):
+                dep_start = int(dep_match.group(1))
+                dep_end_str = dep_match.group(2)
+                or_tail = dep_match.group(3)
 
-            if dep_end_str:
-                # Range: 請求項1~3
-                dep_end = int(dep_end_str)
-                deps.extend(range(dep_start, dep_end + 1))
-            else:
-                deps.append(dep_start)
+                if dep_end_str:
+                    # Range: 請求項1~3
+                    dep_end = int(dep_end_str)
+                    deps.extend(range(dep_start, dep_end + 1))
+                else:
+                    deps.append(dep_start)
 
-            # Additional numbers from "或N、N" tail
-            if or_tail:
-                for m in _OR_NUMS.finditer(or_tail):
-                    deps.append(int(m.group(1)))
+                # Additional numbers from "或N、N" tail
+                if or_tail:
+                    for m in _OR_NUMS.finditer(or_tail):
+                        deps.append(int(m.group(1)))
 
-        # Deduplicate (keep self-refs for check detection downstream)
-        deps = sorted(set(deps))
+            # Deduplicate (keep self-refs for check detection downstream)
+            deps = sorted(set(deps))
+
+        is_independent = has_indep_preamble or len(deps) == 0
 
         claims.append(Claim(
             id=num,
             text=claim_text,
-            independent=len(deps) == 0,
+            independent=is_independent,
             dependencies=deps,
             multiple_dependent=len(deps) > 1,
             method_claim=False,

@@ -514,9 +514,12 @@ class TestTwInventionAllPass:
         result = analyze_bytes(
             _build_tw_invention_all_pass(), "tw_invention.docx", Jurisdiction.TW
         )
-        # Claim 5 contains "如請求項1所述之散熱裝置" so parser detects dependency
-        assert result.independent_claims_count == 1
-        assert result.dependent_claims_count == 4
+        # Claim 5 is 引用記載型式 (quoted-reference independent) — preamble
+        # `一種散熱系統` declares a new subject; the body's `如請求項1所述
+        # 之散熱裝置` is incorporation-by-reference, not dependency.
+        # Claims 2/3/4 are true dependents.
+        assert result.independent_claims_count == 2
+        assert result.dependent_claims_count == 3
 
 
 class TestTwUtilityModelAllPass:
