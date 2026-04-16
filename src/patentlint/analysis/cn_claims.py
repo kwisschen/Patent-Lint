@@ -667,6 +667,14 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # Phase 8c R22 — single-char preposition residues from BYD-style
         # paren-numeral terms (从动凸轮(320)由, 凹部(322)沿, 辅助层沿).
         "由", "沿",
+        # Phase 8c R23 — multi-char trailing verbs from over_capture pool
+        # (77-active stratification). Compound-noun risk audited per token
+        # against full corpus V+CJK matches; all dominated by particle/
+        # determiner suffixes (所/时/的/方) that don't form noun compounds.
+        "录入", "推荐", "导入", "提取", "转动", "重复",
+        "体外培养", "胰蛋白酶消化", "铰接", "选自", "代替", "交联",
+        "检查", "查询", "保存", "固定", "回复", "消化",
+        "恢复",
     ),
     key=len,
     reverse=True,
@@ -776,6 +784,11 @@ _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
         "进行",
         # Phase 8c R12 — additional interior verb overcaptures
         "需要", "发出", "符合",
+        # Phase 8c R23 — interior verb cuts from over_capture pool
+        # (像素界定层限定有X, 处理单元周期性地或非周期, 滑块(230)可移动地设,
+        # 初始地理预训练模型按照预, 处理器核运行客户端进程, 目标预训练模型采用预训练,
+        # 实线边表征不同节点). Compound-noun risk audited per token.
+        "限定有", "周期性地", "可移动地", "按照", "运行", "采用", "表征",
     ),
     key=len,
     reverse=True,
@@ -1541,8 +1554,11 @@ _FORMULA_REFERENCE_RE_CN: re.Pattern[str] = re.compile(r"^式\([^)]+\)$")
 # Phase 8c R22 — verb-predicate term suppression. Walker captured a bare
 # verbal idiom (e.g., 安装有 from 使得安装有X的Y); the trailing-strip already
 # eliminated the noun head, leaving the pure predicate as the term.
+# R23 extends with cascade-product predicates from over_capture round
+# (加入胰蛋白酶消化 → 加入; 加热沸腾提取 → 加热沸腾).
 _VERB_PREDICATE_TERMS_CN: frozenset[str] = frozenset({
     "安装有", "存储有", "形成有", "设置有",
+    "加入", "加热沸腾",
 })
 
 
