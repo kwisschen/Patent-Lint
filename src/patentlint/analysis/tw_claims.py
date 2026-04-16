@@ -2049,22 +2049,55 @@ _DE_NOUN_RE = re.compile(
     r'的(' + _CJK_NO_DE + r'{2,}(?:\([A-Za-z0-9]+\))?)'
 )
 
+# Phase C6 R-TW-F6-extend — F6 verb set + bare-noun arm.
+# Ports CN R14c.1 + R14c.2 (5f650a3 + 25fb3b8). Adds:
+#   * Extended F6 verb set (進行/調用/運行/調整/建立/構建/製得/根據/存在/使用/執行
+#     + 獲取/獲得/得到/生成/產生/發出/發送/接收/輸出/輸入/傳送/存儲/確定/涉及).
+#   * Third arm: bare NP (≥3 CJK chars, no ordinal, no paren).
+#     Per-char F6-verb-boundary negative lookahead prevents greedy capture
+#     from consuming across consecutive F6 verbs. ADJ_REJECTS emission
+#     filter suppresses captures starting with predicate-adjective /
+#     verb-phrase heads.
+# F6-specific CJK class excludes 的 (U+7684) and 之 (U+4E4B) to prevent
+# captures extending into temporal markers (之後/之前) without needing
+# (?![的之]) lookahead.
+_CJK_NO_DE_ZHI_TW = r'[\u4e00-\u4e4a\u4e4c-\u7683\u7685-\u9fff]'
+
+_F6_VERB_ALT_TW = (
+    r'具有|包含|包括|含有|設有|具備'
+    r'|設置|配置|安裝|裝設'
+    r'|形成|構成'
+    r'|提供|連接|連結'
+    r'|獲取|獲得|得到|生成|產生|發出'
+    r'|發送|接收|輸出|輸入|傳送|存儲|確定|涉及'
+    r'|進行|調用|運行|調整|建立|構建|製得|根據|存在|使用|執行'
+)
+
+# Phase C2 F12 ADJ rejects — shared between F6 arm3 emission gate and
+# F12 Tier B/C emission gates. Suppresses bare-NP captures starting
+# with predicate-adjective / verb-phrase heads.
+_F12_ADJ_REJECTS_TW: tuple[str, ...] = (
+    "可", "具有", "具", "經過", "由", "屬於", "用於", "來自",
+    "能夠", "能", "會", "進行", "獲得", "獲取", "接收", "存儲",
+    "輸出", "輸入", "基於", "根據",
+)
+
 _BARE_AFTER_VERB_PATTERN = re.compile(
-    r'(?:'
-    # Structural
-    r'具有|包含|包括|含有|設有'
+    r'(?:' + _F6_VERB_ALT_TW + r')'
+    r'('
+    # Arm 1: ordinal prefix
+    r'第[一二三四五六七八九十\d]+' + _CJK_NO_DE_ZHI_TW + r'+(?:\([A-Za-z0-9]+\))?'
+    # Arm 2: paren-numeral terminated
+    r'|' + _CJK_NO_DE_ZHI_TW + r'+\([A-Za-z0-9]+\)'
+    # Arm 3: bare NP ≥3 CJK chars (gated in emit site by ADJ_REJECTS)
     r'|'
-    # Installation
-    r'設置|配置|安裝|裝設'
-    r'|'
-    # Formation
-    r'形成|構成'
-    r'|'
-    # Provision/connection
-    r'提供|連接|連結'
+    r'(?!第|所述|該|前述|該等|該些)'
+    + r'(?:(?!(?:' + _F6_VERB_ALT_TW + r'))' + _CJK_NO_DE_ZHI_TW + r'){3,20}'
     r')'
-    r'(第[一二三四五六七八九十\d]+' + _CJK_NO_DE + r'+(?:\([A-Za-z0-9]+\))?'
-    r'|' + _CJK_NO_DE + r'+\([A-Za-z0-9]+\))'
+    # Preserve pre-R14c.2 behavior: reject captures followed by 的/之
+    # (attribute modifier form like 具有第一直徑的管道 — 第一直徑 is NOT
+    # an intro there, 管道 is). TW diverges from CN R14c.2 here because
+    # TW corpus uses this pattern more frequently than CN.
     r'(?![的之])'
 )
 
@@ -2175,9 +2208,16 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
         results.append((m.group(0), normalized))
 
-    # F6: 具有/設置/形成 + Y — bare-after-verb intro
+    # F6: 具有/設置/形成/... + Y — bare-after-verb intro
+    # R14c.2: arm 3 (bare NP, no ordinal, no paren) is gated by
+    # _F12_ADJ_REJECTS_TW startswith to suppress predicate-adjective
+    # and verb-phrase heads (可/經過/具有/能夠/用於/基於/根據).
     for m in _BARE_AFTER_VERB_PATTERN.finditer(text):
         noun = m.group(1)
+        if (not noun.startswith('第')
+                and '(' not in noun
+                and noun.startswith(_F12_ADJ_REJECTS_TW)):
+            continue
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
         results.append((m.group(0), normalized))
 
