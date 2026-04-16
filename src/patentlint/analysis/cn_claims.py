@@ -740,6 +740,9 @@ _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
         "相互", "朝向",
         # Stage 4 R2' D1a — 调出 cuts after 处理器指令 prefix (Huawei c3)
         "调出",
+        # Phase 8c R8 — 进行 (carry out) appears mid-term in overcaptures
+        # like 第一设备进行第一信号 → should split to 第一设备.
+        "进行",
     ),
     key=len,
     reverse=True,
