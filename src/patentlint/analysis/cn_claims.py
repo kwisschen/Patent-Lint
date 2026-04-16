@@ -1171,6 +1171,14 @@ _F11_NO_COLON_LIST_ANCHOR_CN: re.Pattern[str] = re.compile(
     r'([\u4e00-\u7683\u7685-\u9fff]{2,}(?:、[\u4e00-\u7683\u7685-\u9fff]{2,})+)'
 )
 
+# Phase 8c R14f — conjunction-split pass. Splits captured intros on
+# 和/与/及/以及 with ≥2 CJK chars each side, registering each element as
+# its own intro so downstream `所述X` / `所述Y` references can resolve
+# when the drafting captured the intro as `X和Y`. Applied as a final
+# pass over _extract_supplementary_intros_cn results after the uniform
+# trailing-verb cleanup.
+_CONJ_SPLIT_RE_CN: re.Pattern[str] = re.compile(r'(.+?)(?:以及|和|与|及)(.+)')
+
 # F13: locative-verb + bare noun (+ optional locative suffix). Phase 8c R14a.
 # Registers Y from `X应用于Y侧` / `X位于Y` as an intro, stripping a trailing
 # locative suffix (侧/端/方/处/面/内/外/上/下/中) when present. The locative
@@ -1436,7 +1444,29 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
         if cleaned_norm.startswith('第') and len(cleaned_norm) < 4:
             continue
         cleaned.append((orig, cleaned_norm))
-    return cleaned
+
+    # R14f conjunction-split: for each cleaned intro containing 和/与/及/以及
+    # with ≥2 CJK chars on each side, register each element as its own intro.
+    seen_norms = {norm for _, norm in cleaned}
+    extras: list[tuple[str, str]] = []
+    for _, norm in cleaned:
+        m = _CONJ_SPLIT_RE_CN.match(norm)
+        if not m:
+            continue
+        for piece in (m.group(1), m.group(2)):
+            piece_clean = clean_noun_phrase_cn(piece)
+            if not piece_clean or len(piece_clean) < 2:
+                continue
+            cjk = sum(1 for c in piece_clean if '\u4e00' <= c <= '\u9fff')
+            if cjk < 2:
+                continue
+            if piece_clean.startswith(_REF_PREFIX_SET_CN):
+                continue
+            if piece_clean in seen_norms:
+                continue
+            seen_norms.add(piece_clean)
+            extras.append((piece_clean, piece_clean))
+    return cleaned + extras
 
 
 def extract_introductions_cn(

@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 18,
+    "current_round": 19,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -1879,8 +1879,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_19_conjunction_split",
+      "round": 19
     },
     {
       "fixture": "CN114357105B",
@@ -2035,8 +2035,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_19_conjunction_split",
+      "round": 19
     },
     {
       "fixture": "CN114357105B",
@@ -2119,8 +2119,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_19_conjunction_split",
+      "round": 19
     },
     {
       "fixture": "CN114357105B",
@@ -2335,8 +2335,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_19_conjunction_split",
+      "round": 19
     },
     {
       "fixture": "CN114357105B",
@@ -2491,8 +2491,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_19_conjunction_split",
+      "round": 19
     },
     {
       "fixture": "CN114357105B",
@@ -2575,8 +2575,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_19_conjunction_split",
+      "round": 19
     },
     {
       "fixture": "CN114357105B",
@@ -13867,8 +13867,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_19_conjunction_split",
+      "round": 19
     },
     {
       "fixture": "CN117427144B",
@@ -16514,8 +16514,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_19_conjunction_split",
+      "round": 19
     },
     {
       "fixture": "CN115485995B",
