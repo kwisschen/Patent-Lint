@@ -155,8 +155,14 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t }) {
       </div>
       <div className={`overflow-hidden transition-all duration-200 ease-in-out ${expanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
         {claimIds.map((id) => {
-          const text = claimTextMap[id]
-          if (!text) return null
+          const rawText = claimTextMap[id]
+          if (!rawText) return null
+          // Strip leading "N. " / "N．" / "N、" the parser preserved on
+          // claim.text. Without this, the rendered line duplicates the
+          // claim number: the component's {id}. label + the claim-text
+          // leading N. produce "1. 1. 一種...".
+          const leadingNum = new RegExp(`^\\s*${id}\\s*[.．、][\\s\\u3000]*`)
+          const text = rawText.replace(leadingNum, '')
           const highlighted = highlightTerms(text, terms)
           return (
             <div
