@@ -45,6 +45,13 @@ _DYM_STOP_PARTICLES_TW: tuple[str, ...] = (
 )
 
 
+# Phase B4 — R14f-analog conjunction-split. Final-pass splitter over
+# supplementary-intro results so `X和Y` / `X與Y` / `X及Y` / `X以及Y` intros
+# register each side as its own intro (≥2 CJK chars on each side).
+# TW-adapted: 与 → 與 (Traditional character).
+_CONJ_SPLIT_RE_TW: re.Pattern[str] = re.compile(r'(.+?)(?:以及|和|與|及)(.+)')
+
+
 def _dym_quality_reject_tw(ref: str, dym: str) -> bool:
     """True if DYM should be suppressed per Phase B3 filters.
 
@@ -2212,7 +2219,31 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
         cleaned_norm = clean_noun_phrase_tw(norm)
         if cleaned_norm and len(cleaned_norm) >= 2:
             cleaned.append((orig, cleaned_norm))
-    return cleaned
+
+    # Phase B4 — R14f-analog conjunction-split: for each cleaned intro
+    # containing 以及/和/與/及 with ≥2 CJK chars on each side, register
+    # each element as its own intro so downstream 所述X / 所述Y references
+    # can resolve when drafting captured the intro as X和Y.
+    seen_norms = {norm for _, norm in cleaned}
+    extras: list[tuple[str, str]] = []
+    for _, norm in cleaned:
+        m = _CONJ_SPLIT_RE_TW.match(norm)
+        if not m:
+            continue
+        for piece in (m.group(1), m.group(2)):
+            piece_clean = clean_noun_phrase_tw(piece)
+            if not piece_clean or len(piece_clean) < 2:
+                continue
+            cjk = sum(1 for c in piece_clean if '\u4e00' <= c <= '\u9fff')
+            if cjk < 2:
+                continue
+            if piece_clean.startswith(_REFERENCE_PREFIXES):
+                continue
+            if piece_clean in seen_norms:
+                continue
+            seen_norms.add(piece_clean)
+            extras.append((piece_clean, piece_clean))
+    return cleaned + extras
 
 
 def extract_introductions_tw(
