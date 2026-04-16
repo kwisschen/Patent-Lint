@@ -24,8 +24,8 @@ _DIDYOUMEAN_THRESHOLD = 0.40
 # Recognized TW dependency format patterns
 _TW_DEP_FORMAT = re.compile(
     r"如請求項\s*\d+"
-    r"(?:\s*(?:~|至|到)\s*\d+)?"
-    r"(?:\s*(?:或|、)\s*\d+)*"
+    r"(?:\s*(?:~|至|到)\s*(?:請求項\s*)?\d+)?"
+    r"(?:\s*(?:或|、)\s*(?:請求項\s*)?\d+)*"
     r"(?:\s*中\s*任一?項)?"
     r"\s*所?述?[之的]?"
 )
@@ -1804,11 +1804,17 @@ def get_ancestor_chain_tw(claim: Claim, all_claims: list[Claim]) -> list[Claim]:
     the immediate parent. This is intentional: 引用記載型式 cross-category
     dependents legitimately reference components introduced in any
     ancestor along the chain.
+
+    The walker traverses BOTH ``dependencies`` (statutory parents) and
+    ``quoted_references`` (引用記載型式 incorporation-by-reference in the
+    claim body). Statutory dependency checks operate on ``dependencies``
+    alone; only the antecedent-basis resolution needs the body-embedded
+    references to reach intros defined in the referenced claim.
     """
     claims_by_id = {c.id: c for c in all_claims}
     chain: list[Claim] = [claim]
     visited: set[int] = {claim.id}
-    queue: list[int] = list(claim.dependencies)
+    queue: list[int] = list(claim.dependencies) + list(claim.quoted_references)
     while queue:
         parent_id = queue.pop(0)
         if parent_id in visited:
@@ -1819,6 +1825,7 @@ def get_ancestor_chain_tw(claim: Claim, all_claims: list[Claim]) -> list[Claim]:
             continue
         chain.append(parent)
         queue.extend(parent.dependencies)
+        queue.extend(parent.quoted_references)
     return chain
 
 
