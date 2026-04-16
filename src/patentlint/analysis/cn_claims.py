@@ -1327,6 +1327,9 @@ _GENUS_PREAMBLE_RE_CN: re.Pattern[str] = re.compile(
 )
 
 
+_FORMULA_ORDINAL_RE_CN: re.Pattern[str] = re.compile(r"^第[A-Za-z]")
+
+
 def _is_bare_genus_self_reference_cn(term: str, claim_text: str) -> bool:
     """Suppress bare-genus self-references in claim preambles (WQ5).
 
@@ -1519,6 +1522,12 @@ def check_antecedent_basis_cn(
                 continue
 
             if "权利要求" in normalized_term:
+                continue
+
+            if len(normalized_term) == 1:
+                continue
+
+            if _FORMULA_ORDINAL_RE_CN.match(normalized_term):
                 continue
 
             issues.append(
