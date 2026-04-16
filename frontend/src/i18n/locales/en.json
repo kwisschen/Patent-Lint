@@ -561,7 +561,9 @@
       "symbolTableInconsistency": {
         "unreferenced": "Defined in 符號說明 but not referenced in 實施方式: {{symbols}}",
         "undefined": "Referenced in 實施方式 but not defined in 符號說明: {{symbols}}"
-      }
+      },
+      "singleSentenceMissingPeriod": "Per 專利法施行細則 §18, each claim must end with a single 。. Add the closing period to the flagged claims.",
+      "singleSentenceMultiSentence": "Per 專利法施行細則 §18, each claim must be one sentence with exactly one 。 at the end. Remove mid-claim 。 or restructure the flagged claims."
     },
     "titleProhibited": {
       "trademark": "Trademark symbol \"{{token}}\"",
@@ -885,7 +887,9 @@
         },
         "singleSentence": {
           "amend": "{{count}} claim(s) are not single-sentence: {{claims}}.",
-          "pass": "All claims are single sentences."
+          "pass": "All claims are single sentences.",
+          "amendMissingPeriod": "{{count}} claim(s) missing ending period: {{claims}}.",
+          "amendMultiSentence": "{{count}} claim(s) are not single-sentence: {{claims}}."
         },
         "refNumeralParens": {
           "verify": "{{count}} claim(s) have reference numerals without parentheses: {{claims}}.",
