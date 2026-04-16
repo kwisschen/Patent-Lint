@@ -63,7 +63,9 @@ const JURISDICTION_CONFIG = {
     drawingsSectionKey: 'section.cn.drawings',
     drawingsShortKey: 'section.cn.drawingsShort',
     abstractSectionKey: 'section.cn.abstract',
-    section112TitleKey: 'section112.title',
+    // CN mirrors TW: heading is 先行詞分析 / Antecedent Basis Analysis,
+    // not "§ 112 Analysis" (§ 112 is a USPTO-specific citation).
+    section112TitleKey: 'section112.titleTw',
     section112PassKey: 'check.claims.antecedentBasis.pass',
     pdfHeaderKey: 'pdf.header',
   },
