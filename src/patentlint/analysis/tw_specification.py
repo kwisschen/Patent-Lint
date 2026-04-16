@@ -220,6 +220,11 @@ _BRACKET_SUBHEADING = re.compile(r"^\[.+\]$")
 _SYMBOL_TABLE_ENTRY = re.compile(
     r"^[A-Za-z0-9~\-]+\s*(?:[‧·.…：:\t]\s*[‧·.…]*\s*|\s{2,}).+"
 )
+# JP-translation-style numbered sub-claim marker in the disclosure body,
+# e.g. `[1]一種蓋組件...，` / `[2]如所述[1]記載的蓋組件...`. When a paragraph
+# starts with this marker, the sub-claim body may legitimately span multiple
+# Word paragraphs (intermediate lines ending with ，/、/；, closing line with 。).
+_BRACKET_CLAIM_MARKER = re.compile(r"^\[\d+\]")
 
 
 def _is_skip_paragraph_ending(text: str) -> bool:
@@ -238,6 +243,14 @@ def check_paragraph_ending(doc: TwPatentDocument) -> list[CheckItem]:
 
     Excludes 符號說明 section, half-width bracket sub-headings, and
     symbol table entry patterns from the check.
+
+    Relaxed sections (發明內容, 圖式簡單說明, 實施方式) also treat
+    JP-translation-style `[N]`-numbered sub-claim groups as single logical
+    units — intermediate continuation paragraphs are skipped and only the
+    closing paragraph of the unit (the one that ends with valid punctuation)
+    is validated. A unit is opened by a paragraph starting with `[<digit>+]`
+    that lacks a valid ending, and closed by the first subsequent paragraph
+    that ends with valid punctuation (or by a new heading/section boundary).
     """
     # Relaxed endings for 圖式簡單說明, 發明內容/新型內容, 實施方式
     # (semicolons and colons allowed for enumerations and step descriptions)
@@ -265,14 +278,29 @@ def check_paragraph_ending(doc: TwPatentDocument) -> list[CheckItem]:
     bad_paragraphs: list[int] = []
     ordinal = 0
     for section_paras, relaxed in sections_to_check:
+        in_claim_unit = False
         for para in section_paras:
             stripped = para.strip()
             if not stripped:
                 continue
             ordinal += 1
             if _is_skip_paragraph_ending(stripped):
+                # Full-bracket subheadings reset any open claim unit.
+                if _BRACKET_SUBHEADING.match(stripped):
+                    in_claim_unit = False
                 continue
-            if not _has_valid_ending_tw(stripped, relaxed):
+            has_valid = _has_valid_ending_tw(stripped, relaxed)
+            if relaxed and _BRACKET_CLAIM_MARKER.match(stripped):
+                # Start of an [N]-numbered sub-claim group.
+                in_claim_unit = not has_valid
+                if not has_valid:
+                    continue  # unit continues into subsequent paragraphs
+            elif relaxed and in_claim_unit:
+                # Continuation paragraph inside an open [N] unit.
+                if has_valid:
+                    in_claim_unit = False
+                continue
+            if not has_valid:
                 bad_paragraphs.append(ordinal)
 
     if bad_paragraphs:
