@@ -24,8 +24,11 @@ def test_length_ratio_rejects_disproportionate_expansion() -> None:
 
 
 def test_length_ratio_accepts_modest_expansion() -> None:
-    # ref len 3, dym len 5 → ratio < 2 → accept (subject to other filters)
-    assert _dym_quality_reject_tw("控制器", "控制器裝置") is False
+    # ref len 3, dym len 4 → ratio < 2 AND suffix <2 CJK → accept.
+    # (Note: prior test used "控制器裝置" with 2-CJK suffix 裝置; that now
+    # falls under F5 modifier-expansion rejection. Use a 1-CJK suffix to
+    # verify length-ratio filter alone doesn't trigger.)
+    assert _dym_quality_reject_tw("控制器", "控制器X") is False
 
 
 # --- Filter 2: leading particle ------------------------------------------
@@ -68,7 +71,30 @@ def test_substring_wrap_with_之_classical_possessive_rejected() -> None:
 
 
 def test_substring_wrap_without_stop_particle_accepted() -> None:
-    # ref ⊂ DYM, but no stop-particle in wrap → accept (genuine match)
+    # ref ⊂ DYM, no stop-particle AND <2 CJK in non-overlap → accept
+    # (短suffix 1-char expansion). Used when DYM is a clean
+    # ref+suffix form like 控制 → 控制器.
+    assert _dym_quality_reject_tw("控制", "控制器") is False
+
+
+# --- Filter 5 (F5): modifier-expanded superset ----------------------------
+
+def test_modifier_prefix_2cjk_rejected_F5() -> None:
+    # DYM = 圖形 + ref (2-CJK modifier prefix) → F5 reject. Generalized
+    # case: 圖形使用者介面 should not DYM-suggest itself for 使用者介面 ref
+    # since the drafter already wrote the right base noun.
+    assert _dym_quality_reject_tw("使用者介面", "圖形使用者介面") is True
+
+
+def test_modifier_suffix_2cjk_rejected_F5() -> None:
+    # DYM = ref + 裝置 (2-CJK modifier suffix) → F5 reject.
+    assert _dym_quality_reject_tw("控制器", "控制器裝置") is True
+
+
+def test_modifier_suffix_1cjk_accepted_F5() -> None:
+    # DYM = ref + 1 CJK (short suffix, not modifier-expanded) → accept.
+    # Boundary case: 1-char expansions are usually inflection/particle,
+    # not modifier, so F5 doesn't trigger.
     assert _dym_quality_reject_tw("控制", "控制器") is False
 
 
@@ -97,3 +123,57 @@ def test_能夠由_traditional_rejected() -> None:
 def test_響應於_traditional_rejected() -> None:
     # CN R21 had 响应于; TW port uses Traditional 響應於
     assert _dym_quality_reject_tw("控制器", "響應於控制器") is True
+
+
+# --- Morphological-prefix fallback (F5) -----------------------------------
+
+def test_morphological_prefix_fallback_basic() -> None:
+    from patentlint.analysis.tw_claims import _morphological_prefix_fallback_tw
+    intros = {
+        "使用者裝置": (1, 0),
+        "位置資訊": (1, 0),
+        "主題標籤": (1, 0),
+    }
+    result = _morphological_prefix_fallback_tw("使用者介面", intros)
+    assert result is not None
+    assert result["term"] == "使用者裝置"
+    assert result["claim_id"] == 1
+
+
+def test_morphological_prefix_fallback_longest_wins() -> None:
+    from patentlint.analysis.tw_claims import _morphological_prefix_fallback_tw
+    # Two candidates share prefix; longer prefix wins.
+    intros = {
+        "第二控制訊號": (4, 0),
+        "第二通訊模組": (4, 0),
+        "第二無線通訊裝置": (4, 0),
+    }
+    result = _morphological_prefix_fallback_tw("第二無線通訊模組", intros)
+    assert result is not None
+    # 第二無線通訊裝置 shares "第二無線通訊" = 5 CJK prefix with ref
+    # 第二通訊模組 shares "第二" = 2 CJK prefix
+    # Longer prefix wins.
+    assert result["term"] == "第二無線通訊裝置"
+
+
+def test_morphological_prefix_fallback_no_match() -> None:
+    from patentlint.analysis.tw_claims import _morphological_prefix_fallback_tw
+    # No intro shares ≥2 CJK prefix with ref → None
+    intros = {
+        "控制器": (1, 0),
+        "感測器": (1, 0),
+    }
+    result = _morphological_prefix_fallback_tw("使用者介面", intros)
+    assert result is None
+
+
+def test_morphological_prefix_fallback_ancestor_proximity_tiebreak() -> None:
+    from patentlint.analysis.tw_claims import _morphological_prefix_fallback_tw
+    # Equal prefix length → nearer ancestor (smaller depth) wins
+    intros = {
+        "使用者A": (1, 2),  # farther ancestor
+        "使用者B": (3, 0),  # current-ish claim
+    }
+    result = _morphological_prefix_fallback_tw("使用者X", intros)
+    assert result is not None
+    assert result["claim_id"] == 3  # nearer ancestor
