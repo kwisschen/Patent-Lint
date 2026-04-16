@@ -680,6 +680,22 @@ _NOUNLIKE_RELAXED_SUFFIXES_CN: frozenset[str] = frozenset(
     {"上", "内", "后", "中", "用", "对"}
 )
 
+# Phase 8c R10 — char-exclusion residue map.
+# Keys: residue chars left at end of terms because _NOUN_CHARS_CN excludes
+# the following char (于→基, 能→功, 应→响).  Values: minimum residual
+# length after stripping the residue char.
+_CHAR_EXCLUSION_RESIDUE_CN: dict[str, int] = {
+    '\u57fa': 3,  # 基 (from 基于) — guard ≥3 protects 培养基
+    '\u54cd': 2,  # 响 (from 响应)
+    '\u529f': 2,  # 功 (from 功能)
+}
+
+# Chemistry chars that legitimately precede 基 (functional-group suffix).
+# When the char before 基 is in this set, 基 is a noun, not a verb residue.
+_CHEMISTRY_BEFORE_JI_CN: frozenset[str] = frozenset(
+    '性酸碱甲乙丙丁养氨羟羧磷烷烯烃硫氧氮氯氢苯胺酮醛酯醇酚'
+)
+
 # Leading quantifier denylist (TC→SC).
 _LEADING_QUANTIFIER_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
     (
@@ -858,6 +874,18 @@ def clean_noun_phrase_cn(text: str) -> str:
             break
         if not stripped:
             break
+
+    # Phase 8c R10 — char-exclusion residue repair.
+    # _NOUN_CHARS_CN excludes 于/能/应 etc., leaving half-compound residues
+    # at the end of captured terms (e.g., 第一设备基 from 基于, 第一功 from
+    # 功能, 第N响 from 响应).  Strip the residue char when it is NOT part
+    # of a legitimate chemistry suffix (培养基, 酸解离性基, 碱基 …).
+    if len(current) >= 3 and current[-1] in _CHAR_EXCLUSION_RESIDUE_CN:
+        guard = _CHAR_EXCLUSION_RESIDUE_CN[current[-1]]
+        if len(current) - 1 >= guard:
+            if current[-1] != '\u57fa' or current[-2] not in _CHEMISTRY_BEFORE_JI_CN:
+                current = current[:-1]
+
     return current
 
 
