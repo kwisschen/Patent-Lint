@@ -763,6 +763,8 @@ _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
         # Phase 8c R8 — 进行 (carry out) appears mid-term in overcaptures
         # like 第一设备进行第一信号 → should split to 第一设备.
         "进行",
+        # Phase 8c R12 — additional interior verb overcaptures
+        "需要", "发出", "符合",
     ),
     key=len,
     reverse=True,

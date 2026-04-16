@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 12,
+    "current_round": 13,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -171,8 +171,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_13_interior_verb_extension",
+      "round": 13
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -411,8 +411,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_13_interior_verb_extension",
+      "round": 13
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -879,8 +879,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_13_interior_verb_extension",
+      "round": 13
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1011,8 +1011,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_13_interior_verb_extension",
+      "round": 13
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1227,8 +1227,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_13_interior_verb_extension",
+      "round": 13
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1335,8 +1335,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_13_interior_verb_extension",
+      "round": 13
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1455,8 +1455,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_13_interior_verb_extension",
+      "round": 13
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1827,8 +1827,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_13_interior_verb_extension",
+      "round": 13
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -17698,6 +17698,54 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN110276410B (BOE)",
+      "claim_id": 1,
+      "term": "离群值因子",
+      "reference_form": "所述离群值因子",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R12 shifting: resurfaced from interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN110276410B (BOE)",
+      "claim_id": 4,
+      "term": "离群值因子",
+      "reference_form": "所述离群值因子",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R12 shifting: resurfaced from interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN113939805B (Huawei)",
+      "claim_id": 1,
+      "term": "客户端进程",
+      "reference_form": "所述客户端进程",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R12 shifting: resurfaced from interior verb split.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN113939805B (Huawei)",
+      "claim_id": 7,
+      "term": "客户端进程",
+      "reference_form": "所述客户端进程",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "R12 shifting: resurfaced from interior verb split.",
       "resolved_by": null,
       "round": 0
     }
