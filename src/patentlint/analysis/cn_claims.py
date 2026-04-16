@@ -1172,25 +1172,35 @@ _POST_DE_ORDINAL_PATTERN_CN = re.compile(
     r'的(第[一二三四五六七八九十\d]+' + _CJK_NO_DE_CN + r'+(?:\([A-Za-z0-9]+\))?)'
 )
 
-_BARE_AFTER_VERB_PATTERN_CN = re.compile(
-    r'(?:'
+# Phase 8c R14c.2 — F6 bare-noun relax.
+# Adds a third capture arm: bare NP (≥3 CJK chars, no ordinal, no paren).
+# Gated by:
+#   - negative lookahead against _F12_ADJ_REJECTS_CN (rejects predicate-
+#     adjective / verb-phrase heads like 经/可/具有/能够/用于/基于)
+#   - negative lookahead against 第/所述/该/前述 (arm1 or ref-prefix)
+#   - per-CJK-char negative lookahead against F6 verbs, so arm3's greedy
+#     CJK{3,20} stops at the next F6-verb start rather than consuming
+#     across `进行处理得到第N信号` and blocking arm1 at 得到第N信号.
+# See docs/8c/r14c2-f6-bare-noun.md.
+_F6_VERB_ALT_CN = (
     r'具有|包含|包括|含有|设有'
+    r'|设置|配置|安装|装设'
+    r'|形成|构成'
+    r'|提供|连接|连结'
+    r'|获取|获得|得到|生成|产生|发出'
+    r'|发送|接收|输出|输入|传送|存储|确定|涉及'
+    r'|进行|调用|运行|调整|建立|构建|制得|根据|存在|使用'
+)
+
+_BARE_AFTER_VERB_PATTERN_CN = re.compile(
+    r'(?:' + _F6_VERB_ALT_CN + r')'
+    r'('
+    r'第[一二三四五六七八九十\d]+' + _CJK_NO_DE_ZHI_CN + r'+(?:\([A-Za-z0-9]+\))?'
+    r'|' + _CJK_NO_DE_ZHI_CN + r'+\([A-Za-z0-9]+\)'
     r'|'
-    r'设置|配置|安装|装设'
-    r'|'
-    r'形成|构成'
-    r'|'
-    r'提供|连接|连结'
-    r'|'
-    r'获取|获得|得到|生成|产生|发出'
-    r'|'
-    r'发送|接收|输出|输入|传送|存储|确定|涉及'
-    r'|'
-    # Phase 8c R14c.1 — F6 verb-set extension
-    r'进行|调用|运行|调整|建立|构建|制得|根据|存在|使用'
+    r'(?!第|所述|该|前述)'
+    + r'(?:(?!(?:' + _F6_VERB_ALT_CN + r'))' + _CJK_NO_DE_ZHI_CN + r'){3,20}'
     r')'
-    r'(第[一二三四五六七八九十\d]+' + _CJK_NO_DE_ZHI_CN + r'+(?:\([A-Za-z0-9]+\))?'
-    r'|' + _CJK_NO_DE_ZHI_CN + r'+\([A-Za-z0-9]+\))'
 )
 
 # F11: colon-anchored list-after-包括/包含/含有 (WQ8 / R3).
@@ -1343,6 +1353,13 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
     # F6: verb + Y — bare-after-verb
     for m in _BARE_AFTER_VERB_PATTERN_CN.finditer(text):
         noun = m.group(1)
+        # R14c.2: bare-NP arm (no ordinal, no paren) is gated by
+        # _F12_ADJ_REJECTS_CN startswith to suppress predicate-adjective
+        # and verb-phrase heads like 可/经过/具有/能够/用于/基于/根据.
+        if (not noun.startswith('第')
+                and '(' not in noun
+                and noun.startswith(_F12_ADJ_REJECTS_CN)):
+            continue
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
         results.append((m.group(0), normalized))
         # Also split conjunctions (和/与/及/、) into individual intros
