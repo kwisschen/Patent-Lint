@@ -256,7 +256,7 @@ function buildPassSummary(sections, t, fontName) {
   if (totalCount === 0) return []
 
   const content = [
-    accentedHeader(`${t('pdf.passedSummary.title')} (${totalCount})`, STATUS_COLORS.PASS, fontName),
+    accentedHeader(`${t('pdf.passedSummary.title')} (${totalCount})`, '#16a34a', fontName),
   ]
 
   for (const group of passItems) {
