@@ -257,9 +257,9 @@
       "network": "초기 페이지 로드(분석 엔진 로드) 후 분석 중에는 네트워크 요청이 전혀 발생하지 않습니다. 브라우저의 개발자 도구 네트워크 탭에서 확인하거나 비행기 모드를 켜세요.",
       "pdfTitle": "PDF 생성",
       "pdf": "PDF 보고서는 pdfmake를 사용하여 브라우저에서 전적으로 생성됩니다. 문서 내용은 보고서 생성 시에도 기기를 벗어나지 않습니다.",
-      "aiTitle": "AI / LLM 사용",
+      "aiTitle": "AI / LLM (사용 안 함)",
       "ai": "PatentLint는 AI, 머신러닝 또는 대규모 언어 모델을 사용하지 않습니다. 모든 검사는 각 특허청 가이드라인에 따른 결정론적 규칙 기반 패턴 매칭입니다. 텍스트가 AI 서비스로 전송되지 않습니다.",
-      "telemetryTitle": "텔레메트리 및 분석",
+      "telemetryTitle": "텔레메트리 및 분석 (사용 안 함)",
       "telemetry": "PatentLint는 분석 스크립트, 추적 픽셀, 쿠키, 서드파티 통합을 포함하지 않습니다. 애플리케이션이 사용 데이터를 수집하거나 전송하지 않습니다.",
       "selfHostedTitle": "자체 호스팅 옵션",
       "selfHosted": "On-premises deployment is available on private inquiry. Compliance with any specific regulatory regime remains the organization's own determination.",
@@ -277,15 +277,15 @@
       "title": "인터랙티브 미국 특허 분석",
       "claimTree": {
         "title": "청구항 트리와 § 112 분석기",
-        "description": "인터랙티브 종속 트리가 다중 종속·다중 독립 구조를 표시하고, § 112(b) 선행사 분석기가 Markush, Jepson, means-plus-function, 전이 어구 등 특수 형식도 함께 검출합니다."
+        "description": "인터랙티브 종속 트리가 다중 종속·다중 독립 구조를 표시하고, § 112 분석기가 선행사 기초(§ 112(b))와 서면 기재 요건(§ 112(a))을 함께 검증하며 동일 용어가 양쪽 모두에서 누락될 경우 상호 참조, 더불어 Markush, Jepson, means-plus-function, 전이 어구 등 특수 형식도 검출합니다."
       },
       "specAbstract": {
         "title": "명세서 및 요약 구조",
-        "description": "섹션 순서(MPEP § 608.01(a)), 문단 번호(§ 608.01(p)), 요약 단어 수(§ 608.01(b)), 그리고 도면과 상세 설명 간의 도면 참조 상호 검증."
+        "description": "섹션 순서(MPEP § 608.01(a)), 문단 번호(§ 608.01(p)), 요약 단어 수(§ 608.01(b)), 도면과 상세 설명 간의 도면 참조 상호 검증 등."
       },
       "specSupport": {
-        "title": "서면 기재 요건 (§ 112(a))",
-        "description": "각 청구항 용어의 § 112(a) 명세서 뒷받침을 개별 검증. 동일 용어가 § 112(b) 선행사에서도 누락되면 양자를 상호 참조."
+        "title": "제한적 표현 및 작성 가드",
+        "description": "청구항, 명세서, 요약서 전반에서 불명확하거나 제한적인 표현(\"must\", \"always\", \"invention\" 등)을 MPEP § 2173.05(b)에 따라 검출하고, \"non-transitory\" 한정이 누락된 CRM 청구항(§ 101)을 플래그합니다."
       }
     },
     "uspto": {
@@ -341,11 +341,11 @@
       "title": "인터랙티브 중국 특허 분석",
       "claimTree": {
         "title": "청구항 구조와 선행사 분석기",
-        "description": "인터랙티브 请求项相依树가 다중 종속·다중 독립 구조를 표시하고, 너비 우선 조상 체인 분석기와 함께 主题名称 일관성, 引用格式, 附图标记 괄호 처리 등을 검사합니다."
+        "description": "인터랙티브 청구항 종속 트리가 다중 종속·다중 독립 구조를 표시하고, 너비 우선 조상 체인 분석기와 함께 주제 일관성, 인용 형식, 참조부호 괄호 처리 등을 검사합니다."
       },
       "specAbstract": {
-        "title": "명세서 및 요약 커버리지",
-        "description": "五大章节 순서(专利法实施细则 §17), 문단 끝 구두점, 附图说明과 具体实施方式 간 附图 참조 일관성, 그리고 摘要 300자 한도(§23)."
+        "title": "명세서 및 요약 검사",
+        "description": "주요 5개 섹션 순서(专利法实施细则 §17), 문단 끝 구두점, 附图说明과 具体实施方式 간 도면 참조 일관성, 摘要 300자 한도(§23) 등."
       },
       "dualPipeline": {
         "title": "五书模板 + CNIPA XML 듀얼 파이프라인",
@@ -390,11 +390,11 @@
       "title": "인터랙티브 대만 특허 분석",
       "claimTree": {
         "title": "청구항 구조와 선행사 분석기",
-        "description": "인터랙티브 請求項相依樹와 너비 우선 先行詞鏈 분석기를 제공하며, 其特徵在於／其改良在於 이단식 형식, 단일문 규칙, 引用記載型式(一種X，具備如請求項N所述的Y)을 처리합니다."
+        "description": "인터랙티브 청구항 종속 트리와 너비 우선 선행사 체인 분석기를 제공하며, 이단식 전제부(其特徵在於／其改良在於), 단일문 규칙, 인용 기재 형식 독립청구항(一種X，具備如請求項N所述的Y)을 처리합니다."
       },
       "specAbstract": {
-        "title": "명세서 및 요약 커버리지",
-        "description": "專利法施行細則 §17의 섹션 순서, 섹션별 엄격/완화 규칙에 따른 문단 끝 구두점, 도면 참조 상호 검증, 그리고 摘要 250자 한도(§21)."
+        "title": "명세서 및 요약 검사",
+        "description": "專利法施行細則 §17의 섹션 순서, 섹션별 엄격/완화 규칙에 따른 문단 끝 구두점, 도면 참조 상호 검증, 摘要 250자 한도(§21) 등."
       },
       "symbolTable": {
         "title": "符號說明 상호 검증(TW 고유)",
@@ -403,8 +403,8 @@
     },
     "tw": {
       "group1Title": "공통 검사",
-      "group2Title": "TIPO 專屬檢查",
-      "group3Title": "PatentLint 專屬檢查",
+      "group2Title": "TIPO 전용 검사",
+      "group3Title": "PatentLint 전용 검사",
       "colTipo": "TIPO 偵錯系統"
     },
     "twChecks": {
@@ -423,7 +423,7 @@
       "dependencyFormat": "종속 형식(專利法施行細則 §18)",
       "selfDependent": "자기 종속 청구항",
       "circularDependency": "순환 종속",
-      "forwardDependency": "선행 請求項 依附",
+      "forwardDependency": "선행 청구항 인용",
       "singleSentence": "청구항당 한 문장",
       "refNumeralParens": "도면 번호를 괄호로 표기(專利法施行細則 §19)",
       "subjectConsistency": "標的名稱 일관성",

@@ -257,9 +257,9 @@
       "network": "After the initial page load (which loads the analysis engine), zero network requests are made during analysis. Verify this in your browser's DevTools Network tab, or simply turn on airplane mode.",
       "pdfTitle": "PDF Generation",
       "pdf": "PDF reports are generated entirely in your browser using pdfmake. Your document content never leaves your device, not even for the report.",
-      "aiTitle": "AI / LLM Usage",
+      "aiTitle": "AI / LLM (No Usage)",
       "ai": "PatentLint does not use AI, machine learning, or large language models. All checks are deterministic, rule-based pattern matching against patent office guidelines. Your text is never sent to any AI service.",
-      "telemetryTitle": "Telemetry & Analytics",
+      "telemetryTitle": "Telemetry & Analytics (No Usage)",
       "telemetry": "PatentLint does not include analytics scripts, tracking pixels, cookies, or third-party integrations. No usage data is collected or transmitted by the application.",
       "selfHostedTitle": "Self-Hosted Option",
       "selfHosted": "On-premises deployment is available on private inquiry. Compliance with any specific regulatory regime remains the organization's own determination.",
@@ -277,15 +277,15 @@
       "title": "Interactive US patent analysis",
       "claimTree": {
         "title": "Claim tree & § 112 walker",
-        "description": "Interactive dependency tree for multi-dependent and multi-independent structures, backed by a § 112(b) antecedent-basis walker that also flags Markush groups, Jepson format, means-plus-function, and transitional-phrase issues."
+        "description": "Interactive dependency tree for multi-dependent and multi-independent structures, backed by a § 112 walker covering antecedent basis (§ 112(b)) and written-description support (§ 112(a)) — cross-linked when the same term fails both — plus Markush, Jepson, means-plus-function, and transitional-phrase checks."
       },
       "specAbstract": {
         "title": "Specification & abstract structure",
-        "description": "Section ordering (MPEP § 608.01(a)), paragraph numbering (§ 608.01(p)), abstract word count (§ 608.01(b)), and figure-reference cross-checks between the drawings and the detailed description."
+        "description": "Section ordering (MPEP § 608.01(a)), paragraph numbering (§ 608.01(p)), abstract word count (§ 608.01(b)), and figure-reference cross-checks between the drawings and the detailed description, among others."
       },
       "specSupport": {
-        "title": "Written-description support (§ 112(a))",
-        "description": "Per-term check for § 112(a) spec support. Findings cross-link to § 112(b) antecedent when the same term fails both."
+        "title": "Restrictive wording & drafting guards",
+        "description": "Detects indefinite or limiting terms (\"must,\" \"always,\" \"invention\") across claims, specification, and abstract per § 2173.05(b); flags CRM claims missing the \"non-transitory\" qualifier under § 101."
       }
     },
     "uspto": {
@@ -340,12 +340,12 @@
     "cnFeatures": {
       "title": "Interactive CN patent analysis",
       "claimTree": {
-        "title": "Claim structure & 先行词 walker",
-        "description": "Interactive 请求项相依树 with multi-dependent rendering, plus a BFS 先行词链 walker with CJK bigram tokenization, 主题名称 consistency, 引用格式, and bracketed 附图标记 checks."
+        "title": "Claim structure & antecedent-basis walker",
+        "description": "Interactive claim dependency tree with multi-dependent rendering, plus a BFS antecedent-basis walker using CJK bigram tokenization, subject-matter consistency, dependency-citation format, and bracketed reference-numeral checks."
       },
       "specAbstract": {
-        "title": "Specification & abstract coverage",
-        "description": "五大章节 ordering (专利法实施细则 §17), paragraph-ending punctuation, 附图 reference consistency across 附图说明 and 具体实施方式, and the 300-character 摘要 limit (§23)."
+        "title": "Specification & abstract checks",
+        "description": "Five-section ordering (专利法实施细则 §17), paragraph-ending punctuation, figure-reference consistency across 附图说明 and 具体实施方式, and the 300-character abstract limit (§23), among others."
       },
       "dualPipeline": {
         "title": "五书模板 + CNIPA XML dual pipeline",
@@ -389,12 +389,12 @@
     "twFeatures": {
       "title": "Interactive TW patent analysis",
       "claimTree": {
-        "title": "Claim structure & 先行詞 walker",
-        "description": "Interactive 請求項相依樹 with a BFS 先行詞鏈 walker, 其特徵在於 / 其改良在於 two-part-form checks, single-sentence rule, and 引用記載型式 handling (一種X，具備如請求項N所述的Y)."
+        "title": "Claim structure & antecedent-basis walker",
+        "description": "Interactive claim dependency tree with a BFS antecedent-basis walker, two-part-form checks (其特徵在於 / 其改良在於), single-sentence rule, and reference-recitation independent-claim handling (一種X，具備如請求項N所述的Y)."
       },
       "specAbstract": {
-        "title": "Specification & abstract coverage",
-        "description": "Section ordering per 專利法施行細則 §17, paragraph-ending punctuation with strict/relaxed rules per section, figure-reference cross-checks, and the 250-character 摘要 limit (§21)."
+        "title": "Specification & abstract checks",
+        "description": "Section ordering per 專利法施行細則 §17, paragraph-ending punctuation with strict/relaxed rules per section, figure-reference cross-checks, and the 250-character abstract limit (§21), among others."
       },
       "symbolTable": {
         "title": "符號說明 cross-check (TW-unique)",
@@ -403,8 +403,8 @@
     },
     "tw": {
       "group1Title": "Shared Checks",
-      "group2Title": "TIPO 專屬檢查",
-      "group3Title": "PatentLint 專屬檢查",
+      "group2Title": "TIPO-only Checks",
+      "group3Title": "PatentLint-only Checks",
       "colTipo": "TIPO 偵錯系統"
     },
     "twChecks": {
