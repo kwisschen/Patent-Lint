@@ -384,9 +384,19 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                             ):
                                 fb_best_score = fb_score
                                 fb_best_stem_diff = fb_stem_sym_diff
+                                # cross_branch flag distinguishes an intro found
+                                # outside the current claim's ancestor chain from
+                                # an ancestor-chain near-miss. The UI uses this
+                                # plus an exact-term-match check to render a
+                                # "term defined in claim N, not in dependency
+                                # chain" message instead of the generic
+                                # "Did you mean …?" DYM hint — the drafter
+                                # already knows the term; the real issue is the
+                                # dependency structure.
                                 suggested_match = {
                                     "term": fb_intro,
                                     "claim_id": fb_cid,
+                                    "cross_branch": True,
                                 }
                         issues.append({
                             "claim_id": claim.id,
