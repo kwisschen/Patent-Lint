@@ -76,7 +76,7 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
           <ShieldCheck className="w-4 h-4 flex-shrink-0 mt-0.5" />
           <div className="flex flex-col gap-1">
             <strong>{t('security.badge.headline')}</strong>
-            <span>
+            <span className="text-xs">
               {t('security.badge.description')}{' '}
               <button
                 onClick={(e) => { e.stopPropagation(); onShowProveIt?.() }}
