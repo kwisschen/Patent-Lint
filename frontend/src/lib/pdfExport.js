@@ -668,14 +668,14 @@ export async function downloadReport(reportData, t, language, originalFilename) 
       // PASS summary
       ...buildPassSummary(sections, t, fontName),
 
-      // Claim trees
-      ...buildClaimTable(reportData.claim_trees, t),
-
       // Antecedent basis
       ...buildAntecedentBasis(reportData.antecedent_basis_issues, t),
 
       // Spec support
       ...buildSpecSupport(reportData.unsupported_terms, t),
+
+      // Claim trees
+      ...buildClaimTable(reportData.claim_trees, t),
 
       // Disclaimer
       {
