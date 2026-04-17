@@ -239,14 +239,14 @@
       },
       "q6": {
         "question": "What does it cost?",
-        "patentlint": "Completely free.",
+        "patentlint": "Free — no fees, no subscription, no usage limits.",
         "addin": "Typically requires a paid license.",
         "cloud": "Typically requires a subscription."
       },
       "q7": {
         "question": "Is my patent text used for AI training?",
         "patentlint": "Never. All checks are deterministic rule-based pattern matching.",
-        "addin": "Depends on vendor; some send telemetry.",
+        "addin": "Depends on vendor — some send telemetry.",
         "cloud": "Often yes. Training rights are often reserved in the terms."
       }
     },
@@ -277,7 +277,7 @@
       "title": "Interactive US patent analysis",
       "claimTree": {
         "title": "Claim tree & § 112 walker",
-        "description": "Interactive dependency tree for multi-dependent and multi-independent structures, backed by a § 112(b) antecedent-basis walker that also flags Markush, Jepson, means-plus-function, and transitional-phrase patterns."
+        "description": "Interactive dependency tree for multi-dependent and multi-independent structures, backed by a § 112(b) antecedent-basis walker that also flags Markush groups, Jepson format, means-plus-function, and transitional-phrase issues."
       },
       "specAbstract": {
         "title": "Specification & abstract structure",
@@ -433,7 +433,7 @@
       "multiDepOnMultiDep": "Multi-dep claim cannot depend on another multi-dep",
       "multiDepAlternative": "Multi-dep alternative form",
       "titleSubjectMatch": "Title matches independent claim subjects",
-      "antecedentBasis": "Antecedent basis (先行詞) — BFS ancestor-chain walker",
+      "antecedentBasis": "Antecedent basis (先行詞) — ancestor-chain walker",
       "charCount": "Abstract character count (≤250)",
       "titleMatch": "Title in abstract",
       "commercialLanguage": "Commercial language",
