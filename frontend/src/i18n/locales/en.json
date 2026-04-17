@@ -277,8 +277,8 @@
         "description": "Section ordering (MPEP § 608.01(a)), paragraph numbering (§ 608.01(p)), abstract word count (§ 608.01(b)), and figure-reference cross-checks between the drawings and the detailed description."
       },
       "crossLink": {
-        "title": "§ 112(a) ↔ § 112(b) cross-linking",
-        "description": "Every § 112(b) antecedent-basis flag is cross-linked to the matching § 112(a) written-description finding on the same term — one click moves between the two instances."
+        "title": "§ 112(a) ↔ § 112(b) cross-reference",
+        "description": "When the same term triggers both a § 112(b) antecedent-basis flag and a § 112(a) written-description flag, both cards carry a cross-reference label so the two-sided defect is visible at a glance."
       }
     },
     "uspto": {
