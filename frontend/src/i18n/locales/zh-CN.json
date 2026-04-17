@@ -146,13 +146,13 @@
   },
   "antecedent": {
     "didYouMean": "您是否指的是\"{{term}}\"（于权利要求{{claim_id}}中引入）？",
-    "crossBranchAntecedent": "在权利要求 {{claim_id}} 中引入，但该权利要求不在本权利要求的相依链中。请调整相依结构或以「a」重新引入该术语。",
+    "crossBranchAntecedent": "在权利要求 {{claim_id}} 中引入，但该权利要求不在本权利要求的相依链中。请调整相依结构或以「a」重新引入该用语。",
     "crossRefSpecSupport": "亦已在说明书支持中标记，参见下方 § 112(a)。"
   },
   "specSupport": {
     "title": "说明书支持检查",
-    "items": "个术语",
-    "item": "个术语",
+    "items": "个用语",
+    "item": "个用语",
     "crossRefAntecedent": "亦已在先行词分析中标记，参见上方 § 112(b)。"
   },
   "triage": {
@@ -199,7 +199,7 @@
       "heroSubtext": "PatentLint 完全在您的浏览器中本地运行，专利稿件绝不会离开您的设备。机密数据始终保留在您的设备上。",
       "tryIt": "自己试试看 →",
       "compareTitle": "PatentLint 与其他工具的比较",
-      "compareDisclaimer": "本比较表反映一般架构模式。各产品可能有所不同。「Word 插件工具」与「云端工具」为通用类别，并非指特定产品。",
+      "compareDisclaimer": "本比较表反映通用架构模式。各产品可能有所不同。「Word 插件工具」与「云端工具」为通用类别，并非指特定产品。",
       "techTitle": "技术细节"
     },
     "compare": {
@@ -239,13 +239,13 @@
       },
       "q6": {
         "question": "费用是多少？",
-        "patentlint": "完全免费。",
+        "patentlint": "免费使用，无需付费、无需订阅、无用量限制。",
         "addin": "通常需要付费许可。",
         "cloud": "通常需要订阅。"
       },
       "q7": {
         "question": "我的专利内容会被用于 AI 训练吗？",
-        "patentlint": "绝不。所有检查均为规则式比对。",
+        "patentlint": "绝不。所有检查均为基于规则的确定性模式匹配。",
         "addin": "视厂商而定；部分会回传遥测数据。",
         "cloud": "常常会；服务条款多保留此权利。"
       }
@@ -269,7 +269,7 @@
   "about": {
     "productTitle": "PatentLint 是什么？",
     "productTagline": "同类首创的专利稿件检查工具，完全在您的浏览器中本地运行。",
-    "productDesc1": "PatentLint 是免费的专利稿件检查工具，替您在审查员找出问题之前先一步发现它们。拖放美国、中国或台湾专利稿件，便可即时获取合规报告，全程于本地运行。无需上传、无需账号、不使用云端。",
+    "productDesc1": "PatentLint 是免费的专利稿件检查工具，在审查员指出缺陷之前先行检出问题。拖放美国、中国或台湾专利稿件，便可即时获取合规报告，全程于本地运行。无需上传、无需账号、不使用云端。",
     "productDesc2": "PatentLint 依据 MPEP（美国）、CNIPA 规则（中国）及 TIPO 规则（台湾）进行撰写规则检查，检测常见问题，如缺乏先行词基础、不正确的权利要求结构和限制性用语。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查文稿本身。",
@@ -285,7 +285,7 @@
       },
       "specSupport": {
         "title": "书面描述支持（§ 112(a)）",
-        "description": "逐一检查各权利要求术语的 § 112(a) 说明书支持。同一术语若亦缺少 § 112(b) 先行词，两项问题交互注记。"
+        "description": "逐一检查各权利要求用语的 § 112(a) 说明书支持。同一用语若亦缺少 § 112(b) 先行词，两项问题交互注记。"
       }
     },
     "uspto": {
@@ -318,13 +318,13 @@
         "headerFooter": "页眉／页脚格式",
         "filingReceipt": "提交回执生成",
         "restrictiveWording": "限制性用语（MPEP § 2173.01）",
-        "indefiniteTerms": "不确定术语（MPEP § 2173.05(b)）",
+        "indefiniteTerms": "不确定用语（MPEP § 2173.05(b)）",
         "impliedPhrases": "摘要中的隐含措辞（MPEP § 608.01(b)）",
         "whereinCommas": "「wherein」逗号规则",
         "antecedentBasis": "先行词基础（「the X」无先前「a X」）",
         "meansPlusFunction": "功能性限定（35 U.S.C. § 112(f)）",
         "preambleConsistency": "权利要求前序一致性（MPEP § 608.01(m)）",
-        "specSupport": "说明书对权利要求术语的支持",
+        "specSupport": "说明书对权利要求用语的支持",
         "legalPhrasesAbstract": "摘要中的法律用语",
         "transitionPhrase": "权利要求过渡用语（§ 112）",
         "checkJepsonPriorArt": "Jepson 现有技术承认（§ 2129）",
@@ -471,14 +471,14 @@
     },
     "enterpriseContact": "企业部署咨询 →",
     "builderTitle": "背景",
-    "builderDesc1": "PatentLint 由一位花费多年审阅数千份专利稿件、反复手动发现相同格式错误与 MPEP 违规的专利工程师所研发。目标：将繁琐的部分自动化，让从业人员能专注于实质内容。",
+    "builderDesc1": "PatentLint 由一位花费多年审阅数千份专利稿件、反复人工排查相同格式错误与 MPEP 违规的专利工程师所研发。目标：将繁琐的部分自动化，让从业人员能专注于实质内容。",
     "builderDesc2": "整个分析引擎以 Python 编写，再编译为 WebAssembly 并直接在您的浏览器中运行。无服务器、无上传、文件不会离开您的设备。现有工具不是需要安装 Windows 专用软件，就是将文档上传至云端服务器。PatentLint 两者皆不需要。",
     "builderSister": "其姊妹项目 Agentic Patent Analyst 使用 LLM 代理进行现有技术检索与权利要求覆盖范围分析。"
   },
   "details": {
     "paragraphs": "段落：{{list}}",
     "claims": "权利要求：{{list}}",
-    "terms": "术语：{{list}}",
+    "terms": "用语：{{list}}",
     "figures": "附图：{{list}}",
     "firstGapParagraph": "首个间隔位于第 {{position}} 段。请依 MPEP § 608.01(p) 重新编号以恢复连续顺序。",
     "firstGapClaim": "首个间隔位于第 {{position}} 项。请依 MPEP § 608.01(j) 将权利要求重新编号为连续。",
@@ -491,7 +491,7 @@
     "claimDependsOn": "权利要求 {{claim}} 从属于权利要求 {{parent}}",
     "nounMismatch": "从属项「{{dependent}}」与独立项「{{independent}}」不一致。从属权利要求须与母权利要求属于相同法定类别（例如同为装置或同为方法）。请修正前序名词。",
     "seeSection112": "详见下方 § 112 分析。",
-    "specSupportUnsupported": "{{count}} 个权利要求术语未在说明书中发现。依 § 112(a)，各权利要求术语应有书面描述支持。请参阅下方 § 112 分析以查看逐项详情。",
+    "specSupportUnsupported": "{{count}} 个权利要求用语未在说明书中发现。依 § 112(a)，各权利要求用语应有书面描述支持。请参阅下方 § 112 分析以查看逐项详情。",
     "restrictiveWordingSpec": "段落：{{list}}。\"must\"、\"always\"或\"invention\"等用语可能依 § 2173.05(b) 被视为不确定或限制范围。请检查各标记段落，考虑该用语是否过度限缩范围或引入不确定性。",
     "paragraphNumberingMissing": "请依 MPEP § 608.01(p) 添加 [0001] 格式的连续段落编号。",
     "paragraphEnding": "段落：{{list}}。说明书各段落须依 MPEP § 608.01(p) 以句号结尾。",
@@ -534,7 +534,7 @@
       "refNumeralParens": "根据审查指南，权利要求中的附图标记应加括号，例如（101）而非101。请检查标记的权利要求。",
       "subjectConsistency": "根据审查指南 第二部分第二章，从属权利要求的主题名称应与其引用的权利要求的主题名称一致。请检查标记的权利要求。",
       "transitionPhrase": "根据审查指南，独立权利要求应包含\"其特征在于\"等特征部分连接词，用以区分已知要素与新颖特征。请检查标记的权利要求。",
-      "twTerminology": "CNIPA使用\"权利要求\"表示claims，\"请求项\"为台湾（TIPO）专利用语。请替换所有\"请求项\"。",
+      "twTerminology": "CNIPA中称为\"权利要求\"，而\"请求项\"是台湾（TIPO）的专利用语。请替换所有\"请求项\"。",
       "claimsSpecReference": "根据审查指南 第二部分第二章，权利要求不得使用\"如说明书……所述\"或\"如图……所示\"来限定保护范围。权利要求应当自成一体。请删除相关引用。",
       "multiMultiDep": "根据专利法实施细则 §22，多项从属权利要求不得作为另一多项从属权利要求的引用基础。请调整引用关系。",
       "dependentOrdering": "根据审查指南 第二部分第二章，引用同一独立权利要求的所有从属权利要求应连续排列在下一项独立权利要求之前。请调整排列顺序。",
@@ -582,7 +582,7 @@
       "titleSubjectMatch": "依专利审查基准，发明名称/新型名称应与独立项之標的名稱一致。请检查标记之请求项。",
       "claims": {
         "symbolTableConsistency": {
-          "missingFromTable": "权利要求中的元件符号未在符号说明中定义：{{numerals_with_locations}}"
+          "missingFromTable": "权利要求中的元件符号在符号说明中未定义：{{numerals_with_locations}}"
         }
       },
       "antecedentBasis": "「该」「所述」「前述」加名词，须于同一请求项或母项中以「一」加名词导入。以正则表达式检测，结果为近似值，请自行确认。",
@@ -835,7 +835,7 @@
           "pass": "从属权利要求排列顺序正确。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 共有 {{issue_count}} 个用语缺少先行词。",
+          "verify": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少先行词。",
           "pass": "所有引用之用语皆有先行词。"
         }
       },
@@ -973,7 +973,7 @@
           "noClaimNumerals": "权利要求未使用元件符号（施行细则 §19 允许），无需检查一致性。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 共有 {{issue_count}} 个用语缺少先行词。",
+          "verify": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少先行词。",
           "pass": "所有引用之用语均有先行词。"
         }
       },
@@ -1026,7 +1026,7 @@
     "feature1_title": "无需上传。无需账号。无需安装。",
     "feature1_desc": "您的机密专利文稿不会离开您的设备。不会上传任何内容，PatentLint 也不会知道您的身份。",
     "feature2_title": "撰写规则检查与权利要求树状图",
-    "feature2_desc": "检测限制性用语、不确定术语及缺乏先行词基础等问题，并以交互式树状图呈现权利要求从属关系。",
+    "feature2_desc": "检测限制性用语、不确定用语及缺乏先行词基础等问题，并以交互式树状图呈现权利要求从属关系。",
     "feature3_title": "权利要求树状图",
     "feature3_desc": "交互式从属关系树状图和 Mermaid 图表，一目了然地呈现权利要求结构。",
     "feature4_title": "随处可用",
@@ -1036,7 +1036,7 @@
   },
   "pdf": {
     "header": "PatentLint 分析报告",
-    "headerTw": "PatentLint — 台湾专利稿件检查报告",
+    "headerTw": "PatentLint｜台湾专利稿件检查报告",
     "securityNote": "已在您的设备上分析，未上传至云端。",
     "amend": "需要修改",
     "verify": "待专家确认",
@@ -1049,10 +1049,10 @@
     "independent": "独立项",
     "dependent": "从属项",
     "antecedentBasis": "先行词基础检查",
-    "antecedentTerm": "术语",
-    "antecedentTerms": "未引用之术语",
+    "antecedentTerm": "用语",
+    "antecedentTerms": "未引用之用语",
     "specSupport": "说明书支持检查",
-    "specTerms": "未支持之术语",
+    "specTerms": "未支持之用语",
     "summaryStats": "文件摘要",
     "specParagraphs": "说明书段落",
     "totalClaims": "权利要求总数",
@@ -1073,8 +1073,8 @@
     "preamble_cross_category_pass": "权利要求前序部分一致。",
     "preamble_noun_mismatch": "从属权利要求与独立权利要求前序名词不同。",
     "preamble_indefinite_article": "从属权利要求前序使用了不定冠词（应使用「The」）。",
-    "spec_support_unsupported_terms": "权利要求术语在说明书中未发现。",
-    "spec_support_pass": "所有权利要求术语均已在说明书中发现。",
+    "spec_support_unsupported_terms": "权利要求用语在说明书中未找到。",
+    "spec_support_pass": "所有权利要求用语均可在说明书中找到。",
     "required_sections_pass": "符合 MPEP § 608.01(a) 的所有必要章节均已存在。",
     "required_sections_missing": "缺少 MPEP § 608.01(a) 规定的必要章节。",
     "optional_section_missing": "可选章节\"{{name}}\"未发现。",

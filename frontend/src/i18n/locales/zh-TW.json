@@ -5,7 +5,7 @@
   },
   "jurisdiction": {
     "us": "美國專利",
-    "cn": "中國專利",
+    "cn": "中國大陸專利",
     "tw": "台灣專利",
     "label": "地區"
   },
@@ -19,7 +19,7 @@
     "rejectMultipleType": "請拖放單一 .docx 檔案。",
     "taglineCn": "依據20多項CNIPA撰稿規則，立即檢查您的專利稿件。",
     "titleCn": "拖放您的專利檔案開始本機分析",
-    "noticeCn": "支援中國專利說明書（.docx、.xml、.zip）",
+    "noticeCn": "支援中國大陸專利說明書（.docx、.xml、.zip）",
     "rejectCn": "僅接受 .docx、.xml 及 .zip 檔案",
     "rejectMultipleTypeCn": "請拖放單一 .docx、.xml 或 .zip 檔案。",
     "taglineTw": "依據30多項TIPO撰稿規則，立即檢查您的專利稿件。",
@@ -111,8 +111,8 @@
   "results": {
     "nonPatentWarning": "此文件可能不是美國專利稿件",
     "nonPatentWarningDetails": "PatentLint 為專利稿件設計。此文件似乎未包含標準美國專利章節、編號請求項或段落編號，分析結果可能不具參考意義。",
-    "nonPatentWarningCn": "此文件可能不是中國專利稿件",
-    "nonPatentWarningDetailsCn": "PatentLint 為專利稿件設計。此文件似乎未包含標準中國說明書章節（技术领域、背景技术等）、編號权利要求或可辨識的格式，分析結果可能不具參考意義。",
+    "nonPatentWarningCn": "此文件可能不是中國大陸專利稿件",
+    "nonPatentWarningDetailsCn": "PatentLint 為專利稿件設計。此文件似乎未包含標準中國大陸說明書章節（技术领域、背景技术等）、編號权利要求或可辨識的格式，分析結果可能不具參考意義。",
     "nonPatentWarningTw": "此文件可能不是台灣專利稿件",
     "nonPatentWarningDetailsTw": "PatentLint 為專利稿件設計。此文件似乎未包含標準台灣說明書章節（【技術領域】、【先前技術】等）、請求項或段落編號，分析結果可能不具參考意義。",
     "showResultsAnyway": "仍然顯示結果",
@@ -146,13 +146,13 @@
   },
   "antecedent": {
     "didYouMean": "您是否指的是「{{term}}」（於請求項{{claim_id}}中導入）？",
-    "crossBranchAntecedent": "於請求項 {{claim_id}} 中引入，但該請求項不在本請求項的相依鏈中。請調整相依結構或以「a」重新引入該用語。",
+    "crossBranchAntecedent": "於請求項 {{claim_id}} 中引入，但該請求項不在本請求項的相依鏈中。請調整附屬結構，或於本請求項中以不定冠詞（「a」）重新導入該用語。",
     "crossRefSpecSupport": "亦已於說明書支持中標記，參見下方 § 112(a)。"
   },
   "specSupport": {
     "title": "說明書支持檢視",
-    "items": "個術語",
-    "item": "個術語",
+    "items": "個用語",
+    "item": "個用語",
     "crossRefAntecedent": "亦已於先行詞分析中標記，參見上方 § 112(b)。"
   },
   "triage": {
@@ -239,7 +239,7 @@
       },
       "q6": {
         "question": "費用是多少？",
-        "patentlint": "完全免費。",
+        "patentlint": "免費使用，無需付費、無需訂閱、無用量限制。",
         "addin": "通常需要付費授權。",
         "cloud": "通常需要訂閱。"
       },
@@ -269,8 +269,8 @@
   "about": {
     "productTitle": "PatentLint 是什麼？",
     "productTagline": "同類首創的專利稿件檢查工具，完全在您的瀏覽器中本機運行。",
-    "productDesc1": "PatentLint 是免費的專利稿件檢查工具，替您在審查委員找出問題之前先一步發現它們。拖放美國、中國或台灣專利稿件，便可即時取得合規報告，全程於本機運行。無需上傳、無需帳號、不使用雲端。",
-    "productDesc2": "PatentLint 依據 MPEP（美國）、CNIPA 規則（中國）及 TIPO 規則（台灣）進行撰稿規則檢查，偵測常見問題，如缺乏先行詞基礎、不正確的請求項結構和限制性用語。",
+    "productDesc1": "PatentLint 是免費的專利稿件檢查工具，於審查委員指出缺失之前先行檢出問題。拖放美國、中國大陸或台灣專利稿件，便可即時取得合規報告，全程於本機運行。無需上傳、無需帳號、不使用雲端。",
+    "productDesc2": "PatentLint 依據 MPEP（美國）、CNIPA 規則（中國大陸）及 TIPO 規則（台灣）進行撰稿規則檢查，偵測常見問題，如缺乏先行詞基礎、不正確的請求項結構和限制性用語。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 驗證送件格式。PatentLint 檢查稿件本身。",
     "usFeatures": {
@@ -285,7 +285,7 @@
       },
       "specSupport": {
         "title": "書面描述支持（§ 112(a)）",
-        "description": "逐一檢查各請求項術語之 § 112(a) 說明書支持。同一術語若亦欠缺 § 112(b) 先行詞，兩項問題交互註記。"
+        "description": "逐一檢查各請求項用語之 § 112(a) 說明書支持。同一用語若亦欠缺 § 112(b) 先行詞，兩項問題交互註記。"
       }
     },
     "uspto": {
@@ -318,13 +318,13 @@
         "headerFooter": "頁首／頁尾格式",
         "filingReceipt": "送件收據產生",
         "restrictiveWording": "限制性用語（MPEP § 2173.01）",
-        "indefiniteTerms": "不明確術語（MPEP § 2173.05(b)）",
+        "indefiniteTerms": "不明確用語（MPEP § 2173.05(b)）",
         "impliedPhrases": "摘要中的隱含用語（MPEP § 608.01(b)）",
         "whereinCommas": "「wherein」逗號規則",
         "antecedentBasis": "先行詞基礎（「the X」無先前「a X」）",
         "meansPlusFunction": "手段功能用語（35 U.S.C. § 112(f)）",
         "preambleConsistency": "請求項前言一致性（MPEP § 608.01(m)）",
-        "specSupport": "說明書對請求項術語之支持",
+        "specSupport": "說明書對請求項用語之支持",
         "legalPhrasesAbstract": "摘要中的法律用語",
         "transitionPhrase": "請求項過渡用語（§ 112）",
         "checkJepsonPriorArt": "Jepson 先前技術承認（§ 2129）",
@@ -338,7 +338,7 @@
     "cnTitle": "PatentLint CNIPA 撰稿規則檢查",
     "cnSubtitle": "20餘項結構性檢查，依據CNIPA撰稿規則（专利法实施细则、审查指南）。",
     "cnFeatures": {
-      "title": "互動式中國專利分析",
+      "title": "互動式中國大陸專利分析",
       "claimTree": {
         "title": "請求項結構與先行詞分析器",
         "description": "互動式請求項相依樹呈現多重附屬與多重獨立結構，並搭配廣度優先的祖先鏈分析器；檢查項目包括主題名稱一致性、引用格式、以及附圖標記括號等。"
@@ -390,7 +390,7 @@
       "title": "互動式台灣專利分析",
       "claimTree": {
         "title": "請求項結構與先行詞分析器",
-        "description": "互動式請求項相依樹搭配廣度優先先行詞鏈分析器，並處理其特徵在於／其改良在於二段式格式、單句化規則、以及引用記載型式（一種X，具備如請求項N所述的Y）。"
+        "description": "互動式請求項相依樹搭配廣度優先先行詞鏈分析器，並處理其特徵在於／其改良在於二段式格式、單一語句要求、以及引用記載型式（一種X，具備如請求項N所述的Y）。"
       },
       "specAbstract": {
         "title": "說明書與摘要覆蓋",
@@ -398,7 +398,7 @@
       },
       "symbolTable": {
         "title": "符號說明交叉比對（TW 獨有）",
-        "description": "原生解析 TW 專屬的符號說明表，並與實施方式、圖式簡單說明、代表圖交叉比對；此檢查項目為 TW 獨有，美國與中國專利中並無此區塊。"
+        "description": "原生解析 TW 專屬的符號說明表，並與實施方式、圖式簡單說明、代表圖交叉比對；此檢查項目為 TW 獨有，美國與中國大陸專利中並無此區塊。"
       }
     },
     "tw": {
@@ -478,7 +478,7 @@
   "details": {
     "paragraphs": "段落：{{list}}",
     "claims": "請求項：{{list}}",
-    "terms": "術語：{{list}}",
+    "terms": "用語：{{list}}",
     "figures": "圖式：{{list}}",
     "firstGapParagraph": "首個間隔位於第 {{position}} 段。請依 MPEP § 608.01(p) 重新編號以恢復連續順序。",
     "firstGapClaim": "首個間隔位於第 {{position}} 項。請依 MPEP § 608.01(j) 將請求項重新編號為連續。",
@@ -491,7 +491,7 @@
     "claimDependsOn": "請求項 {{claim}} 附屬於請求項 {{parent}}",
     "nounMismatch": "附屬項「{{dependent}}」與獨立項「{{independent}}」不一致。附屬項須與母項屬於相同法定類別（例如同為裝置或同為方法）。請修正前言名詞。",
     "seeSection112": "詳見下方 § 112 分析。",
-    "specSupportUnsupported": "{{count}} 個請求項術語未在說明書中出現。依 § 112(a)，各請求項術語應有書面描述支持。請參閱下方 § 112 分析以查看逐項詳情。",
+    "specSupportUnsupported": "{{count}} 個請求項用語未在說明書中出現。依 § 112(a)，各請求項用語應有書面描述支持。請參閱下方 § 112 分析以查看逐項詳情。",
     "restrictiveWordingSpec": "段落：{{list}}。「must」、「always」或「invention」等用語可能依 § 2173.05(b) 被視為不明確或限制範圍。請檢視各標記段落，考量該用語是否不當限縮範圍或造成不明確。",
     "paragraphNumberingMissing": "請依 MPEP § 608.01(p) 新增 [0001] 格式的連續段落編號。",
     "paragraphEnding": "段落：{{list}}。說明書各段落須依 MPEP § 608.01(p) 以句號結尾。",
@@ -835,7 +835,7 @@
           "pass": "從屬權利要求排列順序正確。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 共有 {{issue_count}} 個用語缺少先行詞。",
+          "verify": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少先行詞。",
           "pass": "所有引用之用語皆有先行詞。"
         }
       },
@@ -973,7 +973,7 @@
           "noClaimNumerals": "請求項未使用元件符號（施行細則 §19 允許），無需檢查一致性。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 共有 {{issue_count}} 個用語缺少先行詞。",
+          "verify": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少先行詞。",
           "pass": "所有引用之用語皆有先行詞。"
         }
       },
@@ -1026,7 +1026,7 @@
     "feature1_title": "無需上傳。無需帳號。無需安裝。",
     "feature1_desc": "您的機密專利稿件不會離開您的裝置。不會上傳任何內容，PatentLint 也不會知道您的身份。",
     "feature2_title": "撰稿規則檢查與請求項樹狀圖",
-    "feature2_desc": "偵測限制性用語、不明確術語及缺乏先行詞基礎等問題，並以互動式樹狀圖呈現請求項附屬關係。",
+    "feature2_desc": "偵測限制性用語、不明確用語及缺乏先行詞基礎等問題，並以互動式樹狀圖呈現請求項附屬關係。",
     "feature3_title": "請求項樹狀圖",
     "feature3_desc": "互動式附屬關係樹狀圖和 Mermaid 圖表，一目了然地呈現請求項結構。",
     "feature4_title": "隨處可用",
@@ -1036,7 +1036,7 @@
   },
   "pdf": {
     "header": "PatentLint 分析報告",
-    "headerTw": "PatentLint — 台灣專利稿件檢查報告",
+    "headerTw": "PatentLint｜台灣專利稿件檢查報告",
     "securityNote": "已於您的裝置上分析，未上傳至雲端。",
     "amend": "需要修改",
     "verify": "待專家確認",
@@ -1049,10 +1049,10 @@
     "independent": "獨立項",
     "dependent": "附屬項",
     "antecedentBasis": "先行詞基礎檢視",
-    "antecedentTerm": "術語",
-    "antecedentTerms": "未引用之術語",
+    "antecedentTerm": "用語",
+    "antecedentTerms": "未引用之用語",
     "specSupport": "說明書支持檢視",
-    "specTerms": "未支持之術語",
+    "specTerms": "未支持之用語",
     "summaryStats": "文件摘要",
     "specParagraphs": "說明書段落",
     "totalClaims": "請求項總數",
@@ -1073,8 +1073,8 @@
     "preamble_cross_category_pass": "請求項前言一致。",
     "preamble_noun_mismatch": "附屬項與獨立項前言名詞不同。",
     "preamble_indefinite_article": "附屬項前言使用不定冠詞（應使用「The」）。",
-    "spec_support_unsupported_terms": "請求項術語在說明書中未發現。",
-    "spec_support_pass": "所有請求項術語均已在說明書中發現。",
+    "spec_support_unsupported_terms": "請求項用語在說明書中未找到。",
+    "spec_support_pass": "所有請求項用語均可於說明書中找到。",
     "required_sections_pass": "符合 MPEP § 608.01(a) 之所有必要章節均已存在。",
     "required_sections_missing": "缺少 MPEP § 608.01(a) 規定之必要章節。",
     "optional_section_missing": "選擇性章節「{{name}}」未發現。",

@@ -147,13 +147,13 @@
   "antecedent": {
     "didYouMean": "もしかして「{{term}}」（請求項{{claim_id}}で導入）ですか？",
     "crossBranchAntecedent": "請求項 {{claim_id}} で導入されていますが、当該請求項は本請求項の従属系列に含まれません。従属関係を見直すか、「a」で用語を再導入してください。",
-    "crossRefSpecSupport": "明細書サポートでもフラグされています — 下記 § 112(a) をご確認ください。"
+    "crossRefSpecSupport": "明細書の裏付けでもフラグされています（下記 § 112(a) をご確認ください）。"
   },
   "specSupport": {
     "title": "明細書サポートの確認",
     "items": "個の用語",
     "item": "個の用語",
-    "crossRefAntecedent": "先行詞解析でもフラグされています — 上記 § 112(b) をご確認ください。"
+    "crossRefAntecedent": "先行詞解析でもフラグされています（上記 § 112(b) をご確認ください）。"
   },
   "triage": {
     "title": "優先事項の要約",
@@ -239,7 +239,7 @@
       },
       "q6": {
         "question": "費用はいくらですか？",
-        "patentlint": "完全無料。",
+        "patentlint": "本ツールは完全無料でご利用いただけます。サブスクリプション契約も不要であり、使用制限も設けていません。",
         "addin": "通常、有料ライセンスが必要です。",
         "cloud": "通常、サブスクリプションが必要です。"
       },
@@ -472,7 +472,7 @@
     "enterpriseContact": "エンタープライズ導入 →",
     "builderTitle": "背景",
     "builderDesc1": "PatentLint は、数千件の特許原稿を確認し、同じフォーマットエラーや MPEP 違反を何年も手作業で発見し続けてきた特許技術者によって作られました。目標：煩雑な作業を自動化し、実務者が内容の検討に集中できるようにすること。",
-    "builderDesc2": "分析エンジン全体は Python で記述され、WebAssembly にコンパイルされてブラウザ上で直接実行されます。サーバー不要、アップロード不要、ファイルがデバイスの外に出ることはありません。既存ツールは Windows 専用のインストールが必要か、文書をクラウドサーバーにアップロードする必要があります。PatentLint はそのどちらも不要です。",
+    "builderDesc2": "分析エンジン全体は Python で記述され、WebAssembly にコンパイルされてブラウザ上で直接実行されます。サーバー不要、アップロード不要、ファイルが端末から外部に送信されることはありません。既存ツールは Windows 専用のインストールが必要か、文書をクラウドサーバーにアップロードする必要があります。PatentLint はそのどちらも不要です。",
     "builderSister": "姉妹プロジェクトの Agentic Patent Analyst は、LLM エージェントを使用して先行技術調査と請求項カバレッジ分析を行います。"
   },
   "details": {
@@ -491,7 +491,7 @@
     "claimDependsOn": "請求項 {{claim}} は請求項 {{parent}} に従属",
     "nounMismatch": "従属項「{{dependent}}」と独立項「{{independent}}」が不一致。従属請求項は親請求項と同じ法定カテゴリ（例：共に装置または共に方法）でなければなりません。プリアンブルの名詞を修正してください。",
     "seeSection112": "下記の § 112 分析を参照。",
-    "specSupportUnsupported": "{{count}} 件の請求項用語が明細書に見つかりませんでした。§ 112(a) に基づき、各請求項用語には記載要件のサポートが必要です。用語ごとの詳細は下記の § 112 分析を参照してください。",
+    "specSupportUnsupported": "{{count}} 件の請求項用語が明細書に見つかりませんでした。§ 112(a) に基づき、各請求項用語には明細書による裏付けが必要です。用語ごとの詳細は下記の § 112 分析を参照してください。",
     "restrictiveWordingSpec": "段落：{{list}}。\"must\"、\"always\"、\"invention\" などの用語は § 2173.05(b) に基づき、不明確または範囲を制限するものとして扱われる可能性があります。各フラグ付き段落を確認し、その用語が過度に範囲を制限するか不明確性を生じさせるか検討してください。",
     "paragraphNumberingMissing": "MPEP § 608.01(p) に従い、[0001] 形式の連続した段落番号を追加してください。",
     "paragraphEnding": "段落：{{list}}。MPEP § 608.01(p) に従い、明細書の各段落はピリオドで終了する必要があります。",
@@ -759,7 +759,7 @@
           "amendXml": "段落番号が連番になっていません（{{detail}}）。",
           "amendDocx": "明細書に手動で付与された段落番号が含まれています（CNIPA出願では削除が必要）。",
           "pass": "段落番号は連番で付されています。",
-          "amendXmlGap": "段落番号に飛びがあります — {{prev}}の次が{{next}}。",
+          "amendXmlGap": "段落番号に飛びがあります（{{prev}}の次が{{next}}）。",
           "amendXmlDuplicate": "重複する段落番号が{{count}}件あります：{{paragraphs}}。"
         },
         "paragraphEnding": {
@@ -771,7 +771,7 @@
           "pass": "各章の図面参照は整合しています。"
         },
         "patentTypeTerminology": {
-          "verify": "「{{term}}」を検出 — 出願種別（発明・実用新案）と整合するか確認してください。",
+          "verify": "「{{term}}」を検出：出願種別（発明・実用新案）と整合するか確認してください。",
           "pass": "出願種別の用語が一貫しています。"
         },
         "title": {
@@ -819,7 +819,7 @@
           "pass": "全ての独立請求項に特徴部連接詞が含まれています。"
         },
         "twTerminology": {
-          "verify": "台湾用語「请求项」を検出 — CNIPA出願では「权利要求」を使用してください。",
+          "verify": "台湾用語「请求项」を検出：CNIPA出願では「权利要求」を使用してください。",
           "pass": "請求項はCNIPA用語（权利要求）を使用しています。"
         },
         "specReference": {
@@ -859,7 +859,7 @@
         },
         "figuresSequential": {
           "pass": "図1〜{{found_max}}が連番で付されています。",
-          "amend": "図番が連続していません — 不足：{{figure_list}}。"
+          "amend": "図番が連続していません。不足：{{figure_list}}。"
         }
       }
     },
@@ -875,7 +875,7 @@
         },
         "paragraphNumbering": {
           "pass": "段落番号は連番で付されています（または番号なし）。",
-          "amendGap": "段落番号に飛びがあります — 【{{prev}}】の次が【{{next}}】。",
+          "amendGap": "段落番号に飛びがあります（【{{prev}}】の次が【{{next}}】）。",
           "amendFormat": "【NNNN】形式でない段落が{{count}}件あります。例：{{examples}}。"
         },
         "paragraphEnding": {
@@ -1011,7 +1011,7 @@
         },
         "figuresSequential": {
           "pass": "図1〜{{found_max}}が連番で付されています。",
-          "amend": "図番が連続していません — 不足：{{figure_list}}。"
+          "amend": "図番が連続していません。不足：{{figure_list}}。"
         }
       }
     }
@@ -1036,7 +1036,7 @@
   },
   "pdf": {
     "header": "PatentLint 分析レポート",
-    "headerTw": "PatentLint — 台湾特許原稿検査レポート",
+    "headerTw": "PatentLint｜台湾特許原稿検査レポート",
     "securityNote": "お使いのデバイス上で分析しました。クラウドへのアップロードはありません。",
     "amend": "修正が必要",
     "verify": "専門家の確認が必要",
@@ -1088,7 +1088,7 @@
     "crmNonTransitory": "請求項 {{claimNumber}}：コンピュータ可読媒体の請求項に 'non-transitory' の限定がありません",
     "crmNonTransitoryDetails": "請求項 {{claimNumber}} はコンピュータ可読媒体を記載していますが、'non-transitory' の限定がありません。この限定がない場合、請求項は一時的信号（搬送波など）を含み、35 U.S.C. § 101 の特許適格性を満たしません。媒体の用語の前に 'non-transitory' を追加してください。",
     "markushOpenTransition": "請求項 {{claimNumber}}：Markush グループが 'consisting of' ではなく開放的な '{{transition}}' を使用しています",
-    "markushOpenTransitionDetails": "請求項 {{claimNumber}} の Markush グループが 'consisting of' ではなく '{{transition}}' を使用しています。MPEP § 2117 に基づき、Markush グループは閉鎖的な移行句を使用する必要があります。開放的な用語の使用は不適切な Markush グループとして拒絶される可能性があります。",
+    "markushOpenTransitionDetails": "請求項 {{claimNumber}} の Markush グループが 'consisting of' ではなく '{{transition}}' を使用しています。MPEP § 2117 に基づき、Markush グループは閉鎖型の移行句を使用する必要があります。開放型の用語の使用は不適切な Markush グループとして拒絶される可能性があります。",
     "omnibusClaim": "請求項 {{claimNumber}} は概括請求項の可能性があります",
     "omnibusClaimDetails": "請求項 {{claimNumber}} は明細書または図面を参照していますが、具体的な技術的特徴を記載していません。概括請求項は米国実用特許において 35 U.S.C. § 112(b) に基づき一律に拒絶されます（MPEP § 2173.05(r)）。具体的な構造または方法の限定を記載するよう請求項を書き直してください。",
     "specialFormatsPass": "特殊な請求項形式の問題は検出されませんでした。",
