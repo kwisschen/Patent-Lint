@@ -27,6 +27,12 @@ _STOP_WORDS = (
     r"supports|enables|allows|causes|includes|contains|"
     r"encompasses|creates|maintains|controls|establishes|"
     r"represents|surrounds|overlaps|"
+    # Additional 3sg verbs / adjectives surfaced by testspec12 optics patent
+    # (and similar math/physics-heavy claims where a term is followed by a
+    # verb phrase like "satisfies formula (1)" or by the adjective "close
+    # to X"). Adding them to the regex stop set prevents the NP capture
+    # from bleeding past the head noun into the verb/adjective clause.
+    r"satisfies|crosses|corresponds|relates|close|directed|"
     r"a|an|the|said)"
 )
 
@@ -138,6 +144,11 @@ _PREPOSITION_STOPS = {
     "onto", "over", "under", "from", "with", "without", "beside", "beneath",
     "beyond", "behind", "before", "after", "among", "about", "inside",
     "outside", "throughout", "near", "past", "until", "as", "via",
+    # Directional adverb commonly used as a postpositional modifier in
+    # optics/geometry claims ("extension direction away from the axis").
+    # Stripping bilaterally cleans both "extension direction away" intros
+    # and "the extension direction" references so they match.
+    "away",
 }
 
 # Trailing conjunctions and relative pronouns
@@ -345,9 +356,38 @@ def strip_contextual_verb(term: str, following_text: str) -> str:
     return " ".join(words[:-1])
 
 
+_VARIABLE_IDENTIFIER_RE = re.compile(r"^[a-z][a-z0-9]?'?$")
+
+
+def _is_trailing_variable_identifier(word: str, prev_word: str | None) -> bool:
+    """Detect 1-2 char trailing tokens that are math/physics variable names.
+
+    In lowercased claim text, tokens like ``vd`` (from ``Vd``), ``dz``
+    (``Dz``), ``so`` (``So``), or ``p`` / ``p'`` tacked onto the end of a
+    noun phrase are variable identifiers rather than part of the noun. Only
+    strip when the preceding token is a substantive noun, not an article or
+    preposition that would make the short token the actual head.
+    """
+    if not _VARIABLE_IDENTIFIER_RE.match(word):
+        return False
+    if prev_word is None:
+        return False
+    if prev_word.lower() in _UTS_GUARD_PRECEDERS:
+        return False
+    return True
+
+
 def clean_noun_phrase(phrase: str) -> str:
     """Strip trailing verbs, adverbs, and function words from a noun phrase."""
     words = phrase.strip().split()
+    # Strip a trailing 1-2 char variable identifier ("viewing distance vd",
+    # "physical distance dz"). Applied once before the generic trailing-word
+    # loop so subsequent rules see the cleaned tail.
+    if len(words) >= 2:
+        last = words[-1].rstrip(".,;:")
+        prev = words[-2].rstrip(".,;:")
+        if _is_trailing_variable_identifier(last, prev):
+            words.pop()
     while words:
         last = words[-1].lower().rstrip(".,;:")
         # Trailing bare cardinal ("respectively define two") — strip only
