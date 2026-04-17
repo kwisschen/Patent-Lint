@@ -146,6 +146,7 @@
   },
   "antecedent": {
     "didYouMean": "Did you mean *{{term}}* (introduced in claim {{claim_id}})?",
+    "crossBranchAntecedent": "Introduced in claim {{claim_id}}, which is not in this claim's dependency chain. Restructure the dependency or re-introduce the term with \"a\".",
     "crossRefSpecSupport": "Also flagged for spec support — see § 112(a) below."
   },
   "specSupport": {

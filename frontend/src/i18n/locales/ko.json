@@ -146,6 +146,7 @@
   },
   "antecedent": {
     "didYouMean": "혹시 '{{term}}' (청구항 {{claim_id}}에서 도입됨)을 의미하셨나요?",
+    "crossBranchAntecedent": "청구항 {{claim_id}}에서 도입되었으나, 해당 청구항은 본 청구항의 종속 계열에 포함되지 않습니다. 종속 구조를 조정하거나 용어를 \"a\"로 다시 도입하세요.",
     "crossRefSpecSupport": "명세서 뒷받침에서도 플래그됨 — 아래 § 112(a)를 참조하세요."
   },
   "specSupport": {
