@@ -98,15 +98,16 @@ function ComparisonRow({ index, qKey }) {
         {t(`security.compare.${qKey}.question`)}
       </td>
       <td className="py-2 px-2 sm:py-3 sm:px-4 text-xs sm:text-sm text-green-500 font-bold">
-        <span className="inline-flex items-center gap-1.5">
+        <span className="inline-flex items-start gap-1.5">
           <Check
             size={16}
+            className="shrink-0 mt-0.5"
             style={{
               transform: isInView ? 'scale(1)' : 'scale(0)',
               transition: `transform 0.4s var(--ease-bounce) ${index * 80 + 200}ms`,
             }}
           />
-          {t(`security.compare.${qKey}.patentlint`)}
+          <span>{t(`security.compare.${qKey}.patentlint`)}</span>
         </span>
       </td>
       <td className="hidden sm:table-cell py-3 px-4 text-sm text-muted-foreground">
@@ -123,7 +124,7 @@ function ComparisonSection() {
   const { t } = useTranslation()
   const [ref, isInView] = useInView()
 
-  const rows = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6']
+  const rows = ['q1', 'q6', 'q2', 'q3', 'q4', 'q5', 'q7']
 
   return (
     <section
