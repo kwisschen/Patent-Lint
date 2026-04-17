@@ -7,7 +7,7 @@
     "us": "美国专利",
     "cn": "中国专利",
     "tw": "台湾专利",
-    "label": "管辖区"
+    "label": "地区"
   },
   "dropzone": {
     "tagline": "依据30多项USPTO撰写规则，立即检查您的专利稿件。",
@@ -146,13 +146,13 @@
   },
   "antecedent": {
     "didYouMean": "您是否指的是\"{{term}}\"（于权利要求{{claim_id}}中引入）？",
-    "crossRefSpecSupport": "亦已于说明书支持中标记，请参见 § 112(a) 卡片。"
+    "crossRefSpecSupport": "亦已在说明书支持中标记，参见下方 § 112(a)。"
   },
   "specSupport": {
     "title": "说明书支持检查",
     "items": "个术语",
     "item": "个术语",
-    "crossRefAntecedent": "亦已于先行词分析中标记，请参见 § 112(b) 卡片。"
+    "crossRefAntecedent": "亦已在先行词分析中标记，参见上方 § 112(b)。"
   },
   "triage": {
     "title": "优先处理摘要",
@@ -276,9 +276,9 @@
         "title": "说明书与摘要结构",
         "description": "章节顺序（MPEP § 608.01(a)）、段落编号（§ 608.01(p)）、摘要字数（§ 608.01(b)），以及附图与详细说明之间的引用交叉比对。"
       },
-      "crossLink": {
-        "title": "§ 112(a) ↔ § 112(b) 双向交互注记",
-        "description": "同一术语若同时触发 § 112(b) 先行词问题与 § 112(a) 书面描述问题，两张卡片都会附上交互注记，让双向缺陷一目了然。"
+      "specSupport": {
+        "title": "书面描述支持（§ 112(a)）",
+        "description": "逐一检查各权利要求术语是否在说明书中具书面描述支持。未受支持的术语会被标示，并在同时触发 § 112(b) 先行词问题时相互交互注记，使双向缺陷一次呈现。"
       }
     },
     "uspto": {
@@ -391,7 +391,7 @@
       },
       "symbolTable": {
         "title": "符號說明交叉比对（TW 独有）",
-        "description": "原生解析 TW 专属的符號說明表，并与實施方式、圖式簡單說明、代表圖交叉比对；此检查项目为 TW 独有，其他司法辖区并无此区块。"
+        "description": "原生解析 TW 专属的符號說明表，并与實施方式、圖式簡單說明、代表圖交叉比对；此检查项目为 TW 独有，美国和中国专利中并无此区块。"
       }
     },
     "tw": {
@@ -484,7 +484,7 @@
     "claimDependsOn": "权利要求 {{claim}} 从属于权利要求 {{parent}}",
     "nounMismatch": "从属项「{{dependent}}」与独立项「{{independent}}」不一致。从属权利要求须与母权利要求属于相同法定类别（例如同为装置或同为方法）。请修正前序名词。",
     "seeSection112": "详见下方 § 112 分析。",
-    "specSupportUnsupported": "{{count}} 个权利要求术语未在说明书中找到。依 § 112(a)，各权利要求术语应有书面描述支持。请参阅下方 § 112 分析以查看逐项详情。",
+    "specSupportUnsupported": "{{count}} 个权利要求术语未在说明书中发现。依 § 112(a)，各权利要求术语应有书面描述支持。请参阅下方 § 112 分析以查看逐项详情。",
     "restrictiveWordingSpec": "段落：{{list}}。\"must\"、\"always\"或\"invention\"等用语可能依 § 2173.05(b) 被视为不确定或限制范围。请检查各标记段落，考虑该用语是否过度限缩范围或引入不确定性。",
     "paragraphNumberingMissing": "请依 MPEP § 608.01(p) 添加 [0001] 格式的连续段落编号。",
     "paragraphEnding": "段落：{{list}}。说明书各段落须依 MPEP § 608.01(p) 以句号结尾。",
@@ -534,11 +534,18 @@
       "abstractCharCount": "根据专利法实施细则 §23，摘要不得超过300个汉字。请缩短摘要。",
       "abstractTitleMatch": "根据审查指南，摘要应与发明名称一致。请确认摘要是否体现了发明名称。",
       "commercialLanguage": "根据专利法实施细则 §23，摘要不得包含商业性宣传用语。请删除\"最优\"\"最佳\"\"世界领先\"\"国际领先\"\"国内首创\"\"填补空白\"等用语。",
-      "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语可能缺少先行词。详见下方「先行词基础检查」区块。",
+      "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语缺少先行词。详见下方「先行词基础检查」区块。",
       "titleMissing": "根据审查指南 第一部分第一章，说明书必须包含发明名称。请于说明书首部添加发明名称。",
       "figureRefInconsistency": {
         "onlyDrawings": "仅在附图说明中提及：{{figs}}",
         "onlyEmbodiment": "仅在具体实施方式中提及：{{figs}}"
+      },
+      "pass": {
+        "multiMultiDep": "依专利法实施细则 §22，多项从属权利要求不得引用另一多项从属权利要求，以避免引用链过长造成保护范围不清。",
+        "selfDependent": "依专利法实施细则 §22，权利要求不得引用自身；从属权利要求应当引用在前的权利要求。",
+        "forwardDependency": "依专利法实施细则 §22，从属权利要求仅可引用在前编号的权利要求，不得引用后编号的权利要求。",
+        "singleSentence": "依审查指南 第二部分第二章，每项权利要求应当为一个以句号（。）结尾的完整句子，以确保保护范围明确。",
+        "transitionPhrase": "依审查指南，独立权利要求应包含「其特征在于」等特征部分连接词，用于区分前序部分（现有技术）与特征部分（新颖要素）。"
       }
     },
     "tw": {
@@ -582,7 +589,7 @@
         "description": "代表图符号简单说明中列出之符号应与符号说明中之定义一致。请确认标记的项目。"
       },
       "bracketFormat": "依专利法施行细则 §17，章节标题应使用全角方括号【】。发现：{{detail}}。",
-      "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语可能缺少先行词。详见下方「先行词基础检查」区块。",
+      "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语缺少先行词。详见下方「先行词基础检查」区块。",
       "titleMissing": "依专利审查基准，说明书必须包含发明名称/新型名称。请于说明书首部添加。",
       "figureRefInconsistency": {
         "onlyDrawings": "仅在圖式簡單說明中提及：{{figs}}",
@@ -686,11 +693,11 @@
         "pass": "「wherein」逗号使用正确。"
       },
       "meansFunction": {
-        "verify": "权利要求可能援引 35 U.S.C. § 112(f) 功能性限定。",
+        "verify": "权利要求使用 35 U.S.C. § 112(f) 功能性限定。",
         "pass": "未检测到功能性限定用语。"
       },
       "antecedentBasis": {
-        "verify": "检测到可能缺少先行词基础（antecedent basis）。",
+        "verify": "检测到缺少先行词基础（antecedent basis）。",
         "pass": "未检测到先行词基础问题。"
       },
       "missingTransition": "权利要求 {{claimNumber}} 缺少过渡用语（例如 'comprising'、'consisting of'）",
@@ -801,7 +808,7 @@
           "pass": "从属权利要求的主题名称一致。"
         },
         "transitionPhrase": {
-          "verify": "{{count}} 项独立权利要求可能缺少特征部分连接词：{{claims}}。",
+          "verify": "{{count}} 项独立权利要求缺少特征部分连接词：{{claims}}。",
           "pass": "所有独立权利要求均包含特征部分连接词。"
         },
         "twTerminology": {
@@ -821,7 +828,7 @@
           "pass": "从属权利要求排列顺序正确。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 可能共有 {{issue_count}} 个用语缺少先行词。",
+          "verify": "{{claims}} 共有 {{issue_count}} 个用语缺少先行词。",
           "pass": "所有引用之用语皆有先行词。"
         }
       },
@@ -950,7 +957,7 @@
           "pass": "所有多项附属项均使用择一形式。"
         },
         "titleSubjectMatch": {
-          "verify": "发明名称/新型名称「{{title}}」可能与独立项標的「{{subjects}}」不一致。",
+          "verify": "发明名称/新型名称「{{title}}」与独立项標的「{{subjects}}」不一致。",
           "pass": "发明名称/新型名称与独立项標的一致。"
         },
         "symbolTableConsistency": {
@@ -959,7 +966,7 @@
           "noClaimNumerals": "权利要求未使用元件符号（施行细则 §19 允许），无需检查一致性。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 可能共有 {{issue_count}} 个用语缺少先行词。",
+          "verify": "{{claims}} 共有 {{issue_count}} 个用语缺少先行词。",
           "pass": "所有引用之用语均有先行词。"
         }
       },
@@ -969,7 +976,7 @@
           "pass": "摘要在250字以内（{{count}}字）。"
         },
         "titleMatch": {
-          "verify": "摘要中可能未包含发明名称/新型名称。",
+          "verify": "摘要中未包含发明名称/新型名称。",
           "pass": "摘要中包含发明名称/新型名称。"
         },
         "commercialLanguage": {
@@ -987,7 +994,7 @@
           "pass": "代表图之符号简单说明与符号说明一致。"
         },
         "bracketFormat": {
-          "verify": "章节标题可能未使用正确之【】格式。",
+          "verify": "章节标题未使用【】格式。",
           "pass": "所有章节标题均使用正确之【】格式。"
         }
       },
@@ -1059,11 +1066,11 @@
     "preamble_cross_category_pass": "权利要求前序部分一致。",
     "preamble_noun_mismatch": "从属权利要求与独立权利要求前序名词不同。",
     "preamble_indefinite_article": "从属权利要求前序使用了不定冠词（应使用「The」）。",
-    "spec_support_unsupported_terms": "权利要求术语在说明书中未找到。",
-    "spec_support_pass": "所有权利要求术语均在说明书中找到。",
+    "spec_support_unsupported_terms": "权利要求术语在说明书中未发现。",
+    "spec_support_pass": "所有权利要求术语均已在说明书中发现。",
     "required_sections_pass": "符合 MPEP § 608.01(a) 的所有必要章节均已存在。",
     "required_sections_missing": "缺少 MPEP § 608.01(a) 规定的必要章节。",
-    "optional_section_missing": "可选部分\"{{name}}\"未找到。",
+    "optional_section_missing": "可选章节\"{{name}}\"未发现。",
     "figure_xref_pass": "附图说明与具体实施方式之间的附图引用一致。",
     "figure_xref_orphaned_brief": "附图在附图说明中描述但未在具体实施方式中引用。",
     "figure_xref_orphaned_detailed": "附图在具体实施方式中引用但未在附图说明中描述。"
@@ -1083,7 +1090,7 @@
     "extraPeriod": "权利要求 {{claimNumber}} 包含多余或位置不当的句号。",
     "extraPeriodDetails": "权利要求 {{claimNumber}} 在非预期位置出现句号。依据 MPEP § 608.01(m)，权利要求应仅在末尾包含一个句号。",
     "whereinComma": "权利要求 {{claimNumber}}：请检查 'wherein' 子句前的逗号用法。",
-    "whereinCommaDetails": "权利要求 {{claimNumber}} 的 'wherein' 子句前后逗号使用可能不正确。请依据 MPEP § 608.01(m) 检查标点符号。",
+    "whereinCommaDetails": "权利要求 {{claimNumber}} 的 'wherein' 子句前后逗号使用不正确。请依据 MPEP § 608.01(m) 检查标点符号。",
     "punctuationPass": "所有权利要求标点符号正确。"
   },
   "updates": {
