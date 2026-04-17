@@ -266,6 +266,21 @@
     "productDesc2": "PatentLint checks drafting rules from the MPEP (U.S.), CNIPA rules (China), and TIPO rules (Taiwan), detecting common issues such as missing antecedent basis, incorrect claim structure, and restrictive wording.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center validates filing format. PatentLint checks the draft itself.",
+    "usFeatures": {
+      "title": "Interactive US patent analysis",
+      "claimTree": {
+        "title": "Claim tree & § 112 walker",
+        "description": "Interactive dependency tree for multi-dependent and multi-independent structures, backed by a § 112(b) antecedent-basis walker that also flags Markush, Jepson, means-plus-function, and transitional-phrase patterns."
+      },
+      "specAbstract": {
+        "title": "Specification & abstract structure",
+        "description": "Section ordering (MPEP § 608.01(a)), paragraph numbering (§ 608.01(p)), abstract word count (§ 608.01(b)), and figure-reference cross-checks between the drawings and the detailed description."
+      },
+      "crossLink": {
+        "title": "§ 112(a) ↔ § 112(b) cross-linking",
+        "description": "Every § 112(b) antecedent-basis flag is cross-linked to the matching § 112(a) written-description finding on the same term — one click moves between the two instances."
+      }
+    },
     "uspto": {
       "colCheck": "Check",
       "colUSPTO": "USPTO Patent Center",
@@ -316,18 +331,18 @@
     "cnTitle": "PatentLint CNIPA Drafting Checks",
     "cnSubtitle": "20+ structural checks against CNIPA drafting rules (专利法实施细则, 审查指南).",
     "cnFeatures": {
-      "title": "Interactive CN analysis",
+      "title": "Interactive CN patent analysis",
       "claimTree": {
-        "title": "Claim dependency tree",
-        "description": "Visualize multi-dependent and multi-independent claim structures with an interactive tree and dependency graph."
+        "title": "Claim structure & 先行词 walker",
+        "description": "Interactive 请求项相依树 with multi-dependent rendering, plus a BFS 先行词链 walker with CJK bigram tokenization, 主题名称 consistency, 引用格式, and bracketed 附图标记 checks."
       },
-      "didYouMean": {
-        "title": "Did-you-mean suggestions",
-        "description": "When a reference term has no exact antecedent, the walker offers the closest candidate to help you spot typos and drafting drift."
+      "specAbstract": {
+        "title": "Specification & abstract coverage",
+        "description": "五大章节 ordering (专利法实施细则 §17), paragraph-ending punctuation, 附图 reference consistency across 附图说明 and 具体实施方式, and the 300-character 摘要 limit (§23)."
       },
-      "antecedentBasis": {
-        "title": "Antecedent-basis chain walker",
-        "description": "BFS ancestor-chain walker with bigram tokenization and ordinal guard catches missing antecedent basis across the full claim tree."
+      "dualPipeline": {
+        "title": "五书模板 + CNIPA XML dual pipeline",
+        "description": "The same checks run over CPC 五书模板 Word drafts and CNIPA ST.36 XML filings; 段落编号 rules apply per input format (manual [NNNN] forbidden in .docx, sequential in XML)."
       }
     },
     "cnGroups": {
@@ -364,6 +379,21 @@
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統 covers Taiwan-specific terminology. PatentLint covers broader drafting rules.",
+    "twFeatures": {
+      "title": "Interactive TW patent analysis",
+      "claimTree": {
+        "title": "Claim structure & 先行詞 walker",
+        "description": "Interactive 請求項相依樹 with a BFS 先行詞鏈 walker, 其特徵在於 / 其改良在於 two-part-form checks, single-sentence rule, and 引用記載型式 handling (一種X，具備如請求項N所述的Y)."
+      },
+      "specAbstract": {
+        "title": "Specification & abstract coverage",
+        "description": "Section ordering per 專利法施行細則 §17, paragraph-ending punctuation with strict/relaxed rules per section, figure-reference cross-checks, and the 250-character 摘要 limit (§21)."
+      },
+      "symbolTable": {
+        "title": "符號說明 cross-check (TW-unique)",
+        "description": "TW-only 符號說明 tables parsed natively and cross-checked against 實施方式, 圖式簡單說明, and 代表圖 symbol usage — no other jurisdiction has this section."
+      }
+    },
     "tw": {
       "group1Title": "Shared Checks",
       "group2Title": "TIPO 專屬檢查",

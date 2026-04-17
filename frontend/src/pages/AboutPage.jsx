@@ -167,10 +167,20 @@ function CnCheckTable({ t }) {
   )
 }
 
-const CN_FEATURE_KEYS = ['claimTree', 'didYouMean', 'antecedentBasis']
+const US_FEATURE_KEYS = ['claimTree', 'specAbstract', 'crossLink']
+const CN_FEATURE_KEYS = ['claimTree', 'specAbstract', 'dualPipeline']
+const TW_FEATURE_KEYS = ['claimTree', 'specAbstract', 'symbolTable']
 
-function CnFeatureBlock({ t }) {
+const FEATURE_ACCENT = {
+  US: 'border-l-blue-200 dark:border-l-blue-800',
+  CN: 'border-l-green-200 dark:border-l-green-800',
+  TW: 'border-l-teal-200 dark:border-l-teal-800',
+}
+
+function JurisdictionFeatureBlock({ t, jurisdiction, cardKeys }) {
   const [ref, inView] = useInView()
+  const prefix = `${jurisdiction.toLowerCase()}Features`
+  const accent = FEATURE_ACCENT[jurisdiction] ?? ''
 
   return (
     <div
@@ -183,19 +193,19 @@ function CnFeatureBlock({ t }) {
       }}
     >
       <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
-        {t('about.cnFeatures.title')}
+        {t(`about.${prefix}.title`)}
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {CN_FEATURE_KEYS.map((key) => (
+        {cardKeys.map((key) => (
           <div
             key={key}
-            className="border border-border rounded-lg p-4 bg-card border-l-2 border-l-green-200 dark:border-l-green-800"
+            className={`border border-border rounded-lg p-4 bg-card border-l-2 ${accent}`}
           >
             <div className="text-sm font-semibold text-foreground mb-2">
-              {t(`about.cnFeatures.${key}.title`)}
+              {t(`about.${prefix}.${key}.title`)}
             </div>
             <div className="text-xs text-muted-foreground leading-relaxed">
-              {t(`about.cnFeatures.${key}.description`)}
+              {t(`about.${prefix}.${key}.description`)}
             </div>
           </div>
         ))}
@@ -393,14 +403,24 @@ function ComparisonTable({ t }) {
         </p>
       </div>
 
-      {activeTab === 'US' && <UsComparisonTable t={t} />}
+      {activeTab === 'US' && (
+        <>
+          <JurisdictionFeatureBlock t={t} jurisdiction="US" cardKeys={US_FEATURE_KEYS} />
+          <UsComparisonTable t={t} />
+        </>
+      )}
       {activeTab === 'CN' && (
         <>
-          <CnFeatureBlock t={t} />
+          <JurisdictionFeatureBlock t={t} jurisdiction="CN" cardKeys={CN_FEATURE_KEYS} />
           <CnCheckTable t={t} />
         </>
       )}
-      {activeTab === 'TW' && <TwComparisonTable t={t} />}
+      {activeTab === 'TW' && (
+        <>
+          <JurisdictionFeatureBlock t={t} jurisdiction="TW" cardKeys={TW_FEATURE_KEYS} />
+          <TwComparisonTable t={t} />
+        </>
+      )}
     </section>
   )
 }
