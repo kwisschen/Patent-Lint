@@ -76,11 +76,11 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
           <ShieldCheck className="w-4 h-4 flex-shrink-0 mt-0.5" />
           <div className="flex flex-col gap-1">
             <strong>{t('security.badge.headline')}</strong>
-            <span className="text-xs text-green-600/80 dark:text-green-400/80">
+            <span>
               {t('security.badge.description')}{' '}
               <button
                 onClick={(e) => { e.stopPropagation(); onShowProveIt?.() }}
-                className="underline underline-offset-2 hover:text-green-700 dark:hover:text-green-300 transition-colors"
+                className="underline underline-offset-2 hover:text-green-700 dark:hover:text-green-300 focus-visible:text-green-700 dark:focus-visible:text-green-300 transition-colors"
               >
                 {t('security.badge.proveIt')}
               </button>
