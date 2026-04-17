@@ -59,7 +59,7 @@ function buildMermaidSyntax(claimTrees, t) {
 
 export default function ClaimDiagram({ claimTrees }) {
   const { t } = useTranslation()
-  const [showDiagram, setShowDiagram] = useState(false)
+  const [showDiagram, setShowDiagram] = useState(true)
   const containerRef = useRef(null)
 
   const renderDiagram = useCallback(async () => {
