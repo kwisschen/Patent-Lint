@@ -54,7 +54,7 @@
     "drawingsShort": "도면",
     "abstract": "요약서",
     "cn": {
-      "specification": "설명서",
+      "specification": "명세서",
       "claims": "특허청구범위",
       "drawings": "도면",
       "drawingsShort": "도면",
@@ -75,9 +75,9 @@
     }
   },
   "status": {
-    "pass": "PASS",
-    "verify": "VERIFY",
-    "amend": "AMEND"
+    "pass": "통과",
+    "verify": "확인",
+    "amend": "수정"
   },
   "button": {
     "downloadPdf": "PDF 보고서 저장",
@@ -126,7 +126,7 @@
     "label": "분석"
   },
   "footer": {
-    "disclaimer": "법률 자문이 아닙니다",
+    "disclaimer": "본 보고서는 법률 자문에 해당하지 않습니다",
     "builtBy": "© 2025 Christopher Chen",
     "security": "보안",
     "about": "소개",
@@ -147,13 +147,13 @@
   "antecedent": {
     "didYouMean": "혹시 '{{term}}' (청구항 {{claim_id}}에서 도입됨)을 의미하셨나요?",
     "crossBranchAntecedent": "청구항 {{claim_id}}에서 도입되었으나, 해당 청구항은 본 청구항의 종속 계열에 포함되지 않습니다. 종속 구조를 조정하거나 용어를 \"a\"로 다시 도입하세요.",
-    "crossRefSpecSupport": "명세서 뒷받침에서도 플래그됨 — 아래 § 112(a)를 참조하세요."
+    "crossRefSpecSupport": "명세서 뒷받침에서도 플래그됨 (아래 § 112(a) 참조)."
   },
   "specSupport": {
     "title": "명세서 뒷받침 검토",
     "items": "건",
     "item": "건",
-    "crossRefAntecedent": "선행 근거 분석에서도 플래그됨 — 위 § 112(b)를 참조하세요."
+    "crossRefAntecedent": "선행 근거 분석에서도 플래그됨 (위 § 112(b) 참조)."
   },
   "triage": {
     "title": "우선순위 요약",
@@ -239,7 +239,7 @@
       },
       "q6": {
         "question": "비용이 얼마인가요?",
-        "patentlint": "완전 무료.",
+        "patentlint": "무료. 요금, 구독, 사용 제한 없음.",
         "addin": "보통 유료 라이선스가 필요합니다.",
         "cloud": "보통 구독이 필요합니다."
       },
@@ -340,7 +340,7 @@
     "cnFeatures": {
       "title": "인터랙티브 중국 특허 분석",
       "claimTree": {
-        "title": "청구항 구조와 선행어 분석기",
+        "title": "청구항 구조와 선행사 분석기",
         "description": "인터랙티브 请求项相依树가 다중 종속·다중 독립 구조를 표시하고, 너비 우선 조상 체인 분석기와 함께 主题名称 일관성, 引用格式, 附图标记 괄호 처리 등을 검사합니다."
       },
       "specAbstract": {
@@ -389,7 +389,7 @@
     "twFeatures": {
       "title": "인터랙티브 대만 특허 분석",
       "claimTree": {
-        "title": "청구항 구조와 선행어 분석기",
+        "title": "청구항 구조와 선행사 분석기",
         "description": "인터랙티브 請求項相依樹와 너비 우선 先行詞鏈 분석기를 제공하며, 其特徵在於／其改良在於 이단식 형식, 단일문 규칙, 引用記載型式(一種X，具備如請求項N所述的Y)을 처리합니다."
       },
       "specAbstract": {
@@ -433,7 +433,7 @@
       "multiDepOnMultiDep": "다중 종속은 다른 다중 종속에 종속 불가",
       "multiDepAlternative": "다중 종속은 택일 형식 사용",
       "titleSubjectMatch": "發明名稱이 청구항 標的과 일치",
-      "antecedentBasis": "선행어 분석",
+      "antecedentBasis": "선행사 분석",
       "charCount": "요약서 글자 수(250자 이하)",
       "titleMatch": "發明名稱이 요약서에 포함",
       "commercialLanguage": "상업적 선전 용어",
@@ -759,7 +759,7 @@
           "amendXml": "단락 번호가 순차적이지 않습니다 ({{detail}}).",
           "amendDocx": "명세서에 수동으로 추가된 단락 번호가 포함되어 있습니다 (CNIPA 출원 시 제거 필요).",
           "pass": "단락 번호가 순차적입니다.",
-          "amendXmlGap": "단락 번호에 누락이 있습니다 — {{prev}} 다음에 {{next}}.",
+          "amendXmlGap": "단락 번호에 누락이 있습니다 ({{prev}} 다음에 {{next}}).",
           "amendXmlDuplicate": "중복된 단락 번호가 {{count}}개 있습니다: {{paragraphs}}."
         },
         "paragraphEnding": {
@@ -771,7 +771,7 @@
           "pass": "섹션 간 도면 참조가 일관됩니다."
         },
         "patentTypeTerminology": {
-          "verify": "'{{term}}' 검출 — 출원 종류(발명·실용신안)와 일치하는지 확인하십시오.",
+          "verify": "'{{term}}' 검출: 출원 종류(발명·실용신안)와 일치하는지 확인하십시오.",
           "pass": "출원 종류 용어가 일관됩니다."
         },
         "title": {
@@ -819,7 +819,7 @@
           "pass": "모든 독립 청구항에 연결 어구가 포함되어 있습니다."
         },
         "twTerminology": {
-          "verify": "대만 특허 용어 '请求项' 검출 — CNIPA 출원은 '权利要求'를 사용해야 합니다.",
+          "verify": "대만 특허 용어 '请求项' 검출: CNIPA 출원은 '权利要求'를 사용해야 합니다.",
           "pass": "청구항이 CNIPA 용어(权利要求)를 사용합니다."
         },
         "specReference": {
@@ -859,7 +859,7 @@
         },
         "figuresSequential": {
           "pass": "도 1–{{found_max}}이(가) 순차적으로 번호 매겨져 있습니다.",
-          "amend": "도면 번호가 순차적이지 않습니다 — 누락: {{figure_list}}."
+          "amend": "도면 번호가 순차적이지 않습니다. 누락: {{figure_list}}."
         }
       }
     },
@@ -875,7 +875,7 @@
         },
         "paragraphNumbering": {
           "pass": "단락 번호가 순차적입니다 (또는 부재).",
-          "amendGap": "단락 번호에 누락이 있습니다 — 【{{prev}}】 다음에 【{{next}}】.",
+          "amendGap": "단락 번호에 누락이 있습니다 (【{{prev}}】 다음에 【{{next}}】).",
           "amendFormat": "【NNNN】 형식이 아닌 단락이 {{count}}개 있습니다. 예: {{examples}}."
         },
         "paragraphEnding": {
@@ -1011,7 +1011,7 @@
         },
         "figuresSequential": {
           "pass": "도 1–{{found_max}}이(가) 순차적으로 번호 매겨져 있습니다.",
-          "amend": "도면 번호가 순차적이지 않습니다 — 누락: {{figure_list}}."
+          "amend": "도면 번호가 순차적이지 않습니다. 누락: {{figure_list}}."
         }
       }
     }
@@ -1036,7 +1036,7 @@
   },
   "pdf": {
     "header": "PatentLint 분석 보고서",
-    "headerTw": "PatentLint — 대만 특허 명세서 검사 보고서",
+    "headerTw": "PatentLint｜대만 특허 명세서 검사 보고서",
     "securityNote": "기기에서 분석 완료. 클라우드에 업로드되지 않았습니다.",
     "amend": "조치 필요",
     "verify": "전문가 검토 필요",
@@ -1119,6 +1119,6 @@
   "punct": {
     "listSeparator": ", ",
     "sentenceSeparator": "; ",
-    "ellipsis": " ..."
+    "ellipsis": "…"
   }
 }
