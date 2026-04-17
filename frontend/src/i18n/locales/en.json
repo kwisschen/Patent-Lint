@@ -239,9 +239,15 @@
       },
       "q6": {
         "question": "What does it cost?",
-        "patentlint": "Free — no fees, no subscription, no usage limits.",
+        "patentlint": "Completely free.",
         "addin": "Typically requires a paid license.",
         "cloud": "Typically requires a subscription."
+      },
+      "q7": {
+        "question": "Is my patent text used for AI training?",
+        "patentlint": "Never. All checks are deterministic rule-based pattern matching.",
+        "addin": "Depends on vendor; some send telemetry.",
+        "cloud": "Often yes. Training rights are often reserved in the terms."
       }
     },
     "tech": {
