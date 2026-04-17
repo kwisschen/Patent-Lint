@@ -235,7 +235,7 @@
         "question": "支持哪些平台？",
         "patentlint": "任何支持现代浏览器的设备。",
         "addin": "仅限 Windows + Microsoft Word。",
-        "cloud": "浏览器端，但需要上传资料。"
+        "cloud": "可通过浏览器使用，但须上传文件。"
       },
       "q6": {
         "question": "费用是多少？",
@@ -254,12 +254,12 @@
       "architectureTitle": "架构",
       "architecture": "PatentLint 通过 Pyodide 将 Python 分析引擎编译为 WebAssembly，完全在浏览器的沙盒 JavaScript 环境中运行。文档分析不经过任何服务器端处理。",
       "networkTitle": "网络活动",
-      "network": "初次页面加载（加载分析引擎）之后，分析过程中不会发出任何网络请求。您可以在浏览器的 开发者工具「网络」标签页中验证，或直接开启飞行模式。",
+      "network": "初次页面加载（加载分析引擎）之后，分析过程中不会发出任何网络请求。您可以在浏览器的开发者工具「网络」标签页中验证，或直接开启飞行模式。",
       "pdfTitle": "PDF 生成",
       "pdf": "PDF 报告完全在您的浏览器中使用 pdfmake 生成。您的文件内容绝不离开您的设备，即使是生成报告也不例外。",
-      "aiTitle": "AI / LLM 使用",
+      "aiTitle": "AI / LLM（不使用）",
       "ai": "PatentLint 不使用 AI、机器学习或大型语言模型。所有检查均为确定性的规则匹配，依据各专利局审查规范执行。您的文本不会被发送至任何 AI 服务。",
-      "telemetryTitle": "遥测与分析",
+      "telemetryTitle": "遥测与分析（不使用）",
       "telemetry": "PatentLint 不包含分析脚本、追踪像素、cookies 或第三方集成。此应用程序不收集或传输任何使用数据。",
       "selfHostedTitle": "自托管选项",
       "selfHosted": "对于有严格数据主权要求的组织，例如 ITAR 管控环境或物理隔离网络，PatentLint 可通过 Docker 部署于本地环境，所有依赖项均已包含。",
@@ -277,15 +277,15 @@
       "title": "交互式美国专利分析",
       "claimTree": {
         "title": "权利要求树与 § 112 分析器",
-        "description": "交互式依赖树呈现多重从属与多重独立权利要求结构；§ 112(b) 先行词分析器同时检测 Markush、Jepson、means-plus-function 与过渡用语等特殊格式。"
+        "description": "交互式依赖树呈现多重从属与多重独立权利要求结构；§ 112 分析器同时检查先行词基础（§ 112(b)）与书面描述支持（§ 112(a)），同一用语同时缺少两者时交互注记，并检测 Markush、Jepson、means-plus-function 与过渡用语等特殊格式。"
       },
       "specAbstract": {
         "title": "说明书与摘要结构",
-        "description": "章节顺序（MPEP § 608.01(a)）、段落编号（§ 608.01(p)）、摘要字数（§ 608.01(b)），以及附图与详细说明之间的引用交叉比对。"
+        "description": "章节顺序（MPEP § 608.01(a)）、段落编号（§ 608.01(p)）、摘要字数（§ 608.01(b)），以及附图与详细说明之间的引用交叉比对等。"
       },
       "specSupport": {
-        "title": "书面描述支持（§ 112(a)）",
-        "description": "逐一检查各权利要求用语的 § 112(a) 说明书支持。同一用语若亦缺少 § 112(b) 先行词，两项问题交互注记。"
+        "title": "限制性用语与撰稿防护",
+        "description": "检测权利要求、说明书与摘要中的不明确或限制性用语（如\"must\"、\"always\"、\"invention\"），依 MPEP § 2173.05(b)；并标记缺少\"non-transitory\"限定的 CRM 权利要求（§ 101）。"
       }
     },
     "uspto": {
@@ -344,8 +344,8 @@
         "description": "交互式权利要求依赖树呈现多重从属与多重独立结构，并搭配广度优先的祖先链分析器；检查项目包括主题名称一致性、引用格式、以及附图标记括号等。"
       },
       "specAbstract": {
-        "title": "说明书与摘要覆盖",
-        "description": "五大章节顺序（专利法实施细则 §17）、段落结尾标点、附图说明与具体实施方式之间的附图引用一致性、以及摘要 300 字上限（§23）。"
+        "title": "说明书与摘要检查",
+        "description": "五大章节顺序（专利法实施细则 §17）、段落结尾标点、附图说明与具体实施方式之间的附图引用一致性、以及摘要 300 字上限（§23）等。"
       },
       "dualPipeline": {
         "title": "五书模板与 CNIPA XML 双通道",
@@ -390,11 +390,11 @@
       "title": "交互式台湾专利分析",
       "claimTree": {
         "title": "請求項结构与先行詞分析器",
-        "description": "交互式請求項相依樹搭配广度优先先行詞鏈分析器，并处理其特徵在於／其改良在於二段式格式、单句化规则、以及引用記載型式（一種X，具備如請求項N所述的Y）。"
+        "description": "交互式請求項相依樹搭配广度优先先行詞鏈分析器，并处理二段式格式（其特徵在於／其改良在於）、单句化规则、以及引用記載型式（一種X，具備如請求項N所述的Y）。"
       },
       "specAbstract": {
-        "title": "说明书与摘要覆盖",
-        "description": "章節順序（專利法施行細則 §17）、段落结尾标点按章節严格／宽松规则适用、附图引用交叉比对、以及摘要 250 字上限（§21）。"
+        "title": "说明书与摘要检查",
+        "description": "章節順序（專利法施行細則 §17）、段落结尾标点按章節严格／宽松规则适用、附图引用交叉比对、以及摘要 250 字上限（§21）等。"
       },
       "symbolTable": {
         "title": "符號說明交叉比对（TW 独有）",
@@ -403,8 +403,8 @@
     },
     "tw": {
       "group1Title": "共同检查项目",
-      "group2Title": "TIPO 專屬檢查",
-      "group3Title": "PatentLint 專屬檢查",
+      "group2Title": "TIPO 专属检查",
+      "group3Title": "PatentLint 专属检查",
       "colTipo": "TIPO 偵錯系統"
     },
     "twChecks": {
@@ -430,8 +430,8 @@
       "transitionPhrase": "連接詞（其特徵在於）",
       "cnTerminology": "两岸用语辨识",
       "specDrawingRef": "請求項不得引用說明書或图式",
-      "multiDepOnMultiDep": "多项附属項不得依附另一多项附属項",
-      "multiDepAlternative": "多项附属項须采择一形式",
+      "multiDepOnMultiDep": "多项附属项不得依附另一多项附属项",
+      "multiDepAlternative": "多项附属项须采择一形式",
       "titleSubjectMatch": "發明名稱与請求項標的一致",
       "antecedentBasis": "先行词分析",
       "charCount": "摘要字数（250字以下）",
