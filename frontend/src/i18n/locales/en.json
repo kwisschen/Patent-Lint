@@ -7,7 +7,7 @@
     "us": "US Patent",
     "cn": "CN Patent",
     "tw": "TW Patent",
-    "label": "Jurisdiction"
+    "label": "Region"
   },
   "dropzone": {
     "tagline": "Instantly check your specification against 30+ USPTO drafting rules.",
@@ -146,13 +146,13 @@
   },
   "antecedent": {
     "didYouMean": "Did you mean *{{term}}* (introduced in claim {{claim_id}})?",
-    "crossRefSpecSupport": "Also flagged for spec support — see § 112(a) card."
+    "crossRefSpecSupport": "Also flagged for spec support — see § 112(a) below."
   },
   "specSupport": {
     "title": "Specification Support Review",
     "items": "terms",
     "item": "term",
-    "crossRefAntecedent": "Also flagged for antecedent basis — see § 112(b) card."
+    "crossRefAntecedent": "Also flagged for antecedent basis — see § 112(b) above."
   },
   "triage": {
     "title": "Priority Summary",
@@ -276,9 +276,9 @@
         "title": "Specification & abstract structure",
         "description": "Section ordering (MPEP § 608.01(a)), paragraph numbering (§ 608.01(p)), abstract word count (§ 608.01(b)), and figure-reference cross-checks between the drawings and the detailed description."
       },
-      "crossLink": {
-        "title": "§ 112(a) ↔ § 112(b) cross-reference",
-        "description": "When the same term triggers both a § 112(b) antecedent-basis flag and a § 112(a) written-description flag, both cards carry a cross-reference label so the two-sided defect is visible at a glance."
+      "specSupport": {
+        "title": "Written-description support (§ 112(a))",
+        "description": "Each claim term is checked for written-description support in the specification. Terms appearing in claims but missing from the spec are flagged, and findings cross-link to the § 112(b) antecedent walker when the same term fails both — so two-sided defects surface in one sweep."
       }
     },
     "uspto": {
@@ -539,6 +539,13 @@
       "figureRefInconsistency": {
         "onlyDrawings": "Only cited in 附图说明: {{figs}}",
         "onlyEmbodiment": "Only cited in 具体实施方式: {{figs}}"
+      },
+      "pass": {
+        "multiMultiDep": "Per 专利法实施细则 §22, a multiple-dependent claim may not serve as a basis for another multiple-dependent claim — chained multi-multi references make scope indeterminate.",
+        "selfDependent": "Per 专利法实施细则 §22, a claim may not depend on itself; dependent claims must reference an earlier claim.",
+        "forwardDependency": "Per 专利法实施细则 §22, a dependent claim may only reference earlier-numbered claims, not later ones.",
+        "singleSentence": "Per 审查指南 第二部分第二章, each claim must be a single sentence ending in 。 to keep scope unambiguous.",
+        "transitionPhrase": "Per 审查指南, an independent claim should contain a two-part transition (e.g. 其特征在于) separating the preamble (prior art) from the characterizing part (novel features)."
       }
     },
     "tw": {
