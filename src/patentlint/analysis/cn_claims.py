@@ -23,6 +23,18 @@ from patentlint.models import CheckItem, Claim, CnPatentDocument
 # is the calibration v2 sweet spot from the TW walker; inherited for CN.
 _DIDYOUMEAN_THRESHOLD_CN = 0.40
 
+
+def _dedupe_claim_ids(ids: list[int]) -> list[int]:
+    """Drop duplicate claim IDs while preserving first-seen order.
+
+    A malformed draft can print two distinct claim bodies under the same
+    printed number (e.g., two "44."s in CN115952274B). The parser keeps
+    both so ``check_claims_sequential`` can flag the duplication, but
+    downstream emit sites should surface each claim ID at most once so
+    the report does not render "claims: 44, 44".
+    """
+    return list(dict.fromkeys(ids))
+
 # ── Check 9 ──────────────────────────────────────────────────────────────
 
 
@@ -86,6 +98,7 @@ def check_dependency_format(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 bad_claim_ids.append(claim.id)
 
     if bad_claim_ids:
+        bad_claim_ids = _dedupe_claim_ids(bad_claim_ids)
         claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="amend",
@@ -110,7 +123,7 @@ def check_dependency_format(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
 def check_self_dependent(cn_doc: CnPatentDocument) -> list[CheckItem]:
     """Check if any claim depends on itself."""
-    bad = [c.id for c in cn_doc.claims if c.id in c.dependencies]
+    bad = _dedupe_claim_ids([c.id for c in cn_doc.claims if c.id in c.dependencies])
 
     if bad:
         claims_str = ", ".join(str(i) for i in bad)
@@ -137,7 +150,9 @@ def check_self_dependent(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
 def check_forward_dependency(cn_doc: CnPatentDocument) -> list[CheckItem]:
     """Check if any claim depends on a higher-numbered claim."""
-    bad = [c.id for c in cn_doc.claims if any(d > c.id for d in c.dependencies)]
+    bad = _dedupe_claim_ids(
+        [c.id for c in cn_doc.claims if any(d > c.id for d in c.dependencies)]
+    )
 
     if bad:
         return [CheckItem(
@@ -171,6 +186,7 @@ def check_single_sentence(cn_doc: CnPatentDocument) -> list[CheckItem]:
             bad_claim_ids.append(claim.id)
 
     if bad_claim_ids:
+        bad_claim_ids = _dedupe_claim_ids(bad_claim_ids)
         claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="amend",
@@ -216,6 +232,7 @@ def check_reference_numeral_parentheses(cn_doc: CnPatentDocument) -> list[CheckI
             bad_claim_ids.append(claim.id)
 
     if bad_claim_ids:
+        bad_claim_ids = _dedupe_claim_ids(bad_claim_ids)
         claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="verify",
@@ -237,7 +254,7 @@ def check_reference_numeral_parentheses(cn_doc: CnPatentDocument) -> list[CheckI
 
 # ── Check 15 ─────────────────────────────────────────────────────────────
 
-# Extract subject name: text after the last 所述的 (or 的) before 。
+# Extract subject matter: text after the last 所述的 (or 的) before 。
 _SUBJECT_RE = re.compile(r"所述的(.+?)(?:[，,]|$)")
 _LEADING_QUANTIFIER = re.compile(r"^(?:一种|一个|该|所述|所述的)\s*")
 
@@ -255,7 +272,7 @@ _SUBJECT_END_RE_CN = re.compile(r"(?:[，,]|其特征在于|其改良在于|其�
 
 
 def _extract_subject(claim_text: str) -> str:
-    """Extract the subject name from a claim preamble.
+    """Extract the subject matter from a claim preamble.
 
     Dependent-claim preambles (如权利要求N所述的X) are anchored at start so
     that body-text 所述的 occurrences inside independent claims do not
@@ -286,7 +303,16 @@ def _normalize_subject(subject: str) -> str:
 
 
 def check_subject_name_consistency(cn_doc: CnPatentDocument) -> list[CheckItem]:
-    """Check dependent claim subjects match their parent claim subjects."""
+    """Check dependent claim subject matter matches parent claim subject matter.
+
+    Extract both subjects with the same ``_extract_subject`` helper so a
+    descriptive independent-claim preamble like
+    ``一种基于深度学习模型的数据生成方法`` does not spuriously diverge from
+    a dependent's short-form ``如权利要求1所述的数据生成方法``. Consistency
+    allows equality, or either side being a suffix of the other, since
+    CN drafters commonly drop qualifier phrases (``基于...的``) when
+    re-referencing the parent subject matter.
+    """
     claims_by_id = {c.id: c for c in cn_doc.claims}
     dependents = [c for c in cn_doc.claims if not c.independent]
 
@@ -300,31 +326,30 @@ def check_subject_name_consistency(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
     bad_claim_ids: list[int] = []
     for claim in dependents:
-        dep_subject = _extract_subject(claim.text)
-        if not dep_subject or not claim.dependencies:
+        if not claim.dependencies:
             continue
         parent_id = claim.dependencies[0]
         parent = claims_by_id.get(parent_id)
         if not parent:
             continue
-        # For independent parent, extract the subject from preamble
-        # (text before 其特征在于 or before first ，)
-        parent_text = parent.text
-        preamble_match = re.search(r"[.．。]\s*(.+?)(?:，|,|其特征)", parent_text)
-        if preamble_match:
-            parent_subject = preamble_match.group(1).strip()
-        else:
-            parent_subject = ""
 
-        if (dep_subject and parent_subject
-                and _normalize_subject(dep_subject) != _normalize_subject(parent_subject)):
-            bad_claim_ids.append(claim.id)
+        dep_subject = _normalize_subject(_extract_subject(claim.text))
+        parent_subject = _normalize_subject(_extract_subject(parent.text))
+
+        if not dep_subject or not parent_subject:
+            continue
+        if dep_subject == parent_subject:
+            continue
+        if parent_subject.endswith(dep_subject) or dep_subject.endswith(parent_subject):
+            continue
+        bad_claim_ids.append(claim.id)
 
     if bad_claim_ids:
+        bad_claim_ids = _dedupe_claim_ids(bad_claim_ids)
         claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="verify",
-            message=f"{len(bad_claim_ids)} dependent claim(s) have inconsistent subject names (claims: {claims_str}).",
+            message=f"{len(bad_claim_ids)} dependent claim(s) have inconsistent subject matter (claims: {claims_str}).",
             message_key="check.cn.claims.subjectConsistency.verify",
             details=f"{len(bad_claim_ids)} claims",
             details_key="details.cn.subjectConsistency",
@@ -334,7 +359,7 @@ def check_subject_name_consistency(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
     return [CheckItem(
         status="pass",
-        message="Dependent claim subject names are consistent.",
+        message="Dependent claim subject matter is consistent.",
         message_key="check.cn.claims.subjectConsistency.pass",
         reference="审查指南 第二部分第二章",
     )]
@@ -362,6 +387,7 @@ def check_transition_phrase(cn_doc: CnPatentDocument) -> list[CheckItem]:
             bad_claim_ids.append(claim.id)
 
     if bad_claim_ids:
+        bad_claim_ids = _dedupe_claim_ids(bad_claim_ids)
         claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="verify",
@@ -419,6 +445,7 @@ def check_claims_spec_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
             bad_claim_ids.append(claim.id)
 
     if bad_claim_ids:
+        bad_claim_ids = _dedupe_claim_ids(bad_claim_ids)
         claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="amend",
@@ -451,6 +478,7 @@ def check_multi_multi_dependency(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 bad.append(claim.id)
 
     if bad:
+        bad = _dedupe_claim_ids(bad)
         claims_str = ", ".join(str(i) for i in bad)
         return [CheckItem(
             status="amend",
