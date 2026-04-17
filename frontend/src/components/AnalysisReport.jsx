@@ -243,9 +243,6 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
         >
           {jConfig.showClaimTree && (
             <>
-              <ClaimTree claimTrees={data.claim_trees} />
-              <ClaimDiagram claimTrees={data.claim_trees} />
-
               <Section112Container
                 hasAntecedentIssues={hasAntecedentIssues}
                 hasUnsupportedTerms={hasUnsupportedTerms}
@@ -254,6 +251,9 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
                 claimTrees={data.claim_trees}
                 jurisdiction={data.jurisdiction}
               />
+
+              <ClaimTree claimTrees={data.claim_trees} />
+              <ClaimDiagram claimTrees={data.claim_trees} />
             </>
           )}
         </SectionPanel>
