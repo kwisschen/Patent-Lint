@@ -215,7 +215,7 @@ class TestRefNumeralParentheses:
         assert results[0].details_params["claims"] == [2]
 
 
-# ── Check 15: Subject name consistency ────────────────────────────────────
+# ── Check 15: Subject matter consistency ──────────────────────────────────
 
 
 class TestSubjectNameConsistency:
@@ -241,6 +241,38 @@ class TestSubjectNameConsistency:
         doc = _cn_doc([_claim(1, "1. 一种装置。")])
         results = check_subject_name_consistency(doc)
         assert results[0].status == "pass"
+
+    def test_descriptive_preamble_suffix_pass(self):
+        # Parent preamble carries a qualifier phrase the dependent drops; the
+        # dep subject matter is still a suffix of the parent's, so the claim
+        # pair is consistent under 审查指南 一致 semantics. Regression guard
+        # against the FP where ~100% of real-corpus deps fired before the
+        # symmetric extractor + suffix-containment fix.
+        doc = _cn_doc([
+            _claim(1, "1. 一种基于深度学习模型的数据生成方法，其特征在于包括步骤。"),
+            _claim(2, "2. 如权利要求1所述的数据生成方法，其特征在于还包括其他步骤。",
+                   independent=False, dependencies=[1]),
+        ])
+        results = check_subject_name_consistency(doc)
+        assert results[0].status == "pass"
+
+    def test_duplicate_claim_ids_deduped_in_emit(self):
+        # A malformed docx can print two distinct claims under the same
+        # printed number (e.g., two "44."s in CN115952274B). The parser
+        # keeps both so claims_sequential can flag the duplication, but
+        # the subject-matter emit must not show "44, 44".
+        doc = _cn_doc([
+            _claim(1, "1. 一种数据处理装置，其特征在于包括模块。"),
+            _claim(44, "44. 如权利要求1所述的信号处理系统，其特征在于还包括部件。",
+                   independent=False, dependencies=[1]),
+            _claim(44, "44. 如权利要求1所述的信号处理系统，其特征在于还包括另一部件。",
+                   independent=False, dependencies=[1]),
+        ])
+        results = check_subject_name_consistency(doc)
+        assert results[0].status == "verify"
+        assert results[0].details_params["claims"] == [44]
+        assert results[0].details_params["count"] == 1
+        assert "44, 44" not in results[0].message
 
 
 # ── Check 16: Transition phrase ───────────────────────────────────────────
