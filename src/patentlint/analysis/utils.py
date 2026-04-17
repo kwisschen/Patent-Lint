@@ -573,6 +573,38 @@ def extract_bare_noun_intros(text: str) -> list[str]:
 _DEFINITE_PRECEDER = re.compile(r"(?:\bthe|\bsaid)\s+$", re.IGNORECASE)
 
 
+# Self-definition pattern: "the <NP> [optional 1-2 char identifier] is
+# (a|an) <definition>". Equation-heavy / math-variable claims use this
+# construction to introduce a named quantity together with its symbol
+# (e.g. "the equivalent object distance So is a distance calculated by…",
+# "the physical distance Dz is an actual distance from…"). The NP before
+# "is a/an" is the definiendum — register it as an implicit intro so
+# subsequent "the <NP>" references in the same claim (or descendants)
+# resolve without an explicit "a <NP>" precursor.
+_SELF_DEFINITION_RE = re.compile(
+    rf"\bthe\s+(?P<defined>{_NP_CORE})"
+    rf"(?:\s+[a-z][a-z0-9]?'?)?"
+    rf"\s+is\s+(?:a|an)\s+",
+    re.IGNORECASE,
+)
+
+
+# Wherein-subject bare-noun introduction. After "wherein", capture a
+# bare noun phrase acting as the grammatical subject (no leading
+# article). Requires the subject length ≥3 chars to reject single-char
+# variable subjects like "wherein n is a positive integer". The
+# subsequent token set ("of <determiner>", "gradually/respectively/…",
+# intransitive-verb heads) gates against runaway captures.
+_WHEREIN_BARE_SUBJECT_RE = re.compile(
+    rf"\bwherein\s+(?P<subj>{_NP_CORE})\s+"
+    rf"(?:of\s+(?:the|a|an|each|said|one|two|three|four|five|six|seven|eight|nine|ten)"
+    rf"|gradually|respectively|generally|substantially|essentially"
+    rf"|form|forms|include|includes|comprise|comprises"
+    rf"|correspond|corresponds|represent|represents)",
+    re.IGNORECASE,
+)
+
+
 def extract_introductions(text: str) -> list[str]:
     """Extract all element-introduction noun phrases from patent text.
 
@@ -598,6 +630,33 @@ def extract_introductions(text: str) -> list[str]:
         if cleaned:
             refs.append(cleaned)
     refs.extend(extract_bare_noun_intros(lowered))
+    refs.extend(_extract_self_definition_intros(lowered))
+    refs.extend(_extract_wherein_bare_subject_intros(lowered))
+    return refs
+
+
+def _extract_self_definition_intros(lowered: str) -> list[str]:
+    refs: list[str] = []
+    for m in _SELF_DEFINITION_RE.finditer(lowered):
+        cleaned = clean_noun_phrase(m.group("defined").strip())
+        if cleaned and len(cleaned) >= 3:
+            refs.append(cleaned)
+    return refs
+
+
+def _extract_wherein_bare_subject_intros(lowered: str) -> list[str]:
+    refs: list[str] = []
+    for m in _WHEREIN_BARE_SUBJECT_RE.finditer(lowered):
+        cleaned = clean_noun_phrase(m.group("subj").strip())
+        if not cleaned or len(cleaned) < 3:
+            continue
+        # Reject single-token captures that look like placeholder letters
+        # ("p represents …") — any 1-2 char single word is a variable name,
+        # not an introduced element.
+        words = cleaned.split()
+        if len(words) == 1 and len(words[0]) <= 2:
+            continue
+        refs.append(cleaned)
     return refs
 
 
