@@ -2,7 +2,7 @@
 // Copyright (c) 2025 Christopher Chen
 import { useState, useEffect, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Upload, ShieldCheck } from 'lucide-react'
+import { FilePlus2, ShieldCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
 
@@ -59,7 +59,7 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
         style={isDragActive ? { transitionTimingFunction: 'var(--ease-bounce)' } : undefined}
       >
         <input {...getInputProps()} />
-        <Upload className={`h-10 w-10 transition-colors duration-200 ${isDragActive ? 'text-[var(--pass-text)]' : 'text-muted-foreground'}`} />
+        <FilePlus2 className={`h-10 w-10 transition-colors duration-200 ${isDragActive ? 'text-[var(--pass-text)]' : 'text-muted-foreground'}`} />
         <div className="text-center">
           <p className="text-base font-medium">{t(jConfig.titleKey)}</p>
           <p className="text-sm text-muted-foreground mt-1">{t('dropzone.subtitle')}</p>
