@@ -266,6 +266,21 @@
     "productDesc2": "PatentLint 依据 MPEP（美国）、CNIPA 规则（中国）及 TIPO 规则（台湾）进行撰写规则检查，检测常见问题，如缺乏先行词基础、不正确的权利要求结构和限制性用语。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查文稿本身。",
+    "usFeatures": {
+      "title": "交互式美国专利分析",
+      "claimTree": {
+        "title": "权利要求树与 § 112 分析器",
+        "description": "交互式依赖树呈现多重从属与多重独立权利要求结构；§ 112(b) 先行词分析器同时检测 Markush、Jepson、means-plus-function 与过渡用语等特殊格式。"
+      },
+      "specAbstract": {
+        "title": "说明书与摘要结构",
+        "description": "章节顺序（MPEP § 608.01(a)）、段落编号（§ 608.01(p)）、摘要字数（§ 608.01(b)），以及附图与详细说明之间的引用交叉比对。"
+      },
+      "crossLink": {
+        "title": "§ 112(a) ↔ § 112(b) 双向链接",
+        "description": "每一个 § 112(b) 先行词标记都与同一术语的 § 112(a) 书面描述标记链接，一键即可在两者之间切换。"
+      }
+    },
     "uspto": {
       "colCheck": "检查项目",
       "colUSPTO": "USPTO Patent Center",
@@ -318,16 +333,16 @@
     "cnFeatures": {
       "title": "交互式中国专利分析",
       "claimTree": {
-        "title": "权利要求依赖树",
-        "description": "通过交互式树形视图与依赖图，展现多重从属和多重独立权利要求的结构。"
+        "title": "权利要求结构与先行词分析器",
+        "description": "交互式权利要求依赖树呈现多重从属与多重独立结构，并搭配广度优先的祖先链分析器；检查项目包括主题名称一致性、引用格式、以及附图标记括号等。"
       },
-      "didYouMean": {
-        "title": "相似匹配建议",
-        "description": "当引用术语没有精确先行词时，分析器会给出最接近的候选词，帮助发现拼写错误与撰写漂移。"
+      "specAbstract": {
+        "title": "说明书与摘要覆盖",
+        "description": "五大章节顺序（专利法实施细则 §17）、段落结尾标点、附图说明与具体实施方式之间的附图引用一致性、以及摘要 300 字上限（§23）。"
       },
-      "antecedentBasis": {
-        "title": "先行词链分析",
-        "description": "基于广度优先搜索的祖先链分析器，结合二元分词与序数保护，跨整棵权利要求树检测缺失先行词。"
+      "dualPipeline": {
+        "title": "五书模板与 CNIPA XML 双通道",
+        "description": "同一套检查同时支持 CPC 五书模板 Word 文稿与 CNIPA ST.36 XML 提交格式；段落编号规则按输入格式自动应用（.docx 禁止手动 [NNNN]，XML 需连续编号）。"
       }
     },
     "cnGroups": {
@@ -364,6 +379,21 @@
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統专查台湾特有用语。PatentLint 扩及更广的撰写规范。",
+    "twFeatures": {
+      "title": "交互式台湾专利分析",
+      "claimTree": {
+        "title": "請求項结构与先行詞分析器",
+        "description": "交互式請求項相依樹搭配广度优先先行詞鏈分析器，并处理其特徵在於／其改良在於二段式格式、单句化规则、以及引用記載型式（一種X，具備如請求項N所述的Y）。"
+      },
+      "specAbstract": {
+        "title": "说明书与摘要覆盖",
+        "description": "章節順序（專利法施行細則 §17）、段落结尾标点按章節严格／宽松规则适用、附图引用交叉比对、以及摘要 250 字上限（§21）。"
+      },
+      "symbolTable": {
+        "title": "符號說明交叉比对（TW 独有）",
+        "description": "原生解析 TW 专属的符號說明表，并与實施方式、圖式簡單說明、代表圖交叉比对；此检查项目为 TW 独有，其他司法辖区并无此区块。"
+      }
+    },
     "tw": {
       "group1Title": "共同检查项目",
       "group2Title": "TIPO 專屬檢查",
