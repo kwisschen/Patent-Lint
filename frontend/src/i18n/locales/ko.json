@@ -266,6 +266,21 @@
     "productDesc2": "PatentLint은 MPEP(미국), CNIPA 규칙(중국) 및 TIPO 규칙(대만)의 작성 규칙을 검사하고, 선행사 기초 누락, 부정확한 청구항 구조, 제한적 표현 등 일반적인 문제를 검출합니다.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center는 출원 형식을 검증합니다. PatentLint는 초안 자체를 검사합니다.",
+    "usFeatures": {
+      "title": "인터랙티브 미국 특허 분석",
+      "claimTree": {
+        "title": "청구항 트리와 § 112 분석기",
+        "description": "인터랙티브 종속 트리가 다중 종속·다중 독립 구조를 표시하고, § 112(b) 선행사 분석기가 Markush, Jepson, means-plus-function, 전이 어구 등 특수 형식도 함께 검출합니다."
+      },
+      "specAbstract": {
+        "title": "명세서 및 요약 구조",
+        "description": "섹션 순서(MPEP § 608.01(a)), 문단 번호(§ 608.01(p)), 요약 단어 수(§ 608.01(b)), 그리고 도면과 상세 설명 간의 도면 참조 상호 검증."
+      },
+      "crossLink": {
+        "title": "§ 112(a) ↔ § 112(b) 양방향 링크",
+        "description": "모든 § 112(b) 선행사 플래그는 동일 용어의 § 112(a) 서면 기재 지적과 링크되어, 한 번의 클릭으로 두 지점 사이를 이동할 수 있습니다."
+      }
+    },
     "uspto": {
       "colCheck": "검사 항목",
       "colUSPTO": "USPTO Patent Center",
@@ -316,18 +331,18 @@
     "cnTitle": "PatentLint CNIPA 작성 규칙 검사",
     "cnSubtitle": "CNIPA 작성 규칙(专利法实施细则, 审查指南)에 따른 20여 건의 구조 검사.",
     "cnFeatures": {
-      "title": "인터랙티브 CN 분석",
+      "title": "인터랙티브 중국 특허 분석",
       "claimTree": {
-        "title": "청구항 종속 트리",
-        "description": "다중 종속 및 다중 독립 청구항 구조를 인터랙티브 트리와 의존 그래프로 시각화합니다."
+        "title": "청구항 구조와 선행어 분석기",
+        "description": "인터랙티브 请求项相依树가 다중 종속·다중 독립 구조를 표시하고, 너비 우선 조상 체인 분석기와 함께 主题名称 일관성, 引用格式, 附图标记 괄호 처리 등을 검사합니다."
       },
-      "didYouMean": {
-        "title": "유사 매칭 제안",
-        "description": "참조 용어의 정확한 선행어가 없을 때 가장 가까운 후보를 제안하여 오타와 작성 편차를 찾도록 돕습니다."
+      "specAbstract": {
+        "title": "명세서 및 요약 커버리지",
+        "description": "五大章节 순서(专利法实施细则 §17), 문단 끝 구두점, 附图说明과 具体实施方式 간 附图 참조 일관성, 그리고 摘要 300자 한도(§23)."
       },
-      "antecedentBasis": {
-        "title": "선행어 체인 분석",
-        "description": "너비 우선 탐색 기반 조상 체인 분석기가 바이그램 토큰화와 서수 가드를 결합해 청구항 트리 전반의 선행어 누락을 탐지합니다."
+      "dualPipeline": {
+        "title": "五书模板 + CNIPA XML 듀얼 파이프라인",
+        "description": "동일한 검사가 CPC 五书模板 Word 초안과 CNIPA ST.36 XML 출원 형식 모두에서 실행됩니다. 段落编号 규칙은 입력 형식에 따라 자동으로 적용됩니다(.docx에서는 수동 [NNNN] 금지, XML에서는 연속 번호 필수)."
       }
     },
     "cnGroups": {
@@ -364,6 +379,21 @@
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統은 대만 고유 용어를 검증합니다. PatentLint는 보다 광범위한 작성 규칙을 포괄합니다.",
+    "twFeatures": {
+      "title": "인터랙티브 대만 특허 분석",
+      "claimTree": {
+        "title": "청구항 구조와 선행어 분석기",
+        "description": "인터랙티브 請求項相依樹와 너비 우선 先行詞鏈 분석기를 제공하며, 其特徵在於／其改良在於 이단식 형식, 단일문 규칙, 引用記載型式(一種X，具備如請求項N所述的Y)을 처리합니다."
+      },
+      "specAbstract": {
+        "title": "명세서 및 요약 커버리지",
+        "description": "專利法施行細則 §17의 섹션 순서, 섹션별 엄격/완화 규칙에 따른 문단 끝 구두점, 도면 참조 상호 검증, 그리고 摘要 250자 한도(§21)."
+      },
+      "symbolTable": {
+        "title": "符號說明 상호 검증(TW 고유)",
+        "description": "TW 고유의 符號說明 표를 네이티브로 파싱하고 實施方式, 圖式簡單說明, 代表圖의 부호 사용과 상호 검증합니다. 이 검사 항목은 TW에만 존재하며, 다른 관할구역에는 없습니다."
+      }
+    },
     "tw": {
       "group1Title": "공통 검사",
       "group2Title": "TIPO 專屬檢查",
