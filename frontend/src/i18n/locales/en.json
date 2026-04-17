@@ -351,7 +351,7 @@
       "forwardDependency": "Forward dependency",
       "singleSentence": "Single sentence per claim",
       "refNumeralParens": "Reference numerals in parentheses",
-      "subjectNameConsistency": "Subject name consistency",
+      "subjectNameConsistency": "Subject matter consistency",
       "transitionPhrase": "Transitional phrase (其特征在于)",
       "cnTwTerminology": "CN/TW terminology",
       "claimsSpecReference": "Claims must not reference spec/drawings",
@@ -389,7 +389,7 @@
       "forwardDependency": "Forward dependency",
       "singleSentence": "Single sentence per claim",
       "refNumeralParens": "Reference numerals in parentheses (專利法施行細則 §19)",
-      "subjectConsistency": "Subject name consistency",
+      "subjectConsistency": "Subject matter consistency",
       "transitionPhrase": "Transitional phrase (其特徵在於)",
       "cnTerminology": "CN / TW terminology",
       "specDrawingRef": "Claims must not reference spec or drawings",
@@ -495,7 +495,7 @@
       "forwardDependency": "Per 专利法实施细则 §22, dependent claims must only reference preceding claims. Change the dependency to reference an earlier claim.",
       "singleSentence": "Per 审查指南 第二部分第二章, each claim must be a single sentence ending with one 。. Remove mid-claim periods or restructure into separate claims.",
       "refNumeralParens": "Per 审查指南, reference numerals in claims should be enclosed in parentheses, e.g., (101) not 101. Verify the flagged claims.",
-      "subjectConsistency": "Per 审查指南 第二部分第二章, the subject name (主题名称) of a dependent claim should match its parent claim's subject name. Verify the flagged claims.",
+      "subjectConsistency": "Per 审查指南 第二部分第二章, the subject matter (主题名称) of a dependent claim should match its parent claim's subject matter. Verify the flagged claims.",
       "transitionPhrase": "Per 审查指南, independent claims should contain a characterizing transition such as '其特征在于' to delineate known elements from novel features. Verify the flagged claims.",
       "twTerminology": "CNIPA uses '权利要求' for claims. '请求项' is Taiwan (TIPO) patent terminology. Replace all instances for CNIPA filing.",
       "claimsSpecReference": "Per 审查指南 第二部分第二章, claims must not use '如说明书……所述' or '如图……所示' to define their scope. Claims must be self-contained. Remove these references.",
@@ -529,7 +529,7 @@
       "forwardDependency": "Per 專利法施行細則 §18, dependent claims must only reference preceding claims. Forward references: {{claims}}.",
       "singleSentence": "Per 專利法施行細則 §18, each claim must be one sentence with exactly one 。 at the end. Review flagged claims.",
       "refNumeralParens": "Per 專利法施行細則 §19, reference numerals in claims should be enclosed in parentheses, e.g., (101). Review flagged claims.",
-      "subjectConsistency": "Dependent claim subject name should match the parent claim's subject name. Review flagged claims.",
+      "subjectConsistency": "Dependent claim subject matter should match the parent claim's subject matter. Review flagged claims.",
       "transitionPhrase": "Per 專利法施行細則 §20, independent claims should contain a transitional phrase such as 其特徵在於 or 其改良在於. Review flagged claims.",
       "cnTerminology": "Found simplified Chinese patent terminology: {{detail}}. TW documents should use TIPO terms (請求項, 說明書, 先前技術, 實施方式, etc.), not CNIPA terms (权利要求, 说明书, 背景技术, 具体实施方式, etc.).",
       "specDrawingRef": "Per 專利法施行細則 §19, claims must not reference the specification or drawings (e.g., 如說明書所述, 如圖所示). Found: {{detail}}.",
@@ -767,8 +767,8 @@
           "pass": "All reference numerals enclosed in parentheses."
         },
         "subjectConsistency": {
-          "verify": "Subject name inconsistent with parent in {{claims}} ({{count}} total).",
-          "pass": "All dependent claim subjects match their parent."
+          "verify": "Subject matter inconsistent with parent in {{claims}} ({{count}} total).",
+          "pass": "All dependent claim subject matter matches their parent."
         },
         "transitionPhrase": {
           "verify": "{{count}} independent claim(s) may lack a transition phrase: {{claims}}.",
@@ -896,8 +896,8 @@
           "pass": "All reference numerals enclosed in parentheses."
         },
         "subjectConsistency": {
-          "verify": "Subject name inconsistent with parent in {{claims}} ({{count}} total).",
-          "pass": "All dependent claim subjects match their parent."
+          "verify": "Subject matter inconsistent with parent in {{claims}} ({{count}} total).",
+          "pass": "All dependent claim subject matter matches their parent."
         },
         "transitionPhrase": {
           "verify": "{{count}} independent claim(s) missing a transition phrase: {{claims}}.",

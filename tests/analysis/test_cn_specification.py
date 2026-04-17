@@ -195,6 +195,32 @@ class TestParagraphEnding:
         results = check_paragraph_ending(doc)
         assert results[0].status == "amend"
 
+    def test_bracket_prefix_used_as_locator(self):
+        # When the drafter has left manual [NNNN] prefixes in the file
+        # (separately flagged by check_paragraph_numbering), report the
+        # bracket number as the locator so the two checks don't contradict
+        # each other: the drafter can still find the flagged paragraph by
+        # the exact string they typed before stripping the prefixes.
+        doc = _make_cn_doc(
+            technical_field=["[0001]  本发明涉及数据处理"],
+            background=[
+                "[0002]  正确的。",
+                "[0003]  也没有标点",
+            ],
+        )
+        results = check_paragraph_ending(doc)
+        assert results[0].status == "amend"
+        assert results[0].details_params["paragraphs"] == ["[0001]", "[0003]"]
+
+    def test_bracket_prefix_falls_back_to_ordinal(self):
+        # Unnumbered paragraphs still use the ordinal counter so XML input
+        # and plain-text callers keep their existing locator.
+        doc = _make_cn_doc(
+            technical_field=["正确的。", "没有标点"],
+        )
+        results = check_paragraph_ending(doc)
+        assert results[0].details_params["paragraphs"] == [2]
+
 
 # ── Check 5: Figure reference consistency ─────────────────────────────────
 
