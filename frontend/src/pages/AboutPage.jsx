@@ -167,7 +167,7 @@ function CnCheckTable({ t }) {
   )
 }
 
-const US_FEATURE_KEYS = ['claimTree', 'specAbstract', 'crossLink']
+const US_FEATURE_KEYS = ['claimTree', 'specAbstract', 'specSupport']
 const CN_FEATURE_KEYS = ['claimTree', 'specAbstract', 'dualPipeline']
 const TW_FEATURE_KEYS = ['claimTree', 'specAbstract', 'symbolTable']
 

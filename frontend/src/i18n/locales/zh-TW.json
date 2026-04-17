@@ -7,7 +7,7 @@
     "us": "美國專利",
     "cn": "中國專利",
     "tw": "台灣專利",
-    "label": "管��區"
+    "label": "地區"
   },
   "dropzone": {
     "tagline": "依據30多項USPTO撰稿規則，立即檢查您的專利稿件。",
@@ -146,13 +146,13 @@
   },
   "antecedent": {
     "didYouMean": "您是否指的是「{{term}}」（於請求項{{claim_id}}中導入）？",
-    "crossRefSpecSupport": "亦已於說明書支持中標記，請參見 § 112(a) 卡片。"
+    "crossRefSpecSupport": "亦已於說明書支持中標記，參見下方 § 112(a)。"
   },
   "specSupport": {
     "title": "說明書支持檢視",
     "items": "個術語",
     "item": "個術語",
-    "crossRefAntecedent": "亦已於先行詞分析中標記，請參見 § 112(b) 卡片。"
+    "crossRefAntecedent": "亦已於先行詞分析中標記，參見上方 § 112(b)。"
   },
   "triage": {
     "title": "優先處理摘要",
@@ -276,9 +276,9 @@
         "title": "說明書與摘要結構",
         "description": "章節順序（MPEP § 608.01(a)）、段落編號（§ 608.01(p)）、摘要字數（§ 608.01(b)），以及附圖與詳細說明之間的引用交叉比對。"
       },
-      "crossLink": {
-        "title": "§ 112(a) ↔ § 112(b) 雙向交互註記",
-        "description": "同一術語若同時觸發 § 112(b) 先行詞問題與 § 112(a) 書面描述問題，兩張卡片都會附上交互註記，讓雙向缺陷一目了然。"
+      "specSupport": {
+        "title": "書面描述支持（§ 112(a)）",
+        "description": "逐一檢查各請求項術語是否於說明書中具書面描述支持。未受支持之術語會被標示，並在同時觸發 § 112(b) 先行詞問題時相互交互註記，使雙向缺陷一次呈現。"
       }
     },
     "uspto": {
@@ -391,7 +391,7 @@
       },
       "symbolTable": {
         "title": "符號說明交叉比對（TW 獨有）",
-        "description": "原生解析 TW 專屬的符號說明表，並與實施方式、圖式簡單說明、代表圖交叉比對；此檢查項目為 TW 獨有，其他司法管轄區並無此區塊。"
+        "description": "原生解析 TW 專屬的符號說明表，並與實施方式、圖式簡單說明、代表圖交叉比對；此檢查項目為 TW 獨有，美國與中國專利中並無此區塊。"
       }
     },
     "tw": {
@@ -534,11 +534,18 @@
       "abstractCharCount": "根據专利法实施细则 §23，摘要不得超過300個漢字。請縮短摘要。",
       "abstractTitleMatch": "根據审查指南，摘要應與發明名稱一致。請確認摘要是否體現了發明名稱。",
       "commercialLanguage": "根據专利法实施细则 §23，摘要不得包含商業性宣傳用語。請刪除「最优」「最佳」「世界领先」「国际领先」「国内首创」「填补空白」等用語。",
-      "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語可能缺少先行詞。詳見下方「先行詞基礎檢視」區塊。",
+      "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語缺少先行詞。詳見下方「先行詞基礎檢視」區塊。",
       "titleMissing": "根據審查指南 第一部分第一章，說明書必須包含發明名稱。請於說明書首部添加發明名稱。",
       "figureRefInconsistency": {
         "onlyDrawings": "僅於附图说明中提及：{{figs}}",
         "onlyEmbodiment": "僅於具体实施方式中提及：{{figs}}"
+      },
+      "pass": {
+        "multiMultiDep": "依专利法实施细则 §22，多项从属权利要求不得引用另一多项从属权利要求，以避免引用链过长造成保护范围不清。",
+        "selfDependent": "依专利法实施细则 §22，权利要求不得引用自身；从属权利要求应引用在前的权利要求。",
+        "forwardDependency": "依专利法实施细则 §22，从属权利要求仅可引用在前编号的权利要求，不得引用后编号。",
+        "singleSentence": "依审查指南 第二部分第二章，每项权利要求应为一个以句号（。）结尾的完整句子，以确保保护范围明确。",
+        "transitionPhrase": "依审查指南，独立权利要求应包含「其特征在于」等特征部分连接词，用以区分前序（现有技术）与特征部分（新颖要素）。"
       }
     },
     "tw": {
@@ -582,7 +589,7 @@
         "description": "代表圖符號簡單說明中列出之符號應與符號說明中之定義一致。請確認標記的項目。"
       },
       "bracketFormat": "依專利法施行細則 §17，章節標題應使用全形方括號【】。發現：{{detail}}。",
-      "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語可能缺少先行詞。詳見下方「先行詞基礎檢視」區塊。",
+      "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語缺少先行詞。詳見下方「先行詞基礎檢視」區塊。",
       "titleMissing": "依專利審查基準，說明書必須包含發明名稱/新型名稱。請於說明書首部添加。",
       "figureRefInconsistency": {
         "onlyDrawings": "僅於圖式簡單說明中提及：{{figs}}",
@@ -686,11 +693,11 @@
         "pass": "「wherein」逗號使用正確。"
       },
       "meansFunction": {
-        "verify": "請求項可能援引 35 U.S.C. § 112(f) 手段功能用語。",
+        "verify": "請求項使用 35 U.S.C. § 112(f) 手段功能用語。",
         "pass": "未偵測到手段功能用語。"
       },
       "antecedentBasis": {
-        "verify": "偵測到可能缺少先行詞基礎（antecedent basis）。",
+        "verify": "偵測到缺少先行詞基礎（antecedent basis）。",
         "pass": "未偵測到先行詞基礎問題。"
       },
       "missingTransition": "請求項 {{claimNumber}} 缺少過渡用語（例如 'comprising'、'consisting of'）",
@@ -801,7 +808,7 @@
           "pass": "從屬權利要求的主題名稱一致。"
         },
         "transitionPhrase": {
-          "verify": "{{count}}項獨立權利要求可能缺少特徵部分連接詞：{{claims}}。",
+          "verify": "{{count}}項獨立權利要求缺少特徵部分連接詞：{{claims}}。",
           "pass": "所有獨立權利要求均包含特徵部分連接詞。"
         },
         "twTerminology": {
@@ -821,7 +828,7 @@
           "pass": "從屬權利要求排列順序正確。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 可能共有 {{issue_count}} 個用語缺少先行詞。",
+          "verify": "{{claims}} 共有 {{issue_count}} 個用語缺少先行詞。",
           "pass": "所有引用之用語皆有先行詞。"
         }
       },
@@ -950,7 +957,7 @@
           "pass": "所有多項附屬項皆使用擇一形式。"
         },
         "titleSubjectMatch": {
-          "verify": "發明名稱/新型名稱「{{title}}」可能與獨立項標的「{{subjects}}」不一致。",
+          "verify": "發明名稱/新型名稱「{{title}}」與獨立項標的「{{subjects}}」不一致。",
           "pass": "發明名稱/新型名稱與獨立項標的一致。"
         },
         "symbolTableConsistency": {
@@ -959,7 +966,7 @@
           "noClaimNumerals": "請求項未使用元件符號（施行細則 §19 允許），無需檢查一致性。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 可能共有 {{issue_count}} 個用語缺少先行詞。",
+          "verify": "{{claims}} 共有 {{issue_count}} 個用語缺少先行詞。",
           "pass": "所有引用之用語皆有先行詞。"
         }
       },
@@ -969,7 +976,7 @@
           "pass": "摘要在250字以內（{{count}}字）。"
         },
         "titleMatch": {
-          "verify": "摘要中可能未包含發明名稱/新型名稱。",
+          "verify": "摘要中未包含發明名稱/新型名稱。",
           "pass": "摘要中包含發明名稱/新型名稱。"
         },
         "commercialLanguage": {
@@ -987,7 +994,7 @@
           "pass": "代表圖之符號簡單說明與符號說明一致。"
         },
         "bracketFormat": {
-          "verify": "章節標題可能未使用正確之【】格式。",
+          "verify": "章節標題未使用【】格式。",
           "pass": "所有章節標題皆使用正確之【】格式。"
         }
       },
@@ -1059,11 +1066,11 @@
     "preamble_cross_category_pass": "請求項前言一致。",
     "preamble_noun_mismatch": "附屬項與獨立項前言名詞不同。",
     "preamble_indefinite_article": "附屬項前言使用不定冠詞（應使用「The」）。",
-    "spec_support_unsupported_terms": "請求項術語在說明書中未找到。",
-    "spec_support_pass": "所有請求項術語均在說明書中找到。",
+    "spec_support_unsupported_terms": "請求項術語在說明書中未發現。",
+    "spec_support_pass": "所有請求項術語均已在說明書中發現。",
     "required_sections_pass": "符合 MPEP § 608.01(a) 之所有必要章節均已存在。",
     "required_sections_missing": "缺少 MPEP § 608.01(a) 規定之必要章節。",
-    "optional_section_missing": "選擇性章節「{{name}}」未找到。",
+    "optional_section_missing": "選擇性章節「{{name}}」未發現。",
     "figure_xref_pass": "圖式簡單說明與實施方式之間的圖式引用一致。",
     "figure_xref_orphaned_brief": "圖式在圖式簡單說明中描述但未在實施方式中引用。",
     "figure_xref_orphaned_detailed": "圖式在實施方式中引用但未在圖式簡單說明中描述。"
@@ -1083,7 +1090,7 @@
     "extraPeriod": "請求項 {{claimNumber}} 包含多餘或位置不當的句號。",
     "extraPeriodDetails": "請求項 {{claimNumber}} 在非預期位置出現句號。依據 MPEP § 608.01(m)，請求項僅應在末尾包含一個句號。",
     "whereinComma": "請求項 {{claimNumber}}：請檢查 'wherein' 子句前的逗號用法。",
-    "whereinCommaDetails": "請求項 {{claimNumber}} 的 'wherein' 子句前後逗號使用可能不正確。請依據 MPEP § 608.01(m) 檢查標點符號。",
+    "whereinCommaDetails": "請求項 {{claimNumber}} 的 'wherein' 子句前後逗號使用不正確。請依據 MPEP § 608.01(m) 檢查標點符號。",
     "punctuationPass": "所有請求項標點符號正確。"
   },
   "updates": {
