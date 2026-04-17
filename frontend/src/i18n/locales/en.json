@@ -279,7 +279,7 @@
       },
       "specSupport": {
         "title": "Written-description support (§ 112(a))",
-        "description": "Each claim term is checked for written-description support in the specification. Terms appearing in claims but missing from the spec are flagged, and findings cross-link to the § 112(b) antecedent walker when the same term fails both — so two-sided defects surface in one sweep."
+        "description": "Per-term check for § 112(a) spec support. Findings cross-link to § 112(b) antecedent when the same term fails both."
       }
     },
     "uspto": {
