@@ -173,7 +173,7 @@ const TW_FEATURE_KEYS = ['claimTree', 'specAbstract', 'symbolTable']
 
 const FEATURE_ACCENT = {
   US: 'border-l-blue-200 dark:border-l-blue-800',
-  CN: 'border-l-green-200 dark:border-l-green-800',
+  CN: 'border-l-red-200 dark:border-l-red-800',
   TW: 'border-l-teal-200 dark:border-l-teal-800',
 }
 
