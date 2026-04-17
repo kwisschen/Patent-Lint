@@ -141,6 +141,7 @@ def check_self_dependent(cn_doc: CnPatentDocument) -> list[CheckItem]:
         status="pass",
         message="No self-dependent claims.",
         message_key="check.cn.claims.selfDependent.pass",
+        details_key="details.cn.pass.selfDependent",
         reference="专利法实施细则 §22",
     )]
 
@@ -169,6 +170,7 @@ def check_forward_dependency(cn_doc: CnPatentDocument) -> list[CheckItem]:
         status="pass",
         message="No forward-referencing dependencies.",
         message_key="check.cn.claims.forwardDependency.pass",
+        details_key="details.cn.pass.forwardDependency",
         reference="专利法实施细则 §22",
     )]
 
@@ -202,6 +204,7 @@ def check_single_sentence(cn_doc: CnPatentDocument) -> list[CheckItem]:
         status="pass",
         message="All claims are single sentences ending with 。.",
         message_key="check.cn.claims.singleSentence.pass",
+        details_key="details.cn.pass.singleSentence",
         reference="审查指南 第二部分第二章",
     )]
 
@@ -403,6 +406,7 @@ def check_transition_phrase(cn_doc: CnPatentDocument) -> list[CheckItem]:
         status="pass",
         message="All independent claims contain a transition phrase.",
         message_key="check.cn.claims.transitionPhrase.pass",
+        details_key="details.cn.pass.transitionPhrase",
         reference="审查指南",
     )]
 
@@ -494,6 +498,7 @@ def check_multi_multi_dependency(cn_doc: CnPatentDocument) -> list[CheckItem]:
         status="pass",
         message="No chained multiple dependencies.",
         message_key="check.cn.claims.multiMultiDep.pass",
+        details_key="details.cn.pass.multiMultiDep",
         reference="专利法实施细则 §22",
     )]
 
