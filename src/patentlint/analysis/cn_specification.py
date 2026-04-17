@@ -32,6 +32,13 @@ _SECTION_NAMES_CN = {
 
 _VALID_ENDINGS = frozenset("。！？：")
 
+# Manual [NNNN] bracket prefix at the head of a CN spec paragraph. Separately
+# flagged as forbidden by ``check_paragraph_numbering``, but when present it
+# is the only identifier the drafter can visually locate in Word, so the
+# paragraph-ending check surfaces it as the paragraph label so the two flags
+# don't contradict each other.
+_PARA_NUM_PREFIX_RE = re.compile(r"^\[(\d{4})\]")
+
 
 def _all_paragraphs(cn_doc: CnPatentDocument) -> list[str]:
     """Collect all spec paragraphs from the five body sections."""
@@ -163,8 +170,16 @@ def check_paragraph_numbering(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
 
 def check_paragraph_ending(cn_doc: CnPatentDocument) -> list[CheckItem]:
-    """Check each paragraph ends with valid Chinese punctuation."""
-    bad_paragraphs: list[int] = []
+    """Check each paragraph ends with valid Chinese punctuation.
+
+    Prefers the manually-added ``[NNNN]`` bracket prefix as the paragraph
+    label when present so the drafter can locate the flagged paragraph in
+    Word by the exact identifier they typed, even though a separate check
+    tells them to strip those prefixes before filing. Falls back to an
+    internal ordinal counter for unnumbered paragraphs and for XML input
+    (which has its own sequential numbering channel).
+    """
+    bad_paragraphs: list[int | str] = []
     ordinal = 0
     for para in _all_paragraphs(cn_doc):
         stripped = para.strip()
@@ -173,7 +188,11 @@ def check_paragraph_ending(cn_doc: CnPatentDocument) -> list[CheckItem]:
         ordinal += 1
         last_char = stripped[-1]
         if last_char not in _VALID_ENDINGS:
-            bad_paragraphs.append(ordinal)
+            label: int | str = ordinal
+            m = _PARA_NUM_PREFIX_RE.match(stripped)
+            if m:
+                label = f"[{m.group(1)}]"
+            bad_paragraphs.append(label)
 
     if bad_paragraphs:
         paras_str = ", ".join(str(n) for n in bad_paragraphs)

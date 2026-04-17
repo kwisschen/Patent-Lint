@@ -247,7 +247,7 @@ _SPEC_REF = re.compile(r"如說明書|如圖|參見說明書|參見圖|參照說
 
 
 def _extract_subject(claim_text: str) -> str:
-    """Extract subject name from claim preamble.
+    """Extract subject matter from claim preamble.
 
     Dependent-claim preambles like 如請求項1所述的X are anchored at the
     start of the claim so that body-text occurrences of 所述的 inside an
@@ -536,7 +536,7 @@ def check_ref_numeral_parens(doc: TwPatentDocument) -> list[CheckItem]:
 
 
 def check_subject_consistency(doc: TwPatentDocument) -> list[CheckItem]:
-    """Check dependent claim subjects match their parent claim subjects."""
+    """Check dependent claim subject matter matches parent claim subject matter."""
     claims_by_id = {c.id: c for c in doc.claims}
     dependents = [c for c in doc.claims if not c.independent]
 
@@ -567,7 +567,7 @@ def check_subject_consistency(doc: TwPatentDocument) -> list[CheckItem]:
         claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
             status="verify",
-            message=f"{len(bad_claim_ids)} dependent claim(s) with inconsistent subject name (claims: {claims_str}).",
+            message=f"{len(bad_claim_ids)} dependent claim(s) with inconsistent subject matter (claims: {claims_str}).",
             message_key="check.tw.claims.subjectConsistency.verify",
             details=f"{len(bad_claim_ids)} claims",
             details_key="details.tw.subjectConsistency",
@@ -577,7 +577,7 @@ def check_subject_consistency(doc: TwPatentDocument) -> list[CheckItem]:
 
     return [CheckItem(
         status="pass",
-        message="All dependent claim subjects match parent.",
+        message="All dependent claim subject matter matches parent.",
         message_key="check.tw.claims.subjectConsistency.pass",
         reference="專利審查基準",
     )]
