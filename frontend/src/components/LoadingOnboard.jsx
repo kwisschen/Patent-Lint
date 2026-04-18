@@ -73,7 +73,7 @@ export default function LoadingOnboard({ progress, onReady }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm pb-[20vh]"
       style={{
         opacity: fading ? 0 : 1,
         transition: `opacity ${FADE_DURATION_MS}ms ease`,
