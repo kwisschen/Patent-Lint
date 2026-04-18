@@ -215,7 +215,7 @@
       },
       "q2": {
         "question": "Do I need an account?",
-        "patentlint": "No.",
+        "patentlint": "No. No personal data collected.",
         "addin": "Usually requires a license or account.",
         "cloud": "Yes. Account required."
       },
@@ -474,7 +474,7 @@
     "builderTitle": "Background",
     "builderDesc1": "PatentLint was built by a patent engineer who spent years reviewing thousands of patent drafts and catching the same formatting errors and MPEP violations by hand. The goal: automate the tedious parts so practitioners can focus on substance.",
     "builderDesc2": "The entire analysis engine, written in Python, compiles to WebAssembly and runs directly in your browser. No server, no upload, no files leaving your device. Existing tools either require Windows-only installation or upload documents to cloud servers. PatentLint needs neither.",
-    "builderSister": "Its companion project, the Agentic Patent Analyst, uses LLM agents for prior art search and claim coverage analysis."
+    "builderSister": "Its companion project, the Agentic Patent Analyst, by contrast uses in-house fine-tuned LLM agents for prior art search and claim coverage analysis."
   },
   "details": {
     "paragraphs": "Paragraphs: {{list}}",
@@ -1036,7 +1036,7 @@
     "offline_note": "Works offline after first load",
     "feature1_title": "No Upload. No Account. No Install.",
     "feature1_desc": "Your confidential patent drafts never leave your device. Nothing is uploaded, and PatentLint doesn't even know who you are.",
-    "feature2_title": "Drafting Checks & Claim Tree",
+    "feature2_title": "MPEP/CNIPA/TIPO Checks & Claim Tree",
     "feature2_desc": "Catches restrictive wording, indefinite terms, and antecedent basis gaps. Visualizes claim dependencies with an interactive tree.",
     "feature3_title": "Claim Tree Visualization",
     "feature3_desc": "Interactive dependency tree and Mermaid diagram show your claim structure at a glance.",

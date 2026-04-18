@@ -7,7 +7,13 @@
 
 @theme inline {
   --font-heading: var(--font-sans);
-  --font-sans: 'Geist Variable', sans-serif;
+  --font-sans: 'Geist Variable', system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', 'Helvetica Neue', Arial,
+    'PingFang SC', 'PingFang TC', 'Hiragino Sans', 'Hiragino Sans GB',
+    'Microsoft YaHei', 'Microsoft JhengHei',
+    'Yu Gothic', 'Meiryo',
+    'Malgun Gothic', 'Apple SD Gothic Neo',
+    'Noto Sans', sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -173,8 +179,55 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: "Inter", system-ui, -apple-system, "Noto Sans TC", "Noto Sans SC", "Noto Sans JP", "Noto Sans KR", sans-serif;
+    font-family: 'Geist Variable', system-ui, -apple-system, BlinkMacSystemFont,
+      'Segoe UI', 'Helvetica Neue', Arial,
+      'PingFang SC', 'PingFang TC', 'Hiragino Sans', 'Hiragino Sans GB',
+      'Microsoft YaHei', 'Microsoft JhengHei',
+      'Yu Gothic', 'Meiryo',
+      'Malgun Gothic', 'Apple SD Gothic Neo',
+      'Noto Sans', sans-serif;
     margin: 0;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Locale-specific CJK font stacks — pin each locale to its canonical
+     system CJK font so Windows/macOS/Linux render one typeface across
+     all CJK glyphs instead of falling back per-character (the cause of
+     "random weight" symptoms on Windows). */
+  :root:lang(zh-CN) body,
+  html[lang="zh-CN"] body {
+    font-family: 'Geist Variable', system-ui, -apple-system, BlinkMacSystemFont,
+      'Helvetica Neue', Arial,
+      'PingFang SC', 'Hiragino Sans GB',
+      'Microsoft YaHei', 'Microsoft YaHei UI',
+      'Noto Sans SC', sans-serif;
+  }
+  :root:lang(zh-TW) body,
+  html[lang="zh-TW"] body {
+    font-family: 'Geist Variable', system-ui, -apple-system, BlinkMacSystemFont,
+      'Helvetica Neue', Arial,
+      'PingFang TC',
+      'Microsoft JhengHei', 'Microsoft JhengHei UI',
+      'Noto Sans TC', sans-serif;
+  }
+  :root:lang(ja) body,
+  html[lang="ja"] body {
+    font-family: 'Geist Variable', system-ui, -apple-system, BlinkMacSystemFont,
+      'Helvetica Neue', Arial,
+      'Hiragino Sans', 'Hiragino Kaku Gothic ProN',
+      'Yu Gothic', 'Yu Gothic UI', 'Meiryo', 'Meiryo UI',
+      'Noto Sans JP', sans-serif;
+  }
+  :root:lang(ko) body,
+  html[lang="ko"] body {
+    font-family: 'Geist Variable', system-ui, -apple-system, BlinkMacSystemFont,
+      'Helvetica Neue', Arial,
+      'Apple SD Gothic Neo',
+      'Malgun Gothic',
+      'Noto Sans KR', sans-serif;
   }
   html {
     @apply font-sans;
@@ -291,6 +344,49 @@
 
   /* Avoid breaking inside section panels */
   [data-state] { break-inside: avoid; }
+}
+
+/* About page feature cards — staggered reveal + hover lift + diagonal sheen sweep */
+.feature-card {
+  position: relative;
+  overflow: hidden;
+  will-change: transform, box-shadow;
+}
+.feature-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 12px 28px -12px var(--feature-glow, rgba(0, 0, 0, 0.18)),
+              0 4px 10px -4px var(--feature-glow, rgba(0, 0, 0, 0.12));
+  border-color: transparent;
+}
+.feature-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--feature-sheen, rgba(255,255,255,0.6)), transparent);
+  opacity: 0;
+  transition: opacity 260ms var(--ease-smooth);
+  pointer-events: none;
+}
+.feature-card:hover::before {
+  opacity: 1;
+}
+.feature-card__sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 30%, var(--feature-sheen, rgba(255,255,255,0.4)) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 650ms var(--ease-smooth);
+  mix-blend-mode: screen;
+  opacity: 0.55;
+}
+.feature-card:hover .feature-card__sheen {
+  transform: translateX(120%);
+}
+.dark .feature-card__sheen {
+  mix-blend-mode: plus-lighter;
+  opacity: 0.4;
 }
 
 /* Respect reduced motion */
