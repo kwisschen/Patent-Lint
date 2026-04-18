@@ -379,6 +379,7 @@
       "claimsSpecReference": "청구항에서 명세서/도면 참조 금지",
       "multiMultiDependency": "다중 종속의 다중 종속",
       "dependentOrdering": "종속 청구항 순서",
+      "connectionRelationships": "구성요소 연결관계 (审查指南 §3.2.1)",
       "abstractCharCount": "요약서 글자 수(300자 이하)",
       "titleInAbstract": "제목이 요약서에 포함",
       "commercialLanguage": "상업적 표현",
@@ -440,7 +441,7 @@
       "representativeDrawing": "代表圖 지정",
       "symbolVsRepDrawing": "符號說明과 代表圖 부호 일관성",
       "bracketFormat": "섹션 제목에 【】 사용",
-      "tipoConnectionRelationships": "독립 청구항 구성요소의 連接關係",
+      "connectionRelationships": "독립 청구항 구성요소의 連接關係 (專利審查基準 §2.4)",
       "tipoIndigenous": "원주민 관련 용어 검사",
       "figuresSequential": "도면 번호 연속성"
     },
@@ -538,6 +539,7 @@
       "claimsSpecReference": "审查指南 第二部分第二章에 따라 청구항은 '如说明书……所述' 또는 '如图……所示'로 보호 범위를 한정해서는 안 됩니다. 청구항은 자체적으로 완결되어야 합니다. 해당 인용을 삭제하세요.",
       "multiMultiDep": "专利法实施细则 §22에 따라 다항 종속 청구항은 다른 다항 종속 청구항의 인용 기초가 될 수 없습니다. 인용 관계를 재구성하세요.",
       "dependentOrdering": "审查指南 第二部分第二章에 따라 동일한 독립 청구항을 인용하는 모든 종속 청구항은 다음 독립 청구항 앞에 연속 배치되어야 합니다. 순서를 조정하세요.",
+      "connectionRelationships": "대상 구성요소: {{sample_names}} (총 {{component_count}}개). 연결, 설치, 결합 등의 동사 표현을 보충하여 구성요소 간의 구조적 연결관계를 기재하시기 바랍니다.",
       "abstractCharCount": "专利法实施细则 §23에 따라 요약서는 300자를 초과할 수 없습니다. 요약서를 줄이세요.",
       "abstractTitleMatch": "审查指南에 따라 요약서는 발명 명칭과 일치해야 합니다. 요약서가 발명 명칭을 반영하는지 확인하세요.",
       "commercialLanguage": "专利法实施细则 §23에 따라 요약서에 상업적 광고 용어(商业性宣传用语)를 포함해서는 안 됩니다. 最优, 最佳, 世界领先, 国际领先, 国内首创, 填补空白 등의 용어를 삭제하세요.",
@@ -596,6 +598,7 @@
         "description": "대표도 부호 간단 설명에 기재된 부호는 부호 설명의 정의와 일치해야 합니다. 표시된 항목을 확인해 주십시오."
       },
       "bracketFormat": "專利法施行細則 §17에 따라 섹션 제목은 전각 대괄호 【】를 사용해야 합니다. 발견: {{detail}}.",
+      "connectionRelationships": "대상 구성요소: {{sample_names}} (총 {{component_count}}개). 連接、設置於、耦接 등의 동사 표현을 보충하여 구성요소 간의 구조적 연결관계를 기재하시기 바랍니다.",
       "antecedentBasisTerms": "{{claim_count}}개 청구항에 총 {{issue_count}}개의 선행사가 없을 수 있는 용어가 있습니다. 자세한 내용은 아래 \"선행사 기초 검토\" 섹션을 참조하십시오.",
       "titleMissing": "특허심사기준에 따라, 명세서에는 발명의 명칭 또는 신형의 명칭을 기재하여야 합니다. 명세서 첫머리에 추가해 주십시오.",
       "figureRefInconsistency": {
@@ -834,6 +837,10 @@
           "amend": "종속 청구항이 해당 독립 청구항 직후에 묶여 있지 않습니다.",
           "pass": "종속 청구항이 독립 청구항 직후에 올바르게 묶여 있습니다."
         },
+        "connectionRelationships": {
+          "verify": "독립 청구항 {{claim_id}}이(가) {{sample_names}}을(를) 열거하나 구조적 연결관계가 기재되어 있지 않습니다.",
+          "pass": "모든 독립 장치／시스템 청구항이 구성요소 간 연결관계를 기재하고 있습니다."
+        },
         "antecedentBasis": {
           "verify": "{{claims}}에서 선행사가 없을 수 있는 용어가 {{issue_count}}개 있습니다.",
           "pass": "모든 청구항 용어에 선행사가 있습니다."
@@ -971,6 +978,10 @@
           "verify": "청구항 내 참조 부호가 符號說明과 일치하지 않습니다.",
           "pass": "청구항 내 참조 부호가 符號說明과 일치합니다.",
           "noClaimNumerals": "청구항에 참조 부호가 없어 일치성 검증 대상이 아닙니다."
+        },
+        "connectionRelationships": {
+          "verify": "독립 청구항 {{claim_id}}이(가) {{sample_names}}을(를) 열거하나 구조적 연결관계가 기재되어 있지 않습니다.",
+          "pass": "모든 독립 장치／시스템 청구항이 구성요소 간 연결관계를 기재하고 있습니다."
         },
         "antecedentBasis": {
           "verify": "{{claims}}에서 선행사가 없을 수 있는 용어가 {{issue_count}}개 있습니다.",
