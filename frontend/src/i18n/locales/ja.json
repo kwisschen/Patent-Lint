@@ -379,6 +379,7 @@
       "claimsSpecReference": "請求項は明細書/図面を引用してはならない",
       "multiMultiDependency": "多項従属の多項従属",
       "dependentOrdering": "従属請求項の順序",
+      "connectionRelationships": "構成要素の接続関係（审查指南 §3.2.1）",
       "abstractCharCount": "要約文字数（300字以下）",
       "titleInAbstract": "タイトルが要約に含まれている",
       "commercialLanguage": "商業的表現",
@@ -440,7 +441,7 @@
       "representativeDrawing": "代表圖の指定",
       "symbolVsRepDrawing": "符號說明と代表圖の符号一貫性",
       "bracketFormat": "セクション見出しに【】を使用",
-      "tipoConnectionRelationships": "独立クレーム構成要素の連接關係",
+      "connectionRelationships": "独立クレーム構成要素の連接關係（專利審查基準 §2.4）",
       "tipoIndigenous": "先住民族関連用語のチェック",
       "figuresSequential": "図番号が連続"
     },
@@ -538,6 +539,7 @@
       "claimsSpecReference": "审查指南 第二部分第二章に基づき、請求項は「如说明书……所述」や「如图……所示」で保護範囲を限定してはなりません。請求項は独立していなければなりません。該当引用を削除してください。",
       "multiMultiDep": "专利法实施细则 §22に基づき、多項従属請求項は別の多項従属請求項の引用基礎にすることができません。引用関係を再構成してください。",
       "dependentOrdering": "审查指南 第二部分第二章に基づき、同一の独立請求項を引用するすべての従属請求項は次の独立請求項の前に連続して配置すべきです。順序を調整してください。",
+      "connectionRelationships": "対象構成要素：{{sample_names}}（合計 {{component_count}} 個）。連接、設置、耦接 などの動詞表現を補い、構成要素間の構造的接続関係を記載してください。",
       "abstractCharCount": "专利法实施细则 §23に基づき、要約は300文字を超えてはなりません。要約を短縮してください。",
       "abstractTitleMatch": "审查指南に基づき、要約は発明名称と一致すべきです。要約が発明名称を反映しているか確認してください。",
       "commercialLanguage": "专利法实施细则 §23に基づき、要約に商業的宣伝用語（商业性宣传用语）を含めてはなりません。最优、最佳、世界领先、国际领先、国内首创、填补空白などの用語を削除してください。",
@@ -596,6 +598,7 @@
         "description": "代表図の符号簡単説明に記載された符号は符号説明の定義と一致する必要があります。マークされた項目を確認してください。"
       },
       "bracketFormat": "專利法施行細則 §17により、セクションヘッダーは全角括弧【】を使用する必要があります。検出：{{detail}}。",
+      "connectionRelationships": "対象構成要素：{{sample_names}}（合計 {{component_count}} 個）。連接、設置於、耦接 などの動詞表現を補い、構成要素間の構造的接続関係を記載してください。",
       "antecedentBasisTerms": "{{claim_count}}項の請求項に合計{{issue_count}}個の先行詞がない可能性のある用語があります。詳細は下の「先行詞の根拠の確認」セクションを参照してください。",
       "titleMissing": "特許審査基準により、明細書には発明の名称又は新型の名称を記載する必要があります。明細書の冒頭に追加してください。",
       "figureRefInconsistency": {
@@ -834,6 +837,10 @@
           "amend": "従属請求項が対応する独立請求項の直後にまとめられていません。",
           "pass": "従属請求項は独立請求項の直後に配置されています。"
         },
+        "connectionRelationships": {
+          "verify": "独立クレーム {{claim_id}} は {{sample_names}} を列挙していますが、構造的な接続関係の記載がありません。",
+          "pass": "全ての独立装置／システムクレームに構成要素間の接続関係が記載されています。"
+        },
         "antecedentBasis": {
           "verify": "{{claims}}において先行詞がない可能性がある用語が{{issue_count}}個あります。",
           "pass": "全ての引用用語に先行詞があります。"
@@ -971,6 +978,10 @@
           "verify": "請求項内の参照符号が符號說明と不整合です。",
           "pass": "請求項内の参照符号は符號說明と整合しています。",
           "noClaimNumerals": "請求項に参照符号がないため、整合性チェック対象外です。"
+        },
+        "connectionRelationships": {
+          "verify": "独立項 {{claim_id}} は {{sample_names}} を列挙していますが、構造的な接続関係の記載がありません。",
+          "pass": "全ての独立装置／システム項に構成要素間の接続関係が記載されています。"
         },
         "antecedentBasis": {
           "verify": "{{claims}}において先行詞がない可能性がある用語が{{issue_count}}個あります。",
