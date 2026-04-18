@@ -7,6 +7,7 @@ build/
 .eggs/
 *.egg
 *.whl
+!frontend/public/patentlint-1.0.0-py3-none-any.whl
 frontend/public/version.json
 .venv/
 venv/
