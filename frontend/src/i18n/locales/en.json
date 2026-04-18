@@ -209,19 +209,19 @@
       "colCloud": "Cloud-Based Tools",
       "q1": {
         "question": "Does my file leave my device?",
-        "patentlint": "Never. Runs 100% in-browser.",
+        "patentlint": "Never. Runs 100% locally in-browser.",
         "addin": "File stays local, but add-in may phone home.",
         "cloud": "Yes. Uploaded to remote servers."
       },
       "q2": {
         "question": "Do I need an account?",
-        "patentlint": "No. No sign-up, no login, no tracking.",
+        "patentlint": "No.",
         "addin": "Usually requires a license or account.",
         "cloud": "Yes. Account required."
       },
       "q3": {
         "question": "Does it work offline?",
-        "patentlint": "Yes, after first load.",
+        "patentlint": "Yes, after first page load.",
         "addin": "Depends on license validation.",
         "cloud": "No. Requires internet."
       },
@@ -247,7 +247,7 @@
         "question": "Is my patent text used for AI training?",
         "patentlint": "Never. All checks are deterministic rule-based pattern matching.",
         "addin": "Depends on vendor — some send telemetry.",
-        "cloud": "Often yes. Training rights are often reserved in the terms."
+        "cloud": "Often yes. Terms of service commonly reserve such rights."
       }
     },
     "tech": {
@@ -397,7 +397,7 @@
         "description": "Section ordering per 專利法施行細則 §17, paragraph-ending punctuation with strict/relaxed rules per section, figure-reference cross-checks, and the 250-character abstract limit (§21), among others."
       },
       "symbolTable": {
-        "title": "符號說明 cross-check (TW-unique)",
+        "title": "符號說明 cross-check (TW-specific)",
         "description": "TW-only 符號說明 tables parsed natively and cross-checked against 實施方式, 圖式簡單說明, and 代表圖 symbol usage — no other jurisdiction has this section."
       }
     },
