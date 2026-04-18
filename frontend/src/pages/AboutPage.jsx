@@ -173,15 +173,27 @@ const CN_FEATURE_KEYS = ['claimTree', 'specAbstract', 'dualPipeline']
 const TW_FEATURE_KEYS = ['claimTree', 'specAbstract', 'symbolTable']
 
 const FEATURE_ACCENT = {
-  US: 'border-l-blue-200 dark:border-l-blue-800',
-  CN: 'border-l-red-200 dark:border-l-red-800',
-  TW: 'border-l-teal-200 dark:border-l-teal-800',
+  US: {
+    border: 'border-l-blue-200 dark:border-l-blue-800',
+    glow: 'rgba(37, 99, 235, 0.18)',
+    sheen: 'rgba(96, 165, 250, 0.22)',
+  },
+  CN: {
+    border: 'border-l-red-200 dark:border-l-red-800',
+    glow: 'rgba(220, 38, 38, 0.18)',
+    sheen: 'rgba(248, 113, 113, 0.22)',
+  },
+  TW: {
+    border: 'border-l-teal-200 dark:border-l-teal-800',
+    glow: 'rgba(13, 148, 136, 0.18)',
+    sheen: 'rgba(45, 212, 191, 0.22)',
+  },
 }
 
 function JurisdictionFeatureBlock({ t, jurisdiction, cardKeys }) {
   const [ref, inView] = useInView()
   const prefix = `${jurisdiction.toLowerCase()}Features`
-  const accent = FEATURE_ACCENT[jurisdiction] ?? ''
+  const accent = FEATURE_ACCENT[jurisdiction] ?? FEATURE_ACCENT.US
 
   return (
     <div
@@ -197,15 +209,23 @@ function JurisdictionFeatureBlock({ t, jurisdiction, cardKeys }) {
         {t(`about.${prefix}.title`)}
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {cardKeys.map((key) => (
+        {cardKeys.map((key, i) => (
           <div
             key={key}
-            className={`border border-border rounded-lg p-4 bg-card border-l-2 ${accent}`}
+            className={`feature-card border border-border rounded-lg p-4 bg-card border-l-2 ${accent.border}`}
+            style={{
+              '--feature-glow': accent.glow,
+              '--feature-sheen': accent.sheen,
+              opacity: inView ? 1 : 0,
+              transform: inView ? 'translateY(0)' : 'translateY(14px)',
+              transition: `opacity 600ms var(--ease-smooth) ${i * 120}ms, transform 600ms var(--ease-smooth) ${i * 120}ms, box-shadow 260ms var(--ease-smooth), border-color 260ms var(--ease-smooth)`,
+            }}
           >
-            <div className="text-sm font-semibold text-foreground mb-2">
+            <div className="feature-card__sheen" aria-hidden="true" />
+            <div className="text-sm font-semibold text-foreground mb-2 relative">
               {t(`about.${prefix}.${key}.title`)}
             </div>
-            <div className="text-xs text-muted-foreground leading-relaxed">
+            <div className="text-xs text-muted-foreground leading-relaxed relative">
               {t(`about.${prefix}.${key}.description`)}
             </div>
           </div>
