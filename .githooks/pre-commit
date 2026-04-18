@@ -1,0 +1,47 @@
+#!/bin/sh
+# Phase 9 #39 — wheel staleness guard.
+#
+# Fails the commit if any src/patentlint/**/*.py has a newer mtime than
+# frontend/public/patentlint-*.whl. Catches the "walker code merged,
+# wheel stale" failure class at commit time rather than in the browser.
+#
+# Fast path: stops at the first three newer files. No wheel rebuild
+# happens here — the hook only compares mtimes.
+
+set -e
+
+REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+if [ -z "$REPO_ROOT" ]; then
+    # Not in a git work tree — let git handle it.
+    exit 0
+fi
+cd "$REPO_ROOT"
+
+WHEEL=$(ls frontend/public/patentlint-*.whl 2>/dev/null | head -n 1)
+
+if [ -z "$WHEEL" ]; then
+    # No wheel committed yet — nothing to compare against.
+    exit 0
+fi
+
+# Find up to three .py files under src/patentlint/ newer than the wheel.
+NEWER=$(find src/patentlint -name '*.py' -type f -newer "$WHEEL" 2>/dev/null | head -n 3)
+
+if [ -z "$NEWER" ]; then
+    exit 0
+fi
+
+echo "" >&2
+echo "[pre-commit] src/patentlint/ sources are newer than the committed wheel:" >&2
+echo "$NEWER" | sed 's/^/    /' >&2
+WHEEL_COUNT=$(find src/patentlint -name '*.py' -type f -newer "$WHEEL" 2>/dev/null | wc -l | tr -d ' ')
+if [ "$WHEEL_COUNT" -gt 3 ]; then
+    echo "    (and $(($WHEEL_COUNT - 3)) more)" >&2
+fi
+echo "" >&2
+echo "Rebuild the Pyodide wheel before committing:" >&2
+echo "    cd frontend && npm run build:wheel" >&2
+echo "" >&2
+echo "Then stage the rebuilt wheel and retry your commit." >&2
+echo "" >&2
+exit 1
