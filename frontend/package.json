@@ -11,7 +11,8 @@
     "build:version": "node scripts/emit-version.mjs",
     "build": "npm run build:wheel && npm run build:version && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "setup-hooks": "git -C .. config core.hooksPath .githooks"
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
