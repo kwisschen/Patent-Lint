@@ -379,6 +379,7 @@
       "claimsSpecReference": "权利要求不得引用说明书/附图",
       "multiMultiDependency": "多项从属的从属",
       "dependentOrdering": "从属权利要求排序",
+      "connectionRelationships": "组件连接关系（审查指南 §3.2.1）",
       "abstractCharCount": "摘要字数（≤300）",
       "titleInAbstract": "标题出现在摘要中",
       "commercialLanguage": "商业性用语",
@@ -440,7 +441,7 @@
       "representativeDrawing": "代表圖指定",
       "symbolVsRepDrawing": "符號說明与代表圖之符号一致性",
       "bracketFormat": "章节标题使用【】括号",
-      "tipoConnectionRelationships": "独立项组件之連接關係",
+      "connectionRelationships": "獨立項組件之連接關係（專利審查基準 §2.4）",
       "tipoIndigenous": "原住民族用语检查",
       "figuresSequential": "图号连续"
     },
@@ -538,6 +539,7 @@
       "claimsSpecReference": "根据审查指南 第二部分第二章，权利要求不得使用\"如说明书……所述\"或\"如图……所示\"来限定保护范围。权利要求应当自成一体。请删除相关引用。",
       "multiMultiDep": "根据专利法实施细则 §22，多项从属权利要求不得作为另一多项从属权利要求的引用基础。请调整引用关系。",
       "dependentOrdering": "根据审查指南 第二部分第二章，引用同一独立权利要求的所有从属权利要求应连续排列在下一项独立权利要求之前。请调整排列顺序。",
+      "connectionRelationships": "标记的组件：{{sample_names}}（共 {{component_count}} 个）。请补充连接、设置于、耦接 等动词用语，记载组件之间的结构连接关系。",
       "abstractCharCount": "根据专利法实施细则 §23，摘要不得超过300个汉字。请缩短摘要。",
       "abstractTitleMatch": "根据审查指南，摘要应与发明名称一致。请确认摘要是否体现了发明名称。",
       "commercialLanguage": "根据专利法实施细则 §23，摘要不得包含商业性宣传用语。请删除\"最优\"\"最佳\"\"世界领先\"\"国际领先\"\"国内首创\"\"填补空白\"等用语。",
@@ -596,6 +598,7 @@
         "description": "代表图符号简单说明中列出之符号应与符号说明中之定义一致。请确认标记的项目。"
       },
       "bracketFormat": "依专利法施行细则 §17，章节标题应使用全角方括号【】。发现：{{detail}}。",
+      "connectionRelationships": "標記之組件：{{sample_names}}（共 {{component_count}} 個）。請補充連接、設置於、耦接 等動詞用語，記載組件之間的結構連接關係。",
       "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语缺少先行词。详见下方「先行词基础检查」区块。",
       "titleMissing": "依专利审查基准，说明书必须包含发明名称/新型名称。请于说明书首部添加。",
       "figureRefInconsistency": {
@@ -834,6 +837,10 @@
           "amend": "从属权利要求未紧随其引用的独立权利要求排列。",
           "pass": "从属权利要求排列顺序正确。"
         },
+        "connectionRelationships": {
+          "verify": "独立权利要求 {{claim_id}} 列出 {{sample_names}}，未记载彼此的结构连接关系。",
+          "pass": "所有独立装置／系统权利要求均已记载组件的连接关系。"
+        },
         "antecedentBasis": {
           "verify": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少先行词。",
           "pass": "所有引用之用语皆有先行词。"
@@ -971,6 +978,10 @@
           "verify": "請求項中之元件符号与符號說明不一致。",
           "pass": "請求項中之元件符号与符號說明一致。",
           "noClaimNumerals": "权利要求未使用元件符号（施行细则 §19 允许），无需检查一致性。"
+        },
+        "connectionRelationships": {
+          "verify": "獨立項 {{claim_id}} 列出 {{sample_names}}，未記載彼此之結構連接關係。",
+          "pass": "所有獨立裝置／系統項均已記載組件之連接關係。"
         },
         "antecedentBasis": {
           "verify": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少先行词。",

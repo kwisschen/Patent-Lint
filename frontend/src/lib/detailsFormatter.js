@@ -83,6 +83,21 @@ function formatNumeralList(nums, t) {
   return truncated ? rendered + t("punct.ellipsis") : rendered
 }
 
+// Component-name list for the connection-relationships check. Joins
+// noun-phrase heads with the locale's list separator and appends an
+// ellipsis when the underlying claim has more components than the
+// 3-name sample. The total count comes from the sibling
+// `component_count` param so the formatter knows when to truncate.
+function formatSampleNames(names, t, params) {
+  if (!Array.isArray(names) || names.length === 0) return ""
+  const joined = names.join(t("punct.listSeparator"))
+  const total = params?.component_count
+  if (typeof total === "number" && total > names.length) {
+    return joined + t("punct.ellipsis")
+  }
+  return joined
+}
+
 // Figure reference inconsistency — two-direction mismatch
 function formatFigureRefInconsistency(data, t) {
   if (!data || typeof data !== "object") return ""
@@ -173,6 +188,7 @@ const STRUCTURED_FORMATTERS = {
   // formatter functions.
   claims: formatClaimList,
   paragraphs: formatParagraphListSimple,
+  sample_names: formatSampleNames,
   figure_ref_inconsistency: formatFigureRefInconsistency,
   symbol_table_inconsistency: formatSymbolTableInconsistency,
   symbol_mismatch_triples: formatSymbolMismatchTriples,
@@ -191,6 +207,7 @@ const ARRAY_FORMATTER_FIELDS = new Set([
   "numeral_list",
   "claims",
   "paragraphs",
+  "sample_names",
 ])
 
 /**
@@ -205,10 +222,10 @@ export function formatDetails(key, details_params, t) {
     const value = details_params[field]
     if (value === undefined || value === null) continue
     if (ARRAY_FORMATTER_FIELDS.has(field)) {
-      if (Array.isArray(value)) rendered[field] = formatter(value, t)
+      if (Array.isArray(value)) rendered[field] = formatter(value, t, details_params)
     } else {
       // Object-shaped payload
-      if (typeof value === "object") rendered[field] = formatter(value, t)
+      if (typeof value === "object") rendered[field] = formatter(value, t, details_params)
     }
   }
   return t(key, rendered)

@@ -96,6 +96,7 @@ const CN_CLAIMS_CHECKS = [
   'forwardDependency', 'singleSentence', 'refNumeralParens',
   'subjectNameConsistency', 'transitionPhrase', 'cnTwTerminology',
   'claimsSpecReference', 'multiMultiDependency', 'dependentOrdering',
+  'connectionRelationships',
 ]
 
 const CN_ABSTRACT_CHECKS = [
@@ -221,11 +222,11 @@ const TW_GROUP1_CHECKS = [
   'refNumeralParens', 'subjectConsistency', 'cnTerminology',
   'multiDepOnMultiDep', 'multiDepAlternative', 'titleSubjectMatch',
   'claimsSymbolTableConsistency', 'antecedentBasis',
-  'symbolVsRepDrawing',
+  'symbolVsRepDrawing', 'connectionRelationships',
 ]
 
 const TW_GROUP2_CHECKS = [
-  'tipoConnectionRelationships', 'tipoIndigenous',
+  'tipoIndigenous',
 ]
 
 const TW_GROUP3_CHECKS = [

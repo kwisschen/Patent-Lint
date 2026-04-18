@@ -379,6 +379,7 @@
       "claimsSpecReference": "權利要求不得引用說明書/附圖",
       "multiMultiDependency": "多項從屬的從屬",
       "dependentOrdering": "從屬權利要求排序",
+      "connectionRelationships": "組件連接關係（审查指南 §3.2.1）",
       "abstractCharCount": "摘要字數（≤300）",
       "titleInAbstract": "標題出現在摘要中",
       "commercialLanguage": "商業性用語",
@@ -440,7 +441,7 @@
       "representativeDrawing": "代表圖指定",
       "symbolVsRepDrawing": "符號說明與代表圖之符號一致性",
       "bracketFormat": "章節標題使用【】括號",
-      "tipoConnectionRelationships": "獨立項組件之連接關係",
+      "connectionRelationships": "獨立項組件之連接關係（專利審查基準 §2.4）",
       "tipoIndigenous": "原住民族用語檢查",
       "figuresSequential": "圖號連續"
     },
@@ -538,6 +539,7 @@
       "claimsSpecReference": "根據审查指南 第二部分第二章，權利要求不得使用「如说明书……所述」或「如图……所示」來限定保護範圍。權利要求應當自成一體。請刪除相關引用。",
       "multiMultiDep": "根據专利法实施细则 §22，多項從屬權利要求不得作為另一多項從屬權利要求的引用基礎。請調整引用關係。",
       "dependentOrdering": "根據审查指南 第二部分第二章，引用同一獨立權利要求的所有從屬權利要求應連續排列在下一項獨立權利要求之前。請調整排列順序。",
+      "connectionRelationships": "標記之組件：{{sample_names}}（共 {{component_count}} 個）。請補充连接、设置于、耦接 等動詞用語，記載組件之間的結構連接關係。",
       "abstractCharCount": "根據专利法实施细则 §23，摘要不得超過300個漢字。請縮短摘要。",
       "abstractTitleMatch": "根據审查指南，摘要應與發明名稱一致。請確認摘要是否體現了發明名稱。",
       "commercialLanguage": "根據专利法实施细则 §23，摘要不得包含商業性宣傳用語。請刪除「最优」「最佳」「世界领先」「国际领先」「国内首创」「填补空白」等用語。",
@@ -596,6 +598,7 @@
         "description": "代表圖符號簡單說明中列出之符號應與符號說明中之定義一致。請確認標記的項目。"
       },
       "bracketFormat": "依專利法施行細則 §17，章節標題應使用全形方括號【】。發現：{{detail}}。",
+      "connectionRelationships": "標記之組件：{{sample_names}}（共 {{component_count}} 個）。請補充連接、設置於、耦接 等動詞用語，記載組件之間的結構連接關係。",
       "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語缺少先行詞。詳見下方「先行詞基礎檢視」區塊。",
       "titleMissing": "依專利審查基準，說明書必須包含發明名稱/新型名稱。請於說明書首部添加。",
       "figureRefInconsistency": {
@@ -834,6 +837,10 @@
           "amend": "從屬權利要求未緊隨其引用的獨立權利要求排列。",
           "pass": "從屬權利要求排列順序正確。"
         },
+        "connectionRelationships": {
+          "verify": "獨立權利要求 {{claim_id}} 列出 {{sample_names}}，未記載彼此之結構連接關係。",
+          "pass": "所有獨立裝置／系統權利要求均已記載組件之連接關係。"
+        },
         "antecedentBasis": {
           "verify": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少先行詞。",
           "pass": "所有引用之用語皆有先行詞。"
@@ -971,6 +978,10 @@
           "verify": "請求項中之元件符號與符號說明不一致。",
           "pass": "請求項中之元件符號與符號說明一致。",
           "noClaimNumerals": "請求項未使用元件符號（施行細則 §19 允許），無需檢查一致性。"
+        },
+        "connectionRelationships": {
+          "verify": "獨立項 {{claim_id}} 列出 {{sample_names}}，未記載彼此之結構連接關係。",
+          "pass": "所有獨立裝置／系統項均已記載組件之連接關係。"
         },
         "antecedentBasis": {
           "verify": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少先行詞。",

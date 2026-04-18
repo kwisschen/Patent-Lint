@@ -379,6 +379,7 @@
       "claimsSpecReference": "Claims must not reference spec/drawings",
       "multiMultiDependency": "Multi-multi dependency",
       "dependentOrdering": "Dependent claim ordering",
+      "connectionRelationships": "Component connection relationships (审查指南 §3.2.1)",
       "abstractCharCount": "Abstract character count (≤300)",
       "titleInAbstract": "Title in abstract",
       "commercialLanguage": "Commercial language",
@@ -440,7 +441,7 @@
       "representativeDrawing": "Representative drawing (代表圖) designation",
       "symbolVsRepDrawing": "符號說明 vs 代表圖 symbol consistency",
       "bracketFormat": "Section header 【】 bracket format",
-      "tipoConnectionRelationships": "Independent claim component connection relationships (連接關係)",
+      "connectionRelationships": "Independent claim component connection relationships (連接關係)",
       "tipoIndigenous": "Indigenous peoples terminology (原住民族)",
       "figuresSequential": "Figures numbered sequentially"
     },
@@ -538,6 +539,7 @@
       "claimsSpecReference": "Per 审查指南 第二部分第二章, claims must not use '如说明书……所述' or '如图……所示' to define their scope. Claims must be self-contained. Remove these references.",
       "multiMultiDep": "Per 专利法实施细则 §22, a multiple-dependent claim must not serve as the basis for another multiple-dependent claim. Restructure the dependency chain.",
       "dependentOrdering": "Per 审查指南 第二部分第二章, all claims depending on an independent claim should appear consecutively before the next independent claim. Reorder claims.",
+      "connectionRelationships": "Components flagged: {{sample_names}} ({{component_count}} total). Add a connection verb (e.g., 连接, 设置于, 耦接) describing how these components are structurally arranged.",
       "abstractCharCount": "Per 专利法实施细则 §23, the abstract must not exceed 300 Chinese characters. Shorten the abstract.",
       "abstractTitleMatch": "Per 审查指南, the abstract should be consistent with the title (发明名称). Verify the abstract reflects the invention title.",
       "commercialLanguage": "Per 专利法实施细则 §23, the abstract must not contain commercial advertising language (商业性宣传用语). Remove terms like 最优, 最佳, 世界领先, 国际领先, 国内首创, 填补空白, etc.",
@@ -596,6 +598,7 @@
         "description": "Symbols listed in the representative drawing symbol description should match the definitions in 符號說明. Verify the flagged items."
       },
       "bracketFormat": "Per 專利法施行細則 §17, section headers should use full-width brackets 【】. Found: {{detail}}.",
+      "connectionRelationships": "Components flagged: {{sample_names}} ({{component_count}} total). Add a connection verb (e.g., 連接, 設置於, 耦接) describing how these components are structurally arranged.",
       "antecedentBasisTerms": "{{issue_count}} term(s) across {{claim_count}} claim(s) may lack antecedent basis. See the \"Antecedent Basis Review\" section below for the full per-term breakdown.",
       "titleMissing": "Per TIPO 專利審查基準, the specification must contain a 發明名稱/新型名稱 (title of invention or utility model). Add one to the specification header.",
       "figureRefInconsistency": {
@@ -834,6 +837,10 @@
           "amend": "Dependent claims not grouped after their independent claim.",
           "pass": "Dependent claims correctly grouped after their independent claim."
         },
+        "connectionRelationships": {
+          "verify": "Independent claim {{claim_id}} lists {{sample_names}} without a structural connection verb.",
+          "pass": "All independent device/system claims describe component connections."
+        },
         "antecedentBasis": {
           "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis.",
           "pass": "All claim terms have antecedent basis."
@@ -971,6 +978,10 @@
           "verify": "Reference numerals in claims inconsistent with 符號說明.",
           "pass": "Reference numerals in claims consistent with 符號說明.",
           "noClaimNumerals": "No reference numerals in claims; consistency check not applicable."
+        },
+        "connectionRelationships": {
+          "verify": "Independent claim {{claim_id}} lists {{sample_names}} without a structural connection verb.",
+          "pass": "All independent apparatus/system claims describe component connections."
         },
         "antecedentBasis": {
           "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis.",
