@@ -2,7 +2,7 @@
 // Copyright (c) 2025 Christopher Chen
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Check, Linkedin, Github, Mail, ShieldCheck, Server } from 'lucide-react'
+import { Check, Mail, ShieldCheck, Server } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
 import PageCTA from '../components/PageCTA'
 import { useCountUp } from '../hooks/useCountUp'
@@ -453,7 +453,7 @@ function StatCard({ value, suffix, label, delay }) {
 function StatsGrid({ t }) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      <StatCard value={1200} suffix="+" label={t('about.stats.tests')} delay={0} />
+      <StatCard value={1400} suffix="+" label={t('about.stats.tests')} delay={0} />
       <StatCard value={90} suffix="+" label={t('about.stats.checks')} delay={100} />
       <StatCard value={5} suffix="" label={t('about.stats.languages')} delay={200} />
       <StatCard value={0} suffix="" label={t('about.stats.cloudRequests')} delay={300} />
@@ -637,8 +637,6 @@ function BuilderStory({ t }) {
   const [ref, inView] = useInView()
 
   const links = [
-    { href: 'https://linkedin.com/in/kwisschen', icon: Linkedin, label: 'LinkedIn' },
-    { href: 'https://github.com/kwisschen', icon: Github, label: 'GitHub' },
     { href: 'mailto:kwisschen@gmail.com', icon: Mail, label: 'Email' },
   ]
 
