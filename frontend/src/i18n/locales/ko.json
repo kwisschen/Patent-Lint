@@ -215,7 +215,7 @@
       },
       "q2": {
         "question": "계정이 필요한가요?",
-        "patentlint": "아니요.",
+        "patentlint": "아니요. 개인정보를 수집하지 않습니다.",
         "addin": "보통 라이선스 또는 계정이 필요합니다.",
         "cloud": "네. 계정이 필요합니다."
       },
@@ -474,7 +474,7 @@
     "builderTitle": "배경",
     "builderDesc1": "PatentLint는 수천 건의 특허 초안을 검토하며 동일한 형식 오류와 MPEP 위반을 수작업으로 찾아온 특허 엔지니어가 만들었습니다. 목표는 번거로운 부분을 자동화하여 실무자가 본질에 집중할 수 있도록 하는 것입니다.",
     "builderDesc2": "Python으로 작성된 전체 분석 엔진은 WebAssembly로 컴파일되어 브라우저에서 직접 실행됩니다. 서버 없음, 업로드 없음, 파일이 기기를 벗어나지 않습니다. 기존 도구는 Windows 전용 설치를 요구하거나 문서를 클라우드 서버에 업로드합니다. PatentLint는 둘 다 필요 없습니다.",
-    "builderSister": "자매 프로젝트인 Agentic Patent Analyst는 LLM 에이전트를 활용하여 선행 기술 검색과 청구항 커버리지 분석을 수행합니다."
+    "builderSister": "반면, 자매 프로젝트인 Agentic Patent Analyst는 자체 파인튜닝한 LLM 에이전트를 활용하여 선행 기술 검색과 청구항 커버리지 분석을 수행합니다."
   },
   "details": {
     "paragraphs": "단락: {{list}}",
@@ -1036,7 +1036,7 @@
     "offline_note": "첫 로드 후 오프라인 사용 가능",
     "feature1_title": "업로드 불필요. 계정 불필요. 설치 불필요.",
     "feature1_desc": "기밀 특허 초안이 기기를 벗어나지 않습니다. 아무것도 업로드되지 않으며, PatentLint는 사용자의 신원조차 알지 못합니다.",
-    "feature2_title": "작성 규칙 검사 및 청구항 트리",
+    "feature2_title": "MPEP/CNIPA/TIPO 검사 및 청구항 트리",
     "feature2_desc": "제한적 표현, 불명확한 용어 및 선행사 기초 누락을 검출합니다. 인터랙티브 트리로 청구항 종속 관계를 시각화합니다.",
     "feature3_title": "청구항 트리 시각화",
     "feature3_desc": "인터랙티브 종속 트리와 Mermaid 다이어그램으로 청구항 구조를 한눈에 파악할 수 있습니다.",

@@ -10,19 +10,19 @@
     "label": "地區"
   },
   "dropzone": {
-    "tagline": "依據30多項USPTO撰稿規則，立即檢查您的專利稿件。",
+    "tagline": "依據 30 多項 USPTO 撰稿規則，立即檢查您的專利稿件。",
     "title": "拖放您的專利 .docx 開始本機分析",
     "subtitle": "或點擊瀏覽檔案",
     "notice": "支援美國專利說明書（.docx）",
     "reject": "僅接受 .docx 檔案",
     "rejectMultiple": "請一次拖放一個檔案。",
     "rejectMultipleType": "請拖放單一 .docx 檔案。",
-    "taglineCn": "依據20多項CNIPA撰稿規則，立即檢查您的專利稿件。",
+    "taglineCn": "依據 20 多項 CNIPA 撰稿規則，立即檢查您的專利稿件。",
     "titleCn": "拖放您的專利檔案開始本機分析",
     "noticeCn": "支援中國大陸專利說明書（.docx、.xml、.zip）",
     "rejectCn": "僅接受 .docx、.xml 及 .zip 檔案",
     "rejectMultipleTypeCn": "請拖放單一 .docx、.xml 或 .zip 檔案。",
-    "taglineTw": "依據30多項TIPO撰稿規則，立即檢查您的專利稿件。",
+    "taglineTw": "依據 30 多項 TIPO 撰稿規則，立即檢查您的專利稿件。",
     "titleTw": "拖放您的專利 .docx 開始本機分析",
     "noticeTw": "支援台灣專利說明書（.docx）",
     "rejectTw": "僅接受 .docx 檔案",
@@ -215,7 +215,7 @@
       },
       "q2": {
         "question": "需要帳號嗎？",
-        "patentlint": "不需要。",
+        "patentlint": "不需要。不收集個資。",
         "addin": "通常需要授權或帳號。",
         "cloud": "是，需要帳號。"
       },
@@ -474,7 +474,7 @@
     "builderTitle": "背景",
     "builderDesc1": "PatentLint 由一位花費多年時間審閱數千份專利稿件、並反覆發現相同格式錯誤與 MPEP 違規的專利工程師所研發。目標：將繁瑣的部分自動化，讓從業人員能專注於實質內容。",
     "builderDesc2": "整個分析引擎以 Python 撰寫，再編譯為 WebAssembly 並直接在您的瀏覽器中運行。無伺服器、無上傳、檔案不會離開您的裝置。現有工具不是需要安裝 Windows 專用軟體，就是將檔案上傳至雲端伺服器。PatentLint 兩者皆不需要。",
-    "builderSister": "其姊妹專案 Agentic Patent Analyst 使用 LLM 代理進行先前技術檢索與請求項涵蓋範圍分析。"
+    "builderSister": "其姊妹專案 Agentic Patent Analyst 則使用自行微調的 LLM 代理進行先前技術檢索與請求項涵蓋範圍分析。"
   },
   "details": {
     "paragraphs": "段落：{{list}}",
@@ -1036,7 +1036,7 @@
     "offline_note": "首次載入後可離線使用",
     "feature1_title": "無需上傳。無需帳號。無需安裝。",
     "feature1_desc": "您的機密專利稿件不會離開您的裝置。不會上傳任何內容，PatentLint 也不會知道您的身份。",
-    "feature2_title": "撰稿規則檢查與請求項樹狀圖",
+    "feature2_title": "MPEP／CNIPA／TIPO 檢查與請求項樹狀圖",
     "feature2_desc": "偵測限制性用語、不明確用語及缺乏先行詞基礎等問題，並以互動式樹狀圖呈現請求項附屬關係。",
     "feature3_title": "請求項樹狀圖",
     "feature3_desc": "互動式附屬關係樹狀圖和 Mermaid 圖表，一目了然地呈現請求項結構。",
