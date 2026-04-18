@@ -25,7 +25,6 @@ from patentlint.models import (
     CheckItem,
     Claim,
     Jurisdiction,
-    ReferenceNumeral,
     ReportData,
     UnsupportedTerm,
 )
