@@ -12,6 +12,10 @@ import re
 
 from patentlint.analysis.cjk_ordinal_guard import ordinal_guard
 from patentlint.analysis.cjk_tokenize import jaccard, tokenize_cn
+from patentlint.analysis.connection_relationships import (
+    _CN_CONNECTION_CONFIG,
+    check_connection_relationships,
+)
 from patentlint.models import CheckItem, Claim, CnPatentDocument
 
 # ADR-107 (Phase 8c Stage 2): CN antecedent walker adopts tuple dedup
@@ -586,6 +590,20 @@ def check_dependent_ordering(cn_doc: CnPatentDocument) -> list[CheckItem]:
         message_key="check.cn.claims.dependentOrdering.pass",
         reference="审查指南 第二部分第二章",
     )]
+
+
+# ── Check 21 (连接关系) ──────────────────────────────────────────────────
+
+
+def check_connection_relationships_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
+    """Flag independent apparatus claims listing components without a
+    connection verb (CNIPA 审查指南 §3.2.1 + 专利法 §26.4).
+
+    Thin wrapper over the shared CN/TW helper. Method, CRM, MPF, and
+    composition claims are carved out per ``_CN_CONNECTION_CONFIG``.
+    """
+    return check_connection_relationships(cn_doc.claims, _CN_CONNECTION_CONFIG)
+
 
 
 # ─────────────────────────────────────────────────────────────────────────

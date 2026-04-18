@@ -98,6 +98,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Claims must not reference spec/drawings | 审查指南 第二部分第二章 | AMEND / PASS | `check.cn.claims.specReference` | No references to 说明书 or 附图 in claims |
 | Multi-dep on multi-dep | 专利法实施细则 §22 | AMEND / PASS | `check.cn.claims.multiMultiDep` | Multi-dep claim cannot reference another multi-dep |
 | Dependent claim ordering | 审查指南 第二部分第二章 | AMEND / PASS | `check.cn.claims.dependentOrdering` | Dependents grouped after their independent claim |
+| Component connection relationships | 审查指南 §3.2.1 + 专利法 §26.4 | VERIFY / PASS | `check.cn.claims.connectionRelationships` | Independent device/system claims must describe how their listed components connect (carve-outs: method, CRM, MPF, composition) |
 
 ## CN Abstract (摘要)
 
@@ -151,6 +152,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Title vs claims subject | 專利審查基準 | VERIFY / PASS | `check.tw.claims.titleSubjectMatch` | 發明名稱/新型名稱 consistent with independent claim subjects |
 | Claims vs 符號說明 consistency | 專利法施行細則 §19 | VERIFY / PASS | `check.tw.claims.symbolTableConsistency` | Numerals in claims undefined in 符號說明 (reverse direction not flagged; zero-numeral claims early-return PASS) |
 | Antecedent basis (先行詞) | 專利審查基準 | VERIFY / PASS | `check.tw.claims.antecedentBasis` | BFS ancestor-chain walker with cycle protection; char-bigram Jaccard tokenization (threshold 0.40) with CJK ordinal guard pre-filter; did-you-mean suggestion layer on borderline misses; known limitations: semantic-disjunction intro regex, bigram Jaccard precision ceiling, multi-hop chain-walking gaps (Phase 9) |
+| Component connection relationships | 專利審查基準 §2.4 | VERIFY / PASS | `check.tw.claims.connectionRelationships` | Independent apparatus/system claims must describe how their listed components are arranged (carve-outs: method, CRM, MPF, composition) |
 
 ## TW Abstract (摘要)
 

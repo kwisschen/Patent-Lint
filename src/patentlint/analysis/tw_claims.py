@@ -12,6 +12,10 @@ import re
 
 from patentlint.analysis.cjk_ordinal_guard import ordinal_guard
 from patentlint.analysis.cjk_tokenize import jaccard, tokenize_tw
+from patentlint.analysis.connection_relationships import (
+    _TW_CONNECTION_CONFIG,
+    check_connection_relationships,
+)
 from patentlint.models import CheckItem, Claim, TwPatentDocument
 
 # Did-you-mean Jaccard threshold (ADR-094). Char-bigram Jaccard at 0.40
@@ -927,7 +931,20 @@ def check_claims_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckIt
     )]
 
 
-# ── Check 26 ─────────────────────────────────────────────────────────────
+# ── Check 26 (連接關係) ──────────────────────────────────────────────────
+
+
+def check_connection_relationships_tw(doc: TwPatentDocument) -> list[CheckItem]:
+    """Flag independent apparatus claims listing components without a
+    connection verb (TIPO 專利審查基準 §2.4).
+
+    Thin wrapper over the shared CN/TW helper. Method, CRM, MPF, and
+    composition claims are carved out per ``_TW_CONNECTION_CONFIG``.
+    """
+    return check_connection_relationships(doc.claims, _TW_CONNECTION_CONFIG)
+
+
+# ── Check 27 ─────────────────────────────────────────────────────────────
 
 # Boundary character class for the noun-phrase regex captures.
 #
