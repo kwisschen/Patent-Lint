@@ -11,9 +11,21 @@ from collections import Counter
 
 from patentlint.models import CheckItem, ReferenceNumeral, SpecWordingResult
 
+# Narrowing language per MPEP 2111.01(II): "critical, important, essential,
+# vital, and necessary are indicative of limitations that narrow claim
+# scope." Paired with absolute quantifiers (always, never, must, only,
+# solely, every) and MPEP-adjacent narrowers (required, imperative,
+# indispensable).
+#
+# Deliberately narrower than the historical lexicon (Phase 9 #72b audit,
+# 2026-04-19): "invention", "particular", "specific", and "key" were
+# removed because they dominated the verify noise with non-narrowing
+# uses — "the invention relates to...", "a particular embodiment",
+# "a specific example", "key feature" are all standard drafting
+# conventions, not MPEP-flagged scope-narrowers.
 _RESTRICTIVE_WORDING = re.compile(
-    r"(?i)\b(invention|always|never|must|solely|every|required|essential|critical|key|vital"
-    r"|necessary|imperative|indispensable|particular|specific)\b"
+    r"(?i)\b(always|never|must|solely|every|required|essential|critical|vital"
+    r"|necessary|imperative|indispensable)\b"
 )
 
 
