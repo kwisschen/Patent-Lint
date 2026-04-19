@@ -83,6 +83,56 @@ def _set_para_num(paragraph, num_id: str = "1") -> None:
     pPr.append(numPr)
 
 
+def _add_us_numbering_gap_id(doc: Document, abstract_id: str, num_id: str, start_at: int) -> None:
+    """Append an additional numbering definition with a non-default startAt.
+
+    Used to build fixtures with a paragraph-numbering gap: existing numId=1
+    runs 1..N contiguously; this one starts at ``start_at`` so paragraphs
+    switching to ``num_id`` produce a discontinuity in ``paragraph_numberings``.
+    """
+    numbering_part = doc.part.numbering_part
+    numbering_xml = numbering_part._element
+
+    abstract_num = OxmlElement("w:abstractNum")
+    abstract_num.set(qn("w:abstractNumId"), abstract_id)
+    lvl = OxmlElement("w:lvl")
+    lvl.set(qn("w:ilvl"), "0")
+    start = OxmlElement("w:start")
+    start.set(qn("w:val"), str(start_at))
+    lvl.append(start)
+    num_fmt = OxmlElement("w:numFmt")
+    num_fmt.set(qn("w:val"), "decimal")
+    lvl.append(num_fmt)
+    abstract_num.append(lvl)
+    numbering_xml.append(abstract_num)
+
+    num = OxmlElement("w:num")
+    num.set(qn("w:numId"), num_id)
+    ref = OxmlElement("w:abstractNumId")
+    ref.set(qn("w:val"), abstract_id)
+    num.append(ref)
+    numbering_xml.append(num)
+
+
+def _inject_tracked_insertion(paragraph, text: str = "inserted revision") -> None:
+    """Inject a w:ins tracked-change element into a paragraph's XML.
+
+    python-docx has no public Track Changes API, so we build the OOXML
+    element directly. ``detect_tracked_changes`` in docx_loader.py fires
+    when any w:ins or w:del element is present anywhere in the body.
+    """
+    ins_elem = OxmlElement("w:ins")
+    ins_elem.set(qn("w:id"), "1")
+    ins_elem.set(qn("w:author"), "Test Author")
+    ins_elem.set(qn("w:date"), "2026-04-19T00:00:00Z")
+    run = OxmlElement("w:r")
+    text_elem = OxmlElement("w:t")
+    text_elem.text = text
+    run.append(text_elem)
+    ins_elem.append(run)
+    paragraph._element.append(ins_elem)
+
+
 def _doc_to_bytes(doc: Document) -> bytes:
     buf = io.BytesIO()
     doc.save(buf)
@@ -515,6 +565,201 @@ def _build_us_cluster1_defects() -> bytes:
     return _doc_to_bytes(doc)
 
 
+def _build_us_cluster2_spec_defects() -> bytes:
+    """Engineered US patent exercising 4 zero-coverage spec-level defects.
+
+    Phase E cluster 2: tracked changes (Word revisions), non-sequential
+    paragraph numbering, missing required section, figure-xref orphan.
+    """
+    doc = Document()
+    _add_us_numbering(doc)
+    # Third numbering definition with startAt=5 to create a gap in
+    # paragraph_numberings (e.g., [1, 2, 3, 5, 6]).
+    _add_us_numbering_gap_id(doc, abstract_id="2", num_id="3", start_at=5)
+
+    headers = {
+        "TITLE OF THE INVENTION",
+        "Widget Management System",
+        "FIELD OF THE INVENTION",
+        "SUMMARY OF THE INVENTION",
+        "BRIEF DESCRIPTION OF THE DRAWINGS",
+        "DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS",
+    }
+
+    # Pre-gap spec paragraphs — numId=1 counts 1, 2, 3. Deliberately omits
+    # BACKGROUND OF THE INVENTION to trigger the missing-required-section
+    # check. Brief Description of Drawings mentions FIG. 1 and FIG. 2 to
+    # set up the figure-xref orphan (only FIG. 1 will appear in the
+    # Detailed Description below).
+    pre_gap = [
+        ("TITLE OF THE INVENTION", None),
+        ("Widget Management System", None),
+        ("FIELD OF THE INVENTION", None),
+        ("The present invention relates to a widget management system.", "1"),
+        ("SUMMARY OF THE INVENTION", None),
+        (
+            "A widget management system includes a controller and a plurality of widgets "
+            "operatively coupled to the controller.",
+            "1",
+        ),
+        ("BRIEF DESCRIPTION OF THE DRAWINGS", None),
+        (
+            "FIG. 1 is a schematic overview of the widget management system. "
+            "FIG. 2 is a detail view of a single widget.",
+            "1",
+        ),
+    ]
+    for text, num in pre_gap:
+        para = doc.add_paragraph(text)
+        if num and text not in headers:
+            _set_para_num(para, num)
+
+    # Post-gap spec paragraphs — numId=3 starts at 5, producing a gap from
+    # 3 to 5. The detailed description only references FIG. 1, leaving
+    # FIG. 2 orphaned vs. the Brief Description.
+    doc.add_paragraph("DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS")
+    para_detailed_1 = doc.add_paragraph(
+        "Referring to FIG. 1, the widget management system 100 includes a controller 10 and "
+        "a plurality of widgets 20 operatively coupled to the controller."
+    )
+    _set_para_num(para_detailed_1, "3")
+    # Inject a tracked-change (w:ins) element on this paragraph so
+    # detect_tracked_changes fires.
+    _inject_tracked_insertion(para_detailed_1, "pending revision")
+
+    para_detailed_2 = doc.add_paragraph(
+        "The controller 10 sends command signals to each widget 20 over a communication bus."
+    )
+    _set_para_num(para_detailed_2, "3")
+
+    doc.add_paragraph("CLAIMS")
+    claim_para = doc.add_paragraph(
+        "A widget management system comprising: a controller; and a plurality of widgets "
+        "operatively coupled to the controller."
+    )
+    _set_para_num(claim_para, "2")
+
+    doc.add_paragraph("ABSTRACT")
+    doc.add_paragraph(
+        "A widget management system includes a controller and a plurality of widgets "
+        "operatively coupled to the controller. The controller sends command signals to "
+        "each widget over a communication bus, enabling coordinated operation across the "
+        "fleet of widgets."
+    )
+
+    return _doc_to_bytes(doc)
+
+
+def _build_us_cluster3_single_figure() -> bytes:
+    """Engineered US patent with a single figure mislabeled as FIG. 1.
+
+    Phase E cluster 3: single-figure patents must refer to "The Figure"
+    rather than "FIG. 1" per MPEP convention. Only FIG. 1 is mentioned
+    anywhere in the document.
+    """
+    doc = Document()
+    _add_us_numbering(doc)
+
+    headers = {
+        "TITLE OF THE INVENTION",
+        "Single-Figure Apparatus",
+        "FIELD OF THE INVENTION",
+        "BACKGROUND OF THE INVENTION",
+        "SUMMARY OF THE INVENTION",
+        "BRIEF DESCRIPTION OF THE DRAWINGS",
+        "DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS",
+    }
+    spec = [
+        "TITLE OF THE INVENTION",
+        "Single-Figure Apparatus",
+        "FIELD OF THE INVENTION",
+        "The present invention relates to a single-figure apparatus.",
+        "BACKGROUND OF THE INVENTION",
+        "Conventional apparatus designs have limitations.",
+        "SUMMARY OF THE INVENTION",
+        "An apparatus includes a base and a cover coupled to the base.",
+        "BRIEF DESCRIPTION OF THE DRAWINGS",
+        "FIG. 1 is a perspective view of the apparatus.",
+        "DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS",
+        "Referring to FIG. 1, the apparatus 100 includes a base 10 and a cover 20 coupled to the base.",
+    ]
+    for text in spec:
+        para = doc.add_paragraph(text)
+        if text not in headers:
+            _set_para_num(para, "1")
+
+    doc.add_paragraph("CLAIMS")
+    claim_para = doc.add_paragraph(
+        "An apparatus comprising: a base; and a cover coupled to the base."
+    )
+    _set_para_num(claim_para, "2")
+
+    doc.add_paragraph("ABSTRACT")
+    doc.add_paragraph(
+        "An apparatus includes a base and a cover coupled to the base, providing a compact "
+        "single-piece enclosure suitable for a range of applications."
+    )
+
+    return _doc_to_bytes(doc)
+
+
+def _build_cn_amend_triggers() -> bytes:
+    """Engineered CN patent triggering 2 AMEND-status checks.
+
+    Phase E CN AMEND-triggers: commercial language in abstract (最佳) and
+    abstract over 300 characters. Section ordering is not exercised here —
+    see the note in test_cn_specification.py::TestSectionOrdering for the
+    architectural limitation (CnPatentDocument stores sections by named
+    field, so the check can never fail at the pipeline layer).
+    """
+    doc = Document()
+
+    # Abstract: >300 chars AND contains commercial superlative "最佳"
+    # ("best"). Character count excludes whitespace/newlines per
+    # sections_cn.py:589.
+    abstract_text = (
+        "本发明提供一种最佳的数据处理方法，包括数据预处理步骤和特征提取步骤。"
+        "数据预处理步骤用于对原始数据进行清洗和归一化处理，消除噪声和异常值。"
+        "特征提取步骤采用深度学习模型从清洗后的数据中提取高维特征向量。"
+        "该深度学习模型具有多层卷积结构，能够有效提取数据的空间特征和时序特征。"
+        "本方法在图像识别、自然语言处理、语音识别、医疗诊断、金融风控等诸多领域展现出卓越的应用效果。"
+        "系统能够有效处理大规模高维数据集，实现快速准确的数据分类和预测。"
+        "本方法适用于多种复杂场景，显著提升系统处理效率和分类准确率。"
+        "广泛的应用前景和重要的实用价值，使其成为相关领域的关键技术突破。"
+        "此外，本方法还具备良好的可扩展性和稳定性，适合在大规模生产环境中长期稳定运行。"
+        "综上所述，本发明通过创新的技术架构为数据处理领域提供了高效可靠的解决方案。"
+    )
+    doc.add_paragraph(abstract_text)
+    _add_cn_section_break(doc, "摘要附图")
+
+    _add_cn_section_break(doc, "权利要求书")
+    doc.add_paragraph("1. 一种数据处理方法，包括：")
+    doc.add_paragraph("数据预处理步骤，用于对原始数据进行清洗；及")
+    doc.add_paragraph("特征提取步骤，用于从清洗后的数据中提取特征向量；")
+    doc.add_paragraph("其特征在于，所述特征提取步骤采用深度学习模型。")
+    _add_cn_section_break(doc, "说明书")
+
+    doc.add_paragraph("一种数据处理方法")
+    doc.add_paragraph("技术领域")
+    doc.add_paragraph("本发明涉及一种数据处理方法。")
+    doc.add_paragraph("背景技术")
+    doc.add_paragraph("现有数据分类方法效率较低。")
+    doc.add_paragraph("发明内容")
+    doc.add_paragraph("本发明提供一种数据处理方法。")
+    doc.add_paragraph("附图说明")
+    doc.add_paragraph("图1是本发明的流程图。")
+    doc.add_paragraph("具体实施方式")
+    doc.add_paragraph("下面结合实施例对本发明进行详细说明。")
+    _add_cn_section_break(doc, "说明书附图")
+
+    first_section = doc.sections[0]
+    first_section.header.is_linked_to_previous = False
+    hp = first_section.header.paragraphs[0]
+    hp.text = "说明书摘要"
+
+    return _doc_to_bytes(doc)
+
+
 def _build_tw_minimal(claims_text: list[str], symbol_lines: list[str] | None = None,
                       embodiment_lines: list[str] | None = None) -> bytes:
     """Build a minimal but complete TW .docx for targeted tests."""
@@ -799,6 +1044,94 @@ class TestUsCluster1Defects:
 
     def test_extra_period_detected(self):
         assert "claims.extraPeriod" in self._emitted_keys()
+
+
+class TestUsCluster2SpecDefects:
+    """Phase E cluster 2: 4 zero-coverage spec-level defect checks."""
+
+    TARGET_KEYS = {
+        "check.spec.trackedChanges.amend",
+        "check.spec.paragraphSequential.amend",
+        "checks.required_sections_missing",
+        "checks.figure_xref_orphaned_brief",
+    }
+
+    def _emitted_keys(self) -> set[str]:
+        result = analyze_bytes(
+            _build_us_cluster2_spec_defects(), "us_cluster2.docx", Jurisdiction.US
+        )
+        report = result.to_report_data()
+        return {c.message_key for c in report.all_checks if c.message_key}
+
+    def test_all_four_target_keys_emitted(self):
+        keys = self._emitted_keys()
+        missing = self.TARGET_KEYS - keys
+        assert not missing, f"Missing defect-check emissions: {sorted(missing)}"
+
+    def test_tracked_changes_detected(self):
+        assert "check.spec.trackedChanges.amend" in self._emitted_keys()
+
+    def test_non_sequential_paragraphs_detected(self):
+        assert "check.spec.paragraphSequential.amend" in self._emitted_keys()
+
+    def test_missing_required_sections_detected(self):
+        assert "checks.required_sections_missing" in self._emitted_keys()
+
+    def test_figure_xref_orphaned_detected(self):
+        assert "checks.figure_xref_orphaned_brief" in self._emitted_keys()
+
+
+class TestUsCluster3SingleFigure:
+    """Phase E cluster 3: single-figure patent mislabeled as 'FIG. 1'."""
+
+    def _emitted_keys(self) -> set[str]:
+        result = analyze_bytes(
+            _build_us_cluster3_single_figure(), "us_cluster3.docx", Jurisdiction.US
+        )
+        report = result.to_report_data()
+        return {c.message_key for c in report.all_checks if c.message_key}
+
+    def test_single_figure_wrong_label_detected(self):
+        assert "check.drawings.singleFigure.amend" in self._emitted_keys()
+
+
+class TestCnAmendTriggers:
+    """Phase E CN cluster: AMEND-status defect checks that can be triggered
+    via the full pipeline. ``check.cn.spec.sectionOrdering.amend`` is out of
+    scope — the current ``CnPatentDocument`` model stores each section as a
+    named field, so the check's ``present`` list is always canonically
+    sorted (see ``test_cn_specification.py::TestSectionOrdering`` for the
+    long-form note). Exercising that path requires a data-model refactor
+    that preserves document order, which is larger than Phase E.
+    """
+
+    TARGET_KEYS = {
+        "check.cn.abstract.commercialLanguage.amend",
+        "check.cn.abstract.charCount.amend",
+    }
+
+    def _emitted_keys(self) -> set[str]:
+        result = analyze_bytes(
+            _build_cn_amend_triggers(), "cn_amend.docx", Jurisdiction.CN
+        )
+        all_checks = (
+            result.cn_specification_checks
+            + result.cn_claims_checks
+            + result.cn_abstract_checks
+            + result.cn_drawings_checks
+        )
+        return {c.message_key for c in all_checks if c.message_key}
+
+    def test_all_target_keys_emitted(self):
+        keys = self._emitted_keys()
+        missing = self.TARGET_KEYS - keys
+        assert not missing, f"Missing defect-check emissions: {sorted(missing)}"
+
+    def test_commercial_language_detected(self):
+        assert "check.cn.abstract.commercialLanguage.amend" in self._emitted_keys()
+
+    def test_abstract_over_300_chars_detected(self):
+        assert "check.cn.abstract.charCount.amend" in self._emitted_keys()
 
 
 class TestCrossJurisdictionMismatch:
