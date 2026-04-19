@@ -760,7 +760,7 @@
         },
         "paragraphNumbering": {
           "amendXml": "段落编号不连续（{{detail}}）。",
-          "amendDocx": "说明书包含手动添加的段落编号。",
+          "amendDocx": "说明书包含手动添加的段落编号（CNIPA申请时须移除）。",
           "pass": "段落编号正确。",
           "amendXmlGap": "段落编号不连续：第{{prev}}段后为第{{next}}段。",
           "amendXmlDuplicate": "检测到 {{count}} 个重复的段落编号：段落 {{paragraphs}}。"
@@ -894,7 +894,7 @@
           "pass": "各章节之图式引用一致。"
         },
         "patentTypeTerminology": {
-          "verify": "检测到专利类型用语不一致。",
+          "verify": "检测到专利类型用语不一致（发明与新型混用）。",
           "pass": "专利类型用语一致。"
         },
         "title": {
@@ -1002,7 +1002,7 @@
           "pass": "摘要未包含商业性宣传用语。"
         },
         "representativeDrawing": {
-          "verify": "未发现代表圖指定。",
+          "verify": "未指定代表圖。",
           "pass": "已指定代表圖。"
         }
       },
