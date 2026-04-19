@@ -206,6 +206,11 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
     # --- Drawings analysis ---
     figures_count = drawings_analysis.get_figure_count(drawings_section) if drawings_section else 0
     figures_seq = drawings_analysis.are_figures_sequential(drawings_section) if drawings_section else True
+    figures_missing = (
+        drawings_analysis.compute_missing_figure_numbers(drawings_section)
+        if (drawings_section and not figures_seq)
+        else []
+    )
     single_fig = drawings_analysis.is_single_figure(full_text)
     wrong_label = drawings_analysis.uses_wrong_label_for_single_figure(full_text) if single_fig else False
     prior_art_drawings = drawings_analysis.contains_prior_art_references(drawings_section) if drawings_section else False
@@ -257,6 +262,7 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
         # Drawings
         figures_count=figures_count,
         figures_sequential=figures_seq,
+        figures_missing=figures_missing,
         contains_prior_art_in_drawings=prior_art_drawings,
         single_figure=single_fig,
         wrong_label_for_single_figure=wrong_label,

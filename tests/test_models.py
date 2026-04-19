@@ -2,7 +2,7 @@
 # Copyright (c) 2025 Christopher Chen
 """Unit tests for patentlint.models."""
 
-from patentlint.models import CheckItem, ReportData
+from patentlint.models import AnalysisResult, CheckItem, Jurisdiction, ReportData
 
 
 class TestReportDataAllChecks:
@@ -55,3 +55,35 @@ class TestReportDataAllChecks:
         b = report.all_checks
         assert a == b
         assert a is not b
+
+
+class TestUsFiguresSequentialAmend:
+    """US drawings amend check forwards missing figure numbers to the UI."""
+
+    def _find_sequential_amend(self, report: ReportData) -> CheckItem | None:
+        for check in report.drawings_checks:
+            if check.message_key == "check.drawings.sequential.amend":
+                return check
+        return None
+
+    def test_amend_emits_figure_list(self):
+        result = AnalysisResult(
+            jurisdiction=Jurisdiction.US,
+            figures_count=3,
+            figures_sequential=False,
+            figures_missing=[2, 4],
+        )
+        report = result.to_report_data()
+        check = self._find_sequential_amend(report)
+        assert check is not None
+        assert check.status == "amend"
+        assert check.details_params == {"figure_list": [2, 4]}
+
+    def test_pass_has_no_amend_check(self):
+        result = AnalysisResult(
+            jurisdiction=Jurisdiction.US,
+            figures_count=3,
+            figures_sequential=True,
+        )
+        report = result.to_report_data()
+        assert self._find_sequential_amend(report) is None
