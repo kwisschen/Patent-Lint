@@ -779,7 +779,7 @@
         },
         "title": {
           "amendLength": "发明名称超过25个汉字（共{{count}}个字）。",
-          "amendContent": "发明名称包含禁止内容：{{title_prohibited_items}}",
+          "amendContent": "发明名称包含禁止内容：{{title_prohibited_items}}。",
           "pass": "发明名称符合要求。",
           "amendMissing": "未发现发明名称。"
         },
@@ -898,7 +898,7 @@
           "pass": "专利类型用语一致。"
         },
         "title": {
-          "amendContent": "发明名称/新型名称包含不当内容：{{title_prohibited_items}}",
+          "amendContent": "发明名称/新型名称包含不当内容：{{title_prohibited_items}}。",
           "pass": "发明名称/新型名称符合要求。",
           "amendMissing": "未发现发明名称/新型名称。"
         },

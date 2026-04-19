@@ -779,7 +779,7 @@
         },
         "title": {
           "amendLength": "發明名稱超過25個漢字（共{{count}}個字）。",
-          "amendContent": "發明名稱包含禁止內容：{{title_prohibited_items}}",
+          "amendContent": "發明名稱包含禁止內容：{{title_prohibited_items}}。",
           "pass": "發明名稱符合要求。",
           "amendMissing": "未發現發明名稱。"
         },
@@ -898,7 +898,7 @@
           "pass": "專利類型用語一致。"
         },
         "title": {
-          "amendContent": "發明名稱/新型名稱包含不當內容：{{title_prohibited_items}}",
+          "amendContent": "發明名稱/新型名稱包含不當內容：{{title_prohibited_items}}。",
           "pass": "發明名稱/新型名稱符合要求。",
           "amendMissing": "未發現發明名稱/新型名稱。"
         },
