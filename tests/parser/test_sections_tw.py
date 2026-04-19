@@ -224,6 +224,33 @@ class TestDetectPatentDocumentTw:
         paragraphs = ["【0001】第一段。", "【0002】第二段。"]
         assert detect_patent_document_tw(paragraphs) is False
 
+    def test_phase_9_73_rejects_us_patent(self):
+        """US English patent must not false-positive TW detector (Phase 9 #73)."""
+        paragraphs = [
+            "CLAIMS",
+            "1. A method comprising step A.",
+            "2. The method of claim 1, further comprising step B.",
+            "3. The method of claim 1, wherein step A includes sub-step C.",
+        ]
+        assert detect_patent_document_tw(paragraphs) is False
+
+    def test_phase_9_73_rejects_cn_patent(self):
+        """CN simplified-Chinese publication must not false-positive TW detector (Phase 9 #73).
+
+        CN uses 权利要求 (simplified 权) not 請求項 (traditional 請); uses [0001]
+        ASCII brackets not 【0001】 fullwidth; uses body-anchor markers like
+        权利要求书 plain-text, not 【】 headers.
+        """
+        paragraphs = [
+            "用于调整神经网络的方法和装置",
+            "[0001] 本申请涉及通信技术领域。",
+            "[0002] 具体地，本申请涉及一种神经网络装置。",
+            "[0003] 神经网络在无线通信中应用广泛。",
+            "权利要求书",
+            "1. 一种用于调整神经网络的方法。",
+        ]
+        assert detect_patent_document_tw(paragraphs) is False
+
 
 # NOTE: This test loads a real patent docx that is gitignored under
 # tests/fixtures/tw/. The fixture is NEVER committed. Test skips cleanly

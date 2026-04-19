@@ -467,9 +467,9 @@ class TestDetectPatentDocumentCn:
 
     def test_true_with_fullwidth_period_claims(self):
         paragraphs = [
-            "1．一种装置。",
-            "2．如权利要求1所述。",
-            "3．如权利要求2所述。",
+            "1．一种数据处理装置，其特征在于，包括处理器。",
+            "2．如权利要求1所述的装置。",
+            "3．如权利要求2所述的装置。",
         ]
         assert detect_patent_document_cn(paragraphs) is True
 
@@ -488,6 +488,29 @@ class TestDetectPatentDocumentCn:
 
     def test_fewer_than_three_claims_not_enough(self):
         paragraphs = ["1. 第一项。", "2. 第二项。"]
+        assert detect_patent_document_cn(paragraphs) is False
+
+    def test_phase_9_73_rejects_us_patent(self):
+        """US English claims must not false-positive CN detector (Phase 9 #73)."""
+        paragraphs = [
+            "CLAIMS",
+            "1. A method comprising step A.",
+            "2. The method of claim 1, further comprising step B.",
+            "3. The method of claim 1, wherein step A includes sub-step C.",
+        ]
+        assert detect_patent_document_cn(paragraphs) is False
+
+    def test_phase_9_73_rejects_tw_patent(self):
+        """TW 【】 bracket headers must reject the CN detector (Phase 9 #73)."""
+        paragraphs = [
+            "【中文發明名稱】",
+            "一種蓋組件及帶蓋容器",
+            "【技術領域】",
+            "本發明涉及蓋組件的技術領域。",
+            "1．一種蓋組件，包括蓋本體。",
+            "2．如請求項1所述之蓋組件。",
+            "3．如請求項2所述之蓋組件。",
+        ]
         assert detect_patent_document_cn(paragraphs) is False
 
 
