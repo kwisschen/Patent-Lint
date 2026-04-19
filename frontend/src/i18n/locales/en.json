@@ -853,7 +853,8 @@
         },
         "titleMatch": {
           "verify": "Abstract does not reference the invention title (发明名称).",
-          "pass": "Invention title referenced in abstract."
+          "pass": "Invention title referenced in abstract.",
+          "passCompound": "All title components ({{halves}}) referenced in abstract."
         },
         "commercialLanguage": {
           "amend": "Commercial or advertising language in abstract: {{terms}}.",
@@ -995,7 +996,8 @@
         },
         "titleMatch": {
           "verify": "Abstract may not reference the invention/utility-model title (發明名稱/新型名稱).",
-          "pass": "Invention/utility-model title referenced in abstract."
+          "pass": "Invention/utility-model title referenced in abstract.",
+          "passCompound": "All title components ({{halves}}) referenced in abstract."
         },
         "commercialLanguage": {
           "amend": "Commercial or advertising language in abstract.",

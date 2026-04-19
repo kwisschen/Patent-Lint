@@ -14,6 +14,11 @@ from patentlint.models import CheckItem, CnPatentDocument
 
 _CN_FIG_NUM_RE = re.compile(r"(?:图|附图)\s*(\d+)")
 
+# Compound-title conjunctions (CN drafting). Two-char 以及 must precede 及
+# in the alternation so split does not fire on its tail character.
+_CN_TITLE_CONJ_RE = re.compile(r"以及|及|和|与")
+_COMPOUND_HALF_MIN_CHARS = 2
+
 # ── Check 21 ─────────────────────────────────────────────────────────────
 
 
@@ -58,7 +63,7 @@ def check_abstract_title_match(cn_doc: CnPatentDocument) -> list[CheckItem]:
             reference="审查指南",
         )]
 
-    if not title or title not in abstract:
+    if not title:
         return [CheckItem(
             status="verify",
             message="Title does not appear in the abstract.",
@@ -67,10 +72,33 @@ def check_abstract_title_match(cn_doc: CnPatentDocument) -> list[CheckItem]:
             reference="审查指南",
         )]
 
+    if title in abstract:
+        return [CheckItem(
+            status="pass",
+            message="Title appears in the abstract.",
+            message_key="check.cn.abstract.titleMatch.pass",
+            reference="审查指南",
+        )]
+
+    halves = [h for h in _CN_TITLE_CONJ_RE.split(title) if h]
+    if (
+        len(halves) >= 2
+        and all(len(h) >= _COMPOUND_HALF_MIN_CHARS for h in halves)
+        and all(h in abstract for h in halves)
+    ):
+        return [CheckItem(
+            status="pass",
+            message="All compound-title halves appear in the abstract.",
+            message_key="check.cn.abstract.titleMatch.passCompound",
+            details_params={"halves": "、".join(halves)},
+            reference="审查指南",
+        )]
+
     return [CheckItem(
-        status="pass",
-        message="Title appears in the abstract.",
-        message_key="check.cn.abstract.titleMatch.pass",
+        status="verify",
+        message="Title does not appear in the abstract.",
+        message_key="check.cn.abstract.titleMatch.verify",
+        details_key="details.cn.abstractTitleMatch",
         reference="审查指南",
     )]
 

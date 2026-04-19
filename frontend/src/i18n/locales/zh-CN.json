@@ -853,7 +853,8 @@
         },
         "titleMatch": {
           "verify": "摘要中未出现发明名称。",
-          "pass": "摘要中包含发明名称。"
+          "pass": "摘要中包含发明名称。",
+          "passCompound": "发明名称各部分（{{halves}}）均已在摘要中出现。"
         },
         "commercialLanguage": {
           "amend": "摘要包含商业性宣传用语：{{terms}}。",
@@ -995,7 +996,8 @@
         },
         "titleMatch": {
           "verify": "摘要中未包含发明名称/新型名称。",
-          "pass": "摘要中包含发明名称/新型名称。"
+          "pass": "摘要中包含发明名称/新型名称。",
+          "passCompound": "发明名称/新型名称各部分（{{halves}}）均已在摘要中出现。"
         },
         "commercialLanguage": {
           "amend": "摘要包含商业性宣传用语。",
