@@ -93,18 +93,38 @@ class TestParagraphSequentialCheck:
 
 class TestRestrictiveWording:
     def test_detected(self):
-        result = detect_restrictive_wording("The invention must always perform this step.", 5)
+        result = detect_restrictive_wording("The device must always perform this step.", 5)
         assert 5 in result.flagged_paragraphs
-        assert "invention" in result.formatted_phrases
         assert "must" in result.formatted_phrases
         assert "always" in result.formatted_phrases
 
-    def test_new_mpep_terms(self):
-        result = detect_restrictive_wording("This is necessary and imperative for this specific implementation.", 3)
+    def test_mpep_narrowing_terms(self):
+        """MPEP 2111.01(II) narrowing language: critical/essential/vital/necessary/imperative."""
+        result = detect_restrictive_wording(
+            "This feature is critical, essential, vital, and necessary.", 3
+        )
         assert 3 in result.flagged_paragraphs
-        assert "necessary" in result.formatted_phrases
-        assert "imperative" in result.formatted_phrases
-        assert "specific" in result.formatted_phrases
+        for term in ("critical", "essential", "vital", "necessary"):
+            assert term in result.formatted_phrases
+
+    def test_absolute_quantifiers(self):
+        result = detect_restrictive_wording(
+            "The system must never fail, and solely operates in every mode.", 7
+        )
+        assert 7 in result.flagged_paragraphs
+        for term in ("must", "never", "solely", "every"):
+            assert term in result.formatted_phrases
+
+    def test_phase_9_72b_tightened_terms_pass(self):
+        """Removed in Phase 9 #72b: 'invention', 'particular', 'specific', 'key'
+        are standard drafting words that were dominating verify noise with
+        non-narrowing uses."""
+        result = detect_restrictive_wording(
+            "The present invention relates to a particular embodiment "
+            "with a specific example illustrating the key feature.",
+            4,
+        )
+        assert result.flagged_paragraphs == []
 
     def test_clean(self):
         result = detect_restrictive_wording("The device processes data according to the configuration.", 1)
