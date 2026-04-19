@@ -804,11 +804,19 @@ def _build_cn_section_ordering_violation() -> bytes:
 
 
 def _build_cn_drafter_realistic() -> bytes:
-    """Canonical real-format CN fixture mirroring a drafter's 五书模板 output.
+    """Canonical real-format CN fixture mirroring the CNIPA 五书模板.
 
-    Unlike the ``tests/fixtures/cn/local/*.docx`` corpus (all Google-Patents-
-    downloaded publication docs with INID cover pages and PDF->Word
-    conversion artifacts), this fixture represents what PatentLint's
+    Structurally identical to CNIPA's official 五书模板 Word template
+    (one combined .docx with 5 Word sections whose page headers are set
+    to 说明书摘要 / 摘要附图 / 权利要求书 / 说明书 / 说明书附图, per the
+    WORD转XML编辑器 user manual §3.3.1). Subsection headers inside 说明书
+    (技术领域, 背景技术, 发明内容, 附图说明, 具体实施方式) appear as plain
+    body paragraphs per manual §3.4.8; title is the first body paragraph
+    of 说明书 per §3.4.7.
+
+    Unlike the ``tests/fixtures/cn/local/*.docx`` corpus (all Google-
+    Patents-downloaded publication docs with INID cover pages and PDF→
+    Word conversion artifacts), this fixture represents what PatentLint's
     primary user — a patent drafter preparing a 五书模板 Word file for
     CNIPA filing — actually uploads. Expect: clean title + abstract
     extraction, all five spec subsections populated, every CN check
@@ -1341,10 +1349,12 @@ class TestCnDrafterRealisticBaseline:
     The ``tests/fixtures/cn/local/*.docx`` corpus is Google-Patents-downloaded
     publication documents, not the drafter-format Word files PatentLint's
     primary users upload. ``_build_cn_drafter_realistic`` programmatically
-    constructs the real drafter shape (CNIPA 五书模板, no INID cover, title
-    + abstract in body text, all five spec subsections). This class is the
-    regression gate: if any CN check emits ``.amend`` or ``.verify`` on
-    this clean baseline, that emission is a bug — not a fixture gap.
+    constructs the real drafter shape as specified by CNIPA's WORD转XML
+    编辑器 五书模板 (one combined .docx, 5 Word sections with page headers
+    set to 五书 part names, title + subsection headers in 说明书 body,
+    no INID cover). This class is the regression gate: if any CN check
+    emits ``.amend`` or ``.verify`` on this clean baseline, that emission
+    is a bug — not a fixture gap.
     """
 
     def _result(self):
