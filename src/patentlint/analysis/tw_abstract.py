@@ -8,12 +8,19 @@ against TIPO rules (專利法施行細則 and 專利審查基準).
 
 from __future__ import annotations
 
+import re
+
 from patentlint.models import CheckItem, TwPatentDocument
 
 # TW commercial language terms (Traditional Chinese)
 _COMMERCIAL_TERMS = [
     "最優", "最佳", "世界領先", "國際領先", "國內首創", "填補空白",
 ]
+
+# Compound-title conjunctions (TW drafting). Two-char 以及 must precede 及
+# in the alternation so split does not fire on its tail character.
+_TW_TITLE_CONJ_RE = re.compile(r"以及|及|和|與")
+_COMPOUND_HALF_MIN_CHARS = 2
 
 
 # ── Check 27 ────────────────────────────────────────────────────────────
@@ -59,20 +66,34 @@ def check_abstract_title_match(doc: TwPatentDocument) -> list[CheckItem]:
             reference="專利審查基準",
         )]
 
-    if title not in abstract:
+    if title in abstract:
         return [CheckItem(
-            status="verify",
-            message="Title does not appear in the abstract.",
-            message_key="check.tw.abstract.titleMatch.verify",
-            details_key="details.tw.abstractTitleMatch",
-            details_params={"detail": title},
+            status="pass",
+            message="Title appears in the abstract.",
+            message_key="check.tw.abstract.titleMatch.pass",
+            reference="專利審查基準",
+        )]
+
+    halves = [h for h in _TW_TITLE_CONJ_RE.split(title) if h]
+    if (
+        len(halves) >= 2
+        and all(len(h) >= _COMPOUND_HALF_MIN_CHARS for h in halves)
+        and all(h in abstract for h in halves)
+    ):
+        return [CheckItem(
+            status="pass",
+            message="All compound-title halves appear in the abstract.",
+            message_key="check.tw.abstract.titleMatch.passCompound",
+            details_params={"halves": "、".join(halves)},
             reference="專利審查基準",
         )]
 
     return [CheckItem(
-        status="pass",
-        message="Title appears in the abstract.",
-        message_key="check.tw.abstract.titleMatch.pass",
+        status="verify",
+        message="Title does not appear in the abstract.",
+        message_key="check.tw.abstract.titleMatch.verify",
+        details_key="details.tw.abstractTitleMatch",
+        details_params={"detail": title},
         reference="專利審查基準",
     )]
 
