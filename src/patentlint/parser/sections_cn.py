@@ -254,7 +254,20 @@ def detect_patent_document_cn(paragraphs: list[str]) -> bool:
 def _collect_by_page_header(
     sections: list[DocxSection],
 ) -> tuple[list[str], list[str], list[str], list[bool]]:
-    """Tier 4 (legacy) — classify sections by Word page-header text.
+    """Drafter-authoring tier — classify Word sections by page-header text.
+
+    This is the tier the CNIPA 五书模板 (drafter-authoring template)
+    exercises: the template is a single .docx with 5 Word sections whose
+    page headers are set to 说明书摘要 / 摘要附图 / 权利要求书 / 说明书 /
+    说明书附图 (verified 2026-04-19 against
+    ``docs/WORD转XML编辑器五书模板文件.docx`` + WORD转XML编辑器 user
+    manual §3.3.1). Historically labeled "Tier 4 / legacy / last resort"
+    because the 10-fixture real corpus all came from Google Patents
+    publication exports (which carry page-less body anchors instead of
+    true Word page headers), so the page-header tier rarely fired in
+    corpus dogfood. The naming was reverse-calibrated against a publication
+    corpus; the authoring reality is the opposite — page-header is the
+    primary drafter tier, body-anchor is the publication-recovery tier.
 
     Returns (spec_paragraphs, claims_paragraphs, abstract_paragraphs,
     claims_numpr_flags). Any tier may return empty lists if its heuristic
@@ -280,7 +293,15 @@ def _collect_by_page_header(
 def _collect_by_body_anchor(
     sections: list[DocxSection],
 ) -> tuple[list[str], list[str], list[str], list[bool], int]:
-    """Tier 1 — walk flattened paragraphs, classify by body-anchor scan.
+    """Publication-recovery tier — walk flat paragraphs, classify by body anchors.
+
+    Fires on Google-Patents-downloaded CNIPA publication exports where
+    the 五书 part delimiters sit as standalone body paragraphs (often
+    with pagination suffixes like ``1/3 页``) rather than true Word page
+    headers. Drafter-authoring .docx files use the page-header tier
+    instead; this tier exists to recover section structure from the
+    PDF→Word publication pipeline artifact. The ``(?:\d+/\d+页)?`` suffix
+    tolerance in the anchor regexes is publication-specific.
 
     Returns (spec, claims, abstract, claims_numpr_flags, anchors_found_count).
     Anchors recognized: 权利要求书, 说明书, 说明书摘要/摘要,
@@ -487,17 +508,30 @@ def _backfill_numpr_prefixes(paragraphs: list[str], numpr_flags: list[bool]) -> 
 def extract_cn_sections_from_docx(sections: list[DocxSection]) -> CnPatentDocument:
     """Extract CN patent document structure from Word sections.
 
-    Phase 8c (ADR-109) — three-tier section-ID fallback chain:
+    Phase 8c (ADR-109) — three-tier section-ID fallback chain. The tier
+    ordering (body_anchor tried first, page_header only if body_anchor
+    fails) was reverse-calibrated against the 10-fixture Google-Patents-
+    publication corpus and is NOT the authoring-format order. Verified
+    2026-04-19 against the CNIPA 五书模板 + WORD转XML编辑器 user manual
+    §3.3.1: drafter-authoring files use page_header to delimit 五书
+    parts. Real CNIPA publication exports use body_anchor (with
+    pagination suffixes) instead. Both tiers must remain; swap priority
+    only if a user-demand signal shows drafter-authoring files fail to
+    parse due to spurious body-anchor matches (not observed to date).
 
     1. **Tier 1 body_anchor** — flatten paragraphs across Word sections
        and classify by standalone 五书 markers (权利要求书, 说明书, etc.).
-       Primary tier; fires for real CNIPA downloads.
+       Fires for Google-Patents-downloaded publication exports where the
+       五书 titles appear as body paragraphs (often with ``N/M 页``
+       pagination suffixes).
     2. **Tier 2 claim_density** — if no structural anchor is found, scan
        for runs of ≥3 consecutive claim-start paragraphs. Recovers the
        claims span when body anchors have been stripped.
-    3. **Tier 3 page_header** — legacy Word-page-header mapping. Last
-       resort; fires for 五书模板 Word exports where section titles live
-       in page headers rather than body paragraphs.
+    3. **Tier 3 page_header** — Word-page-header mapping. Fires for
+       CNIPA 五书模板 drafter-authoring files where the five parts are
+       delimited by Word section page headers (the ``说明书摘要`` /
+       ``摘要附图`` / ``权利要求书`` / ``说明书`` / ``说明书附图`` headers
+       specified in the official template).
 
     Stage 1 shipped a fourth `template_substyle` tier but it never fired
     on the real 10-fixture corpus or the two synthetic parity pairs;
