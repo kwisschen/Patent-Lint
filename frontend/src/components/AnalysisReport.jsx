@@ -63,18 +63,18 @@ function consolidateClaimsChecks(checks) {
 
     for (const [rootId, group] of Object.entries(byRoot)) {
       const first = group.items[0]
-      const nounMatch = first.message.match(/preamble noun '([^']+)' differs from independent claim '([^']+)'/)
+      const nounMatch = first.message.match(/preamble noun '([^']+)' differs from parent claim '([^']+)'/)
       const depNoun = nounMatch ? nounMatch[1] : '?'
-      const indepNoun = nounMatch ? nounMatch[2] : '?'
+      const parentNoun = nounMatch ? nounMatch[2] : '?'
       const count = group.items.length
 
       consolidated.push({
         status: 'verify',
         message: `Preamble noun mismatch: ${count} dependent claim${count !== 1 ? 's' : ''} differ from Claim ${rootId}`,
         message_key: 'consolidation.nounMismatchSummary',
-        details: `Independent: '${indepNoun}' — Dependents: '${depNoun}'`,
-        details_key: 'details.nounMismatch',
-        details_params: { count: String(count), rootId, dependent: depNoun, independent: indepNoun },
+        details: `Parent: '${parentNoun}' — Dependents: '${depNoun}'`,
+        details_key: 'details.preambleNounMismatchSummary',
+        details_params: { count: String(count), rootId, dependent: depNoun, parent: parentNoun },
       })
     }
   }
