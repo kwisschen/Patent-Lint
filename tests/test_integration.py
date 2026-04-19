@@ -439,6 +439,82 @@ def _build_us_full_length() -> bytes:
     return _doc_to_bytes(doc)
 
 
+def _build_us_cluster1_defects() -> bytes:
+    """Engineered US patent exercising 6 zero-coverage defect checks.
+
+    Phase E cluster 1: one testspec hits CRM non-transitory, Jepson,
+    Markush open-transition, omnibus, wherein-comma, and extra-period
+    checks. Each claim is isolated so any single claim triggers exactly
+    one of the six target message_keys without cross-contaminating the
+    other five.
+    """
+    doc = Document()
+    _add_us_numbering(doc)
+
+    headers = {
+        "TITLE OF THE INVENTION",
+        "Defective Claims Testbed for Phase E Coverage",
+        "FIELD OF THE INVENTION",
+        "BACKGROUND OF THE INVENTION",
+        "SUMMARY OF THE INVENTION",
+        "BRIEF DESCRIPTION OF THE DRAWINGS",
+        "DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS",
+    }
+    spec_paragraphs = [
+        "TITLE OF THE INVENTION",
+        "Defective Claims Testbed for Phase E Coverage",
+        "FIELD OF THE INVENTION",
+        "The present invention relates to engineered defect coverage for US claim checks.",
+        "BACKGROUND OF THE INVENTION",
+        "Conventional test suites lack synthetic fixtures that exercise each defect class in isolation.",
+        "SUMMARY OF THE INVENTION",
+        "A testbed document recites six claims, each engineered to trigger a specific defect class.",
+        "BRIEF DESCRIPTION OF THE DRAWINGS",
+        "FIG. 1 is a schematic overview of the testbed.",
+        "DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS",
+        "Referring to FIG. 1, the testbed document 100 includes a specification section and a claims section.",
+    ]
+    for text in spec_paragraphs:
+        para = doc.add_paragraph(text)
+        if text not in headers:
+            _set_para_num(para, "1")
+
+    doc.add_paragraph("CLAIMS")
+
+    claims = [
+        # Claim 1: CRM without non-transitory qualifier
+        "A computer-readable storage medium comprising instructions that, "
+        "when executed by a processor, cause the processor to receive sensor data, "
+        "process the sensor data to identify an anomaly, and transmit an alert to a monitoring system.",
+        # Claim 2: Jepson format (the improvement comprising)
+        "In a data processing system comprising a processor and a memory, "
+        "the improvement comprising a cache memory coupled to the processor "
+        "for storing frequently accessed data.",
+        # Claim 3: Markush open-transition (selected from the group comprising)
+        "A composition of matter comprising a polymer selected from the group "
+        "comprising polyethylene, polypropylene, and polystyrene.",
+        # Claim 4: Omnibus (short + omnibus language)
+        "An apparatus substantially as shown in the drawings.",
+        # Claim 5: Wherein-comma violation ("wherein in response" — "in" requires comma after wherein)
+        "The system of claim 2, wherein in response to receiving a signal, "
+        "the cache memory stores the data.",
+        # Claim 6: Extra periods (".." mid-claim)
+        "The system of claim 2, wherein the cache memory has a size of 256 KB.. "
+        "and an access time of 10 ns.",
+    ]
+    for text in claims:
+        para = doc.add_paragraph(text)
+        _set_para_num(para, "2")
+
+    doc.add_paragraph("ABSTRACT")
+    doc.add_paragraph(
+        "A testbed document for verifying US claim-defect checks. The document recites six claims, "
+        "each engineered to exercise a specific defect class in isolation."
+    )
+
+    return _doc_to_bytes(doc)
+
+
 def _build_tw_minimal(claims_text: list[str], symbol_lines: list[str] | None = None,
                       embodiment_lines: list[str] | None = None) -> bytes:
     """Build a minimal but complete TW .docx for targeted tests."""
@@ -680,6 +756,49 @@ class TestUsFullLength:
         assert len(report.claims_checks) > 0
         assert len(report.abstract_checks) > 0
         assert len(report.drawings_checks) > 0
+
+
+class TestUsCluster1Defects:
+    """Phase E cluster 1: one testspec exercises 6 zero-coverage defect checks."""
+
+    TARGET_KEYS = {
+        "claims.crmNonTransitory",
+        "claims.jepsonPriorArt",
+        "claims.markushOpenTransition",
+        "claims.omnibusClaim",
+        "claims.whereinComma",
+        "claims.extraPeriod",
+    }
+
+    def _emitted_keys(self) -> set[str]:
+        result = analyze_bytes(
+            _build_us_cluster1_defects(), "us_cluster1.docx", Jurisdiction.US
+        )
+        report = result.to_report_data()
+        return {c.message_key for c in report.all_checks if c.message_key}
+
+    def test_all_six_target_keys_emitted(self):
+        keys = self._emitted_keys()
+        missing = self.TARGET_KEYS - keys
+        assert not missing, f"Missing defect-check emissions: {sorted(missing)}"
+
+    def test_crm_non_transitory_detected(self):
+        assert "claims.crmNonTransitory" in self._emitted_keys()
+
+    def test_jepson_detected(self):
+        assert "claims.jepsonPriorArt" in self._emitted_keys()
+
+    def test_markush_open_transition_detected(self):
+        assert "claims.markushOpenTransition" in self._emitted_keys()
+
+    def test_omnibus_detected(self):
+        assert "claims.omnibusClaim" in self._emitted_keys()
+
+    def test_wherein_comma_detected(self):
+        assert "claims.whereinComma" in self._emitted_keys()
+
+    def test_extra_period_detected(self):
+        assert "claims.extraPeriod" in self._emitted_keys()
 
 
 class TestCrossJurisdictionMismatch:
