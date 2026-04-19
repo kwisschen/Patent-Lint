@@ -39,6 +39,18 @@ _SPEC_SUBSECTIONS = [
 _PARA_NUM_PATTERN = re.compile(r"^\[(\d{4})\]")
 
 # ---------------------------------------------------------------------------
+# INID cover-page markers — CNIPA publication exports (Google Patents .docx
+# downloads, official publication copies) embed the title at (54)发明名称
+# and the abstract at (57)摘要 on the INID cover page. Drafter-authoring
+# files (五书模板) have no INID cover. Used as a fallback when the
+# body-anchor / page-header tiers leave title or abstract empty.
+# ---------------------------------------------------------------------------
+
+_INID_TITLE_RE = re.compile(r"^\(54\)\s*(?:发明|实用新型|外观设计)名称\s*$")
+_INID_ABSTRACT_RE = re.compile(r"^\(57\)\s*摘要\s*$")
+_INID_CODE_RE = re.compile(r"^\(\d{2}\)")
+
+# ---------------------------------------------------------------------------
 # Body-anchor patterns — Phase 8c Tier 1 (ADR-109)
 # ---------------------------------------------------------------------------
 # Real CNIPA .docx downloads carry 五书 section titles as standalone body
@@ -190,6 +202,65 @@ def _detect_paragraph_numbering(paragraphs: list[str]) -> tuple[bool, list[int]]
     return len(nums) > 0, sorted(nums)
 
 
+def _extract_inid_title_abstract(
+    sections: list[DocxSection],
+) -> tuple[str, list[str]]:
+    """Fallback title + abstract extraction from INID cover page.
+
+    CNIPA publication exports embed bibliographic metadata in a
+    standardized INID (Internationally agreed Numbers for the
+    Identification of Data) header that precedes the body text. The
+    title follows the ``(54)发明名称`` marker; the abstract follows
+    ``(57)摘要`` and runs until the next body anchor (权利要求书,
+    说明书, 摘要附图, or another INID code line). Drafter-authoring
+    五书模板 files have no INID cover, so this returns ``("", [])``
+    for those — the primary body-anchor / page-header path owns that
+    case.
+
+    Used only when the primary tiers leave title or abstract empty.
+    Does not override a non-empty title or abstract produced by the
+    body-anchor / page-header tiers.
+    """
+    paras: list[str] = []
+    for s in sections:
+        paras.extend(s.paragraphs)
+
+    title = ""
+    abstract_paras: list[str] = []
+
+    for i, p in enumerate(paras):
+        if _INID_TITLE_RE.match(p.strip()):
+            for j in range(i + 1, min(i + 5, len(paras))):
+                candidate = paras[j].strip()
+                if candidate:
+                    title = candidate
+                    break
+            break
+
+    in_abstract = False
+    for p in paras:
+        stripped = p.strip()
+        if _INID_ABSTRACT_RE.match(stripped):
+            in_abstract = True
+            continue
+        if not in_abstract:
+            continue
+        compact = _compact(stripped)
+        if (
+            _BA_CLAIMS_RE.match(compact)
+            or _BA_SPEC_RE.match(compact)
+            or _BA_ABSTRACT_DRAWING_RE.match(compact)
+            or _BA_DRAWINGS_RE.match(compact)
+        ):
+            break
+        if _INID_CODE_RE.match(stripped):
+            break
+        if stripped:
+            abstract_paras.append(stripped)
+
+    return title, abstract_paras
+
+
 def _extract_title(paragraphs: list[str]) -> str:
     """Extract invention title from spec paragraphs.
 
@@ -300,7 +371,7 @@ def _collect_by_body_anchor(
     with pagination suffixes like ``1/3 页``) rather than true Word page
     headers. Drafter-authoring .docx files use the page-header tier
     instead; this tier exists to recover section structure from the
-    PDF→Word publication pipeline artifact. The ``(?:\d+/\d+页)?`` suffix
+    PDF→Word publication pipeline artifact. The ``(?:\\d+/\\d+页)?`` suffix
     tolerance in the anchor regexes is publication-specific.
 
     Returns (spec, claims, abstract, claims_numpr_flags, anchors_found_count).
@@ -630,6 +701,18 @@ def extract_cn_sections_from_docx(sections: list[DocxSection]) -> CnPatentDocume
 
     # Abstract
     abstract_text = "\n".join(abstract_paragraphs).strip()
+
+    # INID cover-page fallback (publication docs). Fires only when the
+    # primary tiers left title or abstract empty — drafter files never
+    # have an INID cover, so this is a no-op for them.
+    if not title or not abstract_text:
+        inid_title, inid_abstract = _extract_inid_title_abstract(sections)
+        if not title and inid_title:
+            title = inid_title
+        if not abstract_text and inid_abstract:
+            abstract_paragraphs = inid_abstract
+            abstract_text = "\n".join(abstract_paragraphs).strip()
+
     abstract_char_count = len(
         abstract_text.replace("\n", "").replace(" ", "").replace("\u3000", "")
     )
