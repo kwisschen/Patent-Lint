@@ -1292,6 +1292,18 @@ _F13_LOCATIVE_SUFFIXES_CN: tuple[str, ...] = (
     '侧', '端', '方', '处', '面', '内', '外', '上', '下', '中',
 )
 
+# F14: V+有 noun-of-existence intro (Phase 9 #61).
+# Registers Y from `X形成有Y` / `X安装有Y` / `X存储有Y` as an intro. Gated on
+# a narrow verb set with empirically-clean captures — broader verbs (设置,
+# 包含) add compound-noun FPs that the ADJ_REJECTS filter does not cover.
+# Reuses _F12_ADJ_REJECTS_CN (rejects 可/由/能 etc.) + _REF_PREFIX_SET_CN +
+# _BARE_ORDINAL_RE_CN + leading-conjunction reject (与/和/或).
+_F14_V_YOU_PATTERN_CN: re.Pattern[str] = re.compile(
+    r'(?:形成|安装|存储)有'
+    r'([\u4e00-\u7683\u7685-\u9fff]{2,12}(?:\([A-Za-z0-9]+\))?)'
+)
+_F14_LEADING_CONJ_CN: frozenset[str] = frozenset({'与', '和', '或'})
+
 # F12: copula + 基于/来自 intro family. Phase 8c R14d.
 # Three tiers to balance coverage vs. predicate-adjective false positives:
 #  - Tier A (unconditional): 转变为|变为|转为|划分为|分为 — always register RHS
@@ -1486,6 +1498,22 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
         if len(normalized) < 2:
             continue
         if normalized.startswith(_REF_PREFIX_SET_CN):
+            continue
+        results.append((m.group(0), normalized))
+
+    # F14: V+有 noun-of-existence intro. Phase 9 #61.
+    for m in _F14_V_YOU_PATTERN_CN.finditer(text):
+        raw = m.group(1)
+        if raw.startswith(_REF_PREFIX_SET_CN):
+            continue
+        if raw.startswith(_F12_ADJ_REJECTS_CN):
+            continue
+        if raw and raw[0] in _F14_LEADING_CONJ_CN:
+            continue
+        if _BARE_ORDINAL_RE_CN.match(raw):
+            continue
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', raw)
+        if len(normalized) < 2:
             continue
         results.append((m.group(0), normalized))
 
