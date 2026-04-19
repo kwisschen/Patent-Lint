@@ -803,6 +803,105 @@ def _build_cn_section_ordering_violation() -> bytes:
     return _doc_to_bytes(doc)
 
 
+def _build_cn_drafter_realistic() -> bytes:
+    """Canonical real-format CN fixture mirroring a drafter's 五书模板 output.
+
+    Unlike the ``tests/fixtures/cn/local/*.docx`` corpus (all Google-Patents-
+    downloaded publication docs with INID cover pages and PDF->Word
+    conversion artifacts), this fixture represents what PatentLint's
+    primary user — a patent drafter preparing a 五书模板 Word file for
+    CNIPA filing — actually uploads. Expect: clean title + abstract
+    extraction, all five spec subsections populated, every CN check
+    emitting a ``.pass`` finding (no ``.amend`` / ``.verify`` status).
+
+    Used by ``TestCnDrafterRealisticBaseline`` as the dogfood gate for
+    non-walker CN checks. If the test starts failing, a real-format
+    regression has been introduced and the amend emissions are bugs, not
+    fixture gaps.
+    """
+    doc = Document()
+
+    # --- 说明书摘要 section: abstract body (180-220 chars, no commercial lang) ---
+    abstract_text = (
+        "本发明提供一种高频电路基板用树脂组合物及其制备方法。所述树脂组合物"
+        "包含环氧树脂、固化剂及无机填料。所述无机填料具有低介电常数和低介"
+        "电损耗。该树脂组合物适用于制备高频电路基板，具有良好的热稳定性和"
+        "机械强度。本发明还公开了所述树脂组合物的制备方法。"
+    )
+    doc.add_paragraph(abstract_text)
+    _add_cn_section_break(doc, "摘要附图")
+
+    _add_cn_section_break(doc, "权利要求书")
+    doc.add_paragraph(
+        "1. 一种高频电路基板用树脂组合物，其特征在于，包含环氧树脂、固化剂和无机填料。"
+    )
+    doc.add_paragraph(
+        "2. 如权利要求1所述的树脂组合物，其特征在于，所述无机填料为二氧化硅。"
+    )
+    doc.add_paragraph(
+        "3. 如权利要求1所述的树脂组合物，其特征在于，所述固化剂为酚醛树脂。"
+    )
+    _add_cn_section_break(doc, "说明书")
+
+    # --- 说明书 body: title + all 5 subsections, canonical order ---
+    doc.add_paragraph("一种高频电路基板用树脂组合物及其制备方法")
+
+    # 技术领域 (strict ending: 。！？)
+    doc.add_paragraph("技术领域")
+    doc.add_paragraph(
+        "本发明涉及电路基板材料技术领域，具体涉及一种高频电路基板用树脂组合物及其制备方法。"
+    )
+
+    # 背景技术 (strict)
+    doc.add_paragraph("背景技术")
+    doc.add_paragraph(
+        "随着通讯技术的发展，高频电路基板对材料的介电性能要求越来越高。"
+    )
+    doc.add_paragraph(
+        "现有的树脂组合物难以同时满足低介电常数和低介电损耗的要求。"
+    )
+
+    # 发明内容 (relaxed: 。！？；：)
+    doc.add_paragraph("发明内容")
+    doc.add_paragraph("本发明的目的在于提供一种高频电路基板用树脂组合物，解决现有技术中的问题。")
+    doc.add_paragraph(
+        "本发明提供一种高频电路基板用树脂组合物，包括以下组分："
+    )
+    doc.add_paragraph("环氧树脂；")
+    doc.add_paragraph("固化剂；以及")
+    doc.add_paragraph("无机填料。")
+
+    # 附图说明 (relaxed; includes a bare figure caption to exercise the skip)
+    doc.add_paragraph("附图说明")
+    doc.add_paragraph("图1是本发明一实施例的流程示意图；")
+    doc.add_paragraph("图2是本发明另一实施例的结构示意图。")
+
+    # 具体实施方式 (relaxed; includes bare figure caption below an image)
+    doc.add_paragraph("具体实施方式")
+    doc.add_paragraph(
+        "下面结合附图和实施例对本发明作进一步说明。"
+    )
+    doc.add_paragraph("图1")  # bare caption below figure image — should be skipped
+    doc.add_paragraph(
+        "如图1所示，本实施例的树脂组合物通过以下步骤制备："
+    )
+    doc.add_paragraph("步骤一：将环氧树脂与固化剂混合；")
+    doc.add_paragraph("步骤二：加入无机填料并搅拌均匀；以及")
+    doc.add_paragraph("步骤三：加热固化得到所述树脂组合物。")
+    doc.add_paragraph("图2")  # bare caption below second figure image
+    doc.add_paragraph(
+        "如图2所示，本发明另一实施例中，无机填料均匀分布于树脂基体中。"
+    )
+    _add_cn_section_break(doc, "说明书附图")
+
+    first_section = doc.sections[0]
+    first_section.header.is_linked_to_previous = False
+    hp = first_section.header.paragraphs[0]
+    hp.text = "说明书摘要"
+
+    return _doc_to_bytes(doc)
+
+
 def _build_tw_minimal(claims_text: list[str], symbol_lines: list[str] | None = None,
                       embodiment_lines: list[str] | None = None) -> bytes:
     """Build a minimal but complete TW .docx for targeted tests."""
@@ -1234,6 +1333,99 @@ class TestCnSectionOrderingViolation:
     def test_section_ordering_pass_not_emitted(self):
         keys = self._emitted_keys()
         assert "check.cn.spec.sectionOrdering.pass" not in keys
+
+
+class TestCnDrafterRealisticBaseline:
+    """Canonical drafter-format CN fixture — dogfood gate for non-walker checks.
+
+    The ``tests/fixtures/cn/local/*.docx`` corpus is Google-Patents-downloaded
+    publication documents, not the drafter-format Word files PatentLint's
+    primary users upload. ``_build_cn_drafter_realistic`` programmatically
+    constructs the real drafter shape (CNIPA 五书模板, no INID cover, title
+    + abstract in body text, all five spec subsections). This class is the
+    regression gate: if any CN check emits ``.amend`` or ``.verify`` on
+    this clean baseline, that emission is a bug — not a fixture gap.
+    """
+
+    def _result(self):
+        return analyze_bytes(
+            _build_cn_drafter_realistic(),
+            "cn_drafter.docx",
+            Jurisdiction.CN,
+        )
+
+    def _all_checks(self):
+        result = self._result()
+        return (
+            result.cn_specification_checks
+            + result.cn_claims_checks
+            + result.cn_abstract_checks
+            + result.cn_drawings_checks
+        )
+
+    def test_title_extracted_non_empty(self):
+        # Parser must extract the title from the 说明书 body, not from an
+        # INID cover page. CN publication fixtures fail this assertion.
+        result = self._result()
+        # Title lives on the internal CN document via the pipeline; the
+        # adapter doesn't forward it directly, so assert via the emitted
+        # findings: if title were empty, check_abstract_title_match would
+        # emit verify.
+        title_match = [
+            c for c in result.cn_abstract_checks
+            if c.message_key.startswith("check.cn.abstract.titleMatch.")
+        ]
+        assert title_match, "titleMatch check did not fire"
+        assert title_match[0].status == "pass", (
+            f"titleMatch status was {title_match[0].status} "
+            f"({title_match[0].message}); title or abstract likely empty"
+        )
+
+    def test_abstract_extracted_non_empty(self):
+        # charCount requires non-empty abstract; commercialLanguage check
+        # scans the abstract body. Both must fire pass, not verify.
+        char_count = [
+            c for c in self._all_checks()
+            if c.message_key.startswith("check.cn.abstract.charCount.")
+        ]
+        assert char_count and char_count[0].status == "pass"
+
+    def test_all_spec_subsections_extracted(self):
+        # required_sections check verifies all five CN subsections present.
+        required = [
+            c for c in self._all_checks()
+            if c.message_key.startswith("check.cn.spec.requiredSections.")
+        ]
+        assert required and required[0].status == "pass"
+
+    def test_paragraph_ending_passes(self):
+        # With bug 2 (figure caption) and bug 3 (strict/relaxed) fixed,
+        # this fixture's paragraphs must all pass the ending check.
+        ending = [
+            c for c in self._all_checks()
+            if c.message_key.startswith("check.cn.spec.paragraphEnding.")
+        ]
+        assert ending and ending[0].status == "pass"
+
+    def test_zero_amend_findings(self):
+        # The regression gate. Any amend on a clean drafter fixture is a
+        # bug — the fix-or-document decision belongs in a follow-up, not
+        # here.
+        amend = [c for c in self._all_checks() if c.status == "amend"]
+        assert not amend, (
+            "Unexpected amend emissions on clean drafter fixture: "
+            + ", ".join(f"{c.message_key}: {c.message}" for c in amend)
+        )
+
+    def test_zero_verify_findings(self):
+        # Verify status on clean input typically indicates the check
+        # couldn't confirm something that should have been obvious. Also
+        # a regression gate.
+        verify = [c for c in self._all_checks() if c.status == "verify"]
+        assert not verify, (
+            "Unexpected verify emissions on clean drafter fixture: "
+            + ", ".join(f"{c.message_key}: {c.message}" for c in verify)
+        )
 
 
 class TestTwSectionOrderingViolation:
