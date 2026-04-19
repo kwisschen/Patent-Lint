@@ -674,6 +674,7 @@ function BuilderStory({ t }) {
         {t('about.builderTitle')}
       </h2>
       <div className="space-y-4 text-muted-foreground leading-relaxed">
+        <p>{t('about.builderPain')}</p>
         <p>{t('about.builderDesc1')}</p>
         <p>{t('about.builderDesc2')}</p>
         <p>{t('about.builderSister')}</p>
