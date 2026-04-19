@@ -145,6 +145,63 @@ def _identify_section(header_text: str) -> str | None:
     return None
 
 
+def _merge_publication_continuations(paragraphs: list[str]) -> list[str]:
+    """Merge orphan continuation paragraphs into their preceding [NNNN] paragraph.
+
+    CNIPA publication exports (PDF→Word conversions) split logical
+    paragraphs across multiple ``<w:p>`` elements at PDF column
+    boundaries. The resulting paragraph list looks like::
+
+        [0317]\\t作为示例而非限定，在本申请实施例中，可穿戴设备也可以称为穿戴式智能设备，
+        是应用穿戴式技术对日常穿戴进行智能化设计...
+
+    where the second entry is a continuation of the first with no
+    ``[NNNN]`` numbering of its own. Drafter-authoring files do not
+    fragment this way and do not use ``[NNNN]`` numbering at all, so
+    this pass is a publication-only fixup.
+
+    Gated on the presence of ``[NNNN]`` numbering: if no numbered
+    paragraphs are found, the input is returned unchanged (drafter
+    case). Orphan paragraphs before the first numbered paragraph are
+    preserved as-is — they may be sub-section headers or pre-content
+    prose that the subsection splitter will handle.
+    """
+    if not any(_PARA_NUM_PATTERN.match(p) for p in paragraphs):
+        return list(paragraphs)
+
+    merged: list[str] = []
+    current: str | None = None
+
+    for para in paragraphs:
+        if _PARA_NUM_PATTERN.match(para):
+            if current is not None:
+                merged.append(current)
+            current = para
+            continue
+        if _any_subsection_header(para):
+            if current is not None:
+                merged.append(current)
+                current = None
+            merged.append(para)
+            continue
+        if current is not None:
+            current = current.rstrip() + para.lstrip()
+        else:
+            merged.append(para)
+
+    if current is not None:
+        merged.append(current)
+
+    return merged
+
+
+def _any_subsection_header(para: str) -> bool:
+    for _, pattern in _SPEC_SUBSECTIONS:
+        if pattern.match(para):
+            return True
+    return False
+
+
 def _split_spec_subsections(
     paragraphs: list[str],
 ) -> tuple[dict[str, list[str]], list[str]]:
@@ -158,7 +215,13 @@ def _split_spec_subsections(
     * ``section_order`` — list of field-name keys in the order each header
       was first encountered in the document. First-occurrence only; repeated
       headers do not re-append. Feeds ``check_section_ordering``.
+
+    Publication-format continuation merge runs first (Phase 9 #69) —
+    orphan paragraphs from PDF-column fragmentation fold into their
+    preceding ``[NNNN]`` paragraph before subsection classification.
     """
+    paragraphs = _merge_publication_continuations(paragraphs)
+
     result: dict[str, list[str]] = {
         "technical_field": [],
         "background": [],

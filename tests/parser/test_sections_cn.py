@@ -11,6 +11,7 @@ from patentlint.parser.sections_cn import (
     _extract_inid_title_abstract,
     _extract_title,
     _identify_section,
+    _merge_publication_continuations,
     _presplit_mid_paragraph,
     _split_spec_subsections,
     detect_patent_document_cn,
@@ -289,6 +290,70 @@ class TestExtractInidTitleAbstract:
         sections = [DocxSection(header_text=None, paragraphs=paras)]
         title, _ = _extract_inid_title_abstract(sections)
         assert title == "真实标题"
+
+
+# ---------------------------------------------------------------------------
+# _merge_publication_continuations (Phase 9 #69 — PDF-column fragmentation)
+# ---------------------------------------------------------------------------
+
+
+class TestMergePublicationContinuations:
+    def test_orphan_continuation_merges_into_preceding_numbered(self):
+        paras = [
+            "[0317]\t作为示例而非限定，在本申请实施例中，可穿戴设备也可以称为穿戴式智能设备，",
+            "是应用穿戴式技术对日常穿戴进行智能化设计、开发出可以穿戴的设备的总称。",
+            "[0318]\t下一段。",
+        ]
+        result = _merge_publication_continuations(paras)
+        assert len(result) == 2
+        assert result[0].startswith("[0317]")
+        assert "是应用穿戴式技术" in result[0]
+        assert result[1] == "[0318]\t下一段。"
+
+    def test_multiple_continuations_merge_into_one(self):
+        paras = [
+            "[0100]\t第一行，",
+            "第二行，",
+            "第三行。",
+            "[0101]\t新段。",
+        ]
+        result = _merge_publication_continuations(paras)
+        assert len(result) == 2
+        assert "第一行" in result[0]
+        assert "第二行" in result[0]
+        assert "第三行" in result[0]
+
+    def test_subsection_header_breaks_merge(self):
+        paras = [
+            "[0010]\t背景段落，",
+            "背景技术",
+            "[0011]\t新章节段落。",
+        ]
+        result = _merge_publication_continuations(paras)
+        assert len(result) == 3
+        assert result[0] == "[0010]\t背景段落，"
+        assert result[1] == "背景技术"
+        assert result[2] == "[0011]\t新章节段落。"
+
+    def test_drafter_file_no_numbering_passthrough(self):
+        """Drafter 五书模板 files have no [NNNN] numbering — return unchanged."""
+        paras = [
+            "本发明涉及一种测试装置。",
+            "所述装置包括处理器。",
+            "所述处理器用于执行指令。",
+        ]
+        result = _merge_publication_continuations(paras)
+        assert result == paras
+
+    def test_leading_orphan_before_first_numbered(self):
+        """Orphan paragraphs before the first [NNNN] preserved as-is."""
+        paras = [
+            "序言段落",
+            "[0001]\t第一段。",
+            "[0002]\t第二段。",
+        ]
+        result = _merge_publication_continuations(paras)
+        assert result == paras
 
 
 # ---------------------------------------------------------------------------
