@@ -167,19 +167,20 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t }) {
               {hints.didYouMean && (() => {
                 const dymTerm = hints.didYouMean.term
                 const refBare = label.replace(/^(?:the|said)\s+/i, '').toLowerCase()
+                const isCrossBranch = hints.didYouMean.cross_branch === true
                 const isExactCrossBranch =
-                  hints.didYouMean.cross_branch &&
-                  dymTerm.toLowerCase() === refBare
+                  isCrossBranch && dymTerm.toLowerCase() === refBare
+                const messageKey = isExactCrossBranch
+                  ? 'antecedent.crossBranchAntecedent'
+                  : isCrossBranch
+                  ? 'antecedent.didYouMeanCrossBranch'
+                  : 'antecedent.didYouMean'
                 return (
                   <div>
-                    {isExactCrossBranch
-                      ? t('antecedent.crossBranchAntecedent', {
-                          claim_id: hints.didYouMean.claim_id,
-                        })
-                      : t('antecedent.didYouMean', {
-                          term: dymTerm,
-                          claim_id: hints.didYouMean.claim_id,
-                        })}
+                    {t(messageKey, {
+                      term: dymTerm,
+                      claim_id: hints.didYouMean.claim_id,
+                    })}
                   </div>
                 )
               })()}
