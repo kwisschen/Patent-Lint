@@ -227,14 +227,14 @@ class TestRestrictiveWording:
         _create_numbered_patent_docx(
             path,
             spec_paragraphs=[
-                "The present invention provides a novel approach.",
+                "The feature is critical and must always operate correctly.",
                 "This is a clean paragraph with no issues.",
             ],
             claims=["A method comprising a step."],
         )
         result = load_docx(path)
         assert 1 in result.improper_spec_paragraphs
-        assert "invention" in result.improper_spec_phrases
+        assert "critical" in result.improper_spec_phrases
 
     def test_no_restrictive_wording(self, tmp_path):
         path = tmp_path / "patent.docx"
