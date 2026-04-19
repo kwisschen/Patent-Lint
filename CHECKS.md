@@ -7,7 +7,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
 | Tracked changes | — | AMEND | `check.spec.trackedChanges.amend` | Document contains tracked changes (revisions) |
-| Restrictive wording | § 112(b) | VERIFY / PASS | `check.spec.restrictiveWording` | Restrictive wording in specification paragraphs |
+| Restrictive wording | § 112(b), MPEP § 2111.01(II) | VERIFY / PASS | `check.spec.restrictiveWording` | MPEP 2111.01(II) narrowing language in spec paragraphs: always / never / must / solely / every / required / essential / critical / vital / necessary / imperative / indispensable (Phase 9 #72b) |
 | Paragraph sequential | § 608.01(p) | AMEND / PASS | `check.spec.paragraphSequential` / `check.spec.paragraphSequential.missing` | Paragraph numbers are sequential; no paragraph numbering found (patent documents only) |
 | Paragraph ending | § 608.01(p) | AMEND / PASS | `check.spec.paragraphEnding` | Paragraphs have valid ending punctuation |
 | Sequence listing | § 2422 | AMEND / PASS | `check.spec.sequenceListing` | SEQ ID NO referenced but no sequence listing statement |
@@ -105,7 +105,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
 | Character count | 专利法实施细则 §23 | AMEND / PASS | `check.cn.abstract.charCount` | Abstract ≤300 Chinese characters |
-| Title match | 审查指南 | VERIFY / PASS | `check.cn.abstract.titleMatch` | 发明名称 appears in abstract |
+| Title match | 审查指南 | VERIFY / PASS | `check.cn.abstract.titleMatch` | 发明名称 appears in abstract (compound titles split on 以及/及/和/与 — `passCompound` when all halves ≥2 CJK chars appear, Phase 9 #72a) |
 | Commercial language | 专利法实施细则 §23 | AMEND / PASS | `check.cn.abstract.commercialLanguage` | No 最优, 最佳, 世界领先, etc. |
 
 ## CN Drawings (附图)
@@ -159,7 +159,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
 | Character count | 專利法施行細則 §21 | VERIFY / PASS | `check.tw.abstract.charCount` | Abstract within 250 characters |
-| Title match | 專利審查基準 | VERIFY / PASS | `check.tw.abstract.titleMatch` | 發明名稱/新型名稱 appears in abstract |
+| Title match | 專利審查基準 | VERIFY / PASS | `check.tw.abstract.titleMatch` | 發明名稱/新型名稱 appears in abstract (compound titles split on 以及/及/和/與 — `passCompound` when all halves ≥2 CJK chars appear, Phase 9 #72a) |
 | Commercial language | 專利法施行細則 §21 | AMEND / PASS | `check.tw.abstract.commercialLanguage` | No 商業性宣傳用語 (最優, 最佳, 世界領先, etc.) |
 | Representative drawing | 專利法施行細則 §21 | VERIFY / PASS | `check.tw.abstract.representativeDrawing` | 代表圖 designation present when drawings exist |
 
@@ -179,6 +179,20 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 ---
 
-**Total checks: 92** (33 US + 25 CN + 34 TW)
+**Total checks: 94** (33 US + 26 CN + 35 TW)
 
 † Internal: not rendered as a CheckItem card in the web UI or PDF report. Used for stats aggregation and CLI output only.
+
+---
+
+## Pre-analysis gate — jurisdiction detection
+
+Before any check runs, every upload passes through a jurisdiction-aware document-type detector. When the detector rejects an input as "not a [selected jurisdiction] patent," the frontend renders `NonPatentBanner` with a "Show Results Anyway" bypass button — the detector is advisory, not a hard gate.
+
+| Jurisdiction | Detector | Accepts | Rejects |
+|---|---|---|---|
+| US | `sections.py::detect_patent_document` | English section headers (CLAIMS, ABSTRACT, DETAILED DESCRIPTION, …) OR English claim preamble (`1. A/An/The ...`); east-asian-script ratio ≤ 5% | CJK (CN/TW/JP), Hangul (KO), German / French / Spanish / other Latin-script foreign patents |
+| CN | `sections_cn.py::detect_patent_document_cn` | CN sub-section headers (技术领域, 背景技术, 发明内容, 附图说明, 具体实施方式), 五书 body-anchor markers (权利要求书, 说明书摘要), or 3+ numbered-claim lines with ≥ 20% CJK ratio | TW 【】 bracket headers, JP kana, KO Hangul, US / other Latin-script foreign patents |
+| TW | `sections_tw.py::detect_patent_document_tw` | 【】 fullwidth bracket headers, 請求項 claims keyword, or 3+ 【NNNN】 paragraph numbers | JP kana, KO Hangul, CN Simplified (uses 权利要求 not 請求項; [NNNN] ASCII brackets not 【NNNN】) |
+
+See ADR-134 for the full rationale and `src/patentlint/parser/language.py` for the shared CJK / Hangul / kana classifiers.
