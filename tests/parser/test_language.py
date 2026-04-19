@@ -4,7 +4,17 @@
 
 from __future__ import annotations
 
-from patentlint.parser.language import cjk_ratio, count_cjk_chars, is_cjk_char
+from patentlint.parser.language import (
+    cjk_ratio,
+    contains_hangul,
+    contains_hiragana_or_katakana,
+    count_cjk_chars,
+    east_asian_ratio,
+    is_cjk_char,
+    is_east_asian_char,
+    is_hangul_char,
+    is_hiragana_or_katakana,
+)
 
 
 class TestIsCjkChar:
@@ -106,3 +116,108 @@ class TestCjkRatio:
             "[0002] 具体地，本申请涉及一种用于调整神经网络的方法和装置。\n"
         )
         assert cjk_ratio(text) > 0.5
+
+
+class TestIsHangulChar:
+    def test_korean_syllable(self):
+        assert is_hangul_char("청") is True
+        assert is_hangul_char("구") is True
+        assert is_hangul_char("항") is True
+
+    def test_ascii_letter(self):
+        assert is_hangul_char("A") is False
+
+    def test_cjk_kanji_excluded(self):
+        """Hangul check is strict — CJK kanji must not match."""
+        assert is_hangul_char("漢") is False
+
+    def test_empty(self):
+        assert is_hangul_char("") is False
+
+
+class TestIsHiraganaOrKatakana:
+    def test_hiragana(self):
+        assert is_hiragana_or_katakana("あ") is True
+        assert is_hiragana_or_katakana("の") is True
+
+    def test_katakana(self):
+        assert is_hiragana_or_katakana("ア") is True
+        assert is_hiragana_or_katakana("ネ") is True
+
+    def test_kanji_excluded(self):
+        """Kanji is shared with CN/TW, so not a Japanese-specific signal."""
+        assert is_hiragana_or_katakana("特") is False
+        assert is_hiragana_or_katakana("許") is False
+
+    def test_hangul_excluded(self):
+        assert is_hiragana_or_katakana("청") is False
+
+
+class TestIsEastAsianChar:
+    def test_union_of_cjk_and_hangul(self):
+        assert is_east_asian_char("漢") is True
+        assert is_east_asian_char("あ") is True
+        assert is_east_asian_char("청") is True
+
+    def test_latin_excluded(self):
+        assert is_east_asian_char("A") is False
+        assert is_east_asian_char("ü") is False
+
+
+class TestContainsHangul:
+    def test_korean_sentence(self):
+        assert contains_hangul("본 발명은 신호 처리에 관한 것이다.") is True
+
+    def test_pure_ascii(self):
+        assert contains_hangul("A method comprising step A.") is False
+
+    def test_pure_cjk(self):
+        """Chinese/Japanese kanji-only text should not trip Hangul check."""
+        assert contains_hangul("本发明涉及一种方法。") is False
+        assert contains_hangul("本発明は方法に関する。") is False
+
+    def test_empty(self):
+        assert contains_hangul("") is False
+
+    def test_single_hangul_is_enough(self):
+        """Presence check — a single Hangul char is sufficient."""
+        assert contains_hangul("Hello 한") is True
+
+
+class TestContainsHiraganaOrKatakana:
+    def test_hiragana_sentence(self):
+        assert contains_hiragana_or_katakana("本発明は信号処理に関する。") is True
+
+    def test_katakana_sentence(self):
+        assert contains_hiragana_or_katakana("プロセッサを含む装置。") is True
+
+    def test_pure_kanji_is_false(self):
+        """Kanji-only is shared across CN/TW/JP — not Japanese-specific."""
+        assert contains_hiragana_or_katakana("本发明涉及装置。") is False
+
+    def test_korean_is_false(self):
+        assert contains_hiragana_or_katakana("본 발명은 장치이다.") is False
+
+    def test_empty(self):
+        assert contains_hiragana_or_katakana("") is False
+
+
+class TestEastAsianRatio:
+    def test_korean_patent_high_ratio(self):
+        text = "본 발명은 신호 처리 장치에 관한 것이다."
+        assert east_asian_ratio(text) > 0.5
+
+    def test_japanese_patent_high_ratio(self):
+        text = "本発明は信号処理装置に関するものである。"
+        assert east_asian_ratio(text) > 0.5
+
+    def test_us_patent_low_ratio(self):
+        text = "The invention relates to a signal processing apparatus."
+        assert east_asian_ratio(text) == 0.0
+
+    def test_cjk_ratio_excludes_hangul(self):
+        """cjk_ratio preserves its TIPO-abstract semantic; east_asian_ratio
+        is the jurisdiction-detection superset."""
+        korean_text = "본 발명은 장치이다."
+        assert cjk_ratio(korean_text) == 0.0
+        assert east_asian_ratio(korean_text) > 0.5
