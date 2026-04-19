@@ -6,9 +6,11 @@ from __future__ import annotations
 
 from patentlint.parser.docx_loader import DocxSection
 from patentlint.parser.sections_cn import (
+    _backfill_numpr_prefixes,
     _detect_paragraph_numbering,
     _extract_title,
     _identify_section,
+    _presplit_mid_paragraph,
     _split_spec_subsections,
     detect_patent_document_cn,
     extract_cn_sections_from_docx,
@@ -277,3 +279,111 @@ class TestDetectPatentDocumentCn:
     def test_fewer_than_three_claims_not_enough(self):
         paragraphs = ["1. 第一项。", "2. 第二项。"]
         assert detect_patent_document_cn(paragraphs) is False
+
+
+# ---------------------------------------------------------------------------
+# _presplit_mid_paragraph — Phase 9 #59 fix
+# ---------------------------------------------------------------------------
+
+
+class TestPresplitMidParagraph:
+    """Pre-split must recover mid-paragraph claim boundaries before the
+    numPr backfill runs. Without this, the backfill counter drifts on
+    sibling numPr claims that follow an embedded claim-start in a
+    continuation paragraph (Phase 9 #59).
+    """
+
+    def test_passthrough_unaffected_paragraph(self):
+        paras = ["1. 一种装置，包括组件A。"]
+        flags = [False]
+        out_paras, out_flags = _presplit_mid_paragraph(paras, flags)
+        assert out_paras == paras
+        assert out_flags == flags
+
+    def test_passthrough_preserves_numpr_flag(self):
+        paras = ["一种装置，包括组件A。"]
+        flags = [True]
+        out_paras, out_flags = _presplit_mid_paragraph(paras, flags)
+        assert out_paras == paras
+        assert out_flags == [True]
+
+    def test_embedded_boundary_splits_continuation(self):
+        # Continuation paragraph whose body embeds a new claim-start.
+        # Matches CN113939805B c4 shape from the investigation.
+        paras = [
+            "所述处理器核还用于执行操作。 4 .根据权利要求1或2所述的硬件系统，其特征在于，"
+        ]
+        flags = [False]
+        out_paras, out_flags = _presplit_mid_paragraph(paras, flags)
+        assert len(out_paras) == 2
+        assert out_paras[0] == "所述处理器核还用于执行操作。"
+        assert out_paras[1].startswith("4 .根据权利要求")
+        assert out_flags == [False, False]
+
+    def test_numpr_flag_only_on_first_chunk(self):
+        # numPr-flagged continuation paragraph (rare but possible) —
+        # second chunk starts with a typed prefix and must NOT carry
+        # the numPr flag or the backfill counter would double-advance.
+        paras = [
+            "所述处理器核还用于执行操作。 4 .根据权利要求1或2所述的硬件系统，其特征在于，"
+        ]
+        flags = [True]
+        out_paras, out_flags = _presplit_mid_paragraph(paras, flags)
+        assert len(out_paras) == 2
+        assert out_flags == [True, False]
+
+    def test_backfill_counter_resets_after_embedded_boundary(self):
+        # Full scenario reproducing Phase 9 #59 CN113939805B c5/c6 drift.
+        # Without pre-split, the backfill counter would drift and the
+        # numPr paragraphs at indices 3+4 would emit as claim 4 / 5
+        # instead of 5 / 6.
+        paras = [
+            "3. 如权利要求2所述的硬件系统，其特征在于，",
+            "所述处理器核还用于执行操作。 4 .根据权利要求1或2所述的硬件系统，其特征在于，",
+            # Next two are numPr-auto-numbered siblings (claims 5 and 6).
+            "根据权利要求4所述的硬件系统，其特征在于，",
+            "根据权利要求5所述的硬件系统，其特征在于，",
+            # Typed resumption.
+            "7. 如权利要求6所述的硬件系统。",
+        ]
+        flags = [False, False, True, True, False]
+        split_paras, split_flags = _presplit_mid_paragraph(paras, flags)
+        emitted = _backfill_numpr_prefixes(split_paras, split_flags)
+        # Expect every claim-start paragraph to carry its correct N. prefix.
+        prefixes = [p.split(".", 1)[0].strip() for p in emitted if "." in p]
+        assert "3" in prefixes
+        assert "4" in prefixes
+        assert "5" in prefixes
+        assert "6" in prefixes
+        assert "7" in prefixes
+
+    def test_no_split_without_content_char_lookahead(self):
+        # A numeric token like "2.3" inside a claim body must not be
+        # split. The regex requires a claim-start content char follows.
+        paras = ["1 .一种方法，步骤S1中制备培养基；步骤S2中分离细胞。"]
+        flags = [False]
+        out_paras, out_flags = _presplit_mid_paragraph(paras, flags)
+        assert out_paras == paras
+        assert out_flags == flags
+
+    def test_end_to_end_claim_ids_contiguous(self):
+        # End-to-end: build a fake DocxSection, run through
+        # extract_cn_sections_from_docx, confirm claim IDs are contiguous.
+        claim_paras = [
+            "1. 一种硬件系统，其特征在于，包括处理器核。",
+            "2. 如权利要求1所述的硬件系统，其特征在于，",
+            "3. 如权利要求2所述的硬件系统，其特征在于，",
+            "所述处理器核还用于执行操作。 4 .根据权利要求1或2所述的硬件系统，其特征在于，",
+            "根据权利要求4所述的硬件系统，其特征在于，",
+            "根据权利要求5所述的硬件系统，其特征在于，",
+            "7. 如权利要求6所述的硬件系统。",
+        ]
+        claim_flags = [False, False, False, False, True, True, False]
+        section = DocxSection(
+            header_text="",
+            paragraphs=["权利要求书", *claim_paras],
+            numpr_flags=[False, *claim_flags],
+        )
+        doc = extract_cn_sections_from_docx([section])
+        ids = [c.id for c in doc.claims]
+        assert ids == [1, 2, 3, 4, 5, 6, 7]

@@ -7,7 +7,7 @@ from __future__ import annotations
 import re
 
 from patentlint.models import CnPatentDocument, CnPatentType
-from patentlint.parser.claims_cn import parse_cn_claims_docx
+from patentlint.parser.claims_cn import _MID_PARAGRAPH_CLAIM_BOUNDARY, parse_cn_claims_docx
 from patentlint.parser.docx_loader import DocxSection
 
 # ---------------------------------------------------------------------------
@@ -408,6 +408,43 @@ def _collect_by_claim_density(
     return flat_paras[best_start:best_end], flat_numpr[best_start:best_end]
 
 
+def _presplit_mid_paragraph(
+    paragraphs: list[str], numpr_flags: list[bool]
+) -> tuple[list[str], list[bool]]:
+    """Split continuation paragraphs on embedded mid-paragraph claim
+    boundaries BEFORE the numPr backfill runs.
+
+    Real CNIPA filings sometimes pack two claims into one Word paragraph
+    (continuation paragraph whose body text embeds ``…。 4 .根据…``).
+    Without pre-splitting, ``_backfill_numpr_prefixes`` sees this as a
+    single continuation paragraph and its counter fails to increment;
+    subsequent numPr claims then get mis-numbered.
+
+    Reuses ``_MID_PARAGRAPH_CLAIM_BOUNDARY`` from ``claims_cn`` — same
+    regex that R20 (``574e850``) applied at parse time. Running it here
+    lets the backfill counter reset via the existing typed-prefix
+    branch on the second chunk.
+    """
+    out_paras: list[str] = []
+    out_flags: list[bool] = []
+    for para, np_flag in zip(paragraphs, numpr_flags, strict=True):
+        split = _MID_PARAGRAPH_CLAIM_BOUNDARY.sub(
+            lambda m: "\n" + m.group(0).lstrip(), para
+        )
+        if "\n" not in split:
+            out_paras.append(para)
+            out_flags.append(np_flag)
+            continue
+        chunks = [c.strip() for c in split.split("\n") if c.strip()]
+        for i, chunk in enumerate(chunks):
+            out_paras.append(chunk)
+            # Only the first chunk inherits the original numPr flag.
+            # Subsequent chunks start with a typed prefix and must not
+            # double-trigger the backfill counter.
+            out_flags.append(np_flag if i == 0 else False)
+    return out_paras, out_flags
+
+
 def _backfill_numpr_prefixes(paragraphs: list[str], numpr_flags: list[bool]) -> list[str]:
     """Prepend synthetic 'N. ' claim numbers to numPr paragraphs that
     lack a typed prefix.
@@ -519,6 +556,14 @@ def extract_cn_sections_from_docx(sections: list[DocxSection]) -> CnPatentDocume
             claims_paragraphs = []
             claims_numpr_flags = []
             abstract_paragraphs = []
+
+    # Pre-split continuation paragraphs that embed a mid-paragraph claim
+    # boundary, BEFORE the numPr backfill runs. Without this, the backfill
+    # counter drifts on sibling numPr claims that follow the embedded
+    # boundary, producing duplicate claim IDs downstream.
+    claims_paragraphs, claims_numpr_flags = _presplit_mid_paragraph(
+        claims_paragraphs, claims_numpr_flags
+    )
 
     # Backfill synthetic N. prefixes on numPr claims (ADR-109).
     claims_paragraphs = _backfill_numpr_prefixes(claims_paragraphs, claims_numpr_flags)
