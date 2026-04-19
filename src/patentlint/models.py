@@ -141,6 +141,14 @@ class CnPatentDocument(BaseModel):
     # pre-Phase-8c callers that still construct ``CnPatentDocument``
     # without populating this field (XML path).
     section_source_strategies: dict[str, str] = Field(default_factory=dict)
+    # Canonical field-name keys (technical_field, background, summary,
+    # drawings_description, detailed_description) in the order the parser
+    # first encountered each section header in the document. First-occurrence
+    # only. Empty list when no headers were found (XML path with no
+    # <description>, or docx with no 五书 subsection headers). Consumed by
+    # ``check_section_ordering`` to flag 专利法实施细则 §17 order violations
+    # (Phase 9 #66).
+    section_order: list[str] = Field(default_factory=list)
 
 
 class SymbolEntry(BaseModel):

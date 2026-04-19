@@ -11,6 +11,17 @@ from lxml import etree
 
 from patentlint.models import Claim, CnPatentDocument, CnPatentType
 
+# Map CNIPA filing-XML <description> child tags to CnPatentDocument
+# field names. Used by parse_cnipa_xml to populate section_order in
+# document-encounter order (Phase 9 #66).
+_XML_DESC_TAG_TO_FIELD: dict[str, str] = {
+    "technical-field": "technical_field",
+    "background-art": "background",
+    "disclosure": "summary",
+    "description-of-drawings": "drawings_description",
+    "mode-for-invention": "detailed_description",
+}
+
 
 def _iter_text(element) -> str:
     """Recursively extract plain text from an element, stripping all markup."""
@@ -172,6 +183,15 @@ def parse_cnipa_xml(data: bytes) -> CnPatentDocument:
     drawings_description = _extract_paragraphs(desc, "description-of-drawings")
     detailed_description = _extract_paragraphs(desc, "mode-for-invention")
 
+    # Section order: iterate <description> children and record canonical
+    # field-name keys in first-encounter order. Feeds check_section_ordering.
+    section_order: list[str] = []
+    if desc is not None:
+        for child in desc:
+            key = _XML_DESC_TAG_TO_FIELD.get(child.tag)
+            if key is not None and key not in section_order:
+                section_order.append(key)
+
     # Body text heuristic fallback when appl-type absent
     if not appl_type_str:
         body = " ".join(technical_field + background + summary + detailed_description)
@@ -214,6 +234,7 @@ def parse_cnipa_xml(data: bytes) -> CnPatentDocument:
         has_paragraph_numbering=len(paragraph_numbers) > 0,
         input_format="xml",
         has_doc_page_fallback=False,
+        section_order=section_order,
     )
 
 
