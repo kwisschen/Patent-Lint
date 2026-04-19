@@ -30,7 +30,7 @@ _SECTION_NAMES_CN = {
     "detailed_description": "具体实施方式",
 }
 
-_VALID_ENDINGS = frozenset("。！？：")
+_VALID_ENDINGS = frozenset("。！？")  # strict: 技术领域 / 背景技术
 
 # Manual [NNNN] bracket prefix at the head of a CN spec paragraph. Separately
 # flagged as forbidden by ``check_paragraph_numbering``, but when present it
@@ -38,6 +38,18 @@ _VALID_ENDINGS = frozenset("。！？：")
 # paragraph-ending check surfaces it as the paragraph label so the two flags
 # don't contradict each other.
 _PARA_NUM_PREFIX_RE = re.compile(r"^\[(\d{4})\]")
+
+# Bare figure-caption paragraph (e.g. 图1, 图4A, 图5C). Drafters insert
+# these below figure images in 附图说明 / 具体实施方式 without trailing
+# punctuation; they are captions, not prose.
+_FIGURE_CAPTION_RE = re.compile(r"^\s*图\s*\d+[A-Za-z]?\s*$")
+
+
+def _is_skip_paragraph_ending_cn(text: str) -> bool:
+    """Paragraphs excluded from the ending-punctuation check."""
+    if _FIGURE_CAPTION_RE.match(text):
+        return True
+    return False
 
 
 def _all_paragraphs(cn_doc: CnPatentDocument) -> list[str]:
@@ -178,22 +190,43 @@ def check_paragraph_numbering(cn_doc: CnPatentDocument) -> list[CheckItem]:
 def check_paragraph_ending(cn_doc: CnPatentDocument) -> list[CheckItem]:
     """Check each paragraph ends with valid Chinese punctuation.
 
-    Prefers the manually-added ``[NNNN]`` bracket prefix as the paragraph
-    label when present so the drafter can locate the flagged paragraph in
-    Word by the exact identifier they typed, even though a separate check
-    tells them to strip those prefixes before filing. Falls back to an
-    internal ordinal counter for unnumbered paragraphs and for XML input
-    (which has its own sequential numbering channel).
+    Strict (。！？) applies to 技术领域 and 背景技术 per CNIPA practice.
+    Relaxed (+ ；：) applies to 发明内容, 附图说明, and 具体实施方式 where
+    enumerations and step descriptions legitimately end with ； or ：.
+    Mirrors the TIPO-aligned implementation in ``tw_specification``.
+
+    Bare figure-caption paragraphs (``图1``, ``图4A``, …) are skipped since
+    they are captions, not prose. Prefers the manually-added ``[NNNN]``
+    bracket prefix as the paragraph label when present so the drafter can
+    locate the flagged paragraph in Word by the exact identifier they
+    typed; falls back to an internal ordinal counter otherwise.
     """
+    _RELAXED_VALID = _VALID_ENDINGS | frozenset("；：")
+    sections_to_check = [
+        (cn_doc.technical_field, False),
+        (cn_doc.background, False),
+        (cn_doc.summary, True),
+        (cn_doc.drawings_description, True),
+        (cn_doc.detailed_description, True),
+    ]
+
     bad_paragraphs: list[int | str] = []
     ordinal = 0
-    for para in _all_paragraphs(cn_doc):
-        stripped = para.strip()
-        if not stripped:
-            continue
-        ordinal += 1
-        last_char = stripped[-1]
-        if last_char not in _VALID_ENDINGS:
+    for section_paras, relaxed in sections_to_check:
+        for para in section_paras:
+            stripped = para.strip()
+            if not stripped:
+                continue
+            ordinal += 1
+            if _is_skip_paragraph_ending_cn(stripped):
+                continue
+            endings = _RELAXED_VALID if relaxed else _VALID_ENDINGS
+            if stripped[-1] in endings:
+                continue
+            # Allow ；以及 / ；及 penultimate list items in relaxed sections
+            # (mirror TW allowance for list-cap endings).
+            if relaxed and (stripped.endswith("；以及") or stripped.endswith("；及")):
+                continue
             label: int | str = ordinal
             m = _PARA_NUM_PREFIX_RE.match(stripped)
             if m:
