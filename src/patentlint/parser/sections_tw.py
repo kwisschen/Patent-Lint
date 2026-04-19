@@ -9,7 +9,11 @@ import re
 from patentlint.analysis.figure_refs import TW_PARSER
 from patentlint.models import TwPatentDocument, TwPatentType
 from patentlint.parser.claims_tw import parse_tw_claims
-from patentlint.parser.language import count_cjk_chars
+from patentlint.parser.language import (
+    contains_hangul,
+    contains_hiragana_or_katakana,
+    count_cjk_chars,
+)
 from patentlint.parser.symbol_table_tw import parse_tw_symbol_table
 
 # ---------------------------------------------------------------------------
@@ -95,28 +99,45 @@ _count_cjk_chars = count_cjk_chars
 
 
 def detect_patent_document_tw(paragraphs: list[str]) -> bool:
-    """Heuristic check for whether a TW .docx appears to be a patent specification.
+    """Heuristic check for whether a .docx appears to be a TW patent spec.
 
-    Returns True if patent indicators are found, False otherwise.
+    Jurisdiction-aware as of Phase 9 #74: rejects Japanese (hiragana or
+    katakana) and Korean (Hangul) documents, both of which share the
+    【】 fullwidth bracket section-header convention with TW and would
+    otherwise false-positive every heuristic below. TW patents use
+    Traditional Chinese only — no kana, no Hangul — so a single
+    hiragana / katakana / Hangul character is sufficient to reject.
+
+    Returns True if TW-patent indicators are found, False otherwise.
     OR logic — returns True on first match.
     """
+    full_text = "\n".join(paragraphs)
+
+    # JPO and KIPO both use 【】 fullwidth brackets for section headers
+    # (【特許請求の範囲】, 【청구항 1】). Reject based on script presence
+    # rather than ratio — TW patents should carry zero JP/KO script.
+    if contains_hiragana_or_katakana(full_text):
+        return False
+    if contains_hangul(full_text):
+        return False
+
     para_num_count = 0
     for para in paragraphs:
         stripped = para.strip()
 
-        # 1. Any 【】bracket section header (non-digit content)
+        # 1. Any 【】 bracket section header (non-digit content).
         if _BRACKET_HEADER.match(stripped):
             return True
 
-        # 2. 請求項 claims keyword
+        # 2. 請求項 claims keyword (Traditional Chinese 請).
         if "請求項" in stripped:
             return True
 
-        # 3. Count bracketed paragraph numbers 【NNNN】
+        # 3. Count bracketed paragraph numbers 【NNNN】.
         if _PARA_NUM_PATTERN.match(stripped):
             para_num_count += 1
 
-    # 3+ bracketed paragraph numbers
+    # 3+ bracketed paragraph numbers.
     if para_num_count >= 3:
         return True
 

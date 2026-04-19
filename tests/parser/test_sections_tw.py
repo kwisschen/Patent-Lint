@@ -251,6 +251,37 @@ class TestDetectPatentDocumentTw:
         ]
         assert detect_patent_document_tw(paragraphs) is False
 
+    def test_phase_9_74_rejects_jp_patent(self):
+        """JPO patent must not false-positive TW detector (Phase 9 #74).
+
+        JPO shares the 【】 fullwidth bracket convention with TIPO but
+        uses hiragana/katakana which TW patents never contain.
+        """
+        paragraphs = [
+            "【特許請求の範囲】",
+            "【請求項1】",
+            "信号処理方法であって、第1の信号を受信するステップを含む方法。",
+            "【発明の詳細な説明】",
+            "本発明は信号処理に関するものである。",
+        ]
+        assert detect_patent_document_tw(paragraphs) is False
+
+    def test_phase_9_74_rejects_ko_patent(self):
+        """KIPO patent must not false-positive TW detector (Phase 9 #74).
+
+        KIPO also uses 【】 brackets in some formats but writes in
+        Hangul which TW patents never contain.
+        """
+        paragraphs = [
+            "【청구항 1】",
+            "장치에 있어서,",
+            "처리기와,",
+            "상기 처리기에 연결된 저장 매체를 포함하는 장치.",
+            "【발명의 상세한 설명】",
+            "본 발명은 신호 처리에 관한 것이다.",
+        ]
+        assert detect_patent_document_tw(paragraphs) is False
+
 
 # NOTE: This test loads a real patent docx that is gitignored under
 # tests/fixtures/tw/. The fixture is NEVER committed. Test skips cleanly
