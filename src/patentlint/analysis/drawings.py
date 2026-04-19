@@ -112,6 +112,23 @@ def are_figures_sequential(text: str) -> bool:
     return True
 
 
+def compute_missing_figure_numbers(text: str) -> list[int]:
+    """Return sorted gap-list of missing parent figure numbers in ``1..max``.
+
+    Mirrors the CN ``check_figures_sequential`` shape (cn_abstract.py:129):
+    collect parent numbers, compute ``range(1, max+1) - actual``. Sub-figure
+    suffix ordering violations are handled by ``are_figures_sequential`` and
+    are not reported here — this helper reports only the attorney-actionable
+    gap subset (e.g. FIG. 1, FIG. 3 → ``[2]``).
+    """
+    refs = extract_figure_references(text)
+    if not refs:
+        return []
+    numbers = {r.number for r in refs}
+    max_n = max(numbers)
+    return sorted(set(range(1, max_n + 1)) - numbers)
+
+
 def is_single_figure(text: str) -> bool:
     """True if exactly one figure (FIG. 1 only, no FIG. 2+)."""
     pattern = re.compile(r"(?i)(FIG\.?|Fig\.?|Figure)\s*(\d+)")

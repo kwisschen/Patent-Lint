@@ -5,6 +5,7 @@
 from patentlint.analysis.drawings import (
     get_figure_count,
     are_figures_sequential,
+    compute_missing_figure_numbers,
     is_single_figure,
     uses_wrong_label_for_single_figure,
     contains_prior_art_references,
@@ -42,6 +43,34 @@ class TestFiguresSequential:
 
     def test_empty(self):
         assert are_figures_sequential("No figures.") is True
+
+
+class TestComputeMissingFigureNumbers:
+    def test_empty(self):
+        assert compute_missing_figure_numbers("No figures.") == []
+
+    def test_sequential(self):
+        assert compute_missing_figure_numbers(
+            "FIG. 1 shows a widget.\nFIG. 2 shows a gadget.\nFIG. 3 shows a thing."
+        ) == []
+
+    def test_single_gap(self):
+        assert compute_missing_figure_numbers(
+            "FIG. 1 shows a widget.\nFIG. 3 shows a thing."
+        ) == [2]
+
+    def test_multiple_gaps(self):
+        assert compute_missing_figure_numbers(
+            "FIG. 1 shows X.\nFIG. 3 shows Y.\nFIG. 5 shows Z."
+        ) == [2, 4]
+
+    def test_missing_first(self):
+        assert compute_missing_figure_numbers("FIG. 2 shows X.") == [1]
+
+    def test_subfigure_suffix_collapses_to_parent(self):
+        assert compute_missing_figure_numbers(
+            "FIG. 1A is a view.\nFIG. 1B is another view.\nFIG. 3 is a different one."
+        ) == [2]
 
 
 class TestSingleFigure:

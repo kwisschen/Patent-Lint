@@ -282,6 +282,7 @@ class AnalysisResult(BaseModel):
     # Drawings
     figures_count: int = 0
     figures_sequential: bool = True
+    figures_missing: list[int] = Field(default_factory=list)
     contains_prior_art_in_drawings: bool = False
     single_figure: bool = False
     wrong_label_for_single_figure: bool = False
@@ -817,6 +818,7 @@ class AnalysisResult(BaseModel):
                 message="Figures are not in sequential order.",
                 message_key="check.drawings.sequential.amend",
                 details_key="details.figuresSequentialFix",
+                details_params={"figure_list": self.figures_missing},
             ))
         else:
             drawings_checks.append(CheckItem(
