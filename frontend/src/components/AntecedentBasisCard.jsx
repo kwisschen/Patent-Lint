@@ -154,6 +154,41 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t }) {
         </span>
       </div>
       <div className={`overflow-hidden transition-all duration-200 ease-in-out ${expanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+        {terms.map((label) => {
+          const hints = hintsByLabel[label]
+          if (!hints || (!hints.didYouMean && !hints.crossRef)) return null
+          return (
+            <div
+              key={`hints-${label}`}
+              className="mx-3 mb-1.5 mt-1.5 px-3 py-1.5 text-[11px] leading-snug italic"
+              style={{ color: 'var(--attention-text)' }}
+            >
+              <div className="font-medium not-italic mb-0.5">"{label}"</div>
+              {hints.didYouMean && (() => {
+                const dymTerm = hints.didYouMean.term
+                const refBare = label.replace(/^(?:the|said)\s+/i, '').toLowerCase()
+                const isExactCrossBranch =
+                  hints.didYouMean.cross_branch &&
+                  dymTerm.toLowerCase() === refBare
+                return (
+                  <div>
+                    {isExactCrossBranch
+                      ? t('antecedent.crossBranchAntecedent', {
+                          claim_id: hints.didYouMean.claim_id,
+                        })
+                      : t('antecedent.didYouMean', {
+                          term: dymTerm,
+                          claim_id: hints.didYouMean.claim_id,
+                        })}
+                  </div>
+                )
+              })()}
+              {hints.crossRef === 'spec_support' && (
+                <div>{t('antecedent.crossRefSpecSupport')}</div>
+              )}
+            </div>
+          )
+        })}
         {claimIds.map((id) => {
           const rawText = claimTextMap[id]
           if (!rawText) return null
@@ -189,41 +224,6 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t }) {
                 )
               ) : (
                 <span>{text}</span>
-              )}
-            </div>
-          )
-        })}
-        {terms.map((label) => {
-          const hints = hintsByLabel[label]
-          if (!hints || (!hints.didYouMean && !hints.crossRef)) return null
-          return (
-            <div
-              key={`hints-${label}`}
-              className="mx-3 mb-1.5 px-3 py-1.5 text-[11px] leading-snug italic"
-              style={{ color: 'var(--attention-text)' }}
-            >
-              <div className="font-medium not-italic mb-0.5">"{label}"</div>
-              {hints.didYouMean && (() => {
-                const dymTerm = hints.didYouMean.term
-                const refBare = label.replace(/^(?:the|said)\s+/i, '').toLowerCase()
-                const isExactCrossBranch =
-                  hints.didYouMean.cross_branch &&
-                  dymTerm.toLowerCase() === refBare
-                return (
-                  <div>
-                    {isExactCrossBranch
-                      ? t('antecedent.crossBranchAntecedent', {
-                          claim_id: hints.didYouMean.claim_id,
-                        })
-                      : t('antecedent.didYouMean', {
-                          term: dymTerm,
-                          claim_id: hints.didYouMean.claim_id,
-                        })}
-                  </div>
-                )
-              })()}
-              {hints.crossRef === 'spec_support' && (
-                <div>{t('antecedent.crossRefSpecSupport')}</div>
               )}
             </div>
           )
