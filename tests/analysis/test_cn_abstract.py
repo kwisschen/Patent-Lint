@@ -81,6 +81,60 @@ class TestAbstractTitleMatch:
         results = check_abstract_title_match(doc)
         assert results[0].status == "verify"
 
+    def test_compound_title_ji_both_halves_pass_compound(self):
+        doc = _cn_doc(
+            title="盖组件及带盖容器",
+            abstract_text="本发明公开了一种盖组件，适用于带盖容器的密封结构。",
+        )
+        results = check_abstract_title_match(doc)
+        assert results[0].status == "pass"
+        assert results[0].message_key == "check.cn.abstract.titleMatch.passCompound"
+        assert results[0].details_params == {"halves": "盖组件、带盖容器"}
+
+    def test_compound_title_he_both_halves_pass_compound(self):
+        doc = _cn_doc(
+            title="感测元件和控制电路",
+            abstract_text="本发明公开了一种感测元件及与其耦接的控制电路。",
+        )
+        results = check_abstract_title_match(doc)
+        assert results[0].status == "pass"
+        assert results[0].message_key == "check.cn.abstract.titleMatch.passCompound"
+
+    def test_compound_title_yu_both_halves_pass_compound(self):
+        """CN uses simplified 与 (not Traditional 與)."""
+        doc = _cn_doc(
+            title="发光二极管与驱动电路",
+            abstract_text="本发明公开了一种发光二极管及驱动电路。",
+        )
+        results = check_abstract_title_match(doc)
+        assert results[0].status == "pass"
+        assert results[0].message_key == "check.cn.abstract.titleMatch.passCompound"
+
+    def test_compound_title_yiji_preferred_over_ji(self):
+        doc = _cn_doc(
+            title="存储模块以及存取装置",
+            abstract_text="本发明公开了存储模块及存取装置。",
+        )
+        results = check_abstract_title_match(doc)
+        assert results[0].status == "pass"
+        assert results[0].details_params == {"halves": "存储模块、存取装置"}
+
+    def test_compound_title_one_half_missing_verify(self):
+        doc = _cn_doc(
+            title="盖组件及带盖容器",
+            abstract_text="本发明公开了一种盖组件。",
+        )
+        results = check_abstract_title_match(doc)
+        assert results[0].status == "verify"
+
+    def test_compound_title_single_char_half_verify(self):
+        doc = _cn_doc(
+            title="A及盖组件",
+            abstract_text="本发明公开了A与盖组件。",
+        )
+        results = check_abstract_title_match(doc)
+        assert results[0].status == "verify"
+
 
 # ── Check 23: Commercial language ─────────────────────────────────────────
 

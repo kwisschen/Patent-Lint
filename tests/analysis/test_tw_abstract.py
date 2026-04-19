@@ -110,6 +110,63 @@ class TestCheckAbstractTitleMatch:
         result = check_abstract_title_match(doc)
         assert result[0].message_key == "check.tw.abstract.titleMatch.verify"
 
+    def test_compound_title_ji_both_halves_pass_compound(self):
+        """Real spec1 case: 蓋組件及帶蓋容器 — both halves appear in abstract."""
+        doc = TwPatentDocument(
+            title="蓋組件及帶蓋容器",
+            abstract_text="本發明提供一種蓋組件，適用於帶蓋容器的密封結構。",
+        )
+        result = check_abstract_title_match(doc)
+        assert result[0].status == "pass"
+        assert result[0].message_key == "check.tw.abstract.titleMatch.passCompound"
+        assert result[0].details_params == {"halves": "蓋組件、帶蓋容器"}
+
+    def test_compound_title_he_both_halves_pass_compound(self):
+        doc = TwPatentDocument(
+            title="感測元件和控制電路",
+            abstract_text="本發明揭示一種感測元件及與其耦接之控制電路。",
+        )
+        result = check_abstract_title_match(doc)
+        assert result[0].status == "pass"
+        assert result[0].message_key == "check.tw.abstract.titleMatch.passCompound"
+
+    def test_compound_title_yu_both_halves_pass_compound(self):
+        doc = TwPatentDocument(
+            title="發光二極體與驅動電路",
+            abstract_text="本發明提供一種發光二極體及驅動電路。",
+        )
+        result = check_abstract_title_match(doc)
+        assert result[0].status == "pass"
+        assert result[0].message_key == "check.tw.abstract.titleMatch.passCompound"
+
+    def test_compound_title_yiji_preferred_over_ji(self):
+        """以及 must match first so split does not fire on trailing 及."""
+        doc = TwPatentDocument(
+            title="記憶體模組以及存取裝置",
+            abstract_text="本發明揭示記憶體模組及存取裝置。",
+        )
+        result = check_abstract_title_match(doc)
+        assert result[0].status == "pass"
+        assert result[0].details_params == {"halves": "記憶體模組、存取裝置"}
+
+    def test_compound_title_one_half_missing_verify(self):
+        doc = TwPatentDocument(
+            title="蓋組件及帶蓋容器",
+            abstract_text="本發明提供一種蓋組件。",
+        )
+        result = check_abstract_title_match(doc)
+        assert result[0].status == "verify"
+        assert result[0].message_key == "check.tw.abstract.titleMatch.verify"
+
+    def test_compound_title_single_char_half_verify(self):
+        """Single-CJK-char halves do not trigger compound match."""
+        doc = TwPatentDocument(
+            title="A及蓋組件",
+            abstract_text="本發明揭示A與蓋組件。",
+        )
+        result = check_abstract_title_match(doc)
+        assert result[0].status == "verify"
+
 
 class TestCheckCommercialLanguage:
     """Check #29: Commercial language in abstract."""
