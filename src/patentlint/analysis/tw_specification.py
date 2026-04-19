@@ -123,22 +123,19 @@ def check_required_sections(doc: TwPatentDocument) -> list[CheckItem]:
 
 
 def check_section_ordering(doc: TwPatentDocument) -> list[CheckItem]:
-    """Verify sections appear in prescribed TIPO order."""
-    section_data = [
-        ("technical_field", doc.technical_field),
-        ("prior_art", doc.prior_art),
-        ("disclosure", doc.disclosure),
-        ("drawings_description", doc.drawings_description),
-        ("embodiment", doc.embodiment),
-        ("symbol_table", doc.symbol_table),
+    """Verify sections appear in prescribed TIPO order.
+
+    Reads ``doc.section_order`` — the list of canonical body-section keys
+    in the order the parser first encountered each 【】bracket header. A
+    non-increasing canonical-index sequence indicates the drafter placed
+    sections out of the 專利法施行細則 §17 order. Empty ``section_order``
+    (no bracket headers found) passes vacuously.
+    """
+    canonical_index = {name: idx for idx, name in enumerate(_CANONICAL_ORDER)}
+    indices = [
+        canonical_index[s] for s in doc.section_order if s in canonical_index
     ]
-
-    present = []
-    for idx, (_, items) in enumerate(section_data):
-        if _section_has_content(items):
-            present.append(idx)
-
-    is_sorted = all(present[i] < present[i + 1] for i in range(len(present) - 1))
+    is_sorted = all(indices[i] < indices[i + 1] for i in range(len(indices) - 1))
 
     if not is_sorted:
         return [CheckItem(

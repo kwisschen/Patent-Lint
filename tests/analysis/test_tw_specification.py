@@ -33,6 +33,12 @@ def _make_doc(**kwargs) -> TwPatentDocument:
         "claims": [],
         "abstract_text": "本發明提供一種測試裝置。",
         "abstract_char_count": 10,
+        "section_order": [
+            "technical_field",
+            "prior_art",
+            "disclosure",
+            "embodiment",
+        ],
     }
     defaults.update(kwargs)
     return TwPatentDocument(**defaults)
@@ -102,55 +108,60 @@ class TestSectionOrdering:
         doc = _make_doc()
         items = check_section_ordering(doc)
         assert items[0].status == "pass"
+        assert items[0].message_key == "check.tw.spec.sectionOrdering.pass"
 
     def test_wrong_order_amend(self):
-        # Put embodiment content before disclosure
+        # 實施方式 (embodiment, idx 4) encountered before 發明內容
+        # (disclosure, idx 2) — out of 專利法施行細則 §17 order.
         doc = _make_doc(
-            technical_field=["技術領域。"],
-            prior_art=[],
-            disclosure=[],
-            embodiment=["實施方式。"],
-            drawings_description=["圖式簡單說明。"],
+            section_order=[
+                "technical_field",
+                "prior_art",
+                "embodiment",
+                "disclosure",
+            ]
         )
         items = check_section_ordering(doc)
-        assert items[0].status == "pass"  # in-order → pass
-        # drawings_description (idx 3) comes before embodiment (idx 4), but
-        # since disclosure (idx 2) is empty and drawings (idx 3) and embodiment (idx 4) are present,
-        # order is 0, 3, 4 which is sorted → pass
-        # Let's create a real out-of-order case
-        doc2 = TwPatentDocument(
-            patent_type=TwPatentType.INVENTION,
-            title="test",
-            technical_field=[],
-            prior_art=[],
-            disclosure=[],
-            drawings_description=["圖1。"],
-            embodiment=["實施方式。"],
-            symbol_table=[],
-            claims=[],
-            abstract_text="",
-            # embodiment (idx 4) before drawings_description (idx 3) won't trigger
-            # since we set them in model order. Need to test structural reorder.
+        assert items[0].status == "amend"
+        assert items[0].message_key == "check.tw.spec.sectionOrdering.amend"
+        assert items[0].reference == "專利法施行細則 §17"
+
+    def test_empty_section_order_passes(self):
+        doc = _make_doc(section_order=[])
+        items = check_section_ordering(doc)
+        assert items[0].status == "pass"
+
+    def test_non_canonical_keys_ignored(self):
+        doc = _make_doc(
+            section_order=["claims", "technical_field", "abstract", "prior_art"]
         )
-        # Actually the model fields define the canonical order. The check
-        # inspects whether the document's sections, as stored in the model,
-        # respect that order. Since TwPatentDocument is populated by the parser
-        # which sets fields based on where they appear in the document,
-        # out-of-order means the parser would populate them "wrong."
-        # For unit testing, we simulate by swapping field contents:
-        items2 = check_section_ordering(doc2)
-        # drawings_description (idx 3) before embodiment (idx 4) → sorted, pass
-        assert items2[0].status == "pass"
+        items = check_section_ordering(doc)
+        assert items[0].status == "pass"
+
+    def test_symbol_table_ordering(self):
+        # 符號說明 (idx 5) before 實施方式 (idx 4) violates canonical order.
+        doc = _make_doc(
+            section_order=[
+                "technical_field",
+                "prior_art",
+                "disclosure",
+                "drawings_description",
+                "symbol_table",
+                "embodiment",
+            ],
+            symbol_table=[SymbolEntry(numeral="10", name="裝置")],
+        )
+        items = check_section_ordering(doc)
+        assert items[0].status == "amend"
 
     def test_only_some_sections_present(self):
+        # technical_field (0), embodiment (4) — sorted → pass.
         doc = _make_doc(
-            technical_field=["技術。"],
+            section_order=["technical_field", "embodiment"],
             prior_art=[],
             disclosure=[],
-            embodiment=["實施。"],
         )
         items = check_section_ordering(doc)
-        # technical_field (0), embodiment (4) → sorted → pass
         assert items[0].status == "pass"
 
 
