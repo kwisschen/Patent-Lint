@@ -95,10 +95,17 @@ class TestDetectPatentDocument:
         """Text with numbered claims pattern → True."""
         assert detect_patent_document("Preamble text.\n1. A method comprising step A.\n2. The method of claim 1.") is True
 
-    def test_bracketed_paragraph_numbers(self):
-        """Text with 3+ bracketed paragraph numbers [0001] → True."""
+    def test_bracketed_paragraph_numbers_alone_rejected(self):
+        """[NNNN] numbering alone no longer accepts (Phase 9 #74).
+
+        The convention is shared across US, CN, JP, KO, and several
+        European patent offices — too ambiguous to anchor acceptance on.
+        A US patent without either an English section header or an
+        English claim preamble must bypass the non-patent banner via
+        the "Show Results Anyway" button.
+        """
         text = "[0001] First paragraph.\n[0002] Second paragraph.\n[0003] Third paragraph."
-        assert detect_patent_document(text) is True
+        assert detect_patent_document(text) is False
 
     def test_plain_essay(self):
         """Plain essay text with no patent indicators → False."""
@@ -156,6 +163,65 @@ class TestDetectPatentDocument:
             "1. A method comprising step A.\n"
         )
         assert detect_patent_document(text) is True
+
+    def test_phase_9_74_rejects_jp_patent(self):
+        """JPO patent (kanji + hiragana + katakana) must not false-positive US."""
+        text = (
+            "【特許請求の範囲】\n"
+            "【請求項1】信号処理方法であって、\n"
+            "第1の信号を受信するステップと、\n"
+            "前記信号をニューラルネットワークで処理するステップと、を含む方法。\n"
+        )
+        assert detect_patent_document(text) is False
+
+    def test_phase_9_74_rejects_ko_patent(self):
+        """KIPO patent (Hangul) must not false-positive US.
+
+        Hangul is outside the original CJK range, so before Phase 9 #74
+        a Korean draft with [0001] numbering would have slipped through.
+        """
+        text = (
+            "【청구항 1】\n"
+            "장치에 있어서,\n"
+            "처리기와,\n"
+            "상기 처리기에 연결된 저장 매체를 포함하는 장치.\n"
+            "[0001] 본 발명은 신호 처리 장치에 관한 것이다.\n"
+            "[0002] 보다 구체적으로는 신경망을 이용한 처리 장치이다.\n"
+            "[0003] 종래 기술의 문제점을 해결한다.\n"
+        )
+        assert detect_patent_document(text) is False
+
+    def test_phase_9_74_rejects_de_patent(self):
+        """DPMA / EPO German patent must not false-positive US.
+
+        German patents share the [NNNN] paragraph-numbering convention
+        but use German section headers (Patentansprüche, Beschreibung)
+        and German claim preambles (Ein, Eine, Das). Removing the bare
+        [NNNN] heuristic is what closes this gap.
+        """
+        text = (
+            "Patentansprüche\n"
+            "1. Ein Verfahren zur Signalverarbeitung, umfassend:\n"
+            "das Empfangen eines ersten Signals, und\n"
+            "das Verarbeiten des Signals mit einem neuronalen Netz.\n"
+            "[0001] Die Erfindung betrifft die Signalverarbeitung.\n"
+            "[0002] Genauer gesagt neuronale Netze.\n"
+            "[0003] Der Stand der Technik löst das Problem nicht.\n"
+        )
+        assert detect_patent_document(text) is False
+
+    def test_phase_9_74_rejects_fr_patent(self):
+        """INPI / EPO French patent must not false-positive US."""
+        text = (
+            "Revendications\n"
+            "1. Un procédé de traitement du signal, comprenant :\n"
+            "la réception d'un premier signal, et\n"
+            "le traitement du signal avec un réseau neuronal.\n"
+            "[0001] La présente invention concerne le traitement du signal.\n"
+            "[0002] Plus précisément, les réseaux neuronaux.\n"
+            "[0003] L'art antérieur ne résout pas le problème.\n"
+        )
+        assert detect_patent_document(text) is False
 
 
 class TestDetectPriorArtCitations:
