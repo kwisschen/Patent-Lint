@@ -760,6 +760,49 @@ def _build_cn_amend_triggers() -> bytes:
     return _doc_to_bytes(doc)
 
 
+def _build_cn_section_ordering_violation() -> bytes:
+    """Engineered CN patent with spec subsection headers out of canonical order.
+
+    Phase 9 #66 trigger: places 具体实施方式 before 发明内容 in the spec body.
+    Section content itself is otherwise valid; the violation is purely
+    ordering. Mirrors the MPEP-ordered-spec-reused-for-CNIPA drafter error.
+    """
+    doc = Document()
+
+    # Abstract (passes charCount, no commercial language)
+    doc.add_paragraph(
+        "本发明提供一种数据处理方法，包括数据预处理步骤和特征提取步骤。"
+        "数据预处理步骤用于对原始数据进行清洗。"
+        "特征提取步骤用于提取高维特征向量。"
+    )
+    _add_cn_section_break(doc, "摘要附图")
+
+    _add_cn_section_break(doc, "权利要求书")
+    doc.add_paragraph("1. 一种数据处理方法，其特征在于，包括数据预处理步骤。")
+    _add_cn_section_break(doc, "说明书")
+
+    # Title + out-of-order subsection headers:
+    #   技术领域 (0) → 具体实施方式 (4) → 发明内容 (2) → 附图说明 (3)
+    # Indices 0, 4, 2, 3 are NOT strictly increasing.
+    doc.add_paragraph("一种数据处理方法")
+    doc.add_paragraph("技术领域")
+    doc.add_paragraph("本发明涉及一种数据处理方法。")
+    doc.add_paragraph("具体实施方式")
+    doc.add_paragraph("下面结合实施例对本发明进行详细说明。")
+    doc.add_paragraph("发明内容")
+    doc.add_paragraph("本发明提供一种数据处理方法。")
+    doc.add_paragraph("附图说明")
+    doc.add_paragraph("图1是本发明的流程图。")
+    _add_cn_section_break(doc, "说明书附图")
+
+    first_section = doc.sections[0]
+    first_section.header.is_linked_to_previous = False
+    hp = first_section.header.paragraphs[0]
+    hp.text = "说明书摘要"
+
+    return _doc_to_bytes(doc)
+
+
 def _build_tw_minimal(claims_text: list[str], symbol_lines: list[str] | None = None,
                       embodiment_lines: list[str] | None = None) -> bytes:
     """Build a minimal but complete TW .docx for targeted tests."""
@@ -1096,14 +1139,8 @@ class TestUsCluster3SingleFigure:
 
 
 class TestCnAmendTriggers:
-    """Phase E CN cluster: AMEND-status defect checks that can be triggered
-    via the full pipeline. ``check.cn.spec.sectionOrdering.amend`` is out of
-    scope — the current ``CnPatentDocument`` model stores each section as a
-    named field, so the check's ``present`` list is always canonically
-    sorted (see ``test_cn_specification.py::TestSectionOrdering`` for the
-    long-form note). Exercising that path requires a data-model refactor
-    that preserves document order, which is larger than Phase E.
-    """
+    """Phase E CN cluster: AMEND-status abstract defect checks that can be
+    triggered via the full pipeline."""
 
     TARGET_KEYS = {
         "check.cn.abstract.commercialLanguage.amend",
@@ -1132,6 +1169,35 @@ class TestCnAmendTriggers:
 
     def test_abstract_over_300_chars_detected(self):
         assert "check.cn.abstract.charCount.amend" in self._emitted_keys()
+
+
+class TestCnSectionOrderingViolation:
+    """Phase 9 #66 CN: spec subsection headers emitted out of canonical order
+    trigger ``check.cn.spec.sectionOrdering.amend`` via the full pipeline."""
+
+    def _emitted_keys(self) -> set[str]:
+        result = analyze_bytes(
+            _build_cn_section_ordering_violation(),
+            "cn_section_order.docx",
+            Jurisdiction.CN,
+        )
+        all_checks = (
+            result.cn_specification_checks
+            + result.cn_claims_checks
+            + result.cn_abstract_checks
+            + result.cn_drawings_checks
+        )
+        return {c.message_key for c in all_checks if c.message_key}
+
+    def test_section_ordering_amend_detected(self):
+        keys = self._emitted_keys()
+        assert "check.cn.spec.sectionOrdering.amend" in keys, (
+            f"Expected section ordering AMEND; got {sorted(keys)}"
+        )
+
+    def test_section_ordering_pass_not_emitted(self):
+        keys = self._emitted_keys()
+        assert "check.cn.spec.sectionOrdering.pass" not in keys
 
 
 class TestCrossJurisdictionMismatch:

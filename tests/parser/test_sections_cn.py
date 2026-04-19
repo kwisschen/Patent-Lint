@@ -75,12 +75,19 @@ class TestSplitSpecSubsections:
             "具体实施方式",
             "实施段落",
         ]
-        result = _split_spec_subsections(paragraphs)
+        result, section_order = _split_spec_subsections(paragraphs)
         assert result["technical_field"] == ["技术段落"]
         assert result["background"] == ["背景段落"]
         assert result["summary"] == ["发明段落"]
         assert result["drawings_description"] == ["附图段落"]
         assert result["detailed_description"] == ["实施段落"]
+        assert section_order == [
+            "technical_field",
+            "background",
+            "summary",
+            "drawings_description",
+            "detailed_description",
+        ]
 
     def test_split_missing_section(self):
         paragraphs = [
@@ -89,10 +96,11 @@ class TestSplitSpecSubsections:
             "发明内容",
             "发明段落",
         ]
-        result = _split_spec_subsections(paragraphs)
+        result, section_order = _split_spec_subsections(paragraphs)
         assert result["technical_field"] == ["技术段落"]
         assert result["background"] == []
         assert result["summary"] == ["发明段落"]
+        assert section_order == ["technical_field", "summary"]
 
     def test_split_paragraphs_before_first_header(self):
         paragraphs = [
@@ -101,8 +109,9 @@ class TestSplitSpecSubsections:
             "技术领域",
             "技术段落",
         ]
-        result = _split_spec_subsections(paragraphs)
+        result, section_order = _split_spec_subsections(paragraphs)
         assert result["technical_field"] == ["技术段落"]
+        assert section_order == ["technical_field"]
         # Paragraphs before first header should not appear in any sub-section
         for paras in result.values():
             assert "这是标题" not in paras
@@ -110,8 +119,43 @@ class TestSplitSpecSubsections:
 
     def test_split_fullwidth_spaces(self):
         paragraphs = ["\u3000技术领域\u3000", "段落"]
-        result = _split_spec_subsections(paragraphs)
+        result, section_order = _split_spec_subsections(paragraphs)
         assert result["technical_field"] == ["段落"]
+        assert section_order == ["technical_field"]
+
+    def test_section_order_non_canonical(self):
+        # Headers encountered out of canonical order: 具体实施方式 before 发明内容
+        # The parser preserves encounter order so check_section_ordering can flag.
+        paragraphs = [
+            "技术领域",
+            "技术段落",
+            "具体实施方式",
+            "实施段落",
+            "发明内容",
+            "发明段落",
+        ]
+        result, section_order = _split_spec_subsections(paragraphs)
+        assert result["technical_field"] == ["技术段落"]
+        assert result["detailed_description"] == ["实施段落"]
+        assert result["summary"] == ["发明段落"]
+        assert section_order == [
+            "technical_field",
+            "detailed_description",
+            "summary",
+        ]
+
+    def test_section_order_first_occurrence_only(self):
+        # A reappearing header does not re-append to section_order.
+        paragraphs = [
+            "技术领域",
+            "技术段落",
+            "背景技术",
+            "背景段落",
+            "技术领域",
+            "又一技术段落",
+        ]
+        _, section_order = _split_spec_subsections(paragraphs)
+        assert section_order == ["technical_field", "background"]
 
 
 # ---------------------------------------------------------------------------

@@ -90,14 +90,20 @@ def check_required_sections(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
 
 def check_section_ordering(cn_doc: CnPatentDocument) -> list[CheckItem]:
-    """Verify sections appear in canonical CNIPA order."""
-    present = []
-    for idx, field in enumerate(_CANONICAL_ORDER):
-        paragraphs = getattr(cn_doc, field)
-        if any(p.strip() for p in paragraphs):
-            present.append(idx)
+    """Verify sections appear in canonical CNIPA order.
 
-    is_sorted = all(present[i] < present[i + 1] for i in range(len(present) - 1))
+    Reads ``cn_doc.section_order`` — the list of canonical field-name keys
+    in the order the parser first encountered each header. A non-increasing
+    canonical-index sequence indicates the drafter placed sections out of
+    the 专利法实施细则 §17 order (e.g., reusing an MPEP-ordered spec without
+    reordering). Empty ``section_order`` (no headers found, or XML with no
+    ``<description>``) passes vacuously.
+    """
+    canonical_index = {name: idx for idx, name in enumerate(_CANONICAL_ORDER)}
+    indices = [
+        canonical_index[s] for s in cn_doc.section_order if s in canonical_index
+    ]
+    is_sorted = all(indices[i] < indices[i + 1] for i in range(len(indices) - 1))
 
     if not is_sorted:
         return [CheckItem(
