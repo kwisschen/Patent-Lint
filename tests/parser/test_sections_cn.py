@@ -8,6 +8,7 @@ from patentlint.parser.docx_loader import DocxSection
 from patentlint.parser.sections_cn import (
     _backfill_numpr_prefixes,
     _detect_paragraph_numbering,
+    _extract_inid_title_abstract,
     _extract_title,
     _identify_section,
     _presplit_mid_paragraph,
@@ -188,6 +189,106 @@ class TestExtractTitle:
 
     def test_no_title(self):
         assert _extract_title(["技术领域", "段落"]) == ""
+
+
+# ---------------------------------------------------------------------------
+# _extract_inid_title_abstract (Phase 9 #70 — publication fallback)
+# ---------------------------------------------------------------------------
+
+
+class TestExtractInidTitleAbstract:
+    def test_invention_title_and_abstract(self):
+        paras = [
+            "(19)国家知识产权局",
+            "(12)发明专利",
+            "(54)发明名称",
+            "用于调整神经网络的方法和装置",
+            "(57)摘要",
+            "本申请提供了一种用于调整神经网络的方法和装置。",
+            "权利要求书1/2页",
+            "1. 一种方法。",
+        ]
+        sections = [DocxSection(header_text=None, paragraphs=paras)]
+        title, abstract = _extract_inid_title_abstract(sections)
+        assert title == "用于调整神经网络的方法和装置"
+        assert abstract == ["本申请提供了一种用于调整神经网络的方法和装置。"]
+
+    def test_utility_model_title(self):
+        paras = [
+            "(12)实用新型专利",
+            "(54)实用新型名称",
+            "折叠机构以及内折柔性屏设备",
+            "(57)摘要",
+            "本实用新型公开了一种折叠机构。",
+            "权利要求书",
+        ]
+        sections = [DocxSection(header_text=None, paragraphs=paras)]
+        title, abstract = _extract_inid_title_abstract(sections)
+        assert title == "折叠机构以及内折柔性屏设备"
+        assert abstract == ["本实用新型公开了一种折叠机构。"]
+
+    def test_design_patent_title(self):
+        paras = [
+            "(54)外观设计名称",
+            "手机外壳",
+            "(57)摘要",
+            "本外观设计。",
+        ]
+        sections = [DocxSection(header_text=None, paragraphs=paras)]
+        title, _ = _extract_inid_title_abstract(sections)
+        assert title == "手机外壳"
+
+    def test_abstract_stops_at_claims_anchor(self):
+        paras = [
+            "(54)发明名称",
+            "一种方法",
+            "(57)摘要",
+            "摘要第一段。",
+            "摘要第二段。",
+            "权\t利\t要\t求\t书\t1/3 页",
+            "1. 后续不应纳入摘要。",
+        ]
+        sections = [DocxSection(header_text=None, paragraphs=paras)]
+        _, abstract = _extract_inid_title_abstract(sections)
+        assert abstract == ["摘要第一段。", "摘要第二段。"]
+
+    def test_abstract_stops_at_next_inid_code(self):
+        paras = [
+            "(54)发明名称",
+            "一种方法",
+            "(57)摘要",
+            "摘要内容。",
+            "(71)申请人",
+            "不应纳入摘要的申请人信息。",
+        ]
+        sections = [DocxSection(header_text=None, paragraphs=paras)]
+        _, abstract = _extract_inid_title_abstract(sections)
+        assert abstract == ["摘要内容。"]
+
+    def test_drafter_file_returns_empty(self):
+        """Drafter 五书模板 files have no INID cover — extraction returns empty."""
+        paras = [
+            "一种测试装置",
+            "技术领域",
+            "本发明涉及测试领域。",
+        ]
+        sections = [DocxSection(header_text=None, paragraphs=paras)]
+        title, abstract = _extract_inid_title_abstract(sections)
+        assert title == ""
+        assert abstract == []
+
+    def test_title_skips_blank_paragraphs(self):
+        paras = [
+            "(54)发明名称",
+            "",
+            "   ",
+            "真实标题",
+            "(57)摘要",
+            "摘要。",
+        ]
+        sections = [DocxSection(header_text=None, paragraphs=paras)]
+        title, _ = _extract_inid_title_abstract(sections)
+        assert title == "真实标题"
 
 
 # ---------------------------------------------------------------------------
