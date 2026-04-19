@@ -9,6 +9,7 @@ import re
 from patentlint.models import CnPatentDocument, CnPatentType
 from patentlint.parser.claims_cn import _MID_PARAGRAPH_CLAIM_BOUNDARY, parse_cn_claims_docx
 from patentlint.parser.docx_loader import DocxSection
+from patentlint.parser.language import count_cjk_chars
 
 # ---------------------------------------------------------------------------
 # Header matching patterns — match Word section header text to document parts
@@ -359,28 +360,51 @@ def _count_figures_from_descriptions(paragraphs: list[str]) -> int:
 # ---------------------------------------------------------------------------
 
 
-def detect_patent_document_cn(paragraphs: list[str]) -> bool:
-    """Heuristic check for whether a CN .docx appears to be a patent specification.
+_TW_BRACKET_HEADER_RE = re.compile(r"^【[^\d].+?】", re.MULTILINE)
 
-    Returns True if patent indicators are found, False otherwise.
+
+def detect_patent_document_cn(paragraphs: list[str]) -> bool:
+    """Heuristic check for whether a .docx appears to be a CN patent spec.
+
+    Jurisdiction-aware as of Phase 9 #73: rejects TW patents (which use
+    traditional-Chinese 【...】 section headers that CN's 五书模板 does
+    not) and rejects non-CJK documents (US patents) before applying the
+    fallback numeric-claim heuristic. Heuristics 1 (CN sub-section
+    headers) and 2 (五书 body-anchor markers) are simplified-Chinese
+    only and already jurisdiction-specific; heuristic 3 (numbered
+    claims) was the loose fallback that mis-accepted US and TW inputs.
+
+    Returns True if CN-patent indicators are found, False otherwise.
     OR logic — returns True on first match.
     """
+    full_text = "\n".join(paragraphs)
+
+    # TW patents carry 【section-name】 body headers; CN does not. A single
+    # such header is enough to reject. (CN documents occasionally contain
+    # 【NNNN】 paragraph numbers, but the ``[^\d]`` lookhead rules those out.)
+    if _TW_BRACKET_HEADER_RE.search(full_text):
+        return False
+
     for para in paragraphs:
         stripped = para.strip()
 
-        # 1. CN spec sub-section header (技术领域, 背景技术, etc.)
+        # 1. CN spec sub-section header (技术领域, 背景技术, etc.) — simplified
+        # Chinese, not used by TW or US.
         for _, pattern in _SPEC_SUBSECTIONS:
             if pattern.match(stripped):
                 return True
 
-        # 2. 五書模板 boundary markers
+        # 2. 五书模板 boundary markers — simplified Chinese, not used by TW
+        # (whose 【申請專利範圍】/【摘要】 are traditional) or US.
         if stripped in ("权利要求书", "说明书摘要"):
             return True
 
-    # 3. Numbered claims: 3+ lines starting with Arabic numeral + period variant
-    full_text = "\n".join(paragraphs)
+    # 3. Numbered claims fallback (3+ lines). Language-ambiguous on its own
+    # — US ``1. A method...`` and TW ``1．一種...`` both match. Require
+    # meaningful simplified-CJK content to reject those jurisdictions.
     if len(re.findall(r"^\s*\d+[.．。]\s*", full_text, re.MULTILINE)) >= 3:
-        return True
+        if count_cjk_chars(full_text) >= 30:
+            return True
 
     return False
 

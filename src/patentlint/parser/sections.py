@@ -13,6 +13,8 @@ appear inside body text (e.g., "This application claims the benefit of priority.
 
 import re
 
+from patentlint.parser.language import cjk_ratio
+
 # ---------------------------------------------------------------------------
 # Master list of all recognised section headers (standalone paragraph patterns)
 # ---------------------------------------------------------------------------
@@ -256,21 +258,37 @@ def extract_summary_section(text: str) -> str:
 
 
 def detect_patent_document(full_text: str) -> bool:
-    """Heuristic check for whether the document appears to be a patent specification.
+    """Heuristic check for whether the document appears to be a US patent spec.
 
-    Returns True if patent indicators are found, False otherwise.
-    Errs on the side of True — false positives are much less harmful than
-    false negatives (flagging a real patent as non-patent).
+    Jurisdiction-aware as of Phase 9 #73: rejects CJK-dominant documents
+    (CN or TW patents uploaded to the wrong jurisdiction) so the non-patent
+    banner can prompt the user to re-select. Heuristics 1 and 2 rely on
+    English section-header / claim-preamble language that CJK-drafted
+    patents do not carry; heuristic 3 (the ``[NNNN]`` paragraph-number
+    fallback) is the only language-ambiguous signal because both US and
+    CN specs use ``[0001]`` numbering, so it now requires ASCII-dominant
+    content to fire.
+
+    Returns True if US-patent indicators are found, False otherwise.
     """
-    # 1. Recognized section header
+    # CJK-dominant content is not a US patent. Short-circuit before the
+    # English-header / English-claim heuristics even though those shouldn't
+    # match CJK — a partially-translated US-style filing might carry stray
+    # English headers that we don't want to accept as "is US" either.
+    if cjk_ratio(full_text) > 0.05:
+        return False
+
+    # 1. Recognized section header (English-specific).
     if _ANY_SECTION_HEADER.search(full_text):
         return True
 
-    # 2. Numbered claims pattern: "1. A ..." or "1. An ..."
+    # 2. Numbered claims pattern: "1. A ..." or "1. An ..." (English-specific).
     if re.search(r"^\s*\d+\.\s+(?:A|An|The)\s+", full_text, re.MULTILINE | re.IGNORECASE):
         return True
 
-    # 3. Bracketed paragraph numbers [0001] style — need 3+
+    # 3. Bracketed paragraph numbers [0001] style — need 3+. Language-
+    # ambiguous; the CJK short-circuit above is what prevents this from
+    # firing on CN publication exports that share the bracket convention.
     if len(re.findall(r"\[\d{4}\]", full_text)) >= 3:
         return True
 

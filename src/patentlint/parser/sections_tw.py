@@ -9,6 +9,7 @@ import re
 from patentlint.analysis.figure_refs import TW_PARSER
 from patentlint.models import TwPatentDocument, TwPatentType
 from patentlint.parser.claims_tw import parse_tw_claims
+from patentlint.parser.language import count_cjk_chars
 from patentlint.parser.symbol_table_tw import parse_tw_symbol_table
 
 # ---------------------------------------------------------------------------
@@ -83,29 +84,9 @@ _PARA_NUM_PATTERN = re.compile(r"^【(\d{4})】")
 # ---------------------------------------------------------------------------
 
 
-def _count_cjk_chars(text: str) -> int:
-    """Count CJK characters in text (excluding ASCII, spaces, and punctuation).
-
-    Counts CJK Unified Ideographs, CJK Extension blocks, Bopomofo,
-    Katakana, Hiragana, and fullwidth alphanumeric — i.e., characters
-    that TIPO counts toward the 250-char abstract limit.
-    """
-    count = 0
-    for ch in text:
-        cp = ord(ch)
-        if (
-            0x4E00 <= cp <= 0x9FFF        # CJK Unified Ideographs
-            or 0x3400 <= cp <= 0x4DBF      # CJK Extension A
-            or 0x20000 <= cp <= 0x2A6DF    # CJK Extension B
-            or 0x2A700 <= cp <= 0x2B73F    # CJK Extension C
-            or 0x2B740 <= cp <= 0x2B81F    # CJK Extension D
-            or 0x3040 <= cp <= 0x309F      # Hiragana
-            or 0x30A0 <= cp <= 0x30FF      # Katakana
-            or 0x3100 <= cp <= 0x312F      # Bopomofo
-            or 0xFF01 <= cp <= 0xFF5E      # Fullwidth ASCII variants
-        ):
-            count += 1
-    return count
+# Backwards-compat alias — callers and tests import _count_cjk_chars from
+# this module. The canonical implementation lives in parser.language.
+_count_cjk_chars = count_cjk_chars
 
 
 # ---------------------------------------------------------------------------
