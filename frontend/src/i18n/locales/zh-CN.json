@@ -146,6 +146,7 @@
   },
   "antecedent": {
     "didYouMean": "您是否指的是\"{{term}}\"（于权利要求{{claim_id}}中引入）？",
+    "didYouMeanCrossBranch": "您是否指的是\"{{term}}\"（于权利要求 {{claim_id}} 中引入，但该权利要求不在本权利要求的相依链中）？",
     "crossBranchAntecedent": "在权利要求 {{claim_id}} 中引入，但该权利要求不在本权利要求的相依链中。请调整相依结构或以「a」重新引入该用语。",
     "crossRefSpecSupport": "亦已在说明书支持中标记，参见下方 § 112(a)。"
   },

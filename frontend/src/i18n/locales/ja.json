@@ -146,6 +146,7 @@
   },
   "antecedent": {
     "didYouMean": "もしかして「{{term}}」（請求項{{claim_id}}で導入）ですか？",
+    "didYouMeanCrossBranch": "もしかして「{{term}}」（請求項 {{claim_id}} で導入されていますが、当該請求項は本請求項の従属系列に含まれません）ですか？",
     "crossBranchAntecedent": "請求項 {{claim_id}} で導入されていますが、当該請求項は本請求項の従属系列に含まれません。従属関係を見直すか、「a」で用語を再導入してください。",
     "crossRefSpecSupport": "明細書の裏付けでもフラグされています（下記 § 112(a) をご確認ください）。"
   },

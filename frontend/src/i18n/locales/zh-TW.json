@@ -146,6 +146,7 @@
   },
   "antecedent": {
     "didYouMean": "您是否指的是「{{term}}」（於請求項{{claim_id}}中導入）？",
+    "didYouMeanCrossBranch": "您是否指的是「{{term}}」（於請求項 {{claim_id}} 中導入，但該請求項不在本請求項的相依鏈中）？",
     "crossBranchAntecedent": "於請求項 {{claim_id}} 中引入，但該請求項不在本請求項的相依鏈中。請調整附屬結構，或於本請求項中以不定冠詞（「a」）重新導入該用語。",
     "crossRefSpecSupport": "亦已於說明書支持中標記，參見下方 § 112(a)。"
   },
