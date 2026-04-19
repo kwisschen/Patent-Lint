@@ -1,12 +1,12 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 25,
+    "current_round": 26,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
-    "total_labeled": 1487,
-    "real_findings": 1484,
+    "total_labeled": 1509,
+    "real_findings": 1506,
     "synthetic_findings": 3,
     "key_format": "(fixture, claim_id, term, reference_form) tuple — parity with TW schema v11. ADR-107 tuple dedup is handled inside the walker, not here.",
     "categories": [
@@ -1236,13 +1236,13 @@
     },
     {
       "fixture": "CN113939805B (Huawei)",
-      "claim_id": 4,
+      "claim_id": 5,
       "term": "服务端",
       "reference_form": "所述服务端",
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | parser-fix migration: c4→c5",
       "resolved_by": null,
       "round": 0
     },
@@ -1272,13 +1272,13 @@
     },
     {
       "fixture": "CN113939805B (Huawei)",
-      "claim_id": 4,
+      "claim_id": 5,
       "term": "标识指示",
       "reference_form": "所述标识指示",
       "category": "walker_fp.over_capture",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | parser-fix migration: c4→c5",
       "resolved_by": null,
       "round": 0
     },
@@ -3483,12 +3483,12 @@
       "claim_id": 11,
       "term": "第一神经网络",
       "reference_form": "所述第一神经网络",
-      "category": "legit_drafting_error",
-      "protect": true,
+      "category": "walker_fp.cross_branch_sibling",
+      "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 42, 80, 121]; real §112(b) defect (parallel-invention drafter error)",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 42, 80, 121]; real §112(b) defect (parallel-invention drafter error) | demoted from protect:true legit_drafting_error: pre-fix label was an artifact of parser claim-id drift; post-fix walker resolves the antecedent chain correctly",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115485995B",
@@ -3519,12 +3519,12 @@
       "claim_id": 11,
       "term": "第二神经网络",
       "reference_form": "所述第二神经网络",
-      "category": "legit_drafting_error",
-      "protect": true,
+      "category": "walker_fp.cross_branch_sibling",
+      "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 42, 80, 121]; real §112(b) defect (parallel-invention drafter error)",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 42, 80, 121]; real §112(b) defect (parallel-invention drafter error) | demoted from protect:true legit_drafting_error: pre-fix label was an artifact of parser claim-id drift; post-fix walker resolves the antecedent chain correctly",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115485995B",
@@ -3558,9 +3558,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115485995B",
@@ -3588,13 +3588,13 @@
     },
     {
       "fixture": "CN115485995B",
-      "claim_id": 13,
+      "claim_id": 14,
       "term": "第一集合",
       "reference_form": "所述第一集合",
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | parser-fix migration: c13→c14",
       "resolved_by": null,
       "round": 0
     },
@@ -3702,9 +3702,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115485995B",
@@ -6864,25 +6864,25 @@
     },
     {
       "fixture": "CN115485995B",
-      "claim_id": 82,
+      "claim_id": 83,
       "term": "差异度",
       "reference_form": "所述差异度",
       "category": "legit_drafting_error",
       "protect": true,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 124]; real §112(b) defect (parallel-invention drafter error)",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 124]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c82→c83",
       "resolved_by": null,
       "round": 0
     },
     {
       "fixture": "CN115485995B",
-      "claim_id": 82,
+      "claim_id": 83,
       "term": "相似度",
       "reference_form": "所述相似度",
       "category": "legit_drafting_error",
       "protect": true,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 124]; real §112(b) defect (parallel-invention drafter error)",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 124]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c82→c83",
       "resolved_by": null,
       "round": 0
     },
@@ -7014,9 +7014,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115485995B",
@@ -7062,9 +7062,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115485995B",
@@ -7074,9 +7074,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115485995B",
@@ -7122,9 +7122,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115485995B",
@@ -7158,9 +7158,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115485995B",
@@ -7182,9 +7182,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115485995B",
@@ -7206,9 +7206,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115485995B",
@@ -7230,9 +7230,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [90]; walker intro-registration miss",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [90]; walker intro-registration miss | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115485995B",
@@ -9072,25 +9072,25 @@
     },
     {
       "fixture": "CN115485995B",
-      "claim_id": 124,
+      "claim_id": 125,
       "term": "差异度",
       "reference_form": "所述差异度",
       "category": "legit_drafting_error",
       "protect": true,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 82]; real §112(b) defect (parallel-invention drafter error)",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 82]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c124→c125",
       "resolved_by": null,
       "round": 0
     },
     {
       "fixture": "CN115485995B",
-      "claim_id": 124,
+      "claim_id": 125,
       "term": "相似度",
       "reference_form": "所述相似度",
       "category": "legit_drafting_error",
       "protect": true,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 82]; real §112(b) defect (parallel-invention drafter error)",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 82]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c124→c125",
       "resolved_by": null,
       "round": 0
     },
@@ -11823,12 +11823,12 @@
       "claim_id": 25,
       "term": "第一中间结果",
       "reference_form": "所述第一中间结果",
-      "category": "legit_drafting_error",
-      "protect": true,
+      "category": "walker_fp.cross_branch_sibling",
+      "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 24]; real §112(b) defect (parallel-invention drafter error)",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 24]; real §112(b) defect (parallel-invention drafter error) | demoted from protect:true legit_drafting_error: pre-fix label was an artifact of parser claim-id drift; post-fix walker resolves the antecedent chain correctly",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -11844,13 +11844,13 @@
     },
     {
       "fixture": "CN115952274B",
-      "claim_id": 25,
+      "claim_id": 26,
       "term": "输入数据",
       "reference_form": "所述输入数据",
       "category": "legit_drafting_error",
       "protect": true,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 24]; real §112(b) defect (parallel-invention drafter error)",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 24]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c25→c26",
       "resolved_by": null,
       "round": 0
     },
@@ -11862,9 +11862,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -11886,9 +11886,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -11922,9 +11922,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -11958,9 +11958,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -12006,9 +12006,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -12030,9 +12030,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -12060,13 +12060,13 @@
     },
     {
       "fixture": "CN115952274B",
-      "claim_id": 31,
+      "claim_id": 46,
       "term": "外部记忆库",
       "reference_form": "所述外部记忆库",
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | parser-fix migration: c31→c46",
       "resolved_by": null,
       "round": 0
     },
@@ -12162,9 +12162,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -12234,9 +12234,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -12270,9 +12270,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -12366,9 +12366,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -12378,9 +12378,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -12390,9 +12390,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -12414,9 +12414,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -12426,9 +12426,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -12474,9 +12474,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -12486,9 +12486,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -12840,13 +12840,13 @@
     },
     {
       "fixture": "CN115952274B",
-      "claim_id": 44,
+      "claim_id": 45,
       "term": "检索模型",
       "reference_form": "所述检索模型",
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | parser-fix migration: c44→c45",
       "resolved_by": null,
       "round": 0
     },
@@ -12876,13 +12876,13 @@
     },
     {
       "fixture": "CN115952274B",
-      "claim_id": 45,
+      "claim_id": 46,
       "term": "样本记忆结果",
       "reference_form": "所述样本记忆结果",
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | parser-fix migration: c45→c46",
       "resolved_by": null,
       "round": 0
     },
@@ -12924,13 +12924,13 @@
     },
     {
       "fixture": "CN115952274B",
-      "claim_id": 45,
+      "claim_id": 46,
       "term": "预测记忆结果",
       "reference_form": "所述预测记忆结果",
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | parser-fix migration: c45→c46",
       "resolved_by": null,
       "round": 0
     },
@@ -14592,13 +14592,13 @@
     },
     {
       "fixture": "CN213655447U (BYD)",
-      "claim_id": 8,
+      "claim_id": 9,
       "term": "活动支撑板(120)",
       "reference_form": "所述活动支撑板(120)",
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | parser-fix migration: c8→c9",
       "resolved_by": null,
       "round": 0
     },
@@ -16525,9 +16525,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5). | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115485995B",
@@ -16549,9 +16549,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5). | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115485995B",
@@ -17101,9 +17101,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "R9 shifting: resurfaced from trailing verb strip. | parser-fix migration: c17→c90",
-      "resolved_by": null,
-      "round": 0
+      "notes": "R9 shifting: resurfaced from trailing verb strip. | parser-fix migration: c17→c90 | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115485995B",
@@ -17182,12 +17182,12 @@
       "claim_id": 24,
       "term": "深度学习模型",
       "reference_form": "所述深度学习模型",
-      "category": "legit_drafting_error",
-      "protect": true,
+      "category": "walker_fp.cross_branch_sibling",
+      "protect": false,
       "confidence": "seed",
-      "notes": "R9 shifting: resurfaced from trailing verb strip. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error)",
-      "resolved_by": null,
-      "round": 0
+      "notes": "R9 shifting: resurfaced from trailing verb strip. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error) | demoted from protect:true legit_drafting_error: pre-fix label was an artifact of parser claim-id drift; post-fix walker resolves the antecedent chain correctly",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -17197,9 +17197,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "R9 shifting: resurfaced from trailing verb strip. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss",
-      "resolved_by": null,
-      "round": 0
+      "notes": "R9 shifting: resurfaced from trailing verb strip. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -17209,9 +17209,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "R9 shifting: resurfaced from trailing verb strip. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss",
-      "resolved_by": null,
-      "round": 0
+      "notes": "R9 shifting: resurfaced from trailing verb strip. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN116662522B",
@@ -17278,12 +17278,12 @@
       "claim_id": 11,
       "term": "第一设备",
       "reference_form": "所述第一设备",
-      "category": "legit_drafting_error",
-      "protect": true,
+      "category": "walker_fp.cross_branch_sibling",
+      "protect": false,
       "confidence": "seed",
-      "notes": "R10 shifting: resurfaced from char-exclusion residue strip. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 42, 121]; real §112(b) defect (parallel-invention drafter error)",
-      "resolved_by": null,
-      "round": 0
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 42, 121]; real §112(b) defect (parallel-invention drafter error) | demoted from protect:true legit_drafting_error: pre-fix label was an artifact of parser claim-id drift; post-fix walker resolves the antecedent chain correctly",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115485995B",
@@ -17650,12 +17650,12 @@
       "claim_id": 25,
       "term": "第一中间问询",
       "reference_form": "所述第一中间问询",
-      "category": "legit_drafting_error",
-      "protect": true,
+      "category": "walker_fp.cross_branch_sibling",
+      "protect": false,
       "confidence": "seed",
-      "notes": "R10 shifting: resurfaced from char-exclusion residue strip. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 24]; real §112(b) defect (parallel-invention drafter error)",
-      "resolved_by": null,
-      "round": 0
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 24]; real §112(b) defect (parallel-invention drafter error) | demoted from protect:true legit_drafting_error: pre-fix label was an artifact of parser claim-id drift; post-fix walker resolves the antecedent chain correctly",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -17665,9 +17665,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "R10 shifting: resurfaced from char-exclusion residue strip. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115952274B",
@@ -17785,9 +17785,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Surfaced by parser-fix (mid-paragraph claim boundary). Previously hidden inside adjacent claim text.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Surfaced by parser-fix (mid-paragraph claim boundary). Previously hidden inside adjacent claim text. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN115485995B",
@@ -17797,9 +17797,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Surfaced by parser-fix (mid-paragraph claim boundary). Previously hidden inside adjacent claim text.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Surfaced by parser-fix (mid-paragraph claim boundary). Previously hidden inside adjacent claim text. | resolved by parser-fix: ancestor chain now correct",
+      "resolved_by": "round_26_parser_numpr_presplit",
+      "round": 26
     },
     {
       "fixture": "CN116662522B",
@@ -18043,13 +18043,13 @@
     },
     {
       "fixture": "CN113939805B (Huawei)",
-      "claim_id": 5,
+      "claim_id": 6,
       "term": "返回指令",
       "reference_form": "所述返回指令",
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "R24 single-char trailing: 作/不/相/均/得 added to denylist + relaxed-residual subset | cascade from R24: bare in ancestor(s) [1]",
+      "notes": "R24 single-char trailing: 作/不/相/均/得 added to denylist + relaxed-residual subset | cascade from R24: bare in ancestor(s) [1] | parser-fix migration: c5→c6",
       "resolved_by": null,
       "round": 0
     },
@@ -18064,6 +18064,30 @@
       "notes": "R24 single-char trailing: 作/不/相/均/得 added to denylist + relaxed-residual subset | cascade from R24: bare in ancestor(s) [7]",
       "resolved_by": null,
       "round": 0
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 85,
+      "term": "第三信号",
+      "reference_form": "所述第三信号",
+      "category": "miss_intro.coverage_gap",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | surfaced by round_26_parser_numpr_presplit",
+      "resolved_by": null,
+      "round": 26
+    },
+    {
+      "fixture": "CN115952274B",
+      "claim_id": 25,
+      "term": "用户",
+      "reference_form": "所述用户",
+      "category": "miss_intro.coverage_gap",
+      "protect": false,
+      "confidence": "seed",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | surfaced by round_26_parser_numpr_presplit",
+      "resolved_by": null,
+      "round": 26
     }
   ]
 }
