@@ -781,7 +781,7 @@
           "amendLength": "名称が25文字を超えています（{{count}}文字）。",
           "amendContent": "名称に使用できない語が含まれています：{{title_prohibited_items}}。",
           "pass": "名称はCNIPA要件を満たしています。",
-          "amendMissing": "明細書に名称が記載されていません。"
+          "amendMissing": "明細書に発明の名称が記載されていません。"
         },
         "claimReference": {
           "amend": "明細書が{{count}}段落で請求項を引用しています（{{paragraphs}}）。例：{{snippet}}",
