@@ -108,7 +108,7 @@
         "description": "Active label pending triage; must be resolved before a round can silence it."
       }
     ],
-    "notes": "The source check emits a single aggregate CheckItem per document (set of unique flagged terms). Per-finding records in this snapshot are produced by an audit-only re-walk that replicates the check's internal loop (imports _INTRO_PATTERN from the source module; uses a capturing variant of _REF_PATTERN so reference_form can be exposed). Each fixture record includes a canonical_unique_terms array and a cross_check_ok boolean asserting that the set of unique terms in the audit findings equals the canonical CheckItem.details term set. Finding IDs use claim_{id}_{sha256(term)[:8]}_{within_claim_idx} to remain stable across reruns. | Schema v2 (2026-04-10): ambig resolution pass — all 13 v1 ambig entries recategorized by reading full claim text. Category miss_intro.mid_sentence_verb_object renamed to miss_intro.inline_one_prefix (fix-agnostic name; the corpus pattern is any 一X appearing inline, and the fix shape is a left-anchor denylist conversion rather than a verb-allowlist extension). New category walker_bug.noun_boundary_overgreedy added for 108P001015 c4 聚苯醚成分 (walker extends past a legitimate noun boundary into the fresh N+V clause 成分包括). protect:true count 5 → 8 (+3: 110P000868 c1/c3/c5 電子裝置 — drafter conflated 電子裝置 with 行動裝置; claim never introduces 電子裝置 despite the symbol table listing 800:電子裝置). Proposed walker_bug.conjunction_split_intro category was rejected and collapsed into miss_intro.inline_one_prefix after recognizing the 4 第二方向 findings are the same left-anchor rejection as 為一容置杯體 and 輸出一解鎖指令; one generalized fix covers all sites. | Schema v4 (2026-04-10): relabeled 110P000158 c2/c4 from miss_intro.definitional to walker_bug.trailing_verb_gap (new category). Actual root cause is 介 missing from _TRAILING_VERB_DENYLIST — the intro 一第一夾角介於 captures 第一夾角介 but trailing 介 is not stripped. miss_intro.definitional drops from 3→1. | Schema v5 (2026-04-10): resolved_by for F2 session — 5 entries resolved: 1 miss_intro.definitional (F2_definitional), 2 miss_intro.bare_noun_possessive (F2_definitional_cascade via 上端 prefix match), 2 walker_bug.trailing_verb_gap (F2_trailing_verb_gap). Active: 70, resolved: 14. | Schema v6 (2026-04-10): relabeled 15 miss_intro.inline_one_prefix entries after root-cause analysis on full claim text revealed 4 distinct bugs: walker_bug.greedy_yi_consumption (7), walker_bug.ref_marker_overcapture (2), walker_bug.paren_numeral_asymmetry (1), and 5 additional walker_bug.trailing_verb_gap entries (至/依序/擷取). miss_intro.inline_one_prefix: 15→0. Category count: 14→17. | Schema v7 (2026-04-10): resolved_by for F3 session — 24 entries resolved. Active: 46, resolved: 38. protect:true count unchanged at 8. | Schema v8 (2026-04-10): reclassified 110P000631 c11 第一銜接部銜接(222) from walker_bug.paren_overgreedy to legit_drafting_error (numeral (222) placed after verb 銜接 instead of before — c5 has correct form 第一銜接部(222)銜接). protect:true: 8→9. 108P001015 c4 聚苯醚成分 (noun_boundary_overgreedy): deferred to Phase 9 — N+V boundary detection for 1 entry not worth the risk. | Schema v9 (2026-04-10): resolved_by for F4 + walker bug fix — 5 entries resolved (3 miss_intro.quantifier_list via F4_quantifier_list, 2 walker_bug.regex_noun_class_narrow via F4_連接面_exception). 2 new miss_intro.quantifier_list entries surfaced (158 c1/c3 第一連接面/第二連接面). Active: 43, resolved: 43. protect:true count unchanged at 9. | Schema v10 (2026-04-10): resolved_by for F4b — 2 miss_intro.quantifier_list entries resolved (F4b_bare_N個). Propagation diagnostic: 0 BFS bugs, 3 CROSS-INDEPENDENT (110P000368 c7/c8, 110P000631 c10), 10 UPSTREAM MISS (bare_noun_possessive). All 13 propagation_gap entries annotated with diagnostic provenance. Active: 41, resolved: 45. | Schema v11 (2026-04-10): reclassified 110P000631 c1 容納部 from bare_noun_possessive to legit_drafting_error (protect:true). Drafter introduced 容納空間 but referenced 容納部 — genuine noun mismatch. protect:true 9→10. | Schema v11 migration (2026-04-16, Phase 9 #18 + #19 backport from CN): added round: 0 sentinel to all 86 labels + current_round: 0 to metadata. ADR-110 + ADR-111 semantics now mirror CN harness. No walker edits; no logical changes to resolved_by assignments.",
+    "notes": "The source check emits a single aggregate CheckItem per document (set of unique flagged terms). Per-finding records in this snapshot are produced by an audit-only re-walk that replicates the check's internal loop (imports _INTRO_PATTERN from the source module; uses a capturing variant of _REF_PATTERN so reference_form can be exposed). Each fixture record includes a canonical_unique_terms array and a cross_check_ok boolean asserting that the set of unique terms in the audit findings equals the canonical CheckItem.details term set. Finding IDs use claim_{id}_{sha256(term)[:8]}_{within_claim_idx} to remain stable across reruns. | Schema v2 (2026-04-10): ambig resolution pass — all 13 v1 ambig entries recategorized by reading full claim text. Category miss_intro.mid_sentence_verb_object renamed to miss_intro.inline_one_prefix (fix-agnostic name; the corpus pattern is any 一X appearing inline, and the fix shape is a left-anchor denylist conversion rather than a verb-allowlist extension). New category walker_bug.noun_boundary_overgreedy added for 108P001015 c4 聚苯醚成分 (walker extends past a legitimate noun boundary into the fresh N+V clause 成分包括). protect:true count 5 → 8 (+3: 110P000868 c1/c3/c5 電子裝置 — drafter conflated 電子裝置 with 行動裝置; claim never introduces 電子裝置 despite the symbol table listing 800:電子裝置). Proposed walker_bug.conjunction_split_intro category was rejected and collapsed into miss_intro.inline_one_prefix after recognizing the 4 第二方向 findings are the same left-anchor rejection as 為一容置杯體 and 輸出一解鎖指令; one generalized fix covers all sites. | Schema v4 (2026-04-10): relabeled 110P000158 c2/c4 from miss_intro.definitional to walker_bug.trailing_verb_gap (new category). Actual root cause is 介 missing from _TRAILING_VERB_DENYLIST — the intro 一第一夾角介於 captures 第一夾角介 but trailing 介 is not stripped. miss_intro.definitional drops from 3→1. | Schema v5 (2026-04-10): resolved_by for F2 session — 5 entries resolved: 1 miss_intro.definitional (F2_definitional), 2 miss_intro.bare_noun_possessive (F2_definitional_cascade via 上端 prefix match), 2 walker_bug.trailing_verb_gap (F2_trailing_verb_gap). Active: 70, resolved: 14. | Schema v6 (2026-04-10): relabeled 15 miss_intro.inline_one_prefix entries after root-cause analysis on full claim text revealed 4 distinct bugs: walker_bug.greedy_yi_consumption (7), walker_bug.ref_marker_overcapture (2), walker_bug.paren_numeral_asymmetry (1), and 5 additional walker_bug.trailing_verb_gap entries (至/依序/擷取). miss_intro.inline_one_prefix: 15→0. Category count: 14→17. | Schema v7 (2026-04-10): resolved_by for F3 session — 24 entries resolved. Active: 46, resolved: 38. protect:true count unchanged at 8. | Schema v8 (2026-04-10): reclassified 110P000631 c11 第一銜接部銜接(222) from walker_bug.paren_overgreedy to legit_drafting_error (numeral (222) placed after verb 銜接 instead of before — c5 has correct form 第一銜接部(222)銜接). protect:true: 8→9. 108P001015 c4 聚苯醚成分 (noun_boundary_overgreedy): deferred to Phase 9 — N+V boundary detection for 1 entry not worth the risk. | Schema v9 (2026-04-10): resolved_by for F4 + walker bug fix — 5 entries resolved (3 miss_intro.quantifier_list via F4_quantifier_list, 2 walker_bug.regex_noun_class_narrow via F4_連接面_exception). 2 new miss_intro.quantifier_list entries surfaced (158 c1/c3 第一連接面/第二連接面). Active: 43, resolved: 43. protect:true count unchanged at 9. | Schema v10 (2026-04-10): resolved_by for F4b — 2 miss_intro.quantifier_list entries resolved (F4b_bare_N個). Propagation diagnostic: 0 BFS bugs, 3 CROSS-INDEPENDENT (110P000368 c7/c8, 110P000631 c10), 10 UPSTREAM MISS (bare_noun_possessive). All 13 propagation_gap entries annotated with diagnostic provenance. Active: 41, resolved: 45. | Schema v11 (2026-04-10): reclassified 110P000631 c1 容納部 from bare_noun_possessive to legit_drafting_error (protect:true). Drafter introduced 容納空間 but referenced 容納部 — genuine noun mismatch. protect:true 9→10. | Schema v11 migration (2026-04-16, Phase 9 #18 + #19 backport from CN): added round: 0 sentinel to all 86 labels + current_round: 0 to metadata. ADR-110 + ADR-111 semantics now mirror CN harness. No walker edits; no logical changes to resolved_by assignments. | Schema v11 Phase 9 #19-extension (2026-04-19): historical F1/F2/F3/F4/F4b resolved_by entries backfilled with negative round values (-1/-2/-3/-4/-5) to preserve pre-ADR-111 chronology without colliding with post-backport rounds 1-5. F5/F6/F7/F8/F9 entries remain at round:0 (not in Phase 9 #19 scope). Labels-file hygiene only; no walker, schema, or harness changes.",
     "current_round": 5
   },
   "labels": [
@@ -122,7 +122,7 @@
       "confidence": "high",
       "notes": "intro in c1 via 5重量份至40重量份的聚丁二烯樹脂",
       "resolved_by": "F1_weight_composition",
-      "round": 0
+      "round": -1
     },
     {
       "fixture": "108P001015JP派譯版-FV",
@@ -146,7 +146,7 @@
       "confidence": "high",
       "notes": "c5 dep of c1; same weight-composition intro as claim 2",
       "resolved_by": "F1_weight_composition",
-      "round": 0
+      "round": -1
     },
     {
       "fixture": "108P001015JP派譯版-FV",
@@ -158,7 +158,7 @@
       "confidence": "high",
       "notes": "c6 dep of c5; weight-composition intro inherited",
       "resolved_by": "F1_weight_composition",
-      "round": 0
+      "round": -1
     },
     {
       "fixture": "108P001015JP派譯版-FV",
@@ -170,7 +170,7 @@
       "confidence": "high",
       "notes": "乙烯基 is a new sub-feature introduced via 中-possessive pattern in c6",
       "resolved_by": "F1_weight_composition_cascade",
-      "round": 0
+      "round": -1
     },
     {
       "fixture": "108P001015JP派譯版-FV",
@@ -182,7 +182,7 @@
       "confidence": "high",
       "notes": "c7 dep of c5",
       "resolved_by": "F1_weight_composition",
-      "round": 0
+      "round": -1
     },
     {
       "fixture": "108P001015JP派譯版-FV",
@@ -194,7 +194,7 @@
       "confidence": "high",
       "notes": "苯乙烯基 is a new sub-feature via 中-possessive",
       "resolved_by": "F1_weight_composition_cascade",
-      "round": 0
+      "round": -1
     },
     {
       "fixture": "108P001015JP派譯版-FV",
@@ -206,7 +206,7 @@
       "confidence": "high",
       "notes": "intro in c1 via 5重量份至30重量份的雙馬來醯亞胺",
       "resolved_by": "F1_weight_composition",
-      "round": 0
+      "round": -1
     },
     {
       "fixture": "108P001015JP派譯版-FV",
@@ -218,7 +218,7 @@
       "confidence": "high",
       "notes": "intro in c1 via 20重量份至70重量份的聚苯醚樹脂",
       "resolved_by": "F1_weight_composition",
-      "round": 0
+      "round": -1
     },
     {
       "fixture": "108P001015JP派譯版-FV",
@@ -230,7 +230,7 @@
       "confidence": "high",
       "notes": "c10 dep of c1",
       "resolved_by": "F1_weight_composition",
-      "round": 0
+      "round": -1
     },
     {
       "fixture": "109P001046US.DE.JP派譯版-FV",
@@ -290,7 +290,7 @@
       "confidence": "medium",
       "notes": "c8 dep of c4 | F3 cascade: post-processing intro recovery propagates introduction to downstream claim.",
       "resolved_by": "F3_cascade",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "109P001046US.DE.JP派譯版-FV",
@@ -314,7 +314,7 @@
       "confidence": "high",
       "notes": "walker captured bare ordinal 第一; intended term is 第一剛輪 or 第一交線 — regex noun class fails on next char. SCHEMA V8: root cause is interior-verb 連接 in 第一連接面 truncates to bare 第一. Fix: add 連接面 to _INTERIOR_CUT_EXCEPTIONS.",
       "resolved_by": "F4_連接面_exception",
-      "round": 0
+      "round": -4
     },
     {
       "fixture": "110P000158US.JP.EPC派譯版-FV",
@@ -326,7 +326,7 @@
       "confidence": "high",
       "notes": "SCHEMA V8: surfaced after regex_noun_class_narrow fix. Intro via 四個第一連接面 — bare N個 quantifier not in _INTRO_MULTI_QUANTIFIERS. Previously hidden because 連接 interior-verb cut reduced 第一連接面 to bare ordinal 第一.",
       "resolved_by": "F4b_bare_N個",
-      "round": 0
+      "round": -5
     },
     {
       "fixture": "110P000158US.JP.EPC派譯版-FV",
@@ -338,7 +338,7 @@
       "confidence": "high",
       "notes": "SCHEMA V4: relabeled from miss_intro.definitional. Actual root cause: c1 intro is 一第一夾角介於 — the existing 一 pattern captures 第一夾角介 but 介 is not in _TRAILING_VERB_DENYLIST, so normalization produces 第一夾角介 which mismatches c2's reference 第一夾角.",
       "resolved_by": "F2_trailing_verb_gap",
-      "round": 0
+      "round": -2
     },
     {
       "fixture": "110P000158US.JP.EPC派譯版-FV",
@@ -350,7 +350,7 @@
       "confidence": "high",
       "notes": "same bug as c1 第一 — bare ordinal capture. SCHEMA V8: root cause is interior-verb 連接 in 第二連接面 truncates to bare 第二.",
       "resolved_by": "F4_連接面_exception",
-      "round": 0
+      "round": -4
     },
     {
       "fixture": "110P000158US.JP.EPC派譯版-FV",
@@ -362,7 +362,7 @@
       "confidence": "high",
       "notes": "SCHEMA V8: surfaced after regex_noun_class_narrow fix. Intro via 四個第二連接面 — bare N個 quantifier. Symmetric to c1 第一連接面.",
       "resolved_by": "F4b_bare_N個",
-      "round": 0
+      "round": -5
     },
     {
       "fixture": "110P000158US.JP.EPC派譯版-FV",
@@ -374,7 +374,7 @@
       "confidence": "high",
       "notes": "SCHEMA V4: relabeled from miss_intro.definitional. Symmetric to c2 — c3 intro 一第二夾角介於 captures 第二夾角介, 介 not stripped.",
       "resolved_by": "F2_trailing_verb_gap",
-      "round": 0
+      "round": -2
     },
     {
       "fixture": "110P000368US-JP,KR案派譯版-FV",
@@ -419,7 +419,7 @@
       "confidence": "high",
       "notes": "c4 intro is 得出一個人化特徵 — walker parses 一個 as quantifier, captures 人化特徵 as noun, reference 該個人化特徵 fails to match | F3 cascade: 一 splitting in _postprocess_intro_capture recovers 個人化特徵 as a separate intro from the split at embedded 一 in 使用者識別資料得出一個人化特徵.",
       "resolved_by": "F3_cascade",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000368US-JP,KR案派譯版-FV",
@@ -442,7 +442,7 @@
       "confidence": "high",
       "notes": "一全世界或一地域內 idiomatic disjunction; Phase 9 deferred per CLAUDE.md | F3 cascade: 一 splitting on 一全世界或一地域內 produces both 全世界 and 地域 as intros.",
       "resolved_by": "F3_cascade",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000368US-JP,KR案派譯版-FV",
@@ -454,7 +454,7 @@
       "confidence": "high",
       "notes": "pair with 全世界 | F3 cascade: 一 splitting on 一全世界或一地域內 produces both 全世界 and 地域 as intros.",
       "resolved_by": "F3_cascade",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000368US-JP,KR案派譯版-FV",
@@ -478,7 +478,7 @@
       "confidence": "high",
       "notes": "same bug as c4; c8 is system claim, even if propagation worked c4-side intro is wrongly parsed | F3 cascade: 一 splitting in _postprocess_intro_capture recovers 個人化特徵 as a separate intro from the split at embedded 一 in 使用者識別資料得出一個人化特徵.",
       "resolved_by": "F3_cascade",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000368US-JP,KR案派譯版-FV",
@@ -502,7 +502,7 @@
       "confidence": "high",
       "notes": "c10 propagates the 全世界/地域 deferred family | F3 cascade: 一 splitting on 一全世界或一地域內 produces both 全世界 and 地域 as intros.",
       "resolved_by": "F3_cascade",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000368US-JP,KR案派譯版-FV",
@@ -514,7 +514,7 @@
       "confidence": "high",
       "notes": "pair with 全世界 | F3 cascade: 一 splitting on 一全世界或一地域內 produces both 全世界 and 地域 as intros.",
       "resolved_by": "F3_cascade",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000631US.JP.DE派譯版-FV",
@@ -526,7 +526,7 @@
       "confidence": "high",
       "notes": "intro via 所述開口部(120)的上端邊緣 bare-noun possessive; HIGH RISK family",
       "resolved_by": "F2_definitional_cascade",
-      "round": 0
+      "round": -2
     },
     {
       "fixture": "110P000631US.JP.DE派譯版-FV",
@@ -561,7 +561,7 @@
       "confidence": "high",
       "notes": "intro via 定義為第一長度(L1) — definitional verb prefix",
       "resolved_by": "F2_definitional",
-      "round": 0
+      "round": -2
     },
     {
       "fixture": "110P000631US.JP.DE派譯版-FV",
@@ -584,7 +584,7 @@
       "confidence": "high",
       "notes": "c2 dep of c1; same bare-noun family",
       "resolved_by": "F2_definitional_cascade",
-      "round": 0
+      "round": -2
     },
     {
       "fixture": "110P000631US.JP.DE派譯版-FV",
@@ -608,7 +608,7 @@
       "confidence": "high",
       "notes": "SCHEMA V2: ambig resolved. c6 intro is 所述蓋體配件(400)為一容置杯體(420) — 一 preceded by content verb 為, rejected by current _INTRO_PATTERN left-anchor. Captured term is 容置杯體 (bare noun), not 為一容置杯體. Same left-anchor denylist fix as inline_one_prefix family.",
       "resolved_by": "F3_paren_variant",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000631US.JP.DE派譯版-FV",
@@ -691,7 +691,7 @@
       "confidence": "medium",
       "notes": "intro via V一染色墨水 pattern somewhere in c1 preamble. Category renamed from mid_sentence_verb_object in schema v2.",
       "resolved_by": "F3_greedy_yi_postprocessing",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000633US.JP派譯版-FV",
@@ -703,7 +703,7 @@
       "confidence": "medium",
       "notes": "provisional — intro pattern likely inline 一X after content verb",
       "resolved_by": "F3_ref_marker_postprocessing",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000633US.JP派譯版-FV",
@@ -715,7 +715,7 @@
       "confidence": "medium",
       "notes": "c3 dep of c1",
       "resolved_by": "F3_greedy_yi_postprocessing",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000633US.JP派譯版-FV",
@@ -727,7 +727,7 @@
       "confidence": "high",
       "notes": "SCHEMA V2: ambig resolved. c10 intro is 依據一第一方向及一第二方向 — 一 preceded by 依據 (content verb) for first site, by 及 (conjunction) for second site. Both rejected by current left-anchor. Originally proposed walker_bug.conjunction_split_intro but recognized as same root cause as 為一X / 輸出一X — one generalized left-anchor denylist fix covers all sites.",
       "resolved_by": "F3_trailing_verb_batch",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000633US.JP派譯版-FV",
@@ -739,7 +739,7 @@
       "confidence": "medium",
       "notes": "c12 is separate claim chain",
       "resolved_by": "F3_greedy_yi_postprocessing",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000633US.JP派譯版-FV",
@@ -751,7 +751,7 @@
       "confidence": "high",
       "notes": "SCHEMA V2: ambig resolved. Same as c10 — 依據一第一方向及一第二方向 left-anchor rejection.",
       "resolved_by": "F3_trailing_verb_batch",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000633US.JP派譯版-FV_1",
@@ -763,7 +763,7 @@
       "confidence": "medium",
       "notes": "determinism canary — byte-identical to _FV c1",
       "resolved_by": "F3_greedy_yi_postprocessing",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000633US.JP派譯版-FV_1",
@@ -775,7 +775,7 @@
       "confidence": "medium",
       "notes": "canary",
       "resolved_by": "F3_ref_marker_postprocessing",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000633US.JP派譯版-FV_1",
@@ -787,7 +787,7 @@
       "confidence": "medium",
       "notes": "canary",
       "resolved_by": "F3_greedy_yi_postprocessing",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000633US.JP派譯版-FV_1",
@@ -799,7 +799,7 @@
       "confidence": "high",
       "notes": "SCHEMA V2 canary — same as _FV c10",
       "resolved_by": "F3_trailing_verb_batch",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000633US.JP派譯版-FV_1",
@@ -811,7 +811,7 @@
       "confidence": "medium",
       "notes": "canary",
       "resolved_by": "F3_greedy_yi_postprocessing",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000633US.JP派譯版-FV_1",
@@ -823,7 +823,7 @@
       "confidence": "high",
       "notes": "SCHEMA V2 canary — same as _FV c19",
       "resolved_by": "F3_trailing_verb_batch",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000641JP派譯版-FV",
@@ -835,7 +835,7 @@
       "confidence": "high",
       "notes": "intro via 包含至少三個軸承 — 至少N個X not in _INTRO_MULTI_QUANTIFIERS",
       "resolved_by": "F4_quantifier_list",
-      "round": 0
+      "round": -4
     },
     {
       "fixture": "110P000641JP派譯版-FV",
@@ -847,7 +847,7 @@
       "confidence": "high",
       "notes": "intro via 包含至少四個軸承 — same pattern as c3",
       "resolved_by": "F4_quantifier_list",
-      "round": 0
+      "round": -4
     },
     {
       "fixture": "110P000641JP派譯版-FV",
@@ -859,7 +859,7 @@
       "confidence": "high",
       "notes": "intro via 其中一個所述感測器為一旋轉編碼器 — inline 一X after 為. Category renamed from mid_sentence_verb_object in schema v2.",
       "resolved_by": "F3_greedy_yi_postprocessing",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000641JP派譯版-FV",
@@ -871,7 +871,7 @@
       "confidence": "high",
       "notes": "intro via 兩曲柄 — 兩X quantifier without 個 counter",
       "resolved_by": "F4_quantifier_list",
-      "round": 0
+      "round": -4
     },
     {
       "fixture": "110P000840US.JP.DE派譯版-FV",
@@ -931,7 +931,7 @@
       "confidence": "high",
       "notes": "WALKER BUG — 對 particle eaten into capture after close paren; intended term is 第二定位構件(223) | F3 cascade: prefix match resolves 第二定位構件(223)對 against intro 第二定位構件(223).",
       "resolved_by": "F3_cascade",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000840US.JP.DE派譯版-FV",
@@ -1027,7 +1027,7 @@
       "confidence": "high",
       "notes": "same paren-overgreedy bug as c4 | F3 cascade: prefix match resolves 第二定位構件(223)對 against intro 第二定位構件(223).",
       "resolved_by": "F3_cascade",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000840US.JP.DE派譯版-FV",
@@ -1120,7 +1120,7 @@
       "confidence": "high",
       "notes": "SCHEMA V2: ambig resolved. c8 own text has 該行動通訊模組輸出一解鎖指令至該通訊模組 — inline 一X after content verb 輸出, same claim. Captured term is 解鎖指令 (bare noun).",
       "resolved_by": "F3_trailing_verb_batch",
-      "round": 0
+      "round": -3
     },
     {
       "fixture": "110P000868US.JP派譯版-FV",
