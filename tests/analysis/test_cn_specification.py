@@ -24,6 +24,13 @@ def _make_cn_doc(**overrides) -> CnPatentDocument:
         "summary": ["本发明提供一种数据处理装置，解决了上述问题。"],
         "drawings_description": ["图1为本发明实施例的结构示意图。"],
         "detailed_description": ["如图1所示，数据处理装置包括处理模块。"],
+        "section_order": [
+            "technical_field",
+            "background",
+            "summary",
+            "drawings_description",
+            "detailed_description",
+        ],
         "input_format": "docx",
     }
     defaults.update(overrides)
@@ -63,43 +70,43 @@ class TestSectionOrdering:
         doc = _make_cn_doc()
         results = check_section_ordering(doc)
         assert results[0].status == "pass"
+        assert results[0].message_key == "check.cn.spec.sectionOrdering.pass"
 
     def test_wrong_order_amend(self):
-        # detailed_description before background — but since we check field
-        # presence order against canonical, we need to swap fields in a way
-        # that the non-empty fields are out of canonical order.
-        # Actually the check looks at which fields are non-empty and their
-        # canonical indices. If summary is present but background is empty,
-        # and detailed_description is present but drawings_description is empty,
-        # order is still fine (indices 2, 4 are sorted).
-        # To trigger: make detailed_description non-empty but summary empty,
-        # then have summary empty but drawings non-empty — that's still sorted.
-        # Real trigger: make background empty, summary present, technical_field empty,
-        # but that's just missing sections, not wrong order.
-        # The only way to trigger is if the document actually has sections out
-        # of canonical order. Since CnPatentDocument stores each section in its
-        # own field, the order is always "canonical" by construction. The check
-        # only matters when sections are present — but the indices of present
-        # fields always come from the canonical list.
-        # Wait, re-reading the check: it builds (canonical_index, field_name) for
-        # non-empty fields. This list is always sorted because canonical_index
-        # is a monotonically assigned value per field. So this check can never
-        # fail with the current CnPatentDocument model.
-        # This means the check is designed for when parsing assigns section
-        # content in document order and we verify that order matches canonical.
-        # For the test, we'd need to simulate wrong order at the parser level.
-        # But since the model stores sections by name, not by order, the check
-        # as written will always pass. Let me re-read the implementation...
+        # 具体实施方式 encountered before 发明内容 — classic MPEP-ordered
+        # spec reused for CNIPA filing without reordering.
+        doc = _make_cn_doc(
+            section_order=[
+                "technical_field",
+                "detailed_description",
+                "background",
+            ]
+        )
+        results = check_section_ordering(doc)
+        assert results[0].status == "amend"
+        assert results[0].message_key == "check.cn.spec.sectionOrdering.amend"
+        assert results[0].reference == "专利法实施细则 §17"
 
-        # The implementation checks indices from _CANONICAL_ORDER. Since each
-        # field maps to exactly one index, present indices are always a subset
-        # of [0,1,2,3,4] and always sorted. This check would need a different
-        # data model (e.g., ordered list of sections) to ever fail.
+    def test_empty_section_order_passes(self):
+        # No headers found (degenerate input). Vacuously sorted.
+        doc = _make_cn_doc(section_order=[])
+        results = check_section_ordering(doc)
+        assert results[0].status == "pass"
 
-        # For now, test that all-present gives pass, and accept that the
-        # current model can't trigger amend. The check exists for when
-        # CnPatentDocument is extended with section ordering metadata.
-        doc = _make_cn_doc()
+    def test_non_canonical_keys_ignored(self):
+        # Unknown keys filtered out; remaining canonical indices still sorted.
+        doc = _make_cn_doc(
+            section_order=["claims", "technical_field", "abstract", "background"]
+        )
+        results = check_section_ordering(doc)
+        assert results[0].status == "pass"
+
+    def test_missing_middle_section_passes(self):
+        # Skipping a canonical section (here: summary) is not an ordering
+        # violation — required-sections check handles the absence.
+        doc = _make_cn_doc(
+            section_order=["technical_field", "background", "detailed_description"]
+        )
         results = check_section_ordering(doc)
         assert results[0].status == "pass"
 

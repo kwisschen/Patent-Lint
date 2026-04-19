@@ -133,12 +133,19 @@ def _identify_section(header_text: str) -> str | None:
     return None
 
 
-def _split_spec_subsections(paragraphs: list[str]) -> dict[str, list[str]]:
+def _split_spec_subsections(
+    paragraphs: list[str],
+) -> tuple[dict[str, list[str]], list[str]]:
     """Split specification paragraphs into sub-sections by header detection.
 
-    Returns a dict with keys: technical_field, background, summary,
-    drawings_description, detailed_description. Each value is a list of
-    paragraph strings (excluding the header line itself).
+    Returns ``(subsections, section_order)``:
+
+    * ``subsections`` — dict with keys: technical_field, background, summary,
+      drawings_description, detailed_description. Each value is a list of
+      paragraph strings (excluding the header line itself).
+    * ``section_order`` — list of field-name keys in the order each header
+      was first encountered in the document. First-occurrence only; repeated
+      headers do not re-append. Feeds ``check_section_ordering``.
     """
     result: dict[str, list[str]] = {
         "technical_field": [],
@@ -147,6 +154,7 @@ def _split_spec_subsections(paragraphs: list[str]) -> dict[str, list[str]]:
         "drawings_description": [],
         "detailed_description": [],
     }
+    section_order: list[str] = []
 
     current_key: str | None = None
     for para in paragraphs:
@@ -159,12 +167,14 @@ def _split_spec_subsections(paragraphs: list[str]) -> dict[str, list[str]]:
 
         if matched_key is not None:
             current_key = matched_key
+            if matched_key not in section_order:
+                section_order.append(matched_key)
             continue  # Skip the header line itself
 
         if current_key is not None:
             result[current_key].append(para)
 
-    return result
+    return result, section_order
 
 
 def _detect_paragraph_numbering(paragraphs: list[str]) -> tuple[bool, list[int]]:
@@ -569,7 +579,7 @@ def extract_cn_sections_from_docx(sections: list[DocxSection]) -> CnPatentDocume
     claims_paragraphs = _backfill_numpr_prefixes(claims_paragraphs, claims_numpr_flags)
 
     # Split specification into sub-sections
-    subsections = _split_spec_subsections(spec_paragraphs)
+    subsections, section_order = _split_spec_subsections(spec_paragraphs)
 
     # Extract title (before first sub-section header)
     title = _extract_title(spec_paragraphs)
@@ -622,4 +632,5 @@ def extract_cn_sections_from_docx(sections: list[DocxSection]) -> CnPatentDocume
         input_format="docx",
         has_doc_page_fallback=False,
         section_source_strategies=strategies,
+        section_order=section_order,
     )
