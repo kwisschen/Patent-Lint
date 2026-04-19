@@ -115,6 +115,48 @@ class TestDetectPatentDocument:
         text = "See reference [1] for details. Also [2] is relevant."
         assert detect_patent_document(text) is False
 
+    def test_phase_9_73_rejects_cn_patent(self):
+        """CN publication export with [NNNN] numbering must not false-positive US.
+
+        The CN [0001] paragraph-number convention shares bracket shape with
+        US [NNNN] numbering — the CJK short-circuit is what distinguishes.
+        """
+        text = (
+            "用于调整神经网络的方法和装置\n"
+            "[0001] 本申请涉及通信技术领域。\n"
+            "[0002] 具体地，本申请涉及一种用于调整神经网络的方法和装置。\n"
+            "[0003] 神经网络在无线通信中应用广泛。\n"
+        )
+        assert detect_patent_document(text) is False
+
+    def test_phase_9_73_rejects_tw_patent(self):
+        """TW 【】 section headers + 【NNNN】 paragraph numbers must not false-positive US."""
+        text = (
+            "【中文發明名稱】\n"
+            "蓋組件及帶蓋容器\n"
+            "【技術領域】\n"
+            "本發明涉及蓋組件的技術領域。\n"
+            "【0001】 本發明提供一種蓋組件。\n"
+            "【0002】 所述蓋組件包括蓋本體。\n"
+            "【0003】 所述蓋本體與外筒構件連接。\n"
+        )
+        assert detect_patent_document(text) is False
+
+    def test_phase_9_73_accepts_us_with_cjk_prior_art_citation(self):
+        """A US patent with a minor foreign-language citation should still pass.
+
+        5% is the rejection threshold; typical US specs that mention a
+        foreign application number or a single CJK term stay well below.
+        """
+        text = (
+            "DETAILED DESCRIPTION\n"
+            "The invention is described herein. It claims priority to "
+            "Japanese Patent Application No. 2023-123456 (特許), which "
+            "is incorporated by reference.\n"
+            "1. A method comprising step A.\n"
+        )
+        assert detect_patent_document(text) is True
+
 
 class TestDetectPriorArtCitations:
     def test_found(self):
