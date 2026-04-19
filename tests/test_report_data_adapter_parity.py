@@ -226,6 +226,9 @@ class TestForwardMapsAreExhaustive:
         # destination on ReportData); CN/TW surface these through their
         # per-jurisdiction *_checks lists instead.
         "reference_numerals",
+        # Consumed into the US figures_sequential amend CheckItem's
+        # details_params by _to_us_report_data; not a raw list on ReportData.
+        "figures_missing",
     })
 
     def test_every_list_field_is_either_forwarded_or_documented(self):

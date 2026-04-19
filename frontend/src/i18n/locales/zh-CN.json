@@ -743,7 +743,7 @@
         "pass": "附图说明中未发现现有技术引用。"
       },
       "sequential": {
-        "amend": "附图编号不连续。",
+        "amend": "附图编号不连续，缺失：{{figure_list}}。",
         "pass": "附图编号连续。"
       },
       "count": "发现 {{count}} 张附图。"

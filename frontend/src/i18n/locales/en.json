@@ -743,7 +743,7 @@
         "pass": "No prior art references in drawings description."
       },
       "sequential": {
-        "amend": "Figures are not in sequential order.",
+        "amend": "Figures are not in sequential order; missing: {{figure_list}}.",
         "pass": "Figures are in sequential order."
       },
       "count": "{{count}} figure(s) found."
