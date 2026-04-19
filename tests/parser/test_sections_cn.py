@@ -513,6 +513,27 @@ class TestDetectPatentDocumentCn:
         ]
         assert detect_patent_document_cn(paragraphs) is False
 
+    def test_phase_9_74_rejects_jp_patent(self):
+        """JPO patent (hiragana/katakana) must not false-positive CN (Phase 9 #74)."""
+        paragraphs = [
+            "【特許請求の範囲】",
+            "【請求項1】信号処理方法であって、第1の信号を受信する方法。",
+            "【発明の詳細な説明】",
+            "本発明は信号処理に関する。",
+        ]
+        assert detect_patent_document_cn(paragraphs) is False
+
+    def test_phase_9_74_rejects_ko_patent(self):
+        """KIPO patent (Hangul) must not false-positive CN (Phase 9 #74)."""
+        paragraphs = [
+            "【청구항 1】",
+            "신호 처리 장치에 있어서, 처리기를 포함하는 장치.",
+            "[0001] 본 발명은 신경망을 이용한 신호 처리에 관한 것이다.",
+            "[0002] 보다 구체적으로는 처리 장치이다.",
+            "[0003] 종래 기술의 문제점을 해결한다.",
+        ]
+        assert detect_patent_document_cn(paragraphs) is False
+
 
 # ---------------------------------------------------------------------------
 # _presplit_mid_paragraph — Phase 9 #59 fix

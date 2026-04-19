@@ -13,7 +13,7 @@ appear inside body text (e.g., "This application claims the benefit of priority.
 
 import re
 
-from patentlint.parser.language import cjk_ratio
+from patentlint.parser.language import east_asian_ratio
 
 # ---------------------------------------------------------------------------
 # Master list of all recognised section headers (standalone paragraph patterns)
@@ -260,36 +260,35 @@ def extract_summary_section(text: str) -> str:
 def detect_patent_document(full_text: str) -> bool:
     """Heuristic check for whether the document appears to be a US patent spec.
 
-    Jurisdiction-aware as of Phase 9 #73: rejects CJK-dominant documents
-    (CN or TW patents uploaded to the wrong jurisdiction) so the non-patent
-    banner can prompt the user to re-select. Heuristics 1 and 2 rely on
-    English section-header / claim-preamble language that CJK-drafted
-    patents do not carry; heuristic 3 (the ``[NNNN]`` paragraph-number
-    fallback) is the only language-ambiguous signal because both US and
-    CN specs use ``[0001]`` numbering, so it now requires ASCII-dominant
-    content to fire.
+    Jurisdiction-aware as of Phase 9 #73/#74: rejects East-Asian-script
+    documents (CN/TW/JP/KO patents uploaded to the wrong jurisdiction)
+    so the non-patent banner can prompt the user to re-select. Requires
+    a positive English signal — recognized section header or English
+    claim preamble — to accept. The previous ``[NNNN]`` fallback was
+    removed because the convention is shared across US, CN, JP, KO, and
+    several European offices (DE, FR), so it flagged non-US Latin-script
+    patents as US.
 
     Returns True if US-patent indicators are found, False otherwise.
+    Users whose draft lacks both an English section header and an
+    English claim preamble can still bypass the banner via the "Show
+    Results Anyway" button in the NonPatentBanner component.
     """
-    # CJK-dominant content is not a US patent. Short-circuit before the
-    # English-header / English-claim heuristics even though those shouldn't
-    # match CJK — a partially-translated US-style filing might carry stray
-    # English headers that we don't want to accept as "is US" either.
-    if cjk_ratio(full_text) > 0.05:
+    # Reject any document with substantial East-Asian script (CN/TW/JP/KO).
+    # 5% tolerance allows minor foreign-language citations like
+    # "(特許)" in a US filing that references a Japanese priority document.
+    if east_asian_ratio(full_text) > 0.05:
         return False
 
-    # 1. Recognized section header (English-specific).
+    # 1. Recognized English section header (strong, English-specific signal).
     if _ANY_SECTION_HEADER.search(full_text):
         return True
 
-    # 2. Numbered claims pattern: "1. A ..." or "1. An ..." (English-specific).
+    # 2. Numbered claims pattern: "1. A ..." or "1. An ..." or "1. The ..."
+    # Requires an English indefinite/definite article in the preamble —
+    # rejects German "1. Ein Verfahren...", French "1. Un procédé...",
+    # Spanish "1. Un método...", etc.
     if re.search(r"^\s*\d+\.\s+(?:A|An|The)\s+", full_text, re.MULTILINE | re.IGNORECASE):
-        return True
-
-    # 3. Bracketed paragraph numbers [0001] style — need 3+. Language-
-    # ambiguous; the CJK short-circuit above is what prevents this from
-    # firing on CN publication exports that share the bracket convention.
-    if len(re.findall(r"\[\d{4}\]", full_text)) >= 3:
         return True
 
     return False

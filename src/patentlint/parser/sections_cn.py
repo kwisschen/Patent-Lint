@@ -9,7 +9,11 @@ import re
 from patentlint.models import CnPatentDocument, CnPatentType
 from patentlint.parser.claims_cn import _MID_PARAGRAPH_CLAIM_BOUNDARY, parse_cn_claims_docx
 from patentlint.parser.docx_loader import DocxSection
-from patentlint.parser.language import count_cjk_chars
+from patentlint.parser.language import (
+    cjk_ratio,
+    contains_hangul,
+    contains_hiragana_or_katakana,
+)
 
 # ---------------------------------------------------------------------------
 # Header matching patterns — match Word section header text to document parts
@@ -366,18 +370,25 @@ _TW_BRACKET_HEADER_RE = re.compile(r"^【[^\d].+?】", re.MULTILINE)
 def detect_patent_document_cn(paragraphs: list[str]) -> bool:
     """Heuristic check for whether a .docx appears to be a CN patent spec.
 
-    Jurisdiction-aware as of Phase 9 #73: rejects TW patents (which use
-    traditional-Chinese 【...】 section headers that CN's 五书模板 does
-    not) and rejects non-CJK documents (US patents) before applying the
-    fallback numeric-claim heuristic. Heuristics 1 (CN sub-section
-    headers) and 2 (五书 body-anchor markers) are simplified-Chinese
-    only and already jurisdiction-specific; heuristic 3 (numbered
-    claims) was the loose fallback that mis-accepted US and TW inputs.
+    Jurisdiction-aware as of Phase 9 #73/#74: rejects TW (【】 fullwidth
+    bracket headers), JP (hiragana/katakana presence), KO (Hangul
+    presence), and US / other Latin-script patents (fail the CJK-count
+    gate on the numeric-claim fallback). CN patents use Simplified
+    Chinese only — no kana, no Hangul — so any of those scripts is
+    sufficient to reject.
 
     Returns True if CN-patent indicators are found, False otherwise.
     OR logic — returns True on first match.
     """
     full_text = "\n".join(paragraphs)
+
+    # Script-presence rejections (JP kana, KO Hangul). CN patents carry
+    # zero of either; any appearance is strong enough to reject without
+    # needing a ratio.
+    if contains_hiragana_or_katakana(full_text):
+        return False
+    if contains_hangul(full_text):
+        return False
 
     # TW patents carry 【section-name】 body headers; CN does not. A single
     # such header is enough to reject. (CN documents occasionally contain
@@ -401,9 +412,12 @@ def detect_patent_document_cn(paragraphs: list[str]) -> bool:
 
     # 3. Numbered claims fallback (3+ lines). Language-ambiguous on its own
     # — US ``1. A method...`` and TW ``1．一種...`` both match. Require
-    # meaningful simplified-CJK content to reject those jurisdictions.
+    # CJK dominance (ratio ≥ 20%) to reject US patents that embed CJK
+    # translations of claim terms (e.g. testspec3's 眼鏡 / 鏡片 callouts).
+    # Raw counts don't work: those US specs carry 50-70 CJK chars, above
+    # any reasonable raw threshold, but stay well below 1% by ratio.
     if len(re.findall(r"^\s*\d+[.．。]\s*", full_text, re.MULTILINE)) >= 3:
-        if count_cjk_chars(full_text) >= 30:
+        if cjk_ratio(full_text) >= 0.20:
             return True
 
     return False
