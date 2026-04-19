@@ -843,6 +843,42 @@ def _build_tw_minimal(claims_text: list[str], symbol_lines: list[str] | None = N
     return _doc_to_bytes(doc)
 
 
+def _build_tw_section_ordering_violation() -> bytes:
+    """Engineered TW patent with bracket-header sections out of canonical order.
+
+    Phase 9 #66 trigger: places 【實施方式】 before 【發明內容】 in the spec
+    body. Section content is otherwise valid; violation is purely ordering.
+    """
+    doc = Document()
+    lines = [
+        "【發明名稱】",
+        "散熱裝置",
+        "【技術領域】",
+        "【0001】本發明係關於一種散熱裝置。",
+        "【先前技術】",
+        "【0002】習知技術存在問題。",
+        # 實施方式 (idx 4) BEFORE 發明內容 (idx 2) — violation
+        "【實施方式】",
+        "【0003】請參閱第1圖，散熱裝置100包括一基座10。",
+        "【發明內容】",
+        "【0004】本發明提供一種散熱裝置。",
+        "【圖式簡單說明】",
+        "【0005】第1圖係散熱裝置之示意圖。",
+        "【符號說明】",
+        "100  散熱裝置",
+        "10   基座",
+        "【申請專利範圍】",
+        "1. 一種散熱裝置，其特徵在於包括一基座。",
+        "【摘要】",
+        "本發明提供一種散熱裝置。",
+        "【代表圖】",
+        "第1圖",
+    ]
+    for line in lines:
+        doc.add_paragraph(line)
+    return _doc_to_bytes(doc)
+
+
 # ---------------------------------------------------------------------------
 # Tests
 # ---------------------------------------------------------------------------
@@ -1198,6 +1234,35 @@ class TestCnSectionOrderingViolation:
     def test_section_ordering_pass_not_emitted(self):
         keys = self._emitted_keys()
         assert "check.cn.spec.sectionOrdering.pass" not in keys
+
+
+class TestTwSectionOrderingViolation:
+    """Phase 9 #66 TW: 【】bracket headers emitted out of canonical order
+    trigger ``check.tw.spec.sectionOrdering.amend`` via the full pipeline."""
+
+    def _emitted_keys(self) -> set[str]:
+        result = analyze_bytes(
+            _build_tw_section_ordering_violation(),
+            "tw_section_order.docx",
+            Jurisdiction.TW,
+        )
+        all_checks = (
+            result.tw_specification_checks
+            + result.tw_claims_checks
+            + result.tw_abstract_checks
+            + result.tw_drawings_checks
+        )
+        return {c.message_key for c in all_checks if c.message_key}
+
+    def test_section_ordering_amend_detected(self):
+        keys = self._emitted_keys()
+        assert "check.tw.spec.sectionOrdering.amend" in keys, (
+            f"Expected section ordering AMEND; got {sorted(keys)}"
+        )
+
+    def test_section_ordering_pass_not_emitted(self):
+        keys = self._emitted_keys()
+        assert "check.tw.spec.sectionOrdering.pass" not in keys
 
 
 class TestCrossJurisdictionMismatch:

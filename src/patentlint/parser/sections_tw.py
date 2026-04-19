@@ -48,6 +48,19 @@ _SECTION_MAP: dict[str, str] = {
     "代表圖之符號簡單說明": "representative_drawing_symbols",
 }
 
+# Canonical TwPatentDocument body-section field names. Used to filter
+# _SECTION_MAP targets when populating section_order; non-body targets
+# (title/claims/abstract/representative_drawing/representative_drawing_symbols)
+# are not tracked because check_section_ordering only evaluates body sections.
+_BODY_SECTION_KEYS: frozenset[str] = frozenset({
+    "technical_field",
+    "prior_art",
+    "disclosure",
+    "drawings_description",
+    "embodiment",
+    "symbol_table",
+})
+
 # Headers to skip (not content sections — top-level dividers or English titles)
 _SKIP_HEADERS: set[str] = {
     "發明說明書",
@@ -181,6 +194,7 @@ def extract_tw_sections(
 
     is_utility_model = False
     current_section: str | None = None
+    section_order: list[str] = []
     in_spec_body = False  # Track whether we're inside 【發明說明書】/【新型說明書】
     waiting_for_abstract_text = False  # After 【中文】, next non-empty para is abstract
     spec_title: str | None = None  # Title from spec body (preferred)
@@ -222,6 +236,8 @@ def extract_tw_sections(
             mapped = _SECTION_MAP.get(header_text)
             if mapped is not None:
                 current_section = mapped
+                if mapped in _BODY_SECTION_KEYS and mapped not in section_order:
+                    section_order.append(mapped)
 
                 # Handle inline text after header (e.g., 【中文發明名稱】高頻基板用...)
                 if inline_text:
@@ -339,5 +355,6 @@ def extract_tw_sections(
         paragraph_numbers=paragraph_numbers,
         has_paragraph_numbering=has_paragraph_numbering,
         body_paragraph_word_numbers=body_paragraph_word_numbers,
+        section_order=section_order,
         input_format="docx",
     )

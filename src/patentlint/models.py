@@ -185,6 +185,13 @@ class TwPatentDocument(BaseModel):
     # value instead of a PatentLint-internal ordinal so flagged paragraphs
     # match the drafter's 【NNNN】 labels in Word.
     body_paragraph_word_numbers: list[str | None] = Field(default_factory=list)
+    # Canonical field-name keys (technical_field, prior_art, disclosure,
+    # drawings_description, embodiment, symbol_table) in the order the parser
+    # first encountered each 【】bracket header. First-occurrence only. Empty
+    # when no body-section headers were found. Consumed by
+    # ``check_section_ordering`` to flag 專利法施行細則 §17 order violations
+    # (Phase 9 #66).
+    section_order: list[str] = Field(default_factory=list)
     input_format: str = "docx"
 
 
