@@ -507,6 +507,7 @@
     "meansFunctionClaims": "청구항: {{list}}. § 112(f)에 따라 청구항 범위는 명세서에 개시된 대응 구조 및 균등물로 한정됩니다. 각 기능식 한정에 대해 명세서가 충분한 구조를 기재하고 있는지 확인하세요.",
     "antecedentBasisTerms": "{{count}}건의 선행사 기초 문제가 {{claims}}건의 청구항에 있습니다. 각 한정적 참조(\"the X\" 또는 \"said X\")에는 선행하는 부정적 도입(\"a X\" 또는 \"an X\")이 필요합니다. 선행사 기초 누락은 § 112(b) 불명확성 거절로 이어질 수 있습니다.",
     "preambleNounMismatch": "청구항 {{claim}}은(는) 청구항 {{parent}}에 종속됩니다. 전제부 명사가 다르지만 동일 실체를 지칭하는 경우 허용될 수 있습니다. 일관성을 확인하세요.",
+    "preambleNounMismatchSummary": "청구항 {{rootId}}은(는) 모항 명사 '{{parent}}'를 사용하고, 종속항 {{count}}개는 '{{dependent}}'를 사용합니다. 동일 대상을 지칭하는지 확인하거나 전제부 명사를 일치시키세요.",
     "preambleIndefiniteArticle": "청구항 {{claim}}은(는) 청구항 {{parent}}에 종속됩니다. 종속항은 독립항 실체를 지칭할 때 정관사 \"The\"를 사용해야 하며, \"A\" 또는 \"An\"은 부적절합니다.",
     "singleFigureFix": "MPEP § 608.02에 따라 모든 \"FIG. 1\"을 \"The Figure\" 또는 \"the drawing\"으로 변경하세요.",
     "drawingsPriorArt": "선행 기술을 묘사하는 도면은 MPEP § 608.02(g)에 따라 \"Prior Art\" 범례를 표시해야 합니다. 각 선행 기술 도면이 올바르게 표기되었는지 확인하세요.",

@@ -507,6 +507,7 @@
     "meansFunctionClaims": "权利要求：{{list}}。依 § 112(f)，权利要求范围限于说明书中公开的对应结构及等同物。请确认说明书针对各功能性限定公开了充分的结构。",
     "antecedentBasisTerms": "{{count}}项先行词基础问题，涉及{{claims}}项权利要求。每个确定引用（\"the X\"或\"said X\"）须有先前的不定引用（\"a X\"或\"an X\"）。缺少先行词基础可能导致 § 112(b) 不确定性驳回。",
     "preambleNounMismatch": "权利要求 {{claim}} 从属于权利要求 {{parent}}。前序名词不同，但若指代同一实体则可能合理。请确认一致性。",
+    "preambleNounMismatchSummary": "权利要求 {{rootId}} 使用母项名词「{{parent}}」；{{count}} 个从属权利要求使用「{{dependent}}」。请确认是否指代同一实体，或统一前序名词。",
     "preambleIndefiniteArticle": "权利要求 {{claim}} 从属于权利要求 {{parent}}。从属权利要求须使用定冠词\"The\"指代独立权利要求实体，而非\"A\"或\"An\"。",
     "singleFigureFix": "请依 MPEP § 608.02 将所有\"FIG. 1\"替换为\"The Figure\"或\"the drawing\"。",
     "drawingsPriorArt": "描绘现有技术的附图须依 MPEP § 608.02(g) 标注\"Prior Art\"图例。请确认各现有技术附图已正确标注。",

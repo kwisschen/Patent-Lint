@@ -507,6 +507,7 @@
     "meansFunctionClaims": "Claims: {{list}}. Under § 112(f), claim scope is limited to the corresponding structure disclosed in the specification and equivalents. Verify that the specification describes sufficient structure for each means-plus-function limitation.",
     "antecedentBasisTerms": "{{count}} potential antecedent basis issues across {{claims}} claims. Each definite reference (\"the X\" or \"said X\") must have a prior indefinite introduction (\"a X\" or \"an X\"). Missing antecedent basis may result in a § 112(b) indefiniteness rejection.",
     "preambleNounMismatch": "Claim {{claim}} depends on claim {{parent}}. The preamble nouns differ but may be acceptable if they refer to the same entity. Verify consistency.",
+    "preambleNounMismatchSummary": "Claim {{rootId}} uses parent noun '{{parent}}'; {{count}} dependent claim(s) use '{{dependent}}'. Verify whether these refer to the same entity or align the preamble nouns.",
     "preambleIndefiniteArticle": "Claim {{claim}} depends on claim {{parent}}. Dependent claims must use the definite article \"The\" to refer back to the independent claim entity, not \"A\" or \"An.\"",
     "singleFigureFix": "Replace all instances of \"FIG. 1\" with \"The Figure\" or \"the drawing\" per MPEP § 608.02.",
     "drawingsPriorArt": "Figures depicting prior art must be designated with the legend \"Prior Art\" per MPEP § 608.02(g). Verify each prior art figure is correctly labeled.",
