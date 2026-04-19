@@ -743,8 +743,8 @@
         "pass": "도면 설명에서 선행 기술 참조가 없습니다."
       },
       "sequential": {
-        "amend": "도면이 순차적 순서가 아닙니다.",
-        "pass": "도면이 순차적 순서입니다."
+        "amend": "도면 번호가 순차적이지 않습니다.",
+        "pass": "도면 번호가 순차적입니다."
       },
       "count": "도면 {{count}}개 발견."
     },
@@ -781,7 +781,7 @@
           "amendLength": "명칭이 25자 제한을 초과합니다 ({{count}}자).",
           "amendContent": "명칭에 금지된 내용이 포함되어 있습니다: {{title_prohibited_items}}.",
           "pass": "명칭이 CNIPA 요건을 충족합니다.",
-          "amendMissing": "명세서에 명칭이 누락되어 있습니다."
+          "amendMissing": "명세서에 발명의 명칭이 누락되어 있습니다."
         },
         "claimReference": {
           "amend": "명세서가 {{count}}개 단락에서 청구항을 참조합니다 ({{paragraphs}}). 예: {{snippet}}",
