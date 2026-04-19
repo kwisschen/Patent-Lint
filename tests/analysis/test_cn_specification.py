@@ -228,6 +228,81 @@ class TestParagraphEnding:
         results = check_paragraph_ending(doc)
         assert results[0].details_params["paragraphs"] == [2]
 
+    def test_strict_rejects_colon(self):
+        # 技术领域 is strict — colon not accepted even though relaxed
+        # sections allow it.
+        doc = _make_cn_doc(
+            technical_field=["本发明涉及数据处理："],
+            background=["背景段落。"],
+        )
+        results = check_paragraph_ending(doc)
+        assert results[0].status == "amend"
+        assert results[0].details_params["count"] == 1
+
+    def test_strict_rejects_semicolon(self):
+        # 背景技术 is strict — semicolon not accepted.
+        doc = _make_cn_doc(
+            technical_field=["技术领域段落。"],
+            background=["现有技术存在问题；"],
+        )
+        results = check_paragraph_ending(doc)
+        assert results[0].status == "amend"
+        assert results[0].details_params["count"] == 1
+
+    def test_relaxed_accepts_colon(self):
+        # 发明内容 is relaxed — colon accepted for step/list introductions.
+        doc = _make_cn_doc(
+            summary=["本发明包括以下步骤："],
+        )
+        results = check_paragraph_ending(doc)
+        assert results[0].status == "pass"
+
+    def test_relaxed_accepts_semicolon(self):
+        # 附图说明 is relaxed — semicolon accepted for enumeration items.
+        doc = _make_cn_doc(
+            drawings_description=["图1是本发明的流程图；"],
+        )
+        results = check_paragraph_ending(doc)
+        assert results[0].status == "pass"
+
+    def test_relaxed_accepts_list_cap_yiji(self):
+        # 具体实施方式 is relaxed — ；以及 penultimate list item allowed.
+        doc = _make_cn_doc(
+            detailed_description=["包括第一步骤；第二步骤；以及"],
+        )
+        results = check_paragraph_ending(doc)
+        assert results[0].status == "pass"
+
+    def test_relaxed_accepts_list_cap_ji(self):
+        doc = _make_cn_doc(
+            summary=["提供第一组件；第二组件；及"],
+        )
+        results = check_paragraph_ending(doc)
+        assert results[0].status == "pass"
+
+    def test_figure_caption_only_skipped(self):
+        # Bare figure captions below inserted images are not prose.
+        doc = _make_cn_doc(
+            drawings_description=[
+                "图1是示意图。",
+                "图1",
+                "图4A",
+                "图5C",
+            ],
+            detailed_description=["如图1所示，装置包括处理器。"],
+        )
+        results = check_paragraph_ending(doc)
+        assert results[0].status == "pass"
+
+    def test_figure_prose_still_checked(self):
+        # A paragraph like "图1、图2及图3" is prose referring to figures,
+        # not a standalone caption; must end with punctuation.
+        doc = _make_cn_doc(
+            drawings_description=["图1、图2及图3显示了本发明"],
+        )
+        results = check_paragraph_ending(doc)
+        assert results[0].status == "amend"
+
 
 # ── Check 5: Figure reference consistency ─────────────────────────────────
 
