@@ -670,7 +670,7 @@
   "check": {
     "spec": {
       "restrictiveWording": {
-        "verify": "说明书中发现限制性用语。",
+        "verify": "说明书中发现限制性用语（MPEP § 2173.05(b)）。",
         "pass": "说明书未发现限制性用语。"
       },
       "paragraphSequential": {
@@ -701,7 +701,7 @@
     },
     "claims": {
       "restrictiveWording": {
-        "verify": "权利要求中发现限制性或不确定用语。",
+        "verify": "权利要求中发现限制性或不确定用语（MPEP § 2173.05(b)）。",
         "pass": "权利要求未发现限制性或不确定用语。"
       },
       "sequential": {
@@ -744,7 +744,7 @@
     },
     "abstract": {
       "restrictiveWording": {
-        "verify": "摘要中发现限制性或不当用语。",
+        "verify": "摘要中发现限制性或不当用语（MPEP § 608.01(b)）。",
         "pass": "摘要未发现限制性或不当用语。"
       },
       "structure": {
@@ -766,11 +766,11 @@
         "pass": "单一附图标注正确。"
       },
       "priorArt": {
-        "verify": "附图说明中发现现有技术引用，请确认附图标注。",
+        "verify": "附图说明中发现现有技术引用，请确认附图标注（MPEP § 608.02(g)）。",
         "pass": "附图说明中未发现现有技术引用。"
       },
       "sequential": {
-        "amend": "附图编号不连续，缺失：{{figure_list}}。",
+        "amend": "附图编号不连续，缺失：{{figure_list}}（MPEP § 608.02）。",
         "pass": "附图编号连续。"
       },
       "count": "发现 {{count}} 张附图。"
