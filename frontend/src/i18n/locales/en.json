@@ -147,8 +147,7 @@
       "title": "Send via",
       "description": "Pick how to send the report. Whichever you choose, the full content is also copied to your clipboard.",
       "gmail": "Gmail",
-      "outlook": "Outlook",
-      "mailto": "Email app (Mail / Gmail app / Outlook app)",
+      "mailto": "Email app (Outlook, Mail, Gmail app, etc.)",
       "clipboard": "Copy to clipboard",
       "remember": "Remember my choice"
     },
