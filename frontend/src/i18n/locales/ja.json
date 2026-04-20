@@ -139,7 +139,7 @@
     "reportProblem": "この検出結果に問題を報告",
     "confirmation": "誤り報告をメールに自動入力しました。原稿はそのまま、お手元から出ていません。",
     "emailGreeting": "Christopher 様",
-    "emailIntro": "以下の PatentLint 検出結果に問題がありそうなので、ご報告させていただきます。",
+    "emailIntro": "以下の PatentLint 検出結果の誤りを報告いたします。",
     "emailUserSection": "ご説明",
     "emailClosing": "よろしくお願いいたします。",
     "bodyPlaceholder": "[この検出結果のどこに問題があるとお考えか、ご説明ください。請求項の文言や原稿の内容は一切貼り付けないでください。概要のみで調査可能です。]",
@@ -884,6 +884,7 @@
         },
         "figuresSequential": {
           "pass": "図1〜{{found_max}}が連番で付されています。",
+          "passNone": "図面は検出されませんでした。",
           "amend": "図番が連続していません。不足：{{figure_list}}。"
         }
       }
@@ -1041,6 +1042,7 @@
         },
         "figuresSequential": {
           "pass": "図1〜{{found_max}}が連番で付されています。",
+          "passNone": "図面は検出されませんでした。",
           "amend": "図番が連続していません。不足：{{figure_list}}。"
         }
       }

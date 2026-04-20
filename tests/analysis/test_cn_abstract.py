@@ -221,7 +221,7 @@ class TestFiguresSequential:
         doc = _cn_doc(figure_refs=[])
         results = check_figures_sequential(doc)
         assert results[0].status == "pass"
-        assert results[0].message_key == "check.cn.drawings.figuresSequential.pass"
+        assert results[0].message_key == "check.cn.drawings.figuresSequential.passNone"
 
     def test_reference(self):
         doc = _cn_doc(figure_refs=["图1", "图3"])

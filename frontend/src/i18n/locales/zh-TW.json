@@ -139,7 +139,7 @@
     "reportProblem": "回報此項分析結果的問題",
     "confirmation": "已為您自動填入錯誤回報至電子郵件供您檢視。您的稿件未離開您的裝置。",
     "emailGreeting": "Christopher 您好，",
-    "emailIntro": "我想回報以下 PatentLint 分析結果中看似有誤之處。",
+    "emailIntro": "我想回報以下 PatentLint 分析結果中的錯誤。",
     "emailUserSection": "您的說明",
     "emailClosing": "謝謝，",
     "bodyPlaceholder": "[請說明您認為此項分析結果有何問題。請勿貼上任何請求項文字或您稿件中的其他內容，簡要說明即可供我們調查。]",
@@ -884,6 +884,7 @@
         },
         "figuresSequential": {
           "pass": "附圖 1–{{found_max}} 編號連續。",
+          "passNone": "未找到附圖。",
           "amend": "附圖編號不連續，缺漏：{{figure_list}}。"
         }
       }
@@ -1041,6 +1042,7 @@
         },
         "figuresSequential": {
           "pass": "圖 1–{{found_max}} 編號連續。",
+          "passNone": "未找到圖式。",
           "amend": "圖號不連續，缺漏：{{figure_list}}。"
         }
       }
