@@ -144,6 +144,23 @@ export function showFeedbackToast(t) {
   })
 }
 
+// Open a mailto: URL by simulating a user-gestured click on a dynamic
+// anchor element. More reliable than `window.location.href = href` for
+// protocol handlers — some browsers (notably Chrome on Windows with
+// Gmail web-handler registered for mailto:) treat programmatic
+// `location.href` assignments as non-user-initiated and can fail to
+// dispatch to the external handler, especially on repeat attempts. An
+// anchor click within an onClick handler carries user-activation
+// context that protocol handlers trust.
+export function openMailto(href) {
+  const a = document.createElement('a')
+  a.href = href
+  a.rel = 'noopener'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+}
+
 // Compose a mailto: URL for the footer "Feedback" link. General-purpose
 // feedback (bug reports, feature requests, questions, comments) — not
 // per-finding. Reuses the localized greeting + closing pattern.
