@@ -147,8 +147,7 @@
       "title": "寄送方式",
       "description": "請選擇寄送回報的方式。無論您選哪一項，完整內容也會複製到剪貼簿備用。",
       "gmail": "Gmail",
-      "outlook": "Outlook",
-      "mailto": "電子郵件應用程式（Mail／Gmail App／Outlook App）",
+      "mailto": "電子郵件應用程式（Outlook、Mail、Gmail App 等）",
       "clipboard": "複製到剪貼簿",
       "remember": "記住我的選擇"
     },
