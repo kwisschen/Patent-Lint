@@ -10,7 +10,12 @@ import pytest
 
 from patentlint.models import TwPatentType
 from patentlint.parser.docx_loader import load_docx
-from patentlint.parser.sections_tw import detect_patent_document_tw, extract_tw_sections, _count_cjk_chars
+from patentlint.parser.sections_tw import (
+    _count_cjk_chars,
+    _find_bracketless_section_headers,
+    detect_patent_document_tw,
+    extract_tw_sections,
+)
 
 FIXTURES = Path(__file__).parent.parent / "fixtures" / "tw"
 
@@ -190,6 +195,69 @@ class TestExtractTwSectionsFromRawParagraphs:
             "本新型提供某裝置。",
         ])
         assert doc.patent_type == TwPatentType.UTILITY_MODEL
+
+
+class TestFindBracketlessSectionHeaders:
+    """_find_bracketless_section_headers: detect canonical TIPO section
+    names that appear without the required 【】 brackets."""
+
+    def test_bracketed_name_not_flagged(self):
+        """【先前技術】 is correctly bracketed → not flagged."""
+        assert _find_bracketless_section_headers(["【先前技術】"]) == []
+
+    def test_bare_section_name_flagged(self):
+        """先前技術 alone on a line → flagged (user's reported case)."""
+        assert _find_bracketless_section_headers(["先前技術"]) == ["先前技術"]
+
+    def test_square_bracket_variant_flagged(self):
+        assert _find_bracketless_section_headers(["[先前技術]"]) == ["[先前技術]"]
+
+    def test_fullwidth_paren_variant_flagged(self):
+        assert _find_bracketless_section_headers(["（先前技術）"]) == ["（先前技術）"]
+
+    def test_halfwidth_paren_variant_flagged(self):
+        assert _find_bracketless_section_headers(["(先前技術)"]) == ["(先前技術)"]
+
+    def test_tortoise_bracket_variant_flagged(self):
+        assert _find_bracketless_section_headers(["〔先前技術〕"]) == ["〔先前技術〕"]
+
+    def test_multiple_canonical_names_flagged_in_order(self):
+        paragraphs = [
+            "【技術領域】",
+            "正常內容。",
+            "先前技術",
+            "更多內容。",
+            "[發明內容]",
+            "實施方式",
+        ]
+        result = _find_bracketless_section_headers(paragraphs)
+        assert result == ["先前技術", "[發明內容]", "實施方式"]
+
+    def test_non_canonical_bare_text_not_flagged(self):
+        """A random bare line that isn't a canonical section name passes."""
+        assert _find_bracketless_section_headers(["某段內容"]) == []
+
+    def test_dedup_preserves_first_seen_order(self):
+        paragraphs = ["先前技術", "技術領域", "先前技術"]
+        assert _find_bracketless_section_headers(paragraphs) == ["先前技術", "技術領域"]
+
+    def test_inline_usage_not_flagged(self):
+        """A paragraph mentioning 先前技術 inline is not a header line."""
+        assert _find_bracketless_section_headers(
+            ["本發明涉及先前技術的改良。"]
+        ) == []
+
+    def test_populated_on_document(self):
+        """extract_tw_sections sets bracketless_section_headers on the doc."""
+        doc = extract_tw_sections([
+            "【發明名稱】",
+            "測試裝置",
+            "【技術領域】",
+            "本發明涉及測試。",
+            "先前技術",  # ← missing brackets
+            "已知先前技術。",
+        ])
+        assert doc.bracketless_section_headers == ["先前技術"]
 
 
 class TestDetectPatentDocumentTw:

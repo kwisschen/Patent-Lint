@@ -104,14 +104,45 @@ class TestCheckSymbolVsRepDrawing:
 
 
 class TestCheckBracketFormat:
-    """Check #32: Section header bracket format."""
+    """Check #32: Section header bracket format — 專利法施行細則 §17."""
 
-    def test_always_pass_for_now(self):
-        """Until raw header data is available, always PASS."""
-        doc = TwPatentDocument()
+    def test_empty_list_passes(self):
+        """No bracketless headers → PASS."""
+        doc = TwPatentDocument(bracketless_section_headers=[])
         result = check_bracket_format(doc)
         assert result[0].status == "pass"
         assert result[0].message_key == "check.tw.crossRef.bracketFormat.pass"
+
+    def test_bare_canonical_name_flagged(self):
+        """Bare 先前技術 (no brackets) → VERIFY with header in details."""
+        doc = TwPatentDocument(bracketless_section_headers=["先前技術"])
+        result = check_bracket_format(doc)
+        assert result[0].status == "verify"
+        assert result[0].message_key == "check.tw.crossRef.bracketFormat.verify"
+        assert result[0].details_params == {"headers": "先前技術"}
+
+    def test_variant_bracket_flagged(self):
+        """[先前技術] → VERIFY; whole variant-bracketed string passes through."""
+        doc = TwPatentDocument(bracketless_section_headers=["[先前技術]"])
+        result = check_bracket_format(doc)
+        assert result[0].status == "verify"
+        assert result[0].details_params == {"headers": "[先前技術]"}
+
+    def test_multiple_headers_joined(self):
+        doc = TwPatentDocument(
+            bracketless_section_headers=["先前技術", "技術領域", "[實施方式]"]
+        )
+        result = check_bracket_format(doc)
+        assert result[0].status == "verify"
+        assert result[0].details_params == {"headers": "先前技術, 技術領域, [實施方式]"}
+
+    def test_truncation_at_ten(self):
+        """Payload capped at 10 entries to avoid unbounded detail growth."""
+        headers = [f"header{i}" for i in range(15)]
+        doc = TwPatentDocument(bracketless_section_headers=headers)
+        result = check_bracket_format(doc)
+        rendered = result[0].details_params["headers"]
+        assert rendered.count(",") == 9  # 10 entries = 9 separators
 
     def test_reference(self):
         doc = TwPatentDocument()

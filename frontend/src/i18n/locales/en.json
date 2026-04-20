@@ -1042,7 +1042,7 @@
           "pass": "Representative drawing symbol description consistent with 符號說明."
         },
         "bracketFormat": {
-          "verify": "Some section headers are not in the required 【】 bracket format (專利法施行細則 §17).",
+          "verify": "Section headers not in the required 【】 bracket format: {{headers}} (專利法施行細則 §17).",
           "pass": "All section headers use the required 【】 bracket format."
         }
       },
