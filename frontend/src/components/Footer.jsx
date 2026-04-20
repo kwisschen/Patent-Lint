@@ -2,15 +2,25 @@
 // Copyright (c) 2025 Christopher Chen
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { composeFooterFeedbackUrl } from '../lib/feedback'
+import { composeFooterFeedback, sendFeedback } from '../lib/feedback'
 
 export default function Footer() {
   const { t } = useTranslation()
 
+  // Feedback link gets its own onClick handler so we copy-to-clipboard
+  // in addition to opening Gmail — universal fallback for non-Gmail users.
+  // The href is still populated (from compose) so right-click → "Open in
+  // new tab" works for power users.
+  const feedbackEmail = composeFooterFeedback(t)
+  const handleFeedbackClick = (e) => {
+    e.preventDefault()
+    sendFeedback(feedbackEmail, t)
+  }
+
   const externalLinks = [
     { label: t('footer.github'), href: 'https://github.com/kwisschen' },
     { label: t('footer.linkedin'), href: 'https://linkedin.com/in/kwisschen' },
-    { label: t('footer.feedback'), href: composeFooterFeedbackUrl(t) },
+    { label: t('footer.feedback'), href: feedbackEmail.url, onClick: handleFeedbackClick },
   ]
 
   return (
@@ -30,12 +40,13 @@ export default function Footer() {
           >
             {t('footer.about')}
           </Link>
-          {externalLinks.map(({ label, href }) => (
+          {externalLinks.map(({ label, href, onClick }) => (
             <a
               key={label}
               href={href}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={onClick}
               className="footer-link hover:text-foreground transition-colors duration-200"
             >
               {label}

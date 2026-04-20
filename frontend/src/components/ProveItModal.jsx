@@ -120,19 +120,14 @@ export default function ProveItModal({ open, onOpenChange }) {
       // Prove It test means users see the EXACT request pattern they'll
       // later see in normal use, building recognition/trust instead of
       // creating a "what was that?" moment.
-      const response = await fetch(`/version.json?t=${Date.now()}`, { cache: 'no-store' })
-      if (response.ok) {
-        entryIdRef.current += 1
-        setEntries((prev) => [...prev, {
-          id: entryIdRef.current,
-          url: response.url,
-          timestamp: new Date().toLocaleTimeString(),
-          duration: 0,
-        }])
-        setNetworkActive(true)
-        clearTimeout(timeoutRef.current)
-        timeoutRef.current = setTimeout(() => setNetworkActive(false), 800)
-      }
+      //
+      // The PerformanceObserver above catches the fetch automatically
+      // and appends the entry to the log, so we DON'T manually push
+      // here — doing so would produce two rows per click (one from the
+      // observer, one manual). The old favicon path manually added
+      // because the observer was filtering favicon.svg out; version.json
+      // isn't filtered, so the observer is the single source of truth.
+      await fetch(`/version.json?t=${Date.now()}`, { cache: 'no-store' })
     } catch {
       // Offline — no entry added, which is correct
     }
