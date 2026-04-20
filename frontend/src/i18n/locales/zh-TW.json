@@ -950,11 +950,11 @@
           "pass": "請求項編號連續。"
         },
         "dependencyFormat": {
-          "amend": "{{count}}項請求項之依附格式無法辨識：{{claims}}。",
+          "amend": "{{count}}項請求項之依附格式無法辨識：{{claims}}（專利法施行細則 §18）。",
           "pass": "所有依附引用皆使用正確格式。"
         },
         "selfDependent": {
-          "amend": "發現自我依附之請求項。",
+          "amend": "發現自我依附之請求項（專利法施行細則 §18）。",
           "pass": "無自我依附之請求項。"
         },
         "circularDependency": {
@@ -962,7 +962,7 @@
           "pass": "無循環依附。"
         },
         "forwardDependency": {
-          "amend": "{{claims}} 依附在後之請求項。",
+          "amend": "{{claims}} 依附在後之請求項（專利法施行細則 §18）。",
           "pass": "無依附在後之情形。"
         },
         "singleSentence": {
@@ -972,7 +972,7 @@
           "amendMultiSentence": "{{count}}項請求項非單句撰寫：{{claims}}。"
         },
         "refNumeralParens": {
-          "verify": "{{count}}項請求項之元件符號未加括號：{{claims}}。",
+          "verify": "{{count}}項請求項之元件符號未加括號：{{claims}}（專利法施行細則 §19）。",
           "pass": "所有請求項之元件符號皆已加括號。"
         },
         "subjectConsistency": {
@@ -1028,7 +1028,7 @@
           "passCompound": "發明名稱/新型名稱各部分（{{halves}}）均已於摘要中提及。"
         },
         "commercialLanguage": {
-          "amend": "摘要包含商業性宣傳用語。",
+          "amend": "摘要包含商業性宣傳用語（專利法施行細則 §21）。",
           "pass": "摘要未包含商業性宣傳用語。"
         },
         "representativeDrawing": {

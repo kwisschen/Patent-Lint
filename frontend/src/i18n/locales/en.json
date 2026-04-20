@@ -950,11 +950,11 @@
           "pass": "Claims numbered sequentially."
         },
         "dependencyFormat": {
-          "amend": "Unrecognized dependency format in {{count}} claim(s): {{claims}}.",
+          "amend": "Unrecognized dependency format in {{count}} claim(s): {{claims}} (專利法施行細則 §18).",
           "pass": "All dependency references correctly formatted."
         },
         "selfDependent": {
-          "amend": "Self-dependent claim(s) detected.",
+          "amend": "Self-dependent claim(s) detected (專利法施行細則 §18).",
           "pass": "No self-dependent claims."
         },
         "circularDependency": {
@@ -962,7 +962,7 @@
           "pass": "No circular dependency chains."
         },
         "forwardDependency": {
-          "amend": "{{claims}} reference(s) a subsequent claim (forward dependency).",
+          "amend": "{{claims}} reference(s) a subsequent claim (forward dependency) (專利法施行細則 §18).",
           "pass": "All dependencies reference preceding claims."
         },
         "singleSentence": {
@@ -972,7 +972,7 @@
           "amendMultiSentence": "{{count}} multi-sentence claim(s): {{claims}}."
         },
         "refNumeralParens": {
-          "verify": "Reference numerals not in parentheses in {{count}} claim(s): {{claims}}.",
+          "verify": "Reference numerals not in parentheses in {{count}} claim(s): {{claims}} (專利法施行細則 §19).",
           "pass": "All reference numerals enclosed in parentheses."
         },
         "subjectConsistency": {
@@ -1028,7 +1028,7 @@
           "passCompound": "All title components ({{halves}}) referenced in abstract."
         },
         "commercialLanguage": {
-          "amend": "Commercial or advertising language in abstract.",
+          "amend": "Commercial or advertising language in abstract (專利法施行細則 §21).",
           "pass": "Abstract free of commercial or advertising language."
         },
         "representativeDrawing": {
