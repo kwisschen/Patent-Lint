@@ -670,7 +670,7 @@
   "check": {
     "spec": {
       "restrictiveWording": {
-        "verify": "Restrictive wording found in specification.",
+        "verify": "Restrictive wording found in specification (MPEP § 2173.05(b)).",
         "pass": "No restrictive wording found in specification."
       },
       "paragraphSequential": {
@@ -701,7 +701,7 @@
     },
     "claims": {
       "restrictiveWording": {
-        "verify": "Restrictive or indefinite wording found in claims.",
+        "verify": "Restrictive or indefinite wording found in claims (MPEP § 2173.05(b)).",
         "pass": "No restrictive or indefinite wording found in claims."
       },
       "sequential": {
@@ -744,7 +744,7 @@
     },
     "abstract": {
       "restrictiveWording": {
-        "verify": "Restrictive or improper wording found in abstract.",
+        "verify": "Restrictive or improper wording found in abstract (MPEP § 608.01(b)).",
         "pass": "No restrictive or improper wording found in abstract."
       },
       "structure": {
@@ -766,11 +766,11 @@
         "pass": "Single-figure patent correctly labeled."
       },
       "priorArt": {
-        "verify": "Prior art references found in drawings description — verify figure labeling.",
+        "verify": "Prior art references found in drawings description — verify figure labeling (MPEP § 608.02(g)).",
         "pass": "No prior art references in drawings description."
       },
       "sequential": {
-        "amend": "Figures are not in sequential order; missing: {{figure_list}}.",
+        "amend": "Figures are not in sequential order; missing: {{figure_list}} (MPEP § 608.02).",
         "pass": "Figures are in sequential order."
       },
       "count": "{{count}} figure(s) found."
