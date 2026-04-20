@@ -19,7 +19,8 @@ import { useTranslation } from 'react-i18next'
 import { Shield, Check, ChevronDown } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
 import PageCTA from '../components/PageCTA'
-import { composeEnterprise, sendFeedback } from '../lib/feedback'
+import { composeEnterprise } from '../lib/feedback'
+import { useFeedback } from '../components/FeedbackPicker'
 
 /* ------------------------------------------------------------------ */
 /*  Section 1 — Hero                                                   */
@@ -192,10 +193,10 @@ function TechDetailsSection() {
   const [ref, isInView] = useInView()
   const [open, setOpen] = useState(false)
 
-  const enterpriseEmail = composeEnterprise(t)
+  const { sendFeedback } = useFeedback()
   const handleEnterpriseClick = (e) => {
     e.preventDefault()
-    sendFeedback(enterpriseEmail, t)
+    sendFeedback(composeEnterprise(t))
   }
 
   return (
@@ -243,9 +244,7 @@ function TechDetailsSection() {
               </p>
               {key === 'selfHosted' && (
                 <a
-                  href={enterpriseEmail.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="#"
                   onClick={handleEnterpriseClick}
                   className="inline-flex items-center gap-1 text-sm text-primary underline underline-offset-4 hover:text-primary/80 mt-2"
                 >

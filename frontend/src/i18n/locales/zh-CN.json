@@ -137,7 +137,19 @@
   "feedback": {
     "report": "反馈错误",
     "reportProblem": "反馈此项分析结果的问题",
-    "confirmation": "已自动填入 Gmail 并复制到剪贴板，任选一种方式发送即可。您的文稿未离开您的设备。",
+    "confirmation": {
+      "gmail": "已自动填入 Gmail 并复制到剪贴板。您的文稿未离开您的设备。",
+      "outlook": "已自动填入 Outlook 并复制到剪贴板。您的文稿未离开您的设备。",
+      "clipboard": "已复制到剪贴板，可粘贴到任何电子邮件中发送。您的文稿未离开您的设备。"
+    },
+    "picker": {
+      "title": "发送方式",
+      "description": "请选择发送反馈的方式。无论您选哪一项，完整内容也会复制到剪贴板备用。",
+      "gmail": "Gmail",
+      "outlook": "Outlook",
+      "clipboard": "复制到剪贴板",
+      "remember": "记住我的选择"
+    },
     "emailGreeting": "Christopher 你好，",
     "bodyPlaceholder": "[以下请说明您认为此项分析结果有何问题。请勿粘贴任何权利要求文字或您文稿中的其他内容，简要说明即可供我们调查。]",
     "footerIntro": "我想就 PatentLint 提供一些意见反馈。",
