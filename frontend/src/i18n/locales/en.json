@@ -137,7 +137,19 @@
   "feedback": {
     "report": "Report error",
     "reportProblem": "Report a problem with this finding",
-    "confirmation": "Auto-filled in Gmail and copied to clipboard — use whichever. Your draft stayed put.",
+    "confirmation": {
+      "gmail": "Auto-filled in Gmail and copied to clipboard. Your draft stayed put.",
+      "outlook": "Auto-filled in Outlook and copied to clipboard. Your draft stayed put.",
+      "clipboard": "Copied to clipboard — paste into any email. Your draft stayed put."
+    },
+    "picker": {
+      "title": "Send via",
+      "description": "Pick how to send the report. Whichever you choose, the full content is also copied to your clipboard.",
+      "gmail": "Gmail",
+      "outlook": "Outlook",
+      "clipboard": "Copy to clipboard",
+      "remember": "Remember my choice"
+    },
     "emailGreeting": "Hi Christopher,",
     "bodyPlaceholder": "[Please describe below what you think is wrong with this finding. Do NOT paste claim text or any other content from your draft — a general summary is enough to investigate.]",
     "footerIntro": "I'd like to share some feedback about PatentLint.",

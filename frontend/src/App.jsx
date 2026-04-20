@@ -11,6 +11,7 @@ import AnalysisReport from './components/AnalysisReport'
 import ScannedDocBanner from './components/ScannedDocBanner'
 import LoadingOnboard from './components/LoadingOnboard'
 import ProveItModal from './components/ProveItModal'
+import { FeedbackProvider } from './components/FeedbackPicker'
 import SecurityPage from './pages/SecurityPage'
 import AboutPage from './pages/AboutPage'
 import { usePyodide } from './hooks/usePyodide'
@@ -122,7 +123,7 @@ function App() {
   }, [homeState, handleReset])
 
   return (
-    <>
+    <FeedbackProvider>
       {!engineReady && !pyodide.error && (
         <LoadingOnboard progress={pyodide.progress} onReady={handleEngineReady} />
       )}
@@ -210,7 +211,7 @@ function App() {
 
       <ProveItModal open={showProveIt} onOpenChange={setShowProveIt} />
       <Toaster />
-    </>
+    </FeedbackProvider>
   )
 }
 

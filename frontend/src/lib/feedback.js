@@ -24,9 +24,22 @@ const MAINTAINER_EMAIL = 'kwisschen@gmail.com'
 // mailto:, just to a URL instead of a protocol.
 const GMAIL_COMPOSE_BASE = 'https://mail.google.com/mail/?view=cm&fs=1'
 
+// Outlook web compose. office.com covers Microsoft 365 / work Outlook
+// (the case where Gmail sign-in breaks for corporate users). Personal
+// outlook.com/Hotmail accounts may see a brief redirect but the params
+// survive. Matches the UX pattern of Gmail compose: new tab, pre-filled
+// compose view opens directly, user reviews and sends.
+const OUTLOOK_COMPOSE_BASE = 'https://outlook.office.com/mail/deeplink/compose'
+
 // Shared toast id so rapid-fire reports don't stack — subsequent calls
 // replace the existing confirmation instead of piling up.
 const FEEDBACK_TOAST_ID = 'patentlint-feedback-confirmation'
+
+// localStorage key for the user's chosen send method. Persists across
+// sessions (unlike the session-scoped update-dismissal state) so a
+// user's preference sticks. Values: 'gmail' | 'outlook' | 'clipboard'.
+const METHOD_KEY = 'patentlint:feedback-method'
+const VALID_METHODS = ['gmail', 'outlook', 'clipboard']
 
 // Coarse browser detection — major-family + version-family only. We don't
 // fingerprint precisely; the goal is "Safari 18 / Chrome 13x / Firefox 14x"
@@ -113,6 +126,17 @@ function buildGmailUrl(subject, body) {
   return `${GMAIL_COMPOSE_BASE}&${params.toString()}`
 }
 
+// Build an Outlook web compose URL. Uses `subject` (not `su`) per the
+// Outlook deeplink spec.
+function buildOutlookUrl(subject, body) {
+  const params = new URLSearchParams({
+    to: MAINTAINER_EMAIL,
+    subject: subject,
+    body: body,
+  })
+  return `${OUTLOOK_COMPOSE_BASE}?${params.toString()}`
+}
+
 // Build a feedback email and return BOTH the Gmail compose URL and the
 // plain-text body. The URL opens Gmail pre-filled (works for Gmail users
 // out of the box, Google Workspace users whose domain uses Gmail, and
@@ -124,8 +148,41 @@ function buildGmailUrl(subject, body) {
 //
 // Subject line stays English so the maintainer's inbox can filter
 // consistently across locales.
+// An email's structured data. Not tied to any specific provider — the
+// send method decides at dispatch time which URL to open (or just copy
+// to clipboard). `subject` and `text` are used to build provider-
+// specific URLs on demand in dispatchFeedback().
 function buildEmail(subject, body) {
-  return { url: buildGmailUrl(subject, body), text: body }
+  return { subject, text: body }
+}
+
+// Preference helpers. localStorage persists across tab sessions; user's
+// "remember this choice" tick gets honored on later visits too.
+export function getFeedbackMethod() {
+  try {
+    const method = localStorage.getItem(METHOD_KEY)
+    return VALID_METHODS.includes(method) ? method : null
+  } catch {
+    return null
+  }
+}
+
+export function setFeedbackMethod(method) {
+  if (!VALID_METHODS.includes(method)) return
+  try {
+    localStorage.setItem(METHOD_KEY, method)
+  } catch {
+    // Private-mode / quota exceeded — silent fail; user just won't get
+    // persistence, which is acceptable degradation.
+  }
+}
+
+export function clearFeedbackMethod() {
+  try {
+    localStorage.removeItem(METHOD_KEY)
+  } catch {
+    // Silent fail.
+  }
 }
 
 // Compose per-finding feedback — finding fields + environment metadata
@@ -178,27 +235,38 @@ export function composeEnterprise(t) {
   return buildEmail(subject, body)
 }
 
-// Send a composed email: copy the plain-text body to the clipboard AND
-// open the Gmail compose URL in a new tab, then show a confirmation
-// toast. The dual-channel send is deliberate:
-//   - Gmail tab: works instantly for Gmail / Google Workspace users
-//   - Clipboard: universal fallback for corporate / Outlook / other-provider
-//     users whose Gmail sign-in would be a dead end — they can close the
-//     Gmail tab and paste into any email app
-// Clipboard write is best-effort (silent fail on unsupported / blocked).
-// Focus order matters: write clipboard BEFORE opening the new tab,
-// because window.open may shift focus and some browsers require the
-// original tab to be focused for clipboard writes to succeed.
-export function sendFeedback(email, t) {
+// Dispatch a composed email via the given method. Clipboard write is
+// always performed (silent fail) as a safety-net fallback regardless
+// of method — even a Gmail user can tab away and paste elsewhere if
+// the compose tab fails. Order matters: write clipboard BEFORE opening
+// the new tab, because window.open may steal focus and some browsers
+// require the original tab to be focused for clipboard writes.
+//
+// The confirmation toast's copy varies by method so the user knows
+// what to expect (Gmail tab / Outlook tab / just clipboard).
+export function dispatchFeedback(method, email, t) {
   if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
     navigator.clipboard.writeText(email.text).catch(() => {})
   }
-  if (typeof window !== 'undefined') {
-    window.open(email.url, '_blank', 'noopener,noreferrer')
+
+  let toastKey = 'feedback.confirmation.clipboard'
+  if (method === 'gmail') {
+    if (typeof window !== 'undefined') {
+      window.open(buildGmailUrl(email.subject, email.text), '_blank', 'noopener,noreferrer')
+    }
+    toastKey = 'feedback.confirmation.gmail'
+  } else if (method === 'outlook') {
+    if (typeof window !== 'undefined') {
+      window.open(buildOutlookUrl(email.subject, email.text), '_blank', 'noopener,noreferrer')
+    }
+    toastKey = 'feedback.confirmation.outlook'
   }
-  toast(t('feedback.confirmation'), {
+  // method === 'clipboard' → clipboard already written above, nothing to open.
+
+  toast(t(toastKey), {
     id: FEEDBACK_TOAST_ID,
     duration: Infinity,
     closeButton: true,
   })
 }
+
