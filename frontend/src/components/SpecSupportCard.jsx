@@ -3,9 +3,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FileSearch, ChevronRight, Flag } from 'lucide-react'
-import { toast } from 'sonner'
 import { Button } from './ui/button'
-import { composeFeedbackMailto } from '../lib/feedbackMailto'
+import { composeFeedbackMailto, showFeedbackToast } from '../lib/feedbackMailto'
 
 function ClaimRow({ claimNumber, phrases, crossRefPhrases, jurisdiction }) {
   const { t, i18n } = useTranslation()
@@ -20,10 +19,10 @@ function ClaimRow({ claimNumber, phrases, crossRefPhrases, jurisdiction }) {
         phrases: phrases.join(', '),
         jurisdiction: jurisdiction || 'unknown',
       },
-      { locale: i18n.language },
+      { locale: i18n.language, bodyPlaceholder: t('feedback.bodyPlaceholder') },
     )
     window.location.href = href
-    toast(t('feedback.confirmation'))
+    showFeedbackToast(t)
   }
 
   return (
