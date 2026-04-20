@@ -140,12 +140,12 @@
     "picker": {
       "title": "请选择发送方式",
       "send": {
-        "description": "您的邮件已准备就绪，剪贴板中也有相同内容备用。您的文稿不会离开您的设备。",
+        "description": "您的邮件已准备好，剪贴板中也有相同内容备用。您的文稿不会离开您的设备。",
         "gmail": "用 Gmail 发送",
         "mailto": "用 Outlook 或移动设备发送"
       },
       "report": {
-        "description": "您的错误报告已准备就绪，剪贴板中也有相同内容备用。您的文稿不会离开您的设备。",
+        "description": "您的错误反馈已准备好，剪贴板中也有相同内容备用。您的文稿不会离开您的设备。",
         "gmail": "用 Gmail 反馈",
         "mailto": "用 Outlook 或移动设备反馈"
       },
@@ -153,11 +153,11 @@
       "remember": "记住我的选择"
     },
     "emailGreeting": "Christopher 你好，",
-    "bodyPlaceholder": "[以下请说明您认为此项分析结果有何问题。请勿粘贴任何权利要求文字或您文稿中的其他内容，简要说明即可供我们调查。]",
+    "bodyPlaceholder": "[请用一两句话说明此项分析结果的问题：是误判、分类错误，还是检查遗漏了什么？请勿粘贴权利要求文字或任何文稿内容；分析结果本身已自动附上。]",
     "footerIntro": "我想就 PatentLint 提供一些意见反馈。",
-    "footerPlaceholder": "[以下欢迎分享 bug 反馈、功能建议、使用疑问或任何感想。您无需分享任何业务机密信息。]",
+    "footerPlaceholder": "[欢迎分享任何意见：bug 反馈、功能建议、使用疑问或一般感想。反馈 bug 时，附上您的浏览器与操作系统有助我重现；提出功能建议时，以一句话说明使用情境会很有帮助。您无需分享任何业务机密信息。]",
     "enterpriseIntro": "我想咨询 PatentLint 的企业部署方案。",
-    "enterprisePlaceholder": "[以下请简要说明您的需求：团队规模、预估文稿量、使用辖区，以及任何特殊要求（例如内网部署、air-gapped 安装、SSO 集成、定制化检查项目）。收到后将与您联系讨论方案。]"
+    "enterprisePlaceholder": "[请简要说明您的部署需求：律所或团队规模与专业领域、执业地区、预估文稿量、评估时程，以及任何特殊要求（例如为符合 ITAR 或数据主权法规而采行的内网或 air-gapped 安装、SSO 集成、定制化检查项目等）。]"
   },
   "cta": {
     "heading": "准备好检查您的专利稿件了吗？",
@@ -289,7 +289,7 @@
       "telemetry": "PatentLint 不包含分析脚本、追踪像素、cookies 或第三方集成。此应用程序不收集或传输任何使用数据。",
       "selfHostedTitle": "自托管选项",
       "selfHosted": "On-premises deployment is available on private inquiry. Compliance with any specific regulatory regime remains the organization's own determination.",
-      "contactEnterprise": "咨询企业部署方案"
+      "contactEnterprise": "咨询企业部署方案 →"
     }
   },
   "about": {
