@@ -875,7 +875,7 @@
       },
       "abstract": {
         "charCount": {
-          "amend": "Abstract over the 300-character limit ({{count}} characters).",
+          "amend": "Abstract over the 300-character limit ({{count}} characters, 专利法实施细则 §23).",
           "pass": "Abstract within the 300-character limit ({{count}} characters)."
         },
         "titleMatch": {
@@ -1019,7 +1019,7 @@
       },
       "abstract": {
         "charCount": {
-          "verify": "Abstract over the 250-character limit ({{count}} characters).",
+          "verify": "Abstract over the 250-character limit ({{count}} characters, 專利法施行細則 §21).",
           "pass": "Abstract within the 250-character limit ({{count}} characters)."
         },
         "titleMatch": {
@@ -1042,8 +1042,8 @@
           "pass": "Representative drawing symbol description consistent with 符號說明."
         },
         "bracketFormat": {
-          "verify": "Section headers may not use proper 【】bracket format.",
-          "pass": "All section headers use proper 【】bracket format."
+          "verify": "Some section headers are not in the required 【】 bracket format (專利法施行細則 §17).",
+          "pass": "All section headers use the required 【】 bracket format."
         }
       },
       "drawings": {
