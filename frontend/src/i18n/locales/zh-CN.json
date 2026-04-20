@@ -821,19 +821,19 @@
           "pass": "权利要求编号连续。"
         },
         "dependencyFormat": {
-          "amend": "{{count}} 项权利要求的引用格式不正确：{{claims}}。",
+          "amend": "{{count}} 项权利要求的引用格式不正确：{{claims}}（专利法实施细则 §22）。",
           "pass": "所有从属权利要求的引用格式正确。"
         },
         "selfDependent": {
-          "amend": "{{claims}} 引用了自身。",
+          "amend": "{{claims}} 引用了自身（专利法实施细则 §22）。",
           "pass": "未发现自引用权利要求。"
         },
         "forwardDependency": {
-          "amend": "{{claims}} 引用在后之权利要求。",
+          "amend": "{{claims}} 引用在后之权利要求（专利法实施细则 §22）。",
           "pass": "未发现引用在后之情形。"
         },
         "singleSentence": {
-          "amend": "{{count}} 项权利要求包含多个句子：{{claims}}。",
+          "amend": "{{count}} 项权利要求包含多个句子：{{claims}}（审查指南 第二部分第二章）。",
           "pass": "所有权利要求均为单句。"
         },
         "refNumeralParens": {
@@ -857,7 +857,7 @@
           "pass": "权利要求未引用说明书或附图。"
         },
         "multiMultiDep": {
-          "amend": "{{claims}}：多项从属权利要求引用了另一多项从属权利要求。",
+          "amend": "{{claims}}：多项从属权利要求引用了另一多项从属权利要求（专利法实施细则 §22）。",
           "pass": "未发现多项从属权利要求的链式引用。"
         },
         "dependentOrdering": {

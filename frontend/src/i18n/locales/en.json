@@ -821,19 +821,19 @@
           "pass": "Claims numbered sequentially."
         },
         "dependencyFormat": {
-          "amend": "Incorrect dependency format in {{count}} claim(s): {{claims}}.",
+          "amend": "Incorrect dependency format in {{count}} claim(s): {{claims}} (专利法实施细则 §22).",
           "pass": "All dependency references correctly formatted."
         },
         "selfDependent": {
-          "amend": "Self-dependency in {{claims}}.",
+          "amend": "Self-dependency in {{claims}} (专利法实施细则 §22).",
           "pass": "No self-dependent claims."
         },
         "forwardDependency": {
-          "amend": "{{claims}} reference(s) a subsequent claim (forward dependency).",
+          "amend": "{{claims}} reference(s) a subsequent claim (forward dependency) (专利法实施细则 §22).",
           "pass": "All dependencies reference preceding claims."
         },
         "singleSentence": {
-          "amend": "{{count}} multi-sentence claim(s): {{claims}}.",
+          "amend": "{{count}} multi-sentence claim(s): {{claims}} (审查指南 第二部分第二章).",
           "pass": "All claims formed as single sentences."
         },
         "refNumeralParens": {
@@ -857,7 +857,7 @@
           "pass": "No claim references to the specification or drawings."
         },
         "multiMultiDep": {
-          "amend": "Multi-multi dependency in {{claims}}: a multiple-dependent claim depends on another multiple-dependent claim.",
+          "amend": "Multi-multi dependency in {{claims}}: a multiple-dependent claim depends on another multiple-dependent claim (专利法实施细则 §22).",
           "pass": "No chained multiple-dependent claims."
         },
         "dependentOrdering": {
