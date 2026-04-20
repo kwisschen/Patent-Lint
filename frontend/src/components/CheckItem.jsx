@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Flag } from 'lucide-react'
 import { formatDetails } from "../lib/detailsFormatter"
 import { Button } from "./ui/button"
-import { composeFeedbackMailto, showFeedbackToast } from "../lib/feedbackMailto"
+import { composeFeedbackMailto, openMailto, showFeedbackToast } from "../lib/feedbackMailto"
 
 const CITATION_MAP = {
   'check.spec.restrictiveWording': '§ 112(b)',
@@ -77,7 +77,7 @@ export default function CheckItem({ status, message, message_key, details, detai
       t,
       { locale: i18n.language },
     )
-    window.location.href = href
+    openMailto(href)
     showFeedbackToast(t)
   }
 
