@@ -38,24 +38,58 @@ function buildHash() {
   }
 }
 
-// Compose a mailto: URL pre-filled with structured per-finding feedback.
-// Caller passes the finding-specific fields; the util adds environment
-// metadata + a localized plain-text scaffold encouraging the user to
-// describe the issue without pasting draft text.
+// Human-readable label for each known metadata key. Keys not in this
+// map pass through as-is (so callers can add new fields without this
+// util needing updates — they just get the raw key as the label).
+const FIELD_LABELS = {
+  check_key: 'Check',
+  message: 'Message',
+  status: 'Status',
+  claim_id: 'Claim',
+  terms: 'Terms',
+  phrases: 'Phrases',
+  reference_form: 'Reference form',
+  jurisdiction: 'Jurisdiction',
+  browser: 'Browser',
+  locale: 'Locale',
+  patentlint_build: 'Build',
+}
+
+// Pad labels in a section so values align in a monospace mail client.
+// Aligns to the longest label + 2 spaces.
+function formatSection(entries) {
+  const rows = Object.entries(entries).filter(
+    ([, value]) => value !== undefined && value !== null && value !== '',
+  )
+  if (rows.length === 0) return ''
+  const maxLabel = Math.max(
+    ...rows.map(([key]) => (FIELD_LABELS[key] || key).length),
+  )
+  return rows
+    .map(([key, value]) => {
+      const label = FIELD_LABELS[key] || key
+      const padded = label.padEnd(maxLabel + 2, ' ')
+      return `${padded}${value}`
+    })
+    .join('\n')
+}
+
+// Compose a mailto: URL pre-filled with a professional-looking per-finding
+// feedback email. Fields-to-labels map above handles the cosmetic names;
+// localized framing (greeting / intro / user-section heading / closing /
+// placeholder) comes from the translator the caller passes.
 //
-// finding: an object whose enumerable keys become "key: value" lines in
-// the body. Pass only what's relevant to the surface — the util doesn't
-// validate the shape.
+// finding: an object whose enumerable keys become "Label: value" lines
+// in the Finding section. Pass only what's relevant to the surface.
 //
-// options.locale: IETF tag, used in the structured metadata only.
-// options.bodyPlaceholder: localized instruction text shown to the user
-//   in their email client after a separator. Always pass this from the
-//   caller's `t('feedback.bodyPlaceholder')` — the util keeps the subject
-//   line and metadata keys in English (for maintainer filtering) but the
-//   part the user reads and replies to localizes to their UI language.
+// Environment fields (browser, locale, build) are added automatically in
+// a separate Environment section.
+//
+// Subject line stays English so the maintainer's inbox can filter
+// consistently across locales: "PatentLint finding report — {check_key}".
 //
 // Returns a fully URL-encoded mailto: string ready for window.location.href.
-export function composeFeedbackMailto(finding, { locale, bodyPlaceholder } = {}) {
+export function composeFeedbackMailto(finding, t, { locale } = {}) {
   const env = {
     browser: detectBrowser(),
     locale: locale || (typeof navigator !== 'undefined' ? navigator.language : 'unknown'),
@@ -65,21 +99,24 @@ export function composeFeedbackMailto(finding, { locale, bodyPlaceholder } = {})
   const checkKey = finding.check_key || 'unknown'
   const subject = `PatentLint finding report — ${checkKey}`
 
-  const lines = []
-  for (const [key, value] of Object.entries(finding)) {
-    if (value === undefined || value === null || value === '') continue
-    lines.push(`${key}: ${value}`)
-  }
-  for (const [key, value] of Object.entries(env)) {
-    lines.push(`${key}: ${value}`)
-  }
+  const findingSection = formatSection(finding)
+  const envSection = formatSection(env)
 
   const body = [
-    lines.join('\n'),
+    t('feedback.emailGreeting'),
     '',
-    '---',
+    t('feedback.emailIntro'),
     '',
-    bodyPlaceholder || '',
+    '--- Finding ---',
+    findingSection,
+    '',
+    '--- Environment ---',
+    envSection,
+    '',
+    `--- ${t('feedback.emailUserSection')} ---`,
+    t('feedback.bodyPlaceholder'),
+    '',
+    t('feedback.emailClosing'),
   ].join('\n')
 
   return `mailto:${MAINTAINER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`

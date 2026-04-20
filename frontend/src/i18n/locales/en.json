@@ -137,8 +137,12 @@
   "feedback": {
     "report": "Report error",
     "reportProblem": "Report a problem with this finding",
-    "confirmation": "Auto-filled in your email client for review. Your draft stayed put.",
-    "bodyPlaceholder": "[Please describe what you think is wrong with this finding. Do NOT paste claim text or any other content from your draft — a general summary is enough for us to investigate.]"
+    "confirmation": "Auto-filled an error report in your email for your review. Your draft stayed put.",
+    "emailGreeting": "Hi Christopher,",
+    "emailIntro": "I'm reporting what looks like an issue with the following PatentLint finding.",
+    "emailUserSection": "What seems wrong",
+    "emailClosing": "Thanks,",
+    "bodyPlaceholder": "[Please describe what you think is wrong with this finding. Do NOT paste claim text or any other content from your draft — a general summary is enough to investigate.]"
   },
   "cta": {
     "heading": "Ready to check your draft?",
