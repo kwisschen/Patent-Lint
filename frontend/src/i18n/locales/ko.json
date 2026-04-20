@@ -821,19 +821,19 @@
           "pass": "청구항이 순차적으로 번호 매겨져 있습니다."
         },
         "dependencyFormat": {
-          "amend": "{{count}}개 청구항의 종속 형식이 잘못되었습니다: {{claims}}.",
+          "amend": "{{count}}개 청구항의 종속 형식이 잘못되었습니다: {{claims}}(专利法实施细则 §22).",
           "pass": "모든 종속 참조가 올바른 형식입니다."
         },
         "selfDependent": {
-          "amend": "{{claims}}이(가) 자기 자신에 종속됩니다.",
+          "amend": "{{claims}}이(가) 자기 자신에 종속됩니다(专利法实施细则 §22).",
           "pass": "자기 종속 청구항이 없습니다."
         },
         "forwardDependency": {
-          "amend": "{{claims}}이(가) 후행 청구항을 참조합니다 (전방 종속).",
+          "amend": "{{claims}}이(가) 후행 청구항을 참조합니다 (전방 종속, 专利法实施细则 §22).",
           "pass": "모든 종속이 선행 청구항을 참조합니다."
         },
         "singleSentence": {
-          "amend": "다문장 청구항이 {{count}}개 있습니다: {{claims}}.",
+          "amend": "다문장 청구항이 {{count}}개 있습니다: {{claims}}(审查指南 第二部分第二章).",
           "pass": "모든 청구항이 단일 문장으로 작성되어 있습니다."
         },
         "refNumeralParens": {
@@ -857,7 +857,7 @@
           "pass": "명세서나 도면을 참조하는 청구항이 없습니다."
         },
         "multiMultiDep": {
-          "amend": "{{claims}}: 다항 종속 청구항이 다른 다항 종속 청구항을 참조합니다.",
+          "amend": "{{claims}}: 다항 종속 청구항이 다른 다항 종속 청구항을 참조합니다(专利法实施细则 §22).",
           "pass": "다항 종속의 연쇄 참조가 없습니다."
         },
         "dependentOrdering": {
