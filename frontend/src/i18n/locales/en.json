@@ -137,19 +137,19 @@
   "feedback": {
     "report": "Report error",
     "reportProblem": "Report a problem with this finding",
-    "confirmation": {
-      "gmail": "Auto-filled in Gmail and copied to clipboard. Your draft stayed put.",
-      "outlook": "Auto-filled in Outlook and copied to clipboard. Your draft stayed put.",
-      "mailto": "Opened in your email app and copied to clipboard. Your draft stayed put.",
-      "clipboard": "Copied to clipboard — paste into any email. Your draft stayed put."
-    },
     "picker": {
-      "title": "Send via",
-      "description": "Pick how to send the report. Whichever you choose, the full content is also copied to your clipboard.",
-      "gmail": "Gmail",
-      "mailto": "Email app (Outlook, Mail, Gmail app, etc.)",
+      "title": "Choose how to send",
+      "description": "Your email is ready to send. The same content is on your clipboard. Your draft stays on your device.",
+      "send": {
+        "gmail": "Send via Gmail",
+        "mailto": "Send via Outlook or Mobile"
+      },
+      "report": {
+        "gmail": "Report via Gmail",
+        "mailto": "Report via Outlook or Mobile"
+      },
       "clipboard": "Copy to clipboard",
-      "remember": "Remember my choice"
+      "remember": "Remember my selection"
     },
     "emailGreeting": "Hi Christopher,",
     "bodyPlaceholder": "[Please describe below what you think is wrong with this finding. Do NOT paste claim text or any other content from your draft — a general summary is enough to investigate.]",
@@ -213,7 +213,7 @@
       "step3": "No internet means no cloud, no upload, no data sent anywhere",
       "step4": "After analysis, a green dot on the results page confirms zero network activity.",
       "testHeading": "Don't take our word for it",
-      "testDescription": "This button checks for a new version of PatentLint — the same request PatentLint makes when you return to the tab after being away. Watch the indicator flash red and the fetch appear in the log below.",
+      "testDescription": "Checks for new versions. Same request fires when you return to the tab.",
       "testButton": "Check for updates",
       "logEmpty": "No requests yet",
       "noActivity": "No activity detected",

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 // Copyright (c) 2025 Christopher Chen
 /* global __BUILD_HASH__ */
-import { toast } from 'sonner'
 
 // Source of truth for the maintainer email; mirrors Footer.jsx usage.
 const MAINTAINER_EMAIL = 'kwisschen@gmail.com'
@@ -30,10 +29,6 @@ const GMAIL_COMPOSE_BASE = 'https://mail.google.com/mail/?view=cm&fs=1'
 // survive. Matches the UX pattern of Gmail compose: new tab, pre-filled
 // compose view opens directly, user reviews and sends.
 const OUTLOOK_COMPOSE_BASE = 'https://outlook.office.com/mail/deeplink/compose'
-
-// Shared toast id so rapid-fire reports don't stack — subsequent calls
-// replace the existing confirmation instead of piling up.
-const FEEDBACK_TOAST_ID = 'patentlint-feedback-confirmation'
 
 // localStorage key for the user's chosen send method. Persists across
 // sessions (unlike the session-scoped update-dismissal state) so a
@@ -265,34 +260,27 @@ export function composeEnterprise(t) {
 // the new tab, because window.open may steal focus and some browsers
 // require the original tab to be focused for clipboard writes.
 //
-// The confirmation toast's copy varies by method so the user knows
-// what to expect (Gmail tab / Outlook tab / just clipboard).
-export function dispatchFeedback(method, email, t) {
+// No confirmation toast: the picker modal already tells the user what
+// will happen (pre-fill + clipboard copy), and for Gmail/Outlook/mailto
+// methods the newly-opened tab or mail app is its own visible
+// confirmation. For the clipboard-only path, the modal closing is the
+// confirmation signal.
+export function dispatchFeedback(method, email) {
   if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
     navigator.clipboard.writeText(email.text).catch(() => {})
   }
 
-  let toastKey = 'feedback.confirmation.clipboard'
   if (method === 'gmail') {
     if (typeof window !== 'undefined') {
       window.open(buildGmailUrl(email.subject, email.text), '_blank', 'noopener,noreferrer')
     }
-    toastKey = 'feedback.confirmation.gmail'
   } else if (method === 'outlook') {
     if (typeof window !== 'undefined') {
       window.open(buildOutlookUrl(email.subject, email.text), '_blank', 'noopener,noreferrer')
     }
-    toastKey = 'feedback.confirmation.outlook'
   } else if (method === 'mailto') {
     openMailto(buildMailtoUrl(email.subject, email.text))
-    toastKey = 'feedback.confirmation.mailto'
   }
   // method === 'clipboard' → clipboard already written above, nothing to open.
-
-  toast(t(toastKey), {
-    id: FEEDBACK_TOAST_ID,
-    duration: Infinity,
-    closeButton: true,
-  })
 }
 
