@@ -115,7 +115,12 @@ export default function ProveItModal({ open, onOpenChange }) {
     clearTimeout(noActivityTimeoutRef.current)
     clearTimeout(noActivityClearRef.current)
     try {
-      const response = await fetch(`/favicon.svg?t=${Date.now()}`, { cache: 'no-store' })
+      // Fetch /version.json — the same endpoint the update check uses
+      // when the tab returns from a ≥30s-hidden state. Reusing it in the
+      // Prove It test means users see the EXACT request pattern they'll
+      // later see in normal use, building recognition/trust instead of
+      // creating a "what was that?" moment.
+      const response = await fetch(`/version.json?t=${Date.now()}`, { cache: 'no-store' })
       if (response.ok) {
         entryIdRef.current += 1
         setEntries((prev) => [...prev, {

@@ -238,6 +238,8 @@ function TechDetailsSection() {
               {key === 'selfHosted' && (
                 <a
                   href={composeEnterpriseUrl(t)}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 text-sm text-primary underline underline-offset-4 hover:text-primary/80 mt-2"
                 >
                   {t('about.enterpriseContact')}
