@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { ShieldCheck, FileSearch, Globe } from 'lucide-react'
 
 const FEATURES = [
-  { icon: ShieldCheck, titleKey: 'loading.feature1_title', descKey: 'loading.feature1_desc' },
   { icon: FileSearch, titleKey: 'loading.feature2_title', descKey: 'loading.feature2_desc' },
+  { icon: ShieldCheck, titleKey: 'loading.feature1_title', descKey: 'loading.feature1_desc' },
   { icon: Globe, titleKey: 'loading.feature4_title', descKey: 'loading.feature4_desc' },
 ]
 
