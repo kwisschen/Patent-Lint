@@ -82,7 +82,7 @@ export function FeedbackProvider({ children }) {
           <DialogHeader>
             <DialogTitle>{t('feedback.picker.title')}</DialogTitle>
             <DialogDescription>
-              {t('feedback.picker.description')}
+              {t(`feedback.picker.${verb}.description`)}
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-2">
