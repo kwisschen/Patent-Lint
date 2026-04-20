@@ -137,17 +137,17 @@
   "feedback": {
     "report": "反馈错误",
     "reportProblem": "反馈此项分析结果的问题",
-    "confirmation": {
-      "gmail": "已自动填入 Gmail 并复制到剪贴板。您的文稿未离开您的设备。",
-      "outlook": "已自动填入 Outlook 并复制到剪贴板。您的文稿未离开您的设备。",
-      "mailto": "已在您的电子邮件应用中打开，并复制到剪贴板。您的文稿未离开您的设备。",
-      "clipboard": "已复制到剪贴板，可粘贴到任何电子邮件中发送。您的文稿未离开您的设备。"
-    },
     "picker": {
-      "title": "发送方式",
-      "description": "请选择发送反馈的方式。无论您选哪一项，完整内容也会复制到剪贴板备用。",
-      "gmail": "Gmail",
-      "mailto": "电子邮件应用（Outlook、Mail、Gmail App 等）",
+      "title": "请选择发送方式",
+      "description": "您的邮件已准备就绪，剪贴板中也有相同内容备用。您的文稿不会离开您的设备。",
+      "send": {
+        "gmail": "用 Gmail 发送",
+        "mailto": "用 Outlook 或移动设备发送"
+      },
+      "report": {
+        "gmail": "用 Gmail 反馈",
+        "mailto": "用 Outlook 或移动设备反馈"
+      },
       "clipboard": "复制到剪贴板",
       "remember": "记住我的选择"
     },
@@ -213,7 +213,7 @@
       "step3": "没有网络意味着没有云端、没有上传、没有任何数据外传",
       "step4": "分析后，结果页面的绿色圆点可确认零网络活动。",
       "testHeading": "眼见为实",
-      "testDescription": "此按钮会检查是否有 PatentLint 新版本——与您离开标签页再回来时 PatentLint 所发出的请求完全相同。请观察指示灯短暂变红，并留意下方记录中新增的请求。",
+      "testDescription": "检查是否有新版本。离开标签页再回来时也会执行相同的请求。",
       "testButton": "检查更新",
       "logEmpty": "暂无请求",
       "noActivity": "未检测到活动",

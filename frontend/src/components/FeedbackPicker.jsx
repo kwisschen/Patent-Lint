@@ -39,35 +39,40 @@ const FeedbackContext = createContext(null)
 
 export function FeedbackProvider({ children }) {
   const { t } = useTranslation()
-  // `pending` is either null (no picker open) or the composed email
-  // waiting for the user's method choice.
+  // `pending` is either null (no picker open) or `{ email, verb }` —
+  // the composed email plus the action verb for button labels. verb is
+  // 'report' for per-finding error flows, 'send' for footer feedback
+  // and enterprise inquiries. Default 'send' if caller doesn't specify.
   const [pending, setPending] = useState(null)
-  const [remember, setRemember] = useState(true)
+  // Unchecked by default — user opts in explicitly. Avoids accidentally
+  // locking users into a method they picked once but didn't love.
+  const [remember, setRemember] = useState(false)
 
-  const sendFeedback = useCallback((email) => {
+  const sendFeedback = useCallback((email, options = {}) => {
     const saved = getFeedbackMethod()
     if (saved) {
-      // User previously picked a method AND chose to remember. Dispatch
-      // directly — no modal, one-click UX.
-      dispatchFeedback(saved, email, t)
+      // User previously picked + chose to remember. Dispatch directly.
+      dispatchFeedback(saved, email)
       return
     }
-    // No saved preference: open the picker.
-    setPending(email)
-  }, [t])
+    const verb = options.verb === 'report' ? 'report' : 'send'
+    setPending({ email, verb })
+  }, [])
 
   const handlePick = useCallback((method) => {
     if (!pending) return
     if (remember) {
       setFeedbackMethod(method)
     }
-    dispatchFeedback(method, pending, t)
+    dispatchFeedback(method, pending.email)
     setPending(null)
-  }, [pending, remember, t])
+  }, [pending, remember])
 
   const handleOpenChange = useCallback((open) => {
     if (!open) setPending(null)
   }, [])
+
+  const verb = pending?.verb || 'send'
 
   return (
     <FeedbackContext.Provider value={{ sendFeedback }}>
@@ -84,12 +89,12 @@ export function FeedbackProvider({ children }) {
             <PickerButton
               onClick={() => handlePick('gmail')}
               icon={<Mail />}
-              label={t('feedback.picker.gmail')}
+              label={t(`feedback.picker.${verb}.gmail`)}
             />
             <PickerButton
               onClick={() => handlePick('mailto')}
               icon={<AtSign />}
-              label={t('feedback.picker.mailto')}
+              label={t(`feedback.picker.${verb}.mailto`)}
             />
             <PickerButton
               onClick={() => handlePick('clipboard')}
