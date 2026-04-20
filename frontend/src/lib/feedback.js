@@ -39,7 +39,7 @@ const FEEDBACK_TOAST_ID = 'patentlint-feedback-confirmation'
 // sessions (unlike the session-scoped update-dismissal state) so a
 // user's preference sticks. Values: 'gmail' | 'outlook' | 'clipboard'.
 const METHOD_KEY = 'patentlint:feedback-method'
-const VALID_METHODS = ['gmail', 'outlook', 'clipboard']
+const VALID_METHODS = ['gmail', 'outlook', 'mailto', 'clipboard']
 
 // Coarse browser detection — major-family + version-family only. We don't
 // fingerprint precisely; the goal is "Safari 18 / Chrome 13x / Firefox 14x"
@@ -135,6 +135,29 @@ function buildOutlookUrl(subject, body) {
     body: body,
   })
   return `${OUTLOOK_COMPOSE_BASE}?${params.toString()}`
+}
+
+// Build a mailto: URL. Used for the "Email app" picker option — on
+// mobile (iOS / Android) this opens the user's default mail app with
+// pre-fill working correctly (unlike iOS Gmail-app handling of https
+// compose URLs, which ignores the `?view=cm&body=...` params). On
+// desktop, opens whatever mail client is configured as the default
+// handler (Outlook, Mail.app, Thunderbird, etc.).
+function buildMailtoUrl(subject, body) {
+  return `mailto:${MAINTAINER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+}
+
+// Dispatch a mailto: URL via a dynamically-created anchor click.
+// More reliable than window.location.href = 'mailto:...' for protocol
+// handlers — browsers treat anchor clicks within an onClick handler as
+// user-initiated, which protocol dispatch requires.
+function openMailto(url) {
+  const a = document.createElement('a')
+  a.href = url
+  a.rel = 'noopener'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
 }
 
 // Build a feedback email and return BOTH the Gmail compose URL and the
@@ -260,6 +283,9 @@ export function dispatchFeedback(method, email, t) {
       window.open(buildOutlookUrl(email.subject, email.text), '_blank', 'noopener,noreferrer')
     }
     toastKey = 'feedback.confirmation.outlook'
+  } else if (method === 'mailto') {
+    openMailto(buildMailtoUrl(email.subject, email.text))
+    toastKey = 'feedback.confirmation.mailto'
   }
   // method === 'clipboard' → clipboard already written above, nothing to open.
 
