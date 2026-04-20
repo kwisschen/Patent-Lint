@@ -950,11 +950,11 @@
           "pass": "請求項は連番で付されています。"
         },
         "dependencyFormat": {
-          "amend": "{{count}}項で従属形式が認識できません：{{claims}}。",
+          "amend": "{{count}}項で従属形式が認識できません：{{claims}}（專利法施行細則 §18）。",
           "pass": "全ての従属記載が認識可能な形式です。"
         },
         "selfDependent": {
-          "amend": "自己従属の請求項を検出しました。",
+          "amend": "自己従属の請求項を検出しました（專利法施行細則 §18）。",
           "pass": "自己従属の請求項はありません。"
         },
         "circularDependency": {
@@ -962,7 +962,7 @@
           "pass": "循環従属はありません。"
         },
         "forwardDependency": {
-          "amend": "{{claims}}が後続の請求項を引用しています（前方参照の禁止違反）。",
+          "amend": "{{claims}}が後続の請求項を引用しています（前方参照の禁止違反、專利法施行細則 §18）。",
           "pass": "全ての従属が先行する請求項を引用しています。"
         },
         "singleSentence": {
@@ -972,7 +972,7 @@
           "amendMultiSentence": "複数文を含む請求項が{{count}}項あります：{{claims}}。"
         },
         "refNumeralParens": {
-          "verify": "{{count}}項で参照符号が括弧で囲まれていません：{{claims}}。",
+          "verify": "{{count}}項で参照符号が括弧で囲まれていません：{{claims}}（專利法施行細則 §19）。",
           "pass": "全ての参照符号が括弧で囲まれています。"
         },
         "subjectConsistency": {
@@ -1028,7 +1028,7 @@
           "passCompound": "發明名稱/新型名稱の各部分（{{halves}}）が要約に記載されています。"
         },
         "commercialLanguage": {
-          "amend": "要約に商業的表現が含まれています。",
+          "amend": "要約に商業的表現が含まれています（專利法施行細則 §21）。",
           "pass": "要約に商業的表現はありません。"
         },
         "representativeDrawing": {
