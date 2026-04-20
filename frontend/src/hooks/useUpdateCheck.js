@@ -16,14 +16,16 @@ const DISMISSED_KEY = 'patentlint:update-dismissed'
 // flicker the network indicator on every focus event.
 const LAST_CHECK_KEY = 'patentlint:update-last-check'
 const TOAST_ID = 'patentlint-update-available'
-// Minimum interval between automated version checks (mount + visibility).
-// Long enough to suppress the per-tab-switch indicator flicker that the
-// honest network-monitor surfaces — a typical 30-90 min session sees
-// zero flickers from this hook. Cost of erring long: a user who keeps a
-// tab open across a deploy may not see the update prompt until next
-// reload, which is acceptable (they keep using the previous working
-// version, and pick up the update on next mount).
-const CHECK_THROTTLE_MS = 60 * 60 * 1000
+// Minimum interval between automated version checks triggered by
+// visibility events. Mount checks (fresh load / reload) always fire
+// regardless. Long enough to suppress flicker on typical tab-switch
+// cycles (Word ↔ PatentLint every few minutes = well under 15 min
+// between returns = no flicker); short enough that users who push a
+// deploy and tab-switch back within ~15 min see the update prompt.
+// Previous value (60 min) was tuned for "zero flicker in normal use"
+// but was too long for active-testing workflows where the user pushes
+// then verifies within a few minutes.
+const CHECK_THROTTLE_MS = 15 * 60 * 1000
 
 /**
  * Fetches /version.json on page load and on tab focus, compares to the
