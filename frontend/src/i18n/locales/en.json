@@ -216,7 +216,7 @@
       },
       "q2": {
         "question": "Do I need an account?",
-        "patentlint": "No. No personal data collected.",
+        "patentlint": "No account required. No data collected.",
         "addin": "Usually requires a license or account.",
         "cloud": "Yes. Account required."
       },
@@ -473,7 +473,7 @@
     },
     "enterpriseContact": "Enterprise deployment →",
     "builderTitle": "Background",
-    "builderPain": "Every patent practitioner knows the drill. Antecedent basis. Reference numeral consistency. Figure labels that appear in the body but never in the drawings description. Dependency chains that quietly loop back on themselves. The checks aren't hard. They're just tedious and easy to miss.",
+    "builderPain": "Every patent practitioner knows the drill. Antecedent basis. Claim terms missing from the spec. Figure labels that appear in the body but never in the drawings description. Dependency chains that quietly loop back on themselves. The checks aren't hard. They're just tedious and easy to miss.",
     "builderDesc1": "PatentLint was built by a patent engineer who spent over a decade inside that workflow, reviewing thousands of drafts and watching the same categories of errors slip through again and again. Existing options were either Windows-only desktop installs or cloud services that required uploading a client's unfiled application to someone else's server. One locks you to a specific OS. The other sends the draft out of your firm before it's even on file.",
     "builderDesc2": "The analysis engine is written in Python and compiles to WebAssembly. It runs entirely in the browser, on a laptop, tablet, or phone, with nothing uploaded and nothing logged. That means it works on an airplane, on a locked-down firm machine, on anything a client hasn't signed off on yet.",
     "builderSister": "Its companion project, the Agentic Patent Analyst, covers the reasoning-heavy work: in-house fine-tuned LLM agents for prior art search and claim coverage analysis."
