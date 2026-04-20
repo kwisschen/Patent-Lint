@@ -192,6 +192,12 @@ class TwPatentDocument(BaseModel):
     # ``check_section_ordering`` to flag 專利法施行細則 §17 order violations
     # (Phase 9 #66).
     section_order: list[str] = Field(default_factory=list)
+    # Canonical TIPO section names that appeared without the required 【】
+    # brackets — either bare (先前技術 alone on a line) or in variant brackets
+    # ([先前技術], 〔先前技術〕, (先前技術), （先前技術）). Populated by
+    # ``extract_tw_sections``; consumed by ``check_bracket_format`` to surface
+    # 專利法施行細則 §17 violations.
+    bracketless_section_headers: list[str] = Field(default_factory=list)
     input_format: str = "docx"
 
 
