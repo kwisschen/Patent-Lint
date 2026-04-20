@@ -69,17 +69,32 @@ def check_symbol_vs_rep_drawing(doc: TwPatentDocument) -> list[CheckItem]:
 
 
 def check_bracket_format(doc: TwPatentDocument) -> list[CheckItem]:
-    """Check that section headers use proper 【】bracket format.
+    """Flag canonical TIPO section headers that lack the required 【】 brackets.
 
-    TODO: sections_tw.py currently parses by 【】 only. When raw header
-    data (including variant brackets) becomes available on TwPatentDocument,
-    this check should flag non-standard brackets like [技術領域] or〔技術領域〕.
+    Consumes ``TwPatentDocument.bracketless_section_headers``, populated by
+    ``sections_tw._find_bracketless_section_headers``. Detects both bare
+    canonical names (``先前技術`` alone on a line) and variant-bracket forms
+    (``[先前技術]``, ``〔先前技術〕``, ``(先前技術)``, ``（先前技術）``) per
+    專利法施行細則 §17.
     """
-    # Always PASS until raw header data is available
+    flagged = doc.bracketless_section_headers
+    if not flagged:
+        return [CheckItem(
+            status="pass",
+            message="All section headers use the required 【】 bracket format.",
+            message_key="check.tw.crossRef.bracketFormat.pass",
+            reference="專利法施行細則 §17",
+        )]
+
+    headers_str = ", ".join(flagged[:10])
     return [CheckItem(
-        status="pass",
-        message="All section headers use proper 【】bracket format.",
-        message_key="check.tw.crossRef.bracketFormat.pass",
+        status="verify",
+        message=(
+            "Section headers not in the required 【】 bracket format: "
+            f"{headers_str}."
+        ),
+        message_key="check.tw.crossRef.bracketFormat.verify",
+        details_params={"headers": headers_str},
         reference="專利法施行細則 §17",
     )]
 

@@ -77,6 +77,22 @@ _SKIP_HEADERS: set[str] = {
 # Headers that indicate utility model (any header containing 新型)
 _UTILITY_MODEL_KEYWORDS = {"新型摘要", "新型說明書", "新型內容", "新型申請專利範圍", "新型名稱", "中文新型名稱"}
 
+# All canonical TIPO section names (for bracketless / variant-bracket detection).
+# Includes _SECTION_MAP keys (body sections, title, claims, abstract, etc.) plus
+# _SKIP_HEADERS (top-level dividers like 發明說明書) since those also must carry
+# 【】 per 專利法施行細則 §17.
+_CANONICAL_SECTION_NAMES: frozenset[str] = (
+    frozenset(_SECTION_MAP.keys()) | frozenset(_SKIP_HEADERS)
+)
+
+# Variant bracket pairs some drafters use instead of the required 【】.
+_VARIANT_BRACKET_PAIRS: tuple[tuple[str, str], ...] = (
+    ("[", "]"),
+    ("〔", "〕"),
+    ("(", ")"),
+    ("（", "）"),
+)
+
 # ---------------------------------------------------------------------------
 # Paragraph numbering: 【NNNN】 at start of body text
 # ---------------------------------------------------------------------------
@@ -91,6 +107,42 @@ _PARA_NUM_PATTERN = re.compile(r"^【(\d{4})】")
 # Backwards-compat alias — callers and tests import _count_cjk_chars from
 # this module. The canonical implementation lives in parser.language.
 _count_cjk_chars = count_cjk_chars
+
+
+def _find_bracketless_section_headers(paragraphs: list[str]) -> list[str]:
+    """Scan paragraphs for canonical TIPO section names lacking required 【】.
+
+    Detects two missing-bracket patterns:
+    (a) bare canonical name alone on a line (e.g., ``先前技術``)
+    (b) variant brackets wrapping a canonical name (``[先前技術]``,
+        ``〔先前技術〕``, ``(先前技術)``, ``（先前技術）``)
+
+    Correctly-bracketed 【…】 headers are not flagged — the main parser loop
+    handles those. Returns first-seen occurrences, de-duplicated, up to 50
+    entries to cap worst-case payloads.
+    """
+    seen: set[str] = set()
+    findings: list[str] = []
+    for para in paragraphs:
+        stripped = para.strip()
+        if not stripped or stripped.startswith("【"):
+            continue
+        candidate: str | None = None
+        if stripped in _CANONICAL_SECTION_NAMES:
+            candidate = stripped
+        else:
+            for open_b, close_b in _VARIANT_BRACKET_PAIRS:
+                if stripped.startswith(open_b) and stripped.endswith(close_b):
+                    inner = stripped[len(open_b):-len(close_b)].strip()
+                    if inner in _CANONICAL_SECTION_NAMES:
+                        candidate = stripped
+                    break
+        if candidate is not None and candidate not in seen:
+            seen.add(candidate)
+            findings.append(candidate)
+            if len(findings) >= 50:
+                break
+    return findings
 
 
 # ---------------------------------------------------------------------------
@@ -339,6 +391,8 @@ def extract_tw_sections(
     combined_text = drawings_text + "\n" + embodiment_text
     figure_refs = list(TW_PARSER.extract(combined_text).ordered)
 
+    bracketless_section_headers = _find_bracketless_section_headers(paragraphs)
+
     return TwPatentDocument(
         patent_type=patent_type,
         title=title,
@@ -358,5 +412,6 @@ def extract_tw_sections(
         has_paragraph_numbering=has_paragraph_numbering,
         body_paragraph_word_numbers=body_paragraph_word_numbers,
         section_order=section_order,
+        bracketless_section_headers=bracketless_section_headers,
         input_format="docx",
     )
