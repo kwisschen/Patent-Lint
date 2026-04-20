@@ -83,21 +83,21 @@ function formatSection(entries) {
     .join('\n')
 }
 
-// Compose a mailto: URL pre-filled with a professional-looking per-finding
-// feedback email. Fields-to-labels map above handles the cosmetic names;
-// localized framing (greeting / intro / user-section heading / closing /
-// placeholder) comes from the translator the caller passes.
+// Compose a mailto: URL pre-filled with a per-finding feedback email.
+// Finding fields + environment metadata are merged into one aligned
+// data block — field labels make the structure obvious without needing
+// section-header decoration, and merging the blocks keeps the URL short
+// enough to survive Gmail web-handler compose-URL length limits and
+// other protocol-handler quirks. Professional framing comes from a
+// localized greeting + closing around the data.
 //
-// finding: an object whose enumerable keys become "Label: value" lines
-// in the Finding section. Pass only what's relevant to the surface.
-//
-// Environment fields (browser, locale, build) are added automatically in
-// a separate Environment section.
+// finding: an object whose enumerable keys become "Label: value" lines.
+// Pass only what's relevant to the surface.
 //
 // Subject line stays English so the maintainer's inbox can filter
 // consistently across locales: "PatentLint finding report — {check_key}".
 //
-// Returns a fully URL-encoded mailto: string ready for window.location.href.
+// Returns a fully URL-encoded mailto: string.
 export function composeFeedbackMailto(finding, t, { locale } = {}) {
   const env = {
     browser: detectBrowser(),
@@ -108,21 +108,16 @@ export function composeFeedbackMailto(finding, t, { locale } = {}) {
   const checkKey = finding.check_key || 'unknown'
   const subject = `PatentLint finding report — ${checkKey}`
 
-  const findingSection = formatSection(finding)
-  const envSection = formatSection(env)
+  // Merge finding + env into a single aligned block. The FIELD_LABELS
+  // map above turns raw keys into human-readable column 1; formatSection
+  // pads to the longest label so everything aligns in monospace mail.
+  const dataSection = formatSection({ ...finding, ...env })
 
   const body = [
     t('feedback.emailGreeting'),
     '',
-    t('feedback.emailIntro'),
+    dataSection,
     '',
-    '--- Finding ---',
-    findingSection,
-    '',
-    '--- Environment ---',
-    envSection,
-    '',
-    `--- ${t('feedback.emailUserSection')} ---`,
     t('feedback.bodyPlaceholder'),
     '',
     t('feedback.emailClosing'),
