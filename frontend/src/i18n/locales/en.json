@@ -734,8 +734,8 @@
         "pass": "No means-plus-function language detected."
       },
       "antecedentBasis": {
-        "verify": "Possible missing antecedent basis detected.",
-        "pass": "No antecedent basis issues detected."
+        "verify": "Possible missing antecedent basis — \"the X\" / \"said X\" may lack a prior \"a X\" introduction (§ 112(b)).",
+        "pass": "No antecedent basis issues detected (§ 112(b))."
       },
       "missingTransition": "Claim {{claimNumber}} is missing a transitional phrase (e.g., 'comprising', 'consisting of')",
       "missingTransitionDetails": "Claim {{claimNumber}} does not contain a recognized transitional phrase. Every claim must include a transitional phrase such as 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by', or 'characterized in that' between the preamble and the claim body.",
@@ -869,8 +869,8 @@
           "pass": "All independent device/system claims describe component connections."
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis.",
-          "pass": "All claim terms have antecedent basis."
+          "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 该/所述 reference without a prior 一 introduction (审查指南).",
+          "pass": "All claim terms have antecedent basis (审查指南)."
         }
       },
       "abstract": {
@@ -1013,8 +1013,8 @@
           "pass": "All independent apparatus/system claims describe component connections."
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis.",
-          "pass": "All claim terms have antecedent basis."
+          "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 該/所述/前述 reference without a prior 一 introduction (專利審查基準).",
+          "pass": "All claim terms have antecedent basis (專利審查基準)."
         }
       },
       "abstract": {
@@ -1115,8 +1115,8 @@
     "preamble_cross_category_pass": "Claim preambles are consistent.",
     "preamble_noun_mismatch": "Preamble noun differs between dependent and independent claim.",
     "preamble_indefinite_article": "Indefinite article in dependent claim preamble (should be 'The').",
-    "spec_support_unsupported_terms": "Claim terms not found in specification.",
-    "spec_support_pass": "All claim terms found in specification.",
+    "spec_support_unsupported_terms": "Claim terms not found in the specification — each claim term should have written-description support (§ 112(a)).",
+    "spec_support_pass": "All claim terms found in the specification (§ 112(a) written-description support).",
     "required_sections_pass": "All required sections per MPEP § 608.01(a) are present.",
     "required_sections_missing": "Missing required sections per MPEP § 608.01(a).",
     "optional_section_missing": "Optional section \"{{name}}\" not found.",

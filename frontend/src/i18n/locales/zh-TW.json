@@ -734,8 +734,8 @@
         "pass": "未偵測到手段功能用語。"
       },
       "antecedentBasis": {
-        "verify": "偵測到缺少先行詞基礎（antecedent basis）。",
-        "pass": "未偵測到先行詞基礎問題。"
+        "verify": "可能缺少先行詞基礎（§ 112(b)）：「the X／said X」疑似未有先前之「a X」引介。",
+        "pass": "未偵測到先行詞基礎問題（§ 112(b)）。"
       },
       "missingTransition": "請求項 {{claimNumber}} 缺少過渡用語（例如 'comprising'、'consisting of'）",
       "missingTransitionDetails": "請求項 {{claimNumber}} 未包含任何公認的過渡用語。每項請求項必須在前言與主體之間包含過渡用語，例如 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' 或 'characterized in that'。",
@@ -869,8 +869,8 @@
           "pass": "所有獨立裝置／系統權利要求均已記載組件之連接關係。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少先行詞。",
-          "pass": "所有引用之用語皆有先行詞。"
+          "verify": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少先行詞（审查指南）：「该／所述」引用未有先前之「一」引介。",
+          "pass": "所有引用之用語皆有先行詞（审查指南）。"
         }
       },
       "abstract": {
@@ -1013,8 +1013,8 @@
           "pass": "所有獨立裝置／系統項均已記載組件之連接關係。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少先行詞。",
-          "pass": "所有引用之用語皆有先行詞。"
+          "verify": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少先行詞（專利審查基準）：「該／所述／前述」引用未有先前之「一」引介。",
+          "pass": "所有引用之用語皆有先行詞（專利審查基準）。"
         }
       },
       "abstract": {
@@ -1115,8 +1115,8 @@
     "preamble_cross_category_pass": "請求項前言一致。",
     "preamble_noun_mismatch": "附屬項與獨立項前言名詞不同。",
     "preamble_indefinite_article": "附屬項前言使用不定冠詞（應使用「The」）。",
-    "spec_support_unsupported_terms": "請求項用語在說明書中未找到。",
-    "spec_support_pass": "所有請求項用語均可於說明書中找到。",
+    "spec_support_unsupported_terms": "請求項用語於說明書中未找到：每個用語須於說明書中有書面描述支持（§ 112(a)）。",
+    "spec_support_pass": "所有請求項用語均可於說明書中找到（§ 112(a) 書面描述支持）。",
     "required_sections_pass": "符合 MPEP § 608.01(a) 之所有必要章節均已存在。",
     "required_sections_missing": "缺少 MPEP § 608.01(a) 規定之必要章節。",
     "optional_section_missing": "選擇性章節「{{name}}」未發現。",

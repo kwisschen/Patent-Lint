@@ -734,8 +734,8 @@
         "pass": "未检测到功能性限定用语。"
       },
       "antecedentBasis": {
-        "verify": "检测到缺少先行词基础（antecedent basis）。",
-        "pass": "未检测到先行词基础问题。"
+        "verify": "可能缺少先行词基础（§ 112(b)）：「the X／said X」疑似未有先前之「a X」引介。",
+        "pass": "未检测到先行词基础问题（§ 112(b)）。"
       },
       "missingTransition": "权利要求 {{claimNumber}} 缺少过渡用语（例如 'comprising'、'consisting of'）",
       "missingTransitionDetails": "权利要求 {{claimNumber}} 未包含任何公认的过渡用语。每项权利要求必须在前序部分与主体之间包含过渡用语，例如 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' 或 'characterized in that'。",
@@ -869,8 +869,8 @@
           "pass": "所有独立装置／系统权利要求均已记载组件的连接关系。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少先行词。",
-          "pass": "所有引用之用语皆有先行词。"
+          "verify": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少先行词（审查指南）：「该／所述」引用未有先前之「一」引介。",
+          "pass": "所有引用之用语皆有先行词（审查指南）。"
         }
       },
       "abstract": {
@@ -1013,8 +1013,8 @@
           "pass": "所有獨立裝置／系統項均已記載組件之連接關係。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少先行词。",
-          "pass": "所有引用之用语均有先行词。"
+          "verify": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少先行词（專利審查基準）：「該／所述／前述」引用未有先前之「一」引介。",
+          "pass": "所有引用之用语均有先行词（專利審查基準）。"
         }
       },
       "abstract": {
@@ -1115,8 +1115,8 @@
     "preamble_cross_category_pass": "权利要求前序部分一致。",
     "preamble_noun_mismatch": "从属权利要求与独立权利要求前序名词不同。",
     "preamble_indefinite_article": "从属权利要求前序使用了不定冠词（应使用「The」）。",
-    "spec_support_unsupported_terms": "权利要求用语在说明书中未找到。",
-    "spec_support_pass": "所有权利要求用语均可在说明书中找到。",
+    "spec_support_unsupported_terms": "权利要求用语在说明书中未找到：每个用语须在说明书中有书面描述支持（§ 112(a)）。",
+    "spec_support_pass": "所有权利要求用语均可在说明书中找到（§ 112(a) 书面描述支持）。",
     "required_sections_pass": "符合 MPEP § 608.01(a) 的所有必要章节均已存在。",
     "required_sections_missing": "缺少 MPEP § 608.01(a) 规定的必要章节。",
     "optional_section_missing": "可选章节\"{{name}}\"未发现。",
