@@ -3,9 +3,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AlertTriangle, ChevronRight, Flag } from 'lucide-react'
-import { toast } from 'sonner'
 import { Button } from './ui/button'
-import { composeFeedbackMailto } from '../lib/feedbackMailto'
+import { composeFeedbackMailto, showFeedbackToast } from '../lib/feedbackMailto'
 
 // CJK reference-form prefixes used by the TW walker (該/所述/前述/該等/該些).
 // Matched without word boundaries because CJK text has no whitespace
@@ -109,10 +108,10 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
         terms: terms.join(', '),
         jurisdiction: jurisdiction || 'unknown',
       },
-      { locale: i18n.language },
+      { locale: i18n.language, bodyPlaceholder: t('feedback.bodyPlaceholder') },
     )
     window.location.href = href
-    toast(t('feedback.confirmation'))
+    showFeedbackToast(t)
   }
   // Row badge counts findings (one per claim-term pair), not distinct terms.
   // A row that groups claims 1/2/3/5 all sharing the single term 該使用者介面

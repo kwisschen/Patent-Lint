@@ -2,10 +2,9 @@
 // Copyright (c) 2025 Christopher Chen
 import { useTranslation } from 'react-i18next'
 import { Flag } from 'lucide-react'
-import { toast } from 'sonner'
 import { formatDetails } from "../lib/detailsFormatter"
 import { Button } from "./ui/button"
-import { composeFeedbackMailto } from "../lib/feedbackMailto"
+import { composeFeedbackMailto, showFeedbackToast } from "../lib/feedbackMailto"
 
 const CITATION_MAP = {
   'check.spec.restrictiveWording': '§ 112(b)',
@@ -73,10 +72,10 @@ export default function CheckItem({ status, message, message_key, details, detai
         status,
         jurisdiction: jurisdiction || 'unknown',
       },
-      { locale: i18n.language },
+      { locale: i18n.language, bodyPlaceholder: t('feedback.bodyPlaceholder') },
     )
     window.location.href = href
-    toast(t('feedback.confirmation'))
+    showFeedbackToast(t)
   }
 
   return (
