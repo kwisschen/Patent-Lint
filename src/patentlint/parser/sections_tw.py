@@ -112,24 +112,41 @@ _count_cjk_chars = count_cjk_chars
 def _find_bracketless_section_headers(paragraphs: list[str]) -> list[str]:
     """Scan paragraphs for canonical TIPO section names lacking required 【】.
 
-    Detects two missing-bracket patterns:
-    (a) bare canonical name alone on a line (e.g., ``先前技術``)
-    (b) variant brackets wrapping a canonical name (``[先前技術]``,
+    Detects four missing-bracket patterns:
+    (a) bare canonical name alone on a line (``先前技術``)
+    (b) opening 【 only, closing 】 missing (``【先前技術``)
+    (c) closing 】 only, opening 【 missing (``先前技術】``)
+    (d) variant brackets wrapping a canonical name (``[先前技術]``,
         ``〔先前技術〕``, ``(先前技術)``, ``（先前技術）``)
 
-    Correctly-bracketed 【…】 headers are not flagged — the main parser loop
-    handles those. Returns first-seen occurrences, de-duplicated, up to 50
-    entries to cap worst-case payloads.
+    Correctly-bracketed 【…】 headers matched by the main parser regex are
+    not flagged. Returns first-seen occurrences, de-duplicated, capped at 50
+    entries to bound worst-case payload size.
     """
     seen: set[str] = set()
     findings: list[str] = []
     for para in paragraphs:
         stripped = para.strip()
-        if not stripped or stripped.startswith("【"):
+        if not stripped:
+            continue
+        # Correctly bracketed 【<name>】... — main parser handles.
+        if _BRACKET_HEADER.match(stripped):
             continue
         candidate: str | None = None
+        # Bare canonical name (no brackets at all)
         if stripped in _CANONICAL_SECTION_NAMES:
             candidate = stripped
+        # Opening 【 only, closing 】 absent
+        elif stripped.startswith("【") and "】" not in stripped:
+            inner = stripped[1:].strip()
+            if inner in _CANONICAL_SECTION_NAMES:
+                candidate = stripped
+        # Closing 】 only, opening 【 absent
+        elif stripped.endswith("】") and "【" not in stripped:
+            inner = stripped[:-1].strip()
+            if inner in _CANONICAL_SECTION_NAMES:
+                candidate = stripped
+        # Variant brackets wrapping a canonical name
         else:
             for open_b, close_b in _VARIANT_BRACKET_PAIRS:
                 if stripped.startswith(open_b) and stripped.endswith(close_b):
