@@ -734,8 +734,8 @@
         "pass": "기능식 청구항 표현이 검출되지 않았습니다."
       },
       "antecedentBasis": {
-        "verify": "선행사 기초 누락 가능성이 검출되었습니다.",
-        "pass": "선행사 기초 문제가 검출되지 않았습니다."
+        "verify": "선행사 기초 누락 가능성(§ 112(b)): 'the X / said X'에 선행하는 'a X' 도입이 명세서상에 없을 수 있습니다.",
+        "pass": "선행사 기초 문제가 검출되지 않았습니다(§ 112(b))."
       },
       "missingTransition": "청구항 {{claimNumber}}에 전환어(예: 'comprising', 'consisting of')가 누락되었습니다",
       "missingTransitionDetails": "청구항 {{claimNumber}}에 인식 가능한 전환어가 포함되어 있지 않습니다. 모든 청구항에는 전제부와 본문 사이에 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by' 또는 'characterized in that' 등의 전환어가 포함되어야 합니다.",
@@ -869,8 +869,8 @@
           "pass": "모든 독립 장치／시스템 청구항이 구성요소 간 연결관계를 기재하고 있습니다."
         },
         "antecedentBasis": {
-          "verify": "{{claims}}에서 선행사가 없을 수 있는 용어가 {{issue_count}}개 있습니다.",
-          "pass": "모든 청구항 용어에 선행사가 있습니다."
+          "verify": "{{claims}}에서 선행사가 없을 수 있는 용어 {{issue_count}}개(审查指南): '该 / 所述' 참조에 대한 선행 '一' 도입이 없을 수 있습니다.",
+          "pass": "모든 청구항 용어에 선행사가 있습니다(审查指南)."
         }
       },
       "abstract": {
@@ -1013,8 +1013,8 @@
           "pass": "모든 독립 장치／시스템 청구항이 구성요소 간 연결관계를 기재하고 있습니다."
         },
         "antecedentBasis": {
-          "verify": "{{claims}}에서 선행사가 없을 수 있는 용어가 {{issue_count}}개 있습니다.",
-          "pass": "모든 청구항 용어에 선행사가 있습니다."
+          "verify": "{{claims}}에서 선행사가 없을 수 있는 용어 {{issue_count}}개(專利審查基準): '該 / 所述 / 前述' 참조에 대한 선행 '一' 도입이 없을 수 있습니다.",
+          "pass": "모든 청구항 용어에 선행사가 있습니다(專利審查基準)."
         }
       },
       "abstract": {
@@ -1115,8 +1115,8 @@
     "preamble_cross_category_pass": "청구항 전제부가 일관적입니다.",
     "preamble_noun_mismatch": "종속항과 독립항 간 전제부 명사 불일치.",
     "preamble_indefinite_article": "종속항 전제부에 부정관사 사용 ('The'이어야 합니다).",
-    "spec_support_unsupported_terms": "명세서에서 찾을 수 없는 청구항 용어.",
-    "spec_support_pass": "모든 청구항 용어가 명세서에서 발견되었습니다.",
+    "spec_support_unsupported_terms": "명세서에서 찾을 수 없는 청구항 용어: 각 용어는 명세서상의 서면 개시로 뒷받침되어야 합니다(§ 112(a)).",
+    "spec_support_pass": "모든 청구항 용어가 명세서에서 발견되었습니다(§ 112(a) 서면 개시 요건).",
     "required_sections_pass": "MPEP § 608.01(a)에 따른 모든 필수 섹션이 존재합니다.",
     "required_sections_missing": "MPEP § 608.01(a)에 따른 필수 섹션이 누락되었습니다.",
     "optional_section_missing": "선택 섹션 \"{{name}}\"이(가) 발견되지 않았습니다.",
