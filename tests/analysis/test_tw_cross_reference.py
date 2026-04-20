@@ -187,7 +187,7 @@ class TestCheckFiguresSequential:
         doc = TwPatentDocument(figure_refs=[])
         result = check_figures_sequential(doc)
         assert result[0].status == "pass"
-        assert result[0].message_key == "check.tw.drawings.figuresSequential.pass"
+        assert result[0].message_key == "check.tw.drawings.figuresSequential.passNone"
 
     def test_single_figure_passes(self):
         doc = TwPatentDocument(figure_refs=["1"])

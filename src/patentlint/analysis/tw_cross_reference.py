@@ -116,10 +116,14 @@ def check_figures_sequential(doc: TwPatentDocument) -> list[CheckItem]:
             numbers.add(int(m.group(1)))
 
     if not numbers:
+        # Separate message key from the normal pass case — the `.pass`
+        # template interpolates `{{found_max}}` which we'd have nothing
+        # to provide here, so sharing the key would render the raw
+        # placeholder. `.passNone` has its own placeholder-free template.
         return [CheckItem(
             status="pass",
-            message="No figures to check for sequential order.",
-            message_key="check.tw.drawings.figuresSequential.pass",
+            message="No figures found.",
+            message_key="check.tw.drawings.figuresSequential.passNone",
             reference="專利審查基準",
         )]
 

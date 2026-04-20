@@ -139,7 +139,7 @@
     "reportProblem": "이 검사 결과의 문제 신고",
     "confirmation": "오류 보고서를 이메일에 자동 입력했습니다. 초안은 기기에 그대로 있습니다.",
     "emailGreeting": "Christopher 님께,",
-    "emailIntro": "다음 PatentLint 검사 결과에 문제가 있어 보여 알려드립니다.",
+    "emailIntro": "다음 PatentLint 검사 결과의 오류를 알려드립니다.",
     "emailUserSection": "설명",
     "emailClosing": "감사합니다.",
     "bodyPlaceholder": "[이 검사 결과에서 어떤 부분이 문제라고 생각하시는지 설명해 주세요. 청구항 문구나 초안 내용은 붙여넣지 마시고, 개요만으로도 조사가 가능합니다.]",
@@ -884,6 +884,7 @@
         },
         "figuresSequential": {
           "pass": "도 1–{{found_max}}이(가) 순차적으로 번호 매겨져 있습니다.",
+          "passNone": "도면이 검출되지 않았습니다.",
           "amend": "도면 번호가 순차적이지 않습니다. 누락: {{figure_list}}."
         }
       }
@@ -1041,6 +1042,7 @@
         },
         "figuresSequential": {
           "pass": "도 1–{{found_max}}이(가) 순차적으로 번호 매겨져 있습니다.",
+          "passNone": "도면이 검출되지 않았습니다.",
           "amend": "도면 번호가 순차적이지 않습니다. 누락: {{figure_list}}."
         }
       }
