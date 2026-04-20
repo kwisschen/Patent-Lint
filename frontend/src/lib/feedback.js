@@ -3,8 +3,26 @@
 /* global __BUILD_HASH__ */
 import { toast } from 'sonner'
 
-// Source of truth for the maintainer email; mirrors Footer.jsx:12.
+// Source of truth for the maintainer email; mirrors Footer.jsx usage.
 const MAINTAINER_EMAIL = 'kwisschen@gmail.com'
+
+// Gmail web compose URL. Supports ?to=, ?su=, ?body= query params, and
+// ?view=cm&fs=1 to open directly in the full-screen compose modal.
+//
+// Chosen over mailto: because mailto: requires an OS-level handler to
+// be registered + functional, which a meaningful fraction of users
+// (including the maintainer's own Windows setup) do not have — the
+// dispatch chain silently fails with no user-visible error. An https://
+// URL bypasses the OS handler layer entirely; every browser opens it
+// as a regular webpage regardless of configuration.
+//
+// Preserves the PatentLint trust property ("indicator stays green"):
+// opening a new tab via window.open('https://...') causes the NEW tab
+// to fetch Gmail — PatentLint's tab makes zero network calls.
+// `useNetworkMonitor`'s PerformanceObserver is scoped to PatentLint's
+// tab and doesn't see the new tab's resources. Same handoff pattern as
+// mailto:, just to a URL instead of a protocol.
+const GMAIL_COMPOSE_BASE = 'https://mail.google.com/mail/?view=cm&fs=1'
 
 // Shared toast id so rapid-fire reports don't stack — subsequent calls
 // replace the existing confirmation instead of piling up.
@@ -83,13 +101,23 @@ function formatSection(entries) {
     .join('\n')
 }
 
-// Compose a mailto: URL pre-filled with a per-finding feedback email.
+// Build a Gmail compose URL with the given subject + body. Uses
+// URLSearchParams so encoding is handled consistently (spaces as +,
+// CJK characters as %XX, etc.).
+function buildGmailUrl(subject, body) {
+  const params = new URLSearchParams({
+    to: MAINTAINER_EMAIL,
+    su: subject,
+    body: body,
+  })
+  return `${GMAIL_COMPOSE_BASE}&${params.toString()}`
+}
+
+// Compose a Gmail-compose URL pre-filled with per-finding feedback.
 // Finding fields + environment metadata are merged into one aligned
 // data block — field labels make the structure obvious without needing
-// section-header decoration, and merging the blocks keeps the URL short
-// enough to survive Gmail web-handler compose-URL length limits and
-// other protocol-handler quirks. Professional framing comes from a
-// localized greeting + closing around the data.
+// section-header decoration. Professional framing comes from a localized
+// greeting + closing around the data.
 //
 // finding: an object whose enumerable keys become "Label: value" lines.
 // Pass only what's relevant to the surface.
@@ -97,8 +125,8 @@ function formatSection(entries) {
 // Subject line stays English so the maintainer's inbox can filter
 // consistently across locales: "PatentLint finding report — {check_key}".
 //
-// Returns a fully URL-encoded mailto: string.
-export function composeFeedbackMailto(finding, t, { locale } = {}) {
+// Returns a fully-encoded https:// URL ready for openFeedbackTab.
+export function composeFeedbackUrl(finding, t, { locale } = {}) {
   const env = {
     browser: detectBrowser(),
     locale: locale || (typeof navigator !== 'undefined' ? navigator.language : 'unknown'),
@@ -123,43 +151,14 @@ export function composeFeedbackMailto(finding, t, { locale } = {}) {
     t('feedback.emailClosing'),
   ].join('\n')
 
-  return `mailto:${MAINTAINER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+  return buildGmailUrl(subject, body)
 }
 
-// Show the "Auto-filled in your email client for review. Your draft
-// stayed put." confirmation toast. Persistent (duration: Infinity) with
-// an X close button so users who tab-switch to their email client and
-// come back still see the acknowledgment. Fixed id so rapid-fire reports
-// replace the existing toast rather than stack.
-export function showFeedbackToast(t) {
-  toast(t('feedback.confirmation'), {
-    id: FEEDBACK_TOAST_ID,
-    duration: Infinity,
-    closeButton: true,
-  })
-}
-
-// Open a mailto: URL by simulating a user-gestured click on a dynamic
-// anchor element. More reliable than `window.location.href = href` for
-// protocol handlers — some browsers (notably Chrome on Windows with
-// Gmail web-handler registered for mailto:) treat programmatic
-// `location.href` assignments as non-user-initiated and can fail to
-// dispatch to the external handler, especially on repeat attempts. An
-// anchor click within an onClick handler carries user-activation
-// context that protocol handlers trust.
-export function openMailto(href) {
-  const a = document.createElement('a')
-  a.href = href
-  a.rel = 'noopener'
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
-}
-
-// Compose a mailto: URL for the footer "Feedback" link. General-purpose
-// feedback (bug reports, feature requests, questions, comments) — not
-// per-finding. Reuses the localized greeting + closing pattern.
-export function composeFooterFeedbackMailto(t) {
+// Compose a Gmail-compose URL for the footer "Feedback" link.
+// General-purpose feedback (bug reports, feature requests, questions,
+// comments) — not per-finding. Reuses the localized greeting + closing
+// pattern.
+export function composeFooterFeedbackUrl(t) {
   const subject = 'PatentLint feedback'
   const body = [
     t('feedback.emailGreeting'),
@@ -170,13 +169,13 @@ export function composeFooterFeedbackMailto(t) {
     '',
     t('feedback.emailClosing'),
   ].join('\n')
-  return `mailto:${MAINTAINER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+  return buildGmailUrl(subject, body)
 }
 
-// Compose a mailto: URL for the Security page's enterprise-deployment
-// link. Prospective self-hosted / air-gapped inquiries. Reuses the
+// Compose a Gmail-compose URL for the enterprise-deployment inquiry
+// links. Prospective self-hosted / air-gapped inquiries. Reuses the
 // localized greeting + closing pattern; own subject line and intro.
-export function composeEnterpriseMailto(t) {
+export function composeEnterpriseUrl(t) {
   const subject = 'PatentLint enterprise inquiry'
   const body = [
     t('feedback.emailGreeting'),
@@ -187,5 +186,26 @@ export function composeEnterpriseMailto(t) {
     '',
     t('feedback.emailClosing'),
   ].join('\n')
-  return `mailto:${MAINTAINER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+  return buildGmailUrl(subject, body)
+}
+
+// Open a Gmail compose URL in a new tab. Called from onClick handlers
+// so the user-activation context carries through (no popup blocking).
+// noopener+noreferrer so the new tab can't reach back into PatentLint's
+// window — pure handoff.
+export function openFeedbackTab(url) {
+  window.open(url, '_blank', 'noopener,noreferrer')
+}
+
+// Show the "Auto-filled an error report for your review. Your draft
+// stayed put." confirmation toast. Persistent (duration: Infinity) with
+// an X close button so users who tab-away to the new Gmail tab and come
+// back still see the acknowledgment. Fixed id so rapid-fire reports
+// replace the existing toast rather than stack.
+export function showFeedbackToast(t) {
+  toast(t('feedback.confirmation'), {
+    id: FEEDBACK_TOAST_ID,
+    duration: Infinity,
+    closeButton: true,
+  })
 }
