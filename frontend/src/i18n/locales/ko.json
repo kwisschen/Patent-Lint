@@ -950,11 +950,11 @@
           "pass": "청구항이 순차적으로 번호 매겨져 있습니다."
         },
         "dependencyFormat": {
-          "amend": "{{count}}개 청구항에서 종속 형식을 인식할 수 없습니다: {{claims}}.",
+          "amend": "{{count}}개 청구항에서 종속 형식을 인식할 수 없습니다: {{claims}}(專利法施行細則 §18).",
           "pass": "모든 종속 참조가 인식 가능한 형식입니다."
         },
         "selfDependent": {
-          "amend": "자기 종속 청구항이 검출되었습니다.",
+          "amend": "자기 종속 청구항이 검출되었습니다(專利法施行細則 §18).",
           "pass": "자기 종속 청구항이 없습니다."
         },
         "circularDependency": {
@@ -962,7 +962,7 @@
           "pass": "순환 종속 체인이 없습니다."
         },
         "forwardDependency": {
-          "amend": "{{claims}}이(가) 후행 청구항을 참조합니다 (전방 종속).",
+          "amend": "{{claims}}이(가) 후행 청구항을 참조합니다 (전방 종속, 專利法施行細則 §18).",
           "pass": "모든 종속이 선행 청구항을 참조합니다."
         },
         "singleSentence": {
@@ -972,7 +972,7 @@
           "amendMultiSentence": "다문장 청구항이 {{count}}개 있습니다: {{claims}}."
         },
         "refNumeralParens": {
-          "verify": "{{count}}개 청구항에서 참조 부호가 괄호로 둘러싸여 있지 않습니다: {{claims}}.",
+          "verify": "{{count}}개 청구항에서 참조 부호가 괄호로 둘러싸여 있지 않습니다: {{claims}}(專利法施行細則 §19).",
           "pass": "모든 참조 부호가 괄호로 둘러싸여 있습니다."
         },
         "subjectConsistency": {
@@ -1028,7 +1028,7 @@
           "passCompound": "發明名稱/新型名稱 각 부분({{halves}})이 요약서에 모두 기재되어 있습니다."
         },
         "commercialLanguage": {
-          "amend": "요약서에 상업적 표현이 포함되어 있습니다.",
+          "amend": "요약서에 상업적 표현이 포함되어 있습니다(專利法施行細則 §21).",
           "pass": "요약서에 상업적 표현이 없습니다."
         },
         "representativeDrawing": {
