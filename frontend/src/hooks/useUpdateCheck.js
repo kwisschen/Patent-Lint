@@ -1,5 +1,5 @@
 /* global __BUILD_HASH__ */
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 
@@ -48,6 +48,12 @@ const CHECK_THROTTLE_MS = 60 * 60 * 1000
  */
 export function useUpdateCheck() {
   const { t } = useTranslation()
+  // Tracks whether the mount-time check has already fired in this tab
+  // session. Persists across effect re-runs (e.g., when [t] changes due
+  // to a locale switch) so locale switching does NOT trigger a fresh
+  // network call — that would flicker the honest network indicator
+  // during a pure UI-language change and betray the trust property.
+  const hasMountChecked = useRef(false)
 
   useEffect(() => {
     // Skip in dev — version.json is only generated in production builds
@@ -118,13 +124,16 @@ export function useUpdateCheck() {
       }
     }
 
-    // Run on mount unconditionally. Initial load, reload, and locale-switch
-    // re-render all fire a fresh check — reloading the page is how users
-    // expect to "force a refresh" of any web app, and throttling that would
-    // silently withhold updates from users explicitly asking for fresh state.
-    // The occasional extra check on locale switch (rare mid-session) is the
-    // accepted cost of this simpler policy.
-    check()
+    // Run on TRUE mount only. Initial load / reload starts a fresh React
+    // tree, so hasMountChecked.current is false → check fires. Effect
+    // re-runs from a locale switch (where [t] changed but the component
+    // didn't remount) hit the ref guard and skip — locale changes must
+    // not trigger a network call, otherwise the network indicator would
+    // flicker red on a pure UI-language change and mislead the user.
+    if (!hasMountChecked.current) {
+      hasMountChecked.current = true
+      check()
+    }
 
     // Run on tab focus, also throttled. Using visibilitychange instead
     // of focus because visibilitychange is more reliable across browsers
