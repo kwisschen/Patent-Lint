@@ -675,11 +675,11 @@
       },
       "paragraphSequential": {
         "missing": "說明書中未發現段落編號。",
-        "amend": "段落編號非連續。",
+        "amend": "段落編號非連續（MPEP § 608.01(p)）。",
         "pass": "段落編號為連續。"
       },
       "paragraphEnding": {
-        "amend": "段落結尾標點符號無效或缺失。",
+        "amend": "段落結尾標點符號無效或缺失（MPEP § 608.01(p)）。",
         "pass": "所有段落結尾標點符號正確。"
       },
       "sequenceListing": {
@@ -709,15 +709,15 @@
         "pass": "請求項編號為連續。"
       },
       "multipleDependent": {
-        "amend": "發現多項附屬請求項。",
+        "amend": "發現多項附屬請求項：請留意規費及鏈式多項附屬規則（MPEP § 608.01(n)；§ 112(e)）。",
         "pass": "未發現多項附屬請求項。"
       },
       "selfDependent": {
-        "amend": "發現自我依附請求項。",
+        "amend": "發現自我依附請求項：請求項不得自我依附（§ 112(d)）。",
         "pass": "未發現自我依附請求項。"
       },
       "missingPeriod": {
-        "amend": "請求項缺少句點。",
+        "amend": "請求項缺少句點（MPEP § 608.01(m)）。",
         "pass": "所有請求項均以句點結尾。"
       },
       "extraPeriod": {
@@ -748,15 +748,15 @@
         "pass": "摘要未發現限制性或不當用語。"
       },
       "structure": {
-        "amend": "摘要含有多餘段落或結尾無效。",
+        "amend": "摘要含有多餘段落或結尾無效：須為單一段落（MPEP § 608.01(b)）。",
         "pass": "摘要為單一段落且結尾正確。"
       },
       "impliedPhrases": {
-        "amend": "摘要含有可省略之詞語（如「disclosure」或「provided」）。",
+        "amend": "摘要含有可省略之詞語（如「disclosure」或「provided」）（MPEP § 608.01(b)）。",
         "pass": "摘要未發現可省略之詞語。"
       },
       "wordCount": {
-        "amend": "摘要字數超出 50–150 字範圍。",
+        "amend": "摘要字數超出 50–150 字範圍（MPEP § 608.01(b)）。",
         "pass": "摘要字數在 50–150 字範圍內。"
       }
     },
