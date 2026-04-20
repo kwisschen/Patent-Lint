@@ -139,8 +139,6 @@
     "reportProblem": "回報此項分析結果的問題",
     "confirmation": "已為您自動填入錯誤回報至電子郵件供您檢視。您的稿件未離開您的裝置。",
     "emailGreeting": "Christopher 您好，",
-    "emailIntro": "我想回報以下 PatentLint 分析結果中的錯誤。",
-    "emailUserSection": "您的說明",
     "emailClosing": "謝謝，",
     "bodyPlaceholder": "[請說明您認為此項分析結果有何問題。請勿貼上任何請求項文字或您稿件中的其他內容，簡要說明即可供我們調查。]",
     "footerIntro": "我想就 PatentLint 提供一些意見回饋。",
