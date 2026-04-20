@@ -68,11 +68,13 @@ export default function CheckItem({ status, message, message_key, details, detai
   const handleReport = () => {
     const href = composeFeedbackMailto(
       {
-        check_key: message_key || 'unknown',
+        check_key: message_key || 'generic',
+        message: displayMessage,
         status,
         jurisdiction: jurisdiction || 'unknown',
       },
-      { locale: i18n.language, bodyPlaceholder: t('feedback.bodyPlaceholder') },
+      t,
+      { locale: i18n.language },
     )
     window.location.href = href
     showFeedbackToast(t)

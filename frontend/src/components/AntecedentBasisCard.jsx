@@ -108,7 +108,8 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
         terms: terms.join(', '),
         jurisdiction: jurisdiction || 'unknown',
       },
-      { locale: i18n.language, bodyPlaceholder: t('feedback.bodyPlaceholder') },
+      t,
+      { locale: i18n.language },
     )
     window.location.href = href
     showFeedbackToast(t)
