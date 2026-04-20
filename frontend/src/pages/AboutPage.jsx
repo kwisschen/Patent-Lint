@@ -7,7 +7,7 @@ import { useInView } from '../hooks/useInView'
 import PageCTA from '../components/PageCTA'
 import { useCountUp } from '../hooks/useCountUp'
 import { JURISDICTION_COLORS } from '../lib/jurisdictionConfig'
-import { composeEnterpriseMailto } from '../lib/feedbackMailto'
+import { composeEnterpriseUrl } from '../lib/feedback'
 
 function JurisdictionBadge({ code }) {
   return (
@@ -643,7 +643,7 @@ function ArchitectureDiagram({ t }) {
             <Server className="w-3.5 h-3.5" />
             <span>{t('about.arch.selfHostBadge')}</span>
           </div>
-          <a href={composeEnterpriseMailto(t)} className="inline-block mt-3 text-sm text-muted-foreground underline hover:text-foreground transition-colors">
+          <a href={composeEnterpriseUrl(t)} className="inline-block mt-3 text-sm text-muted-foreground underline hover:text-foreground transition-colors">
             {t('security.tech.contactEnterprise')}
           </a>
         </div>
