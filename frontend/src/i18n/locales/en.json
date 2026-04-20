@@ -138,7 +138,7 @@
     "report": "Report error",
     "reportProblem": "Report a problem with this finding",
     "picker": {
-      "title": "Choose how to send",
+      "title": "How would you like to send this?",
       "description": "Your email is ready to send. The same content is on your clipboard. Your draft stays on your device.",
       "send": {
         "gmail": "Send via Gmail",
