@@ -19,7 +19,8 @@ function ClaimRow({ claimNumber, phrases, crossRefPhrases, jurisdiction }) {
         phrases: phrases.join(', '),
         jurisdiction: jurisdiction || 'unknown',
       },
-      { locale: i18n.language, bodyPlaceholder: t('feedback.bodyPlaceholder') },
+      t,
+      { locale: i18n.language },
     )
     window.location.href = href
     showFeedbackToast(t)
