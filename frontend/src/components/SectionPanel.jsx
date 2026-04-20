@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { ChevronDown } from 'lucide-react'
 import CheckItemComponent from './CheckItem'
 
-export default function SectionPanel({ title, checks = [], defaultOpen = false, children }) {
+export default function SectionPanel({ title, checks = [], defaultOpen = false, children, jurisdiction }) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(defaultOpen)
 
@@ -54,7 +54,7 @@ export default function SectionPanel({ title, checks = [], defaultOpen = false, 
       {open && (
         <div className="mt-1 space-y-1 rounded-lg border bg-card p-2 animate-in fade-in-0 slide-in-from-top-1 duration-200">
           {checks.map((check, i) => (
-            <CheckItemComponent key={i} {...check} />
+            <CheckItemComponent key={i} {...check} jurisdiction={jurisdiction} />
           ))}
           {children}
         </div>

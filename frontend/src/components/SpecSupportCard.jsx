@@ -2,12 +2,29 @@
 // Copyright (c) 2025 Christopher Chen
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FileSearch, ChevronRight } from 'lucide-react'
+import { FileSearch, ChevronRight, Flag } from 'lucide-react'
+import { toast } from 'sonner'
+import { Button } from './ui/button'
+import { composeFeedbackMailto } from '../lib/feedbackMailto'
 
-function ClaimRow({ claimNumber, phrases, crossRefPhrases }) {
-  const { t } = useTranslation()
+function ClaimRow({ claimNumber, phrases, crossRefPhrases, jurisdiction }) {
+  const { t, i18n } = useTranslation()
   const [expanded, setExpanded] = useState(false)
   const hasCrossRef = crossRefPhrases.length > 0
+
+  const handleReport = () => {
+    const href = composeFeedbackMailto(
+      {
+        check_key: 'specSupport',
+        claim_id: claimNumber,
+        phrases: phrases.join(', '),
+        jurisdiction: jurisdiction || 'unknown',
+      },
+      { locale: i18n.language },
+    )
+    window.location.href = href
+    toast(t('feedback.confirmation'))
+  }
 
   return (
     <div>
@@ -49,25 +66,38 @@ function ClaimRow({ claimNumber, phrases, crossRefPhrases }) {
         </span>
       </div>
       {expanded && (
-        <div className="mx-3 mb-2 px-3 py-2 rounded text-xs leading-relaxed border" style={{
+        <div className="mx-3 mb-2 px-3 py-2 rounded text-xs leading-relaxed border flex items-start gap-2" style={{
           borderColor: 'var(--attention-border)',
           backgroundColor: 'var(--attention-bg)',
         }}>
-          <p className="text-muted-foreground">
-            {t('details.specSupportUnsupported', { count: phrases.length })}
-          </p>
-          {hasCrossRef && (
-            <p className="mt-1.5 italic" style={{ color: 'var(--attention-text)' }}>
-              {t('specSupport.crossRefAntecedent')}
+          <div className="flex-1 min-w-0">
+            <p className="text-muted-foreground">
+              {t('details.specSupportUnsupported', { count: phrases.length })}
             </p>
-          )}
+            {hasCrossRef && (
+              <p className="mt-1.5 italic" style={{ color: 'var(--attention-text)' }}>
+                {t('specSupport.crossRefAntecedent')}
+              </p>
+            )}
+          </div>
+          <Button
+            variant="ghost"
+            size="xs"
+            onClick={handleReport}
+            title={t('feedback.reportProblem')}
+            aria-label={t('feedback.reportProblem')}
+            className="shrink-0"
+          >
+            <Flag />
+            {t('feedback.report')}
+          </Button>
         </div>
       )}
     </div>
   )
 }
 
-export default function SpecSupportCard({ unsupportedTerms }) {
+export default function SpecSupportCard({ unsupportedTerms, jurisdiction }) {
   const { t } = useTranslation()
 
   if (!unsupportedTerms || unsupportedTerms.length === 0) return null
@@ -114,6 +144,7 @@ export default function SpecSupportCard({ unsupportedTerms }) {
             claimNumber={id}
             phrases={[...grouped[id]]}
             crossRefPhrases={crossRefByClaim[id] || []}
+            jurisdiction={jurisdiction}
           />
         ))}
       </div>

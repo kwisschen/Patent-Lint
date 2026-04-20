@@ -134,6 +134,11 @@
     "linkedin": "LinkedIn",
     "feedback": "Feedback"
   },
+  "feedback": {
+    "report": "Report",
+    "reportProblem": "Report a problem with this finding",
+    "confirmation": "Auto-filled in your email client for review. Your draft stayed put."
+  },
   "cta": {
     "heading": "Ready to check your draft?",
     "subtext": "Drop a .docx file and get instant results. No upload. No account.",
