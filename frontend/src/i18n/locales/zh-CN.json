@@ -675,11 +675,11 @@
       },
       "paragraphSequential": {
         "missing": "说明书中未发现段落编号。",
-        "amend": "段落编号不连续。",
+        "amend": "段落编号不连续（MPEP § 608.01(p)）。",
         "pass": "段落编号连续。"
       },
       "paragraphEnding": {
-        "amend": "段落结尾标点符号无效或缺失。",
+        "amend": "段落结尾标点符号无效或缺失（MPEP § 608.01(p)）。",
         "pass": "所有段落结尾标点符号正确。"
       },
       "sequenceListing": {
@@ -709,15 +709,15 @@
         "pass": "权利要求编号连续。"
       },
       "multipleDependent": {
-        "amend": "发现多项从属权利要求。",
+        "amend": "发现多项从属权利要求：请留意规费及链式多项从属规则（MPEP § 608.01(n)；§ 112(e)）。",
         "pass": "未发现多项从属权利要求。"
       },
       "selfDependent": {
-        "amend": "发现自引用权利要求。",
+        "amend": "发现自引用权利要求：权利要求不得自我依附（§ 112(d)）。",
         "pass": "未发现自引用权利要求。"
       },
       "missingPeriod": {
-        "amend": "权利要求缺少句号。",
+        "amend": "权利要求缺少句号（MPEP § 608.01(m)）。",
         "pass": "所有权利要求均以句号结尾。"
       },
       "extraPeriod": {
@@ -748,15 +748,15 @@
         "pass": "摘要未发现限制性或不当用语。"
       },
       "structure": {
-        "amend": "摘要含有多余段落或结尾无效。",
+        "amend": "摘要含有多余段落或结尾无效：须为单一段落（MPEP § 608.01(b)）。",
         "pass": "摘要为单一段落且结尾正确。"
       },
       "impliedPhrases": {
-        "amend": "摘要含有可省略的措辞（如「disclosure」或「provided」）。",
+        "amend": "摘要含有可省略的措辞（如「disclosure」或「provided」）（MPEP § 608.01(b)）。",
         "pass": "摘要未发现可省略的措辞。"
       },
       "wordCount": {
-        "amend": "摘要字数超出 50–150 字范围。",
+        "amend": "摘要字数超出 50–150 字范围（MPEP § 608.01(b)）。",
         "pass": "摘要字数在 50–150 字范围内。"
       }
     },
