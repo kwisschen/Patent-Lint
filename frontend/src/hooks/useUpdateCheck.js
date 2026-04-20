@@ -3,9 +3,13 @@ import { useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 
-// Session-scoped dismissal key. If the user clicks "Later", we stop
-// showing the toast for the rest of the session. Reappears next session
-// if a newer version is still available.
+// Session-scoped version-specific dismissal key. Stores the buildHash
+// that the user dismissed. The next time a check runs, we only suppress
+// the toast if the current server buildHash matches the dismissed one —
+// so dismissing version Y doesn't silence a toast for version Z. Without
+// version-scoping, a single dismissal in the session permanently blocked
+// all future update prompts, which broke the update flow for anyone who
+// ever clicked "Later".
 const DISMISSED_KEY = 'patentlint:update-dismissed'
 // Session-scoped timestamp of the last check attempt. Used to throttle
 // visibility-triggered checks so that returning to the tab doesn't
@@ -59,7 +63,7 @@ export function useUpdateCheck() {
     // Skip in dev — version.json is only generated in production builds
     if (import.meta.env.DEV) return
 
-    const isDismissed = () => sessionStorage.getItem(DISMISSED_KEY) === '1'
+    const dismissedFor = () => sessionStorage.getItem(DISMISSED_KEY) || ''
     const lastCheckMs = () => {
       const v = sessionStorage.getItem(LAST_CHECK_KEY)
       return v ? Number(v) : 0
@@ -68,7 +72,6 @@ export function useUpdateCheck() {
       Date.now() - lastCheckMs() < CHECK_THROTTLE_MS
 
     const check = async () => {
-      if (isDismissed()) return
       // Record the attempt BEFORE the fetch so transient failures don't
       // unthrottle and re-fire on the next visibility event. The user
       // will get a fresh attempt after CHECK_THROTTLE_MS or on reload.
@@ -82,6 +85,17 @@ export function useUpdateCheck() {
         if (!res.ok) return
         const data = await res.json()
         if (!data.buildHash || data.buildHash === __BUILD_HASH__) return
+
+        // Version-scoped dismissal: only suppress if THIS specific
+        // server build was already dismissed this session. A newer
+        // deploy naturally breaks the suppression because the stored
+        // hash no longer matches.
+        if (data.buildHash === dismissedFor()) return
+
+        // Capture in closure so dismiss callbacks store THIS build's
+        // hash, not whatever the latest is at dismissal time (which
+        // could race with a concurrent check).
+        const targetHash = data.buildHash
 
         toast(t('updates.available'), {
           id: TOAST_ID,
@@ -112,11 +126,11 @@ export function useUpdateCheck() {
           cancel: {
             label: t('updates.dismiss'),
             onClick: () => {
-              sessionStorage.setItem(DISMISSED_KEY, '1')
+              sessionStorage.setItem(DISMISSED_KEY, targetHash)
             },
           },
           onDismiss: () => {
-            sessionStorage.setItem(DISMISSED_KEY, '1')
+            sessionStorage.setItem(DISMISSED_KEY, targetHash)
           },
         })
       } catch (e) {
