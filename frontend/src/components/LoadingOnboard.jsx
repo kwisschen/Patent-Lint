@@ -73,13 +73,14 @@ export default function LoadingOnboard({ progress, onReady }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm pb-[20vh]"
+      className="fixed inset-0 z-50 overflow-y-auto bg-background/95 backdrop-blur-sm"
       style={{
         opacity: fading ? 0 : 1,
         transition: `opacity ${FADE_DURATION_MS}ms ease`,
       }}
     >
-      <div className="flex flex-col items-center gap-6 max-w-md px-6 text-center">
+      <div className="min-h-full flex items-center justify-center py-8 md:py-0 md:pb-[20vh]">
+        <div className="flex flex-col items-center gap-6 max-w-md px-6 text-center">
         {/* Logo */}
         <h1 className="text-3xl font-bold tracking-tight">PatentLint</h1>
 
@@ -130,6 +131,7 @@ export default function LoadingOnboard({ progress, onReady }) {
 
         {/* Offline note */}
         <p className="text-xs text-muted-foreground/60">{t('loading.offline_note')}</p>
+        </div>
       </div>
     </div>
   )
