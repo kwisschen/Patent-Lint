@@ -70,6 +70,7 @@ export default function CheckItem({ status, message, message_key, details, detai
       {
         check_key: message_key || 'generic',
         message: displayMessage,
+        details: displayDetails,
         status,
         jurisdiction: jurisdiction || 'unknown',
       },
