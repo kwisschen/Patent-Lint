@@ -675,11 +675,11 @@
       },
       "paragraphSequential": {
         "missing": "No paragraph numbering found in specification.",
-        "amend": "Paragraph numbers are not sequential.",
+        "amend": "Paragraph numbers are not sequential (MPEP § 608.01(p)).",
         "pass": "Paragraph numbers are sequential."
       },
       "paragraphEnding": {
-        "amend": "Paragraphs with invalid or missing ending punctuation.",
+        "amend": "Paragraphs with invalid or missing ending punctuation (MPEP § 608.01(p)).",
         "pass": "All paragraphs have valid ending punctuation."
       },
       "sequenceListing": {
@@ -709,15 +709,15 @@
         "pass": "Claim numbers are sequential."
       },
       "multipleDependent": {
-        "amend": "Multiple-dependent claims found.",
+        "amend": "Multiple-dependent claims found — review fees and chained-multi rule (MPEP § 608.01(n); § 112(e)).",
         "pass": "No multiple-dependent claims."
       },
       "selfDependent": {
-        "amend": "Self-dependent claims found.",
+        "amend": "Self-dependent claims found — a claim cannot depend on itself (§ 112(d)).",
         "pass": "No self-dependent claims."
       },
       "missingPeriod": {
-        "amend": "Claims missing a final period.",
+        "amend": "Claims missing a final period (MPEP § 608.01(m)).",
         "pass": "All claims end with a period."
       },
       "extraPeriod": {
@@ -748,15 +748,15 @@
         "pass": "No restrictive or improper wording found in abstract."
       },
       "structure": {
-        "amend": "Abstract has extra paragraphs or invalid ending.",
+        "amend": "Abstract has extra paragraphs or invalid ending — must be a single paragraph (MPEP § 608.01(b)).",
         "pass": "Abstract is a single paragraph with valid ending."
       },
       "impliedPhrases": {
-        "amend": "Abstract contains implied phrases ('disclosure' or 'provided').",
+        "amend": "Abstract contains implied phrases ('disclosure' or 'provided') (MPEP § 608.01(b)).",
         "pass": "No implied phrases found in abstract."
       },
       "wordCount": {
-        "amend": "Abstract word count is outside the 50–150 range.",
+        "amend": "Abstract word count is outside the 50–150 range (MPEP § 608.01(b)).",
         "pass": "Abstract word count is within the 50–150 range."
       }
     },
