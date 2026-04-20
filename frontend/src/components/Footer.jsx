@@ -2,7 +2,7 @@
 // Copyright (c) 2025 Christopher Chen
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { composeFooterFeedbackMailto } from '../lib/feedbackMailto'
+import { composeFooterFeedbackUrl } from '../lib/feedback'
 
 export default function Footer() {
   const { t } = useTranslation()
@@ -10,7 +10,7 @@ export default function Footer() {
   const externalLinks = [
     { label: t('footer.github'), href: 'https://github.com/kwisschen' },
     { label: t('footer.linkedin'), href: 'https://linkedin.com/in/kwisschen' },
-    { label: t('footer.feedback'), href: composeFooterFeedbackMailto(t) },
+    { label: t('footer.feedback'), href: composeFooterFeedbackUrl(t) },
   ]
 
   return (

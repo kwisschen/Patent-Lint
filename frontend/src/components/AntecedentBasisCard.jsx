@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AlertTriangle, ChevronRight, Flag } from 'lucide-react'
 import { Button } from './ui/button'
-import { composeFeedbackMailto, openMailto, showFeedbackToast } from '../lib/feedbackMailto'
+import { composeFeedbackUrl, openFeedbackTab, showFeedbackToast } from '../lib/feedback'
 
 // CJK reference-form prefixes used by the TW walker (該/所述/前述/該等/該些).
 // Matched without word boundaries because CJK text has no whitespace
@@ -101,7 +101,7 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
   const label = formatClaimRange(claimIds, t)
 
   const handleReport = (claimId) => {
-    const href = composeFeedbackMailto(
+    const url = composeFeedbackUrl(
       {
         check_key: 'antecedentBasis',
         claim_id: claimId,
@@ -111,7 +111,7 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
       t,
       { locale: i18n.language },
     )
-    openMailto(href)
+    openFeedbackTab(url)
     showFeedbackToast(t)
   }
   // Row badge counts findings (one per claim-term pair), not distinct terms.

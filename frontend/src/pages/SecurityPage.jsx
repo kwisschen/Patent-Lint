@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next'
 import { Shield, Check, ChevronDown } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
 import PageCTA from '../components/PageCTA'
-import { composeEnterpriseMailto } from '../lib/feedbackMailto'
+import { composeEnterpriseUrl } from '../lib/feedback'
 
 /* ------------------------------------------------------------------ */
 /*  Section 1 — Hero                                                   */
@@ -237,7 +237,7 @@ function TechDetailsSection() {
               </p>
               {key === 'selfHosted' && (
                 <a
-                  href={composeEnterpriseMailto(t)}
+                  href={composeEnterpriseUrl(t)}
                   className="inline-flex items-center gap-1 text-sm text-primary underline underline-offset-4 hover:text-primary/80 mt-2"
                 >
                   {t('about.enterpriseContact')}

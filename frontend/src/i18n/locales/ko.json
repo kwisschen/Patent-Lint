@@ -137,7 +137,7 @@
   "feedback": {
     "report": "오류 신고",
     "reportProblem": "이 검사 결과의 문제 신고",
-    "confirmation": "오류 보고서를 이메일에 자동 입력했습니다. 초안은 기기에 그대로 있습니다.",
+    "confirmation": "오류 보고서를 자동 입력했습니다. 초안은 기기에 그대로 있습니다.",
     "emailGreeting": "Christopher 님께,",
     "emailClosing": "감사합니다.",
     "bodyPlaceholder": "[이 검사 결과에서 어떤 부분이 문제라고 생각하시는지 설명해 주세요. 청구항 문구나 초안 내용은 붙여넣지 마시고, 개요만으로도 조사가 가능합니다.]",
