@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { Flag } from 'lucide-react'
 import { formatDetails } from "../lib/detailsFormatter"
 import { Button } from "./ui/button"
-import { composeFeedbackUrl, openFeedbackTab, showFeedbackToast } from "../lib/feedback"
+import { composeFeedback, sendFeedback } from "../lib/feedback"
 
 const CITATION_MAP = {
   'check.spec.restrictiveWording': '§ 112(b)',
@@ -66,7 +66,7 @@ export default function CheckItem({ status, message, message_key, details, detai
   const citation = getCitation(message_key) || reference || null
 
   const handleReport = () => {
-    const url = composeFeedbackUrl(
+    const email = composeFeedback(
       {
         check_key: message_key || 'generic',
         message: displayMessage,
@@ -77,8 +77,7 @@ export default function CheckItem({ status, message, message_key, details, detai
       t,
       { locale: i18n.language },
     )
-    openFeedbackTab(url)
-    showFeedbackToast(t)
+    sendFeedback(email, t)
   }
 
   return (

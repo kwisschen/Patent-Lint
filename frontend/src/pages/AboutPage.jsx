@@ -7,7 +7,7 @@ import { useInView } from '../hooks/useInView'
 import PageCTA from '../components/PageCTA'
 import { useCountUp } from '../hooks/useCountUp'
 import { JURISDICTION_COLORS } from '../lib/jurisdictionConfig'
-import { composeEnterpriseUrl } from '../lib/feedback'
+import { composeEnterprise, sendFeedback } from '../lib/feedback'
 
 function JurisdictionBadge({ code }) {
   return (
@@ -540,6 +540,12 @@ function ArchitectureDiagram({ t }) {
   const browserRailHeight = (BROWSER_NODES.length - 1) * step
   const totalDrawDelay = 500
 
+  const enterpriseEmail = composeEnterprise(t)
+  const handleEnterpriseClick = (e) => {
+    e.preventDefault()
+    sendFeedback(enterpriseEmail, t)
+  }
+
   return (
     <div ref={ref} className="mt-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -644,9 +650,10 @@ function ArchitectureDiagram({ t }) {
             <span>{t('about.arch.selfHostBadge')}</span>
           </div>
           <a
-            href={composeEnterpriseUrl(t)}
+            href={enterpriseEmail.url}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={handleEnterpriseClick}
             className="inline-block mt-3 text-sm text-muted-foreground underline hover:text-foreground transition-colors"
           >
             {t('security.tech.contactEnterprise')}
