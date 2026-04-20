@@ -142,7 +142,11 @@
     "emailIntro": "I'm reporting what looks like an issue with the following PatentLint finding.",
     "emailUserSection": "What seems wrong",
     "emailClosing": "Thanks,",
-    "bodyPlaceholder": "[Please describe what you think is wrong with this finding. Do NOT paste claim text or any other content from your draft — a general summary is enough to investigate.]"
+    "bodyPlaceholder": "[Please describe what you think is wrong with this finding. Do NOT paste claim text or any other content from your draft — a general summary is enough to investigate.]",
+    "footerIntro": "I'd like to share some feedback about PatentLint.",
+    "footerPlaceholder": "[Feel free to share bug reports, feature requests, questions, or general comments. You don't need to share anything confidential about your work.]",
+    "enterpriseIntro": "I'd like to inquire about enterprise deployment of PatentLint.",
+    "enterprisePlaceholder": "[Briefly describe your needs — team size, approximate document volume, jurisdictions you work with, and any specific requirements (e.g., self-hosted / air-gapped install, SSO, custom checks). I'll follow up with options.]"
   },
   "cta": {
     "heading": "Ready to check your draft?",

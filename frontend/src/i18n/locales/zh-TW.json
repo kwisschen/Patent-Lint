@@ -142,7 +142,11 @@
     "emailIntro": "我想回報以下 PatentLint 分析結果中看似有誤之處。",
     "emailUserSection": "您的說明",
     "emailClosing": "謝謝，",
-    "bodyPlaceholder": "[請說明您認為此項分析結果有何問題。請勿貼上任何請求項文字或您稿件中的其他內容，簡要說明即可供我們調查。]"
+    "bodyPlaceholder": "[請說明您認為此項分析結果有何問題。請勿貼上任何請求項文字或您稿件中的其他內容，簡要說明即可供我們調查。]",
+    "footerIntro": "我想就 PatentLint 提供一些意見回饋。",
+    "footerPlaceholder": "[歡迎分享 bug 回報、功能建議、使用疑問或任何感想。您無需分享任何業務機密資訊。]",
+    "enterpriseIntro": "我想洽詢 PatentLint 的企業部署方案。",
+    "enterprisePlaceholder": "[請簡要說明您的需求：團隊規模、預估文件量、使用管轄區，以及任何特殊要求（例如內網部署、air-gapped 安裝、SSO 整合、客製化檢查項目）。收到後將與您聯繫討論方案。]"
   },
   "cta": {
     "heading": "準備好檢查您的專利稿件了嗎？",

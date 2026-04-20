@@ -142,7 +142,11 @@
     "emailIntro": "我想反馈以下 PatentLint 分析结果中看似有误的地方。",
     "emailUserSection": "您的说明",
     "emailClosing": "谢谢，",
-    "bodyPlaceholder": "[请说明您认为此项分析结果有何问题。请勿粘贴任何权利要求文字或您文稿中的其他内容，简要说明即可供我们调查。]"
+    "bodyPlaceholder": "[请说明您认为此项分析结果有何问题。请勿粘贴任何权利要求文字或您文稿中的其他内容，简要说明即可供我们调查。]",
+    "footerIntro": "我想就 PatentLint 提供一些意见反馈。",
+    "footerPlaceholder": "[欢迎分享 bug 反馈、功能建议、使用疑问或任何感想。您无需分享任何业务机密信息。]",
+    "enterpriseIntro": "我想咨询 PatentLint 的企业部署方案。",
+    "enterprisePlaceholder": "[请简要说明您的需求：团队规模、预估文稿量、使用辖区，以及任何特殊要求（例如内网部署、air-gapped 安装、SSO 集成、定制化检查项目）。收到后将与您联系讨论方案。]"
   },
   "cta": {
     "heading": "准备好检查您的专利稿件了吗？",

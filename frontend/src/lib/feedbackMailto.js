@@ -134,3 +134,37 @@ export function showFeedbackToast(t) {
     closeButton: true,
   })
 }
+
+// Compose a mailto: URL for the footer "Feedback" link. General-purpose
+// feedback (bug reports, feature requests, questions, comments) — not
+// per-finding. Reuses the localized greeting + closing pattern.
+export function composeFooterFeedbackMailto(t) {
+  const subject = 'PatentLint feedback'
+  const body = [
+    t('feedback.emailGreeting'),
+    '',
+    t('feedback.footerIntro'),
+    '',
+    t('feedback.footerPlaceholder'),
+    '',
+    t('feedback.emailClosing'),
+  ].join('\n')
+  return `mailto:${MAINTAINER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+}
+
+// Compose a mailto: URL for the Security page's enterprise-deployment
+// link. Prospective self-hosted / air-gapped inquiries. Reuses the
+// localized greeting + closing pattern; own subject line and intro.
+export function composeEnterpriseMailto(t) {
+  const subject = 'PatentLint enterprise inquiry'
+  const body = [
+    t('feedback.emailGreeting'),
+    '',
+    t('feedback.enterpriseIntro'),
+    '',
+    t('feedback.enterprisePlaceholder'),
+    '',
+    t('feedback.emailClosing'),
+  ].join('\n')
+  return `mailto:${MAINTAINER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+}
