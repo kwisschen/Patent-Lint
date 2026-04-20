@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FileSearch, ChevronRight, Flag } from 'lucide-react'
 import { Button } from './ui/button'
-import { composeFeedbackUrl, openFeedbackTab, showFeedbackToast } from '../lib/feedback'
+import { composeFeedback, sendFeedback } from '../lib/feedback'
 
 function ClaimRow({ claimNumber, phrases, crossRefPhrases, jurisdiction }) {
   const { t, i18n } = useTranslation()
@@ -12,7 +12,7 @@ function ClaimRow({ claimNumber, phrases, crossRefPhrases, jurisdiction }) {
   const hasCrossRef = crossRefPhrases.length > 0
 
   const handleReport = () => {
-    const url = composeFeedbackUrl(
+    const email = composeFeedback(
       {
         check_key: 'specSupport',
         claim_id: claimNumber,
@@ -22,8 +22,7 @@ function ClaimRow({ claimNumber, phrases, crossRefPhrases, jurisdiction }) {
       t,
       { locale: i18n.language },
     )
-    openFeedbackTab(url)
-    showFeedbackToast(t)
+    sendFeedback(email, t)
   }
 
   return (

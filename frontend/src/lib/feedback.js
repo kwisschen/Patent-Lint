@@ -113,34 +113,33 @@ function buildGmailUrl(subject, body) {
   return `${GMAIL_COMPOSE_BASE}&${params.toString()}`
 }
 
-// Compose a Gmail-compose URL pre-filled with per-finding feedback.
-// Finding fields + environment metadata are merged into one aligned
-// data block — field labels make the structure obvious without needing
-// section-header decoration. Professional framing comes from a localized
-// greeting + closing around the data.
-//
-// finding: an object whose enumerable keys become "Label: value" lines.
-// Pass only what's relevant to the surface.
+// Build a feedback email and return BOTH the Gmail compose URL and the
+// plain-text body. The URL opens Gmail pre-filled (works for Gmail users
+// out of the box, Google Workspace users whose domain uses Gmail, and
+// personal-Google-account users). The plain text gets copied to the
+// clipboard at send time as a universal fallback — corporate users with
+// Outlook/Microsoft 365/other provider can close the Gmail tab and paste
+// into their own email. No mail provider is lucky enough to catch everyone,
+// so we give the user both paths and let them pick silently.
 //
 // Subject line stays English so the maintainer's inbox can filter
-// consistently across locales: "PatentLint finding report — {check_key}".
-//
-// Returns a fully-encoded https:// URL ready for openFeedbackTab.
-export function composeFeedbackUrl(finding, t, { locale } = {}) {
+// consistently across locales.
+function buildEmail(subject, body) {
+  return { url: buildGmailUrl(subject, body), text: body }
+}
+
+// Compose per-finding feedback — finding fields + environment metadata
+// merged into one aligned data block around a localized greeting +
+// placeholder.
+export function composeFeedback(finding, t, { locale } = {}) {
   const env = {
     browser: detectBrowser(),
     locale: locale || (typeof navigator !== 'undefined' ? navigator.language : 'unknown'),
     patentlint_build: buildHash(),
   }
-
   const checkKey = finding.check_key || 'unknown'
   const subject = `PatentLint finding report — ${checkKey}`
-
-  // Merge finding + env into a single aligned block. The FIELD_LABELS
-  // map above turns raw keys into human-readable column 1; formatSection
-  // pads to the longest label so everything aligns in monospace mail.
   const dataSection = formatSection({ ...finding, ...env })
-
   const body = [
     t('feedback.emailGreeting'),
     '',
@@ -148,14 +147,12 @@ export function composeFeedbackUrl(finding, t, { locale } = {}) {
     '',
     t('feedback.bodyPlaceholder'),
   ].join('\n')
-
-  return buildGmailUrl(subject, body)
+  return buildEmail(subject, body)
 }
 
-// Compose a Gmail-compose URL for the footer "Feedback" link.
-// General-purpose feedback (bug reports, feature requests, questions,
-// comments) — not per-finding. Reuses the localized greeting pattern.
-export function composeFooterFeedbackUrl(t) {
+// Compose footer-link free-form feedback. Localized greeting + intro +
+// placeholder, no finding-specific data.
+export function composeFooterFeedback(t) {
   const subject = 'PatentLint feedback'
   const body = [
     t('feedback.emailGreeting'),
@@ -164,13 +161,12 @@ export function composeFooterFeedbackUrl(t) {
     '',
     t('feedback.footerPlaceholder'),
   ].join('\n')
-  return buildGmailUrl(subject, body)
+  return buildEmail(subject, body)
 }
 
-// Compose a Gmail-compose URL for the enterprise-deployment inquiry
-// links. Prospective self-hosted / air-gapped inquiries. Reuses the
-// localized greeting pattern; own subject line and intro.
-export function composeEnterpriseUrl(t) {
+// Compose enterprise-deployment inquiry. Localized greeting + intro +
+// placeholder with requirement prompts.
+export function composeEnterprise(t) {
   const subject = 'PatentLint enterprise inquiry'
   const body = [
     t('feedback.emailGreeting'),
@@ -179,23 +175,27 @@ export function composeEnterpriseUrl(t) {
     '',
     t('feedback.enterprisePlaceholder'),
   ].join('\n')
-  return buildGmailUrl(subject, body)
+  return buildEmail(subject, body)
 }
 
-// Open a Gmail compose URL in a new tab. Called from onClick handlers
-// so the user-activation context carries through (no popup blocking).
-// noopener+noreferrer so the new tab can't reach back into PatentLint's
-// window — pure handoff.
-export function openFeedbackTab(url) {
-  window.open(url, '_blank', 'noopener,noreferrer')
-}
-
-// Show the "Auto-filled an error report for your review. Your draft
-// stayed put." confirmation toast. Persistent (duration: Infinity) with
-// an X close button so users who tab-away to the new Gmail tab and come
-// back still see the acknowledgment. Fixed id so rapid-fire reports
-// replace the existing toast rather than stack.
-export function showFeedbackToast(t) {
+// Send a composed email: copy the plain-text body to the clipboard AND
+// open the Gmail compose URL in a new tab, then show a confirmation
+// toast. The dual-channel send is deliberate:
+//   - Gmail tab: works instantly for Gmail / Google Workspace users
+//   - Clipboard: universal fallback for corporate / Outlook / other-provider
+//     users whose Gmail sign-in would be a dead end — they can close the
+//     Gmail tab and paste into any email app
+// Clipboard write is best-effort (silent fail on unsupported / blocked).
+// Focus order matters: write clipboard BEFORE opening the new tab,
+// because window.open may shift focus and some browsers require the
+// original tab to be focused for clipboard writes to succeed.
+export function sendFeedback(email, t) {
+  if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(email.text).catch(() => {})
+  }
+  if (typeof window !== 'undefined') {
+    window.open(email.url, '_blank', 'noopener,noreferrer')
+  }
   toast(t('feedback.confirmation'), {
     id: FEEDBACK_TOAST_ID,
     duration: Infinity,
