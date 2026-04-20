@@ -141,9 +141,9 @@
     "emailGreeting": "Christopher 你好，",
     "bodyPlaceholder": "[以下请说明您认为此项分析结果有何问题。请勿粘贴任何权利要求文字或您文稿中的其他内容，简要说明即可供我们调查。]",
     "footerIntro": "我想就 PatentLint 提供一些意见反馈。",
-    "footerPlaceholder": "[欢迎分享 bug 反馈、功能建议、使用疑问或任何感想。您无需分享任何业务机密信息。]",
+    "footerPlaceholder": "[以下欢迎分享 bug 反馈、功能建议、使用疑问或任何感想。您无需分享任何业务机密信息。]",
     "enterpriseIntro": "我想咨询 PatentLint 的企业部署方案。",
-    "enterprisePlaceholder": "[请简要说明您的需求：团队规模、预估文稿量、使用辖区，以及任何特殊要求（例如内网部署、air-gapped 安装、SSO 集成、定制化检查项目）。收到后将与您联系讨论方案。]"
+    "enterprisePlaceholder": "[以下请简要说明您的需求：团队规模、预估文稿量、使用辖区，以及任何特殊要求（例如内网部署、air-gapped 安装、SSO 集成、定制化检查项目）。收到后将与您联系讨论方案。]"
   },
   "cta": {
     "heading": "准备好检查您的专利稿件了吗？",
@@ -200,8 +200,8 @@
       "step3": "没有网络意味着没有云端、没有上传、没有任何数据外传",
       "step4": "分析后，结果页面的绿色圆点可确认零网络活动。",
       "testHeading": "眼见为实",
-      "testDescription": "此按钮会获取 PatentLint 标志。请观察下方记录，了解 PatentLint 如何检测网络活动。",
-      "testButton": "获取标志",
+      "testDescription": "此按钮会检查是否有 PatentLint 新版本——与您离开标签页再回来时 PatentLint 所发出的请求完全相同。请观察指示灯短暂变红，并留意下方记录中新增的请求。",
+      "testButton": "检查更新",
       "logEmpty": "暂无请求",
       "noActivity": "未检测到活动",
       "tryNow": "立即试试 →"
