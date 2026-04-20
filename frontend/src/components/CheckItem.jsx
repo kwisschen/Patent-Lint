@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 // Copyright (c) 2025 Christopher Chen
 import { useTranslation } from 'react-i18next'
+import { Flag } from 'lucide-react'
+import { toast } from 'sonner'
 import { formatDetails } from "../lib/detailsFormatter"
+import { Button } from "./ui/button"
+import { composeFeedbackMailto } from "../lib/feedbackMailto"
 
 const CITATION_MAP = {
   'check.spec.restrictiveWording': '§ 112(b)',
@@ -56,11 +60,24 @@ function getCitation(messageKey) {
 
 export { getCitation }
 
-export default function CheckItem({ status, message, message_key, details, details_key, details_params, reference }) {
+export default function CheckItem({ status, message, message_key, details, details_key, details_params, reference, jurisdiction }) {
   const { t, i18n } = useTranslation()
   const displayMessage = message_key && i18n.exists(message_key) ? formatDetails(message_key, details_params, t) : message
   const displayDetails = details_key && i18n.exists(details_key) ? formatDetails(details_key, details_params, t) : details
   const citation = getCitation(message_key) || reference || null
+
+  const handleReport = () => {
+    const href = composeFeedbackMailto(
+      {
+        check_key: message_key || 'unknown',
+        status,
+        jurisdiction: jurisdiction || 'unknown',
+      },
+      { locale: i18n.language },
+    )
+    window.location.href = href
+    toast(t('feedback.confirmation'))
+  }
 
   return (
     <div
@@ -82,7 +99,18 @@ export default function CheckItem({ status, message, message_key, details, detai
             {citation}
           </span>
         )}
-        <span className="text-sm">{displayMessage}</span>
+        <span className="text-sm flex-1">{displayMessage}</span>
+        <Button
+          variant="ghost"
+          size="xs"
+          onClick={handleReport}
+          title={t('feedback.reportProblem')}
+          aria-label={t('feedback.reportProblem')}
+          className="shrink-0"
+        >
+          <Flag />
+          {t('feedback.report')}
+        </Button>
       </div>
       {displayDetails && (
         <p className="text-xs text-muted-foreground mt-1 ml-[52px]">{displayDetails}</p>

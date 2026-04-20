@@ -230,16 +230,19 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
           title={t(jConfig.specSectionKey)}
           checks={consolidatedData.specification_checks}
           defaultOpen
+          jurisdiction={data.jurisdiction}
         />
         <SectionPanel
           title={t(jConfig.drawingsSectionKey)}
           checks={consolidatedData.drawings_checks}
           defaultOpen
+          jurisdiction={data.jurisdiction}
         />
         <SectionPanel
           title={t(jConfig.claimsSectionKey)}
           checks={consolidatedData.claims_checks}
           defaultOpen
+          jurisdiction={data.jurisdiction}
         >
           {jConfig.showClaimTree && (
             <>
@@ -261,6 +264,7 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
           title={t(jConfig.abstractSectionKey)}
           checks={consolidatedData.abstract_checks}
           defaultOpen
+          jurisdiction={data.jurisdiction}
         />
       </div>
 

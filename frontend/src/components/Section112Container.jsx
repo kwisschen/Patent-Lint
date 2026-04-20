@@ -40,13 +40,13 @@ export default function Section112Container({
       </div>
 
       {hasAntecedentIssues ? (
-        <AntecedentBasisCard issues={antecedentBasisIssues} claimTrees={claimTrees} />
+        <AntecedentBasisCard issues={antecedentBasisIssues} claimTrees={claimTrees} jurisdiction={jurisdiction} />
       ) : (
         <PassConfirmation messageKey={jConfig.section112PassKey} />
       )}
 
       {isUS && (hasUnsupportedTerms ? (
-        <SpecSupportCard unsupportedTerms={unsupportedTerms} />
+        <SpecSupportCard unsupportedTerms={unsupportedTerms} jurisdiction={jurisdiction} />
       ) : (
         <PassConfirmation messageKey="checks.spec_support_pass" />
       ))}
