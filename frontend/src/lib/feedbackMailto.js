@@ -13,11 +13,19 @@ const FEEDBACK_TOAST_ID = 'patentlint-feedback-confirmation'
 // Coarse browser detection — major-family + version-family only. We don't
 // fingerprint precisely; the goal is "Safari 18 / Chrome 13x / Firefox 14x"
 // so a maintainer reading a stack of reports can spot browser-specific bugs.
+//
+// iOS variants come first because Apple requires all iOS browsers to use
+// WebKit — the UA reports CriOS / FxiOS / EdgiOS instead of Chrome /
+// Firefox / Edg, and they all end with "Safari/". Without iOS-specific
+// patterns, iPhone Chrome would fall through to "unknown" (no Chrome
+// token, no Version/Safari token).
 function detectBrowser() {
   if (typeof navigator === 'undefined') return 'unknown'
   const ua = navigator.userAgent
-  // Order matters: Edge UA contains Chrome; Chrome UA contains Safari.
   const families = [
+    [/CriOS\/(\d+)/, 'Chrome iOS'],
+    [/FxiOS\/(\d+)/, 'Firefox iOS'],
+    [/EdgiOS\/(\d+)/, 'Edge iOS'],
     [/Edg\/(\d+)/, 'Edge'],
     [/Chrome\/(\d+)/, 'Chrome'],
     [/Firefox\/(\d+)/, 'Firefox'],
@@ -44,6 +52,7 @@ function buildHash() {
 const FIELD_LABELS = {
   check_key: 'Check',
   message: 'Message',
+  details: 'Details',
   status: 'Status',
   claim_id: 'Claim',
   terms: 'Terms',
