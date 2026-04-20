@@ -221,6 +221,24 @@ class TestFindBracketlessSectionHeaders:
     def test_tortoise_bracket_variant_flagged(self):
         assert _find_bracketless_section_headers(["〔先前技術〕"]) == ["〔先前技術〕"]
 
+    def test_missing_closing_bracket_flagged(self):
+        """【先前技術 (opening only) → flagged."""
+        assert _find_bracketless_section_headers(["【先前技術"]) == ["【先前技術"]
+
+    def test_missing_opening_bracket_flagged(self):
+        """先前技術】 (closing only) → flagged."""
+        assert _find_bracketless_section_headers(["先前技術】"]) == ["先前技術】"]
+
+    def test_correctly_bracketed_not_flagged(self):
+        """【先前技術】 (well-formed) → not flagged."""
+        assert _find_bracketless_section_headers(["【先前技術】"]) == []
+
+    def test_correctly_bracketed_with_inline_not_flagged(self):
+        """【先前技術】 本發明... (inline content after) → not flagged."""
+        assert _find_bracketless_section_headers(
+            ["【先前技術】 本發明涉及測試。"]
+        ) == []
+
     def test_multiple_canonical_names_flagged_in_order(self):
         paragraphs = [
             "【技術領域】",
