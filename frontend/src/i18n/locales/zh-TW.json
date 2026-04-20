@@ -138,11 +138,11 @@
     "report": "回報錯誤",
     "reportProblem": "回報此項分析結果的問題",
     "picker": {
-      "title": "請選擇寄送方式",
+      "title": "請選擇傳送方式",
       "description": "您的郵件已準備就緒，剪貼簿中也有相同內容備用。您的稿件不會離開您的裝置。",
       "send": {
-        "gmail": "以 Gmail 寄送",
-        "mailto": "以 Outlook 或行動裝置寄送"
+        "gmail": "以 Gmail 傳送",
+        "mailto": "以 Outlook 或行動裝置傳送"
       },
       "report": {
         "gmail": "以 Gmail 回報",
