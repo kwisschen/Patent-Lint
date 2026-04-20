@@ -13,7 +13,7 @@ export default function Layout({ children, onReset, canReset, hasActionBar }) {
   }, [location.pathname])
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-dvh flex flex-col">
       <Header onReset={onReset} canReset={canReset} />
       <main className="flex-1">
         <div key={location.pathname} className="page-enter-active">
