@@ -845,8 +845,8 @@
           "pass": "从属权利要求的主题名称一致。"
         },
         "transitionPhrase": {
-          "verify": "{{count}} 项独立权利要求缺少特征部分连接词：{{claims}}。",
-          "pass": "所有独立权利要求均包含特征部分连接词。"
+          "verify": "{{count}} 项独立权利要求缺少过渡用语（如「其特征在于」）：{{claims}}。",
+          "pass": "所有独立权利要求均包含过渡用语。"
         },
         "twTerminology": {
           "verify": "发现台湾专利用语\"请求项\"，CNIPA申请应使用\"权利要求\"。",
@@ -980,8 +980,8 @@
           "pass": "所有附属项之主题名称均与母项一致。"
         },
         "transitionPhrase": {
-          "verify": "{{count}}项独立项缺少特征连接词：{{claims}}。",
-          "pass": "所有独立项均包含特征连接词。"
+          "verify": "{{count}}项独立项缺少过渡用语（如「其特徵在於」或「其改良在於」）：{{claims}}。",
+          "pass": "所有独立项均包含过渡用语。"
         },
         "cnTerminology": {
           "verify": "在台湾专利稿件中发现大陆专利用语。",
