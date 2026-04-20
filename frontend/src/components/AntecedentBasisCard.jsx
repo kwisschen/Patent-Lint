@@ -2,7 +2,10 @@
 // Copyright (c) 2025 Christopher Chen
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AlertTriangle, ChevronRight } from 'lucide-react'
+import { AlertTriangle, ChevronRight, Flag } from 'lucide-react'
+import { toast } from 'sonner'
+import { Button } from './ui/button'
+import { composeFeedbackMailto } from '../lib/feedbackMailto'
 
 // CJK reference-form prefixes used by the TW walker (該/所述/前述/該等/該些).
 // Matched without word boundaries because CJK text has no whitespace
@@ -94,9 +97,23 @@ function formatClaimRange(ids, t) {
   return t('claimDiagram.claimsLabel', { range: ranges.join(', ') })
 }
 
-function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t }) {
+function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, jurisdiction }) {
   const [expanded, setExpanded] = useState(false)
   const label = formatClaimRange(claimIds, t)
+
+  const handleReport = (claimId) => {
+    const href = composeFeedbackMailto(
+      {
+        check_key: 'antecedentBasis',
+        claim_id: claimId,
+        terms: terms.join(', '),
+        jurisdiction: jurisdiction || 'unknown',
+      },
+      { locale: i18n.language },
+    )
+    window.location.href = href
+    toast(t('feedback.confirmation'))
+  }
   // Row badge counts findings (one per claim-term pair), not distinct terms.
   // A row that groups claims 1/2/3/5 all sharing the single term 該使用者介面
   // represents 4 findings, not 1 — the header total must reconcile with the
@@ -203,29 +220,42 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t }) {
           return (
             <div
               key={id}
-              className="mx-3 mb-1.5 px-3 py-2 rounded text-xs leading-relaxed border"
+              className="mx-3 mb-1.5 px-3 py-2 rounded text-xs leading-relaxed border flex items-start gap-2"
               style={{ borderColor: 'var(--attention-border)', backgroundColor: 'var(--attention-bg)' }}
             >
-              <span className="font-bold mr-1.5" style={{ color: 'var(--attention-text)' }}>
-                {id}.
-              </span>
-              {Array.isArray(highlighted) ? (
-                highlighted.map((part, i) =>
-                  part.highlight ? (
-                    <mark
-                      key={i}
-                      className="rounded px-0.5 font-semibold"
-                      style={{ backgroundColor: 'var(--attention-mark-bg)', color: 'var(--attention-mark-text)' }}
-                    >
-                      {part.text}
-                    </mark>
-                  ) : (
-                    <span key={i}>{part.text}</span>
+              <div className="flex-1 min-w-0">
+                <span className="font-bold mr-1.5" style={{ color: 'var(--attention-text)' }}>
+                  {id}.
+                </span>
+                {Array.isArray(highlighted) ? (
+                  highlighted.map((part, i) =>
+                    part.highlight ? (
+                      <mark
+                        key={i}
+                        className="rounded px-0.5 font-semibold"
+                        style={{ backgroundColor: 'var(--attention-mark-bg)', color: 'var(--attention-mark-text)' }}
+                      >
+                        {part.text}
+                      </mark>
+                    ) : (
+                      <span key={i}>{part.text}</span>
+                    )
                   )
-                )
-              ) : (
-                <span>{text}</span>
-              )}
+                ) : (
+                  <span>{text}</span>
+                )}
+              </div>
+              <Button
+                variant="ghost"
+                size="xs"
+                onClick={() => handleReport(id)}
+                title={t('feedback.reportProblem')}
+                aria-label={t('feedback.reportProblem')}
+                className="shrink-0"
+              >
+                <Flag />
+                {t('feedback.report')}
+              </Button>
             </div>
           )
         })}
@@ -234,8 +264,8 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t }) {
   )
 }
 
-export default function AntecedentBasisCard({ issues, claimTrees }) {
-  const { t } = useTranslation()
+export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }) {
+  const { t, i18n } = useTranslation()
 
   if (!issues || issues.length === 0) return null
 
@@ -308,6 +338,8 @@ export default function AntecedentBasisCard({ issues, claimTrees }) {
             findings={group.findings}
             claimTextMap={claimTextMap}
             t={t}
+            i18n={i18n}
+            jurisdiction={jurisdiction}
           />
         ))}
       </div>

@@ -134,6 +134,11 @@
     "linkedin": "LinkedIn",
     "feedback": "意見回饋"
   },
+  "feedback": {
+    "report": "回報",
+    "reportProblem": "回報此項分析結果的問題",
+    "confirmation": "已自動填入您的電子郵件用戶端供您檢視。您的稿件未離開您的裝置。"
+  },
   "cta": {
     "heading": "準備好檢查您的專利稿件了嗎？",
     "subtext": "拖放 .docx 檔案，即時取得分析結果。無需上傳，無需帳號。",
