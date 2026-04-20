@@ -147,8 +147,7 @@
       "title": "전송 방법",
       "description": "리포트를 전송할 방법을 선택해 주세요. 어떤 방법을 선택하시든 전체 내용이 클립보드에도 복사됩니다.",
       "gmail": "Gmail",
-      "outlook": "Outlook",
-      "mailto": "이메일 앱 (Mail / Gmail 앱 / Outlook 앱)",
+      "mailto": "이메일 앱 (Outlook, Mail, Gmail 앱 등)",
       "clipboard": "클립보드에 복사",
       "remember": "내 선택 기억하기"
     },

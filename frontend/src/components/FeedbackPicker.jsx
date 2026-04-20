@@ -20,7 +20,7 @@
 // - Preference persists in localStorage across tab sessions.
 import { createContext, useCallback, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Mail, Inbox, AtSign, Clipboard } from 'lucide-react'
+import { Mail, AtSign, Clipboard } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -85,11 +85,6 @@ export function FeedbackProvider({ children }) {
               onClick={() => handlePick('gmail')}
               icon={<Mail />}
               label={t('feedback.picker.gmail')}
-            />
-            <PickerButton
-              onClick={() => handlePick('outlook')}
-              icon={<Inbox />}
-              label={t('feedback.picker.outlook')}
             />
             <PickerButton
               onClick={() => handlePick('mailto')}
