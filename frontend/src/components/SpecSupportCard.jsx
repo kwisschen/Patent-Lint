@@ -14,16 +14,19 @@ function ClaimRow({ claimNumber, phrases, crossRefPhrases, jurisdiction }) {
   const hasCrossRef = crossRefPhrases.length > 0
 
   const handleReport = () => {
-    sendFeedback(composeFeedback(
-      {
-        check_key: 'specSupport',
-        claim_id: claimNumber,
-        phrases: phrases.join(', '),
-        jurisdiction: jurisdiction || 'unknown',
-      },
-      t,
-      { locale: i18n.language },
-    ))
+    sendFeedback(
+      composeFeedback(
+        {
+          check_key: 'specSupport',
+          claim_id: claimNumber,
+          phrases: phrases.join(', '),
+          jurisdiction: jurisdiction || 'unknown',
+        },
+        t,
+        { locale: i18n.language },
+      ),
+      { verb: 'report' },
+    )
   }
 
   return (

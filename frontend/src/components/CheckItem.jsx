@@ -68,17 +68,20 @@ export default function CheckItem({ status, message, message_key, details, detai
   const citation = getCitation(message_key) || reference || null
 
   const handleReport = () => {
-    sendFeedback(composeFeedback(
-      {
-        check_key: message_key || 'generic',
-        message: displayMessage,
-        details: displayDetails,
-        status,
-        jurisdiction: jurisdiction || 'unknown',
-      },
-      t,
-      { locale: i18n.language },
-    ))
+    sendFeedback(
+      composeFeedback(
+        {
+          check_key: message_key || 'generic',
+          message: displayMessage,
+          details: displayDetails,
+          status,
+          jurisdiction: jurisdiction || 'unknown',
+        },
+        t,
+        { locale: i18n.language },
+      ),
+      { verb: 'report' },
+    )
   }
 
   return (

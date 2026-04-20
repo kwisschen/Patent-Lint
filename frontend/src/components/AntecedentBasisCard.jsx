@@ -103,16 +103,19 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
   const label = formatClaimRange(claimIds, t)
 
   const handleReport = (claimId) => {
-    sendFeedback(composeFeedback(
-      {
-        check_key: 'antecedentBasis',
-        claim_id: claimId,
-        terms: terms.join(', '),
-        jurisdiction: jurisdiction || 'unknown',
-      },
-      t,
-      { locale: i18n.language },
-    ))
+    sendFeedback(
+      composeFeedback(
+        {
+          check_key: 'antecedentBasis',
+          claim_id: claimId,
+          terms: terms.join(', '),
+          jurisdiction: jurisdiction || 'unknown',
+        },
+        t,
+        { locale: i18n.language },
+      ),
+      { verb: 'report' },
+    )
   }
   // Row badge counts findings (one per claim-term pair), not distinct terms.
   // A row that groups claims 1/2/3/5 all sharing the single term 該使用者介面
