@@ -845,8 +845,8 @@
           "pass": "從屬權利要求的主題名稱一致。"
         },
         "transitionPhrase": {
-          "verify": "{{count}}項獨立權利要求缺少特徵部分連接詞：{{claims}}。",
-          "pass": "所有獨立權利要求均包含特徵部分連接詞。"
+          "verify": "{{count}}項獨立權利要求缺少過渡用語（如「其特徵在於」）：{{claims}}。",
+          "pass": "所有獨立權利要求均包含過渡用語。"
         },
         "twTerminology": {
           "verify": "發現台灣專利用語「請求項」，CNIPA申請應使用「权利要求」。",
@@ -980,8 +980,8 @@
           "pass": "所有附屬項之標的名稱皆與母項一致。"
         },
         "transitionPhrase": {
-          "verify": "{{count}}項獨立項缺少特徵連接詞：{{claims}}。",
-          "pass": "所有獨立項皆包含特徵連接詞。"
+          "verify": "{{count}}項獨立項缺少過渡用語（如「其特徵在於」或「其改良在於」）：{{claims}}。",
+          "pass": "所有獨立項皆包含過渡用語。"
         },
         "cnTerminology": {
           "verify": "在台灣專利稿件中發現大陸專利用語。",
