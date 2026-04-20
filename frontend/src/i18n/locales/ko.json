@@ -138,11 +138,11 @@
     "report": "오류 신고",
     "reportProblem": "이 검사 결과의 문제 신고",
     "picker": {
-      "title": "전송 방법을 선택해 주세요",
+      "title": "보내는 방법을 선택해 주세요",
       "description": "이메일이 준비되었습니다. 같은 내용이 클립보드에도 저장되어 있습니다. 초안은 기기에서 나가지 않습니다.",
       "send": {
-        "gmail": "Gmail로 전송",
-        "mailto": "Outlook 또는 모바일로 전송"
+        "gmail": "Gmail로 보내기",
+        "mailto": "Outlook 또는 모바일로 보내기"
       },
       "report": {
         "gmail": "Gmail로 신고",
