@@ -140,12 +140,12 @@
     "picker": {
       "title": "請選擇傳送方式",
       "send": {
-        "description": "您的郵件已準備就緒，剪貼簿中也有相同內容備用。您的稿件不會離開您的裝置。",
+        "description": "您的郵件已備妥，剪貼簿中也有相同內容備用。您的稿件不會離開您的裝置。",
         "gmail": "以 Gmail 傳送",
         "mailto": "以 Outlook 或行動裝置傳送"
       },
       "report": {
-        "description": "您的錯誤報告已準備就緒，剪貼簿中也有相同內容備用。您的稿件不會離開您的裝置。",
+        "description": "您的錯誤回報已備妥，剪貼簿中也有相同內容備用。您的稿件不會離開您的裝置。",
         "gmail": "以 Gmail 回報",
         "mailto": "以 Outlook 或行動裝置回報"
       },
@@ -153,11 +153,11 @@
       "remember": "記住我的選擇"
     },
     "emailGreeting": "Christopher 您好，",
-    "bodyPlaceholder": "[以下請說明您認為此項分析結果有何問題。請勿貼上任何請求項文字或您稿件中的其他內容，簡要說明即可供我們調查。]",
+    "bodyPlaceholder": "[請用一兩句話說明此項分析結果的問題：是誤判、分類錯誤，還是檢查遺漏了什麼？請勿貼上請求項文字或任何稿件內容；分析結果本身已自動附上。]",
     "footerIntro": "我想就 PatentLint 提供一些意見回饋。",
-    "footerPlaceholder": "[以下歡迎分享 bug 回報、功能建議、使用疑問或任何感想。您無需分享任何業務機密資訊。]",
+    "footerPlaceholder": "[歡迎分享任何意見：bug 回報、功能建議、使用疑問或一般感想。回報 bug 時，附上您的瀏覽器與作業系統有助我重現；提出功能建議時，以一句話說明使用情境會很有幫助。您無需分享任何業務機密資訊。]",
     "enterpriseIntro": "我想洽詢 PatentLint 的企業部署方案。",
-    "enterprisePlaceholder": "[以下請簡要說明您的需求：團隊規模、預估文件量、使用管轄區，以及任何特殊要求（例如內網部署、air-gapped 安裝、SSO 整合、客製化檢查項目）。收到後將與您聯繫討論方案。]"
+    "enterprisePlaceholder": "[請簡要說明您的部署需求：事務所或團隊規模與專業領域、執業地區、預估文件量、評估時程，以及任何特殊要求（例如為符合 ITAR 或資料主權法規而採行的內網或 air-gapped 安裝、SSO 整合、客製化檢查項目等）。]"
   },
   "cta": {
     "heading": "準備好檢查您的專利稿件了嗎？",
@@ -289,7 +289,7 @@
       "telemetry": "PatentLint 不包含分析腳本、追蹤像素、cookies 或第三方整合。此應用程式不收集或傳送任何使用資料。",
       "selfHostedTitle": "自行部署選項",
       "selfHosted": "對於有嚴格資料主權要求的組織，例如 ITAR 管制環境或實體隔離網路，PatentLint 可透過 Docker 自行部署於地端，所有相依套件皆已包含。",
-      "contactEnterprise": "洽詢企業部署方案"
+      "contactEnterprise": "洽詢企業部署方案 →"
     }
   },
   "about": {
