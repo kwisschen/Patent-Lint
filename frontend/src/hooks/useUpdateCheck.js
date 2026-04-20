@@ -30,11 +30,16 @@ const CHECK_THROTTLE_MS = 60 * 60 * 1000
  *   explicit user interaction (page load or tab focus) to preserve the
  *   zero-upload security story — a paranoid user watching DevTools will
  *   only see network activity when they actively engage with the site.
- * - Throttled to one check per CHECK_THROTTLE_MS regardless of trigger.
- *   The network-activity dot honestly flashes red on every fetch; without
- *   throttling, a user who tab-switches frequently would see a confusing
- *   flicker on every return. The throttle masks nothing — when it does
- *   fire, the indicator still flashes truthfully.
+ * - Throttle applies to VISIBILITY events only. Mount-time checks
+ *   (initial load, reload, locale-switch re-render) always fire, so a
+ *   reload is the reliable user-facing escape hatch for "did a new
+ *   version ship?" — matching what users already expect from reloading
+ *   any web app. Throttling reloads would silently withhold updates
+ *   from users who explicitly asked for fresh state.
+ * - The visibility throttle suppresses the indicator flicker that would
+ *   otherwise fire on every tab-switch return. When the throttle clears
+ *   and a check does fire, the indicator still flashes truthfully — the
+ *   throttle masks nothing, it just cuts the unnecessary re-checks.
  * - No file-drop check. The moment the user entrusts a patent draft to
  *   the app must trigger zero network activity.
  * - Silently fails on fetch errors (offline, version.json missing, etc.)
@@ -113,13 +118,13 @@ export function useUpdateCheck() {
       }
     }
 
-    // Run on mount, throttled. First mount in a tab session sees
-    // lastCheckMs() === 0, so the throttle gate passes and the check
-    // fires. Subsequent re-mounts (locale switch within the same tab
-    // session) hit the throttle and skip.
-    if (!isThrottled()) {
-      check()
-    }
+    // Run on mount unconditionally. Initial load, reload, and locale-switch
+    // re-render all fire a fresh check — reloading the page is how users
+    // expect to "force a refresh" of any web app, and throttling that would
+    // silently withhold updates from users explicitly asking for fresh state.
+    // The occasional extra check on locale switch (rare mid-session) is the
+    // accepted cost of this simpler policy.
+    check()
 
     // Run on tab focus, also throttled. Using visibilitychange instead
     // of focus because visibilitychange is more reliable across browsers
