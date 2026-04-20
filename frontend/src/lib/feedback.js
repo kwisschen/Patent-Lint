@@ -147,8 +147,6 @@ export function composeFeedbackUrl(finding, t, { locale } = {}) {
     dataSection,
     '',
     t('feedback.bodyPlaceholder'),
-    '',
-    t('feedback.emailClosing'),
   ].join('\n')
 
   return buildGmailUrl(subject, body)
@@ -156,8 +154,7 @@ export function composeFeedbackUrl(finding, t, { locale } = {}) {
 
 // Compose a Gmail-compose URL for the footer "Feedback" link.
 // General-purpose feedback (bug reports, feature requests, questions,
-// comments) — not per-finding. Reuses the localized greeting + closing
-// pattern.
+// comments) — not per-finding. Reuses the localized greeting pattern.
 export function composeFooterFeedbackUrl(t) {
   const subject = 'PatentLint feedback'
   const body = [
@@ -166,15 +163,13 @@ export function composeFooterFeedbackUrl(t) {
     t('feedback.footerIntro'),
     '',
     t('feedback.footerPlaceholder'),
-    '',
-    t('feedback.emailClosing'),
   ].join('\n')
   return buildGmailUrl(subject, body)
 }
 
 // Compose a Gmail-compose URL for the enterprise-deployment inquiry
 // links. Prospective self-hosted / air-gapped inquiries. Reuses the
-// localized greeting + closing pattern; own subject line and intro.
+// localized greeting pattern; own subject line and intro.
 export function composeEnterpriseUrl(t) {
   const subject = 'PatentLint enterprise inquiry'
   const body = [
@@ -183,8 +178,6 @@ export function composeEnterpriseUrl(t) {
     t('feedback.enterpriseIntro'),
     '',
     t('feedback.enterprisePlaceholder'),
-    '',
-    t('feedback.emailClosing'),
   ].join('\n')
   return buildGmailUrl(subject, body)
 }
