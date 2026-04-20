@@ -114,7 +114,7 @@
     "nonPatentWarningCn": "此文件可能不是中国专利稿件",
     "nonPatentWarningDetailsCn": "PatentLint 为专利稿件设计。此文件似乎未包含标准中国说明书章节（技术领域、背景技术等）、编号权利要求或可辨识的格式，分析结果可能不具参考意义。",
     "nonPatentWarningTw": "此文件可能不是台湾专利稿件",
-    "nonPatentWarningDetailsTw": "PatentLint 为专利稿件设计。此文件似乎未包含标准台湾说明书章节（【技術領域】、【先前技術】等）、請求項或段落编号，分析结果可能不具参考意义。",
+    "nonPatentWarningDetailsTw": "PatentLint 为专利稿件设计。此文件似乎未包含标准台湾说明书章节（【技術領域】、【先前技術】等）、请求项或段落编号，分析结果可能不具参考意义。",
     "showResultsAnyway": "仍然显示结果",
     "trackedChangesWarning": "此文档包含修订标记，可能影响分析准确性。请在文字处理软件中接受或拒绝所有更改后，重新进行分析。",
     "analyzeAgain": "重新分析",
@@ -415,8 +415,8 @@
     "twFeatures": {
       "title": "交互式台湾专利分析",
       "claimTree": {
-        "title": "請求項结构与先行詞分析器",
-        "description": "交互式請求項相依樹搭配广度优先先行詞鏈分析器，并处理二段式格式（其特徵在於／其改良在於）、单句化规则、以及引用記載型式（一種X，具備如請求項N所述的Y）。"
+        "title": "请求项结构与先行词分析器",
+        "description": "交互式请求项相依树搭配广度优先先行词链分析器，并处理二段式格式（其特徵在於／其改良在於）、单句化规则、以及引用记载型式（一種X，具備如請求項N所述的Y）。"
       },
       "specAbstract": {
         "title": "说明书与摘要检查",
@@ -442,26 +442,26 @@
       "paragraphEnding": "段落结尾标点",
       "figureRefConsistency": "图式引用一致性",
       "patentTypeTerminology": "专利类型用语（本發明 vs 本新型）",
-      "title": "發明名稱要求",
-      "claimReference": "說明書不得引用請求項",
-      "claimsSymbolTableConsistency": "請求項中的图号须在符號說明中定义（專利法施行細則 §19）",
-      "sequential": "請求項编号连续",
+      "title": "发明名称要求",
+      "claimReference": "说明书不得引用请求项",
+      "claimsSymbolTableConsistency": "请求项中的图号须在符號說明中定义（專利法施行細則 §19）",
+      "sequential": "请求项编号连续",
       "dependencyFormat": "从属格式（專利法施行細則 §18）",
-      "selfDependent": "自我附属請求項",
+      "selfDependent": "自我附属请求项",
       "circularDependency": "循环附属关系",
       "forwardDependency": "依附在前",
-      "singleSentence": "請求項須為單句",
+      "singleSentence": "请求项须为单句",
       "refNumeralParens": "图号以括号标示（專利法施行細則 §19）",
-      "subjectConsistency": "標的名稱一致性",
+      "subjectConsistency": "标的名称一致性",
       "transitionPhrase": "連接詞（其特徵在於）",
       "cnTerminology": "两岸用语辨识",
-      "specDrawingRef": "請求項不得引用說明書或图式",
+      "specDrawingRef": "请求项不得引用说明书或图式",
       "multiDepOnMultiDep": "多项附属项不得依附另一多项附属项",
       "multiDepAlternative": "多项附属项须采择一形式",
-      "titleSubjectMatch": "發明名稱与請求項標的一致",
+      "titleSubjectMatch": "发明名称与请求项标的一致",
       "antecedentBasis": "先行词分析",
       "charCount": "摘要字数（250字以下）",
-      "titleMatch": "發明名稱出现于摘要中",
+      "titleMatch": "发明名称出现于摘要中",
       "commercialLanguage": "商业性宣传用语",
       "representativeDrawing": "代表圖指定",
       "symbolVsRepDrawing": "符號說明与代表圖之符号一致性",
@@ -586,48 +586,48 @@
     },
     "tw": {
       "requiredSections": "TIPO规定必须包含：技術領域、先前技術、發明內容/新型內容、實施方式。有图式时须包含圖式簡單說明及符號說明。缺少：{{sections}}。",
-      "sectionOrdering": "专利法施行细则 §17规定顺序：技術領域→先前技術→發明內容/新型內容→圖式簡單說明→實施方式→符號說明。请重新排列。",
-      "paragraphNumbering": "如使用段落编号，应采用【NNNN】四位数字连续格式。依专利法施行细则 §17，编号为选用。",
+      "sectionOrdering": "專利法施行細則 §17规定顺序：技術領域→先前技術→發明內容/新型內容→圖式簡單說明→實施方式→符號說明。请重新排列。",
+      "paragraphNumbering": "如使用段落编号，应采用【NNNN】四位数字连续格式。依專利法施行細則 §17，编号为选用。",
       "paragraphEnding": "说明书段落应以中文标点（。！？）结尾。请检查标记之段落。",
-      "figureRefConsistency": "依专利审查基准，圖式簡單說明中描述的图式应在實施方式中引用，反之亦然。请确认标记的引用是否正确。",
+      "figureRefConsistency": "依專利審查基準，圖式簡單說明中描述的图式应在實施方式中引用，反之亦然。请确认标记的引用是否正确。",
       "patentTypeTerminology": "发明专利应使用「本發明」而非「本新型」。新型专利应使用「本新型」而非「本發明」。发现：{{term}}。",
       "title": "发明名称/新型名称应简洁，不得包含商标、型号或无关文字。",
-      "claimReference": "依专利法施行细则 §17，说明书不得引用特定請求項（如「如請求項N所述」）。发现：{{detail}}。",
-      "symbolTablePresence": "依专利法施行细则 §17，有圖式簡單說明时，须包含符號說明章节，列出元件符号及名称。",
-      "symbolTableConsistency": "依专利审查基准，符号说明条目应与实施方式中使用的参考符号一致。请确认完整性。",
-      "claimsSequential": "依专利审查基准，请求项编号须从1开始连续编列。",
-      "dependencyFormat": "依专利法施行细则 §18，依附须使用正确格式（如請求項N所述之、如請求項N之等）。请检查标记之請求項。",
-      "selfDependent": "依专利法施行细则 §18，請求項不得依附于自身。自我依附：{{claims}}。",
-      "circularDependency": "依专利法施行细则 §18，請求項不得形成循环依附链。循环链：請求項 {{claims}}。",
-      "forwardDependency": "依专利法施行细则 §18，附属项仅得依附在前之請求項。依附在後：{{claims}}。",
-      "singleSentence": "依专利法施行细则 §18，每一請求項须为单句，仅于末尾有一个句号（。）。请检查标记之請求項。",
-      "refNumeralParens": "依专利法施行细则 §19，請求項中之元件符号应加括号，例如(101)。请检查标记之請求項。",
-      "subjectConsistency": "附属项之標的名稱应与所依附之母项標的名稱一致。请检查标记之請求項。",
-      "transitionPhrase": "依专利法施行细则 §20，独立项应包含特征连接词，如「其特徵在於」或「其改良在於」。请检查标记之請求項。",
+      "claimReference": "依專利法施行細則 §17，说明书不得引用特定请求项（如「如請求項N所述」）。发现：{{detail}}。",
+      "symbolTablePresence": "依專利法施行細則 §17，有圖式簡單說明时，须包含符號說明章节，列出元件符号及名称。",
+      "symbolTableConsistency": "依專利審查基準，符号说明条目应与实施方式中使用的参考符号一致。请确认完整性。",
+      "claimsSequential": "依專利審查基準，请求项编号须从1开始连续编列。",
+      "dependencyFormat": "依專利法施行細則 §18，依附须使用正确格式（如請求項N所述之、如請求項N之等）。请检查标记之请求项。",
+      "selfDependent": "依專利法施行細則 §18，请求项不得依附于自身。自我依附：{{claims}}。",
+      "circularDependency": "依專利法施行細則 §18，请求项不得形成循环依附链。循环链：请求项 {{claims}}。",
+      "forwardDependency": "依專利法施行細則 §18，附属项仅得依附在前之请求项。依附在后：{{claims}}。",
+      "singleSentence": "依專利法施行細則 §18，每一请求项须为单句，仅于末尾有一个句号（。）。请检查标记之请求项。",
+      "refNumeralParens": "依專利法施行細則 §19，请求项中之元件符号应加括号，例如(101)。请检查标记之请求项。",
+      "subjectConsistency": "附属项之标的名称应与所依附之母项标的名称一致。请检查标记之请求项。",
+      "transitionPhrase": "依專利法施行細則 §20，独立项应包含过渡用语，如「其特徵在於」或「其改良在於」。请检查标记之请求项。",
       "cnTerminology": "发现简体中文专利用语：{{detail}}。台湾专利稿件应使用TIPO用语（請求項、說明書、先前技術、實施方式等），而非CNIPA用语（权利要求、说明书、背景技术、具体实施方式等）。",
-      "specDrawingRef": "依专利法施行细则 §19，請求項不得引用说明书或图式（如「如說明書所述」「如圖所示」）。发现：{{detail}}。",
-      "multiDepOnMultiDep": "依专利法施行细则 §18，多项附属项不得直接或间接依附于另一多项附属项。标记：{{claims}}。",
-      "multiDepAlternative": "依专利法施行细则 §18，多项附属项须使用择一形式（或/任一项）。标记：{{claims}}。",
-      "titleSubjectMatch": "依专利审查基准，发明名称/新型名称应与独立项之標的名稱一致。请检查标记之请求项。",
+      "specDrawingRef": "依專利法施行細則 §19，请求项不得引用说明书或图式（如「如說明書所述」「如圖所示」）。发现：{{detail}}。",
+      "multiDepOnMultiDep": "依專利法施行細則 §18，多项附属项不得直接或间接依附于另一多项附属项。标记：{{claims}}。",
+      "multiDepAlternative": "依專利法施行細則 §18，多项附属项须使用择一形式（或/任一项）。标记：{{claims}}。",
+      "titleSubjectMatch": "依專利審查基準，发明名称/新型名称应与独立项之标的名称一致。请检查标记之请求项。",
       "claims": {
         "symbolTableConsistency": {
           "missingFromTable": "权利要求中的元件符号在符号说明中未定义：{{numerals_with_locations}}"
         }
       },
       "antecedentBasis": "「该」「所述」「前述」加名词，须于同一请求项或母项中以「一」加名词导入。以正则表达式检测，结果为近似值，请自行确认。",
-      "abstractCharCount": "依专利法施行细则 §21，摘要应在250字以内。TIPO不会仅因字数超限而驳回，但请检查是否可精简。",
-      "abstractTitleMatch": "依专利审查基准，摘要应提及发明名称/新型名称。请确认摘要是否反映标题。标题：{{detail}}。",
-      "commercialLanguage": "依专利法施行细则 §21，摘要不得包含商业性宣传用语。发现：{{terms}}。",
-      "representativeDrawing": "依专利法施行细则 §21，有图式时应指定代表圖。请确认是否需要指定代表圖。",
+      "abstractCharCount": "依專利法施行細則 §21，摘要应在250字以内。TIPO不会仅因字数超限而驳回，但请检查是否可精简。",
+      "abstractTitleMatch": "依專利審查基準，摘要应提及发明名称/新型名称。请确认摘要是否反映标题。标题：{{detail}}。",
+      "commercialLanguage": "依專利法施行細則 §21，摘要不得包含商业性宣传用语。发现：{{terms}}。",
+      "representativeDrawing": "依專利法施行細則 §21，有图式时应指定代表圖。请确认是否需要指定代表圖。",
       "symbolVsRepDrawing": {
         "notInTable": "{{numeral}}({{name}})未于符号说明中定义",
         "nameMismatch": "{{numeral}}：代表图符号简单说明为「{{rep_name}}」，符号说明为「{{table_name}}」",
         "description": "代表图符号简单说明中列出之符号应与符号说明中之定义一致。请确认标记的项目。"
       },
-      "bracketFormat": "依专利法施行细则 §17，章节标题应使用全角方括号【】。发现：{{detail}}。",
+      "bracketFormat": "依專利法施行細則 §17，章节标题应使用全角方括号【】。发现：{{detail}}。",
       "connectionRelationships": "標記之組件：{{sample_names}}（共 {{component_count}} 個）。請補充連接、設置於、耦接 等動詞用語，記載組件之間的結構連接關係。",
       "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语缺少先行词。详见下方「先行词基础检查」区块。",
-      "titleMissing": "依专利审查基准，说明书必须包含发明名称/新型名称。请于说明书首部添加。",
+      "titleMissing": "依專利審查基準，说明书必须包含发明名称/新型名称。请于说明书首部添加。",
       "figureRefInconsistency": {
         "onlyDrawings": "仅在圖式簡單說明中提及：{{figs}}",
         "onlyEmbodiment": "仅在實施方式中提及：{{figs}}"
@@ -636,8 +636,8 @@
         "unreferenced": "符号说明已定义但实施方式未引用：{{symbols}}",
         "undefined": "实施方式已引用但符号说明未定义：{{symbols}}"
       },
-      "singleSentenceMissingPeriod": "依专利法施行细则 §18，每一请求项须以单一句号（。）结尾。请为标记之请求项补上句末句号。",
-      "singleSentenceMultiSentence": "依专利法施行细则 §18，每一请求项须为单句，仅于末尾有一个句号（。）。请移除句中之句号或重新拆分标记之请求项。"
+      "singleSentenceMissingPeriod": "依專利法施行細則 §18，每一请求项须以单一句号（。）结尾。请为标记之请求项补上句末句号。",
+      "singleSentenceMultiSentence": "依專利法施行細則 §18，每一请求项须为单句，仅于末尾有一个句号（。）。请移除句中之句号或重新拆分标记之请求项。"
     },
     "titleProhibited": {
       "trademark": "商标符号「{{token}}」",
@@ -902,11 +902,11 @@
     "tw": {
       "spec": {
         "requiredSections": {
-          "amend": "依专利法施行细则 §17，缺少必要章节。",
+          "amend": "依專利法施行細則 §17，缺少必要章节。",
           "pass": "所有必要章节均已包含。"
         },
         "sectionOrdering": {
-          "amend": "依专利法施行细则 §17，章节顺序不正确。",
+          "amend": "依專利法施行細則 §17，章节顺序不正确。",
           "pass": "章节顺序正确。"
         },
         "paragraphNumbering": {
@@ -932,48 +932,48 @@
           "amendMissing": "未发现发明名称/新型名称。"
         },
         "claimReference": {
-          "amend": "说明书中引用了請求項。",
-          "pass": "说明书中未引用請求項。"
+          "amend": "说明书中引用了请求项。",
+          "pass": "说明书中未引用请求项。"
         },
         "symbolTablePresence": {
           "amend": "缺少符號說明章节。",
           "pass": "符號說明章节已包含。"
         },
         "symbolTableConsistency": {
-          "verify": "符号说明内容与实施方式不一致：{{symbol_table_inconsistency}}",
-          "pass": "符號說明内容与说明书一致。"
+          "verify": "符號說明内容与實施方式不一致：{{symbol_table_inconsistency}}",
+          "pass": "符號說明内容与實施方式一致。"
         }
       },
       "claims": {
         "sequential": {
           "amend": "请求项编号不连续：预期第{{expected}}项，实际为第{{found}}项。",
-          "pass": "請求項编号连续。"
+          "pass": "请求项编号连续。"
         },
         "dependencyFormat": {
           "amend": "{{count}}项请求项之依附格式无法识别：{{claims}}（專利法施行細則 §18）。",
           "pass": "所有依附引用均使用正确格式。"
         },
         "selfDependent": {
-          "amend": "发现自我依附之請求項（專利法施行細則 §18）。",
-          "pass": "无自我依附之請求項。"
+          "amend": "发现自我依附之请求项（專利法施行細則 §18）。",
+          "pass": "无自我依附之请求项。"
         },
         "circularDependency": {
           "amend": "发现循环依附。",
           "pass": "无循环依附。"
         },
         "forwardDependency": {
-          "amend": "{{claims}} 依附在後之請求項（專利法施行細則 §18）。",
-          "pass": "無依附在後之情形。"
+          "amend": "{{claims}} 依附在后之请求项（專利法施行細則 §18）。",
+          "pass": "无依附在后之情形。"
         },
         "singleSentence": {
           "amend": "{{count}}项请求项非单句撰写：{{claims}}。",
-          "pass": "所有請求項均为单句。",
+          "pass": "所有请求项均为单句。",
           "amendMissingPeriod": "{{count}}项请求项缺少句末句号：{{claims}}。",
           "amendMultiSentence": "{{count}}项请求项非单句撰写：{{claims}}。"
         },
         "refNumeralParens": {
           "verify": "{{count}}项请求项之元件符号未加括号：{{claims}}（專利法施行細則 §19）。",
-          "pass": "所有請求項之元件符号均已加括号。"
+          "pass": "所有请求项之元件符号均已加括号。"
         },
         "subjectConsistency": {
           "verify": "{{claims}} 的主题名称与母项不一致（共 {{count}} 项）。",
@@ -985,11 +985,11 @@
         },
         "cnTerminology": {
           "verify": "在台湾专利稿件中发现大陆专利用语。",
-          "pass": "請求項使用正确之TIPO用语。"
+          "pass": "请求项使用正确之TIPO用语。"
         },
         "specDrawingRef": {
-          "amend": "請求項中引用了说明书或图式。",
-          "pass": "請求項中未引用说明书或图式。"
+          "amend": "请求项中引用了说明书或图式。",
+          "pass": "请求项中未引用说明书或图式。"
         },
         "multiDepOnMultiDep": {
           "amend": "多项附属项依附于另一多项附属项。",
@@ -1000,13 +1000,13 @@
           "pass": "所有多项附属项均使用择一形式。"
         },
         "titleSubjectMatch": {
-          "verify": "发明名称/新型名称「{{title}}」与独立项標的「{{subjects}}」不一致。",
-          "pass": "发明名称/新型名称与独立项標的一致。"
+          "verify": "发明名称/新型名称「{{title}}」与独立项标的「{{subjects}}」不一致。",
+          "pass": "发明名称/新型名称与独立项标的一致。"
         },
         "symbolTableConsistency": {
-          "verify": "請求項中之元件符号与符號說明不一致。",
-          "pass": "請求項中之元件符号与符號說明一致。",
-          "noClaimNumerals": "权利要求未使用元件符号（施行细则 §19 允许），无需检查一致性。"
+          "verify": "请求项中之元件符号与符號說明不一致。",
+          "pass": "请求项中之元件符号与符號說明一致。",
+          "noClaimNumerals": "请求项未使用元件符号（專利法施行細則 §19 允许），无需检查一致性。"
         },
         "connectionRelationships": {
           "verify": "獨立項 {{claim_id}} 列出 {{sample_names}}，未記載彼此之結構連接關係。",
