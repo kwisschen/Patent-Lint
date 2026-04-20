@@ -2,25 +2,25 @@
 // Copyright (c) 2025 Christopher Chen
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { composeFooterFeedback, sendFeedback } from '../lib/feedback'
+import { composeFooterFeedback } from '../lib/feedback'
+import { useFeedback } from './FeedbackPicker'
 
 export default function Footer() {
   const { t } = useTranslation()
+  const { sendFeedback } = useFeedback()
 
-  // Feedback link gets its own onClick handler so we copy-to-clipboard
-  // in addition to opening Gmail — universal fallback for non-Gmail users.
-  // The href is still populated (from compose) so right-click → "Open in
-  // new tab" works for power users.
-  const feedbackEmail = composeFooterFeedback(t)
+  // Feedback link: click triggers the picker modal (on first use) or
+  // dispatches via the user's remembered method. href is '#' so the
+  // browser doesn't navigate; onClick + preventDefault takes over.
   const handleFeedbackClick = (e) => {
     e.preventDefault()
-    sendFeedback(feedbackEmail, t)
+    sendFeedback(composeFooterFeedback(t))
   }
 
   const externalLinks = [
     { label: t('footer.github'), href: 'https://github.com/kwisschen' },
     { label: t('footer.linkedin'), href: 'https://linkedin.com/in/kwisschen' },
-    { label: t('footer.feedback'), href: feedbackEmail.url, onClick: handleFeedbackClick },
+    { label: t('footer.feedback'), href: '#', onClick: handleFeedbackClick },
   ]
 
   return (
