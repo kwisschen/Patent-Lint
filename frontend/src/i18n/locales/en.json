@@ -140,12 +140,12 @@
     "picker": {
       "title": "How would you like to send this?",
       "send": {
-        "description": "Your email is ready to send. The same content is on your clipboard. Your draft stays on your device.",
+        "description": "Your email is ready. The same content is on your clipboard. Your draft stays on your device.",
         "gmail": "Send via Gmail",
         "mailto": "Send via Outlook or Mobile"
       },
       "report": {
-        "description": "Your error report is ready to send. The same content is on your clipboard. Your draft stays on your device.",
+        "description": "Your error report is ready. The same content is on your clipboard. Your draft stays on your device.",
         "gmail": "Report via Gmail",
         "mailto": "Report via Outlook or Mobile"
       },
@@ -153,11 +153,11 @@
       "remember": "Remember my selection"
     },
     "emailGreeting": "Hi Christopher,",
-    "bodyPlaceholder": "[Please describe below what you think is wrong with this finding. Do NOT paste claim text or any other content from your draft — a general summary is enough to investigate.]",
+    "bodyPlaceholder": "[In a sentence or two, tell me what's wrong with this finding — is this a false positive, a miscategorization, or did the check miss something? Do NOT paste claim text or any other draft content; the finding itself is already attached.]",
     "footerIntro": "I'd like to share some feedback about PatentLint.",
-    "footerPlaceholder": "[Please share below any bug reports, feature requests, questions, or general comments. You don't need to share anything confidential about your work.]",
+    "footerPlaceholder": "[Anything you'd like to share — bug reports, feature requests, questions, or general comments. For bugs, a note on your browser and OS helps me reproduce. For features, one sentence on your use case goes a long way. You don't need to share anything confidential about your work.]",
     "enterpriseIntro": "I'd like to inquire about enterprise deployment of PatentLint.",
-    "enterprisePlaceholder": "[Please briefly describe below your needs — team size, approximate document volume, jurisdictions you work with, and any specific requirements (e.g., self-hosted / air-gapped install, SSO, custom checks). I'll follow up with options.]"
+    "enterprisePlaceholder": "[Tell me about your deployment needs — firm or team size and practice area, regions you work in, approximate document volume, evaluation timeline, and any specific requirements (e.g., self-hosted or air-gapped install for ITAR / data-sovereignty rules, SSO, custom checks).]"
   },
   "cta": {
     "heading": "Ready to check your draft?",
@@ -289,7 +289,7 @@
       "telemetry": "PatentLint does not include analytics scripts, tracking pixels, cookies, or third-party integrations. No usage data is collected or transmitted by the application.",
       "selfHostedTitle": "Self-Hosted Option",
       "selfHosted": "For organizations with strict data sovereignty requirements, such as ITAR-controlled environments or air-gapped networks, PatentLint can be self-hosted via Docker with all dependencies included.",
-      "contactEnterprise": "Contact for enterprise deployment"
+      "contactEnterprise": "Contact for enterprise deployment →"
     }
   },
   "about": {
