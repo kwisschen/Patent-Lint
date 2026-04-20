@@ -11,21 +11,24 @@ import { useTranslation } from 'react-i18next'
 // all future update prompts, which broke the update flow for anyone who
 // ever clicked "Later".
 const DISMISSED_KEY = 'patentlint:update-dismissed'
-// Session-scoped timestamp of the last check attempt. Used to throttle
-// visibility-triggered checks so that returning to the tab doesn't
-// flicker the network indicator on every focus event.
-const LAST_CHECK_KEY = 'patentlint:update-last-check'
+// Companion key storing when the dismissal happened. Used to re-show
+// the toast after a grace period so accidentally-dismissed updates
+// don't silently hide. Newer versions still break the suppression
+// immediately (via hash mismatch); this grace period only affects the
+// "same version was dismissed recently" case.
+const DISMISSED_AT_KEY = 'patentlint:update-dismissed-at'
+const DISMISSAL_RESHOW_MS = 30 * 60 * 1000
 const TOAST_ID = 'patentlint-update-available'
-// Minimum interval between automated version checks triggered by
-// visibility events. Mount checks (fresh load / reload) always fire
-// regardless. Long enough to suppress flicker on typical tab-switch
-// cycles (Word ↔ PatentLint every few minutes = well under 15 min
-// between returns = no flicker); short enough that users who push a
-// deploy and tab-switch back within ~15 min see the update prompt.
-// Previous value (60 min) was tuned for "zero flicker in normal use"
-// but was too long for active-testing workflows where the user pushes
-// then verifies within a few minutes.
-const CHECK_THROTTLE_MS = 15 * 60 * 1000
+// Visibility check gate. On a visibility-visible event, fire a version
+// check only if the tab was HIDDEN for at least this long. Models
+// actual user behavior ("I walked away, now I'm back") better than a
+// time-since-last-check throttle — rapid alt-tabbing stays silent (no
+// flicker from repeated checks) while a 2-3 min absence (typical push
+// + CI wait) reliably triggers a check on return. Previous approach
+// (15 min since last check) failed for Windows users with long-running
+// tabs who never hit the 15-min gap because they'd switched back in
+// between, so the throttle never cleared.
+const MIN_HIDDEN_MS_FOR_CHECK = 30 * 1000
 
 /**
  * Fetches /version.json on page load and on tab focus, compares to the
@@ -36,16 +39,16 @@ const CHECK_THROTTLE_MS = 15 * 60 * 1000
  *   explicit user interaction (page load or tab focus) to preserve the
  *   zero-upload security story — a paranoid user watching DevTools will
  *   only see network activity when they actively engage with the site.
- * - Throttle applies to VISIBILITY events only. Mount-time checks
- *   (initial load, reload, locale-switch re-render) always fire, so a
- *   reload is the reliable user-facing escape hatch for "did a new
- *   version ship?" — matching what users already expect from reloading
- *   any web app. Throttling reloads would silently withhold updates
- *   from users who explicitly asked for fresh state.
- * - The visibility throttle suppresses the indicator flicker that would
- *   otherwise fire on every tab-switch return. When the throttle clears
- *   and a check does fire, the indicator still flashes truthfully — the
- *   throttle masks nothing, it just cuts the unnecessary re-checks.
+ * - Mount-time checks (initial load, reload) always fire. Locale-switch
+ *   re-renders are gated by hasMountChecked so a pure UI-language change
+ *   doesn't trigger a network call.
+ * - Visibility-change checks gate on HIDDEN DURATION, not time-since-last-
+ *   check. A visibility-visible event fires a check only if the tab was
+ *   hidden for ≥ MIN_HIDDEN_MS_FOR_CHECK. This models the "I walked away
+ *   and came back" case correctly (user pushes a deploy, switches back in
+ *   2-3 min → check fires → sees toast) while keeping rapid alt-tabbing
+ *   silent. Previous time-since-last-check throttle broke for Windows
+ *   users with long-running tabs who never hit the throttle gap.
  * - No file-drop check. The moment the user entrusts a patent draft to
  *   the app must trigger zero network activity.
  * - Silently fails on fetch errors (offline, version.json missing, etc.)
@@ -60,24 +63,23 @@ export function useUpdateCheck() {
   // network call — that would flicker the honest network indicator
   // during a pure UI-language change and betray the trust property.
   const hasMountChecked = useRef(false)
+  // Timestamp of the last visibility-hidden event. Used to measure how
+  // long the tab was hidden before becoming visible again; the check
+  // fires only if that duration ≥ MIN_HIDDEN_MS_FOR_CHECK.
+  const lastHiddenMs = useRef(0)
 
   useEffect(() => {
     // Skip in dev — version.json is only generated in production builds
     if (import.meta.env.DEV) return
 
     const dismissedFor = () => sessionStorage.getItem(DISMISSED_KEY) || ''
-    const lastCheckMs = () => {
-      const v = sessionStorage.getItem(LAST_CHECK_KEY)
-      return v ? Number(v) : 0
+    const dismissedAtMs = () => Number(sessionStorage.getItem(DISMISSED_AT_KEY) || 0)
+    const recordDismissal = (buildHash) => {
+      sessionStorage.setItem(DISMISSED_KEY, buildHash)
+      sessionStorage.setItem(DISMISSED_AT_KEY, String(Date.now()))
     }
-    const isThrottled = () =>
-      Date.now() - lastCheckMs() < CHECK_THROTTLE_MS
 
     const check = async () => {
-      // Record the attempt BEFORE the fetch so transient failures don't
-      // unthrottle and re-fire on the next visibility event. The user
-      // will get a fresh attempt after CHECK_THROTTLE_MS or on reload.
-      sessionStorage.setItem(LAST_CHECK_KEY, String(Date.now()))
       try {
         // Cache-bust the manifest fetch itself so we always see the latest.
         // This is safe to cache-bust aggressively: it's a tiny static JSON.
@@ -88,11 +90,18 @@ export function useUpdateCheck() {
         const data = await res.json()
         if (!data.buildHash || data.buildHash === __BUILD_HASH__) return
 
-        // Version-scoped dismissal: only suppress if THIS specific
-        // server build was already dismissed this session. A newer
-        // deploy naturally breaks the suppression because the stored
-        // hash no longer matches.
-        if (data.buildHash === dismissedFor()) return
+        // Version-scoped dismissal with time-bounded grace period:
+        // suppress only if THIS specific server build was dismissed
+        // within the last DISMISSAL_RESHOW_MS. After the grace period,
+        // re-show so accidentally-dismissed updates don't silently hide.
+        // A newer deploy breaks the suppression immediately via hash
+        // mismatch — the time window only affects "same hash" suppression.
+        if (
+          data.buildHash === dismissedFor() &&
+          Date.now() - dismissedAtMs() < DISMISSAL_RESHOW_MS
+        ) {
+          return
+        }
 
         // Capture in closure so dismiss callbacks store THIS build's
         // hash, not whatever the latest is at dismissal time (which
@@ -128,11 +137,11 @@ export function useUpdateCheck() {
           cancel: {
             label: t('updates.dismiss'),
             onClick: () => {
-              sessionStorage.setItem(DISMISSED_KEY, targetHash)
+              recordDismissal(targetHash)
             },
           },
           onDismiss: () => {
-            sessionStorage.setItem(DISMISSED_KEY, targetHash)
+            recordDismissal(targetHash)
           },
         })
       } catch (e) {
@@ -151,13 +160,23 @@ export function useUpdateCheck() {
       check()
     }
 
-    // Run on tab focus, also throttled. Using visibilitychange instead
-    // of focus because visibilitychange is more reliable across browsers
-    // and doesn't fire on window focus that doesn't change tab visibility.
+    // Visibility-change: fire a check when the tab becomes visible IF
+    // it was hidden for at least MIN_HIDDEN_MS_FOR_CHECK. Models the
+    // "I walked away and came back" case (typical: push a deploy, wait
+    // for CI, switch back → 30+ sec hidden → check fires → toast if
+    // mismatch). Rapid alt-tabbing (hidden for a few seconds) stays
+    // silent, avoiding repeated flicker from checks that wouldn't find
+    // anything new.
     const handleVisibilityChange = () => {
-      if (document.visibilityState !== 'visible') return
-      if (isThrottled()) return
-      check()
+      if (document.visibilityState === 'hidden') {
+        lastHiddenMs.current = Date.now()
+        return
+      }
+      // visibilityState === 'visible'
+      if (lastHiddenMs.current === 0) return
+      if (Date.now() - lastHiddenMs.current >= MIN_HIDDEN_MS_FOR_CHECK) {
+        check()
+      }
     }
 
     document.addEventListener('visibilitychange', handleVisibilityChange)
