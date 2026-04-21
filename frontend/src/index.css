@@ -153,19 +153,20 @@
   --attention-mark-text: #fde68a;
 
   /* Claim diagram — gradient stops + shadow (dark)
-     Dep nodes lifted brighter than --card (oklch(0.205)) so they read as
-     elevated chips; indep nodes desaturated so labels stay legible. */
-  --pl-indep-start: #2a3f65;
-  --pl-indep-end: #3b5486;
-  --pl-dep-start: #3a3a3a;
-  --pl-dep-end: #2a2a2a;
+     Brighter lifted chips with a slight blue tint so dep nodes don't read
+     as dead slate. Indep node gets a richer blue with a brighter stroke +
+     stronger shadow so it visually anchors the tree. */
+  --pl-indep-start: #3b5998;
+  --pl-indep-end: #4f73b8;
+  --pl-dep-start: #404859;
+  --pl-dep-end: #2f3644;
   --pl-shadow-color: #000000;
-  --pl-shadow-opacity: 0.55;
+  --pl-shadow-opacity: 0.65;
   --pl-edge-stroke: #94a3b8;
-  --pl-label-indep: #eff6ff;
-  --pl-label-dep: #e5e5e5;
-  --pl-indep-stroke: #60a5fa;
-  --pl-dep-stroke: rgba(255, 255, 255, 0.2);
+  --pl-label-indep: #ffffff;
+  --pl-label-dep: #f1f5f9;
+  --pl-indep-stroke: #93c5fd;
+  --pl-dep-stroke: rgba(148, 163, 184, 0.35);
 
   /* shadcn/ui dark variables */
   --background: oklch(0.145 0 0);
