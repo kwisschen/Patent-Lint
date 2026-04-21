@@ -1590,6 +1590,83 @@ class TestTwRealFixtures:
                 )
 
 
+class TestTwSpecSupportIntegration:
+    """ADR-138: end-to-end TW spec-support pipeline integration."""
+
+    def test_supported_claim_emits_no_unsupported_terms(self):
+        # Claim introduces 基座 and 導熱層, spec describes both.
+        data = _build_tw_minimal(
+            claims_text=[
+                "1. 一種散熱裝置，包括：一基座；及一導熱層。",
+                "2. 如請求項1所述之散熱裝置，其中該基座具有銅材質。",
+            ],
+            embodiment_lines=[
+                "【0005】散熱裝置包括一基座，基座上設置有一導熱層。導熱層為銅材質。",
+            ],
+        )
+        result = analyze_bytes(data, "tw_supported.docx", Jurisdiction.TW)
+        assert result.jurisdiction == Jurisdiction.TW
+        assert result.unsupported_terms == []
+        # Summary CheckItem should be PASS.
+        spec_support_checks = [
+            c for c in result.tw_claims_checks
+            if "specSupport" in c.message_key
+        ]
+        assert len(spec_support_checks) == 1
+        assert spec_support_checks[0].status == "pass"
+        assert spec_support_checks[0].reference == "專利法 §26 第3項"
+
+    def test_unsupported_claim_term_flagged(self):
+        # Claim introduces 量子糾纏模組, which is nowhere in the spec.
+        data = _build_tw_minimal(
+            claims_text=[
+                "1. 一種裝置，包括：一量子糾纏模組。",
+            ],
+            embodiment_lines=[
+                "【0005】本裝置具有處理器與記憶體。",
+            ],
+        )
+        result = analyze_bytes(data, "tw_unsupported.docx", Jurisdiction.TW)
+        phrases = [ut.phrase for ut in result.unsupported_terms]
+        assert "量子糾纏模組" in phrases
+        spec_support_checks = [
+            c for c in result.tw_claims_checks
+            if "specSupport" in c.message_key
+        ]
+        assert len(spec_support_checks) == 1
+        assert spec_support_checks[0].status == "verify"
+
+    def test_symbol_table_term_tier0_pass(self):
+        # Claim introduces 基座; spec has no 基座 prose, but symbol table
+        # declares 基座 at numeral 10 — Tier 0 short-circuits to PASS.
+        data = _build_tw_minimal(
+            claims_text=[
+                "1. 一種散熱裝置，包括：一基座。",
+            ],
+            embodiment_lines=[
+                "【0005】散熱裝置包括相關構件。",
+            ],
+            symbol_lines=["10   基座", "100  散熱裝置"],
+        )
+        result = analyze_bytes(data, "tw_symbol_tier0.docx", Jurisdiction.TW)
+        phrases = [ut.phrase for ut in result.unsupported_terms]
+        assert "基座" not in phrases
+
+    def test_report_data_forwards_unsupported_terms(self):
+        data = _build_tw_minimal(
+            claims_text=[
+                "1. 一種裝置，包括：一量子糾纏模組。",
+            ],
+            embodiment_lines=[
+                "【0005】本裝置具有處理器與記憶體。",
+            ],
+        )
+        result = analyze_bytes(data, "tw_report.docx", Jurisdiction.TW)
+        report = result.to_report_data()
+        phrases = [ut.phrase for ut in report.unsupported_terms]
+        assert "量子糾纏模組" in phrases
+
+
 class TestTwRealFixtureUtilityModel:
     """Verify patent type detection for the utility model fixture."""
 

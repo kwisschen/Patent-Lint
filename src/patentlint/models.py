@@ -452,6 +452,7 @@ class AnalysisResult(BaseModel):
             drawings_checks=list(self.tw_drawings_checks),
             claim_trees=self._build_claim_trees(),
             antecedent_basis_issues=self.antecedent_basis_issues,
+            unsupported_terms=self.unsupported_terms,
             likely_patent=self.likely_patent,
             has_tracked_changes=self.has_tracked_changes,
         )
