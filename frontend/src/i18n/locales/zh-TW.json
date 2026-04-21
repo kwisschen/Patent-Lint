@@ -629,7 +629,7 @@
       "bracketFormat": "依專利法施行細則 §17，章節標題應使用全形方括號【】。發現：{{detail}}。",
       "connectionRelationships": "標記之組件：{{sample_names}}（共 {{component_count}} 個）。請補充連接、設置於、耦接 等動詞用語，記載組件之間的結構連接關係。",
       "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語缺少先行詞。詳見下方「先行詞基礎檢視」區塊。",
-      "specSupportTerms": "{{claim_count}}項請求項共{{issue_count}}個用語疑似未獲說明書支持（專利法 §26 第3項）。詳見下方「說明書支持檢視」區塊。",
+      "specSupportTerms": "{{claim_count}}項請求項共{{issue_count}}個用語疑似未獲說明書支持。詳見下方「說明書支持檢視」區塊。",
       "titleMissing": "依專利審查基準，說明書必須包含發明名稱/新型名稱。請於說明書首部添加。",
       "figureRefInconsistency": {
         "onlyDrawings": "僅於圖式簡單說明中提及：{{figs}}",
