@@ -29,18 +29,6 @@ export default function Footer() {
         <span>{t('footer.builtBy')}</span>
         <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2" aria-label="Footer">
           <Link
-            to="/security"
-            className="hidden sm:inline footer-link hover:text-foreground transition-colors duration-200"
-          >
-            {t('footer.security')}
-          </Link>
-          <Link
-            to="/about"
-            className="hidden sm:inline footer-link hover:text-foreground transition-colors duration-200"
-          >
-            {t('footer.about')}
-          </Link>
-          <Link
             to="/terms"
             className="footer-link hover:text-foreground transition-colors duration-200"
           >
