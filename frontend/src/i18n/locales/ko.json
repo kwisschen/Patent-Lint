@@ -155,6 +155,25 @@
       "clipboard": "클립보드에 복사",
       "remember": "내 선택 기억하기"
     },
+    "report": "오류 신고",
+    "email": {
+      "subjectFinding": "PatentLint 검사 결과 보고: {{checkKey}}",
+      "subjectFooter": "PatentLint 피드백",
+      "subjectEnterprise": "PatentLint 기업 도입 문의",
+      "fieldColon": ": ",
+      "fieldCheck": "검사 항목",
+      "fieldMessage": "메시지",
+      "fieldDetails": "세부 내용",
+      "fieldStatus": "상태",
+      "fieldClaim": "청구항",
+      "fieldTerms": "용어",
+      "fieldPhrases": "구절",
+      "fieldReferenceForm": "참조 형식",
+      "fieldJurisdiction": "지역",
+      "fieldBrowser": "브라우저",
+      "fieldLocale": "언어",
+      "fieldBuild": "버전"
+    },
     "emailGreeting": "Christopher 님께,",
     "bodyPlaceholder": "[한두 문장으로 이 검사 결과의 문제점을 알려 주세요: 오탐인지, 분류 오류인지, 검사가 놓친 부분이 있는지. 청구항 문구나 초안 내용은 절대 붙여넣지 마세요. 검사 결과 자체는 자동으로 첨부됩니다.]",
     "footerIntro": "PatentLint에 대한 피드백을 전달드립니다.",
@@ -390,7 +409,7 @@
       "drawings": "도면(附图)"
     },
     "cnChecks": {
-      "requiredSections": "필수 섹션(专利法实施细则 §17)",
+      "requiredSections": "필수 섹션(专利法 §26 第1款・专利法实施细则 §17)",
       "sectionOrdering": "섹션 순서",
       "paragraphNumbering": "단락 번호",
       "paragraphEnding": "단락 끝 구두점",
@@ -442,7 +461,7 @@
     "twChecks": {
       "symbolTablePresence": "圖式簡單說明이 있을 때 符號說明 필수(專利法施行細則 §17)",
       "symbolTableConsistency": "符號說明의 부호가 實施方式에 등장(專利審查基準)",
-      "requiredSections": "필수 섹션(專利法施行細則 §17)",
+      "requiredSections": "필수 섹션(專利法 §25 第1項・專利法施行細則 §17)",
       "sectionOrdering": "섹션 순서",
       "paragraphNumbering": "단락 번호(【NNNN】 형식)",
       "paragraphEnding": "단락 끝 구두점",
@@ -551,7 +570,7 @@
     "abstractImpliedPhrasesFix": "\"This disclosure provides...\" 또는 \"A method is provided...\" 등의 문구는 MPEP § 608.01(b)에 따른 암시적 문구에 해당합니다. 발명을 직접 기술하도록 다시 작성하세요(예: \"A method that...\").",
     "abstractWordCountFix": "MPEP § 608.01(b)에 따라 요약서는 50~150단어 범위 이내여야 합니다. 이 범위를 충족하도록 수정하세요.",
     "cn": {
-      "requiredSections": "专利法实施细则 §17에 따라 명세서에는 技术领域, 背景技术, 发明内容, 具体实施方式가 포함되어야 합니다. 누락된 섹션을 추가하세요.",
+      "requiredSections": "专利法 §26 第1款에 따라 출원에는 摘要, 说明书(技术领域, 背景技术, 发明内容, 具体实施方式), 权利要求书가 포함되어야 합니다. 누락: {{sections}}.",
       "sectionOrdering": "규정 순서: 技术领域 → 背景技术 → 发明内容 → 附图说明 → 具体实施方式. 섹션 순서를 수정하세요.",
       "paragraphNumberingXml": "审查指南에 따라 단락 번호는 연속적이고 4자리 영(0) 채움 형식(0001, 0002…)이어야 합니다. 번호 순서를 수정하세요.",
       "paragraphNumberingDocx": "CNIPA 규정에 따라 명세서에 단락 번호를 추가해서는 안 됩니다. WORD转XML编辑器가 변환 시 자동으로 번호를 부여합니다. 수동으로 추가한 모든 단락 번호를 삭제하세요.",
@@ -592,7 +611,7 @@
       }
     },
     "tw": {
-      "requiredSections": "TIPO 요건: 技術領域, 先前技術, 發明內容/新型內容, 實施方式. 도면이 있는 경우 圖式簡單說明 및 符號說明도 필요합니다. 누락: {{sections}}.",
+      "requiredSections": "專利法 §25 第1項에 따라 출원에는 摘要, 說明書(技術領域, 先前技術, 發明內容/新型內容, 實施方式), 申請專利範圍이 포함되어야 하며, 專利法施行細則 §17에 따라 도면이 있는 경우 說明書에 圖式簡單說明 및 符號說明도 포함되어야 합니다. 누락: {{sections}}.",
       "sectionOrdering": "專利法施行細則 §17 규정 순서: 技術領域→先前技術→發明內容/新型內容→圖式簡單說明→實施方式→符號說明. 순서를 수정하십시오.",
       "paragraphNumbering": "단락 번호를 사용하는 경우, 【NNNN】 네 자리 숫자 연속 형식을 사용해야 합니다. 특허법 시행규칙 §17에 따라 번호 부여는 선택사항입니다.",
       "paragraphEnding": "명세서 단락은 중국어 문장부호(。！？)로 끝나야 합니다. 표시된 단락을 확인하십시오.",
@@ -786,8 +805,8 @@
     "cn": {
       "spec": {
         "requiredSections": {
-          "amend": "필수 섹션이 누락되었습니다: {{sections}} (专利法实施细则 §17).",
-          "pass": "명세서의 모든 필수 섹션이 존재합니다."
+          "amend": "필수 섹션이 누락되었습니다: {{sections}} (专利法 §26 第1款・专利法实施细则 §17).",
+          "pass": "모든 필수 섹션이 존재합니다."
         },
         "sectionOrdering": {
           "amend": "명세서 섹션이 규정된 순서와 다릅니다 (专利法实施细则 §17).",
@@ -910,8 +929,8 @@
     "tw": {
       "spec": {
         "requiredSections": {
-          "amend": "필수 섹션이 누락되었습니다 (專利法施行細則 §17).",
-          "pass": "명세서의 모든 필수 섹션이 존재합니다."
+          "amend": "필수 섹션이 누락되었습니다 (專利法 §25 第1項・專利法施行細則 §17).",
+          "pass": "모든 필수 섹션이 존재합니다."
         },
         "sectionOrdering": {
           "amend": "명세서 섹션이 규정된 순서와 다릅니다 (專利法施行細則 §17).",
