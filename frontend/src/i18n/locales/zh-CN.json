@@ -141,14 +141,14 @@
     "report": "反馈错误",
     "reportProblem": "反馈此项分析结果的问题",
     "picker": {
-      "title": "请选择发送方式",
+      "title": "您的稿件不会离开您的设备",
       "send": {
-        "description": "您的邮件已准备好，剪贴板中也有相同内容备用。您的文稿不会离开您的设备。",
+        "description": "邮件已准备好，剪贴板中也有相同内容备用。请选择发送方式：",
         "mailto": "用 Outlook 或移动设备发送",
         "gmail": "用 Gmail 发送"
       },
       "report": {
-        "description": "您的错误反馈已准备好，剪贴板中也有相同内容备用。您的文稿不会离开您的设备。",
+        "description": "错误反馈已准备好，剪贴板中也有相同内容备用。请选择反馈方式：",
         "mailto": "用 Outlook 或移动设备反馈",
         "gmail": "用 Gmail 反馈"
       },
