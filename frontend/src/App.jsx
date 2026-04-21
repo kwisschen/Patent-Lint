@@ -14,6 +14,8 @@ import ProveItModal from './components/ProveItModal'
 import { FeedbackProvider } from './components/FeedbackPicker'
 import SecurityPage from './pages/SecurityPage'
 import AboutPage from './pages/AboutPage'
+import TermsPage from './pages/TermsPage'
+import PrivacyPage from './pages/PrivacyPage'
 import { usePyodide } from './hooks/usePyodide'
 import { useUpdateCheck } from './hooks/useUpdateCheck'
 import { Toaster } from './components/ui/sonner'
@@ -206,6 +208,8 @@ function App() {
               <AboutPage />
             </div>
           } />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>
       </Layout>
 
