@@ -291,10 +291,16 @@ def _strip_trailing_conjunction(term: str) -> str:
 def _split_on_conjunction(term: str) -> list[str]:
     """Split a walker-captured conjunction phrase into constituent nouns.
 
-    When a normalized intro spans ``X <conj> Y``, returns [X, Y]; otherwise
-    returns [term] unchanged. Only splits if BOTH sides are at least
-    ``_MIN_INVENTORY_LENGTH`` chars — protects compound nouns that happen
-    to contain 及/和 as morphemes (rare in TW patent diction but possible).
+    When a normalized intro spans ``X <conj> Y``, returns [X, Y]; for
+    multi-conjunction phrases (``A及B以及C``) both sides are recursively
+    split so the result is [A, B, C]. Only splits if BOTH sides are at
+    least ``_MIN_INVENTORY_LENGTH`` chars — protects compound nouns that
+    happen to contain 及/和 as morphemes (rare in TW patent diction but
+    possible).
+
+    The recursion is length-bounded: each split reduces term length, and
+    the base case returns [term] unchanged when no qualifying conjunction
+    is found.
     """
     for conj in _TW_CONJUNCTIONS:
         idx = term.find(conj)
@@ -306,7 +312,7 @@ def _split_on_conjunction(term: str) -> list[str]:
         # walker preserved because it started mid-phrase. Re-normalize.
         right = normalize_reference_term(right) if right else right
         if len(left) >= _MIN_INVENTORY_LENGTH and len(right) >= _MIN_INVENTORY_LENGTH:
-            return [left, right]
+            return _split_on_conjunction(left) + _split_on_conjunction(right)
     return [term]
 
 

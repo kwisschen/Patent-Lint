@@ -177,6 +177,21 @@ class TestSplitOnConjunction:
         # Right side < _MIN_INVENTORY_LENGTH, don't split
         assert _split_on_conjunction("組件及A") == ["組件及A"]
 
+    def test_multi_conjunction_recursive_split(self):
+        # Audit finding: walker captures like 定子及轉子以及軸承 must split
+        # all three ways, not just at the first qualifying conjunction.
+        assert _split_on_conjunction("定子及轉子以及軸承") == ["定子", "轉子", "軸承"]
+        assert _split_on_conjunction("組件A及組件B以及組件C") == ["組件A", "組件B", "組件C"]
+
+    def test_multi_conjunction_mixed_short_side(self):
+        # If one sub-split has a side shorter than min-length, that sub-split
+        # stays joined while the others split. Returns the longest valid
+        # decomposition.
+        result = _split_on_conjunction("大前提及小前提以及結論")
+        assert "大前提" in result
+        assert "小前提" in result
+        assert "結論" in result
+
 
 # ---------------------------------------------------------------------------
 # Stoplists & rejects
