@@ -417,8 +417,8 @@
     "twFeatures": {
       "title": "Interactive TW patent analysis",
       "claimTree": {
-        "title": "Claim structure & antecedent-basis walker",
-        "description": "Interactive claim dependency tree with a BFS antecedent-basis walker, two-part-form checks (其特徵在於 / 其改良在於), single-sentence rule, and reference-recitation independent-claim handling (一種X，具備如請求項N所述的Y)."
+        "title": "Claim tree & § 26(3) walker",
+        "description": "Interactive claim dependency tree backed by a 專利法 §26 第3項 walker covering both antecedent basis (先行詞) and written-description support (說明書支持) — cross-linked when the same term fails both — plus two-part-form checks (其特徵在於 / 其改良在於), single-sentence rule, and reference-recitation independent-claim handling (一種X，具備如請求項N所述的Y). A 4-tier CJK-aware matcher (symbol-table / normalized / raw / character-window) keeps false positives low."
       },
       "specAbstract": {
         "title": "Specification & abstract checks",
@@ -462,6 +462,7 @@
       "multiDepAlternative": "Multi-dep alternative form",
       "titleSubjectMatch": "Title matches independent claim subjects",
       "antecedentBasis": "Antecedent basis (先行詞) — ancestor-chain walker",
+      "specSupport": "Specification support for claim terms (專利法 §26 第3項)",
       "charCount": "Abstract character count (≤250)",
       "titleMatch": "Title in abstract",
       "commercialLanguage": "Commercial language",
