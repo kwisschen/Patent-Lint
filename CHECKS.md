@@ -152,6 +152,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Title vs claims subject | 專利審查基準 | VERIFY / PASS | `check.tw.claims.titleSubjectMatch` | 發明名稱/新型名稱 consistent with independent claim subjects |
 | Claims vs 符號說明 consistency | 專利法施行細則 §19 | VERIFY / PASS | `check.tw.claims.symbolTableConsistency` | Numerals in claims undefined in 符號說明 (reverse direction not flagged; zero-numeral claims early-return PASS) |
 | Antecedent basis (先行詞) | 專利審查基準 | VERIFY / PASS | `check.tw.claims.antecedentBasis` | BFS ancestor-chain walker with cycle protection; char-bigram Jaccard tokenization (threshold 0.40) with CJK ordinal guard pre-filter; did-you-mean suggestion layer on borderline misses; known limitations: semantic-disjunction intro regex, bigram Jaccard precision ceiling, multi-hop chain-walking gaps (Phase 9) |
+| Specification support (說明書支持) | 專利法 §26 第3項 | VERIFY / PASS | `check.tw.claims.specSupport` | 4-tier match (symbol-table whitelist + representative-drawing symbols → aggressively-normalized exact → raw exact → ±30-char CJK bigram window) for every claim intro against technical_field + prior_art + disclosure + embodiment. Inventory-level hygiene: TIPO §19 trailing parenthetical reference numerals stripped, leading preposition strip (於/到/在/自/由), mid-phrase reference-prefix recovery, conjunction split (X及Y → X, Y), length cap 12, leading-verb + interior clause-marker reject (ADR-138) |
 | Component connection relationships | 專利審查基準 §2.4 | VERIFY / PASS | `check.tw.claims.connectionRelationships` | Independent apparatus/system claims must describe how their listed components are arranged (carve-outs: method, CRM, MPF, composition) |
 
 ## TW Abstract (摘要)
@@ -179,7 +180,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 ---
 
-**Total checks: 94** (33 US + 26 CN + 35 TW)
+**Total checks: 95** (33 US + 26 CN + 36 TW)
 
 † Internal: not rendered as a CheckItem card in the web UI or PDF report. Used for stats aggregation and CLI output only.
 
