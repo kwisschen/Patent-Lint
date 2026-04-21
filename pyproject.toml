@@ -7,7 +7,7 @@ name = "patentlint"
 version = "1.0.0"
 description = "Rule-based patent specification analyzer for USPTO/MPEP compliance"
 readme = "README.md"
-license = "PolyForm-Noncommercial-1.0.0"
+license = "LicenseRef-PolyForm-Strict-1.0.0"
 requires-python = ">=3.11"
 authors = [
     { name = "Christopher Chen" },
