@@ -180,7 +180,7 @@
     "title": "明細書サポートの確認",
     "items": "個の用語",
     "item": "個の用語",
-    "crossRefAntecedent": "上記の先行詞解析でも指摘されています。"
+    "crossRefAntecedent": "上記の先行詞の根拠の確認でも指摘されています。"
   },
   "triage": {
     "title": "優先事項の要約",
