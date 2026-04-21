@@ -141,14 +141,14 @@
     "report": "回報錯誤",
     "reportProblem": "回報此項分析結果的問題",
     "picker": {
-      "title": "請選擇傳送方式",
+      "title": "您的稿件不會離開您的裝置",
       "send": {
-        "description": "您的郵件已備妥，剪貼簿中也有相同內容備用。您的稿件不會離開您的裝置。",
+        "description": "郵件已備妥，剪貼簿中也有相同內容備用。請選擇傳送方式：",
         "mailto": "以 Outlook 或行動裝置傳送",
         "gmail": "以 Gmail 傳送"
       },
       "report": {
-        "description": "您的錯誤回報已備妥，剪貼簿中也有相同內容備用。您的稿件不會離開您的裝置。",
+        "description": "錯誤回報已備妥，剪貼簿中也有相同內容備用。請選擇回報方式：",
         "mailto": "以 Outlook 或行動裝置回報",
         "gmail": "以 Gmail 回報"
       },
