@@ -131,6 +131,8 @@
     "builtBy": "© 2025 Christopher Chen",
     "security": "Security",
     "about": "About",
+    "terms": "Terms",
+    "privacy": "Privacy",
     "github": "GitHub",
     "linkedin": "LinkedIn",
     "feedback": "Feedback"
@@ -1179,5 +1181,176 @@
     "listSeparator": ", ",
     "sentenceSeparator": "; ",
     "ellipsis": ", ..."
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last updated: April 21, 2026",
+    "intro": "These Terms govern your use of the patentlint.com website (the \"Site\") and the PatentLint software (the \"Software\"). By using the Site, you agree to these Terms.",
+    "s1": {
+      "title": "The Site vs. the Software",
+      "p1": "PatentLint has two forms:",
+      "siteLabel": "The Site (patentlint.com).",
+      "siteDesc": "A hosted web application provided as a free evaluation service. When you upload a patent draft, analysis runs entirely in your browser via WebAssembly — your draft never leaves your device. The Site is operated by Christopher Chen.",
+      "softwareLabel": "The Software.",
+      "softwareDesc": "The underlying source code, published in a private repository. The Software is licensed under PolyForm-Strict-1.0.0 (see § 4).",
+      "p2": "These Terms cover your use of both. Different rules apply depending on which you are using."
+    },
+    "s2": {
+      "title": "Using the Site",
+      "p1": "The Site is free to use for individual evaluation. You may:",
+      "may1": "Upload patent drafts for analysis across US, CN, or TW jurisdiction rule sets.",
+      "may2": "Export analysis reports for your own reference.",
+      "may3": "Use the analysis output to inform your own drafting decisions.",
+      "p2": "You may not:",
+      "maynot1": "Scrape, spider, or automate bulk access to the Site.",
+      "maynot2": "Attempt to download, reverse-engineer, or redistribute the WebAssembly payload.",
+      "maynot3": "Circumvent any rate limits or access controls.",
+      "maynot4": "Use the Site to violate applicable patent, copyright, trade secret, or export-control law."
+    },
+    "s3": {
+      "title": "Your patent drafts remain yours",
+      "p1": "Analysis runs entirely client-side in your browser via WebAssembly (Pyodide). We do not see, store, or transmit the content of your patent drafts. Drafts never leave your device.",
+      "p2": "If you believe draft content has been transmitted in error, contact us immediately.",
+      "privacyLink": "See the <1>Privacy Policy</1> for the full data-handling disclosure."
+    },
+    "s4": {
+      "title": "The Software license — PolyForm-Strict-1.0.0",
+      "p1": "The Software is source-available under PolyForm-Strict-1.0.0. The full license text is at <1>polyformproject.org/licenses/strict/1.0.0</1> and in the LICENSE file of the Software repository.",
+      "permittedHeading": "Permitted uses of the Software:",
+      "permitted1": "Reading and studying the source code.",
+      "permitted2": "Evaluating the Software to decide whether to license it (\"acceptance testing\").",
+      "permitted3": "Personal use (for yourself, not as part of a commercial activity).",
+      "permitted4": "Use by charitable, educational, public-research, public-safety, or government organizations (per the license's \"Noncommercial Organizations\" clause).",
+      "requiresHeading": "Uses requiring a separate commercial license:",
+      "requires1": "Deploying the Software internally at a firm, company, or organization, including for your own use on behalf of clients.",
+      "requires2": "Offering the Software as a hosted service to third parties.",
+      "requires3": "Redistributing modified or unmodified versions of the Software.",
+      "requires4": "Including the Software (or parts of it) in another product you distribute.",
+      "contact": "Contact <1>kwisschen@gmail.com</1> to discuss commercial licensing terms. Pricing and terms are negotiated case-by-case based on deployment model, scope, and organization size."
+    },
+    "s5": {
+      "title": "Using the Site does not grant Software rights",
+      "p1": "Your use of the Site under these Terms does not grant you any rights to the Software source code beyond what the PolyForm-Strict-1.0.0 license permits. The Site is a hosted service; the Software is a separate thing licensed under its own terms."
+    },
+    "s6": {
+      "title": "No legal advice",
+      "p1": "PatentLint is an automated drafting aid. Its output is preliminary and not a substitute for review by a qualified patent professional. Nothing the Site produces constitutes legal advice. Do not rely solely on PatentLint output for patent prosecution, filing, or enforcement decisions.",
+      "p2": "Check categories include antecedent-basis analysis, specification-support analysis (TW under 專利法 §26 第3項; US under § 112(a)), section ordering, claim punctuation, and other rule-based verifications — these flag candidates for your review, not legal determinations."
+    },
+    "s7": {
+      "title": "Warranty disclaimer",
+      "p1": "The Site and the Software are provided \"AS IS\" without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, or non-infringement. You use them at your own risk."
+    },
+    "s8": {
+      "title": "Limitation of liability",
+      "p1": "To the maximum extent permitted by law, Christopher Chen shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of your use of the Site or the Software, including but not limited to loss of profits, data, or business opportunities."
+    },
+    "s9": {
+      "title": "Governing law",
+      "p1": "These Terms are governed by the laws of the jurisdiction where Christopher Chen resides, without regard to conflict-of-law principles. Disputes shall be resolved in the courts of that jurisdiction."
+    },
+    "s10": {
+      "title": "Changes to these Terms",
+      "p1": "These Terms may be updated from time to time. Material changes will be announced via a banner on the Site for at least 14 days before taking effect. Continued use of the Site after the effective date constitutes acceptance."
+    },
+    "s11": {
+      "title": "Contact",
+      "p1": "For questions about these Terms, commercial licensing inquiries, or any other matter:",
+      "nameLabel": "Name:",
+      "name": "Christopher Chen",
+      "emailLabel": "Email:",
+      "githubLabel": "GitHub:"
+    },
+    "copyright": "Copyright © 2024–2026 Christopher Chen. All rights reserved.",
+    "crossLinks": "See also: <1>Privacy Policy</1> · <3>Security</3>"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: April 21, 2026",
+    "intro": "This Privacy Policy describes how patentlint.com (the \"Site\") handles data when you visit. PatentLint is architected to collect almost nothing about you. This policy formalizes that posture as statutory disclosure.",
+    "s1": {
+      "title": "Introduction",
+      "p1": "patentlint.com is a hosted web application operated by Christopher Chen. It runs PatentLint, a patent drafting checker that analyzes your file entirely in your browser using WebAssembly (Pyodide). No file content reaches our servers.",
+      "p2": "This Privacy Policy applies to your interactions with the Site. It does not cover the PatentLint Software when you obtain the source code separately — that's covered by the Software license (PolyForm-Strict-1.0.0)."
+    },
+    "s2": {
+      "title": "Your patent drafts",
+      "p1": "Patent drafts you upload to the Site are processed entirely in your browser. Analysis runs on a Pyodide / WebAssembly engine loaded into your tab — there is no server-side analysis path on patentlint.com.",
+      "p2": "Specifically, we never:",
+      "never1": "Receive or transmit the content of your patent drafts.",
+      "never2": "Store filenames, claim text, specification body, or any patent-specific data.",
+      "never3": "Send draft content to any third party (including AI providers, OCR services, or document processors).",
+      "verify": "You can verify this in airplane mode — see the <1>Security</1> page for the live demonstration."
+    },
+    "s3": {
+      "title": "Cloudflare-edge hosting metadata",
+      "p1": "The Site is hosted on Cloudflare Pages (a static-asset CDN). When your browser fetches the Site, Cloudflare's edge network may log standard web request metadata as part of normal hosting operations:",
+      "log1": "Your IP address (used by Cloudflare for routing and DDoS protection).",
+      "log2": "Your browser's user-agent string.",
+      "log3": "The URL path you requested and the HTTP response status.",
+      "log4": "A timestamp.",
+      "p2": "This is the same metadata any web host receives — we do not augment it, enrich it, link it to identity, or use it for any analytics. Cloudflare retains its edge logs per its own published retention policy.",
+      "p3": "Under GDPR Art. 4(7) we are technically a data controller for this Cloudflare-edge processing. We don't access these logs in the ordinary course of operating the Site; we'd only consult them if investigating a security incident."
+    },
+    "s4": {
+      "title": "No analytics or tracking",
+      "p1": "The Site contains no analytics scripts, tracking pixels, fingerprinting code, or third-party advertising integrations. Specifically:",
+      "no1": "No Google Analytics, Plausible, Umami, or equivalent.",
+      "no2": "No Meta Pixel, LinkedIn Insight, or other advertising trackers.",
+      "no3": "No session replay, heatmap, or behavioral analytics.",
+      "no4": "No browser fingerprinting.",
+      "p2": "If you enable a network monitor in your browser's developer tools, you'll see the Site issues no analytics requests during use. This is verifiable in airplane mode after the initial page load."
+    },
+    "s5": {
+      "title": "Cookies and local storage",
+      "p1": "We do not set cookies. The Site is fully usable with cookies disabled.",
+      "p2": "Your browser may use localStorage to remember small preferences (selected language, theme choice, dismissal state for in-app banners). This data stays on your device and is never transmitted. Clearing your browser storage clears these preferences."
+    },
+    "s6": {
+      "title": "Voluntary feedback",
+      "p1": "When you click a feedback link, your browser opens your own email client (or a webmail compose window) addressed to kwisschen@gmail.com. We do not host a form. We receive whatever you choose to write and send.",
+      "p2": "We use feedback to fix bugs and respond to you. We do not share feedback with third parties or use it for any purpose other than improving PatentLint and replying to your message."
+    },
+    "s7": {
+      "title": "Third-party services",
+      "p1": "PatentLint relies on the following third-party services to operate. Each is listed for transparency:",
+      "cloudflareLabel": "Cloudflare Pages.",
+      "cloudflare": "Hosts the static Site assets and the Pyodide wheel. Receives the standard web request metadata described in § 3.",
+      "pyodideLabel": "Pyodide CDN.",
+      "pyodide": "On first visit, your browser fetches the Pyodide WebAssembly runtime from the Pyodide CDN (jsdelivr / cloudflare). After that, the runtime is cached locally and works offline.",
+      "fontsLabel": "Google Fonts (CJK font, optional).",
+      "fonts": "If you export a localized PDF in zh-TW / zh-CN / ja / ko, your browser fetches the corresponding Noto Sans CJK font from Google Fonts at PDF-export time. The font is cached after first fetch. English-locale PDFs do not fetch any font.",
+      "p2": "We do not use any other third-party services. No CRM, no email-marketing platform, no support ticketing system, no third-party logging."
+    },
+    "s8": {
+      "title": "Your rights",
+      "p1": "Under GDPR, CCPA, and similar privacy regimes, you have rights regarding your personal data. To the extent these rights apply to data we process:",
+      "accessLabel": "Right of access.",
+      "access": "You may ask what personal data we hold about you. (Almost certainly: nothing — see § 2 and § 4.)",
+      "deletionLabel": "Right of deletion.",
+      "deletion": "You may ask us to delete personal data we hold about you. (Same caveat — there is almost nothing to delete.)",
+      "portabilityLabel": "Right of data portability.",
+      "portability": "You may ask for a copy of personal data we hold about you in a portable format.",
+      "objectLabel": "Right to object / withdraw consent.",
+      "object": "You may object to our processing or withdraw any consent you previously gave.",
+      "exercise": "Exercise these rights by emailing <1>kwisschen@gmail.com</1>. We respond within 30 days. Note: because we collect almost nothing about you, most requests will simply confirm we have nothing to access, delete, or export."
+    },
+    "s9": {
+      "title": "Children",
+      "p1": "patentlint.com is intended for patent practitioners and is not directed at children under 16. We do not knowingly collect personal data from children. If you believe a child has interacted with the Site in a way that involved personal data collection, please contact us so we can investigate."
+    },
+    "s10": {
+      "title": "Changes to this Policy",
+      "p1": "We may update this Privacy Policy from time to time. Material changes will be announced via a banner on the Site for at least 14 days before taking effect. The \"Last updated\" date at the top of this page reflects the current version."
+    },
+    "s11": {
+      "title": "Contact",
+      "p1": "For questions about this Privacy Policy or to exercise the rights described in § 8:",
+      "nameLabel": "Name:",
+      "name": "Christopher Chen",
+      "emailLabel": "Email:"
+    },
+    "copyright": "Copyright © 2024–2026 Christopher Chen. All rights reserved.",
+    "crossLinks": "See also: <1>Terms of Service</1> · <3>Security</3>"
   }
 }
