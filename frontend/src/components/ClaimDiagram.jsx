@@ -73,10 +73,15 @@ function buildMermaidSyntax(claimTrees, t) {
 const SVG_NS = 'http://www.w3.org/2000/svg'
 
 // Keep total reveal duration bounded so 100-claim patents don't take 5+s to draw.
+// Edge draw is intentionally longer than node fade: the line-extension motion
+// is the hero of this reveal and needs to be perceptible when users first
+// land on the results page.
 const NODE_STAGGER_MS = 45
 const NODE_STAGGER_CAP_MS = 600
-const EDGE_STAGGER_MS = 40
-const EDGE_STAGGER_CAP_MS = 700
+const EDGE_STAGGER_MS = 75
+const EDGE_STAGGER_CAP_MS = 1200
+const EDGE_DRAW_DURATION_MS = 1300
+const EDGE_DRAW_DELAY_BASE_MS = 220
 
 // Appends gradient + shadow defs, restyles nodes/edges, adds draw-in animation.
 // Defs IDs are scoped by `suffix` so multiple diagrams on a page don't collide
@@ -152,8 +157,8 @@ function enhanceSvg(svgEl, suffix) {
         path.style.strokeDashoffset = '0'
       } else {
         path.style.strokeDashoffset = String(length)
-        const delay = Math.min(120 + i * EDGE_STAGGER_MS, EDGE_STAGGER_CAP_MS)
-        path.style.animation = `pl-diagram-draw 520ms cubic-bezier(0.25, 0.1, 0.25, 1) ${delay}ms forwards`
+        const delay = Math.min(EDGE_DRAW_DELAY_BASE_MS + i * EDGE_STAGGER_MS, EDGE_STAGGER_CAP_MS)
+        path.style.animation = `pl-diagram-draw ${EDGE_DRAW_DURATION_MS}ms cubic-bezier(0.22, 0.61, 0.36, 1) ${delay}ms forwards`
       }
     } catch {
       // Unusual path shapes can throw on getTotalLength — skip animation for those.
