@@ -364,6 +364,13 @@ def _run_tw_pipeline(
     # char-window). Walker-tuning flags intentionally NOT forwarded —
     # spec-support normalization is a separate semantic axis.
     tw_unsupported_terms = tw_spec_support_analysis.check_spec_support_tw(tw_doc)
+    # ADR-138 supersedes ADR-091's "TW cross_ref expected to remain null"
+    # — populate cross_ref on overlapping (claim_id, term) pairs so the
+    # Section112 frontend cards render sibling-check hint lines.
+    tw_spec_support_analysis.attach_cross_references_tw(
+        tw_antecedent_basis,
+        tw_unsupported_terms,
+    )
     if tw_unsupported_terms:
         issue_count = len(tw_unsupported_terms)
         claim_ids = sorted({ut.claim_number for ut in tw_unsupported_terms})
