@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025 Christopher Chen
 """TW symbol table parser — 符號說明 and 代表圖之符號簡單說明."""
 

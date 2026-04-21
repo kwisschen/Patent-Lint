@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-PatentLint is distributed under [PolyForm Noncommercial 1.0.0](LICENSE).
+PatentLint is distributed under [PolyForm-Strict-1.0.0](LICENSE).
 This file lists third-party software that PatentLint depends on at
 runtime, along with their respective licenses. Each listed dependency is
 used under the terms of its own license; inclusion in this list does not
@@ -29,8 +29,7 @@ document processing stays in the browser.
 ### Docker/CLI tier (optional extras)
 
 These packages are shipped only in the Docker and CLI distributions
-(`pip install patentlint[api]` or the `LICENSE-COMMERCIAL`-governed
-enterprise Docker image). They are not part of the browser tier.
+(`pip install patentlint[api]`). They are not part of the browser tier.
 
 | Package | Version constraint | License | Purpose |
 |---|---|---|---|
@@ -252,8 +251,8 @@ via `cd frontend && npx license-checker --production`.
 All runtime dependencies listed above are licensed under permissive
 terms (MIT, BSD-*, Apache-2.0, ISC, 0BSD, Unlicense, OFL-1.1, or
 BlueOak-1.0.0). No runtime dependency is licensed under GPL, AGPL, SSPL,
-or any other strong copyleft license. PatentLint's PolyForm Noncommercial
-1.0.0 license is downstream-compatible with all listed dependencies.
+or any other strong copyleft license. PatentLint's PolyForm-Strict-1.0.0
+license is downstream-compatible with all listed dependencies.
 
 DOMPurify is dual-licensed under MPL-2.0 and Apache-2.0; PatentLint
 elects to use it under the Apache-2.0 terms of that dual offer.
@@ -269,5 +268,5 @@ node_modules/<package>/LICENSE` (frontend).
 
 ---
 
-Generated: 2026-04-15
-PatentLint is © 2025 Christopher Chen. All rights reserved.
+Generated: 2026-04-21
+PatentLint is © 2024-2026 Christopher Chen. All rights reserved.
