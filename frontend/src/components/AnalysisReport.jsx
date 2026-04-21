@@ -221,11 +221,16 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
       <div style={cascadeDelay(2)}>
         <SummaryBar data={consolidatedData} animate={mounted} />
       </div>
-      <div style={cascadeDelay(3)}>
+      {jConfig.showClaimTree && data.claim_trees?.length > 0 && (
+        <div style={cascadeDelay(3)}>
+          <ClaimDiagram claimTrees={data.claim_trees} />
+        </div>
+      )}
+      <div style={cascadeDelay(4)}>
         <TriagePanel data={consolidatedData} />
       </div>
 
-      <div className="space-y-3" style={cascadeDelay(4)}>
+      <div className="space-y-3" style={cascadeDelay(5)}>
         <SectionPanel
           title={t(jConfig.specSectionKey)}
           checks={consolidatedData.specification_checks}
@@ -256,7 +261,6 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
               />
 
               <ClaimTree claimTrees={data.claim_trees} />
-              <ClaimDiagram claimTrees={data.claim_trees} />
             </>
           )}
         </SectionPanel>
