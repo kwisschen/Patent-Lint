@@ -72,13 +72,66 @@ def _all_spec_text(cn_doc: CnPatentDocument) -> str:
 
 
 def check_required_sections(cn_doc: CnPatentDocument) -> list[CheckItem]:
-    """Check that the four mandatory spec sections are non-empty."""
+    """Check that mandatory top-level CNIPA filing sections are non-empty.
+
+    Covers the three top-level components a CNIPA application requires per
+    专利法 §26 第1款 (说明书 / 摘要 / 权利要求书) plus the 说明书
+    subsections enumerated in 专利法实施细则 §17. When the drafter removes
+    a 五书 header, the corresponding field extracts empty (or in some
+    cases is silently recovered by a parser fallback tier — see below).
+
+    **Strict header detection.** ``cn_doc.section_source_strategies``
+    records which parser tier resolved each top-level part:
+
+    * ``"body_anchor"`` / ``"page_header"`` — a real 五书 heading
+      (``权利要求书`` / ``说明书摘要`` / ``说明书`` / page-header
+      equivalent) was parsed in the document.
+    * ``"claim_density"`` — claims were RECOVERED from a contiguous run
+      of ``N. ...`` claim-start paragraphs because no ``权利要求书``
+      anchor was found. This is parser robustness for malformed
+      publications, but for a draft check it MUST be flagged: the
+      drafter omitted the required heading.
+    * ``"none"`` — no source resolved that part.
+
+    For 摘要 we additionally accept the publication-format INID
+    fallback (``(57)摘要`` cover page) by checking ``abstract_text``
+    when strategies are silent — a downloaded publication is a valid
+    input, and flagging the (57)摘要-only path would be a false
+    positive against the publication-checking workflow.
+    """
+    missing: list[str] = []
+    strategies = cn_doc.section_source_strategies or {}
+    valid_anchor = {"body_anchor", "page_header"}
+
+    # Top-level: 摘要 (required per 专利法 §26, format per §23). Content
+    # alone is the gate: when a body 说明书摘要 anchor is present, the
+    # parser populates ``abstract_text`` from the scoped paragraphs;
+    # when the body anchor is missing, the publication-format INID
+    # fallback ((57)摘要) may populate it. An empty ``abstract_text``
+    # means no source resolved abstract content at all → flag.
+    if not cn_doc.abstract_text or not cn_doc.abstract_text.strip():
+        missing.append("摘要")
+
+    # 说明书 subsections per 专利法实施细则 §17
     required = ["technical_field", "background", "summary", "detailed_description"]
-    missing = []
-    for field in required:
-        paragraphs = getattr(cn_doc, field)
+    for fname in required:
+        paragraphs = getattr(cn_doc, fname)
         if not any(p.strip() for p in paragraphs):
-            missing.append(_SECTION_NAMES_CN[field])
+            missing.append(_SECTION_NAMES_CN[fname])
+
+    # Conditional: 附图说明 required when drawings are referenced in the body
+    # (per 专利法实施细则 §17 第1款 第4项). ``figure_refs`` is populated by
+    # ``_extract_figure_refs`` from the 具体实施方式 + 附图说明 text, so any
+    # 图N reference in the body forces this requirement.
+    if cn_doc.figure_refs and not any(p.strip() for p in cn_doc.drawings_description):
+        missing.append(_SECTION_NAMES_CN["drawings_description"])
+
+    # Top-level: 权利要求书 (required per 专利法 §26, format per §22).
+    # Strict: require a real heading. claim_density recovery is parser
+    # robustness, not a substitute for the 权利要求书 anchor — flag.
+    claims_anchor = strategies.get("claims") in valid_anchor
+    if not claims_anchor or not cn_doc.claims:
+        missing.append("权利要求书")
 
     if missing:
         return [CheckItem(
@@ -88,13 +141,13 @@ def check_required_sections(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details=", ".join(missing),
             details_key="details.cn.requiredSections",
             details_params={"sections": ", ".join(missing)},
-            reference="专利法实施细则 §17",
+            reference="专利法 §26 第1款、专利法实施细则 §17",
         )]
     return [CheckItem(
         status="pass",
-        message="All required specification sections are present.",
+        message="All required sections are present.",
         message_key="check.cn.spec.requiredSections.pass",
-        reference="专利法实施细则 §17",
+        reference="专利法 §26 第1款、专利法实施细则 §17",
     )]
 
 
@@ -212,12 +265,21 @@ def check_paragraph_ending(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
     bad_paragraphs: list[int | str] = []
     ordinal = 0
+    # Continuation paragraphs (Word paragraphs that wrap inside a single
+    # logical [NNNN] unit) lack the typed [NNNN] prefix. Carry the most
+    # recently seen [NNNN] forward so flagged continuations report the
+    # number the drafter sees in Word, not an internal ordinal that
+    # shifts on subsection boundaries.
+    last_para_num: str | None = None
     for section_paras, relaxed in sections_to_check:
         for para in section_paras:
             stripped = para.strip()
             if not stripped:
                 continue
             ordinal += 1
+            m = _PARA_NUM_PREFIX_RE.match(stripped)
+            if m:
+                last_para_num = m.group(1)
             if _is_skip_paragraph_ending_cn(stripped):
                 continue
             endings = _RELAXED_VALID if relaxed else _VALID_ENDINGS
@@ -227,10 +289,10 @@ def check_paragraph_ending(cn_doc: CnPatentDocument) -> list[CheckItem]:
             # (mirror TW allowance for list-cap endings).
             if relaxed and (stripped.endswith("；以及") or stripped.endswith("；及")):
                 continue
-            label: int | str = ordinal
-            m = _PARA_NUM_PREFIX_RE.match(stripped)
-            if m:
-                label = f"[{m.group(1)}]"
+            if last_para_num is not None:
+                label: int | str = f"[{last_para_num}]"
+            else:
+                label = ordinal
             bad_paragraphs.append(label)
 
     if bad_paragraphs:

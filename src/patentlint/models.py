@@ -198,6 +198,16 @@ class TwPatentDocument(BaseModel):
     # ``extract_tw_sections``; consumed by ``check_bracket_format`` to surface
     # 專利法施行細則 §17 violations.
     bracketless_section_headers: list[str] = Field(default_factory=list)
+    # True when an abstract heading (【摘要】 / 【發明摘要】 / 【新型摘要】)
+    # was parsed. False when the drafter omitted the heading but the
+    # parser still populated ``abstract_text`` via the 【中文】 text marker
+    # or another fallback. Consumed by ``check_required_sections`` to
+    # distinguish "摘要 content present because heading was there" from
+    # "摘要 content recovered via fallback — 專利法 §25 第1項 violation".
+    abstract_header_seen: bool = False
+    # True when a claims heading (【申請專利範圍】 / 【發明申請專利範圍】 /
+    # 【新型申請專利範圍】) was parsed. See ``abstract_header_seen``.
+    claims_header_seen: bool = False
     input_format: str = "docx"
 
 

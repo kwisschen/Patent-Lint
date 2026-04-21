@@ -12,7 +12,7 @@ from patentlint.analysis.cn_specification import (
     check_spec_claim_reference,
     check_title,
 )
-from patentlint.models import CnPatentDocument
+from patentlint.models import Claim, CnPatentDocument
 
 
 def _make_cn_doc(**overrides) -> CnPatentDocument:
@@ -24,6 +24,18 @@ def _make_cn_doc(**overrides) -> CnPatentDocument:
         "summary": ["本发明提供一种数据处理装置，解决了上述问题。"],
         "drawings_description": ["图1为本发明实施例的结构示意图。"],
         "detailed_description": ["如图1所示，数据处理装置包括处理模块。"],
+        "claims": [
+            Claim(id=1, text="一种数据处理装置，包括处理模块。", independent=True),
+        ],
+        "abstract_text": "本发明提供一种数据处理装置。",
+        "abstract_char_count": 12,
+        # Default strategies: real anchors found for all three top-level
+        # parts. Tests that simulate heading-removal override these.
+        "section_source_strategies": {
+            "claims": "body_anchor",
+            "specification": "body_anchor",
+            "abstract": "body_anchor",
+        },
         "section_order": [
             "technical_field",
             "background",
@@ -60,6 +72,75 @@ class TestRequiredSections:
         results = check_required_sections(doc)
         assert results[0].status == "amend"
         assert "背景技术" in results[0].details_params["sections"]
+
+    def test_missing_abstract(self):
+        doc = _make_cn_doc(abstract_text="")
+        results = check_required_sections(doc)
+        assert results[0].status == "amend"
+        assert "摘要" in results[0].details_params["sections"]
+
+    def test_missing_abstract_whitespace_only(self):
+        doc = _make_cn_doc(abstract_text="   \n  ")
+        results = check_required_sections(doc)
+        assert results[0].status == "amend"
+        assert "摘要" in results[0].details_params["sections"]
+
+    def test_missing_claims(self):
+        doc = _make_cn_doc(claims=[])
+        results = check_required_sections(doc)
+        assert results[0].status == "amend"
+        assert "权利要求书" in results[0].details_params["sections"]
+
+    def test_reference_field(self):
+        doc = _make_cn_doc(abstract_text="", section_source_strategies={"claims": "body_anchor", "specification": "body_anchor", "abstract": "none"})
+        results = check_required_sections(doc)
+        assert results[0].reference == "专利法 §26 第1款、专利法实施细则 §17"
+
+    def test_claims_recovered_via_density_flags_missing_heading(self):
+        """When the 权利要求书 anchor is missing and claims were
+        recovered from a density-tier fallback, the heading-missing
+        defect must surface even though doc.claims is non-empty."""
+        doc = _make_cn_doc(section_source_strategies={
+            "claims": "claim_density",
+            "specification": "body_anchor",
+            "abstract": "body_anchor",
+        })
+        results = check_required_sections(doc)
+        assert results[0].status == "amend"
+        assert "权利要求书" in results[0].details_params["sections"]
+
+    def test_claims_strategy_none_flags_missing_heading(self):
+        doc = _make_cn_doc(claims=[], section_source_strategies={
+            "claims": "none",
+            "specification": "body_anchor",
+            "abstract": "body_anchor",
+        })
+        results = check_required_sections(doc)
+        assert results[0].status == "amend"
+        assert "权利要求书" in results[0].details_params["sections"]
+
+    def test_abstract_via_inid_fallback_passes(self):
+        """INID cover-page extraction populates abstract_text but leaves
+        strategies["abstract"]="none". Treat as valid (publication
+        format) — flagging would false-positive on legitimate uploads."""
+        doc = _make_cn_doc(section_source_strategies={
+            "claims": "body_anchor",
+            "specification": "body_anchor",
+            "abstract": "none",
+        }, abstract_text="本发明提供一种装置。")
+        results = check_required_sections(doc)
+        assert results[0].status == "pass"
+
+    def test_drawings_description_required_when_figures_referenced(self):
+        doc = _make_cn_doc(drawings_description=[], figure_refs=["1", "2"])
+        results = check_required_sections(doc)
+        assert results[0].status == "amend"
+        assert "附图说明" in results[0].details_params["sections"]
+
+    def test_drawings_description_optional_when_no_figures(self):
+        doc = _make_cn_doc(drawings_description=[], figure_refs=[])
+        results = check_required_sections(doc)
+        assert results[0].status == "pass"
 
 
 # ── Check 2: Section ordering ────────────────────────────────────────────
@@ -227,6 +308,23 @@ class TestParagraphEnding:
         )
         results = check_paragraph_ending(doc)
         assert results[0].details_params["paragraphs"] == [2]
+
+    def test_continuation_paragraph_inherits_parent_bracket_number(self):
+        """A non-empty paragraph following a [NNNN]-prefixed paragraph
+        but lacking its own [NNNN] is a Word-line continuation of the
+        parent. Inherit the parent's [NNNN] so the flagged label
+        matches the number the drafter sees in Word."""
+        doc = _make_cn_doc(
+            technical_field=[],
+            background=[
+                "[0003]  正确的。",
+                "也没有标点",  # continuation of [0003]
+            ],
+        )
+        results = check_paragraph_ending(doc)
+        assert results[0].status == "amend"
+        # The flagged continuation reports as [0003], not as ordinal 2.
+        assert results[0].details_params["paragraphs"] == ["[0003]"]
 
     def test_strict_rejects_colon(self):
         # 技术领域 is strict — colon not accepted even though relaxed
