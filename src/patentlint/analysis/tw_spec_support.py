@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025 Christopher Chen
 """TW specification-support analysis (說明書支持分析).
 

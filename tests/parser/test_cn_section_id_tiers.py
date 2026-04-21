@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025 Christopher Chen
 """Tier-fire tests for the CN section-ID fallback chain.
 

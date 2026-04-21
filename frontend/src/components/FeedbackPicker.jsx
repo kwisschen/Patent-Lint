@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+// SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 // Copyright (c) 2025 Christopher Chen
 //
 // Email picker modal + provider + hook. One shared modal lives at the

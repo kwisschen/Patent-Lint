@@ -2,11 +2,11 @@
 
 [![CI](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml/badge.svg)](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml)
 [![Live Demo](https://img.shields.io/badge/demo-patentlint.com-blue)](https://patentlint.com)
-[![Tests](https://img.shields.io/badge/tests-542-brightgreen)](#)
+[![Tests](https://img.shields.io/badge/tests-1808-brightgreen)](#)
 
 **No account. No install. No upload.**
 
-PatentLint checks U.S. and Chinese patent application drafts against USPTO and CNIPA drafting rules — entirely in your browser. Your file never leaves your device.
+PatentLint checks U.S., Chinese, and Taiwanese patent application drafts against USPTO, CNIPA, and TIPO drafting rules — entirely in your browser. Your file never leaves your device.
 
 **[Try it →](https://patentlint.com)**
 
@@ -22,8 +22,8 @@ PatentLint checks U.S. and Chinese patent application drafts against USPTO and C
 
 ## How It Works
 
-1. **Drop** a patent draft into the browser (.docx for US, .docx/.xml/.zip for CN)
-2. **Analyze** — 57 checks run instantly via WebAssembly (no server, no upload)
+1. **Drop** a patent draft into the browser (.docx for US/TW, .docx/.xml/.zip for CN)
+2. **Analyze** — 95 checks run instantly via WebAssembly (no server, no upload)
 3. **Report** — download a PDF or copy a summary to clipboard
 
 ---
@@ -38,7 +38,7 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 
 ## What It Checks
 
-57 automated checks across two jurisdictions, each classified as **PASS**, **VERIFY**, or **AMEND**.
+95 automated checks across three jurisdictions, each classified as **PASS**, **VERIFY**, or **AMEND**.
 
 ### U.S. Patent Applications (33 checks)
 
@@ -49,16 +49,25 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 | **Claims** | Numbering, dependencies, periods, punctuation, indefinite terms, transitional phrases, means-plus-function (§ 112(f)), antecedent basis (§ 112(b)), preamble consistency (§ 112(d)), specification support (§ 112(a)), claim similarity, special formats (Jepson / CRM / Markush / omnibus) | 35 U.S.C. § 101, § 112; MPEP § 2117–2173 |
 | **Abstract** | Word count (50–150), single paragraph, legal phraseology, implied phrases, self-praising language | MPEP § 608.01(b) |
 
-### Chinese Patent Applications (24 checks)
+### Chinese Patent Applications (26 checks)
 
 | Section | Checks | Reference |
 |---------|--------|-----------|
 | **Specification** | Required sections, section ordering, paragraph numbering/ending, figure reference consistency, patent type terminology, title, claim references in spec | 专利法实施细则 §17, 审查指南 |
-| **Claims** | Sequential numbering, dependency format, self/forward dependencies, single sentence, reference numeral parentheses, subject consistency, transition phrases, Taiwan terminology, spec/drawing references, chained multi-dependencies, dependent ordering | 专利法实施细则 §22, 审查指南 |
+| **Claims** | Sequential numbering, dependency format, self/forward dependencies, single sentence, reference numeral parentheses, subject consistency, transition phrases, Taiwan terminology, spec/drawing references, chained multi-dependencies, dependent ordering, connection relationships, antecedent basis (BFS walker) | 专利法实施细则 §22, 审查指南 |
 | **Abstract** | Character count (≤300), title match, commercial language | 专利法实施细则 §23 |
-| **Drawings** | Figure count | 审查指南 |
+| **Drawings** | Figures sequential, figure count | 审查指南 |
 
-Supported input: .docx for US; .docx, CNIPA filing XML (.xml), and .zip archives for CN.
+### Taiwanese Patent Applications (36 checks)
+
+| Section | Checks | Reference |
+|---------|--------|-----------|
+| **Specification** | Required sections, section ordering, paragraph numbering (【NNNN】 format), paragraph ending, figure reference consistency, patent type terminology (本發明 vs 本新型), title, spec-claim references, 符號說明 presence + consistency, bracket format (【】) | 專利法施行細則 §17, 專利審查基準 |
+| **Claims** | Sequential, dependency format (§18), self / forward / circular dependency, single sentence (§18), reference numeral parens (§19), subject consistency, transition phrase (其特徵在於), CN-term contamination guard, spec/drawing refs, multi-dep on multi-dep, multi-dep alternative form, title-subject match, 符號說明 consistency, **antecedent basis (先行詞) — ancestor-chain walker**, **specification support (說明書支持) — §26 第3項**, connection relationships, 代表圖 vs 符號說明 consistency | 專利法 §26 第3項, 專利法施行細則 §17–§21, 專利審查基準 |
+| **Abstract** | Character count (≤250), title match, commercial language, representative drawing (代表圖) designation | 專利法施行細則 §21 |
+| **Drawings** | Figures sequential, figure count | 專利法施行細則 §17 |
+
+Supported input: `.docx` for US and TW; `.docx`, CNIPA filing XML (`.xml`), and `.zip` archives for CN.
 
 Full inventory: [CHECKS.md](CHECKS.md)
 
@@ -109,20 +118,21 @@ src/patentlint/
 ├── models.py        # Pydantic models (Claim, AnalysisResult, ReportData)
 ├── pipeline.py      # Analysis pipeline (zero web-framework deps)
 ├── cli.py           # Click CLI (analyze, batch)
+├── i18n.py          # Locale bundle loader + i18next-style translator
 ├── parser/          # Section extraction, claim parsing, .docx/.xml/.zip loading
-├── analysis/        # Rule checks (US + CN) — all pure functions, independently testable
-├── report/          # PDF report generation (Jinja2 + weasyprint)
+├── analysis/        # Rule checks (US + CN + TW) — all pure functions, independently testable
+├── report/          # PDF report generation (Jinja2 + weasyprint; locale-aware)
 └── api/             # FastAPI REST endpoints
 
 frontend/
-├── src/components/  # DropZone, ClaimTree, TriagePanel, HealthDonut, …
-├── src/lib/         # pdfExport.js (client-side PDF via pdfmake)
+├── src/components/  # DropZone, ClaimTree, TriagePanel, Section112Container, …
+├── src/lib/         # pdfExport.js (client-side PDF via pdfmake), detailsFormatter.js
 ├── src/pages/       # SecurityPage, AboutPage
 ├── src/hooks/       # usePyodide, useNetworkMonitor
-└── src/i18n/        # Locale files (en, zh-TW, zh-CN, ja, ko)
+└── src/i18n/        # Locale files (en, zh-TW, zh-CN, ja, ko) — shared with Python
 ```
 
-The `parser/` and `analysis/` packages have **zero framework dependencies** — they run identically in Pyodide (browser), FastAPI (Docker), and Click (CLI). The same engine handles both US and CN jurisdictions; `pipeline.py` routes to the appropriate parser and check modules.
+The `parser/` and `analysis/` packages have **zero framework dependencies** — they run identically in Pyodide (browser), FastAPI (Docker), and Click (CLI). The same engine handles US, CN, and TW jurisdictions; `pipeline.py` routes to the appropriate parser and check modules.
 
 ---
 
@@ -139,7 +149,7 @@ Visit **[patentlint.com](https://patentlint.com)** — nothing to install.
 ```bash
 # Backend
 pip install -e ".[api,dev]"
-pytest -v                    # 542 tests
+pytest -v                    # 1808 tests
 uvicorn patentlint.api.app:app --port 8000 --reload
 
 # Frontend (separate terminal)
@@ -152,8 +162,10 @@ cd frontend && npm install && npm run dev
 ```bash
 patentlint analyze patent-draft.docx                                          # US (default)
 patentlint analyze filing.xml --jurisdiction cn                               # CN filing XML
+patentlint analyze tw-draft.docx --jurisdiction tw                            # TW .docx
 patentlint analyze patent-draft.docx -o report.json                           # JSON to file
 patentlint analyze patent-draft.docx --format pdf -o report.pdf               # PDF report
+patentlint analyze tw-draft.docx --format pdf --locale zh-TW -o report.pdf    # Localized PDF
 patentlint batch ./patents/ --output ./reports/                               # Batch mode
 ```
 
@@ -173,6 +185,7 @@ docker run -p 8000:8000 patentlint
 curl -X POST http://localhost:8000/api/analyze -F "file=@draft.docx"
 curl -X POST http://localhost:8000/api/analyze?format=report -F "file=@draft.docx"
 curl -X POST http://localhost:8000/api/analyze/report -F "file=@draft.docx" -o report.pdf
+curl -X POST "http://localhost:8000/api/analyze/report?locale=zh-TW" -F "file=@draft.docx" -o report.pdf
 curl http://localhost:8000/api/health
 ```
 
@@ -188,9 +201,9 @@ curl http://localhost:8000/api/health
 | Frontend | React 18, Vite 6, Tailwind CSS v4, shadcn/ui |
 | PDF | pdfmake (web) · weasyprint (Docker/CLI) |
 | CLI | Click |
-| Testing | pytest (542 tests) |
+| Testing | pytest (1808 tests) |
 | CI/CD | GitHub Actions → Cloudflare Pages |
-| i18n | react-i18next (English, 繁體中文, 简体中文, 日本語, 한국어) |
+| i18n | react-i18next (English, 繁體中文, 简体中文, 日本語, 한국어) — shared locale bundles across frontend + weasyprint PDF |
 
 ---
 
@@ -214,6 +227,22 @@ This tool does not constitute legal advice. All findings should be reviewed by a
 
 ## License
 
-PolyForm Noncommercial 1.0.0 — see [LICENSE](LICENSE) for the full terms. Commercial use (including internal use by law firms or corporate legal departments) requires a separate license; see [COMMERCIAL-LICENSE.md](COMMERCIAL-LICENSE.md).
+PatentLint is source-available under **PolyForm-Strict-1.0.0** — see [LICENSE](LICENSE) for the full terms.
 
-© 2025 Christopher Chen
+**Permitted uses:**
+
+- Reading and studying the source code
+- Evaluating whether to license it ("acceptance testing")
+- Personal use (for yourself, not as part of a commercial activity)
+- Use by charitable / educational / public-research / public-safety / government organizations (per the license's "Noncommercial Organizations" clause)
+
+**Uses requiring a separate commercial license:**
+
+- Deploying PatentLint internally at a firm, company, or organization (including for client matters)
+- Offering PatentLint as a hosted service to third parties
+- Redistributing PatentLint (modified or unmodified)
+- Making changes or new works based on PatentLint
+
+The patentlint.com hosted service is free for individual evaluation. Commercial deployment or redistribution requires a separate license — [contact Christopher Chen](mailto:kwisschen@gmail.com) to discuss terms. See also the [Terms of Service](https://patentlint.com/terms) for the hosted site and the source-code license.
+
+Copyright © 2024-2026 Christopher Chen. All rights reserved.
