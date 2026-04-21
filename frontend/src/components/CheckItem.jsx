@@ -114,11 +114,11 @@ export default function CheckItem({ status, message, message_key, details, detai
           className="shrink-0"
         >
           <Flag />
-          {t('feedback.report')}
+          <span className="hidden sm:inline">{t('feedback.report')}</span>
         </Button>
       </div>
       {displayDetails && (
-        <p className="text-xs text-muted-foreground mt-1 ml-[52px]">{displayDetails}</p>
+        <p className="text-xs text-muted-foreground mt-1 ml-10 sm:ml-[52px]">{displayDetails}</p>
       )}
     </div>
   )
