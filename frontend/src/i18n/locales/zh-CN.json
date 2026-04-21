@@ -499,7 +499,7 @@
     },
     "enterpriseContact": "企业部署咨询 →",
     "builderTitle": "背景",
-    "builderPain": "专利实务工作者对以下问题多半不陌生。引用基础、权利要求用语在说明书中找不到支持、附图说明中介绍过的附图编号具体实施方式却漏了提及、权利要求引用关系绕着绕着变成循环引用。这些检查本身并不困难，只是相当繁琐，也很容易遗漏。",
+    "builderPain": "专利实务工作者对以下问题多半不陌生。引用基础、权利要求用语在说明书中找不到支持、附图说明介绍过的附图编号具体实施方式却未述及、权利要求引用关系绕着绕着变成循环引用。这些检查本身并不困难，只是相当繁琐，也很容易遗漏。",
     "builderDesc1": "PatentLint 的开发者是一位专利工程师，十多年来始终身处此流程之中，经手过数千份稿件，亲眼见证同类问题反复发生。现有工具要么只能安装于 Windows，要么必须将客户尚未递交的稿件上传至他方服务器。前者仅限于特定操作系统；后者则要求在案件正式递交之前，便将稿件送出事务所。",
     "builderDesc2": "本分析引擎由 Python 编写，再编译为 WebAssembly，完全于浏览器内运行，笔记本、平板、手机皆可使用，全程不上传、不留记录。也就是说，无论是在飞机上、事务所内网的电脑，或是客户尚未授权的设备，均可照常安心使用。",
     "builderSister": "其姊妹项目 Agentic Patent Analyst 则负责推理量较重的工作，由自行微调的 LLM agent 执行现有技术检索与权利要求比对分析。"
@@ -520,7 +520,7 @@
     "claimDependsOn": "权利要求 {{claim}} 从属于权利要求 {{parent}}",
     "nounMismatch": "从属项「{{dependent}}」与独立项「{{independent}}」不一致。从属权利要求须与母权利要求属于相同法定类别（例如同为装置或同为方法）。请修正前序名词。",
     "seeSection112": "详见下方 § 112 分析。",
-    "specSupportUnsupported": "此处所示 {{count}} 个用语未于说明书中披露。各请求项用语皆应获说明书支持。",
+    "specSupportUnsupported": "此处所示 {{count}} 个用语未于说明书中披露。各权利要求用语皆应获说明书支持。",
     "restrictiveWordingSpec": "段落：{{list}}。\"must\"、\"always\"或\"invention\"等用语可能依 § 2173.05(b) 被视为不确定或限制范围。请检查各标记段落，考虑该用语是否过度限缩范围或引入不确定性。",
     "paragraphNumberingMissing": "请依 MPEP § 608.01(p) 添加 [0001] 格式的连续段落编号。",
     "paragraphEnding": "段落：{{list}}。说明书各段落须依 MPEP § 608.01(p) 以句号结尾。",
@@ -629,7 +629,7 @@
       "bracketFormat": "依專利法施行細則 §17，章节标题应使用全角方括号【】。发现：{{detail}}。",
       "connectionRelationships": "標記之組件：{{sample_names}}（共 {{component_count}} 個）。請補充連接、設置於、耦接 等動詞用語，記載組件之間的結構連接關係。",
       "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语缺少先行词。详见下方「先行词基础检查」区块。",
-      "specSupportTerms": "{{claim_count}}项请求项共{{issue_count}}个用语疑未获说明书支持（專利法 §26 第3項）。详见下方「说明书支持检视」区块。",
+      "specSupportTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语疑似未获说明书支持（專利法 §26 第3項）。详见下方「说明书支持检视」区块。",
       "titleMissing": "依專利審查基準，说明书必须包含发明名称/新型名称。请于说明书首部添加。",
       "figureRefInconsistency": {
         "onlyDrawings": "仅在圖式簡單說明中提及：{{figs}}",
@@ -1020,8 +1020,8 @@
           "pass": "所有引用之用语均有先行词（專利審查基準）。"
         },
         "specSupport": {
-          "verify": "{{claims}} 共有 {{issue_count}} 个请求项用语疑未获说明书支持（專利法 §26 第3項）。",
-          "pass": "所有请求项用语均获说明书支持（專利法 §26 第3項）。"
+          "verify": "{{claims}} 共有 {{issue_count}} 个权利要求用语疑似未获说明书支持（專利法 §26 第3項）。",
+          "pass": "所有权利要求用语均获说明书支持（專利法 §26 第3項）。"
         }
       },
       "abstract": {
