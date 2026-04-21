@@ -787,14 +787,14 @@
           "pass": "Specification sections in prescribed order."
         },
         "paragraphNumbering": {
-          "amendXml": "Non-sequential paragraph numbering ({{detail}}).",
-          "amendDocx": "Specification contains manually-added paragraph numbering (must be removed for CNIPA filing).",
+          "amendXml": "Non-sequential paragraph numbering ({{detail}}) (审查指南).",
+          "amendDocx": "Specification contains manually-added paragraph numbering — must be removed for CNIPA filing (审查指南).",
           "pass": "Paragraph numbering sequential.",
-          "amendXmlGap": "Gap in paragraph numbering — {{prev}} followed by {{next}}.",
-          "amendXmlDuplicate": "{{count}} duplicate paragraph number(s): {{paragraphs}}."
+          "amendXmlGap": "Gap in paragraph numbering — {{prev}} followed by {{next}} (审查指南).",
+          "amendXmlDuplicate": "{{count}} duplicate paragraph number(s): {{paragraphs}} (审查指南)."
         },
         "paragraphEnding": {
-          "amend": "{{count}} paragraph(s) not ending with valid Chinese punctuation: {{paragraphs}}.",
+          "amend": "{{count}} paragraph(s) not ending with valid Chinese punctuation: {{paragraphs}} (审查指南).",
           "pass": "All specification paragraphs end with valid Chinese punctuation."
         },
         "figureRefConsistency": {
@@ -802,17 +802,17 @@
           "pass": "Figure references consistent across sections."
         },
         "patentTypeTerminology": {
-          "verify": "'{{term}}' detected — verify this matches the filing type (invention vs. utility model).",
+          "verify": "'{{term}}' detected — verify this matches the filing type, invention vs. utility model (审查指南).",
           "pass": "Patent-type terminology consistent."
         },
         "title": {
-          "amendLength": "Title over the 25-character limit ({{count}} characters).",
-          "amendContent": "Prohibited content in title: {{title_prohibited_items}}.",
+          "amendLength": "Title over the 25-character limit ({{count}} characters) (审查指南 第一部分第一章).",
+          "amendContent": "Prohibited content in title: {{title_prohibited_items}} (审查指南 第一部分第一章).",
           "pass": "Title meets CNIPA requirements.",
-          "amendMissing": "Title missing from specification."
+          "amendMissing": "Title missing from specification (审查指南 第一部分第一章)."
         },
         "claimReference": {
-          "amend": "Specification references claims in {{count}} paragraph(s) ({{paragraphs}}). Example: {{snippet}}",
+          "amend": "Specification references claims in {{count}} paragraph(s) ({{paragraphs}}) (专利法实施细则 §17). Example: {{snippet}}",
           "pass": "Specification does not reference the claims."
         }
       },
