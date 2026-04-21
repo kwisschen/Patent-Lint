@@ -20,6 +20,7 @@ import {
   LegalPageFooter,
   LegalPageHeader,
   LegalSection,
+  TranslationNote,
 } from '../components/LegalPage'
 
 export default function PrivacyPage() {
@@ -34,6 +35,8 @@ export default function PrivacyPage() {
         introKey="privacy.intro"
         accentClass="text-blue-600 dark:text-blue-400"
       />
+
+      <TranslationNote noteKey="privacy.translationNote" />
 
       <LegalSection number="1" titleKey="privacy.s1.title">
         <p>{t('privacy.s1.p1')}</p>

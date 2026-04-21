@@ -14,6 +14,7 @@ import {
   LegalPageFooter,
   LegalPageHeader,
   LegalSection,
+  TranslationNote,
 } from '../components/LegalPage'
 
 export default function TermsPage() {
@@ -28,6 +29,8 @@ export default function TermsPage() {
         introKey="terms.intro"
         accentClass="text-green-600 dark:text-green-400"
       />
+
+      <TranslationNote noteKey="terms.translationNote" />
 
       <LegalSection number="1" titleKey="terms.s1.title">
         <p>{t('terms.s1.p1')}</p>
