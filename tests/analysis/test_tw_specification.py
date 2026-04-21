@@ -16,7 +16,7 @@ from patentlint.analysis.tw_specification import (
     check_symbol_table_presence,
     check_title,
 )
-from patentlint.models import SymbolEntry, TwPatentDocument, TwPatentType
+from patentlint.models import Claim, SymbolEntry, TwPatentDocument, TwPatentType
 
 
 def _make_doc(**kwargs) -> TwPatentDocument:
@@ -30,9 +30,13 @@ def _make_doc(**kwargs) -> TwPatentDocument:
         "drawings_description": [],
         "embodiment": ["本實施方式中，裝置包含元件。"],
         "symbol_table": [],
-        "claims": [],
+        "claims": [
+            Claim(id=1, text="一種測試裝置，包含元件。", independent=True),
+        ],
         "abstract_text": "本發明提供一種測試裝置。",
         "abstract_char_count": 10,
+        "abstract_header_seen": True,
+        "claims_header_seen": True,
         "section_order": [
             "technical_field",
             "prior_art",
@@ -97,7 +101,60 @@ class TestRequiredSections:
     def test_reference_field(self):
         doc = _make_doc(technical_field=[])
         items = check_required_sections(doc)
-        assert items[0].reference == "專利法施行細則 §17"
+        assert items[0].reference == "專利法 §25 第1項、專利法施行細則 §17"
+
+    def test_missing_abstract(self):
+        doc = _make_doc(abstract_text="")
+        items = check_required_sections(doc)
+        assert items[0].status == "amend"
+        assert "摘要" in items[0].details_params["sections"]
+
+    def test_missing_abstract_whitespace_only(self):
+        doc = _make_doc(abstract_text="   \n  ")
+        items = check_required_sections(doc)
+        assert items[0].status == "amend"
+        assert "摘要" in items[0].details_params["sections"]
+
+    def test_missing_claims(self):
+        doc = _make_doc(claims=[])
+        items = check_required_sections(doc)
+        assert items[0].status == "amend"
+        assert "申請專利範圍" in items[0].details_params["sections"]
+
+    def test_missing_abstract_and_claims_together(self):
+        doc = _make_doc(
+            abstract_text="",
+            claims=[],
+            abstract_header_seen=False,
+            claims_header_seen=False,
+        )
+        items = check_required_sections(doc)
+        assert items[0].status == "amend"
+        sections = items[0].details_params["sections"]
+        assert "摘要" in sections
+        assert "申請專利範圍" in sections
+
+    def test_abstract_recovered_via_zhongwen_marker_flags_missing(self):
+        """When 【摘要】 / 【發明摘要】 heading is removed but the
+        【中文】 marker still populates abstract_text, the heading-
+        missing defect must surface despite non-empty content."""
+        doc = _make_doc(
+            abstract_header_seen=False,
+            abstract_text="某種發明摘要文字。",
+            abstract_char_count=10,
+        )
+        items = check_required_sections(doc)
+        assert items[0].status == "amend"
+        assert "摘要" in items[0].details_params["sections"]
+
+    def test_claims_present_but_header_missing_flags(self):
+        """If a future parser fallback recovers claims without seeing
+        the 【申請專利範圍】 header, the heading-missing defect must
+        surface."""
+        doc = _make_doc(claims_header_seen=False)
+        items = check_required_sections(doc)
+        assert items[0].status == "amend"
+        assert "申請專利範圍" in items[0].details_params["sections"]
 
 
 # ── Check 2: Section Ordering ───────────────────────────────────────────
@@ -257,16 +314,38 @@ class TestParagraphEnding:
         assert items[0].status == "amend"
         assert items[0].details_params["paragraphs"] == ["0012", "0013"]
 
-    def test_mixed_word_numbers_and_ordinals(self):
-        """Unnumbered paragraphs fall back to ordinal so XML/legacy paths
-        still produce useful output."""
+    def test_unnumbered_paragraph_inherits_parent_word_number(self):
+        """A non-empty paragraph that lacks ``w:numPr`` between two
+        numbered paragraphs is almost always a continuation of the
+        preceding 【NNNN】 unit (Word renders the prefix once, the
+        drafter splits the logical paragraph across multiple Word
+        paragraphs to wrap text). Labeling it with the parent's
+        word_number matches what the drafter sees in Word — using the
+        internal ordinal would surface a number the drafter cannot
+        locate. (Wife's bug report 2026-04-21: 段落 4 was reported but
+        the screenshot showed 0003 was the missing-period paragraph.)"""
         doc = _make_doc(
             technical_field=["段落一", "段落二"],
             prior_art=["段落三。"],
             body_paragraph_word_numbers=["0005", None, "0006"],
         )
         items = check_paragraph_ending(doc)
-        assert items[0].details_params["paragraphs"] == ["0005", 2]
+        # Both flagged paragraphs resolve to "0005" — the first is the
+        # parent 0005 itself; the second is an unnumbered continuation
+        # that walks back to 0005.
+        assert items[0].details_params["paragraphs"] == ["0005", "0005"]
+
+    def test_xml_path_with_no_word_numbers_falls_back_to_ordinal(self):
+        """When NO paragraph carries a word_number (XML input or legacy
+        callers), the walk-back finds nothing and the check falls back
+        to the internal ordinal so the output is still useful."""
+        doc = _make_doc(
+            technical_field=["段落一", "段落二"],
+            prior_art=["段落三。"],
+            body_paragraph_word_numbers=[None, None, None],
+        )
+        items = check_paragraph_ending(doc)
+        assert items[0].details_params["paragraphs"] == [1, 2]
 
     def test_bracket_subclaim_continuation_skipped(self):
         """JP-translation [N]-numbered sub-claim bodies may span multiple
