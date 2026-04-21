@@ -912,11 +912,11 @@
         },
         "paragraphNumbering": {
           "pass": "段落編號正確或未使用編號。",
-          "amendGap": "段落編號不連續:【{{prev}}】後為【{{next}}】。",
-          "amendFormat": "{{count}}個段落未使用【NNNN】格式。範例：{{examples}}。"
+          "amendGap": "段落編號不連續：【{{prev}}】後為【{{next}}】（專利法施行細則 §17）。",
+          "amendFormat": "{{count}}個段落未使用【NNNN】格式。範例：{{examples}}（專利法施行細則 §17）。"
         },
         "paragraphEnding": {
-          "amend": "{{count}}個段落缺少結尾標點：段落 {{paragraphs}}。",
+          "amend": "{{count}}個段落缺少結尾標點：段落 {{paragraphs}}（專利審查基準）。",
           "pass": "所有段落皆以正確標點結尾。"
         },
         "figureRefConsistency": {
@@ -924,20 +924,20 @@
           "pass": "各章節之圖式引用一致。"
         },
         "patentTypeTerminology": {
-          "verify": "偵測到專利類型用語不一致（發明與新型混用）。",
+          "verify": "偵測到專利類型用語不一致（發明與新型混用）（專利審查基準）。",
           "pass": "專利類型用語一致。"
         },
         "title": {
-          "amendContent": "發明名稱/新型名稱包含不當內容：{{title_prohibited_items}}。",
+          "amendContent": "發明名稱/新型名稱包含不當內容：{{title_prohibited_items}}（專利審查基準）。",
           "pass": "發明名稱/新型名稱符合要求。",
-          "amendMissing": "未發現發明名稱/新型名稱。"
+          "amendMissing": "未發現發明名稱/新型名稱（專利審查基準）。"
         },
         "claimReference": {
-          "amend": "說明書中引用了請求項。",
+          "amend": "說明書中引用了請求項（專利法施行細則 §17）。",
           "pass": "說明書中未引用請求項。"
         },
         "symbolTablePresence": {
-          "amend": "缺少符號說明章節。",
+          "amend": "缺少符號說明章節（專利法施行細則 §17）。",
           "pass": "符號說明章節已包含。"
         },
         "symbolTableConsistency": {
@@ -1033,7 +1033,7 @@
           "pass": "摘要未包含商業性宣傳用語。"
         },
         "representativeDrawing": {
-          "verify": "未指定代表圖。",
+          "verify": "未指定代表圖（專利法施行細則 §21）。",
           "pass": "已指定代表圖。"
         }
       },

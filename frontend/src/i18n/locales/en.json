@@ -912,11 +912,11 @@
         },
         "paragraphNumbering": {
           "pass": "Paragraph numbering sequential (or absent).",
-          "amendGap": "Gap in paragraph numbering — 【{{prev}}】 followed by 【{{next}}】.",
-          "amendFormat": "{{count}} paragraph(s) not in 【NNNN】 format. Examples: {{examples}}."
+          "amendGap": "Gap in paragraph numbering — 【{{prev}}】 followed by 【{{next}}】 (專利法施行細則 §17).",
+          "amendFormat": "{{count}} paragraph(s) not in 【NNNN】 format. Examples: {{examples}} (專利法施行細則 §17)."
         },
         "paragraphEnding": {
-          "amend": "{{count}} paragraph(s) missing ending punctuation: {{paragraphs}}.",
+          "amend": "{{count}} paragraph(s) missing ending punctuation: {{paragraphs}} (專利審查基準).",
           "pass": "All specification paragraphs end with valid punctuation."
         },
         "figureRefConsistency": {
@@ -924,20 +924,20 @@
           "pass": "Figure references consistent across sections."
         },
         "patentTypeTerminology": {
-          "verify": "Patent-type terminology mismatch detected (invention vs. utility model).",
+          "verify": "Patent-type terminology mismatch detected — invention vs. utility model (專利審查基準).",
           "pass": "Patent-type terminology consistent."
         },
         "title": {
-          "amendContent": "Prohibited content in title: {{title_prohibited_items}}.",
+          "amendContent": "Prohibited content in title: {{title_prohibited_items}} (專利審查基準).",
           "pass": "Title meets TIPO requirements.",
-          "amendMissing": "Title missing from specification."
+          "amendMissing": "Title missing from specification (專利審查基準)."
         },
         "claimReference": {
-          "amend": "Specification references the claims.",
+          "amend": "Specification references the claims (專利法施行細則 §17).",
           "pass": "Specification does not reference the claims."
         },
         "symbolTablePresence": {
-          "amend": "Required 符號說明 section missing.",
+          "amend": "Required 符號說明 section missing (專利法施行細則 §17).",
           "pass": "符號說明 section present."
         },
         "symbolTableConsistency": {
@@ -1033,7 +1033,7 @@
           "pass": "Abstract free of commercial or advertising language."
         },
         "representativeDrawing": {
-          "verify": "No representative drawing (代表圖) designated.",
+          "verify": "No representative drawing (代表圖) designated (專利法施行細則 §21).",
           "pass": "Representative drawing (代表圖) designated."
         }
       },
