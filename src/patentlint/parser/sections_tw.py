@@ -270,6 +270,8 @@ def extract_tw_sections(
     waiting_for_abstract_text = False  # After 【中文】, next non-empty para is abstract
     spec_title: str | None = None  # Title from spec body (preferred)
     abstract_title: str | None = None  # Title from abstract preamble (fallback)
+    abstract_header_seen = False  # 【摘要】/【發明摘要】/【新型摘要】 encountered
+    claims_header_seen = False    # 【申請專利範圍】 / 【發明申請專利範圍】 / 【新型申請專利範圍】
 
     for idx, para in enumerate(paragraphs):
         stripped = para.strip()
@@ -309,6 +311,10 @@ def extract_tw_sections(
                 current_section = mapped
                 if mapped in _BODY_SECTION_KEYS and mapped not in section_order:
                     section_order.append(mapped)
+                if mapped == "abstract":
+                    abstract_header_seen = True
+                elif mapped == "claims":
+                    claims_header_seen = True
 
                 # Handle inline text after header (e.g., 【中文發明名稱】高頻基板用...)
                 if inline_text:
@@ -430,5 +436,7 @@ def extract_tw_sections(
         body_paragraph_word_numbers=body_paragraph_word_numbers,
         section_order=section_order,
         bracketless_section_headers=bracketless_section_headers,
+        abstract_header_seen=abstract_header_seen,
+        claims_header_seen=claims_header_seen,
         input_format="docx",
     )

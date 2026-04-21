@@ -75,9 +75,28 @@ def _section_has_content(items: list) -> bool:
 
 
 def check_required_sections(doc: TwPatentDocument) -> list[CheckItem]:
-    """Check that mandatory spec sections are non-empty."""
+    """Check that mandatory top-level TIPO filing sections are non-empty.
+
+    Covers the three top-level components a TIPO application requires per
+    專利法 §25 第1項 (摘要 / 說明書 / 申請專利範圍) plus the 說明書
+    subsections enumerated in 專利法施行細則 §17. The 【發明說明書】 /
+    【新型說明書】 wrapper header itself is intentionally not checked —
+    when subsection headers (【技術領域】 etc.) carry the content, the
+    specification is present in substance even if the wrapper divider is
+    omitted.
+    """
     missing = []
 
+    # Top-level: 摘要 (required per 專利法 §25 第1項, format per §21).
+    # Strict: the abstract HEADING must be present. The parser's 【中文】
+    # text marker can populate ``abstract_text`` even when the drafter
+    # omitted 【摘要】 / 【發明摘要】 / 【新型摘要】 — that is itself a
+    # §25 violation, so we key off the header-seen flag rather than the
+    # content field.
+    if not doc.abstract_header_seen or not doc.abstract_text.strip():
+        missing.append("摘要")
+
+    # 說明書 subsections per 專利法施行細則 §17
     if not _section_has_content(doc.technical_field):
         missing.append("技術領域")
     if not _section_has_content(doc.prior_art):
@@ -101,6 +120,13 @@ def check_required_sections(doc: TwPatentDocument) -> list[CheckItem]:
         if not _section_has_content(doc.drawings_description):
             missing.append("圖式簡單說明")
 
+    # Top-level: 申請專利範圍 (required per 專利法 §25 第1項, format per §18).
+    # Strict: the claims HEADING must be present. Future parser fallbacks
+    # (numbering-pattern recovery) would otherwise mask a missing-header
+    # defect; key off the header-seen flag, not the content field.
+    if not doc.claims_header_seen or not doc.claims:
+        missing.append("申請專利範圍")
+
     if missing:
         return [CheckItem(
             status="amend",
@@ -109,13 +135,13 @@ def check_required_sections(doc: TwPatentDocument) -> list[CheckItem]:
             details=", ".join(missing),
             details_key="details.tw.requiredSections",
             details_params={"sections": ", ".join(missing)},
-            reference="專利法施行細則 §17",
+            reference="專利法 §25 第1項、專利法施行細則 §17",
         )]
     return [CheckItem(
         status="pass",
-        message="All required specification sections are present.",
+        message="All required sections are present.",
         message_key="check.tw.spec.requiredSections.pass",
-        reference="專利法施行細則 §17",
+        reference="專利法 §25 第1項、專利法施行細則 §17",
     )]
 
 
@@ -307,11 +333,24 @@ def check_paragraph_ending(doc: TwPatentDocument) -> list[CheckItem]:
                 # Prefer the Word 【NNNN】 auto-number when the drafter's
                 # file carried it; fall back to the internal ordinal
                 # otherwise so XML/legacy paths still produce useful output.
+                #
+                # Continuation paragraphs (Word paragraphs that lack
+                # ``w:numPr`` because they wrap inside a single logical
+                # 【NNNN】 paragraph) carry word_number=None. Walk backward
+                # to the most recent non-None value so the flagged label
+                # matches the 【NNNN】 the drafter sees in Word — not an
+                # internal ordinal that shifts on subsection boundaries.
                 label: int | str = ordinal
-                if ordinal - 1 < len(word_numbers):
-                    wn = word_numbers[ordinal - 1]
-                    if wn is not None:
-                        label = wn
+                resolved_wn: str | None = None
+                idx = ordinal - 1
+                while idx >= 0 and idx < len(word_numbers):
+                    candidate = word_numbers[idx]
+                    if candidate is not None:
+                        resolved_wn = candidate
+                        break
+                    idx -= 1
+                if resolved_wn is not None:
+                    label = resolved_wn
                 bad_paragraphs.append(label)
 
     if bad_paragraphs:
