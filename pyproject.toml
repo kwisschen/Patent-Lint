@@ -53,6 +53,14 @@ patentlint = "patentlint.cli:main"
 [tool.hatch.build.targets.wheel]
 packages = ["src/patentlint"]
 
+# Bundle the frontend locale JSON files into the wheel so Python-side
+# i18n (weasyprint PDF, CLI output) uses the same copy as React. Source
+# of truth stays in frontend/src/i18n/locales/; hatchling mirrors into
+# patentlint/_locales/ at build. The i18n helper prefers the wheel
+# location, falling back to the dev tree in editable installs.
+[tool.hatch.build.targets.wheel.force-include]
+"frontend/src/i18n/locales" = "patentlint/_locales"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
