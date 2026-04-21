@@ -27,7 +27,7 @@ export default function Footer() {
     <footer className="border-t border-gray-200 dark:border-gray-800 py-6 px-4">
       <div className="mx-auto max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500 dark:text-gray-400">
         <span>{t('footer.builtBy')}</span>
-        <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+        <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2" aria-label="Footer">
           <Link
             to="/security"
             className="footer-link hover:text-foreground transition-colors duration-200"
@@ -39,6 +39,18 @@ export default function Footer() {
             className="footer-link hover:text-foreground transition-colors duration-200"
           >
             {t('footer.about')}
+          </Link>
+          <Link
+            to="/terms"
+            className="footer-link hover:text-foreground transition-colors duration-200"
+          >
+            {t('footer.terms')}
+          </Link>
+          <Link
+            to="/privacy"
+            className="footer-link hover:text-foreground transition-colors duration-200"
+          >
+            {t('footer.privacy')}
           </Link>
           {externalLinks.map(({ label, href, onClick }) => (
             <a
