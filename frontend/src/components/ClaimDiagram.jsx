@@ -132,6 +132,7 @@ function enhanceSvg(svgEl, suffix) {
       rect.setAttribute('ry', '10')
       rect.style.setProperty('fill', isIndep ? `url(#${gradIndep})` : `url(#${gradDep})`, 'important')
       rect.style.setProperty('filter', `url(#${shadow})`, 'important')
+      rect.style.setProperty('stroke', isIndep ? 'var(--pl-indep-stroke)' : 'var(--pl-dep-stroke)', 'important')
       rect.style.setProperty('stroke-width', isIndep ? '1.5' : '1', 'important')
     }
 
