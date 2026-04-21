@@ -628,6 +628,7 @@
       "bracketFormat": "Per 專利法施行細則 §17, section headers should use full-width brackets 【】. Found: {{detail}}.",
       "connectionRelationships": "Components flagged: {{sample_names}} ({{component_count}} total). Add a connection verb (e.g., 連接, 設置於, 耦接) describing how these components are structurally arranged.",
       "antecedentBasisTerms": "{{issue_count}} term(s) across {{claim_count}} claim(s) may lack antecedent basis. See the \"Antecedent Basis Review\" section below for the full per-term breakdown.",
+      "specSupportTerms": "{{issue_count}} term(s) across {{claim_count}} claim(s) may lack specification support under 專利法 §26 第3項. See the Specification Support Review section below for the full per-term breakdown.",
       "titleMissing": "Per TIPO 專利審查基準, the specification must contain a 發明名稱/新型名稱 (title of invention or utility model). Add one to the specification header.",
       "figureRefInconsistency": {
         "onlyDrawings": "Only cited in 圖式簡單說明: {{figs}}",
@@ -1016,6 +1017,10 @@
         "antecedentBasis": {
           "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 該/所述/前述 reference without a prior 一 introduction (專利審查基準).",
           "pass": "All claim terms have antecedent basis (專利審查基準)."
+        },
+        "specSupport": {
+          "verify": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body (專利法 §26 第3項).",
+          "pass": "All claim terms supported by the specification (專利法 §26 第3項)."
         }
       },
       "abstract": {
