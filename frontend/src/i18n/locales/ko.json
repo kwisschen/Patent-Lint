@@ -1112,18 +1112,18 @@
     }
   },
   "checks": {
-    "preamble_cross_category_mismatch": "종속항과 독립항 간 청구항 유형 불일치.",
+    "preamble_cross_category_mismatch": "종속항과 독립항 간 청구항 유형 불일치(§ 112(d)).",
     "preamble_cross_category_pass": "청구항 전제부가 일관적입니다.",
-    "preamble_noun_mismatch": "종속항과 독립항 간 전제부 명사 불일치.",
-    "preamble_indefinite_article": "종속항 전제부에 부정관사 사용 ('The'이어야 합니다).",
+    "preamble_noun_mismatch": "종속항과 독립항 간 전제부 명사 불일치(MPEP § 608.01(m)).",
+    "preamble_indefinite_article": "종속항 전제부에 부정관사 사용 — 'The'를 사용해야 합니다(MPEP § 608.01(m)).",
     "spec_support_unsupported_terms": "명세서에서 찾을 수 없는 청구항 용어: 각 용어는 명세서상의 서면 개시로 뒷받침되어야 합니다(§ 112(a)).",
     "spec_support_pass": "모든 청구항 용어가 명세서에서 발견되었습니다(§ 112(a) 서면 개시 요건).",
     "required_sections_pass": "MPEP § 608.01(a)에 따른 모든 필수 섹션이 존재합니다.",
     "required_sections_missing": "MPEP § 608.01(a)에 따른 필수 섹션이 누락되었습니다.",
     "optional_section_missing": "선택 섹션 \"{{name}}\"이(가) 발견되지 않았습니다.",
     "figure_xref_pass": "도면의 간단한 설명과 발명의 상세한 설명 간 모든 도면 참조가 일관적입니다.",
-    "figure_xref_orphaned_brief": "도면의 간단한 설명에 기재되었으나 발명의 상세한 설명에서 참조되지 않는 도면이 있습니다.",
-    "figure_xref_orphaned_detailed": "발명의 상세한 설명에서 참조되었으나 도면의 간단한 설명에 기재되지 않은 도면이 있습니다."
+    "figure_xref_orphaned_brief": "도면의 간단한 설명에 기재되었으나 발명의 상세한 설명에서 참조되지 않는 도면이 있습니다(MPEP § 608.02).",
+    "figure_xref_orphaned_detailed": "발명의 상세한 설명에서 참조되었으나 도면의 간단한 설명에 기재되지 않은 도면이 있습니다(MPEP § 608.02)."
   },
   "claims": {
     "jepsonPriorArt": "청구항 {{claimNumber}}이(가) Jepson 형식을 사용합니다. 전제부 요소는 선행 기술로 인정된 것으로 취급됩니다 (MPEP § 2129)",

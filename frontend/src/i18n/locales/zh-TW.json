@@ -1112,18 +1112,18 @@
     }
   },
   "checks": {
-    "preamble_cross_category_mismatch": "附屬項與獨立項之前言類型不一致（跨類別）。",
+    "preamble_cross_category_mismatch": "附屬項與獨立項之前言類型不一致（跨類別）（§ 112(d)）。",
     "preamble_cross_category_pass": "請求項前言一致。",
-    "preamble_noun_mismatch": "附屬項與獨立項前言名詞不同。",
-    "preamble_indefinite_article": "附屬項前言使用不定冠詞（應使用「The」）。",
+    "preamble_noun_mismatch": "附屬項與獨立項前言名詞不同（MPEP § 608.01(m)）。",
+    "preamble_indefinite_article": "附屬項前言使用不定冠詞，應使用「The」（MPEP § 608.01(m)）。",
     "spec_support_unsupported_terms": "請求項用語於說明書中未找到：每個用語須於說明書中有書面描述支持（§ 112(a)）。",
     "spec_support_pass": "所有請求項用語均可於說明書中找到（§ 112(a) 書面描述支持）。",
     "required_sections_pass": "符合 MPEP § 608.01(a) 之所有必要章節均已存在。",
     "required_sections_missing": "缺少 MPEP § 608.01(a) 規定之必要章節。",
     "optional_section_missing": "選擇性章節「{{name}}」未發現。",
     "figure_xref_pass": "圖式簡單說明與實施方式之間的圖式引用一致。",
-    "figure_xref_orphaned_brief": "圖式在圖式簡單說明中描述但未在實施方式中引用。",
-    "figure_xref_orphaned_detailed": "圖式在實施方式中引用但未在圖式簡單說明中描述。"
+    "figure_xref_orphaned_brief": "圖式在圖式簡單說明中描述但未在實施方式中引用（MPEP § 608.02）。",
+    "figure_xref_orphaned_detailed": "圖式在實施方式中引用但未在圖式簡單說明中描述（MPEP § 608.02）。"
   },
   "claims": {
     "jepsonPriorArt": "請求項 {{claimNumber}} 使用 Jepson 格式，前言部分之元件視為承認之先前技術（MPEP § 2129）",
