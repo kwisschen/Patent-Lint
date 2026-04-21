@@ -8,6 +8,7 @@
 // reading comfort.
 
 import { useTranslation } from 'react-i18next'
+import { Info } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
 
 export function LegalPageContainer({ children }) {
@@ -15,6 +16,34 @@ export function LegalPageContainer({ children }) {
     <div className="mx-auto w-full max-w-3xl px-4 py-12 sm:py-16 space-y-12">
       {children}
     </div>
+  )
+}
+
+// Translation disclaimer banner — rendered only when a non-empty
+// `translationNote` key exists in the current locale. English locale
+// omits the key entirely; non-English locales carry a short note that
+// the English version is authoritative in case of translation drift.
+// Pattern is standard for international SaaS legal docs.
+export function TranslationNote({ noteKey }) {
+  const { t, i18n } = useTranslation()
+  const [ref, isInView] = useInView()
+  if (!i18n.exists(noteKey)) return null
+  const text = t(noteKey)
+  if (!text || text === noteKey) return null
+  return (
+    <aside
+      ref={ref}
+      role="note"
+      className="rounded-md border border-border/60 bg-muted/40 px-4 py-3 flex items-start gap-2.5 text-xs sm:text-sm text-muted-foreground italic"
+      style={{
+        opacity: isInView ? 1 : 0,
+        transform: isInView ? 'translateY(0)' : 'translateY(8px)',
+        transition: 'opacity 0.5s var(--ease-bounce), transform 0.5s var(--ease-bounce)',
+      }}
+    >
+      <Info className="h-4 w-4 shrink-0 mt-0.5 not-italic" aria-hidden="true" />
+      <span>{text}</span>
+    </aside>
   )
 }
 
