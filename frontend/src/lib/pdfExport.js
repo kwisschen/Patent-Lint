@@ -589,14 +589,18 @@ export async function downloadReport(reportData, t, language, originalFilename) 
       ...(fontName ? { font: fontName } : {}),
     },
 
-    footer: (currentPage, pageCount) => ({
-      text: `Page ${currentPage} of ${pageCount}  ·  © 2025 Christopher Chen  ·  patentlint.com`,
-      alignment: 'center',
-      fontSize: 8,
-      color: '#999999',
-      margin: [0, 20, 0, 0],
-      ...(fontName ? { font: fontName } : {}),
-    }),
+    footer: (currentPage, pageCount) => {
+      const year = new Date().getFullYear()
+      const copyrightRange = year > 2025 ? `2025–${year}` : '2025'
+      return {
+        text: `Page ${currentPage} of ${pageCount}  ·  © ${copyrightRange} Christopher Chen  ·  patentlint.com`,
+        alignment: 'center',
+        fontSize: 8,
+        color: '#999999',
+        margin: [0, 20, 0, 0],
+        ...(fontName ? { font: fontName } : {}),
+      }
+    },
 
     content: [
       { text: `${t('analysis.label')}: ${sanitizeText(filename)}`, style: 'title' },
