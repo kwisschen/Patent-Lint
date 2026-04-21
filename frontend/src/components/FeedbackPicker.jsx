@@ -20,7 +20,7 @@
 // - Preference persists in localStorage across tab sessions.
 import { createContext, useCallback, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Mail, AtSign, Clipboard } from 'lucide-react'
+import { AtSign, Clipboard, Lock, Mail } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -80,7 +80,10 @@ export function FeedbackProvider({ children }) {
       <Dialog open={!!pending} onOpenChange={handleOpenChange}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t('feedback.picker.title')}</DialogTitle>
+            <DialogTitle className="flex items-center gap-2 text-base sm:text-lg leading-snug">
+              <Lock className="h-4 w-4 shrink-0 text-green-600 dark:text-green-400" aria-hidden="true" />
+              <span>{t('feedback.picker.title')}</span>
+            </DialogTitle>
             <DialogDescription>
               {t(`feedback.picker.${verb}.description`)}
             </DialogDescription>
@@ -88,12 +91,12 @@ export function FeedbackProvider({ children }) {
           <div className="flex flex-col gap-2">
             <PickerButton
               onClick={() => handlePick('mailto')}
-              icon={<AtSign />}
+              icon={<Mail />}
               label={t(`feedback.picker.${verb}.mailto`)}
             />
             <PickerButton
               onClick={() => handlePick('gmail')}
-              icon={<Mail />}
+              icon={<AtSign />}
               label={t(`feedback.picker.${verb}.gmail`)}
             />
             <PickerButton
