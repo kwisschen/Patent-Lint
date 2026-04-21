@@ -106,7 +106,8 @@
   },
   "section112": {
     "title": "§ 112 分析",
-    "titleTw": "先行詞分析"
+    "titleTw": "先行詞分析",
+    "titleTwSpec": "§26 第3項分析"
   },
   "results": {
     "nonPatentWarning": "此文件可能不是美國專利稿件",
@@ -519,7 +520,7 @@
     "claimDependsOn": "請求項 {{claim}} 附屬於請求項 {{parent}}",
     "nounMismatch": "附屬項「{{dependent}}」與獨立項「{{independent}}」不一致。附屬項須與母項屬於相同法定類別（例如同為裝置或同為方法）。請修正前言名詞。",
     "seeSection112": "詳見下方 § 112 分析。",
-    "specSupportUnsupported": "{{count}} 個請求項用語未於說明書中出現。各請求項用語皆應獲說明書支持；請展開上方請求項查看具體標記之用語。",
+    "specSupportUnsupported": "此處所示 {{count}} 個用語未於說明書中揭露。各請求項用語皆應獲說明書支持。",
     "restrictiveWordingSpec": "段落：{{list}}。「must」、「always」或「invention」等用語可能依 § 2173.05(b) 被視為不明確或限制範圍。請檢視各標記段落，考量該用語是否不當限縮範圍或造成不明確。",
     "paragraphNumberingMissing": "請依 MPEP § 608.01(p) 新增 [0001] 格式的連續段落編號。",
     "paragraphEnding": "段落：{{list}}。說明書各段落須依 MPEP § 608.01(p) 以句號結尾。",
