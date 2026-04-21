@@ -106,7 +106,8 @@
   },
   "section112": {
     "title": "§ 112 分析",
-    "titleTw": "先行詞分析"
+    "titleTw": "先行詞分析",
+    "titleTwSpec": "§26 第3項分析"
   },
   "results": {
     "nonPatentWarning": "この文書は米国特許原稿ではない可能性があります",
@@ -519,7 +520,7 @@
     "claimDependsOn": "請求項 {{claim}} は請求項 {{parent}} に従属",
     "nounMismatch": "従属項「{{dependent}}」と独立項「{{independent}}」が不一致。従属請求項は親請求項と同じ法定カテゴリ（例：共に装置または共に方法）でなければなりません。プリアンブルの名詞を修正してください。",
     "seeSection112": "下記の § 112 分析を参照。",
-    "specSupportUnsupported": "{{count}}件の請求項用語が明細書本文に見つかりませんでした。各請求項用語には明細書による裏付けが必要です。上の請求項を展開して該当用語をご確認ください。",
+    "specSupportUnsupported": "ここに示す {{count}} 件の用語が明細書本文に見当たりません。各請求項用語には明細書による裏付けが必要です。",
     "restrictiveWordingSpec": "段落：{{list}}。\"must\"、\"always\"、\"invention\" などの用語は § 2173.05(b) に基づき、不明確または範囲を制限するものとして扱われる可能性があります。各フラグ付き段落を確認し、その用語が過度に範囲を制限するか不明確性を生じさせるか検討してください。",
     "paragraphNumberingMissing": "MPEP § 608.01(p) に従い、[0001] 形式の連続した段落番号を追加してください。",
     "paragraphEnding": "段落：{{list}}。MPEP § 608.01(p) に従い、明細書の各段落はピリオドで終了する必要があります。",

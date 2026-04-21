@@ -109,7 +109,11 @@ const JURISDICTION_CONFIG = {
     drawingsSectionKey: 'section.tw.drawings',
     drawingsShortKey: 'section.tw.drawingsShort',
     abstractSectionKey: 'section.tw.abstract',
-    section112TitleKey: 'section112.titleTw',
+    // ADR-138 follow-up: the container now holds two cards
+    // (先行詞 + 說明書支持), both sub-requirements of 專利法 §26 第3項.
+    // Switched from 先行詞分析 (accurate only for antecedent-only) to
+    // a statute-level umbrella matching the US "§ 112 Analysis" pattern.
+    section112TitleKey: 'section112.titleTwSpec',
     section112PassKey: 'check.tw.claims.antecedentBasis.pass',
     pdfHeaderKey: 'pdf.headerTw',
     // Phase 8b walker escape hatch (ADR-095). Default False: walker
