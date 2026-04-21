@@ -706,7 +706,7 @@
         "pass": "申請專利範圍未發現限制性或不明確用語。"
       },
       "sequential": {
-        "amend": "請求項編號非連續。",
+        "amend": "請求項編號非連續（MPEP § 608.01(m)）。",
         "pass": "請求項編號為連續。"
       },
       "multipleDependent": {
@@ -722,11 +722,11 @@
         "pass": "所有請求項均以句點結尾。"
       },
       "extraPeriod": {
-        "amend": "請求項含有多餘或錯置句點。",
+        "amend": "請求項含有多餘或錯置句點（MPEP § 608.01(m)）。",
         "pass": "請求項未發現多餘句點。"
       },
       "whereinComma": {
-        "amend": "「wherein」逗號使用不正確。",
+        "amend": "「wherein」逗號使用不正確（MPEP § 608.01(m)）。",
         "verify": "請確認「wherein」逗號使用。",
         "pass": "「wherein」逗號使用正確。"
       },

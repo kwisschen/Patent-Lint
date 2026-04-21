@@ -706,7 +706,7 @@
         "pass": "权利要求未发现限制性或不确定用语。"
       },
       "sequential": {
-        "amend": "权利要求编号不连续。",
+        "amend": "权利要求编号不连续（MPEP § 608.01(m)）。",
         "pass": "权利要求编号连续。"
       },
       "multipleDependent": {
@@ -722,11 +722,11 @@
         "pass": "所有权利要求均以句号结尾。"
       },
       "extraPeriod": {
-        "amend": "权利要求含有多余或错位句号。",
+        "amend": "权利要求含有多余或错位句号（MPEP § 608.01(m)）。",
         "pass": "权利要求未发现多余句号。"
       },
       "whereinComma": {
-        "amend": "「wherein」逗号使用不正确。",
+        "amend": "「wherein」逗号使用不正确（MPEP § 608.01(m)）。",
         "verify": "请确认「wherein」逗号使用。",
         "pass": "「wherein」逗号使用正确。"
       },
