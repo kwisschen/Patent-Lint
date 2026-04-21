@@ -155,6 +155,24 @@
       "clipboard": "クリップボードにコピー",
       "remember": "この選択を記憶する"
     },
+    "email": {
+      "subjectFinding": "PatentLint チェック結果のご報告：{{checkKey}}",
+      "subjectFooter": "PatentLint へのフィードバック",
+      "subjectEnterprise": "PatentLint 企業導入のお問い合わせ",
+      "fieldColon": "：",
+      "fieldCheck": "チェック項目",
+      "fieldMessage": "メッセージ",
+      "fieldDetails": "詳細",
+      "fieldStatus": "ステータス",
+      "fieldClaim": "請求項",
+      "fieldTerms": "用語",
+      "fieldPhrases": "語句",
+      "fieldReferenceForm": "参照形式",
+      "fieldJurisdiction": "地域",
+      "fieldBrowser": "ブラウザ",
+      "fieldLocale": "言語",
+      "fieldBuild": "バージョン"
+    },
     "emailGreeting": "Christopher 様",
     "bodyPlaceholder": "[一、二文で、この検出結果の何が問題かお教えください：誤検出でしょうか、分類の誤りでしょうか、それとも検査の取りこぼしでしょうか？請求項の文言や原稿内容は一切貼り付けないでください。検出結果自体は自動で添付されます。]",
     "footerIntro": "PatentLint についてフィードバックをお送りいたします。",
@@ -390,7 +408,7 @@
       "drawings": "図面（附图）"
     },
     "cnChecks": {
-      "requiredSections": "必須セクション（专利法实施细则 §17）",
+      "requiredSections": "必須セクション（专利法 §26 第1款・专利法实施细则 §17）",
       "sectionOrdering": "セクション順序",
       "paragraphNumbering": "段落番号",
       "paragraphEnding": "段落末尾の句読点",
@@ -442,7 +460,7 @@
     "twChecks": {
       "symbolTablePresence": "圖式簡單說明が存在する場合、符號說明が必要です（專利法施行細則 §17）",
       "symbolTableConsistency": "符號說明の符号が實施方式に出現します（專利審查基準）",
-      "requiredSections": "必要セクション（專利法施行細則 §17）",
+      "requiredSections": "必要セクション（專利法 §25 第1項・專利法施行細則 §17）",
       "sectionOrdering": "セクション順序",
       "paragraphNumbering": "段落番号（【NNNN】形式）",
       "paragraphEnding": "段落末尾の句読点",
@@ -551,7 +569,7 @@
     "abstractImpliedPhrasesFix": "\"This disclosure provides...\" や \"A method is provided...\" などの表現は MPEP § 608.01(b) に基づく暗示的表現に該当します。発明を直接記述するように書き換えてください（例：\"A method that...\"）。",
     "abstractWordCountFix": "MPEP § 608.01(b) に従い、要約書は 50 語から 150 語の範囲内である必要があります。この範囲を満たすよう修正してください。",
     "cn": {
-      "requiredSections": "专利法实施细则 §17に基づき、明細書には技术领域、背景技术、发明内容、具体实施方式が必要です。不足しているセクションを追加してください。",
+      "requiredSections": "专利法 §26 第1款により、出願には摘要、说明书（技术领域、背景技术、发明内容、具体实施方式）、权利要求书が必要です。不足：{{sections}}。",
       "sectionOrdering": "規定順序：技术领域 → 背景技术 → 发明内容 → 附图说明 → 具体实施方式。セクションの順序を修正してください。",
       "paragraphNumberingXml": "审查指南に基づき、段落番号は連続的かつ4桁ゼロ埋め（0001、0002…）である必要があります。番号順序を修正してください。",
       "paragraphNumberingDocx": "CNIPAの規定により、明細書には段落番号を追加してはなりません。WORD转XML编辑器が変換時に自動的に番号を付与します。手動で追加したすべての段落番号を削除してください。",
@@ -592,7 +610,7 @@
       }
     },
     "tw": {
-      "requiredSections": "TIPOの要件：技術領域、先前技術、發明內容/新型內容、實施方式。図面がある場合は圖式簡單說明および符號說明も必要です。不足：{{sections}}。",
+      "requiredSections": "專利法 §25 第1項により、出願には摘要、說明書（技術領域、先前技術、發明內容／新型內容、實施方式）、申請專利範圍が必要です。專利法施行細則 §17により、図面がある場合は說明書に圖式簡單說明および符號說明も含める必要があります。不足：{{sections}}。",
       "sectionOrdering": "專利法施行細則 §17の規定順序：技術領域→先前技術→發明內容/新型內容→圖式簡單說明→實施方式→符號說明。順序を修正してください。",
       "paragraphNumbering": "段落番号を使用する場合、【NNNN】四桁連続形式を使用してください。特許法施行細則 §17により、番号付けは任意です。",
       "paragraphEnding": "明細書の段落は中国語の句読点（。！？）で終わる必要があります。該当段落を確認してください。",
@@ -605,7 +623,7 @@
       "claimsSequential": "特許審査基準により、請求項番号は1から連続していなければなりません。",
       "dependencyFormat": "專利法施行細則 §18により、依存は正しい形式（如請求項N所述之、如請求項N之等）を使用する必要があります。該当する請求項を確認してください。",
       "selfDependent": "專利法施行細則 §18により、請求項は自身に依存できません。自己依存：{{claims}}。",
-      "circularDependency": "專利法施行細則 §18により、請求項は循環依存チェーンを形成できません。循環チェーン：請求項 {{claims}}。",
+      "circularDependency": "專利法施行細則 §18により、請求項は循環依存チェーンを形成できません。循環チェーン：{{claims}}。",
       "forwardDependency": "專利法施行細則 §18により、従属項は先行する請求項のみに依附できます。後行する請求項への依附：{{claims}}。",
       "singleSentence": "專利法施行細則 §18により、各請求項は末尾に句点（。）が1つだけの単文である必要があります。該当する請求項を確認してください。",
       "refNumeralParens": "專利法施行細則 §19により、請求項内の符号は括弧で囲む必要があります（例：(101)）。該当する請求項を確認してください。",
@@ -786,8 +804,8 @@
     "cn": {
       "spec": {
         "requiredSections": {
-          "amend": "必要な章を欠いています：{{sections}}（专利法实施细则 §17）。",
-          "pass": "明細書に必要な章が全て揃っています。"
+          "amend": "必要な章を欠いています：{{sections}}（专利法 §26 第1款・专利法实施细则 §17）。",
+          "pass": "必要な章が全て揃っています。"
         },
         "sectionOrdering": {
           "amend": "明細書の章の順序が規定と異なります（专利法实施细则 §17）。",
@@ -910,8 +928,8 @@
     "tw": {
       "spec": {
         "requiredSections": {
-          "amend": "必要な章を欠いています（專利法施行細則 §17）。",
-          "pass": "明細書に必要な章が全て揃っています。"
+          "amend": "必要な章を欠いています（專利法 §25 第1項・專利法施行細則 §17）。",
+          "pass": "必要な章が全て揃っています。"
         },
         "sectionOrdering": {
           "amend": "明細書の章の順序が規定と異なります（專利法施行細則 §17）。",

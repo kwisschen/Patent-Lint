@@ -155,6 +155,24 @@
       "clipboard": "複製到剪貼簿",
       "remember": "記住我的選擇"
     },
+    "email": {
+      "subjectFinding": "PatentLint 分析結果回報：{{checkKey}}",
+      "subjectFooter": "PatentLint 使用回饋",
+      "subjectEnterprise": "PatentLint 企業諮詢",
+      "fieldColon": "：",
+      "fieldCheck": "檢查項目",
+      "fieldMessage": "訊息內容",
+      "fieldDetails": "詳細說明",
+      "fieldStatus": "狀態",
+      "fieldClaim": "請求項",
+      "fieldTerms": "用語",
+      "fieldPhrases": "詞句",
+      "fieldReferenceForm": "引用形式",
+      "fieldJurisdiction": "地區",
+      "fieldBrowser": "瀏覽器",
+      "fieldLocale": "語言",
+      "fieldBuild": "版本"
+    },
     "emailGreeting": "Christopher 您好，",
     "bodyPlaceholder": "[請用一兩句話說明此項分析結果的問題：是誤判、分類錯誤，還是檢查遺漏了什麼？請勿貼上請求項文字或任何稿件內容；分析結果本身已自動附上。]",
     "footerIntro": "我想就 PatentLint 提供一些意見回饋。",
@@ -308,7 +326,7 @@
       "title": "互動式美國專利分析",
       "claimTree": {
         "title": "請求項樹與 § 112 分析器",
-        "description": "互動式相依樹呈現多重附屬與多重獨立請求項結構；§ 112 分析器同時檢查先行詞基礎（§ 112(b)）與書面描述支持（§ 112(a)），同一用語同時欠缺兩者時交互註記，並偵測 Markush、Jepson、means-plus-function 與過渡用語等特殊格式。"
+        "description": "互動式相依樹呈現多重附屬與多重獨立請求項結構；§ 112 分析器同時檢查先行詞基礎（§ 112(b)）與書面描述支持（§ 112(a)），同一用語同時欠缺兩者時交互註記，並偵測 Markush、Jepson、means-plus-function 與連接詞等特殊格式。"
       },
       "specAbstract": {
         "title": "說明書與摘要結構",
@@ -357,10 +375,10 @@
         "preambleConsistency": "請求項前言一致性（MPEP § 608.01(m)）",
         "specSupport": "說明書對請求項用語之支持",
         "legalPhrasesAbstract": "摘要中的法律用語",
-        "transitionPhrase": "請求項過渡用語（§ 112）",
+        "transitionPhrase": "請求項連接詞（§ 112）",
         "checkJepsonPriorArt": "Jepson 先前技術承認（§ 2129）",
         "checkCrmNonTransitory": "電腦可讀媒體 non-transitory 限定（§ 101）",
-        "checkMarkushTransition": "Markush 群組過渡用語（§ 2117）",
+        "checkMarkushTransition": "Markush 群組連接詞（§ 2117）",
         "checkOmnibusClaim": "概括請求項檢測（§ 112(b)）",
         "checkClaimPunctuation": "請求項標點符號（§ 608.01(m)）",
         "checkSequenceListing": "序列表合規性（§ 2422）"
@@ -390,7 +408,7 @@
       "drawings": "附圖"
     },
     "cnChecks": {
-      "requiredSections": "必要章節（专利法实施细则 §17）",
+      "requiredSections": "必要章節（专利法 §26 第1款、专利法实施细则 §17）",
       "sectionOrdering": "章節順序",
       "paragraphNumbering": "段落編號",
       "paragraphEnding": "段落結尾標點",
@@ -442,7 +460,7 @@
     "twChecks": {
       "symbolTablePresence": "有圖式簡單說明時須提供符號說明（專利法施行細則 §17）",
       "symbolTableConsistency": "符號說明中的符號於實施方式中出現（專利審查基準）",
-      "requiredSections": "必要章節（專利法施行細則 §17）",
+      "requiredSections": "必要章節（專利法 §25 第1項、專利法施行細則 §17）",
       "sectionOrdering": "章節順序",
       "paragraphNumbering": "段落編號（【NNNN】格式）",
       "paragraphEnding": "段落結尾標點",
@@ -551,7 +569,7 @@
     "abstractImpliedPhrasesFix": "「This disclosure provides...」或「A method is provided...」等用語依 MPEP § 608.01(b) 屬於隱含用語。請改為直接描述發明（例如「A method that...」）。",
     "abstractWordCountFix": "摘要須介於 50 至 150 字之間，依 MPEP § 608.01(b)。請修改至符合此範圍。",
     "cn": {
-      "requiredSections": "根據专利法实施细则 §17，說明書應包含技術領域、背景技術、發明內容和具體實施方式。請補充缺少的章節。",
+      "requiredSections": "依专利法 §26 第1款，完整稿件須包含摘要、说明书（技术领域、背景技术、发明内容、具体实施方式）及权利要求书。缺少：{{sections}}。",
       "sectionOrdering": "規定順序：技術領域 → 背景技術 → 發明內容 → 附圖說明 → 具體實施方式。請調整章節順序。",
       "paragraphNumberingXml": "根據审查指南，段落編號應連續且為四位零填充格式（0001、0002……）。請修正編號順序。",
       "paragraphNumberingDocx": "根據CNIPA規定，說明書不應添加任何形式的段落編號。WORD转XML编辑器在轉換時會自動添加編號。請刪除所有手動添加的段落編號。",
@@ -592,7 +610,7 @@
       }
     },
     "tw": {
-      "requiredSections": "TIPO規定必須包含：技術領域、先前技術、發明內容/新型內容、實施方式。有圖式時須包含圖式簡單說明及符號說明。缺少：{{sections}}。",
+      "requiredSections": "依專利法 §25 第1項，完整稿件須包含摘要、說明書（技術領域、先前技術、發明內容／新型內容、實施方式）及申請專利範圍；依專利法施行細則 §17，有圖式時說明書亦須包含圖式簡單說明與符號說明。缺少：{{sections}}。",
       "sectionOrdering": "專利法施行細則 §17規定順序：技術領域→先前技術→發明內容/新型內容→圖式簡單說明→實施方式→符號說明。請重新排列。",
       "paragraphNumbering": "若使用段落編號，應採用【NNNN】四位數字連續格式。依專利法施行細則 §17,編號為選用。",
       "paragraphEnding": "說明書段落應以中文標點（。！？）結尾。請檢查標記之段落。",
@@ -605,7 +623,7 @@
       "claimsSequential": "依專利審查基準，請求項編號須從1開始連續編列。",
       "dependencyFormat": "依專利法施行細則 §18，依附須使用正確格式（如請求項N所述之、如請求項N之等）。請檢查標記之請求項。",
       "selfDependent": "依專利法施行細則 §18，請求項不得依附於自身。自我依附：{{claims}}。",
-      "circularDependency": "依專利法施行細則 §18，請求項不得形成循環依附鏈。循環鏈：請求項 {{claims}}。",
+      "circularDependency": "依專利法施行細則 §18，請求項不得形成循環依附鏈。循環鏈：{{claims}}。",
       "forwardDependency": "依專利法施行細則 §18，附屬項僅得依附在前之請求項。依附在後：{{claims}}。",
       "singleSentence": "依專利法施行細則 §18，每一請求項須為單句，僅於末尾有一個句號（。）。請檢查標記之請求項。",
       "refNumeralParens": "依專利法施行細則 §19，請求項中之元件符號應加括號，例如(101)。請檢查標記之請求項。",
@@ -745,9 +763,9 @@
         "verify": "可能缺少先行詞基礎（§ 112(b)）：「the X／said X」疑似未有先前之「a X」引介。",
         "pass": "未偵測到先行詞基礎問題（§ 112(b)）。"
       },
-      "missingTransition": "請求項 {{claimNumber}} 缺少過渡用語（例如 'comprising'、'consisting of'）",
-      "missingTransitionDetails": "請求項 {{claimNumber}} 未包含任何公認的過渡用語。每項請求項必須在前言與主體之間包含過渡用語，例如 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' 或 'characterized in that'。",
-      "transitionsPresent": "所有請求項均包含過渡用語。",
+      "missingTransition": "請求項 {{claimNumber}} 缺少連接詞（例如 'comprising'、'consisting of'）",
+      "missingTransitionDetails": "請求項 {{claimNumber}} 未包含任何公認的連接詞。每項請求項必須在前言與主體之間包含連接詞，例如 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' 或 'characterized in that'。",
+      "transitionsPresent": "所有請求項均包含連接詞。",
       "overview": "申請專利範圍概覽。"
     },
     "abstract": {
@@ -786,8 +804,8 @@
     "cn": {
       "spec": {
         "requiredSections": {
-          "amend": "缺少必要章節：{{sections}}（专利法实施细则 §17）。",
-          "pass": "說明書包含所有必要章節。"
+          "amend": "缺少必要章節：{{sections}}（专利法 §26 第1款、专利法实施细则 §17）。",
+          "pass": "所有必要章節皆已包含。"
         },
         "sectionOrdering": {
           "amend": "說明書章節順序不符合規定（专利法实施细则 §17）。",
@@ -798,10 +816,10 @@
           "amendDocx": "說明書包含手動添加的段落編號，CNIPA申請時須移除（审查指南）。",
           "pass": "段落編號正確。",
           "amendXmlGap": "段落編號不連續：第{{prev}}段後為第{{next}}段（审查指南）。",
-          "amendXmlDuplicate": "檢測到{{count}}個重複的段落編號：段落 {{paragraphs}}（审查指南）。"
+          "amendXmlDuplicate": "檢測到{{count}}個重複的段落編號：{{paragraphs}}（审查指南）。"
         },
         "paragraphEnding": {
-          "amend": "{{count}}個段落未以有效中文標點結尾：段落 {{paragraphs}}（审查指南）。",
+          "amend": "{{count}}個段落未以有效中文標點結尾：{{paragraphs}}（审查指南）。",
           "pass": "所有段落均以有效標點結尾。"
         },
         "figureRefConsistency": {
@@ -819,7 +837,7 @@
           "amendMissing": "未發現發明名稱（审查指南 第一部分第一章）。"
         },
         "claimReference": {
-          "amend": "說明書在{{count}}個段落中引用了權利要求：段落 {{paragraphs}}（专利法实施细则 §17）。範例：{{snippet}}",
+          "amend": "說明書在{{count}}個段落中引用了權利要求：{{paragraphs}}（专利法实施细则 §17）。範例：{{snippet}}",
           "pass": "說明書未引用權利要求。"
         }
       },
@@ -853,8 +871,8 @@
           "pass": "從屬權利要求的主題名稱一致。"
         },
         "transitionPhrase": {
-          "verify": "{{count}}項獨立權利要求缺少過渡用語（如「其特徵在於」）：{{claims}}。",
-          "pass": "所有獨立權利要求均包含過渡用語。"
+          "verify": "{{count}}項獨立權利要求缺少連接詞（如「其特徵在於」）：{{claims}}。",
+          "pass": "所有獨立權利要求均包含連接詞。"
         },
         "twTerminology": {
           "verify": "發現台灣專利用語「請求項」，CNIPA申請應使用「权利要求」。",
@@ -910,7 +928,7 @@
     "tw": {
       "spec": {
         "requiredSections": {
-          "amend": "依專利法施行細則 §17，缺少必要章節。",
+          "amend": "依專利法 §25 第1項及專利法施行細則 §17，缺少必要章節。",
           "pass": "所有必要章節皆已包含。"
         },
         "sectionOrdering": {
@@ -923,7 +941,7 @@
           "amendFormat": "{{count}}個段落未使用【NNNN】格式。範例：{{examples}}（專利法施行細則 §17）。"
         },
         "paragraphEnding": {
-          "amend": "{{count}}個段落缺少結尾標點：段落 {{paragraphs}}（專利審查基準）。",
+          "amend": "{{count}}個段落缺少結尾標點：{{paragraphs}}（專利審查基準）。",
           "pass": "所有段落皆以正確標點結尾。"
         },
         "figureRefConsistency": {
@@ -988,8 +1006,8 @@
           "pass": "所有附屬項之標的名稱皆與母項一致。"
         },
         "transitionPhrase": {
-          "verify": "{{count}}項獨立項缺少過渡用語（如「其特徵在於」或「其改良在於」）：{{claims}}。",
-          "pass": "所有獨立項皆包含過渡用語。"
+          "verify": "{{count}}項獨立項缺少連接詞（如「其特徵在於」或「其改良在於」）：{{claims}}。",
+          "pass": "所有獨立項皆包含連接詞。"
         },
         "cnTerminology": {
           "verify": "在台灣專利稿件中發現大陸專利用語。",
@@ -1152,7 +1170,7 @@
     "crmNonTransitory": "請求項 {{claimNumber}}：電腦可讀媒體請求項缺少 'non-transitory' 限定詞",
     "crmNonTransitoryDetails": "請求項 {{claimNumber}} 記載電腦可讀媒體但未包含 'non-transitory' 限定詞。缺少此限定詞時，請求項涵蓋暫態訊號（如載波），不符合 35 U.S.C. § 101 之可專利標的要件。請於媒體用語前加入 'non-transitory'。",
     "markushOpenTransition": "請求項 {{claimNumber}}：Markush 群組使用開放式用語 '{{transition}}'，而非 'consisting of'",
-    "markushOpenTransitionDetails": "請求項 {{claimNumber}} 中之 Markush 群組使用 '{{transition}}'，而非規定之 'consisting of'。依據 MPEP § 2117，Markush 群組須使用封閉式過渡用語。使用開放式用語可能導致不當 Markush 群組核駁。",
+    "markushOpenTransitionDetails": "請求項 {{claimNumber}} 中之 Markush 群組使用 '{{transition}}'，而非規定之 'consisting of'。依據 MPEP § 2117，Markush 群組須使用封閉式連接詞。使用開放式用語可能導致不當 Markush 群組核駁。",
     "omnibusClaim": "請求項 {{claimNumber}} 疑似為概括請求項",
     "omnibusClaimDetails": "請求項 {{claimNumber}} 引用說明書或圖式但未記載具體技術特徵。概括請求項在美國發明專利中依 35 U.S.C. § 112(b) 一律核駁（MPEP § 2173.05(r)）。請改寫請求項以記載具體之結構或方法限定。",
     "specialFormatsPass": "未檢測到特殊請求項格式問題。",
