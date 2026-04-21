@@ -87,14 +87,14 @@ export function FeedbackProvider({ children }) {
           </DialogHeader>
           <div className="flex flex-col gap-2">
             <PickerButton
-              onClick={() => handlePick('gmail')}
-              icon={<Mail />}
-              label={t(`feedback.picker.${verb}.gmail`)}
-            />
-            <PickerButton
               onClick={() => handlePick('mailto')}
               icon={<AtSign />}
               label={t(`feedback.picker.${verb}.mailto`)}
+            />
+            <PickerButton
+              onClick={() => handlePick('gmail')}
+              icon={<Mail />}
+              label={t(`feedback.picker.${verb}.gmail`)}
             />
             <PickerButton
               onClick={() => handlePick('clipboard')}
