@@ -1016,12 +1016,12 @@
           "pass": "All independent apparatus/system claims describe component connections."
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 該/所述/前述 reference without a prior 一 introduction (專利審查基準).",
-          "pass": "All claim terms have antecedent basis (專利審查基準)."
+          "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 該/所述/前述 reference without a prior 一 introduction.",
+          "pass": "All claim terms have antecedent basis."
         },
         "specSupport": {
-          "verify": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body (專利法 §26 第3項).",
-          "pass": "All claim terms supported by the specification (專利法 §26 第3項)."
+          "verify": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body.",
+          "pass": "All claim terms supported by the specification."
         }
       },
       "abstract": {
