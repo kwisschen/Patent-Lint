@@ -628,6 +628,7 @@
       "bracketFormat": "依專利法施行細則 §17，章节标题应使用全角方括号【】。发现：{{detail}}。",
       "connectionRelationships": "標記之組件：{{sample_names}}（共 {{component_count}} 個）。請補充連接、設置於、耦接 等動詞用語，記載組件之間的結構連接關係。",
       "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语缺少先行词。详见下方「先行词基础检查」区块。",
+      "specSupportTerms": "{{claim_count}}项请求项共{{issue_count}}个用语疑未获说明书支持（專利法 §26 第3項）。详见下方「说明书支持检视」区块。",
       "titleMissing": "依專利審查基準，说明书必须包含发明名称/新型名称。请于说明书首部添加。",
       "figureRefInconsistency": {
         "onlyDrawings": "仅在圖式簡單說明中提及：{{figs}}",
@@ -1016,6 +1017,10 @@
         "antecedentBasis": {
           "verify": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少先行词（專利審查基準）：「該／所述／前述」引用未有先前之「一」引介。",
           "pass": "所有引用之用语均有先行词（專利審查基準）。"
+        },
+        "specSupport": {
+          "verify": "{{claims}} 共有 {{issue_count}} 个请求项用语疑未获说明书支持（專利法 §26 第3項）。",
+          "pass": "所有请求项用语均获说明书支持（專利法 §26 第3項）。"
         }
       },
       "abstract": {

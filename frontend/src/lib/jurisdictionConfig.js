@@ -34,6 +34,12 @@ const JURISDICTION_CONFIG = {
     section112TitleKey: 'section112.title',
     section112PassKey: 'check.claims.antecedentBasis.pass',
     pdfHeaderKey: 'pdf.header',
+    // ADR-138: spec-support rendering is US-enabled (primary reference
+    // implementation). Keys point at the existing § 112(a) copy.
+    supportsSpecSupport: true,
+    specSupportTitleKey: 'specSupport.title',
+    specSupportPassKey: 'checks.spec_support_pass',
+    specSupportReferenceCite: 'MPEP § 2163',
   },
   CN: {
     acceptedFormats: {
@@ -68,6 +74,14 @@ const JURISDICTION_CONFIG = {
     section112TitleKey: 'section112.titleTw',
     section112PassKey: 'check.claims.antecedentBasis.pass',
     pdfHeaderKey: 'pdf.header',
+    // ADR-138: CN spec-support deferred pending real drafter corpus
+    // (Phase 10 bucket). Flag keeps the feature dormant on the CN
+    // selector so the UI doesn't show a card when the pipeline emits
+    // no findings by construction.
+    supportsSpecSupport: false,
+    specSupportTitleKey: null,
+    specSupportPassKey: null,
+    specSupportReferenceCite: null,
   },
   TW: {
     acceptedFormats: {
@@ -111,6 +125,15 @@ const JURISDICTION_CONFIG = {
     // qualified references must have their own explicit antecedent.
     // For firms with stricter house rules. Plumbed through pipeline.
     strict_qualifier_matching: false,
+    // ADR-138: TW spec-support (說明書支持分析) renders as a second
+    // card under Section112Container alongside 先行詞分析. specSupport.title
+    // is jurisdiction-neutral across the 5 locales; specSupportPassKey points
+    // at a TW-native pass message introduced alongside i18n cleanup in the
+    // following commit (authority cite: 專利法 §26 第3項, not § 112(a)).
+    supportsSpecSupport: true,
+    specSupportTitleKey: 'specSupport.title',
+    specSupportPassKey: 'check.tw.claims.specSupport.pass',
+    specSupportReferenceCite: '專利法 §26 第3項',
   },
 }
 
