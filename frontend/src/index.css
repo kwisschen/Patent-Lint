@@ -91,6 +91,8 @@
   --pl-edge-stroke: #94a3b8;
   --pl-label-indep: #1e40af;
   --pl-label-dep: #334155;
+  --pl-indep-stroke: #2563eb;
+  --pl-dep-stroke: #cbd5e1;
 
   /* shadcn/ui variables */
   --background: oklch(1 0 0);
@@ -150,16 +152,20 @@
   --attention-mark-bg: #78350f;
   --attention-mark-text: #fde68a;
 
-  /* Claim diagram — gradient stops + shadow (dark) */
-  --pl-indep-start: #1e3a5f;
-  --pl-indep-end: #1e40af;
-  --pl-dep-start: #262626;
-  --pl-dep-end: #1c1c1c;
+  /* Claim diagram — gradient stops + shadow (dark)
+     Dep nodes lifted brighter than --card (oklch(0.205)) so they read as
+     elevated chips; indep nodes desaturated so labels stay legible. */
+  --pl-indep-start: #2a3f65;
+  --pl-indep-end: #3b5486;
+  --pl-dep-start: #3a3a3a;
+  --pl-dep-end: #2a2a2a;
   --pl-shadow-color: #000000;
-  --pl-shadow-opacity: 0.5;
-  --pl-edge-stroke: #64748b;
-  --pl-label-indep: #bfdbfe;
+  --pl-shadow-opacity: 0.55;
+  --pl-edge-stroke: #94a3b8;
+  --pl-label-indep: #eff6ff;
   --pl-label-dep: #e5e5e5;
+  --pl-indep-stroke: #60a5fa;
+  --pl-dep-stroke: rgba(255, 255, 255, 0.2);
 
   /* shadcn/ui dark variables */
   --background: oklch(0.145 0 0);
