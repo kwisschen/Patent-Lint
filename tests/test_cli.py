@@ -103,6 +103,54 @@ class TestAnalyzeCommand:
         assert result.exit_code == 0
 
 
+class TestLocaleFlag:
+    def test_pdf_locale_passthrough(self, tmp_path):
+        """--locale forwards to render_pdf."""
+        pytest = __import__("pytest")
+        try:
+            __import__("weasyprint")
+        except ImportError:
+            pytest.skip("weasyprint not installed — skipping PDF locale test")
+
+        docx_file = tmp_path / "test.docx"
+        docx_file.touch()
+        out_file = tmp_path / "report.pdf"
+
+        runner = CliRunner()
+        with patch("patentlint.cli.analyze_file", return_value=_mock_result()), \
+             patch("patentlint.report.generator.render_pdf", return_value=b"%PDF-1.4 stub") as mock_render:
+            result = runner.invoke(
+                main,
+                [
+                    "analyze", str(docx_file),
+                    "--format", "pdf",
+                    "-o", str(out_file),
+                    "--locale", "zh-TW",
+                ],
+            )
+
+        assert result.exit_code in (0, 1)  # 0/1 depending on findings
+        mock_render.assert_called_once()
+        _, kwargs = mock_render.call_args
+        assert kwargs.get("locale") == "zh-TW"
+
+    def test_pdf_default_locale_is_en(self, tmp_path):
+        docx_file = tmp_path / "test.docx"
+        docx_file.touch()
+        out_file = tmp_path / "report.pdf"
+
+        runner = CliRunner()
+        with patch("patentlint.cli.analyze_file", return_value=_mock_result()), \
+             patch("patentlint.report.generator.render_pdf", return_value=b"%PDF-1.4 stub") as mock_render:
+            runner.invoke(
+                main,
+                ["analyze", str(docx_file), "--format", "pdf", "-o", str(out_file)],
+            )
+
+        _, kwargs = mock_render.call_args
+        assert kwargs.get("locale") == "en"
+
+
 class TestBatchCommand:
     def test_batch_json(self, tmp_path):
         """batch <dir> --output <dir> processes all .docx files."""
