@@ -28,7 +28,6 @@ export default function Section112Container({
 }) {
   const { t } = useTranslation()
   const jConfig = getJurisdictionConfig(jurisdiction)
-  const isUS = jurisdiction === 'US'
 
   return (
     <div className="mt-4 rounded-lg border border-border/50 bg-muted/20 dark:bg-muted/30 p-3 space-y-3">
@@ -45,10 +44,12 @@ export default function Section112Container({
         <PassConfirmation messageKey={jConfig.section112PassKey} />
       )}
 
-      {isUS && (hasUnsupportedTerms ? (
+      {/* ADR-138: TW now renders SpecSupportCard alongside US. CN stays
+          gated off via supportsSpecSupport=false pending real drafter corpus. */}
+      {jConfig.supportsSpecSupport && (hasUnsupportedTerms ? (
         <SpecSupportCard unsupportedTerms={unsupportedTerms} jurisdiction={jurisdiction} />
       ) : (
-        <PassConfirmation messageKey="checks.spec_support_pass" />
+        <PassConfirmation messageKey={jConfig.specSupportPassKey} />
       ))}
     </div>
   )
