@@ -787,14 +787,14 @@
           "pass": "说明书章节顺序正确。"
         },
         "paragraphNumbering": {
-          "amendXml": "段落编号不连续（{{detail}}）。",
-          "amendDocx": "说明书包含手动添加的段落编号（CNIPA申请时须移除）。",
+          "amendXml": "段落编号不连续（{{detail}}）（审查指南）。",
+          "amendDocx": "说明书包含手动添加的段落编号，CNIPA申请时须移除（审查指南）。",
           "pass": "段落编号正确。",
-          "amendXmlGap": "段落编号不连续：第{{prev}}段后为第{{next}}段。",
-          "amendXmlDuplicate": "检测到 {{count}} 个重复的段落编号：段落 {{paragraphs}}。"
+          "amendXmlGap": "段落编号不连续：第{{prev}}段后为第{{next}}段（审查指南）。",
+          "amendXmlDuplicate": "检测到 {{count}} 个重复的段落编号：段落 {{paragraphs}}（审查指南）。"
         },
         "paragraphEnding": {
-          "amend": "{{count}} 个段落未以有效中文标点结尾：段落 {{paragraphs}}。",
+          "amend": "{{count}} 个段落未以有效中文标点结尾：段落 {{paragraphs}}（审查指南）。",
           "pass": "所有段落均以有效标点结尾。"
         },
         "figureRefConsistency": {
@@ -802,17 +802,17 @@
           "pass": "各章节附图引用一致。"
         },
         "patentTypeTerminology": {
-          "verify": "发现\"{{term}}\"，请确认是否与专利类型（发明/实用新型）一致。",
+          "verify": "发现\"{{term}}\"，请确认是否与专利类型（发明/实用新型）一致（审查指南）。",
           "pass": "专利类型用语一致。"
         },
         "title": {
-          "amendLength": "发明名称超过25个汉字（共{{count}}个字）。",
-          "amendContent": "发明名称包含禁止内容：{{title_prohibited_items}}。",
+          "amendLength": "发明名称超过25个汉字，共{{count}}个字（审查指南 第一部分第一章）。",
+          "amendContent": "发明名称包含禁止内容：{{title_prohibited_items}}（审查指南 第一部分第一章）。",
           "pass": "发明名称符合要求。",
-          "amendMissing": "未发现发明名称。"
+          "amendMissing": "未发现发明名称（审查指南 第一部分第一章）。"
         },
         "claimReference": {
-          "amend": "说明书在 {{count}} 个段落中引用了权利要求（段落 {{paragraphs}}）。示例：{{snippet}}",
+          "amend": "说明书在 {{count}} 个段落中引用了权利要求：段落 {{paragraphs}}（专利法实施细则 §17）。示例：{{snippet}}",
           "pass": "说明书未引用权利要求。"
         }
       },
