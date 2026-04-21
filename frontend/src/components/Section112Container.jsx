@@ -6,14 +6,36 @@ import AntecedentBasisCard from './AntecedentBasisCard'
 import SpecSupportCard from './SpecSupportCard'
 import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
 
-function PassConfirmation({ messageKey }) {
+// Visual parallel to AntecedentBasisCard / SpecSupportCard, but in the
+// pass palette. Keeps both sub-checks visible as their own containers even
+// when clean — avoids the pass line appearing as a footnote under whichever
+// sibling card happens to have findings.
+function PassCard({ titleKey, messageKey }) {
   const { t, i18n } = useTranslation()
   const msg = i18n.exists(messageKey) ? t(messageKey) : messageKey
 
   return (
-    <div className="flex items-center gap-2 px-3 py-2">
-      <CheckCircle className="h-4 w-4 shrink-0" style={{ color: 'var(--pass-border)' }} />
-      <span className="text-sm" style={{ color: 'var(--pass-text)' }}>{msg}</span>
+    <div
+      className="rounded-lg border-l-4 border bg-card overflow-hidden"
+      style={{ borderLeftColor: 'var(--pass-border)' }}
+    >
+      <div className="flex items-center gap-3 px-4 py-3">
+        <CheckCircle className="h-5 w-5 shrink-0" style={{ color: 'var(--pass-border)' }} />
+        <h3 className="text-sm font-semibold flex-1">{t(titleKey)}</h3>
+        <span
+          className="rounded-full px-2.5 py-0.5 text-xs font-bold"
+          style={{
+            backgroundColor: 'var(--pass-bg)',
+            color: 'var(--pass-tag-text)',
+            border: '1px solid var(--pass-border)',
+          }}
+        >
+          {t('status.pass')}
+        </span>
+      </div>
+      <div className="border-t px-4 py-3">
+        <p className="text-sm leading-relaxed" style={{ color: 'var(--pass-text)' }}>{msg}</p>
+      </div>
     </div>
   )
 }
@@ -41,7 +63,7 @@ export default function Section112Container({
       {hasAntecedentIssues ? (
         <AntecedentBasisCard issues={antecedentBasisIssues} claimTrees={claimTrees} jurisdiction={jurisdiction} />
       ) : (
-        <PassConfirmation messageKey={jConfig.section112PassKey} />
+        <PassCard titleKey="antecedentBasis.title" messageKey={jConfig.section112PassKey} />
       )}
 
       {/* ADR-138: TW now renders SpecSupportCard alongside US. CN stays
@@ -49,7 +71,7 @@ export default function Section112Container({
       {jConfig.supportsSpecSupport && (hasUnsupportedTerms ? (
         <SpecSupportCard unsupportedTerms={unsupportedTerms} jurisdiction={jurisdiction} />
       ) : (
-        <PassConfirmation messageKey={jConfig.specSupportPassKey} />
+        <PassCard titleKey={jConfig.specSupportTitleKey} messageKey={jConfig.specSupportPassKey} />
       ))}
     </div>
   )
