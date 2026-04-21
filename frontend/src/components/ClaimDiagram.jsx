@@ -86,14 +86,16 @@ const EDGE_DRAW_DELAY_BASE_MS = 220
 // Light-mode defaults, used if getComputedStyle returns an empty var() lookup
 // (e.g. inside an iframe, or if the stylesheet hasn't parsed yet).
 const FALLBACK_TOKENS = {
-  '--pl-indep-start': '#eff6ff',
-  '--pl-indep-end': '#bfdbfe',
+  '--pl-indep-start': '#f0f7ff',
+  '--pl-indep-mid': '#dbeafe',
+  '--pl-indep-end': '#a9c9f5',
   '--pl-dep-start': '#ffffff',
-  '--pl-dep-end': '#f1f5f9',
+  '--pl-dep-mid': '#f5f7fa',
+  '--pl-dep-end': '#dfe6ef',
   '--pl-shadow-color': '#0f172a',
-  '--pl-shadow-opacity': '0.14',
+  '--pl-shadow-opacity': '0.18',
   '--pl-edge-stroke': '#94a3b8',
-  '--pl-label-indep': '#1e40af',
+  '--pl-label-indep': '#1e3a8a',
   '--pl-label-dep': '#334155',
   '--pl-indep-stroke': '#2563eb',
   '--pl-dep-stroke': '#cbd5e1',
@@ -131,10 +133,12 @@ function enhanceSvg(svgEl, suffix, surfaceEl) {
   const extras = `
     <linearGradient id="${gradIndep}" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="${tokens['--pl-indep-start']}"/>
+      <stop offset="45%" stop-color="${tokens['--pl-indep-mid']}"/>
       <stop offset="100%" stop-color="${tokens['--pl-indep-end']}"/>
     </linearGradient>
     <linearGradient id="${gradDep}" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="${tokens['--pl-dep-start']}"/>
+      <stop offset="45%" stop-color="${tokens['--pl-dep-mid']}"/>
       <stop offset="100%" stop-color="${tokens['--pl-dep-end']}"/>
     </linearGradient>
     <filter id="${shadow}" x="-30%" y="-30%" width="160%" height="160%">
