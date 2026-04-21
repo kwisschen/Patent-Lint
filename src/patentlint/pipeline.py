@@ -19,6 +19,7 @@ from patentlint.analysis import specification as spec_analysis
 from patentlint.analysis import tw_abstract as tw_abstract_analysis
 from patentlint.analysis import tw_claims as tw_claims_analysis
 from patentlint.analysis import tw_cross_reference as tw_cross_ref_analysis
+from patentlint.analysis import tw_spec_support as tw_spec_support_analysis
 from patentlint.analysis import tw_specification as tw_spec_analysis
 from patentlint.models import AnalysisResult, CheckItem, CnPatentDocument, Jurisdiction, TwPatentDocument
 from patentlint.parser import claims as claims_parser
@@ -356,6 +357,41 @@ def _run_tw_pipeline(
         strict_plural_reference_matching=strict_plural_reference_matching,
         strict_qualifier_matching=strict_qualifier_matching,
     )
+
+    # ADR-138: TW specification-support check (專利法 §26 第3項).
+    # Emits UnsupportedTerm findings for claim noun phrases that fail
+    # the 4-tier match (symbol table / normalized exact / raw exact /
+    # char-window). Walker-tuning flags intentionally NOT forwarded —
+    # spec-support normalization is a separate semantic axis.
+    tw_unsupported_terms = tw_spec_support_analysis.check_spec_support_tw(tw_doc)
+    if tw_unsupported_terms:
+        issue_count = len(tw_unsupported_terms)
+        claim_ids = sorted({ut.claim_number for ut in tw_unsupported_terms})
+        claim_count = len(claim_ids)
+        claims_checks = list(claims_checks) + [
+            CheckItem(
+                status="verify",
+                message="Possible claim terms not supported by the specification.",
+                message_key="check.tw.claims.specSupport.verify",
+                details=f"{issue_count} term(s) may lack specification support across {claim_count} claim(s).",
+                details_key="details.tw.specSupportTerms",
+                details_params={
+                    "issue_count": issue_count,
+                    "claim_count": claim_count,
+                    "claims": claim_ids,
+                },
+                reference="專利法 §26 第3項",
+            )
+        ]
+    else:
+        claims_checks = list(claims_checks) + [
+            CheckItem(
+                status="pass",
+                message="All claim terms supported by the specification.",
+                message_key="check.tw.claims.specSupport.pass",
+                reference="專利法 §26 第3項",
+            )
+        ]
     if tw_antecedent_basis:
         issue_count = len(tw_antecedent_basis)
         claim_ids = sorted({item["claim_id"] for item in tw_antecedent_basis})
@@ -421,6 +457,7 @@ def _run_tw_pipeline(
         tw_abstract_checks=abstract_checks,
         tw_drawings_checks=drawings_checks,
         antecedent_basis_issues=tw_antecedent_basis,
+        unsupported_terms=tw_unsupported_terms,
     )
 
 
