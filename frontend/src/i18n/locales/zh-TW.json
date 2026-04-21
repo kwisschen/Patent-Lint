@@ -1076,6 +1076,7 @@
     "engine": "正在載入分析引擎...",
     "patentlint": "正在載入 PatentLint...",
     "ready": "分析引擎已就緒",
+    "firstVisitHint": "首次造訪需數秒；完成後將快取於您的瀏覽器，下次秒開",
     "offline_note": "首次載入後可離線使用",
     "feature1_title": "無需上傳。無需帳號。無需安裝。",
     "feature1_desc": "您的機密專利稿件不會離開您的裝置。不會上傳任何內容，PatentLint 也不會知道您的身份。",

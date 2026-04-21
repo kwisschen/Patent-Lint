@@ -1076,6 +1076,7 @@
     "engine": "분석 엔진 로딩 중...",
     "patentlint": "PatentLint 로딩 중...",
     "ready": "분석 엔진 로드 완료",
+    "firstVisitHint": "첫 방문 시 몇 초 정도 걸립니다. 이후에는 캐시되어 빠르게 로드됩니다",
     "offline_note": "첫 로드 후 오프라인 사용 가능",
     "feature1_title": "업로드 불필요. 계정 불필요. 설치 불필요.",
     "feature1_desc": "기밀 특허 초안이 기기를 벗어나지 않습니다. 아무것도 업로드되지 않으며, PatentLint는 사용자의 신원조차 알지 못합니다.",

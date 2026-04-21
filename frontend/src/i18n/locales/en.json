@@ -1076,6 +1076,7 @@
     "engine": "Loading analysis engine...",
     "patentlint": "Loading PatentLint...",
     "ready": "Analysis engine loaded",
+    "firstVisitHint": "First visit takes a few seconds — the engine caches after this",
     "offline_note": "Works offline after first load",
     "feature1_title": "No Upload. No Account. No Install.",
     "feature1_desc": "Your confidential patent drafts never leave your device. Nothing is uploaded, and PatentLint doesn't even know who you are.",
