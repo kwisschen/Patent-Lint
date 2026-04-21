@@ -81,15 +81,18 @@
   --attention-mark-bg: #fde68a;
   --attention-mark-text: #78350f;
 
-  /* Claim diagram — gradient stops + shadow (light) */
-  --pl-indep-start: #eff6ff;
-  --pl-indep-end: #bfdbfe;
+  /* Claim diagram — 3-stop glass gradient + shadow (light)
+     start = top highlight, mid = body, end = deeper bottom tint. */
+  --pl-indep-start: #f0f7ff;
+  --pl-indep-mid: #dbeafe;
+  --pl-indep-end: #a9c9f5;
   --pl-dep-start: #ffffff;
-  --pl-dep-end: #f1f5f9;
+  --pl-dep-mid: #f5f7fa;
+  --pl-dep-end: #dfe6ef;
   --pl-shadow-color: #0f172a;
-  --pl-shadow-opacity: 0.14;
+  --pl-shadow-opacity: 0.18;
   --pl-edge-stroke: #94a3b8;
-  --pl-label-indep: #1e40af;
+  --pl-label-indep: #1e3a8a;
   --pl-label-dep: #334155;
   --pl-indep-stroke: #2563eb;
   --pl-dep-stroke: #cbd5e1;
@@ -152,21 +155,22 @@
   --attention-mark-bg: #78350f;
   --attention-mark-text: #fde68a;
 
-  /* Claim diagram — gradient stops + shadow (dark)
-     Brighter lifted chips with a slight blue tint so dep nodes don't read
-     as dead slate. Indep node gets a richer blue with a brighter stroke +
-     stronger shadow so it visually anchors the tree. */
-  --pl-indep-start: #3b5998;
-  --pl-indep-end: #4f73b8;
-  --pl-dep-start: #404859;
-  --pl-dep-end: #2f3644;
+  /* Claim diagram — 3-stop glass gradient + shadow (dark)
+     Top-edge highlight + blue-tinted body + deeper bottom stop so chips
+     feel glassy and lifted rather than flat slate. */
+  --pl-indep-start: #6688c9;
+  --pl-indep-mid: #3b5998;
+  --pl-indep-end: #23376b;
+  --pl-dep-start: #5a6478;
+  --pl-dep-mid: #3a4150;
+  --pl-dep-end: #232836;
   --pl-shadow-color: #000000;
-  --pl-shadow-opacity: 0.65;
+  --pl-shadow-opacity: 0.7;
   --pl-edge-stroke: #94a3b8;
   --pl-label-indep: #ffffff;
   --pl-label-dep: #f1f5f9;
   --pl-indep-stroke: #93c5fd;
-  --pl-dep-stroke: rgba(148, 163, 184, 0.35);
+  --pl-dep-stroke: rgba(148, 163, 184, 0.4);
 
   /* shadcn/ui dark variables */
   --background: oklch(0.145 0 0);
