@@ -106,7 +106,7 @@
   },
   "section112": {
     "title": "§ 112 分析",
-    "titleTw": "先行词分析",
+    "titleTw": "引用基础分析",
     "titleTwSpec": "§26 第3項分析"
   },
   "results": {
@@ -155,6 +155,25 @@
       "clipboard": "复制到剪贴板",
       "remember": "记住我的选择"
     },
+    "report": "反馈错误",
+    "email": {
+      "subjectFinding": "PatentLint 分析结果反馈：{{checkKey}}",
+      "subjectFooter": "PatentLint 使用反馈",
+      "subjectEnterprise": "PatentLint 企业咨询",
+      "fieldColon": "：",
+      "fieldCheck": "检查项目",
+      "fieldMessage": "消息内容",
+      "fieldDetails": "详细说明",
+      "fieldStatus": "状态",
+      "fieldClaim": "权利要求",
+      "fieldTerms": "用语",
+      "fieldPhrases": "词句",
+      "fieldReferenceForm": "引用形式",
+      "fieldJurisdiction": "地区",
+      "fieldBrowser": "浏览器",
+      "fieldLocale": "语言",
+      "fieldBuild": "版本"
+    },
     "emailGreeting": "Christopher 你好，",
     "bodyPlaceholder": "[请用一两句话说明此项分析结果的问题：是误判、分类错误，还是检查遗漏了什么？请勿粘贴权利要求文字或任何文稿内容；分析结果本身已自动附上。]",
     "footerIntro": "我想就 PatentLint 提供一些意见反馈。",
@@ -168,7 +187,7 @@
     "button": "分析稿件"
   },
   "antecedentBasis": {
-    "title": "先行词基础检查",
+    "title": "引用基础检查",
     "findings": "项问题",
     "finding": "项问题"
   },
@@ -182,7 +201,7 @@
     "title": "说明书支持检查",
     "items": "个用语",
     "item": "个用语",
-    "crossRefAntecedent": "亦于上方之先行词基础检查中标记。"
+    "crossRefAntecedent": "亦于上方之引用基础检查中标记。"
   },
   "triage": {
     "title": "优先处理摘要",
@@ -301,14 +320,14 @@
     "productTitle": "PatentLint 是什么？",
     "productTagline": "同类首创的专利稿件检查工具，完全在您的浏览器中本地运行。",
     "productDesc1": "PatentLint 是免费的专利稿件检查工具，在审查员指出缺陷之前先行检出问题。拖放美国、中国或台湾专利稿件，便可即时获取合规报告，全程于本地运行。无需上传、无需账号、不使用云端。",
-    "productDesc2": "PatentLint 依据 MPEP（美国）、CNIPA 规则（中国）及 TIPO 规则（台湾）进行撰写规则检查，检测常见问题，如缺乏先行词基础、不正确的权利要求结构和限制性用语。",
+    "productDesc2": "PatentLint 依据 MPEP（美国）、CNIPA 规则（中国）及 TIPO 规则（台湾）进行撰写规则检查，检测常见问题，如缺乏引用基础、不正确的权利要求结构和限制性用语。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查文稿本身。",
     "usFeatures": {
       "title": "交互式美国专利分析",
       "claimTree": {
         "title": "权利要求树与 § 112 分析器",
-        "description": "交互式依赖树呈现多重从属与多重独立权利要求结构；§ 112 分析器同时检查先行词基础（§ 112(b)）与书面描述支持（§ 112(a)），同一用语同时缺少两者时交互注记，并检测 Markush、Jepson、means-plus-function 与过渡用语等特殊格式。"
+        "description": "交互式依赖树呈现多重从属与多重独立权利要求结构；§ 112 分析器同时检查引用基础（§ 112(b)）与书面描述支持（§ 112(a)），同一用语同时缺少两者时交互注记，并检测 Markush、Jepson、means-plus-function 与连接词等特殊格式。"
       },
       "specAbstract": {
         "title": "说明书与摘要结构",
@@ -352,15 +371,15 @@
         "indefiniteTerms": "不确定用语（MPEP § 2173.05(b)）",
         "impliedPhrases": "摘要中的隐含措辞（MPEP § 608.01(b)）",
         "whereinCommas": "「wherein」逗号规则",
-        "antecedentBasis": "先行词基础（「the X」无先前「a X」）",
+        "antecedentBasis": "引用基础（「the X」无先前「a X」）",
         "meansPlusFunction": "功能性限定（35 U.S.C. § 112(f)）",
         "preambleConsistency": "权利要求前序一致性（MPEP § 608.01(m)）",
         "specSupport": "说明书对权利要求用语的支持",
         "legalPhrasesAbstract": "摘要中的法律用语",
-        "transitionPhrase": "权利要求过渡用语（§ 112）",
+        "transitionPhrase": "权利要求连接词（§ 112）",
         "checkJepsonPriorArt": "Jepson 现有技术承认（§ 2129）",
         "checkCrmNonTransitory": "计算机可读介质 non-transitory 限定（§ 101）",
-        "checkMarkushTransition": "Markush 群组过渡用语（§ 2117）",
+        "checkMarkushTransition": "Markush 群组连接词（§ 2117）",
         "checkOmnibusClaim": "概括权利要求检测（§ 112(b)）",
         "checkClaimPunctuation": "权利要求标点符号（§ 608.01(m)）",
         "checkSequenceListing": "序列表合规性（§ 2422）"
@@ -371,7 +390,7 @@
     "cnFeatures": {
       "title": "交互式中国专利分析",
       "claimTree": {
-        "title": "权利要求结构与先行词分析器",
+        "title": "权利要求结构与引用基础分析器",
         "description": "交互式权利要求依赖树呈现多重从属与多重独立结构，并搭配广度优先的祖先链分析器；检查项目包括主题名称一致性、引用格式、以及附图标记括号等。"
       },
       "specAbstract": {
@@ -390,7 +409,7 @@
       "drawings": "附图"
     },
     "cnChecks": {
-      "requiredSections": "必要章节（专利法实施细则 §17）",
+      "requiredSections": "必要章节（专利法 §26 第1款、专利法实施细则 §17）",
       "sectionOrdering": "章节顺序",
       "paragraphNumbering": "段落编号",
       "paragraphEnding": "段落结尾标点",
@@ -422,7 +441,7 @@
       "title": "交互式台湾专利分析",
       "claimTree": {
         "title": "请求项树与 §26 第3項 分析器",
-        "description": "交互式请求项相依树搭配 專利法 §26 第3項 分析器，同时检视先行词基础与说明书支持；同一用语若两项皆欠缺，将交互注记。分析器并处理二段式格式（其特徵在於／其改良在於）、单句化规则、以及引用记载型式（一種X，具備如請求項N所述的Y）。四阶 CJK 比对机制（符號說明／正规化／原文／字符视窗）以降低误判。"
+        "description": "交互式请求项相依树搭配 專利法 §26 第3項 分析器，同时检视引用基础与说明书支持；同一用语若两项皆欠缺，将交互注记。分析器并处理二段式格式（其特徵在於／其改良在於）、单句化规则、以及引用记载型式（一種X，具備如請求項N所述的Y）。四阶 CJK 比对机制（符號說明／正规化／原文／字符视窗）以降低误判。"
       },
       "specAbstract": {
         "title": "说明书与摘要检查",
@@ -442,7 +461,7 @@
     "twChecks": {
       "symbolTablePresence": "存在圖式簡單說明时须提供符號說明（專利法施行細則 §17）",
       "symbolTableConsistency": "符號說明中的符号在實施方式中出现（專利審查基準）",
-      "requiredSections": "必要章节（專利法施行細則 §17）",
+      "requiredSections": "必要章节（專利法 §25 第1項、專利法施行細則 §17）",
       "sectionOrdering": "章节顺序",
       "paragraphNumbering": "段落编号（【NNNN】格式）",
       "paragraphEnding": "段落结尾标点",
@@ -465,7 +484,7 @@
       "multiDepOnMultiDep": "多项附属项不得依附另一多项附属项",
       "multiDepAlternative": "多项附属项须采择一形式",
       "titleSubjectMatch": "发明名称与请求项标的一致",
-      "antecedentBasis": "先行词分析",
+      "antecedentBasis": "引用基础分析",
       "specSupport": "说明书对请求项用语之支持（專利法 §26 第3項）",
       "charCount": "摘要字数（250字以下）",
       "titleMatch": "发明名称出现于摘要中",
@@ -537,7 +556,7 @@
     "multipleDependentClaims": "权利要求：{{list}}。多项从属权利要求会产生额外费用，且不得从属于其他多项从属权利要求（35 U.S.C. § 112(e)）。请确认此为有意为之。",
     "selfDependentClaims": "权利要求：{{list}}。权利要求不得从属于自身。请修正从属关系引用。",
     "meansFunctionClaims": "权利要求：{{list}}。依 § 112(f)，权利要求范围限于说明书中公开的对应结构及等同物。请确认说明书针对各功能性限定公开了充分的结构。",
-    "antecedentBasisTerms": "{{count}}项先行词基础问题，涉及{{claims}}项权利要求。每个确定引用（\"the X\"或\"said X\"）须有先前的不定引用（\"a X\"或\"an X\"）。缺少先行词基础可能导致 § 112(b) 不确定性驳回。",
+    "antecedentBasisTerms": "{{count}}项引用基础问题，涉及{{claims}}项权利要求。每个确定引用（\"the X\"或\"said X\"）须有先前的不定引用（\"a X\"或\"an X\"）。缺少引用基础可能导致 § 112(b) 不确定性驳回。",
     "preambleNounMismatch": "权利要求 {{claim}} 从属于权利要求 {{parent}}。前序名词不同，但若指代同一实体则可能合理。请确认一致性。",
     "preambleNounMismatchSummary": "权利要求 {{rootId}} 使用母项名词「{{parent}}」；{{count}} 个从属权利要求使用「{{dependent}}」。请确认是否指代同一实体，或统一前序名词。",
     "preambleIndefiniteArticle": "权利要求 {{claim}} 从属于权利要求 {{parent}}。从属权利要求须使用定冠词\"The\"指代独立权利要求实体，而非\"A\"或\"An\"。",
@@ -551,7 +570,7 @@
     "abstractImpliedPhrasesFix": "\"This disclosure provides...\"或\"A method is provided...\"等措辞依 MPEP § 608.01(b) 属于隐含措辞。请改为直接描述发明（例如\"A method that...\"）。",
     "abstractWordCountFix": "摘要须介于 50 至 150 字之间，依 MPEP § 608.01(b)。请修改以符合此范围。",
     "cn": {
-      "requiredSections": "根据专利法实施细则 §17，说明书应包含技术领域、背景技术、发明内容和具体实施方式。请补充缺少的章节。",
+      "requiredSections": "依专利法 §26 第1款，完整稿件须包含摘要、说明书（技术领域、背景技术、发明内容、具体实施方式）及权利要求书。缺少：{{sections}}。",
       "sectionOrdering": "规定顺序：技术领域 → 背景技术 → 发明内容 → 附图说明 → 具体实施方式。请调整章节顺序。",
       "paragraphNumberingXml": "根据审查指南，段落编号应连续且为四位零填充格式（0001、0002……）。请修正编号顺序。",
       "paragraphNumberingDocx": "根据CNIPA规定，说明书不应添加任何形式的段落编号。WORD转XML编辑器在转换时会自动添加编号。请删除所有手动添加的段落编号。",
@@ -577,7 +596,7 @@
       "abstractCharCount": "根据专利法实施细则 §23，摘要不得超过300个汉字。请缩短摘要。",
       "abstractTitleMatch": "根据审查指南，摘要应与发明名称一致。请确认摘要是否体现了发明名称。",
       "commercialLanguage": "根据专利法实施细则 §23，摘要不得包含商业性宣传用语。请删除\"最优\"\"最佳\"\"世界领先\"\"国际领先\"\"国内首创\"\"填补空白\"等用语。",
-      "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语缺少先行词。详见下方「先行词基础检查」区块。",
+      "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语缺少引用基础。详见下方「引用基础检查」区块。",
       "titleMissing": "根据审查指南 第一部分第一章，说明书必须包含发明名称。请于说明书首部添加发明名称。",
       "figureRefInconsistency": {
         "onlyDrawings": "仅在附图说明中提及：{{figs}}",
@@ -592,7 +611,7 @@
       }
     },
     "tw": {
-      "requiredSections": "TIPO规定必须包含：技術領域、先前技術、發明內容/新型內容、實施方式。有图式时须包含圖式簡單說明及符號說明。缺少：{{sections}}。",
+      "requiredSections": "依專利法 §25 第1項，完整稿件须包含摘要、說明書（技術領域、先前技術、發明內容／新型內容、實施方式）及申請專利範圍；依專利法施行細則 §17，有图式时說明書亦须包含圖式簡單說明与符號說明。缺少：{{sections}}。",
       "sectionOrdering": "專利法施行細則 §17规定顺序：技術領域→先前技術→發明內容/新型內容→圖式簡單說明→實施方式→符號說明。请重新排列。",
       "paragraphNumbering": "如使用段落编号，应采用【NNNN】四位数字连续格式。依專利法施行細則 §17，编号为选用。",
       "paragraphEnding": "说明书段落应以中文标点（。！？）结尾。请检查标记之段落。",
@@ -605,12 +624,12 @@
       "claimsSequential": "依專利審查基準，请求项编号须从1开始连续编列。",
       "dependencyFormat": "依專利法施行細則 §18，依附须使用正确格式（如請求項N所述之、如請求項N之等）。请检查标记之请求项。",
       "selfDependent": "依專利法施行細則 §18，请求项不得依附于自身。自我依附：{{claims}}。",
-      "circularDependency": "依專利法施行細則 §18，请求项不得形成循环依附链。循环链：请求项 {{claims}}。",
+      "circularDependency": "依專利法施行細則 §18，请求项不得形成循环依附链。循环链：{{claims}}。",
       "forwardDependency": "依專利法施行細則 §18，附属项仅得依附在前之请求项。依附在后：{{claims}}。",
       "singleSentence": "依專利法施行細則 §18，每一请求项须为单句，仅于末尾有一个句号（。）。请检查标记之请求项。",
       "refNumeralParens": "依專利法施行細則 §19，请求项中之元件符号应加括号，例如(101)。请检查标记之请求项。",
       "subjectConsistency": "附属项之标的名称应与所依附之母项标的名称一致。请检查标记之请求项。",
-      "transitionPhrase": "依專利法施行細則 §20，独立项应包含过渡用语，如「其特徵在於」或「其改良在於」。请检查标记之请求项。",
+      "transitionPhrase": "依專利法施行細則 §20，独立项应包含连接词，如「其特徵在於」或「其改良在於」。请检查标记之请求项。",
       "cnTerminology": "发现简体中文专利用语：{{detail}}。台湾专利稿件应使用TIPO用语（請求項、說明書、先前技術、實施方式等），而非CNIPA用语（权利要求、说明书、背景技术、具体实施方式等）。",
       "specDrawingRef": "依專利法施行細則 §19，请求项不得引用说明书或图式（如「如說明書所述」「如圖所示」）。发现：{{detail}}。",
       "multiDepOnMultiDep": "依專利法施行細則 §18，多项附属项不得直接或间接依附于另一多项附属项。标记：{{claims}}。",
@@ -633,7 +652,7 @@
       },
       "bracketFormat": "依專利法施行細則 §17，章节标题应使用全角方括号【】。发现：{{detail}}。",
       "connectionRelationships": "標記之組件：{{sample_names}}（共 {{component_count}} 個）。請補充連接、設置於、耦接 等動詞用語，記載組件之間的結構連接關係。",
-      "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语缺少先行词。详见下方「先行词基础检查」区块。",
+      "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语缺少引用基础。详见下方「引用基础检查」区块。",
       "specSupportTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语疑似未获说明书支持。详见下方「说明书支持检视」区块。",
       "titleMissing": "依專利審查基準，说明书必须包含发明名称/新型名称。请于说明书首部添加。",
       "figureRefInconsistency": {
@@ -742,12 +761,12 @@
         "pass": "未检测到功能性限定用语。"
       },
       "antecedentBasis": {
-        "verify": "可能缺少先行词基础（§ 112(b)）：「the X／said X」疑似未有先前之「a X」引介。",
-        "pass": "未检测到先行词基础问题（§ 112(b)）。"
+        "verify": "可能缺少引用基础（§ 112(b)）：「the X／said X」疑似未有先前之「a X」引介。",
+        "pass": "未检测到引用基础问题（§ 112(b)）。"
       },
-      "missingTransition": "权利要求 {{claimNumber}} 缺少过渡用语（例如 'comprising'、'consisting of'）",
-      "missingTransitionDetails": "权利要求 {{claimNumber}} 未包含任何公认的过渡用语。每项权利要求必须在前序部分与主体之间包含过渡用语，例如 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' 或 'characterized in that'。",
-      "transitionsPresent": "所有权利要求均包含过渡用语。",
+      "missingTransition": "权利要求 {{claimNumber}} 缺少连接词（例如 'comprising'、'consisting of'）",
+      "missingTransitionDetails": "权利要求 {{claimNumber}} 未包含任何公认的连接词。每项权利要求必须在前序部分与主体之间包含连接词，例如 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' 或 'characterized in that'。",
+      "transitionsPresent": "所有权利要求均包含连接词。",
       "overview": "权利要求概览。"
     },
     "abstract": {
@@ -786,8 +805,8 @@
     "cn": {
       "spec": {
         "requiredSections": {
-          "amend": "缺少必要章节：{{sections}}（专利法实施细则 §17）。",
-          "pass": "说明书包含所有必要章节。"
+          "amend": "缺少必要章节：{{sections}}（专利法 §26 第1款、专利法实施细则 §17）。",
+          "pass": "所有必要章节均已包含。"
         },
         "sectionOrdering": {
           "amend": "说明书章节顺序不符合规定（专利法实施细则 §17）。",
@@ -798,10 +817,10 @@
           "amendDocx": "说明书包含手动添加的段落编号，CNIPA申请时须移除（审查指南）。",
           "pass": "段落编号正确。",
           "amendXmlGap": "段落编号不连续：第{{prev}}段后为第{{next}}段（审查指南）。",
-          "amendXmlDuplicate": "检测到 {{count}} 个重复的段落编号：段落 {{paragraphs}}（审查指南）。"
+          "amendXmlDuplicate": "检测到 {{count}} 个重复的段落编号：{{paragraphs}}（审查指南）。"
         },
         "paragraphEnding": {
-          "amend": "{{count}} 个段落未以有效中文标点结尾：段落 {{paragraphs}}（审查指南）。",
+          "amend": "{{count}} 个段落未以有效中文标点结尾：{{paragraphs}}（审查指南）。",
           "pass": "所有段落均以有效标点结尾。"
         },
         "figureRefConsistency": {
@@ -819,7 +838,7 @@
           "amendMissing": "未发现发明名称（审查指南 第一部分第一章）。"
         },
         "claimReference": {
-          "amend": "说明书在 {{count}} 个段落中引用了权利要求：段落 {{paragraphs}}（专利法实施细则 §17）。示例：{{snippet}}",
+          "amend": "说明书在 {{count}} 个段落中引用了权利要求：{{paragraphs}}（专利法实施细则 §17）。示例：{{snippet}}",
           "pass": "说明书未引用权利要求。"
         }
       },
@@ -853,8 +872,8 @@
           "pass": "从属权利要求的主题名称一致。"
         },
         "transitionPhrase": {
-          "verify": "{{count}} 项独立权利要求缺少过渡用语（如「其特征在于」）：{{claims}}。",
-          "pass": "所有独立权利要求均包含过渡用语。"
+          "verify": "{{count}} 项独立权利要求缺少连接词（如「其特征在于」）：{{claims}}。",
+          "pass": "所有独立权利要求均包含连接词。"
         },
         "twTerminology": {
           "verify": "发现台湾专利用语\"请求项\"，CNIPA申请应使用\"权利要求\"。",
@@ -877,8 +896,8 @@
           "pass": "所有独立装置／系统权利要求均已记载组件的连接关系。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少先行词（审查指南）：「该／所述」引用未有先前之「一」引介。",
-          "pass": "所有引用之用语皆有先行词（审查指南）。"
+          "verify": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少引用基础（审查指南）：「该／所述」引用未有先前之「一」引介。",
+          "pass": "所有引用之用语皆有引用基础（审查指南）。"
         }
       },
       "abstract": {
@@ -910,7 +929,7 @@
     "tw": {
       "spec": {
         "requiredSections": {
-          "amend": "依專利法施行細則 §17，缺少必要章节。",
+          "amend": "依專利法 §25 第1項及專利法施行細則 §17，缺少必要章节。",
           "pass": "所有必要章节均已包含。"
         },
         "sectionOrdering": {
@@ -923,7 +942,7 @@
           "amendFormat": "{{count}}个段落未使用【NNNN】格式。示例：{{examples}}（專利法施行細則 §17）。"
         },
         "paragraphEnding": {
-          "amend": "{{count}}个段落缺少结尾标点：段落 {{paragraphs}}（專利審查基準）。",
+          "amend": "{{count}}个段落缺少结尾标点：{{paragraphs}}（專利審查基準）。",
           "pass": "所有段落均以正确标点结尾。"
         },
         "figureRefConsistency": {
@@ -988,8 +1007,8 @@
           "pass": "所有附属项之主题名称均与母项一致。"
         },
         "transitionPhrase": {
-          "verify": "{{count}}项独立项缺少过渡用语（如「其特徵在於」或「其改良在於」）：{{claims}}。",
-          "pass": "所有独立项均包含过渡用语。"
+          "verify": "{{count}}项独立项缺少连接词（如「其特徵在於」或「其改良在於」）：{{claims}}。",
+          "pass": "所有独立项均包含连接词。"
         },
         "cnTerminology": {
           "verify": "在台湾专利稿件中发现大陆专利用语。",
@@ -1021,8 +1040,8 @@
           "pass": "所有獨立裝置／系統項均已記載組件之連接關係。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少先行词：「該／所述／前述」引用未有先前之「一」引介。",
-          "pass": "所有引用之用语均有先行词。"
+          "verify": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少引用基础：「該／所述／前述」引用未有先前之「一」引介。",
+          "pass": "所有引用之用语均有引用基础。"
         },
         "specSupport": {
           "verify": "{{claims}} 共有 {{issue_count}} 个权利要求用语疑似未获说明书支持。",
@@ -1081,7 +1100,7 @@
     "feature1_title": "无需上传。无需账号。无需安装。",
     "feature1_desc": "您的机密专利文稿不会离开您的设备。不会上传任何内容，PatentLint 也不会知道您的身份。",
     "feature2_title": "MPEP／CNIPA／TIPO 检查与权利要求树状图",
-    "feature2_desc": "检测限制性用语、不确定用语及缺乏先行词基础等问题，并以交互式树状图呈现权利要求从属关系。",
+    "feature2_desc": "检测限制性用语、不确定用语及缺乏引用基础等问题，并以交互式树状图呈现权利要求从属关系。",
     "feature3_title": "权利要求树状图",
     "feature3_desc": "交互式从属关系树状图和 Mermaid 图表，一目了然地呈现权利要求结构。",
     "feature4_title": "随处可用",
@@ -1106,7 +1125,7 @@
     "dependent": "从属项",
     "claimCategories": "权利要求类别",
     "categoryCounts": "方法 {{method}} 项 / 装置 {{apparatus}} 项",
-    "antecedentBasis": "先行词基础检查",
+    "antecedentBasis": "引用基础检查",
     "antecedentTerm": "用语",
     "antecedentTerms": "未引用之用语",
     "specSupport": "说明书支持检查",
@@ -1123,7 +1142,7 @@
     "disclaimerFooter": "由 PatentLint 生成 · 本报告不构成法律意见 · 建议由合格专利专业人员复核",
     "didYouMean": "是否应为「{{term}}」（于权利要求 {{claim_id}} 中引介）？",
     "seeSpecSupportBelow": "亦于下方之说明书支持检查中标记。",
-    "seeAntecedentAbove": "亦于上方之先行词基础检查中标记。",
+    "seeAntecedentAbove": "亦于上方之引用基础检查中标记。",
     "passedChecksCount": "通过项目（{{count}}）",
     "triage": {
       "title": "优先处理项目"
@@ -1152,7 +1171,7 @@
     "crmNonTransitory": "权利要求 {{claimNumber}}：计算机可读介质权利要求缺少 'non-transitory' 限定词",
     "crmNonTransitoryDetails": "权利要求 {{claimNumber}} 记载计算机可读介质但未包含 'non-transitory' 限定词。缺少此限定词时，权利要求涵盖瞬态信号（如载波），不符合 35 U.S.C. § 101 的可专利主题要求。请在介质用语前加入 'non-transitory'。",
     "markushOpenTransition": "权利要求 {{claimNumber}}：Markush 群组使用开放式用语 '{{transition}}'，而非 'consisting of'",
-    "markushOpenTransitionDetails": "权利要求 {{claimNumber}} 中的 Markush 群组使用 '{{transition}}'，而非规定的 'consisting of'。依据 MPEP § 2117，Markush 群组须使用封闭式过渡用语。使用开放式用语可能导致不当 Markush 群组驳回。",
+    "markushOpenTransitionDetails": "权利要求 {{claimNumber}} 中的 Markush 群组使用 '{{transition}}'，而非规定的 'consisting of'。依据 MPEP § 2117，Markush 群组须使用封闭式连接词。使用开放式用语可能导致不当 Markush 群组驳回。",
     "omnibusClaim": "权利要求 {{claimNumber}} 疑似为概括权利要求",
     "omnibusClaimDetails": "权利要求 {{claimNumber}} 引用说明书或附图但未记载具体技术特征。概括权利要求在美国发明专利中依 35 U.S.C. § 112(b) 一律驳回（MPEP § 2173.05(r)）。请改写权利要求以记载具体的结构或方法限定。",
     "specialFormatsPass": "未检测到特殊权利要求格式问题。",
@@ -1239,7 +1258,7 @@
     "s6": {
       "title": "非属法律意见",
       "p1": "PatentLint 为自动化撰稿辅助工具。其输出仅供初步参考，无法替代具备资格之专利专业人员之审阅。本网站所产生之任何内容均不构成法律意见。请勿仅凭 PatentLint 之输出，作为专利申请、答辩或行使权利之依据。",
-      "p2": "检查项目包括先行词基础分析、说明书支持分析（TW 依專利法 §26 第3項；US 依 § 112(a)）、章节顺序、权利要求标点，以及其他规则式检查。各项检查系标示供您审阅之候选事项，并非法律判断。"
+      "p2": "检查项目包括引用基础分析、说明书支持分析（TW 依專利法 §26 第3項；US 依 § 112(a)）、章节顺序、权利要求标点，以及其他规则式检查。各项检查系标示供您审阅之候选事项，并非法律判断。"
     },
     "s7": {
       "title": "免责声明",
