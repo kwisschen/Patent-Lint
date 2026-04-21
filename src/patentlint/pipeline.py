@@ -371,6 +371,40 @@ def _run_tw_pipeline(
         tw_antecedent_basis,
         tw_unsupported_terms,
     )
+    # Emit antecedent tile BEFORE spec-support tile so the summary-grid
+    # ordering matches Section112Container (antecedent card renders first,
+    # spec-support card renders below). Both cite 專利法 §26 第3項 — they
+    # are sibling sub-requirements under the same statute clause
+    # (ADR-138), so the umbrella heading + the two tiles carry a single
+    # coherent citation.
+    if tw_antecedent_basis:
+        issue_count = len(tw_antecedent_basis)
+        claim_ids = sorted({item["claim_id"] for item in tw_antecedent_basis})
+        claim_count = len(claim_ids)
+        claims_checks = list(claims_checks) + [
+            CheckItem(
+                status="verify",
+                message="Possible missing antecedent basis found.",
+                message_key="check.tw.claims.antecedentBasis.verify",
+                details=f"{issue_count} term(s) may lack antecedent basis across {claim_count} claim(s).",
+                details_key="details.tw.antecedentBasisTerms",
+                details_params={
+                    "issue_count": issue_count,
+                    "claim_count": claim_count,
+                    "claims": claim_ids,
+                },
+                reference="專利法 §26 第3項",
+            )
+        ]
+    else:
+        claims_checks = list(claims_checks) + [
+            CheckItem(
+                status="pass",
+                message="All referenced terms have antecedent basis.",
+                message_key="check.tw.claims.antecedentBasis.pass",
+                reference="專利法 §26 第3項",
+            )
+        ]
     if tw_unsupported_terms:
         issue_count = len(tw_unsupported_terms)
         claim_ids = sorted({ut.claim_number for ut in tw_unsupported_terms})
@@ -397,34 +431,6 @@ def _run_tw_pipeline(
                 message="All claim terms supported by the specification.",
                 message_key="check.tw.claims.specSupport.pass",
                 reference="專利法 §26 第3項",
-            )
-        ]
-    if tw_antecedent_basis:
-        issue_count = len(tw_antecedent_basis)
-        claim_ids = sorted({item["claim_id"] for item in tw_antecedent_basis})
-        claim_count = len(claim_ids)
-        claims_checks = list(claims_checks) + [
-            CheckItem(
-                status="verify",
-                message="Possible missing antecedent basis found.",
-                message_key="check.tw.claims.antecedentBasis.verify",
-                details=f"{issue_count} term(s) may lack antecedent basis across {claim_count} claim(s).",
-                details_key="details.tw.antecedentBasisTerms",
-                details_params={
-                    "issue_count": issue_count,
-                    "claim_count": claim_count,
-                    "claims": claim_ids,
-                },
-                reference="專利審查基準",
-            )
-        ]
-    else:
-        claims_checks = list(claims_checks) + [
-            CheckItem(
-                status="pass",
-                message="All referenced terms have antecedent basis.",
-                message_key="check.tw.claims.antecedentBasis.pass",
-                reference="專利審查基準",
             )
         ]
 
