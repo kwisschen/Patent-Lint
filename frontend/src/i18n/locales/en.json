@@ -706,7 +706,7 @@
         "pass": "No restrictive or indefinite wording found in claims."
       },
       "sequential": {
-        "amend": "Claim numbers are not sequential.",
+        "amend": "Claim numbers are not sequential (MPEP § 608.01(m)).",
         "pass": "Claim numbers are sequential."
       },
       "multipleDependent": {
@@ -722,11 +722,11 @@
         "pass": "All claims end with a period."
       },
       "extraPeriod": {
-        "amend": "Claims with extra or misplaced periods.",
+        "amend": "Claims with extra or misplaced periods (MPEP § 608.01(m)).",
         "pass": "No extra periods found in claims."
       },
       "whereinComma": {
-        "amend": "Incorrect wherein comma usage.",
+        "amend": "Incorrect wherein comma usage (MPEP § 608.01(m)).",
         "verify": "Review wherein comma usage.",
         "pass": "Wherein comma usage is correct."
       },
