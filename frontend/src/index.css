@@ -81,6 +81,17 @@
   --attention-mark-bg: #fde68a;
   --attention-mark-text: #78350f;
 
+  /* Claim diagram — gradient stops + shadow (light) */
+  --pl-indep-start: #eff6ff;
+  --pl-indep-end: #bfdbfe;
+  --pl-dep-start: #ffffff;
+  --pl-dep-end: #f1f5f9;
+  --pl-shadow-color: #0f172a;
+  --pl-shadow-opacity: 0.14;
+  --pl-edge-stroke: #94a3b8;
+  --pl-label-indep: #1e40af;
+  --pl-label-dep: #334155;
+
   /* shadcn/ui variables */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -138,6 +149,17 @@
   --attention-border: #fbbf24;
   --attention-mark-bg: #78350f;
   --attention-mark-text: #fde68a;
+
+  /* Claim diagram — gradient stops + shadow (dark) */
+  --pl-indep-start: #1e3a5f;
+  --pl-indep-end: #1e40af;
+  --pl-dep-start: #262626;
+  --pl-dep-end: #1c1c1c;
+  --pl-shadow-color: #000000;
+  --pl-shadow-opacity: 0.5;
+  --pl-edge-stroke: #64748b;
+  --pl-label-indep: #bfdbfe;
+  --pl-label-dep: #e5e5e5;
 
   /* shadcn/ui dark variables */
   --background: oklch(0.145 0 0);
@@ -316,6 +338,18 @@
   0% { left: -100%; }
   100% { left: 100%; }
 }
+
+/* Claim diagram — edge draw-in + node fade */
+@keyframes pl-diagram-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes pl-diagram-node-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.claim-diagram-surface svg { overflow: visible; }
 
 /* MPEP citation badges — slate/gray to avoid clashing with PASS blue */
 .citation-badge {
