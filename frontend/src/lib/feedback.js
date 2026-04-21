@@ -72,39 +72,41 @@ function buildHash() {
   }
 }
 
-// Human-readable label for each known metadata key. Keys not in this
-// map pass through as-is (so callers can add new fields without this
-// util needing updates — they just get the raw key as the label).
-const FIELD_LABELS = {
-  check_key: 'Check',
-  message: 'Message',
-  details: 'Details',
-  status: 'Status',
-  claim_id: 'Claim',
-  terms: 'Terms',
-  phrases: 'Phrases',
-  reference_form: 'Reference form',
-  jurisdiction: 'Jurisdiction',
-  browser: 'Browser',
-  locale: 'Locale',
-  patentlint_build: 'Build',
+// Per-key locale-bundle path for each known metadata key. Keys not in
+// this map fall back to a sentence-case version of the raw key so new
+// fields work without code changes (and the maintainer still sees a
+// readable label even if a translation hasn't been added yet).
+const FIELD_LABEL_KEYS = {
+  check_key: 'feedback.email.fieldCheck',
+  message: 'feedback.email.fieldMessage',
+  details: 'feedback.email.fieldDetails',
+  status: 'feedback.email.fieldStatus',
+  claim_id: 'feedback.email.fieldClaim',
+  terms: 'feedback.email.fieldTerms',
+  phrases: 'feedback.email.fieldPhrases',
+  reference_form: 'feedback.email.fieldReferenceForm',
+  jurisdiction: 'feedback.email.fieldJurisdiction',
+  browser: 'feedback.email.fieldBrowser',
+  locale: 'feedback.email.fieldLocale',
+  patentlint_build: 'feedback.email.fieldBuild',
 }
 
-// Pad labels in a section so values align in a monospace mail client.
-// Aligns to the longest label + 2 spaces.
-function formatSection(entries) {
+// Format a key→value section as a localized "Label: value" stack. Drops
+// the previous space-padding hack — CJK glyphs render at ~2 monospace
+// widths so character-count padding skewed visibly, and the colon line
+// is more scan-friendly than aligned columns anyway. Locale colon comes
+// from `feedback.email.fieldColon` (":" / "：" per script convention).
+function formatSection(entries, t) {
   const rows = Object.entries(entries).filter(
     ([, value]) => value !== undefined && value !== null && value !== '',
   )
   if (rows.length === 0) return ''
-  const maxLabel = Math.max(
-    ...rows.map(([key]) => (FIELD_LABELS[key] || key).length),
-  )
+  const colon = t('feedback.email.fieldColon')
   return rows
     .map(([key, value]) => {
-      const label = FIELD_LABELS[key] || key
-      const padded = label.padEnd(maxLabel + 2, ' ')
-      return `${padded}${value}`
+      const labelKey = FIELD_LABEL_KEYS[key]
+      const label = labelKey ? t(labelKey) : key
+      return `${label}${colon}${value}`
     })
     .join('\n')
 }
@@ -164,8 +166,11 @@ function openMailto(url) {
 // into their own email. No mail provider is lucky enough to catch everyone,
 // so we give the user both paths and let them pick silently.
 //
-// Subject line stays English so the maintainer's inbox can filter
-// consistently across locales.
+// Subject lines are localized (greeting + body label + check identifier)
+// so non-English users don't see a wall of English at the moment of
+// send. The "PatentLint" prefix is preserved across locales so the
+// maintainer's inbox filter still catches every report regardless of
+// the user's UI language.
 // An email's structured data. Not tied to any specific provider — the
 // send method decides at dispatch time which URL to open (or just copy
 // to clipboard). `subject` and `text` are used to build provider-
@@ -204,7 +209,7 @@ export function clearFeedbackMethod() {
 }
 
 // Compose per-finding feedback — finding fields + environment metadata
-// merged into one aligned data block around a localized greeting +
+// merged into one localized data block around a localized greeting +
 // placeholder.
 export function composeFeedback(finding, t, { locale } = {}) {
   const env = {
@@ -213,8 +218,8 @@ export function composeFeedback(finding, t, { locale } = {}) {
     patentlint_build: buildHash(),
   }
   const checkKey = finding.check_key || 'unknown'
-  const subject = `PatentLint finding report — ${checkKey}`
-  const dataSection = formatSection({ ...finding, ...env })
+  const subject = t('feedback.email.subjectFinding', { checkKey })
+  const dataSection = formatSection({ ...finding, ...env }, t)
   const body = [
     t('feedback.emailGreeting'),
     '',
@@ -228,7 +233,7 @@ export function composeFeedback(finding, t, { locale } = {}) {
 // Compose footer-link free-form feedback. Localized greeting + intro +
 // placeholder, no finding-specific data.
 export function composeFooterFeedback(t) {
-  const subject = 'PatentLint feedback'
+  const subject = t('feedback.email.subjectFooter')
   const body = [
     t('feedback.emailGreeting'),
     '',
@@ -242,7 +247,7 @@ export function composeFooterFeedback(t) {
 // Compose enterprise-deployment inquiry. Localized greeting + intro +
 // placeholder with requirement prompts.
 export function composeEnterprise(t) {
-  const subject = 'PatentLint enterprise inquiry'
+  const subject = t('feedback.email.subjectEnterprise')
   const body = [
     t('feedback.emailGreeting'),
     '',

@@ -160,7 +160,25 @@
     "footerIntro": "I'd like to share some feedback about PatentLint.",
     "footerPlaceholder": "[Anything you'd like to share — bug reports, feature requests, questions, or general comments. For bugs, a note on your browser and OS helps me reproduce. For features, one sentence on your use case goes a long way. You don't need to share anything confidential about your work.]",
     "enterpriseIntro": "I'd like to inquire about enterprise deployment of PatentLint.",
-    "enterprisePlaceholder": "[Tell me about your deployment needs — firm or team size and practice area, regions you work in, approximate document volume, evaluation timeline, and any specific requirements (e.g., self-hosted or air-gapped install for ITAR / data-sovereignty rules, SSO, custom checks).]"
+    "enterprisePlaceholder": "[Tell me about your deployment needs — firm or team size and practice area, regions you work in, approximate document volume, evaluation timeline, and any specific requirements (e.g., self-hosted or air-gapped install for ITAR / data-sovereignty rules, SSO, custom checks).]",
+    "email": {
+      "subjectFinding": "PatentLint findings report — {{checkKey}}",
+      "subjectFooter": "PatentLint feedback",
+      "subjectEnterprise": "PatentLint enterprise inquiry",
+      "fieldColon": ": ",
+      "fieldCheck": "Check",
+      "fieldMessage": "Message",
+      "fieldDetails": "Details",
+      "fieldStatus": "Status",
+      "fieldClaim": "Claim",
+      "fieldTerms": "Terms",
+      "fieldPhrases": "Phrases",
+      "fieldReferenceForm": "Reference form",
+      "fieldJurisdiction": "Region",
+      "fieldBrowser": "Browser",
+      "fieldLocale": "Language",
+      "fieldBuild": "Build"
+    }
   },
   "cta": {
     "heading": "Ready to check your draft?",
@@ -390,7 +408,7 @@
       "drawings": "Drawings (附图)"
     },
     "cnChecks": {
-      "requiredSections": "Required sections (专利法实施细则 §17)",
+      "requiredSections": "Required sections (专利法 §26 第1款、专利法实施细则 §17)",
       "sectionOrdering": "Section ordering",
       "paragraphNumbering": "Paragraph numbering",
       "paragraphEnding": "Paragraph ending punctuation",
@@ -442,7 +460,7 @@
     "twChecks": {
       "symbolTablePresence": "符號說明 required when 圖式簡單說明 exists (專利法施行細則 §17)",
       "symbolTableConsistency": "Symbols in 符號說明 appear in 實施方式 (專利審查基準)",
-      "requiredSections": "Required sections (專利法施行細則 §17)",
+      "requiredSections": "Required sections (專利法 §25 第1項、專利法施行細則 §17)",
       "sectionOrdering": "Section ordering",
       "paragraphNumbering": "Paragraph numbering (【NNNN】 format)",
       "paragraphEnding": "Paragraph ending punctuation",
@@ -551,7 +569,7 @@
     "abstractImpliedPhrasesFix": "Phrases like \"This disclosure provides...\" or \"A method is provided...\" are considered implied phraseology per MPEP § 608.01(b). Rewrite to describe the invention directly (e.g., \"A method that...\").",
     "abstractWordCountFix": "The abstract must be between 50 and 150 words per MPEP § 608.01(b). Revise to meet this range.",
     "cn": {
-      "requiredSections": "CNIPA requires 技术领域, 背景技术, 发明内容, and 具体实施方式 per 专利法实施细则 §17. Add the missing sections before filing.",
+      "requiredSections": "A complete CNIPA filing requires 摘要, 说明书 (技术领域, 背景技术, 发明内容, 具体实施方式), and 权利要求书 per 专利法 §26 第1款. Missing: {{sections}}.",
       "sectionOrdering": "Prescribed order: 技术领域 → 背景技术 → 发明内容 → 附图说明 → 具体实施方式. Reorder sections to match.",
       "paragraphNumberingXml": "Per 审查指南, paragraph numbers must be sequential and zero-padded (0001, 0002, ...). Fix the numbering sequence.",
       "paragraphNumberingDocx": "Per CNIPA guidelines, specifications must not contain paragraph numbering. The WORD转XML编辑器 adds numbering automatically during conversion. Remove all manually added paragraph numbers.",
@@ -592,7 +610,7 @@
       }
     },
     "tw": {
-      "requiredSections": "TIPO requires: 技術領域, 先前技術, 發明內容/新型內容, 實施方式. When drawings are present, 圖式簡單說明 and 符號說明 are also required. Missing: {{sections}}.",
+      "requiredSections": "A complete TIPO filing requires 摘要, 說明書 (技術領域, 先前技術, 發明內容/新型內容, 實施方式), and 申請專利範圍 per 專利法 §25 第1項. When drawings are present, 圖式簡單說明 and 符號說明 are also required per 專利法施行細則 §17. Missing: {{sections}}.",
       "sectionOrdering": "專利法施行細則 §17 prescribes: 技術領域 → 先前技術 → 發明內容/新型內容 → 圖式簡單說明 → 實施方式 → 符號說明. Reorder to match.",
       "paragraphNumbering": "When present, paragraph numbers must use 【NNNN】 format with sequential four-digit numbers. Numbering is optional per 專利法施行細則 §17.",
       "paragraphEnding": "Specification paragraphs should end with Chinese punctuation (。！？). Review flagged paragraphs.",
@@ -786,8 +804,8 @@
     "cn": {
       "spec": {
         "requiredSections": {
-          "amend": "Missing required sections: {{sections}} (专利法实施细则 §17).",
-          "pass": "All required specification sections present."
+          "amend": "Missing required sections: {{sections}} (专利法 §26 第1款、专利法实施细则 §17).",
+          "pass": "All required sections are present."
         },
         "sectionOrdering": {
           "amend": "Specification sections out of prescribed order (专利法实施细则 §17).",
@@ -910,8 +928,8 @@
     "tw": {
       "spec": {
         "requiredSections": {
-          "amend": "Missing required sections (專利法施行細則 §17).",
-          "pass": "All required specification sections present."
+          "amend": "Missing required sections per 專利法 §25 第1項 and 專利法施行細則 §17.",
+          "pass": "All required sections are present."
         },
         "sectionOrdering": {
           "amend": "Specification sections out of prescribed order (專利法施行細則 §17).",
