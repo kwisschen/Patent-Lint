@@ -1112,18 +1112,18 @@
     }
   },
   "checks": {
-    "preamble_cross_category_mismatch": "从属权利要求与独立权利要求的前序部分类型不一致（跨类别）。",
+    "preamble_cross_category_mismatch": "从属权利要求与独立权利要求的前序部分类型不一致（跨类别）（§ 112(d)）。",
     "preamble_cross_category_pass": "权利要求前序部分一致。",
-    "preamble_noun_mismatch": "从属权利要求与独立权利要求前序名词不同。",
-    "preamble_indefinite_article": "从属权利要求前序使用了不定冠词（应使用「The」）。",
+    "preamble_noun_mismatch": "从属权利要求与独立权利要求前序名词不同（MPEP § 608.01(m)）。",
+    "preamble_indefinite_article": "从属权利要求前序使用了不定冠词，应使用「The」（MPEP § 608.01(m)）。",
     "spec_support_unsupported_terms": "权利要求用语在说明书中未找到：每个用语须在说明书中有书面描述支持（§ 112(a)）。",
     "spec_support_pass": "所有权利要求用语均可在说明书中找到（§ 112(a) 书面描述支持）。",
     "required_sections_pass": "符合 MPEP § 608.01(a) 的所有必要章节均已存在。",
     "required_sections_missing": "缺少 MPEP § 608.01(a) 规定的必要章节。",
     "optional_section_missing": "可选章节\"{{name}}\"未发现。",
     "figure_xref_pass": "附图说明与具体实施方式之间的附图引用一致。",
-    "figure_xref_orphaned_brief": "附图在附图说明中描述但未在具体实施方式中引用。",
-    "figure_xref_orphaned_detailed": "附图在具体实施方式中引用但未在附图说明中描述。"
+    "figure_xref_orphaned_brief": "附图在附图说明中描述但未在具体实施方式中引用（MPEP § 608.02）。",
+    "figure_xref_orphaned_detailed": "附图在具体实施方式中引用但未在附图说明中描述（MPEP § 608.02）。"
   },
   "claims": {
     "jepsonPriorArt": "权利要求 {{claimNumber}} 使用 Jepson 格式，前序部分的特征视为承认的现有技术（MPEP § 2129）",
