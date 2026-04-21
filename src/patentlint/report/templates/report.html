@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ locale }}">
 <head>
 <meta charset="utf-8">
-<title>PatentLint Analysis Report</title>
+<title>{{ t(jconfig.pdfHeader) }}</title>
 <style>
   @page {
     size: letter;
@@ -274,40 +274,45 @@
 </head>
 <body>
 
-<h1>PatentLint Analysis Report</h1>
+<h1>{{ t(jconfig.pdfHeader) }}</h1>
 
 {# ========== Summary Box ========== #}
 <div class="summary-box">
   <table>
+    {%- set pt_key = patent_type_key(data.patent_type) %}
+    {%- if pt_key %}
     <tr>
-      <td>Specification Paragraphs</td>
+      <td>{{ t('pdf.patentType') }}</td>
+      <td>{{ t(pt_key) }}</td>
+    </tr>
+    {%- endif %}
+    <tr>
+      <td>{{ t('pdf.specParagraphs') }}</td>
       <td>{{ data.paragraph_count }}</td>
     </tr>
     <tr>
-      <td>Total Claims</td>
-      <td>{{ data.total_claims }} ({{ data.independent_count }} independent, {{ data.dependent_count }} dependent)</td>
+      <td>{{ t('pdf.totalClaims') }}</td>
+      <td>{{ t('pdf.totalClaimsBreakdown', total=data.total_claims, independent=data.independent_count, dependent=data.dependent_count) }}</td>
+    </tr>
+    {%- set method_count = [] -%}
+    {%- set apparatus_count = [] -%}
+    {%- for group in data.claim_trees -%}
+      {%- if group.label == "Method Claims" -%}
+        {%- set _ = method_count.append(group.rows | length) -%}
+      {%- else -%}
+        {%- set _ = apparatus_count.append(group.rows | length) -%}
+      {%- endif -%}
+    {%- endfor -%}
+    <tr>
+      <td>{{ t('pdf.claimCategories') }}</td>
+      <td>{{ t('pdf.categoryCounts', method=method_count | sum, apparatus=apparatus_count | sum) }}</td>
     </tr>
     <tr>
-      <td>Claim Categories</td>
-      <td>
-        {%- set method_count = [] -%}
-        {%- set apparatus_count = [] -%}
-        {%- for group in data.claim_trees -%}
-          {%- if group.label == "Method Claims" -%}
-            {%- set _ = method_count.append(group.rows | length) -%}
-          {%- else -%}
-            {%- set _ = apparatus_count.append(group.rows | length) -%}
-          {%- endif -%}
-        {%- endfor -%}
-        {{ method_count | sum }} method / {{ apparatus_count | sum }} apparatus
-      </td>
-    </tr>
-    <tr>
-      <td>Figures</td>
+      <td>{{ t('pdf.figures') }}</td>
       <td>{{ data.figure_count }}</td>
     </tr>
     <tr>
-      <td>Abstract Word Count</td>
+      <td>{{ t(jconfig.abstractCounter) }}</td>
       <td>{{ data.abstract_word_count }}</td>
     </tr>
   </table>
@@ -316,10 +321,10 @@
 {# ========== Internal check filter ========== #}
 {%- set internal_keys = ["check.drawings.count", "check.spec.drawings", "check.claims.overview"] -%}
 {%- set raw_sections = [
-  ("Specification", data.specification_checks),
-  ("Brief Description of Drawings", data.drawings_checks),
-  ("Claims", data.claims_checks),
-  ("Abstract", data.abstract_checks),
+  (t(jconfig.specification), data.specification_checks),
+  (t(jconfig.drawings), data.drawings_checks),
+  (t(jconfig.claims), data.claims_checks),
+  (t(jconfig.abstract), data.abstract_checks),
 ] -%}
 {%- set sections = [] -%}
 {%- for name, checks in raw_sections -%}
@@ -333,11 +338,16 @@
 {%- endfor -%}
 
 {# ========== Actionable Triage Panel ========== #}
-<h2>Priority Actions</h2>
+<h2>{{ t('pdf.triage.title') }}</h2>
 {%- set all_checks = [] -%}
 {%- for name, checks in sections -%}
   {%- for c in checks -%}
-    {%- set _ = all_checks.append({"status": c.status, "message": c.message, "details": c.details, "section": name}) -%}
+    {%- set _ = all_checks.append({
+        "status": c.status,
+        "message": c | localize_message,
+        "details": c | localize_details,
+        "section": name,
+    }) -%}
   {%- endfor -%}
 {%- endfor -%}
 
@@ -346,7 +356,7 @@
 {%- set pass_items = all_checks | selectattr("status", "equalto", "pass") | list -%}
 
 <div class="triage-group amend">
-  <h3 class="triage-heading">Action Required<span class="triage-count">({{ amend_items | length }})</span></h3>
+  <h3 class="triage-heading">{{ t('pdf.amend') }}<span class="triage-count">({{ amend_items | length }})</span></h3>
   {%- if amend_items | length == 0 %}
   <p class="triage-empty">&mdash;</p>
   {%- else %}
@@ -360,7 +370,7 @@
 </div>
 
 <div class="triage-group verify">
-  <h3 class="triage-heading">Expert Review<span class="triage-count">({{ verify_items | length }})</span></h3>
+  <h3 class="triage-heading">{{ t('pdf.verify') }}<span class="triage-count">({{ verify_items | length }})</span></h3>
   {%- if verify_items | length == 0 %}
   <p class="triage-empty">&mdash;</p>
   {%- else %}
@@ -382,10 +392,11 @@
 <h2>{{ name }}</h2>
 {% for check in ordered_checks %}
 <div class="check-item {{ check.status }}">
-  <span class="status-tag {{ check.status }}">{{ check.status | upper }}</span>
-  {{ check.message }}
-  {% if check.details %}
-  <br><small>{{ check.details }}</small>
+  <span class="status-tag {{ check.status }}">{{ t('status.' ~ check.status) }}</span>
+  {{ check | localize_message }}
+  {%- set details_str = check | localize_details %}
+  {% if details_str %}
+  <br><small>{{ details_str }}</small>
   {% endif %}
 </div>
 {% endfor %}
@@ -394,11 +405,13 @@
 
 {# ========== PASS Summary ========== #}
 {%- if pass_items | length > 0 %}
-<h2>Passed Checks ({{ pass_items | length }})</h2>
+<h2>{{ t('pdf.passedChecksCount', count=pass_items | length) }}</h2>
 {%- for name, checks in sections %}
 {%- set passed = checks | selectattr("status", "equalto", "pass") | list -%}
 {%- if passed | length > 0 %}
-<p style="font-size: 10pt; margin: 4pt 0;"><strong>{{ name }}:</strong> {{ passed | map(attribute="message") | join(", ") }}</p>
+<p style="font-size: 10pt; margin: 4pt 0;"><strong>{{ name }}:</strong>
+{%- for c in passed %} {{ c | localize_message }}{% if not loop.last %},{% endif %}{% endfor %}
+</p>
 {%- endif %}
 {%- endfor %}
 {%- endif %}
@@ -411,10 +424,10 @@
 {# live; claim id is repeated in the leftmost cell.                     #}
 {% if data.antecedent_basis_issues %}
 <div class="antecedent-basis">
-  <h3>Antecedent Basis Review</h3>
+  <h3>{{ t('pdf.antecedentBasis') }}</h3>
   <table>
     <thead>
-      <tr><th>Claim</th><th>Flagged Reference</th></tr>
+      <tr><th>{{ t('pdf.claim') }}</th><th>{{ t('pdf.antecedentTerms') }}</th></tr>
     </thead>
     <tbody>
       {%- for issue in data.antecedent_basis_issues %}
@@ -423,10 +436,10 @@
         <td>
           <strong>{{ issue.reference_form or issue.term }}</strong>
           {%- if issue.suggested_match %}
-          <div class="hint">Did you mean &ldquo;{{ issue.suggested_match.term }}&rdquo; (introduced in claim {{ issue.suggested_match.claim_id }})?</div>
+          <div class="hint">{{ t('pdf.didYouMean', term=issue.suggested_match.term, claim_id=issue.suggested_match.claim_id) }}</div>
           {%- endif %}
           {%- if issue.cross_ref == "spec_support" %}
-          <div class="hint">Also flagged by specification support &mdash; see Specification Support Review below.</div>
+          <div class="hint">{{ t('pdf.seeSpecSupportBelow') }}</div>
           {%- endif %}
         </td>
       </tr>
@@ -439,10 +452,10 @@
 {# -- Unsupported Terms (in Claims section) -- #}
 {% if data.unsupported_terms %}
 <div class="antecedent-basis">
-  <h3>Specification Support Review</h3>
+  <h3>{{ t('pdf.specSupport') }}</h3>
   <table>
     <thead>
-      <tr><th>Claim</th><th>Unsupported Term</th></tr>
+      <tr><th>{{ t('pdf.claim') }}</th><th>{{ t('pdf.specTerms') }}</th></tr>
     </thead>
     <tbody>
       {%- for ut in data.unsupported_terms %}
@@ -451,7 +464,7 @@
         <td>
           <strong>{{ ut.phrase }}</strong>
           {%- if ut.cross_ref == "antecedent" %}
-          <div class="hint">Also flagged by antecedent basis &mdash; see Antecedent Basis Review above.</div>
+          <div class="hint">{{ t('pdf.seeAntecedentAbove') }}</div>
           {%- endif %}
         </td>
       </tr>
@@ -463,21 +476,21 @@
 
 {# -- Claim Trees -- #}
 {% for group in data.claim_trees %}
-<h3>{{ group.label }}</h3>
+<h3>{{ t(tree_label_key(group.label)) }}</h3>
 <table class="claim-tree">
   <thead>
     <tr>
-      <th>Claim</th>
-      <th>Type</th>
-      <th>Dependency Chain</th>
-      <th>Claim Text</th>
+      <th>{{ t('pdf.claim') }}</th>
+      <th>{{ t('pdf.claimType') }}</th>
+      <th>{{ t('pdf.dependencyChain') }}</th>
+      <th>{{ t('pdf.claimText') }}</th>
     </tr>
   </thead>
   <tbody>
     {% for row in group.rows %}
     <tr>
       <td>{{ row.claim_id }}</td>
-      <td>{{ row.claim_type }}</td>
+      <td>{{ t('pdf.' ~ ('independent' if row.claim_type == 'Independent' else 'dependent')) }}</td>
       <td>{{ row.chain }}</td>
       <td class="claim-text">{{ row.claim_text[:100] }}{% if row.claim_text | length > 100 %}...{% endif %}</td>
     </tr>
@@ -487,7 +500,7 @@
 {% endfor %}
 
 <div class="disclaimer">
-  Generated by PatentLint &middot; This report does not constitute legal advice &middot; Review by a qualified patent professional is recommended
+  {{ t('pdf.disclaimerFooter') }}
 </div>
 
 </body>
