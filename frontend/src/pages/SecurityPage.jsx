@@ -185,6 +185,7 @@ const techSections = [
   'pdf',
   'ai',
   'telemetry',
+  'hosting',
   'selfHosted',
 ]
 

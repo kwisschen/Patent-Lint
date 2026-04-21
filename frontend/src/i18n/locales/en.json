@@ -224,7 +224,7 @@
       "tryNow": "Try it →"
     },
     "page": {
-      "heroTitle": "No Server. No Upload. No Exceptions.",
+      "heroTitle": "No Upload. No Account. No Tracking.",
       "heroSubtext": "PatentLint runs entirely inside your browser. Your patent draft never leaves your device, and confidential data stays on your machine, always.",
       "tryIt": "Try it yourself →",
       "compareTitle": "How Does PatentLint Compare?",
@@ -244,7 +244,7 @@
       },
       "q2": {
         "question": "Do I need an account?",
-        "patentlint": "No account required. No data collected.",
+        "patentlint": "No account required. PatentLint collects no usage data.",
         "addin": "Usually requires a license or account.",
         "cloud": "Yes. Account required."
       },
@@ -289,7 +289,9 @@
       "aiTitle": "AI / LLM (No Usage)",
       "ai": "PatentLint does not use AI, machine learning, or large language models. All checks are deterministic, rule-based pattern matching against patent office guidelines. Your text is never sent to any AI service.",
       "telemetryTitle": "Telemetry & Analytics (No Usage)",
-      "telemetry": "PatentLint does not include analytics scripts, tracking pixels, cookies, or third-party integrations. No usage data is collected or transmitted by the application.",
+      "telemetry": "PatentLint includes no analytics scripts, tracking pixels, cookies, or third-party tracking integrations. The application collects and transmits no usage data.",
+      "hostingTitle": "Hosting",
+      "hosting": "patentlint.com is hosted on Cloudflare Pages as static assets only — no application server, no database, no analytics. Cloudflare's edge network sees standard web request metadata (IP address, user-agent, timestamp) on each visit, as it does for any website. We don't access these logs in normal operations. See the Privacy page for full disclosure.",
       "selfHostedTitle": "Self-Hosted Option",
       "selfHosted": "For organizations with strict data sovereignty requirements, such as ITAR-controlled environments or air-gapped networks, PatentLint can be self-hosted via Docker with all dependencies included.",
       "contactEnterprise": "Contact for enterprise deployment →"
@@ -1267,15 +1269,15 @@
   "privacy": {
     "title": "Privacy Policy",
     "lastUpdated": "Last updated: April 21, 2026",
-    "intro": "This Privacy Policy describes how patentlint.com (the \"Site\") handles data when you visit. PatentLint is architected to collect almost nothing about you. This policy formalizes that posture as statutory disclosure.",
+    "intro": "This Privacy Policy describes how patentlint.com (the \"Site\") handles data when you visit. The PatentLint application collects nothing about you — no analytics, no trackers, no cookies. The only data flow is the standard web request metadata our hosting provider (Cloudflare Pages) sees on every visit, as it does for any website. This Policy makes that distinction explicit.",
     "s1": {
       "title": "Introduction",
-      "p1": "patentlint.com is a hosted web application operated by Christopher Chen. It runs PatentLint, a patent drafting checker that analyzes your file entirely in your browser using WebAssembly (Pyodide). No file content reaches our servers.",
+      "p1": "patentlint.com is a hosted web application operated by Christopher Chen. It runs PatentLint, a patent drafting checker that analyzes your file entirely in your browser using WebAssembly (Pyodide). The Site is served as static assets from Cloudflare Pages — no application server, no database. Your file content is never transmitted off your device.",
       "p2": "This Privacy Policy applies to your interactions with the Site. It does not cover the PatentLint Software when you obtain the source code separately — that's covered by the Software license (PolyForm-Strict-1.0.0)."
     },
     "s2": {
       "title": "Your patent drafts",
-      "p1": "Patent drafts you upload to the Site are processed entirely in your browser. Analysis runs on a Pyodide / WebAssembly engine loaded into your tab — there is no server-side analysis path on patentlint.com.",
+      "p1": "Patent drafts you \"upload\" to the Site never actually leave your device — the file is loaded into the browser tab and processed there. Analysis runs on a Pyodide / WebAssembly engine in that tab. There is no server-side analysis path on patentlint.com; the Site is static assets only.",
       "p2": "Specifically, we never:",
       "never1": "Receive or transmit the content of your patent drafts.",
       "never2": "Store filenames, claim text, specification body, or any patent-specific data.",
@@ -1326,14 +1328,14 @@
       "title": "Your rights",
       "p1": "Under GDPR, CCPA, and similar privacy regimes, you have rights regarding your personal data. To the extent these rights apply to data we process:",
       "accessLabel": "Right of access.",
-      "access": "You may ask what personal data we hold about you. (Almost certainly: nothing — see § 2 and § 4.)",
+      "access": "You may ask what personal data we hold about you. We do not store user data in the ordinary course of operating the Site (see § 2 and § 4); requests will typically confirm we have nothing on file beyond any voluntary email correspondence you have sent us.",
       "deletionLabel": "Right of deletion.",
-      "deletion": "You may ask us to delete personal data we hold about you. (Same caveat — there is almost nothing to delete.)",
+      "deletion": "You may ask us to delete personal data we hold about you. As with access requests, there is typically nothing to delete; voluntary email correspondence is the rare exception.",
       "portabilityLabel": "Right of data portability.",
       "portability": "You may ask for a copy of personal data we hold about you in a portable format.",
       "objectLabel": "Right to object / withdraw consent.",
       "object": "You may object to our processing or withdraw any consent you previously gave.",
-      "exercise": "Exercise these rights by emailing <1>kwisschen@gmail.com</1>. We respond within 30 days. Note: because we collect almost nothing about you, most requests will simply confirm we have nothing to access, delete, or export."
+      "exercise": "Exercise these rights by emailing <1>kwisschen@gmail.com</1>. We respond within 30 days. Because the PatentLint application collects nothing and we do not store usage data, most requests will simply confirm we have nothing on file to access, delete, or export."
     },
     "s9": {
       "title": "Children",
