@@ -1666,6 +1666,30 @@ class TestTwSpecSupportIntegration:
         phrases = [ut.phrase for ut in report.unsupported_terms]
         assert "量子糾纏模組" in phrases
 
+    def test_cross_ref_pipeline_integration_no_crash(self):
+        # attach_cross_references_tw is invoked in the pipeline. When no
+        # (claim_id, normalized_term) overlaps, cross_ref stays None on
+        # both sides — the integration is that the call is wired without
+        # raising, and the cross_ref slot remains a valid schema slot.
+        # Bidirectional semantics are covered by the unit tests
+        # (TestAttachCrossReferencesTw).
+        data = _build_tw_minimal(
+            claims_text=[
+                "1. 一種裝置，包括：一量子糾纏模組。",
+            ],
+            embodiment_lines=[
+                "【0005】本裝置具有處理器與記憶體。",
+            ],
+        )
+        result = analyze_bytes(data, "tw_crossref.docx", Jurisdiction.TW)
+        # Pipeline ran to completion (attach_cross_references_tw didn't raise).
+        assert result.unsupported_terms, "spec-support should flag 量子糾纏模組"
+        for ut in result.unsupported_terms:
+            # cross_ref slot is a valid Optional[str] — either None or
+            # a "spec_support"/"antecedent" tag. On this fixture there is
+            # no walker overlap so it stays None.
+            assert ut.cross_ref is None or ut.cross_ref in ("antecedent", "spec_support")
+
 
 class TestTwRealFixtureUtilityModel:
     """Verify patent type detection for the utility model fixture."""
