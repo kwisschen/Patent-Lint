@@ -141,14 +141,14 @@
     "report": "Report error",
     "reportProblem": "Report a problem with this finding",
     "picker": {
-      "title": "How would you like to send this?",
+      "title": "Your draft stays on your device",
       "send": {
-        "description": "Your email is ready. The same content is on your clipboard. Your draft stays on your device.",
+        "description": "Your email is ready, with the same content on your clipboard. How would you like to send it?",
         "mailto": "Send via Outlook or Mobile",
         "gmail": "Send via Gmail"
       },
       "report": {
-        "description": "Your error report is ready. The same content is on your clipboard. Your draft stays on your device.",
+        "description": "Your error report is ready, with the same content on your clipboard. How would you like to send it?",
         "mailto": "Report via Outlook or Mobile",
         "gmail": "Report via Gmail"
       },
