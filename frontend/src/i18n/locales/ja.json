@@ -787,14 +787,14 @@
           "pass": "明細書の章の順序は規定に従っています。"
         },
         "paragraphNumbering": {
-          "amendXml": "段落番号が連番になっていません（{{detail}}）。",
-          "amendDocx": "明細書に手動で付与された段落番号が含まれています（CNIPA出願では削除が必要）。",
+          "amendXml": "段落番号が連番になっていません（{{detail}}）（审查指南）。",
+          "amendDocx": "明細書に手動で付与された段落番号が含まれています。CNIPA出願では削除が必要です（审查指南）。",
           "pass": "段落番号は連番で付されています。",
-          "amendXmlGap": "段落番号に飛びがあります（{{prev}}の次が{{next}}）。",
-          "amendXmlDuplicate": "重複する段落番号が{{count}}件あります：{{paragraphs}}。"
+          "amendXmlGap": "段落番号に飛びがあります（{{prev}}の次が{{next}}）（审查指南）。",
+          "amendXmlDuplicate": "重複する段落番号が{{count}}件あります：{{paragraphs}}（审查指南）。"
         },
         "paragraphEnding": {
-          "amend": "句読点で終わっていない段落が{{count}}件あります：{{paragraphs}}。",
+          "amend": "句読点で終わっていない段落が{{count}}件あります：{{paragraphs}}（审查指南）。",
           "pass": "全ての段落が中国語の句点で終わっています。"
         },
         "figureRefConsistency": {
@@ -802,17 +802,17 @@
           "pass": "各章の図面参照は整合しています。"
         },
         "patentTypeTerminology": {
-          "verify": "「{{term}}」を検出：出願種別（発明・実用新案）と整合するか確認してください。",
+          "verify": "「{{term}}」を検出：出願種別（発明・実用新案）と整合するか確認してください（审查指南）。",
           "pass": "出願種別の用語が一貫しています。"
         },
         "title": {
-          "amendLength": "名称が25文字を超えています（{{count}}文字）。",
-          "amendContent": "名称に使用できない語が含まれています：{{title_prohibited_items}}。",
+          "amendLength": "名称が25文字を超えています（{{count}}文字）（审查指南 第一部分第一章）。",
+          "amendContent": "名称に使用できない語が含まれています：{{title_prohibited_items}}（审查指南 第一部分第一章）。",
           "pass": "名称はCNIPA要件を満たしています。",
-          "amendMissing": "明細書に発明の名称が記載されていません。"
+          "amendMissing": "明細書に発明の名称が記載されていません（审查指南 第一部分第一章）。"
         },
         "claimReference": {
-          "amend": "明細書が{{count}}段落で請求項を引用しています（{{paragraphs}}）。例：{{snippet}}",
+          "amend": "明細書が{{count}}段落で請求項を引用しています（{{paragraphs}}）（专利法实施细则 §17）。例：{{snippet}}",
           "pass": "明細書は請求項を引用していません。"
         }
       },
