@@ -13,14 +13,30 @@ const FEATURES = [
 const STAGGER_MS = 700
 const READY_PAUSE_MS = 600
 const FADE_DURATION_MS = 300
+// After this long on the runtime stage, show the "first visit is slow,
+// cached next time" hint. Covers users whose cold-cache WASM fetch is
+// running longer than the typical feature-reveal window, who'd
+// otherwise wonder if it's stuck.
+const RUNTIME_HINT_DELAY_MS = 3000
 
 export default function LoadingOnboard({ progress, onReady }) {
   const { t } = useTranslation()
   const [visible, setVisible] = useState(true)
   const [fading, setFading] = useState(false)
   const [revealCount, setRevealCount] = useState(0)
+  const [showRuntimeHint, setShowRuntimeHint] = useState(false)
   const revealRef = useRef(0)
   const intervalRef = useRef(null)
+
+  // Show the first-visit hint if we've been on the runtime stage longer
+  // than RUNTIME_HINT_DELAY_MS. Resets on stage change.
+  useEffect(() => {
+    setShowRuntimeHint(false)
+    const isRuntimeStage = progress.message?.includes('Python runtime')
+    if (!isRuntimeStage) return
+    const t = setTimeout(() => setShowRuntimeHint(true), RUNTIME_HINT_DELAY_MS)
+    return () => clearTimeout(t)
+  }, [progress.message])
 
   // Staggered reveal: first card after 500ms, then every STAGGER_MS
   useEffect(() => {
@@ -102,6 +118,17 @@ export default function LoadingOnboard({ progress, onReady }) {
             {isReady
               ? `✓ ${t('loading.ready')}`
               : `${t(`loading.${stageKey(progress.message)}`)} ${Math.round(displayPercent)}%`}
+          </p>
+          <p
+            className="mt-1 text-xs text-muted-foreground/70 leading-snug"
+            style={{
+              opacity: showRuntimeHint && !isReady ? 1 : 0,
+              transition: 'opacity 0.4s ease',
+              minHeight: '1rem',
+            }}
+            aria-live="polite"
+          >
+            {showRuntimeHint && !isReady ? t('loading.firstVisitHint') : ' '}
           </p>
         </div>
 
