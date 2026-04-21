@@ -173,13 +173,13 @@
     "didYouMean": "Did you mean *{{term}}* (introduced in claim {{claim_id}})?",
     "didYouMeanCrossBranch": "Did you mean *{{term}}* (introduced in claim {{claim_id}}, which is not in this claim's dependency chain)?",
     "crossBranchAntecedent": "Introduced in claim {{claim_id}}, which is not in this claim's dependency chain. Restructure the dependency or re-introduce the term with \"a\".",
-    "crossRefSpecSupport": "Also flagged for spec support — see § 112(a) below."
+    "crossRefSpecSupport": "Also flagged in the specification-support review below."
   },
   "specSupport": {
     "title": "Specification Support Review",
     "items": "terms",
     "item": "term",
-    "crossRefAntecedent": "Also flagged for antecedent basis — see § 112(b) above."
+    "crossRefAntecedent": "Also flagged in the antecedent-basis review above."
   },
   "triage": {
     "title": "Priority Summary",
@@ -519,7 +519,7 @@
     "claimDependsOn": "Claim {{claim}} depends on claim {{parent}}",
     "nounMismatch": "Dependent '{{dependent}}' vs independent '{{independent}}'. A dependent claim must be of the same statutory category as its parent (e.g., both apparatus or both method). Correct the preamble noun.",
     "seeSection112": "See § 112 Analysis below for per-claim detail.",
-    "specSupportUnsupported": "{{count}} claim term(s) not found in the specification. Under § 112(a), each claim term should have written description support. Review the § 112 Analysis below for per-term details.",
+    "specSupportUnsupported": "{{count}} claim term(s) not found in the specification body. Each claim term should have written-description support. Expand the claim above for the flagged terms.",
     "restrictiveWordingSpec": "Paragraphs: {{list}}. Terms like \"must,\" \"always,\" or \"invention\" may be treated as indefinite or limiting under § 2173.05(b). Review each flagged paragraph and consider whether the term unduly limits scope or introduces indefiniteness.",
     "paragraphNumberingMissing": "Add sequential [0001]-style numbering per MPEP § 608.01(p).",
     "paragraphEnding": "Paragraphs: {{list}}. Each specification paragraph must end with a period per MPEP § 608.01(p).",

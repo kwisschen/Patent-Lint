@@ -173,13 +173,13 @@
     "didYouMean": "您是否指的是「{{term}}」（於請求項{{claim_id}}中導入）？",
     "didYouMeanCrossBranch": "您是否指的是「{{term}}」（於請求項 {{claim_id}} 中導入，但該請求項不在本請求項的相依鏈中）？",
     "crossBranchAntecedent": "於請求項 {{claim_id}} 中引入，但該請求項不在本請求項的相依鏈中。請調整附屬結構，或於本請求項中以不定冠詞（「a」）重新導入該用語。",
-    "crossRefSpecSupport": "亦已於說明書支持中標記，參見下方 § 112(a)。"
+    "crossRefSpecSupport": "亦於下方之說明書支持檢視中標記。"
   },
   "specSupport": {
     "title": "說明書支持檢視",
     "items": "個用語",
     "item": "個用語",
-    "crossRefAntecedent": "亦已於先行詞分析中標記，參見上方 § 112(b)。"
+    "crossRefAntecedent": "亦於上方之先行詞分析中標記。"
   },
   "triage": {
     "title": "優先處理摘要",
@@ -519,7 +519,7 @@
     "claimDependsOn": "請求項 {{claim}} 附屬於請求項 {{parent}}",
     "nounMismatch": "附屬項「{{dependent}}」與獨立項「{{independent}}」不一致。附屬項須與母項屬於相同法定類別（例如同為裝置或同為方法）。請修正前言名詞。",
     "seeSection112": "詳見下方 § 112 分析。",
-    "specSupportUnsupported": "{{count}} 個請求項用語未在說明書中出現。依 § 112(a)，各請求項用語應有書面描述支持。請參閱下方 § 112 分析以查看逐項詳情。",
+    "specSupportUnsupported": "{{count}} 個請求項用語未於說明書中出現。各請求項用語皆應獲說明書支持；請展開上方請求項查看具體標記之用語。",
     "restrictiveWordingSpec": "段落：{{list}}。「must」、「always」或「invention」等用語可能依 § 2173.05(b) 被視為不明確或限制範圍。請檢視各標記段落，考量該用語是否不當限縮範圍或造成不明確。",
     "paragraphNumberingMissing": "請依 MPEP § 608.01(p) 新增 [0001] 格式的連續段落編號。",
     "paragraphEnding": "段落：{{list}}。說明書各段落須依 MPEP § 608.01(p) 以句號結尾。",

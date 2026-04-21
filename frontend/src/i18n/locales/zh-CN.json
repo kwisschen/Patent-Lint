@@ -173,13 +173,13 @@
     "didYouMean": "您是否指的是\"{{term}}\"（于权利要求{{claim_id}}中引入）？",
     "didYouMeanCrossBranch": "您是否指的是\"{{term}}\"（于权利要求 {{claim_id}} 中引入，但该权利要求不在本权利要求的相依链中）？",
     "crossBranchAntecedent": "在权利要求 {{claim_id}} 中引入，但该权利要求不在本权利要求的相依链中。请调整相依结构或以「a」重新引入该用语。",
-    "crossRefSpecSupport": "亦已在说明书支持中标记，参见下方 § 112(a)。"
+    "crossRefSpecSupport": "亦于下方之说明书支持检视中标记。"
   },
   "specSupport": {
     "title": "说明书支持检查",
     "items": "个用语",
     "item": "个用语",
-    "crossRefAntecedent": "亦已在先行词分析中标记，参见上方 § 112(b)。"
+    "crossRefAntecedent": "亦于上方之先行词分析中标记。"
   },
   "triage": {
     "title": "优先处理摘要",
@@ -519,7 +519,7 @@
     "claimDependsOn": "权利要求 {{claim}} 从属于权利要求 {{parent}}",
     "nounMismatch": "从属项「{{dependent}}」与独立项「{{independent}}」不一致。从属权利要求须与母权利要求属于相同法定类别（例如同为装置或同为方法）。请修正前序名词。",
     "seeSection112": "详见下方 § 112 分析。",
-    "specSupportUnsupported": "{{count}} 个权利要求用语未在说明书中发现。依 § 112(a)，各权利要求用语应有书面描述支持。请参阅下方 § 112 分析以查看逐项详情。",
+    "specSupportUnsupported": "{{count}} 个请求项用语未于说明书中出现。各请求项用语皆应获说明书支持；请展开上方请求项查看具体标记之用语。",
     "restrictiveWordingSpec": "段落：{{list}}。\"must\"、\"always\"或\"invention\"等用语可能依 § 2173.05(b) 被视为不确定或限制范围。请检查各标记段落，考虑该用语是否过度限缩范围或引入不确定性。",
     "paragraphNumberingMissing": "请依 MPEP § 608.01(p) 添加 [0001] 格式的连续段落编号。",
     "paragraphEnding": "段落：{{list}}。说明书各段落须依 MPEP § 608.01(p) 以句号结尾。",

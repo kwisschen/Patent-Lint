@@ -173,13 +173,13 @@
     "didYouMean": "혹시 '{{term}}' (청구항 {{claim_id}}에서 도입됨)을 의미하셨나요?",
     "didYouMeanCrossBranch": "혹시 '{{term}}' (청구항 {{claim_id}}에서 도입되었으나, 해당 청구항은 본 청구항의 종속 계열에 포함되지 않음)을 의미하셨나요?",
     "crossBranchAntecedent": "청구항 {{claim_id}}에서 도입되었으나, 해당 청구항은 본 청구항의 종속 계열에 포함되지 않습니다. 종속 구조를 조정하거나 용어를 \"a\"로 다시 도입하세요.",
-    "crossRefSpecSupport": "명세서 뒷받침에서도 플래그됨 (아래 § 112(a) 참조)."
+    "crossRefSpecSupport": "아래의 명세서 뒷받침 검토에서도 지적되었습니다."
   },
   "specSupport": {
     "title": "명세서 뒷받침 검토",
     "items": "건",
     "item": "건",
-    "crossRefAntecedent": "선행 근거 분석에서도 플래그됨 (위 § 112(b) 참조)."
+    "crossRefAntecedent": "위의 선행 근거 분석에서도 지적되었습니다."
   },
   "triage": {
     "title": "우선순위 요약",
@@ -519,7 +519,7 @@
     "claimDependsOn": "청구항 {{claim}}은(는) 청구항 {{parent}}에 종속",
     "nounMismatch": "종속항 '{{dependent}}' vs 독립항 '{{independent}}'. 종속항은 모항과 동일한 법정 범주(예: 둘 다 장치 또는 둘 다 방법)에 속해야 합니다. 전제부 명사를 수정하세요.",
     "seeSection112": "청구항별 세부 사항은 아래 § 112 분석을 참조하세요.",
-    "specSupportUnsupported": "명세서에서 찾을 수 없는 청구항 용어 {{count}}건. § 112(a)에 따라 각 청구항 용어는 기재 요건의 뒷받침이 필요합니다. 용어별 세부 사항은 아래 § 112 분석을 참조하세요.",
+    "specSupportUnsupported": "명세서 본문에서 찾을 수 없는 청구항 용어 {{count}}건. 각 청구항 용어는 명세서의 뒷받침이 필요합니다. 위의 청구항을 펼쳐 지적된 용어를 확인하세요.",
     "restrictiveWordingSpec": "단락: {{list}}. \"must\", \"always\" 또는 \"invention\" 등의 용어는 § 2173.05(b)에 따라 불명확하거나 범위를 제한하는 것으로 취급될 수 있습니다. 각 표시된 단락을 검토하여 해당 용어가 부당하게 범위를 제한하거나 불명확성을 초래하는지 확인하세요.",
     "paragraphNumberingMissing": "MPEP § 608.01(p)에 따라 [0001] 형식의 순차적 단락 번호를 추가하세요.",
     "paragraphEnding": "단락: {{list}}. MPEP § 608.01(p)에 따라 명세서의 각 단락은 마침표로 끝나야 합니다.",
