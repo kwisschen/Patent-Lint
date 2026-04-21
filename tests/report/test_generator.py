@@ -4,7 +4,13 @@
 
 import pytest
 
-from patentlint.models import AnalysisResult, Claim
+from patentlint.models import (
+    AnalysisResult,
+    CheckItem,
+    Claim,
+    Jurisdiction,
+    UnsupportedTerm,
+)
 from patentlint.report.generator import render_html, render_pdf
 
 
@@ -175,3 +181,233 @@ class TestToReportData:
         data = result.to_report_data()
         tc_checks = [c for c in data.specification_checks if "tracked changes" in c.message.lower()]
         assert len(tc_checks) == 0
+
+
+# ---------------------------------------------------------------------------
+# Locale sweep — verify every supported locale renders without raising and
+# produces jurisdiction-appropriate copy.
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def tw_sample_result():
+    """TW-jurisdiction AnalysisResult with antecedent + spec-support payloads
+    populated so both cards render in the PDF, plus a spec-section
+    check so the jurisdictional section heading surfaces.
+    """
+    claims = [
+        Claim(
+            id=1,
+            text="一種裝置，包含一元件。",
+            independent=True,
+            method_claim=False,
+        ),
+        Claim(
+            id=2,
+            text="如請求項1之裝置，其中該元件為金屬。",
+            independent=False,
+            method_claim=False,
+            dependencies=[1],
+        ),
+    ]
+    return AnalysisResult(
+        jurisdiction=Jurisdiction.TW,
+        patent_type="INVENTION",
+        paragraph_count=10,
+        claims=claims,
+        independent_claims_count=1,
+        dependent_claims_count=1,
+        abstract_word_count=120,
+        tw_specification_checks=[
+            CheckItem(
+                status="amend",
+                message="Paragraph ending amend",
+                message_key="check.tw.spec.paragraphEnding.amend",
+            ),
+        ],
+        antecedent_basis_issues=[
+            {
+                "claim_id": 2,
+                "term": "第二元件",
+                "reference_form": "該第二元件",
+                "claim_text": "如請求項1之裝置，其中該第二元件為金屬。",
+                "suggested_match": None,
+                "cross_ref": None,
+            }
+        ],
+        unsupported_terms=[
+            UnsupportedTerm(claim_number=2, phrase="第二元件", cross_ref=None),
+        ],
+    )
+
+
+@pytest.fixture
+def cn_sample_result():
+    """CN-jurisdiction AnalysisResult for locale sweep."""
+    claims = [
+        Claim(id=1, text="一种装置。", independent=True, method_claim=False),
+    ]
+    return AnalysisResult(
+        jurisdiction=Jurisdiction.CN,
+        patent_type="INVENTION",
+        paragraph_count=5,
+        claims=claims,
+        independent_claims_count=1,
+        abstract_word_count=200,
+    )
+
+
+SUPPORTED_LOCALES = ["en", "zh-TW", "zh-CN", "ja", "ko"]
+
+
+class TestLocaleSweepUs:
+
+    @pytest.mark.parametrize("locale", SUPPORTED_LOCALES)
+    def test_render_html_no_raise(self, sample_result, locale):
+        """Every supported locale renders a US AnalysisResult without error."""
+        html = render_html(sample_result, locale=locale)
+        assert html
+        assert "<html" in html
+        assert "<body>" in html
+        assert "</html>" in html
+
+    @pytest.mark.parametrize("locale", SUPPORTED_LOCALES)
+    def test_header_translated(self, sample_result, locale):
+        html = render_html(sample_result, locale=locale)
+        if locale == "en":
+            assert "PatentLint Analysis Report" in html
+        else:
+            # Every non-en bundle localizes pdf.header; we expect the
+            # English fallback NOT to appear as the h1 text.
+            assert "<h1>PatentLint Analysis Report</h1>" not in html
+
+    def test_zh_tw_section_labels(self, sample_result):
+        # US AnalysisResult + zh-TW locale renders the US section
+        # labels (section.specification, section.claims, etc.) in
+        # Traditional Chinese.
+        html = render_html(sample_result, locale="zh-TW")
+        assert "說明書" in html or "規格" in html
+        assert "請求項" in html
+
+
+class TestLocaleSweepTw:
+
+    @pytest.mark.parametrize("locale", SUPPORTED_LOCALES)
+    def test_render_html_no_raise(self, tw_sample_result, locale):
+        html = render_html(tw_sample_result, locale=locale)
+        assert html
+        assert "</html>" in html
+
+    def test_tw_header_uses_tw_variant(self, tw_sample_result):
+        """TW jurisdiction → pdf.headerTw key, not pdf.header."""
+        html = render_html(tw_sample_result, locale="zh-TW")
+        # Should contain the TW-specific header text
+        assert "台灣" in html or "Taiwan" in html
+
+    def test_tw_section_labels_tw_locale(self, tw_sample_result):
+        html = render_html(tw_sample_result, locale="zh-TW")
+        assert "說明書" in html  # section.tw.specification
+        assert "請求項" in html  # section.tw.claims
+
+    def test_tw_section_labels_en_locale(self, tw_sample_result):
+        """TW jurisdiction + en locale renders TW section labels in English."""
+        html = render_html(tw_sample_result, locale="en")
+        # section.tw.specification = "Description" (English TW label)
+        assert "Description" in html
+
+    def test_tw_antecedent_card_renders_tw_copy(self, tw_sample_result):
+        html = render_html(tw_sample_result, locale="zh-TW")
+        assert "先行詞基礎檢視" in html
+
+    def test_tw_spec_support_card_renders_tw_copy(self, tw_sample_result):
+        html = render_html(tw_sample_result, locale="zh-TW")
+        assert "說明書支持檢視" in html
+
+    def test_tw_antecedent_card_en_fallback(self, tw_sample_result):
+        """TW jurisdiction + en locale uses the English antecedent heading."""
+        html = render_html(tw_sample_result, locale="en")
+        assert "Antecedent Basis Review" in html
+        assert "Specification Support Review" in html
+
+
+class TestLocaleSweepCn:
+
+    @pytest.mark.parametrize("locale", SUPPORTED_LOCALES)
+    def test_render_html_no_raise(self, cn_sample_result, locale):
+        html = render_html(cn_sample_result, locale=locale)
+        assert html
+        assert "</html>" in html
+
+    def test_cn_section_labels_cn_locale(self, cn_sample_result):
+        html = render_html(cn_sample_result, locale="zh-CN")
+        assert "说明书" in html
+        assert "权利要求" in html
+
+    def test_cn_abstract_counter_is_chars(self, cn_sample_result):
+        """CN jurisdiction uses pdf.abstractCharCount, not wordCount."""
+        html = render_html(cn_sample_result, locale="zh-CN")
+        assert "摘要字数" in html
+
+
+class TestLocaleFallback:
+    """Unknown / unsupported locales fall through to English."""
+
+    def test_unknown_locale_renders_english(self, sample_result):
+        html_fr = render_html(sample_result, locale="fr-FR")
+        html_en = render_html(sample_result, locale="en")
+        # Bit-equivalence isn't guaranteed (timestamps, etc.), but the
+        # triage heading should match.
+        assert "Priority Actions" in html_fr
+        assert "Priority Actions" in html_en
+
+    def test_bcp47_regional_variant_normalization(self, tw_sample_result):
+        """zh-Hant-TW and zh-TW should render identically."""
+        html_bcp47 = render_html(tw_sample_result, locale="zh-Hant-TW")
+        html_canonical = render_html(tw_sample_result, locale="zh-TW")
+        assert html_bcp47 == html_canonical
+
+
+class TestLocalePdfBinary:
+    """A single PDF render per locale to catch font/encoding issues.
+
+    Cheaper than doing the full cartesian product for HTML + PDF; HTML
+    rendering is the pressure-test, PDF is the smoke test.
+    """
+
+    @pytest.mark.parametrize("locale", SUPPORTED_LOCALES)
+    def test_pdf_renders(self, tw_sample_result, locale):
+        pdf = render_pdf(tw_sample_result, locale=locale)
+        assert pdf[:4] == b"%PDF"
+        assert len(pdf) > 2000
+
+
+class TestNoRawKeyLeaks:
+    """Any ``key.not.found`` literal in rendered HTML means the template
+    referenced a locale key that doesn't exist in the bundle — surfaces
+    via the i18n helper's raw-key fallback.
+    """
+
+    @pytest.mark.parametrize("locale", SUPPORTED_LOCALES)
+    def test_us_no_raw_keys(self, sample_result, locale):
+        html = render_html(sample_result, locale=locale)
+        # If the template references ``pdf.foo`` and the locale has no
+        # ``pdf.foo`` key, the i18n helper returns the raw key literal.
+        # Check for a few representative prefixes.
+        for prefix in ("pdf.", "section.", "tree.", "status.", "punct.", "term."):
+            # The prefix may legitimately appear inside interpolated
+            # values (not as a bare rendered key). Raw-key leaks look
+            # like ``pdf.header`` standalone, no <tag> wrapping.
+            leaked = f">{prefix}"  # bare render attempt, not markup
+            assert leaked not in html, (
+                f"{locale}: raw key leak containing {prefix!r} — check "
+                "template references + locale coverage."
+            )
+
+    @pytest.mark.parametrize("locale", SUPPORTED_LOCALES)
+    def test_tw_no_raw_keys(self, tw_sample_result, locale):
+        html = render_html(tw_sample_result, locale=locale)
+        for prefix in ("pdf.", "section.", "tree.", "status.", "punct.", "term."):
+            leaked = f">{prefix}"
+            assert leaked not in html, (
+                f"{locale}: raw key leak containing {prefix!r}"
+            )
