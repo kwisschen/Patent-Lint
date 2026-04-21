@@ -40,7 +40,12 @@ def main():
     default="us",
     help="Patent jurisdiction (us, cn, or tw).",
 )
-def analyze(file: str, fmt: str, output: str | None, jurisdiction: str):
+@click.option(
+    "--locale",
+    default="en",
+    help="PDF output locale. Accepts BCP-47 tags (en, zh-TW, zh-CN, ja, ko, or regional variants). Ignored for JSON output.",
+)
+def analyze(file: str, fmt: str, output: str | None, jurisdiction: str, locale: str):
     """Analyze a single patent .docx file."""
     if fmt == "pdf" and output is None:
         click.echo("PDF output requires -o/--output. Example: patentlint analyze file.docx --format pdf -o report.pdf", err=True)
@@ -61,7 +66,7 @@ def analyze(file: str, fmt: str, output: str | None, jurisdiction: str):
             click.echo("PDF output requires weasyprint. Install with: pip install patentlint[pdf]", err=True)
             raise SystemExit(EXIT_ERROR)
 
-        pdf_bytes = render_pdf(result)
+        pdf_bytes = render_pdf(result, locale=locale)
         Path(output).write_bytes(pdf_bytes)
         click.echo(f"PDF report written to {output}")
     else:
@@ -94,7 +99,12 @@ def analyze(file: str, fmt: str, output: str | None, jurisdiction: str):
     default="us",
     help="Patent jurisdiction (us, cn, or tw).",
 )
-def batch(directory: str, output: str, fmt: str, jurisdiction: str):
+@click.option(
+    "--locale",
+    default="en",
+    help="PDF output locale. Accepts BCP-47 tags (en, zh-TW, zh-CN, ja, ko, or regional variants). Ignored for JSON output.",
+)
+def batch(directory: str, output: str, fmt: str, jurisdiction: str, locale: str):
     """Analyze all .docx files in a directory."""
     os.makedirs(output, exist_ok=True)
 
@@ -127,7 +137,7 @@ def batch(directory: str, output: str, fmt: str, jurisdiction: str):
 
             if fmt == "pdf":
                 out_path = Path(output) / f"{stem}.pdf"
-                pdf_bytes = render_pdf(result)
+                pdf_bytes = render_pdf(result, locale=locale)
                 out_path.write_bytes(pdf_bytes)
             else:
                 out_path = Path(output) / f"{stem}.json"
