@@ -219,3 +219,75 @@ class TestCORS:
         )
         assert response.status_code == 200
         assert "access-control-allow-origin" in response.headers
+
+
+class TestPickLocale:
+    """Locale resolution precedence: ?locale= > Accept-Language > en."""
+
+    def test_query_param_wins(self):
+        from patentlint.api.app import _pick_locale
+
+        assert _pick_locale("zh-TW", "en-US") == "zh-TW"
+
+    def test_accept_language_fallback(self):
+        from patentlint.api.app import _pick_locale
+
+        assert _pick_locale(None, "zh-TW,zh;q=0.9,en;q=0.8") == "zh-TW"
+
+    def test_default_en(self):
+        from patentlint.api.app import _pick_locale
+
+        assert _pick_locale(None, None) == "en"
+
+    def test_bcp47_normalization(self):
+        """zh-Hant-TW → zh-TW, zh-Hans → zh-CN, en-US → en."""
+        from patentlint.api.app import _pick_locale
+
+        assert _pick_locale(None, "zh-Hant-TW") == "zh-TW"
+        assert _pick_locale(None, "zh-Hans,zh;q=0.8") == "zh-CN"
+        assert _pick_locale(None, "en-US") == "en"
+        assert _pick_locale(None, "ja-JP") == "ja"
+
+    def test_unsupported_locale_falls_back(self):
+        from patentlint.api.app import _pick_locale
+
+        assert _pick_locale(None, "fr-FR") == "en"
+        assert _pick_locale("xx-YY", None) == "en"
+
+
+class TestReportEndpointLocale:
+
+    def test_accept_language_produces_localized_pdf(self):
+        docx_bytes = _create_patent_docx_bytes(
+            spec_texts=["Specification."],
+            claims_texts=["A device."],
+            abstract_text="Abstract.",
+        )
+        response = client.post(
+            "/api/analyze/report",
+            files={"file": ("test.docx", docx_bytes,
+                   "application/vnd.openxmlformats-officedocument.wordprocessingml.document")},
+            headers={"Accept-Language": "zh-TW"},
+        )
+        assert response.status_code == 200
+        assert response.content[:4] == b"%PDF"
+        # PDFs compress text — length sanity check only. Substring
+        # assertions on localized text would require a PDF parser.
+        assert len(response.content) > 1000
+
+    def test_query_param_overrides_accept_language(self):
+        """?locale=en should win even if Accept-Language says zh-TW."""
+        from unittest.mock import patch
+
+        docx_bytes = _create_patent_docx_bytes(spec_texts=["Spec."])
+        with patch(
+            "patentlint.api.app.render_pdf", return_value=b"%PDF-1.4 stub"
+        ) as mock_render:
+            client.post(
+                "/api/analyze/report?locale=en",
+                files={"file": ("test.docx", docx_bytes,
+                       "application/vnd.openxmlformats-officedocument.wordprocessingml.document")},
+                headers={"Accept-Language": "zh-TW,zh;q=0.9"},
+            )
+        _, kwargs = mock_render.call_args
+        assert kwargs.get("locale") == "en"

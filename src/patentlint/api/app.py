@@ -12,10 +12,11 @@ from __future__ import annotations
 import logging
 import os
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, Header, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, Response
 
+from patentlint.i18n import normalize_locale
 from patentlint.models import AnalysisResult, Jurisdiction
 from patentlint.pipeline import analyze_bytes
 from patentlint.report.generator import render_pdf
@@ -84,15 +85,39 @@ async def analyze(
     return result.model_dump()
 
 
+def _pick_locale(query_locale: str | None, accept_language: str | None) -> str:
+    """Resolve the PDF output locale.
+
+    Precedence: explicit ``?locale=`` query param > first Accept-Language
+    tag > default ``en``. BCP-47 normalization collapses regional
+    variants (zh-Hant-TW → zh-TW, en-US → en) so the caller can pass
+    browser-grade language tags through unchanged.
+    """
+    if query_locale:
+        return normalize_locale(query_locale)
+    if accept_language:
+        # Take the first tag; RFC 7231 permits quality-weighted lists
+        # but we don't need best-match scoring for a 5-locale set.
+        first_tag = accept_language.split(",")[0].split(";")[0].strip()
+        return normalize_locale(first_tag)
+    return "en"
+
+
 @app.post("/api/analyze/report")
 async def analyze_report(
     file: UploadFile = File(...),
     jurisdiction: str = "us",
+    locale: str | None = None,
+    accept_language: str | None = Header(default=None, alias="Accept-Language"),
 ):
-    """Upload .docx -> full analysis -> PDF report download."""
+    """Upload .docx -> full analysis -> PDF report download.
+
+    Locale resolution (precedence): ?locale=... > Accept-Language > en.
+    """
     j = Jurisdiction(jurisdiction.upper())
     result = await _run_analysis_pipeline(file, jurisdiction=j)
-    pdf_bytes = render_pdf(result)
+    resolved_locale = _pick_locale(locale, accept_language)
+    pdf_bytes = render_pdf(result, locale=resolved_locale)
     return Response(
         content=pdf_bytes,
         media_type="application/pdf",
