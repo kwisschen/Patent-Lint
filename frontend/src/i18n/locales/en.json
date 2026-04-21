@@ -1112,18 +1112,18 @@
     }
   },
   "checks": {
-    "preamble_cross_category_mismatch": "Cross-category preamble mismatch between dependent and independent claim.",
+    "preamble_cross_category_mismatch": "Cross-category preamble mismatch between dependent and independent claim (§ 112(d)).",
     "preamble_cross_category_pass": "Claim preambles are consistent.",
-    "preamble_noun_mismatch": "Preamble noun differs between dependent and independent claim.",
-    "preamble_indefinite_article": "Indefinite article in dependent claim preamble (should be 'The').",
+    "preamble_noun_mismatch": "Preamble noun differs between dependent and independent claim (MPEP § 608.01(m)).",
+    "preamble_indefinite_article": "Indefinite article in dependent claim preamble — should be 'The' (MPEP § 608.01(m)).",
     "spec_support_unsupported_terms": "Claim terms not found in the specification — each claim term should have written-description support (§ 112(a)).",
     "spec_support_pass": "All claim terms found in the specification (§ 112(a) written-description support).",
     "required_sections_pass": "All required sections per MPEP § 608.01(a) are present.",
     "required_sections_missing": "Missing required sections per MPEP § 608.01(a).",
     "optional_section_missing": "Optional section \"{{name}}\" not found.",
     "figure_xref_pass": "All figure references are consistent between Brief Description of Drawings and Detailed Description.",
-    "figure_xref_orphaned_brief": "Figure(s) described in Brief Description of Drawings but not referenced in Detailed Description.",
-    "figure_xref_orphaned_detailed": "Figure(s) referenced in Detailed Description but not described in Brief Description of Drawings."
+    "figure_xref_orphaned_brief": "Figure(s) described in Brief Description of Drawings but not referenced in Detailed Description (MPEP § 608.02).",
+    "figure_xref_orphaned_detailed": "Figure(s) referenced in Detailed Description but not described in Brief Description of Drawings (MPEP § 608.02)."
   },
   "claims": {
     "jepsonPriorArt": "Claim {{claimNumber}} uses Jepson format — preamble elements are treated as admitted prior art (MPEP § 2129)",
