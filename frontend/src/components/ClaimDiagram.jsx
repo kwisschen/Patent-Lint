@@ -72,10 +72,10 @@ function buildMermaidSyntax(claimTrees, t) {
 
 const SVG_NS = 'http://www.w3.org/2000/svg'
 
-// Keep total reveal duration bounded so 100-claim patents don't take 5+s to draw.
 // Edge draw is intentionally longer than node fade: the line-extension motion
 // is the hero of this reveal and needs to be perceptible when users first
-// land on the results page.
+// land on the results page. Total duration is bounded so large claim sets
+// don't take 5+s.
 const NODE_STAGGER_MS = 45
 const NODE_STAGGER_CAP_MS = 600
 const EDGE_STAGGER_MS = 75
@@ -83,13 +83,40 @@ const EDGE_STAGGER_CAP_MS = 1200
 const EDGE_DRAW_DURATION_MS = 1300
 const EDGE_DRAW_DELAY_BASE_MS = 220
 
+// Light-mode defaults, used if getComputedStyle returns an empty var() lookup
+// (e.g. inside an iframe, or if the stylesheet hasn't parsed yet).
+const FALLBACK_TOKENS = {
+  '--pl-indep-start': '#eff6ff',
+  '--pl-indep-end': '#bfdbfe',
+  '--pl-dep-start': '#ffffff',
+  '--pl-dep-end': '#f1f5f9',
+  '--pl-shadow-color': '#0f172a',
+  '--pl-shadow-opacity': '0.14',
+  '--pl-edge-stroke': '#94a3b8',
+  '--pl-label-indep': '#1e40af',
+  '--pl-label-dep': '#334155',
+  '--pl-indep-stroke': '#2563eb',
+  '--pl-dep-stroke': '#cbd5e1',
+}
+
+function readTokens(el) {
+  const cs = getComputedStyle(el)
+  const out = {}
+  for (const [k, fallback] of Object.entries(FALLBACK_TOKENS)) {
+    const v = cs.getPropertyValue(k).trim()
+    out[k] = v || fallback
+  }
+  return out
+}
+
 // Appends gradient + shadow defs, restyles nodes/edges, adds draw-in animation.
-// Defs IDs are scoped by `suffix` so multiple diagrams on a page don't collide
-// (document-scope `url(#id)` resolution picks whichever def appears first).
-// Inline-important styles are used because mermaid's injected stylesheet has
-// higher specificity than SVG attribute defaults.
-function enhanceSvg(svgEl, suffix) {
-  if (!svgEl) return
+// Defs IDs are scoped by `suffix` so multiple diagrams on a page don't collide.
+// Tokens are resolved to literal hex at render-time via getComputedStyle —
+// `var(--x)` inside inline SVG style attributes is flaky across engines.
+function enhanceSvg(svgEl, suffix, surfaceEl) {
+  if (!svgEl || !surfaceEl) return
+
+  const tokens = readTokens(surfaceEl)
 
   const gradIndep = `pl-grad-indep-${suffix}`
   const gradDep = `pl-grad-dep-${suffix}`
@@ -103,16 +130,17 @@ function enhanceSvg(svgEl, suffix) {
 
   const extras = `
     <linearGradient id="${gradIndep}" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color: var(--pl-indep-start)"/>
-      <stop offset="100%" style="stop-color: var(--pl-indep-end)"/>
+      <stop offset="0%" stop-color="${tokens['--pl-indep-start']}"/>
+      <stop offset="100%" stop-color="${tokens['--pl-indep-end']}"/>
     </linearGradient>
     <linearGradient id="${gradDep}" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color: var(--pl-dep-start)"/>
-      <stop offset="100%" style="stop-color: var(--pl-dep-end)"/>
+      <stop offset="0%" stop-color="${tokens['--pl-dep-start']}"/>
+      <stop offset="100%" stop-color="${tokens['--pl-dep-end']}"/>
     </linearGradient>
     <filter id="${shadow}" x="-30%" y="-30%" width="160%" height="160%">
       <feDropShadow dx="0" dy="2" stdDeviation="3"
-        style="flood-color: var(--pl-shadow-color); flood-opacity: var(--pl-shadow-opacity)"/>
+        flood-color="${tokens['--pl-shadow-color']}"
+        flood-opacity="${tokens['--pl-shadow-opacity']}"/>
     </filter>
   `
   const holder = document.createElementNS(SVG_NS, 'g')
@@ -132,13 +160,14 @@ function enhanceSvg(svgEl, suffix) {
       rect.setAttribute('ry', '10')
       rect.style.setProperty('fill', isIndep ? `url(#${gradIndep})` : `url(#${gradDep})`, 'important')
       rect.style.setProperty('filter', `url(#${shadow})`, 'important')
-      rect.style.setProperty('stroke', isIndep ? 'var(--pl-indep-stroke)' : 'var(--pl-dep-stroke)', 'important')
+      rect.style.setProperty('stroke', isIndep ? tokens['--pl-indep-stroke'] : tokens['--pl-dep-stroke'], 'important')
       rect.style.setProperty('stroke-width', isIndep ? '1.5' : '1', 'important')
     }
 
-    const labelColor = isIndep ? 'var(--pl-label-indep)' : 'var(--pl-label-dep)'
-    g.querySelectorAll('text, tspan').forEach((t) => {
+    const labelColor = isIndep ? tokens['--pl-label-indep'] : tokens['--pl-label-dep']
+    g.querySelectorAll('text, tspan, .nodeLabel, .label').forEach((t) => {
       t.style.setProperty('fill', labelColor, 'important')
+      t.style.setProperty('color', labelColor, 'important')
     })
 
     if (!reduceMotion) {
@@ -149,7 +178,7 @@ function enhanceSvg(svgEl, suffix) {
 
   const paths = svgEl.querySelectorAll('.edgePath path, path.flowchart-link')
   paths.forEach((path, i) => {
-    path.style.setProperty('stroke', 'var(--pl-edge-stroke)', 'important')
+    path.style.setProperty('stroke', tokens['--pl-edge-stroke'], 'important')
     path.style.setProperty('stroke-width', '1.5', 'important')
     try {
       const length = path.getTotalLength?.() ?? 180
@@ -167,8 +196,8 @@ function enhanceSvg(svgEl, suffix) {
   })
 
   svgEl.querySelectorAll('marker path, marker polygon').forEach((m) => {
-    m.style.setProperty('fill', 'var(--pl-edge-stroke)', 'important')
-    m.style.setProperty('stroke', 'var(--pl-edge-stroke)', 'important')
+    m.style.setProperty('fill', tokens['--pl-edge-stroke'], 'important')
+    m.style.setProperty('stroke', tokens['--pl-edge-stroke'], 'important')
   })
 }
 
@@ -191,7 +220,11 @@ export default function ClaimDiagram({ claimTrees }) {
       const { svg } = await mermaid.render(id, syntax)
       if (containerRef.current) {
         containerRef.current.innerHTML = svg
-        enhanceSvg(containerRef.current.querySelector('svg'), String(renderCounter))
+        enhanceSvg(
+          containerRef.current.querySelector('svg'),
+          String(renderCounter),
+          containerRef.current,
+        )
       }
     } catch (err) {
       console.error('Mermaid render error:', err)
@@ -206,6 +239,24 @@ export default function ClaimDiagram({ claimTrees }) {
     if (showDiagram) {
       renderDiagram()
     }
+  }, [showDiagram, renderDiagram])
+
+  // Re-render on theme toggle so the gradient stops + label colors pick up
+  // the new .dark tokens. Tokens are baked into the SVG at render-time
+  // (for cross-engine reliability), so a live CSS-var swap won't reach them.
+  useEffect(() => {
+    if (!showDiagram) return
+    const root = document.documentElement
+    let wasDark = root.classList.contains('dark')
+    const observer = new MutationObserver(() => {
+      const isDark = root.classList.contains('dark')
+      if (isDark !== wasDark) {
+        wasDark = isDark
+        renderDiagram()
+      }
+    })
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
   }, [showDiagram, renderDiagram])
 
   if (!claimTrees || claimTrees.length === 0) return null
