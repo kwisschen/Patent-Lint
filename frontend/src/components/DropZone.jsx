@@ -48,7 +48,7 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
         {...getRootProps()}
         className={`
           flex flex-col items-center justify-center gap-4
-          w-full max-w-lg p-12 rounded-lg
+          w-full max-w-lg p-6 md:p-12 rounded-lg
           border-2 cursor-pointer
           transition-all duration-200
           ${isDragActive
