@@ -912,11 +912,11 @@
         },
         "paragraphNumbering": {
           "pass": "단락 번호가 순차적입니다 (또는 부재).",
-          "amendGap": "단락 번호에 누락이 있습니다 (【{{prev}}】 다음에 【{{next}}】).",
-          "amendFormat": "【NNNN】 형식이 아닌 단락이 {{count}}개 있습니다. 예: {{examples}}."
+          "amendGap": "단락 번호에 누락이 있습니다 (【{{prev}}】 다음에 【{{next}}】) (專利法施行細則 §17).",
+          "amendFormat": "【NNNN】 형식이 아닌 단락이 {{count}}개 있습니다. 예: {{examples}} (專利法施行細則 §17)."
         },
         "paragraphEnding": {
-          "amend": "종결 부호가 누락된 단락이 {{count}}개 있습니다: {{paragraphs}}.",
+          "amend": "종결 부호가 누락된 단락이 {{count}}개 있습니다: {{paragraphs}} (專利審查基準).",
           "pass": "모든 명세서 단락이 중국어 문장 종결 부호로 끝납니다."
         },
         "figureRefConsistency": {
@@ -924,20 +924,20 @@
           "pass": "섹션 간 도면 참조가 일관됩니다."
         },
         "patentTypeTerminology": {
-          "verify": "출원 종류(발명·신형) 용어 불일치가 검출되었습니다.",
+          "verify": "출원 종류(발명·신형) 용어 불일치가 검출되었습니다 (專利審查基準).",
           "pass": "출원 종류 용어가 일관됩니다."
         },
         "title": {
-          "amendContent": "명칭에 금지된 내용이 포함되어 있습니다: {{title_prohibited_items}}.",
+          "amendContent": "명칭에 금지된 내용이 포함되어 있습니다: {{title_prohibited_items}} (專利審查基準).",
           "pass": "명칭이 TIPO 요건을 충족합니다.",
-          "amendMissing": "명세서에 명칭이 누락되어 있습니다."
+          "amendMissing": "명세서에 명칭이 누락되어 있습니다 (專利審查基準)."
         },
         "claimReference": {
-          "amend": "명세서가 청구항을 참조합니다.",
+          "amend": "명세서가 청구항을 참조합니다 (專利法施行細則 §17).",
           "pass": "명세서가 청구항을 참조하지 않습니다."
         },
         "symbolTablePresence": {
-          "amend": "필수 符號說明 섹션이 누락되었습니다.",
+          "amend": "필수 符號說明 섹션이 누락되었습니다 (專利法施行細則 §17).",
           "pass": "符號說明 섹션이 존재합니다."
         },
         "symbolTableConsistency": {
@@ -1033,7 +1033,7 @@
           "pass": "요약서에 상업적 표현이 없습니다."
         },
         "representativeDrawing": {
-          "verify": "대표도(代表圖) 지정이 없습니다.",
+          "verify": "대표도(代表圖) 지정이 없습니다 (專利法施行細則 §21).",
           "pass": "대표도(代表圖)가 지정되어 있습니다."
         }
       },

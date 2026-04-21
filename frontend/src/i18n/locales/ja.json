@@ -912,11 +912,11 @@
         },
         "paragraphNumbering": {
           "pass": "段落番号は連番で付されています（または番号なし）。",
-          "amendGap": "段落番号に飛びがあります（【{{prev}}】の次が【{{next}}】）。",
-          "amendFormat": "【NNNN】形式でない段落が{{count}}件あります。例：{{examples}}。"
+          "amendGap": "段落番号に飛びがあります（【{{prev}}】の次が【{{next}}】）（專利法施行細則 §17）。",
+          "amendFormat": "【NNNN】形式でない段落が{{count}}件あります。例：{{examples}}（專利法施行細則 §17）。"
         },
         "paragraphEnding": {
-          "amend": "句読点で終わっていない段落が{{count}}件あります：{{paragraphs}}。",
+          "amend": "句読点で終わっていない段落が{{count}}件あります：{{paragraphs}}（專利審查基準）。",
           "pass": "全ての段落が中国語の句点で終わっています。"
         },
         "figureRefConsistency": {
@@ -924,20 +924,20 @@
           "pass": "各章の図面参照は整合しています。"
         },
         "patentTypeTerminology": {
-          "verify": "出願種別（発明・新型）の用語に不整合を検出しました。",
+          "verify": "出願種別（発明・新型）の用語に不整合を検出しました（專利審查基準）。",
           "pass": "出願種別の用語が一貫しています。"
         },
         "title": {
-          "amendContent": "名称に使用できない語が含まれています：{{title_prohibited_items}}。",
+          "amendContent": "名称に使用できない語が含まれています：{{title_prohibited_items}}（專利審查基準）。",
           "pass": "名称はTIPO要件を満たしています。",
-          "amendMissing": "明細書に名称が記載されていません。"
+          "amendMissing": "明細書に名称が記載されていません（專利審查基準）。"
         },
         "claimReference": {
-          "amend": "明細書が請求項を引用しています。",
+          "amend": "明細書が請求項を引用しています（專利法施行細則 §17）。",
           "pass": "明細書は請求項を引用していません。"
         },
         "symbolTablePresence": {
-          "amend": "必要な符號說明が欠けています。",
+          "amend": "必要な符號說明が欠けています（專利法施行細則 §17）。",
           "pass": "符號說明が存在します。"
         },
         "symbolTableConsistency": {
@@ -1033,7 +1033,7 @@
           "pass": "要約に商業的表現はありません。"
         },
         "representativeDrawing": {
-          "verify": "代表圖の指定がありません。",
+          "verify": "代表圖の指定がありません（專利法施行細則 §21）。",
           "pass": "代表圖が指定されています。"
         }
       },
