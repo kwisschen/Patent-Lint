@@ -224,7 +224,7 @@
       "tryNow": "立即试试 →"
     },
     "page": {
-      "heroTitle": "无服务器。无上传。无例外。",
+      "heroTitle": "无上传。无账号。无追踪。",
       "heroSubtext": "PatentLint 完全在您的浏览器中本地运行，专利稿件绝不会离开您的设备。机密数据始终保留在您的设备上。",
       "tryIt": "自己试试看 →",
       "compareTitle": "PatentLint 与其他工具的比较",
@@ -244,7 +244,7 @@
       },
       "q2": {
         "question": "需要账号吗？",
-        "patentlint": "无需账号，也不收集个人信息。",
+        "patentlint": "无需账号。PatentLint 应用程序不收集任何使用数据。",
         "addin": "通常需要许可证或账号。",
         "cloud": "是，需要账号。"
       },
@@ -289,7 +289,9 @@
       "aiTitle": "AI / LLM（不使用）",
       "ai": "PatentLint 不使用 AI、机器学习或大型语言模型。所有检查均为确定性的规则匹配，依据各专利局审查规范执行。您的文本不会被发送至任何 AI 服务。",
       "telemetryTitle": "遥测与分析（不使用）",
-      "telemetry": "PatentLint 不包含分析脚本、追踪像素、cookies 或第三方集成。此应用程序不收集或传输任何使用数据。",
+      "telemetry": "PatentLint 不包含分析脚本、追踪像素、cookies 或第三方追踪集成。此应用程序不收集或传输任何使用数据。",
+      "hostingTitle": "托管",
+      "hosting": "patentlint.com 托管于 Cloudflare Pages，仅提供静态资产，并无应用服务器、数据库或分析工具。Cloudflare 边缘节点于每次访问时，会接收标准的网页请求中介数据（IP 地址、user-agent、时间戳），与任何网站无异。日常运营中，我们并不访问上述日志。完整披露请参阅隐私政策。",
       "selfHostedTitle": "自托管选项",
       "selfHosted": "On-premises deployment is available on private inquiry. Compliance with any specific regulatory regime remains the organization's own determination.",
       "contactEnterprise": "咨询企业部署方案 →"
@@ -1267,15 +1269,15 @@
   "privacy": {
     "title": "隐私政策",
     "lastUpdated": "最后更新：2026年4月21日",
-    "intro": "本隐私政策说明 patentlint.com（下称「本网站」）于您访问时如何处理数据。PatentLint 之架构设计即以几乎不收集任何个人数据为原则。本政策将该设计形诸正式之披露文件。",
+    "intro": "本隐私政策说明 patentlint.com（下称「本网站」）于您访问时如何处理数据。PatentLint 应用程序本身不收集您的任何数据：未使用分析工具、未使用追踪、未使用 cookies。唯一存在的数据流，系本网站之托管服务商 Cloudflare Pages 于每次访问时所接收之标准网页请求中介数据，与任何网站无异。本政策将上述区别予以明文披露。",
     "s1": {
       "title": "前言",
-      "p1": "patentlint.com 为 Christopher Chen 所运营之线上应用网站，提供 PatentLint 专利稿件检查工具。文件分析全程透过 WebAssembly（Pyodide）于您的浏览器内执行；任何文件内容均不会传送至本网站之服务器。",
+      "p1": "patentlint.com 为 Christopher Chen 所运营之线上应用网站，提供 PatentLint 专利稿件检查工具。文件分析全程透过 WebAssembly（Pyodide）于您的浏览器内执行。本网站以 Cloudflare Pages 提供静态资产，并无应用服务器，亦无数据库；您的文件内容绝不会自您的设备传出。",
       "p2": "本政策适用于您与本网站之互动。若您另行取得 PatentLint 软件源代码，则应依该软件之授权（PolyForm-Strict-1.0.0）规范，不适用本政策。"
     },
     "s2": {
       "title": "您的专利稿件",
-      "p1": "您上传至本网站之专利稿件，全程于您的浏览器内处理。分析作业在加载至您浏览标签页之 Pyodide／WebAssembly 引擎上执行；patentlint.com 并不存在服务器端的分析路径。",
+      "p1": "您「上传」至本网站之专利稿件，实际上并未离开您的设备——文件仅加载至浏览器标签页内，并于该标签页中处理。分析作业在该标签页中之 Pyodide／WebAssembly 引擎上执行。patentlint.com 并不存在服务器端的分析路径；本网站仅提供静态资产。",
       "p2": "我们绝不：",
       "never1": "接收或传输您专利稿件之内容。",
       "never2": "存储文件名、权利要求文字、说明书本文或任何专利相关数据。",
@@ -1326,14 +1328,14 @@
       "title": "您的权利",
       "p1": "依 GDPR、CCPA 及类似隐私法令，您就个人数据享有相应之权利。于该等权利适用于我们处理之数据之范围内：",
       "accessLabel": "查阅权。",
-      "access": "您得询问我们持有您的何种个人数据。（依 §2 与 §4 所载，几乎不会有任何数据。）",
+      "access": "您得询问我们持有您的何种个人数据。本网站日常运营中并不存储用户数据（详见 §2 与 §4）；您之请求通常将回复「除您主动发送之电子邮件往来外，本网站并无任何关于您之数据」。",
       "deletionLabel": "删除权。",
-      "deletion": "您得要求我们删除我们持有之您之个人数据。（同上，几乎无数据可供删除。）",
+      "deletion": "您得要求我们删除我们持有之您之个人数据。如同查阅请求，通常并无数据可供删除；主动发送之电子邮件往来为唯一例外。",
       "portabilityLabel": "数据可携权。",
       "portability": "您得要求以可携形式取得我们持有之个人数据副本。",
       "objectLabel": "反对／撤回同意之权利。",
       "object": "您得反对我们之处理行为，或撤回您先前所为之任何同意。",
-      "exercise": "如欲行使上述权利，请来信至 <1>kwisschen@gmail.com</1>。我们将于 30 日内回复。请注意：因我们收集之数据极少，多数请求最终仅系回复「并无数据可供查阅、删除或导出」。"
+      "exercise": "如欲行使上述权利，请来信至 <1>kwisschen@gmail.com</1>。我们将于 30 日内回复。因 PatentLint 应用程序不收集任何数据，本网站亦不存储使用数据，多数请求最终仅系回复「并无数据可供查阅、删除或导出」。"
     },
     "s9": {
       "title": "儿童",
