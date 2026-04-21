@@ -3,6 +3,12 @@ FROM python:3.12-slim AS wheel-build
 WORKDIR /app
 COPY pyproject.toml README.md ./
 COPY src/ src/
+# ADR-139: hatchling force-include copies frontend/src/i18n/locales/
+# into patentlint/_locales/ inside the wheel at build time so the
+# Python i18n helper (src/patentlint/i18n.py) can load locale JSON
+# without depending on a separate install path. The locales dir must
+# therefore be present in the build context here.
+COPY frontend/src/i18n/locales frontend/src/i18n/locales
 RUN pip wheel . --no-deps -w /wheels/
 
 # ---- Stage 2: Build frontend ----
@@ -37,6 +43,9 @@ WORKDIR /app
 # Install Python deps (leverage layer caching)
 COPY pyproject.toml README.md ./
 COPY src/ src/
+# Same ADR-139 reason as wheel-build stage: hatchling needs the
+# locales dir in the build context to satisfy its force-include rule.
+COPY frontend/src/i18n/locales frontend/src/i18n/locales
 RUN pip install --no-cache-dir ".[api]"
 
 # Copy built frontend
