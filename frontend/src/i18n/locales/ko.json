@@ -787,14 +787,14 @@
           "pass": "명세서 섹션이 규정된 순서에 따릅니다."
         },
         "paragraphNumbering": {
-          "amendXml": "단락 번호가 순차적이지 않습니다 ({{detail}}).",
-          "amendDocx": "명세서에 수동으로 추가된 단락 번호가 포함되어 있습니다 (CNIPA 출원 시 제거 필요).",
+          "amendXml": "단락 번호가 순차적이지 않습니다 ({{detail}}) (审查指南).",
+          "amendDocx": "명세서에 수동으로 추가된 단락 번호가 포함되어 있어 CNIPA 출원 시 제거가 필요합니다 (审查指南).",
           "pass": "단락 번호가 순차적입니다.",
-          "amendXmlGap": "단락 번호에 누락이 있습니다 ({{prev}} 다음에 {{next}}).",
-          "amendXmlDuplicate": "중복된 단락 번호가 {{count}}개 있습니다: {{paragraphs}}."
+          "amendXmlGap": "단락 번호에 누락이 있습니다 ({{prev}} 다음에 {{next}}) (审查指南).",
+          "amendXmlDuplicate": "중복된 단락 번호가 {{count}}개 있습니다: {{paragraphs}} (审查指南)."
         },
         "paragraphEnding": {
-          "amend": "중국어 문장 종결 부호로 끝나지 않는 단락이 {{count}}개 있습니다: {{paragraphs}}.",
+          "amend": "중국어 문장 종결 부호로 끝나지 않는 단락이 {{count}}개 있습니다: {{paragraphs}} (审查指南).",
           "pass": "모든 명세서 단락이 중국어 문장 종결 부호로 끝납니다."
         },
         "figureRefConsistency": {
@@ -802,17 +802,17 @@
           "pass": "섹션 간 도면 참조가 일관됩니다."
         },
         "patentTypeTerminology": {
-          "verify": "'{{term}}' 검출: 출원 종류(발명·실용신안)와 일치하는지 확인하십시오.",
+          "verify": "'{{term}}' 검출: 출원 종류(발명·실용신안)와 일치하는지 확인하십시오 (审查指南).",
           "pass": "출원 종류 용어가 일관됩니다."
         },
         "title": {
-          "amendLength": "명칭이 25자 제한을 초과합니다 ({{count}}자).",
-          "amendContent": "명칭에 금지된 내용이 포함되어 있습니다: {{title_prohibited_items}}.",
+          "amendLength": "명칭이 25자 제한을 초과합니다 ({{count}}자) (审查指南 第一部分第一章).",
+          "amendContent": "명칭에 금지된 내용이 포함되어 있습니다: {{title_prohibited_items}} (审查指南 第一部分第一章).",
           "pass": "명칭이 CNIPA 요건을 충족합니다.",
-          "amendMissing": "명세서에 발명의 명칭이 누락되어 있습니다."
+          "amendMissing": "명세서에 발명의 명칭이 누락되어 있습니다 (审查指南 第一部分第一章)."
         },
         "claimReference": {
-          "amend": "명세서가 {{count}}개 단락에서 청구항을 참조합니다 ({{paragraphs}}). 예: {{snippet}}",
+          "amend": "명세서가 {{count}}개 단락에서 청구항을 참조합니다 ({{paragraphs}}) (专利法实施细则 §17). 예: {{snippet}}",
           "pass": "명세서가 청구항을 참조하지 않습니다."
         }
       },
