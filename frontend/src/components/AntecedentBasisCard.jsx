@@ -257,7 +257,7 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
                 className="shrink-0"
               >
                 <Flag />
-                {t('feedback.report')}
+                <span className="hidden sm:inline">{t('feedback.report')}</span>
               </Button>
             </div>
           )

@@ -92,7 +92,7 @@ function ClaimRow({ claimNumber, phrases, crossRefPhrases, jurisdiction }) {
             className="shrink-0"
           >
             <Flag />
-            {t('feedback.report')}
+            <span className="hidden sm:inline">{t('feedback.report')}</span>
           </Button>
         </div>
       )}
