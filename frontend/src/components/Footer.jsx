@@ -30,13 +30,13 @@ export default function Footer() {
         <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2" aria-label="Footer">
           <Link
             to="/security"
-            className="footer-link hover:text-foreground transition-colors duration-200"
+            className="hidden sm:inline footer-link hover:text-foreground transition-colors duration-200"
           >
             {t('footer.security')}
           </Link>
           <Link
             to="/about"
-            className="footer-link hover:text-foreground transition-colors duration-200"
+            className="hidden sm:inline footer-link hover:text-foreground transition-colors duration-200"
           >
             {t('footer.about')}
           </Link>
