@@ -174,13 +174,13 @@
     "didYouMean": "您是否指的是\"{{term}}\"（于权利要求{{claim_id}}中引入）？",
     "didYouMeanCrossBranch": "您是否指的是\"{{term}}\"（于权利要求 {{claim_id}} 中引入，但该权利要求不在本权利要求的相依链中）？",
     "crossBranchAntecedent": "在权利要求 {{claim_id}} 中引入，但该权利要求不在本权利要求的相依链中。请调整相依结构或以「a」重新引入该用语。",
-    "crossRefSpecSupport": "亦于下方之说明书支持检视中标记。"
+    "crossRefSpecSupport": "亦于下方之说明书支持检查中标记。"
   },
   "specSupport": {
     "title": "说明书支持检查",
     "items": "个用语",
     "item": "个用语",
-    "crossRefAntecedent": "亦于上方之先行词分析中标记。"
+    "crossRefAntecedent": "亦于上方之先行词基础检查中标记。"
   },
   "triage": {
     "title": "优先处理摘要",
