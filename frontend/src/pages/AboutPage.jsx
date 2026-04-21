@@ -257,7 +257,7 @@ const TW_GROUP3_CHECKS = [
   'sequential', 'selfDependent', 'circularDependency',
   'transitionPhrase', 'specDrawingRef',
   'charCount', 'titleMatch', 'commercialLanguage', 'representativeDrawing',
-  'bracketFormat', 'figuresSequential',
+  'bracketFormat', 'figuresSequential', 'specSupport',
 ]
 
 function TwComparisonTable({ t }) {
