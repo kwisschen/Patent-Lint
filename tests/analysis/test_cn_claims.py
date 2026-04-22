@@ -394,6 +394,24 @@ class TestTwTerminology:
         results = check_tw_terminology(doc)
         assert results[0].status == "verify"
 
+    def test_flagged_phrases_items_surfaced(self):
+        """FlaggedTermList chips surface the actual detected TW terms and
+        the claims they were found in — previously the walker emitted only
+        a boolean-ish finding with no token content."""
+        doc = _cn_doc([
+            _claim(1, "1. 一种装置。"),
+            _claim(2, "2. 根据请求项1所述的装置。"),
+            _claim(3, "3. 根據請求項1所述的裝置。"),
+        ])
+        results = check_tw_terminology(doc)
+        items = results[0].details_params.get("flagged_phrases", {}).get("items", [])
+        tokens = [i["token"] for i in items]
+        locations = [i["location"] for i in items]
+        assert "请求项" in tokens
+        assert "請求項" in tokens
+        assert 2 in locations
+        assert 3 in locations
+
 
 # ── Check 18: Spec reference ─────────────────────────────────────────────
 
@@ -417,6 +435,23 @@ class TestClaimsSpecReference:
         ])
         results = check_claims_spec_reference(doc)
         assert results[0].status == "amend"
+
+    def test_flagged_phrases_items_surfaced(self):
+        """FlaggedTermList chips surface the actual matched spec/drawing
+        reference tokens, not just claim IDs. Previously the walker only
+        emitted `count` and `claims`, losing the matched phrase content."""
+        doc = _cn_doc([
+            _claim(1, "1. 一种装置，如说明书所述包括模块。"),
+            _claim(2, "2. 根据权利要求1所述的装置，如图1所示。"),
+        ])
+        results = check_claims_spec_reference(doc)
+        items = results[0].details_params.get("flagged_phrases", {}).get("items", [])
+        tokens = [i["token"] for i in items]
+        assert "如说明书" in tokens
+        assert "如图" in tokens
+        for item in items:
+            assert item["kind"] == "reference"
+            assert isinstance(item["location"], int)
 
 
 # ── Check 19: Multi-multi dependency ──────────────────────────────────────

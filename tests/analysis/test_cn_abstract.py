@@ -165,6 +165,19 @@ class TestCommercialLanguage:
         results = check_commercial_language(doc)
         assert results[0].status == "pass"
 
+    def test_flagged_phrases_items_surfaced(self):
+        """FlaggedTermList chip payload is emitted alongside the legacy
+        `terms` string so the UI can render detected commercial terms as chips."""
+        doc = _cn_doc(abstract_text="本发明是国内首创的最佳方案，填补空白。")
+        results = check_commercial_language(doc)
+        items = results[0].details_params.get("flagged_phrases", {}).get("items", [])
+        tokens = [i["token"] for i in items]
+        assert "最佳" in tokens
+        assert "国内首创" in tokens
+        assert "填补空白" in tokens
+        for item in items:
+            assert item["kind"] == "phrase"
+
 
 # ── Check 24: Figure count ────────────────────────────────────────────────
 

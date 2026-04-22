@@ -143,7 +143,12 @@ def check_commercial_language(cn_doc: CnPatentDocument) -> list[CheckItem]:
             message_key="check.cn.abstract.commercialLanguage.amend",
             details=terms_str,
             details_key="details.cn.commercialLanguage",
-            details_params={"terms": terms_str},
+            details_params={
+                "terms": terms_str,
+                "flagged_phrases": {
+                    "items": [{"kind": "phrase", "token": t} for t in found]
+                },
+            },
             reference="专利法实施细则 §23",
             diagnostics=_dx(
                 hit_count=len(found),

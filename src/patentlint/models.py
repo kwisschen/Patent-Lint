@@ -8,6 +8,7 @@ These are designed to be shareable with the Agentic Patent Analyst project.
 
 from __future__ import annotations
 
+import re
 from enum import Enum
 from typing import Any, Optional
 
@@ -20,6 +21,34 @@ from pydantic import BaseModel, Field
 # import dependency in the Pyodide bundle entrypoint.
 def _dx(**kwargs: Any) -> dict[str, Any]:
     return {k: v for k, v in kwargs.items() if v is not None}
+
+
+# Shape: '[N] → "word"\n              ' repeated. Parser surfaces the
+# (location, phrase) pairs so CheckItem emit sites can hand them to the
+# FlaggedTermList chip renderer. The location is int — paragraph or claim
+# id depending on the emit site context.
+_FORMATTED_PHRASE_RE = re.compile(r'\[(\d+)\]\s+→\s+"([^"]+)"')
+
+
+def _parse_formatted_phrases(formatted: str, kind: str = "phrase") -> list[dict[str, Any]]:
+    """Parse detect_restrictive_wording / detect_improper_claim_wording output
+    into structured {location, token, kind} items. Deduplicates (location,
+    token) pairs while preserving first-seen order. Used by the US spec +
+    claims restrictiveWording emit sites in _to_us_report_data to populate
+    details_params.flagged_phrases for the FlaggedTermList chip row."""
+    if not formatted:
+        return []
+    seen: set[tuple[int, str]] = set()
+    items: list[dict[str, Any]] = []
+    for m in _FORMATTED_PHRASE_RE.finditer(formatted):
+        loc = int(m.group(1))
+        token = m.group(2)
+        key = (loc, token.lower())
+        if key in seen:
+            continue
+        seen.add(key)
+        items.append({"location": loc, "token": token, "kind": kind})
+    return items
 
 
 class Jurisdiction(str, Enum):
@@ -613,14 +642,23 @@ class AnalysisResult(BaseModel):
         # Spec restrictive wording belongs to spec-content (not spec-structure)
         # per the document-order invariant — was #2 in the legacy order.
         if self.improper_spec_paragraphs:
+            spec_items = _parse_formatted_phrases(
+                self.improper_spec_phrases_formatted, kind="phrase"
+            )
             spec_checks.append(CheckItem(
                 status="verify",
                 message="Restrictive wording found in specification paragraphs.",
                 message_key="check.spec.restrictiveWording.verify",
                 details=f"Paragraphs: {self.improper_spec_paragraphs}",
                 details_key="details.restrictiveWordingSpec",
-                details_params={"list": str(self.improper_spec_paragraphs)},
-                diagnostics=_dx(flagged_paragraph_count=len(self.improper_spec_paragraphs)),
+                details_params={
+                    "list": str(self.improper_spec_paragraphs),
+                    "flagged_phrases": {"items": spec_items},
+                } if spec_items else {"list": str(self.improper_spec_paragraphs)},
+                diagnostics=_dx(
+                    flagged_paragraph_count=len(self.improper_spec_paragraphs),
+                    flagged_phrase_count=len(spec_items) or None,
+                ),
             ))
         else:
             spec_checks.append(CheckItem(
@@ -652,14 +690,23 @@ class AnalysisResult(BaseModel):
         claims_checks: list[CheckItem] = []
 
         if self.improper_claims:
+            claim_items = _parse_formatted_phrases(
+                self.improper_claim_phrases_formatted, kind="phrase"
+            )
             claims_checks.append(CheckItem(
                 status="verify",
                 message="Restrictive or indefinite wording found in claims.",
                 message_key="check.claims.restrictiveWording.verify",
                 details=f"Claims: {self.improper_claims}",
                 details_key="details.restrictiveWordingClaims",
-                details_params={"list": str(self.improper_claims)},
-                diagnostics=_dx(flagged_claim_count=len(self.improper_claims)),
+                details_params={
+                    "list": str(self.improper_claims),
+                    "flagged_phrases": {"items": claim_items},
+                } if claim_items else {"list": str(self.improper_claims)},
+                diagnostics=_dx(
+                    flagged_claim_count=len(self.improper_claims),
+                    flagged_phrase_count=len(claim_items) or None,
+                ),
             ))
         else:
             claims_checks.append(CheckItem(

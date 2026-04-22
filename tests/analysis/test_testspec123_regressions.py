@@ -87,3 +87,142 @@ class TestRelationalAdjectiveBleedFix:
             f"Expected zero antecedent findings with term ending in 'opposite'; "
             f"got {bleeding_terms}."
         )
+
+
+class TestFlaggedPhrasesSurfacing:
+    """End-to-end: running the US pipeline on TestSpec123.docx must
+    populate details_params.flagged_phrases.items on the spec + claims
+    restrictive-wording emit sites so FlaggedTermList renders chips.
+    Without chips, the user sees hardcoded placeholder examples in the
+    template and has no way to know WHICH tokens were actually flagged."""
+
+    def _run_us_pipeline(self):
+        from patentlint.models import Jurisdiction
+        from patentlint.pipeline import analyze_file
+        if not TESTSPEC123_PATH.exists():
+            pytest.skip(f"TestSpec123.docx not available at {TESTSPEC123_PATH}")
+        return analyze_file(str(TESTSPEC123_PATH), jurisdiction=Jurisdiction.US)
+
+    def test_spec_restrictive_wording_surfaces_flagged_phrases(self):
+        result = self._run_us_pipeline()
+        report = result.to_report_data()
+        spec_checks = [
+            c for c in report.specification_checks
+            if c.message_key == "check.spec.restrictiveWording.verify"
+        ]
+        assert spec_checks, "Expected at least one spec restrictive-wording verify finding"
+        check = spec_checks[0]
+        assert check.details_params is not None
+        phrases = check.details_params.get("flagged_phrases")
+        assert phrases is not None, (
+            "details_params.flagged_phrases missing on spec restrictiveWording — "
+            "FlaggedTermList chips won't render."
+        )
+        items = phrases.get("items")
+        assert items, "flagged_phrases.items empty"
+        # Each item has token + location + kind; tokens are actual detected words
+        for item in items:
+            assert "token" in item and item["token"]
+            assert "location" in item and isinstance(item["location"], int)
+
+    def test_claims_restrictive_wording_surfaces_flagged_phrases(self):
+        result = self._run_us_pipeline()
+        report = result.to_report_data()
+        claims_checks = [
+            c for c in report.claims_checks
+            if c.message_key == "check.claims.restrictiveWording.verify"
+        ]
+        assert claims_checks, "Expected at least one claims restrictive-wording verify finding"
+        check = claims_checks[0]
+        assert check.details_params is not None
+        phrases = check.details_params.get("flagged_phrases")
+        assert phrases is not None, (
+            "details_params.flagged_phrases missing on claims restrictiveWording — "
+            "FlaggedTermList chips won't render."
+        )
+        items = phrases.get("items")
+        assert items, "flagged_phrases.items empty"
+        for item in items:
+            assert "token" in item and item["token"]
+            assert "location" in item and isinstance(item["location"], int)
+
+    def test_abstract_restrictive_wording_surfaces_flagged_phrases(self):
+        result = self._run_us_pipeline()
+        report = result.to_report_data()
+        abstract_checks = [
+            c for c in report.abstract_checks
+            if c.message_key == "check.abstract.restrictiveWording.verify"
+        ]
+        assert abstract_checks, "Expected at least one abstract restrictive-wording finding"
+        check = abstract_checks[0]
+        assert check.details_params is not None
+        phrases = check.details_params.get("flagged_phrases")
+        assert phrases is not None, (
+            "details_params.flagged_phrases missing on abstract restrictiveWording"
+        )
+        items = phrases.get("items")
+        assert items, "flagged_phrases.items empty"
+
+    def test_preamble_noun_mismatch_surfaces_claim_ids(self):
+        """Each individual preamble_noun_mismatch CheckItem must carry the
+        dependent claim ID in details_params so the frontend consolidation
+        in AnalysisReport.jsx can list specific dep claims ('附屬項 5') rather
+        than the previous generic '1 個附屬項' summary."""
+        result = self._run_us_pipeline()
+        report = result.to_report_data()
+        mismatches = [
+            c for c in report.claims_checks
+            if c.message_key == "checks.preamble_noun_mismatch"
+        ]
+        if not mismatches:
+            pytest.skip("This fixture doesn't trigger preamble_noun_mismatch")
+        for c in mismatches:
+            assert c.details_params is not None
+            assert c.details_params.get("claim"), f"Missing claim id: {c.details_params}"
+            assert c.details_params.get("parent"), f"Missing parent id: {c.details_params}"
+            assert c.details_params.get("dependent"), "Missing dependent noun"
+            assert c.details_params.get("independent"), "Missing independent noun"
+
+
+class TestParseFormattedPhrases:
+    """Unit tests for _parse_formatted_phrases — the shim that converts the
+    legacy '[N] → \"word\"\\n' formatted string into structured chip items."""
+
+    def _parser(self):
+        from patentlint.models import _parse_formatted_phrases
+        return _parse_formatted_phrases
+
+    def test_single_match(self):
+        f = self._parser()
+        result = f('[4] → "must"\n              ')
+        assert result == [{"location": 4, "token": "must", "kind": "phrase"}]
+
+    def test_multiple_matches(self):
+        f = self._parser()
+        result = f('[4] → "must"\n              [4] → "always"\n              [47] → "invention"\n              ')
+        assert result == [
+            {"location": 4, "token": "must", "kind": "phrase"},
+            {"location": 4, "token": "always", "kind": "phrase"},
+            {"location": 47, "token": "invention", "kind": "phrase"},
+        ]
+
+    def test_dedupe_same_token_same_location(self):
+        f = self._parser()
+        result = f('[4] → "must"\n              [4] → "must"\n              ')
+        assert result == [{"location": 4, "token": "must", "kind": "phrase"}]
+
+    def test_dedupe_case_insensitive(self):
+        f = self._parser()
+        result = f('[4] → "Must"\n              [4] → "must"\n              ')
+        # Preserves first-seen casing ("Must"), skips case-duplicate
+        assert result == [{"location": 4, "token": "Must", "kind": "phrase"}]
+
+    def test_empty_input(self):
+        f = self._parser()
+        assert f("") == []
+        assert f(None or "") == []
+
+    def test_kind_override(self):
+        f = self._parser()
+        result = f('[4] → "must"', kind="custom")
+        assert result == [{"location": 4, "token": "must", "kind": "custom"}]

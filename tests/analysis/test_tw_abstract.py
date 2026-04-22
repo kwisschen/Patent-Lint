@@ -215,6 +215,19 @@ class TestCheckCommercialLanguage:
         result = check_commercial_language(doc)
         assert result[0].reference == "專利法施行細則 §21"
 
+    def test_flagged_phrases_items_surfaced(self):
+        """FlaggedTermList chip payload is emitted alongside the legacy
+        `terms` string so the UI can render detected commercial terms as chips."""
+        doc = TwPatentDocument(abstract_text="本發明為最優且最佳之世界領先技術。")
+        result = check_commercial_language(doc)
+        items = result[0].details_params.get("flagged_phrases", {}).get("items", [])
+        tokens = [i["token"] for i in items]
+        assert "最優" in tokens
+        assert "最佳" in tokens
+        assert "世界領先" in tokens
+        for item in items:
+            assert item["kind"] == "phrase"
+
 
 class TestCheckRepresentativeDrawing:
     """Check #30: Representative drawing designation."""
