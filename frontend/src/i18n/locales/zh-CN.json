@@ -262,7 +262,7 @@
       },
       "q2": {
         "question": "需要账号吗？",
-        "patentlint": "无需账号。PatentLint 应用程序不收集任何使用数据。",
+        "patentlint": "无需账号，不收集任何使用数据。",
         "addin": "通常需要许可证或账号。",
         "cloud": "是，需要账号。"
       },
@@ -308,8 +308,6 @@
       "ai": "PatentLint 不使用 AI、机器学习或大型语言模型。所有检查均为确定性的规则匹配，依据各专利局审查规范执行。您的文本不会被发送至任何 AI 服务。",
       "telemetryTitle": "遥测与分析（不使用）",
       "telemetry": "PatentLint 不包含分析脚本、追踪像素、cookies 或第三方追踪集成。此应用程序不收集或传输任何使用数据。",
-      "hostingTitle": "托管",
-      "hosting": "patentlint.com 托管于 Cloudflare Pages，仅提供静态资产，并无应用服务器、数据库或分析工具。Cloudflare 边缘节点于每次访问时，会接收标准的网页请求中介数据（IP 地址、user-agent、时间戳），与任何网站无异。日常运营中，我们并不访问上述日志。完整披露请参阅隐私政策。",
       "selfHostedTitle": "自托管选项",
       "selfHosted": "On-premises deployment is available on private inquiry. Compliance with any specific regulatory regime remains the organization's own determination.",
       "contactEnterprise": "咨询企业部署方案 →"
@@ -541,7 +539,7 @@
     "missingSections": "缺少：{{list}}。请在提交前添加这些部分。",
     "sectionName": "{{name}}",
     "claimDependsOn": "权利要求 {{claim}} 从属于权利要求 {{parent}}",
-    "nounMismatch": "从属项「{{dependent}}」与独立项「{{independent}}」不一致。从属权利要求须与母权利要求属于相同法定类别（例如同为装置或同为方法）。请修正前序名词。",
+    "nounMismatch": "从属项「{{dependent}}」与独立项「{{independent}}」不一致。从属权利要求须与被引用的独立权利要求属于相同范畴（例如同为装置或同为方法）。请修正前序部分的主题名称。",
     "seeSection112": "详见下方 § 112 分析。",
     "specSupportUnsupported": "此处所示 {{count}} 个用语未于说明书中披露。各权利要求用语皆应获说明书支持。",
     "restrictiveWordingSpec": "段落：{{list}}。\"must\"、\"always\"或\"invention\"等用语可能依 § 2173.05(b) 被视为不确定或限制范围。请检查各标记段落，考虑该用语是否过度限缩范围或引入不确定性。",
@@ -556,8 +554,8 @@
     "selfDependentClaims": "权利要求：{{list}}。权利要求不得从属于自身。请修正从属关系引用。",
     "meansFunctionClaims": "权利要求：{{list}}。依 § 112(f)，权利要求范围限于说明书中公开的对应结构及等同物。请确认说明书针对各功能性限定公开了充分的结构。",
     "antecedentBasisTerms": "{{count}}项引用基础问题，涉及{{claims}}项权利要求。每个确定引用（\"the X\"或\"said X\"）须有先前的不定引用（\"a X\"或\"an X\"）。缺少引用基础可能导致 § 112(b) 不确定性驳回。",
-    "preambleNounMismatch": "权利要求 {{claim}} 从属于权利要求 {{parent}}。前序名词不同，但若指代同一实体则可能合理。请确认一致性。",
-    "preambleNounMismatchSummary": "权利要求 {{rootId}} 使用母项名词「{{parent}}」；{{count}} 个从属权利要求使用「{{dependent}}」。请确认是否指代同一实体，或统一前序名词。",
+    "preambleNounMismatch": "权利要求 {{claim}} 从属于权利要求 {{parent}}。前序部分的主题名称不同，但若指代同一实体则可能合理。请确认一致性。",
+    "preambleNounMismatchSummary": "权利要求 {{rootId}} 使用母项主题名称「{{parent}}」；{{count}} 个从属权利要求使用「{{dependent}}」。请确认是否指代同一实体，或统一前序部分的主题名称。",
     "preambleIndefiniteArticle": "权利要求 {{claim}} 从属于权利要求 {{parent}}。从属权利要求须使用定冠词\"The\"指代独立权利要求实体，而非\"A\"或\"An\"。",
     "singleFigureFix": "请依 MPEP § 608.02 将所有\"FIG. 1\"替换为\"The Figure\"或\"the drawing\"。",
     "drawingsPriorArt": "描绘现有技术的附图须依 MPEP § 608.02(g) 标注\"Prior Art\"图例。请确认各现有技术附图已正确标注。",
@@ -684,7 +682,7 @@
     }
   },
   "consolidation": {
-    "nounMismatchSummary": "前序名词不一致：{{count}} 个从属项与权利要求 {{rootId}} 不同"
+    "nounMismatchSummary": "前序部分主题名称不一致：{{count}} 个从属项与权利要求 {{rootId}} 不同"
   },
   "lang": {
     "en": "English",
@@ -1153,7 +1151,7 @@
   "checks": {
     "preamble_cross_category_mismatch": "从属权利要求与独立权利要求的前序部分类型不一致（跨类别）（§ 112(d)）。",
     "preamble_cross_category_pass": "权利要求前序部分一致。",
-    "preamble_noun_mismatch": "从属权利要求与独立权利要求前序名词不同（MPEP § 608.01(m)）。",
+    "preamble_noun_mismatch": "从属权利要求与独立权利要求前序部分的主题名称不同（MPEP § 608.01(m)）。",
     "preamble_indefinite_article": "从属权利要求前序使用了不定冠词，应使用「The」（MPEP § 608.01(m)）。",
     "spec_support_unsupported_terms": "权利要求用语在说明书中未找到：每个用语须在说明书中有书面描述支持（§ 112(a)）。",
     "spec_support_pass": "所有权利要求用语均可在说明书中找到（§ 112(a) 书面描述支持）。",
