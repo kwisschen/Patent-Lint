@@ -398,6 +398,19 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                                     "claim_id": fb_cid,
                                     "cross_branch": True,
                                 }
+                        # Structural fingerprint (ADR-145) — surfaces walker
+                        # intro-pool + did-you-mean state. Counts + booleans
+                        # only; no claim text, no noun content.
+                        diagnostics = {
+                            "prefix": prefix,  # "the" or "said" — closed set
+                            "term_charlen": len(term),
+                            "intros_pool_size": len(intros_by_term),
+                            "has_suggested_match": suggested_match is not None,
+                            "suggested_cross_branch": bool(
+                                suggested_match
+                                and suggested_match.get("cross_branch")
+                            ) if suggested_match else False,
+                        }
                         issues.append({
                             "claim_id": claim.id,
                             "term": term,
@@ -405,6 +418,7 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                             "claim_text": claim.text,
                             "suggested_match": suggested_match,
                             "cross_ref": None,
+                            "diagnostics": diagnostics,
                         })
 
     issues.sort(key=lambda x: (x["claim_id"], x["term"], x["reference_form"]))
