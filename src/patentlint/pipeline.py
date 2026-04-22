@@ -123,9 +123,12 @@ def _run_cn_pipeline(
     )
 
     # --- Drawings checks (24–25) ---
+    # Emission order: figure_count → figures_sequential per Phase 10C
+    # document-order invariant (see CLAUDE.md "Check-ordering consistency
+    # invariant"). Swapped from legacy sequential-then-count order.
     drawings_checks = (
-        cn_abstract_analysis.check_figures_sequential(cn_doc)
-        + cn_abstract_analysis.check_figure_count(cn_doc)
+        cn_abstract_analysis.check_figure_count(cn_doc)
+        + cn_abstract_analysis.check_figures_sequential(cn_doc)
     )
 
     return AnalysisResult(
@@ -453,9 +456,12 @@ def _run_tw_pipeline(
     )
 
     # --- Drawings checks (33–34) ---
+    # Emission order: figure_count → figures_sequential per Phase 10C
+    # document-order invariant (see CLAUDE.md "Check-ordering consistency
+    # invariant"). Swapped from legacy sequential-then-count order.
     drawings_checks = (
-        tw_cross_ref_analysis.check_figures_sequential(tw_doc)
-        + tw_cross_ref_analysis.check_figure_count(tw_doc)
+        tw_cross_ref_analysis.check_figure_count(tw_doc)
+        + tw_cross_ref_analysis.check_figures_sequential(tw_doc)
     )
 
     return AnalysisResult(
