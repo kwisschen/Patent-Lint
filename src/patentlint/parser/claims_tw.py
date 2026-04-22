@@ -12,7 +12,9 @@ from patentlint.models import Claim
 _TW_CLAIM_NUM = re.compile(r"^[\s\u3000]*(\d+)\s*[.．]\s*", re.MULTILINE)
 
 # Dependency patterns:
-# 如請求項1所述之, 如請求項1之, 如請求項1或2之,
+# 如請求項1所述之, 如請求項1所述的, 如請求項1之, 如請求項1或2之,
+# 如請求項1所記載之, 如請求項1所記載的 (JP-translation variants),
+# 如請求項1所揭示的, 如請求項1所描述之,
 # 如請求項1~3中任一項所述之, 如請求項1至3中任一項之
 _TW_DEP_PATTERN = re.compile(
     r"如請求項\s*"
@@ -22,7 +24,11 @@ _TW_DEP_PATTERN = re.compile(
     r"(?:\s*(?:~|至|到)\s*(?:請求項\s*)?(\d+))?"
     r"((?:\s*(?:或|、)\s*(?:請求項\s*)?\d+)*)"
     r"(?:\s*中\s*任一?項)?"
-    r"\s*所?述?[之的]?"
+    # Trailing connective accepts TIPO-standard (所述) + JP-translation
+    # variants (所記載, 所揭示, 所描述) + bare 之/的. All optional so a
+    # range/or-list reference alone still parses (dependency detection
+    # uses group captures, not this suffix).
+    r"\s*(?:所(?:述|記載|揭示|描述))?[之的]?"
 )
 
 # Extract individual numbers from the "或N、N" tail

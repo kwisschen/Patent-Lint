@@ -75,9 +75,15 @@ def check_claims_sequential(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
 # ── Check 10 ─────────────────────────────────────────────────────────────
 
-_DEP_FORMAT_SINGLE = re.compile(r"如权利要求\s*\d+[\s\S]*?所述的")
+# CN dependent-claim preamble connective.
+# CNIPA-standard is 所述 (per 专利法实施细则 §22 + CNIPA drafting examples).
+# JP-translation variants 所记载/所揭示/所描述 surface in CN patents translated
+# from Japanese originals; parse them tolerantly rather than flag them — the
+# 分属名称 check should not fire purely on the connective shape.
+_CN_DEP_CONNECTIVE = r"所(?:述|记载|揭示|描述)的"
+_DEP_FORMAT_SINGLE = re.compile(r"如权利要求\s*\d+[\s\S]*?" + _CN_DEP_CONNECTIVE)
 _DEP_FORMAT_MULTI = re.compile(
-    r"如权利要求\s*\d+[\s\S]*?中\s*任[一意]\s*项\s*所述的"
+    r"如权利要求\s*\d+[\s\S]*?中\s*任[一意]\s*项\s*" + _CN_DEP_CONNECTIVE
 )
 
 
@@ -267,12 +273,16 @@ _LEADING_QUANTIFIER = re.compile(r"^(?:一种|一个|该|所述|所述的)\s*")
 
 # Dependent-claim preamble anchored at start (CN mirror of TW fix): prevents
 # body-text 所述的 inside independent claims from hijacking extraction.
+# Trailing connective accepts 所(述|记载|揭示|描述)[的] + bare 的 (older form
+# 权利要求N的X). JP-translated CN patents keep 所记载 even though CNIPA-standard
+# is 所述 — parse the dep preamble tolerantly so subject extraction succeeds.
+_DEP_PREAMBLE_CONNECTIVE_CN = r"(?:所(?:述|记载|揭示|描述)的?|的)?"
 _DEP_PREFIX_RE_CN = re.compile(
     r"^(?:如|根据|依)权利要求\s*\d+"
     r"(?:\s*(?:~|至|到)\s*\d+)?"
     r"(?:\s*(?:或|、)\s*\d+)*"
     r"(?:\s*中\s*任一?项)?"
-    r"\s*所?述?的?"
+    r"\s*" + _DEP_PREAMBLE_CONNECTIVE_CN
 )
 _INDEP_PREFIX_RE_CN = re.compile(r"^(?:一种|一个)\s*")
 _SUBJECT_END_RE_CN = re.compile(r"(?:[，,]|其特征在于|其改良在于|其中)")
@@ -1647,7 +1657,7 @@ _BARE_GENUS_NOUNS_CN: frozenset[str] = frozenset({
 })
 
 _GENUS_PREAMBLE_RE_CN: re.Pattern[str] = re.compile(
-    r"(?:(?:如|根据)权利要求[^，。\n]*?所述的[^，。\n]*?|一种[^，。\n]*?)"
+    r"(?:(?:如|根据)权利要求[^，。\n]*?" + _CN_DEP_CONNECTIVE + r"[^，。\n]*?|一种[^，。\n]*?)"
     r"(?:方法|装置|系统|设备|组件|模块|单元|电路|部件|芯片)[，,\s]"
 )
 
