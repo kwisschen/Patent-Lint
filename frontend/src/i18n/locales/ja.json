@@ -325,7 +325,7 @@
       "title": "インタラクティブな米国特許分析",
       "claimTree": {
         "title": "請求項ツリーと § 112 解析器",
-        "description": "インタラクティブな従属ツリーが多重従属・多重独立構造を表示し、§ 112 解析器が先行詞基礎（§ 112(b)）と書面記載要件（§ 112(a)）を同時に検証、同一用語が両方に該当する場合は相互参照し、さらに Markush、Jepson、means-plus-function、移行句などの特殊形式も検出します。"
+        "description": "インタラクティブな従属ツリーが多重従属・多重独立構造を表示し、§ 112 解析器が先行詞の根拠（§ 112(b)）と記述要件（§ 112(a)）を同時に検証、同一用語が両方に該当する場合は相互参照し、さらに Markush、Jepson、means-plus-function、移行句などの特殊形式も検出します。"
       },
       "specAbstract": {
         "title": "明細書と要約の構造",
@@ -374,11 +374,11 @@
         "preambleConsistency": "請求項プリアンブルの一貫性（MPEP § 608.01(m)）",
         "specSupport": "請求項用語に対する明細書のサポート",
         "legalPhrasesAbstract": "要約書の法律用語",
-        "transitionPhrase": "請求項トランジションフレーズ（§ 112）",
+        "transitionPhrase": "請求項移行句（§ 112）",
         "checkJepsonPriorArt": "Jepson 先行技術の承認（§ 2129）",
         "checkCrmNonTransitory": "コンピュータ可読媒体 non-transitory 限定（§ 101）",
         "checkMarkushTransition": "Markush グループ移行句（§ 2117）",
-        "checkOmnibusClaim": "概括請求項の検出（§ 112(b)）",
+        "checkOmnibusClaim": "オムニバス請求項の検出（§ 112(b)）",
         "checkClaimPunctuation": "請求項の句読点（§ 608.01(m)）",
         "checkSequenceListing": "配列表の準拠性（§ 2422）"
       }
@@ -422,7 +422,7 @@
       "singleSentence": "請求項ごとに一文",
       "refNumeralParens": "参照番号の括弧",
       "subjectNameConsistency": "主題名の一貫性",
-      "transitionPhrase": "連接詞（其特征在于）",
+      "transitionPhrase": "移行句（其特征在于）",
       "cnTwTerminology": "中国大陸/台湾の用語",
       "claimsSpecReference": "請求項は明細書/図面を引用してはならない",
       "multiMultiDependency": "多項従属の多項従属",
@@ -476,7 +476,7 @@
       "singleSentence": "請求項ごとに一文",
       "refNumeralParens": "図番号を括弧で囲む（專利法施行細則 §19）",
       "subjectConsistency": "標的名稱の一貫性",
-      "transitionPhrase": "連接詞（其特徵在於）",
+      "transitionPhrase": "移行句（其特徵在於）",
       "cnTerminology": "両岸用語の識別",
       "specDrawingRef": "請求項は明細書や図面を引用してはなりません",
       "multiDepOnMultiDep": "多項従属項は他の多項従属項に従属できません",
@@ -540,7 +540,7 @@
     "missingSections": "不足：{{list}}。出願前にこれらのセクションを追加してください。",
     "sectionName": "{{name}}",
     "claimDependsOn": "請求項 {{claim}} は請求項 {{parent}} に従属",
-    "nounMismatch": "従属項「{{dependent}}」と独立項「{{independent}}」が不一致。従属請求項は親請求項と同じ法定カテゴリ（例：共に装置または共に方法）でなければなりません。プリアンブルの名詞を修正してください。",
+    "nounMismatch": "従属項「{{dependent}}」と独立項「{{independent}}」が不一致。従属請求項は親請求項と同じ発明のカテゴリー（例：共に装置または共に方法）でなければなりません。プリアンブルの名詞を修正してください。",
     "seeSection112": "下記の § 112 分析を参照。",
     "specSupportUnsupported": "ここに示す {{count}} 件の用語が明細書本文に見当たりません。各請求項用語には明細書による裏付けが必要です。",
     "restrictiveWordingSpec": "段落：{{list}}。\"must\"、\"always\"、\"invention\" などの用語は § 2173.05(b) に基づき、不明確または範囲を制限するものとして扱われる可能性があります。各フラグ付き段落を確認し、その用語が過度に範囲を制限するか不明確性を生じさせるか検討してください。",
@@ -585,7 +585,7 @@
       "singleSentence": "审查指南 第二部分第二章に基づき、各請求項は句点（。）で終わる1文でなければなりません。文中の余分な句点を削除するか、複数の請求項に分割してください。",
       "refNumeralParens": "审查指南に基づき、請求項内の参照符号は括弧で囲む必要があります（例：101ではなく（101））。該当請求項を確認してください。",
       "subjectConsistency": "审查指南 第二部分第二章に基づき、従属請求項の主題名称は引用元の請求項の主題名称と一致すべきです。該当請求項を確認してください。",
-      "transitionPhrase": "审查指南に基づき、独立請求項には「其特征在于」などの特徴部分の移行語を含め、既知要素と新規特徴を区別すべきです。該当請求項を確認してください。",
+      "transitionPhrase": "审查指南に基づき、独立請求項には「其特征在于」などの特徴部分の移行句を含め、既知要素と新規特徴を区別すべきです。該当請求項を確認してください。",
       "twTerminology": "CNIPAでは請求項を「权利要求」と表記します。「请求项」は台湾（TIPO）の特許用語です。すべて置き換えてください。",
       "claimsSpecReference": "审查指南 第二部分第二章に基づき、請求項は「如说明书……所述」や「如图……所示」で保護範囲を限定してはなりません。請求項は独立していなければなりません。該当引用を削除してください。",
       "multiMultiDep": "专利法实施细则 §22に基づき、多項従属請求項は別の多項従属請求項の引用基礎にすることができません。引用関係を再構成してください。",
@@ -605,7 +605,7 @@
         "selfDependent": "専利法実施細則 §22により、請求項は自身を引用することができません。従属請求項は先行する請求項を引用する必要があります。",
         "forwardDependency": "専利法実施細則 §22により、従属請求項は先行する番号の請求項のみを引用でき、後方の請求項を引用することはできません。",
         "singleSentence": "審査指南 第二部第二章により、各請求項は句点（。）で終わる一文で記載する必要があります。保護範囲を明確にするためです。",
-        "transitionPhrase": "審査指南により、独立請求項には「其特征在于」などの二部形式の連結語を含め、前書き（従来技術）と特徴部（新規要素）を区別する必要があります。"
+        "transitionPhrase": "審査指南により、独立請求項には「其特征在于」などの二部形式の移行句を含め、前書き（従来技術）と特徴部（新規要素）を区別する必要があります。"
       }
     },
     "tw": {
@@ -627,7 +627,7 @@
       "singleSentence": "專利法施行細則 §18により、各請求項は末尾に句点（。）が1つだけの単文である必要があります。該当する請求項を確認してください。",
       "refNumeralParens": "專利法施行細則 §19により、請求項内の符号は括弧で囲む必要があります（例：(101)）。該当する請求項を確認してください。",
       "subjectConsistency": "従属項の標的名稱は親項の標的名稱と一致する必要があります。該当する請求項を確認してください。",
-      "transitionPhrase": "專利法施行細則 §20により、独立項には「其特徵在於」または「其改良在於」などの連接詞を含める必要があります。該当する請求項を確認してください。",
+      "transitionPhrase": "專利法施行細則 §20により、独立項には「其特徵在於」または「其改良在於」などの移行句を含める必要があります。該当する請求項を確認してください。",
       "cnTerminology": "簡体字中国語の特許用語が見つかりました：{{detail}}。TW文書はTIPO用語（請求項、說明書、先前技術、實施方式等）を使用し、CNIPA用語（权利要求、说明书、背景技术、具体实施方式等）は不可です。",
       "specDrawingRef": "專利法施行細則 §19により、請求項に明細書または図面を参照する記載（「如說明書所述」「如圖所示」等）は不可です。検出：{{detail}}。",
       "multiDepOnMultiDep": "專利法施行細則 §18により、多項従属項は直接または間接的に別の多項従属項に依存できません。該当：{{claims}}。",
@@ -762,9 +762,9 @@
         "verify": "先行詞の根拠を欠く可能性（§ 112(b)）：「the X／said X」に対応する「a X」の導入が明細書上にない可能性があります。",
         "pass": "先行詞の根拠の問題は検出されませんでした（§ 112(b)）。"
       },
-      "missingTransition": "請求項 {{claimNumber}} にトランジションフレーズがありません（例：'comprising'、'consisting of'）",
-      "missingTransitionDetails": "請求項 {{claimNumber}} に公認のトランジションフレーズが含まれていません。各請求項には、前文と本体の間に 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' または 'characterized in that' などのトランジションフレーズが必要です。",
-      "transitionsPresent": "すべての請求項にトランジションフレーズが含まれています。",
+      "missingTransition": "請求項 {{claimNumber}} に移行句がありません（例：'comprising'、'consisting of'）",
+      "missingTransitionDetails": "請求項 {{claimNumber}} に公認の移行句が含まれていません。各請求項には、前文と本体の間に 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' または 'characterized in that' などの移行句が必要です。",
+      "transitionsPresent": "すべての請求項に移行句が含まれています。",
       "overview": "特許請求の範囲の概要。"
     },
     "abstract": {
@@ -1170,8 +1170,8 @@
     "crmNonTransitoryDetails": "請求項 {{claimNumber}} はコンピュータ可読媒体を記載していますが、'non-transitory' の限定がありません。この限定がない場合、請求項は一時的信号（搬送波など）を含み、35 U.S.C. § 101 の特許適格性を満たしません。媒体の用語の前に 'non-transitory' を追加してください。",
     "markushOpenTransition": "請求項 {{claimNumber}}：Markush グループが 'consisting of' ではなく開放的な '{{transition}}' を使用しています",
     "markushOpenTransitionDetails": "請求項 {{claimNumber}} の Markush グループが 'consisting of' ではなく '{{transition}}' を使用しています。MPEP § 2117 に基づき、Markush グループは閉鎖型の移行句を使用する必要があります。開放型の用語の使用は不適切な Markush グループとして拒絶される可能性があります。",
-    "omnibusClaim": "請求項 {{claimNumber}} は概括請求項の可能性があります",
-    "omnibusClaimDetails": "請求項 {{claimNumber}} は明細書または図面を参照していますが、具体的な技術的特徴を記載していません。概括請求項は米国実用特許において 35 U.S.C. § 112(b) に基づき一律に拒絶されます（MPEP § 2173.05(r)）。具体的な構造または方法の限定を記載するよう請求項を書き直してください。",
+    "omnibusClaim": "請求項 {{claimNumber}} はオムニバス請求項の可能性があります",
+    "omnibusClaimDetails": "請求項 {{claimNumber}} は明細書または図面を参照していますが、具体的な技術的特徴を記載していません。オムニバス請求項は米国実用特許において 35 U.S.C. § 112(b) に基づき一律に拒絶されます（MPEP § 2173.05(r)）。具体的な構造または方法の限定を記載するよう請求項を書き直してください。",
     "specialFormatsPass": "特殊な請求項形式の問題は検出されませんでした。",
     "missingPeriod": "請求項 {{claimNumber}} がピリオドで終わっていません。",
     "missingPeriodDetails": "請求項 {{claimNumber}} に末尾のピリオドがありません。MPEP § 608.01(m) に基づき、各請求項は単一のピリオドで終わる必要があります。",
