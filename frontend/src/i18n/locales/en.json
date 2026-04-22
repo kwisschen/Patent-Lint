@@ -308,8 +308,6 @@
       "ai": "PatentLint does not use AI, machine learning, or large language models. All checks are deterministic, rule-based pattern matching against patent office guidelines. Your text is never sent to any AI service.",
       "telemetryTitle": "Telemetry & Analytics (No Usage)",
       "telemetry": "PatentLint includes no analytics scripts, tracking pixels, cookies, or third-party tracking integrations. The application collects and transmits no usage data.",
-      "hostingTitle": "Hosting",
-      "hosting": "patentlint.com is hosted on Cloudflare Pages as static assets only — no application server, no database, no analytics. Cloudflare's edge network sees standard web request metadata (IP address, user-agent, timestamp) on each visit, as it does for any website. We don't access these logs in normal operations. See the Privacy page for full disclosure.",
       "selfHostedTitle": "Self-Hosted Option",
       "selfHosted": "For organizations with strict data sovereignty requirements, such as ITAR-controlled environments or air-gapped networks, PatentLint can be self-hosted via Docker with all dependencies included.",
       "contactEnterprise": "Contact for enterprise deployment →"
