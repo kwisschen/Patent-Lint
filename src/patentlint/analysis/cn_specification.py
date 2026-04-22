@@ -141,7 +141,12 @@ def check_required_sections(cn_doc: CnPatentDocument) -> list[CheckItem]:
             message_key="check.cn.spec.requiredSections.amend",
             details=", ".join(missing),
             details_key="details.cn.requiredSections",
-            details_params={"sections": ", ".join(missing)},
+            details_params={
+                "sections": ", ".join(missing),
+                "flagged_phrases": {
+                    "items": [{"kind": "section", "token": s} for s in missing]
+                },
+            },
             reference="专利法 §26 第1款、专利法实施细则 §17",
             diagnostics=_dx(
                 missing_count=len(missing),

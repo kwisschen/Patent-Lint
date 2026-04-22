@@ -645,6 +645,24 @@ class TestTitleSubjectMatch:
         assert "title" in result[0].details_params
         assert "subjects" in result[0].details_params
 
+    def test_flagged_phrases_items_surfaced(self):
+        """Mismatched subject nouns surface as FlaggedTermList chips so the
+        user sees the specific claim subjects that differ from the title."""
+        doc = _make_doc(
+            title="一種通訊系統",
+            claims=[
+                _claim(1, "1. 一種裝置，其特徵在於包含一基座。"),
+                _claim(2, "2. 一種方法，包含步驟A。", independent=True),
+            ],
+        )
+        result = check_title_subject_match(doc)
+        items = result[0].details_params.get("flagged_phrases", {}).get("items", [])
+        tokens = [i["token"] for i in items]
+        assert "裝置" in tokens
+        assert "方法" in tokens
+        for item in items:
+            assert item["kind"] == "subject"
+
     def test_title_partial_overlap_pass(self):
         doc = _make_doc(
             title="裝置",

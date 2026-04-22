@@ -119,14 +119,14 @@ class TestCheckBracketFormat:
         result = check_bracket_format(doc)
         assert result[0].status == "verify"
         assert result[0].message_key == "check.tw.crossRef.bracketFormat.verify"
-        assert result[0].details_params == {"headers": "先前技術"}
+        assert result[0].details_params["headers"] == "先前技術"
 
     def test_variant_bracket_flagged(self):
         """[先前技術] → VERIFY; whole variant-bracketed string passes through."""
         doc = TwPatentDocument(bracketless_section_headers=["[先前技術]"])
         result = check_bracket_format(doc)
         assert result[0].status == "verify"
-        assert result[0].details_params == {"headers": "[先前技術]"}
+        assert result[0].details_params["headers"] == "[先前技術]"
 
     def test_multiple_headers_joined(self):
         doc = TwPatentDocument(
@@ -134,7 +134,7 @@ class TestCheckBracketFormat:
         )
         result = check_bracket_format(doc)
         assert result[0].status == "verify"
-        assert result[0].details_params == {"headers": "先前技術, 技術領域, [實施方式]"}
+        assert result[0].details_params["headers"] == "先前技術, 技術領域, [實施方式]"
 
     def test_truncation_at_ten(self):
         """Payload capped at 10 entries to avoid unbounded detail growth."""
@@ -148,6 +148,22 @@ class TestCheckBracketFormat:
         doc = TwPatentDocument()
         result = check_bracket_format(doc)
         assert result[0].reference == "專利法施行細則 §17"
+
+    def test_flagged_phrases_items_surfaced(self):
+        """Malformed header tokens surface as FlaggedTermList chips so the
+        user sees WHICH headers failed the 【】 bracket format — no
+        hardcoded example list in the template."""
+        doc = TwPatentDocument(
+            bracketless_section_headers=["先前技術", "[實施方式]", "(發明內容)"]
+        )
+        result = check_bracket_format(doc)
+        items = result[0].details_params.get("flagged_phrases", {}).get("items", [])
+        tokens = [i["token"] for i in items]
+        assert "先前技術" in tokens
+        assert "[實施方式]" in tokens
+        assert "(發明內容)" in tokens
+        for item in items:
+            assert item["kind"] == "header"
 
 
 class TestCheckFigureCount:

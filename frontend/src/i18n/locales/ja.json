@@ -1212,6 +1212,11 @@
     "sentenceSeparator": "；",
     "ellipsis": "……"
   },
+  "chip": {
+    "fromParagraph": "段落 {{n}} より",
+    "fromClaim": "請求項 {{n}} より",
+    "more": "他 {{n}} 件"
+  },
   "terms": {
     "title": "利用規約",
     "lastUpdated": "最終更新：2026年4月21日",

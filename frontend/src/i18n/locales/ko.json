@@ -1212,6 +1212,11 @@
     "sentenceSeparator": "; ",
     "ellipsis": "…"
   },
+  "chip": {
+    "fromParagraph": "단락 {{n}}",
+    "fromClaim": "청구항 {{n}}",
+    "more": "+{{n}}개 더"
+  },
   "terms": {
     "title": "이용약관",
     "lastUpdated": "최종 업데이트: 2026년 4월 21일",
