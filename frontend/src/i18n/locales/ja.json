@@ -564,9 +564,9 @@
     "figuresSequentialFix": "MPEP § 608.02 に従い、図面を昇順に再番号付けしてください。",
     "orphanedBriefFigures": "図面：{{list}}。発明を実施するための形態でこれらの図面への参照を追加するか、図面の簡単な説明から削除してください。",
     "orphanedDetailedFigures": "図面：{{list}}。図面の簡単な説明でこれらの図面の説明を追加するか、発明を実施するための形態から参照を削除してください。",
-    "restrictiveWordingAbstract": "{{text}}。MPEP § 608.01(b) に従い、要約書では法律用語（\"comprising\"、\"said\"、\"means\"）、評価的用語（\"novel\"、\"innovative\"）、限定的用語（\"must\"、\"essential\"）を避けるべきです。フラグ付き用語を修正してください。",
+    "restrictiveWordingAbstract": "MPEP § 608.01(b) に従い、要約書では法律用語（\"comprising\"、\"said\"、\"means\"）、評価的用語（\"novel\"、\"innovative\"）、限定的用語（\"must\"、\"essential\"）を避けるべきです。上に表示した用語を修正してください。",
     "abstractStructureFix": "MPEP § 608.01(b) に従い、要約書はピリオド、感嘆符、または疑問符で終わる単一段落であり、特許明細書の最後のセクションとして配置される必要があります。",
-    "abstractImpliedPhrasesFix": "暗示的表現を検出：{{phrases}}。MPEP § 608.01(b) に基づき、「This disclosure provides...」や「A method is provided...」などの書き出しは発明を直接記述するよう書き換えてください（例：「A method that...」）。",
+    "abstractImpliedPhrasesFix": "MPEP § 608.01(b) に基づき、「This disclosure provides...」や「A method is provided...」などの書き出しは発明を直接記述するよう書き換えてください（例：「A method that...」）。",
     "abstractWordCountFix": "MPEP § 608.01(b) に従い、要約書は 50 語から 150 語の範囲内である必要があります。この範囲を満たすよう修正してください。",
     "cn": {
       "requiredSections": "专利法 §26 第1款により、出願には摘要、说明书（技术领域、背景技术、发明内容、具体实施方式）、权利要求书が必要です。不足：{{sections}}。",

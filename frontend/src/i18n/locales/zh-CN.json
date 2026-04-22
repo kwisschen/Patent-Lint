@@ -564,9 +564,9 @@
     "figuresSequentialFix": "请依 MPEP § 608.02 将附图重新编号为递增顺序。",
     "orphanedBriefFigures": "附图：{{list}}。请在具体实施方式中添加对这些附图的引用，或从附图说明中移除。",
     "orphanedDetailedFigures": "附图：{{list}}。请在附图说明中添加对这些附图的描述，或从具体实施方式中移除引用。",
-    "restrictiveWordingAbstract": "{{text}}。摘要应避免法律用语（\"comprising\"、\"said\"、\"means\"）、评价性用语（\"novel\"、\"innovative\"）及限制性用语（\"must\"、\"essential\"），依 MPEP § 608.01(b)。请修改标记用语。",
+    "restrictiveWordingAbstract": "摘要应避免法律用语（\"comprising\"、\"said\"、\"means\"）、评价性用语（\"novel\"、\"innovative\"）及限制性用语（\"must\"、\"essential\"），依 MPEP § 608.01(b)。请修改上列标记用语。",
     "abstractStructureFix": "摘要须为单一段落，以句号、感叹号或问号结尾，且须作为专利稿件最后一部分，依 MPEP § 608.01(b)。",
-    "abstractImpliedPhrasesFix": "检测到隐含措辞：{{phrases}}。依 MPEP § 608.01(b)，\"This disclosure provides...\"或\"A method is provided...\"等开头应改为直接描述发明（例如\"A method that...\"）。",
+    "abstractImpliedPhrasesFix": "依 MPEP § 608.01(b)，\"This disclosure provides...\"或\"A method is provided...\"等开头应改为直接描述发明（例如\"A method that...\"）。",
     "abstractWordCountFix": "摘要须介于 50 至 150 字之间，依 MPEP § 608.01(b)。请修改以符合此范围。",
     "cn": {
       "requiredSections": "依专利法 §26 第1款，完整稿件须包含摘要、说明书（技术领域、背景技术、发明内容、具体实施方式）及权利要求书。缺少：{{sections}}。",
