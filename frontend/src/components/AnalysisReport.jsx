@@ -55,18 +55,30 @@ function consolidateClaimsChecks(checks) {
   if (nounMismatches.length > 0) {
     const byRoot = {}
     for (const nm of nounMismatches) {
-      const rootMatch = nm.details?.match(/depends on claim (\d+)/)
-      const rootId = rootMatch ? rootMatch[1] : 'unknown'
-      if (!byRoot[rootId]) byRoot[rootId] = { items: [], message: nm.message }
+      // Prefer structured details_params.parent (emitted by the walker since
+      // Part A); fall back to regex on message text for older findings.
+      const rootId = nm.details_params?.parent
+        ?? nm.details?.match(/depends on claim (\d+)/)?.[1]
+        ?? 'unknown'
+      if (!byRoot[rootId]) byRoot[rootId] = { items: [] }
       byRoot[rootId].items.push(nm)
     }
 
     for (const [rootId, group] of Object.entries(byRoot)) {
       const first = group.items[0]
-      const nounMatch = first.message.match(/preamble noun '([^']+)' differs from parent claim '([^']+)'/)
-      const depNoun = nounMatch ? nounMatch[1] : '?'
-      const parentNoun = nounMatch ? nounMatch[2] : '?'
+      const depNoun = first.details_params?.dependent
+        ?? first.message.match(/preamble noun '([^']+)' differs/)?.[1]
+        ?? '?'
+      const parentNoun = first.details_params?.independent
+        ?? first.message.match(/differs from parent claim '([^']+)'/)?.[1]
+        ?? '?'
       const count = group.items.length
+      // Collect the actual dep-claim IDs so the summary can name them
+      // (user feedback: "1 个从属项与请求项 3 不同" was hiding WHICH dep).
+      const depClaims = group.items
+        .map(it => it.details_params?.claim)
+        .filter(Boolean)
+        .sort((a, b) => Number(a) - Number(b))
 
       consolidated.push({
         status: 'verify',
@@ -74,7 +86,13 @@ function consolidateClaimsChecks(checks) {
         message_key: 'consolidation.nounMismatchSummary',
         details: `Parent: '${parentNoun}' — Dependents: '${depNoun}'`,
         details_key: 'details.preambleNounMismatchSummary',
-        details_params: { count: String(count), rootId, dependent: depNoun, parent: parentNoun },
+        details_params: {
+          count: String(count),
+          rootId,
+          dependent: depNoun,
+          parent: parentNoun,
+          depClaims: depClaims.join(', '),
+        },
       })
     }
   }
