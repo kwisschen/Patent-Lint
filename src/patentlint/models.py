@@ -485,10 +485,19 @@ class AnalysisResult(BaseModel):
         )
 
     def _to_us_report_data(self) -> ReportData:
-        """Build ReportData for US jurisdiction from flat analysis fields."""
+        """Build ReportData for US jurisdiction from flat analysis fields.
+
+        Emission order follows the Phase 10C document-order invariant (see
+        CLAUDE.md "Check-ordering consistency invariant"):
+          1. Spec structure: tracked_changes → required_sections
+             → paragraph_numbering → paragraph_ending
+          2. Spec content: sequence_listing → cross_reference → prior_art
+             → spec restrictive_wording → drawing_overview
+        """
         # --- Specification checks ---
         spec_checks: list[CheckItem] = []
 
+        # --- Group 1: Spec structure ---
         if self.has_tracked_changes:
             spec_checks.append(CheckItem(
                 status="amend",
@@ -497,22 +506,11 @@ class AnalysisResult(BaseModel):
                 diagnostics=_dx(reason_code="tracked_changes_present"),
             ))
 
-        if self.improper_spec_paragraphs:
-            spec_checks.append(CheckItem(
-                status="verify",
-                message="Restrictive wording found in specification paragraphs.",
-                message_key="check.spec.restrictiveWording.verify",
-                details=f"Paragraphs: {self.improper_spec_paragraphs}",
-                details_key="details.restrictiveWordingSpec",
-                details_params={"list": str(self.improper_spec_paragraphs)},
-                diagnostics=_dx(flagged_paragraph_count=len(self.improper_spec_paragraphs)),
-            ))
-        else:
-            spec_checks.append(CheckItem(
-                status="pass",
-                message="No restrictive wording found in specification.",
-                message_key="check.spec.restrictiveWording.pass",
-            ))
+        # Required sections checks (Issue #2) — moved to front of spec-structure
+        # group per the document-order invariant (was mid-list; TW/CN already
+        # emit these first).
+        for rc in self.required_sections_checks:
+            spec_checks.append(rc)
 
         if self.paragraph_count == 0 and self.likely_patent:
             spec_checks.append(CheckItem(
@@ -562,6 +560,7 @@ class AnalysisResult(BaseModel):
                 message_key="check.spec.paragraphEnding.pass",
             ))
 
+        # --- Group 2: Spec content ---
         if self.sequence_listing_mismatch:
             spec_checks.append(CheckItem(
                 status="amend",
@@ -611,9 +610,24 @@ class AnalysisResult(BaseModel):
                 message_key="check.spec.priorArt.pass",
             ))
 
-        # Required sections checks (Issue #2)
-        for rc in self.required_sections_checks:
-            spec_checks.append(rc)
+        # Spec restrictive wording belongs to spec-content (not spec-structure)
+        # per the document-order invariant — was #2 in the legacy order.
+        if self.improper_spec_paragraphs:
+            spec_checks.append(CheckItem(
+                status="verify",
+                message="Restrictive wording found in specification paragraphs.",
+                message_key="check.spec.restrictiveWording.verify",
+                details=f"Paragraphs: {self.improper_spec_paragraphs}",
+                details_key="details.restrictiveWordingSpec",
+                details_params={"list": str(self.improper_spec_paragraphs)},
+                diagnostics=_dx(flagged_paragraph_count=len(self.improper_spec_paragraphs)),
+            ))
+        else:
+            spec_checks.append(CheckItem(
+                status="pass",
+                message="No restrictive wording found in specification.",
+                message_key="check.spec.restrictiveWording.pass",
+            ))
 
         # Drawings overview in specification section
         has_drawing_issue = (
