@@ -565,9 +565,9 @@
     "figuresSequentialFix": "MPEP § 608.02에 따라 도면을 오름차순으로 재번호 부여하세요.",
     "orphanedBriefFigures": "도면: {{list}}. 발명의 상세한 설명에 이 도면에 대한 참조를 추가하거나, 도면의 간단한 설명에서 제거하세요.",
     "orphanedDetailedFigures": "도면: {{list}}. 도면의 간단한 설명에 이 도면에 대한 설명을 추가하거나, 발명의 상세한 설명에서 참조를 제거하세요.",
-    "restrictiveWordingAbstract": "{{text}}. MPEP § 608.01(b)에 따라 요약서에는 법률 용어(\"comprising\", \"said\", \"means\"), 평가적 용어(\"novel\", \"innovative\") 및 제한적 용어(\"must\", \"essential\")를 사용하지 않아야 합니다. 표시된 용어를 수정하세요.",
+    "restrictiveWordingAbstract": "MPEP § 608.01(b)에 따라 요약서에는 법률 용어(\"comprising\", \"said\", \"means\"), 평가적 용어(\"novel\", \"innovative\") 및 제한적 용어(\"must\", \"essential\")를 사용하지 않아야 합니다. 위에 표시된 용어를 수정하세요.",
     "abstractStructureFix": "MPEP § 608.01(b)에 따라 요약서는 마침표, 느낌표 또는 물음표로 끝나는 단일 단락이어야 하며, 특허 명세서의 마지막 섹션으로 배치되어야 합니다.",
-    "abstractImpliedPhrasesFix": "암시적 문구 감지: {{phrases}}. MPEP § 608.01(b)에 따라 'This disclosure provides...' 또는 'A method is provided...' 같은 도입부는 발명을 직접 기술하도록 다시 작성하세요(예: 'A method that...').",
+    "abstractImpliedPhrasesFix": "MPEP § 608.01(b)에 따라 'This disclosure provides...' 또는 'A method is provided...' 같은 도입부는 발명을 직접 기술하도록 다시 작성하세요(예: 'A method that...').",
     "abstractWordCountFix": "MPEP § 608.01(b)에 따라 요약서는 50~150단어 범위 이내여야 합니다. 이 범위를 충족하도록 수정하세요.",
     "cn": {
       "requiredSections": "专利法 §26 第1款에 따라 출원에는 摘要, 说明书(技术领域, 背景技术, 发明内容, 具体实施方式), 权利要求书가 포함되어야 합니다. 누락: {{sections}}.",

@@ -564,9 +564,9 @@
     "figuresSequentialFix": "Renumber figures in ascending order per MPEP § 608.02.",
     "orphanedBriefFigures": "Figures: {{list}}. Either add a reference to these figures in the Detailed Description or remove them from the Brief Description.",
     "orphanedDetailedFigures": "Figures: {{list}}. Either add a description for these figures in the Brief Description of Drawings or remove the reference from the Detailed Description.",
-    "restrictiveWordingAbstract": "{{text}}. The abstract should avoid legal phraseology (\"comprising,\" \"said,\" \"means\"), merit language (\"novel,\" \"innovative\"), and restrictive terms (\"must,\" \"essential\") per MPEP § 608.01(b). Rephrase flagged terms.",
+    "restrictiveWordingAbstract": "The abstract should avoid legal phraseology (\"comprising,\" \"said,\" \"means\"), merit language (\"novel,\" \"innovative\"), and restrictive terms (\"must,\" \"essential\") per MPEP § 608.01(b). Rephrase the flagged terms.",
     "abstractStructureFix": "The abstract must be a single paragraph ending with a period, exclamation point, or question mark, and must appear as the last section of the specification per MPEP § 608.01(b).",
-    "abstractImpliedPhrasesFix": "Implied phrases detected: {{phrases}}. Per MPEP § 608.01(b), openers like \"This disclosure provides...\" or \"A method is provided...\" should be rewritten to describe the invention directly (e.g., \"A method that...\").",
+    "abstractImpliedPhrasesFix": "Per MPEP § 608.01(b), openers like \"This disclosure provides...\" or \"A method is provided...\" should be rewritten to describe the invention directly (e.g., \"A method that...\").",
     "abstractWordCountFix": "The abstract must be between 50 and 150 words per MPEP § 608.01(b). Revise to meet this range.",
     "cn": {
       "requiredSections": "A complete CNIPA filing requires 摘要, 说明书 (技术领域, 背景技术, 发明内容, 具体实施方式), and 权利要求书 per 专利法 §26 第1款. Missing: {{sections}}.",
