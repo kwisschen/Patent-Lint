@@ -448,3 +448,119 @@ class TestExpandedVerbSuffixes:
         """Short -sts words (<6 chars) are not stripped."""
         # 'lists' is 5 chars → _is_likely_third_person_verb returns False
         assert clean_noun_phrase("input lists") == "input lists"
+
+
+class TestTrailingRelationalAdjectives:
+    """Relational/positional adjectives (opposite/relative/adjacent/parallel/...)
+    that head a predicative phrase must be stripped when trailing. Surfaced
+    by TestSpec123.docx: 'the lower cover surface opposite to the upper cover
+    surface' was being captured as 'lower cover surface opposite' and flooding
+    spec-support + antecedent-DYM output."""
+
+    def test_opposite_trailing(self):
+        assert clean_noun_phrase("lower cover surface opposite") == "lower cover surface"
+
+    def test_opposing_trailing(self):
+        assert clean_noun_phrase("first wall opposing") == "first wall"
+
+    def test_relative_trailing(self):
+        assert clean_noun_phrase("conductive substrate relative") == "conductive substrate"
+
+    def test_adjacent_trailing(self):
+        assert clean_noun_phrase("region adjacent") == "region"
+
+    def test_adjoining_trailing(self):
+        assert clean_noun_phrase("electrode adjoining") == "electrode"
+
+    def test_parallel_trailing(self):
+        assert clean_noun_phrase("reference plane parallel") == "reference plane"
+
+    def test_perpendicular_trailing(self):
+        assert clean_noun_phrase("beam axis perpendicular") == "beam axis"
+
+    def test_orthogonal_trailing(self):
+        assert clean_noun_phrase("first vector orthogonal") == "first vector"
+
+    def test_oblique_trailing(self):
+        assert clean_noun_phrase("side face oblique") == "side face"
+
+    def test_concentric_trailing(self):
+        assert clean_noun_phrase("outer ring concentric") == "outer ring"
+
+    def test_collinear_trailing(self):
+        assert clean_noun_phrase("second axis collinear") == "second axis"
+
+    def test_coaxial_trailing(self):
+        assert clean_noun_phrase("rotor shaft coaxial") == "rotor shaft"
+
+    def test_similar_trailing(self):
+        assert clean_noun_phrase("resistance value similar") == "resistance value"
+
+    def test_identical_trailing(self):
+        assert clean_noun_phrase("secondary coil identical") == "secondary coil"
+
+    def test_equal_trailing(self):
+        assert clean_noun_phrase("duty cycle equal") == "duty cycle"
+
+    def test_equivalent_trailing(self):
+        assert clean_noun_phrase("input signal equivalent") == "input signal"
+
+    def test_proximate_trailing(self):
+        assert clean_noun_phrase("sensor array proximate") == "sensor array"
+
+    def test_distal_trailing(self):
+        assert clean_noun_phrase("catheter tip distal") == "catheter tip"
+
+    def test_proximal_trailing(self):
+        assert clean_noun_phrase("anchor end proximal") == "anchor end"
+
+    def test_medial_trailing(self):
+        assert clean_noun_phrase("tibial surface medial") == "tibial surface"
+
+    def test_lateral_trailing(self):
+        assert clean_noun_phrase("femoral surface lateral") == "femoral surface"
+
+    def test_closer_trailing(self):
+        assert clean_noun_phrase("second lens closer") == "second lens"
+
+    def test_nearer_trailing(self):
+        assert clean_noun_phrase("first element nearer") == "first element"
+
+    def test_farther_trailing(self):
+        assert clean_noun_phrase("third element farther") == "third element"
+
+
+class TestRelationalAdjectivesPreservedInLeadingPosition:
+    """Leading and internal uses of the same adjectives must NOT be stripped —
+    'opposite' at the start of 'opposite surface' is a legitimate modifier.
+    The trailing-only strip only walks from the right end of the phrase."""
+
+    def test_opposite_leading(self):
+        assert clean_noun_phrase("opposite surface") == "opposite surface"
+
+    def test_adjacent_leading(self):
+        assert clean_noun_phrase("adjacent region") == "adjacent region"
+
+    def test_parallel_leading(self):
+        assert clean_noun_phrase("parallel plates") == "parallel plates"
+
+    def test_perpendicular_leading(self):
+        assert clean_noun_phrase("perpendicular axis") == "perpendicular axis"
+
+    def test_lateral_leading(self):
+        assert clean_noun_phrase("lateral surface") == "lateral surface"
+
+    def test_medial_leading(self):
+        assert clean_noun_phrase("medial layer") == "medial layer"
+
+    def test_similar_internal(self):
+        assert clean_noun_phrase("similar housing structure") == "similar housing structure"
+
+    def test_opposite_internal(self):
+        assert clean_noun_phrase("opposite cover surface") == "opposite cover surface"
+
+    def test_concentric_leading(self):
+        assert clean_noun_phrase("concentric rings") == "concentric rings"
+
+    def test_coaxial_leading(self):
+        assert clean_noun_phrase("coaxial cable") == "coaxial cable"
