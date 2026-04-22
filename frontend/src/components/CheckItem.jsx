@@ -60,7 +60,7 @@ function getCitation(messageKey) {
 
 export { getCitation }
 
-export default function CheckItem({ status, message, message_key, details, details_key, details_params, reference, jurisdiction }) {
+export default function CheckItem({ status, message, message_key, details, details_key, details_params, reference, jurisdiction, diagnostics }) {
   const { t, i18n } = useTranslation()
   const { sendFeedback } = useFeedback()
   const displayMessage = message_key && i18n.exists(message_key) ? formatDetails(message_key, details_params, t) : message
@@ -76,6 +76,7 @@ export default function CheckItem({ status, message, message_key, details, detai
           details: displayDetails,
           status,
           jurisdiction: jurisdiction || 'unknown',
+          diagnostics: diagnostics || null,
         },
         t,
         { locale: i18n.language },

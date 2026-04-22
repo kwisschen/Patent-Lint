@@ -208,9 +208,30 @@ export function clearFeedbackMethod() {
   }
 }
 
+// Format the walker-diagnostic fingerprint as an indented block. Values
+// are coerced to compact strings (true/false for booleans, str for ints)
+// so the email body reads like a key/value ledger. Pure metadata by
+// design — no claim text, no nouns; disclosed in Privacy §7.
+function formatDiagnostics(diagnostics, t) {
+  if (!diagnostics || typeof diagnostics !== 'object') return ''
+  const entries = Object.entries(diagnostics).filter(
+    ([, value]) => value !== undefined && value !== null && value !== '',
+  )
+  if (entries.length === 0) return ''
+  const header = t('feedback.email.diagnosticHeader')
+  const colon = t('feedback.email.fieldColon')
+  const lines = entries.map(([key, value]) => {
+    const displayValue = typeof value === 'boolean' ? String(value) : value
+    return `  ${key}${colon}${displayValue}`
+  })
+  return [header, ...lines].join('\n')
+}
+
 // Compose per-finding feedback — finding fields + environment metadata
 // merged into one localized data block around a localized greeting +
-// placeholder.
+// placeholder. Walker diagnostics (optional) render as a separate
+// fingerprint block so the maintainer can identify the exact code path
+// a report came from without any claim content leaving the device.
 export function composeFeedback(finding, t, { locale } = {}) {
   const env = {
     browser: detectBrowser(),
@@ -219,14 +240,21 @@ export function composeFeedback(finding, t, { locale } = {}) {
   }
   const checkKey = finding.check_key || 'unknown'
   const subject = t('feedback.email.subjectFinding', { checkKey })
-  const dataSection = formatSection({ ...finding, ...env }, t)
-  const body = [
+  // Strip diagnostics from the main section — they render as their own
+  // block below, not as an inline "diagnostics: [object]" row.
+  const { diagnostics, ...findingCore } = finding
+  const dataSection = formatSection({ ...findingCore, ...env }, t)
+  const diagnosticSection = formatDiagnostics(diagnostics, t)
+  const sections = [
     t('feedback.emailGreeting'),
     '',
     dataSection,
-    '',
-    t('feedback.bodyPlaceholder'),
-  ].join('\n')
+  ]
+  if (diagnosticSection) {
+    sections.push('', diagnosticSection)
+  }
+  sections.push('', t('feedback.bodyPlaceholder'))
+  const body = sections.join('\n')
   return buildEmail(subject, body)
 }
 
