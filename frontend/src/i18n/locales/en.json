@@ -178,7 +178,7 @@
       "fieldBrowser": "Browser",
       "fieldLocale": "Language",
       "fieldBuild": "Build",
-      "diagnosticHeader": "Diagnostic fingerprint (structural metadata, no claim content — see Privacy §7):"
+      "diagnosticHeader": "Diagnostic fingerprint (structural metadata, no claim content — see Privacy §6):"
     }
   },
   "cta": {

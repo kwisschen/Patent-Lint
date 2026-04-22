@@ -172,7 +172,7 @@
       "fieldBrowser": "瀏覽器",
       "fieldLocale": "語言",
       "fieldBuild": "版本",
-      "diagnosticHeader": "診斷指紋（結構性中繼資料，不含稿件內容，詳見隱私權政策 §7）："
+      "diagnosticHeader": "診斷指紋（結構性中繼資料，不含稿件內容，詳見隱私權政策 §6）："
     },
     "emailGreeting": "Christopher 您好，",
     "bodyPlaceholder": "[請用一兩句話說明此項分析結果的問題：是誤判、分類錯誤，還是檢查遺漏了什麼？請勿貼上請求項文字或任何稿件內容；分析結果本身已自動附上。]",
