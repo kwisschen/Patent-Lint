@@ -1288,3 +1288,127 @@ class TestBugReportJPTranslatedCapAssembly:
             "基材",
         ):
             assert expected in norms, f"missing intro: {expected}"
+
+
+class TestDepPreambleConnective:
+    """Regression test for a 2026-04-24 bug report.
+
+    JP-translated TW patents use 「如請求項N所記載的X」 instead of the
+    TIPO-standard 「所述的X」. The old dep-preamble regex required exactly
+    `所?述?[之的]`, so `_extract_subject` fell through on `所記載的`, extracted
+    the full preamble as the subject, and falsely flagged claims 2-7 as
+    subject-inconsistent with the parent. Fix extends the connective to
+    cover `所(述|記載|揭示|描述)[之的]` + bare `之/的` forms.
+    """
+
+    def _build(self, preamble_form: str):
+        from patentlint.models import Claim, TwPatentDocument, TwPatentType
+
+        c1 = Claim(
+            id=1,
+            text="1. 一種蓋組件，包括：一本體；以及一蓋體。",
+            dependencies=[],
+            independent=True,
+        )
+        c2 = Claim(
+            id=2,
+            text=f"2. {preamble_form}，其中前述蓋體呈環狀。",
+            dependencies=[1],
+            independent=False,
+        )
+        return TwPatentDocument(
+            claims=[c1, c2],
+            specification=[],
+            abstract=None,
+            drawings_description=[],
+            title="",
+            symbol_table=[],
+            cross_references=[],
+            background_paragraphs=[],
+            patent_type=TwPatentType.INVENTION,
+        )
+
+    def test_ji_zai_de(self):
+        """如請求項1所記載的 — JP-translation form, reporter's case."""
+        from patentlint.analysis.tw_claims import check_subject_consistency
+
+        doc = self._build("如請求項1所記載的蓋組件")
+        findings = check_subject_consistency(doc)
+        assert all(f.status == "pass" for f in findings), (
+            f"FP: {[f.message for f in findings]}"
+        )
+
+    def test_ji_zai_zhi(self):
+        """如請求項1所記載之 — JP-translation formal."""
+        from patentlint.analysis.tw_claims import check_subject_consistency
+
+        doc = self._build("如請求項1所記載之蓋組件")
+        findings = check_subject_consistency(doc)
+        assert all(f.status == "pass" for f in findings)
+
+    def test_jie_shi_de(self):
+        """如請求項1所揭示的 — formal alternative."""
+        from patentlint.analysis.tw_claims import check_subject_consistency
+
+        doc = self._build("如請求項1所揭示的蓋組件")
+        findings = check_subject_consistency(doc)
+        assert all(f.status == "pass" for f in findings)
+
+    def test_miao_shu_zhi(self):
+        """如請求項1所描述之 — alternative."""
+        from patentlint.analysis.tw_claims import check_subject_consistency
+
+        doc = self._build("如請求項1所描述之蓋組件")
+        findings = check_subject_consistency(doc)
+        assert all(f.status == "pass" for f in findings)
+
+    def test_standard_suo_shu_de_still_works(self):
+        """如請求項1所述的 — TIPO-standard must still pass."""
+        from patentlint.analysis.tw_claims import check_subject_consistency
+
+        doc = self._build("如請求項1所述的蓋組件")
+        findings = check_subject_consistency(doc)
+        assert all(f.status == "pass" for f in findings)
+
+    def test_bare_de_still_works(self):
+        """如請求項1的 — bare form."""
+        from patentlint.analysis.tw_claims import check_subject_consistency
+
+        doc = self._build("如請求項1的蓋組件")
+        findings = check_subject_consistency(doc)
+        assert all(f.status == "pass" for f in findings)
+
+    def test_range_with_ji_zai(self):
+        """如請求項1至7中任一項所記載的 — multi-dep JP-translation form."""
+        from patentlint.analysis.tw_claims import check_subject_consistency
+
+        doc = self._build("如請求項1至7中任一項所記載的蓋組件")
+        findings = check_subject_consistency(doc)
+        assert all(f.status == "pass" for f in findings)
+
+    def test_spec_drawing_ref_ji_zai(self):
+        """如說明書所記載 — also forbidden, JP-translation of 如說明書所述."""
+        from patentlint.analysis.tw_claims import check_spec_drawing_ref
+        from patentlint.models import Claim, TwPatentDocument, TwPatentType
+
+        c = Claim(
+            id=1,
+            text="1. 一種裝置，其構造如說明書所記載。",
+            dependencies=[],
+            independent=True,
+        )
+        doc = TwPatentDocument(
+            claims=[c],
+            specification=[],
+            abstract=None,
+            drawings_description=[],
+            title="",
+            symbol_table=[],
+            cross_references=[],
+            background_paragraphs=[],
+            patent_type=TwPatentType.INVENTION,
+        )
+        findings = check_spec_drawing_ref(doc)
+        assert any(f.status == "amend" for f in findings), (
+            "如說明書所記載 should be flagged (forbidden spec-ref)"
+        )

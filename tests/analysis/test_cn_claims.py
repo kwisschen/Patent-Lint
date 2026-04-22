@@ -274,6 +274,36 @@ class TestSubjectNameConsistency:
         assert results[0].details_params["count"] == 1
         assert "44, 44" not in results[0].message
 
+    def test_ji_zai_connective_pass(self):
+        """如权利要求1所记载的 — JP-translation form, mirrors TW bug fix."""
+        doc = _cn_doc([
+            _claim(1, "1. 一种盖组件，其特征在于包括本体。"),
+            _claim(2, "2. 如权利要求1所记载的盖组件，其特征在于还包括嵌合部。",
+                   independent=False, dependencies=[1]),
+        ])
+        results = check_subject_name_consistency(doc)
+        assert results[0].status == "pass"
+
+    def test_gen_ju_ji_zai_de_pass(self):
+        """根据权利要求1所记载的 — JP-translation formal."""
+        doc = _cn_doc([
+            _claim(1, "1. 一种盖组件，其特征在于包括本体。"),
+            _claim(2, "2. 根据权利要求1所记载的盖组件，其特征在于还包括嵌合部。",
+                   independent=False, dependencies=[1]),
+        ])
+        results = check_subject_name_consistency(doc)
+        assert results[0].status == "pass"
+
+    def test_jie_shi_de_pass(self):
+        """根据权利要求1所揭示的 — formal alternative."""
+        doc = _cn_doc([
+            _claim(1, "1. 一种盖组件，其特征在于包括本体。"),
+            _claim(2, "2. 根据权利要求1所揭示的盖组件，其特征在于还包括嵌合部。",
+                   independent=False, dependencies=[1]),
+        ])
+        results = check_subject_name_consistency(doc)
+        assert results[0].status == "pass"
+
 
 # ── Check 16: Transition phrase ───────────────────────────────────────────
 
