@@ -1412,3 +1412,112 @@ class TestDepPreambleConnective:
         assert any(f.status == "amend" for f in findings), (
             "如說明書所記載 should be flagged (forbidden spec-ref)"
         )
+
+
+class TestSubjectConsistencySplit:
+    """ADR-145: subject_consistency must distinguish parse-limit fall-through
+    from genuine drafter-level mismatches.
+
+    Each finding must also carry a structural diagnostic fingerprint so
+    error-report emails can identify the exact code path without leaking
+    claim content.
+    """
+
+    def _build(self, claim_texts):
+        from patentlint.models import Claim, TwPatentDocument, TwPatentType
+
+        claims = []
+        for i, text in enumerate(claim_texts, start=1):
+            if i == 1:
+                claims.append(Claim(
+                    id=i, text=text, dependencies=[], independent=True,
+                ))
+            else:
+                claims.append(Claim(
+                    id=i, text=text, dependencies=[1], independent=False,
+                ))
+        return TwPatentDocument(
+            claims=claims, specification=[], abstract=None,
+            drawings_description=[], title="", symbol_table=[],
+            cross_references=[], background_paragraphs=[],
+            patent_type=TwPatentType.INVENTION,
+        )
+
+    def test_genuine_mismatch_emits_verify(self):
+        """Both preambles parse cleanly but subjects differ."""
+        from patentlint.analysis.tw_claims import check_subject_consistency
+
+        doc = self._build([
+            "1. 一種蓋組件，包括X。",
+            "2. 如請求項1所述的裝置，包括Y。",
+        ])
+        findings = check_subject_consistency(doc)
+        mismatch = [
+            f for f in findings
+            if f.message_key == "check.tw.claims.subjectConsistency.verify"
+        ]
+        assert len(mismatch) == 1
+        assert mismatch[0].diagnostics is not None
+        assert mismatch[0].diagnostics["dep_path"] == "dep_prefix"
+        assert mismatch[0].diagnostics["parent_path"] == "indep_prefix"
+
+    def test_parse_fallthrough_emits_parseUnclear_not_verify(self):
+        """When preamble doesn't match a recognized form, emit parseUnclear."""
+        from patentlint.analysis.tw_claims import check_subject_consistency
+
+        doc = self._build([
+            "1. 一種蓋組件，包括X。",
+            "2. 基於請求項1所揭露的組件，包括Z。",  # not a recognized dep form
+        ])
+        findings = check_subject_consistency(doc)
+        unclear = [
+            f for f in findings
+            if f.message_key
+            == "check.tw.claims.subjectConsistencyParseUnclear"
+        ]
+        mismatch = [
+            f for f in findings
+            if f.message_key == "check.tw.claims.subjectConsistency.verify"
+        ]
+        assert len(unclear) == 1, (
+            "parse fallthrough should emit parseUnclear, not verify"
+        )
+        assert len(mismatch) == 0, (
+            "parse fallthrough should NOT emit a mismatch finding"
+        )
+        assert unclear[0].diagnostics["dep_path"] == "fallthrough"
+
+    def test_mixed_mismatch_and_parseUnclear_emitted_separately(self):
+        from patentlint.analysis.tw_claims import check_subject_consistency
+
+        doc = self._build([
+            "1. 一種蓋組件，包括X。",
+            "2. 如請求項1所述的裝置，包括Y。",  # genuine mismatch
+            "3. 基於請求項1所揭露的組件，包括Z。",  # parseUnclear
+        ])
+        findings = check_subject_consistency(doc)
+        mismatch = [
+            f for f in findings
+            if f.message_key == "check.tw.claims.subjectConsistency.verify"
+        ]
+        unclear = [
+            f for f in findings
+            if f.message_key
+            == "check.tw.claims.subjectConsistencyParseUnclear"
+        ]
+        assert len(mismatch) == 1 and mismatch[0].details_params["claims"] == [2]
+        assert len(unclear) == 1 and unclear[0].details_params["claims"] == [3]
+
+    def test_reporter_case_no_findings(self):
+        """26P001TW reporter case: 如請求項N所記載的X → no findings."""
+        from patentlint.analysis.tw_claims import check_subject_consistency
+
+        doc = self._build([
+            "1. 一種蓋組件，包括本體。",
+            "2. 如請求項1所記載的蓋組件，更包括嵌合部。",
+            "3. 如請求項1所記載的蓋組件，更包括壓力調節閥。",
+        ])
+        findings = check_subject_consistency(doc)
+        assert all(f.status == "pass" for f in findings), (
+            f"reporter case must pass; got: {[f.message for f in findings]}"
+        )

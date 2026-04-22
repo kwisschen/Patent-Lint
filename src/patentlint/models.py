@@ -221,6 +221,13 @@ class CheckItem(BaseModel):
     details_key: str | None = None
     details_params: dict[str, Any] | None = None
     reference: str | None = None
+    # Structural diagnostic fingerprint surfaced in error-report emails so
+    # the maintainer can identify walker parse paths without seeing claim
+    # content. Values must be str / int / bool — no claim text, no nouns,
+    # no verbs. Disclosed in Privacy §7 (error reports). Example:
+    #   {"extraction_path": "fallthrough", "preamble_matched": False,
+    #    "dep_subject_charlen": 13, "parent_subject_charlen": 3}
+    diagnostics: dict[str, Any] | None = None
 
 
 class ClaimTreeRow(BaseModel):

@@ -304,6 +304,47 @@ class TestSubjectNameConsistency:
         results = check_subject_name_consistency(doc)
         assert results[0].status == "pass"
 
+    def test_parse_fallthrough_emits_parseUnclear_not_verify(self):
+        """ADR-145: parse fallthrough (unrecognized preamble form) → parseUnclear."""
+        doc = _cn_doc([
+            _claim(1, "1. 一种盖组件，其特征在于包括本体。"),
+            _claim(2, "2. 基于权利要求1的组件，其特征在于还包括Z。",
+                   independent=False, dependencies=[1]),
+        ])
+        results = check_subject_name_consistency(doc)
+        unclear = [
+            r for r in results
+            if r.message_key == "check.cn.claims.subjectConsistencyParseUnclear"
+        ]
+        mismatch = [
+            r for r in results
+            if r.message_key == "check.cn.claims.subjectConsistency.verify"
+        ]
+        assert len(unclear) == 1
+        assert len(mismatch) == 0
+        assert unclear[0].diagnostics is not None
+        assert unclear[0].diagnostics["dep_path"] == "fallthrough"
+
+    def test_diagnostics_attached_on_verify(self):
+        """Mismatch finding carries structural fingerprint."""
+        doc = _cn_doc([
+            _claim(1, "1. 一种盖组件，其特征在于包括本体。"),
+            _claim(2, "2. 如权利要求1所述的信号处理系统，其特征在于还包括部件。",
+                   independent=False, dependencies=[1]),
+        ])
+        results = check_subject_name_consistency(doc)
+        mismatch = [
+            r for r in results
+            if r.message_key == "check.cn.claims.subjectConsistency.verify"
+        ]
+        assert len(mismatch) == 1
+        dx = mismatch[0].diagnostics
+        assert dx is not None
+        assert dx["dep_path"] == "dep_prefix"
+        assert dx["parent_path"] == "indep_prefix"
+        assert dx["parent_subject_charlen"] > 0
+        assert dx["dep_subject_charlen"] > 0
+
 
 # ── Check 16: Transition phrase ───────────────────────────────────────────
 
