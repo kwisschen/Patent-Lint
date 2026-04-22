@@ -226,6 +226,7 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
     abstract_implied_phrases = abstract_analysis.detect_implied_phrases(abstract_section) if abstract_section else []
     abstract_implied = bool(abstract_implied_phrases)
     abstract_wording = abstract_analysis.detect_improper_wording(abstract_section) if abstract_section else ""
+    abstract_wording_items = abstract_analysis.detect_improper_wording_items(abstract_section) if abstract_section else []
 
     # --- Required sections check ---
     required_sections_checks = spec_analysis.check_required_sections(full_text)
@@ -296,6 +297,7 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
         abstract_has_implied_phrase=abstract_implied,
         abstract_implied_phrases=abstract_implied_phrases,
         improper_abstract_phrases_formatted=abstract_wording,
+        improper_abstract_phrases=abstract_wording_items,
     )
 
 

@@ -6,6 +6,7 @@ import { formatDetails } from "../lib/detailsFormatter"
 import { Button } from "./ui/button"
 import { composeFeedback } from "../lib/feedback"
 import { useFeedback } from "./FeedbackPicker"
+import FlaggedTermList from "./FlaggedTermList"
 
 const CITATION_MAP = {
   'check.spec.restrictiveWording': '§ 112(b)',
@@ -118,6 +119,9 @@ export default function CheckItem({ status, message, message_key, details, detai
           <span className="hidden sm:inline">{t('feedback.report')}</span>
         </Button>
       </div>
+      {details_params?.flagged_phrases?.items?.length > 0 && (
+        <FlaggedTermList items={details_params.flagged_phrases.items} status={status} />
+      )}
       {displayDetails && (
         <p className="text-xs text-muted-foreground mt-1 ml-10 sm:ml-[52px]">{displayDetails}</p>
       )}
