@@ -269,4 +269,4 @@ node_modules/<package>/LICENSE` (frontend).
 ---
 
 Generated: 2026-04-21
-PatentLint is © 2024-2026 Christopher Chen. All rights reserved.
+PatentLint is © 2025 Christopher Chen. All rights reserved.

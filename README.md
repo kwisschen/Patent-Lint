@@ -245,4 +245,4 @@ PatentLint is source-available under **PolyForm-Strict-1.0.0** — see [LICENSE]
 
 The patentlint.com hosted service is free for individual evaluation. Commercial deployment or redistribution requires a separate license — [contact Christopher Chen](mailto:kwisschen@gmail.com) to discuss terms. See also the [Terms of Service](https://patentlint.com/terms) for the hosted site and the source-code license.
 
-Copyright © 2024-2026 Christopher Chen. All rights reserved.
+Copyright © 2025 Christopher Chen. All rights reserved.
