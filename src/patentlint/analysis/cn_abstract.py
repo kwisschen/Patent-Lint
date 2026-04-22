@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import re
 
+from patentlint.analysis.utils import _dx
 from patentlint.models import CheckItem, CnPatentDocument
 
 _CN_FIG_NUM_RE = re.compile(r"(?:图|附图)\s*(\d+)")
@@ -35,6 +36,11 @@ def check_abstract_char_count(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.abstractCharCount",
             details_params={"count": str(count)},
             reference="专利法实施细则 §23",
+            diagnostics=_dx(
+                char_count=count,
+                threshold=300,
+                overage=count - 300,
+            ),
         )]
 
     return [CheckItem(
@@ -61,6 +67,10 @@ def check_abstract_title_match(cn_doc: CnPatentDocument) -> list[CheckItem]:
             message_key="check.cn.abstract.titleMatch.verify",
             details_key="details.cn.abstractTitleMatch",
             reference="审查指南",
+            diagnostics=_dx(
+                reason_code="empty_abstract",
+                title_charlen=len(title),
+            ),
         )]
 
     if not title:
@@ -70,6 +80,10 @@ def check_abstract_title_match(cn_doc: CnPatentDocument) -> list[CheckItem]:
             message_key="check.cn.abstract.titleMatch.verify",
             details_key="details.cn.abstractTitleMatch",
             reference="审查指南",
+            diagnostics=_dx(
+                reason_code="empty_title",
+                abstract_charlen=len(abstract),
+            ),
         )]
 
     if title in abstract:
@@ -100,6 +114,11 @@ def check_abstract_title_match(cn_doc: CnPatentDocument) -> list[CheckItem]:
         message_key="check.cn.abstract.titleMatch.verify",
         details_key="details.cn.abstractTitleMatch",
         reference="审查指南",
+        diagnostics=_dx(
+            title_charlen=len(title),
+            abstract_charlen=len(abstract),
+            compound_halves=len(halves),
+        ),
     )]
 
 
@@ -126,6 +145,10 @@ def check_commercial_language(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.commercialLanguage",
             details_params={"terms": terms_str},
             reference="专利法实施细则 §23",
+            diagnostics=_dx(
+                hit_count=len(found),
+                total_terms_scanned=len(_COMMERCIAL_TERMS),
+            ),
         )]
 
     return [CheckItem(
@@ -194,6 +217,11 @@ def check_figures_sequential(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 "found_max": str(max_n),
             },
             reference="审查指南",
+            diagnostics=_dx(
+                missing_count=len(missing),
+                found_max=max_n,
+                total_figures_found=len(numbers),
+            ),
         )]
 
     return [CheckItem(

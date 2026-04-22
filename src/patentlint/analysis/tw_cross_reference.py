@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import re
 
+from patentlint.analysis.utils import _dx
 from patentlint.models import CheckItem, TwPatentDocument
 
 _FIG_NUM_RE = re.compile(r"(\d+)")
@@ -47,6 +48,8 @@ def check_symbol_vs_rep_drawing(doc: TwPatentDocument) -> list[CheckItem]:
             })
 
     if mismatches:
+        not_in_table = sum(1 for m in mismatches if m["kind"] == "not_in_table")
+        name_mismatch = sum(1 for m in mismatches if m["kind"] == "name_mismatch")
         return [CheckItem(
             status="verify",
             message="Representative drawing symbols inconsistent with symbol table.",
@@ -54,6 +57,12 @@ def check_symbol_vs_rep_drawing(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.symbolVsRepDrawing.description",
             details_params={"symbol_mismatch_triples": {"mismatches": mismatches[:10]}},
             reference="專利審查基準",
+            diagnostics=_dx(
+                not_in_table_count=not_in_table,
+                name_mismatch_count=name_mismatch,
+                total_rep_symbols=len(doc.representative_drawing_symbols),
+                total_table_entries=len(doc.symbol_table),
+            ),
         )]
 
     return [CheckItem(
@@ -96,6 +105,9 @@ def check_bracket_format(doc: TwPatentDocument) -> list[CheckItem]:
         message_key="check.tw.crossRef.bracketFormat.verify",
         details_params={"headers": headers_str},
         reference="專利法施行細則 §17",
+        diagnostics=_dx(
+            flagged_count=len(flagged),
+        ),
     )]
 
 
@@ -156,6 +168,11 @@ def check_figures_sequential(doc: TwPatentDocument) -> list[CheckItem]:
                 "found_max": str(max_n),
             },
             reference="專利審查基準",
+            diagnostics=_dx(
+                missing_count=len(missing),
+                found_max=max_n,
+                total_figures_found=len(numbers),
+            ),
         )]
 
     return [CheckItem(

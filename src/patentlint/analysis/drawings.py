@@ -7,6 +7,7 @@ Figure counting, sequential ordering, single-figure format, and prior art refere
 
 import re
 
+from patentlint.analysis.utils import _dx
 from patentlint.models import CheckItem, FigureReference
 
 _FIGURE_PATTERN = re.compile(
@@ -214,6 +215,11 @@ def check_figure_cross_references(
             details=fig_list,
             details_key="details.orphanedBriefFigures",
             details_params={"list": fig_list},
+            diagnostics=_dx(
+                orphan_count=len(orphaned_brief),
+                total_brief=len(brief_figs),
+                total_detailed=len(detailed_figs),
+            ),
         ))
 
     if orphaned_detailed:
@@ -225,6 +231,11 @@ def check_figure_cross_references(
             details=fig_list,
             details_key="details.orphanedDetailedFigures",
             details_params={"list": fig_list},
+            diagnostics=_dx(
+                orphan_count=len(orphaned_detailed),
+                total_brief=len(brief_figs),
+                total_detailed=len(detailed_figs),
+            ),
         ))
 
     if not orphaned_brief and not orphaned_detailed:

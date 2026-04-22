@@ -5,7 +5,30 @@
 Extracted from analysis/claims.py for reuse across multiple checks.
 """
 
+from __future__ import annotations
+
 import re
+from typing import Any
+
+
+# ADR-145 diagnostic fingerprint helper. Every amend/verify CheckItem
+# emission carries a diagnostics dict so error-report emails contain a
+# consistent structural-metadata block across every check — no silent
+# "this one has a fingerprint, that one doesn't" UX. The helper drops
+# None values so call-sites can pass every candidate key unconditionally
+# without littering the output.
+#
+# VALID diagnostic keys (structural only, no claim content):
+#   - counts / lengths: flagged_count, total_count, *_charlen
+#   - Unicode codepoints from closed-set chars: *_codepoint (e.g.
+#     sample_last_char_codepoint for paragraph-ending checks)
+#   - closed-set enum strings: *_code, *_path (e.g. reason_code:
+#     "length" / "content" / "missing")
+#   - booleans: has_*, is_*, *_matched
+# INVALID: raw noun/verb content, claim text, user-typed strings.
+def _dx(**kwargs: Any) -> dict[str, Any]:
+    """Build a structural-diagnostic fingerprint dict, dropping None values."""
+    return {k: v for k, v in kwargs.items() if v is not None}
 
 # Hyphen-aware word token: matches "multi-stage", "non-transitory", "widget"
 _WORD = r"\w+(?:-\w+)*"
