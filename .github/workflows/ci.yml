@@ -20,8 +20,17 @@ jobs:
 
       - name: Install system deps
         run: |
-          sudo apt-get update
+          # Route around the Azure-hosted Ubuntu mirror when it's
+          # unhealthy — the ubuntu-latest runner defaults to
+          # azure.archive.ubuntu.com, which occasionally times out and
+          # burns 20-30 minutes on apt-get retries before falling back
+          # to the public archive. Force the public archive upfront, and
+          # cap retries/timeout so any remaining mirror hiccups surface
+          # fast.
+          sudo sed -i 's|http://azure.archive.ubuntu.com|http://archive.ubuntu.com|g' /etc/apt/sources.list /etc/apt/apt-mirrors.txt 2>/dev/null || true
+          sudo apt-get update -o Acquire::Retries=2 -o Acquire::http::Timeout=30
           sudo apt-get install -y --no-install-recommends \
+              -o Acquire::Retries=2 -o Acquire::http::Timeout=30 \
               libpango-1.0-0 libpangoft2-1.0-0 libpangocairo-1.0-0 \
               libgdk-pixbuf-2.0-0 libcairo2 libffi-dev shared-mime-info
 
@@ -68,8 +77,17 @@ jobs:
 
       - name: Install system deps
         run: |
-          sudo apt-get update
+          # Route around the Azure-hosted Ubuntu mirror when it's
+          # unhealthy — the ubuntu-latest runner defaults to
+          # azure.archive.ubuntu.com, which occasionally times out and
+          # burns 20-30 minutes on apt-get retries before falling back
+          # to the public archive. Force the public archive upfront, and
+          # cap retries/timeout so any remaining mirror hiccups surface
+          # fast.
+          sudo sed -i 's|http://azure.archive.ubuntu.com|http://archive.ubuntu.com|g' /etc/apt/sources.list /etc/apt/apt-mirrors.txt 2>/dev/null || true
+          sudo apt-get update -o Acquire::Retries=2 -o Acquire::http::Timeout=30
           sudo apt-get install -y --no-install-recommends \
+              -o Acquire::Retries=2 -o Acquire::http::Timeout=30 \
               libpango-1.0-0 libpangoft2-1.0-0 libpangocairo-1.0-0 \
               libgdk-pixbuf-2.0-0 libcairo2 libffi-dev shared-mime-info
 
