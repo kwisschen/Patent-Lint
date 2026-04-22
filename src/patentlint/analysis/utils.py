@@ -289,6 +289,30 @@ def _is_trailing_arithmetic(word: str) -> bool:
     return word in _ARITHMETIC_OPERATORS
 
 
+# Relational / positional adjectives that typically head a predicative phrase
+# ("the X opposite to Y", "the X relative to Z", "the X adjacent to W") rather
+# than belonging to the noun phrase itself. Strip only when trailing; leading
+# or internal uses ("an opposite surface", "a lateral region") are preserved
+# because clean_noun_phrase walks from the end and stops at the first word
+# that survives the denylist. Applies to US-only; CJK walkers use different
+# tokenization and would need a separate denylist if this class of bug
+# surfaces there.
+_RELATIONAL_ADJ_STOPS = frozenset({
+    "opposite", "opposing",
+    "relative", "relatively",
+    "adjacent", "adjoining",
+    "parallel", "perpendicular", "orthogonal", "oblique",
+    "concentric", "collinear", "coaxial",
+    "similar", "identical", "equal", "equivalent",
+    "proximate", "distal", "proximal", "medial", "lateral",
+    "closer", "nearer", "farther",
+})
+
+
+def _is_trailing_relational_adj(word: str) -> bool:
+    return word in _RELATIONAL_ADJ_STOPS
+
+
 def _is_trailing_ly_adverb(word: str) -> bool:
     """Detect -ly adverbs that terminate over-captured NPs.
 
@@ -330,6 +354,7 @@ def _should_strip_trailing(word: str) -> bool:
         or _is_trailing_ly_adverb(w)
         or _is_trailing_distributive(w)
         or _is_trailing_arithmetic(w)
+        or _is_trailing_relational_adj(w)
     ):
         return True
     # Strip trailing -ing verbs/gerunds (mirrors single-word rejection at clean_noun_phrase)
