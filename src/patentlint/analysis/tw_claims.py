@@ -1005,7 +1005,7 @@ def check_connection_relationships_tw(doc: TwPatentDocument) -> list[CheckItem]:
 # 該所述前述 prefix is stripped before this regex applies). 12 leaves
 # headroom for ordinal+qualifier+head-noun compounds without permitting
 # the runaway captures observed in the 2026-04-09 smoke test.
-_NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以並且其而還另時在]{2,12}"
+_NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以並且其而還另時在更]{2,12}"
 
 # Introduction patterns — ordered longest-first so 至少一個 / 複數個 are
 # matched as single tokens before their shorter prefixes (一 / 複數). The
@@ -2308,6 +2308,73 @@ _POSSESSIVE_VERB_DENYLIST = {
     '設置', '形成', '連接', '連結',
 }
 
+# F10: Bare-modifier `的NOUN` — JP-translated TW claims frequently introduce
+# elements as the head noun of an adjectival/locative clause without a
+# preceding 一/quantifier, e.g.
+#   「配置在容器本體上部的開口部」              → 開口部
+#   「具有從前述內塞的下表面朝下側突出的環狀的嵌合壁部」 → 嵌合壁部
+#   「可拆裝地嵌合於前述嵌合壁部的可彈性變形的嵌合部」   → 嵌合部
+#   「…外部連通的壓力調節閥」                   → 壓力調節閥
+#   「比…更硬質的基材」                         → 基材
+# F5a already handles `所述X的Y` (ref-prefixed modifier); F10 is the bare-
+# modifier analogue. Emitting extras into `intros_by_term` is safe — intros
+# only resolve references, they never manufacture findings.
+# Noun charset reuses _CJK_NO_DE_ZHI_TW (excludes 的 U+7684 and 之 U+4E4B)
+# so captures don't span through further possessive markers. Upper bound 8
+# mirrors _NOUN_CHARS. Trailing CJK negative lookahead anchors the capture
+# at a non-CJK boundary (clause punctuation, end of text).
+_F10_BARE_DE_NOUN_RE = re.compile(
+    r'的'
+    r'(?P<noun>' + _CJK_NO_DE_ZHI_TW + r'{2,8}'
+    r'(?:\([A-Za-z0-9]+\))?)'
+    r'(?![一-鿿])'
+)
+
+# F11: Locative-possessive bare NOUN. TW/JP-translated drafters introduce
+# containing elements as the modifier before a positional suffix:
+#   「配置在容器本體上部的開口部」 → 容器本體
+# The positional suffix (上部/下部/內部/...) + 的 combination anchors the
+# capture. A preceding CJK preposition (於|在|到|至|從|朝) rules out mid-
+# word false starts; post-capture filter rejects ref-prefix heads.
+_F11_LOCATIVE_SUFFIXES = (
+    '上部', '下部', '內部', '外部',
+    '上方', '下方', '內側', '外側',
+    '頂部', '底部', '前部', '後部',
+    '側面', '表面', '內面', '外面',
+    '內壁', '外壁', '上端', '下端',
+)
+_F11_LOCATIVE_POSS_RE = re.compile(
+    r'(?:於|在|到|至|從|朝)'
+    r'(?P<noun>' + _CJK_NO_DE_ZHI_TW + r'{2,6})'
+    r'(?:' + '|'.join(_F11_LOCATIVE_SUFFIXES) + r')'
+    r'的'
+)
+
+# ADJ/verb heads that must not start a bare-modifier noun capture.
+# Mirrors _F12_ADJ_REJECTS_TW with additions for bare-的 context.
+_F10_NOUN_REJECTS = (
+    '可', '具有', '具', '經過', '由', '屬於', '用於', '來自',
+    '能夠', '能', '會', '進行', '獲得', '獲取', '接收', '存儲',
+    '輸出', '輸入', '基於', '根據',
+    '單一', '唯一',
+)
+
+# Mechanical-component suffix set. F10 only emits captures whose tail is
+# one of these characters — the strong "this word names a physical claim
+# element" signal that separates mechanical intros (開口部/壓力調節閥/基材)
+# from loose attribute nouns (識別資料, 訊息, 指令) buried in the same
+# `的NOUN` syntactic position. Extensions should stay anchored to concrete
+# element-like terms; avoid data/signal suffixes (料 for 資料, 號 for 信號,
+# 令 for 指令) unless there is fixture evidence of a legit-intro need.
+_F10_COMPONENT_SUFFIXES: tuple[str, ...] = (
+    '部', '件', '體', '器', '閥', '板', '模', '組', '塊', '片',
+    '環', '殼', '膜', '座', '盤', '筒', '軸', '桿', '輪', '帶',
+    '管', '架', '框', '壁', '面', '層', '材', '口', '道', '頭',
+    '側', '孔', '縫', '邊', '頂', '底', '角', '心', '核', '機',
+    '櫃', '室', '槽', '線', '路', '池', '樞', '蓋', '套', '罩',
+    '網', '柱', '錐', '球', '球體', '筒體',
+)
+
 
 def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
     """Extract bare-noun introductions from supplementary patterns.
@@ -2443,6 +2510,38 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
         if follower in _POSSESSIVE_VERB_DENYLIST:
             continue
         results.append((m.group(0), normalized))
+
+    # F10: Bare-modifier `的NOUN` — broad JP-translated-pattern coverage.
+    # Runs after all ref-prefixed and verb-triggered patterns so its extras
+    # fill gaps rather than duplicate. Scoped to mechanical-component
+    # suffixes so data/attribute nouns buried inside possessive chains
+    # (e.g. `所述X的Y的識別資料` in 110P000868 claim 1 where 識別資料 is a
+    # loose attribute that was never properly introduced) aren't silently
+    # emitted as intros. The component suffix is a strong positive signal
+    # that the captured word names a claim element, not an attribute.
+    for m in _F10_BARE_DE_NOUN_RE.finditer(text):
+        noun = m.group('noun')
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        if not normalized or len(normalized) < 2:
+            continue
+        if normalized.startswith(_REFERENCE_PREFIXES):
+            continue
+        if normalized.startswith(_F10_NOUN_REJECTS):
+            continue
+        if not normalized.endswith(_F10_COMPONENT_SUFFIXES):
+            continue
+        results.append((m.group(0), normalized))
+
+    # F11: Locative-possessive bare NOUN (Y+上部/下部/...的).
+    for m in _F11_LOCATIVE_POSS_RE.finditer(text):
+        noun = m.group('noun')
+        if not noun or len(noun) < 2:
+            continue
+        if noun.startswith(_REFERENCE_PREFIXES):
+            continue
+        if noun.startswith(_F10_NOUN_REJECTS):
+            continue
+        results.append((m.group(0), noun))
 
     # Uniform trailing-verb cleanup for all supplementary captures
     cleaned: list[tuple[str, str]] = []
