@@ -1521,3 +1521,67 @@ class TestSubjectConsistencySplit:
         assert all(f.status == "pass" for f in findings), (
             f"reporter case must pass; got: {[f.message for f in findings]}"
         )
+
+
+class TestAntecedentDiagnostics:
+    """ADR-145: antecedent-basis findings must carry structural fingerprints
+    so error-report emails can identify walker state (intro-pool size,
+    did-you-mean presence, cross-branch) without any claim content.
+    """
+
+    def _build(self, claim_texts):
+        from patentlint.models import Claim, TwPatentDocument, TwPatentType
+
+        claims = []
+        for i, text in enumerate(claim_texts, start=1):
+            if i == 1:
+                claims.append(Claim(
+                    id=i, text=text, dependencies=[], independent=True,
+                ))
+            else:
+                claims.append(Claim(
+                    id=i, text=text, dependencies=[1], independent=False,
+                ))
+        return TwPatentDocument(
+            claims=claims, specification=[], abstract=None,
+            drawings_description=[], title="", symbol_table=[],
+            cross_references=[], background_paragraphs=[],
+            patent_type=TwPatentType.INVENTION,
+        )
+
+    def test_finding_carries_diagnostics(self):
+        from patentlint.analysis.tw_claims import check_antecedent_basis
+
+        # Claim 2 references 所述第一卡止部 with no matching intro; walker
+        # finds 一第一按鈕 as did-you-mean candidate. Pure-structural
+        # fingerprint should expose that state to maintainer emails.
+        doc = self._build([
+            "1. 一種裝置，包含一第一按鈕。",
+            "2. 如請求項1所述的裝置，其中所述第一卡止部為彈性。",
+        ])
+        issues = check_antecedent_basis(doc)
+        assert len(issues) >= 1
+        issue = issues[0]
+        assert "diagnostics" in issue
+        dx = issue["diagnostics"]
+        assert dx["prefix_charlen"] == 2           # 所述
+        assert dx["term_charlen"] == 5             # 第一卡止部
+        assert dx["intros_pool_size"] >= 1
+        assert dx["has_suggested_match"] is True
+        assert dx["suggested_cross_branch"] is False
+
+    def test_diagnostic_contains_no_claim_text(self):
+        """Fingerprint must never carry noun content — counts + booleans only."""
+        from patentlint.analysis.tw_claims import check_antecedent_basis
+
+        doc = self._build([
+            "1. 一種機械裝置，包含一第一卡止部。",
+            "2. 如請求項1所述的裝置，其中所述第二卡止部位於頂面。",
+        ])
+        issues = check_antecedent_basis(doc)
+        for issue in issues:
+            dx = issue.get("diagnostics") or {}
+            for value in dx.values():
+                assert not isinstance(value, str) or value in ("the", "said", "所述", "該", "前述", "該等", "該些"), (
+                    f"diagnostic value looks like content: {value!r}"
+                )
