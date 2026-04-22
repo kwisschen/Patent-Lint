@@ -9,6 +9,7 @@ sequence listing references, and reference numeral consistency.
 import re
 from collections import Counter
 
+from patentlint.analysis.utils import _dx
 from patentlint.models import CheckItem, ReferenceNumeral, SpecWordingResult
 
 # Narrowing language per MPEP 2111.01(II): "critical, important, essential,
@@ -239,6 +240,10 @@ def check_required_sections(full_text: str) -> list[CheckItem]:
             details=", ".join(missing_required),
             details_key="details.missingSections",
             details_params={"list": ", ".join(missing_required)},
+            diagnostics=_dx(
+                missing_count=len(missing_required),
+                total_required=len(required),
+            ),
         ))
     else:
         results.append(CheckItem(
@@ -257,6 +262,9 @@ def check_required_sections(full_text: str) -> list[CheckItem]:
                 details=name,
                 details_key="details.optionalSectionGuidance",
                 details_params={"name": name},
+                diagnostics=_dx(
+                    section_name=name,
+                ),
             ))
 
     return results
