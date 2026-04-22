@@ -721,7 +721,12 @@ def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
                     message_key="checks.preamble_indefinite_article",
                     details=f"Claim {claim.id} depends on claim {parent_claim_num}",
                     details_key="details.preambleIndefiniteArticle",
-                    details_params={"claim": str(claim.id), "parent": str(parent_claim_num)},
+                    details_params={
+                        "claim": str(claim.id),
+                        "parent": str(parent_claim_num),
+                        "article": article,
+                        "noun": dep_noun,
+                    },
                     diagnostics={
                         "article": article.lower(),
                         "dep_head_charlen": len(dep_noun),
@@ -764,7 +769,12 @@ def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
                 message_key="checks.preamble_noun_mismatch",
                 details=f"Claim {claim.id} depends on claim {parent_claim_num}",
                 details_key="details.preambleNounMismatch",
-                details_params={"claim": str(claim.id), "parent": str(parent_claim_num)},
+                details_params={
+                    "claim": str(claim.id),
+                    "parent": str(parent_claim_num),
+                    "dependent": dep_noun,
+                    "independent": p_noun,
+                },
                 diagnostics={
                     "dep_head_charlen": len(dep_noun),
                     "parent_head_charlen": len(p_noun),

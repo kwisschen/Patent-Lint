@@ -229,6 +229,9 @@ class TestForwardMapsAreExhaustive:
         # Consumed into the US figures_sequential amend CheckItem's
         # details_params by _to_us_report_data; not a raw list on ReportData.
         "figures_missing",
+        # Consumed into the US abstract impliedPhrases CheckItem's
+        # details_params by _to_us_report_data; not a raw list on ReportData.
+        "abstract_implied_phrases",
     })
 
     def test_every_list_field_is_either_forwarded_or_documented(self):
