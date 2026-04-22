@@ -1212,6 +1212,11 @@
     "sentenceSeparator": "; ",
     "ellipsis": ", ..."
   },
+  "chip": {
+    "fromParagraph": "from paragraph {{n}}",
+    "fromClaim": "from claim {{n}}",
+    "more": "+{{n}} more"
+  },
   "terms": {
     "title": "Terms of Service",
     "lastUpdated": "Last updated: April 21, 2026",

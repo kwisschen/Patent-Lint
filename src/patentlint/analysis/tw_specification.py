@@ -135,7 +135,12 @@ def check_required_sections(doc: TwPatentDocument) -> list[CheckItem]:
             message_key="check.tw.spec.requiredSections.amend",
             details=", ".join(missing),
             details_key="details.tw.requiredSections",
-            details_params={"sections": ", ".join(missing)},
+            details_params={
+                "sections": ", ".join(missing),
+                "flagged_phrases": {
+                    "items": [{"kind": "section", "token": s} for s in missing]
+                },
+            },
             reference="專利法 §25 第1項、專利法施行細則 §17",
             diagnostics=_dx(
                 missing_count=len(missing),
