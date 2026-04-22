@@ -989,11 +989,16 @@ class TestSupplementaryIntrosF7c:
         assert "第一面板" in norms
 
     def test_post_de_reject_non_ordinal(self):
-        """凹入的底部 → NOT captured (no 第)."""
+        """凹入的底部 → 底部 captured by the broader F10 bare-modifier pass.
+
+        F7c itself rejects non-ordinal captures, but F10 emits it
+        independently because 底部 ends with a component-suffix (部). Safe:
+        extra intros only resolve references, never manufacture findings.
+        """
         text = "凹入的底部"
         intros = extract_introductions_tw(_claim(1, text))
         norms = [n for _, n in intros]
-        assert "底部" not in norms
+        assert "底部" in norms
 
     def test_post_de_reject_ref_between(self):
         """所述X的所述第Y → NOT captured (所述 between 的 and 第)."""
@@ -1188,3 +1193,98 @@ class TestSupplementaryIntrosF5b:
         intros = extract_introductions_tw(_claim(1, text))
         norms = [n for _, n in intros]
         assert norms.count("開口部") == 1
+
+
+class TestBugReportJPTranslatedCapAssembly:
+    """Regression test for a 2026-04-24 bug report.
+
+    JP-translated TW patent — "一種蓋組件" cap assembly claim — introduces
+    elements bare (without 一) via participial/locative possessive patterns:
+      - 配置在容器本體上部的開口部        → 容器本體 + 開口部
+      - 具有…突出的環狀的嵌合壁部         → 嵌合壁部
+      - 可彈性變形的嵌合部                → 嵌合部
+      - …外部連通的壓力調節閥             → 壓力調節閥
+      - …更硬質的基材                     → 基材
+
+    Reporter flagged 6 findings, one of which (前述壓力調節閥更硬質) was a
+    pure walker-extraction bug (更 leaked into the reference-noun greedy
+    capture). Fix adds 更 to _NOUN_CHARS exclusion plus F10 (bare-modifier
+    的NOUN intro, component-suffix-gated) and F11 (locative-possessive
+    bare-noun intro) so all six go clean.
+    """
+
+    _CLAIM_TEXT = (
+        "一種蓋組件，係可拆裝地安裝於配置在容器本體上部的開口部，具有螺接於前述"
+        "開口部的蓋體、以及配置於前述開口部內的密封構件，前述蓋體，具有插入前述"
+        "開口部內的內塞，前述密封構件，係安裝於前述內塞，前述內塞，具有從前述內"
+        "塞的下表面朝下側突出的環狀的嵌合壁部，前述密封構件，具有：跨全周接觸於"
+        "前述開口部的內周面的可彈性變形的環狀的止水墊圈；可拆裝地嵌合於前述嵌合"
+        "壁部的可彈性變形的嵌合部；配置於前述嵌合部的徑向內側，接觸於前述內塞的"
+        "下表面，且可彈性變形，並能通過前述內塞與前述密封構件之間使前述容器本體"
+        "的內部與外部連通的壓力調節閥；以及固定於前述嵌合部及前述壓力調節閥，且"
+        "比前述嵌合部及前述壓力調節閥更硬質的基材，係藉由單一的構件一體地形成。"
+    )
+
+    def test_no_antecedent_findings(self):
+        """All 6 reported references resolve — zero findings."""
+        from patentlint.analysis.tw_claims import check_antecedent_basis
+        from patentlint.models import (
+            Claim,
+            TwPatentDocument,
+            TwPatentType,
+        )
+
+        claim = Claim(
+            id=1,
+            text=self._CLAIM_TEXT,
+            dependencies=[],
+            independent=True,
+        )
+        doc = TwPatentDocument(
+            claims=[claim],
+            specification=[],
+            abstract=None,
+            drawings_description=[],
+            title="",
+            symbol_table=[],
+            cross_references=[],
+            background_paragraphs=[],
+            patent_type=TwPatentType.INVENTION,
+        )
+        findings = check_antecedent_basis(doc)
+        assert findings == [], (
+            f"Expected zero findings; got {len(findings)}: "
+            f"{[(f['reference_form'], f['term']) for f in findings]}"
+        )
+
+    def test_no_greedy_更_capture(self):
+        """前述壓力調節閥 must not greedily extend to 前述壓力調節閥更硬質."""
+        from patentlint.analysis.tw_claims import _REF_PATTERN_CAPTURE
+
+        captured = [m.group(0) for m in _REF_PATTERN_CAPTURE.finditer(
+            "比前述嵌合部及前述壓力調節閥更硬質的基材"
+        )]
+        assert "前述壓力調節閥" in captured
+        assert "前述壓力調節閥更硬質" not in captured
+
+    def test_bare_noun_intros_emitted(self):
+        """F10+F11 emit the 6 bare-noun intros the reporter relied on."""
+        from patentlint.analysis.tw_claims import extract_introductions_tw
+        from patentlint.models import Claim
+
+        claim = Claim(
+            id=1,
+            text=self._CLAIM_TEXT,
+            dependencies=[],
+            independent=True,
+        )
+        norms = {n for _, n in extract_introductions_tw(claim)}
+        for expected in (
+            "容器本體",
+            "開口部",
+            "嵌合壁部",
+            "嵌合部",
+            "壓力調節閥",
+            "基材",
+        ):
+            assert expected in norms, f"missing intro: {expected}"
