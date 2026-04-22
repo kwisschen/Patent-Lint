@@ -14,6 +14,14 @@ from typing import Any, Optional
 from pydantic import BaseModel, Field
 
 
+# Local copy of the structural-diagnostic helper (see
+# analysis/utils.py for authoritative docs). Duplicated inline to avoid
+# reaching into the analysis layer from the model layer and adding a new
+# import dependency in the Pyodide bundle entrypoint.
+def _dx(**kwargs: Any) -> dict[str, Any]:
+    return {k: v for k, v in kwargs.items() if v is not None}
+
+
 class Jurisdiction(str, Enum):
     """Patent jurisdiction for analysis routing."""
     US = "US"
@@ -484,6 +492,7 @@ class AnalysisResult(BaseModel):
                 status="amend",
                 message="Document contains tracked changes (revisions). Accept or reject all changes before filing.",
                 message_key="check.spec.trackedChanges.amend",
+                diagnostics=_dx(reason_code="tracked_changes_present"),
             ))
 
         if self.improper_spec_paragraphs:
@@ -494,6 +503,7 @@ class AnalysisResult(BaseModel):
                 details=f"Paragraphs: {self.improper_spec_paragraphs}",
                 details_key="details.restrictiveWordingSpec",
                 details_params={"list": str(self.improper_spec_paragraphs)},
+                diagnostics=_dx(flagged_paragraph_count=len(self.improper_spec_paragraphs)),
             ))
         else:
             spec_checks.append(CheckItem(
@@ -508,6 +518,7 @@ class AnalysisResult(BaseModel):
                 message="No paragraph numbering found in specification.",
                 message_key="check.spec.paragraphSequential.missing",
                 details_key="details.paragraphNumberingMissing",
+                diagnostics=_dx(reason_code="no_paragraph_numbering"),
             ))
         elif not self.paragraphs_sequential:
             spec_checks.append(CheckItem(
@@ -517,6 +528,10 @@ class AnalysisResult(BaseModel):
                 details=f"First gap at position {self.last_sequential_paragraph}",
                 details_key="details.firstGapParagraph",
                 details_params={"position": str(self.last_sequential_paragraph)},
+                diagnostics=_dx(
+                    first_gap_position=self.last_sequential_paragraph,
+                    total_paragraphs=self.paragraph_count,
+                ),
             ))
         else:
             spec_checks.append(CheckItem(
@@ -533,6 +548,10 @@ class AnalysisResult(BaseModel):
                 details=f"Paragraphs: {self.missing_ending_paragraphs}",
                 details_key="details.paragraphEnding",
                 details_params={"list": str(self.missing_ending_paragraphs)},
+                diagnostics=_dx(
+                    flagged_count=len(self.missing_ending_paragraphs),
+                    total_paragraphs=self.paragraph_count,
+                ),
             ))
         else:
             spec_checks.append(CheckItem(
@@ -547,6 +566,7 @@ class AnalysisResult(BaseModel):
                 message="SEQ ID NO referenced but no sequence listing statement found.",
                 message_key="check.spec.sequenceListing.amend",
                 details_key="details.sequenceListingFix",
+                diagnostics=_dx(reason_code="missing_sequence_statement"),
             ))
         else:
             spec_checks.append(CheckItem(
@@ -563,6 +583,7 @@ class AnalysisResult(BaseModel):
                 details=self.cross_reference_citations,
                 details_key="details.crossReferenceCitations",
                 details_params={"text": self.cross_reference_citations},
+                diagnostics=_dx(citation_charlen=len(self.cross_reference_citations)),
             ))
         else:
             spec_checks.append(CheckItem(
@@ -579,6 +600,7 @@ class AnalysisResult(BaseModel):
                 details=self.prior_art_citations,
                 details_key="details.priorArtCitations",
                 details_params={"text": self.prior_art_citations},
+                diagnostics=_dx(citation_charlen=len(self.prior_art_citations)),
             ))
         else:
             spec_checks.append(CheckItem(
@@ -604,6 +626,10 @@ class AnalysisResult(BaseModel):
             details=f"{self.figures_count} figure(s) found.",
             details_key="details.figureCount",
             details_params={"count": str(self.figures_count)},
+            diagnostics=_dx(
+                figure_count=self.figures_count,
+                has_drawing_issue=has_drawing_issue,
+            ) if has_drawing_issue else None,
         ))
 
         # --- Claims checks ---
@@ -617,6 +643,7 @@ class AnalysisResult(BaseModel):
                 details=f"Claims: {self.improper_claims}",
                 details_key="details.restrictiveWordingClaims",
                 details_params={"list": str(self.improper_claims)},
+                diagnostics=_dx(flagged_claim_count=len(self.improper_claims)),
             ))
         else:
             claims_checks.append(CheckItem(
@@ -633,6 +660,10 @@ class AnalysisResult(BaseModel):
                 details=f"First gap at position {self.last_sequential_claim}",
                 details_key="details.firstGapClaim",
                 details_params={"position": str(self.last_sequential_claim)},
+                diagnostics=_dx(
+                    first_gap_position=self.last_sequential_claim,
+                    total_claims=self.total_claims,
+                ),
             ))
         else:
             claims_checks.append(CheckItem(
@@ -649,6 +680,7 @@ class AnalysisResult(BaseModel):
                 details=f"Claims: {self.multiple_dependent_claims}",
                 details_key="details.multipleDependentClaims",
                 details_params={"list": str(self.multiple_dependent_claims)},
+                diagnostics=_dx(flagged_count=len(self.multiple_dependent_claims)),
             ))
         else:
             claims_checks.append(CheckItem(
@@ -665,6 +697,7 @@ class AnalysisResult(BaseModel):
                 details=f"Claims: {self.self_dependent_claims}",
                 details_key="details.selfDependentClaims",
                 details_params={"list": str(self.self_dependent_claims)},
+                diagnostics=_dx(flagged_count=len(self.self_dependent_claims)),
             ))
         else:
             claims_checks.append(CheckItem(
@@ -685,6 +718,7 @@ class AnalysisResult(BaseModel):
                 details=f"Claims: {self.means_plus_function_claims}",
                 details_key="details.meansFunctionClaims",
                 details_params={"list": str(self.means_plus_function_claims)},
+                diagnostics=_dx(flagged_count=len(self.means_plus_function_claims)),
             ))
         else:
             claims_checks.append(CheckItem(
@@ -703,6 +737,10 @@ class AnalysisResult(BaseModel):
                 details=f"{issue_count} issues across {claim_count} claims",
                 details_key="details.antecedentBasisTerms",
                 details_params={"count": str(issue_count), "claims": str(claim_count)},
+                diagnostics=_dx(
+                    issue_count=issue_count,
+                    claim_count=claim_count,
+                ),
             ))
         else:
             claims_checks.append(CheckItem(
@@ -733,6 +771,10 @@ class AnalysisResult(BaseModel):
                 details=f"Terms: {', '.join(unique_phrases[:10])}",
                 details_key="details.specSupportUnsupported",
                 details_params={"count": str(len(unique_phrases))},
+                diagnostics=_dx(
+                    unsupported_phrase_count=len(unique_phrases),
+                    total_findings=len(self.unsupported_terms),
+                ),
             ))
         else:
             claims_checks.append(CheckItem(
@@ -769,6 +811,9 @@ class AnalysisResult(BaseModel):
                 details=self.improper_abstract_phrases_formatted.strip(),
                 details_key="details.restrictiveWordingAbstract",
                 details_params={"text": self.improper_abstract_phrases_formatted.strip()},
+                diagnostics=_dx(
+                    flagged_phrases_charlen=len(self.improper_abstract_phrases_formatted),
+                ),
             ))
         else:
             abstract_checks.append(CheckItem(
@@ -783,6 +828,7 @@ class AnalysisResult(BaseModel):
                 message="Abstract has extra paragraphs or invalid ending.",
                 message_key="check.abstract.structure.amend",
                 details_key="details.abstractStructureFix",
+                diagnostics=_dx(reason_code="bad_structure"),
             ))
         else:
             abstract_checks.append(CheckItem(
@@ -797,6 +843,7 @@ class AnalysisResult(BaseModel):
                 message="Abstract contains implied phrases ('disclosure' or 'provided').",
                 message_key="check.abstract.impliedPhrases.amend",
                 details_key="details.abstractImpliedPhrasesFix",
+                diagnostics=_dx(reason_code="implied_phrase_detected"),
             ))
         else:
             abstract_checks.append(CheckItem(
@@ -812,6 +859,12 @@ class AnalysisResult(BaseModel):
                 message=f"Abstract word count ({wc}) is outside the 50\u2013150 range.",
                 message_key="check.abstract.wordCount.amend",
                 details_key="details.abstractWordCountFix",
+                diagnostics=_dx(
+                    word_count=wc,
+                    lower_threshold=50,
+                    upper_threshold=150,
+                    reason_code="below" if wc < 50 else "above",
+                ),
             ))
         else:
             abstract_checks.append(CheckItem(
@@ -829,6 +882,7 @@ class AnalysisResult(BaseModel):
                 message="Single-figure patent uses 'FIG. 1' instead of 'The Figure'.",
                 message_key="check.drawings.singleFigure.amend",
                 details_key="details.singleFigureFix",
+                diagnostics=_dx(reason_code="wrong_single_figure_label"),
             ))
         elif self.single_figure:
             drawings_checks.append(CheckItem(
@@ -843,6 +897,7 @@ class AnalysisResult(BaseModel):
                 message="Prior art references found in drawings description.",
                 message_key="check.drawings.priorArt.verify",
                 details_key="details.drawingsPriorArt",
+                diagnostics=_dx(reason_code="prior_art_reference_in_drawings"),
             ))
         else:
             drawings_checks.append(CheckItem(
@@ -858,6 +913,10 @@ class AnalysisResult(BaseModel):
                 message_key="check.drawings.sequential.amend",
                 details_key="details.figuresSequentialFix",
                 details_params={"figure_list": self.figures_missing},
+                diagnostics=_dx(
+                    missing_count=len(self.figures_missing) if self.figures_missing else 0,
+                    total_figures=self.figures_count,
+                ),
             ))
         else:
             drawings_checks.append(CheckItem(

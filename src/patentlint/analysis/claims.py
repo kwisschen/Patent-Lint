@@ -13,7 +13,7 @@ import snowballstemmer as _sb
 
 from patentlint.analysis.en_normalize import en_number_key
 from patentlint.analysis.utils import (
-    _DEFINITE_REF, _QUANTIFIER_STOPS,
+    _DEFINITE_REF, _QUANTIFIER_STOPS, _dx,
     extract_introductions, extract_introductions_permissive,
     extract_abbreviation_intros, clean_noun_phrase,
     strip_contextual_verb, token_set_jaccard,
@@ -853,6 +853,10 @@ def check_claim_transitions(claims: list[Claim]) -> list[CheckItem]:
                 details=f"Claim {claim.id} does not contain a recognized transitional phrase. Every claim must include a transitional phrase such as 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by', or 'characterized in that' between the preamble and the claim body.",
                 details_key="check.claims.missingTransitionDetails",
                 details_params={"claimNumber": str(claim.id)},
+                diagnostics=_dx(
+                    flagged_claim_id=claim.id,
+                    has_colon=":" in claim.text,
+                ),
             ))
 
     if not results:
@@ -929,6 +933,7 @@ def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
                 ),
                 details_key="claims.jepsonPriorArtDetails",
                 details_params={"claimNumber": str(claim.id)},
+                diagnostics=_dx(flagged_claim_id=claim.id),
             ))
 
         # 2. CRM non-transitory — independent only
@@ -950,6 +955,7 @@ def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
                     ),
                     details_key="claims.crmNonTransitoryDetails",
                     details_params={"claimNumber": str(claim.id)},
+                    diagnostics=_dx(flagged_claim_id=claim.id),
                 ))
 
         # 3. Markush — all claims
@@ -971,6 +977,10 @@ def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
                 ),
                 details_key="claims.markushOpenTransitionDetails",
                 details_params={"claimNumber": str(claim.id), "transition": transition},
+                diagnostics=_dx(
+                    flagged_claim_id=claim.id,
+                    transition=transition.lower(),
+                ),
             ))
 
         # 4. Omnibus — all claims, requires short text + omnibus language
@@ -989,6 +999,10 @@ def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
                 ),
                 details_key="claims.omnibusClaimDetails",
                 details_params={"claimNumber": str(claim.id)},
+                diagnostics=_dx(
+                    flagged_claim_id=claim.id,
+                    word_count=word_count,
+                ),
             ))
 
     if not results:
@@ -1015,7 +1029,14 @@ def check_claim_punctuation(claims: list[Claim]) -> list[CheckItem]:
 
     results: list[CheckItem] = []
 
+    # Pre-compute per-claim character lookups so fingerprints can carry
+    # the last-char codepoint (spots fullwidth vs halfwidth period
+    # confusion) without rescanning claims for every finding.
+    claim_text_by_id = {c.id: c.text.strip() for c in claims}
+
     for claim_id in find_missing_periods(claims):
+        text = claim_text_by_id.get(claim_id, "")
+        last_cp = ord(text[-1]) if text else None
         results.append(CheckItem(
             status="amend",
             message=f"Claim {claim_id} does not end with a period.",
@@ -1023,9 +1044,14 @@ def check_claim_punctuation(claims: list[Claim]) -> list[CheckItem]:
             details=f"Claim {claim_id} is missing its final period. Every claim must end with a single period per MPEP § 608.01(m).",
             details_key="claims.missingPeriodDetails",
             details_params={"claimNumber": str(claim_id)},
+            diagnostics=_dx(
+                flagged_claim_id=claim_id,
+                last_codepoint=last_cp,
+            ),
         ))
 
     for claim_id in find_extra_periods(claims):
+        text = claim_text_by_id.get(claim_id, "")
         results.append(CheckItem(
             status="amend",
             message=f"Claim {claim_id} contains extra or misplaced periods.",
@@ -1033,6 +1059,10 @@ def check_claim_punctuation(claims: list[Claim]) -> list[CheckItem]:
             details=f"Claim {claim_id} has periods in unexpected positions. A claim should contain only one period at the very end per MPEP § 608.01(m).",
             details_key="claims.extraPeriodDetails",
             details_params={"claimNumber": str(claim_id)},
+            diagnostics=_dx(
+                flagged_claim_id=claim_id,
+                period_count=text.count("."),
+            ),
         ))
 
     for claim_id in detect_incorrect_wherein_commas(claims):
@@ -1043,6 +1073,7 @@ def check_claim_punctuation(claims: list[Claim]) -> list[CheckItem]:
             details=f"Claim {claim_id} may have incorrect comma placement around a 'wherein' clause. Review punctuation per MPEP § 608.01(m).",
             details_key="claims.whereinCommaDetails",
             details_params={"claimNumber": str(claim_id)},
+            diagnostics=_dx(flagged_claim_id=claim_id),
         ))
 
     if not results:

@@ -13,6 +13,7 @@ from typing import Any
 
 from patentlint.analysis.cjk_ordinal_guard import ordinal_guard
 from patentlint.analysis.cjk_tokenize import jaccard, tokenize_tw
+from patentlint.analysis.utils import _dx
 from patentlint.analysis.connection_relationships import (
     _TW_CONNECTION_CONFIG,
     check_connection_relationships,
@@ -337,6 +338,11 @@ def check_claims_sequential(doc: TwPatentDocument) -> list[CheckItem]:
                 details_key="details.tw.claimsSequential",
                 details_params={"expected": expected, "found": claim.id},
                 reference="專利審查基準",
+                diagnostics=_dx(
+                    expected_id=expected,
+                    found_id=claim.id,
+                    total_claims=len(claims),
+                ),
             )]
 
     return [CheckItem(
@@ -376,6 +382,10 @@ def check_dependency_format(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.dependencyFormat",
             details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="專利法施行細則 §18",
+            diagnostics=_dx(
+                flagged_count=len(bad_claim_ids),
+                total_dependents=len(dependents),
+            ),
         )]
 
     return [CheckItem(
@@ -403,6 +413,10 @@ def check_self_dependent(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.selfDependent",
             details_params={"claims": bad},
             reference="專利法施行細則 §18",
+            diagnostics=_dx(
+                flagged_count=len(bad),
+                total_claims=len(doc.claims),
+            ),
         )]
 
     return [CheckItem(
@@ -448,6 +462,10 @@ def check_circular_dependency(doc: TwPatentDocument) -> list[CheckItem]:
                     details_key="details.tw.circularDependency",
                     details_params={"claims": claims_str},
                     reference="專利法施行細則 §18",
+                    diagnostics=_dx(
+                        cycle_length=len(cycle),
+                        total_claims=len(doc.claims),
+                    ),
                 )]
 
     return [CheckItem(
@@ -474,6 +492,10 @@ def check_forward_dependency(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.forwardDependency",
             details_params={"claims": bad},
             reference="專利法施行細則 §18",
+            diagnostics=_dx(
+                flagged_count=len(bad),
+                total_claims=len(doc.claims),
+            ),
         )]
 
     return [CheckItem(
@@ -499,13 +521,23 @@ def check_single_sentence(doc: TwPatentDocument) -> list[CheckItem]:
     """
     missing_period: list[int] = []
     multi_sentence: list[int] = []
+    # Track last-codepoint per flagged claim so the fingerprint reveals
+    # full-width/half-width punctuation variants (e.g. ， U+FF0C vs . U+002E)
+    # without surfacing the claim text itself.
+    sample_missing_codepoint: int | None = None
+    sample_multi_codepoint: int | None = None
     for claim in doc.claims:
         text = claim.text.strip()
         period_count = text.count("。")
+        last_cp = ord(text[-1]) if text else None
         if period_count == 0:
             missing_period.append(claim.id)
+            if sample_missing_codepoint is None and last_cp is not None:
+                sample_missing_codepoint = last_cp
         elif period_count > 1 or not text.endswith("。"):
             multi_sentence.append(claim.id)
+            if sample_multi_codepoint is None and last_cp is not None:
+                sample_multi_codepoint = last_cp
 
     items: list[CheckItem] = []
     if missing_period:
@@ -518,6 +550,11 @@ def check_single_sentence(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.singleSentenceMissingPeriod",
             details_params={"count": len(missing_period), "claims": missing_period},
             reference="專利法施行細則 §18",
+            diagnostics=_dx(
+                flagged_count=len(missing_period),
+                total_claims=len(doc.claims),
+                sample_last_codepoint=sample_missing_codepoint,
+            ),
         ))
     if multi_sentence:
         claims_str = ", ".join(str(i) for i in multi_sentence)
@@ -529,6 +566,11 @@ def check_single_sentence(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.singleSentenceMultiSentence",
             details_params={"count": len(multi_sentence), "claims": multi_sentence},
             reference="專利法施行細則 §18",
+            diagnostics=_dx(
+                flagged_count=len(multi_sentence),
+                total_claims=len(doc.claims),
+                sample_last_codepoint=sample_multi_codepoint,
+            ),
         ))
     if items:
         return items
@@ -561,6 +603,10 @@ def check_ref_numeral_parens(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.refNumeralParens",
             details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="專利法施行細則 §19",
+            diagnostics=_dx(
+                flagged_count=len(bad_claim_ids),
+                total_claims=len(doc.claims),
+            ),
         )]
 
     return [CheckItem(
@@ -708,6 +754,10 @@ def check_transition_phrase(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.transitionPhrase",
             details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="專利法施行細則 §20",
+            diagnostics=_dx(
+                flagged_count=len(bad_claim_ids),
+                total_independent=len(independents),
+            ),
         )]
 
     return [CheckItem(
@@ -738,6 +788,10 @@ def check_cn_terminology(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.cnTerminology",
             details_params={"detail": ", ".join(found)},
             reference=None,
+            diagnostics=_dx(
+                hit_count=len(found),
+                total_terms_scanned=len(_CNIPA_TERMS),
+            ),
         )]
 
     return [CheckItem(
@@ -772,6 +826,10 @@ def check_spec_drawing_ref(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.specDrawingRef",
             details_params={"detail": detail},
             reference="專利法施行細則 §19",
+            diagnostics=_dx(
+                hit_count=len(found_refs),
+                unique_patterns=len(set(found_refs)),
+            ),
         )]
 
     return [CheckItem(
@@ -829,6 +887,10 @@ def check_multi_dep_on_multi_dep(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.multiDepOnMultiDep",
             details_params={"claims": bad},
             reference="專利法施行細則 §18",
+            diagnostics=_dx(
+                flagged_count=len(bad),
+                total_multi_dep=len(multi_dep_ids),
+            ),
         )]
 
     return [CheckItem(
@@ -868,6 +930,10 @@ def check_multi_dep_alternative(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.multiDepAlternative",
             details_params={"claims": bad},
             reference="專利法施行細則 §18",
+            diagnostics=_dx(
+                flagged_count=len(bad),
+                total_multi_dep=len(multi_deps),
+            ),
         )]
 
     return [CheckItem(
@@ -933,6 +999,11 @@ def check_title_subject_match(doc: TwPatentDocument) -> list[CheckItem]:
         details_key="details.tw.titleSubjectMatch",
         details_params={"title": doc.title, "subjects": subjects_str},
         reference="專利審查基準",
+        diagnostics=_dx(
+            title_charlen=len(title_norm),
+            subject_count=len(subjects),
+            total_independent=len(independents),
+        ),
     )]
 
 
@@ -1014,6 +1085,11 @@ def check_claims_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckIt
             details_key="details.tw.claims.symbolTableConsistency.missingFromTable",
             details_params={"numerals_with_locations": numerals_with_locations},
             reference="專利法施行細則 §19",
+            diagnostics=_dx(
+                missing_count=len(missing_numerals),
+                total_claim_numerals=len(claim_numerals),
+                total_symbol_numerals=len(symbol_numerals),
+            ),
         )]
 
     return [CheckItem(

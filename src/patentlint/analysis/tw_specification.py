@@ -11,6 +11,7 @@ from __future__ import annotations
 import re
 
 from patentlint.analysis.figure_refs import TW_PARSER
+from patentlint.analysis.utils import _dx
 from patentlint.models import CheckItem, TwPatentDocument, TwPatentType
 
 # Canonical section order per 專利法施行細則 §17
@@ -136,6 +137,9 @@ def check_required_sections(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.requiredSections",
             details_params={"sections": ", ".join(missing)},
             reference="專利法 §25 第1項、專利法施行細則 §17",
+            diagnostics=_dx(
+                missing_count=len(missing),
+            ),
         )]
     return [CheckItem(
         status="pass",
@@ -170,6 +174,9 @@ def check_section_ordering(doc: TwPatentDocument) -> list[CheckItem]:
             message_key="check.tw.spec.sectionOrdering.amend",
             details_key="details.tw.sectionOrdering",
             reference="專利法施行細則 §17",
+            diagnostics=_dx(
+                sections_seen=len(indices),
+            ),
         )]
     return [CheckItem(
         status="pass",
@@ -213,6 +220,10 @@ def check_paragraph_numbering(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.paragraphNumbering",
             details_params={"count": len(bad_format), "examples": examples_str},
             reference="專利法施行細則 §17",
+            diagnostics=_dx(
+                flagged_count=len(bad_format),
+                total_paragraphs=len(nums),
+            ),
         )]
 
     # Check sequential
@@ -226,6 +237,10 @@ def check_paragraph_numbering(doc: TwPatentDocument) -> list[CheckItem]:
                 details_key="details.tw.paragraphNumbering",
                 details_params={"prev": nums[i - 1], "next": nums[i]},
                 reference="專利法施行細則 §17",
+                diagnostics=_dx(
+                    gap_size=int_nums[i] - int_nums[i - 1],
+                    total_paragraphs=len(nums),
+                ),
             )]
 
     return [CheckItem(
@@ -363,6 +378,10 @@ def check_paragraph_ending(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.paragraphEnding",
             details_params={"count": len(bad_paragraphs), "paragraphs": bad_paragraphs},
             reference="專利審查基準",
+            diagnostics=_dx(
+                flagged_count=len(bad_paragraphs),
+                total_paragraphs_scanned=ordinal,
+            ),
         )]
     return [CheckItem(
         status="pass",
@@ -420,6 +439,12 @@ def check_figure_ref_consistency(doc: TwPatentDocument) -> list[CheckItem]:
                 },
             },
             reference="專利審查基準",
+            diagnostics=_dx(
+                only_drawings_count=len(only_drawings),
+                only_embodiment_count=len(only_embodiment),
+                total_drawings=len(drawings_parents),
+                total_embodiment=len(embodiment_parents),
+            ),
         )]
 
     return [CheckItem(
@@ -447,6 +472,10 @@ def check_patent_type_terminology(doc: TwPatentDocument) -> list[CheckItem]:
                 details_key="details.tw.patentTypeTerminology",
                 details_params={"term": "本新型"},
                 reference="專利審查基準",
+                diagnostics=_dx(
+                    patent_type="invention",
+                    mismatched_term_codepoint=ord("本"),
+                ),
             )]
     elif doc.patent_type == TwPatentType.UTILITY_MODEL:
         if "本發明" in text:
@@ -458,6 +487,10 @@ def check_patent_type_terminology(doc: TwPatentDocument) -> list[CheckItem]:
                 details_key="details.tw.patentTypeTerminology",
                 details_params={"term": "本發明"},
                 reference="專利審查基準",
+                diagnostics=_dx(
+                    patent_type="utility_model",
+                    mismatched_term_codepoint=ord("本"),
+                ),
             )]
 
     return [CheckItem(
@@ -482,6 +515,10 @@ def check_title(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.titleMissing",
             details="",
             reference="專利審查基準",
+            diagnostics=_dx(
+                reason_code="missing",
+                title_charlen=0,
+            ),
         )]
 
     items: list[dict] = []
@@ -500,6 +537,11 @@ def check_title(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.title",
             details_params={"title_prohibited_items": {"items": items}},
             reference="專利審查基準",
+            diagnostics=_dx(
+                reason_code="prohibited_content",
+                flagged_count=len(items),
+                title_charlen=len(title),
+            ),
         )]
 
     return [CheckItem(
@@ -528,6 +570,9 @@ def check_spec_claim_reference(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.claimReference",
             details_params={"detail": snippet},
             reference="專利法施行細則 §17",
+            diagnostics=_dx(
+                hit_count=1,
+            ),
         )]
 
     return [CheckItem(
@@ -550,6 +595,9 @@ def check_symbol_table_presence(doc: TwPatentDocument) -> list[CheckItem]:
             message_key="check.tw.spec.symbolTablePresence.amend",
             details_key="details.tw.symbolTablePresence",
             reference="專利法施行細則 §17",
+            diagnostics=_dx(
+                reason_code="missing_with_drawings_present",
+            ),
         )]
 
     return [CheckItem(
@@ -611,6 +659,11 @@ def check_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckItem]:
                 },
             },
             reference="專利審查基準",
+            diagnostics=_dx(
+                unreferenced_count=len(unreferenced),
+                undefined_count=len(undefined),
+                total_table_entries=len(doc.symbol_table),
+            ),
         )]
 
     return [CheckItem(
