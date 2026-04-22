@@ -430,6 +430,20 @@ class TestCnTerminology:
         assert "权利要求" in result[0].details_params["detail"]
         assert "背景技术" in result[0].details_params["detail"]
 
+    def test_flagged_phrases_items_surfaced(self):
+        """Verify the FlaggedTermList chip payload is emitted alongside the
+        legacy `detail` string — chips render the detected terms in the UI."""
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，如权利要求1所述，背景技术中提及。"),
+        ])
+        result = check_cn_terminology(doc)
+        items = result[0].details_params.get("flagged_phrases", {}).get("items", [])
+        tokens = [i["token"] for i in items]
+        assert "权利要求" in tokens
+        assert "背景技术" in tokens
+        for item in items:
+            assert item["kind"] == "term"
+
     def test_reference_is_none(self):
         doc = _make_doc(claims=[
             _claim(1, "1. 一種裝置。"),
@@ -484,6 +498,20 @@ class TestSpecDrawingRef:
         ])
         result = check_spec_drawing_ref(doc)
         assert result[0].status == "amend"
+
+    def test_flagged_phrases_items_surfaced(self):
+        """Matched spec/drawing reference tokens are surfaced as
+        FlaggedTermList chips (TW + CN uses the same chip-payload shape)."""
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，如圖1所示且如說明書所述。"),
+        ])
+        result = check_spec_drawing_ref(doc)
+        items = result[0].details_params.get("flagged_phrases", {}).get("items", [])
+        tokens = [i["token"] for i in items]
+        assert "如圖1所示" in tokens
+        assert "如說明書所述" in tokens
+        for item in items:
+            assert item["kind"] == "reference"
 
     def test_no_claims_pass(self):
         doc = _make_doc(claims=[])

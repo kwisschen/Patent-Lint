@@ -532,18 +532,34 @@ _TW_TERMS = re.compile(r"请求项|請求項")
 
 def check_tw_terminology(cn_doc: CnPatentDocument) -> list[CheckItem]:
     """Scan claims for Taiwan-specific terminology."""
+    hits: list[tuple[int, str]] = []
+    seen: set[tuple[int, str]] = set()
     for claim in cn_doc.claims:
-        if _TW_TERMS.search(claim.text):
-            return [CheckItem(
-                status="verify",
-                message="Taiwan-specific terminology found in claims.",
-                message_key="check.cn.claims.twTerminology.verify",
-                details_key="details.cn.twTerminology",
-                reference="",
-                diagnostics=_dx(
-                    flagged_claim_id=claim.id,
-                ),
-            )]
+        for m in _TW_TERMS.finditer(claim.text):
+            token = m.group(0)
+            key = (claim.id, token)
+            if key in seen:
+                continue
+            seen.add(key)
+            hits.append((claim.id, token))
+
+    if hits:
+        return [CheckItem(
+            status="verify",
+            message="Taiwan-specific terminology found in claims.",
+            message_key="check.cn.claims.twTerminology.verify",
+            details_key="details.cn.twTerminology",
+            details_params={
+                "flagged_phrases": {
+                    "items": [{"kind": "term", "token": token, "location": cid} for cid, token in hits]
+                },
+            },
+            reference="",
+            diagnostics=_dx(
+                flagged_claim_id=hits[0][0],
+                hit_count=len(hits),
+            ),
+        )]
 
     return [CheckItem(
         status="pass",
@@ -561,9 +577,18 @@ _SPEC_REF = re.compile(r"如说明书|如图|参见说明书|参见图|参照说
 def check_claims_spec_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
     """Check if claims reference the specification or drawings for scope."""
     bad_claim_ids: list[int] = []
+    ref_hits: list[tuple[int, str]] = []
+    seen: set[tuple[int, str]] = set()
     for claim in cn_doc.claims:
-        if _SPEC_REF.search(claim.text):
-            bad_claim_ids.append(claim.id)
+        for m in _SPEC_REF.finditer(claim.text):
+            token = m.group(0)
+            key = (claim.id, token)
+            if key in seen:
+                continue
+            seen.add(key)
+            ref_hits.append((claim.id, token))
+            if claim.id not in bad_claim_ids:
+                bad_claim_ids.append(claim.id)
 
     if bad_claim_ids:
         bad_claim_ids = _dedupe_claim_ids(bad_claim_ids)
@@ -574,11 +599,18 @@ def check_claims_spec_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
             message_key="check.cn.claims.specReference.amend",
             details=f"{len(bad_claim_ids)} claims",
             details_key="details.cn.claimsSpecReference",
-            details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
+            details_params={
+                "count": len(bad_claim_ids),
+                "claims": bad_claim_ids,
+                "flagged_phrases": {
+                    "items": [{"kind": "reference", "token": token, "location": cid} for cid, token in ref_hits]
+                },
+            },
             reference="审查指南 第二部分第二章",
             diagnostics=_dx(
                 flagged_count=len(bad_claim_ids),
                 total_claims=len(cn_doc.claims),
+                hit_count=len(ref_hits),
             ),
         )]
 

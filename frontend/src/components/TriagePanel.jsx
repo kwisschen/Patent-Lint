@@ -9,6 +9,7 @@ import { formatDetails } from '../lib/detailsFormatter'
 import { composeFeedback } from '../lib/feedback'
 import { useFeedback } from './FeedbackPicker'
 import { Button } from './ui/button'
+import FlaggedTermList from './FlaggedTermList'
 
 const GROUP_CONFIG = [
   { status: 'amend', titleKey: 'triage.amend', emptyKey: 'triage.amendEmpty', Icon: AlertCircle },
@@ -55,6 +56,13 @@ function TriageItem({ check, t, i18n, compact, jurisdiction }) {
       )}
       <div className="min-w-0 flex-1">
         <span className="text-sm">{msg}</span>
+        {!compact && check.details_params?.flagged_phrases?.items?.length > 0 && (
+          <FlaggedTermList
+            items={check.details_params.flagged_phrases.items}
+            status={check.status}
+            className="mt-0.5"
+          />
+        )}
         {!compact && details && (
           <p className="text-xs text-muted-foreground mt-0.5">
             {details}

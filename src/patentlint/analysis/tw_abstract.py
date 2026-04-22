@@ -125,7 +125,12 @@ def check_commercial_language(doc: TwPatentDocument) -> list[CheckItem]:
             message_key="check.tw.abstract.commercialLanguage.amend",
             details=terms_str,
             details_key="details.tw.commercialLanguage",
-            details_params={"terms": terms_str},
+            details_params={
+                "terms": terms_str,
+                "flagged_phrases": {
+                    "items": [{"kind": "phrase", "token": t} for t in found]
+                },
+            },
             reference="專利法施行細則 §21",
             diagnostics=_dx(
                 hit_count=len(found),
