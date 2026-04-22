@@ -6,6 +6,7 @@ from patentlint.analysis.abstract import (
     count_words,
     is_single_paragraph_and_final,
     has_implied_phrase,
+    detect_implied_phrases,
     detect_improper_wording,
 )
 
@@ -49,6 +50,32 @@ class TestImpliedPhrase:
 
     def test_clean(self):
         assert has_implied_phrase("A method for processing data includes steps A and B.") is False
+
+
+class TestDetectImpliedPhrases:
+    """detect_implied_phrases surfaces the actual matched tokens so the
+    UI can show users WHICH phrase triggered the finding."""
+
+    def test_is_provided(self):
+        assert detect_implied_phrases("A method is provided for processing.") == ["is provided"]
+
+    def test_are_provided(self):
+        assert detect_implied_phrases("Several improvements are provided herein.") == ["are provided"]
+
+    def test_disclosure(self):
+        assert detect_implied_phrases("This disclosure relates to widgets.") == ["disclosure"]
+
+    def test_multiple(self):
+        # "A disclosure is provided for..." → both trigger
+        phrases = detect_implied_phrases("A disclosure is provided for processing.")
+        assert "is provided" in phrases
+        assert "disclosure" in phrases
+
+    def test_clean(self):
+        assert detect_implied_phrases("A method for processing data includes steps A and B.") == []
+
+    def test_empty_input(self):
+        assert detect_implied_phrases("") == []
 
 
 class TestImproperWording:
