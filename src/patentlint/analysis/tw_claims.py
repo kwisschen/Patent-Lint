@@ -9,6 +9,7 @@ against TIPO rules (專利法施行細則 and 專利審查基準).
 from __future__ import annotations
 
 import re
+from typing import Any
 
 from patentlint.analysis.cjk_ordinal_guard import ordinal_guard
 from patentlint.analysis.cjk_tokenize import jaccard, tokenize_tw
@@ -237,7 +238,9 @@ _DEP_PREFIX_RE = re.compile(
     r"\s*" + _DEP_PREAMBLE_CONNECTIVE
 )
 _INDEP_PREFIX_RE = re.compile(r"^(?:一種|一個)\s*")
-_SUBJECT_END_RE = re.compile(r"(?:[，,]|其特徵在於|其改良在於|其中)")
+# Subject-end boundary: any clause/sentence terminator stops extraction so
+# a realistic claim preamble (with trailing 。 or ；) yields a clean subject.
+_SUBJECT_END_RE = re.compile(r"(?:[，,；。]|其特徵在於|其改良在於|其中)")
 
 # Leading quantifier for normalization
 _LEADING_QUANTIFIER = re.compile(r"^(?:一種|一個|該|所述|所述的)\s*")
@@ -257,27 +260,52 @@ _TRANSITION_PHRASES = (
 _SPEC_REF = re.compile(r"如說明書|如圖|參見說明書|參見圖|參照說明書|參照附圖|如圖所示")
 
 
-def _extract_subject(claim_text: str) -> str:
-    """Extract subject matter from claim preamble.
+def _extract_subject_with_path(claim_text: str) -> tuple[str, str]:
+    """Extract subject matter + provenance tag.
 
-    Dependent-claim preambles like 如請求項1所述的X are anchored at the
-    start of the claim so that body-text occurrences of 所述的 inside an
-    independent claim do not hijack the extraction. Independent-claim
-    preambles (一種X / 一個X) fall through to the anchored independent
-    prefix path; both paths then read the noun phrase up to the first
-    comma / 其中 / 其特徵在於 boundary.
+    Returns (subject_text, extraction_path) where path is one of:
+      - ``"dep_prefix"``   — matched `_DEP_PREFIX_RE` (clean dep preamble)
+      - ``"indep_prefix"`` — matched `_INDEP_PREFIX_RE` (clean indep preamble)
+      - ``"fallthrough"``  — no recognized preamble, returned raw text
+
+    Subject-consistency callers use the path tag to distinguish walker
+    parse failures (``fallthrough``) from genuine drafter-level subject
+    mismatches. The path tag is also surfaced as a diagnostic fingerprint
+    in error-report emails so walker regex gaps are self-identifying
+    without any claim content leaving the device.
     """
     text = re.sub(r"^\s*\d+\s*[.．]\s*", "", claim_text).strip()
     dep_m = _DEP_PREFIX_RE.match(text)
     if dep_m:
         remainder = text[dep_m.end():]
         end_m = _SUBJECT_END_RE.search(remainder)
-        return (remainder[:end_m.start()] if end_m else remainder).strip()
+        return (
+            (remainder[:end_m.start()] if end_m else remainder).strip(),
+            "dep_prefix",
+        )
     indep_m = _INDEP_PREFIX_RE.match(text)
     if indep_m:
-        text = text[indep_m.end():]
+        body = text[indep_m.end():]
+        end_m = _SUBJECT_END_RE.search(body)
+        return (
+            (body[:end_m.start()] if end_m else body).strip(),
+            "indep_prefix",
+        )
     end_m = _SUBJECT_END_RE.search(text)
-    return (text[:end_m.start()] if end_m else text).strip()
+    return (
+        (text[:end_m.start()] if end_m else text).strip(),
+        "fallthrough",
+    )
+
+
+def _extract_subject(claim_text: str) -> str:
+    """Back-compat wrapper — returns just the subject text.
+
+    New callers should prefer ``_extract_subject_with_path`` so they can
+    distinguish fall-through parse failures from clean extractions.
+    """
+    subject, _path = _extract_subject_with_path(claim_text)
+    return subject
 
 
 def _normalize_subject(subject: str) -> str:
@@ -547,7 +575,20 @@ def check_ref_numeral_parens(doc: TwPatentDocument) -> list[CheckItem]:
 
 
 def check_subject_consistency(doc: TwPatentDocument) -> list[CheckItem]:
-    """Check dependent claim subject matter matches parent claim subject matter."""
+    """Check dependent claim subject matter matches parent claim subject matter.
+
+    Emits two distinct finding categories per ADR-145 (check-split for
+    parse-failure vs genuine-violation):
+
+      * ``verify`` — both claim preambles parsed cleanly, subjects differ.
+      * ``parseUnclear`` — at least one preamble didn't match any recognized
+        form. This is a walker parse limit, not a drafter error. Typically
+        surfaces on JP-translated drafts with unrecognized preamble forms.
+
+    Each non-pass finding carries a ``diagnostics`` dict with structural
+    fingerprints (path tag, char lengths, connective form) so error-report
+    emails can identify which code path fired without leaking content.
+    """
     claims_by_id = {c.id: c for c in doc.claims}
     dependents = [c for c in doc.claims if not c.independent]
 
@@ -559,7 +600,13 @@ def check_subject_consistency(doc: TwPatentDocument) -> list[CheckItem]:
             reference="專利審查基準",
         )]
 
-    bad_claim_ids: list[int] = []
+    mismatch_ids: list[int] = []
+    unclear_ids: list[int] = []
+    # Accumulate per-category diagnostic samples — one representative
+    # fingerprint per category, compact enough for the email payload.
+    mismatch_fp: dict[str, Any] | None = None
+    unclear_fp: dict[str, Any] | None = None
+
     for claim in dependents:
         if not claim.dependencies:
             continue
@@ -568,23 +615,61 @@ def check_subject_consistency(doc: TwPatentDocument) -> list[CheckItem]:
         if not parent:
             continue
 
-        dep_subject = _normalize_subject(_extract_subject(claim.text))
-        parent_subject = _normalize_subject(_extract_subject(parent.text))
+        dep_raw, dep_path = _extract_subject_with_path(claim.text)
+        parent_raw, parent_path = _extract_subject_with_path(parent.text)
+        dep_subject = _normalize_subject(dep_raw)
+        parent_subject = _normalize_subject(parent_raw)
+
+        # Parse-failure category: one side couldn't be resolved to a clean
+        # preamble shape. Emit parseUnclear instead of verify.
+        if dep_path == "fallthrough" or parent_path == "fallthrough":
+            unclear_ids.append(claim.id)
+            if unclear_fp is None:
+                unclear_fp = {
+                    "dep_path": dep_path,
+                    "parent_path": parent_path,
+                    "dep_subject_charlen": len(dep_subject),
+                    "parent_subject_charlen": len(parent_subject),
+                }
+            continue
 
         if dep_subject and parent_subject and dep_subject != parent_subject:
-            bad_claim_ids.append(claim.id)
+            mismatch_ids.append(claim.id)
+            if mismatch_fp is None:
+                mismatch_fp = {
+                    "dep_path": dep_path,
+                    "parent_path": parent_path,
+                    "dep_subject_charlen": len(dep_subject),
+                    "parent_subject_charlen": len(parent_subject),
+                }
 
-    if bad_claim_ids:
-        claims_str = ", ".join(str(i) for i in bad_claim_ids)
-        return [CheckItem(
+    results: list[CheckItem] = []
+    if mismatch_ids:
+        claims_str = ", ".join(str(i) for i in mismatch_ids)
+        results.append(CheckItem(
             status="verify",
-            message=f"{len(bad_claim_ids)} dependent claim(s) with inconsistent subject matter (claims: {claims_str}).",
+            message=f"{len(mismatch_ids)} dependent claim(s) with inconsistent subject matter (claims: {claims_str}).",
             message_key="check.tw.claims.subjectConsistency.verify",
-            details=f"{len(bad_claim_ids)} claims",
+            details=f"{len(mismatch_ids)} claims",
             details_key="details.tw.subjectConsistency",
-            details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
+            details_params={"count": len(mismatch_ids), "claims": mismatch_ids},
             reference="專利審查基準",
-        )]
+            diagnostics=mismatch_fp,
+        ))
+    if unclear_ids:
+        claims_str = ", ".join(str(i) for i in unclear_ids)
+        results.append(CheckItem(
+            status="verify",
+            message=f"{len(unclear_ids)} dependent claim(s) with an unrecognized preamble — couldn't verify subject consistency (claims: {claims_str}).",
+            message_key="check.tw.claims.subjectConsistencyParseUnclear",
+            details=f"{len(unclear_ids)} claims",
+            details_key="details.tw.subjectConsistencyParseUnclear",
+            details_params={"count": len(unclear_ids), "claims": unclear_ids},
+            reference="專利審查基準",
+            diagnostics=unclear_fp,
+        ))
+    if results:
+        return results
 
     return [CheckItem(
         status="pass",

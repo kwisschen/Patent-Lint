@@ -177,7 +177,8 @@
       "fieldJurisdiction": "Region",
       "fieldBrowser": "Browser",
       "fieldLocale": "Language",
-      "fieldBuild": "Build"
+      "fieldBuild": "Build",
+      "diagnosticHeader": "Diagnostic fingerprint (structural metadata, no claim content — see Privacy §7):"
     }
   },
   "cta": {
@@ -557,6 +558,7 @@
     "preambleNounMismatch": "Claim {{claim}} depends on claim {{parent}}. The preamble nouns differ but may be acceptable if they refer to the same entity. Verify consistency.",
     "preambleNounMismatchSummary": "Claim {{rootId}} uses parent noun '{{parent}}'; {{count}} dependent claim(s) use '{{dependent}}'. Verify whether these refer to the same entity or align the preamble nouns.",
     "preambleIndefiniteArticle": "Claim {{claim}} depends on claim {{parent}}. Dependent claims must use the definite article \"The\" to refer back to the independent claim entity, not \"A\" or \"An.\"",
+    "preambleParseUnclear": "Claims: {{claims}}. The walker couldn't parse these dependent-claim preambles. MPEP § 608.01(n) compliant forms include: 'The X of claim N', 'The X according to claim N', 'The X as in claim N', 'The X as claimed in claim N', 'The X as recited in claim N', 'The X as set forth in claim N'. Verify manually, or report a bug if the preamble uses a standard MPEP form we haven't recognized.",
     "singleFigureFix": "Replace all instances of \"FIG. 1\" with \"The Figure\" or \"the drawing\" per MPEP § 608.02.",
     "drawingsPriorArt": "Figures depicting prior art must be designated with the legend \"Prior Art\" per MPEP § 608.02(g). Verify each prior art figure is correctly labeled.",
     "figuresSequentialFix": "Renumber figures in ascending order per MPEP § 608.02.",
@@ -583,7 +585,8 @@
       "forwardDependency": "Per 专利法实施细则 §22, dependent claims must only reference preceding claims. Change the dependency to reference an earlier claim.",
       "singleSentence": "Per 审查指南 第二部分第二章, each claim must be a single sentence ending with one 。. Remove mid-claim periods or restructure into separate claims.",
       "refNumeralParens": "Per 审查指南, reference numerals in claims should be enclosed in parentheses, e.g., (101) not 101. Verify the flagged claims.",
-      "subjectConsistency": "Per 审查指南 第二部分第二章, the subject matter (主题名称) of a dependent claim should match its parent claim's subject matter. Verify the flagged claims.",
+      "subjectConsistency": "Per 审查指南 第二部分第二章, the subject matter (主题名称) of a dependent claim should match its parent claim's subject matter. Recognized preamble forms: 如权利要求N所述[的]X, 如权利要求N所记载[的]X, 如权利要求N[的]X. Verify the flagged claims.",
+      "subjectConsistencyParseUnclear": "These dependent claims use a preamble form the walker doesn't recognize. Accepted forms per 专利法实施细则 §22 include: 如权利要求N所述[的]X, 如权利要求N所记载[的]X, 如权利要求N[的]X. Verify manually, or report a bug if your preamble is CNIPA-compliant.",
       "transitionPhrase": "Per 审查指南, independent claims should contain a characterizing transition such as '其特征在于' to delineate known elements from novel features. Verify the flagged claims.",
       "twTerminology": "CNIPA uses '权利要求' for claims. '请求项' is Taiwan (TIPO) patent terminology. Replace all instances for CNIPA filing.",
       "claimsSpecReference": "Per 审查指南 第二部分第二章, claims must not use '如说明书……所述' or '如图……所示' to define their scope. Claims must be self-contained. Remove these references.",
@@ -625,7 +628,8 @@
       "forwardDependency": "Per 專利法施行細則 §18, dependent claims must only reference preceding claims. Forward references: {{claims}}.",
       "singleSentence": "Per 專利法施行細則 §18, each claim must be one sentence with exactly one 。 at the end. Review flagged claims.",
       "refNumeralParens": "Per 專利法施行細則 §19, reference numerals in claims should be enclosed in parentheses, e.g., (101). Review flagged claims.",
-      "subjectConsistency": "Dependent claim subject matter should match the parent claim's subject matter. Review flagged claims.",
+      "subjectConsistency": "Dependent claim subject matter should match the parent claim's subject matter. Recognized preamble forms: 如請求項N所述[之的]X, 如請求項N所記載[之的]X, 如請求項N[之的]X. Review flagged claims.",
+      "subjectConsistencyParseUnclear": "These dependent claims use a preamble form the walker doesn't recognize. Accepted forms per 專利法施行細則 §18 include: 如請求項N所述[之的]X, 如請求項N所記載[之的]X, 如請求項N[之的]X. Verify manually, or report a bug if your preamble is TIPO-compliant.",
       "transitionPhrase": "Per 專利法施行細則 §20, independent claims should contain a transitional phrase such as 其特徵在於 or 其改良在於. Review flagged claims.",
       "cnTerminology": "Found simplified Chinese patent terminology: {{detail}}. TW documents should use TIPO terms (請求項, 說明書, 先前技術, 實施方式, etc.), not CNIPA terms (权利要求, 说明书, 背景技术, 具体实施方式, etc.).",
       "specDrawingRef": "Per 專利法施行細則 §19, claims must not reference the specification or drawings (e.g., 如說明書所述, 如圖所示). Found: {{detail}}.",
@@ -868,6 +872,9 @@
           "verify": "Subject matter inconsistent with parent in {{claims}} ({{count}} total).",
           "pass": "All dependent claim subject matter matches their parent."
         },
+        "subjectConsistencyParseUnclear": {
+          "verify": "{{count}} dependent claim(s) with an unrecognized preamble — couldn't verify subject consistency: {{claims}}."
+        },
         "transitionPhrase": {
           "verify": "{{count}} independent claim(s) may lack a transition phrase: {{claims}}.",
           "pass": "All independent claims contain a transition phrase."
@@ -1002,6 +1009,9 @@
         "subjectConsistency": {
           "verify": "Subject matter inconsistent with parent in {{claims}} ({{count}} total).",
           "pass": "All dependent claim subject matter matches their parent."
+        },
+        "subjectConsistencyParseUnclear": {
+          "verify": "{{count}} dependent claim(s) with an unrecognized preamble — couldn't verify subject consistency: {{claims}}."
         },
         "transitionPhrase": {
           "verify": "{{count}} independent claim(s) missing a transition phrase: {{claims}}.",
@@ -1153,6 +1163,7 @@
     "preamble_cross_category_pass": "Claim preambles are consistent.",
     "preamble_noun_mismatch": "Preamble noun differs between dependent and independent claim (MPEP § 608.01(m)).",
     "preamble_indefinite_article": "Indefinite article in dependent claim preamble — should be 'The' (MPEP § 608.01(m)).",
+    "preamble_parse_unclear": "Couldn't verify preamble consistency for {{count}} dependent claim(s) with unrecognized preamble forms (MPEP § 608.01(n)).",
     "spec_support_unsupported_terms": "Claim terms not found in the specification — each claim term should have written-description support (§ 112(a)).",
     "spec_support_pass": "All claim terms found in the specification (§ 112(a) written-description support).",
     "required_sections_pass": "All required sections per MPEP § 608.01(a) are present.",
@@ -1328,7 +1339,9 @@
     "s6": {
       "title": "Voluntary feedback",
       "p1": "When you click a feedback link, your browser opens your own email client (or a webmail compose window) addressed to kwisschen@gmail.com. We do not host a form. We receive whatever you choose to write and send.",
-      "p2": "We use feedback to fix bugs and respond to you. We do not share feedback with third parties or use it for any purpose other than improving PatentLint and replying to your message."
+      "p2": "We use feedback to fix bugs and respond to you. We do not share feedback with third parties or use it for any purpose other than improving PatentLint and replying to your message.",
+      "p3": "Error reports sent via the \"Report error\" links may include a compact \"Diagnostic fingerprint\" block — structural metadata about which walker code path produced the finding (regex-match outcomes, character counts, extraction-path tags). The fingerprint contains no claim text, no nouns, no drafted content; it is designed so we can diagnose walker bugs without seeing your draft. You can review the entire email body before sending and delete the fingerprint block if you prefer.",
+      "p4": "If you want to send feedback pseudonymously, use an email-aliasing service (e.g., Apple Hide My Email, Gmail + aliases, Firefox Relay, ProtonMail aliases). We receive the alias address; your real address stays with your provider. We do not correlate alias addresses with any other data."
     },
     "s7": {
       "title": "Third-party services",

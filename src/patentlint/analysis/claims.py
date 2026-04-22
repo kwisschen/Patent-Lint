@@ -7,7 +7,7 @@ preamble consistency, and spec support.
 """
 
 import re
-from typing import Optional
+from typing import Any, Optional
 
 import snowballstemmer as _sb
 
@@ -444,7 +444,22 @@ _TRANSITIONS = re.compile(
 )
 
 _DEP_PREAMBLE = re.compile(
-    r"^(The|An?)\s+(.*?)\s+(?:of|according\s+to)\s+claims?\s+(\d+)",
+    # Covers MPEP § 608.01(n)(iii) accepted forms:
+    #   "The X of claim N"           (most common)
+    #   "The X according to claim N"
+    #   "The X as in claim N"        ("as in")
+    #   "The X as claimed in claim N"  (British form)
+    #   "The X as recited in claim N"
+    #   "The X as set forth in claim N"
+    r"^(The|An?)\s+(.*?)\s+"
+    r"(?:"
+    r"of"
+    r"|according\s+to"
+    r"|as\s+in"
+    r"|as\s+claimed\s+in"
+    r"|as\s+recited\s+in"
+    r"|as\s+set\s+forth\s+in"
+    r")\s+claims?\s+(\d+)",
     re.IGNORECASE,
 )
 
@@ -634,6 +649,12 @@ def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
     """
     results: list[CheckItem] = []
     has_issue = False
+    # ADR-145: track dependents whose preamble didn't match any recognized
+    # MPEP § 608.01(n)(iii) form so the aggregate parseUnclear finding can
+    # surface them as a single "walker couldn't verify" signal rather than
+    # silently skipping.
+    unclear_ids: list[int] = []
+    unclear_fp: dict[str, Any] | None = None
 
     for claim in claims:
         if claim.independent:
@@ -641,6 +662,12 @@ def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
 
         dm = _DEP_PREAMBLE.match(claim.text)
         if not dm:
+            unclear_ids.append(claim.id)
+            if unclear_fp is None:
+                unclear_fp = {
+                    "dep_preamble_matched": False,
+                    "claim_charlen": len(claim.text),
+                }
             continue
 
         article = dm.group(1)
@@ -648,6 +675,12 @@ def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
 
         dep_info = _preamble_head_info(claim)
         if dep_info is None:
+            unclear_ids.append(claim.id)
+            if unclear_fp is None:
+                unclear_fp = {
+                    "dep_preamble_matched": True,
+                    "head_noun_extracted": False,
+                }
             continue
         dep_noun, dep_entity = dep_info
 
@@ -675,6 +708,10 @@ def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
                     details=f"Claim {claim.id} depends on claim {parent_claim_num}",
                     details_key="details.preambleIndefiniteArticle",
                     details_params={"claim": str(claim.id), "parent": str(parent_claim_num)},
+                    diagnostics={
+                        "article": article.lower(),
+                        "dep_head_charlen": len(dep_noun),
+                    },
                 ))
                 has_issue = True
             continue
@@ -698,6 +735,12 @@ def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
                 details=f"Dependent '{dep_noun}' vs parent '{p_noun}'",
                 details_key="details.nounMismatch",
                 details_params={"dependent": dep_noun, "independent": p_noun},
+                diagnostics={
+                    "dep_entity": dep_entity,
+                    "parent_entity": p_entity,
+                    "dep_head_charlen": len(dep_noun),
+                    "parent_head_charlen": len(p_noun),
+                },
             ))
             has_issue = True
         elif dep_noun != p_noun:
@@ -708,8 +751,25 @@ def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
                 details=f"Claim {claim.id} depends on claim {parent_claim_num}",
                 details_key="details.preambleNounMismatch",
                 details_params={"claim": str(claim.id), "parent": str(parent_claim_num)},
+                diagnostics={
+                    "dep_head_charlen": len(dep_noun),
+                    "parent_head_charlen": len(p_noun),
+                },
             ))
             has_issue = True
+
+    if unclear_ids:
+        claims_str = ", ".join(str(i) for i in unclear_ids)
+        results.append(CheckItem(
+            status="verify",
+            message=f"{len(unclear_ids)} dependent claim(s) with an unrecognized preamble — couldn't verify preamble consistency (claims: {claims_str}).",
+            message_key="checks.preamble_parse_unclear",
+            details=f"{len(unclear_ids)} claims",
+            details_key="details.preambleParseUnclear",
+            details_params={"count": len(unclear_ids), "claims": unclear_ids},
+            diagnostics=unclear_fp,
+        ))
+        has_issue = True
 
     if not has_issue:
         results.append(CheckItem(
