@@ -45,7 +45,11 @@ _CN_DEPENDENCY = re.compile(
     r"(?P<spec>"
     + f"(?:{_NUMSPEC_RANGE}|{_NUMSPEC_ENUM}|{_NUMSPEC_OR}|{_NUMSPEC_SINGLE})"
     + r")"
-    r"\s*(?:所述的?)?"
+    # Trailing connective accepts CNIPA-standard 所述[的] + JP-translation
+    # variants (所记载/所揭示/所描述) + bare. All optional so range/or-list
+    # references alone still parse (dependency detection uses group captures,
+    # not this suffix).
+    r"\s*(?:所(?:述|记载|揭示|描述)的?)?"
 )
 
 
