@@ -173,7 +173,7 @@
       "fieldBrowser": "브라우저",
       "fieldLocale": "언어",
       "fieldBuild": "버전",
-      "diagnosticHeader": "진단 지문(구조 메타데이터만 포함, 명세서 내용 없음 — 개인정보 처리방침 §7 참조):"
+      "diagnosticHeader": "진단 지문(구조 메타데이터만 포함, 명세서 내용 없음 — 개인정보 처리방침 §6 참조):"
     },
     "emailGreeting": "Christopher 님께,",
     "bodyPlaceholder": "[한두 문장으로 이 검사 결과의 문제점을 알려 주세요: 오탐인지, 분류 오류인지, 검사가 놓친 부분이 있는지. 청구항 문구나 초안 내용은 절대 붙여넣지 마세요. 검사 결과 자체는 자동으로 첨부됩니다.]",

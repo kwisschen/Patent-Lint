@@ -173,7 +173,7 @@
       "fieldBrowser": "浏览器",
       "fieldLocale": "语言",
       "fieldBuild": "版本",
-      "diagnosticHeader": "诊断指纹（结构性元数据，不含稿件内容，详见隐私政策 §7）："
+      "diagnosticHeader": "诊断指纹（结构性元数据，不含稿件内容，详见隐私政策 §6）："
     },
     "emailGreeting": "Christopher 你好，",
     "bodyPlaceholder": "[请用一两句话说明此项分析结果的问题：是误判、分类错误，还是检查遗漏了什么？请勿粘贴权利要求文字或任何文稿内容；分析结果本身已自动附上。]",
