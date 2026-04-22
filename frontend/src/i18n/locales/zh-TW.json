@@ -263,7 +263,7 @@
       },
       "q2": {
         "question": "需要帳號嗎？",
-        "patentlint": "無需帳號。PatentLint 應用程式不收集任何使用資料。",
+        "patentlint": "無需帳號，不收集任何使用資料。",
         "addin": "通常需要授權或帳號。",
         "cloud": "是，需要帳號。"
       },
@@ -309,8 +309,6 @@
       "ai": "PatentLint 不使用 AI、機器學習或大型語言模型。所有檢查皆為確定性的規則比對，依據各專利局審查規範執行。您的文字不會被傳送至任何 AI 服務。",
       "telemetryTitle": "遙測與分析（不使用）",
       "telemetry": "PatentLint 不包含分析腳本、追蹤像素、cookies 或第三方追蹤整合。此應用程式不收集或傳送任何使用資料。",
-      "hostingTitle": "託管",
-      "hosting": "patentlint.com 託管於 Cloudflare Pages，僅提供靜態資產，並無應用程式伺服器、資料庫或分析工具。Cloudflare 邊緣節點於每次造訪時，會接收標準的網頁請求中介資料（IP 位址、user-agent、時間戳記），與任何網站無異。日常營運中，我們並不存取上述記錄。完整揭露請參閱隱私權政策。",
       "selfHostedTitle": "自行部署選項",
       "selfHosted": "對於有嚴格資料主權要求的組織，例如 ITAR 管制環境或實體隔離網路，PatentLint 可透過 Docker 自行部署於地端，所有相依套件皆已包含。",
       "contactEnterprise": "洽詢企業部署方案 →"
@@ -327,7 +325,7 @@
       "title": "互動式美國專利分析",
       "claimTree": {
         "title": "請求項樹與 § 112 分析器",
-        "description": "互動式相依樹呈現多重附屬與多重獨立請求項結構；§ 112 分析器同時檢查先行詞基礎（§ 112(b)）與書面描述支持（§ 112(a)），同一用語同時欠缺兩者時交互註記，並偵測 Markush、Jepson、means-plus-function 與連接詞等特殊格式。"
+        "description": "互動式相依樹呈現多重附屬與多重獨立請求項結構；§ 112 分析器同時檢查先行詞基礎（§ 112(b)）與書面說明支持（§ 112(a)），同一用語同時欠缺兩者時交互註記，並偵測 Markush、Jepson、means-plus-function 與連接詞等特殊格式。"
       },
       "specAbstract": {
         "title": "說明書與摘要結構",
@@ -542,7 +540,7 @@
     "missingSections": "缺少：{{list}}。請在送件前加入這些章節。",
     "sectionName": "{{name}}",
     "claimDependsOn": "請求項 {{claim}} 附屬於請求項 {{parent}}",
-    "nounMismatch": "附屬項「{{dependent}}」與獨立項「{{independent}}」不一致。附屬項須與母項屬於相同法定類別（例如同為裝置或同為方法）。請修正前言名詞。",
+    "nounMismatch": "附屬項「{{dependent}}」與獨立項「{{independent}}」不一致。附屬項須與母項屬於相同範疇（例如同為裝置或同為方法）。請修正前言之標的名稱。",
     "seeSection112": "詳見下方 § 112 分析。",
     "specSupportUnsupported": "此處所示 {{count}} 個用語未於說明書中揭露。各請求項用語皆應獲說明書支持。",
     "restrictiveWordingSpec": "段落：{{list}}。「must」、「always」或「invention」等用語可能依 § 2173.05(b) 被視為不明確或限制範圍。請檢視各標記段落，考量該用語是否不當限縮範圍或造成不明確。",
@@ -555,10 +553,10 @@
     "restrictiveWordingClaims": "請求項：{{list}}。「must」、「essential」或「invention」等用語可能觸發 § 112(b) 不明確核駁。請檢視各標記請求項，考量該用語是否必要。",
     "multipleDependentClaims": "請求項：{{list}}。多項附屬請求項會產生額外費用，且不得附屬於其他多項附屬請求項（35 U.S.C. § 112(e)）。請確認此為有意為之。",
     "selfDependentClaims": "請求項：{{list}}。請求項不得自我依附。請修正附屬關係引用。",
-    "meansFunctionClaims": "請求項：{{list}}。依 § 112(f)，請求項範圍限於說明書所揭露的對應結構及等效物。請確認說明書就各手段功能限定揭露了充分的結構。",
+    "meansFunctionClaims": "請求項：{{list}}。依 § 112(f)，請求項範圍限於說明書所揭露的對應結構及等效物。請確認說明書就各手段功能用語揭露了充分的結構。",
     "antecedentBasisTerms": "{{count}}項先行詞基礎問題，涉及{{claims}}項請求項。每個確定引用（「the X」或「said X」）須有先前不定引用（「a X」或「an X」）。缺乏先行詞基礎可能導致 § 112(b) 不明確核駁。",
-    "preambleNounMismatch": "請求項 {{claim}} 附屬於請求項 {{parent}}。前言名詞不同，但若指涉同一實體則可能無誤。請確認一致性。",
-    "preambleNounMismatchSummary": "請求項 {{rootId}} 使用母項名詞「{{parent}}」；有 {{count}} 個附屬項使用「{{dependent}}」。請確認兩者是否指涉同一實體，或將前言名詞統一。",
+    "preambleNounMismatch": "請求項 {{claim}} 附屬於請求項 {{parent}}。前言之標的名稱不同，但若指涉同一實體則可能無誤。請確認一致性。",
+    "preambleNounMismatchSummary": "請求項 {{rootId}} 使用母項標的名稱「{{parent}}」；有 {{count}} 個附屬項使用「{{dependent}}」。請確認兩者是否指涉同一實體，或將前言之標的名稱統一。",
     "preambleIndefiniteArticle": "請求項 {{claim}} 附屬於請求項 {{parent}}。附屬項須使用定冠詞「The」引用獨立項實體，而非「A」或「An」。",
     "singleFigureFix": "請依 MPEP § 608.02 將所有「FIG. 1」改為「The Figure」或「the drawing」。",
     "drawingsPriorArt": "描繪先前技術的圖式須依 MPEP § 608.02(g) 標示「Prior Art」圖例。請確認各先前技術圖式已正確標記。",
@@ -685,7 +683,7 @@
     }
   },
   "consolidation": {
-    "nounMismatchSummary": "前言名詞不一致：{{count}} 個附屬項與請求項 {{rootId}} 不同"
+    "nounMismatchSummary": "前言之標的名稱不一致：{{count}} 個附屬項與請求項 {{rootId}} 不同"
   },
   "lang": {
     "en": "English",
@@ -1154,10 +1152,10 @@
   "checks": {
     "preamble_cross_category_mismatch": "附屬項與獨立項之前言類型不一致（跨類別）（§ 112(d)）。",
     "preamble_cross_category_pass": "請求項前言一致。",
-    "preamble_noun_mismatch": "附屬項與獨立項前言名詞不同（MPEP § 608.01(m)）。",
+    "preamble_noun_mismatch": "附屬項與獨立項前言之標的名稱不同（MPEP § 608.01(m)）。",
     "preamble_indefinite_article": "附屬項前言使用不定冠詞，應使用「The」（MPEP § 608.01(m)）。",
-    "spec_support_unsupported_terms": "請求項用語於說明書中未找到：每個用語須於說明書中有書面描述支持（§ 112(a)）。",
-    "spec_support_pass": "所有請求項用語均可於說明書中找到（§ 112(a) 書面描述支持）。",
+    "spec_support_unsupported_terms": "請求項用語於說明書中未找到：每個用語須於說明書中有書面說明支持（§ 112(a)）。",
+    "spec_support_pass": "所有請求項用語均可於說明書中找到（§ 112(a) 書面說明支持）。",
     "required_sections_pass": "符合 MPEP § 608.01(a) 之所有必要章節均已存在。",
     "required_sections_missing": "缺少 MPEP § 608.01(a) 規定之必要章節。",
     "optional_section_missing": "選擇性章節「{{name}}」未發現。",
