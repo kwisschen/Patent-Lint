@@ -172,7 +172,8 @@
       "fieldJurisdiction": "地区",
       "fieldBrowser": "浏览器",
       "fieldLocale": "语言",
-      "fieldBuild": "版本"
+      "fieldBuild": "版本",
+      "diagnosticHeader": "诊断指纹（结构性元数据，不含稿件内容，详见隐私政策 §7）："
     },
     "emailGreeting": "Christopher 你好，",
     "bodyPlaceholder": "[请用一两句话说明此项分析结果的问题：是误判、分类错误，还是检查遗漏了什么？请勿粘贴权利要求文字或任何文稿内容；分析结果本身已自动附上。]",
@@ -558,6 +559,7 @@
     "preambleNounMismatch": "权利要求 {{claim}} 从属于权利要求 {{parent}}。前序部分的主题名称不同，但若指代同一实体则可能合理。请确认一致性。",
     "preambleNounMismatchSummary": "权利要求 {{rootId}} 使用母项主题名称「{{parent}}」；{{count}} 个从属权利要求使用「{{dependent}}」。请确认是否指代同一实体，或统一前序部分的主题名称。",
     "preambleIndefiniteArticle": "权利要求 {{claim}} 从属于权利要求 {{parent}}。从属权利要求须使用定冠词\"The\"指代独立权利要求实体，而非\"A\"或\"An\"。",
+    "preambleParseUnclear": "权利要求：{{claims}}。本检查器无法解析这些从属权利要求之前序。MPEP § 608.01(n) 认可之型式包含：「The X of claim N」、「The X according to claim N」、「The X as in claim N」、「The X as claimed in claim N」、「The X as recited in claim N」、「The X as set forth in claim N」。请人工确认前序，若使用 MPEP 标准型式而未被识别，请回报错误。",
     "singleFigureFix": "请依 MPEP § 608.02 将所有\"FIG. 1\"替换为\"The Figure\"或\"the drawing\"。",
     "drawingsPriorArt": "描绘现有技术的附图须依 MPEP § 608.02(g) 标注\"Prior Art\"图例。请确认各现有技术附图已正确标注。",
     "figuresSequentialFix": "请依 MPEP § 608.02 将附图重新编号为递增顺序。",
@@ -584,7 +586,8 @@
       "forwardDependency": "根据专利法实施细则 §22，从属权利要求只能引用在前的权利要求。请修改引用关系。",
       "singleSentence": "根据审查指南 第二部分第二章，每项权利要求应为一个以句号（。）结尾的完整句子。请删除句中多余的句号或拆分为多项权利要求。",
       "refNumeralParens": "根据审查指南，权利要求中的附图标记应加括号，例如（101）而非101。请检查标记的权利要求。",
-      "subjectConsistency": "根据审查指南 第二部分第二章，从属权利要求的主题名称应与其引用的权利要求的主题名称一致。请检查标记的权利要求。",
+      "subjectConsistency": "根据审查指南 第二部分第二章，从属权利要求的主题名称应与其引用的权利要求的主题名称一致。已识别之前序型式：如权利要求N所述[的]X、如权利要求N所记载[的]X、如权利要求N[的]X。请检查标记的权利要求。",
+      "subjectConsistencyParseUnclear": "这些从属权利要求使用之前序型式未被识别。依专利法实施细则 §22，可接受之前序型式包含：如权利要求N所述[的]X、如权利要求N所记载[的]X、如权利要求N[的]X。请人工确认前序，若为CNIPA合规前序而未能识别，请回报错误。",
       "transitionPhrase": "根据审查指南，独立权利要求应包含\"其特征在于\"等特征部分连接词，用以区分已知要素与新颖特征。请检查标记的权利要求。",
       "twTerminology": "CNIPA中称为\"权利要求\"，而\"请求项\"是台湾（TIPO）的专利用语。请替换所有\"请求项\"。",
       "claimsSpecReference": "根据审查指南 第二部分第二章，权利要求不得使用\"如说明书……所述\"或\"如图……所示\"来限定保护范围。权利要求应当自成一体。请删除相关引用。",
@@ -626,7 +629,8 @@
       "forwardDependency": "依專利法施行細則 §18，附属项仅得依附在前之请求项。依附在后：{{claims}}。",
       "singleSentence": "依專利法施行細則 §18，每一请求项须为单句，仅于末尾有一个句号（。）。请检查标记之请求项。",
       "refNumeralParens": "依專利法施行細則 §19，请求项中之元件符号应加括号，例如(101)。请检查标记之请求项。",
-      "subjectConsistency": "附属项之标的名称应与所依附之母项标的名称一致。请检查标记之请求项。",
+      "subjectConsistency": "附属项之标的名称应与所依附之母项标的名称一致。已识别之前序型式：如請求項N所述[之的]X、如請求項N所記載[之的]X、如請求項N[之的]X。请检查标记之请求项。",
+      "subjectConsistencyParseUnclear": "这些附属项使用之前序型式未被识别。依专利法施行细则 §18，可接受之前序型式包含：如請求項N所述[之的]X、如請求項N所記載[之的]X、如請求項N[之的]X。请人工确认前序，若为合规前序而未能识别，请回报错误。",
       "transitionPhrase": "依專利法施行細則 §20，独立项应包含连接词，如「其特徵在於」或「其改良在於」。请检查标记之请求项。",
       "cnTerminology": "发现简体中文专利用语：{{detail}}。台湾专利稿件应使用TIPO用语（請求項、說明書、先前技術、實施方式等），而非CNIPA用语（权利要求、说明书、背景技术、具体实施方式等）。",
       "specDrawingRef": "依專利法施行細則 §19，请求项不得引用说明书或图式（如「如說明書所述」「如圖所示」）。发现：{{detail}}。",
@@ -869,6 +873,9 @@
           "verify": "{{claims}} 的主题名称与母项不一致（共 {{count}} 项）。",
           "pass": "从属权利要求的主题名称一致。"
         },
+        "subjectConsistencyParseUnclear": {
+          "verify": "{{count}} 项从属权利要求之前序未被识别，无法验证主题名称一致性：{{claims}}。"
+        },
         "transitionPhrase": {
           "verify": "{{count}} 项独立权利要求缺少连接词（如「其特征在于」）：{{claims}}。",
           "pass": "所有独立权利要求均包含连接词。"
@@ -1003,6 +1010,9 @@
         "subjectConsistency": {
           "verify": "{{claims}} 的主题名称与母项不一致（共 {{count}} 项）。",
           "pass": "所有附属项之主题名称均与母项一致。"
+        },
+        "subjectConsistencyParseUnclear": {
+          "verify": "{{count}}项附属请求项之前序未被识别，无法验证主题名称一致性：{{claims}}。"
         },
         "transitionPhrase": {
           "verify": "{{count}}项独立项缺少连接词（如「其特徵在於」或「其改良在於」）：{{claims}}。",
@@ -1154,6 +1164,7 @@
     "preamble_cross_category_pass": "权利要求前序部分一致。",
     "preamble_noun_mismatch": "从属权利要求与独立权利要求前序部分的主题名称不同（MPEP § 608.01(m)）。",
     "preamble_indefinite_article": "从属权利要求前序使用了不定冠词，应使用「The」（MPEP § 608.01(m)）。",
+    "preamble_parse_unclear": "{{count}}项从属权利要求之前序未被识别，无法验证前序一致性（MPEP § 608.01(n)）。",
     "spec_support_unsupported_terms": "权利要求用语在说明书中未找到：每个用语须在说明书中有书面描述支持（§ 112(a)）。",
     "spec_support_pass": "所有权利要求用语均可在说明书中找到（§ 112(a) 书面描述支持）。",
     "required_sections_pass": "符合 MPEP § 608.01(a) 的所有必要章节均已存在。",
@@ -1331,7 +1342,9 @@
     "s6": {
       "title": "反馈意见之自愿提供",
       "p1": "当您点击反馈链接时，您的浏览器将启动您自身之电子邮件客户端（或网页邮件撰写界面），收件人为 kwisschen@gmail.com。我们未提供任何网页表单。我们所收到者，仅为您主动撰写并发送之内容。",
-      "p2": "我们将反馈用于修复错误及回复您。我们不将反馈分享给第三方，亦不将其用于改良 PatentLint 及回复您以外之任何用途。"
+      "p2": "我们将反馈用于修复错误及回复您。我们不将反馈分享给第三方，亦不将其用于改良 PatentLint 及回复您以外之任何用途。",
+      "p3": "通过「报告错误」链接发送之错误报告，可能包含一组精简之「诊断指纹」区块，其中仅为检查器所经代码路径之结构性元数据（正则匹配结果、字符计数、提取路径标签等）。该指纹不含任何权利要求文字、名词或稿件内容，其设计目的为使我们得于不接触您稿件内容之情形下诊断检查器缺陷。您于发送前得查看全部邮件内容，如有疑虑并得自行删除该指纹区块。",
+      "p4": "若您希望以匿名方式发送反馈，建议使用电子邮件别名服务（例如 Apple Hide My Email、Gmail 别名、Firefox Relay、ProtonMail 别名等）。我们仅收到该别名地址，您的真实电子邮件地址将由您的服务提供商保管，我们亦不会将别名地址与其他任何数据进行关联。"
     },
     "s7": {
       "title": "第三方服务",
