@@ -232,6 +232,9 @@ class TestForwardMapsAreExhaustive:
         # Consumed into the US abstract impliedPhrases CheckItem's
         # details_params by _to_us_report_data; not a raw list on ReportData.
         "abstract_implied_phrases",
+        # Consumed into the US abstract restrictiveWording CheckItem's
+        # details_params by _to_us_report_data; not a raw list on ReportData.
+        "improper_abstract_phrases",
     })
 
     def test_every_list_field_is_either_forwarded_or_documented(self):

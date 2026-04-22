@@ -380,6 +380,7 @@ class AnalysisResult(BaseModel):
     abstract_has_implied_phrase: bool = False
     abstract_implied_phrases: list[str] = Field(default_factory=list)
     improper_abstract_phrases_formatted: str = ""
+    improper_abstract_phrases: list[str] = Field(default_factory=list)
 
     @property
     def total_claims(self) -> int:
@@ -805,15 +806,32 @@ class AnalysisResult(BaseModel):
         abstract_checks: list[CheckItem] = []
 
         if self.improper_abstract_phrases_formatted:
+            # Dedupe while preserving first-seen order — a single token can
+            # appear multiple times in the abstract, but the chip list should
+            # show each flagged word once.
+            seen: set[str] = set()
+            unique_phrases: list[str] = []
+            for p in self.improper_abstract_phrases:
+                key = p.lower()
+                if key in seen:
+                    continue
+                seen.add(key)
+                unique_phrases.append(p)
             abstract_checks.append(CheckItem(
                 status="verify",
                 message="Restrictive or improper wording found in abstract.",
                 message_key="check.abstract.restrictiveWording.verify",
                 details=self.improper_abstract_phrases_formatted.strip(),
                 details_key="details.restrictiveWordingAbstract",
-                details_params={"text": self.improper_abstract_phrases_formatted.strip()},
+                details_params={
+                    "text": self.improper_abstract_phrases_formatted.strip(),
+                    "flagged_phrases": {
+                        "items": [{"kind": "phrase", "token": p} for p in unique_phrases]
+                    },
+                } if unique_phrases else {"text": self.improper_abstract_phrases_formatted.strip()},
                 diagnostics=_dx(
                     flagged_phrases_charlen=len(self.improper_abstract_phrases_formatted),
+                    flagged_phrase_count=len(unique_phrases) or None,
                 ),
             ))
         else:

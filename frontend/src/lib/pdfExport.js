@@ -163,6 +163,62 @@ function statusPill(status, t, fontName) {
   }
 }
 
+// Tinted chip for flagged terms (React FlaggedTermList parity). Light tint
+// matching the finding status; no border stroke so chips read as inline
+// labels rather than bordered buttons. Shared rendering primitive with
+// statusPill above — both use pdfmake's single-cell-table-with-fillColor
+// pattern since pdfmake has no native chip element.
+function termChip(token, status, fontName) {
+  return {
+    width: 'auto',
+    table: {
+      widths: ['auto'],
+      body: [[
+        {
+          text: token,
+          color: statusColor(status),
+          bold: true,
+          fontSize: 8,
+          alignment: 'center',
+          ...(fontName ? { font: fontName } : {}),
+        },
+      ]],
+    },
+    layout: {
+      hLineWidth: () => 0,
+      vLineWidth: () => 0,
+      fillColor: () => statusTint(status),
+      paddingLeft: () => 5,
+      paddingRight: () => 5,
+      paddingTop: () => 2,
+      paddingBottom: () => 2,
+    },
+    margin: [0, 0, 4, 2],
+  }
+}
+
+// Chip-row from details_params.flagged_phrases.items. pdfmake's columns
+// layout flows chips horizontally; multi-row wrap on narrow PDF widths
+// works because each chip is its own auto-sized column cell followed by a
+// thin spacer. Returns null when there is nothing to render so callers can
+// unconditionally spread the result.
+function flaggedPhrasesRow(details_params, status, fontName) {
+  const items = details_params?.flagged_phrases?.items
+  if (!Array.isArray(items) || items.length === 0) return null
+  const chips = items.map((item) => termChip(item.token, status, fontName))
+  return {
+    columns: [
+      { width: 60, text: '' },
+      {
+        width: '*',
+        columns: chips,
+        columnGap: 0,
+      },
+    ],
+    margin: [0, 2, 0, 2],
+  }
+}
+
 // Two-cell callout card: 3pt colored strip + tinted content. Used for the
 // AMEND / VERIFY triage groups. Renders "— None" for an empty group.
 function triageCard(severity, items, t, fontName) {
@@ -318,6 +374,10 @@ function buildSectionChecks(sections, t, fontName) {
         columnGap: 0,
         margin: [0, 4, 0, 2],
       })
+      const chipRow = flaggedPhrasesRow(item.details_params, item.status, fontName)
+      if (chipRow) {
+        content.push(chipRow)
+      }
       const detailText = item.details_key && formatDetails(item.details_key, item.details_params, t) !== item.details_key
         ? formatDetails(item.details_key, item.details_params, t)
         : item.details
