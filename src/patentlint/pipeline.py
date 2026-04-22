@@ -223,7 +223,8 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
     # --- Abstract analysis ---
     abstract_word_count = abstract_analysis.count_words(abstract_section)
     abstract_structure = abstract_analysis.is_single_paragraph_and_final(full_text, abstract_section) if abstract_section else True
-    abstract_implied = abstract_analysis.has_implied_phrase(abstract_section) if abstract_section else False
+    abstract_implied_phrases = abstract_analysis.detect_implied_phrases(abstract_section) if abstract_section else []
+    abstract_implied = bool(abstract_implied_phrases)
     abstract_wording = abstract_analysis.detect_improper_wording(abstract_section) if abstract_section else ""
 
     # --- Required sections check ---
@@ -293,6 +294,7 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
         abstract_word_count=abstract_word_count,
         abstract_structure_good=abstract_structure,
         abstract_has_implied_phrase=abstract_implied,
+        abstract_implied_phrases=abstract_implied_phrases,
         improper_abstract_phrases_formatted=abstract_wording,
     )
 

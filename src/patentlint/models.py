@@ -378,6 +378,7 @@ class AnalysisResult(BaseModel):
     abstract_word_count: int = 0
     abstract_structure_good: bool = True
     abstract_has_implied_phrase: bool = False
+    abstract_implied_phrases: list[str] = Field(default_factory=list)
     improper_abstract_phrases_formatted: str = ""
 
     @property
@@ -838,12 +839,22 @@ class AnalysisResult(BaseModel):
             ))
 
         if self.abstract_has_implied_phrase:
+            phrases = list(self.abstract_implied_phrases)
             abstract_checks.append(CheckItem(
                 status="amend",
                 message="Abstract contains implied phrases ('disclosure' or 'provided').",
                 message_key="check.abstract.impliedPhrases.amend",
                 details_key="details.abstractImpliedPhrasesFix",
-                diagnostics=_dx(reason_code="implied_phrase_detected"),
+                details_params={
+                    "phrases": ", ".join(f'"{p}"' for p in phrases),
+                    "flagged_phrases": {
+                        "items": [{"kind": "phrase", "token": p} for p in phrases]
+                    },
+                } if phrases else None,
+                diagnostics=_dx(
+                    reason_code="implied_phrase_detected",
+                    flagged_phrase_count=len(phrases) or None,
+                ),
             ))
         else:
             abstract_checks.append(CheckItem(

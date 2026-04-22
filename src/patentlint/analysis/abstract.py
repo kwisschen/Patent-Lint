@@ -26,13 +26,30 @@ def is_single_paragraph_and_final(document_text: str, abstract_text: str) -> boo
     return single_paragraph and at_end and proper_ending
 
 
+_IMPLIED_PHRASES = ("is provided", "are provided", "disclosure")
+
+
 def has_implied_phrase(abstract_text: str) -> bool:
     """Check if first sentence contains 'is provided', 'are provided', or 'disclosure'."""
     sentences = re.split(r"(?<=[.!?])\s+", abstract_text)
     if not sentences:
         return False
     first = sentences[0].lower()
-    return "is provided" in first or "are provided" in first or "disclosure" in first
+    return any(phrase in first for phrase in _IMPLIED_PHRASES)
+
+
+def detect_implied_phrases(abstract_text: str) -> list[str]:
+    """Return the ordered list of implied phrases present in the first sentence.
+
+    Unlike has_implied_phrase (which returns bool), this surfaces the actual
+    matched tokens so downstream callers can render them in the user-facing
+    finding. Matched phrases preserve their source-text casing."""
+    sentences = re.split(r"(?<=[.!?])\s+", abstract_text)
+    if not sentences:
+        return []
+    first = sentences[0]
+    first_lower = first.lower()
+    return [phrase for phrase in _IMPLIED_PHRASES if phrase in first_lower]
 
 
 def detect_improper_wording(abstract_text: str) -> str:
