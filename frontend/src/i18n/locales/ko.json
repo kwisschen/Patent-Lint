@@ -324,7 +324,7 @@
       "title": "인터랙티브 미국 특허 분석",
       "claimTree": {
         "title": "청구항 트리와 § 112 분석기",
-        "description": "인터랙티브 종속 트리가 다중 종속·다중 독립 구조를 표시하고, § 112 분석기가 선행사 기초(§ 112(b))와 서면 기재 요건(§ 112(a))을 함께 검증하며 동일 용어가 양쪽 모두에서 누락될 경우 상호 참조, 더불어 Markush, Jepson, means-plus-function, 전이 어구 등 특수 형식도 검출합니다."
+        "description": "인터랙티브 종속 트리가 다중 종속·다중 독립 구조를 표시하고, § 112 분석기가 선행사 기초(§ 112(b))와 서면 기재 요건(§ 112(a))을 함께 검증하며 동일 용어가 양쪽 모두에서 누락될 경우 상호 참조, 더불어 Markush, Jepson, means-plus-function, 연결어 등 특수 형식도 검출합니다."
       },
       "specAbstract": {
         "title": "명세서 및 요약 구조",
@@ -373,11 +373,11 @@
         "preambleConsistency": "청구항 전제부 일관성 (MPEP § 608.01(m))",
         "specSupport": "청구항 용어의 명세서 뒷받침",
         "legalPhrasesAbstract": "요약서의 법률 용어",
-        "transitionPhrase": "청구항 전환어 (§ 112)",
+        "transitionPhrase": "청구항 연결어 (§ 112)",
         "checkJepsonPriorArt": "Jepson 선행 기술 인정 (§ 2129)",
         "checkCrmNonTransitory": "CRM non-transitory 한정어 (§ 101)",
-        "checkMarkushTransition": "Markush 그룹 전환어 (§ 2117)",
-        "checkOmnibusClaim": "포괄 청구항 검출 (§ 112(b))",
+        "checkMarkushTransition": "Markush 그룹 연결어 (§ 2117)",
+        "checkOmnibusClaim": "옴니버스 청구항 검출 (§ 112(b))",
         "checkClaimPunctuation": "청구항 부호 (§ 608.01(m))",
         "checkSequenceListing": "서열 목록 규정 준수 (§ 2422)"
       }
@@ -421,7 +421,7 @@
       "singleSentence": "청구항당 한 문장",
       "refNumeralParens": "도면 부호 괄호",
       "subjectNameConsistency": "주제명 일관성",
-      "transitionPhrase": "連接詞(其特征在于)",
+      "transitionPhrase": "연결어(其特征在于)",
       "cnTwTerminology": "중국 대륙/대만 용어",
       "claimsSpecReference": "청구항에서 명세서/도면 참조 금지",
       "multiMultiDependency": "다중 종속의 다중 종속",
@@ -475,7 +475,7 @@
       "singleSentence": "청구항당 한 문장",
       "refNumeralParens": "도면 번호를 괄호로 표기(專利法施行細則 §19)",
       "subjectConsistency": "標的名稱 일관성",
-      "transitionPhrase": "連接詞(其特徵在於)",
+      "transitionPhrase": "연결어(其特徵在於)",
       "cnTerminology": "양안 용어 구분",
       "specDrawingRef": "청구항에서 명세서나 도면 참조 금지",
       "multiDepOnMultiDep": "다중 종속은 다른 다중 종속에 종속 불가",
@@ -539,7 +539,7 @@
     "missingSections": "누락: {{list}}. 출원 전에 이 섹션들을 추가하세요.",
     "sectionName": "{{name}}",
     "claimDependsOn": "청구항 {{claim}}은(는) 청구항 {{parent}}에 종속",
-    "nounMismatch": "종속항 '{{dependent}}' vs 독립항 '{{independent}}'. 종속항은 모항과 동일한 법정 범주(예: 둘 다 장치 또는 둘 다 방법)에 속해야 합니다. 전제부 명사를 수정하세요.",
+    "nounMismatch": "종속항 '{{dependent}}' vs 독립항 '{{independent}}'. 종속항은 모항과 동일한 청구항 범주(예: 둘 다 장치 또는 둘 다 방법)에 속해야 합니다. 전제부 명사를 수정하세요.",
     "seeSection112": "청구항별 세부 사항은 아래 § 112 분석을 참조하세요.",
     "specSupportUnsupported": "여기에 표시된 {{count}}건의 용어가 명세서 본문에서 확인되지 않았습니다. 각 청구항 용어는 명세서의 뒷받침이 필요합니다.",
     "restrictiveWordingSpec": "단락: {{list}}. \"must\", \"always\" 또는 \"invention\" 등의 용어는 § 2173.05(b)에 따라 불명확하거나 범위를 제한하는 것으로 취급될 수 있습니다. 각 표시된 단락을 검토하여 해당 용어가 부당하게 범위를 제한하거나 불명확성을 초래하는지 확인하세요.",
@@ -584,7 +584,7 @@
       "singleSentence": "审查指南 第二部分第二章에 따라 각 청구항은 마침표(。)로 끝나는 단일 문장이어야 합니다. 문장 중간의 불필요한 마침표를 삭제하거나 여러 청구항으로 분리하세요.",
       "refNumeralParens": "审查指南에 따라 청구항 내 참조 부호는 괄호로 묶어야 합니다. 예: 101이 아닌 (101). 해당 청구항을 확인하세요.",
       "subjectConsistency": "审查指南 第二部分第二章에 따라 종속 청구항의 주제 명칭은 인용 대상 청구항의 주제 명칭과 일치해야 합니다. 해당 청구항을 확인하세요.",
-      "transitionPhrase": "审查指南에 따라 독립 청구항에는 '其特征在于' 등의 특징 부분 전환어를 포함하여 공지 요소와 신규 특징을 구분해야 합니다. 해당 청구항을 확인하세요.",
+      "transitionPhrase": "审查指南에 따라 독립 청구항에는 '其特征在于' 등의 특징 부분 연결어를 포함하여 공지 요소와 신규 특징을 구분해야 합니다. 해당 청구항을 확인하세요.",
       "twTerminology": "CNIPA에서는 청구항을 '权利要求'로 표기합니다. '请求项'은 대만(TIPO) 특허 용어입니다. 모두 교체하세요.",
       "claimsSpecReference": "审查指南 第二部分第二章에 따라 청구항은 '如说明书……所述' 또는 '如图……所示'로 보호 범위를 한정해서는 안 됩니다. 청구항은 자체적으로 완결되어야 합니다. 해당 인용을 삭제하세요.",
       "multiMultiDep": "专利法实施细则 §22에 따라 다항 종속 청구항은 다른 다항 종속 청구항의 인용 기초가 될 수 없습니다. 인용 관계를 재구성하세요.",
@@ -604,7 +604,7 @@
         "selfDependent": "전리법 시행세칙 §22에 따라, 청구항은 자신을 인용할 수 없습니다. 종속 청구항은 앞선 청구항을 인용해야 합니다.",
         "forwardDependency": "전리법 시행세칙 §22에 따라, 종속 청구항은 앞 번호의 청구항만 인용할 수 있으며 뒤 번호의 청구항은 인용할 수 없습니다.",
         "singleSentence": "심사지남 제2부 제2장에 따라, 각 청구항은 마침표(。)로 끝나는 하나의 완전한 문장이어야 합니다. 보호 범위를 명확히 하기 위함입니다.",
-        "transitionPhrase": "심사지남에 따라, 독립 청구항은 '其特征在于' 등 2부 형식 연결어를 포함하여 전제부(선행기술)와 특징부(신규 요소)를 구분해야 합니다."
+        "transitionPhrase": "심사지남에 따라, 독립 청구항은 '其特征在于' 등 2부 형식의 연결어를 포함하여 전제부(선행기술)와 특징부(신규 요소)를 구분해야 합니다."
       }
     },
     "tw": {
@@ -626,7 +626,7 @@
       "singleSentence": "專利法施行細則 §18에 따라 각 請求項은 끝에 마침표(。)가 하나만 있는 단일 문장이어야 합니다. 표시된 請求項을 확인하십시오.",
       "refNumeralParens": "專利法施行細則 §19에 따라 請求項의 부호는 괄호로 둘러싸야 합니다(예: (101)). 표시된 請求項을 확인하십시오.",
       "subjectConsistency": "종속항의 標的名稱은 모항의 標的名稱과 일치해야 합니다. 표시된 請求項을 확인하십시오.",
-      "transitionPhrase": "專利法施行細則 §20에 따라 독립항에는 「其特徵在於」 또는 「其改良在於」 등의 連接詞가 포함되어야 합니다. 표시된 請求項을 확인하십시오.",
+      "transitionPhrase": "專利法施行細則 §20에 따라 독립항에는 「其特徵在於」 또는 「其改良在於」 등의 연결어가 포함되어야 합니다. 표시된 請求項을 확인하십시오.",
       "cnTerminology": "간체자 중국어 특허 용어가 발견되었습니다: {{detail}}. TW 문서는 TIPO 용어(請求項, 說明書, 先前技術, 實施方式 등)를 사용해야 하며 CNIPA 용어(权利要求, 说明书, 背景技术, 具体实施方式 등)는 사용할 수 없습니다.",
       "specDrawingRef": "專利法施行細則 §19에 따라 請求項에서 명세서 또는 도면을 참조(예: 「如說明書所述」「如圖所示」)할 수 없습니다. 발견: {{detail}}.",
       "multiDepOnMultiDep": "專利法施行細則 §18에 따라 다항 종속항은 직접 또는 간접적으로 다른 다항 종속항에 종속될 수 없습니다. 해당: {{claims}}.",
@@ -761,9 +761,9 @@
         "verify": "선행사 기초 누락 가능성(§ 112(b)): 'the X / said X'에 선행하는 'a X' 도입이 명세서상에 없을 수 있습니다.",
         "pass": "선행사 기초 문제가 검출되지 않았습니다(§ 112(b))."
       },
-      "missingTransition": "청구항 {{claimNumber}}에 전환어(예: 'comprising', 'consisting of')가 누락되었습니다",
-      "missingTransitionDetails": "청구항 {{claimNumber}}에 인식 가능한 전환어가 포함되어 있지 않습니다. 모든 청구항에는 전제부와 본문 사이에 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by' 또는 'characterized in that' 등의 전환어가 포함되어야 합니다.",
-      "transitionsPresent": "모든 청구항에 전환어가 포함되어 있습니다.",
+      "missingTransition": "청구항 {{claimNumber}}에 연결어(예: 'comprising', 'consisting of')가 누락되었습니다",
+      "missingTransitionDetails": "청구항 {{claimNumber}}에 인식 가능한 연결어가 포함되어 있지 않습니다. 모든 청구항에는 전제부와 본문 사이에 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by' 또는 'characterized in that' 등의 연결어가 포함되어야 합니다.",
+      "transitionsPresent": "모든 청구항에 연결어가 포함되어 있습니다.",
       "overview": "청구항 개요."
     },
     "abstract": {
@@ -869,8 +869,8 @@
           "pass": "종속 청구항의 주제명이 모항과 일치합니다."
         },
         "transitionPhrase": {
-          "verify": "{{count}}개 독립 청구항에 전환구('其特征在于' 등)가 누락되었을 수 있습니다: {{claims}}.",
-          "pass": "모든 독립 청구항에 전환구가 포함되어 있습니다."
+          "verify": "{{count}}개 독립 청구항에 연결어('其特征在于' 등)가 누락되었을 수 있습니다: {{claims}}.",
+          "pass": "모든 독립 청구항에 연결어가 포함되어 있습니다."
         },
         "twTerminology": {
           "verify": "대만 특허 용어 '请求项' 검출: CNIPA 출원은 '权利要求'를 사용해야 합니다.",
@@ -1004,8 +1004,8 @@
           "pass": "종속 청구항의 주제명이 모항과 일치합니다."
         },
         "transitionPhrase": {
-          "verify": "{{count}}개 독립 청구항에 전환구('其特徵在於' / '其改良在於' 등)가 누락되어 있습니다: {{claims}}.",
-          "pass": "모든 독립 청구항에 전환구가 포함되어 있습니다."
+          "verify": "{{count}}개 독립 청구항에 연결어('其特徵在於' / '其改良在於' 등)가 누락되어 있습니다: {{claims}}.",
+          "pass": "모든 독립 청구항에 연결어가 포함되어 있습니다."
         },
         "cnTerminology": {
           "verify": "TW 문서에서 CNIPA 용어가 검출되었습니다.",
@@ -1168,9 +1168,9 @@
     "crmNonTransitory": "청구항 {{claimNumber}}: 컴퓨터 판독 가능 매체 청구항에 'non-transitory' 한정어가 누락되었습니다",
     "crmNonTransitoryDetails": "청구항 {{claimNumber}}이(가) 'non-transitory' 한정어 없이 컴퓨터 판독 가능 매체를 기재하고 있습니다. 이 한정어 없이는 청구항이 일시적 신호(예: 반송파)를 포함하게 되며, 이는 35 U.S.C. § 101에 따른 특허 적격 대상이 아닙니다. 매체 용어 앞에 'non-transitory'를 추가하세요.",
     "markushOpenTransition": "청구항 {{claimNumber}}: Markush 그룹이 'consisting of' 대신 개방형 '{{transition}}'을(를) 사용하고 있습니다",
-    "markushOpenTransitionDetails": "청구항 {{claimNumber}}이(가) 'consisting of' 대신 '{{transition}}'을(를) 사용한 Markush 그룹을 포함하고 있습니다. Markush 그룹은 MPEP § 2117에 따라 폐쇄형 전환어를 사용해야 합니다. 개방형 전환어를 사용하면 부적절한 Markush 그룹 거절이 발생할 수 있습니다.",
-    "omnibusClaim": "청구항 {{claimNumber}}이(가) 포괄 청구항으로 보입니다",
-    "omnibusClaimDetails": "청구항 {{claimNumber}}이(가) 구체적인 기술적 특징을 기재하지 않고 명세서 또는 도면을 참조하고 있습니다. 포괄 청구항은 미국 실용특허에서 35 U.S.C. § 112(b)에 따라 일률적으로 거절됩니다 (MPEP § 2173.05(r)). 구체적인 구조적 또는 방법적 한정 사항을 기재하도록 청구항을 다시 작성하세요.",
+    "markushOpenTransitionDetails": "청구항 {{claimNumber}}이(가) 'consisting of' 대신 '{{transition}}'을(를) 사용한 Markush 그룹을 포함하고 있습니다. Markush 그룹은 MPEP § 2117에 따라 폐쇄형 연결어를 사용해야 합니다. 개방형 연결어를 사용하면 부적절한 Markush 그룹 거절이 발생할 수 있습니다.",
+    "omnibusClaim": "청구항 {{claimNumber}}이(가) 옴니버스 청구항으로 보입니다",
+    "omnibusClaimDetails": "청구항 {{claimNumber}}이(가) 구체적인 기술적 특징을 기재하지 않고 명세서 또는 도면을 참조하고 있습니다. 옴니버스 청구항은 미국 실용특허에서 35 U.S.C. § 112(b)에 따라 일률적으로 거절됩니다 (MPEP § 2173.05(r)). 구체적인 구조적 또는 방법적 한정 사항을 기재하도록 청구항을 다시 작성하세요.",
     "specialFormatsPass": "특수 청구항 형식 문제가 검출되지 않았습니다.",
     "missingPeriod": "청구항 {{claimNumber}}이(가) 마침표로 끝나지 않습니다.",
     "missingPeriodDetails": "청구항 {{claimNumber}}에 마지막 마침표가 누락되었습니다. MPEP § 608.01(m)에 따라 모든 청구항은 마침표로 끝나야 합니다.",
