@@ -262,7 +262,7 @@
       },
       "q2": {
         "question": "アカウントは必要ですか？",
-        "patentlint": "アカウント不要。PatentLint アプリケーションは利用データを一切収集しません。",
+        "patentlint": "アカウント不要。利用データは一切収集しません。",
         "addin": "通常、ライセンスまたはアカウントが必要です。",
         "cloud": "アカウントの作成が必要です。"
       },
@@ -308,8 +308,6 @@
       "ai": "PatentLint は AI、機械学習、大規模言語モデルを一切使用しません。すべてのチェックは各特許庁のガイドラインに基づく確定的なルールベースのパターンマッチングです。お客様のテキストが AI サービスに送信されることはありません。",
       "telemetryTitle": "テレメトリとアナリティクス（使用なし）",
       "telemetry": "PatentLint はアナリティクススクリプト、トラッキングピクセル、Cookie、サードパーティのトラッキング統合を一切含みません。本アプリケーションが使用状況データを収集または送信することはありません。",
-      "hostingTitle": "ホスティング",
-      "hosting": "patentlint.com は Cloudflare Pages 上で静的アセットのみとしてホスティングされており、アプリケーションサーバー、データベース、アナリティクスは一切ありません。Cloudflare のエッジネットワークは、いかなるウェブサイトでも同様に、訪問のたびに標準的なリクエストメタデータ（IP アドレス、user-agent、タイムスタンプ）を受信します。日常の運用において、当方は当該ログにアクセスいたしません。詳細はプライバシーポリシーをご参照ください。",
       "selfHostedTitle": "セルフホストオプション",
       "selfHosted": "On-premises deployment is available on private inquiry. Compliance with any specific regulatory regime remains the organization's own determination.",
       "contactEnterprise": "エンタープライズ導入についてお問い合わせ →"
