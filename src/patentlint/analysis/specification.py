@@ -239,7 +239,12 @@ def check_required_sections(full_text: str) -> list[CheckItem]:
             message_key="checks.required_sections_missing",
             details=", ".join(missing_required),
             details_key="details.missingSections",
-            details_params={"list": ", ".join(missing_required)},
+            details_params={
+                "list": ", ".join(missing_required),
+                "flagged_phrases": {
+                    "items": [{"kind": "section", "token": s} for s in missing_required]
+                },
+            },
             diagnostics=_dx(
                 missing_count=len(missing_required),
                 total_required=len(required),
