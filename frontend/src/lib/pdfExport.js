@@ -202,10 +202,22 @@ function termChip(token, status, fontName) {
 // works because each chip is its own auto-sized column cell followed by a
 // thin spacer. Returns null when there is nothing to render so callers can
 // unconditionally spread the result.
-function flaggedPhrasesRow(details_params, status, fontName) {
+// Capped at MAX_PDF_CHIPS to avoid overflowing the page width on
+// heavily-flagged documents; overflow is denoted with a "+N more" chip
+// (React parity; PDF can't expand interactively).
+const MAX_PDF_CHIPS = 20
+
+function flaggedPhrasesRow(details_params, status, t, fontName) {
   const items = details_params?.flagged_phrases?.items
   if (!Array.isArray(items) || items.length === 0) return null
-  const chips = items.map((item) => termChip(item.token, status, fontName))
+  const total = items.length
+  const cap = Math.min(MAX_PDF_CHIPS, total)
+  const visible = items.slice(0, cap)
+  const overflow = total - cap
+  const chips = visible.map((item) => termChip(item.token, status, fontName))
+  if (overflow > 0) {
+    chips.push(termChip(t('chip.more', { n: overflow, defaultValue: `+${overflow} more` }), status, fontName))
+  }
   return {
     columns: [
       { width: 60, text: '' },
@@ -374,7 +386,7 @@ function buildSectionChecks(sections, t, fontName) {
         columnGap: 0,
         margin: [0, 4, 0, 2],
       })
-      const chipRow = flaggedPhrasesRow(item.details_params, item.status, fontName)
+      const chipRow = flaggedPhrasesRow(item.details_params, item.status, t, fontName)
       if (chipRow) {
         content.push(chipRow)
       }

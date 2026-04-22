@@ -1008,7 +1008,13 @@ def check_title_subject_match(doc: TwPatentDocument) -> list[CheckItem]:
         message=f"Title '{doc.title}' may not match independent claim subjects: {subjects_str}.",
         message_key="check.tw.claims.titleSubjectMatch.verify",
         details_key="details.tw.titleSubjectMatch",
-        details_params={"title": doc.title, "subjects": subjects_str},
+        details_params={
+            "title": doc.title,
+            "subjects": subjects_str,
+            "flagged_phrases": {
+                "items": [{"kind": "subject", "token": s} for s in subjects]
+            },
+        },
         reference="專利審查基準",
         diagnostics=_dx(
             title_charlen=len(title_norm),

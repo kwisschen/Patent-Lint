@@ -103,7 +103,12 @@ def check_bracket_format(doc: TwPatentDocument) -> list[CheckItem]:
             f"{headers_str}."
         ),
         message_key="check.tw.crossRef.bracketFormat.verify",
-        details_params={"headers": headers_str},
+        details_params={
+            "headers": headers_str,
+            "flagged_phrases": {
+                "items": [{"kind": "header", "token": h} for h in flagged]
+            },
+        },
         reference="專利法施行細則 §17",
         diagnostics=_dx(
             flagged_count=len(flagged),
