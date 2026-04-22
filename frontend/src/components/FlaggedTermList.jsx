@@ -12,10 +12,10 @@
 // paragraph so narrow viewports (mobile 375px) can wrap chips cleanly
 // without splitting CJK characters mid-word. Each chip is a single token.
 
-export default function FlaggedTermList({ items, status = "verify" }) {
+export default function FlaggedTermList({ items, status = "verify", className = "" }) {
   if (!Array.isArray(items) || items.length === 0) return null
   return (
-    <div className="mt-1 ml-10 sm:ml-[52px] flex flex-wrap gap-1">
+    <div className={`flex flex-wrap gap-1 ${className}`.trim()}>
       {items.map((item, idx) => (
         <span
           key={`${item.token}-${idx}`}

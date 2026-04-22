@@ -786,7 +786,12 @@ def check_cn_terminology(doc: TwPatentDocument) -> list[CheckItem]:
             message_key="check.tw.claims.cnTerminology.verify",
             details=", ".join(found),
             details_key="details.tw.cnTerminology",
-            details_params={"detail": ", ".join(found)},
+            details_params={
+                "detail": ", ".join(found),
+                "flagged_phrases": {
+                    "items": [{"kind": "term", "token": t} for t in found]
+                },
+            },
             reference=None,
             diagnostics=_dx(
                 hit_count=len(found),
@@ -818,13 +823,19 @@ def check_spec_drawing_ref(doc: TwPatentDocument) -> list[CheckItem]:
         found_refs.extend(matches)
 
     if found_refs:
-        detail = "、".join(sorted(set(found_refs)))
+        unique_refs = sorted(set(found_refs))
+        detail = "、".join(unique_refs)
         return [CheckItem(
             status="amend",
             message="Claims reference specification or drawings.",
             message_key="check.tw.claims.specDrawingRef.amend",
             details_key="details.tw.specDrawingRef",
-            details_params={"detail": detail},
+            details_params={
+                "detail": detail,
+                "flagged_phrases": {
+                    "items": [{"kind": "reference", "token": r} for r in unique_refs]
+                },
+            },
             reference="專利法施行細則 §19",
             diagnostics=_dx(
                 hit_count=len(found_refs),

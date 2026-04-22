@@ -120,7 +120,11 @@ export default function CheckItem({ status, message, message_key, details, detai
         </Button>
       </div>
       {details_params?.flagged_phrases?.items?.length > 0 && (
-        <FlaggedTermList items={details_params.flagged_phrases.items} status={status} />
+        <FlaggedTermList
+          items={details_params.flagged_phrases.items}
+          status={status}
+          className="mt-1 ml-10 sm:ml-[52px]"
+        />
       )}
       {displayDetails && (
         <p className="text-xs text-muted-foreground mt-1 ml-10 sm:ml-[52px]">{displayDetails}</p>
