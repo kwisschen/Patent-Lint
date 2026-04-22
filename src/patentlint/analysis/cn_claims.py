@@ -13,6 +13,7 @@ from typing import Any
 
 from patentlint.analysis.cjk_ordinal_guard import ordinal_guard
 from patentlint.analysis.cjk_tokenize import jaccard, tokenize_cn
+from patentlint.analysis.utils import _dx
 from patentlint.analysis.connection_relationships import (
     _CN_CONNECTION_CONFIG,
     check_connection_relationships,
@@ -64,6 +65,11 @@ def check_claims_sequential(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 details_key="details.cn.claimsSequential",
                 details_params={"expected": expected, "found": claim.id},
                 reference="审查指南",
+                diagnostics=_dx(
+                    expected_id=expected,
+                    found_id=claim.id,
+                    total_claims=len(claims),
+                ),
             )]
 
     return [CheckItem(
@@ -119,6 +125,10 @@ def check_dependency_format(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.dependencyFormat",
             details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="专利法实施细则 §22",
+            diagnostics=_dx(
+                flagged_count=len(bad_claim_ids),
+                total_dependents=len(dependents),
+            ),
         )]
 
     return [CheckItem(
@@ -146,6 +156,10 @@ def check_self_dependent(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.selfDependent",
             details_params={"claims": bad},
             reference="专利法实施细则 §22",
+            diagnostics=_dx(
+                flagged_count=len(bad),
+                total_claims=len(cn_doc.claims),
+            ),
         )]
 
     return [CheckItem(
@@ -175,6 +189,10 @@ def check_forward_dependency(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.forwardDependency",
             details_params={"claims": bad},
             reference="专利法实施细则 §22",
+            diagnostics=_dx(
+                flagged_count=len(bad),
+                total_claims=len(cn_doc.claims),
+            ),
         )]
 
     return [CheckItem(
@@ -192,11 +210,14 @@ def check_forward_dependency(cn_doc: CnPatentDocument) -> list[CheckItem]:
 def check_single_sentence(cn_doc: CnPatentDocument) -> list[CheckItem]:
     """Each claim must have exactly one 。 at the end."""
     bad_claim_ids: list[int] = []
+    sample_last_cp: int | None = None
     for claim in cn_doc.claims:
         text = claim.text.strip()
         period_count = text.count("。")
         if period_count != 1 or not text.endswith("。"):
             bad_claim_ids.append(claim.id)
+            if sample_last_cp is None and text:
+                sample_last_cp = ord(text[-1])
 
     if bad_claim_ids:
         bad_claim_ids = _dedupe_claim_ids(bad_claim_ids)
@@ -209,6 +230,11 @@ def check_single_sentence(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.singleSentence",
             details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="审查指南 第二部分第二章",
+            diagnostics=_dx(
+                flagged_count=len(bad_claim_ids),
+                total_claims=len(cn_doc.claims),
+                sample_last_codepoint=sample_last_cp,
+            ),
         )]
 
     return [CheckItem(
@@ -256,6 +282,10 @@ def check_reference_numeral_parentheses(cn_doc: CnPatentDocument) -> list[CheckI
             details_key="details.cn.refNumeralParens",
             details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="审查指南",
+            diagnostics=_dx(
+                flagged_count=len(bad_claim_ids),
+                total_claims=len(cn_doc.claims),
+            ),
         )]
 
     return [CheckItem(
@@ -480,6 +510,10 @@ def check_transition_phrase(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.transitionPhrase",
             details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="审查指南",
+            diagnostics=_dx(
+                flagged_count=len(bad_claim_ids),
+                total_independent=len(independents),
+            ),
         )]
 
     return [CheckItem(
@@ -506,6 +540,9 @@ def check_tw_terminology(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 message_key="check.cn.claims.twTerminology.verify",
                 details_key="details.cn.twTerminology",
                 reference="",
+                diagnostics=_dx(
+                    flagged_claim_id=claim.id,
+                ),
             )]
 
     return [CheckItem(
@@ -539,6 +576,10 @@ def check_claims_spec_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.claimsSpecReference",
             details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
             reference="审查指南 第二部分第二章",
+            diagnostics=_dx(
+                flagged_count=len(bad_claim_ids),
+                total_claims=len(cn_doc.claims),
+            ),
         )]
 
     return [CheckItem(
@@ -572,6 +613,10 @@ def check_multi_multi_dependency(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.multiMultiDep",
             details_params={"claims": bad},
             reference="专利法实施细则 §22",
+            diagnostics=_dx(
+                flagged_count=len(bad),
+                total_multi_dep=len(multi_dep_ids),
+            ),
         )]
 
     return [CheckItem(
@@ -658,6 +703,10 @@ def check_dependent_ordering(cn_doc: CnPatentDocument) -> list[CheckItem]:
                         message_key="check.cn.claims.dependentOrdering.amend",
                         details_key="details.cn.dependentOrdering",
                         reference="审查指南 第二部分第二章",
+                        diagnostics=_dx(
+                            total_claims=len(claims),
+                            total_independent=len(indep_positions),
+                        ),
                     )]
 
     return [CheckItem(

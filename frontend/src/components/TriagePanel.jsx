@@ -2,10 +2,13 @@
 // Copyright (c) 2025 Christopher Chen
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AlertCircle, Search, CheckCircle, ChevronDown } from 'lucide-react'
+import { AlertCircle, Search, CheckCircle, ChevronDown, Flag } from 'lucide-react'
 import { getCitation } from './CheckItem'
 import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
 import { formatDetails } from '../lib/detailsFormatter'
+import { composeFeedback } from '../lib/feedback'
+import { useFeedback } from './FeedbackPicker'
+import { Button } from './ui/button'
 
 const GROUP_CONFIG = [
   { status: 'amend', titleKey: 'triage.amend', emptyKey: 'triage.amendEmpty', Icon: AlertCircle },
@@ -13,12 +16,35 @@ const GROUP_CONFIG = [
   { status: 'pass', titleKey: 'triage.pass', emptyKey: null, Icon: CheckCircle },
 ]
 
-function TriageItem({ check, t, i18n, compact }) {
+function TriageItem({ check, t, i18n, compact, jurisdiction }) {
+  const { sendFeedback } = useFeedback()
   const msg = check.message_key && i18n.exists(check.message_key) ? formatDetails(check.message_key, check.details_params, t) : check.message
   const citation = getCitation(check.message_key) || check.reference || null
+  const details = check.details_key && i18n.exists(check.details_key) ? formatDetails(check.details_key, check.details_params, t) : check.details
+  // Pass findings aren't reportable — nothing to diagnose when nothing
+  // went wrong.
+  const showReport = check.status !== 'pass'
+
+  const handleReport = () => {
+    sendFeedback(
+      composeFeedback(
+        {
+          check_key: check.message_key || 'generic',
+          message: msg,
+          details,
+          status: check.status,
+          jurisdiction: jurisdiction || 'unknown',
+          diagnostics: check.diagnostics || null,
+        },
+        t,
+        { locale: i18n.language },
+      ),
+      { verb: 'report' },
+    )
+  }
 
   return (
-    <div className="flex items-start gap-2 py-1.5 px-3">
+    <div className="flex items-start gap-2 py-1.5 px-3 group">
       <span className="shrink-0 text-[11px] text-muted-foreground mt-0.5">
         {check.section}
       </span>
@@ -27,19 +53,32 @@ function TriageItem({ check, t, i18n, compact }) {
           {citation}
         </span>
       )}
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
         <span className="text-sm">{msg}</span>
-        {!compact && (check.details || check.details_key) && (
+        {!compact && details && (
           <p className="text-xs text-muted-foreground mt-0.5">
-            {check.details_key && i18n.exists(check.details_key) ? formatDetails(check.details_key, check.details_params, t) : check.details}
+            {details}
           </p>
         )}
       </div>
+      {showReport && (
+        <Button
+          variant="ghost"
+          size="xs"
+          onClick={handleReport}
+          title={t('feedback.reportProblem')}
+          aria-label={t('feedback.reportProblem')}
+          className="shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
+        >
+          <Flag />
+          <span className="hidden sm:inline">{t('feedback.report')}</span>
+        </Button>
+      )}
     </div>
   )
 }
 
-function TriageGroup({ status, title, emptyMessage, Icon, items, defaultOpen, t, i18n }) {
+function TriageGroup({ status, title, emptyMessage, Icon, items, defaultOpen, t, i18n, jurisdiction }) {
   const [open, setOpen] = useState(defaultOpen)
   const count = items.length
   const compact = status === 'pass'
@@ -69,7 +108,7 @@ function TriageGroup({ status, title, emptyMessage, Icon, items, defaultOpen, t,
             <p className="px-3 py-2 text-sm text-muted-foreground">{emptyMessage}</p>
           ) : (
             items.map((check, i) => (
-              <TriageItem key={i} check={check} t={t} i18n={i18n} compact={compact} />
+              <TriageItem key={i} check={check} t={t} i18n={i18n} compact={compact} jurisdiction={jurisdiction} />
             ))
           )}
         </div>
@@ -114,6 +153,7 @@ export default function TriagePanel({ data }) {
           }
           t={t}
           i18n={i18n}
+          jurisdiction={data.jurisdiction}
         />
       ))}
     </div>

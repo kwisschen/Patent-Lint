@@ -11,6 +11,7 @@ from __future__ import annotations
 import re
 from collections import Counter
 
+from patentlint.analysis.utils import _dx
 from patentlint.models import CheckItem, CnPatentDocument
 
 # Canonical section order per 专利法实施细则 §17
@@ -142,6 +143,9 @@ def check_required_sections(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.requiredSections",
             details_params={"sections": ", ".join(missing)},
             reference="专利法 §26 第1款、专利法实施细则 §17",
+            diagnostics=_dx(
+                missing_count=len(missing),
+            ),
         )]
     return [CheckItem(
         status="pass",
@@ -177,6 +181,9 @@ def check_section_ordering(cn_doc: CnPatentDocument) -> list[CheckItem]:
             message_key="check.cn.spec.sectionOrdering.amend",
             details_key="details.cn.sectionOrdering",
             reference="专利法实施细则 §17",
+            diagnostics=_dx(
+                sections_seen=len(indices),
+            ),
         )]
     return [CheckItem(
         status="pass",
@@ -208,6 +215,11 @@ def check_paragraph_numbering(cn_doc: CnPatentDocument) -> list[CheckItem]:
                     details_key="details.cn.paragraphNumberingXml",
                     details_params={"count": len(duplicates), "paragraphs": duplicates},
                     reference="审查指南",
+                    diagnostics=_dx(
+                        reason_code="duplicate",
+                        duplicate_count=len(duplicates),
+                        total_paragraphs=len(nums),
+                    ),
                 )]
             for i in range(1, len(nums)):
                 if nums[i] != nums[i - 1] + 1:
@@ -218,6 +230,11 @@ def check_paragraph_numbering(cn_doc: CnPatentDocument) -> list[CheckItem]:
                         details_key="details.cn.paragraphNumberingXml",
                         details_params={"prev": nums[i - 1], "next": nums[i]},
                         reference="审查指南",
+                        diagnostics=_dx(
+                            reason_code="gap",
+                            gap_size=nums[i] - nums[i - 1],
+                            total_paragraphs=len(nums),
+                        ),
                     )]
     elif cn_doc.input_format == "docx":
         if cn_doc.has_paragraph_numbering:
@@ -227,6 +244,9 @@ def check_paragraph_numbering(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 message_key="check.cn.spec.paragraphNumbering.amendDocx",
                 details_key="details.cn.paragraphNumberingDocx",
                 reference="审查指南",
+                diagnostics=_dx(
+                    reason_code="manual_docx_numbering",
+                ),
             )]
 
     return [CheckItem(
@@ -305,6 +325,10 @@ def check_paragraph_ending(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.paragraphEnding",
             details_params={"count": len(bad_paragraphs), "paragraphs": bad_paragraphs},
             reference="审查指南",
+            diagnostics=_dx(
+                flagged_count=len(bad_paragraphs),
+                total_paragraphs_scanned=ordinal,
+            ),
         )]
     return [CheckItem(
         status="pass",
@@ -352,6 +376,12 @@ def check_figure_reference_consistency(cn_doc: CnPatentDocument) -> list[CheckIt
                 },
             },
             reference="审查指南",
+            diagnostics=_dx(
+                only_drawings_count=len(only_drawings),
+                only_embodiment_count=len(only_detail),
+                total_drawings=len(drawings_figs),
+                total_detail=len(detail_figs),
+            ),
         )]
 
     return [CheckItem(
@@ -384,6 +414,10 @@ def check_patent_type_terminology(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.patentTypeTerminology",
             details_params={"term": minority},
             reference="审查指南",
+            diagnostics=_dx(
+                invention_count=inv_count,
+                utility_count=util_count,
+            ),
         )]
 
     return [CheckItem(
@@ -415,6 +449,10 @@ def check_title(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.titleMissing",
             details="",
             reference="审查指南 第一部分第一章",
+            diagnostics=_dx(
+                reason_code="missing",
+                title_charlen=0,
+            ),
         )]
 
     results: list[CheckItem] = []
@@ -429,6 +467,12 @@ def check_title(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.titleLength",
             details_params={"count": cjk_count},
             reference="审查指南 第一部分第一章",
+            diagnostics=_dx(
+                reason_code="length",
+                cjk_count=cjk_count,
+                threshold=25,
+                overage=cjk_count - 25,
+            ),
         ))
 
     # Content check
@@ -448,6 +492,11 @@ def check_title(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.titleContent",
             details_params={"title_prohibited_items": {"items": items}},
             reference="审查指南 第一部分第一章",
+            diagnostics=_dx(
+                reason_code="prohibited_content",
+                flagged_count=len(items),
+                title_charlen=len(title),
+            ),
         ))
 
     if not results:
@@ -496,6 +545,10 @@ def check_spec_claim_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 "snippet": first_snippet,
             },
             reference="专利法实施细则 §17",
+            diagnostics=_dx(
+                flagged_count=len(bad_paragraphs),
+                total_paragraphs_scanned=ordinal,
+            ),
         )]
 
     return [CheckItem(

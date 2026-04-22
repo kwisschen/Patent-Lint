@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import re
 
+from patentlint.analysis.utils import _dx
 from patentlint.models import CheckItem, TwPatentDocument
 
 # TW commercial language terms (Traditional Chinese)
@@ -39,6 +40,11 @@ def check_abstract_char_count(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.abstractCharCount",
             details_params={"count": str(count)},
             reference="專利法施行細則 §21",
+            diagnostics=_dx(
+                char_count=count,
+                threshold=250,
+                overage=count - 250,
+            ),
         )]
 
     return [CheckItem(
@@ -95,6 +101,11 @@ def check_abstract_title_match(doc: TwPatentDocument) -> list[CheckItem]:
         details_key="details.tw.abstractTitleMatch",
         details_params={"detail": title},
         reference="專利審查基準",
+        diagnostics=_dx(
+            title_charlen=len(title),
+            abstract_charlen=len(abstract),
+            compound_halves=len(halves),
+        ),
     )]
 
 
@@ -116,6 +127,10 @@ def check_commercial_language(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.commercialLanguage",
             details_params={"terms": terms_str},
             reference="專利法施行細則 §21",
+            diagnostics=_dx(
+                hit_count=len(found),
+                total_terms_scanned=len(_COMMERCIAL_TERMS),
+            ),
         )]
 
     return [CheckItem(
@@ -148,6 +163,10 @@ def check_representative_drawing(doc: TwPatentDocument) -> list[CheckItem]:
             message_key="check.tw.abstract.representativeDrawing.verify",
             details_key="details.tw.representativeDrawing",
             reference="專利法施行細則 §21",
+            diagnostics=_dx(
+                reason_code="missing_designation",
+                has_drawings=True,
+            ),
         )]
 
     return [CheckItem(
