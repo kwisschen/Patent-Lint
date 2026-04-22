@@ -103,6 +103,16 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
   const label = formatClaimRange(claimIds, t)
 
   const handleReport = (claimId) => {
+    // Aggregate per-claim diagnostics across findings the user is about to
+    // report. Each underlying walker finding carries its own diagnostics
+    // dict; for the emitted fingerprint we pick the first finding's
+    // diagnostics for THIS claim (they're shape-identical across sibling
+    // findings under the same grouping) and augment with a count.
+    const claimFindings = findings.filter((f) => f.claim_id === claimId)
+    const baseDx = claimFindings[0]?.diagnostics || null
+    const diagnostics = baseDx
+      ? { ...baseDx, findings_in_group: claimFindings.length }
+      : null
     sendFeedback(
       composeFeedback(
         {
@@ -110,6 +120,7 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
           claim_id: claimId,
           terms: terms.join(', '),
           jurisdiction: jurisdiction || 'unknown',
+          diagnostics,
         },
         t,
         { locale: i18n.language },

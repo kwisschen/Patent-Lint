@@ -2977,6 +2977,19 @@ def check_antecedent_basis(
                 if fallback is not None:
                     suggested_match = fallback
 
+            # Structural fingerprint (ADR-145) — surfaces the walker's
+            # intro-pool size, whether a did-you-mean fallback fired, and
+            # whether the candidate is cross-branch. No claim text, no
+            # noun content — all counts and booleans.
+            diagnostics = {
+                "prefix_charlen": len(prefix),
+                "term_charlen": len(normalized_term),
+                "intros_pool_size": len(intros_by_term),
+                "has_suggested_match": suggested_match is not None,
+                "suggested_cross_branch": bool(
+                    suggested_match and suggested_match.get("cross_branch")
+                ) if suggested_match else False,
+            }
             issues.append(
                 {
                     "claim_id": claim.id,
@@ -2985,6 +2998,7 @@ def check_antecedent_basis(
                     "claim_text": claim.text,
                     "suggested_match": suggested_match,
                     "cross_ref": None,
+                    "diagnostics": diagnostics,
                 }
             )
 
