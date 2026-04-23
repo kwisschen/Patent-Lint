@@ -337,7 +337,7 @@
       }
     },
     "uspto": {
-      "colCheck": "Prüfung",
+      "colCheck": "Prüfungen",
       "colUSPTO": "USPTO Patent Center",
       "colPatentLint": "PatentLint",
       "group1Title": "Formatierung & Struktur",
