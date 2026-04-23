@@ -525,7 +525,7 @@
     "builderDesc1": "PatentLint wurde von einem Patentingenieur gebaut, der über ein Jahrzehnt in diesem Arbeitsablauf verbracht, Tausende Anmeldungen geprüft und dieselben Fehlerkategorien immer wieder hat durchrutschen sehen. Bestehende Optionen waren entweder reine Windows-Desktop-Installationen oder Cloud-Dienste, bei denen die noch nicht eingereichte Anmeldung eines Mandanten auf einen fremden Server hochgeladen werden musste. Das eine bindet Sie an ein bestimmtes Betriebssystem. Das andere schickt den Entwurf aus der Kanzlei, bevor er überhaupt eingereicht ist.",
     "builderDesc2": "Die Analyse-Engine ist in Python geschrieben und wird zu WebAssembly kompiliert. Sie läuft vollständig im Browser, auf Laptop, Tablet oder Smartphone, ohne Upload und ohne Protokollierung. Das heißt: Sie funktioniert im Flugzeug, auf gesperrten Kanzleirechnern, auf allem, was ein Mandant noch nicht freigegeben hat.",
     "builderSister": "Das Schwesterprojekt, der Agentic Patent Analyst, übernimmt die argumentationsintensive Arbeit und nutzt intern feinjustierte LLM-Agenten für Stand-der-Technik-Recherche und Anspruchsabdeckungsanalyse.",
-    "tableFootnote": "Stand: April 2026. Beide Systeme werden weiterentwickelt."
+    "tableFootnote": "Stand: April 2026. Beide Systeme können weiterentwickelt werden."
   },
   "details": {
     "paragraphs": "Absätze: {{list}}",
