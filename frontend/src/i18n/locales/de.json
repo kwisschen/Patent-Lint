@@ -164,7 +164,7 @@
     "footerIntro": "Ich möchte Feedback zu PatentLint geben.",
     "footerPlaceholder": "[Was auch immer Sie teilen möchten — Fehlermeldungen, Funktionswünsche, Fragen oder allgemeine Anmerkungen. Bei Fehlern hilft ein Hinweis zu Browser und Betriebssystem bei der Reproduktion. Bei Funktionswünschen reicht ein Satz zum Anwendungsfall. Sie müssen nichts Vertrauliches zu Ihrer Arbeit preisgeben.]",
     "enterpriseIntro": "Ich möchte eine Anfrage zur Enterprise-Bereitstellung von PatentLint stellen.",
-    "enterprisePlaceholder": "[Beschreiben Sie Ihren Einsatzbedarf — Kanzlei- oder Teamgröße und Fachgebiet, Regionen, in denen Sie tätig sind, ungefähres Dokumentenvolumen, Evaluierungszeitraum und besondere Anforderungen (z. B. selbst gehostete oder Air-Gap-Installation für ITAR- oder Datenschutzanforderungen, SSO, eigene Prüfungen).]",
+    "enterprisePlaceholder": "[Beschreiben Sie Ihren Einsatzbedarf — Kanzlei- oder Teamgröße und Fachgebiet, Regionen, in denen Sie tätig sind, ungefähres Dokumentenvolumen, Evaluierungszeitraum und besondere Anforderungen (z. B. On-Premises- oder Air-Gap-Installation für ITAR- oder Datenschutzanforderungen, SSO, eigene Prüfungen).]",
     "email": {
       "subjectFinding": "PatentLint Befundbericht — {{checkKey}}",
       "subjectFooter": "PatentLint Feedback",
@@ -313,8 +313,8 @@
       "ai": "PatentLint verwendet keine KI, kein Machine Learning und keine großen Sprachmodelle. Alle Prüfungen erfolgen deterministisch durch regelbasierten Mustervergleich gegen die Richtlinien der Patentämter. Ihr Text wird nie an einen KI-Dienst gesendet.",
       "telemetryTitle": "Telemetrie & Analyse (nicht genutzt)",
       "telemetry": "PatentLint enthält keine Analyse-Skripte, Tracking-Pixel, Cookies oder Drittanbieter-Tracking. Die Anwendung erfasst und überträgt keine Nutzungsdaten.",
-      "selfHostedTitle": "Self-Hosting-Option",
-      "selfHosted": "Für Organisationen mit strengen Datensouveränitätsanforderungen, wie ITAR-geschützte Umgebungen oder Air-Gap-Netzwerke, kann PatentLint über Docker einschließlich aller Abhängigkeiten selbst gehostet werden.",
+      "selfHostedTitle": "On-Premises-Bereitstellung",
+      "selfHosted": "Für Organisationen mit strengen Datensouveränitätsanforderungen, wie ITAR-geschützte Umgebungen oder Air-Gap-Netzwerke, steht eine On-Premises-Bereitstellung als Option zur Verfügung.",
       "contactEnterprise": "Kontakt für Enterprise-Bereitstellung →"
     }
   },
@@ -507,9 +507,9 @@
     "archTitle": "Architektur",
     "arch": {
       "browser": "Ihr Browser",
-      "optional": "Optional: Docker / CLI",
+      "optional": "Optional: On-Premises (Docker / CLI)",
       "zeroBadge": "Keine Netzwerkanfragen während der Prüfung",
-      "selfHostBadge": "Self-Hosting für Air-Gap- und ITAR-sensible Umgebungen",
+      "selfHostBadge": "On-Premises-Option für Air-Gap- und ITAR-sensible Umgebungen",
       "node": {
         "analysisEngine": "Analyse-Engine",
         "pdfReport": "PDF-Bericht"
