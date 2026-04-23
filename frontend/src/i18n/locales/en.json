@@ -164,7 +164,7 @@
     "footerIntro": "I'd like to share some feedback about PatentLint.",
     "footerPlaceholder": "[Anything you'd like to share — bug reports, feature requests, questions, or general comments. For bugs, a note on your browser and OS helps me reproduce. For features, one sentence on your use case goes a long way. You don't need to share anything confidential about your work.]",
     "enterpriseIntro": "I'd like to inquire about enterprise deployment of PatentLint.",
-    "enterprisePlaceholder": "[Tell me about your deployment needs — firm or team size and practice area, regions you work in, approximate document volume, evaluation timeline, and any specific requirements (e.g., self-hosted or air-gapped install for ITAR / data-sovereignty rules, SSO, custom checks).]",
+    "enterprisePlaceholder": "[Tell me about your deployment needs — firm or team size and practice area, regions you work in, approximate document volume, evaluation timeline, and any specific requirements (e.g., on-premises or air-gapped install for ITAR / data-sovereignty rules, SSO, custom checks).]",
     "email": {
       "subjectFinding": "PatentLint findings report — {{checkKey}}",
       "subjectFooter": "PatentLint feedback",
@@ -313,7 +313,7 @@
       "ai": "PatentLint does not use AI, machine learning, or large language models. All checks are deterministic, rule-based pattern matching against patent office guidelines. Your text is never sent to any AI service.",
       "telemetryTitle": "Telemetry & Analytics (No Usage)",
       "telemetry": "PatentLint includes no analytics scripts, tracking pixels, cookies, or third-party tracking integrations. The application collects and transmits no usage data.",
-      "selfHostedTitle": "Self-Hosted Option",
+      "selfHostedTitle": "On-Premises Deployment",
       "selfHosted": "On-premises deployment is available on private inquiry. Compliance with any specific regulatory regime remains the organization's own determination.",
       "contactEnterprise": "Contact for enterprise deployment →"
     }
@@ -507,9 +507,9 @@
     "archTitle": "Architecture",
     "arch": {
       "browser": "Your Browser",
-      "optional": "Optional: Docker / CLI",
+      "optional": "Optional: On-premises (Docker / CLI)",
       "zeroBadge": "Zero network requests during analysis",
-      "selfHostBadge": "Self-hosted for air-gapped and ITAR-sensitive environments",
+      "selfHostBadge": "On-premises option for air-gapped and ITAR-sensitive environments",
       "node": {
         "analysisEngine": "Analysis Engine",
         "pdfReport": "PDF Report"

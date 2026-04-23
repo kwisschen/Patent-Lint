@@ -313,7 +313,7 @@
       "ai": "PatentLint 不使用 AI、機器學習或大型語言模型。所有檢查皆為確定性的規則比對，依據各專利局審查規範執行。您的文字不會被傳送至任何 AI 服務。",
       "telemetryTitle": "遙測與分析（不使用）",
       "telemetry": "PatentLint 不包含分析腳本、追蹤像素、cookies 或第三方追蹤整合。此應用程式不蒐集或傳送任何使用資料。",
-      "selfHostedTitle": "自行部署選項",
+      "selfHostedTitle": "地端部署",
       "selfHosted": "On-premises deployment is available on private inquiry. Compliance with any specific regulatory regime remains the organization's own determination.",
       "contactEnterprise": "洽詢企業部署方案 →"
     }
@@ -507,9 +507,9 @@
     "archTitle": "架構",
     "arch": {
       "browser": "您的瀏覽器",
-      "optional": "選配：Docker / CLI",
+      "optional": "選配：地端部署（Docker / CLI）",
       "zeroBadge": "分析過程中零網路請求",
-      "selfHostBadge": "自行部署，適用於實體隔離網路與 ITAR 敏感環境",
+      "selfHostBadge": "地端部署選項，適用於實體隔離網路與 ITAR 敏感環境",
       "node": {
         "analysisEngine": "分析引擎",
         "pdfReport": "PDF 報告"

@@ -313,7 +313,7 @@
       "ai": "PatentLint는 AI, 머신러닝 또는 대규모 언어 모델을 사용하지 않습니다. 모든 검사는 각 특허청 가이드라인에 따른 결정론적 규칙 기반 패턴 매칭입니다. 텍스트가 AI 서비스로 전송되지 않습니다.",
       "telemetryTitle": "텔레메트리 및 분석 (사용 안 함)",
       "telemetry": "PatentLint는 분석 스크립트, 추적 픽셀, 쿠키, 서드파티 추적 통합을 포함하지 않습니다. 애플리케이션이 사용 데이터를 수집하거나 전송하지 않습니다.",
-      "selfHostedTitle": "자체 호스팅 옵션",
+      "selfHostedTitle": "온프레미스 배포",
       "selfHosted": "On-premises deployment is available on private inquiry. Compliance with any specific regulatory regime remains the organization's own determination.",
       "contactEnterprise": "엔터프라이즈 배포 문의 →"
     }
@@ -507,9 +507,9 @@
     "archTitle": "아키텍처",
     "arch": {
       "browser": "사용자 브라우저",
-      "optional": "선택 사항: Docker / CLI",
+      "optional": "선택 사항: 온프레미스 (Docker / CLI)",
       "zeroBadge": "분석 중 네트워크 요청 제로",
-      "selfHostBadge": "에어갭 및 ITAR 환경을 위한 자체 호스팅",
+      "selfHostBadge": "에어갭 및 ITAR 환경을 위한 온프레미스 옵션",
       "node": {
         "analysisEngine": "분석 엔진",
         "pdfReport": "PDF 보고서"
