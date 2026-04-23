@@ -59,15 +59,18 @@ function ProductStory({ t }) {
 // bucket (G1 = Formatting & Structure, G2 = USPTO Filing Format, G3 = Substantive
 // Drafting), rows sort by that canonical sequence so readers see the same order
 // they encounter in actual analysis results.
+//
+// G1/G3 placement is grounded in USPTO Patent Center's documented DOCX validation
+// (DOCX_Feedback_Errors_and_Warnings.pdf + Sept 2025 User Guide): it catches
+// period-ending, capitalization, single-sentence, numbering, multiple dependency,
+// abstract word count, paragraph numbering, and section-heading detection — but
+// performs NO semantic § 112 analysis, figure cross-reference, or paragraph-
+// ending-punctuation checks. Items in G1 are shared; G3 is PatentLint-only.
 const GROUP1_CHECKS = [
   // Spec structure
-  'requiredSections', 'sectionHeaders', 'paraNumbering', 'specParaNumbering', 'specParaEndings',
-  // Spec content
-  'figureCrossRef',
-  // Drawings
-  'figureSequential', 'singleFigure', 'priorArtLabeling',
+  'requiredSections', 'sectionHeaders', 'paraNumbering', 'specParaNumbering',
   // Claims structure (formatting half)
-  'claimSequentiality', 'claimDependencies',
+  'claimSequentiality', 'claimDependencies', 'claimPeriods',
   // Abstract structure
   'abstractWordCount', 'abstractStructure',
   // Filing extras
@@ -82,6 +85,12 @@ const GROUP2_CHECKS = [
 ]
 
 const GROUP3_CHECKS = [
+  // Spec structure (semantic)
+  'specParaEndings',
+  // Spec content (figure cross-reference)
+  'figureCrossRef',
+  // Drawings (MPEP § 608.02 semantic rules — USPTO doesn't check pre-submission)
+  'figureSequential', 'singleFigure', 'priorArtLabeling',
   // Claims structure (substantive half)
   'transitionPhrase',
   // Claims cross-jurisdiction (restrictive wording family)
@@ -89,7 +98,7 @@ const GROUP3_CHECKS = [
   // Claims §112 analysis
   'meansPlusFunction', 'antecedentBasis', 'specSupport', 'preambleConsistency',
   'checkJepsonPriorArt', 'checkCrmNonTransitory', 'checkMarkushTransition', 'checkOmnibusClaim',
-  'whereinCommas', 'checkClaimPunctuation', 'claimPeriods',
+  'whereinCommas', 'checkClaimPunctuation',
   // Abstract (substantive half)
   'legalPhrasesAbstract', 'impliedPhrases',
 ]
@@ -263,18 +272,31 @@ function JurisdictionFeatureBlock({ t, jurisdiction, cardKeys }) {
 
 // TW table: keeps the marketing buckets (Shared / TIPO-only / PatentLint-only)
 // but within each bucket rows sort by the canonical 7-group document order.
+//
+// G1/G3 placement is grounded in TIPO 專利申請文件輔助偵錯系統's documented
+// check families (文字矛盾 / 元件標號錯誤 / 標點符號誤用 / 用語不一致 /
+// 獨立項元件連接關係 / 名稱與範圍用語相符性 / 書寫格式檢查) per IPPA trade-
+// association writeup + practitioner walkthrough (Irene Lin, Medium).
+// These cover formal/format-level checks broadly; what's demonstrably beyond
+// TIPO 偵錯系統's scope is semantic §26 第3項 walker analysis (先行詞 /
+// 說明書支持), full CNIPA-terminology detection (TIPO limited to char-level),
+// and specific semantic abstract/claim-reference checks. Items in G3 are
+// confirmed or high-confidence PatentLint-only.
 const TW_GROUP1_CHECKS = [
+  // Spec structure
+  'requiredSections', 'sectionOrdering', 'paragraphNumbering', 'paragraphEnding', 'bracketFormat',
   // Spec content
-  'figureRefConsistency', 'patentTypeTerminology', 'symbolTablePresence', 'symbolTableConsistency',
+  'figureRefConsistency', 'patentTypeTerminology', 'title', 'symbolTablePresence', 'symbolTableConsistency',
+  // Drawings
+  'figuresSequential',
   // Claims structure
-  'dependencyFormat', 'forwardDependency', 'singleSentence', 'refNumeralParens', 'subjectConsistency',
+  'sequential', 'dependencyFormat', 'selfDependent', 'circularDependency', 'forwardDependency',
+  'singleSentence', 'refNumeralParens', 'subjectConsistency',
   // Claims cross-jurisdiction
-  'cnTerminology', 'multiDepOnMultiDep', 'multiDepAlternative', 'titleSubjectMatch',
+  'multiDepOnMultiDep', 'multiDepAlternative', 'titleSubjectMatch',
   'claimsSymbolTableConsistency', 'connectionRelationships',
-  // Claims §112 analysis
-  'antecedentBasis',
-  // Abstract (representative-drawing cross-check)
-  'symbolVsRepDrawing',
+  // Abstract
+  'charCount', 'representativeDrawing', 'symbolVsRepDrawing',
 ]
 
 const TW_GROUP2_CHECKS = [
@@ -283,20 +305,16 @@ const TW_GROUP2_CHECKS = [
 ]
 
 const TW_GROUP3_CHECKS = [
-  // Spec structure
-  'requiredSections', 'sectionOrdering', 'paragraphNumbering', 'paragraphEnding', 'bracketFormat',
-  // Spec content
-  'title', 'claimReference',
-  // Drawings
-  'figuresSequential',
-  // Claims structure
-  'sequential', 'selfDependent', 'circularDependency', 'transitionPhrase',
-  // Claims cross-jurisdiction
-  'specDrawingRef',
-  // Claims §112 analysis
-  'specSupport',
-  // Abstract
-  'charCount', 'titleMatch', 'commercialLanguage', 'representativeDrawing',
+  // Spec content (semantic — claims referenced from spec)
+  'claimReference',
+  // Claims structure (semantic two-part 其特徵在於 detection)
+  'transitionPhrase',
+  // Claims cross-jurisdiction (semantic)
+  'cnTerminology', 'specDrawingRef',
+  // Claims §26 第3項 semantic walker analysis
+  'antecedentBasis', 'specSupport',
+  // Abstract (semantic)
+  'titleMatch', 'commercialLanguage',
 ]
 
 function TwComparisonTable({ t }) {
@@ -362,6 +380,9 @@ function TwComparisonTable({ t }) {
         {renderGroup(ref2, inView2, 'about.tw.group2Title', TW_GROUP2_CHECKS, true, false, false, 150)}
         {renderGroup(ref3, inView3, 'about.tw.group3Title', TW_GROUP3_CHECKS, false, true, true, 300)}
       </table>
+      <p className="text-xs text-muted-foreground italic px-2 py-3">
+        {t('about.tableFootnote')}
+      </p>
     </div>
   )
 }
@@ -429,6 +450,9 @@ function UsComparisonTable({ t }) {
         {renderGroup(ref2, inView2, 'about.uspto.group2Title', GROUP2_CHECKS, true, false, false, 150)}
         {renderGroup(ref3, inView3, 'about.uspto.group3Title', GROUP3_CHECKS, false, true, true, 300)}
       </table>
+      <p className="text-xs text-muted-foreground italic px-2 py-3">
+        {t('about.tableFootnote')}
+      </p>
     </div>
   )
 }
