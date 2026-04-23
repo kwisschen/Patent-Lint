@@ -63,6 +63,12 @@ def _run_cn_pipeline(
     )
 
     # --- Claims checks (9–21) ---
+    # Emission order follows canonical groups (ADR-149):
+    #   G4 claims-structure: sequential → dependency_format → self_dependent
+    #     → forward_dependency → single_sentence → ref_numeral_parens
+    #     → subject_consistency → transition_phrase → dependent_ordering
+    #   G5 claims cross-jurisdiction: tw_terminology → claims_spec_reference
+    #     → multi_multi_dep → connection_relationships
     claims_checks = (
         cn_claims_analysis.check_claims_sequential(cn_doc)
         + cn_claims_analysis.check_dependency_format(cn_doc)
@@ -72,10 +78,10 @@ def _run_cn_pipeline(
         + cn_claims_analysis.check_reference_numeral_parentheses(cn_doc)
         + cn_claims_analysis.check_subject_name_consistency(cn_doc)
         + cn_claims_analysis.check_transition_phrase(cn_doc)
+        + cn_claims_analysis.check_dependent_ordering(cn_doc)
         + cn_claims_analysis.check_tw_terminology(cn_doc)
         + cn_claims_analysis.check_claims_spec_reference(cn_doc)
         + cn_claims_analysis.check_multi_multi_dependency(cn_doc)
-        + cn_claims_analysis.check_dependent_ordering(cn_doc)
         + cn_claims_analysis.check_connection_relationships_cn(cn_doc)
     )
 
@@ -321,12 +327,21 @@ def _run_tw_pipeline(
         + len(tw_doc.embodiment)
     )
 
-    # --- Specification checks (1–10) ---
+    # --- Specification checks (1–11) ---
+    # Emission order follows canonical groups (ADR-149):
+    #   G1 spec-structure: required_sections → section_ordering
+    #     → paragraph_numbering → paragraph_ending → bracket_format
+    #   G2 spec-content: figure_ref_consistency → patent_type_terminology
+    #     → title → claim_reference → symbol_table_presence
+    #     → symbol_table_consistency → symbol_vs_rep_drawing (spliced below)
+    # bracket_format (施行細則 §17 header structure) moved up from trailing
+    # position to its canonical G1 slot after paragraph_ending.
     spec_checks = (
         tw_spec_analysis.check_required_sections(tw_doc)
         + tw_spec_analysis.check_section_ordering(tw_doc)
         + tw_spec_analysis.check_paragraph_numbering(tw_doc)
         + tw_spec_analysis.check_paragraph_ending(tw_doc)
+        + tw_cross_ref_analysis.check_bracket_format(tw_doc)
         + tw_spec_analysis.check_figure_ref_consistency(tw_doc)
         + tw_spec_analysis.check_patent_type_terminology(tw_doc)
         + tw_spec_analysis.check_title(tw_doc)
@@ -449,11 +464,10 @@ def _run_tw_pipeline(
         + tw_abstract_analysis.check_representative_drawing(tw_doc)
     )
 
-    # --- Cross-reference checks (31–32) → spec-level ---
-    spec_checks = list(spec_checks) + (
-        tw_cross_ref_analysis.check_symbol_vs_rep_drawing(tw_doc)
-        + tw_cross_ref_analysis.check_bracket_format(tw_doc)
-    )
+    # --- Cross-reference checks (spec-level G2 tail) ---
+    # symbol_vs_rep_drawing is a cross-ref content consistency check (G2);
+    # bracket_format moved to its G1 slot above (ADR-149).
+    spec_checks = list(spec_checks) + tw_cross_ref_analysis.check_symbol_vs_rep_drawing(tw_doc)
 
     # --- Drawings checks (33–34) ---
     # Emission order: figure_count → figures_sequential per Phase 10C
