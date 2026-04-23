@@ -1,128 +1,98 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025 Christopher Chen
-"""Regression gates for the Phase 10C document-order invariant.
+"""Regression gates for the canonical check-emission order (ADR-149).
 
-Asserts that CheckItems emit in the canonical per-jurisdiction order
-documented in CLAUDE.md ("Check-ordering consistency invariant"). The
-test doesn't pin a brittle full-order list; instead each known
-message_key maps to an integer group rank (1 = spec-structure,
-2 = spec-content, 3 = drawings, ...), and we require the actual emit
-order to be monotonically non-decreasing in group rank.
+Drift is caught two ways:
 
-If a future refactor shuffles a check into the wrong group (e.g.
-required_sections drifts mid-spec-list), the test fails loudly with
-the offending message_key named."""
+1. **Unregistered key gate**: every message_key emitted by any pipeline
+   must appear in ``CANONICAL_CHECK_ORDER`` (src/patentlint/check_order.py).
+   A new check family that forgets to register fails this gate with the
+   offending key named.
+
+2. **Monotonicity gate**: within each of the four emission buckets
+   (specification / claims / abstract / drawings), the sequence of
+   registered keys must be non-decreasing in (CheckGroup, idx). A future
+   refactor that shuffles a check into the wrong canonical group fails
+   this gate loudly.
+
+Covers all three jurisdictions (US / CN / TW) via the pass-path — the
+empty-fixture emit already exercises ~30+ CheckItems per pipeline, which
+is the coverage surface we care about for an ordering invariant.
+"""
 
 from __future__ import annotations
 
-from patentlint.models import AnalysisResult, Jurisdiction
+from patentlint.check_order import (
+    CANONICAL_CHECK_ORDER,
+    canonical_rank,
+)
+from patentlint.models import (
+    AnalysisResult,
+    CheckItem,
+    CnPatentDocument,
+    CnPatentType,
+    Jurisdiction,
+    TwPatentDocument,
+    TwPatentType,
+)
+from patentlint.pipeline import _run_cn_pipeline, _run_tw_pipeline
 
 
-# Group rank for every message_key emitted on spec_checks / drawings_checks.
-# Lower numbers emit first. Keys not in this dict are ignored (walker-emitted
-# dynamic keys like required_sections_checks contents are handled inline).
-SPEC_STRUCTURE_GROUP = 1
-SPEC_CONTENT_GROUP = 2
-DRAWINGS_GROUP = 3
-
-SPEC_GROUP_RANK: dict[str, int] = {
-    # Group 1: Spec structure
-    "check.spec.trackedChanges.amend": SPEC_STRUCTURE_GROUP,
-    "check.spec.paragraphSequential.missing": SPEC_STRUCTURE_GROUP,
-    "check.spec.paragraphSequential.amend": SPEC_STRUCTURE_GROUP,
-    "check.spec.paragraphSequential.pass": SPEC_STRUCTURE_GROUP,
-    "check.spec.paragraphEnding.amend": SPEC_STRUCTURE_GROUP,
-    "check.spec.paragraphEnding.pass": SPEC_STRUCTURE_GROUP,
-    # Required sections checks are emitted as dynamic per-section items;
-    # their message_keys begin with "checks.required_section_" — handled
-    # via prefix in _rank_of.
-    # Group 2: Spec content
-    "check.spec.sequenceListing.amend": SPEC_CONTENT_GROUP,
-    "check.spec.sequenceListing.pass": SPEC_CONTENT_GROUP,
-    "check.spec.crossReference.verify": SPEC_CONTENT_GROUP,
-    "check.spec.crossReference.pass": SPEC_CONTENT_GROUP,
-    "check.spec.priorArt.verify": SPEC_CONTENT_GROUP,
-    "check.spec.priorArt.pass": SPEC_CONTENT_GROUP,
-    "check.spec.restrictiveWording.verify": SPEC_CONTENT_GROUP,
-    "check.spec.restrictiveWording.pass": SPEC_CONTENT_GROUP,
-    # Drawing overview is also spec-content (it's the spec-tab preview of
-    # drawings status; true drawings checks live on drawings_checks).
-    "check.drawings.overview.verify": SPEC_CONTENT_GROUP,
-    "check.drawings.overview.pass": SPEC_CONTENT_GROUP,
-}
-
-# Drawings tab (jurisdiction-common)
-DRAWINGS_GROUP_RANK: dict[str, int] = {
-    # Per target: figure_count → single_figure → prior_art_drawings
-    # → figures_sequential → figure_xref
-    "check.drawings.count.amend": 1,
-    "check.drawings.count.pass": 1,
-    "check.cn.drawings.count.amend": 1,
-    "check.cn.drawings.count.pass": 1,
-    "check.tw.drawings.count.amend": 1,
-    "check.tw.drawings.count.pass": 1,
-    "check.drawings.singleFigure.amend": 2,
-    "check.drawings.singleFigure.pass": 2,
-    "check.drawings.priorArt.amend": 3,
-    "check.drawings.priorArt.pass": 3,
-    "check.drawings.sequential.amend": 4,
-    "check.drawings.sequential.pass": 4,
-    "check.cn.drawings.figuresSequential.amend": 4,
-    "check.cn.drawings.figuresSequential.pass": 4,
-    "check.tw.drawings.figuresSequential.amend": 4,
-    "check.tw.drawings.figuresSequential.pass": 4,
-}
+def _assert_all_registered(items: list[CheckItem], jurisdiction: str, bucket_name: str) -> None:
+    """Every emitted CheckItem's message_key must be in CANONICAL_CHECK_ORDER."""
+    unregistered = [c.message_key for c in items if canonical_rank(c.message_key) is None]
+    assert not unregistered, (
+        f"{jurisdiction} {bucket_name}: unregistered message_keys emitted — "
+        f"{unregistered}. Every emitted key must be registered in "
+        f"src/patentlint/check_order.py (ADR-149). Either add the key to "
+        f"CANONICAL_CHECK_ORDER with its canonical (bucket, group, idx), or "
+        f"remove the emit site."
+    )
 
 
-def _rank_spec(key: str) -> int | None:
-    if key in SPEC_GROUP_RANK:
-        return SPEC_GROUP_RANK[key]
-    # Required-sections synthesized CheckItems (group 1, spec structure).
-    if key.startswith("checks.required_section"):
-        return SPEC_STRUCTURE_GROUP
-    return None
-
-
-def _rank_drawings(key: str) -> int | None:
-    return DRAWINGS_GROUP_RANK.get(key)
-
-
-def _assert_monotonic(items, rank_fn, jurisdiction: str, group_label: str) -> None:
-    last_rank = 0
-    last_key = None
+def _assert_monotonic(items: list[CheckItem], jurisdiction: str, bucket_name: str) -> None:
+    """Registered keys must emit in non-decreasing (group, idx) order."""
+    last_sort_key: tuple[int, int] = (0, 0)
+    last_message_key = None
     for check in items:
-        rank = rank_fn(check.message_key)
+        rank = canonical_rank(check.message_key)
         if rank is None:
+            # _assert_all_registered catches this; skip here so the two
+            # assertions report independently.
             continue
-        assert rank >= last_rank, (
-            f"{jurisdiction} {group_label} order regression: "
-            f"'{check.message_key}' (rank {rank}) emitted after "
-            f"'{last_key}' (rank {last_rank}). The document-order invariant "
-            f"requires non-decreasing group ranks — see CLAUDE.md "
-            f"'Check-ordering consistency invariant'."
+        _bucket, group, idx = rank
+        sort_key = (group.value, idx)
+        assert sort_key >= last_sort_key, (
+            f"{jurisdiction} {bucket_name} order regression: "
+            f"'{check.message_key}' (group={group.value}, idx={idx}) "
+            f"emitted after '{last_message_key}' "
+            f"(group={last_sort_key[0]}, idx={last_sort_key[1]}). "
+            f"See the canonical order in src/patentlint/check_order.py "
+            f"(ADR-149)."
         )
-        last_rank = rank
-        last_key = check.message_key
+        last_sort_key = sort_key
+        last_message_key = check.message_key
 
 
-class TestUsSpecOrderInvariant:
-    """US _to_us_report_data spec-checks emit in the document-order invariant."""
+class TestUsEmissionOrder:
+    """US pipeline (``_to_us_report_data``) obeys the canonical order."""
 
-    def test_empty_us_analysis_spec_order(self):
-        # A minimal US AnalysisResult still emits the pass-status spec
-        # checks; ordering must respect the group invariant even with
-        # no findings.
+    def test_us_all_buckets_clean(self):
         result = AnalysisResult(jurisdiction=Jurisdiction.US, likely_patent=True)
         report = result.to_report_data()
-        _assert_monotonic(report.specification_checks, _rank_spec, "US", "spec")
+        for bucket_name, items in (
+            ("specification_checks", report.specification_checks),
+            ("claims_checks", report.claims_checks),
+            ("abstract_checks", report.abstract_checks),
+            ("drawings_checks", report.drawings_checks),
+        ):
+            _assert_all_registered(items, "US", bucket_name)
+            _assert_monotonic(items, "US", bucket_name)
 
-    def test_required_sections_emits_in_spec_structure_group(self):
-        # Required sections are Group 1 (spec structure). Verify they appear
-        # before any Group 2 (spec content) check by inspecting the pass-path
-        # output — required_sections should show up before
-        # sequence_listing / cross_reference / prior_art / restrictive_wording.
-        from patentlint.models import CheckItem
-
+    def test_us_required_sections_precedes_sequence_listing(self):
+        # Specific document-order invariant: required-sections (G1) must
+        # precede sequence-listing (G2). Preserved from the pre-ADR-149
+        # regression — gates the same invariant at a finer grain.
         result = AnalysisResult(
             jurisdiction=Jurisdiction.US,
             likely_patent=True,
@@ -130,35 +100,63 @@ class TestUsSpecOrderInvariant:
                 CheckItem(
                     status="amend",
                     message="Missing X section.",
-                    message_key="checks.required_section_test_stub",
+                    message_key="checks.required_sections_missing",
                 ),
             ],
         )
         report = result.to_report_data()
         keys = [c.message_key for c in report.specification_checks]
-
-        # The stub required-sections check must precede sequence_listing
-        # (Group 2 leader).
-        rs_idx = keys.index("checks.required_section_test_stub")
+        rs_idx = keys.index("checks.required_sections_missing")
         sl_idx = keys.index("check.spec.sequenceListing.pass")
         assert rs_idx < sl_idx, (
-            f"required_sections (Group 1) emitted after sequence_listing "
-            f"(Group 2): keys={keys}"
+            f"required_sections (G1) must precede sequence_listing (G2); "
+            f"keys={keys}"
         )
 
 
-class TestDrawingsOrderInvariant:
-    """CN + TW pipelines emit drawings checks figure_count → figures_sequential."""
+class TestCnEmissionOrder:
+    """CN pipeline (``_run_cn_pipeline``) obeys the canonical order."""
 
-    def test_cn_drawings_order(self):
-        # The CN pipeline's drawings_checks concatenation is
-        # check_figure_count(...) + check_figures_sequential(...). We
-        # assert that ordering is reflected in the rank function — a
-        # lightweight invariant check that catches future concat swaps
-        # without needing to spin up a full CN fixture.
-        assert _rank_drawings("check.cn.drawings.count.amend") == 1
-        assert _rank_drawings("check.cn.drawings.figuresSequential.amend") == 4
+    def test_cn_all_buckets_clean(self):
+        doc = CnPatentDocument(patent_type=CnPatentType.INVENTION)
+        result = _run_cn_pipeline(doc)
+        for bucket_name, items in (
+            ("cn_specification_checks", result.cn_specification_checks),
+            ("cn_claims_checks", result.cn_claims_checks),
+            ("cn_abstract_checks", result.cn_abstract_checks),
+            ("cn_drawings_checks", result.cn_drawings_checks),
+        ):
+            _assert_all_registered(items, "CN", bucket_name)
+            _assert_monotonic(items, "CN", bucket_name)
 
-    def test_tw_drawings_order(self):
-        assert _rank_drawings("check.tw.drawings.count.amend") == 1
-        assert _rank_drawings("check.tw.drawings.figuresSequential.amend") == 4
+
+class TestTwEmissionOrder:
+    """TW pipeline (``_run_tw_pipeline``) obeys the canonical order."""
+
+    def test_tw_all_buckets_clean(self):
+        doc = TwPatentDocument(patent_type=TwPatentType.INVENTION)
+        result = _run_tw_pipeline(doc)
+        for bucket_name, items in (
+            ("tw_specification_checks", result.tw_specification_checks),
+            ("tw_claims_checks", result.tw_claims_checks),
+            ("tw_abstract_checks", result.tw_abstract_checks),
+            ("tw_drawings_checks", result.tw_drawings_checks),
+        ):
+            _assert_all_registered(items, "TW", bucket_name)
+            _assert_monotonic(items, "TW", bucket_name)
+
+
+class TestCanonicalConstantInternalConsistency:
+    """Sanity gates on the canonical constant itself."""
+
+    def test_every_entry_has_correct_shape(self):
+        # Defensive: catches a typo'd entry that accidentally inserts
+        # wrong-shaped tuple (e.g., missing the idx).
+        for key, value in CANONICAL_CHECK_ORDER.items():
+            assert (
+                isinstance(value, tuple) and len(value) == 3
+            ), f"Bad entry for {key!r}: expected (bucket, group, idx), got {value!r}"
+
+    def test_idx_values_are_non_negative(self):
+        for key, (_bucket, _group, idx) in CANONICAL_CHECK_ORDER.items():
+            assert idx >= 0, f"{key!r}: idx must be non-negative, got {idx}"
