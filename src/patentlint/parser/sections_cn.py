@@ -9,10 +9,16 @@ import re
 from patentlint.models import CnPatentDocument, CnPatentType
 from patentlint.parser.claims_cn import _MID_PARAGRAPH_CLAIM_BOUNDARY, parse_cn_claims_docx
 from patentlint.parser.docx_loader import DocxSection
+from patentlint.parser.detection import (
+    HANGUL_REJECTION_RATIO,
+    JP_KANA_REJECTION_RATIO,
+    DetectionReason,
+    DetectionResult,
+)
 from patentlint.parser.language import (
     cjk_ratio,
-    contains_hangul,
-    contains_hiragana_or_katakana,
+    hangul_ratio,
+    jp_kana_ratio,
 )
 
 # ---------------------------------------------------------------------------
@@ -367,60 +373,65 @@ def _count_figures_from_descriptions(paragraphs: list[str]) -> int:
 _TW_BRACKET_HEADER_RE = re.compile(r"^【[^\d].+?】", re.MULTILINE)
 
 
-def detect_patent_document_cn(paragraphs: list[str]) -> bool:
-    """Heuristic check for whether a .docx appears to be a CN patent spec.
+def classify_document_cn(paragraphs: list[str]) -> DetectionResult:
+    """Classify a .docx as CN patent or explain why it isn't.
 
-    Jurisdiction-aware as of Phase 9 #73/#74: rejects TW (【】 fullwidth
-    bracket headers), JP (hiragana/katakana presence), KO (Hangul
-    presence), and US / other Latin-script patents (fail the CJK-count
-    gate on the numeric-claim fallback). CN patents use Simplified
-    Chinese only — no kana, no Hangul — so any of those scripts is
-    sufficient to reject.
+    Layered decision (ADR-150):
 
-    Returns True if CN-patent indicators are found, False otherwise.
-    OR logic — returns True on first match.
+    1. Cross-script rejection (ratio-based). JP kana or KO Hangul
+       content above :data:`JP_KANA_REJECTION_RATIO` /
+       :data:`HANGUL_REJECTION_RATIO` → reject with the specific
+       reason code so the banner can explain what was detected.
+       Ratios tolerate trace contamination (a stray middle dot in a
+       real CN draft) without false-positive.
+    2. TW 【】 bracket headers → reject as ``content_missing`` (the
+       document looks like TW, not CN; the banner prompts the user
+       to re-select jurisdiction without lying about what was found).
+    3. Positive CN evidence: CN spec sub-section headers
+       (技术领域 / 背景技术 / …) or 五书模板 boundary markers
+       (权利要求书 / 说明书摘要).
+    4. Numbered-claims fallback gated on CJK dominance ≥ 20% to
+       disambiguate US drafts that embed CJK term callouts.
     """
     full_text = "\n".join(paragraphs)
 
-    # Script-presence rejections (JP kana, KO Hangul). CN patents carry
-    # zero of either; any appearance is strong enough to reject without
-    # needing a ratio.
-    if contains_hiragana_or_katakana(full_text):
-        return False
-    if contains_hangul(full_text):
-        return False
+    # --- Layer 1: Cross-script rejection (ratio-based) ---
+    kana = jp_kana_ratio(full_text)
+    hangul = hangul_ratio(full_text)
+    if kana >= JP_KANA_REJECTION_RATIO:
+        return (False, DetectionReason.CROSS_SCRIPT_JAPANESE)
+    if hangul >= HANGUL_REJECTION_RATIO:
+        return (False, DetectionReason.CROSS_SCRIPT_KOREAN)
 
-    # TW patents carry 【section-name】 body headers; CN does not. A single
-    # such header is enough to reject. (CN documents occasionally contain
-    # 【NNNN】 paragraph numbers, but the ``[^\d]`` lookhead rules those out.)
+    # --- Layer 2: TW 【】 section headers mean this isn't a CN draft ---
+    # Not a cross-script issue — both are zh, just different jurisdictions.
+    # Banner copy ("does not match CN spec patterns") is truthful.
     if _TW_BRACKET_HEADER_RE.search(full_text):
-        return False
+        return (False, DetectionReason.CONTENT_MISSING)
 
+    # --- Layer 3: Positive CN evidence ---
     for para in paragraphs:
         stripped = para.strip()
-
-        # 1. CN spec sub-section header (技术领域, 背景技术, etc.) — simplified
-        # Chinese, not used by TW or US.
         for _, pattern in _SPEC_SUBSECTIONS:
             if pattern.match(stripped):
-                return True
-
-        # 2. 五书模板 boundary markers — simplified Chinese, not used by TW
-        # (whose 【申請專利範圍】/【摘要】 are traditional) or US.
+                return (True, DetectionReason.PATENT_DETECTED)
         if stripped in ("权利要求书", "说明书摘要"):
-            return True
+            return (True, DetectionReason.PATENT_DETECTED)
 
-    # 3. Numbered claims fallback (3+ lines). Language-ambiguous on its own
-    # — US ``1. A method...`` and TW ``1．一種...`` both match. Require
-    # CJK dominance (ratio ≥ 20%) to reject US patents that embed CJK
-    # translations of claim terms (e.g. testspec3's 眼鏡 / 鏡片 callouts).
-    # Raw counts don't work: those US specs carry 50-70 CJK chars, above
-    # any reasonable raw threshold, but stay well below 1% by ratio.
-    if len(re.findall(r"^\s*\d+[.．。]\s*", full_text, re.MULTILINE)) >= 3:
-        if cjk_ratio(full_text) >= 0.20:
-            return True
+    # --- Layer 4: Numbered-claims fallback (requires CJK dominance) ---
+    if (
+        len(re.findall(r"^\s*\d+[.．。]\s*", full_text, re.MULTILINE)) >= 3
+        and cjk_ratio(full_text) >= 0.20
+    ):
+        return (True, DetectionReason.PATENT_DETECTED)
 
-    return False
+    return (False, DetectionReason.CONTENT_MISSING)
+
+
+def detect_patent_document_cn(paragraphs: list[str]) -> bool:
+    """Back-compat boolean wrapper around :func:`classify_document_cn`."""
+    is_patent, _ = classify_document_cn(paragraphs)
+    return is_patent
 
 
 def _collect_by_page_header(

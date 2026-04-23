@@ -55,17 +55,40 @@ def is_hangul_char(ch: str) -> bool:
 
 
 def is_hiragana_or_katakana(ch: str) -> bool:
-    """Return True if ``ch`` is a Japanese-specific kana character.
+    """Return True if ``ch`` is a JP-specific kana character.
 
-    Hiragana and Katakana are Japan-only — neither CN nor TW patents use
-    these scripts. Kanji (CJK Unified Ideographs) is shared across CN, TW,
-    and JP, so presence of kanji alone is not a Japanese-specificity
-    signal; presence of kana is.
+    Narrower than the raw Hiragana/Katakana Unicode blocks: excludes the
+    script=Common code points that sit inside those blocks (middle dot,
+    double hyphen, prolonged sound mark, voicing marks), because they
+    are routinely used in Traditional Chinese typography. Treating them
+    as "JP-specific" causes jurisdiction detectors to reject legitimate
+    TW/CN drafts on a single stray punctuation character.
+
+    Covered code points (all Unicode script=Hiragana or script=Katakana):
+      - U+3041..U+3096  hiragana syllables (small + full)
+      - U+309D..U+309F  hiragana iteration marks + digraph yori
+      - U+30A1..U+30FA  katakana syllables
+      - U+30FD..U+30FF  katakana iteration marks + digraph koto
+
+    Explicitly excluded (script=Common despite living in the blocks):
+      - U+3040 / U+3097 / U+3098  unassigned
+      - U+3099..U+309C  combining + standalone voicing marks
+      - U+30A0  KATAKANA-HIRAGANA DOUBLE HYPHEN
+      - U+30FB  KATAKANA MIDDLE DOT  (seen in TW "保溫・保冷" usage)
+      - U+30FC  KATAKANA-HIRAGANA PROLONGED SOUND MARK
+
+    Kanji (CJK Unified Ideographs) is shared across CN/TW/JP, so its
+    presence is not a JP-specificity signal either.
     """
     if not ch:
         return False
     cp = ord(ch)
-    return 0x3040 <= cp <= 0x309F or 0x30A0 <= cp <= 0x30FF
+    return (
+        0x3041 <= cp <= 0x3096  # hiragana syllables
+        or 0x309D <= cp <= 0x309F  # hiragana iteration + digraph
+        or 0x30A1 <= cp <= 0x30FA  # katakana syllables
+        or 0x30FD <= cp <= 0x30FF  # katakana iteration + digraph
+    )
 
 
 def is_east_asian_char(ch: str) -> bool:
@@ -91,15 +114,70 @@ def contains_hangul(text: str) -> bool:
 
 
 def contains_hiragana_or_katakana(text: str) -> bool:
-    """Return True if ``text`` contains at least one hiragana or katakana.
+    """Return True if ``text`` contains at least one JP-specific kana.
 
-    Strict presence check (not a ratio) because TW/CN patents should
-    contain zero Japanese-specific kana — a single kana is enough to
-    reject the document as Japanese.
+    Strict presence check. Prefer :func:`jp_kana_ratio` when deciding
+    whether to reject a document as JP — real-world TW/CN drafts
+    translated from JP priority documents sometimes retain a handful
+    of katakana for transliterated brand names or technical terms
+    (< 0.5% of content). A ratio-aware check tolerates that while
+    still catching genuine JP documents.
     """
     if not text:
         return False
     return any(is_hiragana_or_katakana(ch) for ch in text)
+
+
+def jp_kana_count(text: str) -> int:
+    """Count JP-specific kana characters (narrowed; excludes middle dot etc.)."""
+    if not text:
+        return 0
+    return sum(1 for ch in text if is_hiragana_or_katakana(ch))
+
+
+def jp_kana_ratio(text: str) -> float:
+    """Return the JP kana share of non-whitespace characters in ``text``.
+
+    Empty input returns 0.0. Mirrors :func:`cjk_ratio` / :func:`east_asian_ratio`
+    so jurisdiction detectors can tolerate trace kana (< 0.5% typical for
+    TW/CN drafts carrying JP-priority-doc artifacts) while still rejecting
+    genuinely Japanese documents (tens of percent kana content).
+    """
+    if not text:
+        return 0.0
+    total = 0
+    kana = 0
+    for ch in text:
+        if ch.isspace():
+            continue
+        total += 1
+        if is_hiragana_or_katakana(ch):
+            kana += 1
+    if total == 0:
+        return 0.0
+    return kana / total
+
+
+def hangul_ratio(text: str) -> float:
+    """Return the Hangul share of non-whitespace characters in ``text``.
+
+    Mirror of :func:`jp_kana_ratio` for the Korean side. Real-world
+    TW/CN drafts contain zero Hangul, so the threshold can be tighter
+    than the JP one (any non-trivial ratio indicates a KO document).
+    """
+    if not text:
+        return 0.0
+    total = 0
+    hangul = 0
+    for ch in text:
+        if ch.isspace():
+            continue
+        total += 1
+        if is_hangul_char(ch):
+            hangul += 1
+    if total == 0:
+        return 0.0
+    return hangul / total
 
 
 def count_cjk_chars(text: str) -> int:

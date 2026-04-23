@@ -314,6 +314,13 @@ class ReportData(BaseModel):
 
     # Document-level flags
     likely_patent: bool = True
+    # Reason code describing why ``likely_patent`` was set the way it was
+    # (see :class:`patentlint.parser.detection.DetectionReason`). Carries
+    # forward to the frontend banner so copy can honestly describe what
+    # the detector actually checked — content-missing vs. cross-script
+    # vs. weak-signal. Default ``None`` keeps back-compat for constructors
+    # that predate ADR-150.
+    patent_detection_reason: str | None = None
     has_tracked_changes: bool = False
     has_scanned_fallback: bool = False
 
@@ -401,6 +408,7 @@ class AnalysisResult(BaseModel):
 
     # Document-level flags
     likely_patent: bool = True
+    patent_detection_reason: str | None = None
     has_scanned_fallback: bool = False
 
     # Abstract
@@ -481,6 +489,7 @@ class AnalysisResult(BaseModel):
             claim_trees=self._build_claim_trees(),
             antecedent_basis_issues=self.antecedent_basis_issues,
             likely_patent=self.likely_patent,
+            patent_detection_reason=self.patent_detection_reason,
             has_tracked_changes=self.has_tracked_changes,
             has_scanned_fallback=self.has_scanned_fallback,
         )
@@ -510,6 +519,7 @@ class AnalysisResult(BaseModel):
             antecedent_basis_issues=self.antecedent_basis_issues,
             unsupported_terms=self.unsupported_terms,
             likely_patent=self.likely_patent,
+            patent_detection_reason=self.patent_detection_reason,
             has_tracked_changes=self.has_tracked_changes,
         )
 
@@ -1054,5 +1064,6 @@ class AnalysisResult(BaseModel):
             antecedent_basis_issues=self.antecedent_basis_issues,
             unsupported_terms=self.unsupported_terms,
             likely_patent=self.likely_patent,
+            patent_detection_reason=self.patent_detection_reason,
             has_tracked_changes=self.has_tracked_changes,
         )

@@ -9,10 +9,16 @@ import re
 from patentlint.analysis.figure_refs import TW_PARSER
 from patentlint.models import TwPatentDocument, TwPatentType
 from patentlint.parser.claims_tw import parse_tw_claims
+from patentlint.parser.detection import (
+    HANGUL_REJECTION_RATIO,
+    JP_KANA_REJECTION_RATIO,
+    DetectionReason,
+    DetectionResult,
+)
 from patentlint.parser.language import (
-    contains_hangul,
-    contains_hiragana_or_katakana,
     count_cjk_chars,
+    hangul_ratio,
+    jp_kana_ratio,
 )
 from patentlint.parser.symbol_table_tw import parse_tw_symbol_table
 
@@ -167,50 +173,65 @@ def _find_bracketless_section_headers(paragraphs: list[str]) -> list[str]:
 # ---------------------------------------------------------------------------
 
 
-def detect_patent_document_tw(paragraphs: list[str]) -> bool:
-    """Heuristic check for whether a .docx appears to be a TW patent spec.
+def classify_document_tw(paragraphs: list[str]) -> DetectionResult:
+    """Classify a .docx as TW patent or explain why it isn't.
 
-    Jurisdiction-aware as of Phase 9 #74: rejects Japanese (hiragana or
-    katakana) and Korean (Hangul) documents, both of which share the
-    【】 fullwidth bracket section-header convention with TW and would
-    otherwise false-positive every heuristic below. TW patents use
-    Traditional Chinese only — no kana, no Hangul — so a single
-    hiragana / katakana / Hangul character is sufficient to reject.
+    Two-layer decision (ADR-150):
 
-    Returns True if TW-patent indicators are found, False otherwise.
-    OR logic — returns True on first match.
+    1. Cross-script rejection runs FIRST with a ratio threshold
+       (:data:`JP_KANA_REJECTION_RATIO` / :data:`HANGUL_REJECTION_RATIO`).
+       A document with meaningful JP kana or KO Hangul content is
+       rejected as the corresponding jurisdiction regardless of how
+       many 【】 bracket headers it carries — JPO patents also use
+       【】 headers, so bracket count alone cannot distinguish TIPO
+       from JPO; kana content does.
+
+    2. Positive TW evidence wins AFTER cross-script clears. Single
+       【section-name】 header or single 請求項 mention is enough —
+       neither character is used by CN simplified or US. 【NNNN】
+       paragraph numbers alone need ≥ 3 since the convention is
+       shared with other jurisdictions.
+
+    The ratio-based cross-script check (not presence) is the key
+    anti-false-positive measure: real-world TW drafts translated
+    from JP priority documents sometimes retain trace katakana
+    (brand names, a stray middle-dot) well below 0.5% content.
+    Pre-ADR-150 presence-based logic rejected those documents; the
+    ratio tolerates them while still catching genuinely JP input.
     """
     full_text = "\n".join(paragraphs)
 
-    # JPO and KIPO both use 【】 fullwidth brackets for section headers
-    # (【特許請求の範囲】, 【청구항 1】). Reject based on script presence
-    # rather than ratio — TW patents should carry zero JP/KO script.
-    if contains_hiragana_or_katakana(full_text):
-        return False
-    if contains_hangul(full_text):
-        return False
+    # --- Layer 1: Cross-script rejection (ratio-based, always first) ---
+    kana = jp_kana_ratio(full_text)
+    hangul = hangul_ratio(full_text)
+    if kana >= JP_KANA_REJECTION_RATIO:
+        return (False, DetectionReason.CROSS_SCRIPT_JAPANESE)
+    if hangul >= HANGUL_REJECTION_RATIO:
+        return (False, DetectionReason.CROSS_SCRIPT_KOREAN)
 
+    # --- Layer 2: Positive TW evidence ---
+    bracket_count = 0
+    qing_count = 0
     para_num_count = 0
     for para in paragraphs:
         stripped = para.strip()
-
-        # 1. Any 【】 bracket section header (non-digit content).
         if _BRACKET_HEADER.match(stripped):
-            return True
-
-        # 2. 請求項 claims keyword (Traditional Chinese 請).
+            bracket_count += 1
         if "請求項" in stripped:
-            return True
-
-        # 3. Count bracketed paragraph numbers 【NNNN】.
+            qing_count += 1
         if _PARA_NUM_PATTERN.match(stripped):
             para_num_count += 1
 
-    # 3+ bracketed paragraph numbers.
-    if para_num_count >= 3:
-        return True
+    if bracket_count >= 1 or qing_count >= 1 or para_num_count >= 3:
+        return (True, DetectionReason.PATENT_DETECTED)
 
-    return False
+    return (False, DetectionReason.CONTENT_MISSING)
+
+
+def detect_patent_document_tw(paragraphs: list[str]) -> bool:
+    """Back-compat boolean wrapper around :func:`classify_document_tw`."""
+    is_patent, _ = classify_document_tw(paragraphs)
+    return is_patent
 
 
 def extract_tw_sections(

@@ -534,6 +534,62 @@ class TestDetectPatentDocumentCn:
         ]
         assert detect_patent_document_cn(paragraphs) is False
 
+    def test_adr_150_accepts_cn_with_stray_middle_dot(self):
+        """ADR-150: a real CN draft with a stray U+30FB middle dot must
+        still be accepted. Pre-fix, the presence-based kana check rejected
+        such documents with a misleading "no CN sections found" banner."""
+        from patentlint.parser.sections_cn import classify_document_cn
+        from patentlint.parser.detection import DetectionReason
+        paragraphs = [
+            "技术领域",
+            "本发明涉及一种信号处理装置，具有保温・保冷功能。",
+            "背景技术",
+            "现有技术存在诸多缺陷。",
+            "权利要求书",
+            "1. 一种信号处理装置。",
+        ]
+        is_patent, reason = classify_document_cn(paragraphs)
+        assert is_patent is True
+        assert reason == DetectionReason.PATENT_DETECTED
+
+    def test_adr_150_reports_jp_reason_on_real_jp(self):
+        from patentlint.parser.sections_cn import classify_document_cn
+        from patentlint.parser.detection import DetectionReason
+        paragraphs = [
+            "【特許請求の範囲】",
+            "【請求項1】信号処理方法であって、第1の信号を受信する方法。",
+            "【発明の詳細な説明】本発明は信号処理に関する。",
+        ]
+        is_patent, reason = classify_document_cn(paragraphs)
+        assert is_patent is False
+        assert reason == DetectionReason.CROSS_SCRIPT_JAPANESE
+
+    def test_adr_150_reports_ko_reason_on_real_ko(self):
+        from patentlint.parser.sections_cn import classify_document_cn
+        from patentlint.parser.detection import DetectionReason
+        paragraphs = [
+            "【청구항 1】",
+            "본 발명은 신호 처리에 관한 것이다.",
+        ]
+        is_patent, reason = classify_document_cn(paragraphs)
+        assert is_patent is False
+        assert reason == DetectionReason.CROSS_SCRIPT_KOREAN
+
+    def test_adr_150_tw_upload_reports_content_missing(self):
+        """A TW draft uploaded to the CN selector has no cross-script
+        issue — both are zh. Report content_missing (the doc doesn't
+        match CN patterns) so the banner copy is accurate."""
+        from patentlint.parser.sections_cn import classify_document_cn
+        from patentlint.parser.detection import DetectionReason
+        paragraphs = [
+            "【發明摘要】",
+            "【申請專利範圍】",
+            "1. 一種裝置，包括處理器及記憶體。",
+        ]
+        is_patent, reason = classify_document_cn(paragraphs)
+        assert is_patent is False
+        assert reason == DetectionReason.CONTENT_MISSING
+
 
 # ---------------------------------------------------------------------------
 # _presplit_mid_paragraph — Phase 9 #59 fix
