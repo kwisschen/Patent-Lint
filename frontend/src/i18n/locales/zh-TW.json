@@ -183,7 +183,7 @@
   },
   "cta": {
     "heading": "準備好檢查您的專利稿件了嗎？",
-    "subtext": "拖放 .docx 檔案，即時取得分析結果。無需上傳，無需帳號。",
+    "subtext": "拖放 .docx 檔案，即時取得結果。無需上傳、無需帳號、不使用AI。",
     "button": "檢查稿件"
   },
   "antecedentBasis": {
@@ -216,7 +216,7 @@
   "security": {
     "airplaneDemoAlt": "示範：在飛航模式下無網路連線分析專利稿件",
     "badge": {
-      "headline": "無需上傳。無需帳號。無需安裝。",
+      "headline": "無需上傳。無需帳號。無AI。",
       "description": "您的檔案不會離開您的裝置。",
       "proveIt": "來驗證 →"
     },
@@ -317,7 +317,7 @@
   "about": {
     "productTitle": "PatentLint 是什麼？",
     "productTagline": "同類首創的專利稿件檢查工具，完全在您的瀏覽器中本機運行。",
-    "productDesc1": "PatentLint 是免費的專利稿件檢查工具，於審查委員指出缺失之前先行檢出問題。拖放美國、中國大陸或台灣專利稿件，便可即時取得合規報告，全程於本機運行。無需上傳、無需帳號、不使用雲端。",
+    "productDesc1": "PatentLint 是免費的專利稿件檢查工具，於審查委員指出缺失之前先行檢出問題。拖放美國、中國大陸或台灣專利稿件，便可即時取得合規報告，全程於本機運行。無需上傳、無需帳號、不使用雲端、不使用AI。",
     "productDesc2": "PatentLint 依據 MPEP（美國）、CNIPA 規則（中國大陸）及 TIPO 規則（台灣）進行撰稿規則檢查，偵測常見問題，如缺乏先行詞基礎、不正確的請求項結構和限制性用語。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 驗證送件格式。PatentLint 檢查稿件本身。",
@@ -1105,7 +1105,7 @@
     "ready": "分析引擎已就緒",
     "firstVisitHint": "首次造訪需數秒；完成後將快取於您的瀏覽器，下次秒開",
     "offline_note": "首次載入後可離線使用",
-    "feature1_title": "無需上傳。無需帳號。無需安裝。",
+    "feature1_title": "無需上傳。無需帳號。無AI。",
     "feature1_desc": "您的機密專利稿件不會離開您的裝置。不會上傳任何內容，PatentLint 也不會知道您的身份。",
     "feature2_title": "MPEP／CNIPA／TIPO 檢查與請求項樹狀圖",
     "feature2_desc": "偵測限制性用語、不明確用語及缺乏先行詞基礎等問題，並以互動式樹狀圖呈現請求項附屬關係。",

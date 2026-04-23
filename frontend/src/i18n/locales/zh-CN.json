@@ -183,7 +183,7 @@
   },
   "cta": {
     "heading": "准备好检查您的专利稿件了吗？",
-    "subtext": "拖放 .docx 文件，即时获取分析结果。无需上传，无需账号。",
+    "subtext": "拖放 .docx 文件，即时获取结果。无需上传、无需账号、不使用AI。",
     "button": "检查稿件"
   },
   "antecedentBasis": {
@@ -216,7 +216,7 @@
   "security": {
     "airplaneDemoAlt": "演示：在飞行模式下无网络连接分析专利稿件",
     "badge": {
-      "headline": "无需上传。无需账号。无需安装。",
+      "headline": "无需上传。无需账号。无AI。",
       "description": "您的文件不会离开您的设备。",
       "proveIt": "验证一下 →"
     },
@@ -317,7 +317,7 @@
   "about": {
     "productTitle": "PatentLint 是什么？",
     "productTagline": "同类首创的专利稿件检查工具，完全在您的浏览器中本地运行。",
-    "productDesc1": "PatentLint 是免费的专利稿件检查工具，在审查员指出缺陷之前先行检出问题。拖放美国、中国或台湾专利稿件，便可即时获取合规报告，全程于本地运行。无需上传、无需账号、不使用云端。",
+    "productDesc1": "PatentLint 是免费的专利稿件检查工具，在审查员指出缺陷之前先行检出问题。拖放美国、中国或台湾专利稿件，便可即时获取合规报告，全程于本地运行。无需上传、无需账号、不使用云端、不使用AI。",
     "productDesc2": "PatentLint 依据 MPEP（美国）、CNIPA 规则（中国）及 TIPO 规则（台湾）进行撰写规则检查，检测常见问题，如缺乏引用基础、不正确的权利要求结构和限制性用语。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查文稿本身。",
@@ -1105,7 +1105,7 @@
     "ready": "分析引擎已就绪",
     "firstVisitHint": "首次访问需几秒钟；完成后将缓存至您的浏览器，下次秒开",
     "offline_note": "首次加载后可离线使用",
-    "feature1_title": "无需上传。无需账号。无需安装。",
+    "feature1_title": "无需上传。无需账号。无AI。",
     "feature1_desc": "您的机密专利文稿不会离开您的设备。不会上传任何内容，PatentLint 也不会知道您的身份。",
     "feature2_title": "MPEP／CNIPA／TIPO 检查与权利要求树状图",
     "feature2_desc": "检测限制性用语、不确定用语及缺乏引用基础等问题，并以交互式树状图呈现权利要求从属关系。",
