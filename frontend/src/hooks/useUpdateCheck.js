@@ -107,6 +107,14 @@ export function useUpdateCheck() {
         // hash, not whatever the latest is at dismissal time (which
         // could race with a concurrent check).
         const targetHash = data.buildHash
+        // Sonner's onDismiss fires on ANY dismissal — including the
+        // action button click that triggers Reload. If we let onDismiss
+        // unconditionally call recordDismissal, clicking Reload silently
+        // stores the NEW hash as "dismissed", and a stale-HTML reload
+        // loop then re-surfaces the toast after the grace period. This
+        // flag scopes recordDismissal to implicit dismissals only (swipe
+        // / programmatic). Cancel still records explicitly.
+        let explicitlyHandled = false
 
         toast(t('updates.available'), {
           id: TOAST_ID,
@@ -114,10 +122,21 @@ export function useUpdateCheck() {
           action: {
             label: t('updates.reload'),
             onClick: () => {
-              // Belt-and-suspenders: clear Pyodide's Cache Storage before
-              // reload. The query-param cache-busting from commit 1 should
-              // make this unnecessary, but defense-in-depth protects users
-              // whose browsers somehow cached the old URL.
+              explicitlyHandled = true
+              // Force a fresh HTML fetch. window.location.reload() may
+              // serve a cached document (browser or CDN edge), which
+              // would re-execute the old bundle with the stale build
+              // hash baked in — the toast then reappears on the next
+              // check. A replace() with a one-shot cache-bust query
+              // forces the document request to bypass HTTP cache.
+              const reloadWithCacheBust = () => {
+                const url = new URL(window.location.href)
+                url.searchParams.set('_r', String(Date.now()))
+                window.location.replace(url.toString())
+              }
+              // Belt-and-suspenders: clear Pyodide's Cache Storage
+              // before reload. New deploys often ship a new Pyodide
+              // wheel, so the old cached WASM wouldn't match.
               if ('caches' in window) {
                 caches
                   .keys()
@@ -128,19 +147,21 @@ export function useUpdateCheck() {
                         .map((k) => caches.delete(k))
                     )
                   )
-                  .finally(() => window.location.reload())
+                  .finally(reloadWithCacheBust)
               } else {
-                window.location.reload()
+                reloadWithCacheBust()
               }
             },
           },
           cancel: {
             label: t('updates.dismiss'),
             onClick: () => {
+              explicitlyHandled = true
               recordDismissal(targetHash)
             },
           },
           onDismiss: () => {
+            if (explicitlyHandled) return
             recordDismissal(targetHash)
           },
         })
