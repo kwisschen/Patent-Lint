@@ -4,16 +4,56 @@ import { useTranslation } from 'react-i18next'
 import { AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-export default function NonPatentBanner({ onShowResults, jurisdiction }) {
-  const { t } = useTranslation()
+// Banner copy is keyed off BOTH the selected jurisdiction and the actual
+// rejection reason (ADR-150). Pre-ADR-150 the banner always said "your
+// document doesn't have standard sections/claims/numbering" regardless
+// of whether detection actually checked any of that — so a document
+// that happened to trip the cross-script short-circuit would be told
+// its sections were missing (a lie). Keying off the reason lets each
+// message honestly describe what the detector saw.
+//
+// Reason codes mirror patentlint.parser.detection.DetectionReason.
+// Fallback chain: try (jurisdiction + reason) → (jurisdiction + generic)
+// → (generic + reason) → (global generic). Guarantees we always render
+// something sensible even if a new reason ships without full translations.
+const REASONS = {
+  content_missing: 'ContentMissing',
+  cross_script_japanese: 'CrossScriptJapanese',
+  cross_script_korean: 'CrossScriptKorean',
+  weak_signal: 'WeakSignal',
+}
 
-  const warningKey = jurisdiction === 'CN' ? 'results.nonPatentWarningCn'
-                   : jurisdiction === 'TW' ? 'results.nonPatentWarningTw'
-                   : 'results.nonPatentWarning'
+const JURISDICTION_SUFFIXES = {
+  US: 'Us',
+  CN: 'Cn',
+  TW: 'Tw',
+}
 
-  const detailsKey = jurisdiction === 'CN' ? 'results.nonPatentWarningDetailsCn'
-                   : jurisdiction === 'TW' ? 'results.nonPatentWarningDetailsTw'
-                   : 'results.nonPatentWarningDetails'
+function buildCandidateKeys(field, jurisdiction, reason) {
+  const reasonSuffix = REASONS[reason] || REASONS.content_missing
+  const jurSuffix = JURISDICTION_SUFFIXES[jurisdiction] || ''
+  // field examples: "nonPatentWarning" / "nonPatentWarningDetails"
+  return [
+    `results.${field}${jurSuffix}${reasonSuffix}`,
+    `results.${field}${reasonSuffix}`,
+    `results.${field}${jurSuffix}`,
+    `results.${field}`,
+  ]
+}
+
+export default function NonPatentBanner({ onShowResults, jurisdiction, reason = 'content_missing' }) {
+  const { t, i18n } = useTranslation()
+
+  const resolveKey = (field) => {
+    const candidates = buildCandidateKeys(field, jurisdiction, reason)
+    for (const key of candidates) {
+      if (i18n.exists(key)) return key
+    }
+    return candidates[candidates.length - 1]
+  }
+
+  const warningKey = resolveKey('nonPatentWarning')
+  const detailsKey = resolveKey('nonPatentWarningDetails')
 
   return (
     <div className="flex items-center justify-center min-h-[60vh]">

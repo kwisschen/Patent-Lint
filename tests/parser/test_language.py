@@ -10,10 +10,13 @@ from patentlint.parser.language import (
     contains_hiragana_or_katakana,
     count_cjk_chars,
     east_asian_ratio,
+    hangul_ratio,
     is_cjk_char,
     is_east_asian_char,
     is_hangul_char,
     is_hiragana_or_katakana,
+    jp_kana_count,
+    jp_kana_ratio,
 )
 
 
@@ -152,6 +155,30 @@ class TestIsHiraganaOrKatakana:
     def test_hangul_excluded(self):
         assert is_hiragana_or_katakana("청") is False
 
+    def test_middle_dot_excluded(self):
+        """U+30FB (KATAKANA MIDDLE DOT) is script=Common per Unicode —
+        used in Traditional Chinese typography (保溫・保冷). Rejecting a
+        TW draft on a single middle dot is the ADR-150 bug."""
+        assert is_hiragana_or_katakana("・") is False
+
+    def test_prolonged_sound_mark_excluded(self):
+        """U+30FC (KATAKANA-HIRAGANA PROLONGED SOUND MARK) is script=Common."""
+        assert is_hiragana_or_katakana("ー") is False
+
+    def test_double_hyphen_excluded(self):
+        """U+30A0 (KATAKANA-HIRAGANA DOUBLE HYPHEN) is script=Common."""
+        assert is_hiragana_or_katakana("゠") is False
+
+    def test_voicing_marks_excluded(self):
+        """U+3099..U+309C voicing marks are script-Common/Inherited, not JP."""
+        assert is_hiragana_or_katakana("゙") is False
+        assert is_hiragana_or_katakana("゛") is False
+
+    def test_katakana_iteration_marks_included(self):
+        """U+30FD..U+30FF are script=Katakana — legitimate JP signal."""
+        assert is_hiragana_or_katakana("ヽ") is True
+        assert is_hiragana_or_katakana("ヾ") is True
+
 
 class TestIsEastAsianChar:
     def test_union_of_cjk_and_hangul(self):
@@ -214,6 +241,55 @@ class TestEastAsianRatio:
     def test_us_patent_low_ratio(self):
         text = "The invention relates to a signal processing apparatus."
         assert east_asian_ratio(text) == 0.0
+
+
+class TestJpKanaCount:
+    def test_kana_characters_counted(self):
+        assert jp_kana_count("本発明は信号処理") == 1  # は
+        assert jp_kana_count("プロセッサ") == 5
+
+    def test_middle_dot_not_counted(self):
+        """ADR-150: middle dot U+30FB is script=Common, not JP kana."""
+        assert jp_kana_count("保溫・保冷") == 0
+
+    def test_empty(self):
+        assert jp_kana_count("") == 0
+
+    def test_none_tolerant(self):
+        assert jp_kana_count(None) == 0  # type: ignore[arg-type]
+
+
+class TestJpKanaRatio:
+    def test_pure_jp_high_ratio(self):
+        text = "本発明は信号処理装置に関するものである。"
+        assert jp_kana_ratio(text) > 0.2
+
+    def test_tw_with_single_middle_dot_below_threshold(self):
+        """ADR-150 regression: the user-reported TW fixture had a single
+        ・ in 20k chars → 0.005%, well below the 0.5% rejection ratio."""
+        # 40 Chinese chars + 1 middle dot. The middle dot is excluded
+        # from kana count, so ratio should be 0.0.
+        text = "本發明提供一種蓋組件及帶蓋容器，能更穩定地抑制容器本體保溫・保冷機能"
+        assert jp_kana_ratio(text) == 0.0
+
+    def test_us_patent_zero(self):
+        assert jp_kana_ratio("The invention relates to apparatus.") == 0.0
+
+    def test_empty(self):
+        assert jp_kana_ratio("") == 0.0
+
+
+class TestHangulRatio:
+    def test_pure_ko_high_ratio(self):
+        text = "본 발명은 신호 처리 장치에 관한 것이다."
+        assert hangul_ratio(text) > 0.5
+
+    def test_cn_zero(self):
+        text = "本发明涉及一种信号处理装置。"
+        assert hangul_ratio(text) == 0.0
+
+    def test_empty(self):
+        assert hangul_ratio("") == 0.0
 
     def test_cjk_ratio_excludes_hangul(self):
         """cjk_ratio preserves its TIPO-abstract semantic; east_asian_ratio

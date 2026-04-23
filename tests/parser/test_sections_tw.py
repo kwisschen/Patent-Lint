@@ -368,6 +368,61 @@ class TestDetectPatentDocumentTw:
         ]
         assert detect_patent_document_tw(paragraphs) is False
 
+    def test_adr_150_accepts_tw_with_stray_middle_dot(self):
+        """ADR-150 regression: a TW draft carrying a single script=Common
+        middle dot (U+30FB) in 保溫・保冷-style typography must not be
+        rejected as JP. Pre-fix, a single dot dropped likely_patent to
+        False and triggered the non-patent banner on a clearly-TW file."""
+        from patentlint.parser.sections_tw import classify_document_tw
+        from patentlint.parser.detection import DetectionReason
+        paragraphs = [
+            "【發明摘要】",
+            "【中文發明名稱】蓋組件及帶蓋容器",
+            "【發明說明】",
+            "1. 如請求項1所記載的蓋組件，具備保溫・保冷機能。",
+            "【技術領域】",
+            "本發明關於一種蓋組件及帶蓋容器。",
+        ]
+        is_patent, reason = classify_document_tw(paragraphs)
+        assert is_patent is True
+        assert reason == DetectionReason.PATENT_DETECTED
+
+    def test_adr_150_reports_jp_reason_on_real_jp(self):
+        """ADR-150: when a JP patent is uploaded to TW, the reason code
+        should be CROSS_SCRIPT_JAPANESE so the banner copy can explain
+        what was actually detected."""
+        from patentlint.parser.sections_tw import classify_document_tw
+        from patentlint.parser.detection import DetectionReason
+        paragraphs = [
+            "【特許請求の範囲】",
+            "【請求項1】",
+            "信号処理方法であって、第1の信号を受信するステップを含む方法。",
+            "【発明の詳細な説明】",
+            "本発明は信号処理に関するものである。",
+        ]
+        is_patent, reason = classify_document_tw(paragraphs)
+        assert is_patent is False
+        assert reason == DetectionReason.CROSS_SCRIPT_JAPANESE
+
+    def test_adr_150_reports_ko_reason_on_real_ko(self):
+        from patentlint.parser.sections_tw import classify_document_tw
+        from patentlint.parser.detection import DetectionReason
+        paragraphs = [
+            "【청구항 1】",
+            "장치에 있어서,",
+            "본 발명은 신호 처리에 관한 것이다.",
+        ]
+        is_patent, reason = classify_document_tw(paragraphs)
+        assert is_patent is False
+        assert reason == DetectionReason.CROSS_SCRIPT_KOREAN
+
+    def test_adr_150_content_missing_on_blank_doc(self):
+        from patentlint.parser.sections_tw import classify_document_tw
+        from patentlint.parser.detection import DetectionReason
+        is_patent, reason = classify_document_tw(["Hello world.", "Nothing here."])
+        assert is_patent is False
+        assert reason == DetectionReason.CONTENT_MISSING
+
 
 # NOTE: This test loads a real patent docx that is gitignored under
 # tests/fixtures/tw/. The fixture is NEVER committed. Test skips cleanly
