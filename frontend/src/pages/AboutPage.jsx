@@ -53,25 +53,45 @@ function ProductStory({ t }) {
 /* ────────────────────────────────────────────
    Section 2: USPTO Comparison Table
    ──────────────────────────────────────────── */
+// Row order follows CLAUDE.md § Check-ordering consistency invariant (7 canonical
+// groups: spec structure → spec content → drawings → claims structure → claims
+// cross-jurisdiction → claims §112 analysis → abstract). Within each marketing
+// bucket (G1 = Formatting & Structure, G2 = USPTO Filing Format, G3 = Substantive
+// Drafting), rows sort by that canonical sequence so readers see the same order
+// they encounter in actual analysis results.
 const GROUP1_CHECKS = [
-  'sectionHeaders', 'paraNumbering', 'claimDependencies',
-  'claimSequentiality', 'abstractWordCount', 'abstractStructure',
-  'figureSequential', 'singleFigure', 'priorArtLabeling', 'specParaEndings',
-  'specParaNumbering', 'requiredSections', 'figureCrossRef',
+  // Spec structure
+  'requiredSections', 'sectionHeaders', 'paraNumbering', 'specParaNumbering', 'specParaEndings',
+  // Spec content
+  'figureCrossRef',
+  // Drawings
+  'figureSequential', 'singleFigure', 'priorArtLabeling',
+  // Claims structure (formatting half)
+  'claimSequentiality', 'claimDependencies',
+  // Abstract structure
+  'abstractWordCount', 'abstractStructure',
+  // Filing extras
   'checkSequenceListing',
 ]
 
 const GROUP2_CHECKS = [
+  // Filing-format-specific checks (PDF / margins / typography) — outside the
+  // canonical 7-group ordering; leave as-is.
   'pdfCompliance', 'marginCheck', 'fontSizeCheck', 'lineSpacing',
   'pageNumbering', 'headerFooter', 'filingReceipt',
 ]
 
 const GROUP3_CHECKS = [
-  'restrictiveWording', 'indefiniteTerms', 'impliedPhrases',
-  'checkClaimPunctuation', 'claimPeriods', 'antecedentBasis', 'meansPlusFunction',
-  'preambleConsistency', 'specSupport', 'legalPhrasesAbstract',
-  'transitionPhrase', 'whereinCommas', 'checkJepsonPriorArt', 'checkCrmNonTransitory',
-  'checkMarkushTransition', 'checkOmnibusClaim',
+  // Claims structure (substantive half)
+  'transitionPhrase',
+  // Claims cross-jurisdiction (restrictive wording family)
+  'restrictiveWording', 'indefiniteTerms',
+  // Claims §112 analysis
+  'meansPlusFunction', 'antecedentBasis', 'specSupport', 'preambleConsistency',
+  'checkJepsonPriorArt', 'checkCrmNonTransitory', 'checkMarkushTransition', 'checkOmnibusClaim',
+  'whereinCommas', 'checkClaimPunctuation', 'claimPeriods',
+  // Abstract (substantive half)
+  'legalPhrasesAbstract', 'impliedPhrases',
 ]
 
 function CheckMark({ active, isPatentLint }) {
@@ -87,25 +107,29 @@ function CheckMark({ active, isPatentLint }) {
   )
 }
 
+// CN table: same canonical 7-group ordering within each tbody.
 const CN_SPEC_CHECKS = [
-  'requiredSections', 'sectionOrdering', 'paragraphNumbering',
-  'paragraphEnding', 'figureRefConsistency', 'patentTypeTerminology',
-  'titleRequirements', 'specClaimReference',
+  // Spec structure
+  'requiredSections', 'sectionOrdering', 'paragraphNumbering', 'paragraphEnding',
+  // Spec content
+  'figureRefConsistency', 'patentTypeTerminology', 'titleRequirements', 'specClaimReference',
 ]
 
 const CN_CLAIMS_CHECKS = [
-  'claimsSequential', 'dependencyFormat', 'selfDependent',
-  'forwardDependency', 'singleSentence', 'refNumeralParens',
-  'subjectNameConsistency', 'transitionPhrase', 'cnTwTerminology',
-  'claimsSpecReference', 'multiMultiDependency', 'dependentOrdering',
-  'connectionRelationships',
+  // Claims structure
+  'claimsSequential', 'dependencyFormat', 'selfDependent', 'forwardDependency', 'dependentOrdering',
+  'singleSentence', 'refNumeralParens', 'subjectNameConsistency', 'transitionPhrase',
+  // Claims cross-jurisdiction
+  'cnTwTerminology', 'claimsSpecReference', 'multiMultiDependency', 'connectionRelationships',
 ]
 
 const CN_ABSTRACT_CHECKS = [
+  // Abstract — canonical already correct
   'abstractCharCount', 'titleInAbstract', 'commercialLanguage',
 ]
 
 const CN_DRAWINGS_CHECKS = [
+  // Drawings
   'figuresSequential',
 ]
 
@@ -237,27 +261,42 @@ function JurisdictionFeatureBlock({ t, jurisdiction, cardKeys }) {
   )
 }
 
+// TW table: keeps the marketing buckets (Shared / TIPO-only / PatentLint-only)
+// but within each bucket rows sort by the canonical 7-group document order.
 const TW_GROUP1_CHECKS = [
-  'figureRefConsistency', 'patentTypeTerminology',
-  'symbolTablePresence', 'symbolTableConsistency',
-  'dependencyFormat', 'forwardDependency', 'singleSentence',
-  'refNumeralParens', 'subjectConsistency', 'cnTerminology',
-  'multiDepOnMultiDep', 'multiDepAlternative', 'titleSubjectMatch',
-  'claimsSymbolTableConsistency', 'antecedentBasis',
-  'symbolVsRepDrawing', 'connectionRelationships',
+  // Spec content
+  'figureRefConsistency', 'patentTypeTerminology', 'symbolTablePresence', 'symbolTableConsistency',
+  // Claims structure
+  'dependencyFormat', 'forwardDependency', 'singleSentence', 'refNumeralParens', 'subjectConsistency',
+  // Claims cross-jurisdiction
+  'cnTerminology', 'multiDepOnMultiDep', 'multiDepAlternative', 'titleSubjectMatch',
+  'claimsSymbolTableConsistency', 'connectionRelationships',
+  // Claims §112 analysis
+  'antecedentBasis',
+  // Abstract (representative-drawing cross-check)
+  'symbolVsRepDrawing',
 ]
 
 const TW_GROUP2_CHECKS = [
+  // TIPO-specific (no canonical-group match — single item)
   'tipoIndigenous',
 ]
 
 const TW_GROUP3_CHECKS = [
-  'requiredSections', 'sectionOrdering', 'paragraphNumbering',
-  'paragraphEnding', 'title', 'claimReference',
-  'sequential', 'selfDependent', 'circularDependency',
-  'transitionPhrase', 'specDrawingRef',
+  // Spec structure
+  'requiredSections', 'sectionOrdering', 'paragraphNumbering', 'paragraphEnding', 'bracketFormat',
+  // Spec content
+  'title', 'claimReference',
+  // Drawings
+  'figuresSequential',
+  // Claims structure
+  'sequential', 'selfDependent', 'circularDependency', 'transitionPhrase',
+  // Claims cross-jurisdiction
+  'specDrawingRef',
+  // Claims §112 analysis
+  'specSupport',
+  // Abstract
   'charCount', 'titleMatch', 'commercialLanguage', 'representativeDrawing',
-  'bracketFormat', 'figuresSequential', 'specSupport',
 ]
 
 function TwComparisonTable({ t }) {
