@@ -178,7 +178,7 @@
       "fieldBrowser": "Browser",
       "fieldLocale": "Language",
       "fieldBuild": "Build",
-      "diagnosticHeader": "Diagnostic fingerprint (structural metadata, no claim content — see Privacy §6):"
+      "diagnosticHeader": "Diagnostic trail (structural metadata, no claim content — see Privacy §6):"
     }
   },
   "cta": {
@@ -1346,7 +1346,7 @@
       "title": "Voluntary feedback",
       "p1": "When you click a feedback link, your browser opens your own email client (or a webmail compose window) addressed to kwisschen@gmail.com. We do not host a form. We receive whatever you choose to write and send.",
       "p2": "We use feedback to fix bugs and respond to you. We do not share feedback with third parties or use it for any purpose other than improving PatentLint and replying to your message.",
-      "p3": "Error reports sent via the \"Report error\" links may include a compact \"Diagnostic fingerprint\" block — structural metadata about which walker code path produced the finding (regex-match outcomes, character counts, extraction-path tags). The fingerprint contains no claim text, no nouns, no drafted content; it is designed so we can diagnose walker bugs without seeing your draft. You can review the entire email body before sending and delete the fingerprint block if you prefer.",
+      "p3": "Error reports sent via the \"Report error\" links may include a compact \"Diagnostic trail\" block — structural metadata about which walker code path produced the finding (regex-match outcomes, character counts, extraction-path tags). The trail contains no claim text, no nouns, no drafted content; it is designed so we can diagnose walker bugs without seeing your draft. You can review the entire email body before sending and delete the trail block if you prefer.",
       "p4": "If you want to send feedback pseudonymously, use an email-aliasing service (e.g., Apple Hide My Email, Gmail + aliases, Firefox Relay, ProtonMail aliases). We receive the alias address; your real address stays with your provider. We do not correlate alias addresses with any other data."
     },
     "s7": {
