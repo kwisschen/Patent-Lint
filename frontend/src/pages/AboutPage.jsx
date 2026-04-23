@@ -9,6 +9,7 @@ import { useCountUp } from '../hooks/useCountUp'
 import { JURISDICTION_COLORS } from '../lib/jurisdictionConfig'
 import { composeEnterprise } from '../lib/feedback'
 import { useFeedback } from '../components/FeedbackPicker'
+import { TESTS_DISPLAY, CHECKS_DISPLAY } from '../generated/stats'
 
 function JurisdictionBadge({ code }) {
   return (
@@ -542,8 +543,8 @@ function StatsGrid({ t }) {
   const localeCount = (i18n.options.supportedLngs || []).filter((l) => l !== 'cimode').length
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      <StatCard value={1800} suffix="+" label={t('about.stats.tests')} delay={0} />
-      <StatCard value={95} suffix="+" label={t('about.stats.checks')} delay={100} />
+      <StatCard value={TESTS_DISPLAY} suffix="+" label={t('about.stats.tests')} delay={0} />
+      <StatCard value={CHECKS_DISPLAY} suffix="+" label={t('about.stats.checks')} delay={100} />
       <StatCard value={localeCount} suffix="" label={t('about.stats.languages')} delay={200} />
       <StatCard value={0} suffix="" label={t('about.stats.cloudRequests')} delay={300} />
     </div>
