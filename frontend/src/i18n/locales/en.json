@@ -183,7 +183,7 @@
   },
   "cta": {
     "heading": "Ready to check your draft?",
-    "subtext": "Drop a .docx file and get instant results. No upload. No account.",
+    "subtext": "Drop a .docx file and get instant results. No upload. No account. No AI.",
     "button": "Check a draft"
   },
   "antecedentBasis": {
@@ -216,7 +216,7 @@
   "security": {
     "airplaneDemoAlt": "Demo: analyzing a patent draft in airplane mode with no network connection",
     "badge": {
-      "headline": "No upload. No account. No install.",
+      "headline": "No upload. No account. No AI.",
       "description": "Your file never leaves your device.",
       "proveIt": "Prove it →"
     },
@@ -317,7 +317,7 @@
   "about": {
     "productTitle": "What is PatentLint?",
     "productTagline": "A first-of-its-kind patent draft checker that runs locally in your own browser.",
-    "productDesc1": "PatentLint is a free patent draft checker that catches issues for you before the examiner does. Drop a U.S., Chinese, or Taiwanese patent draft for an instant compliance report, processed entirely on your own device. No uploads, no accounts, no cloud.",
+    "productDesc1": "PatentLint is a free patent draft checker that catches issues for you before the examiner does. Drop a U.S., Chinese, or Taiwanese patent draft for an instant compliance report, processed entirely on your own device. No uploads, no accounts, no cloud, no AI.",
     "productDesc2": "PatentLint checks drafting rules from the MPEP (U.S.), CNIPA rules (China), and TIPO rules (Taiwan), detecting common issues such as missing antecedent basis, incorrect claim structure, and restrictive wording.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center validates filing format. PatentLint checks the draft itself.",
@@ -1105,7 +1105,7 @@
     "ready": "Analysis engine loaded",
     "firstVisitHint": "First visit takes a few seconds — the engine caches after this",
     "offline_note": "Works offline after first load",
-    "feature1_title": "No Upload. No Account. No Install.",
+    "feature1_title": "No Upload. No Account. No AI.",
     "feature1_desc": "Your confidential patent drafts never leave your device. Nothing is uploaded, and PatentLint doesn't even know who you are.",
     "feature2_title": "MPEP | CNIPA | TIPO Checks & Claim Tree",
     "feature2_desc": "Catches restrictive wording, indefinite terms, and antecedent basis gaps. Visualizes claim dependencies with an interactive tree.",
