@@ -11,19 +11,19 @@
   },
   "dropzone": {
     "tagline": "30 以上の USPTO 作成ルールに基づき、特許原稿を即座にチェック。",
-    "title": "特許 .docx をドロップしてローカル分析を開始",
+    "title": "特許 .docx をドロップしてローカルチェックを開始",
     "subtitle": "またはクリックして参照",
     "notice": "米国特許明細書（.docx）に対応しています",
     "reject": ".docx ファイルのみ対応",
     "rejectMultiple": "ファイルは一つずつドロップしてください。",
     "rejectMultipleType": "一つの .docx ファイルをドロップしてください。",
     "taglineCn": "20 以上の CNIPA 作成ルールに基づき、特許原稿を即座にチェック。",
-    "titleCn": "特許ファイルをドロップしてローカル分析を開始",
+    "titleCn": "特許ファイルをドロップしてローカルチェックを開始",
     "noticeCn": "中国特許明細書（.docx、.xml、.zip）に対応しています",
     "rejectCn": ".docx、.xml、.zip ファイルのみ対応",
     "rejectMultipleTypeCn": "一つの .docx、.xml、または .zip ファイルをドロップしてください。",
     "taglineTw": "30 以上の TIPO 作成ルールに基づき、特許原稿を即座にチェック。",
-    "titleTw": "特許 .docx をドロップしてローカル分析を開始",
+    "titleTw": "特許 .docx をドロップしてローカルチェックを開始",
     "noticeTw": "台湾特許明細書（.docx）に対応しています",
     "rejectTw": ".docx ファイルのみ対応",
     "rejectMultipleTypeTw": "一つの .docx ファイルをドロップしてください。"
@@ -81,7 +81,7 @@
   },
   "button": {
     "downloadPdf": "PDFレポートを保存",
-    "newAnalysis": "再分析",
+    "newAnalysis": "再チェック",
     "generating": "保存中..."
   },
   "diagram": {
@@ -111,20 +111,20 @@
   },
   "results": {
     "nonPatentWarning": "この文書は米国特許原稿ではない可能性があります",
-    "nonPatentWarningDetails": "PatentLint は特許原稿向けに設計されています。この文書には標準的な米国特許セクション、番号付きクレーム、または段落番号が含まれていないようです。分析結果は参考にならない場合があります。",
+    "nonPatentWarningDetails": "PatentLint は特許原稿向けに設計されています。この文書には標準的な米国特許セクション、番号付きクレーム、または段落番号が含まれていないようです。チェック結果は参考にならない場合があります。",
     "nonPatentWarningCn": "この文書は中国特許原稿ではない可能性があります",
-    "nonPatentWarningDetailsCn": "PatentLint は特許原稿向けに設計されています。この文書には標準的な中国明細書セクション（技术领域、背景技术など）、番号付きクレーム、または認識可能な書式が含まれていないようです。分析結果は参考にならない場合があります。",
+    "nonPatentWarningDetailsCn": "PatentLint は特許原稿向けに設計されています。この文書には標準的な中国明細書セクション（技术领域、背景技术など）、番号付きクレーム、または認識可能な書式が含まれていないようです。チェック結果は参考にならない場合があります。",
     "nonPatentWarningTw": "この文書は台湾特許原稿ではない可能性があります",
-    "nonPatentWarningDetailsTw": "PatentLint は特許原稿向けに設計されています。この文書には標準的な台湾明細書セクション（【技術領域】、【先前技術】など）、請求項、または段落番号が含まれていないようです。分析結果は参考にならない場合があります。",
+    "nonPatentWarningDetailsTw": "PatentLint は特許原稿向けに設計されています。この文書には標準的な台湾明細書セクション（【技術領域】、【先前技術】など）、請求項、または段落番号が含まれていないようです。チェック結果は参考にならない場合があります。",
     "showResultsAnyway": "結果を表示する",
-    "trackedChangesWarning": "この文書には変更履歴が含まれており、分析精度に影響する可能性があります。Wordですべての変更を承認または拒否してから、再度分析を行ってください。",
-    "analyzeAgain": "再分析",
+    "trackedChangesWarning": "この文書には変更履歴が含まれており、チェック精度に影響する可能性があります。Wordですべての変更を承認または拒否してから、再度チェックを行ってください。",
+    "analyzeAgain": "再チェック",
     "scannedDocWarning": "このファイルにはスキャン画像のみが含まれており、構造化テキストがありません",
     "scannedDocWarningDetails": "アップロードされたファイルにはスキャン文書画像のみが含まれており、機械可読な特許テキストがありません。PatentLintは構造化テキストが必要です。元の出願XMLまたは.docx草稿をアップロードしてください。"
   },
   "analysis": {
-    "analyzing": "特許文書を分析中...",
-    "label": "分析結果"
+    "analyzing": "特許文書をチェック中...",
+    "label": "チェック結果"
   },
   "footer": {
     "disclaimer": "本レポートは法的助言を構成するものではありません",
@@ -184,7 +184,7 @@
   "cta": {
     "heading": "特許原稿をチェックする準備はできましたか？",
     "subtext": ".docx ファイルをドロップするだけで即座に結果を取得できます。アップロードおよびアカウント登録は不要です。",
-    "button": "特許原稿を分析"
+    "button": "特許原稿をチェック"
   },
   "antecedentBasis": {
     "title": "先行詞の根拠の確認",
@@ -214,14 +214,14 @@
     "item": "件"
   },
   "security": {
-    "airplaneDemoAlt": "デモ：機内モードでネットワーク接続なしに特許原稿を分析",
+    "airplaneDemoAlt": "デモ：機内モードでネットワーク接続なしに特許原稿をチェック",
     "badge": {
       "headline": "アップロード不要。アカウント不要。インストール不要。",
       "description": "ファイルがデバイスの外に出ることはありません。",
       "proveIt": "確かめる →"
     },
     "results": {
-      "badge": "お使いのデバイス上で分析済み",
+      "badge": "お使いのデバイス上でチェック済み",
       "networkActive": "ネットワーク通信中",
       "networkIdle": "ネットワーク通信なし",
       "howItWorks": "仕組みを見る"
@@ -234,7 +234,7 @@
       "step1": "WiFi をオフにするか、機内モードをオンにします",
       "step2": "任意の .docx を PatentLint にドラッグします",
       "step3": "インターネット接続なしで動作します。クラウド通信、アップロード、データ送信は一切発生しません。",
-      "step4": "分析後、結果ページの緑のドットがネットワーク通信がないことを示します。",
+      "step4": "チェック後、結果ページの緑のドットがネットワーク通信がないことを示します。",
       "testHeading": "自分の目で確かめる",
       "testDescription": "新しいバージョンの有無を確認します。タブへ戻った際にも同じリクエストが実行されます。",
       "testButton": "更新を確認",
@@ -300,9 +300,9 @@
     },
     "tech": {
       "architectureTitle": "アーキテクチャ",
-      "architecture": "PatentLint は Pyodide を使用して Python 分析エンジンを WebAssembly にコンパイルし、ブラウザのサンドボックス化された JavaScript 環境内で完全に動作します。文書分析にサーバー側の処理は一切発生しません。",
+      "architecture": "PatentLint は Pyodide を使用して Python チェックエンジンを WebAssembly にコンパイルし、ブラウザのサンドボックス化された JavaScript 環境内で完全に動作します。文書チェックにサーバー側の処理は一切発生しません。",
       "networkTitle": "ネットワーク活動",
-      "network": "初回のページ読み込み（分析エンジンの読み込み）後、分析中にネットワークリクエストは一切発生しません。ブラウザの開発者ツールのネットワークタブで確認するか、機内モードをオンにして検証できます。",
+      "network": "初回のページ読み込み（チェックエンジンの読み込み）後、チェック中にネットワークリクエストは一切発生しません。ブラウザの開発者ツールのネットワークタブで確認するか、機内モードをオンにして検証できます。",
       "pdfTitle": "PDF 生成",
       "pdf": "PDF レポートは pdfmake を使用してブラウザ内で完全に生成されます。文書の内容はレポート生成時でもデバイスの外に出ることはありません。",
       "aiTitle": "AI / LLM（使用なし）",
@@ -322,7 +322,7 @@
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center は出願フォーマットを検証します。PatentLint は原稿そのものをチェックします。",
     "usFeatures": {
-      "title": "インタラクティブな米国特許分析",
+      "title": "インタラクティブな米国特許チェック",
       "claimTree": {
         "title": "請求項ツリーと § 112 解析器",
         "description": "インタラクティブな従属ツリーが多重従属・多重独立構造を表示し、§ 112 解析器が先行詞の根拠（§ 112(b)）と記述要件（§ 112(a)）を同時に検証、同一用語が両方に該当する場合は相互参照し、さらに Markush、Jepson、means-plus-function、移行句などの特殊形式も検出します。"
@@ -386,7 +386,7 @@
     "cnTitle": "PatentLint CNIPA 作成規則チェック",
     "cnSubtitle": "CNIPA作成規則（专利法实施细则、审查指南）に基づく20余件の構造チェック。",
     "cnFeatures": {
-      "title": "インタラクティブな中国特許分析",
+      "title": "インタラクティブな中国特許チェック",
       "claimTree": {
         "title": "請求項構造と先行詞解析器",
         "description": "インタラクティブな請求項の依存ツリーで多重従属・多重独立構造を表示し、幅優先の祖先チェーン解析器と併せて、主題の一貫性、引用形式、参照符号の括弧付けを検証します。"
@@ -436,7 +436,7 @@
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統は台湾固有の用語をチェックします。PatentLint はより広範な作成ルールを網羅します。",
     "twFeatures": {
-      "title": "インタラクティブな台湾特許分析",
+      "title": "インタラクティブな台湾特許チェック",
       "claimTree": {
         "title": "請求項ツリーと §26 第3項 解析器",
         "description": "インタラクティブな請求項の依存ツリーに 專利法 §26 第3項 解析器を搭載し、先行詞の根拠と明細書による裏付けを同時に検証します。同一用語が両方で不足する場合は相互参照されます。さらに二段式プリアンブル（其特徵在於／其改良在於）、単文規則、および引用形式独立請求項（一種X，具備如請求項N所述的Y）に対応します。4 段階の CJK 対応マッチャ（符號說明／正規化／原文／文字ウィンドウ）で誤検出を抑制します。"
@@ -504,10 +504,10 @@
     "arch": {
       "browser": "お使いのブラウザ",
       "optional": "オプション：Docker / CLI",
-      "zeroBadge": "分析中のネットワークリクエストはゼロ",
+      "zeroBadge": "チェック中のネットワークリクエストはゼロ",
       "selfHostBadge": "エアギャップおよび ITAR 対応環境向けセルフホスト",
       "node": {
-        "analysisEngine": "分析エンジン",
+        "analysisEngine": "チェックエンジン",
         "pdfReport": "PDFレポート"
       },
       "tip": {
@@ -1100,9 +1100,9 @@
   "loading": {
     "runtime": "Python ランタイムを読み込み中...",
     "parser": "文書パーサーを読み込み中...",
-    "engine": "分析エンジンを読み込み中...",
+    "engine": "チェックエンジンを読み込み中...",
     "patentlint": "PatentLint を読み込み中...",
-    "ready": "分析エンジンの準備完了",
+    "ready": "チェックエンジンの準備完了",
     "firstVisitHint": "初回は数秒かかります。次回以降はキャッシュから高速に読み込まれます",
     "offline_note": "初回読み込み後はオフラインで使用可能",
     "feature1_title": "アップロード不要。アカウント不要。インストール不要。",
@@ -1113,13 +1113,13 @@
     "feature3_desc": "インタラクティブな従属関係ツリーと Mermaid 図で、請求項の構造を一目で把握できます。",
     "feature4_title": "どこでも使える",
     "feature4_desc": "Mac、Windows、Linux、iPadなど、モダンブラウザが利用可能なすべてのデバイスでご利用いただけます。Wordアドインは不要です。English、繁體中文、简体中文、日本語、한국어の多言語UIに対応しています。",
-    "feature5_title": "瞬時の分析",
+    "feature5_title": "瞬時のチェック",
     "feature5_desc": ".docx ファイルをドロップするだけで数秒で結果が得られます。PDF レポートのダウンロードもクラウド不要。"
   },
   "pdf": {
-    "header": "PatentLint 分析レポート",
+    "header": "PatentLint チェックレポート",
     "headerTw": "PatentLint｜台湾特許原稿検査レポート",
-    "securityNote": "お使いのデバイス上で分析しました。クラウドへのアップロードはありません。",
+    "securityNote": "お使いのデバイス上でチェックしました。クラウドへのアップロードはありません。",
     "amend": "修正が必要",
     "verify": "専門家の確認が必要",
     "pass": "合格",
