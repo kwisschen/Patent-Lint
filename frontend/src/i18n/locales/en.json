@@ -300,7 +300,7 @@
     },
     "tech": {
       "architectureTitle": "Architecture",
-      "architecture": "PatentLint compiles its Python analysis engine to WebAssembly via Pyodide and runs it entirely inside your browser's sandboxed JavaScript environment. No server-side processing occurs for document analysis.",
+      "architecture": "PatentLint uses a client-side-only architecture: its Python analysis engine compiles to WebAssembly via Pyodide and runs entirely inside your browser's sandboxed JavaScript environment. No server-side processing occurs for document analysis.",
       "networkTitle": "Network Activity",
       "network": "After the initial page load (which loads the analysis engine), zero network requests are made during analysis. Verify this in your browser's DevTools Network tab, or simply turn on airplane mode.",
       "pdfTitle": "PDF Generation",

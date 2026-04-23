@@ -300,7 +300,7 @@
     },
     "tech": {
       "architectureTitle": "アーキテクチャ",
-      "architecture": "PatentLint は Pyodide を使用して Python チェックエンジンを WebAssembly にコンパイルし、ブラウザのサンドボックス化された JavaScript 環境内で完全に動作します。文書チェックにサーバー側の処理は一切発生しません。",
+      "architecture": "PatentLint は純クライアントサイド型アーキテクチャを採用しています。Pyodide を使用して Python チェックエンジンを WebAssembly にコンパイルし、ブラウザのサンドボックス化された JavaScript 環境内で完全に動作します。文書チェックにサーバー側の処理は一切発生しません。",
       "networkTitle": "ネットワーク活動",
       "network": "初回のページ読み込み（チェックエンジンの読み込み）後、チェック中にネットワークリクエストは一切発生しません。ブラウザの開発者ツールのネットワークタブで確認するか、機内モードをオンにして検証できます。",
       "pdfTitle": "PDF 生成",

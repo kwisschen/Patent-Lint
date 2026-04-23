@@ -300,7 +300,7 @@
     },
     "tech": {
       "architectureTitle": "아키텍처",
-      "architecture": "PatentLint는 Pyodide를 통해 Python 분석 엔진을 WebAssembly로 컴파일하고 브라우저의 샌드박스 JavaScript 환경에서 전적으로 실행됩니다. 문서 분석에 서버 측 처리가 발생하지 않습니다.",
+      "architecture": "PatentLint는 순수 클라이언트 사이드 아키텍처를 채택합니다. Pyodide를 통해 Python 분석 엔진을 WebAssembly로 컴파일하고 브라우저의 샌드박스 JavaScript 환경에서 전적으로 실행됩니다. 문서 분석에 서버 측 처리가 발생하지 않습니다.",
       "networkTitle": "네트워크 활동",
       "network": "초기 페이지 로드(분석 엔진 로드) 후 분석 중에는 네트워크 요청이 전혀 발생하지 않습니다. 브라우저의 개발자 도구 네트워크 탭에서 확인하거나 비행기 모드를 켜세요.",
       "pdfTitle": "PDF 생성",

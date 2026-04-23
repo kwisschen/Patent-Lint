@@ -300,7 +300,7 @@
     },
     "tech": {
       "architectureTitle": "架构",
-      "architecture": "PatentLint 通过 Pyodide 将 Python 分析引擎编译为 WebAssembly，完全在浏览器的沙盒 JavaScript 环境中运行。文档分析不经过任何服务器端处理。",
+      "architecture": "PatentLint 采用纯客户端架构：通过 Pyodide 将 Python 分析引擎编译为 WebAssembly，完全在浏览器的沙盒 JavaScript 环境中运行。文档分析不经过任何服务器端处理。",
       "networkTitle": "网络活动",
       "network": "初次页面加载（加载分析引擎）之后，分析过程中不会发出任何网络请求。您可以在浏览器的开发者工具「网络」标签页中验证，或直接开启飞行模式。",
       "pdfTitle": "PDF 生成",

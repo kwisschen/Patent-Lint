@@ -300,7 +300,7 @@
     },
     "tech": {
       "architectureTitle": "Architektur",
-      "architecture": "PatentLint kompiliert seine Python-Analyse-Engine über Pyodide zu WebAssembly und führt sie vollständig in der JavaScript-Sandbox Ihres Browsers aus. Für die Dokumentprüfung findet keine serverseitige Verarbeitung statt.",
+      "architecture": "PatentLint nutzt eine rein clientseitige Architektur: Die Python-Analyse-Engine wird über Pyodide zu WebAssembly kompiliert und läuft vollständig in der JavaScript-Sandbox Ihres Browsers. Für die Dokumentprüfung findet keine serverseitige Verarbeitung statt.",
       "networkTitle": "Netzwerkaktivität",
       "network": "Nach dem ersten Seitenaufruf (der die Analyse-Engine lädt) werden während der Prüfung keinerlei Netzwerkanfragen gestellt. Prüfen Sie dies im Netzwerk-Tab der DevTools Ihres Browsers oder aktivieren Sie einfach den Flugmodus.",
       "pdfTitle": "PDF-Erzeugung",
