@@ -694,7 +694,7 @@ function ArchitectureDiagram({ t }) {
           <a
             href="#"
             onClick={handleEnterpriseClick}
-            className="inline-block mt-3 text-sm text-muted-foreground underline hover:text-foreground transition-colors"
+            className="inline-flex items-center gap-1 mt-3 text-sm text-primary underline underline-offset-4 hover:text-primary/80"
           >
             {t('security.tech.contactEnterprise')}
           </a>
