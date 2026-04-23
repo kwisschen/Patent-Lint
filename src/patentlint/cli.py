@@ -16,12 +16,19 @@ from pathlib import Path
 
 import click
 
+from patentlint.i18n import supported_locales
 from patentlint.models import Jurisdiction
 from patentlint.pipeline import analyze_file
 
 EXIT_SUCCESS = 0
 EXIT_FINDINGS = 1
 EXIT_ERROR = 2
+
+_LOCALE_HELP = (
+    "PDF output locale. Accepts BCP-47 tags "
+    f"({', '.join(supported_locales())}, or regional variants). "
+    "Ignored for JSON output."
+)
 
 
 @click.group()
@@ -43,7 +50,7 @@ def main():
 @click.option(
     "--locale",
     default="en",
-    help="PDF output locale. Accepts BCP-47 tags (en, zh-TW, zh-CN, ja, ko, or regional variants). Ignored for JSON output.",
+    help=_LOCALE_HELP,
 )
 def analyze(file: str, fmt: str, output: str | None, jurisdiction: str, locale: str):
     """Analyze a single patent .docx file."""
@@ -102,7 +109,7 @@ def analyze(file: str, fmt: str, output: str | None, jurisdiction: str, locale: 
 @click.option(
     "--locale",
     default="en",
-    help="PDF output locale. Accepts BCP-47 tags (en, zh-TW, zh-CN, ja, ko, or regional variants). Ignored for JSON output.",
+    help=_LOCALE_HELP,
 )
 def batch(directory: str, output: str, fmt: str, jurisdiction: str, locale: str):
     """Analyze all .docx files in a directory."""
