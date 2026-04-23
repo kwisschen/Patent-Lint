@@ -318,7 +318,7 @@
     "productTitle": "PatentLint이란?",
     "productTagline": "사용자의 브라우저 내에서 로컬로 동작하는, 업계 최초의 특허 명세서 검사 도구.",
     "productDesc1": "PatentLint은 무료 특허 명세서 검사 도구로, 심사관이 문제를 찾기 전에 먼저 발견해 드립니다. 미국, 중국 또는 대만 특허 명세서를 끌어다 놓으면 컴플라이언스 보고서를 즉시 받아볼 수 있으며, 모든 처리가 사용자의 기기에서 이루어집니다. 업로드 불필요, 계정 불필요, 클라우드 미사용, AI 미사용.",
-    "productDesc2": "PatentLint은 MPEP(미국), CNIPA 규칙(중국) 및 TIPO 규칙(대만)의 작성 규칙을 검사하고, 선행사 기초 누락, 부정확한 청구항 구조, 제한적 표현 등 일반적인 문제를 검출합니다.",
+    "productDesc2": "PatentLint은 USPTO(미국), CNIPA(중국) 및 TIPO(대만)의 작성 규칙을 검사하고, 선행사 기초 누락, 부정확한 청구항 구조, 제한적 표현 등 일반적인 문제를 검출합니다.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center는 출원 형식을 검증합니다. PatentLint는 초안 자체를 검사합니다.",
     "usFeatures": {
@@ -1107,7 +1107,7 @@
     "offline_note": "첫 로드 후 오프라인 사용 가능",
     "feature1_title": "업로드 불필요. 계정 불필요. AI 없음.",
     "feature1_desc": "기밀 특허 초안이 기기를 벗어나지 않습니다. 아무것도 업로드되지 않으며, PatentLint는 사용자의 신원조차 알지 못합니다.",
-    "feature2_title": "MPEP | CNIPA | TIPO 검사 및 청구항 트리",
+    "feature2_title": "USPTO | CNIPA | TIPO 검사 및 청구항 트리",
     "feature2_desc": "제한적 표현, 불명확한 용어 및 선행사 기초 누락을 검출합니다. 인터랙티브 트리로 청구항 종속 관계를 시각화합니다.",
     "feature3_title": "청구항 트리 시각화",
     "feature3_desc": "인터랙티브 종속 트리와 Mermaid 다이어그램으로 청구항 구조를 한눈에 파악할 수 있습니다.",

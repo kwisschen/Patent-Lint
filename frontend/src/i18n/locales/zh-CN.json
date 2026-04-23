@@ -318,7 +318,7 @@
     "productTitle": "PatentLint 是什么？",
     "productTagline": "同类首创的专利稿件检查工具，完全在您的浏览器中本地运行。",
     "productDesc1": "PatentLint 是免费的专利稿件检查工具，在审查员指出缺陷之前先行检出问题。拖放美国、中国或台湾专利稿件，便可即时获取合规报告，全程于本地运行。无需上传、无需账号、不使用云端、不使用AI。",
-    "productDesc2": "PatentLint 依据 MPEP（美国）、CNIPA 规则（中国）及 TIPO 规则（台湾）进行撰写规则检查，检测常见问题，如缺乏引用基础、不正确的权利要求结构和限制性用语。",
+    "productDesc2": "PatentLint 依据 USPTO（美国）、CNIPA（中国）及 TIPO（台湾）的撰写规则进行检查，检测常见问题，如缺乏引用基础、不正确的权利要求结构和限制性用语。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查文稿本身。",
     "usFeatures": {
@@ -1107,7 +1107,7 @@
     "offline_note": "首次加载后可离线使用",
     "feature1_title": "无需上传。无需账号。无AI。",
     "feature1_desc": "您的机密专利文稿不会离开您的设备。不会上传任何内容，PatentLint 也不会知道您的身份。",
-    "feature2_title": "MPEP／CNIPA／TIPO 检查与权利要求树状图",
+    "feature2_title": "USPTO／CNIPA／TIPO 检查与权利要求树状图",
     "feature2_desc": "检测限制性用语、不确定用语及缺乏引用基础等问题，并以交互式树状图呈现权利要求从属关系。",
     "feature3_title": "权利要求树状图",
     "feature3_desc": "交互式从属关系树状图和 Mermaid 图表，一目了然地呈现权利要求结构。",

@@ -318,7 +318,7 @@
     "productTitle": "Was ist PatentLint?",
     "productTagline": "Der erste Patentanmeldungs-Checker seiner Art — er läuft lokal in Ihrem eigenen Browser.",
     "productDesc1": "PatentLint ist ein kostenloser Patentanmeldungs-Checker, der Mängel erkennt, bevor der Prüfer es tut. Legen Sie eine US-, chinesische oder taiwanesische Patentanmeldung ab und erhalten Sie einen sofortigen Compliance-Bericht, der vollständig auf Ihrem eigenen Gerät erstellt wird. Keine Uploads, keine Konten, keine Cloud, keine KI.",
-    "productDesc2": "PatentLint prüft Ausarbeitungsregeln aus dem MPEP (USA), den CNIPA-Vorschriften (China) und den TIPO-Vorschriften (Taiwan) und erkennt typische Mängel wie fehlenden Rückbezug, fehlerhafte Anspruchsstruktur und einschränkende Formulierungen.",
+    "productDesc2": "PatentLint prüft Ausarbeitungsregeln der USPTO (USA), der CNIPA (China) und der TIPO (Taiwan) und erkennt typische Mängel wie fehlenden Rückbezug, fehlerhafte Anspruchsstruktur und einschränkende Formulierungen.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "Das USPTO Patent Center validiert das Einreichungsformat. PatentLint prüft den Entwurf selbst.",
     "usFeatures": {
@@ -1107,7 +1107,7 @@
     "offline_note": "Funktioniert nach dem ersten Laden offline",
     "feature1_title": "Kein Upload. Kein Konto. Keine KI.",
     "feature1_desc": "Ihre vertraulichen Patentanmeldungen verlassen nie Ihr Gerät. Nichts wird hochgeladen, und PatentLint weiß nicht einmal, wer Sie sind.",
-    "feature2_title": "MPEP | CNIPA | TIPO-Prüfungen & Anspruchsbaum",
+    "feature2_title": "USPTO | CNIPA | TIPO-Prüfungen & Anspruchsbaum",
     "feature2_desc": "Erkennt einschränkende Formulierungen, unklare Begriffe und fehlende Rückbezüge. Visualisiert Anspruchsabhängigkeiten mit einem interaktiven Baum.",
     "feature3_title": "Anspruchsbaum-Visualisierung",
     "feature3_desc": "Interaktiver Abhängigkeitsbaum und Mermaid-Diagramm zeigen die Struktur Ihrer Ansprüche auf einen Blick.",
