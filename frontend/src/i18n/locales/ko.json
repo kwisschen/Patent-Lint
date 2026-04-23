@@ -195,7 +195,7 @@
   "antecedent": {
     "didYouMean": "혹시 '{{term}}' (청구항 {{claim_id}}에서 도입됨)을 의미하셨나요?",
     "didYouMeanCrossBranch": "혹시 '{{term}}' (청구항 {{claim_id}}에서 도입되었으나, 해당 청구항은 본 청구항의 종속 계열에 포함되지 않음)을 의미하셨나요?",
-    "crossBranchAntecedent": "청구항 {{claim_id}}에서 도입되었으나, 해당 청구항은 본 청구항의 종속 계열에 포함되지 않습니다. 종속 구조를 조정하거나 용어를 \"a\"로 다시 도입하세요.",
+    "crossBranchAntecedent": "청구항 {{claim_id}}에서 도입되었으나, 해당 청구항은 본 청구항의 종속 계열에 포함되지 않습니다. 종속 구조를 조정하거나 용어를 “a”로 다시 도입하세요.",
     "crossRefSpecSupport": "아래의 명세서 뒷받침 검토에서도 지적되었습니다."
   },
   "specSupport": {
@@ -248,7 +248,7 @@
       "heroSubtext": "PatentLint는 전적으로 브라우저 내에서 실행되며, 특허 초안이 기기를 벗어나지 않습니다. 기밀 데이터는 항상 사용자의 기기에 보관됩니다.",
       "tryIt": "직접 확인 →",
       "compareTitle": "PatentLint와 다른 도구의 비교",
-      "compareDisclaimer": "이 비교는 일반적인 아키텍처 패턴을 반영합니다. 개별 제품은 다를 수 있습니다. \"Word 추가 기능 도구\"와 \"클라우드 기반 도구\"는 일반 범주이며 특정 제품을 지칭하지 않습니다.",
+      "compareDisclaimer": "이 비교는 일반적인 아키텍처 패턴을 반영합니다. 개별 제품은 다를 수 있습니다. “Word 추가 기능 도구”와 “클라우드 기반 도구”는 일반 범주이며 특정 제품을 지칭하지 않습니다.",
       "techTitle": "기술 세부 사항"
     },
     "compare": {
@@ -334,7 +334,7 @@
       },
       "specSupport": {
         "title": "제한적 표현 및 작성 가드",
-        "description": "청구항, 명세서, 요약서 전반에서 불명확하거나 제한적인 표현(\"must\", \"always\", \"invention\" 등)을 MPEP § 2173.05(b)에 따라 검출하고, \"non-transitory\" 한정이 누락된 CRM 청구항(§ 101)을 플래그합니다."
+        "description": "청구항, 명세서, 요약서 전반에서 불명확하거나 제한적인 표현(“must”, “always”, “invention” 등)을 MPEP § 2173.05(b)에 따라 검출하고, “non-transitory” 한정이 누락된 CRM 청구항(§ 101)을 플래그합니다."
       }
     },
     "uspto": {
@@ -353,7 +353,7 @@
         "abstractWordCount": "요약서 단어 수 (50–150)",
         "abstractStructure": "요약서 단일 단락 및 유효한 결미",
         "figureSequential": "도면 번호 순차 확인",
-        "singleFigure": "단일 도면 표기 (\"The Figure\")",
+        "singleFigure": "단일 도면 표기 (“The Figure”)",
         "priorArtLabeling": "선행 기술 도면 표기",
         "specParaEndings": "명세서 단락 종료 부호",
         "specParaNumbering": "명세서 단락 번호 형식",
@@ -370,7 +370,7 @@
         "indefiniteTerms": "불명확한 용어 (MPEP § 2173.05(b))",
         "impliedPhrases": "요약서의 암시적 문구 (MPEP § 608.01(b))",
         "whereinCommas": "Wherein 쉼표 규칙",
-        "antecedentBasis": "선행사 기초 (\"the X\" 앞에 \"a X\" 없음)",
+        "antecedentBasis": "선행사 기초 (“the X” 앞에 “a X” 없음)",
         "meansPlusFunction": "기능식 청구항 (35 U.S.C. § 112(f))",
         "preambleConsistency": "청구항 전제부 일관성 (MPEP § 608.01(m))",
         "specSupport": "청구항 용어의 명세서 뒷받침",
@@ -547,7 +547,7 @@
     "restrictiveWordingSpec": "단락: {{list}}. 위 용어는 MPEP § 2173.05(b)에 따라 불명확하거나 범위를 제한하는 것으로 취급될 수 있습니다. 각 표시된 단락을 검토하여 해당 용어가 부당하게 범위를 제한하거나 불명확성을 초래하는지 확인하세요.",
     "paragraphNumberingMissing": "MPEP § 608.01(p)에 따라 [0001] 형식의 순차적 단락 번호를 추가하세요.",
     "paragraphEnding": "단락: {{list}}. MPEP § 608.01(p)에 따라 명세서의 각 단락은 마침표로 끝나야 합니다.",
-    "sequenceListingFix": "37 C.F.R. § 1.821–1.825에 따라 \"Statement Regarding Sequence Listing\" 섹션을 추가하세요.",
+    "sequenceListingFix": "37 C.F.R. § 1.821–1.825에 따라 “Statement Regarding Sequence Listing” 섹션을 추가하세요.",
     "crossReferenceCitations": "{{text}}. 출원번호가 정확하고 우선권 체인(계속출원, CIP, 가출원, 분할출원)이 완전한지 확인하세요.",
     "priorArtCitations": "{{text}}. 특허/공개번호가 정확한지 확인하세요. 선행 기술에 대한 기술(記述)은 심사 중 자인으로 취급될 수 있습니다.",
     "optionalSectionGuidance": "출원에 해당하는 경우 이 섹션을 포함하세요.",
@@ -555,17 +555,17 @@
     "multipleDependentClaims": "청구항: {{list}}. 다중 종속항은 추가 수수료가 발생하며 다른 다중 종속항에 종속될 수 없습니다 (35 U.S.C. § 112(e)). 의도적인지 확인하세요.",
     "selfDependentClaims": "청구항: {{list}}. 청구항은 자기 자신에 종속될 수 없습니다. 종속 관계 참조를 수정하세요.",
     "meansFunctionClaims": "청구항: {{list}}. § 112(f)에 따라 청구항 범위는 명세서에 개시된 대응 구조 및 균등물로 한정됩니다. 각 기능식 한정에 대해 명세서가 충분한 구조를 기재하고 있는지 확인하세요.",
-    "antecedentBasisTerms": "{{count}}건의 선행사 기초 문제가 {{claims}}건의 청구항에 있습니다. 각 한정적 참조(\"the X\" 또는 \"said X\")에는 선행하는 부정적 도입(\"a X\" 또는 \"an X\")이 필요합니다. 선행사 기초 누락은 § 112(b) 불명확성 거절로 이어질 수 있습니다.",
+    "antecedentBasisTerms": "{{count}}건의 선행사 기초 문제가 {{claims}}건의 청구항에 있습니다. 각 한정적 참조(“the X” 또는 “said X”)에는 선행하는 부정적 도입(“a X” 또는 “an X”)이 필요합니다. 선행사 기초 누락은 § 112(b) 불명확성 거절로 이어질 수 있습니다.",
     "preambleNounMismatch": "청구항 {{claim}}은(는) 청구항 {{parent}}에 종속됩니다. 전제부 명사가 다릅니다: 종속항 '{{dependent}}', 모항 '{{independent}}'. 동일 실체를 지칭하는 경우 허용될 수 있으니 일관성을 확인하세요.",
     "preambleNounMismatchSummary": "청구항 {{rootId}}은(는) 모항 명사 '{{parent}}'를 사용하고, 종속항 {{depClaims}}은(는) '{{dependent}}'를 사용합니다. 동일 대상을 지칭하는지 확인하거나 전제부 명사를 일치시키세요.",
     "preambleIndefiniteArticle": "청구항 {{claim}}은(는) 청구항 {{parent}}에 종속됩니다. 종속항 전제부에 '{{article}} {{noun}}'가 사용되었지만, 독립항 실체를 지칭하려면 'The {{noun}}'를 사용해야 합니다.",
     "preambleParseUnclear": "청구항: {{claims}}. 본 검사기가 이 종속 청구항들의 전제부를 해석할 수 없었습니다. MPEP § 608.01(n)에 부합하는 형식: 'The X of claim N', 'The X according to claim N', 'The X as in claim N', 'The X as claimed in claim N', 'The X as recited in claim N', 'The X as set forth in claim N'. 수동으로 확인하거나, MPEP 표준 형식에도 불구하고 인식되지 않는 경우 버그로 신고해 주세요.",
-    "singleFigureFix": "MPEP § 608.02에 따라 모든 \"FIG. 1\"을 \"The Figure\" 또는 \"the drawing\"으로 변경하세요.",
-    "drawingsPriorArt": "선행 기술을 묘사하는 도면은 MPEP § 608.02(g)에 따라 \"Prior Art\" 범례를 표시해야 합니다. 각 선행 기술 도면이 올바르게 표기되었는지 확인하세요.",
+    "singleFigureFix": "MPEP § 608.02에 따라 모든 “FIG. 1”을 “The Figure” 또는 “the drawing”으로 변경하세요.",
+    "drawingsPriorArt": "선행 기술을 묘사하는 도면은 MPEP § 608.02(g)에 따라 “Prior Art” 범례를 표시해야 합니다. 각 선행 기술 도면이 올바르게 표기되었는지 확인하세요.",
     "figuresSequentialFix": "MPEP § 608.02에 따라 도면을 오름차순으로 재번호 부여하세요.",
     "orphanedBriefFigures": "도면: {{list}}. 발명의 상세한 설명에 이 도면에 대한 참조를 추가하거나, 도면의 간단한 설명에서 제거하세요.",
     "orphanedDetailedFigures": "도면: {{list}}. 도면의 간단한 설명에 이 도면에 대한 설명을 추가하거나, 발명의 상세한 설명에서 참조를 제거하세요.",
-    "restrictiveWordingAbstract": "MPEP § 608.01(b)에 따라 요약서에는 법률 용어(\"comprising\", \"said\", \"means\"), 평가적 용어(\"novel\", \"innovative\") 및 제한적 용어(\"must\", \"essential\")를 사용하지 않아야 합니다. 위에 표시된 용어를 수정하세요.",
+    "restrictiveWordingAbstract": "MPEP § 608.01(b)에 따라 요약서에는 법률 용어(“comprising”, “said”, “means”), 평가적 용어(“novel”, “innovative”) 및 제한적 용어(“must”, “essential”)를 사용하지 않아야 합니다. 위에 표시된 용어를 수정하세요.",
     "abstractStructureFix": "MPEP § 608.01(b)에 따라 요약서는 마침표, 느낌표 또는 물음표로 끝나는 단일 단락이어야 하며, 특허 명세서의 마지막 섹션으로 배치되어야 합니다.",
     "abstractImpliedPhrasesFix": "MPEP § 608.01(b)에 따라 'This disclosure provides...' 또는 'A method is provided...' 같은 도입부는 발명을 직접 기술하도록 다시 작성하세요(예: 'A method that...').",
     "abstractWordCountFix": "MPEP § 608.01(b)에 따라 요약서는 50~150단어 범위 이내여야 합니다. 이 범위를 충족하도록 수정하세요.",
@@ -597,7 +597,7 @@
       "abstractCharCount": "专利法实施细则 §23에 따라 요약서는 300자를 초과할 수 없습니다. 요약서를 줄이세요.",
       "abstractTitleMatch": "审查指南에 따라 요약서는 발명 명칭과 일치해야 합니다. 요약서가 발명 명칭을 반영하는지 확인하세요.",
       "commercialLanguage": "专利法实施细则 §23에 따라 요약서에 상업적 광고 용어(商业性宣传用语)를 포함해서는 안 됩니다. 위에 표시된 용어를 삭제하세요.",
-      "antecedentBasisTerms": "{{claim_count}}개 청구항에 총 {{issue_count}}개의 선행사가 없을 수 있는 용어가 있습니다. 자세한 내용은 아래 \"선행사 기초 검토\" 섹션을 참조하십시오.",
+      "antecedentBasisTerms": "{{claim_count}}개 청구항에 총 {{issue_count}}개의 선행사가 없을 수 있는 용어가 있습니다. 자세한 내용은 아래 “선행사 기초 검토” 섹션을 참조하십시오.",
       "titleMissing": "심사지남 제1부 제1장에 따라, 명세서에는 발명의 명칭을 기재하여야 합니다. 명세서 첫머리에 발명의 명칭을 추가해 주십시오.",
       "figureRefInconsistency": {
         "onlyDrawings": "부도설명에만 언급: {{figs}}",
@@ -654,8 +654,8 @@
       },
       "bracketFormat": "專利法施行細則 §17에 따라 섹션 제목은 전각 대괄호 【】를 사용해야 합니다. 발견: {{detail}}.",
       "connectionRelationships": "대상 구성요소: {{sample_names}} (총 {{component_count}}개). 連接、設置於、耦接 등의 동사 표현을 보충하여 구성요소 간의 구조적 연결관계를 기재하시기 바랍니다.",
-      "antecedentBasisTerms": "{{claim_count}}개 청구항에 총 {{issue_count}}개의 선행사가 없을 수 있는 용어가 있습니다. 자세한 내용은 아래 \"선행사 기초 검토\" 섹션을 참조하십시오.",
-      "specSupportTerms": "{{claim_count}}개 청구항에 총 {{issue_count}}개의 명세서 뒷받침이 부족할 수 있는 용어가 있습니다. 자세한 내용은 아래 \"명세서 뒷받침 검토\" 섹션을 참조하십시오.",
+      "antecedentBasisTerms": "{{claim_count}}개 청구항에 총 {{issue_count}}개의 선행사가 없을 수 있는 용어가 있습니다. 자세한 내용은 아래 “선행사 기초 검토” 섹션을 참조하십시오.",
+      "specSupportTerms": "{{claim_count}}개 청구항에 총 {{issue_count}}개의 명세서 뒷받침이 부족할 수 있는 용어가 있습니다. 자세한 내용은 아래 “명세서 뒷받침 검토” 섹션을 참조하십시오.",
       "titleMissing": "특허심사기준에 따라, 명세서에는 발명의 명칭 또는 신형의 명칭을 기재하여야 합니다. 명세서 첫머리에 추가해 주십시오.",
       "figureRefInconsistency": {
         "onlyDrawings": "도면의 간단한 설명에만 언급: {{figs}}",
@@ -1036,7 +1036,7 @@
           "pass": "모든 다항 종속 청구항이 택일 형식으로 작성되어 있습니다."
         },
         "titleSubjectMatch": {
-          "verify": "명칭 \"{{title}}\"이(가) 독립 청구항의 주제와 일치하지 않을 수 있습니다: {{subjects}}.",
+          "verify": "명칭 “{{title}}”이(가) 독립 청구항의 주제와 일치하지 않을 수 있습니다: {{subjects}}.",
           "pass": "명칭이 독립 청구항의 주제와 일치합니다."
         },
         "symbolTableConsistency": {
@@ -1149,7 +1149,7 @@
     "patentType": "특허 유형",
     "disclaimer": "PatentLint에 의해 생성되었습니다. 이 보고서는 법률 자문을 구성하지 않습니다. 자격을 갖춘 특허 전문가의 검토를 권장합니다.",
     "disclaimerFooter": "PatentLint에 의해 생성됨 · 본 보고서는 법률 자문을 구성하지 않음 · 자격을 갖춘 특허 전문가의 검토를 권장",
-    "didYouMean": "혹시 \"{{term}}\"(청구항 {{claim_id}}에서 도입)인가요?",
+    "didYouMean": "혹시 “{{term}}”(청구항 {{claim_id}}에서 도입)인가요?",
     "seeSpecSupportBelow": "아래의 명세서 뒷받침 검토에서도 지적되었습니다.",
     "seeAntecedentAbove": "위의 선행사 기초 검토에서도 지적되었습니다.",
     "passedChecksCount": "통과 항목({{count}})",
@@ -1170,7 +1170,7 @@
     "spec_support_pass": "모든 청구항 용어가 명세서에서 발견되었습니다(§ 112(a) 서면 개시 요건).",
     "required_sections_pass": "MPEP § 608.01(a)에 따른 모든 필수 섹션이 존재합니다.",
     "required_sections_missing": "MPEP § 608.01(a)에 따른 필수 섹션이 누락되었습니다.",
-    "optional_section_missing": "선택 섹션 \"{{name}}\"이(가) 발견되지 않았습니다.",
+    "optional_section_missing": "선택 섹션 “{{name}}”이(가) 발견되지 않았습니다.",
     "figure_xref_pass": "도면의 간단한 설명과 발명의 상세한 설명 간 모든 도면 참조가 일관적입니다.",
     "figure_xref_orphaned_brief": "도면의 간단한 설명에 기재되었으나 발명의 상세한 설명에서 참조되지 않는 도면이 있습니다(MPEP § 608.02).",
     "figure_xref_orphaned_detailed": "발명의 상세한 설명에서 참조되었으나 도면의 간단한 설명에 기재되지 않은 도면이 있습니다(MPEP § 608.02)."
@@ -1349,7 +1349,7 @@
       "title": "자발적 피드백",
       "p1": "피드백 링크를 클릭하시면 귀하의 메일 클라이언트(또는 웹메일 작성 화면)가 열리며, 수신처는 kwisschen@gmail.com입니다. 당사는 폼을 운영하지 아니합니다. 당사가 수신하는 것은 귀하가 자발적으로 작성하여 송신하신 내용에 한합니다.",
       "p2": "피드백은 결함 수정 및 귀하에 대한 회신에 사용됩니다. 제3자와 공유하지 아니하며, PatentLint 개선 및 귀하에 대한 회신 외의 목적으로는 사용하지 아니합니다.",
-      "p3": "\"오류 신고\" 링크를 통해 전송되는 오류 보고서에는 간결한 \"진단 지문\" 블록이 포함될 수 있습니다. 이는 검사기가 통과한 코드 경로에 관한 구조적 메타데이터(정규식 일치 결과, 문자 수, 추출 경로 태그 등)만으로 구성되며, 청구항 문언이나 명사, 명세서 내용은 일체 포함되지 아니합니다. 해당 지문은 당사가 귀하의 명세서 내용을 보지 아니하고도 검사기 결함을 진단할 수 있도록 설계되었습니다. 귀하께서는 송신 전에 메일 본문 전체를 확인하실 수 있으며, 우려가 있으시면 해당 지문 블록을 삭제하셔도 무방합니다.",
+      "p3": "“오류 신고” 링크를 통해 전송되는 오류 보고서에는 간결한 “진단 지문” 블록이 포함될 수 있습니다. 이는 검사기가 통과한 코드 경로에 관한 구조적 메타데이터(정규식 일치 결과, 문자 수, 추출 경로 태그 등)만으로 구성되며, 청구항 문언이나 명사, 명세서 내용은 일체 포함되지 아니합니다. 해당 지문은 당사가 귀하의 명세서 내용을 보지 아니하고도 검사기 결함을 진단할 수 있도록 설계되었습니다. 귀하께서는 송신 전에 메일 본문 전체를 확인하실 수 있으며, 우려가 있으시면 해당 지문 블록을 삭제하셔도 무방합니다.",
       "p4": "피드백을 익명으로 보내고자 하시는 경우, 이메일 별칭 서비스(예: Apple Hide My Email, Gmail 별칭, Firefox Relay, ProtonMail 별칭 등)의 이용을 권장드립니다. 당사에 도달하는 것은 해당 별칭 주소뿐이며, 귀하의 실제 이메일 주소는 귀하의 서비스 제공자에게 보관됩니다. 당사는 별칭 주소를 다른 데이터와 연관시키지 아니합니다."
     },
     "s7": {
