@@ -13,7 +13,16 @@ appear inside body text (e.g., "This application claims the benefit of priority.
 
 import re
 
-from patentlint.parser.language import east_asian_ratio
+from patentlint.parser.detection import (
+    HANGUL_REJECTION_RATIO,
+    JP_KANA_REJECTION_RATIO,
+    DetectionReason,
+    DetectionResult,
+)
+from patentlint.parser.language import (
+    hangul_ratio,
+    jp_kana_ratio,
+)
 
 # ---------------------------------------------------------------------------
 # Master list of all recognised section headers (standalone paragraph patterns)
@@ -257,41 +266,49 @@ def extract_summary_section(text: str) -> str:
     return text[start:end].strip()
 
 
-def detect_patent_document(full_text: str) -> bool:
-    """Heuristic check for whether the document appears to be a US patent spec.
+def classify_document(full_text: str) -> DetectionResult:
+    """Classify a document as US patent or explain why it isn't.
 
-    Jurisdiction-aware as of Phase 9 #73/#74: rejects East-Asian-script
-    documents (CN/TW/JP/KO patents uploaded to the wrong jurisdiction)
-    so the non-patent banner can prompt the user to re-select. Requires
-    a positive English signal — recognized section header or English
-    claim preamble — to accept. The previous ``[NNNN]`` fallback was
-    removed because the convention is shared across US, CN, JP, KO, and
-    several European offices (DE, FR), so it flagged non-US Latin-script
-    patents as US.
-
-    Returns True if US-patent indicators are found, False otherwise.
-    Users whose draft lacks both an English section header and an
-    English claim preamble can still bypass the banner via the "Show
-    Results Anyway" button in the NonPatentBanner component.
+    Positive-evidence-first (ADR-150). Recognized English section
+    headers or English claim preambles short-circuit to accept even
+    when there's minor cross-script noise (a JP priority doc
+    reference, a CN term callout). Cross-script rejection only
+    consults ratios when positive evidence is absent, and the ratios
+    are specific (JP kana vs. KO Hangul vs. generic East-Asian) so
+    the banner can describe WHY a document was rejected.
     """
-    # Reject any document with substantial East-Asian script (CN/TW/JP/KO).
-    # 5% tolerance allows minor foreign-language citations like
-    # "(特許)" in a US filing that references a Japanese priority document.
-    if east_asian_ratio(full_text) > 0.05:
-        return False
+    # --- Strong positive signals (short-circuit regardless of script) ---
+    has_section_header = bool(_ANY_SECTION_HEADER.search(full_text))
+    has_en_claim_preamble = bool(
+        re.search(
+            r"^\s*\d+\.\s+(?:A|An|The)\s+",
+            full_text,
+            re.MULTILINE | re.IGNORECASE,
+        )
+    )
 
-    # 1. Recognized English section header (strong, English-specific signal).
-    if _ANY_SECTION_HEADER.search(full_text):
-        return True
+    if has_section_header or has_en_claim_preamble:
+        return (True, DetectionReason.PATENT_DETECTED)
 
-    # 2. Numbered claims pattern: "1. A ..." or "1. An ..." or "1. The ..."
-    # Requires an English indefinite/definite article in the preamble —
-    # rejects German "1. Ein Verfahren...", French "1. Un procédé...",
-    # Spanish "1. Un método...", etc.
-    if re.search(r"^\s*\d+\.\s+(?:A|An|The)\s+", full_text, re.MULTILINE | re.IGNORECASE):
-        return True
+    # --- No positive evidence: consult cross-script ratios to choose
+    #     the banner reason. JP/KO are specific (detection infrastructure
+    #     anticipates adding them as first-class jurisdictions); generic
+    #     CJK falls through to CONTENT_MISSING since CN/TW re-selection
+    #     is a valid recovery path already covered by the banner copy.
+    kana = jp_kana_ratio(full_text)
+    hangul = hangul_ratio(full_text)
+    if kana >= JP_KANA_REJECTION_RATIO:
+        return (False, DetectionReason.CROSS_SCRIPT_JAPANESE)
+    if hangul >= HANGUL_REJECTION_RATIO:
+        return (False, DetectionReason.CROSS_SCRIPT_KOREAN)
 
-    return False
+    return (False, DetectionReason.CONTENT_MISSING)
+
+
+def detect_patent_document(full_text: str) -> bool:
+    """Back-compat boolean wrapper around :func:`classify_document`."""
+    is_patent, _ = classify_document(full_text)
+    return is_patent
 
 
 def detect_prior_art_citations(text: str) -> str:
