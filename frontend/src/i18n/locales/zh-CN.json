@@ -81,7 +81,7 @@
   },
   "button": {
     "downloadPdf": "保存 PDF 报告",
-    "newAnalysis": "重新分析",
+    "newAnalysis": "重新检查",
     "generating": "保存中..."
   },
   "diagram": {
@@ -122,9 +122,9 @@
     "nonPatentWarningDetailsCrossScriptKorean": "PatentLint 在此文件中检测到大量韩文字（谚文）。本工具目前尚未支持韩国专利，仅适用于美国、中国大陆（简体）及台湾（繁体）专利稿件。您仍可继续查看分析结果，但输出内容对韩文稿件可能不具参考意义。",
     "showResultsAnyway": "仍然显示结果",
     "trackedChangesWarning": "此文档包含修订标记，可能影响分析准确性。请在文字处理软件中接受或拒绝所有更改后，重新进行分析。",
-    "analyzeAgain": "重新分析",
+    "analyzeAgain": "重新检查",
     "scannedDocWarning": "此文件仅包含扫描文档页面",
-    "scannedDocWarningDetails": "上传的文件包含扫描文档图像，没有可读的专利文本。PatentLint需要结构化文本进行分析。请上传原始申请XML或.docx草稿。"
+    "scannedDocWarningDetails": "上传的文件包含扫描文档图像，没有可读的专利文本。PatentLint 需要结构化文本进行分析。请上传原始申请 XML 或.docx 草稿。"
   },
   "analysis": {
     "analyzing": "正在分析专利文件...",
@@ -187,7 +187,7 @@
   },
   "cta": {
     "heading": "准备好检查您的专利稿件了吗？",
-    "subtext": "拖放 .docx 文件，即时获取结果。无需上传、无需账号、不使用AI。",
+    "subtext": "拖放 .docx 文件，即时获取结果。无需上传、无需账号、不使用 AI。",
     "button": "检查稿件"
   },
   "antecedentBasis": {
@@ -220,7 +220,7 @@
   "security": {
     "airplaneDemoAlt": "演示：在飞行模式下无网络连接分析专利稿件",
     "badge": {
-      "headline": "无需上传。无需账号。无AI。",
+      "headline": "无需上传。无需账号。无 AI。",
       "description": "您的文件不会离开您的设备。",
       "proveIt": "验证一下 →"
     },
@@ -247,7 +247,7 @@
       "tryNow": "立即试试 →"
     },
     "page": {
-      "heroTitle": "无上传。无AI。无例外。",
+      "heroTitle": "无上传。无 AI。无例外。",
       "heroSubtext": "PatentLint 完全在您的浏览器中本地运行，专利稿件绝不会离开您的设备。机密数据始终保留在您的设备上。",
       "tryIt": "自己试试看 →",
       "compareTitle": "PatentLint 与其他工具的比较",
@@ -321,7 +321,7 @@
   "about": {
     "productTitle": "PatentLint 是什么？",
     "productTagline": "同类首创的专利稿件检查工具，完全在您的浏览器中本地运行。",
-    "productDesc1": "PatentLint 是免费的专利稿件检查工具，在审查员指出缺陷之前先行检出问题。拖放美国、中国或台湾专利稿件，便可即时获取合规报告，全程于本地运行。无需上传、无需账号、不使用云端、不使用AI。",
+    "productDesc1": "PatentLint 是免费的专利稿件检查工具，在审查员指出缺陷之前先行检出问题。拖放美国、中国或台湾专利稿件，便可即时获取合规报告，全程于本地运行。无需上传、无需账号、不使用云端、不使用 AI。",
     "productDesc2": "PatentLint 依据 USPTO（美国）、CNIPA（中国）及 TIPO（台湾）的撰写规则进行检查，检测常见问题，如缺乏引用基础、不正确的权利要求结构和限制性用语。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查文稿本身。",
@@ -388,7 +388,7 @@
       }
     },
     "cnTitle": "PatentLint CNIPA 撰写规则检查",
-    "cnSubtitle": "20余项结构性检查，依据CNIPA撰写规则（专利法实施细则、审查指南）。",
+    "cnSubtitle": "20 余项结构性检查，依据 CNIPA 撰写规则（专利法实施细则、审查指南）。",
     "cnFeatures": {
       "title": "交互式中国专利分析",
       "claimTree": {
@@ -577,7 +577,7 @@
       "requiredSections": "依专利法 §26 第1款，完整稿件须包含摘要、说明书（技术领域、背景技术、发明内容、具体实施方式）及权利要求书。缺少：{{sections}}。",
       "sectionOrdering": "规定顺序：技术领域 → 背景技术 → 发明内容 → 附图说明 → 具体实施方式。请调整章节顺序。",
       "paragraphNumberingXml": "根据审查指南，段落编号应连续且为四位零填充格式（0001、0002……）。请修正编号顺序。",
-      "paragraphNumberingDocx": "根据CNIPA规定，说明书不应添加任何形式的段落编号。WORD转XML编辑器在转换时会自动添加编号。请删除所有手动添加的段落编号。",
+      "paragraphNumberingDocx": "根据 CNIPA 规定，说明书不应添加任何形式的段落编号。WORD转XML编辑器在转换时会自动添加编号。请删除所有手动添加的段落编号。",
       "paragraphEnding": "根据审查指南，说明书段落应以中文句末标点（。、！或？）结尾。请检查标记的段落。",
       "figureRefConsistency": "根据审查指南，附图说明中描述的附图应在具体实施方式中引用，反之亦然。请确认标记的引用是否正确。",
       "patentTypeTerminology": "根据审查指南，发明专利申请应使用“本发明”（而非“本实用新型”），实用新型申请反之。检测到：“{{term}}”。请确认用语与申请类型一致。",
@@ -591,9 +591,9 @@
       "singleSentence": "根据审查指南 第二部分第二章，每项权利要求应为一个以句号（。）结尾的完整句子。请删除句中多余的句号或拆分为多项权利要求。",
       "refNumeralParens": "根据审查指南，权利要求中的附图标记应加括号，例如（101）而非101。请检查标记的权利要求。",
       "subjectConsistency": "根据审查指南 第二部分第二章，从属权利要求的主题名称应与其引用的权利要求的主题名称一致。已识别之前序型式：如权利要求N所述[的]X、如权利要求N所记载[的]X、如权利要求N[的]X。请检查标记的权利要求。",
-      "subjectConsistencyParseUnclear": "这些从属权利要求使用之前序型式未被识别。依专利法实施细则 §22，可接受之前序型式包含：如权利要求N所述[的]X、如权利要求N所记载[的]X、如权利要求N[的]X。请人工确认前序，若为CNIPA合规前序而未能识别，请回报错误。",
+      "subjectConsistencyParseUnclear": "这些从属权利要求使用之前序型式未被识别。依专利法实施细则 §22，可接受之前序型式包含：如权利要求N所述[的]X、如权利要求N所记载[的]X、如权利要求N[的]X。请人工确认前序，若为 CNIPA 合规前序而未能识别，请回报错误。",
       "transitionPhrase": "根据审查指南，独立权利要求应包含“其特征在于”等特征部分连接词，用以区分已知要素与新颖特征。请检查标记的权利要求。",
-      "twTerminology": "CNIPA稿件中发现台湾（TIPO）专利用语。CNIPA中称为“权利要求”。请替换上列标记用语。",
+      "twTerminology": "CNIPA 稿件中发现台湾（TIPO）专利用语。CNIPA 中称为“权利要求”。请替换上列标记用语。",
       "claimsSpecReference": "根据审查指南 第二部分第二章，权利要求不得引用说明书或附图来限定保护范围。权利要求应当自成一体——请删除上列标记引用。",
       "multiMultiDep": "根据专利法实施细则 §22，多项从属权利要求不得作为另一多项从属权利要求的引用基础。请调整引用关系。",
       "dependentOrdering": "根据审查指南 第二部分第二章，引用同一独立权利要求的所有从属权利要求应连续排列在下一项独立权利要求之前。请调整排列顺序。",
@@ -636,7 +636,7 @@
       "subjectConsistency": "附属项之标的名称应与所依附之母项标的名称一致。已识别之前序型式：如請求項N所述[之的]X、如請求項N所記載[之的]X、如請求項N[之的]X。请检查标记之请求项。",
       "subjectConsistencyParseUnclear": "这些附属项使用之前序型式未被识别。依专利法施行细则 §18，可接受之前序型式包含：如請求項N所述[之的]X、如請求項N所記載[之的]X、如請求項N[之的]X。请人工确认前序，若为合规前序而未能识别，请回报错误。",
       "transitionPhrase": "依專利法施行細則 §20，独立项应包含连接词，如「其特徵在於」或「其改良在於」。请检查标记之请求项。",
-      "cnTerminology": "发现简体中文专利用语：{{detail}}。台湾专利稿件应使用TIPO用语（請求項、說明書、先前技術、實施方式等），而非CNIPA用语（权利要求、说明书、背景技术、具体实施方式等）。",
+      "cnTerminology": "发现简体中文专利用语：{{detail}}。台湾专利稿件应使用 TIPO 用语（請求項、說明書、先前技術、實施方式等），而非 CNIPA 用语（权利要求、说明书、背景技术、具体实施方式等）。",
       "specDrawingRef": "依專利法施行細則 §19，请求项不得引用说明书或图式（如「如說明書所述」「如圖所示」）。发现：{{detail}}。",
       "multiDepOnMultiDep": "依專利法施行細則 §18，多项附属项不得直接或间接依附于另一多项附属项。标记：{{claims}}。",
       "multiDepAlternative": "依專利法施行細則 §18，多项附属项须使用择一形式（或/任一项）。标记：{{claims}}。",
@@ -647,7 +647,7 @@
         }
       },
       "antecedentBasis": "「该」「所述」「前述」加名词，须于同一请求项或母项中以「一」加名词导入。以正则表达式检测，结果为近似值，请自行确认。",
-      "abstractCharCount": "依專利法施行細則 §21，摘要应在250字以内。TIPO不会仅因字数超限而驳回，但请检查是否可精简。",
+      "abstractCharCount": "依專利法施行細則 §21，摘要应在250 字以内。TIPO 不会仅因字数超限而驳回，但请检查是否可精简。",
       "abstractTitleMatch": "依專利審查基準，摘要应提及发明名称/新型名称。请确认摘要是否反映标题。标题：{{detail}}。",
       "commercialLanguage": "依專利法施行細則 §21，摘要不得包含商业性宣传用语。发现：{{terms}}。",
       "representativeDrawing": "依專利法施行細則 §21，有图式时应指定代表圖。请确认是否需要指定代表圖。",
@@ -821,7 +821,7 @@
         },
         "paragraphNumbering": {
           "amendXml": "段落编号不连续（{{detail}}）（审查指南）。",
-          "amendDocx": "说明书包含手动添加的段落编号，CNIPA申请时须移除（审查指南）。",
+          "amendDocx": "说明书包含手动添加的段落编号，CNIPA 申请时须移除（审查指南）。",
           "pass": "段落编号正确。",
           "amendXmlGap": "段落编号不连续：第{{prev}}段后为第{{next}}段（审查指南）。",
           "amendXmlDuplicate": "检测到 {{count}} 个重复的段落编号：{{paragraphs}}（审查指南）。"
@@ -886,8 +886,8 @@
           "pass": "所有独立权利要求均包含连接词。"
         },
         "twTerminology": {
-          "verify": "发现台湾专利用语“请求项”，CNIPA申请应使用“权利要求”。",
-          "pass": "权利要求用语符合CNIPA规范。"
+          "verify": "发现台湾专利用语“请求项”，CNIPA 申请应使用“权利要求”。",
+          "pass": "权利要求用语符合 CNIPA 规范。"
         },
         "specReference": {
           "amend": "{{count}} 项权利要求引用了说明书或附图：{{claims}}。",
@@ -1025,7 +1025,7 @@
         },
         "cnTerminology": {
           "verify": "在台湾专利稿件中发现大陆专利用语。",
-          "pass": "请求项使用正确之TIPO用语。"
+          "pass": "请求项使用正确之 TIPO 用语。"
         },
         "specDrawingRef": {
           "amend": "请求项中引用了说明书或图式。",
@@ -1064,7 +1064,7 @@
       "abstract": {
         "charCount": {
           "verify": "摘要超过250字（{{count}}字，專利法施行細則 §21）。",
-          "pass": "摘要在250字以内（{{count}}字）。"
+          "pass": "摘要在250 字以内（{{count}}字）。"
         },
         "titleMatch": {
           "verify": "摘要中未包含发明名称/新型名称。",
@@ -1110,7 +1110,7 @@
     "ready": "分析引擎已就绪",
     "firstVisitHint": "首次访问需几秒钟；完成后将缓存至您的浏览器，下次秒开",
     "offline_note": "首次加载后可离线使用",
-    "feature1_title": "无需上传。无需账号。无AI。",
+    "feature1_title": "无需上传。无需账号。无 AI。",
     "feature1_desc": "您的机密专利文稿不会离开您的设备。不会上传任何内容，PatentLint 也不会知道您的身份。",
     "feature2_title": "USPTO／CNIPA／TIPO 检查与权利要求树状图",
     "feature2_desc": "检测限制性用语、不确定用语及缺乏引用基础等问题，并以交互式树状图呈现权利要求从属关系。",
