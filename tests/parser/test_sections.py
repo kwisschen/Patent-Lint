@@ -174,6 +174,60 @@ class TestDetectPatentDocument:
         )
         assert detect_patent_document(text) is False
 
+    def test_adr_150_classify_reports_jp_reason(self):
+        """US classify_document returns CROSS_SCRIPT_JAPANESE on JP input."""
+        from patentlint.parser.sections import classify_document
+        from patentlint.parser.detection import DetectionReason
+        text = (
+            "【特許請求の範囲】\n"
+            "【請求項1】信号処理方法であって、\n"
+            "第1の信号を受信するステップを含む方法。\n"
+        )
+        is_patent, reason = classify_document(text)
+        assert is_patent is False
+        assert reason == DetectionReason.CROSS_SCRIPT_JAPANESE
+
+    def test_adr_150_classify_reports_ko_reason(self):
+        from patentlint.parser.sections import classify_document
+        from patentlint.parser.detection import DetectionReason
+        text = (
+            "【청구항 1】\n"
+            "장치에 있어서, 처리기를 포함하는 장치.\n"
+        )
+        is_patent, reason = classify_document(text)
+        assert is_patent is False
+        assert reason == DetectionReason.CROSS_SCRIPT_KOREAN
+
+    def test_adr_150_classify_reports_content_missing(self):
+        from patentlint.parser.sections import classify_document
+        from patentlint.parser.detection import DetectionReason
+        is_patent, reason = classify_document("Some essay text. Nothing patent-like.")
+        assert is_patent is False
+        assert reason == DetectionReason.CONTENT_MISSING
+
+    def test_adr_150_classify_reports_patent_detected(self):
+        from patentlint.parser.sections import classify_document
+        from patentlint.parser.detection import DetectionReason
+        is_patent, reason = classify_document("CLAIMS\n1. A method comprising step A.")
+        assert is_patent is True
+        assert reason == DetectionReason.PATENT_DETECTED
+
+    def test_adr_150_us_tolerates_stray_middle_dot(self):
+        """Mirror of the TW bug: a US draft with a stray U+30FB middle
+        dot (rare but possible in prior-art excerpts) shouldn't false-
+        reject. US detector uses east_asian_ratio already; this test
+        confirms parity after the kana-set narrowing."""
+        from patentlint.parser.sections import classify_document
+        from patentlint.parser.detection import DetectionReason
+        text = (
+            "DETAILED DESCRIPTION\n"
+            "The invention relates to heat-retention・cold-retention functions.\n"
+            "1. A container comprising a lid.\n"
+        )
+        is_patent, reason = classify_document(text)
+        assert is_patent is True
+        assert reason == DetectionReason.PATENT_DETECTED
+
     def test_phase_9_74_rejects_ko_patent(self):
         """KIPO patent (Hangul) must not false-positive US.
 

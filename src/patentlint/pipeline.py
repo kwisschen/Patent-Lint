@@ -25,8 +25,8 @@ from patentlint.models import AnalysisResult, CheckItem, CnPatentDocument, Juris
 from patentlint.parser import claims as claims_parser
 from patentlint.parser import sections
 from patentlint.parser.docx_loader import load_docx, load_docx_cn, load_docx_tw
-from patentlint.parser.sections_cn import detect_patent_document_cn, extract_cn_sections_from_docx
-from patentlint.parser.sections_tw import detect_patent_document_tw, extract_tw_sections
+from patentlint.parser.sections_cn import classify_document_cn, extract_cn_sections_from_docx
+from patentlint.parser.sections_tw import classify_document_tw, extract_tw_sections
 from patentlint.parser.xml_loader import extract_cn_xml_from_zip, parse_cnipa_xml
 
 
@@ -37,6 +37,7 @@ def _run_cn_pipeline(
     cn_doc: CnPatentDocument,
     *,
     likely_patent: bool = True,
+    patent_detection_reason: str | None = None,
     has_tracked_changes: bool = False,
     strict_plural_reference_matching: bool = False,
     strict_qualifier_matching: bool = False,
@@ -147,6 +148,7 @@ def _run_cn_pipeline(
         figures_count=cn_doc.figure_count,
         abstract_word_count=cn_doc.abstract_char_count,
         likely_patent=likely_patent,
+        patent_detection_reason=patent_detection_reason,
         has_tracked_changes=has_tracked_changes,
         has_scanned_fallback=cn_doc.has_doc_page_fallback,
         cn_specification_checks=spec_checks,
@@ -161,7 +163,8 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
     """Core pipeline logic shared by analyze_file and analyze_bytes."""
 
     # --- Document type detection ---
-    likely_patent = sections.detect_patent_document(full_text)
+    likely_patent, detection_reason = sections.classify_document(full_text)
+    patent_detection_reason = detection_reason.value
 
     # --- Section extraction ---
     claims_section = sections.extract_claims_section(full_text)
@@ -259,6 +262,7 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
         jurisdiction=jurisdiction,
         # Document-level flag
         likely_patent=likely_patent,
+        patent_detection_reason=patent_detection_reason,
         # Specification
         has_tracked_changes=loaded.has_tracked_changes,
         paragraph_count=len(para_nums),
@@ -314,6 +318,7 @@ def _run_tw_pipeline(
     tw_doc: TwPatentDocument,
     *,
     likely_patent: bool = True,
+    patent_detection_reason: str | None = None,
     has_tracked_changes: bool = False,
     strict_plural_reference_matching: bool = False,
     strict_qualifier_matching: bool = False,
@@ -488,6 +493,7 @@ def _run_tw_pipeline(
         figures_count=len(tw_doc.figure_refs),
         abstract_word_count=tw_doc.abstract_char_count,
         likely_patent=likely_patent,
+        patent_detection_reason=patent_detection_reason,
         has_tracked_changes=has_tracked_changes,
         tw_specification_checks=spec_checks,
         tw_claims_checks=claims_checks,
@@ -515,7 +521,7 @@ def analyze_file(
             msg = f"Unsupported file type for TW jurisdiction: {file_path}"
             raise ValueError(msg)
         loaded_tw = load_docx_tw(file_path)
-        likely_patent = detect_patent_document_tw(loaded_tw.paragraphs)
+        likely_patent, detection_reason = classify_document_tw(loaded_tw.paragraphs)
         tw_doc = extract_tw_sections(
             loaded_tw.paragraphs,
             loaded_tw.paragraph_word_numbers,
@@ -523,6 +529,7 @@ def analyze_file(
         return _run_tw_pipeline(
             tw_doc,
             likely_patent=likely_patent,
+            patent_detection_reason=detection_reason.value,
             has_tracked_changes=loaded_tw.has_tracked_changes,
             strict_plural_reference_matching=tw_strict_plural_reference_matching,
             strict_qualifier_matching=tw_strict_qualifier_matching,
@@ -549,11 +556,12 @@ def analyze_file(
         if lower.endswith(".docx"):
             loaded_cn = load_docx_cn(file_path)
             all_cn_paragraphs = [p for s in loaded_cn.sections for p in s.paragraphs]
-            likely_patent = detect_patent_document_cn(all_cn_paragraphs)
+            likely_patent, detection_reason = classify_document_cn(all_cn_paragraphs)
             cn_doc = extract_cn_sections_from_docx(loaded_cn.sections)
             return _run_cn_pipeline(
                 cn_doc,
                 likely_patent=likely_patent,
+                patent_detection_reason=detection_reason.value,
                 has_tracked_changes=loaded_cn.has_tracked_changes,
                 strict_plural_reference_matching=cn_strict_plural_reference_matching,
                 strict_qualifier_matching=cn_strict_qualifier_matching,
@@ -587,7 +595,7 @@ def analyze_bytes(
             tmp.write(content)
             tmp.flush()
             loaded_tw = load_docx_tw(tmp.name)
-        likely_patent = detect_patent_document_tw(loaded_tw.paragraphs)
+        likely_patent, detection_reason = classify_document_tw(loaded_tw.paragraphs)
         tw_doc = extract_tw_sections(
             loaded_tw.paragraphs,
             loaded_tw.paragraph_word_numbers,
@@ -595,6 +603,7 @@ def analyze_bytes(
         return _run_tw_pipeline(
             tw_doc,
             likely_patent=likely_patent,
+            patent_detection_reason=detection_reason.value,
             has_tracked_changes=loaded_tw.has_tracked_changes,
             strict_plural_reference_matching=tw_strict_plural_reference_matching,
             strict_qualifier_matching=tw_strict_qualifier_matching,
@@ -622,11 +631,12 @@ def analyze_bytes(
                 tmp.flush()
                 loaded_cn = load_docx_cn(tmp.name)
             all_cn_paragraphs = [p for s in loaded_cn.sections for p in s.paragraphs]
-            likely_patent = detect_patent_document_cn(all_cn_paragraphs)
+            likely_patent, detection_reason = classify_document_cn(all_cn_paragraphs)
             cn_doc = extract_cn_sections_from_docx(loaded_cn.sections)
             return _run_cn_pipeline(
                 cn_doc,
                 likely_patent=likely_patent,
+                patent_detection_reason=detection_reason.value,
                 has_tracked_changes=loaded_cn.has_tracked_changes,
                 strict_plural_reference_matching=cn_strict_plural_reference_matching,
                 strict_qualifier_matching=cn_strict_qualifier_matching,

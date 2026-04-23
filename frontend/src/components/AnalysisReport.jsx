@@ -182,14 +182,18 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
 
   if (!showResults) {
     return (
-      <NonPatentBanner jurisdiction={data.jurisdiction} onShowResults={() => {
-        setShowResults(true)
-        // Reset cascade so results animate in fresh
-        setMounted(false)
-        setBarVisible(false)
-        setTimeout(() => setMounted(true), 50)
-        setTimeout(() => setBarVisible(true), 300)
-      }} />
+      <NonPatentBanner
+        jurisdiction={data.jurisdiction}
+        reason={data.patent_detection_reason || 'content_missing'}
+        onShowResults={() => {
+          setShowResults(true)
+          // Reset cascade so results animate in fresh
+          setMounted(false)
+          setBarVisible(false)
+          setTimeout(() => setMounted(true), 50)
+          setTimeout(() => setBarVisible(true), 300)
+        }}
+      />
     )
   }
 
