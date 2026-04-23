@@ -273,30 +273,25 @@ function JurisdictionFeatureBlock({ t, jurisdiction, cardKeys }) {
 // TW table: keeps the marketing buckets (Shared / TIPO-only / PatentLint-only)
 // but within each bucket rows sort by the canonical 7-group document order.
 //
-// G1/G3 placement is grounded in TIPO 專利申請文件輔助偵錯系統's documented
-// check families (文字矛盾 / 元件標號錯誤 / 標點符號誤用 / 用語不一致 /
-// 獨立項元件連接關係 / 名稱與範圍用語相符性 / 書寫格式檢查) per IPPA trade-
-// association writeup + practitioner walkthrough (Irene Lin, Medium).
-// These cover formal/format-level checks broadly; what's demonstrably beyond
-// TIPO 偵錯系統's scope is semantic §26 第3項 walker analysis (先行詞 /
-// 說明書支持), full CNIPA-terminology detection (TIPO limited to char-level),
-// and specific semantic abstract/claim-reference checks. Items in G3 are
-// confirmed or high-confidence PatentLint-only.
+// G1 placement discipline: only items with DIRECT EVIDENCE or strong single-
+// step inference from TIPO 專利申請文件輔助偵錯系統's documented check
+// families stay in G1. The documented families are narrow and specific
+// (文字矛盾 / 元件標號錯誤 / 標點符號誤用 / 用語不一致 / 獨立項元件連接關係 /
+// 名稱與範圍用語相符性 / 請求項開頭文字 / 書寫格式檢查) per IPPA trade-
+// association writeup + Irene Lin's practitioner walkthrough (Medium).
+//
+// When uncertain whether TIPO 偵錯系統 performs a given check, item lives
+// in G3 (PatentLint-only). This errs on the side of not overclaiming TIPO's
+// scope; if a TIPO practitioner flags any G3 item as actually-covered, we
+// move it to G1 — a one-line correction rather than a retraction.
 const TW_GROUP1_CHECKS = [
-  // Spec structure
-  'requiredSections', 'sectionOrdering', 'paragraphNumbering', 'paragraphEnding', 'bracketFormat',
-  // Spec content
-  'figureRefConsistency', 'patentTypeTerminology', 'title', 'symbolTablePresence', 'symbolTableConsistency',
-  // Drawings
-  'figuresSequential',
-  // Claims structure
-  'sequential', 'dependencyFormat', 'selfDependent', 'circularDependency', 'forwardDependency',
-  'singleSentence', 'refNumeralParens', 'subjectConsistency',
-  // Claims cross-jurisdiction
-  'multiDepOnMultiDep', 'multiDepAlternative', 'titleSubjectMatch',
-  'claimsSymbolTableConsistency', 'connectionRelationships',
-  // Abstract
-  'charCount', 'representativeDrawing', 'symbolVsRepDrawing',
+  // Spec content (strong inference: 用語不一致 family)
+  'patentTypeTerminology',
+  // Claims structure (strong inference: 用語不一致 family applied to dependent
+  // claim subject-matter consistency)
+  'subjectConsistency',
+  // Claims cross-jurisdiction (both confirmed in TIPO documentation)
+  'titleSubjectMatch', 'connectionRelationships',
 ]
 
 const TW_GROUP2_CHECKS = [
@@ -305,16 +300,22 @@ const TW_GROUP2_CHECKS = [
 ]
 
 const TW_GROUP3_CHECKS = [
-  // Spec content (semantic — claims referenced from spec)
-  'claimReference',
-  // Claims structure (semantic two-part 其特徵在於 detection)
-  'transitionPhrase',
-  // Claims cross-jurisdiction (semantic)
-  'cnTerminology', 'specDrawingRef',
+  // Spec structure
+  'requiredSections', 'sectionOrdering', 'paragraphNumbering', 'paragraphEnding', 'bracketFormat',
+  // Spec content
+  'figureRefConsistency', 'title', 'claimReference', 'symbolTablePresence', 'symbolTableConsistency',
+  // Drawings
+  'figuresSequential',
+  // Claims structure
+  'sequential', 'dependencyFormat', 'selfDependent', 'circularDependency', 'forwardDependency',
+  'singleSentence', 'refNumeralParens', 'transitionPhrase',
+  // Claims cross-jurisdiction
+  'cnTerminology', 'specDrawingRef', 'multiDepOnMultiDep', 'multiDepAlternative',
+  'claimsSymbolTableConsistency',
   // Claims §26 第3項 semantic walker analysis
   'antecedentBasis', 'specSupport',
-  // Abstract (semantic)
-  'titleMatch', 'commercialLanguage',
+  // Abstract
+  'charCount', 'titleMatch', 'commercialLanguage', 'representativeDrawing', 'symbolVsRepDrawing',
 ]
 
 function TwComparisonTable({ t }) {
