@@ -178,7 +178,7 @@
       "fieldBrowser": "Browser",
       "fieldLocale": "Sprache",
       "fieldBuild": "Build",
-      "diagnosticHeader": "Diagnose-Fingerabdruck (strukturelle Metadaten, kein Anspruchstext — siehe Datenschutz §6):"
+      "diagnosticHeader": "Diagnose-Spur (strukturelle Metadaten, kein Anspruchstext — siehe Datenschutz §6):"
     }
   },
   "cta": {
@@ -1346,7 +1346,7 @@
       "title": "Freiwilliges Feedback",
       "p1": "Wenn Sie auf einen Feedback-Link klicken, öffnet Ihr Browser Ihr eigenes E-Mail-Programm (oder ein Webmail-Fenster), adressiert an kwisschen@gmail.com. Wir hosten kein Formular. Wir erhalten nur, was Sie selbst verfassen und senden.",
       "p2": "Wir verwenden Feedback zur Fehlerbehebung und zur Antwort an Sie. Wir geben Feedback nicht an Dritte weiter und nutzen es zu keinem anderen Zweck als zur Verbesserung von PatentLint und zur Beantwortung Ihrer Nachricht.",
-      "p3": "Fehlerberichte, die über „Fehler melden“-Links gesendet werden, können einen kompakten Block „Diagnose-Fingerabdruck“ enthalten — strukturelle Metadaten dazu, welcher Walker-Codepfad den Befund erzeugt hat (Ergebnisse von Regex-Matches, Zeichenzählungen, Tags zum Extraktionspfad). Der Fingerabdruck enthält keinen Anspruchstext, keine Substantive, keine Entwurfsinhalte; er ist so konzipiert, dass wir Walker-Fehler diagnostizieren können, ohne Ihren Entwurf zu sehen. Sie können den gesamten E-Mail-Text vor dem Senden einsehen und den Fingerabdruck-Block entfernen, wenn Sie möchten.",
+      "p3": "Fehlerberichte, die über „Fehler melden“-Links gesendet werden, können einen kompakten Block „Diagnose-Spur“ enthalten — strukturelle Metadaten dazu, welcher Walker-Codepfad den Befund erzeugt hat (Ergebnisse von Regex-Matches, Zeichenzählungen, Tags zum Extraktionspfad). Die Spur enthält keinen Anspruchstext, keine Substantive, keine Entwurfsinhalte; sie ist so konzipiert, dass wir Walker-Fehler diagnostizieren können, ohne Ihren Entwurf zu sehen. Sie können den gesamten E-Mail-Text vor dem Senden einsehen und den Spur-Block entfernen, wenn Sie möchten.",
       "p4": "Möchten Sie Feedback pseudonym senden, nutzen Sie einen E-Mail-Alias-Dienst (z. B. Apple Hide My Email, Gmail-Aliase, Firefox Relay, ProtonMail-Aliase). Wir erhalten die Alias-Adresse; Ihre echte Adresse bleibt bei Ihrem Anbieter. Wir korrelieren Alias-Adressen nicht mit anderen Daten."
     },
     "s7": {
