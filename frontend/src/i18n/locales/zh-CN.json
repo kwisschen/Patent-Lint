@@ -193,8 +193,8 @@
     "finding": "项问题"
   },
   "antecedent": {
-    "didYouMean": "您是否指的是\"{{term}}\"（于权利要求{{claim_id}}中引入）？",
-    "didYouMeanCrossBranch": "您是否指的是\"{{term}}\"（于权利要求 {{claim_id}} 中引入，但该权利要求不在本权利要求的相依链中）？",
+    "didYouMean": "您是否指的是“{{term}}”（于权利要求{{claim_id}}中引入）？",
+    "didYouMeanCrossBranch": "您是否指的是“{{term}}”（于权利要求 {{claim_id}} 中引入，但该权利要求不在本权利要求的相依链中）？",
     "crossBranchAntecedent": "在权利要求 {{claim_id}} 中引入，但该权利要求不在本权利要求的相依链中。请调整相依结构或以「a」重新引入该用语。",
     "crossRefSpecSupport": "亦于下方之说明书支持检查中标记。"
   },
@@ -334,7 +334,7 @@
       },
       "specSupport": {
         "title": "限制性用语与撰稿防护",
-        "description": "检测权利要求、说明书与摘要中的不明确或限制性用语（如\"must\"、\"always\"、\"invention\"），依 MPEP § 2173.05(b)；并标记缺少\"non-transitory\"限定的 CRM 权利要求（§ 101）。"
+        "description": "检测权利要求、说明书与摘要中的不明确或限制性用语（如“must”、“always”、“invention”），依 MPEP § 2173.05(b)；并标记缺少“non-transitory”限定的 CRM 权利要求（§ 101）。"
       }
     },
     "uspto": {
@@ -547,7 +547,7 @@
     "restrictiveWordingSpec": "段落：{{list}}。上列用语依 MPEP § 2173.05(b) 可能被视为不确定或限制范围。请检查各标记段落，考虑该用语是否过度限缩范围或引入不确定性。",
     "paragraphNumberingMissing": "请依 MPEP § 608.01(p) 添加 [0001] 格式的连续段落编号。",
     "paragraphEnding": "段落：{{list}}。说明书各段落须依 MPEP § 608.01(p) 以句号结尾。",
-    "sequenceListingFix": "请依 37 C.F.R. § 1.821–1.825 添加\"Statement Regarding Sequence Listing\"部分。",
+    "sequenceListingFix": "请依 37 C.F.R. § 1.821–1.825 添加“Statement Regarding Sequence Listing”部分。",
     "crossReferenceCitations": "{{text}}。请确认序列号正确，且优先权链完整（延续案、CIP、临时申请、分案）。",
     "priorArtCitations": "{{text}}。请确认专利/公开号准确。对现有技术的描述可能在审查中被视为自认。",
     "optionalSectionGuidance": "如适用于您的申请，请添加此部分。",
@@ -555,19 +555,19 @@
     "multipleDependentClaims": "权利要求：{{list}}。多项从属权利要求会产生额外费用，且不得从属于其他多项从属权利要求（35 U.S.C. § 112(e)）。请确认此为有意为之。",
     "selfDependentClaims": "权利要求：{{list}}。权利要求不得从属于自身。请修正从属关系引用。",
     "meansFunctionClaims": "权利要求：{{list}}。依 § 112(f)，权利要求范围限于说明书中公开的对应结构及等同物。请确认说明书针对各功能性限定公开了充分的结构。",
-    "antecedentBasisTerms": "{{count}}项引用基础问题，涉及{{claims}}项权利要求。每个确定引用（\"the X\"或\"said X\"）须有先前的不定引用（\"a X\"或\"an X\"）。缺少引用基础可能导致 § 112(b) 不确定性驳回。",
+    "antecedentBasisTerms": "{{count}}项引用基础问题，涉及{{claims}}项权利要求。每个确定引用（“the X”或“said X”）须有先前的不定引用（“a X”或“an X”）。缺少引用基础可能导致 § 112(b) 不确定性驳回。",
     "preambleNounMismatch": "权利要求 {{claim}} 从属于权利要求 {{parent}}。前序部分的主题名称不同：从属项为「{{dependent}}」，母项为「{{independent}}」。若指代同一实体则可能合理，请确认一致性。",
     "preambleNounMismatchSummary": "权利要求 {{rootId}} 使用母项主题名称「{{parent}}」；从属权利要求 {{depClaims}} 使用「{{dependent}}」。请确认是否指代同一实体，或统一前序部分的主题名称。",
-    "preambleIndefiniteArticle": "权利要求 {{claim}} 从属于权利要求 {{parent}}。从属项前序使用\"{{article}} {{noun}}\"，应改为\"The {{noun}}\"以指代独立权利要求实体。",
+    "preambleIndefiniteArticle": "权利要求 {{claim}} 从属于权利要求 {{parent}}。从属项前序使用“{{article}} {{noun}}”，应改为“The {{noun}}”以指代独立权利要求实体。",
     "preambleParseUnclear": "权利要求：{{claims}}。本检查器无法解析这些从属权利要求之前序。MPEP § 608.01(n) 认可之型式包含：「The X of claim N」、「The X according to claim N」、「The X as in claim N」、「The X as claimed in claim N」、「The X as recited in claim N」、「The X as set forth in claim N」。请人工确认前序，若使用 MPEP 标准型式而未被识别，请回报错误。",
-    "singleFigureFix": "请依 MPEP § 608.02 将所有\"FIG. 1\"替换为\"The Figure\"或\"the drawing\"。",
-    "drawingsPriorArt": "描绘现有技术的附图须依 MPEP § 608.02(g) 标注\"Prior Art\"图例。请确认各现有技术附图已正确标注。",
+    "singleFigureFix": "请依 MPEP § 608.02 将所有“FIG. 1”替换为“The Figure”或“the drawing”。",
+    "drawingsPriorArt": "描绘现有技术的附图须依 MPEP § 608.02(g) 标注“Prior Art”图例。请确认各现有技术附图已正确标注。",
     "figuresSequentialFix": "请依 MPEP § 608.02 将附图重新编号为递增顺序。",
     "orphanedBriefFigures": "附图：{{list}}。请在具体实施方式中添加对这些附图的引用，或从附图说明中移除。",
     "orphanedDetailedFigures": "附图：{{list}}。请在附图说明中添加对这些附图的描述，或从具体实施方式中移除引用。",
-    "restrictiveWordingAbstract": "摘要应避免法律用语（\"comprising\"、\"said\"、\"means\"）、评价性用语（\"novel\"、\"innovative\"）及限制性用语（\"must\"、\"essential\"），依 MPEP § 608.01(b)。请修改上列标记用语。",
+    "restrictiveWordingAbstract": "摘要应避免法律用语（“comprising”、“said”、“means”）、评价性用语（“novel”、“innovative”）及限制性用语（“must”、“essential”），依 MPEP § 608.01(b)。请修改上列标记用语。",
     "abstractStructureFix": "摘要须为单一段落，以句号、感叹号或问号结尾，且须作为专利稿件最后一部分，依 MPEP § 608.01(b)。",
-    "abstractImpliedPhrasesFix": "依 MPEP § 608.01(b)，\"This disclosure provides...\"或\"A method is provided...\"等开头应改为直接描述发明（例如\"A method that...\"）。",
+    "abstractImpliedPhrasesFix": "依 MPEP § 608.01(b)，“This disclosure provides...”或“A method is provided...”等开头应改为直接描述发明（例如“A method that...”）。",
     "abstractWordCountFix": "摘要须介于 50 至 150 字之间，依 MPEP § 608.01(b)。请修改以符合此范围。",
     "cn": {
       "requiredSections": "依专利法 §26 第1款，完整稿件须包含摘要、说明书（技术领域、背景技术、发明内容、具体实施方式）及权利要求书。缺少：{{sections}}。",
@@ -576,20 +576,20 @@
       "paragraphNumberingDocx": "根据CNIPA规定，说明书不应添加任何形式的段落编号。WORD转XML编辑器在转换时会自动添加编号。请删除所有手动添加的段落编号。",
       "paragraphEnding": "根据审查指南，说明书段落应以中文句末标点（。、！或？）结尾。请检查标记的段落。",
       "figureRefConsistency": "根据审查指南，附图说明中描述的附图应在具体实施方式中引用，反之亦然。请确认标记的引用是否正确。",
-      "patentTypeTerminology": "根据审查指南，发明专利申请应使用\"本发明\"（而非\"本实用新型\"），实用新型申请反之。检测到：\"{{term}}\"。请确认用语与申请类型一致。",
+      "patentTypeTerminology": "根据审查指南，发明专利申请应使用“本发明”（而非“本实用新型”），实用新型申请反之。检测到：“{{term}}”。请确认用语与申请类型一致。",
       "titleLength": "根据审查指南 第一部分第一章，发明名称不应超过25个汉字（当前 {{count}} 个）。请缩短发明名称。",
       "titleContent": "根据审查指南，发明名称不得包含商标、型号、人名或商业性宣传用语。请删除禁止内容。",
-      "specClaimReference": "根据专利法实施细则 §17，说明书不得使用\"如权利要求……所述的……\"等语言引用权利要求。请删除说明书中的权利要求引用。",
+      "specClaimReference": "根据专利法实施细则 §17，说明书不得使用“如权利要求……所述的……”等语言引用权利要求。请删除说明书中的权利要求引用。",
       "claimsSequential": "根据审查指南，权利要求应从1开始连续编号。请修正编号。",
-      "dependencyFormat": "根据专利法实施细则 §22，从属权利要求应使用\"如权利要求N所述的……\"的格式引用在前的权利要求。请修正标记的权利要求。",
+      "dependencyFormat": "根据专利法实施细则 §22，从属权利要求应使用“如权利要求N所述的……”的格式引用在前的权利要求。请修正标记的权利要求。",
       "selfDependent": "根据专利法实施细则 §22，权利要求不得引用自身。请修正引用关系。",
       "forwardDependency": "根据专利法实施细则 §22，从属权利要求只能引用在前的权利要求。请修改引用关系。",
       "singleSentence": "根据审查指南 第二部分第二章，每项权利要求应为一个以句号（。）结尾的完整句子。请删除句中多余的句号或拆分为多项权利要求。",
       "refNumeralParens": "根据审查指南，权利要求中的附图标记应加括号，例如（101）而非101。请检查标记的权利要求。",
       "subjectConsistency": "根据审查指南 第二部分第二章，从属权利要求的主题名称应与其引用的权利要求的主题名称一致。已识别之前序型式：如权利要求N所述[的]X、如权利要求N所记载[的]X、如权利要求N[的]X。请检查标记的权利要求。",
       "subjectConsistencyParseUnclear": "这些从属权利要求使用之前序型式未被识别。依专利法实施细则 §22，可接受之前序型式包含：如权利要求N所述[的]X、如权利要求N所记载[的]X、如权利要求N[的]X。请人工确认前序，若为CNIPA合规前序而未能识别，请回报错误。",
-      "transitionPhrase": "根据审查指南，独立权利要求应包含\"其特征在于\"等特征部分连接词，用以区分已知要素与新颖特征。请检查标记的权利要求。",
-      "twTerminology": "CNIPA稿件中发现台湾（TIPO）专利用语。CNIPA中称为\"权利要求\"。请替换上列标记用语。",
+      "transitionPhrase": "根据审查指南，独立权利要求应包含“其特征在于”等特征部分连接词，用以区分已知要素与新颖特征。请检查标记的权利要求。",
+      "twTerminology": "CNIPA稿件中发现台湾（TIPO）专利用语。CNIPA中称为“权利要求”。请替换上列标记用语。",
       "claimsSpecReference": "根据审查指南 第二部分第二章，权利要求不得引用说明书或附图来限定保护范围。权利要求应当自成一体——请删除上列标记引用。",
       "multiMultiDep": "根据专利法实施细则 §22，多项从属权利要求不得作为另一多项从属权利要求的引用基础。请调整引用关系。",
       "dependentOrdering": "根据审查指南 第二部分第二章，引用同一独立权利要求的所有从属权利要求应连续排列在下一项独立权利要求之前。请调整排列顺序。",
@@ -831,7 +831,7 @@
           "pass": "各章节附图引用一致。"
         },
         "patentTypeTerminology": {
-          "verify": "发现\"{{term}}\"，请确认是否与专利类型（发明/实用新型）一致（审查指南）。",
+          "verify": "发现“{{term}}”，请确认是否与专利类型（发明/实用新型）一致（审查指南）。",
           "pass": "专利类型用语一致。"
         },
         "title": {
@@ -882,7 +882,7 @@
           "pass": "所有独立权利要求均包含连接词。"
         },
         "twTerminology": {
-          "verify": "发现台湾专利用语\"请求项\"，CNIPA申请应使用\"权利要求\"。",
+          "verify": "发现台湾专利用语“请求项”，CNIPA申请应使用“权利要求”。",
           "pass": "权利要求用语符合CNIPA规范。"
         },
         "specReference": {
@@ -1170,7 +1170,7 @@
     "spec_support_pass": "所有权利要求用语均可在说明书中找到（§ 112(a) 书面描述支持）。",
     "required_sections_pass": "符合 MPEP § 608.01(a) 的所有必要章节均已存在。",
     "required_sections_missing": "缺少 MPEP § 608.01(a) 规定的必要章节。",
-    "optional_section_missing": "可选章节\"{{name}}\"未发现。",
+    "optional_section_missing": "可选章节“{{name}}”未发现。",
     "figure_xref_pass": "附图说明与具体实施方式之间的附图引用一致。",
     "figure_xref_orphaned_brief": "附图在附图说明中描述但未在具体实施方式中引用（MPEP § 608.02）。",
     "figure_xref_orphaned_detailed": "附图在具体实施方式中引用但未在附图说明中描述（MPEP § 608.02）。"
