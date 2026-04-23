@@ -4,6 +4,7 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import en from './locales/en.json'
+import de from './locales/de.json'
 import zhCN from './locales/zh-CN.json'
 import zhTW from './locales/zh-TW.json'
 import ja from './locales/ja.json'
@@ -26,21 +27,25 @@ i18n
   .init({
     resources: {
       en: { translation: en },
+      de: { translation: de },
       'zh-CN': { translation: zhCN },
       'zh-TW': { translation: zhTW },
       ja: { translation: ja },
       ko: { translation: ko },
     },
-    supportedLngs: ['en', 'zh-CN', 'zh-TW', 'ja', 'ko'],
+    supportedLngs: ['en', 'de', 'zh-CN', 'zh-TW', 'ja', 'ko'],
     fallbackLng: 'en',
     detection: {
       order: ['localStorage', 'navigator'],
       caches: ['localStorage'],
       lookupLocalStorage: newKey,
       convertDetectedLanguage: (lng) => {
-        // Map Chinese variants to specific locales
-        if (lng === 'zh' || lng === 'zh-Hant') return 'zh-TW'
-        if (lng === 'zh-Hans') return 'zh-CN'
+        // Map locale variants to supported locales
+        if (!lng) return lng
+        const lower = lng.toLowerCase()
+        if (lower === 'zh' || lower === 'zh-hant') return 'zh-TW'
+        if (lower === 'zh-hans') return 'zh-CN'
+        if (lower === 'de' || lower.startsWith('de-')) return 'de'
         return lng
       },
     },
