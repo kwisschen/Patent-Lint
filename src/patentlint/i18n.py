@@ -28,7 +28,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Callable
 
-_SUPPORTED_LOCALES: tuple[str, ...] = ("en", "zh-TW", "zh-CN", "ja", "ko")
+_SUPPORTED_LOCALES: tuple[str, ...] = ("en", "de", "zh-TW", "zh-CN", "ja", "ko")
 _DEFAULT_LOCALE: str = "en"
 
 # ``{{var}}`` interpolation. Identifiers only — no expressions, no
@@ -179,6 +179,8 @@ def normalize_locale(locale: str | None) -> str:
         if "hans" in lower or "cn" in lower or "sg" in lower:
             return "zh-CN"
         return "zh-CN"
+    if lower.startswith("de"):
+        return "de"
     if lower.startswith("ja"):
         return "ja"
     if lower.startswith("ko"):

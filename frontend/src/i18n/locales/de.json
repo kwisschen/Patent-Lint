@@ -1,0 +1,1394 @@
+{
+  "header": {
+    "title": "PatentLint",
+    "subtitle": "Patentschrift-Checker"
+  },
+  "jurisdiction": {
+    "us": "US Patent",
+    "cn": "CN Patent",
+    "tw": "TW Patent",
+    "label": "Region"
+  },
+  "dropzone": {
+    "tagline": "Prüfen Sie Ihre Beschreibung sofort gegen 30+ USPTO-Ausarbeitungsregeln.",
+    "title": "Patentanmeldung (.docx) ablegen, um die lokale Prüfung zu starten",
+    "subtitle": "oder zum Durchsuchen klicken",
+    "notice": "Unterstützt US-Patentbeschreibungen (.docx)",
+    "reject": "Nur .docx-Dateien werden akzeptiert",
+    "rejectMultiple": "Bitte immer nur eine Datei ablegen.",
+    "rejectMultipleType": "Bitte eine einzelne .docx-Datei ablegen.",
+    "taglineCn": "Prüfen Sie Ihre Beschreibung sofort gegen 20+ CNIPA-Ausarbeitungsregeln.",
+    "titleCn": "Patentdatei ablegen, um die lokale Prüfung zu starten",
+    "noticeCn": "Unterstützt chinesische Patentbeschreibungen (.docx, .xml, .zip)",
+    "rejectCn": "Nur .docx-, .xml- und .zip-Dateien werden akzeptiert",
+    "rejectMultipleTypeCn": "Bitte eine einzelne .docx-, .xml- oder .zip-Datei ablegen.",
+    "taglineTw": "Prüfen Sie Ihre Beschreibung sofort gegen 30+ TIPO-Ausarbeitungsregeln.",
+    "titleTw": "Patentanmeldung (.docx) ablegen, um die lokale Prüfung zu starten",
+    "noticeTw": "Unterstützt taiwanesische Patentbeschreibungen (.docx)",
+    "rejectTw": "Nur .docx-Dateien werden akzeptiert",
+    "rejectMultipleTypeTw": "Bitte eine einzelne .docx-Datei ablegen."
+  },
+  "summary": {
+    "specParagraphs": "Absätze der Beschreibung",
+    "claims": "Ansprüche",
+    "independent": "unabhängig",
+    "dependent": "abhängig",
+    "figures": "Figuren",
+    "abstractWords": "Wörter der Zusammenfassung",
+    "abstractChars": "Zeichen der Zusammenfassung",
+    "claimCategories": "Anspruchskategorien",
+    "method": "Verfahren",
+    "apparatus": "Vorrichtung",
+    "outsideRange": "Außerhalb des Bereichs 50–150",
+    "outsideRangeCn": "Überschreitet 300 Zeichen",
+    "outsideRangeTw": "Überschreitet 250 Zeichen",
+    "noParagraphs": "Keine Absatznummerierung gefunden",
+    "patentType": "Patentart",
+    "patentTypeInvention": "Erfindungspatent",
+    "patentTypeUtilityModel": "Gebrauchsmuster"
+  },
+  "section": {
+    "specification": "Beschreibung",
+    "claims": "Ansprüche",
+    "drawings": "Kurze Beschreibung der Zeichnungen",
+    "drawingsShort": "Zeichnungen",
+    "abstract": "Zusammenfassung",
+    "cn": {
+      "specification": "Beschreibung",
+      "claims": "Ansprüche",
+      "drawings": "Zeichnungen",
+      "drawingsShort": "Zeichnungen",
+      "abstract": "Zusammenfassung"
+    },
+    "tw": {
+      "technicalField": "Technisches Gebiet",
+      "priorArt": "Stand der Technik",
+      "disclosure": "Offenbarung",
+      "drawingsDescription": "Kurze Beschreibung der Zeichnungen",
+      "embodiment": "Ausführungsbeispiel",
+      "specification": "Beschreibung",
+      "drawings": "Zeichnungen",
+      "drawingsShort": "Zeichnungen",
+      "symbolTable": "Bezugszeichenliste",
+      "claims": "Ansprüche",
+      "abstract": "Zusammenfassung"
+    }
+  },
+  "status": {
+    "pass": "OK",
+    "verify": "PRÜFEN",
+    "amend": "ÄNDERN"
+  },
+  "button": {
+    "downloadPdf": "PDF-Bericht speichern",
+    "newAnalysis": "Neue Prüfung",
+    "generating": "Wird gespeichert..."
+  },
+  "diagram": {
+    "show": "Diagramm einblenden",
+    "hide": "Diagramm ausblenden"
+  },
+  "claimDiagram": {
+    "renderError": "Diagramm konnte nicht erstellt werden",
+    "independent": "Unabhängig",
+    "dependent": "Abhängig",
+    "claimLabel": "Anspruch {{id}}",
+    "claimsLabel": "Ansprüche {{range}}"
+  },
+  "tree": {
+    "apparatusClaims": "Vorrichtungsansprüche",
+    "methodClaims": "Verfahrensansprüche",
+    "claims": "Ansprüche",
+    "independent": "Unabhängig",
+    "dependent": "Abhängig",
+    "deps": "abh.",
+    "dep": "abh."
+  },
+  "section112": {
+    "title": "§ 112 Analyse",
+    "titleTw": "Rückbezugs-Analyse",
+    "titleTwSpec": "§ 26(3) Analyse"
+  },
+  "results": {
+    "nonPatentWarning": "Dieses Dokument ist möglicherweise keine US-Patentbeschreibung",
+    "nonPatentWarningDetails": "PatentLint ist für Patentanmeldungsentwürfe konzipiert. Diese Datei enthält offenbar keine üblichen US-Patentabschnitte, nummerierte Ansprüche oder Absatznummerierung. Prüfergebnisse für nicht-US- oder Nicht-Patentdokumente können wenig aussagekräftig sein.",
+    "nonPatentWarningCn": "Dieses Dokument ist möglicherweise keine chinesische Patentbeschreibung",
+    "nonPatentWarningDetailsCn": "PatentLint ist für Patentanmeldungsentwürfe konzipiert. Diese Datei enthält offenbar keine üblichen chinesischen Beschreibungsabschnitte (技术领域, 背景技术 usw.), nummerierte Ansprüche oder erkennbare Formatierung. Prüfergebnisse für nicht-chinesische oder Nicht-Patentdokumente können wenig aussagekräftig sein.",
+    "nonPatentWarningTw": "Dieses Dokument ist möglicherweise keine taiwanesische Patentbeschreibung",
+    "nonPatentWarningDetailsTw": "PatentLint ist für Patentanmeldungsentwürfe konzipiert. Diese Datei enthält offenbar keine üblichen taiwanesischen Beschreibungsabschnitte (【技術領域】, 【先前技術】 usw.), nummerierte Ansprüche (請求項) oder Absatznummerierung. Prüfergebnisse für nicht-taiwanesische oder Nicht-Patentdokumente können wenig aussagekräftig sein.",
+    "showResultsAnyway": "Ergebnisse dennoch anzeigen",
+    "trackedChangesWarning": "Dieses Dokument enthält nachverfolgte Änderungen, die die Prüfgenauigkeit beeinträchtigen können. Akzeptieren oder verwerfen Sie alle Änderungen in Ihrer Textverarbeitung und prüfen Sie erneut.",
+    "analyzeAgain": "Erneut prüfen",
+    "scannedDocWarning": "Diese Datei enthält nur eingescannte Dokumentseiten",
+    "scannedDocWarningDetails": "Die hochgeladene Datei enthält eingescannte Bilder ohne maschinenlesbaren Patenttext. PatentLint benötigt strukturierten Text für die Prüfung. Bitte laden Sie stattdessen die Original-Anmelde-XML oder einen .docx-Entwurf."
+  },
+  "analysis": {
+    "analyzing": "Patentdokument wird geprüft...",
+    "label": "Prüfung"
+  },
+  "footer": {
+    "disclaimer": "Keine Rechtsberatung",
+    "builtBy": "© 2025 Christopher Chen",
+    "security": "Sicherheit",
+    "about": "Über",
+    "terms": "AGB",
+    "privacy": "Datenschutz",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "feedback": "Feedback"
+  },
+  "feedback": {
+    "report": "Fehler melden",
+    "reportProblem": "Problem mit diesem Befund melden",
+    "picker": {
+      "title": "Ihr Entwurf bleibt auf Ihrem Gerät",
+      "send": {
+        "description": "Ihre E-Mail ist bereit, mit demselben Inhalt in der Zwischenablage. Wie möchten Sie sie senden?",
+        "mailto": "Über Outlook oder Mobile senden",
+        "gmail": "Über Gmail senden"
+      },
+      "report": {
+        "description": "Ihr Fehlerbericht ist bereit, mit demselben Inhalt in der Zwischenablage. Wie möchten Sie ihn senden?",
+        "mailto": "Über Outlook oder Mobile melden",
+        "gmail": "Über Gmail melden"
+      },
+      "clipboard": "In die Zwischenablage kopieren",
+      "remember": "Auswahl merken"
+    },
+    "emailGreeting": "Hallo Christopher,",
+    "bodyPlaceholder": "[In ein oder zwei Sätzen: Was stimmt an diesem Befund nicht — handelt es sich um einen False Positive, eine falsche Kategorisierung, oder hat die Prüfung etwas übersehen? Bitte KEINEN Anspruchstext oder sonstigen Entwurfsinhalt einfügen; der Befund selbst ist bereits angehängt.]",
+    "footerIntro": "Ich möchte Feedback zu PatentLint geben.",
+    "footerPlaceholder": "[Was auch immer Sie teilen möchten — Fehlermeldungen, Funktionswünsche, Fragen oder allgemeine Anmerkungen. Bei Fehlern hilft ein Hinweis zu Browser und Betriebssystem bei der Reproduktion. Bei Funktionswünschen reicht ein Satz zum Anwendungsfall. Sie müssen nichts Vertrauliches zu Ihrer Arbeit preisgeben.]",
+    "enterpriseIntro": "Ich möchte eine Anfrage zur Enterprise-Bereitstellung von PatentLint stellen.",
+    "enterprisePlaceholder": "[Beschreiben Sie Ihren Einsatzbedarf — Kanzlei- oder Teamgröße und Fachgebiet, Regionen, in denen Sie tätig sind, ungefähres Dokumentenvolumen, Evaluierungszeitraum und besondere Anforderungen (z. B. selbst gehostete oder Air-Gap-Installation für ITAR- oder Datenschutzanforderungen, SSO, eigene Prüfungen).]",
+    "email": {
+      "subjectFinding": "PatentLint Befundbericht — {{checkKey}}",
+      "subjectFooter": "PatentLint Feedback",
+      "subjectEnterprise": "PatentLint Enterprise-Anfrage",
+      "fieldColon": ": ",
+      "fieldCheck": "Prüfung",
+      "fieldMessage": "Nachricht",
+      "fieldDetails": "Details",
+      "fieldStatus": "Status",
+      "fieldClaim": "Anspruch",
+      "fieldTerms": "Begriffe",
+      "fieldPhrases": "Phrasen",
+      "fieldReferenceForm": "Bezugsform",
+      "fieldJurisdiction": "Region",
+      "fieldBrowser": "Browser",
+      "fieldLocale": "Sprache",
+      "fieldBuild": "Build",
+      "diagnosticHeader": "Diagnose-Fingerabdruck (strukturelle Metadaten, kein Anspruchstext — siehe Datenschutz §6):"
+    }
+  },
+  "cta": {
+    "heading": "Bereit, Ihren Entwurf zu prüfen?",
+    "subtext": "Legen Sie eine .docx-Datei ab und erhalten Sie sofort Ergebnisse. Kein Upload. Kein Konto.",
+    "button": "Entwurf prüfen"
+  },
+  "antecedentBasis": {
+    "title": "Rückbezugs-Analyse",
+    "findings": "Befunde",
+    "finding": "Befund"
+  },
+  "antecedent": {
+    "didYouMean": "Meinten Sie *{{term}}* (eingeführt in Anspruch {{claim_id}})?",
+    "didYouMeanCrossBranch": "Meinten Sie *{{term}}* (eingeführt in Anspruch {{claim_id}}, der nicht zur Abhängigkeitskette dieses Anspruchs gehört)?",
+    "crossBranchAntecedent": "Eingeführt in Anspruch {{claim_id}}, der nicht zur Abhängigkeitskette dieses Anspruchs gehört. Restrukturieren Sie die Abhängigkeit oder führen Sie den Begriff erneut mit „a\" ein.",
+    "crossRefSpecSupport": "Ebenfalls in der Stützungs-Prüfung der Beschreibung unten gekennzeichnet."
+  },
+  "specSupport": {
+    "title": "Stützungs-Prüfung der Beschreibung",
+    "items": "Begriffe",
+    "item": "Begriff",
+    "crossRefAntecedent": "Ebenfalls in der Rückbezugs-Prüfung oben gekennzeichnet."
+  },
+  "triage": {
+    "title": "Prioritäten-Übersicht",
+    "amend": "Änderung erforderlich",
+    "amendEmpty": "Keine änderungsbedürftigen Punkte.",
+    "verify": "Fachliche Prüfung nötig",
+    "verifyEmpty": "Keine zur Prüfung markierten Punkte.",
+    "pass": "Bestanden",
+    "items": "Einträge",
+    "item": "Eintrag"
+  },
+  "security": {
+    "airplaneDemoAlt": "Demo: Prüfung einer Patentanmeldung im Flugmodus ohne Netzwerkverbindung",
+    "badge": {
+      "headline": "Kein Upload. Kein Konto. Keine Installation.",
+      "description": "Ihre Datei verlässt nie Ihr Gerät.",
+      "proveIt": "Beweis →"
+    },
+    "results": {
+      "badge": "Auf Ihrem Gerät geprüft",
+      "networkActive": "Netzwerk aktiv",
+      "networkIdle": "Keine Netzwerkaktivität",
+      "howItWorks": "Wie funktioniert das?"
+    },
+    "prove": {
+      "label1": "Offline gehen",
+      "label2": "Datei ablegen",
+      "label3": "Es funktioniert trotzdem",
+      "label4": "Der grüne Punkt",
+      "step1": "WLAN ausschalten oder Flugmodus aktivieren",
+      "step2": "Beliebige .docx in PatentLint ziehen",
+      "step3": "Kein Internet heißt keine Cloud, kein Upload, keine Datenübertragung",
+      "step4": "Nach der Prüfung bestätigt ein grüner Punkt auf der Ergebnisseite, dass keine Netzwerkaktivität stattgefunden hat.",
+      "testHeading": "Vertrauen Sie nicht allein unserem Wort",
+      "testDescription": "Prüft auf neue Versionen. Dieselbe Anfrage wird ausgelöst, wenn Sie zum Tab zurückkehren.",
+      "testButton": "Auf Updates prüfen",
+      "logEmpty": "Noch keine Anfragen",
+      "noActivity": "Keine Aktivität erkannt",
+      "tryNow": "Jetzt ausprobieren →"
+    },
+    "page": {
+      "heroTitle": "Kein Upload. Kein Konto. Kein Tracking.",
+      "heroSubtext": "PatentLint läuft vollständig in Ihrem Browser. Ihre Patentanmeldung verlässt nie Ihr Gerät, und vertrauliche Daten bleiben immer auf Ihrer Maschine.",
+      "tryIt": "Selbst ausprobieren →",
+      "compareTitle": "Wie schneidet PatentLint im Vergleich ab?",
+      "compareDisclaimer": "Der Vergleich spiegelt allgemeine Architekturmuster wider. Einzelne Produkte können abweichen. „Word-Add-in-Tools\" und „Cloud-basierte Tools\" sind generische Kategorien, keine konkreten Produkte.",
+      "techTitle": "Technische Details"
+    },
+    "compare": {
+      "colQuestion": "Frage",
+      "colPatentLint": "PatentLint",
+      "colAddin": "Word-Add-in-Tools",
+      "colCloud": "Cloud-basierte Tools",
+      "q1": {
+        "question": "Verlässt meine Datei mein Gerät?",
+        "patentlint": "Nie. Läuft zu 100 % lokal im Browser.",
+        "addin": "Datei bleibt lokal, aber das Add-in kann Daten zurücksenden.",
+        "cloud": "Ja. Auf entfernte Server hochgeladen."
+      },
+      "q2": {
+        "question": "Benötige ich ein Konto?",
+        "patentlint": "Kein Konto erforderlich. PatentLint erfasst keine Nutzungsdaten.",
+        "addin": "Erfordert in der Regel eine Lizenz oder ein Konto.",
+        "cloud": "Ja. Konto erforderlich."
+      },
+      "q3": {
+        "question": "Funktioniert es offline?",
+        "patentlint": "Ja, nach dem ersten Seitenaufruf.",
+        "addin": "Hängt von der Lizenzvalidierung ab.",
+        "cloud": "Nein. Erfordert Internetverbindung."
+      },
+      "q4": {
+        "question": "Kann ich die Datenschutzaussage verifizieren?",
+        "patentlint": "Ja. DevTools → Netzwerk öffnen oder in den Flugmodus wechseln.",
+        "addin": "Add-in-Verkehr ist schwer zu prüfen.",
+        "cloud": "Nein. Daten liegen auf deren Servern."
+      },
+      "q5": {
+        "question": "Welche Plattformen werden unterstützt?",
+        "patentlint": "Jedes Gerät mit einem modernen Browser.",
+        "addin": "Nur Windows + Microsoft Word.",
+        "cloud": "Browserbasiert, aber Upload erforderlich."
+      },
+      "q6": {
+        "question": "Was kostet es?",
+        "patentlint": "Kostenlos — keine Gebühren, kein Abo, keine Nutzungsbegrenzung.",
+        "addin": "Erfordert in der Regel eine kostenpflichtige Lizenz.",
+        "cloud": "Erfordert in der Regel ein Abonnement."
+      },
+      "q7": {
+        "question": "Wird mein Patenttext für KI-Training genutzt?",
+        "patentlint": "Nie. Alle Prüfungen erfolgen deterministisch durch regelbasierten Mustervergleich.",
+        "addin": "Herstellerabhängig — manche senden Telemetriedaten.",
+        "cloud": "Häufig ja. Nutzungsbedingungen behalten sich solche Rechte oft vor."
+      }
+    },
+    "tech": {
+      "architectureTitle": "Architektur",
+      "architecture": "PatentLint kompiliert seine Python-Analyse-Engine über Pyodide zu WebAssembly und führt sie vollständig in der JavaScript-Sandbox Ihres Browsers aus. Für die Dokumentprüfung findet keine serverseitige Verarbeitung statt.",
+      "networkTitle": "Netzwerkaktivität",
+      "network": "Nach dem ersten Seitenaufruf (der die Analyse-Engine lädt) werden während der Prüfung keinerlei Netzwerkanfragen gestellt. Prüfen Sie dies im Netzwerk-Tab der DevTools Ihres Browsers oder aktivieren Sie einfach den Flugmodus.",
+      "pdfTitle": "PDF-Erzeugung",
+      "pdf": "PDF-Berichte werden vollständig in Ihrem Browser über pdfmake erzeugt. Ihr Dokumentinhalt verlässt nie Ihr Gerät, auch nicht für den Bericht.",
+      "aiTitle": "KI / LLM (nicht genutzt)",
+      "ai": "PatentLint verwendet keine KI, kein Machine Learning und keine großen Sprachmodelle. Alle Prüfungen erfolgen deterministisch durch regelbasierten Mustervergleich gegen die Richtlinien der Patentämter. Ihr Text wird nie an einen KI-Dienst gesendet.",
+      "telemetryTitle": "Telemetrie & Analyse (nicht genutzt)",
+      "telemetry": "PatentLint enthält keine Analyse-Skripte, Tracking-Pixel, Cookies oder Drittanbieter-Tracking. Die Anwendung erfasst und überträgt keine Nutzungsdaten.",
+      "selfHostedTitle": "Self-Hosting-Option",
+      "selfHosted": "Für Organisationen mit strengen Datensouveränitätsanforderungen, wie ITAR-geschützte Umgebungen oder Air-Gap-Netzwerke, kann PatentLint über Docker einschließlich aller Abhängigkeiten selbst gehostet werden.",
+      "contactEnterprise": "Kontakt für Enterprise-Bereitstellung →"
+    }
+  },
+  "about": {
+    "productTitle": "Was ist PatentLint?",
+    "productTagline": "Ein Patentanmeldungs-Checker der ersten Generation, der lokal in Ihrem eigenen Browser läuft.",
+    "productDesc1": "PatentLint ist ein kostenloser Patentanmeldungs-Checker, der Mängel erkennt, bevor der Prüfer es tut. Legen Sie eine US-, chinesische oder taiwanesische Patentanmeldung ab und erhalten Sie einen sofortigen Compliance-Bericht, der vollständig auf Ihrem eigenen Gerät erstellt wird. Keine Uploads, keine Konten, keine Cloud.",
+    "productDesc2": "PatentLint prüft Ausarbeitungsregeln aus dem MPEP (USA), den CNIPA-Vorschriften (China) und den TIPO-Vorschriften (Taiwan) und erkennt typische Mängel wie fehlenden Rückbezug, fehlerhafte Anspruchsstruktur und einschränkende Formulierungen.",
+    "usptoTitle": "PatentLint vs. USPTO Patent Center",
+    "usptoSubtitle": "Das USPTO Patent Center validiert das Einreichungsformat. PatentLint prüft den Entwurf selbst.",
+    "usFeatures": {
+      "title": "Interaktive Prüfung von US-Patentanmeldungen",
+      "claimTree": {
+        "title": "Anspruchsbaum & § 112-Walker",
+        "description": "Interaktiver Abhängigkeitsbaum für mehrfach abhängige und mehrfach unabhängige Strukturen, unterstützt von einem § 112-Walker für Rückbezug (§ 112(b)) und Stützung in der Beschreibung (§ 112(a)) — querverlinkt, wenn derselbe Begriff in beiden fehlt — sowie Prüfungen für Markush, Jepson, funktionelle Merkmalsangaben und Übergangsbegriffe."
+      },
+      "specAbstract": {
+        "title": "Struktur von Beschreibung & Zusammenfassung",
+        "description": "Abschnittsreihenfolge (MPEP § 608.01(a)), Absatznummerierung (§ 608.01(p)), Wortzahl der Zusammenfassung (§ 608.01(b)) und Querbezüge zwischen den Zeichnungen und der ausführlichen Beschreibung, unter anderem."
+      },
+      "specSupport": {
+        "title": "Einschränkende Formulierungen & Ausarbeitungs-Guards",
+        "description": "Erkennt unklare oder einschränkende Begriffe („must\", „always\", „invention\") in Ansprüchen, Beschreibung und Zusammenfassung gemäß § 2173.05(b); kennzeichnet CRM-Ansprüche, bei denen der Zusatz „non-transitory\" gemäß § 101 fehlt."
+      }
+    },
+    "uspto": {
+      "colCheck": "Prüfung",
+      "colUSPTO": "USPTO Patent Center",
+      "colPatentLint": "PatentLint",
+      "group1Title": "Formatierung & Struktur",
+      "group2Title": "USPTO-Einreichungsformat-Prüfungen",
+      "group3Title": "Inhaltliche Ausarbeitungsprüfungen",
+      "check": {
+        "sectionHeaders": "Erforderliche Abschnittsüberschriften (MPEP § 608.01(a))",
+        "paraNumbering": "Fortlaufende Absatznummerierung",
+        "claimPeriods": "Ansprüche enden mit Punkt",
+        "claimDependencies": "Validierung der Anspruchsabhängigkeiten",
+        "claimSequentiality": "Fortlaufende Anspruchsnummerierung",
+        "abstractWordCount": "Wortzahl der Zusammenfassung (50–150)",
+        "abstractStructure": "Zusammenfassung ein einziger Absatz mit gültigem Ende",
+        "figureSequential": "Fortlaufende Figurennummerierung",
+        "singleFigure": "Einzelfigur-Kennzeichnung („The Figure\")",
+        "priorArtLabeling": "Kennzeichnung von Stand-der-Technik-Figuren",
+        "specParaEndings": "Satzzeichen am Absatzende der Beschreibung",
+        "specParaNumbering": "Format der Absatznummerierung in der Beschreibung",
+        "requiredSections": "Erforderliche / optionale Abschnitte vorhanden",
+        "figureCrossRef": "Konsistenz der Figurenquerbezüge",
+        "pdfCompliance": "PDF/A-Konformität",
+        "marginCheck": "Seitenränder",
+        "fontSizeCheck": "Schriftgrößen-Anforderungen",
+        "lineSpacing": "Zeilenabstand",
+        "pageNumbering": "Seitennummerierung",
+        "headerFooter": "Kopf- / Fußzeilen-Format",
+        "filingReceipt": "Eingangsbestätigung der Anmeldung",
+        "restrictiveWording": "Einschränkende Formulierungen (MPEP § 2173.01)",
+        "indefiniteTerms": "Unklare Begriffe (MPEP § 2173.05(b))",
+        "impliedPhrases": "Implizierende Phrasen in der Zusammenfassung (MPEP § 608.01(b))",
+        "whereinCommas": "Kommaregeln bei „wherein\"",
+        "antecedentBasis": "Rückbezug („the X\" ohne vorheriges „a X\")",
+        "meansPlusFunction": "Funktionelle Merkmalsangabe (35 U.S.C. § 112(f))",
+        "preambleConsistency": "Konsistenz des Anspruchs-Oberbegriffs (MPEP § 608.01(m))",
+        "specSupport": "Stützung der Anspruchsbegriffe in der Beschreibung",
+        "legalPhrasesAbstract": "Rechtstypische Formulierungen in der Zusammenfassung",
+        "transitionPhrase": "Übergangsbegriff im Anspruch (§ 112)",
+        "checkJepsonPriorArt": "Jepson-Anerkenntnis zum Stand der Technik (§ 2129)",
+        "checkCrmNonTransitory": "CRM „non-transitory\"-Zusatz (§ 101)",
+        "checkMarkushTransition": "Übergangsbegriff bei Markush-Gruppen (§ 2117)",
+        "checkOmnibusClaim": "Erkennung von Omnibus-Ansprüchen (§ 112(b))",
+        "checkClaimPunctuation": "Satzzeichen in Ansprüchen (§ 608.01(m))",
+        "checkSequenceListing": "Sequenzprotokoll-Konformität (§ 2422)"
+      }
+    },
+    "cnTitle": "PatentLint CNIPA-Ausarbeitungsprüfungen",
+    "cnSubtitle": "20+ strukturelle Prüfungen gegen die CNIPA-Ausarbeitungsregeln (专利法实施细则, 审查指南).",
+    "cnFeatures": {
+      "title": "Interaktive Prüfung von CN-Patentanmeldungen",
+      "claimTree": {
+        "title": "Anspruchsstruktur & Rückbezugs-Walker",
+        "description": "Interaktiver Anspruchs-Abhängigkeitsbaum mit Mehrfachabhängigkeits-Rendering, ergänzt durch einen BFS-Rückbezugs-Walker mit CJK-Bigramm-Tokenisierung, Prüfung der Gegenstands-Konsistenz, Format der Abhängigkeitszitate und geklammerter Bezugszeichen."
+      },
+      "specAbstract": {
+        "title": "Prüfungen für Beschreibung & Zusammenfassung",
+        "description": "Fünf-Abschnitts-Reihenfolge (专利法实施细则 §17), Satzzeichen am Absatzende, Konsistenz der Figurenbezüge zwischen 附图说明 und 具体实施方式 sowie die 300-Zeichen-Grenze der Zusammenfassung (§23), unter anderem."
+      },
+      "dualPipeline": {
+        "title": "五书模板 + CNIPA-XML-Dual-Pipeline",
+        "description": "Dieselben Prüfungen laufen über CPC-五书模板-Word-Entwürfe und CNIPA-ST.36-XML-Einreichungen; 段落编号-Regeln gelten je nach Eingabeformat (manuelles [NNNN] in .docx unzulässig, fortlaufend in XML)."
+      }
+    },
+    "cnGroups": {
+      "specification": "Beschreibung (说明书)",
+      "claims": "Ansprüche (权利要求)",
+      "abstract": "Zusammenfassung (摘要)",
+      "drawings": "Zeichnungen (附图)"
+    },
+    "cnChecks": {
+      "requiredSections": "Erforderliche Abschnitte (专利法 §26 第1款、专利法实施细则 §17)",
+      "sectionOrdering": "Abschnittsreihenfolge",
+      "paragraphNumbering": "Absatznummerierung",
+      "paragraphEnding": "Satzzeichen am Absatzende",
+      "figureRefConsistency": "Konsistenz der Figurenbezüge",
+      "patentTypeTerminology": "Patentart-Terminologie",
+      "titleRequirements": "Titelanforderungen",
+      "specClaimReference": "Beschreibung darf nicht auf Ansprüche verweisen",
+      "claimsSequential": "Ansprüche fortlaufend",
+      "dependencyFormat": "Format der Abhängigkeit",
+      "selfDependent": "Selbstabhängige Ansprüche",
+      "forwardDependency": "Vorwärtsabhängigkeit",
+      "singleSentence": "Ein Satz pro Anspruch",
+      "refNumeralParens": "Bezugszeichen in Klammern",
+      "subjectNameConsistency": "Konsistenz des Gegenstands",
+      "transitionPhrase": "Übergangsbegriff (其特征在于)",
+      "cnTwTerminology": "CN/TW-Terminologie",
+      "claimsSpecReference": "Ansprüche dürfen nicht auf Beschreibung/Zeichnungen verweisen",
+      "multiMultiDependency": "Multi-Multi-Abhängigkeit",
+      "dependentOrdering": "Reihenfolge abhängiger Ansprüche",
+      "connectionRelationships": "Verbindungsbeziehungen der Komponenten (审查指南 §3.2.1)",
+      "abstractCharCount": "Zeichenzahl der Zusammenfassung (≤300)",
+      "titleInAbstract": "Titel in der Zusammenfassung",
+      "commercialLanguage": "Werbesprache",
+      "figuresSequential": "Figuren fortlaufend nummeriert"
+    },
+    "twTitle": "PatentLint vs. TIPO 偵錯系統",
+    "twSubtitle": "TIPO 偵錯系統 deckt taiwan-spezifische Terminologie ab. PatentLint deckt umfassendere Ausarbeitungsregeln ab.",
+    "twFeatures": {
+      "title": "Interaktive Prüfung von TW-Patentanmeldungen",
+      "claimTree": {
+        "title": "Anspruchsbaum & § 26(3)-Walker",
+        "description": "Interaktiver Anspruchs-Abhängigkeitsbaum, unterstützt von einem 專利法 §26 第3項-Walker für Rückbezug (先行詞) und Stützung in der Beschreibung (說明書支持) — querverlinkt, wenn derselbe Begriff in beiden fehlt — sowie Prüfungen der zweiteiligen Anspruchsform (其特徵在於 / 其改良在於), der Ein-Satz-Regel und der Referenz-Rezitation in unabhängigen Ansprüchen (一種X，具備如請求項N所述的Y). Ein 4-stufiger CJK-Matcher (Bezugszeichenliste / normalisiert / roh / Zeichenfenster) hält False Positives gering."
+      },
+      "specAbstract": {
+        "title": "Prüfungen für Beschreibung & Zusammenfassung",
+        "description": "Abschnittsreihenfolge gemäß 專利法施行細則 §17, Satzzeichen am Absatzende mit strengen/lockeren Regeln je Abschnitt, Querbezüge der Figuren und die 250-Zeichen-Grenze der Zusammenfassung (§21), unter anderem."
+      },
+      "symbolTable": {
+        "title": "符號說明-Querabgleich (TW-spezifisch)",
+        "description": "TW-spezifische 符號說明-Tabellen werden nativ geparst und gegen die Bezugszeichen in 實施方式, 圖式簡單說明 und 代表圖 abgeglichen — keine andere Jurisdiktion hat diesen Abschnitt."
+      }
+    },
+    "tw": {
+      "group1Title": "Gemeinsame Prüfungen",
+      "group2Title": "Nur TIPO-Prüfungen",
+      "group3Title": "Nur PatentLint-Prüfungen",
+      "colTipo": "TIPO 偵錯系統"
+    },
+    "twChecks": {
+      "symbolTablePresence": "符號說明 erforderlich, wenn 圖式簡單說明 vorhanden ist (專利法施行細則 §17)",
+      "symbolTableConsistency": "In 符號說明 aufgeführte Bezugszeichen erscheinen in 實施方式 (專利審查基準)",
+      "requiredSections": "Erforderliche Abschnitte (專利法 §25 第1項、專利法施行細則 §17)",
+      "sectionOrdering": "Abschnittsreihenfolge",
+      "paragraphNumbering": "Absatznummerierung (【NNNN】-Format)",
+      "paragraphEnding": "Satzzeichen am Absatzende",
+      "figureRefConsistency": "Konsistenz der Figurenbezüge",
+      "patentTypeTerminology": "Patentart-Terminologie (本發明 vs 本新型)",
+      "title": "Titelanforderungen",
+      "claimReference": "Beschreibung darf nicht auf Ansprüche verweisen",
+      "claimsSymbolTableConsistency": "Bezugszeichen in Ansprüchen in 符號說明 definiert (專利法施行細則 §19)",
+      "sequential": "Anspruchsnummern fortlaufend",
+      "dependencyFormat": "Format der Abhängigkeit (專利法施行細則 §18)",
+      "selfDependent": "Selbstabhängige Ansprüche",
+      "circularDependency": "Zirkuläre Abhängigkeitsketten",
+      "forwardDependency": "Vorwärtsabhängigkeit",
+      "singleSentence": "Ein Satz pro Anspruch",
+      "refNumeralParens": "Bezugszeichen in Klammern (專利法施行細則 §19)",
+      "subjectConsistency": "Konsistenz des Gegenstands",
+      "transitionPhrase": "Übergangsbegriff (其特徵在於)",
+      "cnTerminology": "CN / TW-Terminologie",
+      "specDrawingRef": "Ansprüche dürfen nicht auf Beschreibung oder Zeichnungen verweisen",
+      "multiDepOnMultiDep": "Mehrfach abhängiger Anspruch darf nicht von weiterem mehrfach abhängigem abhängen",
+      "multiDepAlternative": "Mehrfach abhängiger Anspruch in alternativer Form",
+      "titleSubjectMatch": "Titel entspricht den Gegenständen der unabhängigen Ansprüche",
+      "antecedentBasis": "Rückbezug (先行詞) — Vorfahrenketten-Walker",
+      "specSupport": "Stützung der Anspruchsbegriffe in der Beschreibung (專利法 §26 第3項)",
+      "charCount": "Zeichenzahl der Zusammenfassung (≤250)",
+      "titleMatch": "Titel in der Zusammenfassung",
+      "commercialLanguage": "Werbesprache",
+      "representativeDrawing": "Kennzeichnung einer repräsentativen Zeichnung (代表圖)",
+      "symbolVsRepDrawing": "Konsistenz zwischen 符號說明 und 代表圖",
+      "bracketFormat": "【】-Klammerformat in Abschnittsüberschriften",
+      "connectionRelationships": "Verbindungsbeziehungen der Komponenten im unabhängigen Anspruch (連接關係)",
+      "tipoIndigenous": "Terminologie zu indigenen Völkern (原住民族)",
+      "figuresSequential": "Figuren fortlaufend nummeriert"
+    },
+    "stats": {
+      "tests": "Automatisierte Tests",
+      "checks": "Ausarbeitungsprüfungen",
+      "languages": "UI-Sprachen",
+      "cloudRequests": "Cloud-Anfragen"
+    },
+    "archTitle": "Architektur",
+    "arch": {
+      "browser": "Ihr Browser",
+      "optional": "Optional: Docker / CLI",
+      "zeroBadge": "Keine Netzwerkanfragen während der Prüfung",
+      "selfHostBadge": "Self-Hosting für Air-Gap- und ITAR-sensible Umgebungen",
+      "node": {
+        "analysisEngine": "Analyse-Engine",
+        "pdfReport": "PDF-Bericht"
+      },
+      "tip": {
+        "react": "React 18 + Vite 6 + Tailwind CSS v4",
+        "pyodide": "CPython zu WebAssembly kompiliert. Führt Python im Browser aus",
+        "pdfmake": "Clientseitige PDF-Erzeugung, kein Server erforderlich",
+        "fastapi": "Python-REST-API für serverseitige Bereitstellungen",
+        "cli": "Kommandozeilen-Schnittstelle für Batch-Verarbeitung",
+        "weasyprint": "HTML-zu-PDF-Engine mit CJK-Schriftunterstützung"
+      }
+    },
+    "enterpriseContact": "Enterprise-Bereitstellung →",
+    "builderTitle": "Hintergrund",
+    "builderPain": "Jeder Patentanwalt kennt die Routine. Rückbezüge. Anspruchsbegriffe, die in der Beschreibung fehlen. Figuren, die in der Zeichnungsbeschreibung angekündigt, aber im Text nie referenziert werden. Abhängigkeitsketten, die sich unbemerkt selbst schließen. Die Prüfungen sind nicht schwierig. Sie sind nur mühsam und leicht zu übersehen.",
+    "builderDesc1": "PatentLint wurde von einem Patentingenieur gebaut, der über ein Jahrzehnt in diesem Arbeitsablauf verbracht, Tausende Anmeldungen geprüft und dieselben Fehlerkategorien immer wieder durchrutschen sehen hat. Bestehende Optionen waren entweder reine Windows-Desktop-Installationen oder Cloud-Dienste, bei denen die noch nicht eingereichte Anmeldung eines Mandanten auf einen fremden Server hochgeladen werden musste. Das eine bindet Sie an ein bestimmtes Betriebssystem. Das andere schickt den Entwurf aus der Kanzlei, bevor er überhaupt eingereicht ist.",
+    "builderDesc2": "Die Analyse-Engine ist in Python geschrieben und wird zu WebAssembly kompiliert. Sie läuft vollständig im Browser, auf Laptop, Tablet oder Smartphone, ohne Upload und ohne Protokollierung. Das heißt: Sie funktioniert im Flugzeug, auf gesperrten Kanzleirechnern, auf allem, was ein Mandant noch nicht freigegeben hat.",
+    "builderSister": "Das Schwesterprojekt, der Agentic Patent Analyst, übernimmt die argumentationsintensive Arbeit und nutzt intern feinjustierte LLM-Agenten für Stand-der-Technik-Recherche und Anspruchsabdeckungsanalyse."
+  },
+  "details": {
+    "paragraphs": "Absätze: {{list}}",
+    "claims": "Ansprüche: {{list}}",
+    "terms": "Begriffe: {{list}}",
+    "figures": "Figuren: {{list}}",
+    "firstGapParagraph": "Erste Lücke bei Absatz {{position}}. Neu durchnummerieren, um fortlaufende Reihenfolge gemäß MPEP § 608.01(p) herzustellen.",
+    "firstGapClaim": "Erste Lücke bei Anspruch {{position}}. Ansprüche fortlaufend neu nummerieren gemäß MPEP § 608.01(j).",
+    "citations": "{{text}}",
+    "rawText": "{{text}}",
+    "claimsOverview": "{{independent}} unabhängig, {{dependent}} abhängig, {{total}} gesamt",
+    "figureCount": "{{count}} Figur(en) gefunden.",
+    "missingSections": "Fehlend: {{list}}. Fügen Sie diese Abschnitte vor der Einreichung hinzu.",
+    "sectionName": "{{name}}",
+    "claimDependsOn": "Anspruch {{claim}} hängt von Anspruch {{parent}} ab",
+    "nounMismatch": "Abhängig '{{dependent}}' vs. unabhängig '{{independent}}'. Ein abhängiger Anspruch muss derselben Anspruchskategorie wie sein Elternanspruch angehören (z. B. beide Vorrichtung oder beide Verfahren). Korrigieren Sie das Substantiv im Oberbegriff.",
+    "seeSection112": "Siehe § 112-Analyse unten für Details je Anspruch.",
+    "specSupportUnsupported": "Die hier gezeigten {{count}} Anspruchsbegriff(e) wurden im Beschreibungsteil nicht gefunden. Jeder Anspruchsbegriff sollte in der Beschreibung gestützt sein.",
+    "restrictiveWordingSpec": "Absätze: {{list}}. Diese Begriffe können gemäß MPEP § 2173.05(b) als unklar oder einschränkend ausgelegt werden. Prüfen Sie jeden gekennzeichneten Absatz darauf, ob der Begriff den Schutzbereich übermäßig einschränkt oder Unklarheit erzeugt.",
+    "paragraphNumberingMissing": "Fortlaufende [0001]-Nummerierung gemäß MPEP § 608.01(p) ergänzen.",
+    "paragraphEnding": "Absätze: {{list}}. Jeder Absatz der Beschreibung muss gemäß MPEP § 608.01(p) mit einem Punkt enden.",
+    "sequenceListingFix": "Fügen Sie einen Abschnitt „Statement Regarding Sequence Listing\" gemäß 37 C.F.R. § 1.821–1.825 hinzu.",
+    "crossReferenceCitations": "{{text}}. Prüfen Sie, ob die Aktenzeichen korrekt sind und die Prioritätskette vollständig ist (Continuations, CIPs, Provisionals, Divisionals).",
+    "priorArtCitations": "{{text}}. Prüfen Sie, ob Patent-/Veröffentlichungsnummern korrekt sind. Charakterisierungen des Stands der Technik können im Prüfungsverfahren als Zugeständnisse gewertet werden.",
+    "optionalSectionGuidance": "Fügen Sie diesen Abschnitt hinzu, falls er für Ihre Anmeldung einschlägig ist.",
+    "restrictiveWordingClaims": "Ansprüche: {{list}}. Diese Begriffe können gemäß MPEP § 2173.05(b) eine Zurückweisung wegen Unklarheit nach § 112(b) auslösen. Prüfen Sie jeden gekennzeichneten Anspruch darauf, ob der Begriff erforderlich ist.",
+    "multipleDependentClaims": "Ansprüche: {{list}}. Mehrfach abhängige Ansprüche lösen zusätzliche Gebühren aus und dürfen nicht auf weitere mehrfach abhängige Ansprüche rückbezogen sein (35 U.S.C. § 112(e)). Prüfen Sie, ob dies beabsichtigt ist.",
+    "selfDependentClaims": "Ansprüche: {{list}}. Ein Anspruch kann nicht von sich selbst abhängen. Korrigieren Sie den Rückbezug.",
+    "meansFunctionClaims": "Ansprüche: {{list}}. Nach § 112(f) ist der Schutzbereich auf die in der Beschreibung offenbarte entsprechende Struktur und deren Äquivalente beschränkt. Prüfen Sie, ob die Beschreibung für jede funktionelle Merkmalsangabe ausreichende Struktur offenbart.",
+    "antecedentBasisTerms": "{{count}} potenzielle Rückbezugs-Mängel über {{claims}} Ansprüche hinweg. Jeder bestimmte Bezug („the X\" oder „said X\") muss eine vorherige unbestimmte Einführung („a X\" oder „an X\") haben. Fehlender Rückbezug kann zu einer Zurückweisung wegen Unklarheit nach § 112(b) führen.",
+    "preambleNounMismatch": "Anspruch {{claim}} hängt von Anspruch {{parent}} ab. Substantiv im Oberbegriff weicht ab: „{{dependent}}\" vs. Elternanspruch „{{independent}}\". Kann zulässig sein, sofern beide dieselbe Einheit bezeichnen. Konsistenz prüfen.",
+    "preambleNounMismatchSummary": "Anspruch {{rootId}} verwendet Elternbegriff '{{parent}}'; abhängige(r) Anspruch/Ansprüche {{depClaims}} verwendet '{{dependent}}'. Prüfen Sie, ob sich diese auf dieselbe Einheit beziehen, oder gleichen Sie die Substantive im Oberbegriff an.",
+    "preambleIndefiniteArticle": "Anspruch {{claim}} hängt von Anspruch {{parent}} ab. Der abhängige Oberbegriff verwendet „{{article}} {{noun}}\" — es sollte „The {{noun}}\" heißen, um auf die Einheit des unabhängigen Anspruchs zurückzuverweisen.",
+    "preambleParseUnclear": "Ansprüche: {{claims}}. Der Walker konnte die Oberbegriffe dieser abhängigen Ansprüche nicht parsen. MPEP § 608.01(n)-konforme Formen sind u. a.: 'The X of claim N', 'The X according to claim N', 'The X as in claim N', 'The X as claimed in claim N', 'The X as recited in claim N', 'The X as set forth in claim N'. Manuell prüfen oder als Fehler melden, falls der Oberbegriff eine übliche MPEP-Form verwendet, die wir noch nicht erkennen.",
+    "singleFigureFix": "Ersetzen Sie alle Vorkommen von „FIG. 1\" durch „The Figure\" oder „the drawing\" gemäß MPEP § 608.02.",
+    "drawingsPriorArt": "Figuren, die den Stand der Technik zeigen, müssen gemäß MPEP § 608.02(g) mit der Legende „Prior Art\" gekennzeichnet sein. Prüfen Sie, ob jede Stand-der-Technik-Figur korrekt beschriftet ist.",
+    "figuresSequentialFix": "Figuren in aufsteigender Reihenfolge neu nummerieren gemäß MPEP § 608.02.",
+    "orphanedBriefFigures": "Figuren: {{list}}. Fügen Sie entweder einen Verweis auf diese Figuren in der ausführlichen Beschreibung hinzu oder entfernen Sie sie aus der Kurzbeschreibung.",
+    "orphanedDetailedFigures": "Figuren: {{list}}. Fügen Sie entweder eine Beschreibung dieser Figuren in der kurzen Beschreibung der Zeichnungen hinzu oder entfernen Sie den Verweis aus der ausführlichen Beschreibung.",
+    "restrictiveWordingAbstract": "Die Zusammenfassung sollte juristische Formulierungen („comprising\", „said\", „means\"), anpreisende Sprache („novel\", „innovative\") und einschränkende Begriffe („must\", „essential\") gemäß MPEP § 608.01(b) vermeiden. Formulieren Sie die gekennzeichneten Begriffe um.",
+    "abstractStructureFix": "Die Zusammenfassung muss ein einziger Absatz sein, der mit Punkt, Ausrufe- oder Fragezeichen endet, und gemäß MPEP § 608.01(b) als letzter Abschnitt der Beschreibung erscheinen.",
+    "abstractImpliedPhrasesFix": "Gemäß MPEP § 608.01(b) sollten Einleitungen wie „This disclosure provides...\" oder „A method is provided...\" umformuliert werden, um die Erfindung direkt zu beschreiben (z. B. „A method that...\").",
+    "abstractWordCountFix": "Die Zusammenfassung muss gemäß MPEP § 608.01(b) zwischen 50 und 150 Wörtern liegen. Bitte anpassen.",
+    "cn": {
+      "requiredSections": "Eine vollständige CNIPA-Einreichung erfordert 摘要, 说明书 (技术领域, 背景技术, 发明内容, 具体实施方式) und 权利要求书 gemäß 专利法 §26 第1款. Fehlend: {{sections}}.",
+      "sectionOrdering": "Vorgeschriebene Reihenfolge: 技术领域 → 背景技术 → 发明内容 → 附图说明 → 具体实施方式. Abschnitte entsprechend umsortieren.",
+      "paragraphNumberingXml": "Gemäß 审查指南 müssen Absatznummern fortlaufend und mit führenden Nullen (0001, 0002, ...) formatiert sein. Nummerierung korrigieren.",
+      "paragraphNumberingDocx": "Gemäß CNIPA-Richtlinien darf die Beschreibung keine Absatznummerierung enthalten. Der 编辑器 im WORD转XML fügt sie bei der Konvertierung automatisch hinzu. Entfernen Sie alle manuell eingefügten Absatznummern.",
+      "paragraphEnding": "Gemäß 审查指南 müssen Absätze der Beschreibung mit chinesischen Satzend-Zeichen (。, ！ oder ？) enden. Prüfen Sie die gekennzeichneten Absätze.",
+      "figureRefConsistency": "Gemäß 审查指南 sollten in 附图说明 beschriebene Figuren in 具体实施方式 referenziert werden und umgekehrt. Prüfen Sie, ob die gekennzeichneten Bezüge beabsichtigt sind.",
+      "patentTypeTerminology": "Gemäß 审查指南 sollten Erfindungsanmeldungen 本发明 (nicht 本实用新型) verwenden und Gebrauchsmusteranmeldungen umgekehrt. Gefunden: {{term}}. Prüfen Sie, ob die Terminologie zur Einreichungsart passt.",
+      "titleLength": "Gemäß 审查指南 第一部分第一章 darf der Titel (发明名称) 25 chinesische Zeichen nicht überschreiten ({{count}} gefunden). Kürzen Sie den Titel.",
+      "titleContent": "Gemäß 审查指南 darf der Titel keine Markennamen, Typennummern, Personennamen oder Werbesprache enthalten. Entfernen Sie den unzulässigen Inhalt.",
+      "specClaimReference": "Gemäß 专利法实施细则 §17 darf die Beschreibung keine Formulierungen wie '如权利要求……所述的……' zur Bezugnahme auf Ansprüche verwenden. Entfernen Sie Anspruchsbezüge aus der Beschreibung.",
+      "claimsSequential": "Gemäß 审查指南 müssen Ansprüche fortlaufend ab 1 nummeriert sein. Nummerierung korrigieren.",
+      "dependencyFormat": "Gemäß 专利法实施细则 §22 müssen abhängige Ansprüche die Form '如权利要求N所述的……' verwenden, um auf Elternansprüche zu verweisen. Korrigieren Sie die gekennzeichneten Ansprüche.",
+      "selfDependent": "Gemäß 专利法实施细则 §22 kann ein Anspruch nicht von sich selbst abhängen. Korrigieren Sie den Rückbezug.",
+      "forwardDependency": "Gemäß 专利法实施细则 §22 dürfen abhängige Ansprüche nur auf vorausgehende Ansprüche verweisen. Ändern Sie den Rückbezug auf einen früheren Anspruch.",
+      "singleSentence": "Gemäß 审查指南 第二部分第二章 muss jeder Anspruch ein einziger Satz sein, der mit einem 。 endet. Entfernen Sie Punkte innerhalb des Anspruchs oder strukturieren Sie ihn in getrennte Ansprüche um.",
+      "refNumeralParens": "Gemäß 审查指南 sollten Bezugszeichen in Ansprüchen in Klammern stehen, z. B. (101) statt 101. Prüfen Sie die gekennzeichneten Ansprüche.",
+      "subjectConsistency": "Gemäß 审查指南 第二部分第二章 sollte der Gegenstand (主题名称) eines abhängigen Anspruchs mit dem Gegenstand des Elternanspruchs übereinstimmen. Anerkannte Oberbegriff-Formen: 如权利要求N所述[的]X, 如权利要求N所记载[的]X, 如权利要求N[的]X. Prüfen Sie die gekennzeichneten Ansprüche.",
+      "subjectConsistencyParseUnclear": "Diese abhängigen Ansprüche verwenden eine vom Walker nicht erkannte Oberbegriff-Form. Anerkannte Formen gemäß 专利法实施细则 §22 sind: 如权利要求N所述[的]X, 如权利要求N所记载[的]X, 如权利要求N[的]X. Manuell prüfen oder als Fehler melden, falls Ihr Oberbegriff CNIPA-konform ist.",
+      "transitionPhrase": "Gemäß 审查指南 sollten unabhängige Ansprüche einen kennzeichnenden Übergang wie '其特征在于' enthalten, um bekannte Elemente von neuartigen Merkmalen abzugrenzen. Prüfen Sie die gekennzeichneten Ansprüche.",
+      "twTerminology": "TIPO-Terminologie in CNIPA-Einreichung erkannt. CNIPA verwendet '权利要求' für Ansprüche. Ersetzen Sie alle gekennzeichneten Stellen.",
+      "claimsSpecReference": "Gemäß 审查指南 第二部分第二章 dürfen Ansprüche zur Bestimmung ihres Schutzbereichs nicht auf die Beschreibung oder Zeichnungen verweisen. Ansprüche müssen in sich geschlossen sein — entfernen Sie die gekennzeichneten Bezüge.",
+      "multiMultiDep": "Gemäß 专利法实施细则 §22 darf ein mehrfach abhängiger Anspruch nicht als Grundlage für einen weiteren mehrfach abhängigen Anspruch dienen. Strukturieren Sie die Abhängigkeitskette um.",
+      "dependentOrdering": "Gemäß 审查指南 第二部分第二章 sollten alle Ansprüche, die von einem unabhängigen Anspruch abhängen, zusammenhängend vor dem nächsten unabhängigen Anspruch stehen. Ansprüche umsortieren.",
+      "connectionRelationships": "Gekennzeichnete Komponenten: {{sample_names}} (insgesamt {{component_count}}). Ergänzen Sie ein Verbindungsverb (z. B. 连接, 设置于, 耦接), das die strukturelle Anordnung dieser Komponenten beschreibt.",
+      "abstractCharCount": "Gemäß 专利法实施细则 §23 darf die Zusammenfassung 300 chinesische Zeichen nicht überschreiten. Kürzen Sie die Zusammenfassung.",
+      "abstractTitleMatch": "Gemäß 审查指南 sollte die Zusammenfassung mit dem Titel (发明名称) übereinstimmen. Prüfen Sie, ob die Zusammenfassung den Erfindungstitel widerspiegelt.",
+      "commercialLanguage": "Gemäß 专利法实施细则 §23 darf die Zusammenfassung keine Werbesprache (商业性宣传用语) enthalten. Entfernen Sie die gekennzeichneten Begriffe.",
+      "antecedentBasisTerms": "{{issue_count}} Begriff(e) in {{claim_count}} Anspruch/Ansprüchen könnten ohne Rückbezug sein. Siehe Abschnitt „Rückbezugs-Analyse\" unten für die vollständige Aufschlüsselung je Begriff.",
+      "titleMissing": "Gemäß CNIPA 审查指南 第一部分第一章 muss die Beschreibung einen 发明名称 (Erfindungstitel) enthalten. Fügen Sie einen Titel in der Kopfzeile der Beschreibung hinzu.",
+      "figureRefInconsistency": {
+        "onlyDrawings": "Nur in 附图说明 zitiert: {{figs}}",
+        "onlyEmbodiment": "Nur in 具体实施方式 zitiert: {{figs}}"
+      },
+      "pass": {
+        "multiMultiDep": "Gemäß 专利法实施细则 §22 darf ein mehrfach abhängiger Anspruch nicht als Grundlage für einen weiteren mehrfach abhängigen dienen — verkettete Multi-Multi-Bezüge machen den Schutzbereich unbestimmt.",
+        "selfDependent": "Gemäß 专利法实施细则 §22 darf ein Anspruch nicht von sich selbst abhängen; abhängige Ansprüche müssen auf einen früheren Anspruch verweisen.",
+        "forwardDependency": "Gemäß 专利法实施细则 §22 darf ein abhängiger Anspruch nur auf Ansprüche mit früherer Nummer verweisen, nicht auf spätere.",
+        "singleSentence": "Gemäß 审查指南 第二部分第二章 muss jeder Anspruch ein einziger Satz sein, der mit 。 endet, damit der Schutzbereich eindeutig bleibt.",
+        "transitionPhrase": "Gemäß 审查指南 sollte ein unabhängiger Anspruch einen zweiteiligen Übergang (z. B. 其特征在于) enthalten, der den Oberbegriff (Stand der Technik) vom kennzeichnenden Teil (neuartige Merkmale) trennt."
+      }
+    },
+    "tw": {
+      "requiredSections": "Eine vollständige TIPO-Einreichung erfordert 摘要, 說明書 (技術領域, 先前技術, 發明內容/新型內容, 實施方式) und 申請專利範圍 gemäß 專利法 §25 第1項. Bei vorhandenen Zeichnungen sind zusätzlich 圖式簡單說明 und 符號說明 gemäß 專利法施行細則 §17 erforderlich. Fehlend: {{sections}}.",
+      "sectionOrdering": "專利法施行細則 §17 schreibt vor: 技術領域 → 先前技術 → 發明內容/新型內容 → 圖式簡單說明 → 實施方式 → 符號說明. Reihenfolge anpassen.",
+      "paragraphNumbering": "Sofern vorhanden, müssen Absatznummern im Format 【NNNN】 mit fortlaufenden vierstelligen Nummern stehen. Die Nummerierung ist gemäß 專利法施行細則 §17 optional.",
+      "paragraphEnding": "Absätze der Beschreibung sollten mit chinesischer Interpunktion (。！？) enden. Gekennzeichnete Absätze prüfen.",
+      "figureRefConsistency": "Gemäß 專利審查基準 sollten in 圖式簡單說明 beschriebene Figuren in 實施方式 referenziert werden und umgekehrt. Prüfen Sie, ob die gekennzeichneten Bezüge beabsichtigt sind.",
+      "patentTypeTerminology": "Erfindungspatente (發明) sollten 本發明, nicht 本新型 verwenden. Gebrauchsmuster (新型) sollten 本新型, nicht 本發明 verwenden. Gefunden: {{term}}.",
+      "title": "發明名稱/新型名稱 sollte prägnant sein, ohne Markennamen, Typennummern oder irrelevanten Text.",
+      "claimReference": "Gemäß 專利法施行細則 §17 darf die Beschreibung keine bestimmten Ansprüche referenzieren (z. B. 如請求項N所述). Gefunden: {{detail}}.",
+      "symbolTablePresence": "Gemäß 專利法施行細則 §17 muss, wenn 圖式簡單說明 vorhanden ist, auch 符號說明 enthalten sein. Ergänzen Sie einen 符號說明-Abschnitt mit Bezugszeichen und Komponentennamen.",
+      "symbolTableConsistency": "Gemäß 專利審查基準 sollten 符號說明-Einträge mit den in 實施方式 verwendeten Bezugszeichen übereinstimmen. Vollständigkeit prüfen.",
+      "claimsSequential": "Gemäß 專利審查基準 müssen Anspruchsnummern fortlaufend ab 1 sein.",
+      "dependencyFormat": "Gemäß 專利法施行細則 §18 müssen Abhängigkeiten eine anerkannte Form verwenden (如請求項N所述之, 如請求項N之 usw.). Gekennzeichnete Ansprüche prüfen.",
+      "selfDependent": "Gemäß 專利法施行細則 §18 kann ein Anspruch nicht von sich selbst abhängen. Selbstabhängig: {{claims}}.",
+      "circularDependency": "Gemäß 專利法施行細則 §18 dürfen Ansprüche keine zirkulären Abhängigkeitsketten bilden. Zirkuläre Kette: 請求項 {{claims}}.",
+      "forwardDependency": "Gemäß 專利法施行細則 §18 dürfen abhängige Ansprüche nur auf vorausgehende Ansprüche verweisen. Vorwärtsbezüge: {{claims}}.",
+      "singleSentence": "Gemäß 專利法施行細則 §18 muss jeder Anspruch ein Satz mit genau einem 。 am Ende sein. Gekennzeichnete Ansprüche prüfen.",
+      "refNumeralParens": "Gemäß 專利法施行細則 §19 sollten Bezugszeichen in Ansprüchen in Klammern stehen, z. B. (101). Gekennzeichnete Ansprüche prüfen.",
+      "subjectConsistency": "Der Gegenstand eines abhängigen Anspruchs sollte mit dem Gegenstand des Elternanspruchs übereinstimmen. Anerkannte Oberbegriff-Formen: 如請求項N所述[之的]X, 如請求項N所記載[之的]X, 如請求項N[之的]X. Gekennzeichnete Ansprüche prüfen.",
+      "subjectConsistencyParseUnclear": "Diese abhängigen Ansprüche verwenden eine vom Walker nicht erkannte Oberbegriff-Form. Anerkannte Formen gemäß 專利法施行細則 §18 sind: 如請求項N所述[之的]X, 如請求項N所記載[之的]X, 如請求項N[之的]X. Manuell prüfen oder als Fehler melden, falls Ihr Oberbegriff TIPO-konform ist.",
+      "transitionPhrase": "Gemäß 專利法施行細則 §20 sollten unabhängige Ansprüche einen Übergangsbegriff wie 其特徵在於 oder 其改良在於 enthalten. Gekennzeichnete Ansprüche prüfen.",
+      "cnTerminology": "Vereinfachte chinesische Patent-Terminologie gefunden: {{detail}}. TW-Dokumente sollten TIPO-Begriffe verwenden (請求項, 說明書, 先前技術, 實施方式 usw.), nicht CNIPA-Begriffe (权利要求, 说明书, 背景技术, 具体实施方式 usw.).",
+      "specDrawingRef": "Gemäß 專利法施行細則 §19 dürfen Ansprüche nicht auf die Beschreibung oder Zeichnungen verweisen (z. B. 如說明書所述, 如圖所示). Gefunden: {{detail}}.",
+      "multiDepOnMultiDep": "Gemäß 專利法施行細則 §18 darf ein mehrfach abhängiger Anspruch weder direkt noch mittelbar von einem weiteren mehrfach abhängigen abhängen. Gekennzeichnet: {{claims}}.",
+      "multiDepAlternative": "Gemäß 專利法施行細則 §18 müssen mehrfach abhängige Ansprüche in alternativer Form stehen (或/任一項). Gekennzeichnet: {{claims}}.",
+      "titleSubjectMatch": "Gemäß TIPO 專利審查基準 sollte der Titel mit dem Gegenstand der unabhängigen Ansprüche übereinstimmen. Gekennzeichnete Ansprüche prüfen.",
+      "claims": {
+        "symbolTableConsistency": {
+          "missingFromTable": "In Ansprüchen verwendete, in 符號說明 nicht definierte Bezugszeichen: {{numerals_with_locations}}"
+        }
+      },
+      "antecedentBasis": "該/所述/前述 + Substantiv sollte im selben Anspruch oder in einem Elternanspruch eine passende Einführung mit 一 + Substantiv haben. Gekennzeichnete Begriffe müssen ggf. geprüft werden. Die regex-basierte Erkennung ist approximativ.",
+      "abstractCharCount": "Gemäß 專利法施行細則 §21 sollte die Zusammenfassung höchstens 250 Zeichen umfassen. TIPO weist nicht zwingend allein aufgrund der Länge zurück, prüfen Sie dennoch auf Prägnanz.",
+      "abstractTitleMatch": "Gemäß 專利審查基準 sollte die Zusammenfassung auf das 發明名稱/新型名稱 Bezug nehmen. Prüfen Sie, ob die Zusammenfassung den Titel widerspiegelt. Titel: {{detail}}.",
+      "commercialLanguage": "Gemäß 專利法施行細則 §21 darf die Zusammenfassung keine Werbesprache (商業性宣傳用語) enthalten. Gefunden: {{terms}}.",
+      "representativeDrawing": "Gemäß 專利法施行細則 §21 sollte bei vorhandenen Zeichnungen eine 代表圖 benannt werden. Prüfen Sie, ob eine repräsentative Zeichnung ausgewiesen werden sollte.",
+      "symbolVsRepDrawing": {
+        "notInTable": "{{numeral}} ({{name}}) nicht in 符號說明",
+        "nameMismatch": "{{numeral}}: Symbolbeschreibung der repräsentativen Zeichnung enthält „{{rep_name}}\", 符號說明 enthält „{{table_name}}\"",
+        "description": "Die in der Symbolbeschreibung der repräsentativen Zeichnung aufgeführten Bezugszeichen sollten mit den Definitionen in 符號說明 übereinstimmen. Gekennzeichnete Einträge prüfen."
+      },
+      "bracketFormat": "Gemäß 專利法施行細則 §17 sollten Abschnittsüberschriften in vollbreite Klammern 【】 gefasst sein. Gefunden: {{detail}}.",
+      "connectionRelationships": "Gekennzeichnete Komponenten: {{sample_names}} (insgesamt {{component_count}}). Ergänzen Sie ein Verbindungsverb (z. B. 連接, 設置於, 耦接), das die strukturelle Anordnung dieser Komponenten beschreibt.",
+      "antecedentBasisTerms": "{{issue_count}} Begriff(e) in {{claim_count}} Anspruch/Ansprüchen könnten ohne Rückbezug sein. Siehe Abschnitt „Rückbezugs-Analyse\" unten für die vollständige Aufschlüsselung je Begriff.",
+      "specSupportTerms": "{{issue_count}} Begriff(e) in {{claim_count}} Anspruch/Ansprüchen könnten ohne Stützung in der Beschreibung sein. Siehe Abschnitt „Stützungs-Prüfung der Beschreibung\" unten für die vollständige Aufschlüsselung je Begriff.",
+      "titleMissing": "Gemäß TIPO 專利審查基準 muss die Beschreibung einen 發明名稱/新型名稱 (Erfindungs- oder Gebrauchsmustertitel) enthalten. Fügen Sie diesen in der Kopfzeile der Beschreibung hinzu.",
+      "figureRefInconsistency": {
+        "onlyDrawings": "Nur in 圖式簡單說明 zitiert: {{figs}}",
+        "onlyEmbodiment": "Nur in 實施方式 zitiert: {{figs}}"
+      },
+      "symbolTableInconsistency": {
+        "unreferenced": "In 符號說明 definiert, aber nicht in 實施方式 referenziert: {{symbols}}",
+        "undefined": "In 實施方式 referenziert, aber nicht in 符號說明 definiert: {{symbols}}"
+      },
+      "singleSentenceMissingPeriod": "Gemäß 專利法施行細則 §18 muss jeder Anspruch mit einem einzelnen 。 enden. Ergänzen Sie das abschließende Satzzeichen in den gekennzeichneten Ansprüchen.",
+      "singleSentenceMultiSentence": "Gemäß 專利法施行細則 §18 muss jeder Anspruch ein Satz mit genau einem 。 am Ende sein. Entfernen Sie Punkte innerhalb des Anspruchs oder strukturieren Sie die gekennzeichneten Ansprüche um."
+    },
+    "titleProhibited": {
+      "trademark": "Markensymbol „{{token}}\"",
+      "commercial": "Werbesprache „{{token}}\"",
+      "model": "Typennummer „{{token}}\""
+    },
+    "paragraphFormat": {
+      "examples": "{{count}} Absatz/Absätze nicht im [NNNN]-Format. Beispiele: {{examples}}"
+    }
+  },
+  "common": {
+    "close": "Schließen",
+    "toggleTheme": "Design umschalten",
+    "changeLanguage": "Sprache wechseln",
+    "betaBadge": {
+      "label": "BETA",
+      "tooltip": "Beta: Einige Prüfungen sind noch in Entwicklung"
+    }
+  },
+  "consolidation": {
+    "nounMismatchSummary": "Substantiv im Oberbegriff weicht ab: abhängige(r) Anspruch/Ansprüche {{depClaims}} abweichend von Anspruch {{rootId}}"
+  },
+  "lang": {
+    "en": "English",
+    "de": "Deutsch",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "ja": "日本語",
+    "ko": "한국어"
+  },
+  "check": {
+    "spec": {
+      "restrictiveWording": {
+        "verify": "Einschränkende Formulierungen in der Beschreibung gefunden (MPEP § 2173.05(b)).",
+        "pass": "Keine einschränkenden Formulierungen in der Beschreibung gefunden."
+      },
+      "paragraphSequential": {
+        "missing": "Keine Absatznummerierung in der Beschreibung gefunden.",
+        "amend": "Absatznummern sind nicht fortlaufend (MPEP § 608.01(p)).",
+        "pass": "Absatznummern sind fortlaufend."
+      },
+      "paragraphEnding": {
+        "amend": "Absätze mit ungültigen oder fehlenden Satzzeichen am Ende (MPEP § 608.01(p)).",
+        "pass": "Alle Absätze haben gültige Satzzeichen am Ende."
+      },
+      "sequenceListing": {
+        "amend": "SEQ ID NO referenziert, aber keine Sequenzprotokoll-Erklärung gefunden.",
+        "pass": "Keine Sequenzprotokoll-Abweichung."
+      },
+      "crossReference": {
+        "verify": "Querverweis-Abschnitt zitiert verwandte Anmeldungen — Vollständigkeit prüfen.",
+        "pass": "Keine Querverweis-Zitate gefunden."
+      },
+      "priorArt": {
+        "verify": "Hintergrund-Abschnitt zitiert Stand der Technik — Charakterisierungen prüfen.",
+        "pass": "Keine Stand-der-Technik-Zitate im Hintergrund gefunden."
+      },
+      "drawings": "Übersicht der Zeichnungen.",
+      "trackedChanges": {
+        "amend": "Dokument enthält nachverfolgte Änderungen (Revisionen). Alle Änderungen vor der Einreichung akzeptieren oder verwerfen."
+      }
+    },
+    "claims": {
+      "restrictiveWording": {
+        "verify": "Einschränkende oder unklare Formulierungen in den Ansprüchen gefunden (MPEP § 2173.05(b)).",
+        "pass": "Keine einschränkenden oder unklaren Formulierungen in den Ansprüchen gefunden."
+      },
+      "sequential": {
+        "amend": "Anspruchsnummern sind nicht fortlaufend (MPEP § 608.01(m)).",
+        "pass": "Anspruchsnummern sind fortlaufend."
+      },
+      "multipleDependent": {
+        "amend": "Mehrfach abhängige Ansprüche gefunden — Gebühren und Multi-Multi-Regel prüfen (MPEP § 608.01(n); § 112(e)).",
+        "pass": "Keine mehrfach abhängigen Ansprüche."
+      },
+      "selfDependent": {
+        "amend": "Selbstabhängige Ansprüche gefunden — ein Anspruch kann nicht von sich selbst abhängen (§ 112(d)).",
+        "pass": "Keine selbstabhängigen Ansprüche."
+      },
+      "missingPeriod": {
+        "amend": "Ansprüchen fehlt der abschließende Punkt (MPEP § 608.01(m)).",
+        "pass": "Alle Ansprüche enden mit einem Punkt."
+      },
+      "extraPeriod": {
+        "amend": "Ansprüche mit zusätzlichen oder falsch platzierten Punkten (MPEP § 608.01(m)).",
+        "pass": "Keine überzähligen Punkte in Ansprüchen gefunden."
+      },
+      "whereinComma": {
+        "amend": "Falsche Kommasetzung bei „wherein\" (MPEP § 608.01(m)).",
+        "verify": "Kommasetzung bei „wherein\" prüfen.",
+        "pass": "Kommasetzung bei „wherein\" ist korrekt."
+      },
+      "meansFunction": {
+        "verify": "Ansprüche rufen möglicherweise 35 U.S.C. § 112(f) auf (funktionelle Merkmalsangabe).",
+        "pass": "Keine funktionellen Merkmalsangaben erkannt."
+      },
+      "antecedentBasis": {
+        "verify": "Möglicher fehlender Rückbezug — „the X\" / „said X\" ohne vorherige Einführung „a X\" (§ 112(b)).",
+        "pass": "Keine Rückbezugs-Mängel erkannt (§ 112(b))."
+      },
+      "missingTransition": "Anspruch {{claimNumber}} fehlt ein Übergangsbegriff (z. B. 'comprising', 'consisting of')",
+      "missingTransitionDetails": "Anspruch {{claimNumber}} enthält keinen anerkannten Übergangsbegriff. Jeder Anspruch muss einen Übergangsbegriff wie 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by' oder 'characterized in that' zwischen Oberbegriff und Anspruchskörper enthalten.",
+      "transitionsPresent": "Alle Ansprüche enthalten Übergangsbegriffe.",
+      "overview": "Anspruchs-Übersicht."
+    },
+    "abstract": {
+      "restrictiveWording": {
+        "verify": "Einschränkende oder unzulässige Formulierungen in der Zusammenfassung gefunden (MPEP § 608.01(b)).",
+        "pass": "Keine einschränkenden oder unzulässigen Formulierungen in der Zusammenfassung gefunden."
+      },
+      "structure": {
+        "amend": "Zusammenfassung hat zusätzliche Absätze oder ungültiges Ende — muss ein einziger Absatz sein (MPEP § 608.01(b)).",
+        "pass": "Zusammenfassung ist ein einziger Absatz mit gültigem Ende."
+      },
+      "impliedPhrases": {
+        "amend": "Zusammenfassung enthält implizierende Phrasen ('disclosure' oder 'provided') (MPEP § 608.01(b)).",
+        "pass": "Keine implizierenden Phrasen in der Zusammenfassung gefunden."
+      },
+      "wordCount": {
+        "amend": "Wortzahl der Zusammenfassung außerhalb des Bereichs 50–150 (MPEP § 608.01(b)).",
+        "pass": "Wortzahl der Zusammenfassung liegt im Bereich 50–150."
+      }
+    },
+    "drawings": {
+      "singleFigure": {
+        "amend": "Einzelfigur-Patent verwendet 'FIG. 1' statt 'The Figure'.",
+        "pass": "Einzelfigur-Patent korrekt beschriftet."
+      },
+      "priorArt": {
+        "verify": "Stand-der-Technik-Bezüge in der Zeichnungsbeschreibung gefunden — Figurenbeschriftung prüfen (MPEP § 608.02(g)).",
+        "pass": "Keine Stand-der-Technik-Bezüge in der Zeichnungsbeschreibung."
+      },
+      "sequential": {
+        "amend": "Figuren nicht in fortlaufender Reihenfolge; fehlend: {{figure_list}} (MPEP § 608.02).",
+        "pass": "Figuren sind in fortlaufender Reihenfolge."
+      },
+      "count": "{{count}} Figur(en) gefunden."
+    },
+    "cn": {
+      "spec": {
+        "requiredSections": {
+          "amend": "Erforderliche Abschnitte fehlen: {{sections}} (专利法 §26 第1款、专利法实施细则 §17).",
+          "pass": "Alle erforderlichen Abschnitte vorhanden."
+        },
+        "sectionOrdering": {
+          "amend": "Abschnitte der Beschreibung nicht in vorgeschriebener Reihenfolge (专利法实施细则 §17).",
+          "pass": "Abschnitte der Beschreibung in vorgeschriebener Reihenfolge."
+        },
+        "paragraphNumbering": {
+          "amendXml": "Nicht fortlaufende Absatznummerierung ({{detail}}) (审查指南).",
+          "amendDocx": "Beschreibung enthält manuell eingefügte Absatznummerierung — für CNIPA-Einreichung zu entfernen (审查指南).",
+          "pass": "Absatznummerierung fortlaufend.",
+          "amendXmlGap": "Lücke in der Absatznummerierung — auf {{prev}} folgt {{next}} (审查指南).",
+          "amendXmlDuplicate": "{{count}} doppelte Absatznummer(n): {{paragraphs}} (审查指南)."
+        },
+        "paragraphEnding": {
+          "amend": "{{count}} Absatz/Absätze ohne gültiges chinesisches Satzend-Zeichen: {{paragraphs}} (审查指南).",
+          "pass": "Alle Absätze der Beschreibung enden mit gültigem chinesischen Satzend-Zeichen."
+        },
+        "figureRefConsistency": {
+          "verify": "Inkonsistente Figurenbezüge: {{figure_ref_inconsistency}}",
+          "pass": "Figurenbezüge zwischen Abschnitten konsistent."
+        },
+        "patentTypeTerminology": {
+          "verify": "'{{term}}' erkannt — prüfen, ob dies zur Einreichungsart passt (Erfindung vs. Gebrauchsmuster) (审查指南).",
+          "pass": "Patentart-Terminologie konsistent."
+        },
+        "title": {
+          "amendLength": "Titel überschreitet 25-Zeichen-Grenze ({{count}} Zeichen) (审查指南 第一部分第一章).",
+          "amendContent": "Unzulässiger Inhalt im Titel: {{title_prohibited_items}} (审查指南 第一部分第一章).",
+          "pass": "Titel erfüllt CNIPA-Anforderungen.",
+          "amendMissing": "Titel fehlt in der Beschreibung (审查指南 第一部分第一章)."
+        },
+        "claimReference": {
+          "amend": "Beschreibung verweist in {{count}} Absatz/Absätzen ({{paragraphs}}) auf Ansprüche (专利法实施细则 §17). Beispiel: {{snippet}}",
+          "pass": "Beschreibung verweist nicht auf die Ansprüche."
+        }
+      },
+      "claims": {
+        "sequential": {
+          "amend": "Nicht fortlaufende Anspruchsnummerierung: erwartet {{expected}}, gefunden {{found}}.",
+          "pass": "Ansprüche fortlaufend nummeriert."
+        },
+        "dependencyFormat": {
+          "amend": "Falsches Abhängigkeitsformat in {{count}} Anspruch/Ansprüchen: {{claims}} (专利法实施细则 §22).",
+          "pass": "Alle Abhängigkeits-Rückbezüge korrekt formatiert."
+        },
+        "selfDependent": {
+          "amend": "Selbstabhängigkeit in {{claims}} (专利法实施细则 §22).",
+          "pass": "Keine selbstabhängigen Ansprüche."
+        },
+        "forwardDependency": {
+          "amend": "{{claims}} verweist/verweisen auf einen nachfolgenden Anspruch (Vorwärtsabhängigkeit) (专利法实施细则 §22).",
+          "pass": "Alle Abhängigkeiten verweisen auf vorausgehende Ansprüche."
+        },
+        "singleSentence": {
+          "amend": "{{count}} Mehrsatz-Anspruch/Ansprüche: {{claims}} (审查指南 第二部分第二章).",
+          "pass": "Alle Ansprüche als einzelne Sätze formuliert."
+        },
+        "refNumeralParens": {
+          "verify": "Bezugszeichen nicht in Klammern in {{count}} Anspruch/Ansprüchen: {{claims}}.",
+          "pass": "Alle Bezugszeichen in Klammern gesetzt."
+        },
+        "subjectConsistency": {
+          "verify": "Gegenstand weicht vom Elternanspruch ab in {{claims}} (insgesamt {{count}}).",
+          "pass": "Alle abhängigen Ansprüche stimmen im Gegenstand mit ihrem Elternanspruch überein."
+        },
+        "subjectConsistencyParseUnclear": {
+          "verify": "{{count}} abhängige(r) Anspruch/Ansprüche mit nicht erkanntem Oberbegriff — Gegenstands-Konsistenz konnte nicht verifiziert werden: {{claims}}."
+        },
+        "transitionPhrase": {
+          "verify": "{{count}} unabhängige(r) Anspruch/Ansprüche ohne erkennbaren Übergangsbegriff: {{claims}}.",
+          "pass": "Alle unabhängigen Ansprüche enthalten einen Übergangsbegriff."
+        },
+        "twTerminology": {
+          "verify": "TIPO-Terminologie '请求项' erkannt — CNIPA-Einreichungen müssen '权利要求' verwenden.",
+          "pass": "Ansprüche verwenden CNIPA-Terminologie (权利要求)."
+        },
+        "specReference": {
+          "amend": "{{count}} Anspruch/Ansprüche verweist/verweisen auf Beschreibung oder Zeichnungen: {{claims}}.",
+          "pass": "Keine Anspruchsbezüge zur Beschreibung oder zu Zeichnungen."
+        },
+        "multiMultiDep": {
+          "amend": "Multi-Multi-Abhängigkeit in {{claims}}: ein mehrfach abhängiger Anspruch hängt von einem weiteren mehrfach abhängigen ab (专利法实施细则 §22).",
+          "pass": "Keine verketteten mehrfach abhängigen Ansprüche."
+        },
+        "dependentOrdering": {
+          "amend": "Abhängige Ansprüche nicht zusammenhängend nach ihrem unabhängigen Anspruch angeordnet.",
+          "pass": "Abhängige Ansprüche korrekt zusammenhängend nach ihrem unabhängigen Anspruch angeordnet."
+        },
+        "connectionRelationships": {
+          "verify": "Unabhängiger Anspruch {{claim_id}} führt {{sample_names}} ohne strukturelles Verbindungsverb auf.",
+          "pass": "Alle unabhängigen Vorrichtungs-/System-Ansprüche beschreiben Komponentenverbindungen."
+        },
+        "antecedentBasis": {
+          "verify": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 该/所述-Bezug ohne vorheriges 一 (审查指南).",
+          "pass": "Alle Anspruchsbegriffe haben Rückbezug (审查指南)."
+        }
+      },
+      "abstract": {
+        "charCount": {
+          "amend": "Zusammenfassung überschreitet 300-Zeichen-Grenze ({{count}} Zeichen, 专利法实施细则 §23).",
+          "pass": "Zusammenfassung innerhalb der 300-Zeichen-Grenze ({{count}} Zeichen)."
+        },
+        "titleMatch": {
+          "verify": "Zusammenfassung nimmt nicht auf den Erfindungstitel (发明名称) Bezug.",
+          "pass": "Erfindungstitel in der Zusammenfassung referenziert.",
+          "passCompound": "Alle Titelbestandteile ({{halves}}) in der Zusammenfassung referenziert."
+        },
+        "commercialLanguage": {
+          "amend": "Werbesprache in der Zusammenfassung: {{terms}}.",
+          "pass": "Zusammenfassung frei von Werbesprache."
+        }
+      },
+      "drawings": {
+        "figureCount": {
+          "pass": "{{count}} Figur(en) erkannt."
+        },
+        "figuresSequential": {
+          "pass": "Figuren 1–{{found_max}} fortlaufend nummeriert.",
+          "passNone": "Keine Figuren gefunden.",
+          "amend": "Nicht fortlaufende Figurennummerierung — fehlend: {{figure_list}}."
+        }
+      }
+    },
+    "tw": {
+      "spec": {
+        "requiredSections": {
+          "amend": "Erforderliche Abschnitte fehlen gemäß 專利法 §25 第1項 und 專利法施行細則 §17.",
+          "pass": "Alle erforderlichen Abschnitte vorhanden."
+        },
+        "sectionOrdering": {
+          "amend": "Abschnitte der Beschreibung nicht in vorgeschriebener Reihenfolge (專利法施行細則 §17).",
+          "pass": "Abschnitte der Beschreibung in vorgeschriebener Reihenfolge."
+        },
+        "paragraphNumbering": {
+          "pass": "Absatznummerierung fortlaufend (oder nicht vorhanden).",
+          "amendGap": "Lücke in der Absatznummerierung — auf 【{{prev}}】 folgt 【{{next}}】 (專利法施行細則 §17).",
+          "amendFormat": "{{count}} Absatz/Absätze nicht im 【NNNN】-Format. Beispiele: {{examples}} (專利法施行細則 §17)."
+        },
+        "paragraphEnding": {
+          "amend": "{{count}} Absatz/Absätze ohne Satzzeichen am Ende: {{paragraphs}} (專利審查基準).",
+          "pass": "Alle Absätze der Beschreibung enden mit gültigem Satzzeichen."
+        },
+        "figureRefConsistency": {
+          "verify": "Inkonsistente Figurenbezüge: {{figure_ref_inconsistency}}",
+          "pass": "Figurenbezüge zwischen Abschnitten konsistent."
+        },
+        "patentTypeTerminology": {
+          "verify": "Patentart-Terminologie weicht ab — Erfindung vs. Gebrauchsmuster (專利審查基準).",
+          "pass": "Patentart-Terminologie konsistent."
+        },
+        "title": {
+          "amendContent": "Unzulässiger Inhalt im Titel: {{title_prohibited_items}} (專利審查基準).",
+          "pass": "Titel erfüllt TIPO-Anforderungen.",
+          "amendMissing": "Titel fehlt in der Beschreibung (專利審查基準)."
+        },
+        "claimReference": {
+          "amend": "Beschreibung verweist auf die Ansprüche (專利法施行細則 §17).",
+          "pass": "Beschreibung verweist nicht auf die Ansprüche."
+        },
+        "symbolTablePresence": {
+          "amend": "Erforderlicher 符號說明-Abschnitt fehlt (專利法施行細則 §17).",
+          "pass": "符號說明-Abschnitt vorhanden."
+        },
+        "symbolTableConsistency": {
+          "verify": "符號說明-Einträge inkonsistent mit 實施方式: {{symbol_table_inconsistency}}",
+          "pass": "符號說明-Einträge konsistent mit 實施方式."
+        }
+      },
+      "claims": {
+        "sequential": {
+          "amend": "Nicht fortlaufende Anspruchsnummerierung: erwartet {{expected}}, gefunden {{found}}.",
+          "pass": "Ansprüche fortlaufend nummeriert."
+        },
+        "dependencyFormat": {
+          "amend": "Nicht erkannte Abhängigkeits-Form in {{count}} Anspruch/Ansprüchen: {{claims}} (專利法施行細則 §18).",
+          "pass": "Alle Abhängigkeits-Rückbezüge korrekt formatiert."
+        },
+        "selfDependent": {
+          "amend": "Selbstabhängige(r) Anspruch/Ansprüche erkannt (專利法施行細則 §18).",
+          "pass": "Keine selbstabhängigen Ansprüche."
+        },
+        "circularDependency": {
+          "amend": "Zirkuläre Abhängigkeitskette erkannt.",
+          "pass": "Keine zirkulären Abhängigkeitsketten."
+        },
+        "forwardDependency": {
+          "amend": "{{claims}} verweist/verweisen auf einen nachfolgenden Anspruch (Vorwärtsabhängigkeit) (專利法施行細則 §18).",
+          "pass": "Alle Abhängigkeiten verweisen auf vorausgehende Ansprüche."
+        },
+        "singleSentence": {
+          "amend": "{{count}} Mehrsatz-Anspruch/Ansprüche: {{claims}}.",
+          "pass": "Alle Ansprüche als einzelne Sätze formuliert.",
+          "amendMissingPeriod": "{{count}} Anspruch/Ansprüche ohne abschließendes Satzzeichen: {{claims}}.",
+          "amendMultiSentence": "{{count}} Mehrsatz-Anspruch/Ansprüche: {{claims}}."
+        },
+        "refNumeralParens": {
+          "verify": "Bezugszeichen nicht in Klammern in {{count}} Anspruch/Ansprüchen: {{claims}} (專利法施行細則 §19).",
+          "pass": "Alle Bezugszeichen in Klammern gesetzt."
+        },
+        "subjectConsistency": {
+          "verify": "Gegenstand weicht vom Elternanspruch ab in {{claims}} (insgesamt {{count}}).",
+          "pass": "Alle abhängigen Ansprüche stimmen im Gegenstand mit ihrem Elternanspruch überein."
+        },
+        "subjectConsistencyParseUnclear": {
+          "verify": "{{count}} abhängige(r) Anspruch/Ansprüche mit nicht erkanntem Oberbegriff — Gegenstands-Konsistenz konnte nicht verifiziert werden: {{claims}}."
+        },
+        "transitionPhrase": {
+          "verify": "{{count}} unabhängige(r) Anspruch/Ansprüche ohne Übergangsbegriff: {{claims}}.",
+          "pass": "Alle unabhängigen Ansprüche enthalten einen Übergangsbegriff."
+        },
+        "cnTerminology": {
+          "verify": "CNIPA-Terminologie im TW-Dokument erkannt.",
+          "pass": "Ansprüche verwenden TIPO-Terminologie."
+        },
+        "specDrawingRef": {
+          "amend": "Anspruch/Ansprüche verweisen auf Beschreibung oder Zeichnungen.",
+          "pass": "Keine Anspruchsbezüge zur Beschreibung oder zu Zeichnungen."
+        },
+        "multiDepOnMultiDep": {
+          "amend": "Multi-Multi-Abhängigkeit: ein mehrfach abhängiger Anspruch hängt von einem weiteren mehrfach abhängigen ab.",
+          "pass": "Alle mehrfach abhängigen Ansprüche haben eine gültige Abhängigkeitsstruktur."
+        },
+        "multiDepAlternative": {
+          "amend": "Mehrfach abhängige(r) Anspruch/Ansprüche nicht in alternativer Form abgefasst.",
+          "pass": "Alle mehrfach abhängigen Ansprüche in alternativer Form abgefasst."
+        },
+        "titleSubjectMatch": {
+          "verify": "Titel „{{title}}\" entspricht möglicherweise nicht den Gegenständen der unabhängigen Ansprüche: {{subjects}}.",
+          "pass": "Titel konsistent mit den Gegenständen der unabhängigen Ansprüche."
+        },
+        "symbolTableConsistency": {
+          "verify": "Bezugszeichen in Ansprüchen inkonsistent mit 符號說明.",
+          "pass": "Bezugszeichen in Ansprüchen konsistent mit 符號說明.",
+          "noClaimNumerals": "Keine Bezugszeichen in Ansprüchen; Konsistenzprüfung nicht anwendbar."
+        },
+        "connectionRelationships": {
+          "verify": "Unabhängiger Anspruch {{claim_id}} führt {{sample_names}} ohne strukturelles Verbindungsverb auf.",
+          "pass": "Alle unabhängigen Vorrichtungs-/System-Ansprüche beschreiben Komponentenverbindungen."
+        },
+        "antecedentBasis": {
+          "verify": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 該/所述/前述-Bezug ohne vorheriges 一.",
+          "pass": "Alle Anspruchsbegriffe haben Rückbezug."
+        },
+        "specSupport": {
+          "verify": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Stützung in der Beschreibung sein — Nominalphrase des Anspruchs nicht im Beschreibungsteil gefunden.",
+          "pass": "Alle Anspruchsbegriffe in der Beschreibung gestützt."
+        }
+      },
+      "abstract": {
+        "charCount": {
+          "verify": "Zusammenfassung überschreitet 250-Zeichen-Grenze ({{count}} Zeichen, 專利法施行細則 §21).",
+          "pass": "Zusammenfassung innerhalb der 250-Zeichen-Grenze ({{count}} Zeichen)."
+        },
+        "titleMatch": {
+          "verify": "Zusammenfassung nimmt möglicherweise nicht auf den Erfindungs-/Gebrauchsmustertitel (發明名稱/新型名稱) Bezug.",
+          "pass": "Erfindungs-/Gebrauchsmustertitel in der Zusammenfassung referenziert.",
+          "passCompound": "Alle Titelbestandteile ({{halves}}) in der Zusammenfassung referenziert."
+        },
+        "commercialLanguage": {
+          "amend": "Werbesprache in der Zusammenfassung (專利法施行細則 §21).",
+          "pass": "Zusammenfassung frei von Werbesprache."
+        },
+        "representativeDrawing": {
+          "verify": "Keine repräsentative Zeichnung (代表圖) benannt (專利法施行細則 §21).",
+          "pass": "Repräsentative Zeichnung (代表圖) benannt."
+        }
+      },
+      "crossRef": {
+        "symbolVsRepDrawing": {
+          "verify": "Bezugszeichen der repräsentativen Zeichnung inkonsistent mit 符號說明: {{symbol_mismatch_triples}}",
+          "pass": "Symbolbeschreibung der repräsentativen Zeichnung konsistent mit 符號說明."
+        },
+        "bracketFormat": {
+          "verify": "Abschnittsüberschriften nicht im erforderlichen 【】-Klammerformat: {{headers}} (專利法施行細則 §17).",
+          "pass": "Alle Abschnittsüberschriften im erforderlichen 【】-Klammerformat."
+        }
+      },
+      "drawings": {
+        "figureCount": {
+          "pass": "{{count}} Figur(en) erkannt."
+        },
+        "figuresSequential": {
+          "pass": "Figuren 1–{{found_max}} fortlaufend nummeriert.",
+          "passNone": "Keine Figuren gefunden.",
+          "amend": "Nicht fortlaufende Figurennummerierung — fehlend: {{figure_list}}."
+        }
+      }
+    }
+  },
+  "loading": {
+    "runtime": "Python-Runtime wird geladen...",
+    "parser": "Dokument-Parser wird geladen...",
+    "engine": "Analyse-Engine wird geladen...",
+    "patentlint": "PatentLint wird geladen...",
+    "ready": "Analyse-Engine geladen",
+    "firstVisitHint": "Der erste Besuch dauert ein paar Sekunden — die Engine wird danach zwischengespeichert",
+    "offline_note": "Funktioniert nach dem ersten Laden offline",
+    "feature1_title": "Kein Upload. Kein Konto. Keine Installation.",
+    "feature1_desc": "Ihre vertraulichen Patentanmeldungen verlassen nie Ihr Gerät. Nichts wird hochgeladen, und PatentLint weiß nicht einmal, wer Sie sind.",
+    "feature2_title": "MPEP | CNIPA | TIPO-Prüfungen & Anspruchsbaum",
+    "feature2_desc": "Erkennt einschränkende Formulierungen, unklare Begriffe und fehlende Rückbezüge. Visualisiert Anspruchsabhängigkeiten mit einem interaktiven Baum.",
+    "feature3_title": "Anspruchsbaum-Visualisierung",
+    "feature3_desc": "Interaktiver Abhängigkeitsbaum und Mermaid-Diagramm zeigen die Struktur Ihrer Ansprüche auf einen Blick.",
+    "feature4_title": "Funktioniert überall",
+    "feature4_desc": "Mac, Windows, Linux, iPad: jedes Gerät mit Browser. Kein Word-Add-in nötig. Vollständige UI auf Deutsch, English, 繁體中文, 简体中文, 日本語 und 한국어.",
+    "feature5_title": "Sofortige Prüfung",
+    "feature5_desc": "Legen Sie eine .docx-Datei ab und erhalten Sie Ergebnisse in Sekunden. PDF-Bericht herunterladen, ohne Cloud-Umweg."
+  },
+  "pdf": {
+    "header": "PatentLint Prüfbericht",
+    "headerTw": "PatentLint — Prüfbericht zur taiwanesischen Patentbeschreibung",
+    "securityNote": "Auf Ihrem Gerät geprüft -- nicht in die Cloud hochgeladen.",
+    "amend": "Änderung erforderlich",
+    "verify": "Fachliche Prüfung nötig",
+    "pass": "Bestanden",
+    "claimDependency": "Anspruchs-Abhängigkeitsbaum",
+    "claim": "Anspruch",
+    "claimNumber": "Anspruchs-Nr.",
+    "claimType": "Art",
+    "dependencyChain": "Abhängigkeitskette",
+    "claimText": "Anspruchstext",
+    "independent": "Unabhängig",
+    "dependent": "Abhängig",
+    "claimCategories": "Anspruchskategorien",
+    "categoryCounts": "{{method}} Verfahren / {{apparatus}} Vorrichtung",
+    "antecedentBasis": "Rückbezugs-Analyse",
+    "antecedentTerm": "Begriff",
+    "antecedentTerms": "Begriffe ohne Rückbezug",
+    "specSupport": "Stützungs-Prüfung der Beschreibung",
+    "specTerms": "Nicht gestützte Begriffe",
+    "summaryStats": "Dokument-Übersicht",
+    "specParagraphs": "Absätze der Beschreibung",
+    "totalClaims": "Ansprüche gesamt",
+    "totalClaimsBreakdown": "{{total}} ({{independent}} unabhängig, {{dependent}} abhängig)",
+    "figures": "Figuren",
+    "abstractWordCount": "Wortzahl der Zusammenfassung",
+    "abstractCharCount": "Zeichenzahl der Zusammenfassung",
+    "patentType": "Patentart",
+    "disclaimer": "Erstellt von PatentLint. Dieser Bericht stellt keine Rechtsberatung dar. Eine Überprüfung durch einen qualifizierten Patentprofi wird empfohlen.",
+    "disclaimerFooter": "Erstellt von PatentLint · Dieser Bericht stellt keine Rechtsberatung dar · Eine Überprüfung durch einen qualifizierten Patentprofi wird empfohlen",
+    "didYouMean": "Meinten Sie „{{term}}\" (eingeführt in Anspruch {{claim_id}})?",
+    "seeSpecSupportBelow": "Ebenfalls in der Stützungs-Prüfung der Beschreibung unten gekennzeichnet.",
+    "seeAntecedentAbove": "Ebenfalls in der Rückbezugs-Prüfung oben gekennzeichnet.",
+    "passedChecksCount": "Bestandene Prüfungen ({{count}})",
+    "triage": {
+      "title": "Prioritäre Maßnahmen"
+    },
+    "passedSummary": {
+      "title": "Bestandene Prüfungen"
+    }
+  },
+  "checks": {
+    "preamble_cross_category_mismatch": "Anspruchskategorien-Abweichung zwischen abhängigem und unabhängigem Anspruch (§ 112(d)).",
+    "preamble_cross_category_pass": "Anspruchs-Oberbegriffe sind konsistent.",
+    "preamble_noun_mismatch": "Substantiv im Oberbegriff weicht zwischen abhängigem und unabhängigem Anspruch ab (MPEP § 608.01(m)).",
+    "preamble_indefinite_article": "Unbestimmter Artikel im abhängigen Anspruchs-Oberbegriff — sollte 'The' sein (MPEP § 608.01(m)).",
+    "preamble_parse_unclear": "Oberbegriff-Konsistenz für {{count}} abhängige(n) Anspruch/Ansprüche mit nicht erkannten Formen konnte nicht verifiziert werden (MPEP § 608.01(n)).",
+    "spec_support_unsupported_terms": "Anspruchsbegriffe nicht in der Beschreibung gefunden — jeder Anspruchsbegriff sollte in der Beschreibung gestützt sein (§ 112(a)).",
+    "spec_support_pass": "Alle Anspruchsbegriffe in der Beschreibung gefunden (§ 112(a) Stützung in der Beschreibung).",
+    "required_sections_pass": "Alle gemäß MPEP § 608.01(a) erforderlichen Abschnitte vorhanden.",
+    "required_sections_missing": "Erforderliche Abschnitte gemäß MPEP § 608.01(a) fehlen.",
+    "optional_section_missing": "Optionaler Abschnitt „{{name}}\" nicht gefunden.",
+    "figure_xref_pass": "Alle Figurenbezüge konsistent zwischen kurzer Beschreibung der Zeichnungen und ausführlicher Beschreibung.",
+    "figure_xref_orphaned_brief": "Figur(en) in der kurzen Beschreibung der Zeichnungen beschrieben, aber in der ausführlichen Beschreibung nicht referenziert (MPEP § 608.02).",
+    "figure_xref_orphaned_detailed": "Figur(en) in der ausführlichen Beschreibung referenziert, aber in der kurzen Beschreibung der Zeichnungen nicht beschrieben (MPEP § 608.02)."
+  },
+  "claims": {
+    "jepsonPriorArt": "Anspruch {{claimNumber}} verwendet Jepson-Form — Elemente des Oberbegriffs gelten als anerkannter Stand der Technik (MPEP § 2129)",
+    "jepsonPriorArtDetails": "Anspruch {{claimNumber}} ist in Jepson-Form abgefasst. Nach MPEP § 2129 gelten die im Oberbegriff eines Jepson-Anspruchs genannten Elemente als implizites Anerkenntnis, Stand der Technik zu sein. Prüfen Sie, ob dieses Anerkenntnis beabsichtigt ist.",
+    "crmNonTransitory": "Anspruch {{claimNumber}}: Anspruch auf ein computerlesbares Medium ohne Zusatz 'non-transitory'",
+    "crmNonTransitoryDetails": "Anspruch {{claimNumber}} nennt ein computerlesbares Medium ohne Zusatz 'non-transitory'. Ohne diesen Zusatz deckt der Anspruch auch flüchtige Signale (z. B. Trägerwellen) ab, die gemäß 35 U.S.C. § 101 nicht patentfähig sind. Ergänzen Sie 'non-transitory' vor dem Medium-Begriff.",
+    "markushOpenTransition": "Anspruch {{claimNumber}}: Markush-Gruppe verwendet offenes '{{transition}}' statt 'consisting of'",
+    "markushOpenTransitionDetails": "Anspruch {{claimNumber}} enthält eine Markush-Gruppe mit '{{transition}}' statt des erforderlichen 'consisting of'. Markush-Gruppen müssen gemäß MPEP § 2117 einen geschlossenen Übergang verwenden. Ein offener Übergang kann zur Zurückweisung wegen unzulässiger Markush-Gruppierung führen.",
+    "omnibusClaim": "Anspruch {{claimNumber}} erscheint als Omnibus-Anspruch",
+    "omnibusClaimDetails": "Anspruch {{claimNumber}} verweist auf die Beschreibung oder Zeichnungen, ohne konkrete technische Merkmale zu nennen. Omnibus-Ansprüche werden in US-Gebrauchspatenten gemäß 35 U.S.C. § 112(b) kategorisch zurückgewiesen (MPEP § 2173.05(r)). Formulieren Sie den Anspruch so um, dass er konkrete strukturelle oder verfahrensbezogene Merkmale nennt.",
+    "specialFormatsPass": "Keine besonderen Anspruchsformat-Mängel erkannt.",
+    "missingPeriod": "Anspruch {{claimNumber}} endet nicht mit einem Punkt.",
+    "missingPeriodDetails": "Anspruch {{claimNumber}} fehlt der abschließende Punkt. Jeder Anspruch muss gemäß MPEP § 608.01(m) mit einem einzelnen Punkt enden.",
+    "extraPeriod": "Anspruch {{claimNumber}} enthält überzählige oder falsch platzierte Punkte.",
+    "extraPeriodDetails": "Anspruch {{claimNumber}} hat Punkte an unerwarteten Stellen. Ein Anspruch sollte gemäß MPEP § 608.01(m) nur einen Punkt ganz am Ende enthalten.",
+    "whereinComma": "Anspruch {{claimNumber}}: Kommasetzung vor 'wherein'-Klausel prüfen.",
+    "whereinCommaDetails": "Anspruch {{claimNumber}} könnte eine falsche Kommasetzung um eine 'wherein'-Klausel aufweisen. Prüfen Sie die Interpunktion gemäß MPEP § 608.01(m).",
+    "punctuationPass": "Alle Ansprüche weisen korrekte Interpunktion auf."
+  },
+  "updates": {
+    "available": "Eine neue Version ist verfügbar",
+    "reload": "Neu laden",
+    "dismiss": "Später"
+  },
+  "term": {
+    "claim": {
+      "numbered": "Anspruch {{n}}"
+    },
+    "figure": {
+      "numbered": "Figur {{n}}"
+    },
+    "paragraph": {
+      "numbered": "Absatz {{n}}"
+    }
+  },
+  "punct": {
+    "listSeparator": ", ",
+    "sentenceSeparator": "; ",
+    "ellipsis": ", ..."
+  },
+  "chip": {
+    "fromParagraph": "aus Absatz {{n}}",
+    "fromClaim": "aus Anspruch {{n}}",
+    "more": "+{{n}} weitere"
+  },
+  "terms": {
+    "title": "Nutzungsbedingungen",
+    "lastUpdated": "Zuletzt aktualisiert: 21. April 2026",
+    "intro": "Diese Nutzungsbedingungen regeln Ihre Nutzung der Website patentlint.com (die „Website\") und der Software PatentLint (die „Software\"). Durch Nutzung der Website stimmen Sie diesen Bedingungen zu.",
+    "s1": {
+      "title": "Die Website vs. die Software",
+      "p1": "PatentLint hat zwei Erscheinungsformen:",
+      "siteLabel": "Die Website (patentlint.com).",
+      "siteDesc": "Eine gehostete Webanwendung, die als kostenloser Evaluierungsdienst bereitgestellt wird. Wenn Sie eine Patentanmeldung hochladen, läuft die Prüfung vollständig in Ihrem Browser über WebAssembly — Ihr Entwurf verlässt nie Ihr Gerät. Die Website wird von Christopher Chen betrieben.",
+      "softwareLabel": "Die Software.",
+      "softwareDesc": "Der zugrunde liegende Quellcode, veröffentlicht in einem privaten Repository. Die Software ist unter PolyForm-Strict-1.0.0 lizenziert (siehe § 4).",
+      "p2": "Diese Bedingungen gelten für die Nutzung beider. Unterschiedliche Regeln gelten je nachdem, welche Sie nutzen."
+    },
+    "s2": {
+      "title": "Nutzung der Website",
+      "p1": "Die Website ist zur individuellen Evaluierung kostenlos nutzbar. Sie dürfen:",
+      "may1": "Patentanmeldungen zur Prüfung gegen US-, CN- oder TW-Rechtsregelwerke hochladen.",
+      "may2": "Prüfberichte für eigene Zwecke exportieren.",
+      "may3": "Die Prüfungsergebnisse für Ihre eigenen Ausarbeitungsentscheidungen verwenden.",
+      "p2": "Sie dürfen nicht:",
+      "maynot1": "Die Website scrapen, crawlen oder massenhaft automatisiert zugreifen.",
+      "maynot2": "Versuchen, die WebAssembly-Nutzlast herunterzuladen, zurückzuentwickeln oder weiterzuverteilen.",
+      "maynot3": "Ratenbegrenzungen oder Zugangskontrollen umgehen.",
+      "maynot4": "Die Website zur Verletzung geltenden Patent-, Urheber-, Geschäftsgeheimnis- oder Exportkontrollrechts nutzen."
+    },
+    "s3": {
+      "title": "Ihre Patentanmeldungen bleiben Ihre",
+      "p1": "Die Prüfung läuft vollständig clientseitig in Ihrem Browser über WebAssembly (Pyodide). Wir sehen, speichern oder übertragen den Inhalt Ihrer Patentanmeldungen nicht. Entwürfe verlassen nie Ihr Gerät.",
+      "p2": "Sollten Sie den Eindruck haben, dass Entwurfsinhalte irrtümlich übertragen wurden, kontaktieren Sie uns bitte umgehend.",
+      "privacyLink": "Siehe die <1>Datenschutzerklärung</1> für die vollständige Offenlegung zur Datenverarbeitung."
+    },
+    "s4": {
+      "title": "Die Software-Lizenz — PolyForm-Strict-1.0.0",
+      "p1": "Die Software ist quelloffen unter PolyForm-Strict-1.0.0 bereitgestellt. Der vollständige Lizenztext ist unter <1>polyformproject.org/licenses/strict/1.0.0</1> und in der LICENSE-Datei des Software-Repositorys abrufbar.",
+      "permittedHeading": "Zulässige Nutzungen der Software:",
+      "permitted1": "Lesen und Studieren des Quellcodes.",
+      "permitted2": "Evaluierung der Software zur Entscheidung über eine Lizenzierung („Acceptance Testing\").",
+      "permitted3": "Private Nutzung (für Sie selbst, nicht im Rahmen einer gewerblichen Tätigkeit).",
+      "permitted4": "Nutzung durch gemeinnützige, Bildungs-, öffentliche Forschungs-, öffentliche Sicherheits- oder staatliche Organisationen (gemäß der Klausel „Noncommercial Organizations\" der Lizenz).",
+      "requiresHeading": "Nutzungen, die eine gesonderte kommerzielle Lizenz erfordern:",
+      "requires1": "Interne Bereitstellung der Software in einer Kanzlei, einem Unternehmen oder einer Organisation, einschließlich der eigenen Nutzung im Auftrag von Mandanten.",
+      "requires2": "Bereitstellung der Software als gehosteter Dienst für Dritte.",
+      "requires3": "Weiterverteilung modifizierter oder unveränderter Versionen der Software.",
+      "requires4": "Einbindung der Software (oder Teilen davon) in ein anderes von Ihnen vertriebenes Produkt.",
+      "contact": "Kontaktieren Sie <1>kwisschen@gmail.com</1>, um kommerzielle Lizenzbedingungen zu besprechen. Preise und Bedingungen werden je nach Bereitstellungsmodell, Umfang und Organisationsgröße einzelfallbezogen verhandelt."
+    },
+    "s5": {
+      "title": "Die Nutzung der Website gewährt keine Software-Rechte",
+      "p1": "Ihre Nutzung der Website nach diesen Bedingungen gewährt Ihnen keine Rechte am Software-Quellcode, die über die PolyForm-Strict-1.0.0-Lizenz hinausgehen. Die Website ist ein gehosteter Dienst; die Software ist ein eigenständig lizenziertes Produkt."
+    },
+    "s6": {
+      "title": "Keine Rechtsberatung",
+      "p1": "PatentLint ist eine automatisierte Ausarbeitungshilfe. Ihre Ausgabe ist vorläufig und ersetzt nicht die Prüfung durch einen qualifizierten Patentprofi. Nichts, was die Website ausgibt, stellt Rechtsberatung dar. Verlassen Sie sich bei Entscheidungen zu Patentverfahren, Einreichung oder Durchsetzung nicht allein auf PatentLint-Ausgaben.",
+      "p2": "Zu den Prüfkategorien zählen Rückbezugs-Analyse, Stützungs-Prüfung der Beschreibung (TW nach 專利法 §26 第3項; USA nach § 112(a)), Abschnittsreihenfolge, Anspruchs-Interpunktion und weitere regelbasierte Verifikationen — diese markieren Kandidaten für Ihre Prüfung, keine rechtlichen Feststellungen."
+    },
+    "s7": {
+      "title": "Gewährleistungsausschluss",
+      "p1": "Die Website und die Software werden „WIE BESEHEN\" bereitgestellt, ohne jegliche ausdrückliche oder stillschweigende Gewährleistung, insbesondere ohne Gewährleistung der Marktgängigkeit, der Eignung für einen bestimmten Zweck oder der Nichtverletzung fremder Rechte. Die Nutzung erfolgt auf eigenes Risiko."
+    },
+    "s8": {
+      "title": "Haftungsbeschränkung",
+      "p1": "Soweit gesetzlich zulässig, haftet Christopher Chen nicht für mittelbare, zufällige, besondere, Folge- oder Strafschäden aus der Nutzung der Website oder der Software, einschließlich entgangenen Gewinns, Datenverlusts oder entgangener Geschäftsmöglichkeiten."
+    },
+    "s9": {
+      "title": "Anwendbares Recht",
+      "p1": "Diese Bedingungen unterliegen dem Recht der Gerichtsbarkeit, in der Christopher Chen seinen Wohnsitz hat, ohne Berücksichtigung von Kollisionsregeln. Streitigkeiten werden vor den Gerichten dieser Gerichtsbarkeit ausgetragen."
+    },
+    "s10": {
+      "title": "Änderungen dieser Bedingungen",
+      "p1": "Diese Bedingungen können von Zeit zu Zeit aktualisiert werden. Wesentliche Änderungen werden mindestens 14 Tage vor Inkrafttreten über ein Banner auf der Website angekündigt. Die fortgesetzte Nutzung der Website nach dem Wirksamkeitsdatum gilt als Zustimmung."
+    },
+    "s11": {
+      "title": "Kontakt",
+      "p1": "Bei Fragen zu diesen Bedingungen, kommerziellen Lizenzanfragen oder sonstigen Anliegen:",
+      "nameLabel": "Name:",
+      "name": "Christopher Chen",
+      "emailLabel": "E-Mail:",
+      "githubLabel": "GitHub:"
+    },
+    "copyright": "Copyright © 2025 Christopher Chen. Alle Rechte vorbehalten.",
+    "crossLinks": "Siehe auch: <1>Datenschutzerklärung</1> · <3>Sicherheit</3>"
+  },
+  "privacy": {
+    "title": "Datenschutzerklärung",
+    "lastUpdated": "Zuletzt aktualisiert: 21. April 2026",
+    "intro": "Diese Datenschutzerklärung beschreibt, wie patentlint.com (die „Website\") beim Besuch mit Daten umgeht. Die Anwendung PatentLint erfasst nichts über Sie — keine Analyse, keine Tracker, keine Cookies. Der einzige Datenfluss sind die üblichen Webanfrage-Metadaten, die unser Hosting-Anbieter (Cloudflare Pages) bei jedem Besuch sieht, wie jede andere Website auch. Diese Erklärung stellt diese Unterscheidung ausdrücklich klar.",
+    "s1": {
+      "title": "Einführung",
+      "p1": "patentlint.com ist eine gehostete Webanwendung, die von Christopher Chen betrieben wird. Sie führt PatentLint aus, einen Patentanmeldungs-Checker, der Ihre Datei vollständig in Ihrem Browser über WebAssembly (Pyodide) prüft. Die Website wird als statische Assets von Cloudflare Pages ausgeliefert — kein Anwendungsserver, keine Datenbank. Dateiinhalte werden nie von Ihrem Gerät übertragen.",
+      "p2": "Diese Datenschutzerklärung gilt für Ihre Interaktionen mit der Website. Sie deckt nicht die PatentLint-Software ab, wenn Sie den Quellcode separat beziehen — dafür gilt die Software-Lizenz (PolyForm-Strict-1.0.0)."
+    },
+    "s2": {
+      "title": "Ihre Patentanmeldungen",
+      "p1": "Patentanmeldungen, die Sie auf die Website „hochladen\", verlassen tatsächlich nie Ihr Gerät — die Datei wird in den Browser-Tab geladen und dort verarbeitet. Die Prüfung läuft auf einer Pyodide-/WebAssembly-Engine in diesem Tab. Auf patentlint.com gibt es keinen serverseitigen Prüfpfad; die Website besteht ausschließlich aus statischen Assets.",
+      "p2": "Konkret:",
+      "never1": "Wir empfangen oder übertragen keinen Inhalt Ihrer Patentanmeldungen.",
+      "never2": "Wir speichern keine Dateinamen, Anspruchstexte, Beschreibungsinhalte oder patent-spezifischen Daten.",
+      "never3": "Wir senden keine Entwurfsinhalte an Dritte (auch nicht an KI-Anbieter, OCR-Dienste oder Dokumentenprozessoren).",
+      "verify": "Sie können dies im Flugmodus prüfen — siehe die <1>Sicherheits</1>-Seite für die Live-Demonstration."
+    },
+    "s3": {
+      "title": "Hosting-Metadaten am Cloudflare-Edge",
+      "p1": "Die Website wird auf Cloudflare Pages (einem CDN für statische Assets) gehostet. Wenn Ihr Browser die Website abruft, kann das Edge-Netzwerk von Cloudflare im Rahmen des normalen Hosting-Betriebs standardmäßige Webanfrage-Metadaten protokollieren:",
+      "log1": "Ihre IP-Adresse (von Cloudflare zur Leitwegfindung und zum DDoS-Schutz genutzt).",
+      "log2": "Den User-Agent-String Ihres Browsers.",
+      "log3": "Den angefragten URL-Pfad und den HTTP-Antwortstatus.",
+      "log4": "Einen Zeitstempel.",
+      "p2": "Dies sind dieselben Metadaten, die jeder Webhoster erhält — wir erweitern, anreichern oder verknüpfen sie nicht mit einer Identität und verwenden sie nicht für Analysen. Cloudflare speichert seine Edge-Protokolle gemäß der eigenen veröffentlichten Aufbewahrungsrichtlinie.",
+      "p3": "Nach Art. 4 (7) DSGVO sind wir technisch Verantwortlicher für diese Verarbeitung am Cloudflare-Edge. Wir greifen im ordentlichen Betrieb der Website nicht auf diese Protokolle zu; wir würden sie nur bei der Untersuchung eines Sicherheitsvorfalls einsehen."
+    },
+    "s4": {
+      "title": "Keine Analyse oder Tracking",
+      "p1": "Die Website enthält keine Analyse-Skripte, Tracking-Pixel, Fingerprinting-Code oder Drittanbieter-Werbeintegrationen. Konkret:",
+      "no1": "Kein Google Analytics, Plausible, Umami oder Äquivalentes.",
+      "no2": "Kein Meta Pixel, LinkedIn Insight oder sonstige Werbe-Tracker.",
+      "no3": "Kein Session-Replay, kein Heatmap-, kein Verhaltens-Tracking.",
+      "no4": "Kein Browser-Fingerprinting.",
+      "p2": "Wenn Sie in den Entwicklertools Ihres Browsers einen Netzwerkmonitor aktivieren, sehen Sie, dass die Website während der Nutzung keine Analyseanfragen stellt. Dies ist nach dem ersten Seitenaufruf auch im Flugmodus verifizierbar."
+    },
+    "s5": {
+      "title": "Cookies und lokaler Speicher",
+      "p1": "Wir setzen keine Cookies. Die Website ist auch mit deaktivierten Cookies vollständig nutzbar.",
+      "p2": "Ihr Browser kann localStorage nutzen, um kleine Einstellungen zu merken (gewählte Sprache, Design, Banner-Schließstatus). Diese Daten bleiben auf Ihrem Gerät und werden nie übertragen. Durch Leeren des Browser-Speichers werden diese Einstellungen entfernt."
+    },
+    "s6": {
+      "title": "Freiwilliges Feedback",
+      "p1": "Wenn Sie auf einen Feedback-Link klicken, öffnet Ihr Browser Ihr eigenes E-Mail-Programm (oder ein Webmail-Fenster), adressiert an kwisschen@gmail.com. Wir hosten kein Formular. Wir erhalten nur, was Sie selbst verfassen und senden.",
+      "p2": "Wir verwenden Feedback zur Fehlerbehebung und zur Antwort an Sie. Wir geben Feedback nicht an Dritte weiter und nutzen es zu keinem anderen Zweck als zur Verbesserung von PatentLint und zur Beantwortung Ihrer Nachricht.",
+      "p3": "Fehlerberichte, die über „Fehler melden\"-Links gesendet werden, können einen kompakten Block „Diagnose-Fingerabdruck\" enthalten — strukturelle Metadaten dazu, welcher Walker-Codepfad den Befund erzeugt hat (Ergebnisse von Regex-Matches, Zeichenzählungen, Tags zum Extraktionspfad). Der Fingerabdruck enthält keinen Anspruchstext, keine Substantive, keine Entwurfsinhalte; er ist so konzipiert, dass wir Walker-Fehler diagnostizieren können, ohne Ihren Entwurf zu sehen. Sie können den gesamten E-Mail-Text vor dem Senden einsehen und den Fingerabdruck-Block entfernen, wenn Sie möchten.",
+      "p4": "Möchten Sie Feedback pseudonym senden, nutzen Sie einen E-Mail-Alias-Dienst (z. B. Apple Hide My Email, Gmail-Aliase, Firefox Relay, ProtonMail-Aliase). Wir erhalten die Alias-Adresse; Ihre echte Adresse bleibt bei Ihrem Anbieter. Wir korrelieren Alias-Adressen nicht mit anderen Daten."
+    },
+    "s7": {
+      "title": "Drittanbieter-Dienste",
+      "p1": "PatentLint nutzt für den Betrieb die folgenden Drittanbieter-Dienste. Jeder ist aus Transparenzgründen aufgeführt:",
+      "cloudflareLabel": "Cloudflare Pages.",
+      "cloudflare": "Hostet die statischen Website-Assets und das Pyodide-Wheel. Empfängt die unter § 3 beschriebenen standardmäßigen Webanfrage-Metadaten.",
+      "pyodideLabel": "Pyodide-CDN.",
+      "pyodide": "Beim ersten Besuch lädt Ihr Browser die Pyodide-WebAssembly-Laufzeit vom Pyodide-CDN (jsdelivr / cloudflare). Danach wird die Laufzeit lokal zwischengespeichert und funktioniert offline.",
+      "fontsLabel": "Google Fonts (CJK-Schrift, optional).",
+      "fonts": "Wenn Sie einen lokalisierten PDF-Bericht in zh-TW / zh-CN / ja / ko exportieren, lädt Ihr Browser die entsprechende Noto-Sans-CJK-Schrift beim PDF-Export von Google Fonts. Die Schrift wird nach dem ersten Abruf zwischengespeichert. Englische und deutsche PDFs rufen keine Schrift ab.",
+      "p2": "Wir nutzen keine weiteren Drittanbieter-Dienste. Kein CRM, keine E-Mail-Marketing-Plattform, kein Support-Ticketsystem, keine Drittanbieter-Protokollierung."
+    },
+    "s8": {
+      "title": "Ihre Rechte",
+      "p1": "Nach DSGVO, CCPA und ähnlichen Datenschutzregelwerken haben Sie Rechte in Bezug auf Ihre personenbezogenen Daten. Soweit diese Rechte auf von uns verarbeitete Daten anwendbar sind:",
+      "accessLabel": "Auskunftsrecht.",
+      "access": "Sie können erfragen, welche personenbezogenen Daten wir über Sie vorhalten. Wir speichern im ordentlichen Betrieb der Website keine Nutzerdaten (siehe § 2 und § 4); Anfragen bestätigen typischerweise, dass wir über freiwillige E-Mail-Korrespondenz hinaus nichts vorhalten.",
+      "deletionLabel": "Recht auf Löschung.",
+      "deletion": "Sie können uns auffordern, über Sie vorgehaltene personenbezogene Daten zu löschen. Wie bei Auskunftsanfragen gibt es typischerweise nichts zu löschen; freiwillige E-Mail-Korrespondenz ist die seltene Ausnahme.",
+      "portabilityLabel": "Recht auf Datenübertragbarkeit.",
+      "portability": "Sie können eine Kopie der über Sie vorgehaltenen personenbezogenen Daten in einem übertragbaren Format anfordern.",
+      "objectLabel": "Widerspruchs- / Widerrufsrecht.",
+      "object": "Sie können der Verarbeitung widersprechen oder eine zuvor erteilte Einwilligung widerrufen.",
+      "exercise": "Üben Sie diese Rechte per E-Mail an <1>kwisschen@gmail.com</1> aus. Wir antworten innerhalb von 30 Tagen. Da die Anwendung PatentLint nichts erfasst und wir keine Nutzungsdaten speichern, werden die meisten Anfragen lediglich bestätigen, dass wir nichts zum Einsehen, Löschen oder Exportieren vorhalten."
+    },
+    "s9": {
+      "title": "Kinder",
+      "p1": "patentlint.com richtet sich an Patentpraktiker und nicht an Kinder unter 16 Jahren. Wir erfassen wissentlich keine personenbezogenen Daten von Kindern. Sollten Sie den Eindruck haben, dass ein Kind die Website in einer Weise genutzt hat, die personenbezogene Daten umfasst, kontaktieren Sie uns bitte zur Untersuchung."
+    },
+    "s10": {
+      "title": "Änderungen dieser Erklärung",
+      "p1": "Wir können diese Datenschutzerklärung von Zeit zu Zeit aktualisieren. Wesentliche Änderungen werden mindestens 14 Tage vor Inkrafttreten über ein Banner auf der Website angekündigt. Das Datum „Zuletzt aktualisiert\" oben auf dieser Seite weist die aktuelle Fassung aus."
+    },
+    "s11": {
+      "title": "Kontakt",
+      "p1": "Bei Fragen zu dieser Datenschutzerklärung oder zur Ausübung der in § 8 beschriebenen Rechte:",
+      "nameLabel": "Name:",
+      "name": "Christopher Chen",
+      "emailLabel": "E-Mail:"
+    },
+    "copyright": "Copyright © 2025 Christopher Chen. Alle Rechte vorbehalten.",
+    "crossLinks": "Siehe auch: <1>Nutzungsbedingungen</1> · <3>Sicherheit</3>"
+  }
+}

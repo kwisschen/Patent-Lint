@@ -97,7 +97,7 @@ def _pick_locale(query_locale: str | None, accept_language: str | None) -> str:
         return normalize_locale(query_locale)
     if accept_language:
         # Take the first tag; RFC 7231 permits quality-weighted lists
-        # but we don't need best-match scoring for a 5-locale set.
+        # but we don't need best-match scoring for our small locale set.
         first_tag = accept_language.split(",")[0].split(";")[0].strip()
         return normalize_locale(first_tag)
     return "en"

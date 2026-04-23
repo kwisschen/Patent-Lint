@@ -4,6 +4,7 @@
 
 import pytest
 
+from patentlint.i18n import supported_locales
 from patentlint.models import (
     AnalysisResult,
     CheckItem,
@@ -257,7 +258,7 @@ def cn_sample_result():
     )
 
 
-SUPPORTED_LOCALES = ["en", "zh-TW", "zh-CN", "ja", "ko"]
+SUPPORTED_LOCALES = list(supported_locales())
 
 
 class TestLocaleSweepUs:
