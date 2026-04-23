@@ -30,21 +30,75 @@ const REPO_ROOT = resolve(__dirname, "..");
 const LOCALES_DIR = resolve(REPO_ROOT, "frontend/src/i18n/locales");
 
 const BASE = "en";
-const TARGETS = ["zh-TW", "zh-CN", "ja", "ko"];
+const TARGETS = ["de", "zh-TW", "zh-CN", "ja", "ko"];
 
-// Keys where EN-identical values are legitimate (brand names, legal markers
-// that must be preserved verbatim in patent drafts, English MPEP/section
-// anchors) per ADR-085. Each entry is a JSONPath-like string matching a leaf
-// path. Prefixes are matched with "startsWith" semantics so a subtree can be
-// exempted at once.
+// Keys where EN-identical values are legitimate (brand names, proper nouns,
+// universal acronyms, punctuation shared across Latin scripts, or tech loan
+// words that German has absorbed identically — Duden-approved) per ADR-085
+// and ADR-144. Each entry is a JSONPath-like string matching a leaf path.
+// Prefixes are matched with "startsWith" semantics so a subtree can be
+// exempted at once. Add a new entry when a future locale legitimately
+// matches EN on a token (brand, loan word, cognate) so future contributors
+// don't re-review the same ones.
 const EN_IDENTICAL_ALLOWLIST = [
     // Brand / header
     "header.title",
-    // ADR-085: English-preserved USPTO artifacts (wherein, FIG., §, non-transitory, Jepson, Markush).
-    // Section / legal anchors that embed English abbreviations.
+    // ADR-085: English-preserved jurisdiction codes across every locale.
     "jurisdiction.us",
     "jurisdiction.cn",
     "jurisdiction.tw",
+    // Latin-cognate "Region" used identically in DE as geographic-territory label.
+    "jurisdiction.label",
+    // Language endonyms — lang.* block holds each language's self-name
+    // ("English", "简体中文", "日本語", "Deutsch", etc.) which is identical
+    // across every locale file by convention.
+    "lang",
+    // Product brand name and identity markers kept English across all locales.
+    "footer.builtBy",
+    "footer.github",
+    "footer.linkedin",
+    "footer.feedback",
+    "security.compare.colPatentLint",
+    "about.usptoTitle",
+    "about.uspto.colUSPTO",
+    "about.uspto.colPatentLint",
+    "about.twTitle",
+    "about.tw.colTipo",
+    "about.arch.tip.react",
+    "about.arch.optional",
+    "details.citations",
+    "details.rawText",
+    // Pure interpolation placeholder — no translatable text.
+    "details.sectionName",
+    // Universal acronym/label.
+    "common.betaBadge.label",
+    // Proper names carried verbatim across locales (maintainer identity).
+    "terms.s11.name",
+    "terms.s11.nameLabel",
+    "terms.s11.githubLabel",
+    "privacy.s11.name",
+    "privacy.s11.nameLabel",
+    // Brand names in the third-party-services disclosure.
+    "privacy.s7.cloudflareLabel",
+    "privacy.s7.pyodideLabel",
+    // DI-172 punctuation: Latin scripts use ": " with space; CJK uses "：".
+    // Identical across EN/DE/KO is legitimate.
+    "feedback.email.fieldColon",
+    // Tech loan words German/Latin-script locales use identically — Duden-approved
+    // and universal in native German UI copy (ADR-144: these ARE the native terms,
+    // not lazy translations).
+    "feedback.email.fieldDetails",
+    "feedback.email.fieldStatus",
+    "feedback.email.fieldJurisdiction",
+    "feedback.email.fieldBrowser",
+    "feedback.email.fieldBuild",
+    // Latin-script punctuation conventions — CJK uses full-width variants.
+    "punct.listSeparator",
+    "punct.sentenceSeparator",
+    "punct.ellipsis",
+    // Copyright line: legitimately identical when a locale keeps the English legal form.
+    "terms.copyright",
+    "privacy.copyright",
 ];
 
 function loadLocale(name) {

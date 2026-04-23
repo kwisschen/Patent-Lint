@@ -153,7 +153,11 @@ class TestNormalizeLocale:
             ("ko-KR", "ko"),
             ("en-US", "en"),
             ("fr", "en"),
-            ("de-DE", "en"),
+            ("de", "de"),
+            ("de-DE", "de"),
+            ("de-AT", "de"),
+            ("de-CH", "de"),
+            ("de-LI", "de"),
         ],
     )
     def test_bcp47_normalization(self, given, expected):

@@ -10,6 +10,7 @@ inconsistency, etc.).
 
 import pytest
 
+from patentlint.i18n import supported_locales
 from patentlint.models import CheckItem
 from patentlint.report.details import (
     format_details,
@@ -238,7 +239,7 @@ class TestFrontendParity:
     identically.
     """
 
-    @pytest.mark.parametrize("locale", ["en", "zh-TW", "zh-CN", "ja", "ko"])
+    @pytest.mark.parametrize("locale", list(supported_locales()))
     def test_claim_list_renders_in_all_locales(self, locale):
         from patentlint.report.details import _format_claim_list
         from patentlint.i18n import get_translator
