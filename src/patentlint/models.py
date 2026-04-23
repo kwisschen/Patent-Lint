@@ -687,34 +687,16 @@ class AnalysisResult(BaseModel):
         ))
 
         # --- Claims checks ---
+        # Emission order follows the canonical claims sequence (ADR-149):
+        #   G4 claims-structure: sequential → multipleDependent → selfDependent
+        #     → transition_phrase
+        #   G5 claims cross-jurisdiction: restrictive_wording
+        #   G6 claims §112 analysis: meansFunction → antecedentBasis
+        #     → spec_support → preamble_checks → special_formats → punctuation
+        #   end: overview (summary)
         claims_checks: list[CheckItem] = []
 
-        if self.improper_claims:
-            claim_items = _parse_formatted_phrases(
-                self.improper_claim_phrases_formatted, kind="phrase"
-            )
-            claims_checks.append(CheckItem(
-                status="verify",
-                message="Restrictive or indefinite wording found in claims.",
-                message_key="check.claims.restrictiveWording.verify",
-                details=f"Claims: {self.improper_claims}",
-                details_key="details.restrictiveWordingClaims",
-                details_params={
-                    "list": str(self.improper_claims),
-                    "flagged_phrases": {"items": claim_items},
-                } if claim_items else {"list": str(self.improper_claims)},
-                diagnostics=_dx(
-                    flagged_claim_count=len(self.improper_claims),
-                    flagged_phrase_count=len(claim_items) or None,
-                ),
-            ))
-        else:
-            claims_checks.append(CheckItem(
-                status="pass",
-                message="No restrictive or indefinite wording found in claims.",
-                message_key="check.claims.restrictiveWording.pass",
-            ))
-
+        # --- G4: Claims structure ---
         if not self.claims_sequential:
             claims_checks.append(CheckItem(
                 status="amend",
@@ -769,10 +751,37 @@ class AnalysisResult(BaseModel):
                 message_key="check.claims.selfDependent.pass",
             ))
 
-        # Claim punctuation checks
-        for pc in self.punctuation_checks:
-            claims_checks.append(pc)
+        for tc in self.transition_checks:
+            claims_checks.append(tc)
 
+        # --- G5: Claims cross-jurisdiction ---
+        if self.improper_claims:
+            claim_items = _parse_formatted_phrases(
+                self.improper_claim_phrases_formatted, kind="phrase"
+            )
+            claims_checks.append(CheckItem(
+                status="verify",
+                message="Restrictive or indefinite wording found in claims.",
+                message_key="check.claims.restrictiveWording.verify",
+                details=f"Claims: {self.improper_claims}",
+                details_key="details.restrictiveWordingClaims",
+                details_params={
+                    "list": str(self.improper_claims),
+                    "flagged_phrases": {"items": claim_items},
+                } if claim_items else {"list": str(self.improper_claims)},
+                diagnostics=_dx(
+                    flagged_claim_count=len(self.improper_claims),
+                    flagged_phrase_count=len(claim_items) or None,
+                ),
+            ))
+        else:
+            claims_checks.append(CheckItem(
+                status="pass",
+                message="No restrictive or indefinite wording found in claims.",
+                message_key="check.claims.restrictiveWording.pass",
+            ))
+
+        # --- G6: Claims § 112 analysis ---
         if self.means_plus_function_claims:
             claims_checks.append(CheckItem(
                 status="verify",
@@ -812,19 +821,6 @@ class AnalysisResult(BaseModel):
                 message_key="check.claims.antecedentBasis.pass",
             ))
 
-        # Preamble consistency checks
-        for pc in self.preamble_checks:
-            claims_checks.append(pc)
-
-        # Transition phrase checks
-        for tc in self.transition_checks:
-            claims_checks.append(tc)
-
-        # Special claim format checks
-        for sc in self.special_format_checks:
-            claims_checks.append(sc)
-
-        # Spec support checks
         if self.unsupported_terms:
             unique_phrases = sorted(set(ut.phrase for ut in self.unsupported_terms))
             claims_checks.append(CheckItem(
@@ -846,6 +842,16 @@ class AnalysisResult(BaseModel):
                 message_key="checks.spec_support_pass",
             ))
 
+        for pc in self.preamble_checks:
+            claims_checks.append(pc)
+
+        for sc in self.special_format_checks:
+            claims_checks.append(sc)
+
+        for pc in self.punctuation_checks:
+            claims_checks.append(pc)
+
+        # --- End summary ---
         claims_checks.append(CheckItem(
             status="pass",
             message="Claims overview.",
@@ -864,7 +870,30 @@ class AnalysisResult(BaseModel):
         ))
 
         # --- Abstract checks ---
+        # Emission order follows canonical G7 sequence (ADR-149):
+        #   word_count → restrictive_wording → implied_phrases → structure
         abstract_checks: list[CheckItem] = []
+
+        wc = self.abstract_word_count
+        if wc < 50 or wc > 150:
+            abstract_checks.append(CheckItem(
+                status="amend",
+                message=f"Abstract word count ({wc}) is outside the 50–150 range.",
+                message_key="check.abstract.wordCount.amend",
+                details_key="details.abstractWordCountFix",
+                diagnostics=_dx(
+                    word_count=wc,
+                    lower_threshold=50,
+                    upper_threshold=150,
+                    reason_code="below" if wc < 50 else "above",
+                ),
+            ))
+        else:
+            abstract_checks.append(CheckItem(
+                status="pass",
+                message=f"Abstract word count ({wc}) is within the 50–150 range.",
+                message_key="check.abstract.wordCount.pass",
+            ))
 
         if self.improper_abstract_phrases_formatted:
             # Dedupe while preserving first-seen order — a single token can
@@ -902,21 +931,6 @@ class AnalysisResult(BaseModel):
                 message_key="check.abstract.restrictiveWording.pass",
             ))
 
-        if not self.abstract_structure_good:
-            abstract_checks.append(CheckItem(
-                status="amend",
-                message="Abstract has extra paragraphs or invalid ending.",
-                message_key="check.abstract.structure.amend",
-                details_key="details.abstractStructureFix",
-                diagnostics=_dx(reason_code="bad_structure"),
-            ))
-        else:
-            abstract_checks.append(CheckItem(
-                status="pass",
-                message="Abstract is a single paragraph with valid ending.",
-                message_key="check.abstract.structure.pass",
-            ))
-
         if self.abstract_has_implied_phrase:
             phrases = list(self.abstract_implied_phrases)
             abstract_checks.append(CheckItem(
@@ -942,29 +956,34 @@ class AnalysisResult(BaseModel):
                 message_key="check.abstract.impliedPhrases.pass",
             ))
 
-        wc = self.abstract_word_count
-        if wc < 50 or wc > 150:
+        if not self.abstract_structure_good:
             abstract_checks.append(CheckItem(
                 status="amend",
-                message=f"Abstract word count ({wc}) is outside the 50\u2013150 range.",
-                message_key="check.abstract.wordCount.amend",
-                details_key="details.abstractWordCountFix",
-                diagnostics=_dx(
-                    word_count=wc,
-                    lower_threshold=50,
-                    upper_threshold=150,
-                    reason_code="below" if wc < 50 else "above",
-                ),
+                message="Abstract has extra paragraphs or invalid ending.",
+                message_key="check.abstract.structure.amend",
+                details_key="details.abstractStructureFix",
+                diagnostics=_dx(reason_code="bad_structure"),
             ))
         else:
             abstract_checks.append(CheckItem(
                 status="pass",
-                message=f"Abstract word count ({wc}) is within the 50\u2013150 range.",
-                message_key="check.abstract.wordCount.pass",
+                message="Abstract is a single paragraph with valid ending.",
+                message_key="check.abstract.structure.pass",
             ))
 
         # --- Drawings checks ---
+        # Emission order follows the canonical Group 3 sequence (ADR-149):
+        #   figure_count → single_figure → prior_art → figures_sequential
+        #   → figure_xref
+        # Matches CN + TW pipeline ordering (Phase 10C 8cf18af).
         drawings_checks: list[CheckItem] = []
+
+        drawings_checks.append(CheckItem(
+            status="pass",
+            message=f"{self.figures_count} figure(s) found.",
+            message_key="check.drawings.count",
+            details_params={"count": str(self.figures_count)},
+        ))
 
         if self.single_figure and self.wrong_label_for_single_figure:
             drawings_checks.append(CheckItem(
@@ -1014,13 +1033,6 @@ class AnalysisResult(BaseModel):
                 message="Figures are in sequential order.",
                 message_key="check.drawings.sequential.pass",
             ))
-
-        drawings_checks.append(CheckItem(
-            status="pass",
-            message=f"{self.figures_count} figure(s) found.",
-            message_key="check.drawings.count",
-            details_params={"count": str(self.figures_count)},
-        ))
 
         # Figure cross-reference checks (Issue #3)
         for fc in self.figure_xref_checks:
