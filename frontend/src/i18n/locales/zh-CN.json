@@ -313,8 +313,8 @@
       "ai": "PatentLint 不使用 AI、机器学习或大型语言模型。所有检查均为确定性的规则匹配，依据各专利局审查规范执行。您的文本不会被发送至任何 AI 服务。",
       "telemetryTitle": "遥测与分析（不使用）",
       "telemetry": "PatentLint 不包含分析脚本、追踪像素、cookies 或第三方追踪集成。此应用程序不收集或传输任何使用数据。",
-      "selfHostedTitle": "自托管选项",
-      "selfHosted": "对于有严格数据主权要求的组织，例如 ITAR 管控环境或物理隔离网络，PatentLint 可通过 Docker 部署于本地环境，所有依赖项均已包含。",
+      "selfHostedTitle": "本地部署",
+      "selfHosted": "对于有严格数据主权要求的组织，例如 ITAR 管控环境或物理隔离网络，PatentLint 提供本地部署选项。",
       "contactEnterprise": "咨询企业部署方案 →"
     }
   },
@@ -507,9 +507,9 @@
     "archTitle": "架构",
     "arch": {
       "browser": "您的浏览器",
-      "optional": "可选：Docker / CLI",
+      "optional": "可选：本地部署（Docker / CLI）",
       "zeroBadge": "分析过程中零网络请求",
-      "selfHostBadge": "自托管部署，适用于物理隔离网络与 ITAR 敏感环境",
+      "selfHostBadge": "本地部署选项，适用于物理隔离网络与 ITAR 敏感环境",
       "node": {
         "analysisEngine": "分析引擎",
         "pdfReport": "PDF 报告"
