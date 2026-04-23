@@ -69,6 +69,18 @@ export function useUpdateCheck() {
   const lastHiddenMs = useRef(0)
 
   useEffect(() => {
+    // Scrub the ?_r=<ts> cache-bust query param that the Reload action
+    // appends to the HTML document URL. Without this, the address bar
+    // retains the timestamp after reload (bookmark-ugly, not a privacy
+    // concern — the ts is a pure cache-buster, same class as ?t=<ts> on
+    // version.json). Runs unconditionally; cheap no-op when absent.
+    if (typeof window !== 'undefined' && window.location.search.includes('_r=')) {
+      const url = new URL(window.location.href)
+      url.searchParams.delete('_r')
+      const cleaned = url.pathname + (url.search ? url.search : '') + url.hash
+      window.history.replaceState({}, '', cleaned)
+    }
+
     // Skip in dev — version.json is only generated in production builds
     if (import.meta.env.DEV) return
 
