@@ -699,3 +699,45 @@ class TestFigureRefConsistency110P000368Regression:
         assert items[0].status == "verify"
         payload = items[0].details_params["figure_ref_inconsistency"]
         assert 3 in payload["only_drawings"]
+
+
+# ── check.tw.spec.indigenousTerms ──────────────────────────────────────
+
+
+class TestIndigenousTerms:
+    """TIPO 偵錯系統 Table 1 #19: 原住民族傳統智慧創作保護條例 advisory."""
+
+    def test_no_terms_passes(self):
+        from patentlint.analysis.tw_specification import check_indigenous_terms
+        doc = _make_doc(embodiment=["一般設備之實施方式描述。"])
+        results = check_indigenous_terms(doc)
+        assert results[0].status == "pass"
+
+    def test_tribe_name_flags(self):
+        from patentlint.analysis.tw_specification import check_indigenous_terms
+        doc = _make_doc(embodiment=["本發明應用於阿美族傳統編織技術。"])
+        results = check_indigenous_terms(doc)
+        assert results[0].status == "verify"
+        terms = results[0].details_params["terms"]
+        assert "阿美族" in terms
+
+    def test_generic_term_flags(self):
+        from patentlint.analysis.tw_specification import check_indigenous_terms
+        doc = _make_doc(embodiment=["本實施例適用於原住民相關文化保護。"])
+        results = check_indigenous_terms(doc)
+        assert results[0].status == "verify"
+        assert "原住民" in results[0].details_params["terms"]
+
+    def test_multiple_terms_deduplicated(self):
+        from patentlint.analysis.tw_specification import check_indigenous_terms
+        doc = _make_doc(embodiment=[
+            "本發明應用於阿美族與布農族之部落工藝。阿美族傳統紡織。"
+        ])
+        results = check_indigenous_terms(doc)
+        assert results[0].status == "verify"
+        terms = results[0].details_params["terms"]
+        # Deduplicated + sorted
+        assert terms == sorted(set(terms))
+        assert "阿美族" in terms
+        assert "布農族" in terms
+        assert "部落" in terms
