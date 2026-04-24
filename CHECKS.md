@@ -21,9 +21,11 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
-| Restrictive wording | § 112(b) | VERIFY / PASS | `check.claims.restrictiveWording` | Restrictive or indefinite wording in claims |
+| Restrictive absolutes | § 2173.01 | VERIFY / PASS | `check.claims.restrictiveAbsolutes` | Absolute terms (must, always, never, etc.) |
+| Indefinite wording | § 2173.05(b) | VERIFY / PASS | `check.claims.indefiniteWording` | Relative/indefinite terms (may, substantially, generally, etc.) |
 | Claims sequential | § 608.01(m) | AMEND / PASS | `check.claims.sequential` | Claim numbers are sequential |
-| Multiple dependents | § 608.01(n) | AMEND / PASS | `check.claims.multipleDependent` | Multiple-dependent claims found |
+| Multiple dependents | § 608.01(n) | VERIFY / PASS | `check.claims.multipleDependent` | Multiple-dependent claims found — fee + chain reminder |
+| Chained multi-dep | § 112(e) | AMEND / PASS | `check.claims.chainedMultiDep` | Multi-dep claim depending on another multi-dep claim |
 | Self-dependent | § 112(d) | AMEND / PASS | `check.claims.selfDependent` | Self-dependent claims found |
 | Missing period | § 608.01(m) | AMEND | `claims.missingPeriod` | Per-claim: claim does not end with a period |
 | Extra periods | § 608.01(m) | AMEND | `claims.extraPeriod` | Per-claim: claim has extra or misplaced periods |
@@ -56,7 +58,8 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
-| Restrictive wording | § 608.01(b) | VERIFY / PASS | `check.abstract.restrictiveWording` | Restrictive or improper wording in abstract |
+| Legal phraseology | § 608.01(b) | VERIFY / PASS | `check.abstract.legalPhraseology` | Claim-style legal phraseology (means, said, comprising, wherein, thereof, the same) |
+| Merit language | § 608.01(b) | VERIFY / PASS | `check.abstract.meritLanguage` | Purported-merit or self-referential language (novel, innovative, present invention, etc.) |
 | Structure | § 608.01(b) | AMEND / PASS | `check.abstract.structure` | Abstract is single paragraph with valid ending |
 | Implied phrases | § 608.01(b) | AMEND / PASS | `check.abstract.impliedPhrases` | Abstract contains 'disclosure' or 'provided' |
 | Word count | § 608.01(b) | AMEND / PASS | `check.abstract.wordCount` | Abstract word count within 50–150 range |
