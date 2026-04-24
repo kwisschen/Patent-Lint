@@ -206,12 +206,17 @@ _CN_CLAIM_NUM_PREFIX = re.compile(r"^[\s　]*\d+\s*[.．。]\s*")
 
 
 def check_independent_preamble(cn_doc: CnPatentDocument) -> list[CheckItem]:
-    """Flag independent claims not opening with 「一种」.
+    """Advisory: flag independent claims not opening with 「一种」.
 
-    Per 审查指南 第二部分第二章 §3.1.1 (canonical example form) +
-    专利法实施细则 §22: independent claims open with 一种X. Dependent-
-    claim opener set (根据/如/按照 etc.) is validated separately by
-    ``check_dependency_format``.
+    审查指南 第二部分第二章 §3.1.1 uses 一种X as the canonical preamble
+    form in its examples, and CNIPA practitioner convention follows this.
+    Note: 专利法实施细则 §22 requires the preamble to state the 主题名称
+    (subject-matter name) but does NOT literally mandate 一种 — other
+    preambles that still name the subject matter may satisfy the statute.
+    Status is therefore VERIFY (advisory), not FIX.
+
+    Dependent-claim opener set (根据/如/按照 etc.) is validated separately
+    by ``check_dependency_format``.
     """
     bad: list[int] = []
     for claim in cn_doc.claims:
@@ -225,20 +230,20 @@ def check_independent_preamble(cn_doc: CnPatentDocument) -> list[CheckItem]:
         bad_sorted = _dedupe_claim_ids(bad)
         claims_str = ", ".join(str(i) for i in bad_sorted)
         return [CheckItem(
-            status="amend",
+            status="verify",
             message=f"Independent claim(s) not opening with 「一种」: {claims_str}.",
-            message_key="check.cn.claims.independentPreamble.amend",
+            message_key="check.cn.claims.independentPreamble.verify",
             details=claims_str,
             details_key="details.cn.independentPreamble",
             details_params={"count": len(bad_sorted), "claims": bad_sorted},
-            reference="审查指南 第二部分第二章 §3.1.1",
+            reference="审查指南 第二部分第二章 §3.1.1 (canonical example form)",
             diagnostics=_dx(flagged_count=len(bad_sorted)),
         )]
     return [CheckItem(
         status="pass",
         message="All independent claims open with 「一种」.",
         message_key="check.cn.claims.independentPreamble.pass",
-        reference="审查指南 第二部分第二章 §3.1.1",
+        reference="审查指南 第二部分第二章 §3.1.1 (canonical example form)",
     )]
 
 

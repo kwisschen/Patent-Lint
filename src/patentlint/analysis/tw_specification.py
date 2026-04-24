@@ -708,10 +708,20 @@ def check_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckItem]:
 # ── Check 11 ─────────────────────────────────────────────────────────────
 
 # Taiwanese indigenous peoples terminology (per TIPO 偵錯系統 Table 1 #19,
-# grounded in 原住民族傳統智慧創作保護條例). The 16 officially-recognized
-# indigenous peoples per 原住民族委員會 + generic terms the TIPO system
-# flags (per PDF fig 31 shows 魯凱族, 部落, 阿美族, 卑南族, 達悟族 as example hits).
-# Advisory VERIFY — flags for drafter review; isn't a hard violation.
+# grounded in 原住民族傳統智慧創作保護條例). TIPO's PDF fig 31 shows example
+# hits (魯凱族, 部落, 阿美族, 卑南族, 達悟族) but doesn't publish its full
+# trigger list. The list below covers 原住民族委員會's 16 officially-
+# recognized peoples (high confidence — statutory indigenous status under
+# 原住民族基本法) plus the two generic terms TIPO surfaced in examples.
+#
+# NOT INCLUDED: the 10 unrecognized Pingpu peoples (阿立昆族, 貓霧拺族,
+# 巴賽族, 洪雅族, 噶哈巫族, 凱達格蘭族, 拍瀑拉族, 巴宰族, 猴猴族,
+# 道卡斯族) — they lack statutory indigenous status and their names
+# overlap more with ordinary usage, raising FP risk. If TIPO's real
+# trigger list is confirmed to include these, the tuple can be extended.
+# 雅美族 (older colonial-era name) and 達悟族 (modern official name) both
+# included since they name the same people and either can appear in drafts.
+# Advisory VERIFY — flags for drafter review; not a hard violation.
 _TW_INDIGENOUS_TERMS = (
     # 16 officially-recognized indigenous peoples
     "阿美族", "泰雅族", "排灣族", "布農族", "卑南族", "魯凱族", "鄒族",

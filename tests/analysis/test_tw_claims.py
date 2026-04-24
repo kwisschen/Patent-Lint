@@ -816,7 +816,10 @@ class TestClaimsSymbolTableConsistency:
 
 
 class TestIndependentPreamble:
-    """TIPO 偵錯系統 Table 1 #20: indep claims must open with 一種."""
+    """TIPO 偵錯系統 Table 1 #20: advisory — indep claims conventionally
+    open with 一種 (statute requires subject-matter name, not literal 一種).
+    Status is VERIFY (advisory), not AMEND (hard rule).
+    """
 
     def _doc(self, claims):
         from patentlint.models import TwPatentDocument
@@ -831,25 +834,25 @@ class TestIndependentPreamble:
         results = check_independent_preamble(doc)
         assert results[0].status == "pass"
 
-    def test_independent_missing_yizhong_flags(self):
+    def test_independent_missing_yizhong_flags_verify(self):
         from patentlint.analysis.tw_claims import check_independent_preamble
         from patentlint.models import Claim
         doc = self._doc([
             Claim(id=1, text="1. 裝置，包含A。", independent=True, dependencies=[]),
         ])
         results = check_independent_preamble(doc)
-        assert results[0].status == "amend"
+        assert results[0].status == "verify"
         assert 1 in results[0].details_params["claims"]
 
-    def test_independent_with_yige_flags(self):
-        """一個 is a colloquial variant; TIPO 規定「一種」 specifically."""
+    def test_independent_with_yige_flags_verify(self):
+        """一個 is a colloquial variant; TIPO flags anything other than 一種."""
         from patentlint.analysis.tw_claims import check_independent_preamble
         from patentlint.models import Claim
         doc = self._doc([
             Claim(id=1, text="1. 一個裝置，包含A。", independent=True, dependencies=[]),
         ])
         results = check_independent_preamble(doc)
-        assert results[0].status == "amend"
+        assert results[0].status == "verify"
 
     def test_dependent_claim_ignored(self):
         """Dep claims open with 如/依據/根據, not 一種 — don't flag them here."""
