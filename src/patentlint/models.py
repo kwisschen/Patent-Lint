@@ -735,7 +735,7 @@ class AnalysisResult(BaseModel):
         if self.multiple_dependent_claims:
             claims_checks.append(CheckItem(
                 status="verify",
-                message="Multiple-dependent claims found.",
+                message="Multiple-dependent claims found — review fees and chained-multi rule (MPEP § 608.01(n); § 112(e)).",
                 message_key="check.claims.multipleDependent.verify",
                 details=f"Claims: {self.multiple_dependent_claims}",
                 details_key="details.multipleDependentClaims",
@@ -755,7 +755,7 @@ class AnalysisResult(BaseModel):
         if self.chained_multi_dep_claims:
             claims_checks.append(CheckItem(
                 status="amend",
-                message="Multiple-dependent claim depends on another multiple-dependent claim.",
+                message="Multi-dependent claim depends on another multi-dependent claim (§ 112(e) / MPEP § 608.01(n)).",
                 message_key="check.claims.chainedMultiDep.amend",
                 details=f"Claims: {self.chained_multi_dep_claims}",
                 details_key="details.chainedMultiDepClaims",
