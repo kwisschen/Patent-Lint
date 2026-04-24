@@ -185,7 +185,8 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
         self_deps = claims_analysis.find_self_dependent_claims(claims)
         claims_seq = claims_analysis.are_claims_sequential(claim_ids)
         last_seq_claim = claims_analysis.get_last_sequential_index(claim_ids)
-        wording = claims_parser.detect_improper_claim_wording(claims)
+        claims_restrictive = claims_parser.detect_restrictive_absolutes_in_claims(claims)
+        claims_indefinite = claims_parser.detect_indefinite_wording_in_claims(claims)
         means_plus_function = claims_analysis.detect_means_plus_function(claims)
         antecedent_basis = claims_analysis.check_antecedent_basis(claims)
         preamble_checks = claims_analysis.check_preamble_consistency(claims)
@@ -206,7 +207,8 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
         self_deps = []
         claims_seq = True
         last_seq_claim = 0
-        wording = claims_parser.detect_improper_claim_wording([])
+        claims_restrictive = claims_parser.detect_restrictive_absolutes_in_claims([])
+        claims_indefinite = claims_parser.detect_indefinite_wording_in_claims([])
         means_plus_function = []
         antecedent_basis = []
         preamble_checks = []
@@ -237,8 +239,10 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
     abstract_structure = abstract_analysis.is_single_paragraph_and_final(full_text, abstract_section) if abstract_section else True
     abstract_implied_phrases = abstract_analysis.detect_implied_phrases(abstract_section) if abstract_section else []
     abstract_implied = bool(abstract_implied_phrases)
-    abstract_wording = abstract_analysis.detect_improper_wording(abstract_section) if abstract_section else ""
-    abstract_wording_items = abstract_analysis.detect_improper_wording_items(abstract_section) if abstract_section else []
+    abstract_legal_phraseology = abstract_analysis.detect_legal_phraseology(abstract_section) if abstract_section else ""
+    abstract_legal_phraseology_items = abstract_analysis.detect_legal_phraseology_items(abstract_section) if abstract_section else []
+    abstract_merit_language = abstract_analysis.detect_merit_language(abstract_section) if abstract_section else ""
+    abstract_merit_language_items = abstract_analysis.detect_merit_language_items(abstract_section) if abstract_section else []
 
     # --- Required sections check ---
     required_sections_checks = spec_analysis.check_required_sections(full_text)
@@ -284,8 +288,10 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
         wrong_label_for_single_figure=wrong_label,
         # Claims
         claims=claims,
-        improper_claims=wording.improper_claims,
-        improper_claim_phrases_formatted=wording.formatted_phrases,
+        restrictive_absolute_claims=claims_restrictive.improper_claims,
+        restrictive_absolute_phrases_formatted=claims_restrictive.formatted_phrases,
+        indefinite_wording_claims=claims_indefinite.improper_claims,
+        indefinite_wording_phrases_formatted=claims_indefinite.formatted_phrases,
         independent_claims_count=independent_count,
         dependent_claims_count=dependent_count,
         claims_sequential=claims_seq,
@@ -309,8 +315,10 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
         abstract_structure_good=abstract_structure,
         abstract_has_implied_phrase=abstract_implied,
         abstract_implied_phrases=abstract_implied_phrases,
-        improper_abstract_phrases_formatted=abstract_wording,
-        improper_abstract_phrases=abstract_wording_items,
+        abstract_legal_phraseology_formatted=abstract_legal_phraseology,
+        abstract_legal_phraseology_items=abstract_legal_phraseology_items,
+        abstract_merit_language_formatted=abstract_merit_language,
+        abstract_merit_language_items=abstract_merit_language_items,
     )
 
 

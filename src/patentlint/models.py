@@ -31,7 +31,7 @@ _FORMATTED_PHRASE_RE = re.compile(r'\[(\d+)\]\s+→\s+"([^"]+)"')
 
 
 def _parse_formatted_phrases(formatted: str, kind: str = "phrase") -> list[dict[str, Any]]:
-    """Parse detect_restrictive_wording / detect_improper_claim_wording output
+    """Parse detect_restrictive_wording / detect_{restrictive_absolutes,indefinite_wording}_in_claims output
     into structured {location, token, kind} items. Deduplicates (location,
     token) pairs while preserving first-seen order. Used by the US spec +
     claims restrictiveWording emit sites in _to_us_report_data to populate
@@ -371,8 +371,10 @@ class AnalysisResult(BaseModel):
 
     # Claims
     claims: list[Claim] = Field(default_factory=list)
-    improper_claims: list[int] = Field(default_factory=list)
-    improper_claim_phrases_formatted: str = ""
+    restrictive_absolute_claims: list[int] = Field(default_factory=list)
+    restrictive_absolute_phrases_formatted: str = ""
+    indefinite_wording_claims: list[int] = Field(default_factory=list)
+    indefinite_wording_phrases_formatted: str = ""
     independent_claims_count: int = 0
     dependent_claims_count: int = 0
     claims_sequential: bool = True
@@ -416,8 +418,10 @@ class AnalysisResult(BaseModel):
     abstract_structure_good: bool = True
     abstract_has_implied_phrase: bool = False
     abstract_implied_phrases: list[str] = Field(default_factory=list)
-    improper_abstract_phrases_formatted: str = ""
-    improper_abstract_phrases: list[str] = Field(default_factory=list)
+    abstract_legal_phraseology_formatted: str = ""
+    abstract_legal_phraseology_items: list[str] = Field(default_factory=list)
+    abstract_merit_language_formatted: str = ""
+    abstract_merit_language_items: list[str] = Field(default_factory=list)
 
     @property
     def total_claims(self) -> int:
@@ -765,30 +769,60 @@ class AnalysisResult(BaseModel):
             claims_checks.append(tc)
 
         # --- G5: Claims cross-jurisdiction ---
-        if self.improper_claims:
-            claim_items = _parse_formatted_phrases(
-                self.improper_claim_phrases_formatted, kind="phrase"
+        # Split into two category-specific checks (MPEP § 2173.01 restrictive
+        # absolutes vs MPEP § 2173.05(b) indefinite/relative wording) so users
+        # see category-appropriate titles and chips — avoids the confusion of
+        # "can" appearing under a card titled "restrictive absolutes".
+        if self.restrictive_absolute_claims:
+            restrictive_items = _parse_formatted_phrases(
+                self.restrictive_absolute_phrases_formatted, kind="phrase"
             )
             claims_checks.append(CheckItem(
                 status="verify",
-                message="Restrictive or indefinite wording found in claims.",
-                message_key="check.claims.restrictiveWording.verify",
-                details=f"Claims: {self.improper_claims}",
-                details_key="details.restrictiveWordingClaims",
+                message="Restrictive absolutes found in claims.",
+                message_key="check.claims.restrictiveAbsolutes.verify",
+                details=f"Claims: {self.restrictive_absolute_claims}",
+                details_key="details.restrictiveAbsolutesClaims",
                 details_params={
-                    "list": str(self.improper_claims),
-                    "flagged_phrases": {"items": claim_items},
-                } if claim_items else {"list": str(self.improper_claims)},
+                    "list": str(self.restrictive_absolute_claims),
+                    "flagged_phrases": {"items": restrictive_items},
+                } if restrictive_items else {"list": str(self.restrictive_absolute_claims)},
                 diagnostics=_dx(
-                    flagged_claim_count=len(self.improper_claims),
-                    flagged_phrase_count=len(claim_items) or None,
+                    flagged_claim_count=len(self.restrictive_absolute_claims),
+                    flagged_phrase_count=len(restrictive_items) or None,
                 ),
             ))
         else:
             claims_checks.append(CheckItem(
                 status="pass",
-                message="No restrictive or indefinite wording found in claims.",
-                message_key="check.claims.restrictiveWording.pass",
+                message="No restrictive absolutes found in claims.",
+                message_key="check.claims.restrictiveAbsolutes.pass",
+            ))
+
+        if self.indefinite_wording_claims:
+            indefinite_items = _parse_formatted_phrases(
+                self.indefinite_wording_phrases_formatted, kind="phrase"
+            )
+            claims_checks.append(CheckItem(
+                status="verify",
+                message="Indefinite or relative wording found in claims.",
+                message_key="check.claims.indefiniteWording.verify",
+                details=f"Claims: {self.indefinite_wording_claims}",
+                details_key="details.indefiniteWordingClaims",
+                details_params={
+                    "list": str(self.indefinite_wording_claims),
+                    "flagged_phrases": {"items": indefinite_items},
+                } if indefinite_items else {"list": str(self.indefinite_wording_claims)},
+                diagnostics=_dx(
+                    flagged_claim_count=len(self.indefinite_wording_claims),
+                    flagged_phrase_count=len(indefinite_items) or None,
+                ),
+            ))
+        else:
+            claims_checks.append(CheckItem(
+                status="pass",
+                message="No indefinite or relative wording found in claims.",
+                message_key="check.claims.indefiniteWording.pass",
             ))
 
         # --- G6: Claims § 112 analysis ---
@@ -905,40 +939,70 @@ class AnalysisResult(BaseModel):
                 message_key="check.abstract.wordCount.pass",
             ))
 
-        if self.improper_abstract_phrases_formatted:
-            # Dedupe while preserving first-seen order — a single token can
-            # appear multiple times in the abstract, but the chip list should
-            # show each flagged word once.
+        # Split into two § 608.01(b) subcategories (legal phraseology vs
+        # purported-merit language) so each chip appears under a card whose
+        # title accurately describes what it flags.
+        def _dedupe(tokens: list[str]) -> list[str]:
             seen: set[str] = set()
-            unique_phrases: list[str] = []
-            for p in self.improper_abstract_phrases:
-                key = p.lower()
-                if key in seen:
+            out: list[str] = []
+            for t in tokens:
+                k = t.lower()
+                if k in seen:
                     continue
-                seen.add(key)
-                unique_phrases.append(p)
+                seen.add(k)
+                out.append(t)
+            return out
+
+        if self.abstract_legal_phraseology_formatted:
+            unique_legal = _dedupe(self.abstract_legal_phraseology_items)
             abstract_checks.append(CheckItem(
                 status="verify",
-                message="Restrictive or improper wording found in abstract.",
-                message_key="check.abstract.restrictiveWording.verify",
-                details=self.improper_abstract_phrases_formatted.strip(),
-                details_key="details.restrictiveWordingAbstract",
+                message="Legal phraseology found in abstract.",
+                message_key="check.abstract.legalPhraseology.verify",
+                details=self.abstract_legal_phraseology_formatted.strip(),
+                details_key="details.legalPhraseologyAbstract",
                 details_params={
-                    "text": self.improper_abstract_phrases_formatted.strip(),
+                    "text": self.abstract_legal_phraseology_formatted.strip(),
                     "flagged_phrases": {
-                        "items": [{"kind": "phrase", "token": p} for p in unique_phrases]
+                        "items": [{"kind": "phrase", "token": p} for p in unique_legal]
                     },
-                } if unique_phrases else {"text": self.improper_abstract_phrases_formatted.strip()},
+                } if unique_legal else {"text": self.abstract_legal_phraseology_formatted.strip()},
                 diagnostics=_dx(
-                    flagged_phrases_charlen=len(self.improper_abstract_phrases_formatted),
-                    flagged_phrase_count=len(unique_phrases) or None,
+                    flagged_phrases_charlen=len(self.abstract_legal_phraseology_formatted),
+                    flagged_phrase_count=len(unique_legal) or None,
                 ),
             ))
         else:
             abstract_checks.append(CheckItem(
                 status="pass",
-                message="No restrictive or improper wording found in abstract.",
-                message_key="check.abstract.restrictiveWording.pass",
+                message="No legal phraseology found in abstract.",
+                message_key="check.abstract.legalPhraseology.pass",
+            ))
+
+        if self.abstract_merit_language_formatted:
+            unique_merit = _dedupe(self.abstract_merit_language_items)
+            abstract_checks.append(CheckItem(
+                status="verify",
+                message="Merit or self-referential language found in abstract.",
+                message_key="check.abstract.meritLanguage.verify",
+                details=self.abstract_merit_language_formatted.strip(),
+                details_key="details.meritLanguageAbstract",
+                details_params={
+                    "text": self.abstract_merit_language_formatted.strip(),
+                    "flagged_phrases": {
+                        "items": [{"kind": "phrase", "token": p} for p in unique_merit]
+                    },
+                } if unique_merit else {"text": self.abstract_merit_language_formatted.strip()},
+                diagnostics=_dx(
+                    flagged_phrases_charlen=len(self.abstract_merit_language_formatted),
+                    flagged_phrase_count=len(unique_merit) or None,
+                ),
+            ))
+        else:
+            abstract_checks.append(CheckItem(
+                status="pass",
+                message="No merit or self-referential language found in abstract.",
+                message_key="check.abstract.meritLanguage.pass",
             ))
 
         if self.abstract_has_implied_phrase:

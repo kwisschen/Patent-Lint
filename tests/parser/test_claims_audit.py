@@ -6,7 +6,7 @@ from patentlint.models import Claim
 from patentlint.parser.claims import (
     parse_claims,
     detect_incorrect_wherein_commas,
-    detect_improper_claim_wording,
+    detect_indefinite_wording_in_claims,
 )
 
 
@@ -54,22 +54,24 @@ class TestWhereinEdgeCases:
 
 
 class TestWordingEdgeCases:
+    """All flagged under MPEP § 2173.05(b) indefinite/exemplary language."""
+
     def test_for_example_flagged(self):
         claims = [Claim(id=1, text="A device for example a widget.", independent=True, method_claim=False)]
-        result = detect_improper_claim_wording(claims)
+        result = detect_indefinite_wording_in_claims(claims)
         assert 1 in result.improper_claims
 
     def test_such_as_flagged(self):
         claims = [Claim(id=1, text="A compound such as sodium chloride.", independent=True, method_claim=False)]
-        result = detect_improper_claim_wording(claims)
+        result = detect_indefinite_wording_in_claims(claims)
         assert 1 in result.improper_claims
 
     def test_or_the_like_flagged(self):
         claims = [Claim(id=1, text="A fastener, rivet, or the like.", independent=True, method_claim=False)]
-        result = detect_improper_claim_wording(claims)
+        result = detect_indefinite_wording_in_claims(claims)
         assert 1 in result.improper_claims
 
     def test_clean_claim_not_flagged(self):
         claims = [Claim(id=1, text="A semiconductor device comprising a substrate and a gate electrode disposed on the substrate.", independent=True, method_claim=False)]
-        result = detect_improper_claim_wording(claims)
+        result = detect_indefinite_wording_in_claims(claims)
         assert 1 not in result.improper_claims

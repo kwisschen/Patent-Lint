@@ -92,7 +92,8 @@ US_FORWARD_MAP = [
     ("required_sections_checks", "specification_checks",
      lambda: [_make_check("us.req_sections.x")]),
     # claims_checks accumulator
-    ("improper_claims", "claims_checks", lambda: [3]),
+    ("restrictive_absolute_claims", "claims_checks", lambda: [3]),
+    ("indefinite_wording_claims", "claims_checks", lambda: [7]),
     ("multiple_dependent_claims", "claims_checks", lambda: [5]),
     ("self_dependent_claims", "claims_checks", lambda: [6]),
     ("means_plus_function_claims", "claims_checks", lambda: [2]),
@@ -232,9 +233,11 @@ class TestForwardMapsAreExhaustive:
         # Consumed into the US abstract impliedPhrases CheckItem's
         # details_params by _to_us_report_data; not a raw list on ReportData.
         "abstract_implied_phrases",
-        # Consumed into the US abstract restrictiveWording CheckItem's
-        # details_params by _to_us_report_data; not a raw list on ReportData.
-        "improper_abstract_phrases",
+        # Consumed into the US abstract legalPhraseology + meritLanguage
+        # CheckItems' details_params by _to_us_report_data; not raw lists
+        # on ReportData.
+        "abstract_legal_phraseology_items",
+        "abstract_merit_language_items",
     })
 
     def test_every_list_field_is_either_forwarded_or_documented(self):
