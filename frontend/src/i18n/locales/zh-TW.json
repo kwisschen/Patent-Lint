@@ -1,7 +1,7 @@
 {
   "header": {
     "title": "PatentLint",
-    "subtitle": "專利稿件檢查工具"
+    "subtitle": "專利說明書檢查工具"
   },
   "jurisdiction": {
     "us": "美國專利",
@@ -10,19 +10,19 @@
     "label": "地區"
   },
   "dropzone": {
-    "tagline": "依據 30 多項 USPTO 撰稿規則，立即檢查您的專利稿件。",
+    "tagline": "依據 30 多項 USPTO 撰稿規則，立即檢查您的專利說明書。",
     "title": "拖放您的專利 .docx 開始本機分析",
     "subtitle": "或點擊瀏覽檔案",
     "notice": "支援美國專利說明書（.docx）",
     "reject": "僅接受 .docx 檔案",
     "rejectMultiple": "請一次拖放一個檔案。",
     "rejectMultipleType": "請拖放單一 .docx 檔案。",
-    "taglineCn": "依據 20 多項 CNIPA 撰稿規則，立即檢查您的專利稿件。",
+    "taglineCn": "依據 20 多項 CNIPA 撰稿規則，立即檢查您的專利說明書。",
     "titleCn": "拖放您的專利檔案開始本機分析",
     "noticeCn": "支援中國大陸專利說明書（.docx、.xml、.zip）",
     "rejectCn": "僅接受 .docx、.xml 及 .zip 檔案",
     "rejectMultipleTypeCn": "請拖放單一 .docx、.xml 或 .zip 檔案。",
-    "taglineTw": "依據 30 多項 TIPO 撰稿規則，立即檢查您的專利稿件。",
+    "taglineTw": "依據 30 多項 TIPO 撰稿規則，立即檢查您的專利說明書。",
     "titleTw": "拖放您的專利 .docx 開始本機分析",
     "noticeTw": "支援台灣專利說明書（.docx）",
     "rejectTw": "僅接受 .docx 檔案",
@@ -110,16 +110,16 @@
     "titleTwSpec": "§26 第3項分析"
   },
   "results": {
-    "nonPatentWarning": "此文件可能不是美國專利稿件",
-    "nonPatentWarningDetails": "PatentLint 為專利稿件設計。此文件似乎未包含標準美國專利章節、編號請求項或段落編號，分析結果可能不具參考意義。",
-    "nonPatentWarningCn": "此文件可能不是中國大陸專利稿件",
-    "nonPatentWarningDetailsCn": "PatentLint 為專利稿件設計。此文件似乎未包含標準中國大陸說明書章節（技术领域、背景技术等）、編號权利要求或可辨識的格式，分析結果可能不具參考意義。",
-    "nonPatentWarningTw": "此文件可能不是台灣專利稿件",
-    "nonPatentWarningDetailsTw": "PatentLint 為專利稿件設計。此文件似乎未包含標準台灣說明書章節（【技術領域】、【先前技術】等）、請求項或段落編號，分析結果可能不具參考意義。",
+    "nonPatentWarning": "此文件可能不是美國專利說明書",
+    "nonPatentWarningDetails": "PatentLint 為專利說明書設計。此文件似乎未包含標準美國專利章節、編號請求項或段落編號，分析結果可能不具參考意義。",
+    "nonPatentWarningCn": "此文件可能不是中國大陸專利說明書",
+    "nonPatentWarningDetailsCn": "PatentLint 為專利說明書設計。此文件似乎未包含標準中國大陸說明書章節（技术领域、背景技术等）、編號权利要求或可辨識的格式，分析結果可能不具參考意義。",
+    "nonPatentWarningTw": "此文件可能不是台灣專利說明書",
+    "nonPatentWarningDetailsTw": "PatentLint 為專利說明書設計。此文件似乎未包含標準台灣說明書章節（【技術領域】、【先前技術】等）、請求項或段落編號，分析結果可能不具參考意義。",
     "nonPatentWarningCrossScriptJapanese": "此文件看似為日本專利",
-    "nonPatentWarningDetailsCrossScriptJapanese": "PatentLint 在此文件中偵測到大量日文假名（平假名或片假名）。本工具目前尚未支援日本專利，僅適用於美國、中國大陸（簡體）及台灣（繁體）專利稿件。您仍可繼續查看分析結果，但輸出內容對日文稿件可能不具參考意義。",
+    "nonPatentWarningDetailsCrossScriptJapanese": "PatentLint 在此文件中偵測到大量日文假名（平假名或片假名）。本工具目前尚未支援日本專利，僅適用於美國、中國大陸（簡體）及台灣（繁體）專利說明書。您仍可繼續查看分析結果，但輸出內容對日文說明書可能不具參考意義。",
     "nonPatentWarningCrossScriptKorean": "此文件看似為韓國專利",
-    "nonPatentWarningDetailsCrossScriptKorean": "PatentLint 在此文件中偵測到大量韓文字（諺文）。本工具目前尚未支援韓國專利，僅適用於美國、中國大陸（簡體）及台灣（繁體）專利稿件。您仍可繼續查看分析結果，但輸出內容對韓文稿件可能不具參考意義。",
+    "nonPatentWarningDetailsCrossScriptKorean": "PatentLint 在此文件中偵測到大量韓文字（諺文）。本工具目前尚未支援韓國專利，僅適用於美國、中國大陸（簡體）及台灣（繁體）專利說明書。您仍可繼續查看分析結果，但輸出內容對韓文說明書可能不具參考意義。",
     "showResultsAnyway": "仍然顯示結果",
     "trackedChangesWarning": "此文件包含追蹤修訂，可能影響分析準確性。請在文書處理軟體中接受或拒絕所有變更後，重新進行分析。",
     "analyzeAgain": "重新檢查",
@@ -145,7 +145,7 @@
     "report": "回報錯誤",
     "reportProblem": "回報此項分析結果的問題",
     "picker": {
-      "title": "您的稿件不會離開您的裝置",
+      "title": "您的專利說明書不會離開您的裝置",
       "send": {
         "description": "郵件已備妥，剪貼簿中也有相同內容備用。請選擇傳送方式：",
         "mailto": "以 Outlook 或行動裝置傳送",
@@ -186,7 +186,7 @@
     "enterprisePlaceholder": "[請簡要說明您的部署需求：事務所或團隊規模與專業領域、執業地區、預估文件量、評估時程，以及任何特殊要求（例如為符合 ITAR 或資料主權法規而採行的內網或 air-gapped 安裝、SSO 整合、客製化檢查項目等）。]"
   },
   "cta": {
-    "heading": "準備好檢查您的專利稿件了嗎？",
+    "heading": "準備好檢查您的專利說明書了嗎？",
     "subtext": "拖放 .docx 檔案，即時取得結果。無需上傳、無需帳號、不使用 AI。",
     "button": "檢查稿件"
   },
@@ -218,7 +218,7 @@
     "item": "個項目"
   },
   "security": {
-    "airplaneDemoAlt": "示範：在飛航模式下無網路連線分析專利稿件",
+    "airplaneDemoAlt": "示範：在飛航模式下無網路連線分析專利說明書",
     "badge": {
       "headline": "無需上傳。無需帳號。無 AI。",
       "description": "您的檔案不會離開您的裝置。",
@@ -248,7 +248,7 @@
     },
     "page": {
       "heroTitle": "無上傳。無 AI。無例外。",
-      "heroSubtext": "PatentLint 完全在您的瀏覽器中本機運作，專利稿件絕不會離開您的裝置。機密資料始終保留在您的裝置上。",
+      "heroSubtext": "PatentLint 完全在您的瀏覽器中本機運作，專利說明書絕不會離開您的裝置。機密資料始終保留在您的裝置上。",
       "tryIt": "自己試試看 →",
       "compareTitle": "PatentLint 與其他工具的比較",
       "compareDisclaimer": "本比較表反映一般架構模式。個別產品可能有所不同。「Word 增益集工具」與「雲端工具」為通用類別，並非指特定產品。",
@@ -320,11 +320,11 @@
   },
   "about": {
     "productTitle": "PatentLint 是什麼？",
-    "productTagline": "同類首創的專利稿件檢查工具，完全在您的瀏覽器中本機運行。",
-    "productDesc1": "PatentLint 是免費的專利稿件檢查工具，於審查委員指出缺失之前先行檢出問題。拖放美國、中國大陸或台灣專利稿件，便可即時取得合規報告，全程於本機運行。無需上傳、無需帳號、不使用雲端、不使用 AI。",
+    "productTagline": "同類首創的專利說明書檢查工具，完全在您的瀏覽器中本機運行。",
+    "productDesc1": "PatentLint 是免費的專利說明書檢查工具，於審查委員指出缺失之前先行檢出問題。拖放美國、中國大陸或台灣專利說明書，便可即時取得合規報告，全程於本機運行。無需上傳、無需帳號、不使用雲端、不使用 AI。",
     "productDesc2": "PatentLint 依據 USPTO（美國）、CNIPA（中國大陸）及 TIPO（台灣）的撰稿規則進行檢查，偵測常見問題，如缺乏先行詞基礎、不正確的請求項結構和限制性用語。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
-    "usptoSubtitle": "USPTO Patent Center 驗證送件格式。PatentLint 檢查稿件本身。",
+    "usptoSubtitle": "USPTO Patent Center 驗證送件格式。PatentLint 檢查說明書本身。",
     "usFeatures": {
       "title": "互動式美國專利分析",
       "claimTree": {
@@ -570,11 +570,11 @@
     "orphanedBriefFigures": "圖式：{{list}}。請在實施方式中新增對這些圖式的引用，或從圖式簡單說明中移除。",
     "orphanedDetailedFigures": "圖式：{{list}}。請在圖式簡單說明中新增對這些圖式的描述，或從實施方式中移除引用。",
     "restrictiveWordingAbstract": "摘要應避免法律用語（「comprising」、「said」、「means」）、評價性用語（「novel」、「innovative」）及限制性用語（「must」、「essential」），依 MPEP § 608.01(b)。請修改上列標記用語。",
-    "abstractStructureFix": "摘要須為單一段落，以句號、驚嘆號或問號結尾，且須作為專利稿件最後一章，依 MPEP § 608.01(b)。",
+    "abstractStructureFix": "摘要須為單一段落，以句號、驚嘆號或問號結尾，且須作為專利說明書最後一章，依 MPEP § 608.01(b)。",
     "abstractImpliedPhrasesFix": "依 MPEP § 608.01(b)，「This disclosure provides...」或「A method is provided...」等起首語應改為直接描述發明（例如「A method that...」）。",
     "abstractWordCountFix": "摘要須介於 50 至 150 字之間，依 MPEP § 608.01(b)。請修改至符合此範圍。",
     "cn": {
-      "requiredSections": "依专利法 §26 第1款，完整稿件須包含摘要、说明书（技术领域、背景技术、发明内容、具体实施方式）及权利要求书。缺少：{{sections}}。",
+      "requiredSections": "依专利法 §26 第1款，完整专利申请須包含摘要、说明书（技术领域、背景技术、发明内容、具体实施方式）及权利要求书。缺少：{{sections}}。",
       "sectionOrdering": "規定順序：技術領域 → 背景技術 → 發明內容 → 附圖說明 → 具體實施方式。請調整章節順序。",
       "paragraphNumberingXml": "根據审查指南，段落編號應連續且為四位零填充格式（0001、0002……）。請修正編號順序。",
       "paragraphNumberingDocx": "根據 CNIPA 規定，說明書不應添加任何形式的段落編號。WORD转XML编辑器在轉換時會自動添加編號。請刪除所有手動添加的段落編號。",
@@ -593,7 +593,7 @@
       "subjectConsistency": "根據审查指南 第二部分第二章，從屬權利要求的主題名稱應與其引用的權利要求的主題名稱一致。已識別之前言型式：如权利要求N所述[的]X、如权利要求N所记载[的]X、如权利要求N[的]X。請檢查標記的權利要求。",
       "subjectConsistencyParseUnclear": "這些從屬權利要求使用之前言型式未被識別。依专利法实施细则 §22，可接受之前言型式包含：如权利要求N所述[的]X、如权利要求N所记载[的]X、如权利要求N[的]X。請人工確認前言，若為 CNIPA 合規前言而未能識別，請回報錯誤。",
       "transitionPhrase": "根據审查指南，獨立權利要求應包含「其特征在于」等特徵部分連接詞，用以區分已知要素與新穎特徵。請檢查標記的權利要求。",
-      "twTerminology": "CNIPA 稿件中發現台灣（TIPO）專利用語。CNIPA 使用「权利要求」表示 claims。請替換上列標記用語。",
+      "twTerminology": "CNIPA 說明書中發現台灣（TIPO）專利用語。CNIPA 使用「权利要求」表示 claims。請替換上列標記用語。",
       "claimsSpecReference": "根據审查指南 第二部分第二章，權利要求不得引用說明書或圖式來限定保護範圍。權利要求應當自成一體——請刪除上列標記引用。",
       "multiMultiDep": "根據专利法实施细则 §22，多項從屬權利要求不得作為另一多項從屬權利要求的引用基礎。請調整引用關係。",
       "dependentOrdering": "根據审查指南 第二部分第二章，引用同一獨立權利要求的所有從屬權利要求應連續排列在下一項獨立權利要求之前。請調整排列順序。",
@@ -616,7 +616,7 @@
       }
     },
     "tw": {
-      "requiredSections": "依專利法 §25 第1項，完整稿件須包含摘要、說明書（技術領域、先前技術、發明內容／新型內容、實施方式）及申請專利範圍；依專利法施行細則 §17，有圖式時說明書亦須包含圖式簡單說明與符號說明。缺少：{{sections}}。",
+      "requiredSections": "依專利法 §25 第1項，完整專利申請須包含摘要、說明書（技術領域、先前技術、發明內容／新型內容、實施方式）及申請專利範圍；依專利法施行細則 §17，有圖式時說明書亦須包含圖式簡單說明與符號說明。缺少：{{sections}}。",
       "sectionOrdering": "專利法施行細則 §17規定順序：技術領域→先前技術→發明內容/新型內容→圖式簡單說明→實施方式→符號說明。請重新排列。",
       "paragraphNumbering": "若使用段落編號，應採用【NNNN】四位數字連續格式。依專利法施行細則 §17,編號為選用。",
       "paragraphEnding": "說明書段落應以中文標點（。！？）結尾。請檢查標記之段落。",
@@ -636,7 +636,7 @@
       "subjectConsistency": "附屬項之標的名稱應與所依附之母項標的名稱一致。已識別之前言型式：如請求項N所述[之的]X、如請求項N所記載[之的]X、如請求項N[之的]X。請檢查標記之請求項。",
       "subjectConsistencyParseUnclear": "這些附屬項使用之前言型式未被識別。依專利法施行細則 §18，可接受之前言型式包含：如請求項N所述[之的]X、如請求項N所記載[之的]X、如請求項N[之的]X。請人工確認前言，若為合規前言而未能識別，請回報錯誤。",
       "transitionPhrase": "依專利法施行細則 §20，獨立項應包含特徵連接詞，如「其特徵在於」或「其改良在於」。請檢查標記之請求項。",
-      "cnTerminology": "發現簡體中文專利用語：{{detail}}。台灣專利稿件應使用 TIPO 用語（請求項、說明書、先前技術、實施方式等），而非 CNIPA 用語（权利要求、说明书、背景技术、具体实施方式等）。",
+      "cnTerminology": "發現簡體中文專利用語：{{detail}}。台灣專利說明書應使用 TIPO 用語（請求項、說明書、先前技術、實施方式等），而非 CNIPA 用語（权利要求、说明书、背景技术、具体实施方式等）。",
       "specDrawingRef": "依專利法施行細則 §19，請求項不得引用說明書或圖式（如「如說明書所述」「如圖所示」）。發現：{{detail}}。",
       "multiDepOnMultiDep": "依專利法施行細則 §18，多項附屬項不得直接或間接依附於另一多項附屬項。標記：{{claims}}。",
       "multiDepAlternative": "依專利法施行細則 §18，多項附屬項須使用擇一形式（或/任一項）。標記：{{claims}}。",
@@ -1024,7 +1024,7 @@
           "pass": "所有獨立項皆包含連接詞。"
         },
         "cnTerminology": {
-          "verify": "在台灣專利稿件中發現大陸專利用語。",
+          "verify": "在台灣專利說明書中發現大陸專利用語。",
           "pass": "請求項使用正確之 TIPO 用語。"
         },
         "specDrawingRef": {
@@ -1111,7 +1111,7 @@
     "firstVisitHint": "首次造訪需數秒；完成後將快取於您的瀏覽器，下次秒開",
     "offline_note": "首次載入後可離線使用",
     "feature1_title": "無需上傳。無需帳號。無 AI。",
-    "feature1_desc": "您的機密專利稿件不會離開您的裝置。不會上傳任何內容，PatentLint 也不會知道您的身份。",
+    "feature1_desc": "您的機密專利說明書不會離開您的裝置。不會上傳任何內容，PatentLint 也不會知道您的身份。",
     "feature2_title": "USPTO／CNIPA／TIPO 檢查與請求項樹狀圖",
     "feature2_desc": "偵測限制性用語、不明確用語及缺乏先行詞基礎等問題，並以互動式樹狀圖呈現請求項附屬關係。",
     "feature3_title": "請求項樹狀圖",
@@ -1123,7 +1123,7 @@
   },
   "pdf": {
     "header": "PatentLint 分析報告",
-    "headerTw": "PatentLint｜台灣專利稿件檢查報告",
+    "headerTw": "PatentLint｜台灣專利說明書檢查報告",
     "securityNote": "已於您的裝置上分析，未上傳至雲端。",
     "amend": "需要修改",
     "verify": "待專家確認",
@@ -1232,7 +1232,7 @@
       "title": "本網站與本軟體的區別",
       "p1": "PatentLint 以兩種形式提供：",
       "siteLabel": "本網站（patentlint.com）。",
-      "siteDesc": "屬於免費評估用途之線上應用服務。當您上傳專利稿件時，分析過程透過 WebAssembly 全程於您的瀏覽器內執行；您的稿件不會離開裝置。本網站由 Christopher Chen 營運。",
+      "siteDesc": "屬於免費評估用途之線上應用服務。當您上傳專利說明書時，分析過程透過 WebAssembly 全程於您的瀏覽器內執行；您的說明書不會離開裝置。本網站由 Christopher Chen 營運。",
       "softwareLabel": "本軟體。",
       "softwareDesc": "底層原始碼，存放於私有原始碼儲存庫。本軟體依 PolyForm-Strict-1.0.0 授權（詳見 §4）。",
       "p2": "本條款涵蓋上述兩者之使用。依您所使用之形式，適用之規範有所不同。"
@@ -1240,7 +1240,7 @@
     "s2": {
       "title": "使用本網站",
       "p1": "本網站可供個人評估用途免費使用。您得：",
-      "may1": "上傳專利稿件，依 US、CN 或 TW 管轄區規則進行分析。",
+      "may1": "上傳專利說明書，依 US、CN 或 TW 管轄區規則進行分析。",
       "may2": "為自身參考目的匯出分析報告。",
       "may3": "依分析結果輔助您自身的撰稿判斷。",
       "p2": "您不得：",
@@ -1250,8 +1250,8 @@
       "maynot4": "藉由本網站從事違反專利法、著作權法、營業祕密法或出口管制法令之行為。"
     },
     "s3": {
-      "title": "您的專利稿件仍屬於您",
-      "p1": "分析過程透過 WebAssembly（Pyodide）全程於您的瀏覽器內執行。我們不會閱覽、儲存或傳輸您專利稿件之內容。稿件不會離開您的裝置。",
+      "title": "您的專利說明書仍屬於您",
+      "p1": "分析過程透過 WebAssembly（Pyodide）全程於您的瀏覽器內執行。我們不會閱覽、儲存或傳輸您專利說明書之內容。說明書不會離開您的裝置。",
       "p2": "若您懷疑稿件內容遭誤傳，請立即與我們聯繫。",
       "privacyLink": "完整資料處理揭露請參閱<1>隱私權政策</1>。"
     },
@@ -1313,14 +1313,14 @@
     "intro": "本隱私權政策說明 patentlint.com（下稱「本網站」）於您造訪時如何處理資料。PatentLint 應用程式本身不蒐集您的任何資料：未使用分析工具、未使用追蹤、未使用 cookies。唯一存在的資料流，係本網站之託管服務商 Cloudflare Pages 於每次造訪時所接收之標準網頁請求中介資料，與任何網站無異。本政策將上述區別予以明文揭露。",
     "s1": {
       "title": "前言",
-      "p1": "patentlint.com 為 Christopher Chen 所營運之線上應用網站，提供 PatentLint 專利稿件檢查工具。檔案分析全程透過 WebAssembly（Pyodide）於您的瀏覽器內執行。本網站以 Cloudflare Pages 提供靜態資產，並無應用程式伺服器，亦無資料庫；您的檔案內容絕不會自您的裝置傳出。",
+      "p1": "patentlint.com 為 Christopher Chen 所營運之線上應用網站，提供 PatentLint 專利說明書檢查工具。檔案分析全程透過 WebAssembly（Pyodide）於您的瀏覽器內執行。本網站以 Cloudflare Pages 提供靜態資產，並無應用程式伺服器，亦無資料庫；您的檔案內容絕不會自您的裝置傳出。",
       "p2": "本政策適用於您與本網站之互動。若您另行取得 PatentLint 軟體原始碼，則應依該軟體之授權（PolyForm-Strict-1.0.0）規範，不適用本政策。"
     },
     "s2": {
-      "title": "您的專利稿件",
-      "p1": "您「上傳」至本網站之專利稿件，實際上並未離開您的裝置；檔案僅載入瀏覽器分頁內，並於該分頁中處理。分析作業在該分頁中之 Pyodide／WebAssembly 引擎上執行。patentlint.com 並不存在伺服器端的分析路徑；本網站僅提供靜態資產。",
+      "title": "您的專利說明書",
+      "p1": "您「上傳」至本網站之專利說明書，實際上並未離開您的裝置；檔案僅載入瀏覽器分頁內，並於該分頁中處理。分析作業在該分頁中之 Pyodide／WebAssembly 引擎上執行。patentlint.com 並不存在伺服器端的分析路徑；本網站僅提供靜態資產。",
       "p2": "我們絕不：",
-      "never1": "接收或傳輸您專利稿件之內容。",
+      "never1": "接收或傳輸您專利說明書之內容。",
       "never2": "儲存檔名、請求項文字、說明書本文或任何專利相關資料。",
       "never3": "將稿件內容傳送予任何第三方（包含 AI 服務、OCR 服務或文件處理服務）。",
       "verify": "您可於飛航模式下自行驗證以上事項。詳見<1>安全性說明</1>頁面之即時示範。"
