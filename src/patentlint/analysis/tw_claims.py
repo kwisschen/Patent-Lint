@@ -401,6 +401,46 @@ def check_dependency_format(doc: TwPatentDocument) -> list[CheckItem]:
     )]
 
 
+# Strip the `N. ` / `N．` claim-number prefix before checking the preamble.
+_CLAIM_NUM_PREFIX = re.compile(r"^[\s　]*\d+\s*[.．]\s*")
+
+
+def check_independent_preamble(doc: TwPatentDocument) -> list[CheckItem]:
+    """Flag independent claims not opening with 「一種」.
+
+    Per TIPO 偵錯系統 Table 1 #20 + 專利法施行細則 §18 + 專利審查基準:
+    independent claims must open with 一種. Dependent-claim opener set
+    (如/依據/根據) is validated separately by ``check_dependency_format``.
+    """
+    bad: list[int] = []
+    for claim in doc.claims:
+        if not claim.independent:
+            continue
+        body = _CLAIM_NUM_PREFIX.sub("", claim.text).lstrip()
+        if not body.startswith("一種"):
+            bad.append(claim.id)
+
+    if bad:
+        bad_sorted = sorted(set(bad))
+        claims_str = ", ".join(str(i) for i in bad_sorted)
+        return [CheckItem(
+            status="amend",
+            message=f"Independent claim(s) not opening with 「一種」: {claims_str}.",
+            message_key="check.tw.claims.independentPreamble.amend",
+            details=claims_str,
+            details_key="details.tw.independentPreamble",
+            details_params={"count": len(bad_sorted), "claims": bad_sorted},
+            reference="專利法施行細則 §18",
+            diagnostics=_dx(flagged_count=len(bad_sorted)),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="All independent claims open with 「一種」.",
+        message_key="check.tw.claims.independentPreamble.pass",
+        reference="專利法施行細則 §18",
+    )]
+
+
 # ── Check 13 ─────────────────────────────────────────────────────────────
 
 

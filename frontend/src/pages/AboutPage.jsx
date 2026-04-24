@@ -271,7 +271,7 @@ function JurisdictionFeatureBlock({ t, jurisdiction, cardKeys }) {
   )
 }
 
-// TW table: three marketing buckets (Shared / TIPO-only / PatentLint-only).
+// TW table: two marketing buckets (Shared / PatentLint-only).
 // Within each bucket rows sort by the canonical 7-group document order.
 //
 // AUTHORITATIVE SOURCE for TIPO coverage: "專利申請文件輔助偵錯系統 —
@@ -285,6 +285,7 @@ const TW_GROUP1_CHECKS = [
   'patentTypeTerminology',       // TIPO #18 (新型 內容/實施方式 用「本發明」「此發明」)
   'symbolVsRepDrawing',          // TIPO #1/#2/#16 (符號說明 vs 代表圖符號簡單說明)
   'symbolTableConsistency',      // TIPO #3  (新型內容/實施方式 vs 符號說明/代表圖符號簡單說明)
+  'tipoIndigenous',              // TIPO #19 (原住民相關用語)
   // G4 claims-structure
   'selfDependent',               // TIPO #5  (附屬項未依附在前 — self-dep 分支)
   'circularDependency',          // TIPO #5  (附屬項未依附在前 — circular 分支)
@@ -293,6 +294,7 @@ const TW_GROUP1_CHECKS = [
   'refNumeralParens',            // TIPO #9  (構件符號未全部置於括號內)
   'subjectConsistency',          // TIPO #10 (附屬項標的名稱 vs 所依附請求項標的名稱)
   'dependencyFormat',            // TIPO #20 (附屬項開頭「如」「依據」「根據」)
+  'independentPreamble',         // TIPO #20 (獨立項「一種」開頭)
   // G5 claims-cross-jurisdiction
   'cnTerminology',               // TIPO #17 (附屬項開頭使用「權利要求」)
   'multiDepOnMultiDep',          // TIPO #6  (多項附屬項直接/間接依附多項附屬項)
@@ -302,12 +304,6 @@ const TW_GROUP1_CHECKS = [
   'connectionRelationships',     // TIPO #14 (獨立項主要構件連結/對應關係)
   // G6 claims §112-equivalent
   'antecedentBasis',             // TIPO #11 + #12 (先行詞 + 不當依附)
-]
-
-const TW_GROUP2_CHECKS = [
-  // TIPO #19 — 原住民相關用語. The only TIPO check with no PatentLint
-  // counterpart; sensitive-terms advisory tied to 原住民族傳統智慧創作保護條例.
-  'tipoIndigenous',
 ]
 
 const TW_GROUP3_CHECKS = [
@@ -329,7 +325,6 @@ const TW_GROUP3_CHECKS = [
 
 function TwComparisonTable({ t }) {
   const [ref1, inView1] = useInView()
-  const [ref2, inView2] = useInView()
   const [ref3, inView3] = useInView()
 
   const renderGroup = (ref, inView, titleKey, checks, tipo, patentlint, highlight, delay) => (
@@ -387,8 +382,7 @@ function TwComparisonTable({ t }) {
           </tr>
         </thead>
         {renderGroup(ref1, inView1, 'about.tw.group1Title', TW_GROUP1_CHECKS, true, true, false, 0)}
-        {renderGroup(ref2, inView2, 'about.tw.group2Title', TW_GROUP2_CHECKS, true, false, false, 150)}
-        {renderGroup(ref3, inView3, 'about.tw.group3Title', TW_GROUP3_CHECKS, false, true, true, 300)}
+        {renderGroup(ref3, inView3, 'about.tw.group3Title', TW_GROUP3_CHECKS, false, true, true, 150)}
       </table>
       <p className="text-xs text-muted-foreground italic px-2 py-3">
         {t('about.twTableFootnote')}

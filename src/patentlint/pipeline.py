@@ -83,6 +83,7 @@ def _run_cn_pipeline(
     claims_checks = (
         cn_claims_analysis.check_claims_sequential(cn_doc)
         + cn_claims_analysis.check_dependency_format(cn_doc)
+        + cn_claims_analysis.check_independent_preamble(cn_doc)
         + cn_claims_analysis.check_self_dependent(cn_doc)
         + cn_claims_analysis.check_forward_dependency(cn_doc)
         + cn_claims_analysis.check_single_sentence(cn_doc)
@@ -388,12 +389,14 @@ def _run_tw_pipeline(
         + tw_spec_analysis.check_spec_claim_reference(tw_doc)
         + tw_spec_analysis.check_symbol_table_presence(tw_doc)
         + tw_spec_analysis.check_symbol_table_consistency(tw_doc)
+        + tw_spec_analysis.check_indigenous_terms(tw_doc)
     )
 
     # --- Claims checks (11–27) ---
     claims_checks = (
         tw_claims_analysis.check_claims_sequential(tw_doc)
         + tw_claims_analysis.check_dependency_format(tw_doc)
+        + tw_claims_analysis.check_independent_preamble(tw_doc)
         + tw_claims_analysis.check_self_dependent(tw_doc)
         + tw_claims_analysis.check_circular_dependency(tw_doc)
         + tw_claims_analysis.check_forward_dependency(tw_doc)

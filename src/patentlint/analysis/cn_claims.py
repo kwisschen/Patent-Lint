@@ -201,6 +201,47 @@ def check_self_dependent(cn_doc: CnPatentDocument) -> list[CheckItem]:
     )]
 
 
+# Strip the ``N. `` / ``N．`` claim-number prefix before checking preamble.
+_CN_CLAIM_NUM_PREFIX = re.compile(r"^[\s　]*\d+\s*[.．。]\s*")
+
+
+def check_independent_preamble(cn_doc: CnPatentDocument) -> list[CheckItem]:
+    """Flag independent claims not opening with 「一种」.
+
+    Per 审查指南 第二部分第二章 §3.1.1 (canonical example form) +
+    专利法实施细则 §22: independent claims open with 一种X. Dependent-
+    claim opener set (根据/如/按照 etc.) is validated separately by
+    ``check_dependency_format``.
+    """
+    bad: list[int] = []
+    for claim in cn_doc.claims:
+        if not claim.independent:
+            continue
+        body = _CN_CLAIM_NUM_PREFIX.sub("", claim.text).lstrip()
+        if not body.startswith("一种"):
+            bad.append(claim.id)
+
+    if bad:
+        bad_sorted = _dedupe_claim_ids(bad)
+        claims_str = ", ".join(str(i) for i in bad_sorted)
+        return [CheckItem(
+            status="amend",
+            message=f"Independent claim(s) not opening with 「一种」: {claims_str}.",
+            message_key="check.cn.claims.independentPreamble.amend",
+            details=claims_str,
+            details_key="details.cn.independentPreamble",
+            details_params={"count": len(bad_sorted), "claims": bad_sorted},
+            reference="审查指南 第二部分第二章 §3.1.1",
+            diagnostics=_dx(flagged_count=len(bad_sorted)),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="All independent claims open with 「一种」.",
+        message_key="check.cn.claims.independentPreamble.pass",
+        reference="审查指南 第二部分第二章 §3.1.1",
+    )]
+
+
 # ── Check 12 ─────────────────────────────────────────────────────────────
 
 

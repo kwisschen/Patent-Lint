@@ -810,3 +810,55 @@ class TestClaimsSymbolTableConsistency:
 # TestAntecedentBasis removed in Phase 8b — the legacy check returned a
 # CheckItem; the new BFS walker returns list[dict] of per-occurrence
 # findings. Walker tests live in tests/analysis/test_tw_walker.py.
+
+
+# ── check.tw.claims.independentPreamble ─────────────────────────────────
+
+
+class TestIndependentPreamble:
+    """TIPO 偵錯系統 Table 1 #20: indep claims must open with 一種."""
+
+    def _doc(self, claims):
+        from patentlint.models import TwPatentDocument
+        return TwPatentDocument(claims=claims)
+
+    def test_independent_with_yizhong_passes(self):
+        from patentlint.analysis.tw_claims import check_independent_preamble
+        from patentlint.models import Claim
+        doc = self._doc([
+            Claim(id=1, text="1. 一種裝置，包含A。", independent=True, dependencies=[]),
+        ])
+        results = check_independent_preamble(doc)
+        assert results[0].status == "pass"
+
+    def test_independent_missing_yizhong_flags(self):
+        from patentlint.analysis.tw_claims import check_independent_preamble
+        from patentlint.models import Claim
+        doc = self._doc([
+            Claim(id=1, text="1. 裝置，包含A。", independent=True, dependencies=[]),
+        ])
+        results = check_independent_preamble(doc)
+        assert results[0].status == "amend"
+        assert 1 in results[0].details_params["claims"]
+
+    def test_independent_with_yige_flags(self):
+        """一個 is a colloquial variant; TIPO 規定「一種」 specifically."""
+        from patentlint.analysis.tw_claims import check_independent_preamble
+        from patentlint.models import Claim
+        doc = self._doc([
+            Claim(id=1, text="1. 一個裝置，包含A。", independent=True, dependencies=[]),
+        ])
+        results = check_independent_preamble(doc)
+        assert results[0].status == "amend"
+
+    def test_dependent_claim_ignored(self):
+        """Dep claims open with 如/依據/根據, not 一種 — don't flag them here."""
+        from patentlint.analysis.tw_claims import check_independent_preamble
+        from patentlint.models import Claim
+        doc = self._doc([
+            Claim(id=1, text="1. 一種裝置。", independent=True, dependencies=[]),
+            Claim(id=2, text="2. 如請求項1所述之裝置，包含B。",
+                  independent=False, dependencies=[1]),
+        ])
+        results = check_independent_preamble(doc)
+        assert results[0].status == "pass"

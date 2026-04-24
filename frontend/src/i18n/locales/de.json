@@ -496,7 +496,8 @@
       "bracketFormat": "【】-Klammerformat in Abschnittsüberschriften",
       "connectionRelationships": "Verbindungsbeziehungen der Komponenten im unabhängigen Anspruch (連接關係)",
       "tipoIndigenous": "Terminologie zu indigenen Völkern (原住民族)",
-      "figuresSequential": "Figuren fortlaufend nummeriert"
+      "figuresSequential": "Figuren fortlaufend nummeriert",
+      "independentPreamble": "Unabhängiger Anspruch mit 一種"
     },
     "stats": {
       "tests": "Automatisierte Tests",
@@ -617,7 +618,8 @@
         "forwardDependency": "Gemäß 专利法实施细则 §22 darf ein abhängiger Anspruch nur auf Ansprüche mit früherer Nummer verweisen, nicht auf spätere.",
         "singleSentence": "Gemäß 审查指南 第二部分第二章 muss jeder Anspruch ein einziger Satz sein, der mit 。 endet, damit der Schutzbereich eindeutig bleibt.",
         "transitionPhrase": "Gemäß 审查指南 sollte ein unabhängiger Anspruch einen zweiteiligen Übergang (z. B. 其特征在于) enthalten, der den Oberbegriff (Stand der Technik) vom kennzeichnenden Teil (neuartige Merkmale) trennt."
-      }
+      },
+      "independentPreamble": "Gemäß 审查指南 第二部分第二章 §3.1.1 müssen unabhängige Ansprüche mit 「一种」 beginnen. Präambel der markierten Ansprüche umformulieren."
     },
     "tw": {
       "requiredSections": "Eine vollständige TIPO-Einreichung erfordert 摘要, 說明書 (技術領域, 先前技術, 發明內容/新型內容, 實施方式) und 申請專利範圍 gemäß 專利法 §25 第1項. Bei vorhandenen Zeichnungen sind zusätzlich 圖式簡單說明 und 符號說明 gemäß 專利法施行細則 §17 erforderlich. Fehlend: {{sections}}.",
@@ -674,7 +676,9 @@
         "undefined": "In 實施方式 referenziert, aber nicht in 符號說明 definiert: {{symbols}}"
       },
       "singleSentenceMissingPeriod": "Gemäß 專利法施行細則 §18 muss jeder Anspruch mit einem einzelnen 。 enden. Ergänzen Sie das abschließende Satzzeichen in den gekennzeichneten Ansprüchen.",
-      "singleSentenceMultiSentence": "Gemäß 專利法施行細則 §18 muss jeder Anspruch ein Satz mit genau einem 。 am Ende sein. Entfernen Sie Punkte innerhalb des Anspruchs oder strukturieren Sie die gekennzeichneten Ansprüche um."
+      "singleSentenceMultiSentence": "Gemäß 專利法施行細則 §18 muss jeder Anspruch ein Satz mit genau einem 。 am Ende sein. Entfernen Sie Punkte innerhalb des Anspruchs oder strukturieren Sie die gekennzeichneten Ansprüche um.",
+      "independentPreamble": "Gemäß 專利法施行細則 §18 müssen unabhängige Ansprüche mit 「一種」 beginnen. Präambel der markierten Ansprüche umformulieren.",
+      "indigenousTerms": "Begriffe: {{terms}}. Gemäß 原住民族傳統智慧創作保護條例 prüfen, ob die Anmeldung geschützten traditionellen Schöpfungen nicht widerspricht."
     },
     "titleProhibited": {
       "trademark": "Markensymbol „{{token}}“",
@@ -946,6 +950,10 @@
         "markushOpenTransition": {
           "verify": "{{claims}}: Markush-Formel nutzt offenen Übergangsbegriff ({{transitions}}) anstelle von 组成的 (审查指南 第二部分第十章 §9.3).",
           "pass": "Markush-Formeln nutzen den geschlossenen Übergang 组成的."
+        },
+        "independentPreamble": {
+          "amend": "{{claims}}: unabhängige Ansprüche müssen mit 「一种」 beginnen (审查指南 第二部分第二章 §3.1.1).",
+          "pass": "Alle unabhängigen Ansprüche beginnen mit 「一种」."
         }
       },
       "abstract": {
@@ -1021,6 +1029,10 @@
         "symbolTableConsistency": {
           "verify": "符號說明-Einträge inkonsistent mit 實施方式: {{symbol_table_inconsistency}}",
           "pass": "符號說明-Einträge konsistent mit 實施方式."
+        },
+        "indigenousTerms": {
+          "verify": "Indigene Terminologie gefunden — Konformität mit 原住民族傳統智慧創作保護條例 prüfen.",
+          "pass": "Keine indigene Terminologie gefunden."
         }
       },
       "claims": {
@@ -1101,6 +1113,10 @@
         "specSupport": {
           "verify": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Stützung in der Beschreibung sein — Nominalphrase des Anspruchs nicht im Beschreibungsteil gefunden.",
           "pass": "Alle Anspruchsbegriffe in der Beschreibung gestützt."
+        },
+        "independentPreamble": {
+          "amend": "{{claims}}: unabhängige Ansprüche müssen mit 「一種」 beginnen (專利法施行細則 §18).",
+          "pass": "Alle unabhängigen Ansprüche beginnen mit 「一種」."
         }
       },
       "abstract": {
