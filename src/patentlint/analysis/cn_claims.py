@@ -85,12 +85,42 @@ def check_claims_sequential(cn_doc: CnPatentDocument) -> list[CheckItem]:
 # CN dependent-claim preamble connective.
 # CNIPA-standard is 所述 (per 专利法实施细则 §22 + CNIPA drafting examples).
 # JP-translation variants 所记载/所揭示/所描述 surface in CN patents translated
-# from Japanese originals; parse them tolerantly rather than flag them — the
-# 分属名称 check should not fire purely on the connective shape.
-_CN_DEP_CONNECTIVE = r"所(?:述|记载|揭示|描述)的"
-_DEP_FORMAT_SINGLE = re.compile(r"如权利要求\s*\d+[\s\S]*?" + _CN_DEP_CONNECTIVE)
+# from Japanese originals; parse them tolerantly rather than flag them.
+# The trailing 的 is optional — CN drafters sometimes write 所述X (without 的)
+# when X starts with a measure word or complex noun phrase.
+_CN_DEP_CONNECTIVE = r"所(?:述|记载|揭示|描述)的?"
+
+# The introducing verb is NOT constrained: CNIPA drafting commonly uses
+# 根据/如/按照/依照/依/依据/基于 + 权利要求N + 所述的, or even the bare
+# 权利要求N所述的 form. 审查指南 第二部分第二章 §3.3.1 uses 根据 in its
+# canonical example; 如 is equally valid. Requiring a specific verb
+# false-positives on nearly all real CN drafts. The actually-enforced
+# structure is: 权利要求 + digit + ... + 所述.
+_DEP_FORMAT_SINGLE = re.compile(r"权利要求\s*\d+[\s\S]*?" + _CN_DEP_CONNECTIVE)
+
+# Multi-dep alternative-reference forms (per 专利法实施细则 §22 第3款 —
+# multi-dep claims must use 择一方式 / alternative reference):
+#   (a) `权利要求1或2所述的` — 或 alternative
+#   (b) `权利要求1、2或3所述的` — 、 + 或 alternative
+#   (c) `权利要求1至3中任一项所述的` — range + 中任一项
+#   (d) `权利要求1至3任一项所述的` — range + 任一项 (no 中)
+#   (e) `权利要求10至12中任意一项所述的` — range + 中任意一项
+#   (f) `权利要求1-3任一项所述的` / `1~3` / `1‑5` (U+2010–U+2015 dashes)
+# At least one alternative-reference marker (range-form OR or-form) is required.
+_CN_RANGE_SEPARATOR = r"(?:~|至|到|[‐-―\-])"
+_CN_ANY_ITEM_QUANTIFIER = r"任\s*(?:意\s*)?(?:一|何)?\s*项"
 _DEP_FORMAT_MULTI = re.compile(
-    r"如权利要求\s*\d+[\s\S]*?中\s*任[一意]\s*项\s*" + _CN_DEP_CONNECTIVE
+    r"权利要求\s*\d+"
+    r"(?:"
+    #   Range form: `N至M[中[的]任[意][一|何]项]`
+    r"\s*" + _CN_RANGE_SEPARATOR + r"\s*(?:权利要求\s*)?\d+"
+    r"(?:\s*(?:中(?:\s*的)?\s*)?" + _CN_ANY_ITEM_QUANTIFIER + r")?"
+    r"|"
+    #   Or/comma form: `或 N`, `、N`, possibly repeated
+    r"(?:\s*(?:或|、)\s*(?:权利要求\s*)?\d+)+"
+    r"(?:\s*(?:中(?:\s*的)?\s*)?" + _CN_ANY_ITEM_QUANTIFIER + r")?"
+    r")"
+    r"[\s\S]*?" + _CN_DEP_CONNECTIVE
 )
 
 
@@ -760,6 +790,108 @@ def check_connection_relationships_cn(cn_doc: CnPatentDocument) -> list[CheckIte
     composition claims are carved out per ``_CN_CONNECTION_CONFIG``.
     """
     return check_connection_relationships(cn_doc.claims, _CN_CONNECTION_CONFIG)
+
+
+# ── Check 22 (omnibus / 如说明书所述) ─────────────────────────────────────
+
+# Mirrors US ``_OMNIBUS_LANG``; CN-practitioner phrasings that reference
+# the description or drawings instead of reciting features. 审查指南
+# 第二部分第二章 §3.3 — claims must recite technical features, not
+# reference the specification.
+_OMNIBUS_LANG_CN = re.compile(
+    r"如说明书(?:及附图)?(?:所述|所描述|所记载)"
+    r"|如说明书和附图(?:所述|所描述|所示|所描述的)"
+    r"|如(?:附图|图)\s*\d*(?:所示|所述|所描述)"
+    r"|基本上如说明书(?:所述|所描述)"
+    r"|如(?:前述|前文)(?:所述|所描述)说明书"
+)
+
+
+def detect_omnibus_claims_cn(cn_doc: CnPatentDocument) -> list[int]:
+    """Return IDs of CN claims that reference 说明书/附图 without reciting features.
+
+    Mirrors :func:`patentlint.analysis.claims.check_special_claim_formats`
+    omnibus branch, with CN practitioner patterns. Length threshold (<40
+    CJK chars) guards against false positives on long detailed claims that
+    incidentally mention 说明书.
+    """
+    out: list[int] = []
+    for claim in cn_doc.claims:
+        text = claim.text or ""
+        cjk_count = sum(1 for ch in text if "一" <= ch <= "鿿")
+        if cjk_count < 40 and _OMNIBUS_LANG_CN.search(text):
+            out.append(claim.id)
+    return out
+
+
+def check_omnibus_claims(cn_doc: CnPatentDocument) -> list[CheckItem]:
+    """Emit CheckItem for CN omnibus claims (FIX) — 审查指南 §3.3."""
+    ids = detect_omnibus_claims_cn(cn_doc)
+    if ids:
+        claims_str = ", ".join(str(i) for i in ids)
+        return [CheckItem(
+            status="amend",
+            message=f"Omnibus claim(s) reference the specification or drawings instead of reciting features: {claims_str}.",
+            message_key="check.cn.claims.omnibus.amend",
+            details=claims_str,
+            details_key="details.cn.omnibusClaims",
+            details_params={"claims": ids},
+            reference="审查指南 第二部分第二章 §3.3",
+            diagnostics=_dx(flagged_count=len(ids)),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="No omnibus claims found.",
+        message_key="check.cn.claims.omnibus.pass",
+        reference="审查指南 第二部分第二章 §3.3",
+    )]
+
+
+# ── Check 23 (Markush group open transition) ─────────────────────────────
+
+# CNIPA 审查指南 第二部分第十章 §9.3 — a Markush claim must use the closed
+# transition 组成的 (e.g. 选自由...所组成的群组 / 选自由X、Y、Z组成的群组).
+# Open-ended variants (包括/具有/含有) are suspect.
+_MARKUSH_OPEN_CN = re.compile(
+    r"选自由[^，。；]{0,80}?(包括|具有|含有)"
+)
+_MARKUSH_CLOSED_CN = re.compile(r"选自由[^，。；]{0,80}?组成")
+
+
+def detect_markush_open_transition_cn(cn_doc: CnPatentDocument) -> list[tuple[int, str]]:
+    """Return (claim_id, open_transition) pairs for Markush claims using 包括/具有/含有."""
+    out: list[tuple[int, str]] = []
+    for claim in cn_doc.claims:
+        text = claim.text or ""
+        m = _MARKUSH_OPEN_CN.search(text)
+        if m and not _MARKUSH_CLOSED_CN.search(text):
+            out.append((claim.id, m.group(1)))
+    return out
+
+
+def check_markush_open_transition(cn_doc: CnPatentDocument) -> list[CheckItem]:
+    """Emit CheckItem for CN Markush claims using open transition (VERIFY)."""
+    pairs = detect_markush_open_transition_cn(cn_doc)
+    if pairs:
+        ids = [cid for cid, _ in pairs]
+        transitions = sorted({t for _, t in pairs})
+        claims_str = ", ".join(str(i) for i in ids)
+        return [CheckItem(
+            status="verify",
+            message=f"Markush claim(s) use open-ended transition instead of 组成的: {claims_str}.",
+            message_key="check.cn.claims.markushOpenTransition.verify",
+            details=claims_str,
+            details_key="details.cn.markushOpenTransition",
+            details_params={"claims": ids, "transitions": transitions},
+            reference="审查指南 第二部分第十章 §9.3",
+            diagnostics=_dx(flagged_count=len(ids)),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="Markush groups use closed transition 组成的.",
+        message_key="check.cn.claims.markushOpenTransition.pass",
+        reference="审查指南 第二部分第十章 §9.3",
+    )]
 
 
 

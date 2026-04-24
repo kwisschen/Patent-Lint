@@ -10,19 +10,19 @@
     "label": "Region"
   },
   "dropzone": {
-    "tagline": "Prüfen Sie Ihre Beschreibung sofort gegen 30+ USPTO-Ausarbeitungsregeln.",
+    "tagline": "Prüfen Sie Ihre Beschreibung sofort gegen {{count}} USPTO-Ausarbeitungsregeln.",
     "title": "Patentanmeldung (.docx) ablegen, um die lokale Prüfung zu starten",
     "subtitle": "oder zum Durchsuchen klicken",
     "notice": "Unterstützt US-Patentbeschreibungen (.docx)",
     "reject": "Nur .docx-Dateien werden akzeptiert",
     "rejectMultiple": "Bitte immer nur eine Datei ablegen.",
     "rejectMultipleType": "Bitte eine einzelne .docx-Datei ablegen.",
-    "taglineCn": "Prüfen Sie Ihre Beschreibung sofort gegen 20+ CNIPA-Ausarbeitungsregeln.",
+    "taglineCn": "Prüfen Sie Ihre Beschreibung sofort gegen {{count}} CNIPA-Ausarbeitungsregeln.",
     "titleCn": "Patentdatei ablegen, um die lokale Prüfung zu starten",
     "noticeCn": "Unterstützt chinesische Patentbeschreibungen (.docx, .xml, .zip)",
     "rejectCn": "Nur .docx-, .xml- und .zip-Dateien werden akzeptiert",
     "rejectMultipleTypeCn": "Bitte eine einzelne .docx-, .xml- oder .zip-Datei ablegen.",
-    "taglineTw": "Prüfen Sie Ihre Beschreibung sofort gegen 30+ TIPO-Ausarbeitungsregeln.",
+    "taglineTw": "Prüfen Sie Ihre Beschreibung sofort gegen {{count}} TIPO-Ausarbeitungsregeln.",
     "titleTw": "Patentanmeldung (.docx) ablegen, um die lokale Prüfung zu starten",
     "noticeTw": "Unterstützt taiwanesische Patentbeschreibungen (.docx)",
     "rejectTw": "Nur .docx-Dateien werden akzeptiert",
@@ -388,7 +388,7 @@
       }
     },
     "cnTitle": "PatentLint CNIPA-Ausarbeitungsprüfungen",
-    "cnSubtitle": "20+ strukturelle Prüfungen gegen die CNIPA-Ausarbeitungsregeln (专利法实施细则, 审查指南).",
+    "cnSubtitle": "{{count}} strukturelle Prüfungen gegen die CNIPA-Ausarbeitungsregeln (专利法实施细则, 审查指南).",
     "cnFeatures": {
       "title": "Interaktive Prüfung von CN-Patentanmeldungen",
       "claimTree": {
@@ -682,7 +682,11 @@
     },
     "paragraphFormat": {
       "examples": "{{count}} Absatz/Absätze nicht im [NNNN]-Format. Beispiele: {{examples}}"
-    }
+    },
+    "titleMissing": "Gemäß MPEP § 606 muss jede Patentanmeldung einen Titel enthalten. Fügen Sie der Beschreibung einen Titel hinzu.",
+    "titleLength": "Gemäß MPEP § 606 darf der Titel 500 Zeichen nicht überschreiten ({{count}} gefunden). Kürzen Sie den Titel.",
+    "titleContent": "Gemäß MPEP § 608.01 darf der Titel keine Marken oder Modellnummern enthalten. Entfernen Sie die unzulässigen Inhalte.",
+    "titleWordCount": "Gemäß MPEP § 606 sollten Titel kurz und spezifisch sein ({{count}} Wörter gefunden; üblich sind 2–7 Wörter). Erwägen Sie eine Kürzung."
   },
   "common": {
     "close": "Schließen",
@@ -734,6 +738,13 @@
       "drawings": "Übersicht der Zeichnungen.",
       "trackedChanges": {
         "amend": "Dokument enthält nachverfolgte Änderungen (Revisionen). Alle Änderungen vor der Einreichung akzeptieren oder verwerfen."
+      },
+      "title": {
+        "amendMissing": "Titel fehlt in der Beschreibung (MPEP § 606).",
+        "amendLength": "Titel hat {{count}} Zeichen — MPEP § 606 lässt maximal 500 Zeichen zu.",
+        "amendContent": "Unzulässiger Inhalt im Titel: {{title_prohibited_items}} (MPEP § 608.01).",
+        "verify": "Titel hat {{count}} Wörter — MPEP § 606 empfiehlt einen kurzen, spezifischen Titel.",
+        "pass": "Titel erfüllt MPEP § 606-Anforderungen."
       }
     },
     "claims": {
@@ -826,6 +837,9 @@
     },
     "cn": {
       "spec": {
+        "trackedChanges": {
+          "amend": "Dokument enthält nachverfolgte Änderungen (Revisionen). Alle Änderungen vor der Einreichung akzeptieren oder verwerfen."
+        },
         "requiredSections": {
           "amend": "Erforderliche Abschnitte fehlen: {{sections}} (专利法 §26 第1款、专利法实施细则 §17).",
           "pass": "Alle erforderlichen Abschnitte vorhanden."
@@ -923,6 +937,14 @@
         "antecedentBasis": {
           "verify": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 该/所述-Bezug ohne vorheriges 一 (审查指南).",
           "pass": "Alle Anspruchsbegriffe haben Rückbezug (审查指南)."
+        },
+        "omnibus": {
+          "amend": "{{claims}}: Anspruch verweist auf 说明书/附图 statt Merkmale zu benennen (审查指南 第二部分第二章 §3.3).",
+          "pass": "Keine Omnibus-Ansprüche."
+        },
+        "markushOpenTransition": {
+          "verify": "{{claims}}: Markush-Formel nutzt offenen Übergangsbegriff ({{transitions}}) anstelle von 组成的 (审查指南 第二部分第十章 §9.3).",
+          "pass": "Markush-Formeln nutzen den geschlossenen Übergang 组成的."
         }
       },
       "abstract": {
@@ -948,6 +970,10 @@
           "pass": "Figuren 1–{{found_max}} fortlaufend nummeriert.",
           "passNone": "Keine Figuren gefunden.",
           "amend": "Nicht fortlaufende Figurennummerierung — fehlend: {{figure_list}}."
+        },
+        "priorArt": {
+          "verify": "Stand-der-Technik-Bezüge in 附图说明 gefunden — Figurenbeschriftung prüfen (审查指南 第一部分第一章 §4.2).",
+          "pass": "Keine Stand-der-Technik-Bezüge in 附图说明."
         }
       }
     },

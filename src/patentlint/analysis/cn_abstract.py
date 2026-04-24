@@ -167,6 +167,32 @@ def check_commercial_language(cn_doc: CnPatentDocument) -> list[CheckItem]:
 # ── Check 24 ─────────────────────────────────────────────────────────────
 
 
+def check_drawings_prior_art(cn_doc: CnPatentDocument) -> list[CheckItem]:
+    """Flag prior-art references in 附图说明 (CN drawings description).
+
+    Per 审查指南 第一部分第一章 §4.2, figures depicting prior art must be
+    labeled as such. Mirrors US ``check.drawings.priorArt`` with CN
+    practitioner vocabulary (现有技术 / 已知技术 / 背景技术 / 已知).
+    """
+    from patentlint.analysis.drawings import contains_prior_art_references_cn
+
+    text = "\n".join(cn_doc.drawings_description)
+    if text and contains_prior_art_references_cn(text):
+        return [CheckItem(
+            status="verify",
+            message="Prior-art references found in 附图说明 — verify figure labeling.",
+            message_key="check.cn.drawings.priorArt.verify",
+            reference="审查指南 第一部分第一章 §4.2",
+            diagnostics=_dx(reason_code="prior_art_marker_found"),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="No prior-art references found in 附图说明.",
+        message_key="check.cn.drawings.priorArt.pass",
+        reference="审查指南 第一部分第一章 §4.2",
+    )]
+
+
 def check_figure_count(cn_doc: CnPatentDocument) -> list[CheckItem]:
     """Report figure count (UI-internal stats check, always PASS)."""
     count = cn_doc.figure_count

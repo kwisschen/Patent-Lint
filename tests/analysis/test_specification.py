@@ -9,6 +9,7 @@ from patentlint.analysis.specification import (
     detect_restrictive_wording,
     has_sequence_listing_mismatch,
     check_required_sections,
+    check_title,
 )
 from patentlint.models import AnalysisResult
 
@@ -285,3 +286,53 @@ class TestRequiredSections:
         amend = [r for r in results if r.status == "amend"]
         assert len(amend) == 1
         assert amend[0].message_key == "checks.required_sections_missing"
+
+
+class TestCheckTitle:
+    def test_missing_title(self):
+        results = check_title("")
+        assert len(results) == 1
+        assert results[0].status == "amend"
+        assert results[0].message_key == "check.spec.title.amendMissing"
+
+    def test_pass(self):
+        results = check_title("Method and Apparatus for Widget Assembly")
+        assert len(results) == 1
+        assert results[0].status == "pass"
+        assert results[0].message_key == "check.spec.title.pass"
+
+    def test_too_long(self):
+        # 501 characters
+        long_title = "A " + ("very " * 100) + "title"
+        assert len(long_title) >= 500
+        results = check_title(long_title)
+        assert any(
+            r.message_key == "check.spec.title.amendLength" for r in results
+        )
+
+    def test_trademark_rejected(self):
+        results = check_title("Coca-Cola® Bottling Method")
+        assert any(
+            r.message_key == "check.spec.title.amendContent" for r in results
+        )
+
+    def test_model_number_rejected(self):
+        results = check_title("Widget XJ-9000 Assembly System")
+        assert any(
+            r.message_key == "check.spec.title.amendContent" for r in results
+        )
+
+    def test_wordy_title_verify(self):
+        # 18 words
+        wordy = " ".join(["word"] * 18)
+        results = check_title(wordy)
+        assert any(
+            r.message_key == "check.spec.title.verify" for r in results
+        )
+
+    def test_short_title_no_verify(self):
+        # Five words — no warning.
+        results = check_title("Method for Assembling a Widget")
+        assert all(
+            r.message_key != "check.spec.title.verify" for r in results
+        )

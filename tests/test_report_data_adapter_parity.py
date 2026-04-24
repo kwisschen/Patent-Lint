@@ -239,6 +239,12 @@ class TestForwardMapsAreExhaustive:
         # on ReportData.
         "abstract_legal_phraseology_items",
         "abstract_merit_language_items",
+        # Consumed into the CN claims omnibus / markush CheckItems'
+        # details_params by _run_cn_pipeline (the summary CheckItem lives
+        # inside cn_claims_checks); the raw ID lists are kept on
+        # AnalysisResult for report-data tooling + cross-test introspection.
+        "cn_omnibus_claims",
+        "cn_markush_open_claims",
     })
 
     def test_every_list_field_is_either_forwarded_or_documented(self):

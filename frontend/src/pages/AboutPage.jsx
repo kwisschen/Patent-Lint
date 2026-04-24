@@ -9,7 +9,7 @@ import { useCountUp } from '../hooks/useCountUp'
 import { JURISDICTION_COLORS } from '../lib/jurisdictionConfig'
 import { composeEnterprise } from '../lib/feedback'
 import { useFeedback } from '../components/FeedbackPicker'
-import { TESTS_DISPLAY, CHECKS_DISPLAY } from '../generated/stats'
+import { TESTS_DISPLAY, CHECKS_DISPLAY, CHECKS_BY_JURISDICTION } from '../generated/stats'
 
 function JurisdictionBadge({ code }) {
   return (
@@ -487,7 +487,10 @@ function ComparisonTable({ t }) {
           {t(activeTab === 'CN' ? 'about.cnTitle' : activeTab === 'TW' ? 'about.twTitle' : 'about.usptoTitle')}
         </h2>
         <p className="text-muted-foreground">
-          {t(activeTab === 'CN' ? 'about.cnSubtitle' : activeTab === 'TW' ? 'about.twSubtitle' : 'about.usptoSubtitle')}
+          {t(
+            activeTab === 'CN' ? 'about.cnSubtitle' : activeTab === 'TW' ? 'about.twSubtitle' : 'about.usptoSubtitle',
+            { count: CHECKS_BY_JURISDICTION[activeTab] }
+          )}
         </p>
       </div>
 

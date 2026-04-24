@@ -7,6 +7,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
 | Tracked changes | — | AMEND | `check.spec.trackedChanges.amend` | Document contains tracked changes (revisions) |
+| Title requirements | MPEP § 606, § 608.01 | AMEND / VERIFY / PASS | `check.spec.title` | Title ≤500 chars, no trademarks/model numbers; advisory warning if >15 words |
 | Restrictive wording | § 112(b), MPEP § 2111.01(II) | VERIFY / PASS | `check.spec.restrictiveWording` | MPEP 2111.01(II) narrowing language in spec paragraphs: always / never / must / solely / every / required / essential / critical / vital / necessary / imperative / indispensable (Phase 9 #72b) |
 | Paragraph sequential | § 608.01(p) | AMEND / PASS | `check.spec.paragraphSequential` / `check.spec.paragraphSequential.missing` | Paragraph numbers are sequential; no paragraph numbering found (patent documents only) |
 | Paragraph ending | § 608.01(p) | AMEND / PASS | `check.spec.paragraphEnding` | Paragraphs have valid ending punctuation |
@@ -66,7 +67,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 ---
 
-**Total US checks: 33** (10 Specification + 14 Claims + 5 Drawings + 4 Abstract)
+**Total US checks: 40** (10 Specification + 21 Claims + 4 Drawings + 5 Abstract; † summary rows excluded)
 
 † Internal: not rendered as a CheckItem card in the web UI or PDF report. Used for stats aggregation and CLI output only.
 
@@ -76,6 +77,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
+| Tracked changes | — | AMEND | `check.cn.spec.trackedChanges.amend` | Document contains tracked changes (revisions) |
 | Required sections | 专利法实施细则 §17 | AMEND / PASS | `check.cn.spec.requiredSections` | Required sections present (技术领域, 背景技术, 发明内容, 具体实施方式) |
 | Section ordering | 专利法实施细则 §17 | AMEND / PASS | `check.cn.spec.sectionOrdering` | Sections in prescribed order |
 | Paragraph numbering | 审查指南 | AMEND / PASS | `check.cn.spec.paragraphNumbering` | XML: sequential `<p num>` tags; docx: `[NNNN]` format present |
@@ -102,6 +104,9 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Multi-dep on multi-dep | 专利法实施细则 §22 | AMEND / PASS | `check.cn.claims.multiMultiDep` | Multi-dep claim cannot reference another multi-dep |
 | Dependent claim ordering | 审查指南 第二部分第二章 | AMEND / PASS | `check.cn.claims.dependentOrdering` | Dependents grouped after their independent claim |
 | Component connection relationships | 审查指南 §3.2.1 + 专利法 §26.4 | VERIFY / PASS | `check.cn.claims.connectionRelationships` | Independent device/system claims must describe how their listed components connect (carve-outs: method, CRM, MPF, composition) |
+| Antecedent basis (引用基础) | 审查指南 第二部分第二章 §3.2.2 | VERIFY / PASS | `check.cn.claims.antecedentBasis` | BFS ancestor-chain walker with cycle protection; char-bigram Jaccard tokenization with CJK ordinal guard pre-filter; did-you-mean suggestion layer on borderline misses |
+| Omnibus claim | 审查指南 第二部分第二章 §3.3 | AMEND / PASS | `check.cn.claims.omnibus` | Claim references 说明书/附图 without reciting specific technical features |
+| Markush open transition | 审查指南 第二部分第十章 §9.3 | VERIFY / PASS | `check.cn.claims.markushOpenTransition` | Markush group uses 包括/具有/含有 instead of 组成的 (closed transition) |
 
 ## CN Abstract (摘要)
 
@@ -116,6 +121,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
 | Figure count † | 审查指南 | PASS | `check.cn.drawings.figureCount` | Number of figures found |
+| Prior art references | 审查指南 第一部分第一章 §4.2 | VERIFY / PASS | `check.cn.drawings.priorArt` | Prior-art references found in 附图说明 — verify figure labeling |
 | Figures sequential | 审查指南 | AMEND / PASS | `check.cn.drawings.figuresSequential` | Figure numbers form a contiguous 1..N set (sub-figure suffixes collapsed) |
 
 ---
@@ -183,7 +189,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 ---
 
-**Total checks: 95** (33 US + 26 CN + 36 TW)
+**Total checks: 105** (40 US + 30 CN + 35 TW; † summary rows excluded)
 
 † Internal: not rendered as a CheckItem card in the web UI or PDF report. Used for stats aggregation and CLI output only.
 
