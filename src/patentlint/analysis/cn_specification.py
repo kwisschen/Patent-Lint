@@ -45,12 +45,52 @@ _PARA_NUM_PREFIX_RE = re.compile(r"^\[(\d{4})\]")
 # punctuation; they are captions, not prose.
 _FIGURE_CAPTION_RE = re.compile(r"^\s*图\s*\d+[A-Za-z]?\s*$")
 
+# Non-prose structural markers commonly found in CN spec body paragraphs
+# (especially chemistry / pharma filings). These are not sentences and
+# shouldn't be held to the 。！？ / ；： ending rule:
+#
+#   [化N] / [表N] / [式N]   formula / table / equation labels
+#   [short label]            bracketed section name (e.g. [实施例1], [LWR])
+#   ＜...＞ / 〈...〉        angle-bracketed section marker
+#   (...) / （...）         paren-wrapped sub-section marker (allows 1-level
+#                            nesting such as (鎓盐化合物(1)))
+#   "实施例" / similar       bare section header words on their own line
+#   [NNNN] alone             bare paragraph number with no content
+#
+# Patterns strip any leading [NNNN] prefix first, then inspect the
+# remaining body for a recognized non-prose shape.
+_NON_PROSE_BODY_PATTERNS = (
+    # [化N] / [表N] / [式N] with optional content after
+    re.compile(r"^\[(?:化|表|式)\s*\d+[A-Za-z]?\s*\].*$"),
+    # Any bracketed label ≤20 CJK/Latin chars (e.g. [实施例1], [LWR])
+    re.compile(r"^\[[^\]]{1,20}\]\s*$"),
+    # Angle-bracketed section marker
+    re.compile(r"^[＜〈<][^＞〉>]+[＞〉>]\s*$"),
+    # Paren-wrapped (1-level nesting allowed) — (鎓盐化合物) / (鎓盐化合物(1))
+    re.compile(r"^\([^)]*(?:\([^)]*\)[^)]*)*\)\s*$"),
+    re.compile(r"^（[^）]*(?:（[^）]*）[^）]*)*）\s*$"),
+    # Empty body after stripping [NNNN] prefix — standalone para-number
+    # placeholder with no content is a structural marker.
+    re.compile(r"^$"),
+)
+_PARA_NUM_STRIP_RE = re.compile(r"^\[\d{4}\][\s　\t]*")
+
 
 def _is_skip_paragraph_ending_cn(text: str) -> bool:
-    """Paragraphs excluded from the ending-punctuation check."""
+    """Paragraphs excluded from the ending-punctuation check.
+
+    Skips bare figure captions (``图N``) and non-prose structural markers
+    (formula / table / equation labels, angle-bracketed section headers,
+    paren-wrapped sub-section markers, bare ``[NNNN]`` placeholders).
+    Chemistry and pharma CN specs rely heavily on these shapes for
+    embedded 化学式 / 表 / 式 labeling, and flagging them as prose-ending
+    violations floods the report with non-actionable items (~200/doc on
+    CN120266060A).
+    """
     if _FIGURE_CAPTION_RE.match(text):
         return True
-    return False
+    body = _PARA_NUM_STRIP_RE.sub("", text).strip()
+    return any(p.match(body) for p in _NON_PROSE_BODY_PATTERNS)
 
 
 def _all_paragraphs(cn_doc: CnPatentDocument) -> list[str]:
