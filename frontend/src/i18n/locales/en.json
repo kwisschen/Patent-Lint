@@ -76,8 +76,8 @@
   },
   "status": {
     "pass": "PASS",
-    "verify": "VERIFY",
-    "amend": "AMEND"
+    "verify": "REVIEW",
+    "amend": "FIX"
   },
   "button": {
     "downloadPdf": "Save PDF Report",
@@ -209,10 +209,10 @@
   },
   "triage": {
     "title": "Priority Summary",
-    "amend": "Action Required",
-    "amendEmpty": "No issues requiring amendment.",
-    "verify": "Expert Review Needed",
-    "verifyEmpty": "No items flagged for review.",
+    "amend": "Needs Fix",
+    "amendEmpty": "No fixes needed.",
+    "verify": "Needs Review",
+    "verifyEmpty": "No items to review.",
     "pass": "Passed",
     "items": "items",
     "item": "item"
@@ -555,7 +555,8 @@
     "crossReferenceCitations": "{{text}}. Verify serial numbers are correct and the priority chain is complete (continuations, CIPs, provisionals, divisionals).",
     "priorArtCitations": "{{text}}. Verify patent/publication numbers are accurate. Characterizations of prior art may be treated as admissions during prosecution.",
     "optionalSectionGuidance": "Include this section if applicable to your application.",
-    "restrictiveWordingClaims": "Claims: {{list}}. These terms may trigger a § 112(b) indefiniteness rejection per MPEP § 2173.05(b). Review each flagged claim and consider whether the term is necessary.",
+    "restrictiveAbsolutesClaims": "Claims: {{list}}. Absolute terms such as \"must,\" \"essential,\" \"always,\" \"never\" can narrow claim scope unnecessarily and may create § 112(b) indefiniteness when the specification doesn't actually require the absoluteness asserted. Per MPEP § 2173.01, review each flagged term and rephrase if the restriction is not supported.",
+    "indefiniteWordingClaims": "Claims: {{list}}. Relative or indefinite terms such as \"substantially,\" \"approximately,\" \"generally,\" \"may,\" \"preferably,\" \"or the like\" leave claim scope unclear. Per MPEP § 2173.05(b), review each flagged term and replace with precise limitations or remove if not necessary.",
     "multipleDependentClaims": "Claims: {{list}}. Multiple-dependent claims incur additional fees and must not depend on other multiple-dependent claims (35 U.S.C. § 112(e)). Verify this is intentional.",
     "selfDependentClaims": "Claims: {{list}}. A claim cannot depend on itself. Correct the dependency reference.",
     "meansFunctionClaims": "Claims: {{list}}. Under § 112(f), claim scope is limited to the corresponding structure disclosed in the specification and equivalents. Verify that the specification describes sufficient structure for each means-plus-function limitation.",
@@ -569,7 +570,8 @@
     "figuresSequentialFix": "Renumber figures in ascending order per MPEP § 608.02.",
     "orphanedBriefFigures": "Figures: {{list}}. Either add a reference to these figures in the Detailed Description or remove them from the Brief Description.",
     "orphanedDetailedFigures": "Figures: {{list}}. Either add a description for these figures in the Brief Description of Drawings or remove the reference from the Detailed Description.",
-    "restrictiveWordingAbstract": "The abstract should avoid legal phraseology (\"comprising,\" \"said,\" \"means\"), merit language (\"novel,\" \"innovative\"), and restrictive terms (\"must,\" \"essential\") per MPEP § 608.01(b). Rephrase the flagged terms.",
+    "legalPhraseologyAbstract": "Per MPEP § 608.01(b), the abstract should avoid \"the form and legal phraseology often used in patent claims\" — the manual names \"means\" and \"said,\" and practitioner guidance extends the class to transitional phrases (\"comprising,\" \"comprises,\" etc.), claim modifiers (\"wherein\"), and archaic claim-style pronouns (\"thereof,\" \"the same\"). Rephrase the flagged terms.",
+    "meritLanguageAbstract": "Per MPEP § 608.01(b), the abstract should not refer to purported merits of the invention — avoid evaluative adjectives (\"novel,\" \"innovative,\" \"unique,\" \"important,\" \"significant\") and self-referential phrasing (\"the present invention\"). Rephrase the flagged terms.",
     "abstractStructureFix": "The abstract must be a single paragraph ending with a period, exclamation point, or question mark, and must appear as the last section of the specification per MPEP § 608.01(b).",
     "abstractImpliedPhrasesFix": "Per MPEP § 608.01(b), openers like \"This disclosure provides...\" or \"A method is provided...\" should be rewritten to describe the invention directly (e.g., \"A method that...\").",
     "abstractWordCountFix": "The abstract must be between 50 and 150 words per MPEP § 608.01(b). Revise to meet this range.",
@@ -734,9 +736,13 @@
       }
     },
     "claims": {
-      "restrictiveWording": {
-        "verify": "Restrictive or indefinite wording found in claims (MPEP § 2173.05(b)).",
-        "pass": "No restrictive or indefinite wording found in claims."
+      "restrictiveAbsolutes": {
+        "verify": "Restrictive absolutes found in claims (MPEP § 2173.01).",
+        "pass": "No restrictive absolutes found in claims."
+      },
+      "indefiniteWording": {
+        "verify": "Indefinite or relative wording found in claims (MPEP § 2173.05(b)).",
+        "pass": "No indefinite or relative wording found in claims."
       },
       "sequential": {
         "amend": "Claim numbers are not sequential (MPEP § 608.01(m)).",
@@ -777,9 +783,13 @@
       "overview": "Claims overview."
     },
     "abstract": {
-      "restrictiveWording": {
-        "verify": "Restrictive or improper wording found in abstract (MPEP § 608.01(b)).",
-        "pass": "No restrictive or improper wording found in abstract."
+      "legalPhraseology": {
+        "verify": "Claim-style legal phraseology found in abstract (MPEP § 608.01(b)).",
+        "pass": "No claim-style legal phraseology found in abstract."
+      },
+      "meritLanguage": {
+        "verify": "Merit or self-referential language found in abstract (MPEP § 608.01(b)).",
+        "pass": "No merit or self-referential language found in abstract."
       },
       "structure": {
         "amend": "Abstract has extra paragraphs or invalid ending — must be a single paragraph (MPEP § 608.01(b)).",
@@ -1125,8 +1135,8 @@
     "header": "PatentLint Analysis Report",
     "headerTw": "PatentLint — Taiwan Patent Specification Report",
     "securityNote": "Analyzed on your device -- not uploaded to the cloud.",
-    "amend": "Action Required",
-    "verify": "Expert Review Needed",
+    "amend": "Needs Fix",
+    "verify": "Needs Review",
     "pass": "Passed",
     "claimDependency": "Claim Dependency Tree",
     "claim": "Claim",

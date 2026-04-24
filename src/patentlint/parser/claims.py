@@ -35,32 +35,39 @@ _MULTIPLE_DEP = re.compile(
     re.IGNORECASE,
 )
 
-# Improper/indefinite wording pattern for claims.
-# Split into categories for future per-category severity:
-# - Absolute terms (MPEP 2173.01): invention, always, never, must, solely, every, required, essential, critical, key, vital
-# - Relative/indefinite terms (MPEP 2173.05(b)): substantially, approximately, about, capable of, etc.
-# - Potentially indefinite: may, might, can, could, should
-# - 112(f) triggers: means, step (flagged for awareness, not necessarily errors)
-#
-# REMOVED from original: "it" (too many false positives — appears in nearly every claim),
-# "high", "low" (legitimate as modifiers: "high-frequency", "low-power"),
-# "long", "short" (legitimate in many contexts: "short-range", "long-lived")
-# ADDED: "preferably", "for example", "such as", "or the like", "type of", "kind of"
-_IMPROPER_CLAIM_WORDING = re.compile(
+# MPEP § 2173.01: restrictive absolutes. Over-qualifying a claim limitation
+# with absolute language ("must," "essential," "required," etc.) unnecessarily
+# narrows scope and can create §112(b) indefiniteness when the specification
+# doesn't actually require the absoluteness asserted.
+_RESTRICTIVE_ABSOLUTES_CLAIM_RE = re.compile(
+    r"\b(always|never|must|solely|every|required|essential|critical|key|vital)\b",
+    re.IGNORECASE,
+)
+
+# MPEP § 2173.05(b): relative / indefinite terminology. Covers probabilistic
+# modals, approximation adverbs, frequency qualifiers, relative adjectives,
+# and open-ended exemplars that each leave claim scope unclear.
+_INDEFINITE_WORDING_CLAIM_RE = re.compile(
     r"\b("
-    r"invention|always|never|must|solely|every|required|essential|critical|key|vital"
-    r"|may|might|can|could|should"
+    r"may|might|can|could|should"
     r"|substantially|approximately|capable of|about"
     r"|generally|normally|typically|usually"
     r"|relatively|fairly|reasonably"
     r"|essentially|similar|comparable"
-    r"|means|step|improved|optimized"
     r"|close|near|fast|slow|hard|soft|wide|narrow"
     r"|preferably|or the like"
     r")\b"
     r"|\b(for example|such as|kind of|type of)\b",
     re.IGNORECASE,
 )
+
+# Notes on intentionally-excluded tokens (vs. the pre-split history):
+# - "means", "step": § 112(f) MPF triggers handled by detect_means_plus_function;
+#   keeping them here would double-flag the same token under two checks.
+# - "improved", "optimized": no § 2173 support; pure puffery, not indefiniteness.
+# - "invention": standalone self-reference is legitimate in many claims (e.g.
+#   antecedent-basis patterns); not a § 2173.01 absolute. Removed to cut noise.
+# - "it", "high", "low", "long", "short": removed in a prior pass (too many FPs).
 
 # Words that require a comma after "wherein"
 _WORDS_REQUIRING_COMMA = [
@@ -199,19 +206,26 @@ def detect_incorrect_wherein_commas(claims: list[Claim]) -> list[int]:
     return [c.id for c in claims if detect_wherein_issue(c.text)]
 
 
-def detect_improper_claim_wording(claims: list[Claim]) -> ClaimWordingResult:
-    """Detect improper/indefinite wording in claims."""
-    improper_claims: list[int] = []
-    phrases_parts: list[str] = []
-
+def _scan_claims(pattern: re.Pattern, claims: list[Claim]) -> ClaimWordingResult:
+    flagged: list[int] = []
+    parts: list[str] = []
     for claim in claims:
-        for match in _IMPROPER_CLAIM_WORDING.finditer(claim.text):
-            matched = match.group(1) or match.group(2)  # group(1) for single words, group(2) for multi-word
-            if claim.id not in improper_claims:
-                improper_claims.append(claim.id)
-            phrases_parts.append(f'[{claim.id}] → "{matched}"\n              ')
+        for match in pattern.finditer(claim.text):
+            matched = match.group(1) or (match.group(2) if match.lastindex and match.lastindex >= 2 else None)
+            if matched is None:
+                matched = match.group(0)
+            if claim.id not in flagged:
+                flagged.append(claim.id)
+            parts.append(f'[{claim.id}] → "{matched}"\n              ')
+    return ClaimWordingResult(improper_claims=flagged, formatted_phrases="".join(parts))
 
-    return ClaimWordingResult(
-        improper_claims=improper_claims,
-        formatted_phrases="".join(phrases_parts),
-    )
+
+def detect_restrictive_absolutes_in_claims(claims: list[Claim]) -> ClaimWordingResult:
+    """Detect MPEP § 2173.01 restrictive absolutes (must, essential, always, etc.)."""
+    return _scan_claims(_RESTRICTIVE_ABSOLUTES_CLAIM_RE, claims)
+
+
+def detect_indefinite_wording_in_claims(claims: list[Claim]) -> ClaimWordingResult:
+    """Detect MPEP § 2173.05(b) relative/indefinite terminology (may, substantially,
+    approximately, generally, typically, relatively, similar, preferably, for example, etc.)."""
+    return _scan_claims(_INDEFINITE_WORDING_CLAIM_RE, claims)

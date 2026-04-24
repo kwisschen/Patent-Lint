@@ -54,8 +54,10 @@ def sample_result():
         wrong_label_for_single_figure=False,
         # Claims
         claims=claims,
-        improper_claims=[1],
-        improper_claim_phrases_formatted='[1] -> "comprising"\n              ',
+        restrictive_absolute_claims=[1],
+        restrictive_absolute_phrases_formatted='[1] -> "must"\n              ',
+        indefinite_wording_claims=[],
+        indefinite_wording_phrases_formatted="",
         independent_claims_count=2,
         dependent_claims_count=1,
         claims_sequential=True,
@@ -66,7 +68,8 @@ def sample_result():
         abstract_word_count=85,
         abstract_structure_good=True,
         abstract_has_implied_phrase=False,
-        improper_abstract_phrases_formatted="",
+        abstract_legal_phraseology_formatted="",
+        abstract_merit_language_formatted="",
     )
 
 
@@ -83,8 +86,8 @@ class TestRenderHtml:
     def test_contains_status_tags(self, sample_result):
         html = render_html(sample_result)
         assert "Passed Checks" in html  # PASS summary section
-        assert "VERIFY" in html
-        assert "AMEND" in html
+        assert "REVIEW" in html
+        assert "FIX" in html
 
     def test_contains_summary_stats(self, sample_result):
         html = render_html(sample_result)
@@ -137,11 +140,16 @@ class TestToReportData:
 
     def test_claims_checks_count(self, sample_result):
         data = sample_result.to_report_data()
-        assert len(data.claims_checks) == 8  # punctuation_checks empty by default
+        # 9 after the restrictiveWording split: restrictiveAbsolutes +
+        # indefiniteWording now emit independently. punctuation_checks empty
+        # by default.
+        assert len(data.claims_checks) == 9
 
     def test_abstract_checks_count(self, sample_result):
         data = sample_result.to_report_data()
-        assert len(data.abstract_checks) == 4
+        # 5 after the restrictiveWording split: legalPhraseology +
+        # meritLanguage now emit independently.
+        assert len(data.abstract_checks) == 5
 
     def test_drawings_checks_present(self, sample_result):
         data = sample_result.to_report_data()

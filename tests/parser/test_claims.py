@@ -7,7 +7,8 @@ from patentlint.parser.claims import (
     parse_claims,
     is_method_claim,
     detect_incorrect_wherein_commas,
-    detect_improper_claim_wording,
+    detect_restrictive_absolutes_in_claims,
+    detect_indefinite_wording_in_claims,
 )
 
 
@@ -97,36 +98,91 @@ class TestWhereinComma:
         assert 1 in detect_incorrect_wherein_commas(claims)
 
 
-class TestImproperWording:
-    def test_flags_restrictive(self):
+class TestRestrictiveAbsolutes:
+    """MPEP § 2173.01: restrictive absolute terminology."""
+
+    def test_flags_restrictive_absolutes(self):
         claims = [
-            Claim(id=1, text="A method that must always process the invention.", independent=True, method_claim=True),
+            Claim(id=1, text="A method that must always process the widget.", independent=True, method_claim=True),
             Claim(id=2, text="An apparatus comprising a processor.", independent=True, method_claim=False),
         ]
-        result = detect_improper_claim_wording(claims)
+        result = detect_restrictive_absolutes_in_claims(claims)
         assert 1 in result.improper_claims
         assert 2 not in result.improper_claims
         assert "must" in result.formatted_phrases
         assert "always" in result.formatted_phrases
-        assert "invention" in result.formatted_phrases
 
-    def test_flags_indefinite(self):
+    def test_does_not_flag_invention(self):
+        # "invention" alone is not a § 2173.01 restrictive absolute; legitimate
+        # antecedent references ("the invention") should not be flagged here.
+        claims = [Claim(id=1, text="A method according to the invention.", independent=True, method_claim=True)]
+        result = detect_restrictive_absolutes_in_claims(claims)
+        assert result.improper_claims == []
+
+    def test_does_not_flag_indefinite_modals(self):
+        # Indefinite modals (may/might/can) are handled by the indefinite detector.
+        claims = [Claim(id=1, text="A method that may process data.", independent=True, method_claim=True)]
+        result = detect_restrictive_absolutes_in_claims(claims)
+        assert result.improper_claims == []
+
+
+class TestIndefiniteWording:
+    """MPEP § 2173.05(b): relative / indefinite terminology."""
+
+    def test_flags_indefinite_modals(self):
         claims = [Claim(id=1, text="A method that may substantially improve performance.", independent=True, method_claim=True)]
-        result = detect_improper_claim_wording(claims)
+        result = detect_indefinite_wording_in_claims(claims)
         assert 1 in result.improper_claims
         assert "may" in result.formatted_phrases
         assert "substantially" in result.formatted_phrases
 
     def test_flags_relative_frequency(self):
         claims = [Claim(id=1, text="A method that generally typically processes data.", independent=True, method_claim=True)]
-        result = detect_improper_claim_wording(claims)
+        result = detect_indefinite_wording_in_claims(claims)
         assert 1 in result.improper_claims
         assert "generally" in result.formatted_phrases
         assert "typically" in result.formatted_phrases
 
     def test_flags_degree_and_comparison(self):
         claims = [Claim(id=1, text="A device with a relatively similar structure.", independent=True, method_claim=False)]
-        result = detect_improper_claim_wording(claims)
+        result = detect_indefinite_wording_in_claims(claims)
         assert 1 in result.improper_claims
         assert "relatively" in result.formatted_phrases
         assert "similar" in result.formatted_phrases
+
+    def test_does_not_flag_restrictive_absolutes(self):
+        # Restrictive absolutes (must/always/never) are handled by the restrictive detector.
+        claims = [Claim(id=1, text="A method that must always process data.", independent=True, method_claim=True)]
+        result = detect_indefinite_wording_in_claims(claims)
+        assert result.improper_claims == []
+
+    def test_does_not_flag_means_step(self):
+        # § 112(f) MPF triggers are handled by detect_means_plus_function.
+        claims = [Claim(id=1, text="A device comprising means for processing.", independent=True, method_claim=False)]
+        result = detect_indefinite_wording_in_claims(claims)
+        assert result.improper_claims == []
+
+
+class TestClaimDetectorMutualExclusivity:
+    """Invariant: a token caught by detect_restrictive_absolutes_in_claims
+    must NOT also be caught by detect_indefinite_wording_in_claims (and vice
+    versa). Same design as the abstract split — clean MPEP subcategorization."""
+
+    def test_disjoint_coverage(self):
+        text = (
+            "A method that must always process substantially every element, "
+            "with a generally similar output that may be preferably narrow."
+        )
+        claims = [Claim(id=1, text=text, independent=True, method_claim=True)]
+        restrictive = detect_restrictive_absolutes_in_claims(claims)
+        indefinite = detect_indefinite_wording_in_claims(claims)
+        # Both fire (there are both kinds of terms in the sentence)...
+        assert restrictive.improper_claims == [1]
+        assert indefinite.improper_claims == [1]
+        # ...but their formatted_phrases must not share any matched token.
+        import re
+        r_tokens = set(re.findall(r'"([^"]+)"', restrictive.formatted_phrases))
+        i_tokens = set(re.findall(r'"([^"]+)"', indefinite.formatted_phrases))
+        assert r_tokens & i_tokens == set(), (
+            f"Overlap between restrictive and indefinite detectors: {r_tokens & i_tokens}"
+        )

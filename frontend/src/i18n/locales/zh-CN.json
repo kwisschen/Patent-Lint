@@ -76,8 +76,8 @@
   },
   "status": {
     "pass": "通过",
-    "verify": "确认",
-    "amend": "修改"
+    "verify": "检视",
+    "amend": "修正"
   },
   "button": {
     "downloadPdf": "保存 PDF 报告",
@@ -209,10 +209,10 @@
   },
   "triage": {
     "title": "优先处理摘要",
-    "amend": "需要修改",
-    "amendEmpty": "无需修改的项目。",
-    "verify": "待专家确认",
-    "verifyEmpty": "无需确认的项目。",
+    "amend": "需修正",
+    "amendEmpty": "无需修正的项目。",
+    "verify": "需检视",
+    "verifyEmpty": "无需检视的项目。",
     "pass": "通过",
     "items": "个项目",
     "item": "个项目"
@@ -555,7 +555,8 @@
     "crossReferenceCitations": "{{text}}。请确认序列号正确，且优先权链完整（延续案、CIP、临时申请、分案）。",
     "priorArtCitations": "{{text}}。请确认专利/公开号准确。对现有技术的描述可能在审查中被视为自认。",
     "optionalSectionGuidance": "如适用于您的申请，请添加此部分。",
-    "restrictiveWordingClaims": "权利要求：{{list}}。上列用语依 MPEP § 2173.05(b) 可能触发 § 112(b) 不确定性驳回。请检查各标记权利要求，考虑该用语是否必要。",
+    "restrictiveAbsolutesClaims": "权利要求：{{list}}。\"must\"、\"essential\"、\"always\"、\"never\"等绝对用语可能不必要地缩限权利要求范围，且当说明书实际并未要求如此绝对之限定时，可能引发 § 112(b) 不明确性。依 MPEP § 2173.01，请审视各标记用语；如该限定未获说明书支持，请改写用语。",
+    "indefiniteWordingClaims": "权利要求：{{list}}。\"substantially\"、\"approximately\"、\"generally\"、\"may\"、\"preferably\"、\"or the like\"等相对性或不明确用语使权利要求范围难以界定。依 MPEP § 2173.05(b)，请审视各标记用语；请以具体限定取代，或于非必要时移除。",
     "multipleDependentClaims": "权利要求：{{list}}。多项从属权利要求会产生额外费用，且不得从属于其他多项从属权利要求（35 U.S.C. § 112(e)）。请确认此为有意为之。",
     "selfDependentClaims": "权利要求：{{list}}。权利要求不得从属于自身。请修正从属关系引用。",
     "meansFunctionClaims": "权利要求：{{list}}。依 § 112(f)，权利要求范围限于说明书中公开的对应结构及等同物。请确认说明书针对各功能性限定公开了充分的结构。",
@@ -569,7 +570,8 @@
     "figuresSequentialFix": "请依 MPEP § 608.02 将附图重新编号为递增顺序。",
     "orphanedBriefFigures": "附图：{{list}}。请在具体实施方式中添加对这些附图的引用，或从附图说明中移除。",
     "orphanedDetailedFigures": "附图：{{list}}。请在附图说明中添加对这些附图的描述，或从具体实施方式中移除引用。",
-    "restrictiveWordingAbstract": "摘要应避免法律用语（“comprising”、“said”、“means”）、评价性用语（“novel”、“innovative”）及限制性用语（“must”、“essential”），依 MPEP § 608.01(b)。请修改上列标记用语。",
+    "legalPhraseologyAbstract": "依 MPEP § 608.01(b)，摘要应避免\"权利要求惯用之形式与法律用语\"——该手册明确指出\"means\"与\"said\"，实务指南并将此类别延伸至连接词（\"comprising\"、\"comprises\"等）、权利要求修饰语（\"wherein\"）及权利要求式古典代词（\"thereof\"、\"the same\"）。请改写上列标记用语。",
+    "meritLanguageAbstract": "依 MPEP § 608.01(b)，摘要不得涉及发明之自述优点——应避免评价性形容词（\"novel\"、\"innovative\"、\"unique\"、\"important\"、\"significant\"）及自指性叙述（\"the present invention\"）。请改写上列标记用语。",
     "abstractStructureFix": "摘要须为单一段落，以句号、感叹号或问号结尾，且须作为专利说明书最后一部分，依 MPEP § 608.01(b)。",
     "abstractImpliedPhrasesFix": "依 MPEP § 608.01(b)，“This disclosure provides...”或“A method is provided...”等开头应改为直接描述发明（例如“A method that...”）。",
     "abstractWordCountFix": "摘要须介于 50 至 150 字之间，依 MPEP § 608.01(b)。请修改以符合此范围。",
@@ -734,9 +736,13 @@
       }
     },
     "claims": {
-      "restrictiveWording": {
-        "verify": "权利要求中发现限制性或不确定用语（MPEP § 2173.05(b)）。",
-        "pass": "权利要求未发现限制性或不确定用语。"
+      "restrictiveAbsolutes": {
+        "verify": "权利要求中发现限制性绝对用语（MPEP § 2173.01）。",
+        "pass": "权利要求未发现限制性绝对用语。"
+      },
+      "indefiniteWording": {
+        "verify": "权利要求中发现不明确或相对性用语（MPEP § 2173.05(b)）。",
+        "pass": "权利要求未发现不明确或相对性用语。"
       },
       "sequential": {
         "amend": "权利要求编号不连续（MPEP § 608.01(m)）。",
@@ -777,9 +783,13 @@
       "overview": "权利要求概览。"
     },
     "abstract": {
-      "restrictiveWording": {
-        "verify": "摘要中发现限制性或不当用语（MPEP § 608.01(b)）。",
-        "pass": "摘要未发现限制性或不当用语。"
+      "legalPhraseology": {
+        "verify": "摘要中发现权利要求式法律用语（MPEP § 608.01(b)）。",
+        "pass": "摘要未发现权利要求式法律用语。"
+      },
+      "meritLanguage": {
+        "verify": "摘要中发现评价性或自指性用语（MPEP § 608.01(b)）。",
+        "pass": "摘要未发现评价性或自指性用语。"
       },
       "structure": {
         "amend": "摘要含有多余段落或结尾无效：须为单一段落（MPEP § 608.01(b)）。",
@@ -1125,8 +1135,8 @@
     "header": "PatentLint 分析报告",
     "headerTw": "PatentLint｜台湾专利说明书检查报告",
     "securityNote": "已在您的设备上分析，未上传至云端。",
-    "amend": "需要修改",
-    "verify": "待专家确认",
+    "amend": "需修正",
+    "verify": "需检视",
     "pass": "通过",
     "claimDependency": "权利要求从属关系表",
     "claim": "权利要求",
