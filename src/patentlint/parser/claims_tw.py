@@ -16,8 +16,12 @@ _TW_CLAIM_NUM = re.compile(r"^[\s\u3000]*(\d+)\s*[.．]\s*", re.MULTILINE)
 # 如請求項1所記載之, 如請求項1所記載的 (JP-translation variants),
 # 如請求項1所揭示的, 如請求項1所描述之,
 # 如請求項1~3中任一項所述之, 如請求項1至3中任一項之
+# 依據請求項1所述之 / 根據請求項1所述之 — per TIPO 偵錯系統 (Table 1 #20)
+# the three accepted dep openers are 如 / 依據 / 根據. Bare `請求項N所述的`
+# form (no verb) also appears in older filings. Matches the opener set
+# accepted by the CN parser (_CN_DEPENDENCY) for cross-jurisdiction parity.
 _TW_DEP_PATTERN = re.compile(
-    r"如請求項\s*"
+    r"(?:如|依據|根據|依)?\s*請求項\s*"
     r"(\d+)"
     # Range tail: allow an explicit ``請求項`` before the end number
     # (e.g. ``如請求項4至請求項10中任一項所述``).

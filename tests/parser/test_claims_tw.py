@@ -199,3 +199,33 @@ class TestParseTwClaimsUnit:
         ])
         assert claims[1].dependencies == [1]
         assert claims[1].quoted_references == []
+
+    def test_yiju_verb_classifies_as_dependent(self):
+        """TIPO 偵錯系統 (Table 1 #20) accepts 依據/根據/如 as dep openers.
+        Previously the parser only matched 如請求項, silently misclassifying
+        依據/根據-opened dep claims as independent (no deps extracted).
+        """
+        claims = parse_tw_claims([
+            "1. 一種裝置。",
+            "2. 依據請求項1所述之裝置，其中A為B。",
+        ])
+        assert claims[1].dependencies == [1]
+        assert claims[1].independent is False
+
+    def test_genju_verb_classifies_as_dependent(self):
+        claims = parse_tw_claims([
+            "1. 一種方法。",
+            "2. 根據請求項1所述之方法，包括步驟C。",
+        ])
+        assert claims[1].dependencies == [1]
+        assert claims[1].independent is False
+
+    def test_bare_verb_classifies_as_dependent(self):
+        """Bare form 請求項N所述 (no verb) also accepted per cross-jur parity
+        with CN parser."""
+        claims = parse_tw_claims([
+            "1. 一種方法。",
+            "2. 請求項1所述之方法，包括步驟C。",
+        ])
+        assert claims[1].dependencies == [1]
+        assert claims[1].independent is False
