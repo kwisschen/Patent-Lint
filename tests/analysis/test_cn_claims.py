@@ -693,7 +693,10 @@ class TestMarkushOpenTransitionCn:
 
 
 class TestCnIndependentPreamble:
-    """审查指南 第二部分第二章 §3.1.1: indep claims open with 一种."""
+    """审查指南 第二部分第二章 §3.1.1: advisory — indep claims conventionally
+    open with 一种 (statute requires 主题名称, not literal 一种). Status is
+    VERIFY (advisory), not AMEND (hard rule).
+    """
 
     def test_independent_with_yizhong_passes(self):
         from patentlint.analysis.cn_claims import check_independent_preamble
@@ -703,13 +706,13 @@ class TestCnIndependentPreamble:
         results = check_independent_preamble(doc)
         assert results[0].status == "pass"
 
-    def test_independent_missing_yizhong_flags(self):
+    def test_independent_missing_yizhong_flags_verify(self):
         from patentlint.analysis.cn_claims import check_independent_preamble
         doc = _cn_doc([
             _claim(1, "1. 装置，其特征在于包括A。"),
         ])
         results = check_independent_preamble(doc)
-        assert results[0].status == "amend"
+        assert results[0].status == "verify"
         assert 1 in results[0].details_params["claims"]
 
     def test_dependent_claim_ignored(self):
