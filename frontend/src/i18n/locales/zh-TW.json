@@ -438,7 +438,7 @@
       "figuresSequential": "附圖編號連續"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
-    "twSubtitle": "TIPO 偵錯系統為官方檢查工具。PatentLint 針對台灣撰稿規範深入實作。",
+    "twSubtitle": "TIPO 偵錯系統限新型申請。PatentLint 兼顧新型與發明申請文件。",
     "twFeatures": {
       "title": "互動式台灣專利分析",
       "claimTree": {
@@ -531,7 +531,7 @@
     "builderDesc2": "本分析引擎由 Python 撰寫，再編譯為 WebAssembly，完全於瀏覽器內執行，筆電、平板、手機皆可使用，全程不上傳、不留記錄。也就是說，無論是在飛機上、事務所鎖網的電腦，或是客戶尚未核准的設備，皆可照常安心使用。",
     "builderSister": "其姊妹專案 Agentic Patent Analyst 則負責推理量較重的工作，由自行微調的 LLM agent 執行前案檢索與請求項範圍比對。",
     "tableFootnote": "截至 2026 年 4 月；兩者均可能持續演進。",
-    "twTableFootnote": "TIPO 檢查項目依「專利申請文件輔助偵錯系統：功能介紹與使用指南」（2023.5.30 版）比對。兩者均可能持續演進。"
+    "twTableFootnote": "TIPO 檢查項目依「專利申請文件輔助偵錯系統：功能介紹與使用指南」（2023.5.30 版）比對。TIPO 偵錯系統僅適用新型專利申請；PatentLint 同時支援新型與發明。兩者均可能持續演進。"
   },
   "details": {
     "paragraphs": "段落：{{list}}",
