@@ -322,7 +322,7 @@
     "productTitle": "Was ist PatentLint?",
     "productTagline": "Der erste Patentanmeldungs-Checker seiner Art — er läuft lokal in Ihrem eigenen Browser.",
     "productDesc1": "PatentLint ist ein kostenloser Patentanmeldungs-Checker, der Mängel erkennt, bevor der Prüfer es tut. Legen Sie eine US-, chinesische oder taiwanesische Patentanmeldung ab und erhalten Sie einen sofortigen Compliance-Bericht, der vollständig auf Ihrem eigenen Gerät erstellt wird. Keine Uploads, keine Konten, keine Cloud, keine KI.",
-    "productDesc2": "PatentLint prüft Ausarbeitungsregeln der USPTO (USA), der CNIPA (China) und der TIPO (Taiwan) und erkennt typische Mängel wie fehlenden Rückbezug, fehlerhafte Anspruchsstruktur und einschränkende Formulierungen.",
+    "productDesc2": "PatentLint prüft Ausarbeitungsregeln der USPTO (USA), der CNIPA (China) und der TIPO (Taiwan) und erkennt nach gängigen Prüfungsrichtlinien typische Mängel wie fehlenden Rückbezug, fehlerhafte Anspruchsstruktur und einschränkende Formulierungen.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "Das USPTO Patent Center validiert das Einreichungsformat. PatentLint prüft den Entwurf selbst.",
     "usFeatures": {

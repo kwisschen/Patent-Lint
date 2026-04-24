@@ -322,7 +322,7 @@
     "productTitle": "PatentLint とは？",
     "productTagline": "お使いのブラウザ内でローカルに動作する、業界初の特許明細書チェックツール。",
     "productDesc1": "PatentLint は無料の特許明細書チェックツールで、審査官に指摘される前に問題を見つけ出します。米国・中国・台湾の特許明細書をドラッグ＆ドロップすれば、コンプライアンスレポートが即座に得られ、処理はすべてお使いの端末内で完結します。アップロード不要、アカウント不要、クラウド不使用、AI 不使用。",
-    "productDesc2": "PatentLint は USPTO（米国）、CNIPA（中国）、および TIPO（台湾）の作成ルールに基づいてチェックを行い、先行詞の根拠の欠落、不正確な請求項構造、限定的な表現などの一般的な問題を検出します。",
+    "productDesc2": "PatentLint は USPTO（米国）、CNIPA（中国）、および TIPO（台湾）の作成ルールに基づいてチェックを行い、先行詞の根拠の欠落、不正確な請求項構造、限定的な表現など、審査で指摘されやすい一般的な問題を検出します。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center は出願フォーマットを検証します。PatentLint は明細書そのものをチェックします。",
     "usFeatures": {

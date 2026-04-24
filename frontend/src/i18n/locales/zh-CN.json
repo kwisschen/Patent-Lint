@@ -321,8 +321,8 @@
   "about": {
     "productTitle": "PatentLint 是什么？",
     "productTagline": "同类首创的专利说明书检查工具，完全在您的浏览器中本地运行。",
-    "productDesc1": "PatentLint 是免费的专利说明书检查工具，在审查员指出缺陷之前先行检出问题。拖放美国、中国或台湾专利说明书，便可即时获取合规报告，全程于本地运行。无需上传、无需账号、不使用云端、不使用 AI。",
-    "productDesc2": "PatentLint 依据 USPTO（美国）、CNIPA（中国）及 TIPO（台湾）的撰写规则进行检查，检测常见问题，如缺乏引用基础、不正确的权利要求结构和限制性用语。",
+    "productDesc1": "PatentLint 是免费的专利说明书检查工具，在审查员指出缺陷之前先行检出问题。拖放美国、中国或台湾的专利说明书，便可即时获取合规报告，全程于本地运行。无需上传、无需账号、不使用云端、不使用 AI。",
+    "productDesc2": "PatentLint 依据 USPTO（美国）、CNIPA（中国）及 TIPO（台湾）的撰写规则进行检查，检测审查规范中的常见问题，如缺乏引用基础、不正确的权利要求结构和限制性用语。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查说明书本身。",
     "usFeatures": {
