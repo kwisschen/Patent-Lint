@@ -225,11 +225,14 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.tw.claims.dependencyFormat.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 20),
     "check.tw.claims.dependencyFormat.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 20),
 
-    # Independent claim opening per 施行細則 §18 / 审查指南 §3.1.1 — emit
-    # right after dependency-format since both validate claim preamble text.
-    "check.cn.claims.independentPreamble.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 22),
+    # Independent claim opening — advisory (VERIFY). Statute (施行細則 §18 /
+    # 实施细则 §22) requires preamble to state subject-matter name but does
+    # NOT literally mandate 一種/一种; it's a strong practitioner convention
+    # that TIPO 偵錯系統 + CNIPA 审查指南 §3.1.1 canonical examples follow.
+    # Emit right after dependency-format since both validate preamble text.
+    "check.cn.claims.independentPreamble.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 22),
     "check.cn.claims.independentPreamble.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 22),
-    "check.tw.claims.independentPreamble.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 22),
+    "check.tw.claims.independentPreamble.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 22),
     "check.tw.claims.independentPreamble.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 22),
 
     "check.claims.multipleDependent.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 25),
