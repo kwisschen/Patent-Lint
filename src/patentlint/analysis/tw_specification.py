@@ -37,8 +37,31 @@ _SECTION_NAMES_TW = {
 _VALID_ENDINGS = frozenset("。！？")
 
 _TRADEMARK_RE = re.compile(r"[®™©]")
-_MODEL_NUMBER_RE = re.compile(r"[A-Z]{2,}-\d{2,}", re.IGNORECASE)
-_CLAIM_REF_RE = re.compile(r"如請求項\s*\d+")
+# Model-number pattern: ALL-CAPS alphanumeric tokens that look like product
+# codes (XY-1234, ABC-12A). No IGNORECASE — lowercase hyphenated words like
+# "foo-22" or "usb-30" are not model numbers. No `\b` word boundaries
+# because TW titles often surround the code with CJK chars (一種XY-1234裝置),
+# and CJK chars are Unicode word-chars in Python's regex engine, which
+# defeats the boundary check. Use character-class lookbehind/ahead to
+# guard against picking up codes that are embedded inside a longer Latin
+# alphanumeric identifier.
+_MODEL_NUMBER_RE = re.compile(
+    r"(?<![A-Za-z0-9])"
+    r"[A-Z]{2,}[- ]?\d{2,}[A-Z0-9\-]*"
+    r"(?![A-Za-z0-9])"
+)
+# Spec-body references to claims (prohibited per 施行細則 §17). Introducing
+# verb is not constrained — TIPO 偵錯系統 (Table 1 #20) accepts 如/依據/根據
+# for dep-claim openers, so spec body may use any of them when referring
+# back to a claim. Connective accepts either 所(述|記載|揭示|描述) or bare
+# 之/的 (請求項N之X form). Distance-bounded (≤20 chars) to avoid FPs on
+# cross-sentence co-occurrences.
+_CLAIM_REF_RE = re.compile(
+    r"請求項\s*\d+"
+    r"(?:\s*(?:至|到|~|、|或)\s*(?:請求項\s*)?\d+)?"
+    r"[^。]{0,20}?"
+    r"(?:所(?:述|記載|揭示|描述)|[之的])"
+)
 _REF_NUMERAL_RE = re.compile(
     r"[(（]"                # require opening paren (ASCII or fullwidth)
     r"(\d{1,4}[a-zA-Z]?)"   # 1-4 digit + optional single letter suffix
@@ -464,39 +487,42 @@ def check_figure_ref_consistency(doc: TwPatentDocument) -> list[CheckItem]:
 
 
 def check_patent_type_terminology(doc: TwPatentDocument) -> list[CheckItem]:
-    """Flag mixed 本發明 / 本新型 usage based on patent type."""
+    """Flag 本發明 / 此發明 / 本新型 / 此新型 used against declared patent type.
+
+    Per TIPO 偵錯系統 Table 1 #18: 新型內容 and 實施方式 must not contain
+    「本發明」or「此發明」when filed as 新型 (and symmetrically for 發明).
+    """
     text = _all_spec_text(doc)
 
+    # Forbidden terms per direction. TIPO lists 本 and 此 prefixes.
     if doc.patent_type == TwPatentType.INVENTION:
-        if "本新型" in text:
-            return [CheckItem(
-                status="verify",
-                message="Invention patent contains utility model terminology.",
-                message_key="check.tw.spec.patentTypeTerminology.verify",
-                details="Patent type mismatch: 本新型",
-                details_key="details.tw.patentTypeTerminology",
-                details_params={"term": "本新型"},
-                reference="專利審查基準",
-                diagnostics=_dx(
-                    patent_type="invention",
-                    mismatched_term_codepoint=ord("本"),
-                ),
-            )]
+        forbidden = ("本新型", "此新型")
     elif doc.patent_type == TwPatentType.UTILITY_MODEL:
-        if "本發明" in text:
-            return [CheckItem(
-                status="verify",
-                message="Utility model contains invention patent terminology.",
-                message_key="check.tw.spec.patentTypeTerminology.verify",
-                details="Patent type mismatch: 本發明",
-                details_key="details.tw.patentTypeTerminology",
-                details_params={"term": "本發明"},
-                reference="專利審查基準",
-                diagnostics=_dx(
-                    patent_type="utility_model",
-                    mismatched_term_codepoint=ord("本"),
+        forbidden = ("本發明", "此發明")
+    else:
+        forbidden = ()
+
+    hits = [term for term in forbidden if term in text]
+    if hits:
+        primary = hits[0]
+        return [CheckItem(
+            status="verify",
+            message=f"Patent type terminology mismatch: {', '.join(hits)}.",
+            message_key="check.tw.spec.patentTypeTerminology.verify",
+            details=f"Patent type mismatch: {primary}",
+            details_key="details.tw.patentTypeTerminology",
+            details_params={"term": primary},
+            reference="專利審查基準",
+            diagnostics=_dx(
+                patent_type=(
+                    "invention"
+                    if doc.patent_type == TwPatentType.INVENTION
+                    else "utility_model"
                 ),
-            )]
+                mismatched_term_count=len(hits),
+                mismatched_term_codepoint=ord("本"),
+            ),
+        )]
 
     return [CheckItem(
         status="pass",

@@ -41,7 +41,12 @@ _NUMSPEC_ENUM = r"\d+(?:\s*[、,]\s*\d+)+(?:\s*或\s*\d+)?"
 _NUMSPEC_OR = r"\d+\s*或\s*\d+"
 _NUMSPEC_SINGLE = r"\d+"
 _CN_DEPENDENCY = re.compile(
-    r"(?:如|根据|依据)?\s*权利要求\s*"
+    # Introducing verb: CNIPA 审查指南 §3.3.1 canonical uses 根据; drafters
+    # also use 如/依据/按照/依照/基于 or bare form. Match the full set rather
+    # than locking to a single verb — pair with the `_CN_DEPENDENCY` usage
+    # pattern (validator `_DEP_FORMAT_SINGLE` in analysis/cn_claims.py also
+    # accepts the same range).
+    r"(?:如|根据|依据|按照|依照|基于|依)?\s*权利要求\s*"
     r"(?P<spec>"
     + f"(?:{_NUMSPEC_RANGE}|{_NUMSPEC_ENUM}|{_NUMSPEC_OR}|{_NUMSPEC_SINGLE})"
     + r")"

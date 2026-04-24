@@ -401,16 +401,34 @@ def check_figure_reference_consistency(cn_doc: CnPatentDocument) -> list[CheckIt
 
 
 def check_patent_type_terminology(cn_doc: CnPatentDocument) -> list[CheckItem]:
-    """Flag mixed 本发明 / 本实用新型 usage."""
-    text = _all_spec_text(cn_doc)
-    has_invention = "本发明" in text
-    has_utility = "本实用新型" in text
+    """Flag mixed 本发明/此发明 vs 本实用新型/此实用新型 usage.
 
-    if has_invention and has_utility:
-        # Determine minority term
-        inv_count = text.count("本发明")
-        util_count = text.count("本实用新型")
-        minority = "本实用新型" if inv_count >= util_count else "本发明"
+    Per 审查指南 第一部分第二章 §2.1.2 (and TIPO 偵錯系統 Table 1 #18
+    parallel): 本发明 terminology is only permitted in invention filings;
+    本实用新型 only in utility-model filings. 此发明 and 此实用新型 are
+    less-common variants of the same concept and also violate.
+
+    CN patent_type is inferred heuristically (whichever term dominates the
+    spec body), so we can't gate on a declared type as TIPO does. Fall back
+    to the mixed-usage signal: if BOTH families appear, something is
+    inconsistent — flag whichever is the minority.
+    """
+    text = _all_spec_text(cn_doc)
+    invention_terms = ("本发明", "此发明")
+    utility_terms = ("本实用新型", "此实用新型")
+    inv_count = sum(text.count(t) for t in invention_terms)
+    util_count = sum(text.count(t) for t in utility_terms)
+
+    if inv_count and util_count:
+        # Determine minority family to surface the likely error
+        if inv_count >= util_count:
+            minority = next(
+                (t for t in utility_terms if t in text), utility_terms[0]
+            )
+        else:
+            minority = next(
+                (t for t in invention_terms if t in text), invention_terms[0]
+            )
         return [CheckItem(
             status="verify",
             message="Mixed patent type terminology found.",
