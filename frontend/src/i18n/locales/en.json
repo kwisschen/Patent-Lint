@@ -496,7 +496,8 @@
       "bracketFormat": "Section header 【】 bracket format",
       "connectionRelationships": "Independent claim component connection relationships (連接關係)",
       "tipoIndigenous": "Indigenous peoples terminology (原住民族)",
-      "figuresSequential": "Figures numbered sequentially"
+      "figuresSequential": "Figures numbered sequentially",
+      "independentPreamble": "Independent claim preamble (一種)"
     },
     "stats": {
       "tests": "Automated Tests",
@@ -617,7 +618,8 @@
         "forwardDependency": "Per 专利法实施细则 §22, a dependent claim may only reference earlier-numbered claims, not later ones.",
         "singleSentence": "Per 审查指南 第二部分第二章, each claim must be a single sentence ending in 。 to keep scope unambiguous.",
         "transitionPhrase": "Per 审查指南, an independent claim should contain a two-part transition (e.g. 其特征在于) separating the preamble (prior art) from the characterizing part (novel features)."
-      }
+      },
+      "independentPreamble": "Per 审查指南 第二部分第二章 §3.1.1, independent claims must open with 「一种」. Rewrite the flagged claim preamble(s)."
     },
     "tw": {
       "requiredSections": "A complete TIPO filing requires 摘要, 說明書 (技術領域, 先前技術, 發明內容/新型內容, 實施方式), and 申請專利範圍 per 專利法 §25 第1項. When drawings are present, 圖式簡單說明 and 符號說明 are also required per 專利法施行細則 §17. Missing: {{sections}}.",
@@ -674,7 +676,9 @@
         "undefined": "Referenced in 實施方式 but not defined in 符號說明: {{symbols}}"
       },
       "singleSentenceMissingPeriod": "Per 專利法施行細則 §18, each claim must end with a single 。. Add the closing period to the flagged claims.",
-      "singleSentenceMultiSentence": "Per 專利法施行細則 §18, each claim must be one sentence with exactly one 。 at the end. Remove mid-claim 。 or restructure the flagged claims."
+      "singleSentenceMultiSentence": "Per 專利法施行細則 §18, each claim must be one sentence with exactly one 。 at the end. Remove mid-claim 。 or restructure the flagged claims.",
+      "independentPreamble": "Per 專利法施行細則 §18, independent claims must open with 「一種」. Rewrite the flagged claim preamble(s).",
+      "indigenousTerms": "Terms: {{terms}}. Per 原住民族傳統智慧創作保護條例, verify the filing does not conflict with protected traditional creations."
     },
     "titleProhibited": {
       "trademark": "Trademark symbol \"{{token}}\"",
@@ -946,6 +950,10 @@
         "markushOpenTransition": {
           "verify": "{{claims}}: Markush group uses open transition ({{transitions}}) instead of 组成的 (审查指南 第二部分第十章 §9.3).",
           "pass": "Markush groups use the closed transition 组成的."
+        },
+        "independentPreamble": {
+          "amend": "{{claims}}: independent claim(s) must open with 「一种」 (审查指南 第二部分第二章 §3.1.1).",
+          "pass": "All independent claims open with 「一种」."
         }
       },
       "abstract": {
@@ -1021,6 +1029,10 @@
         "symbolTableConsistency": {
           "verify": "符號說明 entries inconsistent with 實施方式: {{symbol_table_inconsistency}}",
           "pass": "符號說明 entries consistent with 實施方式."
+        },
+        "indigenousTerms": {
+          "verify": "Indigenous peoples terminology found — verify compliance with 原住民族傳統智慧創作保護條例.",
+          "pass": "No indigenous peoples terminology found."
         }
       },
       "claims": {
@@ -1101,6 +1113,10 @@
         "specSupport": {
           "verify": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body.",
           "pass": "All claim terms supported by the specification."
+        },
+        "independentPreamble": {
+          "amend": "{{claims}}: independent claim(s) must open with 「一種」 (專利法施行細則 §18).",
+          "pass": "All independent claims open with 「一種」."
         }
       },
       "abstract": {
