@@ -93,6 +93,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 |-------|-----------|----------|-------------|-------------|
 | Claims sequential | 审查指南 | AMEND / PASS | `check.cn.claims.sequential` | Claim numbers sequential from 1 |
 | Dependency format | 专利法实施细则 §22 | AMEND / PASS | `check.cn.claims.dependencyFormat` | Dependencies use 如权利要求N所述的 format |
+| Independent claim preamble | 审查指南 第二部分第二章 §3.1.1 | AMEND / PASS | `check.cn.claims.independentPreamble` | Independent claims must open with 一种 |
 | Self-dependent | 专利法实施细则 §22 | AMEND / PASS | `check.cn.claims.selfDependent` | Claim does not depend on itself |
 | Forward dependency | 专利法实施细则 §22 | AMEND / PASS | `check.cn.claims.forwardDependency` | No references to later claims |
 | Single sentence | 审查指南 第二部分第二章 | AMEND / PASS | `check.cn.claims.singleSentence` | Each claim is one sentence ending with 。 |
@@ -140,6 +141,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Spec must not reference claims | 專利法施行細則 §17 | AMEND / PASS | `check.tw.spec.claimReference` | No 如請求項N所述 in specification |
 | 符號說明 presence | 專利法施行細則 §17 | AMEND / PASS | `check.tw.spec.symbolTablePresence` | 符號說明 required when 圖式簡單說明 exists |
 | 符號說明 vs spec consistency | 專利審查基準 | VERIFY / PASS | `check.tw.spec.symbolTableConsistency` | Symbols in 符號說明 appear in 實施方式 |
+| Indigenous terminology | 原住民族傳統智慧創作保護條例 | VERIFY / PASS | `check.tw.spec.indigenousTerms` | Indigenous peoples terms flagged for drafter review |
 
 ## TW Claims (申請專利範圍)
 
@@ -147,6 +149,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 |-------|-----------|----------|-------------|-------------|
 | Claims sequential | 專利審查基準 | AMEND / PASS | `check.tw.claims.sequential` | Claim numbers sequential from 1 |
 | Dependency format | 專利法施行細則 §18 | AMEND / PASS | `check.tw.claims.dependencyFormat` | Dependencies use recognized format |
+| Independent claim preamble | 專利法施行細則 §18 | AMEND / PASS | `check.tw.claims.independentPreamble` | Independent claims must open with 一種 |
 | Self-dependent | 專利法施行細則 §18 | AMEND / PASS | `check.tw.claims.selfDependent` | Claim does not depend on itself |
 | Circular dependency | 專利法施行細則 §18 | AMEND / PASS | `check.tw.claims.circularDependency` | No circular dependency chains |
 | Forward dependency | 專利法施行細則 §18 | AMEND / PASS | `check.tw.claims.forwardDependency` | Dependent claim only references preceding claims |
@@ -189,7 +192,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 ---
 
-**Total checks: 105** (40 US + 30 CN + 35 TW; † summary rows excluded)
+**Total checks: 108** (40 US + 31 CN + 37 TW; † summary rows excluded)
 
 † Internal: not rendered as a CheckItem card in the web UI or PDF report. Used for stats aggregation and CLI output only.
 

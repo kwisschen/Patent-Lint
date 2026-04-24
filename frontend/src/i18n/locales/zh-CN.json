@@ -496,7 +496,8 @@
       "bracketFormat": "章节标题使用【】括号",
       "connectionRelationships": "獨立項組件之連接關係（專利審查基準 §2.4）",
       "tipoIndigenous": "原住民族用语检查",
-      "figuresSequential": "图号连续"
+      "figuresSequential": "图号连续",
+      "independentPreamble": "独立项须以「一種」开头"
     },
     "stats": {
       "tests": "自动化测试",
@@ -617,7 +618,8 @@
         "forwardDependency": "依专利法实施细则 §22，从属权利要求仅可引用在前编号的权利要求，不得引用后编号的权利要求。",
         "singleSentence": "依审查指南 第二部分第二章，每项权利要求应当为一个以句号（。）结尾的完整句子，以确保保护范围明确。",
         "transitionPhrase": "依审查指南，独立权利要求应包含「其特征在于」等特征部分连接词，用于区分前序部分（现有技术）与特征部分（新颖要素）。"
-      }
+      },
+      "independentPreamble": "依审查指南 第二部分第二章 §3.1.1，独立权利要求须以「一种」开头。请修改标记权利要求之前序部分。"
     },
     "tw": {
       "requiredSections": "依專利法 §25 第1項，完整專利申請须包含摘要、說明書（技術領域、先前技術、發明內容／新型內容、實施方式）及申請專利範圍；依專利法施行細則 §17，有图式时說明書亦须包含圖式簡單說明与符號說明。缺少：{{sections}}。",
@@ -674,7 +676,9 @@
         "undefined": "实施方式已引用但符号说明未定义：{{symbols}}"
       },
       "singleSentenceMissingPeriod": "依專利法施行細則 §18，每一请求项须以单一句号（。）结尾。请为标记之请求项补上句末句号。",
-      "singleSentenceMultiSentence": "依專利法施行細則 §18，每一请求项须为单句，仅于末尾有一个句号（。）。请移除句中之句号或重新拆分标记之请求项。"
+      "singleSentenceMultiSentence": "依專利法施行細則 §18，每一请求项须为单句，仅于末尾有一个句号（。）。请移除句中之句号或重新拆分标记之请求项。",
+      "independentPreamble": "依專利法施行細則 §18，独立项须以「一種」开头。请修改标记请求项之前序部分。",
+      "indigenousTerms": "用语：{{terms}}。依《原住民族傳統智慧創作保護條例》，请确认本申请未与受保护的传统智慧创作冲突。"
     },
     "titleProhibited": {
       "trademark": "商标符号「{{token}}」",
@@ -946,6 +950,10 @@
         "markushOpenTransition": {
           "verify": "{{claims}}：马库什权利要求使用开放式连接词（{{transitions}}），应改为封闭式「组成的」（审查指南 第二部分第十章 §9.3）。",
           "pass": "马库什权利要求均使用封闭式连接词「组成的」。"
+        },
+        "independentPreamble": {
+          "amend": "{{claims}}：独立权利要求须以「一种」开头（审查指南 第二部分第二章 §3.1.1）。",
+          "pass": "所有独立权利要求均以「一种」开头。"
         }
       },
       "abstract": {
@@ -1021,6 +1029,10 @@
         "symbolTableConsistency": {
           "verify": "符號說明内容与實施方式不一致：{{symbol_table_inconsistency}}",
           "pass": "符號說明内容与實施方式一致。"
+        },
+        "indigenousTerms": {
+          "verify": "发现原住民相关用语，请依《原住民族傳統智慧創作保護條例》确认是否冲突。",
+          "pass": "未发现原住民相关用语。"
         }
       },
       "claims": {
@@ -1101,6 +1113,10 @@
         "specSupport": {
           "verify": "{{claims}} 共有 {{issue_count}} 个权利要求用语疑似未获说明书支持。",
           "pass": "所有权利要求用语均获说明书支持。"
+        },
+        "independentPreamble": {
+          "amend": "{{claims}}：独立项须以「一種」开头（專利法施行細則 §18）。",
+          "pass": "所有独立项均以「一種」开头。"
         }
       },
       "abstract": {

@@ -687,3 +687,37 @@ class TestMarkushOpenTransitionCn:
         pairs = detect_markush_open_transition_cn(doc)
         assert pairs == [(1, '具有')]
 
+
+
+# ── check.cn.claims.independentPreamble ─────────────────────────────────
+
+
+class TestCnIndependentPreamble:
+    """审查指南 第二部分第二章 §3.1.1: indep claims open with 一种."""
+
+    def test_independent_with_yizhong_passes(self):
+        from patentlint.analysis.cn_claims import check_independent_preamble
+        doc = _cn_doc([
+            _claim(1, "1. 一种装置，其特征在于包括A。"),
+        ])
+        results = check_independent_preamble(doc)
+        assert results[0].status == "pass"
+
+    def test_independent_missing_yizhong_flags(self):
+        from patentlint.analysis.cn_claims import check_independent_preamble
+        doc = _cn_doc([
+            _claim(1, "1. 装置，其特征在于包括A。"),
+        ])
+        results = check_independent_preamble(doc)
+        assert results[0].status == "amend"
+        assert 1 in results[0].details_params["claims"]
+
+    def test_dependent_claim_ignored(self):
+        from patentlint.analysis.cn_claims import check_independent_preamble
+        doc = _cn_doc([
+            _claim(1, "1. 一种装置。"),
+            _claim(2, "2. 根据权利要求1所述的装置，其特征在于包括B。",
+                   independent=False, dependencies=[1]),
+        ])
+        results = check_independent_preamble(doc)
+        assert results[0].status == "pass"

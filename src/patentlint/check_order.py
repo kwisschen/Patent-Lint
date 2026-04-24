@@ -157,6 +157,12 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.tw.spec.symbolTableConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 60),
     "check.tw.spec.symbolTableConsistency.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 60),
 
+    # TW-specific sensitive-terms advisory (原住民族傳統智慧創作保護條例) —
+    # emits after the other spec-content checks so it doesn't intrude on
+    # structural-error flow.
+    "check.tw.spec.indigenousTerms.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 65),
+    "check.tw.spec.indigenousTerms.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 65),
+
     # US-specific spec content (sequence listing → cross-reference → prior art
     # → restrictive wording → drawings overview tile). These emit only on
     # US pipelines, so their relative order vs. the CN/TW items above is
@@ -218,6 +224,13 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.cn.claims.dependencyFormat.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 20),
     "check.tw.claims.dependencyFormat.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 20),
     "check.tw.claims.dependencyFormat.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 20),
+
+    # Independent claim opening per 施行細則 §18 / 审查指南 §3.1.1 — emit
+    # right after dependency-format since both validate claim preamble text.
+    "check.cn.claims.independentPreamble.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 22),
+    "check.cn.claims.independentPreamble.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 22),
+    "check.tw.claims.independentPreamble.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 22),
+    "check.tw.claims.independentPreamble.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 22),
 
     "check.claims.multipleDependent.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 25),
     "check.claims.multipleDependent.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 25),

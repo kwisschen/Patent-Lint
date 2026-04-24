@@ -703,3 +703,56 @@ def check_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckItem]:
         message_key="check.tw.spec.symbolTableConsistency.pass",
         reference="專利審查基準",
     )]
+
+
+# ── Check 11 ─────────────────────────────────────────────────────────────
+
+# Taiwanese indigenous peoples terminology (per TIPO 偵錯系統 Table 1 #19,
+# grounded in 原住民族傳統智慧創作保護條例). The 16 officially-recognized
+# indigenous peoples per 原住民族委員會 + generic terms the TIPO system
+# flags (per PDF fig 31 shows 魯凱族, 部落, 阿美族, 卑南族, 達悟族 as example hits).
+# Advisory VERIFY — flags for drafter review; isn't a hard violation.
+_TW_INDIGENOUS_TERMS = (
+    # 16 officially-recognized indigenous peoples
+    "阿美族", "泰雅族", "排灣族", "布農族", "卑南族", "魯凱族", "鄒族",
+    "賽夏族", "雅美族", "達悟族", "邵族", "噶瑪蘭族", "太魯閣族",
+    "撒奇萊雅族", "賽德克族", "拉阿魯哇族", "卡那卡那富族",
+    # Generic terms TIPO's advisory surfaces
+    "原住民", "部落",
+)
+
+
+def check_indigenous_terms(doc: TwPatentDocument) -> list[CheckItem]:
+    """Flag indigenous peoples terminology for drafter review.
+
+    Per TIPO 偵錯系統 Table 1 #19 + 原住民族傳統智慧創作保護條例 — TIPO's
+    system surfaces indigenous-peoples references so applicants can verify
+    their filing doesn't conflict with protected traditional creations.
+    Advisory (VERIFY) rather than a hard rule violation.
+    """
+    text = _all_spec_text(doc)
+    hits = sorted({term for term in _TW_INDIGENOUS_TERMS if term in text})
+
+    if hits:
+        return [CheckItem(
+            status="verify",
+            message=f"Indigenous terminology found: {', '.join(hits)}.",
+            message_key="check.tw.spec.indigenousTerms.verify",
+            details=", ".join(hits),
+            details_key="details.tw.indigenousTerms",
+            details_params={
+                "count": len(hits),
+                "terms": hits,
+                "flagged_phrases": {
+                    "items": [{"kind": "term", "token": t} for t in hits]
+                },
+            },
+            reference="原住民族傳統智慧創作保護條例",
+            diagnostics=_dx(flagged_count=len(hits)),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="No indigenous terminology references found.",
+        message_key="check.tw.spec.indigenousTerms.pass",
+        reference="原住民族傳統智慧創作保護條例",
+    )]
