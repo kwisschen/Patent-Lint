@@ -8,6 +8,7 @@ from patentlint.analysis.claims import (
     find_missing_periods,
     has_extra_periods,
     find_self_dependent_claims,
+    find_chained_multi_dependents,
     are_claims_sequential,
     get_last_sequential_index,
     calculate_similarity,
@@ -21,6 +22,55 @@ from patentlint.analysis.claims import (
     check_claim_punctuation,
     _TRANSITIONS,
 )
+
+
+class TestChainedMultiDependents:
+    """35 U.S.C. § 112(e): a multi-dependent claim cannot depend on another
+    multi-dependent claim. Flags the actual chain violation (FIX), unlike
+    find_multiple_dependents which just flags presence (REVIEW)."""
+
+    def test_no_multi_deps(self):
+        claims = [
+            Claim(id=1, text="1. A method.", independent=True, method_claim=True),
+            Claim(id=2, text="2. The method of claim 1.", independent=False, method_claim=True, dependencies=[1]),
+        ]
+        assert find_chained_multi_dependents(claims) == []
+
+    def test_single_multi_dep_no_chain(self):
+        # Claim 3 is multi-dep (depends on 1 or 2), but 1 and 2 are single-dep — no violation.
+        claims = [
+            Claim(id=1, text="1. A method.", independent=True, method_claim=True),
+            Claim(id=2, text="2. An apparatus.", independent=True, method_claim=False),
+            Claim(id=3, text="3. The method/apparatus of claim 1 or 2.", independent=False,
+                  method_claim=True, dependencies=[1, 2], multiple_dependent=True),
+        ]
+        assert find_chained_multi_dependents(claims) == []
+
+    def test_chained_violation_detected(self):
+        # Claim 3 is multi-dep; claim 4 is multi-dep that depends on claim 3 — § 112(e) violation.
+        claims = [
+            Claim(id=1, text="1. A method.", independent=True, method_claim=True),
+            Claim(id=2, text="2. An apparatus.", independent=True, method_claim=False),
+            Claim(id=3, text="3. The method/apparatus of claim 1 or 2.", independent=False,
+                  method_claim=True, dependencies=[1, 2], multiple_dependent=True),
+            Claim(id=4, text="4. The method of claim 3 or 1.", independent=False,
+                  method_claim=True, dependencies=[3, 1], multiple_dependent=True),
+        ]
+        assert find_chained_multi_dependents(claims) == [4]
+
+    def test_chained_deep(self):
+        claims = [
+            Claim(id=1, text="1. A method.", independent=True, method_claim=True),
+            Claim(id=2, text="2. An apparatus.", independent=True, method_claim=False),
+            Claim(id=3, text="3. The method/apparatus of claim 1 or 2.", independent=False,
+                  method_claim=True, dependencies=[1, 2], multiple_dependent=True),
+            Claim(id=4, text="4. The method of claim 1 or 3.", independent=False,
+                  method_claim=True, dependencies=[1, 3], multiple_dependent=True),
+            Claim(id=5, text="5. The method of claim 3 or 4.", independent=False,
+                  method_claim=True, dependencies=[3, 4], multiple_dependent=True),
+        ]
+        # 4 chains via 3; 5 chains via both 3 and 4.
+        assert find_chained_multi_dependents(claims) == [4, 5]
 
 
 class TestMissingPeriods:

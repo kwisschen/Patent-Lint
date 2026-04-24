@@ -384,15 +384,15 @@ class TestTwTerminology:
         results = check_tw_terminology(doc)
         assert results[0].status == "pass"
 
-    def test_tw_simplified_verify(self):
+    def test_tw_simplified_amend(self):
         doc = _cn_doc([_claim(1, "1. 根据请求项1所述的装置。")])
         results = check_tw_terminology(doc)
-        assert results[0].status == "verify"
+        assert results[0].status == "amend"
 
-    def test_tw_traditional_verify(self):
+    def test_tw_traditional_amend(self):
         doc = _cn_doc([_claim(1, "1. 根據請求項1所述的裝置。")])
         results = check_tw_terminology(doc)
-        assert results[0].status == "verify"
+        assert results[0].status == "amend"
 
     def test_flagged_phrases_items_surfaced(self):
         """FlaggedTermList chips surface the actual detected TW terms and

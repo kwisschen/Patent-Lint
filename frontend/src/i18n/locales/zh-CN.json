@@ -558,6 +558,7 @@
     "restrictiveAbsolutesClaims": "权利要求：{{list}}。\"must\"、\"essential\"、\"always\"、\"never\"等绝对用语可能不必要地缩限权利要求范围，且当说明书实际并未要求如此绝对之限定时，可能引发 § 112(b) 不明确性。依 MPEP § 2173.01，请审视各标记用语；如该限定未获说明书支持，请改写用语。",
     "indefiniteWordingClaims": "权利要求：{{list}}。\"substantially\"、\"approximately\"、\"generally\"、\"may\"、\"preferably\"、\"or the like\"等相对性或不明确用语使权利要求范围难以界定。依 MPEP § 2173.05(b)，请审视各标记用语；请以具体限定取代，或于非必要时移除。",
     "multipleDependentClaims": "权利要求：{{list}}。多项从属权利要求会产生额外费用，且不得从属于其他多项从属权利要求（35 U.S.C. § 112(e)）。请确认此为有意为之。",
+    "chainedMultiDepClaims": "权利要求：{{list}}。依 35 U.S.C. § 112(e) 及 MPEP § 608.01(n)，多项从属权利要求不得引用另一多项从属权利要求。请改写标记之权利要求，使其改引用单一权利要求，或直接引用独立权利要求（而非通过其他多项从属权利要求）。",
     "selfDependentClaims": "权利要求：{{list}}。权利要求不得从属于自身。请修正从属关系引用。",
     "meansFunctionClaims": "权利要求：{{list}}。依 § 112(f)，权利要求范围限于说明书中公开的对应结构及等同物。请确认说明书针对各功能性限定公开了充分的结构。",
     "antecedentBasisTerms": "{{count}}项引用基础问题，涉及{{claims}}项权利要求。每个确定引用（“the X”或“said X”）须有先前的不定引用（“a X”或“an X”）。缺少引用基础可能导致 § 112(b) 不确定性驳回。",
@@ -749,8 +750,12 @@
         "pass": "权利要求编号连续。"
       },
       "multipleDependent": {
-        "amend": "发现多项从属权利要求：请留意规费及链式多项从属规则（MPEP § 608.01(n)；§ 112(e)）。",
+        "verify": "发现多项从属权利要求：请留意规费及链式多项从属规则（MPEP § 608.01(n)；§ 112(e)）。",
         "pass": "未发现多项从属权利要求。"
+      },
+      "chainedMultiDep": {
+        "amend": "多项从属权利要求引用另一多项从属权利要求（§ 112(e) / MPEP § 608.01(n)）。",
+        "pass": "未发现多项从属权利要求链式引用。"
       },
       "selfDependent": {
         "amend": "发现自引用权利要求：权利要求不得自我依附（§ 112(d)）。",
@@ -896,7 +901,7 @@
           "pass": "所有独立权利要求均包含连接词。"
         },
         "twTerminology": {
-          "verify": "发现台湾专利用语“请求项”，CNIPA 申请应使用“权利要求”。",
+          "amend": "发现台湾专利用语“请求项”，CNIPA 申请应使用“权利要求”。",
           "pass": "权利要求用语符合 CNIPA 规范。"
         },
         "specReference": {
@@ -1034,7 +1039,7 @@
           "pass": "所有独立项均包含连接词。"
         },
         "cnTerminology": {
-          "verify": "在台湾专利说明书中发现大陆专利用语。",
+          "amend": "在台湾专利说明书中发现大陆专利用语。",
           "pass": "请求项使用正确之 TIPO 用语。"
         },
         "specDrawingRef": {
@@ -1073,7 +1078,7 @@
       },
       "abstract": {
         "charCount": {
-          "verify": "摘要超过250字（{{count}}字，專利法施行細則 §21）。",
+          "amend": "摘要超过250字（{{count}}字，專利法施行細則 §21）。",
           "pass": "摘要在250 字以内（{{count}}字）。"
         },
         "titleMatch": {
@@ -1096,7 +1101,7 @@
           "pass": "代表图之符号简单说明与符号说明一致。"
         },
         "bracketFormat": {
-          "verify": "下列章节标题未使用【】格式：{{headers}}（專利法施行細則 §17）。",
+          "amend": "下列章节标题未使用【】格式：{{headers}}（專利法施行細則 §17）。",
           "pass": "所有章节标题均使用正确之【】格式。"
         }
       },

@@ -558,6 +558,7 @@
     "restrictiveAbsolutesClaims": "請求項：{{list}}。「must」、「essential」、「always」、「never」等絕對用語可能不必要地限縮請求項範圍，且當說明書實際並未要求如此絕對之限定時，可能引發 § 112(b) 不明確性。依 MPEP § 2173.01，請檢視各標記用語；若該限定未獲說明書支持，請改寫用語。",
     "indefiniteWordingClaims": "請求項：{{list}}。「substantially」、「approximately」、「generally」、「may」、「preferably」、「or the like」等相對性或不明確用語使請求項範圍難以界定。依 MPEP § 2173.05(b)，請檢視各標記用語；請以具體限定取代，或於非必要時移除。",
     "multipleDependentClaims": "請求項：{{list}}。多項附屬請求項會產生額外費用，且不得附屬於其他多項附屬請求項（35 U.S.C. § 112(e)）。請確認此為有意為之。",
+    "chainedMultiDepClaims": "請求項：{{list}}。依 35 U.S.C. § 112(e) 及 MPEP § 608.01(n)，多項附屬項不得引用另一多項附屬項。請改寫標記之請求項，使其改引用單一請求項，或直接引用獨立項（而非透過其他多項附屬項）。",
     "selfDependentClaims": "請求項：{{list}}。請求項不得自我依附。請修正附屬關係引用。",
     "meansFunctionClaims": "請求項：{{list}}。依 § 112(f)，請求項範圍限於說明書所揭露的對應結構及等效物。請確認說明書就各手段功能用語揭露了充分的結構。",
     "antecedentBasisTerms": "{{count}}項先行詞基礎問題，涉及{{claims}}項請求項。每個確定引用（「the X」或「said X」）須有先前不定引用（「a X」或「an X」）。缺乏先行詞基礎可能導致 § 112(b) 不明確核駁。",
@@ -749,8 +750,12 @@
         "pass": "請求項編號為連續。"
       },
       "multipleDependent": {
-        "amend": "發現多項附屬請求項：請留意規費及鏈式多項附屬規則（MPEP § 608.01(n)；§ 112(e)）。",
+        "verify": "發現多項附屬請求項：請留意規費及鏈式多項附屬規則（MPEP § 608.01(n)；§ 112(e)）。",
         "pass": "未發現多項附屬請求項。"
+      },
+      "chainedMultiDep": {
+        "amend": "多項附屬項引用另一多項附屬項（§ 112(e) / MPEP § 608.01(n)）。",
+        "pass": "未發現多項附屬項鏈結引用。"
       },
       "selfDependent": {
         "amend": "發現自我依附請求項：請求項不得自我依附（§ 112(d)）。",
@@ -896,7 +901,7 @@
           "pass": "所有獨立權利要求均包含連接詞。"
         },
         "twTerminology": {
-          "verify": "發現台灣專利用語「請求項」，CNIPA 申請應使用「权利要求」。",
+          "amend": "發現台灣專利用語「請求項」，CNIPA 申請應使用「权利要求」。",
           "pass": "權利要求用語符合 CNIPA 規範。"
         },
         "specReference": {
@@ -1034,7 +1039,7 @@
           "pass": "所有獨立項皆包含連接詞。"
         },
         "cnTerminology": {
-          "verify": "在台灣專利說明書中發現大陸專利用語。",
+          "amend": "在台灣專利說明書中發現大陸專利用語。",
           "pass": "請求項使用正確之 TIPO 用語。"
         },
         "specDrawingRef": {
@@ -1073,7 +1078,7 @@
       },
       "abstract": {
         "charCount": {
-          "verify": "摘要超過250字（{{count}}字，專利法施行細則 §21）。",
+          "amend": "摘要超過250字（{{count}}字，專利法施行細則 §21）。",
           "pass": "摘要在250字以內（{{count}}字）。"
         },
         "titleMatch": {
@@ -1096,7 +1101,7 @@
           "pass": "代表圖之符號簡單說明與符號說明一致。"
         },
         "bracketFormat": {
-          "verify": "下列章節標題未使用【】格式：{{headers}}（專利法施行細則 §17）。",
+          "amend": "下列章節標題未使用【】格式：{{headers}}（專利法施行細則 §17）。",
           "pass": "所有章節標題皆使用正確之【】格式。"
         }
       },

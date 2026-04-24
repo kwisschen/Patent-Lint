@@ -120,7 +120,7 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.tw.spec.paragraphEnding.pass": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 50),
 
     "check.tw.crossRef.bracketFormat.pass": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 60),
-    "check.tw.crossRef.bracketFormat.verify": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 60),
+    "check.tw.crossRef.bracketFormat.amend": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 60),
 
     # --- Group 2: Spec content ---
     "check.cn.spec.figureRefConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 10),
@@ -211,8 +211,10 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.tw.claims.dependencyFormat.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 20),
     "check.tw.claims.dependencyFormat.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 20),
 
-    "check.claims.multipleDependent.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 25),
+    "check.claims.multipleDependent.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 25),
     "check.claims.multipleDependent.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 25),
+    "check.claims.chainedMultiDep.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 27),
+    "check.claims.chainedMultiDep.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 27),
 
     "check.claims.selfDependent.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 30),
     "check.claims.selfDependent.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 30),
@@ -261,9 +263,9 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
 
     # --- Group 5: Claims cross-jurisdiction ---
     "check.cn.claims.twTerminology.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 10),
-    "check.cn.claims.twTerminology.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 10),
+    "check.cn.claims.twTerminology.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 10),
     "check.tw.claims.cnTerminology.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 10),
-    "check.tw.claims.cnTerminology.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 10),
+    "check.tw.claims.cnTerminology.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 10),
 
     "check.cn.claims.specReference.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 20),
     "check.cn.claims.specReference.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 20),
@@ -343,7 +345,7 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.cn.abstract.charCount.amend": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 10),
     "check.cn.abstract.charCount.pass": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 10),
     "check.tw.abstract.charCount.pass": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 10),
-    "check.tw.abstract.charCount.verify": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 10),
+    "check.tw.abstract.charCount.amend": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 10),
 
     "check.cn.abstract.titleMatch.pass": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 20),
     "check.cn.abstract.titleMatch.passCompound": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 20),

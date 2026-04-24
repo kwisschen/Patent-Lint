@@ -781,9 +781,9 @@ def check_cn_terminology(doc: TwPatentDocument) -> list[CheckItem]:
 
     if found:
         return [CheckItem(
-            status="verify",
+            status="amend",
             message=f"CNIPA terminology found: {', '.join(found)}.",
-            message_key="check.tw.claims.cnTerminology.verify",
+            message_key="check.tw.claims.cnTerminology.amend",
             details=", ".join(found),
             details_key="details.tw.cnTerminology",
             details_params={
