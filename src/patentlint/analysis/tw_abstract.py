@@ -33,9 +33,9 @@ def check_abstract_char_count(doc: TwPatentDocument) -> list[CheckItem]:
 
     if count > 250:
         return [CheckItem(
-            status="verify",
-            message=f"Abstract has {count} characters (recommended max 250).",
-            message_key="check.tw.abstract.charCount.verify",
+            status="amend",
+            message=f"Abstract has {count} characters (over 250 limit).",
+            message_key="check.tw.abstract.charCount.amend",
             details=f"{count} characters",
             details_key="details.tw.abstractCharCount",
             details_params={"count": str(count)},

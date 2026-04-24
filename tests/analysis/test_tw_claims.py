@@ -413,20 +413,20 @@ class TestCnTerminology:
         result = check_cn_terminology(doc)
         assert result[0].status == "pass"
 
-    def test_single_cn_term_verify(self):
+    def test_single_cn_term_amend(self):
         doc = _make_doc(claims=[
             _claim(1, "1. 一種裝置，如权利要求1所述。"),
         ])
         result = check_cn_terminology(doc)
-        assert result[0].status == "verify"
+        assert result[0].status == "amend"
         assert "权利要求" in result[0].details_params["detail"]
 
-    def test_multiple_cn_terms_verify(self):
+    def test_multiple_cn_terms_amend(self):
         doc = _make_doc(claims=[
             _claim(1, "1. 一種裝置，如权利要求1所述，背景技术中提及。"),
         ])
         result = check_cn_terminology(doc)
-        assert result[0].status == "verify"
+        assert result[0].status == "amend"
         assert "权利要求" in result[0].details_params["detail"]
         assert "背景技术" in result[0].details_params["detail"]
 
