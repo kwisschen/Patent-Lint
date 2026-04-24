@@ -438,7 +438,7 @@
       "figuresSequential": "도면 번호 연속성"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
-    "twSubtitle": "TIPO 偵錯系統은 대만 고유 용어를 검증합니다. PatentLint는 보다 광범위한 작성 규칙을 포괄합니다.",
+    "twSubtitle": "TIPO 偵錯系統 은 공식 검사 도구입니다. PatentLint 는 대만 작성 규범에 맞춰 구현되었습니다.",
     "twFeatures": {
       "title": "인터랙티브 대만 특허 분석",
       "claimTree": {
