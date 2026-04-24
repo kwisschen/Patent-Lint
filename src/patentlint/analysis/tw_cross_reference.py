@@ -97,12 +97,12 @@ def check_bracket_format(doc: TwPatentDocument) -> list[CheckItem]:
 
     headers_str = ", ".join(flagged[:10])
     return [CheckItem(
-        status="verify",
+        status="amend",
         message=(
             "Section headers not in the required 【】 bracket format: "
             f"{headers_str}."
         ),
-        message_key="check.tw.crossRef.bracketFormat.verify",
+        message_key="check.tw.crossRef.bracketFormat.amend",
         details_params={
             "headers": headers_str,
             "flagged_phrases": {

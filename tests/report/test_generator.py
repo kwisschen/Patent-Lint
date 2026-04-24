@@ -140,10 +140,10 @@ class TestToReportData:
 
     def test_claims_checks_count(self, sample_result):
         data = sample_result.to_report_data()
-        # 9 after the restrictiveWording split: restrictiveAbsolutes +
-        # indefiniteWording now emit independently. punctuation_checks empty
-        # by default.
-        assert len(data.claims_checks) == 9
+        # 10 after the restrictiveWording split (restrictiveAbsolutes +
+        # indefiniteWording emit independently) and the chainedMultiDep
+        # addition (§ 112(e) detector). punctuation_checks empty by default.
+        assert len(data.claims_checks) == 10
 
     def test_abstract_checks_count(self, sample_result):
         data = sample_result.to_report_data()

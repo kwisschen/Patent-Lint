@@ -61,6 +61,23 @@ def find_multiple_dependents(claims: list[Claim]) -> list[int]:
     return [c.id for c in claims if c.multiple_dependent]
 
 
+def find_chained_multi_dependents(claims: list[Claim]) -> list[int]:
+    """35 U.S.C. § 112(e) prohibits a multi-dependent claim that depends on
+    another multi-dependent claim. Returns the IDs of claims that violate
+    this rule — multi-dep claims whose chain includes another multi-dep.
+
+    Mirrors CN cn_claims::check_multi_multi_dep and TW tw_claims::
+    check_multi_dep_on_multi_dep (专利法实施细则 §22 / 專利法施行細則 §18)."""
+    multi_dep_ids = {c.id for c in claims if c.multiple_dependent}
+    if not multi_dep_ids:
+        return []
+    return [
+        c.id for c in claims
+        if c.multiple_dependent
+        and any(dep in multi_dep_ids for dep in c.dependencies)
+    ]
+
+
 def find_self_dependent_claims(claims: list[Claim]) -> list[int]:
     return [c.id for c in claims if c.id in c.dependencies]
 
