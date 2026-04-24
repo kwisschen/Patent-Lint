@@ -51,8 +51,17 @@ def _run_cn_pipeline(
         + len(cn_doc.detailed_description)
     )
 
-    # --- Specification checks (1–8) ---
-    spec_checks = (
+    # --- Specification checks (1–9) ---
+    spec_checks: list[CheckItem] = []
+    if has_tracked_changes:
+        spec_checks.append(CheckItem(
+            status="amend",
+            message="Document contains tracked changes (revisions). Accept or reject all changes before filing.",
+            message_key="check.cn.spec.trackedChanges.amend",
+            reference="专利法实施细则 §17",
+            diagnostics={"reason_code": "tracked_changes_present"},
+        ))
+    spec_checks = spec_checks + (
         cn_spec_analysis.check_required_sections(cn_doc)
         + cn_spec_analysis.check_section_ordering(cn_doc)
         + cn_spec_analysis.check_paragraph_numbering(cn_doc)
@@ -70,6 +79,7 @@ def _run_cn_pipeline(
     #     → subject_consistency → transition_phrase → dependent_ordering
     #   G5 claims cross-jurisdiction: tw_terminology → claims_spec_reference
     #     → multi_multi_dep → connection_relationships
+    #   G6 claims § 112: antecedent_basis → omnibus → markush_open_transition
     claims_checks = (
         cn_claims_analysis.check_claims_sequential(cn_doc)
         + cn_claims_analysis.check_dependency_format(cn_doc)
@@ -122,6 +132,13 @@ def _run_cn_pipeline(
             )
         ]
 
+    # G6 — omnibus (§3.3) and Markush open transition (§9.3) emit after
+    # the antecedent-basis tile per the canonical claims §112 order.
+    claims_checks = list(claims_checks) + (
+        cn_claims_analysis.check_omnibus_claims(cn_doc)
+        + cn_claims_analysis.check_markush_open_transition(cn_doc)
+    )
+
     # --- Abstract checks (21–23) ---
     abstract_checks = (
         cn_abstract_analysis.check_abstract_char_count(cn_doc)
@@ -135,6 +152,7 @@ def _run_cn_pipeline(
     # invariant"). Swapped from legacy sequential-then-count order.
     drawings_checks = (
         cn_abstract_analysis.check_figure_count(cn_doc)
+        + cn_abstract_analysis.check_drawings_prior_art(cn_doc)
         + cn_abstract_analysis.check_figures_sequential(cn_doc)
     )
 
@@ -155,6 +173,8 @@ def _run_cn_pipeline(
         cn_claims_checks=claims_checks,
         cn_abstract_checks=abstract_checks,
         cn_drawings_checks=drawings_checks,
+        cn_omnibus_claims=cn_claims_analysis.detect_omnibus_claims_cn(cn_doc),
+        cn_markush_open_claims=[cid for cid, _ in cn_claims_analysis.detect_markush_open_transition_cn(cn_doc)],
         antecedent_basis_issues=cn_antecedent_basis,
     )
 
@@ -165,6 +185,9 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
     # --- Document type detection ---
     likely_patent, detection_reason = sections.classify_document(full_text)
     patent_detection_reason = detection_reason.value
+
+    # --- Title extraction (MPEP § 606) ---
+    title = sections.extract_title(full_text)
 
     # --- Section extraction ---
     claims_section = sections.extract_claims_section(full_text)
@@ -270,6 +293,7 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
         likely_patent=likely_patent,
         patent_detection_reason=patent_detection_reason,
         # Specification
+        title=title,
         has_tracked_changes=loaded.has_tracked_changes,
         paragraph_count=len(para_nums),
         improper_spec_paragraphs=loaded.improper_spec_paragraphs,

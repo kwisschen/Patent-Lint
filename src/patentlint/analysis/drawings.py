@@ -263,3 +263,32 @@ def _sort_fig_id(fig_id: str) -> tuple[int, str]:
 def contains_prior_art_references(text: str) -> bool:
     """True if drawings section contains prior art references."""
     return bool(re.search(r"\bart\b|\bconventional\b|\btraditional\b|\bprior art\b", text, re.IGNORECASE))
+
+
+_PRIOR_ART_MARKER_CN = re.compile(r"现有技术|已知技术|背景技术")
+# Labeling pattern: a figure number followed/preceded by prior-art marker
+# in a descriptive context. Covers 图N为/示出/是/显示 現有技術 and reverse.
+_PRIOR_ART_LABEL_CN = re.compile(
+    r"图\s*\d+[^\n。；]{0,20}?(?:现有技术|已知技术|背景技术)"
+    r"|(?:现有技术|已知技术|背景技术)[^\n。；]{0,20}?图\s*\d+"
+)
+
+
+def contains_prior_art_references_cn(text: str) -> bool:
+    """True if CN 附图说明 labels a specific figure as prior art.
+
+    CNIPA 审查指南 第一部分第一章 §4.2 requires prior-art figures to be
+    labeled. Only flags when a prior-art marker (现有技术/已知技术/背景技术)
+    appears in proximity to a figure number (图N) — this excludes the
+    common 附图说明 boilerplate preamble (``为了更清楚地说明本发明实施例或
+    现有技术…``) which mentions 现有技术 conceptually without labeling
+    any figure.
+    """
+    if not _PRIOR_ART_MARKER_CN.search(text):
+        return False
+    # Check each paragraph independently so the boilerplate preamble — which
+    # mentions 现有技术 but references no specific figure — doesn't trigger.
+    for para in text.split("\n"):
+        if _PRIOR_ART_LABEL_CN.search(para):
+            return True
+    return False

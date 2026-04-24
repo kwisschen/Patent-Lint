@@ -8,13 +8,17 @@ from patentlint.analysis.cn_claims import (
     check_dependency_format,
     check_dependent_ordering,
     check_forward_dependency,
+    check_markush_open_transition,
     check_multi_multi_dependency,
+    check_omnibus_claims,
     check_reference_numeral_parentheses,
     check_self_dependent,
     check_single_sentence,
     check_subject_name_consistency,
     check_transition_phrase,
     check_tw_terminology,
+    detect_markush_open_transition_cn,
+    detect_omnibus_claims_cn,
 )
 from patentlint.models import Claim, CnPatentDocument
 
@@ -91,6 +95,62 @@ class TestDependencyFormat:
 
     def test_no_dependents_pass(self):
         doc = _cn_doc([_claim(1, "1. 一种装置。")])
+        results = check_dependency_format(doc)
+        assert results[0].status == "pass"
+
+    def test_genju_verb_accepted(self):
+        # CNIPA 审查指南 §3.3.1 canonical example uses 根据, which is the most
+        # common verb in real CN drafts. Previously the regex required 如,
+        # false-positiving on every 根据-using claim (user-reported on
+        # CN114357105B, CN213655447U, CN117427144B fixtures).
+        doc = _cn_doc([
+            _claim(1, "1. 一种方法。"),
+            _claim(2, "2. 根据权利要求1所述的方法，其特征在于，包括步骤A。",
+                   independent=False, dependencies=[1]),
+        ])
+        results = check_dependency_format(doc)
+        assert results[0].status == "pass"
+
+    def test_anzhao_verb_accepted(self):
+        doc = _cn_doc([
+            _claim(1, "1. 一种方法。"),
+            _claim(2, "2. 按照权利要求1所述的方法，其特征在于，包括步骤A。",
+                   independent=False, dependencies=[1]),
+        ])
+        results = check_dependency_format(doc)
+        assert results[0].status == "pass"
+
+    def test_multi_dep_huo_form_pass(self):
+        # 或 (or) alternative — common multi-dep form.
+        doc = _cn_doc([
+            _claim(1, "1. 一种装置。"),
+            _claim(2, "2. 一种方法。"),
+            _claim(3, "3. 根据权利要求1或2所述的系统，其特征在于，包括部件。",
+                   independent=False, dependencies=[1, 2], multiple_dependent=True),
+        ])
+        results = check_dependency_format(doc)
+        assert results[0].status == "pass"
+
+    def test_multi_dep_range_renyi_yi_xiang_pass(self):
+        # 根据权利要求X至Y中任意一项所述的 — range + 中任意一项
+        doc = _cn_doc([
+            _claim(1, "1. 一种装置。"),
+            _claim(2, "2. 装置2。"),
+            _claim(3, "3. 装置3。"),
+            _claim(4, "4. 根据权利要求1至3中任意一项所述的装置，其特征在于部件A。",
+                   independent=False, dependencies=[1, 2, 3], multiple_dependent=True),
+        ])
+        results = check_dependency_format(doc)
+        assert results[0].status == "pass"
+
+    def test_multi_dep_endash_range_pass(self):
+        # 根据权利要求1‑5任一项所述的 — non-breaking hyphen range, no 中
+        doc = _cn_doc([
+            _claim(1, "1. 一种方法。"),
+            _claim(2, "2. 方法2。"),
+            _claim(3, "3. 根据权利要求1‑5任一项所述的方法，其特征在于步骤A。",
+                   independent=False, dependencies=[1, 2], multiple_dependent=True),
+        ])
         results = check_dependency_format(doc)
         assert results[0].status == "pass"
 
@@ -561,3 +621,69 @@ class TestDymQualityGate:
 
     def test_same_length_kept(self):
         assert not self._reject("数据组", "数据集")
+
+# ── Check 22: Omnibus claims (CN) ────────────────────────────────────────
+
+
+class TestOmnibusClaimsCn:
+    def test_pass_no_omnibus(self):
+        doc = _cn_doc([
+            _claim(1, '一种装置，包括基座（10）和盖（20），所述盖通过铰链与基座连接。')
+        ])
+        assert detect_omnibus_claims_cn(doc) == []
+        results = check_omnibus_claims(doc)
+        assert results[0].status == 'pass'
+
+    def test_amend_shuomingshu_ref(self):
+        doc = _cn_doc([
+            _claim(1, '一种装置，如说明书所述。')
+        ])
+        assert detect_omnibus_claims_cn(doc) == [1]
+        results = check_omnibus_claims(doc)
+        assert results[0].status == 'amend'
+
+    def test_amend_fig_ref(self):
+        doc = _cn_doc([
+            _claim(1, '一种装置，如附图所示。')
+        ])
+        assert detect_omnibus_claims_cn(doc) == [1]
+
+    def test_long_claim_with_incidental_mention_not_flagged(self):
+        # >40 CJK chars, so length guard kicks in.
+        doc = _cn_doc([
+            _claim(1,
+                '一种装置，包括基座（10）、盖（20）、铰链（30）、弹簧（40）、'
+                '开关（50）、显示器（60）和控制电路（70），其中所述控制电路的'
+                '具体实施方式如说明书所述。')
+        ])
+        assert detect_omnibus_claims_cn(doc) == []
+
+
+# ── Check 23: Markush open transition (CN) ───────────────────────────────
+
+
+class TestMarkushOpenTransitionCn:
+    def test_pass_closed_transition(self):
+        doc = _cn_doc([
+            _claim(1, '选自由铜、铁、铝组成的群组。')
+        ])
+        assert detect_markush_open_transition_cn(doc) == []
+        results = check_markush_open_transition(doc)
+        assert results[0].status == 'pass'
+
+    def test_verify_open_transition_baokuo(self):
+        doc = _cn_doc([
+            _claim(1, '选自由包括铜、铁、铝。')
+        ])
+        pairs = detect_markush_open_transition_cn(doc)
+        assert pairs == [(1, '包括')]
+        results = check_markush_open_transition(doc)
+        assert results[0].status == 'verify'
+
+    def test_verify_open_transition_juyou(self):
+        doc = _cn_doc([
+            _claim(1, '选自由具有铜、铁、铝的基团。')
+        ])
+        pairs = detect_markush_open_transition_cn(doc)
+        assert pairs == [(1, '具有')]
+

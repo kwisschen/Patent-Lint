@@ -10,19 +10,19 @@
     "label": "地域"
   },
   "dropzone": {
-    "tagline": "30 以上の USPTO 作成ルールに基づき、特許明細書を即座にチェック。",
+    "tagline": "{{count}} 件の USPTO 作成ルールに基づき、特許明細書を即座にチェック。",
     "title": "特許 .docx をドロップしてローカルチェックを開始",
     "subtitle": "またはクリックして参照",
     "notice": "米国特許明細書（.docx）に対応しています",
     "reject": ".docx ファイルのみ対応",
     "rejectMultiple": "ファイルは一つずつドロップしてください。",
     "rejectMultipleType": "一つの .docx ファイルをドロップしてください。",
-    "taglineCn": "20 以上の CNIPA 作成ルールに基づき、特許明細書を即座にチェック。",
+    "taglineCn": "{{count}} 件の CNIPA 作成ルールに基づき、特許明細書を即座にチェック。",
     "titleCn": "特許ファイルをドロップしてローカルチェックを開始",
     "noticeCn": "中国特許明細書（.docx、.xml、.zip）に対応しています",
     "rejectCn": ".docx、.xml、.zip ファイルのみ対応",
     "rejectMultipleTypeCn": "一つの .docx、.xml、または .zip ファイルをドロップしてください。",
-    "taglineTw": "30 以上の TIPO 作成ルールに基づき、特許明細書を即座にチェック。",
+    "taglineTw": "{{count}} 件の TIPO 作成ルールに基づき、特許明細書を即座にチェック。",
     "titleTw": "特許 .docx をドロップしてローカルチェックを開始",
     "noticeTw": "台湾特許明細書（.docx）に対応しています",
     "rejectTw": ".docx ファイルのみ対応",
@@ -388,7 +388,7 @@
       }
     },
     "cnTitle": "PatentLint CNIPA 作成規則チェック",
-    "cnSubtitle": "CNIPA 作成規則（专利法实施细则、审查指南）に基づく20余件の構造チェック。",
+    "cnSubtitle": "CNIPA 作成規則（专利法实施细则、审查指南）に基づく {{count}} 件の構造チェック。",
     "cnFeatures": {
       "title": "インタラクティブな中国特許チェック",
       "claimTree": {
@@ -682,7 +682,11 @@
     },
     "paragraphFormat": {
       "examples": "{{count}}個の段落が【NNNN】形式を使用していません。例：{{examples}}"
-    }
+    },
+    "titleMissing": "MPEP § 606 により、特許出願には必ず発明の名称を記載する必要があります。明細書の冒頭に名称を追記してください。",
+    "titleLength": "MPEP § 606 により、発明の名称は 500 文字を超えてはなりません（実際 {{count}} 文字）。名称を短縮してください。",
+    "titleContent": "MPEP § 608.01 により、発明の名称に商標や型番を含めることはできません。該当箇所を削除してください。",
+    "titleWordCount": "MPEP § 606 により、発明の名称は簡潔で具体的であるべきです（実際 {{count}} 語；通常 2〜7 語）。短縮をご検討ください。"
   },
   "common": {
     "close": "閉じる",
@@ -734,6 +738,13 @@
       "drawings": "図面の概要。",
       "trackedChanges": {
         "amend": "文書に変更履歴が含まれています。出願前にすべての変更を承認または拒否してください。"
+      },
+      "title": {
+        "amendMissing": "明細書に発明の名称が記載されていません（MPEP § 606）。",
+        "amendLength": "発明の名称が {{count}} 文字です。MPEP § 606 は 500 文字を上限としています。",
+        "amendContent": "発明の名称に使用できない語が含まれています：{{title_prohibited_items}}（MPEP § 608.01）。",
+        "verify": "発明の名称が {{count}} 語です。MPEP § 606 は簡潔で具体的な名称を推奨しています。",
+        "pass": "発明の名称は MPEP § 606 の要件を満たしています。"
       }
     },
     "claims": {
@@ -826,6 +837,9 @@
     },
     "cn": {
       "spec": {
+        "trackedChanges": {
+          "amend": "文書に変更履歴が含まれています。出願前にすべての変更を承認または拒否してください。"
+        },
         "requiredSections": {
           "amend": "必要な章を欠いています：{{sections}}（专利法 §26 第1款・专利法实施细则 §17）。",
           "pass": "必要な章が全て揃っています。"
@@ -923,6 +937,14 @@
         "antecedentBasis": {
           "verify": "{{claims}}において先行詞がない可能性がある用語が{{issue_count}}個（审查指南）：「该／所述」の参照に対応する「一」導入がない可能性があります。",
           "pass": "全ての引用用語に先行詞があります（审查指南）。"
+        },
+        "omnibus": {
+          "amend": "{{claims}}：請求項が具体的な技術的特徴を記載せず、说明书・附图を援引しています（审查指南 第二部分第二章 §3.3）。",
+          "pass": "援引式の請求項は見つかりませんでした。"
+        },
+        "markushOpenTransition": {
+          "verify": "{{claims}}：マーカッシュ請求項が開放型の連結語（{{transitions}}）を用いています。閉鎖型「组成的」への変更が必要です（审查指南 第二部分第十章 §9.3）。",
+          "pass": "マーカッシュ請求項は閉鎖型「组成的」を用いています。"
         }
       },
       "abstract": {
@@ -948,6 +970,10 @@
           "pass": "図1〜{{found_max}}が連番で付されています。",
           "passNone": "図面は検出されませんでした。",
           "amend": "図番が連続していません。不足：{{figure_list}}。"
+        },
+        "priorArt": {
+          "verify": "附图说明に先行技術の引用が含まれています。図面の表記を確認してください（审查指南 第一部分第一章 §4.2）。",
+          "pass": "附图说明に先行技術の引用はありません。"
         }
       }
     },

@@ -10,19 +10,19 @@
     "label": "Region"
   },
   "dropzone": {
-    "tagline": "Instantly check your specification against 30+ USPTO drafting rules.",
+    "tagline": "Instantly check your specification against {{count}} USPTO drafting rules.",
     "title": "Drop your patent .docx to begin local analysis",
     "subtitle": "or click to browse",
     "notice": "Supports U.S. patent specifications (.docx)",
     "reject": "Only .docx files are accepted",
     "rejectMultiple": "Please drop one file at a time.",
     "rejectMultipleType": "Please drop a single .docx file.",
-    "taglineCn": "Instantly check your specification against 20+ CNIPA drafting rules.",
+    "taglineCn": "Instantly check your specification against {{count}} CNIPA drafting rules.",
     "titleCn": "Drop your patent file to begin local analysis",
     "noticeCn": "Supports China patent specifications (.docx, .xml, .zip)",
     "rejectCn": "Only .docx, .xml, and .zip files are accepted",
     "rejectMultipleTypeCn": "Please drop a single .docx, .xml, or .zip file.",
-    "taglineTw": "Instantly check your specification against 30+ TIPO drafting rules.",
+    "taglineTw": "Instantly check your specification against {{count}} TIPO drafting rules.",
     "titleTw": "Drop your patent .docx to begin local analysis",
     "noticeTw": "Supports Taiwan patent specifications (.docx)",
     "rejectTw": "Only .docx files are accepted",
@@ -388,7 +388,7 @@
       }
     },
     "cnTitle": "PatentLint CNIPA Drafting Checks",
-    "cnSubtitle": "20+ structural checks against CNIPA drafting rules (专利法实施细则, 审查指南).",
+    "cnSubtitle": "{{count}} structural checks against CNIPA drafting rules (专利法实施细则, 审查指南).",
     "cnFeatures": {
       "title": "Interactive CN patent analysis",
       "claimTree": {
@@ -682,7 +682,11 @@
     },
     "paragraphFormat": {
       "examples": "{{count}} paragraph(s) use non-[NNNN] format. Examples: {{examples}}"
-    }
+    },
+    "titleMissing": "Per MPEP § 606, every utility patent application must open with a title. Add a title to the specification header.",
+    "titleLength": "Per MPEP § 606, the title must not exceed 500 characters ({{count}} found). Shorten the title.",
+    "titleContent": "Per MPEP § 608.01, the title must not contain trademarks or model / product codes. Remove the prohibited content.",
+    "titleWordCount": "Per MPEP § 606, titles should be short and specific ({{count}} words found; 2–7 words is typical). Consider condensing the title."
   },
   "common": {
     "close": "Close",
@@ -734,6 +738,13 @@
       "drawings": "Drawings overview.",
       "trackedChanges": {
         "amend": "Document contains tracked changes (revisions). Accept or reject all changes before filing."
+      },
+      "title": {
+        "amendMissing": "Title is missing from specification (MPEP § 606).",
+        "amendLength": "Title has {{count}} characters — MPEP § 606 caps at 500 characters.",
+        "amendContent": "Prohibited content in title: {{title_prohibited_items}} (MPEP § 608.01).",
+        "verify": "Title has {{count}} words — MPEP § 606 recommends a short, specific title.",
+        "pass": "Title meets MPEP § 606 requirements."
       }
     },
     "claims": {
@@ -826,6 +837,9 @@
     },
     "cn": {
       "spec": {
+        "trackedChanges": {
+          "amend": "Document contains tracked changes (revisions). Accept or reject all changes before filing."
+        },
         "requiredSections": {
           "amend": "Missing required sections: {{sections}} (专利法 §26 第1款、专利法实施细则 §17).",
           "pass": "All required sections are present."
@@ -923,6 +937,14 @@
         "antecedentBasis": {
           "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 该/所述 reference without a prior 一 introduction (审查指南).",
           "pass": "All claim terms have antecedent basis (审查指南)."
+        },
+        "omnibus": {
+          "amend": "{{claims}}: claim references 说明书/附图 instead of reciting features (审查指南 第二部分第二章 §3.3).",
+          "pass": "No omnibus claims found."
+        },
+        "markushOpenTransition": {
+          "verify": "{{claims}}: Markush group uses open transition ({{transitions}}) instead of 组成的 (审查指南 第二部分第十章 §9.3).",
+          "pass": "Markush groups use the closed transition 组成的."
         }
       },
       "abstract": {
@@ -948,6 +970,10 @@
           "pass": "Figures 1–{{found_max}} numbered sequentially.",
           "passNone": "No figures found.",
           "amend": "Non-sequential figure numbering — missing: {{figure_list}}."
+        },
+        "priorArt": {
+          "verify": "Prior art references found in 附图说明 — verify figure labeling (审查指南 第一部分第一章 §4.2).",
+          "pass": "No prior art references found in 附图说明."
         }
       }
     },

@@ -517,7 +517,13 @@ def check_title(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
 # ── Check 8 ──────────────────────────────────────────────────────────────
 
-_CLAIM_REF_RE = re.compile(r"如权利要求\s*\d+[\s\S]*?所述")
+# Spec-text references to claims (prohibited per 专利法实施细则 §17 —
+# the specification must not describe the invention by reference to the
+# claims). The introducing verb is not constrained: CN drafters use
+# 根据/如/按照/依照/依据 + 权利要求N + 所述, or bare 权利要求N所述.
+# Distance-bounded to keep `所述` within 20 chars of `权利要求N`, avoiding
+# FPs on unrelated co-occurrences across sentences.
+_CLAIM_REF_RE = re.compile(r"权利要求\s*\d+[^所。]{0,20}所述")
 
 
 def check_spec_claim_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
