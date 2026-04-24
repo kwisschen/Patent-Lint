@@ -406,11 +406,18 @@ _CLAIM_NUM_PREFIX = re.compile(r"^[\s　]*\d+\s*[.．]\s*")
 
 
 def check_independent_preamble(doc: TwPatentDocument) -> list[CheckItem]:
-    """Flag independent claims not opening with 「一種」.
+    """Advisory: flag independent claims not opening with 「一種」.
 
-    Per TIPO 偵錯系統 Table 1 #20 + 專利法施行細則 §18 + 專利審查基準:
-    independent claims must open with 一種. Dependent-claim opener set
-    (如/依據/根據) is validated separately by ``check_dependency_format``.
+    TIPO 偵錯系統 (Table 1 #20, 2023.5.30 版 PDF fig 33) flags this as an
+    error in its debugger because `一種X` is the practitioner convention
+    that lets the 標的名稱 (subject-matter designation) be reliably parsed.
+    Note: 專利法施行細則 §18 + 專利審查基準 require the preamble to state
+    the subject-matter name but do NOT literally mandate 「一種」 — other
+    preambles that still name the subject matter may satisfy the statute.
+    Status is therefore VERIFY (advisory), not FIX.
+
+    Dependent-claim openers (如/依據/根據) validated separately by
+    ``check_dependency_format``.
     """
     bad: list[int] = []
     for claim in doc.claims:
@@ -424,20 +431,20 @@ def check_independent_preamble(doc: TwPatentDocument) -> list[CheckItem]:
         bad_sorted = sorted(set(bad))
         claims_str = ", ".join(str(i) for i in bad_sorted)
         return [CheckItem(
-            status="amend",
+            status="verify",
             message=f"Independent claim(s) not opening with 「一種」: {claims_str}.",
-            message_key="check.tw.claims.independentPreamble.amend",
+            message_key="check.tw.claims.independentPreamble.verify",
             details=claims_str,
             details_key="details.tw.independentPreamble",
             details_params={"count": len(bad_sorted), "claims": bad_sorted},
-            reference="專利法施行細則 §18",
+            reference="專利審查基準 + TIPO 偵錯系統 Table 1 #20",
             diagnostics=_dx(flagged_count=len(bad_sorted)),
         )]
     return [CheckItem(
         status="pass",
         message="All independent claims open with 「一種」.",
         message_key="check.tw.claims.independentPreamble.pass",
-        reference="專利法施行細則 §18",
+        reference="專利審查基準 + TIPO 偵錯系統 Table 1 #20",
     )]
 
 

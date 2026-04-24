@@ -619,7 +619,7 @@
         "singleSentence": "Per 审查指南 第二部分第二章, each claim must be a single sentence ending in 。 to keep scope unambiguous.",
         "transitionPhrase": "Per 审查指南, an independent claim should contain a two-part transition (e.g. 其特征在于) separating the preamble (prior art) from the characterizing part (novel features)."
       },
-      "independentPreamble": "Per 审查指南 第二部分第二章 §3.1.1, independent claims must open with 「一种」. Rewrite the flagged claim preamble(s)."
+      "independentPreamble": "审查指南 第二部分第二章 §3.1.1 uses 一种X as the canonical form; 专利法实施细则 §22 requires the preamble to state the 主题名称 (subject-matter name) but does not literally mandate 一种. Consider rewriting to the 一种X form."
     },
     "tw": {
       "requiredSections": "A complete TIPO filing requires 摘要, 說明書 (技術領域, 先前技術, 發明內容/新型內容, 實施方式), and 申請專利範圍 per 專利法 §25 第1項. When drawings are present, 圖式簡單說明 and 符號說明 are also required per 專利法施行細則 §17. Missing: {{sections}}.",
@@ -677,7 +677,7 @@
       },
       "singleSentenceMissingPeriod": "Per 專利法施行細則 §18, each claim must end with a single 。. Add the closing period to the flagged claims.",
       "singleSentenceMultiSentence": "Per 專利法施行細則 §18, each claim must be one sentence with exactly one 。 at the end. Remove mid-claim 。 or restructure the flagged claims.",
-      "independentPreamble": "Per 專利法施行細則 §18, independent claims must open with 「一種」. Rewrite the flagged claim preamble(s).",
+      "independentPreamble": "TIPO 偵錯系統 flags this as a convention error. 專利法施行細則 §18 + 專利審查基準 require the preamble to state the 標的名稱 (subject-matter name) but do not literally mandate 「一種」. Consider rewriting to the 一種X form if that matches the invention.",
       "indigenousTerms": "Terms: {{terms}}. Per 原住民族傳統智慧創作保護條例, verify the filing does not conflict with protected traditional creations."
     },
     "titleProhibited": {
@@ -952,8 +952,8 @@
           "pass": "Markush groups use the closed transition 组成的."
         },
         "independentPreamble": {
-          "amend": "{{claims}}: independent claim(s) must open with 「一种」 (审查指南 第二部分第二章 §3.1.1).",
-          "pass": "All independent claims open with 「一种」."
+          "pass": "All independent claims open with 「一种」.",
+          "verify": "{{claims}}: independent claim(s) typically open with 「一种」 (审查指南 §3.1.1 canonical form; statute requires 主题名称, not literal 一种)."
         }
       },
       "abstract": {
@@ -1115,8 +1115,8 @@
           "pass": "All claim terms supported by the specification."
         },
         "independentPreamble": {
-          "amend": "{{claims}}: independent claim(s) must open with 「一種」 (專利法施行細則 §18).",
-          "pass": "All independent claims open with 「一種」."
+          "pass": "All independent claims open with 「一種」.",
+          "verify": "{{claims}}: independent claim(s) typically open with 「一種」 (TIPO 偵錯系統 convention; statute requires subject-matter name, not literal 一種)."
         }
       },
       "abstract": {
