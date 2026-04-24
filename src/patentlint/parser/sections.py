@@ -311,6 +311,22 @@ def detect_patent_document(full_text: str) -> bool:
     return is_patent
 
 
+def extract_title(full_text: str) -> str:
+    """Extract the patent title as text preceding the first section header.
+
+    Mirrors the heuristic already used inside ``check_required_sections``.
+    Titles are conventionally typeset above the first labeled section
+    (CROSS-REFERENCE, BACKGROUND, etc.). Returns the stripped text or ``""``
+    when no preceding text exists.
+    """
+    first_header = _ANY_SECTION_HEADER.search(full_text)
+    candidate = full_text[:first_header.start()] if first_header else full_text
+    # Keep the last non-empty line of the pre-header block — patent filings
+    # typically carry boilerplate / applicant identifiers above the title.
+    lines = [ln.strip() for ln in candidate.splitlines() if ln.strip()]
+    return lines[-1] if lines else ""
+
+
 def detect_prior_art_citations(text: str) -> str:
     """Detect prior art patent citations in text.
 

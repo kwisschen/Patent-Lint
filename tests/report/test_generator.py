@@ -136,7 +136,8 @@ class TestToReportData:
 
     def test_specification_checks_count(self, sample_result):
         data = sample_result.to_report_data()
-        assert len(data.specification_checks) == 7
+        # 8 after title (MPEP § 606) was added to the US spec content group.
+        assert len(data.specification_checks) == 8
 
     def test_claims_checks_count(self, sample_result):
         data = sample_result.to_report_data()

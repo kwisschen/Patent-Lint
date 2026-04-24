@@ -10,19 +10,19 @@
     "label": "地区"
   },
   "dropzone": {
-    "tagline": "依据 30 多项 USPTO 撰写规则，立即检查您的专利说明书。",
+    "tagline": "依据 {{count}} 项 USPTO 撰写规则，立即检查您的专利说明书。",
     "title": "拖放您的专利 .docx 开始本地分析",
     "subtitle": "或点击浏览文件",
     "notice": "支持美国专利说明书（.docx）",
     "reject": "仅接受 .docx 文件",
     "rejectMultiple": "请一次拖放一个文件。",
     "rejectMultipleType": "请拖放单个 .docx 文件。",
-    "taglineCn": "依据 20 多项 CNIPA 撰写规则，立即检查您的专利说明书。",
+    "taglineCn": "依据 {{count}} 项 CNIPA 撰写规则，立即检查您的专利说明书。",
     "titleCn": "拖放您的专利文件开始本地分析",
     "noticeCn": "支持中国专利说明书（.docx、.xml、.zip）",
     "rejectCn": "仅接受 .docx、.xml 及 .zip 文件",
     "rejectMultipleTypeCn": "请拖放单个 .docx、.xml 或 .zip 文件。",
-    "taglineTw": "依据 30 多项 TIPO 撰写规则，立即检查您的专利说明书。",
+    "taglineTw": "依据 {{count}} 项 TIPO 撰写规则，立即检查您的专利说明书。",
     "titleTw": "拖放您的专利 .docx 开始本地分析",
     "noticeTw": "支持台湾专利说明书（.docx）",
     "rejectTw": "仅接受 .docx 文件",
@@ -388,7 +388,7 @@
       }
     },
     "cnTitle": "PatentLint CNIPA 撰写规则检查",
-    "cnSubtitle": "20 余项结构性检查，依据 CNIPA 撰写规则（专利法实施细则、审查指南）。",
+    "cnSubtitle": "{{count}} 项结构性检查，依据 CNIPA 撰写规则（专利法实施细则、审查指南）。",
     "cnFeatures": {
       "title": "交互式中国专利分析",
       "claimTree": {
@@ -682,7 +682,11 @@
     },
     "paragraphFormat": {
       "examples": "{{count}}个段落未使用【NNNN】格式。示例：{{examples}}"
-    }
+    },
+    "titleMissing": "依 MPEP § 606，每件发明专利申请均须载明发明名称。请于说明书首页加上发明名称。",
+    "titleLength": "依 MPEP § 606，发明名称不得超过 500 字符（实际 {{count}} 字符）。请缩短名称。",
+    "titleContent": "依 MPEP § 608.01，发明名称不得含商标或产品型号。请移除禁止内容。",
+    "titleWordCount": "依 MPEP § 606，发明名称宜简短明确（实际 {{count}} 词；通常 2–7 词为宜）。请考虑精简。"
   },
   "common": {
     "close": "关闭",
@@ -734,6 +738,13 @@
       "drawings": "附图概览。",
       "trackedChanges": {
         "amend": "文档包含修订标记。提交前请接受或拒绝所有更改。"
+      },
+      "title": {
+        "amendMissing": "说明书未载明发明名称（MPEP § 606）。",
+        "amendLength": "发明名称共 {{count}} 个字符，超过 MPEP § 606 所定 500 字符上限。",
+        "amendContent": "发明名称含禁止内容：{{title_prohibited_items}}（MPEP § 608.01）。",
+        "verify": "发明名称共 {{count}} 个词，MPEP § 606 建议简短明确。",
+        "pass": "发明名称符合 MPEP § 606 规定。"
       }
     },
     "claims": {
@@ -826,6 +837,9 @@
     },
     "cn": {
       "spec": {
+        "trackedChanges": {
+          "amend": "文档包含修订标记。提交前请接受或拒绝所有更改。"
+        },
         "requiredSections": {
           "amend": "缺少必要章节：{{sections}}（专利法 §26 第1款、专利法实施细则 §17）。",
           "pass": "所有必要章节均已包含。"
@@ -923,6 +937,14 @@
         "antecedentBasis": {
           "verify": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少引用基础（审查指南）：「该／所述」引用未有先前之「一」引介。",
           "pass": "所有引用之用语皆有引用基础（审查指南）。"
+        },
+        "omnibus": {
+          "amend": "{{claims}}：权利要求以「如说明书所述」等方式援引说明书或附图，未具体记载技术特征（审查指南 第二部分第二章 §3.3）。",
+          "pass": "未发现援引式权利要求。"
+        },
+        "markushOpenTransition": {
+          "verify": "{{claims}}：马库什权利要求使用开放式连接词（{{transitions}}），应改为封闭式「组成的」（审查指南 第二部分第十章 §9.3）。",
+          "pass": "马库什权利要求均使用封闭式连接词「组成的」。"
         }
       },
       "abstract": {
@@ -948,6 +970,10 @@
           "pass": "附图 1–{{found_max}} 编号连续。",
           "passNone": "未找到附图。",
           "amend": "附图编号不连续，缺失：{{figure_list}}。"
+        },
+        "priorArt": {
+          "verify": "附图说明中发现现有技术引用，请确认附图标注（审查指南 第一部分第一章 §4.2）。",
+          "pass": "附图说明中未发现现有技术引用。"
         }
       }
     },

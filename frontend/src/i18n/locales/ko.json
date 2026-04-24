@@ -10,19 +10,19 @@
     "label": "지역"
   },
   "dropzone": {
-    "tagline": "30개 이상의 USPTO 작성 규칙으로 명세서를 즉시 검사합니다.",
+    "tagline": "{{count}}개의 USPTO 작성 규칙으로 명세서를 즉시 검사합니다.",
     "title": "특허 .docx 파일을 드롭하여 로컬 분석을 시작하세요",
     "subtitle": "또는 클릭하여 파일 탐색",
     "notice": "미국 특허 명세서(.docx) 지원",
     "reject": ".docx 파일만 허용됩니다",
     "rejectMultiple": "파일을 하나씩 드롭해 주십시오.",
     "rejectMultipleType": "단일 .docx 파일을 드롭해 주십시오.",
-    "taglineCn": "20개 이상의 CNIPA 작성 규칙으로 명세서를 즉시 검사합니다.",
+    "taglineCn": "{{count}}개의 CNIPA 작성 규칙으로 명세서를 즉시 검사합니다.",
     "titleCn": "특허 파일을 드롭하여 로컬 분석을 시작하세요",
     "noticeCn": "중국 특허 명세서(.docx, .xml, .zip) 지원",
     "rejectCn": ".docx, .xml, .zip 파일만 허용됩니다",
     "rejectMultipleTypeCn": "단일 .docx, .xml 또는 .zip 파일을 드롭해 주십시오.",
-    "taglineTw": "30개 이상의 TIPO 작성 규칙으로 명세서를 즉시 검사합니다.",
+    "taglineTw": "{{count}}개의 TIPO 작성 규칙으로 명세서를 즉시 검사합니다.",
     "titleTw": "특허 .docx 파일을 드롭하여 로컬 분석을 시작하세요",
     "noticeTw": "대만 특허 명세서(.docx) 지원",
     "rejectTw": ".docx 파일만 허용됩니다",
@@ -388,7 +388,7 @@
       }
     },
     "cnTitle": "PatentLint CNIPA 작성 규칙 검사",
-    "cnSubtitle": "CNIPA 작성 규칙(专利法实施细则, 审查指南)에 따른 20여 건의 구조 검사.",
+    "cnSubtitle": "CNIPA 작성 규칙(专利法实施细则, 审查指南)에 따른 {{count}}건의 구조 검사.",
     "cnFeatures": {
       "title": "인터랙티브 중국 특허 분석",
       "claimTree": {
@@ -682,7 +682,11 @@
     },
     "paragraphFormat": {
       "examples": "{{count}}개 단락이 【NNNN】 형식을 사용하지 않습니다. 예: {{examples}}"
-    }
+    },
+    "titleMissing": "MPEP § 606 에 따라 모든 특허 출원은 발명의 명칭을 포함해야 합니다. 명세서 첫 부분에 명칭을 추가하세요.",
+    "titleLength": "MPEP § 606 에 따라 발명의 명칭은 500자를 초과할 수 없습니다 (실제 {{count}}자). 명칭을 줄이세요.",
+    "titleContent": "MPEP § 608.01 에 따라 발명의 명칭에 상표나 모델 번호를 포함할 수 없습니다. 해당 내용을 제거하세요.",
+    "titleWordCount": "MPEP § 606 에 따라 발명의 명칭은 간결하고 구체적이어야 합니다 (실제 {{count}}단어; 보통 2–7 단어). 축약을 고려하세요."
   },
   "common": {
     "close": "닫기",
@@ -734,6 +738,13 @@
       "drawings": "도면 개요.",
       "trackedChanges": {
         "amend": "문서에 변경 내용 추적(수정 사항)이 포함되어 있습니다. 출원 전에 모든 변경 내용을 수락하거나 거부하세요."
+      },
+      "title": {
+        "amendMissing": "명세서에 발명의 명칭이 누락되어 있습니다 (MPEP § 606).",
+        "amendLength": "발명의 명칭이 {{count}}자 입니다. MPEP § 606 은 500자 이내를 요구합니다.",
+        "amendContent": "발명의 명칭에 금지된 내용이 포함되어 있습니다: {{title_prohibited_items}} (MPEP § 608.01).",
+        "verify": "발명의 명칭이 {{count}}단어 입니다. MPEP § 606 은 간결하고 구체적인 명칭을 권장합니다.",
+        "pass": "발명의 명칭이 MPEP § 606 요건을 충족합니다."
       }
     },
     "claims": {
@@ -826,6 +837,9 @@
     },
     "cn": {
       "spec": {
+        "trackedChanges": {
+          "amend": "문서에 변경 내용 추적(수정 사항)이 포함되어 있습니다. 출원 전에 모든 변경 내용을 수락하거나 거부하세요."
+        },
         "requiredSections": {
           "amend": "필수 섹션이 누락되었습니다: {{sections}} (专利法 §26 第1款・专利法实施细则 §17).",
           "pass": "모든 필수 섹션이 존재합니다."
@@ -923,6 +937,14 @@
         "antecedentBasis": {
           "verify": "{{claims}}에서 선행사가 없을 수 있는 용어 {{issue_count}}개(审查指南): '该 / 所述' 참조에 대한 선행 '一' 도입이 없을 수 있습니다.",
           "pass": "모든 청구항 용어에 선행사가 있습니다(审查指南)."
+        },
+        "omnibus": {
+          "amend": "{{claims}}: 청구항이 구체적 기술적 특징을 기재하지 않고 说明书·附图를 원용하고 있습니다 (审查指南 第二部分第二章 §3.3).",
+          "pass": "원용식 청구항이 발견되지 않았습니다."
+        },
+        "markushOpenTransition": {
+          "verify": "{{claims}}: 마쿠시 청구항이 개방형 연결어({{transitions}})를 사용합니다. 폐쇄형 「组成的」으로 수정해야 합니다 (审查指南 第二部分第十章 §9.3).",
+          "pass": "마쿠시 청구항은 폐쇄형 「组成的」을 사용합니다."
         }
       },
       "abstract": {
@@ -948,6 +970,10 @@
           "pass": "도 1–{{found_max}}이(가) 순차적으로 번호 매겨져 있습니다.",
           "passNone": "도면이 검출되지 않았습니다.",
           "amend": "도면 번호가 순차적이지 않습니다. 누락: {{figure_list}}."
+        },
+        "priorArt": {
+          "verify": "附图说明에서 선행 기술 참조가 발견되었습니다. 도면 표기를 확인하세요 (审查指南 第一部分第一章 §4.2).",
+          "pass": "附图说明에서 선행 기술 참조가 없습니다."
         }
       }
     },

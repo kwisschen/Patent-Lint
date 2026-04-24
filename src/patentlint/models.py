@@ -349,6 +349,7 @@ class AnalysisResult(BaseModel):
     # Specification
     jurisdiction: Jurisdiction = Jurisdiction.US
     patent_type: str | None = None
+    title: str = ""
     has_tracked_changes: bool = False
     paragraph_count: int = 0
     improper_spec_paragraphs: list[int] = Field(default_factory=list)
@@ -402,6 +403,11 @@ class AnalysisResult(BaseModel):
     cn_claims_checks: list[CheckItem] = Field(default_factory=list)
     cn_abstract_checks: list[CheckItem] = Field(default_factory=list)
     cn_drawings_checks: list[CheckItem] = Field(default_factory=list)
+    # CN per-claim lists for omnibus + Markush open-transition detection
+    # (CheckItem summary already sits inside ``cn_claims_checks`` above;
+    # these ID lists support report-data forwarding + cross-tooling).
+    cn_omnibus_claims: list[int] = Field(default_factory=list)
+    cn_markush_open_claims: list[int] = Field(default_factory=list)
 
     # TW check results (populated by _run_tw_pipeline, empty for US/CN)
     tw_specification_checks: list[CheckItem] = Field(default_factory=list)
@@ -605,6 +611,9 @@ class AnalysisResult(BaseModel):
             ))
 
         # --- Group 2: Spec content ---
+        from patentlint.analysis.specification import check_title as _check_us_title
+        spec_checks.extend(_check_us_title(self.title))
+
         if self.sequence_listing_mismatch:
             spec_checks.append(CheckItem(
                 status="amend",

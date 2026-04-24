@@ -9,6 +9,7 @@ from patentlint.analysis.drawings import (
     is_single_figure,
     uses_wrong_label_for_single_figure,
     contains_prior_art_references,
+    contains_prior_art_references_cn,
     count_figure_range,
     check_figure_cross_references,
 )
@@ -93,6 +94,35 @@ class TestPriorArt:
 
     def test_clean(self):
         assert contains_prior_art_references("FIG. 1 shows the device.") is False
+
+
+class TestPriorArtCn:
+    def test_xianyou_jishu_labeled(self):
+        assert contains_prior_art_references_cn("图1示出现有技术的小部件。") is True
+
+    def test_yizhi_jishu_labeled(self):
+        assert contains_prior_art_references_cn("图1示出已知技术的系统。") is True
+
+    def test_beijing_jishu_labeled(self):
+        assert contains_prior_art_references_cn("图1为背景技术示意图。") is True
+
+    def test_reverse_order(self):
+        assert contains_prior_art_references_cn("现有技术如图1所示。") is True
+
+    def test_clean_embodiment(self):
+        assert contains_prior_art_references_cn("图1为本发明一实施例的装置示意图。") is False
+
+    def test_boilerplate_preamble_not_flagged(self):
+        # The common 附图说明 intro mentions 现有技术 conceptually but
+        # doesn't label a specific figure. Must NOT fire (BOE fixture bug).
+        boilerplate = (
+            "为了更清楚地说明本发明实施例或现有技术中的技术方案，"
+            "下面将对实施例或现有技术描述中所需要使用的附图作简单地介绍"
+        )
+        assert contains_prior_art_references_cn(boilerplate) is False
+
+    def test_no_figure_reference_not_flagged(self):
+        assert contains_prior_art_references_cn("本发明克服了现有技术的缺点。") is False
 
 
 class TestFigureRange:

@@ -14,6 +14,7 @@ from patentlint.models import AnalysisResult, CheckItem
 def _mock_result():
     """Create a minimal AnalysisResult for testing."""
     return AnalysisResult(
+        title="Mock Widget",
         paragraph_count=10,
         independent_claims_count=1,
         dependent_claims_count=1,

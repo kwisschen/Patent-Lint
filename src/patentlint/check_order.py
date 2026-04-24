@@ -87,6 +87,7 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     # =====================================================================
     # --- Group 1: Spec structure ---
     "check.spec.trackedChanges.amend": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 10),
+    "check.cn.spec.trackedChanges.amend": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 10),
 
     "checks.required_sections_missing": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 20),
     "checks.required_sections_pass": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 20),
@@ -133,6 +134,11 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.tw.spec.patentTypeTerminology.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 20),
     "check.tw.spec.patentTypeTerminology.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 20),
 
+    "check.spec.title.amendContent": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 30),
+    "check.spec.title.amendLength": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 30),
+    "check.spec.title.amendMissing": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 30),
+    "check.spec.title.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 30),
+    "check.spec.title.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 30),
     "check.cn.spec.title.amendContent": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 30),
     "check.cn.spec.title.amendLength": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 30),
     "check.cn.spec.title.amendMissing": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 30),
@@ -181,6 +187,8 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
 
     "check.drawings.priorArt.verify": (CheckBucket.DRAWINGS, CheckGroup.DRAWINGS, 30),
     "check.drawings.priorArt.pass": (CheckBucket.DRAWINGS, CheckGroup.DRAWINGS, 30),
+    "check.cn.drawings.priorArt.verify": (CheckBucket.DRAWINGS, CheckGroup.DRAWINGS, 30),
+    "check.cn.drawings.priorArt.pass": (CheckBucket.DRAWINGS, CheckGroup.DRAWINGS, 30),
 
     "check.drawings.sequential.amend": (CheckBucket.DRAWINGS, CheckGroup.DRAWINGS, 40),
     "check.drawings.sequential.pass": (CheckBucket.DRAWINGS, CheckGroup.DRAWINGS, 40),
@@ -327,6 +335,10 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "claims.markushOpenTransition": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
     "claims.omnibusClaim": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
     "claims.specialFormatsPass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
+    "check.cn.claims.omnibus.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
+    "check.cn.claims.omnibus.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
+    "check.cn.claims.markushOpenTransition.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
+    "check.cn.claims.markushOpenTransition.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
 
     # Claim punctuation (MPEP § 608.01(m) / 35 U.S.C. §112(b)).
     "claims.extraPeriod": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 60),
