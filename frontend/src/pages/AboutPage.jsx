@@ -271,52 +271,60 @@ function JurisdictionFeatureBlock({ t, jurisdiction, cardKeys }) {
   )
 }
 
-// TW table: keeps the marketing buckets (Shared / TIPO-only / PatentLint-only)
-// but within each bucket rows sort by the canonical 7-group document order.
+// TW table: three marketing buckets (Shared / TIPO-only / PatentLint-only).
+// Within each bucket rows sort by the canonical 7-group document order.
 //
-// G1 placement discipline: only items with DIRECT EVIDENCE or strong single-
-// step inference from TIPO 專利申請文件輔助偵錯系統's documented check
-// families stay in G1. The documented families are narrow and specific
-// (文字矛盾 / 元件標號錯誤 / 標點符號誤用 / 用語不一致 / 獨立項元件連接關係 /
-// 名稱與範圍用語相符性 / 請求項開頭文字 / 書寫格式檢查) per IPPA trade-
-// association writeup + Irene Lin's practitioner walkthrough (Medium).
-//
-// When uncertain whether TIPO 偵錯系統 performs a given check, item lives
-// in G3 (PatentLint-only). This errs on the side of not overclaiming TIPO's
-// scope; if a TIPO practitioner flags any G3 item as actually-covered, we
-// move it to G1 — a one-line correction rather than a retraction.
+// AUTHORITATIVE SOURCE for TIPO coverage: "專利申請文件輔助偵錯系統 —
+// 功能介紹與使用指南" (2023.5.30 版, 專利行政企劃組 助理審查官 劉克群).
+// Table 1 lists 20 documented check families — each check below is mapped
+// to the specific TIPO item number it corresponds to. G1 is direct evidence
+// from that table, not inference.
 const TW_GROUP1_CHECKS = [
-  // Spec content (strong inference: 用語不一致 family)
-  'patentTypeTerminology',
-  // Claims structure (strong inference: 用語不一致 family applied to dependent
-  // claim subject-matter consistency)
-  'subjectConsistency',
-  // Claims cross-jurisdiction (both confirmed in TIPO documentation)
-  'titleSubjectMatch', 'connectionRelationships',
+  // G2 spec-content
+  'figureRefConsistency',        // TIPO #4  (實施方式圖號 vs 圖式簡單說明)
+  'patentTypeTerminology',       // TIPO #18 (新型 內容/實施方式 用「本發明」「此發明」)
+  'symbolVsRepDrawing',          // TIPO #1/#2/#16 (符號說明 vs 代表圖符號簡單說明)
+  'symbolTableConsistency',      // TIPO #3  (新型內容/實施方式 vs 符號說明/代表圖符號簡單說明)
+  // G4 claims-structure
+  'selfDependent',               // TIPO #5  (附屬項未依附在前 — self-dep 分支)
+  'circularDependency',          // TIPO #5  (附屬項未依附在前 — circular 分支)
+  'forwardDependency',           // TIPO #5  (附屬項未依附在前 — forward 分支)
+  'singleSentence',              // TIPO #8  (獨立項/附屬項未以單句為之)
+  'refNumeralParens',            // TIPO #9  (構件符號未全部置於括號內)
+  'subjectConsistency',          // TIPO #10 (附屬項標的名稱 vs 所依附請求項標的名稱)
+  'dependencyFormat',            // TIPO #20 (附屬項開頭「如」「依據」「根據」)
+  // G5 claims-cross-jurisdiction
+  'cnTerminology',               // TIPO #17 (附屬項開頭使用「權利要求」)
+  'multiDepOnMultiDep',          // TIPO #6  (多項附屬項直接/間接依附多項附屬項)
+  'multiDepAlternative',         // TIPO #7  (多項附屬項未以選擇式為之)
+  'titleSubjectMatch',           // TIPO #15 (新型名稱 vs 請求項標的名稱)
+  'claimsSymbolTableConsistency',// TIPO #13 (申請專利範圍 vs 符號說明/代表圖符號簡單說明)
+  'connectionRelationships',     // TIPO #14 (獨立項主要構件連結/對應關係)
+  // G6 claims §112-equivalent
+  'antecedentBasis',             // TIPO #11 + #12 (先行詞 + 不當依附)
 ]
 
 const TW_GROUP2_CHECKS = [
-  // TIPO-specific (no canonical-group match — single item)
+  // TIPO #19 — 原住民相關用語. The only TIPO check with no PatentLint
+  // counterpart; sensitive-terms advisory tied to 原住民族傳統智慧創作保護條例.
   'tipoIndigenous',
 ]
 
 const TW_GROUP3_CHECKS = [
-  // Spec structure
+  // G1 spec-structure
   'requiredSections', 'sectionOrdering', 'paragraphNumbering', 'paragraphEnding', 'bracketFormat',
-  // Spec content
-  'figureRefConsistency', 'title', 'claimReference', 'symbolTablePresence', 'symbolTableConsistency',
-  // Drawings
+  // G2 spec-content
+  'title', 'claimReference', 'symbolTablePresence',
+  // G3 drawings
   'figuresSequential',
-  // Claims structure
-  'sequential', 'dependencyFormat', 'selfDependent', 'circularDependency', 'forwardDependency',
-  'singleSentence', 'refNumeralParens', 'transitionPhrase',
-  // Claims cross-jurisdiction
-  'cnTerminology', 'specDrawingRef', 'multiDepOnMultiDep', 'multiDepAlternative',
-  'claimsSymbolTableConsistency',
-  // Claims §26 第3項 semantic walker analysis
-  'antecedentBasis', 'specSupport',
-  // Abstract
-  'charCount', 'titleMatch', 'commercialLanguage', 'representativeDrawing', 'symbolVsRepDrawing',
+  // G4 claims-structure
+  'sequential', 'transitionPhrase',
+  // G5 claims-cross-jurisdiction
+  'specDrawingRef',
+  // G6 claims §26 第3項 semantic walker analysis
+  'specSupport',
+  // G7 abstract
+  'charCount', 'titleMatch', 'commercialLanguage', 'representativeDrawing',
 ]
 
 function TwComparisonTable({ t }) {
@@ -383,7 +391,7 @@ function TwComparisonTable({ t }) {
         {renderGroup(ref3, inView3, 'about.tw.group3Title', TW_GROUP3_CHECKS, false, true, true, 300)}
       </table>
       <p className="text-xs text-muted-foreground italic px-2 py-3">
-        {t('about.tableFootnote')}
+        {t('about.twTableFootnote')}
       </p>
     </div>
   )
