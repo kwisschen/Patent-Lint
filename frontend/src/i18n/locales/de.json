@@ -77,7 +77,7 @@
   "status": {
     "pass": "OK",
     "verify": "PRÜFEN",
-    "amend": "ÄNDERN"
+    "amend": "KORRIGIEREN"
   },
   "button": {
     "downloadPdf": "PDF-Bericht speichern",
@@ -209,9 +209,9 @@
   },
   "triage": {
     "title": "Prioritäten-Übersicht",
-    "amend": "Änderung erforderlich",
-    "amendEmpty": "Keine änderungsbedürftigen Punkte.",
-    "verify": "Fachliche Prüfung nötig",
+    "amend": "Korrektur erforderlich",
+    "amendEmpty": "Keine korrekturbedürftigen Punkte.",
+    "verify": "Prüfung nötig",
     "verifyEmpty": "Keine zur Prüfung markierten Punkte.",
     "pass": "Bestanden",
     "items": "Einträge",
@@ -555,7 +555,8 @@
     "crossReferenceCitations": "{{text}}. Prüfen Sie, ob die Aktenzeichen korrekt sind und die Prioritätskette vollständig ist (Continuations, CIPs, Provisionals, Divisionals).",
     "priorArtCitations": "{{text}}. Prüfen Sie, ob Patent-/Veröffentlichungsnummern korrekt sind. Charakterisierungen des Stands der Technik können im Prüfungsverfahren als Zugeständnisse gewertet werden.",
     "optionalSectionGuidance": "Fügen Sie diesen Abschnitt hinzu, falls er für Ihre Anmeldung einschlägig ist.",
-    "restrictiveWordingClaims": "Ansprüche: {{list}}. Diese Begriffe können gemäß MPEP § 2173.05(b) eine Zurückweisung wegen Unklarheit nach § 112(b) auslösen. Prüfen Sie jeden gekennzeichneten Anspruch darauf, ob der Begriff erforderlich ist.",
+    "restrictiveAbsolutesClaims": "Ansprüche: {{list}}. Absolute Begriffe wie „must\", „essential\", „always\", „never\" können den Anspruchsumfang unnötig einschränken und zu einer § 112(b)-Unbestimmtheit führen, wenn die Beschreibung die geforderte Absolutheit nicht tatsächlich verlangt. Gemäß MPEP § 2173.01: Prüfen Sie jeden gekennzeichneten Begriff und formulieren Sie ihn um, falls die Einschränkung nicht gestützt ist.",
+    "indefiniteWordingClaims": "Ansprüche: {{list}}. Relative oder unbestimmte Begriffe wie „substantially\", „approximately\", „generally\", „may\", „preferably\", „or the like\" machen den Anspruchsumfang unklar. Gemäß MPEP § 2173.05(b): Prüfen Sie jeden gekennzeichneten Begriff und ersetzen Sie ihn durch präzise Einschränkungen oder entfernen Sie ihn, falls nicht erforderlich.",
     "multipleDependentClaims": "Ansprüche: {{list}}. Mehrfach abhängige Ansprüche lösen zusätzliche Gebühren aus und dürfen nicht auf weitere mehrfach abhängige Ansprüche rückbezogen sein (35 U.S.C. § 112(e)). Prüfen Sie, ob dies beabsichtigt ist.",
     "selfDependentClaims": "Ansprüche: {{list}}. Ein Anspruch kann nicht von sich selbst abhängen. Korrigieren Sie den Rückbezug.",
     "meansFunctionClaims": "Ansprüche: {{list}}. Nach § 112(f) ist der Schutzbereich auf die in der Beschreibung offenbarte entsprechende Struktur und deren Äquivalente beschränkt. Prüfen Sie, ob die Beschreibung für jede funktionelle Merkmalsangabe ausreichende Struktur offenbart.",
@@ -569,7 +570,8 @@
     "figuresSequentialFix": "Figuren in aufsteigender Reihenfolge neu nummerieren gemäß MPEP § 608.02.",
     "orphanedBriefFigures": "Figuren: {{list}}. Fügen Sie entweder einen Verweis auf diese Figuren in der ausführlichen Beschreibung hinzu oder entfernen Sie sie aus der Kurzbeschreibung.",
     "orphanedDetailedFigures": "Figuren: {{list}}. Fügen Sie entweder eine Beschreibung dieser Figuren in der kurzen Beschreibung der Zeichnungen hinzu oder entfernen Sie den Verweis aus der ausführlichen Beschreibung.",
-    "restrictiveWordingAbstract": "Die Zusammenfassung sollte juristische Formulierungen („comprising“, „said“, „means“), anpreisende Sprache („novel“, „innovative“) und einschränkende Begriffe („must“, „essential“) gemäß MPEP § 608.01(b) vermeiden. Formulieren Sie die gekennzeichneten Begriffe um.",
+    "legalPhraseologyAbstract": "Gemäß MPEP § 608.01(b) sollte die Zusammenfassung „die in Patentansprüchen übliche Form und juristische Formulierung\" vermeiden — das Handbuch nennt „means\" und „said\", und die Fachliteratur erweitert die Klasse um Übergangsbegriffe („comprising\", „comprises\" usw.), Anspruchsmodifikatoren („wherein\") und anspruchstypische archaische Pronomen („thereof\", „the same\"). Formulieren Sie die gekennzeichneten Begriffe um.",
+    "meritLanguageAbstract": "Gemäß MPEP § 608.01(b) darf die Zusammenfassung nicht auf vermeintliche Vorzüge der Erfindung Bezug nehmen — vermeiden Sie anpreisende Adjektive („novel\", „innovative\", „unique\", „important\", „significant\") und selbstbezügliche Formulierungen („the present invention\"). Formulieren Sie die gekennzeichneten Begriffe um.",
     "abstractStructureFix": "Die Zusammenfassung muss ein einziger Absatz sein, der mit Punkt, Ausrufe- oder Fragezeichen endet, und gemäß MPEP § 608.01(b) als letzter Abschnitt der Beschreibung erscheinen.",
     "abstractImpliedPhrasesFix": "Gemäß MPEP § 608.01(b) sollten Einleitungen wie „This disclosure provides...“ oder „A method is provided...“ umformuliert werden, um die Erfindung direkt zu beschreiben (z. B. „A method that...“).",
     "abstractWordCountFix": "Die Zusammenfassung muss gemäß MPEP § 608.01(b) zwischen 50 und 150 Wörtern liegen. Bitte anpassen.",
@@ -734,9 +736,13 @@
       }
     },
     "claims": {
-      "restrictiveWording": {
-        "verify": "Einschränkende oder unklare Formulierungen in den Ansprüchen gefunden (MPEP § 2173.05(b)).",
-        "pass": "Keine einschränkenden oder unklaren Formulierungen in den Ansprüchen gefunden."
+      "restrictiveAbsolutes": {
+        "verify": "Einschränkende Absolutismen in den Ansprüchen gefunden (MPEP § 2173.01).",
+        "pass": "Keine einschränkenden Absolutismen in den Ansprüchen gefunden."
+      },
+      "indefiniteWording": {
+        "verify": "Unbestimmte oder relative Formulierungen in den Ansprüchen gefunden (MPEP § 2173.05(b)).",
+        "pass": "Keine unbestimmten oder relativen Formulierungen in den Ansprüchen gefunden."
       },
       "sequential": {
         "amend": "Anspruchsnummern sind nicht fortlaufend (MPEP § 608.01(m)).",
@@ -777,9 +783,13 @@
       "overview": "Anspruchs-Übersicht."
     },
     "abstract": {
-      "restrictiveWording": {
-        "verify": "Einschränkende oder unzulässige Formulierungen in der Zusammenfassung gefunden (MPEP § 608.01(b)).",
-        "pass": "Keine einschränkenden oder unzulässigen Formulierungen in der Zusammenfassung gefunden."
+      "legalPhraseology": {
+        "verify": "Anspruchsähnliche juristische Formulierungen in der Zusammenfassung gefunden (MPEP § 608.01(b)).",
+        "pass": "Keine anspruchsähnlichen juristischen Formulierungen in der Zusammenfassung gefunden."
+      },
+      "meritLanguage": {
+        "verify": "Anpreisende oder selbstbezügliche Sprache in der Zusammenfassung gefunden (MPEP § 608.01(b)).",
+        "pass": "Keine anpreisende oder selbstbezügliche Sprache in der Zusammenfassung gefunden."
       },
       "structure": {
         "amend": "Zusammenfassung hat zusätzliche Absätze oder ungültiges Ende — muss ein einziger Absatz sein (MPEP § 608.01(b)).",
@@ -1125,8 +1135,8 @@
     "header": "PatentLint Prüfbericht",
     "headerTw": "PatentLint — Prüfbericht zur taiwanesischen Patentbeschreibung",
     "securityNote": "Auf Ihrem Gerät geprüft -- nicht in die Cloud hochgeladen.",
-    "amend": "Änderung erforderlich",
-    "verify": "Fachliche Prüfung nötig",
+    "amend": "Korrektur erforderlich",
+    "verify": "Prüfung nötig",
     "pass": "Bestanden",
     "claimDependency": "Anspruchs-Abhängigkeitsbaum",
     "claim": "Anspruch",

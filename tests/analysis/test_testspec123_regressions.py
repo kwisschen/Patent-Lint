@@ -125,43 +125,61 @@ class TestFlaggedPhrasesSurfacing:
             assert "token" in item and item["token"]
             assert "location" in item and isinstance(item["location"], int)
 
-    def test_claims_restrictive_wording_surfaces_flagged_phrases(self):
+    def test_claims_wording_surfaces_flagged_phrases(self):
+        """After the restrictiveWording split, claims surface findings come
+        from either restrictiveAbsolutes (§ 2173.01) or indefiniteWording
+        (§ 2173.05(b)). At least one of these should fire on TestSpec123 and
+        carry flagged_phrases chips."""
         result = self._run_us_pipeline()
         report = result.to_report_data()
         claims_checks = [
             c for c in report.claims_checks
-            if c.message_key == "check.claims.restrictiveWording.verify"
+            if c.message_key in (
+                "check.claims.restrictiveAbsolutes.verify",
+                "check.claims.indefiniteWording.verify",
+            )
         ]
-        assert claims_checks, "Expected at least one claims restrictive-wording verify finding"
-        check = claims_checks[0]
-        assert check.details_params is not None
-        phrases = check.details_params.get("flagged_phrases")
-        assert phrases is not None, (
-            "details_params.flagged_phrases missing on claims restrictiveWording — "
-            "FlaggedTermList chips won't render."
+        assert claims_checks, (
+            "Expected at least one restrictiveAbsolutes or indefiniteWording verify finding"
         )
-        items = phrases.get("items")
-        assert items, "flagged_phrases.items empty"
-        for item in items:
-            assert "token" in item and item["token"]
-            assert "location" in item and isinstance(item["location"], int)
+        for check in claims_checks:
+            assert check.details_params is not None
+            phrases = check.details_params.get("flagged_phrases")
+            assert phrases is not None, (
+                f"details_params.flagged_phrases missing on {check.message_key} — "
+                f"FlaggedTermList chips won't render."
+            )
+            items = phrases.get("items")
+            assert items, f"flagged_phrases.items empty on {check.message_key}"
+            for item in items:
+                assert "token" in item and item["token"]
+                assert "location" in item and isinstance(item["location"], int)
 
-    def test_abstract_restrictive_wording_surfaces_flagged_phrases(self):
+    def test_abstract_wording_surfaces_flagged_phrases(self):
+        """When the abstract legalPhraseology or meritLanguage checks DO
+        fire, their findings must carry flagged_phrases chips so the UI can
+        render them. After the § 608.01(b) regex tightening, TestSpec123's
+        abstract may not trigger either subcategory (its prior triggers like
+        'thereof' / 'the same' / 'always' were correctly removed as not
+        § 608.01(b)-supported); if so, this test is a no-op for this fixture
+        but still guards chip-rendering when either check does fire."""
         result = self._run_us_pipeline()
         report = result.to_report_data()
         abstract_checks = [
             c for c in report.abstract_checks
-            if c.message_key == "check.abstract.restrictiveWording.verify"
+            if c.message_key in (
+                "check.abstract.legalPhraseology.verify",
+                "check.abstract.meritLanguage.verify",
+            )
         ]
-        assert abstract_checks, "Expected at least one abstract restrictive-wording finding"
-        check = abstract_checks[0]
-        assert check.details_params is not None
-        phrases = check.details_params.get("flagged_phrases")
-        assert phrases is not None, (
-            "details_params.flagged_phrases missing on abstract restrictiveWording"
-        )
-        items = phrases.get("items")
-        assert items, "flagged_phrases.items empty"
+        for check in abstract_checks:
+            assert check.details_params is not None
+            phrases = check.details_params.get("flagged_phrases")
+            assert phrases is not None, (
+                f"details_params.flagged_phrases missing on {check.message_key}"
+            )
+            items = phrases.get("items")
+            assert items, f"flagged_phrases.items empty on {check.message_key}"
 
     def test_preamble_noun_mismatch_surfaces_claim_ids(self):
         """Each individual preamble_noun_mismatch CheckItem must carry the

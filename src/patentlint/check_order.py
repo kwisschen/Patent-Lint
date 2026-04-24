@@ -291,8 +291,10 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.tw.claims.connectionRelationships.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 70),
     "check.tw.claims.connectionRelationships.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 70),
 
-    "check.claims.restrictiveWording.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 80),
-    "check.claims.restrictiveWording.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 80),
+    "check.claims.restrictiveAbsolutes.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 80),
+    "check.claims.restrictiveAbsolutes.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 80),
+    "check.claims.indefiniteWording.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 82),
+    "check.claims.indefiniteWording.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 82),
 
     # --- Group 6: Claims § 112 analysis ---
     "check.claims.meansFunction.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 10),
@@ -355,8 +357,10 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.tw.abstract.commercialLanguage.amend": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 30),
     "check.tw.abstract.commercialLanguage.pass": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 30),
 
-    "check.abstract.restrictiveWording.verify": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 40),
-    "check.abstract.restrictiveWording.pass": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 40),
+    "check.abstract.legalPhraseology.verify": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 40),
+    "check.abstract.legalPhraseology.pass": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 40),
+    "check.abstract.meritLanguage.verify": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 42),
+    "check.abstract.meritLanguage.pass": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 42),
 
     "check.abstract.impliedPhrases.amend": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 50),
     "check.abstract.impliedPhrases.pass": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 50),

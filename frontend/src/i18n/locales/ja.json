@@ -209,9 +209,9 @@
   },
   "triage": {
     "title": "優先事項の要約",
-    "amend": "修正が必要",
+    "amend": "要修正",
     "amendEmpty": "修正が必要な項目はありません。",
-    "verify": "専門家の確認が必要",
+    "verify": "要確認",
     "verifyEmpty": "確認が必要な項目はありません。",
     "pass": "合格",
     "items": "件",
@@ -555,7 +555,8 @@
     "crossReferenceCitations": "{{text}}。出願番号が正確であり、優先権チェーン（継続出願、CIP、仮出願、分割出願）が完全であることを確認してください。",
     "priorArtCitations": "{{text}}。特許/公開番号が正確であることを確認してください。先行技術の特性評価は審査中に自認として扱われる可能性があります。",
     "optionalSectionGuidance": "出願に該当する場合はこのセクションを追加してください。",
-    "restrictiveWordingClaims": "請求項：{{list}}。上の用語は MPEP § 2173.05(b) に基づき § 112(b) の不明確拒絶を引き起こす可能性があります。各フラグ付き請求項を確認し、その用語が必要か検討してください。",
+    "restrictiveAbsolutesClaims": "請求項：{{list}}。「must」、「essential」、「always」、「never」などの絶対的用語は請求項の範囲を不必要に狭める可能性があり、明細書が実際にはその絶対性を要求していない場合、§ 112(b) の不明確性を招きうる可能性があります。MPEP § 2173.01 に従い、標記された各用語を見直し、その限定が明細書によって裏付けられていない場合は書き直してください。",
+    "indefiniteWordingClaims": "請求項：{{list}}。「substantially」、「approximately」、「generally」、「may」、「preferably」、「or the like」などの相対的または不明確な用語は請求項の範囲を不明瞭にします。MPEP § 2173.05(b) に従い、標記された各用語を見直し、具体的な限定に置き換えるか、不要な場合は削除してください。",
     "multipleDependentClaims": "請求項：{{list}}。多数項従属請求項は追加手数料が発生し、他の多数項従属請求項に従属することはできません（35 U.S.C. § 112(e)）。意図的であることを確認してください。",
     "selfDependentClaims": "請求項：{{list}}。請求項は自身に従属できません。従属関係の参照を修正してください。",
     "meansFunctionClaims": "請求項：{{list}}。§ 112(f) に基づき、請求項の範囲は明細書に開示された対応する構造およびその均等物に限定されます。各ミーンズ・プラス・ファンクション限定について、明細書が十分な構造を記載していることを確認してください。",
@@ -569,7 +570,8 @@
     "figuresSequentialFix": "MPEP § 608.02 に従い、図面を昇順に再番号付けしてください。",
     "orphanedBriefFigures": "図面：{{list}}。発明を実施するための形態でこれらの図面への参照を追加するか、図面の簡単な説明から削除してください。",
     "orphanedDetailedFigures": "図面：{{list}}。図面の簡単な説明でこれらの図面の説明を追加するか、発明を実施するための形態から参照を削除してください。",
-    "restrictiveWordingAbstract": "MPEP § 608.01(b) に従い、要約書では法律用語（「comprising」、「said」、「means」）、評価的用語（「novel」、「innovative」）、限定的用語（「must」、「essential」）を避けるべきです。上に表示した用語を修正してください。",
+    "legalPhraseologyAbstract": "MPEP § 608.01(b) に従い、要約書では「請求項で使用される形式および法律用語」を避けるべきです——手引書は「means」と「said」を明示的に挙げており、実務指南はこの範疇を移行句（「comprising」、「comprises」等）、請求項修飾語（「wherein」）、および請求項様式の古典的代名詞（「thereof」、「the same」）にまで広げています。上に表示した用語を修正してください。",
+    "meritLanguageAbstract": "MPEP § 608.01(b) に従い、要約書では発明の自称的な利点に言及すべきではありません——評価的な形容詞（「novel」、「innovative」、「unique」、「important」、「significant」）や自己言及的な表現（「the present invention」）を避けてください。上に表示した用語を修正してください。",
     "abstractStructureFix": "MPEP § 608.01(b) に従い、要約書はピリオド、感嘆符、または疑問符で終わる単一段落であり、特許明細書の最後のセクションとして配置される必要があります。",
     "abstractImpliedPhrasesFix": "MPEP § 608.01(b) に基づき、「This disclosure provides...」や「A method is provided...」などの書き出しは発明を直接記述するよう書き換えてください（例：「A method that...」）。",
     "abstractWordCountFix": "MPEP § 608.01(b) に従い、要約書は 50 語から 150 語の範囲内である必要があります。この範囲を満たすよう修正してください。",
@@ -734,9 +736,13 @@
       }
     },
     "claims": {
-      "restrictiveWording": {
-        "verify": "特許請求の範囲に限定的または不明確な表現が含まれています（MPEP § 2173.05(b)）。",
-        "pass": "特許請求の範囲に限定的または不明確な表現は見つかりませんでした。"
+      "restrictiveAbsolutes": {
+        "verify": "請求項に絶対的限定用語が見つかりました（MPEP § 2173.01）。",
+        "pass": "請求項に絶対的限定用語は見つかりませんでした。"
+      },
+      "indefiniteWording": {
+        "verify": "請求項に不明確または相対的な用語が見つかりました（MPEP § 2173.05(b)）。",
+        "pass": "請求項に不明確または相対的な用語は見つかりませんでした。"
       },
       "sequential": {
         "amend": "請求項番号が連続していません（MPEP § 608.01(m)）。",
@@ -777,9 +783,13 @@
       "overview": "特許請求の範囲の概要。"
     },
     "abstract": {
-      "restrictiveWording": {
-        "verify": "要約書に限定的または不適切な表現が含まれています（MPEP § 608.01(b)）。",
-        "pass": "要約書に限定的または不適切な表現は見つかりませんでした。"
+      "legalPhraseology": {
+        "verify": "要約書に請求項様式の法律用語が見つかりました（MPEP § 608.01(b)）。",
+        "pass": "要約書に請求項様式の法律用語は見つかりませんでした。"
+      },
+      "meritLanguage": {
+        "verify": "要約書に評価的または自己言及的な用語が見つかりました（MPEP § 608.01(b)）。",
+        "pass": "要約書に評価的または自己言及的な用語は見つかりませんでした。"
       },
       "structure": {
         "amend": "要約書に余分な段落または無効な末尾があります：単一段落でなければなりません（MPEP § 608.01(b)）。",
@@ -1125,8 +1135,8 @@
     "header": "PatentLint チェックレポート",
     "headerTw": "PatentLint｜台湾特許明細書検査レポート",
     "securityNote": "お使いのデバイス上でチェックしました。クラウドへのアップロードはありません。",
-    "amend": "修正が必要",
-    "verify": "専門家の確認が必要",
+    "amend": "要修正",
+    "verify": "要確認",
     "pass": "合格",
     "claimDependency": "請求項従属関係表",
     "claim": "請求項",
