@@ -275,6 +275,100 @@ def check_required_sections(full_text: str) -> list[CheckItem]:
     return results
 
 
+_TITLE_TRADEMARK_RE = re.compile(r"[®™©]")
+# Commercial / model-number pattern per MPEP § 608.01 — reject ALL-CAPS
+# alphanumeric tokens that look like product codes (e.g. "AB-123", "X-9000").
+_TITLE_MODEL_NUMBER_RE = re.compile(r"\b[A-Z]{2,}[- ]?\d{2,}[A-Z0-9\-]*\b")
+
+
+def check_title(title: str) -> list[CheckItem]:
+    """Check US patent title length and prohibited content (MPEP § 606 / § 608.01).
+
+    - Missing title: AMEND.
+    - Title > 500 characters (MPEP § 606 hard cap): AMEND.
+    - Title contains trademark symbol or model-number pattern: AMEND.
+    - Title > 15 words (MPEP § 606 "preferably 2-7 words" soft guideline): VERIFY.
+    - Otherwise: PASS.
+    """
+    clean = title.strip()
+    if not clean:
+        return [CheckItem(
+            status="amend",
+            message="Title is missing from specification.",
+            message_key="check.spec.title.amendMissing",
+            details_key="details.titleMissing",
+            reference="MPEP § 606",
+            diagnostics=_dx(reason_code="missing", title_charlen=0),
+        )]
+
+    results: list[CheckItem] = []
+
+    charlen = len(clean)
+    if charlen > 500:
+        results.append(CheckItem(
+            status="amend",
+            message=f"Title has {charlen} characters (MPEP § 606 hard cap is 500).",
+            message_key="check.spec.title.amendLength",
+            details_key="details.titleLength",
+            details_params={"count": charlen},
+            reference="MPEP § 606",
+            diagnostics=_dx(
+                reason_code="length",
+                char_count=charlen,
+                threshold=500,
+                overage=charlen - 500,
+            ),
+        ))
+
+    items: list[dict] = []
+    tm = _TITLE_TRADEMARK_RE.search(clean)
+    if tm:
+        items.append({"kind": "trademark", "token": tm.group()})
+    mn = _TITLE_MODEL_NUMBER_RE.search(clean)
+    if mn:
+        items.append({"kind": "model", "token": mn.group()})
+    if items:
+        results.append(CheckItem(
+            status="amend",
+            message="Title contains prohibited content (trademark or model number).",
+            message_key="check.spec.title.amendContent",
+            details_key="details.titleContent",
+            details_params={"title_prohibited_items": {"items": items}},
+            reference="MPEP § 608.01",
+            diagnostics=_dx(
+                reason_code="prohibited_content",
+                flagged_count=len(items),
+                title_charlen=charlen,
+            ),
+        ))
+
+    word_count = len(clean.split())
+    if word_count > 15 and charlen <= 500 and not items:
+        results.append(CheckItem(
+            status="verify",
+            message=f"Title has {word_count} words — MPEP § 606 recommends a short, specific title.",
+            message_key="check.spec.title.verify",
+            details_key="details.titleWordCount",
+            details_params={"count": word_count},
+            reference="MPEP § 606",
+            diagnostics=_dx(
+                reason_code="wordy",
+                word_count=word_count,
+                threshold=15,
+            ),
+        ))
+
+    if not results:
+        results.append(CheckItem(
+            status="pass",
+            message="Title meets MPEP § 606 requirements.",
+            message_key="check.spec.title.pass",
+            reference="MPEP § 606",
+        ))
+
+    return results
+
+
 def has_sequence_listing_mismatch(full_text: str) -> bool:
     """Check if spec mentions SEQ ID NO but lacks a sequence listing statement."""
     mentions_seq = bool(re.search(r"(?i)SEQ\.?\s*(ID|NO)\.?\s*(NO\.)?", full_text))

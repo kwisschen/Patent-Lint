@@ -22,6 +22,7 @@ import { Toaster } from './components/ui/sonner'
 import { analyzeDocument, downloadReport as downloadReportServer } from './api'
 import { downloadReport as downloadReportClient, prefetchCjkFont } from './lib/pdfExport'
 import { getJurisdictionConfig, JURISDICTION_COLORS } from './lib/jurisdictionConfig'
+import { CHECKS_BY_JURISDICTION } from './generated/stats'
 
 function JurisdictionBadge({ code }) {
   return (
@@ -159,7 +160,7 @@ function App() {
                       </button>
                     ))}
                   </div>
-                  <p className="text-base sm:text-lg text-muted-foreground text-center mb-4">{t(getJurisdictionConfig(jurisdiction).taglineKey)}</p>
+                  <p className="text-base sm:text-lg text-muted-foreground text-center mb-4">{t(getJurisdictionConfig(jurisdiction).taglineKey, { count: CHECKS_BY_JURISDICTION[jurisdiction] })}</p>
                   <DropZone onFile={handleFile} onShowProveIt={() => setShowProveIt(true)} jurisdiction={jurisdiction} />
                 </div>
               )}
