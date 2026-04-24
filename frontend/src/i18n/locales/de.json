@@ -438,7 +438,7 @@
       "figuresSequential": "Figuren fortlaufend nummeriert"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
-    "twSubtitle": "TIPO 偵錯系統 ist das amtliche Prüfwerkzeug. PatentLint implementiert TW-Ausarbeitungsregeln in der Tiefe.",
+    "twSubtitle": "TIPO 偵錯系統 unterstützt nur Gebrauchsmuster-Anmeldungen. PatentLint deckt Gebrauchsmuster und Erfindungspatente ab.",
     "twFeatures": {
       "title": "Interaktive Prüfung von TW-Patentanmeldungen",
       "claimTree": {
@@ -531,7 +531,7 @@
     "builderDesc2": "Die Analyse-Engine ist in Python geschrieben und wird zu WebAssembly kompiliert. Sie läuft vollständig im Browser, auf Laptop, Tablet oder Smartphone, ohne Upload und ohne Protokollierung. Das heißt: Sie funktioniert im Flugzeug, auf gesperrten Kanzleirechnern, auf allem, was ein Mandant noch nicht freigegeben hat.",
     "builderSister": "Das Schwesterprojekt, der Agentic Patent Analyst, übernimmt die argumentationsintensive Arbeit und nutzt intern feinjustierte LLM-Agenten für Stand-der-Technik-Recherche und Anspruchsabdeckungsanalyse.",
     "tableFootnote": "Stand: April 2026. Beide Systeme können weiterentwickelt werden.",
-    "twTableFootnote": "TIPO-Abdeckung abgeglichen mit 專利申請文件輔助偵錯系統 — 功能介紹與使用指南 (Ausgabe 30.05.2023). Beide Systeme können weiterentwickelt werden."
+    "twTableFootnote": "TIPO-Abdeckung abgeglichen mit 專利申請文件輔助偵錯系統 — 功能介紹與使用指南 (Ausgabe 30.05.2023). TIPO 偵錯系統 unterstützt nur Gebrauchsmuster-Anmeldungen; PatentLint unterstützt Gebrauchsmuster und Erfindungspatente. Beide Systeme können weiterentwickelt werden."
   },
   "details": {
     "paragraphs": "Absätze: {{list}}",

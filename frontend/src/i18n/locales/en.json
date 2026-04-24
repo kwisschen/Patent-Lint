@@ -438,7 +438,7 @@
       "figuresSequential": "Figures numbered sequentially"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
-    "twSubtitle": "TIPO 偵錯系統 is TIPO's official tool. PatentLint implements TW drafting rules in depth.",
+    "twSubtitle": "TIPO 偵錯系統 supports utility-model filings only. PatentLint covers both utility models and inventions.",
     "twFeatures": {
       "title": "Interactive TW patent analysis",
       "claimTree": {
@@ -531,7 +531,7 @@
     "builderDesc2": "The analysis engine is written in Python and compiles to WebAssembly. It runs entirely in the browser, on a laptop, tablet, or phone, with nothing uploaded and nothing logged. That means it works on an airplane, on a locked-down firm machine, on anything a client hasn't signed off on yet.",
     "builderSister": "Its companion project, the Agentic Patent Analyst, covers the reasoning-heavy work, using in-house fine-tuned LLM agents for prior art search and claim coverage analysis.",
     "tableFootnote": "As of April 2026; both tools may continue to evolve.",
-    "twTableFootnote": "TIPO coverage audited against 專利申請文件輔助偵錯系統 — 功能介紹與使用指南 (2023.5.30 版). Both tools may continue to evolve."
+    "twTableFootnote": "TIPO coverage audited against 專利申請文件輔助偵錯系統 — 功能介紹與使用指南 (2023.5.30 版). TIPO 偵錯系統 supports utility-model filings only; PatentLint supports both utility models and inventions. Both tools may continue to evolve."
   },
   "details": {
     "paragraphs": "Paragraphs: {{list}}",
