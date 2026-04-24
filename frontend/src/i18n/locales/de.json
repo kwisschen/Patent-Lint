@@ -558,6 +558,7 @@
     "restrictiveAbsolutesClaims": "Ansprüche: {{list}}. Absolute Begriffe wie „must\", „essential\", „always\", „never\" können den Anspruchsumfang unnötig einschränken und zu einer § 112(b)-Unbestimmtheit führen, wenn die Beschreibung die geforderte Absolutheit nicht tatsächlich verlangt. Gemäß MPEP § 2173.01: Prüfen Sie jeden gekennzeichneten Begriff und formulieren Sie ihn um, falls die Einschränkung nicht gestützt ist.",
     "indefiniteWordingClaims": "Ansprüche: {{list}}. Relative oder unbestimmte Begriffe wie „substantially\", „approximately\", „generally\", „may\", „preferably\", „or the like\" machen den Anspruchsumfang unklar. Gemäß MPEP § 2173.05(b): Prüfen Sie jeden gekennzeichneten Begriff und ersetzen Sie ihn durch präzise Einschränkungen oder entfernen Sie ihn, falls nicht erforderlich.",
     "multipleDependentClaims": "Ansprüche: {{list}}. Mehrfach abhängige Ansprüche lösen zusätzliche Gebühren aus und dürfen nicht auf weitere mehrfach abhängige Ansprüche rückbezogen sein (35 U.S.C. § 112(e)). Prüfen Sie, ob dies beabsichtigt ist.",
+    "chainedMultiDepClaims": "Ansprüche: {{list}}. Gemäß 35 U.S.C. § 112(e) (und MPEP § 608.01(n)) darf ein mehrfach abhängiger Anspruch nicht von einem weiteren mehrfach abhängigen Anspruch abhängen. Formulieren Sie die gekennzeichneten Ansprüche so um, dass sie entweder von einem einzigen Anspruch oder direkt von unabhängigen Ansprüchen abhängen (nicht über einen weiteren mehrfach abhängigen Anspruch).",
     "selfDependentClaims": "Ansprüche: {{list}}. Ein Anspruch kann nicht von sich selbst abhängen. Korrigieren Sie den Rückbezug.",
     "meansFunctionClaims": "Ansprüche: {{list}}. Nach § 112(f) ist der Schutzbereich auf die in der Beschreibung offenbarte entsprechende Struktur und deren Äquivalente beschränkt. Prüfen Sie, ob die Beschreibung für jede funktionelle Merkmalsangabe ausreichende Struktur offenbart.",
     "antecedentBasisTerms": "{{count}} potenzielle Rückbezugs-Mängel über {{claims}} Ansprüche hinweg. Jeder bestimmte Bezug („the X“ oder „said X“) muss eine vorherige unbestimmte Einführung („a X“ oder „an X“) haben. Fehlender Rückbezug kann zu einer Zurückweisung wegen Unklarheit nach § 112(b) führen.",
@@ -749,8 +750,12 @@
         "pass": "Anspruchsnummern sind fortlaufend."
       },
       "multipleDependent": {
-        "amend": "Mehrfach abhängige Ansprüche gefunden — Gebühren und Multi-Multi-Regel prüfen (MPEP § 608.01(n); § 112(e)).",
+        "verify": "Mehrfach abhängige Ansprüche gefunden — Gebühren und Multi-Multi-Regel prüfen (MPEP § 608.01(n); § 112(e)).",
         "pass": "Keine mehrfach abhängigen Ansprüche."
+      },
+      "chainedMultiDep": {
+        "amend": "Mehrfach abhängiger Anspruch hängt von einem weiteren mehrfach abhängigen Anspruch ab (§ 112(e) / MPEP § 608.01(n)).",
+        "pass": "Keine verketteten mehrfach abhängigen Ansprüche."
       },
       "selfDependent": {
         "amend": "Selbstabhängige Ansprüche gefunden — ein Anspruch kann nicht von sich selbst abhängen (§ 112(d)).",
@@ -896,7 +901,7 @@
           "pass": "Alle unabhängigen Ansprüche enthalten einen Übergangsbegriff."
         },
         "twTerminology": {
-          "verify": "TIPO-Terminologie '请求项' erkannt — CNIPA-Einreichungen müssen '权利要求' verwenden.",
+          "amend": "TIPO-Terminologie '请求项' erkannt — CNIPA-Einreichungen müssen '权利要求' verwenden.",
           "pass": "Ansprüche verwenden CNIPA-Terminologie (权利要求)."
         },
         "specReference": {
@@ -1034,7 +1039,7 @@
           "pass": "Alle unabhängigen Ansprüche enthalten einen Übergangsbegriff."
         },
         "cnTerminology": {
-          "verify": "CNIPA-Terminologie im TW-Dokument erkannt.",
+          "amend": "CNIPA-Terminologie im TW-Dokument erkannt.",
           "pass": "Ansprüche verwenden TIPO-Terminologie."
         },
         "specDrawingRef": {
@@ -1073,7 +1078,7 @@
       },
       "abstract": {
         "charCount": {
-          "verify": "Zusammenfassung überschreitet 250-Zeichen-Grenze ({{count}} Zeichen, 專利法施行細則 §21).",
+          "amend": "Zusammenfassung überschreitet 250-Zeichen-Grenze ({{count}} Zeichen, 專利法施行細則 §21).",
           "pass": "Zusammenfassung innerhalb der 250-Zeichen-Grenze ({{count}} Zeichen)."
         },
         "titleMatch": {
@@ -1096,7 +1101,7 @@
           "pass": "Symbolbeschreibung der repräsentativen Zeichnung konsistent mit 符號說明."
         },
         "bracketFormat": {
-          "verify": "Abschnittsüberschriften nicht im erforderlichen 【】-Klammerformat: {{headers}} (專利法施行細則 §17).",
+          "amend": "Abschnittsüberschriften nicht im erforderlichen 【】-Klammerformat: {{headers}} (專利法施行細則 §17).",
           "pass": "Alle Abschnittsüberschriften im erforderlichen 【】-Klammerformat."
         }
       },

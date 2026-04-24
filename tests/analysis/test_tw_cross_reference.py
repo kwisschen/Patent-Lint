@@ -117,15 +117,15 @@ class TestCheckBracketFormat:
         """Bare 先前技術 (no brackets) → VERIFY with header in details."""
         doc = TwPatentDocument(bracketless_section_headers=["先前技術"])
         result = check_bracket_format(doc)
-        assert result[0].status == "verify"
-        assert result[0].message_key == "check.tw.crossRef.bracketFormat.verify"
+        assert result[0].status == "amend"
+        assert result[0].message_key == "check.tw.crossRef.bracketFormat.amend"
         assert result[0].details_params["headers"] == "先前技術"
 
     def test_variant_bracket_flagged(self):
         """[先前技術] → VERIFY; whole variant-bracketed string passes through."""
         doc = TwPatentDocument(bracketless_section_headers=["[先前技術]"])
         result = check_bracket_format(doc)
-        assert result[0].status == "verify"
+        assert result[0].status == "amend"
         assert result[0].details_params["headers"] == "[先前技術]"
 
     def test_multiple_headers_joined(self):
@@ -133,7 +133,7 @@ class TestCheckBracketFormat:
             bracketless_section_headers=["先前技術", "技術領域", "[實施方式]"]
         )
         result = check_bracket_format(doc)
-        assert result[0].status == "verify"
+        assert result[0].status == "amend"
         assert result[0].details_params["headers"] == "先前技術, 技術領域, [實施方式]"
 
     def test_truncation_at_ten(self):

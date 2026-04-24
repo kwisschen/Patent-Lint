@@ -545,9 +545,9 @@ def check_tw_terminology(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
     if hits:
         return [CheckItem(
-            status="verify",
+            status="amend",
             message="Taiwan-specific terminology found in claims.",
-            message_key="check.cn.claims.twTerminology.verify",
+            message_key="check.cn.claims.twTerminology.amend",
             details_key="details.cn.twTerminology",
             details_params={
                 "flagged_phrases": {

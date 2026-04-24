@@ -95,6 +95,7 @@ US_FORWARD_MAP = [
     ("restrictive_absolute_claims", "claims_checks", lambda: [3]),
     ("indefinite_wording_claims", "claims_checks", lambda: [7]),
     ("multiple_dependent_claims", "claims_checks", lambda: [5]),
+    ("chained_multi_dep_claims", "claims_checks", lambda: [4]),
     ("self_dependent_claims", "claims_checks", lambda: [6]),
     ("means_plus_function_claims", "claims_checks", lambda: [2]),
     ("punctuation_checks", "claims_checks",

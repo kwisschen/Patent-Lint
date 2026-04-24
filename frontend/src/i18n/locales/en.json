@@ -558,6 +558,7 @@
     "restrictiveAbsolutesClaims": "Claims: {{list}}. Absolute terms such as \"must,\" \"essential,\" \"always,\" \"never\" can narrow claim scope unnecessarily and may create § 112(b) indefiniteness when the specification doesn't actually require the absoluteness asserted. Per MPEP § 2173.01, review each flagged term and rephrase if the restriction is not supported.",
     "indefiniteWordingClaims": "Claims: {{list}}. Relative or indefinite terms such as \"substantially,\" \"approximately,\" \"generally,\" \"may,\" \"preferably,\" \"or the like\" leave claim scope unclear. Per MPEP § 2173.05(b), review each flagged term and replace with precise limitations or remove if not necessary.",
     "multipleDependentClaims": "Claims: {{list}}. Multiple-dependent claims incur additional fees and must not depend on other multiple-dependent claims (35 U.S.C. § 112(e)). Verify this is intentional.",
+    "chainedMultiDepClaims": "Claims: {{list}}. Under 35 U.S.C. § 112(e) (and MPEP § 608.01(n)), a multi-dependent claim cannot depend on another multi-dependent claim. Rewrite the flagged claim(s) to either depend on a single claim or to depend directly on independent claims (not via another multi-dep).",
     "selfDependentClaims": "Claims: {{list}}. A claim cannot depend on itself. Correct the dependency reference.",
     "meansFunctionClaims": "Claims: {{list}}. Under § 112(f), claim scope is limited to the corresponding structure disclosed in the specification and equivalents. Verify that the specification describes sufficient structure for each means-plus-function limitation.",
     "antecedentBasisTerms": "{{count}} potential antecedent basis issues across {{claims}} claims. Each definite reference (\"the X\" or \"said X\") must have a prior indefinite introduction (\"a X\" or \"an X\"). Missing antecedent basis may result in a § 112(b) indefiniteness rejection.",
@@ -749,8 +750,12 @@
         "pass": "Claim numbers are sequential."
       },
       "multipleDependent": {
-        "amend": "Multiple-dependent claims found — review fees and chained-multi rule (MPEP § 608.01(n); § 112(e)).",
+        "verify": "Multiple-dependent claims found — review fees and chained-multi rule (MPEP § 608.01(n); § 112(e)).",
         "pass": "No multiple-dependent claims."
+      },
+      "chainedMultiDep": {
+        "amend": "Multi-dependent claim depends on another multi-dependent claim (§ 112(e) / MPEP § 608.01(n)).",
+        "pass": "No chained multi-dependent claims."
       },
       "selfDependent": {
         "amend": "Self-dependent claims found — a claim cannot depend on itself (§ 112(d)).",
@@ -896,7 +901,7 @@
           "pass": "All independent claims contain a transition phrase."
         },
         "twTerminology": {
-          "verify": "TIPO terminology '请求项' detected — CNIPA filings must use '权利要求'.",
+          "amend": "TIPO terminology '请求项' detected — CNIPA filings must use '权利要求'.",
           "pass": "Claims use CNIPA terminology (权利要求)."
         },
         "specReference": {
@@ -1034,7 +1039,7 @@
           "pass": "All independent claims contain a transition phrase."
         },
         "cnTerminology": {
-          "verify": "CNIPA terminology detected in TW document.",
+          "amend": "CNIPA terminology detected in TW document.",
           "pass": "Claims use TIPO terminology."
         },
         "specDrawingRef": {
@@ -1073,7 +1078,7 @@
       },
       "abstract": {
         "charCount": {
-          "verify": "Abstract over the 250-character limit ({{count}} characters, 專利法施行細則 §21).",
+          "amend": "Abstract over the 250-character limit ({{count}} characters, 專利法施行細則 §21).",
           "pass": "Abstract within the 250-character limit ({{count}} characters)."
         },
         "titleMatch": {
@@ -1096,7 +1101,7 @@
           "pass": "Representative drawing symbol description consistent with 符號說明."
         },
         "bracketFormat": {
-          "verify": "Section headers not in the required 【】 bracket format: {{headers}} (專利法施行細則 §17).",
+          "amend": "Section headers not in the required 【】 bracket format: {{headers}} (專利法施行細則 §17).",
           "pass": "All section headers use the required 【】 bracket format."
         }
       },

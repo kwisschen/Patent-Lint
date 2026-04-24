@@ -23,11 +23,11 @@ class TestCheckAbstractCharCount:
         assert result[0].status == "pass"
         assert result[0].details_params == {"count": "250"}
 
-    def test_251_chars_verify(self):
+    def test_251_chars_amend(self):
         doc = TwPatentDocument(abstract_char_count=251)
         result = check_abstract_char_count(doc)
         assert len(result) == 1
-        assert result[0].status == "verify"
+        assert result[0].status == "amend"
         assert result[0].details_params == {"count": "251"}
         assert result[0].reference == "專利法施行細則 §21"
 
@@ -42,22 +42,21 @@ class TestCheckAbstractCharCount:
         result = check_abstract_char_count(doc)
         assert result[0].status == "pass"
 
-    def test_well_over_limit_verify(self):
+    def test_well_over_limit_amend(self):
         doc = TwPatentDocument(abstract_char_count=500)
         result = check_abstract_char_count(doc)
-        assert result[0].status == "verify"
+        assert result[0].status == "amend"
 
-    def test_severity_is_verify_not_amend(self):
-        """TIPO won't reject on length alone — must be VERIFY."""
+    def test_severity_is_amend(self):
+        """專利法施行細則 §21: 250-char limit is a hard statutory cap — must be FIX."""
         doc = TwPatentDocument(abstract_char_count=300)
         result = check_abstract_char_count(doc)
-        assert result[0].status == "verify"
-        assert result[0].status != "amend"
+        assert result[0].status == "amend"
 
     def test_message_key(self):
         doc = TwPatentDocument(abstract_char_count=251)
         result = check_abstract_char_count(doc)
-        assert result[0].message_key == "check.tw.abstract.charCount.verify"
+        assert result[0].message_key == "check.tw.abstract.charCount.amend"
 
     def test_pass_message_key(self):
         doc = TwPatentDocument(abstract_char_count=200)

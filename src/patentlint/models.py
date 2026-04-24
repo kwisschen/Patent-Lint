@@ -381,6 +381,7 @@ class AnalysisResult(BaseModel):
     last_sequential_claim: int = 0
     punctuation_checks: list[CheckItem] = Field(default_factory=list)
     multiple_dependent_claims: list[int] = Field(default_factory=list)
+    chained_multi_dep_claims: list[int] = Field(default_factory=list)
     self_dependent_claims: list[int] = Field(default_factory=list)
     means_plus_function_claims: list[int] = Field(default_factory=list)
     antecedent_basis_issues: list[dict] = Field(default_factory=list)
@@ -733,9 +734,9 @@ class AnalysisResult(BaseModel):
 
         if self.multiple_dependent_claims:
             claims_checks.append(CheckItem(
-                status="amend",
+                status="verify",
                 message="Multiple-dependent claims found.",
-                message_key="check.claims.multipleDependent.amend",
+                message_key="check.claims.multipleDependent.verify",
                 details=f"Claims: {self.multiple_dependent_claims}",
                 details_key="details.multipleDependentClaims",
                 details_params={"list": str(self.multiple_dependent_claims)},
@@ -746,6 +747,26 @@ class AnalysisResult(BaseModel):
                 status="pass",
                 message="No multiple-dependent claims.",
                 message_key="check.claims.multipleDependent.pass",
+            ))
+
+        # § 112(e) chained-multi prohibition — a multi-dep claim cannot depend
+        # on another multi-dep claim. Unlike the informational multipleDependent
+        # check, this is a real rule violation (FIX).
+        if self.chained_multi_dep_claims:
+            claims_checks.append(CheckItem(
+                status="amend",
+                message="Multiple-dependent claim depends on another multiple-dependent claim.",
+                message_key="check.claims.chainedMultiDep.amend",
+                details=f"Claims: {self.chained_multi_dep_claims}",
+                details_key="details.chainedMultiDepClaims",
+                details_params={"list": str(self.chained_multi_dep_claims)},
+                diagnostics=_dx(flagged_count=len(self.chained_multi_dep_claims)),
+            ))
+        else:
+            claims_checks.append(CheckItem(
+                status="pass",
+                message="No chained multiple-dependent claims.",
+                message_key="check.claims.chainedMultiDep.pass",
             ))
 
         if self.self_dependent_claims:
