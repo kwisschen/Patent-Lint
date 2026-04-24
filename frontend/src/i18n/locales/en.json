@@ -438,7 +438,7 @@
       "figuresSequential": "Figures numbered sequentially"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
-    "twSubtitle": "TIPO 偵錯系統 covers Taiwan-specific terminology. PatentLint covers broader drafting rules.",
+    "twSubtitle": "TIPO 偵錯系統 is TIPO's official tool. PatentLint implements TW drafting rules in depth.",
     "twFeatures": {
       "title": "Interactive TW patent analysis",
       "claimTree": {

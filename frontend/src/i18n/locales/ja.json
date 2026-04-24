@@ -438,7 +438,7 @@
       "figuresSequential": "図面番号が連続"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
-    "twSubtitle": "TIPO 偵錯系統は台湾固有の用語をチェックします。PatentLint はより広範な作成ルールを網羅します。",
+    "twSubtitle": "TIPO 偵錯系統 は公式チェックツールです。PatentLint は台湾の作成規範に対応した実装を行います。",
     "twFeatures": {
       "title": "インタラクティブな台湾特許チェック",
       "claimTree": {

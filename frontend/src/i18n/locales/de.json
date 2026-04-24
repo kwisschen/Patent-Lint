@@ -438,7 +438,7 @@
       "figuresSequential": "Figuren fortlaufend nummeriert"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
-    "twSubtitle": "TIPO 偵錯系統 deckt taiwan-spezifische Terminologie ab. PatentLint deckt umfassendere Ausarbeitungsregeln ab.",
+    "twSubtitle": "TIPO 偵錯系統 ist das amtliche Prüfwerkzeug. PatentLint implementiert TW-Ausarbeitungsregeln in der Tiefe.",
     "twFeatures": {
       "title": "Interaktive Prüfung von TW-Patentanmeldungen",
       "claimTree": {

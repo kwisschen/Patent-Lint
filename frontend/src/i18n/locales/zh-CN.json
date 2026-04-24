@@ -438,7 +438,7 @@
       "figuresSequential": "附图编号连续"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
-    "twSubtitle": "TIPO 偵錯系統专查台湾特有用语。PatentLint 扩及更广的撰写规范。",
+    "twSubtitle": "TIPO 偵錯系統为官方检查工具。PatentLint 针对台湾撰写规范深入实作。",
     "twFeatures": {
       "title": "交互式台湾专利分析",
       "claimTree": {
