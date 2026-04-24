@@ -188,11 +188,16 @@ def _morphological_prefix_fallback_tw(
 
 
 # Recognized TW dependency format patterns.
+# TIPO 偵錯系統 documentation (2023.5.30 版, Table 1 #20) accepts three
+# opening verbs for dependent claims — 如 / 依據 / 根據 — so the prefix is
+# unconstrained. In practice TW drafters overwhelmingly use 如請求項 (TIPO's
+# canonical), but this keeps us consistent with the authoritative spec and
+# matches how CN's dep-format check treats 根据/按照/依照.
 # Trailing connective accepts TIPO-standard (所述) + JP-translation variants
 # (所記載, less common: 所揭示 / 所描述), plus bare 之/的 (如請求項N之X).
 _TW_DEP_CONNECTIVE = r"(?:所(?:述|記載|揭示|描述))?[之的]?"
 _TW_DEP_FORMAT = re.compile(
-    r"如請求項\s*\d+"
+    r"請求項\s*\d+"
     r"(?:\s*(?:~|至|到)\s*(?:請求項\s*)?\d+)?"
     r"(?:\s*(?:或|、)\s*(?:請求項\s*)?\d+)*"
     r"(?:\s*中\s*任一?項)?"
