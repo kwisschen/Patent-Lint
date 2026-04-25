@@ -411,6 +411,7 @@
       "drawings": "도면(附图)"
     },
     "cnChecks": {
+      "trackedChanges": "변경 추적",
       "requiredSections": "필수 섹션(专利法 §26 第1款・专利法实施细则 §17)",
       "sectionOrdering": "섹션 순서",
       "paragraphNumbering": "단락 번호",
@@ -421,6 +422,7 @@
       "specClaimReference": "명세서에서 청구항 참조 금지",
       "claimsSequential": "청구항 번호 연속성",
       "dependencyFormat": "종속 형식",
+      "independentPreamble": "독립 청구항 전제부(一种, 审查指南 §3.1.1)",
       "selfDependent": "자기 종속 청구항",
       "forwardDependency": "선행 청구항 인용",
       "singleSentence": "청구항당 한 문장",
@@ -432,9 +434,14 @@
       "multiMultiDependency": "다중 종속의 다중 종속",
       "dependentOrdering": "종속 청구항 순서",
       "connectionRelationships": "구성요소 연결관계 (审查指南 §3.2.1)",
+      "antecedentBasis": "선행사 워커(引用基础, 审查指南 §3.2.2)",
+      "specSupport": "청구항 용어의 명세서 뒷받침(专利法 §26 第4款)",
+      "omnibus": "포괄 청구항(审查指南 §3.3)",
+      "markushOpenTransition": "마쿠시군 개방형 전환어(审查指南 §9.3)",
       "abstractCharCount": "요약서 글자 수(300자 이하)",
       "titleInAbstract": "제목이 요약서에 포함",
       "commercialLanguage": "상업적 표현",
+      "priorArt": "도면의 선행기술 참조(审查指南 §4.2)",
       "figuresSequential": "도면 번호 연속성"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",

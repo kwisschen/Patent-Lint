@@ -411,6 +411,7 @@
       "drawings": "附图"
     },
     "cnChecks": {
+      "trackedChanges": "修订追踪",
       "requiredSections": "必要章节（专利法 §26 第1款、专利法实施细则 §17）",
       "sectionOrdering": "章节顺序",
       "paragraphNumbering": "段落编号",
@@ -421,6 +422,7 @@
       "specClaimReference": "说明书不得引用权利要求",
       "claimsSequential": "权利要求编号连续",
       "dependencyFormat": "从属格式",
+      "independentPreamble": "独立权利要求前序部分（一种，审查指南 §3.1.1）",
       "selfDependent": "自引用权利要求",
       "forwardDependency": "引用在前之权利要求",
       "singleSentence": "权利要求须为单句",
@@ -432,9 +434,14 @@
       "multiMultiDependency": "多项从属的从属",
       "dependentOrdering": "从属权利要求排序",
       "connectionRelationships": "组件连接关系（审查指南 §3.2.1）",
+      "antecedentBasis": "引用基础走查器（审查指南 §3.2.2）",
+      "specSupport": "权利要求用语之说明书支持（专利法 §26 第4款）",
+      "omnibus": "援引式权利要求（审查指南 §3.3）",
+      "markushOpenTransition": "马库什开放式连接词（审查指南 §9.3）",
       "abstractCharCount": "摘要字数（≤300）",
       "titleInAbstract": "标题出现在摘要中",
       "commercialLanguage": "商业性用语",
+      "priorArt": "附图之现有技术引用（审查指南 §4.2）",
       "figuresSequential": "附图编号连续"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
