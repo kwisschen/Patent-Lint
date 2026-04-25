@@ -607,6 +607,7 @@
       "abstractTitleMatch": "根据审查指南，摘要应与发明名称一致。请确认摘要是否体现了发明名称。",
       "commercialLanguage": "根据专利法实施细则 §23，摘要不得包含商业性宣传用语。请删除上列标记用语。",
       "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语缺少引用基础。详见下方「引用基础检查」区块。",
+      "specSupportTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语疑似未获说明书支持。详见下方「说明书支持检查」区块。",
       "titleMissing": "根据审查指南 第一部分第一章，说明书必须包含发明名称。请于说明书首部添加发明名称。",
       "figureRefInconsistency": {
         "onlyDrawings": "仅在附图说明中提及：{{figs}}",
@@ -942,6 +943,10 @@
         "antecedentBasis": {
           "verify": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少引用基础（审查指南）：「该／所述」引用未有先前之「一」引介。",
           "pass": "所有引用之用语皆有引用基础（审查指南）。"
+        },
+        "specSupport": {
+          "verify": "{{claims}} 共有 {{issue_count}} 个权利要求用语疑似未获说明书支持（审查指南 第二部分第二章 §3.2.1）。",
+          "pass": "所有权利要求用语皆获说明书支持（审查指南）。"
         },
         "omnibus": {
           "amend": "{{claims}}：权利要求以「如说明书所述」等方式援引说明书或附图，未具体记载技术特征（审查指南 第二部分第二章 §3.3）。",

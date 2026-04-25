@@ -607,6 +607,7 @@
       "abstractTitleMatch": "Per 审查指南, the abstract should be consistent with the title (发明名称). Verify the abstract reflects the invention title.",
       "commercialLanguage": "Per 专利法实施细则 §23, the abstract must not contain commercial advertising language (商业性宣传用语). Remove the flagged terms.",
       "antecedentBasisTerms": "{{issue_count}} term(s) across {{claim_count}} claim(s) may lack antecedent basis. See the \"Antecedent Basis Review\" section below for the full per-term breakdown.",
+      "specSupportTerms": "{{issue_count}} term(s) across {{claim_count}} claim(s) may lack specification support. See the \"Specification Support Review\" section below for the full per-term breakdown.",
       "titleMissing": "Per CNIPA 审查指南 第一部分第一章, the specification must contain a 发明名称 (title of invention). Add a title to the specification header.",
       "figureRefInconsistency": {
         "onlyDrawings": "Only cited in 附图说明: {{figs}}",
@@ -942,6 +943,10 @@
         "antecedentBasis": {
           "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 该/所述 reference without a prior 一 introduction (审查指南).",
           "pass": "All claim terms have antecedent basis (审查指南)."
+        },
+        "specSupport": {
+          "verify": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body (审查指南 第二部分第二章 §3.2.1).",
+          "pass": "All claim terms supported by the specification (审查指南)."
         },
         "omnibus": {
           "amend": "{{claims}}: claim references 说明书/附图 instead of reciting features (审查指南 第二部分第二章 §3.3).",
