@@ -704,11 +704,7 @@
   "common": {
     "close": "Close",
     "toggleTheme": "Toggle theme",
-    "changeLanguage": "Change language",
-    "betaBadge": {
-      "label": "BETA",
-      "tooltip": "Beta: some checks are still in development"
-    }
+    "changeLanguage": "Change language"
   },
   "consolidation": {
     "nounMismatchSummary": "Preamble noun mismatch: dependent claim(s) {{depClaims}} differ from Claim {{rootId}}"

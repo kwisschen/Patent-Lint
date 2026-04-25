@@ -704,11 +704,7 @@
   "common": {
     "close": "關閉",
     "toggleTheme": "切換主題",
-    "changeLanguage": "切換語言",
-    "betaBadge": {
-      "label": "BETA",
-      "tooltip": "測試中：部分檢查項目仍在開發"
-    }
+    "changeLanguage": "切換語言"
   },
   "consolidation": {
     "nounMismatchSummary": "前言之標的名稱不一致：附屬項 {{depClaims}} 與請求項 {{rootId}} 不同"

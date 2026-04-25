@@ -704,11 +704,7 @@
   "common": {
     "close": "Schließen",
     "toggleTheme": "Design umschalten",
-    "changeLanguage": "Sprache wechseln",
-    "betaBadge": {
-      "label": "BETA",
-      "tooltip": "Beta: Einige Prüfungen sind noch in Entwicklung"
-    }
+    "changeLanguage": "Sprache wechseln"
   },
   "consolidation": {
     "nounMismatchSummary": "Substantiv im Oberbegriff weicht ab: abhängige(r) Anspruch/Ansprüche {{depClaims}} abweichend von Anspruch {{rootId}}"

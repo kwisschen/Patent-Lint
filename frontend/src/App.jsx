@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import { Loader2 } from 'lucide-react'
 import Layout from './components/Layout'
 import DropZone from './components/DropZone'
-import BetaBadge from './components/BetaBadge'
 import AnalysisReport from './components/AnalysisReport'
 import ScannedDocBanner from './components/ScannedDocBanner'
 import LoadingOnboard from './components/LoadingOnboard'
@@ -152,11 +151,6 @@ function App() {
                       >
                         <JurisdictionBadge code={j} />
                         {t(`jurisdiction.${j.toLowerCase()}`)}
-                        {j === 'CN' && (
-                          <span className="absolute -top-2 right-0 pointer-events-none">
-                            <BetaBadge />
-                          </span>
-                        )}
                       </button>
                     ))}
                   </div>
