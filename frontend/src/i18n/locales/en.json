@@ -411,6 +411,7 @@
       "drawings": "Drawings (附图)"
     },
     "cnChecks": {
+      "trackedChanges": "Tracked changes",
       "requiredSections": "Required sections (专利法 §26 第1款、专利法实施细则 §17)",
       "sectionOrdering": "Section ordering",
       "paragraphNumbering": "Paragraph numbering",
@@ -421,6 +422,7 @@
       "specClaimReference": "Specification must not reference claims",
       "claimsSequential": "Claims sequential",
       "dependencyFormat": "Dependency format",
+      "independentPreamble": "Independent claim preamble (一种, 审查指南 §3.1.1)",
       "selfDependent": "Self-dependent claims",
       "forwardDependency": "Forward dependency",
       "singleSentence": "Single sentence per claim",
@@ -432,9 +434,14 @@
       "multiMultiDependency": "Multi-multi dependency",
       "dependentOrdering": "Dependent claim ordering",
       "connectionRelationships": "Component connection relationships (审查指南 §3.2.1)",
+      "antecedentBasis": "Antecedent basis walker (引用基础, 审查指南 §3.2.2)",
+      "specSupport": "Specification support for claim terms (专利法 §26 第4款)",
+      "omnibus": "Omnibus claim (审查指南 §3.3)",
+      "markushOpenTransition": "Markush open transition (审查指南 §9.3)",
       "abstractCharCount": "Abstract character count (≤300)",
       "titleInAbstract": "Title in abstract",
       "commercialLanguage": "Commercial language",
+      "priorArt": "Prior art figure references (审查指南 §4.2)",
       "figuresSequential": "Figures numbered sequentially"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
