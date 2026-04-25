@@ -335,6 +335,8 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
 
     "checks.spec_support_pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 30),
     "checks.spec_support_unsupported_terms": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 30),
+    "check.cn.claims.specSupport.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 30),
+    "check.cn.claims.specSupport.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 30),
     "check.tw.claims.specSupport.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 30),
     "check.tw.claims.specSupport.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 30),
 
