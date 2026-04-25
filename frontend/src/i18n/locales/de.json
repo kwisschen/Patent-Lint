@@ -411,6 +411,7 @@
       "drawings": "Zeichnungen (附图)"
     },
     "cnChecks": {
+      "trackedChanges": "Nachverfolgte Änderungen",
       "requiredSections": "Erforderliche Abschnitte (专利法 §26 第1款、专利法实施细则 §17)",
       "sectionOrdering": "Abschnittsreihenfolge",
       "paragraphNumbering": "Absatznummerierung",
@@ -421,6 +422,7 @@
       "specClaimReference": "Beschreibung darf nicht auf Ansprüche verweisen",
       "claimsSequential": "Ansprüche fortlaufend",
       "dependencyFormat": "Format der Abhängigkeit",
+      "independentPreamble": "Oberbegriff des unabhängigen Anspruchs (一种, 审查指南 §3.1.1)",
       "selfDependent": "Selbstabhängige Ansprüche",
       "forwardDependency": "Vorwärtsabhängigkeit",
       "singleSentence": "Ein Satz pro Anspruch",
@@ -432,9 +434,14 @@
       "multiMultiDependency": "Multi-Multi-Abhängigkeit",
       "dependentOrdering": "Reihenfolge abhängiger Ansprüche",
       "connectionRelationships": "Verbindungsbeziehungen der Komponenten (审查指南 §3.2.1)",
+      "antecedentBasis": "Rückbezugs-Walker (引用基础, 审查指南 §3.2.2)",
+      "specSupport": "Stützung der Anspruchsbegriffe in der Beschreibung (专利法 §26 第4款)",
+      "omnibus": "Omnibus-Anspruch (审查指南 §3.3)",
+      "markushOpenTransition": "Markush mit offenem Übergangsbegriff (审查指南 §9.3)",
       "abstractCharCount": "Zeichenzahl der Zusammenfassung (≤300)",
       "titleInAbstract": "Titel in der Zusammenfassung",
       "commercialLanguage": "Werbesprache",
+      "priorArt": "Stand-der-Technik-Bezüge in Figuren (审查指南 §4.2)",
       "figuresSequential": "Figuren fortlaufend nummeriert"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",

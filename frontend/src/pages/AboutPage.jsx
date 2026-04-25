@@ -117,30 +117,61 @@ function CheckMark({ active, isPatentLint }) {
   )
 }
 
-// CN table: same canonical 7-group ordering within each tbody.
+// CN table: same canonical 7-group ordering within each tbody as US + TW.
+// Single-column "what PatentLint covers" framing (no public CNIPA pre-filing
+// debug system to compare against — CNIPA's WORD转XML编辑器 is filing-format
+// only). Total 32 checks per CHECKS.md row count (excluding the † informational
+// figureCount row, which by US/TW convention also doesn't appear in the
+// marketing table).
 const CN_SPEC_CHECKS = [
-  // Spec structure
-  'requiredSections', 'sectionOrdering', 'paragraphNumbering', 'paragraphEnding',
-  // Spec content
-  'figureRefConsistency', 'patentTypeTerminology', 'titleRequirements', 'specClaimReference',
+  // G1 spec structure
+  'trackedChanges',                  // FIX (no statute — drafting hygiene)
+  'requiredSections',                // 专利法实施细则 §17
+  'sectionOrdering',                 // 专利法实施细则 §17
+  'paragraphNumbering',              // 审查指南
+  'paragraphEnding',                 // 审查指南
+  // G2 spec content
+  'figureRefConsistency',            // 审查指南
+  'patentTypeTerminology',           // 审查指南
+  'titleRequirements',               // 审查指南 第一部分第一章
+  'specClaimReference',              // 专利法实施细则 §17
 ]
 
 const CN_CLAIMS_CHECKS = [
-  // Claims structure
-  'claimsSequential', 'dependencyFormat', 'selfDependent', 'forwardDependency', 'dependentOrdering',
-  'singleSentence', 'refNumeralParens', 'subjectNameConsistency', 'transitionPhrase',
-  // Claims cross-jurisdiction
-  'cnTwTerminology', 'claimsSpecReference', 'multiMultiDependency', 'connectionRelationships',
+  // G4 claims structure
+  'claimsSequential',                // 审查指南
+  'dependencyFormat',                // 专利法实施细则 §22
+  'independentPreamble',             // 审查指南 §3.1.1 canonical (advisory)
+  'selfDependent',                   // 专利法实施细则 §22
+  'forwardDependency',               // 专利法实施细则 §22
+  'dependentOrdering',               // 审查指南 第二部分第二章
+  'singleSentence',                  // 审查指南 第二部分第二章
+  'refNumeralParens',                // 审查指南
+  'subjectNameConsistency',          // 审查指南 第二部分第二章
+  'transitionPhrase',                // 审查指南
+  // G5 claims cross-jurisdiction
+  'cnTwTerminology',                 // — (PatentLint guard against TIPO leakage)
+  'claimsSpecReference',             // 审查指南 第二部分第二章
+  'multiMultiDependency',            // 专利法实施细则 §22
+  'connectionRelationships',         // 审查指南 §3.2.1 + 专利法 §26.4
+  // G6 claims §112-equivalent (引用基础 + 说明书支持)
+  'antecedentBasis',                 // 审查指南 第二部分第二章 §3.2.2
+  'specSupport',                     // 专利法 §26 第4款 + 审查指南 §3.2.1 (ADR-151)
+  'omnibus',                         // 审查指南 第二部分第二章 §3.3
+  'markushOpenTransition',           // 审查指南 第二部分第十章 §9.3
 ]
 
 const CN_ABSTRACT_CHECKS = [
-  // Abstract — canonical already correct
-  'abstractCharCount', 'titleInAbstract', 'commercialLanguage',
+  // G7 abstract
+  'abstractCharCount',               // 专利法实施细则 §23
+  'titleInAbstract',                 // 审查指南
+  'commercialLanguage',              // 专利法实施细则 §23
 ]
 
 const CN_DRAWINGS_CHECKS = [
-  // Drawings
-  'figuresSequential',
+  // G3 drawings (figureCount † informational row excluded by US/TW convention)
+  'priorArt',                        // 审查指南 第一部分第一章 §4.2
+  'figuresSequential',               // 审查指南
 ]
 
 function CnCheckTable({ t }) {
