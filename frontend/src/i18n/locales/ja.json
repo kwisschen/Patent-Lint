@@ -704,11 +704,7 @@
   "common": {
     "close": "閉じる",
     "toggleTheme": "テーマ切替",
-    "changeLanguage": "言語切替",
-    "betaBadge": {
-      "label": "BETA",
-      "tooltip": "ベータ版：一部のチェック項目は開発中です"
-    }
+    "changeLanguage": "言語切替"
   },
   "consolidation": {
     "nounMismatchSummary": "プリアンブル名詞の不一致：従属項 {{depClaims}} が請求項 {{rootId}} と異なります"

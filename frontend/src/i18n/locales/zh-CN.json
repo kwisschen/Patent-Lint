@@ -704,11 +704,7 @@
   "common": {
     "close": "关闭",
     "toggleTheme": "切换主题",
-    "changeLanguage": "切换语言",
-    "betaBadge": {
-      "label": "BETA",
-      "tooltip": "测试中：部分检查项目仍在开发"
-    }
+    "changeLanguage": "切换语言"
   },
   "consolidation": {
     "nounMismatchSummary": "前序部分主题名称不一致：从属项 {{depClaims}} 与权利要求 {{rootId}} 不同"
