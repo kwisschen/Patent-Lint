@@ -893,8 +893,8 @@ def _build_cn_drafter_realistic() -> bytes:
     doc.add_paragraph(
         "如图1所示，本实施例的树脂组合物通过以下步骤制备："
     )
-    doc.add_paragraph("步骤一：将环氧树脂与固化剂混合；")
-    doc.add_paragraph("步骤二：加入无机填料并搅拌均匀；以及")
+    doc.add_paragraph("步骤一：将环氧树脂与固化剂混合，所述固化剂优选为酚醛树脂；")
+    doc.add_paragraph("步骤二：加入无机填料并搅拌均匀，所述无机填料优选为二氧化硅；以及")
     doc.add_paragraph("步骤三：加热固化得到所述树脂组合物。")
     doc.add_paragraph("图2")  # bare caption below second figure image
     doc.add_paragraph(

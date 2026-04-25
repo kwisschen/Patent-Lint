@@ -13,6 +13,7 @@ from patentlint.analysis import abstract as abstract_analysis
 from patentlint.analysis import claims as claims_analysis
 from patentlint.analysis import cn_abstract as cn_abstract_analysis
 from patentlint.analysis import cn_claims as cn_claims_analysis
+from patentlint.analysis import cn_spec_support as cn_spec_support_analysis
 from patentlint.analysis import cn_specification as cn_spec_analysis
 from patentlint.analysis import drawings as drawings_analysis
 from patentlint.analysis import specification as spec_analysis
@@ -133,8 +134,54 @@ def _run_cn_pipeline(
             )
         ]
 
+    # G6 spec_support — CN port of ADR-138 TW spec-support. Emits
+    # UnsupportedTerm findings for claim noun phrases that fail the 3-tier
+    # match (normalized exact / raw exact / char-window). No Tier 0
+    # symbol-table whitelist — CN has no 符号说明 surface. Statute anchor:
+    # 专利法 §26 第4款 + 审查指南 第二部分第二章 §3.2.1.
+    cn_unsupported_terms = cn_spec_support_analysis.check_spec_support_cn(
+        cn_doc,
+        antecedent_findings=cn_antecedent_basis,
+        strict_qualifier_matching=strict_qualifier_matching,
+    )
+    # Cross-ref link: same (claim_id, term) appearing in both walkers
+    # gets annotated so the Section112 frontend renders sibling-check
+    # hints (§26 第2款/第3款 ↔ §26 第4款 equivalents in CNIPA terms).
+    cn_spec_support_analysis.attach_cross_references_cn(
+        cn_antecedent_basis,
+        cn_unsupported_terms,
+    )
+    if cn_unsupported_terms:
+        issue_count = len(cn_unsupported_terms)
+        claim_ids = sorted({ut.claim_number for ut in cn_unsupported_terms})
+        claim_count = len(claim_ids)
+        claims_checks = list(claims_checks) + [
+            CheckItem(
+                status="verify",
+                message="Possible claim terms not supported by the specification.",
+                message_key="check.cn.claims.specSupport.verify",
+                details=f"{issue_count} term(s) may lack specification support across {claim_count} claim(s).",
+                details_key="details.cn.specSupportTerms",
+                details_params={
+                    "issue_count": issue_count,
+                    "claim_count": claim_count,
+                    "claims": claim_ids,
+                },
+                reference="专利法 §26 第4款",
+            )
+        ]
+    else:
+        claims_checks = list(claims_checks) + [
+            CheckItem(
+                status="pass",
+                message="All claim terms supported by the specification.",
+                message_key="check.cn.claims.specSupport.pass",
+                reference="专利法 §26 第4款",
+            )
+        ]
+
     # G6 — omnibus (§3.3) and Markush open transition (§9.3) emit after
-    # the antecedent-basis tile per the canonical claims §112 order.
+    # the spec-support tile per the canonical claims §112 order.
     claims_checks = list(claims_checks) + (
         cn_claims_analysis.check_omnibus_claims(cn_doc)
         + cn_claims_analysis.check_markush_open_transition(cn_doc)
@@ -177,6 +224,7 @@ def _run_cn_pipeline(
         cn_omnibus_claims=cn_claims_analysis.detect_omnibus_claims_cn(cn_doc),
         cn_markush_open_claims=[cid for cid, _ in cn_claims_analysis.detect_markush_open_transition_cn(cn_doc)],
         antecedent_basis_issues=cn_antecedent_basis,
+        unsupported_terms=cn_unsupported_terms,
     )
 
 

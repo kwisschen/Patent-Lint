@@ -607,6 +607,7 @@
       "abstractTitleMatch": "Gemäß 审查指南 sollte die Zusammenfassung mit dem Titel (发明名称) übereinstimmen. Prüfen Sie, ob die Zusammenfassung den Erfindungstitel widerspiegelt.",
       "commercialLanguage": "Gemäß 专利法实施细则 §23 darf die Zusammenfassung keine Werbesprache (商业性宣传用语) enthalten. Entfernen Sie die gekennzeichneten Begriffe.",
       "antecedentBasisTerms": "{{issue_count}} Begriff(e) in {{claim_count}} Anspruch/Ansprüchen könnten ohne Rückbezug sein. Siehe Abschnitt „Rückbezugs-Analyse“ unten für die vollständige Aufschlüsselung je Begriff.",
+      "specSupportTerms": "{{issue_count}} Begriff(e) in {{claim_count}} Anspruch/Ansprüchen könnten ohne Stützung in der Beschreibung sein. Siehe Abschnitt „Stützungs-Prüfung der Beschreibung“ unten für die vollständige Aufschlüsselung je Begriff.",
       "titleMissing": "Gemäß CNIPA 审查指南 第一部分第一章 muss die Beschreibung einen 发明名称 (Erfindungstitel) enthalten. Fügen Sie einen Titel in der Kopfzeile der Beschreibung hinzu.",
       "figureRefInconsistency": {
         "onlyDrawings": "Nur in 附图说明 zitiert: {{figs}}",
@@ -942,6 +943,10 @@
         "antecedentBasis": {
           "verify": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 该/所述-Bezug ohne vorheriges 一 (审查指南).",
           "pass": "Alle Anspruchsbegriffe haben Rückbezug (审查指南)."
+        },
+        "specSupport": {
+          "verify": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Stützung in der Beschreibung sein — Nominalphrase des Anspruchs nicht im Beschreibungsteil gefunden (审查指南 第二部分第二章 §3.2.1).",
+          "pass": "Alle Anspruchsbegriffe sind in der Beschreibung gestützt (审查指南)."
         },
         "omnibus": {
           "amend": "{{claims}}: Anspruch verweist auf 说明书/附图 statt Merkmale zu benennen (审查指南 第二部分第二章 §3.3).",

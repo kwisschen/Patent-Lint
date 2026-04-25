@@ -74,14 +74,13 @@ const JURISDICTION_CONFIG = {
     section112TitleKey: 'section112.titleTw',
     section112PassKey: 'check.claims.antecedentBasis.pass',
     pdfHeaderKey: 'pdf.header',
-    // ADR-138: CN spec-support deferred pending real drafter corpus
-    // (Phase 10 bucket). Flag keeps the feature dormant on the CN
-    // selector so the UI doesn't show a card when the pipeline emits
-    // no findings by construction.
-    supportsSpecSupport: false,
-    specSupportTitleKey: null,
-    specSupportPassKey: null,
-    specSupportReferenceCite: null,
+    // CN spec-support (说明书支持分析) — CN port of TW ADR-138 feature.
+    // Statute anchor: 专利法 §26 第4款 + 审查指南 第二部分第二章 §3.2.1.
+    // 3-tier matcher (no symbol-table whitelist — CN has no 符号说明).
+    supportsSpecSupport: true,
+    specSupportTitleKey: 'specSupport.title',
+    specSupportPassKey: 'check.cn.claims.specSupport.pass',
+    specSupportReferenceCite: '专利法 §26 第4款',
   },
   TW: {
     acceptedFormats: {
