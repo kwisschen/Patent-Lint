@@ -1467,7 +1467,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "相同稿件，相同评等。无 AI。"
+      "line": "同一份文稿，每次评等皆同。无 AI。"
     },
     "cap": {
       "oneFix": "1 项 FIX 将评等上限压至 B-",
@@ -1513,6 +1513,7 @@
       "trustIntro": "评等之输入仅为各检查所判定之 FIX／REVIEW／PASS 状态，输出纯为加权加总。同一份稿件必得相同评等。PatentLint 不上传任何稿件 — 全部分析均于您的浏览器内完成。",
       "disclaimerTitle": "A 等代表什麽，又不代表什麽",
       "disclaimerIntro": "A 等表示 PatentLint 之规则库未发现缺失，但不代表稿件已达申请就绪之品质。仍需由具备资格之专利代理人进行实质审视。"
-    }
+    },
+    "howWeScore": "评分方式 →"
   }
 }
