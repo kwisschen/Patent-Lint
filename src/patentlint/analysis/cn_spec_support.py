@@ -267,7 +267,7 @@ _CN_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = (
 # are CN-native prepositions absent from TW practice).
 _CN_LEADING_PREPOSITIONS: tuple[str, ...] = ("于", "到", "在", "自", "由", "从", "向", "对")
 
-# Reference numerals per 专利法实施细则 §19 — drafters inline element
+# Reference numerals per 专利法实施细则 §21 — drafters inline element
 # numerals like 底座(10). NON-ANCHORED to handle:
 #   (a) Trailing parens (底座(10) → 底座)
 #   (b) Interior parens when walker capture has trailing text
@@ -327,7 +327,7 @@ def _normalize_for_spec_support_cn(
     """Normalize a claim-side term for CN spec-support matching.
 
     Order:
-        1. Strip trailing parenthetical reference numeral 专利法实施细则 §19
+        1. Strip trailing parenthetical reference numeral 专利法实施细则 §21
            (底座(10) → 底座).
         2. Strip trailing bare reference numeral (底座10 → 底座) —
            CN-specific; TW doesn't need this because TIPO drafters

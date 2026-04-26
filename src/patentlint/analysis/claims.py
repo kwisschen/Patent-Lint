@@ -67,7 +67,7 @@ def find_chained_multi_dependents(claims: list[Claim]) -> list[int]:
     this rule — multi-dep claims whose chain includes another multi-dep.
 
     Mirrors CN cn_claims::check_multi_multi_dep and TW tw_claims::
-    check_multi_dep_on_multi_dep (专利法实施细则 §22 / 專利法施行細則 §18)."""
+    check_multi_dep_on_multi_dep (专利法实施细则 §25 第3款 / 專利法施行細則 §18)."""
     multi_dep_ids = {c.id for c in claims if c.multiple_dependent}
     if not multi_dep_ids:
         return []
