@@ -95,6 +95,12 @@ def _build_env(locale: str) -> Environment:
     env.globals["tree_label_key"] = _tree_label_key
     env.globals["patent_type_key"] = _patent_type_key
     env.globals["locale"] = locale
+    # Total check count for the rubric.version footer. Single source of
+    # truth at frontend/src/generated/stats.js (CHECKS_RAW), regenerated
+    # by emit-stats.mjs at vite build time from CHECKS.md. Mirroring the
+    # value here keeps the weasyprint PDF and the pdfmake PDF in sync;
+    # update both when CHECKS.md count changes.
+    env.globals["checks_total"] = 109
     env.filters["localize_message"] = lambda item: localize_message(item, locale)
     env.filters["localize_details"] = lambda item: localize_details(item, locale)
     return env

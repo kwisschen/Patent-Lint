@@ -285,11 +285,13 @@
     letter-spacing: -2pt;
     margin: 0;
   }
-  .cover .grade-letter.tier-a { color: #16a34a; }
-  .cover .grade-letter.tier-b,
-  .cover .grade-letter.tier-c { color: #d97706; }
+  /* Color scheme matches the web hero (--pass-border / --verify-border /
+     --amend-border on light mode). PDF doesn't have dark mode, so
+     light-mode hex values are the canonical reference. */
+  .cover .grade-letter.tier-a { color: #2563eb; }   /* blue — pass-border */
+  .cover .grade-letter.tier-bc { color: #16a34a; }  /* green — verify-border */
   .cover .grade-letter.tier-d,
-  .cover .grade-letter.tier-f { color: #dc2626; }
+  .cover .grade-letter.tier-f { color: #dc2626; }   /* red — amend-border */
   .cover .grade-letter.tier-na { color: #6b7280; }
   .cover .grade-score {
     font-size: 14pt;
@@ -341,9 +343,8 @@
     font-weight: 700;
     border: 1pt solid;
   }
-  .section-grades .tier-a { color: #16a34a; border-color: #16a34a; }
-  .section-grades .tier-b,
-  .section-grades .tier-c { color: #d97706; border-color: #d97706; }
+  .section-grades .tier-a { color: #2563eb; border-color: #2563eb; }
+  .section-grades .tier-bc { color: #16a34a; border-color: #16a34a; }
   .section-grades .tier-d,
   .section-grades .tier-f { color: #dc2626; border-color: #dc2626; }
   .section-grades .tier-na { color: #6b7280; border-color: #d1d5db; background: #f9fafb; }
@@ -383,27 +384,35 @@
     {%- if g.section_grades %}
     <table class="section-grades">
       <tr>
-        <th>{{ t('about.tableHeaders.section') if 'about.tableHeaders.section' in [] else 'Section' }}</th>
-        <th style="text-align:right;">Grade</th>
-        <th style="text-align:right;">Weight</th>
+        <th>{{ t('rubric.cover.tableSection') }}</th>
+        <th style="text-align:right;">{{ t('rubric.cover.tableGrade') }}</th>
+        <th style="text-align:right;">{{ t('rubric.cover.tableWeight') }}</th>
       </tr>
       {%- for sg in g.section_grades %}
+      {#- Tier color thresholds align with the 12-tier letter map:
+          A range (≥ 90) = blue/tier-a; B/C range (70-89) = green/tier-bc;
+          D/F (< 70) = red/tier-f. #}
       {%- set s_tier = 'tier-na' %}
       {%- if not sg.applicable %}{%- set s_tier = 'tier-na' %}
-      {%- elif sg.score >= 88 %}{%- set s_tier = 'tier-a' %}
-      {%- elif sg.score >= 68 %}{%- set s_tier = 'tier-bc' %}
+      {%- elif sg.score >= 90 %}{%- set s_tier = 'tier-a' %}
+      {%- elif sg.score >= 70 %}{%- set s_tier = 'tier-bc' %}
       {%- else %}{%- set s_tier = 'tier-f' %}
       {%- endif %}
+      {#- Standard US 12-tier letter map (no A+, matches rubric.py
+          letter_for_score). #}
       {%- set s_letter = '—' %}
       {%- if sg.applicable %}
-        {%- if sg.score >= 97 %}{%- set s_letter = 'A' %}
-        {%- elif sg.score >= 93 %}{%- set s_letter = 'A-' %}
-        {%- elif sg.score >= 88 %}{%- set s_letter = 'B+' %}
+        {%- if sg.score >= 93 %}{%- set s_letter = 'A' %}
+        {%- elif sg.score >= 90 %}{%- set s_letter = 'A-' %}
+        {%- elif sg.score >= 87 %}{%- set s_letter = 'B+' %}
         {%- elif sg.score >= 83 %}{%- set s_letter = 'B' %}
-        {%- elif sg.score >= 78 %}{%- set s_letter = 'B-' %}
-        {%- elif sg.score >= 73 %}{%- set s_letter = 'C+' %}
-        {%- elif sg.score >= 68 %}{%- set s_letter = 'C' %}
-        {%- elif sg.score >= 60 %}{%- set s_letter = 'D' %}
+        {%- elif sg.score >= 80 %}{%- set s_letter = 'B-' %}
+        {%- elif sg.score >= 77 %}{%- set s_letter = 'C+' %}
+        {%- elif sg.score >= 73 %}{%- set s_letter = 'C' %}
+        {%- elif sg.score >= 70 %}{%- set s_letter = 'C-' %}
+        {%- elif sg.score >= 67 %}{%- set s_letter = 'D+' %}
+        {%- elif sg.score >= 63 %}{%- set s_letter = 'D' %}
+        {%- elif sg.score >= 60 %}{%- set s_letter = 'D-' %}
         {%- else %}{%- set s_letter = 'F' %}
         {%- endif %}
       {%- endif %}
@@ -419,7 +428,7 @@
       {%- endfor %}
     </table>
     {%- endif %}
-    <div class="rubric-version">{{ t('rubric.version', version=g.rubric_version, count=109) }}</div>
+    <div class="rubric-version">{{ t('rubric.version', version=g.rubric_version, count=checks_total) }}</div>
   {%- endif %}
 </div>
 {%- endif %}
