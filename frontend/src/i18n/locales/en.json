@@ -1465,7 +1465,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "Same draft → same grade. No AI."
+      "line": "Same draft, same grade. Every time. No AI."
     },
     "cap": {
       "oneFix": "1 FIX caps grade at B-",
@@ -1511,6 +1511,7 @@
       "trustIntro": "Every input to your grade is a FIX/REVIEW/PASS status set by a deterministic checker. Every output is a pure arithmetic aggregation. The same draft always gets the same grade. PatentLint never uploads your draft anywhere — analysis runs entirely in your browser.",
       "disclaimerTitle": "What an A grade does and does not mean",
       "disclaimerIntro": "An A grade means PatentLint's rule catalog found no issues. It does not mean your draft is filing-ready. Substantive review by a registered practitioner is still required."
-    }
+    },
+    "howWeScore": "How we score →"
   }
 }
