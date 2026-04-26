@@ -55,6 +55,34 @@ REVIEW_DEDUCTION = 3
 EMPTY_TOKEN_THRESHOLD = 50
 
 
+# Advisory REVIEW keys — informational, not problem-indicating.
+#
+# These checks fire when the draft contains content that warrants
+# verification but isn't necessarily a defect: cross-references to
+# related applications, prior-art citations in background, indigenous-
+# terminology disclosure flags. A senior-attorney drafter who legitimately
+# cites cross-references and prior art shouldn't see the grade drop —
+# the REVIEW status is a "please verify" prompt, not a problem flag.
+#
+# These items still display as REVIEW in the TriagePanel (so the user
+# can verify), but they are excluded from the rubric's REVIEW deduction
+# count and from the impact list. Effectively: visible-but-zero-points.
+#
+# Adding to this set is the conservative move when introducing a new
+# advisory-style check; the test gate ensures the rubric semantics stay
+# explicit.
+ADVISORY_REVIEW_KEYS: frozenset[str] = frozenset({
+    # US
+    "check.spec.crossReference.verify",
+    "check.spec.priorArt.verify",
+    "check.drawings.priorArt.verify",
+    # CN
+    "check.cn.drawings.priorArt.verify",
+    # TW
+    "check.tw.spec.indigenousTerms.verify",
+})
+
+
 # Section weights — must sum to 100 (5 buckets, jurisdiction-uniform).
 SECTION_WEIGHTS: dict[RubricSection, int] = {
     RubricSection.SPECIFICATION: 20,
@@ -302,7 +330,14 @@ def compute_rubric_grade(
         if check.status == "amend":
             bucket_fix[section] += 1
         elif check.status == "verify":
-            bucket_review[section] += 1
+            # Advisory REVIEWs are informational only — counted as PASS for
+            # grading purposes so they don't deduct. They still display as
+            # REVIEW in the UI / PDF / triage list (the bucketing here is
+            # purely for the score formula).
+            if check.message_key in ADVISORY_REVIEW_KEYS:
+                bucket_pass[section] += 1
+            else:
+                bucket_review[section] += 1
         elif check.status == "pass":
             bucket_pass[section] += 1
 
@@ -396,6 +431,10 @@ def _compute_impact_list(
     items: list[ImpactItem] = []
     for check in all_checks:
         if check.status not in ("amend", "verify"):
+            continue
+        # Advisory REVIEWs are informational — no deduction means no impact
+        # delta means no entry on the lever-list.
+        if check.status == "verify" and check.message_key in ADVISORY_REVIEW_KEYS:
             continue
         section = section_for_message_key(check.message_key or "")
         if not applicable.get(section, False):

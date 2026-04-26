@@ -1501,7 +1501,7 @@
       "weightsTitle": "Abschnittsgewichtung",
       "weightsIntro": "Jede Prüfung fließt in einen dieser fünf Abschnitte ein. Die Gewichtung ist für US-, CN- und TW-Anmeldungen identisch.",
       "gateTitle": "Wie die FEHLER-Sperre wirkt",
-      "gateIntro": "Gesetzliche Mängel führen die Bewertung an. Bereits ein FEHLER begrenzt die Note auf B-, unabhängig davon wie sauber der Rest ist. Das entspricht dem realen Triage-Ablauf — die Frage ist immer „erst Blocker, dann Politur\".",
+      "gateIntro": "Gesetzliche Mängel führen die Bewertung an. Bereits ein FEHLER begrenzt die Note auf B-, unabhängig davon, wie sorgfältig der Rest der Schrift verfasst ist. Das entspricht dem realen Triage-Ablauf — zuerst auf blockierende Mängel prüfen, dann auf die Sorgfalt der Ausarbeitung.",
       "gateRule": "{{count}} FEHLER → höchstens {{letter}}",
       "conditionalTitle": "Wenn Abschnitte nicht zutreffen",
       "conditionalIntro": "Eine Schrift ohne Zeichnungen (Chemie, Verfahren, Geschäftsmodelle) lässt den Zeichnungs-Abschnitt zulässig weg. Zeichnungen werden dann mit „n. z.\" markiert und ihre 10 % Gewichtung anteilig auf die übrigen vier Abschnitte verteilt — keine Strafe für fehlende Zeichnungen.",

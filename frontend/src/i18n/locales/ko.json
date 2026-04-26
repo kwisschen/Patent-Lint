@@ -1470,11 +1470,11 @@
       "line": "AI 없음. 같은 초안에는 언제나 같은 평가."
     },
     "cap": {
-      "oneFix": "FIX 1건이면 평가 상한 B-",
-      "twoFix": "FIX 2건 → 상한 C+",
-      "threeFix": "FIX 3건 → 상한 C",
-      "fourFix": "FIX 4건 → 상한 D",
-      "fiveFix": "FIX {{count}}건 → 상한 F"
+      "oneFix": "수정 1건이면 평가 상한 B-",
+      "twoFix": "수정 2건 → 상한 C+",
+      "threeFix": "수정 3건 → 상한 C",
+      "fourFix": "수정 4건 → 상한 D",
+      "fiveFix": "수정 {{count}}건 → 상한 F"
     },
     "completenessGate": {
       "title": "초안 불완전 — 평가 불가",
@@ -1502,9 +1502,9 @@
       "subtitle": "결정적인 평가 기준입니다. AI 판단도 머신러닝도 사용하지 않습니다.",
       "weightsTitle": "섹션 가중치",
       "weightsIntro": "모든 검사는 아래 다섯 섹션 중 하나로 집계됩니다. 가중치는 미국·중국·대만 출원에 동일하게 적용됩니다.",
-      "gateTitle": "FIX 게이트의 작동",
-      "gateIntro": "법정 결함이 평가를 주도합니다. FIX 가 한 건이라도 있으면 다른 섹션이 아무리 깨끗해도 상한은 B- 입니다. 실무 분류 논리 — “먼저 차단 요소, 그다음 마무리” — 와 일치합니다.",
-      "gateRule": "FIX {{count}}건 → 최대 {{letter}}",
+      "gateTitle": "「수정」 게이트의 작동",
+      "gateIntro": "법정 결함이 평가를 주도합니다. 수정 항목이 한 건이라도 있으면 다른 섹션에 흠이 없어도 상한은 B- 입니다. 실무 분류 논리, 즉 「중대한 결함을 먼저 살피고 그 다음에 세부 마감을 본다」 와 일치합니다.",
+      "gateRule": "수정 {{count}}건 → 최대 {{letter}}",
       "conditionalTitle": "섹션이 해당 없음인 경우",
       "conditionalIntro": "도면이 없는 초안(화학, 방법, 비즈니스 모델)은 도면 섹션을 정당하게 생략할 수 있습니다. 도면을 “해당 없음” 으로 표시하고 10 % 가중치를 나머지 네 섹션에 비례 배분하여, 도면 부재로 인한 감점은 없습니다.",
       "completenessTitle": "초안이 불완전한 경우",
