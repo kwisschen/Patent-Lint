@@ -661,7 +661,7 @@
           "missingFromTable": "Numerals in claims undefined in 符號說明: {{numerals_with_locations}}"
         }
       },
-      "antecedentBasis": "該/所述/前述 + noun should have a matching 一 + noun introduction in the same claim or a parent claim. Flagged terms may need review. Regex-based detection is approximate.",
+      "antecedentBasis": "該/所述/前述 + noun should have a matching prior introduction in the same claim or a parent claim. The 一 + noun form is the canonical convention; alternatives (一個 / 至少一 / 複數個 / 多個 + noun) are also accepted. Regex-based detection is approximate.",
       "abstractCharCount": "Per 專利法施行細則 §21, the abstract should be within 250 characters. TIPO may not reject on length alone, but review for conciseness.",
       "abstractTitleMatch": "Per 專利審查基準, the abstract should reference the 發明名稱/新型名稱. Verify the abstract reflects the title. Title: {{detail}}.",
       "commercialLanguage": "Per 專利法施行細則 §21, the abstract must not contain commercial advertising language (商業性宣傳用語). Found: {{terms}}.",
@@ -945,7 +945,7 @@
           "pass": "All independent device/system claims describe component connections."
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 该/所述 reference without a prior 一 introduction (审查指南).",
+          "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 该/所述 reference without a prior introduction (e.g., 一 / 至少一 / 多个 + noun) (审查指南).",
           "pass": "All claim terms have antecedent basis (审查指南)."
         },
         "specSupport": {
@@ -1116,7 +1116,7 @@
           "pass": "All independent apparatus/system claims describe component connections."
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 該/所述/前述 reference without a prior 一 introduction.",
+          "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 該/所述/前述 reference without a prior introduction (e.g., 一 / 至少一 / 複數個 + noun).",
           "pass": "All claim terms have antecedent basis."
         },
         "specSupport": {
