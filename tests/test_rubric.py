@@ -51,16 +51,31 @@ class TestPureHelpers:
         assert compute_section_score(10, 0) == 0
 
     def test_letter_thresholds(self):
-        assert letter_for_score(100) == "A"
-        assert letter_for_score(97) == "A"
-        assert letter_for_score(96) == "A-"
-        assert letter_for_score(93) == "A-"
-        assert letter_for_score(88) == "B+"
+        # Standard US 13-tier scale.
+        assert letter_for_score(100) == "A+"
+        assert letter_for_score(97) == "A+"
+        assert letter_for_score(96) == "A"
+        assert letter_for_score(93) == "A"
+        assert letter_for_score(92) == "A-"
+        assert letter_for_score(90) == "A-"
+        assert letter_for_score(89) == "B+"
+        assert letter_for_score(87) == "B+"
+        assert letter_for_score(86) == "B"
         assert letter_for_score(83) == "B"
-        assert letter_for_score(78) == "B-"
-        assert letter_for_score(73) == "C+"
-        assert letter_for_score(68) == "C"
-        assert letter_for_score(60) == "D"
+        assert letter_for_score(82) == "B-"
+        assert letter_for_score(80) == "B-"
+        assert letter_for_score(79) == "C+"
+        assert letter_for_score(77) == "C+"
+        assert letter_for_score(76) == "C"
+        assert letter_for_score(73) == "C"
+        assert letter_for_score(72) == "C-"
+        assert letter_for_score(70) == "C-"
+        assert letter_for_score(69) == "D+"
+        assert letter_for_score(67) == "D+"
+        assert letter_for_score(66) == "D"
+        assert letter_for_score(63) == "D"
+        assert letter_for_score(62) == "D-"
+        assert letter_for_score(60) == "D-"
         assert letter_for_score(59) == "F"
         assert letter_for_score(0) == "F"
 
@@ -69,12 +84,11 @@ class TestPureHelpers:
         assert cap == 100
         assert reason is None
 
-    def test_gate_one_fix_caps_b_plus(self):
-        # Gradient gate: 1 FIX caps at B+ (not B-) — one letter rank per FIX
-        # rather than catastrophic-on-the-first-FIX.
+    def test_gate_one_fix_caps_a_minus(self):
+        # Standard US 13-tier mapping: numeric cap 92 = A- (90-92).
         cap, reason = gate_cap_for_fix_count(1)
         assert cap == 92
-        assert "B+" in reason
+        assert "A-" in reason
 
     def test_gate_progressive_caps(self):
         # 2: B (87), 3: B- (82), 4: C+ (77), 5: C (72), 6: D (67), 7+: F (59)
@@ -150,7 +164,7 @@ class TestSectionMapping:
 
 
 class TestComputeRubricGrade:
-    def test_all_pass_scores_a(self):
+    def test_all_pass_scores_a_plus(self):
         checks = [_check("pass", "check.spec.paragraphSequential.pass")]
         grade = compute_rubric_grade(
             jurisdiction=Jurisdiction.US,
@@ -158,11 +172,11 @@ class TestComputeRubricGrade:
             has_drawings=True,
         )
         assert grade.score == 100
-        assert grade.letter == "A"
+        assert grade.letter == "A+"
         assert grade.cap_reason is None
         assert grade.is_complete
 
-    def test_one_fix_caps_at_b_plus(self):
+    def test_one_fix_caps_at_a_minus(self):
         checks = [_check("amend", "check.cn.spec.requiredSections.amend")]
         grade = compute_rubric_grade(
             jurisdiction=Jurisdiction.CN,
@@ -170,28 +184,27 @@ class TestComputeRubricGrade:
             has_drawings=True,
         )
         # Spec section: 100 - 15 = 85; weighted = 85 * 0.20 = 17 contribution.
-        # Other sections: 100 each. Total weighted ≈ 97. Gate caps at 92 (B+).
+        # Other sections: 100 each. Total weighted ≈ 97. Gate caps at 92 (A-).
         assert grade.score == 92
-        assert grade.letter == "B+"
-        assert "B+" in grade.cap_reason
+        assert grade.letter == "A-"
+        assert "A-" in grade.cap_reason
 
-    def test_three_fix_lands_in_b_minus_range(self):
-        # 3 FIXes all in Claims (45% weight): section score 55, weighted
-        # contribution 24.75 (vs 45.0 clean), overall un-capped 79.75 → 79.
-        # Gate cap for 3 FIX is 82, not binding here. Letter is B-.
-        # The point of this test is verifying the gradient: 3 FIX → B- range.
+    def test_three_fix_caps_at_b_minus(self):
+        # Spread the 3 FIXes across different sections so the gate (cap 82)
+        # is the binding constraint, not section-level deductions.
         checks = [
-            _check("amend", "check.claims.sequential.amend"),
-            _check("amend", "check.claims.selfDependent.amend"),
-            _check("amend", "claims.markushOpenTransition"),
+            _check("amend", "check.spec.paragraphSequential.amend"),
+            _check("amend", "check.cn.claims.selfDependent.amend"),
+            _check("amend", "check.cn.abstract.charCount.amend"),
         ]
         grade = compute_rubric_grade(
-            jurisdiction=Jurisdiction.US,
+            jurisdiction=Jurisdiction.CN,
             all_checks=checks,
             has_drawings=True,
         )
+        # Gate cap for 3 FIX is 82 (B- in standard US scale: 80-82).
+        assert grade.score == 82
         assert grade.letter == "B-"
-        assert 78 <= grade.score <= 82
 
     def test_review_only_polishes_a_minus(self):
         # 5 REVIEW × 3pts = 15pts deducted across various sections; clean of FIX.
@@ -210,8 +223,8 @@ class TestComputeRubricGrade:
             has_drawings=True,
         )
         # 5 × 3 = 15 deducted from antecedent section → 85; weighted at 0.15 → -2.25.
-        # Overall ≈ 98 → A. No gate.
-        assert grade.letter in ("A", "A-")
+        # Overall ≈ 97.75 → 97 → A+ (97-100 in standard US scale). No gate.
+        assert grade.letter in ("A+", "A", "A-")
         assert grade.cap_reason is None
 
     def test_no_drawings_drawings_section_na(self):
