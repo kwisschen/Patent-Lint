@@ -800,8 +800,8 @@
         "pass": "未偵測到手段功能用語。"
       },
       "antecedentBasis": {
-        "verify": "可能缺少先行詞基礎（§ 112(b)）：「the X／said X」疑似未有先前之「a X」引介。",
-        "pass": "未偵測到先行詞基礎問題（§ 112(b)）。"
+        "pass": "未偵測到先行詞基礎問題（§ 112(b)）。",
+        "amend": "可能缺少先行詞基礎（§ 112(b)）：「the X／said X」疑似未有先前之「a X」引介。"
       },
       "missingTransition": "請求項 {{claimNumber}} 缺少連接詞（例如 'comprising'、'consisting of'）",
       "missingTransitionDetails": "請求項 {{claimNumber}} 未包含任何公認的連接詞。每項請求項必須在前言與主體之間包含連接詞，例如 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' 或 'characterized in that'。",
@@ -870,8 +870,8 @@
           "verify": "{{count}}個段落未以有效中文標點結尾：{{paragraphs}}（审查指南）。"
         },
         "figureRefConsistency": {
-          "verify": "附圖引用不一致：{{figure_ref_inconsistency}}",
-          "pass": "各章節附圖引用一致。"
+          "pass": "各章節附圖引用一致。",
+          "amend": "附圖引用不一致：{{figure_ref_inconsistency}}"
         },
         "patentTypeTerminology": {
           "verify": "發現「{{term}}」，請確認是否與專利類型（發明／實用新型）一致（审查指南）。",
@@ -945,12 +945,12 @@
           "pass": "所有獨立裝置／系統權利要求均已記載組件之連接關係。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少先行詞（审查指南）：「该／所述」引用未見對應之先前引介（例如以「一」、「至少一」、「多个」加名詞之形式）。",
-          "pass": "所有引用之用語皆有先行詞（审查指南）。"
+          "pass": "所有引用之用語皆有先行詞（审查指南）。",
+          "amend": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少先行詞（审查指南）：「该／所述」引用未見對應之先前引介（例如以「一」、「至少一」、「多个」加名詞之形式）。"
         },
         "specSupport": {
-          "verify": "{{claims}} 共有 {{issue_count}} 個權利要求用語疑似未獲說明書支持（审查指南 第二部分第二章 §3.2.1）。",
-          "pass": "所有權利要求用語皆獲說明書支持（审查指南）。"
+          "pass": "所有權利要求用語皆獲說明書支持（审查指南）。",
+          "amend": "{{claims}} 共有 {{issue_count}} 個權利要求用語疑似未獲說明書支持（审查指南 第二部分第二章 §3.2.1）。"
         },
         "omnibus": {
           "amend": "{{claims}}：權利要求以「如說明書所述」等方式援引說明書或附圖，未具體記載技術特徵（审查指南 第二部分第二章 §3.3）。",
@@ -1015,8 +1015,8 @@
           "verify": "{{count}}個段落缺少結尾標點：{{paragraphs}}（專利審查基準）。"
         },
         "figureRefConsistency": {
-          "verify": "圖式引用不一致：{{figure_ref_inconsistency}}",
-          "pass": "各章節之圖式引用一致。"
+          "pass": "各章節之圖式引用一致。",
+          "amend": "圖式引用不一致：{{figure_ref_inconsistency}}"
         },
         "patentTypeTerminology": {
           "verify": "偵測到專利類型用語不一致（發明與新型混用）（專利審查基準）。",
@@ -1116,12 +1116,12 @@
           "pass": "所有獨立裝置／系統項均已記載組件之連接關係。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少先行詞：「該／所述／前述」引用未見對應之先前引介（例如以「一」、「至少一」、「複數個」加名詞之形式）。",
-          "pass": "所有引用之用語皆有先行詞。"
+          "pass": "所有引用之用語皆有先行詞。",
+          "amend": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少先行詞：「該／所述／前述」引用未見對應之先前引介（例如以「一」、「至少一」、「複數個」加名詞之形式）。"
         },
         "specSupport": {
-          "verify": "{{claims}} 共有 {{issue_count}} 個請求項用語疑似未獲說明書支持。",
-          "pass": "所有請求項用語均獲說明書支持。"
+          "pass": "所有請求項用語均獲說明書支持。",
+          "amend": "{{claims}} 共有 {{issue_count}} 個請求項用語疑似未獲說明書支持。"
         },
         "independentPreamble": {
           "pass": "所有獨立項皆以「一種」開頭。",

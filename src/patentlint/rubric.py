@@ -72,10 +72,15 @@ EMPTY_TOKEN_THRESHOLD = 50
 # advisory-style check; the test gate ensures the rubric semantics stay
 # explicit.
 ADVISORY_REVIEW_KEYS: frozenset[str] = frozenset({
-    # US
+    # US — informational / pre-existing prior-art context
     "check.spec.crossReference.verify",
     "check.spec.priorArt.verify",
     "check.drawings.priorArt.verify",
+    # US — REVIEW kept after demotion but message is purely informational
+    # (multi-dep claims are legal per § 608.01(n); fee + chain reminder)
+    "check.claims.multipleDependent.verify",
+    # US — Jepson preamble = admitted prior art warning, not a defect
+    "claims.jepsonPriorArt",
     # CN
     "check.cn.drawings.priorArt.verify",
     # TW

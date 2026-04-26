@@ -800,8 +800,8 @@
         "pass": "ミーンズ・プラス・ファンクション用語は検出されませんでした。"
       },
       "antecedentBasis": {
-        "verify": "先行詞の根拠を欠く可能性（§ 112(b)）：「the X／said X」に対応する「a X」の導入が明細書上にない可能性があります。",
-        "pass": "先行詞の根拠の問題は検出されませんでした（§ 112(b)）。"
+        "pass": "先行詞の根拠の問題は検出されませんでした（§ 112(b)）。",
+        "amend": "先行詞の根拠を欠く可能性（§ 112(b)）：「the X／said X」に対応する「a X」の導入が明細書上にない可能性があります。"
       },
       "missingTransition": "請求項 {{claimNumber}} に移行句がありません（例：'comprising'、'consisting of'）",
       "missingTransitionDetails": "請求項 {{claimNumber}} に公認の移行句が含まれていません。各請求項には、前文と本体の間に 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' または 'characterized in that' などの移行句が必要です。",
@@ -870,8 +870,8 @@
           "verify": "句読点で終わっていない段落が{{count}}件あります：{{paragraphs}}（审查指南）。"
         },
         "figureRefConsistency": {
-          "verify": "図面の参照に不整合があります：{{figure_ref_inconsistency}}",
-          "pass": "各章の図面参照は整合しています。"
+          "pass": "各章の図面参照は整合しています。",
+          "amend": "図面の参照に不整合があります：{{figure_ref_inconsistency}}"
         },
         "patentTypeTerminology": {
           "verify": "「{{term}}」を検出：出願種別（発明・実用新案）と整合するか確認してください（审查指南）。",
@@ -945,12 +945,12 @@
           "pass": "全ての独立装置／システムクレームに構成要素間の接続関係が記載されています。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}}において先行詞がない可能性がある用語が{{issue_count}}個（审查指南）：「该／所述」の参照に対応する先行導入が見当たりません（例：「一」「至少一」「多个」＋名詞などの形式）。",
-          "pass": "全ての引用用語に先行詞があります（审查指南）。"
+          "pass": "全ての引用用語に先行詞があります（审查指南）。",
+          "amend": "{{claims}}において先行詞がない可能性がある用語が{{issue_count}}個（审查指南）：「该／所述」の参照に対応する先行導入が見当たりません（例：「一」「至少一」「多个」＋名詞などの形式）。"
         },
         "specSupport": {
-          "verify": "{{claims}}において明細書による裏付けが不足している可能性のある請求項用語が{{issue_count}}個あります（审查指南 第二部分第二章 §3.2.1）。",
-          "pass": "全ての請求項用語が明細書により裏付けられています（审查指南）。"
+          "pass": "全ての請求項用語が明細書により裏付けられています（审查指南）。",
+          "amend": "{{claims}}において明細書による裏付けが不足している可能性のある請求項用語が{{issue_count}}個あります（审查指南 第二部分第二章 §3.2.1）。"
         },
         "omnibus": {
           "amend": "{{claims}}：請求項が具体的な技術的特徴を記載せず、说明书・附图を援引しています（审查指南 第二部分第二章 §3.3）。",
@@ -1015,8 +1015,8 @@
           "verify": "句読点で終わっていない段落が{{count}}件あります：{{paragraphs}}（專利審查基準）。"
         },
         "figureRefConsistency": {
-          "verify": "図面の参照に不整合があります：{{figure_ref_inconsistency}}",
-          "pass": "各章の図面参照は整合しています。"
+          "pass": "各章の図面参照は整合しています。",
+          "amend": "図面の参照に不整合があります：{{figure_ref_inconsistency}}"
         },
         "patentTypeTerminology": {
           "verify": "出願種別（発明・新型）の用語に不整合を検出しました（專利審查基準）。",
@@ -1116,12 +1116,12 @@
           "pass": "全ての独立装置／システム項に構成要素間の接続関係が記載されています。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}}において先行詞がない可能性がある用語が{{issue_count}}個：「該／所述／前述」の参照に対応する先行導入が見当たりません（例：「一」「至少一」「複數個」＋名詞などの形式）。",
-          "pass": "全ての引用用語に先行詞があります。"
+          "pass": "全ての引用用語に先行詞があります。",
+          "amend": "{{claims}}において先行詞がない可能性がある用語が{{issue_count}}個：「該／所述／前述」の参照に対応する先行導入が見当たりません（例：「一」「至少一」「複數個」＋名詞などの形式）。"
         },
         "specSupport": {
-          "verify": "{{claims}}において明細書による裏付けが不足している可能性のある請求項用語が{{issue_count}}個あります。",
-          "pass": "全ての請求項用語が明細書により裏付けられています。"
+          "pass": "全ての請求項用語が明細書により裏付けられています。",
+          "amend": "{{claims}}において明細書による裏付けが不足している可能性のある請求項用語が{{issue_count}}個あります。"
         },
         "independentPreamble": {
           "pass": "すべての独立項が「一種」で始まっています。",

@@ -125,9 +125,9 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
 
     # --- Group 2: Spec content ---
     "check.cn.spec.figureRefConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 10),
-    "check.cn.spec.figureRefConsistency.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 10),
+    "check.cn.spec.figureRefConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 10),
     "check.tw.spec.figureRefConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 10),
-    "check.tw.spec.figureRefConsistency.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 10),
+    "check.tw.spec.figureRefConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 10),
 
     "check.cn.spec.patentTypeTerminology.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 20),
     "check.cn.spec.patentTypeTerminology.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 20),
@@ -326,19 +326,19 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.claims.meansFunction.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 10),
     "check.claims.meansFunction.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 10),
 
-    "check.claims.antecedentBasis.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 20),
+    "check.claims.antecedentBasis.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 20),
     "check.claims.antecedentBasis.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 20),
-    "check.cn.claims.antecedentBasis.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 20),
+    "check.cn.claims.antecedentBasis.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 20),
     "check.cn.claims.antecedentBasis.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 20),
-    "check.tw.claims.antecedentBasis.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 20),
+    "check.tw.claims.antecedentBasis.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 20),
     "check.tw.claims.antecedentBasis.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 20),
 
     "checks.spec_support_pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 30),
     "checks.spec_support_unsupported_terms": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 30),
     "check.cn.claims.specSupport.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 30),
-    "check.cn.claims.specSupport.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 30),
+    "check.cn.claims.specSupport.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 30),
     "check.tw.claims.specSupport.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 30),
-    "check.tw.claims.specSupport.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 30),
+    "check.tw.claims.specSupport.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 30),
 
     # US preamble walker.
     "checks.preamble_cross_category_mismatch": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 40),

@@ -800,8 +800,8 @@
         "pass": "기능식 청구항 표현이 검출되지 않았습니다."
       },
       "antecedentBasis": {
-        "verify": "선행사 기초 누락 가능성(§ 112(b)): 'the X / said X'에 선행하는 'a X' 도입이 명세서상에 없을 수 있습니다.",
-        "pass": "선행사 기초 문제가 검출되지 않았습니다(§ 112(b))."
+        "pass": "선행사 기초 문제가 검출되지 않았습니다(§ 112(b)).",
+        "amend": "선행사 기초 누락 가능성(§ 112(b)): 'the X / said X'에 선행하는 'a X' 도입이 명세서상에 없을 수 있습니다."
       },
       "missingTransition": "청구항 {{claimNumber}}에 연결어(예: 'comprising', 'consisting of')가 누락되었습니다",
       "missingTransitionDetails": "청구항 {{claimNumber}}에 인식 가능한 연결어가 포함되어 있지 않습니다. 모든 청구항에는 전제부와 본문 사이에 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by' 또는 'characterized in that' 등의 연결어가 포함되어야 합니다.",
@@ -870,8 +870,8 @@
           "verify": "중국어 문장 종결 부호로 끝나지 않는 단락이 {{count}}개 있습니다: {{paragraphs}} (审查指南)."
         },
         "figureRefConsistency": {
-          "verify": "도면 참조에 불일치가 있습니다: {{figure_ref_inconsistency}}",
-          "pass": "섹션 간 도면 참조가 일관됩니다."
+          "pass": "섹션 간 도면 참조가 일관됩니다.",
+          "amend": "도면 참조에 불일치가 있습니다: {{figure_ref_inconsistency}}"
         },
         "patentTypeTerminology": {
           "verify": "'{{term}}' 검출: 출원 종류(발명·실용신안)와 일치하는지 확인하십시오 (审查指南).",
@@ -945,12 +945,12 @@
           "pass": "모든 독립 장치／시스템 청구항이 구성요소 간 연결관계를 기재하고 있습니다."
         },
         "antecedentBasis": {
-          "verify": "{{claims}}에서 선행사가 없을 수 있는 용어 {{issue_count}}개(审查指南): '该 / 所述' 참조에 대한 선행 도입이 보이지 않습니다(예: '一' / '至少一' / '多个' + 명사 형식).",
-          "pass": "모든 청구항 용어에 선행사가 있습니다(审查指南)."
+          "pass": "모든 청구항 용어에 선행사가 있습니다(审查指南).",
+          "amend": "{{claims}}에서 선행사가 없을 수 있는 용어 {{issue_count}}개(审查指南): '该 / 所述' 참조에 대한 선행 도입이 보이지 않습니다(예: '一' / '至少一' / '多个' + 명사 형식)."
         },
         "specSupport": {
-          "verify": "{{claims}}에서 명세서의 뒷받침이 부족할 수 있는 청구항 용어 {{issue_count}}개(审查指南 第二部分第二章 §3.2.1).",
-          "pass": "모든 청구항 용어가 명세서에 의해 뒷받침됩니다(审查指南)."
+          "pass": "모든 청구항 용어가 명세서에 의해 뒷받침됩니다(审查指南).",
+          "amend": "{{claims}}에서 명세서의 뒷받침이 부족할 수 있는 청구항 용어 {{issue_count}}개(审查指南 第二部分第二章 §3.2.1)."
         },
         "omnibus": {
           "amend": "{{claims}}: 청구항이 구체적 기술적 특징을 기재하지 않고 说明书·附图를 원용하고 있습니다 (审查指南 第二部分第二章 §3.3).",
@@ -1015,8 +1015,8 @@
           "verify": "종결 부호가 누락된 단락이 {{count}}개 있습니다: {{paragraphs}} (專利審查基準)."
         },
         "figureRefConsistency": {
-          "verify": "도면 참조에 불일치가 있습니다: {{figure_ref_inconsistency}}",
-          "pass": "섹션 간 도면 참조가 일관됩니다."
+          "pass": "섹션 간 도면 참조가 일관됩니다.",
+          "amend": "도면 참조에 불일치가 있습니다: {{figure_ref_inconsistency}}"
         },
         "patentTypeTerminology": {
           "verify": "출원 종류(발명·신형) 용어 불일치가 검출되었습니다 (專利審查基準).",
@@ -1116,12 +1116,12 @@
           "pass": "모든 독립 장치／시스템 청구항이 구성요소 간 연결관계를 기재하고 있습니다."
         },
         "antecedentBasis": {
-          "verify": "{{claims}}에서 선행사가 없을 수 있는 용어 {{issue_count}}개: '該 / 所述 / 前述' 참조에 대한 선행 도입이 보이지 않습니다(예: '一' / '至少一' / '複數個' + 명사 형식).",
-          "pass": "모든 청구항 용어에 선행사가 있습니다."
+          "pass": "모든 청구항 용어에 선행사가 있습니다.",
+          "amend": "{{claims}}에서 선행사가 없을 수 있는 용어 {{issue_count}}개: '該 / 所述 / 前述' 참조에 대한 선행 도입이 보이지 않습니다(예: '一' / '至少一' / '複數個' + 명사 형식)."
         },
         "specSupport": {
-          "verify": "{{claims}}에서 명세서의 뒷받침이 부족할 수 있는 청구항 용어 {{issue_count}}개.",
-          "pass": "모든 청구항 용어가 명세서에 의해 뒷받침됩니다."
+          "pass": "모든 청구항 용어가 명세서에 의해 뒷받침됩니다.",
+          "amend": "{{claims}}에서 명세서의 뒷받침이 부족할 수 있는 청구항 용어 {{issue_count}}개."
         },
         "independentPreamble": {
           "pass": "모든 독립항이 「一種」 으로 시작합니다.",
