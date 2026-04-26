@@ -493,16 +493,12 @@ function buildRubricCover(rubricGrade, t, fontName) {
       ...fontProp,
     },
   ]
-  if (rubricGrade.cap_reason) {
-    cover.push({
-      text: rubricGrade.cap_reason,
-      fontSize: 9,
-      color: '#b91c1c',
-      alignment: 'center',
-      margin: [0, 4, 0, 0],
-      ...fontProp,
-    })
-  }
+  // cap_reason is intentionally not rendered inline on the cover —
+  // matches the web hero, which replaced inline cap-reason text with
+  // the /rubric link in commit 966f783. The gate rules are documented
+  // on the /rubric page; the section-grade table below already
+  // surfaces which section absorbed the FIX, which is the load-bearing
+  // information for the user.
 
   // Section-grade table.
   if (rubricGrade.section_grades?.length) {
