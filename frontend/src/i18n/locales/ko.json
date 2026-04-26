@@ -729,8 +729,8 @@
         "pass": "단락 번호가 순차적입니다."
       },
       "paragraphEnding": {
-        "amend": "종료 부호가 유효하지 않거나 누락된 단락이 있습니다(MPEP § 608.01(p)).",
-        "pass": "모든 단락의 종료 부호가 유효합니다."
+        "pass": "모든 단락의 종료 부호가 유효합니다.",
+        "verify": "종료 부호가 유효하지 않거나 누락된 단락이 있습니다(MPEP § 608.01(p))."
       },
       "sequenceListing": {
         "amend": "SEQ ID NO가 참조되었으나 서열 목록 기재문이 발견되지 않았습니다.",
@@ -865,8 +865,8 @@
           "amendXmlDuplicate": "중복된 단락 번호가 {{count}}개 있습니다: {{paragraphs}} (审查指南)."
         },
         "paragraphEnding": {
-          "amend": "중국어 문장 종결 부호로 끝나지 않는 단락이 {{count}}개 있습니다: {{paragraphs}} (审查指南).",
-          "pass": "모든 명세서 단락이 중국어 문장 종결 부호로 끝납니다."
+          "pass": "모든 명세서 단락이 중국어 문장 종결 부호로 끝납니다.",
+          "verify": "중국어 문장 종결 부호로 끝나지 않는 단락이 {{count}}개 있습니다: {{paragraphs}} (审查指南)."
         },
         "figureRefConsistency": {
           "verify": "도면 참조에 불일치가 있습니다: {{figure_ref_inconsistency}}",
@@ -956,8 +956,8 @@
           "pass": "원용식 청구항이 발견되지 않았습니다."
         },
         "markushOpenTransition": {
-          "verify": "{{claims}}: 마쿠시 청구항이 개방형 연결어({{transitions}})를 사용합니다. 폐쇄형 「组成的」으로 수정해야 합니다 (审查指南 第二部分第十章 §9.3).",
-          "pass": "마쿠시 청구항은 폐쇄형 「组成的」을 사용합니다."
+          "pass": "마쿠시 청구항은 폐쇄형 「组成的」을 사용합니다.",
+          "amend": "{{claims}}: 마쿠시 청구항이 개방형 연결어({{transitions}})를 사용합니다. 폐쇄형 「组成的」으로 수정해야 합니다 (审查指南 第二部分第十章 §9.3)."
         },
         "independentPreamble": {
           "pass": "모든 독립 청구항이 「一种」 으로 시작합니다.",
@@ -1010,8 +1010,8 @@
           "amendFormat": "【NNNN】 형식이 아닌 단락이 {{count}}개 있습니다. 예: {{examples}} (專利法施行細則 §17)."
         },
         "paragraphEnding": {
-          "amend": "종결 부호가 누락된 단락이 {{count}}개 있습니다: {{paragraphs}} (專利審查基準).",
-          "pass": "모든 명세서 단락이 중국어 문장 종결 부호로 끝납니다."
+          "pass": "모든 명세서 단락이 중국어 문장 종결 부호로 끝납니다.",
+          "verify": "종결 부호가 누락된 단락이 {{count}}개 있습니다: {{paragraphs}} (專利審查基準)."
         },
         "figureRefConsistency": {
           "verify": "도면 참조에 불일치가 있습니다: {{figure_ref_inconsistency}}",
@@ -1071,8 +1071,8 @@
           "amendMultiSentence": "다문장 청구항이 {{count}}개 있습니다: {{claims}}."
         },
         "refNumeralParens": {
-          "verify": "{{count}}개 청구항에서 참조 부호가 괄호로 둘러싸여 있지 않습니다: {{claims}}(專利法施行細則 §19).",
-          "pass": "모든 참조 부호가 괄호로 둘러싸여 있습니다."
+          "pass": "모든 참조 부호가 괄호로 둘러싸여 있습니다.",
+          "amend": "{{count}}개 청구항에서 참조 부호가 괄호로 둘러싸여 있지 않습니다: {{claims}}(專利法施行細則 §19)."
         },
         "subjectConsistency": {
           "verify": "{{claims}}의 주제명이 모항과 일치하지 않습니다 (총 {{count}}개).",

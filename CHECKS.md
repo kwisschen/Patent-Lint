@@ -10,7 +10,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Title requirements | MPEP § 606, § 608.01 | FIX / REVIEW / PASS | `check.spec.title` | Title ≤500 chars, no trademarks/model numbers; advisory warning if >15 words |
 | Restrictive wording | § 112(b), MPEP § 2111.01(II) | REVIEW / PASS | `check.spec.restrictiveWording` | MPEP 2111.01(II) narrowing language in spec paragraphs: always / never / must / solely / every / required / essential / critical / vital / necessary / imperative / indispensable (Phase 9 #72b) |
 | Paragraph sequential | § 608.01(p) | FIX / PASS | `check.spec.paragraphSequential` / `check.spec.paragraphSequential.missing` | Paragraph numbers are sequential; no paragraph numbering found (patent documents only) |
-| Paragraph ending | § 608.01(p) | FIX / PASS | `check.spec.paragraphEnding` | Paragraphs have valid ending punctuation |
+| Paragraph ending | § 608.01(p) | REVIEW / PASS | `check.spec.paragraphEnding` | Paragraphs have valid ending punctuation (formatting hygiene; §608.01(p) governs numbering, not termination) |
 | Sequence listing | § 2422 | FIX / PASS | `check.spec.sequenceListing` | SEQ ID NO referenced but no sequence listing statement |
 | Cross-reference | § 608.01 | REVIEW / PASS | `check.spec.crossReference` | Cross-reference section cites related applications — verify completeness |
 | Prior art citations | § 608.01(c) | REVIEW / PASS | `check.spec.priorArt` | Background section cites prior art — review characterizations |
@@ -39,7 +39,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Transition phrase | § 112 | FIX / PASS | `check.claims.missingTransition` / `check.claims.transitionsPresent` | Every independent claim has a transitional phrase |
 | Jepson prior art | § 2129 | REVIEW | `claims.jepsonPriorArt` | Jepson format — preamble elements treated as admitted prior art |
 | CRM non-transitory | § 101 | FIX | `claims.crmNonTransitory` | Computer-readable medium missing 'non-transitory' qualifier |
-| Markush transition | § 2117 | REVIEW | `claims.markushOpenTransition` | Markush group uses open-ended transition instead of 'consisting of' |
+| Markush transition | § 2117 | FIX | `claims.markushOpenTransition` | Markush group uses open-ended transition instead of 'consisting of' (improper Markush = substantive rejection on the merits per MPEP § 2117) |
 | Omnibus claim | § 112(b) | FIX | `claims.omnibusClaim` | Claim references description/drawings without specific features |
 | Special formats pass | — | PASS | `claims.specialFormatsPass` | No special claim format issues detected |
 | Spec support | § 112(a) | REVIEW / PASS | `checks.spec_support_unsupported_terms` / `checks.spec_support_pass` | Claim terms found/not found in specification (3-tier matching) |
@@ -81,7 +81,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Required sections | 专利法实施细则 §20 | FIX / PASS | `check.cn.spec.requiredSections` | Required sections present (技术领域, 背景技术, 发明内容, 具体实施方式) |
 | Section ordering | 专利法实施细则 §20 | FIX / PASS | `check.cn.spec.sectionOrdering` | Sections in prescribed order |
 | Paragraph numbering | 审查指南 | FIX / PASS | `check.cn.spec.paragraphNumbering` | XML: sequential `<p num>` tags; docx: `[NNNN]` format present |
-| Paragraph ending | 审查指南 | FIX / PASS | `check.cn.spec.paragraphEnding` | Paragraphs end with Chinese punctuation (。！？) |
+| Paragraph ending | 审查指南 | REVIEW / PASS | `check.cn.spec.paragraphEnding` | Paragraphs end with Chinese punctuation (。！？) (formatting hygiene; not literal in 实施细则 or 审查指南) |
 | Figure ref consistency | 审查指南 | REVIEW / PASS | `check.cn.spec.figureRefConsistency` | Figure references match between 附图说明 and 具体实施方式 |
 | Patent type terminology | 审查指南 | REVIEW / PASS | `check.cn.spec.patentTypeTerminology` | 本发明 vs 本实用新型 consistency |
 | Title requirements | 审查指南 第一部分第一章 | FIX / PASS | `check.cn.spec.title` | Title ≤25 CJK chars, no trademarks/model numbers |
@@ -100,7 +100,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Reference numeral parentheses | 审查指南 | REVIEW / PASS | `check.cn.claims.refNumeralParens` | Reference numerals in parentheses, e.g. (101) |
 | Subject name consistency | 审查指南 第二部分第二章 | REVIEW / PASS | `check.cn.claims.subjectConsistency` | Dependent claim subject matches parent |
 | Transition phrase | 审查指南 | REVIEW / PASS | `check.cn.claims.transitionPhrase` | Independent claims contain 其特征在于 |
-| TW terminology | — | REVIEW / PASS | `check.cn.claims.twTerminology` | Flags 请求项 (TIPO) vs 权利要求 (CNIPA) |
+| TW terminology | — | FIX / PASS | `check.cn.claims.twTerminology` | Flags 请求项 (TIPO) vs 权利要求 (CNIPA) — jurisdictional contamination = filing-fatal |
 | Claims must not reference spec/drawings | 审查指南 第二部分第二章 | FIX / PASS | `check.cn.claims.specReference` | No references to 说明书 or 附图 in claims |
 | Multi-dep on multi-dep | 专利法实施细则 §25 第3款 | FIX / PASS | `check.cn.claims.multiMultiDep` | Multi-dep claim cannot reference another multi-dep |
 | Dependent claim ordering | 审查指南 第二部分第二章 | FIX / PASS | `check.cn.claims.dependentOrdering` | Dependents grouped after their independent claim |
@@ -108,7 +108,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Antecedent basis (引用基础) | 审查指南 第二部分第二章 §3.2.2 | REVIEW / PASS | `check.cn.claims.antecedentBasis` | BFS ancestor-chain walker with cycle protection; char-bigram Jaccard tokenization with CJK ordinal guard pre-filter; did-you-mean suggestion layer on borderline misses |
 | Specification support (说明书支持) | 专利法 §26 第4款 + 审查指南 第二部分第二章 §3.2.1 | REVIEW / PASS | `check.cn.claims.specSupport` | 3-tier match (aggressively-normalized exact → raw exact → ±30-char CJK bigram window) for every claim intro against technical_field + summary + detailed_description (背景技术 excluded per §2.2.3 — prior-art context, not disclosure). Inventory hygiene: paren + bare-numeral reference strip, leading preposition strip (于/到/在/自/由/从/向/对), mid-phrase reference-prefix recovery, conjunction split including disjunctive 或 (X或Y → X, Y), length cap 12, existential-verb leading reject (设有/装有/配置有/设置有), CN-drafting trailing-token strip (之间/位于/构成/设置 etc.), tw_contamination skip (该等/该些 parser artifacts not double-reported) |
 | Omnibus claim | 审查指南 第二部分第二章 §3.3 | FIX / PASS | `check.cn.claims.omnibus` | Claim references 说明书/附图 without reciting specific technical features |
-| Markush open transition | 审查指南 第二部分第十章 §9.3 | REVIEW / PASS | `check.cn.claims.markushOpenTransition` | Markush group uses 包括/具有/含有 instead of 组成的 (closed transition) |
+| Markush open transition | 审查指南 第二部分第十章 §9.3 | FIX / PASS | `check.cn.claims.markushOpenTransition` | Markush group uses 包括/具有/含有 instead of 组成的 (closed transition) — improper Markush = substantive rejection per §9.3 |
 
 ## CN Abstract (摘要)
 
@@ -135,7 +135,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Required sections | 專利法施行細則 §17 | FIX / PASS | `check.tw.spec.requiredSections` | Required sections present (技術領域, 先前技術, 發明內容/新型內容, 實施方式) |
 | Section ordering | 專利法施行細則 §17 | FIX / PASS | `check.tw.spec.sectionOrdering` | Sections in prescribed order |
 | Paragraph numbering format | 專利法施行細則 §17 | FIX / PASS | `check.tw.spec.paragraphNumbering` | If present: 【NNNN】format, sequential, no gaps |
-| Paragraph ending punctuation | 專利審查基準 | FIX / PASS | `check.tw.spec.paragraphEnding` | Paragraphs end with valid Chinese punctuation (。！？) |
+| Paragraph ending punctuation | 專利審查基準 | REVIEW / PASS | `check.tw.spec.paragraphEnding` | Paragraphs end with valid Chinese punctuation (。！？) (formatting hygiene; not literal in 施行細則 or 審查基準) |
 | Figure reference consistency | 專利審查基準 | REVIEW / PASS | `check.tw.spec.figureRefConsistency` | Figure references match between 圖式簡單說明 and 實施方式 |
 | Patent type terminology | 專利審查基準 | REVIEW / PASS | `check.tw.spec.patentTypeTerminology` | 本發明 vs 本新型 consistency |
 | Title requirements | 專利審查基準 | FIX / PASS | `check.tw.spec.title` | Title concise, no trademarks or model numbers |
@@ -155,10 +155,10 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Circular dependency | 專利法施行細則 §18 | FIX / PASS | `check.tw.claims.circularDependency` | No circular dependency chains |
 | Forward dependency | 專利法施行細則 §18 | FIX / PASS | `check.tw.claims.forwardDependency` | Dependent claim only references preceding claims |
 | Single sentence | 專利法施行細則 §18 | FIX / PASS | `check.tw.claims.singleSentence` | Each claim has exactly one 。 at end |
-| Reference numerals in parentheses | 專利法施行細則 §19 | REVIEW / PASS | `check.tw.claims.refNumeralParens` | Reference numerals enclosed in parentheses |
+| Reference numerals in parentheses | 專利法施行細則 §19 第3款 | FIX / PASS | `check.tw.claims.refNumeralParens` | Reference numerals enclosed in parentheses — §19 第3款 mandates parens when numerals are used |
 | Subject name consistency | 專利審查基準 | REVIEW / PASS | `check.tw.claims.subjectConsistency` | Dependent claim subject matches parent |
 | Transition phrase detection | 專利法施行細則 §20 | REVIEW / PASS | `check.tw.claims.transitionPhrase` | Independent claims contain 其特徵在於 or equivalent |
-| CN terminology flag | — | REVIEW / PASS | `check.tw.claims.cnTerminology` | Flags CNIPA terminology in TW document |
+| CN terminology flag | — | FIX / PASS | `check.tw.claims.cnTerminology` | Flags CNIPA terminology in TW document — jurisdictional contamination = filing-fatal |
 | Claims must not reference spec/drawings | 專利法施行細則 §19 | FIX / PASS | `check.tw.claims.specDrawingRef` | No 如說明書所述, 如圖所示 in claims |
 | Multi-multi dependency prohibited | 專利法施行細則 §18 | FIX / PASS | `check.tw.claims.multiDepOnMultiDep` | Multi-dep cannot depend on another multi-dep |
 | Multi-dep alternative form | 專利法施行細則 §18 | FIX / PASS | `check.tw.claims.multiDepAlternative` | Multi-dep claims must use alternative form |
@@ -172,7 +172,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
-| Character count | 專利法施行細則 §21 | REVIEW / PASS | `check.tw.abstract.charCount` | Abstract within 250 characters |
+| Character count | 專利法施行細則 §21 | FIX / PASS | `check.tw.abstract.charCount` | Abstract within 250 characters — §21 hard limit |
 | Title match | 專利審查基準 | REVIEW / PASS | `check.tw.abstract.titleMatch` | 發明名稱/新型名稱 appears in abstract (compound titles split on 以及/及/和/與 — `passCompound` when all halves ≥2 CJK chars appear, Phase 9 #72a) |
 | Commercial language | 專利法施行細則 §21 | FIX / PASS | `check.tw.abstract.commercialLanguage` | No 商業性宣傳用語 (最優, 最佳, 世界領先, etc.) |
 | Representative drawing | 專利法施行細則 §21 | REVIEW / PASS | `check.tw.abstract.representativeDrawing` | 代表圖 designation present when drawings exist |
@@ -182,7 +182,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
 | 符號說明 vs 代表圖 consistency | 專利審查基準 | REVIEW / PASS | `check.tw.crossRef.symbolVsRepDrawing` | Symbols in 代表圖之符號簡單說明 match 符號說明 |
-| Section header bracket format | 專利法施行細則 §17 | REVIEW / PASS | `check.tw.crossRef.bracketFormat` | Section headers use proper 【】brackets |
+| Section header bracket format | 專利法施行細則 §17 | FIX / PASS | `check.tw.crossRef.bracketFormat` | Section headers use proper 【】brackets — §17 strict bracket format |
 
 ## TW Drawings (圖式)
 
@@ -193,7 +193,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 ---
 
-**Total checks: 108** (40 US + 31 CN + 37 TW; † summary rows excluded)
+**Total checks: 109** (40 US + 32 CN + 37 TW; † summary rows excluded)
 
 † Internal: not rendered as a CheckItem card in the web UI or PDF report. Used for stats aggregation and CLI output only.
 

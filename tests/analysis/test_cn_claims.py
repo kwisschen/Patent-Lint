@@ -671,14 +671,14 @@ class TestMarkushOpenTransitionCn:
         results = check_markush_open_transition(doc)
         assert results[0].status == 'pass'
 
-    def test_verify_open_transition_baokuo(self):
+    def test_amend_open_transition_baokuo(self):
         doc = _cn_doc([
             _claim(1, '选自由包括铜、铁、铝。')
         ])
         pairs = detect_markush_open_transition_cn(doc)
         assert pairs == [(1, '包括')]
         results = check_markush_open_transition(doc)
-        assert results[0].status == 'verify'
+        assert results[0].status == 'amend'
 
     def test_verify_open_transition_juyou(self):
         doc = _cn_doc([

@@ -990,7 +990,7 @@ def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
         if markush_match:
             transition = markush_match.group(1)
             results.append(CheckItem(
-                status="verify",
+                status="amend",
                 message=(
                     f"Claim {claim.id}: Markush group uses open-ended "
                     f"'{transition}' instead of 'consisting of'"
