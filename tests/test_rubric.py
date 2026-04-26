@@ -486,6 +486,25 @@ class TestAdvisoryReviews:
         assert "check.spec.crossReference.verify" not in keys_in_impact
         assert "check.spec.priorArt.verify" not in keys_in_impact
 
+    def test_small_deduction_visibly_drops_below_100(self):
+        # Regression for the rounding bug: 1 REVIEW in a low-weight section
+        # produced a fractional overall deduction (~0.5pts) that rounded
+        # back up to 100, hiding the deduction in the hero. With floor
+        # semantics any non-zero deduction must visibly drop the score
+        # below 100.
+        clean = compute_rubric_grade(
+            jurisdiction=Jurisdiction.TW,
+            all_checks=[],
+            has_drawings=False,  # mirror the user's BDoD-removed fixture
+        )
+        with_review = compute_rubric_grade(
+            jurisdiction=Jurisdiction.TW,
+            all_checks=[_check("verify", "check.tw.claims.antecedentBasis.verify")],
+            has_drawings=False,
+        )
+        assert clean.score == 100
+        assert with_review.score < 100, "any non-advisory REVIEW must visibly drop the score below 100"
+
     def test_advisory_still_appears_in_section_pass_count(self):
         # Advisory items bucket as PASS for grading purposes.
         grade = compute_rubric_grade(
