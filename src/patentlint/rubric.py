@@ -462,7 +462,13 @@ def compute_rubric_grade(
             )
         )
 
-    overall_score = round(overall_weighted)
+    # Floor rather than round: any non-zero deduction must visibly drop
+    # the score below 100. Otherwise tiny deductions (e.g., 1 REVIEW in
+    # a 15% section ≈ 0.45 overall) would round back up to 100, making a
+    # truly-clean draft and a draft-with-a-REVIEW indistinguishable in
+    # the hero. 100 is now reserved for drafts with zero non-advisory
+    # findings anywhere.
+    overall_score = int(overall_weighted)
 
     # Apply FIX-count gate.
     cap_max, cap_reason = gate_cap_for_fix_count(total_fix)
