@@ -183,8 +183,9 @@ class CnPatentDocument(BaseModel):
     # first encountered each section header in the document. First-occurrence
     # only. Empty list when no headers were found (XML path with no
     # <description>, or docx with no 五书 subsection headers). Consumed by
-    # ``check_section_ordering`` to flag 专利法实施细则 §17 order violations
-    # (Phase 9 #66).
+    # ``check_section_ordering`` to flag 专利法实施细则 §20 order violations
+    # (Phase 9 #66; cite migrated from §17 in the 2023 revision effective
+    # 2024-01-20).
     section_order: list[str] = Field(default_factory=list)
 
 

@@ -59,7 +59,7 @@ def _run_cn_pipeline(
             status="amend",
             message="Document contains tracked changes (revisions). Accept or reject all changes before filing.",
             message_key="check.cn.spec.trackedChanges.amend",
-            reference="专利法实施细则 §17",
+            reference="专利法实施细则 §20",
             diagnostics={"reason_code": "tracked_changes_present"},
         ))
     spec_checks = spec_checks + (
