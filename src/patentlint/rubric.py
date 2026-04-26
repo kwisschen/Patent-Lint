@@ -279,23 +279,39 @@ def compute_section_score(fix_count: int, review_count: int) -> int:
 
 
 def letter_for_score(score: int) -> str:
-    """Map a 0-100 score to a letter grade."""
+    """Map a 0-100 score to a letter grade.
+
+    Standard US 4.0-GPA letter scale (13 tiers):
+      A+ 97-100  A 93-96  A- 90-92
+      B+ 87-89   B 83-86  B- 80-82
+      C+ 77-79   C 73-76  C- 70-72
+      D+ 67-69   D 63-66  D- 60-62
+      F  < 60
+    """
     if score >= 97:
-        return "A"
+        return "A+"
     if score >= 93:
+        return "A"
+    if score >= 90:
         return "A-"
-    if score >= 88:
+    if score >= 87:
         return "B+"
     if score >= 83:
         return "B"
-    if score >= 78:
+    if score >= 80:
         return "B-"
-    if score >= 73:
+    if score >= 77:
         return "C+"
-    if score >= 68:
+    if score >= 73:
         return "C"
-    if score >= 60:
+    if score >= 70:
+        return "C-"
+    if score >= 67:
+        return "D+"
+    if score >= 63:
         return "D"
+    if score >= 60:
+        return "D-"
     return "F"
 
 
@@ -316,17 +332,17 @@ def gate_cap_for_fix_count(fix_count: int) -> tuple[int, str | None]:
     if fix_count == 0:
         return 100, None
     if fix_count == 1:
-        return 92, "1 FIX caps grade at B+"
+        return 92, "1 FIX caps grade at A-"
     if fix_count == 2:
-        return 87, "2 FIX cap grade at B"
+        return 87, "2 FIX cap grade at B+"
     if fix_count == 3:
         return 82, "3 FIX cap grade at B-"
     if fix_count == 4:
         return 77, "4 FIX cap grade at C+"
     if fix_count == 5:
-        return 72, "5 FIX cap grade at C"
+        return 72, "5 FIX cap grade at C-"
     if fix_count == 6:
-        return 67, "6 FIX cap grade at D"
+        return 67, "6 FIX cap grade at D+"
     return 59, f"{fix_count} FIX cap grade at F"
 
 

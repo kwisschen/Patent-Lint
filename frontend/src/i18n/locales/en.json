@@ -1468,8 +1468,8 @@
       "line": "No AI. Same draft, same grade, every time."
     },
     "cap": {
-      "oneFix": "1 FIX caps grade at B+",
-      "twoFix": "2 FIX cap grade at B",
+      "oneFix": "1 FIX caps grade at A-",
+      "twoFix": "2 FIX cap grade at B+",
       "threeFix": "3 FIX cap grade at B-",
       "fourFix": "4 FIX cap grade at C+",
       "fiveFix": "{{count}} FIX cap grade at F"
@@ -1501,7 +1501,7 @@
       "weightsTitle": "Section weights",
       "weightsIntro": "Every check we run rolls into one of these five sections. Weights are fixed across US, CN, and TW filings.",
       "gateTitle": "How the FIX gate works",
-      "gateIntro": "Statutory blockers headline the grade. One FIX caps the grade at B+, regardless of how clean the rest of the draft is. This matches partner-triage reality — the question is always \"any blockers, then how clean?\"",
+      "gateIntro": "Statutory blockers headline the grade. One FIX caps the grade at A-, regardless of how clean the rest of the draft is. This matches partner-triage reality — the question is always \"any blockers, then how clean?\"",
       "gateRule": "{{count}} FIX → max {{letter}}",
       "conditionalTitle": "When sections are not applicable",
       "conditionalIntro": "Two scenarios shape the Drawings section. First — when no drawings are detected (chemistry, methods, business processes), the section is marked N/A and its 10% weight redistributes proportionally across the other four sections; legitimately drawing-free drafts incur no penalty. Second — when drawings exist (FIG. references found in the body) but the Brief Description of Drawings section is missing, the resulting required-section FIX lands in the Drawings rubric so the section pill reflects the actual gap.",
@@ -1510,7 +1510,9 @@
       "trustTitle": "No AI judgment",
       "trustIntro": "Every input to your grade is a FIX/REVIEW/PASS status set by a deterministic checker. Every output is a pure arithmetic aggregation. The same draft always gets the same grade. PatentLint never uploads your draft anywhere — analysis runs entirely in your browser.",
       "disclaimerTitle": "What an A grade does and does not mean",
-      "disclaimerIntro": "An A grade means PatentLint's rule catalog found no issues. It does not mean your draft is filing-ready. Substantive review by a registered practitioner is still recommended."
+      "disclaimerIntro": "An A grade means PatentLint's rule catalog found no issues. It does not mean your draft is filing-ready. Substantive review by a registered practitioner is still recommended.",
+      "letterMappingTitle": "Letter grade mapping",
+      "letterMappingIntro": "Standard US 4.0-GPA scale. The numeric score (0–100) is what the rubric computes; the letter is the human-readable label."
     },
     "howWeScore": "How we score →"
   }

@@ -11,14 +11,30 @@ const SECTION_WEIGHTS = [
 ]
 
 const GATE_RULES = [
-  { fix: 0, letter: 'A' },
-  { fix: 1, letter: 'B+' },
-  { fix: 2, letter: 'B' },
+  { fix: 0, letter: 'A+' },
+  { fix: 1, letter: 'A-' },
+  { fix: 2, letter: 'B+' },
   { fix: 3, letter: 'B-' },
   { fix: 4, letter: 'C+' },
-  { fix: 5, letter: 'C' },
-  { fix: 6, letter: 'D' },
+  { fix: 5, letter: 'C-' },
+  { fix: 6, letter: 'D+' },
   { fix: 7, letter: 'F' },
+]
+
+const LETTER_MAPPING = [
+  { range: '97–100', letter: 'A+' },
+  { range: '93–96', letter: 'A' },
+  { range: '90–92', letter: 'A−' },
+  { range: '87–89', letter: 'B+' },
+  { range: '83–86', letter: 'B' },
+  { range: '80–82', letter: 'B−' },
+  { range: '77–79', letter: 'C+' },
+  { range: '73–76', letter: 'C' },
+  { range: '70–72', letter: 'C−' },
+  { range: '67–69', letter: 'D+' },
+  { range: '63–66', letter: 'D' },
+  { range: '60–62', letter: 'D−' },
+  { range: '< 60', letter: 'F' },
 ]
 
 function Section({ title, children }) {
@@ -70,6 +86,23 @@ export default function RubricPage() {
                   <td className="px-4 py-2 font-mono">
                     {t('rubric.page.gateRule', { count: row.fix, letter: row.letter })}
                   </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Section>
+
+      {/* Letter mapping */}
+      <Section title={t('rubric.page.letterMappingTitle')}>
+        <p>{t('rubric.page.letterMappingIntro')}</p>
+        <div className="rounded-lg border bg-card overflow-hidden">
+          <table className="w-full text-sm">
+            <tbody>
+              {LETTER_MAPPING.map((row) => (
+                <tr key={row.letter} className="border-b last:border-0">
+                  <td className="px-4 py-2 font-mono">{row.range}</td>
+                  <td className="px-4 py-2 text-right font-semibold">{row.letter}</td>
                 </tr>
               ))}
             </tbody>
