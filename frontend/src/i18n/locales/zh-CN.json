@@ -1467,7 +1467,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "同一份文稿，每次评等皆同。无 AI。"
+      "line": "无 AI。同一份文稿，每次评等皆同。"
     },
     "cap": {
       "oneFix": "1 项 FIX 将评等上限压至 B-",
@@ -1482,7 +1482,7 @@
     },
     "section": {
       "specification": "说明书",
-      "drawings": "附图",
+      "drawings": "附图说明",
       "claims": "权利要求书",
       "abstract": "摘要",
       "antecedent_spec_support": "引用基础与支持依据",
@@ -1499,7 +1499,7 @@
     "gradePill": "{{letter}}",
     "page": {
       "title": "PatentLint 如何为稿件评等",
-      "subtitle": "评分标准确定，不依赖 AI 判断或机器学习。",
+      "subtitle": "评分标准确定且不使用 AI 判断或机器学习。",
       "weightsTitle": "章节权重",
       "weightsIntro": "每项检查均归入下列五大章节之一。权重在美国、中国与台湾申请间皆相同。",
       "gateTitle": "FIX 门槛机制",
@@ -1510,9 +1510,9 @@
       "completenessTitle": "当稿件不完整时",
       "completenessIntro": "若必要章节（发明名称、权利要求书、说明书本文或摘要）为空，系统不予评等。对空白稿件给予优等评等将构成误导。",
       "trustTitle": "不依赖 AI 判断",
-      "trustIntro": "评等之输入仅为各检查所判定之 FIX／REVIEW／PASS 状态，输出纯为加权加总。同一份稿件必得相同评等。PatentLint 不上传任何稿件 — 全部分析均于您的浏览器内完成。",
+      "trustIntro": "评等之输入仅为各确定性检查器所判定之 修正／检视／通过 状态，输出纯为加权加总。同一份稿件必得相同评等。PatentLint 不上传任何稿件 — 全部分析均于您的浏览器内完成。",
       "disclaimerTitle": "A 等代表什麽，又不代表什麽",
-      "disclaimerIntro": "A 等表示 PatentLint 之规则库未发现缺失，但不代表稿件已达申请就绪之品质。仍需由具备资格之专利代理人进行实质审视。"
+      "disclaimerIntro": "A 等表示 PatentLint 之规则库未发现缺失，但不代表稿件已达申请就绪之品质。仍建议由具备资格之专利代理人进行实质审视。"
     },
     "howWeScore": "评分方式 →"
   }
