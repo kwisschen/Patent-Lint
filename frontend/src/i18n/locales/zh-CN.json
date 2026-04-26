@@ -1512,9 +1512,7 @@
       "trustTitle": "不使用 AI 判断",
       "trustIntro": "评等之输入仅为各确定性检查器所判定之 修正／检视／通过 状态，输出纯为加权加总。同一份稿件必得相同评等。PatentLint 不上传任何稿件 — 全部分析均于您的浏览器内完成。",
       "disclaimerTitle": "A 等代表什么，又不代表什么",
-      "disclaimerIntro": "A 等表示 PatentLint 之规则库未发现缺失，但不代表稿件已达申请就绪之品质。仍建议由具备资格之专利代理人进行实质审视。",
-      "letterMappingTitle": "等第对照",
-      "letterMappingIntro": "采美国标准 4.0 学分计分制。评分以 0–100 数值计算，等第仅为对照标示。"
+      "disclaimerIntro": "A 等表示 PatentLint 之规则库未发现缺失，但不代表稿件已达申请就绪之品质。仍建议由具备资格之专利代理人进行实质审视。"
     },
     "howWeScore": "评分方式 →"
   }

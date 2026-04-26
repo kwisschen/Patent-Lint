@@ -21,21 +21,6 @@ const GATE_RULES = [
   { fix: 7, letter: 'F' },
 ]
 
-const LETTER_MAPPING = [
-  { range: '93–100', letter: 'A' },
-  { range: '90–92', letter: 'A−' },
-  { range: '87–89', letter: 'B+' },
-  { range: '83–86', letter: 'B' },
-  { range: '80–82', letter: 'B−' },
-  { range: '77–79', letter: 'C+' },
-  { range: '73–76', letter: 'C' },
-  { range: '70–72', letter: 'C−' },
-  { range: '67–69', letter: 'D+' },
-  { range: '63–66', letter: 'D' },
-  { range: '60–62', letter: 'D−' },
-  { range: '< 60', letter: 'F' },
-]
-
 function Section({ title, children }) {
   return (
     <section className="space-y-3">
@@ -85,23 +70,6 @@ export default function RubricPage() {
                   <td className="px-4 py-2 font-mono">
                     {t('rubric.page.gateRule', { count: row.fix, letter: row.letter })}
                   </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Section>
-
-      {/* Letter mapping */}
-      <Section title={t('rubric.page.letterMappingTitle')}>
-        <p>{t('rubric.page.letterMappingIntro')}</p>
-        <div className="rounded-lg border bg-card overflow-hidden">
-          <table className="w-full text-sm">
-            <tbody>
-              {LETTER_MAPPING.map((row) => (
-                <tr key={row.letter} className="border-b last:border-0">
-                  <td className="px-4 py-2 font-mono">{row.range}</td>
-                  <td className="px-4 py-2 text-right font-semibold">{row.letter}</td>
                 </tr>
               ))}
             </tbody>
