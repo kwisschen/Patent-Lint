@@ -139,7 +139,8 @@
     "privacy": "Privacy",
     "github": "GitHub",
     "linkedin": "LinkedIn",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "rubric": "How we score"
   },
   "feedback": {
     "report": "Report error",

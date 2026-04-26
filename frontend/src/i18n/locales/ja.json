@@ -139,7 +139,8 @@
     "privacy": "プライバシー",
     "github": "GitHub",
     "linkedin": "LinkedIn",
-    "feedback": "フィードバック"
+    "feedback": "フィードバック",
+    "rubric": "評価基準"
   },
   "feedback": {
     "report": "誤りを報告",
