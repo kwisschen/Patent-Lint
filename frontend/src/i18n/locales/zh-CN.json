@@ -1463,5 +1463,55 @@
     },
     "copyright": "Copyright © 2025 Christopher Chen。保留一切权利。",
     "crossLinks": "另请参阅：<1>服务条款</1>・<3>安全性说明</3>"
+  },
+  "rubric": {
+    "trust": {
+      "line": "相同稿件，相同评等。无 AI。"
+    },
+    "cap": {
+      "oneFix": "1 项 FIX 将评等上限压至 B-",
+      "twoFix": "2 项 FIX 上限至 C+",
+      "threeFix": "3 项 FIX 上限至 C",
+      "fourFix": "4 项 FIX 上限至 D",
+      "fiveFix": "{{count}} 项 FIX 上限至 F"
+    },
+    "completenessGate": {
+      "title": "稿件不完整 — 无法评等",
+      "missingSections": "缺少必要章节：{{sections}}"
+    },
+    "section": {
+      "specification": "说明书",
+      "drawings": "附图",
+      "claims": "权利要求书",
+      "abstract": "摘要",
+      "antecedent_spec_support": "引用基础与支持依据",
+      "title": "发明名称",
+      "notApplicable": "不适用",
+      "notApplicableTooltip": "未检测到附图 — 此章节不纳入评等"
+    },
+    "impactList": {
+      "title": "提升评等之关键项目",
+      "delta": "解决后可提升 {{delta}} 分",
+      "sectionLabel": "{{section}}"
+    },
+    "version": "评分标准 v{{version}}（共 {{count}} 项检查）",
+    "gradePill": "{{letter}}",
+    "page": {
+      "title": "PatentLint 如何为稿件评等",
+      "subtitle": "评分标准确定，不依赖 AI 判断或机器学习。",
+      "weightsTitle": "章节权重",
+      "weightsIntro": "每项检查均归入下列五大章节之一。权重在美国、中国与台湾申请间皆相同。",
+      "gateTitle": "FIX 门槛机制",
+      "gateIntro": "法定瑕疵主导整体评等：只要存在 1 项 FIX，评等上限即降至 B-，无论其余章节是否乾净。此设计呼应实务分流逻辑：「先看是否有阻碍，再论细节品质」。",
+      "gateRule": "{{count}} 项 FIX → 最高 {{letter}}",
+      "conditionalTitle": "当章节不适用时",
+      "conditionalIntro": "无附图之稿件（化学、方法、商业模式）可正当省略附图章节。系统将附图标记为「不适用」，并将其 10 % 权重按比例分配至其余四章节，不对未绘附图予以扣分。",
+      "completenessTitle": "当稿件不完整时",
+      "completenessIntro": "若必要章节（发明名称、权利要求书、说明书本文或摘要）为空，系统不予评等。对空白稿件给予优等评等将构成误导。",
+      "trustTitle": "不依赖 AI 判断",
+      "trustIntro": "评等之输入仅为各检查所判定之 FIX／REVIEW／PASS 状态，输出纯为加权加总。同一份稿件必得相同评等。PatentLint 不上传任何稿件 — 全部分析均于您的浏览器内完成。",
+      "disclaimerTitle": "A 等代表什麽，又不代表什麽",
+      "disclaimerIntro": "A 等表示 PatentLint 之规则库未发现缺失，但不代表稿件已达申请就绪之品质。仍需由具备资格之专利代理人进行实质审视。"
+    }
   }
 }

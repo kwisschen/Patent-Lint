@@ -1461,5 +1461,55 @@
     },
     "copyright": "Copyright © 2025 Christopher Chen. Alle Rechte vorbehalten.",
     "crossLinks": "Siehe auch: <1>Nutzungsbedingungen</1> · <3>Sicherheit</3>"
+  },
+  "rubric": {
+    "trust": {
+      "line": "Gleiche Schrift → gleiche Bewertung. Keine KI."
+    },
+    "cap": {
+      "oneFix": "1 FEHLER begrenzt die Bewertung auf B-",
+      "twoFix": "2 FEHLER begrenzen auf C+",
+      "threeFix": "3 FEHLER begrenzen auf C",
+      "fourFix": "4 FEHLER begrenzen auf D",
+      "fiveFix": "{{count}} FEHLER begrenzen auf F"
+    },
+    "completenessGate": {
+      "title": "Schrift unvollständig — keine Bewertung verfügbar",
+      "missingSections": "Erforderliche Abschnitte fehlen: {{sections}}"
+    },
+    "section": {
+      "specification": "Beschreibung",
+      "drawings": "Zeichnungen",
+      "claims": "Ansprüche",
+      "abstract": "Zusammenfassung",
+      "antecedent_spec_support": "Rückbezug + Stützung",
+      "title": "Titel",
+      "notApplicable": "n. z.",
+      "notApplicableTooltip": "Keine Zeichnungen erkannt — Abschnitt nicht bewertet"
+    },
+    "impactList": {
+      "title": "Wirksamste Hebel",
+      "delta": "+{{delta}} Punkte bei Korrektur",
+      "sectionLabel": "{{section}}"
+    },
+    "version": "Bewertungsraster v{{version}} ({{count}} Prüfungen)",
+    "gradePill": "{{letter}}",
+    "page": {
+      "title": "Wie PatentLint Ihre Schrift bewertet",
+      "subtitle": "Ein deterministisches Bewertungsraster — kein KI-Urteil, kein maschinelles Lernen.",
+      "weightsTitle": "Abschnittsgewichtung",
+      "weightsIntro": "Jede Prüfung fließt in einen dieser fünf Abschnitte ein. Die Gewichtung ist für US-, CN- und TW-Anmeldungen identisch.",
+      "gateTitle": "Wie die FEHLER-Sperre wirkt",
+      "gateIntro": "Gesetzliche Mängel führen die Bewertung an. Bereits ein FEHLER begrenzt die Note auf B-, unabhängig davon wie sauber der Rest ist. Das entspricht dem realen Triage-Ablauf — die Frage ist immer „erst Blocker, dann Politur\".",
+      "gateRule": "{{count}} FEHLER → höchstens {{letter}}",
+      "conditionalTitle": "Wenn Abschnitte nicht zutreffen",
+      "conditionalIntro": "Eine Schrift ohne Zeichnungen (Chemie, Verfahren, Geschäftsmodelle) lässt den Zeichnungs-Abschnitt zulässig weg. Zeichnungen werden dann mit „n. z.\" markiert und ihre 10 % Gewichtung anteilig auf die übrigen vier Abschnitte verteilt — keine Strafe für fehlende Zeichnungen.",
+      "completenessTitle": "Wenn die Schrift unvollständig ist",
+      "completenessIntro": "Fehlt ein universal erforderlicher Abschnitt (Titel, Ansprüche, Beschreibungstext oder Zusammenfassung), vergeben wir keine Note. Eine Top-Bewertung auf einer leeren Schrift wäre irreführend.",
+      "trustTitle": "Kein KI-Urteil",
+      "trustIntro": "Jede Eingabe in Ihre Bewertung ist ein FEHLER/PRÜFEN/OK-Status, gesetzt von einem deterministischen Prüfer. Jede Ausgabe ist eine reine arithmetische Aggregation. Dieselbe Schrift erhält stets dieselbe Bewertung. PatentLint lädt Ihre Schrift nirgendwo hoch — die Prüfung läuft vollständig in Ihrem Browser.",
+      "disclaimerTitle": "Was eine A-Bewertung bedeutet — und was nicht",
+      "disclaimerIntro": "Eine A-Bewertung bedeutet, dass der Prüfkatalog von PatentLint keine Beanstandungen gefunden hat. Sie bedeutet nicht, dass Ihre Schrift einreichungsbereit ist. Die inhaltliche Prüfung durch eine zugelassene Vertretung bleibt erforderlich."
+    }
   }
 }

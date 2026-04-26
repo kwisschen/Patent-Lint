@@ -2,7 +2,7 @@
 // Copyright (c) 2025 Christopher Chen
 import { useState, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import HealthDonut from './HealthDonut'
+import RubricHero from './RubricHero'
 import SectionHealthBars from './SectionHealthBars'
 import SummaryBar from './SummaryBar'
 import TriagePanel from './TriagePanel'
@@ -154,6 +154,26 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
 
   const jConfig = getJurisdictionConfig(data.jurisdiction)
 
+  // --- Rubric grade helpers (per-section pill rendering) ---
+  // section_grades is keyed by RubricSection enum values: "specification",
+  // "drawings", "claims", "antecedent_spec_support", "abstract".
+  const sectionGradeFor = (sectionId) => {
+    return data.rubric_grade?.section_grades?.find((sg) => sg.section === sectionId) || null
+  }
+  const letterFromScore = (sg) => {
+    if (!sg || !sg.applicable) return null
+    const s = sg.score
+    if (s >= 97) return 'A'
+    if (s >= 93) return 'A-'
+    if (s >= 88) return 'B+'
+    if (s >= 83) return 'B'
+    if (s >= 78) return 'B-'
+    if (s >= 73) return 'C+'
+    if (s >= 68) return 'C'
+    if (s >= 60) return 'D'
+    return 'F'
+  }
+
   const consolidatedData = useMemo(() => ({
     ...data,
     specification_checks: jConfig.filterInternalSpecChecks
@@ -233,9 +253,10 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
         </div>
       )}
 
-      {/* Summary cards with stagger cascade */}
+      {/* Hero: rubric grade letter + score + status legend (replaces
+          finding-count hero per the scoring repositioning). */}
       <div style={cascadeDelay(0)}>
-        <HealthDonut data={consolidatedData} animate={mounted} />
+        <RubricHero data={consolidatedData} animate={mounted} />
       </div>
       <div style={cascadeDelay(1)}>
         <SectionHealthBars data={consolidatedData} animate={mounted} />
@@ -258,18 +279,24 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
           checks={consolidatedData.specification_checks}
           defaultOpen
           jurisdiction={data.jurisdiction}
+          grade={sectionGradeFor('specification')?.score != null ? letterFromScore(sectionGradeFor('specification')) : null}
+          applicable={sectionGradeFor('specification')?.applicable !== false}
         />
         <SectionPanel
           title={t(jConfig.drawingsSectionKey)}
           checks={consolidatedData.drawings_checks}
           defaultOpen
           jurisdiction={data.jurisdiction}
+          grade={sectionGradeFor('drawings')?.score != null ? letterFromScore(sectionGradeFor('drawings')) : null}
+          applicable={sectionGradeFor('drawings')?.applicable !== false}
         />
         <SectionPanel
           title={t(jConfig.claimsSectionKey)}
           checks={consolidatedData.claims_checks}
           defaultOpen
           jurisdiction={data.jurisdiction}
+          grade={sectionGradeFor('claims')?.score != null ? letterFromScore(sectionGradeFor('claims')) : null}
+          applicable={sectionGradeFor('claims')?.applicable !== false}
         >
           {jConfig.showClaimTree && (
             <>
@@ -291,6 +318,8 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
           checks={consolidatedData.abstract_checks}
           defaultOpen
           jurisdiction={data.jurisdiction}
+          grade={sectionGradeFor('abstract')?.score != null ? letterFromScore(sectionGradeFor('abstract')) : null}
+          applicable={sectionGradeFor('abstract')?.applicable !== false}
         />
       </div>
 
