@@ -302,19 +302,31 @@ def letter_for_score(score: int) -> str:
 def gate_cap_for_fix_count(fix_count: int) -> tuple[int, str | None]:
     """Apply the FIX-count gate. Returns (max_score, reason or None).
 
-    The gate enforces "any statutory blocker headlines the grade":
-    a single FIX caps at B- regardless of how clean other sections are.
+    Smooth gradient: each FIX drops the grade one letter rank, so the
+    relationship between FIX count and grade is approximately linear
+    rather than catastrophic-on-the-first-FIX. Matches partner-triage
+    cadence — one issue is "good but has a problem", a few are "real
+    concerns", many are "rework needed".
+
+    Calibration revisited 2026-04-26 evening: the prior gate (1 FIX
+    → B-) created an 18pt drop on the first FIX and 5pt drops after,
+    making the first finding feel catastrophic and recovery feel
+    disproportionate. New gradient is one letter rank per FIX.
     """
     if fix_count == 0:
         return 100, None
     if fix_count == 1:
-        return 82, "1 FIX caps grade at B-"
+        return 92, "1 FIX caps grade at B+"
     if fix_count == 2:
-        return 77, "2 FIX cap grade at C+"
+        return 87, "2 FIX cap grade at B"
     if fix_count == 3:
-        return 72, "3 FIX cap grade at C"
+        return 82, "3 FIX cap grade at B-"
     if fix_count == 4:
-        return 67, "4 FIX cap grade at D"
+        return 77, "4 FIX cap grade at C+"
+    if fix_count == 5:
+        return 72, "5 FIX cap grade at C"
+    if fix_count == 6:
+        return 67, "6 FIX cap grade at D"
     return 59, f"{fix_count} FIX cap grade at F"
 
 
