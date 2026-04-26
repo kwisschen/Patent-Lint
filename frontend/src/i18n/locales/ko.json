@@ -139,7 +139,8 @@
     "privacy": "개인정보",
     "github": "GitHub",
     "linkedin": "LinkedIn",
-    "feedback": "피드백"
+    "feedback": "피드백",
+    "rubric": "평가 기준"
   },
   "feedback": {
     "report": "오류 신고",

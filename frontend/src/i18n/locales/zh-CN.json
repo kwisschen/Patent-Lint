@@ -139,7 +139,8 @@
     "privacy": "隐私",
     "github": "GitHub",
     "linkedin": "LinkedIn",
-    "feedback": "意见反馈"
+    "feedback": "意见反馈",
+    "rubric": "评分标准"
   },
   "feedback": {
     "report": "反馈错误",
