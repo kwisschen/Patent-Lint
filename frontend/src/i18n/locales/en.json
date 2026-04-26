@@ -397,7 +397,7 @@
       },
       "specAbstract": {
         "title": "Specification & abstract checks",
-        "description": "Five-section ordering (专利法实施细则 §17), paragraph-ending punctuation, figure-reference consistency across 附图说明 and 具体实施方式, and the 300-character abstract limit (§23), among others."
+        "description": "Five-section ordering (专利法实施细则 §20), paragraph-ending punctuation, figure-reference consistency across 附图说明 and 具体实施方式, and the 300-character abstract limit (§26), among others."
       },
       "dualPipeline": {
         "title": "五书模板 + CNIPA XML dual pipeline",
@@ -412,7 +412,7 @@
     },
     "cnChecks": {
       "trackedChanges": "Tracked changes",
-      "requiredSections": "Required sections (专利法 §26 第1款、专利法实施细则 §17)",
+      "requiredSections": "Required sections (专利法 §26 第1款、专利法实施细则 §20)",
       "sectionOrdering": "Section ordering",
       "paragraphNumbering": "Paragraph numbering",
       "paragraphEnding": "Paragraph ending punctuation",
@@ -595,24 +595,24 @@
       "patentTypeTerminology": "Per 审查指南, invention applications should use 本发明 (not 本实用新型), and utility model applications vice versa. Found: {{term}}. Verify the terminology matches your filing type.",
       "titleLength": "Per 审查指南 第一部分第一章, the title (发明名称) must not exceed 25 Chinese characters ({{count}} found). Shorten the title.",
       "titleContent": "Per 审查指南, the title must not contain trademarks, model numbers, personal names, or commercial/advertising language. Remove the prohibited content.",
-      "specClaimReference": "Per 专利法实施细则 §17, the specification must not use language such as '如权利要求……所述的……' to reference claims. Remove claim references from the specification.",
+      "specClaimReference": "Per 专利法实施细则 §20, the specification must not use language such as '如权利要求……所述的……' to reference claims. Remove claim references from the specification.",
       "claimsSequential": "Per 审查指南, claims must be numbered sequentially starting from 1. Fix the numbering.",
-      "dependencyFormat": "Per 专利法实施细则 §22, dependent claims must use the format '如权利要求N所述的……' to reference parent claims. Fix the flagged claims.",
-      "selfDependent": "Per 专利法实施细则 §22, a claim cannot depend on itself. Correct the dependency reference.",
-      "forwardDependency": "Per 专利法实施细则 §22, dependent claims must only reference preceding claims. Change the dependency to reference an earlier claim.",
+      "dependencyFormat": "Per 专利法实施细则 §25, dependent claims must use the format '如权利要求N所述的……' to reference parent claims. Fix the flagged claims.",
+      "selfDependent": "Per 专利法实施细则 §25, a claim cannot depend on itself. Correct the dependency reference.",
+      "forwardDependency": "Per 专利法实施细则 §25, dependent claims must only reference preceding claims. Change the dependency to reference an earlier claim.",
       "singleSentence": "Per 审查指南 第二部分第二章, each claim must be a single sentence ending with one 。. Remove mid-claim periods or restructure into separate claims.",
       "refNumeralParens": "Per 审查指南, reference numerals in claims should be enclosed in parentheses, e.g., (101) not 101. Verify the flagged claims.",
       "subjectConsistency": "Per 审查指南 第二部分第二章, the subject matter (主题名称) of a dependent claim should match its parent claim's subject matter. Recognized preamble forms: 如权利要求N所述[的]X, 如权利要求N所记载[的]X, 如权利要求N[的]X. Verify the flagged claims.",
-      "subjectConsistencyParseUnclear": "These dependent claims use a preamble form the walker doesn't recognize. Accepted forms per 专利法实施细则 §22 include: 如权利要求N所述[的]X, 如权利要求N所记载[的]X, 如权利要求N[的]X. Verify manually, or report a bug if your preamble is CNIPA-compliant.",
+      "subjectConsistencyParseUnclear": "These dependent claims use a preamble form the walker doesn't recognize. Accepted forms per 专利法实施细则 §25 include: 如权利要求N所述[的]X, 如权利要求N所记载[的]X, 如权利要求N[的]X. Verify manually, or report a bug if your preamble is CNIPA-compliant.",
       "transitionPhrase": "Per 审查指南, independent claims should contain a characterizing transition such as '其特征在于' to delineate known elements from novel features. Verify the flagged claims.",
       "twTerminology": "Taiwan (TIPO) patent terminology detected in CNIPA filing. CNIPA uses '权利要求' for claims. Replace all flagged instances.",
       "claimsSpecReference": "Per 审查指南 第二部分第二章, claims must not reference the specification or drawings to define their scope. Claims must be self-contained — remove the flagged references.",
-      "multiMultiDep": "Per 专利法实施细则 §22, a multiple-dependent claim must not serve as the basis for another multiple-dependent claim. Restructure the dependency chain.",
+      "multiMultiDep": "Per 专利法实施细则 §25, a multiple-dependent claim must not serve as the basis for another multiple-dependent claim. Restructure the dependency chain.",
       "dependentOrdering": "Per 审查指南 第二部分第二章, all claims depending on an independent claim should appear consecutively before the next independent claim. Reorder claims.",
       "connectionRelationships": "Components flagged: {{sample_names}} ({{component_count}} total). Add a connection verb (e.g., 连接, 设置于, 耦接) describing how these components are structurally arranged.",
-      "abstractCharCount": "Per 专利法实施细则 §23, the abstract must not exceed 300 Chinese characters. Shorten the abstract.",
+      "abstractCharCount": "Per 专利法实施细则 §26, the abstract must not exceed 300 Chinese characters. Shorten the abstract.",
       "abstractTitleMatch": "Per 审查指南, the abstract should be consistent with the title (发明名称). Verify the abstract reflects the invention title.",
-      "commercialLanguage": "Per 专利法实施细则 §23, the abstract must not contain commercial advertising language (商业性宣传用语). Remove the flagged terms.",
+      "commercialLanguage": "Per 专利法实施细则 §26, the abstract must not contain commercial advertising language (商业性宣传用语). Remove the flagged terms.",
       "antecedentBasisTerms": "{{issue_count}} term(s) across {{claim_count}} claim(s) may lack antecedent basis. See the \"Antecedent Basis Review\" section below for the full per-term breakdown.",
       "specSupportTerms": "{{issue_count}} term(s) across {{claim_count}} claim(s) may lack specification support. See the \"Specification Support Review\" section below for the full per-term breakdown.",
       "titleMissing": "Per CNIPA 审查指南 第一部分第一章, the specification must contain a 发明名称 (title of invention). Add a title to the specification header.",
@@ -621,13 +621,13 @@
         "onlyEmbodiment": "Only cited in 具体实施方式: {{figs}}"
       },
       "pass": {
-        "multiMultiDep": "Per 专利法实施细则 §22, a multiple-dependent claim may not serve as a basis for another multiple-dependent claim — chained multi-multi references make scope indeterminate.",
-        "selfDependent": "Per 专利法实施细则 §22, a claim may not depend on itself; dependent claims must reference an earlier claim.",
-        "forwardDependency": "Per 专利法实施细则 §22, a dependent claim may only reference earlier-numbered claims, not later ones.",
+        "multiMultiDep": "Per 专利法实施细则 §25, a multiple-dependent claim may not serve as a basis for another multiple-dependent claim — chained multi-multi references make scope indeterminate.",
+        "selfDependent": "Per 专利法实施细则 §25, a claim may not depend on itself; dependent claims must reference an earlier claim.",
+        "forwardDependency": "Per 专利法实施细则 §25, a dependent claim may only reference earlier-numbered claims, not later ones.",
         "singleSentence": "Per 审查指南 第二部分第二章, each claim must be a single sentence ending in 。 to keep scope unambiguous.",
         "transitionPhrase": "Per 审查指南, an independent claim should contain a two-part transition (e.g. 其特征在于) separating the preamble (prior art) from the characterizing part (novel features)."
       },
-      "independentPreamble": "审查指南 第二部分第二章 §3.1.1 uses 一种X as the canonical form; 专利法实施细则 §22 requires the preamble to state the 主题名称 (subject-matter name) but does not literally mandate 一种. Consider rewriting to the 一种X form."
+      "independentPreamble": "审查指南 第二部分第二章 §3.1.1 uses 一种X as the canonical form; 专利法实施细则 §24 requires the preamble to state the 主题名称 (subject-matter name) but does not literally mandate 一种. Consider rewriting to the 一种X form."
     },
     "tw": {
       "requiredSections": "A complete TIPO filing requires 摘要, 說明書 (技術領域, 先前技術, 發明內容/新型內容, 實施方式), and 申請專利範圍 per 專利法 §25 第1項. When drawings are present, 圖式簡單說明 and 符號說明 are also required per 專利法施行細則 §17. Missing: {{sections}}.",
@@ -850,11 +850,11 @@
           "amend": "Document contains tracked changes (revisions). Accept or reject all changes before filing."
         },
         "requiredSections": {
-          "amend": "Missing required sections: {{sections}} (专利法 §26 第1款、专利法实施细则 §17).",
+          "amend": "Missing required sections: {{sections}} (专利法 §26 第1款、专利法实施细则 §20).",
           "pass": "All required sections are present."
         },
         "sectionOrdering": {
-          "amend": "Specification sections out of prescribed order (专利法实施细则 §17).",
+          "amend": "Specification sections out of prescribed order (专利法实施细则 §20).",
           "pass": "Specification sections in prescribed order."
         },
         "paragraphNumbering": {
@@ -883,7 +883,7 @@
           "amendMissing": "Title missing from specification (审查指南 第一部分第一章)."
         },
         "claimReference": {
-          "amend": "Specification references claims in {{count}} paragraph(s) ({{paragraphs}}) (专利法实施细则 §17). Example: {{snippet}}",
+          "amend": "Specification references claims in {{count}} paragraph(s) ({{paragraphs}}) (专利法实施细则 §20). Example: {{snippet}}",
           "pass": "Specification does not reference the claims."
         }
       },
@@ -893,15 +893,15 @@
           "pass": "Claims numbered sequentially."
         },
         "dependencyFormat": {
-          "amend": "Incorrect dependency format in {{count}} claim(s): {{claims}} (专利法实施细则 §22).",
+          "amend": "Incorrect dependency format in {{count}} claim(s): {{claims}} (专利法实施细则 §25).",
           "pass": "All dependency references correctly formatted."
         },
         "selfDependent": {
-          "amend": "Self-dependency in {{claims}} (专利法实施细则 §22).",
+          "amend": "Self-dependency in {{claims}} (专利法实施细则 §25).",
           "pass": "No self-dependent claims."
         },
         "forwardDependency": {
-          "amend": "{{claims}} reference(s) a subsequent claim (forward dependency) (专利法实施细则 §22).",
+          "amend": "{{claims}} reference(s) a subsequent claim (forward dependency) (专利法实施细则 §25).",
           "pass": "All dependencies reference preceding claims."
         },
         "singleSentence": {
@@ -932,7 +932,7 @@
           "pass": "No claim references to the specification or drawings."
         },
         "multiMultiDep": {
-          "amend": "Multi-multi dependency in {{claims}}: a multiple-dependent claim depends on another multiple-dependent claim (专利法实施细则 §22).",
+          "amend": "Multi-multi dependency in {{claims}}: a multiple-dependent claim depends on another multiple-dependent claim (专利法实施细则 §25).",
           "pass": "No chained multiple-dependent claims."
         },
         "dependentOrdering": {
@@ -966,7 +966,7 @@
       },
       "abstract": {
         "charCount": {
-          "amend": "Abstract over the 300-character limit ({{count}} characters, 专利法实施细则 §23).",
+          "amend": "Abstract over the 300-character limit ({{count}} characters, 专利法实施细则 §26).",
           "pass": "Abstract within the 300-character limit ({{count}} characters)."
         },
         "titleMatch": {
