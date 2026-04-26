@@ -17,9 +17,10 @@ export default function Footer() {
     sendFeedback(composeFooterFeedback(t))
   }
 
+  // Footer is reserved for legal / product links. Personal-credibility
+  // links (GitHub / LinkedIn) live on the AboutPage Background section
+  // alongside Email — that's where users go for that context.
   const externalLinks = [
-    { label: t('footer.github'), href: 'https://github.com/kwisschen' },
-    { label: t('footer.linkedin'), href: 'https://linkedin.com/in/kwisschen' },
     { label: t('footer.feedback'), href: '#', onClick: handleFeedbackClick },
   ]
 
@@ -39,6 +40,12 @@ export default function Footer() {
             className="footer-link hover:text-foreground transition-colors duration-200"
           >
             {t('footer.privacy')}
+          </Link>
+          <Link
+            to="/rubric"
+            className="footer-link hover:text-foreground transition-colors duration-200"
+          >
+            {t('footer.rubric')}
           </Link>
           {externalLinks.map(({ label, href, onClick }) => (
             <a

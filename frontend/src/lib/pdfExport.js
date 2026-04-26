@@ -413,6 +413,147 @@ function buildSectionChecks(sections, t, fontName) {
   return content
 }
 
+// Map a letter grade to a color matching the cover styling.
+function gradeColor(letter) {
+  if (!letter || letter === '—') return '#6b7280'
+  if (letter.startsWith('A')) return '#16a34a'
+  if (letter.startsWith('B') || letter.startsWith('C')) return '#d97706'
+  return '#dc2626' // D / F
+}
+
+function letterFromScore(score, applicable) {
+  if (!applicable) return null
+  if (score >= 97) return 'A'
+  if (score >= 93) return 'A-'
+  if (score >= 88) return 'B+'
+  if (score >= 83) return 'B'
+  if (score >= 78) return 'B-'
+  if (score >= 73) return 'C+'
+  if (score >= 68) return 'C'
+  if (score >= 60) return 'D'
+  return 'F'
+}
+
+function buildRubricCover(rubricGrade, t, fontName) {
+  if (!rubricGrade) return []
+  const fontProp = fontName ? { font: fontName } : {}
+
+  // Completeness gate: no grade emitted, surface the gap.
+  if (rubricGrade.completeness_gap?.missing_sections?.length) {
+    const labels = rubricGrade.completeness_gap.missing_sections.map((s) =>
+      t(`rubric.section.${s}`, { defaultValue: s })
+    )
+    return [
+      {
+        text: t('rubric.completenessGate.title'),
+        fontSize: 18,
+        bold: true,
+        color: '#b91c1c',
+        alignment: 'center',
+        margin: [0, 14, 0, 6],
+        ...fontProp,
+      },
+      {
+        text: t('rubric.completenessGate.missingSections', { sections: labels.join(', ') }),
+        fontSize: 11,
+        color: '#4b5563',
+        alignment: 'center',
+        margin: [0, 0, 0, 18],
+        ...fontProp,
+      },
+    ]
+  }
+
+  const letter = rubricGrade.letter || '—'
+  const score = rubricGrade.score ?? 0
+  const cover = [
+    {
+      text: letter,
+      fontSize: 72,
+      bold: true,
+      color: gradeColor(letter),
+      alignment: 'center',
+      margin: [0, 12, 0, 0],
+      ...fontProp,
+    },
+    {
+      text: `${score} / 100`,
+      fontSize: 14,
+      color: '#4b5563',
+      alignment: 'center',
+      margin: [0, 4, 0, 0],
+      ...fontProp,
+    },
+    {
+      text: t('rubric.trust.line'),
+      fontSize: 9,
+      color: '#6b7280',
+      alignment: 'center',
+      margin: [0, 8, 0, 0],
+      ...fontProp,
+    },
+  ]
+  if (rubricGrade.cap_reason) {
+    cover.push({
+      text: rubricGrade.cap_reason,
+      fontSize: 9,
+      color: '#b91c1c',
+      alignment: 'center',
+      margin: [0, 4, 0, 0],
+      ...fontProp,
+    })
+  }
+
+  // Section-grade table.
+  if (rubricGrade.section_grades?.length) {
+    const tableBody = [
+      [
+        { text: t('rubric.section.title', { defaultValue: 'Section' }), bold: true, fontSize: 9, color: '#4b5563' },
+        { text: 'Grade', bold: true, fontSize: 9, color: '#4b5563', alignment: 'right' },
+        { text: 'Weight', bold: true, fontSize: 9, color: '#4b5563', alignment: 'right' },
+      ],
+      ...rubricGrade.section_grades.map((sg) => {
+        const sLetter = letterFromScore(sg.score, sg.applicable)
+        const sectionLabel = t(`rubric.section.${sg.section}`, { defaultValue: sg.section })
+        const weightLabel = `${Math.round(sg.effective_weight)}%`
+        if (!sg.applicable) {
+          return [
+            { text: sectionLabel, fontSize: 9 },
+            { text: t('rubric.section.notApplicable'), fontSize: 9, color: '#6b7280', alignment: 'right' },
+            { text: weightLabel, fontSize: 9, color: '#9ca3af', alignment: 'right' },
+          ]
+        }
+        return [
+          { text: sectionLabel, fontSize: 9 },
+          { text: sLetter, fontSize: 9, bold: true, color: gradeColor(sLetter), alignment: 'right' },
+          { text: weightLabel, fontSize: 9, color: '#4b5563', alignment: 'right' },
+        ]
+      }),
+    ]
+    cover.push({
+      layout: 'lightHorizontalLines',
+      margin: [40, 14, 40, 0],
+      table: { widths: ['*', 'auto', 'auto'], body: tableBody },
+    })
+  }
+
+  cover.push({
+    text: t('rubric.version', { version: rubricGrade.rubric_version || '1.0', count: 109 }),
+    fontSize: 7,
+    color: '#9ca3af',
+    alignment: 'center',
+    margin: [0, 10, 0, 18],
+    ...fontProp,
+  })
+
+  // Bottom border to set off the cover from the rest of the report.
+  cover.push({
+    canvas: [{ type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5, lineColor: '#e5e7eb' }],
+    margin: [0, 0, 0, 12],
+  })
+  return cover
+}
+
 function buildClaimTable(claimTrees, t) {
   if (!claimTrees || claimTrees.length === 0) return []
 
@@ -681,6 +822,10 @@ export async function downloadReport(reportData, t, language, originalFilename) 
         text: t('pdf.securityNote'),
         style: 'securityNote',
       },
+
+      // Rubric cover (grade letter + section-grade table) — appears
+      // before the rest of the report so the grade is the headline.
+      ...buildRubricCover(reportData.rubric_grade, t, fontName),
 
       // Non-patent warning (if applicable)
       ...(reportData.likely_patent === false ? [

@@ -409,9 +409,9 @@ def check_figure_reference_consistency(cn_doc: CnPatentDocument) -> list[CheckIt
 
     if only_drawings or only_detail:
         return [CheckItem(
-            status="verify",
+            status="amend",
             message="Figure references differ between 附图说明 and 具体实施方式.",
-            message_key="check.cn.spec.figureRefConsistency.verify",
+            message_key="check.cn.spec.figureRefConsistency.amend",
             details_key="details.cn.figureRefConsistency",
             details_params={
                 "figure_ref_inconsistency": {
