@@ -15,6 +15,7 @@ import SecurityPage from './pages/SecurityPage'
 import AboutPage from './pages/AboutPage'
 import TermsPage from './pages/TermsPage'
 import PrivacyPage from './pages/PrivacyPage'
+import RubricPage from './pages/RubricPage'
 import { usePyodide } from './hooks/usePyodide'
 import { useUpdateCheck } from './hooks/useUpdateCheck'
 import { Toaster } from './components/ui/sonner'
@@ -205,6 +206,7 @@ function App() {
           } />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/rubric" element={<RubricPage />} />
         </Routes>
       </Layout>
 
