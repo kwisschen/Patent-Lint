@@ -35,7 +35,7 @@ def check_abstract_char_count(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details=f"{count} characters",
             details_key="details.cn.abstractCharCount",
             details_params={"count": str(count)},
-            reference="专利法实施细则 §23",
+            reference="专利法实施细则 §26",
             diagnostics=_dx(
                 char_count=count,
                 threshold=300,
@@ -48,7 +48,7 @@ def check_abstract_char_count(cn_doc: CnPatentDocument) -> list[CheckItem]:
         message=f"Abstract has {count} characters (within 300 limit).",
         message_key="check.cn.abstract.charCount.pass",
         details_params={"count": str(count)},
-        reference="专利法实施细则 §23",
+        reference="专利法实施细则 §26",
     )]
 
 
@@ -149,7 +149,7 @@ def check_commercial_language(cn_doc: CnPatentDocument) -> list[CheckItem]:
                     "items": [{"kind": "phrase", "token": t} for t in found]
                 },
             },
-            reference="专利法实施细则 §23",
+            reference="专利法实施细则 §26",
             diagnostics=_dx(
                 hit_count=len(found),
                 total_terms_scanned=len(_COMMERCIAL_TERMS),
@@ -160,7 +160,7 @@ def check_commercial_language(cn_doc: CnPatentDocument) -> list[CheckItem]:
         status="pass",
         message="No commercial language found in abstract.",
         message_key="check.cn.abstract.commercialLanguage.pass",
-        reference="专利法实施细则 §23",
+        reference="专利法实施细则 §26",
     )]
 
 

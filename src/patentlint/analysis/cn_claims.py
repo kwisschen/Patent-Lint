@@ -83,7 +83,7 @@ def check_claims_sequential(cn_doc: CnPatentDocument) -> list[CheckItem]:
 # ── Check 10 ─────────────────────────────────────────────────────────────
 
 # CN dependent-claim preamble connective.
-# CNIPA-standard is 所述 (per 专利法实施细则 §22 + CNIPA drafting examples).
+# CNIPA-standard is 所述 (per 专利法实施细则 §25 + CNIPA drafting examples).
 # JP-translation variants 所记载/所揭示/所描述 surface in CN patents translated
 # from Japanese originals; parse them tolerantly rather than flag them.
 # The trailing 的 is optional — CN drafters sometimes write 所述X (without 的)
@@ -98,7 +98,7 @@ _CN_DEP_CONNECTIVE = r"所(?:述|记载|揭示|描述)的?"
 # structure is: 权利要求 + digit + ... + 所述.
 _DEP_FORMAT_SINGLE = re.compile(r"权利要求\s*\d+[\s\S]*?" + _CN_DEP_CONNECTIVE)
 
-# Multi-dep alternative-reference forms (per 专利法实施细则 §22 第3款 —
+# Multi-dep alternative-reference forms (per 专利法实施细则 §25 第3款 —
 # multi-dep claims must use 择一方式 / alternative reference):
 #   (a) `权利要求1或2所述的` — 或 alternative
 #   (b) `权利要求1、2或3所述的` — 、 + 或 alternative
@@ -132,7 +132,7 @@ def check_dependency_format(cn_doc: CnPatentDocument) -> list[CheckItem]:
             status="pass",
             message="No dependent claims to check.",
             message_key="check.cn.claims.dependencyFormat.pass",
-            reference="专利法实施细则 §22",
+            reference="专利法实施细则 §25",
         )]
 
     bad_claim_ids: list[int] = []
@@ -154,7 +154,7 @@ def check_dependency_format(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details=f"{len(bad_claim_ids)} claims",
             details_key="details.cn.dependencyFormat",
             details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
-            reference="专利法实施细则 §22",
+            reference="专利法实施细则 §25",
             diagnostics=_dx(
                 flagged_count=len(bad_claim_ids),
                 total_dependents=len(dependents),
@@ -165,7 +165,7 @@ def check_dependency_format(cn_doc: CnPatentDocument) -> list[CheckItem]:
         status="pass",
         message="All dependent claims use proper dependency format.",
         message_key="check.cn.claims.dependencyFormat.pass",
-        reference="专利法实施细则 §22",
+        reference="专利法实施细则 §25",
     )]
 
 
@@ -185,7 +185,7 @@ def check_self_dependent(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details=claims_str,
             details_key="details.cn.selfDependent",
             details_params={"claims": bad},
-            reference="专利法实施细则 §22",
+            reference="专利法实施细则 §25",
             diagnostics=_dx(
                 flagged_count=len(bad),
                 total_claims=len(cn_doc.claims),
@@ -197,7 +197,7 @@ def check_self_dependent(cn_doc: CnPatentDocument) -> list[CheckItem]:
         message="No self-dependent claims.",
         message_key="check.cn.claims.selfDependent.pass",
         details_key="details.cn.pass.selfDependent",
-        reference="专利法实施细则 §22",
+        reference="专利法实施细则 §25",
     )]
 
 
@@ -210,9 +210,10 @@ def check_independent_preamble(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
     审查指南 第二部分第二章 §3.1.1 uses 一种X as the canonical preamble
     form in its examples, and CNIPA practitioner convention follows this.
-    Note: 专利法实施细则 §22 requires the preamble to state the 主题名称
-    (subject-matter name) but does NOT literally mandate 一种 — other
-    preambles that still name the subject matter may satisfy the statute.
+    Note: 专利法实施细则 §24 (independent claim format) requires the
+    preamble to state the 主题名称 (subject-matter name) but does NOT
+    literally mandate 一种 — other preambles that still name the
+    subject matter may satisfy the statute.
     Status is therefore VERIFY (advisory), not FIX.
 
     Dependent-claim opener set (根据/如/按照 etc.) is validated separately
@@ -264,7 +265,7 @@ def check_forward_dependency(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details=", ".join(str(i) for i in bad),
             details_key="details.cn.forwardDependency",
             details_params={"claims": bad},
-            reference="专利法实施细则 §22",
+            reference="专利法实施细则 §25",
             diagnostics=_dx(
                 flagged_count=len(bad),
                 total_claims=len(cn_doc.claims),
@@ -276,7 +277,7 @@ def check_forward_dependency(cn_doc: CnPatentDocument) -> list[CheckItem]:
         message="No forward-referencing dependencies.",
         message_key="check.cn.claims.forwardDependency.pass",
         details_key="details.cn.pass.forwardDependency",
-        reference="专利法实施细则 §22",
+        reference="专利法实施细则 §25",
     )]
 
 
@@ -720,7 +721,7 @@ def check_multi_multi_dependency(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details=claims_str,
             details_key="details.cn.multiMultiDep",
             details_params={"claims": bad},
-            reference="专利法实施细则 §22",
+            reference="专利法实施细则 §25",
             diagnostics=_dx(
                 flagged_count=len(bad),
                 total_multi_dep=len(multi_dep_ids),
@@ -732,7 +733,7 @@ def check_multi_multi_dependency(cn_doc: CnPatentDocument) -> list[CheckItem]:
         message="No chained multiple dependencies.",
         message_key="check.cn.claims.multiMultiDep.pass",
         details_key="details.cn.pass.multiMultiDep",
-        reference="专利法实施细则 §22",
+        reference="专利法实施细则 §25",
     )]
 
 

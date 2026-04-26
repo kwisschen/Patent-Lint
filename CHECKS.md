@@ -78,31 +78,31 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
 | Tracked changes | — | FIX | `check.cn.spec.trackedChanges.amend` | Document contains tracked changes (revisions) |
-| Required sections | 专利法实施细则 §17 | FIX / PASS | `check.cn.spec.requiredSections` | Required sections present (技术领域, 背景技术, 发明内容, 具体实施方式) |
-| Section ordering | 专利法实施细则 §17 | FIX / PASS | `check.cn.spec.sectionOrdering` | Sections in prescribed order |
+| Required sections | 专利法实施细则 §20 | FIX / PASS | `check.cn.spec.requiredSections` | Required sections present (技术领域, 背景技术, 发明内容, 具体实施方式) |
+| Section ordering | 专利法实施细则 §20 | FIX / PASS | `check.cn.spec.sectionOrdering` | Sections in prescribed order |
 | Paragraph numbering | 审查指南 | FIX / PASS | `check.cn.spec.paragraphNumbering` | XML: sequential `<p num>` tags; docx: `[NNNN]` format present |
 | Paragraph ending | 审查指南 | FIX / PASS | `check.cn.spec.paragraphEnding` | Paragraphs end with Chinese punctuation (。！？) |
 | Figure ref consistency | 审查指南 | REVIEW / PASS | `check.cn.spec.figureRefConsistency` | Figure references match between 附图说明 and 具体实施方式 |
 | Patent type terminology | 审查指南 | REVIEW / PASS | `check.cn.spec.patentTypeTerminology` | 本发明 vs 本实用新型 consistency |
 | Title requirements | 审查指南 第一部分第一章 | FIX / PASS | `check.cn.spec.title` | Title ≤25 CJK chars, no trademarks/model numbers |
-| Spec must not reference claims | 专利法实施细则 §17 | FIX / PASS | `check.cn.spec.claimReference` | No 如权利要求N所述 in specification |
+| Spec must not reference claims | 专利法实施细则 §20 | FIX / PASS | `check.cn.spec.claimReference` | No 如权利要求N所述 in specification |
 
 ## CN Claims (权利要求)
 
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
 | Claims sequential | 审查指南 | FIX / PASS | `check.cn.claims.sequential` | Claim numbers sequential from 1 |
-| Dependency format | 专利法实施细则 §22 | FIX / PASS | `check.cn.claims.dependencyFormat` | Dependencies use 如权利要求N所述的 format |
+| Dependency format | 专利法实施细则 §25 | FIX / PASS | `check.cn.claims.dependencyFormat` | Dependencies use 如权利要求N所述的 format |
 | Independent claim preamble | 审查指南 §3.1.1 (canonical form) | REVIEW / PASS | `check.cn.claims.independentPreamble` | Advisory: independent claims typically open with 一种 (statute requires subject-matter name, not literal 一种) |
-| Self-dependent | 专利法实施细则 §22 | FIX / PASS | `check.cn.claims.selfDependent` | Claim does not depend on itself |
-| Forward dependency | 专利法实施细则 §22 | FIX / PASS | `check.cn.claims.forwardDependency` | No references to later claims |
+| Self-dependent | 专利法实施细则 §25 | FIX / PASS | `check.cn.claims.selfDependent` | Claim does not depend on itself |
+| Forward dependency | 专利法实施细则 §25 | FIX / PASS | `check.cn.claims.forwardDependency` | No references to later claims |
 | Single sentence | 审查指南 第二部分第二章 | FIX / PASS | `check.cn.claims.singleSentence` | Each claim is one sentence ending with 。 |
 | Reference numeral parentheses | 审查指南 | REVIEW / PASS | `check.cn.claims.refNumeralParens` | Reference numerals in parentheses, e.g. (101) |
 | Subject name consistency | 审查指南 第二部分第二章 | REVIEW / PASS | `check.cn.claims.subjectConsistency` | Dependent claim subject matches parent |
 | Transition phrase | 审查指南 | REVIEW / PASS | `check.cn.claims.transitionPhrase` | Independent claims contain 其特征在于 |
 | TW terminology | — | REVIEW / PASS | `check.cn.claims.twTerminology` | Flags 请求项 (TIPO) vs 权利要求 (CNIPA) |
 | Claims must not reference spec/drawings | 审查指南 第二部分第二章 | FIX / PASS | `check.cn.claims.specReference` | No references to 说明书 or 附图 in claims |
-| Multi-dep on multi-dep | 专利法实施细则 §22 | FIX / PASS | `check.cn.claims.multiMultiDep` | Multi-dep claim cannot reference another multi-dep |
+| Multi-dep on multi-dep | 专利法实施细则 §25 第3款 | FIX / PASS | `check.cn.claims.multiMultiDep` | Multi-dep claim cannot reference another multi-dep |
 | Dependent claim ordering | 审查指南 第二部分第二章 | FIX / PASS | `check.cn.claims.dependentOrdering` | Dependents grouped after their independent claim |
 | Component connection relationships | 审查指南 §3.2.1 + 专利法 §26.4 | REVIEW / PASS | `check.cn.claims.connectionRelationships` | Independent device/system claims must describe how their listed components connect (carve-outs: method, CRM, MPF, composition) |
 | Antecedent basis (引用基础) | 审查指南 第二部分第二章 §3.2.2 | REVIEW / PASS | `check.cn.claims.antecedentBasis` | BFS ancestor-chain walker with cycle protection; char-bigram Jaccard tokenization with CJK ordinal guard pre-filter; did-you-mean suggestion layer on borderline misses |
@@ -114,9 +114,9 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
-| Character count | 专利法实施细则 §23 | FIX / PASS | `check.cn.abstract.charCount` | Abstract ≤300 Chinese characters |
+| Character count | 专利法实施细则 §26 | FIX / PASS | `check.cn.abstract.charCount` | Abstract ≤300 Chinese characters |
 | Title match | 审查指南 | REVIEW / PASS | `check.cn.abstract.titleMatch` | 发明名称 appears in abstract (compound titles split on 以及/及/和/与 — `passCompound` when all halves ≥2 CJK chars appear, Phase 9 #72a) |
-| Commercial language | 专利法实施细则 §23 | FIX / PASS | `check.cn.abstract.commercialLanguage` | No 最优, 最佳, 世界领先, etc. |
+| Commercial language | 专利法实施细则 §26 | FIX / PASS | `check.cn.abstract.commercialLanguage` | No 最优, 最佳, 世界领先, etc. |
 
 ## CN Drawings (附图)
 
