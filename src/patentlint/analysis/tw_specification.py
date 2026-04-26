@@ -459,9 +459,9 @@ def check_figure_ref_consistency(doc: TwPatentDocument) -> list[CheckItem]:
 
     if only_drawings or only_embodiment:
         return [CheckItem(
-            status="verify",
+            status="amend",
             message="Figure references differ between 圖式簡單說明 and 實施方式.",
-            message_key="check.tw.spec.figureRefConsistency.verify",
+            message_key="check.tw.spec.figureRefConsistency.amend",
             details_key="details.tw.figureRefConsistency",
             details_params={
                 "figure_ref_inconsistency": {
