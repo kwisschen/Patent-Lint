@@ -51,10 +51,10 @@ class TestPureHelpers:
         assert compute_section_score(10, 0) == 0
 
     def test_letter_thresholds(self):
-        # Standard US 13-tier scale.
-        assert letter_for_score(100) == "A+"
-        assert letter_for_score(97) == "A+"
-        assert letter_for_score(96) == "A"
+        # Standard US university 12-tier scale (Harvard / Yale / MIT-style;
+        # no A+). A spans 93-100; everything else split into +/-/middle.
+        assert letter_for_score(100) == "A"
+        assert letter_for_score(97) == "A"
         assert letter_for_score(93) == "A"
         assert letter_for_score(92) == "A-"
         assert letter_for_score(90) == "A-"
@@ -164,7 +164,7 @@ class TestSectionMapping:
 
 
 class TestComputeRubricGrade:
-    def test_all_pass_scores_a_plus(self):
+    def test_all_pass_scores_a(self):
         checks = [_check("pass", "check.spec.paragraphSequential.pass")]
         grade = compute_rubric_grade(
             jurisdiction=Jurisdiction.US,
@@ -172,7 +172,7 @@ class TestComputeRubricGrade:
             has_drawings=True,
         )
         assert grade.score == 100
-        assert grade.letter == "A+"
+        assert grade.letter == "A"
         assert grade.cap_reason is None
         assert grade.is_complete
 
@@ -223,8 +223,8 @@ class TestComputeRubricGrade:
             has_drawings=True,
         )
         # 5 × 3 = 15 deducted from antecedent section → 85; weighted at 0.15 → -2.25.
-        # Overall ≈ 97.75 → 97 → A+ (97-100 in standard US scale). No gate.
-        assert grade.letter in ("A+", "A", "A-")
+        # Overall ≈ 97.75 → 97 → A (93-100 with no A+). No gate.
+        assert grade.letter in ("A", "A-")
         assert grade.cap_reason is None
 
     def test_no_drawings_drawings_section_na(self):

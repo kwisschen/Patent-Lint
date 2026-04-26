@@ -281,15 +281,14 @@ def compute_section_score(fix_count: int, review_count: int) -> int:
 def letter_for_score(score: int) -> str:
     """Map a 0-100 score to a letter grade.
 
-    Standard US 4.0-GPA letter scale (13 tiers):
-      A+ 97-100  A 93-96  A- 90-92
-      B+ 87-89   B 83-86  B- 80-82
-      C+ 77-79   C 73-76  C- 70-72
-      D+ 67-69   D 63-66  D- 60-62
+    Standard US university grading scale (12 tiers; no A+, matching
+    Harvard / Yale / MIT-style transcripts):
+      A  93-100  A- 90-92
+      B+ 87-89   B  83-86  B- 80-82
+      C+ 77-79   C  73-76  C- 70-72
+      D+ 67-69   D  63-66  D- 60-62
       F  < 60
     """
-    if score >= 97:
-        return "A+"
     if score >= 93:
         return "A"
     if score >= 90:
