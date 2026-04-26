@@ -399,9 +399,9 @@ def check_paragraph_ending(doc: TwPatentDocument) -> list[CheckItem]:
     if bad_paragraphs:
         paras_str = ", ".join(str(n) for n in bad_paragraphs)
         return [CheckItem(
-            status="amend",
+            status="verify",
             message=f"{len(bad_paragraphs)} paragraph(s) have invalid ending punctuation (paragraphs: {paras_str}).",
-            message_key="check.tw.spec.paragraphEnding.amend",
+            message_key="check.tw.spec.paragraphEnding.verify",
             details=f"{len(bad_paragraphs)} paragraphs",
             details_key="details.tw.paragraphEnding",
             details_params={"count": len(bad_paragraphs), "paragraphs": bad_paragraphs},

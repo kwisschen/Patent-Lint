@@ -729,8 +729,8 @@
         "pass": "段落編號為連續。"
       },
       "paragraphEnding": {
-        "amend": "段落結尾標點符號無效或缺失（MPEP § 608.01(p)）。",
-        "pass": "所有段落結尾標點符號正確。"
+        "pass": "所有段落結尾標點符號正確。",
+        "verify": "段落結尾標點符號無效或缺失（MPEP § 608.01(p)）。"
       },
       "sequenceListing": {
         "amend": "引用了 SEQ ID NO，但缺少序列表聲明。",
@@ -865,8 +865,8 @@
           "amendXmlDuplicate": "檢測到{{count}}個重複的段落編號：{{paragraphs}}（审查指南）。"
         },
         "paragraphEnding": {
-          "amend": "{{count}}個段落未以有效中文標點結尾：{{paragraphs}}（审查指南）。",
-          "pass": "所有段落均以有效標點結尾。"
+          "pass": "所有段落均以有效標點結尾。",
+          "verify": "{{count}}個段落未以有效中文標點結尾：{{paragraphs}}（审查指南）。"
         },
         "figureRefConsistency": {
           "verify": "附圖引用不一致：{{figure_ref_inconsistency}}",
@@ -956,8 +956,8 @@
           "pass": "未發現援引式權利要求。"
         },
         "markushOpenTransition": {
-          "verify": "{{claims}}：馬庫什請求項使用開放式連接詞（{{transitions}}），應改為封閉式「组成的」（审查指南 第二部分第十章 §9.3）。",
-          "pass": "馬庫什請求項均使用封閉式連接詞「组成的」。"
+          "pass": "馬庫什請求項均使用封閉式連接詞「组成的」。",
+          "amend": "{{claims}}：馬庫什請求項使用開放式連接詞（{{transitions}}），應改為封閉式「组成的」（审查指南 第二部分第十章 §9.3）。"
         },
         "independentPreamble": {
           "pass": "所有獨立權利要求皆以「一种」開頭。",
@@ -1010,8 +1010,8 @@
           "amendFormat": "{{count}}個段落未使用【NNNN】格式。範例：{{examples}}（專利法施行細則 §17）。"
         },
         "paragraphEnding": {
-          "amend": "{{count}}個段落缺少結尾標點：{{paragraphs}}（專利審查基準）。",
-          "pass": "所有段落皆以正確標點結尾。"
+          "pass": "所有段落皆以正確標點結尾。",
+          "verify": "{{count}}個段落缺少結尾標點：{{paragraphs}}（專利審查基準）。"
         },
         "figureRefConsistency": {
           "verify": "圖式引用不一致：{{figure_ref_inconsistency}}",
@@ -1071,8 +1071,8 @@
           "amendMultiSentence": "{{count}}項請求項非單句撰寫：{{claims}}。"
         },
         "refNumeralParens": {
-          "verify": "{{count}}項請求項之元件符號未加括號：{{claims}}（專利法施行細則 §19）。",
-          "pass": "所有請求項之元件符號皆已加括號。"
+          "pass": "所有請求項之元件符號皆已加括號。",
+          "amend": "{{count}}項請求項之元件符號未加括號：{{claims}}（專利法施行細則 §19）。"
         },
         "subjectConsistency": {
           "verify": "{{claims}} 的標的名稱與母項不一致（共 {{count}} 項）。",

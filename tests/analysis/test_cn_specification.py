@@ -250,13 +250,13 @@ class TestParagraphEnding:
         results = check_paragraph_ending(doc)
         assert results[0].status == "pass"
 
-    def test_invalid_ending_amend(self):
+    def test_invalid_ending_verify(self):
         doc = _make_cn_doc(
             technical_field=["本发明涉及数据处理"],  # no ending punctuation
             background=["现有技术存在问题。"],
         )
         results = check_paragraph_ending(doc)
-        assert results[0].status == "amend"
+        assert results[0].status == "verify"
         assert results[0].details_params["count"] == 1
         assert results[0].details_params["paragraphs"] == [1]
 
@@ -267,7 +267,7 @@ class TestParagraphEnding:
             summary=["正确的。"],
         )
         results = check_paragraph_ending(doc)
-        assert results[0].status == "amend"
+        assert results[0].status == "verify"
         assert results[0].details_params["count"] == 2
         assert results[0].details_params["paragraphs"] == [1, 2]
 
@@ -281,7 +281,7 @@ class TestParagraphEnding:
     def test_ascii_period_not_accepted(self):
         doc = _make_cn_doc(technical_field=["This ends with a period."])
         results = check_paragraph_ending(doc)
-        assert results[0].status == "amend"
+        assert results[0].status == "verify"
 
     def test_bracket_prefix_used_as_locator(self):
         # When the drafter has left manual [NNNN] prefixes in the file
@@ -297,7 +297,7 @@ class TestParagraphEnding:
             ],
         )
         results = check_paragraph_ending(doc)
-        assert results[0].status == "amend"
+        assert results[0].status == "verify"
         assert results[0].details_params["paragraphs"] == ["[0001]", "[0003]"]
 
     def test_bracket_prefix_falls_back_to_ordinal(self):
@@ -322,7 +322,7 @@ class TestParagraphEnding:
             ],
         )
         results = check_paragraph_ending(doc)
-        assert results[0].status == "amend"
+        assert results[0].status == "verify"
         # The flagged continuation reports as [0003], not as ordinal 2.
         assert results[0].details_params["paragraphs"] == ["[0003]"]
 
@@ -334,7 +334,7 @@ class TestParagraphEnding:
             background=["背景段落。"],
         )
         results = check_paragraph_ending(doc)
-        assert results[0].status == "amend"
+        assert results[0].status == "verify"
         assert results[0].details_params["count"] == 1
 
     def test_strict_rejects_semicolon(self):
@@ -344,7 +344,7 @@ class TestParagraphEnding:
             background=["现有技术存在问题；"],
         )
         results = check_paragraph_ending(doc)
-        assert results[0].status == "amend"
+        assert results[0].status == "verify"
         assert results[0].details_params["count"] == 1
 
     def test_relaxed_accepts_colon(self):
@@ -399,7 +399,7 @@ class TestParagraphEnding:
             drawings_description=["图1、图2及图3显示了本发明"],
         )
         results = check_paragraph_ending(doc)
-        assert results[0].status == "amend"
+        assert results[0].status == "verify"
 
 
 # ── Check 5: Figure reference consistency ─────────────────────────────────
