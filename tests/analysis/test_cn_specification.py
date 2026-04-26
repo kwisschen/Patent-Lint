@@ -94,7 +94,7 @@ class TestRequiredSections:
     def test_reference_field(self):
         doc = _make_cn_doc(abstract_text="", section_source_strategies={"claims": "body_anchor", "specification": "body_anchor", "abstract": "none"})
         results = check_required_sections(doc)
-        assert results[0].reference == "专利法 §26 第1款、专利法实施细则 §17"
+        assert results[0].reference == "专利法 §26 第1款、专利法实施细则 §20"
 
     def test_claims_recovered_via_density_flags_missing_heading(self):
         """When the 权利要求书 anchor is missing and claims were
@@ -166,7 +166,7 @@ class TestSectionOrdering:
         results = check_section_ordering(doc)
         assert results[0].status == "amend"
         assert results[0].message_key == "check.cn.spec.sectionOrdering.amend"
-        assert results[0].reference == "专利法实施细则 §17"
+        assert results[0].reference == "专利法实施细则 §20"
 
     def test_empty_section_order_passes(self):
         # No headers found (degenerate input). Vacuously sorted.

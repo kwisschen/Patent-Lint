@@ -14,7 +14,7 @@ from collections import Counter
 from patentlint.analysis.utils import _dx
 from patentlint.models import CheckItem, CnPatentDocument
 
-# Canonical section order per 专利法实施细则 §17
+# Canonical section order per 专利法实施细则 §20
 _CANONICAL_ORDER = [
     "technical_field",
     "background",
@@ -117,7 +117,7 @@ def check_required_sections(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
     Covers the three top-level components a CNIPA application requires per
     专利法 §26 第1款 (说明书 / 摘要 / 权利要求书) plus the 说明书
-    subsections enumerated in 专利法实施细则 §17. When the drafter removes
+    subsections enumerated in 专利法实施细则 §20. When the drafter removes
     a 五书 header, the corresponding field extracts empty (or in some
     cases is silently recovered by a parser fallback tier — see below).
 
@@ -153,7 +153,7 @@ def check_required_sections(cn_doc: CnPatentDocument) -> list[CheckItem]:
     if not cn_doc.abstract_text or not cn_doc.abstract_text.strip():
         missing.append("摘要")
 
-    # 说明书 subsections per 专利法实施细则 §17
+    # 说明书 subsections per 专利法实施细则 §20
     required = ["technical_field", "background", "summary", "detailed_description"]
     for fname in required:
         paragraphs = getattr(cn_doc, fname)
@@ -161,7 +161,7 @@ def check_required_sections(cn_doc: CnPatentDocument) -> list[CheckItem]:
             missing.append(_SECTION_NAMES_CN[fname])
 
     # Conditional: 附图说明 required when drawings are referenced in the body
-    # (per 专利法实施细则 §17 第1款 第4项). ``figure_refs`` is populated by
+    # (per 专利法实施细则 §20 第1款 第4项). ``figure_refs`` is populated by
     # ``_extract_figure_refs`` from the 具体实施方式 + 附图说明 text, so any
     # 图N reference in the body forces this requirement.
     if cn_doc.figure_refs and not any(p.strip() for p in cn_doc.drawings_description):
@@ -187,7 +187,7 @@ def check_required_sections(cn_doc: CnPatentDocument) -> list[CheckItem]:
                     "items": [{"kind": "section", "token": s} for s in missing]
                 },
             },
-            reference="专利法 §26 第1款、专利法实施细则 §17",
+            reference="专利法 §26 第1款、专利法实施细则 §20",
             diagnostics=_dx(
                 missing_count=len(missing),
             ),
@@ -196,7 +196,7 @@ def check_required_sections(cn_doc: CnPatentDocument) -> list[CheckItem]:
         status="pass",
         message="All required sections are present.",
         message_key="check.cn.spec.requiredSections.pass",
-        reference="专利法 §26 第1款、专利法实施细则 §17",
+        reference="专利法 §26 第1款、专利法实施细则 §20",
     )]
 
 
@@ -209,7 +209,7 @@ def check_section_ordering(cn_doc: CnPatentDocument) -> list[CheckItem]:
     Reads ``cn_doc.section_order`` — the list of canonical field-name keys
     in the order the parser first encountered each header. A non-increasing
     canonical-index sequence indicates the drafter placed sections out of
-    the 专利法实施细则 §17 order (e.g., reusing an MPEP-ordered spec without
+    the 专利法实施细则 §20 order (e.g., reusing an MPEP-ordered spec without
     reordering). Empty ``section_order`` (no headers found, or XML with no
     ``<description>``) passes vacuously.
     """
@@ -225,7 +225,7 @@ def check_section_ordering(cn_doc: CnPatentDocument) -> list[CheckItem]:
             message="Specification sections are not in the required order.",
             message_key="check.cn.spec.sectionOrdering.amend",
             details_key="details.cn.sectionOrdering",
-            reference="专利法实施细则 §17",
+            reference="专利法实施细则 §20",
             diagnostics=_dx(
                 sections_seen=len(indices),
             ),
@@ -234,7 +234,7 @@ def check_section_ordering(cn_doc: CnPatentDocument) -> list[CheckItem]:
         status="pass",
         message="Specification sections are in the correct order.",
         message_key="check.cn.spec.sectionOrdering.pass",
-        reference="专利法实施细则 §17",
+        reference="专利法实施细则 §20",
     )]
 
 
@@ -575,7 +575,7 @@ def check_title(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
 # ── Check 8 ──────────────────────────────────────────────────────────────
 
-# Spec-text references to claims (prohibited per 专利法实施细则 §17 —
+# Spec-text references to claims (prohibited per 专利法实施细则 §20 —
 # the specification must not describe the invention by reference to the
 # claims). The introducing verb is not constrained: CN drafters use
 # 根据/如/按照/依照/依据 + 权利要求N + 所述, or bare 权利要求N所述.
@@ -613,7 +613,7 @@ def check_spec_claim_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 "paragraphs": bad_paragraphs,
                 "snippet": first_snippet,
             },
-            reference="专利法实施细则 §17",
+            reference="专利法实施细则 §20",
             diagnostics=_dx(
                 flagged_count=len(bad_paragraphs),
                 total_paragraphs_scanned=ordinal,
@@ -624,5 +624,5 @@ def check_spec_claim_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
         status="pass",
         message="No claim references found in specification.",
         message_key="check.cn.spec.claimReference.pass",
-        reference="专利法实施细则 §17",
+        reference="专利法实施细则 §20",
     )]
