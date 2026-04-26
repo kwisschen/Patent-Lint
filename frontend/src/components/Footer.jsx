@@ -40,6 +40,12 @@ export default function Footer() {
           >
             {t('footer.privacy')}
           </Link>
+          <Link
+            to="/rubric"
+            className="footer-link hover:text-foreground transition-colors duration-200"
+          >
+            {t('footer.rubric')}
+          </Link>
           {externalLinks.map(({ label, href, onClick }) => (
             <a
               key={label}
