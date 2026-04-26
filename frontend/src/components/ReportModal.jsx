@@ -29,7 +29,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { buildReportPayload } from '@/lib/feedback'
+import { buildReportPayload, FIELD_LABEL_KEYS } from '@/lib/feedback'
 
 export default function ReportModal({
   open,
@@ -102,7 +102,10 @@ export default function ReportModal({
             {entries
               .map(([key, value]) => {
                 const v = typeof value === 'boolean' ? String(value) : value
-                return `${key}: ${v}`
+                const labelKey = FIELD_LABEL_KEYS[key]
+                const label = labelKey ? t(labelKey) : key
+                const colon = t('feedback.email.fieldColon')
+                return `${label}${colon}${v}`
               })
               .join('\n')}
           </pre>

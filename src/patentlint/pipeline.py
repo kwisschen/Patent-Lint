@@ -164,6 +164,12 @@ def _run_cn_pipeline(
                     "claims": claim_ids,
                 },
                 reference="审查指南",
+                diagnostics={
+                    "issue_count": issue_count,
+                    "claim_count": claim_count,
+                    "total_claims": len(cn_doc.claims),
+                    "flagged_claim_id": claim_ids[0] if claim_ids else None,
+                },
             )
         ]
     else:
@@ -210,6 +216,12 @@ def _run_cn_pipeline(
                     "claims": claim_ids,
                 },
                 reference="专利法 §26 第4款",
+                diagnostics={
+                    "issue_count": issue_count,
+                    "claim_count": claim_count,
+                    "total_claims": len(cn_doc.claims),
+                    "flagged_claim_id": claim_ids[0] if claim_ids else None,
+                },
             )
         ]
     else:
@@ -569,6 +581,12 @@ def _run_tw_pipeline(
                     "claims": claim_ids,
                 },
                 reference="專利法 §26 第3項",
+                diagnostics={
+                    "issue_count": issue_count,
+                    "claim_count": claim_count,
+                    "total_claims": len(tw_doc.claims),
+                    "flagged_claim_id": claim_ids[0] if claim_ids else None,
+                },
             )
         ]
     else:
@@ -597,6 +615,12 @@ def _run_tw_pipeline(
                     "claims": claim_ids,
                 },
                 reference="專利法 §26 第3項",
+                diagnostics={
+                    "issue_count": issue_count,
+                    "claim_count": claim_count,
+                    "total_claims": len(tw_doc.claims),
+                    "flagged_claim_id": claim_ids[0] if claim_ids else None,
+                },
             )
         ]
     else:

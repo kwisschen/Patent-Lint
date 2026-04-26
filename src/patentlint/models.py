@@ -628,7 +628,10 @@ class AnalysisResult(BaseModel):
                 status="amend",
                 message="Document contains tracked changes (revisions). Accept or reject all changes before filing.",
                 message_key="check.spec.trackedChanges.amend",
-                diagnostics=_dx(reason_code="tracked_changes_present"),
+                diagnostics=_dx(
+                    reason_code="tracked_changes_present",
+                    total_paragraphs=self.paragraph_count,
+                ),
             ))
 
         # Required sections checks (Issue #2) — moved to front of spec-structure
@@ -824,7 +827,11 @@ class AnalysisResult(BaseModel):
                 details=f"Claims: {self.multiple_dependent_claims}",
                 details_key="details.multipleDependentClaims",
                 details_params={"list": str(self.multiple_dependent_claims)},
-                diagnostics=_dx(flagged_count=len(self.multiple_dependent_claims)),
+                diagnostics=_dx(
+                    flagged_count=len(self.multiple_dependent_claims),
+                    total_claims=len(self.claims),
+                    flagged_claim_id=self.multiple_dependent_claims[0] if self.multiple_dependent_claims else None,
+                ),
             ))
         else:
             claims_checks.append(CheckItem(
@@ -844,7 +851,11 @@ class AnalysisResult(BaseModel):
                 details=f"Claims: {self.chained_multi_dep_claims}",
                 details_key="details.chainedMultiDepClaims",
                 details_params={"list": str(self.chained_multi_dep_claims)},
-                diagnostics=_dx(flagged_count=len(self.chained_multi_dep_claims)),
+                diagnostics=_dx(
+                    flagged_count=len(self.chained_multi_dep_claims),
+                    total_claims=len(self.claims),
+                    flagged_claim_id=self.chained_multi_dep_claims[0] if self.chained_multi_dep_claims else None,
+                ),
             ))
         else:
             claims_checks.append(CheckItem(
@@ -861,7 +872,11 @@ class AnalysisResult(BaseModel):
                 details=f"Claims: {self.self_dependent_claims}",
                 details_key="details.selfDependentClaims",
                 details_params={"list": str(self.self_dependent_claims)},
-                diagnostics=_dx(flagged_count=len(self.self_dependent_claims)),
+                diagnostics=_dx(
+                    flagged_count=len(self.self_dependent_claims),
+                    total_claims=len(self.claims),
+                    flagged_claim_id=self.self_dependent_claims[0] if self.self_dependent_claims else None,
+                ),
             ))
         else:
             claims_checks.append(CheckItem(
@@ -939,7 +954,11 @@ class AnalysisResult(BaseModel):
                 details=f"Claims: {self.means_plus_function_claims}",
                 details_key="details.meansFunctionClaims",
                 details_params={"list": str(self.means_plus_function_claims)},
-                diagnostics=_dx(flagged_count=len(self.means_plus_function_claims)),
+                diagnostics=_dx(
+                    flagged_count=len(self.means_plus_function_claims),
+                    total_claims=len(self.claims),
+                    flagged_claim_id=self.means_plus_function_claims[0] if self.means_plus_function_claims else None,
+                ),
             ))
         else:
             claims_checks.append(CheckItem(
@@ -950,7 +969,8 @@ class AnalysisResult(BaseModel):
 
         if self.antecedent_basis_issues:
             issue_count = len(self.antecedent_basis_issues)
-            claim_count = len(set(item["claim_id"] for item in self.antecedent_basis_issues))
+            ab_claim_ids = sorted({item["claim_id"] for item in self.antecedent_basis_issues})
+            claim_count = len(ab_claim_ids)
             claims_checks.append(CheckItem(
                 status="amend",
                 message="Possible missing antecedent basis found.",
@@ -961,6 +981,8 @@ class AnalysisResult(BaseModel):
                 diagnostics=_dx(
                     issue_count=issue_count,
                     claim_count=claim_count,
+                    total_claims=len(self.claims),
+                    flagged_claim_id=ab_claim_ids[0] if ab_claim_ids else None,
                 ),
             ))
         else:
@@ -972,6 +994,7 @@ class AnalysisResult(BaseModel):
 
         if self.unsupported_terms:
             unique_phrases = sorted(set(ut.phrase for ut in self.unsupported_terms))
+            us_claim_ids = sorted({ut.claim_number for ut in self.unsupported_terms})
             claims_checks.append(CheckItem(
                 status="amend",
                 message="Claim terms not found in specification.",
@@ -982,6 +1005,9 @@ class AnalysisResult(BaseModel):
                 diagnostics=_dx(
                     unsupported_phrase_count=len(unique_phrases),
                     total_findings=len(self.unsupported_terms),
+                    claim_count=len(us_claim_ids),
+                    total_claims=len(self.claims),
+                    flagged_claim_id=us_claim_ids[0] if us_claim_ids else None,
                 ),
             ))
         else:

@@ -76,12 +76,17 @@ function buildHash() {
 // this map fall back to a sentence-case version of the raw key so new
 // fields work without code changes (and the maintainer still sees a
 // readable label even if a translation hasn't been added yet).
-const FIELD_LABEL_KEYS = {
+//
+// Exported for ReportModal to render localized labels in its payload
+// preview — same labels users see in the modal show up in their email
+// client when they choose the mailto fallback.
+export const FIELD_LABEL_KEYS = {
   check_key: 'feedback.email.fieldCheck',
   message: 'feedback.email.fieldMessage',
   details: 'feedback.email.fieldDetails',
   status: 'feedback.email.fieldStatus',
   claim_id: 'feedback.email.fieldClaim',
+  flagged_claim_id: 'feedback.email.fieldClaim',
   terms: 'feedback.email.fieldTerms',
   phrases: 'feedback.email.fieldPhrases',
   reference_form: 'feedback.email.fieldReferenceForm',
@@ -89,6 +94,20 @@ const FIELD_LABEL_KEYS = {
   browser: 'feedback.email.fieldBrowser',
   locale: 'feedback.email.fieldLocale',
   patentlint_build: 'feedback.email.fieldBuild',
+  flagged_count: 'feedback.email.fieldFlaggedCount',
+  total_count: 'feedback.email.fieldTotalCount',
+  total_kind: 'feedback.email.fieldTotalKind',
+  hit_count: 'feedback.email.fieldHitCount',
+  fixture_shape_hash: 'feedback.email.fieldShapeHash',
+  reason_code: 'feedback.email.fieldReasonCode',
+  findings_in_group: 'feedback.email.fieldFindingsInGroup',
+  // Aliases for keys already used by existing _dx() emit sites (so the
+  // modal preview localizes them too without renaming source-side).
+  issue_count: 'feedback.email.fieldIssueCount',
+  claim_count: 'feedback.email.fieldClaimCount',
+  total_claims: 'feedback.email.fieldTotalClaims',
+  unsupported_phrase_count: 'feedback.email.fieldFlaggedCount',
+  total_findings: 'feedback.email.fieldHitCount',
 }
 
 // Format a key→value section as a localized "Label: value" stack. Drops
