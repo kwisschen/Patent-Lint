@@ -162,12 +162,41 @@ _DRAWINGS_KEY_PREFIXES_FROM_OTHER_BUCKETS = (
 )
 
 
+# Required-sections check is monolithic — one CheckItem lists every
+# missing section by name. When the missing list is exclusively drawings-
+# related (BDoD or 符號說明), the FIX is conceptually a Drawings issue,
+# not a Spec issue, and routing it to the Drawings rubric category makes
+# the section pills tell the truth.
+_REQUIRED_SECTIONS_AMEND_KEYS = frozenset({
+    "checks.required_sections_missing",       # US
+    "check.cn.spec.requiredSections.amend",   # CN
+    "check.tw.spec.requiredSections.amend",   # TW
+})
+
+# Drawings-related section names as they appear in CheckItem.details_params
+# across the 3 jurisdictions. The strings are language-specific (TW uses
+# 圖式簡單說明, CN uses 附图说明, US uses 'Brief Description of the Drawings');
+# we normalize by case-insensitive substring presence below.
+_DRAWINGS_RELATED_SECTION_LABELS = frozenset({
+    "圖式簡單說明",  # TW BDoD
+    "符號說明",      # TW symbol table
+    "附图说明",      # CN BDoD
+    "Brief Description of the Drawings",  # US
+})
+
+
 def section_for_message_key(message_key: str) -> RubricSection:
     """Map a CheckItem message_key to its rubric section.
 
     Walker-based §112 checks (antecedent / spec support) and figure /
     symbol-table checks have explicit prefix routing; everything else
     derives from the canonical CheckBucket.
+
+    Note: this function is key-only and cannot inspect a check's
+    details_params. Use ``section_for_check`` when routing decisions
+    depend on the check's payload (e.g., requiredSections.amend
+    routing to Drawings when the missing-sections list contains only
+    drawings-related labels).
     """
     if not message_key:
         # Unkeyed CheckItem (defensive). Treat as SPEC — the conservative
@@ -192,6 +221,48 @@ def section_for_message_key(message_key: str) -> RubricSection:
     if bucket == CheckBucket.ABSTRACT:
         return RubricSection.ABSTRACT
     return RubricSection.CLAIMS
+
+
+def _is_drawings_only_required_sections(check: CheckItem) -> bool:
+    """True when a requiredSections.amend CheckItem reports ONLY
+    drawings-related sections as missing (BDoD / 符號說明).
+
+    Mixed-missing cases (BDoD + 技術領域 missing) return False so the
+    FIX stays in the SPEC rubric — losing the non-drawings signal by
+    routing to Drawings would be worse than the slight imprecision
+    of leaving a drawings-tinged FIX in Spec.
+    """
+    if not check.details_params:
+        return False
+    sections_value = check.details_params.get("sections")
+    if not sections_value:
+        return False
+    # Normalize to a list of section labels. The check stores either a
+    # comma-joined string ("圖式簡單說明, 符號說明") or the structured
+    # flagged_phrases.items[].token list. Read whichever is canonical.
+    if isinstance(sections_value, str):
+        labels = [s.strip() for s in sections_value.split(",") if s.strip()]
+    elif isinstance(sections_value, (list, tuple)):
+        labels = [str(s).strip() for s in sections_value if s]
+    else:
+        return False
+    if not labels:
+        return False
+    return all(lbl in _DRAWINGS_RELATED_SECTION_LABELS for lbl in labels)
+
+
+def section_for_check(check: CheckItem) -> RubricSection:
+    """Map a CheckItem to its rubric section.
+
+    Wraps ``section_for_message_key`` and adds payload-aware routing
+    for the monolithic requiredSections.amend check: when the missing
+    list is exclusively drawings-related, route to DRAWINGS instead
+    of SPECIFICATION so the section pills reflect reality.
+    """
+    key = check.message_key or ""
+    if key in _REQUIRED_SECTIONS_AMEND_KEYS and _is_drawings_only_required_sections(check):
+        return RubricSection.DRAWINGS
+    return section_for_message_key(key)
 
 
 # === Pure-function helpers ===============================================
@@ -326,7 +397,7 @@ def compute_rubric_grade(
     bucket_pass: dict[RubricSection, int] = {s: 0 for s in RubricSection}
 
     for check in all_checks:
-        section = section_for_message_key(check.message_key or "")
+        section = section_for_check(check)
         if check.status == "amend":
             bucket_fix[section] += 1
         elif check.status == "verify":
@@ -436,7 +507,7 @@ def _compute_impact_list(
         # delta means no entry on the lever-list.
         if check.status == "verify" and check.message_key in ADVISORY_REVIEW_KEYS:
             continue
-        section = section_for_message_key(check.message_key or "")
+        section = section_for_check(check)
         if not applicable.get(section, False):
             continue
         deduction = FIX_DEDUCTION if check.status == "amend" else REVIEW_DEDUCTION

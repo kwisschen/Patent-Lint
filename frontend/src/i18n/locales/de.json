@@ -1504,7 +1504,7 @@
       "gateIntro": "Gesetzliche Mängel führen die Bewertung an. Bereits ein FEHLER begrenzt die Note auf B-, unabhängig davon, wie sorgfältig der Rest der Schrift verfasst ist. Das entspricht dem realen Triage-Ablauf — zuerst auf blockierende Mängel prüfen, dann auf die Sorgfalt der Ausarbeitung.",
       "gateRule": "{{count}} FEHLER → höchstens {{letter}}",
       "conditionalTitle": "Wenn Abschnitte nicht zutreffen",
-      "conditionalIntro": "Eine Schrift ohne Zeichnungen (Chemie, Verfahren, Geschäftsmodelle) lässt den Zeichnungs-Abschnitt zulässig weg. Zeichnungen werden dann mit „n. z.\" markiert und ihre 10 % Gewichtung anteilig auf die übrigen vier Abschnitte verteilt — keine Strafe für fehlende Zeichnungen.",
+      "conditionalIntro": "Der Zeichnungs-Abschnitt verhält sich in zwei Szenarien unterschiedlich. Erstens — wenn keine Zeichnungen erkannt werden (Chemie, Verfahren, Geschäftsmodelle), wird der Abschnitt als „n. z.\" markiert und seine 10 % Gewichtung anteilig auf die übrigen vier Abschnitte verteilt; rechtmäßig zeichnungsfreie Schriften werden nicht bestraft. Zweitens — wenn Zeichnungen vorhanden sind (Bezugnahmen wie „FIG.\" im Beschreibungstext) und der Abschnitt „Kurze Beschreibung der Zeichnungen\" fehlt, fließt die entsprechende Beanstandung in den Zeichnungs-Abschnitt ein, damit die Abschnittsanzeige die tatsächliche Lücke widerspiegelt.",
       "completenessTitle": "Wenn die Schrift unvollständig ist",
       "completenessIntro": "Fehlt ein universal erforderlicher Abschnitt (Titel, Ansprüche, Beschreibungstext oder Zusammenfassung), vergeben wir keine Note. Eine Top-Bewertung auf einer leeren Schrift wäre irreführend.",
       "trustTitle": "Kein KI-Urteil",
