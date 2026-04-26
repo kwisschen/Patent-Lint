@@ -1507,6 +1507,11 @@
       "reportTitle": "Help us improve — report misjudgments",
       "reportIntro": "No checker is perfect. Walker-based checks (antecedent basis, specification support, figure references) carry a small false-positive risk; with grading now in place, a wrongly-flagged FIX can cost the draft a letter rank. The Report button on each triage item attaches a structural diagnostic trail — counts, codepoints, closed-set enums — and never the claim content or draft text, so we can pinpoint the bug without ever seeing the invention."
     },
-    "howWeScore": "How we score →"
+    "howWeScore": "How we score →",
+    "cover": {
+      "tableSection": "Section",
+      "tableGrade": "Grade",
+      "tableWeight": "Weight"
+    }
   }
 }

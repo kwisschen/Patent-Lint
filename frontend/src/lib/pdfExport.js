@@ -3,6 +3,7 @@
 import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
 import { formatDetails } from './detailsFormatter'
+import { CHECKS_RAW } from '../generated/stats'
 
 // Register bundled Roboto fonts into pdfmake's internal VirtualFileSystem.
 // In module/bundler context, vfs_fonts.js does NOT auto-register — we must
@@ -413,24 +414,30 @@ function buildSectionChecks(sections, t, fontName) {
   return content
 }
 
-// Map a letter grade to a color matching the cover styling.
+// Map a letter grade to a color. Matches the web hero (--pass-border /
+// --verify-border / --amend-border on light mode); PDFs don't have a
+// dark mode, so light-mode hex values are canonical.
 function gradeColor(letter) {
   if (!letter || letter === '—') return '#6b7280'
-  if (letter.startsWith('A')) return '#16a34a'
-  if (letter.startsWith('B') || letter.startsWith('C')) return '#d97706'
-  return '#dc2626' // D / F
+  if (letter.startsWith('A')) return '#2563eb'  // blue, web pass-border
+  if (letter.startsWith('B') || letter.startsWith('C')) return '#16a34a'  // green, verify-border
+  return '#dc2626'  // D / F red, amend-border
 }
 
+// Standard US 12-tier letter map (no A+, matches rubric.py letter_for_score).
 function letterFromScore(score, applicable) {
   if (!applicable) return null
-  if (score >= 97) return 'A'
-  if (score >= 93) return 'A-'
-  if (score >= 88) return 'B+'
+  if (score >= 93) return 'A'
+  if (score >= 90) return 'A-'
+  if (score >= 87) return 'B+'
   if (score >= 83) return 'B'
-  if (score >= 78) return 'B-'
-  if (score >= 73) return 'C+'
-  if (score >= 68) return 'C'
-  if (score >= 60) return 'D'
+  if (score >= 80) return 'B-'
+  if (score >= 77) return 'C+'
+  if (score >= 73) return 'C'
+  if (score >= 70) return 'C-'
+  if (score >= 67) return 'D+'
+  if (score >= 63) return 'D'
+  if (score >= 60) return 'D-'
   return 'F'
 }
 
@@ -534,7 +541,7 @@ function buildRubricCover(rubricGrade, t, fontName) {
   }
 
   cover.push({
-    text: t('rubric.version', { version: rubricGrade.rubric_version || '1.0', count: 109 }),
+    text: t('rubric.version', { version: rubricGrade.rubric_version || '1.0', count: CHECKS_RAW }),
     fontSize: 7,
     color: '#9ca3af',
     alignment: 'center',

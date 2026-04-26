@@ -1507,6 +1507,11 @@
       "reportTitle": "Helfen Sie uns weiter — falsche Treffer melden",
       "reportIntro": "Kein Prüfer ist fehlerfrei. Walker-basierte Prüfungen (Rückbezug, Stützung, Bezugnahmen auf Zeichnungen) tragen ein geringes Fehlerrisiko; da die Bewertung nun davon abhängt, kann eine ungerechtfertigte Beanstandung eine Notenstufe kosten. Über den «Melden»-Knopf an jedem Triage-Eintrag wird eine rein strukturelle Diagnose-Spur mitgesendet — Zählwerte, Codepoints, abgeschlossene Aufzählungen — niemals der Anspruchsinhalt oder der Schrifttext. So können wir den Fehler eingrenzen, ohne Ihre Erfindung je zu sehen."
     },
-    "howWeScore": "Bewertungsmaßstab →"
+    "howWeScore": "Bewertungsmaßstab →",
+    "cover": {
+      "tableSection": "Abschnitt",
+      "tableGrade": "Note",
+      "tableWeight": "Gewichtung"
+    }
   }
 }

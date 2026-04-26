@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 // Copyright (c) 2025 Christopher Chen
 import { useTranslation } from 'react-i18next'
+import { CHECKS_RAW } from '../generated/stats'
 
 const SECTION_WEIGHTS = [
   { id: 'specification', weight: 20 },
@@ -104,7 +105,7 @@ export default function RubricPage() {
 
       {/* Version footer */}
       <footer className="text-center text-xs text-muted-foreground pt-4 border-t">
-        {t('rubric.version', { version: '1.0', count: 109 })}
+        {t('rubric.version', { version: '1.0', count: CHECKS_RAW })}
       </footer>
     </div>
   )
