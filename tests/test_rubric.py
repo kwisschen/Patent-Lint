@@ -1,0 +1,405 @@
+# SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
+# Copyright (c) 2025 Christopher Chen
+"""Tests for patentlint.rubric — the deterministic scoring rubric."""
+
+from __future__ import annotations
+
+
+from patentlint.models import (
+    CheckItem,
+    CompletenessGap,
+    Jurisdiction,
+    RubricSection,
+)
+from patentlint.rubric import (
+    FIX_DEDUCTION,
+    REVIEW_DEDUCTION,
+    RUBRIC_VERSION,
+    SECTION_WEIGHTS,
+    compute_rubric_grade,
+    compute_section_score,
+    detect_completeness_gap,
+    detect_has_drawings,
+    flatten_checks_from_lists,
+    gate_cap_for_fix_count,
+    letter_for_score,
+    section_for_message_key,
+)
+
+
+def _check(status: str, message_key: str) -> CheckItem:
+    return CheckItem(status=status, message=message_key, message_key=message_key)
+
+
+# ── Pure helpers ─────────────────────────────────────────────────────────
+
+
+class TestPureHelpers:
+    def test_section_score_clean(self):
+        assert compute_section_score(0, 0) == 100
+
+    def test_section_score_one_fix(self):
+        assert compute_section_score(1, 0) == 100 - FIX_DEDUCTION
+
+    def test_section_score_one_review(self):
+        assert compute_section_score(0, 1) == 100 - REVIEW_DEDUCTION
+
+    def test_section_score_floors_at_zero(self):
+        # 10 FIX would deduct 150 — must floor.
+        assert compute_section_score(10, 0) == 0
+
+    def test_letter_thresholds(self):
+        assert letter_for_score(100) == "A"
+        assert letter_for_score(97) == "A"
+        assert letter_for_score(96) == "A-"
+        assert letter_for_score(93) == "A-"
+        assert letter_for_score(88) == "B+"
+        assert letter_for_score(83) == "B"
+        assert letter_for_score(78) == "B-"
+        assert letter_for_score(73) == "C+"
+        assert letter_for_score(68) == "C"
+        assert letter_for_score(60) == "D"
+        assert letter_for_score(59) == "F"
+        assert letter_for_score(0) == "F"
+
+    def test_gate_no_fix(self):
+        cap, reason = gate_cap_for_fix_count(0)
+        assert cap == 100
+        assert reason is None
+
+    def test_gate_one_fix_caps_b_minus(self):
+        cap, reason = gate_cap_for_fix_count(1)
+        assert cap == 82
+        assert "B-" in reason
+
+    def test_gate_progressive_caps(self):
+        for fix_n, expected_max in [(2, 77), (3, 72), (4, 67), (5, 59), (10, 59)]:
+            cap, _ = gate_cap_for_fix_count(fix_n)
+            assert cap == expected_max, f"fix_count={fix_n} should cap at {expected_max}"
+
+    def test_section_weights_sum_to_100(self):
+        assert sum(SECTION_WEIGHTS.values()) == 100
+
+
+# ── Section mapping ──────────────────────────────────────────────────────
+
+
+class TestSectionMapping:
+    def test_antecedent_basis_routes_to_dedicated_section(self):
+        assert section_for_message_key("check.claims.antecedentBasis.verify") == \
+            RubricSection.ANTECEDENT_SPEC_SUPPORT
+        assert section_for_message_key("check.cn.claims.antecedentBasis.verify") == \
+            RubricSection.ANTECEDENT_SPEC_SUPPORT
+        assert section_for_message_key("check.tw.claims.antecedentBasis.pass") == \
+            RubricSection.ANTECEDENT_SPEC_SUPPORT
+
+    def test_spec_support_routes_to_dedicated_section(self):
+        assert section_for_message_key("checks.spec_support_unsupported_terms") == \
+            RubricSection.ANTECEDENT_SPEC_SUPPORT
+        assert section_for_message_key("check.cn.claims.specSupport.verify") == \
+            RubricSection.ANTECEDENT_SPEC_SUPPORT
+        assert section_for_message_key("check.tw.claims.specSupport.pass") == \
+            RubricSection.ANTECEDENT_SPEC_SUPPORT
+
+    def test_figure_ref_consistency_routes_to_drawings(self):
+        # Spec-bucket checks that are conceptually drawings → DRAWINGS rubric.
+        assert section_for_message_key("check.cn.spec.figureRefConsistency.verify") == \
+            RubricSection.DRAWINGS
+        assert section_for_message_key("check.tw.spec.figureRefConsistency.pass") == \
+            RubricSection.DRAWINGS
+
+    def test_tw_symbol_table_routes_to_drawings(self):
+        assert section_for_message_key("check.tw.spec.symbolTablePresence.amend") == \
+            RubricSection.DRAWINGS
+        assert section_for_message_key("check.tw.crossRef.symbolVsRepDrawing.pass") == \
+            RubricSection.DRAWINGS
+        assert section_for_message_key("check.tw.claims.symbolTableConsistency.pass") == \
+            RubricSection.DRAWINGS
+
+    def test_spec_default_routes_to_specification(self):
+        assert section_for_message_key("check.spec.paragraphSequential.amend") == \
+            RubricSection.SPECIFICATION
+        assert section_for_message_key("check.cn.spec.requiredSections.pass") == \
+            RubricSection.SPECIFICATION
+
+    def test_drawings_bucket_routes_to_drawings(self):
+        assert section_for_message_key("check.drawings.singleFigure.amend") == \
+            RubricSection.DRAWINGS
+        assert section_for_message_key("check.tw.drawings.figuresSequential.pass") == \
+            RubricSection.DRAWINGS
+
+    def test_claims_bucket_routes_to_claims(self):
+        assert section_for_message_key("check.claims.sequential.amend") == \
+            RubricSection.CLAIMS
+        assert section_for_message_key("check.cn.claims.markushOpenTransition.amend") == \
+            RubricSection.CLAIMS
+
+    def test_abstract_bucket_routes_to_abstract(self):
+        assert section_for_message_key("check.abstract.wordCount.amend") == \
+            RubricSection.ABSTRACT
+        assert section_for_message_key("check.cn.abstract.charCount.amend") == \
+            RubricSection.ABSTRACT
+
+
+# ── compute_rubric_grade ─────────────────────────────────────────────────
+
+
+class TestComputeRubricGrade:
+    def test_all_pass_scores_a(self):
+        checks = [_check("pass", "check.spec.paragraphSequential.pass")]
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=checks,
+            has_drawings=True,
+        )
+        assert grade.score == 100
+        assert grade.letter == "A"
+        assert grade.cap_reason is None
+        assert grade.is_complete
+
+    def test_one_fix_caps_at_b_minus(self):
+        checks = [_check("amend", "check.cn.spec.requiredSections.amend")]
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.CN,
+            all_checks=checks,
+            has_drawings=True,
+        )
+        # Spec section: 100 - 15 = 85; weighted = 85 * 0.20 = 17 contribution.
+        # Other sections: 100 each. Total weighted ≈ 97. Gate caps at 82 (B-).
+        assert grade.score == 82
+        assert grade.letter == "B-"
+        assert "B-" in grade.cap_reason
+
+    def test_three_fix_caps_at_c(self):
+        checks = [
+            _check("amend", "check.claims.sequential.amend"),
+            _check("amend", "check.claims.selfDependent.amend"),
+            _check("amend", "claims.markushOpenTransition"),
+        ]
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=checks,
+            has_drawings=True,
+        )
+        # Gate at 3 FIX caps at 72 (C).
+        assert grade.score == 72
+        assert grade.letter == "C"
+
+    def test_review_only_polishes_a_minus(self):
+        # 5 REVIEW × 3pts = 15pts deducted across various sections; clean of FIX.
+        # Effect on weighted overall is small (claims-section 5 reviews = -15
+        # at section level, weighted at 0.45 → -6.75 to overall).
+        checks = [
+            _check("verify", "check.claims.antecedentBasis.verify"),
+            _check("verify", "check.claims.antecedentBasis.verify"),
+            _check("verify", "check.claims.antecedentBasis.verify"),
+            _check("verify", "check.claims.antecedentBasis.verify"),
+            _check("verify", "check.claims.antecedentBasis.verify"),
+        ]
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=checks,
+            has_drawings=True,
+        )
+        # 5 × 3 = 15 deducted from antecedent section → 85; weighted at 0.15 → -2.25.
+        # Overall ≈ 98 → A. No gate.
+        assert grade.letter in ("A", "A-")
+        assert grade.cap_reason is None
+
+    def test_no_drawings_drawings_section_na(self):
+        checks = [_check("pass", "check.cn.spec.requiredSections.pass")]
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.CN,
+            all_checks=checks,
+            has_drawings=False,
+        )
+        # Drawings section should be N/A.
+        drawings_sg = next(sg for sg in grade.section_grades if sg.section == RubricSection.DRAWINGS)
+        assert not drawings_sg.applicable
+        assert drawings_sg.effective_weight == 0.0
+
+    def test_no_drawings_redistributes_weight(self):
+        checks = [_check("pass", "check.cn.spec.requiredSections.pass")]
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.CN,
+            all_checks=checks,
+            has_drawings=False,
+        )
+        # Total effective weight across applicable sections must sum to ~100.
+        total = sum(sg.effective_weight for sg in grade.section_grades if sg.applicable)
+        assert abs(total - 100.0) < 0.5  # allow rounding slack
+
+    def test_completeness_gap_yields_no_grade(self):
+        gap = CompletenessGap(missing_sections=["claims", "abstract"])
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=[],
+            has_drawings=True,
+            completeness_gap=gap,
+        )
+        assert grade.completeness_gap is not None
+        assert grade.completeness_gap.missing_sections == ["claims", "abstract"]
+        assert grade.letter == "—"
+        assert not grade.is_complete
+
+    def test_section_grades_include_all_5(self):
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.TW,
+            all_checks=[],
+            has_drawings=True,
+        )
+        sections = {sg.section for sg in grade.section_grades}
+        assert sections == set(RubricSection)
+
+    def test_rubric_version_set(self):
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=[],
+            has_drawings=False,
+        )
+        assert grade.rubric_version == RUBRIC_VERSION
+
+    def test_gate_only_surfaced_when_actually_capped(self):
+        # 1 FIX in claims: section drops to 85, weighted contribution still
+        # high; without gate score would be ~93. Gate caps at 82 — actually
+        # binding, so cap_reason should surface.
+        checks = [_check("amend", "check.claims.selfDependent.amend")]
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=checks,
+            has_drawings=True,
+        )
+        assert grade.cap_reason is not None
+        assert grade.score == 82
+
+
+# ── Impact list ──────────────────────────────────────────────────────────
+
+
+class TestImpactList:
+    def test_empty_when_all_pass(self):
+        checks = [_check("pass", "check.claims.sequential.pass")]
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=checks,
+            has_drawings=True,
+        )
+        assert grade.impact_list == []
+
+    def test_top_3_only(self):
+        checks = [_check("amend", "check.claims.sequential.amend") for _ in range(10)]
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=checks,
+            has_drawings=True,
+        )
+        assert len(grade.impact_list) <= 3
+
+    def test_fix_ranks_above_review(self):
+        # Both in claims section: FIX delta should beat REVIEW delta.
+        checks = [
+            _check("verify", "check.claims.antecedentBasis.verify"),
+            _check("amend", "check.claims.selfDependent.amend"),
+        ]
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=checks,
+            has_drawings=True,
+        )
+        assert grade.impact_list[0].status == "amend"
+
+    def test_excludes_pass_items(self):
+        checks = [
+            _check("pass", "check.claims.sequential.pass"),
+            _check("amend", "check.claims.selfDependent.amend"),
+        ]
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=checks,
+            has_drawings=True,
+        )
+        assert all(item.status in ("amend", "verify") for item in grade.impact_list)
+
+    def test_excludes_findings_in_inapplicable_sections(self):
+        # A drawings-section finding when has_drawings=False should not
+        # appear in the impact list (drawings is N/A so resolving it
+        # doesn't move the grade).
+        checks = [_check("amend", "check.drawings.sequential.amend")]
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=checks,
+            has_drawings=False,
+        )
+        assert grade.impact_list == []
+
+
+# ── Detection helpers ────────────────────────────────────────────────────
+
+
+class TestDetectHasDrawings:
+    def test_figure_count_signals_drawings(self):
+        assert detect_has_drawings(figures_count=3) is True
+
+    def test_figure_refs_signal_drawings(self):
+        assert detect_has_drawings(figures_count=0, figure_refs=["1", "2"]) is True
+
+    def test_no_signal_means_no_drawings(self):
+        assert detect_has_drawings(figures_count=0, figure_refs=None) is False
+        assert detect_has_drawings(figures_count=0, figure_refs=[]) is False
+
+
+class TestDetectCompletenessGap:
+    def test_complete_doc_no_gap(self):
+        gap = detect_completeness_gap(
+            title="A Useful Invention",
+            has_claims=True,
+            has_spec_body=True,
+            has_abstract=True,
+        )
+        assert gap is None
+
+    def test_missing_title_triggers_gap(self):
+        gap = detect_completeness_gap(
+            title="",
+            has_claims=True,
+            has_spec_body=True,
+            has_abstract=True,
+        )
+        assert gap is not None
+        assert "title" in gap.missing_sections
+
+    def test_whitespace_title_triggers_gap(self):
+        gap = detect_completeness_gap(
+            title="   ",
+            has_claims=True,
+            has_spec_body=True,
+            has_abstract=True,
+        )
+        assert gap is not None
+        assert "title" in gap.missing_sections
+
+    def test_multiple_missing_listed(self):
+        gap = detect_completeness_gap(
+            title="",
+            has_claims=False,
+            has_spec_body=True,
+            has_abstract=False,
+        )
+        assert gap is not None
+        assert set(gap.missing_sections) == {"title", "claims", "abstract"}
+
+
+# ── flatten_checks_from_lists ────────────────────────────────────────────
+
+
+class TestFlatten:
+    def test_flattens_multiple_lists(self):
+        a = [_check("pass", "check.spec.paragraphSequential.pass")]
+        b = [_check("amend", "check.claims.selfDependent.amend")]
+        c: list = []
+        flat = flatten_checks_from_lists(a, b, c)
+        assert len(flat) == 2
+
+    def test_empty_lists_yield_empty(self):
+        assert flatten_checks_from_lists() == []
+        assert flatten_checks_from_lists([], [], []) == []
