@@ -1468,8 +1468,8 @@
       "line": "Keine KI. Gleiche Schrift, gleiche Bewertung, jedes Mal."
     },
     "cap": {
-      "oneFix": "1 FEHLER begrenzt die Bewertung auf B+",
-      "twoFix": "2 FEHLER begrenzen auf B",
+      "oneFix": "1 FEHLER begrenzt die Bewertung auf A-",
+      "twoFix": "2 FEHLER begrenzen auf B+",
       "threeFix": "3 FEHLER begrenzen auf B-",
       "fourFix": "4 FEHLER begrenzen auf C+",
       "fiveFix": "{{count}} FEHLER begrenzen auf F"
@@ -1501,7 +1501,7 @@
       "weightsTitle": "Abschnittsgewichtung",
       "weightsIntro": "Jede Prüfung fließt in einen dieser fünf Abschnitte ein. Die Gewichtung ist für US-, CN- und TW-Anmeldungen identisch.",
       "gateTitle": "Wie die FEHLER-Sperre wirkt",
-      "gateIntro": "Gesetzliche Mängel führen die Bewertung an. Bereits ein FEHLER begrenzt die Note auf B+, unabhängig davon, wie sorgfältig der Rest der Schrift verfasst ist. Das entspricht dem realen Triage-Ablauf — zuerst auf blockierende Mängel prüfen, dann auf die Sorgfalt der Ausarbeitung.",
+      "gateIntro": "Gesetzliche Mängel führen die Bewertung an. Bereits ein FEHLER begrenzt die Note auf A-, unabhängig davon, wie sorgfältig der Rest der Schrift verfasst ist. Das entspricht dem realen Triage-Ablauf — zuerst auf blockierende Mängel prüfen, dann auf die Sorgfalt der Ausarbeitung.",
       "gateRule": "{{count}} FEHLER → höchstens {{letter}}",
       "conditionalTitle": "Wenn Abschnitte nicht zutreffen",
       "conditionalIntro": "Der Zeichnungs-Abschnitt verhält sich in zwei Szenarien unterschiedlich. Erstens — wenn keine Zeichnungen erkannt werden (Chemie, Verfahren, Geschäftsmodelle), wird der Abschnitt als „n. z.\" markiert und seine 10 % Gewichtung anteilig auf die übrigen vier Abschnitte verteilt; rechtmäßig zeichnungsfreie Schriften werden nicht bestraft. Zweitens — wenn Zeichnungen vorhanden sind (Bezugnahmen wie „FIG.\" im Beschreibungstext) und der Abschnitt „Kurze Beschreibung der Zeichnungen\" fehlt, fließt die entsprechende Beanstandung in den Zeichnungs-Abschnitt ein, damit die Abschnittsanzeige die tatsächliche Lücke widerspiegelt.",
@@ -1510,7 +1510,9 @@
       "trustTitle": "Kein KI-Urteil",
       "trustIntro": "Jede Eingabe in Ihre Bewertung ist ein KORRIGIEREN/PRÜFEN/OK-Status, gesetzt von einem deterministischen Prüfer. Jede Ausgabe ist eine reine arithmetische Aggregation. Dieselbe Schrift erhält stets dieselbe Bewertung. PatentLint lädt Ihre Schrift nirgendwo hoch — die Prüfung läuft vollständig in Ihrem Browser.",
       "disclaimerTitle": "Was eine A-Bewertung bedeutet — und was nicht",
-      "disclaimerIntro": "Eine A-Bewertung bedeutet, dass der Prüfkatalog von PatentLint keine Beanstandungen gefunden hat. Sie bedeutet nicht, dass Ihre Schrift einreichungsbereit ist. Eine inhaltliche Prüfung durch eine zugelassene Vertretung wird weiterhin empfohlen."
+      "disclaimerIntro": "Eine A-Bewertung bedeutet, dass der Prüfkatalog von PatentLint keine Beanstandungen gefunden hat. Sie bedeutet nicht, dass Ihre Schrift einreichungsbereit ist. Eine inhaltliche Prüfung durch eine zugelassene Vertretung wird weiterhin empfohlen.",
+      "letterMappingTitle": "Notenstufen-Zuordnung",
+      "letterMappingIntro": "Standard-US-Skala (4.0-GPA). Das Bewertungsraster berechnet den numerischen Wert (0–100); der Buchstabe ist die lesbare Kennzeichnung."
     },
     "howWeScore": "Bewertungsmaßstab →"
   }
