@@ -729,8 +729,8 @@
         "pass": "Paragraph numbers are sequential."
       },
       "paragraphEnding": {
-        "amend": "Paragraphs with invalid or missing ending punctuation (MPEP § 608.01(p)).",
-        "pass": "All paragraphs have valid ending punctuation."
+        "pass": "All paragraphs have valid ending punctuation.",
+        "verify": "Paragraphs with invalid or missing ending punctuation (MPEP § 608.01(p))."
       },
       "sequenceListing": {
         "amend": "SEQ ID NO referenced but no sequence listing statement found.",
@@ -865,8 +865,8 @@
           "amendXmlDuplicate": "{{count}} duplicate paragraph number(s): {{paragraphs}} (审查指南)."
         },
         "paragraphEnding": {
-          "amend": "{{count}} paragraph(s) not ending with valid Chinese punctuation: {{paragraphs}} (审查指南).",
-          "pass": "All specification paragraphs end with valid Chinese punctuation."
+          "pass": "All specification paragraphs end with valid Chinese punctuation.",
+          "verify": "{{count}} paragraph(s) not ending with valid Chinese punctuation: {{paragraphs}} (审查指南)."
         },
         "figureRefConsistency": {
           "verify": "Inconsistent figure references: {{figure_ref_inconsistency}}",
@@ -956,8 +956,8 @@
           "pass": "No omnibus claims found."
         },
         "markushOpenTransition": {
-          "verify": "{{claims}}: Markush group uses open transition ({{transitions}}) instead of 组成的 (审查指南 第二部分第十章 §9.3).",
-          "pass": "Markush groups use the closed transition 组成的."
+          "pass": "Markush groups use the closed transition 组成的.",
+          "amend": "{{claims}}: Markush group uses open transition ({{transitions}}) instead of 组成的 (审查指南 第二部分第十章 §9.3)."
         },
         "independentPreamble": {
           "pass": "All independent claims open with 「一种」.",
@@ -1010,8 +1010,8 @@
           "amendFormat": "{{count}} paragraph(s) not in 【NNNN】 format. Examples: {{examples}} (專利法施行細則 §17)."
         },
         "paragraphEnding": {
-          "amend": "{{count}} paragraph(s) missing ending punctuation: {{paragraphs}} (專利審查基準).",
-          "pass": "All specification paragraphs end with valid punctuation."
+          "pass": "All specification paragraphs end with valid punctuation.",
+          "verify": "{{count}} paragraph(s) missing ending punctuation: {{paragraphs}} (專利審查基準)."
         },
         "figureRefConsistency": {
           "verify": "Inconsistent figure references: {{figure_ref_inconsistency}}",
@@ -1071,8 +1071,8 @@
           "amendMultiSentence": "{{count}} multi-sentence claim(s): {{claims}}."
         },
         "refNumeralParens": {
-          "verify": "Reference numerals not in parentheses in {{count}} claim(s): {{claims}} (專利法施行細則 §19).",
-          "pass": "All reference numerals enclosed in parentheses."
+          "pass": "All reference numerals enclosed in parentheses.",
+          "amend": "Reference numerals not in parentheses in {{count}} claim(s): {{claims}} (專利法施行細則 §19)."
         },
         "subjectConsistency": {
           "verify": "Subject matter inconsistent with parent in {{claims}} ({{count}} total).",

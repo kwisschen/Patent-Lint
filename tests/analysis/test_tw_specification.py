@@ -281,13 +281,13 @@ class TestParagraphEnding:
         items = check_paragraph_ending(doc)
         assert items[0].status == "pass"
 
-    def test_missing_ending_amend(self):
+    def test_missing_ending_verify(self):
         doc = _make_doc(
             technical_field=["本發明涉及測試"],  # no ending punctuation
             prior_art=["習知技術。"],
         )
         items = check_paragraph_ending(doc)
-        assert items[0].status == "amend"
+        assert items[0].status == "verify"
         assert items[0].details_params["count"] == 1
         assert items[0].details_params["paragraphs"] == [1]
 
@@ -297,7 +297,7 @@ class TestParagraphEnding:
             prior_art=["段落三。"],
         )
         items = check_paragraph_ending(doc)
-        assert items[0].status == "amend"
+        assert items[0].status == "verify"
         assert items[0].details_params["count"] == 2
         assert items[0].details_params["paragraphs"] == [1, 2]
 
@@ -311,7 +311,7 @@ class TestParagraphEnding:
             body_paragraph_word_numbers=["0012", "0013", "0014"],
         )
         items = check_paragraph_ending(doc)
-        assert items[0].status == "amend"
+        assert items[0].status == "verify"
         assert items[0].details_params["paragraphs"] == ["0012", "0013"]
 
     def test_unnumbered_paragraph_inherits_parent_word_number(self):

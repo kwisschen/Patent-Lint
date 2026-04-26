@@ -639,7 +639,13 @@ def check_single_sentence(doc: TwPatentDocument) -> list[CheckItem]:
 
 
 def check_ref_numeral_parens(doc: TwPatentDocument) -> list[CheckItem]:
-    """Find reference numerals in claims not enclosed in parentheses."""
+    """Find reference numerals in claims not enclosed in parentheses (FIX).
+
+    施行細則 §19 第3款 mandates parens when ref numerals appear:
+    「該符號應附加於對應之技術特徵後，並置於括號內」. Drafter chose
+    to use numerals → parens are statutorily required; the check
+    fires only when the violation exists.
+    """
     bad_claim_ids: list[int] = []
     for claim in doc.claims:
         if _BARE_NUMERAL.search(claim.text):
@@ -648,9 +654,9 @@ def check_ref_numeral_parens(doc: TwPatentDocument) -> list[CheckItem]:
     if bad_claim_ids:
         claims_str = ", ".join(str(i) for i in bad_claim_ids)
         return [CheckItem(
-            status="verify",
+            status="amend",
             message=f"{len(bad_claim_ids)} claim(s) with reference numerals not in parentheses (claims: {claims_str}).",
-            message_key="check.tw.claims.refNumeralParens.verify",
+            message_key="check.tw.claims.refNumeralParens.amend",
             details=f"{len(bad_claim_ids)} claims",
             details_key="details.tw.refNumeralParens",
             details_params={"count": len(bad_claim_ids), "claims": bad_claim_ids},
