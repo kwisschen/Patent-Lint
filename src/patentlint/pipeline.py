@@ -153,9 +153,9 @@ def _run_cn_pipeline(
         claim_count = len(claim_ids)
         claims_checks = list(claims_checks) + [
             CheckItem(
-                status="verify",
+                status="amend",
                 message="Possible missing antecedent basis found.",
-                message_key="check.cn.claims.antecedentBasis.verify",
+                message_key="check.cn.claims.antecedentBasis.amend",
                 details=f"{issue_count} term(s) may lack antecedent basis across {claim_count} claim(s).",
                 details_key="details.cn.antecedentBasisTerms",
                 details_params={
@@ -199,9 +199,9 @@ def _run_cn_pipeline(
         claim_count = len(claim_ids)
         claims_checks = list(claims_checks) + [
             CheckItem(
-                status="verify",
+                status="amend",
                 message="Possible claim terms not supported by the specification.",
-                message_key="check.cn.claims.specSupport.verify",
+                message_key="check.cn.claims.specSupport.amend",
                 details=f"{issue_count} term(s) may lack specification support across {claim_count} claim(s).",
                 details_key="details.cn.specSupportTerms",
                 details_params={
@@ -558,9 +558,9 @@ def _run_tw_pipeline(
         claim_count = len(claim_ids)
         claims_checks = list(claims_checks) + [
             CheckItem(
-                status="verify",
+                status="amend",
                 message="Possible missing antecedent basis found.",
-                message_key="check.tw.claims.antecedentBasis.verify",
+                message_key="check.tw.claims.antecedentBasis.amend",
                 details=f"{issue_count} term(s) may lack antecedent basis across {claim_count} claim(s).",
                 details_key="details.tw.antecedentBasisTerms",
                 details_params={
@@ -586,9 +586,9 @@ def _run_tw_pipeline(
         claim_count = len(claim_ids)
         claims_checks = list(claims_checks) + [
             CheckItem(
-                status="verify",
+                status="amend",
                 message="Possible claim terms not supported by the specification.",
-                message_key="check.tw.claims.specSupport.verify",
+                message_key="check.tw.claims.specSupport.amend",
                 details=f"{issue_count} term(s) may lack specification support across {claim_count} claim(s).",
                 details_key="details.tw.specSupportTerms",
                 details_params={

@@ -394,13 +394,13 @@ class TestFigureRefConsistency:
         items = check_figure_ref_consistency(doc)
         assert items[0].status == "pass"
 
-    def test_mismatch_verify(self):
+    def test_mismatch_amend(self):
         doc = _make_doc(
             drawings_description=["圖1為示意圖。", "圖2為截面圖。"],
             embodiment=["如圖1所示。"],
         )
         items = check_figure_ref_consistency(doc)
-        assert items[0].status == "verify"
+        assert items[0].status == "amend"
         assert "figure_ref_inconsistency" in items[0].details_params
 
     def test_di_n_tu_format(self):
@@ -440,7 +440,7 @@ class TestFigureRefConsistency:
             embodiment=["如圖1所示...進一步參閱圖12(A)及圖12(B)。"],
         )
         items = check_figure_ref_consistency(doc)
-        assert items[0].status == "verify"
+        assert items[0].status == "amend"
         inconsist = items[0].details_params["figure_ref_inconsistency"]
         assert inconsist["only_embodiment"] == [12]
 
@@ -696,7 +696,7 @@ class TestFigureRefConsistency110P000368Regression:
             embodiment=["如圖1所示，參見圖2。"],
         )
         items = check_figure_ref_consistency(doc)
-        assert items[0].status == "verify"
+        assert items[0].status == "amend"
         payload = items[0].details_params["figure_ref_inconsistency"]
         assert 3 in payload["only_drawings"]
 

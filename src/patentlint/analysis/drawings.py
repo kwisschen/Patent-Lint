@@ -209,7 +209,7 @@ def check_figure_cross_references(
     if orphaned_brief:
         fig_list = ", ".join(orphaned_brief)
         results.append(CheckItem(
-            status="verify",
+            status="amend",
             message=f"FIG(s). {fig_list} described in Brief Description of Drawings but not referenced in Detailed Description.",
             message_key="checks.figure_xref_orphaned_brief",
             details=fig_list,
@@ -225,7 +225,7 @@ def check_figure_cross_references(
     if orphaned_detailed:
         fig_list = ", ".join(orphaned_detailed)
         results.append(CheckItem(
-            status="verify",
+            status="amend",
             message=f"FIG(s). {fig_list} referenced in Detailed Description but not described in Brief Description of Drawings.",
             message_key="checks.figure_xref_orphaned_detailed",
             details=fig_list,
