@@ -6,10 +6,11 @@ import { AlertCircle, Search, CheckCircle, ChevronDown, Flag } from 'lucide-reac
 import { getCitation } from './CheckItem'
 import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
 import { formatDetails } from '../lib/detailsFormatter'
-import { composeFeedback } from '../lib/feedback'
+import { composeFeedback, sendReport } from '../lib/feedback'
 import { useFeedback } from './FeedbackPicker'
 import { Button } from './ui/button'
 import FlaggedTermList from './FlaggedTermList'
+import ReportModal from './ReportModal'
 
 const GROUP_CONFIG = [
   { status: 'amend', titleKey: 'triage.amend', emptyKey: 'triage.amendEmpty', Icon: AlertCircle },
@@ -19,6 +20,7 @@ const GROUP_CONFIG = [
 
 function TriageItem({ check, t, i18n, compact, jurisdiction }) {
   const { sendFeedback } = useFeedback()
+  const [reportModalOpen, setReportModalOpen] = useState(false)
   const msg = check.message_key && i18n.exists(check.message_key) ? formatDetails(check.message_key, check.details_params, t) : check.message
   const citation = getCitation(check.message_key) || check.reference || null
   const details = check.details_key && i18n.exists(check.details_key) ? formatDetails(check.details_key, check.details_params, t) : check.details
@@ -26,7 +28,22 @@ function TriageItem({ check, t, i18n, compact, jurisdiction }) {
   // went wrong.
   const showReport = check.status !== 'pass'
 
+  // Default flow: open the anonymous-send modal. Modal previews the
+  // exact wire payload, fires sendReport on confirm. Mailto remains
+  // accessible as a tertiary fallback inside the modal.
   const handleReport = () => {
+    setReportModalOpen(true)
+  }
+
+  const handleAnonymousConfirm = () =>
+    sendReport({
+      checkKey: check.message_key || 'generic',
+      jurisdiction: jurisdiction || 'unknown',
+      locale: i18n.language,
+      diagnostics: check.diagnostics || {},
+    })
+
+  const handleMailtoFallback = () => {
     sendFeedback(
       composeFeedback(
         {
@@ -70,17 +87,29 @@ function TriageItem({ check, t, i18n, compact, jurisdiction }) {
         )}
       </div>
       {showReport && (
-        <Button
-          variant="ghost"
-          size="xs"
-          onClick={handleReport}
-          title={t('feedback.reportProblem')}
-          aria-label={t('feedback.reportProblem')}
-          className="shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
-        >
-          <Flag />
-          <span className="hidden sm:inline">{t('feedback.report')}</span>
-        </Button>
+        <>
+          <Button
+            variant="ghost"
+            size="xs"
+            onClick={handleReport}
+            title={t('feedback.reportProblem')}
+            aria-label={t('feedback.reportProblem')}
+            className="shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
+          >
+            <Flag />
+            <span className="hidden sm:inline">{t('feedback.report')}</span>
+          </Button>
+          <ReportModal
+            open={reportModalOpen}
+            onOpenChange={setReportModalOpen}
+            checkKey={check.message_key || 'generic'}
+            jurisdiction={jurisdiction || 'unknown'}
+            locale={i18n.language}
+            diagnostics={check.diagnostics || {}}
+            onConfirm={handleAnonymousConfirm}
+            onMailtoFallback={handleMailtoFallback}
+          />
+        </>
       )}
     </div>
   )
