@@ -1510,9 +1510,7 @@
       "trustTitle": "Kein KI-Urteil",
       "trustIntro": "Jede Eingabe in Ihre Bewertung ist ein KORRIGIEREN/PRÜFEN/OK-Status, gesetzt von einem deterministischen Prüfer. Jede Ausgabe ist eine reine arithmetische Aggregation. Dieselbe Schrift erhält stets dieselbe Bewertung. PatentLint lädt Ihre Schrift nirgendwo hoch — die Prüfung läuft vollständig in Ihrem Browser.",
       "disclaimerTitle": "Was eine A-Bewertung bedeutet — und was nicht",
-      "disclaimerIntro": "Eine A-Bewertung bedeutet, dass der Prüfkatalog von PatentLint keine Beanstandungen gefunden hat. Sie bedeutet nicht, dass Ihre Schrift einreichungsbereit ist. Eine inhaltliche Prüfung durch eine zugelassene Vertretung wird weiterhin empfohlen.",
-      "letterMappingTitle": "Notenstufen-Zuordnung",
-      "letterMappingIntro": "Standard-US-Skala (4.0-GPA). Das Bewertungsraster berechnet den numerischen Wert (0–100); der Buchstabe ist die lesbare Kennzeichnung."
+      "disclaimerIntro": "Eine A-Bewertung bedeutet, dass der Prüfkatalog von PatentLint keine Beanstandungen gefunden hat. Sie bedeutet nicht, dass Ihre Schrift einreichungsbereit ist. Eine inhaltliche Prüfung durch eine zugelassene Vertretung wird weiterhin empfohlen."
     },
     "howWeScore": "Bewertungsmaßstab →"
   }
