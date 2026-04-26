@@ -43,7 +43,7 @@ export default function SectionPanel({
       >
         <span className="font-semibold">{title}</span>
         <div className="flex items-center gap-2">
-          {grade !== null && applicable && (
+          {applicable && grade !== null && (
             <span
               className="rounded-md px-2 py-0.5 text-xs font-bold leading-none"
               style={{
@@ -56,7 +56,7 @@ export default function SectionPanel({
               {grade}
             </span>
           )}
-          {grade !== null && !applicable && (
+          {!applicable && (
             <span
               className="rounded-md px-2 py-0.5 text-[10px] font-medium leading-none text-muted-foreground"
               style={{ backgroundColor: 'var(--muted)' }}
