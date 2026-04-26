@@ -1468,10 +1468,10 @@
       "line": "Keine KI. Gleiche Schrift, gleiche Bewertung. Jedes Mal."
     },
     "cap": {
-      "oneFix": "1 FEHLER begrenzt die Bewertung auf B-",
-      "twoFix": "2 FEHLER begrenzen auf C+",
-      "threeFix": "3 FEHLER begrenzen auf C",
-      "fourFix": "4 FEHLER begrenzen auf D",
+      "oneFix": "1 FEHLER begrenzt die Bewertung auf B+",
+      "twoFix": "2 FEHLER begrenzen auf B",
+      "threeFix": "3 FEHLER begrenzen auf B-",
+      "fourFix": "4 FEHLER begrenzen auf C+",
       "fiveFix": "{{count}} FEHLER begrenzen auf F"
     },
     "completenessGate": {
@@ -1501,7 +1501,7 @@
       "weightsTitle": "Abschnittsgewichtung",
       "weightsIntro": "Jede Prüfung fließt in einen dieser fünf Abschnitte ein. Die Gewichtung ist für US-, CN- und TW-Anmeldungen identisch.",
       "gateTitle": "Wie die FEHLER-Sperre wirkt",
-      "gateIntro": "Gesetzliche Mängel führen die Bewertung an. Bereits ein FEHLER begrenzt die Note auf B-, unabhängig davon, wie sorgfältig der Rest der Schrift verfasst ist. Das entspricht dem realen Triage-Ablauf — zuerst auf blockierende Mängel prüfen, dann auf die Sorgfalt der Ausarbeitung.",
+      "gateIntro": "Gesetzliche Mängel führen die Bewertung an. Bereits ein FEHLER begrenzt die Note auf B+, unabhängig davon, wie sorgfältig der Rest der Schrift verfasst ist. Das entspricht dem realen Triage-Ablauf — zuerst auf blockierende Mängel prüfen, dann auf die Sorgfalt der Ausarbeitung.",
       "gateRule": "{{count}} FEHLER → höchstens {{letter}}",
       "conditionalTitle": "Wenn Abschnitte nicht zutreffen",
       "conditionalIntro": "Der Zeichnungs-Abschnitt verhält sich in zwei Szenarien unterschiedlich. Erstens — wenn keine Zeichnungen erkannt werden (Chemie, Verfahren, Geschäftsmodelle), wird der Abschnitt als „n. z.\" markiert und seine 10 % Gewichtung anteilig auf die übrigen vier Abschnitte verteilt; rechtmäßig zeichnungsfreie Schriften werden nicht bestraft. Zweitens — wenn Zeichnungen vorhanden sind (Bezugnahmen wie „FIG.\" im Beschreibungstext) und der Abschnitt „Kurze Beschreibung der Zeichnungen\" fehlt, fließt die entsprechende Beanstandung in den Zeichnungs-Abschnitt ein, damit die Abschnittsanzeige die tatsächliche Lücke widerspiegelt.",

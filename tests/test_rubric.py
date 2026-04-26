@@ -69,13 +69,16 @@ class TestPureHelpers:
         assert cap == 100
         assert reason is None
 
-    def test_gate_one_fix_caps_b_minus(self):
+    def test_gate_one_fix_caps_b_plus(self):
+        # Gradient gate: 1 FIX caps at B+ (not B-) — one letter rank per FIX
+        # rather than catastrophic-on-the-first-FIX.
         cap, reason = gate_cap_for_fix_count(1)
-        assert cap == 82
-        assert "B-" in reason
+        assert cap == 92
+        assert "B+" in reason
 
     def test_gate_progressive_caps(self):
-        for fix_n, expected_max in [(2, 77), (3, 72), (4, 67), (5, 59), (10, 59)]:
+        # 2: B (87), 3: B- (82), 4: C+ (77), 5: C (72), 6: D (67), 7+: F (59)
+        for fix_n, expected_max in [(2, 87), (3, 82), (4, 77), (5, 72), (6, 67), (7, 59), (10, 59)]:
             cap, _ = gate_cap_for_fix_count(fix_n)
             assert cap == expected_max, f"fix_count={fix_n} should cap at {expected_max}"
 
@@ -159,7 +162,7 @@ class TestComputeRubricGrade:
         assert grade.cap_reason is None
         assert grade.is_complete
 
-    def test_one_fix_caps_at_b_minus(self):
+    def test_one_fix_caps_at_b_plus(self):
         checks = [_check("amend", "check.cn.spec.requiredSections.amend")]
         grade = compute_rubric_grade(
             jurisdiction=Jurisdiction.CN,
@@ -167,12 +170,16 @@ class TestComputeRubricGrade:
             has_drawings=True,
         )
         # Spec section: 100 - 15 = 85; weighted = 85 * 0.20 = 17 contribution.
-        # Other sections: 100 each. Total weighted ≈ 97. Gate caps at 82 (B-).
-        assert grade.score == 82
-        assert grade.letter == "B-"
-        assert "B-" in grade.cap_reason
+        # Other sections: 100 each. Total weighted ≈ 97. Gate caps at 92 (B+).
+        assert grade.score == 92
+        assert grade.letter == "B+"
+        assert "B+" in grade.cap_reason
 
-    def test_three_fix_caps_at_c(self):
+    def test_three_fix_lands_in_b_minus_range(self):
+        # 3 FIXes all in Claims (45% weight): section score 55, weighted
+        # contribution 24.75 (vs 45.0 clean), overall un-capped 79.75 → 79.
+        # Gate cap for 3 FIX is 82, not binding here. Letter is B-.
+        # The point of this test is verifying the gradient: 3 FIX → B- range.
         checks = [
             _check("amend", "check.claims.sequential.amend"),
             _check("amend", "check.claims.selfDependent.amend"),
@@ -183,9 +190,8 @@ class TestComputeRubricGrade:
             all_checks=checks,
             has_drawings=True,
         )
-        # Gate at 3 FIX caps at 72 (C).
-        assert grade.score == 72
-        assert grade.letter == "C"
+        assert grade.letter == "B-"
+        assert 78 <= grade.score <= 82
 
     def test_review_only_polishes_a_minus(self):
         # 5 REVIEW × 3pts = 15pts deducted across various sections; clean of FIX.
@@ -262,9 +268,9 @@ class TestComputeRubricGrade:
         assert grade.rubric_version == RUBRIC_VERSION
 
     def test_gate_only_surfaced_when_actually_capped(self):
-        # 1 FIX in claims: section drops to 85, weighted contribution still
-        # high; without gate score would be ~93. Gate caps at 82 — actually
-        # binding, so cap_reason should surface.
+        # 1 FIX in claims: section drops to 85, weighted contribution
+        # ~93 un-capped. Gate caps at 92 (B+) — actually binding, so
+        # cap_reason should surface.
         checks = [_check("amend", "check.claims.selfDependent.amend")]
         grade = compute_rubric_grade(
             jurisdiction=Jurisdiction.US,
@@ -272,7 +278,7 @@ class TestComputeRubricGrade:
             has_drawings=True,
         )
         assert grade.cap_reason is not None
-        assert grade.score == 82
+        assert grade.score == 92
 
 
 # ── Impact list ──────────────────────────────────────────────────────────
