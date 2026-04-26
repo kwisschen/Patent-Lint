@@ -135,14 +135,18 @@ def check_required_sections(doc: TwPatentDocument) -> list[CheckItem]:
     if not _section_has_content(doc.embodiment):
         missing.append("實施方式")
 
-    # Conditional: when drawings exist, require 圖式簡單說明 and 符號說明
-    if _section_has_content(doc.drawings_description):
-        if not _section_has_content(doc.symbol_table):
-            missing.append("符號說明")
-    elif _section_has_content(doc.symbol_table):
-        # symbol_table exists but no drawings_description — check 圖式簡單說明
+    # Conditional: 圖式簡單說明 + 符號說明 are required when drawings exist
+    # (per 施行細則 §17 第1款 第5項 + 第7項). Use ``figure_refs`` (parsed
+    # from spec body) as the canonical signal that figures exist —
+    # mirrors CN's approach at cn_specification.py and is robust to
+    # the case where a user removes both 圖式簡單說明 AND 符號說明
+    # while keeping figure references in 實施方式.
+    drawings_exist = bool(doc.figure_refs) or _section_has_content(doc.drawings_description)
+    if drawings_exist:
         if not _section_has_content(doc.drawings_description):
             missing.append("圖式簡單說明")
+        if not _section_has_content(doc.symbol_table):
+            missing.append("符號說明")
 
     # Top-level: 申請專利範圍 (required per 專利法 §25 第1項, format per §18).
     # Strict: the claims HEADING must be present. Future parser fallbacks
