@@ -156,8 +156,10 @@ export default function TriagePanel({ data }) {
           Icon={Icon}
           items={byStatus[status]}
           defaultOpen={
-            status === 'amend' ||
-            (status === 'verify' && byStatus.amend.length === 0)
+            // FIX + REVIEW open by default — both feed the rubric grade,
+            // so they're load-bearing for the user's decision-making.
+            // PASS stays collapsed (informational only).
+            status === 'amend' || status === 'verify'
           }
           t={t}
           i18n={i18n}

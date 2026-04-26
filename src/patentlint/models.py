@@ -325,6 +325,11 @@ class ReportData(BaseModel):
     has_tracked_changes: bool = False
     has_scanned_fallback: bool = False
 
+    # Rubric grade (forwarded from AnalysisResult). Allows the PDF
+    # template + frontend report to read the grade from a single
+    # canonical surface.
+    rubric_grade: RubricGrade | None = None
+
     @property
     def all_checks(self) -> list[CheckItem]:
         """Return a flat list of every CheckItem across all sections in
@@ -338,6 +343,68 @@ class ReportData(BaseModel):
             + list(self.abstract_checks)
             + list(self.drawings_checks)
         )
+
+
+class RubricSection(str, Enum):
+    """The 5 weighted rubric sections (jurisdiction-uniform).
+
+    See ``patentlint.rubric`` for the scoring logic + section weights.
+    """
+
+    SPECIFICATION = "specification"
+    DRAWINGS = "drawings"
+    CLAIMS = "claims"
+    ANTECEDENT_SPEC_SUPPORT = "antecedent_spec_support"
+    ABSTRACT = "abstract"
+
+
+class SectionGrade(BaseModel):
+    """Per-section grading result."""
+
+    section: RubricSection
+    weight: int  # original section weight (pre-renormalization)
+    effective_weight: float  # post-renormalization (when N/A sections drop out)
+    score: int  # 0-100
+    fix_count: int = 0
+    review_count: int = 0
+    pass_count: int = 0
+    applicable: bool = True  # False = N/A (e.g., no drawings)
+
+
+class CompletenessGap(BaseModel):
+    """Reason a draft fails the completeness gate (no grade emitted)."""
+
+    missing_sections: list[str] = Field(default_factory=list)
+
+
+class ImpactItem(BaseModel):
+    """An unaddressed finding ranked by score-impact-if-resolved."""
+
+    message_key: str
+    section: RubricSection
+    status: str  # "amend" or "verify"
+    delta: int  # points the overall score would rise
+
+
+class RubricGrade(BaseModel):
+    """Top-level scoring result for an analysis run.
+
+    When ``completeness_gap`` is set, the draft is incomplete and
+    ``score`` / ``letter`` are placeholders — the UI surfaces a
+    "draft incomplete" state instead of the grade.
+    """
+
+    rubric_version: str = "1.0"
+    score: int = 0  # 0-100 weighted overall (post-gate)
+    letter: str = "F"  # A / A- / B+ / B / B- / C+ / C / D / F (or "—" when ungraded)
+    cap_reason: str | None = None  # e.g., "1 FIX caps grade at B-"
+    section_grades: list[SectionGrade] = Field(default_factory=list)
+    impact_list: list[ImpactItem] = Field(default_factory=list)
+    completeness_gap: CompletenessGap | None = None
+
+    @property
+    def is_complete(self) -> bool:
+        return self.completeness_gap is None
 
 
 class AnalysisResult(BaseModel):
@@ -431,6 +498,10 @@ class AnalysisResult(BaseModel):
     abstract_merit_language_formatted: str = ""
     abstract_merit_language_items: list[str] = Field(default_factory=list)
 
+    # Rubric grade (populated by pipelines via patentlint.rubric.compute_rubric_grade
+    # after all checks emit). None until the grading pass runs.
+    rubric_grade: RubricGrade | None = None
+
     @property
     def total_claims(self) -> int:
         return self.independent_claims_count + self.dependent_claims_count
@@ -505,6 +576,7 @@ class AnalysisResult(BaseModel):
             patent_detection_reason=self.patent_detection_reason,
             has_tracked_changes=self.has_tracked_changes,
             has_scanned_fallback=self.has_scanned_fallback,
+            rubric_grade=self.rubric_grade,
         )
 
     def _to_tw_report_data(self) -> ReportData:
@@ -534,6 +606,7 @@ class AnalysisResult(BaseModel):
             likely_patent=self.likely_patent,
             patent_detection_reason=self.patent_detection_reason,
             has_tracked_changes=self.has_tracked_changes,
+            rubric_grade=self.rubric_grade,
         )
 
     def _to_us_report_data(self) -> ReportData:
@@ -879,9 +952,9 @@ class AnalysisResult(BaseModel):
             issue_count = len(self.antecedent_basis_issues)
             claim_count = len(set(item["claim_id"] for item in self.antecedent_basis_issues))
             claims_checks.append(CheckItem(
-                status="verify",
+                status="amend",
                 message="Possible missing antecedent basis found.",
-                message_key="check.claims.antecedentBasis.verify",
+                message_key="check.claims.antecedentBasis.amend",
                 details=f"{issue_count} issues across {claim_count} claims",
                 details_key="details.antecedentBasisTerms",
                 details_params={"count": str(issue_count), "claims": str(claim_count)},
@@ -900,7 +973,7 @@ class AnalysisResult(BaseModel):
         if self.unsupported_terms:
             unique_phrases = sorted(set(ut.phrase for ut in self.unsupported_terms))
             claims_checks.append(CheckItem(
-                status="verify",
+                status="amend",
                 message="Claim terms not found in specification.",
                 message_key="checks.spec_support_unsupported_terms",
                 details=f"Terms: {', '.join(unique_phrases[:10])}",
@@ -1162,4 +1235,5 @@ class AnalysisResult(BaseModel):
             likely_patent=self.likely_patent,
             patent_detection_reason=self.patent_detection_reason,
             has_tracked_changes=self.has_tracked_changes,
+            rubric_grade=self.rubric_grade,
         )
