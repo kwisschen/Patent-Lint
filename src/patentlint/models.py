@@ -340,6 +340,68 @@ class ReportData(BaseModel):
         )
 
 
+class RubricSection(str, Enum):
+    """The 5 weighted rubric sections (jurisdiction-uniform).
+
+    See ``patentlint.rubric`` for the scoring logic + section weights.
+    """
+
+    SPECIFICATION = "specification"
+    DRAWINGS = "drawings"
+    CLAIMS = "claims"
+    ANTECEDENT_SPEC_SUPPORT = "antecedent_spec_support"
+    ABSTRACT = "abstract"
+
+
+class SectionGrade(BaseModel):
+    """Per-section grading result."""
+
+    section: RubricSection
+    weight: int  # original section weight (pre-renormalization)
+    effective_weight: float  # post-renormalization (when N/A sections drop out)
+    score: int  # 0-100
+    fix_count: int = 0
+    review_count: int = 0
+    pass_count: int = 0
+    applicable: bool = True  # False = N/A (e.g., no drawings)
+
+
+class CompletenessGap(BaseModel):
+    """Reason a draft fails the completeness gate (no grade emitted)."""
+
+    missing_sections: list[str] = Field(default_factory=list)
+
+
+class ImpactItem(BaseModel):
+    """An unaddressed finding ranked by score-impact-if-resolved."""
+
+    message_key: str
+    section: RubricSection
+    status: str  # "amend" or "verify"
+    delta: int  # points the overall score would rise
+
+
+class RubricGrade(BaseModel):
+    """Top-level scoring result for an analysis run.
+
+    When ``completeness_gap`` is set, the draft is incomplete and
+    ``score`` / ``letter`` are placeholders — the UI surfaces a
+    "draft incomplete" state instead of the grade.
+    """
+
+    rubric_version: str = "1.0"
+    score: int = 0  # 0-100 weighted overall (post-gate)
+    letter: str = "F"  # A / A- / B+ / B / B- / C+ / C / D / F (or "—" when ungraded)
+    cap_reason: str | None = None  # e.g., "1 FIX caps grade at B-"
+    section_grades: list[SectionGrade] = Field(default_factory=list)
+    impact_list: list[ImpactItem] = Field(default_factory=list)
+    completeness_gap: CompletenessGap | None = None
+
+    @property
+    def is_complete(self) -> bool:
+        return self.completeness_gap is None
+
+
 class AnalysisResult(BaseModel):
     """Aggregates all analysis findings into a single structured result.
 
@@ -430,6 +492,10 @@ class AnalysisResult(BaseModel):
     abstract_legal_phraseology_items: list[str] = Field(default_factory=list)
     abstract_merit_language_formatted: str = ""
     abstract_merit_language_items: list[str] = Field(default_factory=list)
+
+    # Rubric grade (populated by pipelines via patentlint.rubric.compute_rubric_grade
+    # after all checks emit). None until the grading pass runs.
+    rubric_grade: RubricGrade | None = None
 
     @property
     def total_claims(self) -> int:
