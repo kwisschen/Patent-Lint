@@ -2,6 +2,7 @@
 // Copyright (c) 2025 Christopher Chen
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import { useCountUp } from '../hooks/useCountUp'
 
 // Map a letter grade to one of the existing status CSS-variable families
@@ -134,12 +135,16 @@ export default function RubricHero({ data, animate = false }) {
       {/* Trust line — preserves the No-AI badge invariant. */}
       <p className="text-xs text-muted-foreground">{t('rubric.trust.line')}</p>
 
-      {/* Cap reason (only when the gate actually pulled the score down). */}
-      {grade?.cap_reason && (
-        <p className="text-xs" style={{ color: 'var(--amend-text)' }}>
-          {grade.cap_reason}
-        </p>
-      )}
+      {/* Discoverable link to the rubric exposition page. Replaces the
+          raw cap-reason text — the explanation lives at /rubric where
+          the gate rules are documented in full, instead of crowding
+          the hero with internal mechanics. */}
+      <Link
+        to="/rubric"
+        className="text-xs text-muted-foreground hover:text-foreground transition-colors underline-offset-2 hover:underline"
+      >
+        {t('rubric.howWeScore')}
+      </Link>
 
       {/* Status legend — preserves visibility of pass/review/fix counts. */}
       {segments.length > 0 && (
