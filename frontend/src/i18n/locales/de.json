@@ -184,6 +184,16 @@
       "fieldLocale": "Sprache",
       "fieldBuild": "Build",
       "diagnosticHeader": "Diagnose-Spur (strukturelle Metadaten, kein Anspruchstext — siehe Datenschutz §6):"
+    },
+    "reportModal": {
+      "title": "Anonym melden?",
+      "body": "Eine kleine strukturierte Datenmenge geht über HTTPS an PatentLint, damit wir diese Prüfung untersuchen können. Keine Ansprüche, keine Entwurfsinhalte, keine E-Mail-Adresse, keine IP-Protokollierung. Jedes Feld ist unten sichtbar — nur Zahlen, Codepoints und Kategoriebezeichnungen.",
+      "previewHeading": "Felder, die gesendet werden:",
+      "send": "Anonym senden",
+      "cancel": "Abbrechen",
+      "emailFallback": "Lieber per E-Mail? Per mailto senden",
+      "toastSuccess": "Danke — Meldung empfangen.",
+      "toastFailure": "Senden gerade nicht möglich — bitte per E-Mail versuchen."
     }
   },
   "cta": {
@@ -1369,6 +1379,10 @@
       "emailLabel": "E-Mail:",
       "githubLabel": "GitHub:"
     },
+    "s12": {
+      "title": "Anonyme Fehlermeldungen",
+      "p1": "Wenn Sie bei einer Prüfung auf „Anonym senden“ klicken, gewähren Sie PatentLint die Erlaubnis, die strukturellen Daten zur Verbesserung des Produkts zu nutzen. Sie behalten alle Rechte an Ihrer Patentanmeldung, die auf Ihrem Gerät verbleibt. Da die Meldungen anonym sind, können wir Ihnen möglicherweise nicht direkt antworten — wir lesen jedoch jede Meldung."
+    },
     "copyright": "Copyright © 2025 Christopher Chen. Alle Rechte vorbehalten.",
     "crossLinks": "Siehe auch: <1>Datenschutzerklärung</1> · <3>Sicherheit</3>"
   },
@@ -1419,7 +1433,8 @@
       "p1": "Wenn Sie auf einen Feedback-Link klicken, öffnet Ihr Browser Ihr eigenes E-Mail-Programm (oder ein Webmail-Fenster), adressiert an kwisschen@gmail.com. Wir hosten kein Formular. Wir erhalten nur, was Sie selbst verfassen und senden.",
       "p2": "Wir verwenden Feedback zur Fehlerbehebung und zur Antwort an Sie. Wir geben Feedback nicht an Dritte weiter und nutzen es zu keinem anderen Zweck als zur Verbesserung von PatentLint und zur Beantwortung Ihrer Nachricht.",
       "p3": "Fehlerberichte, die über „Fehler melden“-Links gesendet werden, können einen kompakten Block „Diagnose-Spur“ enthalten — strukturelle Metadaten dazu, welcher Walker-Codepfad den Befund erzeugt hat (Ergebnisse von Regex-Matches, Zeichenzählungen, Tags zum Extraktionspfad). Die Spur enthält keinen Anspruchstext, keine Substantive, keine Entwurfsinhalte; sie ist so konzipiert, dass wir Walker-Fehler diagnostizieren können, ohne Ihren Entwurf zu sehen. Sie können den gesamten E-Mail-Text vor dem Senden einsehen und den Spur-Block entfernen, wenn Sie möchten.",
-      "p4": "Möchten Sie Feedback pseudonym senden, nutzen Sie einen E-Mail-Alias-Dienst (z. B. Apple Hide My Email, Gmail-Aliase, Firefox Relay, ProtonMail-Aliase). Wir erhalten die Alias-Adresse; Ihre echte Adresse bleibt bei Ihrem Anbieter. Wir korrelieren Alias-Adressen nicht mit anderen Daten."
+      "p4": "Möchten Sie Feedback pseudonym senden, nutzen Sie einen E-Mail-Alias-Dienst (z. B. Apple Hide My Email, Gmail-Aliase, Firefox Relay, ProtonMail-Aliase). Wir erhalten die Alias-Adresse; Ihre echte Adresse bleibt bei Ihrem Anbieter. Wir korrelieren Alias-Adressen nicht mit anderen Daten.",
+      "p5": "Bei einigen Triage-Einträgen erscheint zusätzlich eine Schaltfläche „Anonym senden“, die die strukturierte Diagnose-Datenmenge (Zählwerte, Codepoints, Kategoriebezeichnungen — niemals Anspruchstext oder Entwurfsinhalte) an einen privaten GitHub-Issue-Tracker sendet, den nur der Maintainer einsehen kann. Vor dem Senden zeigt der Dialog den genauen Inhalt; nichts wird verborgen, keine E-Mail-Adresse und keine IP wird erfasst, und die Übermittlung kann nicht mit Ihnen in Verbindung gebracht werden."
     },
     "s7": {
       "title": "Drittanbieter-Dienste",
