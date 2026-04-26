@@ -661,7 +661,7 @@
           "missingFromTable": "In Ansprüchen verwendete, in 符號說明 nicht definierte Bezugszeichen: {{numerals_with_locations}}"
         }
       },
-      "antecedentBasis": "該/所述/前述 + Substantiv sollte im selben Anspruch oder in einem Elternanspruch eine passende Einführung mit 一 + Substantiv haben. Gekennzeichnete Begriffe müssen ggf. geprüft werden. Die regex-basierte Erkennung ist approximativ.",
+      "antecedentBasis": "該/所述/前述 + Substantiv sollte im selben Anspruch oder in einem Elternanspruch eine passende vorherige Einführung haben. Die Form 一 + Substantiv ist die kanonische Konvention; Alternativen (一個 / 至少一 / 複數個 / 多個 + Substantiv) werden ebenfalls akzeptiert. Die regex-basierte Erkennung ist approximativ.",
       "abstractCharCount": "Gemäß 專利法施行細則 §21 sollte die Zusammenfassung höchstens 250 Zeichen umfassen. TIPO weist nicht zwingend allein aufgrund der Länge zurück, prüfen Sie dennoch auf Prägnanz.",
       "abstractTitleMatch": "Gemäß 專利審查基準 sollte die Zusammenfassung auf das 發明名稱/新型名稱 Bezug nehmen. Prüfen Sie, ob die Zusammenfassung den Titel widerspiegelt. Titel: {{detail}}.",
       "commercialLanguage": "Gemäß 專利法施行細則 §21 darf die Zusammenfassung keine Werbesprache (商業性宣傳用語) enthalten. Gefunden: {{terms}}.",
@@ -945,7 +945,7 @@
           "pass": "Alle unabhängigen Vorrichtungs-/System-Ansprüche beschreiben Komponentenverbindungen."
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 该/所述-Bezug ohne vorheriges 一 (审查指南).",
+          "verify": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 该/所述-Bezug ohne vorherige Einführung (z. B. 一 / 至少一 / 多个 + Substantiv) (审查指南).",
           "pass": "Alle Anspruchsbegriffe haben Rückbezug (审查指南)."
         },
         "specSupport": {
@@ -1116,7 +1116,7 @@
           "pass": "Alle unabhängigen Vorrichtungs-/System-Ansprüche beschreiben Komponentenverbindungen."
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 該/所述/前述-Bezug ohne vorheriges 一.",
+          "verify": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 該/所述/前述-Bezug ohne vorherige Einführung (z. B. 一 / 至少一 / 複數個 + Substantiv).",
           "pass": "Alle Anspruchsbegriffe haben Rückbezug."
         },
         "specSupport": {
