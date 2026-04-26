@@ -325,6 +325,11 @@ class ReportData(BaseModel):
     has_tracked_changes: bool = False
     has_scanned_fallback: bool = False
 
+    # Rubric grade (forwarded from AnalysisResult). Allows the PDF
+    # template + frontend report to read the grade from a single
+    # canonical surface.
+    rubric_grade: RubricGrade | None = None
+
     @property
     def all_checks(self) -> list[CheckItem]:
         """Return a flat list of every CheckItem across all sections in
@@ -571,6 +576,7 @@ class AnalysisResult(BaseModel):
             patent_detection_reason=self.patent_detection_reason,
             has_tracked_changes=self.has_tracked_changes,
             has_scanned_fallback=self.has_scanned_fallback,
+            rubric_grade=self.rubric_grade,
         )
 
     def _to_tw_report_data(self) -> ReportData:
@@ -600,6 +606,7 @@ class AnalysisResult(BaseModel):
             likely_patent=self.likely_patent,
             patent_detection_reason=self.patent_detection_reason,
             has_tracked_changes=self.has_tracked_changes,
+            rubric_grade=self.rubric_grade,
         )
 
     def _to_us_report_data(self) -> ReportData:
@@ -1228,4 +1235,5 @@ class AnalysisResult(BaseModel):
             likely_patent=self.likely_patent,
             patent_detection_reason=self.patent_detection_reason,
             has_tracked_changes=self.has_tracked_changes,
+            rubric_grade=self.rubric_grade,
         )

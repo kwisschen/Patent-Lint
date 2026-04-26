@@ -270,9 +270,156 @@
     color: #999;
     text-align: center;
   }
+
+  /* ---- Rubric cover ---- */
+  .cover {
+    text-align: center;
+    padding: 24pt 0 18pt 0;
+    margin-bottom: 18pt;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .cover .grade-letter {
+    font-size: 96pt;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -2pt;
+    margin: 0;
+  }
+  .cover .grade-letter.tier-a { color: #16a34a; }
+  .cover .grade-letter.tier-b,
+  .cover .grade-letter.tier-c { color: #d97706; }
+  .cover .grade-letter.tier-d,
+  .cover .grade-letter.tier-f { color: #dc2626; }
+  .cover .grade-letter.tier-na { color: #6b7280; }
+  .cover .grade-score {
+    font-size: 14pt;
+    color: #4b5563;
+    margin-top: 6pt;
+  }
+  .cover .trust-line {
+    font-size: 10pt;
+    color: #6b7280;
+    margin-top: 10pt;
+  }
+  .cover .cap-reason {
+    font-size: 10pt;
+    color: #b91c1c;
+    margin-top: 4pt;
+  }
+  .cover .completeness-gap {
+    font-size: 14pt;
+    font-weight: 700;
+    color: #b91c1c;
+    margin-bottom: 8pt;
+  }
+  .cover .completeness-detail {
+    font-size: 11pt;
+    color: #4b5563;
+  }
+  .section-grades {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12pt;
+    font-size: 10pt;
+  }
+  .section-grades th {
+    background: #f9fafb;
+    color: #4b5563;
+    font-weight: 600;
+    text-align: left;
+    padding: 6pt 8pt;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .section-grades td {
+    padding: 6pt 8pt;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  .section-grades .pill {
+    display: inline-block;
+    padding: 2pt 8pt;
+    border-radius: 4pt;
+    font-weight: 700;
+    border: 1pt solid;
+  }
+  .section-grades .tier-a { color: #16a34a; border-color: #16a34a; }
+  .section-grades .tier-b,
+  .section-grades .tier-c { color: #d97706; border-color: #d97706; }
+  .section-grades .tier-d,
+  .section-grades .tier-f { color: #dc2626; border-color: #dc2626; }
+  .section-grades .tier-na { color: #6b7280; border-color: #d1d5db; background: #f9fafb; }
+  .rubric-version {
+    font-size: 8pt;
+    color: #9ca3af;
+    margin-top: 10pt;
+  }
 </style>
 </head>
 <body>
+
+{# ========== Rubric cover ========== #}
+{%- if data.rubric_grade %}
+{%- set g = data.rubric_grade %}
+{%- set tier = 'tier-na' %}
+{%- if g.letter and g.letter[0] == 'A' %}{%- set tier = 'tier-a' %}{%- endif %}
+{%- if g.letter and g.letter[0] in ['B', 'C'] %}{%- set tier = 'tier-bc' %}{%- endif %}
+{%- if g.letter and g.letter[0] == 'D' %}{%- set tier = 'tier-d' %}{%- endif %}
+{%- if g.letter and g.letter[0] == 'F' %}{%- set tier = 'tier-f' %}{%- endif %}
+<div class="cover">
+  {%- if g.completeness_gap and g.completeness_gap.missing_sections %}
+    <div class="completeness-gap">{{ t('rubric.completenessGate.title') }}</div>
+    {%- set sec_labels = [] %}
+    {%- for s in g.completeness_gap.missing_sections %}
+      {%- set _ = sec_labels.append(t('rubric.section.' ~ s)) %}
+    {%- endfor %}
+    <div class="completeness-detail">{{ t('rubric.completenessGate.missingSections', sections=(sec_labels | join(', '))) }}</div>
+  {%- else %}
+    <div class="grade-letter {{ tier }}">{{ g.letter }}</div>
+    <div class="grade-score">{{ g.score }} / 100</div>
+    <div class="trust-line">{{ t('rubric.trust.line') }}</div>
+    {%- if g.cap_reason %}<div class="cap-reason">{{ g.cap_reason }}</div>{%- endif %}
+    {%- if g.section_grades %}
+    <table class="section-grades">
+      <tr>
+        <th>{{ t('about.tableHeaders.section') if 'about.tableHeaders.section' in [] else 'Section' }}</th>
+        <th style="text-align:right;">Grade</th>
+        <th style="text-align:right;">Weight</th>
+      </tr>
+      {%- for sg in g.section_grades %}
+      {%- set s_tier = 'tier-na' %}
+      {%- if not sg.applicable %}{%- set s_tier = 'tier-na' %}
+      {%- elif sg.score >= 88 %}{%- set s_tier = 'tier-a' %}
+      {%- elif sg.score >= 68 %}{%- set s_tier = 'tier-bc' %}
+      {%- else %}{%- set s_tier = 'tier-f' %}
+      {%- endif %}
+      {%- set s_letter = '—' %}
+      {%- if sg.applicable %}
+        {%- if sg.score >= 97 %}{%- set s_letter = 'A' %}
+        {%- elif sg.score >= 93 %}{%- set s_letter = 'A-' %}
+        {%- elif sg.score >= 88 %}{%- set s_letter = 'B+' %}
+        {%- elif sg.score >= 83 %}{%- set s_letter = 'B' %}
+        {%- elif sg.score >= 78 %}{%- set s_letter = 'B-' %}
+        {%- elif sg.score >= 73 %}{%- set s_letter = 'C+' %}
+        {%- elif sg.score >= 68 %}{%- set s_letter = 'C' %}
+        {%- elif sg.score >= 60 %}{%- set s_letter = 'D' %}
+        {%- else %}{%- set s_letter = 'F' %}
+        {%- endif %}
+      {%- endif %}
+      <tr>
+        <td>{{ t('rubric.section.' ~ sg.section) }}</td>
+        <td style="text-align:right;">
+          {%- if sg.applicable %}<span class="pill {{ s_tier }}">{{ s_letter }}</span>
+          {%- else %}<span class="pill tier-na">{{ t('rubric.section.notApplicable') }}</span>
+          {%- endif %}
+        </td>
+        <td style="text-align:right;">{{ "%.0f"|format(sg.effective_weight) }}%</td>
+      </tr>
+      {%- endfor %}
+    </table>
+    {%- endif %}
+    <div class="rubric-version">{{ t('rubric.version', version=g.rubric_version, count=109) }}</div>
+  {%- endif %}
+</div>
+{%- endif %}
 
 <h1>{{ t(jconfig.pdfHeader) }}</h1>
 
