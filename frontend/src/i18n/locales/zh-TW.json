@@ -1470,11 +1470,11 @@
       "line": "無 AI。同一份稿件，每次評等皆同。"
     },
     "cap": {
-      "oneFix": "1 項 FIX 將評等上限壓至 B-",
-      "twoFix": "2 項 FIX 上限至 C+",
-      "threeFix": "3 項 FIX 上限至 C",
-      "fourFix": "4 項 FIX 上限至 D",
-      "fiveFix": "{{count}} 項 FIX 上限至 F"
+      "oneFix": "1 項修正使評等上限為 B-",
+      "twoFix": "2 項修正使上限為 C+",
+      "threeFix": "3 項修正使上限為 C",
+      "fourFix": "4 項修正使上限為 D",
+      "fiveFix": "{{count}} 項修正使上限為 F"
     },
     "completenessGate": {
       "title": "稿件不完整 — 無法評等",
@@ -1502,14 +1502,14 @@
       "subtitle": "評分標準確定且不使用 AI 判斷或機器學習。",
       "weightsTitle": "章節權重",
       "weightsIntro": "每項檢查都歸入下列五大章節之一。權重在美國、中國大陸及台灣申請間皆相同。",
-      "gateTitle": "FIX 門檻機制",
-      "gateIntro": "法定瑕疵主導整體評等：只要存在 1 項 FIX，評等上限即降至 B-，不論其餘章節是否乾淨。此設計呼應實務分流邏輯：「先看是否有阻礙，再論細節品質」。",
-      "gateRule": "{{count}} 項 FIX → 最高 {{letter}}",
+      "gateTitle": "「修正」門檻機制",
+      "gateIntro": "法定瑕疵主導整體評等：只要存在 1 項修正，評等上限即降至 B-，無論其餘章節是否完善。此設計呼應實務分流邏輯：先排除關鍵瑕疵，再論細部品質。",
+      "gateRule": "{{count}} 項修正 → 最高 {{letter}}",
       "conditionalTitle": "當章節不適用時",
-      "conditionalIntro": "無圖式之稿件（化學、方法、商業模式）可正當省略圖式章節。系統將圖式標記為「不適用」，並將其 10 % 權重按比例分配至其餘四章節，不對未繪圖式予以扣分。",
+      "conditionalIntro": "無圖式說明之稿件（化學、方法、商業模式）可正當省略圖式說明章節。系統將圖式說明標記為「不適用」，並將其 10 % 權重按比例分配至其餘四章節，不對未繪圖式予以扣分。",
       "completenessTitle": "當稿件不完整時",
       "completenessIntro": "若必要章節（發明名稱、申請專利範圍、說明書本文或摘要）為空，系統不予評等。對空白稿件給予優等評等將構成誤導。",
-      "trustTitle": "不依賴 AI 判斷",
+      "trustTitle": "不使用 AI 判斷",
       "trustIntro": "評等之輸入僅為各確定性檢查器所判定之 修正／檢視／通過 狀態，輸出純為加權加總。同一份稿件必得相同評等。PatentLint 不上傳任何稿件 — 全部分析皆於您的瀏覽器內完成。",
       "disclaimerTitle": "A 等代表什麼，又不代表什麼",
       "disclaimerIntro": "A 等表示 PatentLint 之規則庫未發現缺失，但不代表稿件已達申請就緒之品質。仍建議由領有執照之專利師（或專利代理人）進行實質審視。"

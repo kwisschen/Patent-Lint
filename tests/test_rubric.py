@@ -12,6 +12,7 @@ from patentlint.models import (
     RubricSection,
 )
 from patentlint.rubric import (
+    ADVISORY_REVIEW_KEYS,
     FIX_DEDUCTION,
     REVIEW_DEDUCTION,
     RUBRIC_VERSION,
@@ -331,6 +332,90 @@ class TestImpactList:
             has_drawings=False,
         )
         assert grade.impact_list == []
+
+
+# ── Advisory REVIEW exclusion ────────────────────────────────────────────
+
+
+class TestAdvisoryReviews:
+    """Advisory REVIEW items are informational (cross-reference / prior-art
+    citation / indigenous-term presence). They surface in the triage panel
+    but must NOT deduct from the rubric grade — drafters who legitimately
+    cite cross-references shouldn't see the grade drop."""
+
+    def test_advisory_keys_set_nonempty(self):
+        # Sanity check: the set should be populated; if someone clears
+        # it, this test fires.
+        assert len(ADVISORY_REVIEW_KEYS) >= 5
+        # Spot-check a few specific keys
+        assert "check.spec.crossReference.verify" in ADVISORY_REVIEW_KEYS
+        assert "check.spec.priorArt.verify" in ADVISORY_REVIEW_KEYS
+        assert "check.tw.spec.indigenousTerms.verify" in ADVISORY_REVIEW_KEYS
+
+    def test_advisory_review_does_not_deduct(self):
+        # An advisory REVIEW item should not affect the grade.
+        clean_grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=[],
+            has_drawings=True,
+        )
+        with_advisory = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=[_check("verify", "check.spec.crossReference.verify")],
+            has_drawings=True,
+        )
+        assert with_advisory.score == clean_grade.score
+        assert with_advisory.letter == clean_grade.letter
+
+    def test_non_advisory_review_still_deducts(self):
+        # A non-advisory REVIEW (antecedent walker, restrictive wording, etc.)
+        # should still deduct. Using 5 reviews in claims (45% weight) so the
+        # deduction is large enough to survive rounding: 5 × 3 = 15pts at
+        # section level, weighted at 0.45 → -6.75 → final score ~93.
+        clean_grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=[],
+            has_drawings=True,
+        )
+        with_reviews = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=[_check("verify", "check.claims.restrictiveAbsolutes.verify") for _ in range(5)],
+            has_drawings=True,
+        )
+        assert with_reviews.score < clean_grade.score
+
+    def test_advisory_review_excluded_from_impact_list(self):
+        checks = [
+            _check("verify", "check.spec.crossReference.verify"),
+            _check("verify", "check.spec.priorArt.verify"),
+            _check("verify", "check.claims.antecedentBasis.verify"),  # non-advisory
+        ]
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=checks,
+            has_drawings=True,
+        )
+        # Only the antecedent item should land in the impact list — the two
+        # advisory items are filtered out.
+        keys_in_impact = {item.message_key for item in grade.impact_list}
+        assert "check.claims.antecedentBasis.verify" in keys_in_impact
+        assert "check.spec.crossReference.verify" not in keys_in_impact
+        assert "check.spec.priorArt.verify" not in keys_in_impact
+
+    def test_advisory_still_appears_in_section_pass_count(self):
+        # Advisory items bucket as PASS for grading purposes.
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=[
+                _check("verify", "check.spec.crossReference.verify"),
+                _check("verify", "check.spec.priorArt.verify"),
+            ],
+            has_drawings=True,
+        )
+        spec = next(sg for sg in grade.section_grades if sg.section == RubricSection.SPECIFICATION)
+        # Both advisory verifies counted as pass (for grading), not as review.
+        assert spec.review_count == 0
+        assert spec.pass_count == 2
 
 
 # ── Detection helpers ────────────────────────────────────────────────────
