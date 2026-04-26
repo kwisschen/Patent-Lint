@@ -1467,13 +1467,6 @@
     "trust": {
       "line": "No AI. Same draft, same grade, every time."
     },
-    "cap": {
-      "oneFix": "1 FIX caps grade at A-",
-      "twoFix": "2 FIX cap grade at B+",
-      "threeFix": "3 FIX cap grade at B-",
-      "fourFix": "4 FIX cap grade at C+",
-      "fiveFix": "{{count}} FIX cap grade at F"
-    },
     "completenessGate": {
       "title": "Draft incomplete — grade unavailable",
       "missingSections": "Missing required sections: {{sections}}"

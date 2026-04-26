@@ -1469,13 +1469,6 @@
     "trust": {
       "line": "無 AI。同一份稿件，每次評分皆相同。"
     },
-    "cap": {
-      "oneFix": "1 項修正使評等上限為 A-",
-      "twoFix": "2 項修正使上限為 B+",
-      "threeFix": "3 項修正使上限為 B-",
-      "fourFix": "4 項修正使上限為 C+",
-      "fiveFix": "{{count}} 項修正使上限為 F"
-    },
     "completenessGate": {
       "title": "稿件不完整 — 無法評等",
       "missingSections": "欠缺必要章節：{{sections}}"

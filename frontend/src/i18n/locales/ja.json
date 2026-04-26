@@ -1469,13 +1469,6 @@
     "trust": {
       "line": "AI 不使用。同じ原稿には、毎回同じ評価。"
     },
-    "cap": {
-      "oneFix": "修正 1 件で評価上限が A- に",
-      "twoFix": "修正 2 件で上限 B+",
-      "threeFix": "修正 3 件で上限 B-",
-      "fourFix": "修正 4 件で上限 C+",
-      "fiveFix": "修正 {{count}} 件で上限 F"
-    },
     "completenessGate": {
       "title": "原稿が不完全 — 評価不可",
       "missingSections": "必要な章を欠いています：{{sections}}"

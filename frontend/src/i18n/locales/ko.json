@@ -1469,13 +1469,6 @@
     "trust": {
       "line": "AI 없음. 같은 초안에는 언제나 같은 평가."
     },
-    "cap": {
-      "oneFix": "수정 1건이면 평가 상한 A-",
-      "twoFix": "수정 2건 → 상한 B+",
-      "threeFix": "수정 3건 → 상한 B-",
-      "fourFix": "수정 4건 → 상한 C+",
-      "fiveFix": "수정 {{count}}건 → 상한 F"
-    },
     "completenessGate": {
       "title": "초안 불완전 — 평가 불가",
       "missingSections": "필수 섹션 누락: {{sections}}"
