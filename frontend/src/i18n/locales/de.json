@@ -1467,13 +1467,6 @@
     "trust": {
       "line": "Keine KI. Gleiche Schrift, gleiche Bewertung, jedes Mal."
     },
-    "cap": {
-      "oneFix": "1 FEHLER begrenzt die Bewertung auf A-",
-      "twoFix": "2 FEHLER begrenzen auf B+",
-      "threeFix": "3 FEHLER begrenzen auf B-",
-      "fourFix": "4 FEHLER begrenzen auf C+",
-      "fiveFix": "{{count}} FEHLER begrenzen auf F"
-    },
     "completenessGate": {
       "title": "Schrift unvollständig — keine Bewertung verfügbar",
       "missingSections": "Erforderliche Abschnitte fehlen: {{sections}}"
