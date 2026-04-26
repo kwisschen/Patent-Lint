@@ -376,7 +376,10 @@
     <div class="grade-letter {{ tier }}">{{ g.letter }}</div>
     <div class="grade-score">{{ g.score }} / 100</div>
     <div class="trust-line">{{ t('rubric.trust.line') }}</div>
-    {%- if g.cap_reason %}<div class="cap-reason">{{ g.cap_reason }}</div>{%- endif %}
+    {#- cap_reason intentionally not rendered inline on the cover; matches
+        the web hero (commit 966f783 replaced inline cap-reason with /rubric
+        link). The section-grade table below shows which section absorbed
+        the FIX, which is the load-bearing info. Gate rules are on /rubric. #}
     {%- if g.section_grades %}
     <table class="section-grades">
       <tr>
