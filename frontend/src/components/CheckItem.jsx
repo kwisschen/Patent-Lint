@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 // Copyright (c) 2025 Christopher Chen
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flag } from 'lucide-react'
 import { formatDetails } from "../lib/detailsFormatter"
 import { Button } from "./ui/button"
-import { composeFeedback } from "../lib/feedback"
+import { composeFeedback, sendReport } from "../lib/feedback"
 import { useFeedback } from "./FeedbackPicker"
 import FlaggedTermList from "./FlaggedTermList"
+import ReportModal from "./ReportModal"
 
 const CITATION_MAP = {
   'check.spec.restrictiveWording': '§ 112(b)',
@@ -66,11 +68,24 @@ export { getCitation }
 export default function CheckItem({ status, message, message_key, details, details_key, details_params, reference, jurisdiction, diagnostics }) {
   const { t, i18n } = useTranslation()
   const { sendFeedback } = useFeedback()
+  const [reportModalOpen, setReportModalOpen] = useState(false)
   const displayMessage = message_key && i18n.exists(message_key) ? formatDetails(message_key, details_params, t) : message
   const displayDetails = details_key && i18n.exists(details_key) ? formatDetails(details_key, details_params, t) : details
   const citation = getCitation(message_key) || reference || null
 
   const handleReport = () => {
+    setReportModalOpen(true)
+  }
+
+  const handleAnonymousConfirm = () =>
+    sendReport({
+      checkKey: message_key || 'generic',
+      jurisdiction: jurisdiction || 'unknown',
+      locale: i18n.language,
+      diagnostics: diagnostics || {},
+    })
+
+  const handleMailtoFallback = () => {
     sendFeedback(
       composeFeedback(
         {
@@ -120,6 +135,16 @@ export default function CheckItem({ status, message, message_key, details, detai
           <Flag />
           <span className="hidden sm:inline">{t('feedback.report')}</span>
         </Button>
+        <ReportModal
+          open={reportModalOpen}
+          onOpenChange={setReportModalOpen}
+          checkKey={message_key || 'generic'}
+          jurisdiction={jurisdiction || 'unknown'}
+          locale={i18n.language}
+          diagnostics={diagnostics || {}}
+          onConfirm={handleAnonymousConfirm}
+          onMailtoFallback={handleMailtoFallback}
+        />
       </div>
       {details_params?.flagged_phrases?.items?.length > 0 && (
         <FlaggedTermList

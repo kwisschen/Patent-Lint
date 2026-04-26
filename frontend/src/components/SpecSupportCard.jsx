@@ -4,16 +4,30 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FileSearch, ChevronRight, Flag } from 'lucide-react'
 import { Button } from './ui/button'
-import { composeFeedback } from '../lib/feedback'
+import { composeFeedback, sendReport } from '../lib/feedback'
 import { useFeedback } from './FeedbackPicker'
+import ReportModal from './ReportModal'
 
 function ClaimRow({ claimNumber, phrases, crossRefPhrases, jurisdiction }) {
   const { t, i18n } = useTranslation()
   const { sendFeedback } = useFeedback()
   const [expanded, setExpanded] = useState(false)
+  const [reportModalOpen, setReportModalOpen] = useState(false)
   const hasCrossRef = crossRefPhrases.length > 0
 
   const handleReport = () => {
+    setReportModalOpen(true)
+  }
+
+  const handleAnonymousConfirm = () =>
+    sendReport({
+      checkKey: 'specSupport',
+      jurisdiction: jurisdiction || 'unknown',
+      locale: i18n.language,
+      diagnostics: { flagged_claim_id: claimNumber, hit_count: phrases.length },
+    })
+
+  const handleMailtoFallback = () => {
     sendFeedback(
       composeFeedback(
         {
@@ -96,6 +110,16 @@ function ClaimRow({ claimNumber, phrases, crossRefPhrases, jurisdiction }) {
           </Button>
         </div>
       )}
+      <ReportModal
+        open={reportModalOpen}
+        onOpenChange={setReportModalOpen}
+        checkKey="specSupport"
+        jurisdiction={jurisdiction || 'unknown'}
+        locale={i18n.language}
+        diagnostics={{ flagged_claim_id: claimNumber, hit_count: phrases.length }}
+        onConfirm={handleAnonymousConfirm}
+        onMailtoFallback={handleMailtoFallback}
+      />
     </div>
   )
 }
