@@ -139,7 +139,8 @@
     "privacy": "Privacy",
     "github": "GitHub",
     "linkedin": "LinkedIn",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "rubric": "How we score"
   },
   "feedback": {
     "report": "Report error",
@@ -660,7 +661,7 @@
           "missingFromTable": "Numerals in claims undefined in 符號說明: {{numerals_with_locations}}"
         }
       },
-      "antecedentBasis": "該/所述/前述 + noun should have a matching 一 + noun introduction in the same claim or a parent claim. Flagged terms may need review. Regex-based detection is approximate.",
+      "antecedentBasis": "該/所述/前述 + noun should have a matching prior introduction in the same claim or a parent claim. The 一 + noun form is the canonical convention; alternatives (一個 / 至少一 / 複數個 / 多個 + noun) are also accepted. Regex-based detection is approximate.",
       "abstractCharCount": "Per 專利法施行細則 §21, the abstract should be within 250 characters. TIPO may not reject on length alone, but review for conciseness.",
       "abstractTitleMatch": "Per 專利審查基準, the abstract should reference the 發明名稱/新型名稱. Verify the abstract reflects the title. Title: {{detail}}.",
       "commercialLanguage": "Per 專利法施行細則 §21, the abstract must not contain commercial advertising language (商業性宣傳用語). Found: {{terms}}.",
@@ -799,8 +800,8 @@
         "pass": "No means-plus-function language detected."
       },
       "antecedentBasis": {
-        "verify": "Possible missing antecedent basis — \"the X\" / \"said X\" may lack a prior \"a X\" introduction (§ 112(b)).",
-        "pass": "No antecedent basis issues detected (§ 112(b))."
+        "pass": "No antecedent basis issues detected (§ 112(b)).",
+        "amend": "Possible missing antecedent basis — \"the X\" / \"said X\" may lack a prior \"a X\" introduction (§ 112(b))."
       },
       "missingTransition": "Claim {{claimNumber}} is missing a transitional phrase (e.g., 'comprising', 'consisting of')",
       "missingTransitionDetails": "Claim {{claimNumber}} does not contain a recognized transitional phrase. Every claim must include a transitional phrase such as 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by', or 'characterized in that' between the preamble and the claim body.",
@@ -869,8 +870,8 @@
           "verify": "{{count}} paragraph(s) not ending with valid Chinese punctuation: {{paragraphs}} (审查指南)."
         },
         "figureRefConsistency": {
-          "verify": "Inconsistent figure references: {{figure_ref_inconsistency}}",
-          "pass": "Figure references consistent across sections."
+          "pass": "Figure references consistent across sections.",
+          "amend": "Inconsistent figure references: {{figure_ref_inconsistency}}"
         },
         "patentTypeTerminology": {
           "verify": "'{{term}}' detected — verify this matches the filing type, invention vs. utility model (审查指南).",
@@ -944,12 +945,12 @@
           "pass": "All independent device/system claims describe component connections."
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 该/所述 reference without a prior 一 introduction (审查指南).",
-          "pass": "All claim terms have antecedent basis (审查指南)."
+          "pass": "All claim terms have antecedent basis (审查指南).",
+          "amend": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 该/所述 reference without a prior introduction (e.g., 一 / 至少一 / 多个 + noun) (审查指南)."
         },
         "specSupport": {
-          "verify": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body (审查指南 第二部分第二章 §3.2.1).",
-          "pass": "All claim terms supported by the specification (审查指南)."
+          "pass": "All claim terms supported by the specification (审查指南).",
+          "amend": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body (审查指南 第二部分第二章 §3.2.1)."
         },
         "omnibus": {
           "amend": "{{claims}}: claim references 说明书/附图 instead of reciting features (审查指南 第二部分第二章 §3.3).",
@@ -1014,8 +1015,8 @@
           "verify": "{{count}} paragraph(s) missing ending punctuation: {{paragraphs}} (專利審查基準)."
         },
         "figureRefConsistency": {
-          "verify": "Inconsistent figure references: {{figure_ref_inconsistency}}",
-          "pass": "Figure references consistent across sections."
+          "pass": "Figure references consistent across sections.",
+          "amend": "Inconsistent figure references: {{figure_ref_inconsistency}}"
         },
         "patentTypeTerminology": {
           "verify": "Patent-type terminology mismatch detected — invention vs. utility model (專利審查基準).",
@@ -1115,12 +1116,12 @@
           "pass": "All independent apparatus/system claims describe component connections."
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 該/所述/前述 reference without a prior 一 introduction.",
-          "pass": "All claim terms have antecedent basis."
+          "pass": "All claim terms have antecedent basis.",
+          "amend": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 該/所述/前述 reference without a prior introduction (e.g., 一 / 至少一 / 複數個 + noun)."
         },
         "specSupport": {
-          "verify": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body.",
-          "pass": "All claim terms supported by the specification."
+          "pass": "All claim terms supported by the specification.",
+          "amend": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body."
         },
         "independentPreamble": {
           "pass": "All independent claims open with 「一種」.",
@@ -1461,5 +1462,51 @@
     },
     "copyright": "Copyright © 2025 Christopher Chen. All rights reserved.",
     "crossLinks": "See also: <1>Terms of Service</1> · <3>Security</3>"
+  },
+  "rubric": {
+    "trust": {
+      "line": "No AI. Same draft, same grade, every time."
+    },
+    "completenessGate": {
+      "title": "Draft incomplete — grade unavailable",
+      "missingSections": "Missing required sections: {{sections}}"
+    },
+    "section": {
+      "specification": "Specification",
+      "drawings": "Drawings",
+      "claims": "Claims",
+      "abstract": "Abstract",
+      "antecedent_spec_support": "Antecedent + Spec Support",
+      "title": "title",
+      "notApplicable": "N/A",
+      "notApplicableTooltip": "No drawings detected — section not graded"
+    },
+    "impactList": {
+      "title": "Biggest-impact items",
+      "delta": "Resolve to gain {{delta}} pts",
+      "sectionLabel": "{{section}}"
+    },
+    "version": "Rubric v{{version}} ({{count}} checks)",
+    "gradePill": "{{letter}}",
+    "page": {
+      "title": "How PatentLint scores your draft",
+      "subtitle": "A deterministic rubric — no AI judgment, no machine learning.",
+      "weightsTitle": "Section weights",
+      "weightsIntro": "Every check we run rolls into one of these five sections. Weights are fixed across US, CN, and TW filings.",
+      "gateTitle": "How the FIX gate works",
+      "gateIntro": "Statutory blockers headline the grade. One FIX caps the grade at A-, regardless of how clean the rest of the draft is. This matches partner-triage reality — the question is always \"any blockers, then how clean?\"",
+      "gateRule": "{{count}} FIX → max {{letter}}",
+      "conditionalTitle": "When sections are not applicable",
+      "conditionalIntro": "Two scenarios shape the Drawings section. First — when no drawings are detected (chemistry, methods, business processes), the section is marked N/A and its 10% weight redistributes proportionally across the other four sections; legitimately drawing-free drafts incur no penalty. Second — when drawings exist (FIG. references found in the body) but the Brief Description of Drawings section is missing, the resulting required-section FIX lands in the Drawings rubric so the section pill reflects the actual gap.",
+      "completenessTitle": "When the draft is incomplete",
+      "completenessIntro": "When a universally-required section (title, claims, specification body, or abstract) is structurally empty, we do not emit a grade. An A grade on an empty draft would be misleading.",
+      "trustTitle": "No AI judgment",
+      "trustIntro": "Every input to your grade is a FIX/REVIEW/PASS status set by a deterministic checker. Every output is a pure arithmetic aggregation. The same draft always gets the same grade. PatentLint never uploads your draft anywhere — analysis runs entirely in your browser.",
+      "disclaimerTitle": "What an A grade does and does not mean",
+      "disclaimerIntro": "An A grade means PatentLint's rule catalog found no issues. It does not mean your draft is filing-ready. Substantive review by a registered practitioner is still recommended.",
+      "reportTitle": "Help us improve — report misjudgments",
+      "reportIntro": "No checker is perfect. Walker-based checks (antecedent basis, specification support, figure references) carry a small false-positive risk; with grading now in place, a wrongly-flagged FIX can cost the draft a letter rank. The Report button on each triage item attaches a structural diagnostic trail — counts, codepoints, closed-set enums — and never the claim content or draft text, so we can pinpoint the bug without ever seeing the invention."
+    },
+    "howWeScore": "How we score →"
   }
 }

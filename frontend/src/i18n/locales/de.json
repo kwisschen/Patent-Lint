@@ -139,7 +139,8 @@
     "privacy": "Datenschutz",
     "github": "GitHub",
     "linkedin": "LinkedIn",
-    "feedback": "Feedback"
+    "feedback": "Feedback",
+    "rubric": "Bewertung"
   },
   "feedback": {
     "report": "Fehler melden",
@@ -660,7 +661,7 @@
           "missingFromTable": "In Ansprüchen verwendete, in 符號說明 nicht definierte Bezugszeichen: {{numerals_with_locations}}"
         }
       },
-      "antecedentBasis": "該/所述/前述 + Substantiv sollte im selben Anspruch oder in einem Elternanspruch eine passende Einführung mit 一 + Substantiv haben. Gekennzeichnete Begriffe müssen ggf. geprüft werden. Die regex-basierte Erkennung ist approximativ.",
+      "antecedentBasis": "該/所述/前述 + Substantiv sollte im selben Anspruch oder in einem Elternanspruch eine passende vorherige Einführung haben. Die Form 一 + Substantiv ist die kanonische Konvention; Alternativen (一個 / 至少一 / 複數個 / 多個 + Substantiv) werden ebenfalls akzeptiert. Die regex-basierte Erkennung ist approximativ.",
       "abstractCharCount": "Gemäß 專利法施行細則 §21 sollte die Zusammenfassung höchstens 250 Zeichen umfassen. TIPO weist nicht zwingend allein aufgrund der Länge zurück, prüfen Sie dennoch auf Prägnanz.",
       "abstractTitleMatch": "Gemäß 專利審查基準 sollte die Zusammenfassung auf das 發明名稱/新型名稱 Bezug nehmen. Prüfen Sie, ob die Zusammenfassung den Titel widerspiegelt. Titel: {{detail}}.",
       "commercialLanguage": "Gemäß 專利法施行細則 §21 darf die Zusammenfassung keine Werbesprache (商業性宣傳用語) enthalten. Gefunden: {{terms}}.",
@@ -799,8 +800,8 @@
         "pass": "Keine funktionellen Merkmalsangaben erkannt."
       },
       "antecedentBasis": {
-        "verify": "Möglicher fehlender Rückbezug — „the X“ / „said X“ ohne vorherige Einführung „a X“ (§ 112(b)).",
-        "pass": "Keine Rückbezugs-Mängel erkannt (§ 112(b))."
+        "pass": "Keine Rückbezugs-Mängel erkannt (§ 112(b)).",
+        "amend": "Möglicher fehlender Rückbezug — „the X“ / „said X“ ohne vorherige Einführung „a X“ (§ 112(b))."
       },
       "missingTransition": "Anspruch {{claimNumber}} fehlt ein Übergangsbegriff (z. B. 'comprising', 'consisting of')",
       "missingTransitionDetails": "Anspruch {{claimNumber}} enthält keinen anerkannten Übergangsbegriff. Jeder Anspruch muss einen Übergangsbegriff wie 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by' oder 'characterized in that' zwischen Oberbegriff und Anspruchskörper enthalten.",
@@ -869,8 +870,8 @@
           "verify": "{{count}} Absatz/Absätze ohne gültiges chinesisches Satzend-Zeichen: {{paragraphs}} (审查指南)."
         },
         "figureRefConsistency": {
-          "verify": "Inkonsistente Figurenbezüge: {{figure_ref_inconsistency}}",
-          "pass": "Figurenbezüge zwischen Abschnitten konsistent."
+          "pass": "Figurenbezüge zwischen Abschnitten konsistent.",
+          "amend": "Inkonsistente Figurenbezüge: {{figure_ref_inconsistency}}"
         },
         "patentTypeTerminology": {
           "verify": "'{{term}}' erkannt — prüfen, ob dies zur Einreichungsart passt (Erfindung vs. Gebrauchsmuster) (审查指南).",
@@ -944,12 +945,12 @@
           "pass": "Alle unabhängigen Vorrichtungs-/System-Ansprüche beschreiben Komponentenverbindungen."
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 该/所述-Bezug ohne vorheriges 一 (审查指南).",
-          "pass": "Alle Anspruchsbegriffe haben Rückbezug (审查指南)."
+          "pass": "Alle Anspruchsbegriffe haben Rückbezug (审查指南).",
+          "amend": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 该/所述-Bezug ohne vorherige Einführung (z. B. 一 / 至少一 / 多个 + Substantiv) (审查指南)."
         },
         "specSupport": {
-          "verify": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Stützung in der Beschreibung sein — Nominalphrase des Anspruchs nicht im Beschreibungsteil gefunden (审查指南 第二部分第二章 §3.2.1).",
-          "pass": "Alle Anspruchsbegriffe sind in der Beschreibung gestützt (审查指南)."
+          "pass": "Alle Anspruchsbegriffe sind in der Beschreibung gestützt (审查指南).",
+          "amend": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Stützung in der Beschreibung sein — Nominalphrase des Anspruchs nicht im Beschreibungsteil gefunden (审查指南 第二部分第二章 §3.2.1)."
         },
         "omnibus": {
           "amend": "{{claims}}: Anspruch verweist auf 说明书/附图 statt Merkmale zu benennen (审查指南 第二部分第二章 §3.3).",
@@ -1014,8 +1015,8 @@
           "verify": "{{count}} Absatz/Absätze ohne Satzzeichen am Ende: {{paragraphs}} (專利審查基準)."
         },
         "figureRefConsistency": {
-          "verify": "Inkonsistente Figurenbezüge: {{figure_ref_inconsistency}}",
-          "pass": "Figurenbezüge zwischen Abschnitten konsistent."
+          "pass": "Figurenbezüge zwischen Abschnitten konsistent.",
+          "amend": "Inkonsistente Figurenbezüge: {{figure_ref_inconsistency}}"
         },
         "patentTypeTerminology": {
           "verify": "Patentart-Terminologie weicht ab — Erfindung vs. Gebrauchsmuster (專利審查基準).",
@@ -1115,12 +1116,12 @@
           "pass": "Alle unabhängigen Vorrichtungs-/System-Ansprüche beschreiben Komponentenverbindungen."
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 該/所述/前述-Bezug ohne vorheriges 一.",
-          "pass": "Alle Anspruchsbegriffe haben Rückbezug."
+          "pass": "Alle Anspruchsbegriffe haben Rückbezug.",
+          "amend": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 該/所述/前述-Bezug ohne vorherige Einführung (z. B. 一 / 至少一 / 複數個 + Substantiv)."
         },
         "specSupport": {
-          "verify": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Stützung in der Beschreibung sein — Nominalphrase des Anspruchs nicht im Beschreibungsteil gefunden.",
-          "pass": "Alle Anspruchsbegriffe in der Beschreibung gestützt."
+          "pass": "Alle Anspruchsbegriffe in der Beschreibung gestützt.",
+          "amend": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Stützung in der Beschreibung sein — Nominalphrase des Anspruchs nicht im Beschreibungsteil gefunden."
         },
         "independentPreamble": {
           "pass": "Alle unabhängigen Ansprüche beginnen mit 「一種」.",
@@ -1461,5 +1462,51 @@
     },
     "copyright": "Copyright © 2025 Christopher Chen. Alle Rechte vorbehalten.",
     "crossLinks": "Siehe auch: <1>Nutzungsbedingungen</1> · <3>Sicherheit</3>"
+  },
+  "rubric": {
+    "trust": {
+      "line": "Keine KI. Gleiche Schrift, gleiche Bewertung, jedes Mal."
+    },
+    "completenessGate": {
+      "title": "Schrift unvollständig — keine Bewertung verfügbar",
+      "missingSections": "Erforderliche Abschnitte fehlen: {{sections}}"
+    },
+    "section": {
+      "specification": "Beschreibung",
+      "drawings": "Zeichnungen",
+      "claims": "Ansprüche",
+      "abstract": "Zusammenfassung",
+      "antecedent_spec_support": "Rückbezug + Stützung",
+      "title": "Titel",
+      "notApplicable": "n. z.",
+      "notApplicableTooltip": "Keine Zeichnungen erkannt — Abschnitt nicht bewertet"
+    },
+    "impactList": {
+      "title": "Wirksamste Hebel",
+      "delta": "+{{delta}} Punkte bei Korrektur",
+      "sectionLabel": "{{section}}"
+    },
+    "version": "Bewertungsraster v{{version}} ({{count}} Prüfungen)",
+    "gradePill": "{{letter}}",
+    "page": {
+      "title": "Wie PatentLint Ihre Schrift bewertet",
+      "subtitle": "Ein deterministisches Bewertungsraster — kein KI-Urteil, kein maschinelles Lernen.",
+      "weightsTitle": "Abschnittsgewichtung",
+      "weightsIntro": "Jede Prüfung fließt in einen dieser fünf Abschnitte ein. Die Gewichtung ist für US-, CN- und TW-Anmeldungen identisch.",
+      "gateTitle": "Wie die FEHLER-Sperre wirkt",
+      "gateIntro": "Gesetzliche Mängel führen die Bewertung an. Bereits ein FEHLER begrenzt die Note auf A-, unabhängig davon, wie sorgfältig der Rest der Schrift verfasst ist. Das entspricht dem realen Triage-Ablauf — zuerst auf blockierende Mängel prüfen, dann auf die Sorgfalt der Ausarbeitung.",
+      "gateRule": "{{count}} FEHLER → höchstens {{letter}}",
+      "conditionalTitle": "Wenn Abschnitte nicht zutreffen",
+      "conditionalIntro": "Der Zeichnungs-Abschnitt verhält sich in zwei Szenarien unterschiedlich. Erstens — wenn keine Zeichnungen erkannt werden (Chemie, Verfahren, Geschäftsmodelle), wird der Abschnitt als „n. z.\" markiert und seine 10 % Gewichtung anteilig auf die übrigen vier Abschnitte verteilt; rechtmäßig zeichnungsfreie Schriften werden nicht bestraft. Zweitens — wenn Zeichnungen vorhanden sind (Bezugnahmen wie „FIG.\" im Beschreibungstext) und der Abschnitt „Kurze Beschreibung der Zeichnungen\" fehlt, fließt die entsprechende Beanstandung in den Zeichnungs-Abschnitt ein, damit die Abschnittsanzeige die tatsächliche Lücke widerspiegelt.",
+      "completenessTitle": "Wenn die Schrift unvollständig ist",
+      "completenessIntro": "Fehlt ein universal erforderlicher Abschnitt (Titel, Ansprüche, Beschreibungstext oder Zusammenfassung), vergeben wir keine Note. Eine Top-Bewertung auf einer leeren Schrift wäre irreführend.",
+      "trustTitle": "Kein KI-Urteil",
+      "trustIntro": "Jede Eingabe in Ihre Bewertung ist ein KORRIGIEREN/PRÜFEN/OK-Status, gesetzt von einem deterministischen Prüfer. Jede Ausgabe ist eine reine arithmetische Aggregation. Dieselbe Schrift erhält stets dieselbe Bewertung. PatentLint lädt Ihre Schrift nirgendwo hoch — die Prüfung läuft vollständig in Ihrem Browser.",
+      "disclaimerTitle": "Was eine A-Bewertung bedeutet — und was nicht",
+      "disclaimerIntro": "Eine A-Bewertung bedeutet, dass der Prüfkatalog von PatentLint keine Beanstandungen gefunden hat. Sie bedeutet nicht, dass Ihre Schrift einreichungsbereit ist. Eine inhaltliche Prüfung durch eine zugelassene Vertretung wird weiterhin empfohlen.",
+      "reportTitle": "Helfen Sie uns weiter — falsche Treffer melden",
+      "reportIntro": "Kein Prüfer ist fehlerfrei. Walker-basierte Prüfungen (Rückbezug, Stützung, Bezugnahmen auf Zeichnungen) tragen ein geringes Fehlerrisiko; da die Bewertung nun davon abhängt, kann eine ungerechtfertigte Beanstandung eine Notenstufe kosten. Über den «Melden»-Knopf an jedem Triage-Eintrag wird eine rein strukturelle Diagnose-Spur mitgesendet — Zählwerte, Codepoints, abgeschlossene Aufzählungen — niemals der Anspruchsinhalt oder der Schrifttext. So können wir den Fehler eingrenzen, ohne Ihre Erfindung je zu sehen."
+    },
+    "howWeScore": "Bewertungsmaßstab →"
   }
 }

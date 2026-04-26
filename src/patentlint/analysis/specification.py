@@ -182,8 +182,15 @@ def check_required_sections(full_text: str) -> list[CheckItem]:
 
     Uses existing section extractors where available, regex header matching
     for Title detection.
+
+    Brief Description of Drawings is conditionally required per
+    37 CFR 1.74 ("when there are drawings, there shall be a brief
+    description"). We detect drawings via figure references parsed
+    from the body — robust to the case where BDoD heading is removed
+    while FIG. N references remain in the detailed description.
     """
     from patentlint.models import CheckItem
+    from patentlint.analysis.drawings import _extract_figure_ids
     from patentlint.parser.sections import (
         extract_cross_reference_section,
         extract_background_section,
@@ -215,16 +222,23 @@ def check_required_sections(full_text: str) -> list[CheckItem]:
         "Abstract of the Disclosure": bool(extract_abstract_section(full_text)),
     }
 
-    # Required sections (all except Cross-Reference which is optional)
+    # 37 CFR 1.74: BDoD is conditional on drawings existing. Detect figure
+    # references anywhere in the spec body — this catches cases where the
+    # BDoD heading is removed but FIG. 1 / FIG. 2 still appear in the
+    # detailed description.
+    drawings_exist = bool(_extract_figure_ids(full_text))
+
+    # Required sections — BDoD only required when drawings are present.
     required = [
         "Title of the Invention",
         "Background of the Invention",
         "Brief Summary of the Invention",
-        "Brief Description of the Drawings",
         "Detailed Description of the Invention",
         "Claims",
         "Abstract of the Disclosure",
     ]
+    if drawings_exist:
+        required.insert(3, "Brief Description of the Drawings")
 
     optional = [
         "Cross-Reference to Related Applications",

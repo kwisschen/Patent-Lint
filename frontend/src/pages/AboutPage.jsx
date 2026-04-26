@@ -2,7 +2,7 @@
 // Copyright (c) 2025 Christopher Chen
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Check, Mail, ShieldCheck, Server } from 'lucide-react'
+import { Check, Mail, ShieldCheck, Server, Github, Linkedin } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
 import PageCTA from '../components/PageCTA'
 import { useCountUp } from '../hooks/useCountUp'
@@ -774,6 +774,8 @@ function BuilderStory({ t }) {
 
   const links = [
     { href: 'mailto:kwisschen@gmail.com', icon: Mail, label: 'Email' },
+    { href: 'https://github.com/kwisschen', icon: Github, label: 'GitHub' },
+    { href: 'https://linkedin.com/in/kwisschen', icon: Linkedin, label: 'LinkedIn' },
   ]
 
   return (
