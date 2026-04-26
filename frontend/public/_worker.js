@@ -1,49 +1,51 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 // Copyright (c) 2025 Christopher Chen
 //
-// Anonymous error-report endpoint — Cloudflare Pages Function.
+// Cloudflare Pages single-file Worker.
 //
-// Receives POST /api/report from the ReportModal in the frontend,
-// forwards the structural diagnostic payload to GitHub Issues on
-// the Patent-Lint repo, and returns { ok: true } or
-// { ok: false, reason }.
+// Handles /api/report (anonymous error-report endpoint) and falls
+// every other request through to Pages' static-asset serving via
+// env.ASSETS.fetch. This single-file pattern is the well-supported
+// path for `wrangler pages deploy <dir>` workflows, where directory-
+// based functions/ detection is unreliable.
 //
-// Why GitHub Issues (instead of a custom DB / admin UI):
-//   - Maintainer (and Claude Code, via gh CLI) can read reports as
+// Why GitHub Issues (instead of a custom DB):
+//   - Maintainer (and Claude Code via gh CLI) reads reports as
 //     `gh issue list --label report` — no separate UI to build.
-//   - GitHub's issue UI handles search, labels, comments, close
-//     states, mobile notifications, and reactions for triage status.
-//   - Issues live in a private repo, so they're maintainer-only.
-//   - Free tier handles this trivially.
+//   - GitHub's issue UI handles search, labels, comments, mobile
+//     notifications, and reactions for triage.
+//   - Issues live in the private Patent-Lint repo, so they're
+//     maintainer-only.
 //
 // Env vars (set in Cloudflare Pages dashboard):
-//   GITHUB_ISSUES_TOKEN   fine-grained PAT, scoped to Issues:Write
+//   GITHUB_ISSUES_TOKEN   fine-grained PAT scoped to Issues:Write
 //                         on kwisschen/Patent-Lint only
 //   GITHUB_ISSUES_REPO    "kwisschen/Patent-Lint" (defaults if unset)
-//
-// Privacy invariants enforced here:
-//   - No IP logging (we never read request.headers["cf-connecting-ip"]
-//     or request.cf)
-//   - No cookies set
-//   - Origin gate (only patentlint.com may submit)
-//   - Payload size capped at 8 KB (reports are small fingerprints)
-//   - No content scrubbing — the modal previewed exactly what's in
-//     the payload, so nothing is hidden from the user
 
 const ALLOWED_ORIGIN = "https://patentlint.com";
 const MAX_BODY_BYTES = 8 * 1024;
 const DEFAULT_REPO = "kwisschen/Patent-Lint";
 
-export async function onRequestOptions() {
-  return new Response(null, {
-    status: 204,
-    headers: corsHeaders(),
-  });
-}
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
 
-export async function onRequestPost(context) {
-  const { request, env } = context;
+    if (url.pathname === "/api/report") {
+      if (request.method === "OPTIONS") {
+        return new Response(null, { status: 204, headers: corsHeaders() });
+      }
+      if (request.method === "POST") {
+        return handleReport(request, env);
+      }
+      return json({ ok: false, reason: "method_not_allowed" }, 405);
+    }
 
+    // Everything else: serve static assets.
+    return env.ASSETS.fetch(request);
+  },
+};
+
+async function handleReport(request, env) {
   const origin = request.headers.get("origin") ?? "";
   if (origin && origin !== ALLOWED_ORIGIN) {
     return json({ ok: false, reason: "origin_not_allowed" }, 403);
@@ -98,8 +100,6 @@ export async function onRequestPost(context) {
   }
 
   if (!ghResponse.ok) {
-    // GitHub returned 4xx or 5xx. Don't leak detail to the client;
-    // the response body lands in Cloudflare's observability surface.
     console.error("github issue create failed:", ghResponse.status, await ghResponse.text());
     return json({ ok: false, reason: "github_create_failed" }, 502);
   }
@@ -107,20 +107,14 @@ export async function onRequestPost(context) {
   return json({ ok: true }, 202);
 }
 
-// Build the GitHub Issue payload. Title is short and greppable; body
-// renders the structural fields as a markdown code block so future-
-// you (or Claude reading via `gh issue view`) sees the exact wire
-// shape.
 function buildIssue(payload) {
   const checkKey = payload.check_key;
-  const fingerprint = typeof payload.fixture_shape_hash === "string"
-    ? ` (${payload.fixture_shape_hash})`
-    : "";
+  const fingerprint =
+    typeof payload.fixture_shape_hash === "string"
+      ? ` (${payload.fixture_shape_hash})`
+      : "";
   const title = `[report] ${checkKey}${fingerprint}`;
 
-  // Sort keys for deterministic body output. Same fingerprint
-  // shape produces identical issue body, regardless of object
-  // iteration order.
   const sortedKeys = Object.keys(payload).sort();
   const lines = sortedKeys.map((k) => {
     const v = payload[k];
@@ -138,14 +132,11 @@ function buildIssue(payload) {
     "_Submitted via `POST /api/report`. No claim text, no draft contents, no IP logging — see Privacy Policy._",
   ].join("\n");
 
-  // Labels: always `report`. Add jurisdiction label if present so
-  // `gh issue list --label cn` works for jurisdiction-specific
-  // triage. Labels must already exist on the repo to apply; if
-  // they don't, the API call still succeeds but the label is
-  // silently dropped (set up jurisdiction labels once in the
-  // GitHub repo settings).
   const labels = ["report"];
-  if (typeof payload.jurisdiction === "string" && /^[a-z]{2,3}$/.test(payload.jurisdiction)) {
+  if (
+    typeof payload.jurisdiction === "string" &&
+    /^[a-z]{2,3}$/.test(payload.jurisdiction)
+  ) {
     labels.push(payload.jurisdiction);
   }
 
