@@ -184,6 +184,16 @@
       "fieldLocale": "Language",
       "fieldBuild": "Build",
       "diagnosticHeader": "Diagnostic trail (structural metadata, no claim content — see Privacy §6):"
+    },
+    "reportModal": {
+      "title": "Send an anonymous report?",
+      "body": "A small structured payload goes to PatentLint over HTTPS so we can investigate this check. No claim text, no draft contents, no email address, no IP logging. Every field is shown below — counts, codepoints, and category labels only.",
+      "previewHeading": "Fields that will be sent:",
+      "send": "Send anonymously",
+      "cancel": "Cancel",
+      "emailFallback": "Prefer email? Send via mailto instead",
+      "toastSuccess": "Thank you — report received.",
+      "toastFailure": "Couldn't send right now — try email instead."
     }
   },
   "cta": {
@@ -1369,6 +1379,10 @@
       "emailLabel": "Email:",
       "githubLabel": "GitHub:"
     },
+    "s12": {
+      "title": "Anonymous error reports",
+      "p1": "If you click \"Send anonymously\" on a check, you give PatentLint permission to use the structural data to improve the product. You retain all rights to your patent draft, which stays on your device. Because reports are anonymous, we may not be able to follow up directly — but we read every report."
+    },
     "copyright": "Copyright © 2025 Christopher Chen. All rights reserved.",
     "crossLinks": "See also: <1>Privacy Policy</1> · <3>Security</3>"
   },
@@ -1419,7 +1433,8 @@
       "p1": "When you click a feedback link, your browser opens your own email client (or a webmail compose window) addressed to kwisschen@gmail.com. We do not host a form. We receive whatever you choose to write and send.",
       "p2": "We use feedback to fix bugs and respond to you. We do not share feedback with third parties or use it for any purpose other than improving PatentLint and replying to your message.",
       "p3": "Error reports sent via the \"Report error\" links may include a compact \"Diagnostic trail\" block — structural metadata about which walker code path produced the finding (regex-match outcomes, character counts, extraction-path tags). The trail contains no claim text, no nouns, no drafted content; it is designed so we can diagnose walker bugs without seeing your draft. You can review the entire email body before sending and delete the trail block if you prefer.",
-      "p4": "If you want to send feedback pseudonymously, use an email-aliasing service (e.g., Apple Hide My Email, Gmail + aliases, Firefox Relay, ProtonMail aliases). We receive the alias address; your real address stays with your provider. We do not correlate alias addresses with any other data."
+      "p4": "If you want to send feedback pseudonymously, use an email-aliasing service (e.g., Apple Hide My Email, Gmail + aliases, Firefox Relay, ProtonMail aliases). We receive the alias address; your real address stays with your provider. We do not correlate alias addresses with any other data.",
+      "p5": "Some triage items also offer a \"Send anonymously\" button that posts the structural diagnostic payload (counts, codepoints, category labels — never claim text or draft content) to a private GitHub issue tracker only the maintainer can see. The dialog shows you the exact payload before sending; nothing is hidden, no email or IP is collected, and the submission cannot be linked back to you."
     },
     "s7": {
       "title": "Third-party services",
