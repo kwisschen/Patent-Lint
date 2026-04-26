@@ -12,11 +12,13 @@ const SECTION_WEIGHTS = [
 
 const GATE_RULES = [
   { fix: 0, letter: 'A' },
-  { fix: 1, letter: 'B-' },
-  { fix: 2, letter: 'C+' },
-  { fix: 3, letter: 'C' },
-  { fix: 4, letter: 'D' },
-  { fix: 5, letter: 'F' },
+  { fix: 1, letter: 'B+' },
+  { fix: 2, letter: 'B' },
+  { fix: 3, letter: 'B-' },
+  { fix: 4, letter: 'C+' },
+  { fix: 5, letter: 'C' },
+  { fix: 6, letter: 'D' },
+  { fix: 7, letter: 'F' },
 ]
 
 function Section({ title, children }) {
