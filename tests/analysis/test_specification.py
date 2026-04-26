@@ -189,6 +189,9 @@ class TestRequiredSections:
         assert verify[0].message_key == "checks.optional_section_missing"
 
     def test_minimal_doc_claims_and_abstract_only(self):
+        # No figure references in the body → BDoD is conditionally
+        # not required (37 CFR 1.74). Other required sections still
+        # missing should be flagged.
         doc = (
             "CLAIMS\n1. A widget comprising a base plate.\n\n"
             "ABSTRACT OF THE DISCLOSURE\nA widget is disclosed."
@@ -196,10 +199,26 @@ class TestRequiredSections:
         results = check_required_sections(doc)
         amend = [r for r in results if r.status == "amend"]
         assert len(amend) == 1
-        # Should list multiple missing required sections
         assert "Background" in amend[0].message
         assert "Summary" in amend[0].message
         assert "Detailed Description" in amend[0].message
+        # BDoD NOT required when no figures are mentioned anywhere in body.
+        assert "Brief Description of the Drawings" not in amend[0].message
+
+    def test_bdod_required_when_figures_referenced(self):
+        # Body mentions FIG. 1 but the BDoD heading is removed —
+        # BDoD must surface as missing per 37 CFR 1.74.
+        doc = (
+            "TITLE OF THE INVENTION\nWidget With Base Plate\n\n"
+            "BACKGROUND OF THE INVENTION\nWidgets are known.\n\n"
+            "BRIEF SUMMARY OF THE INVENTION\nA widget is disclosed.\n\n"
+            "DETAILED DESCRIPTION OF THE INVENTION\nFIG. 1 shows the widget.\n\n"
+            "CLAIMS\n1. A widget comprising a base plate.\n\n"
+            "ABSTRACT OF THE DISCLOSURE\nA widget is disclosed."
+        )
+        results = check_required_sections(doc)
+        amend = [r for r in results if r.status == "amend"]
+        assert len(amend) == 1
         assert "Brief Description of the Drawings" in amend[0].message
 
     def test_variant_header_spellings(self):

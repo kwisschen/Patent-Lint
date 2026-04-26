@@ -24,6 +24,7 @@ from patentlint.rubric import (
     flatten_checks_from_lists,
     gate_cap_for_fix_count,
     letter_for_score,
+    section_for_check,
     section_for_message_key,
 )
 
@@ -332,6 +333,89 @@ class TestImpactList:
             has_drawings=False,
         )
         assert grade.impact_list == []
+
+
+# ── requiredSections.amend → Drawings routing ───────────────────────────
+
+
+class TestRequiredSectionsRouting:
+    """When a requiredSections FIX names ONLY drawings-related sections
+    (BDoD or 符號說明), route the FIX to the Drawings rubric section so
+    the section pills tell the truth (Drawings score drops; Spec score
+    stays clean). Mixed-missing cases stay in SPEC."""
+
+    def _check_with_sections(self, message_key, sections_str):
+        return CheckItem(
+            status="amend",
+            message="Missing required sections",
+            message_key=message_key,
+            details_params={"sections": sections_str},
+        )
+
+    def test_tw_bdod_only_routes_to_drawings(self):
+        c = self._check_with_sections("check.tw.spec.requiredSections.amend", "圖式簡單說明")
+        assert section_for_check(c) == RubricSection.DRAWINGS
+
+    def test_tw_symbol_table_only_routes_to_drawings(self):
+        c = self._check_with_sections("check.tw.spec.requiredSections.amend", "符號說明")
+        assert section_for_check(c) == RubricSection.DRAWINGS
+
+    def test_tw_bdod_plus_symbol_table_routes_to_drawings(self):
+        c = self._check_with_sections("check.tw.spec.requiredSections.amend", "圖式簡單說明, 符號說明")
+        assert section_for_check(c) == RubricSection.DRAWINGS
+
+    def test_tw_mixed_missing_stays_in_spec(self):
+        # BDoD + 技術領域 missing → mixed; routing to Drawings would lose
+        # the non-drawings signal. Keep on SPEC.
+        c = self._check_with_sections("check.tw.spec.requiredSections.amend", "圖式簡單說明, 技術領域")
+        assert section_for_check(c) == RubricSection.SPECIFICATION
+
+    def test_tw_non_drawings_only_stays_in_spec(self):
+        c = self._check_with_sections("check.tw.spec.requiredSections.amend", "技術領域, 先前技術")
+        assert section_for_check(c) == RubricSection.SPECIFICATION
+
+    def test_cn_bdod_only_routes_to_drawings(self):
+        c = self._check_with_sections("check.cn.spec.requiredSections.amend", "附图说明")
+        assert section_for_check(c) == RubricSection.DRAWINGS
+
+    def test_us_bdod_only_routes_to_drawings(self):
+        c = self._check_with_sections("checks.required_sections_missing", "Brief Description of the Drawings")
+        assert section_for_check(c) == RubricSection.DRAWINGS
+
+    def test_non_required_sections_check_unaffected(self):
+        # A non-requiredSections check with details_params still routes
+        # by the normal key-based path.
+        c = CheckItem(
+            status="amend",
+            message="x",
+            message_key="check.tw.spec.paragraphNumbering.amendFormat",
+            details_params={"sections": "圖式簡單說明"},  # irrelevant for this key
+        )
+        assert section_for_check(c) == RubricSection.SPECIFICATION
+
+    def test_no_details_params_falls_back_to_spec(self):
+        c = CheckItem(
+            status="amend",
+            message="x",
+            message_key="check.tw.spec.requiredSections.amend",
+        )
+        assert section_for_check(c) == RubricSection.SPECIFICATION
+
+    def test_routing_affects_section_grade(self):
+        # End-to-end: a TW draft that has drawings (figures detected),
+        # a missing 圖式簡單說明 should drop the Drawings score, NOT Spec.
+        check = self._check_with_sections("check.tw.spec.requiredSections.amend", "圖式簡單說明")
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.TW,
+            all_checks=[check],
+            has_drawings=True,
+        )
+        spec = next(sg for sg in grade.section_grades if sg.section == RubricSection.SPECIFICATION)
+        drawings = next(sg for sg in grade.section_grades if sg.section == RubricSection.DRAWINGS)
+        assert spec.fix_count == 0
+        assert spec.score == 100
+        assert drawings.fix_count == 1
+        assert drawings.score == 85  # 100 - 15
 
 
 # ── Advisory REVIEW exclusion ────────────────────────────────────────────
