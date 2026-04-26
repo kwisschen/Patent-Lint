@@ -1463,5 +1463,55 @@
     },
     "copyright": "Copyright © 2025 Christopher Chen. All rights reserved.",
     "crossLinks": "あわせてご参照：<1>利用規約</1>・<3>セキュリティ</3>"
+  },
+  "rubric": {
+    "trust": {
+      "line": "同じ原稿は、同じ評価。AI 不使用。"
+    },
+    "cap": {
+      "oneFix": "FIX 1 件で評価上限が B- に",
+      "twoFix": "FIX 2 件で上限 C+",
+      "threeFix": "FIX 3 件で上限 C",
+      "fourFix": "FIX 4 件で上限 D",
+      "fiveFix": "FIX {{count}} 件で上限 F"
+    },
+    "completenessGate": {
+      "title": "原稿が不完全 — 評価不可",
+      "missingSections": "必要な章を欠いています：{{sections}}"
+    },
+    "section": {
+      "specification": "明細書",
+      "drawings": "図面",
+      "claims": "特許請求の範囲",
+      "abstract": "要約",
+      "antecedent_spec_support": "引用関係と裏付け",
+      "title": "発明の名称",
+      "notApplicable": "対象外",
+      "notApplicableTooltip": "図面が検出されないため、この章は評価対象外"
+    },
+    "impactList": {
+      "title": "評価を最も上げる項目",
+      "delta": "解消で +{{delta}} 点",
+      "sectionLabel": "{{section}}"
+    },
+    "version": "評価基準 v{{version}}（{{count}} 件のチェック）",
+    "gradePill": "{{letter}}",
+    "page": {
+      "title": "PatentLint は原稿をどう評価するか",
+      "subtitle": "決定的な評価基準。AI 判断や機械学習は用いません。",
+      "weightsTitle": "章ごとの重み",
+      "weightsIntro": "各チェックは以下 5 章のいずれかに集計されます。米国、中国、台湾の各出願で重みは同一です。",
+      "gateTitle": "FIX ゲートの仕組み",
+      "gateIntro": "法定の不備が評価を主導します。FIX が 1 件でもあれば、他章が完璧でも上限は B- になります。実務分流の論理「まず障害の有無、次に仕上がり」と一致します。",
+      "gateRule": "FIX {{count}} 件 → 最高 {{letter}}",
+      "conditionalTitle": "章が適用外となる場合",
+      "conditionalIntro": "図面のない原稿（化学、方法、ビジネスモデル）は図面の章を正当に省略できます。図面を「対象外」とし、その 10 % の重みを他 4 章に按分配分するため、図面の不存在は減点になりません。",
+      "completenessTitle": "原稿が不完全な場合",
+      "completenessIntro": "必須章（発明の名称、特許請求の範囲、明細書本文、要約）に実体がない場合、評価は付与されません。空原稿に高評価を付すことは誤誘導となります。",
+      "trustTitle": "AI 判断は使いません",
+      "trustIntro": "評価への入力は決定論的なチェッカが付した FIX／REVIEW／PASS の状態のみであり、出力は純粋な加重集計です。同じ原稿には常に同じ評価が付きます。PatentLint は原稿をどこにも送信せず、解析は完全にお手元のブラウザ内で完了します。",
+      "disclaimerTitle": "A 評価が意味すること・しないこと",
+      "disclaimerIntro": "A 評価は PatentLint のルール集合で問題が見つからなかったことを示します。出願準備が整ったことを意味するものではなく、登録弁理士による実体的な審視は引き続き必要です。"
+    }
   }
 }
