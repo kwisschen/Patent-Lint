@@ -177,6 +177,16 @@
       "fieldBrowser": "浏览器",
       "fieldLocale": "语言",
       "fieldBuild": "版本",
+      "fieldFlaggedCount": "标记数",
+      "fieldTotalCount": "总数",
+      "fieldTotalKind": "计数对象",
+      "fieldHitCount": "命中数",
+      "fieldShapeHash": "结构哈希",
+      "fieldReasonCode": "原因",
+      "fieldFindingsInGroup": "组内项目数",
+      "fieldClaimCount": "影响权利要求数",
+      "fieldTotalClaims": "权利要求总数",
+      "fieldIssueCount": "问题数",
       "diagnosticHeader": "诊断轨迹（结构性元数据，不含说明书内容，详见隐私政策 §6）："
     },
     "emailGreeting": "Christopher 你好，",
@@ -187,13 +197,13 @@
     "enterprisePlaceholder": "[请简要说明您的部署需求：律所或团队规模与专业领域、执业地区、预估文稿量、评估时程，以及任何特殊要求（例如为符合 ITAR 或数据主权法规而采行的内网或 air-gapped 安装、SSO 集成、定制化检查项目等）。]",
     "reportModal": {
       "title": "匿名提交错误反馈吗？",
-      "body": "PatentLint 会通过 HTTPS 收到一段小型的结构化数据，以便我们调查这次检查。不会发送权利要求内容、文稿内容、邮箱地址或 IP。下方显示所有字段 — 仅包含计数、Unicode 码位与分类标签。",
-      "previewHeading": "提交内容字段：",
+      "body": "PatentLint 会通过 HTTPS 收到一段小型的结构化数据，以便我们调查这次检查。不会发送权利要求内容、文稿内容、邮箱地址或 IP。下方显示所有将提交字段，仅包含计数、Unicode 码位与分类标签。",
+      "previewHeading": "提交内容：",
       "send": "匿名提交",
       "cancel": "取消",
       "emailFallback": "想用邮箱？改用 mailto 发送",
-      "toastSuccess": "感谢您 — 已收到反馈。",
-      "toastFailure": "暂时无法发送 — 请改用邮箱。"
+      "toastSuccess": "感谢您，已收到反馈。",
+      "toastFailure": "暂时无法发送，请改用邮箱。"
     }
   },
   "cta": {
@@ -591,8 +601,8 @@
     "figuresSequentialFix": "请依 MPEP § 608.02 将附图重新编号为递增顺序。",
     "orphanedBriefFigures": "附图：{{list}}。请在具体实施方式中添加对这些附图的引用，或从附图说明中移除。",
     "orphanedDetailedFigures": "附图：{{list}}。请在附图说明中添加对这些附图的描述，或从具体实施方式中移除引用。",
-    "legalPhraseologyAbstract": "依 MPEP § 608.01(b)，摘要应避免\"权利要求惯用之形式与法律用语\"——该手册明确指出\"means\"与\"said\"，实务指南并将此类别延伸至连接词（\"comprising\"、\"comprises\"等）、权利要求修饰语（\"wherein\"）及权利要求式古典代词（\"thereof\"、\"the same\"）。请改写上列标记用语。",
-    "meritLanguageAbstract": "依 MPEP § 608.01(b)，摘要不得涉及发明之自述优点——应避免评价性形容词（\"novel\"、\"innovative\"、\"unique\"、\"important\"、\"significant\"）及自指性叙述（\"the present invention\"）。请改写上列标记用语。",
+    "legalPhraseologyAbstract": "依 MPEP § 608.01(b)，摘要应避免\"权利要求惯用之形式与法律用语\"，该手册明确指出\"means\"与\"said\"，实务指南并将此类别延伸至连接词（\"comprising\"、\"comprises\"等）、权利要求修饰语（\"wherein\"）及权利要求式古典代词（\"thereof\"、\"the same\"）。请改写上列标记用语。",
+    "meritLanguageAbstract": "依 MPEP § 608.01(b)，摘要不得涉及发明之自述优点，应避免评价性形容词（\"novel\"、\"innovative\"、\"unique\"、\"important\"、\"significant\"）及自指性叙述（\"the present invention\"）。请改写上列标记用语。",
     "abstractStructureFix": "摘要须为单一段落，以句号、感叹号或问号结尾，且须作为专利说明书最后一部分，依 MPEP § 608.01(b)。",
     "abstractImpliedPhrasesFix": "依 MPEP § 608.01(b)，“This disclosure provides...”或“A method is provided...”等开头应改为直接描述发明（例如“A method that...”）。",
     "abstractWordCountFix": "摘要须介于 50 至 150 字之间，依 MPEP § 608.01(b)。请修改以符合此范围。",
@@ -617,7 +627,7 @@
       "subjectConsistencyParseUnclear": "这些从属权利要求使用之前序型式未被识别。依专利法实施细则 §25，可接受之前序型式包含：如权利要求N所述[的]X、如权利要求N所记载[的]X、如权利要求N[的]X。请人工确认前序，若为 CNIPA 合规前序而未能识别，请回报错误。",
       "transitionPhrase": "根据审查指南，独立权利要求应包含“其特征在于”等特征部分连接词，用以区分已知要素与新颖特征。请检查标记的权利要求。",
       "twTerminology": "CNIPA 说明书中发现台湾（TIPO）专利用语。CNIPA 中称为“权利要求”。请替换上列标记用语。",
-      "claimsSpecReference": "根据审查指南 第二部分第二章，权利要求不得引用说明书或附图来限定保护范围。权利要求应当自成一体——请删除上列标记引用。",
+      "claimsSpecReference": "根据审查指南 第二部分第二章，权利要求不得引用说明书或附图来限定保护范围。权利要求应当自成一体，请删除上列标记引用。",
       "multiMultiDep": "根据专利法实施细则 §25，多项从属权利要求不得作为另一多项从属权利要求的引用基础。请调整引用关系。",
       "dependentOrdering": "根据审查指南 第二部分第二章，引用同一独立权利要求的所有从属权利要求应连续排列在下一项独立权利要求之前。请调整排列顺序。",
       "connectionRelationships": "标记的组件：{{sample_names}}（共 {{component_count}} 个）。请补充连接、设置于、耦接 等动词用语，记载组件之间的结构连接关系。",
@@ -1382,7 +1392,7 @@
     },
     "s12": {
       "title": "匿名错误反馈",
-      "p1": "当您在检查项上点击「匿名提交」时，即授权 PatentLint 使用该结构化数据以改进产品。您保留专利说明书的全部权利，文稿内容也不会离开您的设备。由于反馈为匿名形式，我们可能无法直接回复您 — 但我们会阅读每一份反馈。"
+      "p1": "当您在检查项上点击「匿名提交」时，即授权 PatentLint 使用该结构化数据以改进产品。您保留专利说明书的全部权利，文稿内容也不会离开您的设备。由于反馈为匿名形式，我们可能无法直接回复您，但我们会阅读每一份反馈。"
     },
     "copyright": "Copyright © 2025 Christopher Chen。保留一切权利。",
     "crossLinks": "另请参阅：<1>隐私政策</1>・<3>安全性说明</3>"
@@ -1485,7 +1495,7 @@
       "line": "无 AI。同一份文稿，每次评分皆相同。"
     },
     "completenessGate": {
-      "title": "稿件不完整 — 无法评等",
+      "title": "稿件不完整，无法评等",
       "missingSections": "缺少必要章节：{{sections}}"
     },
     "section": {
@@ -1496,7 +1506,7 @@
       "antecedent_spec_support": "引用基础与支持依据",
       "title": "发明名称",
       "notApplicable": "不适用",
-      "notApplicableTooltip": "未检测到附图 — 此章节不纳入评等"
+      "notApplicableTooltip": "未检测到附图，此章节不纳入评等"
     },
     "impactList": {
       "title": "提升评等之关键项目",
@@ -1518,10 +1528,10 @@
       "completenessTitle": "当稿件不完整时",
       "completenessIntro": "若必要章节（发明名称、权利要求书、说明书本文或摘要）为空，系统不予评等。对空白稿件给予优等评等将构成误导。",
       "trustTitle": "不使用 AI 判断",
-      "trustIntro": "评等之输入仅为各确定性检查器所判定之 修正／检视／通过 状态，输出纯为加权加总。同一份稿件必得相同评等。PatentLint 不上传任何稿件 — 全部分析均于您的浏览器内完成。",
+      "trustIntro": "评等之输入仅为各确定性检查器所判定之 修正／检视／通过 状态，输出纯为加权加总。同一份稿件必得相同评等。PatentLint 不上传任何稿件，全部分析均于您的浏览器内完成。",
       "disclaimerTitle": "A 等代表什么，又不代表什么",
       "disclaimerIntro": "A 等表示 PatentLint 之规则库未发现缺失，但不代表稿件已达申请就绪之品质。仍建议由具备资格之专利代理人进行实质审视。",
-      "reportTitle": "协助我们精进 — 回报误判",
+      "reportTitle": "协助我们精进，回报误判",
       "reportIntro": "检查不可能毫无瑕疵。先行词、说明书支持、附图引用等以走访器（walker）为基础之检查仍存有少量误判风险；加之评等机制后，一项误判之「修正」可能影响稿件之等第。每项分流项目皆附「回报」按钮，仅随附结构性之诊断轨迹（计数、字符码点、封闭式枚举），绝不包含权利要求内容或稿件文本，使我们得以在完全不接触发明内容之情况下定位问题。"
     },
     "howWeScore": "评分方式 →",
