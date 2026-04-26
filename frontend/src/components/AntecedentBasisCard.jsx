@@ -4,8 +4,9 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AlertTriangle, ChevronRight, Flag } from 'lucide-react'
 import { Button } from './ui/button'
-import { composeFeedback } from '../lib/feedback'
+import { composeFeedback, sendReport } from '../lib/feedback'
 import { useFeedback } from './FeedbackPicker'
+import ReportModal from './ReportModal'
 
 // CJK reference-form prefixes used by the TW walker (該/所述/前述/該等/該些).
 // Matched without word boundaries because CJK text has no whitespace
@@ -99,28 +100,49 @@ function formatClaimRange(ids, t) {
 
 function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, jurisdiction }) {
   const [expanded, setExpanded] = useState(false)
+  const [reportModalOpen, setReportModalOpen] = useState(false)
+  const [reportContext, setReportContext] = useState(null)
   const { sendFeedback } = useFeedback()
   const label = formatClaimRange(claimIds, t)
 
-  const handleReport = (claimId) => {
-    // Aggregate per-claim diagnostics across findings the user is about to
-    // report. Each underlying walker finding carries its own diagnostics
-    // dict; for the emitted fingerprint we pick the first finding's
-    // diagnostics for THIS claim (they're shape-identical across sibling
-    // findings under the same grouping) and augment with a count.
+  // Build the per-claim payload + diagnostics dict shared by both the
+  // anonymous send and the mailto fallback, so the modal preview matches
+  // what the email body would otherwise contain.
+  const buildReportContext = (claimId) => {
     const claimFindings = findings.filter((f) => f.claim_id === claimId)
-    const baseDx = claimFindings[0]?.diagnostics || null
-    const diagnostics = baseDx
-      ? { ...baseDx, findings_in_group: claimFindings.length }
-      : null
+    const baseDx = claimFindings[0]?.diagnostics || {}
+    return {
+      claimId,
+      diagnostics: { ...baseDx, findings_in_group: claimFindings.length },
+    }
+  }
+
+  const handleReport = (claimId) => {
+    setReportContext(buildReportContext(claimId))
+    setReportModalOpen(true)
+  }
+
+  const handleAnonymousConfirm = () => {
+    if (!reportContext) return { ok: false, reason: 'no_context' }
+    return sendReport({
+      checkKey: 'antecedentBasis',
+      jurisdiction: jurisdiction || 'unknown',
+      locale: i18n.language,
+      diagnostics: { flagged_claim_id: reportContext.claimId, ...reportContext.diagnostics },
+    })
+  }
+
+  const handleMailtoFallback = () => {
+    if (!reportContext) return
+    const baseDx = reportContext.diagnostics || null
     sendFeedback(
       composeFeedback(
         {
           check_key: 'antecedentBasis',
-          claim_id: claimId,
+          claim_id: reportContext.claimId,
           terms: terms.join(', '),
           jurisdiction: jurisdiction || 'unknown',
-          diagnostics,
+          diagnostics: baseDx,
         },
         t,
         { locale: i18n.language },
@@ -274,6 +296,20 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
           )
         })}
       </div>
+      <ReportModal
+        open={reportModalOpen}
+        onOpenChange={setReportModalOpen}
+        checkKey="antecedentBasis"
+        jurisdiction={jurisdiction || 'unknown'}
+        locale={i18n.language}
+        diagnostics={
+          reportContext
+            ? { flagged_claim_id: reportContext.claimId, ...reportContext.diagnostics }
+            : {}
+        }
+        onConfirm={handleAnonymousConfirm}
+        onMailtoFallback={handleMailtoFallback}
+      />
     </div>
   )
 }
