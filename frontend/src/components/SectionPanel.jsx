@@ -5,7 +5,28 @@ import { useTranslation } from 'react-i18next'
 import { ChevronDown } from 'lucide-react'
 import CheckItemComponent from './CheckItem'
 
-export default function SectionPanel({ title, checks = [], defaultOpen = false, children, jurisdiction }) {
+// Map a letter grade to one of the existing status CSS-variable families
+// for the section pill — matches the RubricHero color logic.
+function letterColorVar(letter) {
+  if (!letter || letter === '—') return 'var(--muted-foreground)'
+  if (letter.startsWith('A')) return 'var(--pass-border)'
+  if (letter.startsWith('B') || letter.startsWith('C')) return 'var(--verify-border)'
+  return 'var(--amend-border)' // D / F
+}
+
+export default function SectionPanel({
+  title,
+  checks = [],
+  defaultOpen = false,
+  children,
+  jurisdiction,
+  // Optional per-section rubric grade — when supplied, renders a pill
+  // showing the section's grade letter to the left of the count badges.
+  // When `applicable === false`, renders an "N/A" pill instead with a
+  // tooltip explaining why (no drawings detected, etc.).
+  grade = null,
+  applicable = true,
+}) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(defaultOpen)
 
@@ -22,6 +43,28 @@ export default function SectionPanel({ title, checks = [], defaultOpen = false, 
       >
         <span className="font-semibold">{title}</span>
         <div className="flex items-center gap-2">
+          {applicable && grade !== null && (
+            <span
+              className="rounded-md px-2 py-0.5 text-xs font-bold leading-none"
+              style={{
+                backgroundColor: 'var(--card)',
+                border: `1px solid ${letterColorVar(grade)}`,
+                color: letterColorVar(grade),
+              }}
+              title={t('rubric.gradePill', { letter: grade })}
+            >
+              {grade}
+            </span>
+          )}
+          {!applicable && (
+            <span
+              className="rounded-md px-2 py-0.5 text-[10px] font-medium leading-none text-muted-foreground"
+              style={{ backgroundColor: 'var(--muted)' }}
+              title={t('rubric.section.notApplicableTooltip')}
+            >
+              {t('rubric.section.notApplicable')}
+            </span>
+          )}
           {counts.amend > 0 && (
             <span
               className="rounded px-1.5 py-0.5 text-[10px] font-bold leading-none"

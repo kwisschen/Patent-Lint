@@ -29,9 +29,51 @@ from patentlint.parser.docx_loader import load_docx, load_docx_cn, load_docx_tw
 from patentlint.parser.sections_cn import classify_document_cn, extract_cn_sections_from_docx
 from patentlint.parser.sections_tw import classify_document_tw, extract_tw_sections
 from patentlint.parser.xml_loader import extract_cn_xml_from_zip, parse_cnipa_xml
+from patentlint.rubric import (
+    compute_rubric_grade,
+    detect_completeness_gap,
+    detect_has_drawings,
+    flatten_checks_from_lists,
+)
 
 
 # TODO Phase 7: Add language mismatch detection (English content in CN mode, Chinese content in US mode)
+
+
+def _attach_rubric_grade(
+    result: AnalysisResult,
+    *,
+    has_drawings: bool,
+    title: str,
+    has_claims: bool,
+    has_spec_body: bool,
+    has_abstract: bool,
+) -> None:
+    """Compute and attach the rubric grade to a freshly-built AnalysisResult.
+
+    Uses ``result.to_report_data()`` to gather the canonical user-visible
+    check lists (the same lists the UI / PDF surface), so the grade is
+    grounded in exactly what the drafter sees, not internal state.
+    """
+    report = result.to_report_data()
+    all_checks = flatten_checks_from_lists(
+        report.specification_checks,
+        report.claims_checks,
+        report.drawings_checks,
+        report.abstract_checks,
+    )
+    gap = detect_completeness_gap(
+        title=title,
+        has_claims=has_claims,
+        has_spec_body=has_spec_body,
+        has_abstract=has_abstract,
+    )
+    result.rubric_grade = compute_rubric_grade(
+        jurisdiction=result.jurisdiction,
+        all_checks=all_checks,
+        has_drawings=has_drawings,
+        completeness_gap=gap,
+    )
 
 
 def _run_cn_pipeline(
@@ -111,9 +153,9 @@ def _run_cn_pipeline(
         claim_count = len(claim_ids)
         claims_checks = list(claims_checks) + [
             CheckItem(
-                status="verify",
+                status="amend",
                 message="Possible missing antecedent basis found.",
-                message_key="check.cn.claims.antecedentBasis.verify",
+                message_key="check.cn.claims.antecedentBasis.amend",
                 details=f"{issue_count} term(s) may lack antecedent basis across {claim_count} claim(s).",
                 details_key="details.cn.antecedentBasisTerms",
                 details_params={
@@ -157,9 +199,9 @@ def _run_cn_pipeline(
         claim_count = len(claim_ids)
         claims_checks = list(claims_checks) + [
             CheckItem(
-                status="verify",
+                status="amend",
                 message="Possible claim terms not supported by the specification.",
-                message_key="check.cn.claims.specSupport.verify",
+                message_key="check.cn.claims.specSupport.amend",
                 details=f"{issue_count} term(s) may lack specification support across {claim_count} claim(s).",
                 details_key="details.cn.specSupportTerms",
                 details_params={
@@ -204,7 +246,7 @@ def _run_cn_pipeline(
         + cn_abstract_analysis.check_figures_sequential(cn_doc)
     )
 
-    return AnalysisResult(
+    result = AnalysisResult(
         jurisdiction=Jurisdiction.CN,
         patent_type=cn_doc.patent_type.value,
         paragraph_count=para_count,
@@ -226,6 +268,17 @@ def _run_cn_pipeline(
         antecedent_basis_issues=cn_antecedent_basis,
         unsupported_terms=cn_unsupported_terms,
     )
+    _attach_rubric_grade(
+        result,
+        has_drawings=detect_has_drawings(figures_count=cn_doc.figure_count, figure_refs=cn_doc.figure_refs),
+        title=cn_doc.title,
+        has_claims=bool(cn_doc.claims),
+        has_spec_body=bool(
+            "".join(cn_doc.technical_field + cn_doc.background + cn_doc.summary + cn_doc.detailed_description).strip()
+        ),
+        has_abstract=bool(cn_doc.abstract_text and cn_doc.abstract_text.strip()),
+    )
+    return result
 
 
 def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisdiction.US) -> AnalysisResult:
@@ -336,7 +389,7 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
     cross_ref_citations = sections.detect_prior_art_citations(cross_ref_section) if cross_ref_section else ""
     prior_art_citations = sections.detect_prior_art_citations(background_section) if background_section else ""
 
-    return AnalysisResult(
+    result = AnalysisResult(
         jurisdiction=jurisdiction,
         # Document-level flag
         likely_patent=likely_patent,
@@ -396,6 +449,15 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
         abstract_merit_language_formatted=abstract_merit_language,
         abstract_merit_language_items=abstract_merit_language_items,
     )
+    _attach_rubric_grade(
+        result,
+        has_drawings=detect_has_drawings(figures_count=figures_count),
+        title=title,
+        has_claims=bool(claims),
+        has_spec_body=bool((detailed_desc_section or "").strip() or (background_section or "").strip()),
+        has_abstract=abstract_word_count > 0,
+    )
+    return result
 
 
 def _run_tw_pipeline(
@@ -496,9 +558,9 @@ def _run_tw_pipeline(
         claim_count = len(claim_ids)
         claims_checks = list(claims_checks) + [
             CheckItem(
-                status="verify",
+                status="amend",
                 message="Possible missing antecedent basis found.",
-                message_key="check.tw.claims.antecedentBasis.verify",
+                message_key="check.tw.claims.antecedentBasis.amend",
                 details=f"{issue_count} term(s) may lack antecedent basis across {claim_count} claim(s).",
                 details_key="details.tw.antecedentBasisTerms",
                 details_params={
@@ -524,9 +586,9 @@ def _run_tw_pipeline(
         claim_count = len(claim_ids)
         claims_checks = list(claims_checks) + [
             CheckItem(
-                status="verify",
+                status="amend",
                 message="Possible claim terms not supported by the specification.",
-                message_key="check.tw.claims.specSupport.verify",
+                message_key="check.tw.claims.specSupport.amend",
                 details=f"{issue_count} term(s) may lack specification support across {claim_count} claim(s).",
                 details_key="details.tw.specSupportTerms",
                 details_params={
@@ -569,7 +631,7 @@ def _run_tw_pipeline(
         + tw_cross_ref_analysis.check_figures_sequential(tw_doc)
     )
 
-    return AnalysisResult(
+    result = AnalysisResult(
         jurisdiction=Jurisdiction.TW,
         patent_type=tw_doc.patent_type.value,
         paragraph_count=para_count,
@@ -588,6 +650,17 @@ def _run_tw_pipeline(
         antecedent_basis_issues=tw_antecedent_basis,
         unsupported_terms=tw_unsupported_terms,
     )
+    _attach_rubric_grade(
+        result,
+        has_drawings=detect_has_drawings(figures_count=len(tw_doc.figure_refs), figure_refs=list(tw_doc.figure_refs)),
+        title=tw_doc.title,
+        has_claims=bool(tw_doc.claims),
+        has_spec_body=bool(
+            "".join(tw_doc.technical_field + tw_doc.prior_art + tw_doc.disclosure + tw_doc.embodiment).strip()
+        ),
+        has_abstract=bool(tw_doc.abstract_text and tw_doc.abstract_text.strip()),
+    )
+    return result
 
 
 def analyze_file(

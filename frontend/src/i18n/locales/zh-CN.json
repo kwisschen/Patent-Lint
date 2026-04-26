@@ -139,7 +139,8 @@
     "privacy": "隐私",
     "github": "GitHub",
     "linkedin": "LinkedIn",
-    "feedback": "意见反馈"
+    "feedback": "意见反馈",
+    "rubric": "评分标准"
   },
   "feedback": {
     "report": "反馈错误",
@@ -660,7 +661,7 @@
           "missingFromTable": "权利要求中的元件符号在符号说明中未定义：{{numerals_with_locations}}"
         }
       },
-      "antecedentBasis": "「该」「所述」「前述」加名词，须于同一请求项或母项中以「一」加名词导入。以正则表达式检测，结果为近似值，请自行确认。",
+      "antecedentBasis": "「该」「所述」「前述」加名词应于同一请求项或母项中有对应之先前引介。「一」加名词为惯用形式；其他可接受之引介包括「一个」、「至少一」、「复数个」、「多个」加名词等。以正则表达式检测，结果为近似值，请自行确认。",
       "abstractCharCount": "依專利法施行細則 §21，摘要应在250 字以内。TIPO 不会仅因字数超限而驳回，但请检查是否可精简。",
       "abstractTitleMatch": "依專利審查基準，摘要应提及发明名称/新型名称。请确认摘要是否反映标题。标题：{{detail}}。",
       "commercialLanguage": "依專利法施行細則 §21，摘要不得包含商业性宣传用语。发现：{{terms}}。",
@@ -799,8 +800,8 @@
         "pass": "未检测到功能性限定用语。"
       },
       "antecedentBasis": {
-        "verify": "可能缺少引用基础（§ 112(b)）：「the X／said X」疑似未有先前之「a X」引介。",
-        "pass": "未检测到引用基础问题（§ 112(b)）。"
+        "pass": "未检测到引用基础问题（§ 112(b)）。",
+        "amend": "可能缺少引用基础（§ 112(b)）：「the X／said X」疑似未有先前之「a X」引介。"
       },
       "missingTransition": "权利要求 {{claimNumber}} 缺少连接词（例如 'comprising'、'consisting of'）",
       "missingTransitionDetails": "权利要求 {{claimNumber}} 未包含任何公认的连接词。每项权利要求必须在前序部分与主体之间包含连接词，例如 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' 或 'characterized in that'。",
@@ -869,8 +870,8 @@
           "verify": "{{count}} 个段落未以有效中文标点结尾：{{paragraphs}}（审查指南）。"
         },
         "figureRefConsistency": {
-          "verify": "附图引用不一致：{{figure_ref_inconsistency}}",
-          "pass": "各章节附图引用一致。"
+          "pass": "各章节附图引用一致。",
+          "amend": "附图引用不一致：{{figure_ref_inconsistency}}"
         },
         "patentTypeTerminology": {
           "verify": "发现“{{term}}”，请确认是否与专利类型（发明/实用新型）一致（审查指南）。",
@@ -944,12 +945,12 @@
           "pass": "所有独立装置／系统权利要求均已记载组件的连接关系。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少引用基础（审查指南）：「该／所述」引用未有先前之「一」引介。",
-          "pass": "所有引用之用语皆有引用基础（审查指南）。"
+          "pass": "所有引用之用语皆有引用基础（审查指南）。",
+          "amend": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少引用基础（审查指南）：「该／所述」引用未见对应之先前引介（例如以「一」、「至少一」、「多个」加名词之形式）。"
         },
         "specSupport": {
-          "verify": "{{claims}} 共有 {{issue_count}} 个权利要求用语疑似未获说明书支持（审查指南 第二部分第二章 §3.2.1）。",
-          "pass": "所有权利要求用语皆获说明书支持（审查指南）。"
+          "pass": "所有权利要求用语皆获说明书支持（审查指南）。",
+          "amend": "{{claims}} 共有 {{issue_count}} 个权利要求用语疑似未获说明书支持（审查指南 第二部分第二章 §3.2.1）。"
         },
         "omnibus": {
           "amend": "{{claims}}：权利要求以「如说明书所述」等方式援引说明书或附图，未具体记载技术特征（审查指南 第二部分第二章 §3.3）。",
@@ -1014,8 +1015,8 @@
           "verify": "{{count}}个段落缺少结尾标点：{{paragraphs}}（專利審查基準）。"
         },
         "figureRefConsistency": {
-          "verify": "图式引用不一致：{{figure_ref_inconsistency}}",
-          "pass": "各章节之图式引用一致。"
+          "pass": "各章节之图式引用一致。",
+          "amend": "图式引用不一致：{{figure_ref_inconsistency}}"
         },
         "patentTypeTerminology": {
           "verify": "检测到专利类型用语不一致（发明与新型混用）（專利審查基準）。",
@@ -1115,12 +1116,12 @@
           "pass": "所有獨立裝置／系統項均已記載組件之連接關係。"
         },
         "antecedentBasis": {
-          "verify": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少引用基础：「該／所述／前述」引用未有先前之「一」引介。",
-          "pass": "所有引用之用语均有引用基础。"
+          "pass": "所有引用之用语均有引用基础。",
+          "amend": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少引用基础：「該／所述／前述」引用未见对应之先前引介（例如以「一」、「至少一」、「复数个」加名词之形式）。"
         },
         "specSupport": {
-          "verify": "{{claims}} 共有 {{issue_count}} 个权利要求用语疑似未获说明书支持。",
-          "pass": "所有权利要求用语均获说明书支持。"
+          "pass": "所有权利要求用语均获说明书支持。",
+          "amend": "{{claims}} 共有 {{issue_count}} 个权利要求用语疑似未获说明书支持。"
         },
         "independentPreamble": {
           "pass": "所有独立项均以「一種」开头。",
@@ -1463,5 +1464,51 @@
     },
     "copyright": "Copyright © 2025 Christopher Chen。保留一切权利。",
     "crossLinks": "另请参阅：<1>服务条款</1>・<3>安全性说明</3>"
+  },
+  "rubric": {
+    "trust": {
+      "line": "无 AI。同一份文稿，每次评分皆相同。"
+    },
+    "completenessGate": {
+      "title": "稿件不完整 — 无法评等",
+      "missingSections": "缺少必要章节：{{sections}}"
+    },
+    "section": {
+      "specification": "说明书",
+      "drawings": "附图说明",
+      "claims": "权利要求书",
+      "abstract": "摘要",
+      "antecedent_spec_support": "引用基础与支持依据",
+      "title": "发明名称",
+      "notApplicable": "不适用",
+      "notApplicableTooltip": "未检测到附图 — 此章节不纳入评等"
+    },
+    "impactList": {
+      "title": "提升评等之关键项目",
+      "delta": "解决后可提升 {{delta}} 分",
+      "sectionLabel": "{{section}}"
+    },
+    "version": "评分标准 v{{version}}（共 {{count}} 项检查）",
+    "gradePill": "{{letter}}",
+    "page": {
+      "title": "PatentLint 如何为稿件评等",
+      "subtitle": "评分标准确定且不使用 AI 判断或机器学习。",
+      "weightsTitle": "章节权重",
+      "weightsIntro": "每项检查均归入下列五大章节之一。权重在美国、中国与台湾申请间皆相同。",
+      "gateTitle": "「修正」门槛机制",
+      "gateIntro": "法定瑕疵主导整体评等：只要存在 1 项修正，评等上限即降至 A-，无论其余章节是否完善。此设计呼应实务分流逻辑：先排除关键瑕疵，再论细部品质。",
+      "gateRule": "{{count}} 项修正 → 最高 {{letter}}",
+      "conditionalTitle": "当章节不适用时",
+      "conditionalIntro": "附图说明评分项依两种情境区分处理。第一，若稿件未含任何附图（如化学、方法或商业模式类发明），系统将附图说明标记为「不适用」，并将其 10 % 权重按比例分配至其余四章节，未绘附图之稿件不予扣分。第二，若稿件含附图（具体实施方式中出现「图N」等引用）但缺少对应之「附图说明」章节，该必要章节缺失之修正项目将计入附图说明评分项，使章节评等反映实际缺口。",
+      "completenessTitle": "当稿件不完整时",
+      "completenessIntro": "若必要章节（发明名称、权利要求书、说明书本文或摘要）为空，系统不予评等。对空白稿件给予优等评等将构成误导。",
+      "trustTitle": "不使用 AI 判断",
+      "trustIntro": "评等之输入仅为各确定性检查器所判定之 修正／检视／通过 状态，输出纯为加权加总。同一份稿件必得相同评等。PatentLint 不上传任何稿件 — 全部分析均于您的浏览器内完成。",
+      "disclaimerTitle": "A 等代表什么，又不代表什么",
+      "disclaimerIntro": "A 等表示 PatentLint 之规则库未发现缺失，但不代表稿件已达申请就绪之品质。仍建议由具备资格之专利代理人进行实质审视。",
+      "reportTitle": "协助我们精进 — 回报误判",
+      "reportIntro": "检查不可能毫无瑕疵。先行词、说明书支持、附图引用等以走访器（walker）为基础之检查仍存有少量误判风险；加之评等机制后，一项误判之「修正」可能影响稿件之等第。每项分流项目皆附「回报」按钮，仅随附结构性之诊断轨迹（计数、字符码点、封闭式枚举），绝不包含权利要求内容或稿件文本，使我们得以在完全不接触发明内容之情况下定位问题。"
+    },
+    "howWeScore": "评分方式 →"
   }
 }
