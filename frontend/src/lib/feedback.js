@@ -317,3 +317,74 @@ export function dispatchFeedback(method, email) {
   // method === 'clipboard' → clipboard already written above, nothing to open.
 }
 
+
+// ---------------------------------------------------------------------------
+// Anonymous error-report endpoint (POST /api/report).
+//
+// Same-origin Pages Function — no CORS, no env-var URL, no token in
+// the bundle. The Function forwards to GitHub Issues on the
+// Patent-Lint repo, where the maintainer (and Claude Code via
+// `gh issue list --label report`) reads them.
+//
+// Trade-off vs. the mailto-based flow above:
+//   mailto: zero network calls from PatentLint's tab; user reviews
+//           in their email client; user's email address ends up on
+//           the From header.
+//   anonymous endpoint: one same-origin POST; user reviews the
+//           exact payload in the modal preview before sending; no
+//           account, no email address required.
+// Both flows ship — modal defaults to anonymous, mailto is the
+// in-modal tertiary fallback.
+// ---------------------------------------------------------------------------
+
+export function buildReportPayload({
+  checkKey,
+  jurisdiction,
+  locale,
+  diagnostics,
+}) {
+  const payload = {
+    check_key: checkKey || 'unknown',
+    patentlint_build: buildHash(),
+  }
+  if (jurisdiction) payload.jurisdiction = jurisdiction
+  if (locale) payload.locale = locale
+  if (diagnostics && typeof diagnostics === 'object') {
+    for (const [k, v] of Object.entries(diagnostics)) {
+      if (v === null || v === undefined || v === '') continue
+      payload[k] = v
+    }
+  }
+  return payload
+}
+
+// Send the structural payload to /api/report. Returns
+// { ok: true, payload } on 2xx, { ok: false, reason } on any
+// failure. The modal maps reason → localized toast string; raw HTTP
+// detail never reaches the user.
+export async function sendReport({ checkKey, jurisdiction, locale, diagnostics }) {
+  const payload = buildReportPayload({ checkKey, jurisdiction, locale, diagnostics })
+
+  let response
+  try {
+    response = await fetch('/api/report', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload),
+      credentials: 'omit',
+      referrerPolicy: 'no-referrer',
+    })
+  } catch {
+    return { ok: false, reason: 'network_error' }
+  }
+
+  if (response.status >= 500) {
+    return { ok: false, reason: 'server_error' }
+  }
+  if (!response.ok) {
+    return { ok: false, reason: 'request_failed' }
+  }
+  return { ok: true, payload }
+}
+
+

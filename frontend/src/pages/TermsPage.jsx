@@ -142,6 +142,10 @@ export default function TermsPage() {
         </ul>
       </LegalSection>
 
+      <LegalSection number="12" titleKey="terms.s12.title">
+        <p>{t('terms.s12.p1')}</p>
+      </LegalSection>
+
       <LegalPageFooter>
         <p>{t('terms.copyright')}</p>
         <p>
