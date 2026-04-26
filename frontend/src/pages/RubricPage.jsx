@@ -11,7 +11,7 @@ const SECTION_WEIGHTS = [
 ]
 
 const GATE_RULES = [
-  { fix: 0, letter: 'A+' },
+  { fix: 0, letter: 'A' },
   { fix: 1, letter: 'A-' },
   { fix: 2, letter: 'B+' },
   { fix: 3, letter: 'B-' },
@@ -22,8 +22,7 @@ const GATE_RULES = [
 ]
 
 const LETTER_MAPPING = [
-  { range: '97–100', letter: 'A+' },
-  { range: '93–96', letter: 'A' },
+  { range: '93–100', letter: 'A' },
   { range: '90–92', letter: 'A−' },
   { range: '87–89', letter: 'B+' },
   { range: '83–86', letter: 'B' },
