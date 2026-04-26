@@ -952,9 +952,9 @@ class AnalysisResult(BaseModel):
             issue_count = len(self.antecedent_basis_issues)
             claim_count = len(set(item["claim_id"] for item in self.antecedent_basis_issues))
             claims_checks.append(CheckItem(
-                status="verify",
+                status="amend",
                 message="Possible missing antecedent basis found.",
-                message_key="check.claims.antecedentBasis.verify",
+                message_key="check.claims.antecedentBasis.amend",
                 details=f"{issue_count} issues across {claim_count} claims",
                 details_key="details.antecedentBasisTerms",
                 details_params={"count": str(issue_count), "claims": str(claim_count)},
@@ -973,7 +973,7 @@ class AnalysisResult(BaseModel):
         if self.unsupported_terms:
             unique_phrases = sorted(set(ut.phrase for ut in self.unsupported_terms))
             claims_checks.append(CheckItem(
-                status="verify",
+                status="amend",
                 message="Claim terms not found in specification.",
                 message_key="checks.spec_support_unsupported_terms",
                 details=f"Terms: {', '.join(unique_phrases[:10])}",

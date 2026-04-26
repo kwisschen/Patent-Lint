@@ -414,13 +414,13 @@ class TestFigureReferenceConsistency:
         results = check_figure_reference_consistency(doc)
         assert results[0].status == "pass"
 
-    def test_mismatch_verify(self):
+    def test_mismatch_amend(self):
         doc = _make_cn_doc(
             drawings_description=["图1为结构示意图。", "图3为侧视图。"],
             detailed_description=["如图1所示，装置包括模块。", "如图5所示，处理。"],
         )
         results = check_figure_reference_consistency(doc)
-        assert results[0].status == "verify"
+        assert results[0].status == "amend"
         payload = results[0].details_params["figure_ref_inconsistency"]
         assert 3 in payload["only_drawings"]
         assert 5 in payload["only_embodiment"]

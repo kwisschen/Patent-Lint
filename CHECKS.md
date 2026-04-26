@@ -33,7 +33,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Wherein comma | § 608.01(m) | REVIEW | `claims.whereinComma` | Per-claim: incorrect comma around 'wherein' clause |
 | Punctuation pass | § 608.01(m) | PASS | `claims.punctuationPass` | All claims have correct punctuation |
 | Means-plus-function | § 112(f) | REVIEW / PASS | `check.claims.meansFunction` | Claims invoke 35 U.S.C. § 112(f) means-plus-function |
-| Antecedent basis | § 112(b) | REVIEW / PASS | `check.claims.antecedentBasis` | Possible missing antecedent basis ("the X" without prior "a X") |
+| Antecedent basis | § 112(b) | FIX / PASS | `check.claims.antecedentBasis` | Possible missing antecedent basis ("the X" without prior "a X") |
 | Preamble consistency | § 608.01(m) / § 112(d) | FIX / REVIEW / PASS | `checks.preamble_*` | Dependent claim preambles match independent claim entity type |
 | Indefinite article | § 608.01(m) | FIX | `checks.preamble_indefinite_article` | Dependent claim uses "A"/"An" instead of "The" |
 | Transition phrase | § 112 | FIX / PASS | `check.claims.missingTransition` / `check.claims.transitionsPresent` | Every independent claim has a transitional phrase |
@@ -42,7 +42,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Markush transition | § 2117 | FIX | `claims.markushOpenTransition` | Markush group uses open-ended transition instead of 'consisting of' (improper Markush = substantive rejection on the merits per MPEP § 2117) |
 | Omnibus claim | § 112(b) | FIX | `claims.omnibusClaim` | Claim references description/drawings without specific features |
 | Special formats pass | — | PASS | `claims.specialFormatsPass` | No special claim format issues detected |
-| Spec support | § 112(a) | REVIEW / PASS | `checks.spec_support_unsupported_terms` / `checks.spec_support_pass` | Claim terms found/not found in specification (3-tier matching) |
+| Spec support | § 112(a) | FIX / PASS | `checks.spec_support_unsupported_terms` / `checks.spec_support_pass` | Claim terms found/not found in specification (3-tier matching) |
 | Claims overview † | — | PASS | `check.claims.overview` | Summary: independent, dependent, and total claim counts |
 
 ## Brief Description of Drawings
@@ -53,7 +53,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Prior art references | § 608.02 | REVIEW / PASS | `check.drawings.priorArt` | Prior art references found in drawings description — verify figure labeling |
 | Figures sequential | § 608.02 | FIX / PASS | `check.drawings.sequential` | Figures are in sequential order |
 | Figure count † | § 608.02 | PASS | `check.drawings.count` | Number of figures found |
-| Cross-ref consistency | § 608.02 | REVIEW / PASS | `checks.figure_xref_*` | Figure references consistent between Brief Description and Detailed Description |
+| Cross-ref consistency | § 608.02 | FIX / PASS | `checks.figure_xref_*` | Figure references consistent between Brief Description and Detailed Description |
 
 ## Abstract
 
@@ -82,7 +82,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Section ordering | 专利法实施细则 §20 | FIX / PASS | `check.cn.spec.sectionOrdering` | Sections in prescribed order |
 | Paragraph numbering | 审查指南 | FIX / PASS | `check.cn.spec.paragraphNumbering` | XML: sequential `<p num>` tags; docx: `[NNNN]` format present |
 | Paragraph ending | 审查指南 | REVIEW / PASS | `check.cn.spec.paragraphEnding` | Paragraphs end with Chinese punctuation (。！？) (formatting hygiene; not literal in 实施细则 or 审查指南) |
-| Figure ref consistency | 审查指南 | REVIEW / PASS | `check.cn.spec.figureRefConsistency` | Figure references match between 附图说明 and 具体实施方式 |
+| Figure ref consistency | 审查指南 | FIX / PASS | `check.cn.spec.figureRefConsistency` | Figure references match between 附图说明 and 具体实施方式 |
 | Patent type terminology | 审查指南 | REVIEW / PASS | `check.cn.spec.patentTypeTerminology` | 本发明 vs 本实用新型 consistency |
 | Title requirements | 审查指南 第一部分第一章 | FIX / PASS | `check.cn.spec.title` | Title ≤25 CJK chars, no trademarks/model numbers |
 | Spec must not reference claims | 专利法实施细则 §20 | FIX / PASS | `check.cn.spec.claimReference` | No 如权利要求N所述 in specification |
@@ -105,8 +105,8 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Multi-dep on multi-dep | 专利法实施细则 §25 第3款 | FIX / PASS | `check.cn.claims.multiMultiDep` | Multi-dep claim cannot reference another multi-dep |
 | Dependent claim ordering | 审查指南 第二部分第二章 | FIX / PASS | `check.cn.claims.dependentOrdering` | Dependents grouped after their independent claim |
 | Component connection relationships | 审查指南 §3.2.1 + 专利法 §26.4 | REVIEW / PASS | `check.cn.claims.connectionRelationships` | Independent device/system claims must describe how their listed components connect (carve-outs: method, CRM, MPF, composition) |
-| Antecedent basis (引用基础) | 审查指南 第二部分第二章 §3.2.2 | REVIEW / PASS | `check.cn.claims.antecedentBasis` | BFS ancestor-chain walker with cycle protection; char-bigram Jaccard tokenization with CJK ordinal guard pre-filter; did-you-mean suggestion layer on borderline misses |
-| Specification support (说明书支持) | 专利法 §26 第4款 + 审查指南 第二部分第二章 §3.2.1 | REVIEW / PASS | `check.cn.claims.specSupport` | 3-tier match (aggressively-normalized exact → raw exact → ±30-char CJK bigram window) for every claim intro against technical_field + summary + detailed_description (背景技术 excluded per §2.2.3 — prior-art context, not disclosure). Inventory hygiene: paren + bare-numeral reference strip, leading preposition strip (于/到/在/自/由/从/向/对), mid-phrase reference-prefix recovery, conjunction split including disjunctive 或 (X或Y → X, Y), length cap 12, existential-verb leading reject (设有/装有/配置有/设置有), CN-drafting trailing-token strip (之间/位于/构成/设置 etc.), tw_contamination skip (该等/该些 parser artifacts not double-reported) |
+| Antecedent basis (引用基础) | 审查指南 第二部分第二章 §3.2.2 | FIX / PASS | `check.cn.claims.antecedentBasis` | BFS ancestor-chain walker with cycle protection; char-bigram Jaccard tokenization with CJK ordinal guard pre-filter; did-you-mean suggestion layer on borderline misses |
+| Specification support (说明书支持) | 专利法 §26 第4款 + 审查指南 第二部分第二章 §3.2.1 | FIX / PASS | `check.cn.claims.specSupport` | 3-tier match (aggressively-normalized exact → raw exact → ±30-char CJK bigram window) for every claim intro against technical_field + summary + detailed_description (背景技术 excluded per §2.2.3 — prior-art context, not disclosure). Inventory hygiene: paren + bare-numeral reference strip, leading preposition strip (于/到/在/自/由/从/向/对), mid-phrase reference-prefix recovery, conjunction split including disjunctive 或 (X或Y → X, Y), length cap 12, existential-verb leading reject (设有/装有/配置有/设置有), CN-drafting trailing-token strip (之间/位于/构成/设置 etc.), tw_contamination skip (该等/该些 parser artifacts not double-reported) |
 | Omnibus claim | 审查指南 第二部分第二章 §3.3 | FIX / PASS | `check.cn.claims.omnibus` | Claim references 说明书/附图 without reciting specific technical features |
 | Markush open transition | 审查指南 第二部分第十章 §9.3 | FIX / PASS | `check.cn.claims.markushOpenTransition` | Markush group uses 包括/具有/含有 instead of 组成的 (closed transition) — improper Markush = substantive rejection per §9.3 |
 
@@ -136,7 +136,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Section ordering | 專利法施行細則 §17 | FIX / PASS | `check.tw.spec.sectionOrdering` | Sections in prescribed order |
 | Paragraph numbering format | 專利法施行細則 §17 | FIX / PASS | `check.tw.spec.paragraphNumbering` | If present: 【NNNN】format, sequential, no gaps |
 | Paragraph ending punctuation | 專利審查基準 | REVIEW / PASS | `check.tw.spec.paragraphEnding` | Paragraphs end with valid Chinese punctuation (。！？) (formatting hygiene; not literal in 施行細則 or 審查基準) |
-| Figure reference consistency | 專利審查基準 | REVIEW / PASS | `check.tw.spec.figureRefConsistency` | Figure references match between 圖式簡單說明 and 實施方式 |
+| Figure reference consistency | 專利審查基準 | FIX / PASS | `check.tw.spec.figureRefConsistency` | Figure references match between 圖式簡單說明 and 實施方式 |
 | Patent type terminology | 專利審查基準 | REVIEW / PASS | `check.tw.spec.patentTypeTerminology` | 本發明 vs 本新型 consistency |
 | Title requirements | 專利審查基準 | FIX / PASS | `check.tw.spec.title` | Title concise, no trademarks or model numbers |
 | Spec must not reference claims | 專利法施行細則 §17 | FIX / PASS | `check.tw.spec.claimReference` | No 如請求項N所述 in specification |
@@ -165,7 +165,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Title vs claims subject | 專利審查基準 | REVIEW / PASS | `check.tw.claims.titleSubjectMatch` | 發明名稱/新型名稱 consistent with independent claim subjects |
 | Claims vs 符號說明 consistency | 專利法施行細則 §19 | REVIEW / PASS | `check.tw.claims.symbolTableConsistency` | Numerals in claims undefined in 符號說明 (reverse direction not flagged; zero-numeral claims early-return PASS) |
 | Antecedent basis (先行詞) | 專利審查基準 | REVIEW / PASS | `check.tw.claims.antecedentBasis` | BFS ancestor-chain walker with cycle protection; char-bigram Jaccard tokenization (threshold 0.40) with CJK ordinal guard pre-filter; did-you-mean suggestion layer on borderline misses; known limitations: semantic-disjunction intro regex, bigram Jaccard precision ceiling, multi-hop chain-walking gaps (Phase 9) |
-| Specification support (說明書支持) | 專利法 §26 第3項 | REVIEW / PASS | `check.tw.claims.specSupport` | 4-tier match (symbol-table whitelist + representative-drawing symbols → aggressively-normalized exact → raw exact → ±30-char CJK bigram window) for every claim intro against technical_field + prior_art + disclosure + embodiment. Inventory-level hygiene: TIPO §19 trailing parenthetical reference numerals stripped, leading preposition strip (於/到/在/自/由), mid-phrase reference-prefix recovery, conjunction split (X及Y → X, Y), length cap 12, leading-verb + interior clause-marker reject (ADR-138) |
+| Specification support (說明書支持) | 專利法 §26 第3項 | FIX / PASS | `check.tw.claims.specSupport` | 4-tier match (symbol-table whitelist + representative-drawing symbols → aggressively-normalized exact → raw exact → ±30-char CJK bigram window) for every claim intro against technical_field + prior_art + disclosure + embodiment. Inventory-level hygiene: TIPO §19 trailing parenthetical reference numerals stripped, leading preposition strip (於/到/在/自/由), mid-phrase reference-prefix recovery, conjunction split (X及Y → X, Y), length cap 12, leading-verb + interior clause-marker reject (ADR-138) |
 | Component connection relationships | 專利審查基準 §2.4 | REVIEW / PASS | `check.tw.claims.connectionRelationships` | Independent apparatus/system claims must describe how their listed components are arranged (carve-outs: method, CRM, MPF, composition) |
 
 ## TW Abstract (摘要)

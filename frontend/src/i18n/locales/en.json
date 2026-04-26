@@ -800,8 +800,8 @@
         "pass": "No means-plus-function language detected."
       },
       "antecedentBasis": {
-        "verify": "Possible missing antecedent basis — \"the X\" / \"said X\" may lack a prior \"a X\" introduction (§ 112(b)).",
-        "pass": "No antecedent basis issues detected (§ 112(b))."
+        "pass": "No antecedent basis issues detected (§ 112(b)).",
+        "amend": "Possible missing antecedent basis — \"the X\" / \"said X\" may lack a prior \"a X\" introduction (§ 112(b))."
       },
       "missingTransition": "Claim {{claimNumber}} is missing a transitional phrase (e.g., 'comprising', 'consisting of')",
       "missingTransitionDetails": "Claim {{claimNumber}} does not contain a recognized transitional phrase. Every claim must include a transitional phrase such as 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by', or 'characterized in that' between the preamble and the claim body.",
@@ -870,8 +870,8 @@
           "verify": "{{count}} paragraph(s) not ending with valid Chinese punctuation: {{paragraphs}} (审查指南)."
         },
         "figureRefConsistency": {
-          "verify": "Inconsistent figure references: {{figure_ref_inconsistency}}",
-          "pass": "Figure references consistent across sections."
+          "pass": "Figure references consistent across sections.",
+          "amend": "Inconsistent figure references: {{figure_ref_inconsistency}}"
         },
         "patentTypeTerminology": {
           "verify": "'{{term}}' detected — verify this matches the filing type, invention vs. utility model (审查指南).",
@@ -945,12 +945,12 @@
           "pass": "All independent device/system claims describe component connections."
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 该/所述 reference without a prior introduction (e.g., 一 / 至少一 / 多个 + noun) (审查指南).",
-          "pass": "All claim terms have antecedent basis (审查指南)."
+          "pass": "All claim terms have antecedent basis (审查指南).",
+          "amend": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 该/所述 reference without a prior introduction (e.g., 一 / 至少一 / 多个 + noun) (审查指南)."
         },
         "specSupport": {
-          "verify": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body (审查指南 第二部分第二章 §3.2.1).",
-          "pass": "All claim terms supported by the specification (审查指南)."
+          "pass": "All claim terms supported by the specification (审查指南).",
+          "amend": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body (审查指南 第二部分第二章 §3.2.1)."
         },
         "omnibus": {
           "amend": "{{claims}}: claim references 说明书/附图 instead of reciting features (审查指南 第二部分第二章 §3.3).",
@@ -1015,8 +1015,8 @@
           "verify": "{{count}} paragraph(s) missing ending punctuation: {{paragraphs}} (專利審查基準)."
         },
         "figureRefConsistency": {
-          "verify": "Inconsistent figure references: {{figure_ref_inconsistency}}",
-          "pass": "Figure references consistent across sections."
+          "pass": "Figure references consistent across sections.",
+          "amend": "Inconsistent figure references: {{figure_ref_inconsistency}}"
         },
         "patentTypeTerminology": {
           "verify": "Patent-type terminology mismatch detected — invention vs. utility model (專利審查基準).",
@@ -1116,12 +1116,12 @@
           "pass": "All independent apparatus/system claims describe component connections."
         },
         "antecedentBasis": {
-          "verify": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 該/所述/前述 reference without a prior introduction (e.g., 一 / 至少一 / 複數個 + noun).",
-          "pass": "All claim terms have antecedent basis."
+          "pass": "All claim terms have antecedent basis.",
+          "amend": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 該/所述/前述 reference without a prior introduction (e.g., 一 / 至少一 / 複數個 + noun)."
         },
         "specSupport": {
-          "verify": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body.",
-          "pass": "All claim terms supported by the specification."
+          "pass": "All claim terms supported by the specification.",
+          "amend": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body."
         },
         "independentPreamble": {
           "pass": "All independent claims open with 「一種」.",
