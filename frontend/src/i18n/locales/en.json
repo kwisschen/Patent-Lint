@@ -1468,10 +1468,10 @@
       "line": "No AI. Same draft, same grade. Every time."
     },
     "cap": {
-      "oneFix": "1 FIX caps grade at B-",
-      "twoFix": "2 FIX cap grade at C+",
-      "threeFix": "3 FIX cap grade at C",
-      "fourFix": "4 FIX cap grade at D",
+      "oneFix": "1 FIX caps grade at B+",
+      "twoFix": "2 FIX cap grade at B",
+      "threeFix": "3 FIX cap grade at B-",
+      "fourFix": "4 FIX cap grade at C+",
       "fiveFix": "{{count}} FIX cap grade at F"
     },
     "completenessGate": {
@@ -1501,7 +1501,7 @@
       "weightsTitle": "Section weights",
       "weightsIntro": "Every check we run rolls into one of these five sections. Weights are fixed across US, CN, and TW filings.",
       "gateTitle": "How the FIX gate works",
-      "gateIntro": "Statutory blockers headline the grade. One FIX caps the grade at B-, regardless of how clean the rest of the draft is. This matches partner-triage reality — the question is always \"any blockers, then how clean?\"",
+      "gateIntro": "Statutory blockers headline the grade. One FIX caps the grade at B+, regardless of how clean the rest of the draft is. This matches partner-triage reality — the question is always \"any blockers, then how clean?\"",
       "gateRule": "{{count}} FIX → max {{letter}}",
       "conditionalTitle": "When sections are not applicable",
       "conditionalIntro": "Two scenarios shape the Drawings section. First — when no drawings are detected (chemistry, methods, business processes), the section is marked N/A and its 10% weight redistributes proportionally across the other four sections; legitimately drawing-free drafts incur no penalty. Second — when drawings exist (FIG. references found in the body) but the Brief Description of Drawings section is missing, the resulting required-section FIX lands in the Drawings rubric so the section pill reflects the actual gap.",
