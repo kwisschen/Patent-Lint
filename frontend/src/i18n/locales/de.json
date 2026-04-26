@@ -397,7 +397,7 @@
       },
       "specAbstract": {
         "title": "Prüfungen für Beschreibung & Zusammenfassung",
-        "description": "Fünf-Abschnitts-Reihenfolge (专利法实施细则 §17), Satzzeichen am Absatzende, Konsistenz der Figurenbezüge zwischen 附图说明 und 具体实施方式 sowie die 300-Zeichen-Grenze der Zusammenfassung (§23), unter anderem."
+        "description": "Fünf-Abschnitts-Reihenfolge (专利法实施细则 §20), Satzzeichen am Absatzende, Konsistenz der Figurenbezüge zwischen 附图说明 und 具体实施方式 sowie die 300-Zeichen-Grenze der Zusammenfassung (§26), unter anderem."
       },
       "dualPipeline": {
         "title": "五书模板 + CNIPA-XML-Dual-Pipeline",
@@ -412,7 +412,7 @@
     },
     "cnChecks": {
       "trackedChanges": "Nachverfolgte Änderungen",
-      "requiredSections": "Erforderliche Abschnitte (专利法 §26 第1款、专利法实施细则 §17)",
+      "requiredSections": "Erforderliche Abschnitte (专利法 §26 第1款、专利法实施细则 §20)",
       "sectionOrdering": "Abschnittsreihenfolge",
       "paragraphNumbering": "Absatznummerierung",
       "paragraphEnding": "Satzzeichen am Absatzende",
@@ -595,24 +595,24 @@
       "patentTypeTerminology": "Gemäß 审查指南 sollten Erfindungsanmeldungen 本发明 (nicht 本实用新型) verwenden und Gebrauchsmusteranmeldungen umgekehrt. Gefunden: {{term}}. Prüfen Sie, ob die Terminologie zur Einreichungsart passt.",
       "titleLength": "Gemäß 审查指南 第一部分第一章 darf der Titel (发明名称) 25 chinesische Zeichen nicht überschreiten ({{count}} gefunden). Kürzen Sie den Titel.",
       "titleContent": "Gemäß 审查指南 darf der Titel keine Markennamen, Typennummern, Personennamen oder Werbesprache enthalten. Entfernen Sie den unzulässigen Inhalt.",
-      "specClaimReference": "Gemäß 专利法实施细则 §17 darf die Beschreibung keine Formulierungen wie '如权利要求……所述的……' zur Bezugnahme auf Ansprüche verwenden. Entfernen Sie Anspruchsbezüge aus der Beschreibung.",
+      "specClaimReference": "Gemäß 专利法实施细则 §20 darf die Beschreibung keine Formulierungen wie '如权利要求……所述的……' zur Bezugnahme auf Ansprüche verwenden. Entfernen Sie Anspruchsbezüge aus der Beschreibung.",
       "claimsSequential": "Gemäß 审查指南 müssen Ansprüche fortlaufend ab 1 nummeriert sein. Nummerierung korrigieren.",
-      "dependencyFormat": "Gemäß 专利法实施细则 §22 müssen abhängige Ansprüche die Form '如权利要求N所述的……' verwenden, um auf Elternansprüche zu verweisen. Korrigieren Sie die gekennzeichneten Ansprüche.",
-      "selfDependent": "Gemäß 专利法实施细则 §22 kann ein Anspruch nicht von sich selbst abhängen. Korrigieren Sie den Rückbezug.",
-      "forwardDependency": "Gemäß 专利法实施细则 §22 dürfen abhängige Ansprüche nur auf vorausgehende Ansprüche verweisen. Ändern Sie den Rückbezug auf einen früheren Anspruch.",
+      "dependencyFormat": "Gemäß 专利法实施细则 §25 müssen abhängige Ansprüche die Form '如权利要求N所述的……' verwenden, um auf Elternansprüche zu verweisen. Korrigieren Sie die gekennzeichneten Ansprüche.",
+      "selfDependent": "Gemäß 专利法实施细则 §25 kann ein Anspruch nicht von sich selbst abhängen. Korrigieren Sie den Rückbezug.",
+      "forwardDependency": "Gemäß 专利法实施细则 §25 dürfen abhängige Ansprüche nur auf vorausgehende Ansprüche verweisen. Ändern Sie den Rückbezug auf einen früheren Anspruch.",
       "singleSentence": "Gemäß 审查指南 第二部分第二章 muss jeder Anspruch ein einziger Satz sein, der mit einem 。 endet. Entfernen Sie Punkte innerhalb des Anspruchs oder strukturieren Sie ihn in getrennte Ansprüche um.",
       "refNumeralParens": "Gemäß 审查指南 sollten Bezugszeichen in Ansprüchen in Klammern stehen, z. B. (101) statt 101. Prüfen Sie die gekennzeichneten Ansprüche.",
       "subjectConsistency": "Gemäß 审查指南 第二部分第二章 sollte der Gegenstand (主题名称) eines abhängigen Anspruchs mit dem Gegenstand des Elternanspruchs übereinstimmen. Anerkannte Oberbegriff-Formen: 如权利要求N所述[的]X, 如权利要求N所记载[的]X, 如权利要求N[的]X. Prüfen Sie die gekennzeichneten Ansprüche.",
-      "subjectConsistencyParseUnclear": "Diese abhängigen Ansprüche verwenden eine vom Walker nicht erkannte Oberbegriff-Form. Anerkannte Formen gemäß 专利法实施细则 §22 sind: 如权利要求N所述[的]X, 如权利要求N所记载[的]X, 如权利要求N[的]X. Manuell prüfen oder als Fehler melden, falls Ihr Oberbegriff CNIPA-konform ist.",
+      "subjectConsistencyParseUnclear": "Diese abhängigen Ansprüche verwenden eine vom Walker nicht erkannte Oberbegriff-Form. Anerkannte Formen gemäß 专利法实施细则 §25 sind: 如权利要求N所述[的]X, 如权利要求N所记载[的]X, 如权利要求N[的]X. Manuell prüfen oder als Fehler melden, falls Ihr Oberbegriff CNIPA-konform ist.",
       "transitionPhrase": "Gemäß 审查指南 sollten unabhängige Ansprüche einen kennzeichnenden Übergang wie '其特征在于' enthalten, um bekannte Elemente von neuartigen Merkmalen abzugrenzen. Prüfen Sie die gekennzeichneten Ansprüche.",
       "twTerminology": "TIPO-Terminologie in CNIPA-Einreichung erkannt. CNIPA verwendet '权利要求' für Ansprüche. Ersetzen Sie alle gekennzeichneten Stellen.",
       "claimsSpecReference": "Gemäß 审查指南 第二部分第二章 dürfen Ansprüche zur Bestimmung ihres Schutzbereichs nicht auf die Beschreibung oder Zeichnungen verweisen. Ansprüche müssen in sich geschlossen sein — entfernen Sie die gekennzeichneten Bezüge.",
-      "multiMultiDep": "Gemäß 专利法实施细则 §22 darf ein mehrfach abhängiger Anspruch nicht als Grundlage für einen weiteren mehrfach abhängigen Anspruch dienen. Strukturieren Sie die Abhängigkeitskette um.",
+      "multiMultiDep": "Gemäß 专利法实施细则 §25 darf ein mehrfach abhängiger Anspruch nicht als Grundlage für einen weiteren mehrfach abhängigen Anspruch dienen. Strukturieren Sie die Abhängigkeitskette um.",
       "dependentOrdering": "Gemäß 审查指南 第二部分第二章 sollten alle Ansprüche, die von einem unabhängigen Anspruch abhängen, zusammenhängend vor dem nächsten unabhängigen Anspruch stehen. Ansprüche umsortieren.",
       "connectionRelationships": "Gekennzeichnete Komponenten: {{sample_names}} (insgesamt {{component_count}}). Ergänzen Sie ein Verbindungsverb (z. B. 连接, 设置于, 耦接), das die strukturelle Anordnung dieser Komponenten beschreibt.",
-      "abstractCharCount": "Gemäß 专利法实施细则 §23 darf die Zusammenfassung 300 chinesische Zeichen nicht überschreiten. Kürzen Sie die Zusammenfassung.",
+      "abstractCharCount": "Gemäß 专利法实施细则 §26 darf die Zusammenfassung 300 chinesische Zeichen nicht überschreiten. Kürzen Sie die Zusammenfassung.",
       "abstractTitleMatch": "Gemäß 审查指南 sollte die Zusammenfassung mit dem Titel (发明名称) übereinstimmen. Prüfen Sie, ob die Zusammenfassung den Erfindungstitel widerspiegelt.",
-      "commercialLanguage": "Gemäß 专利法实施细则 §23 darf die Zusammenfassung keine Werbesprache (商业性宣传用语) enthalten. Entfernen Sie die gekennzeichneten Begriffe.",
+      "commercialLanguage": "Gemäß 专利法实施细则 §26 darf die Zusammenfassung keine Werbesprache (商业性宣传用语) enthalten. Entfernen Sie die gekennzeichneten Begriffe.",
       "antecedentBasisTerms": "{{issue_count}} Begriff(e) in {{claim_count}} Anspruch/Ansprüchen könnten ohne Rückbezug sein. Siehe Abschnitt „Rückbezugs-Analyse“ unten für die vollständige Aufschlüsselung je Begriff.",
       "specSupportTerms": "{{issue_count}} Begriff(e) in {{claim_count}} Anspruch/Ansprüchen könnten ohne Stützung in der Beschreibung sein. Siehe Abschnitt „Stützungs-Prüfung der Beschreibung“ unten für die vollständige Aufschlüsselung je Begriff.",
       "titleMissing": "Gemäß CNIPA 审查指南 第一部分第一章 muss die Beschreibung einen 发明名称 (Erfindungstitel) enthalten. Fügen Sie einen Titel in der Kopfzeile der Beschreibung hinzu.",
@@ -621,13 +621,13 @@
         "onlyEmbodiment": "Nur in 具体实施方式 zitiert: {{figs}}"
       },
       "pass": {
-        "multiMultiDep": "Gemäß 专利法实施细则 §22 darf ein mehrfach abhängiger Anspruch nicht als Grundlage für einen weiteren mehrfach abhängigen dienen — verkettete Multi-Multi-Bezüge machen den Schutzbereich unbestimmt.",
-        "selfDependent": "Gemäß 专利法实施细则 §22 darf ein Anspruch nicht von sich selbst abhängen; abhängige Ansprüche müssen auf einen früheren Anspruch verweisen.",
-        "forwardDependency": "Gemäß 专利法实施细则 §22 darf ein abhängiger Anspruch nur auf Ansprüche mit früherer Nummer verweisen, nicht auf spätere.",
+        "multiMultiDep": "Gemäß 专利法实施细则 §25 darf ein mehrfach abhängiger Anspruch nicht als Grundlage für einen weiteren mehrfach abhängigen dienen — verkettete Multi-Multi-Bezüge machen den Schutzbereich unbestimmt.",
+        "selfDependent": "Gemäß 专利法实施细则 §25 darf ein Anspruch nicht von sich selbst abhängen; abhängige Ansprüche müssen auf einen früheren Anspruch verweisen.",
+        "forwardDependency": "Gemäß 专利法实施细则 §25 darf ein abhängiger Anspruch nur auf Ansprüche mit früherer Nummer verweisen, nicht auf spätere.",
         "singleSentence": "Gemäß 审查指南 第二部分第二章 muss jeder Anspruch ein einziger Satz sein, der mit 。 endet, damit der Schutzbereich eindeutig bleibt.",
         "transitionPhrase": "Gemäß 审查指南 sollte ein unabhängiger Anspruch einen zweiteiligen Übergang (z. B. 其特征在于) enthalten, der den Oberbegriff (Stand der Technik) vom kennzeichnenden Teil (neuartige Merkmale) trennt."
       },
-      "independentPreamble": "审查指南 第二部分第二章 §3.1.1 verwendet 一种X als Standardform; 专利法实施细则 §22 verlangt die Nennung des 主题名称, nicht wörtlich „一种\". Nach 一种X umformulieren."
+      "independentPreamble": "审查指南 第二部分第二章 §3.1.1 verwendet 一种X als Standardform; 专利法实施细则 §24 verlangt die Nennung des 主题名称, nicht wörtlich „一种\". Nach 一种X umformulieren."
     },
     "tw": {
       "requiredSections": "Eine vollständige TIPO-Einreichung erfordert 摘要, 說明書 (技術領域, 先前技術, 發明內容/新型內容, 實施方式) und 申請專利範圍 gemäß 專利法 §25 第1項. Bei vorhandenen Zeichnungen sind zusätzlich 圖式簡單說明 und 符號說明 gemäß 專利法施行細則 §17 erforderlich. Fehlend: {{sections}}.",
@@ -850,11 +850,11 @@
           "amend": "Dokument enthält nachverfolgte Änderungen (Revisionen). Alle Änderungen vor der Einreichung akzeptieren oder verwerfen."
         },
         "requiredSections": {
-          "amend": "Erforderliche Abschnitte fehlen: {{sections}} (专利法 §26 第1款、专利法实施细则 §17).",
+          "amend": "Erforderliche Abschnitte fehlen: {{sections}} (专利法 §26 第1款、专利法实施细则 §20).",
           "pass": "Alle erforderlichen Abschnitte vorhanden."
         },
         "sectionOrdering": {
-          "amend": "Abschnitte der Beschreibung nicht in vorgeschriebener Reihenfolge (专利法实施细则 §17).",
+          "amend": "Abschnitte der Beschreibung nicht in vorgeschriebener Reihenfolge (专利法实施细则 §20).",
           "pass": "Abschnitte der Beschreibung in vorgeschriebener Reihenfolge."
         },
         "paragraphNumbering": {
@@ -883,7 +883,7 @@
           "amendMissing": "Titel fehlt in der Beschreibung (审查指南 第一部分第一章)."
         },
         "claimReference": {
-          "amend": "Beschreibung verweist in {{count}} Absatz/Absätzen ({{paragraphs}}) auf Ansprüche (专利法实施细则 §17). Beispiel: {{snippet}}",
+          "amend": "Beschreibung verweist in {{count}} Absatz/Absätzen ({{paragraphs}}) auf Ansprüche (专利法实施细则 §20). Beispiel: {{snippet}}",
           "pass": "Beschreibung verweist nicht auf die Ansprüche."
         }
       },
@@ -893,15 +893,15 @@
           "pass": "Ansprüche fortlaufend nummeriert."
         },
         "dependencyFormat": {
-          "amend": "Falsches Abhängigkeitsformat in {{count}} Anspruch/Ansprüchen: {{claims}} (专利法实施细则 §22).",
+          "amend": "Falsches Abhängigkeitsformat in {{count}} Anspruch/Ansprüchen: {{claims}} (专利法实施细则 §25).",
           "pass": "Alle Abhängigkeits-Rückbezüge korrekt formatiert."
         },
         "selfDependent": {
-          "amend": "Selbstabhängigkeit in {{claims}} (专利法实施细则 §22).",
+          "amend": "Selbstabhängigkeit in {{claims}} (专利法实施细则 §25).",
           "pass": "Keine selbstabhängigen Ansprüche."
         },
         "forwardDependency": {
-          "amend": "{{claims}} verweist/verweisen auf einen nachfolgenden Anspruch (Vorwärtsabhängigkeit) (专利法实施细则 §22).",
+          "amend": "{{claims}} verweist/verweisen auf einen nachfolgenden Anspruch (Vorwärtsabhängigkeit) (专利法实施细则 §25).",
           "pass": "Alle Abhängigkeiten verweisen auf vorausgehende Ansprüche."
         },
         "singleSentence": {
@@ -932,7 +932,7 @@
           "pass": "Keine Anspruchsbezüge zur Beschreibung oder zu Zeichnungen."
         },
         "multiMultiDep": {
-          "amend": "Multi-Multi-Abhängigkeit in {{claims}}: ein mehrfach abhängiger Anspruch hängt von einem weiteren mehrfach abhängigen ab (专利法实施细则 §22).",
+          "amend": "Multi-Multi-Abhängigkeit in {{claims}}: ein mehrfach abhängiger Anspruch hängt von einem weiteren mehrfach abhängigen ab (专利法实施细则 §25).",
           "pass": "Keine verketteten mehrfach abhängigen Ansprüche."
         },
         "dependentOrdering": {
@@ -966,7 +966,7 @@
       },
       "abstract": {
         "charCount": {
-          "amend": "Zusammenfassung überschreitet 300-Zeichen-Grenze ({{count}} Zeichen, 专利法实施细则 §23).",
+          "amend": "Zusammenfassung überschreitet 300-Zeichen-Grenze ({{count}} Zeichen, 专利法实施细则 §26).",
           "pass": "Zusammenfassung innerhalb der 300-Zeichen-Grenze ({{count}} Zeichen)."
         },
         "titleMatch": {
