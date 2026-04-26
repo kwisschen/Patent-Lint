@@ -92,6 +92,11 @@ export default function RubricPage() {
         <p>{t('rubric.page.trustIntro')}</p>
       </Section>
 
+      {/* Report errors */}
+      <Section title={t('rubric.page.reportTitle')}>
+        <p>{t('rubric.page.reportIntro')}</p>
+      </Section>
+
       {/* Disclaimer */}
       <Section title={t('rubric.page.disclaimerTitle')}>
         <p>{t('rubric.page.disclaimerIntro')}</p>

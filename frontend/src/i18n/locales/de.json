@@ -1510,7 +1510,9 @@
       "trustTitle": "Kein KI-Urteil",
       "trustIntro": "Jede Eingabe in Ihre Bewertung ist ein KORRIGIEREN/PRÜFEN/OK-Status, gesetzt von einem deterministischen Prüfer. Jede Ausgabe ist eine reine arithmetische Aggregation. Dieselbe Schrift erhält stets dieselbe Bewertung. PatentLint lädt Ihre Schrift nirgendwo hoch — die Prüfung läuft vollständig in Ihrem Browser.",
       "disclaimerTitle": "Was eine A-Bewertung bedeutet — und was nicht",
-      "disclaimerIntro": "Eine A-Bewertung bedeutet, dass der Prüfkatalog von PatentLint keine Beanstandungen gefunden hat. Sie bedeutet nicht, dass Ihre Schrift einreichungsbereit ist. Eine inhaltliche Prüfung durch eine zugelassene Vertretung wird weiterhin empfohlen."
+      "disclaimerIntro": "Eine A-Bewertung bedeutet, dass der Prüfkatalog von PatentLint keine Beanstandungen gefunden hat. Sie bedeutet nicht, dass Ihre Schrift einreichungsbereit ist. Eine inhaltliche Prüfung durch eine zugelassene Vertretung wird weiterhin empfohlen.",
+      "reportTitle": "Helfen Sie uns weiter — falsche Treffer melden",
+      "reportIntro": "Kein Prüfer ist fehlerfrei. Walker-basierte Prüfungen (Rückbezug, Stützung, Bezugnahmen auf Zeichnungen) tragen ein geringes Fehlerrisiko; da die Bewertung nun davon abhängt, kann eine ungerechtfertigte Beanstandung eine Notenstufe kosten. Über den «Melden»-Knopf an jedem Triage-Eintrag wird eine rein strukturelle Diagnose-Spur mitgesendet — Zählwerte, Codepoints, abgeschlossene Aufzählungen — niemals der Anspruchsinhalt oder der Schrifttext. So können wir den Fehler eingrenzen, ohne Ihre Erfindung je zu sehen."
     },
     "howWeScore": "Bewertungsmaßstab →"
   }
