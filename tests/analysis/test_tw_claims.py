@@ -260,12 +260,12 @@ class TestRefNumeralParens:
         result = check_ref_numeral_parens(doc)
         assert result[0].status == "pass"
 
-    def test_bare_numeral_verify(self):
+    def test_bare_numeral_amend(self):
         doc = _make_doc(claims=[
             _claim(1, "1. 一種裝置，包含一基座101及一蓋板102。"),
         ])
         result = check_ref_numeral_parens(doc)
-        assert result[0].status == "verify"
+        assert result[0].status == "amend"
         assert result[0].details_params["count"] == 1
         assert result[0].details_params["claims"] == [1]
 

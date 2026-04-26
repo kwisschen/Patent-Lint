@@ -113,11 +113,11 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.tw.spec.paragraphNumbering.amendGap": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 40),
     "check.tw.spec.paragraphNumbering.pass": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 40),
 
-    "check.spec.paragraphEnding.amend": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 50),
+    "check.spec.paragraphEnding.verify": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 50),
     "check.spec.paragraphEnding.pass": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 50),
-    "check.cn.spec.paragraphEnding.amend": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 50),
+    "check.cn.spec.paragraphEnding.verify": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 50),
     "check.cn.spec.paragraphEnding.pass": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 50),
-    "check.tw.spec.paragraphEnding.amend": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 50),
+    "check.tw.spec.paragraphEnding.verify": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 50),
     "check.tw.spec.paragraphEnding.pass": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 50),
 
     "check.tw.crossRef.bracketFormat.pass": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 60),
@@ -264,7 +264,7 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.cn.claims.refNumeralParens.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 70),
     "check.cn.claims.refNumeralParens.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 70),
     "check.tw.claims.refNumeralParens.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 70),
-    "check.tw.claims.refNumeralParens.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 70),
+    "check.tw.claims.refNumeralParens.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 70),
 
     "check.cn.claims.subjectConsistency.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 80),
     "check.cn.claims.subjectConsistency.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 80),
@@ -355,7 +355,7 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "claims.specialFormatsPass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
     "check.cn.claims.omnibus.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
     "check.cn.claims.omnibus.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
-    "check.cn.claims.markushOpenTransition.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
+    "check.cn.claims.markushOpenTransition.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
     "check.cn.claims.markushOpenTransition.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
 
     # Claim punctuation (MPEP § 608.01(m) / 35 U.S.C. §112(b)).

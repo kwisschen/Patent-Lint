@@ -729,8 +729,8 @@
         "pass": "段落番号は連続しています。"
       },
       "paragraphEnding": {
-        "amend": "段落の末尾に無効または欠落した句読点があります（MPEP § 608.01(p)）。",
-        "pass": "すべての段落の末尾句読点は正常です。"
+        "pass": "すべての段落の末尾句読点は正常です。",
+        "verify": "段落の末尾に無効または欠落した句読点があります（MPEP § 608.01(p)）。"
       },
       "sequenceListing": {
         "amend": "SEQ ID NO が参照されていますが、配列表の記載がありません。",
@@ -865,8 +865,8 @@
           "amendXmlDuplicate": "重複する段落番号が{{count}}件あります：{{paragraphs}}（审查指南）。"
         },
         "paragraphEnding": {
-          "amend": "句読点で終わっていない段落が{{count}}件あります：{{paragraphs}}（审查指南）。",
-          "pass": "全ての段落が中国語の句点で終わっています。"
+          "pass": "全ての段落が中国語の句点で終わっています。",
+          "verify": "句読点で終わっていない段落が{{count}}件あります：{{paragraphs}}（审查指南）。"
         },
         "figureRefConsistency": {
           "verify": "図面の参照に不整合があります：{{figure_ref_inconsistency}}",
@@ -956,8 +956,8 @@
           "pass": "援引式の請求項は見つかりませんでした。"
         },
         "markushOpenTransition": {
-          "verify": "{{claims}}：マーカッシュ請求項が開放型の連結語（{{transitions}}）を用いています。閉鎖型「组成的」への変更が必要です（审查指南 第二部分第十章 §9.3）。",
-          "pass": "マーカッシュ請求項は閉鎖型「组成的」を用いています。"
+          "pass": "マーカッシュ請求項は閉鎖型「组成的」を用いています。",
+          "amend": "{{claims}}：マーカッシュ請求項が開放型の連結語（{{transitions}}）を用いています。閉鎖型「组成的」への変更が必要です（审查指南 第二部分第十章 §9.3）。"
         },
         "independentPreamble": {
           "pass": "すべての独立请求项が「一种」で始まっています。",
@@ -1010,8 +1010,8 @@
           "amendFormat": "【NNNN】形式でない段落が{{count}}件あります。例：{{examples}}（專利法施行細則 §17）。"
         },
         "paragraphEnding": {
-          "amend": "句読点で終わっていない段落が{{count}}件あります：{{paragraphs}}（專利審查基準）。",
-          "pass": "全ての段落が中国語の句点で終わっています。"
+          "pass": "全ての段落が中国語の句点で終わっています。",
+          "verify": "句読点で終わっていない段落が{{count}}件あります：{{paragraphs}}（專利審查基準）。"
         },
         "figureRefConsistency": {
           "verify": "図面の参照に不整合があります：{{figure_ref_inconsistency}}",
@@ -1071,8 +1071,8 @@
           "amendMultiSentence": "複数文を含む請求項が{{count}}項あります：{{claims}}。"
         },
         "refNumeralParens": {
-          "verify": "{{count}}項で参照符号が括弧で囲まれていません：{{claims}}（專利法施行細則 §19）。",
-          "pass": "全ての参照符号が括弧で囲まれています。"
+          "pass": "全ての参照符号が括弧で囲まれています。",
+          "amend": "{{count}}項で参照符号が括弧で囲まれていません：{{claims}}（專利法施行細則 §19）。"
         },
         "subjectConsistency": {
           "verify": "{{claims}}の主題名が親請求項と一致しません（計{{count}}項）。",

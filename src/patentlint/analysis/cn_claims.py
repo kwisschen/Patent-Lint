@@ -917,16 +917,22 @@ def detect_markush_open_transition_cn(cn_doc: CnPatentDocument) -> list[tuple[in
 
 
 def check_markush_open_transition(cn_doc: CnPatentDocument) -> list[CheckItem]:
-    """Emit CheckItem for CN Markush claims using open transition (VERIFY)."""
+    """Emit CheckItem for CN Markush claims using open transition (FIX).
+
+    Improper Markush is a substantive rejection per 审查指南 第二部分第十章
+    §9.3 (Markush requires 选自由...组成的 closed group), not a formal
+    correction — open transition triggers an examiner rejection on the
+    merits.
+    """
     pairs = detect_markush_open_transition_cn(cn_doc)
     if pairs:
         ids = [cid for cid, _ in pairs]
         transitions = sorted({t for _, t in pairs})
         claims_str = ", ".join(str(i) for i in ids)
         return [CheckItem(
-            status="verify",
+            status="amend",
             message=f"Markush claim(s) use open-ended transition instead of 组成的: {claims_str}.",
-            message_key="check.cn.claims.markushOpenTransition.verify",
+            message_key="check.cn.claims.markushOpenTransition.amend",
             details=claims_str,
             details_key="details.cn.markushOpenTransition",
             details_params={"claims": ids, "transitions": transitions},

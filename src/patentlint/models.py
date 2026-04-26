@@ -594,9 +594,9 @@ class AnalysisResult(BaseModel):
 
         if self.missing_ending_paragraphs:
             spec_checks.append(CheckItem(
-                status="amend",
+                status="verify",
                 message="Paragraphs with invalid or missing ending punctuation.",
-                message_key="check.spec.paragraphEnding.amend",
+                message_key="check.spec.paragraphEnding.verify",
                 details=f"Paragraphs: {self.missing_ending_paragraphs}",
                 details_key="details.paragraphEnding",
                 details_params={"list": str(self.missing_ending_paragraphs)},

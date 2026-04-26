@@ -729,8 +729,8 @@
         "pass": "Absatznummern sind fortlaufend."
       },
       "paragraphEnding": {
-        "amend": "Absätze mit ungültigen oder fehlenden Satzzeichen am Ende (MPEP § 608.01(p)).",
-        "pass": "Alle Absätze haben gültige Satzzeichen am Ende."
+        "pass": "Alle Absätze haben gültige Satzzeichen am Ende.",
+        "verify": "Absätze mit ungültigen oder fehlenden Satzzeichen am Ende (MPEP § 608.01(p))."
       },
       "sequenceListing": {
         "amend": "SEQ ID NO referenziert, aber keine Sequenzprotokoll-Erklärung gefunden.",
@@ -865,8 +865,8 @@
           "amendXmlDuplicate": "{{count}} doppelte Absatznummer(n): {{paragraphs}} (审查指南)."
         },
         "paragraphEnding": {
-          "amend": "{{count}} Absatz/Absätze ohne gültiges chinesisches Satzend-Zeichen: {{paragraphs}} (审查指南).",
-          "pass": "Alle Absätze der Beschreibung enden mit gültigem chinesischen Satzend-Zeichen."
+          "pass": "Alle Absätze der Beschreibung enden mit gültigem chinesischen Satzend-Zeichen.",
+          "verify": "{{count}} Absatz/Absätze ohne gültiges chinesisches Satzend-Zeichen: {{paragraphs}} (审查指南)."
         },
         "figureRefConsistency": {
           "verify": "Inkonsistente Figurenbezüge: {{figure_ref_inconsistency}}",
@@ -956,8 +956,8 @@
           "pass": "Keine Omnibus-Ansprüche."
         },
         "markushOpenTransition": {
-          "verify": "{{claims}}: Markush-Formel nutzt offenen Übergangsbegriff ({{transitions}}) anstelle von 组成的 (审查指南 第二部分第十章 §9.3).",
-          "pass": "Markush-Formeln nutzen den geschlossenen Übergang 组成的."
+          "pass": "Markush-Formeln nutzen den geschlossenen Übergang 组成的.",
+          "amend": "{{claims}}: Markush-Formel nutzt offenen Übergangsbegriff ({{transitions}}) anstelle von 组成的 (审查指南 第二部分第十章 §9.3)."
         },
         "independentPreamble": {
           "pass": "Alle unabhängigen Ansprüche beginnen mit 「一种」.",
@@ -1010,8 +1010,8 @@
           "amendFormat": "{{count}} Absatz/Absätze nicht im 【NNNN】-Format. Beispiele: {{examples}} (專利法施行細則 §17)."
         },
         "paragraphEnding": {
-          "amend": "{{count}} Absatz/Absätze ohne Satzzeichen am Ende: {{paragraphs}} (專利審查基準).",
-          "pass": "Alle Absätze der Beschreibung enden mit gültigem Satzzeichen."
+          "pass": "Alle Absätze der Beschreibung enden mit gültigem Satzzeichen.",
+          "verify": "{{count}} Absatz/Absätze ohne Satzzeichen am Ende: {{paragraphs}} (專利審查基準)."
         },
         "figureRefConsistency": {
           "verify": "Inkonsistente Figurenbezüge: {{figure_ref_inconsistency}}",
@@ -1071,8 +1071,8 @@
           "amendMultiSentence": "{{count}} Mehrsatz-Anspruch/Ansprüche: {{claims}}."
         },
         "refNumeralParens": {
-          "verify": "Bezugszeichen nicht in Klammern in {{count}} Anspruch/Ansprüchen: {{claims}} (專利法施行細則 §19).",
-          "pass": "Alle Bezugszeichen in Klammern gesetzt."
+          "pass": "Alle Bezugszeichen in Klammern gesetzt.",
+          "amend": "Bezugszeichen nicht in Klammern in {{count}} Anspruch/Ansprüchen: {{claims}} (專利法施行細則 §19)."
         },
         "subjectConsistency": {
           "verify": "Gegenstand weicht vom Elternanspruch ab in {{claims}} (insgesamt {{count}}).",

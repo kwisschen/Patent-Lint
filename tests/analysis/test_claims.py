@@ -536,12 +536,12 @@ class TestSpecialClaimFormats:
         assert len(markush) == 0
 
     def test_markush_comprising_flagged(self):
-        """'selected from the group comprising A, B, and C' -> VERIFY."""
+        """'selected from the group comprising A, B, and C' -> FIX (improper Markush per MPEP § 2117)."""
         claims = [Claim(id=1, text="A composition comprising a metal selected from the group comprising gold, silver, and copper.", independent=True)]
         results = check_special_claim_formats(claims)
         markush = [r for r in results if r.message_key == "claims.markushOpenTransition"]
         assert len(markush) == 1
-        assert markush[0].status == "verify"
+        assert markush[0].status == "amend"
         assert markush[0].details_params["transition"] == "comprising"
 
     def test_markush_including_flagged(self):
