@@ -1465,7 +1465,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "Gleiche Schrift, gleiche Bewertung. Jedes Mal. Keine KI."
+      "line": "Keine KI. Gleiche Schrift, gleiche Bewertung. Jedes Mal."
     },
     "cap": {
       "oneFix": "1 FEHLER begrenzt die Bewertung auf B-",
@@ -1508,9 +1508,9 @@
       "completenessTitle": "Wenn die Schrift unvollständig ist",
       "completenessIntro": "Fehlt ein universal erforderlicher Abschnitt (Titel, Ansprüche, Beschreibungstext oder Zusammenfassung), vergeben wir keine Note. Eine Top-Bewertung auf einer leeren Schrift wäre irreführend.",
       "trustTitle": "Kein KI-Urteil",
-      "trustIntro": "Jede Eingabe in Ihre Bewertung ist ein FEHLER/PRÜFEN/OK-Status, gesetzt von einem deterministischen Prüfer. Jede Ausgabe ist eine reine arithmetische Aggregation. Dieselbe Schrift erhält stets dieselbe Bewertung. PatentLint lädt Ihre Schrift nirgendwo hoch — die Prüfung läuft vollständig in Ihrem Browser.",
+      "trustIntro": "Jede Eingabe in Ihre Bewertung ist ein KORRIGIEREN/PRÜFEN/OK-Status, gesetzt von einem deterministischen Prüfer. Jede Ausgabe ist eine reine arithmetische Aggregation. Dieselbe Schrift erhält stets dieselbe Bewertung. PatentLint lädt Ihre Schrift nirgendwo hoch — die Prüfung läuft vollständig in Ihrem Browser.",
       "disclaimerTitle": "Was eine A-Bewertung bedeutet — und was nicht",
-      "disclaimerIntro": "Eine A-Bewertung bedeutet, dass der Prüfkatalog von PatentLint keine Beanstandungen gefunden hat. Sie bedeutet nicht, dass Ihre Schrift einreichungsbereit ist. Die inhaltliche Prüfung durch eine zugelassene Vertretung bleibt erforderlich."
+      "disclaimerIntro": "Eine A-Bewertung bedeutet, dass der Prüfkatalog von PatentLint keine Beanstandungen gefunden hat. Sie bedeutet nicht, dass Ihre Schrift einreichungsbereit ist. Eine inhaltliche Prüfung durch eine zugelassene Vertretung wird weiterhin empfohlen."
     },
     "howWeScore": "Bewertungsmaßstab →"
   }
