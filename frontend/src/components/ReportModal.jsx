@@ -176,7 +176,7 @@ export default function ReportModal({
             onOpenChange(false)
             onMailtoFallback?.()
           }}
-          className="mt-1 text-center text-xs text-muted-foreground underline-offset-2 hover:underline"
+          className="mt-1 text-center text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
         >
           {t('feedback.reportModal.emailFallback')}
         </button>
