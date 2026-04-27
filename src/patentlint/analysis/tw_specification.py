@@ -172,6 +172,10 @@ def check_required_sections(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 missing_count=len(missing),
                 first_missing=missing[0] if missing else None,
+                missing_sections=missing[:10],
+                total_required=len(missing) + (5 - len(missing)) if len(missing) <= 5 else len(missing),
+                abstract_header_seen=getattr(doc, "abstract_header_seen", None),
+                claims_header_seen=getattr(doc, "claims_header_seen", None),
             ),
         )]
     return [CheckItem(
@@ -210,6 +214,12 @@ def check_section_ordering(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 sections_seen=len(indices),
                 total_canonical_sections=len(_CANONICAL_ORDER),
+                section_order_actual=list(doc.section_order)[:10],
+                canonical_order=list(_CANONICAL_ORDER)[:10],
+                first_disorder_at=next(
+                    (i for i in range(len(indices) - 1) if indices[i] >= indices[i + 1]),
+                    None,
+                ),
             ),
         )]
     return [CheckItem(
@@ -257,6 +267,10 @@ def check_paragraph_numbering(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_count=len(bad_format),
                 total_paragraphs=len(nums),
+                findings=[
+                    {"raw_value": n[:32], "charlen": len(n), "is_digits": n.isdigit()}
+                    for n in bad_format[:5]
+                ],
             ),
         )]
 
@@ -274,6 +288,10 @@ def check_paragraph_numbering(doc: TwPatentDocument) -> list[CheckItem]:
                 diagnostics=_dx(
                     gap_size=int_nums[i] - int_nums[i - 1],
                     total_paragraphs=len(nums),
+                    prev_value=nums[i - 1],
+                    next_value=nums[i],
+                    gap_position=i,
+                    is_backward=int_nums[i] < int_nums[i - 1],
                 ),
             )]
 
@@ -354,6 +372,7 @@ def check_paragraph_ending(doc: TwPatentDocument) -> list[CheckItem]:
     word_numbers = doc.body_paragraph_word_numbers
 
     bad_paragraphs: list[int | str] = []
+    bad_findings: list[dict] = []
     ordinal = 0
     for section_paras, relaxed in sections_to_check:
         in_claim_unit = False
@@ -401,6 +420,13 @@ def check_paragraph_ending(doc: TwPatentDocument) -> list[CheckItem]:
                 if resolved_wn is not None:
                     label = resolved_wn
                 bad_paragraphs.append(label)
+                if len(bad_findings) < 5:
+                    bad_findings.append({
+                        "paragraph_label": label,
+                        "last_char_codepoint": ord(stripped[-1]),
+                        "last_30_chars": stripped[-30:],
+                        "relaxed_section": relaxed,
+                    })
 
     if bad_paragraphs:
         paras_str = ", ".join(str(n) for n in bad_paragraphs)
@@ -415,6 +441,7 @@ def check_paragraph_ending(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_count=len(bad_paragraphs),
                 total_paragraphs_scanned=ordinal,
+                findings=bad_findings,
             ),
         )]
     return [CheckItem(
@@ -478,6 +505,8 @@ def check_figure_ref_consistency(doc: TwPatentDocument) -> list[CheckItem]:
                 only_embodiment_count=len(only_embodiment),
                 total_drawings=len(drawings_parents),
                 total_embodiment=len(embodiment_parents),
+                only_drawings_sample=only_drawings[:10],
+                only_embodiment_sample=only_embodiment[:10],
             ),
         )]
 
@@ -527,6 +556,9 @@ def check_patent_type_terminology(doc: TwPatentDocument) -> list[CheckItem]:
                 ),
                 mismatched_term_count=len(hits),
                 mismatched_term_codepoint=ord("本"),
+                mismatched_terms=hits[:10],
+                first_match_position=text.find(hits[0]) if hits else None,
+                spec_charlen=len(text),
             ),
         )]
 
@@ -555,6 +587,8 @@ def check_title(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 reason_code="missing",
                 title_charlen=0,
+                title_raw_charlen=len(doc.title),
+                title_is_whitespace=bool(doc.title and not doc.title.strip()),
             ),
         )]
 
@@ -578,6 +612,8 @@ def check_title(doc: TwPatentDocument) -> list[CheckItem]:
                 reason_code="prohibited_content",
                 flagged_count=len(items),
                 title_charlen=len(title),
+                flagged_kinds=[it.get("kind") for it in items],
+                tokens_sample=[(it.get("token") or "")[:32] for it in items[:5]],
             ),
         )]
 
@@ -610,6 +646,9 @@ def check_spec_claim_reference(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 hit_count=1,
                 snippet_charlen=len(snippet),
+                matched_phrase=match.group()[:80],
+                match_position=match.start(),
+                spec_text_charlen=len(text),
             ),
         )]
 
@@ -636,6 +675,8 @@ def check_symbol_table_presence(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 reason_code="missing_with_drawings_present",
                 drawings_section_paragraphs=len(doc.drawings_description),
+                symbol_table_entries=len(doc.symbol_table) if doc.symbol_table else 0,
+                drawings_section_charlen=sum(len(p) for p in doc.drawings_description),
             ),
         )]
 
@@ -702,6 +743,8 @@ def check_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckItem]:
                 unreferenced_count=len(unreferenced),
                 undefined_count=len(undefined),
                 total_table_entries=len(doc.symbol_table),
+                unreferenced_sample=[(n or "")[:32] for n in sorted(unreferenced)[:5]],
+                undefined_sample=[(n or "")[:32] for n in sorted(undefined)[:5]],
             ),
         )]
 
@@ -769,6 +812,8 @@ def check_indigenous_terms(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_count=len(hits),
                 first_hit_charlen=len(hits[0]) if hits else None,
+                hit_terms=hits[:10],
+                total_terms_scanned=len(_TW_INDIGENOUS_TERMS),
             ),
         )]
     return [CheckItem(

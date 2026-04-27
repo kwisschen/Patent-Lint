@@ -262,6 +262,9 @@ def check_required_sections(full_text: str) -> list[CheckItem]:
             diagnostics=_dx(
                 missing_count=len(missing_required),
                 total_required=len(required),
+                missing_sections=missing_required[:10],
+                drawings_exist=drawings_exist,
+                first_missing=missing_required[0] if missing_required else None,
             ),
         ))
     else:
@@ -284,6 +287,7 @@ def check_required_sections(full_text: str) -> list[CheckItem]:
                 diagnostics=_dx(
                     section_name=name,
                     total_optional=len(optional),
+                    section_name_charlen=len(name),
                 ),
             ))
 
@@ -313,7 +317,12 @@ def check_title(title: str) -> list[CheckItem]:
             message_key="check.spec.title.amendMissing",
             details_key="details.titleMissing",
             reference="MPEP § 606",
-            diagnostics=_dx(reason_code="missing", title_charlen=0),
+            diagnostics=_dx(
+                reason_code="missing",
+                title_charlen=0,
+                title_raw_charlen=len(title),
+                title_is_whitespace=bool(title and not title.strip()),
+            ),
         )]
 
     results: list[CheckItem] = []
@@ -332,6 +341,8 @@ def check_title(title: str) -> list[CheckItem]:
                 char_count=charlen,
                 threshold=500,
                 overage=charlen - 500,
+                first_30_chars=clean[:30],
+                last_30_chars=clean[-30:],
             ),
         ))
 
@@ -354,6 +365,8 @@ def check_title(title: str) -> list[CheckItem]:
                 reason_code="prohibited_content",
                 flagged_count=len(items),
                 title_charlen=charlen,
+                flagged_kinds=[it.get("kind") for it in items],
+                tokens_sample=[(it.get("token") or "")[:32] for it in items[:5]],
             ),
         ))
 
@@ -370,6 +383,8 @@ def check_title(title: str) -> list[CheckItem]:
                 reason_code="wordy",
                 word_count=word_count,
                 threshold=15,
+                title_charlen=charlen,
+                first_30_chars=clean[:30],
             ),
         ))
 

@@ -631,6 +631,7 @@ class AnalysisResult(BaseModel):
                 diagnostics=_dx(
                     reason_code="tracked_changes_present",
                     total_paragraphs=self.paragraph_count,
+                    total_claims=self.total_claims,
                 ),
             ))
 
@@ -646,7 +647,12 @@ class AnalysisResult(BaseModel):
                 message="No paragraph numbering found in specification.",
                 message_key="check.spec.paragraphSequential.missing",
                 details_key="details.paragraphNumberingMissing",
-                diagnostics=_dx(reason_code="no_paragraph_numbering"),
+                diagnostics=_dx(
+                    reason_code="no_paragraph_numbering",
+                    paragraph_count=self.paragraph_count,
+                    likely_patent=self.likely_patent,
+                    total_claims=self.total_claims,
+                ),
             ))
         elif not self.paragraphs_sequential:
             spec_checks.append(CheckItem(
@@ -679,6 +685,8 @@ class AnalysisResult(BaseModel):
                 diagnostics=_dx(
                     flagged_count=len(self.missing_ending_paragraphs),
                     total_paragraphs=self.paragraph_count,
+                    flagged_paragraphs_sample=self.missing_ending_paragraphs[:10],
+                    first_flagged_paragraph=self.missing_ending_paragraphs[0] if self.missing_ending_paragraphs else None,
                 ),
             ))
         else:
@@ -698,7 +706,10 @@ class AnalysisResult(BaseModel):
                 message="SEQ ID NO referenced but no sequence listing statement found.",
                 message_key="check.spec.sequenceListing.amend",
                 details_key="details.sequenceListingFix",
-                diagnostics=_dx(reason_code="missing_sequence_statement"),
+                diagnostics=_dx(
+                    reason_code="missing_sequence_statement",
+                    paragraph_count=self.paragraph_count,
+                ),
             ))
         else:
             spec_checks.append(CheckItem(
@@ -715,7 +726,10 @@ class AnalysisResult(BaseModel):
                 details=self.cross_reference_citations,
                 details_key="details.crossReferenceCitations",
                 details_params={"text": self.cross_reference_citations},
-                diagnostics=_dx(citation_charlen=len(self.cross_reference_citations)),
+                diagnostics=_dx(
+                    citation_charlen=len(self.cross_reference_citations),
+                    citation_excerpt=self.cross_reference_citations[:60],
+                ),
             ))
         else:
             spec_checks.append(CheckItem(
@@ -732,7 +746,10 @@ class AnalysisResult(BaseModel):
                 details=self.prior_art_citations,
                 details_key="details.priorArtCitations",
                 details_params={"text": self.prior_art_citations},
-                diagnostics=_dx(citation_charlen=len(self.prior_art_citations)),
+                diagnostics=_dx(
+                    citation_charlen=len(self.prior_art_citations),
+                    citation_excerpt=self.prior_art_citations[:60],
+                ),
             ))
         else:
             spec_checks.append(CheckItem(
@@ -790,6 +807,10 @@ class AnalysisResult(BaseModel):
             diagnostics=_dx(
                 figure_count=self.figures_count,
                 has_drawing_issue=has_drawing_issue,
+                single_figure=self.single_figure,
+                wrong_label_for_single_figure=self.wrong_label_for_single_figure,
+                contains_prior_art_in_drawings=self.contains_prior_art_in_drawings,
+                figures_sequential=self.figures_sequential,
             ) if has_drawing_issue else None,
         ))
 
@@ -815,6 +836,8 @@ class AnalysisResult(BaseModel):
                 diagnostics=_dx(
                     first_gap_position=self.last_sequential_claim,
                     total_claims=self.total_claims,
+                    has_independent=any(c.independent for c in self.claims),
+                    independent_count=sum(1 for c in self.claims if c.independent),
                 ),
             ))
         else:
@@ -1194,7 +1217,12 @@ class AnalysisResult(BaseModel):
                 message="Abstract has extra paragraphs or invalid ending.",
                 message_key="check.abstract.structure.amend",
                 details_key="details.abstractStructureFix",
-                diagnostics=_dx(reason_code="bad_structure"),
+                diagnostics=_dx(
+                    reason_code="bad_structure",
+                    abstract_word_count=self.abstract_word_count,
+                    abstract_charlen=len(self.abstract_text or ""),
+                    last_char_codepoint=ord((self.abstract_text or "X")[-1]) if (self.abstract_text or "").strip() else None,
+                ),
             ))
         else:
             abstract_checks.append(CheckItem(
@@ -1223,7 +1251,10 @@ class AnalysisResult(BaseModel):
                 message="Single-figure patent uses 'FIG. 1' instead of 'The Figure'.",
                 message_key="check.drawings.singleFigure.amend",
                 details_key="details.singleFigureFix",
-                diagnostics=_dx(reason_code="wrong_single_figure_label"),
+                diagnostics=_dx(
+                    reason_code="wrong_single_figure_label",
+                    figure_count=self.figures_count,
+                ),
             ))
         elif self.single_figure:
             drawings_checks.append(CheckItem(
@@ -1238,7 +1269,10 @@ class AnalysisResult(BaseModel):
                 message="Prior art references found in drawings description.",
                 message_key="check.drawings.priorArt.verify",
                 details_key="details.drawingsPriorArt",
-                diagnostics=_dx(reason_code="prior_art_reference_in_drawings"),
+                diagnostics=_dx(
+                    reason_code="prior_art_reference_in_drawings",
+                    figure_count=self.figures_count,
+                ),
             ))
         else:
             drawings_checks.append(CheckItem(
@@ -1257,6 +1291,8 @@ class AnalysisResult(BaseModel):
                 diagnostics=_dx(
                     missing_count=len(self.figures_missing) if self.figures_missing else 0,
                     total_figures=self.figures_count,
+                    missing_figures=self.figures_missing[:10] if self.figures_missing else None,
+                    first_missing=self.figures_missing[0] if self.figures_missing else None,
                 ),
             ))
         else:
