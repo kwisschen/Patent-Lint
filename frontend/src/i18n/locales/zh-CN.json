@@ -304,8 +304,8 @@
       "tryNow": "立即试试 →"
     },
     "page": {
-      "heroTitle": "无上传。无 AI。无例外。",
-      "heroSubtext": "PatentLint 完全在您的浏览器中本地运行，专利说明书绝不会离开您的设备。机密数据始终保留在您的设备上。",
+      "heroTitle": "无上传。无 AI。不追踪。",
+      "heroSubtext": "PatentLint 完全在您的浏览器中本地运行，专利说明书绝不会离开您的设备；分析全程于本地执行，结果仅供您本人查阅。",
       "tryIt": "自己试试看 →",
       "compareTitle": "PatentLint 与其他工具的比较",
       "compareDisclaimer": "本比较表反映通用架构模式。各产品可能有所不同。「Word 插件工具」与「云端工具」为通用类别，并非指特定产品。",
@@ -369,7 +369,7 @@
       "aiTitle": "AI / LLM（不使用）",
       "ai": "PatentLint 不使用 AI、机器学习或大型语言模型。所有检查均为确定性的规则匹配，依据各专利局审查规范执行。您的文本不会被发送至任何 AI 服务。",
       "telemetryTitle": "遥测与分析（不使用）",
-      "telemetry": "PatentLint 不包含分析脚本、追踪像素、cookies 或第三方追踪集成。此应用程序不收集或传输任何使用数据。",
+      "telemetry": "PatentLint 不包含分析脚本、追踪像素、cookies 或第三方追踪集成。本应用程序不会自动收集或传输任何使用数据。唯一之数据传输系您通过「报告」按钮主动发送之错误反馈，该反馈已去标识化处理，于发送前可完整查看，详见隐私政策 §6。",
       "selfHostedTitle": "本地部署",
       "selfHosted": "On-premises deployment is available on private inquiry. Compliance with any specific regulatory regime remains the organization's own determination.",
       "contactEnterprise": "咨询企业部署方案 →"
@@ -1234,7 +1234,7 @@
     "firstVisitHint": "首次访问需几秒钟；完成后将缓存至您的浏览器，下次秒开",
     "offline_note": "首次加载后可离线使用",
     "feature1_title": "无需上传。无需账号。无 AI。",
-    "feature1_desc": "您的机密专利说明书不会离开您的设备。不会上传任何内容，PatentLint 也不会知道您的身份。",
+    "feature1_desc": "您的机密专利说明书不会离开您的设备。您的文件绝不会被上传，PatentLint 也不会知道您的身份。",
     "feature2_title": "USPTO／CNIPA／TIPO 检查与权利要求树状图",
     "feature2_desc": "检测限制性用语、不确定用语及缺乏引用基础等问题，并以交互式树状图呈现权利要求从属关系。",
     "feature3_title": "权利要求树状图",

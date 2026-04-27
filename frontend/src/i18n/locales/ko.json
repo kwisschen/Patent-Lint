@@ -304,8 +304,8 @@
       "tryNow": "지금 해보기 →"
     },
     "page": {
-      "heroTitle": "업로드 없음. AI 없음. 예외 없음.",
-      "heroSubtext": "PatentLint는 전적으로 브라우저 내에서 실행되며, 특허 초안이 기기를 벗어나지 않습니다. 기밀 데이터는 항상 사용자의 기기에 보관됩니다.",
+      "heroTitle": "업로드 없음. AI 없음. 추적 없음.",
+      "heroSubtext": "PatentLint는 전적으로 브라우저 내에서 실행되며, 특허 초안이 기기를 벗어나지 않습니다. 분석은 로컬에서 이루어지며, 결과는 사용자만의 것입니다.",
       "tryIt": "직접 확인 →",
       "compareTitle": "PatentLint와 다른 도구의 비교",
       "compareDisclaimer": "이 비교는 일반적인 아키텍처 패턴을 반영합니다. 개별 제품은 다를 수 있습니다. “Word 추가 기능 도구”와 “클라우드 기반 도구”는 일반 범주이며 특정 제품을 지칭하지 않습니다.",
@@ -369,7 +369,7 @@
       "aiTitle": "AI / LLM (사용 안 함)",
       "ai": "PatentLint는 AI, 머신러닝 또는 대규모 언어 모델을 사용하지 않습니다. 모든 검사는 각 특허청 가이드라인에 따른 결정론적 규칙 기반 패턴 매칭입니다. 텍스트가 AI 서비스로 전송되지 않습니다.",
       "telemetryTitle": "텔레메트리 및 분석 (사용 안 함)",
-      "telemetry": "PatentLint는 분석 스크립트, 추적 픽셀, 쿠키, 서드파티 추적 통합을 포함하지 않습니다. 애플리케이션이 사용 데이터를 수집하거나 전송하지 않습니다.",
+      "telemetry": "PatentLint는 분석 스크립트, 추적 픽셀, 쿠키, 서드파티 추적 통합을 포함하지 않습니다. 사용 데이터를 자동으로 수집하거나 전송하지 않습니다. 유일한 데이터 흐름은 사용자가 「보고」 버튼을 통해 자발적으로 보내는 오류 보고로, 비식별 처리되며 전송 전에 전체 내용을 확인할 수 있고, 개인정보 처리방침 §6에 기재된 바와 같습니다.",
       "selfHostedTitle": "온프레미스 배포",
       "selfHosted": "On-premises deployment is available on private inquiry. Compliance with any specific regulatory regime remains the organization's own determination.",
       "contactEnterprise": "엔터프라이즈 배포 문의 →"
@@ -1234,7 +1234,7 @@
     "firstVisitHint": "첫 방문 시 몇 초 정도 걸립니다. 이후에는 캐시되어 빠르게 로드됩니다",
     "offline_note": "첫 로드 후 오프라인 사용 가능",
     "feature1_title": "업로드 불필요. 계정 불필요. AI 없음.",
-    "feature1_desc": "기밀 특허 초안이 기기를 벗어나지 않습니다. 아무것도 업로드되지 않으며, PatentLint는 사용자의 신원조차 알지 못합니다.",
+    "feature1_desc": "기밀 특허 초안이 기기를 벗어나지 않습니다. 파일이 업로드되지 않으며, PatentLint는 사용자의 신원조차 알지 못합니다.",
     "feature2_title": "USPTO | CNIPA | TIPO 검사 및 청구항 트리",
     "feature2_desc": "제한적 표현, 불명확한 용어 및 선행사 기초 누락을 검출합니다. 인터랙티브 트리로 청구항 종속 관계를 시각화합니다.",
     "feature3_title": "청구항 트리 시각화",

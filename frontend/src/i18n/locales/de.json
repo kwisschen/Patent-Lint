@@ -304,8 +304,8 @@
       "tryNow": "Jetzt ausprobieren →"
     },
     "page": {
-      "heroTitle": "Kein Upload. Keine KI. Keine Ausnahmen.",
-      "heroSubtext": "PatentLint läuft vollständig in Ihrem Browser. Ihre Patentanmeldung verlässt nie Ihr Gerät, und vertrauliche Daten bleiben immer auf Ihrer Maschine.",
+      "heroTitle": "Kein Upload. Keine KI. Kein Tracking.",
+      "heroSubtext": "PatentLint läuft vollständig in Ihrem Browser. Ihre Patentanmeldung verlässt nie Ihr Gerät — die Analyse erfolgt lokal, die Ergebnisse gehören Ihnen.",
       "tryIt": "Selbst ausprobieren →",
       "compareTitle": "Wie schneidet PatentLint im Vergleich ab?",
       "compareDisclaimer": "Der Vergleich spiegelt allgemeine Architekturmuster wider. Einzelne Produkte können abweichen. „Word-Add-in-Tools“ und „Cloud-basierte Tools“ sind generische Kategorien, keine konkreten Produkte.",
@@ -369,7 +369,7 @@
       "aiTitle": "KI / LLM (nicht genutzt)",
       "ai": "PatentLint verwendet keine KI, kein Machine Learning und keine großen Sprachmodelle. Alle Prüfungen erfolgen deterministisch durch regelbasierten Mustervergleich gegen die Richtlinien der Patentämter. Ihr Text wird nie an einen KI-Dienst gesendet.",
       "telemetryTitle": "Telemetrie & Analyse (nicht genutzt)",
-      "telemetry": "PatentLint enthält keine Analyse-Skripte, Tracking-Pixel, Cookies oder Drittanbieter-Tracking. Die Anwendung erfasst und überträgt keine Nutzungsdaten.",
+      "telemetry": "PatentLint enthält keine Analyse-Skripte, Tracking-Pixel, Cookies oder Drittanbieter-Tracking. Es werden keine Nutzungsdaten automatisch erfasst oder übertragen. Der einzige Datenfluss ist die freiwillige Fehlermeldung, die Sie über die Schaltfläche „Melden“ senden können — anonymisiert, vor dem Senden vollständig angezeigt und in Datenschutz §6 beschrieben.",
       "selfHostedTitle": "On-Premises-Bereitstellung",
       "selfHosted": "On-premises deployment is available on private inquiry. Compliance with any specific regulatory regime remains the organization's own determination.",
       "contactEnterprise": "Kontakt für Enterprise-Bereitstellung →"
@@ -1234,7 +1234,7 @@
     "firstVisitHint": "Der erste Besuch dauert ein paar Sekunden — die Engine wird danach zwischengespeichert",
     "offline_note": "Funktioniert nach dem ersten Laden offline",
     "feature1_title": "Kein Upload. Kein Konto. Keine KI.",
-    "feature1_desc": "Ihre vertraulichen Patentanmeldungen verlassen nie Ihr Gerät. Nichts wird hochgeladen, und PatentLint weiß nicht einmal, wer Sie sind.",
+    "feature1_desc": "Ihre vertraulichen Patentanmeldungen verlassen nie Ihr Gerät. Ihre Datei wird nie hochgeladen, und PatentLint weiß nicht einmal, wer Sie sind.",
     "feature2_title": "USPTO | CNIPA | TIPO-Prüfungen & Anspruchsbaum",
     "feature2_desc": "Erkennt einschränkende Formulierungen, unklare Begriffe und fehlende Rückbezüge. Visualisiert Anspruchsabhängigkeiten mit einem interaktiven Baum.",
     "feature3_title": "Anspruchsbaum-Visualisierung",
