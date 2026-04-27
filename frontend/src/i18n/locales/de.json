@@ -229,7 +229,7 @@
       "fieldOrphans": "Verwaiste Figuren",
       "fieldBriefFigsSample": "Figuren in Kurzbeschreibung (Stichprobe)",
       "fieldDetailedFigsSample": "Figuren in Detailbeschreibung (Stichprobe)",
-      "diagnosticHeader": "Diagnose-Spur (strukturelle Metadaten, kein Anspruchstext — siehe Datenschutz §6):"
+      "diagnosticHeader": "Diagnose-Spur (anonymisiert — siehe Datenschutz §6):"
     },
     "reportModal": {
       "title": "Anonym melden?",
@@ -1428,7 +1428,7 @@
     },
     "s12": {
       "title": "Anonyme Fehlermeldungen",
-      "p1": "Wenn Sie bei einer Prüfung auf „Anonym senden“ klicken, gewähren Sie PatentLint die Erlaubnis, die strukturellen Daten zur Verbesserung des Produkts zu nutzen. Sie behalten alle Rechte an Ihrer Patentanmeldung, die auf Ihrem Gerät verbleibt. Da die Meldungen anonym sind, können wir Ihnen möglicherweise nicht direkt antworten — wir lesen jedoch jede Meldung."
+      "p1": "Wenn Sie bei einer Prüfung auf „Anonym senden“ klicken, gewähren Sie PatentLint die Erlaubnis, die anonymisierte Diagnose-Datenmenge zur Behebung von Erkennungsfehlern und zur Verbesserung des Prüfkatalogs zu nutzen. Sie behalten alle Rechte an Ihrer Patentanmeldung, die auf Ihrem Gerät verbleibt. Da Meldungen nicht mit Ihnen verknüpft werden können, ist eine direkte Rückmeldung möglicherweise nicht möglich — wir lesen jedoch jede Meldung."
     },
     "copyright": "Copyright © 2025 Christopher Chen. Alle Rechte vorbehalten.",
     "crossLinks": "Siehe auch: <1>Datenschutzerklärung</1> · <3>Sicherheit</3>"
@@ -1477,11 +1477,10 @@
     },
     "s6": {
       "title": "Freiwilliges Feedback",
-      "p1": "Wenn Sie auf einen Feedback-Link klicken, öffnet Ihr Browser Ihr eigenes E-Mail-Programm (oder ein Webmail-Fenster), adressiert an kwisschen@gmail.com. Wir hosten kein Formular. Wir erhalten nur, was Sie selbst verfassen und senden.",
-      "p2": "Wir verwenden Feedback zur Fehlerbehebung und zur Antwort an Sie. Wir geben Feedback nicht an Dritte weiter und nutzen es zu keinem anderen Zweck als zur Verbesserung von PatentLint und zur Beantwortung Ihrer Nachricht.",
-      "p3": "Fehlerberichte, die über „Fehler melden“-Links gesendet werden, können einen kompakten Block „Diagnose-Spur“ enthalten — strukturelle Metadaten dazu, welcher Walker-Codepfad den Befund erzeugt hat (Ergebnisse von Regex-Matches, Zeichenzählungen, Tags zum Extraktionspfad). Die Spur enthält keinen Anspruchstext, keine Substantive, keine Entwurfsinhalte; sie ist so konzipiert, dass wir Walker-Fehler diagnostizieren können, ohne Ihren Entwurf zu sehen. Sie können den gesamten E-Mail-Text vor dem Senden einsehen und den Spur-Block entfernen, wenn Sie möchten.",
-      "p4": "Möchten Sie Feedback pseudonym senden, nutzen Sie einen E-Mail-Alias-Dienst (z. B. Apple Hide My Email, Gmail-Aliase, Firefox Relay, ProtonMail-Aliase). Wir erhalten die Alias-Adresse; Ihre echte Adresse bleibt bei Ihrem Anbieter. Wir korrelieren Alias-Adressen nicht mit anderen Daten.",
-      "p5": "Bei einigen Triage-Einträgen erscheint zusätzlich eine Schaltfläche „Anonym senden“, die eine strukturierte Diagnose-Datenmenge an einen privaten GitHub-Issue-Tracker sendet, den nur der Maintainer einsehen kann. Die Datenmenge enthält kurze Fragmente aus der unmittelbaren Umgebung des Funds — etwa den konkret markierten Begriff, ungefähr 30 Zeichen umgebenden Kontext, die Interpretation durch den Walker und die ausgelöste Regel — auf höchstens fünf Funde pro Bericht begrenzt. Sie enthält keinen vollständigen Anspruchstext, keine vollständigen Absätze, keine Dateinamen, keine Datei-Metadaten, keine E-Mail, keinen Namen und keine IP. Der Dialog zeigt jedes Fragment vor dem Senden; nichts wird verborgen. Berichte können nicht mit Ihrer Identität verknüpft werden."
+      "p1": "Jeder Befund hat eine Schaltfläche „Melden“. Mit einem Klick öffnet sich ein Dialog, der genau das anzeigt, was gesendet wird — nichts ist verborgen. Der Dialog bietet zudem die Alternative „Per E-Mail senden“ an kwisschen@gmail.com, falls Sie selbst mehr Kontext schreiben möchten.",
+      "p2": "Die anonyme Datenmenge enthält Zählwerte, den konkret markierten Begriff oder Ausdruck, etwa 30 Zeichen umgebenden Kontext, Kategoriebezeichnungen (welche Prüfung, welche Regel, welcher Erkennungszweig) und einige strukturelle Kennwerte — auf höchstens fünf Funde pro Bericht begrenzt. Sie enthält keinen vollständigen Anspruchstext, keine vollständigen Absätze, keine Dateinamen, keine Datei-Metadaten, keine E-Mail, keinen Namen und keine IP.",
+      "p3": "Wenn Sie auf „Anonym senden“ klicken, sendet Ihr Browser die Datenmenge per HTTPS an eine Cloudflare-Pages-Function auf patentlint.com, die in einem privaten GitHub-Issues-Tracker, auf den nur der Maintainer zugreifen kann, einen Eintrag anlegt. Ihre IP und Browser-Header werden nicht an GitHub weitergeleitet. Meldungen lassen sich nicht mit Ihrer Identität verknüpfen.",
+      "p4": "Nutzen Sie stattdessen die E-Mail-Alternative, erhalten wir nur das, was Sie selbst schreiben. Möchten Sie pseudonym senden, verwenden Sie einen E-Mail-Alias-Dienst (Apple Hide My Email, Gmail-Aliase, Firefox Relay, ProtonMail-Aliase); wir korrelieren Alias-Adressen nicht mit anderen Daten. Wir verwenden Feedback ausschließlich zur Fehlerbehebung und zur Antwort an Sie und geben es nicht an Dritte weiter."
     },
     "s7": {
       "title": "Drittanbieter-Dienste",
@@ -1492,6 +1491,8 @@
       "pyodide": "Beim ersten Besuch lädt Ihr Browser die Pyodide-WebAssembly-Laufzeit vom Pyodide-CDN (jsdelivr / cloudflare). Danach wird die Laufzeit lokal zwischengespeichert und funktioniert offline.",
       "fontsLabel": "Google Fonts (CJK-Schrift, optional).",
       "fonts": "Wenn Sie einen lokalisierten PDF-Bericht in zh-TW / zh-CN / ja / ko exportieren, lädt Ihr Browser die entsprechende Noto-Sans-CJK-Schrift beim PDF-Export von Google Fonts. Die Schrift wird nach dem ersten Abruf zwischengespeichert. Englische und deutsche PDFs rufen keine Schrift ab.",
+      "githubLabel": "GitHub.",
+      "github": "Anonyme Meldungen, die über die Schaltfläche „Senden“ im Melde-Dialog gesendet werden, leitet eine Cloudflare-Pages-Function an einen privaten GitHub-Issues-Tracker (kwisschen/Patent-Lint) weiter, auf den nur der Maintainer zugreifen kann. GitHub erhält ausschließlich die anonymisierte Datenmenge — keine IP, keine E-Mail, keine Browser-Header — und speichert die Einträge gemäß seiner eigenen Datenschutzrichtlinie.",
       "p2": "Wir nutzen keine weiteren Drittanbieter-Dienste. Kein CRM, keine E-Mail-Marketing-Plattform, kein Support-Ticketsystem, keine Drittanbieter-Protokollierung."
     },
     "s8": {
@@ -1567,7 +1568,7 @@
       "disclaimerTitle": "Was eine A-Bewertung bedeutet — und was nicht",
       "disclaimerIntro": "Eine A-Bewertung bedeutet, dass der Prüfkatalog von PatentLint keine Beanstandungen gefunden hat. Sie bedeutet nicht, dass Ihre Schrift einreichungsbereit ist. Eine inhaltliche Prüfung durch eine zugelassene Vertretung wird weiterhin empfohlen.",
       "reportTitle": "Helfen Sie uns weiter — falsche Treffer melden",
-      "reportIntro": "Kein Prüfer ist fehlerfrei. Walker-basierte Prüfungen (Rückbezug, Stützung, Bezugnahmen auf Zeichnungen) tragen ein geringes Fehlerrisiko; da die Bewertung nun davon abhängt, kann eine ungerechtfertigte Beanstandung eine Notenstufe kosten. Über den «Melden»-Knopf an jedem Triage-Eintrag wird eine rein strukturelle Diagnose-Spur mitgesendet — Zählwerte, Codepoints, abgeschlossene Aufzählungen — niemals der Anspruchsinhalt oder der Schrifttext. So können wir den Fehler eingrenzen, ohne Ihre Erfindung je zu sehen."
+      "reportIntro": "Kein Prüfer ist fehlerfrei. Walker-basierte Prüfungen (Rückbezug, Stützung, Bezugnahmen auf Zeichnungen) tragen ein geringes Fehlerrisiko; da die Bewertung nun davon abhängt, kann eine ungerechtfertigte Beanstandung eine Notenstufe kosten. Der „Melden“-Knopf an jedem Triage-Eintrag öffnet einen Dialog, der genau anzeigt, was gesendet wird — Zählwerte, der markierte Begriff, etwa 30 Zeichen Kontext und Kategoriebezeichnungen, auf höchstens fünf Funde begrenzt — sodass wir den Fehler aus einer anonymisierten Datenmenge eingrenzen können."
     },
     "howWeScore": "Bewertungsmaßstab →",
     "cover": {
