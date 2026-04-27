@@ -87,3 +87,54 @@ class TestUsFiguresSequentialAmend:
         )
         report = result.to_report_data()
         assert self._find_sequential_amend(report) is None
+
+
+class TestUsAbstractStructureAmendDiagnostics:
+    """Regression for the abstract.structure.amend diagnostic crash —
+    ``_to_us_report_data`` referenced ``self.abstract_text`` before that
+    field existed on ``AnalysisResult``, so any document with
+    ``abstract_structure_good=False`` (extra paragraphs / invalid
+    ending) would crash at adapter time. Surfaced 2026-04-27 via
+    real-user testing on TestSpec1/2; pre-existing from the ADR-145
+    fingerprint sweep (b447ab6 / 1c35b54).
+    """
+
+    def _find_structure_amend(self, report: ReportData) -> CheckItem | None:
+        for check in report.abstract_checks:
+            if check.message_key == "check.abstract.structure.amend":
+                return check
+        return None
+
+    def test_structure_amend_renders_with_abstract_text(self):
+        result = AnalysisResult(
+            jurisdiction=Jurisdiction.US,
+            abstract_word_count=80,
+            abstract_text="An invention. Extra paragraph here.",
+            abstract_structure_good=False,
+        )
+        report = result.to_report_data()
+        check = self._find_structure_amend(report)
+        assert check is not None
+        assert check.status == "amend"
+        assert check.diagnostics is not None
+        assert check.diagnostics.get("reason_code") == "bad_structure"
+        assert check.diagnostics.get("abstract_word_count") == 80
+        assert check.diagnostics.get("abstract_charlen") == len(
+            "An invention. Extra paragraph here."
+        )
+
+    def test_structure_amend_renders_with_empty_abstract_text(self):
+        # ``abstract_text=""`` was the silent-default before this fix;
+        # adapter must still render the chip without crashing on
+        # ``len(None)`` or ``ord("")[-1]``.
+        result = AnalysisResult(
+            jurisdiction=Jurisdiction.US,
+            abstract_word_count=0,
+            abstract_text="",
+            abstract_structure_good=False,
+        )
+        report = result.to_report_data()
+        check = self._find_structure_amend(report)
+        assert check is not None
+        assert check.diagnostics.get("abstract_charlen") == 0
+        assert check.diagnostics.get("last_char_codepoint") is None

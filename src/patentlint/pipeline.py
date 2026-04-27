@@ -26,6 +26,7 @@ from patentlint.models import AnalysisResult, CheckItem, CnPatentDocument, Juris
 from patentlint.parser import claims as claims_parser
 from patentlint.parser import sections
 from patentlint.parser.docx_loader import load_docx, load_docx_cn, load_docx_tw
+from patentlint.parser.jurisdiction_mismatch import detect_jurisdiction_mismatch
 from patentlint.parser.sections_cn import classify_document_cn, extract_cn_sections_from_docx
 from patentlint.parser.sections_tw import classify_document_tw, extract_tw_sections
 from patentlint.parser.xml_loader import extract_cn_xml_from_zip, parse_cnipa_xml
@@ -37,7 +38,10 @@ from patentlint.rubric import (
 )
 
 
-# TODO Phase 7: Add language mismatch detection (English content in CN mode, Chinese content in US mode)
+# Issue #9 / ADR-082 revisit (2026-04-27) — language/jurisdiction mismatch
+# detection lives in ``patentlint.parser.jurisdiction_mismatch`` and is
+# wired in at the ``analyze_file`` / ``analyze_bytes`` entry points below.
+# Result rides on AnalysisResult.jurisdiction_mismatch / suggested_jurisdiction.
 
 
 def _attach_rubric_grade(
@@ -82,6 +86,7 @@ def _run_cn_pipeline(
     likely_patent: bool = True,
     patent_detection_reason: str | None = None,
     has_tracked_changes: bool = False,
+    suggested_jurisdiction: str | None = None,
     strict_plural_reference_matching: bool = False,
     strict_qualifier_matching: bool = False,
 ) -> AnalysisResult:
@@ -279,6 +284,8 @@ def _run_cn_pipeline(
         cn_markush_open_claims=[cid for cid, _ in cn_claims_analysis.detect_markush_open_transition_cn(cn_doc)],
         antecedent_basis_issues=cn_antecedent_basis,
         unsupported_terms=cn_unsupported_terms,
+        jurisdiction_mismatch=bool(suggested_jurisdiction),
+        suggested_jurisdiction=suggested_jurisdiction,
     )
     _attach_rubric_grade(
         result,
@@ -293,7 +300,13 @@ def _run_cn_pipeline(
     return result
 
 
-def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisdiction.US) -> AnalysisResult:
+def _run_pipeline(
+    loaded,
+    full_text: str,
+    *,
+    jurisdiction: Jurisdiction = Jurisdiction.US,
+    suggested_jurisdiction: str | None = None,
+) -> AnalysisResult:
     """Core pipeline logic shared by analyze_file and analyze_bytes."""
 
     # --- Document type detection ---
@@ -453,6 +466,7 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
         figure_xref_checks=figure_xref_checks,
         # Abstract
         abstract_word_count=abstract_word_count,
+        abstract_text=abstract_section or "",
         abstract_structure_good=abstract_structure,
         abstract_has_implied_phrase=abstract_implied,
         abstract_implied_phrases=abstract_implied_phrases,
@@ -460,6 +474,8 @@ def _run_pipeline(loaded, full_text: str, *, jurisdiction: Jurisdiction = Jurisd
         abstract_legal_phraseology_items=abstract_legal_phraseology_items,
         abstract_merit_language_formatted=abstract_merit_language,
         abstract_merit_language_items=abstract_merit_language_items,
+        jurisdiction_mismatch=bool(suggested_jurisdiction),
+        suggested_jurisdiction=suggested_jurisdiction,
     )
     _attach_rubric_grade(
         result,
@@ -478,6 +494,7 @@ def _run_tw_pipeline(
     likely_patent: bool = True,
     patent_detection_reason: str | None = None,
     has_tracked_changes: bool = False,
+    suggested_jurisdiction: str | None = None,
     strict_plural_reference_matching: bool = False,
     strict_qualifier_matching: bool = False,
 ) -> AnalysisResult:
@@ -673,6 +690,8 @@ def _run_tw_pipeline(
         tw_drawings_checks=drawings_checks,
         antecedent_basis_issues=tw_antecedent_basis,
         unsupported_terms=tw_unsupported_terms,
+        jurisdiction_mismatch=bool(suggested_jurisdiction),
+        suggested_jurisdiction=suggested_jurisdiction,
     )
     _attach_rubric_grade(
         result,
@@ -709,11 +728,15 @@ def analyze_file(
             loaded_tw.paragraphs,
             loaded_tw.paragraph_word_numbers,
         )
+        suggested = detect_jurisdiction_mismatch(
+            "\n".join(loaded_tw.paragraphs), Jurisdiction.TW,
+        )
         return _run_tw_pipeline(
             tw_doc,
             likely_patent=likely_patent,
             patent_detection_reason=detection_reason.value,
             has_tracked_changes=loaded_tw.has_tracked_changes,
+            suggested_jurisdiction=suggested,
             strict_plural_reference_matching=tw_strict_plural_reference_matching,
             strict_qualifier_matching=tw_strict_qualifier_matching,
         )
@@ -741,11 +764,15 @@ def analyze_file(
             all_cn_paragraphs = [p for s in loaded_cn.sections for p in s.paragraphs]
             likely_patent, detection_reason = classify_document_cn(all_cn_paragraphs)
             cn_doc = extract_cn_sections_from_docx(loaded_cn.sections)
+            suggested = detect_jurisdiction_mismatch(
+                "\n".join(all_cn_paragraphs), Jurisdiction.CN,
+            )
             return _run_cn_pipeline(
                 cn_doc,
                 likely_patent=likely_patent,
                 patent_detection_reason=detection_reason.value,
                 has_tracked_changes=loaded_cn.has_tracked_changes,
+                suggested_jurisdiction=suggested,
                 strict_plural_reference_matching=cn_strict_plural_reference_matching,
                 strict_qualifier_matching=cn_strict_qualifier_matching,
             )
@@ -754,7 +781,10 @@ def analyze_file(
 
     # US jurisdiction (existing behavior, unchanged)
     loaded = load_docx(file_path)
-    return _run_pipeline(loaded, loaded.full_text, jurisdiction=jurisdiction)
+    suggested = detect_jurisdiction_mismatch(loaded.full_text, Jurisdiction.US)
+    return _run_pipeline(
+        loaded, loaded.full_text, jurisdiction=jurisdiction, suggested_jurisdiction=suggested,
+    )
 
 
 def analyze_bytes(
@@ -783,11 +813,15 @@ def analyze_bytes(
             loaded_tw.paragraphs,
             loaded_tw.paragraph_word_numbers,
         )
+        suggested = detect_jurisdiction_mismatch(
+            "\n".join(loaded_tw.paragraphs), Jurisdiction.TW,
+        )
         return _run_tw_pipeline(
             tw_doc,
             likely_patent=likely_patent,
             patent_detection_reason=detection_reason.value,
             has_tracked_changes=loaded_tw.has_tracked_changes,
+            suggested_jurisdiction=suggested,
             strict_plural_reference_matching=tw_strict_plural_reference_matching,
             strict_qualifier_matching=tw_strict_qualifier_matching,
         )
@@ -816,11 +850,15 @@ def analyze_bytes(
             all_cn_paragraphs = [p for s in loaded_cn.sections for p in s.paragraphs]
             likely_patent, detection_reason = classify_document_cn(all_cn_paragraphs)
             cn_doc = extract_cn_sections_from_docx(loaded_cn.sections)
+            suggested = detect_jurisdiction_mismatch(
+                "\n".join(all_cn_paragraphs), Jurisdiction.CN,
+            )
             return _run_cn_pipeline(
                 cn_doc,
                 likely_patent=likely_patent,
                 patent_detection_reason=detection_reason.value,
                 has_tracked_changes=loaded_cn.has_tracked_changes,
+                suggested_jurisdiction=suggested,
                 strict_plural_reference_matching=cn_strict_plural_reference_matching,
                 strict_qualifier_matching=cn_strict_qualifier_matching,
             )
@@ -836,4 +874,7 @@ def analyze_bytes(
         tmp.write(content)
         tmp.flush()
         loaded = load_docx(tmp.name)
-    return _run_pipeline(loaded, loaded.full_text, jurisdiction=jurisdiction)
+    suggested = detect_jurisdiction_mismatch(loaded.full_text, Jurisdiction.US)
+    return _run_pipeline(
+        loaded, loaded.full_text, jurisdiction=jurisdiction, suggested_jurisdiction=suggested,
+    )
