@@ -120,29 +120,34 @@ function buildIssue(payload) {
       : "";
   const title = `[report] ${checkKey}${fingerprint}`;
 
-  const sortedKeys = Object.keys(payload).sort();
-  const lines = sortedKeys.map((k) => {
-    const v = payload[k];
-    const display = typeof v === "boolean" ? String(v) : v;
-    return `${k}: ${display}`;
-  });
+  // Render the payload as pretty JSON inside a fenced ```json block.
+  // Top-level keys are sorted for stable diffs across reports; nested
+  // findings arrays are preserved as objects (the previous flat
+  // `${k}: ${v}` template stringified arrays via Array.prototype.toString,
+  // which collapses every finding to `[object Object]`).
+  const sortedPayload = Object.fromEntries(
+    Object.keys(payload)
+      .sort()
+      .map((k) => [k, payload[k]]),
+  );
+  const json_block = JSON.stringify(sortedPayload, null, 2);
 
   const body = [
     "Anonymous error report submitted via the ReportModal.",
     "",
-    "```",
-    ...lines,
+    "```json",
+    json_block,
     "```",
     "",
-    "_Submitted via `POST /api/report`. No claim text, no draft contents, no IP logging — see Privacy Policy._",
+    "_Submitted via `POST /api/report`. De-identified payload only — no full claim text, no full paragraphs, no email, no IP. See Privacy §6._",
   ].join("\n");
 
   const labels = ["report"];
   if (
     typeof payload.jurisdiction === "string" &&
-    /^[a-z]{2,3}$/.test(payload.jurisdiction)
+    /^[a-z]{2,3}$/i.test(payload.jurisdiction)
   ) {
-    labels.push(payload.jurisdiction);
+    labels.push(payload.jurisdiction.toLowerCase());
   }
 
   return { title, body, labels };
