@@ -304,8 +304,8 @@
       "tryNow": "立即試試 →"
     },
     "page": {
-      "heroTitle": "無上傳。無 AI。不追蹤。",
-      "heroSubtext": "PatentLint 完全在您的瀏覽器中本機運作，專利說明書絕不會離開您的裝置；分析全程於本機執行，結果僅供您本人查閱。",
+      "heroTitle": "無上傳。無 AI。無例外。",
+      "heroSubtext": "PatentLint 完全在您的瀏覽器中本機運作，專利說明書絕不會離開您的裝置。機密資料保留在您的裝置上。",
       "tryIt": "自己試試看 →",
       "compareTitle": "PatentLint 與其他工具的比較",
       "compareDisclaimer": "本比較表反映一般架構模式。個別產品可能有所不同。「Word 增益集工具」與「雲端工具」為通用類別，並非指特定產品。",
@@ -369,7 +369,8 @@
       "aiTitle": "AI / LLM（不使用）",
       "ai": "PatentLint 不使用 AI、機器學習或大型語言模型。所有檢查皆為確定性的規則比對，依據各專利局審查規範執行。您的文字不會被傳送至任何 AI 服務。",
       "telemetryTitle": "遙測與分析（不使用）",
-      "telemetry": "PatentLint 不包含分析腳本、追蹤像素、cookies 或第三方追蹤整合。本應用程式不會自動蒐集或傳送任何使用資料。唯一之資料傳輸係您透過「回報」按鈕主動傳送之錯誤回報，該回報已去識別化處理，於傳送前可完整檢視，詳見隱私權政策 §6。",
+      "telemetry": "PatentLint 不包含分析腳本、追蹤像素、cookies 或第三方追蹤整合。本應用程式不會自動蒐集或傳送任何使用資料。",
+      "telemetryLink": "主動傳送之錯誤回報 → 隱私權政策 §6",
       "selfHostedTitle": "地端部署",
       "selfHosted": "On-premises deployment is available on private inquiry. Compliance with any specific regulatory regime remains the organization's own determination.",
       "contactEnterprise": "洽詢企業部署方案 →"
