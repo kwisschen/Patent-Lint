@@ -963,6 +963,12 @@ def check_multi_dep_on_multi_dep(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_count=len(bad),
                 total_multi_dep=len(multi_dep_ids),
+                total_claims=len(doc.claims),
+                flagged_claim_id=bad[0] if bad else None,
+                findings=[
+                    {"claim_id": cid, "preamble": (next((c.text for c in doc.claims if c.id == cid), "") or "")[:80]}
+                    for cid in bad[:5]
+                ],
             ),
         )]
 
@@ -1006,6 +1012,12 @@ def check_multi_dep_alternative(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_count=len(bad),
                 total_multi_dep=len(multi_deps),
+                total_claims=len(doc.claims),
+                flagged_claim_id=bad[0] if bad else None,
+                findings=[
+                    {"claim_id": cid, "preamble": (next((c.text for c in doc.claims if c.id == cid), "") or "")[:120]}
+                    for cid in bad[:5]
+                ],
             ),
         )]
 

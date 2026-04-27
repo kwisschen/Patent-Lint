@@ -232,7 +232,7 @@
     },
     "reportModal": {
       "title": "Send an anonymous report?",
-      "body": "A small structured payload goes to PatentLint over HTTPS so we can investigate this check. No claim text, no draft contents, no email address, no IP logging. All fields to be sent are shown below — counts, codepoints, and category labels only.",
+      "body": "A small structured payload goes to PatentLint over HTTPS so we can investigate this check. No substantive claim content, no full paragraphs, no email address, no IP logging. All fields to be sent are shown below — counts, the specific flagged term or phrase, ~30 characters of surrounding context, and category labels. All de-identified.",
       "previewHeading": "Content to send:",
       "send": "Send anonymously",
       "cancel": "Cancel",
