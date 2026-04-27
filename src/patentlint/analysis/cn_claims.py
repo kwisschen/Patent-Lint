@@ -729,6 +729,12 @@ def check_multi_multi_dependency(cn_doc: CnPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_count=len(bad),
                 total_multi_dep=len(multi_dep_ids),
+                total_claims=len(cn_doc.claims),
+                flagged_claim_id=bad[0] if bad else None,
+                findings=[
+                    {"claim_id": cid, "preamble": (next((c.text for c in cn_doc.claims if c.id == cid), "") or "")[:80]}
+                    for cid in bad[:5]
+                ],
             ),
         )]
 
@@ -892,6 +898,10 @@ def check_omnibus_claims(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 flagged_count=len(ids),
                 total_claims=len(cn_doc.claims),
                 flagged_claim_id=ids[0] if ids else None,
+                findings=[
+                    {"claim_id": cid, "preamble": (next((c.text for c in cn_doc.claims if c.id == cid), "") or "")[:80]}
+                    for cid in ids[:5]
+                ],
             ),
         )]
     return [CheckItem(
@@ -949,6 +959,15 @@ def check_markush_open_transition(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 flagged_count=len(ids),
                 total_claims=len(cn_doc.claims),
                 flagged_claim_id=ids[0] if ids else None,
+                transitions=transitions,
+                findings=[
+                    {
+                        "claim_id": cid,
+                        "open_transition": tw_word,
+                        "preamble": (next((c.text for c in cn_doc.claims if c.id == cid), "") or "")[:120],
+                    }
+                    for cid, tw_word in pairs[:5]
+                ],
             ),
         )]
     return [CheckItem(
