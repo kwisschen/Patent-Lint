@@ -306,7 +306,7 @@
     },
     "page": {
       "heroTitle": "No Upload. No AI. No Exceptions.",
-      "heroSubtext": "PatentLint runs entirely inside your browser. Your patent draft never leaves your device, and confidential data stays on your machine.",
+      "heroSubtext": "PatentLint runs entirely inside your browser. Your patent draft never leaves your device — analysis is local, results are yours.",
       "tryIt": "Try it yourself →",
       "compareTitle": "How Does PatentLint Compare?",
       "compareDisclaimer": "Comparison reflects general architecture patterns. Individual products may vary. \"Word Add-in Tools\" and \"Cloud-Based Tools\" are generic categories, not specific products.",
@@ -325,7 +325,7 @@
       },
       "q2": {
         "question": "Do I need an account?",
-        "patentlint": "No account required. PatentLint collects no usage data.",
+        "patentlint": "No account required. PatentLint collects no personal data.",
         "addin": "Usually requires a license or account.",
         "cloud": "Yes. Account required."
       },
