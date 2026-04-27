@@ -283,6 +283,7 @@ def check_required_sections(full_text: str) -> list[CheckItem]:
                 details_params={"name": name},
                 diagnostics=_dx(
                     section_name=name,
+                    total_optional=len(optional),
                 ),
             ))
 

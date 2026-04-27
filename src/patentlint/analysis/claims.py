@@ -960,7 +960,11 @@ def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
                 ),
                 details_key="claims.jepsonPriorArtDetails",
                 details_params={"claimNumber": str(claim.id)},
-                diagnostics=_dx(flagged_claim_id=claim.id),
+                diagnostics=_dx(
+                    flagged_claim_id=claim.id,
+                    total_claims=len(claims),
+                    reason_code="jepson_format",
+                ),
             ))
 
         # 2. CRM non-transitory — independent only
@@ -982,7 +986,11 @@ def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
                     ),
                     details_key="claims.crmNonTransitoryDetails",
                     details_params={"claimNumber": str(claim.id)},
-                    diagnostics=_dx(flagged_claim_id=claim.id),
+                    diagnostics=_dx(
+                        flagged_claim_id=claim.id,
+                        total_claims=len(claims),
+                        reason_code="missing_non_transitory_qualifier",
+                    ),
                 ))
 
         # 3. Markush — all claims
@@ -1100,7 +1108,11 @@ def check_claim_punctuation(claims: list[Claim]) -> list[CheckItem]:
             details=f"Claim {claim_id} may have incorrect comma placement around a 'wherein' clause. Review punctuation per MPEP § 608.01(m).",
             details_key="claims.whereinCommaDetails",
             details_params={"claimNumber": str(claim_id)},
-            diagnostics=_dx(flagged_claim_id=claim_id),
+            diagnostics=_dx(
+                flagged_claim_id=claim_id,
+                total_claims=len(claims),
+                reason_code="wherein_comma_irregular",
+            ),
         ))
 
     if not results:

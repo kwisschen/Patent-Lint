@@ -183,7 +183,11 @@ def check_drawings_prior_art(cn_doc: CnPatentDocument) -> list[CheckItem]:
             message="Prior-art references found in 附图说明 — verify figure labeling.",
             message_key="check.cn.drawings.priorArt.verify",
             reference="审查指南 第一部分第一章 §4.2",
-            diagnostics=_dx(reason_code="prior_art_marker_found"),
+            diagnostics=_dx(
+                reason_code="prior_art_marker_found",
+                drawings_paragraph_count=len(cn_doc.drawings_description),
+                drawings_charlen=len(text),
+            ),
         )]
     return [CheckItem(
         status="pass",
