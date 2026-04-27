@@ -305,8 +305,8 @@
       "tryNow": "立即試試 →"
     },
     "page": {
-      "heroTitle": "無上傳。無 AI。無例外。",
-      "heroSubtext": "PatentLint 完全在您的瀏覽器中本機運作，專利說明書絕不會離開您的裝置。機密資料始終保留在您的裝置上。",
+      "heroTitle": "無上傳。無 AI。不追蹤。",
+      "heroSubtext": "PatentLint 完全在您的瀏覽器中本機運作，專利說明書絕不會離開您的裝置；分析全程於本機執行，結果僅供您本人查閱。",
       "tryIt": "自己試試看 →",
       "compareTitle": "PatentLint 與其他工具的比較",
       "compareDisclaimer": "本比較表反映一般架構模式。個別產品可能有所不同。「Word 增益集工具」與「雲端工具」為通用類別，並非指特定產品。",
@@ -370,7 +370,7 @@
       "aiTitle": "AI / LLM（不使用）",
       "ai": "PatentLint 不使用 AI、機器學習或大型語言模型。所有檢查皆為確定性的規則比對，依據各專利局審查規範執行。您的文字不會被傳送至任何 AI 服務。",
       "telemetryTitle": "遙測與分析（不使用）",
-      "telemetry": "PatentLint 不包含分析腳本、追蹤像素、cookies 或第三方追蹤整合。此應用程式不蒐集或傳送任何使用資料。",
+      "telemetry": "PatentLint 不包含分析腳本、追蹤像素、cookies 或第三方追蹤整合。本應用程式不會自動蒐集或傳送任何使用資料。唯一之資料傳輸係您透過「回報」按鈕主動傳送之錯誤回報，該回報已去識別化處理，於傳送前可完整檢視，詳見隱私權政策 §6。",
       "selfHostedTitle": "地端部署",
       "selfHosted": "對於有嚴格資料主權要求的組織，例如 ITAR 管制環境或實體隔離網路，PatentLint 提供地端部署選項。",
       "contactEnterprise": "洽詢企業部署方案 →"
@@ -1235,7 +1235,7 @@
     "firstVisitHint": "首次造訪需數秒；完成後將快取於您的瀏覽器，下次秒開",
     "offline_note": "首次載入後可離線使用",
     "feature1_title": "無需上傳。無需帳號。無 AI。",
-    "feature1_desc": "您的機密專利說明書不會離開您的裝置。不會上傳任何內容，PatentLint 也不會知道您的身份。",
+    "feature1_desc": "您的機密專利說明書不會離開您的裝置。您的檔案絕不會被上傳，PatentLint 也不會知道您的身份。",
     "feature2_title": "USPTO／CNIPA／TIPO 檢查與請求項樹狀圖",
     "feature2_desc": "偵測限制性用語、不明確用語及缺乏先行詞基礎等問題，並以互動式樹狀圖呈現請求項附屬關係。",
     "feature3_title": "請求項樹狀圖",
