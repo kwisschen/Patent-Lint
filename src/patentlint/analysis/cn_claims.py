@@ -69,6 +69,9 @@ def check_claims_sequential(cn_doc: CnPatentDocument) -> list[CheckItem]:
                     expected_id=expected,
                     found_id=claim.id,
                     total_claims=len(claims),
+                    gap_position=i,
+                    is_backward=claim.id < expected,
+                    preamble=(claim.text or "")[:80],
                 ),
             )]
 
@@ -158,6 +161,12 @@ def check_dependency_format(cn_doc: CnPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_count=len(bad_claim_ids),
                 total_dependents=len(dependents),
+                total_claims=len(cn_doc.claims),
+                flagged_claim_id=bad_claim_ids[0] if bad_claim_ids else None,
+                findings=[
+                    {"claim_id": cid, "preamble": (next((c.text for c in cn_doc.claims if c.id == cid), "") or "")[:80]}
+                    for cid in bad_claim_ids[:5]
+                ],
             ),
         )]
 
@@ -189,6 +198,11 @@ def check_self_dependent(cn_doc: CnPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_count=len(bad),
                 total_claims=len(cn_doc.claims),
+                flagged_claim_id=bad[0] if bad else None,
+                findings=[
+                    {"claim_id": cid, "preamble": (next((c.text for c in cn_doc.claims if c.id == cid), "") or "")[:80]}
+                    for cid in bad[:5]
+                ],
             ),
         )]
 
@@ -273,6 +287,11 @@ def check_forward_dependency(cn_doc: CnPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_count=len(bad),
                 total_claims=len(cn_doc.claims),
+                flagged_claim_id=bad[0] if bad else None,
+                findings=[
+                    {"claim_id": cid, "preamble": (next((c.text for c in cn_doc.claims if c.id == cid), "") or "")[:80]}
+                    for cid in bad[:5]
+                ],
             ),
         )]
 
@@ -366,6 +385,14 @@ def check_reference_numeral_parentheses(cn_doc: CnPatentDocument) -> list[CheckI
             diagnostics=_dx(
                 flagged_count=len(bad_claim_ids),
                 total_claims=len(cn_doc.claims),
+                flagged_claim_id=bad_claim_ids[0] if bad_claim_ids else None,
+                findings=[
+                    {
+                        "claim_id": cid,
+                        "first_match": (m.group(0) if (m := _BARE_NUMERAL.search(next((c.text for c in cn_doc.claims if c.id == cid), "") or "")) else None),
+                    }
+                    for cid in bad_claim_ids[:5]
+                ],
             ),
         )]
 
@@ -594,6 +621,12 @@ def check_transition_phrase(cn_doc: CnPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_count=len(bad_claim_ids),
                 total_independent=len(independents),
+                total_claims=len(cn_doc.claims),
+                flagged_claim_id=bad_claim_ids[0] if bad_claim_ids else None,
+                findings=[
+                    {"claim_id": cid, "preamble": (next((c.text for c in cn_doc.claims if c.id == cid), "") or "")[:120]}
+                    for cid in bad_claim_ids[:5]
+                ],
             ),
         )]
 
@@ -639,6 +672,11 @@ def check_tw_terminology(cn_doc: CnPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_claim_id=hits[0][0],
                 hit_count=len(hits),
+                total_claims=len(cn_doc.claims),
+                findings=[
+                    {"claim_id": cid, "token": token}
+                    for cid, token in hits[:5]
+                ],
             ),
         )]
 
@@ -825,6 +863,10 @@ def check_dependent_ordering(cn_doc: CnPatentDocument) -> list[CheckItem]:
                         diagnostics=_dx(
                             total_claims=len(claims),
                             total_independent=len(indep_positions),
+                            stranded_claim_id=c.id,
+                            expected_after_independent_id=current_indep_id,
+                            actual_position=j,
+                            stranded_preamble=(c.text or "")[:80],
                         ),
                     )]
 

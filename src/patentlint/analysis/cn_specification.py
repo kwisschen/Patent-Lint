@@ -191,6 +191,9 @@ def check_required_sections(cn_doc: CnPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 missing_count=len(missing),
                 first_missing=missing[0] if missing else None,
+                missing_sections=missing[:10],
+                input_format=getattr(cn_doc, "input_format", None),
+                claims_strategy=cn_doc.section_source_strategies.get("claims") if hasattr(cn_doc, "section_source_strategies") else None,
             ),
         )]
     return [CheckItem(
@@ -230,6 +233,12 @@ def check_section_ordering(cn_doc: CnPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 sections_seen=len(indices),
                 total_canonical_sections=len(_CANONICAL_ORDER),
+                section_order_actual=list(cn_doc.section_order)[:10],
+                canonical_order=list(_CANONICAL_ORDER)[:10],
+                first_disorder_at=next(
+                    (i for i in range(len(indices) - 1) if indices[i] >= indices[i + 1]),
+                    None,
+                ),
             ),
         )]
     return [CheckItem(
@@ -266,6 +275,8 @@ def check_paragraph_numbering(cn_doc: CnPatentDocument) -> list[CheckItem]:
                         reason_code="duplicate",
                         duplicate_count=len(duplicates),
                         total_paragraphs=len(nums),
+                        duplicate_sample=duplicates[:10],
+                        first_duplicate=duplicates[0] if duplicates else None,
                     ),
                 )]
             for i in range(1, len(nums)):
@@ -281,6 +292,10 @@ def check_paragraph_numbering(cn_doc: CnPatentDocument) -> list[CheckItem]:
                             reason_code="gap",
                             gap_size=nums[i] - nums[i - 1],
                             total_paragraphs=len(nums),
+                            prev_value=nums[i - 1],
+                            next_value=nums[i],
+                            gap_position=i,
+                            is_backward=nums[i] < nums[i - 1],
                         ),
                     )]
     elif cn_doc.input_format == "docx":
@@ -294,6 +309,7 @@ def check_paragraph_numbering(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 diagnostics=_dx(
                     reason_code="manual_docx_numbering",
                     total_paragraphs=len(cn_doc.paragraph_numbers) if cn_doc.paragraph_numbers else None,
+                    sample_numbers=[str(n) for n in (cn_doc.paragraph_numbers or [])[:5]],
                 ),
             )]
 
@@ -332,6 +348,7 @@ def check_paragraph_ending(cn_doc: CnPatentDocument) -> list[CheckItem]:
     ]
 
     bad_paragraphs: list[int | str] = []
+    bad_findings: list[dict] = []
     ordinal = 0
     # Continuation paragraphs (Word paragraphs that wrap inside a single
     # logical [NNNN] unit) lack the typed [NNNN] prefix. Carry the most
@@ -362,6 +379,13 @@ def check_paragraph_ending(cn_doc: CnPatentDocument) -> list[CheckItem]:
             else:
                 label = ordinal
             bad_paragraphs.append(label)
+            if len(bad_findings) < 5:
+                bad_findings.append({
+                    "paragraph_label": label,
+                    "last_char_codepoint": ord(stripped[-1]),
+                    "last_30_chars": stripped[-30:],
+                    "relaxed_section": relaxed,
+                })
 
     if bad_paragraphs:
         paras_str = ", ".join(str(n) for n in bad_paragraphs)
@@ -376,6 +400,7 @@ def check_paragraph_ending(cn_doc: CnPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_count=len(bad_paragraphs),
                 total_paragraphs_scanned=ordinal,
+                findings=bad_findings,
             ),
         )]
     return [CheckItem(
@@ -429,6 +454,8 @@ def check_figure_reference_consistency(cn_doc: CnPatentDocument) -> list[CheckIt
                 only_embodiment_count=len(only_detail),
                 total_drawings=len(drawings_figs),
                 total_detail=len(detail_figs),
+                only_drawings_sample=[int(x) for x in only_drawings[:10]],
+                only_embodiment_sample=[int(x) for x in only_detail[:10]],
             ),
         )]
 
@@ -483,6 +510,9 @@ def check_patent_type_terminology(cn_doc: CnPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 invention_count=inv_count,
                 utility_count=util_count,
+                minority_term=minority,
+                minority_count=min(inv_count, util_count),
+                majority_count=max(inv_count, util_count),
             ),
         )]
 
@@ -518,6 +548,8 @@ def check_title(cn_doc: CnPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 reason_code="missing",
                 title_charlen=0,
+                title_raw_charlen=len(cn_doc.title),
+                title_is_whitespace=bool(cn_doc.title and not cn_doc.title.strip()),
             ),
         )]
 
@@ -538,6 +570,8 @@ def check_title(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 cjk_count=cjk_count,
                 threshold=25,
                 overage=cjk_count - 25,
+                title_charlen=len(title),
+                first_30_chars=title[:30],
             ),
         ))
 
@@ -562,6 +596,8 @@ def check_title(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 reason_code="prohibited_content",
                 flagged_count=len(items),
                 title_charlen=len(title),
+                flagged_kinds=[it.get("kind") for it in items],
+                tokens_sample=[(it.get("token") or "")[:32] for it in items[:5]],
             ),
         ))
 
@@ -605,6 +641,25 @@ def check_spec_claim_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
     if bad_paragraphs:
         paras_str = ", ".join(str(n) for n in bad_paragraphs)
+        # Build per-finding samples directly from the spec text.
+        sample_findings: list[dict] = []
+        scan_ord = 0
+        for para in _all_paragraphs(cn_doc):
+            stripped = para.strip()
+            if not stripped:
+                continue
+            scan_ord += 1
+            if scan_ord not in bad_paragraphs:
+                continue
+            m = _CLAIM_REF_RE.search(stripped)
+            if not m:
+                continue
+            sample_findings.append({
+                "paragraph_ordinal": scan_ord,
+                "matched_phrase": m.group(0)[:80],
+            })
+            if len(sample_findings) >= 5:
+                break
         return [CheckItem(
             status="amend",
             message=f"Specification references claims in {len(bad_paragraphs)} paragraph(s) (paragraphs: {paras_str}).",
@@ -620,6 +675,7 @@ def check_spec_claim_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_count=len(bad_paragraphs),
                 total_paragraphs_scanned=ordinal,
+                findings=sample_findings,
             ),
         )]
 

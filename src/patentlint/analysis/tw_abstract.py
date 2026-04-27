@@ -44,6 +44,9 @@ def check_abstract_char_count(doc: TwPatentDocument) -> list[CheckItem]:
                 char_count=count,
                 threshold=250,
                 overage=count - 250,
+                abstract_text_charlen=len(doc.abstract_text),
+                first_30_chars=doc.abstract_text[:30],
+                last_30_chars=doc.abstract_text[-30:] if doc.abstract_text else "",
             ),
         )]
 
@@ -105,6 +108,9 @@ def check_abstract_title_match(doc: TwPatentDocument) -> list[CheckItem]:
             title_charlen=len(title),
             abstract_charlen=len(abstract),
             compound_halves=len(halves),
+            title_first_30=title[:30],
+            abstract_first_30=abstract[:30],
+            halves_charlens=[len(h) for h in halves[:5]],
         ),
     )]
 
@@ -135,6 +141,14 @@ def check_commercial_language(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 hit_count=len(found),
                 total_terms_scanned=len(_COMMERCIAL_TERMS),
+                abstract_charlen=len(doc.abstract_text),
+                findings=[
+                    {
+                        "token": term,
+                        "match_position": doc.abstract_text.find(term),
+                    }
+                    for term in found[:5]
+                ],
             ),
         )]
 
@@ -171,6 +185,8 @@ def check_representative_drawing(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 reason_code="missing_designation",
                 has_drawings=True,
+                figure_ref_count=len(doc.figure_refs) if doc.figure_refs else 0,
+                abstract_charlen=len(doc.abstract_text),
             ),
         )]
 
