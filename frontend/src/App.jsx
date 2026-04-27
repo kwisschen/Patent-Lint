@@ -66,17 +66,27 @@ function App() {
   const [error, setError] = useState(null)
   const [downloading, setDownloading] = useState(false)
 
-  const handleFile = async (uploadedFile) => {
+  // ``jurisdictionOverride`` lets the JurisdictionMismatchBanner re-run
+  // analysis on the same already-loaded file under a different
+  // jurisdiction without forcing the user to re-upload. When provided
+  // we also commit the new jurisdiction to App state so the picker
+  // reflects what was actually analyzed.
+  const handleFile = async (uploadedFile, jurisdictionOverride) => {
     setFile(uploadedFile)
     setError(null)
     setHomeState('analyzing')
 
+    const jurisdictionForRun = jurisdictionOverride || jurisdiction
+    if (jurisdictionOverride && jurisdictionOverride !== jurisdiction) {
+      setJurisdiction(jurisdictionOverride)
+    }
+
     try {
       let data
       if (pyodide.ready) {
-        data = await pyodide.analyze(uploadedFile, jurisdiction)
+        data = await pyodide.analyze(uploadedFile, jurisdictionForRun)
       } else {
-        data = await analyzeDocument(uploadedFile, jurisdiction)
+        data = await analyzeDocument(uploadedFile, jurisdictionForRun)
       }
       setResult(data)
       setHomeState('results')
@@ -176,6 +186,7 @@ function App() {
                     filename={file?.name}
                     onDownloadPdf={handleDownloadPdf}
                     onReset={handleReset}
+                    onSwitchJurisdiction={(target) => handleFile(file, target)}
                     downloading={downloading}
                     onShowProveIt={() => setShowProveIt(true)}
                     pyodideReady={pyodide.ready}
