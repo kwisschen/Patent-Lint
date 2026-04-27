@@ -190,6 +190,7 @@ def check_required_sections(cn_doc: CnPatentDocument) -> list[CheckItem]:
             reference="专利法 §26 第1款、专利法实施细则 §20",
             diagnostics=_dx(
                 missing_count=len(missing),
+                first_missing=missing[0] if missing else None,
             ),
         )]
     return [CheckItem(
@@ -228,6 +229,7 @@ def check_section_ordering(cn_doc: CnPatentDocument) -> list[CheckItem]:
             reference="专利法实施细则 §20",
             diagnostics=_dx(
                 sections_seen=len(indices),
+                total_canonical_sections=len(_CANONICAL_ORDER),
             ),
         )]
     return [CheckItem(
@@ -291,6 +293,7 @@ def check_paragraph_numbering(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 reference="审查指南",
                 diagnostics=_dx(
                     reason_code="manual_docx_numbering",
+                    total_paragraphs=len(cn_doc.paragraph_numbers) if cn_doc.paragraph_numbers else None,
                 ),
             )]
 
