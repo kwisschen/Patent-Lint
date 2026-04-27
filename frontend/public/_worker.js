@@ -23,7 +23,12 @@
 //   GITHUB_ISSUES_REPO    "kwisschen/Patent-Lint" (defaults if unset)
 
 const ALLOWED_ORIGIN = "https://patentlint.com";
-const MAX_BODY_BYTES = 8 * 1024;
+// 16 KB cap accommodates the richer per-check extractor payloads
+// (up to 5 findings × ~300 bytes each + aggregate fields). Worst-case
+// observed ~3 KB; cap leaves comfortable headroom while still
+// rejecting spam-sized bodies. Well under GitHub Issues 64 KB body
+// limit.
+const MAX_BODY_BYTES = 16 * 1024;
 const DEFAULT_REPO = "kwisschen/Patent-Lint";
 
 export default {

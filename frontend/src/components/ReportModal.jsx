@@ -98,18 +98,44 @@ export default function ReportModal({
           <p className="mb-2 text-xs font-medium text-muted-foreground">
             {t('feedback.reportModal.previewHeading')}
           </p>
-          <pre className="overflow-x-auto text-xs font-mono leading-5 text-foreground/90">
+          <pre className="overflow-x-auto text-xs font-mono leading-5 text-foreground/90 whitespace-pre-wrap break-all">
             {entries
               .map(([key, value]) => {
-                const v = typeof value === 'boolean' ? String(value) : value
                 const labelKey = FIELD_LABEL_KEYS[key]
                 const label = labelKey ? t(labelKey) : key
                 const colon = t('feedback.email.fieldColon')
+                // Nested findings array: render as indented sub-block
+                // so the user sees per-finding pinpoint detail (term,
+                // matched_phrase, context windows, etc.) before they
+                // consent to send.
+                if (Array.isArray(value)) {
+                  const lines = [`${label}${colon}`]
+                  value.forEach((finding, i) => {
+                    lines.push(`  [${i + 1}]`)
+                    if (finding && typeof finding === 'object') {
+                      Object.entries(finding).forEach(([k, v]) => {
+                        if (v === null || v === undefined || v === '') return
+                        const fLabelKey = FIELD_LABEL_KEYS[k]
+                        const fLabel = fLabelKey ? t(fLabelKey) : k
+                        const fv = typeof v === 'boolean' ? String(v) : (Array.isArray(v) ? v.join(', ') : v)
+                        lines.push(`    ${fLabel}${colon}${fv}`)
+                      })
+                    } else {
+                      lines.push(`    ${finding}`)
+                    }
+                  })
+                  return lines.join('\n')
+                }
+                const v = typeof value === 'boolean' ? String(value) : value
                 return `${label}${colon}${v}`
               })
               .join('\n')}
           </pre>
         </div>
+
+        <p className="text-xs text-muted-foreground italic">
+          {t('feedback.reportModal.deidNotice')}
+        </p>
 
         {result === 'success' && (
           <p

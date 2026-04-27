@@ -193,6 +193,39 @@
       "fieldClaimCount": "Claims affected",
       "fieldTotalClaims": "Total claims",
       "fieldIssueCount": "Issues found",
+      "fieldFindings": "Findings",
+      "fieldTerm": "Term",
+      "fieldReferenceForm": "Reference form",
+      "fieldDidYouMean": "Did you mean",
+      "fieldDidYouMeanClaimId": "Suggested from claim",
+      "fieldCategory": "Category",
+      "fieldCharOffset": "Char offset",
+      "fieldContextBefore": "Context before",
+      "fieldContextAfter": "Context after",
+      "fieldClaimTextCharlen": "Claim length (chars)",
+      "fieldPhrase": "Phrase",
+      "fieldTiersChecked": "Tiers checked",
+      "fieldCrossRef": "Cross-reference",
+      "fieldSpecParagraphCount": "Spec paragraphs",
+      "fieldMatchedPhrase": "Matched phrase",
+      "fieldPreamble": "Preamble",
+      "fieldKind": "Kind",
+      "fieldFirst5Numbers": "First 5 numbers",
+      "fieldLast5Numbers": "Last 5 numbers",
+      "fieldGapAtIndex": "Gap at index",
+      "fieldExpectedAfter": "Expected after gap",
+      "fieldFoundAfter": "Found after gap",
+      "fieldGapSize": "Gap size",
+      "fieldMissingSections": "Missing sections",
+      "fieldDetectedCount": "Detected count",
+      "fieldDetectedHeadersSample": "Detected headers sample",
+      "fieldCanonicalCount": "Canonical count",
+      "fieldSeenIndices": "Seen indices",
+      "fieldIsIncreasing": "Is increasing",
+      "fieldSampleParagraphIds": "Sample paragraph IDs",
+      "fieldInputFormat": "Input format",
+      "fieldTotalParagraphs": "Total paragraphs",
+      "fieldWhat": "What",
       "diagnosticHeader": "Diagnostic trail (structural metadata, no claim content — see Privacy §6):"
     },
     "reportModal": {
@@ -203,7 +236,8 @@
       "cancel": "Cancel",
       "emailFallback": "Prefer email? Send via mailto instead",
       "toastSuccess": "Thank you — report received.",
-      "toastFailure": "Couldn't send right now — try email instead."
+      "toastFailure": "Couldn't send right now — try email instead.",
+      "deidNotice": "Reports cannot be linked to your identity. No email, IP, or account info is collected; the fields above are de-identified fragments shown to you in full before sending."
     }
   },
   "cta": {
@@ -1444,7 +1478,7 @@
       "p2": "We use feedback to fix bugs and respond to you. We do not share feedback with third parties or use it for any purpose other than improving PatentLint and replying to your message.",
       "p3": "Error reports sent via the \"Report error\" links may include a compact \"Diagnostic trail\" block — structural metadata about which walker code path produced the finding (regex-match outcomes, character counts, extraction-path tags). The trail contains no claim text, no nouns, no drafted content; it is designed so we can diagnose walker bugs without seeing your draft. You can review the entire email body before sending and delete the trail block if you prefer.",
       "p4": "If you want to send feedback pseudonymously, use an email-aliasing service (e.g., Apple Hide My Email, Gmail + aliases, Firefox Relay, ProtonMail aliases). We receive the alias address; your real address stays with your provider. We do not correlate alias addresses with any other data.",
-      "p5": "Some triage items also offer a \"Send anonymously\" button that posts the structural diagnostic payload (counts, codepoints, category labels — never claim text or draft content) to a private GitHub issue tracker only the maintainer can see. The dialog shows you the exact payload before sending; nothing is hidden, no email or IP is collected, and the submission cannot be linked back to you."
+      "p5": "Some triage items also offer a \"Send anonymously\" button that posts a structured diagnostic payload to a private GitHub issue tracker only the maintainer can see. The payload includes short fragments of the immediate vicinity of the finding — for example, the specific term flagged, ~30 characters of surrounding context, the walker's interpretation, and which rule fired — capped at five findings per report. It does not include your full claim text, full paragraphs, file names, file metadata, email, name, or IP. The dialog shows you every fragment before sending; nothing is hidden. Reports cannot be linked back to your identity."
     },
     "s7": {
       "title": "Third-party services",
