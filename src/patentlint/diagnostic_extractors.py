@@ -49,7 +49,7 @@ Helper conventions
 
 from __future__ import annotations
 
-from typing import Any, Iterable
+from typing import Any
 
 # ---------------------------------------------------------------------------
 # Helper primitives
