@@ -124,7 +124,11 @@
     "trackedChangesWarning": "이 문서에 변경 내용 추적이 포함되어 있어 분석 정확도에 영향을 줄 수 있습니다. 워드 프로세서에서 모든 변경 내용을 수락 또는 거부한 후 다시 분석하세요.",
     "analyzeAgain": "다시 분석",
     "scannedDocWarning": "이 파일에는 스캔된 문서 페이지만 포함되어 있습니다",
-    "scannedDocWarningDetails": "업로드된 파일에는 스캔 문서 이미지만 포함되어 있으며, 기계 판독 가능한 특허 텍스트가 없습니다. PatentLint는 구조화된 텍스트가 필요합니다. 원본 출원 XML 또는 .docx 초안을 업로드하세요."
+    "scannedDocWarningDetails": "업로드된 파일에는 스캔 문서 이미지만 포함되어 있으며, 기계 판독 가능한 특허 텍스트가 없습니다. PatentLint는 구조화된 텍스트가 필요합니다. 원본 출원 XML 또는 .docx 초안을 업로드하세요.",
+    "jurisdictionMismatchTitle": "이 문서는 {{suggested}}로 보입니다",
+    "jurisdictionMismatchDetails": "현재 {{selected}}가 선택되어 있지만, 이 파일의 언어와 섹션 마커로 볼 때 이 문서는 {{suggested}} 명세서로 보입니다. 지역을 전환하여 알맞은 검사를 실행하거나, 현재 {{selected}} 분석을 계속 진행할 수 있습니다.",
+    "jurisdictionMismatchSwitch": "{{suggested}}로 전환",
+    "jurisdictionMismatchDismiss": "계속 진행"
   },
   "analysis": {
     "analyzing": "특허 문서 분석 중...",
@@ -1531,7 +1535,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "AI 없음. 같은 초안에는 언제나 같은 평가."
+      "line": "형식 요건만 평가하며 명세서의 내용 자체는 판단하지 않습니다. 모든 항목은 수정 가능합니다."
     },
     "completenessGate": {
       "title": "초안 불완전, 평가 불가",

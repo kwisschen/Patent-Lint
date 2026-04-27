@@ -124,7 +124,11 @@
     "trackedChangesWarning": "This document contains tracked changes, which may affect analysis accuracy. Accept or reject all changes in your word processor, then analyze again.",
     "analyzeAgain": "Analyze Again",
     "scannedDocWarning": "This file contains only scanned document pages",
-    "scannedDocWarningDetails": "The uploaded file contains scanned document images with no machine-readable patent text. PatentLint requires structured text to analyze. Please upload the original filing XML or a .docx draft instead."
+    "scannedDocWarningDetails": "The uploaded file contains scanned document images with no machine-readable patent text. PatentLint requires structured text to analyze. Please upload the original filing XML or a .docx draft instead.",
+    "jurisdictionMismatchTitle": "This looks like a {{suggested}}",
+    "jurisdictionMismatchDetails": "{{selected}} is selected, but the language and section markers in this file look like a {{suggested}} draft. Switch jurisdictions to run the right checks, or continue with the current {{selected}} analysis.",
+    "jurisdictionMismatchSwitch": "Switch to {{suggested}}",
+    "jurisdictionMismatchDismiss": "Continue anyway"
   },
   "analysis": {
     "analyzing": "Analyzing patent document...",
@@ -1529,7 +1533,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "No AI. Same draft, same grade, every time."
+      "line": "Grades formality, not the substance of your draft. Every finding is fixable."
     },
     "completenessGate": {
       "title": "Draft incomplete — grade unavailable",

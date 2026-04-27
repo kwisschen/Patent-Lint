@@ -124,7 +124,11 @@
     "trackedChangesWarning": "この文書には変更履歴が含まれており、チェック精度に影響する可能性があります。Wordですべての変更を承認または拒否してから、再度チェックを行ってください。",
     "analyzeAgain": "再チェック",
     "scannedDocWarning": "このファイルにはスキャン画像のみが含まれており、構造化テキストがありません",
-    "scannedDocWarningDetails": "アップロードされたファイルにはスキャン文書画像のみが含まれており、機械可読な特許テキストがありません。PatentLint は構造化テキストが必要です。元の出願 XML または .docx 草稿をアップロードしてください。"
+    "scannedDocWarningDetails": "アップロードされたファイルにはスキャン文書画像のみが含まれており、機械可読な特許テキストがありません。PatentLint は構造化テキストが必要です。元の出願 XML または .docx 草稿をアップロードしてください。",
+    "jurisdictionMismatchTitle": "この文書は {{suggested}} のようです",
+    "jurisdictionMismatchDetails": "現在 {{selected}} が選択されていますが、本ファイルの言語と章節マーカーから判断すると、この文書は {{suggested}} の明細書のようです。地域を切り替えて適切なチェックを実行するか、現在の {{selected}} 分析を続行してください。",
+    "jurisdictionMismatchSwitch": "{{suggested}} に切り替える",
+    "jurisdictionMismatchDismiss": "このまま続行"
   },
   "analysis": {
     "analyzing": "特許文書をチェック中...",
@@ -1531,7 +1535,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "AI 不使用。同じ原稿には、毎回同じ評価。"
+      "line": "本評価は形式要件のみを対象とし、原稿の内容そのものは判断しません。すべての項目は修正可能です。"
     },
     "completenessGate": {
       "title": "原稿が不完全、評価不可",

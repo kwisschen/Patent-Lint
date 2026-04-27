@@ -124,7 +124,11 @@
     "trackedChangesWarning": "此文件包含追蹤修訂，可能影響分析準確性。請在文書處理軟體中接受或拒絕所有變更後，重新進行分析。",
     "analyzeAgain": "重新檢查",
     "scannedDocWarning": "此檔案僅包含掃描文件頁面",
-    "scannedDocWarningDetails": "上傳的檔案包含掃描文件影像，沒有可讀的專利文本。PatentLint 需要結構化文字進行分析。請上傳原始申請 XML 或.docx 草稿。"
+    "scannedDocWarningDetails": "上傳的檔案包含掃描文件影像，沒有可讀的專利文本。PatentLint 需要結構化文字進行分析。請上傳原始申請 XML 或.docx 草稿。",
+    "jurisdictionMismatchTitle": "這份檔案看起來像是{{suggested}}",
+    "jurisdictionMismatchDetails": "目前選擇的是{{selected}}，但從本檔案的語言與章節標記判斷，這份稿件似乎是{{suggested}}。可切換地區以執行對應的檢查項目，或繼續以目前的{{selected}}分析。",
+    "jurisdictionMismatchSwitch": "切換為{{suggested}}",
+    "jurisdictionMismatchDismiss": "仍要繼續"
   },
   "analysis": {
     "analyzing": "正在分析專利文件...",
@@ -1531,7 +1535,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "無 AI。同一份稿件，每次評分皆相同。"
+      "line": "此評等僅就形式要件，非評斷稿件內容；所有項目皆可修正。"
     },
     "completenessGate": {
       "title": "稿件不完整：無法評等",

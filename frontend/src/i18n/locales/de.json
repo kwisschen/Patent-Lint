@@ -124,7 +124,11 @@
     "trackedChangesWarning": "Dieses Dokument enthält nachverfolgte Änderungen, die die Prüfgenauigkeit beeinträchtigen können. Akzeptieren oder verwerfen Sie alle Änderungen in Ihrer Textverarbeitung und prüfen Sie erneut.",
     "analyzeAgain": "Erneut prüfen",
     "scannedDocWarning": "Diese Datei enthält nur eingescannte Dokumentseiten",
-    "scannedDocWarningDetails": "Die hochgeladene Datei enthält eingescannte Bilder ohne maschinenlesbaren Patenttext. PatentLint benötigt strukturierten Text für die Prüfung. Bitte laden Sie stattdessen die Original-Anmelde-XML oder einen .docx-Entwurf."
+    "scannedDocWarningDetails": "Die hochgeladene Datei enthält eingescannte Bilder ohne maschinenlesbaren Patenttext. PatentLint benötigt strukturierten Text für die Prüfung. Bitte laden Sie stattdessen die Original-Anmelde-XML oder einen .docx-Entwurf.",
+    "jurisdictionMismatchTitle": "Dies sieht wie ein {{suggested}} aus",
+    "jurisdictionMismatchDetails": "Aktuell ist {{selected}} ausgewählt, aber Sprache und Abschnittskennzeichnungen dieses Dokuments deuten auf ein {{suggested}}-Dokument hin. Wechseln Sie die Region, um die passenden Prüfungen auszuführen, oder fahren Sie mit der aktuellen {{selected}}-Analyse fort.",
+    "jurisdictionMismatchSwitch": "Zu {{suggested}} wechseln",
+    "jurisdictionMismatchDismiss": "Trotzdem fortfahren"
   },
   "analysis": {
     "analyzing": "Patentdokument wird geprüft...",
@@ -1529,7 +1533,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "Keine KI. Gleiche Schrift, gleiche Bewertung, jedes Mal."
+      "line": "Bewertet die Form, nicht den Inhalt Ihres Entwurfs. Jeder Befund ist behebbar."
     },
     "completenessGate": {
       "title": "Schrift unvollständig — keine Bewertung verfügbar",

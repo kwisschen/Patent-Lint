@@ -124,7 +124,11 @@
     "trackedChangesWarning": "此文档包含修订标记，可能影响分析准确性。请在文字处理软件中接受或拒绝所有更改后，重新进行分析。",
     "analyzeAgain": "重新检查",
     "scannedDocWarning": "此文件仅包含扫描文档页面",
-    "scannedDocWarningDetails": "上传的文件包含扫描文档图像，没有可读的专利文本。PatentLint 需要结构化文本进行分析。请上传原始申请 XML 或.docx 草稿。"
+    "scannedDocWarningDetails": "上传的文件包含扫描文档图像，没有可读的专利文本。PatentLint 需要结构化文本进行分析。请上传原始申请 XML 或.docx 草稿。",
+    "jurisdictionMismatchTitle": "这份文件看起来像是{{suggested}}",
+    "jurisdictionMismatchDetails": "当前选择的是{{selected}}，但从本文件的语言与章节标记来看，这份文稿似乎是{{suggested}}。可切换地区以运行对应的检查项目，或继续以当前的{{selected}}分析。",
+    "jurisdictionMismatchSwitch": "切换为{{suggested}}",
+    "jurisdictionMismatchDismiss": "仍然继续"
   },
   "analysis": {
     "analyzing": "正在分析专利文件...",
@@ -1531,7 +1535,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "无 AI。同一份文稿，每次评分皆相同。"
+      "line": "此评分仅针对形式要件，并非评判文稿内容；所有项目均可修正。"
     },
     "completenessGate": {
       "title": "稿件不完整，无法评等",
