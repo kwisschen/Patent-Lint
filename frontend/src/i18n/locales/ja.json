@@ -187,6 +187,39 @@
       "fieldClaimCount": "対象請求項数",
       "fieldTotalClaims": "請求項合計",
       "fieldIssueCount": "問題件数",
+      "fieldFindings": "項目",
+      "fieldTerm": "用語",
+      "fieldReferenceForm": "参照形式",
+      "fieldDidYouMean": "もしかして",
+      "fieldDidYouMeanClaimId": "請求項からの提案",
+      "fieldCategory": "カテゴリ",
+      "fieldCharOffset": "文字位置",
+      "fieldContextBefore": "前文脈",
+      "fieldContextAfter": "後文脈",
+      "fieldClaimTextCharlen": "請求項の長さ（文字数）",
+      "fieldPhrase": "フレーズ",
+      "fieldTiersChecked": "確認した層",
+      "fieldCrossRef": "相互参照",
+      "fieldSpecParagraphCount": "明細書の段落数",
+      "fieldMatchedPhrase": "一致したフレーズ",
+      "fieldPreamble": "冒頭部",
+      "fieldKind": "種類",
+      "fieldFirst5Numbers": "最初の 5 つの番号",
+      "fieldLast5Numbers": "最後の 5 つの番号",
+      "fieldGapAtIndex": "ギャップの位置（索引）",
+      "fieldExpectedAfter": "ギャップ後の期待値",
+      "fieldFoundAfter": "ギャップ後の実際値",
+      "fieldGapSize": "ギャップサイズ",
+      "fieldMissingSections": "欠落セクション",
+      "fieldDetectedCount": "検出数",
+      "fieldDetectedHeadersSample": "検出されたヘッダーのサンプル",
+      "fieldCanonicalCount": "正準セクション数",
+      "fieldSeenIndices": "確認した索引",
+      "fieldIsIncreasing": "昇順",
+      "fieldSampleParagraphIds": "段落 ID のサンプル",
+      "fieldInputFormat": "入力形式",
+      "fieldTotalParagraphs": "段落数合計",
+      "fieldWhat": "種別",
       "diagnosticHeader": "診断軌跡（構造的メタデータのみ、明細書内容は含まれません。プライバシーポリシー §6 参照）："
     },
     "emailGreeting": "Christopher 様",
@@ -203,7 +236,8 @@
       "cancel": "キャンセル",
       "emailFallback": "メールがよい場合は mailto で送信",
       "toastSuccess": "ありがとうございます。レポートを受信しました。",
-      "toastFailure": "現在送信できません。メールでお試しください。"
+      "toastFailure": "現在送信できません。メールでお試しください。",
+      "deidNotice": "レポートはお客様の身元と紐付けできない形式で送信されます。メールアドレス、IP、アカウント情報は収集されません。上記の項目は匿名化された断片であり、送信前に全項目をご確認いただけます。"
     }
   },
   "cta": {
@@ -1446,7 +1480,7 @@
       "p2": "フィードバックは不具合の修正およびお客様への返信のために使用します。第三者と共有することはなく、PatentLint の改善およびお客様への返信以外の目的には使用しません。",
       "p3": "「エラー報告」リンクから送信される不具合報告には、コンパクトな「診断軌跡」ブロックが含まれることがあります。これはチェッカーが通過したコードパスに関する構造的メタデータ（正規表現の一致結果、文字数、抽出パスのタグ等）のみで構成されており、請求項本文や名詞、明細書の内容は一切含まれません。当該軌跡は、当方がお客様の明細書内容に触れることなくチェッカーの不具合を診断できるよう設計されています。お客様は送信前にメール本文全体をご確認いただけ、懸念がある場合は当該ブロックを削除していただいて差し支えありません。",
       "p4": "フィードバックを匿名でお送りになりたい場合は、電子メールのエイリアスサービス（例：Apple Hide My Email、Gmail エイリアス、Firefox Relay、ProtonMail エイリアス等）のご利用をお勧めいたします。当方に到着するのは当該エイリアスアドレスのみであり、お客様の実際のメールアドレスはお客様のプロバイダーに保持されます。当方はエイリアスアドレスを他のデータと関連付けることはありません。",
-      "p5": "一部のチェック項目には「匿名で送信」ボタンも用意されており、構造化された診断データ（数値、Unicode コードポイント、分類ラベル、請求項の内容や明細書の内容は決して含まれません）を、メンテナーのみが閲覧できるプライベート GitHub Issue トラッカーへ送信します。送信前にダイアログで正確な内容をご確認いただけ、何も非表示にはせず、メールアドレスや IP は収集されず、ご送信内容をお客様と紐付けることはできません。"
+      "p5": "一部のチェック項目には「匿名で送信」ボタンも用意されており、構造化された診断データを、メンテナーのみが閲覧できるプライベート GitHub Issue トラッカーへ送信します。データには、該当の発見に関連する短い断片（具体的にマークされた用語、前後約 30 文字の文脈、ウォーカーの解釈、トリガーされたルール）が含まれ、1 レポートあたり最大 5 件の発見に制限されます。請求項の全文、段落の全文、ファイル名、ファイルメタデータ、メールアドレス、お名前、IP は含まれません。送信前にダイアログでそれぞれの断片を確認できます。何も非表示にはしません。レポートは匿名加工処理されており、お客様の身元と紐付けることはできません。"
     },
     "s7": {
       "title": "第三者サービス",

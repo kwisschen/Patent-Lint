@@ -968,6 +968,7 @@ class AnalysisResult(BaseModel):
             ))
 
         if self.antecedent_basis_issues:
+            from patentlint.diagnostic_extractors import extract_antecedent_basis
             issue_count = len(self.antecedent_basis_issues)
             ab_claim_ids = sorted({item["claim_id"] for item in self.antecedent_basis_issues})
             claim_count = len(ab_claim_ids)
@@ -978,12 +979,7 @@ class AnalysisResult(BaseModel):
                 details=f"{issue_count} issues across {claim_count} claims",
                 details_key="details.antecedentBasisTerms",
                 details_params={"count": str(issue_count), "claims": str(claim_count)},
-                diagnostics=_dx(
-                    issue_count=issue_count,
-                    claim_count=claim_count,
-                    total_claims=len(self.claims),
-                    flagged_claim_id=ab_claim_ids[0] if ab_claim_ids else None,
-                ),
+                diagnostics=extract_antecedent_basis(self.antecedent_basis_issues, len(self.claims)),
             ))
         else:
             claims_checks.append(CheckItem(
@@ -993,8 +989,8 @@ class AnalysisResult(BaseModel):
             ))
 
         if self.unsupported_terms:
+            from patentlint.diagnostic_extractors import extract_spec_support
             unique_phrases = sorted(set(ut.phrase for ut in self.unsupported_terms))
-            us_claim_ids = sorted({ut.claim_number for ut in self.unsupported_terms})
             claims_checks.append(CheckItem(
                 status="amend",
                 message="Claim terms not found in specification.",
@@ -1002,12 +998,9 @@ class AnalysisResult(BaseModel):
                 details=f"Terms: {', '.join(unique_phrases[:10])}",
                 details_key="details.specSupportUnsupported",
                 details_params={"count": str(len(unique_phrases))},
-                diagnostics=_dx(
-                    unsupported_phrase_count=len(unique_phrases),
-                    total_findings=len(self.unsupported_terms),
-                    claim_count=len(us_claim_ids),
+                diagnostics=extract_spec_support(
+                    self.unsupported_terms,
                     total_claims=len(self.claims),
-                    flagged_claim_id=us_claim_ids[0] if us_claim_ids else None,
                 ),
             ))
         else:
