@@ -133,7 +133,7 @@ export default function ReportModal({
           </pre>
         </div>
 
-        <p className="text-xs text-muted-foreground italic">
+        <p className="text-sm text-muted-foreground">
           {t('feedback.reportModal.deidNotice')}
         </p>
 

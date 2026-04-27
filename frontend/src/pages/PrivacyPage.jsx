@@ -91,7 +91,6 @@ export default function PrivacyPage() {
         <p>{t('privacy.s6.p2')}</p>
         <p>{t('privacy.s6.p3')}</p>
         <p>{t('privacy.s6.p4')}</p>
-        <p>{t('privacy.s6.p5')}</p>
       </LegalSection>
 
       <LegalSection number="7" titleKey="privacy.s7.title">
@@ -105,6 +104,9 @@ export default function PrivacyPage() {
           </li>
           <li>
             <strong>{t('privacy.s7.fontsLabel')}</strong> {t('privacy.s7.fonts')}
+          </li>
+          <li>
+            <strong>{t('privacy.s7.githubLabel')}</strong> {t('privacy.s7.github')}
           </li>
         </ul>
         <p>{t('privacy.s7.p2')}</p>

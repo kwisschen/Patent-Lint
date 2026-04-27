@@ -229,7 +229,7 @@
       "fieldOrphans": "Orphan figures",
       "fieldBriefFigsSample": "Brief description figures (sample)",
       "fieldDetailedFigsSample": "Detailed description figures (sample)",
-      "diagnosticHeader": "Diagnostic trail (structural metadata, no claim content — see Privacy §6):"
+      "diagnosticHeader": "Diagnostic trail (de-identified — see Privacy §6):"
     },
     "reportModal": {
       "title": "Send an anonymous report?",
@@ -1428,7 +1428,7 @@
     },
     "s12": {
       "title": "Anonymous error reports",
-      "p1": "If you click \"Send anonymously\" on a check, you give PatentLint permission to use the structural data to improve the product. You retain all rights to your patent draft, which stays on your device. Because reports are anonymous, we may not be able to follow up directly — but we read every report."
+      "p1": "If you click \"Send anonymously\" on a check, you give PatentLint permission to use the de-identified diagnostic payload to debug detection bugs and improve the catalog. You retain all rights to your patent draft, which stays on your device. Because reports cannot be linked back to you, we may not be able to follow up directly — but we read every report."
     },
     "copyright": "Copyright © 2025 Christopher Chen. All rights reserved.",
     "crossLinks": "See also: <1>Privacy Policy</1> · <3>Security</3>"
@@ -1477,11 +1477,10 @@
     },
     "s6": {
       "title": "Voluntary feedback",
-      "p1": "When you click a feedback link, your browser opens your own email client (or a webmail compose window) addressed to kwisschen@gmail.com. We do not host a form. We receive whatever you choose to write and send.",
-      "p2": "We use feedback to fix bugs and respond to you. We do not share feedback with third parties or use it for any purpose other than improving PatentLint and replying to your message.",
-      "p3": "Error reports sent via the \"Report error\" links may include a compact \"Diagnostic trail\" block — structural metadata about which walker code path produced the finding (regex-match outcomes, character counts, extraction-path tags). The trail contains no claim text, no nouns, no drafted content; it is designed so we can diagnose walker bugs without seeing your draft. You can review the entire email body before sending and delete the trail block if you prefer.",
-      "p4": "If you want to send feedback pseudonymously, use an email-aliasing service (e.g., Apple Hide My Email, Gmail + aliases, Firefox Relay, ProtonMail aliases). We receive the alias address; your real address stays with your provider. We do not correlate alias addresses with any other data.",
-      "p5": "Some triage items also offer a \"Send anonymously\" button that posts a structured diagnostic payload to a private GitHub issue tracker only the maintainer can see. The payload includes short fragments of the immediate vicinity of the finding — for example, the specific term flagged, ~30 characters of surrounding context, the walker's interpretation, and which rule fired — capped at five findings per report. It does not include your full claim text, full paragraphs, file names, file metadata, email, name, or IP. The dialog shows you every fragment before sending; nothing is hidden. Reports cannot be linked back to your identity."
+      "p1": "Each finding has a \"Report\" button. Clicking it opens a dialog that previews exactly what will be sent — nothing is hidden. The dialog also offers a \"Send by email\" alternative addressed to kwisschen@gmail.com if you would rather write more context yourself.",
+      "p2": "The anonymous payload contains counts, the specific term or phrase the rule flagged, about 30 characters of surrounding context, category labels (which check, which rule, which detection branch), and a few structural fingerprints — capped at five findings per report. It does not contain your full claim text, full paragraphs, file names, file metadata, your email, your name, or your IP.",
+      "p3": "When you click \"Send anonymously,\" your browser POSTs the payload over HTTPS to a Cloudflare Pages Function on patentlint.com that creates an issue in a private GitHub Issues tracker only the maintainer can read. Your IP and browser headers are not forwarded to GitHub. Reports cannot be linked back to your identity.",
+      "p4": "If you use the email alternative instead, we receive whatever you write. To send pseudonymously, use an email-aliasing service (Apple Hide My Email, Gmail aliases, Firefox Relay, ProtonMail aliases); we do not correlate alias addresses with any other data. We use feedback only to fix bugs and reply to you, and we do not share it with third parties."
     },
     "s7": {
       "title": "Third-party services",
@@ -1492,6 +1491,8 @@
       "pyodide": "On first visit, your browser fetches the Pyodide WebAssembly runtime from the Pyodide CDN (jsdelivr / cloudflare). After that, the runtime is cached locally and works offline.",
       "fontsLabel": "Google Fonts (CJK font, optional).",
       "fonts": "If you export a localized PDF in zh-TW / zh-CN / ja / ko, your browser fetches the corresponding Noto Sans CJK font from Google Fonts at PDF-export time. The font is cached after first fetch. English-locale PDFs do not fetch any font.",
+      "githubLabel": "GitHub.",
+      "github": "Anonymous reports submitted via the \"Send\" button in the report dialog are forwarded by a Cloudflare Pages Function to a private GitHub Issues tracker (kwisschen/Patent-Lint) only the maintainer can access. GitHub receives the de-identified payload only — no IP, no email, no browser headers — and stores issues under its own privacy policy.",
       "p2": "We do not use any other third-party services. No CRM, no email-marketing platform, no support ticketing system, no third-party logging."
     },
     "s8": {
@@ -1567,7 +1568,7 @@
       "disclaimerTitle": "What an A grade does and does not mean",
       "disclaimerIntro": "An A grade means PatentLint's rule catalog found no issues. It does not mean your draft is filing-ready. Substantive review by a registered practitioner is still recommended.",
       "reportTitle": "Help us improve — report misjudgments",
-      "reportIntro": "No checker is perfect. Walker-based checks (antecedent basis, specification support, figure references) carry a small false-positive risk; with grading now in place, a wrongly-flagged FIX can cost the draft a letter rank. The Report button on each triage item attaches a structural diagnostic trail — counts, codepoints, closed-set enums — and never the claim content or draft text, so we can pinpoint the bug without ever seeing the invention."
+      "reportIntro": "No checker is perfect. Walker-based checks (antecedent basis, specification support, figure references) carry a small false-positive risk; with grading now in place, a wrongly-flagged FIX can cost the draft a letter rank. The Report button on each triage item opens a dialog that previews exactly what will be sent — counts, the flagged term, ~30 characters of context, and category labels, capped at five findings — so we can pinpoint the bug from a de-identified payload."
     },
     "howWeScore": "How we score →",
     "cover": {
