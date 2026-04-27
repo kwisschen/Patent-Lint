@@ -93,18 +93,44 @@ function consolidateClaimsChecks(checks) {
           parent: parentNoun,
           depClaims: depClaims.join(', '),
         },
+        // Forward the synthesized summary fields + the first underlying
+        // walker item's diagnostics (charlens) so a Report click on
+        // this consolidated row sends actually-useful pinpoint data.
+        diagnostics: {
+          summary_count: count,
+          parent_claim_id: rootId,
+          dependent_noun: depNoun,
+          parent_noun: parentNoun,
+          dependent_claims: depClaims.join(', '),
+          ...(first?.diagnostics || {}),
+        },
       })
     }
   }
 
   if (antecedentItems.length > 0) {
     const worst = antecedentItems.some(c => c.status === 'amend') ? 'amend' : 'verify'
+    // Forward the rich diagnostic fingerprint from the underlying
+    // walker emit so the Report button on this consolidated row sends
+    // the same per-finding pinpoint data (term, did_you_mean, context
+    // windows, etc.) as a direct report on the underlying card. Without
+    // this, the consolidated row's report would carry only meta-fields
+    // (check_key, jurisdiction, locale, build) — useless for triage.
+    // Pick the amend item if present (richer payload from the actual
+    // walker findings), else fall back to the first verify item.
+    const sourceItem = antecedentItems.find(c => c.status === 'amend') || antecedentItems[0]
     consolidated.push({
       status: worst,
       message: 'Missing antecedent basis detected.',
-      message_key: 'check.claims.antecedentBasis.verify',
+      // message_key matches the chosen status so locale rendering and
+      // citation lookup line up. Was always `.verify` even when status
+      // was `.amend` — bug since this consolidation row was added.
+      message_key: worst === 'amend'
+        ? 'check.claims.antecedentBasis.amend'
+        : 'check.claims.antecedentBasis.verify',
       details: 'See § 112 Analysis below for per-claim detail.',
       details_key: 'details.seeSection112',
+      diagnostics: sourceItem?.diagnostics || null,
     })
   } else if (hasAntecedentPass) {
     consolidated.push({
