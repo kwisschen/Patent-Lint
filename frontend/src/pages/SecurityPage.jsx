@@ -14,7 +14,7 @@
 // If any browser fails, update the "any device with a browser" claim accordingly.
 
 import { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Shield, Check, ChevronDown } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
@@ -250,6 +250,14 @@ function TechDetailsSection() {
                 >
                   {t('about.enterpriseContact')}
                 </a>
+              )}
+              {key === 'telemetry' && (
+                <Link
+                  to="/privacy"
+                  className="inline-flex items-center gap-1 text-sm text-primary underline underline-offset-4 hover:text-primary/80 mt-2"
+                >
+                  {t('security.tech.telemetryLink')}
+                </Link>
               )}
             </div>
           ))}
