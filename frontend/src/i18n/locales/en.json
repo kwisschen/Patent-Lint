@@ -305,8 +305,8 @@
       "tryNow": "Try it →"
     },
     "page": {
-      "heroTitle": "No Upload. No AI. No Tracking.",
-      "heroSubtext": "PatentLint runs entirely inside your browser. Your patent draft never leaves your device — analysis is local, results are yours.",
+      "heroTitle": "No Upload. No AI. No Exceptions.",
+      "heroSubtext": "PatentLint runs entirely inside your browser. Your patent draft never leaves your device, and confidential data stays on your machine.",
       "tryIt": "Try it yourself →",
       "compareTitle": "How Does PatentLint Compare?",
       "compareDisclaimer": "Comparison reflects general architecture patterns. Individual products may vary. \"Word Add-in Tools\" and \"Cloud-Based Tools\" are generic categories, not specific products.",
@@ -370,7 +370,8 @@
       "aiTitle": "AI / LLM (No Usage)",
       "ai": "PatentLint does not use AI, machine learning, or large language models. All checks are deterministic, rule-based pattern matching against patent office guidelines. Your text is never sent to any AI service.",
       "telemetryTitle": "Telemetry & Analytics (No Usage)",
-      "telemetry": "PatentLint includes no analytics scripts, tracking pixels, cookies, or third-party tracking integrations. No usage data is collected or transmitted automatically. The only data flow is the opt-in error report you can choose to send via the Report button — de-identified, previewed in full before sending, and described in Privacy §6.",
+      "telemetry": "PatentLint includes no analytics scripts, tracking pixels, cookies, or third-party tracking integrations. No usage data is collected or transmitted automatically.",
+      "telemetryLink": "Voluntary error reports → Privacy §6",
       "selfHostedTitle": "On-Premises Deployment",
       "selfHosted": "For organizations with strict data sovereignty requirements, such as ITAR-controlled environments or air-gapped networks, an on-premises deployment option is available.",
       "contactEnterprise": "Contact for enterprise deployment →"
