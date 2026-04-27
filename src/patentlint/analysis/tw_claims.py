@@ -438,7 +438,11 @@ def check_independent_preamble(doc: TwPatentDocument) -> list[CheckItem]:
             details_key="details.tw.independentPreamble",
             details_params={"count": len(bad_sorted), "claims": bad_sorted},
             reference="專利審查基準 + TIPO 偵錯系統 Table 1 #20",
-            diagnostics=_dx(flagged_count=len(bad_sorted)),
+            diagnostics=_dx(
+                flagged_count=len(bad_sorted),
+                total_claims=len(doc.claims),
+                flagged_claim_id=bad_sorted[0] if bad_sorted else None,
+            ),
         )]
     return [CheckItem(
         status="pass",

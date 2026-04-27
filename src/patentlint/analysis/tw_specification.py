@@ -171,6 +171,7 @@ def check_required_sections(doc: TwPatentDocument) -> list[CheckItem]:
             reference="專利法 §25 第1項、專利法施行細則 §17",
             diagnostics=_dx(
                 missing_count=len(missing),
+                first_missing=missing[0] if missing else None,
             ),
         )]
     return [CheckItem(
@@ -208,6 +209,7 @@ def check_section_ordering(doc: TwPatentDocument) -> list[CheckItem]:
             reference="專利法施行細則 §17",
             diagnostics=_dx(
                 sections_seen=len(indices),
+                total_canonical_sections=len(_CANONICAL_ORDER),
             ),
         )]
     return [CheckItem(
@@ -607,6 +609,7 @@ def check_spec_claim_reference(doc: TwPatentDocument) -> list[CheckItem]:
             reference="專利法施行細則 §17",
             diagnostics=_dx(
                 hit_count=1,
+                snippet_charlen=len(snippet),
             ),
         )]
 
@@ -632,6 +635,7 @@ def check_symbol_table_presence(doc: TwPatentDocument) -> list[CheckItem]:
             reference="專利法施行細則 §17",
             diagnostics=_dx(
                 reason_code="missing_with_drawings_present",
+                drawings_section_paragraphs=len(doc.drawings_description),
             ),
         )]
 
@@ -762,7 +766,10 @@ def check_indigenous_terms(doc: TwPatentDocument) -> list[CheckItem]:
                 },
             },
             reference="原住民族傳統智慧創作保護條例",
-            diagnostics=_dx(flagged_count=len(hits)),
+            diagnostics=_dx(
+                flagged_count=len(hits),
+                first_hit_charlen=len(hits[0]) if hits else None,
+            ),
         )]
     return [CheckItem(
         status="pass",

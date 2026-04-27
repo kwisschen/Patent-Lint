@@ -238,7 +238,11 @@ def check_independent_preamble(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.independentPreamble",
             details_params={"count": len(bad_sorted), "claims": bad_sorted},
             reference="审查指南 第二部分第二章 §3.1.1 (canonical example form)",
-            diagnostics=_dx(flagged_count=len(bad_sorted)),
+            diagnostics=_dx(
+                flagged_count=len(bad_sorted),
+                total_claims=len(cn_doc.claims),
+                flagged_claim_id=bad_sorted[0] if bad_sorted else None,
+            ),
         )]
     return [CheckItem(
         status="pass",
@@ -884,7 +888,11 @@ def check_omnibus_claims(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.omnibusClaims",
             details_params={"claims": ids},
             reference="审查指南 第二部分第二章 §3.3",
-            diagnostics=_dx(flagged_count=len(ids)),
+            diagnostics=_dx(
+                flagged_count=len(ids),
+                total_claims=len(cn_doc.claims),
+                flagged_claim_id=ids[0] if ids else None,
+            ),
         )]
     return [CheckItem(
         status="pass",
@@ -937,7 +945,11 @@ def check_markush_open_transition(cn_doc: CnPatentDocument) -> list[CheckItem]:
             details_key="details.cn.markushOpenTransition",
             details_params={"claims": ids, "transitions": transitions},
             reference="审查指南 第二部分第十章 §9.3",
-            diagnostics=_dx(flagged_count=len(ids)),
+            diagnostics=_dx(
+                flagged_count=len(ids),
+                total_claims=len(cn_doc.claims),
+                flagged_claim_id=ids[0] if ids else None,
+            ),
         )]
     return [CheckItem(
         status="pass",
