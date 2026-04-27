@@ -18,6 +18,7 @@ from patentlint.analysis.utils import (
     extract_abbreviation_intros, clean_noun_phrase,
     strip_contextual_verb, token_set_jaccard,
 )
+from patentlint.diagnostic_extractors import extract_special_format
 from patentlint.models import Claim, CheckItem, UnsupportedTerm
 
 
@@ -961,7 +962,7 @@ def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
                 details_key="claims.jepsonPriorArtDetails",
                 details_params={"claimNumber": str(claim.id)},
                 diagnostics=_dx(
-                    flagged_claim_id=claim.id,
+                    **extract_special_format(claim, kind="jepson"),
                     total_claims=len(claims),
                     reason_code="jepson_format",
                 ),
@@ -987,7 +988,7 @@ def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
                     details_key="claims.crmNonTransitoryDetails",
                     details_params={"claimNumber": str(claim.id)},
                     diagnostics=_dx(
-                        flagged_claim_id=claim.id,
+                        **extract_special_format(claim, kind="crm_non_transitory"),
                         total_claims=len(claims),
                         reason_code="missing_non_transitory_qualifier",
                     ),

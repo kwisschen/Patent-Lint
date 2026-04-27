@@ -187,6 +187,38 @@
       "fieldClaimCount": "影响权利要求数",
       "fieldTotalClaims": "权利要求总数",
       "fieldIssueCount": "问题数",
+      "fieldFindings": "项目",
+      "fieldTerm": "用语",
+      "fieldDidYouMean": "可能想表达",
+      "fieldDidYouMeanClaimId": "建议来自权利要求",
+      "fieldCategory": "类别",
+      "fieldCharOffset": "字符位置",
+      "fieldContextBefore": "前文上下文",
+      "fieldContextAfter": "后文上下文",
+      "fieldClaimTextCharlen": "权利要求长度（字符）",
+      "fieldPhrase": "词句",
+      "fieldTiersChecked": "已检查层级",
+      "fieldCrossRef": "交叉引用",
+      "fieldSpecParagraphCount": "说明书段落数",
+      "fieldMatchedPhrase": "匹配片段",
+      "fieldPreamble": "前言",
+      "fieldKind": "种类",
+      "fieldFirst5Numbers": "前 5 个编号",
+      "fieldLast5Numbers": "后 5 个编号",
+      "fieldGapAtIndex": "缺口位置（索引）",
+      "fieldExpectedAfter": "缺口后预期值",
+      "fieldFoundAfter": "缺口后实际值",
+      "fieldGapSize": "缺口大小",
+      "fieldMissingSections": "缺失章节",
+      "fieldDetectedCount": "检测数量",
+      "fieldDetectedHeadersSample": "检测到的标头样本",
+      "fieldCanonicalCount": "标准章节总数",
+      "fieldSeenIndices": "已见索引",
+      "fieldIsIncreasing": "为递增",
+      "fieldSampleParagraphIds": "段落 ID 样本",
+      "fieldInputFormat": "输入格式",
+      "fieldTotalParagraphs": "段落总数",
+      "fieldWhat": "类型",
       "diagnosticHeader": "诊断轨迹（结构性元数据，不含说明书内容，详见隐私政策 §6）："
     },
     "emailGreeting": "Christopher 你好，",
@@ -203,7 +235,8 @@
       "cancel": "取消",
       "emailFallback": "想用邮箱？改用 mailto 发送",
       "toastSuccess": "感谢您，已收到反馈。",
-      "toastFailure": "暂时无法发送，请改用邮箱。"
+      "toastFailure": "暂时无法发送，请改用邮箱。",
+      "deidNotice": "反馈无法与您的身份关联。我们不收集邮箱、IP 或账户信息；上述字段为去标识化片段，发送前已完整呈现给您审阅。"
     }
   },
   "cta": {
@@ -1446,7 +1479,7 @@
       "p2": "我们将反馈用于修复错误及回复您。我们不将反馈分享给第三方，亦不将其用于改良 PatentLint 及回复您以外之任何用途。",
       "p3": "通过「报告错误」链接发送之错误报告，可能包含一组精简之「诊断轨迹」区块，其中仅为检查器所经代码路径之结构性元数据（正则匹配结果、字符计数、提取路径标签等）。该轨迹不含任何权利要求文字、名词或说明书内容，其设计目的为使我们得于不接触您说明书内容之情形下诊断检查器缺陷。您于发送前得查看全部邮件内容，如有疑虑并得自行删除该轨迹区块。",
       "p4": "若您希望以匿名方式发送反馈，建议使用电子邮件别名服务（例如 Apple Hide My Email、Gmail 别名、Firefox Relay、ProtonMail 别名等）。我们仅收到该别名地址，您的真实电子邮件地址将由您的服务提供商保管，我们亦不会将别名地址与其他任何数据进行关联。",
-      "p5": "部分检查项另提供「匿名提交」按钮，会将结构化的诊断数据（计数、Unicode 码位、分类标签；绝不包含权利要求内容或文稿内容）发送至仅维护者可见的私有 GitHub 议题追踪系统。对话框会在发送前显示确切内容；不会隐藏任何数据，不会收集邮箱地址或 IP，且无法将该反馈与您本人关联。"
+      "p5": "部分检查项另提供「匿名提交」按钮，会将结构化的诊断数据发送至仅维护者可见的私有 GitHub 议题追踪系统。数据内容包含与该项发现直接相关的短片段，例如：标记到的具体用语、约 30 字符的前后上下文、Walker 的判读，以及触发的规则；每份反馈至多包含 5 项发现。不包含完整权利要求内容、完整段落、文件名、文件元数据、邮箱、姓名或 IP。对话框会在发送前完整显示每个片段；不会隐藏任何数据。反馈内容已经过去标识化处理，无法与您的身份关联。"
     },
     "s7": {
       "title": "第三方服务",
