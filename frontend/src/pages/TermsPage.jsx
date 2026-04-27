@@ -105,6 +105,7 @@ export default function TermsPage() {
       <LegalSection number="6" titleKey="terms.s6.title">
         <p>{t('terms.s6.p1')}</p>
         <p>{t('terms.s6.p2')}</p>
+        <p>{t('terms.s6.p3')}</p>
       </LegalSection>
 
       <LegalSection number="7" titleKey="terms.s7.title">

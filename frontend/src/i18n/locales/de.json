@@ -378,7 +378,7 @@
   "about": {
     "productTitle": "Was ist PatentLint?",
     "productTagline": "Der erste Patentanmeldungs-Checker seiner Art — er läuft lokal in Ihrem eigenen Browser.",
-    "productDesc1": "PatentLint ist ein kostenloser Patentanmeldungs-Checker, der Mängel erkennt, bevor der Prüfer es tut. Legen Sie eine US-, chinesische oder taiwanesische Patentanmeldung ab und erhalten Sie einen sofortigen Compliance-Bericht, der vollständig auf Ihrem eigenen Gerät erstellt wird. Keine Uploads, keine Konten, keine Cloud, keine KI.",
+    "productDesc1": "PatentLint ist ein kostenloser Patentanmeldungs-Checker, der Mängel erkennt, bevor der Prüfer es tut. Legen Sie eine US-, chinesische oder taiwanesische Patentanmeldung ab und erhalten Sie einen sofortigen Compliance-Bericht samt Notenstufe, beides vollständig auf Ihrem eigenen Gerät erstellt. Keine Uploads, keine Konten, keine Cloud, keine KI.",
     "productDesc2": "PatentLint prüft Ausarbeitungsregeln der USPTO (USA), der CNIPA (China) und der TIPO (Taiwan) und erkennt nach gängigen Prüfungsrichtlinien typische Mängel wie fehlenden Rückbezug, fehlerhafte Anspruchsstruktur und einschränkende Formulierungen.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "Das USPTO Patent Center validiert das Einreichungsformat. PatentLint prüft den Entwurf selbst.",
@@ -1399,7 +1399,8 @@
     "s6": {
       "title": "Keine Rechtsberatung",
       "p1": "PatentLint ist eine automatisierte Ausarbeitungshilfe. Ihre Ausgabe ist vorläufig und ersetzt nicht die Prüfung durch einen qualifizierten Patentprofi. Nichts, was die Website ausgibt, stellt Rechtsberatung dar. Verlassen Sie sich bei Entscheidungen zu Patentverfahren, Einreichung oder Durchsetzung nicht allein auf PatentLint-Ausgaben.",
-      "p2": "Zu den Prüfkategorien zählen Rückbezugs-Analyse, Stützungs-Prüfung der Beschreibung (TW nach 專利法 §26 第3項; USA nach § 112(a)), Abschnittsreihenfolge, Anspruchs-Interpunktion und weitere regelbasierte Verifikationen — diese markieren Kandidaten für Ihre Prüfung, keine rechtlichen Feststellungen."
+      "p2": "Zu den Prüfkategorien zählen Rückbezugs-Analyse, Stützungs-Prüfung der Beschreibung (TW nach 專利法 §26 第3項; USA nach § 112(a)), Abschnittsreihenfolge, Anspruchs-Interpunktion und weitere regelbasierte Verifikationen — diese markieren Kandidaten für Ihre Prüfung, keine rechtlichen Feststellungen.",
+      "p3": "Die zusammenfassende Notenstufe fasst die regelbasierten Befunde zusammen und stellt keine substanzielle Prüfung dar. Ein A bedeutet nicht, dass die Anmeldung einreichungsreif ist, sondern lediglich, dass PatentLints Prüfkatalog keine markierten Mängel gefunden hat."
     },
     "s7": {
       "title": "Gewährleistungsausschluss",

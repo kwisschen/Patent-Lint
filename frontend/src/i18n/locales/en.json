@@ -378,7 +378,7 @@
   "about": {
     "productTitle": "What is PatentLint?",
     "productTagline": "A first-of-its-kind patent draft checker that runs locally in your own browser.",
-    "productDesc1": "PatentLint is a free patent draft checker that catches issues for you before the examiner does. Drop a U.S., Chinese, or Taiwanese patent draft for an instant compliance report, processed entirely on your own device. No uploads, no accounts, no cloud, no AI.",
+    "productDesc1": "PatentLint is a free patent draft checker that catches issues for you before the examiner does. Drop a U.S., Chinese, or Taiwanese patent draft for an instant compliance report and letter grade, processed entirely on your own device. No uploads, no accounts, no cloud, no AI.",
     "productDesc2": "PatentLint checks drafting rules from the USPTO (U.S.), CNIPA (China), and TIPO (Taiwan), detecting issues commonly flagged by examination standards, such as missing antecedent basis, incorrect claim structure, and restrictive wording.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center validates filing format. PatentLint checks the draft itself.",
@@ -1399,7 +1399,8 @@
     "s6": {
       "title": "No legal advice",
       "p1": "PatentLint is an automated drafting aid. Its output is preliminary and not a substitute for review by a qualified patent professional. Nothing the Site produces constitutes legal advice. Do not rely solely on PatentLint output for patent prosecution, filing, or enforcement decisions.",
-      "p2": "Check categories include antecedent-basis analysis, specification-support analysis (TW under 專利法 §26 第3項; US under § 112(a)), section ordering, claim punctuation, and other rule-based verifications — these flag candidates for your review, not legal determinations."
+      "p2": "Check categories include antecedent-basis analysis, specification-support analysis (TW under 專利法 §26 第3項; US under § 112(a)), section ordering, claim punctuation, and other rule-based verifications — these flag candidates for your review, not legal determinations.",
+      "p3": "An overall letter grade summarizes the rule-based findings but is not a substantive review. An A grade does not mean the draft is filing-ready; it means PatentLint's catalog found no flagged issues."
     },
     "s7": {
       "title": "Warranty disclaimer",
