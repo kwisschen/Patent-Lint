@@ -126,7 +126,7 @@ function ComparisonSection() {
   const { t } = useTranslation()
   const [ref, isInView] = useInView()
 
-  const rows = ['q1', 'q6', 'q2', 'q3', 'q4', 'q5', 'q7']
+  const rows = ['q1', 'q7', 'q6', 'q2', 'q3', 'q4', 'q5']
 
   return (
     <section
