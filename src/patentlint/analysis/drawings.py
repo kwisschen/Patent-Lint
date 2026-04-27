@@ -219,6 +219,9 @@ def check_figure_cross_references(
                 orphan_count=len(orphaned_brief),
                 total_brief=len(brief_figs),
                 total_detailed=len(detailed_figs),
+                orphans=orphaned_brief[:10],
+                brief_figs_sample=sorted(brief_figs, key=_sort_fig_id)[:5],
+                detailed_figs_sample=sorted(detailed_figs, key=_sort_fig_id)[:5],
             ),
         ))
 
@@ -235,6 +238,9 @@ def check_figure_cross_references(
                 orphan_count=len(orphaned_detailed),
                 total_brief=len(brief_figs),
                 total_detailed=len(detailed_figs),
+                orphans=orphaned_detailed[:10],
+                brief_figs_sample=sorted(brief_figs, key=_sort_fig_id)[:5],
+                detailed_figs_sample=sorted(detailed_figs, key=_sort_fig_id)[:5],
             ),
         ))
 

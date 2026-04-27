@@ -226,6 +226,9 @@
       "fieldInputFormat": "Eingabeformat",
       "fieldTotalParagraphs": "Gesamtabsätze",
       "fieldWhat": "Art",
+      "fieldOrphans": "Verwaiste Figuren",
+      "fieldBriefFigsSample": "Figuren in Kurzbeschreibung (Stichprobe)",
+      "fieldDetailedFigsSample": "Figuren in Detailbeschreibung (Stichprobe)",
       "diagnosticHeader": "Diagnose-Spur (strukturelle Metadaten, kein Anspruchstext — siehe Datenschutz §6):"
     },
     "reportModal": {
