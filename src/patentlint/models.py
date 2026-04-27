@@ -760,6 +760,11 @@ class AnalysisResult(BaseModel):
                 diagnostics=_dx(
                     flagged_paragraph_count=len(self.improper_spec_paragraphs),
                     flagged_phrase_count=len(spec_items) or None,
+                    flagged_paragraphs_sample=self.improper_spec_paragraphs[:5] or None,
+                    flagged_phrases_sample=[
+                        {"location": it.get("location"), "token": (it.get("token") or "")[:80], "kind": it.get("kind")}
+                        for it in spec_items[:5]
+                    ] or None,
                 ),
             ))
         else:
@@ -831,6 +836,10 @@ class AnalysisResult(BaseModel):
                     flagged_count=len(self.multiple_dependent_claims),
                     total_claims=len(self.claims),
                     flagged_claim_id=self.multiple_dependent_claims[0] if self.multiple_dependent_claims else None,
+                    findings=[
+                        {"claim_id": cid, "preamble": (next((c.text for c in self.claims if c.id == cid), "") or "")[:80]}
+                        for cid in self.multiple_dependent_claims[:5]
+                    ],
                 ),
             ))
         else:
@@ -855,6 +864,10 @@ class AnalysisResult(BaseModel):
                     flagged_count=len(self.chained_multi_dep_claims),
                     total_claims=len(self.claims),
                     flagged_claim_id=self.chained_multi_dep_claims[0] if self.chained_multi_dep_claims else None,
+                    findings=[
+                        {"claim_id": cid, "preamble": (next((c.text for c in self.claims if c.id == cid), "") or "")[:80]}
+                        for cid in self.chained_multi_dep_claims[:5]
+                    ],
                 ),
             ))
         else:
@@ -876,6 +889,10 @@ class AnalysisResult(BaseModel):
                     flagged_count=len(self.self_dependent_claims),
                     total_claims=len(self.claims),
                     flagged_claim_id=self.self_dependent_claims[0] if self.self_dependent_claims else None,
+                    findings=[
+                        {"claim_id": cid, "preamble": (next((c.text for c in self.claims if c.id == cid), "") or "")[:80]}
+                        for cid in self.self_dependent_claims[:5]
+                    ],
                 ),
             ))
         else:
@@ -910,6 +927,11 @@ class AnalysisResult(BaseModel):
                 diagnostics=_dx(
                     flagged_claim_count=len(self.restrictive_absolute_claims),
                     flagged_phrase_count=len(restrictive_items) or None,
+                    flagged_claims_sample=self.restrictive_absolute_claims[:5] or None,
+                    flagged_phrases_sample=[
+                        {"location": it.get("location"), "token": (it.get("token") or "")[:80], "kind": it.get("kind")}
+                        for it in restrictive_items[:5]
+                    ] or None,
                 ),
             ))
         else:
@@ -936,6 +958,11 @@ class AnalysisResult(BaseModel):
                 diagnostics=_dx(
                     flagged_claim_count=len(self.indefinite_wording_claims),
                     flagged_phrase_count=len(indefinite_items) or None,
+                    flagged_claims_sample=self.indefinite_wording_claims[:5] or None,
+                    flagged_phrases_sample=[
+                        {"location": it.get("location"), "token": (it.get("token") or "")[:80], "kind": it.get("kind")}
+                        for it in indefinite_items[:5]
+                    ] or None,
                 ),
             ))
         else:
@@ -958,6 +985,10 @@ class AnalysisResult(BaseModel):
                     flagged_count=len(self.means_plus_function_claims),
                     total_claims=len(self.claims),
                     flagged_claim_id=self.means_plus_function_claims[0] if self.means_plus_function_claims else None,
+                    findings=[
+                        {"claim_id": cid, "preamble": (next((c.text for c in self.claims if c.id == cid), "") or "")[:80]}
+                        for cid in self.means_plus_function_claims[:5]
+                    ],
                 ),
             ))
         else:
@@ -1094,6 +1125,7 @@ class AnalysisResult(BaseModel):
                 diagnostics=_dx(
                     flagged_phrases_charlen=len(self.abstract_legal_phraseology_formatted),
                     flagged_phrase_count=len(unique_legal) or None,
+                    flagged_phrases_sample=[(p or "")[:80] for p in unique_legal[:5]] or None,
                 ),
             ))
         else:
@@ -1120,6 +1152,7 @@ class AnalysisResult(BaseModel):
                 diagnostics=_dx(
                     flagged_phrases_charlen=len(self.abstract_merit_language_formatted),
                     flagged_phrase_count=len(unique_merit) or None,
+                    flagged_phrases_sample=[(p or "")[:80] for p in unique_merit[:5]] or None,
                 ),
             ))
         else:
@@ -1145,6 +1178,7 @@ class AnalysisResult(BaseModel):
                 diagnostics=_dx(
                     reason_code="implied_phrase_detected",
                     flagged_phrase_count=len(phrases) or None,
+                    flagged_phrases_sample=[(p or "")[:80] for p in phrases[:5]] or None,
                 ),
             ))
         else:
