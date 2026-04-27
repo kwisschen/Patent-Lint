@@ -220,6 +220,9 @@
       "fieldInputFormat": "입력 형식",
       "fieldTotalParagraphs": "전체 단락 수",
       "fieldWhat": "종류",
+      "fieldOrphans": "고아 도면",
+      "fieldBriefFigsSample": "도면의 간단한 설명에 나열된 도면 (샘플)",
+      "fieldDetailedFigsSample": "상세한 설명에서 인용된 도면 (샘플)",
       "diagnosticHeader": "진단 자취(구조 메타데이터만 포함, 명세서 내용 없음, 개인정보 처리방침 §6 참조):"
     },
     "emailGreeting": "Christopher 님께,",

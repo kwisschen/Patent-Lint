@@ -220,6 +220,9 @@
       "fieldInputFormat": "输入格式",
       "fieldTotalParagraphs": "段落总数",
       "fieldWhat": "类型",
+      "fieldOrphans": "孤立图式",
+      "fieldBriefFigsSample": "附图说明所列图式（样本）",
+      "fieldDetailedFigsSample": "具体实施方式所引用图式（样本）",
       "diagnosticHeader": "诊断轨迹（结构性元数据，不含说明书内容，详见隐私政策 §6）："
     },
     "emailGreeting": "Christopher 你好，",

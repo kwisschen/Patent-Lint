@@ -220,6 +220,9 @@
       "fieldInputFormat": "入力形式",
       "fieldTotalParagraphs": "段落数合計",
       "fieldWhat": "種別",
+      "fieldOrphans": "孤立した図",
+      "fieldBriefFigsSample": "図面の簡単な説明の図（サンプル）",
+      "fieldDetailedFigsSample": "詳細な説明の図（サンプル）",
       "diagnosticHeader": "診断軌跡（構造的メタデータのみ、明細書内容は含まれません。プライバシーポリシー §6 参照）："
     },
     "emailGreeting": "Christopher 様",

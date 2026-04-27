@@ -145,6 +145,9 @@ export const FIELD_LABEL_KEYS = {
   total_paragraphs: 'feedback.email.fieldTotalParagraphs',
   what: 'feedback.email.fieldWhat',
   flagged_claim_id: 'feedback.email.fieldClaim',
+  orphans: 'feedback.email.fieldOrphans',
+  brief_figs_sample: 'feedback.email.fieldBriefFigsSample',
+  detailed_figs_sample: 'feedback.email.fieldDetailedFigsSample',
 }
 
 // Format a key→value section as a localized "Label: value" stack. Drops
