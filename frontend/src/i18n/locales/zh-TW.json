@@ -219,6 +219,9 @@
       "fieldInputFormat": "輸入格式",
       "fieldTotalParagraphs": "段落總數",
       "fieldWhat": "類型",
+      "fieldOrphans": "孤立圖式",
+      "fieldBriefFigsSample": "圖式簡單說明所列圖式（樣本）",
+      "fieldDetailedFigsSample": "實施方式所引用圖式（樣本）",
       "diagnosticHeader": "診斷軌跡（結構性中繼資料，不含稿件內容，詳見隱私權政策 §6）："
     },
     "emailGreeting": "Christopher 您好，",

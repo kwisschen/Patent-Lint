@@ -225,6 +225,9 @@
       "fieldInputFormat": "Input format",
       "fieldTotalParagraphs": "Total paragraphs",
       "fieldWhat": "What",
+      "fieldOrphans": "Orphan figures",
+      "fieldBriefFigsSample": "Brief description figures (sample)",
+      "fieldDetailedFigsSample": "Detailed description figures (sample)",
       "diagnosticHeader": "Diagnostic trail (structural metadata, no claim content — see Privacy §6):"
     },
     "reportModal": {
