@@ -148,6 +148,7 @@ def _run_cn_pipeline(
         strict_qualifier_matching=strict_qualifier_matching,
     )
     if cn_antecedent_basis:
+        from patentlint.diagnostic_extractors import extract_antecedent_basis
         issue_count = len(cn_antecedent_basis)
         claim_ids = sorted({item["claim_id"] for item in cn_antecedent_basis})
         claim_count = len(claim_ids)
@@ -164,12 +165,7 @@ def _run_cn_pipeline(
                     "claims": claim_ids,
                 },
                 reference="审查指南",
-                diagnostics={
-                    "issue_count": issue_count,
-                    "claim_count": claim_count,
-                    "total_claims": len(cn_doc.claims),
-                    "flagged_claim_id": claim_ids[0] if claim_ids else None,
-                },
+                diagnostics=extract_antecedent_basis(cn_antecedent_basis, len(cn_doc.claims)),
             )
         ]
     else:
@@ -200,9 +196,14 @@ def _run_cn_pipeline(
         cn_unsupported_terms,
     )
     if cn_unsupported_terms:
+        from patentlint.diagnostic_extractors import extract_spec_support
         issue_count = len(cn_unsupported_terms)
         claim_ids = sorted({ut.claim_number for ut in cn_unsupported_terms})
         claim_count = len(claim_ids)
+        cn_spec_paragraph_count = (
+            len(cn_doc.technical_field) + len(cn_doc.background) + len(cn_doc.summary)
+            + len(cn_doc.drawings_description) + len(cn_doc.detailed_description)
+        )
         claims_checks = list(claims_checks) + [
             CheckItem(
                 status="amend",
@@ -216,12 +217,11 @@ def _run_cn_pipeline(
                     "claims": claim_ids,
                 },
                 reference="专利法 §26 第4款",
-                diagnostics={
-                    "issue_count": issue_count,
-                    "claim_count": claim_count,
-                    "total_claims": len(cn_doc.claims),
-                    "flagged_claim_id": claim_ids[0] if claim_ids else None,
-                },
+                diagnostics=extract_spec_support(
+                    cn_unsupported_terms,
+                    total_claims=len(cn_doc.claims),
+                    spec_paragraph_count=cn_spec_paragraph_count,
+                ),
             )
         ]
     else:
@@ -565,6 +565,7 @@ def _run_tw_pipeline(
     # (ADR-138), so the umbrella heading + the two tiles carry a single
     # coherent citation.
     if tw_antecedent_basis:
+        from patentlint.diagnostic_extractors import extract_antecedent_basis
         issue_count = len(tw_antecedent_basis)
         claim_ids = sorted({item["claim_id"] for item in tw_antecedent_basis})
         claim_count = len(claim_ids)
@@ -581,12 +582,7 @@ def _run_tw_pipeline(
                     "claims": claim_ids,
                 },
                 reference="專利法 §26 第3項",
-                diagnostics={
-                    "issue_count": issue_count,
-                    "claim_count": claim_count,
-                    "total_claims": len(tw_doc.claims),
-                    "flagged_claim_id": claim_ids[0] if claim_ids else None,
-                },
+                diagnostics=extract_antecedent_basis(tw_antecedent_basis, len(tw_doc.claims)),
             )
         ]
     else:
@@ -599,9 +595,14 @@ def _run_tw_pipeline(
             )
         ]
     if tw_unsupported_terms:
+        from patentlint.diagnostic_extractors import extract_spec_support
         issue_count = len(tw_unsupported_terms)
         claim_ids = sorted({ut.claim_number for ut in tw_unsupported_terms})
         claim_count = len(claim_ids)
+        tw_spec_paragraph_count = (
+            len(tw_doc.technical_field) + len(tw_doc.prior_art) + len(tw_doc.disclosure)
+            + len(tw_doc.drawings_description) + len(tw_doc.embodiment)
+        )
         claims_checks = list(claims_checks) + [
             CheckItem(
                 status="amend",
@@ -615,12 +616,11 @@ def _run_tw_pipeline(
                     "claims": claim_ids,
                 },
                 reference="專利法 §26 第3項",
-                diagnostics={
-                    "issue_count": issue_count,
-                    "claim_count": claim_count,
-                    "total_claims": len(tw_doc.claims),
-                    "flagged_claim_id": claim_ids[0] if claim_ids else None,
-                },
+                diagnostics=extract_spec_support(
+                    tw_unsupported_terms,
+                    total_claims=len(tw_doc.claims),
+                    spec_paragraph_count=tw_spec_paragraph_count,
+                ),
             )
         ]
     else:

@@ -187,6 +187,39 @@
       "fieldClaimCount": "影響請求項數",
       "fieldTotalClaims": "請求項總數",
       "fieldIssueCount": "問題數",
+      "fieldFindings": "項目",
+      "fieldTerm": "用語",
+      "fieldReferenceForm": "引用形式",
+      "fieldDidYouMean": "可能想表達",
+      "fieldDidYouMeanClaimId": "建議來自請求項",
+      "fieldCategory": "類別",
+      "fieldCharOffset": "字元位置",
+      "fieldContextBefore": "前文脈絡",
+      "fieldContextAfter": "後文脈絡",
+      "fieldClaimTextCharlen": "請求項長度（字元）",
+      "fieldPhrase": "詞句",
+      "fieldTiersChecked": "已檢查層級",
+      "fieldCrossRef": "交互引用",
+      "fieldSpecParagraphCount": "說明書段落數",
+      "fieldMatchedPhrase": "匹配片段",
+      "fieldPreamble": "前言",
+      "fieldKind": "種類",
+      "fieldFirst5Numbers": "前 5 個編號",
+      "fieldLast5Numbers": "後 5 個編號",
+      "fieldGapAtIndex": "缺口位置（索引）",
+      "fieldExpectedAfter": "缺口後預期值",
+      "fieldFoundAfter": "缺口後實際值",
+      "fieldGapSize": "缺口大小",
+      "fieldMissingSections": "缺少章節",
+      "fieldDetectedCount": "偵測數量",
+      "fieldDetectedHeadersSample": "偵測到的標頭樣本",
+      "fieldCanonicalCount": "標準章節總數",
+      "fieldSeenIndices": "已見索引",
+      "fieldIsIncreasing": "為遞增",
+      "fieldSampleParagraphIds": "段落 ID 樣本",
+      "fieldInputFormat": "輸入格式",
+      "fieldTotalParagraphs": "段落總數",
+      "fieldWhat": "類型",
       "diagnosticHeader": "診斷軌跡（結構性中繼資料，不含稿件內容，詳見隱私權政策 §6）："
     },
     "emailGreeting": "Christopher 您好，",
@@ -203,7 +236,8 @@
       "cancel": "取消",
       "emailFallback": "想用電子郵件？改用 mailto 傳送",
       "toastSuccess": "感謝您，已收到回報。",
-      "toastFailure": "目前無法傳送，請改用電子郵件。"
+      "toastFailure": "目前無法傳送，請改用電子郵件。",
+      "deidNotice": "回報無法與您的身分連結。我們不收集電子郵件、IP 或帳號資訊；上述欄位為去識別化片段，傳送前已完整呈現給您審閱。"
     }
   },
   "cta": {
@@ -1446,7 +1480,7 @@
       "p2": "我們將回饋用於修復錯誤及回覆您。我們不將回饋分享予第三方，亦不將其用於改良 PatentLint 及回覆您以外之任何用途。",
       "p3": "透過「回報錯誤」連結寄送之錯誤報告，可能包含一組精簡之「診斷軌跡」區塊，其中僅為檢查器所經代碼路徑之結構性中繼資料（正則比對結果、字元計數、擷取路徑標籤等）。該軌跡不含任何請求項文字、名詞或稿件內容，其設計目的為使我們得於不接觸您稿件內容之情形下診斷檢查器缺陷。您於寄送前得檢視全部郵件內容，如有疑慮並得自行刪除該軌跡區塊。",
       "p4": "若您希望以匿名方式寄送回饋，建議使用電子郵件別名服務（例如 Apple Hide My Email、Gmail 別名、Firefox Relay、ProtonMail 別名等）。我們僅收到該別名地址，您的真實電子郵件地址將由您的服務提供者保管，我們亦不會將別名地址與其他任何資料進行關聯。",
-      "p5": "部分檢查項目另提供「匿名傳送」按鈕，會將結構化的診斷資料（計數、Unicode 碼位、分類標籤；絕不包含請求項內容或稿件內容）傳送至僅維護者可見的私人 GitHub 議題追蹤系統。對話框會在傳送前顯示確切內容；不會隱藏任何資料，不會收集電子郵件位址或 IP，且無法將該回報與您本人連結。"
+      "p5": "部分檢查項目另提供「匿名傳送」按鈕，會將結構化的診斷資料傳送至僅維護者可見的私人 GitHub 議題追蹤系統。資料內容包含與該項發現直接相關的短片段，例如：標記到的具體用語、約 30 字元的前後文、Walker 的判讀，以及觸發的規則；每份回報至多包含 5 項發現。不包含完整請求項內容、完整段落、檔案名稱、檔案中繼資料、電子郵件、姓名或 IP。對話框會在傳送前完整顯示每個片段；不會隱藏任何資料。回報內容已經去識別化處理，無法與您的身分連結。"
     },
     "s7": {
       "title": "第三方服務",

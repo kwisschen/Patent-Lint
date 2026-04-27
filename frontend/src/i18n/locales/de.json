@@ -193,6 +193,39 @@
       "fieldClaimCount": "Betroffene Ansprüche",
       "fieldTotalClaims": "Ansprüche insgesamt",
       "fieldIssueCount": "Funde",
+      "fieldFindings": "Funde",
+      "fieldTerm": "Begriff",
+      "fieldReferenceForm": "Bezugsform",
+      "fieldDidYouMean": "Meinten Sie",
+      "fieldDidYouMeanClaimId": "Aus Anspruch",
+      "fieldCategory": "Kategorie",
+      "fieldCharOffset": "Position (Zeichen)",
+      "fieldContextBefore": "Kontext davor",
+      "fieldContextAfter": "Kontext danach",
+      "fieldClaimTextCharlen": "Anspruchslänge (Zeichen)",
+      "fieldPhrase": "Phrase",
+      "fieldTiersChecked": "Geprüfte Stufen",
+      "fieldCrossRef": "Querverweis",
+      "fieldSpecParagraphCount": "Beschreibungsabsätze",
+      "fieldMatchedPhrase": "Übereinstimmung",
+      "fieldPreamble": "Oberbegriff",
+      "fieldKind": "Art",
+      "fieldFirst5Numbers": "Erste 5 Nummern",
+      "fieldLast5Numbers": "Letzte 5 Nummern",
+      "fieldGapAtIndex": "Lücke bei Index",
+      "fieldExpectedAfter": "Erwartet nach Lücke",
+      "fieldFoundAfter": "Gefunden nach Lücke",
+      "fieldGapSize": "Lückengröße",
+      "fieldMissingSections": "Fehlende Abschnitte",
+      "fieldDetectedCount": "Erkannte Anzahl",
+      "fieldDetectedHeadersSample": "Erkannte Überschriften",
+      "fieldCanonicalCount": "Kanonische Anzahl",
+      "fieldSeenIndices": "Gesehene Indizes",
+      "fieldIsIncreasing": "Aufsteigend",
+      "fieldSampleParagraphIds": "Beispielabsatz-IDs",
+      "fieldInputFormat": "Eingabeformat",
+      "fieldTotalParagraphs": "Gesamtabsätze",
+      "fieldWhat": "Art",
       "diagnosticHeader": "Diagnose-Spur (strukturelle Metadaten, kein Anspruchstext — siehe Datenschutz §6):"
     },
     "reportModal": {
@@ -203,7 +236,8 @@
       "cancel": "Abbrechen",
       "emailFallback": "Lieber per E-Mail? Per mailto senden",
       "toastSuccess": "Danke — Meldung empfangen.",
-      "toastFailure": "Senden gerade nicht möglich — bitte per E-Mail versuchen."
+      "toastFailure": "Senden gerade nicht möglich — bitte per E-Mail versuchen.",
+      "deidNotice": "Berichte können nicht mit Ihrer Identität verknüpft werden. Keine E-Mail, keine IP, keine Kontoinformationen werden erfasst; die Felder oben sind anonymisierte Fragmente, die Ihnen vor dem Senden vollständig angezeigt werden."
     }
   },
   "cta": {
@@ -1444,7 +1478,7 @@
       "p2": "Wir verwenden Feedback zur Fehlerbehebung und zur Antwort an Sie. Wir geben Feedback nicht an Dritte weiter und nutzen es zu keinem anderen Zweck als zur Verbesserung von PatentLint und zur Beantwortung Ihrer Nachricht.",
       "p3": "Fehlerberichte, die über „Fehler melden“-Links gesendet werden, können einen kompakten Block „Diagnose-Spur“ enthalten — strukturelle Metadaten dazu, welcher Walker-Codepfad den Befund erzeugt hat (Ergebnisse von Regex-Matches, Zeichenzählungen, Tags zum Extraktionspfad). Die Spur enthält keinen Anspruchstext, keine Substantive, keine Entwurfsinhalte; sie ist so konzipiert, dass wir Walker-Fehler diagnostizieren können, ohne Ihren Entwurf zu sehen. Sie können den gesamten E-Mail-Text vor dem Senden einsehen und den Spur-Block entfernen, wenn Sie möchten.",
       "p4": "Möchten Sie Feedback pseudonym senden, nutzen Sie einen E-Mail-Alias-Dienst (z. B. Apple Hide My Email, Gmail-Aliase, Firefox Relay, ProtonMail-Aliase). Wir erhalten die Alias-Adresse; Ihre echte Adresse bleibt bei Ihrem Anbieter. Wir korrelieren Alias-Adressen nicht mit anderen Daten.",
-      "p5": "Bei einigen Triage-Einträgen erscheint zusätzlich eine Schaltfläche „Anonym senden“, die die strukturierte Diagnose-Datenmenge (Zählwerte, Codepoints, Kategoriebezeichnungen — niemals Anspruchstext oder Entwurfsinhalte) an einen privaten GitHub-Issue-Tracker sendet, den nur der Maintainer einsehen kann. Vor dem Senden zeigt der Dialog den genauen Inhalt; nichts wird verborgen, keine E-Mail-Adresse und keine IP wird erfasst, und die Übermittlung kann nicht mit Ihnen in Verbindung gebracht werden."
+      "p5": "Bei einigen Triage-Einträgen erscheint zusätzlich eine Schaltfläche „Anonym senden“, die eine strukturierte Diagnose-Datenmenge an einen privaten GitHub-Issue-Tracker sendet, den nur der Maintainer einsehen kann. Die Datenmenge enthält kurze Fragmente aus der unmittelbaren Umgebung des Funds — etwa den konkret markierten Begriff, ungefähr 30 Zeichen umgebenden Kontext, die Interpretation durch den Walker und die ausgelöste Regel — auf höchstens fünf Funde pro Bericht begrenzt. Sie enthält keinen vollständigen Anspruchstext, keine vollständigen Absätze, keine Dateinamen, keine Datei-Metadaten, keine E-Mail, keinen Namen und keine IP. Der Dialog zeigt jedes Fragment vor dem Senden; nichts wird verborgen. Berichte können nicht mit Ihrer Identität verknüpft werden."
     },
     "s7": {
       "title": "Drittanbieter-Dienste",
