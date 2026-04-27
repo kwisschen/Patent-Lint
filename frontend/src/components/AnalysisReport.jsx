@@ -14,6 +14,7 @@ import SpecSupportCard from './SpecSupportCard'
 import Section112Container from './Section112Container'
 import NonPatentBanner from './NonPatentBanner'
 import TrackedChangesBanner from './TrackedChangesBanner'
+import JurisdictionMismatchBanner from './JurisdictionMismatchBanner'
 import { Button } from '@/components/ui/button'
 import { Download, RotateCcw, ShieldCheck } from 'lucide-react'
 import { useNetworkMonitor } from '../hooks/useNetworkMonitor'
@@ -143,7 +144,7 @@ function consolidateClaimsChecks(checks) {
   return consolidated
 }
 
-export default function AnalysisReport({ data, filename, onDownloadPdf, onReset, downloading, onShowProveIt, pyodideReady }) {
+export default function AnalysisReport({ data, filename, onDownloadPdf, onReset, onSwitchJurisdiction, downloading, onShowProveIt, pyodideReady }) {
   const { t } = useTranslation()
   const { active: networkActive } = useNetworkMonitor()
 
@@ -154,6 +155,16 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
   // Tracked changes gate
   const hasTrackedChanges = data.has_tracked_changes === true
   const [dismissedTracked, setDismissedTracked] = useState(false)
+
+  // Jurisdiction-mismatch gate (Issue #9 / ADR-082 revisit). Renders
+  // before the NonPatent banner because a mismatch is the more useful
+  // diagnosis when both fire (mismatch implies the NonPatent trigger
+  // was caused by running the wrong-jurisdiction pipeline). When the
+  // user clicks Switch, App.jsx re-runs analysis on the same file
+  // under the suggested jurisdiction — the component remounts with
+  // fresh data so this state resets implicitly.
+  const hasJurisdictionMismatch = data.jurisdiction_mismatch === true && Boolean(data.suggested_jurisdiction)
+  const [dismissedMismatch, setDismissedMismatch] = useState(false)
 
   // Stagger cascade for summary cards
   const [mounted, setMounted] = useState(false)
@@ -229,6 +240,46 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
     transform: mounted ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0.95)',
     transition: `opacity 400ms var(--ease-bounce) ${i * 100}ms, transform 400ms var(--ease-bounce) ${i * 100}ms`,
   })
+
+  if (hasJurisdictionMismatch && !dismissedMismatch) {
+    return (
+      <JurisdictionMismatchBanner
+        selectedJurisdiction={data.jurisdiction}
+        suggestedJurisdiction={data.suggested_jurisdiction}
+        onSwitch={() => {
+          if (onSwitchJurisdiction) {
+            onSwitchJurisdiction(data.suggested_jurisdiction)
+          }
+        }}
+        onDismiss={() => {
+          setDismissedMismatch(true)
+          // Banner-stack discipline: dismissing the Mismatch banner
+          // means the user has acknowledged the document is from a
+          // different jurisdiction and chose to view results under the
+          // originally-selected pipeline. The NonPatent banner that
+          // would otherwise fire next describes the same observation
+          // reframed (the selected jurisdiction's markers are absent
+          // BECAUSE the doc is from another jurisdiction) for
+          // content_missing / weak_signal reasons — suppress it.
+          // For cross_script_japanese / cross_script_korean keep
+          // NonPatent: it surfaces an orthogonal script-level warning
+          // (e.g., "this looks Japanese") that the Mismatch banner
+          // didn't address.
+          const reason = data.patent_detection_reason || 'content_missing'
+          if (reason === 'content_missing' || reason === 'weak_signal') {
+            setShowResults(true)
+          }
+          // Always reset cascade — if NonPatent still fires next, its
+          // dismiss handler will redo it; the extra setState calls
+          // are cheap and the unused mount/bar timers don't render.
+          setMounted(false)
+          setBarVisible(false)
+          setTimeout(() => setMounted(true), 50)
+          setTimeout(() => setBarVisible(true), 300)
+        }}
+      />
+    )
+  }
 
   if (!showResults) {
     return (

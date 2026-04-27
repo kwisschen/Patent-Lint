@@ -325,6 +325,16 @@ class ReportData(BaseModel):
     has_tracked_changes: bool = False
     has_scanned_fallback: bool = False
 
+    # Issue #9 / ADR-082 revisit — set to True when the document looks
+    # like a different supported jurisdiction than the one the user
+    # selected (e.g., user picked US but uploaded a TW draft). The
+    # frontend renders a soft-warning banner with a one-click "Switch
+    # to [X]" button. ``suggested_jurisdiction`` carries the suggested
+    # code ("US" / "CN" / "TW"). Both fields default to "no mismatch"
+    # so existing constructors that predate the feature work unchanged.
+    jurisdiction_mismatch: bool = False
+    suggested_jurisdiction: str | None = None
+
     # Rubric grade (forwarded from AnalysisResult). Allows the PDF
     # template + frontend report to read the grade from a single
     # canonical surface.
@@ -488,8 +498,23 @@ class AnalysisResult(BaseModel):
     patent_detection_reason: str | None = None
     has_scanned_fallback: bool = False
 
+    # Issue #9 / ADR-082 revisit — see ReportData.jurisdiction_mismatch.
+    jurisdiction_mismatch: bool = False
+    suggested_jurisdiction: str | None = None
+
     # Abstract
     abstract_word_count: int = 0
+    # Raw abstract text — populated for US runs from the parser's
+    # ``abstract_section``. CN/TW carry their abstract text on
+    # ``CnPatentDocument`` / ``TwPatentDocument`` (the doc-level model)
+    # rather than here, so ``abstract_text`` on ``AnalysisResult`` is
+    # US-only by current convention. Diagnostic emit sites in
+    # ``_to_us_report_data`` (e.g., the abstract.structure.amend chip)
+    # read from this field; the previous version assumed it existed
+    # and crashed when ``abstract_structure_good`` was False (b447ab6
+    # / 1c35b54 ADR-145 sweep regression — see fix landed alongside
+    # the ADR-082 revisit).
+    abstract_text: str = ""
     abstract_structure_good: bool = True
     abstract_has_implied_phrase: bool = False
     abstract_implied_phrases: list[str] = Field(default_factory=list)
@@ -576,6 +601,8 @@ class AnalysisResult(BaseModel):
             patent_detection_reason=self.patent_detection_reason,
             has_tracked_changes=self.has_tracked_changes,
             has_scanned_fallback=self.has_scanned_fallback,
+            jurisdiction_mismatch=self.jurisdiction_mismatch,
+            suggested_jurisdiction=self.suggested_jurisdiction,
             rubric_grade=self.rubric_grade,
         )
 
@@ -606,6 +633,8 @@ class AnalysisResult(BaseModel):
             likely_patent=self.likely_patent,
             patent_detection_reason=self.patent_detection_reason,
             has_tracked_changes=self.has_tracked_changes,
+            jurisdiction_mismatch=self.jurisdiction_mismatch,
+            suggested_jurisdiction=self.suggested_jurisdiction,
             rubric_grade=self.rubric_grade,
         )
 
@@ -1324,5 +1353,7 @@ class AnalysisResult(BaseModel):
             likely_patent=self.likely_patent,
             patent_detection_reason=self.patent_detection_reason,
             has_tracked_changes=self.has_tracked_changes,
+            jurisdiction_mismatch=self.jurisdiction_mismatch,
+            suggested_jurisdiction=self.suggested_jurisdiction,
             rubric_grade=self.rubric_grade,
         )
