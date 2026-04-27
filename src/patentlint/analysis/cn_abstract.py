@@ -40,6 +40,9 @@ def check_abstract_char_count(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 char_count=count,
                 threshold=300,
                 overage=count - 300,
+                abstract_text_charlen=len(cn_doc.abstract_text),
+                first_30_chars=cn_doc.abstract_text[:30],
+                last_30_chars=cn_doc.abstract_text[-30:] if cn_doc.abstract_text else "",
             ),
         )]
 
@@ -70,6 +73,8 @@ def check_abstract_title_match(cn_doc: CnPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 reason_code="empty_abstract",
                 title_charlen=len(title),
+                abstract_raw_charlen=len(cn_doc.abstract_text),
+                abstract_is_whitespace=bool(cn_doc.abstract_text and not cn_doc.abstract_text.strip()),
             ),
         )]
 
@@ -83,6 +88,8 @@ def check_abstract_title_match(cn_doc: CnPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 reason_code="empty_title",
                 abstract_charlen=len(abstract),
+                title_raw_charlen=len(cn_doc.title),
+                title_is_whitespace=bool(cn_doc.title and not cn_doc.title.strip()),
             ),
         )]
 
@@ -118,6 +125,9 @@ def check_abstract_title_match(cn_doc: CnPatentDocument) -> list[CheckItem]:
             title_charlen=len(title),
             abstract_charlen=len(abstract),
             compound_halves=len(halves),
+            title_first_30=title[:30],
+            abstract_first_30=abstract[:30],
+            halves_charlens=[len(h) for h in halves[:5]],
         ),
     )]
 
@@ -153,6 +163,14 @@ def check_commercial_language(cn_doc: CnPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 hit_count=len(found),
                 total_terms_scanned=len(_COMMERCIAL_TERMS),
+                abstract_charlen=len(abstract),
+                findings=[
+                    {
+                        "token": term,
+                        "match_position": abstract.find(term),
+                    }
+                    for term in found[:5]
+                ],
             ),
         )]
 
@@ -187,6 +205,7 @@ def check_drawings_prior_art(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 reason_code="prior_art_marker_found",
                 drawings_paragraph_count=len(cn_doc.drawings_description),
                 drawings_charlen=len(text),
+                first_30_chars=text[:30],
             ),
         )]
     return [CheckItem(
@@ -256,6 +275,8 @@ def check_figures_sequential(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 missing_count=len(missing),
                 found_max=max_n,
                 total_figures_found=len(numbers),
+                missing_sample=missing[:10],
+                first_missing=missing[0] if missing else None,
             ),
         )]
 

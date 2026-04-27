@@ -347,6 +347,9 @@ def check_claims_sequential(doc: TwPatentDocument) -> list[CheckItem]:
                     expected_id=expected,
                     found_id=claim.id,
                     total_claims=len(claims),
+                    gap_position=i,
+                    is_backward=claim.id < expected,
+                    preamble=(claim.text or "")[:80],
                 ),
             )]
 
@@ -390,6 +393,11 @@ def check_dependency_format(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_count=len(bad_claim_ids),
                 total_dependents=len(dependents),
+                flagged_claim_id=bad_claim_ids[0] if bad_claim_ids else None,
+                findings=[
+                    {"claim_id": cid, "preamble": (next((c.text for c in doc.claims if c.id == cid), "") or "")[:80]}
+                    for cid in bad_claim_ids[:5]
+                ],
             ),
         )]
 
@@ -472,6 +480,11 @@ def check_self_dependent(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_count=len(bad),
                 total_claims=len(doc.claims),
+                flagged_claim_id=bad[0] if bad else None,
+                findings=[
+                    {"claim_id": cid, "preamble": (next((c.text for c in doc.claims if c.id == cid), "") or "")[:80]}
+                    for cid in bad[:5]
+                ],
             ),
         )]
 
@@ -521,6 +534,12 @@ def check_circular_dependency(doc: TwPatentDocument) -> list[CheckItem]:
                     diagnostics=_dx(
                         cycle_length=len(cycle),
                         total_claims=len(doc.claims),
+                        flagged_claim_id=cycle[0] if cycle else None,
+                        cycle_claim_ids=cycle[:10],
+                        findings=[
+                            {"claim_id": cid, "preamble": (next((c.text for c in doc.claims if c.id == cid), "") or "")[:80]}
+                            for cid in cycle[:5]
+                        ],
                     ),
                 )]
 
@@ -551,6 +570,11 @@ def check_forward_dependency(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_count=len(bad),
                 total_claims=len(doc.claims),
+                flagged_claim_id=bad[0] if bad else None,
+                findings=[
+                    {"claim_id": cid, "preamble": (next((c.text for c in doc.claims if c.id == cid), "") or "")[:80]}
+                    for cid in bad[:5]
+                ],
             ),
         )]
 
@@ -668,6 +692,14 @@ def check_ref_numeral_parens(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_count=len(bad_claim_ids),
                 total_claims=len(doc.claims),
+                flagged_claim_id=bad_claim_ids[0] if bad_claim_ids else None,
+                findings=[
+                    {
+                        "claim_id": cid,
+                        "first_match": (m.group(0) if (m := _BARE_NUMERAL.search(next((c.text for c in doc.claims if c.id == cid), ""))) else None),
+                    }
+                    for cid in bad_claim_ids[:5]
+                ],
             ),
         )]
 
@@ -819,6 +851,11 @@ def check_transition_phrase(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_count=len(bad_claim_ids),
                 total_independent=len(independents),
+                flagged_claim_id=bad_claim_ids[0] if bad_claim_ids else None,
+                findings=[
+                    {"claim_id": cid, "preamble": (next((c.text for c in doc.claims if c.id == cid), "") or "")[:120]}
+                    for cid in bad_claim_ids[:5]
+                ],
             ),
         )]
 
@@ -858,6 +895,14 @@ def check_cn_terminology(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 hit_count=len(found),
                 total_terms_scanned=len(_CNIPA_TERMS),
+                findings=[
+                    {
+                        "claim_id": c.id,
+                        "token": term,
+                    }
+                    for term in found[:5]
+                    for c in doc.claims if term in c.text
+                ][:5],
             ),
         )]
 
@@ -902,6 +947,14 @@ def check_spec_drawing_ref(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 hit_count=len(found_refs),
                 unique_patterns=len(set(found_refs)),
+                findings=[
+                    {
+                        "claim_id": c.id,
+                        "matched_phrase": m.group(0)[:80],
+                    }
+                    for c in doc.claims
+                    if (m := _SPEC_DRAWING_REF.search(c.text))
+                ][:5],
             ),
         )]
 
@@ -1094,6 +1147,8 @@ def check_title_subject_match(doc: TwPatentDocument) -> list[CheckItem]:
             title_charlen=len(title_norm),
             subject_count=len(subjects),
             total_independent=len(independents),
+            title_first_30=doc.title[:30],
+            subjects_sample=[(s or "")[:32] for s in subjects[:5]],
         ),
     )]
 
@@ -1180,6 +1235,8 @@ def check_claims_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckIt
                 missing_count=len(missing_numerals),
                 total_claim_numerals=len(claim_numerals),
                 total_symbol_numerals=len(symbol_numerals),
+                missing_sample=[n for n in missing_numerals[:10]],
+                first_missing=missing_numerals[0] if missing_numerals else None,
             ),
         )]
 
