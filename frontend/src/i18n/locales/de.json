@@ -233,7 +233,7 @@
     },
     "reportModal": {
       "title": "Anonym melden?",
-      "body": "Eine kleine strukturierte Datenmenge geht über HTTPS an PatentLint, damit wir diese Prüfung untersuchen können. Keine Ansprüche, keine Entwurfsinhalte, keine E-Mail-Adresse, keine IP-Protokollierung. Alle zu sendenden Felder sind unten sichtbar — nur Zahlen, Codepoints und Kategoriebezeichnungen.",
+      "body": "Eine kleine strukturierte Datenmenge geht über HTTPS an PatentLint, damit wir diese Prüfung untersuchen können. Keine substantiellen Anspruchstexte, keine vollständigen Absätze, keine E-Mail-Adresse, keine IP-Protokollierung. Alle zu sendenden Felder sind unten sichtbar — Zählwerte, der konkret markierte Begriff oder Ausdruck, etwa 30 Zeichen umgebender Kontext und Kategoriebezeichnungen. Alles anonymisiert.",
       "previewHeading": "Sendeinhalt:",
       "send": "Anonym senden",
       "cancel": "Abbrechen",
