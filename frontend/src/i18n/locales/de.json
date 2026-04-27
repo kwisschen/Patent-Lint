@@ -233,14 +233,14 @@
     },
     "reportModal": {
       "title": "Anonym melden?",
-      "body": "Eine kleine strukturierte Datenmenge geht über HTTPS an PatentLint, damit wir diese Prüfung untersuchen können. Keine substantiellen Anspruchstexte, keine vollständigen Absätze, keine E-Mail-Adresse, keine IP-Protokollierung. Alle zu sendenden Felder sind unten sichtbar — Zählwerte, der konkret markierte Begriff oder Ausdruck, etwa 30 Zeichen umgebender Kontext und Kategoriebezeichnungen. Alles anonymisiert.",
+      "body": "Ein kleines strukturiertes Paket geht über HTTPS an PatentLint, damit wir diese Prüfung untersuchen können: Zählwerte, der markierte Begriff oder Ausdruck, etwa 30 Zeichen umgebender Kontext und Kategoriebezeichnungen. Kein Anspruchstext, keine vollständigen Absätze, keine E-Mail, keine IP — und was Sie unten sehen, ist genau das, was bei uns ankommt.",
       "previewHeading": "Sendeinhalt:",
       "send": "Anonym senden",
       "cancel": "Abbrechen",
       "emailFallback": "Lieber per E-Mail? Per mailto senden",
       "toastSuccess": "Danke — Meldung empfangen.",
       "toastFailure": "Senden gerade nicht möglich — bitte per E-Mail versuchen.",
-      "deidNotice": "Berichte können nicht mit Ihrer Identität verknüpft werden. Keine E-Mail, keine IP, keine Kontoinformationen werden erfasst; die Felder oben sind anonymisierte Fragmente, die Ihnen vor dem Senden vollständig angezeigt werden."
+      "deidNotice": "Meldungen lassen sich nicht mit Ihrer Identität verknüpfen. Wir erfassen weder E-Mail noch IP oder Kontodaten; gesendet werden ausschließlich die oben gezeigten anonymisierten Fragmente."
     }
   },
   "cta": {
