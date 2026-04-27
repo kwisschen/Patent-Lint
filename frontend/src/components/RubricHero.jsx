@@ -132,8 +132,9 @@ export default function RubricHero({ data, animate = false }) {
         </div>
       </div>
 
-      {/* Trust line — preserves the No-AI badge invariant. */}
-      <p className="text-xs text-muted-foreground">{t('rubric.trust.line')}</p>
+      <p className="max-w-md rounded-lg bg-muted/40 px-4 py-2 text-center text-sm leading-relaxed text-foreground/85">
+        {t('rubric.trust.line')}
+      </p>
 
       {/* Discoverable link to the rubric exposition page. Replaces the
           raw cap-reason text — the explanation lives at /rubric where
