@@ -884,6 +884,9 @@ def check_claim_transitions(claims: list[Claim]) -> list[CheckItem]:
                 diagnostics=_dx(
                     flagged_claim_id=claim.id,
                     has_colon=":" in claim.text,
+                    total_claims=len(claims),
+                    preamble=(claim.text or "")[:120],
+                    claim_text_charlen=len(claim.text or ""),
                 ),
             ))
 
@@ -1016,12 +1019,16 @@ def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
                 diagnostics=_dx(
                     flagged_claim_id=claim.id,
                     transition=transition.lower(),
+                    total_claims=len(claims),
+                    matched_phrase=(markush_match.group(0) if markush_match else "")[:120],
+                    preamble=(claim.text or "")[:120],
                 ),
             ))
 
         # 4. Omnibus — all claims, requires short text + omnibus language
         word_count = len(claim.text.split())
-        if word_count < 50 and _OMNIBUS_LANG.search(claim.text):
+        omnibus_match = _OMNIBUS_LANG.search(claim.text)
+        if word_count < 50 and omnibus_match:
             results.append(CheckItem(
                 status="amend",
                 message=f"Claim {claim.id} appears to be an omnibus claim",
@@ -1038,6 +1045,9 @@ def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
                 diagnostics=_dx(
                     flagged_claim_id=claim.id,
                     word_count=word_count,
+                    total_claims=len(claims),
+                    matched_phrase=omnibus_match.group(0)[:120],
+                    preamble=(claim.text or "")[:120],
                 ),
             ))
 
@@ -1083,6 +1093,12 @@ def check_claim_punctuation(claims: list[Claim]) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_claim_id=claim_id,
                 last_codepoint=last_cp,
+                last_char_class=("digit" if text and text[-1].isdigit()
+                                 else "letter" if text and text[-1].isalpha()
+                                 else "punct" if text else "empty"),
+                claim_text_charlen=len(text),
+                total_claims=len(claims),
+                last_30_chars=text[-30:] if text else "",
             ),
         ))
 
@@ -1098,6 +1114,9 @@ def check_claim_punctuation(claims: list[Claim]) -> list[CheckItem]:
             diagnostics=_dx(
                 flagged_claim_id=claim_id,
                 period_count=text.count("."),
+                claim_text_charlen=len(text),
+                total_claims=len(claims),
+                preamble=text[:80] if text else "",
             ),
         ))
 
@@ -1113,6 +1132,8 @@ def check_claim_punctuation(claims: list[Claim]) -> list[CheckItem]:
                 flagged_claim_id=claim_id,
                 total_claims=len(claims),
                 reason_code="wherein_comma_irregular",
+                preamble=(claim_text_by_id.get(claim_id, "") or "")[:120],
+                wherein_count=claim_text_by_id.get(claim_id, "").lower().count("wherein"),
             ),
         ))
 

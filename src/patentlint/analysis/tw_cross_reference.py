@@ -62,6 +62,15 @@ def check_symbol_vs_rep_drawing(doc: TwPatentDocument) -> list[CheckItem]:
                 name_mismatch_count=name_mismatch,
                 total_rep_symbols=len(doc.representative_drawing_symbols),
                 total_table_entries=len(doc.symbol_table),
+                findings=[
+                    {
+                        "kind": m["kind"],
+                        "numeral_charlen": len(m.get("numeral") or ""),
+                        "rep_name_charlen": len(m.get("rep_name") or ""),
+                        "table_name_charlen": len(m.get("table_name") or "") if m.get("table_name") is not None else None,
+                    }
+                    for m in mismatches[:5]
+                ],
             ),
         )]
 
@@ -112,6 +121,11 @@ def check_bracket_format(doc: TwPatentDocument) -> list[CheckItem]:
         reference="專利法施行細則 §17",
         diagnostics=_dx(
             flagged_count=len(flagged),
+            findings=[
+                {"header_charlen": len(h), "first_char_codepoint": ord(h[0]) if h else None, "last_char_codepoint": ord(h[-1]) if h else None}
+                for h in flagged[:5]
+            ],
+            sample_headers=[h[:32] for h in flagged[:5]],
         ),
     )]
 
@@ -177,6 +191,8 @@ def check_figures_sequential(doc: TwPatentDocument) -> list[CheckItem]:
                 missing_count=len(missing),
                 found_max=max_n,
                 total_figures_found=len(numbers),
+                missing_sample=missing[:10],
+                first_missing=missing[0] if missing else None,
             ),
         )]
 
