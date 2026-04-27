@@ -231,8 +231,8 @@
       "diagnosticHeader": "Diagnose-Spur (anonymisiert — siehe Datenschutz §6):"
     },
     "reportModal": {
-      "title": "Anonym melden?",
-      "body": "Ein kleines strukturiertes Paket geht über HTTPS an PatentLint, damit wir diese Prüfung untersuchen können: Zählwerte, der markierte Begriff oder Ausdruck, etwa 30 Zeichen umgebender Kontext und Kategoriebezeichnungen. Kein Anspruchstext, keine vollständigen Absätze, keine E-Mail, keine IP — und was Sie unten sehen, ist genau das, was bei uns ankommt.",
+      "title": "Anonyme Meldung senden?",
+      "body": "Ein kleines strukturiertes Paket geht über HTTPS an PatentLint, damit wir diese Prüfung untersuchen können: Zählwerte, der markierte Begriff oder Ausdruck, etwa 30 Zeichen umgebender Kontext und Kategoriebezeichnungen. Keinen vollständigen Anspruchstext, keine vollständigen Absätze, keine E-Mail, keine IP — und was Sie unten sehen, ist genau das, was bei uns ankommt.",
       "previewHeading": "Sendeinhalt:",
       "send": "Anonym senden",
       "cancel": "Abbrechen",
