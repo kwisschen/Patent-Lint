@@ -66,8 +66,8 @@ export default function RubricHero({ data, animate = false }) {
   // Defensive: if no grade *and* no findings, render nothing (caller handles).
   if (!grade && total === 0) return null
 
-  const size = 168
-  const strokeWidth = 16
+  const size = 144
+  const strokeWidth = 14
   const radius = (size - strokeWidth) / 2
   const circumference = 2 * Math.PI * radius
 
@@ -98,7 +98,7 @@ export default function RubricHero({ data, animate = false }) {
   const letterColor = letterColorVar(letter)
 
   return (
-    <FrostCard tier="hero" className="flex flex-col items-center gap-5 px-6 py-8 sm:px-10 sm:py-10">
+    <FrostCard tier="elevated" className="flex flex-col items-center gap-3 px-4 py-5 sm:px-6 sm:py-6">
       <div className="relative" style={{ width: size, height: size }}>
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
           {arcs.map((arc) => (
@@ -120,13 +120,13 @@ export default function RubricHero({ data, animate = false }) {
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
           <span
-            className="text-6xl font-bold tracking-tight"
+            className="text-5xl font-bold tracking-tight"
             style={{ color: letterColor, textShadow: '0 1px 2px rgba(15,23,42,0.06)' }}
           >
             {letter}
           </span>
           {grade && (
-            <span className="mt-2 text-xs font-medium text-muted-foreground">
+            <span className="mt-1.5 text-xs font-medium text-muted-foreground">
               {animatedScore} / 100
             </span>
           )}
