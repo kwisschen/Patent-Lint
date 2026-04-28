@@ -28,6 +28,12 @@ export default function PageCTA() {
       </p>
       <button
         onClick={() => navigate('/')}
+        // Override --shine-color for the CTA button: it's bg-primary
+        // (near-black in light, near-white in dark), so the default
+        // tinted-blue-at-22% gets lost. White at 50% alpha gives strong
+        // screen-blend contrast against the dark face in light mode and
+        // a bright accent against the light face in dark mode.
+        style={{ '--shine-color': 'rgba(255, 255, 255, 0.5)' }}
         className="cta-button shine-on-hover inline-flex items-center gap-2 px-8 py-3 rounded-full bg-primary text-primary-foreground font-semibold text-base shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer"
       >
         <FileSearch size={18} />
