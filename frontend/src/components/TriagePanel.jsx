@@ -9,6 +9,7 @@ import { formatDetails } from '../lib/detailsFormatter'
 import { composeFeedback, sendReport } from '../lib/feedback'
 import { useFeedback } from './FeedbackPicker'
 import { Button } from './ui/button'
+import { FrostCard } from './ui/frost-card'
 import FlaggedTermList from './FlaggedTermList'
 import ReportModal from './ReportModal'
 
@@ -121,26 +122,25 @@ function TriageGroup({ status, title, emptyMessage, Icon, items, defaultOpen, t,
   const compact = status === 'pass'
 
   return (
-    <div>
+    <FrostCard tier="resting" accent={status} className="overflow-visible">
       <button
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left transition-colors hover:opacity-90"
-        style={{
-          borderLeft: `4px solid var(--${status}-border)`,
-          backgroundColor: `var(--${status}-bg)`,
-        }}
+        className="flex w-full items-center gap-3 px-4 py-3 pl-5 text-left transition-colors duration-[var(--motion-duration-fast)] hover:bg-foreground/[0.02]"
+        style={{ backgroundColor: `var(--${status}-bg)`, color: `var(--${status}-tag-text)` }}
+        aria-expanded={open}
       >
         <Icon className="h-5 w-5 shrink-0" style={{ color: `var(--${status}-text)` }} />
         <span className="font-semibold flex-1">{title}</span>
-        <span className="text-xs font-medium" style={{ color: `var(--${status}-tag-text)` }}>
+        <span className="text-xs font-medium tabular-nums">
           {count} {count === 1 ? t('triage.item') : t('triage.items')}
         </span>
         <ChevronDown
-          className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          className={`h-4 w-4 transition-transform duration-[var(--motion-duration-base)] ${open ? 'rotate-180' : ''}`}
+          style={{ color: `var(--${status}-text)` }}
         />
       </button>
       {open && (
-        <div className="mt-1 rounded-lg border bg-card p-1 animate-in fade-in-0 slide-in-from-top-1 duration-200">
+        <div className="border-t border-border/40 p-1 animate-in fade-in-0 slide-in-from-top-1 duration-[var(--motion-duration-base)]">
           {count === 0 && emptyMessage ? (
             <p className="px-3 py-2 text-sm text-muted-foreground">{emptyMessage}</p>
           ) : (
@@ -150,7 +150,7 @@ function TriageGroup({ status, title, emptyMessage, Icon, items, defaultOpen, t,
           )}
         </div>
       )}
-    </div>
+    </FrostCard>
   )
 }
 

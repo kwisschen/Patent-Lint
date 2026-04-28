@@ -34,8 +34,9 @@ export function TranslationNote({ noteKey }) {
     <aside
       ref={ref}
       role="note"
-      className="rounded-md border border-border/60 bg-muted/40 px-4 py-3 flex items-start gap-2.5 text-xs sm:text-sm text-muted-foreground italic"
+      className="rounded-md ring-1 ring-[var(--frost-resting-border)] shadow-[var(--frost-resting-shadow),var(--frost-resting-inner-light)] px-4 py-3 flex items-start gap-2.5 text-xs sm:text-sm text-muted-foreground italic"
       style={{
+        backgroundImage: 'var(--frost-resting-bg)',
         opacity: isInView ? 1 : 0,
         transform: isInView ? 'translateY(0)' : 'translateY(8px)',
         transition: 'opacity 0.5s var(--ease-bounce), transform 0.5s var(--ease-bounce)',

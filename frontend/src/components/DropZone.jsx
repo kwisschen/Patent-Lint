@@ -48,15 +48,18 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
         {...getRootProps()}
         className={`
           flex flex-col items-center justify-center gap-4
-          w-full max-w-lg p-6 md:p-12 rounded-lg
+          w-full max-w-lg p-6 md:p-12 rounded-xl
           border-2 cursor-pointer
-          transition-all duration-200
+          transition-all duration-[var(--motion-duration-base)]
           ${isDragActive
-            ? 'border-solid border-[var(--pass-border)] bg-blue-50/50 dark:bg-blue-950/30 scale-[1.015]'
-            : 'border-dashed border-gray-300 dark:border-gray-600 hover:border-muted-foreground/50 dropzone-breathe'
+            ? 'border-solid border-[var(--pass-border)] bg-blue-50/50 dark:bg-blue-950/30 scale-[1.015] shadow-[var(--frost-elevated-shadow)]'
+            : 'border-dashed border-gray-300 dark:border-gray-600 hover:border-muted-foreground/50 dropzone-breathe shadow-[var(--frost-resting-shadow)]'
           }
         `}
-        style={isDragActive ? { transitionTimingFunction: 'var(--ease-bounce)' } : undefined}
+        style={{
+          backgroundImage: isDragActive ? undefined : 'var(--frost-resting-bg)',
+          ...(isDragActive ? { transitionTimingFunction: 'var(--ease-bounce)' } : {}),
+        }}
       >
         <input {...getInputProps()} />
         <FilePlus2 className={`h-10 w-10 transition-colors duration-200 ${isDragActive ? 'text-[var(--pass-text)]' : 'text-muted-foreground'}`} />

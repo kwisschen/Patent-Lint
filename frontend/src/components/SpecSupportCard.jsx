@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FileSearch, ChevronRight, Flag } from 'lucide-react'
 import { Button } from './ui/button'
+import { FrostCard } from './ui/frost-card'
+import { StatusPill } from './ui/status-pill'
 import { composeFeedback, sendReport } from '../lib/feedback'
 import { useFeedback } from './FeedbackPicker'
 import ReportModal from './ReportModal'
@@ -146,25 +148,15 @@ export default function SpecSupportCard({ unsupportedTerms, jurisdiction }) {
   const totalItems = unsupportedTerms.length
 
   return (
-    <div
-      className="rounded-lg border-l-4 border bg-card overflow-hidden"
-      style={{ borderLeftColor: 'var(--attention-border)' }}
-    >
-      <div className="flex items-center gap-3 px-4 py-3">
+    <FrostCard tier="resting" accent="attention">
+      <div className="flex items-center gap-3 px-4 py-3 pl-5">
         <FileSearch className="h-5 w-5 shrink-0" style={{ color: 'var(--attention-border)' }} />
         <h3 className="text-sm font-semibold flex-1">{t('specSupport.title')}</h3>
-        <span
-          className="rounded-full px-2.5 py-0.5 text-xs font-bold"
-          style={{
-            backgroundColor: 'var(--attention-bg)',
-            color: 'var(--attention-text)',
-            border: '1px solid var(--attention-border)',
-          }}
-        >
+        <StatusPill status="attention" shape="pill">
           {totalItems} {totalItems !== 1 ? t('specSupport.items') : t('specSupport.item')}
-        </span>
+        </StatusPill>
       </div>
-      <div className="border-t px-1 py-1">
+      <div className="border-t border-border/40 px-1 py-1">
         {claimIds.map((id) => (
           <ClaimRow
             key={id}
@@ -175,6 +167,6 @@ export default function SpecSupportCard({ unsupportedTerms, jurisdiction }) {
           />
         ))}
       </div>
-    </div>
+    </FrostCard>
   )
 }

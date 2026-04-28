@@ -27,9 +27,9 @@ export default function Header({ onReset, canReset }) {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
+      className={`sticky top-0 z-50 w-full border-b transition-all duration-[var(--motion-duration-base)] ${
         scrolled
-          ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm'
+          ? 'frost-blur-md bg-background/70 supports-[backdrop-filter]:bg-background/60 shadow-[var(--frost-resting-shadow)] border-[var(--frost-resting-border)]'
           : 'bg-background border-border'
       }`}
     >
