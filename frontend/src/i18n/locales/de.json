@@ -28,6 +28,12 @@
     "rejectTw": "Nur .docx-Dateien werden akzeptiert",
     "rejectMultipleTypeTw": "Bitte eine einzelne .docx-Datei ablegen."
   },
+  "home": {
+    "pricing": {
+      "individuals": "Kostenlos für Einzelpersonen",
+      "firms": "Für Team-Bereitstellung"
+    }
+  },
   "summary": {
     "specParagraphs": "Absätze der Beschreibung",
     "claims": "Ansprüche",
@@ -139,6 +145,7 @@
     "builtBy": "© 2025 Christopher Chen",
     "security": "Sicherheit",
     "about": "Über",
+    "commercial": "Lizenzierung",
     "terms": "AGB",
     "privacy": "Datenschutz",
     "github": "GitHub",
@@ -199,7 +206,6 @@
       "fieldIssueCount": "Funde",
       "fieldFindings": "Funde",
       "fieldTerm": "Begriff",
-      "fieldReferenceForm": "Bezugsform",
       "fieldDidYouMean": "Meinten Sie",
       "fieldDidYouMeanClaimId": "Aus Anspruch",
       "fieldCategory": "Kategorie",
@@ -602,6 +608,94 @@
     "builderSister": "Das Schwesterprojekt, der Agentic Patent Analyst, übernimmt die argumentationsintensive Arbeit und nutzt intern feinjustierte LLM-Agenten für Stand-der-Technik-Recherche und Anspruchsabdeckungsanalyse.",
     "tableFootnote": "Stand: April 2026. Beide Systeme können weiterentwickelt werden.",
     "twTableFootnote": "TIPO-Abdeckung abgeglichen mit 專利申請文件輔助偵錯系統 — 功能介紹與使用指南 (Ausgabe 30.05.2023). TIPO 偵錯系統 unterstützt nur Gebrauchsmuster-Anmeldungen; PatentLint unterstützt Gebrauchsmuster und Erfindungspatente. Beide Systeme können weiterentwickelt werden."
+  },
+  "commercial": {
+    "hero": {
+      "title": "PatentLint für Unternehmen",
+      "subtitle": "Für Einzelpraktiker stets kostenlos. Enterprise-Option für Organisationen — SLA, SSO, Datenhoheit, eigene Regelpakete, eigene Rubrik-Gewichtungen, Audit-Trail.",
+      "body": "Dieselbe rein clientseitige Prüf-Engine, die Sie auf patentlint.com überprüfen können — eingesetzt hinter Ihrer Firewall unter einer kommerziellen Lizenz. Patentschriften verlassen Ihr Netzwerk niemals. Kein Upload, kein Konto, kein KI-Einsatz — unter der Kontrolle Ihrer IT.",
+      "cta": "Evaluierung anfragen"
+    },
+    "popular": "Am beliebtesten",
+    "feeNote": "Jährliche Pauschalgebühr, kalenderjahrgebundene Erneuerung.",
+    "pricing": {
+      "heading": "Preise",
+      "subheading": "Zwei Tarife. Vertrauensbasierte Selbstauskunft. Keine Nutzungsmessung, keine Sitzplatz-Zählung.",
+      "footnote": "Preise in USD. Erneuerungsrechnungen werden 60 Tage vor dem 1. Januar gestellt. 60-tägige Kündigungsfrist. Die fortgesetzte Nutzung der bei Ihnen installierten Version bleibt nach Nichtverlängerung dauerhaft zulässig."
+    },
+    "standalone": {
+      "name": "Einzelplatz",
+      "size": "1–20 Patentfachleute",
+      "fee": "$3.500 / Jahr",
+      "cta": "Anfragen",
+      "features": [
+        "Alle Jurisdiktionen (US, CN, TW; EU/JP/KR in Entwicklung)",
+        "Alle {{count}} Prüfungen, bewertet über die 5 Rubrik-Abschnitte",
+        "Air-Gap-Bereitstellung (kein Internet nach Installation erforderlich)",
+        "E-Mail-Support, 2 Werktage Reaktionszeit",
+        "Quartalsweise getaggte Releases",
+        "30-tägige Evaluierung, Rechnung erstattungsfähig",
+        "PolyForm-Strict-1.0.0 zzgl. kommerzielles Beibrief"
+      ]
+    },
+    "firm": {
+      "name": "Unternehmen",
+      "size": "21+ Patentfachleute",
+      "fee": "$7.000 / Jahr",
+      "cta": "Anfragen",
+      "features": [
+        "Alles aus Einzelkanzlei enthalten",
+        "SSO bei Verfügbarkeit (OIDC) — ohne Aufpreis",
+        "Auditprotokoll aktivierbar (lokale Datei, keine Telemetrie)",
+        "Optionales Custom-Regelpaket-Add-on",
+        "Vorrang bei Funktionswünschen in den Quartalsbesprechungen",
+        "Optionaler informeller Slack-Connect-Kanal"
+      ]
+    },
+    "faq": {
+      "heading": "Häufige Fragen",
+      "q1": {
+        "q": "Wo läuft die Prüfung?",
+        "a": "Hinter Ihrer Firewall. Das Docker-Image läuft auf Ihrer Infrastruktur; Entwürfe verlassen Ihr Netzwerk niemals. Dieselbe rein clientseitige Architektur wie patentlint.com, von Ihrer IT betrieben."
+      },
+      "q2": {
+        "q": "Wird nach der Installation Internet benötigt?",
+        "a": "Nein. Das Docker-Image läuft nach dem ersten Build vollständig air-gapped. Die einzige ausgehende Netzwerkverbindung erfolgt, wenn Ihre IT ein neues getaggtes Release aus dem Quell-Repository bezieht."
+      },
+      "q3": {
+        "q": "ITAR / Datensouveränität?",
+        "a": "Air-Gap-Bereitstellung erfüllt typische ITAR- und Datenresidenz-Anforderungen ohne Zusatzmodul. Wir verkaufen kein separates ITAR-Modul — die Architektur ist die Antwort."
+      },
+      "q4": {
+        "q": "Wie häufig erscheinen Releases?",
+        "a": "Quartalsweise getaggte Releases (v1.0, v1.1, v1.2, v1.3) mit ausführlichen Release-Notes, die auf Änderungen von MPEP / 專利法 / 审查指南 verweisen. Patch-Releases nach Bedarf. Ihre IT zieht den Release, wenn es passt; niemals automatisch."
+      },
+      "q5": {
+        "q": "Was ist ein Custom-Regelpaket?",
+        "a": "Übersetzung Ihres organisationsinternen Stilhandbuchs in ein privates Regelpaket-Modul, das neben den {{count}} Standardprüfungen geladen wird. Beidseitig vertraulich. Preise pro Engagement; typischer Rahmen $8.000–$25.000 einmalig zuzüglich jährlicher Pflege."
+      },
+      "q6": {
+        "q": "Wie ist die Lizenzierung gestaltet?",
+        "a": "PolyForm-Strict-1.0.0 (quelloffen, öffentlich) zuzüglich eines einseitigen kommerziellen Beibriefs für die interne kommerzielle Nutzung. Der Beibrief ist eine Seite lang; die Prüfung durch die Rechtsabteilung dauert in der Regel unter 30 Minuten."
+      },
+      "q7": {
+        "q": "Wie überprüfen wir, was tatsächlich läuft?",
+        "a": "Jedes Release ist mit einem dedizierten PatentLint-Signaturschlüssel PGP-signiert. Der Verifizierungsleitfaden befindet sich im Repository (RELEASE_VERIFICATION.md). Ihre IT prüft die Signaturen vor der Bereitstellung als Teil der üblichen Release-Hygiene."
+      },
+      "q8": {
+        "q": "Evaluierungszeitraum?",
+        "a": "14 Tage ab dem Wirksamkeitsdatum. Volle Funktionalität, keine Zeitsperre, keine Funktionseinschränkung. Bei Nichtfortführung wird der anteilige Rest der Jahresgebühr erstattet, abzüglich des Werts bereits erbrachter Onboarding-Leistungen (Kick-off-Gespräch, Bereitstellungshilfe, individuelle Konfiguration)."
+      }
+    },
+    "trustVerify": {
+      "body": "Sicherheitsarchitektur unabhängig prüfen:",
+      "security": "Sicherheitsdetails",
+      "privacy": "Datenschutzerklärung"
+    },
+    "finalCta": {
+      "body": "Beschreiben Sie kurz Ihren Einsatzbedarf. Sie erhalten zurück einen einseitigen Beibrief und ein auf Ihr Unternehmen zugeschnittenes Angebot.",
+      "button": "Anfrage senden"
+    }
   },
   "details": {
     "paragraphs": "Absätze: {{list}}",
