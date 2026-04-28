@@ -1541,7 +1541,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "This grade helps you fix formal requirements, and is not a judgment on how the draft reads."
+      "line": "This grade helps you fix formal requirements. It is not a judgment on how the draft reads."
     },
     "completenessGate": {
       "title": "Draft incomplete — grade unavailable",
