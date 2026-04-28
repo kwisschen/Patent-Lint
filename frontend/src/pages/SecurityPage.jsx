@@ -30,10 +30,10 @@ function HeroSection({ onShowProveIt }) {
   const { t } = useTranslation()
   const location = useLocation()
   const [ref, isInView] = useInView()
-  const [gifKey, setGifKey] = useState(Date.now())
+  const [demoKey, setDemoKey] = useState(Date.now())
 
   useEffect(() => {
-    setGifKey(Date.now())
+    setDemoKey(Date.now())
   }, [location.key])
 
   return (
@@ -62,10 +62,15 @@ function HeroSection({ onShowProveIt }) {
         {t('security.page.heroSubtext')}
       </p>
 
-      <img
-        key={gifKey}
-        src={`/airplane-demo.gif?v=${gifKey}`}
-        alt={t('security.airplaneDemoAlt')}
+      <video
+        key={demoKey}
+        src={`/airplane-demo.mp4?v=${demoKey}`}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-label={t('security.airplaneDemoAlt')}
         className="frost-card-elevated w-full max-w-2xl mx-auto"
       />
 
