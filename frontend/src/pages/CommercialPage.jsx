@@ -71,10 +71,13 @@ function PricingCard({ tier, onInquire, popular = false }) {
   const [ref, isInView] = useInView()
   const features = t(`commercial.${tier}.features`, { returnObjects: true, count: CHECKS_DISPLAY }) || []
 
+  // Wrap the FrostCard in an outer relative div: the badge positioning needs
+  // overflow:visible (so -top-3 isn't clipped on mobile), but the FrostCard
+  // itself needs overflow:hidden to contain its inner-light highlight + sheen.
   return (
     <div
       ref={ref}
-      className={`relative ${popular ? 'frost-card-hero' : 'frost-card-elevated'} p-6 sm:p-8 flex flex-col`}
+      className="relative h-full"
       style={{
         opacity: isInView ? 1 : 0,
         transform: isInView ? 'translateY(0)' : 'translateY(16px)',
@@ -82,43 +85,45 @@ function PricingCard({ tier, onInquire, popular = false }) {
       }}
     >
       {popular && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-blue-600 text-white text-xs font-semibold">
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 px-3 py-0.5 rounded-full bg-blue-600 text-white text-xs font-semibold whitespace-nowrap shadow-md">
           {t('commercial.popular')}
         </span>
       )}
-      <h3 className="text-xl font-bold text-foreground">
-        {t(`commercial.${tier}.name`)}
-      </h3>
-      <p className="text-sm text-muted-foreground mt-1">
-        {t(`commercial.${tier}.size`)}
-      </p>
-      <p className="text-3xl font-bold text-foreground mt-4">
-        {t(`commercial.${tier}.fee`)}
-      </p>
-      <p className="text-xs text-muted-foreground">
-        {t('commercial.feeNote')}
-      </p>
+      <div className={`${popular ? 'frost-card-hero' : 'frost-card-elevated'} p-6 sm:p-8 flex flex-col h-full`}>
+        <h3 className="text-xl font-bold text-foreground">
+          {t(`commercial.${tier}.name`)}
+        </h3>
+        <p className="text-sm text-muted-foreground mt-1">
+          {t(`commercial.${tier}.size`)}
+        </p>
+        <p className="text-3xl font-bold text-foreground mt-4">
+          {t(`commercial.${tier}.fee`)}
+        </p>
+        <p className="text-xs text-muted-foreground">
+          {t('commercial.feeNote')}
+        </p>
 
-      <ul className="mt-6 space-y-2.5 flex-1">
-        {Array.isArray(features) && features.map((feature, i) => (
-          <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-            <Check className="h-4 w-4 mt-0.5 shrink-0 text-blue-500" aria-hidden="true" />
-            <span>{feature}</span>
-          </li>
-        ))}
-      </ul>
+        <ul className="mt-6 space-y-2.5 flex-1">
+          {Array.isArray(features) && features.map((feature, i) => (
+            <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+              <Check className="h-4 w-4 mt-0.5 shrink-0 text-blue-500" aria-hidden="true" />
+              <span>{feature}</span>
+            </li>
+          ))}
+        </ul>
 
-      <button
-        onClick={onInquire}
-        className={`mt-6 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-colors ${
-          popular
-            ? 'bg-blue-600 hover:bg-blue-700 text-white'
-            : 'bg-secondary hover:bg-secondary/80 text-foreground'
-        }`}
-      >
-        {t(`commercial.${tier}.cta`)}
-        <ArrowRight className="h-4 w-4" />
-      </button>
+        <button
+          onClick={onInquire}
+          className={`mt-6 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-colors ${
+            popular
+              ? 'bg-blue-600 hover:bg-blue-700 text-white'
+              : 'bg-secondary hover:bg-secondary/80 text-foreground'
+          }`}
+        >
+          {t(`commercial.${tier}.cta`)}
+          <ArrowRight className="h-4 w-4" />
+        </button>
+      </div>
     </div>
   )
 }

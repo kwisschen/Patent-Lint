@@ -206,7 +206,6 @@
       "fieldIssueCount": "Issues found",
       "fieldFindings": "Findings",
       "fieldTerm": "Term",
-      "fieldReferenceForm": "Reference form",
       "fieldDidYouMean": "Did you mean",
       "fieldDidYouMeanClaimId": "Suggested from claim",
       "fieldCategory": "Category",
@@ -613,8 +612,8 @@
   "commercial": {
     "hero": {
       "title": "PatentLint for enterprises",
-      "subtitle": "Always free for individual practitioners. Enterprise option for organizations — SLA, SSO, data custody, custom rule packs, custom rubric weights, audit trail.",
-      "body": "The same client-side analysis engine you can audit at patentlint.com, deployed inside your firewall under a commercial license. Drafts never leave your network. No upload, no account, no AI — under your IT's control.",
+      "subtitle": "Always free for individual use. Enterprise option for organizations — SLA, SSO, data custody, custom rule packs, custom rubric weights, audit trail.",
+      "body": "Deploy the same analysis engine inside your firewall, commercially licensed for client work. Optional SSO, audit trail, and custom rule packs that translate your house style. Drafts never leave your network. No upload, no account, no AI.",
       "cta": "Request evaluation"
     },
     "popular": "Most popular",
@@ -625,7 +624,7 @@
       "footnote": "Prices listed in USD. Renewals invoiced 60 days before each January 1. Sixty-day cancellation notice. Continued use of the version installed on your systems remains permitted indefinitely after non-renewal."
     },
     "standalone": {
-      "name": "Standalone",
+      "name": "Team",
       "size": "1–20 patent practitioners",
       "fee": "$3,500 / year",
       "cta": "Inquire",
