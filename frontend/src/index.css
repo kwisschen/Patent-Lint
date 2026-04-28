@@ -130,6 +130,39 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Frost surface system (light) — three tiers of layered translucent glass.
+     Use --frost-{tier}-bg as background, --frost-{tier}-border for outline,
+     --frost-{tier}-shadow for ambient depth, --frost-{tier}-inner-light for
+     a subtle top highlight that reads as glass on rendering surfaces that
+     support inset shadows. */
+  --frost-resting-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(248, 250, 252, 0.62));
+  --frost-resting-border: rgba(15, 23, 42, 0.06);
+  --frost-resting-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
+  --frost-resting-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+
+  --frost-elevated-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.7));
+  --frost-elevated-border: rgba(15, 23, 42, 0.08);
+  --frost-elevated-shadow: 0 4px 6px rgba(15, 23, 42, 0.05), 0 10px 15px rgba(15, 23, 42, 0.08);
+  --frost-elevated-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+
+  --frost-hero-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.75));
+  --frost-hero-border: rgba(15, 23, 42, 0.1);
+  --frost-hero-shadow: 0 10px 25px rgba(15, 23, 42, 0.08), 0 20px 40px rgba(15, 23, 42, 0.06);
+  --frost-hero-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  /* Status frost overlays — layered on top of --pass-bg / --verify-bg /
+     --amend-bg / --attention-bg to give the colored chip a subtle glass
+     sheen instead of a flat fill. */
+  --pass-frost-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent);
+  --verify-frost-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent);
+  --amend-frost-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent);
+  --attention-frost-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent);
+
+  /* Motion — durations to harmonize transitions across the design. */
+  --motion-duration-fast: 150ms;
+  --motion-duration-base: 250ms;
+  --motion-duration-slow: 400ms;
 }
 
 .dark {
@@ -204,6 +237,29 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Frost surface system (dark) — translucent slate over the dark
+     background; inner-light is far subtler than light mode (white at
+     low opacity reads as a faint highlight rather than a glow). */
+  --frost-resting-bg: linear-gradient(180deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.45));
+  --frost-resting-border: rgba(255, 255, 255, 0.06);
+  --frost-resting-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --frost-resting-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  --frost-elevated-bg: linear-gradient(180deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.55));
+  --frost-elevated-border: rgba(255, 255, 255, 0.08);
+  --frost-elevated-shadow: 0 4px 6px rgba(0, 0, 0, 0.5), 0 10px 15px rgba(0, 0, 0, 0.4);
+  --frost-elevated-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+  --frost-hero-bg: linear-gradient(180deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.65));
+  --frost-hero-border: rgba(255, 255, 255, 0.1);
+  --frost-hero-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 20px 40px rgba(0, 0, 0, 0.4);
+  --frost-hero-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+  --pass-frost-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent);
+  --verify-frost-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent);
+  --amend-frost-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent);
+  --attention-frost-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent);
 }
 
 @layer base {
@@ -432,6 +488,22 @@
 .dark .feature-card__sheen {
   mix-blend-mode: plus-lighter;
   opacity: 0.4;
+}
+
+/* Frost-blur utility classes — pair with --frost-*-bg backgrounds to give
+   surfaces an actual backdrop blur where supported. Browser-only effect;
+   PDFs degrade gracefully to the gradient backgrounds. */
+.frost-blur-sm {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.frost-blur-md {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.frost-blur-lg {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 /* Respect reduced motion */
