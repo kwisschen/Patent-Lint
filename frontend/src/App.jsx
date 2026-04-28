@@ -164,10 +164,10 @@ function App() {
                         role="radio"
                         aria-checked={jurisdiction === j}
                         onClick={() => setJurisdiction(j)}
-                        className={`relative flex items-center gap-1 sm:gap-1.5 rounded-md px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium whitespace-nowrap transition-colors duration-[var(--motion-duration-fast)] ${
+                        className={`relative flex items-center gap-1 sm:gap-1.5 rounded-md px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium whitespace-nowrap transition-all duration-[var(--motion-duration-fast)] ${
                           jurisdiction === j
-                            ? 'bg-background text-foreground shadow-sm'
-                            : 'text-muted-foreground hover:text-foreground'
+                            ? 'bg-card text-foreground shadow-md ring-1 ring-foreground/15'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-card/40'
                         }`}
                       >
                         <JurisdictionBadge code={j} />

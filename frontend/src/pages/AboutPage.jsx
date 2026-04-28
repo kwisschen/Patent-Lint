@@ -514,10 +514,10 @@ function ComparisonTable({ t }) {
               role="radio"
               aria-checked={activeTab === j}
               onClick={() => setActiveTab(j)}
-              className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+              className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all ${
                 activeTab === j
-                  ? 'bg-background text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'bg-card text-foreground shadow-md ring-1 ring-foreground/15'
+                  : 'text-muted-foreground hover:text-foreground hover:bg-card/40'
               }`}
             >
               <JurisdictionBadge code={j} />
