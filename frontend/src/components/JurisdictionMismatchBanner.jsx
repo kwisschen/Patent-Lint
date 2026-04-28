@@ -33,7 +33,7 @@ export default function JurisdictionMismatchBanner({
         <h2 className="text-xl font-bold mb-3" style={{ color: 'var(--attention-text)' }}>
           {t('results.jurisdictionMismatchTitle', { suggested: suggestedLabel })}
         </h2>
-        <p className="text-sm leading-relaxed mb-6 text-foreground/80">
+        <p className="text-sm leading-relaxed mb-6 text-foreground">
           {t('results.jurisdictionMismatchDetails', {
             selected: selectedLabel,
             suggested: suggestedLabel,

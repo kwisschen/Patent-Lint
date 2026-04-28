@@ -151,7 +151,7 @@ export default function RubricHero({ data, animate = false }) {
 
       <div className="w-full border-t border-border/40" aria-hidden="true" />
 
-      <p className="max-w-md text-center text-sm leading-relaxed text-foreground/85">
+      <p className="max-w-md text-center text-sm leading-relaxed text-foreground">
         {t('rubric.trust.line')}
       </p>
 

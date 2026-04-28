@@ -19,7 +19,7 @@ export default function ScannedDocBanner({ onReset }) {
         <h2 className="text-xl font-bold mb-3" style={{ color: 'var(--attention-text)' }}>
           {t('results.scannedDocWarning')}
         </h2>
-        <p className="text-sm leading-relaxed mb-6 text-foreground/80">
+        <p className="text-sm leading-relaxed mb-6 text-foreground">
           {t('results.scannedDocWarningDetails')}
         </p>
         <Button variant="outline" onClick={onReset}>

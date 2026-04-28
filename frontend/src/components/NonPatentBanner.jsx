@@ -67,7 +67,7 @@ export default function NonPatentBanner({ onShowResults, jurisdiction, reason = 
         <h2 className="text-xl font-bold mb-3" style={{ color: 'var(--attention-text)' }}>
           {t(warningKey)}
         </h2>
-        <p className="text-sm leading-relaxed mb-6 text-foreground/80">
+        <p className="text-sm leading-relaxed mb-6 text-foreground">
           {t(detailsKey)}
         </p>
         <Button variant="outline" onClick={onShowResults}>
