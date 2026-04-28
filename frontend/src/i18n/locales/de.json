@@ -1297,7 +1297,8 @@
     },
     "passedSummary": {
       "title": "Bestandene Prüfungen"
-    }
+    },
+    "similarFindings": "   + {{count}} weitere ähnliche Befunde derselben Prüfung"
   },
   "checks": {
     "preamble_cross_category_mismatch": "Anspruchskategorien-Abweichung zwischen abhängigem und unabhängigem Anspruch (§ 112(d)).",
@@ -1540,7 +1541,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "Bewertet die Form, nicht den Inhalt Ihres Entwurfs. Jeder Befund ist behebbar."
+      "line": "Diese Bewertung hilft Ihnen, formale Anforderungen zu beheben, und beurteilt nicht, wie die Anmeldung selbst geschrieben ist."
     },
     "completenessGate": {
       "title": "Schrift unvollständig — keine Bewertung verfügbar",

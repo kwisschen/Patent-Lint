@@ -1297,7 +1297,8 @@
     },
     "passedSummary": {
       "title": "通過項目"
-    }
+    },
+    "similarFindings": "   ＋類似情形 {{count}} 件（同一檢查項目）"
   },
   "checks": {
     "preamble_cross_category_mismatch": "附屬項與獨立項之前言類型不一致（跨類別）（§ 112(d)）。",
@@ -1542,7 +1543,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "此評等僅就形式要件，非評斷稿件內容；所有項目皆可修正。"
+      "line": "此評等僅用於協助修正形式要件，非評斷稿件內容。"
     },
     "completenessGate": {
       "title": "稿件不完整：無法評等",

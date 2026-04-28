@@ -1297,7 +1297,8 @@
     },
     "passedSummary": {
       "title": "通过项目"
-    }
+    },
+    "similarFindings": "   ＋类似情形 {{count}} 件（同一检查项目）"
   },
   "checks": {
     "preamble_cross_category_mismatch": "从属权利要求与独立权利要求的前序部分类型不一致（跨类别）（§ 112(d)）。",
@@ -1542,7 +1543,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "此评分仅针对形式要件，并非评判文稿内容；所有项目均可修正。"
+      "line": "此评等仅用于协助修正形式要件，非评判文稿内容。"
     },
     "completenessGate": {
       "title": "稿件不完整，无法评等",

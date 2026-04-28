@@ -1297,7 +1297,8 @@
     },
     "passedSummary": {
       "title": "통과 항목"
-    }
+    },
+    "similarFindings": "   ＋동일 검사 항목의 유사 지적 {{count}}건"
   },
   "checks": {
     "preamble_cross_category_mismatch": "종속항과 독립항 간 청구항 유형 불일치(§ 112(d)).",
@@ -1542,7 +1543,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "형식 요건만 평가하며 명세서의 내용 자체는 판단하지 않습니다. 모든 항목은 수정 가능합니다."
+      "line": "본 등급은 형식 요건의 수정을 돕기 위한 것이며, 명세서 자체의 작성 품질을 평가하지는 않습니다."
     },
     "completenessGate": {
       "title": "초안 불완전, 평가 불가",

@@ -1297,7 +1297,8 @@
     },
     "passedSummary": {
       "title": "Passed Checks"
-    }
+    },
+    "similarFindings": "   + {{count}} similar finding(s) on the same check"
   },
   "checks": {
     "preamble_cross_category_mismatch": "Cross-category preamble mismatch between dependent and independent claim (§ 112(d)).",
@@ -1540,7 +1541,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "Grades formality, not the substance of your draft. Every finding is fixable."
+      "line": "This grade helps you fix formal requirements, and is not a judgment on how the draft reads."
     },
     "completenessGate": {
       "title": "Draft incomplete — grade unavailable",
