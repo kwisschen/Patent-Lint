@@ -28,6 +28,12 @@
     "rejectTw": "仅接受 .docx 文件",
     "rejectMultipleTypeTw": "请拖放单个 .docx 文件。"
   },
+  "home": {
+    "pricing": {
+      "individuals": "个人使用免费",
+      "firms": "团队部署方案"
+    }
+  },
   "summary": {
     "specParagraphs": "说明书段落",
     "claims": "权利要求",
@@ -139,6 +145,7 @@
     "builtBy": "© 2025 Christopher Chen",
     "security": "安全性",
     "about": "关于",
+    "commercial": "企业方案",
     "terms": "服务条款",
     "privacy": "隐私",
     "github": "GitHub",

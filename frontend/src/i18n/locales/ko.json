@@ -28,6 +28,12 @@
     "rejectTw": ".docx 파일만 허용됩니다",
     "rejectMultipleTypeTw": "단일 .docx 파일을 드롭해 주십시오."
   },
+  "home": {
+    "pricing": {
+      "individuals": "개인 사용 무료",
+      "firms": "팀 배포 안내"
+    }
+  },
   "summary": {
     "specParagraphs": "명세서 단락",
     "claims": "청구항",
@@ -139,6 +145,7 @@
     "builtBy": "© 2025 Christopher Chen",
     "security": "보안",
     "about": "소개",
+    "commercial": "기업 도입",
     "terms": "이용약관",
     "privacy": "개인정보",
     "github": "GitHub",

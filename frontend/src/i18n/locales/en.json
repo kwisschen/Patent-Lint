@@ -28,6 +28,12 @@
     "rejectTw": "Only .docx files are accepted",
     "rejectMultipleTypeTw": "Please drop a single .docx file."
   },
+  "home": {
+    "pricing": {
+      "individuals": "Free for individual use",
+      "firms": "For team deployments"
+    }
+  },
   "summary": {
     "specParagraphs": "Specification Paragraphs",
     "claims": "Claims",
@@ -139,6 +145,7 @@
     "builtBy": "© 2025 Christopher Chen",
     "security": "Security",
     "about": "About",
+    "commercial": "Commercial",
     "terms": "Terms",
     "privacy": "Privacy",
     "github": "GitHub",

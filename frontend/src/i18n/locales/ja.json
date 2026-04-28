@@ -28,6 +28,12 @@
     "rejectTw": ".docx ファイルのみ対応",
     "rejectMultipleTypeTw": "一つの .docx ファイルをドロップしてください。"
   },
+  "home": {
+    "pricing": {
+      "individuals": "個人利用は無料",
+      "firms": "チーム導入はこちら"
+    }
+  },
   "summary": {
     "specParagraphs": "明細書段落数",
     "claims": "請求項",
@@ -139,6 +145,7 @@
     "builtBy": "© 2025 Christopher Chen",
     "security": "セキュリティ",
     "about": "概要",
+    "commercial": "法人向け",
     "terms": "利用規約",
     "privacy": "プライバシー",
     "github": "GitHub",
