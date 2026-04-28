@@ -612,8 +612,8 @@
   "commercial": {
     "hero": {
       "title": "PatentLint für Unternehmen",
-      "subtitle": "Für Einzelpraktiker stets kostenlos. Enterprise-Option für Organisationen — SLA, SSO, Datenhoheit, eigene Regelpakete, eigene Rubrik-Gewichtungen, Audit-Trail.",
-      "body": "Dieselbe rein clientseitige Prüf-Engine, die Sie auf patentlint.com überprüfen können — eingesetzt hinter Ihrer Firewall unter einer kommerziellen Lizenz. Patentschriften verlassen Ihr Netzwerk niemals. Kein Upload, kein Konto, kein KI-Einsatz — unter der Kontrolle Ihrer IT.",
+      "subtitle": "Für den Einzelgebrauch stets kostenlos. Enterprise-Option für Organisationen — SLA, SSO, Datenhoheit, eigene Regelpakete, eigene Rubrik-Gewichtungen, Audit-Trail.",
+      "body": "Setzen Sie dieselbe Analyse-Engine in Ihrer eigenen Infrastruktur ein, kommerziell lizenziert für die Mandatsarbeit. Optional SSO, Audit-Trail und eigene Regelpakete, die Ihre Hausschreibweise abbilden. Anmeldungen verlassen niemals Ihr Netzwerk. Kein Upload, kein Konto, keine KI.",
       "cta": "Evaluierung anfragen"
     },
     "popular": "Am beliebtesten",
@@ -624,7 +624,7 @@
       "footnote": "Preise in USD. Erneuerungsrechnungen werden 60 Tage vor dem 1. Januar gestellt. 60-tägige Kündigungsfrist. Die fortgesetzte Nutzung der bei Ihnen installierten Version bleibt nach Nichtverlängerung dauerhaft zulässig."
     },
     "standalone": {
-      "name": "Einzelplatz",
+      "name": "Team",
       "size": "1–20 Patentfachleute",
       "fee": "$3.500 / Jahr",
       "cta": "Anfragen",
