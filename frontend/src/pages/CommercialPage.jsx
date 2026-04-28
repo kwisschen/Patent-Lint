@@ -6,7 +6,7 @@
 // 1 of the commercialization plan; covers law firms and corporate IP
 // departments alike).
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Shield, Check, ChevronDown, ArrowRight } from 'lucide-react'
@@ -282,6 +282,19 @@ function FAQSection() {
 export default function CommercialPage() {
   const { t } = useTranslation()
   const { sendFeedback } = useFeedback()
+
+  // Belt-and-suspenders SEO de-indexing for the enterprise URL alongside
+  // robots.txt — JS-rendering crawlers will still see this meta even if
+  // they ignore the robots disallow. Removed automatically on unmount so
+  // other routes aren't affected. Drop this block + the robots.txt
+  // disallow when /commercial gets a public launch.
+  useEffect(() => {
+    const meta = document.createElement('meta')
+    meta.name = 'robots'
+    meta.content = 'noindex, nofollow'
+    document.head.appendChild(meta)
+    return () => { document.head.removeChild(meta) }
+  }, [])
 
   const handleInquire = () => {
     sendFeedback(composeEnterprise(t))
