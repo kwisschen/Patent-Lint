@@ -214,7 +214,7 @@ function CnCheckTable({ t }) {
   )
 
   return (
-    <div className="rounded-lg border border-border">
+    <div className="frost-card">
       <table className="w-full text-left">
         <thead>
           <tr className="border-b border-border bg-muted/30">
@@ -279,7 +279,7 @@ function JurisdictionFeatureBlock({ t, jurisdiction, cardKeys }) {
         {cardKeys.map((key, i) => (
           <div
             key={key}
-            className={`feature-card border border-border rounded-lg p-4 bg-card border-l-2 ${accent.border}`}
+            className={`feature-card frost-card frost-card-interactive p-4 border-l-2 ${accent.border}`}
             style={{
               '--feature-glow': accent.glow,
               '--feature-sheen': accent.sheen,
@@ -397,7 +397,7 @@ function TwComparisonTable({ t }) {
   )
 
   return (
-    <div className="rounded-lg border border-border">
+    <div className="frost-card">
       <table className="w-full text-left">
         <thead>
           <tr className="border-b border-border bg-muted/30">
@@ -466,7 +466,7 @@ function UsComparisonTable({ t }) {
   )
 
   return (
-    <div className="rounded-lg border border-border">
+    <div className="frost-card">
       <table className="w-full text-left">
         <thead>
           <tr className="border-b border-border bg-muted/30">
@@ -498,7 +498,16 @@ function ComparisonTable({ t }) {
   return (
     <section>
       <div className="text-center mb-8">
-        <div className="flex items-center justify-center gap-1 rounded-lg bg-muted p-1 mb-4 w-fit mx-auto" role="radiogroup" aria-label={t('jurisdiction.label')}>
+        <div
+          className="flex items-center justify-center gap-1 rounded-lg p-1 mb-4 w-fit mx-auto ring-1"
+          style={{
+            backgroundImage: 'var(--frost-resting-bg)',
+            boxShadow: 'var(--frost-resting-inner-light)',
+            borderColor: 'var(--frost-resting-border)',
+          }}
+          role="radiogroup"
+          aria-label={t('jurisdiction.label')}
+        >
           {['US', 'CN', 'TW'].map((j) => (
             <button
               key={j}
@@ -559,7 +568,7 @@ function StatCard({ value, suffix, label, delay }) {
   return (
     <div
       ref={ref}
-      className="border border-border rounded-lg p-6 text-center shadow-sm hover:translate-y-[-2px] transition-all duration-200"
+      className="frost-card frost-card-interactive p-6 text-center"
       style={{
         opacity: inView ? 1 : 0,
         transform: inView ? undefined : 'translateY(16px)',

@@ -66,7 +66,7 @@ function HeroSection({ onShowProveIt }) {
         key={gifKey}
         src={`/airplane-demo.gif?v=${gifKey}`}
         alt={t('security.airplaneDemoAlt')}
-        className="rounded-lg border border-border shadow-md w-full max-w-2xl mx-auto"
+        className="frost-card-elevated w-full max-w-2xl mx-auto"
       />
 
       <button
@@ -142,7 +142,7 @@ function ComparisonSection() {
         {t('security.page.compareTitle')}
       </h2>
 
-      <div className="rounded-lg border border-border">
+      <div className="frost-card">
         <table className="w-full text-sm border-collapse">
           <thead>
             <tr className="border-b border-border bg-muted/30">
@@ -211,7 +211,7 @@ function TechDetailsSection() {
     >
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between text-left px-4 py-4 rounded-lg border border-border hover:bg-muted/40 transition-colors"
+        className="frost-card frost-card-interactive w-full flex items-center justify-between text-left px-4 py-4 hover:bg-muted/40 transition-colors duration-[var(--motion-duration-base)]"
       >
         <span className="text-xl font-bold text-foreground">
           {t('security.page.techTitle')}

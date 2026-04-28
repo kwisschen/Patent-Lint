@@ -41,8 +41,10 @@ function ClaimNode({ row, isIndependent, t }) {
         )}
         <span
           className={`
-            inline-flex items-center justify-center rounded-full text-xs font-bold shrink-0
-            ${isIndependent ? 'h-7 w-7 bg-primary text-primary-foreground' : 'h-6 w-6 bg-secondary text-secondary-foreground'}
+            inline-flex items-center justify-center rounded-full text-xs font-bold shrink-0 ring-1
+            ${isIndependent
+              ? 'h-7 w-7 bg-primary text-primary-foreground ring-primary/30 shadow-sm'
+              : 'h-6 w-6 bg-secondary text-secondary-foreground ring-border/40'}
           `}
         >
           {row.claim_id}
@@ -61,9 +63,9 @@ function ClaimNode({ row, isIndependent, t }) {
         )}
       </div>
       <div
-        className={`overflow-hidden transition-all duration-200 ease-in-out ${showText ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+        className={`overflow-hidden transition-all duration-[var(--motion-duration-base)] ease-in-out ${showText ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
       >
-        <p className="text-xs text-muted-foreground mt-1.5 ml-9 pl-2 border-l-2 border-border leading-relaxed">
+        <p className="text-xs text-muted-foreground mt-1.5 ml-9 pl-3 py-1.5 border-l-2 border-border/60 leading-relaxed bg-muted/30 rounded-r-md">
           {row.claim_text}
         </p>
       </div>

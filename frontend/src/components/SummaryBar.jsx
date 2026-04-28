@@ -1,20 +1,18 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 // Copyright (c) 2025 Christopher Chen
 import { useTranslation } from 'react-i18next'
-import { Card, CardContent } from '@/components/ui/card'
+import { FrostCard } from './ui/frost-card'
 import { useCountUp } from '../hooks/useCountUp'
 import { useInView } from '../hooks/useInView'
 import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
 
 function StatCard({ label, value, subtitle }) {
   return (
-    <Card>
-      <CardContent className="p-4">
-        <p className="text-sm text-muted-foreground">{label}</p>
-        <p className="text-2xl font-bold mt-1">{value}</p>
-        {subtitle && <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>}
-      </CardContent>
-    </Card>
+    <FrostCard tier="resting" interactive className="p-4">
+      <p className="text-sm text-muted-foreground">{label}</p>
+      <p className="text-2xl font-bold mt-1">{value}</p>
+      {subtitle && <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>}
+    </FrostCard>
   )
 }
 
@@ -56,21 +54,19 @@ export default function SummaryBar({ data, animate = false }) {
   return (
     <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
       {data.jurisdiction === 'US' && data.claim_trees?.length > 0 && (
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-sm text-muted-foreground">{t('summary.claimCategories')}</p>
-            <div className="mt-1 space-y-0.5">
-              <p className="flex items-baseline">
-                <span className="text-2xl font-bold">{methodCount}</span>
-                <span className="text-sm text-muted-foreground ml-1.5">{t('summary.method')}</span>
-              </p>
-              <p className="flex items-baseline">
-                <span className="text-2xl font-bold">{apparatusCount}</span>
-                <span className="text-sm text-muted-foreground ml-1.5">{t('summary.apparatus')}</span>
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+        <FrostCard tier="resting" interactive className="p-4">
+          <p className="text-sm text-muted-foreground">{t('summary.claimCategories')}</p>
+          <div className="mt-1 space-y-0.5">
+            <p className="flex items-baseline">
+              <span className="text-2xl font-bold">{methodCount}</span>
+              <span className="text-sm text-muted-foreground ml-1.5">{t('summary.method')}</span>
+            </p>
+            <p className="flex items-baseline">
+              <span className="text-2xl font-bold">{apparatusCount}</span>
+              <span className="text-sm text-muted-foreground ml-1.5">{t('summary.apparatus')}</span>
+            </p>
+          </div>
+        </FrostCard>
       )}
       {jConfig.showPatentType && (
         <StatCard
@@ -78,21 +74,19 @@ export default function SummaryBar({ data, animate = false }) {
           value={patentTypeValue}
         />
       )}
-      <Card>
-        <CardContent className="p-4">
-          <p className="text-sm text-muted-foreground">{t('summary.claims')}</p>
-          <div className="mt-1 space-y-0.5">
-            <p className="flex items-baseline">
-              <span className="text-2xl font-bold">{indepCount}</span>
-              <span className="text-sm text-muted-foreground ml-1.5">{t('summary.independent')}</span>
-            </p>
-            <p className="flex items-baseline">
-              <span className="text-2xl font-bold">{depCount}</span>
-              <span className="text-sm text-muted-foreground ml-1.5">{t('summary.dependent')}</span>
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      <FrostCard tier="resting" interactive className="p-4">
+        <p className="text-sm text-muted-foreground">{t('summary.claims')}</p>
+        <div className="mt-1 space-y-0.5">
+          <p className="flex items-baseline">
+            <span className="text-2xl font-bold">{indepCount}</span>
+            <span className="text-sm text-muted-foreground ml-1.5">{t('summary.independent')}</span>
+          </p>
+          <p className="flex items-baseline">
+            <span className="text-2xl font-bold">{depCount}</span>
+            <span className="text-sm text-muted-foreground ml-1.5">{t('summary.dependent')}</span>
+          </p>
+        </div>
+      </FrostCard>
       <StatCard
         label={t('summary.figures')}
         value={figureCount}
