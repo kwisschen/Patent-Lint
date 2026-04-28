@@ -114,48 +114,39 @@ function filterInternalChecks(sections) {
 
 // --- Shared presentation helpers ---
 
-// Section header with colored accent underline (60pt bar) on a frost
-// tint band. Approximates the web LiquidGlass section header treatment
-// using pdfmake's single-cell-table primitive.
+// Section header: title text + short colored accent line beneath. No
+// frost band, no fill — relies on whitespace and the colored bar to
+// read as a section break. Mirrors filing convention (paper +
+// printed heading, no decorative chrome).
 function accentedHeader(text, accentColor, fontName) {
   return {
-    table: {
-      widths: ['*'],
-      body: [[{
-        stack: [
-          {
-            text,
-            fontSize: 14,
-            bold: true,
-            color: '#1e293b',
-            margin: [0, 0, 0, 5],
-            ...(fontName ? { font: fontName } : {}),
-          },
-          {
-            canvas: [{ type: 'line', x1: 0, y1: 0, x2: 60, y2: 0, lineWidth: 2.5, lineColor: accentColor }],
-          },
-        ],
-        fillColor: '#f8fafc',
-        border: [false, false, false, false],
-        margin: [12, 8, 12, 8],
-      }]],
-    },
-    layout: {
-      hLineWidth: () => 0.5,
-      vLineWidth: () => 0,
-      hLineColor: () => '#e2e8f0',
-    },
+    stack: [
+      {
+        text,
+        fontSize: 14,
+        bold: true,
+        color: '#1e293b',
+        margin: [0, 0, 0, 4],
+        ...(fontName ? { font: fontName } : {}),
+      },
+      {
+        canvas: [{ type: 'line', x1: 0, y1: 0, x2: 48, y2: 0, lineWidth: 2.5, lineColor: accentColor }],
+      },
+    ],
     margin: [0, 22, 0, 12],
+    // Tagged so docDefinition.pageBreakBefore can detect orphan headers
+    // (a header at the very bottom of a page with no body following) and
+    // push them to the next page along with their content.
+    headlineLevel: 1,
   }
 }
 
 // Compact filled pill showing the status label (AMEND / VERIFY).
-// 0.5pt rim border + slight padding bump for parity with the web
-// StatusPill. The rim is the same color as the fill so it reads as
-// a glossier surface, not a separate border. noWrap is critical for
-// CJK locales — pdfmake doesn't treat CJK characters as a word, so
-// without it short labels like "修正" wrap one-character-per-line
-// when the column context is constrained.
+// Solid status color background, white text, no rim border. lineHeight: 1
+// prevents pdfmake's default leading from creating extra space below CJK
+// glyphs (which fill the full em-square — without lineHeight: 1 the cell
+// gets extra height from line-height that pushes the visual character
+// to the top of the rectangle).
 function statusPill(status, t, fontName) {
   const label = t(`status.${status}`)
   return {
@@ -168,6 +159,7 @@ function statusPill(status, t, fontName) {
           color: 'white',
           bold: true,
           fontSize: 8,
+          lineHeight: 1,
           alignment: 'center',
           noWrap: true,
           ...(fontName ? { font: fontName } : {}),
@@ -175,24 +167,20 @@ function statusPill(status, t, fontName) {
       ]],
     },
     layout: {
-      hLineWidth: () => 0.5,
-      vLineWidth: () => 0.5,
-      hLineColor: () => statusColor(status),
-      vLineColor: () => statusColor(status),
+      hLineWidth: () => 0,
+      vLineWidth: () => 0,
       fillColor: () => statusColor(status),
-      paddingLeft: () => 8,
-      paddingRight: () => 8,
+      paddingLeft: () => 7,
+      paddingRight: () => 7,
       paddingTop: () => 4,
       paddingBottom: () => 4,
     },
   }
 }
 
-// Tinted chip for flagged terms (React FlaggedTermList parity). Light tint
-// matching the finding status with a 0.5pt rim border in the strong
-// status color — pairs with statusPill above for visual harmony, both
-// using pdfmake's single-cell-table-with-fillColor pattern since
-// pdfmake has no native chip element.
+// Tinted chip for flagged terms (React FlaggedTermList parity). Light
+// tint background, status-colored text, no rim border. Same lineHeight:
+// 1 trick as statusPill so CJK glyphs center properly in the cell.
 function termChip(token, status, fontName) {
   return {
     width: 'auto',
@@ -204,6 +192,7 @@ function termChip(token, status, fontName) {
           color: statusColor(status),
           bold: true,
           fontSize: 8,
+          lineHeight: 1,
           alignment: 'center',
           noWrap: true,
           ...(fontName ? { font: fontName } : {}),
@@ -211,15 +200,13 @@ function termChip(token, status, fontName) {
       ]],
     },
     layout: {
-      hLineWidth: () => 0.5,
-      vLineWidth: () => 0.5,
-      hLineColor: () => statusColor(status),
-      vLineColor: () => statusColor(status),
+      hLineWidth: () => 0,
+      vLineWidth: () => 0,
       fillColor: () => statusTint(status),
       paddingLeft: () => 6,
       paddingRight: () => 6,
-      paddingTop: () => 3,
-      paddingBottom: () => 3,
+      paddingTop: () => 4,
+      paddingBottom: () => 4,
     },
     margin: [0, 0, 4, 2],
   }
@@ -286,9 +273,29 @@ function triageCard(severity, items, t, fontName) {
       ...(fontName ? { font: fontName } : {}),
     }]
   } else {
-    bodyContent = items.map(({ item, sectionName }) => {
+    // Aggregate consecutive same-message_key items so the PDF doesn't
+    // render N near-identical rows for one check that fired N times.
+    // First occurrence renders the full message + section; subsequent
+    // matches collapse into a "+N similar findings" tail. Web keeps
+    // per-finding rows (chips give per-finding context); PDF favors
+    // compactness because a static doc can't be expanded.
+    const groups = []
+    let lastKey = null
+    let lastGroup = null
+    items.forEach(({ item, sectionName }) => {
+      const key = item.message_key || `__nokey__${groups.length}`
+      if (key === lastKey && lastGroup) {
+        lastGroup.duplicates.push({ item, sectionName })
+      } else {
+        lastGroup = { item, sectionName, duplicates: [] }
+        groups.push(lastGroup)
+        lastKey = key
+      }
+    })
+
+    bodyContent = groups.flatMap(({ item, sectionName, duplicates }) => {
       const heading = sanitizeText(translateMessage(item, t))
-      return {
+      const result = [{
         text: [
           { text: '\u2022  ', color: accent, bold: true },
           { text: heading, color: '#1e293b' },
@@ -297,7 +304,21 @@ function triageCard(severity, items, t, fontName) {
         fontSize: 10,
         margin: [0, 2, 0, 2],
         ...(fontName ? { font: fontName } : {}),
+      }]
+      if (duplicates.length > 0) {
+        result.push({
+          text: t('pdf.similarFindings', {
+            count: duplicates.length,
+            defaultValue: `   + ${duplicates.length} similar finding${duplicates.length === 1 ? '' : 's'} on the same check`,
+          }),
+          color: '#94a3b8',
+          italics: true,
+          fontSize: 9,
+          margin: [12, 0, 0, 4],
+          ...(fontName ? { font: fontName } : {}),
+        })
       }
+      return result
     })
   }
 
@@ -468,32 +489,12 @@ function letterFromScore(score, applicable) {
   return 'F'
 }
 
-// Build a frost-tinted "card" wrapper around cover content. pdfmake
-// can't do real backdrop blur, so we approximate with a single-cell
-// table: subtle tint background, thin top + bottom rules, generous
-// padding. Reads as a contained surface rather than loose stacked text.
-function frostCoverWrapper(innerStack, fontProp) {
-  return {
-    table: {
-      widths: ['*'],
-      body: [[{
-        stack: innerStack,
-        border: [false, false, false, false],
-        fillColor: '#f8fafc',
-        margin: [24, 28, 24, 28],
-      }]],
-    },
-    layout: {
-      hLineWidth: () => 0.5,
-      vLineWidth: () => 0.5,
-      hLineColor: () => '#e2e8f0',
-      vLineColor: () => '#e2e8f0',
-    },
-    margin: [0, 6, 0, 16],
-    ...(fontProp || {}),
-  }
-}
-
+// Cover treatment: NO container/wrapper around the rubric. Letter grade
+// sits cleanly on the page (filing-cover-sheet convention — paper +
+// printed letter, nothing else). Section grades render as an inline
+// "label letter" row separated by mid-dots; the letter itself carries
+// the tier color, no boxes around individual pills. Cleaner than the
+// previous bordered-chip-row treatment, prints sharp.
 function buildRubricCover(rubricGrade, t, fontName) {
   if (!rubricGrade) return []
   const fontProp = fontName ? { font: fontName } : {}
@@ -503,14 +504,14 @@ function buildRubricCover(rubricGrade, t, fontName) {
     const labels = rubricGrade.completeness_gap.missing_sections.map((s) =>
       t(`rubric.section.${s}`, { defaultValue: s })
     )
-    return [frostCoverWrapper([
+    return [
       {
         text: t('rubric.completenessGate.title'),
         fontSize: 18,
         bold: true,
         color: '#b91c1c',
         alignment: 'center',
-        margin: [0, 0, 0, 8],
+        margin: [0, 16, 0, 6],
         ...fontProp,
       },
       {
@@ -518,94 +519,78 @@ function buildRubricCover(rubricGrade, t, fontName) {
         fontSize: 11,
         color: '#4b5563',
         alignment: 'center',
+        margin: [0, 0, 0, 18],
         ...fontProp,
       },
-    ], fontProp)]
+    ]
   }
 
   const letter = rubricGrade.letter || '—'
   const score = rubricGrade.score ?? 0
-  const innerStack = [
+  const cover = [
     {
       text: letter,
-      fontSize: 80,
+      fontSize: 64,
       bold: true,
+      lineHeight: 1,
       color: gradeColor(letter),
       alignment: 'center',
-      margin: [0, 0, 0, 0],
+      margin: [0, 4, 0, 0],
       ...fontProp,
     },
     {
       text: `${score} / 100`,
-      fontSize: 14,
+      fontSize: 12,
       color: '#4b5563',
       alignment: 'center',
-      margin: [0, 6, 0, 0],
+      margin: [0, 2, 0, 0],
       ...fontProp,
     },
     {
       text: t('rubric.trust.line'),
-      fontSize: 9.5,
+      fontSize: 9,
       italics: true,
       color: '#64748b',
       alignment: 'center',
-      margin: [0, 12, 0, 0],
+      margin: [0, 8, 0, 0],
       ...fontProp,
     },
   ]
-  // cap_reason intentionally not rendered inline — matches the web
-  // hero (replaced inline cap-reason with the /rubric link in 966f783).
-  // The section-grade chip row below surfaces which section absorbed
-  // the FIX, which is the load-bearing information.
 
-  // Section-grade chip row — replaces the previous 3-col table with a
-  // horizontal pill layout that mirrors the web RubricHero legend.
+  // Section grades: inline `label letter` pairs separated by mid-dots.
+  // Renders as one centered text line; each letter colored by tier.
   if (rubricGrade.section_grades?.length) {
-    const chipRow = rubricGrade.section_grades.map((sg) => {
+    const inlineParts = []
+    rubricGrade.section_grades.forEach((sg, idx) => {
       const sLetter = letterFromScore(sg.score, sg.applicable)
       const sectionLabel = t(`rubric.section.${sg.section}`, { defaultValue: sg.section })
       const isNa = !sg.applicable
-      const chipColor = isNa ? '#6b7280' : gradeColor(sLetter)
-      const chipFill = isNa ? '#f1f5f9' : (sLetter && sLetter.startsWith('A') ? '#dbeafe' : (sLetter && (sLetter.startsWith('B') || sLetter.startsWith('C')) ? '#dcfce7' : '#fee2e2'))
-      const chipText = isNa ? t('rubric.section.notApplicable') : sLetter
-      return {
-        table: {
-          widths: ['auto'],
-          body: [[{
-            stack: [
-              { text: sectionLabel, fontSize: 7, color: '#64748b', alignment: 'center', margin: [0, 0, 0, 2], ...fontProp },
-              { text: chipText, fontSize: 12, bold: true, color: chipColor, alignment: 'center', ...fontProp },
-            ],
-            fillColor: chipFill,
-            border: [false, false, false, false],
-            margin: [10, 6, 10, 6],
-          }]],
-        },
-        layout: {
-          hLineWidth: () => 0.5,
-          vLineWidth: () => 0.5,
-          hLineColor: () => chipColor,
-          vLineColor: () => chipColor,
-        },
+      const letterText = isNa ? t('rubric.section.notApplicable') : sLetter
+      const letterColor = isNa ? '#9ca3af' : gradeColor(sLetter)
+      if (idx > 0) {
+        inlineParts.push({ text: '  ·  ', color: '#cbd5e1', ...fontProp })
       }
+      inlineParts.push({ text: `${sectionLabel} `, color: '#64748b', ...fontProp })
+      inlineParts.push({ text: letterText, bold: true, color: letterColor, ...fontProp })
     })
-    innerStack.push({
-      columns: chipRow,
-      columnGap: 6,
-      margin: [0, 16, 0, 0],
+    cover.push({
+      text: inlineParts,
+      fontSize: 9.5,
+      alignment: 'center',
+      margin: [0, 10, 0, 0],
     })
   }
 
-  innerStack.push({
+  cover.push({
     text: t('rubric.version', { version: rubricGrade.rubric_version || '1.0', count: CHECKS_RAW }),
     fontSize: 7,
     color: '#9ca3af',
     alignment: 'center',
-    margin: [0, 14, 0, 0],
+    margin: [0, 8, 0, 12],
     ...fontProp,
   })
 
-  return [frostCoverWrapper(innerStack, fontProp)]
+  return cover
 }
 
 function buildClaimTable(claimTrees, t) {
@@ -949,8 +934,11 @@ export async function downloadReport(reportData, t, language, originalFilename) 
       // Spec support
       ...buildSpecSupport(reportData.unsupported_terms, t),
 
-      // Claim trees
-      ...buildClaimTable(reportData.claim_trees, t),
+      // Claim-dependency table intentionally omitted from PDF — the
+      // dependency structure is already conveyed by claim text itself
+      // ("如請求項N所述" prefixes), and a static table can't be expanded
+      // like the web ClaimTree. The web version stays interactive; the
+      // PDF stays focused on findings, not duplicated reference data.
 
       // Disclaimer
       {
@@ -984,6 +972,17 @@ export async function downloadReport(reportData, t, language, originalFilename) 
       fontSize: 10,
       lineHeight: 1.4,
       ...(fontName ? { font: fontName } : {}),
+    },
+    // Push orphan section headers to the next page. accentedHeader
+    // tags itself with headlineLevel: 1 — when such a node has no
+    // following nodes on the same page, force a break before it so
+    // the header travels with its body content rather than sitting
+    // alone at the bottom of a page.
+    pageBreakBefore: function(currentNode, followingNodesOnPage) {
+      if (currentNode.headlineLevel === 1 && followingNodesOnPage.length === 0) {
+        return true
+      }
+      return false
     },
   }
 
