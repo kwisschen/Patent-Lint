@@ -2,6 +2,7 @@
 // Copyright (c) 2025 Christopher Chen
 import { useTranslation } from 'react-i18next'
 import { CHECKS_RAW } from '../generated/stats'
+import { FrostCard } from '@/components/ui/frost-card'
 
 const SECTION_WEIGHTS = [
   { id: 'specification', weight: 20 },
@@ -44,11 +45,11 @@ export default function RubricPage() {
       {/* Section weights */}
       <Section title={t('rubric.page.weightsTitle')}>
         <p>{t('rubric.page.weightsIntro')}</p>
-        <div className="rounded-lg border bg-card overflow-hidden">
+        <FrostCard tier="resting" className="overflow-hidden">
           <table className="w-full text-sm">
             <tbody>
               {SECTION_WEIGHTS.map((row) => (
-                <tr key={row.id} className="border-b last:border-0">
+                <tr key={row.id} className="border-b border-border/40 last:border-0">
                   <td className="px-4 py-2 font-medium">{t(`rubric.section.${row.id}`)}</td>
                   <td className="px-4 py-2 text-right text-foreground font-semibold">
                     {row.weight}%
@@ -57,17 +58,17 @@ export default function RubricPage() {
               ))}
             </tbody>
           </table>
-        </div>
+        </FrostCard>
       </Section>
 
       {/* Gate logic */}
       <Section title={t('rubric.page.gateTitle')}>
         <p>{t('rubric.page.gateIntro')}</p>
-        <div className="rounded-lg border bg-card overflow-hidden">
+        <FrostCard tier="resting" className="overflow-hidden">
           <table className="w-full text-sm">
             <tbody>
               {GATE_RULES.map((row) => (
-                <tr key={row.fix} className="border-b last:border-0">
+                <tr key={row.fix} className="border-b border-border/40 last:border-0">
                   <td className="px-4 py-2 font-mono">
                     {t('rubric.page.gateRule', { count: row.fix, letter: row.letter })}
                   </td>
@@ -75,7 +76,7 @@ export default function RubricPage() {
               ))}
             </tbody>
           </table>
-        </div>
+        </FrostCard>
       </Section>
 
       {/* Conditional sections */}

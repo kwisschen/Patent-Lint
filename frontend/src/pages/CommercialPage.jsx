@@ -74,7 +74,7 @@ function PricingCard({ tier, onInquire, popular = false }) {
   return (
     <div
       ref={ref}
-      className={`relative rounded-2xl border ${popular ? 'border-blue-500 shadow-lg' : 'border-border'} bg-card p-6 sm:p-8 flex flex-col`}
+      className={`relative ${popular ? 'frost-card-hero' : 'frost-card-elevated'} p-6 sm:p-8 flex flex-col`}
       style={{
         opacity: isInView ? 1 : 0,
         transform: isInView ? 'translateY(0)' : 'translateY(16px)',

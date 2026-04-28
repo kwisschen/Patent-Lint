@@ -186,10 +186,10 @@ export default function ProveItModal({ open, onOpenChange }) {
                 tabIndex={isDropCard ? 0 : undefined}
                 onClick={isDropCard ? handleDropCardClick : undefined}
                 onKeyDown={isDropCard ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleDropCardClick() } } : undefined}
-                className={`flex items-start gap-3 rounded-lg border p-3 transition-all duration-300 ${
+                className={`flex items-start gap-3 rounded-lg p-3 transition-all duration-300 ${
                   isDropCard
-                    ? 'cursor-pointer border-blue-300 dark:border-blue-700 bg-blue-50/50 dark:bg-blue-950/30 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md hover:shadow-blue-500/10 hover:scale-[1.02] active:scale-[0.98]'
-                    : ''
+                    ? 'frost-card frost-card-interactive cursor-pointer border-blue-300 dark:border-blue-700 hover:border-blue-400 dark:hover:border-blue-500 active:scale-[0.98]'
+                    : 'frost-card'
                 }`}
                 style={{
                   opacity: visible ? 1 : 0,
