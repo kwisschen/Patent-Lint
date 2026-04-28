@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml/badge.svg)](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml)
 [![Live Demo](https://img.shields.io/badge/demo-patentlint.com-blue)](https://patentlint.com)
-[![Tests](https://img.shields.io/badge/tests-1808-brightgreen)](#)
+[![Tests](https://img.shields.io/badge/tests-2159-brightgreen)](#)
 
 **No account. No install. No upload.**
 
