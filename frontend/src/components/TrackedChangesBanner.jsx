@@ -16,7 +16,7 @@ export default function TrackedChangesBanner({ onAnalyzeAgain, onShowResults }) 
         className="max-w-lg w-full mx-auto p-8 pl-9 text-center animate-in fade-in zoom-in-95 duration-[var(--motion-duration-slow)]"
       >
         <AlertTriangle className="mx-auto h-12 w-12 mb-4" style={{ color: 'var(--attention-border)' }} />
-        <p className="text-sm leading-relaxed mb-6 text-foreground/80">
+        <p className="text-sm leading-relaxed mb-6 text-foreground">
           {t('results.trackedChangesWarning')}
         </p>
         <div className="flex items-center justify-center gap-3">
