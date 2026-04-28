@@ -47,6 +47,7 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
       <div
         {...getRootProps()}
         className={`
+          shine-on-hover
           flex flex-col items-center justify-center gap-4
           w-full max-w-lg p-6 md:p-12 rounded-xl
           border-2 cursor-pointer
