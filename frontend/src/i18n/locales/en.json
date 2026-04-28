@@ -237,7 +237,7 @@
     },
     "reportModal": {
       "title": "Send an anonymous report?",
-      "body": "A small structured payload is sent to PatentLint over HTTPS so we can investigate this check: counts, the flagged term or phrase, ~30 characters of surrounding context, and category labels. No full claim text, no full paragraphs, no email, no IP — and what you see below is exactly what we get.",
+      "body": "A small structured payload is sent to PatentLint over HTTPS so we can investigate this check: counts, the flagged term or phrase, a short surrounding excerpt, and category labels. No full claim text, no full paragraphs, no email, no IP — and what you see below is exactly what we get.",
       "previewHeading": "Content to send:",
       "send": "Send anonymously",
       "cancel": "Cancel",
@@ -353,7 +353,7 @@
       },
       "q6": {
         "question": "What does it cost?",
-        "patentlint": "Free — no fees, no subscription, no usage limits.",
+        "patentlint": "Free — no subscription, no usage limits.",
         "addin": "Typically requires a paid license.",
         "cloud": "Typically requires a subscription."
       },
@@ -1484,7 +1484,7 @@
     "s6": {
       "title": "Voluntary feedback",
       "p1": "Each finding has a \"Report\" button. Clicking it opens a dialog that previews exactly what will be sent — nothing is hidden. The dialog also offers a \"Send by email\" alternative addressed to kwisschen@gmail.com if you would rather write more context yourself.",
-      "p2": "The anonymous payload contains counts, the specific term or phrase the rule flagged, about 30 characters of surrounding context, category labels (which check, which rule, which detection branch), and a few structural fingerprints — capped at five findings per report. It does not contain your full claim text, full paragraphs, file names, file metadata, your email, your name, or your IP.",
+      "p2": "The anonymous payload contains counts, the specific term or phrase the rule flagged, a short surrounding excerpt, category labels (which check, which rule, which detection branch), and a few structural fingerprints — capped at five findings per report. It does not contain your full claim text, full paragraphs, file names, file metadata, your email, your name, or your IP.",
       "p3": "When you click \"Send anonymously,\" your browser POSTs the payload over HTTPS to a Cloudflare Pages Function on patentlint.com that creates an issue in a private GitHub Issues tracker only the maintainer can read. Your IP and browser headers are not forwarded to GitHub. Reports cannot be linked back to your identity.",
       "p4": "If you use the email alternative instead, we receive whatever you write. To send pseudonymously, use an email-aliasing service (Apple Hide My Email, Gmail aliases, Firefox Relay, ProtonMail aliases); we do not correlate alias addresses with any other data. We use feedback only to fix bugs and reply to you, and we do not share it with third parties."
     },
@@ -1574,7 +1574,7 @@
       "disclaimerTitle": "What an A grade does and does not mean",
       "disclaimerIntro": "An A grade means PatentLint's rule catalog found no issues. It does not mean your draft is filing-ready. Substantive review by a registered practitioner is still recommended.",
       "reportTitle": "Help us improve — report misjudgments",
-      "reportIntro": "No checker is perfect. Walker-based checks (antecedent basis, specification support, figure references) carry a small false-positive risk; with grading now in place, a wrongly-flagged FIX can cost the draft a letter rank. The Report button on each triage item opens a dialog that previews exactly what will be sent — counts, the flagged term, ~30 characters of context, and category labels, capped at five findings — so we can pinpoint the bug from a de-identified payload."
+      "reportIntro": "No checker is perfect. Walker-based checks (antecedent basis, specification support, figure references) carry a small false-positive risk; with grading now in place, a wrongly-flagged FIX can cost the draft a letter rank. The Report button on each triage item opens a dialog that previews exactly what will be sent — counts, the flagged term, a short surrounding excerpt, and category labels, capped at five findings — so we can pinpoint the bug from a de-identified payload."
     },
     "howWeScore": "How we score →",
     "cover": {
