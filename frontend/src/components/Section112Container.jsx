@@ -5,6 +5,7 @@ import { CheckCircle } from 'lucide-react'
 import AntecedentBasisCard from './AntecedentBasisCard'
 import SpecSupportCard from './SpecSupportCard'
 import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
+import { StatusPill } from './ui/status-pill'
 
 // Visual parallel to AntecedentBasisCard / SpecSupportCard, but in the
 // pass palette. Keeps both sub-checks visible as their own containers even
@@ -22,16 +23,7 @@ function PassCard({ titleKey, messageKey }) {
       <div className="flex items-center gap-3 px-4 py-3">
         <CheckCircle className="h-5 w-5 shrink-0" style={{ color: 'var(--pass-border)' }} />
         <h3 className="text-sm font-semibold flex-1">{t(titleKey)}</h3>
-        <span
-          className="rounded-full px-2.5 py-0.5 text-xs font-bold"
-          style={{
-            backgroundColor: 'var(--pass-bg)',
-            color: 'var(--pass-tag-text)',
-            border: '1px solid var(--pass-border)',
-          }}
-        >
-          {t('status.pass')}
-        </span>
+        <StatusPill status="pass" shape="pill">{t('status.pass')}</StatusPill>
       </div>
       <div className="border-t px-4 py-3">
         <p className="text-sm leading-relaxed" style={{ color: 'var(--pass-text)' }}>{msg}</p>

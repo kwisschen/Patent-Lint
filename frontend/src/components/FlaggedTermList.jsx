@@ -21,6 +21,7 @@
 //   heavily-flagged docs.
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
+import { StatusPill } from './ui/status-pill'
 
 const DEFAULT_MAX = 20
 
@@ -52,27 +53,22 @@ export default function FlaggedTermList({ items, status = "verify", className = 
       {visible.map((item, idx) => {
         const title = chipTitle(item, t)
         return (
-          <span
+          <StatusPill
             key={`${item.token}-${idx}`}
+            status={status}
+            size="sm"
             title={title}
-            className="inline-flex items-center rounded px-1.5 py-0.5 text-[11px] font-medium leading-none border"
-            style={{
-              backgroundColor: `var(--${status}-bg)`,
-              color: `var(--${status}-tag-text)`,
-              borderColor: `var(--${status}-border)`,
-            }}
           >
             {item.token}
-          </span>
+          </StatusPill>
         )
       })}
       {overflow > 0 && (
         <button
           type="button"
           onClick={() => setExpanded(true)}
-          className="inline-flex items-center rounded px-1.5 py-0.5 text-[11px] font-medium leading-none border border-dashed hover:opacity-80 transition-opacity"
+          className="inline-flex items-center rounded-md px-2 py-0.5 text-[11px] font-semibold leading-tight border border-dashed bg-transparent hover:opacity-80 transition-opacity"
           style={{
-            backgroundColor: "transparent",
             color: `var(--${status}-tag-text)`,
             borderColor: `var(--${status}-border)`,
           }}

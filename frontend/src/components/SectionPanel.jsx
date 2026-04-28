@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown } from 'lucide-react'
 import CheckItemComponent from './CheckItem'
+import { StatusPill } from './ui/status-pill'
 
 // Map a letter grade to one of the existing status CSS-variable families
 // for the section pill — matches the RubricHero color logic.
@@ -66,28 +67,13 @@ export default function SectionPanel({
             </span>
           )}
           {counts.amend > 0 && (
-            <span
-              className="rounded px-1.5 py-0.5 text-[10px] font-bold leading-none"
-              style={{ backgroundColor: 'var(--amend-bg)', color: 'var(--amend-tag-text)' }}
-            >
-              {counts.amend} {t('status.amend').toLowerCase()}
-            </span>
+            <StatusPill status="amend" size="xs">{counts.amend} {t('status.amend').toLowerCase()}</StatusPill>
           )}
           {counts.verify > 0 && (
-            <span
-              className="rounded px-1.5 py-0.5 text-[10px] font-bold leading-none"
-              style={{ backgroundColor: 'var(--verify-bg)', color: 'var(--verify-tag-text)' }}
-            >
-              {counts.verify} {t('status.verify').toLowerCase()}
-            </span>
+            <StatusPill status="verify" size="xs">{counts.verify} {t('status.verify').toLowerCase()}</StatusPill>
           )}
           {counts.pass > 0 && (
-            <span
-              className="rounded px-1.5 py-0.5 text-[10px] font-bold leading-none"
-              style={{ backgroundColor: 'var(--pass-bg)', color: 'var(--pass-tag-text)' }}
-            >
-              {counts.pass} {t('status.pass').toLowerCase()}
-            </span>
+            <StatusPill status="pass" size="xs">{counts.pass} {t('status.pass').toLowerCase()}</StatusPill>
           )}
           <ChevronDown
             className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
