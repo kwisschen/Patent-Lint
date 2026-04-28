@@ -679,7 +679,7 @@
       },
       "q7": {
         "q": "Wie überprüfen wir, was tatsächlich läuft?",
-        "a": "Jedes Release ist mit einem dedizierten PatentLint-Signaturschlüssel PGP-signiert. Der Verifizierungsleitfaden befindet sich im Repository (RELEASE_VERIFICATION.md). Ihre IT prüft die Signaturen vor der Bereitstellung als Teil der üblichen Release-Hygiene."
+        "a": "Getaggte Releases folgen den üblichen Release-Engineering-Standards. Für Organisationen mit formalen Verifizierungsanforderungen (PGP-signierte Builds, Signaturprüfung vor der Bereitstellung) werden die Spezifika im Rahmen des Engagements abgestimmt — entsprechend dem vorhandenen Werkzeug- und Richtlinienbestand Ihrer IT."
       },
       "q8": {
         "q": "Evaluierungszeitraum?",
@@ -1384,7 +1384,8 @@
     },
     "passedSummary": {
       "title": "Bestandene Prüfungen"
-    }
+    },
+    "similarFindings": "   + {{count}} weitere ähnliche Befunde derselben Prüfung"
   },
   "checks": {
     "preamble_cross_category_mismatch": "Anspruchskategorien-Abweichung zwischen abhängigem und unabhängigem Anspruch (§ 112(d)).",
@@ -1627,7 +1628,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "Bewertet die Form, nicht den Inhalt Ihres Entwurfs. Jeder Befund ist behebbar."
+      "line": "Diese Bewertung hilft Ihnen, formale Anforderungen zu beheben, und beurteilt nicht, wie die Anmeldung selbst geschrieben ist."
     },
     "completenessGate": {
       "title": "Schrift unvollständig — keine Bewertung verfügbar",
