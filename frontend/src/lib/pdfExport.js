@@ -152,7 +152,10 @@ function accentedHeader(text, accentColor, fontName) {
 // Compact filled pill showing the status label (AMEND / VERIFY).
 // 0.5pt rim border + slight padding bump for parity with the web
 // StatusPill. The rim is the same color as the fill so it reads as
-// a glossier surface, not a separate border.
+// a glossier surface, not a separate border. noWrap is critical for
+// CJK locales — pdfmake doesn't treat CJK characters as a word, so
+// without it short labels like "修正" wrap one-character-per-line
+// when the column context is constrained.
 function statusPill(status, t, fontName) {
   const label = t(`status.${status}`)
   return {
@@ -166,6 +169,7 @@ function statusPill(status, t, fontName) {
           bold: true,
           fontSize: 8,
           alignment: 'center',
+          noWrap: true,
           ...(fontName ? { font: fontName } : {}),
         },
       ]],
@@ -201,6 +205,7 @@ function termChip(token, status, fontName) {
           bold: true,
           fontSize: 8,
           alignment: 'center',
+          noWrap: true,
           ...(fontName ? { font: fontName } : {}),
         },
       ]],
