@@ -29,12 +29,11 @@ export default function Footer() {
       <div className="mx-auto max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500 dark:text-gray-400">
         <span>{t('footer.builtBy')}</span>
         <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2" aria-label="Footer">
-          <Link
-            to="/commercial"
-            className="footer-link hover:text-foreground transition-colors duration-200"
-          >
-            {t('footer.commercial')}
-          </Link>
+          {/* /commercial deliberately unlinked here — the page is
+              reachable at its URL for enterprise inquirers, but kept
+              out of nav + search (see frontend/public/robots.txt and
+              CommercialPage's noindex meta) until the LinkedIn launch.
+              Restore this Link when announcing publicly. */}
           <Link
             to="/terms"
             className="footer-link hover:text-foreground transition-colors duration-200"
