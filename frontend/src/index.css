@@ -131,41 +131,31 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
-  /* Frost surface system (light) — Apple LiquidGlass language.
-     Surfaces are semi-transparent with strong backdrop blur + saturation
-     boost so they pick up hue from content behind, plus a specular top
-     highlight + subtle rim shadow that reads as a thin pane of glass.
-     Always paired with .frost-card-* utility classes which apply the
-     backdrop-filter (CSS-var values can't be used inside backdrop-filter). */
-  --frost-resting-bg: rgba(255, 255, 255, 0.45);
-  --frost-resting-border: rgba(255, 255, 255, 0.55);
-  --frost-resting-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.04),
-    0 4px 12px rgba(15, 23, 42, 0.06),
-    0 8px 24px rgba(15, 23, 42, 0.04);
-  --frost-resting-inner-light:
-    inset 0 1px 0 rgba(255, 255, 255, 0.85),
-    inset 0 -0.5px 0 rgba(15, 23, 42, 0.04);
+  /* Frost surface system (light) — calibrated for professional-tool
+     register (Stripe Dashboard / Linear / GitHub level), not consumer-
+     SaaS LiquidGlass maximalism. Resting tier reads as a clean card
+     with subtle bg + thin border + soft shadow (no blur, no inner-
+     light specular highlight). Elevated and hero tiers keep the glass
+     blur for emphasis. Tuned to reduce visual noise — patent attorneys
+     spend hours reading dense text; calm chrome lets findings dominate. */
+  --frost-resting-bg: rgba(255, 255, 255, 0.7);
+  --frost-resting-border: rgba(15, 23, 42, 0.07);
+  --frost-resting-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+  --frost-resting-inner-light: none;
 
-  --frost-elevated-bg: rgba(255, 255, 255, 0.5);
-  --frost-elevated-border: rgba(255, 255, 255, 0.65);
+  --frost-elevated-bg: rgba(255, 255, 255, 0.78);
+  --frost-elevated-border: rgba(15, 23, 42, 0.08);
   --frost-elevated-shadow:
-    0 2px 4px rgba(15, 23, 42, 0.05),
-    0 8px 24px rgba(15, 23, 42, 0.08),
-    0 16px 40px rgba(15, 23, 42, 0.06);
-  --frost-elevated-inner-light:
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.95),
-    inset 0 -0.5px 0 rgba(15, 23, 42, 0.05);
+    0 2px 6px rgba(15, 23, 42, 0.06),
+    0 8px 16px rgba(15, 23, 42, 0.06);
+  --frost-elevated-inner-light: none;
 
-  --frost-hero-bg: rgba(255, 255, 255, 0.55);
-  --frost-hero-border: rgba(255, 255, 255, 0.75);
+  --frost-hero-bg: rgba(255, 255, 255, 0.85);
+  --frost-hero-border: rgba(15, 23, 42, 0.1);
   --frost-hero-shadow:
     0 4px 8px rgba(15, 23, 42, 0.06),
-    0 16px 40px rgba(15, 23, 42, 0.1),
-    0 32px 64px rgba(15, 23, 42, 0.08);
-  --frost-hero-inner-light:
-    inset 0 2px 0 rgba(255, 255, 255, 1),
-    inset 0 -1px 0 rgba(15, 23, 42, 0.06);
+    0 12px 24px rgba(15, 23, 42, 0.08);
+  --frost-hero-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.7);
 
   /* Status frost overlays — layered on top of --pass-bg / --verify-bg /
      --amend-bg / --attention-bg to give the colored chip a subtle glass
@@ -254,38 +244,27 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 
-  /* Frost surface system (dark) — LiquidGlass on dark substrate.
-     The specular highlight stays bright (white at moderate opacity)
-     so the glass edge reads against deep slate. */
-  --frost-resting-bg: rgba(30, 41, 59, 0.5);
-  --frost-resting-border: rgba(255, 255, 255, 0.1);
-  --frost-resting-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.3),
-    0 4px 12px rgba(0, 0, 0, 0.4),
-    0 8px 24px rgba(0, 0, 0, 0.3);
-  --frost-resting-inner-light:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 -0.5px 0 rgba(255, 255, 255, 0.04);
+  /* Frost surface system (dark) — same calm-professional register as
+     light mode. Single-shadow on resting; multi-shadow on elevated/
+     hero. Inner-light specular highlight reserved for hero tier. */
+  --frost-resting-bg: rgba(30, 41, 59, 0.6);
+  --frost-resting-border: rgba(255, 255, 255, 0.08);
+  --frost-resting-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --frost-resting-inner-light: none;
 
-  --frost-elevated-bg: rgba(30, 41, 59, 0.6);
-  --frost-elevated-border: rgba(255, 255, 255, 0.12);
+  --frost-elevated-bg: rgba(30, 41, 59, 0.72);
+  --frost-elevated-border: rgba(255, 255, 255, 0.1);
   --frost-elevated-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.4),
-    0 8px 24px rgba(0, 0, 0, 0.5),
-    0 16px 40px rgba(0, 0, 0, 0.4);
-  --frost-elevated-inner-light:
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.18),
-    inset 0 -0.5px 0 rgba(255, 255, 255, 0.04);
+    0 2px 6px rgba(0, 0, 0, 0.35),
+    0 8px 16px rgba(0, 0, 0, 0.3);
+  --frost-elevated-inner-light: none;
 
-  --frost-hero-bg: rgba(30, 41, 59, 0.7);
-  --frost-hero-border: rgba(255, 255, 255, 0.15);
+  --frost-hero-bg: rgba(30, 41, 59, 0.82);
+  --frost-hero-border: rgba(255, 255, 255, 0.12);
   --frost-hero-shadow:
-    0 4px 8px rgba(0, 0, 0, 0.5),
-    0 16px 40px rgba(0, 0, 0, 0.6),
-    0 32px 64px rgba(0, 0, 0, 0.4);
-  --frost-hero-inner-light:
-    inset 0 2px 0 rgba(255, 255, 255, 0.22),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+    0 4px 8px rgba(0, 0, 0, 0.4),
+    0 12px 24px rgba(0, 0, 0, 0.4);
+  --frost-hero-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.12);
 
   --pass-frost-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent);
   --verify-frost-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent);
@@ -578,36 +557,41 @@
    laptops, while heroes/overlays/banners/modals still get the full
    LiquidGlass treatment. Older browsers without backdrop-filter fall
    back via @supports rule below. */
+/* Resting tier: NO backdrop-filter. Reads as a clean card with subtle
+   bg + thin border + soft shadow — the Stripe Dashboard / Linear
+   register. Routine cards (most surfaces on the results page) live
+   here so the page stays calm. */
 .frost-card {
   position: relative;
   border-radius: var(--radius-lg);
   background-color: var(--frost-resting-bg);
-  backdrop-filter: blur(14px) saturate(170%);
-  -webkit-backdrop-filter: blur(14px) saturate(170%);
   box-shadow:
     var(--frost-resting-shadow),
-    var(--frost-resting-inner-light),
     inset 0 0 0 1px var(--frost-resting-border);
   overflow: hidden;
 }
+/* Elevated tier: light backdrop blur + slightly more opaque. Used for
+   emphasis (banners, modals, popular pricing card). */
 .frost-card-elevated {
   position: relative;
   border-radius: var(--radius-xl);
   background-color: var(--frost-elevated-bg);
-  backdrop-filter: blur(22px) saturate(200%);
-  -webkit-backdrop-filter: blur(22px) saturate(200%);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
   box-shadow:
     var(--frost-elevated-shadow),
-    var(--frost-elevated-inner-light),
     inset 0 0 0 1px var(--frost-elevated-border);
   overflow: hidden;
 }
+/* Hero tier: peak glass — only the rubric grade hero + the popular
+   pricing tier card use this. Inner-light highlight reserved for this
+   tier so the bright top-edge feels distinctive instead of universal. */
 .frost-card-hero {
   position: relative;
   border-radius: var(--radius-xl);
   background-color: var(--frost-hero-bg);
-  backdrop-filter: blur(28px) saturate(220%);
-  -webkit-backdrop-filter: blur(28px) saturate(220%);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
   box-shadow:
     var(--frost-hero-shadow),
     var(--frost-hero-inner-light),
@@ -654,54 +638,19 @@
       inset 0 0 0 1px rgba(15, 23, 42, 0.1);
   }
 }
+/* Interactive variant: subtle hover lift only (no shine sweep). The
+   shine pattern is reserved for key CTAs (dropzone + primary button)
+   via the .shine-on-hover class — applying it to every interactive
+   card created visual noise that competed with content. */
 .frost-card-interactive {
   transition: transform var(--motion-duration-base) var(--ease-smooth),
               box-shadow var(--motion-duration-base) var(--ease-smooth);
-  transform: translateZ(0); /* promote to GPU layer once */
 }
 .frost-card-interactive:hover {
-  transform: translate3d(0, -2px, 0);
+  transform: translate3d(0, -1px, 0);
   box-shadow:
     var(--frost-elevated-shadow),
-    var(--frost-elevated-inner-light),
     inset 0 0 0 1px var(--frost-elevated-border);
-}
-
-/* Specular sheen on hover — a thin diagonal highlight sweeps across
-   interactive cards. Pure CSS transform animation, no JS, GPU-composited
-   (zero paint cost on supporting browsers). The ::after element has
-   pointer-events: none so it doesn't intercept clicks. */
-.frost-card-interactive::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 60%;
-  height: 100%;
-  background: linear-gradient(
-    115deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.35) 50%,
-    transparent 70%
-  );
-  transform: translateX(0);
-  transition: transform 700ms var(--ease-smooth);
-  pointer-events: none;
-  mix-blend-mode: screen;
-  opacity: 0.7;
-}
-.frost-card-interactive:hover::after {
-  transform: translateX(280%);
-}
-.dark .frost-card-interactive::after {
-  background: linear-gradient(
-    115deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.18) 50%,
-    transparent 70%
-  );
-  mix-blend-mode: plus-lighter;
-  opacity: 0.5;
 }
 
 /* Respect reduced motion */
