@@ -172,11 +172,11 @@
       "remember": "Remember my selection"
     },
     "emailGreeting": "Hi Christopher,",
-    "bodyPlaceholder": "[In a sentence or two, tell me what's wrong with this finding — is this a false positive, a miscategorization, or did the check miss something? Do NOT paste claim text or any other draft content; the finding itself is already attached.]",
+    "bodyPlaceholder": "[In a sentence or two, tell us what's wrong with this finding — is this a false positive, a miscategorization, or did the check miss something? Do NOT paste claim text or any other draft content; the structured payload above is the only thing that should leave your device.]",
     "footerIntro": "I'd like to share some feedback about PatentLint.",
-    "footerPlaceholder": "[Anything you'd like to share — bug reports, feature requests, questions, or general comments. For bugs, a note on your browser and OS helps me reproduce. For features, one sentence on your use case goes a long way. You don't need to share anything confidential about your work.]",
+    "footerPlaceholder": "[Anything you'd like to share — bug reports, feature requests, questions, or general comments. For bugs, a note on your browser and OS helps us reproduce. For features, one sentence on your use case goes a long way. You don't need to share any business-confidential information.]",
     "enterpriseIntro": "I'd like to inquire about enterprise deployment of PatentLint.",
-    "enterprisePlaceholder": "[Tell me about your deployment needs — firm or team size and practice area, regions you work in, approximate document volume, evaluation timeline, and any specific requirements (e.g., on-premises or air-gapped install for ITAR / data-sovereignty rules, SSO, custom checks).]",
+    "enterprisePlaceholder": "[Tell us about your deployment needs — firm or team size and practice area, regions you work in, approximate document volume, evaluation timeline, and any specific requirements (e.g., on-premises or air-gapped install for ITAR or data sovereignty, SSO integration, custom rule packs).]",
     "email": {
       "subjectFinding": "PatentLint findings report — {{checkKey}}",
       "subjectFooter": "PatentLint feedback",
