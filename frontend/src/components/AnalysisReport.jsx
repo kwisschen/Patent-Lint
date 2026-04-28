@@ -16,7 +16,6 @@ import NonPatentBanner from './NonPatentBanner'
 import TrackedChangesBanner from './TrackedChangesBanner'
 import JurisdictionMismatchBanner from './JurisdictionMismatchBanner'
 import { Button } from '@/components/ui/button'
-import { FrostCard } from '@/components/ui/frost-card'
 import { Download, RotateCcw, ShieldCheck } from 'lucide-react'
 import { useNetworkMonitor } from '../hooks/useNetworkMonitor'
 import { getJurisdictionConfig, JURISDICTION_COLORS } from '../lib/jurisdictionConfig'
@@ -318,7 +317,7 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
   return (
     <div className="space-y-5">
       {filename && (
-        <FrostCard tier="resting" className="flex items-center justify-between gap-3 px-4 py-3">
+        <div className="flex items-center justify-between gap-3 px-1">
           <p className="min-w-0 text-sm text-muted-foreground truncate">{t('analysis.label')}: {filename}</p>
           {data.jurisdiction && (
             <span
@@ -332,7 +331,7 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
               {t(JURISDICTION_I18N[data.jurisdiction])}
             </span>
           )}
-        </FrostCard>
+        </div>
       )}
 
       {/* Hero: rubric grade letter + score + status legend (replaces

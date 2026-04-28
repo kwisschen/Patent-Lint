@@ -98,7 +98,7 @@ export default function RubricHero({ data, animate = false }) {
   const letterColor = letterColorVar(letter)
 
   return (
-    <FrostCard tier="elevated" className="flex flex-col items-center gap-3 px-4 py-5 sm:px-6 sm:py-6">
+    <div className="flex flex-col items-center gap-3 px-4 py-5 sm:px-6 sm:py-6">
       <div className="relative" style={{ width: size, height: size }}>
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
           {arcs.map((arc) => (
@@ -164,6 +164,6 @@ export default function RubricHero({ data, animate = false }) {
       >
         {t('rubric.howWeScore')}
       </Link>
-    </FrostCard>
+    </div>
   )
 }
