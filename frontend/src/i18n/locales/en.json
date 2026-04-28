@@ -28,6 +28,12 @@
     "rejectTw": "Only .docx files are accepted",
     "rejectMultipleTypeTw": "Please drop a single .docx file."
   },
+  "home": {
+    "pricing": {
+      "individuals": "Free for individual use",
+      "firms": "For team deployments"
+    }
+  },
   "summary": {
     "specParagraphs": "Specification Paragraphs",
     "claims": "Claims",
@@ -139,6 +145,7 @@
     "builtBy": "© 2025 Christopher Chen",
     "security": "Security",
     "about": "About",
+    "commercial": "Commercial",
     "terms": "Terms",
     "privacy": "Privacy",
     "github": "GitHub",
@@ -602,6 +609,94 @@
     "builderSister": "Its companion project, the Agentic Patent Analyst, covers the reasoning-heavy work, using in-house fine-tuned LLM agents for prior art search and claim coverage analysis.",
     "tableFootnote": "As of April 2026; both tools may continue to evolve.",
     "twTableFootnote": "TIPO coverage audited against 專利申請文件輔助偵錯系統 — 功能介紹與使用指南 (2023.5.30 版). TIPO 偵錯系統 supports utility-model filings only; PatentLint supports both utility models and inventions. Both tools may continue to evolve."
+  },
+  "commercial": {
+    "hero": {
+      "title": "PatentLint for enterprises",
+      "subtitle": "Always free for individual practitioners. Enterprise option for organizations — SLA, SSO, data custody, custom rule packs, custom rubric weights, audit trail.",
+      "body": "The same client-side analysis engine you can audit at patentlint.com, deployed inside your firewall under a commercial license. Drafts never leave your network. No upload, no account, no AI — under your IT's control.",
+      "cta": "Request evaluation"
+    },
+    "popular": "Most popular",
+    "feeNote": "Annual flat fee, calendar-aligned renewal.",
+    "pricing": {
+      "heading": "Pricing",
+      "subheading": "Two tiers. Honor-system attestation. No usage metering, no per-seat counting.",
+      "footnote": "Prices listed in USD. Renewals invoiced 60 days before each January 1. Sixty-day cancellation notice. Continued use of the version installed on your systems remains permitted indefinitely after non-renewal."
+    },
+    "standalone": {
+      "name": "Standalone",
+      "size": "1–20 patent practitioners",
+      "fee": "$3,500 / year",
+      "cta": "Inquire",
+      "features": [
+        "All jurisdictions (US, CN, TW; EU/JP/KR in development)",
+        "All {{count}} checks scored across the 5-section rubric",
+        "Air-gap deployment (no internet required after install)",
+        "Email support, 2 business-day response",
+        "Quarterly tagged releases",
+        "30-day evaluation, refundable invoice",
+        "PolyForm-Strict-1.0.0 + commercial side letter"
+      ]
+    },
+    "firm": {
+      "name": "Enterprise",
+      "size": "21+ patent practitioners",
+      "fee": "$7,000 / year",
+      "cta": "Inquire",
+      "features": [
+        "Everything in Standalone",
+        "SSO when available (OIDC) — no upcharge",
+        "Audit log enabled (local file, no telemetry)",
+        "Custom rule pack add-on available",
+        "Priority for feature requests during quarterly reviews",
+        "Optional informal Slack Connect channel"
+      ]
+    },
+    "faq": {
+      "heading": "Common questions",
+      "q1": {
+        "q": "Where does analysis run?",
+        "a": "Inside your firewall. The Docker image runs on your infrastructure; drafts never leave your network. Same client-side architecture as patentlint.com, deployed by your IT."
+      },
+      "q2": {
+        "q": "Internet required after install?",
+        "a": "No. The Docker image runs fully air-gapped after first build. The only outbound network connection is when your IT pulls a new tagged release from the source repository."
+      },
+      "q3": {
+        "q": "ITAR / data sovereignty?",
+        "a": "Air-gap deployment satisfies typical ITAR and data-residency requirements out of the box. We do not sell a separate ITAR module — the architecture itself is the answer."
+      },
+      "q4": {
+        "q": "How often are releases shipped?",
+        "a": "Quarterly tagged releases (v1.0, v1.1, v1.2, v1.3) with explicit release notes mapping to MPEP / 專利法 / 审查指南 rule changes. Patch releases as needed. Your IT pulls when ready; never auto-updates."
+      },
+      "q5": {
+        "q": "What is a custom rule pack?",
+        "a": "Translation of your organization's drafting style guide into a private rule-pack module that loads alongside the standard {{count}} checks. Bilateral-confidential. Pricing scoped per engagement; typical range $8,000–$25,000 one-time plus annual maintenance."
+      },
+      "q6": {
+        "q": "How is this licensed?",
+        "a": "PolyForm-Strict-1.0.0 (source-available, public) plus a one-page commercial side letter granting internal commercial-use rights. Side letter is single-page; GC review typically takes under 30 minutes."
+      },
+      "q7": {
+        "q": "How do we verify what is running?",
+        "a": "Each release is PGP-signed with a dedicated PatentLint signing key. Verification guide ships in the repository (RELEASE_VERIFICATION.md). Your IT verifies signatures before deploy as part of standard release-engineering hygiene."
+      },
+      "q8": {
+        "q": "Evaluation period?",
+        "a": "14 days from the effective date. Full functionality, no time-bomb, no feature gating. If you decide not to continue, the prorated remainder of the annual fee is refundable, less the value of any onboarding services already rendered (kickoff call, deployment assistance, custom configuration)."
+      }
+    },
+    "trustVerify": {
+      "body": "Verify our trust posture independently:",
+      "security": "Security details",
+      "privacy": "Privacy policy"
+    },
+    "finalCta": {
+      "body": "Tell me about your deployment needs. I will send back a one-page side letter and a quote tailored to your organization.",
+      "button": "Send inquiry"
+    }
   },
   "details": {
     "paragraphs": "Paragraphs: {{list}}",
