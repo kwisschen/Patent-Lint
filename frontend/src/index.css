@@ -521,6 +521,39 @@
   opacity: 0.4;
 }
 
+/* Generic on-hover diagonal shine — apply to any surface that should
+   sweep a highlight on hover/focus. Sets position:relative + overflow:hidden
+   automatically so adding the class is enough; no JSX restructuring needed.
+   GPU-composited transform animation; mix-blend-mode = screen (light) /
+   plus-lighter (dark). Idle cost: zero. */
+.shine-on-hover {
+  position: relative;
+  overflow: hidden;
+}
+.shine-on-hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%);
+  transform: translateX(0);
+  transition: transform 700ms var(--ease-smooth);
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0.65;
+}
+.shine-on-hover:hover::after,
+.shine-on-hover:focus-visible::after {
+  transform: translateX(280%);
+}
+.dark .shine-on-hover::after {
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.18) 50%, transparent 70%);
+  mix-blend-mode: plus-lighter;
+  opacity: 0.5;
+}
+
 /* Frost-blur utility classes — pair with --frost-*-bg backgrounds to give
    surfaces an actual backdrop blur where supported. Browser-only effect;
    PDFs degrade gracefully to the gradient backgrounds. */
