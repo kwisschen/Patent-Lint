@@ -28,7 +28,7 @@ export default function PageCTA() {
       </p>
       <button
         onClick={() => navigate('/')}
-        className="cta-button inline-flex items-center gap-2 px-8 py-3 rounded-full bg-primary text-primary-foreground font-semibold text-base shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer"
+        className="cta-button shine-on-hover inline-flex items-center gap-2 px-8 py-3 rounded-full bg-primary text-primary-foreground font-semibold text-base shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer"
       >
         <FileSearch size={18} />
         {t('cta.button')}
