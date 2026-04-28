@@ -16,7 +16,7 @@ PatentLint checks U.S., Chinese, and Taiwanese patent application drafts against
 
 > Your documents never leave your browser — verifiable in airplane mode.
 
-![Airplane mode demo](frontend/public/airplane-demo.gif)
+[Watch the demo →](https://patentlint.com/security)
 
 ---
 
