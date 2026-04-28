@@ -524,8 +524,16 @@
 /* Generic on-hover diagonal shine — apply to any surface that should
    sweep a highlight on hover/focus. Sets position:relative + overflow:hidden
    automatically so adding the class is enough; no JSX restructuring needed.
-   GPU-composited transform animation; mix-blend-mode = screen (light) /
-   plus-lighter (dark). Idle cost: zero. */
+   GPU-composited transform animation. Idle cost: zero.
+
+   Light mode uses a dark gradient with mix-blend-mode: multiply (a brief
+   shadow rolling across the surface). White-on-white sweeps via screen
+   blend are nearly invisible against light backgrounds; a darker sweep
+   gives visible contrast on white surfaces (dropzone) AND deepens
+   colored surfaces (the blue CTA button) so it works in both cases.
+
+   Dark mode keeps the white gradient with plus-lighter for the brightness
+   sweep that reads naturally as "light catching glass". */
 .shine-on-hover {
   position: relative;
   overflow: hidden;
@@ -537,21 +545,21 @@
   left: -100%;
   width: 60%;
   height: 100%;
-  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%);
+  background: linear-gradient(115deg, transparent 30%, rgba(15, 23, 42, 0.16) 50%, transparent 70%);
   transform: translateX(0);
   transition: transform 700ms var(--ease-smooth);
   pointer-events: none;
-  mix-blend-mode: screen;
-  opacity: 0.65;
+  mix-blend-mode: multiply;
+  opacity: 1;
 }
 .shine-on-hover:hover::after,
 .shine-on-hover:focus-visible::after {
   transform: translateX(280%);
 }
 .dark .shine-on-hover::after {
-  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.18) 50%, transparent 70%);
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.22) 50%, transparent 70%);
   mix-blend-mode: plus-lighter;
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 /* Frost-blur utility classes — pair with --frost-*-bg backgrounds to give
