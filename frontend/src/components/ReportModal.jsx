@@ -94,7 +94,7 @@ export default function ReportModal({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="rounded-md border bg-muted/40 p-3">
+        <div className="frost-card !rounded-md p-3">
           <p className="mb-2 text-xs font-medium text-muted-foreground">
             {t('feedback.reportModal.previewHeading')}
           </p>

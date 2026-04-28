@@ -30,14 +30,15 @@ function HealthBar({ label, checks = [], animate, delay = 0 }) {
   return (
     <div className="flex items-center gap-3">
       <span className="text-xs text-muted-foreground w-24 text-right shrink-0">{label}</span>
-      <div className="flex-1 flex h-3 rounded-full overflow-hidden bg-secondary">
+      <div className="flex-1 flex h-3 rounded-full overflow-hidden bg-secondary/60 ring-1 ring-[var(--frost-resting-border)] shadow-[var(--frost-resting-inner-light)]">
         {segments.map((seg) => (
           <div
             key={seg.key}
-            className="h-full"
+            className="h-full relative"
             style={{
               width: grown ? `${(seg.count / total) * 100}%` : '0%',
               backgroundColor: seg.color,
+              backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.25), transparent)',
               transition: `width 500ms var(--ease-bounce)`,
             }}
           />

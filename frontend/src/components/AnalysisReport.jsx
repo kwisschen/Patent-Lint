@@ -16,6 +16,7 @@ import NonPatentBanner from './NonPatentBanner'
 import TrackedChangesBanner from './TrackedChangesBanner'
 import JurisdictionMismatchBanner from './JurisdictionMismatchBanner'
 import { Button } from '@/components/ui/button'
+import { FrostCard } from '@/components/ui/frost-card'
 import { Download, RotateCcw, ShieldCheck } from 'lucide-react'
 import { useNetworkMonitor } from '../hooks/useNetworkMonitor'
 import { getJurisdictionConfig, JURISDICTION_COLORS } from '../lib/jurisdictionConfig'
@@ -315,13 +316,13 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {filename && (
-        <div className="flex items-center justify-between gap-3">
-          <p className="min-w-0 text-sm text-muted-foreground">{t('analysis.label')}: {filename}</p>
+        <FrostCard tier="resting" className="flex items-center justify-between gap-3 px-4 py-3">
+          <p className="min-w-0 text-sm text-muted-foreground truncate">{t('analysis.label')}: {filename}</p>
           {data.jurisdiction && (
             <span
-              className="whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold tracking-wide"
+              className="whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold tracking-wide shrink-0"
               style={{
                 background: `linear-gradient(135deg, ${JURISDICTION_COLORS[data.jurisdiction]}, ${JURISDICTION_COLORS[data.jurisdiction]}cc)`,
                 color: '#fff',
@@ -331,7 +332,7 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
               {t(JURISDICTION_I18N[data.jurisdiction])}
             </span>
           )}
-        </div>
+        </FrostCard>
       )}
 
       {/* Hero: rubric grade letter + score + status legend (replaces
@@ -409,7 +410,7 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
 
       {/* Single-row action bar with security status */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-40 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-transform duration-300"
+        className="fixed bottom-0 left-0 right-0 z-40 border-t border-[var(--frost-elevated-border)] frost-blur-md bg-background/85 supports-[backdrop-filter]:bg-background/60 transition-transform duration-[var(--motion-duration-base)] shadow-[var(--frost-elevated-shadow)]"
         style={{
           transform: barVisible ? 'translateY(0)' : 'translateY(100%)',
           transitionTimingFunction: 'var(--ease-smooth)',

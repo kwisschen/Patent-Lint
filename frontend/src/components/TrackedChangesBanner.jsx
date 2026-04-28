@@ -3,35 +3,31 @@
 import { useTranslation } from 'react-i18next'
 import { AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { FrostCard } from '@/components/ui/frost-card'
 
 export default function TrackedChangesBanner({ onAnalyzeAgain, onShowResults }) {
   const { t } = useTranslation()
 
   return (
     <div className="flex items-center justify-center min-h-[60vh]">
-      <div
-        className="max-w-lg w-full mx-auto rounded-xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30 p-8 text-center animate-in fade-in zoom-in-95 duration-400"
+      <FrostCard
+        tier="elevated"
+        accent="attention"
+        className="max-w-lg w-full mx-auto p-8 pl-9 text-center animate-in fade-in zoom-in-95 duration-[var(--motion-duration-slow)]"
       >
-        <AlertTriangle className="mx-auto h-12 w-12 text-amber-500 dark:text-amber-400 mb-4" />
-        <p className="text-sm text-amber-800 dark:text-amber-200/80 leading-relaxed mb-6">
+        <AlertTriangle className="mx-auto h-12 w-12 mb-4" style={{ color: 'var(--attention-border)' }} />
+        <p className="text-sm leading-relaxed mb-6 text-foreground/80">
           {t('results.trackedChangesWarning')}
         </p>
         <div className="flex items-center justify-center gap-3">
-          <Button
-            className="bg-amber-600 hover:bg-amber-700 text-white"
-            onClick={onAnalyzeAgain}
-          >
+          <Button onClick={onAnalyzeAgain}>
             {t('results.analyzeAgain')}
           </Button>
-          <Button
-            variant="outline"
-            className="border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-200 hover:bg-amber-100 dark:hover:bg-amber-900/40"
-            onClick={onShowResults}
-          >
+          <Button variant="outline" onClick={onShowResults}>
             {t('results.showResultsAnyway')}
           </Button>
         </div>
-      </div>
+      </FrostCard>
     </div>
   )
 }
