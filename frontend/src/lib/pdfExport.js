@@ -114,27 +114,45 @@ function filterInternalChecks(sections) {
 
 // --- Shared presentation helpers ---
 
-// Section header with colored accent underline (48pt bar).
+// Section header with colored accent underline (60pt bar) on a frost
+// tint band. Approximates the web LiquidGlass section header treatment
+// using pdfmake's single-cell-table primitive.
 function accentedHeader(text, accentColor, fontName) {
   return {
-    stack: [
-      {
-        text,
-        fontSize: 14,
-        bold: true,
-        color: '#1e293b',
-        margin: [0, 0, 0, 4],
-        ...(fontName ? { font: fontName } : {}),
-      },
-      {
-        canvas: [{ type: 'line', x1: 0, y1: 0, x2: 48, y2: 0, lineWidth: 2.5, lineColor: accentColor }],
-      },
-    ],
-    margin: [0, 18, 0, 10],
+    table: {
+      widths: ['*'],
+      body: [[{
+        stack: [
+          {
+            text,
+            fontSize: 14,
+            bold: true,
+            color: '#1e293b',
+            margin: [0, 0, 0, 5],
+            ...(fontName ? { font: fontName } : {}),
+          },
+          {
+            canvas: [{ type: 'line', x1: 0, y1: 0, x2: 60, y2: 0, lineWidth: 2.5, lineColor: accentColor }],
+          },
+        ],
+        fillColor: '#f8fafc',
+        border: [false, false, false, false],
+        margin: [12, 8, 12, 8],
+      }]],
+    },
+    layout: {
+      hLineWidth: () => 0.5,
+      vLineWidth: () => 0,
+      hLineColor: () => '#e2e8f0',
+    },
+    margin: [0, 22, 0, 12],
   }
 }
 
 // Compact filled pill showing the status label (AMEND / VERIFY).
+// 0.5pt rim border + slight padding bump for parity with the web
+// StatusPill. The rim is the same color as the fill so it reads as
+// a glossier surface, not a separate border.
 function statusPill(status, t, fontName) {
   const label = t(`status.${status}`)
   return {
@@ -153,22 +171,24 @@ function statusPill(status, t, fontName) {
       ]],
     },
     layout: {
-      hLineWidth: () => 0,
-      vLineWidth: () => 0,
+      hLineWidth: () => 0.5,
+      vLineWidth: () => 0.5,
+      hLineColor: () => statusColor(status),
+      vLineColor: () => statusColor(status),
       fillColor: () => statusColor(status),
-      paddingLeft: () => 6,
-      paddingRight: () => 6,
-      paddingTop: () => 3,
-      paddingBottom: () => 3,
+      paddingLeft: () => 8,
+      paddingRight: () => 8,
+      paddingTop: () => 4,
+      paddingBottom: () => 4,
     },
   }
 }
 
 // Tinted chip for flagged terms (React FlaggedTermList parity). Light tint
-// matching the finding status; no border stroke so chips read as inline
-// labels rather than bordered buttons. Shared rendering primitive with
-// statusPill above — both use pdfmake's single-cell-table-with-fillColor
-// pattern since pdfmake has no native chip element.
+// matching the finding status with a 0.5pt rim border in the strong
+// status color — pairs with statusPill above for visual harmony, both
+// using pdfmake's single-cell-table-with-fillColor pattern since
+// pdfmake has no native chip element.
 function termChip(token, status, fontName) {
   return {
     width: 'auto',
@@ -186,13 +206,15 @@ function termChip(token, status, fontName) {
       ]],
     },
     layout: {
-      hLineWidth: () => 0,
-      vLineWidth: () => 0,
+      hLineWidth: () => 0.5,
+      vLineWidth: () => 0.5,
+      hLineColor: () => statusColor(status),
+      vLineColor: () => statusColor(status),
       fillColor: () => statusTint(status),
-      paddingLeft: () => 5,
-      paddingRight: () => 5,
-      paddingTop: () => 2,
-      paddingBottom: () => 2,
+      paddingLeft: () => 6,
+      paddingRight: () => 6,
+      paddingTop: () => 3,
+      paddingBottom: () => 3,
     },
     margin: [0, 0, 4, 2],
   }
@@ -441,6 +463,32 @@ function letterFromScore(score, applicable) {
   return 'F'
 }
 
+// Build a frost-tinted "card" wrapper around cover content. pdfmake
+// can't do real backdrop blur, so we approximate with a single-cell
+// table: subtle tint background, thin top + bottom rules, generous
+// padding. Reads as a contained surface rather than loose stacked text.
+function frostCoverWrapper(innerStack, fontProp) {
+  return {
+    table: {
+      widths: ['*'],
+      body: [[{
+        stack: innerStack,
+        border: [false, false, false, false],
+        fillColor: '#f8fafc',
+        margin: [24, 28, 24, 28],
+      }]],
+    },
+    layout: {
+      hLineWidth: () => 0.5,
+      vLineWidth: () => 0.5,
+      hLineColor: () => '#e2e8f0',
+      vLineColor: () => '#e2e8f0',
+    },
+    margin: [0, 6, 0, 16],
+    ...(fontProp || {}),
+  }
+}
+
 function buildRubricCover(rubricGrade, t, fontName) {
   if (!rubricGrade) return []
   const fontProp = fontName ? { font: fontName } : {}
@@ -450,14 +498,14 @@ function buildRubricCover(rubricGrade, t, fontName) {
     const labels = rubricGrade.completeness_gap.missing_sections.map((s) =>
       t(`rubric.section.${s}`, { defaultValue: s })
     )
-    return [
+    return [frostCoverWrapper([
       {
         text: t('rubric.completenessGate.title'),
         fontSize: 18,
         bold: true,
         color: '#b91c1c',
         alignment: 'center',
-        margin: [0, 14, 0, 6],
+        margin: [0, 0, 0, 8],
         ...fontProp,
       },
       {
@@ -465,22 +513,21 @@ function buildRubricCover(rubricGrade, t, fontName) {
         fontSize: 11,
         color: '#4b5563',
         alignment: 'center',
-        margin: [0, 0, 0, 18],
         ...fontProp,
       },
-    ]
+    ], fontProp)]
   }
 
   const letter = rubricGrade.letter || '—'
   const score = rubricGrade.score ?? 0
-  const cover = [
+  const innerStack = [
     {
       text: letter,
-      fontSize: 72,
+      fontSize: 80,
       bold: true,
       color: gradeColor(letter),
       alignment: 'center',
-      margin: [0, 12, 0, 0],
+      margin: [0, 0, 0, 0],
       ...fontProp,
     },
     {
@@ -488,73 +535,72 @@ function buildRubricCover(rubricGrade, t, fontName) {
       fontSize: 14,
       color: '#4b5563',
       alignment: 'center',
-      margin: [0, 4, 0, 0],
+      margin: [0, 6, 0, 0],
       ...fontProp,
     },
     {
       text: t('rubric.trust.line'),
-      fontSize: 9,
-      color: '#6b7280',
+      fontSize: 9.5,
+      italics: true,
+      color: '#64748b',
       alignment: 'center',
-      margin: [0, 8, 0, 0],
+      margin: [0, 12, 0, 0],
       ...fontProp,
     },
   ]
-  // cap_reason is intentionally not rendered inline on the cover —
-  // matches the web hero, which replaced inline cap-reason text with
-  // the /rubric link in commit 966f783. The gate rules are documented
-  // on the /rubric page; the section-grade table below already
-  // surfaces which section absorbed the FIX, which is the load-bearing
-  // information for the user.
+  // cap_reason intentionally not rendered inline — matches the web
+  // hero (replaced inline cap-reason with the /rubric link in 966f783).
+  // The section-grade chip row below surfaces which section absorbed
+  // the FIX, which is the load-bearing information.
 
-  // Section-grade table.
+  // Section-grade chip row — replaces the previous 3-col table with a
+  // horizontal pill layout that mirrors the web RubricHero legend.
   if (rubricGrade.section_grades?.length) {
-    const tableBody = [
-      [
-        { text: t('rubric.section.title', { defaultValue: 'Section' }), bold: true, fontSize: 9, color: '#4b5563' },
-        { text: 'Grade', bold: true, fontSize: 9, color: '#4b5563', alignment: 'right' },
-        { text: 'Weight', bold: true, fontSize: 9, color: '#4b5563', alignment: 'right' },
-      ],
-      ...rubricGrade.section_grades.map((sg) => {
-        const sLetter = letterFromScore(sg.score, sg.applicable)
-        const sectionLabel = t(`rubric.section.${sg.section}`, { defaultValue: sg.section })
-        const weightLabel = `${Math.round(sg.effective_weight)}%`
-        if (!sg.applicable) {
-          return [
-            { text: sectionLabel, fontSize: 9 },
-            { text: t('rubric.section.notApplicable'), fontSize: 9, color: '#6b7280', alignment: 'right' },
-            { text: weightLabel, fontSize: 9, color: '#9ca3af', alignment: 'right' },
-          ]
-        }
-        return [
-          { text: sectionLabel, fontSize: 9 },
-          { text: sLetter, fontSize: 9, bold: true, color: gradeColor(sLetter), alignment: 'right' },
-          { text: weightLabel, fontSize: 9, color: '#4b5563', alignment: 'right' },
-        ]
-      }),
-    ]
-    cover.push({
-      layout: 'lightHorizontalLines',
-      margin: [40, 14, 40, 0],
-      table: { widths: ['*', 'auto', 'auto'], body: tableBody },
+    const chipRow = rubricGrade.section_grades.map((sg) => {
+      const sLetter = letterFromScore(sg.score, sg.applicable)
+      const sectionLabel = t(`rubric.section.${sg.section}`, { defaultValue: sg.section })
+      const isNa = !sg.applicable
+      const chipColor = isNa ? '#6b7280' : gradeColor(sLetter)
+      const chipFill = isNa ? '#f1f5f9' : (sLetter && sLetter.startsWith('A') ? '#dbeafe' : (sLetter && (sLetter.startsWith('B') || sLetter.startsWith('C')) ? '#dcfce7' : '#fee2e2'))
+      const chipText = isNa ? t('rubric.section.notApplicable') : sLetter
+      return {
+        table: {
+          widths: ['auto'],
+          body: [[{
+            stack: [
+              { text: sectionLabel, fontSize: 7, color: '#64748b', alignment: 'center', margin: [0, 0, 0, 2], ...fontProp },
+              { text: chipText, fontSize: 12, bold: true, color: chipColor, alignment: 'center', ...fontProp },
+            ],
+            fillColor: chipFill,
+            border: [false, false, false, false],
+            margin: [10, 6, 10, 6],
+          }]],
+        },
+        layout: {
+          hLineWidth: () => 0.5,
+          vLineWidth: () => 0.5,
+          hLineColor: () => chipColor,
+          vLineColor: () => chipColor,
+        },
+      }
+    })
+    innerStack.push({
+      columns: chipRow,
+      columnGap: 6,
+      margin: [0, 16, 0, 0],
     })
   }
 
-  cover.push({
+  innerStack.push({
     text: t('rubric.version', { version: rubricGrade.rubric_version || '1.0', count: CHECKS_RAW }),
     fontSize: 7,
     color: '#9ca3af',
     alignment: 'center',
-    margin: [0, 10, 0, 18],
+    margin: [0, 14, 0, 0],
     ...fontProp,
   })
 
-  // Bottom border to set off the cover from the rest of the report.
-  cover.push({
-    canvas: [{ type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5, lineColor: '#e5e7eb' }],
-    margin: [0, 0, 0, 12],
-  })
-  return cover
+  return [frostCoverWrapper(innerStack, fontProp)]
 }
 
 function buildClaimTable(claimTrees, t) {
@@ -931,6 +977,7 @@ export async function downloadReport(reportData, t, language, originalFilename) 
     },
     defaultStyle: {
       fontSize: 10,
+      lineHeight: 1.4,
       ...(fontName ? { font: fontName } : {}),
     },
   }
