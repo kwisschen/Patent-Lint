@@ -13,7 +13,7 @@ import { Shield, Check, ChevronDown, ArrowRight } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
 import { composeEnterprise } from '../lib/feedback'
 import { useFeedback } from '../components/FeedbackPicker'
-import { CHECKS_DISPLAY } from '../generated/stats'
+import { CHECKS_RAW } from '../generated/stats'
 
 /* ------------------------------------------------------------------ */
 /*  Hero                                                               */
@@ -69,7 +69,7 @@ function HeroSection({ onInquire }) {
 function PricingCard({ tier, onInquire, popular = false }) {
   const { t } = useTranslation()
   const [ref, isInView] = useInView()
-  const features = t(`commercial.${tier}.features`, { returnObjects: true, count: CHECKS_DISPLAY }) || []
+  const features = t(`commercial.${tier}.features`, { returnObjects: true, count: CHECKS_RAW }) || []
 
   // Wrap the FrostCard in an outer relative div: the badge positioning needs
   // overflow:visible (so -top-3 isn't clipped on mobile), but the FrostCard
@@ -193,7 +193,7 @@ function FAQItem({ qKey, aKey, delay = 0 }) {
       </button>
       {open && (
         <p className="pb-4 text-sm text-muted-foreground leading-relaxed">
-          {t(aKey, { count: CHECKS_DISPLAY })}
+          {t(aKey, { count: CHECKS_RAW })}
         </p>
       )}
     </div>
