@@ -679,7 +679,7 @@
       },
       "q7": {
         "q": "How do we verify what is running?",
-        "a": "Each release is PGP-signed with a dedicated PatentLint signing key. Verification guide ships in the repository (RELEASE_VERIFICATION.md). Your IT verifies signatures before deploy as part of standard release-engineering hygiene."
+        "a": "Tagged releases follow standard release-engineering hygiene. For organizations with formal release-verification requirements (PGP-signed builds, signature verification before deploy), specifics are arranged at engagement based on your IT team's existing tooling and policies."
       },
       "q8": {
         "q": "Evaluation period?",
@@ -1384,7 +1384,8 @@
     },
     "passedSummary": {
       "title": "Passed Checks"
-    }
+    },
+    "similarFindings": "   + {{count}} similar finding(s) on the same check"
   },
   "checks": {
     "preamble_cross_category_mismatch": "Cross-category preamble mismatch between dependent and independent claim (§ 112(d)).",
@@ -1627,7 +1628,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "Grades formality, not the substance of your draft. Every finding is fixable."
+      "line": "This grade helps you fix formal requirements, and is not a judgment on how the draft reads."
     },
     "completenessGate": {
       "title": "Draft incomplete — grade unavailable",
