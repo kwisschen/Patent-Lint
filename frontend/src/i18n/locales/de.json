@@ -612,7 +612,7 @@
   "commercial": {
     "hero": {
       "title": "PatentLint für Unternehmen",
-      "subtitle": "Für den Einzelgebrauch stets kostenlos. Enterprise-Option für Organisationen — SLA, SSO, Datenhoheit, eigene Regelpakete, eigene Rubrik-Gewichtungen, Audit-Trail.",
+      "subtitle": "Für den Einzelgebrauch stets kostenlos. Enterprise-Option für Organisationen — SSO, Datenhoheit, eigene Regelpakete, eigene Rubrik-Gewichtungen, Audit-Trail.",
       "body": "Setzen Sie dieselbe Analyse-Engine in Ihrer eigenen Infrastruktur ein, kommerziell lizenziert für die Mandatsarbeit. Optional SSO, Audit-Trail und eigene Regelpakete, die Ihre Hausschreibweise abbilden. Anmeldungen verlassen niemals Ihr Netzwerk. Kein Upload, kein Konto, keine KI.",
       "cta": "Evaluierung anfragen"
     },
@@ -632,7 +632,7 @@
         "Alle Jurisdiktionen (US, CN, TW; EU/JP/KR in Entwicklung)",
         "Alle {{count}} Prüfungen, bewertet über die 5 Rubrik-Abschnitte",
         "Air-Gap-Bereitstellung (kein Internet nach Installation erforderlich)",
-        "E-Mail-Support, 2 Werktage Reaktionszeit",
+        "E-Mail-Support, Antwort nach Verfügbarkeit",
         "Quartalsweise getaggte Releases",
         "14-tägige Evaluierung, Rechnung erstattungsfähig",
         "PolyForm-Strict-1.0.0 zzgl. kommerzielles Beibrief"
@@ -648,8 +648,7 @@
         "SSO bei Verfügbarkeit (OIDC) — ohne Aufpreis",
         "Auditprotokoll aktivierbar (lokale Datei, keine Telemetrie)",
         "Optionales Custom-Regelpaket-Add-on",
-        "Vorrang bei Funktionswünschen in den Quartalsbesprechungen",
-        "Optionaler informeller Slack-Connect-Kanal"
+        "Bevorzugte Berücksichtigung von Funktionswünschen"
       ]
     },
     "faq": {

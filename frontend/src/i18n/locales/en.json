@@ -612,7 +612,7 @@
   "commercial": {
     "hero": {
       "title": "PatentLint for enterprises",
-      "subtitle": "Always free for individual use. Enterprise option for organizations — SLA, SSO, data custody, custom rule packs, custom rubric weights, audit trail.",
+      "subtitle": "Always free for individual use. Enterprise option for organizations — SSO, data custody, custom rule packs, custom rubric weights, audit trail.",
       "body": "Deploy the same analysis engine inside your firewall, commercially licensed for client work. Optional SSO, audit trail, and custom rule packs that translate your house style. Drafts never leave your network. No upload, no account, no AI.",
       "cta": "Request evaluation"
     },
@@ -632,7 +632,7 @@
         "All jurisdictions (US, CN, TW; EU/JP/KR in development)",
         "All {{count}} checks scored across the 5-section rubric",
         "Air-gap deployment (no internet required after install)",
-        "Email support, 2 business-day response",
+        "Email support, best-effort response",
         "Quarterly tagged releases",
         "14-day evaluation, refundable invoice",
         "PolyForm-Strict-1.0.0 + commercial side letter"
@@ -648,8 +648,7 @@
         "SSO when available (OIDC) — no upcharge",
         "Audit log enabled (local file, no telemetry)",
         "Custom rule pack add-on available",
-        "Priority for feature requests during quarterly reviews",
-        "Optional informal Slack Connect channel"
+        "Priority consideration for feature requests"
       ]
     },
     "faq": {
