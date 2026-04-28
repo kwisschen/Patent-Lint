@@ -16,9 +16,13 @@ Design principles
 - **Top-N sample**: at most 5 findings per report. A check with 100
   matches sends 5 representatives + the aggregate count.
 - **Bounded fragments**: terms ≤80 chars, regex matches ≤120 chars,
-  context windows 30 chars before + 30 after. Never the whole claim
-  text or paragraph. The user sees every fragment in the modal preview
-  and can decline.
+  context windows sized per script (Latin 30 / Japanese 22 / Hangul
+  18 / Han 12) so the linguistic content shown is roughly equivalent
+  across scripts. Han chars carry ~4x the morpheme density of Latin
+  chars; Japanese mixes Han with kana inflection and long katakana
+  technical terms (closer to Latin than Han); Hangul is syllabic.
+  Never the whole claim text or paragraph. The user sees every
+  fragment in the modal preview and can decline.
 - **No identity, no link to identity**: no email, no IP, no file path,
   no session ID, no OS user info ever appears in any extractor output.
 
@@ -36,9 +40,10 @@ E. Claim-level structural (`extract_claim_id_list`)
 
 Helper conventions
 ------------------
-- `_excerpt_around(text, target, before=30, after=30)`: returns the
-  `(context_before, context_after, char_offset)` triple for the first
-  occurrence of `target` in `text`. Returns `(None, None, None)` if
+- `_excerpt_around(text, target)`: returns the `(context_before,
+  context_after, char_offset)` triple for the first occurrence of
+  `target` in `text`. Window size is auto-picked from the script of
+  `text` via `_context_window_for`. Returns `(None, None, None)` if
   not found.
 - `_truncate(s, n)`: shortens a string to ≤n chars without splitting
   CJK characters in the middle (Python str slicing on codepoints, so
@@ -55,12 +60,51 @@ from typing import Any
 # Helper primitives
 # ---------------------------------------------------------------------------
 
-CONTEXT_WINDOW = 30
+CONTEXT_WINDOW_LATIN = 30
+CONTEXT_WINDOW_JA = 22
+CONTEXT_WINDOW_HANGUL = 18
+CONTEXT_WINDOW_HAN = 12
 TERM_MAX = 80
 MATCH_MAX = 120
 EXCERPT_MAX = 60
 PREAMBLE_MAX = 60
 SAMPLE_SIZE = 5
+
+
+def _context_window_for(text: str) -> int:
+    """Pick a per-script context window so the modal preview shows
+    roughly equivalent linguistic content regardless of script.
+
+    - Han (zh-TW / zh-CN): 12 — each char ≈ 1 morpheme, very dense.
+    - Japanese: 22 — kana inflection + long katakana technical terms
+      (e.g. インターフェース = 8 chars for one concept) inflate token
+      count well beyond pure Han or Hangul, so JA needs more chars to
+      hold the same semantic content. Detected via kana presence —
+      CN/TW drafts virtually never contain hiragana/katakana, so even
+      a few kana chars are a near-perfect Japanese signal.
+    - Hangul: 18 — syllabic blocks, denser than JA's mixed scripts.
+    - Latin (en/de): 30 — ~5 chars/word.
+
+    Detection is content-driven (reads ``text``), not UI-locale-driven:
+    a US user analyzing a TW patent still gets the Han window because
+    the claim text itself is Han-dominant. Kana uses an absolute
+    count ≥ 3 (real JP claims always have lots of hiragana particles
+    の/を/に/で/は; a stray katakana product name in a CN claim won't
+    cross 3). Han/Hangul use a 0.3 ratio matching the threshold in
+    ``parser/jurisdiction_mismatch.py``."""
+    if not text:
+        return CONTEXT_WINDOW_LATIN
+    n = len(text)
+    kana = sum(1 for c in text if "぀" <= c <= "ヿ")
+    if kana >= 3:
+        return CONTEXT_WINDOW_JA
+    han = sum(1 for c in text if "一" <= c <= "鿿")
+    if han / n > 0.3:
+        return CONTEXT_WINDOW_HAN
+    hangul = sum(1 for c in text if "가" <= c <= "힯")
+    if hangul / n > 0.3:
+        return CONTEXT_WINDOW_HANGUL
+    return CONTEXT_WINDOW_LATIN
 
 
 def _truncate(s: Any, n: int) -> str | None:
@@ -75,15 +119,21 @@ def _truncate(s: Any, n: int) -> str | None:
     return text[:n]
 
 
-def _excerpt_around(text: str, target: str, before: int = CONTEXT_WINDOW, after: int = CONTEXT_WINDOW) -> tuple[str | None, str | None, int | None]:
+def _excerpt_around(text: str, target: str, before: int | None = None, after: int | None = None) -> tuple[str | None, str | None, int | None]:
     """Return (context_before, context_after, char_offset) for the first
-    occurrence of ``target`` inside ``text``. Returns all-None if not
-    found or if either input is empty."""
+    occurrence of ``target`` inside ``text``. Window size is picked from
+    the script of ``text`` when ``before``/``after`` are not given.
+    Returns all-None if not found or if either input is empty."""
     if not text or not target:
         return None, None, None
     idx = text.find(target)
     if idx < 0:
         return None, None, None
+    window = _context_window_for(text)
+    if before is None:
+        before = window
+    if after is None:
+        after = window
     ctx_before = text[max(0, idx - before): idx] or None
     end = idx + len(target)
     ctx_after = text[end: end + after] or None
