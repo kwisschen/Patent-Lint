@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 // Copyright (c) 2025 Christopher Chen
-import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, Link } from 'react-router-dom'
 import LogoIcon from './LogoIcon'
@@ -10,13 +9,6 @@ import LanguageSwitcher from './LanguageSwitcher'
 export default function Header({ onReset, canReset }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const [scrolled, setScrolled] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10)
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   const handleLogoClick = () => {
     if (canReset) {
@@ -26,13 +18,7 @@ export default function Header({ onReset, canReset }) {
   }
 
   return (
-    <header
-      className={`sticky top-0 z-50 w-full border-b transition-all duration-[var(--motion-duration-base)] ${
-        scrolled
-          ? 'frost-blur-md bg-background/70 supports-[backdrop-filter]:bg-background/60 shadow-[var(--frost-resting-shadow)] border-[var(--frost-resting-border)]'
-          : 'bg-background border-border'
-      }`}
-    >
+    <header className="sticky top-0 z-50 w-full border-b bg-background border-border">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
         <div
           role="button"
