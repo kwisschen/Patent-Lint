@@ -24,11 +24,27 @@
     }
   }
 
+  /* Frost-glass surface tokens — weasyprint supports CSS3 fully (gradients,
+     rgba, box-shadow) but NOT backdrop-filter (browser-only). Approximate
+     the LiquidGlass aesthetic with translucent gradient + soft shadow +
+     specular inner-light highlight. Print stays light-only by design
+     (matches pdfExport.js convention). */
+  :root {
+    --frost-resting-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(248, 250, 252, 0.65));
+    --frost-resting-border: 1pt solid rgba(15, 23, 42, 0.08);
+    --frost-resting-shadow: 0 1pt 3pt rgba(15, 23, 42, 0.06), 0 4pt 8pt rgba(15, 23, 42, 0.06);
+    --frost-resting-inner-light: inset 0 1pt 0 rgba(255, 255, 255, 0.9);
+    --frost-elevated-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(241, 245, 249, 0.72));
+    --frost-elevated-border: 1pt solid rgba(15, 23, 42, 0.1);
+    --frost-elevated-shadow: 0 4pt 8pt rgba(15, 23, 42, 0.06), 0 12pt 24pt rgba(15, 23, 42, 0.08);
+    --frost-elevated-inner-light: inset 0 1.5pt 0 rgba(255, 255, 255, 1);
+  }
+
   body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 11pt;
     color: #1a1a1a;
-    line-height: 1.5;
+    line-height: 1.55;
   }
 
   h1 {
@@ -41,11 +57,14 @@
 
   h2 {
     font-size: 15pt;
-    color: #333;
-    margin-top: 20pt;
-    margin-bottom: 10pt;
-    border-bottom: 1px solid #e5e7eb;
-    padding-bottom: 4pt;
+    color: #1e293b;
+    margin-top: 24pt;
+    margin-bottom: 12pt;
+    padding: 8pt 12pt;
+    background: linear-gradient(90deg, rgba(248, 250, 252, 0.6), transparent);
+    border-bottom: 1pt solid #e5e7eb;
+    border-left: 3pt solid #cbd5e1;
+    border-radius: 4pt 4pt 0 0;
   }
 
   h3 {
@@ -56,10 +75,11 @@
   }
 
   .summary-box {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    padding: 12pt 16pt;
+    background: var(--frost-resting-bg);
+    border: var(--frost-resting-border);
+    border-radius: 8pt;
+    box-shadow: var(--frost-resting-shadow), var(--frost-resting-inner-light);
+    padding: 14pt 18pt;
     margin: 12pt 0 20pt 0;
   }
 
@@ -91,16 +111,18 @@
 
   .status-tag {
     font-weight: 700;
-    padding: 1px 6px;
-    border-radius: 3px;
+    padding: 2pt 8pt;
+    border-radius: 4pt;
     font-size: 10pt;
     display: inline-block;
     margin-right: 4pt;
+    border: 1pt solid;
+    box-shadow: inset 0 1pt 0 rgba(255, 255, 255, 0.5);
   }
 
-  .status-tag.pass   { background: #dbeafe; color: #1e40af; }
-  .status-tag.verify { background: #dcfce7; color: #166534; }
-  .status-tag.amend  { background: #fee2e2; color: #991b1b; }
+  .status-tag.pass   { background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent), #dbeafe; color: #1e40af; border-color: #2563eb; }
+  .status-tag.verify { background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent), #dcfce7; color: #166534; border-color: #16a34a; }
+  .status-tag.amend  { background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent), #fee2e2; color: #991b1b; border-color: #dc2626; }
 
   .check-item small {
     color: #555;
@@ -144,22 +166,23 @@
 
   /* Triage section */
   .triage-group {
-    margin: 8pt 0;
-    padding: 6pt 10pt;
-    border-left: 4px solid #e5e7eb;
-    border-radius: 0 4px 4px 0;
+    margin: 10pt 0;
+    padding: 8pt 12pt;
+    border-left: 4pt solid #e5e7eb;
+    border-radius: 0 6pt 6pt 0;
+    box-shadow: var(--frost-resting-shadow), inset 0 1pt 0 rgba(255, 255, 255, 0.6);
   }
   .triage-group.amend {
     border-left-color: #dc2626;
-    background: #fef2f2;
+    background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent), #fef2f2;
   }
   .triage-group.verify {
     border-left-color: #16a34a;
-    background: #f0fdf4;
+    background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent), #f0fdf4;
   }
   .triage-group.pass {
     border-left-color: #2563eb;
-    background: #eff6ff;
+    background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent), #eff6ff;
   }
   .triage-group .triage-item {
     font-size: 10pt;
@@ -279,9 +302,12 @@
   /* ---- Rubric cover ---- */
   .cover {
     text-align: center;
-    padding: 24pt 0 18pt 0;
-    margin-bottom: 18pt;
-    border-bottom: 1px solid #e5e7eb;
+    padding: 32pt 24pt;
+    margin-bottom: 22pt;
+    background: var(--frost-elevated-bg);
+    border: var(--frost-elevated-border);
+    border-radius: 12pt;
+    box-shadow: var(--frost-elevated-shadow), var(--frost-elevated-inner-light);
   }
   .cover .grade-letter {
     font-size: 96pt;
@@ -289,6 +315,7 @@
     line-height: 1;
     letter-spacing: -2pt;
     margin: 0;
+    text-shadow: 0 1pt 2pt rgba(15, 23, 42, 0.05);
   }
   /* Color scheme matches the web hero (--pass-border / --verify-border /
      --amend-border on light mode). PDF doesn't have dark mode, so
@@ -343,10 +370,11 @@
   }
   .section-grades .pill {
     display: inline-block;
-    padding: 2pt 8pt;
+    padding: 3pt 10pt;
     border-radius: 4pt;
     font-weight: 700;
     border: 1pt solid;
+    box-shadow: inset 0 1pt 0 rgba(255, 255, 255, 0.5);
   }
   .section-grades .tier-a { color: #2563eb; border-color: #2563eb; }
   .section-grades .tier-bc { color: #16a34a; border-color: #16a34a; }
