@@ -142,7 +142,7 @@
   },
   "footer": {
     "disclaimer": "Keine Rechtsberatung",
-    "builtBy": "© 2025 Christopher Chen",
+    "builtBy": "© 2025–2026 Christopher Chen",
     "security": "Sicherheit",
     "about": "Über",
     "commercial": "Lizenzierung",
@@ -1454,14 +1454,14 @@
       "title": "Die Website vs. die Software",
       "p1": "PatentLint hat zwei Erscheinungsformen:",
       "siteLabel": "Die Website (patentlint.com).",
-      "siteDesc": "Eine gehostete Webanwendung, die als kostenloser Evaluierungsdienst bereitgestellt wird. Wenn Sie eine Patentanmeldung hochladen, läuft die Prüfung vollständig in Ihrem Browser über WebAssembly — Ihr Entwurf verlässt nie Ihr Gerät. Die Website wird von Christopher Chen betrieben.",
+      "siteDesc": "Eine gehostete Webanwendung, kostenlos für die persönliche Nutzung durch einzelne Patentpraktiker und für Organisationen zur Evaluierung vor einer kommerziellen Lizenzierung (siehe § 4). Wenn Sie eine Patentanmeldung hochladen, läuft die Prüfung vollständig in Ihrem Browser über WebAssembly — Ihr Entwurf verlässt nie Ihr Gerät. Die Website wird von Christopher Chen betrieben.",
       "softwareLabel": "Die Software.",
       "softwareDesc": "Der zugrunde liegende Quellcode, veröffentlicht in einem privaten Repository. Die Software ist unter PolyForm-Strict-1.0.0 lizenziert (siehe § 4).",
       "p2": "Diese Bedingungen gelten für die Nutzung beider. Unterschiedliche Regeln gelten je nachdem, welche Sie nutzen."
     },
     "s2": {
       "title": "Nutzung der Website",
-      "p1": "Die Website ist zur individuellen Evaluierung kostenlos nutzbar. Sie dürfen:",
+      "p1": "Die Website ist kostenlos zur persönlichen Nutzung sowie zur Evaluierung von PatentLint vor einer kommerziellen Lizenzierung (siehe § 4). Sie dürfen:",
       "may1": "Patentanmeldungen zur Prüfung gegen US-, CN- oder TW-Rechtsregelwerke hochladen.",
       "may2": "Prüfberichte für eigene Zwecke exportieren.",
       "may3": "Die Prüfungsergebnisse für Ihre eigenen Ausarbeitungsentscheidungen verwenden.",
@@ -1530,7 +1530,7 @@
       "title": "Anonyme Fehlermeldungen",
       "p1": "Wenn Sie bei einer Prüfung auf „Anonym senden“ klicken, gewähren Sie PatentLint die Erlaubnis, die anonymisierte Diagnose-Datenmenge zur Behebung von Erkennungsfehlern und zur Verbesserung des Prüfkatalogs zu nutzen. Sie behalten alle Rechte an Ihrer Patentanmeldung, die auf Ihrem Gerät verbleibt. Da Meldungen nicht mit Ihnen verknüpft werden können, ist eine direkte Rückmeldung möglicherweise nicht möglich — wir lesen jedoch jede Meldung."
     },
-    "copyright": "Copyright © 2025 Christopher Chen. Alle Rechte vorbehalten.",
+    "copyright": "Copyright © 2025–2026 Christopher Chen. Alle Rechte vorbehalten.",
     "crossLinks": "Siehe auch: <1>Datenschutzerklärung</1> · <3>Sicherheit</3>"
   },
   "privacy": {
@@ -1623,7 +1623,7 @@
       "name": "Christopher Chen",
       "emailLabel": "E-Mail:"
     },
-    "copyright": "Copyright © 2025 Christopher Chen. Alle Rechte vorbehalten.",
+    "copyright": "Copyright © 2025–2026 Christopher Chen. Alle Rechte vorbehalten.",
     "crossLinks": "Siehe auch: <1>Nutzungsbedingungen</1> · <3>Sicherheit</3>"
   },
   "rubric": {
