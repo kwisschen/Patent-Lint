@@ -1536,17 +1536,17 @@
   },
   "privacy": {
     "title": "隐私政策",
-    "lastUpdated": "最后更新：2026年4月21日",
+    "lastUpdated": "最后更新：2026年4月27日",
     "translationNote": "本译文仅供参考。中译本与英文版本如有歧异，以英文版为准。",
     "intro": "本隐私政策说明 patentlint.com（下称「本网站」）于您访问时如何处理数据。PatentLint 应用程序本身不收集您的任何数据：未使用分析工具、未使用追踪、未使用 cookies。唯一存在的数据流，系本网站之托管服务商 Cloudflare Pages 于每次访问时所接收之标准网页请求中介数据，与任何网站无异。本政策将上述区别予以明文披露。",
     "s1": {
       "title": "前言",
-      "p1": "patentlint.com 为 Christopher Chen 所运营之线上应用网站，提供 PatentLint 专利说明书检查工具。文件分析全程透过 WebAssembly（Pyodide）于您的浏览器内执行。本网站以 Cloudflare Pages 提供静态资产，并无应用服务器，亦无数据库；您的文件内容绝不会自您的设备传出。",
+      "p1": "patentlint.com 为 Christopher Chen 所运营之线上应用网站，提供 PatentLint 专利说明书检查工具。文件分析全程透过 WebAssembly（Pyodide）于您的浏览器内执行。本网站以 Cloudflare Pages 提供静态资产，另设有单一 Cloudflare Pages Function 作为第 6 条所述之自愿性错误反馈端点；本网站并无分析服务器，亦无数据库。您的文件内容绝不会自您的设备传出。",
       "p2": "本政策适用于您与本网站之互动。若您另行取得 PatentLint 软件源代码，则应依该软件之授权（PolyForm-Strict-1.0.0）规范，不适用本政策。"
     },
     "s2": {
       "title": "您的专利说明书",
-      "p1": "您「上传」至本网站之专利说明书，实际上并未离开您的设备；文件仅加载至浏览器标签页内，并于该标签页中处理。分析作业在该标签页中之 Pyodide／WebAssembly 引擎上执行。patentlint.com 并不存在服务器端的分析路径；本网站仅提供静态资产。",
+      "p1": "您「上传」至本网站之专利说明书，实际上并未离开您的设备；文件仅加载至浏览器标签页内，并于该标签页中处理。分析作业在该标签页中之 Pyodide／WebAssembly 引擎上执行。patentlint.com 并不存在服务器端的分析路径；本网站以静态资产形式提供，另设有单一自愿性错误反馈端点（第 6 条），仅于用户明确提交时执行。",
       "p2": "我们绝不：",
       "never1": "接收或传输您专利说明书之内容。",
       "never2": "存储文件名、权利要求文字、说明书本文或任何专利相关数据。",
