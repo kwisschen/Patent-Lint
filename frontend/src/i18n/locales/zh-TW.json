@@ -142,7 +142,7 @@
   },
   "footer": {
     "disclaimer": "本報告不構成法律意見",
-    "builtBy": "© 2025 Christopher Chen",
+    "builtBy": "© 2025–2026 Christopher Chen",
     "security": "安全性",
     "about": "關於",
     "commercial": "企業方案",
@@ -1455,14 +1455,14 @@
       "title": "本網站與本軟體的區別",
       "p1": "PatentLint 以兩種形式提供：",
       "siteLabel": "本網站（patentlint.com）。",
-      "siteDesc": "屬於免費評估用途之線上應用服務。當您上傳專利說明書時，分析過程透過 WebAssembly 全程於您的瀏覽器內執行；您的說明書不會離開裝置。本網站由 Christopher Chen 營運。",
+      "siteDesc": "本網站係供個人實務人員個人使用、及供機構於商業授權前進行評估之免費線上應用服務（詳見第 4 條）。當您上傳專利說明書時，分析過程透過 WebAssembly 全程於您的瀏覽器內執行；您的說明書不會離開裝置。本網站由 Christopher Chen 營運。",
       "softwareLabel": "本軟體。",
       "softwareDesc": "底層原始碼，存放於私有原始碼儲存庫。本軟體依 PolyForm-Strict-1.0.0 授權（詳見 §4）。",
       "p2": "本條款涵蓋上述兩者之使用。依您所使用之形式，適用之規範有所不同。"
     },
     "s2": {
       "title": "使用本網站",
-      "p1": "本網站可供個人評估用途免費使用。您得：",
+      "p1": "本網站可供個人使用、及供機構於商業授權前評估 PatentLint 免費使用（詳見第 4 條）。您得：",
       "may1": "上傳專利說明書，依 US、CN 或 TW 管轄區規則進行分析。",
       "may2": "為自身參考目的匯出分析報告。",
       "may3": "依分析結果輔助您自身的撰稿判斷。",
@@ -1531,7 +1531,7 @@
       "title": "匿名錯誤回報",
       "p1": "當您在檢查項目上點選「匿名傳送」時，即授權 PatentLint 使用該去識別化之診斷資料以修復偵測缺陷並改良檢查項目。您仍保留專利說明書的一切權利，稿件內容也不會離開您的裝置。由於回報無法連結至您本人，我們可能無法直接回覆，但我們會閱讀每一份回報。"
     },
-    "copyright": "Copyright © 2025 Christopher Chen。保留一切權利。",
+    "copyright": "Copyright © 2025–2026 Christopher Chen。保留一切權利。",
     "crossLinks": "另請參閱：<1>隱私權政策</1>・<3>安全性說明</3>"
   },
   "privacy": {
@@ -1625,7 +1625,7 @@
       "name": "Christopher Chen",
       "emailLabel": "電子郵件："
     },
-    "copyright": "Copyright © 2025 Christopher Chen。保留一切權利。",
+    "copyright": "Copyright © 2025–2026 Christopher Chen。保留一切權利。",
     "crossLinks": "另請參閱：<1>服務條款</1>・<3>安全性說明</3>"
   },
   "rubric": {
