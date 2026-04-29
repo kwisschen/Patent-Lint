@@ -1630,7 +1630,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "此評等僅用於協助修正形式要件，非評斷稿件內容。"
+      "line": "此評等僅反映 PatentLint 之檢查結果，並非稿件實質內容之評斷。"
     },
     "completenessGate": {
       "title": "稿件不完整：無法評等",

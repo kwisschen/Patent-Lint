@@ -1628,7 +1628,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "This grade helps you fix formal requirements. It is not a judgment on how the draft reads."
+      "line": "This grade only reflects PatentLint's check results. It is not a judgment on the draft's substantive content."
     },
     "completenessGate": {
       "title": "Draft incomplete — grade unavailable",
