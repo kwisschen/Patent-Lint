@@ -1535,16 +1535,16 @@
   },
   "privacy": {
     "title": "Datenschutzerklärung",
-    "lastUpdated": "Zuletzt aktualisiert: 21. April 2026",
+    "lastUpdated": "Zuletzt aktualisiert: 27. April 2026",
     "intro": "Diese Datenschutzerklärung beschreibt, wie patentlint.com (die „Website“) beim Besuch mit Daten umgeht. Die Anwendung PatentLint erfasst nichts über Sie — keine Analyse, keine Tracker, keine Cookies. Der einzige Datenfluss sind die üblichen Webanfrage-Metadaten, die unser Hosting-Anbieter (Cloudflare Pages) bei jedem Besuch sieht, wie jede andere Website auch. Diese Erklärung stellt diese Unterscheidung ausdrücklich klar.",
     "s1": {
       "title": "Einführung",
-      "p1": "patentlint.com ist eine gehostete Webanwendung, die von Christopher Chen betrieben wird. Sie führt PatentLint aus, einen Patentanmeldungs-Checker, der Ihre Datei vollständig in Ihrem Browser über WebAssembly (Pyodide) prüft. Die Website wird als statische Assets von Cloudflare Pages ausgeliefert — kein Anwendungsserver, keine Datenbank. Dateiinhalte werden nie von Ihrem Gerät übertragen.",
+      "p1": "patentlint.com ist eine gehostete Webanwendung, die von Christopher Chen betrieben wird. Sie führt PatentLint aus, einen Patentanmeldungs-Checker, der Ihre Datei vollständig in Ihrem Browser über WebAssembly (Pyodide) prüft. Die Website wird als statische Assets von Cloudflare Pages ausgeliefert, ergänzt um eine einzelne Cloudflare Pages Function für den in § 6 beschriebenen freiwilligen Fehlermelde-Endpunkt. Es gibt keinen Analyseserver und keine Datenbank. Dateiinhalte werden nie von Ihrem Gerät übertragen.",
       "p2": "Diese Datenschutzerklärung gilt für Ihre Interaktionen mit der Website. Sie deckt nicht die PatentLint-Software ab, wenn Sie den Quellcode separat beziehen — dafür gilt die Software-Lizenz (PolyForm-Strict-1.0.0)."
     },
     "s2": {
       "title": "Ihre Patentanmeldungen",
-      "p1": "Patentanmeldungen, die Sie auf die Website „hochladen“, verlassen tatsächlich nie Ihr Gerät — die Datei wird in den Browser-Tab geladen und dort verarbeitet. Die Prüfung läuft auf einer Pyodide-/WebAssembly-Engine in diesem Tab. Auf patentlint.com gibt es keinen serverseitigen Prüfpfad; die Website besteht ausschließlich aus statischen Assets.",
+      "p1": "Patentanmeldungen, die Sie auf die Website „hochladen“, verlassen tatsächlich nie Ihr Gerät — die Datei wird in den Browser-Tab geladen und dort verarbeitet. Die Prüfung läuft auf einer Pyodide-/WebAssembly-Engine in diesem Tab. Auf patentlint.com gibt es keinen serverseitigen Prüfpfad; die Website wird als statische Assets ausgeliefert, ergänzt um einen einzelnen freiwilligen Fehlermelde-Endpunkt (§ 6), der nur bei ausdrücklicher Übermittlung durch den Nutzer ausgeführt wird.",
       "p2": "Konkret:",
       "never1": "Wir empfangen oder übertragen keinen Inhalt Ihrer Patentanmeldungen.",
       "never2": "Wir speichern keine Dateinamen, Anspruchstexte, Beschreibungsinhalte oder patent-spezifischen Daten.",
