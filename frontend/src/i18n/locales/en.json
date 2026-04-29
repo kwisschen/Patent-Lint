@@ -142,7 +142,7 @@
   },
   "footer": {
     "disclaimer": "Not legal advice",
-    "builtBy": "© 2025 Christopher Chen",
+    "builtBy": "© 2025–2026 Christopher Chen",
     "security": "Security",
     "about": "About",
     "commercial": "Commercial",
@@ -1367,14 +1367,14 @@
       "title": "The Site vs. the Software",
       "p1": "PatentLint has two forms:",
       "siteLabel": "The Site (patentlint.com).",
-      "siteDesc": "A hosted web application provided as a free evaluation service. When you upload a patent draft, analysis runs entirely in your browser via WebAssembly — your draft never leaves your device. The Site is operated by Christopher Chen.",
+      "siteDesc": "A hosted web application, free for individual practitioners' personal use and for organizations evaluating before commercial licensing (see § 4). When you upload a patent draft, analysis runs entirely in your browser via WebAssembly — your draft never leaves your device. The Site is operated by Christopher Chen.",
       "softwareLabel": "The Software.",
       "softwareDesc": "The underlying source code, published in a private repository. The Software is licensed under PolyForm-Strict-1.0.0 (see § 4).",
       "p2": "These Terms cover your use of both. Different rules apply depending on which you are using."
     },
     "s2": {
       "title": "Using the Site",
-      "p1": "The Site is free to use for individual evaluation. You may:",
+      "p1": "The Site is free for personal use, and for organizations evaluating PatentLint before commercial licensing (see § 4). You may:",
       "may1": "Upload patent drafts for analysis across US, CN, or TW jurisdiction rule sets.",
       "may2": "Export analysis reports for your own reference.",
       "may3": "Use the analysis output to inform your own drafting decisions.",
@@ -1443,7 +1443,7 @@
       "title": "Anonymous error reports",
       "p1": "If you click \"Send anonymously\" on a check, you give PatentLint permission to use the de-identified diagnostic payload to debug detection bugs and improve the catalog. You retain all rights to your patent draft, which stays on your device. Because reports cannot be linked back to you, we may not be able to follow up directly — but we read every report."
     },
-    "copyright": "Copyright © 2025 Christopher Chen. All rights reserved.",
+    "copyright": "Copyright © 2025–2026 Christopher Chen. All rights reserved.",
     "crossLinks": "See also: <1>Privacy Policy</1> · <3>Security</3>"
   },
   "privacy": {
@@ -1536,7 +1536,7 @@
       "name": "Christopher Chen",
       "emailLabel": "Email:"
     },
-    "copyright": "Copyright © 2025 Christopher Chen. All rights reserved.",
+    "copyright": "Copyright © 2025–2026 Christopher Chen. All rights reserved.",
     "crossLinks": "See also: <1>Terms of Service</1> · <3>Security</3>"
   },
   "rubric": {

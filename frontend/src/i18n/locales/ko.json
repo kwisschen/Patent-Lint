@@ -142,7 +142,7 @@
   },
   "footer": {
     "disclaimer": "본 보고서는 법률 자문에 해당하지 않습니다",
-    "builtBy": "© 2025 Christopher Chen",
+    "builtBy": "© 2025–2026 Christopher Chen",
     "security": "보안",
     "about": "소개",
     "commercial": "기업 도입",
@@ -1368,14 +1368,14 @@
       "title": "본 사이트와 본 소프트웨어의 구분",
       "p1": "PatentLint는 두 가지 형태로 제공됩니다.",
       "siteLabel": "본 사이트(patentlint.com).",
-      "siteDesc": "무료 평가용으로 제공되는 호스팅 웹 애플리케이션입니다. 특허 명세서를 업로드하시면 분석은 WebAssembly를 통해 전적으로 브라우저 내에서 실행되며, 명세서가 단말기 외부로 전송되지 않습니다. 본 사이트는 Christopher Chen이 운영합니다.",
+      "siteDesc": "개인 특허 실무자의 개인 이용 및 상업 라이선스 체결 전 조직의 평가 모두 무료로 이용 가능한 호스팅 웹 애플리케이션입니다(§4 참조). 특허 명세서를 업로드하시면 분석은 WebAssembly를 통해 전적으로 브라우저 내에서 실행되며, 명세서가 단말기 외부로 전송되지 않습니다. 본 사이트는 Christopher Chen이 운영합니다.",
       "softwareLabel": "본 소프트웨어.",
       "softwareDesc": "비공개 저장소에 게시된 기반 소스 코드입니다. 본 소프트웨어는 PolyForm-Strict-1.0.0에 따라 라이선스가 부여됩니다(§4 참조).",
       "p2": "본 약관은 양자 모두에 적용됩니다. 이용 형태에 따라 적용되는 규정이 달라집니다."
     },
     "s2": {
       "title": "본 사이트의 이용",
-      "p1": "본 사이트는 개인 평가 목적으로 무료 이용 가능합니다. 다음과 같은 행위는 허용됩니다.",
+      "p1": "본 사이트는 개인 이용 및 상업 라이선스 체결 전 PatentLint 평가 목적으로 무료 이용 가능합니다(§4 참조). 다음과 같은 행위는 허용됩니다.",
       "may1": "US, CN, TW 관할권 규칙 세트에 따라 특허 명세서를 업로드하여 분석합니다.",
       "may2": "본인의 참고용으로 분석 보고서를 내보냅니다.",
       "may3": "분석 결과를 본인의 작성 판단 참고로 활용합니다.",
@@ -1444,7 +1444,7 @@
       "title": "익명 오류 보고",
       "p1": "검사 항목에서 「익명으로 보내기」 를 누르시면, PatentLint 는 해당 비식별화된 진단 데이터를 검출 결함 수정 및 점검 항목 개선에 사용할 수 있는 권한을 받습니다. 귀하는 특허 명세서에 대한 모든 권리를 계속 보유하시며, 명세서 내용은 귀하의 기기 내에 유지됩니다. 보고가 귀하 개인과 연결되지 않으므로 직접 회신을 드리지 못할 수 있으나, 저희는 모든 보고를 읽고 있습니다."
     },
-    "copyright": "Copyright © 2025 Christopher Chen. All rights reserved.",
+    "copyright": "Copyright © 2025–2026 Christopher Chen. All rights reserved.",
     "crossLinks": "함께 참조: <1>개인정보 처리방침</1> · <3>보안</3>"
   },
   "privacy": {
@@ -1538,7 +1538,7 @@
       "name": "Christopher Chen",
       "emailLabel": "이메일:"
     },
-    "copyright": "Copyright © 2025 Christopher Chen. All rights reserved.",
+    "copyright": "Copyright © 2025–2026 Christopher Chen. All rights reserved.",
     "crossLinks": "함께 참조: <1>이용약관</1> · <3>보안</3>"
   },
   "rubric": {

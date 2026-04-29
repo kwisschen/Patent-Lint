@@ -142,7 +142,7 @@
   },
   "footer": {
     "disclaimer": "本レポートは法的助言を構成するものではありません",
-    "builtBy": "© 2025 Christopher Chen",
+    "builtBy": "© 2025–2026 Christopher Chen",
     "security": "セキュリティ",
     "about": "概要",
     "commercial": "法人向け",
@@ -1368,14 +1368,14 @@
       "title": "本サイトと本ソフトウェアの区別",
       "p1": "PatentLint には次の二つの形態があります。",
       "siteLabel": "本サイト（patentlint.com）。",
-      "siteDesc": "無料の評価用としてご提供するホスト型のウェブアプリケーションです。特許明細書をアップロードすると、解析は WebAssembly により全てブラウザ内で実行され、明細書が端末から外部へ送信されることはありません。本サイトは Christopher Chen が運営します。",
+      "siteDesc": "個人の特許実務者による個人利用、および商用ライセンス契約前の組織による評価のいずれにおいても、無料でご提供するホスト型のウェブアプリケーションです（§4 参照）。特許明細書をアップロードすると、解析は WebAssembly により全てブラウザ内で実行され、明細書が端末から外部へ送信されることはありません。本サイトは Christopher Chen が運営します。",
       "softwareLabel": "本ソフトウェア。",
       "softwareDesc": "プライベートリポジトリで公開されている基底のソースコードです。本ソフトウェアは PolyForm-Strict-1.0.0 の下で許諾されています（§4 参照）。",
       "p2": "本規約は上記いずれにも適用されます。ご利用形態に応じて、適用される条項が異なります。"
     },
     "s2": {
       "title": "本サイトのご利用",
-      "p1": "本サイトは、個人的な評価目的で無料でご利用いただけます。次の行為は許容されます。",
+      "p1": "本サイトは、個人利用および商用ライセンス契約前の PatentLint 評価のため、無料でご利用いただけます（§4 参照）。次の行為は許容されます。",
       "may1": "US／CN／TW 各管轄区のルールセットに基づき、特許明細書をアップロードして解析する。",
       "may2": "ご自身の参考目的で解析レポートを書き出す。",
       "may3": "解析結果をご自身の起案判断の参考とする。",
@@ -1444,7 +1444,7 @@
       "title": "匿名エラーレポート",
       "p1": "チェック項目で「匿名で送信」を押された場合、PatentLint は当該の非識別化された診断データを検出不具合の修正およびチェックカタログの改善のために利用させていただきます。お客様は特許明細書に関するすべての権利を引き続き保持され、明細書の内容はお使いのデバイス内にとどまります。報告はご本人と紐付けられないため、直接のご返信ができない場合がございますが、当方ではすべての報告を拝読しております。"
     },
-    "copyright": "Copyright © 2025 Christopher Chen. All rights reserved.",
+    "copyright": "Copyright © 2025–2026 Christopher Chen. All rights reserved.",
     "crossLinks": "あわせてご参照：<1>プライバシーポリシー</1>・<3>セキュリティ</3>"
   },
   "privacy": {
@@ -1538,7 +1538,7 @@
       "name": "Christopher Chen",
       "emailLabel": "電子メール："
     },
-    "copyright": "Copyright © 2025 Christopher Chen. All rights reserved.",
+    "copyright": "Copyright © 2025–2026 Christopher Chen. All rights reserved.",
     "crossLinks": "あわせてご参照：<1>利用規約</1>・<3>セキュリティ</3>"
   },
   "rubric": {
