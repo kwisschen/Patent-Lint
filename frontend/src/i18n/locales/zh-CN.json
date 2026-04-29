@@ -10,19 +10,19 @@
     "label": "地区"
   },
   "dropzone": {
-    "tagline": "依据 {{count}} 项 USPTO 撰写规则，立即检查您的专利说明书。",
+    "tagline": "依据 {{count}} 项 USPTO 撰写规则，自动为您检查专利说明书。",
     "title": "拖放您的专利 .docx 开始本地分析",
     "subtitle": "或点击浏览文件",
     "notice": "支持美国专利说明书（.docx）",
     "reject": "仅接受 .docx 文件",
     "rejectMultiple": "请一次拖放一个文件。",
     "rejectMultipleType": "请拖放单个 .docx 文件。",
-    "taglineCn": "依据 {{count}} 项 CNIPA 撰写规则，立即检查您的专利说明书。",
+    "taglineCn": "依据 {{count}} 项 CNIPA 撰写规则，自动为您检查专利说明书。",
     "titleCn": "拖放您的专利文件开始本地分析",
     "noticeCn": "支持中国专利说明书（.docx、.xml、.zip）",
     "rejectCn": "仅接受 .docx、.xml 及 .zip 文件",
     "rejectMultipleTypeCn": "请拖放单个 .docx、.xml 或 .zip 文件。",
-    "taglineTw": "依据 {{count}} 项 TIPO 撰写规则，立即检查您的专利说明书。",
+    "taglineTw": "依据 {{count}} 项 TIPO 撰写规则，自动为您检查专利说明书。",
     "titleTw": "拖放您的专利 .docx 开始本地分析",
     "noticeTw": "支持台湾专利说明书（.docx）",
     "rejectTw": "仅接受 .docx 文件",
@@ -255,7 +255,7 @@
   },
   "cta": {
     "heading": "准备好检查您的说明书了吗？",
-    "subtext": "拖放 .docx 文件，即时获取结果。无需上传、无需账号、不使用 AI。",
+    "subtext": "拖放 .docx 文件，即时获取结果。无上传、无云端处理、无 AI。",
     "button": "检查说明书"
   },
   "antecedentBasis": {
@@ -288,7 +288,7 @@
   "security": {
     "airplaneDemoAlt": "演示：在飞行模式下无网络连接分析专利说明书",
     "badge": {
-      "headline": "无需上传。无需账号。无 AI。",
+      "headline": "无上传。无云端处理。无 AI。",
       "description": "您的文件不会离开您的设备。",
       "proveIt": "验证一下 →"
     },
@@ -316,8 +316,8 @@
     },
     "page": {
       "heroTitle": "无上传。无 AI。无例外。",
-      "heroSubtext": "PatentLint 完全在您的浏览器中本地运行，专利说明书绝不会离开您的设备。分析全程于本地执行；分析结果仅供您本人查阅。",
-      "tryIt": "自己试试看 →",
+      "heroSubtext": "PatentLint 完全在您的浏览器中本地运行，专利说明书绝不会离开您的设备。本工具采无账号架构，无从收集您的个人信息。分析全程于本地执行；分析结果仅供您本人查阅。",
+      "tryIt": "自己验证看看 →",
       "compareTitle": "PatentLint 与其他工具的比较",
       "compareDisclaimer": "本比较表反映通用架构模式。各产品可能有所不同。「Word 插件工具」与「云端工具」为通用类别，并非指特定产品。",
       "techTitle": "技术细节"
@@ -389,8 +389,8 @@
   },
   "about": {
     "productTitle": "PatentLint 是什么？",
-    "productTagline": "同类首创的专利说明书检查工具，完全在您的浏览器中本地运行。",
-    "productDesc1": "PatentLint 是免费的专利说明书检查工具，在审查员指出缺陷之前先行检出问题。拖放美国、中国或台湾的专利说明书，便可即时获取合规报告与等第评分，全程于本地运行。无需上传、无需账号、不使用云端、不使用 AI。",
+    "productTagline": "同类首创的专利说明书检查工具，可离线于您的浏览器中照常运作。",
+    "productDesc1": "PatentLint 完全在您的设备上本地运行，为您在审查员指出缺陷之前先行检出问题。拖放美国、中国或台湾的专利说明书，便可即时获取形式要件的合规报告与评分。无上传、无云端处理、无 AI。",
     "productDesc2": "PatentLint 依据 USPTO（美国）、CNIPA（中国）及 TIPO（台湾）的撰写规则进行检查，检测审查规范中的常见问题，如缺乏引用基础、不正确的权利要求结构和限制性用语。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查说明书本身。",
@@ -605,7 +605,7 @@
     "builderPain": "专利实务工作者对以下问题多半不陌生。引用基础、权利要求用语在说明书中找不到支持、附图说明介绍过的附图编号具体实施方式却未述及、权利要求引用关系绕着绕着变成循环引用。这些检查本身并不困难，只是相当繁琐，也很容易遗漏。",
     "builderDesc1": "PatentLint 的开发者是一位专利工程师，十多年来始终身处此流程之中，经手过数千份说明书，亲眼见证同类问题反复发生。现有工具要么只能安装于 Windows，要么必须将客户尚未递交的说明书上传至他方服务器。前者仅限于特定操作系统；后者则要求在案件正式递交之前，便将说明书送出事务所。",
     "builderDesc2": "本分析引擎由 Python 编写，再编译为 WebAssembly，完全于浏览器内运行，笔记本、平板、手机皆可使用，全程不上传、不留记录。也就是说，无论是在飞机上、事务所内网的电脑，或是客户尚未授权的设备，均可照常安心使用。",
-    "builderSister": "其姊妹项目 Agentic Patent Analyst 则负责推理量较重的工作，由自行微调的 LLM agent 执行现有技术检索与权利要求比对分析。",
+    "builderSister": "其姊妹项目 Agentic Patent Analyst 由自行微调的 LLM agent 执行现有技术检索与权利要求比对分析。",
     "tableFootnote": "截至 2026 年 4 月；两者均可能持续演进。",
     "twTableFootnote": "TIPO 检查项目依据「专利申请文件辅助侦错系统：功能介绍与使用指南」（2023.5.30 版）比对。TIPO 偵錯系統仅适用实用新型申请；PatentLint 同时支援实用新型与发明。两者均可能持续演进。"
   },
@@ -613,7 +613,7 @@
     "hero": {
       "title": "PatentLint 企业部署",
       "subtitle": "个人使用永久免费；组织另设企业方案：SSO、数据主权、定制规则包、定制评等权重、审计轨迹。",
-      "body": "于贵单位防火墙内部署相同的分析引擎，依商业授权合法供客户业务使用。可选配 SSO、审计轨迹,并可加购定制规则包以对应贵单位之内部撰稿规范。专利说明书始终留存于贵单位网络内,无上传、无账号、不使用 AI。",
+      "body": "于贵单位防火墙内部署相同的分析引擎，依商业授权合法供客户业务使用。可选配 SSO、审计轨迹,并可加购定制规则包以对应贵单位之内部撰稿规范。专利说明书始终留存于贵单位网络内,无上传、无云端处理、无 AI。",
       "cta": "申请评估"
     },
     "popular": "最受欢迎",
@@ -1332,7 +1332,7 @@
     "ready": "分析引擎已就绪",
     "firstVisitHint": "首次访问需几秒钟；完成后将缓存至您的浏览器，下次秒开",
     "offline_note": "首次加载后可离线使用",
-    "feature1_title": "无需上传。无需账号。无 AI。",
+    "feature1_title": "无上传。无云端处理。无 AI。",
     "feature1_desc": "您的机密专利说明书不会离开您的设备。您的文件绝不会被上传，PatentLint 也不会知道您的身份。",
     "feature2_title": "USPTO／CNIPA／TIPO 检查与权利要求树状图",
     "feature2_desc": "检测限制性用语、不确定用语及缺乏引用基础等问题，并以交互式树状图呈现权利要求从属关系。",
