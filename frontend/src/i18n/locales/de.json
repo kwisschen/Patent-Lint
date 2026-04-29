@@ -10,19 +10,19 @@
     "label": "Region"
   },
   "dropzone": {
-    "tagline": "Prüfen Sie Ihre Beschreibung sofort gegen {{count}} USPTO-Ausarbeitungsregeln.",
+    "tagline": "Prüfen Sie Ihre Beschreibung automatisch gegen {{count}} USPTO-Ausarbeitungsregeln.",
     "title": "Patentanmeldung (.docx) ablegen, um die lokale Prüfung zu starten",
     "subtitle": "oder zum Durchsuchen klicken",
     "notice": "Unterstützt US-Patentbeschreibungen (.docx)",
     "reject": "Nur .docx-Dateien werden akzeptiert",
     "rejectMultiple": "Bitte immer nur eine Datei ablegen.",
     "rejectMultipleType": "Bitte eine einzelne .docx-Datei ablegen.",
-    "taglineCn": "Prüfen Sie Ihre Beschreibung sofort gegen {{count}} CNIPA-Ausarbeitungsregeln.",
+    "taglineCn": "Prüfen Sie Ihre Beschreibung automatisch gegen {{count}} CNIPA-Ausarbeitungsregeln.",
     "titleCn": "Patentdatei ablegen, um die lokale Prüfung zu starten",
     "noticeCn": "Unterstützt chinesische Patentbeschreibungen (.docx, .xml, .zip)",
     "rejectCn": "Nur .docx-, .xml- und .zip-Dateien werden akzeptiert",
     "rejectMultipleTypeCn": "Bitte eine einzelne .docx-, .xml- oder .zip-Datei ablegen.",
-    "taglineTw": "Prüfen Sie Ihre Beschreibung sofort gegen {{count}} TIPO-Ausarbeitungsregeln.",
+    "taglineTw": "Prüfen Sie Ihre Beschreibung automatisch gegen {{count}} TIPO-Ausarbeitungsregeln.",
     "titleTw": "Patentanmeldung (.docx) ablegen, um die lokale Prüfung zu starten",
     "noticeTw": "Unterstützt taiwanesische Patentbeschreibungen (.docx)",
     "rejectTw": "Nur .docx-Dateien werden akzeptiert",
@@ -255,7 +255,7 @@
   },
   "cta": {
     "heading": "Bereit, Ihren Entwurf zu prüfen?",
-    "subtext": "Legen Sie eine .docx-Datei ab und erhalten Sie sofort Ergebnisse. Kein Upload. Kein Konto. Keine KI.",
+    "subtext": "Legen Sie eine .docx-Datei ab und erhalten Sie sofort Ergebnisse. Kein Upload. Keine Cloud-Verarbeitung. Keine KI.",
     "button": "Ihren Entwurf prüfen"
   },
   "antecedentBasis": {
@@ -288,7 +288,7 @@
   "security": {
     "airplaneDemoAlt": "Demo: Prüfung einer Patentanmeldung im Flugmodus ohne Netzwerkverbindung",
     "badge": {
-      "headline": "Kein Upload. Kein Konto. Keine KI.",
+      "headline": "Kein Upload. Keine Cloud-Verarbeitung. Keine KI.",
       "description": "Ihre Datei verlässt nie Ihr Gerät.",
       "proveIt": "Überzeugen Sie sich →"
     },
@@ -316,8 +316,8 @@
     },
     "page": {
       "heroTitle": "Kein Upload. Keine KI. Keine Ausnahmen.",
-      "heroSubtext": "PatentLint läuft vollständig in Ihrem Browser. Ihre Patentanmeldung verlässt nie Ihr Gerät — die Analyse erfolgt lokal, die Ergebnisse gehören Ihnen.",
-      "tryIt": "Selbst ausprobieren →",
+      "heroSubtext": "PatentLint läuft vollständig in Ihrem Browser. Ihre Patentanmeldung verlässt nie Ihr Gerät. Bewusst kontofrei, somit keine personenbezogenen Daten erfassbar. Die Analyse erfolgt lokal, die Ergebnisse gehören Ihnen.",
+      "tryIt": "Selbst überprüfen →",
       "compareTitle": "Wie schneidet PatentLint im Vergleich ab?",
       "compareDisclaimer": "Der Vergleich spiegelt allgemeine Architekturmuster wider. Einzelne Produkte können abweichen. „Word-Add-in-Tools“ und „Cloud-basierte Tools“ sind generische Kategorien, keine konkreten Produkte.",
       "techTitle": "Technische Details"
@@ -389,8 +389,8 @@
   },
   "about": {
     "productTitle": "Was ist PatentLint?",
-    "productTagline": "Der erste Patentanmeldungs-Checker seiner Art — er läuft lokal in Ihrem eigenen Browser.",
-    "productDesc1": "PatentLint ist ein kostenloser Patentanmeldungs-Checker, der Mängel erkennt, bevor der Prüfer es tut. Legen Sie eine US-, chinesische oder taiwanesische Patentanmeldung ab und erhalten Sie einen sofortigen Compliance-Bericht samt Notenstufe, beides vollständig auf Ihrem eigenen Gerät erstellt. Keine Uploads, keine Konten, keine Cloud, keine KI.",
+    "productTagline": "Der erste Patentanmeldungs-Checker seiner Art, der in Ihrem Browser funktioniert, online wie offline.",
+    "productDesc1": "PatentLint läuft vollständig auf Ihrem eigenen Gerät und erkennt Mängel, bevor der Prüfer es tut. Legen Sie eine US-, chinesische oder taiwanesische Patentanmeldung ab und erhalten Sie einen sofortigen Compliance-Bericht und Bewertung zu den formellen Anforderungen. Keine Uploads, keine Cloud-Verarbeitung, keine KI.",
     "productDesc2": "PatentLint prüft Ausarbeitungsregeln der USPTO (USA), der CNIPA (China) und der TIPO (Taiwan) und erkennt nach gängigen Prüfungsrichtlinien typische Mängel wie fehlenden Rückbezug, fehlerhafte Anspruchsstruktur und einschränkende Formulierungen.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "Das USPTO Patent Center validiert das Einreichungsformat. PatentLint prüft den Entwurf selbst.",
@@ -605,7 +605,7 @@
     "builderPain": "Wer mit Patenten arbeitet, kennt die Routine. Rückbezüge. Anspruchsbegriffe, die in der Beschreibung fehlen. Figuren, die in der Zeichnungsbeschreibung angekündigt, aber im Text nie referenziert werden. Abhängigkeitsketten, die unbemerkt zirkulär werden. Nichts davon ist schwer. Alles davon ist mühsam. Alles davon lässt sich leicht übersehen.",
     "builderDesc1": "PatentLint wurde von einem Patentingenieur gebaut, der über ein Jahrzehnt in diesem Arbeitsablauf verbracht, Tausende Anmeldungen geprüft und dieselben Fehlerkategorien immer wieder hat durchrutschen sehen. Bestehende Optionen waren entweder reine Windows-Desktop-Installationen oder Cloud-Dienste, bei denen die noch nicht eingereichte Anmeldung eines Mandanten auf einen fremden Server hochgeladen werden musste. Das eine bindet Sie an ein bestimmtes Betriebssystem. Das andere schickt den Entwurf aus der Kanzlei, bevor er überhaupt eingereicht ist.",
     "builderDesc2": "Die Analyse-Engine ist in Python geschrieben und wird zu WebAssembly kompiliert. Sie läuft vollständig im Browser, auf Laptop, Tablet oder Smartphone, ohne Upload und ohne Protokollierung. Das heißt: Sie funktioniert im Flugzeug, auf gesperrten Kanzleirechnern, auf allem, was ein Mandant noch nicht freigegeben hat.",
-    "builderSister": "Das Schwesterprojekt, der Agentic Patent Analyst, übernimmt die argumentationsintensive Arbeit und nutzt intern feinjustierte LLM-Agenten für Stand-der-Technik-Recherche und Anspruchsabdeckungsanalyse.",
+    "builderSister": "Das Schwesterprojekt, der Agentic Patent Analyst, nutzt intern feinjustierte LLM-Agenten für Stand-der-Technik-Recherche und Anspruchsabdeckungsanalyse.",
     "tableFootnote": "Stand: April 2026. Beide Systeme können weiterentwickelt werden.",
     "twTableFootnote": "TIPO-Abdeckung abgeglichen mit 專利申請文件輔助偵錯系統 — 功能介紹與使用指南 (Ausgabe 30.05.2023). TIPO 偵錯系統 unterstützt nur Gebrauchsmuster-Anmeldungen; PatentLint unterstützt Gebrauchsmuster und Erfindungspatente. Beide Systeme können weiterentwickelt werden."
   },
@@ -613,7 +613,7 @@
     "hero": {
       "title": "PatentLint für Unternehmen",
       "subtitle": "Für den Einzelgebrauch stets kostenlos. Enterprise-Option für Organisationen — SSO, Datenhoheit, eigene Regelpakete, eigene Rubrik-Gewichtungen, Audit-Trail.",
-      "body": "Setzen Sie dieselbe Analyse-Engine in Ihrer eigenen Infrastruktur ein, kommerziell lizenziert für die Mandatsarbeit. Optional SSO, Audit-Trail und eigene Regelpakete, die Ihre Hausschreibweise abbilden. Anmeldungen verlassen niemals Ihr Netzwerk. Kein Upload, kein Konto, keine KI.",
+      "body": "Setzen Sie dieselbe Analyse-Engine in Ihrer eigenen Infrastruktur ein, kommerziell lizenziert für die Mandatsarbeit. Optional SSO, Audit-Trail und eigene Regelpakete, die Ihre Hausschreibweise abbilden. Anmeldungen verlassen niemals Ihr Netzwerk. Kein Upload, keine Cloud-Verarbeitung, keine KI.",
       "cta": "Evaluierung anfragen"
     },
     "popular": "Am beliebtesten",
@@ -1332,7 +1332,7 @@
     "ready": "Analyse-Engine geladen",
     "firstVisitHint": "Der erste Besuch dauert ein paar Sekunden — die Engine wird danach zwischengespeichert",
     "offline_note": "Funktioniert nach dem ersten Laden offline",
-    "feature1_title": "Kein Upload. Kein Konto. Keine KI.",
+    "feature1_title": "Kein Upload. Keine Cloud-Verarbeitung. Keine KI.",
     "feature1_desc": "Ihre vertraulichen Patentanmeldungen verlassen nie Ihr Gerät. Ihre Datei wird nie hochgeladen, und PatentLint weiß nicht einmal, wer Sie sind.",
     "feature2_title": "USPTO | CNIPA | TIPO-Prüfungen & Anspruchsbaum",
     "feature2_desc": "Erkennt einschränkende Formulierungen, unklare Begriffe und fehlende Rückbezüge. Visualisiert Anspruchsabhängigkeiten mit einem interaktiven Baum.",
