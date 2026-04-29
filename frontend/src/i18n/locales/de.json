@@ -1541,7 +1541,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "Diese Bewertung hilft Ihnen, formale Anforderungen zu beheben, und beurteilt nicht, wie die Anmeldung selbst geschrieben ist."
+      "line": "Diese Bewertung spiegelt nur die Prüfergebnisse von PatentLint wider und ist keine Beurteilung des inhaltlichen Gehalts der Anmeldung."
     },
     "completenessGate": {
       "title": "Schrift unvollständig — keine Bewertung verfügbar",

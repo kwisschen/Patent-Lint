@@ -1543,7 +1543,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "此评等仅用于协助修正形式要件，非评判文稿内容。"
+      "line": "此评等仅反映 PatentLint 之检查结果，并非文稿实质内容之评断。"
     },
     "completenessGate": {
       "title": "稿件不完整，无法评等",
