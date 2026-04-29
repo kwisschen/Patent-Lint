@@ -1449,17 +1449,17 @@
   },
   "privacy": {
     "title": "隱私權政策",
-    "lastUpdated": "最後更新：2026年4月21日",
+    "lastUpdated": "最後更新：2026年4月27日",
     "translationNote": "本中譯本僅供參考。中文譯本與英文版本如有歧異，以英文版為準。",
     "intro": "本隱私權政策說明 patentlint.com（下稱「本網站」）於您造訪時如何處理資料。PatentLint 應用程式本身不收集您的任何資料：未使用分析工具、未使用追蹤、未使用 cookies。唯一存在的資料流，係本網站之託管服務商 Cloudflare Pages 於每次造訪時所接收之標準網頁請求中介資料，與任何網站無異。本政策將上述區別予以明文揭露。",
     "s1": {
       "title": "前言",
-      "p1": "patentlint.com 為 Christopher Chen 所營運之線上應用網站，提供 PatentLint 專利說明書檢查工具。檔案分析全程透過 WebAssembly（Pyodide）於您的瀏覽器內執行。本網站以 Cloudflare Pages 提供靜態資產，並無應用程式伺服器，亦無資料庫；您的檔案內容絕不會自您的裝置傳出。",
+      "p1": "patentlint.com 為 Christopher Chen 所營運之線上應用網站，提供 PatentLint 專利說明書檢查工具。檔案分析全程透過 WebAssembly（Pyodide）於您的瀏覽器內執行。本網站以 Cloudflare Pages 提供靜態資產，另設有單一 Cloudflare Pages Function 作為第 6 條所述之自願性錯誤回報端點；本網站並無分析伺服器，亦無資料庫。您的檔案內容絕不會自您的裝置傳出。",
       "p2": "本政策適用於您與本網站之互動。若您另行取得 PatentLint 軟體原始碼，則應依該軟體之授權（PolyForm-Strict-1.0.0）規範，不適用本政策。"
     },
     "s2": {
       "title": "您的專利說明書",
-      "p1": "您「上傳」至本網站之專利說明書，實際上並未離開您的裝置；檔案僅載入瀏覽器分頁內，並於該分頁中處理。分析作業在該分頁中之 Pyodide／WebAssembly 引擎上執行。patentlint.com 並不存在伺服器端的分析路徑；本網站僅提供靜態資產。",
+      "p1": "您「上傳」至本網站之專利說明書，實際上並未離開您的裝置；檔案僅載入瀏覽器分頁內，並於該分頁中處理。分析作業在該分頁中之 Pyodide／WebAssembly 引擎上執行。patentlint.com 並不存在伺服器端的分析路徑；本網站以靜態資產形式提供，另設有單一自願性錯誤回報端點（第 6 條），僅於使用者明確送出時執行。",
       "p2": "我們絕不：",
       "never1": "接收或傳輸您專利說明書之內容。",
       "never2": "儲存檔名、請求項文字、說明書本文或任何專利相關資料。",

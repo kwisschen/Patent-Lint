@@ -1448,16 +1448,16 @@
   },
   "privacy": {
     "title": "Privacy Policy",
-    "lastUpdated": "Last updated: April 21, 2026",
+    "lastUpdated": "Last updated: April 27, 2026",
     "intro": "This Privacy Policy describes how patentlint.com (the \"Site\") handles data when you visit. The PatentLint application collects nothing about you — no analytics, no trackers, no cookies. The only data flow is the standard web request metadata our hosting provider (Cloudflare Pages) sees on every visit, as it does for any website. This Policy makes that distinction explicit.",
     "s1": {
       "title": "Introduction",
-      "p1": "patentlint.com is a hosted web application operated by Christopher Chen. It runs PatentLint, a patent drafting checker that analyzes your file entirely in your browser using WebAssembly (Pyodide). The Site is served as static assets from Cloudflare Pages — no application server, no database. Your file content is never transmitted off your device.",
+      "p1": "patentlint.com is a hosted web application operated by Christopher Chen. It runs PatentLint, a patent drafting checker that analyzes your file entirely in your browser using WebAssembly (Pyodide). The Site is served as static assets from Cloudflare Pages, with a single Cloudflare Pages Function for the voluntary error-report endpoint described in § 6. There is no analysis server and no database. Your file content is never transmitted off your device.",
       "p2": "This Privacy Policy applies to your interactions with the Site. It does not cover the PatentLint Software when you obtain the source code separately — that's covered by the Software license (PolyForm-Strict-1.0.0)."
     },
     "s2": {
       "title": "Your patent drafts",
-      "p1": "Patent drafts you \"upload\" to the Site never actually leave your device — the file is loaded into the browser tab and processed there. Analysis runs on a Pyodide / WebAssembly engine in that tab. There is no server-side analysis path on patentlint.com; the Site is static assets only.",
+      "p1": "Patent drafts you \"upload\" to the Site never actually leave your device — the file is loaded into the browser tab and processed there. Analysis runs on a Pyodide / WebAssembly engine in that tab. There is no server-side analysis path on patentlint.com; the Site is served as static assets, with a single voluntary error-report endpoint (§ 6) that runs only on explicit user submission.",
       "p2": "Specifically, we never:",
       "never1": "Receive or transmit the content of your patent drafts.",
       "never2": "Store filenames, claim text, specification body, or any patent-specific data.",
