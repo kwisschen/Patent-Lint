@@ -1201,6 +1201,18 @@ _LEADING_QUANTIFIER_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "复数个", "多个", "数个",
         "复数",
         "一",
+        # Cross-jurisdiction parity with TW R6 (ce91d2b): 各 distributive
+        # quantifier ("each"). CNIPA drafters use 前述各X / 所述各X / 该各X
+        # for "each X" references when a parent claim introduces an indexed
+        # family. Reference-side normalization must strip 各 so the bare
+        # head noun matches the upstream intro. Symmetric strip on the
+        # intro side is harmless because 各X intros are unattested at
+        # claim-body level (the indexed family is introduced as bare noun,
+        # then references add the distributive 各 prefix). Audit confirmed
+        # 0 active CN labels collide; 3 resolved entries have mid-string
+        # 各 (compound noun usage like 各样本数据) which startswith() leaves
+        # untouched.
+        "各",
     ),
     key=len,
     reverse=True,
