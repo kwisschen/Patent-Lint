@@ -356,12 +356,32 @@ _CJK_UNIT_TOKENS_CN = (
     r"摩尔百分比|摩尔比|摩尔|"
     r"体积百分比|体积比|质量百分比|原子百分比|"
     r"毫克|公克|毫升|公升|微升|微米|纳米|公分|公釐|公尺|"
-    r"克|升|倍率|倍|份|个|颗|片"
+    r"克|升|倍率|倍|份|个|颗|片|"
+    # R-refnum-1 (2026-04-30, cross-port from TW issue #25): Miller-index
+    # suffixes for crystallography in semiconductor patents. CNIPA
+    # drafters write `100面` / `110方向` identically to TIPO; same
+    # FP risk applies. Cross-port is symmetric per ADR-095.
+    r"结晶面|晶面|平面|方向|面"
 )
 _BARE_NUMERAL = re.compile(
     r"(?<!\()(?<=[\u4e00-\u9fff])\s?\d{2,4}(?!\))"
     r"(?!\s*(?:" + _CJK_UNIT_TOKENS_CN + r"))"
 )
+
+
+def _ref_numeral_finding_diag_cn(cid: int, claims: list) -> dict:
+    """CN parallel of _ref_numeral_finding_diag_tw — adds context_after
+    for self-diagnosing reports per R-refnum-1.
+    """
+    text = next((c.text for c in claims if c.id == cid), "") or ""
+    m = _BARE_NUMERAL.search(text)
+    if not m:
+        return {"claim_id": cid, "first_match": None, "context_after": None}
+    return {
+        "claim_id": cid,
+        "first_match": m.group(0),
+        "context_after": text[m.end():m.end() + 8],
+    }
 
 
 def check_reference_numeral_parentheses(cn_doc: CnPatentDocument) -> list[CheckItem]:
@@ -386,11 +406,11 @@ def check_reference_numeral_parentheses(cn_doc: CnPatentDocument) -> list[CheckI
                 flagged_count=len(bad_claim_ids),
                 total_claims=len(cn_doc.claims),
                 flagged_claim_id=bad_claim_ids[0] if bad_claim_ids else None,
+                # R-refnum-1 (2026-04-30): added context_after so future
+                # reports of FPs like Miller-index `100面` arrive self-
+                # diagnosing without needing the draft. Cross-port from TW.
                 findings=[
-                    {
-                        "claim_id": cid,
-                        "first_match": (m.group(0) if (m := _BARE_NUMERAL.search(next((c.text for c in cn_doc.claims if c.id == cid), "") or "")) else None),
-                    }
+                    _ref_numeral_finding_diag_cn(cid, cn_doc.claims)
                     for cid in bad_claim_ids[:5]
                 ],
             ),
