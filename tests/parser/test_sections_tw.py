@@ -460,3 +460,98 @@ class TestFigureRefs110P000368Regression:
             f"False positives found: {set(doc.figure_refs) & false_positives}"
         )
         assert len(doc.figure_refs) == 10
+
+
+class TestClaimBracketLabels:
+    """Regression for issue #17: TIPO firm-variant claim labeling with
+    【請求項N】 inline bracket headers.
+
+    Without explicit support, the bracket-header regex in
+    ``extract_tw_sections`` matches 【請求項N】 as an unknown section
+    header, resets ``current_section`` to None, and drops claim text.
+    Result: ``claims_header_seen=True`` but ``doc.claims=[]``, which
+    trips the requiredSections.amend check with a misleading "missing
+    申請專利範圍" message even though the section IS present.
+
+    The fix recognizes 【請求項N】 while inside the claims section and
+    transforms it to standard "N. <body>" form so parse_tw_claims
+    handles it identically to the standard inline-numbered format.
+
+    TIPO 專利法施行細則 §18 第3款 only requires Arabic-numeral sequential
+    numbering — 【請求項N】 satisfies that, so the parser must accept it.
+    """
+
+    def test_claim_bracket_labels_with_inline_body(self):
+        paragraphs = [
+            "【中文發明名稱】範例發明",
+            "【發明說明書】",
+            "【技術領域】",
+            "本發明係關於一種半導體裝置。",
+            "【先前技術】",
+            "現有技術中存在某種問題。",
+            "【發明內容】",
+            "本發明之目的在於解決上述問題。",
+            "【實施方式】",
+            "茲就本發明之實施方式說明如下。",
+            "【申請專利範圍】",
+            "【請求項1】 一種半導體裝置，包括A、B、C。",
+            "【請求項2】 如請求項1所述之半導體裝置，其中A為矽。",
+            "【請求項3】 如請求項1所述之半導體裝置，其中B為金屬。",
+        ]
+        doc = extract_tw_sections(paragraphs)
+        assert doc.claims_header_seen is True
+        assert len(doc.claims) == 3
+        assert doc.claims[0].id == 1
+        assert doc.claims[0].independent is True
+        assert doc.claims[1].id == 2
+        assert doc.claims[1].dependencies == [1]
+        assert doc.claims[2].id == 3
+        assert doc.claims[2].dependencies == [1]
+
+    def test_claim_bracket_labels_with_continuation_paragraphs(self):
+        """Continuation paragraphs (claim body wrapping across multiple
+        paragraphs without a leading bracket label) accumulate into the
+        preceding claim's text under the same claims section."""
+        paragraphs = [
+            "【申請專利範圍】",
+            "【請求項1】 一種半導體裝置，包括A、B、C。",
+            "前述A為一種特殊材料，",
+            "前述B覆蓋於A之上。",
+            "【請求項2】 如請求項1所述之半導體裝置，其中A為矽。",
+        ]
+        doc = extract_tw_sections(paragraphs)
+        assert doc.claims_header_seen is True
+        assert len(doc.claims) == 2
+        assert "前述A為一種特殊材料" in doc.claims[0].text
+        assert "前述B覆蓋於A之上" in doc.claims[0].text
+
+    def test_claim_bracket_label_without_inline_body(self):
+        """Drafter places 【請求項N】 on its own line, claim body on the
+        next paragraph. Should still parse correctly."""
+        paragraphs = [
+            "【申請專利範圍】",
+            "【請求項1】",
+            "一種半導體裝置，包括A、B、C。",
+            "【請求項2】",
+            "如請求項1所述之半導體裝置，其中A為矽。",
+        ]
+        doc = extract_tw_sections(paragraphs)
+        assert doc.claims_header_seen is True
+        assert len(doc.claims) == 2
+        assert doc.claims[0].id == 1
+        assert doc.claims[1].id == 2
+        assert doc.claims[1].dependencies == [1]
+
+    def test_standard_inline_format_still_works(self):
+        """Anti-corpus check: drafts using the standard `1.` / `1．`
+        inline numbering (the path that's been working) must not
+        regress."""
+        paragraphs = [
+            "【申請專利範圍】",
+            "1. 一種半導體裝置，包括A、B、C。",
+            "2. 如請求項1所述之半導體裝置，其中A為矽。",
+        ]
+        doc = extract_tw_sections(paragraphs)
+        assert doc.claims_header_seen is True
+        assert len(doc.claims) == 2
+        assert doc.claims[1].dependencies == [1]
