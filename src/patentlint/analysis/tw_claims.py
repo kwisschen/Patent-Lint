@@ -86,8 +86,16 @@ _CONJ_SPLIT_RE_TW: re.Pattern[str] = re.compile(r'(.+?)(?:以及|和|與|及)(.+
 # Tier C is omitted in TW port as it routinely over-captures "X為Y" /
 # "X是Y" forms that are predicates, not intros. If corpus evolution
 # surfaces Tier C need, port selectively with per-claim gating.
+# R7 (2026-04-30): 作為 added to Tier A — copula construction `將X作為Y`
+# is common in TIPO method-claim drafting (`將前述矽鍺層作為p型通道層露出`)
+# where Y is a role/function name being introduced. Noun class extended
+# to admit ASCII letters/digits so semiconductor identifiers (`p型通道層`,
+# `n型通道層`, `RAM控制器`) capture cleanly — same mixed-script class as
+# F14. Excludes 之 (U+4E4B) and 的 (U+7684) to prevent capture extending
+# into possessive markers.
 _F12_TIER_A_RE_TW: re.Pattern[str] = re.compile(
-    r'(?:轉變為|變為|轉為|劃分為|分為)([\u4e00-\u9fff]{2,10})'
+    r'(?:作為|轉變為|變為|轉為|劃分為|分為)'
+    r'([A-Za-z0-9\u4e00-\u4e4a\u4e4c-\u7683\u7685-\u9fff]{2,10})'
 )
 _F12_TIER_B_RE_TW: re.Pattern[str] = re.compile(
     r'(?:基於|來自)([\u4e00-\u9fff]{2,10})'
@@ -1545,6 +1553,21 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         #     noun risk: 來自 is always prep-verb in TW drafting; the
         #     trailing 一 quantifier only appears in prepositional phrases.
         "來自一",
+        # === Phase 8b R7 — Added 2026-04-30 (Claire-draft audit) ===
+        # 較: comparative verb ("compared to"). Observed across c2/c5/c7/
+        #     c9 of the semiconductor draft as the head of comparison
+        #     clauses (`前述矽鍺層較前述矽層後退`, `較構成前述n型通道層之矽鍺
+        #     層的膜厚更厚`). 較 doesn't occur as a noun-position suffix in
+        #     any TW patent diction surveyed; corpus grep returns 0
+        #     compound-noun hits (比較 / 較量 etc. all have 較 at position
+        #     [-1] of a 2-char compound, residual 1 < 3, no protection
+        #     needed because they're not flagged as elements anyway).
+        "較",
+        # 厚膜化: process verb-suffix ("thicken / film-ize"). Observed in
+        #     c13 of the Claire draft (`使前述p型通道層厚膜化`). Multi-char
+        #     specific token avoids over-stripping the productive 化-suffix
+        #     (氧化/文化/變化 unaffected since they don't end in 厚膜化).
+        "厚膜化",
     ),
     key=len,
     reverse=True,
@@ -1630,7 +1653,26 @@ _NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset(
      # F3: 擷取 (2-char) — despite the set name, the residual guard
      # mechanism works with any length. 影像擷取 (4 chars, residual 2)
      # protected; 影像擷取裝置擷取 (8 chars, residual 6) strips correctly.
-     "擷取"}
+     "擷取",
+     # === Phase 8b R7 — Added 2026-04-30 (Claire-draft audit) ===
+     # 作: verb-fragment of 作為 ("treat as") that strands when the noun-
+     #     class regex stops before 為 (which is in the _NOUN_CHARS
+     #     exclusion list). Observed across c11/c13/c14/c15 of the Claire
+     #     draft (`前述半導體通道層作 為n型通道層`, `前述矽鍺層作為p型通道層`).
+     #     Compound nouns ending in 作 (操作/工作/動作/作業/作品): 操作/
+     #     工作/動作 are 2-char with residual 1 < 3 → protected; 作業 / 作品
+     #     end in 業 / 品 not 作 — not affected by the trailing strip.
+     #     Grep across TW corpus: 操作 ×high, 工作 ×low, all preserved.
+     "作",
+     # 使: causative particle / verb fragment. Observed in c15 of the
+     #     Claire draft (`以前述閘極電極覆蓋使前述矽層薄膜化`). Claim text
+     #     usage is overwhelmingly causative ("cause X to Y"), so trailing
+     #     使 is verb-fragment territory. Compound nouns ending in 使
+     #     (大使/天使/特使/驅使) are 2-char (residual 1 < 3 → protected) or
+     #     end in 使 with productive prefix that residual ≥ 3 still allows
+     #     to strip when justified. No corpus collisions in TW or CN
+     #     fixture pool.
+     "使"}
 )
 
 # Relaxed-guard subset: members of _NOUNLIKE_SINGLE_CHAR_SUFFIXES that
@@ -1730,6 +1772,44 @@ _PLURAL_REFERENCE_PREFIXES: tuple[str, ...] = tuple(sorted(
 # Ordered longest-first so 設有/包含 strip before single-char tokens.
 _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
     (
+        # === Phase 8b R7 — Added 2026-04-30 (Claire-draft audit) ===
+        # 覆蓋: process verb ("cover"). Observed in c10/c13/c15 of the
+        #     Claire draft (`被前述閘極電極覆蓋的前述p型通道層`,
+        #     `以前述閘極電極覆蓋前述厚膜化之前述p型通道層`,
+        #     `以前述閘極電極覆蓋使前述矽層薄膜化`). 覆蓋層 (cover layer) and
+        #     覆蓋率 (coverage rate) have 覆蓋 at position 0 of a longer
+        #     compound — the interior-cut leaves text BEFORE the verb, so
+        #     position-0 occurrences are no-op (idx + offset == 0, fails
+        #     the > 1 gate). No compound-noun risk.
+        "覆蓋",
+        # 夾持: mechanical verb ("clamp / hold"). Observed in c5/c6/c7 of
+        #     the Claire draft (`端部被矽層夾持`, `被前述矽層夾持的端部`).
+        #     Compound forms 夾持器 / 夾持機構 have the verb at position 0
+        #     of a longer compound — same > 1 gate behavior; no risk.
+        "夾持",
+        # 進行: process verb ("perform / carry out"). Observed in c12 of
+        #     the Claire draft (`進行蝕刻`, `前述矽鍺層進行膜厚減少`). CN
+        #     walker has 进行 in `_INTERIOR_VERB_BOUNDARIES_CN` since R7;
+        #     TW was missing the parity entry. No compound-noun risk:
+        #     進行式 / 進行曲 are music/grammar terms, 0 corpus hits in
+        #     patent claim text.
+        "進行",
+        # 作為: copula ("treat as / serve as"). Observed in c11/c13/c14/
+        #     c15 of the Claire draft (`將前述矽鍺層作為p型通道層露出`,
+        #     `將前述半導體通道層作為n型通道層露出`). Multi-char specific
+        #     prevents over-stripping single-char 作 (handled separately
+        #     via _NOUNLIKE_SINGLE_CHAR_SUFFIXES residual ≥ 3). 作為 only
+        #     appears as the X-作為-Y copula construction in TW patent
+        #     drafting; no compound-noun collision.
+        "作為",
+        # 露出: process verb ("expose"). Observed in c11/c13/c14/c15 of
+        #     the Claire draft (`作為p型通道層露出的工程`, `將前述矽鍺層
+        #     作為p型通道層露出之工程中`). Required for F12 Tier A's
+        #     `作為Y` capture to truncate at 露出 cleanly. 露出層 / 露出器
+        #     / 露出口 / 露出面 absent from TW corpus per grep (`露出` is
+        #     always V-V compound, not noun-prefix); no compound-noun
+        #     collision.
+        "露出",
         # === Phase F F2 — Added 2026-04-17 ===
         # 選自由: Markush group verb phrase ("selected from"). Observed in
         #     tw_markush c3 (synthetic) `該模組選自由語音識別模組、...` where
@@ -2227,6 +2307,21 @@ _QUANTIFIER_AFTER_POSITION: tuple[str, ...] = (
     "複數", "多個", "數個", "至少",
 )
 
+# Round 7 (2026-04-30): Leading-verb prefixes stripped from both reference
+# and intro sides during normalization. Drafters sometimes refer back to
+# a process step's product via the verb-prefixed form (`前述形成p型源極／
+# 汲極之工程` references the step that introduced `p型源極／汲極`); the
+# walker captures the verb prefix as part of the noun, missing the match
+# against the bare-noun intro. The strip applies a residual ≥ 3 guard:
+#   `形成p型源極／汲極` (10 chars) → strip → `p型源極／汲極` (8 chars ≥ 3) ✓
+#   `形成器`           (3 chars)  → strip → `器`         (1 char  < 3) PROTECT
+# Multi-char specific tokens; no compound-noun risk because bare-noun
+# claim elements never have these as their literal head morpheme.
+_LEADING_VERB_PREFIXES_TW: tuple[str, ...] = ("形成", "製造")
+# Residual ≥ 2: `形成p型源極／汲極` (10) → 8 ≥ 2 ✓; `製造方法` (4) → 2 ≥ 2 ✓;
+# `形成器`/`形成物` (3) → 1 < 2 PROTECT; `製造商`/`製造廠` (3) → 1 < 2 PROTECT.
+_LEADING_VERB_RESIDUAL_FLOOR: int = 2
+
 
 def strip_leading_qualifier(
     text: str,
@@ -2285,11 +2380,13 @@ def normalize_reference_term(
         → strip_leading_qualifier      (對應/相應/前+quantifier — NEW)
         → clean_noun_phrase_tw         (interior cut + trailing strip)
         → strip_leading_quantifier     (一/一個/複數/...)
+        → strip_leading_verb           (形成 — R7, residual ≥ 3 guard)
     """
     t = strip_reference_form_prefix(text)
     t = strip_leading_qualifier(t, strict_qualifier_matching=strict_qualifier_matching)
     t = clean_noun_phrase_tw(t)
     t = strip_leading_quantifier(t)
+    t = strip_leading_verb_tw(t)
     return t
 
 
@@ -2323,7 +2420,32 @@ def normalize_candidate_intro(
     t = clean_noun_phrase_tw(t)
     t = strip_leading_quantifier(t)
     t = strip_reference_form_prefix(t)
+    t = strip_leading_verb_tw(t)
     return t
+
+
+def strip_leading_verb_tw(text: str) -> str:
+    """Strip a leading verb prefix per Round 7 audit (Claire draft).
+
+    Some drafters refer back to a process step's product via the verb-
+    prefixed form (`前述形成p型源極／汲極之工程`); the walker's noun
+    capture includes the leading verb, missing the match against a
+    bare-noun intro registered without that verb. This pass removes the
+    verb prefix when it's followed by a sufficient noun residual.
+
+    Residual guard ≥ 3 protects short compounds where the verb prefix
+    coincidentally precedes a 1-2 char tail (`形成器` → `器` would be 1
+    char, fails the floor — preserved).
+    """
+    if not text:
+        return text
+    for prefix in _LEADING_VERB_PREFIXES_TW:
+        if (
+            text.startswith(prefix)
+            and len(text) - len(prefix) >= _LEADING_VERB_RESIDUAL_FLOOR
+        ):
+            return text[len(prefix):]
+    return text
 
 
 def detect_plural_reference(text: str) -> bool:
@@ -2562,6 +2684,12 @@ _F6_VERB_ALT_TW = (
     r'|獲取|獲得|得到|生成|產生|發出'
     r'|發送|接收|輸出|輸入|傳送|存儲|確定|涉及'
     r'|進行|調用|運行|調整|建立|構建|製得|根據|存在|執行'
+    # R7 (2026-04-30): 夾持 added — mechanical-clamp verb common in
+    # semiconductor process claims (`夾持矽鍺層之n型通道層`,
+    # `藉由矽層夾持矽鍺層的半導體通道層`). Captures the object NP via
+    # arm 3. 夾持器 / 夾持機構 absent from TW corpus per grep — no
+    # compound-noun collision.
+    r'|夾持'
     # NOTE: 使用 intentionally omitted from TW port. TW corpus contains
     # compound nouns 使用者介面 (GUI), 使用者, 使用期限 that the CN-ported
     # F6 bare-noun arm incorrectly mis-captures (使用 + 者介面 → registers
@@ -2580,6 +2708,15 @@ _F12_ADJ_REJECTS_TW: tuple[str, ...] = (
     "可", "具有", "具", "經過", "由", "屬於", "用於", "來自",
     "能夠", "能", "會", "進行", "獲得", "獲取", "接收", "存儲",
     "輸出", "輸入", "基於", "根據",
+    # === Phase 8b R7 — Added 2026-04-30 (Claire-draft audit) ===
+    # Copula / preposition / verb prefixes that F6 bare-NP arm 3 may
+    # capture as the head: `具有較前述矽層在前述...` (F6 verb 具有 + bare
+    # NP starting with 較); `進行蝕刻使膜厚減少` (進行 + 蝕刻...);
+    # `形成對在前述矽` (形成 + 對在...). Mirror set with _F10_NOUN_REJECTS
+    # so all bare-modifier emit sites apply consistent hygiene.
+    "係", "是", "為",
+    "較", "對", "在",
+    "將", "藉", "蝕",
 )
 
 _BARE_AFTER_VERB_PATTERN = re.compile(
@@ -2653,7 +2790,14 @@ _F10_BARE_DE_NOUN_RE = re.compile(
     r'的'
     r'(?P<noun>' + _CJK_NO_DE_ZHI_TW + r'{2,8}'
     r'(?:\([A-Za-z0-9]+\))?)'
-    r'(?![一-鿿])'
+    # R7 (2026-04-30): trailing lookahead uses _CJK_NO_DE_ZHI_TW (the noun
+    # class) instead of the full CJK range. The full range mistakenly
+    # rejects boundaries at 之 (U+4E4B) / 的 (U+7684), which are valid
+    # clause boundaries — those chars are excluded from the noun class.
+    # Pre-fix: `的半導體通道層交...` failed because 交 is CJK, so backtrack
+    # cascaded to no match. Post-fix: same, but `的奈米片積層體之兩側`
+    # captures `奈米片積層體` cleanly because 之 isn't in noun class.
+    r'(?!' + _CJK_NO_DE_ZHI_TW + r')'
 )
 
 # F11: Locative-possessive bare NOUN. TW/JP-translated drafters introduce
@@ -2698,12 +2842,99 @@ _F11_LOCATIVE_POSS_RE = re.compile(
 # Conjunction-split (Phase B4 at end of _extract_supplementary_intros)
 # downstream-splits 之X以及Y / 之X和Y / 之X與Y / 之X及Y so each piece is
 # registered as its own intro.
-_F14_NOUN_CLASS = r'[A-Za-z0-9一-乊乌-皃皅-鿿]'
+# R7 (2026-04-30): U+FF0F (／ fullwidth slash) added to noun class.
+# Common in semiconductor / electronics claims for paired-element names
+# (`源極／汲極` = source/drain, `輸入／輸出` = I/O). Excluded from generic
+# CJK class but legitimate in component-name position. No claim-text
+# context where ／ is non-noun (no fractions or pagination markers
+# in claim body).
+_F14_NOUN_CLASS = r'[A-Za-z0-9／一-乊乌-皃皅-鿿]'
 _F14_BARE_ZHI_NOUN_RE = re.compile(
     r'之'
     r'(?P<noun>' + _F14_NOUN_CLASS + r'{2,12}'
     r'(?:\([A-Za-z0-9]+\))?)'
     r'(?!' + _F14_NOUN_CLASS + r')'
+)
+
+# Round 7 (2026-04-30): F16 — locative left-side intro `(?:於|在)X之Y`.
+# F14 captures the right-side Y; F16 captures the left-side X when used
+# in locative constructions where X is the new claim element. Common in
+# semiconductor / mechanical drafting:
+#   `於半導體基板之一主面側` → register `半導體基板`
+#   `在半導體基板之一主面上` → register `半導體基板`
+#   `在前述凹槽之內壁` → X = `前述凹槽` rejected (ref-prefix)
+# Component-suffix gate ensures X names a physical claim element.
+# X length cap of 8 chars matches F10. No clause-boundary anchor — `在`
+# / `於` can appear mid-clause when introducing a new element via
+# locative construction (`係積層有在矽層之間夾持矽鍺層之n型通道層`).
+# `對於X之Y` also matches as `於X之Y` and captures X correctly (no harm).
+_F16_LOC_LEFT_INTRO_RE = re.compile(
+    r'(?:於|在)'
+    r'(?P<noun>' + _F14_NOUN_CLASS + r'{2,8}'
+    r'(?:\([A-Za-z0-9]+\))?)'
+    r'之'
+)
+
+# Round 7 (2026-04-30): F17 — locative-internal intro `在X之間`. Specific
+# pattern where X is between two surfaces / volumes. Common in
+# semiconductor process claims (`在矽層之間夾持矽鍺層`). Distinguishes
+# from F16 by the trailing `之間` anchor (locative-between scope).
+# Component-suffix gate via _F10_SINGLE_CHAR_SUFFIXES_TW (one char).
+# No clause-boundary anchor — F17 fires whenever the `在X之間` pattern
+# appears, which is unambiguous about X's role as a claim element.
+_F17_LOC_INTERNAL_INTRO_RE = re.compile(
+    r'在'
+    r'(?P<noun>' + _F14_NOUN_CLASS + r'{2,8}'
+    r'(?:\([A-Za-z0-9]+\))?)'
+    r'之間'
+)
+
+# Round 7 (2026-04-30): F15 — colon-list bare-noun intros. TW port of
+# CN's F11_COLON_LIST_ANCHOR (`包括: X1, X2, ...`). After a recognized
+# trigger verb (具有/包括/包含/含有/具備/設有) followed by `:` or `：`,
+# capture the list region until the next strong-clause boundary (。) and
+# split into bare-NP segments via _F15_LIST_SPLIT (、，,；以及和與及).
+# Each segment is registered as an intro after the standard hygiene gate.
+# Common in TIPO sub-element listings:
+#   `前述p型電晶體具有：p型積層體；以及 閘極電極，係介隔著...`
+#     → register `p型積層體`, `閘極電極`
+_F15_COLON_LIST_ANCHOR_TW = re.compile(
+    r'(?:具有|包括|包含|含有|具備|設有)[：:]\s*([^。]+)'
+)
+_F15_LIST_SPLIT_TW = re.compile(r'[、，,；和與及]|以及')
+
+# Round 7 (2026-04-30): F19 — `verb + X + 之 + Y` left-side intro.
+# Captures X (the verb's object that's also possessor of Y). F14
+# captures the right-side Y; F19 captures the left-side X. F6's
+# `(?![的之])` trailing lookahead blocks F6 from emitting on this shape
+# because the bare-NP arm rejects when followed by 之/的. Common in
+# TIPO method-claim drafting:
+#   `夾持矽鍺層之n型通道層`         → register `矽鍺層`
+#   `具有第一夾角之凸部`             → register `第一夾角`
+# Component-suffix gate via _trim_capture_to_clean_noun_tw at emit.
+_F19_VERB_NP_ZHI_RE = re.compile(
+    r'(?:夾持|包含|包括|具有|含有|具備|設有|設置|配置|安裝|裝設|形成|構成|連接|連結|提供|構建)'
+    r'(?P<noun>' + _F14_NOUN_CLASS + r'{2,8}'
+    r'(?:\([A-Za-z0-9]+\))?)'
+    r'[之的]'  # accept 之 (formal register) OR 的 (modern register)
+)
+
+# Round 7 (2026-04-30): F20 — `(以|藉由|透過|經由) X (verb)` instrumental
+# intro. Captures X as a new claim element when used as the means in a
+# preposition + verb clause. Common in TIPO method-claim drafting:
+#   `以閘極電極覆蓋前述p型通道層`     → register `閘極電極`
+#   `藉由矽層夾持矽鍺層`             → register `矽層`
+# Trailing verb is required to disambiguate from preposition-only uses
+# (`以X的Y` would match F10/F19 instead). Component-suffix gate via
+# walk-back at emit.
+# `以` excluded when followed by `及` (conjunction `以及` = "as well as")
+# to prevent mid-conjunction false matches like `以及藉由矽層夾持` where
+# `以` would otherwise trigger and capture `及藉由矽層` as junk noun.
+_F20_PREP_NP_VERB_RE = re.compile(
+    r'(?:以(?!及)|藉由|透過|經由)'
+    r'(?P<noun>' + _F14_NOUN_CLASS + r'{2,8}'
+    r'(?:\([A-Za-z0-9]+\))?)'
+    r'(?:夾持|覆蓋|包含|包括|具有|含有|具備|設有|設置|配置|形成|構成|連接|連結|提供|分隔|劃分|實施|分為|構建|測量|蝕刻|除去|裝設|安裝)'
 )
 
 # ADJ/verb heads that must not start a bare-modifier noun capture.
@@ -2713,6 +2944,23 @@ _F10_NOUN_REJECTS = (
     '能夠', '能', '會', '進行', '獲得', '獲取', '接收', '存儲',
     '輸出', '輸入', '基於', '根據',
     '單一', '唯一',
+    # === Phase 8b R7 — Added 2026-04-30 (Claire-draft audit) ===
+    # Copula / verb-prefix rejects for F15 colon-list intros and F12
+    # Tier A walk-back. F15 splits a colon-list segment that may start
+    # with copula 係 (`係積層有由矽鍺所構成之p型通道層`); F12 may
+    # over-capture across `為` boundaries (`為主`-style adverbs).
+    '係', '是', '為',
+    # Comparative / preposition rejects: F6 over-capture (`具有較前述矽層
+    # 在前述p型電晶體`) and bare-NP arm 3 produce captures starting with
+    # 較/對/在. Also F15 colon-list segments may start with 在 (`在矽層
+    # 之間夾持矽鍺層之n型通道層`). 對 covers 對於/對應 / `對在前述矽`.
+    '較', '對', '在',
+    # Verb-of-action prefix rejects: F15 segments may carry leading
+    # verbs (`將犧牲片層`, `藉由矽層夾持`, `蝕刻使膜厚`). 將/藉/蝕 cover
+    # the observed corpus cases. Multi-char `藉由` would also work but
+    # single-char 藉 is sufficient (藉口 is non-patent; no compound-noun
+    # collision in TW patent claim diction).
+    '將', '藉', '蝕',
 )
 
 # Mechanical-component suffix set. F10 only emits captures whose tail is
@@ -2729,6 +2977,152 @@ _F10_COMPONENT_SUFFIXES: tuple[str, ...] = (
     '側', '孔', '縫', '邊', '頂', '底', '角', '心', '核', '機',
     '櫃', '室', '槽', '線', '路', '池', '樞', '蓋', '套', '罩',
     '網', '柱', '錐', '球', '球體', '筒體',
+    # === Phase 8b R7 — Added 2026-04-30 (Claire-draft audit) ===
+    # 域: region/area suffix for semiconductor + electronic claim
+    #     elements (n型區域, p型區域, 主動區域, 隔離區域). Observed in
+    #     c11/c13/c14/c15 of the Claire draft. F14 captures `中之n型區域`
+    #     cleanly but the emit gate rejected because 域 was missing. Risk
+    #     audit: TW corpus 0 spurious matches (域 in 領域/場域/流域/海域
+    #     are general-domain words rare in claim text; no collision with
+    #     the 25 protect:true entries).
+    '域',
+    # 極: electrode/pole suffix for semiconductor claim elements (閘極
+    #     電極, 源極, 汲極, 集極, 射極). Observed in c1/c10/c13/c15 of
+    #     the Claire draft. Risk audit: 北極/南極/太極/積極 are
+    #     non-patent compounds, 0 corpus collisions; 中極 / 終極 absent.
+    '極',
+    # NOTE: 法 (method-claim head) intentionally NOT added here — F10's
+    # narrow `的Y` capture would misfire on synthetic `一種的方法` (and
+    # other 2-char 法 compounds). Walk-back uses the wider set
+    # _F10_WALKBACK_SUFFIXES_TW which DOES include 法 so F14/F19/F20
+    # can register `製造方法` (then strip_leading_verb_tw produces `方法`).
+)
+
+
+# Round 7 (2026-04-30): Single-char component suffixes derived from
+# _F10_COMPONENT_SUFFIXES, used by walk-back-to-last-suffix logic in
+# F12/F14 emit. Multi-char items (球體, 筒體) contribute their tail char
+# (體) which is already in the single-char set. The walk-back logic only
+# needs the single-char tails to identify a clean noun-phrase boundary
+# from the right.
+_F10_SINGLE_CHAR_SUFFIXES_TW: frozenset[str] = frozenset(
+    s for s in _F10_COMPONENT_SUFFIXES if len(s) == 1
+) | {
+    # Walk-back-only suffixes that aren't in F10's narrow endswith gate
+    # (because F10 fires on `的Y` with Y={2,8} chars and short 法-suffix
+    # captures like `的方法` would misfire on 想法/做法/算法 cases). F14/
+    # F19/F20 walk-back uses this wider set so `之製造方法` registers
+    # `製造方法` (then strip_leading_verb_tw produces `方法` as the head).
+    '法',
+}
+
+# Round 7: walk-back is only allowed to discard a suffix that BEGINS with
+# one of these verb-tail-head characters AND has length ≥ 2. This prevents
+# false positives where the over-capture ends in a noun-suffix-shaped
+# verb-derivative — e.g. `全域厚膜化` (drafter's 厚膜化 = "to thicken")
+# would walk back from 化 to 膜 producing `全域厚膜`, which is junk
+# (verb's object, not a claim element). The discarded `化` (1 char, not
+# in V-head set) → REJECT. Same for `矽鍺層膜厚更厚` discarding `膜厚更厚`
+# — starts with 膜 (a noun suffix, not a V-head) → REJECT.
+#
+# Captures the canonical TW patent-claim trailing-verb-clause shapes:
+#   `X之Y所形成`     → walk-back at `所` → Y     (4 findings on Claire draft)
+#   `X之Y所構成`     → walk-back at `所` → Y
+#   `X作為Y露出`     → walk-back at `露` → Y     (4 findings)
+#   `X之Y組成的Z`    → walk-back at `組` → Y
+#   `X進行Y`         → covered separately by interior-cut on 進行
+_F14_WALKBACK_VERB_HEADS_TW: tuple[str, ...] = (
+    '所', '露', '形', '構', '組', '製', '經',
+)
+
+
+def _trim_capture_to_clean_noun_tw(text: str) -> str | None:
+    """Walk back from end of `text` to the last component-suffix character
+    and truncate; return ``None`` if the result fails any hygiene check.
+
+    Used by F12 Tier A and F14 emit sites to recover from over-greedy
+    captures that extend past the head noun into a trailing verb clause.
+    Hygiene checks (in order):
+      1. If `text` already ends in a component-suffix char, walk-back is a
+         no-op (just run hygiene checks 4-5 below). Preserves R6 behavior
+         for clean captures like `p型電晶體以及n型電晶體`.
+      2. Walk-back must find a single-char component suffix in the leading
+         12 characters of `text`. Without one, the capture is not a noun
+         phrase — reject.
+      3. The discarded suffix (`text[clean_end:]`) must (a) be ≥ 2 chars
+         AND (b) start with one of `_F14_WALKBACK_VERB_HEADS_TW`. This
+         restricts walk-back to known verb-clause tails (所形成 / 露出 /
+         構成 / 組成 / etc.) and rejects walk-back that would salvage
+         meaningless substrings (`化` from 厚膜化, `膜厚更厚` from
+         矽鍺層膜厚更厚).
+      4. The truncated form must not contain an embedded reference-form
+         prefix (該等/該些/所述/前述/該). Embedded ref-prefixes mean the
+         capture spans clauses rather than a single noun phrase.
+      5. The truncated form must be ≥ 2 chars and must not start with
+         one of `_F10_NOUN_REJECTS` (predicate-adjective / verb-phrase
+         heads).
+
+    Returns the truncated form if all checks pass, else ``None``.
+
+    Examples (Round 7 audit on Claire's draft):
+      - `p型區域所形成` → discard `所形成` (≥2, starts with 所) → `p型區域` ✓
+      - `p型通道層露出` → discard `露出` (≥2, starts with 露) → `p型通道層` ✓
+      - `全域厚膜化`   → discard `化` (length 1) → REJECT
+      - `矽鍺層膜厚更厚` → discard `膜厚更厚` (starts with 膜, not in V-heads) → REJECT
+      - `內壁露出前述矽層` → ends in 層 (no walk-back) → embedded `前述` → REJECT
+      - `p型電晶體以及n型電晶體` → ends in 體 → no walk-back → PASS
+    """
+    if not text or len(text) < 2:
+        return None
+    # Case 1: already ends in component suffix — no walk-back needed
+    if text[-1] in _F10_SINGLE_CHAR_SUFFIXES_TW:
+        truncated = text
+    else:
+        # Walk back to last component-suffix char within leading 12 chars.
+        clean_end = None
+        for i in range(min(len(text), 12), 0, -1):
+            if text[i - 1] in _F10_SINGLE_CHAR_SUFFIXES_TW:
+                clean_end = i
+                break
+        if clean_end is None:
+            return None
+        # Verb-tail gate: discarded suffix must be a known verb-clause shape
+        discarded = text[clean_end:]
+        if len(discarded) < 2 or not discarded.startswith(
+            _F14_WALKBACK_VERB_HEADS_TW
+        ):
+            return None
+        truncated = text[:clean_end]
+    if len(truncated) < 2:
+        return None
+    # Reject embedded reference-form prefix.
+    for prefix in _REFERENCE_PREFIXES:
+        if prefix in truncated:
+            return None
+    # Reject ADJ/verb-phrase heads.
+    if truncated.startswith(_F10_NOUN_REJECTS):
+        return None
+    return truncated
+
+
+# R7 (2026-04-30): F10b — lazy-suffix-anchored variant of F10. The
+# greedy F10 fails when the noun is followed by CJK (e.g.
+# `的半導體通道層交互積層`); F10b matches `的(noun{1,7}? + suffix-char)`
+# so the capture is bounded by the FIRST component suffix encountered.
+# This admits captures with arbitrary trailing CJK context, complementing
+# F10's greedy boundary-anchored match.
+#
+# Risk: lazy match registers the shortest suffix-ending NP; longer
+# forms (e.g. `奈米片積層體` vs `奈米片積層`) would prefer greedy F10.
+# Both patterns run; F10's greedy emit takes precedence when the trailing
+# context permits, otherwise F10b's lazy emit fills the gap. Junk
+# captures are filtered by the same hygiene gate as F10.
+_F10B_SUFFIX_CHARSET = '[' + ''.join(sorted(_F10_SINGLE_CHAR_SUFFIXES_TW)) + ']'
+_F10B_BARE_DE_NOUN_RE = re.compile(
+    r'的'
+    r'(?P<noun>' + _CJK_NO_DE_ZHI_TW + r'{1,7}?'
+    + _F10B_SUFFIX_CHARSET
+    + r'(?:\([A-Za-z0-9]+\))?)'
 )
 
 
@@ -2819,7 +3213,15 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
         results.append((m.group(0), normalized))
 
     # F12: copula intros (C2, Tier A + Tier B ports).
-    # Tier A unconditional (轉變為/變為/分為-family): register Y from X轉變為Y.
+    # Tier A unconditional (轉變為/變為/分為/作為-family): register Y from
+    # X轉變為Y / X作為Y. Round 7 (2026-04-30): 作為 added with mixed-script
+    # noun class (in regex def above). Trailing verb-clause cleanup
+    # (`作為p型通道層露出` → `p型通道層`) handled by clean_noun_phrase_tw
+    # via the interior-cut at 露出 (added to _INTERIOR_VERB_BOUNDARIES in
+    # this round). No walk-back here — preserves R2's f12_copula behavior
+    # for short captures like `水蒸氣` that don't end in F10 component
+    # suffixes (氣 is a chemistry-element tail, intentionally outside the
+    # mechanical-element suffix list).
     for m in _F12_TIER_A_RE_TW.finditer(text):
         noun = m.group(1)
         if noun.startswith(('所述', '該', '前述', '該等', '該些')):
@@ -2888,6 +3290,24 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
             continue
         results.append((m.group(0), normalized))
 
+    # R7 (2026-04-30): F10b — lazy-suffix-anchored fallback of F10. Catches
+    # `的(noun)` captures where the trailing context is CJK (greedy F10
+    # fails). Same hygiene as F10. Common in process-method drafting
+    # where elements are listed in long compound phrases:
+    #   `藉由矽層夾持矽鍺層的半導體通道層交互積層` → register `半導體通道層`
+    for m in _F10B_BARE_DE_NOUN_RE.finditer(text):
+        noun = m.group('noun')
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        if not normalized or len(normalized) < 2:
+            continue
+        if normalized.startswith(_REFERENCE_PREFIXES):
+            continue
+        if normalized.startswith(_F10_NOUN_REJECTS):
+            continue
+        if not normalized.endswith(_F10_COMPONENT_SUFFIXES):
+            continue
+        results.append((m.group(0), normalized))
+
     # F11: Locative-possessive bare NOUN (Y+上部/下部/...的).
     for m in _F11_LOCATIVE_POSS_RE.finditer(text):
         noun = m.group('noun')
@@ -2904,18 +3324,89 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
     # letters/digits for electronics/semiconductor identifiers.
     # Component-suffix gate + ref-prefix rejection + ADJ rejection mirror
     # F10. Conjunction-split downstream handles 之X以及Y / 之X和Y / etc.
+    #
+    # R7 (2026-04-30): Replace strict endswith-suffix gate with walk-back-
+    # to-last-suffix recovery. Greedy regex matches up to 12 chars and
+    # often extends past the head noun (`之p型區域所形成` captures
+    # `p型區域所形成`); walk-back recovers `p型區域` cleanly. Also rejects
+    # captures with embedded ref-prefix (`內壁露出前述矽層` → `前述`-embedded
+    # → REJECT) which the old endswith-only gate let through.
     for m in _F14_BARE_ZHI_NOUN_RE.finditer(text):
         noun = m.group('noun')
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
-        if not normalized or len(normalized) < 2:
+        trimmed = _trim_capture_to_clean_noun_tw(normalized)
+        if trimmed is None:
             continue
-        if normalized.startswith(_REFERENCE_PREFIXES):
+        results.append((m.group(0), trimmed))
+
+    # Phase 8b R7 — F16: locative left-side intro `(於|在)X之Y`. Captures
+    # X as a new claim element when the drafter introduces it via a
+    # locative phrase (`於半導體基板之一主面側` registers `半導體基板`).
+    # Same hygiene gate as F14 — component-suffix tail, no embedded
+    # ref-prefix, no ADJ-head.
+    for m in _F16_LOC_LEFT_INTRO_RE.finditer(text):
+        noun = m.group('noun')
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        trimmed = _trim_capture_to_clean_noun_tw(normalized)
+        if trimmed is None:
             continue
-        if normalized.startswith(_F10_NOUN_REJECTS):
+        results.append((m.group(0), trimmed))
+
+    # Phase 8b R7 — F17: locative-internal intro `在X之間`. Specific
+    # pattern where X is between two surfaces / volumes. Captures X as
+    # the new element (`在矽層之間夾持` registers `矽層`).
+    for m in _F17_LOC_INTERNAL_INTRO_RE.finditer(text):
+        noun = m.group('noun')
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        trimmed = _trim_capture_to_clean_noun_tw(normalized)
+        if trimmed is None:
             continue
-        if not normalized.endswith(_F10_COMPONENT_SUFFIXES):
+        results.append((m.group(0), trimmed))
+
+    # Phase 8b R7 — F15: colon-list bare-noun intros. After a trigger
+    # verb + colon, register each ；/、/，-separated segment as a bare
+    # noun intro. Each segment passes through the same hygiene gate as
+    # F14 / F16 / F17 (component-suffix tail, no embedded ref-prefix,
+    # no ADJ-head). TIPO sub-element listings often introduce multiple
+    # claim elements after a single trigger verb.
+    for m in _F15_COLON_LIST_ANCHOR_TW.finditer(text):
+        list_text = m.group(1)
+        for raw_segment in _F15_LIST_SPLIT_TW.split(list_text):
+            seg = raw_segment.strip()
+            if not seg or len(seg) < 2:
+                continue
+            # The segment may carry leading/trailing whitespace plus a
+            # short verb-clause tail (like `閘極電極，係介隔...` after
+            # comma-split; the `係...` is a separate fragment but if
+            # split missed it, walk-back will trim). Run through walk-back.
+            seg = re.sub(r'\([A-Za-z0-9]+\)', '', seg)
+            trimmed = _trim_capture_to_clean_noun_tw(seg)
+            if trimmed is None:
+                continue
+            results.append((seg, trimmed))
+
+    # Phase 8b R7 — F19: `verb + X + 之 + Y` left-side intro. Register
+    # the left-side X (verb's object) when followed by 之. Complements
+    # F14 which registers right-side Y. F6 rejects this shape due to
+    # the `(?![的之])` trailing lookahead; F19 explicitly handles it.
+    for m in _F19_VERB_NP_ZHI_RE.finditer(text):
+        noun = m.group('noun')
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        trimmed = _trim_capture_to_clean_noun_tw(normalized)
+        if trimmed is None:
             continue
-        results.append((m.group(0), normalized))
+        results.append((m.group(0), trimmed))
+
+    # Phase 8b R7 — F20: `(以|藉由|透過|經由) X (verb)` instrumental intro.
+    # Register X as new claim element when used as means in preposition +
+    # verb clause (`以閘極電極覆蓋`, `藉由矽層夾持`).
+    for m in _F20_PREP_NP_VERB_RE.finditer(text):
+        noun = m.group('noun')
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        trimmed = _trim_capture_to_clean_noun_tw(normalized)
+        if trimmed is None:
+            continue
+        results.append((m.group(0), trimmed))
 
     # Uniform trailing-verb cleanup for all supplementary captures
     cleaned: list[tuple[str, str]] = []
@@ -2995,9 +3486,16 @@ def extract_introductions_tw(
                 pairs.append((original, normalized))
 
     # --- Supplementary patterns (bare-noun intros without 一 prefix) ---
+    # Supplementary `_extract_supplementary_intros` already applies its own
+    # cleanup pipeline (interior cut + trailing strip + conjunction-split).
+    # R7 (2026-04-30): also apply `strip_leading_verb_tw` so a captured
+    # `製造方法` (from F14 on `之製造方法`) registers as `方法` after
+    # stripping the leading 製造 verb prefix — matching the canonical
+    # method-claim head-noun reference `該方法`.
     supplementary = _extract_supplementary_intros(claim.text)
     for orig, norm in supplementary:
-        if norm not in seen:
+        norm = strip_leading_verb_tw(norm)
+        if norm and norm not in seen:
             seen.add(norm)
             pairs.append((orig, norm))
 
