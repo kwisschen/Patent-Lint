@@ -290,7 +290,7 @@
     "airplaneDemoAlt": "示範：在飛航模式下無網路連線分析專利說明書",
     "badge": {
       "headline": "無上傳。無雲端處理。無 AI。",
-      "description": "PatentLint 已下載於您的瀏覽器內並可離線運作。",
+      "description": "頁面載入後可斷網使用。您的稿件不會經過網路。",
       "proveIt": "來驗證 →"
     },
     "results": {
@@ -317,7 +317,7 @@
     },
     "page": {
       "heroTitle": "無上傳。無 AI。無例外。",
-      "heroSubtext": "PatentLint 完全在您的瀏覽器中本機運作，專利稿件絕不會離開您的裝置。本工具採無帳號架構，無從收集您的個人資料。分析全程於本機執行；分析結果僅供您本人查閱。",
+      "heroSubtext": "PatentLint 完全在您的瀏覽器中本機運作，專利稿件不會離開您的裝置。本工具採無帳號架構，無從收集您的個人資料。分析全程於本機執行。分析結果僅供您本人查閱。",
       "tryIt": "自己驗證看看 →",
       "compareTitle": "PatentLint 與其他工具的比較",
       "compareDisclaimer": "本比較表反映一般架構模式。個別產品可能有所不同。「Word 增益集工具」與「雲端工具」為通用類別，並非指特定產品。",
@@ -330,7 +330,7 @@
       "colCloud": "雲端工具",
       "q1": {
         "question": "我的檔案會離開我的裝置嗎？",
-        "patentlint": "絕不。100% 在瀏覽器中本機執行。",
+        "patentlint": "不會。100% 在瀏覽器中本機執行。",
         "addin": "檔案留在本機，但增益集可能連線回報。",
         "cloud": "是，上傳至遠端伺服器。"
       },
@@ -366,7 +366,7 @@
       },
       "q7": {
         "question": "我的專利內容會被用於 AI 訓練嗎？",
-        "patentlint": "絕不。所有檢查皆為規則式比對。",
+        "patentlint": "不會。所有檢查皆為規則式比對。",
         "addin": "視廠商而定；部分會回傳遙測資料。",
         "cloud": "常常會；服務條款常保留此類權利。"
       }
@@ -377,7 +377,7 @@
       "networkTitle": "網路活動",
       "network": "初次頁面載入（載入分析引擎）之後，分析過程中不會發出任何網路請求。您可以在瀏覽器的開發人員工具「網路」分頁中驗證，或直接開啟飛航模式。",
       "pdfTitle": "PDF 生成",
-      "pdf": "PDF 報告完全在您的瀏覽器中使用 pdfmake 生成。您的文件內容絕不離開您的裝置，即使是生成報告也不例外。",
+      "pdf": "PDF 報告完全在您的瀏覽器中使用 pdfmake 生成。您的文件內容不會離開您的裝置，即使是生成報告也不例外。",
       "aiTitle": "AI / LLM（不使用）",
       "ai": "PatentLint 不使用 AI、機器學習或大型語言模型。所有檢查皆為確定性的規則比對，依據各專利局審查規範執行。您的文字不會被傳送至任何 AI 服務。",
       "telemetryTitle": "遙測與分析（不使用）",
@@ -391,7 +391,7 @@
   "about": {
     "productTitle": "PatentLint 是什麼？",
     "productTagline": "同類首創的專利稿件檢查工具，可離線於您的瀏覽器中正常運作。",
-    "productDesc1": "PatentLint完全在您的裝置上本機運行，為您在審查委員指出缺失之前先行檢出問題。拖放美國、中國大陸或台灣的專利說明書，便可即時取得形式要件的合規報告與評分。無上傳、無雲端處理、無 AI。",
+    "productDesc1": "PatentLint完全在您的裝置上本機運行，為您在審查委員指出缺失之前先行檢出問題。網頁僅是入口。頁面載入後，PatentLint 便如桌面軟體般在您的裝置上獨立運作，您可關閉網路繼續使用。拖放美國、中國大陸或台灣的專利說明書，便可即時取得形式要件的合規報告與評分。無上傳、無雲端處理、無 AI。",
     "productDesc2": "PatentLint 依據 USPTO（美國）、CNIPA（中國大陸）及 TIPO（台灣）的撰稿規則進行檢查，偵測審查規範中的常見問題，如缺乏先行詞基礎、不正確的請求項結構和限制性用語。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 驗證送件格式。PatentLint 檢查說明書本身。",
@@ -1334,7 +1334,7 @@
     "firstVisitHint": "首次造訪需數秒；完成後將快取於您的瀏覽器，下次秒開",
     "offline_note": "首次載入後可離線使用",
     "feature1_title": "無上傳。無雲端處理。無 AI。",
-    "feature1_desc": "您的機密專利說明書不會離開您的裝置。您的檔案絕不會被上傳，PatentLint 也不會知道您的身份。",
+    "feature1_desc": "您的機密專利說明書不會離開您的裝置。您的檔案不會被上傳，PatentLint 也不會知道您的身份。",
     "feature2_title": "USPTO／CNIPA／TIPO 檢查與請求項樹狀圖",
     "feature2_desc": "偵測限制性用語、不明確用語及缺乏先行詞基礎等問題，並以互動式樹狀圖呈現請求項附屬關係。",
     "feature3_title": "請求項樹狀圖",
