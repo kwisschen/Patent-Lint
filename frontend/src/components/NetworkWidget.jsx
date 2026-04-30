@@ -51,45 +51,53 @@ export default function NetworkWidget({ pyodideReady }) {
 
   if (!pyodideReady) return null
 
+  // Outer wrapper owns the fixed positioning; inner uses frost-card for
+  // styling. Splitting these is load-bearing — `.frost-card` sets
+  // `position: relative` (index.css:565), which on the same element as
+  // Tailwind `fixed` wins on specificity and falls the widget back into
+  // document flow (renders below the footer on short pages — the bug we
+  // just shipped on b3be10e6).
   return (
-    <div className="fixed bottom-4 right-4 z-30 frost-card rounded-lg shadow-md text-xs select-none">
-      <button
-        type="button"
-        onClick={() => setExpanded(!expanded)}
-        className="flex items-center gap-2 px-3 py-2 hover:bg-foreground/5 transition-colors w-full"
-        aria-label={expanded ? t('widget.collapse') : t('widget.expand')}
-        aria-expanded={expanded}
-      >
-        <span
-          className={`w-2 h-2 rounded-full transition-colors duration-150 ${
-            flashing ? 'bg-red-500' : 'bg-green-500'
-          }`}
-        />
-        <span className="font-mono">{t('widget.outgoing', { count })}</span>
-        {expanded ? (
-          <ChevronDown className="w-3 h-3 opacity-60" />
-        ) : (
-          <ChevronUp className="w-3 h-3 opacity-60" />
-        )}
-      </button>
-      {expanded && (
-        <div className="border-t border-border/40 px-3 py-2 max-h-32 overflow-y-auto">
-          {events.length === 0 ? (
-            <p className="text-muted-foreground">{t('widget.empty')}</p>
+    <div className="fixed bottom-4 right-4 z-30 max-w-[240px]">
+      <div className="frost-card rounded-lg shadow-md text-xs select-none">
+        <button
+          type="button"
+          onClick={() => setExpanded(!expanded)}
+          className="flex items-center gap-2 px-3 py-2 hover:bg-foreground/5 transition-colors w-full"
+          aria-label={expanded ? t('widget.collapse') : t('widget.expand')}
+          aria-expanded={expanded}
+        >
+          <span
+            className={`w-2 h-2 rounded-full shrink-0 transition-colors duration-150 ${
+              flashing ? 'bg-red-500' : 'bg-green-500'
+            }`}
+          />
+          <span className="font-mono whitespace-nowrap">{t('widget.outgoing', { count })}</span>
+          {expanded ? (
+            <ChevronDown className="w-3 h-3 opacity-60 shrink-0" />
           ) : (
-            <ul className="space-y-1">
-              {events.map((event, i) => (
-                <li key={i} className="font-mono text-[10px]">
-                  <span className="text-muted-foreground mr-2">
-                    {new Date(event.timestamp).toLocaleTimeString()}
-                  </span>
-                  {event.endpoint}
-                </li>
-              ))}
-            </ul>
+            <ChevronUp className="w-3 h-3 opacity-60 shrink-0" />
           )}
-        </div>
-      )}
+        </button>
+        {expanded && (
+          <div className="border-t border-border/40 px-3 py-2 max-h-32 overflow-y-auto">
+            {events.length === 0 ? (
+              <p className="text-muted-foreground">{t('widget.empty')}</p>
+            ) : (
+              <ul className="space-y-1">
+                {events.map((event, i) => (
+                  <li key={i} className="font-mono text-[10px]">
+                    <span className="text-muted-foreground mr-2">
+                      {new Date(event.timestamp).toLocaleTimeString()}
+                    </span>
+                    {event.endpoint}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
