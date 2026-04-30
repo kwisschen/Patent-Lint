@@ -290,7 +290,7 @@
     "airplaneDemoAlt": "演示：在飞行模式下无网络连接分析专利说明书",
     "badge": {
       "headline": "无上传。无云端处理。无 AI。",
-      "description": "PatentLint 已下载于您的浏览器内并可离线运作。",
+      "description": "页面载入后可断网使用。您的稿件不会经过网络。",
       "proveIt": "验证一下 →"
     },
     "results": {
@@ -391,7 +391,7 @@
   "about": {
     "productTitle": "PatentLint 是什么？",
     "productTagline": "同类首创的专利说明书检查工具，可离线于您的浏览器中正常运作。",
-    "productDesc1": "PatentLint 完全在您的设备上本地运行，为您在审查员指出缺陷之前先行检出问题。拖放美国、中国或台湾的专利说明书，便可即时获取形式要件的合规报告与评分。无上传、无云端处理、无 AI。",
+    "productDesc1": "PatentLint 完全在您的设备上本地运行，为您在审查员指出缺陷之前先行检出问题。网页只是入口。页面载入后，PatentLint 便如桌面软件般在您的设备上独立运行，您可断网继续使用。拖放美国、中国或台湾的专利说明书，便可即时获取形式要件的合规报告与评分。无上传、无云端处理、无 AI。",
     "productDesc2": "PatentLint 依据 USPTO（美国）、CNIPA（中国）及 TIPO（台湾）的撰写规则进行检查，检测审查规范中的常见问题，如缺乏引用基础、不正确的权利要求结构和限制性用语。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查说明书本身。",
