@@ -172,6 +172,22 @@ def check_required_sections(doc: TwPatentDocument) -> list[CheckItem]:
             diagnostics=_dx(
                 missing_count=len(missing),
                 first_missing=missing[0] if missing else None,
+                # Diagnostic fields surfaced for self-triage of claims-
+                # parser failures (issue #17 class). When triaging a
+                # report:
+                #   claims_header_seen=True + claims_section_paragraph_count=0
+                #     → header recognized but bracket-header reset dropped
+                #     all claim text. Combined with
+                #     unknown_bracket_headers_in_claims>0, points at an
+                #     unhandled firm-variant claim label.
+                #   claims_first_paragraph_starts_with_bracket=True
+                #     → drafter uses 【...】-style claim labels the parser
+                #     didn't recognize.
+                # Lets future triage skip the "ask user for the draft"
+                # step.
+                claims_section_paragraph_count=getattr(doc, "claims_section_paragraph_count", None),
+                claims_first_paragraph_starts_with_bracket=getattr(doc, "claims_first_paragraph_starts_with_bracket", None),
+                unknown_bracket_headers_in_claims=getattr(doc, "unknown_bracket_headers_in_claims", None),
                 missing_sections=missing[:10],
                 total_required=len(missing) + (5 - len(missing)) if len(missing) <= 5 else len(missing),
                 abstract_header_seen=getattr(doc, "abstract_header_seen", None),
