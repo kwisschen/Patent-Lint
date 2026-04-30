@@ -290,7 +290,7 @@
     "airplaneDemoAlt": "데모: 네트워크 연결 없이 비행기 모드에서 특허 초안을 분석하는 모습",
     "badge": {
       "headline": "업로드 없음. 클라우드 처리 없음. AI 없음.",
-      "description": "파일이 기기를 벗어나지 않습니다.",
+      "description": "PatentLint은 브라우저에 다운로드되어 있으며 오프라인에서도 작동합니다.",
       "proveIt": "직접 확인 →"
     },
     "results": {
@@ -1685,5 +1685,11 @@
       "tableGrade": "등급",
       "tableWeight": "가중치"
     }
+  },
+  "widget": {
+    "outgoing": "외부 전송: {{count}}건",
+    "empty": "외부 전송 없음",
+    "expand": "로그 보기",
+    "collapse": "로그 숨기기"
   }
 }

@@ -290,7 +290,7 @@
     "airplaneDemoAlt": "Demo: Prüfung einer Patentanmeldung im Flugmodus ohne Netzwerkverbindung",
     "badge": {
       "headline": "Kein Upload. Keine Cloud-Verarbeitung. Keine KI.",
-      "description": "Ihre Datei verlässt nie Ihr Gerät.",
+      "description": "PatentLint ist in Ihren Browser heruntergeladen und funktioniert auch offline.",
       "proveIt": "Überzeugen Sie sich →"
     },
     "results": {
@@ -1683,5 +1683,11 @@
       "tableGrade": "Note",
       "tableWeight": "Gewichtung"
     }
+  },
+  "widget": {
+    "outgoing": "Ausgehende Daten: {{count}}",
+    "empty": "Noch keine ausgehenden Anfragen.",
+    "expand": "Protokoll anzeigen",
+    "collapse": "Protokoll ausblenden"
   }
 }

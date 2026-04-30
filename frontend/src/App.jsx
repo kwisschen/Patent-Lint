@@ -10,6 +10,7 @@ import AnalysisReport from './components/AnalysisReport'
 import ScannedDocBanner from './components/ScannedDocBanner'
 import LoadingOnboard from './components/LoadingOnboard'
 import ProveItModal from './components/ProveItModal'
+import NetworkWidget from './components/NetworkWidget'
 import { FeedbackProvider } from './components/FeedbackPicker'
 import SecurityPage from './pages/SecurityPage'
 import AboutPage from './pages/AboutPage'
@@ -225,6 +226,7 @@ function App() {
         </Routes>
       </Layout>
 
+      <NetworkWidget pyodideReady={pyodide.ready} />
       <ProveItModal open={showProveIt} onOpenChange={setShowProveIt} />
       <Toaster />
     </FeedbackProvider>
