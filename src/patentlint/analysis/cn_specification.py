@@ -194,6 +194,14 @@ def check_required_sections(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 missing_sections=missing[:10],
                 input_format=getattr(cn_doc, "input_format", None),
                 claims_strategy=cn_doc.section_source_strategies.get("claims") if hasattr(cn_doc, "section_source_strategies") else None,
+                # Symmetry with TW (issue #17 follow-up): surface how many
+                # claims the parser actually extracted, not just whether
+                # the strategy detected them. claims_count=0 with a valid
+                # claims_strategy would point at a downstream parsing
+                # failure (e.g., unrecognized numbering format) rather
+                # than a missing-section defect — same bug class TW saw
+                # with bracket-label firm variants.
+                claims_count=len(cn_doc.claims) if cn_doc.claims else 0,
             ),
         )]
     return [CheckItem(
