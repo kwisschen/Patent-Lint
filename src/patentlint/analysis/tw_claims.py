@@ -1670,6 +1670,15 @@ _LEADING_QUANTIFIER_DENYLIST: tuple[str, ...] = tuple(sorted(
         "複數個", "多個", "數個",
         "複數",
         "一",
+        # Round 6 addition: 各 distributive quantifier ("each"). TIPO
+        # drafters use 前述各X / 該各X for "each X" references when a
+        # parent claim introduces an indexed family (各p型通道層, 各n型
+        # 電極). Reference-side normalization must strip 各 so the bare
+        # head noun matches the upstream intro. Symmetric strip on the
+        # intro side is harmless because 各X intros are unattested at
+        # claim-body level (the indexed family is introduced as bare
+        # noun, then references add the distributive 各 prefix).
+        "各",
     ),
     key=len,
     reverse=True,
@@ -2667,6 +2676,36 @@ _F11_LOCATIVE_POSS_RE = re.compile(
     r'的'
 )
 
+# Round 6: F14 — bare-modifier `之NOUN` intro. Formal-register parallel
+# to F10's `的NOUN` for TIPO 專利說明書 register and JP-translated drafts
+# where 之 is used for possessive marking instead of the modern 的.
+# Triggered by issues #19 + #23 (semiconductor patent drafter introducing
+# sub-elements as `具備全周閘極構造之p型電晶體以及n型電晶體`).
+#
+# Mixed-script noun class: CJK (excluding 的 U+7684 + 之 U+4E4B) plus
+# ASCII letters/digits to capture electronics/semiconductor identifiers
+# (p型電晶體, n型通道層, RAM控制器). _CJK_NO_DE_ZHI_TW alone would miss
+# these — its ranges are CJK-only.
+#
+# Trailing negative-lookahead anchors the capture at a non-CJK-non-alnum
+# boundary (clause punctuation, end of text). Constraints in the emit
+# site mirror F10:
+#   * Component-suffix gate ensures the captured word names a physical
+#     claim element (uses _F10_COMPONENT_SUFFIXES; 體 covers p/n型電晶體,
+#     層 covers p/n型通道層, etc.).
+#   * Reject ref-prefix heads (所述/該/前述/該等/該些).
+#   * Reject ADJ/verb heads via _F10_NOUN_REJECTS.
+# Conjunction-split (Phase B4 at end of _extract_supplementary_intros)
+# downstream-splits 之X以及Y / 之X和Y / 之X與Y / 之X及Y so each piece is
+# registered as its own intro.
+_F14_NOUN_CLASS = r'[A-Za-z0-9一-乊乌-皃皅-鿿]'
+_F14_BARE_ZHI_NOUN_RE = re.compile(
+    r'之'
+    r'(?P<noun>' + _F14_NOUN_CLASS + r'{2,12}'
+    r'(?:\([A-Za-z0-9]+\))?)'
+    r'(?!' + _F14_NOUN_CLASS + r')'
+)
+
 # ADJ/verb heads that must not start a bare-modifier noun capture.
 # Mirrors _F12_ADJ_REJECTS_TW with additions for bare-的 context.
 _F10_NOUN_REJECTS = (
@@ -2859,6 +2898,24 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
         if noun.startswith(_F10_NOUN_REJECTS):
             continue
         results.append((m.group(0), noun))
+
+    # Phase 8b R6 — F14: bare-modifier `之NOUN` intro (formal-register
+    # parallel to F10's `的NOUN`). Mixed-script noun class admits ASCII
+    # letters/digits for electronics/semiconductor identifiers.
+    # Component-suffix gate + ref-prefix rejection + ADJ rejection mirror
+    # F10. Conjunction-split downstream handles 之X以及Y / 之X和Y / etc.
+    for m in _F14_BARE_ZHI_NOUN_RE.finditer(text):
+        noun = m.group('noun')
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        if not normalized or len(normalized) < 2:
+            continue
+        if normalized.startswith(_REFERENCE_PREFIXES):
+            continue
+        if normalized.startswith(_F10_NOUN_REJECTS):
+            continue
+        if not normalized.endswith(_F10_COMPONENT_SUFFIXES):
+            continue
+        results.append((m.group(0), normalized))
 
     # Uniform trailing-verb cleanup for all supplementary captures
     cleaned: list[tuple[str, str]] = []
