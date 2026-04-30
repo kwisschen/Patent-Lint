@@ -11,19 +11,19 @@
   },
   "dropzone": {
     "tagline": "Prüfen Sie Ihre Beschreibung automatisch gegen {{count}} USPTO-Ausarbeitungsregeln.",
-    "title": "Patentanmeldung (.docx) ablegen, um die lokale Prüfung zu starten",
+    "title": "Patentanmeldung (.docx) ablegen, lokal prüfen",
     "subtitle": "oder zum Durchsuchen klicken",
     "notice": "Unterstützt US-Patentbeschreibungen (.docx)",
     "reject": "Nur .docx-Dateien werden akzeptiert",
     "rejectMultiple": "Bitte immer nur eine Datei ablegen.",
     "rejectMultipleType": "Bitte eine einzelne .docx-Datei ablegen.",
     "taglineCn": "Prüfen Sie Ihre Beschreibung automatisch gegen {{count}} CNIPA-Ausarbeitungsregeln.",
-    "titleCn": "Patentdatei ablegen, um die lokale Prüfung zu starten",
+    "titleCn": "Patentdatei ablegen, lokal prüfen",
     "noticeCn": "Unterstützt chinesische Patentbeschreibungen (.docx, .xml, .zip)",
     "rejectCn": "Nur .docx-, .xml- und .zip-Dateien werden akzeptiert",
     "rejectMultipleTypeCn": "Bitte eine einzelne .docx-, .xml- oder .zip-Datei ablegen.",
     "taglineTw": "Prüfen Sie Ihre Beschreibung automatisch gegen {{count}} TIPO-Ausarbeitungsregeln.",
-    "titleTw": "Patentanmeldung (.docx) ablegen, um die lokale Prüfung zu starten",
+    "titleTw": "Patentanmeldung (.docx) ablegen, lokal prüfen",
     "noticeTw": "Unterstützt taiwanesische Patentbeschreibungen (.docx)",
     "rejectTw": "Nur .docx-Dateien werden akzeptiert",
     "rejectMultipleTypeTw": "Bitte eine einzelne .docx-Datei ablegen."
@@ -290,8 +290,7 @@
     "airplaneDemoAlt": "Demo: Prüfung einer Patentanmeldung im Flugmodus ohne Netzwerkverbindung",
     "badge": {
       "headline": "Kein Upload. Keine Cloud-Verarbeitung. Keine KI.",
-      "description": "Nach dem Laden der Seite können Sie offline arbeiten. Ihr Entwurf verlässt das Netzwerk nie.",
-      "proveIt": "Überzeugen Sie sich →"
+      "proveIt": "Offline ausprobieren →"
     },
     "results": {
       "badge": "Auf Ihrem Gerät geprüft",
@@ -304,7 +303,7 @@
       "label2": "Datei ablegen",
       "label3": "Es funktioniert trotzdem",
       "label4": "Der grüne Punkt",
-      "step1": "WLAN ausschalten oder Flugmodus aktivieren",
+      "step1": "Internetverbindung trennen oder Flugmodus aktivieren",
       "step2": "Beliebige .docx in PatentLint ziehen",
       "step3": "Kein Internet heißt keine Cloud, kein Upload, keine Datenübertragung",
       "step4": "Nach der Prüfung bestätigt ein grüner Punkt auf der Ergebnisseite, dass keine Netzwerkaktivität stattgefunden hat.",

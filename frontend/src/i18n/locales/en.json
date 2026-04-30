@@ -290,8 +290,7 @@
     "airplaneDemoAlt": "Demo: analyzing a patent draft in airplane mode with no network connection",
     "badge": {
       "headline": "No upload. No cloud processing. No AI.",
-      "description": "Once the page loads, you can disconnect — your draft never travels over the network.",
-      "proveIt": "Prove it →"
+      "proveIt": "Try our checker offline →"
     },
     "results": {
       "badge": "Analyzed on your device",
@@ -304,7 +303,7 @@
       "label2": "Drop a file",
       "label3": "It still works",
       "label4": "The green dot",
-      "step1": "Turn off WiFi or enable airplane mode",
+      "step1": "Disconnect from the network or enable airplane mode",
       "step2": "Drag any .docx into PatentLint",
       "step3": "No internet means no cloud, no upload, no data sent anywhere",
       "step4": "After analysis, a green dot on the results page confirms zero network activity.",

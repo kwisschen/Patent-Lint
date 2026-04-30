@@ -43,13 +43,20 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
   })
 
   return (
-    <div className="flex flex-col items-center gap-3">
+    // Parent column gets the same width cap as the dropzone (`w-full max-w-lg`)
+    // so the column doesn't widen to fit a longer headline/trust-line below.
+    // Without this, German's longer `Kein Upload. Keine Cloud-Verarbeitung.
+    // Keine KI.` headline (~48 chars) pulls the column wider than zh-TW's
+    // `無上傳。無雲端處理。無 AI。` (~14 visual units), and the dropzone's
+    // `w-full max-w-lg` follows suit — making the box visibly wider in DE.
+    // Capping the column makes the dropzone box width identical across locales.
+    <div className="flex flex-col items-center gap-3 w-full max-w-lg">
       <div
         {...getRootProps()}
         className={`
           shine-on-hover
           flex flex-col items-center justify-center gap-4
-          w-full max-w-lg p-6 md:p-12 rounded-xl
+          w-full min-h-[280px] p-6 md:p-12 rounded-xl
           border-2 cursor-pointer
           transition-all duration-[var(--motion-duration-base)]
           ${isDragActive
@@ -63,7 +70,7 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
         }}
       >
         <input {...getInputProps()} />
-        <FilePlus2 className={`h-10 w-10 transition-colors duration-200 ${isDragActive ? 'text-[var(--pass-text)]' : 'text-muted-foreground'}`} />
+        <FilePlus2 className={`h-12 w-12 transition-colors duration-200 ${isDragActive ? 'text-[var(--pass-text)]' : 'text-muted-foreground'}`} />
         <div className="text-center">
           <p className="text-base font-medium">{t(jConfig.titleKey)}</p>
           <p className="text-sm text-muted-foreground mt-1">{t('dropzone.subtitle')}</p>
@@ -71,7 +78,11 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
         </div>
       </div>
 
-      {/* Security badge */}
+      {/* Security badge — bold headline (static) + clickable CTA on the
+          line below. Two-line layout: the headline is the claim, the CTA
+          underneath invites verification (links to airplane-mode demo via
+          ProveItModal). The dropzone box's width is independent of these
+          lines because the parent flex column is capped at `max-w-lg`. */}
       <div
         className="flex flex-col gap-1.5 text-sm text-green-600 dark:text-green-400 transition-opacity duration-500"
         style={{ opacity: badgeVisible ? 1 : 0 }}
@@ -80,15 +91,12 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
           <ShieldCheck className="w-4 h-4 flex-shrink-0 mt-0.5" />
           <div className="flex flex-col gap-1">
             <strong>{t('security.badge.headline')}</strong>
-            <span className="text-xs">
-              {t('security.badge.description')}{' '}
-              <button
-                onClick={(e) => { e.stopPropagation(); onShowProveIt?.() }}
-                className="underline underline-offset-2 hover:text-green-700 dark:hover:text-green-300 focus-visible:text-green-700 dark:focus-visible:text-green-300 transition-colors"
-              >
-                {t('security.badge.proveIt')}
-              </button>
-            </span>
+            <button
+              onClick={(e) => { e.stopPropagation(); onShowProveIt?.() }}
+              className="text-xs text-left underline underline-offset-2 hover:text-green-700 dark:hover:text-green-300 focus-visible:text-green-700 dark:focus-visible:text-green-300 transition-colors"
+            >
+              {t('security.badge.proveIt')}
+            </button>
           </div>
         </div>
       </div>
