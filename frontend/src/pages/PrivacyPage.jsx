@@ -56,6 +56,7 @@ export default function PrivacyPage() {
             You can verify this in airplane mode — see the <Link to="/security">Security</Link> page for the live demonstration.
           </Trans>
         </p>
+        <p>{t('privacy.s2.p3')}</p>
       </LegalSection>
 
       <LegalSection number="3" titleKey="privacy.s3.title">

@@ -59,6 +59,12 @@ export default function TermsPage() {
           <li>{t('terms.s2.maynot3')}</li>
           <li>{t('terms.s2.maynot4')}</li>
         </ul>
+        <p>{t('terms.s2.p3')}</p>
+        <ul>
+          <li>{t('terms.s2.rep1')}</li>
+          <li>{t('terms.s2.rep2')}</li>
+          <li>{t('terms.s2.rep3')}</li>
+        </ul>
       </LegalSection>
 
       <LegalSection number="3" titleKey="terms.s3.title">
@@ -114,6 +120,7 @@ export default function TermsPage() {
 
       <LegalSection number="8" titleKey="terms.s8.title">
         <p>{t('terms.s8.p1')}</p>
+        <p>{t('terms.s8.p2')}</p>
       </LegalSection>
 
       <LegalSection number="9" titleKey="terms.s9.title">

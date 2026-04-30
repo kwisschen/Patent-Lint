@@ -20,7 +20,6 @@ import RubricPage from './pages/RubricPage'
 import { usePyodide } from './hooks/usePyodide'
 import { useUpdateCheck } from './hooks/useUpdateCheck'
 import { Toaster } from './components/ui/sonner'
-import { analyzeDocument, downloadReport as downloadReportServer } from './api'
 import { downloadReport as downloadReportClient, prefetchCjkFont } from './lib/pdfExport'
 import { getJurisdictionConfig, JURISDICTION_COLORS } from './lib/jurisdictionConfig'
 import { CHECKS_BY_JURISDICTION } from './generated/stats'
@@ -83,12 +82,10 @@ function App() {
     }
 
     try {
-      let data
-      if (pyodide.ready) {
-        data = await pyodide.analyze(uploadedFile, jurisdictionForRun)
-      } else {
-        data = await analyzeDocument(uploadedFile, jurisdictionForRun)
+      if (!pyodide.ready) {
+        throw new Error(t('analysis.engineNotReady'))
       }
+      const data = await pyodide.analyze(uploadedFile, jurisdictionForRun)
       setResult(data)
       setHomeState('results')
     } catch (err) {
@@ -98,14 +95,10 @@ function App() {
   }
 
   const handleDownloadPdf = async () => {
-    if (!file) return
+    if (!file || !pyodide.ready || !result) return
     setDownloading(true)
     try {
-      if (pyodide.ready && result) {
-        await downloadReportClient(result, t, i18n.language, file.name)
-      } else {
-        await downloadReportServer(file)
-      }
+      await downloadReportClient(result, t, i18n.language, file.name)
     } catch (err) {
       setError(err.message)
     } finally {
