@@ -1599,7 +1599,7 @@
   },
   "widget": {
     "outgoing": "Ausgehende Daten: {{count}}",
-    "empty": "Noch keine ausgehenden Anfragen.",
+    "empty": "Keine ausgehenden Anfragen.",
     "expand": "Protokoll anzeigen",
     "collapse": "Protokoll ausblenden",
     "endpointDesc": {

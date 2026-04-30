@@ -1599,7 +1599,7 @@
   },
   "widget": {
     "outgoing": "Outgoing data: {{count}}",
-    "empty": "No outgoing requests yet.",
+    "empty": "No outgoing requests.",
     "expand": "Show outgoing data log",
     "collapse": "Hide outgoing data log",
     "endpointDesc": {

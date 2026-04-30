@@ -1601,7 +1601,7 @@
   },
   "widget": {
     "outgoing": "對外傳輸：{{count}} 筆",
-    "empty": "尚無對外傳輸",
+    "empty": "無對外傳輸",
     "expand": "展開記錄",
     "collapse": "收合記錄",
     "endpointDesc": {
