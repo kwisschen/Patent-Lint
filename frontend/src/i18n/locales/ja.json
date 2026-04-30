@@ -290,7 +290,7 @@
     "airplaneDemoAlt": "デモ：機内モードでネットワーク接続なしに特許明細書をチェック",
     "badge": {
       "headline": "アップロード不要。クラウド処理不使用。AI 不使用。",
-      "description": "ファイルがデバイスの外に出ることはありません。",
+      "description": "PatentLint はブラウザにダウンロード済みで、オフラインでも動作します。",
       "proveIt": "確かめる →"
     },
     "results": {
@@ -1598,5 +1598,11 @@
       "tableGrade": "評価",
       "tableWeight": "重み"
     }
+  },
+  "widget": {
+    "outgoing": "送信データ：{{count}} 件",
+    "empty": "送信データはありません",
+    "expand": "ログを表示",
+    "collapse": "ログを非表示"
   }
 }

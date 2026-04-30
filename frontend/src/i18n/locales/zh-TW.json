@@ -290,7 +290,7 @@
     "airplaneDemoAlt": "示範：在飛航模式下無網路連線分析專利說明書",
     "badge": {
       "headline": "無上傳。無雲端處理。無 AI。",
-      "description": "您的檔案不會離開您的裝置。",
+      "description": "PatentLint 已下載於您的瀏覽器內並可離線運作。",
       "proveIt": "來驗證 →"
     },
     "results": {
@@ -1598,5 +1598,11 @@
       "tableGrade": "評等",
       "tableWeight": "權重"
     }
+  },
+  "widget": {
+    "outgoing": "對外傳輸：{{count}} 筆",
+    "empty": "尚無對外傳輸",
+    "expand": "展開記錄",
+    "collapse": "收合記錄"
   }
 }

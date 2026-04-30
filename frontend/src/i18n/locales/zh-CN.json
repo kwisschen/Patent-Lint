@@ -290,7 +290,7 @@
     "airplaneDemoAlt": "演示：在飞行模式下无网络连接分析专利说明书",
     "badge": {
       "headline": "无上传。无云端处理。无 AI。",
-      "description": "您的文件不会离开您的设备。",
+      "description": "PatentLint 已下载于您的浏览器内并可离线运作。",
       "proveIt": "验证一下 →"
     },
     "results": {
@@ -1598,5 +1598,11 @@
       "tableGrade": "评等",
       "tableWeight": "权重"
     }
+  },
+  "widget": {
+    "outgoing": "对外传输：{{count}} 笔",
+    "empty": "尚无对外传输",
+    "expand": "展开记录",
+    "collapse": "收合记录"
   }
 }

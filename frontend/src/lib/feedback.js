@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 // Copyright (c) 2025 Christopher Chen
 /* global __BUILD_HASH__ */
+import { emitOutgoing } from './outgoingRequests'
 
 // Source of truth for the maintainer email; mirrors Footer.jsx usage.
 const MAINTAINER_EMAIL = 'kwisschen@gmail.com'
@@ -471,6 +472,7 @@ export function buildReportPayload({
 export async function sendReport({ checkKey, jurisdiction, locale, diagnostics }) {
   const payload = buildReportPayload({ checkKey, jurisdiction, locale, diagnostics })
 
+  emitOutgoing('/api/report')
   let response
   try {
     response = await fetch('/api/report', {
