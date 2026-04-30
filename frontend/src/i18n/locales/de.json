@@ -290,7 +290,7 @@
     "airplaneDemoAlt": "Demo: Prüfung einer Patentanmeldung im Flugmodus ohne Netzwerkverbindung",
     "badge": {
       "headline": "Kein Upload. Keine Cloud-Verarbeitung. Keine KI.",
-      "description": "PatentLint ist in Ihren Browser heruntergeladen und funktioniert auch offline.",
+      "description": "Nach dem Laden der Seite können Sie offline arbeiten. Ihr Entwurf verlässt das Netzwerk nie.",
       "proveIt": "Überzeugen Sie sich →"
     },
     "results": {
@@ -391,7 +391,7 @@
   "about": {
     "productTitle": "Was ist PatentLint?",
     "productTagline": "Der erste Patentanmeldungs-Checker seiner Art, der in Ihrem Browser funktioniert, online wie offline.",
-    "productDesc1": "PatentLint läuft vollständig auf Ihrem eigenen Gerät und erkennt Mängel, bevor der Prüfer es tut. Legen Sie eine US-, chinesische oder taiwanesische Patentanmeldung ab und erhalten Sie einen sofortigen Compliance-Bericht und Bewertung zu den formellen Anforderungen. Keine Uploads, keine Cloud-Verarbeitung, keine KI.",
+    "productDesc1": "PatentLint läuft vollständig auf Ihrem eigenen Gerät und erkennt Mängel, bevor der Prüfer es tut. Die Webseite ist nur der Einstieg. Nach dem Laden funktioniert PatentLint wie eine Desktop-Software auf Ihrem Gerät, sodass Sie auch ohne Internetverbindung weiterarbeiten können. Legen Sie eine US-, chinesische oder taiwanesische Patentanmeldung ab und erhalten Sie einen sofortigen Compliance-Bericht und Bewertung zu den formellen Anforderungen. Keine Uploads, keine Cloud-Verarbeitung, keine KI.",
     "productDesc2": "PatentLint prüft Ausarbeitungsregeln der USPTO (USA), der CNIPA (China) und der TIPO (Taiwan) und erkennt nach gängigen Prüfungsrichtlinien typische Mängel wie fehlenden Rückbezug, fehlerhafte Anspruchsstruktur und einschränkende Formulierungen.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "Das USPTO Patent Center validiert das Einreichungsformat. PatentLint prüft den Entwurf selbst.",
