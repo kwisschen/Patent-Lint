@@ -138,7 +138,8 @@
   },
   "analysis": {
     "analyzing": "Analyzing patent document...",
-    "label": "Analysis"
+    "label": "Analysis",
+    "engineNotReady": "PatentLint's analysis engine is still loading. Please wait for the page to finish loading, or refresh and try again."
   },
   "footer": {
     "disclaimer": "Not legal advice",
@@ -1382,7 +1383,11 @@
       "maynot1": "Scrape, spider, or automate bulk access to the Site.",
       "maynot2": "Attempt to download, reverse-engineer, or redistribute the WebAssembly payload.",
       "maynot3": "Circumvent any rate limits or access controls.",
-      "maynot4": "Use the Site to violate applicable patent, copyright, trade secret, or export-control law."
+      "maynot4": "Use the Site to violate applicable patent, copyright, trade secret, or export-control law.",
+      "p3": "By using the Site, you also represent and warrant that:",
+      "rep1": "You have all necessary rights, authority, and clearances to load the documents you analyze — including any confidentiality clearances required by your client engagement, applicable rules of professional conduct (including USPTO 37 CFR § 11.106 and any bar or patent-attorney association rules of your jurisdiction), or organizational policy.",
+      "rep2": "You have independently verified that PatentLint's architecture is appropriate for the sensitivity of those documents.",
+      "rep3": "Your use of PatentLint complies with applicable law and professional rules."
     },
     "s3": {
       "title": "Your patent drafts remain yours",
@@ -1421,11 +1426,12 @@
     },
     "s8": {
       "title": "Limitation of liability",
-      "p1": "To the maximum extent permitted by law, Christopher Chen shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of your use of the Site or the Software, including but not limited to loss of profits, data, or business opportunities."
+      "p1": "To the maximum extent permitted by law, Christopher Chen shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of your use of the Site or the Software, including but not limited to loss of profits, data, or business opportunities.",
+      "p2": "Aggregate liability for any claim is capped at the greater of (i) fees you have paid for use of the Site or Software in the twelve months preceding the claim, or (ii) US$100."
     },
     "s9": {
       "title": "Governing law",
-      "p1": "These Terms are governed by the laws of the jurisdiction where Christopher Chen resides, without regard to conflict-of-law principles. Disputes shall be resolved in the courts of that jurisdiction."
+      "p1": "These Terms are governed by the laws of Taiwan (Republic of China), without regard to its conflict-of-law principles. The parties submit to the exclusive jurisdiction of the Taipei District Court for any disputes arising under these Terms."
     },
     "s10": {
       "title": "Changes to these Terms",
@@ -1462,7 +1468,8 @@
       "never1": "Receive or transmit the content of your patent drafts.",
       "never2": "Store filenames, claim text, specification body, or any patent-specific data.",
       "never3": "Send draft content to any third party (including AI providers, OCR services, or document processors).",
-      "verify": "You can verify this in airplane mode — see the <1>Security</1> page for the live demonstration."
+      "verify": "You can verify this in airplane mode — see the <1>Security</1> page for the live demonstration.",
+      "p3": "Scope of processing. PatentLint does not act as a \"data controller\" or \"data processor\" within the meaning of GDPR Art. 4(7)–(8), nor as a \"business\" within the meaning of CCPA/CPRA, with respect to the patent draft content you analyze. That content is processed entirely within your browser tab and is never transmitted to any PatentLint server. We act as a controller only with respect to (i) the voluntary diagnostic report you submit via the \"Send\" button, if you choose to submit one, and (ii) standard hosting metadata logged by our static-asset provider (see § 3)."
     },
     "s3": {
       "title": "Cloudflare-edge hosting metadata",
