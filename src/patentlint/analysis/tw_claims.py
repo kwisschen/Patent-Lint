@@ -3033,6 +3033,11 @@ _F10_SINGLE_CHAR_SUFFIXES_TW: frozenset[str] = frozenset(
 #   `X進行Y`         → covered separately by interior-cut on 進行
 _F14_WALKBACK_VERB_HEADS_TW: tuple[str, ...] = (
     '所', '露', '形', '構', '組', '製', '經',
+    # R7 extension (2026-04-30): 獲 covers `X獲得Y` / `X獲取Y` walk-back
+    # in process-method drafts (`X之Y獲得Z` discards `獲得Z` → truncates
+    # to Y). Compound-noun risk: 獲利 (profit) is rare in claim text;
+    # 獲得/獲取 are dominant in patent diction as verbs.
+    '獲',
 )
 
 

@@ -1498,11 +1498,17 @@ def normalize_reference_term_cn(
     *,
     strict_qualifier_matching: bool = False,
 ) -> str:
-    """Normalize a flagged reference term for antecedent matching."""
+    """Normalize a flagged reference term for antecedent matching.
+
+    R7 (2026-04-30): + strip_leading_verb_cn for `所述形成p型源极／漏极`
+    style references that carry a leading verb prefix (符号见 ADR-095
+    addendum / TW R7 commit).
+    """
     t = strip_reference_form_prefix_cn(text)
     t = strip_leading_qualifier_cn(t, strict_qualifier_matching=strict_qualifier_matching)
     t = clean_noun_phrase_cn(t)
     t = strip_leading_quantifier_cn(t)
+    t = strip_leading_verb_cn(t)
     return t
 
 
@@ -1522,6 +1528,7 @@ def normalize_candidate_intro_cn(
     t = clean_noun_phrase_cn(t)
     t = strip_leading_quantifier_cn(t)
     t = strip_reference_form_prefix_cn(t)
+    t = strip_leading_verb_cn(t)
     return t
 
 
@@ -1838,6 +1845,181 @@ _POSSESSIVE_VERB_DENYLIST_CN = {
 }
 
 
+# ── R7-port (2026-04-30) — CN architectural buildout for F14/F16/F17/F19/F20 ──
+# Mirror of TW R7's bare-modifier intro infrastructure. CN drafters use the
+# same structural patterns (locative left-side, verb-X-之/的-Y, instrumental
+# clauses) as TIPO drafters; the architectural divergence between CN and
+# TW walkers prior to R7 meant CN had no equivalent of these mechanisms.
+# This block adds them in advance — without waiting for a CN-side report —
+# so CNIPA semiconductor / process-method drafts get the same protection.
+
+# Component-suffix tail set for bare-noun intro emit gates. Mirrors TW
+# _F10_COMPONENT_SUFFIXES with CN-specific items (域 region, 极 electrode).
+# Single-char only — multi-char composites contribute their tail char which
+# is already covered.
+_F10_COMPONENT_SUFFIXES_CN: tuple[str, ...] = (
+    '部', '件', '体', '器', '阀', '板', '模', '组', '块', '片',
+    '环', '壳', '膜', '座', '盘', '筒', '轴', '杆', '轮', '带',
+    '管', '架', '框', '壁', '面', '层', '材', '口', '道', '头',
+    '侧', '孔', '缝', '边', '顶', '底', '角', '心', '核', '机',
+    '柜', '室', '槽', '线', '路', '池', '枢', '盖', '套', '罩',
+    '网', '柱', '锥', '球',
+    # R7 (2026-04-30) — semiconductor + electronic claim element suffixes:
+    # 域 (region: n型区域, p型区域, 主动区域); 极 (electrode pole: 栅极,
+    # 源极, 漏极, 集极, 射极)
+    '域', '极',
+)
+
+# Single-char component-suffix set for walk-back logic. F10's narrow
+# endswith gate uses _F10_COMPONENT_SUFFIXES_CN; walk-back uses this
+# wider set which includes 法 (method-claim head — `制造方法`).
+_F10_SINGLE_CHAR_SUFFIXES_CN: frozenset[str] = frozenset(
+    _F10_COMPONENT_SUFFIXES_CN
+) | {
+    # Walk-back-only: 法 lets `之制造方法` register as `制造方法` (then
+    # strip_leading_verb_cn produces `方法`). F10's narrow gate excludes
+    # 法 to avoid 想法/做法/算法 misfire on `一种的方法`-style synthetic.
+    '法',
+}
+
+# Walk-back's discarded-suffix gate — only allow walk-back when the
+# discarded portion starts with one of these verb-tail-head characters
+# AND has length ≥ 2. Mirrors TW _F14_WALKBACK_VERB_HEADS_TW. CN
+# zh-Hans equivalents: 制 (制成, 所制), 经 (经由 — also covers traditional
+# 經 in mixed-script).
+_F14_WALKBACK_VERB_HEADS_CN: tuple[str, ...] = (
+    '所', '露', '形', '构', '组', '制', '经',
+    # R7 extension (2026-04-30): 获 covers `X获得Y` / `X获取Y` walk-back
+    # in CN process-method drafts. Mirror TW addition; 获利 is rare in
+    # claim text, 获得/获取 dominant as verbs.
+    '获',
+)
+
+# Mixed-script noun class for CN F14/F16/F17/F19/F20. Admits ASCII
+# letters/digits + ／ (paired-element separator). Excludes 之 (U+4E4B)
+# and 的 (U+7684) so captures don't span possessive markers.
+_F14_NOUN_CLASS_CN = r'[A-Za-z0-9／一-乊乌-皃皅-鿿]'
+
+# ADJ/verb heads that must not start a bare-modifier noun capture.
+# Mirrors TW _F10_NOUN_REJECTS plus CN-specific copula / preposition /
+# verb-prefix rejects.
+_F10_NOUN_REJECTS_CN: tuple[str, ...] = (
+    '可', '具有', '具', '经过', '由', '属于', '用于', '来自',
+    '能够', '能', '会', '进行', '获得', '获取', '接收', '存储',
+    '输出', '输入', '基于', '根据',
+    '单一', '唯一',
+    # R7 — copula / preposition / verb-prefix rejects (zh-Hans equivalents
+    # of TW's 系/是/为/较/对/在/将/借/蚀)
+    '系', '是', '为',
+    '较', '对', '在',
+    '将', '借', '蚀',
+)
+
+# Leading-verb prefix strip (`形成X`/`制造X` → `X`). Symmetric on intro
+# and reference sides per ADR-095. Residual ≥ 2 protects 形成器/形成物
+# (3 chars, residual 1 < 2) while admitting 制造方法 (4 chars, residual 2).
+_LEADING_VERB_PREFIXES_CN: tuple[str, ...] = ('形成', '制造')
+_LEADING_VERB_RESIDUAL_FLOOR_CN: int = 2
+
+
+def strip_leading_verb_cn(text: str) -> str:
+    """R7 (2026-04-30): strip leading verb prefix (形成/制造) when followed
+    by a sufficient noun residual. Used in normalize_*_cn pipelines so
+    `所述形成p型源极／漏极` references resolve against bare-noun
+    `p型源极／漏极` intros.
+    """
+    if not text:
+        return text
+    for prefix in _LEADING_VERB_PREFIXES_CN:
+        if (
+            text.startswith(prefix)
+            and len(text) - len(prefix) >= _LEADING_VERB_RESIDUAL_FLOOR_CN
+        ):
+            return text[len(prefix):]
+    return text
+
+
+def _trim_capture_to_clean_noun_cn(text: str) -> str | None:
+    """R7 (2026-04-30): walk back from end of `text` to the last component-
+    suffix character and truncate; return ``None`` if hygiene gates fail.
+    Mirror of _trim_capture_to_clean_noun_tw — see that function for full
+    contract documentation.
+    """
+    if not text or len(text) < 2:
+        return None
+    if text[-1] in _F10_SINGLE_CHAR_SUFFIXES_CN:
+        truncated = text
+    else:
+        clean_end = None
+        for i in range(min(len(text), 12), 0, -1):
+            if text[i - 1] in _F10_SINGLE_CHAR_SUFFIXES_CN:
+                clean_end = i
+                break
+        if clean_end is None:
+            return None
+        discarded = text[clean_end:]
+        if len(discarded) < 2 or not discarded.startswith(
+            _F14_WALKBACK_VERB_HEADS_CN
+        ):
+            return None
+        truncated = text[:clean_end]
+    if len(truncated) < 2:
+        return None
+    for prefix in _REFERENCE_FORM_PREFIXES_CN:
+        if prefix in truncated:
+            return None
+    if truncated.startswith(_F10_NOUN_REJECTS_CN):
+        return None
+    return truncated
+
+
+# F14 — bare-modifier `之NOUN` intro (formal-register parallel to F10's
+# `的NOUN`). Less common in modern CN claims but appears in formal-register
+# / JP-translated CN drafts. Mixed-script noun class for semiconductor.
+_F14_BARE_ZHI_NOUN_RE_CN = re.compile(
+    r'之'
+    r'(?P<noun>' + _F14_NOUN_CLASS_CN + r'{2,12}'
+    r'(?:\([A-Za-z0-9]+\))?)'
+    r'(?!' + _F14_NOUN_CLASS_CN + r')'
+)
+
+# F16 — locative left-side intro `(?:于|在)X[之的]Y`. Captures left-side X
+# (the new claim element introduced via locative phrase). CN uses both
+# 之 (formal) and 的 (modern) for the possessive marker.
+_F16_LOC_LEFT_INTRO_RE_CN = re.compile(
+    r'(?:于|在)'
+    r'(?P<noun>' + _F14_NOUN_CLASS_CN + r'{2,8}'
+    r'(?:\([A-Za-z0-9]+\))?)'
+    r'[之的]'
+)
+
+# F17 — locative-internal `在X之间` / `在X之间` intro (zh-Hans uses 间).
+_F17_LOC_INTERNAL_INTRO_RE_CN = re.compile(
+    r'在'
+    r'(?P<noun>' + _F14_NOUN_CLASS_CN + r'{2,8}'
+    r'(?:\([A-Za-z0-9]+\))?)'
+    r'之间'
+)
+
+# F19 — `verb + X + [之的] + Y` left-side intro. F6 rejects this shape
+# via its `(?![的之])` trailing lookahead; F19 explicitly catches it.
+_F19_VERB_NP_ZHI_RE_CN = re.compile(
+    r'(?:夹持|包含|包括|具有|含有|具备|设有|设置|配置|安装|装设|形成|构成|连接|连结|提供|构建)'
+    r'(?P<noun>' + _F14_NOUN_CLASS_CN + r'{2,8}'
+    r'(?:\([A-Za-z0-9]+\))?)'
+    r'[之的]'
+)
+
+# F20 — `(以|借由|透过|经由) X (verb)` instrumental intro. `以` excluded
+# when followed by `及` (conjunction `以及`).
+_F20_PREP_NP_VERB_RE_CN = re.compile(
+    r'(?:以(?!及)|借由|透过|经由)'
+    r'(?P<noun>' + _F14_NOUN_CLASS_CN + r'{2,8}'
+    r'(?:\([A-Za-z0-9]+\))?)'
+    r'(?:夹持|覆盖|包含|包括|具有|含有|具备|设有|设置|配置|形成|构成|连接|连结|提供|分隔|划分|实施|分为|构建|测量|蚀刻|除去|装设|安装)'
+)
+
+
 def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
     """Extract bare-noun introductions from supplementary CN patterns.
 
@@ -2023,6 +2205,56 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
             continue
         results.append((m.group(0), normalized))
 
+    # === Phase 8c R7-port (2026-04-30) — TW R7 architectural buildout ===
+    # F14 (V之Y), F16 (locative left-side), F17 (locative-internal),
+    # F19 (verb-X-之/的), F20 (instrumental). Mirror of TW R7 mechanisms.
+    # All use _trim_capture_to_clean_noun_cn for hygiene.
+
+    # F14: bare-modifier `之NOUN` intro (formal-register parallel to F10).
+    for m in _F14_BARE_ZHI_NOUN_RE_CN.finditer(text):
+        noun = m.group('noun')
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        trimmed = _trim_capture_to_clean_noun_cn(normalized)
+        if trimmed is None:
+            continue
+        results.append((m.group(0), trimmed))
+
+    # F16: locative left-side intro `(于|在)X[之的]`.
+    for m in _F16_LOC_LEFT_INTRO_RE_CN.finditer(text):
+        noun = m.group('noun')
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        trimmed = _trim_capture_to_clean_noun_cn(normalized)
+        if trimmed is None:
+            continue
+        results.append((m.group(0), trimmed))
+
+    # F17: locative-internal `在X之间`.
+    for m in _F17_LOC_INTERNAL_INTRO_RE_CN.finditer(text):
+        noun = m.group('noun')
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        trimmed = _trim_capture_to_clean_noun_cn(normalized)
+        if trimmed is None:
+            continue
+        results.append((m.group(0), trimmed))
+
+    # F19: `verb + X + [之的] + Y` left-side intro.
+    for m in _F19_VERB_NP_ZHI_RE_CN.finditer(text):
+        noun = m.group('noun')
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        trimmed = _trim_capture_to_clean_noun_cn(normalized)
+        if trimmed is None:
+            continue
+        results.append((m.group(0), trimmed))
+
+    # F20: `(以|借由|透过|经由) X (verb)` instrumental intro.
+    for m in _F20_PREP_NP_VERB_RE_CN.finditer(text):
+        noun = m.group('noun')
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        trimmed = _trim_capture_to_clean_noun_cn(normalized)
+        if trimmed is None:
+            continue
+        results.append((m.group(0), trimmed))
+
     # Uniform trailing-verb cleanup
     cleaned: list[tuple[str, str]] = []
     for orig, norm in results:
@@ -2080,9 +2312,14 @@ def extract_introductions_cn(
                 seen.add(normalized)
                 pairs.append((original, normalized))
 
+    # R7 (2026-04-30): also apply strip_leading_verb_cn to supplementary
+    # intros so a captured `制造方法` (from F14 on `之制造方法`) registers
+    # as `方法` after stripping the leading 制造 verb prefix — matching
+    # the canonical method-claim head-noun reference `所述方法`.
     supplementary = _extract_supplementary_intros_cn(claim.text)
     for orig, norm in supplementary:
-        if norm not in seen:
+        norm = strip_leading_verb_cn(norm)
+        if norm and norm not in seen:
             seen.add(norm)
             pairs.append((orig, norm))
 
