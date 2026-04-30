@@ -1603,6 +1603,9 @@
     "outgoing": "对外传输：{{count}} 笔",
     "empty": "尚无对外传输",
     "expand": "展开记录",
-    "collapse": "收合记录"
+    "collapse": "收合记录",
+    "endpointDesc": {
+      "report": "匿名错误反馈（仅含诊断轨迹，未含您的稿件内容）"
+    }
   }
 }

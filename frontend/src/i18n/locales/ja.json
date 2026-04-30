@@ -1603,6 +1603,9 @@
     "outgoing": "送信データ：{{count}} 件",
     "empty": "送信データはありません",
     "expand": "ログを表示",
-    "collapse": "ログを非表示"
+    "collapse": "ログを非表示",
+    "endpointDesc": {
+      "report": "匿名のエラー報告（診断軌跡のみ、原稿は含みません）"
+    }
   }
 }

@@ -23,6 +23,15 @@ import { subscribeOutgoing, getOutgoingHistory } from '../lib/outgoingRequests'
 // "Outgoing data" / "對外傳輸" etc., modal says "Live activity log"
 // / 即時網路活動.
 
+// Maps known endpoint paths to a localized description key. Renders
+// directly under the technical endpoint line so users seeing the bare
+// `/api/report` string understand WHAT it is in their language —
+// avoids "I just saw an English path go out, did my draft leak?"
+// panic when expanding the log after sending an anonymous report.
+const ENDPOINT_DESCRIPTION_KEYS = {
+  '/api/report': 'widget.endpointDesc.report',
+}
+
 export default function NetworkWidget({ pyodideReady }) {
   const { t } = useTranslation()
   const [count, setCount] = useState(0)
@@ -84,15 +93,25 @@ export default function NetworkWidget({ pyodideReady }) {
             {events.length === 0 ? (
               <p className="text-muted-foreground">{t('widget.empty')}</p>
             ) : (
-              <ul className="space-y-1">
-                {events.map((event, i) => (
-                  <li key={i} className="font-mono text-[10px]">
-                    <span className="text-muted-foreground mr-2">
-                      {new Date(event.timestamp).toLocaleTimeString()}
-                    </span>
-                    {event.endpoint}
-                  </li>
-                ))}
+              <ul className="space-y-2">
+                {events.map((event, i) => {
+                  const descKey = ENDPOINT_DESCRIPTION_KEYS[event.endpoint]
+                  return (
+                    <li key={i} className="text-[10px] leading-tight">
+                      <div className="font-mono">
+                        <span className="text-muted-foreground mr-2">
+                          {new Date(event.timestamp).toLocaleTimeString()}
+                        </span>
+                        {event.endpoint}
+                      </div>
+                      {descKey && (
+                        <div className="text-muted-foreground mt-0.5">
+                          {t(descKey)}
+                        </div>
+                      )}
+                    </li>
+                  )
+                })}
               </ul>
             )}
           </div>
