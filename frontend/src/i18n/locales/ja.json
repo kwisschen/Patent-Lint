@@ -155,8 +155,8 @@
     "rubric": "評価基準"
   },
   "feedback": {
-    "report": "誤りを報告",
-    "reportProblem": "この検出結果に問題を報告",
+    "report": "違うかも？",
+    "reportProblem": "誤検知の可能性を報告",
     "picker": {
       "title": "明細書はお客様の端末内に留まります",
       "send": {

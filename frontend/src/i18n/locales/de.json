@@ -155,8 +155,8 @@
     "rubric": "Bewertung"
   },
   "feedback": {
-    "report": "Fehler melden",
-    "reportProblem": "Problem mit diesem Befund melden",
+    "report": "Sieht falsch aus?",
+    "reportProblem": "Vermutlichen Fehlalarm melden",
     "picker": {
       "title": "Ihr Entwurf bleibt auf Ihrem Gerät",
       "send": {
