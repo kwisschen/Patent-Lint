@@ -155,8 +155,8 @@
     "rubric": "평가 기준"
   },
   "feedback": {
-    "report": "오류 신고",
-    "reportProblem": "이 검사 결과의 문제 신고",
+    "report": "잘못됐나요?",
+    "reportProblem": "오탐으로 의심되는 항목 신고",
     "picker": {
       "title": "귀하의 명세서는 기기를 벗어나지 않습니다",
       "send": {
