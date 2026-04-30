@@ -555,3 +555,83 @@ class TestClaimBracketLabels:
         assert doc.claims_header_seen is True
         assert len(doc.claims) == 2
         assert doc.claims[1].dependencies == [1]
+
+    def test_pattern_variants_qing_qiu(self):
+        """Variant: 【請求N】 (claim-N) without 項 suffix."""
+        paragraphs = [
+            "【申請專利範圍】",
+            "【請求1】 一種半導體裝置。",
+            "【請求2】 如請求項1所述之半導體裝置。",
+        ]
+        doc = extract_tw_sections(paragraphs)
+        assert len(doc.claims) == 2
+        assert doc.claims[0].id == 1
+        assert doc.claims[1].id == 2
+
+    def test_pattern_variants_di_n_xiang(self):
+        """Variant: 【第N項】 (item-N) — alternate firm-variant style."""
+        paragraphs = [
+            "【申請專利範圍】",
+            "【第1項】 一種半導體裝置。",
+            "【第2項】 如請求項1所述之半導體裝置。",
+        ]
+        doc = extract_tw_sections(paragraphs)
+        assert len(doc.claims) == 2
+        assert doc.claims[0].id == 1
+        assert doc.claims[1].id == 2
+
+    def test_pattern_variants_quan_li_yao_qiu(self):
+        """Variant: 【權利要求N】 — TW translation of CN-style label."""
+        paragraphs = [
+            "【申請專利範圍】",
+            "【權利要求1】 一種半導體裝置。",
+            "【權利要求2】 如請求項1所述之半導體裝置。",
+        ]
+        doc = extract_tw_sections(paragraphs)
+        assert len(doc.claims) == 2
+
+    def test_pattern_variants_whitespace_in_label(self):
+        """Variant: 【請求項 1】 / 【第 1 項】 — interior whitespace."""
+        paragraphs = [
+            "【申請專利範圍】",
+            "【請求項 1】 一種半導體裝置。",
+            "【第 2 項】 如請求項1所述之半導體裝置。",
+        ]
+        doc = extract_tw_sections(paragraphs)
+        assert len(doc.claims) == 2
+
+    def test_diagnostic_fields_track_bracket_label_failure(self):
+        """When the bracket-label fix path triggers, diagnostic fields
+        reflect what the parser saw — useful for triage on future
+        unhandled-pattern reports."""
+        paragraphs = [
+            "【申請專利範圍】",
+            "【請求項1】 一種半導體裝置。",
+            "【請求項2】 如請求項1所述之半導體裝置。",
+        ]
+        doc = extract_tw_sections(paragraphs)
+        # Path succeeded — claims parsed.
+        assert doc.claims_section_paragraph_count == 2  # 2 synthetic "N. body" entries
+        # First paragraph in claims section is the synthetic "1. ..."
+        # form (after the fix transformed 【請求項1】 inline).
+        assert doc.claims_first_paragraph_starts_with_bracket is False
+        # No unhandled bracket headers — the fix recognized them all.
+        assert doc.unknown_bracket_headers_in_claims == 0
+
+    def test_diagnostic_fields_track_unhandled_pattern(self):
+        """When the parser hits a bracket-label format it doesn't
+        recognize (e.g., a hypothetical 【附項N】 variant), diagnostics
+        reveal the failure mode without needing the user's draft."""
+        paragraphs = [
+            "【申請專利範圍】",
+            "【附項1】 一種半導體裝置。",  # unrecognized prefix
+            "【附項2】 如請求項1所述之半導體裝置。",
+        ]
+        doc = extract_tw_sections(paragraphs)
+        # Claims didn't parse — but diagnostics tell the maintainer why.
+        assert doc.claims_header_seen is True
+        assert doc.claims_section_paragraph_count == 0  # nothing accumulated
+        # Two unknown bracket headers seen inside the claims section —
+        # the smoking gun for "drafter used a label format we don't
+        # handle."
+        assert doc.unknown_bracket_headers_in_claims == 2

@@ -29,13 +29,15 @@ from patentlint.parser.symbol_table_tw import parse_tw_symbol_table
 # Match bracket headers but NOT paragraph numbers 【0001】
 _BRACKET_HEADER = re.compile(r"^【([^\d].+?)】(.*)$")
 
-# Firm-variant claim-number label: 【請求項N】 used as inline claim
-# numbering (Claire's report, issue #17). Not a section header — when
-# encountered inside the claims section, transform to standard "N. <body>"
-# so parse_tw_claims recognizes the claim. TIPO 專利法施行細則 §18 only
-# requires Arabic-numeral sequence; firms using 【請求項N】 to label each
-# claim still satisfy that.
-_CLAIM_LABEL = re.compile(r"^請求項\s*(\d+)$")
+# Firm-variant claim-number labels: 【請求項N】, 【請求N】, 【權利要求N】,
+# 【權利範圍N】, 【第N項】, etc. — used as inline claim numbering instead
+# of standard `N.` / `N．` inline form. Not section headers; when
+# encountered inside the claims section, transform to standard
+# "N. <body>" so parse_tw_claims recognizes the claim. TIPO 專利法施行
+# 細則 §18 第3款 only mandates Arabic-numeral sequential numbering; the
+# label form is firm-discretion. Issue #17 surfaced 【請求項N】; the
+# expanded regex covers the broader class.
+_CLAIM_LABEL = re.compile(r"^(?:請求項|請求|權利要求|權利範圍|第)\s*(\d+)\s*項?$")
 
 # Map bracket header content to TwPatentDocument field names.
 # Includes both statute-standard headers and firm-variant prefixed headers.
@@ -301,6 +303,18 @@ def extract_tw_sections(
     abstract_title: str | None = None  # Title from abstract preamble (fallback)
     abstract_header_seen = False  # 【摘要】/【發明摘要】/【新型摘要】 encountered
     claims_header_seen = False    # 【申請專利範圍】 / 【發明申請專利範圍】 / 【新型申請專利範圍】
+    # True between a claims header and the NEXT known section header.
+    # Distinct from `current_section == "claims"` because an unknown
+    # bracket header resets current_section to None — but conceptually
+    # we're still scanning claims-section text. This flag drives both
+    # the claim-label recovery path AND the diagnostic counter.
+    in_claims_scope = False
+    # Diagnostic counter: 【...】 patterns rejected as unknown headers while
+    # in_claims_scope. Non-zero signals an unhandled firm-variant claim
+    # label (issue #17 class) — surfaced in check_required_sections
+    # diagnostics so future triage doesn't need the user's actual draft
+    # to identify the format.
+    unknown_bracket_headers_in_claims = 0
 
     for idx, para in enumerate(paragraphs):
         stripped = para.strip()
@@ -342,8 +356,14 @@ def extract_tw_sections(
                     section_order.append(mapped)
                 if mapped == "abstract":
                     abstract_header_seen = True
-                elif mapped == "claims":
+                if mapped == "claims":
                     claims_header_seen = True
+                    in_claims_scope = True
+                else:
+                    # Any other known section header ends claims scope —
+                    # subsequent unknown bracket headers don't count
+                    # toward the claims-section diagnostic.
+                    in_claims_scope = False
 
                 # Handle inline text after header (e.g., 【中文發明名稱】高頻基板用...)
                 if inline_text:
@@ -367,14 +387,21 @@ def extract_tw_sections(
             # recognizes the claim numbering. Continuation paragraphs
             # (lines wrapping from the same claim body, no leading bracket
             # label) stay in the claims section and accumulate normally.
-            if current_section == "claims":
+            if in_claims_scope:
                 cm = _CLAIM_LABEL.match(header_text)
                 if cm:
                     claim_num = cm.group(1)
                     body = inline_text
                     synthetic = f"{claim_num}. {body}" if body else f"{claim_num}."
                     section_content["claims"].append(synthetic)
+                    # Re-attach to claims section in case a prior unknown
+                    # bracket header reset current_section.
+                    current_section = "claims"
                     continue
+                # Header is bracketed but not a known section, not a
+                # claim label. Counted for diagnostics so triage can
+                # spot unhandled firm-variant labels.
+                unknown_bracket_headers_in_claims += 1
 
             # Unknown header — stop accumulating into current section
             current_section = None
@@ -448,6 +475,16 @@ def extract_tw_sections(
     # --- Claims ---
     claims = parse_tw_claims(section_content["claims"])
 
+    # --- Claims-section diagnostic snapshot ---
+    # Tracks parser-internal state that downstream check_required_sections
+    # surfaces in its diagnostic payload, so future triage of similar bug
+    # classes can self-diagnose without needing the user's actual draft.
+    _claims_paragraphs = section_content["claims"]
+    claims_section_paragraph_count = len(_claims_paragraphs)
+    claims_first_paragraph_starts_with_bracket = bool(
+        _claims_paragraphs and _claims_paragraphs[0].lstrip().startswith("【")
+    )
+
     # --- Abstract ---
     abstract_text = "\n".join(section_content["abstract"]).strip()
     abstract_char_count = _count_cjk_chars(abstract_text)
@@ -482,5 +519,8 @@ def extract_tw_sections(
         bracketless_section_headers=bracketless_section_headers,
         abstract_header_seen=abstract_header_seen,
         claims_header_seen=claims_header_seen,
+        claims_section_paragraph_count=claims_section_paragraph_count,
+        claims_first_paragraph_starts_with_bracket=claims_first_paragraph_starts_with_bracket,
+        unknown_bracket_headers_in_claims=unknown_bracket_headers_in_claims,
         input_format="docx",
     )
