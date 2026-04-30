@@ -1148,6 +1148,13 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # particle. All 16 emit-terms ending in these chars match the
         # 16 targets exactly (zero collateral).
         "作", "不", "相", "均", "得",
+        # === Phase 8c R7-port (2026-04-30) — TW Round 7 cross-port ===
+        # 较 (comparative verb), 厚膜化 (process verb-suffix). CN parity
+        # for TW additions; CNIPA semiconductor drafters use these
+        # identically. 0 active CN-label collisions; 比较/较量 etc.
+        # protected via the existing residual ≥ 1 floor (2-char compounds
+        # with 较 at position [-1] strip to 1 char, blocked).
+        "较", "厚膜化",
     ),
     key=len,
     reverse=True,
@@ -1158,7 +1165,11 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
 # participation below.
 _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN: frozenset[str] = frozenset(
     {"所", "位", "中", "后", "用", "上", "内", "撷取", "对", "由", "沿",
-     "作", "不", "相", "均", "得"}
+     "作", "不", "相", "均", "得",
+     # === R7-port (2026-04-30) — TW R7 parity ===
+     # 使 (causative particle / verb fragment): residual ≥ 3 protects
+     # 大使/天使/特使/使用 (all 2-char compounds, residual 1 < 3).
+     "使"}
 )
 
 # Relaxed-guard subset (residual ≥ 2 instead of ≥ 3).
@@ -1277,6 +1288,13 @@ _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
         # 初始地理预训练模型按照预, 处理器核运行客户端进程, 目标预训练模型采用预训练,
         # 实线边表征不同节点). Compound-noun risk audited per token.
         "限定有", "周期性地", "可移动地", "按照", "运行", "采用", "表征",
+        # === Phase 8c R7-port (2026-04-30) — TW Round 7 cross-port ===
+        # Process verbs that split mid-string captures cleanly in
+        # semiconductor / mechanical claims. CN parity for the TW
+        # additions in R7; same drafter conventions across jurisdictions.
+        # Compound-noun risk: 夹持器/覆盖层/露出口 absent from CN corpus
+        # per grep (verbs only, no compound-noun collision).
+        "夹持", "覆盖", "露出",
     ),
     key=len,
     reverse=True,
@@ -1764,6 +1782,14 @@ _F12_ADJ_REJECTS_CN: tuple[str, ...] = (
     '能够', '能', '会',
     '进行', '获得', '获取', '接收', '存储', '输出', '输入',
     '基于', '根据',
+    # === Phase 8c R7-port (2026-04-30) — TW R7 parity ===
+    # Copula / preposition / verb-prefix rejects for F6 bare-NP arm 3
+    # and F12 Tier B emit. CN equivalents of TW's 係/是/為/較/對/在/將/
+    # 藉/蝕. Mirror set with TW _F12_ADJ_REJECTS_TW so semiconductor /
+    # process-method drafts surface clean noun heads on CN side.
+    '系', '是', '为',
+    '较', '对', '在',
+    '将', '借', '蚀',
 )
 
 # F7d: participial `<tail>的Y` intro family. Phase 8c R14b.
