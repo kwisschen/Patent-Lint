@@ -1362,7 +1362,7 @@
   },
   "terms": {
     "title": "Terms of Service",
-    "lastUpdated": "Last updated: April 21, 2026",
+    "lastUpdated": "Last updated: April 30, 2026",
     "intro": "These Terms govern your use of the patentlint.com website (the \"Site\") and the PatentLint software (the \"Software\"). By using the Site, you agree to these Terms.",
     "s1": {
       "title": "The Site vs. the Software",
@@ -1454,7 +1454,7 @@
   },
   "privacy": {
     "title": "Privacy Policy",
-    "lastUpdated": "Last updated: April 27, 2026",
+    "lastUpdated": "Last updated: April 30, 2026",
     "intro": "This Privacy Policy describes how patentlint.com (the \"Site\") handles data when you visit. The PatentLint application collects nothing about you — no analytics, no trackers, no cookies. The only data flow is the standard web request metadata our hosting provider (Cloudflare Pages) sees on every visit, as it does for any website. This Policy makes that distinction explicit.",
     "s1": {
       "title": "Introduction",
