@@ -6,7 +6,7 @@ import { AlertTriangle, ChevronRight, Flag } from 'lucide-react'
 import { Button } from './ui/button'
 import { FrostCard } from './ui/frost-card'
 import { StatusPill } from './ui/status-pill'
-import { composeFeedback, sendReport } from '../lib/feedback'
+import { composeFeedback, sendReport, excerptAround, SAMPLE_SIZE } from '../lib/feedback'
 import { useFeedback } from './FeedbackPicker'
 import ReportModal from './ReportModal'
 
@@ -112,10 +112,44 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
   // what the email body would otherwise contain.
   const buildReportContext = (claimId) => {
     const claimFindings = findings.filter((f) => f.claim_id === claimId)
+    if (claimFindings.length === 0) return null
+
+    const claimText = claimTextMap[claimId] || ''
+    const claimTextCharlen = claimText.length
+
+    // Mirror diagnostic_extractors.extract_antecedent_basis output shape so
+    // the per-claim payload matches what the Python section-level extractor
+    // produces, filtered to this claim only. Triage tooling already keys on
+    // `findings: [...]` — no special-case handling needed.
+    const findingsList = claimFindings.slice(0, SAMPLE_SIZE).map((f) => {
+      const { context_before, context_after, char_offset } = excerptAround(claimText, f.term || '')
+      const suggested = f.suggested_match || {}
+      return {
+        claim_id: f.claim_id,
+        term: f.term || null,
+        reference_form: f.reference_form || null,
+        did_you_mean: suggested.term || null,
+        did_you_mean_claim_id: suggested.claim_id || null,
+        category: f.category || null,
+        char_offset,
+        context_before,
+        context_after,
+        claim_text_charlen: claimTextCharlen,
+      }
+    })
+
+    // Walker-level fingerprints from the first finding (these are stable
+    // across findings within the same claim group).
     const baseDx = claimFindings[0]?.diagnostics || {}
     return {
       claimId,
-      diagnostics: { ...baseDx, findings_in_group: claimFindings.length },
+      diagnostics: {
+        flagged_claim_id: claimId,
+        findings_in_group: claimFindings.length,
+        findings: findingsList,
+        ...(baseDx.intros_pool_size !== undefined && { intros_pool_size: baseDx.intros_pool_size }),
+        ...(baseDx.suggested_cross_branch !== undefined && { suggested_cross_branch: baseDx.suggested_cross_branch }),
+      },
     }
   }
 
@@ -130,7 +164,7 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
       checkKey: 'antecedentBasis',
       jurisdiction: jurisdiction || 'unknown',
       locale: i18n.language,
-      diagnostics: { flagged_claim_id: reportContext.claimId, ...reportContext.diagnostics },
+      diagnostics: reportContext.diagnostics,
     })
   }
 
@@ -304,11 +338,7 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
         checkKey="antecedentBasis"
         jurisdiction={jurisdiction || 'unknown'}
         locale={i18n.language}
-        diagnostics={
-          reportContext
-            ? { flagged_claim_id: reportContext.claimId, ...reportContext.diagnostics }
-            : {}
-        }
+        diagnostics={reportContext?.diagnostics || {}}
         onConfirm={handleAnonymousConfirm}
         onMailtoFallback={handleMailtoFallback}
       />

@@ -59,7 +59,7 @@ export default function Section112Container({
       {/* ADR-138: TW now renders SpecSupportCard alongside US. CN stays
           gated off via supportsSpecSupport=false pending real drafter corpus. */}
       {jConfig.supportsSpecSupport && (hasUnsupportedTerms ? (
-        <SpecSupportCard unsupportedTerms={unsupportedTerms} jurisdiction={jurisdiction} />
+        <SpecSupportCard unsupportedTerms={unsupportedTerms} claimTrees={claimTrees} jurisdiction={jurisdiction} />
       ) : (
         <PassCard titleKey={jConfig.specSupportTitleKey} messageKey={jConfig.specSupportPassKey} />
       ))}
