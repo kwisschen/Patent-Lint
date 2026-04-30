@@ -138,7 +138,8 @@
   },
   "analysis": {
     "analyzing": "Patentdokument wird geprüft...",
-    "label": "Prüfung"
+    "label": "Prüfung",
+    "engineNotReady": "Die Analyse-Engine von PatentLint ist noch nicht bereit. Bitte warten Sie, bis die Seite vollständig geladen ist, oder aktualisieren Sie und versuchen Sie es erneut."
   },
   "footer": {
     "disclaimer": "Keine Rechtsberatung",
@@ -1469,7 +1470,11 @@
       "maynot1": "Die Website scrapen, crawlen oder massenhaft automatisiert zugreifen.",
       "maynot2": "Versuchen, die WebAssembly-Nutzlast herunterzuladen, zurückzuentwickeln oder weiterzuverteilen.",
       "maynot3": "Ratenbegrenzungen oder Zugangskontrollen umgehen.",
-      "maynot4": "Die Website zur Verletzung geltenden Patent-, Urheber-, Geschäftsgeheimnis- oder Exportkontrollrechts nutzen."
+      "maynot4": "Die Website zur Verletzung geltenden Patent-, Urheber-, Geschäftsgeheimnis- oder Exportkontrollrechts nutzen.",
+      "p3": "Durch die Nutzung der Website sichern Sie zudem zu, dass:",
+      "rep1": "Sie über alle erforderlichen Rechte, Befugnisse und internen Freigaben verfügen, um die zu analysierenden Dokumente zu laden — einschließlich etwaiger Vertraulichkeitsfreigaben aus Ihrer Mandantenbeziehung, anwendbaren berufsständischen Regeln (einschließlich USPTO 37 CFR § 11.106 sowie etwaigen Standesregeln Ihrer Zulassungsjurisdiktion) oder Organisationsrichtlinien.",
+      "rep2": "Sie die Architektur von PatentLint unabhängig auf ihre Eignung für die Sensibilität dieser Dokumente geprüft haben.",
+      "rep3": "Ihre Nutzung von PatentLint mit dem anwendbaren Recht und den anwendbaren berufsständischen Regeln vereinbar ist."
     },
     "s3": {
       "title": "Ihre Patentanmeldungen bleiben Ihre",
@@ -1508,11 +1513,12 @@
     },
     "s8": {
       "title": "Haftungsbeschränkung",
-      "p1": "Soweit gesetzlich zulässig, haftet Christopher Chen nicht für mittelbare, zufällige, besondere, Folge- oder Strafschäden aus der Nutzung der Website oder der Software, einschließlich entgangenen Gewinns, Datenverlusts oder entgangener Geschäftsmöglichkeiten."
+      "p1": "Soweit gesetzlich zulässig, haftet Christopher Chen nicht für mittelbare, zufällige, besondere, Folge- oder Strafschäden aus der Nutzung der Website oder der Software, einschließlich entgangenen Gewinns, Datenverlusts oder entgangener Geschäftsmöglichkeiten.",
+      "p2": "Die Gesamthaftung für jeden Anspruch ist auf den höheren der folgenden Beträge begrenzt: (i) die in den zwölf Monaten vor dem Anspruch gezahlten Gebühren für die Nutzung der Website oder Software, oder (ii) 100 US-Dollar."
     },
     "s9": {
       "title": "Anwendbares Recht",
-      "p1": "Diese Bedingungen unterliegen dem Recht der Gerichtsbarkeit, in der Christopher Chen seinen Wohnsitz hat, ohne Berücksichtigung von Kollisionsregeln. Streitigkeiten werden vor den Gerichten dieser Gerichtsbarkeit ausgetragen."
+      "p1": "Diese Bedingungen unterliegen dem Recht der Republik China (Taiwan), ohne Berücksichtigung ihrer kollisionsrechtlichen Grundsätze. Die Parteien unterwerfen sich für Streitigkeiten aus diesen Bedingungen der ausschließlichen Zuständigkeit des Bezirksgerichts Taipeh."
     },
     "s10": {
       "title": "Änderungen dieser Bedingungen",
@@ -1549,7 +1555,8 @@
       "never1": "Wir empfangen oder übertragen keinen Inhalt Ihrer Patentanmeldungen.",
       "never2": "Wir speichern keine Dateinamen, Anspruchstexte, Beschreibungsinhalte oder patent-spezifischen Daten.",
       "never3": "Wir senden keine Entwurfsinhalte an Dritte (auch nicht an KI-Anbieter, OCR-Dienste oder Dokumentenprozessoren).",
-      "verify": "Sie können dies im Flugmodus prüfen — siehe die <1>Sicherheits</1>-Seite für die Live-Demonstration."
+      "verify": "Sie können dies im Flugmodus prüfen — siehe die <1>Sicherheits</1>-Seite für die Live-Demonstration.",
+      "p3": "Verarbeitungsumfang. Hinsichtlich des analysierten Patentbeschreibungsinhalts handelt PatentLint weder als „Verantwortlicher\" oder „Auftragsverarbeiter\" im Sinne von Art. 4 Nr. 7–8 DSGVO noch als „Business\" im Sinne von CCPA/CPRA. Dieser Inhalt wird ausschließlich in Ihrem Browser-Tab verarbeitet und niemals an einen PatentLint-Server übermittelt. Als Verantwortlicher fungieren wir lediglich für (i) den freiwilligen Diagnosebericht, den Sie über die Schaltfläche „Senden\" übermitteln, falls Sie dies wählen, und (ii) standardmäßige Hosting-Metadaten, die von unserem Static-Asset-Anbieter erfasst werden (siehe §3)."
     },
     "s3": {
       "title": "Hosting-Metadaten am Cloudflare-Edge",

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 // Copyright (c) 2025 Christopher Chen
+/* global __BUILD_HASH__ */
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { composeFooterFeedback } from '../lib/feedback'
@@ -27,7 +28,10 @@ export default function Footer() {
   return (
     <footer className="border-t border-gray-200 dark:border-gray-800 py-6 px-4">
       <div className="mx-auto max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500 dark:text-gray-400">
-        <span>{t('footer.builtBy')}</span>
+        <span>
+          {t('footer.builtBy')}
+          <span className="font-mono opacity-50 ml-2 text-xs">{__BUILD_HASH__.slice(0, 8)}</span>
+        </span>
         <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2" aria-label="Footer">
           {/* /commercial deliberately unlinked here — the page is
               reachable at its URL for enterprise inquirers, but kept
