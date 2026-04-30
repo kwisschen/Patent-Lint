@@ -29,6 +29,14 @@ from patentlint.parser.symbol_table_tw import parse_tw_symbol_table
 # Match bracket headers but NOT paragraph numbers 【0001】
 _BRACKET_HEADER = re.compile(r"^【([^\d].+?)】(.*)$")
 
+# Firm-variant claim-number label: 【請求項N】 used as inline claim
+# numbering (Claire's report, issue #17). Not a section header — when
+# encountered inside the claims section, transform to standard "N. <body>"
+# so parse_tw_claims recognizes the claim. TIPO 專利法施行細則 §18 only
+# requires Arabic-numeral sequence; firms using 【請求項N】 to label each
+# claim still satisfy that.
+_CLAIM_LABEL = re.compile(r"^請求項\s*(\d+)$")
+
 # Map bracket header content to TwPatentDocument field names.
 # Includes both statute-standard headers and firm-variant prefixed headers.
 _SECTION_MAP: dict[str, str] = {
@@ -352,6 +360,21 @@ def extract_tw_sections(
                         if mapped in body_section_word_numbers:
                             body_section_word_numbers[mapped].append(None)
                 continue
+
+            # Firm-variant claim-number label inside the claims section.
+            # Transform 【請求項N】 + inline body → "N. body" so the claim
+            # text reaches section_content["claims"] and parse_tw_claims
+            # recognizes the claim numbering. Continuation paragraphs
+            # (lines wrapping from the same claim body, no leading bracket
+            # label) stay in the claims section and accumulate normally.
+            if current_section == "claims":
+                cm = _CLAIM_LABEL.match(header_text)
+                if cm:
+                    claim_num = cm.group(1)
+                    body = inline_text
+                    synthetic = f"{claim_num}. {body}" if body else f"{claim_num}."
+                    section_content["claims"].append(synthetic)
+                    continue
 
             # Unknown header — stop accumulating into current section
             current_section = None
