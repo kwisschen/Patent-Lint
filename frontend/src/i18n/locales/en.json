@@ -290,7 +290,7 @@
     "airplaneDemoAlt": "Demo: analyzing a patent draft in airplane mode with no network connection",
     "badge": {
       "headline": "No upload. No cloud processing. No AI.",
-      "description": "Your file never leaves your device.",
+      "description": "PatentLint is downloaded into your browser and works offline.",
       "proveIt": "Prove it →"
     },
     "results": {
@@ -1683,5 +1683,11 @@
       "tableGrade": "Grade",
       "tableWeight": "Weight"
     }
+  },
+  "widget": {
+    "outgoing": "Outgoing data: {{count}}",
+    "empty": "No outgoing requests yet.",
+    "expand": "Show outgoing data log",
+    "collapse": "Hide outgoing data log"
   }
 }
