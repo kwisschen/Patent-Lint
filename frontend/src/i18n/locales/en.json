@@ -130,7 +130,7 @@
     "trackedChangesWarning": "This document contains tracked changes, which may affect analysis accuracy. Accept or reject all changes in your word processor, then analyze again.",
     "analyzeAgain": "Analyze Again",
     "scannedDocWarning": "This file contains only scanned document pages",
-    "scannedDocWarningDetails": "The uploaded file contains scanned document images with no machine-readable patent text. PatentLint requires structured text to analyze. Please upload the original filing XML or a .docx draft instead.",
+    "scannedDocWarningDetails": "Your file contains scanned document images with no machine-readable patent text. PatentLint requires structured text to analyze. Please drop the original filing XML or a .docx draft instead.",
     "jurisdictionMismatchTitle": "This looks like a {{suggested}}",
     "jurisdictionMismatchDetails": "{{selected}} is selected, but the language and section markers in this file look like a {{suggested}} draft. Switch jurisdictions to run the right checks, or continue with the current {{selected}} analysis.",
     "jurisdictionMismatchSwitch": "Switch to {{suggested}}",
@@ -1454,7 +1454,7 @@
       "title": "The Site vs. the Software",
       "p1": "PatentLint has two forms:",
       "siteLabel": "The Site (patentlint.com).",
-      "siteDesc": "A hosted web application, free for individual practitioners' personal use and for organizations evaluating before commercial licensing (see § 4). When you upload a patent draft, analysis runs entirely in your browser via WebAssembly — your draft never leaves your device. The Site is operated by Christopher Chen.",
+      "siteDesc": "A hosted web application, free for individual practitioners' personal use and for organizations evaluating before commercial licensing (see § 4). When you load a patent draft, analysis runs entirely in your browser via WebAssembly — your draft never leaves your device. The Site is operated by Christopher Chen.",
       "softwareLabel": "The Software.",
       "softwareDesc": "The underlying source code, published in a private repository. The Software is licensed under PolyForm-Strict-1.0.0 (see § 4).",
       "p2": "These Terms cover your use of both. Different rules apply depending on which you are using."
@@ -1462,7 +1462,7 @@
     "s2": {
       "title": "Using the Site",
       "p1": "The Site is free for personal use, and for organizations evaluating PatentLint before commercial licensing (see § 4). You may:",
-      "may1": "Upload patent drafts for analysis across US, CN, or TW jurisdiction rule sets.",
+      "may1": "Load patent drafts for analysis across US, CN, or TW jurisdiction rule sets.",
       "may2": "Export analysis reports for your own reference.",
       "may3": "Use the analysis output to inform your own drafting decisions.",
       "p2": "You may not:",
@@ -1544,7 +1544,7 @@
     },
     "s2": {
       "title": "Your patent drafts",
-      "p1": "Patent drafts you \"upload\" to the Site never actually leave your device — the file is loaded into the browser tab and processed there. Analysis runs on a Pyodide / WebAssembly engine in that tab. There is no server-side analysis path on patentlint.com; the Site is served as static assets, with a single voluntary error-report endpoint (§ 6) that runs only on explicit user submission.",
+      "p1": "Patent drafts you load into the Site never actually leave your device — the file stays in the browser tab and is processed there. Analysis runs on a Pyodide / WebAssembly engine in that tab. There is no server-side analysis path on patentlint.com; the Site is served as static assets, with a single voluntary error-report endpoint (§ 6) that runs only on explicit user submission.",
       "p2": "Specifically, we never:",
       "never1": "Receive or transmit the content of your patent drafts.",
       "never2": "Store filenames, claim text, specification body, or any patent-specific data.",
