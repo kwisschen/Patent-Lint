@@ -246,6 +246,25 @@ class TwPatentDocument(BaseModel):
     # True when a claims heading (【申請專利範圍】 / 【發明申請專利範圍】 /
     # 【新型申請專利範圍】) was parsed. See ``abstract_header_seen``.
     claims_header_seen: bool = False
+    # Diagnostic-only fields surfaced via check_required_sections to make
+    # claims-parser failures self-diagnosing without needing the user's
+    # actual draft. Set in extract_tw_sections.
+    #   claims_section_paragraph_count: paragraphs accumulated into the
+    #     claims section (after pre-processing). 0 when the header was
+    #     seen but bracket-header reset dropped everything (issue #17
+    #     class).
+    #   claims_first_paragraph_starts_with_bracket: True when the first
+    #     non-empty paragraph in the claims section starts with 【.
+    #     Distinguishes unhandled bracket-label firm variants from
+    #     standard formats without exposing claim content.
+    #   unknown_bracket_headers_in_claims: count of 【...】 patterns that
+    #     hit the unknown-header fallback inside the claims section.
+    #     Non-zero = parser rejected something the drafter expected to
+    #     work; combined with claims_section_paragraph_count=0, points
+    #     directly at a missing firm-variant label pattern.
+    claims_section_paragraph_count: int = 0
+    claims_first_paragraph_starts_with_bracket: bool = False
+    unknown_bracket_headers_in_claims: int = 0
     input_format: str = "docx"
 
 
