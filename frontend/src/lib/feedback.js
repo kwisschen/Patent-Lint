@@ -72,6 +72,53 @@ function buildHash() {
   }
 }
 
+// Per-script context window for per-finding diagnostic excerpts. Mirrors
+// `src/patentlint/diagnostic_extractors.py::_context_window_for` so the
+// per-claim React-side payload matches what the Python section-level
+// extractor produces. Detection is content-driven (reads claim text), not
+// UI-locale-driven: a US user analyzing a TW patent still gets the Han
+// window because the claim text itself is Han-dominant.
+const CONTEXT_WINDOW_LATIN = 30
+const CONTEXT_WINDOW_JA = 22
+const CONTEXT_WINDOW_HANGUL = 18
+const CONTEXT_WINDOW_HAN = 12
+
+export const SAMPLE_SIZE = 5
+
+function contextWindowFor(text) {
+  if (!text) return CONTEXT_WINDOW_LATIN
+  let kana = 0, han = 0, hangul = 0
+  for (const c of text) {
+    const cp = c.codePointAt(0)
+    if (cp >= 0x3040 && cp <= 0x30FF) kana++
+    else if (cp >= 0x4E00 && cp <= 0x9FFF) han++
+    else if (cp >= 0xAC00 && cp <= 0xD7AF) hangul++
+  }
+  if (kana >= 3) return CONTEXT_WINDOW_JA
+  const n = text.length
+  if (han / n > 0.3) return CONTEXT_WINDOW_HAN
+  if (hangul / n > 0.3) return CONTEXT_WINDOW_HANGUL
+  return CONTEXT_WINDOW_LATIN
+}
+
+// Locate first occurrence of `target` inside `text` and return excerpt
+// data: { context_before, context_after, char_offset }. Mirrors Python's
+// `_excerpt_around`. All-null if not found or empty.
+export function excerptAround(text, target) {
+  if (!text || !target) {
+    return { context_before: null, context_after: null, char_offset: null }
+  }
+  const idx = text.indexOf(target)
+  if (idx < 0) {
+    return { context_before: null, context_after: null, char_offset: null }
+  }
+  const window = contextWindowFor(text)
+  const context_before = text.slice(Math.max(0, idx - window), idx) || null
+  const end = idx + target.length
+  const context_after = text.slice(end, end + window) || null
+  return { context_before, context_after, char_offset: idx }
+}
+
 // Per-key locale-bundle path for each known metadata key. Keys not in
 // this map fall back to a sentence-case version of the raw key so new
 // fields work without code changes (and the maintainer still sees a

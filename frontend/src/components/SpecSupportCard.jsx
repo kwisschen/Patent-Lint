@@ -6,11 +6,11 @@ import { FileSearch, ChevronRight, Flag } from 'lucide-react'
 import { Button } from './ui/button'
 import { FrostCard } from './ui/frost-card'
 import { StatusPill } from './ui/status-pill'
-import { composeFeedback, sendReport } from '../lib/feedback'
+import { composeFeedback, sendReport, excerptAround, SAMPLE_SIZE } from '../lib/feedback'
 import { useFeedback } from './FeedbackPicker'
 import ReportModal from './ReportModal'
 
-function ClaimRow({ claimNumber, phrases, crossRefPhrases, jurisdiction }) {
+function ClaimRow({ claimNumber, phrases, crossRefPhrases, claimText, jurisdiction }) {
   const { t, i18n } = useTranslation()
   const { sendFeedback } = useFeedback()
   const [expanded, setExpanded] = useState(false)
@@ -21,12 +21,38 @@ function ClaimRow({ claimNumber, phrases, crossRefPhrases, jurisdiction }) {
     setReportModalOpen(true)
   }
 
+  // Mirror the antecedent-basis pattern: build a `findings: [...]` list of
+  // per-phrase pinpoint data (phrase, cross_ref, char_offset, context excerpt)
+  // scoped to this claim. Same shape as the Python section-level extractor
+  // so triage tooling handles per-claim and section-level reports identically.
+  const buildDiagnostics = () => {
+    const text = claimText || ''
+    const findingsList = phrases.slice(0, SAMPLE_SIZE).map((p) => {
+      const { context_before, context_after, char_offset } = excerptAround(text, p)
+      return {
+        claim_id: claimNumber,
+        phrase: p,
+        cross_ref: crossRefPhrases.includes(p) ? 'spec_support' : null,
+        char_offset,
+        context_before,
+        context_after,
+        claim_text_charlen: text.length,
+      }
+    })
+    return {
+      flagged_claim_id: claimNumber,
+      findings_in_group: phrases.length,
+      findings: findingsList,
+      hit_count: phrases.length,
+    }
+  }
+
   const handleAnonymousConfirm = () =>
     sendReport({
       checkKey: 'specSupport',
       jurisdiction: jurisdiction || 'unknown',
       locale: i18n.language,
-      diagnostics: { flagged_claim_id: claimNumber, hit_count: phrases.length },
+      diagnostics: buildDiagnostics(),
     })
 
   const handleMailtoFallback = () => {
@@ -118,7 +144,7 @@ function ClaimRow({ claimNumber, phrases, crossRefPhrases, jurisdiction }) {
         checkKey="specSupport"
         jurisdiction={jurisdiction || 'unknown'}
         locale={i18n.language}
-        diagnostics={{ flagged_claim_id: claimNumber, hit_count: phrases.length }}
+        diagnostics={buildDiagnostics()}
         onConfirm={handleAnonymousConfirm}
         onMailtoFallback={handleMailtoFallback}
       />
@@ -126,10 +152,21 @@ function ClaimRow({ claimNumber, phrases, crossRefPhrases, jurisdiction }) {
   )
 }
 
-export default function SpecSupportCard({ unsupportedTerms, jurisdiction }) {
+export default function SpecSupportCard({ unsupportedTerms, claimTrees, jurisdiction }) {
   const { t } = useTranslation()
 
   if (!unsupportedTerms || unsupportedTerms.length === 0) return null
+
+  // Build claim text lookup from claimTrees so per-claim Report payloads
+  // can include char_offset + context excerpt around each flagged phrase.
+  const claimTextMap = {}
+  if (claimTrees) {
+    claimTrees.forEach((group) => {
+      group.rows.forEach((row) => {
+        claimTextMap[row.claim_id] = row.claim_text
+      })
+    })
+  }
 
   // Group by claim_number, also tracking which phrases carry a cross-reference
   // hint to the antecedent-basis card.
@@ -163,6 +200,7 @@ export default function SpecSupportCard({ unsupportedTerms, jurisdiction }) {
             claimNumber={id}
             phrases={[...grouped[id]]}
             crossRefPhrases={crossRefByClaim[id] || []}
+            claimText={claimTextMap[id]}
             jurisdiction={jurisdiction}
           />
         ))}

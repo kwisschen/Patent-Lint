@@ -155,8 +155,8 @@
     "rubric": "How we score"
   },
   "feedback": {
-    "report": "Report error",
-    "reportProblem": "Report a problem with this finding",
+    "report": "Looks wrong?",
+    "reportProblem": "Report a suspected misflag",
     "picker": {
       "title": "Your draft stays on your device",
       "send": {
