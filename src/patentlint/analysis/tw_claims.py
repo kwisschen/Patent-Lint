@@ -220,7 +220,16 @@ _CJK_UNIT_TOKENS = (
     r"莫耳百分比|莫耳比|莫耳|"
     r"體積百分比|體積比|質量百分比|原子百分比|"
     r"毫克|公克|毫升|公升|微升|微米|奈米|公分|公釐|公尺|"
-    r"克|升|倍率|倍|份|個|顆|片"
+    r"克|升|倍率|倍|份|個|顆|片|"
+    # R-refnum-1 (2026-04-30, issue #25): Miller-index suffixes for
+    # crystallography in semiconductor patents. Drafters write `100面` /
+    # `110方向` etc. as bare digits because the paren form `(100)面` is
+    # also conventional but optional (TIPO/CNIPA accept both). Pre-fix:
+    # walker mistook `100面` for an unbracketed element reference numeral
+    # (Claire's draft c12 `露出前述矽層之100面的狀態下實施`). Longer
+    # multi-char tokens listed first for readability — order doesn't
+    # matter for correctness in negative-lookahead alternation.
+    r"結晶面|晶面|平面|方向|面"
 )
 _BARE_NUMERAL = re.compile(
     r"(?<!\()(?<=[\u4e00-\u9fff])"  # preceded by CJK, not by (
@@ -674,6 +683,25 @@ def check_single_sentence(doc: TwPatentDocument) -> list[CheckItem]:
 # ── Check 17 ─────────────────────────────────────────────────────────────
 
 
+def _ref_numeral_finding_diag(cid: int, claims: list) -> dict:
+    """Build a per-claim diagnostic finding for refNumeralParens.
+
+    Returns ``{claim_id, first_match, context_after}`` where context_after
+    is the 8-char window after the matched digits. R-refnum-1 added
+    context_after so reports of Miller-index FPs (`100面`) and other
+    over-fires arrive self-diagnosing.
+    """
+    text = next((c.text for c in claims if c.id == cid), "")
+    m = _BARE_NUMERAL.search(text)
+    if not m:
+        return {"claim_id": cid, "first_match": None, "context_after": None}
+    return {
+        "claim_id": cid,
+        "first_match": m.group(0),
+        "context_after": text[m.end():m.end() + 8],
+    }
+
+
 def check_ref_numeral_parens(doc: TwPatentDocument) -> list[CheckItem]:
     """Find reference numerals in claims not enclosed in parentheses (FIX).
 
@@ -701,11 +729,14 @@ def check_ref_numeral_parens(doc: TwPatentDocument) -> list[CheckItem]:
                 flagged_count=len(bad_claim_ids),
                 total_claims=len(doc.claims),
                 flagged_claim_id=bad_claim_ids[0] if bad_claim_ids else None,
+                # R-refnum-1 (2026-04-30, issue #25): added `context_after`
+                # so future reports of FPs like Miller-index `100面` arrive
+                # self-diagnosing without needing the draft. The 8-char
+                # window after the match captures the immediately-following
+                # context (面的狀態 / 方向上 / etc.) which classifies the
+                # bug class on payload inspection alone.
                 findings=[
-                    {
-                        "claim_id": cid,
-                        "first_match": (m.group(0) if (m := _BARE_NUMERAL.search(next((c.text for c in doc.claims if c.id == cid), ""))) else None),
-                    }
+                    _ref_numeral_finding_diag(cid, doc.claims)
                     for cid in bad_claim_ids[:5]
                 ],
             ),
