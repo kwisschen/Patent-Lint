@@ -1688,6 +1688,9 @@
     "outgoing": "Ausgehende Daten: {{count}}",
     "empty": "Noch keine ausgehenden Anfragen.",
     "expand": "Protokoll anzeigen",
-    "collapse": "Protokoll ausblenden"
+    "collapse": "Protokoll ausblenden",
+    "endpointDesc": {
+      "report": "Anonymer Fehlerbericht: nur Diagnose-Spur, kein Entwurfsinhalt."
+    }
   }
 }

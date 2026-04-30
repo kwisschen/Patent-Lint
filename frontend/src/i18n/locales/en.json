@@ -1688,6 +1688,9 @@
     "outgoing": "Outgoing data: {{count}}",
     "empty": "No outgoing requests yet.",
     "expand": "Show outgoing data log",
-    "collapse": "Hide outgoing data log"
+    "collapse": "Hide outgoing data log",
+    "endpointDesc": {
+      "report": "Anonymous error report — diagnostic trail only, no draft content."
+    }
   }
 }

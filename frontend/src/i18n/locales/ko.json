@@ -1690,6 +1690,9 @@
     "outgoing": "외부 전송: {{count}}건",
     "empty": "외부 전송 없음",
     "expand": "로그 보기",
-    "collapse": "로그 숨기기"
+    "collapse": "로그 숨기기",
+    "endpointDesc": {
+      "report": "익명 오류 보고 (진단 자취만 포함, 원고 내용 없음)"
+    }
   }
 }
