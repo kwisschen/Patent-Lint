@@ -130,7 +130,7 @@
     "trackedChangesWarning": "Dieses Dokument enthält nachverfolgte Änderungen, die die Prüfgenauigkeit beeinträchtigen können. Akzeptieren oder verwerfen Sie alle Änderungen in Ihrer Textverarbeitung und prüfen Sie erneut.",
     "analyzeAgain": "Erneut prüfen",
     "scannedDocWarning": "Diese Datei enthält nur eingescannte Dokumentseiten",
-    "scannedDocWarningDetails": "Die hochgeladene Datei enthält eingescannte Bilder ohne maschinenlesbaren Patenttext. PatentLint benötigt strukturierten Text für die Prüfung. Bitte laden Sie stattdessen die Original-Anmelde-XML oder einen .docx-Entwurf.",
+    "scannedDocWarningDetails": "Ihre Datei enthält eingescannte Bilder ohne maschinenlesbaren Patenttext. PatentLint benötigt strukturierten Text für die Prüfung. Bitte legen Sie stattdessen die Original-Anmelde-XML oder einen .docx-Entwurf ab.",
     "jurisdictionMismatchTitle": "Dies sieht wie ein {{suggested}} aus",
     "jurisdictionMismatchDetails": "Aktuell ist {{selected}} ausgewählt, aber Sprache und Abschnittskennzeichnungen dieses Dokuments deuten auf ein {{suggested}}-Dokument hin. Wechseln Sie die Region, um die passenden Prüfungen auszuführen, oder fahren Sie mit der aktuellen {{selected}}-Analyse fort.",
     "jurisdictionMismatchSwitch": "Zu {{suggested}} wechseln",
@@ -1367,7 +1367,7 @@
       "title": "Die Website vs. die Software",
       "p1": "PatentLint hat zwei Erscheinungsformen:",
       "siteLabel": "Die Website (patentlint.com).",
-      "siteDesc": "Eine gehostete Webanwendung, kostenlos für die persönliche Nutzung durch einzelne Patentpraktiker und für Organisationen zur Evaluierung vor einer kommerziellen Lizenzierung (siehe § 4). Wenn Sie eine Patentanmeldung hochladen, läuft die Prüfung vollständig in Ihrem Browser über WebAssembly — Ihr Entwurf verlässt nie Ihr Gerät. Die Website wird von Christopher Chen betrieben.",
+      "siteDesc": "Eine gehostete Webanwendung, kostenlos für die persönliche Nutzung durch einzelne Patentpraktiker und für Organisationen zur Evaluierung vor einer kommerziellen Lizenzierung (siehe § 4). Wenn Sie eine Patentanmeldung laden, läuft die Prüfung vollständig in Ihrem Browser über WebAssembly — Ihr Entwurf verlässt nie Ihr Gerät. Die Website wird von Christopher Chen betrieben.",
       "softwareLabel": "Die Software.",
       "softwareDesc": "Der zugrunde liegende Quellcode, veröffentlicht in einem privaten Repository. Die Software ist unter PolyForm-Strict-1.0.0 lizenziert (siehe § 4).",
       "p2": "Diese Bedingungen gelten für die Nutzung beider. Unterschiedliche Regeln gelten je nachdem, welche Sie nutzen."
@@ -1375,7 +1375,7 @@
     "s2": {
       "title": "Nutzung der Website",
       "p1": "Die Website ist kostenlos zur persönlichen Nutzung sowie zur Evaluierung von PatentLint vor einer kommerziellen Lizenzierung (siehe § 4). Sie dürfen:",
-      "may1": "Patentanmeldungen zur Prüfung gegen US-, CN- oder TW-Rechtsregelwerke hochladen.",
+      "may1": "Patentanmeldungen zur Prüfung gegen US-, CN- oder TW-Rechtsregelwerke laden.",
       "may2": "Prüfberichte für eigene Zwecke exportieren.",
       "may3": "Die Prüfungsergebnisse für Ihre eigenen Ausarbeitungsentscheidungen verwenden.",
       "p2": "Sie dürfen nicht:",
@@ -1457,7 +1457,7 @@
     },
     "s2": {
       "title": "Ihre Patentanmeldungen",
-      "p1": "Patentanmeldungen, die Sie auf die Website „hochladen“, verlassen tatsächlich nie Ihr Gerät — die Datei wird in den Browser-Tab geladen und dort verarbeitet. Die Prüfung läuft auf einer Pyodide-/WebAssembly-Engine in diesem Tab. Auf patentlint.com gibt es keinen serverseitigen Prüfpfad; die Website wird als statische Assets ausgeliefert, ergänzt um einen einzelnen freiwilligen Fehlermelde-Endpunkt (§ 6), der nur bei ausdrücklicher Übermittlung durch den Nutzer ausgeführt wird.",
+      "p1": "Patentanmeldungen, die Sie in PatentLint laden, verlassen tatsächlich nie Ihr Gerät — die Datei bleibt im Browser-Tab und wird dort verarbeitet. Die Prüfung läuft auf einer Pyodide-/WebAssembly-Engine in diesem Tab. Auf patentlint.com gibt es keinen serverseitigen Prüfpfad; die Website wird als statische Assets ausgeliefert, ergänzt um einen einzelnen freiwilligen Fehlermelde-Endpunkt (§ 6), der nur bei ausdrücklicher Übermittlung durch den Nutzer ausgeführt wird.",
       "p2": "Konkret:",
       "never1": "Wir empfangen oder übertragen keinen Inhalt Ihrer Patentanmeldungen.",
       "never2": "Wir speichern keine Dateinamen, Anspruchstexte, Beschreibungsinhalte oder patent-spezifischen Daten.",
