@@ -79,6 +79,15 @@ export default function ProveItModal({ open, onOpenChange }) {
     const observer = new PerformanceObserver((list) => {
       const newEntries = list.getEntries()
         .filter((e) => !e.name.includes('favicon.svg'))
+        // Filter out failed-offline fetches: PerformanceResourceTiming
+        // entries fire even when the network is unreachable (the BROWSER
+        // attempted the request), but those entries have responseStart === 0
+        // because no response was ever received. If we counted them, an
+        // offline user clicking "check for updates" would see the indicator
+        // flip red and the GET appear in the log — exactly the trust signal
+        // we're trying to disprove. Successful fetches (network or cached)
+        // have responseStart > 0; only those count as "real" activity.
+        .filter((e) => e.responseStart > 0)
         .map((e) => {
           entryIdRef.current += 1
           return {
