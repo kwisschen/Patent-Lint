@@ -155,7 +155,7 @@
     "rubric": "评分标准"
   },
   "feedback": {
-    "report": "看起来不对？",
+    "report": "看起来不太对？",
     "reportProblem": "回报疑似误判",
     "picker": {
       "title": "您的专利说明书不会离开您的设备",
