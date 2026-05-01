@@ -27,15 +27,16 @@ mermaid.initialize({
   },
 })
 
-;(async () => {
-  try {
-    await mermaid.render('init-check', 'flowchart TD\n  A["init"]')
-    document.getElementById('init-check')?.remove()
-    document.querySelector('[id^="dinit-check"]')?.remove()
-  } catch {
-    // Ignore — this just forces the dynamic import
-  }
-})()
+// REMOVED 2026-05-01: a module-level IIFE used to call
+// `mermaid.render('init-check', 'flowchart TD\n  A["init"]')` to "force the
+// dynamic import" — but mermaid is statically imported at line 6 above, so
+// the bundle is already in the chunk. The IIFE was a no-op for the stated
+// purpose, AND on failure (or partial cleanup-miss in mermaid v11+ ID
+// naming), it left behind a visible "Syntax error in text" bomb-icon SVG
+// at the bottom of every page (including the homepage where no claim
+// diagram is needed). User saw it on iPhone Safari prod build 6746b7d.
+// First ClaimDiagram render below works fine without pre-warming because
+// mermaid is already loaded statically.
 
 function buildMermaidSyntax(claimTrees, t) {
   const lines = [
@@ -232,6 +233,14 @@ export default function ClaimDiagram({ claimTrees }) {
       }
     } catch (err) {
       console.error('Mermaid render error:', err)
+      // Defensive cleanup: mermaid may leave temporary DOM elements at the
+      // body level when render fails partway through (the bomb-icon error
+      // SVG it renders before throwing). Remove any orphaned containers
+      // using both the id we passed and mermaid v11's d-prefix convention
+      // so the user sees ONLY the localized renderError message inside
+      // containerRef, never the library default bomb at body level.
+      document.getElementById(id)?.remove()
+      document.querySelector(`[id^="d${id}"]`)?.remove()
       if (containerRef.current) {
         containerRef.current.innerHTML =
           `<p class="text-sm text-muted-foreground">${t('claimDiagram.renderError')}</p>`
