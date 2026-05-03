@@ -244,6 +244,36 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
         chain = get_ancestor_chain(claim, claims)
         claim_text_lower = claim.text.lower()
 
+        # R32-US (2026-05-04): exclude dep preamble from body-reference
+        # scan ONLY when entity-consistent with parent. The dep preamble
+        # (`The X of claim N`) refers back to the parent via `of claim N`;
+        # if X matches the parent's head noun, scanning it as body text
+        # produces 2300+ walker_fp emissions (`method ofclaim 1`-shape).
+        # When X DOESN'T match the parent's head noun, it's a real §112(b)
+        # entity-mismatch drafting error (e.g., US11740393B2 c9: `The
+        # energy harvesting system of claim 1` but c1 introduces `image
+        # capturing system`). Body scan must still flag those.
+        #
+        # Use same-length whitespace mask so char offsets in downstream
+        # context-extraction still align with the original claim text.
+        dep_m = _DEP_PREAMBLE.match(claim.text)
+        body_scan_text = claim_text_lower
+        if dep_m:
+            dep_head_str = dep_m.group(2).strip()
+            parent_claim_id = int(dep_m.group(3))
+            dep_head = _extract_head_noun(dep_head_str)
+            parent_claim = next((c for c in claims if c.id == parent_claim_id), None)
+            parent_head = None
+            if parent_claim:
+                parent_info = _preamble_head_info(parent_claim)
+                if parent_info:
+                    parent_head = parent_info[0]
+            if dep_head and parent_head and _heads_match(dep_head, parent_head):
+                body_scan_offset = dep_m.end()
+                body_scan_text = (
+                    (' ' * body_scan_offset) + claim_text_lower[body_scan_offset:]
+                )
+
         # Gather all introductions, tracking the ancestor claim each came from.
         # When the same intro phrase appears in multiple ancestors, prefer the
         # lowest claim id (the earliest claim that introduced the term) so
@@ -272,7 +302,7 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
 
         # Find definite references ("the X" and "said X") in this claim
         seen: set[tuple[str, str]] = set()
-        for m in _DEFINITE_REF.finditer(claim_text_lower):
+        for m in _DEFINITE_REF.finditer(body_scan_text):
             term = clean_noun_phrase(m.group("noun").strip())
             term = strip_contextual_verb(term, claim_text_lower[m.end():])
             if not term:
@@ -483,7 +513,16 @@ _DEP_PREAMBLE = re.compile(
     #   "The X as claimed in claim N"  (British form)
     #   "The X as recited in claim N"
     #   "The X as set forth in claim N"
-    r"^(The|An?)\s+(.*?)\s+"
+    #
+    # R32-US (2026-05-04): leading `\d+\.` claim-number prefix tolerated
+    # (Claim.text often retains the parser's claim number); connector→
+    # claim spacing relaxed from \s+ to \s* so Google Patents HTML
+    # extraction artifacts (`ofclaim 1`, `according toclaim 1`) still
+    # match. ~2300 walker_fp emissions on the round-1 705-draft US corpus
+    # arose from dep-preamble detection failing → walker scanned the
+    # preamble as body text and emitted `the method ofclaim 1` as a
+    # bogus reference.
+    r"^(?:\d+\s*[.\-]?\s*)?(The|An?)\s+(.*?)\s+"
     r"(?:"
     r"of"
     r"|according\s+to"
@@ -491,7 +530,7 @@ _DEP_PREAMBLE = re.compile(
     r"|as\s+claimed\s+in"
     r"|as\s+recited\s+in"
     r"|as\s+set\s+forth\s+in"
-    r")\s+claims?\s+(\d+)",
+    r")\s*claims?\s+(\d+)",
     re.IGNORECASE,
 )
 
