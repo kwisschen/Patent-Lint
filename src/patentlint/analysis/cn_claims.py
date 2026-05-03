@@ -2408,6 +2408,52 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
             seen_norms.add(piece_clean)
             extras.append((piece_clean, piece_clean))
 
+    # R31 (2026-05-03): generic 的-substring sub-noun extraction across ALL
+    # captured intros. R30's F11 sub-noun was F11-only; round-1 mining
+    # showed F12/F13/F14 captures also benefit (e.g., F13 locative-verb
+    # intros like `位於連接器之間的耦合介面` should register both 連接器
+    # and 耦合介面). Apply post-pass over `cleaned` (which contains all
+    # F-family results after trim). Single-的 split only.
+    # Anti-pattern: skip if both halves < 2 CJK chars OR start with reject prefix.
+    cleaned_subs = []
+    for orig, norm in cleaned:
+        de_idx = norm.find('的')  # 的
+        if 0 < de_idx < len(norm) - 1:
+            head = norm[:de_idx]
+            tail = norm[de_idx + 1:]
+            for sub in (head, tail):
+                sub_cjk = sum(1 for c in sub if '\u4e00' <= c <= '\u9fff')
+                if sub_cjk < 2:
+                    continue
+                if sub.startswith(_REF_PREFIX_SET_CN):
+                    continue
+                if sub.startswith(_F12_ADJ_REJECTS_CN):
+                    continue
+                if sub in seen_norms:
+                    continue
+                seen_norms.add(sub)
+                cleaned_subs.append((orig, sub))
+    cleaned.extend(cleaned_subs)
+
+    # R31 second 的-split pass — handles X的Y的Z three-way splits.
+    cleaned_subs2 = []
+    for orig, norm in cleaned_subs:  # only re-split the newly added ones
+        de_idx = norm.find('的')
+        if 0 < de_idx < len(norm) - 1:
+            head = norm[:de_idx]
+            tail = norm[de_idx + 1:]
+            for sub in (head, tail):
+                sub_cjk = sum(1 for c in sub if '\u4e00' <= c <= '\u9fff')
+                if sub_cjk < 2:
+                    continue
+                if sub.startswith(_REF_PREFIX_SET_CN):
+                    continue
+                if sub in seen_norms:
+                    continue
+                seen_norms.add(sub)
+                cleaned_subs2.append((orig, sub))
+    cleaned.extend(cleaned_subs2)
+
     # R30 mechanism #11 (2026-05-03): step-label colon intros for method claims.
     # Pattern: `；以及<step-name>:<step-content>` or `；<step-name>:<content>`
     # where the step-name (multi-char CJK before colon) is the new claim element.
