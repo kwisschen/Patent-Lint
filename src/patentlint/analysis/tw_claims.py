@@ -3523,6 +3523,47 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
             seen_norms.add(piece_clean)
             extras.append((piece_clean, piece_clean))
 
+    # R31 (2026-05-03): generic 的 sub-noun extraction across all captured intros.
+    # CN R31 mirror in Traditional script. Splits each cleaned intro on 的;
+    # registers head and tail as separate intros if each is ≥2 CJK chars and
+    # doesn't start with reference-prefix or ADJ-reject head.
+    cleaned_subs = []
+    for orig, norm in cleaned:
+        de_idx = norm.find('的')  # 的
+        if 0 < de_idx < len(norm) - 1:
+            head = norm[:de_idx]
+            tail = norm[de_idx + 1:]
+            for sub in (head, tail):
+                sub_cjk = sum(1 for c in sub if '\u4e00' <= c <= '\u9fff')
+                if sub_cjk < 2:
+                    continue
+                if sub.startswith(_REFERENCE_PREFIXES):
+                    continue
+                if sub in seen_norms:
+                    continue
+                seen_norms.add(sub)
+                cleaned_subs.append((orig, sub))
+    cleaned.extend(cleaned_subs)
+
+    # R31 second 的-split pass — handles X的Y的Z three-way splits.
+    cleaned_subs2 = []
+    for orig, norm in cleaned_subs:  # only re-split the newly added ones
+        de_idx = norm.find('的')
+        if 0 < de_idx < len(norm) - 1:
+            head = norm[:de_idx]
+            tail = norm[de_idx + 1:]
+            for sub in (head, tail):
+                sub_cjk = sum(1 for c in sub if '\u4e00' <= c <= '\u9fff')
+                if sub_cjk < 2:
+                    continue
+                if sub.startswith(_REFERENCE_PREFIXES):
+                    continue
+                if sub in seen_norms:
+                    continue
+                seen_norms.add(sub)
+                cleaned_subs2.append((orig, sub))
+    cleaned.extend(cleaned_subs2)
+
     # R30 mechanism #6 (2026-05-03): parenthetical abbreviation bridging.
     # Mirror of CN R30. `<full term>(<Abbr>)` registers both full and Abbr.
     _PAREN_ABBREV_RE_R30_TW = re.compile(
