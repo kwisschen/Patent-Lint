@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 28,
+    "current_round": 27,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -55,17 +55,7 @@
         "description": "Intro site has `X和Y` / `X与Y` / `X及Y` shape; walker registered the whole string as a single intro rather than splitting on the conjunction. Downstream references to just X or just Y fail to resolve. R14f target."
       }
     ],
-    "notes": " | Schema v11 triage (2026-04-16): auto-classified 423 active labels from 'unclassified' into walker_fp / miss_intro / ambig categories. Active-pool composition now: ambig=41 miss_intro.coverage_gap=146 tw_contamination=3 walker_fp.cross_branch_sibling=169 walker_fp.fragment=6 walker_fp.over_capture=59 walker_fp.trailing_residue=2. Classifier: shape heuristics + ancestor-chain search + trim-strip fallback. The 41 'ambig' entries are residual; cross_branch_sibling is Option B territory (Phase 9 #54). Categories walker_fp.* / miss_intro.* added to metadata for ADR-110 validation.",
-    "review_log": [
-      {
-        "date": "2026-05-02",
-        "review": "Phase 2a borderline label review (Christopher)",
-        "demoted_count": 11,
-        "demotion_targets": "9× miss_intro.coverage_gap, 2× walker_fp.fragment",
-        "rationale": "Sonnet ensemble correctly identified intros walker missed (verb-object bare nouns, Pattern B enumerator-form members, parent-claim bare-noun intros, compound-noun tokenization fragments). 2 cases retained as legit_drafting_error per Christopher's review.",
-        "round": 28
-      }
-    ]
+    "notes": " | Schema v11 triage (2026-04-16): auto-classified 423 active labels from 'unclassified' into walker_fp / miss_intro / ambig categories. Active-pool composition now: ambig=41 miss_intro.coverage_gap=146 tw_contamination=3 walker_fp.cross_branch_sibling=169 walker_fp.fragment=6 walker_fp.over_capture=59 walker_fp.trailing_residue=2. Classifier: shape heuristics + ancestor-chain search + trim-strip fallback. The 41 'ambig' entries are residual; cross_branch_sibling is Option B territory (Phase 9 #54). Categories walker_fp.* / miss_intro.* added to metadata for ADR-110 validation."
   },
   "labels": [
     {
@@ -997,12 +987,12 @@
       "claim_id": 1,
       "term": "页表",
       "reference_form": "所述页表",
-      "category": "miss_intro.coverage_gap",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [7]; real §112(b) defect (parallel-invention drafter error) | demoted 2026-05-02 per Phase 2a borderline review: walker missed bare-verb-object intro `建立页表` in claim 1 itself; original 'parallel-only [7]' label was incorrect",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [7]; real §112(b) defect (parallel-invention drafter error)",
       "resolved_by": null,
-      "round": 28
+      "round": 0
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1441,12 +1431,12 @@
       "claim_id": 7,
       "term": "页表",
       "reference_form": "所述页表",
-      "category": "miss_intro.coverage_gap",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error) | demoted 2026-05-02 per Phase 2a borderline review: walker missed bare-verb-object intro `建立页表` within claim 7; ancestor [1] also has same intro pattern",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error)",
       "resolved_by": null,
-      "round": 28
+      "round": 0
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1981,12 +1971,12 @@
       "claim_id": 1,
       "term": "节点",
       "reference_form": "所述节点",
-      "category": "miss_intro.coverage_gap",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [9]; real §112(b) defect (parallel-invention drafter error) | demoted 2026-05-02 per Phase 2a borderline review: walker missed Pattern B intro `包括…各节点` in claim 1 (enumerator-form list member); original 'parallel-only [9]' label was incorrect",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [9]; real §112(b) defect (parallel-invention drafter error)",
       "resolved_by": null,
-      "round": 28
+      "round": 0
     },
     {
       "fixture": "CN114357105B",
@@ -2437,12 +2427,12 @@
       "claim_id": 9,
       "term": "节点",
       "reference_form": "所述节点",
-      "category": "miss_intro.coverage_gap",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error) | demoted 2026-05-02 per Phase 2a borderline review: walker missed Pattern B intro `包括…各节点` in claim 9 (mirrors claim 1 structure)",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error)",
       "resolved_by": null,
-      "round": 28
+      "round": 0
     },
     {
       "fixture": "CN114357105B",
@@ -5005,12 +4995,12 @@
       "claim_id": 42,
       "term": "第四神经网",
       "reference_form": "所述第四神经网",
-      "category": "walker_fp.fragment",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 80, 121]; real §112(b) defect (parallel-invention drafter error) | demoted 2026-05-02 per Phase 2a borderline review: walker term is tokenization fragment of `第四神经网络`, which is introduced bare in claim 42 (`接收来自所述第一设备的第四神经网络的信息`)",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 80, 121]; real §112(b) defect (parallel-invention drafter error)",
       "resolved_by": null,
-      "round": 28
+      "round": 0
     },
     {
       "fixture": "CN115485995B",
@@ -6877,24 +6867,24 @@
       "claim_id": 83,
       "term": "差异度",
       "reference_form": "所述差异度",
-      "category": "miss_intro.coverage_gap",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 124]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c82→c83 | demoted 2026-05-02 per Phase 2a borderline review: walker missed bare-noun intro `差异度` in ancestor claim 82 (`差异度满足第一条件`); original 'parallel-only [11, 124]' label missed the parent intro",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 124]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c82→c83",
       "resolved_by": null,
-      "round": 28
+      "round": 0
     },
     {
       "fixture": "CN115485995B",
       "claim_id": 83,
       "term": "相似度",
       "reference_form": "所述相似度",
-      "category": "miss_intro.coverage_gap",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 124]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c82→c83 | demoted 2026-05-02 per Phase 2a borderline review: walker missed bare-noun intro `相似度` in ancestor claim 82",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 124]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c82→c83",
       "resolved_by": null,
-      "round": 28
+      "round": 0
     },
     {
       "fixture": "CN115485995B",
@@ -8761,12 +8751,12 @@
       "claim_id": 121,
       "term": "第四神经网",
       "reference_form": "所述第四神经网",
-      "category": "walker_fp.fragment",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 42, 80]; real §112(b) defect (parallel-invention drafter error) | demoted 2026-05-02 per Phase 2a borderline review: walker term is tokenization fragment of `第四神经网络`, which is introduced bare within claim 121",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 42, 80]; real §112(b) defect (parallel-invention drafter error)",
       "resolved_by": null,
-      "round": 28
+      "round": 0
     },
     {
       "fixture": "CN115485995B",
@@ -9085,24 +9075,24 @@
       "claim_id": 125,
       "term": "差异度",
       "reference_form": "所述差异度",
-      "category": "miss_intro.coverage_gap",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 82]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c124→c125 | demoted 2026-05-02 per Phase 2a borderline review: walker missed bare-noun intro `差异度` in ancestor claim 124; original 'parallel-only [11, 82]' label missed the parent intro",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 82]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c124→c125",
       "resolved_by": null,
-      "round": 28
+      "round": 0
     },
     {
       "fixture": "CN115485995B",
       "claim_id": 125,
       "term": "相似度",
       "reference_form": "所述相似度",
-      "category": "miss_intro.coverage_gap",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 82]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c124→c125 | demoted 2026-05-02 per Phase 2a borderline review: walker missed bare-noun intro `相似度` in ancestor claim 124",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 82]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c124→c125",
       "resolved_by": null,
-      "round": 28
+      "round": 0
     },
     {
       "fixture": "CN115485995B",
@@ -11857,12 +11847,12 @@
       "claim_id": 26,
       "term": "输入数据",
       "reference_form": "所述输入数据",
-      "category": "miss_intro.coverage_gap",
-      "protect": false,
+      "category": "legit_drafting_error",
+      "protect": true,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 24]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c25→c26 | demoted 2026-05-02 per Phase 2a borderline review: walker missed bare-noun intro `输入数据` in ancestor claim 24 (`基于用户的输入数据`); original 'parallel-only [1, 24]' label conflated parent and parallel",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 24]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c25→c26",
       "resolved_by": null,
-      "round": 28
+      "round": 0
     },
     {
       "fixture": "CN115952274B",
