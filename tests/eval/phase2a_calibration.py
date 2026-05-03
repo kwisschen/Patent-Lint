@@ -88,9 +88,9 @@ def load_labels(path: Path) -> list[dict]:
     """Read a labels file's `labels` array, dropping unclassified seeds."""
     data = json.loads(path.read_text())
     return [
-        l
-        for l in data.get("labels", [])
-        if l.get("category") not in (None, "", "unclassified")
+        lab
+        for lab in data.get("labels", [])
+        if lab.get("category") not in (None, "", "unclassified")
     ]
 
 
@@ -113,7 +113,7 @@ def discover_tw_fixture_paths(labels: list[dict]) -> dict[str, Path]:
     Synthetic fixtures (tw_*) are not real .docx — skip them in the calibration.
     """
     out: dict[str, Path] = {}
-    fixture_keys = {l.get("fixture") for l in labels if l.get("fixture")}
+    fixture_keys = {lab.get("fixture") for lab in labels if lab.get("fixture")}
     for key in fixture_keys:
         if not key or key.startswith("tw_") or key == "spec1":
             # Synthetic / spec-only; not real claim-text drafts
@@ -216,13 +216,13 @@ def find_label_for_finding(
 ) -> Optional[dict]:
     """Match a finding to its ground-truth label (if any)."""
     candidates = labels_by_fixture.get(fixture_key, [])
-    for l in candidates:
+    for lab in candidates:
         if (
-            l.get("claim_id") == finding.claim_id
-            and l.get("term") == finding.term
-            and l.get("reference_form") == finding.reference_form
+            lab.get("claim_id") == finding.claim_id
+            and lab.get("term") == finding.term
+            and lab.get("reference_form") == finding.reference_form
         ):
-            return l
+            return lab
     return None
 
 
@@ -349,11 +349,11 @@ async def run_calibration(
     tw_labels = load_labels(TW_LABELS)
 
     cn_labels_by_fixture: dict[str, list[dict]] = defaultdict(list)
-    for l in cn_labels:
-        cn_labels_by_fixture[l["fixture"]].append(l)
+    for lab in cn_labels:
+        cn_labels_by_fixture[lab["fixture"]].append(lab)
     tw_labels_by_fixture: dict[str, list[dict]] = defaultdict(list)
-    for l in tw_labels:
-        tw_labels_by_fixture[l["fixture"]].append(l)
+    for lab in tw_labels:
+        tw_labels_by_fixture[lab["fixture"]].append(lab)
 
     # Resolve fixture paths
     cn_paths = load_cn_fixture_paths()

@@ -165,7 +165,7 @@ def render_case(case: dict, idx: int, kind: str) -> str:
     lines.append(f"## Case {idx}: {case['patent_id']} (claim {case['claim_id']}) — `{case['term']}`")
     lines.append(f"_(jurisdiction={case['jurisdiction']}, applicant_type={case['applicant_type']}, kind={kind})_")
     lines.append("")
-    lines.append(f"**Walker finding:**")
+    lines.append("**Walker finding:**")
     lines.append(f"- term: `{case['term']}`")
     lines.append(f"- reference_form: `{case['reference_form']}`")
     lines.append(f"- context_before: `{case['context_before']}`")
