@@ -2240,6 +2240,18 @@ def clean_noun_phrase_tw(text: str) -> str:
     search_text = text[protected_prefix_len:]
     search_offset = protected_prefix_len
 
+    # R31 (2026-05-03) tight noun-suffix guard: skip the interior cut when
+    # the verb is part of a known noun compound. Restricted by:
+    #   1. verb in high-collision whitelist (decision/sense/identify class)
+    #   2. char immediately after verb is a noun-suffix
+    #   3. TOTAL TEXT LENGTH ≤ 8 chars (typical compound noun max — prevents
+    #      preserving long over-captures like 輸入訊號來自一感測器模組 which
+    #      contains noun-suffix at end but isn't a clean compound)
+    _R31_NOUN_COMPOUND_VERBS_TW = {
+        '決定', '感測', '偵測', '監測', '辨識', '識別', '解析',
+        '處理', '控制', '驅動', '檢出', '判定', '計算', '生成',
+        '輸出', '輸入', '儲存', '存取', '讀取', '寫入',
+    }
     earliest_idx: int | None = None
     for verb in _INTERIOR_VERB_BOUNDARIES:
         idx = search_text.find(verb)
@@ -2248,6 +2260,13 @@ def clean_noun_phrase_tw(text: str) -> str:
         # total before the verb in the absolute original text.
         if idx >= 0 and (idx + search_offset) > 1:
             absolute_idx = idx + search_offset
+            # R31 noun-compound guard (length-bounded):
+            if (verb in _R31_NOUN_COMPOUND_VERBS_TW
+                    and len(text) <= 8):
+                next_char_pos = absolute_idx + len(verb)
+                if (next_char_pos < len(text)
+                        and text[next_char_pos] in _F10_SINGLE_CHAR_SUFFIXES_TW):
+                    continue  # 對象決定+部 etc. (text length ≤ 8)
             if earliest_idx is None or absolute_idx < earliest_idx:
                 earliest_idx = absolute_idx
 
