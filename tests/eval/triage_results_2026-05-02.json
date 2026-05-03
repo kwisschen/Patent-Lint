@@ -1,0 +1,476 @@
+{
+  "17": {
+    "title": "[report] check.tw.spec.requiredSections.amend",
+    "shape": "pre_extractor",
+    "classification": "fix_shipped_close_pending",
+    "verdicts": [],
+    "comment_posted": true,
+    "comment_preview": "**Autonomous triage** (2026-05-01 16:54 UTC): fix verifiably shipped after this report.\n\n- Report build: `4641dfa`\n- Fix commit(s): `6746b7d`, `28398d5`\n- Verified `git merge-base --is-ancestor 4641dfa 28398d5` returns true — fix descends from the build the user reported on.\n\n**Recommended action:**"
+  },
+  "19": {
+    "title": "[report] check.tw.claims.antecedentBasis.amend",
+    "shape": "modern",
+    "classification": "modern_triaged",
+    "verdicts": [
+      {
+        "finding_key": "issue19_finding0",
+        "final_category": "ambig",
+        "agreement_level": "three_way_split",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 92,
+            "reasoning": "The context shows 'p型電晶體以及[n型電晶體]，\n前述p型電晶體具有：' — the walker flagged 'n型電晶體' as lacking antecedent, but it is introduced by the coordinating conjunction '以及' (and/as well as) that links it to the previously introduced 'p型電晶體'. The 'n型電晶體' shares the introducing article/quantifier scope with 'p型電晶體' via coordination; this is a known pattern the walker does not recognize.",
+            "raw": "{\n  \"category\": \"walker_fp\",\n  \"confidence\": 92,\n  \"reasoning\": \"The context shows 'p型電晶體以及[n型電晶體]，\\n前述p型電晶體具有：' — the walker flagged 'n型電晶體' as lacking antecedent, but it is introduced by the coordinating conjunction '以及' (and/as well as) that links it to the previously introduced 'p型電晶體'. The 'n型電晶體' shares the introducing article/quantifier scope with 'p型電晶體' via coordination; this is a known pattern the walker does not recognize.\"\n}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "diagnostic_mis_attribution",
+            "confidence": 90,
+            "reasoning": "The surrounding text mentions p型電晶體 (and even 前述p型電晶體), not n型電晶體 or 前述n型電晶體, so the walker pointed to the wrong span or constructed the wrong reference form.",
+            "raw": "{\"category\":\"diagnostic_mis_attribution\",\"confidence\":90,\"reasoning\":\"The surrounding text mentions p型電晶體 (and even 前述p型電晶體), not n型電晶體 or 前述n型電晶體, so the walker pointed to the wrong span or constructed the wrong reference form.\"}"
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": "Looking at the diagnostic payload:\n\n- `context_before`: `閘極構造之p型電晶體以及`\n- Term: `n型電晶體`\n- `context_after`: `，\\n前述p型電晶體具有：`\n\nThe context shows \"p型電晶體以及n型電晶體\" — this is a listing structure using 以及 (and/as well as), connecting p型電晶體 and n型電晶體. The n型電晶體 appears here for what seems to be the first time in this window without an introducing article (一/該). However, the term appears in a coordinate structure (\"p型電晶體以及n型電晶體\") which is a common introducing pattern — both items are being introduced togeth"
+          }
+        ]
+      },
+      {
+        "finding_key": "issue19_finding1",
+        "final_category": "ambig",
+        "agreement_level": "tiebreaker",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 85,
+            "reasoning": "The term 'p型電晶體' appears at char_offset 33 without an introducing quantifier or article in the visible context ('側設有具備全周閘極構造之' + term). The walker's reference form '前述p型電晶體' is the canonical introducing pattern, and the context_after shows '以及n型電晶體，\n前述p...' indicating the drafter only introduces the term retroactively after mentioning it. This is a genuine antecedent-basis gap.",
+            "raw": "{\n  \"category\": \"legit_drafting_error\",\n  \"confidence\": 85,\n  \"reasoning\": \"The term 'p型電晶體' appears at char_offset 33 without an introducing quantifier or article in the visible context ('側設有具備全周閘極構造之' + term). The walker's reference form '前述p型電晶體' is the canonical introducing pattern, and the context_after shows '以及n型電晶體，\\n前述p...' indicating the drafter only introduces the term retroactively after mentioning it. This is a genuine antecedent-basis gap.\"\n}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": ""
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": "Looking at the diagnostic payload:\n\n- `context_before`: `側設有具備全周閘極構造之`\n- term: `p型電晶體`\n- `context_after`: `以及n型電晶體，\\n前述p`\n\nThe context before the term is `具備全周閘極構造之`, which is a relative clause modifier ending in `之`, followed directly by `p型電晶體`. This is a construction like \"具備...之p型電晶體\" — meaning \"a p-type transistor having a gate-all-around structure.\" The `之` here is acting as a possessive/relative marker, and `p型電晶體` appears to be first introduced here without an explicit `一` (indefinite ar"
+          }
+        ]
+      },
+      {
+        "finding_key": "issue19_finding2",
+        "final_category": "ambig",
+        "agreement_level": "tiebreaker",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 92,
+            "reasoning": "The context_before ends with '前述' (aforementioned), which is a standard Chinese introducing article/determiner. The walker's reference_form '前述各n型通道層' matches exactly what appears in the surface text: '前述' + term '各n型通道層'. The term IS properly introduced in the visible window—the walker is double-flagging an already-introduced antecedent.",
+            "raw": "{\n  \"category\": \"walker_fp\",\n  \"confidence\": 92,\n  \"reasoning\": \"The context_before ends with '前述' (aforementioned), which is a standard Chinese introducing article/determiner. The walker's reference_form '前述各n型通道層' matches exactly what appears in the surface text: '前述' + term '各n型通道層'. The term IS properly introduced in the visible window—the walker is double-flagging an already-introduced antecedent.\"\n}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": ""
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": "Looking at the diagnostic payload:\n\n- The term is `各n型通道層`\n- The walker constructed reference form is `前述各n型通道層`\n- The `context_before` ends with `介隔著閘極絕緣膜覆蓋前述`\n- The `context_after` starts with `之全周。`\n\nThe surface text at the flagged position shows: `...覆蓋前述[各n型通道層]之全周。`\n\nThe word `前述` appears immediately before `各n型通道層` in the context_before, meaning the introducing/referential form `前述各n型通道層` IS present in the text at this exact location. The walker constructed `前述各n型通道層` as the reference for"
+          }
+        ]
+      },
+      {
+        "finding_key": "issue19_finding3",
+        "final_category": "walker_fp",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 92,
+            "reasoning": "The context_before ends with '前述' (aforementioned), which is a direct antecedent-introducing marker in Chinese. The term '各p型通道層' is immediately preceded by this introducing quantifier, so the walker's construction of '前述各p型通道層' as the reference form confirms the antecedent is already present in the surface text. This is a false positive.",
+            "raw": "{\n  \"category\": \"walker_fp\",\n  \"confidence\": 92,\n  \"reasoning\": \"The context_before ends with '前述' (aforementioned), which is a direct antecedent-introducing marker in Chinese. The term '各p型通道層' is immediately preceded by this introducing quantifier, so the walker's construction of '前述各p型通道層' as the reference form confirms the antecedent is already present in the surface text. This is a false positive.\"\n}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "walker_fp",
+            "confidence": 90,
+            "reasoning": "The context shows '覆蓋前述' immediately before the matched phrase, i.e. the surface text already uses the introducer '前述' for the p-type channel layers, so the walker incorrectly flagged an antecedent error.",
+            "raw": "{\"category\":\"walker_fp\",\"confidence\":90,\"reasoning\":\"The context shows '覆蓋前述' immediately before the matched phrase, i.e. the surface text already uses the introducer '前述' for the p-type channel layers, so the walker incorrectly flagged an antecedent error.\"}"
+          }
+        ]
+      },
+      {
+        "finding_key": "issue19_finding4",
+        "final_category": "ambig",
+        "agreement_level": "tiebreaker",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 92,
+            "reasoning": "The context_before already contains '前述' (aforesaid) immediately before the term's position, indicating the walker's own reference_form '前述n型通道層' is already present in the surface text. This is a false positive where the walker flagged a term that is already properly introduced with the very antecedent marker it constructed.",
+            "raw": "{\n  \"category\": \"walker_fp\",\n  \"confidence\": 92,\n  \"reasoning\": \"The context_before already contains '前述' (aforesaid) immediately before the term's position, indicating the walker's own reference_form '前述n型通道層' is already present in the surface text. This is a false positive where the walker flagged a term that is already properly introduced with the very antecedent marker it constructed.\"\n}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": ""
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": "Looking at the diagnostic payload:\n\n- `context_before`: `所記載之半導體裝置，前述`\n- Term: `n型通道層`\n- `context_after`: `，在周端面具有前述矽鍺層`\n\nThe context shows `前述n型通道層` — the introducing prefix `前述` appears immediately before the term in `context_before`. The walker constructed `前述n型通道層` as the reference form, and that exact form IS present in the text (the `前述` is at the end of `context_before`, directly adjacent to the term).\n\nThis means the term IS properly introduced with `前述`, and the walker is incorrectly fl"
+          }
+        ]
+      }
+    ],
+    "comment_posted": true,
+    "comment_preview": "**Autonomous triage** (2026-05-01 16:55 UTC) — cross-family LLM ensemble (Haiku 4.5 + gpt-5-mini, Sonnet 4.6 tiebreaker on disagreement). Per the `triage-report` skill: classification only; not solo-patching, not invoking `walker-round` (post-closeout walkers require ≥3 same-jurisdiction confirmed F"
+  },
+  "20": {
+    "title": "[report] specSupport",
+    "shape": "modern",
+    "classification": "modern_triaged",
+    "verdicts": [
+      {
+        "finding_key": "issue20_finding0",
+        "final_category": "walker_fp",
+        "agreement_level": "tiebreaker",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 92,
+            "reasoning": "The phrase '較前述矽層在前述' is a function-word/connector fragment combining comparative particles ('較', '在前述') with a noun. These are structural connectors that the drafter used to link clauses; the substantive technical content ('矽層' / silicon layer) is separately defined in the specification. The walker is flagging a partial syntactic construct rather than a missing technical term.",
+            "raw": "{\n  \"category\": \"walker_fp\",\n  \"confidence\": 92,\n  \"reasoning\": \"The phrase '較前述矽層在前述' is a function-word/connector fragment combining comparative particles ('較', '在前述') with a noun. These are structural connectors that the drafter used to link clauses; the substantive technical content ('矽層' / silicon layer) is separately defined in the specification. The walker is flagging a partial syntactic construct rather than a missing technical term.\"\n}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": ""
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "walker_fp",
+            "confidence": 95,
+            "reasoning": "The phrase '較前述矽層在前述' is clearly a function-word/comparative residue fragment (較...在前述) that results from over-aggressive tokenization, not a standalone technical term. It spans a comparative clause connector rather than any substantive technical concept requiring spec support.",
+            "raw": "{\"category\": \"walker_fp\", \"confidence\": 95, \"reasoning\": \"The phrase '較前述矽層在前述' is clearly a function-word/comparative residue fragment (較...在前述) that results from over-aggressive tokenization, not a standalone technical term. It spans a comparative clause connector rather than any substantive technical concept requiring spec support.\"}"
+          }
+        ]
+      }
+    ],
+    "comment_posted": true,
+    "comment_preview": "**Autonomous triage** (2026-05-01 16:55 UTC) — cross-family LLM ensemble (Haiku 4.5 + gpt-5-mini, Sonnet 4.6 tiebreaker on disagreement). Per the `triage-report` skill: classification only; not solo-patching, not invoking `walker-round` (post-closeout walkers require ≥3 same-jurisdiction confirmed F"
+  },
+  "21": {
+    "title": "[report] specSupport",
+    "shape": "modern",
+    "classification": "modern_triaged",
+    "verdicts": [
+      {
+        "finding_key": "issue21_finding0",
+        "final_category": "ambig",
+        "agreement_level": "tiebreaker",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 82,
+            "reasoning": "The phrase '蝕刻使膜厚' appears to be a function-word fragment or partial construct from a longer nominal phrase (likely '蝕刻使膜厚減少' meaning 'etching causes membrane thickness to decrease'). The walker captured only a partial grammatical unit; the substantive claim-supporting concept is '蝕刻使膜厚減少' (the full action), which the specification almost certainly describes via its constituent concepts rather than this exact substring.",
+            "raw": "{\n  \"category\": \"walker_fp\",\n  \"confidence\": 82,\n  \"reasoning\": \"The phrase '蝕刻使膜厚' appears to be a function-word fragment or partial construct from a longer nominal phrase (likely '蝕刻使膜厚減少' meaning 'etching causes membrane thickness to decrease'). The walker captured only a partial grammatical unit; the substantive claim-supporting concept is '蝕刻使膜厚減少' (the full action), which the specification almost certainly describes via its constituent concepts rather than this exact substring.\"\n}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": ""
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": "Looking at the diagnostic payload:\n\n- The phrase is `蝕刻使膜厚`\n- Context before: `前述犧牲片層從露出面進行`\n- Context after: `減少，並且形成對在前述矽`\n\nThe full reconstructed claim segment reads: `前述犧牲片層從露出面進行蝕刻使膜厚減少，並且形成對在前述矽...`\n\nThis phrase `蝕刻使膜厚` appears to be a bridging fragment that spans what should be read as `進行蝕刻` (perform etching) + `使膜厚減少` (reduce film thickness). The tokenization has captured a cross-boundary fragment that combines the end of one natural phrase with the beginning of another — `蝕刻` (etching)"
+          }
+        ]
+      },
+      {
+        "finding_key": "issue21_finding1",
+        "final_category": "walker_fp",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 92,
+            "reasoning": "對在 is a function-word fragment (preposition + locative marker) typical of tokenization residue. The surrounding context shows 對在前述矽層之間, which is a coherent phrase meaning 'between the aforementioned silicon layers'. The walker appears to have over-segmented a grammatical unit rather than flagged a substantive technical term.",
+            "raw": "{\n  \"category\": \"walker_fp\",\n  \"confidence\": 92,\n  \"reasoning\": \"對在 is a function-word fragment (preposition + locative marker) typical of tokenization residue. The surrounding context shows 對在前述矽層之間, which is a coherent phrase meaning 'between the aforementioned silicon layers'. The walker appears to have over-segmented a grammatical unit rather than flagged a substantive technical term.\"\n}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "walker_fp",
+            "confidence": 95,
+            "reasoning": "'對在' is a short function-word fragment (residual token) rather than a substantive technical term; this is the kind of partial fragment the walker commonly misflags due to tokenization rather than a true unsupported claim term.",
+            "raw": "{\"category\":\"walker_fp\",\"confidence\":95,\"reasoning\":\"'對在' is a short function-word fragment (residual token) rather than a substantive technical term; this is the kind of partial fragment the walker commonly misflags due to tokenization rather than a true unsupported claim term.\"}"
+          }
+        ]
+      }
+    ],
+    "comment_posted": true,
+    "comment_preview": "**Autonomous triage** (2026-05-01 16:56 UTC) — cross-family LLM ensemble (Haiku 4.5 + gpt-5-mini, Sonnet 4.6 tiebreaker on disagreement). Per the `triage-report` skill: classification only; not solo-patching, not invoking `walker-round` (post-closeout walkers require ≥3 same-jurisdiction confirmed F"
+  },
+  "23": {
+    "title": "[report] check.tw.claims.antecedentBasis.amend",
+    "shape": "modern",
+    "classification": "modern_triaged",
+    "verdicts": [
+      {
+        "finding_key": "issue23_finding0",
+        "final_category": "ambig",
+        "agreement_level": "tiebreaker",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 85,
+            "reasoning": "The context shows 'p型電晶體以及[n型電晶體]' where n型電晶體 is conjoined via 以及 without an introducing article (一/該/前述). The walker's reference_form '前述n型電晶體' correctly reflects what should have been used. The term lacks antecedent introduction in the visible span and matches the canonical reference shape.",
+            "raw": "{\n  \"category\": \"legit_drafting_error\",\n  \"confidence\": 85,\n  \"reasoning\": \"The context shows 'p型電晶體以及[n型電晶體]' where n型電晶體 is conjoined via 以及 without an introducing article (一/該/前述). The walker's reference_form '前述n型電晶體' correctly reflects what should have been used. The term lacks antecedent introduction in the visible span and matches the canonical reference shape.\"\n}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": ""
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": "Looking at the diagnostic payload:\n\n- `context_before`: `閘極構造之p型電晶體以及`\n- Term: `n型電晶體`\n- `context_after`: `，\\n前述p型電晶體具有：`\n\nThe term `n型電晶體` appears after `p型電晶體以及`, suggesting this is a list structure like \"...p型電晶體以及n型電晶體，\". The walker's `reference_form` is `前述n型電晶體`, meaning it expects a prior introduction. \n\nThe context shows `n型電晶體` appearing in what looks like an enumeration (\"p型電晶體以及n型電晶體\"), which is a first-introduction context (no 前述/該 prefix on the term itself). The subsequent line uses"
+          }
+        ]
+      },
+      {
+        "finding_key": "issue23_finding1",
+        "final_category": "ambig",
+        "agreement_level": "tiebreaker",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 82,
+            "reasoning": "The term 'p型電晶體' appears at char_offset 33 in claim 1 with context showing '側設有具備全周閘極構造之[p型電晶體]以及n型電晶體'. The surface text lacks any introducing quantifier (一、該、前述) before 'p型電晶體'. The walker's reference_form '前述p型電晶體' is the canonical introducing form expected in TW/CN practice. The subsequent context ('前述p') indicates the drafter only introduces the term later, not at first mention—a genuine antecedent-basis failure.",
+            "raw": "{\n  \"category\": \"legit_drafting_error\",\n  \"confidence\": 82,\n  \"reasoning\": \"The term 'p型電晶體' appears at char_offset 33 in claim 1 with context showing '側設有具備全周閘極構造之[p型電晶體]以及n型電晶體'. The surface text lacks any introducing quantifier (一、該、前述) before 'p型電晶體'. The walker's reference_form '前述p型電晶體' is the canonical introducing form expected in TW/CN practice. The subsequent context ('前述p') indicates the drafter only introduces the term later, not at first mention—a genuine antecedent-basis failure.\"\n}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": ""
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": "Looking at the diagnostic payload:\n\n- `context_before`: `側設有具備全周閘極構造之`\n- Term: `p型電晶體`\n- `context_after`: `以及n型電晶體，\\n前述p`\n\nThe context before the term is `側設有具備全周閘極構造之p型電晶體`, which reads as \"...is provided with p型電晶體 having a gate-all-around structure.\" This is the **first introduction** of `p型電晶體` — the phrase `具備全周閘極構造之p型電晶體` uses the `之` construction, which is an introducing/descriptive form (equivalent to \"a p-type transistor having...\"), not a back-reference.\n\nThe walker then sees `前述p型電晶體`"
+          }
+        ]
+      },
+      {
+        "finding_key": "issue23_finding2",
+        "final_category": "walker_fp",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 92,
+            "reasoning": "The context_before ends with '前述' (\"aforementioned\"), which is a proper introducing article in Chinese patent language. The walker's reference_form '前述各n型通道層' matches exactly what appears in the surface text: '前述' + the term '各n型通道層'. This is a correct antecedent introduction that the walker has paradoxically flagged as missing.",
+            "raw": "{\n  \"category\": \"walker_fp\",\n  \"confidence\": 92,\n  \"reasoning\": \"The context_before ends with '前述' (\\\"aforementioned\\\"), which is a proper introducing article in Chinese patent language. The walker's reference_form '前述各n型通道層' matches exactly what appears in the surface text: '前述' + the term '各n型通道層'. This is a correct antecedent introduction that the walker has paradoxically flagged as missing.\"\n}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "walker_fp",
+            "confidence": 90,
+            "reasoning": "The context shows '覆蓋前述' immediately before '各n型通道層', so the term is already introduced with 前述; the walker wrongly flagged an antecedent error.",
+            "raw": "{\"category\":\"walker_fp\",\"confidence\":90,\"reasoning\":\"The context shows '覆蓋前述' immediately before '各n型通道層', so the term is already introduced with 前述; the walker wrongly flagged an antecedent error.\"}"
+          }
+        ]
+      },
+      {
+        "finding_key": "issue23_finding3",
+        "final_category": "ambig",
+        "agreement_level": "tiebreaker",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 92,
+            "reasoning": "The context_before ends with '前述' (aforementioned), which is a classic introducing article in Chinese patents. The walker's reference_form '前述各p型通道層' matches the surface text exactly, but the term is already introduced by the preceding '前述' quantifier — the walker appears to have duplicated or failed to recognize this existing antecedent marker in its diagnostic output.",
+            "raw": "{\n  \"category\": \"walker_fp\",\n  \"confidence\": 92,\n  \"reasoning\": \"The context_before ends with '前述' (aforementioned), which is a classic introducing article in Chinese patents. The walker's reference_form '前述各p型通道層' matches the surface text exactly, but the term is already introduced by the preceding '前述' quantifier — the walker appears to have duplicated or failed to recognize this existing antecedent marker in its diagnostic output.\"\n}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": ""
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": "Looking at the diagnostic payload:\n\n- `context_before`: `介隔著閘極絕緣膜覆蓋前述`\n- term: `各p型通道層`\n- `context_after`: `之全周，\\n前述n型電晶體`\n\nThe context shows `覆蓋前述各p型通道層之全周`, which means the full phrase at the offset is `前述各p型通道層`. The term `各p型通道層` appears with `前述` immediately preceding it in the context_before, forming `前述各p型通道層` — which is exactly the introducing/referential form. The walker constructed `前述各p型通道層` as the reference form, and indeed `前述` is already present in context_before right before the t"
+          }
+        ]
+      },
+      {
+        "finding_key": "issue23_finding4",
+        "final_category": "ambig",
+        "agreement_level": "tiebreaker",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 95,
+            "reasoning": "The context_before contains '前述' immediately before the term offset, which is a standard introducing quantifier in TW/CN practice. The walker's reference_form '前述n型通道層' matches exactly what appears in the surface text, confirming the antecedent IS properly introduced via '前述' — the walker incorrectly flagged a valid introduction.",
+            "raw": "{\n  \"category\": \"walker_fp\",\n  \"confidence\": 95,\n  \"reasoning\": \"The context_before contains '前述' immediately before the term offset, which is a standard introducing quantifier in TW/CN practice. The walker's reference_form '前述n型通道層' matches exactly what appears in the surface text, confirming the antecedent IS properly introduced via '前述' — the walker incorrectly flagged a valid introduction.\"\n}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": ""
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": "Looking at the diagnostic payload:\n\n- `context_before` ends with `前述`, and the term is `n型通道層`\n- So the full surface text at the offset reads: `...前述n型通道層...`\n- The walker's `reference_form` is `前述n型通道層`\n- The context shows `前述` immediately preceding the term, meaning this is a proper antecedent reference form already present in the text\n\nThe walker is flagging `n型通道層` as lacking antecedent, but the surface text clearly shows `前述n型通道層` — the introducing reference word `前述` is already there. This"
+          }
+        ]
+      }
+    ],
+    "comment_posted": true,
+    "comment_preview": "**Autonomous triage** (2026-05-01 16:57 UTC) — cross-family LLM ensemble (Haiku 4.5 + gpt-5-mini, Sonnet 4.6 tiebreaker on disagreement). Per the `triage-report` skill: classification only; not solo-patching, not invoking `walker-round` (post-closeout walkers require ≥3 same-jurisdiction confirmed F"
+  },
+  "24": {
+    "title": "[report] check.tw.claims.specSupport.amend",
+    "shape": "modern",
+    "classification": "modern_triaged",
+    "verdicts": [
+      {
+        "finding_key": "issue24_finding0",
+        "final_category": "walker_fp",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 92,
+            "reasoning": "The phrase '較前述矽層在前述' is a function-word fragment containing multiple anaphoric/deictic elements ('較前述' = 'compared to aforementioned', '在前述' = 'in aforementioned'). These are cohesion markers that typically appear fragmented in claim parsing and do not represent substantive technical terms that must be explicitly defined in the specification.",
+            "raw": "{\n  \"category\": \"walker_fp\",\n  \"confidence\": 92,\n  \"reasoning\": \"The phrase '較前述矽層在前述' is a function-word fragment containing multiple anaphoric/deictic elements ('較前述' = 'compared to aforementioned', '在前述' = 'in aforementioned'). These are cohesion markers that typically appear fragmented in claim parsing and do not represent substantive technical terms that must be explicitly defined in the specification.\"\n}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "walker_fp",
+            "confidence": 90,
+            "reasoning": "The phrase appears to be a fragment/functional-word residue ('較前述' and '在前述') concatenated with '矽層', not a substantive technical term; this looks like a partial/malformed fragment the walker wrongly treated as a standalone phrase.",
+            "raw": "{\"category\":\"walker_fp\",\"confidence\":90,\"reasoning\":\"The phrase appears to be a fragment/functional-word residue ('較前述' and '在前述') concatenated with '矽層', not a substantive technical term; this looks like a partial/malformed fragment the walker wrongly treated as a standalone phrase.\"}"
+          }
+        ]
+      },
+      {
+        "finding_key": "issue24_finding1",
+        "final_category": "ambig",
+        "agreement_level": "three_way_split",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 92,
+            "reasoning": "The phrase '蝕刻使膜厚' is a function-word compound fragment (蝕刻 [etching] + 使 [causes/makes] + 膜厚 [membrane thickness]). This is a grammatical construction where the spec likely describes etching and membrane thickness separately or as '蝕刻膜厚' without the intervening 使, which the walker's tier checks would correctly match. The 使 is a light relational verb that the walker likely tokenized separately, causing false fragmentation.",
+            "raw": "{\n  \"category\": \"walker_fp\",\n  \"confidence\": 92,\n  \"reasoning\": \"The phrase '蝕刻使膜厚' is a function-word compound fragment (蝕刻 [etching] + 使 [causes/makes] + 膜厚 [membrane thickness]). This is a grammatical construction where the spec likely describes etching and membrane thickness separately or as '蝕刻膜厚' without the intervening 使, which the walker's tier checks would correctly match. The 使 is a light relational verb that the walker likely tokenized separately, causing false fragmentation.\"\n}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "ambig",
+            "confidence": 0,
+            "reasoning": "[parse error: Expecting value: line 1 column 1 (char 0)]",
+            "raw": ""
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "diagnostic_mis_attribution",
+            "confidence": 72,
+            "reasoning": "The phrase '蝕刻使膜厚' appears to be an artifact of aggressive tokenization that incorrectly spliced together parts of a longer claim sentence (likely something like '蝕刻...使膜厚...' or a boundary between clauses), rather than a genuine technical term or coherent phrase used by the drafter. The lack of context (N/A offsets, no before/after text) further suggests the walker misparsed the token boundary, making this a mis-attribution rather than a substantive drafting error.",
+            "raw": "{\"category\": \"diagnostic_mis_attribution\", \"confidence\": 72, \"reasoning\": \"The phrase '蝕刻使膜厚' appears to be an artifact of aggressive tokenization that incorrectly spliced together parts of a longer claim sentence (likely something like '蝕刻...使膜厚...' or a boundary between clauses), rather than a genuine technical term or coherent phrase used by the drafter. The lack of context (N/A offsets, no before/after text) further suggests the walker misparsed the token boundary, making this a mis-attribution rather than a substantive drafting error.\"}"
+          }
+        ]
+      },
+      {
+        "finding_key": "issue24_finding2",
+        "final_category": "walker_fp",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 92,
+            "reasoning": "對在 is a function-word fragment (preposition + locative particle) characteristic of Chinese patent claim syntax, not a substantive technical term. Such residual particles commonly appear as tokenization artifacts and do not represent drafting defects under TW §26(3).",
+            "raw": "{\n  \"category\": \"walker_fp\",\n  \"confidence\": 92,\n  \"reasoning\": \"對在 is a function-word fragment (preposition + locative particle) characteristic of Chinese patent claim syntax, not a substantive technical term. Such residual particles commonly appear as tokenization artifacts and do not represent drafting defects under TW §26(3).\"\n}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "walker_fp",
+            "confidence": 90,
+            "reasoning": "'對在' is a short function-word fragment (likely a tokenization/segmentation artifact) rather than a substantive technical term, so the walker is likely misflagging a partial phrase rather than detecting a true spec-absence.",
+            "raw": "{\"category\":\"walker_fp\",\"confidence\":90,\"reasoning\":\"'對在' is a short function-word fragment (likely a tokenization/segmentation artifact) rather than a substantive technical term, so the walker is likely misflagging a partial phrase rather than detecting a true spec-absence.\"}"
+          }
+        ]
+      }
+    ],
+    "comment_posted": true,
+    "comment_preview": "**Autonomous triage** (2026-05-01 16:57 UTC) — cross-family LLM ensemble (Haiku 4.5 + gpt-5-mini, Sonnet 4.6 tiebreaker on disagreement). Per the `triage-report` skill: classification only; not solo-patching, not invoking `walker-round` (post-closeout walkers require ≥3 same-jurisdiction confirmed F"
+  },
+  "25": {
+    "title": "[report] check.tw.claims.refNumeralParens.amend",
+    "shape": "modern",
+    "classification": "fix_shipped_close_pending",
+    "verdicts": [],
+    "comment_posted": true,
+    "comment_preview": "**Autonomous triage** (2026-05-01 16:57 UTC): fix verifiably shipped after this report.\n\n- Report build: `b5f3648`\n- Fix commit(s): `cf1884a`\n- Verified `git merge-base --is-ancestor b5f3648 cf1884a` returns true — fix descends from the build the user reported on.\n\n**Recommended action:** maintainer"
+  }
+}
