@@ -25,7 +25,6 @@ import random
 import sys
 import time
 from collections import Counter, defaultdict
-from dataclasses import asdict
 from pathlib import Path
 from typing import Optional
 
@@ -37,12 +36,10 @@ PATENTLINT_ROOT = Path("/Users/chrischen/Documents/Projects/Patent-Lint")
 sys.path.insert(0, str(PATENTLINT_ROOT / "src"))
 
 from patentlint.analysis.cn_claims import check_antecedent_basis_cn  # noqa: E402
-from patentlint.analysis.tw_claims import check_antecedent_basis  # noqa: E402
 from patentlint.parser.docx_loader import load_docx_cn  # noqa: E402
 from patentlint.parser.sections_cn import extract_cn_sections_from_docx  # noqa: E402
 
 from .llm_judges import (  # noqa: E402
-    EnsembleVerdict,
     judge_finding,
     load_keys,
     verdict_to_dict,
@@ -83,8 +80,8 @@ def stratified_sample(labels: list[dict], target_n: int, rng: random.Random) -> 
     Each stratum gets ~target_n/3 entries; pad from largest stratum if any short.
     """
     by_stratum: dict[str, list[dict]] = defaultdict(list)
-    for l in labels:
-        cat = l.get("category", "")
+    for lab in labels:
+        cat = lab.get("category", "")
         # Exclude raw 'unclassified' (Stage 3 seed); the Stage 4 auto-classifier
         # re-tagged 423 labels from unclassified into walker_fp.* / miss_intro.* etc
         # but did NOT update confidence='seed' (per metadata notes 2026-04-16).
@@ -94,7 +91,7 @@ def stratified_sample(labels: list[dict], target_n: int, rng: random.Random) -> 
         mapped = map_label_to_ensemble(cat)
         if mapped is None:
             continue
-        by_stratum[mapped].append(l)
+        by_stratum[mapped].append(lab)
 
     per = max(1, target_n // 3)
     selected: list[dict] = []
@@ -107,10 +104,10 @@ def stratified_sample(labels: list[dict], target_n: int, rng: random.Random) -> 
         # Pad from largest stratum
         biggest = max(by_stratum.values(), key=len, default=[])
         already = {id(s) for s in selected}
-        for l in biggest:
-            if id(l) in already:
+        for lab in biggest:
+            if id(lab) in already:
                 continue
-            selected.append(l)
+            selected.append(lab)
             if len(selected) >= target_n:
                 break
 
@@ -202,8 +199,8 @@ async def calibrate_cn(
     """
     fixture_paths = load_cn_fixture_paths()
     by_fixture: dict[str, list[dict]] = defaultdict(list)
-    for l in sampled:
-        by_fixture[l["fixture"]].append(l)
+    for lab in sampled:
+        by_fixture[lab["fixture"]].append(lab)
 
     # Phase 1: pre-load walker output for each unique fixture (sequential, fast)
     walker_outputs: dict[str, list[dict] | str] = {}
@@ -222,8 +219,8 @@ async def calibrate_cn(
     for fixture_key, labels_in_fixture in by_fixture.items():
         out = walker_outputs[fixture_key]
         if isinstance(out, str):
-            for l in labels_in_fixture:
-                work.append((l, None, out))
+            for lab in labels_in_fixture:
+                work.append((lab, None, out))
             continue
         for label in labels_in_fixture:
             wm = find_walker_match(out, label)
@@ -421,13 +418,13 @@ def render_report(thresholds: dict, results: list[dict], elapsed_sec: float) -> 
         lines.append("| Fixture | Claim | Term | Ground truth | Ensemble | Sketch reason |")
         lines.append("|---|---|---|---|---|---|")
         for r in disagreements[:20]:  # top 20
-            l = r["label"]
+            lab = r["label"]
             v = r["verdict"]
             first_reason = v["judgments"][0]["reasoning"].replace("\n", " ").replace("|", "\\|")[:90]
             lines.append(
-                f"| {l['fixture'][:25]} | {l['claim_id']} | "
-                f"`{(l.get('term') or '')[:18]}` | `{r['ground_truth_mapped']}` "
-                f"({l['category']}) | `{v['final_category']}` | {first_reason} |"
+                f"| {lab['fixture'][:25]} | {lab['claim_id']} | "
+                f"`{(lab.get('term') or '')[:18]}` | `{r['ground_truth_mapped']}` "
+                f"({lab['category']}) | `{v['final_category']}` | {first_reason} |"
             )
         if len(disagreements) > 20:
             lines.append(f"| _...{len(disagreements)-20} more — see step0_results.json_ | | | | | |")

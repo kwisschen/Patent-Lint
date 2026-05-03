@@ -28,7 +28,6 @@ import asyncio
 import json
 from dataclasses import dataclass, asdict, field
 from pathlib import Path
-from typing import Literal
 
 from anthropic import AsyncAnthropic
 from openai import AsyncOpenAI
@@ -63,7 +62,7 @@ VALID_CATEGORIES: set[str] = {
 # disagreement (≥15% finding-level mismatches). Quality preserved or improved
 # (fewer spurious escalations on noise); cost roughly halved on large-draft
 # corpora.
-import math
+import math  # noqa: E402
 
 
 def opus_escalation_threshold(findings_count: int) -> int:

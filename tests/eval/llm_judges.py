@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import asyncio
 import json
-import os
 from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import Literal
