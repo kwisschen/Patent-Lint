@@ -1501,13 +1501,37 @@ def clean_noun_phrase_cn(text: str) -> str:
     return current
 
 
+# R32 (2026-05-04): regex-based at-least-N strip + 其-possessive strip
+# (CN parity with TW R32). Existing _LEADING_QUANTIFIER_DENYLIST_CN
+# covers 至少一/至少一个/至少两/至少两个 only; 至少三个X / 至少100个X
+# stranded. 其X (its X) possessive captured by F-anchor patterns when
+# the canonical intro is bare X (introduced as feature of prior subject).
+_AT_LEAST_N_PREFIX_RE_CN: re.Pattern[str] = re.compile(
+    r'^至少[一二三四五六七八九十百0-9]+个'
+)
+_POSSESSIVE_其_PREFIX_RE_CN: re.Pattern[str] = re.compile(
+    r'^其(?=[一-鿿]{2,})'
+)
+
+
 def strip_leading_quantifier_cn(text: str) -> str:
-    """Strip one matching leading quantifier (ADR-095 Rule 2)."""
+    """Strip one matching leading quantifier (ADR-095 Rule 2).
+
+    R32 (2026-05-04): regex-based 至少N个 strip applied first; 其-possessive
+    strip applied last with ≥2 CJK lookahead so 其余 (2 chars) is protected.
+    """
     if not text:
         return text
+    m = _AT_LEAST_N_PREFIX_RE_CN.match(text)
+    if m and len(text) - m.end() >= 2:
+        text = text[m.end():]
     for q in _LEADING_QUANTIFIER_DENYLIST_CN:
         if text.startswith(q) and len(text) > len(q):
-            return text[len(q):]
+            text = text[len(q):]
+            break
+    m = _POSSESSIVE_其_PREFIX_RE_CN.match(text)
+    if m:
+        text = text[m.end():]
     return text
 
 
@@ -2586,11 +2610,74 @@ def extract_introductions_cn(
     supplementary = _extract_supplementary_intros_cn(claim.text)
     for orig, norm in supplementary:
         norm = strip_leading_verb_cn(norm)
-        if norm and norm not in seen:
-            seen.add(norm)
-            pairs.append((orig, norm))
+        if not norm or norm in seen:
+            continue
+        # R32 (2026-05-04): TW parity — drop intros with newline/colon
+        # (capture crossed paragraph or label boundary). Spec-support
+        # reads intros directly so guard at extraction time.
+        if '\n' in norm or '：' in norm or ':' in norm:
+            continue
+        seen.add(norm)
+        pairs.append((orig, norm))
+
+    # R32 (2026-05-04): F-head-indep — capture rightmost head noun from
+    # `一种<modifier>的<HEAD>，` independent-claim preambles. CN parity
+    # with TW R32. Default `_INTRO_PATTERN_CN` excludes `的` from the
+    # noun class, so a long preamble like `用于X的Y的装置` only captures
+    # fragment intros, leaving the canonical head `装置` unregistered
+    # for downstream `所述装置` references in dependent claims.
+    #
+    # Conflict guard: skip registration when claim text contains a
+    # `<head><positional-suffix>` form (装置侧, 处理器端) that would be
+    # a distinct §112 entity. Without this, prefix-match resolves
+    # `所述装置侧` → `装置` and masks legit drafting errors (CN115485995B
+    # c121 protect:true label).
+    for m in _F_HEAD_INDEP_RE_CN.finditer(claim.text):
+        head = m.group('head')
+        if not head or head in seen:
+            continue
+        if _f_head_indep_conflict_cn(head, claim.text):
+            continue
+        seen.add(head)
+        pairs.append((m.group(0), head))
 
     return pairs
+
+
+# R32 (2026-05-04): F-head-indep regex (CN parity with TW). Captures
+# rightmost head noun in `一种<modifier>的<HEAD>，` preambles.
+# Conflict guard applied at registration time (not in regex): the head
+# is rejected if `<head><1-3 CJK>` appears elsewhere in the claim text,
+# since prefix-match resolution would over-resolve longer references
+# onto the captured head (CN115485995B c121: `装置 + 装置侧` collision
+# masks legit drafting error). The narrower regex (lookahead trailing
+# verbs) was tried but lost ~95 walker_fp silences in CN, ~135 in TW;
+# the conflict-guard approach preserves silence yield while protecting
+# protect:true labels.
+_F_HEAD_INDEP_RE_CN: re.Pattern[str] = re.compile(
+    r'一种(?:[^，。；,;:：]{4,80})的'
+    r'(?P<head>[一-鿿]{2,12})'
+    r'(?=[，,。；;:：])'
+)
+
+
+_F_HEAD_POSITIONAL_SUFFIX_RE_CN: re.Pattern[str] = re.compile(
+    r'(?:侧|端|部|面|段|层|区|际|际面|底|顶|前|后|左|右|内|外|上|下|侧面|端面|端部|底部|顶部|前面|后面|左面|右面|内部|外部|上部|下部|内侧|外侧|内端|外端|内层|外层|内面|外面)'
+)
+
+
+def _f_head_indep_conflict_cn(head: str, claim_text: str) -> bool:
+    """True if registering `head` would cause prefix-match over-resolution.
+
+    R32 (2026-05-04): scan for `<head><positional-suffix>` patterns where
+    the suffix indicates a DIFFERENT entity (装置侧 vs 装置, 处理器端 vs
+    处理器). Positional suffixes (侧/端/部/面/段/底/顶/前/后/左/右/内/外/上/下
+    + compounds) frequently create distinct claim elements; prefix-match
+    would wrongly resolve them. Compound-noun patterns (装置中的, 装置包括)
+    don't trigger because they require additional non-suffix CJK after.
+    """
+    pattern = re.compile(re.escape(head) + r'(?:' + _F_HEAD_POSITIONAL_SUFFIX_RE_CN.pattern + r')(?:[，,。；;:： \t]|$)')
+    return bool(pattern.search(claim_text))
 
 
 def full_ref_starts_with_plural_cn(text: str) -> bool:
@@ -2891,7 +2978,20 @@ def check_antecedent_basis_cn(
             if "权利要求" in normalized_term:
                 continue
 
+            # R32 (2026-05-04): TW parity — citation boilerplate filter
+            # (任一项 stranded after `权利要求` substring removal would
+            # otherwise pass — but multi-dep refs like `任一项所述的X`
+            # produce term=`任一项` directly when the dep regex misses).
+            if "任一项" in normalized_term or "申请专利范围" in normalized_term:
+                continue
+
             if len(normalized_term) == 1:
+                continue
+
+            # R32 (2026-05-04): TW parity — newline/colon filter. F-anchor
+            # captures crossing paragraph or label boundaries leak garbage
+            # into spec-support too via shared extract_introductions_cn.
+            if '\n' in normalized_term or '：' in normalized_term or ':' in normalized_term:
                 continue
 
             if _FORMULA_ORDINAL_RE_CN.match(normalized_term):
