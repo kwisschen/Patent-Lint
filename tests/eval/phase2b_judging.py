@@ -82,7 +82,16 @@ import re
 _CN_CLAIM_NUM_RE = re.compile(r"^\s*(\d+)\s*[\.、．]")
 _CN_DEP_RE = re.compile(r"如?权利要求(\d+)|根据权利要求(\d+)")
 _TW_CLAIM_NUM_RE = re.compile(r"^\s*(\d+)\s*[\.、．]")
-_TW_DEP_RE = re.compile(r"如(?:申請專利範圍第)?[第]?(\d+)[項所]|根據[第]?(\d+)項")
+# R31 (2026-05-03): TW dep regex extended to match modern register
+# `如請求項<N>之<noun>` and `如請求項<N>所述之<noun>` shapes (e.g.,
+# `如請求項1之方法` / `如請求項1所述之方法`). Original regex required
+# `[項所]` immediately after the digit, missing entire dependent claim
+# population in TW corpus. Same fix in tests/eval/round1_corpus_harness.py.
+_TW_DEP_RE = re.compile(
+    r"如(?:申請專利範圍第)?[第]?(\d+)(?:[項所之]|所述)"
+    r"|根據[第]?(\d+)項"
+    r"|請求項[第]?(\d+)"
+)
 
 
 def _parse_claim_text(
