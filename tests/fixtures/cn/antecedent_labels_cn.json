@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 29,
+    "current_round": 30,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -1769,8 +1769,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_30_capture_side_stack",
+      "round": 30
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -2117,8 +2117,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_30_capture_side_stack",
+      "round": 30
     },
     {
       "fixture": "CN114357105B",
@@ -2573,8 +2573,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_30_capture_side_stack",
+      "round": 30
     },
     {
       "fixture": "CN114357105B",
@@ -11777,8 +11777,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_30_capture_side_stack",
+      "round": 30
     },
     {
       "fixture": "CN115952274B",
@@ -12941,8 +12941,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | parser-fix migration: c45→c46",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_30_capture_side_stack",
+      "round": 30
     },
     {
       "fixture": "CN115952274B",
