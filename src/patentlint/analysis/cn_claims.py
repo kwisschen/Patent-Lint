@@ -1436,11 +1436,30 @@ def clean_noun_phrase_cn(text: str) -> str:
     )
     min_absolute_idx = 1 if is_one_char_noun_prefix else 2
 
+    # R31 (2026-05-03) tight noun-suffix guard for compound nouns where
+    # the verb is part of a real noun compound (verb + noun-suffix). Mirror
+    # of TW R31. Restricted by:
+    #   1. verb in high-collision whitelist (decision/sense/identify class)
+    #   2. char immediately after verb is a noun-suffix
+    #   3. TOTAL TEXT LENGTH ≤ 8 chars (typical compound noun max)
+    _R31_NOUN_COMPOUND_VERBS_CN = {
+        '决定', '感测', '侦测', '监测', '辨识', '识别', '解析',
+        '处理', '控制', '驱动', '检出', '判定', '计算', '生成',
+        '输出', '输入', '存储', '存取', '读取', '写入',
+    }
     earliest_idx: int | None = None
     for verb in _INTERIOR_VERB_BOUNDARIES_CN:
         idx = search_text.find(verb)
         if idx >= 0 and (idx + search_offset) >= min_absolute_idx:
             absolute_idx = idx + search_offset
+            # R31 noun-compound guard (length-bounded): skip cut if verb is
+            # in whitelist, char after is noun-suffix, total len ≤ 8.
+            if (verb in _R31_NOUN_COMPOUND_VERBS_CN
+                    and len(text) <= 8):
+                next_char_pos = absolute_idx + len(verb)
+                if (next_char_pos < len(text)
+                        and text[next_char_pos] in _F10_SINGLE_CHAR_SUFFIXES_CN):
+                    continue  # 对象决定+部 etc. (text length ≤ 8)
             if earliest_idx is None or absolute_idx < earliest_idx:
                 earliest_idx = absolute_idx
 
