@@ -171,9 +171,9 @@ def run_gate1():
     print(f"  TW spec_support confirmed walker_fps: {spec_support_confirmed}")
     print(f"  TW antecedent confirmed walker_fps: {antecedent_confirmed}")
     if spec_support_confirmed >= 3:
-        print(f"  ✅ TW spec_support meets ≥3 trigger threshold — walker-round invocation candidate")
+        print("  ✅ TW spec_support meets ≥3 trigger threshold — walker-round invocation candidate")
     if antecedent_confirmed >= 3:
-        print(f"  ✅ TW antecedent meets ≥3 trigger threshold")
+        print("  ✅ TW antecedent meets ≥3 trigger threshold")
 
 
 if __name__ == "__main__":
