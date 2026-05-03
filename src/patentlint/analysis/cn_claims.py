@@ -1762,8 +1762,13 @@ _BARE_AFTER_VERB_PATTERN_CN = re.compile(
 )
 
 # F11: colon-anchored list-after-包括/包含/含有 (WQ8 / R3).
+# R31 (2026-05-03): F11 anchor verb set extended to cover broader Pattern B
+# trigger vocabulary observed in round-1 corpus. CNIPA drafters use 具有
+# /具备/设有/设置/包括以下/还包括/进一步包括/还具有 as Pattern B intro
+# anchors, not just 包括/包含/含有. Each addition gated separately against
+# protect:true labels.
 _F11_COLON_LIST_ANCHOR_CN: re.Pattern[str] = re.compile(
-    r'(?:包括|包含|含有)[：:]\s*([^。]+)'
+    r'(?:包括以下|还包括|还包含|进一步包括|进一步包含|包括|包含|含有|具有|具备|设有)[：:]\s*([^。]+)'
 )
 # R29 (2026-05-03): regex no longer excludes `；` so the capture spans the
 # whole list (bounded by `。`). Caller in _extract_supplementary_intros_cn
@@ -1779,7 +1784,8 @@ _F11_LIST_SPLIT_CN: re.Pattern[str] = re.compile(r'[、，,和与及]')
 # requires the enum-list shape so single-noun `包括Y` doesn't fire
 # (that case belongs to F6 / elsewhere).
 _F11_NO_COLON_LIST_ANCHOR_CN: re.Pattern[str] = re.compile(
-    r'(?:包括|包含|含有)'
+    # R31 (2026-05-03): mirror of F11_COLON anchor verb extension.
+    r'(?:包括以下|还包括|还包含|进一步包括|进一步包含|包括|包含|含有|具有|具备|设有)'
     r'([\u4e00-\u7683\u7685-\u9fff]{2,}(?:、[\u4e00-\u7683\u7685-\u9fff]{2,})+)'
 )
 
