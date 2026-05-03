@@ -1,0 +1,184 @@
+{
+  "review_date": "2026-05-02",
+  "reviewer": "Christopher Chen",
+  "review_context": "Phase 2a borderline label validation — pre-Phase-2b sanity check on the 13 cases where label.protect=True but ensemble final ≠ legit_drafting_error",
+  "reviewed_count": 13,
+  "kept_count": 2,
+  "demoted_count": 11,
+  "ambig_count": 0,
+  "labels_file_round": 28,
+  "kept_cases": [
+    {
+      "fixture": "110P000368US-JP,KR案派譯版-FV",
+      "claim_id": 2,
+      "term": "使用者介面",
+      "reference_form": "該使用者介面",
+      "rationale": "Patent claim antecedent requires exact match (with limited legit permutations). Drafter mistyped 該使用者裝置 as 該使用者介面 in claim 1 and propagated into claim 2. Walker correctly flagged."
+    },
+    {
+      "fixture": "110P000631US.JP.DE派譯版-FV",
+      "claim_id": 11,
+      "term": "第一銜接部銜接(222)",
+      "reference_form": "所述第一銜接部銜接(222)",
+      "rationale": "Drafter typo: numeral (222) misplaced after verb 銜接 instead of after noun 第一銜接部. Compare correct form `所述第一銜接部(222)銜接` in claim 5. Walker correctly flagged the precision mismatch."
+    }
+  ],
+  "demoted_cases": [
+    {
+      "case": 3,
+      "fixture": "CN113939805B (Huawei)",
+      "claim_id": 1,
+      "term": "页表",
+      "reference_form": "所述页表",
+      "old_category": "legit_drafting_error",
+      "old_protect": true,
+      "new_category": "miss_intro.coverage_gap",
+      "walker_pattern_gap": "verb-object bare-noun intro (`建立页表`)",
+      "rationale": "Walker missed the bare-noun intro `页表` after verb `建立` in claim 1 itself. Sonnet correctly identified the intro pattern; gpt-5-mini failed to produce verdict (token cap)."
+    },
+    {
+      "case": 4,
+      "fixture": "CN113939805B (Huawei)",
+      "claim_id": 7,
+      "term": "页表",
+      "reference_form": "所述页表",
+      "old_category": "legit_drafting_error",
+      "old_protect": true,
+      "new_category": "miss_intro.coverage_gap",
+      "walker_pattern_gap": "verb-object bare-noun intro",
+      "rationale": "Same pattern as case 3 — walker missed `建立页表` intro in claim 7."
+    },
+    {
+      "case": 5,
+      "fixture": "CN114357105B",
+      "claim_id": 1,
+      "term": "节点",
+      "reference_form": "所述节点",
+      "old_category": "legit_drafting_error",
+      "old_protect": true,
+      "new_category": "miss_intro.coverage_gap",
+      "walker_pattern_gap": "Pattern B intro with enumerator-form member (`包括各节点`)",
+      "rationale": "Walker missed the Pattern B-style intro `所述兴趣点异构图包括…各节点` in claim 1. The enumerator `各节点` is the listed Pattern-B member; the bare `节点` should be derivable."
+    },
+    {
+      "case": 6,
+      "fixture": "CN114357105B",
+      "claim_id": 9,
+      "term": "节点",
+      "reference_form": "所述节点",
+      "old_category": "legit_drafting_error",
+      "old_protect": true,
+      "new_category": "miss_intro.coverage_gap",
+      "walker_pattern_gap": "Pattern B intro with enumerator-form member",
+      "rationale": "Same as case 5 — claim 9 mirrors claim 1 structure."
+    },
+    {
+      "case": 7,
+      "fixture": "CN115485995B",
+      "claim_id": 42,
+      "term": "第四神经网",
+      "reference_form": "所述第四神经网",
+      "old_category": "legit_drafting_error",
+      "old_protect": true,
+      "new_category": "walker_fp.fragment",
+      "walker_pattern_gap": "tokenization fragment of compound noun",
+      "rationale": "Walker term `第四神经网` is a tokenization fragment of `第四神经网络` (full compound). The full term is introduced bare in claim 42 itself: `接收来自所述第一设备的第四神经网络的信息`."
+    },
+    {
+      "case": 8,
+      "fixture": "CN115485995B",
+      "claim_id": 83,
+      "term": "差异度",
+      "reference_form": "所述差异度",
+      "old_category": "legit_drafting_error",
+      "old_protect": true,
+      "new_category": "miss_intro.coverage_gap",
+      "walker_pattern_gap": "bare-noun intro in ancestor claim",
+      "rationale": "Walker missed bare-noun intro `差异度` in ancestor claim 82 (`差异度满足第一条件`). Original 'parallel-only [11, 124]' label conflated this with parallel-claim cases."
+    },
+    {
+      "case": 9,
+      "fixture": "CN115485995B",
+      "claim_id": 83,
+      "term": "相似度",
+      "reference_form": "所述相似度",
+      "old_category": "legit_drafting_error",
+      "old_protect": true,
+      "new_category": "miss_intro.coverage_gap",
+      "walker_pattern_gap": "bare-noun intro in ancestor claim",
+      "rationale": "Same as case 8 — walker missed `相似度` intro in ancestor claim 82."
+    },
+    {
+      "case": 10,
+      "fixture": "CN115485995B",
+      "claim_id": 121,
+      "term": "第四神经网",
+      "reference_form": "所述第四神经网",
+      "old_category": "legit_drafting_error",
+      "old_protect": true,
+      "new_category": "walker_fp.fragment",
+      "walker_pattern_gap": "tokenization fragment of compound noun",
+      "rationale": "Same as case 7 — `第四神经网` is tokenization fragment; `第四神经网络` introduced within claim 121."
+    },
+    {
+      "case": 11,
+      "fixture": "CN115485995B",
+      "claim_id": 125,
+      "term": "差异度",
+      "reference_form": "所述差异度",
+      "old_category": "legit_drafting_error",
+      "old_protect": true,
+      "new_category": "miss_intro.coverage_gap",
+      "walker_pattern_gap": "bare-noun intro in ancestor claim",
+      "rationale": "Walker missed bare-noun intro `差异度` in ancestor claim 124."
+    },
+    {
+      "case": 12,
+      "fixture": "CN115485995B",
+      "claim_id": 125,
+      "term": "相似度",
+      "reference_form": "所述相似度",
+      "old_category": "legit_drafting_error",
+      "old_protect": true,
+      "new_category": "miss_intro.coverage_gap",
+      "walker_pattern_gap": "bare-noun intro in ancestor claim",
+      "rationale": "Same as case 11 — walker missed `相似度` intro in ancestor claim 124."
+    },
+    {
+      "case": 13,
+      "fixture": "CN115952274B",
+      "claim_id": 26,
+      "term": "输入数据",
+      "reference_form": "所述输入数据",
+      "old_category": "legit_drafting_error",
+      "old_protect": true,
+      "new_category": "miss_intro.coverage_gap",
+      "walker_pattern_gap": "bare-noun intro in ancestor claim via possessive",
+      "rationale": "Walker missed bare-noun intro `输入数据` in ancestor claim 24 (`基于用户的输入数据`). Original 'parallel-only [1, 24]' label conflated parent claim 24 with parallel claim 1."
+    }
+  ],
+  "walker_round_implications": {
+    "summary": "Three distinct walker pattern gaps surfaced, all worth tracking for future walker-round work:",
+    "gaps": [
+      {
+        "name": "verb-object bare-noun intro",
+        "examples_from_review": ["建立页表 → 所述页表"],
+        "impact": "low (1 fixture, 2 findings)",
+        "fix_strategy": "Add a walker pattern recognizing bare-noun direct-object after specific creation/establishment verbs (建立, 产生, 形成, 生成, 获取). DR-1 grounding: only ~2 confirmed cases; wait for ≥3 in walker-round queue per close-out trigger #2."
+      },
+      {
+        "name": "Pattern B intro with enumerator-form member",
+        "examples_from_review": ["包括各节点 → 所述节点"],
+        "impact": "low (1 fixture, 2 findings)",
+        "fix_strategy": "Walker should split `各X` enumerator forms inside Pattern B head-clauses and credit X as introduced. Currently walker treats `各X` as anti-introduction (Anti-pattern 3). Needs Phase-3 mechanism design before relaxing."
+      },
+      {
+        "name": "compound-noun tokenization fragments",
+        "examples_from_review": ["第四神经网 from 第四神经网络"],
+        "impact": "moderate (existing walker_fp.fragment subcategory had 7 cases pre-review; +2 from this review = 9)",
+        "fix_strategy": "Tokenizer trailing-character extension; standard walker-round work. May warrant dedicated round if .fragment cluster grows."
+      }
+    ],
+    "trigger_status": "Below close-out trigger #2 threshold (≥3 confirmed walker FPs accumulated from triage-report queue in same jurisdiction). This review adds 11 confirmed FPs but they're in 3 distinct sub-clusters; walker-round can decide whether to bundle or wait."
+  }
+}
