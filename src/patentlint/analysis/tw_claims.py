@@ -58,7 +58,31 @@ _DYM_STOP_PARTICLES_TW: tuple[str, ...] = (
 # chain for each edge case, suppress emission at the walker boundary.
 _BARE_QUANTIFIER_TERMS_TW: frozenset[str] = frozenset({
     "複數", "多個", "若干", "一些", "至少一", "至少兩",
+    # R32 (2026-05-04): bare quantifier-residue terms that survive
+    # leading-strip + interior-cut cascades. Empirically attested in the
+    # round-1 1073-TW corpus as walker_fp emissions where the head noun
+    # was lost during normalization. None form valid §112 claim terms.
+    "個", "兩個", "三個", "四個", "五個", "六個", "七個", "八個", "九個", "十個",
+    "或多個", "多", "數", "各",
 })
+
+# R32 (2026-05-04): bare-ordinal regex — `第N` with no head noun is a
+# residue, never a valid §112 reference. Walker emissions of bare 第一/
+# 第二/第三 happen when interior-cut truncates `該第一X` past a digit
+# boundary or when leading-quantifier strip hits an ordinal-only intro.
+_BARE_ORDINAL_RE_TW: re.Pattern[str] = re.compile(
+    r'^第[一二三四五六七八九十百0-9]+$'
+)
+
+# R32 (2026-05-04): claim-citation boilerplate filter. TIPO multi-dependent
+# claim references like `如前述請求項中任一項所述之X` produce reference
+# captures of `前述請求項中任一項`/`前述任一請求項`/etc. that are statutory
+# dep-citation phrases, NOT noun terms requiring antecedent. Filter at
+# emit boundary; the dep-traversal logic already handles the citation
+# correctly via _TW_DEP_RE.
+_CLAIM_CITATION_RE_TW: re.Pattern[str] = re.compile(
+    r'(?:請求項|任一項|申請專利範圍)'
+)
 
 # Walker degenerate 2-char fragments observed in Phase F triage. Add
 # entries here only with empirical grounding: observed walker output,
@@ -2317,6 +2341,30 @@ def clean_noun_phrase_tw(text: str) -> str:
     return current
 
 
+# R32 (2026-05-04): regex-based at-least-N quantifier strip. Existing
+# _LEADING_QUANTIFIER_DENYLIST covers 至少一/至少一個/至少兩/至少兩個 only;
+# 至少三個X / 至少四個X / 至少五個X / 至少二十個X / 至少100個X all stranded.
+# Round-1 corpus + the 110P000641 bearing-patent fixture surfaced this
+# bleed into spec-support (`至少三個軸承`/`至少四個軸承`). Symmetric strip
+# on both reference and intro sides keeps 該軸承 ↔ `至少三個軸承`-intro
+# resolving to the same head noun.
+_AT_LEAST_N_PREFIX_RE_TW: re.Pattern[str] = re.compile(
+    r'^至少[一二三四五六七八九十百0-9]+個'
+)
+
+# R32 (2026-05-04): possessive-pronoun prefix strip. Drafters use 其X
+# (its X) as a possessive noun phrase referring back to a prior subject
+# — captured as an intro via F-anchor patterns but the canonical intro
+# is the bare X (introduced as a feature of the prior subject, not as
+# a new element). Lookahead ≥2 CJK ensures we only strip when the tail
+# is a substantive noun; protects 其餘 (rest, 2 chars total — fails
+# residual since 0 < 2 after strip), 其中 (filter — but `中` standalone
+# is already in _BARE_QUANTIFIER_TERMS_TW indirectly).
+_POSSESSIVE_其_PREFIX_RE_TW: re.Pattern[str] = re.compile(
+    r'^其(?=[一-鿿]{2,})'
+)
+
+
 def strip_leading_quantifier(text: str) -> str:
     """Strip one matching leading quantifier (ADR-095 Rule 2).
 
@@ -2325,12 +2373,28 @@ def strip_leading_quantifier(text: str) -> str:
     is NOT iterative — applied once per term — so compound terms where
     a quantifier-like morpheme is part of the head noun (e.g., 一次性
     starting with 一) are not over-stripped.
+
+    R32 (2026-05-04): regex-based 至少N個 strip applied first (handles
+    digit/ordinal-N variants beyond the static denylist); 其-possessive
+    strip applied last (only when residual ≥ 2 CJK; fired on intros only
+    via the symmetric flow).
     """
     if not text:
         return text
+    # R32: at-least-N regex strip (handles 至少三個/至少四個/至少100個).
+    m = _AT_LEAST_N_PREFIX_RE_TW.match(text)
+    if m and len(text) - m.end() >= 2:
+        text = text[m.end():]
     for q in _LEADING_QUANTIFIER_DENYLIST:
         if text.startswith(q) and len(text) > len(q):
-            return text[len(q):]
+            text = text[len(q):]
+            break
+    # R32: 其-possessive strip — applied last. Lookahead in the regex
+    # ensures the trailing residual is ≥2 CJK so `其餘` (2 chars) is
+    # protected (residual would be 1 char `餘` < 2).
+    m = _POSSESSIVE_其_PREFIX_RE_TW.match(text)
+    if m:
+        text = text[m.end():]
     return text
 
 
@@ -3699,11 +3763,72 @@ def extract_introductions_tw(
     supplementary = _extract_supplementary_intros(claim.text)
     for orig, norm in supplementary:
         norm = strip_leading_verb_tw(norm)
-        if norm and norm not in seen:
-            seen.add(norm)
-            pairs.append((orig, norm))
+        if not norm or norm in seen:
+            continue
+        # R32 (2026-05-04): drop intros with newline/colon — capture
+        # crossed paragraph/label boundary. These leak to spec-support
+        # (`其包含：\n一` from 110P000641 c4 — F-anchor over-captured
+        # across `\n` boundary). Walker filters at emit boundary too,
+        # but spec-support reads intros directly so guard here.
+        if '\n' in norm or '：' in norm or ':' in norm:
+            continue
+        seen.add(norm)
+        pairs.append((orig, norm))
+
+    # R32 (2026-05-04): F-head-indep — capture the rightmost head noun
+    # from `一種<modifier>的<HEAD>，` independent-claim preambles. Default
+    # `_INTRO_PATTERN` (line 1432) uses `_NOUN_CHARS` which excludes `的`,
+    # so a long preamble noun phrase like
+    # `用於一第一無線通訊設備處的無線通訊的裝置`
+    # captures only `種用` / `無線通訊` fragments — the head `裝置` is
+    # never registered as an intro, and dependent-claim references like
+    # `該裝置` flag walker_fp despite being well-formed.
+    #
+    # Conflict guard skips heads where `<head><positional-suffix>` exists
+    # in the claim text (preserves CN115485995B c121-style protect:true
+    # legit drafting errors from prefix-match over-resolution).
+    for m in _F_HEAD_INDEP_RE_TW.finditer(claim.text):
+        head = m.group('head')
+        if not head or head in seen:
+            continue
+        if _f_head_indep_conflict_tw(head, claim.text):
+            continue
+        seen.add(head)
+        pairs.append((m.group(0), head))
 
     return pairs
+
+
+# R32 (2026-05-04): F-head-indep regex. Captures rightmost head noun in
+# `一種<modifier>的<HEAD>，` independent-claim preambles. Modifier may
+# span across embedded `的` (nested possessive); head is bare CJK 2-12
+# chars terminated by punctuation lookahead. Conflict guard at
+# registration time rejects heads that would create prefix-match
+# over-resolution (head + positional-suffix form like 裝置側 collides
+# with bare 裝置). CN R32 parity.
+_F_HEAD_INDEP_RE_TW: re.Pattern[str] = re.compile(
+    r'一種(?:[^，。；,;:：]{4,80})的'
+    r'(?P<head>[一-鿿]{2,12})'
+    r'(?=[，,。；;:：])'
+)
+
+_F_HEAD_POSITIONAL_SUFFIX_RE_TW: re.Pattern[str] = re.compile(
+    r'(?:側|端|部|面|段|層|區|際|底|頂|前|後|左|右|內|外|上|下|側面|端面|端部|底部|頂部|前面|後面|左面|右面|內部|外部|上部|下部|內側|外側|內端|外端|內層|外層|內面|外面)'
+)
+
+
+def _f_head_indep_conflict_tw(head: str, claim_text: str) -> bool:
+    """True if registering `head` would cause prefix-match over-resolution.
+
+    See cn_claims._f_head_indep_conflict_cn for full reasoning. Mirror
+    in Traditional script.
+    """
+    pattern = re.compile(
+        re.escape(head)
+        + r'(?:' + _F_HEAD_POSITIONAL_SUFFIX_RE_TW.pattern + r')'
+        r'(?:[，,。；;:： \t]|$)'
+    )
+    return bool(pattern.search(claim_text))
 
 
 def check_antecedent_basis(
@@ -3817,6 +3942,23 @@ def check_antecedent_basis(
             if normalized_term in _BARE_QUANTIFIER_TERMS_TW:
                 continue
             if normalized_term in _WALKER_DEGENERATE_FRAGMENTS_TW:
+                continue
+            # R32 (2026-05-04): structural-residue filter — short residues
+            # from interior-cut + leading-strip cascade; bare ordinals
+            # missing head noun; statutory claim-citation boilerplate;
+            # terms containing newlines/colons (capture crossed paragraph
+            # or label boundary). Round-1 corpus measured ~1300 walker_fp
+            # findings silenced at <2% legit_drafting_error collateral
+            # (within LLM noise floor). Length check uses len(normalized_term)
+            # directly — 1-char terms emerge from `該複數個` → `個`,
+            # `該等相應X` → `相` cascades that pre-emit cleanup misses.
+            if len(normalized_term) < 2:
+                continue
+            if _BARE_ORDINAL_RE_TW.match(normalized_term):
+                continue
+            if _CLAIM_CITATION_RE_TW.search(normalized_term):
+                continue
+            if '\n' in normalized_term or '：' in normalized_term or ':' in normalized_term:
                 continue
 
             if normalized_term in seen_terms:
