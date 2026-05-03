@@ -1175,6 +1175,18 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # protected via the existing residual ≥ 1 floor (2-char compounds
         # with 较 at position [-1] strip to 1 char, blocked).
         "较", "厚膜化",
+        # === R29 (2026-05-03) — round-1 corpus over-capture extensions ===
+        # Conservative extension only. Excludes verbs that double as common
+        # noun endings (处理, 配置, 形成, 驱动, 存储, 传输, 连接, 选择,
+        # 标识, 识别) — those silenced legacy `处理器配置` protect:true
+        # label on tw_contamination_simple synthetic. Kept additions are
+        # clearly-verb multi-char phrases without noun-suffix ambiguity.
+        "围绕", "代表", "连同", "表示", "移动",
+        "检测", "测量", "收集", "输送",
+        "释放", "操控", "扫描",
+        "覆盖", "分离", "比较", "判断", "决定", "分析",
+        "包括以下", "执行以下", "进行以下",
+        "执行以下操作", "执行以下操",
     ),
     key=len,
     reverse=True,
@@ -1728,8 +1740,13 @@ _BARE_AFTER_VERB_PATTERN_CN = re.compile(
 
 # F11: colon-anchored list-after-包括/包含/含有 (WQ8 / R3).
 _F11_COLON_LIST_ANCHOR_CN: re.Pattern[str] = re.compile(
-    r'(?:包括|包含|含有)[：:]\s*([^。；]+)'
+    r'(?:包括|包含|含有)[：:]\s*([^。]+)'
 )
+# R29 (2026-05-03): regex no longer excludes `；` so the capture spans the
+# whole list (bounded by `。`). Caller in _extract_supplementary_intros_cn
+# splits the captured text on `；` and processes each segment as its own
+# F11 list-element source. Pattern B claims like `<system>包括: A; B; 以及 C`
+# previously dropped B and C because the capture stopped at first `；`.
 _F11_LIST_SPLIT_CN: re.Pattern[str] = re.compile(r'[、，,和与及]')
 
 # Phase 8c R14e — F11 no-colon extension. Matches no-colon enum lists
@@ -2125,18 +2142,27 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
     # separated elements.
     for anchor_re in (_F11_COLON_LIST_ANCHOR_CN, _F11_NO_COLON_LIST_ANCHOR_CN):
         for m in anchor_re.finditer(text):
-            list_text = m.group(1).split('；')[0].split('。')[0]
-            for element in _F11_LIST_SPLIT_CN.split(list_text):
-                element = element.strip()
-                if not element:
+            # R29 (2026-05-03): iterate ；-segments instead of truncating
+            # at first; strip leading 以及/及 from each segment.
+            full_list = m.group(1).split('。')[0]
+            for segment in full_list.split('；'):
+                segment = segment.strip()
+                if not segment:
                     continue
-                normalized = re.sub(r'\([A-Za-z0-9]+\)', '', element)
-                cjk_len = sum(1 for c in normalized if '\u4e00' <= c <= '\u9fff')
-                if cjk_len < 2:
+                segment = re.sub(r'^(?:以及|及)\s*', '', segment)
+                if not segment:
                     continue
-                if normalized.startswith(_REF_PREFIX_SET_CN):
-                    continue
-                results.append((element, normalized))
+                for element in _F11_LIST_SPLIT_CN.split(segment):
+                    element = element.strip()
+                    if not element:
+                        continue
+                    normalized = re.sub(r'\([A-Za-z0-9]+\)', '', element)
+                    cjk_len = sum(1 for c in normalized if '\u4e00' <= c <= '\u9fff')
+                    if cjk_len < 2:
+                        continue
+                    if normalized.startswith(_REF_PREFIX_SET_CN):
+                        continue
+                    results.append((element, normalized))
 
     # F13: locative-verb + bare noun (+ optional locative suffix). R14a.
     for m in _F13_LOCATIVE_VERB_PATTERN_CN.finditer(text):
@@ -2482,6 +2508,7 @@ def check_antecedent_basis_cn(
             ):
                 intros_by_term.setdefault(normalized, (ancestor.id, depth))
 
+
         # Q1 tw_contamination rejection pre-pass. The TC-plural prefixes
         # 该等 / 该些 are not valid in CN drafting (CNIPA审查指南 uses 所述).
         # Their detection regex is local to this function so the only
@@ -2562,6 +2589,17 @@ def check_antecedent_basis_cn(
                     ):
                         best_len = len(intro)
                         resolved_intro = intro
+
+            # R29 (2026-05-03) — Resolution-side architectural mechanisms
+            # (forward-prefix with boundary, symmetric clean, cross-branch
+            # sibling, substring) all silenced protect:true legit_drafting
+            # _error labels (parallel-invention drafter errors on
+            # CN115485995B / CN113939805B / CN110276410B). §112(b) is
+            # strict: references must resolve to SAME-CHAIN antecedents,
+            # not sibling-claim intros or substring matches. Round 29
+            # restricted to the capture-side fix (F11 ;-segment continuation
+            # in _extract_supplementary_intros_cn) plus conservative trim-
+            # verb extensions, both of which respect the chain invariant.
 
             if resolved_intro is not None:
                 if not strict_plural_reference_matching:

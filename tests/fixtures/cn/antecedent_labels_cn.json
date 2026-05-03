@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 28,
+    "current_round": 29,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -521,8 +521,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -2177,8 +2177,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN114357105B",
@@ -2645,8 +2645,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN114357105B",
@@ -7397,8 +7397,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115485995B",
@@ -7541,8 +7541,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115485995B",
@@ -8129,8 +8129,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115485995B",
@@ -9185,8 +9185,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115485995B",
@@ -9353,8 +9353,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115485995B",
@@ -9437,8 +9437,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115485995B",
@@ -10061,8 +10061,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115485995B",
@@ -10109,8 +10109,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115485995B",
@@ -11177,8 +11177,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115952274B",
@@ -11225,8 +11225,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115952274B",
@@ -11321,8 +11321,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115952274B",
@@ -12449,8 +12449,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115952274B",
@@ -12557,8 +12557,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [24]; walker intro-registration miss",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115952274B",
@@ -12785,8 +12785,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | parser-fix migration: c43→c44",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115952274B",
@@ -16992,8 +16992,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115485995B",
@@ -17004,8 +17004,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115485995B",
@@ -17136,8 +17136,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R9 shifting: resurfaced from trailing verb strip.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115952274B",
@@ -17460,8 +17460,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_29_f11_semicolon_split_plus_trim_verbs",
+      "round": 29
     },
     {
       "fixture": "CN115485995B",
