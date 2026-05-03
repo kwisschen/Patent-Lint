@@ -1088,7 +1088,13 @@ _WEIGHT_COMPOSITION_PREFIX_CN = (
 )
 
 # Definitional intro (mechanical TC→SC swap per v2 § 4).
-_DEFINITIONAL_PREFIX_CN = r"(?:定义为|称为|记为|表示为)一?"
+# R30 mechanism #10 (2026-05-03): extended definitional prefixes.
+# Common CN patent drafting introduces a term via 定义为/称为/记为/表示为
+# already; corpus shows additional shapes: 此处称为, 此处定义为, 简称为
+# (abbreviation marker), 命名为 (named as), 标记为 (marked as), 视为
+# (deemed/treated as), 等同于 (equivalent to). Anti-pattern guard: the
+# `一?` allows optional 一 prefix (drafter writes either form).
+_DEFINITIONAL_PREFIX_CN = r"(?:定义为|称为|记为|表示为|此处称为|此处定义为|简称为|命名为|标记为|视为|等同于|又称为|又称|亦即)一?"
 
 _INTRO_PATTERN_CN = re.compile(
     r"(?:"
@@ -1187,6 +1193,12 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "覆盖", "分离", "比较", "判断", "决定", "分析",
         "包括以下", "执行以下", "进行以下",
         "执行以下操作", "执行以下操",
+        # === R30 (2026-05-03) — sample-derived adverbial / adjectival trims
+        # 进一步: adverbial ("further"), fragment of 进一步包括/进一步具有.
+        #   Multi-char so safe against noun compounds (第一步/一步走 unaffected).
+        # 相关联: adjectival ("related/associated"), fragment of <noun>相关联的.
+        #   Existing 相关 + 有关 catch 2-char form; 3-char form needs explicit.
+        "进一步", "相关联",
     ),
     key=len,
     reverse=True,
@@ -1256,6 +1268,17 @@ _LEADING_QUANTIFIER_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # 各 (compound noun usage like 各样本数据) which startswith() leaves
         # untouched.
         "各",
+        # === R30 (2026-05-03) — extended plural-quantifier bridging ===
+        # Phase 2c Refinement C: when a parent claim introduces `多个X` /
+        # `若干X` and a dependent references `所述X` (singular), bridging via
+        # symmetric strip is the right move per CN drafting practice. The
+        # original set covered 复数/多个/数个; this round adds the rest of
+        # the common CNIPA quantifier vocabulary. All multi-char so safe
+        # against compound nouns (无 single-char additions).
+        "若干个", "若干",
+        "一些", "某些",
+        "多种", "多类", "多组", "多对",
+        "至少两个", "至少两", "两个", "两种",
     ),
     key=len,
     reverse=True,
@@ -1847,6 +1870,18 @@ _F7D_PARTICIPIAL_TAILS_CN: tuple[str, ...] = (
     '预设', '所需', '相关', '对应', '匹配',
     '得到', '制得', '执行', '制造', '相连',
     '生成', '连接', '形成', '组成',
+    # === R30 (2026-05-03) — extended participial tails from corpus ===
+    # Round-1 corpus walker_fps include patterns like
+    # `<X>覆盖的Y`, `<X>构成的Y`, `<X>设置的Y`, `<X>包含的Y` that the
+    # original F7d allowlist doesn't catch. Adding them is safe because:
+    # (a) each is clearly a participial verb (not a noun), (b) the trailing
+    # 的 ensures Y is an attribute of X — registering Y as intro is correct
+    # under §112(b) when X is in the chain.
+    '覆盖', '构成', '设置', '配置', '安装',
+    '提供', '获取', '获得', '产生',
+    '所述包括', '所述包含', '所述具有',
+    '附加', '增加', '减少', '改变', '修改',
+    '包括', '包含', '具有',
 )
 _F7D_PATTERN_CN: re.Pattern[str] = re.compile(
     r'(?:' + '|'.join(re.escape(t) for t in _F7D_PARTICIPIAL_TAILS_CN) + r')'
@@ -2163,6 +2198,40 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
                     if normalized.startswith(_REF_PREFIX_SET_CN):
                         continue
                     results.append((element, normalized))
+                    # R30 mechanism #4 (2026-05-03): sub-noun extraction from
+                    # `<verb>X\u7684Y` shape inside the captured element. Pattern B
+                    # often introduces multiple terms via possessive constructs:
+                    # `\u5904\u7406\u672b\u7aef\u6267\u884c\u5668\u7684\u6240\u6709\u4efb\u52a1` should register both `\u672b\u7aef\u6267\u884c\u5668`
+                    # and `\u6240\u6709\u4efb\u52a1`. Find the FIRST \u7684 (avoid deep nesting),
+                    # split into head/tail, register each if valid noun phrase.
+                    de_idx = normalized.find('\u7684')  # \u7684
+                    if 0 < de_idx < len(normalized) - 1:
+                        head = normalized[:de_idx]
+                        tail = normalized[de_idx + 1:]
+                        for sub in (head, tail):
+                            sub_cjk = sum(1 for c in sub if '\u4e00' <= c <= '\u9fff')
+                            if sub_cjk < 2:
+                                continue
+                            if sub.startswith(_REF_PREFIX_SET_CN):
+                                continue
+                            if sub.startswith(_F12_ADJ_REJECTS_CN):
+                                continue
+                            # Strip leading verb prefix (creation-verb subset)
+                            # to unwrap `<verb><noun>` head into bare noun.
+                            stripped = sub
+                            for verb in ('\u63d0\u4f9b', '\u914d\u7f6e', '\u8bbe\u7f6e', '\u5f62\u6210', '\u6784\u6210',
+                                          '\u6784\u5efa', '\u83b7\u53d6', '\u83b7\u5f97', '\u5f97\u5230', '\u751f\u6210',
+                                          '\u4ea7\u751f', '\u8fde\u63a5', '\u8fde\u7ed3', '\u5b89\u88c5', '\u88c5\u8bbe',
+                                          '\u5904\u7406'):
+                                if stripped.startswith(verb) and len(stripped) > len(verb) + 1:
+                                    rest = stripped[len(verb):]
+                                    rest_cjk = sum(1 for c in rest if '\u4e00' <= c <= '\u9fff')
+                                    if rest_cjk >= 2:
+                                        stripped = rest
+                                        break
+                            if stripped != sub:
+                                results.append((element, stripped))
+                            results.append((element, sub))
 
     # F13: locative-verb + bare noun (+ optional locative suffix). R14a.
     for m in _F13_LOCATIVE_VERB_PATTERN_CN.finditer(text):
@@ -2332,6 +2401,75 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
                 continue
             seen_norms.add(piece_clean)
             extras.append((piece_clean, piece_clean))
+
+    # R30 mechanism #11 (2026-05-03): step-label colon intros for method claims.
+    # Pattern: `；以及<step-name>:<step-content>` or `；<step-name>:<content>`
+    # where the step-name (multi-char CJK before colon) is the new claim element.
+    # Common in CN method claims: `；以及印刷步骤：在所述陶瓷块...`. Anti-pattern:
+    # the noun must NOT start with reference-prefix or 第N (those are existing
+    # references / ordinals, not new step labels).
+    _STEP_LABEL_RE_R30 = re.compile(
+        r'[；;]\s*(?:以及|及)?\s*([\u4e00-\u9fff]{2,12})\s*[：:]'
+    )
+    for sl_m in _STEP_LABEL_RE_R30.finditer(text):
+        noun = sl_m.group(1)
+        if not noun or len(noun) < 2:
+            continue
+        if noun.startswith(_REF_PREFIX_SET_CN):
+            continue
+        if noun.startswith('第'):
+            continue
+        if noun.startswith(_F12_ADJ_REJECTS_CN):
+            continue
+        if noun in seen_norms:
+            continue
+        seen_norms.add(noun)
+        extras.append((sl_m.group(0), noun))
+
+    # R30 mechanism #7 (2026-05-03): F6c Latin/short-CJK term floor.
+    # F6 arms 1-3 require CJK-only nouns. Walker_fps on Latin acronyms
+    # (UE, DCI, LHT, CU-CP) and Latin-CJK mixed terms (PWM信号, DCI格式,
+    # RAM控制器) need an explicit arm. Pattern: <F6 verb>(<Latin-noun>)
+    # where Latin-noun is uppercase Latin chars optionally followed by CJK
+    # suffix. Anti-pattern: must be at a clear boundary (followed by
+    # punctuation, conjunction, or end-of-clause) to avoid mid-word matches.
+    _F6C_VERB_ALT = (
+        r'具有|包含|包括|含有|设有|设置|配置|安装|装设|形成|构成|提供|连接|连结'
+        r'|获取|获得|得到|生成|产生|发出|发送|接收|输出|输入|传送|存储|确定|涉及'
+        r'|进行|调用|运行|调整|建立|构建|制得|根据|存在|使用'
+    )
+    _F6C_LATIN_RE = re.compile(
+        r'(?:' + _F6C_VERB_ALT + r')'
+        r'(?P<noun>[A-Z][A-Za-z0-9\-]{1,15}[\u4e00-\u9fff]{0,8})'
+        r'(?=[，,。；;、 \t\n或与和及])'
+    )
+    for fc_m in _F6C_LATIN_RE.finditer(text):
+        noun = fc_m.group('noun')
+        if not noun or len(noun) < 2:
+            continue
+        if noun in seen_norms:
+            continue
+        seen_norms.add(noun)
+        extras.append((fc_m.group(0), noun))
+
+    # R30 mechanism #6 (2026-05-03): parenthetical abbreviation bridging.
+    # Pattern B intros like `<full term>(<Abbr>)` should register both
+    # full and abbrev so later `所述<Abbr>` references resolve.
+    # Phase 2c Refinement B (Christopher: LHT/VH-region pattern is common).
+    # CN form: `中心单元-控制面(CU-CP)`, `超参数自适应选择策略单元(HASS)`.
+    _PAREN_ABBREV_RE_R30 = re.compile(
+        r'([\u4e00-\u9fff]{2,12})\(([A-Z][A-Za-z0-9\-]{0,15})\)'
+    )
+    for pa_m in _PAREN_ABBREV_RE_R30.finditer(text):
+        full_noun = pa_m.group(1)
+        abbrev = pa_m.group(2)
+        if abbrev not in seen_norms and len(abbrev) >= 2:
+            seen_norms.add(abbrev)
+            extras.append((pa_m.group(0), abbrev))
+        if full_noun not in seen_norms:
+            seen_norms.add(full_noun)
+            extras.append((pa_m.group(0), full_noun))
+
     return cleaned + extras
 
 
