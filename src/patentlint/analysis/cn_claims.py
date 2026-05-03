@@ -1583,6 +1583,13 @@ def normalize_reference_term_cn(
     t = clean_noun_phrase_cn(t)
     t = strip_leading_quantifier_cn(t)
     t = strip_leading_verb_cn(t)
+    # R31 (2026-05-03): re-run reference-prefix strip after verb strip,
+    # because the new 有 prefix entry can expose a hidden 所述/该/前述
+    # underneath (e.g., 有所述高亮度区域 → 所述高亮度区域 after 有 strip
+    # → 高亮度区域 after re-prefix-strip). Without this, spec_support
+    # mid-phrase recovery test failed.
+    t = strip_reference_form_prefix_cn(t)
+    t = strip_leading_qualifier_cn(t, strict_qualifier_matching=strict_qualifier_matching)
     return t
 
 
@@ -2015,7 +2022,12 @@ _F10_NOUN_REJECTS_CN: tuple[str, ...] = (
 # Leading-verb prefix strip (`形成X`/`制造X` → `X`). Symmetric on intro
 # and reference sides per ADR-095. Residual ≥ 2 protects 形成器/形成物
 # (3 chars, residual 1 < 2) while admitting 制造方法 (4 chars, residual 2).
-_LEADING_VERB_PREFIXES_CN: tuple[str, ...] = ('形成', '制造')
+# R31 (2026-05-03): added 有 prefix. F-family captures of `设置有X` style
+# Pattern B intros leave `有X` after 设置 strip; the leading 有 should be
+# stripped to surface bare X. Residual ≥ 2 protects compound nouns
+# starting with 有 (有限/有机/有效) — those are 2-char with residual 0/1
+# after strip, so still protected.
+_LEADING_VERB_PREFIXES_CN: tuple[str, ...] = ('形成', '制造', '有')
 _LEADING_VERB_RESIDUAL_FLOOR_CN: int = 2
 
 
