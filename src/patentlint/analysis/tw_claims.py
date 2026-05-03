@@ -1426,7 +1426,9 @@ _WEIGHT_COMPOSITION_PREFIX = (
 # Corpus attestation: 定義為 ×22 across 110P000158/110P000631/110P000633;
 # 稱為/記為/表示為 have 0 corpus occurrences but are standard TIPO drafting
 # patterns included for forward-compat.
-_DEFINITIONAL_PREFIX = r"(?:定義為|稱為|記為|表示為)一?"
+# R30 mechanism #10 (2026-05-03): extended definitional prefixes.
+# CN R30 mirror in Traditional script.
+_DEFINITIONAL_PREFIX = r"(?:定義為|稱為|記為|表示為|此處稱為|此處定義為|簡稱為|命名為|標記為|視為|等同於|又稱為|又稱|亦即)一?"
 _INTRO_PATTERN = re.compile(
     r"(?:"
     + _WEIGHT_COMPOSITION_PREFIX
@@ -1613,6 +1615,11 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         "分離", "比較", "判斷", "決定", "分析",
         "包括以下", "執行以下", "進行以下",
         "執行以下操作", "執行以下操",
+        # === R30 (2026-05-03) — sample-derived adverbial / adjectival trims
+        # 進一步: adverbial fragment of 進一步包括/進一步具有.
+        # 相關聯: adjectival fragment of <noun>相關聯的. Existing 相關 + 有關
+        # catch 2-char form; 3-char form needs explicit.
+        "進一步", "相關聯",
     ),
     key=len,
     reverse=True,
@@ -1766,6 +1773,15 @@ _LEADING_QUANTIFIER_DENYLIST: tuple[str, ...] = tuple(sorted(
         # claim-body level (the indexed family is introduced as bare
         # noun, then references add the distributive 各 prefix).
         "各",
+        # === R30 (2026-05-03) — extended plural-quantifier bridging ===
+        # CN R30 mirror in Traditional script. When a parent claim
+        # introduces 多種X / 若干X and a dependent references 該X (singular),
+        # symmetric strip bridges per TIPO drafting practice. Multi-char
+        # additions only (no single-char to avoid noun-compound collision).
+        "若干個", "若干",
+        "一些", "某些",
+        "多種", "多類", "多組", "多對",
+        "至少兩個", "至少兩", "兩個", "兩種",
     ),
     key=len,
     reverse=True,
@@ -3434,6 +3450,24 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
             if trimmed is None:
                 continue
             results.append((seg, trimmed))
+            # R30 mechanism #4 (2026-05-03): sub-noun extraction from
+            # `<verb>X的Y` shape inside F15 list elements. Mirror of CN R30.
+            # When a Pattern B element captures `處理末端執行器的所有任務`,
+            # register both `末端執行器` and `所有任務` as separate intros.
+            de_idx = trimmed.find('的')  # 的 (TW also uses 的 in modern register)
+            if 0 < de_idx < len(trimmed) - 1:
+                head = trimmed[:de_idx]
+                tail = trimmed[de_idx + 1:]
+                for sub in (head, tail):
+                    sub_cjk = sum(1 for c in sub if '\u4e00' <= c <= '\u9fff')
+                    if sub_cjk < 2:
+                        continue
+                    if sub.startswith(_REFERENCE_FORM_PREFIXES):
+                        continue
+                    sub_trimmed = _trim_capture_to_clean_noun_tw(sub)
+                    if sub_trimmed is None:
+                        continue
+                    results.append((seg, sub_trimmed))
 
     # Phase 8b R7 — F19: `verb + X + 之 + Y` left-side intro. Register
     # the left-side X (verb's object) when followed by 之. Complements
@@ -3488,6 +3522,61 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
                 continue
             seen_norms.add(piece_clean)
             extras.append((piece_clean, piece_clean))
+
+    # R30 mechanism #6 (2026-05-03): parenthetical abbreviation bridging.
+    # Mirror of CN R30. `<full term>(<Abbr>)` registers both full and Abbr.
+    _PAREN_ABBREV_RE_R30_TW = re.compile(
+        r'([\u4e00-\u9fff]{2,12})\(([A-Z][A-Za-z0-9\-]{0,15})\)'
+    )
+    for pa_m in _PAREN_ABBREV_RE_R30_TW.finditer(text):
+        full_noun = pa_m.group(1)
+        abbrev = pa_m.group(2)
+        if abbrev not in seen_norms and len(abbrev) >= 2:
+            seen_norms.add(abbrev)
+            extras.append((pa_m.group(0), abbrev))
+        if full_noun not in seen_norms:
+            seen_norms.add(full_noun)
+            extras.append((pa_m.group(0), full_noun))
+
+    # R30 mechanism #7 (2026-05-03): F6c Latin/short-CJK term floor.
+    # Mirror of CN R30. <verb><Latin-noun> with right-boundary gate.
+    _F6C_VERB_ALT_TW = (
+        r'具有|包含|包括|含有|設有|設置|配置|安裝|裝設|形成|構成|提供|連接|連結'
+        r'|獲取|獲得|得到|生成|產生|發出|發送|接收|輸出|輸入|傳送|存儲|確定|涉及'
+        r'|進行|調用|運行|調整|建立|構建|製得|根據|存在|使用'
+    )
+    _F6C_LATIN_RE_TW = re.compile(
+        r'(?:' + _F6C_VERB_ALT_TW + r')'
+        r'(?P<noun>[A-Z][A-Za-z0-9\-]{1,15}[\u4e00-\u9fff]{0,8})'
+        r'(?=[，,。；;、 \t\n或與和及])'
+    )
+    for fc_m in _F6C_LATIN_RE_TW.finditer(text):
+        noun = fc_m.group('noun')
+        if not noun or len(noun) < 2:
+            continue
+        if noun in seen_norms:
+            continue
+        seen_norms.add(noun)
+        extras.append((fc_m.group(0), noun))
+
+    # R30 mechanism #11 (2026-05-03): step-label colon intros.
+    # Mirror of CN R30. `；以及<step-name>:` / `；<step-name>:`.
+    _STEP_LABEL_RE_R30_TW = re.compile(
+        r'[；;]\s*(?:以及|及)?\s*([\u4e00-\u9fff]{2,12})\s*[：:]'
+    )
+    for sl_m in _STEP_LABEL_RE_R30_TW.finditer(text):
+        noun = sl_m.group(1)
+        if not noun or len(noun) < 2:
+            continue
+        if noun.startswith(_REFERENCE_PREFIXES):
+            continue
+        if noun.startswith('第'):
+            continue
+        if noun in seen_norms:
+            continue
+        seen_norms.add(noun)
+        extras.append((sl_m.group(0), noun))
+
     return cleaned + extras
 
 
