@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml/badge.svg)](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml)
 [![Live Demo](https://img.shields.io/badge/demo-patentlint.com-blue)](https://patentlint.com)
-[![Tests](https://img.shields.io/badge/tests-2159-brightgreen)](#)
+[![Tests](https://img.shields.io/badge/tests-2183-brightgreen)](#)
 
 **No account. No install. No upload.**
 
@@ -23,7 +23,7 @@ PatentLint checks U.S., Chinese, and Taiwanese patent application drafts against
 ## How It Works
 
 1. **Drop** a patent draft into the browser (.docx for US/TW, .docx/.xml/.zip for CN)
-2. **Analyze** — 95 checks run instantly via WebAssembly (no server, no upload)
+2. **Analyze** — 109 checks run instantly via WebAssembly (no server, no upload)
 3. **Report** — download a PDF or copy a summary to clipboard
 
 ---
@@ -38,9 +38,9 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 
 ## What It Checks
 
-95 automated checks across three jurisdictions, each classified as **PASS**, **VERIFY**, or **AMEND**.
+109 automated checks across three jurisdictions, each classified as **PASS**, **REVIEW**, or **FIX**.
 
-### U.S. Patent Applications (33 checks)
+### U.S. Patent Applications (40 checks)
 
 | Section | Checks | Reference |
 |---------|--------|-----------|
@@ -49,7 +49,7 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 | **Claims** | Numbering, dependencies, periods, punctuation, indefinite terms, transitional phrases, means-plus-function (§ 112(f)), antecedent basis (§ 112(b)), preamble consistency (§ 112(d)), specification support (§ 112(a)), claim similarity, special formats (Jepson / CRM / Markush / omnibus) | 35 U.S.C. § 101, § 112; MPEP § 2117–2173 |
 | **Abstract** | Word count (50–150), single paragraph, legal phraseology, implied phrases, self-praising language | MPEP § 608.01(b) |
 
-### Chinese Patent Applications (26 checks)
+### Chinese Patent Applications (32 checks)
 
 | Section | Checks | Reference |
 |---------|--------|-----------|
@@ -58,7 +58,7 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 | **Abstract** | Character count (≤300), title match, commercial language | 专利法实施细则 §23 |
 | **Drawings** | Figures sequential, figure count | 审查指南 |
 
-### Taiwanese Patent Applications (36 checks)
+### Taiwanese Patent Applications (37 checks)
 
 | Section | Checks | Reference |
 |---------|--------|-----------|
@@ -149,7 +149,7 @@ Visit **[patentlint.com](https://patentlint.com)** — nothing to install.
 ```bash
 # Backend
 pip install -e ".[api,dev]"
-pytest -v                    # 1808 tests
+pytest -v                    # 2183 tests
 uvicorn patentlint.api.app:app --port 8000 --reload
 
 # Frontend (separate terminal)
@@ -201,19 +201,20 @@ curl http://localhost:8000/api/health
 | Frontend | React 18, Vite 6, Tailwind CSS v4, shadcn/ui |
 | PDF | pdfmake (web) · weasyprint (Docker/CLI) |
 | CLI | Click |
-| Testing | pytest (1808 tests) |
+| Testing | pytest (2183 tests) |
 | CI/CD | GitHub Actions → Cloudflare Pages |
-| i18n | react-i18next (English, 繁體中文, 简体中文, 日本語, 한국어) — shared locale bundles across frontend + weasyprint PDF |
+| i18n | react-i18next (English, Deutsch, 繁體中文, 简体中文, 日本語, 한국어) — shared locale bundles across frontend + weasyprint PDF |
 
 ---
 
 ## Languages
 
-PatentLint's UI is available in five languages. Patent-specific terms follow official terminology from each jurisdiction's patent office.
+PatentLint's UI is available in six languages. Patent-specific terms follow official terminology from each jurisdiction's patent office.
 
 | Language | Patent Office | Terminology Standard |
 |----------|--------------|---------------------|
 | English | USPTO | MPEP |
+| Deutsch | EPA / DPMA | EPÜ / PatG |
 | 繁體中文 | TIPO (經濟部智慧財產局) | 專利審查基準 |
 | 简体中文 | CNIPA (国家知识产权局) | 专利审查指南 |
 | 日本語 | JPO (特許庁) | 特許・実用新案審査基準 |
