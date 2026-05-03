@@ -293,6 +293,15 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
             for abbrev_intro in extract_abbreviation_intros(ancestor.text):
                 _record(abbrev_intro, ancestor.id)
 
+        # R32-US head-noun-from-intro: drafted but DEFERRED — would silence
+        # ~617 single-word walker_fp emissions but breaks 1 protect:true
+        # label (US20240185203A1 c1: `the information` from gerund-phrase
+        # `collecting information` would resolve incorrectly). Mechanism
+        # needs a stronger guard distinguishing Pattern A `a/an X` intros
+        # from bare-noun-list / gerund-phrase intros before shipping.
+        # See `2026-05-04_morning-resume-runbook.md` step 2 for the
+        # design sketch.
+
         intros = set(intros_by_term.keys())
 
         intros_by_number_key: dict[str, int] = {}
