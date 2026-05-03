@@ -1599,6 +1599,20 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         #     specific token avoids over-stripping the productive 化-suffix
         #     (氧化/文化/變化 unaffected since they don't end in 厚膜化).
         "厚膜化",
+        # === R29 (2026-05-03) — round-1 corpus over-capture extensions ===
+        # Conservative extension only. Excludes verbs that double as common
+        # noun endings (處理/配置/形成/驅動/儲存/傳輸/連接/選擇/標識/識別/
+        # 圍繞 — last one removed after tw_adversarial_negatives c2 `機殼圍繞`
+        # protect:true label hit). Kept additions are clearly-verb multi-
+        # char phrases without noun-suffix ambiguity. Mirror of CN R29
+        # trim-verb extensions, adapted to Traditional script. 測量 / 覆蓋
+        # already in main set above; not duplicated.
+        "代表", "連同", "表示", "移動",
+        "檢測", "收集", "輸送",
+        "釋放", "操控", "掃描",
+        "分離", "比較", "判斷", "決定", "分析",
+        "包括以下", "執行以下", "進行以下",
+        "執行以下操作", "執行以下操",
     ),
     key=len,
     reverse=True,
