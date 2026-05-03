@@ -1,0 +1,2313 @@
+{
+  "thresholds": {
+    "judged_count": 36,
+    "skipped_count": 24,
+    "threshold_1_inter_judge": 61.1,
+    "threshold_1_pass": false,
+    "threshold_2_protect_true": 52.4,
+    "threshold_2_n": 21,
+    "threshold_2_pass": false,
+    "threshold_3_walker_fp": 16.7,
+    "threshold_3_n": 6,
+    "threshold_3_pass": false
+  },
+  "results": [
+    {
+      "label": {
+        "fixture": "CN115952274B",
+        "claim_id": 42,
+        "term": "经训练",
+        "reference_form": "所述经训练",
+        "category": "walker_fp.cross_branch_sibling",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": "round_25_r14c2_f6_bare_noun",
+        "round": 25
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN115952274B",
+        "claim_id": 16,
+        "term": "第二输出作",
+        "reference_form": "所述第二输出作",
+        "category": "walker_fp.over_capture",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
+        "resolved_by": "round_24_single_char_trailing",
+        "round": 24
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN115952274B",
+        "claim_id": 46,
+        "term": "预测记忆结果",
+        "reference_form": "所述预测记忆结果",
+        "category": "walker_fp.cross_branch_sibling",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | parser-fix migration: c45→c46",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": {
+        "finding_key": "cn:CN115952274B:46:预测记忆结果",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 75,
+            "reasoning": "The context_before shows '所述' (reference marker) immediately preceding the term within the diagnostic window, and the 30-char window is insufficient to confirm any introducing form earlier in claim 46 or its ancestors. The reference form '所述预测记忆结果' is being used before the term appears to have been properly introduced (indefinite article or bare noun).",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 75, \"reasoning\": \"The context_before shows '所述' (reference marker) immediately preceding the term within the diagnostic window, and the 30-char window is insufficient to confirm any introducing form earlier in claim 46 or its ancestors. The reference form '所述预测记忆结果' is being used before the term appears to have been properly introduced (indefinite article or bare noun).\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 85,
+            "reasoning": "The snippet shows the term only as a back-reference ('所述预测记忆结果' in context_after) and no introducing form (e.g. '一预测记忆结果' or other allowed introducer) in the provided window. Based on the vicinity, the antecedent appears not to have been introduced, so the walker's flag is likely correct.",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":85,\"reasoning\":\"The snippet shows the term only as a back-reference ('所述预测记忆结果' in context_after) and no introducing form (e.g. '一预测记忆结果' or other allowed introducer) in the provided window. Based on the vicinity, the antecedent appears not to have been introduced, so the walker's flag is likely correct.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 46,
+        "term": "预测记忆结果",
+        "reference_form": "所述预测记忆结果",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 182,
+        "context_before": "单元，被配置为获取由外部记忆库基于所述第四样本中间输入确定的",
+        "context_after": "；\n第三调参单元，被配置为基于所述预测记忆结果和所述样本记忆",
+        "claim_text": "46. 如权利要求42至44中任一项所述的训练装置，其特征在于，所述训练装置还包括：第七获取单元，被配置为获取第四样本数据，所述第四样本数据包括第四样本初始输\n入、能够由外部记忆库识别的第四样本中间输入、样本记忆结果以及第四样本回复，其中，所述第四样本中间输入是基于所述第四样本初始输入确定的；\n第八获取单元，被配置为获取由外部记忆库基于所述第四样本中间输入确定的预测记忆结果；\n第三调参单元，被配置为基于所述预测记忆结果和所述样本记忆结果的比较，调整所述外部记忆库的参数；\n第三确定单元，被配置为至少基于所述第四样本初始输入和所述样本记忆结果，确定用于所述深度学习模型的第四样本目标输入；\n第三处理单元，被配置为利用所述深度学习模型对所述第四样本目标输入进行处理，以获得第四预测回复；以及\n第四调参单元，被配置为基于所述第四样本回复和所述第四预测回复的比较，调整所述深度学习模型的参数。",
+        "claim_text_charlen": 394
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN115952274B",
+        "claim_id": 4,
+        "term": "第一数据组",
+        "reference_form": "所述第一数据组",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "R23 over_capture extension: 18 multi-char trailing verbs + 7 interior verbs + 2 cascade verb-predicates | cascade from R23: bare in ancestor(s) [4, 2]",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": {
+        "finding_key": "cn:CN115952274B:4:第一数据组",
+        "final_category": "ambig",
+        "agreement_level": "three_way_split",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 72,
+            "reasoning": "The term '第一数据组' appears with the reference form '所述第一数据组' (the aforementioned first data group) in claim 4. The context_before shows only reference markers ('所述方法', '所述输入数据', '所述回复') but no introducing form ('一第一数据组', '一個第一數據組', or bare introduction) of '第一数据组' within the visible window. Since claim 4 is not claim 1 (no ancestor context provided) and no introduction is evident, this appears to be a genuine antecedent-basis error where the drafter referenced a term without properly introducing i",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 72, \"reasoning\": \"The term '第一数据组' appears with the reference form '所述第一数据组' (the aforementioned first data group) in claim 4. The context_before shows only reference markers ('所述方法', '所述输入数据', '所述回复') but no introducing form ('一第一数据组', '一個第一數據組', or bare introduction) of '第一数据组' within the visible window. Since claim 4 is not claim 1 (no ancestor context provided) and no introduction is evident, this appears to be a genuine antecedent-basis error where the drafter referenced a term without properly introducing it first.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "walker_fp",
+            "confidence": 85,
+            "reasoning": "The surface shows '所述第一数据组集中的任一数据组' (the head noun is '第一数据组集'), while the walker matched/truncated it as '所述第一数据组' — indicating mis-tokenization of a larger noun rather than a genuine missing antecedent.",
+            "raw": "{\"category\":\"walker_fp\",\"confidence\":85,\"reasoning\":\"The surface shows '所述第一数据组集中的任一数据组' (the head noun is '第一数据组集'), while the walker matched/truncated it as '所述第一数据组' — indicating mis-tokenization of a larger noun rather than a genuine missing antecedent.\"}"
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 52,
+            "reasoning": "Claim 4 is a dependent claim, so '第一数据组' may well have been introduced in an ancestor claim (e.g., claim 1 or earlier). The 30-char context_before only shows a reference marker ('所述') usage, but this alone cannot confirm a drafting error since proper introduction in a parent claim is common and not visible in this window.",
+            "raw": "{\"category\": \"ambig\", \"confidence\": 52, \"reasoning\": \"Claim 4 is a dependent claim, so '第一数据组' may well have been introduced in an ancestor claim (e.g., claim 1 or earlier). The 30-char context_before only shows a reference marker ('所述') usage, but this alone cannot confirm a drafting error since proper introduction in a parent claim is common and not visible in this window.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 4,
+        "term": "第一数据组",
+        "reference_form": "所述第一数据组",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 53,
+        "context_before": "于，所述方法还包括：\n响应于确定基于所述输入数据和所述回复的",
+        "context_after": "与所述第一数据组集中的任一数据组之间的相似度低于第二阈值，将",
+        "claim_text": "4 .如权利要求2所述的数据生成方法，其特征在于，所述方法还包括：\n响应于确定基于所述输入数据和所述回复的第一数据组与所述第一数据组集中的任一数据组之间的相似度低于第二阈值，将所述第一数据组录入所述第一数据组集中。",
+        "claim_text_charlen": 107
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 89,
+        "term": "第二神经网络",
+        "reference_form": "所述第二神经网络",
+        "category": "walker_fp.cross_branch_sibling",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5). | resolved by parser-fix: ancestor chain now correct",
+        "resolved_by": "round_26_parser_numpr_presplit",
+        "round": 26
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 87,
+        "term": "第四神经网络",
+        "reference_form": "所述第四神经网络",
+        "category": "walker_fp.cross_branch_sibling",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+        "resolved_by": "round_26_parser_numpr_presplit",
+        "round": 26
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 160,
+        "term": "计算机程序",
+        "reference_form": "所述计算机程序",
+        "category": "walker_fp.over_capture",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": "round_27_f14_v_you",
+        "round": 27
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 11,
+        "term": "第一设备",
+        "reference_form": "所述第一设备",
+        "category": "walker_fp.cross_branch_sibling",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "R10 shifting: resurfaced from char-exclusion residue strip. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 42, 121]; real §112(b) defect (parallel-invention drafter error) | demoted from protect:true legit_drafting_error: pre-fix label was an artifact of parser claim-id drift; post-fix walker resolves the antecedent chain correctly",
+        "resolved_by": "round_26_parser_numpr_presplit",
+        "round": 26
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 87,
+        "term": "第二神经网络",
+        "reference_form": "所述第二神经网络",
+        "category": "walker_fp.cross_branch_sibling",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | resolved by parser-fix: ancestor chain now correct",
+        "resolved_by": "round_26_parser_numpr_presplit",
+        "round": 26
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 89,
+        "term": "第一信息",
+        "reference_form": "所述第一信息",
+        "category": "walker_fp.cross_branch_sibling",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5).",
+        "resolved_by": "round_19_conjunction_split",
+        "round": 19
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 32,
+        "term": "信息",
+        "reference_form": "所述信息",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": "round_25_r14c2_f6_bare_noun",
+        "round": 25
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 150,
+        "term": "处理单元",
+        "reference_form": "所述处理单元",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": {
+        "finding_key": "cn:CN115485995B:150:处理单元",
+        "final_category": "ambig",
+        "agreement_level": "three_way_split",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "coverage_gap",
+            "confidence": 72,
+            "reasoning": "Claim 150 explicitly references \"权利要求149所述的装置\" (the apparatus as recited in claim 149), making it a dependent claim. The term '处理单元' (processing unit) is likely introduced in the parent claim 149, which the walker cannot see in its 30-char window. This is a jurisdictional coverage limitation for dependent-claim antecedent tracing, not a drafting error.",
+            "raw": "{\"category\": \"coverage_gap\", \"confidence\": 72, \"reasoning\": \"Claim 150 explicitly references \\\"权利要求149所述的装置\\\" (the apparatus as recited in claim 149), making it a dependent claim. The term '处理单元' (processing unit) is likely introduced in the parent claim 149, which the walker cannot see in its 30-char window. This is a jurisdictional coverage limitation for dependent-claim antecedent tracing, not a drafting error.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "walker_fp",
+            "confidence": 90,
+            "reasoning": "The claim explicitly depends on claim 149 ('如权利要求149所述的装置'), so ‘所述处理单元’ is a reference to an antecedent introduced in the ancestor claim; the walker incorrectly flagged it as missing.",
+            "raw": "{\"category\":\"walker_fp\",\"confidence\":90,\"reasoning\":\"The claim explicitly depends on claim 149 ('如权利要求149所述的装置'), so ‘所述处理单元’ is a reference to an antecedent introduced in the ancestor claim; the walker incorrectly flagged it as missing.\"}"
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 62,
+            "reasoning": "Claim 150 is a dependent claim (\"如权利要求149所述的装置\"), so '处理单元' may have been introduced in claim 149 or an ancestor claim — the 30-char window only shows the reference form '所述处理单元' without revealing whether it was introduced upstream. Because dependent claims legitimately inherit antecedents from ancestor claims, the walker cannot determine a drafting error from this window alone, but the window is genuinely insufficient to confirm introduction.",
+            "raw": "{\"category\": \"ambig\", \"confidence\": 62, \"reasoning\": \"Claim 150 is a dependent claim (\\\"如权利要求149所述的装置\\\"), so '处理单元' may have been introduced in claim 149 or an ancestor claim — the 30-char window only shows the reference form '所述处理单元' without revealing whether it was introduced upstream. Because dependent claims legitimately inherit antecedents from ancestor claims, the walker cannot determine a drafting error from this window alone, but the window is genuinely insufficient to confirm introduction.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 150,
+        "term": "处理单元",
+        "reference_form": "所述处理单元",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 27,
+        "context_before": "150. 如权利要求149所述的装置，其特征在于，所述",
+        "context_after": "将所述信息传输模式从所述第一模式切换至所述第二模式包括：\n所",
+        "claim_text": "150. 如权利要求149所述的装置，其特征在于，所述处理单元将所述信息传输模式从所述第一模式切换至所述第二模式包括：\n所述处理单元在第四起始时刻之后的第四预设时长之内或第四预设时长之后开始将所述信息传输模式从所述第一模式切换至所述第二模式，其中，所述第四起始时刻包括所述发送单元向所述第一设备发送所述第二通知消息的时刻，或所述接收单元接收来自所述第一设备的所述第二通知消息的时刻。",
+        "claim_text_charlen": 191
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 141,
+        "term": "第三神经网络",
+        "reference_form": "所述第三神经网络",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": {
+        "finding_key": "cn:CN115485995B:141:第三神经网络",
+        "final_category": "ambig",
+        "agreement_level": "three_way_split",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 72,
+            "reasoning": "The context_before shows '所述第三神经网络' (the reference form itself), indicating a back-reference to a prior introduction. No introducing form (一/一個/bare noun) of '第三神经网络' is visible in the ~30-char window. In claim 141 (likely a dependent claim), the term uses a definite reference marker without an obvious local introduction, suggesting the drafter may have failed to introduce this term properly.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 72, \"reasoning\": \"The context_before shows '所述第三神经网络' (the reference form itself), indicating a back-reference to a prior introduction. No introducing form (一/一個/bare noun) of '第三神经网络' is visible in the ~30-char window. In claim 141 (likely a dependent claim), the term uses a definite reference marker without an obvious local introduction, suggesting the drafter may have failed to introduce this term properly.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "diagnostic_mis_attribution",
+            "confidence": 90,
+            "reasoning": "The provided context contains '所述第四神经网络' (and references to 所述第一设备) but not '所述第三神经网络'; the walker’s constructed reference form does not appear at the indicated span, so the diagnostic likely pointed to the wrong text.",
+            "raw": "{\"category\":\"diagnostic_mis_attribution\",\"confidence\":90,\"reasoning\":\"The provided context contains '所述第四神经网络' (and references to 所述第一设备) but not '所述第三神经网络'; the walker’s constructed reference form does not appear at the indicated span, so the diagnostic likely pointed to the wrong text.\"}"
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 52,
+            "reasoning": "The 30-char window shows `所述第三神经网络` (a reference form) at the flag site, confirming the walker's complaint that no introduction is visible here. However, claim 141 is a dependent claim (claim_id 141, with a \"Did you mean\" hint pointing to claim 121 for '神经网络'), so '第三神经网络' may have been introduced in an ancestor claim — the short window and lack of ancestor context make it impossible to confirm or deny a legitimate antecedent exists elsewhere in the claim chain.",
+            "raw": "{\"category\": \"ambig\", \"confidence\": 52, \"reasoning\": \"The 30-char window shows `所述第三神经网络` (a reference form) at the flag site, confirming the walker's complaint that no introduction is visible here. However, claim 141 is a dependent claim (claim_id 141, with a \\\"Did you mean\\\" hint pointing to claim 121 for '神经网络'), so '第三神经网络' may have been introduced in an ancestor claim — the short window and lack of ancestor context make it impossible to confirm or deny a legitimate antecedent exists elsewhere in the claim chain.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 141,
+        "term": "第三神经网络",
+        "reference_form": "所述第三神经网络",
+        "did_you_mean": {
+          "term": "神经网络",
+          "claim_id": 121
+        },
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 100,
+        "context_before": "息，或者，接收来自所述第一设备的所述第四神经网络的信息和所述",
+        "context_after": "的信息包括：\n所述接收单元在所述发送单元发送所述第二信息之后",
+        "claim_text": "141 .如权利要求140所述的装置，其特征在于，所述接收单元在所述发送单元发送所述第二信息之后，接收来自所述第一设备的所述第四神经网络的信息，或者，接收来自所述第一设备的所述第四神经网络的信息和所述第三神经网络的信息包括：\n所述接收单元在所述发送单元发送所述第二信息之后，在第一起始时刻之后的第一预设时长之内或第一预设时长之后开始接收来自所述第一设备的所述第四神经网络的信息，或者，接收来自所述第一设备的所述第四神经网络的信息和所述第三神经网络的信息。",
+        "claim_text_charlen": 227
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 91,
+        "term": "第二神经网络",
+        "reference_form": "所述第二神经网络",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: term introduced bare in ancestor [90]; walker intro-registration miss | resolved by parser-fix: ancestor chain now correct",
+        "resolved_by": "round_26_parser_numpr_presplit",
+        "round": 26
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 121,
+        "term": "第三神经网络",
+        "reference_form": "所述第三神经网络",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 42, 80]; real §112(b) defect (parallel-invention drafter error)",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN115485995B:121:第三神经网络",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 75,
+            "reasoning": "The walker correctly identifies `所述第三神经网络` (reference form) in context_before at char_offset 187, but the visible context shows only references to other neural networks (`所述第四神经网络`, `所述第一神经网络`) without an introducing form (`一第三神经网络` or bare `第三神经网络`) of the third neural network itself. This indicates a genuine antecedent-basis gap.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 75, \"reasoning\": \"The walker correctly identifies `所述第三神经网络` (reference form) in context_before at char_offset 187, but the visible context shows only references to other neural networks (`所述第四神经网络`, `所述第一神经网络`) without an introducing form (`一第三神经网络` or bare `第三神经网络`) of the third neural network itself. This indicates a genuine antecedent-basis gap.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 90,
+            "reasoning": "The context shows reference forms for 第一、第二、第四 神经网络 but no introducing form for 第三神经网络 (no 一第三/一個第三 or bare introduction) within the window; the walker’s complaint is valid.",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":90,\"reasoning\":\"The context shows reference forms for 第一、第二、第四 神经网络 but no introducing form for 第三神经网络 (no 一第三/一個第三 or bare introduction) within the window; the walker’s complaint is valid.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 121,
+        "term": "第三神经网络",
+        "reference_form": "所述第三神经网络",
+        "did_you_mean": {
+          "term": "神经网络",
+          "claim_id": 121
+        },
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 187,
+        "context_before": "经网络的信息确定所述第四神经网络，\n其中，所述第一神经网络或",
+        "context_after": "用于所述第一设备进行第一信号处理，所述第二神经网络或所述第四",
+        "claim_text": "121 .一种用于调整神经网络的装置，涉及第一神经网络和第二神经网络，其中，第一神经网络应用于第一设备侧，第二神经网络应用于所述装置侧，其特征在于，所述装置包括：接收单元，用于接收来自所述第一设备的第四神经网络的信息，其中，所述第四神经网\n络为所述第二神经网络更新或调整后的神经网络；\n处理单元，用于基于所述第四神经网络的信息确定所述第四神经网络，\n其中，所述第一神经网络或第三神经网络用于所述第一设备进行第一信号处理，所述第二神经网络或所述第四神经网络用于所述装置进行第二信号处理，所述第二信号处理与所述第一信号处理相对应，所述第三神经网络为所述第一设备确定的更新或调整后的所述第一神经网络。",
+        "claim_text_charlen": 297
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 82,
+        "term": "第一训练信号",
+        "reference_form": "所述第一训练信号",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | parser-fix migration: c81→c82 | R20 re-triage: independent claim references term introduced only in parallel independent claims [124]; real §112(b) defect (parallel-invention drafter error)",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN115485995B:82:第一训练信号",
+        "final_category": "ambig",
+        "agreement_level": "three_way_split",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 78,
+            "reasoning": "The context shows '所述第一训练信号' (the reference form) at char_offset 33, immediately preceded by '所述' and '所述第三信号相关的'. The visible context contains only reference markers ('所述'), with no introducing form ('一第一训练信号', '一個第一訓練信號', or bare noun introduction) present. Claim 82 depends on claim 81, but the char_offset 33 is in the introductory phrase comparing to claim 81; without evidence of a prior introduction within claim 82 or 81's context, this appears to be a genuine failure to introduce the antece",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 78, \"reasoning\": \"The context shows '所述第一训练信号' (the reference form) at char_offset 33, immediately preceded by '所述' and '所述第三信号相关的'. The visible context contains only reference markers ('所述'), with no introducing form ('一第一训练信号', '一個第一訓練信號', or bare noun introduction) present. Claim 82 depends on claim 81, but the char_offset 33 is in the introductory phrase comparing to claim 81; without evidence of a prior introduction within claim 82 or 81's context, this appears to be a genuine failure to introduce the antecedent.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "diagnostic_mis_attribution",
+            "confidence": 90,
+            "reasoning": "The walker reports '所述第一训练信号' but the visible span contains '所述第六信号相关的第二训练信号' (第二, not 第一); the constructed reference form does not appear at the shown location, so the diagnostic pointed to the wrong span/term.",
+            "raw": "{\"category\":\"diagnostic_mis_attribution\",\"confidence\":90,\"reasoning\":\"The walker reports '所述第一训练信号' but the visible span contains '所述第六信号相关的第二训练信号' (第二, not 第一); the constructed reference form does not appear at the shown location, so the diagnostic pointed to the wrong span/term.\"}"
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 62,
+            "reasoning": "Claim 82 depends on claim 81, so '第一训练信号' may have been introduced in claim 81 or an ancestor claim — the 30-char window only shows a reference-form context (`所述第三信号相关的`) with no introducing form visible here, but the introduction could legitimately exist in the ancestor chain. Without visibility into claim 81's text, the window is insufficient to confirm or deny a drafting error.",
+            "raw": "{\"category\": \"ambig\", \"confidence\": 62, \"reasoning\": \"Claim 82 depends on claim 81, so '第一训练信号' may have been introduced in claim 81 or an ancestor claim — the 30-char window only shows a reference-form context (`所述第三信号相关的`) with no introducing form visible here, but the introduction could legitimately exist in the ancestor chain. Without visibility into claim 81's text, the window is insufficient to confirm or deny a drafting error.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 82,
+        "term": "第一训练信号",
+        "reference_form": "所述第一训练信号",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 33,
+        "context_before": " .如权利要求81所述的装置，其特征在于，所述第三信号相关的",
+        "context_after": "与所述\n第六信号相关的第二训练信号之间的差异度满足第一条件；",
+        "claim_text": "82  .如权利要求81所述的装置，其特征在于，所述第三信号相关的第一训练信号与所述\n第六信号相关的第二训练信号之间的差异度满足第一条件；或者，\n所述第一训练信号与所述第二训练信号之间的相似度满足第二条件。",
+        "claim_text_charlen": 103
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 125,
+        "term": "差异度",
+        "reference_form": "所述差异度",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 82]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c124→c125",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN115485995B:125:差异度",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 78,
+            "reasoning": "The term '差异度' appears in its reference form '所述差异度' (char offset 27), immediately after '所述' which is a canonical antecedent-reference marker in CN. The context_before shows only the reference marker '所述', with no introducing form (一差异度/一個差異度/bare noun) visible. Claim 125 is a dependent claim (references claim 124), but the term itself is not introduced in claim 125; it would need introduction either in an ancestor or inline. The reference marker '所述' signals the walker's complaint is likely va",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 78, \"reasoning\": \"The term '差异度' appears in its reference form '所述差异度' (char offset 27), immediately after '所述' which is a canonical antecedent-reference marker in CN. The context_before shows only the reference marker '所述', with no introducing form (一差异度/一個差異度/bare noun) visible. Claim 125 is a dependent claim (references claim 124), but the term itself is not introduced in claim 125; it would need introduction either in an ancestor or inline. The reference marker '所述' signals the walker's complaint is likely valid.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 90,
+            "reasoning": "Context shows the reference form '所述差异度' with no introducing form (e.g. '一差异度' or bare '差异度') in the visible window; this indicates a referenced term without a prior introduction (walker flag is likely correct).",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":90,\"reasoning\":\"Context shows the reference form '所述差异度' with no introducing form (e.g. '一差异度' or bare '差异度') in the visible window; this indicates a referenced term without a prior introduction (walker flag is likely correct).\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 125,
+        "term": "差异度",
+        "reference_form": "所述差异度",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 27,
+        "context_before": "125. 如权利要求124所述的装置，其特征在于，所述",
+        "context_after": "包括以下任意一种：差值、均方差值、归一化均方差值或平均绝对误",
+        "claim_text": "125. 如权利要求124所述的装置，其特征在于，所述差异度包括以下任意一种：差值、均方差值、归一化均方差值或平均绝对误差；\n所述相似度包括相关性系数。",
+        "claim_text_charlen": 76
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 125,
+        "term": "相似度",
+        "reference_form": "所述相似度",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 82]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c124→c125",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN115485995B:125:相似度",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 78,
+            "reasoning": "The context_before ends with \"所述\" (a reference marker) immediately before the term '相似度', indicating this is a reference form (\"the aforementioned similarity degree\"). The visible context shows only reference markers (所述) and no introducing form (一相似度, 一個相似度, or bare 相似度 as preamble). This is consistent with the walker's finding of missing antecedent.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 78, \"reasoning\": \"The context_before ends with \\\"所述\\\" (a reference marker) immediately before the term '相似度', indicating this is a reference form (\\\"the aforementioned similarity degree\\\"). The visible context shows only reference markers (所述) and no introducing form (一相似度, 一個相似度, or bare 相似度 as preamble). This is consistent with the walker's finding of missing antecedent.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 90,
+            "reasoning": "The context shows the reference marker '所述' immediately before the term and there is no introducing form like '一相似度'/'相似度' in the visible window, so the walker correctly flagged a missing antecedent.",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":90,\"reasoning\":\"The context shows the reference marker '所述' immediately before the term and there is no introducing form like '一相似度'/'相似度' in the visible window, so the walker correctly flagged a missing antecedent.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 125,
+        "term": "相似度",
+        "reference_form": "所述相似度",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 65,
+        "context_before": "意一种：差值、均方差值、归一化均方差值或平均绝对误差；\n所述",
+        "context_after": "包括相关性系数。",
+        "claim_text": "125. 如权利要求124所述的装置，其特征在于，所述差异度包括以下任意一种：差值、均方差值、归一化均方差值或平均绝对误差；\n所述相似度包括相关性系数。",
+        "claim_text_charlen": 76
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 42,
+        "term": "第三神经网络",
+        "reference_form": "所述第三神经网络",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 80, 121]; real §112(b) defect (parallel-invention drafter error)",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN115485995B:42:第三神经网络",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 72,
+            "reasoning": "The context_before shows `所述第四神经网络` and `所述第一神经网络` — both reference forms (所述+term), indicating these neural networks are being REFERENCED, not introduced. No introducing form (`一个第三神经网络` or bare `第三神经网络`) is visible in the 30-char window. The term appears to lack a proper antecedent introduction in this claim (claim 42, a dependent claim with no parent context provided).",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 72, \"reasoning\": \"The context_before shows `所述第四神经网络` and `所述第一神经网络` — both reference forms (所述+term), indicating these neural networks are being REFERENCED, not introduced. No introducing form (`一个第三神经网络` or bare `第三神经网络`) is visible in the 30-char window. The term appears to lack a proper antecedent introduction in this claim (claim 42, a dependent claim with no parent context provided).\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 90,
+            "reasoning": "The snippet shows reference forms for 第一/第二/第四神经网络 but no introducing form for 第三神经网络 in the visible context, indicating the drafter likely failed to introduce the third neural network before using 所述第三神经网络.",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":90,\"reasoning\":\"The snippet shows reference forms for 第一/第二/第四神经网络 but no introducing form for 第三神经网络 in the visible context, indicating the drafter likely failed to introduce the third neural network before using 所述第三神经网络.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 42,
+        "term": "第三神经网络",
+        "reference_form": "所述第三神经网络",
+        "did_you_mean": {
+          "term": "神经网络",
+          "claim_id": 42
+        },
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 184,
+        "context_before": "经网络的信息确定所述第四神经网络，\n其中，所述第一神经网络或",
+        "context_after": "用于所述第一设备进行第一信号处理，所述第二神经网络或所述第四",
+        "claim_text": "42. 一种用于调整神经网络的方法，涉及第一神经网络和第二神经网络，其中，第一神经网络应用于第一设备侧，第二神经网络应用于第二设备侧，其特征在于，所述方法包括：所述第二设备接收来自所述第一设备的第四神经网络的信息，其中，所述第四神经网\n络为所述第二神经网络更新或调整后的神经网络；\n所述第二设备基于所述第四神经网络的信息确定所述第四神经网络，\n其中，所述第一神经网络或第三神经网络用于所述第一设备进行第一信号处理，所述第二神经网络或所述第四神经网络用于所述第二设备进行第二信号处理，所述第二信号处理与所述第一信号处理相对应，所述第三神经网络为所述第一设备确定的更新或调整后的所述第一神经网络。",
+        "claim_text_charlen": 296
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 42,
+        "term": "第四神经网",
+        "reference_form": "所述第四神经网",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 80, 121]; real §112(b) defect (parallel-invention drafter error)",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN115485995B:42:第四神经网",
+        "final_category": "walker_fp",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 85,
+            "reasoning": "The walker matched '第四神经网' but the corrected term is '第四神经网络' (with '络' at the end). The context_after shows '络为所述第二神经网络' — the complete phrase is '第四神经网络', which the walker mis-tokenized by stopping prematurely. This is a compound-noun tokenization error; the full term was not matched correctly.",
+            "raw": "{\"category\": \"walker_fp\", \"confidence\": 85, \"reasoning\": \"The walker matched '第四神经网' but the corrected term is '第四神经网络' (with '络' at the end). The context_after shows '络为所述第二神经网络' — the complete phrase is '第四神经网络', which the walker mis-tokenized by stopping prematurely. This is a compound-noun tokenization error; the full term was not matched correctly.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "walker_fp",
+            "confidence": 95,
+            "reasoning": "The surface shows the full noun ‘所述第四神经网\n络’ (第四神经网络) but the walker matched only the fragment ‘第四神经网’ — a tokenization/segmentation error, not a true missing-introduction error.",
+            "raw": "{\"category\":\"walker_fp\",\"confidence\":95,\"reasoning\":\"The surface shows the full noun ‘所述第四神经网\\n络’ (第四神经网络) but the walker matched only the fragment ‘第四神经网’ — a tokenization/segmentation error, not a true missing-introduction error.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 42,
+        "term": "第四神经网",
+        "reference_form": "所述第四神经网",
+        "did_you_mean": {
+          "term": "第四神经网络",
+          "claim_id": 42
+        },
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 97,
+        "context_before": "其特征在于，所述方法包括：所述第二设备接收来自所述第一设备的",
+        "context_after": "络的信息，其中，所述第四神经网\n络为所述第二神经网络更新或调",
+        "claim_text": "42. 一种用于调整神经网络的方法，涉及第一神经网络和第二神经网络，其中，第一神经网络应用于第一设备侧，第二神经网络应用于第二设备侧，其特征在于，所述方法包括：所述第二设备接收来自所述第一设备的第四神经网络的信息，其中，所述第四神经网\n络为所述第二神经网络更新或调整后的神经网络；\n所述第二设备基于所述第四神经网络的信息确定所述第四神经网络，\n其中，所述第一神经网络或第三神经网络用于所述第一设备进行第一信号处理，所述第二神经网络或所述第四神经网络用于所述第二设备进行第二信号处理，所述第二信号处理与所述第一信号处理相对应，所述第三神经网络为所述第一设备确定的更新或调整后的所述第一神经网络。",
+        "claim_text_charlen": 296
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 83,
+        "term": "相似度",
+        "reference_form": "所述相似度",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [11, 124]; real §112(b) defect (parallel-invention drafter error) | parser-fix migration: c82→c83",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN115485995B:83:相似度",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 85,
+            "reasoning": "The reference form '所述相似度' appears at char_offset 63 with context showing '所述' immediately before the term, indicating a back-pointer to a prior introduction. The context_before shows only a semicolon and '所述', with no introducing form ('一相似度', '一個相似度', or bare '相似度') visible in the ~30-char window. The walker's flag is correct: the term is referenced but not introduced in the accessible claim scope.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 85, \"reasoning\": \"The reference form '所述相似度' appears at char_offset 63 with context showing '所述' immediately before the term, indicating a back-pointer to a prior introduction. The context_before shows only a semicolon and '所述', with no introducing form ('一相似度', '一個相似度', or bare '相似度') visible in the ~30-char window. The walker's flag is correct: the term is referenced but not introduced in the accessible claim scope.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 90,
+            "reasoning": "The context shows '所述' immediately before the term and the visible window contains no introducing form (e.g. '一相似度' or bare '相似度'); this indicates a backward reference with no local introduction, so the walker's flag is valid.",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":90,\"reasoning\":\"The context shows '所述' immediately before the term and the visible window contains no introducing form (e.g. '一相似度' or bare '相似度'); this indicates a backward reference with no local introduction, so the walker's flag is valid.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 83,
+        "term": "相似度",
+        "reference_form": "所述相似度",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 63,
+        "context_before": "意一种：差值、均方差值、归一化均方差值或平均绝对误差；\n所述",
+        "context_after": "包括相关性系数。",
+        "claim_text": "83. 如权利要求82所述的装置，其特征在于，所述差异度包括以下任意一种：差值、均方差值、归一化均方差值或平均绝对误差；\n所述相似度包括相关性系数。",
+        "claim_text_charlen": 74
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 121,
+        "term": "装置侧",
+        "reference_form": "所述装置侧",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [80]; real §112(b) defect (parallel-invention drafter error)",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN115485995B:121:装置侧",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "tiebreaker",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "coverage_gap",
+            "confidence": 72,
+            "reasoning": "The term '装置侧' appears in reference form '所述装置侧' at char_offset 64, following the construction \"第二神经网络应用于所述\". The context_before shows \"第一设备侧\" (introducing \"设备侧\" with no determiner as a list member in a coordination context), and the reference '所述装置侧' immediately follows. The walker likely missed that '装置侧' is introduced via implicit coordination or a synonym pattern (likely \"装置侧\" is semantically parallel to \"设备侧\"), which is a recognizable-but-non-walker-supported introduction pattern in CN draf",
+            "raw": "{\"category\": \"coverage_gap\", \"confidence\": 72, \"reasoning\": \"The term '装置侧' appears in reference form '所述装置侧' at char_offset 64, following the construction \\\"第二神经网络应用于所述\\\". The context_before shows \\\"第一设备侧\\\" (introducing \\\"设备侧\\\" with no determiner as a list member in a coordination context), and the reference '所述装置侧' immediately follows. The walker likely missed that '装置侧' is introduced via implicit coordination or a synonym pattern (likely \\\"装置侧\\\" is semantically parallel to \\\"设备侧\\\"), which is a recognizable-but-non-walker-supported introduction pattern in CN drafting.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 90,
+            "reasoning": "The context shows a reference form ('所述...') to '装置侧' but the earlier phrase introduces '第一设备侧' (设备 vs 裝置), not '装置侧'; no introducing form for '装置侧' is visible, indicating a missing/inconsistent antecedent.",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":90,\"reasoning\":\"The context shows a reference form ('所述...') to '装置侧' but the earlier phrase introduces '第一设备侧' (设备 vs 裝置), not '装置侧'; no introducing form for '装置侧' is visible, indicating a missing/inconsistent antecedent.\"}"
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "legit_drafting_error",
+            "confidence": 82,
+            "reasoning": "The context_before shows `所述装置侧` — a reference form (`所述` + `装置侧`) — meaning the walker is flagging that `装置侧` is being referenced without a prior introduction. The visible window shows only `第一设备侧` (device side) introduced earlier, not `装置侧` (apparatus side), and no introducing form like `一装置侧` or `一个装置侧` is visible. This appears to be a genuine drafting error where the drafter used `所述装置侧` without first introducing `装置侧` (possibly conflating it with `设备侧`).",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 82, \"reasoning\": \"The context_before shows `所述装置侧` — a reference form (`所述` + `装置侧`) — meaning the walker is flagging that `装置侧` is being referenced without a prior introduction. The visible window shows only `第一设备侧` (device side) introduced earlier, not `装置侧` (apparatus side), and no introducing form like `一装置侧` or `一个装置侧` is visible. This appears to be a genuine drafting error where the drafter used `所述装置侧` without first introducing `装置侧` (possibly conflating it with `设备侧`).\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 121,
+        "term": "装置侧",
+        "reference_form": "所述装置侧",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 64,
+        "context_before": "，其中，第一神经网络应用于第一设备侧，第二神经网络应用于所述",
+        "context_after": "，其特征在于，所述装置包括：接收单元，用于接收来自所述第一设",
+        "claim_text": "121 .一种用于调整神经网络的装置，涉及第一神经网络和第二神经网络，其中，第一神经网络应用于第一设备侧，第二神经网络应用于所述装置侧，其特征在于，所述装置包括：接收单元，用于接收来自所述第一设备的第四神经网络的信息，其中，所述第四神经网\n络为所述第二神经网络更新或调整后的神经网络；\n处理单元，用于基于所述第四神经网络的信息确定所述第四神经网络，\n其中，所述第一神经网络或第三神经网络用于所述第一设备进行第一信号处理，所述第二神经网络或所述第四神经网络用于所述装置进行第二信号处理，所述第二信号处理与所述第一信号处理相对应，所述第三神经网络为所述第一设备确定的更新或调整后的所述第一神经网络。",
+        "claim_text_charlen": 297
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN115485995B",
+        "claim_id": 82,
+        "term": "第二训练信号",
+        "reference_form": "所述第二训练信号",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | parser-fix migration: c81→c82 | R20 re-triage: independent claim references term introduced only in parallel independent claims [124]; real §112(b) defect (parallel-invention drafter error)",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN115485995B:82:第二训练信号",
+        "final_category": "ambig",
+        "agreement_level": "three_way_split",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 72,
+            "reasoning": "The context_before shows '所述' (reference marker) immediately preceding the term '第二训练信号', indicating a REFERENCE form, not an introduction. No introducing form (一/一個/一種) is visible in the provided ~30-char window, suggesting genuine failure to introduce the antecedent 第二训练信号 in the claim or its ancestors.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 72, \"reasoning\": \"The context_before shows '所述' (reference marker) immediately preceding the term '第二训练信号', indicating a REFERENCE form, not an introduction. No introducing form (一/一個/一種) is visible in the provided ~30-char window, suggesting genuine failure to introduce the antecedent 第二训练信号 in the claim or its ancestors.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "coverage_gap",
+            "confidence": 90,
+            "reasoning": "The snippet contains an introducing phrase '…所述第六信号相关的第二训练信号…' (the second training signal related to the sixth signal), i.e. the noun '第二训练信号' is introduced by a modifier rather than by the limited patterns the walker expects, so the walker missed this valid antecedent form.",
+            "raw": "{\"category\":\"coverage_gap\",\"confidence\":90,\"reasoning\":\"The snippet contains an introducing phrase '…所述第六信号相关的第二训练信号…' (the second training signal related to the sixth signal), i.e. the noun '第二训练信号' is introduced by a modifier rather than by the limited patterns the walker expects, so the walker missed this valid antecedent form.\"}"
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 52,
+            "reasoning": "The 30-char window shows `所述第二训练信号` (a reference form) at the flagged offset, but claim 82 is likely a dependent claim where `第二训练信号` may have been introduced in an ancestor claim — the short context window cannot confirm or deny this. The walker's \"Did you mean\" hint pointing to `第二训练信号之间` suggests possible tokenization confusion, but the reference form `所述第二训练信号` does appear in context, making this a plausible legit flag; however, without visibility into ancestor claims, classification is genu",
+            "raw": "{\"category\": \"ambig\", \"confidence\": 52, \"reasoning\": \"The 30-char window shows `所述第二训练信号` (a reference form) at the flagged offset, but claim 82 is likely a dependent claim where `第二训练信号` may have been introduced in an ancestor claim — the short context window cannot confirm or deny this. The walker's \\\"Did you mean\\\" hint pointing to `第二训练信号之间` suggests possible tokenization confusion, but the reference form `所述第二训练信号` does appear in context, making this a plausible legit flag; however, without visibility into ancestor claims, classification is genuinely ambiguous.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 82,
+        "term": "第二训练信号",
+        "reference_form": "所述第二训练信号",
+        "did_you_mean": {
+          "term": "第二训练信号之间",
+          "claim_id": 82
+        },
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 50,
+        "context_before": "征在于，所述第三信号相关的第一训练信号与所述\n第六信号相关的",
+        "context_after": "之间的差异度满足第一条件；或者，\n所述第一训练信号与所述第二",
+        "claim_text": "82  .如权利要求81所述的装置，其特征在于，所述第三信号相关的第一训练信号与所述\n第六信号相关的第二训练信号之间的差异度满足第一条件；或者，\n所述第一训练信号与所述第二训练信号之间的相似度满足第二条件。",
+        "claim_text_charlen": 103
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN117427144B",
+        "claim_id": 2,
+        "term": "加入胰蛋白酶消化",
+        "reference_form": "所述加入胰蛋白酶消化",
+        "category": "walker_fp.over_capture",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | parser-fix migration: c1→c2 | R-ambig triage: term shape (interior/predicate token '胰蛋白酶消化' at idx 2) — walker capture FP",
+        "resolved_by": "round_23_over_capture_extension",
+        "round": 23
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN117427144B",
+        "claim_id": 1,
+        "term": "何首乌",
+        "reference_form": "所述何首乌",
+        "category": "walker_fp.cross_branch_sibling",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": {
+        "finding_key": "cn:CN117427144B:1:何首乌",
+        "final_category": "ambig",
+        "agreement_level": "three_way_split",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 72,
+            "reasoning": "The term '何首乌' appears in a context where it is immediately preceded by structural notation (ratios/specifications) and followed by a coordinate list (、当归...), suggesting it is part of an ingredient enumeration. The reference form '所述何首乌' indicates a back-reference, but the visible context shows no introducing form (一何首乌/一個何首乌 or bare introduction) nearby. Although the 30-char window is tight and claim 1 could theoretically contain an earlier introduction, the pattern of direct reference markers",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 72, \"reasoning\": \"The term '何首乌' appears in a context where it is immediately preceded by structural notation (ratios/specifications) and followed by a coordinate list (、当归...), suggesting it is part of an ingredient enumeration. The reference form '所述何首乌' indicates a back-reference, but the visible context shows no introducing form (一何首乌/一個何首乌 or bare introduction) nearby. Although the 30-char window is tight and claim 1 could theoretically contain an earlier introduction, the pattern of direct reference markers without visible antecedent introduction in the immediate vicinity is consistent with a legitimate drafting error.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "walker_fp",
+            "confidence": 90,
+            "reasoning": "The snippet shows the herb used as a bare coordinated list item (e.g. “何首乌、当归分别洗净...” — an introducing occurrence), not a back-reference with 所述/該; the walker misclassified an introduction as a reference.",
+            "raw": "{\"category\":\"walker_fp\",\"confidence\":90,\"reasoning\":\"The snippet shows the herb used as a bare coordinated list item (e.g. “何首乌、当归分别洗净...” — an introducing occurrence), not a back-reference with 所述/該; the walker misclassified an introduction as a reference.\"}"
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 52,
+            "reasoning": "The context_before shows a ratio specification line ending in a step label (S8), with no visible introducing form (`一何首乌`/`一種何首乌`/bare preamble noun) in the 30-char window; however, in a long claim (1384 chars) with multiple herb ingredients listed in what appears to be an ingredient enumeration (typical TCM formulation claims), '何首乌' is almost certainly introduced earlier in the claim as part of a conjunction/coordination list (e.g., `包括...何首乌、当归...`). The window is too narrow to confirm either",
+            "raw": "{\"category\": \"ambig\", \"confidence\": 52, \"reasoning\": \"The context_before shows a ratio specification line ending in a step label (S8), with no visible introducing form (`一何首乌`/`一種何首乌`/bare preamble noun) in the 30-char window; however, in a long claim (1384 chars) with multiple herb ingredients listed in what appears to be an ingredient enumeration (typical TCM formulation claims), '何首乌' is almost certainly introduced earlier in the claim as part of a conjunction/coordination list (e.g., `包括...何首乌、当归...`). The window is too narrow to confirm either a legit drafting error or a walker_fp coordination-introduction miss.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 1,
+        "term": "何首乌",
+        "reference_form": "所述何首乌",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 1100,
+        "context_before": "3‑5:1‑2:120‑150；\nS8 .水提取物的制备：将",
+        "context_after": "、当归分别洗净，干燥，粉碎，制得混合粉，加入水中，加热沸腾提",
+        "claim_text": "1 .一种含干细胞外泌体的防脱生发组合物的制备方法，其特征在于，包括以下步骤： S1 .培养基的制备：将蜂王浆、肝素钠加入含有胎牛血清的α‑MEM完全培养液中，混合均\n匀，制得培养基；所述培养基中，蜂王浆的含量为10‑20mg/L，所述肝素钠的含量为15‑22mg/ L，所述胎牛血清的含量为10‑12wt%；\nS2 .外泌体的刺激分泌：将猪脂肪间充质干细胞用步骤S1制得的培养基重悬细胞，低氧条件下体外培养，待细胞密度70‑80%时，用PBS溶液冲洗细胞，剩余的培养液留用，接种到无血清培养基中培养36‑60h后，收集细胞，剩余的培养液留用，与之前的培养液合并，制得脂肪干细胞无细胞培养液；所述低氧条件下体外培养中，氧气含量为1‑3v/v%，所述体外培养的温度为36‑38℃；\nS3 .脂肪干细胞外泌体的分离：用PBS溶液冲洗步骤S2获得的细胞，加入胰蛋白酶消化，在2‑4℃，将培养基依次在270‑320×g离心10‑15min，1800‑2200×g离心5‑10min，8000-12000×g离心25‑35min，去除细胞和细胞碎片；继续在98000‑102000×g离心60‑80min，将底部的沉淀物重悬并用PBS溶液冲洗，最后在98000‑102000×g离心60‑80min去除外泌体中污染的蛋白质，获得脂肪干细胞外泌体；\nS4 .外泌体‑脂质体的制备：将卵磷脂、胆固醇溶于乙醇，加入泊洛沙姆188的PBS溶液中，加热搅拌，使得乙醇完全挥发，制得脂质体溶液，将步骤S3制得的脂肪干细胞外泌体加入脂质体溶液中，孵育，制得外泌体‑脂质体溶液；\nS5 .活性共晶的制备：将二氨基嘧啶氧化物溶于丙二醇中，得到溶液A；将吡咯烷基二氨基嘧啶氧化物溶于乙腈中，得到溶液B，将2 ,3 ,5 ,4’ ‑四羟基二苯乙烯葡萄苷溶于乙醇中，得到溶液C；将溶液A、溶液B、溶液C混合均匀，室温静置，挥发溶剂，球磨，制得活性共晶粉；所述二氨基嘧啶氧化物、吡咯烷基二氨基嘧啶氧化物、2 ,3 ,5 ,4’ ‑四羟基二苯乙烯葡萄苷的质量比为2‑4:1‑2:3‑5；\nS6 .添加剂的制备：将人参皂苷Rb1、生物素三肽‑1、甘草酸二铵混合均匀，制得添加剂；所述人参皂苷Rb1、生物素三肽‑1、甘草酸二铵的质量比为2‑4:7‑10:3‑5；\nS7 .载药体系的制备：将步骤S5制得的活性共晶粉和步骤S6制得的添加剂混合均匀，加入步骤S4制得的外泌体‑脂质体溶液中，超声分散均匀，离心，收集沉淀，获得载药体系；所述活性共晶粉、添加剂、外泌体‑脂质体溶液的质量比为3‑5:1‑2:120‑150；\nS8 .水提取物的制备：将何首乌、当归分别洗净，干燥，粉碎，制得混合粉，加入水中，加热沸腾提取，过滤，收集固体，滤液干燥，制得水提取物；所述何首乌、当归的质量比为7‑10: 3‑5；\nS9 .发酵产物的制备：将步骤S8中的固体和步骤S2中的脂肪干细胞无细胞培养液混合均匀，灭菌，接种婴儿双歧杆菌和短双歧杆菌菌种种子液，发酵培养，过滤，滤液冷冻干燥，制得发酵产物；所述固体和脂肪干细胞无细胞培养液的质量比为7‑10:50‑70；\nS10 .含干细胞外泌体的防脱生发组合物的制备：将步骤S7制得的载药体系、步骤S8制得的水提取物、步骤S9制得的发酵产物混合均匀，制得含干细胞外泌体的防脱生发组合物。",
+        "claim_text_charlen": 1384
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN117427144B",
+        "claim_id": 1,
+        "term": "体外培养",
+        "reference_form": "所述体外培养",
+        "category": "walker_fp.cross_branch_sibling",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": {
+        "finding_key": "cn:CN117427144B:1:体外培养",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 72,
+            "reasoning": "The context shows only `低氧条件下体外培养` with no introducing form (一体外培养/一個體外培養/bare introduction) visible in the 30-char window or preceding context. The reference form `所述体外培养` pattern indicates the walker correctly identified a back-pointer, and no alternative introduction pattern (coordination, synonym, cross-reference) is evident in the visible vicinity.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 72, \"reasoning\": \"The context shows only `低氧条件下体外培养` with no introducing form (一体外培养/一個體外培養/bare introduction) visible in the 30-char window or preceding context. The reference form `所述体外培养` pattern indicates the walker correctly identified a back-pointer, and no alternative introduction pattern (coordination, synonym, cross-reference) is evident in the visible vicinity.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 85,
+            "reasoning": "The 30‑char window shows process text and '培养基' but no introducing form (e.g. 一体外培养/一種體外培养 or a bare‑noun introduction at claim start) for '体外培养', so the walker’s complaint that a referenced '所述体外培养' lacks antecedent is likely correct.",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":85,\"reasoning\":\"The 30‑char window shows process text and '培养基' but no introducing form (e.g. 一体外培养/一種體外培养 or a bare‑noun introduction at claim start) for '体外培养', so the walker’s complaint that a referenced '所述体外培养' lacks antecedent is likely correct.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 1,
+        "term": "体外培养",
+        "reference_form": "所述体外培养",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 200,
+        "context_before": "猪脂肪间充质干细胞用步骤S1制得的培养基重悬细胞，低氧条件下",
+        "context_after": "，待细胞密度70‑80%时，用PBS溶液冲洗细胞，剩余的培养",
+        "claim_text": "1 .一种含干细胞外泌体的防脱生发组合物的制备方法，其特征在于，包括以下步骤： S1 .培养基的制备：将蜂王浆、肝素钠加入含有胎牛血清的α‑MEM完全培养液中，混合均\n匀，制得培养基；所述培养基中，蜂王浆的含量为10‑20mg/L，所述肝素钠的含量为15‑22mg/ L，所述胎牛血清的含量为10‑12wt%；\nS2 .外泌体的刺激分泌：将猪脂肪间充质干细胞用步骤S1制得的培养基重悬细胞，低氧条件下体外培养，待细胞密度70‑80%时，用PBS溶液冲洗细胞，剩余的培养液留用，接种到无血清培养基中培养36‑60h后，收集细胞，剩余的培养液留用，与之前的培养液合并，制得脂肪干细胞无细胞培养液；所述低氧条件下体外培养中，氧气含量为1‑3v/v%，所述体外培养的温度为36‑38℃；\nS3 .脂肪干细胞外泌体的分离：用PBS溶液冲洗步骤S2获得的细胞，加入胰蛋白酶消化，在2‑4℃，将培养基依次在270‑320×g离心10‑15min，1800‑2200×g离心5‑10min，8000-12000×g离心25‑35min，去除细胞和细胞碎片；继续在98000‑102000×g离心60‑80min，将底部的沉淀物重悬并用PBS溶液冲洗，最后在98000‑102000×g离心60‑80min去除外泌体中污染的蛋白质，获得脂肪干细胞外泌体；\nS4 .外泌体‑脂质体的制备：将卵磷脂、胆固醇溶于乙醇，加入泊洛沙姆188的PBS溶液中，加热搅拌，使得乙醇完全挥发，制得脂质体溶液，将步骤S3制得的脂肪干细胞外泌体加入脂质体溶液中，孵育，制得外泌体‑脂质体溶液；\nS5 .活性共晶的制备：将二氨基嘧啶氧化物溶于丙二醇中，得到溶液A；将吡咯烷基二氨基嘧啶氧化物溶于乙腈中，得到溶液B，将2 ,3 ,5 ,4’ ‑四羟基二苯乙烯葡萄苷溶于乙醇中，得到溶液C；将溶液A、溶液B、溶液C混合均匀，室温静置，挥发溶剂，球磨，制得活性共晶粉；所述二氨基嘧啶氧化物、吡咯烷基二氨基嘧啶氧化物、2 ,3 ,5 ,4’ ‑四羟基二苯乙烯葡萄苷的质量比为2‑4:1‑2:3‑5；\nS6 .添加剂的制备：将人参皂苷Rb1、生物素三肽‑1、甘草酸二铵混合均匀，制得添加剂；所述人参皂苷Rb1、生物素三肽‑1、甘草酸二铵的质量比为2‑4:7‑10:3‑5；\nS7 .载药体系的制备：将步骤S5制得的活性共晶粉和步骤S6制得的添加剂混合均匀，加入步骤S4制得的外泌体‑脂质体溶液中，超声分散均匀，离心，收集沉淀，获得载药体系；所述活性共晶粉、添加剂、外泌体‑脂质体溶液的质量比为3‑5:1‑2:120‑150；\nS8 .水提取物的制备：将何首乌、当归分别洗净，干燥，粉碎，制得混合粉，加入水中，加热沸腾提取，过滤，收集固体，滤液干燥，制得水提取物；所述何首乌、当归的质量比为7‑10: 3‑5；\nS9 .发酵产物的制备：将步骤S8中的固体和步骤S2中的脂肪干细胞无细胞培养液混合均匀，灭菌，接种婴儿双歧杆菌和短双歧杆菌菌种种子液，发酵培养，过滤，滤液冷冻干燥，制得发酵产物；所述固体和脂肪干细胞无细胞培养液的质量比为7‑10:50‑70；\nS10 .含干细胞外泌体的防脱生发组合物的制备：将步骤S7制得的载药体系、步骤S8制得的水提取物、步骤S9制得的发酵产物混合均匀，制得含干细胞外泌体的防脱生发组合物。",
+        "claim_text_charlen": 1384
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN117427144B",
+        "claim_id": 4,
+        "term": "加热沸腾提取",
+        "reference_form": "所述加热沸腾提取",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": "round_23_over_capture_extension",
+        "round": 23
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN117427144B",
+        "claim_id": 6,
+        "term": "婴儿双歧杆菌",
+        "reference_form": "所述婴儿双歧杆菌",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": {
+        "finding_key": "cn:CN117427144B:6:婴儿双歧杆菌",
+        "final_category": "ambig",
+        "agreement_level": "three_way_split",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "coverage_gap",
+            "confidence": 72,
+            "reasoning": "The reference form '所述婴儿双歧杆菌' is correctly flagged in claim 6 (dependent), but the 30-char windows show only fragment views. The context_after mentions '和短双歧杆菌' (coordination with 短双歧杆菌), suggesting compound-noun coordination '婴儿双歧杆菌和短双歧杆菌' is likely introduced via coordination (coordination-introduced members), which is a valid intro pattern the walker may not fully capture in dependent claims.",
+            "raw": "{\"category\": \"coverage_gap\", \"confidence\": 72, \"reasoning\": \"The reference form '所述婴儿双歧杆菌' is correctly flagged in claim 6 (dependent), but the 30-char windows show only fragment views. The context_after mentions '和短双歧杆菌' (coordination with 短双歧杆菌), suggesting compound-noun coordination '婴儿双歧杆菌和短双歧杆菌' is likely introduced via coordination (coordination-introduced members), which is a valid intro pattern the walker may not fully capture in dependent claims.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "walker_fp",
+            "confidence": 90,
+            "reasoning": "The nearby text reads like '接种婴儿双歧杆菌和短双歧杆菌菌种种子液…' — the term appears as a bare/coordinated introduction (婴儿双歧杆菌) before '和短双歧杆菌', so the walker wrongly treated it as anaphoric (所述…) rather than an introduced noun.",
+            "raw": "{\"category\":\"walker_fp\",\"confidence\":90,\"reasoning\":\"The nearby text reads like '接种婴儿双歧杆菌和短双歧杆菌菌种种子液…' — the term appears as a bare/coordinated introduction (婴儿双歧杆菌) before '和短双歧杆菌', so the walker wrongly treated it as anaphoric (所述…) rather than an introduced noun.\"}"
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 52,
+            "reasoning": "The 30-char window shows the term '婴儿双歧杆菌' appearing in a coordination context ('接种婴儿双歧杆菌和短双歧杆菌菌种种子液'), which could constitute a bare-noun introduction rather than a back-reference — but there is no visible introducing form (一/一种) in context_before, and the claim is #6 (a dependent claim), so the introduction may exist in an ancestor claim. The window is insufficient to confirm whether '婴儿双歧杆菌' was properly introduced in an ancestor claim or earlier in this claim, nor whether '所述婴儿双歧杆菌' actually",
+            "raw": "{\"category\": \"ambig\", \"confidence\": 52, \"reasoning\": \"The 30-char window shows the term '婴儿双歧杆菌' appearing in a coordination context ('接种婴儿双歧杆菌和短双歧杆菌菌种种子液'), which could constitute a bare-noun introduction rather than a back-reference — but there is no visible introducing form (一/一种) in context_before, and the claim is #6 (a dependent claim), so the introduction may exist in an ancestor claim. The window is insufficient to confirm whether '婴儿双歧杆菌' was properly introduced in an ancestor claim or earlier in this claim, nor whether '所述婴儿双歧杆菌' actually appears at the flagged offset vs. a bare noun.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 6,
+        "term": "婴儿双歧杆菌",
+        "reference_form": "所述婴儿双歧杆菌",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 1299,
+        "context_before": "量份步骤S2中的脂肪干\n细胞无细胞培养液混合均匀，灭菌，接种",
+        "context_after": "和短双歧杆菌菌种种子液，接种量分别为2‑3v/v%和1‑2v",
+        "claim_text": "6. 根据权利要求1所述的制备方法，其特征在于，具体包括以下步骤：\nS1 .培养基的制备：将蜂王浆、肝素钠加入含有胎牛血清的α‑MEM完全培养液中，混合均匀，制得培养基，培养基中，蜂王浆的含量为10‑20mg/L，所述肝素钠的含量为15‑22mg/L，所述胎牛血清的含量为10‑12wt%；\nS2 .外泌体的刺激分泌：将猪脂肪间充质干细胞用步骤S1制得的培养基重悬细胞，氧气含量为1‑3v/v%条件下，36‑38℃体外培养，待细胞密度70‑80%时，用PBS溶液冲洗细胞，剩余的培养液留用，接种到无血清培养基中，细胞密度为106‑107个/mL培养36‑60h后，收集细胞，剩余的培养液留用，与之前的培养液合并，制得脂肪干细胞无细胞培养液；\nS3 .脂肪干细胞外泌体的分离：用PBS溶液冲洗步骤S2获得的细胞，加入0 .2‑0 .3wt%的胰蛋白酶于36‑38℃消化3‑5min，在2‑4℃，将培养基依次在270‑320×g离心10‑15min， 1800‑2200×g离心5‑10min，8000‑12000×g离心25‑35min，去除细胞和细胞碎片；继续在\n98000‑102000×g离心60‑80min，将底部的沉淀物重悬并用PBS溶液冲洗，最后在98000-\n102000×g离心60‑80min去除外泌体中污染的蛋白质，获得脂肪干细胞外泌体；\nS4 .外泌体‑脂质体的制备：将10‑12重量份卵磷脂、5‑7重量份胆固醇溶于50重量份乙醇，加入200重量份含2‑4重量份泊洛沙姆188的pH值为6  .9‑7  .2的PBS溶液中，加热至60‑70\n℃，搅拌使得乙醇完全挥发，制得脂质体溶液，将3‑5重量份步骤S3制得的脂肪干细胞外泌体加入脂质体溶液中，36‑38℃孵育0 .5‑1 .5h，制得外泌体‑脂质体溶液；\nS5 .活性共晶的制备：将2‑4重量份二氨基嘧啶氧化物溶于20重量份丙二醇中，得到溶液A；将1‑2重量份吡咯烷基二氨基嘧啶氧化物溶于10重量份乙腈中，得到溶液B，将3‑5重量份2 ,3 ,5 ,4’ ‑四羟基二苯乙烯葡萄苷溶于30重量份乙醇中，得到溶液C；将溶液A、溶液B、溶液C混合均匀，室温静置4‑7天，挥发溶剂，球磨2‑4h，制得活性共晶粉；\nS6 .添加剂的制备：将2‑4重量份人参皂苷Rb1、7‑10重量份生物素三肽‑1、3‑5重量份甘草酸二铵混合均匀，制得添加剂；\nS7 .载药体系的制备：将3‑5重量份步骤S5制得的活性共晶粉和1‑2重量份步骤S6制得的添加剂混合均匀，加入120‑150重量份步骤S4制得的外泌体‑脂质体溶液中，1200‑1500W超声分散15‑20min，离心，收集沉淀，获得载药体系；\nS8 .水提取物的制备：将7‑10重量份何首乌、3‑5重量份当归分别洗净，干燥，粉碎，制得混合粉，加入水中，所述混合粉和水的固液比为1:5‑7g/mL，加热沸腾提取2‑4h，过滤，收集固体，滤液干燥，制得水提取物；\nS9 .发酵产物的制备：将7‑10重量份步骤S8中的固体和50‑70重量份步骤S2中的脂肪干\n细胞无细胞培养液混合均匀，灭菌，接种婴儿双歧杆菌和短双歧杆菌菌种种子液，接种量分别为2‑3v/v%和1‑2v/v%，36‑38℃，100‑150r/min，发酵培养36‑48h，过滤，滤液冷冻干燥，制得发酵产物；所述婴儿双歧杆菌和短双歧杆菌菌种种子液的含菌量分别为108‑109cfu/mL； S10 .含干细胞外泌体的防脱生发组合物的制备：将15‑20重量份步骤S7制得的载药体\n系、3‑5重量份步骤S8制得的水提取物、5‑7重量份步骤S9制得的发酵产物混合均匀，制得含干细胞外泌体的防脱生发组合物。",
+        "claim_text_charlen": 1532
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN213655447U (BYD)",
+        "claim_id": 1,
+        "term": "柔性屏(400)",
+        "reference_form": "所述柔性屏(400)",
+        "category": "walker_fp.cross_branch_sibling",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": {
+        "finding_key": "cn:CN213655447U (BYD):1:柔性屏(400)",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "tiebreaker",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 72,
+            "reasoning": "The reference form '所述柔性屏(400)' appears at char_offset 230 in context, confirming the walker correctly identified a reference marker. The context_before shows only determiners (所述 for other components like 固定支撑板) with no introducing form (一柔性屏/一個柔性屏) visible in the ~30-char windows, suggesting the term lacks proper antecedent introduction despite being referenced.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 72, \"reasoning\": \"The reference form '所述柔性屏(400)' appears at char_offset 230 in context, confirming the walker correctly identified a reference marker. The context_before shows only determiners (所述 for other components like 固定支撑板) with no introducing form (一柔性屏/一個柔性屏) visible in the ~30-char windows, suggesting the term lacks proper antecedent introduction despite being referenced.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "walker_fp",
+            "confidence": 85,
+            "reasoning": "The diagnostic constructed the reference form 所述柔性屏(400) but the visible text shows a bare occurrence ‘柔性屏(400)’ (no 所述/該). This mismatch indicates the walker mis‑tokenized/attributed the term rather than a true missing antecedent.",
+            "raw": "{\"category\":\"walker_fp\",\"confidence\":85,\"reasoning\":\"The diagnostic constructed the reference form 所述柔性屏(400) but the visible text shows a bare occurrence ‘柔性屏(400)’ (no 所述/該). This mismatch indicates the walker mis‑tokenized/attributed the term rather than a true missing antecedent.\"}"
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "legit_drafting_error",
+            "confidence": 82,
+            "reasoning": "The reference form `所述柔性屏(400)` appears at the flagged offset in claim 1, but the 30-char context_before shows only `所述固定支撑板(110)` (another reference) with no introducing form such as `一柔性屏(400)` or bare `柔性屏(400)` visible anywhere in the window. Since this is claim 1 (no ancestor claims), the term `柔性屏(400)` must be introduced within this claim itself, but no `一<noun>` or preamble introduction is evident — the walker's flag appears to be a genuine drafting omission.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 82, \"reasoning\": \"The reference form `所述柔性屏(400)` appears at the flagged offset in claim 1, but the 30-char context_before shows only `所述固定支撑板(110)` (another reference) with no introducing form such as `一柔性屏(400)` or bare `柔性屏(400)` visible anywhere in the window. Since this is claim 1 (no ancestor claims), the term `柔性屏(400)` must be introduced within this claim itself, but no `一<noun>` or preamble introduction is evident — the walker's flag appears to be a genuine drafting omission.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 1,
+        "term": "柔性屏(400)",
+        "reference_form": "所述柔性屏(400)",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 230,
+        "context_before": "状态之间变换；\n其中，所述固定支撑板(110)被构造为能够向",
+        "context_after": "的平整部(410)提供支撑，所述活动支撑板(120)被构造为",
+        "claim_text": "1 .一种折叠机构，其特征在于，所述折叠机构具有展开状态和折叠状态，所述折叠机构包括两个屏幕支撑组件(100)以及两个避让组件(200)；\n每个所述屏幕支撑组件(100)包括固定支撑板(110)和活动支撑板(120)；每个所述避让组件(200)具有第一轴线；\n两个所述屏幕支撑组件(100)能够分别绕与其对应的避让组件(200)的第一轴线相背地转动和相向地转动以使所述折叠机构在所述展开状态和所述折叠状态之间变换；\n其中，所述固定支撑板(110)被构造为能够向柔性屏(400)的平整部(410)提供支撑，所述活动支撑板(120)被构造为能够在所述固定支撑板(110)和所述第一轴线之间移动；所述屏幕支撑组件(100)被构造为：在所述展开状态，所述活动支撑板(120)能够远离所述固定支撑板(110)以向所述柔性屏(400)的弯折部(420)提供支撑，在所述折叠状态，所述活动支撑板(120)能够靠近所述固定支撑板(110)以使得所述第一轴线处形成用于容纳隆起的所述弯折部(420)的空间；\n所述避让组件(200)被构造为：当所述折叠机构在所述折叠状态和所述展开状态之间变换时，能够驱使所述活动支撑板(120)在所述固定支撑板(110)和所述第一轴线之间移动。",
+        "claim_text_charlen": 529
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN116662522B",
+        "claim_id": 7,
+        "term": "预训练任务",
+        "reference_form": "所述预训练任务",
+        "category": "walker_fp.over_capture",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": {
+        "finding_key": "cn:CN116662522B:7:预训练任务",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 78,
+            "reasoning": "The context shows '所述预训练任务' (reference form) at the target position with no introducing form ('一预训练任务' or bare '预训练任务') visible in context_before. The reference marker '所述' immediately precedes the term, confirming it is a back-reference. Claim 7 is not claim 1, so the introduction would need to appear in an ancestor claim (1) or earlier in claim 7, but the adjacent context only shows the reference itself, not an introduction.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 78, \"reasoning\": \"The context shows '所述预训练任务' (reference form) at the target position with no introducing form ('一预训练任务' or bare '预训练任务') visible in context_before. The reference marker '所述' immediately precedes the term, confirming it is a back-reference. Claim 7 is not claim 1, so the introduction would need to appear in an ancestor claim (1) or earlier in claim 7, but the adjacent context only shows the reference itself, not an introduction.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 85,
+            "reasoning": "The snippet shows the term only in the reference form '所述预训练任务' (and no introducing form like '一预训练任务'/'一個預訓練任務' or a bare-noun introduction) within the visible context, so the walker’s lack of antecedent is likely correct.",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":85,\"reasoning\":\"The snippet shows the term only in the reference form '所述预训练任务' (and no introducing form like '一预训练任务'/'一個預訓練任務' or a bare-noun introduction) within the visible context, so the walker’s lack of antecedent is likely correct.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 7,
+        "term": "预训练任务",
+        "reference_form": "所述预训练任务",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 125,
+        "context_before": "码，得到所述多个第\n一编码结果，其中，所述目标预训练模型采用",
+        "context_after": "通过机器学习训练得到，所述预训练任务包括：词级别任务和句级别",
+        "claim_text": "7 .根据权利要求2或6所述的问题答案推荐方法，其特征在于，分别对所述多个待识别语言单位进行独立编码，得到所述多个第一编码结果包括：\n采用目标预训练模型分别对所述多个待识别语言单位进行独立编码，得到所述多个第\n一编码结果，其中，所述目标预训练模型采用预训练任务通过机器学习训练得到，所述预训练任务包括：词级别任务和句级别任务。",
+        "claim_text_charlen": 163
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN116662522B",
+        "claim_id": 10,
+        "term": "识别结果推荐",
+        "reference_form": "所述识别结果推荐",
+        "category": "walker_fp.over_capture",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": "round_23_over_capture_extension",
+        "round": 23
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN116662522B",
+        "claim_id": 5,
+        "term": "待回答问题",
+        "reference_form": "所述待回答问题",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": "round_25_r14c2_f6_bare_noun",
+        "round": 25
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN116662522B",
+        "claim_id": 1,
+        "term": "识别结果",
+        "reference_form": "所述识别结果",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [10, 13]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
+        "resolved_by": "round_25_r14c2_f6_bare_noun",
+        "round": 25
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN116662522B",
+        "claim_id": 11,
+        "term": "问题答案",
+        "reference_form": "所述问题答案",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "R23 over_capture extension: 18 multi-char trailing verbs + 7 interior verbs + 2 cascade verb-predicates | cascade from R23: bare in ancestor(s) [11, 10]",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": {
+        "finding_key": "cn:CN116662522B:11:问题答案",
+        "final_category": "walker_fp",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 88,
+            "reasoning": "The walker appears to have mis-tokenized a compound noun. The context shows \"所述的推荐方法\" (i.e., \"the aforementioned recommendation method\"), where \"推荐方法\" is the introduced term from claim 10. The walker incorrectly isolated \"问题答案\" as a separate term when it is part of the larger compound \"问题答案推荐方法\" (problem-answer recommendation method), which the claim legitimately references via the ancestor claim 10.",
+            "raw": "{\"category\": \"walker_fp\", \"confidence\": 88, \"reasoning\": \"The walker appears to have mis-tokenized a compound noun. The context shows \\\"所述的推荐方法\\\" (i.e., \\\"the aforementioned recommendation method\\\"), where \\\"推荐方法\\\" is the introduced term from claim 10. The walker incorrectly isolated \\\"问题答案\\\" as a separate term when it is part of the larger compound \\\"问题答案推荐方法\\\" (problem-answer recommendation method), which the claim legitimately references via the ancestor claim 10.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "walker_fp",
+            "confidence": 90,
+            "reasoning": "Context shows this is claim 11 depending on claim 10 (‘根据权利要求10所述的推荐方法’). The true introduced noun in claim 10 is the compound ‘问题答案推荐方法’; the walker mis-tokenized the fragment ‘问题答案’ as a separate term lacking introduction.",
+            "raw": "{\"category\":\"walker_fp\",\"confidence\":90,\"reasoning\":\"Context shows this is claim 11 depending on claim 10 (‘根据权利要求10所述的推荐方法’). The true introduced noun in claim 10 is the compound ‘问题答案推荐方法’; the walker mis-tokenized the fragment ‘问题答案’ as a separate term lacking introduction.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 11,
+        "term": "问题答案",
+        "reference_form": "所述问题答案",
+        "did_you_mean": {
+          "term": "问题答案推荐方法",
+          "claim_id": 10
+        },
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 15,
+        "context_before": "11 .根据权利要求10所述的",
+        "context_after": "推荐方法，其特征在于，通过终端设备提供一图形用户界面，所述图",
+        "claim_text": "11 .根据权利要求10所述的问题答案推荐方法，其特征在于，通过终端设备提供一图形用户界面，所述图形用户界面所显示的内容至少部分地包含一法律问答在线咨询服务场景，所述问题答案推荐还包括：\n响应作用于所述图形用户界面的第一触控操作，获取在输入框内输入的所述待回答法律问题；\n响应作用于所述图形用户界面的第二触控操作，获取所述目标法条答案；在所述图形用户界面内展示所述目标法条答案。",
+        "claim_text_charlen": 189
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN116662522B",
+        "claim_id": 13,
+        "term": "问题答案推荐方法",
+        "reference_form": "所述问题答案推荐方法",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1, 10]; real §112(b) defect (parallel-invention drafter error)",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN116662522B:13:问题答案推荐方法",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 78,
+            "reasoning": "The reference form '所述问题答案推荐方法' appears at char_offset 203 in claim 13, and context_before shows '所述' immediately before the term, confirming a reference marker (definite article). No introducing form ('一问题答案推荐方法', '一个问题答案推荐方法', etc.) is visible in the 30-char vicinity. Given claim 13 has no ancestors to inherit the introduction from, the antecedent appears genuinely missing.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 78, \"reasoning\": \"The reference form '所述问题答案推荐方法' appears at char_offset 203 in claim 13, and context_before shows '所述' immediately before the term, confirming a reference marker (definite article). No introducing form ('一问题答案推荐方法', '一个问题答案推荐方法', etc.) is visible in the 30-char vicinity. Given claim 13 has no ancestors to inherit the introduction from, the antecedent appears genuinely missing.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 90,
+            "reasoning": "The context shows the reference marker '所述' immediately before related terms and no introducing form (e.g. '一种/一個...','問題答案推薦方法' as a bare noun) in the visible window, indicating the claim refers to '所述问题答案推荐方法' without a prior introduction.",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":90,\"reasoning\":\"The context shows the reference marker '所述' immediately before related terms and no introducing form (e.g. '一种/一個...','問題答案推薦方法' as a bare noun) in the visible window, indicating the claim refers to '所述问题答案推荐方法' without a prior introduction.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 13,
+        "term": "问题答案推荐方法",
+        "reference_form": "所述问题答案推荐方法",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 203,
+        "context_before": "答问题与所述识别结果推荐所述待回答问题匹配的目标答案；\n所述",
+        "context_after": "还包括：对所述预设知识领域中的知识内容进行结构化处理，得到结",
+        "claim_text": "13. 一种电子设备，其特征在于，包括：处理器；以及\n存储器，与所述处理器连接，用于为所述处理器提供处理以下处理步骤的指令：\n获取待回答问题，其中，所述待回答问题为预设知识领域的问答在线咨询服务相关联的问题；\n对所述待回答问题进行意图识别，得到识别结果，其中，所述识别结果用于从所述预设知识领域中识别出所述待回答问题对应的分类标签；\n基于所述待回答问题与所述识别结果推荐所述待回答问题匹配的目标答案；\n所述问题答案推荐方法还包括：对所述预设知识领域中的知识内容进行结构化处理，得到结构化知识以及所述结构化知识对应的分类标签；构建意图体系，其中，所述意图体系包括多个层级的意图；在所述结构化知识对应的分类标签与所述多个层级的意图之间建立关联关系，其中，所述关联关系用于对所述待回答问题进行意图识别以得到所述识别结果。\n问题答案推荐方法、存储介质和电子设备",
+        "claim_text_charlen": 376
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN110276410B (BOE)",
+        "claim_id": 4,
+        "term": "未知不良数据导入",
+        "reference_form": "所述未知不良数据导入",
+        "category": "walker_fp.over_capture",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": "round_23_over_capture_extension",
+        "round": 23
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN110276410B (BOE)",
+        "claim_id": 5,
+        "term": "输入模块",
+        "reference_form": "所述输入模块",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": {
+        "finding_key": "cn:CN110276410B (BOE):5:输入模块",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 78,
+            "reasoning": "The context_before shows only a reference form \"所述输入模块\" (the aforementioned input module) with no introducing form like \"一输入模块\" visible. Claim 5 depends on claim 4, but the 30-char window shows no introduction of this term in the current claim's preamble. This is characteristic of a legitimate antecedent-basis gap where the drafter used a reference marker without establishing the antecedent in this dependent claim.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 78, \"reasoning\": \"The context_before shows only a reference form \\\"所述输入模块\\\" (the aforementioned input module) with no introducing form like \\\"一输入模块\\\" visible. Claim 5 depends on claim 4, but the 30-char window shows no introduction of this term in the current claim's preamble. This is characteristic of a legitimate antecedent-basis gap where the drafter used a reference marker without establishing the antecedent in this dependent claim.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 85,
+            "reasoning": "Context shows the term preceded by the reference marker “所述” (i.e. 所述输入模块) with no introducing form (一X/一個X or bare X) visible in the window; this indicates a referenced element without a clear antecedent in the shown context (claim 5 refers back to claim 4 but no introducer is present here).",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":85,\"reasoning\":\"Context shows the term preceded by the reference marker “所述” (i.e. 所述输入模块) with no introducing form (一X/一個X or bare X) visible in the window; this indicates a referenced element without a clear antecedent in the shown context (claim 5 refers back to claim 4 but no introducer is present here).\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 5,
+        "term": "输入模块",
+        "reference_form": "所述输入模块",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 24,
+        "context_before": "5. 根据权利要求4所述的装置，其特征在于，所述",
+        "context_after": "用于：\n将所述生产履历数据、所述生产设备的标识以及所述生产设",
+        "claim_text": "5. 根据权利要求4所述的装置，其特征在于，所述输入模块用于：\n将所述生产履历数据、所述生产设备的标识以及所述生产设备参数分别输入所述模型，分别得到与所述已知不良有关的生产工序、生产设备以及生产设备参数。",
+        "claim_text_charlen": 102
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN110276410B (BOE)",
+        "claim_id": 1,
+        "term": "已知不良",
+        "reference_form": "所述已知不良",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [4]; real §112(b) defect (parallel-invention drafter error)",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN110276410B (BOE):1:已知不良",
+        "final_category": "ambig",
+        "agreement_level": "three_way_split",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 72,
+            "reasoning": "The context_before shows only the claim preamble and structure markers (包括) with no introducing form for '已知不良'. The context_after reveals the term appears as '已知不良时' with '所述检测对象' and '所述生产数据' — both using reference markers. The term '已知不良' lacks any preceding '一已知不良' or bare introduction, and is referenced directly with the definite form, indicating a genuine antecedent gap.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 72, \"reasoning\": \"The context_before shows only the claim preamble and structure markers (包括) with no introducing form for '已知不良'. The context_after reveals the term appears as '已知不良时' with '所述检测对象' and '所述生产数据' — both using reference markers. The term '已知不良' lacks any preceding '一已知不良' or bare introduction, and is referenced directly with the definite form, indicating a genuine antecedent gap.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "diagnostic_mis_attribution",
+            "confidence": 90,
+            "reasoning": "The 30-char window shows '在检测对象存在时，抽取所述检测对象…' and contains no instance of '已知不良' or the reference form '所述已知不良', so the diagnostic appears to point to the wrong span.",
+            "raw": "{\"category\":\"diagnostic_mis_attribution\",\"confidence\":90,\"reasoning\":\"The 30-char window shows '在检测对象存在时，抽取所述检测对象…' and contains no instance of '已知不良' or the reference form '所述已知不良', so the diagnostic appears to point to the wrong span.\"}"
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "walker_fp",
+            "confidence": 82,
+            "reasoning": "The walker's \"Did you mean\" hint reveals the actual surface token is '已知不良时' (not '已知不良'), indicating compound-noun mis-tokenization: the walker split off the trailing '时' and matched a fragment. The full phrase '已知不良时' functions as a temporal/conditional clause head (\"when a known defect exists\"), not a standalone noun requiring indefinite-article introduction, so the walker's constructed reference form '所述已知不良' is mis-attributed to a fragment of that larger construction.",
+            "raw": "{\"category\": \"walker_fp\", \"confidence\": 82, \"reasoning\": \"The walker's \\\"Did you mean\\\" hint reveals the actual surface token is '已知不良时' (not '已知不良'), indicating compound-noun mis-tokenization: the walker split off the trailing '时' and matched a fragment. The full phrase '已知不良时' functions as a temporal/conditional clause head (\\\"when a known defect exists\\\"), not a standalone noun requiring indefinite-article introduction, so the walker's constructed reference form '所述已知不良' is mis-attributed to a fragment of that larger construction.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 1,
+        "term": "已知不良",
+        "reference_form": "所述已知不良",
+        "did_you_mean": {
+          "term": "已知不良时",
+          "claim_id": 1
+        },
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 32,
+        "context_before": ".一种确定不良原因的方法，其特征在于，包括：\n在检测对象存在",
+        "context_after": "时，抽取所述检测对象的生产数据，所述生产数据至少包括生产履历",
+        "claim_text": "1 .一种确定不良原因的方法，其特征在于，包括：\n在检测对象存在已知不良时，抽取所述检测对象的生产数据，所述生产数据至少包括生产履历数据、生产设备的标识以及生产设备参数中的一种，所述检测对象为OLED面板；\n将所述生产数据输入预先训练得到的模型，得到与所述已知不良有关的生产工序、生产设备以及生产设备参数中的至少一种，其中，所述模型根据所述检测对象的生产样本数据进行训练得到，所述生产样本数据中的各条数据标记了与所述已知不良之间的相关性；\n所述方法还包括：\n获取未知不良数据，形成第一数据集；\n基于所述第一数据集进行潜在因子离群值计算，得到离群值因子；基于所述离群值因子发出告警提示信息；\n获取针对所述告警提示信息的第一标记信息；\n使用所述第一标记信息对所述未知不良数据进行标记，得到标记后的未知不良数据；当标记后的未知不良数据的数据量达到阈值后，将标记后的所述未知不良数据导入所\n述模型的训练数据集，所述训练数据集中的数据用于训练所述模型；\n在将所述生产数据输入预先训练得到的模型，得到与所述已知不良有关的生产工序、生产设备以及生产设备参数中的至少一种信息之后，获取针对所述生产设备参数的第二标注信息；所述第二标注信息包括所述生产设备参数对应的数值范围信息；\n在所述第二标注信息指示所述检测对象在生产过程中存在不良时，根据产生所述生产设备参数的时间段，确定与所述不良相关的生产批次、产生所述不良后所述检测对象的后续生产工序以及所述检测对象的库存分布信息中的至少一种信息。",
+        "claim_text_charlen": 636
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN110276410B (BOE)",
+        "claim_id": 4,
+        "term": "已知不良",
+        "reference_form": "所述已知不良",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error)",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN110276410B (BOE):4:已知不良",
+        "final_category": "ambig",
+        "agreement_level": "three_way_split",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 75,
+            "reasoning": "The walker matched '已知不良' but the actual context shows '已知不良时' (with 时), indicating the walker mis-tokenized or over-matched. The 30-char window shows the drafter used coordination-intro structure ('包括：抽取模块，用于在检测对象存在已知不良时...') which introduces the concept, not a reference form. The walker's reference construction '所述已知不良' does not appear in the visible text, only the temporal form '已知不良时' does.",
+            "raw": "{\"category\": \"walker_fp\", \"confidence\": 75, \"reasoning\": \"The walker matched '已知不良' but the actual context shows '已知不良时' (with 时), indicating the walker mis-tokenized or over-matched. The 30-char window shows the drafter used coordination-intro structure ('包括：抽取模块，用于在检测对象存在已知不良时...') which introduces the concept, not a reference form. The walker's reference construction '所述已知不良' does not appear in the visible text, only the temporal form '已知不良时' does.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "diagnostic_mis_attribution",
+            "confidence": 90,
+            "reasoning": "The provided context does not contain the reference form '所述已知不良' (or any '已知不良'); instead it shows '检测对象存在时'. The walker likely pointed at the wrong span or mis-tokenized (e.g. confused '已知不良时' with surrounding text).",
+            "raw": "{\"category\":\"diagnostic_mis_attribution\",\"confidence\":90,\"reasoning\":\"The provided context does not contain the reference form '所述已知不良' (or any '已知不良'); instead it shows '检测对象存在时'. The walker likely pointed at the wrong span or mis-tokenized (e.g. confused '已知不良时' with surrounding text).\"}"
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "legit_drafting_error",
+            "confidence": 62,
+            "reasoning": "The walker flags `所述已知不良` but the context window shows `检测对象存在已知不良时` — this appears to be a bare-noun usage (`已知不良`) as part of a condition phrase, not a reference form with `所述`. However, the reference_form `所述已知不良` doesn't visibly appear in the context; instead the term appears bare. This suggests either the walker mis-constructed the reference form (pointing at a bare introduction that actually satisfies antecedent), or the term `已知不良` is used in claim 4 as a dependent claim without being int",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 62, \"reasoning\": \"The walker flags `所述已知不良` but the context window shows `检测对象存在已知不良时` — this appears to be a bare-noun usage (`已知不良`) as part of a condition phrase, not a reference form with `所述`. However, the reference_form `所述已知不良` doesn't visibly appear in the context; instead the term appears bare. This suggests either the walker mis-constructed the reference form (pointing at a bare introduction that actually satisfies antecedent), or the term `已知不良` is used in claim 4 as a dependent claim without being introduced in the parent claim chain. Given claim_id is 4 (dependent) and the 30-char window does not show a prior introduction (`一已知不良` or similar) within this window, and the \\\"did you mean\\\" suggestion points to `已知不良时` as the matched term, there is likely a genuine antecedent basis gap if `已知不良` was never introduced in claims 1–3.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 4,
+        "term": "已知不良",
+        "reference_form": "所述已知不良",
+        "did_you_mean": {
+          "term": "已知不良时",
+          "claim_id": 4
+        },
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 39,
+        "context_before": "原因的装置，其特征在于，包括：\n抽取模块，用于在检测对象存在",
+        "context_after": "时，抽取所述检测对象的生产数据，所述生产数据至少包括生产履历",
+        "claim_text": "4 .一种确定不良原因的装置，其特征在于，包括：\n抽取模块，用于在检测对象存在已知不良时，抽取所述检测对象的生产数据，所述生产数据至少包括生产履历数据、生产设备的标识以及生产设备参数中的一种，所述检测对象为OLED面板；\n输入模块，用于将所述生产数据输入预先训练得到的模型，得到与所述已知不良有关的生产工序、生产设备以及生产设备参数中的至少一种，其中，所述模型根据所述检测对象的生产样本数据进行训练得到，所述生产样本数据中的各条数据标记了与所述已知不良之间的相关性；\n所述装置还包括：\n第一获取模块，用于获取未知不良数据，形成第一数据集；\n计算模块，用于基于所述第一数据集进行潜在因子离群值计算，得到离群值因子；提示模块，用于基于所述离群值因子发出告警提示信息；\n第二获取模块，用于获取针对所述告警提示信息的第一标记信息；\n标记模块，用于使用所述第一标记信息对所述未知不良数据进行标记，得到标记后的未知不良数据；\n导入模块，用于当标记后的未知不良数据的数据量达到阈值后，将标记后的所述未知不良数据导入所述模型的训练数据集，所述训练数据集中的数据用于训练所述模型；\n在将所述生产数据输入预先训练得到的模型，得到与所述已知不良有关的生产工序、生产设备以及生产设备参数中的至少一种信息之后，获取针对所述生产设备参数的第二标注信息；所述第二标注信息包括所述生产设备参数对应的数值范围信息；\n在所述第二标注信息指示所述检测对象在生产过程中存在不良时，根据产生所述生产设备参数的时间段，确定与所述不良相关的生产批次、产生所述不良后所述检测对象的后续生产工序以及所述检测对象的库存分布信息中的至少一种信息。",
+        "claim_text_charlen": 696
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN110276410B (BOE)",
+        "claim_id": 4,
+        "term": "检测对象",
+        "reference_form": "所述检测对象",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error)",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN110276410B (BOE):4:检测对象",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "tiebreaker",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "coverage_gap",
+            "confidence": 72,
+            "reasoning": "The context_before shows a list-introducing preamble (\"包括：抽取模块，用于在\") which, under coordination-introduction principles, may introduce subordinate objects. The reference form \"所述检测对象\" appears in context_after, suggesting the term should have been introduced as part of the list structure or via a recognizable but non-canonical pattern. The walker appears to lack pattern coverage for list-subordinate introductions or similar syntactic variants common in CN patent drafting.",
+            "raw": "{\"category\": \"coverage_gap\", \"confidence\": 72, \"reasoning\": \"The context_before shows a list-introducing preamble (\\\"包括：抽取模块，用于在\\\") which, under coordination-introduction principles, may introduce subordinate objects. The reference form \\\"所述检测对象\\\" appears in context_after, suggesting the term should have been introduced as part of the list structure or via a recognizable but non-canonical pattern. The walker appears to lack pattern coverage for list-subordinate introductions or similar syntactic variants common in CN patent drafting.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 85,
+            "reasoning": "The snippet shows only the reference form '所述检测对象' (抽取所述检测对象的生产数据) with no introducing form (e.g. 一检测对象/一個检测对象 or bare 引入) in the visible context or preamble — the walker’s flag is justified.",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":85,\"reasoning\":\"The snippet shows only the reference form '所述检测对象' (抽取所述检测对象的生产数据) with no introducing form (e.g. 一检测对象/一個检测对象 or bare 引入) in the visible context or preamble — the walker’s flag is justified.\"}"
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "legit_drafting_error",
+            "confidence": 82,
+            "reasoning": "The context_before shows the claim begins with a preamble introducing a device (\"一种确定不良原因的装置\"), but '检测对象' is referenced via '所述检测对象' in context_after without any visible introducing form (一检测对象/一个检测对象/bare 检测对象) in the visible window. Claim 4 is a dependent claim, so an introduction could exist in an ancestor claim, but the 30-char window around char_offset 33 only shows the preamble of claim 4 itself, and no introducing form of '检测对象' is visible there or in context_after — the context_after im",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 82, \"reasoning\": \"The context_before shows the claim begins with a preamble introducing a device (\\\"一种确定不良原因的装置\\\"), but '检测对象' is referenced via '所述检测对象' in context_after without any visible introducing form (一检测对象/一个检测对象/bare 检测对象) in the visible window. Claim 4 is a dependent claim, so an introduction could exist in an ancestor claim, but the 30-char window around char_offset 33 only shows the preamble of claim 4 itself, and no introducing form of '检测对象' is visible there or in context_after — the context_after immediately uses the reference form '所述检测对象', suggesting the term was never properly introduced.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 4,
+        "term": "检测对象",
+        "reference_form": "所述检测对象",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 33,
+        "context_before": "一种确定不良原因的装置，其特征在于，包括：\n抽取模块，用于在",
+        "context_after": "存在已知不良时，抽取所述检测对象的生产数据，所述生产数据至少",
+        "claim_text": "4 .一种确定不良原因的装置，其特征在于，包括：\n抽取模块，用于在检测对象存在已知不良时，抽取所述检测对象的生产数据，所述生产数据至少包括生产履历数据、生产设备的标识以及生产设备参数中的一种，所述检测对象为OLED面板；\n输入模块，用于将所述生产数据输入预先训练得到的模型，得到与所述已知不良有关的生产工序、生产设备以及生产设备参数中的至少一种，其中，所述模型根据所述检测对象的生产样本数据进行训练得到，所述生产样本数据中的各条数据标记了与所述已知不良之间的相关性；\n所述装置还包括：\n第一获取模块，用于获取未知不良数据，形成第一数据集；\n计算模块，用于基于所述第一数据集进行潜在因子离群值计算，得到离群值因子；提示模块，用于基于所述离群值因子发出告警提示信息；\n第二获取模块，用于获取针对所述告警提示信息的第一标记信息；\n标记模块，用于使用所述第一标记信息对所述未知不良数据进行标记，得到标记后的未知不良数据；\n导入模块，用于当标记后的未知不良数据的数据量达到阈值后，将标记后的所述未知不良数据导入所述模型的训练数据集，所述训练数据集中的数据用于训练所述模型；\n在将所述生产数据输入预先训练得到的模型，得到与所述已知不良有关的生产工序、生产设备以及生产设备参数中的至少一种信息之后，获取针对所述生产设备参数的第二标注信息；所述第二标注信息包括所述生产设备参数对应的数值范围信息；\n在所述第二标注信息指示所述检测对象在生产过程中存在不良时，根据产生所述生产设备参数的时间段，确定与所述不良相关的生产批次、产生所述不良后所述检测对象的后续生产工序以及所述检测对象的库存分布信息中的至少一种信息。",
+        "claim_text_charlen": 696
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN110276410B (BOE)",
+        "claim_id": 1,
+        "term": "检测对象",
+        "reference_form": "所述检测对象",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [4]; real §112(b) defect (parallel-invention drafter error)",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN110276410B (BOE):1:检测对象",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 82,
+            "reasoning": "The context_before shows the claim opens with a bare-noun preamble (\"一种确定不良原因的方法\") followed by \"包括:\" (a coordination introducer), but no introducing form for \"检测对象\" appears in the visible window. The context_after shows only the reference form \"所述检测对象\" (the aforementioned detection object), indicating a back-pointer to a prior introduction that is not present in the preamble or preceding text visible here.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 82, \"reasoning\": \"The context_before shows the claim opens with a bare-noun preamble (\\\"一种确定不良原因的方法\\\") followed by \\\"包括:\\\" (a coordination introducer), but no introducing form for \\\"检测对象\\\" appears in the visible window. The context_after shows only the reference form \\\"所述检测对象\\\" (the aforementioned detection object), indicating a back-pointer to a prior introduction that is not present in the preamble or preceding text visible here.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 92,
+            "reasoning": "Claim 1's preamble introduces a ‘方法’ (一种确定不良原因的方法) not ‘检测对象’, and the visible text shows the reference form 所述检测对象 with no prior introducing form in claim 1 (and there are no ancestor claims), so the drafter failed to introduce the antecedent.",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":92,\"reasoning\":\"Claim 1's preamble introduces a ‘方法’ (一种确定不良原因的方法) not ‘检测对象’, and the visible text shows the reference form 所述检测对象 with no prior introducing form in claim 1 (and there are no ancestor claims), so the drafter failed to introduce the antecedent.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 1,
+        "term": "检测对象",
+        "reference_form": "所述检测对象",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 26,
+        "context_before": "1 .一种确定不良原因的方法，其特征在于，包括：\n在",
+        "context_after": "存在已知不良时，抽取所述检测对象的生产数据，所述生产数据至少",
+        "claim_text": "1 .一种确定不良原因的方法，其特征在于，包括：\n在检测对象存在已知不良时，抽取所述检测对象的生产数据，所述生产数据至少包括生产履历数据、生产设备的标识以及生产设备参数中的一种，所述检测对象为OLED面板；\n将所述生产数据输入预先训练得到的模型，得到与所述已知不良有关的生产工序、生产设备以及生产设备参数中的至少一种，其中，所述模型根据所述检测对象的生产样本数据进行训练得到，所述生产样本数据中的各条数据标记了与所述已知不良之间的相关性；\n所述方法还包括：\n获取未知不良数据，形成第一数据集；\n基于所述第一数据集进行潜在因子离群值计算，得到离群值因子；基于所述离群值因子发出告警提示信息；\n获取针对所述告警提示信息的第一标记信息；\n使用所述第一标记信息对所述未知不良数据进行标记，得到标记后的未知不良数据；当标记后的未知不良数据的数据量达到阈值后，将标记后的所述未知不良数据导入所\n述模型的训练数据集，所述训练数据集中的数据用于训练所述模型；\n在将所述生产数据输入预先训练得到的模型，得到与所述已知不良有关的生产工序、生产设备以及生产设备参数中的至少一种信息之后，获取针对所述生产设备参数的第二标注信息；所述第二标注信息包括所述生产设备参数对应的数值范围信息；\n在所述第二标注信息指示所述检测对象在生产过程中存在不良时，根据产生所述生产设备参数的时间段，确定与所述不良相关的生产批次、产生所述不良后所述检测对象的后续生产工序以及所述检测对象的库存分布信息中的至少一种信息。",
+        "claim_text_charlen": 636
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN120266060A",
+        "claim_id": 2,
+        "term": "式(1)",
+        "reference_form": "所述式(1)",
+        "category": "walker_fp.fragment",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": "round_22_fragment_residue_cleanup",
+        "round": 22
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN113939805B (Huawei)",
+        "claim_id": 5,
+        "term": "返回指令均",
+        "reference_form": "所述返回指令均",
+        "category": "walker_fp.over_capture",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": "round_24_single_char_trailing",
+        "round": 24
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN113939805B (Huawei)",
+        "claim_id": 8,
+        "term": "处理器核",
+        "reference_form": "所述处理器核",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": {
+        "finding_key": "cn:CN113939805B (Huawei):8:处理器核",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 75,
+            "reasoning": "The context_before shows '所述处理器核' (the reference form with definite marker 所述) immediately before the term, but there is no visible introducing form like '一处理器核' or bare '处理器核' in the 30-char window. Since claim 8 depends on claim 7, an introduction would likely be in claim 7 or earlier; the walker flags that no such antecedent is found. The reference form appearing without a traceable prior introduction suggests a genuine drafting gap.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 75, \"reasoning\": \"The context_before shows '所述处理器核' (the reference form with definite marker 所述) immediately before the term, but there is no visible introducing form like '一处理器核' or bare '处理器核' in the 30-char window. Since claim 8 depends on claim 7, an introduction would likely be in claim 7 or earlier; the walker flags that no such antecedent is found. The reference form appearing without a traceable prior introduction suggests a genuine drafting gap.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 85,
+            "reasoning": "The vicinity shows a reference marker ('所述') before the term and no introducing form (e.g. '一处理器核'/'一個处理器核' or bare noun) in the visible text; this indicates the claim uses a back-reference without a visible antecedent.",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":85,\"reasoning\":\"The vicinity shows a reference marker ('所述') before the term and no introducing form (e.g. '一处理器核'/'一個处理器核' or bare noun) in the visible text; this indicates the claim uses a back-reference without a visible antecedent.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 8,
+        "term": "处理器核",
+        "reference_form": "所述处理器核",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 33,
+        "context_before": "根据权利要求7所述的方法，其特征在于，所述方法还包括：\n所述",
+        "context_after": "在所述客户端进程需要调用服务端进程的服务时，配置所述共享内存",
+        "claim_text": "8. 根据权利要求7所述的方法，其特征在于，所述方法还包括：\n所述处理器核在所述客户端进程需要调用服务端进程的服务时，配置所述共享内存空间中的一部分内存空间给所述客户端进程，以保存所述待传递数据。",
+        "claim_text_charlen": 98
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN113939805B (Huawei)",
+        "claim_id": 4,
+        "term": "服务端进程",
+        "reference_form": "所述服务端进程",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": "round_25_r14c2_f6_bare_noun",
+        "round": 25
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN113939805B (Huawei)",
+        "claim_id": 3,
+        "term": "标识",
+        "reference_form": "所述标识",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": {
+        "finding_key": "cn:CN113939805B (Huawei):3:标识",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 78,
+            "reasoning": "The context_before shows \"所述注册信息包括所述\" immediately before the term '标识', which is a clear reference form (所述) marker. No introducing form (一标识 or bare 标识 alone at a boundary) is visible in the ~30-char window or the claim preamble syntax. The walker's flag appears valid: the term is referenced but not introduced in this claim or its ancestors (claim 3 has no prior claims shown).",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 78, \"reasoning\": \"The context_before shows \\\"所述注册信息包括所述\\\" immediately before the term '标识', which is a clear reference form (所述) marker. No introducing form (一标识 or bare 标识 alone at a boundary) is visible in the ~30-char window or the claim preamble syntax. The walker's flag appears valid: the term is referenced but not introduced in this claim or its ancestors (claim 3 has no prior claims shown).\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 90,
+            "reasoning": "The surrounding text shows only reference forms (e.g. “所述注册信息包括所述…”), so “所述标识” is a back-reference with no introducing form (一标识/標識 or bare introduction) visible—walker correctly flagged a missing antecedent.",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":90,\"reasoning\":\"The surrounding text shows only reference forms (e.g. “所述注册信息包括所述…”), so “所述标识” is a back-reference with no introducing form (一标识/標識 or bare introduction) visible—walker correctly flagged a missing antecedent.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 3,
+        "term": "标识",
+        "reference_form": "所述标识",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 83,
+        "context_before": "C引擎硬件发送所述服务端进程的注册信息，所述注册信息包括所述",
+        "context_after": "；\n所述IPC引擎硬件还用于：接收所述注册信息；响应于所述注",
+        "claim_text": "3. 根据权利要求1或2所述的硬件系统，其特征在于，\n在运行所述客户端进程前，所述处理器核还用于向所述IPC引擎硬件发送所述服务端进程的注册信息，所述注册信息包括所述标识；\n所述IPC引擎硬件还用于：接收所述注册信息；响应于所述注册信息在所述IPC引擎硬件中保存所述标识和所述服务端进程的入口地址；\n所述IPC引擎硬件具体用于：根据所述标识，找到所述入口地址；将所述入口地址设置到所述处理器核中的程序计数器(PC)；\n所述处理器核还用于，根据设置在所述PC中的所述入口地址运行所述服务端进程。",
+        "claim_text_charlen": 246
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN113939805B (Huawei)",
+        "claim_id": 4,
+        "term": "客户端进程",
+        "reference_form": "所述客户端进程",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": "round_25_r14c2_f6_bare_noun",
+        "round": 25
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN113939805B (Huawei)",
+        "claim_id": 1,
+        "term": "客户端进程",
+        "reference_form": "所述客户端进程",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "R12 shifting: resurfaced from interior verb split. | R20 re-triage: independent claim references term introduced only in parallel independent claims [7]; real §112(b) defect (parallel-invention drafter error) | R14c.2 pre-triage: term has bare intro in the same-claim or ancestor-chain preceded by F6 verb (获取/发出/得到/进行/确定/…); walker coverage gap, not a drafting error. Reverses R20 `4cac830` over-triage which scanned siblings but missed same-claim F6 bare-noun intros.",
+        "resolved_by": "round_25_r14c2_f6_bare_noun",
+        "round": 25
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN113939805B (Huawei)",
+        "claim_id": 10,
+        "term": "处理",
+        "reference_form": "所述处理",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": {
+        "finding_key": "cn:CN113939805B (Huawei):10:处理",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 72,
+            "reasoning": "Claim 10 is dependent on claim 7/8, so it inherits scope from ancestors. The 30-char context shows '所述处理' (the reference form) immediately before the term '处理', with no introducing form visible. The context_after confirms this is a reference use within the dependent claim. Without evidence of introduction in ancestor claims (claim 7/8), this appears to be a genuine antecedent-basis gap where '处理' is referenced without prior introduction in the claim chain.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 72, \"reasoning\": \"Claim 10 is dependent on claim 7/8, so it inherits scope from ancestors. The 30-char context shows '所述处理' (the reference form) immediately before the term '处理', with no introducing form visible. The context_after confirms this is a reference use within the dependent claim. Without evidence of introduction in ancestor claims (claim 7/8), this appears to be a genuine antecedent-basis gap where '处理' is referenced without prior introduction in the claim chain.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 85,
+            "reasoning": "The context shows the reference marker '所述' immediately before '处理' in dependent claim 10 and no introducing form (e.g. 一处理/处理作为首项) is visible in the provided window; the walker correctly flags an unresolved antecedent (it must be introduced earlier in claim 10 or in claims 7/8 but is not shown).",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":85,\"reasoning\":\"The context shows the reference marker '所述' immediately before '处理' in dependent claim 10 and no introducing form (e.g. 一处理/处理作为首项) is visible in the provided window; the walker correctly flags an unresolved antecedent (it must be introduced earlier in claim 10 or in claims 7/8 but is not shown).\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 10,
+        "term": "处理",
+        "reference_form": "所述处理",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 27,
+        "context_before": "10. 根据权利要求7或8所述的方法，其特征在于，所述",
+        "context_after": "器核向IPC引擎硬件发送第一处理器指令之后，所述方法还包括：",
+        "claim_text": "10. 根据权利要求7或8所述的方法，其特征在于，所述处理器核向IPC引擎硬件发送第一处理器指令之后，所述方法还包括：\n所述IPC引擎硬件查询所述处理器核中的状态寄存器以获得所述客户端进程的调用堆栈地址，并在所述IPC引擎硬件中保存所述客户端进程的调用堆栈地址；\n相应的，所述IPC引擎硬件根据所述第二处理器指令，指示所述处理器核恢复运行所述客户端进程，包括：\n所述IPC引擎硬件根据所述第二处理器指令调出所述调用堆栈地址，并指示所述处理\n器核根据所述调用堆栈地址恢复运行所述客户端进程。",
+        "claim_text_charlen": 244
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN113939805B (Huawei)",
+        "claim_id": 7,
+        "term": "服务",
+        "reference_form": "所述服务",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error)",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN113939805B (Huawei):7:服务",
+        "final_category": "ambig",
+        "agreement_level": "three_way_split",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 85,
+            "reasoning": "The context clearly shows '客户端进程的服务' where '服务' appears as part of a larger noun phrase '客户端进程的服务' (the service of the client process). This is likely a nominalized possessive construction introducing the term via the prepositional relationship rather than a bare reference form. Additionally, claim 7 (a dependent claim) would inherit antecedents from ancestor claims, making the reference valid even if not introduced locally.",
+            "raw": "{\"category\": \"walker_fp\", \"confidence\": 85, \"reasoning\": \"The context clearly shows '客户端进程的服务' where '服务' appears as part of a larger noun phrase '客户端进程的服务' (the service of the client process). This is likely a nominalized possessive construction introducing the term via the prepositional relationship rather than a bare reference form. Additionally, claim 7 (a dependent claim) would inherit antecedents from ancestor claims, making the reference valid even if not introduced locally.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "diagnostic_mis_attribution",
+            "confidence": 90,
+            "reasoning": "The walker reported reference form '所述服务' but the visible text shows '端进程的服务' (no '所述服务' or other reference marker) — the diagnostic appears to have pointed at/matched the wrong surface span.",
+            "raw": "{\"category\":\"diagnostic_mis_attribution\",\"confidence\":90,\"reasoning\":\"The walker reported reference form '所述服务' but the visible text shows '端进程的服务' (no '所述服务' or other reference marker) — the diagnostic appears to have pointed at/matched the wrong surface span.\"}"
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 52,
+            "reasoning": "The context_before shows '所述客户端进程需要调用' and context_after shows '端进程的服务时', suggesting the full phrase is '服务端进程的服务' (service of a server process), where '服务' here may be a bare noun introduced naturally in context rather than via a reference form. However, the 30-char window is insufficient to determine whether '服务' (service) was formally introduced earlier in claim 7 or in an ancestor claim; the walker may have mis-tokenized '服务端' (server-side) from '服务' (service), making this potentially a comp",
+            "raw": "{\"category\": \"ambig\", \"confidence\": 52, \"reasoning\": \"The context_before shows '所述客户端进程需要调用' and context_after shows '端进程的服务时', suggesting the full phrase is '服务端进程的服务' (service of a server process), where '服务' here may be a bare noun introduced naturally in context rather than via a reference form. However, the 30-char window is insufficient to determine whether '服务' (service) was formally introduced earlier in claim 7 or in an ancestor claim; the walker may have mis-tokenized '服务端' (server-side) from '服务' (service), making this potentially a compound-noun fragmentation issue, but this cannot be confirmed from the visible window alone.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 7,
+        "term": "服务",
+        "reference_form": "所述服务",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 178,
+        "context_before": "关系；\n所述处理器核运行客户端进程，在所述客户端进程需要调用",
+        "context_after": "端进程的服务时，向 IPC引擎硬件发送第一处理器指令，所述第",
+        "claim_text": "7 .一种用于进程间通信IPC的方法，其特征在于，包括：\n处理器核在IPC引擎硬件初始化时，将存储器中的一部分内存空间配置为进程的共享内存空间，所述共享内存空间用于保存进程间通信所需的待传递数据；根据所述共享内存空间的起始地址和长度建立页表，所述页表包含所述共享内存空间的虚拟地址到物理地址的映射关系；\n所述处理器核运行客户端进程，在所述客户端进程需要调用服务端进程的服务时，向 IPC引擎硬件发送第一处理器指令，所述第一处理器指令是所述客户端进程对所述服务的调用指令，所述调用指令包括所述服务端进程的标识和待传递数据的虚拟地址；所述待传递数据的物理地址位于所述共享内存空间；\n所述IPC引擎硬件根据所述标识指示所述处理器核运行所述服务端进程，并将所述待传递数据的虚拟地址发送给所述服务端进程；\n所述处理器核运行所述服务端进程，通过所述服务端进程根据所述待传递数据的虚拟地址查询所述页表获得所述待传递数据来执行所述服务；\n所述处理器核向所述IPC引擎硬件发送第二处理器指令，所述第二处理器指令是所述服务端进程的返回指令；\n所述IPC引擎硬件根据所述第二处理器指令，指示所述处理器核恢复运行所述客户端进程。",
+        "claim_text_charlen": 502
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN113939805B (Huawei)",
+        "claim_id": 7,
+        "term": "IPC引擎硬件",
+        "reference_form": "所述IPC引擎硬件",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error)",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN113939805B (Huawei):7:IPC引擎硬件",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 72,
+            "reasoning": "The context shows '所述IPC引擎硬件' is used with the reference marker '所述' (indicating \"the aforementioned\"), but the visible context_before only shows introductory material for a process claim ('种用于进程间通信IPC的方法') with no introducing form ('一IPC引擎硬件' or bare noun) for the specific term. Claim 7 is a dependent claim, and without seeing an introduction in the parent claim text provided, the reference appears to lack proper antecedent basis.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 72, \"reasoning\": \"The context shows '所述IPC引擎硬件' is used with the reference marker '所述' (indicating \\\"the aforementioned\\\"), but the visible context_before only shows introductory material for a process claim ('种用于进程间通信IPC的方法') with no introducing form ('一IPC引擎硬件' or bare noun) for the specific term. Claim 7 is a dependent claim, and without seeing an introduction in the parent claim text provided, the reference appears to lack proper antecedent basis.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 75,
+            "reasoning": "The 30-char context shows no introducing form (e.g. 一种/一個/一<名词> or a bare-noun introduction) for 'IPC引擎硬件' before the reference; the walker’s complaint that the term lacks an antecedent is likely correct.",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":75,\"reasoning\":\"The 30-char context shows no introducing form (e.g. 一种/一個/一<名词> or a bare-noun introduction) for 'IPC引擎硬件' before the reference; the walker’s complaint that the term lacks an antecedent is likely correct.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 7,
+        "term": "IPC引擎硬件",
+        "reference_form": "所述IPC引擎硬件",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 34,
+        "context_before": "种用于进程间通信IPC的方法，其特征在于，包括：\n处理器核在",
+        "context_after": "初始化时，将存储器中的一部分内存空间配置为进程的共享内存空间",
+        "claim_text": "7 .一种用于进程间通信IPC的方法，其特征在于，包括：\n处理器核在IPC引擎硬件初始化时，将存储器中的一部分内存空间配置为进程的共享内存空间，所述共享内存空间用于保存进程间通信所需的待传递数据；根据所述共享内存空间的起始地址和长度建立页表，所述页表包含所述共享内存空间的虚拟地址到物理地址的映射关系；\n所述处理器核运行客户端进程，在所述客户端进程需要调用服务端进程的服务时，向 IPC引擎硬件发送第一处理器指令，所述第一处理器指令是所述客户端进程对所述服务的调用指令，所述调用指令包括所述服务端进程的标识和待传递数据的虚拟地址；所述待传递数据的物理地址位于所述共享内存空间；\n所述IPC引擎硬件根据所述标识指示所述处理器核运行所述服务端进程，并将所述待传递数据的虚拟地址发送给所述服务端进程；\n所述处理器核运行所述服务端进程，通过所述服务端进程根据所述待传递数据的虚拟地址查询所述页表获得所述待传递数据来执行所述服务；\n所述处理器核向所述IPC引擎硬件发送第二处理器指令，所述第二处理器指令是所述服务端进程的返回指令；\n所述IPC引擎硬件根据所述第二处理器指令，指示所述处理器核恢复运行所述客户端进程。",
+        "claim_text_charlen": 502
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN113939805B (Huawei)",
+        "claim_id": 7,
+        "term": "页表",
+        "reference_form": "所述页表",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error)",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN113939805B (Huawei):7:页表",
+        "final_category": "legit_drafting_error",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 75,
+            "reasoning": "The term '页表' appears in reference form '所述页表' at char_offset 118 in claim 7. The context_before shows only the reference marker '所述共享内存空间' (a different term) but no introducing form (一页表/一個页表) for '页表' itself is visible. Since claim 7 is dependent, an introduction in an ancestor claim would be expected, but without access to parent claim text, the surface evidence shows a reference form lacking an obvious prior introduction within the visible scope.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 75, \"reasoning\": \"The term '页表' appears in reference form '所述页表' at char_offset 118 in claim 7. The context_before shows only the reference marker '所述共享内存空间' (a different term) but no introducing form (一页表/一個页表) for '页表' itself is visible. Since claim 7 is dependent, an introduction in an ancestor claim would be expected, but without access to parent claim text, the surface evidence shows a reference form lacking an obvious prior introduction within the visible scope.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "legit_drafting_error",
+            "confidence": 90,
+            "reasoning": "The snippet shows the term only as a back-reference ('所述页表') with no introducing form (e.g. '一页表' or bare '页表') in the provided context; the walker’s flag that the antecedent is missing is valid.",
+            "raw": "{\"category\":\"legit_drafting_error\",\"confidence\":90,\"reasoning\":\"The snippet shows the term only as a back-reference ('所述页表') with no introducing form (e.g. '一页表' or bare '页表') in the provided context; the walker’s flag that the antecedent is missing is valid.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 7,
+        "term": "页表",
+        "reference_form": "所述页表",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 118,
+        "context_before": "信所需的待传递数据；根据所述共享内存空间的起始地址和长度建立",
+        "context_after": "，所述页表包含所述共享内存空间的虚拟地址到物理地址的映射关系",
+        "claim_text": "7 .一种用于进程间通信IPC的方法，其特征在于，包括：\n处理器核在IPC引擎硬件初始化时，将存储器中的一部分内存空间配置为进程的共享内存空间，所述共享内存空间用于保存进程间通信所需的待传递数据；根据所述共享内存空间的起始地址和长度建立页表，所述页表包含所述共享内存空间的虚拟地址到物理地址的映射关系；\n所述处理器核运行客户端进程，在所述客户端进程需要调用服务端进程的服务时，向 IPC引擎硬件发送第一处理器指令，所述第一处理器指令是所述客户端进程对所述服务的调用指令，所述调用指令包括所述服务端进程的标识和待传递数据的虚拟地址；所述待传递数据的物理地址位于所述共享内存空间；\n所述IPC引擎硬件根据所述标识指示所述处理器核运行所述服务端进程，并将所述待传递数据的虚拟地址发送给所述服务端进程；\n所述处理器核运行所述服务端进程，通过所述服务端进程根据所述待传递数据的虚拟地址查询所述页表获得所述待传递数据来执行所述服务；\n所述处理器核向所述IPC引擎硬件发送第二处理器指令，所述第二处理器指令是所述服务端进程的返回指令；\n所述IPC引擎硬件根据所述第二处理器指令，指示所述处理器核恢复运行所述客户端进程。",
+        "claim_text_charlen": 502
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN113939805B (Huawei)",
+        "claim_id": 1,
+        "term": "服务",
+        "reference_form": "所述服务",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [7]; real §112(b) defect (parallel-invention drafter error)",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN113939805B (Huawei):1:服务",
+        "final_category": "ambig",
+        "agreement_level": "three_way_split",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "legit_drafting_error",
+            "confidence": 75,
+            "reasoning": "The context shows \"在所述客户端进程需要调用[所述]服务时\" where the term is introduced with the reference form \"所述服务\" (the aforementioned service). No introducing form like \"一种服务\" or bare \"服务\" appears in context_before; the walker correctly identifies that \"服务\" lacks a prior introduction and is only referenced with a definite article, indicating a genuine antecedent-basis gap.",
+            "raw": "{\"category\": \"legit_drafting_error\", \"confidence\": 75, \"reasoning\": \"The context shows \\\"在所述客户端进程需要调用[所述]服务时\\\" where the term is introduced with the reference form \\\"所述服务\\\" (the aforementioned service). No introducing form like \\\"一种服务\\\" or bare \\\"服务\\\" appears in context_before; the walker correctly identifies that \\\"服务\\\" lacks a prior introduction and is only referenced with a definite article, indicating a genuine antecedent-basis gap.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "diagnostic_mis_attribution",
+            "confidence": 90,
+            "reasoning": "The walker reports reference_form '所述服务' but the visible span shows '端进程的服务' (no '所述' immediately before '服务'); the constructed reference form does not actually appear in the provided context, so the diagnostic likely pointed to the wrong span.",
+            "raw": "{\"category\":\"diagnostic_mis_attribution\",\"confidence\":90,\"reasoning\":\"The walker reports reference_form '所述服务' but the visible span shows '端进程的服务' (no '所述' immediately before '服务'); the constructed reference form does not actually appear in the provided context, so the diagnostic likely pointed to the wrong span.\"}"
+          },
+          {
+            "model": "claude-sonnet-4-6",
+            "category": "ambig",
+            "confidence": 52,
+            "reasoning": "The context window shows `所述客户端进程需要调用` before and `端进程的服务时` after the term '服务', suggesting the full phrase is something like `服务端进程的服务` (a service of a server-side process). The term '服务' here appears without a `所述` directly preceding it (it's `端进程的服务`, a possessive construction), which means it may be a bare-noun first appearance rather than a back-reference — but the 30-char window is insufficient to confirm whether '服务' was introduced earlier in the claim or if this is its first (bare) occur",
+            "raw": "{\"category\": \"ambig\", \"confidence\": 52, \"reasoning\": \"The context window shows `所述客户端进程需要调用` before and `端进程的服务时` after the term '服务', suggesting the full phrase is something like `服务端进程的服务` (a service of a server-side process). The term '服务' here appears without a `所述` directly preceding it (it's `端进程的服务`, a possessive construction), which means it may be a bare-noun first appearance rather than a back-reference — but the 30-char window is insufficient to confirm whether '服务' was introduced earlier in the claim or if this is its first (bare) occurrence in a possessive phrase that could constitute an introduction.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 1,
+        "term": "服务",
+        "reference_form": "所述服务",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 213,
+        "context_before": "所述处理器核还用于，运行客户端进程，在所述客户端进程需要调用",
+        "context_after": "端进程的服务时，向所述IPC引擎硬件发送第一处理器指令，所述",
+        "claim_text": "1 .一种用于进程间通信IPC的硬件系统，其特征在于，包括：处理器核、IPC引擎硬件和存储器，其中：\n所述处理器核用于，在所述IPC引擎硬件初始化时，将所述存储器中的一部分内存空间配置为进程的共享内存空间，所述共享内存空间用于保存进程间通信所需的待传递数据；根据所述共享内存空间的起始地址和长度建立页表，所述页表包含所述共享内存空间的虚拟地址到物理地址的映射关系；\n所述处理器核还用于，运行客户端进程，在所述客户端进程需要调用服务端进程的服务时，向所述IPC引擎硬件发送第一处理器指令，所述第一处理器指令是所述客户端进程对所述服务的调用指令，所述调用指令包括所述服务端进程的标识和待传递数据的虚拟地址；所述待传递数据的物理地址位于所述共享内存空间；\n所述IPC引擎硬件用于，根据所述标识指示所述处理器核运行所述服务端进程，并将所述待传递数据的虚拟地址发送给所述服务端进程；\n所述处理器核还用于，运行所述服务端进程，所述服务端进程根据所述待传递数据的虚拟地址查询所述页表获得所述待传递数据来执行所述服务；以及，向所述IPC引擎硬件发送第二处理器指令，所述第二处理器指令是所述服务端进程的返回指令；\n所述IPC引擎硬件还用于，根据所述第二处理器指令，指示所述处理器核恢复运行所述客户端进程。",
+        "claim_text_charlen": 543
+      }
+    },
+    {
+      "label": {
+        "fixture": "tw_contamination_simple",
+        "claim_id": 1,
+        "term": "处理器配置",
+        "reference_form": "该等",
+        "category": "tw_contamination",
+        "protect": true,
+        "confidence": "high",
+        "notes": "Synthetic fixture — Q1 tw_contamination rejection by construction. Walker output MUST preserve.",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": {
+        "finding_key": "cn:tw_contamination_simple:1:处理器配置",
+        "final_category": "walker_fp",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 92,
+            "reasoning": "The context_before shows '一处理器；以及一存储器' — classic coordination-introduced components within a list structure ('包括：...'). The term '处理器配置' (processor configuration) encompasses these introduced elements, and '该等' correctly refers back to them. The walker appears to have missed the coordination-pattern introduction.",
+            "raw": "{\"category\": \"walker_fp\", \"confidence\": 92, \"reasoning\": \"The context_before shows '一处理器；以及一存储器' — classic coordination-introduced components within a list structure ('包括：...'). The term '处理器配置' (processor configuration) encompasses these introduced elements, and '该等' correctly refers back to them. The walker appears to have missed the coordination-pattern introduction.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "walker_fp",
+            "confidence": 90,
+            "reasoning": "Context shows an introducing form '一处理器；以及一存储器' immediately before the reference '其中该等…', so the pronoun clearly refers to introduced items. The walker mis-tokenized/matched '处理器配置' instead of the actual introduced '处理器' (false positive).",
+            "raw": "{\"category\":\"walker_fp\",\"confidence\":90,\"reasoning\":\"Context shows an introducing form '一处理器；以及一存储器' immediately before the reference '其中该等…', so the pronoun clearly refers to introduced items. The walker mis-tokenized/matched '处理器配置' instead of the actual introduced '处理器' (false positive).\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 1,
+        "term": "处理器配置",
+        "reference_form": "该等",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": "tw_contamination",
+        "char_offset": 40,
+        "context_before": "置，包括：一处理器；以及一存储器，与所述处理器耦接，其中该等",
+        "context_after": "为处理输入信号。",
+        "claim_text": "1. 一种数据处理装置，包括：一处理器；以及一存储器，与所述处理器耦接，其中该等处理器配置为处理输入信号。",
+        "claim_text_charlen": 53
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN114357105B",
+        "claim_id": 11,
+        "term": "实线边",
+        "reference_form": "所述实线边",
+        "category": "walker_fp.cross_branch_sibling",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "R10 shifting: resurfaced from char-exclusion residue strip.",
+        "resolved_by": "round_25_r14c2_f6_bare_noun",
+        "round": 25
+      },
+      "ground_truth_mapped": "walker_fp",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN114357105B",
+        "claim_id": 12,
+        "term": "兴趣点异构图",
+        "reference_form": "所述兴趣点异构图",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": "round_19_conjunction_split",
+        "round": 19
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN114357105B",
+        "claim_id": 9,
+        "term": "节点",
+        "reference_form": "所述节点",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error)",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN114357105B:9:节点",
+        "final_category": "walker_fp",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 90,
+            "reasoning": "The context_before shows \"包括：\\n样本\" which introduces \"样本节点序列获取单元\" as a list member following \"包括\" (a coordination/enumeration introducer). The noun phrase \"样本节点\" is introduced as part of this coordinate structure; the walker's reference form \"所述节点\" correctly points back to this introduction, but the walker misattributed the finding to a missing antecedent when the term was actually introduced via the \"包括\" coordination pattern.",
+            "raw": "{\"category\": \"walker_fp\", \"confidence\": 90, \"reasoning\": \"The context_before shows \\\"包括：\\\\n样本\\\" which introduces \\\"样本节点序列获取单元\\\" as a list member following \\\"包括\\\" (a coordination/enumeration introducer). The noun phrase \\\"样本节点\\\" is introduced as part of this coordinate structure; the walker's reference form \\\"所述节点\\\" correctly points back to this introduction, but the walker misattributed the finding to a missing antecedent when the term was actually introduced via the \\\"包括\\\" coordination pattern.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "walker_fp",
+            "confidence": 90,
+            "reasoning": "The diagnostic matched bare '节点'/'所述节点' but the text uses the compound '样本节点' (e.g. '获取样本节点序列' and '所述样本节点…') — walker mis-tokenized a larger introduced noun phrase rather than a missing antecedent.",
+            "raw": "{\"category\":\"walker_fp\",\"confidence\":90,\"reasoning\":\"The diagnostic matched bare '节点'/'所述节点' but the text uses the compound '样本节点' (e.g. '获取样本节点序列' and '所述样本节点…') — walker mis-tokenized a larger introduced noun phrase rather than a missing antecedent.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 9,
+        "term": "节点",
+        "reference_form": "所述节点",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 25,
+        "context_before": "9. 一种地理预训练模型的预训练装置，包括：\n样本",
+        "context_after": "序列获取单元，被配置成获取样本节点序列；其中，所述样本节点序",
+        "claim_text": "9. 一种地理预训练模型的预训练装置，包括：\n样本节点序列获取单元，被配置成获取样本节点序列；其中，所述样本节点序列基于预设的兴趣点异构图和随机游走算法生成，所述兴趣点异构图包括由各兴趣点充当的各节点和连接各所述节点的边，所述节点名为相应兴趣点的地名，所述边表征相应节点之间在真实世界存在的关联关系；\n训练样本输入单元，被配置成将所述样本节点序列作为训练样本输入初始地理预训练模型；其中，所述初始地理预训练模型包括第一转换层、聚合层、第二转换层，所述第一转换层用于将构成所述样本节点序列的每个节点的节点信息分别进行第一特征编码，得到节点分类编码和节点上下文编码，所述聚合层用于将每个节点的节点分类编码结合其它节点的节点分类编码进行特征聚合，得到聚合后节点分类编码，所述第二转换层用于将每个节点的聚合后节点分类编码和节点上下文编码分别进行第二特征编码；\n预训练单元，被配置成控制所述初始地理预训练模型按照预设的训练目标进行训练，并将达到所述训练目标的当前地理预训练模型输出为目标地理预训练模型；其中，所述训练目标包括指导模型从所述训练样本中学习到兴趣点的地名与预设位置编码之间的映射关系的子目标，所述预设位置编码对应于相应兴趣点在真实世界所处的地理区块。",
+        "claim_text_charlen": 526
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN114357105B",
+        "claim_id": 1,
+        "term": "节点",
+        "reference_form": "所述节点",
+        "category": "legit_drafting_error",
+        "protect": true,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [9]; real §112(b) defect (parallel-invention drafter error)",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "legit_drafting_error",
+      "verdict": {
+        "finding_key": "cn:CN114357105B:1:节点",
+        "final_category": "walker_fp",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 90,
+            "reasoning": "The term '节点' is introduced via coordination in the visible context: '包括：\\n获取样本[节点]序列' shows the preamble structure where '节点序列' is part of a coordination-introduced list. The subsequent reference '所述样本节点序列' is valid because the compound noun '样本节点序列' was introduced in the list immediately before.",
+            "raw": "{\"category\": \"walker_fp\", \"confidence\": 90, \"reasoning\": \"The term '节点' is introduced via coordination in the visible context: '包括：\\\\n获取样本[节点]序列' shows the preamble structure where '节点序列' is part of a coordination-introduced list. The subsequent reference '所述样本节点序列' is valid because the compound noun '样本节点序列' was introduced in the list immediately before.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "walker_fp",
+            "confidence": 90,
+            "reasoning": "The text shows an introduced compound noun ‘样本节点序列’ (e.g. ‘获取样本节点序列；其中，所述样本节点序列…’). The walker matched the fragment '节点' as '所述节点' instead of recognizing it as part of the introduced compound, so the walker mis-tokenized the noun.",
+            "raw": "{\"category\":\"walker_fp\",\"confidence\":90,\"reasoning\":\"The text shows an introduced compound noun ‘样本节点序列’ (e.g. ‘获取样本节点序列；其中，所述样本节点序列…’). The walker matched the fragment '节点' as '所述节点' instead of recognizing it as part of the introduced compound, so the walker mis-tokenized the noun.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 1,
+        "term": "节点",
+        "reference_form": "所述节点",
+        "did_you_mean": null,
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 27,
+        "context_before": "1 .一种地理预训练模型的预训练方法，包括：\n获取样本",
+        "context_after": "序列；其中，所述样本节点序列基于预设的兴趣点异构图和随机游走",
+        "claim_text": "1 .一种地理预训练模型的预训练方法，包括：\n获取样本节点序列；其中，所述样本节点序列基于预设的兴趣点异构图和随机游走算法生成，所述兴趣点异构图包括由各兴趣点充当的各节点和连接各所述节点的边，所述节点名为相应兴趣点的地名，所述边表征相应节点之间在真实世界存在的关联关系；\n将所述样本节点序列作为训练样本输入初始地理预训练模型；其中，所述初始地理预训练模型包括第一转换层、聚合层、第二转换层，所述第一转换层用于将构成所述样本节点序列的每个节点的节点信息分别进行第一特征编码，得到节点分类编码和节点上下文编码，所述聚合层用于将每个节点的节点分类编码结合其它节点的节点分类编码进行特征聚合，得到聚合后节点分类编码，所述第二转换层用于将每个节点的聚合后节点分类编码和节点上下文编码分别进行第二特征编码；\n控制所述初始地理预训练模型按照预设的训练目标进行训练，并将达到所述训练目标的当前地理预训练模型输出为目标地理预训练模型；其中，所述训练目标包括指导模型从所述训练样本中学习到兴趣点的地名与预设位置编码之间的映射关系的子目标，所述预设位置编码对应于相应兴趣点在真实世界所处的地理区块。",
+        "claim_text_charlen": 488
+      }
+    },
+    {
+      "label": {
+        "fixture": "CN112271269B",
+        "claim_id": 9,
+        "term": "金属阳离子",
+        "reference_form": "所述金属阳离子",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "R23 over_capture extension: 18 multi-char trailing verbs + 7 interior verbs + 2 cascade verb-predicates | cascade from R23: bare in ancestor(s) [1]",
+        "resolved_by": "round_25_r14c2_f6_bare_noun",
+        "round": 25
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": null,
+      "skip_reason": "walker_no_longer_emits"
+    },
+    {
+      "label": {
+        "fixture": "CN112271269B",
+        "claim_id": 10,
+        "term": "荧光性",
+        "reference_form": "所述荧光性",
+        "category": "miss_intro.coverage_gap",
+        "protect": false,
+        "confidence": "seed",
+        "notes": "Stage 3 seed — awaiting Stage 4 classification.",
+        "resolved_by": null,
+        "round": 0
+      },
+      "ground_truth_mapped": "coverage_gap",
+      "verdict": {
+        "finding_key": "cn:CN112271269B:10:荧光性",
+        "final_category": "walker_fp",
+        "agreement_level": "unanimous",
+        "judgments": [
+          {
+            "model": "claude-haiku-4-5-20251001",
+            "category": "walker_fp",
+            "confidence": 92,
+            "reasoning": "The walker matched '荧光性' (fluorescence) but the actual introduced term in context is '荧光性能' (fluorescence performance)—a distinct compound noun. The context shows \"具有荧光性能的量子点材料\" which is an INTRODUCING form (coordinative structure with '具有' + adjective modifier). The walker mis-tokenized the term boundary.",
+            "raw": "{\"category\": \"walker_fp\", \"confidence\": 92, \"reasoning\": \"The walker matched '荧光性' (fluorescence) but the actual introduced term in context is '荧光性能' (fluorescence performance)—a distinct compound noun. The context shows \\\"具有荧光性能的量子点材料\\\" which is an INTRODUCING form (coordinative structure with '具有' + adjective modifier). The walker mis-tokenized the term boundary.\"}"
+          },
+          {
+            "model": "gpt-5-mini",
+            "category": "walker_fp",
+            "confidence": 90,
+            "reasoning": "The walker matched a fragment ('荧光性') but the surface shows the full introduced phrase '具有荧光性能的量子点材料' (and later '所述具有荧光性能的量子点材料'), so the term is part of a larger introduced noun phrase and the walker mis-tokenized the reference.",
+            "raw": "{\"category\":\"walker_fp\",\"confidence\":90,\"reasoning\":\"The walker matched a fragment ('荧光性') but the surface shows the full introduced phrase '具有荧光性能的量子点材料' (and later '所述具有荧光性能的量子点材料'), so the term is part of a larger introduced noun phrase and the walker mis-tokenized the reference.\"}"
+          }
+        ]
+      },
+      "finding": {
+        "claim_id": 10,
+        "term": "荧光性",
+        "reference_form": "所述荧光性",
+        "did_you_mean": {
+          "term": "荧光性能",
+          "claim_id": 10
+        },
+        "did_you_mean_claim_id": null,
+        "category": null,
+        "char_offset": 134,
+        "context_before": "少一种颜色的光对应的发光元件，该发光元件的发光层的材料为具有",
+        "context_after": "能的量子点材料，所述具有荧光性能的量子点材料包括具有荧光性能",
+        "claim_text": "10. 一种采用如权利要求1‑9中任意一项所述的制造方法制造的显示单元，所述显示单元包括多个像素单元，每个像素单元包括多个子像素单元，每个子像素单元中都对应设置\n有发出相应颜色光的发光元件，其特征在于，对于至少一种颜色的光对应的发光元件，该发光元件的发光层的材料为具有荧光性能的量子点材料，所述具有荧光性能的量子点材料包括具有荧光性能的量子点本体和位于所述量子点本体表面的交联网状结构，所述交联网状结构由可交联配体相互交联而形成，对应其他颜色光的发光元件中形成有辅助层，所述辅助层的材料包括辅助量子点材料，所述辅助量子点材料包括荧光性能淬灭的量子点本体以及位于该荧光性能淬灭的量子点本体表面的未交联的可交联配体；\n所述荧光性能被淬灭的量子点本体的量子点核的材料和/或所述荧光性能被淬灭的量子点本体的量子点壳的材料包括以下阳离子中的至少一者：\nFe3+、Cu+、Co2+、Ni2+、Ag+、Mo6+、Na+、K+、Cs+、Ba2+、Ca2+、Hg2+、Sn2+、Pb2+。",
+        "claim_text_charlen": 435
+      }
+    }
+  ]
+}
