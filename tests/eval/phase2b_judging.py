@@ -27,7 +27,6 @@ import json
 import sys
 import time
 from collections import Counter, defaultdict
-from dataclasses import asdict
 from pathlib import Path
 
 import pyarrow.parquet as pq
@@ -77,7 +76,7 @@ PROGRESS_LOG_EVERY = 25
 # ---------- claim parsing (from raw text → Claim objects) ----------
 
 
-import re
+import re  # noqa: E402
 
 _CN_CLAIM_NUM_RE = re.compile(r"^\s*(\d+)\s*[\.、．]")
 _CN_DEP_RE = re.compile(r"如?权利要求(\d+)|根据权利要求(\d+)")
@@ -543,17 +542,16 @@ def render_report(result: dict) -> str:
     line("## Recommendation for Phase 2c (Claire spot-check)")
     line()
     walker_fp_n = result["final_category_distribution"].get("walker_fp", 0)
-    legit_n = result["final_category_distribution"].get("legit_drafting_error", 0)
     line(f"- Pass 1 (~30 min): sample 15 unanimous walker_fp verdicts "
          f"(out of {walker_fp_n} total walker_fp findings; sampling "
          f"stratified by jurisdiction × applicant_type). Confirm walker "
          f"FP rate before any walker-round trigger evidence ships.")
-    line(f"- Pass 2 (~50-75 min): sample 10-15 disagreement cases — "
-         f"prioritize Opus-resolved drafts where Opus disagreed with "
-         f"both Sonnet and gpt-5-mini, and any case where the verdict "
-         f"would silence a `protect:true` ground-truth label "
-         f"(post-2026-05-02 demotions, the protect:true cluster is "
-         f"smaller and validates faster).")
+    line("- Pass 2 (~50-75 min): sample 10-15 disagreement cases — "
+         "prioritize Opus-resolved drafts where Opus disagreed with "
+         "both Sonnet and gpt-5-mini, and any case where the verdict "
+         "would silence a `protect:true` ground-truth label "
+         "(post-2026-05-02 demotions, the protect:true cluster is "
+         "smaller and validates faster).")
     line()
 
     return "\n".join(lines)

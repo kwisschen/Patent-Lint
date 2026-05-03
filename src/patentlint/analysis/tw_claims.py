@@ -1747,7 +1747,12 @@ _NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset(
 # 所/位/中/後/用 stay at the strict ≥ 3 guard because they DO have
 # productive 3-char compounds ending in the suffix (研究所, 第一位) or
 # because the corpus is too small to confidently relax (中/後/用).
-_NOUNLIKE_RELAXED_SUFFIXES: frozenset[str] = frozenset({"上", "內"})
+# R31 (2026-05-03): added 中 to relaxed (≥2 residual instead of ≥3) to
+# match CN parity. Round-1 corpus shows 系統中 / 區段中 / 範圍中 etc. are
+# common over-capture shapes where the locative 中 should strip leaving
+# 2-char head (系統/區段/範圍). 中 standalone or as 2-char compound prefix
+# (中央/中文) is protected by the 0-position check (cut at idx > 1).
+_NOUNLIKE_RELAXED_SUFFIXES: frozenset[str] = frozenset({"上", "內", "中"})
 
 # ADR-095 Rule 2: leading quantifiers (stripped from both sides).
 # Ordered longest-first so 至少一個 is stripped as a single token before
