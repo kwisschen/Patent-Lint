@@ -4186,6 +4186,27 @@ def check_antecedent_basis(
                         best_len = len(intro)
                         resolved_intro = intro
 
+            # R46 (2026-05-04): ordinal-prefix-to-Latin-abbrev bridge.
+            # When reference is `第N<X>` where X is a short uppercase
+            # Latin abbrev (2-5 chars), and bare `<X>` exists as an
+            # intro in the chain, bridge. Common in 5G/wireless TIPO
+            # drafts: parent intro `(UE)` paren-abbrev registers `UE`,
+            # dep claim references `該第一UE` -> `第一UE`. The first/
+            # second UE is a SPECIFIC INSTANCE of the generic UE class,
+            # antecedent valid. Cluster Phase A on post-R44 corpus
+            # showed TW `第一U` 68 wfp / `一UE` 37 wfp / `UE` 57 wfp
+            # all 0-legit safe-silence clusters.
+            if resolved_intro is None:
+                m_ord = re.match(r'^第[一二三四五六七八九十百0-9]+', normalized_term)
+                if m_ord:
+                    bare = normalized_term[m_ord.end():]
+                    if (
+                        bare and 2 <= len(bare) <= 5
+                        and bare.isupper() and bare.isascii()
+                        and bare in intros_by_term
+                    ):
+                        resolved_intro = bare
+
             if resolved_intro is not None:
                 # Number-neutral match satisfies the antecedent under
                 # default semantics. Strict mode additionally requires
