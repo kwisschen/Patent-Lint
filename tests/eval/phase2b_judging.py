@@ -233,6 +233,7 @@ async def _run(
     output_report: Path = REPORT_PATH,
     exclude_judged: list[Path] | None = None,
     no_opus: bool = False,
+    cost_cap: float | None = None,
 ) -> dict:
     print(f"Loading corpus from {CORPUS_PARQUET_DIR} ...")
     records = load_corpus_records(CORPUS_PARQUET_DIR)
@@ -349,6 +350,12 @@ async def _run(
     )
 
     # Run all in chunks of PROGRESS_LOG_EVERY for periodic progress + cost-halt
+    # Effective halt threshold — CLI --cost-cap overrides COST_HALT_THRESHOLD.
+    # Two halt triggers fire whichever comes first:
+    #   (a) cumulative cost_actual > effective_cap (hard ceiling)
+    #   (b) projected_total > effective_cap (early-warning extrapolation)
+    effective_cap = cost_cap if cost_cap is not None else COST_HALT_THRESHOLD
+
     t0 = time.monotonic()
     all_results: list[tuple[dict, DraftEnsembleVerdict | None]] = []
     halted = False
@@ -366,20 +373,29 @@ async def _run(
         n_done = len(all_results)
         elapsed = time.monotonic() - t0
         per_draft_actual = elapsed / max(1, n_done)
+        per_draft_cost = cost_actual / max(1, n_done)
         eta = per_draft_actual * (len(drafts_to_judge) - n_done)
+        projected_total = per_draft_cost * len(drafts_to_judge)
         print(
             f"  progress: {n_done}/{len(drafts_to_judge)} drafts "
             f"({100*n_done/len(drafts_to_judge):.0f}%), "
             f"elapsed {elapsed:.0f}s, ETA {eta:.0f}s, "
-            f"cost=${cost_actual:.2f} (actual from API usage)"
+            f"cost=${cost_actual:.2f} (per-draft ${per_draft_cost:.4f}, "
+            f"projected total ${projected_total:.2f}, cap ${effective_cap:.2f})"
         )
-        # Cost halt — extrapolated from actual telemetry.
-        projected_total = (cost_actual / max(1, n_done)) * len(drafts_to_judge)
-        if projected_total > COST_HALT_THRESHOLD:
+        # Hard halt — cumulative cost exceeded cap.
+        if cost_actual > effective_cap:
+            print(
+                f"  HALT — cumulative cost ${cost_actual:.2f} exceeded "
+                f"cap ${effective_cap:.2f}. Stopping at {n_done} drafts."
+            )
+            halted = True
+            break
+        # Early-warning halt — projected total exceeds cap.
+        if projected_total > effective_cap:
             print(
                 f"  HALT — projected total ${projected_total:.2f} exceeds "
-                f"halt threshold ${COST_HALT_THRESHOLD:.2f}. "
-                f"Stopping at {n_done} drafts judged."
+                f"cap ${effective_cap:.2f}. Stopping at {n_done} drafts."
             )
             halted = True
             break
@@ -530,6 +546,7 @@ async def _main_async(args: argparse.Namespace) -> int:
         output_report=output_report,
         exclude_judged=exclude_judged_paths,
         no_opus=args.no_opus,
+        cost_cap=args.cost_cap,
     )
 
     output_results.write_text(json.dumps(result, ensure_ascii=False, indent=2))
@@ -569,6 +586,13 @@ def main() -> int:
                         help="Disable Opus tiebreaker escalation. Sonnet+gpt-mini "
                              "only. Lowers cost ~3-5x at the cost of ensemble "
                              "tiebreaking on high-disagreement drafts.")
+    parser.add_argument("--cost-cap", type=float, default=120.0,
+                        help="USD cap on total run cost (default $120). HALTs "
+                             "the run and writes partial results when either "
+                             "(a) cumulative cost exceeds cap or (b) projected "
+                             "total cost (per-draft mean × total drafts) "
+                             "exceeds cap. Overrides the legacy "
+                             "COST_HALT_THRESHOLD constant ($150).")
     args = parser.parse_args()
     return asyncio.run(_main_async(args))
 
