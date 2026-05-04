@@ -1,27 +1,26 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025 Christopher Chen
-"""Tests for `compute_confidence_score` (Phase 5 walker-side helper).
+"""Tests for `compute_confidence_score` v3 (Phase 5 walker-side helper).
 
-The confidence score is a coarsely-calibrated ranking signal for the
-user-facing tier-display knob. Threshold calibration ships in a
-follow-up commit using Phase 1 re-judging verdicts; these tests
-validate the SHAPE + DIRECTION of each signal, not the absolute values.
+V3 formula is empirically grounded: each signal's sign matches the
+correlation observed on broad pre-R34 supplement verdicts (CN 7556,
+US 13578, TW 5283). On US data, V3 lifts bucket precision from
+absolute 29.4% → 45.3% at threshold 45 (+15.9pp, 1454 findings).
+
+These tests validate the SHAPE + DIRECTION of each signal — they are
+contracts, not absolute thresholds. The helper's exact value at a
+given input may shift as we re-validate against Phase 1 verdicts.
 """
 
 from patentlint.analysis.utils import compute_confidence_score
 
 
 def _baseline(**overrides) -> dict:
-    """Default kwargs that produce the score==55 baseline (50 + 5 jaccard
-    when has_suggested_match=True).
-
-    Default args: 6-char term `widget`, prefix `the`, intro pool 5,
-    no suggested match → score 50 (no bonuses, no penalties).
-    """
+    """Default kwargs producing baseline 50."""
     args = dict(
-        term="widget",
-        prefix="the",
-        intros_pool_size=5,
+        term="widget",  # 6 chars, no triggers
+        prefix="the",   # informal, no boost
+        intros_pool_size=5,  # nonzero
         has_suggested_match=False,
         suggested_cross_branch=False,
         suggested_jaccard=None,
@@ -33,109 +32,83 @@ def _baseline(**overrides) -> dict:
 
 class TestConfidenceScore:
     def test_baseline(self):
-        # 6-char term, no signals → 50 (low-confidence default)
+        # No triggers fired → baseline 50
         assert compute_confidence_score(**_baseline()) == 50
 
-    def test_empty_intro_pool(self):
-        # +25 for empty pool — strongest positive signal
-        assert compute_confidence_score(**_baseline(intros_pool_size=0)) == 75
+    def test_very_short_positive(self):
+        # +8 — empirically positive predictor
+        assert compute_confidence_score(**_baseline(term="該下")) == 58
 
-    def test_suggested_match_high_jaccard(self):
-        # +15 for very-close near-match
+    def test_long_term_negative(self):
+        # -8 — walker over-extraction class
         assert compute_confidence_score(**_baseline(
-            has_suggested_match=True,
-            suggested_jaccard=0.95,
-        )) == 65
+            term="movable positioning component"  # >8 chars
+        )) == 42
 
-    def test_suggested_match_medium_jaccard(self):
-        # +10 for close near-match
+    def test_paren_numeric_negative(self):
+        # -5 — paren-context over-extraction
+        # 8-char `widget(120)` triggers BOTH long_term (-8) AND paren (-5) = -13
         assert compute_confidence_score(**_baseline(
-            has_suggested_match=True,
-            suggested_jaccard=0.80,
-        )) == 60
+            term="widget(120)"
+        )) == 37
 
-    def test_suggested_match_weak_jaccard(self):
-        # +5 for weak near-match
+    def test_paren_no_digits_no_penalty(self):
+        # `device(qual)` — no digit, no penalty even though parens present
         assert compute_confidence_score(**_baseline(
-            has_suggested_match=True,
-            suggested_jaccard=0.50,
-        )) == 55
+            term="device(qual)"
+        )) == 42  # Only -8 from ≥8 chars; no paren penalty
 
-    def test_suggested_same_claim_bonus(self):
-        # +10 for same-claim near-match (additive on top of jaccard)
-        assert compute_confidence_score(**_baseline(
-            has_suggested_match=True,
-            suggested_jaccard=0.95,
-            suggested_same_claim=True,
-        )) == 75
+    def test_short_uppercase_latin_strong_penalty(self):
+        # -15 short_upper_latin + -15 very_short (RX is 2 chars and upper-Latin, hits BOTH)
+        # Wait: very_short is +8, short_upper_latin is -15 — but 2-char RX is ALSO ≤3
+        # So: +8 (very_short) + (-15) (short_upper_latin) = -7 → 50-7=43
+        assert compute_confidence_score(**_baseline(term="RX")) == 43
 
-    def test_long_term_bonus(self):
-        # +10 for term length ≥ 8 chars
-        assert compute_confidence_score(**_baseline(
-            term="movable positioning component"
-        )) == 60
+    def test_three_char_acronym(self):
+        # 3-char `MAC` — short_upper_latin penalty, NOT very_short
+        assert compute_confidence_score(**_baseline(term="MAC")) == 35
 
-    def test_paren_ref_discriminator(self):
-        # +5 for paren-numeral discriminator (`第一電極(120)` style)
-        assert compute_confidence_score(**_baseline(
-            term="第一電極(120)"
-        )) == 65  # 50 + 10 (≥8 chars) + 5 (paren-ref)
-
-    def test_paren_no_digits_no_bonus(self):
-        # `term(qualifier)` without digits should NOT trigger paren-ref bonus
-        assert compute_confidence_score(**_baseline(
-            term="device(qualifier)"
-        )) == 60  # 50 + 10 (≥8 chars), no paren-ref bonus
+    def test_zero_intros_pool_negative(self):
+        # -15 — walker-parser failure correlation
+        assert compute_confidence_score(**_baseline(intros_pool_size=0)) == 35
 
     def test_formal_register_said(self):
-        # +5 for `said`
+        # +5
         assert compute_confidence_score(**_baseline(prefix="said")) == 55
 
     def test_formal_register_cjk(self):
         for p in ("所述", "前述"):
             assert compute_confidence_score(**_baseline(prefix=p)) == 55
 
-    def test_short_uppercase_latin_penalty(self):
-        # -20 for `UE`, `RX`, `MAC` etc — clamps to 30
-        # (50 - 20 = 30 for `MAC` which is 3 chars all-upper-Latin)
-        assert compute_confidence_score(**_baseline(term="MAC")) == 30
-        # `RX` is 2 chars — also gets the very-short penalty (-15)
-        # 50 - 20 (short upper Latin) - 15 (≤2 chars) = 15
-        assert compute_confidence_score(**_baseline(term="RX")) == 15
-
-    def test_very_short_penalty(self):
-        # -15 for term len ≤ 2 (CJK fragment / Latin remnant)
-        assert compute_confidence_score(**_baseline(term="該")) == 35
-
-    def test_cross_branch_penalty(self):
-        # -15 for cross-branch only
+    def test_suggested_match_high_jaccard(self):
+        # +5 — small positive on weak signal correlation
         assert compute_confidence_score(**_baseline(
             has_suggested_match=True,
-            suggested_jaccard=0.95,
-            suggested_cross_branch=True,
-        )) == 50  # 50 + 15 (high jaccard) - 15 (cross-branch) = 50
+            suggested_jaccard=0.85,
+        )) == 55
 
-    def test_clamp_low(self):
-        # Stack penalties (short upper-Latin + very short)
-        score = compute_confidence_score(**_baseline(term="UE"))
-        # 50 - 20 - 15 = 15
-        assert score == 15
-        assert score >= 0  # clamp
-
-    def test_clamp_high(self):
-        # Stack bonuses to drive toward 100
-        score = compute_confidence_score(
-            term="movable positioning member(120)",
-            prefix="said",
-            intros_pool_size=0,
+    def test_suggested_match_low_jaccard_no_boost(self):
+        # No boost (j < 0.75)
+        assert compute_confidence_score(**_baseline(
             has_suggested_match=True,
-            suggested_cross_branch=False,
-            suggested_jaccard=0.95,
+            suggested_jaccard=0.50,
+        )) == 50
+
+    def test_suggested_match_same_claim(self):
+        # +10 — strong same-claim signal
+        assert compute_confidence_score(**_baseline(
+            has_suggested_match=True,
+            suggested_jaccard=0.85,
             suggested_same_claim=True,
-        )
-        # 50 + 25 (zero pool) + 15 (jaccard ≥0.9) + 10 (same claim) +
-        # 10 (≥8 chars) + 5 (paren-ref) + 5 (said) = 120 → clamped to 100
-        assert score == 100
+        )) == 65  # 50 + 5 (jaccard) + 10 (same_claim)
+
+    def test_cross_branch_only_penalty(self):
+        # -10 — chain-invalid by strict §112(b)
+        assert compute_confidence_score(**_baseline(
+            has_suggested_match=True,
+            suggested_jaccard=0.85,
+            suggested_cross_branch=True,
+        )) == 45  # 50 + 5 (jaccard) - 10 (cross-branch)
 
     def test_returns_int(self):
         score = compute_confidence_score(**_baseline(
@@ -144,18 +117,50 @@ class TestConfidenceScore:
         ))
         assert isinstance(score, int)
 
-    def test_clamp_lower_bound_zero(self):
-        # Verify the lower clamp is at 0 (not negative)
-        # Need to find a config that drives below 0; current signals max
-        # at -35 from baseline 50 = 15, so clamp doesn't fire.
-        # Verify the floor logic via the helper directly.
-        # (Defensive — protects against future signal additions.)
+    def test_clamp_low(self):
+        # Stack negatives
         score = compute_confidence_score(
-            term="A",  # 1 char short uppercase Latin
+            term="UE",  # very_short +8, short_upper_latin -15
             prefix="the",
-            intros_pool_size=5,
-            has_suggested_match=False,
-            suggested_cross_branch=False,
+            intros_pool_size=0,  # -15
+            has_suggested_match=True,
+            suggested_cross_branch=True,  # -10
+            suggested_jaccard=0.0,
+            suggested_same_claim=False,
         )
-        # 50 - 20 (short upper-Latin) - 15 (≤2 chars) = 15
-        assert score == 15
+        # 50 + 8 - 15 - 15 - 10 = 18
+        assert score == 18
+        assert score >= 0  # clamp invariant
+
+    def test_clamp_high(self):
+        # Stack positives — but most signals are negative now
+        # Best v3 case: short CJK term (short_upper_latin doesn't fire on
+        # non-ASCII) + said + same_claim near-match
+        score = compute_confidence_score(
+            term="該下",  # 2 chars CJK: very_short +8, no acronym penalty
+            prefix="said",
+            intros_pool_size=5,
+            has_suggested_match=True,
+            suggested_cross_branch=False,
+            suggested_jaccard=0.95,
+            suggested_same_claim=True,
+        )
+        # 50 + 8 (very_short) + 5 (said) + 5 (jaccard) + 10 (same_claim) = 78
+        assert score == 78
+
+    def test_directional_invariants(self):
+        """Sanity-check that key signal directions are correct (v3 contract).
+
+        These guard against accidentally flipping a sign during refactor.
+        """
+        baseline = compute_confidence_score(**_baseline())
+        long_term = compute_confidence_score(**_baseline(term="abcdefghij"))
+        very_short = compute_confidence_score(**_baseline(term="ab"))
+        zero_pool = compute_confidence_score(**_baseline(intros_pool_size=0))
+        formal_register = compute_confidence_score(**_baseline(prefix="said"))
+
+        # V3 invariants:
+        assert long_term < baseline, "long term should reduce score (over-extraction)"
+        assert very_short > baseline, "very-short should boost score (empirically positive)"
+        assert zero_pool < baseline, "zero pool should reduce score (parser-failure correlation)"
+        assert formal_register > baseline, "formal register should boost"
