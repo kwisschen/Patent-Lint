@@ -1193,17 +1193,21 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "覆盖", "分离", "比较", "判断", "决定", "分析",
         "包括以下", "执行以下", "进行以下",
         "执行以下操作", "执行以下操",
-        # === R32 (2026-05-04) — passive / connective trailing residues ===
+        # === R32 (2026-05-04) — passive trailing residue ===
         # 被: passive marker (`<noun>被<verb>`). Compound nouns ending in
         #   `被` are vanishingly rare in CN patent claims (棉被/被服 are
         #   household items, not patent terms). Empirically: walker emits
         #   `单元被`/`子单元被` from CN114357105B c12/c15 spec-support FPs
         #   where bare `单元`/`子单元` is the canonical intro.
-        # 通信/通讯: verb forms ("communicate/transmit"). Compound nouns
-        #   `通信模块`/`通信网络` have 通信 at PREFIX; suffix-position is
-        #   uniformly verb. Empirical: `处理器通信` in CN115952274B c47.
+        #
+        # NOT included: 通信/通讯. Initially considered, but corpus audit
+        # showed compound NOUNS like `侧链路中继通信` / `无线通信` use
+        # 通信 as HEAD noun at suffix position; symmetric strip would
+        # bridge legit-flagged refs to bare `侧链路中继` and silence 7
+        # protect:false legit-drafting-error labels in CN115398975B c1-8
+        # (LLM ensemble Phase 2c verified). Reserved for a context-aware
+        # mechanism (verb-mode vs noun-mode) outside R32 scope.
         '被',
-        '通信', '通讯',
         # === R30 (2026-05-03) — sample-derived adverbial / adjectival trims
         # 进一步: adverbial ("further"), fragment of 进一步包括/进一步具有.
         #   Multi-char so safe against noun compounds (第一步/一步走 unaffected).
