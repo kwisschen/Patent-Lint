@@ -17,7 +17,7 @@ from patentlint.analysis.utils import (
     extract_introductions, extract_introductions_permissive,
     extract_pattern_a_intros,
     extract_abbreviation_intros, clean_noun_phrase,
-    make_document_dedup_key,
+    compute_confidence_score, make_document_dedup_key,
     strip_contextual_verb, token_set_jaccard,
 )
 from patentlint.diagnostic_extractors import extract_special_format
@@ -595,6 +595,21 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                                 and suggested_match.get("cross_branch")
                             ) if suggested_match else False,
                         }
+                        confidence_score = compute_confidence_score(
+                            term=term,
+                            prefix=prefix,
+                            intros_pool_size=len(intros_by_term),
+                            has_suggested_match=suggested_match is not None,
+                            suggested_cross_branch=bool(
+                                suggested_match
+                                and suggested_match.get("cross_branch")
+                            ),
+                            suggested_jaccard=fb_best_score if suggested_match else None,
+                            suggested_same_claim=bool(
+                                suggested_match
+                                and suggested_match.get("claim_id") == claim.id
+                            ),
+                        )
                         issues.append({
                             "claim_id": claim.id,
                             "term": term,
@@ -606,6 +621,7 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                             "document_dedup_key": make_document_dedup_key(
                                 term, reference_form
                             ),
+                            "confidence_score": confidence_score,
                         })
 
     issues.sort(key=lambda x: (x["claim_id"], x["term"], x["reference_form"]))
