@@ -15,6 +15,7 @@ from patentlint.analysis.en_normalize import en_number_key
 from patentlint.analysis.utils import (
     _DEFINITE_REF, _QUANTIFIER_STOPS, _dx,
     extract_introductions, extract_introductions_permissive,
+    extract_pattern_a_intros,
     extract_abbreviation_intros, clean_noun_phrase,
     strip_contextual_verb, token_set_jaccard,
 )
@@ -293,14 +294,62 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
             for abbrev_intro in extract_abbreviation_intros(ancestor.text):
                 _record(abbrev_intro, ancestor.id)
 
-        # R32-US head-noun-from-intro: drafted but DEFERRED — would silence
-        # ~617 single-word walker_fp emissions but breaks 1 protect:true
-        # label (US20240185203A1 c1: `the information` from gerund-phrase
-        # `collecting information` would resolve incorrectly). Mechanism
-        # needs a stronger guard distinguishing Pattern A `a/an X` intros
-        # from bare-noun-list / gerund-phrase intros before shipping.
-        # See `2026-05-04_morning-resume-runbook.md` step 2 for the
-        # design sketch.
+        # R32-US (2026-05-04): head-noun-from-intro. Promote the LAST
+        # word of multi-word Pattern A intros as a separate intro entry
+        # so a body reference like `the method` resolves against an intro
+        # `method for delivering an e-commerce order` (head noun of the
+        # apparatus-claim preamble).
+        #
+        # Three guards (audited against round-1 705-draft US corpus):
+        #
+        #   1. Pattern A only — promoted heads come from
+        #      `extract_pattern_a_intros` (strict `a/an X` matches), NOT
+        #      from `extract_bare_noun_intros` (comprising lists with
+        #      gerund phrases like `collecting information`) or
+        #      self-definition / wherein-bare-subject extractors. The
+        #      gerund-phrase exclusion preserves protect:true label
+        #      US20240185203A1 c1 `the information` (real §112(b) defect
+        #      where `information` was first introduced via the gerund
+        #      `collecting information`, not via Pattern A).
+        #
+        #   2. Multi-modifier ambiguity — if 2+ Pattern A intros share
+        #      the same last word (e.g., `first surface` + `second
+        #      surface`), bare `surface` is statutorily ambiguous and
+        #      MUST stay flagged. Preserves US7839645B2 c15 protect:true
+        #      `the surface`.
+        #
+        #   3. Last-word floor of 4 chars + _SKIP_TERMS / _QUANTIFIER_STOPS
+        #      exclusion — prevents over-resolution on common short
+        #      ambiguous tokens (set/data/user/one/two).
+        pattern_a_phrases: list[tuple[str, int]] = []
+        for ancestor in chain:
+            for phrase in extract_pattern_a_intros(ancestor.text):
+                pattern_a_phrases.append((phrase, ancestor.id))
+
+        last_word_count: dict[str, int] = {}
+        for phrase, _ in pattern_a_phrases:
+            words = phrase.split()
+            if len(words) < 2:
+                continue
+            lw = words[-1].strip(' ,.;:()')
+            last_word_count[lw] = last_word_count.get(lw, 0) + 1
+
+        for phrase, ancestor_id in pattern_a_phrases:
+            words = phrase.split()
+            if len(words) < 2:
+                continue
+            last_word = words[-1].strip(' ,.;:()')
+            if len(last_word) < 4:
+                continue
+            if last_word in _SKIP_TERMS:
+                continue
+            if last_word in _QUANTIFIER_STOPS:
+                continue
+            if last_word in intros_by_term:
+                continue
+            if last_word_count.get(last_word, 0) > 1:
+                continue
+            _record(last_word, ancestor_id)
 
         intros = set(intros_by_term.keys())
 
