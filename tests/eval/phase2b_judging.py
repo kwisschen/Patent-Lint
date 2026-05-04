@@ -232,6 +232,7 @@ async def _run(
     output_results: Path = RESULTS_PATH,
     output_report: Path = REPORT_PATH,
     exclude_judged: list[Path] | None = None,
+    no_opus: bool = False,
 ) -> dict:
     print(f"Loading corpus from {CORPUS_PARQUET_DIR} ...")
     records = load_corpus_records(CORPUS_PARQUET_DIR)
@@ -336,6 +337,7 @@ async def _run(
                     anthropic_client=anth,
                     openai_client=oai,
                     system_prompt=_system_prompt_for(rec["jurisdiction"]),
+                    no_opus=no_opus,
                 )
                 return rec, ensemble
             except Exception as exc:
@@ -527,6 +529,7 @@ async def _main_async(args: argparse.Namespace) -> int:
         output_results=output_results,
         output_report=output_report,
         exclude_judged=exclude_judged_paths,
+        no_opus=args.no_opus,
     )
 
     output_results.write_text(json.dumps(result, ensure_ascii=False, indent=2))
@@ -562,6 +565,10 @@ def main() -> int:
     parser.add_argument("--exclude-judged", nargs="+", default=None,
                         help="One or more prior results JSON files; their "
                              "patent_ids are skipped (avoids re-judging).")
+    parser.add_argument("--no-opus", action="store_true",
+                        help="Disable Opus tiebreaker escalation. Sonnet+gpt-mini "
+                             "only. Lowers cost ~3-5x at the cost of ensemble "
+                             "tiebreaking on high-disagreement drafts.")
     args = parser.parse_args()
     return asyncio.run(_main_async(args))
 
