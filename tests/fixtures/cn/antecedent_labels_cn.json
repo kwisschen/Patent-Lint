@@ -65,7 +65,16 @@
         "rationale": "Sonnet ensemble correctly identified intros walker missed (verb-object bare nouns, Pattern B enumerator-form members, parent-claim bare-noun intros, compound-noun tokenization fragments). 2 cases retained as legit_drafting_error per Christopher's review.",
         "round": 28
       }
-    ]
+    ],
+    "round_history": [
+      {
+        "round": 33,
+        "name": "r38_f22_list_item_no_colon",
+        "description": "Mirror of TW R37 F22 — list-item bare-noun extraction without colon trigger.",
+        "unresolved_removed_resolved": 4
+      }
+    ],
+    "last_updated": "2026-05-04T09:52:56.594193+00:00"
   },
   "labels": [
     {
@@ -4624,9 +4633,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "[r38: F22 no-colon list extraction registers 网络设备 as bare-noun intro from comma-list parent] Stage 3 seed — awaiting Stage 4 classification.",
+      "resolved_by": "r38_f22_list_item_no_colon",
+      "round": 33
     },
     {
       "fixture": "CN115485995B",
@@ -6352,9 +6361,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "[r38: F22 no-colon list extraction registers 网络设备 as bare-noun intro from comma-list parent] Stage 3 seed — awaiting Stage 4 classification.",
+      "resolved_by": "r38_f22_list_item_no_colon",
+      "round": 33
     },
     {
       "fixture": "CN115485995B",
@@ -8416,9 +8425,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "[r38: F22 no-colon list extraction registers 网络设备 as bare-noun intro from comma-list parent] Stage 3 seed — awaiting Stage 4 classification.",
+      "resolved_by": "r38_f22_list_item_no_colon",
+      "round": 33
     },
     {
       "fixture": "CN115485995B",
@@ -10264,9 +10273,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "[r38: F22 no-colon list extraction registers 网络设备 as bare-noun intro from comma-list parent] Stage 3 seed — awaiting Stage 4 classification.",
+      "resolved_by": "r38_f22_list_item_no_colon",
+      "round": 33
     },
     {
       "fixture": "CN115485995B",
