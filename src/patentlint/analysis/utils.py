@@ -564,6 +564,43 @@ _LEADING_ARTICLE = re.compile(r"^(?:a|an)\s+", re.IGNORECASE)
 _LIST_CONTEXT_BREAKER = re.compile(r"\bwherein\b", re.IGNORECASE)
 
 
+# R45 (2026-05-04): method-step bare-noun intro extraction. Process
+# claims commonly introduce elements via gerund-led method steps with
+# explicit (a)/(b)/(1) step labels:
+#   `comprising:(a) isolating lipoprotein particles from a biological sample`
+# Pattern A doesn't match (no `a` before `lipoprotein particles`); the
+# bare-noun list extraction misses because the item starts with a
+# gerund, not a noun.
+#
+# Narrow gate: REQUIRE the explicit step label `(a)`/`(b)`/`(1)` at the
+# start (filters out arbitrary gerund text); REQUIRE a known stop word
+# (from/via/in/on/by/at/to/for/with/of/using/wherein/;) immediately
+# after the captured noun phrase (anchors the extraction); cap noun
+# phrase length at 5 words.
+_METHOD_STEP_BARE_NOUN_RE = re.compile(
+    r'[\(\[]\s*[a-z0-9]+\s*[\)\]]\s*'           # step label (a) (b) (1) etc.
+    r'(?:[a-z]+(?:ing|ed))\s+'                   # gerund or past participle
+    r'((?:[a-z][\w\-]*\s+){0,4}[a-z][\w\-]*)'   # 1-5 word noun phrase
+    r'(?=\s+(?:from|via|in|on|by|at|to|for|with|of|using|wherein|so|when|while|;)\b)',
+    re.IGNORECASE,
+)
+
+
+def extract_method_step_intros(text: str) -> list[str]:
+    """Extract bare-noun intros from method-step gerund constructions.
+
+    Pattern: `(label) <gerund> <bare-noun> <stop-word>`. Used as a
+    supplementary intro source for process-claim element introduction
+    in method steps that lack the standard `a/an X` form.
+    """
+    refs: list[str] = []
+    for m in _METHOD_STEP_BARE_NOUN_RE.finditer(text):
+        cleaned = clean_noun_phrase(m.group(1).strip())
+        if cleaned and len(cleaned) >= 4:
+            refs.append(cleaned)
+    return refs
+
+
 def extract_bare_noun_intros(text: str) -> list[str]:
     """Extract introductions from bare-noun list contexts.
 
@@ -695,6 +732,7 @@ def extract_introductions(text: str) -> list[str]:
     refs.extend(extract_bare_noun_intros(lowered))
     refs.extend(_extract_self_definition_intros(lowered))
     refs.extend(_extract_wherein_bare_subject_intros(lowered))
+    refs.extend(extract_method_step_intros(lowered))
     return refs
 
 
