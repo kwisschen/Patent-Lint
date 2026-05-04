@@ -1193,6 +1193,17 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "覆盖", "分离", "比较", "判断", "决定", "分析",
         "包括以下", "执行以下", "进行以下",
         "执行以下操作", "执行以下操",
+        # === R32 (2026-05-04) — passive / connective trailing residues ===
+        # 被: passive marker (`<noun>被<verb>`). Compound nouns ending in
+        #   `被` are vanishingly rare in CN patent claims (棉被/被服 are
+        #   household items, not patent terms). Empirically: walker emits
+        #   `单元被`/`子单元被` from CN114357105B c12/c15 spec-support FPs
+        #   where bare `单元`/`子单元` is the canonical intro.
+        # 通信/通讯: verb forms ("communicate/transmit"). Compound nouns
+        #   `通信模块`/`通信网络` have 通信 at PREFIX; suffix-position is
+        #   uniformly verb. Empirical: `处理器通信` in CN115952274B c47.
+        '被',
+        '通信', '通讯',
         # === R30 (2026-05-03) — sample-derived adverbial / adjectival trims
         # 进一步: adverbial ("further"), fragment of 进一步包括/进一步具有.
         #   Multi-char so safe against noun compounds (第一步/一步走 unaffected).
@@ -2051,7 +2062,22 @@ _F10_NOUN_REJECTS_CN: tuple[str, ...] = (
 # stripped to surface bare X. Residual ≥ 2 protects compound nouns
 # starting with 有 (有限/有机/有效) — those are 2-char with residual 0/1
 # after strip, so still protected.
-_LEADING_VERB_PREFIXES_CN: tuple[str, ...] = ('形成', '制造', '有')
+_LEADING_VERB_PREFIXES_CN: tuple[str, ...] = tuple(sorted(
+    (
+        '形成', '制造', '有',
+        # R32 (2026-05-04): connective-verb prefixes — TW parity.
+        # Empirical: `即根据各数字内容` / `使得各数字内容关联` shape leaks
+        # into spec-support via shared extract_introductions_cn helper.
+        # Multi-char longest-first.
+        '即根据', '即基于', '即依据', '即依照',
+        '根据', '基于', '依据', '依照',
+        '为了', '借以', '借由', '通过',
+        '使得', '使其', '从而', '进而', '并且',
+        '用以', '用于',
+    ),
+    key=len,
+    reverse=True,
+))
 _LEADING_VERB_RESIDUAL_FLOOR_CN: int = 2
 
 

@@ -1491,6 +1491,14 @@ _REF_PATTERN_CAPTURE = re.compile(
 # ``sorted(..., key=len, reverse=True)`` is applied once at import time.
 _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
     (
+        # === R32 (2026-05-04) — passive / connective trailing residues ===
+        # CN parity (added to _TRAILING_VERB_DENYLIST_CN same round).
+        # 被: passive marker. Compound nouns ending in 被 are vanishingly
+        #   rare in TIPO patent claims; suffix-position is uniformly verb.
+        # 通訊/通信: verb forms. Compound 通訊模組/通信網路 have 通訊/通信
+        #   at PREFIX; suffix-position is verb (`處理器通訊` → strip → `處理器`).
+        "被",
+        "通訊", "通信",
         # Verb suffixes
         "包含", "包括", "含有", "具有", "係", "為", "是", "設有", "具備",
         # Preposition-verbs
@@ -2466,7 +2474,32 @@ _QUANTIFIER_AFTER_POSITION: tuple[str, ...] = (
 #   `形成器`           (3 chars)  → strip → `器`         (1 char  < 3) PROTECT
 # Multi-char specific tokens; no compound-noun risk because bare-noun
 # claim elements never have these as their literal head morpheme.
-_LEADING_VERB_PREFIXES_TW: tuple[str, ...] = ("形成", "製造")
+_LEADING_VERB_PREFIXES_TW: tuple[str, ...] = tuple(sorted(
+    (
+        "形成", "製造",
+        # R32 (2026-05-04): connective-verb prefixes that frequently bleed
+        # into intro captures. Empirical attestation in 110P000368 c6
+        # spec-support FPs `即根據各數位內容` / `使得各數位內容關聯`. These
+        # are clause-connective verbs ("namely according to" / "such that")
+        # that drafters use to connect description to a noun referent.
+        # Stripping them symmetrically (intro + reference) preserves
+        # antecedent matching while eliminating the over-capture surface
+        # in spec-support.
+        # Multi-char longest-first so `即根據` is stripped as a unit
+        # before `根據` would be tried separately.
+        "即根據", "即基於", "即依據", "即依照",
+        "根據", "基於", "依據", "依照",
+        "為了", "藉以", "藉由",
+        "使得", "使其", "從而", "進而", "並且",
+        # 用以/用於 — purpose markers; often precede noun-phrase intros
+        # (`用以驅動X` / `用於X`) where the canonical intro is the X.
+        # Risk audited: 用以 / 用於 do not appear as compound-noun prefixes
+        # in patent claims (no 用以X-form noun in TIPO claim corpus).
+        "用以", "用於",
+    ),
+    key=len,
+    reverse=True,
+))
 # Residual ≥ 2: `形成p型源極／汲極` (10) → 8 ≥ 2 ✓; `製造方法` (4) → 2 ≥ 2 ✓;
 # `形成器`/`形成物` (3) → 1 < 2 PROTECT; `製造商`/`製造廠` (3) → 1 < 2 PROTECT.
 _LEADING_VERB_RESIDUAL_FLOOR: int = 2
