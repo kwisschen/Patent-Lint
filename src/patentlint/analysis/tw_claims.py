@@ -1503,6 +1503,21 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         # not a verb. Verb-mode vs noun-mode disambiguation is out of
         # R32 scope.
         "被",
+        # === R32 (2026-05-04) — verb-suffix trailing residues ===
+        # Cluster-mined from round-1 TW corpus: each entry has ≥30
+        # walker_fp findings AND 0 legit_drafting_error findings (safe
+        # silence per ensemble verdict + Phase 2c noise-floor analysis).
+        # Compound-noun risk audited: each verb appears at PREFIX
+        # position in noun compounds, not suffix.
+        "發送",  # 40 walker_fp / 0 legit. `<noun>發送` over-capture.
+        "提供",  # 38 walker_fp / 0 legit.
+        "獲得",  # 31 walker_fp / 0 legit.
+        "隔開",  # 32 walker_fp / 0 legit. (`<noun>隔開` separator verb)
+        "延伸",  # 44 walker_fp / 0 legit. Risk: 延伸線 (extension line)
+                # at PREFIX position, suffix-position is uniformly verb.
+        "經組態",  # 57 walker_fp / 0 legit. Passive participle ("configured").
+        # NOTE: 發光 not added — `發光二極體` (LED) suffix risk too high
+        # for confident strip without per-claim context.
         # Verb suffixes
         "包含", "包括", "含有", "具有", "係", "為", "是", "設有", "具備",
         # Preposition-verbs
