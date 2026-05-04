@@ -2201,13 +2201,21 @@ _F19_VERB_NP_ZHI_RE_CN = re.compile(
     r'[之的]'
 )
 
-# F20 — `(以|借由|透过|经由) X (verb)` instrumental intro. `以` excluded
-# when followed by `及` (conjunction `以及`).
+# F20 — `(以|借由|透过|经由|将) X (verb)` instrumental/object intro.
+# `以` excluded when followed by `及` (conjunction `以及`).
+# R41 (2026-05-04): added `将` (instrumental object marker, very
+# common in CN claims for `将<noun><verb>` constructions like
+# `将第一激发光输出`/`将信号发送`/`将数据传输`). Extended trailing-
+# verb list with output/send/transmit/etc. to cover the most common
+# 将-shape cases. Phase A on post-R36 corpus showed CN `发光` cluster
+# 48 wfp / 0 legit (top: `第二激发光` 14, `第一激发光` 13) — parent
+# claim 1 introduces 第一激发光 via `将第一激发光输出` shape that
+# F20 didn't recognize.
 _F20_PREP_NP_VERB_RE_CN = re.compile(
-    r'(?:以(?!及)|借由|透过|经由)'
+    r'(?:以(?!及)|借由|透过|经由|将)'
     r'(?P<noun>' + _F14_NOUN_CLASS_CN + r'{2,8}'
     r'(?:\([A-Za-z0-9]+\))?)'
-    r'(?:夹持|覆盖|包含|包括|具有|含有|具备|设有|设置|配置|形成|构成|连接|连结|提供|分隔|划分|实施|分为|构建|测量|蚀刻|除去|装设|安装)'
+    r'(?:夹持|覆盖|包含|包括|具有|含有|具备|设有|设置|配置|形成|构成|连接|连结|提供|分隔|划分|实施|分为|构建|测量|蚀刻|除去|装设|安装|输出|输入|发送|接收|传输|传送|生成|获取|获得|确定|存储|读取|写入|执行|处理|计算)'
 )
 
 
