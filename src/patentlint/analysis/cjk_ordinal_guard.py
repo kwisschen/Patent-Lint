@@ -51,6 +51,75 @@ _NUMERIC_ORDINAL = re.compile(rf"^第([{_CJK_DIGITS}]+|\d+)(.*)$")
 
 
 # ---------------------------------------------------------------------------
+# Arabic-to-CJK ordinal normalization (R33 walker-mine M2)
+# ---------------------------------------------------------------------------
+
+# Per the round-1 cluster discovery, JP-translated TW + CN drafts retain
+# half-width Arabic digits in 第N constructions (`第1電極`, `第2端子`)
+# where canonical TW/CN style uses CJK numerals (`第一電極`, `第二端子`).
+# The walker's normalize_reference_term / normalize_candidate_intro
+# currently treat them as distinct intro/reference identities, so a
+# parent claim using `第一X` and a dep claim referencing `第1X` (or vice
+# versa) emits a spurious antecedent-basis finding. This helper folds
+# the two forms together at normalization time, keyed only on the 1-2
+# digit range that covers ordinary patent ordinals (1..99). Element
+# label numbers (101) etc. are unaffected because they lack a leading
+# 第 character.
+
+_ARABIC_TO_CJK_DIGIT: dict[str, str] = {
+    "0": "零", "1": "一", "2": "二", "3": "三", "4": "四",
+    "5": "五", "6": "六", "7": "七", "8": "八", "9": "九",
+}
+
+
+def _arabic_digits_to_cjk_numeral(digits: str) -> str:
+    """Convert a 1-2 char Arabic digit string to its CJK numeral form.
+
+    Returns: "1" → "一", "10" → "十", "20" → "二十", "25" → "二十五",
+    "99" → "九十九". Returns the input unchanged if it falls outside
+    1..99 (single 0, 3+ digit strings, or non-digit input).
+    """
+    if not digits.isdigit() or not 1 <= len(digits) <= 2:
+        return digits
+    n = int(digits)
+    if n == 0:
+        return "零"
+    if 1 <= n <= 9:
+        return _ARABIC_TO_CJK_DIGIT[digits]
+    if 10 <= n <= 19:
+        ones = _ARABIC_TO_CJK_DIGIT[str(n - 10)] if n > 10 else ""
+        return "十" + ones
+    if 20 <= n <= 99:
+        tens = _ARABIC_TO_CJK_DIGIT[str(n // 10)]
+        ones_digit = n % 10
+        ones = _ARABIC_TO_CJK_DIGIT[str(ones_digit)] if ones_digit else ""
+        return tens + "十" + ones
+    return digits
+
+
+# `(?!\d)` blocks 3+ digit ordinal labels (e.g., `第123A段`) which are
+# rare and more likely to be raw element identifiers than ordinals; the
+# pattern requires `第` immediately followed by exactly 1-2 digits.
+_ARABIC_ORDINAL_RUN = re.compile(r"第(\d{1,2})(?!\d)")
+
+
+def normalize_arabic_ordinal_to_cjk(text: str) -> str:
+    """Fold half-width Arabic ordinals (第1, 第2) to CJK form (第一, 第二).
+
+    Used by TW + CN walker normalize_reference_term* and
+    normalize_candidate_intro* for ADR-095 symmetry. The transformation
+    is a no-op on text already in CJK form, so it is safe to apply
+    unconditionally at the start of the normalization pipeline.
+    """
+    if not text or "第" not in text:
+        return text
+    return _ARABIC_ORDINAL_RUN.sub(
+        lambda m: "第" + _arabic_digits_to_cjk_numeral(m.group(1)),
+        text,
+    )
+
+
+# ---------------------------------------------------------------------------
 # Pattern 2: polarity / type prefix (single-character binary pairs)
 # ---------------------------------------------------------------------------
 

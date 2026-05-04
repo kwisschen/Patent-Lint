@@ -11,7 +11,10 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from patentlint.analysis.cjk_ordinal_guard import ordinal_guard
+from patentlint.analysis.cjk_ordinal_guard import (
+    normalize_arabic_ordinal_to_cjk,
+    ordinal_guard,
+)
 from patentlint.analysis.cjk_tokenize import jaccard, tokenize_cn
 from patentlint.analysis.utils import _dx
 from patentlint.analysis.connection_relationships import (
@@ -1635,8 +1638,13 @@ def normalize_reference_term_cn(
     R7 (2026-04-30): + strip_leading_verb_cn for `所述形成p型源极／漏极`
     style references that carry a leading verb prefix (符号见 ADR-095
     addendum / TW R7 commit).
+
+    R33 (2026-05-04): + normalize_arabic_ordinal_to_cjk at the head so
+    JP-translated drafts using `第1` / `第2` collapse with canonical
+    `第一` / `第二` intros for matching purposes.
     """
-    t = strip_reference_form_prefix_cn(text)
+    t = normalize_arabic_ordinal_to_cjk(text)
+    t = strip_reference_form_prefix_cn(t)
     t = strip_leading_qualifier_cn(t, strict_qualifier_matching=strict_qualifier_matching)
     t = clean_noun_phrase_cn(t)
     t = strip_leading_quantifier_cn(t)
@@ -1663,7 +1671,8 @@ def normalize_candidate_intro_cn(
     the _INTRO_PATTERN_CN captures a reference-prefix artifact as part
     of the bare noun group.
     """
-    t = strip_leading_qualifier_cn(text, strict_qualifier_matching=strict_qualifier_matching)
+    t = normalize_arabic_ordinal_to_cjk(text)
+    t = strip_leading_qualifier_cn(t, strict_qualifier_matching=strict_qualifier_matching)
     t = clean_noun_phrase_cn(t)
     t = strip_leading_quantifier_cn(t)
     t = strip_reference_form_prefix_cn(t)
