@@ -39,8 +39,14 @@ from .phase2b_judging import (  # noqa: E402
     run_walker_on_draft,
 )
 
-# Threshold candidates (per plan §Phase 5: "candidate thresholds 70/75/80/85").
-THRESHOLDS = [60, 65, 70, 75, 80, 85, 90]
+# Threshold candidates. The v3 confidence formula (analysis/utils.py)
+# emits scores from baseline 50 with empirically-grounded ±15 adjustments,
+# so the meaningful range is roughly 25–80 with most findings clustering
+# 35–65. The plan's original 70-90 range was calibrated for the v1/v2
+# formulas (baseline 80) and would show empty buckets on v3 data.
+# Cover the v3 distribution comprehensively + keep the original high
+# end for sanity-checking edge cases.
+THRESHOLDS = [25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85]
 
 
 def _walker_key(claim_id: int, term: str, reference_form: str) -> tuple:
