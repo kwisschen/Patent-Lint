@@ -2659,15 +2659,29 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
     # Each item must be 2-12 pure CJK chars (filters out fragments
     # with embedded Latin/digit/punctuation). Reference-prefix items
     # are skipped (they're not new intros).
+    # R44 (2026-05-04): expand triggers to 具有/具备/设有/含有 BUT only
+    # when the captured list has >=2 commas (3+ items) — single-comma
+    # lists with these triggers were too noisy on R37/R38 gate-3
+    # spec-support test. 3+ items strongly signal a list (not a
+    # possessive or modifier sequence).
     _F22_NO_COLON_LIST_CN = re.compile(
         r'(?:包括|包含)'
         r'((?:[一-鿿]{2,12}[、，])+'
         r'(?:[一-鿿]{2,12}(?:以及|及|和|或))?'
         r'[一-鿿]{2,12})'
+        r'|'
+        r'(?:具有|具备|设有|含有)'
+        r'((?:[一-鿿]{2,12}[、，]){2,}'
+        r'(?:[一-鿿]{2,12}(?:以及|及|和|或))?'
+        r'[一-鿿]{2,12})'
     )
     _F22_LIST_SPLIT_CN = re.compile(r'[、，]|以及|及|和|或')
     for fl_m in _F22_NO_COLON_LIST_CN.finditer(text):
-        list_text = fl_m.group(1)
+        # Either group 1 (包括/包含 with >=1 comma) or group 2
+        # (具有/具备/设有/含有 with >=2 commas) captures the list.
+        list_text = fl_m.group(1) or fl_m.group(2)
+        if not list_text:
+            continue
         for item_raw in _F22_LIST_SPLIT_CN.split(list_text):
             item = item_raw.strip()
             if not item or len(item) < 2:
