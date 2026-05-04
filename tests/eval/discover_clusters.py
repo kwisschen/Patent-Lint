@@ -240,6 +240,38 @@ def render_report(result: dict) -> str:
         f"- Drafts judged: {result['drafts_judged']}\n"
         f"- Drafts with walker output: {result['drafts_with_walker_data']}\n"
     )
+
+    # Executive summary — quick view for triage
+    safe_silence = result.get("safe_silence_clusters", [])
+    recall_mining = result.get("recall_mining_clusters", [])
+    total_safe_wfp = sum(c["walker_fp"] for c in safe_silence)
+    total_recall_coverage = sum(c["coverage_gap"] for c in recall_mining)
+    lines.append("\n## Executive summary\n")
+    lines.append(
+        f"- **{len(safe_silence)} safe-silence clusters** "
+        f"(≥10 wfp, 0 legit) — total {total_safe_wfp} walker_fp findings "
+        f"that could be silenced without risk to legits"
+    )
+    lines.append(
+        f"- **{len(recall_mining)} recall-mining clusters** "
+        f"(≥5 coverage_gap) — total {total_recall_coverage} coverage_gap "
+        f"findings where walker missed a Pattern A/B variant"
+    )
+    if safe_silence:
+        top = safe_silence[0]
+        lines.append(
+            f"- **Top safe-silence target**: "
+            f"`{top['signature_kind']}|{top['jurisdiction']}|{top['signature_value']}` "
+            f"with {top['walker_fp']} wfp / 0 legit"
+        )
+    if recall_mining:
+        top = recall_mining[0]
+        lines.append(
+            f"- **Top recall-mining target**: "
+            f"`{top['signature_kind']}|{top['jurisdiction']}|{top['signature_value']}` "
+            f"with {top['coverage_gap']} coverage_gap"
+        )
+
     lines.append("\n## Safe-silence targets (≥10 wfp, 0 legit)\n")
     lines.append(
         "Clusters where the walker over-emits with no risk to legit "
