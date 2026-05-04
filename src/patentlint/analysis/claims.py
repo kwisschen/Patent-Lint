@@ -351,6 +351,58 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                 continue
             _record(last_word, ancestor_id)
 
+        # R40 (2026-05-04): leading-bigram registration with
+        # participle-suffix gate. Phase A on the post-R36 corpus
+        # showed `aggregate metric` 75 wfp / 0 legit — parent intro
+        # `aggregate metric indicative` over-captures the trailing
+        # `indicative` (an `-ive` participle) before hitting `of`
+        # stop word. Bare reference `the aggregate metric` doesn't
+        # match.
+        #
+        # Mechanism: for a 3-word Pattern A intro `<W1> <W2> <W3>`,
+        # register the leading bigram `<W1> <W2>` IF AND ONLY IF
+        # the third word ends in `-ive`/`-ing`/`-ed`/`-able`/`-ous`/
+        # `-ory`/`-ant`/`-ent` (typical participle/adjective endings
+        # that signal over-capture, NOT a real compound noun head).
+        # This excludes the test case `common voltage difference
+        # circuit` (`circuit` is a real noun head) so the existing
+        # `test_long_intro_does_not_mask_short_reference` regression
+        # gate stays green.
+        _PARTICIPLE_SUFFIX = (
+            'ive', 'ing', 'ed', 'able', 'ous', 'ory', 'ant', 'ent',
+        )
+        leading_bigram_count: dict[str, int] = {}
+        for phrase, _ in pattern_a_phrases:
+            words = phrase.split()
+            if len(words) == 3:
+                tail = words[-1].strip(' ,.;:()').lower()
+                if any(tail.endswith(suf) for suf in _PARTICIPLE_SUFFIX):
+                    bg = ' '.join(words[:2]).strip(' ,.;:()')
+                    leading_bigram_count[bg] = leading_bigram_count.get(bg, 0) + 1
+
+        for phrase, ancestor_id in pattern_a_phrases:
+            words = phrase.split()
+            if len(words) != 3:
+                continue
+            tail = words[-1].strip(' ,.;:()').lower()
+            if not any(tail.endswith(suf) for suf in _PARTICIPLE_SUFFIX):
+                continue
+            bigram = ' '.join(words[:2]).strip(' ,.;:()')
+            bg_words = bigram.split()
+            if len(bg_words) != 2:
+                continue
+            if any(len(w) < 3 for w in bg_words):
+                continue
+            if len(bigram) < 7:
+                continue
+            if any(w in _SKIP_TERMS or w in _QUANTIFIER_STOPS for w in bg_words):
+                continue
+            if bigram in intros_by_term:
+                continue
+            if leading_bigram_count.get(bigram, 0) > 1:
+                continue
+            _record(bigram, ancestor_id)
+
         intros = set(intros_by_term.keys())
 
         intros_by_number_key: dict[str, int] = {}
