@@ -1529,6 +1529,16 @@ _POSSESSIVE_其_PREFIX_RE_CN: re.Pattern[str] = re.compile(
 )
 
 
+# R32 (2026-05-04): leading conjunction-residue strip. CN drafters use
+# `和/或X` (and/or X) constructions in lists. Walker captures `/或X` as
+# leading residue when the conjunction-split mechanism fails on the
+# slash. Empirical: `/或第二功能模块` from CN115485995B c12 spec-support FP
+# where canonical intro is `第二功能模块`.
+_LEADING_CONJ_RESIDUE_RE_CN: re.Pattern[str] = re.compile(
+    r'^(?:/或|/和|和/或|或/|/)'
+)
+
+
 def strip_leading_quantifier_cn(text: str) -> str:
     """Strip one matching leading quantifier (ADR-095 Rule 2).
 
@@ -1537,6 +1547,10 @@ def strip_leading_quantifier_cn(text: str) -> str:
     """
     if not text:
         return text
+    # R32: leading conjunction residue (`/或`, `和/或`) strip
+    m = _LEADING_CONJ_RESIDUE_RE_CN.match(text)
+    if m and len(text) - m.end() >= 2:
+        text = text[m.end():]
     m = _AT_LEAST_N_PREFIX_RE_CN.match(text)
     if m and len(text) - m.end() >= 2:
         text = text[m.end():]
