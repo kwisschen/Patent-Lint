@@ -2376,6 +2376,13 @@ _POSSESSIVE_其_PREFIX_RE_TW: re.Pattern[str] = re.compile(
     r'^其(?=[一-鿿]{2,})'
 )
 
+# R32 (2026-05-04): leading conjunction-residue strip — CN parity. TIPO
+# drafts occasionally use `/或X` (and/or X — particularly in JP-translated
+# patents). Walker captures `/或<noun>` as leading-residue intro.
+_LEADING_CONJ_RESIDUE_RE_TW: re.Pattern[str] = re.compile(
+    r'^(?:/或|/和|和/或|或/|/)'
+)
+
 
 def strip_leading_quantifier(text: str) -> str:
     """Strip one matching leading quantifier (ADR-095 Rule 2).
@@ -2393,6 +2400,10 @@ def strip_leading_quantifier(text: str) -> str:
     """
     if not text:
         return text
+    # R32: leading conjunction-residue strip (`/或`, `和/或`).
+    m = _LEADING_CONJ_RESIDUE_RE_TW.match(text)
+    if m and len(text) - m.end() >= 2:
+        text = text[m.end():]
     # R32: at-least-N regex strip (handles 至少三個/至少四個/至少100個).
     m = _AT_LEAST_N_PREFIX_RE_TW.match(text)
     if m and len(text) - m.end() >= 2:
