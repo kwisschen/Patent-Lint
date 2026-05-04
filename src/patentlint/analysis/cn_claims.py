@@ -1208,6 +1208,11 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # (LLM ensemble Phase 2c verified). Reserved for a context-aware
         # mechanism (verb-mode vs noun-mode) outside R32 scope.
         '被',
+        # === R32 (2026-05-04) — verb-suffix trailing residues (CN parity) ===
+        # Cluster-mined from round-1 CN corpus.
+        '延伸',  # 51 walker_fp / 0 legit. (Risk audited per TW.)
+        '指示',  # 42 walker_fp / 0 legit. Verb form ("indicate").
+                # NOTE: 指示牌 / 指示灯 noun compounds at PREFIX position.
         # === R30 (2026-05-03) — sample-derived adverbial / adjectival trims
         # 进一步: adverbial ("further"), fragment of 进一步包括/进一步具有.
         #   Multi-char so safe against noun compounds (第一步/一步走 unaffected).
