@@ -50,6 +50,78 @@ def make_document_dedup_key(term: str, reference_form: str) -> str:
     r = " ".join((reference_form or "").split()).casefold()
     return f"{t}|{r}"
 
+
+# Closed set of "formal-register" reference prefixes across jurisdictions.
+# Formal register correlates weakly but consistently with deliberate
+# drafter intent (drafter chose `said` over `the`); the +5 confidence
+# adjustment reflects that, not absolute correctness.
+_FORMAL_PREFIXES = frozenset({"said", "所述", "前述"})
+
+
+def compute_confidence_score(
+    *,
+    term: str,
+    prefix: str,
+    intros_pool_size: int,
+    has_suggested_match: bool,
+    suggested_cross_branch: bool,
+    suggested_jaccard: float | None = None,
+    suggested_same_claim: bool = False,
+) -> int:
+    """Confidence score (0–100) for an antecedent-basis finding.
+
+    Computed at walker emit-time from signals available when the
+    finding fires. NOT a probability — a coarsely-calibrated ranking
+    score for the user-facing tier-display knob (Phase 5 of the
+    precision-push plan). Threshold calibration against Phase 1
+    re-judging verdicts ships in a follow-up commit; this helper
+    surfaces the field today so the rest of the stack can be wired.
+
+    Signals (additive, baseline 80):
+
+    - **+5** formal register (`said` / `所述` / `前述`): correlates with
+      deliberate drafter intent; informal `the` / `該` can be casual
+      reference and is more often a real ambiguity.
+    - **+5** empty intro pool (`intros_pool_size == 0`): the claim
+      chain registers ZERO intros; almost certainly a real defect.
+    - **−10** short ASCII-uppercase term (`len ≤ 3`): high baseline FP
+      rate on Latin acronyms (UE, RX, MAC) — see R34/R40/R41/R42 over-
+      bridge clusters.
+    - **+5 × Jaccard** when a suggested-match candidate exists: closer
+      lexical match to a real intro = stronger signal that this is a
+      stylistic-drift typo (the cited cluster's "did-you-mean" hits).
+    - **+5** suggested-match in the same claim as the reference: a
+      near-match a few tokens away is high-confidence stylistic drift,
+      not a chain-traversal error.
+    - **−10** suggested-match exists but ONLY cross-branch (no
+      ancestor-chain candidate): under STRICT §112(b) the cross-branch
+      candidate cannot satisfy antecedent basis, but this is ambiguous
+      enough that flagging at high confidence over-aggressively can
+      fight the drafter.
+
+    Clamped to [0, 100].
+    """
+    score = 80
+    if prefix and prefix.strip().lower() in _FORMAL_PREFIXES:
+        score += 5
+    if intros_pool_size == 0:
+        score += 5
+    if (
+        term
+        and len(term) <= 3
+        and term.isascii()
+        and term.isupper()
+    ):
+        score -= 10
+    if has_suggested_match:
+        j = suggested_jaccard if suggested_jaccard is not None else 0.0
+        score += int(round(5 * max(0.0, min(1.0, j))))
+        if suggested_same_claim:
+            score += 5
+        if suggested_cross_branch:
+            score -= 10
+    return max(0, min(100, score))
+
 # Hyphen-aware word token: matches "multi-stage", "non-transitory", "widget"
 _WORD = r"\w+(?:-\w+)*"
 
