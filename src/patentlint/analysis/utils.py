@@ -550,7 +550,14 @@ _LIST_ITEM_SPLIT = re.compile(r"[,;]|\s+and\s+|\s+or\s+", re.IGNORECASE)
 # split on ``;`` only, so internal commas/"and" inside a single item do not
 # fragment the item (e.g. "X connected to A, B, and C" stays one item).
 _SEMICOLON_SPLIT = re.compile(r";")
-_LEADING_AND = re.compile(r"^\s*and\s+", re.IGNORECASE)
+# R36 (2026-05-04): also strip `and<word>` (PDF whitespace collapse) so
+# items like `andprocessing logic` parse as bare-noun intro `processing
+# logic`. Per PDF-extract diagnostic on US round-1 corpus, `and<word>`
+# collapse occurs 2982 times; top: `andwherein` 532 / `anddetermining`
+# 183 / `andsaid` 113 — fixing it inside the list-context split is safe
+# because `and` is always a list conjunction in that scope (never the
+# proper-name `Andrew` etc.).
+_LEADING_AND = re.compile(r"^\s*and(?:\s+|(?=[a-z]))", re.IGNORECASE)
 # Only ``a``/``an`` are stripped — list items starting with ``the`` are
 # back-references, not introductions, and must not be re-registered.
 _LEADING_ARTICLE = re.compile(r"^(?:a|an)\s+", re.IGNORECASE)
