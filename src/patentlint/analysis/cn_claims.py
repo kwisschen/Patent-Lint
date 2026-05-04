@@ -3052,6 +3052,21 @@ def check_antecedent_basis_cn(
                         best_len = len(intro)
                         resolved_intro = intro
 
+            # R46 (2026-05-04): mirror of TW R46 — ordinal-prefix-to-
+            # Latin-abbrev bridge. Reference `第N<X>` where X is short
+            # uppercase Latin abbrev (2-5 chars) and `<X>` is registered
+            # as an intro -> bridge. Common in CN 5G/wireless drafts.
+            if resolved_intro is None:
+                m_ord = re.match(r'^第[一二三四五六七八九十百0-9]+', normalized_term)
+                if m_ord:
+                    bare = normalized_term[m_ord.end():]
+                    if (
+                        bare and 2 <= len(bare) <= 5
+                        and bare.isupper() and bare.isascii()
+                        and bare in intros_by_term
+                    ):
+                        resolved_intro = bare
+
             # R29 (2026-05-03) — Resolution-side architectural mechanisms
             # (forward-prefix with boundary, symmetric clean, cross-branch
             # sibling, substring) all silenced protect:true legit_drafting
