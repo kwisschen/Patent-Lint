@@ -683,6 +683,29 @@ def extract_introductions(text: str) -> list[str]:
     return refs
 
 
+def extract_pattern_a_intros(text: str) -> list[str]:
+    """Extract ONLY Pattern A intros (a/an + noun, plurality of, etc.).
+
+    R32-US (2026-05-04): subset of `extract_introductions` that excludes
+    bare-noun-list intros, self-definition intros, and wherein-bare-subject
+    intros. Used by the head-noun-from-intro mechanism in
+    `check_antecedent_basis` so that promoted head nouns come ONLY from
+    explicitly-introduced (`a X for Y`) phrases — never from gerund-phrase
+    bare-noun-list captures (`collecting information` from a comprising
+    list, which Phase 2c flagged as a real §112(b) defect to preserve).
+    """
+    lowered = text.lower()
+    refs: list[str] = []
+    for m in _INTRO_PATTERNS.finditer(lowered):
+        preceding = lowered[max(0, m.start() - 8) : m.start()]
+        if _DEFINITE_PRECEDER.search(preceding):
+            continue
+        cleaned = clean_noun_phrase(m.group(1).strip())
+        if cleaned:
+            refs.append(cleaned)
+    return refs
+
+
 def _extract_self_definition_intros(lowered: str) -> list[str]:
     refs: list[str] = []
     for m in _SELF_DEFINITION_RE.finditer(lowered):

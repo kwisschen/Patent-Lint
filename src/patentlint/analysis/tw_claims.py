@@ -3895,6 +3895,61 @@ def check_antecedent_basis(
             ):
                 intros_by_term.setdefault(normalized, (ancestor.id, depth))
 
+        # R32 (2026-05-04): Path A equivalent for TW — chain-level
+        # ordinal-prefix bridging. When a chain intro starts with `第N`
+        # and `X` (the suffix) is not already an intro, register `X` as
+        # a separate intro IFF:
+        #   1. Multi-modifier ambiguity guard — no other ordinal-prefixed
+        #      chain intro shares the same suffix `X` (preserves
+        #      `第一X` + `第二X` → bare `X` ambiguous).
+        #   2. Prefix-conflict guard — claim text doesn't contain
+        #      `X<1-3 CJK>` shape that would create over-resolution via
+        #      longest-prefix fallback (preserves `控制電路` ↔
+        #      `控制電路A` distinct-element flagging).
+        # Same chain-level bridge runs ONCE per walker iteration; uses
+        # nearest-ancestor depth for the bridged entry (depth tiebreak
+        # preserves did-you-mean ordering).
+        _R32_ORDINAL_RE_TW = re.compile(r'^第[一二三四五六七八九十百0-9]+')
+        suffix_count_chain: dict[str, int] = {}
+        suffix_anchor_chain: dict[str, tuple[int, int]] = {}
+        for norm, (ancestor_id, depth) in intros_by_term.items():
+            mo = _R32_ORDINAL_RE_TW.match(norm)
+            if not mo:
+                continue
+            suffix = norm[mo.end():]
+            if len(suffix) < 2:
+                continue
+            suffix_count_chain[suffix] = suffix_count_chain.get(suffix, 0) + 1
+            existing = suffix_anchor_chain.get(suffix)
+            if existing is None or depth < existing[1]:
+                suffix_anchor_chain[suffix] = (ancestor_id, depth)
+        for suffix, count in suffix_count_chain.items():
+            if count > 1:
+                continue  # multi-modifier ambiguity
+            if suffix in intros_by_term:
+                continue
+            # Prefix-conflict guard: scan claim text for <suffix><1-3 CJK>
+            # which would be a distinct element prefix-matched by the
+            # bridge. If present, do not bridge.
+            conflict_re = re.compile(re.escape(suffix) + r'[一-鿿]{1,3}')
+            has_conflict = False
+            for ancestor in chain:
+                if conflict_re.search(ancestor.text):
+                    # check it's not just the suffix as part of `第N+suffix`
+                    # (which is the source intro itself — not a conflict)
+                    full = '第' + r'[一二三四五六七八九十百0-9]+' + re.escape(suffix)
+                    full_re = re.compile(full)
+                    # If conflict_re finds something but full_re consumes
+                    # everything, no real conflict
+                    text = ancestor.text
+                    consumed = full_re.sub('', text)
+                    if conflict_re.search(consumed):
+                        has_conflict = True
+                        break
+            if has_conflict:
+                continue
+            intros_by_term[suffix] = suffix_anchor_chain[suffix]
+
         # Dedup by normalized term within a claim — repeated greedy
         # captures of the same head noun (``該齒輪為金屬, 該齒輪設有齒``)
         # collapse to one finding. The displayable reference_form is
