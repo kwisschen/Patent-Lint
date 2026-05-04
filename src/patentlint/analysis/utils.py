@@ -30,6 +30,26 @@ def _dx(**kwargs: Any) -> dict[str, Any]:
     """Build a structural-diagnostic fingerprint dict, dropping None values."""
     return {k: v for k, v in kwargs.items() if v is not None}
 
+
+def make_document_dedup_key(term: str, reference_form: str) -> str:
+    """Per-document dedup key for an antecedent-basis finding.
+
+    The walker emits at `(claim_id, term, reference_form)` granularity.
+    Across N dependent claims that all reference `the X` when X has no
+    antecedent, N redundant findings fire — same logical defect, just
+    surfaced in N claim contexts. Collapsing them at the display layer
+    needs a stable key that ignores claim_id but preserves the
+    (term, reference_form) pair, which IS the logical defect identity.
+
+    Format: ``"<term>|<reference_form>"`` — pipe-delimited so JSON-
+    serializable + readable in trace output. Whitespace-collapsed and
+    case-folded for cross-claim equivalence under common stylistic
+    drift (`said widget`, `said widget `, `Said widget`).
+    """
+    t = " ".join((term or "").split()).casefold()
+    r = " ".join((reference_form or "").split()).casefold()
+    return f"{t}|{r}"
+
 # Hyphen-aware word token: matches "multi-stage", "non-transitory", "widget"
 _WORD = r"\w+(?:-\w+)*"
 

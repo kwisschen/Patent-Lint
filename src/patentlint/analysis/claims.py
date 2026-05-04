@@ -17,6 +17,7 @@ from patentlint.analysis.utils import (
     extract_introductions, extract_introductions_permissive,
     extract_pattern_a_intros,
     extract_abbreviation_intros, clean_noun_phrase,
+    make_document_dedup_key,
     strip_contextual_verb, token_set_jaccard,
 )
 from patentlint.diagnostic_extractors import extract_special_format
@@ -602,6 +603,9 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                             "suggested_match": suggested_match,
                             "cross_ref": None,
                             "diagnostics": diagnostics,
+                            "document_dedup_key": make_document_dedup_key(
+                                term, reference_form
+                            ),
                         })
 
     issues.sort(key=lambda x: (x["claim_id"], x["term"], x["reference_form"]))
