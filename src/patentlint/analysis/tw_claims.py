@@ -3148,11 +3148,15 @@ _F19_VERB_NP_ZHI_RE = re.compile(
 # `以` excluded when followed by `及` (conjunction `以及` = "as well as")
 # to prevent mid-conjunction false matches like `以及藉由矽層夾持` where
 # `以` would otherwise trigger and capture `及藉由矽層` as junk noun.
+# R41 (2026-05-04): added `將` (instrumental object marker, traditional
+# CJK; mirror of CN R41 `将`). Extended trailing verb list with
+# output/send/transmit/etc. forms to cover `將X輸出/發送/傳輸` shapes
+# in JP/CN-translated TW drafts.
 _F20_PREP_NP_VERB_RE = re.compile(
-    r'(?:以(?!及)|藉由|透過|經由)'
+    r'(?:以(?!及)|藉由|透過|經由|將)'
     r'(?P<noun>' + _F14_NOUN_CLASS + r'{2,8}'
     r'(?:\([A-Za-z0-9]+\))?)'
-    r'(?:夾持|覆蓋|包含|包括|具有|含有|具備|設有|設置|配置|形成|構成|連接|連結|提供|分隔|劃分|實施|分為|構建|測量|蝕刻|除去|裝設|安裝)'
+    r'(?:夾持|覆蓋|包含|包括|具有|含有|具備|設有|設置|配置|形成|構成|連接|連結|提供|分隔|劃分|實施|分為|構建|測量|蝕刻|除去|裝設|安裝|輸出|輸入|發送|接收|傳輸|傳送|生成|獲取|獲得|確定|存儲|讀取|寫入|執行|處理|計算)'
 )
 
 # ADJ/verb heads that must not start a bare-modifier noun capture.
