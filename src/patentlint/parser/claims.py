@@ -29,6 +29,14 @@ _CLAIM_BLOCK = re.compile(
     re.DOTALL,
 )
 
+# PDF→text whitespace collapse: dep-preamble "of claim N" sometimes loses
+# its space ("ofclaim N") in machine-translated/PDF-extract pipelines. The
+# walker then fails to match the dep-preamble exclusion and emits the
+# whole "the X ofclaim N" as a §112(b) reference. Normalize so downstream
+# regexes (incl. _DEP_REF above and the dep-preamble body-scan exclusion)
+# see canonical spacing. Idempotent on already-spaced text.
+_OFCLAIM_FIX = re.compile(r"\bof\s*(claims?)\b", re.IGNORECASE)
+
 # Pattern to detect multiple dependency
 _MULTIPLE_DEP = re.compile(
     r"claim(s)?\s+\d+\s*(to|and|or|-)\s*(claim(s)?\s+)?\d+",
@@ -119,7 +127,7 @@ def parse_claims(claims_text: str) -> list[Claim]:
     claims = []
     for match in _CLAIM_BLOCK.finditer(cleaned):
         claim_number = int(match.group(1))
-        claim_text = match.group(2).strip()
+        claim_text = _OFCLAIM_FIX.sub(r"of \1", match.group(2).strip())
 
         independent = not _DEP_REF.search(claim_text)
         multiple_dependent = bool(_MULTIPLE_DEP.search(claim_text))
