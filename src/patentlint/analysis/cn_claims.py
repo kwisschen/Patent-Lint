@@ -3008,6 +3008,13 @@ def check_antecedent_basis_cn(
                 "document_dedup_key": make_document_dedup_key(
                     normalized_term or raw_noun, prefix
                 ),
+                # Q1 path is a rule-based detection of TC-plural prefixes
+                # (该等/该些) on a CN doc. Not pattern-based — the prefix
+                # alone is the violation under CNIPA审查指南 guidance to
+                # use 所述. Very rarely a false positive in practice;
+                # ship a fixed high confidence so the tier-display knob
+                # treats these as high-confidence by default.
+                "confidence_score": 90,
             }
             if not normalized_term:
                 finding["note"] = "cleanup_empty"
