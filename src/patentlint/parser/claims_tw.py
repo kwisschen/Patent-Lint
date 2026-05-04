@@ -46,6 +46,24 @@ _OR_NUMS = re.compile(r"(\d+)")
 # a new invention subject X while incorporating claim N's Y by reference.
 _TW_INDEP_PREAMBLE = re.compile(r"^(?:一種|一個)\s*")
 
+# R43 (2026-05-04): "every preceding claim" multi-dep form. TW parity
+# with CN R43. TIPO drafters use `如前述請求項中任一項所述` (296 corpus
+# occurrences) / `如以上請求項中任一項所述` / `根據前述請求項中任一項所述`
+# to depend on ALL prior claims. The numeric `_TW_DEP_PATTERN` requires
+# a digit after `請求項` and bails on this shape.
+#
+# Pattern requires BOTH a "preceding" marker (前述/以上/前面/前/前列) AND
+# an "any" marker (任[一]?項?) in either word order around `請求項`.
+_TW_PRECEDING_CLAIMS_DEP = re.compile(
+    r"(?:如|依據|根據|依)?\s*"
+    r"(?:"
+    r"(?:前述|以上|前面|前列|前)\s*請求項\s*(?:中\s*)?任\s*[一]?\s*項?"
+    r"|"
+    r"任\s*[一]?\s*(?:前述|以上|前面|前列)\s*請求項"
+    r")"
+    r"\s*(?:所(?:述|記載|揭示|描述))?[之的]?"
+)
+
 
 def parse_tw_claims(paragraphs: list[str]) -> list[Claim]:
     """Parse TW claims into Claim model objects.
@@ -102,6 +120,14 @@ def parse_tw_claims(paragraphs: list[str]) -> list[Claim]:
             if or_tail:
                 for m in _OR_NUMS.finditer(or_tail):
                     refs.append(int(m.group(1)))
+
+        # R43 (2026-05-04): "every preceding claim" multi-dep form.
+        # `如前述請求項中任一項所述` -> deps = [1..num-1]. Recognized
+        # only when no numeric deps were already matched (so explicit
+        # `如前述請求項1至5中任一項所述` ranges still work via the
+        # primary _TW_DEP_PATTERN).
+        if not refs and _TW_PRECEDING_CLAIMS_DEP.search(claim_text):
+            refs = list(range(1, num))
 
         # Deduplicate (keep self-refs for check detection downstream)
         refs = sorted(set(refs))
