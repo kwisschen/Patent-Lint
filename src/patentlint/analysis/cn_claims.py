@@ -2642,6 +2642,37 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
             seen_norms.add(full_noun)
             extras.append((pa_m.group(0), full_noun))
 
+    # R37 (2026-05-04): mirror of TW R37 F22 — list-item bare-noun
+    # extraction WITHOUT colon trigger. CN parity: parent claim
+    # introduces multiple components in `<verb><N1>、<N2>以及<N3>`
+    # comma-list shape:
+    #   `导电端子包括差分信号端子、第一接地端子以及第二接地端子`
+    # Trigger verbs limited to `包括`/`包含` (most reliable list verbs).
+    # Each item must be 2-12 pure CJK chars (filters out fragments
+    # with embedded Latin/digit/punctuation). Reference-prefix items
+    # are skipped (they're not new intros).
+    _F22_NO_COLON_LIST_CN = re.compile(
+        r'(?:包括|包含)'
+        r'((?:[一-鿿]{2,12}[、，])+'
+        r'(?:[一-鿿]{2,12}(?:以及|及|和|或))?'
+        r'[一-鿿]{2,12})'
+    )
+    _F22_LIST_SPLIT_CN = re.compile(r'[、，]|以及|及|和|或')
+    for fl_m in _F22_NO_COLON_LIST_CN.finditer(text):
+        list_text = fl_m.group(1)
+        for item_raw in _F22_LIST_SPLIT_CN.split(list_text):
+            item = item_raw.strip()
+            if not item or len(item) < 2:
+                continue
+            if item.startswith(_REF_PREFIX_SET_CN):
+                continue
+            if not all('一' <= ch <= '鿿' for ch in item):
+                continue
+            if item in seen_norms:
+                continue
+            seen_norms.add(item)
+            extras.append((fl_m.group(0), item))
+
     return cleaned + extras
 
 
