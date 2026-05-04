@@ -1585,3 +1585,52 @@ class TestAntecedentDiagnostics:
                 assert not isinstance(value, str) or value in ("the", "said", "所述", "該", "前述", "該等", "該些"), (
                     f"diagnostic value looks like content: {value!r}"
                 )
+
+
+class TestParenAbbrevR34:
+    """R34 (2026-05-04) widening of R30 mechanism #6 paren-abbrev bridge.
+
+    Adds support for full-width 全角 parens and lowercase-full-form-then-
+    uppercase-abbrev shape (`使用者設備(user equipment, UE)`). Cluster
+    Phase A on post-R34 corpus showed TW `第一U` 68 wfp / `UE` 57 wfp /
+    `一UE` 37 wfp, all 0-legit; 50 of 98 walker_fp findings used
+    full-width parens, 11 used lowercase-FF-comma form.
+    """
+
+    @staticmethod
+    def _build_one(text: str):
+        from patentlint.models import Claim, TwPatentDocument
+        return TwPatentDocument(claims=[
+            Claim(id=1, text=text, independent=True, multiple_dependent=False, method_claim=False, dependencies=[]),
+        ])
+
+    def _intros(self, text: str) -> list[str]:
+        from patentlint.analysis.tw_claims import extract_introductions_tw
+        doc = self._build_one(text)
+        return [norm for _orig, norm in extract_introductions_tw(doc.claims[0])]
+
+    def test_ascii_paren_simple_unchanged(self):
+        """Original R30 shape `<CJK>(UPPER)` still registers UPPER abbrev."""
+        intros = self._intros("一種使用者設備(UE)，包含一處理器。")
+        assert "UE" in intros, f"UE missing from {intros}"
+
+    def test_full_width_paren_registers_abbrev(self):
+        """R34 — full-width 全角 parens register abbrev."""
+        intros = self._intros("一種使用者設備（UE），包含一處理器。")
+        assert "UE" in intros, f"UE missing from {intros}"
+
+    def test_lowercase_ff_comma_uppercase_abbrev(self):
+        """R34 — `(user equipment, UE)` lowercase full form then UPPER abbrev."""
+        intros = self._intros("一種使用者設備(user equipment, UE)，包含一處理器。")
+        assert "UE" in intros, f"UE missing from {intros}"
+
+    def test_full_width_paren_lowercase_ff_full_width_comma(self):
+        """R34 — full-width parens AND full-width comma combined."""
+        intros = self._intros("一種使用者設備（user equipment，UE），包含。")
+        assert "UE" in intros, f"UE missing from {intros}"
+
+    def test_lone_paren_label_does_not_register(self):
+        """(101) is an element label number, NOT a paren-abbrev intro."""
+        intros = self._intros("一種裝置，包含一第一電極(101)。")
+        # Element label digits don't form an UPPER abbrev — should not register
+        assert "101" not in intros

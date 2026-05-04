@@ -2622,8 +2622,15 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
     # full and abbrev so later `所述<Abbr>` references resolve.
     # Phase 2c Refinement B (Christopher: LHT/VH-region pattern is common).
     # CN form: `中心单元-控制面(CU-CP)`, `超参数自适应选择策略单元(HASS)`.
+    # R34 (2026-05-04): mirror of TW R34 widening \u2014 accept full-width
+    # \u5168\u89d2 parens AND lowercase-full-form-then-uppercase-abbrev shape
+    # (`\u7528\u6237\u8bbe\u5907(user equipment, UE)`). Cross-jurisdiction parity.
     _PAREN_ABBREV_RE_R30 = re.compile(
-        r'([\u4e00-\u9fff]{2,12})\(([A-Z][A-Za-z0-9\-]{0,15})\)'
+        r'([\u4e00-\u9fff]{2,12})'
+        r'[(\uff08]\s*'
+        r'(?:[a-z][A-Za-z0-9\- ]{0,40}[,;\uff0c\uff1b]\s*)?'
+        r'([A-Z][A-Za-z0-9\-]{0,15})'
+        r'\s*[)\uff09]'
     )
     for pa_m in _PAREN_ABBREV_RE_R30.finditer(text):
         full_noun = pa_m.group(1)
