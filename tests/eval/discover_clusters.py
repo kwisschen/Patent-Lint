@@ -147,6 +147,26 @@ def discover(verdicts_path: Path, top_n: int) -> dict:
             iss = by_key.get((cid, term))
             ref_form = (iss or {}).get("reference_form", "") if iss else ""
 
+            # CURRENT-WALKER FILTER: only include findings whose pattern
+            # the CURRENT walker still emits. Critical for Phase 3 mining
+            # to avoid burning effort on patterns already fixed by R34-R48.
+            #
+            # Rules:
+            #   walker_fp + iss is None → CURRENT walker no longer emits
+            #     this term; safely skip (already fixed by prior rounds).
+            #   walker_fp + iss not None → CURRENT walker still emits;
+            #     mining target.
+            #   coverage_gap → CURRENT walker still missing the intro
+            #     (whether or not the same term is emitted); always include.
+            #   legit/ambig/diag_misattr + iss is None → walker silenced;
+            #     informational, not a mining target — skip.
+            #   legit/ambig/diag_misattr + iss not None → still emits;
+            #     include for completeness baseline.
+            if cat in ("walker_fp", "legit_drafting_error", "ambig",
+                       "diagnostic_mis_attribution"):
+                if iss is None:
+                    continue
+
             # Three signature granularities for clustering — each finding
             # contributes to all three.
             sigs = [
