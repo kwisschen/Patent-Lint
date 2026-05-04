@@ -16,7 +16,7 @@ from patentlint.analysis.cjk_ordinal_guard import (
     ordinal_guard,
 )
 from patentlint.analysis.cjk_tokenize import jaccard, tokenize_tw
-from patentlint.analysis.utils import _dx
+from patentlint.analysis.utils import _dx, make_document_dedup_key
 from patentlint.analysis.connection_relationships import (
     _TW_CONNECTION_CONFIG,
     check_connection_relationships,
@@ -4332,6 +4332,9 @@ def check_antecedent_basis(
                     "suggested_match": suggested_match,
                     "cross_ref": None,
                     "diagnostics": diagnostics,
+                    "document_dedup_key": make_document_dedup_key(
+                        normalized_term, reference_form
+                    ),
                 }
             )
 
