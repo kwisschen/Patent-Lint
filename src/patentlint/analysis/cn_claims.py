@@ -2816,6 +2816,42 @@ def check_antecedent_basis_cn(
             ):
                 intros_by_term.setdefault(normalized, (ancestor.id, depth))
 
+        # R32 (2026-05-04): Path A equivalent for CN — chain-level
+        # ordinal-prefix bridging. Mirror of TW R32. Two guards:
+        #   1. Multi-modifier ambiguity (no other 第N+suffix in chain).
+        #   2. Prefix-conflict (suffix not followed by 1-3 CJK in claim
+        #      text outside the ordinal-prefixed source intro itself).
+        _R32_ORDINAL_RE_CN = re.compile(r'^第[一二三四五六七八九十百0-9]+')
+        suffix_count_chain_cn: dict[str, int] = {}
+        suffix_anchor_chain_cn: dict[str, tuple[int, int]] = {}
+        for norm, (ancestor_id, depth) in intros_by_term.items():
+            mo = _R32_ORDINAL_RE_CN.match(norm)
+            if not mo:
+                continue
+            suffix = norm[mo.end():]
+            if len(suffix) < 2:
+                continue
+            suffix_count_chain_cn[suffix] = suffix_count_chain_cn.get(suffix, 0) + 1
+            existing = suffix_anchor_chain_cn.get(suffix)
+            if existing is None or depth < existing[1]:
+                suffix_anchor_chain_cn[suffix] = (ancestor_id, depth)
+        for suffix, count in suffix_count_chain_cn.items():
+            if count > 1:
+                continue
+            if suffix in intros_by_term:
+                continue
+            conflict_re = re.compile(re.escape(suffix) + r'[一-鿿]{1,3}')
+            has_conflict = False
+            for ancestor in chain:
+                full_re = re.compile(r'第[一二三四五六七八九十百0-9]+' + re.escape(suffix))
+                consumed = full_re.sub('', ancestor.text)
+                if conflict_re.search(consumed):
+                    has_conflict = True
+                    break
+            if has_conflict:
+                continue
+            intros_by_term[suffix] = suffix_anchor_chain_cn[suffix]
+
 
         # Q1 tw_contamination rejection pre-pass. The TC-plural prefixes
         # 该等 / 该些 are not valid in CN drafting (CNIPA审查指南 uses 所述).
