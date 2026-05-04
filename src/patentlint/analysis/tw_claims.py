@@ -16,7 +16,11 @@ from patentlint.analysis.cjk_ordinal_guard import (
     ordinal_guard,
 )
 from patentlint.analysis.cjk_tokenize import jaccard, tokenize_tw
-from patentlint.analysis.utils import _dx, make_document_dedup_key
+from patentlint.analysis.utils import (
+    _dx,
+    compute_confidence_score,
+    make_document_dedup_key,
+)
 from patentlint.analysis.connection_relationships import (
     _TW_CONNECTION_CONFIG,
     check_connection_relationships,
@@ -4323,6 +4327,26 @@ def check_antecedent_basis(
                     suggested_match and suggested_match.get("cross_branch")
                 ) if suggested_match else False,
             }
+            confidence_score = compute_confidence_score(
+                term=normalized_term,
+                prefix=prefix,
+                intros_pool_size=len(intros_by_term),
+                has_suggested_match=suggested_match is not None,
+                suggested_cross_branch=bool(
+                    suggested_match and suggested_match.get("cross_branch")
+                ),
+                # `best_score` is set inside the `resolved_intro is None`
+                # branch above and remains in scope here; it may be 0.0
+                # when suggested_match came from the morphological-prefix
+                # fallback (which doesn't compute Jaccard).
+                suggested_jaccard=(
+                    best_score if suggested_match is not None else None
+                ),
+                suggested_same_claim=bool(
+                    suggested_match
+                    and suggested_match.get("claim_id") == claim.id
+                ),
+            )
             issues.append(
                 {
                     "claim_id": claim.id,
@@ -4335,6 +4359,7 @@ def check_antecedent_basis(
                     "document_dedup_key": make_document_dedup_key(
                         normalized_term, reference_form
                     ),
+                    "confidence_score": confidence_score,
                 }
             )
 
