@@ -281,6 +281,11 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
         # did-you-mean attributes references to the original intro, not a
         # re-mention in a nearer ancestor.
         intros_by_term: dict[str, int] = {}
+        # R42 (2026-05-04): track which intros came from
+        # `extract_abbreviation_intros` separately so a downstream
+        # multi-abbrev bridge can recognize compound references
+        # like `the MAC PDU` against parent abbrev intros `MAC`+`PDU`.
+        abbrev_intros: set[str] = set()
 
         def _record(phrase: str, ancestor_id: int) -> None:
             existing = intros_by_term.get(phrase)
@@ -293,6 +298,12 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                 _record(phrase, ancestor.id)
             for abbrev_intro in extract_abbreviation_intros(ancestor.text):
                 _record(abbrev_intro, ancestor.id)
+                # Bare lowercase abbrev (no trailing word) → confirmed
+                # abbreviation. Multi-word forms (`mac protocol data unit`)
+                # are excluded from the abbrev set; we want only the
+                # compact acronym entries.
+                if abbrev_intro.isalpha() and 2 <= len(abbrev_intro) <= 5:
+                    abbrev_intros.add(abbrev_intro)
 
         # R32-US (2026-05-04): head-noun-from-intro. Promote the LAST
         # word of multi-word Pattern A intros as a separate intro entry
@@ -427,12 +438,26 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
             ):
                 continue
             # Primary: bidirectional word-boundary exact match.
-            # Fallback: ADR-095 Rule 3 analogue — number-agnostic key match
-            # for plural-intro / singular-reference pairs.
+            # Fallback 1: ADR-095 Rule 3 analogue — number-agnostic key
+            # match for plural-intro / singular-reference pairs.
+            # Fallback 2 (R42): multi-abbrev compound bridge — when the
+            # reference is exactly N short uppercase-acronym words and
+            # EVERY component is a registered abbreviation intro from
+            # the chain (`MAC PDU` ref vs intros `MAC` + `PDU`), accept.
+            # Reference compound is a defined-term juxtaposition; both
+            # halves were established as separate abbrev intros via
+            # `<full term> (ABBR)` parenthetical definitions.
             has_basis = any(
                 _word_boundary_match(intro, term) and _word_boundary_match(term, intro)
                 for intro in intros
             ) or en_number_key(term) in intros_by_number_key
+            if not has_basis and abbrev_intros:
+                term_words = term.split()
+                if (
+                    2 <= len(term_words) <= 4
+                    and all(w in abbrev_intros for w in term_words)
+                ):
+                    has_basis = True
 
             if not has_basis:
                 if term not in _SKIP_TERMS and not term.startswith("fig") and not term.startswith("claim"):
