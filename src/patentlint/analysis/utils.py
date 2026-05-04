@@ -186,6 +186,14 @@ _TRAILING_FUNCTION_WORDS = {
 # standalone "two" / "three" captured from "the two" / "the three" is
 # preserved and handled elsewhere.
 _TRAILING_CARDINAL_STOPS = {
+    # R32 (2026-05-04): added 'one' to strip the trailing-cardinal residue
+    # in over-captured noun phrases like `first message comprises one`. The
+    # `len(words) > 1` guard at the strip site preserves standalone `the
+    # one` references (handled by _QUANTIFIER_STOPS at the walker level).
+    # Empirical: 212 walker_fp findings of shape `^.* (?:comprises|...)
+    # one$` from US round-1 corpus over-captured into a verb + cardinal
+    # determiner clause.
+    "one",
     "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
 }
 
