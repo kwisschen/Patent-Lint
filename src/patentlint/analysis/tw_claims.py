@@ -3723,8 +3723,21 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
 
     # R30 mechanism #6 (2026-05-03): parenthetical abbreviation bridging.
     # Mirror of CN R30. `<full term>(<Abbr>)` registers both full and Abbr.
+    # R34 (2026-05-04): widen to cover two more shapes seen on the
+    # post-R34 corpus baseline (Phase A cluster: TW `\u7b2c\u4e00U` 68 wfp /
+    # `UE` 57 wfp / `\u4e00UE` 37 wfp, all 0-legit). Subsumes:
+    #   1. Full-width \u5168\u89d2 parens \u2014 `\u4f7f\u7528\u8005\u8a2d\u5099\uff08UE\uff09` (JP/CN-translated
+    #      drafts default to full-width punctuation; original ASCII-only
+    #      regex missed 50 of 98 walker_fp findings in cluster).
+    #   2. Lowercase-full-form-then-uppercase-abbrev \u2014 `\u4f7f\u7528\u8005\u8a2d\u5099(user
+    #      equipment, UE)` (formal patent style: define foreign term
+    #      first, then bracket the acronym; another 11 of 98).
     _PAREN_ABBREV_RE_R30_TW = re.compile(
-        r'([\u4e00-\u9fff]{2,12})\(([A-Z][A-Za-z0-9\-]{0,15})\)'
+        r'([\u4e00-\u9fff]{2,12})'
+        r'[(\uff08]\s*'
+        r'(?:[a-z][A-Za-z0-9\- ]{0,40}[,;\uff0c\uff1b]\s*)?'
+        r'([A-Z][A-Za-z0-9\-]{0,15})'
+        r'\s*[)\uff09]'
     )
     for pa_m in _PAREN_ABBREV_RE_R30_TW.finditer(text):
         full_noun = pa_m.group(1)
