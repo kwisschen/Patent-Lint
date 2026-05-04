@@ -24,6 +24,8 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import math
+import random
 import sys
 import time
 from collections import Counter, defaultdict
@@ -219,6 +221,66 @@ def issue_to_finding(issue: dict, window: int = 30) -> FindingInput:
     )
 
 
+# ---------- weighted sampling ----------
+
+
+def _weighted_sample_drafts(
+    drafts: list[tuple[dict, list[FindingInput], dict[int, str]]],
+    *,
+    target_per_jurisdiction: int,
+    seed: int,
+) -> list[tuple[dict, list[FindingInput], dict[int, str]]]:
+    """Stratified weighted sample without replacement.
+
+    Per jurisdiction, sample `target_per_jurisdiction` drafts with
+    probability proportional to `len(findings)` per draft. Drafts where
+    the R34 harness fix exposed the most new findings get highest
+    selection probability.
+
+    Implementation: Efraimidis-Spirakis A-ES algorithm — for each item
+    draw `key = -ln(uniform()) / weight`, then take the K items with
+    SMALLEST key. Equivalent to weighted-without-replacement sampling
+    in O(N log K). Pinned `seed` makes the run deterministic so a 5-
+    draft pilot is a strict prefix of the full sample.
+    """
+    rng = random.Random(seed)
+    by_juris: dict[str, list[tuple[dict, list[FindingInput], dict[int, str]]]] = (
+        defaultdict(list)
+    )
+    for d in drafts:
+        rec, _, _ = d
+        by_juris[rec.get("jurisdiction", "?")].append(d)
+
+    out: list[tuple[dict, list[FindingInput], dict[int, str]]] = []
+    for juris, juris_drafts in sorted(by_juris.items()):
+        if target_per_jurisdiction >= len(juris_drafts):
+            print(
+                f"  weighted-sample {juris}: target {target_per_jurisdiction} "
+                f"≥ available {len(juris_drafts)}, taking all"
+            )
+            out.extend(juris_drafts)
+            continue
+        keyed: list[tuple[float, tuple[dict, list[FindingInput], dict[int, str]]]] = []
+        for d in juris_drafts:
+            _, findings, _ = d
+            w = max(1, len(findings))
+            u = rng.random()
+            # avoid log(0); in practice rng.random() never returns 0
+            key = -math.log(u if u > 0 else 1e-12) / w
+            keyed.append((key, d))
+        keyed.sort(key=lambda kv: kv[0])
+        sampled = [d for _, d in keyed[:target_per_jurisdiction]]
+        out.extend(sampled)
+        total_findings = sum(len(d[1]) for d in juris_drafts)
+        sampled_findings = sum(len(d[1]) for d in sampled)
+        print(
+            f"  weighted-sample {juris}: {len(sampled)}/{len(juris_drafts)} drafts "
+            f"({sampled_findings}/{total_findings} findings, "
+            f"{100*sampled_findings/max(1,total_findings):.0f}% coverage)"
+        )
+    return out
+
+
 # ---------- main loop ----------
 
 
@@ -234,6 +296,8 @@ async def _run(
     exclude_judged: list[Path] | None = None,
     no_opus: bool = False,
     cost_cap: float | None = None,
+    target_per_jurisdiction: int | None = None,
+    sample_seed: int = 20260505,
 ) -> dict:
     print(f"Loading corpus from {CORPUS_PARQUET_DIR} ...")
     records = load_corpus_records(CORPUS_PARQUET_DIR)
@@ -310,6 +374,22 @@ async def _run(
     if not drafts_to_judge:
         print("No drafts to judge; exiting.")
         return {"drafts_judged": 0, "verdicts": []}
+
+    # Stratified weighted sampling — when set, draws `target_per_jurisdiction`
+    # drafts per jurisdiction with probability proportional to walker-finding
+    # count. Pinned seed makes the pilot a deterministic prefix of the full
+    # run; combine with `--limit` to take the prefix.
+    if target_per_jurisdiction is not None:
+        print(
+            f"Weighted sampling: target {target_per_jurisdiction} drafts/"
+            f"jurisdiction (seed={sample_seed})"
+        )
+        drafts_to_judge = _weighted_sample_drafts(
+            drafts_to_judge,
+            target_per_jurisdiction=target_per_jurisdiction,
+            seed=sample_seed,
+        )
+        print(f"After sampling: {len(drafts_to_judge)} drafts to judge")
 
     # Phase B: LLM judging with mid-run halt
     anth_key, oai_key = load_keys()
@@ -547,6 +627,8 @@ async def _main_async(args: argparse.Namespace) -> int:
         exclude_judged=exclude_judged_paths,
         no_opus=args.no_opus,
         cost_cap=args.cost_cap,
+        target_per_jurisdiction=args.target_per_jurisdiction,
+        sample_seed=args.sample_seed,
     )
 
     output_results.write_text(json.dumps(result, ensure_ascii=False, indent=2))
@@ -593,6 +675,16 @@ def main() -> int:
                              "total cost (per-draft mean × total drafts) "
                              "exceeds cap. Overrides the legacy "
                              "COST_HALT_THRESHOLD constant ($150).")
+    parser.add_argument("--target-per-jurisdiction", type=int, default=None,
+                        help="If set, weighted-sample N drafts per jurisdiction "
+                             "(US/CN/TW separately) with probability "
+                             "proportional to walker-finding count. Default "
+                             "None = take all post-filter drafts.")
+    parser.add_argument("--sample-seed", type=int, default=20260505,
+                        help="Random seed for weighted sampling (default "
+                             "20260505). Pinned for determinism — pilot runs "
+                             "are strict prefixes of full runs given the "
+                             "same seed + larger --target-per-jurisdiction.")
     args = parser.parse_args()
     return asyncio.run(_main_async(args))
 
