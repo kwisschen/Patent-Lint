@@ -724,3 +724,29 @@ class TestCnIndependentPreamble:
         ])
         results = check_independent_preamble(doc)
         assert results[0].status == "pass"
+
+
+class TestParenAbbrevR34Cn:
+    """R34 (2026-05-04) widening of CN R30 mechanism #6 paren-abbrev bridge.
+
+    Mirror of TW R34: accept full-width 全角 parens + lowercase-full-form-
+    comma-uppercase-abbrev shape. Cross-jurisdiction parity with TW.
+    """
+
+    def _intros(self, text: str) -> list[str]:
+        from patentlint.analysis.cn_claims import extract_introductions_cn
+        from patentlint.models import Claim
+        c = Claim(id=1, text=text, independent=True, multiple_dependent=False, method_claim=False, dependencies=[])
+        return [norm for _orig, norm in extract_introductions_cn(c)]
+
+    def test_ascii_paren_simple_unchanged(self):
+        intros = self._intros("一种用户设备(UE)，包括一处理器。")
+        assert "UE" in intros, f"UE missing from {intros}"
+
+    def test_full_width_paren_registers_abbrev(self):
+        intros = self._intros("一种用户设备（UE），包括一处理器。")
+        assert "UE" in intros, f"UE missing from {intros}"
+
+    def test_lowercase_ff_comma_uppercase_abbrev(self):
+        intros = self._intros("一种用户设备(user equipment, UE)，包括一处理器。")
+        assert "UE" in intros, f"UE missing from {intros}"
