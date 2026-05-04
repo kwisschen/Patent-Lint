@@ -3788,6 +3788,40 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
         seen_norms.add(noun)
         extras.append((sl_m.group(0), noun))
 
+    # R37 (2026-05-04): F22 — list-item bare-noun extraction WITHOUT
+    # a colon trigger. Phase A on the post-R36 corpus surfaced ~85
+    # walker_fp findings per 100 patents (extrapolated ~800 across
+    # the full TW corpus) where the parent claim introduces multiple
+    # ordinal-prefixed components in a comma-list:
+    #   `導電端子包括差分訊號端子、第一接地端子以及第二接地端子`
+    # F15 requires a `:` colon after the trigger verb; this F22
+    # variant accepts a bare comma-list (one or more `、` between
+    # nouns) directly after the trigger verb. The presence of `、`
+    # is the disambiguating signal for "this is a list" vs the
+    # possessive `<noun>的<noun>` or modifier sequence shapes that
+    # would otherwise false-fire.
+    _F22_NO_COLON_LIST_TW = re.compile(
+        r'(?:包括|包含)'
+        r'((?:[一-鿿]{2,12}[、，])+'
+        r'(?:[一-鿿]{2,12}(?:以及|及|和|或))?'
+        r'[一-鿿]{2,12})'
+    )
+    _F22_LIST_SPLIT_TW = re.compile(r'[、，]|以及|及|和|或')
+    for fl_m in _F22_NO_COLON_LIST_TW.finditer(text):
+        list_text = fl_m.group(1)
+        for item_raw in _F22_LIST_SPLIT_TW.split(list_text):
+            item = item_raw.strip()
+            if not item or len(item) < 2:
+                continue
+            if item.startswith(_REFERENCE_PREFIXES):
+                continue
+            if not all('一' <= ch <= '鿿' for ch in item):
+                continue
+            if item in seen_norms:
+                continue
+            seen_norms.add(item)
+            extras.append((fl_m.group(0), item))
+
     return cleaned + extras
 
 
