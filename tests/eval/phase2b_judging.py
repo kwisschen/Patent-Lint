@@ -73,75 +73,19 @@ COST_HALT_THRESHOLD = 150.0
 PROGRESS_LOG_EVERY = 25
 
 
-# ---------- claim parsing (from raw text → Claim objects) ----------
+# ---------- claim parsing (delegates to production parsers) ----------
+#
+# R34 (2026-05-04): switched to production parsers to eliminate three
+# distinct regex-drift bugs that previously contaminated walker output
+# this script feeds to LLM judges. See round1_corpus_harness.py for the
+# detailed bug accounting (US fall-through to TW regex; CN missing
+# range/enum/disjunction expansion; TW missing 引用記載型式 chain bridges
+# via quoted_references). Importing parser/claims*.py keeps this script
+# in sync with production forever.
 
-
-import re  # noqa: E402
-
-_CN_CLAIM_NUM_RE = re.compile(r"^\s*(\d+)\s*[\.、．]")
-_CN_DEP_RE = re.compile(r"如?权利要求(\d+)|根据权利要求(\d+)")
-_TW_CLAIM_NUM_RE = re.compile(r"^\s*(\d+)\s*[\.、．]")
-# R31 (2026-05-03): TW dep regex extended to match modern register
-# `如請求項<N>之<noun>` and `如請求項<N>所述之<noun>` shapes (e.g.,
-# `如請求項1之方法` / `如請求項1所述之方法`). Original regex required
-# `[項所]` immediately after the digit, missing entire dependent claim
-# population in TW corpus. Same fix in tests/eval/round1_corpus_harness.py.
-_TW_DEP_RE = re.compile(
-    r"如(?:申請專利範圍第)?[第]?(\d+)(?:[項所之]|所述)"
-    r"|根據[第]?(\d+)項"
-    r"|請求項[第]?(\d+)"
-)
-
-
-def _parse_claim_text(
-    raw: str, claim_id: int, jurisdiction: str
-) -> Claim | None:
-    """Parse a single claim string into a Claim object.
-
-    `claim_id` is supplied by position in the input list (1-indexed) AS
-    FALLBACK. Where the claim text begins with a `N.` prefix (most CN/US
-    patents), we extract the actual claim number from the text — handles
-    cases where the patent has gaps in numbering (cancelled / withdrawn
-    claims that Google Patents skips). Verified 2026-05-03 against
-    US20210105435A1 which has actual claim 14 at list position 13.
-
-    For TW patents (bare-noun starts like `一種...`) and any other case
-    without a numeric prefix, falls back to the supplied position-based
-    `claim_id`.
-    """
-    if not raw or not raw.strip():
-        return None
-
-    # Try to extract actual patent claim number from leading "N." prefix.
-    # Falls back to position-based claim_id when no prefix present.
-    actual_id_match = re.match(r"^\s*(\d+)\s*[\.、．]", raw)
-    if actual_id_match:
-        claim_id = int(actual_id_match.group(1))
-
-    if jurisdiction == "CN":
-        dep_re = _CN_DEP_RE
-    else:
-        dep_re = _TW_DEP_RE
-
-    deps: list[int] = []
-    for dm in dep_re.finditer(raw):
-        for g in dm.groups():
-            if g:
-                try:
-                    deps.append(int(g))
-                except ValueError:
-                    pass
-                break
-    deps = list(dict.fromkeys(deps))  # dedup, preserve order
-
-    return Claim(
-        id=claim_id,
-        text=raw.strip(),
-        independent=(len(deps) == 0),
-        multiple_dependent=(len(deps) > 1),
-        method_claim=False,
-        dependencies=deps,
-    )
+from patentlint.parser.claims import parse_claims as _parse_us_claims  # noqa: E402
+from patentlint.parser.claims_cn import parse_cn_claims_docx as _parse_cn_claims  # noqa: E402
+from patentlint.parser.claims_tw import parse_tw_claims as _parse_tw_claims  # noqa: E402
 
 
 def build_doc_from_claims(
@@ -149,28 +93,35 @@ def build_doc_from_claims(
 ) -> CnPatentDocument | TwPatentDocument | list[Claim] | None:
     """Construct a jurisdiction-appropriate doc from a raw claims list.
 
+    Routes through production parsers (parser/claims.py +
+    parser/claims_cn.py + parser/claims_tw.py) so walker output sent to
+    judges matches what real .docx ingestion produces. US/CN corpus
+    claims carry leading 'N.' prefixes; TW corpus does not, so prepend
+    'i+1.' to each TW claim before calling parse_tw_claims.
+
     - CN → `CnPatentDocument(claims=...)`
     - TW → `TwPatentDocument(claims=...)`
-    - US → bare `list[Claim]` (US walker `check_antecedent_basis` takes a
-      claim list directly, not a Document wrapper)
+    - US → bare `list[Claim]` (US walker takes list[Claim] directly)
     - else → None
-
-    claim_id is assigned by 1-based position in the input list; this matches
-    Google Patents' rendering order which preserves the source claim sequence.
     """
-    parsed: list[Claim] = []
-    for idx, raw in enumerate(claims_list, 1):
-        c = _parse_claim_text(raw, idx, jurisdiction)
-        if c is not None:
-            parsed.append(c)
-    if not parsed:
+    if not claims_list:
         return None
+    if jurisdiction == "US":
+        parsed = _parse_us_claims("\n".join(claims_list))
+        return parsed if parsed else None
     if jurisdiction == "CN":
+        parsed = _parse_cn_claims("\n".join(claims_list))
+        if not parsed:
+            return None
         return CnPatentDocument(claims=parsed, input_format="google_patents_html")
     if jurisdiction == "TW":
+        # TW corpus claims lack leading 'N.'; synthesize from list position
+        # so production `_TW_CLAIM_NUM` regex finds boundaries.
+        paragraphs = [f"{i + 1}. {c}" for i, c in enumerate(claims_list)]
+        parsed = _parse_tw_claims(paragraphs)
+        if not parsed:
+            return None
         return TwPatentDocument(claims=parsed, input_format="google_patents_html")
-    if jurisdiction == "US":
-        return parsed
     return None
 
 
