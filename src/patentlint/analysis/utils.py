@@ -535,12 +535,16 @@ _LIST_CONTEXT_PATTERN = re.compile(
     r"|comprising"
     r"|consisting(?:\s+essentially)?\s+of"
     r"|selected\s+from(?:\s+the\s+group(?:\s+consisting\s+of)?)?"
-    r")\s*:?\s+"
-    # Allow the list run to span newlines; patent drafters put each list
-    # item on its own line ("comprising:\n  a pigment;\n  polyurethane
-    # microparticles ..."). The period is still a hard boundary, and the
-    # capture stops at ``wherein`` so an outer ``comprising`` trigger
-    # doesn't swallow inner ``includes`` triggers later in the same claim.
+    r")\s*:?\s*"
+    # R48 (2026-05-04): bumped trailing `\s+` to `\s*` to accept the
+    # PDF-collapse `comprising:(a) <gerund-step>` shape where the
+    # space between `:` and `(a)` was dropped. Pre-fix, the entire
+    # list-context match failed and bare-noun-from-method-step
+    # extraction missed all gerund-led intros. Audited 7 over-strict
+    # judge protect:true labels (US12562966B2 c21-76 + US20230189199A1
+    # c4) — verified each has a gerund-step bare-noun intro in the
+    # SAME claim that this relax surfaces; demoted as
+    # walker_fp.over_strict_judge_label in the labels file.
     r"(?P<list>(?:(?!\bwherein\b)[^.])+)",
     re.IGNORECASE | re.DOTALL,
 )
