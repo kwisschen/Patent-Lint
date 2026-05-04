@@ -73,92 +73,92 @@ def compute_confidence_score(
     Computed at walker emit-time from signals available when the
     finding fires. NOT a probability — a coarsely-calibrated ranking
     score for the user-facing tier-display knob (Phase 5 of the
-    precision-push plan). Threshold calibration against Phase 1
-    re-judging verdicts ships in a follow-up commit; this helper
-    surfaces the field today so the rest of the stack can be wired.
+    precision-push plan).
 
-    Architecture: positive-evidence-additive starting from a low
-    baseline. Initial v1 formula started from baseline 80 and made
-    small ±5 adjustments — pilot calibration showed 99% of findings
-    landed in 75–90 with no separation between legit and walker_fp.
-    v2 (this version) starts at 50 and grants larger bonuses for
-    strong positive evidence (zero intro pool, high-Jaccard near-
-    match, multi-token long term, paren-ref discriminator) so high-
-    confidence findings surface above 80 with meaningful spread.
+    Formula evolution (in-source for transparency — calibration is a
+    research problem, the values are working hypotheses):
 
-    Positive signals (evidence the finding IS a real defect):
+    - **v1** (shipped `c3b83f2`): baseline 80 + ±5 adjustments.
+      Pilot calibration showed 99% of findings clustered 75–90 with
+      no spread.
+    - **v2** (shipped `24edd56`): baseline 50 + larger bonuses on
+      "strong positive evidence" signals. Pilot showed meaningful
+      spread BUT empirical signal-correlation analysis on the broad
+      pre-R34 supplement data (CN 7556, US 13578, TW 5283 verdicts)
+      revealed v2's positive signals are INVERSELY correlated with
+      `legit_drafting_error` — high-conf buckets had LOWER precision
+      than absolute. v2 was push findings the wrong way.
+    - **v3** (this version): empirically-grounded sign reversal. Each
+      signal direction matches the broad-corpus correlation:
+      `very_short` correlates with legit (+); `long_term`,
+      `paren_term`, `short_upper_latin`, `zero_pool` correlate with
+      walker_fp (−). On US 13578 verdicts: absolute 29.4% → bucket
+      precision 45.3% at threshold 45 (+15.9pp lift, 1454 findings).
 
-    - **+25** zero intros in chain — almost certainly a defect; the
-      drafter never introduced ANY antecedent in the entire chain.
-    - **+15** very-close near-match (Jaccard ≥ 0.9) — stylistic typo
-      of an existing intro (`movable component` ↔ `movable componen`).
-    - **+10** close near-match (Jaccard ≥ 0.75 < 0.9).
-    - **+5** weak near-match (Jaccard < 0.75 with suggested_match set).
-    - **+10** suggested-match in same claim — high-signal stylistic
-      drift, not a chain-traversal error.
-    - **+10** term length ≥ 8 chars — long specific phrase = deliberate
-      drafter intent, missing antecedent likely real.
-    - **+5** term contains `(<num>)` paren-ref discriminator
-      (`第一電極(120)` style) — drafter explicitly identified the
-      element by reference numeral; missing antecedent on numbered
-      element strongly suggests structural defect.
-    - **+5** formal-register prefix (`said` / `所述` / `前述`) — small
-      boost; correlates weakly with deliberate drafter intent.
+    V3 signals (sign matches empirical correlation):
 
-    Negative signals (evidence the finding is likely a walker FP):
+    - **+8** very-short term (≤2 chars) — empirical +6.1pp lift; many
+      single-char CJK component refs (該下/該上/該左/該右) ARE legit
+      defects; intuition was wrong, data wins.
+    - **+10** suggested-match same-claim — kept positive (small
+      negative correlation in data but theoretically a strong signal
+      for stylistic-drift typos).
+    - **+5** suggested-match (any) with high Jaccard (≥0.75) — small
+      positive on weak correlation.
+    - **−8** long term (≥8 chars) — empirical −12.6pp; catches walker
+      over-extraction past head noun.
+    - **−5** paren term (`X(YYY)` shape) — empirical −9.4pp; walker
+      grabbing parenthetical context = over-extraction signal.
+    - **−15** short ASCII-uppercase (≤3 chars) — empirical −18.0pp;
+      Latin acronym over-bridge class (R34/R40/R41/R42 cluster).
+    - **−15** zero intros in chain — empirical −19.5pp; walker-parser
+      failure indicator, NOT a defect-strength signal as v2 assumed.
+    - **−10** suggested-match cross-branch only — chain-invalid by
+      strict §112(b) definition.
 
-    - **−15** suggested-match cross-branch only (no ancestor-chain
-      candidate) — the term IS introduced somewhere, just not in the
-      strict §112(b) chain. Often informational, not actionable.
-    - **−20** short ASCII-uppercase term (`len ≤ 3`) — high baseline
-      FP rate on Latin acronyms (UE / RX / MAC class).
-    - **−15** very short term (`len ≤ 2`) — likely walker tokenization
-      fragment (single CJK char or 2-char Latin remnant).
+    NOT yet validated against post-R48 verdicts (Phase 1 supplement_v2
+    in-flight). When those arrive, re-run signal correlation analysis
+    and ship v4 if directions shift.
 
     Clamped to [0, 100].
     """
     score = 50
-    # Strong positive signals
-    if intros_pool_size == 0:
-        score += 25
-    if has_suggested_match:
-        j = suggested_jaccard if suggested_jaccard is not None else 0.0
-        if j >= 0.9:
-            score += 15
-        elif j >= 0.75:
-            score += 10
-        else:
-            score += 5
-        if suggested_same_claim:
-            score += 10
-        if suggested_cross_branch and not suggested_same_claim:
-            score -= 15
-    # Term-length / structural signals
+    # Term-length / structural signals (empirically calibrated)
     term_str = term or ""
+    if 0 < len(term_str) <= 2:
+        score += 8
     if len(term_str) >= 8:
-        score += 10
-    # Paren-ref discriminator: `(<digits>)` or `(<NN>)` at end
-    # — strict because we want this to fire only on numeric refs.
+        score -= 8
+    # Paren-ref structural fingerprint — empirical wfp correlation.
     if "(" in term_str and ")" in term_str:
-        # Cheap structural check: contains a paren-numeral substring
         i = term_str.rfind("(")
         j2 = term_str.rfind(")")
         if i < j2:
             inner = term_str[i + 1:j2]
             if inner and any(c.isdigit() for c in inner):
-                score += 5
-    if prefix and prefix.strip().lower() in _FORMAL_PREFIXES:
-        score += 5
-    # Negative signals
+                score -= 5
+    # Acronym / parser-failure / chain-invalid penalties
     if (
         term_str
         and len(term_str) <= 3
         and term_str.isascii()
         and term_str.isupper()
     ):
-        score -= 20
-    if 0 < len(term_str) <= 2:
         score -= 15
+    if intros_pool_size == 0:
+        score -= 15
+    # Suggested-match signals
+    if has_suggested_match:
+        j = suggested_jaccard if suggested_jaccard is not None else 0.0
+        if j >= 0.75:
+            score += 5
+        if suggested_same_claim:
+            score += 10
+        if suggested_cross_branch and not suggested_same_claim:
+            score -= 10
+    # Formal-register prefix — minor positive
+    if prefix and prefix.strip().lower() in _FORMAL_PREFIXES:
+        score += 5
     return max(0, min(100, score))
 
 # Hyphen-aware word token: matches "multi-stage", "non-transitory", "widget"
