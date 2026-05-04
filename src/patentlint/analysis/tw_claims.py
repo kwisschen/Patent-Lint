@@ -1491,14 +1491,18 @@ _REF_PATTERN_CAPTURE = re.compile(
 # ``sorted(..., key=len, reverse=True)`` is applied once at import time.
 _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
     (
-        # === R32 (2026-05-04) — passive / connective trailing residues ===
+        # === R32 (2026-05-04) — passive trailing residue ===
         # CN parity (added to _TRAILING_VERB_DENYLIST_CN same round).
         # 被: passive marker. Compound nouns ending in 被 are vanishingly
         #   rare in TIPO patent claims; suffix-position is uniformly verb.
-        # 通訊/通信: verb forms. Compound 通訊模組/通信網路 have 通訊/通信
-        #   at PREFIX; suffix-position is verb (`處理器通訊` → strip → `處理器`).
+        #
+        # NOT included: 通訊/通信. Empirically silenced 7 protect:false
+        # legit_drafting_error labels in CN115398975B c1-8 where bare
+        # `所述側鏈路中繼通訊` is genuinely ambiguous (no Pattern A intro
+        # exists); 通訊 is the HEAD noun in compound `側鏈路中繼通訊`,
+        # not a verb. Verb-mode vs noun-mode disambiguation is out of
+        # R32 scope.
         "被",
-        "通訊", "通信",
         # Verb suffixes
         "包含", "包括", "含有", "具有", "係", "為", "是", "設有", "具備",
         # Preposition-verbs
