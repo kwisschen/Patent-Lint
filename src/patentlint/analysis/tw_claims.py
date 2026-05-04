@@ -3804,15 +3804,27 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
     # is the disambiguating signal for "this is a list" vs the
     # possessive `<noun>的<noun>` or modifier sequence shapes that
     # would otherwise false-fire.
+    # R44 (2026-05-04): expand triggers to 具有/具備/設有/含有 BUT only
+    # when the captured list has >=2 commas (3+ items) — single-comma
+    # lists with these triggers were too noisy on R37 gate-3
+    # spec-support test (TW JP-translation fixture +1). 3+ items
+    # strongly signal a list (not a possessive or modifier sequence).
     _F22_NO_COLON_LIST_TW = re.compile(
         r'(?:包括|包含)'
         r'((?:[一-鿿]{2,12}[、，])+'
         r'(?:[一-鿿]{2,12}(?:以及|及|和|或))?'
         r'[一-鿿]{2,12})'
+        r'|'
+        r'(?:具有|具備|設有|含有)'
+        r'((?:[一-鿿]{2,12}[、，]){2,}'
+        r'(?:[一-鿿]{2,12}(?:以及|及|和|或))?'
+        r'[一-鿿]{2,12})'
     )
     _F22_LIST_SPLIT_TW = re.compile(r'[、，]|以及|及|和|或')
     for fl_m in _F22_NO_COLON_LIST_TW.finditer(text):
-        list_text = fl_m.group(1)
+        list_text = fl_m.group(1) or fl_m.group(2)
+        if not list_text:
+            continue
         for item_raw in _F22_LIST_SPLIT_TW.split(list_text):
             item = item_raw.strip()
             if not item or len(item) < 2:
