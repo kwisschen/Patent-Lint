@@ -391,10 +391,17 @@ async def _run(
         )
         print(f"After sampling: {len(drafts_to_judge)} drafts to judge")
 
-    # Phase B: LLM judging with mid-run halt
+    # Phase B: LLM judging with mid-run halt.
+    # Per-request timeout = 240s. Without an explicit timeout, a stuck
+    # connection can wedge `asyncio.gather` forever (hit during 2026-05-05
+    # overnight run — first launch hung silently for 1h with no progress
+    # because connections were established but no response packets flowed).
+    # 240s is well above typical sonnet-4-6 latency for ~30K-token prompts
+    # (10-60s) plus Anthropic's internal retries; setting it lower would
+    # spuriously fail high-finding drafts.
     anth_key, oai_key = load_keys()
-    anth = AsyncAnthropic(api_key=anth_key)
-    oai = AsyncOpenAI(api_key=oai_key)
+    anth = AsyncAnthropic(api_key=anth_key, timeout=240.0, max_retries=3)
+    oai = AsyncOpenAI(api_key=oai_key, timeout=240.0, max_retries=3)
 
     sem = asyncio.Semaphore(fetch_concurrency)
 
