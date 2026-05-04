@@ -601,6 +601,43 @@ def extract_method_step_intros(text: str) -> list[str]:
     return refs
 
 
+# R47 (2026-05-04): `having <bare-noun> <past-participle>` intro
+# extraction. US round-1 corpus has 94 occurrences of this pattern
+# in apparatus claims like:
+#   `having program instructions stored thereon`
+#   `having unique identification data stored on`
+#   `having a slot defined by`
+# The participle (stored/configured/coupled/etc.) is the disambiguating
+# signal that <bare-noun> is being introduced as a claim element with
+# a structural attribute.
+_HAVING_BARE_NOUN_RE = re.compile(
+    r'\bhaving\s+'
+    r'((?:[a-z][\w\-]*\s+){0,4}[a-z][\w\-]*)'   # 1-5 word noun phrase
+    r'\s+(?:stored|configured|arranged|positioned|coupled|connected|disposed|operable|adapted|defined|formed|integrated|attached|mounted)\b',
+    re.IGNORECASE,
+)
+
+
+def extract_having_bare_noun_intros(text: str) -> list[str]:
+    """Extract bare-noun intros from `having X <past-participle>`.
+
+    Catches apparatus-claim element introductions where the drafter
+    uses a structural-attribute participle phrase (`having X stored`,
+    `having X configured`) instead of the standard `a/an X` form.
+    """
+    refs: list[str] = []
+    for m in _HAVING_BARE_NOUN_RE.finditer(text):
+        cleaned = clean_noun_phrase(m.group(1).strip())
+        if cleaned and len(cleaned) >= 4:
+            # Drop spurious captures like 'been' / 'a slot' (already
+            # covered by Pattern A) — keep multi-word noun phrases.
+            words = cleaned.split()
+            if len(words) == 1 and words[0] in {'been', 'said', 'the'}:
+                continue
+            refs.append(cleaned)
+    return refs
+
+
 def extract_bare_noun_intros(text: str) -> list[str]:
     """Extract introductions from bare-noun list contexts.
 
@@ -733,6 +770,7 @@ def extract_introductions(text: str) -> list[str]:
     refs.extend(_extract_self_definition_intros(lowered))
     refs.extend(_extract_wherein_bare_subject_intros(lowered))
     refs.extend(extract_method_step_intros(lowered))
+    refs.extend(extract_having_bare_noun_intros(lowered))
     return refs
 
 
