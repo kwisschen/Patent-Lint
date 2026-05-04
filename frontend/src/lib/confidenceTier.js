@@ -22,24 +22,24 @@
 // `tierForScore`. Until calibration commits land, all jurisdictions
 // share the same defaults.
 
-// Per-jurisdiction calibrated thresholds — pre-Phase-1 calibration
-// against broad supplement data using the v3 confidence formula.
-// Each T_HIGH is the threshold where bucket precision peaks above
-// the absolute baseline by the largest yield × precision tradeoff.
+// Per-jurisdiction calibrated thresholds — POST-Phase-1 calibration
+// against the supplement_v2 verdicts (605 weighted-sampled drafts on
+// post-R48 walker, 2026-05-05). Each T_HIGH is the threshold where
+// bucket precision peaks above the absolute baseline by the largest
+// yield × precision tradeoff with bucket_size ≥ 10.
 // Format: { US: { high: N, low: N }, CN: ..., TW: ... }
 //
-// Refresh after Phase 1 verdicts via:
+// Refresh by re-running:
 //   python -m tests.eval.calibrate_confidence_threshold \
 //     tests/eval/phase2b_results_supplement_v2.json
 export const TIER_THRESHOLDS = {
-  // Pre-Phase-1 sweet spots (v3 formula on pre-R34 data, see CC Output
-  // 2026-05-05 mid-session writeup). Post-R48 walker may shift these;
-  // post-Phase-1 calibration commit will refine.
-  US: { high: 50, low: 30 }, // 35.0% bucket precision (+5.6pp vs absolute 29.4%)
-  CN: { high: 60, low: 30 }, // 23.1% bucket precision (+3.5pp vs absolute 19.6%)
-  TW: { high: 60, low: 30 }, // 31.8% bucket precision (+3.9pp vs absolute 27.9%)
+  // Post-Phase-1 sweet spots from
+  // tests/eval/phase2b_results_supplement_v2_calibration.json:
+  US: { high: 50, low: 30 }, // 40.4% bucket precision (+4.9pp vs absolute 35.5%, 803 findings)
+  CN: { high: 65, low: 30 }, // 20.8% bucket precision (+6.4pp vs absolute 14.4%, 606 findings)
+  TW: { high: 65, low: 30 }, // 17.5% bucket precision (+4.9pp vs absolute 12.6%, 702 findings)
   // Default-fallback for any jurisdiction not explicitly listed.
-  DEFAULT: { high: 55, low: 30 },
+  DEFAULT: { high: 60, low: 30 },
 }
 
 export const TIER_HIGH = 'high'
