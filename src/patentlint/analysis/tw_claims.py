@@ -11,7 +11,10 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from patentlint.analysis.cjk_ordinal_guard import ordinal_guard
+from patentlint.analysis.cjk_ordinal_guard import (
+    normalize_arabic_ordinal_to_cjk,
+    ordinal_guard,
+)
 from patentlint.analysis.cjk_tokenize import jaccard, tokenize_tw
 from patentlint.analysis.utils import _dx
 from patentlint.analysis.connection_relationships import (
@@ -2588,13 +2591,15 @@ def normalize_reference_term(
     """Normalize a flagged reference term for antecedent matching.
 
     Composes:
-        strip_reference_form_prefix    (該/所述/前述/該等/該些)
-        → strip_leading_qualifier      (對應/相應/前+quantifier — NEW)
-        → clean_noun_phrase_tw         (interior cut + trailing strip)
-        → strip_leading_quantifier     (一/一個/複數/...)
-        → strip_leading_verb           (形成 — R7, residual ≥ 3 guard)
+        normalize_arabic_ordinal_to_cjk  (R33 — 第1→第一, 第2→第二)
+        → strip_reference_form_prefix    (該/所述/前述/該等/該些)
+        → strip_leading_qualifier        (對應/相應/前+quantifier)
+        → clean_noun_phrase_tw           (interior cut + trailing strip)
+        → strip_leading_quantifier       (一/一個/複數/...)
+        → strip_leading_verb             (形成 — R7, residual ≥ 3 guard)
     """
-    t = strip_reference_form_prefix(text)
+    t = normalize_arabic_ordinal_to_cjk(text)
+    t = strip_reference_form_prefix(t)
     t = strip_leading_qualifier(t, strict_qualifier_matching=strict_qualifier_matching)
     t = clean_noun_phrase_tw(t)
     t = strip_leading_quantifier(t)
@@ -2628,7 +2633,8 @@ def normalize_candidate_intro(
     invariant that the intro and reference normalize to the same
     string when they refer to the same entity.
     """
-    t = strip_leading_qualifier(text, strict_qualifier_matching=strict_qualifier_matching)
+    t = normalize_arabic_ordinal_to_cjk(text)
+    t = strip_leading_qualifier(t, strict_qualifier_matching=strict_qualifier_matching)
     t = clean_noun_phrase_tw(t)
     t = strip_leading_quantifier(t)
     t = strip_reference_form_prefix(t)
