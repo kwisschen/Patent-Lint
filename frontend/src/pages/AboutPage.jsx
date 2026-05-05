@@ -214,7 +214,7 @@ function CnCheckTable({ t }) {
   )
 
   return (
-    <div className="frost-card max-h-[70vh] overflow-y-auto">
+    <div className="frost-card">
       <table className="w-full text-left">
         <thead className="sticky top-0 z-10 bg-card backdrop-blur-sm">
           <tr className="border-b border-border bg-muted/30">
@@ -397,7 +397,7 @@ function TwComparisonTable({ t }) {
   )
 
   return (
-    <div className="frost-card max-h-[70vh] overflow-y-auto">
+    <div className="frost-card">
       <table className="w-full text-left">
         <thead className="sticky top-0 z-10 bg-card backdrop-blur-sm">
           <tr className="border-b border-border bg-muted/30">
@@ -466,7 +466,7 @@ function UsComparisonTable({ t }) {
   )
 
   return (
-    <div className="frost-card max-h-[70vh] overflow-y-auto">
+    <div className="frost-card">
       <table className="w-full text-left">
         <thead className="sticky top-0 z-10 bg-card backdrop-blur-sm">
           <tr className="border-b border-border bg-muted/30">
