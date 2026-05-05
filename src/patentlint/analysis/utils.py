@@ -35,7 +35,7 @@ def annotate_term_in_spec(
     findings: list[dict],
     spec_text: str,
 ) -> None:
-    """Annotate each walker finding with a `term_in_spec` boolean.
+    """Annotate each walker finding with `term_in_spec` + adjust confidence.
 
     R57 (2026-05-05): cross-validate antecedent walker findings against
     the document's specification body. When a flagged term ALSO appears
@@ -47,8 +47,9 @@ def annotate_term_in_spec(
     introduced in spec but referenced in claims without parallel intro)
     vs. a pure walker FP (over-capture or fragment).
 
-    Mutates findings list in place; adds boolean field. Empty spec text
-    leaves the field False on all findings.
+    Mutates findings list in place. Adds `term_in_spec: bool` and
+    boosts `confidence_score` by +10 when match. Empty spec text leaves
+    the field False; no score change.
     """
     if not spec_text:
         for f in findings:
@@ -56,7 +57,10 @@ def annotate_term_in_spec(
         return
     for f in findings:
         term = (f.get("term") or "").strip()
-        f["term_in_spec"] = bool(term) and term in spec_text
+        in_spec = bool(term) and term in spec_text
+        f["term_in_spec"] = in_spec
+        if in_spec and "confidence_score" in f:
+            f["confidence_score"] = min(100, int(f["confidence_score"]) + 10)
 
 
 def make_document_dedup_key(term: str, reference_form: str) -> str:
