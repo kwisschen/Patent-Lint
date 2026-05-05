@@ -331,6 +331,12 @@ _SYMBOL_TABLE_ENTRY = re.compile(
 # starts with this marker, the sub-claim body may legitimately span multiple
 # Word paragraphs (intermediate lines ending with ，/、/；, closing line with 。).
 _BRACKET_CLAIM_MARKER = re.compile(r"^\[\d+\]")
+# R65 (2026-05-05): empty paragraph numbering markers — drafters use
+# `【NNNN】` alone as section spacers between content paragraphs (Word
+# auto-numbers carry, no body content). User-reported on 神秘黑屏哥.docx
+# c10 where `【0009】` was flagged for missing 。. These are structural,
+# not content paragraphs.
+_EMPTY_PARA_NUM_ONLY = re.compile(r"^【\d{4}】\s*$")
 
 
 def _is_skip_paragraph_ending(text: str) -> bool:
@@ -340,6 +346,9 @@ def _is_skip_paragraph_ending(text: str) -> bool:
         return True
     # Symbol table entry patterns: numeral + separator + name
     if _SYMBOL_TABLE_ENTRY.match(text):
+        return True
+    # R65: empty 【NNNN】 numbering markers (drafter spacers, no body)
+    if _EMPTY_PARA_NUM_ONLY.match(text):
         return True
     return False
 
@@ -680,20 +689,27 @@ def check_spec_claim_reference(doc: TwPatentDocument) -> list[CheckItem]:
 
 
 def check_symbol_table_presence(doc: TwPatentDocument) -> list[CheckItem]:
-    """Check 符號說明 presence when drawings exist."""
-    if _section_has_content(doc.drawings_description) and not _section_has_content(doc.symbol_table):
+    """Check 符號說明 presence when drawings exist.
+
+    R65 (2026-05-05): now a no-op when ``check_required_sections`` would
+    already flag 符號說明 as missing — that condition is the strict
+    superset (drawings_exist = figure_refs OR drawings_description), and
+    the user-reported duplicate FIX entries on 神秘黑屏哥.docx came from
+    both checks firing simultaneously. ``check_required_sections`` is the
+    canonical check (it cites §25 第1項 + §17, the broader statutory
+    basis) so this one defers when the conditions overlap.
+    """
+    drawings_exist = bool(doc.figure_refs) or _section_has_content(doc.drawings_description)
+    symbol_missing = not _section_has_content(doc.symbol_table)
+
+    if drawings_exist and symbol_missing:
+        # Duplicate of requiredSections.amend — suppress to avoid showing
+        # two FIX entries for the same defect.
         return [CheckItem(
-            status="amend",
-            message="符號說明 section missing but 圖式簡單說明 is present.",
-            message_key="check.tw.spec.symbolTablePresence.amend",
-            details_key="details.tw.symbolTablePresence",
+            status="pass",
+            message="符號說明 absence flagged by requiredSections.",
+            message_key="check.tw.spec.symbolTablePresence.pass",
             reference="專利法施行細則 §17",
-            diagnostics=_dx(
-                reason_code="missing_with_drawings_present",
-                drawings_section_paragraphs=len(doc.drawings_description),
-                symbol_table_entries=len(doc.symbol_table) if doc.symbol_table else 0,
-                drawings_section_charlen=sum(len(p) for p in doc.drawings_description),
-            ),
         )]
 
     return [CheckItem(

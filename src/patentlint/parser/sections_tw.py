@@ -106,12 +106,28 @@ _SKIP_HEADERS: set[str] = {
 # Headers that indicate utility model (any header containing 新型)
 _UTILITY_MODEL_KEYWORDS = {"新型摘要", "新型說明書", "新型內容", "新型申請專利範圍", "新型名稱", "中文新型名稱"}
 
+# R65 (2026-05-05): sub-section names that map to a parent in
+# _SECTION_MAP for paragraph collection but should NOT be flagged by
+# bracket-format check. TIPO drafters write literature-citation sub-
+# sections with `[]` brackets as a stylistic convention (organizing
+# patent vs non-patent citations under prior_art); strict §17 only
+# applies to MAIN section headers, not these citation sub-headers.
+# 背景技術 is intentionally NOT in this set — it's an alternate name
+# for 先前技術 (main section), so [背景技術] DOES warrant the bracket
+# fix.
+_SUB_SECTION_NAMES: frozenset[str] = frozenset({
+    "先前技術文獻",
+    "專利文獻",
+    "非專利文獻",
+})
+
 # All canonical TIPO section names (for bracketless / variant-bracket detection).
 # Includes _SECTION_MAP keys (body sections, title, claims, abstract, etc.) plus
 # _SKIP_HEADERS (top-level dividers like 發明說明書) since those also must carry
-# 【】 per 專利法施行細則 §17.
+# 【】 per 專利法施行細則 §17. Sub-section names excluded — see _SUB_SECTION_NAMES.
 _CANONICAL_SECTION_NAMES: frozenset[str] = (
-    frozenset(_SECTION_MAP.keys()) | frozenset(_SKIP_HEADERS)
+    (frozenset(_SECTION_MAP.keys()) | frozenset(_SKIP_HEADERS))
+    - _SUB_SECTION_NAMES
 )
 
 # Variant bracket pairs some drafters use instead of the required 【】.
