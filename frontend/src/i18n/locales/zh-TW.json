@@ -262,7 +262,12 @@
   "antecedentBasis": {
     "title": "先行詞基礎檢視",
     "findings": "項問題",
-    "finding": "項問題"
+    "finding": "項問題",
+    "tierFilter": {
+      "label": "篩選：",
+      "showAll": "全部顯示（{{count}} 項）",
+      "showHighConf": "僅顯示高信心度（{{count}} 項）"
+    }
   },
   "antecedent": {
     "didYouMean": "您是否指的是「{{term}}」（於請求項{{claim_id}}中導入）？",
