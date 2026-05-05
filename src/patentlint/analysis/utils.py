@@ -64,6 +64,40 @@ def annotate_term_in_spec(
         f["term_in_spec"] = bool(term) and term in spec_text
 
 
+def annotate_term_in_symbol_table(
+    findings: list[dict],
+    symbol_table_norms: set[str],
+) -> None:
+    """Post-walker annotator — sets `term_in_symbol_table: bool` per finding.
+
+    R61b (2026-05-05): TIPO-style hybrid uses 符號說明 as a *lookup table*
+    (not a walker silencer — see ``feedback_no_symbol_table_antecedent_bridge.md``
+    for why silencing was rejected). Drafter-declared element names in
+    符號說明 are evidence the element exists; missing claim-chain intro
+    on a declared element is more likely a real legit defect than walker
+    over-capture. The flag rides on the finding payload so frontend can
+    render a "declared in 符號說明" chip and the confidence-score helper
+    can use it as a small +boost.
+
+    The walker itself sets `term_in_symbol_table` at emit-time when
+    available (so the boost flows into ``confidence_score`` directly);
+    this helper exists for parity with ``annotate_term_in_spec`` and for
+    pipeline-level recomputation if the walker is ever called without
+    symbol_table context.
+
+    Mutates ``findings`` in place. Empty ``symbol_table_norms`` leaves
+    every finding's flag at False.
+    """
+    if not symbol_table_norms:
+        for f in findings:
+            f.setdefault("term_in_symbol_table", False)
+        return
+    for f in findings:
+        term = (f.get("term") or "").strip()
+        if "term_in_symbol_table" not in f:
+            f["term_in_symbol_table"] = bool(term) and term in symbol_table_norms
+
+
 def make_document_dedup_key(term: str, reference_form: str) -> str:
     """Per-document dedup key for an antecedent-basis finding.
 
@@ -180,6 +214,8 @@ def compute_confidence_score(
     suggested_jaccard: float | None = None,
     suggested_same_claim: bool = False,
     term_in_spec: bool = False,
+    term_in_symbol_table: bool = False,
+    is_quoted_reference_format: bool = False,
     reference_form: str = "",
     jurisdiction: str = "",
 ) -> int:
@@ -302,6 +338,16 @@ def compute_confidence_score(
     # Kept the kwarg for forward compatibility but no score change.
     if term_in_spec:
         pass  # signal not currently used; placeholder for future training
+    # R61b (2026-05-05): TIPO-style 符號說明 lookup-table boost.
+    # Empirical direction validated on local TW fixtures (9/9 in_st findings
+    # are legit defects; presence is correctly aligned with "real defect").
+    # Skipped on 引用記載型式 claims per separate-handling guidance — those
+    # claims resolve antecedent via quoted_references, not symbol_table.
+    # Magnitude is intentionally small (+5) — corpus-scale validation
+    # blocked on data acquisition (Path 1 in flight). Will recalibrate
+    # once corpus symbol_table data lands.
+    if term_in_symbol_table and not is_quoted_reference_format:
+        score += 5
     # R59 (2026-05-05): ML-distilled high-precision-path bonus. When the
     # finding matches one of 11 sklearn DecisionTree leaves identified at
     # ≥50% precision (combined 70.4% on 452 findings), boost score by +25
