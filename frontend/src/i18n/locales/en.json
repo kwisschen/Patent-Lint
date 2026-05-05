@@ -263,7 +263,7 @@
     "title": "Antecedent Basis Review",
     "findings": "findings",
     "finding": "finding",
-    "disclaimer": "This walker uses heuristics; high-confidence tier prioritizes most-actionable findings. Always confirm against your draft.",
+    "disclaimer": "PatentLint does not use AI or server-side processing. High-confidence tier prioritizes most-actionable findings. Always confirm against your draft.",
     "tierFilter": {
       "label": "Filter:",
       "showAll": "Show all ({{count}})",
