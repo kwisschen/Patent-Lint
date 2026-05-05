@@ -89,6 +89,75 @@ def make_document_dedup_key(term: str, reference_form: str) -> str:
 # adjustment reflects that, not absolute correctness.
 _FORMAL_PREFIXES = frozenset({"said", "所述", "前述"})
 
+# R59: precompiled regex for ordinal-zh detection (used in compute_confidence_score)
+_re_ordinal_zh = re.compile(r'^第[一二三四五六七八九十百0-9]+')
+
+
+def _r59_ml_path_match(
+    *,
+    is_us: bool,
+    intros_pool: int,
+    term_len: int,
+    ref_len: int,
+    has_latin: bool,
+    is_ordinal_zh: bool,
+    is_cross_branch: bool,
+) -> bool:
+    """R59 (2026-05-05): match against ML-distilled high-precision paths.
+
+    Trained sklearn DecisionTree (depth 8, min_leaf 30) on combined
+    phase2b verdicts (55,503 labeled findings, 21.8% absolute precision).
+    Identified 11 leaves with ≥50% precision (combined 70.4% precision
+    on 452 findings — at the 70%-bucket goal).
+
+    Each leaf's decision path encoded as one branch below. Returns True
+    if a finding's feature vector matches any high-precision leaf.
+    Pure deterministic Python — no model file shipped at runtime.
+
+    Top-precision branches (top 4 of 11):
+      Leaf 264: 94.1% (n=68) — US, intros_pool>67, term_len>6, ref_len≤17
+      Leaf 255: 89.4% (n=47) — US, intros_pool 54-63, term_len 7-11, ref_len>14
+      Leaf 263: 74.2% (n=31) — US, intros_pool>67, term_len≤6, ref_len≤17
+      Leaf 261: 72.9% (n=48) — US, intros_pool 63-67, ref_len≤17
+    """
+    # US-jurisdiction high-precision branches (10 of 11 leaves)
+    if is_us and intros_pool > 4.5 and ref_len <= 20.5 and intros_pool > 54.5:
+        # Subtree at intros_pool > 54.5 (leaves 254/255/258/261/263/264/265)
+        if intros_pool > 63.5:
+            if ref_len <= 17.5:
+                if intros_pool > 67.5:
+                    if term_len > 6.5:
+                        return True  # leaf 264, 94.1%
+                    else:
+                        return True  # leaf 263, 74.2%
+                else:
+                    return True  # leaf 261, 72.9%
+            else:
+                return True  # leaf 265, 62.2%
+        else:  # 54.5 < intros_pool ≤ 63.5
+            if term_len > 6.5:
+                if term_len > 11.5:
+                    if ref_len > 18.5:
+                        return True  # leaf 258, 64.1%
+                else:  # term_len 7-11
+                    if ref_len > 14.5:
+                        return True  # leaf 255, 89.4%
+                    else:
+                        return True  # leaf 254, 63.2%
+    # US, ref_len 21-40, very high pool (leaf 284, 285)
+    if is_us and intros_pool > 4.5 and 20.5 < ref_len <= 40.5 and intros_pool > 73.5:
+        if intros_pool <= 211.0:
+            return True  # leaf 284, 61.8%
+        else:
+            return True  # leaf 285, 50.0%
+    # US, low pool, very long term (leaf 185, 56.5%)
+    if is_us and intros_pool <= 4.5 and not is_cross_branch and 11.5 < term_len <= 17.5:
+        return True
+    # Non-US (CN/TW), very specific 第N pattern (leaf 22, 58.8%)
+    if (not is_us) and term_len <= 4.5 and not has_latin and ref_len <= 5.5 and is_ordinal_zh and ref_len <= 4.5 and intros_pool <= 19.5:
+        return True
+    return False
+
 
 def compute_confidence_score(
     *,
@@ -100,6 +169,8 @@ def compute_confidence_score(
     suggested_jaccard: float | None = None,
     suggested_same_claim: bool = False,
     term_in_spec: bool = False,
+    reference_form: str = "",
+    jurisdiction: str = "",
 ) -> int:
     """Confidence score (0–100) for an antecedent-basis finding.
 
@@ -216,6 +287,27 @@ def compute_confidence_score(
     # `annotate_term_in_spec` in pipeline; included here for direct callers).
     if term_in_spec:
         score += 10
+    # R59 (2026-05-05): ML-distilled high-precision-path bonus. When the
+    # finding matches one of 11 sklearn DecisionTree leaves identified at
+    # ≥50% precision (combined 70.4% on 452 findings), boost score by +25
+    # to lift into the high-conf tier. Pure deterministic encoding of
+    # the trained tree's decision paths.
+    if reference_form and jurisdiction:
+        is_us = (jurisdiction == "US")
+        ref_len = len(reference_form)
+        has_latin = any('A' <= c <= 'z' for c in (term or ""))
+        is_ordinal_zh = bool(_re_ordinal_zh.match(term or ""))
+        is_cross_branch = suggested_cross_branch and not suggested_same_claim
+        if _r59_ml_path_match(
+            is_us=is_us,
+            intros_pool=intros_pool_size,
+            term_len=len(term or ""),
+            ref_len=ref_len,
+            has_latin=has_latin,
+            is_ordinal_zh=is_ordinal_zh,
+            is_cross_branch=is_cross_branch,
+        ):
+            score += 25
     return max(0, min(100, score))
 
 # Hyphen-aware word token: matches "multi-stage", "non-transitory", "widget"
