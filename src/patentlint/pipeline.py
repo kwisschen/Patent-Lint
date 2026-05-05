@@ -152,6 +152,17 @@ def _run_cn_pipeline(
         strict_plural_reference_matching=strict_plural_reference_matching,
         strict_qualifier_matching=strict_qualifier_matching,
     )
+    # R57 (2026-05-05): cross-validate against spec body. Annotates each
+    # finding with `term_in_spec` for the confidence-score helper.
+    from patentlint.analysis.utils import annotate_term_in_spec
+    cn_spec_text = "\n".join(
+        list(cn_doc.technical_field)
+        + list(cn_doc.background)
+        + list(cn_doc.summary)
+        + list(cn_doc.drawings_description)
+        + list(cn_doc.detailed_description)
+    )
+    annotate_term_in_spec(cn_antecedent_basis, cn_spec_text)
     if cn_antecedent_basis:
         from patentlint.diagnostic_extractors import extract_antecedent_basis
         issue_count = len(cn_antecedent_basis)
@@ -561,6 +572,16 @@ def _run_tw_pipeline(
         strict_plural_reference_matching=strict_plural_reference_matching,
         strict_qualifier_matching=strict_qualifier_matching,
     )
+    # R57 (2026-05-05): cross-validate TW findings against spec body.
+    from patentlint.analysis.utils import annotate_term_in_spec
+    tw_spec_text = "\n".join(
+        list(tw_doc.technical_field)
+        + list(tw_doc.prior_art)
+        + list(tw_doc.disclosure)
+        + list(tw_doc.drawings_description)
+        + list(tw_doc.embodiment)
+    )
+    annotate_term_in_spec(tw_antecedent_basis, tw_spec_text)
 
     # ADR-138: TW specification-support check (專利法 §26 第3項).
     # Emits UnsupportedTerm findings for claim noun phrases that fail
