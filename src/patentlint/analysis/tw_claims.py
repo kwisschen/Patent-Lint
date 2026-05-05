@@ -1737,6 +1737,21 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         "檢測", "收集", "輸送",
         "釋放", "操控", "掃描",
         "分離", "比較", "判斷", "決定", "分析",
+        # === R63 (2026-05-05) — 神秘黑屏哥.docx audit ===
+        # Adverbs / adjectives over-captured at trailing position.
+        # Multi-char specific compounds first (longest-first sort):
+        # - 不同介電率: modifier+noun (`第一間隔件不同介電率的絕緣膜`).
+        #   Walker captured this as part of element-name span; should
+        #   strip the modifier+noun suffix to recover element identity.
+        # - 不同: pure adjective, never noun-position-suffix in TW patent
+        #   diction. 不同點 / 不同處 captured properly via mid-position;
+        #   trailing 不同 is uniformly walker over-capture.
+        # - 僅: adverb "only/merely", never part of noun.
+        # Residual ≥ 2 implicit guard: len < 2 emit-time filter (R32)
+        # protects 1-char residuals from leaking through.
+        "不同介電率",
+        "不同",
+        "僅",
         "包括以下", "執行以下", "進行以下",
         "執行以下操作", "執行以下操",
         # R60 (2026-05-05): TW 執行 verb-suffix from cluster TAIL|TW|經量化
@@ -4016,6 +4031,17 @@ def extract_introductions_tw(
     # method-claim head-noun reference `該方法`.
     supplementary = _extract_supplementary_intros(claim.text)
     for orig, norm in supplementary:
+        # R63 (2026-05-05): symmetric Arabic-ordinal normalization.
+        # The main intro path runs `normalize_candidate_intro` which
+        # applies `normalize_arabic_ordinal_to_cjk` first; supplementary
+        # intros only ran `strip_leading_verb_tw`, so 第1間隔件 stayed
+        # as 第1間隔件 in intros_by_term while reference 前述第1間隔件
+        # normalized to 第一間隔件 (Arabic→CJK). Asymmetric → mismatch
+        # → spurious walker_fp.
+        # User-reported bug on 神秘黑屏哥.docx 2026-05-05 — claim 1
+        # uses Arabic ordinals (第1間隔件 / 第2間隔件), all dep claims
+        # using 前述第一間隔件 / 前述第二間隔件 emit incorrectly.
+        norm = normalize_arabic_ordinal_to_cjk(norm)
         norm = strip_leading_verb_tw(norm)
         if not norm or norm in seen:
             continue
