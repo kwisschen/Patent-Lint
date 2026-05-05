@@ -20,20 +20,31 @@ _TW_CLAIM_NUM = re.compile(r"^[\s\u3000]*(\d+)\s*[.．]\s*", re.MULTILINE)
 # the three accepted dep openers are 如 / 依據 / 根據. Bare `請求項N所述的`
 # form (no verb) also appears in older filings. Matches the opener set
 # accepted by the CN parser (_CN_DEPENDENCY) for cross-jurisdiction parity.
+#
+# R62 (2026-05-05): admit older TIPO form `申請專利範圍第N項`. Pre-2018
+# drafts (TWI417633B et al.) use `如申請專利範圍第1項所述之` instead of
+# `如請求項1所述之`. Without this branch, ALL dep claims in older filings
+# parse with empty `dependencies`, breaking walker chain traversal and
+# producing thousands of spurious findings whose terms ARE introduced
+# in claim 1 but the chain never reaches there.
+# Empirical: TWI417633B (2013 filing, supplement_v2 corpus) had all 15
+# claims parsing as independent until this fix.
 _TW_DEP_PATTERN = re.compile(
-    r"(?:如|依據|根據|依)?\s*請求項\s*"
+    r"(?:如|依據|根據|依)?\s*"
+    r"(?:請求項|申請專利範圍)\s*"
     # R49 (2026-05-05): admit `第N項` particles between `請求項` and the
     # digit. TIPO chemistry/medical drafters use the long form
     # `如請求項第1項至第6項中任一項所述的方法` (Patent-Analyst supplement_v2
     # cluster `TAIL|TW|(I)`, 54 walker_fp findings on TW202502382A and
     # similar). Bare `請求項1` still works because both `第` and `項` are
-    # optional.
+    # optional. R62 (2026-05-05): same particles also apply after
+    # `申請專利範圍` since older form mandates `第N項` shape.
     r"第?\s*(\d+)\s*項?"
-    # Range tail: allow an explicit ``請求項`` before the end number
-    # (e.g. ``如請求項4至請求項10中任一項所述``) and also `第N項` particles
-    # (R49: `至第6項`).
-    r"(?:\s*(?:~|至|到)\s*(?:請求項\s*)?第?\s*(\d+)\s*項?)?"
-    r"((?:\s*(?:或|、)\s*(?:請求項\s*)?第?\s*\d+\s*項?)*)"
+    # Range tail: allow an explicit ``請求項`` or ``申請專利範圍`` before
+    # the end number (e.g. ``如請求項4至請求項10中任一項所述`` /
+    # ``申請專利範圍第4項至第10項中任一項``).
+    r"(?:\s*(?:~|至|到)\s*(?:(?:請求項|申請專利範圍)\s*)?第?\s*(\d+)\s*項?)?"
+    r"((?:\s*(?:或|、)\s*(?:(?:請求項|申請專利範圍)\s*)?第?\s*\d+\s*項?)*)"
     r"(?:\s*中\s*任一?項)?"
     # Trailing connective accepts TIPO-standard (所述) + JP-translation
     # variants (所記載, 所揭示, 所描述) + bare 之/的. All optional so a

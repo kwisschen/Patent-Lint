@@ -290,10 +290,13 @@ def _symbol_table_dym_fallback_tw(
 # Trailing connective accepts TIPO-standard (所述) + JP-translation variants
 # (所記載, less common: 所揭示 / 所描述), plus bare 之/的 (如請求項N之X).
 _TW_DEP_CONNECTIVE = r"(?:所(?:述|記載|揭示|描述))?[之的]?"
+# R62 (2026-05-05): admit older TIPO form `申請專利範圍第N項` alongside
+# modern `請求項N`. Same fix as parser/_TW_DEP_PATTERN — pre-2018 TIPO
+# drafts use the older form and were misclassified as independent claims.
 _TW_DEP_FORMAT = re.compile(
-    r"請求項\s*\d+"
-    r"(?:\s*(?:~|至|到)\s*(?:請求項\s*)?\d+)?"
-    r"(?:\s*(?:或|、)\s*(?:請求項\s*)?\d+)*"
+    r"(?:請求項|申請專利範圍)\s*第?\s*\d+\s*項?"
+    r"(?:\s*(?:~|至|到)\s*(?:(?:請求項|申請專利範圍)\s*)?第?\s*\d+\s*項?)?"
+    r"(?:\s*(?:或|、)\s*(?:(?:請求項|申請專利範圍)\s*)?第?\s*\d+\s*項?)*"
     r"(?:\s*中\s*任一?項)?"
     r"\s*" + _TW_DEP_CONNECTIVE
 )
