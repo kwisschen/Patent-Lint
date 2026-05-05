@@ -72,6 +72,13 @@ _NON_PROSE_BODY_PATTERNS = (
     # Empty body after stripping [NNNN] prefix — standalone para-number
     # placeholder with no content is a structural marker.
     re.compile(r"^$"),
+    # R65 (2026-05-05) TW parity: bibliographic citation paragraphs.
+    # CN drafters using cross-jurisdiction conventions list patent +
+    # non-patent literature with `[专利文献N]` / `[非专利文献N]` labels;
+    # citation entries are bibliographic references (e.g.
+    # `美国专利第10256321号说明书`), not prose sentences. Drafters
+    # conventionally omit trailing 。.
+    re.compile(r"^\[(?:专利文献|非专利文献)\s*\d+\].*$"),
 )
 _PARA_NUM_STRIP_RE = re.compile(r"^\[\d{4}\][\s　\t]*")
 
