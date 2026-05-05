@@ -2689,6 +2689,40 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
             seen_norms.add(chinese)
             extras.append((la_m.group(0), chinese))
 
+    # R50b (2026-05-05): AF-style Pattern A preamble juxtaposition.
+    # Drafters embed acronyms in Pattern A preambles via function-role
+    # suffix anchoring:
+    #
+    #   `一种由与通信网络相关联的应用功能AF实施的方法`
+    #            └──── 应用功能AF: 应用功能 = "application function" descriptor,
+    #                              AF = "Application Function" acronym
+    #
+    # Phase 1 supplement_v2 cluster SHAPE|CN|ASCII_UPPER:SHORT residual
+    # 52 wfp after R50 (R50 only handles 包括/包含-triggered shapes).
+    #
+    # Anchor: well-known telecom/protocol function-role suffixes that
+    # ALWAYS signal "<noun phrase><suffix><acronym>" pattern. Narrow
+    # allowlist so we don't over-extract from random Chinese-Latin
+    # neighbor pairs. Drafters universally use these CJK suffixes for
+    # functional/network entities — high precision.
+    _CN_FUNCTION_SUFFIXES = (
+        r'功能|服务|系统|网络|设备|单元|协议|平面|层|消息|报文|网元|节点'
+    )
+    _CN_FUNCTION_LATIN_ABBREV_RE = re.compile(
+        r'([一-鿿]{1,8}(?:' + _CN_FUNCTION_SUFFIXES + r'))'
+        r'([A-Z][A-Za-z0-9]{1,4})'
+        r'(?=[，。；,;:、(（]|的|所述|实施|是|为|具有|包括|包含|$|\s)'
+    )
+    for la_m in _CN_FUNCTION_LATIN_ABBREV_RE.finditer(text):
+        chinese = la_m.group(1)
+        latin = la_m.group(2)
+        if latin not in seen_norms and len(latin) >= 2:
+            seen_norms.add(latin)
+            extras.append((la_m.group(0), latin))
+        if chinese not in seen_norms:
+            seen_norms.add(chinese)
+            extras.append((la_m.group(0), chinese))
+
     # R37 (2026-05-04): mirror of TW R37 F22 — list-item bare-noun
     # extraction WITHOUT colon trigger. CN parity: parent claim
     # introduces multiple components in `<verb><N1>、<N2>以及<N3>`
