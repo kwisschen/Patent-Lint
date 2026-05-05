@@ -2372,6 +2372,29 @@ def clean_noun_phrase_tw(text: str) -> str:
             break
         if not stripped:
             break
+
+    # R55 (2026-05-05): TW parity of CN R54 — adverbial-verb + 整體呈X
+    # over-capture strip. Same architecture, Traditional script.
+    # Anchored two-group regex: head noun (≥2 chars) + verb-phrase suffix.
+    # Pre-地 portion constrained to 2-3 chars (typical TW adverbials:
+    # 軸向, 平穩, 垂直, 自動).
+    _R55_OVERALL_DESC_TW = re.compile(
+        r'^([一-鿿]{2,})整體呈[一-鿿]{1,8}$'
+    )
+    _R55_ADVERBIAL_VERB_TW = re.compile(
+        r'^([一-鿿]{2,})[一-鿿]{2,3}地[一-鿿]{1,3}$'
+    )
+    for _ in range(4):
+        before = current
+        m = _R55_OVERALL_DESC_TW.match(current)
+        if m:
+            current = m.group(1)
+        m = _R55_ADVERBIAL_VERB_TW.match(current)
+        if m:
+            current = m.group(1)
+        if current == before:
+            break
+
     return current
 
 
