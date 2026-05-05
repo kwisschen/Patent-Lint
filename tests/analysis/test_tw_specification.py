@@ -564,13 +564,19 @@ class TestSymbolTablePresence:
         items = check_symbol_table_presence(doc)
         assert items[0].status == "pass"
 
-    def test_drawings_without_symbols_amend(self):
+    def test_drawings_without_symbols_pass_dedup(self):
+        """R65 (2026-05-05): symbolTablePresence now deduplicates against
+        requiredSections.amend (which lists 符號說明 as missing when
+        drawings exist). Both checks fired pre-R65 producing duplicate
+        FIX entries on user reports — confusing UX. The canonical
+        finding is requiredSections (broader statutory cite); this
+        check passes when conditions overlap."""
         doc = _make_doc(
             drawings_description=["圖1為示意圖。"],
             symbol_table=[],
         )
         items = check_symbol_table_presence(doc)
-        assert items[0].status == "amend"
+        assert items[0].status == "pass"
 
     def test_symbols_without_drawings_pass(self):
         """Symbol table without drawings: presence check passes (required section check handles this)."""
