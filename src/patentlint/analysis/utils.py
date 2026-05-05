@@ -120,8 +120,15 @@ def _r59_ml_path_match(
       Leaf 263: 74.2% (n=31) — US, intros_pool>67, term_len≤6, ref_len≤17
       Leaf 261: 72.9% (n=48) — US, intros_pool 63-67, ref_len≤17
     """
-    # US-jurisdiction high-precision branches (10 of 11 leaves)
-    if is_us and intros_pool > 4.5 and ref_len <= 20.5 and intros_pool > 54.5:
+    # R59c (2026-05-05): single robust ML-distilled path.
+    # depth-4 DT, min_samples_leaf=200, ONE leaf passing strict
+    # cross-validation: train_p=70.9% (n=316), test_p=56.5% (n=85).
+    # Path: is_us AND intros_pool > 53.5 AND ref_len <= 20.5
+    if is_us and intros_pool > 53.5 and ref_len <= 20.5:
+        return True
+    # FALLBACK GUARD: rest of original R59 paths kept commented for
+    # ablation; they overfit (in-sample 70-94% but test 5-30%).
+    if False and is_us and intros_pool > 4.5 and ref_len <= 20.5 and intros_pool > 54.5:
         # Subtree at intros_pool > 54.5 (leaves 254/255/258/261/263/264/265)
         if intros_pool > 63.5:
             if ref_len <= 17.5:
