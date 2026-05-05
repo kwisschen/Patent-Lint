@@ -153,9 +153,12 @@ def _r59_ml_path_match(
     # US, low pool, very long term (leaf 185, 56.5%)
     if is_us and intros_pool <= 4.5 and not is_cross_branch and 11.5 < term_len <= 17.5:
         return True
-    # Non-US (CN/TW), very specific 第N pattern (leaf 22, 58.8%)
-    if (not is_us) and term_len <= 4.5 and not has_latin and ref_len <= 5.5 and is_ordinal_zh and ref_len <= 4.5 and intros_pool <= 19.5:
-        return True
+    # CN/TW path REMOVED: holdout test showed in-sample 58.8% on TW leaf
+    # 22 (the only non-US qualifying path) regressed to 5.7% on TEST
+    # data — the tree overfit. Keeping only US paths which retained
+    # ~54.6% precision on test data (vs absolute 32%, +23pp lift).
+    # CN/TW need their own per-juris model + stricter cross-validation
+    # before any path encoding ships (R60 follow-up).
     return False
 
 
