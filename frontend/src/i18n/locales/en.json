@@ -263,6 +263,7 @@
     "title": "Antecedent Basis Review",
     "findings": "findings",
     "finding": "finding",
+    "disclaimer": "This walker uses heuristics; high-confidence tier prioritizes most-actionable findings. Always confirm against your draft.",
     "tierFilter": {
       "label": "Filter:",
       "showAll": "Show all ({{count}})",
@@ -321,7 +322,7 @@
     },
     "page": {
       "heroTitle": "No Upload. No AI. No Exceptions.",
-      "heroSubtext": "PatentLint runs entirely inside your browser. Your patent draft never leaves your device. No account by design — no personal data to collect. Analysis is local; results are yours.",
+      "heroSubtext": "PatentLint runs entirely inside your browser. Your patent draft never leaves your device. Analysis is local; results are yours. No account. No telemetry. No personal data.",
       "tryIt": "Verify it yourself →",
       "compareTitle": "How Does PatentLint Compare?",
       "compareDisclaimer": "Comparison reflects general architecture patterns. Individual products may vary. \"Word Add-in Tools\" and \"Cloud-Based Tools\" are generic categories, not specific products.",
