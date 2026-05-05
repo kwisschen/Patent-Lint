@@ -793,3 +793,46 @@ class TestGarbageCaptureSweepR67:
         # If walker emits, term should NOT span across 由.
         for i in issues:
             assert "由" not in i["term"], i
+
+
+class TestVerbOnlySuppressionR68:
+    """R68 (2026-05-06) — verb-only walker degenerate fragments.
+
+    `所述确定` / `所述获得` / `所述进行` etc. surface when the walker
+    regex stops at 的 or other boundary and the leading verb is left
+    bare. These bare verbs are NEVER drafter-intended antecedent
+    references; suppress at emit time.
+    """
+
+    def test_quoque_che_ding_suppressed(self):
+        from patentlint.analysis.cn_claims import check_antecedent_basis_cn
+        doc = _cn_doc([
+            _claim(
+                1,
+                "1. 一种方法，包含一参数，根据所述参数确定的结果输出至显示屏。",
+            ),
+        ])
+        issues = check_antecedent_basis_cn(doc)
+        assert not any(i["term"] == "确定" for i in issues), issues
+
+    def test_jin_xing_suppressed(self):
+        from patentlint.analysis.cn_claims import check_antecedent_basis_cn
+        doc = _cn_doc([
+            _claim(
+                1,
+                "1. 一种方法，用于进行的步骤包含数据采集和处理。",
+            ),
+        ])
+        issues = check_antecedent_basis_cn(doc)
+        assert not any(i["term"] == "进行" for i in issues), issues
+
+    def test_huo_de_suppressed(self):
+        from patentlint.analysis.cn_claims import check_antecedent_basis_cn
+        doc = _cn_doc([
+            _claim(
+                1,
+                "1. 一种方法，所述获得的数据存储在存储模块中。",
+            ),
+        ])
+        issues = check_antecedent_basis_cn(doc)
+        assert not any(i["term"] == "获得" for i in issues), issues

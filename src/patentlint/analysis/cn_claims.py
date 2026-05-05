@@ -3052,6 +3052,11 @@ _FORMULA_REFERENCE_RE_CN: re.Pattern[str] = re.compile(r"^式\([^)]+\)$")
 _VERB_PREDICATE_TERMS_CN: frozenset[str] = frozenset({
     "安装有", "存储有", "形成有", "设置有",
     "加入", "加热沸腾",
+    # R68 (2026-05-06) — TW parity. Pure-action verbs from supplement_v2
+    # walker_fp mining (n=6289 CN walker_fp): 确定 ~15, 进行 ~3, 获得,
+    # 判断, 执行, 完成. Safe-suppress: drafters never use as standalone
+    # noun antecedents; appear only in compounds (确定值/获得结果 etc.).
+    "确定", "进行", "获得", "判断", "执行", "完成",
 })
 
 
