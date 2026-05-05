@@ -355,6 +355,14 @@ def _run_pipeline(
         transition_checks = claims_analysis.check_claim_transitions(claims)
         special_format_checks = claims_analysis.check_special_claim_formats(claims)
         spec_text = (summary_section or "") + "\n" + (detailed_desc_section or "")
+        # R61c (2026-05-05): cross-validate US findings against spec body.
+        # Path 1 corpus measurement on TW supplement_v2 surfaced
+        # term_in_description=False as the strongest production signal
+        # (0.8% legit on n=264 absent-from-spec findings vs 12.8% baseline).
+        # Same `annotate_term_in_spec` helper applies the validated −15
+        # confidence penalty when the term is missing from spec body.
+        from patentlint.analysis.utils import annotate_term_in_spec
+        annotate_term_in_spec(antecedent_basis, spec_text)
         unsupported_terms = claims_analysis.check_spec_support(claims, spec_text)
         # ADR-091 (Option Y): both checks emit independently; compute the
         # cross-reference set so the frontend can render hint lines linking
