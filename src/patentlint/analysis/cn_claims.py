@@ -3387,6 +3387,8 @@ def check_antecedent_basis_cn(
                     suggested_match
                     and suggested_match.get("claim_id") == claim.id
                 ),
+                reference_form=reference_form,
+                jurisdiction="CN",
             )
             issues.append(
                 {
