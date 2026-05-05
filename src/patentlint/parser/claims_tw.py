@@ -22,11 +22,18 @@ _TW_CLAIM_NUM = re.compile(r"^[\s\u3000]*(\d+)\s*[.．]\s*", re.MULTILINE)
 # accepted by the CN parser (_CN_DEPENDENCY) for cross-jurisdiction parity.
 _TW_DEP_PATTERN = re.compile(
     r"(?:如|依據|根據|依)?\s*請求項\s*"
-    r"(\d+)"
+    # R49 (2026-05-05): admit `第N項` particles between `請求項` and the
+    # digit. TIPO chemistry/medical drafters use the long form
+    # `如請求項第1項至第6項中任一項所述的方法` (Patent-Analyst supplement_v2
+    # cluster `TAIL|TW|(I)`, 54 walker_fp findings on TW202502382A and
+    # similar). Bare `請求項1` still works because both `第` and `項` are
+    # optional.
+    r"第?\s*(\d+)\s*項?"
     # Range tail: allow an explicit ``請求項`` before the end number
-    # (e.g. ``如請求項4至請求項10中任一項所述``).
-    r"(?:\s*(?:~|至|到)\s*(?:請求項\s*)?(\d+))?"
-    r"((?:\s*(?:或|、)\s*(?:請求項\s*)?\d+)*)"
+    # (e.g. ``如請求項4至請求項10中任一項所述``) and also `第N項` particles
+    # (R49: `至第6項`).
+    r"(?:\s*(?:~|至|到)\s*(?:請求項\s*)?第?\s*(\d+)\s*項?)?"
+    r"((?:\s*(?:或|、)\s*(?:請求項\s*)?第?\s*\d+\s*項?)*)"
     r"(?:\s*中\s*任一?項)?"
     # Trailing connective accepts TIPO-standard (所述) + JP-translation
     # variants (所記載, 所揭示, 所描述) + bare 之/的. All optional so a
