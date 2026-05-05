@@ -117,7 +117,7 @@ def main() -> int:
     avg_st_size = (
         sum(len(s) for s in inline_st_cache.values()) / max(n_with_inline_st, 1)
     )
-    print(f"\nInline symbol-table mining:")
+    print("\nInline symbol-table mining:")
     print(f"  patents with ≥1 mined inline-ST entry: {n_with_inline_st}/{len(descs)}")
     print(f"  avg ST size (where present): {avg_st_size:.1f}")
 
