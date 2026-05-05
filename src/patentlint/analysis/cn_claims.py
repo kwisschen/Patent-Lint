@@ -1525,6 +1525,37 @@ def clean_noun_phrase_cn(text: str) -> str:
             if current[-1] != '\u57fa' or current[-2] not in _CHEMISTRY_BEFORE_JI_CN:
                 current = current[:-1]
 
+    # R54 (2026-05-05): regex-based verb-phrase trailing strip.
+    # Catches over-capture patterns the literal allowlist doesn't cover:
+    #   `\u9501\u626d\u6574\u4f53\u5448\u5706\u67f1\u5f62` \u2192 `\u9501\u626d` (\u6574\u4f53\u5448X = "overall is X" descriptor)
+    #   `\u7ea4\u7ef4\u6750\u6599\u8f74\u5411\u5730\u6392\u5217` \u2192 `\u7ea4\u7ef4\u6750\u6599` (XY\u5730ZW = adverbial-verb suffix)
+    # Both confirmed walker over-capture per user 2026-05-05 phone-judge
+    # (CN103443870A c19, CN106654630B c10).
+    #
+    # Adverbial regex constrains the pre-\u5730 portion to 2-3 chars (typical
+    # CN adverbials: \u8f74\u5411, \u5e73\u7a33, \u5782\u76f4, \u81ea\u52a8). Wider {1,4} bracket consumed
+    # head-noun chars greedily (`\u7ea4\u7ef4\u6750\u6599\u8f74\u5411\u5730\u6392\u5217` \u2192 `\u7ea4\u7ef4`); narrower
+    # {2,3} leaves head noun intact (`\u7ea4\u7ef4\u6750\u6599`).
+    #
+    # Verb portion 1-3 chars (\u6392\u5217, \u8fd0\u52a8, \u5f62\u6210).
+    # Head-noun group \u22652 chars (residual guard).
+    _R54_OVERALL_DESC = re.compile(
+        r'^([\u4e00-\u9fff]{2,})\u6574\u4f53\u5448[\u4e00-\u9fff]{1,8}$'
+    )
+    _R54_ADVERBIAL_VERB = re.compile(
+        r'^([\u4e00-\u9fff]{2,})[\u4e00-\u9fff]{2,3}\u5730[\u4e00-\u9fff]{1,3}$'
+    )
+    for _ in range(4):
+        before = current
+        m = _R54_OVERALL_DESC.match(current)
+        if m:
+            current = m.group(1)
+        m = _R54_ADVERBIAL_VERB.match(current)
+        if m:
+            current = m.group(1)
+        if current == before:
+            break
+
     return current
 
 
