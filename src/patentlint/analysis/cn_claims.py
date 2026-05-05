@@ -2723,6 +2723,33 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
             seen_norms.add(chinese)
             extras.append((la_m.group(0), chinese))
 
+    # R51 (2026-05-05): facilitate-verb verbal-noun introduction.
+    # CN method-claim drafters introduce verbal nouns via constructions
+    # like `便于操作的执行` ("facilitates operation's execution") where
+    # 操作 (the operation) is intended as a noun-introduction. Subsequent
+    # `所述操作` references should resolve.
+    #
+    # Phase 1 supplement_v2 cluster `TAIL|CN|操作` + `HEAD|CN|操作`
+    # (65 wfp / 0 legit, 13 distinct drafts).
+    #
+    # Trigger verbs limited to clear "facilitate/realize" semantics. NOT
+    # 用于 (for-use-of, much broader and risks over-extraction). NOT
+    # 使 / 让 (causative, too generic).
+    #
+    # Pattern: <facilitate-verb> <X> 的 <Y>
+    #   register X as intro (Y is captured by other extractors)
+    _CN_FACILITATE_VERBS = r'便于|促进|完成|实现|执行|支持|有助于'
+    _CN_FACILITATE_X_DE_Y_RE = re.compile(
+        r'(?:' + _CN_FACILITATE_VERBS + r')'
+        r'([一-鿿]{2,8})'
+        r'的[一-鿿]{1,8}'
+    )
+    for fv_m in _CN_FACILITATE_X_DE_Y_RE.finditer(text):
+        x_term = fv_m.group(1)
+        if x_term not in seen_norms and len(x_term) >= 2:
+            seen_norms.add(x_term)
+            extras.append((fv_m.group(0), x_term))
+
     # R37 (2026-05-04): mirror of TW R37 F22 — list-item bare-noun
     # extraction WITHOUT colon trigger. CN parity: parent claim
     # introduces multiple components in `<verb><N1>、<N2>以及<N3>`
