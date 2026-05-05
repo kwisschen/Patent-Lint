@@ -7,6 +7,7 @@ import { Button } from './ui/button'
 import { FrostCard } from './ui/frost-card'
 import { StatusPill } from './ui/status-pill'
 import { composeFeedback, sendReport, excerptAround, SAMPLE_SIZE } from '../lib/feedback'
+import { groupTier, TIER_HIGH } from '../lib/confidenceTier'
 import { useFeedback } from './FeedbackPicker'
 import ReportModal from './ReportModal'
 
@@ -348,6 +349,10 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
 
 export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }) {
   const { t, i18n } = useTranslation()
+  // Phase 5 tier filter (default OFF — preserves existing UX). When ON,
+  // hides groups whose findings are all below the high-conf tier per
+  // the calibrated TIER_THRESHOLDS in confidenceTier.js.
+  const [highConfOnly, setHighConfOnly] = useState(false)
 
   if (!issues || issues.length === 0) return null
 
@@ -396,6 +401,21 @@ export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }
 
   const totalFindings = issues.length
 
+  // Phase 5 tier filter: assign each group's tier based on its findings'
+  // max confidence_score (per groupTier helper). Default-show all groups;
+  // when filter is on, show only groups with at least one high-conf finding.
+  const groupsWithTier = groups.map((g) => ({
+    ...g,
+    tier: groupTier(g.findings, jurisdiction),
+  }))
+  const visibleGroups = highConfOnly
+    ? groupsWithTier.filter((g) => g.tier === TIER_HIGH)
+    : groupsWithTier
+  const highConfGroupCount = groupsWithTier.filter(
+    (g) => g.tier === TIER_HIGH
+  ).length
+  const hasMixedTiers = highConfGroupCount > 0 && highConfGroupCount < groupsWithTier.length
+
   return (
     <FrostCard tier="resting" accent="attention">
       <div className="flex items-center gap-3 px-4 py-3 pl-5">
@@ -405,8 +425,25 @@ export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }
           {totalFindings} {totalFindings !== 1 ? t('antecedentBasis.findings') : t('antecedentBasis.finding')}
         </StatusPill>
       </div>
+      {hasMixedTiers && (
+        <div className="flex items-center justify-end gap-2 border-t border-border/40 px-4 py-2 text-xs">
+          <span className="text-muted-foreground">
+            {t('antecedentBasis.tierFilter.label', 'Filter:')}
+          </span>
+          <Button
+            variant={highConfOnly ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setHighConfOnly(!highConfOnly)}
+            className="h-7 text-xs"
+          >
+            {highConfOnly
+              ? t('antecedentBasis.tierFilter.showAll', 'Show all ({{count}})', { count: groupsWithTier.length })
+              : t('antecedentBasis.tierFilter.showHighConf', 'High confidence only ({{count}})', { count: highConfGroupCount })}
+          </Button>
+        </div>
+      )}
       <div className="border-t border-border/40 px-1 py-1">
-        {groups.map((group, i) => (
+        {visibleGroups.map((group, i) => (
           <ClaimGroupRow
             key={i}
             claimIds={group.claimIds}
