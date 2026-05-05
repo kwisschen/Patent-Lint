@@ -262,7 +262,12 @@
   "antecedentBasis": {
     "title": "引用基础检查",
     "findings": "项问题",
-    "finding": "项问题"
+    "finding": "项问题",
+    "tierFilter": {
+      "label": "筛选：",
+      "showAll": "显示全部（{{count}} 项）",
+      "showHighConf": "仅显示高置信度（{{count}} 项）"
+    }
   },
   "antecedent": {
     "didYouMean": "您是否指的是“{{term}}”（于权利要求{{claim_id}}中引入）？",
