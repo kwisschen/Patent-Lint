@@ -468,7 +468,7 @@
       "title": "Interaktive Prüfung von CN-Patentanmeldungen",
       "claimTree": {
         "title": "Anspruchsbaum & 引用基础-Walker",
-        "description": "Anspruchsbaum mit Breitensuch-Walker für 引用基础 (Rückbezug) auf CJK-Bigramm-Basis — durchläuft die gesamte Anspruchskette, kein flacher 符号说明-Abgleich. Thematische Konsistenz, Rückzitatsformat und Bezugszeichen-Klammern inklusive."
+        "description": "Anspruchsbaum mit Breitensuch-Walker für 引用基础 (Rückbezug) auf CJK-Bigramm-Basis — durchläuft die gesamte Anspruchskette. Thematische Konsistenz, Rückzitatsformat und Bezugszeichen-Klammern inklusive."
       },
       "specAbstract": {
         "title": "Prüfungen für Beschreibung & Zusammenfassung",

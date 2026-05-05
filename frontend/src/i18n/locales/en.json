@@ -468,7 +468,7 @@
       "title": "Interactive CN patent analysis",
       "claimTree": {
         "title": "Claim tree + 引用基础 walker",
-        "description": "Dependency tree with a BFS antecedent walker over CJK bigrams — traverses the full claim chain, not a flat 符号说明 lookup. Subject consistency, dependency format, and bracketed reference numerals included."
+        "description": "Dependency tree with a BFS antecedent walker over CJK bigrams covering the full claim chain. Subject consistency, dependency format, and bracketed reference numerals included."
       },
       "specAbstract": {
         "title": "Specification & abstract checks",
