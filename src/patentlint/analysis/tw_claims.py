@@ -628,6 +628,23 @@ def check_circular_dependency(doc: TwPatentDocument) -> list[CheckItem]:
         if not claim.independent:
             cycle = has_cycle(claim.id)
             if cycle:
+                # R65 (2026-05-05): suppress cycles whose closing edge is
+                # itself a self-loop — those are already flagged by
+                # check_self_dependent with the same root cause. The cycle
+                # detector reports "5 → 4" when c5.deps=[4] and c4.deps=[4]
+                # (c4's self-loop), but that's not a true mutual cycle
+                # between distinct claims. True multi-hop cycles
+                # (c5↔c6 mutual; c7→c8→c9→c7 ring) have last cycle claim's
+                # first dep pointing at a DIFFERENT claim already in path.
+                terminal_id = cycle[-1]
+                terminal_claim = claims_by_id.get(terminal_id)
+                if (
+                    terminal_claim is not None
+                    and terminal_claim.dependencies == [terminal_id]
+                ):
+                    # Self-loop on the terminal claim → redundant with
+                    # selfDependent; skip.
+                    continue
                 claims_str = " → ".join(str(i) for i in cycle)
                 return [CheckItem(
                     status="amend",

@@ -1111,8 +1111,11 @@ class TestTwInventionMultiFail:
         )
         keys = {c.message_key for c in all_checks if c.status in ("amend", "verify")}
 
+        # R65 (2026-05-05): symbolTablePresence.amend deduplicated against
+        # requiredSections.amend. Both flagged the same defect; canonical
+        # is requiredSections (broader §25 第1項 + §17 cite).
         expected_keys = {
-            "check.tw.spec.symbolTablePresence.amend",
+            "check.tw.spec.requiredSections.amend",
             "check.tw.spec.paragraphNumbering.amendGap",
             "check.tw.claims.forwardDependency.amend",
             "check.tw.abstract.commercialLanguage.amend",
