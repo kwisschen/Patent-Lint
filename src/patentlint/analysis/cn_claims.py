@@ -1145,6 +1145,13 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "介",
         "位",
         "或",
+        # R62 (2026-05-05) ATTEMPTED but REVERTED — trailing 和/与/及 strip
+        # caused 2 protect:true label silencing + 6 unresolved_removed in
+        # the CN harness. The risk audit underestimated noun compounds
+        # ending in 和 (e.g., 总和 sum, 平和 balance, 缓和 mitigation) —
+        # these ARE element-name candidates in chemistry/measurement
+        # claims. Held off pending finer-grained guard (e.g., minimum
+        # residual length + protected-suffix list) before re-attempting.
         "中",
         "后",
         "用",
