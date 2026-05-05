@@ -609,6 +609,8 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                                 suggested_match
                                 and suggested_match.get("claim_id") == claim.id
                             ),
+                            reference_form=reference_form,
+                            jurisdiction="US",
                         )
                         issues.append({
                             "claim_id": claim.id,
