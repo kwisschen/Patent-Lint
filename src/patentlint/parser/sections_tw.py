@@ -50,6 +50,19 @@ _SECTION_MAP: dict[str, str] = {
     # Body sections
     "技術領域": "technical_field",
     "先前技術": "prior_art",
+    # R64 (2026-05-05): TIPO drafters use 背景技術 interchangeably with
+    # 先前技術 (both are accepted prior-art section names per 專利法
+    # 施行細則 §17 commentary). Adding aliases prevents 0002/0003
+    # paragraphs from being orphaned and dropping out of paragraph_numbers
+    # (which then triggered a false 0001→0004 gap report on
+    # 神秘黑屏哥.docx).
+    "背景技術": "prior_art",
+    # Sub-headers under 先前技術 / 背景技術 that drafters use to organize
+    # literature citations. TIPO accepts these as part of the prior-art
+    # discussion, not separate sections.
+    "先前技術文獻": "prior_art",
+    "專利文獻": "prior_art",
+    "非專利文獻": "prior_art",
     "發明內容": "disclosure",
     "新型內容": "disclosure",
     "圖式簡單說明": "drawings_description",

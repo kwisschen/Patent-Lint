@@ -1460,6 +1460,33 @@ _NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以並
 # paren is part of the legitimate element identity (符號說明 entry name).
 _PAREN_NUM_TRAIL_RE = re.compile(r"[(（][0-9A-Za-z]{1,5}$")
 
+# R64 (2026-05-05): display-side ordinal restoration. Walker normalizes
+# 第1 → 第一 (Arabic→CJK) for matching parity with intros. For UI display
+# the drafter's original ordinal form is preferred — showing 前述第一間隔件
+# when the draft uses 前述第1間隔件 causes confusion ("the report says
+# something different than my draft"). Pure additive — only restores
+# when raw has Arabic AND normalized has CJK at the corresponding
+# ordinal position.
+_ARABIC_TO_CJK_ORDINAL = (
+    ("一", "1"), ("二", "2"), ("三", "3"), ("四", "4"), ("五", "5"),
+    ("六", "6"), ("七", "7"), ("八", "8"), ("九", "9"), ("十", "10"),
+)
+
+
+def _restore_original_ordinals(normalized: str, raw: str) -> str:
+    """If raw drafter text used Arabic ordinals, restore them in display form.
+
+    Walker normalize_reference_term converts 第1 → 第一 (CJK) for symmetric
+    matching against intros. This helper maps the normalized form back to
+    the drafter's surface form for UI display, so the user sees the same
+    ordinal style they wrote.
+    """
+    out = normalized
+    for cjk, ar in _ARABIC_TO_CJK_ORDINAL:
+        if f"第{cjk}" in normalized and f"第{ar}" in raw:
+            out = out.replace(f"第{cjk}", f"第{ar}")
+    return out
+
 # Introduction patterns — ordered longest-first so 至少一個 / 複數個 are
 # matched as single tokens before their shorter prefixes (一 / 複數). The
 # regex returns the noun via group 1; the (?:...) alternation in group 0
@@ -3498,6 +3525,36 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
             continue
         results.append((m.group(0), normalized))
 
+    # F7d (R64, 2026-05-05): bare locative `於X的Y` — captures X.
+    # User-reported on 神秘黑屏哥.docx c10:
+    #   `於半導體基板的一主面上，藉由...`
+    # Drafter introduces 半導體基板 via this locative phrase. Walker's
+    # main intro pattern misses it (no quantifier prefix). F7a captures
+    # the post-的 noun (Y); this complement captures the pre-的 noun (X)
+    # which IS the introduced element in `於X的Y` shape.
+    #
+    # Risk-managed scoping:
+    #   1. 於 must follow a clause boundary or claim start (not mid-noun)
+    #   2. X must be ≥ 3 CJK chars
+    #   3. X must not start with reference prefix (前述/所述/該/該等/該些)
+    #   4. X stops at first non-noun char (excluded set + 的)
+    # Without (3), `於前述X的Y` would re-register X as a fresh intro.
+    _BARE_YU_X_DE_RE = re.compile(
+        r"(?:^|[，、。；\n　])"
+        r"於([^\s，。；：、及與和之的該將能須應皆被於以並且其而還另時在更前所]{3,12})"
+        r"的"
+    )
+    for m in _BARE_YU_X_DE_RE.finditer(text):
+        candidate = m.group(1)
+        # Defensive: re-check no ref-prefix (regex char class might admit some)
+        if any(candidate.startswith(p) for p in _REF_PREFIX_SET):
+            continue
+        # Floor: ≥3 CJK chars
+        cjk_len = sum(1 for c in candidate if '一' <= c <= '鿿')
+        if cjk_len < 3:
+            continue
+        results.append((m.group(0), candidate))
+
     # F7a: 形成於X的Y — locative intro (last 的NOUN before clause boundary)
     for pos in (i for i, ch in enumerate(text) if text[i:i + 3] == '形成於'):
         clause_start = pos + 3
@@ -4209,6 +4266,21 @@ def check_antecedent_basis(
     for claim in claims:
         chain = get_ancestor_chain_tw(claim, claims)
 
+        # R64 (2026-05-05): suppress walker emit when the chain doesn't
+        # terminate at an independent claim (chain[-1].dependencies is
+        # non-empty after BFS — signals a self-loop / cycle / dangling
+        # parent ref upstream). The structural defect is surfaced
+        # separately via selfDependent / circularDependency checks; the
+        # cascading antecedent findings on every dependent of the broken
+        # claim are confusing UX (the user sees "前述X not introduced"
+        # for terms that ARE introduced in claim 1 but the chain just
+        # can't reach there).
+        # Empirical: 神秘黑屏哥.docx c4 deps=[4] (self-loop drafter typo)
+        # propagates to c5 deps=[4] producing 7 cascade findings.
+        # User-reported bug 2026-05-05.
+        if chain and chain[-1].dependencies:
+            continue
+
         # Map normalized intro term → (shallowest ancestor id, BFS depth).
         # Iteration order (chain[0] = current claim @ depth 0, chain[1] =
         # nearest parent @ depth 1, ...) means setdefault preserves the
@@ -4417,7 +4489,12 @@ def check_antecedent_basis(
                 continue
             seen_terms.add(normalized_term)
 
-            reference_form = f"{prefix}{normalized_term}"
+            # R64 (2026-05-05): preserve drafter's original ordinal form
+            # for display. Walker matches on CJK-normalized term but UI
+            # showing 第一 when draft has 第1 confuses the user. Restore
+            # Arabic ordinal in displayed reference_form when raw has it.
+            display_term = _restore_original_ordinals(normalized_term, raw_noun)
+            reference_form = f"{prefix}{display_term}"
 
             # Resolution order:
             #   1. Exact normalized match against any ancestor intro.

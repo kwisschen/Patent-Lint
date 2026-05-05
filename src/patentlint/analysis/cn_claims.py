@@ -1081,6 +1081,24 @@ _NOUN_CHARS_CN = r"[^\s，。；：、及与和之的该将能须应皆被于以
 # extends the noun by 1 char if claim.text[match_end] is `)` or `）`.
 _PAREN_NUM_TRAIL_RE_CN = re.compile(r"[(（][0-9A-Za-z]{1,5}$")
 
+# R64 (2026-05-05) TW parity: display-side ordinal restoration. Walker
+# normalizes 第1 → 第一 (Arabic→CJK) for matching; UI display preserves
+# drafter's original ordinal style.
+_ARABIC_TO_CJK_ORDINAL_CN = (
+    ("一", "1"), ("二", "2"), ("三", "3"), ("四", "4"), ("五", "5"),
+    ("六", "6"), ("七", "7"), ("八", "8"), ("九", "9"), ("十", "10"),
+)
+
+
+def _restore_original_ordinals_cn(normalized: str, raw: str) -> str:
+    """Mirror of TW _restore_original_ordinals; preserves Arabic ordinals
+    in displayed reference_form when drafter wrote them that way."""
+    out = normalized
+    for cjk, ar in _ARABIC_TO_CJK_ORDINAL_CN:
+        if f"第{cjk}" in normalized and f"第{ar}" in raw:
+            out = out.replace(f"第{cjk}", f"第{ar}")
+    return out
+
 # Introduction multi-char quantifiers (TC→SC glyph swap).
 _INTRO_MULTI_QUANTIFIERS_CN = (
     "一或多个",
@@ -2288,6 +2306,29 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
     """
     results: list[tuple[str, str]] = []
 
+    # F7d (R64, 2026-05-05) TW parity: bare locative `于X的Y` — captures X.
+    # Same scoping as TW F7d:
+    #   1. 于 must follow a clause boundary or claim start
+    #   2. X must be ≥ 3 CJK chars
+    #   3. X must not start with reference prefix (前述/所述/该/该等/该些)
+    # Conservative: CN drafters use 在X上 / 在X中 more than 于X的, so
+    # this pattern's hit rate may be low — but adding for cross-jurisdiction
+    # symmetry with TW F7d (which surfaced the user-reported 半导体基板
+    # missed-intro on 神秘黑屏哥.docx).
+    _BARE_YU_X_DE_RE_CN = re.compile(
+        r"(?:^|[，、。；\n　])"
+        r"于([^\s，。；：、及与和之的该将能须应皆被于以并且其而还另时在前所]{3,12})"
+        r"的"
+    )
+    for m in _BARE_YU_X_DE_RE_CN.finditer(text):
+        candidate = m.group(1)
+        if any(candidate.startswith(p) for p in _REFERENCE_FORM_PREFIXES_CN):
+            continue
+        cjk_len = sum(1 for c in candidate if '一' <= c <= '鿿')
+        if cjk_len < 3:
+            continue
+        results.append((m.group(0), candidate))
+
     # F7b: 一V的Y — participial
     for m in _PARTICIPIAL_YI_DE_PATTERN_CN.finditer(text):
         noun = m.group(1)
@@ -3087,6 +3128,15 @@ def check_antecedent_basis_cn(
     for claim in claims:
         chain = get_ancestor_chain_cn(claim, claims)
 
+        # R64 (2026-05-05) TW parity: suppress walker emit when chain
+        # doesn't terminate at an independent claim (broken chain via
+        # self-loop / cycle / dangling parent ref upstream). The
+        # structural defect surfaces separately via selfDependent /
+        # circularDependency checks; cascading antecedent findings are
+        # confusing UX.
+        if chain and chain[-1].dependencies:
+            continue
+
         intros_by_term: dict[str, tuple[int, int]] = {}
         for depth, ancestor in enumerate(chain):
             for _, normalized in extract_introductions_cn(
@@ -3258,7 +3308,11 @@ def check_antecedent_basis_cn(
                 continue
             seen_terms.add(dedup_key)
 
-            reference_form = normalized_reference_form
+            # R64 (2026-05-05) TW parity: dedup uses CJK-normalized
+            # reference_form (matching parity); displayed reference_form
+            # restores drafter's original Arabic ordinals.
+            display_term = _restore_original_ordinals_cn(normalized_term, raw_noun)
+            reference_form = f"{prefix}{display_term}"
 
             resolved_intro: str | None = None
             if normalized_term in intros_by_term:
