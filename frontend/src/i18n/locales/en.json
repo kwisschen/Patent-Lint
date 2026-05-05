@@ -403,16 +403,16 @@
     "usFeatures": {
       "title": "Interactive US patent analysis",
       "claimTree": {
-        "title": "Claim tree & § 112 walker",
-        "description": "Interactive dependency tree for multi-dependent and multi-independent structures, backed by a § 112 walker covering antecedent basis (§ 112(b)) and written-description support (§ 112(a)) — cross-linked when the same term fails both — plus Markush, Jepson, means-plus-function, and transitional-phrase checks."
+        "title": "Claim tree + § 112 walker",
+        "description": "Dependency tree for multi-dependent and multi-independent claims, with a § 112 walker covering antecedent basis (b) and written-description support (a) — cross-linked when one term fails both."
       },
       "specAbstract": {
         "title": "Specification & abstract structure",
-        "description": "Section ordering (MPEP § 608.01(a)), paragraph numbering (§ 608.01(p)), abstract word count (§ 608.01(b)), and figure-reference cross-checks between the drawings and the detailed description, among others."
+        "description": "Section ordering (§ 608.01(a)), paragraph numbering (§ 608.01(p)), abstract word count (§ 608.01(b)), and figure-reference cross-checks."
       },
       "specSupport": {
-        "title": "Restrictive wording & drafting guards",
-        "description": "Detects indefinite or limiting terms (\"must,\" \"always,\" \"invention\") across claims, specification, and abstract per § 2173.05(b); flags CRM claims missing the \"non-transitory\" qualifier under § 101."
+        "title": "Restrictive wording & § 101 guards",
+        "description": "Indefinite or limiting wording flagged per § 2173.05(b); CRM claims checked for the \"non-transitory\" qualifier under § 101."
       }
     },
     "uspto": {
@@ -467,16 +467,16 @@
     "cnFeatures": {
       "title": "Interactive CN patent analysis",
       "claimTree": {
-        "title": "Claim structure & antecedent-basis walker",
-        "description": "Interactive claim dependency tree with multi-dependent rendering, plus a BFS antecedent-basis walker using CJK bigram tokenization, subject-matter consistency, dependency-citation format, and bracketed reference-numeral checks."
+        "title": "Claim tree + 引用基础 walker",
+        "description": "Dependency tree with a BFS antecedent walker over CJK bigrams — traverses the full claim chain, not a flat 符号说明 lookup. Subject consistency, dependency format, and bracketed reference numerals included."
       },
       "specAbstract": {
         "title": "Specification & abstract checks",
-        "description": "Five-section ordering (专利法实施细则 §20), paragraph-ending punctuation, figure-reference consistency across 附图说明 and 具体实施方式, and the 300-character abstract limit (§26), among others."
+        "description": "Section ordering (§20), paragraph endings, figure-reference consistency, and the 300-character abstract limit (§26)."
       },
       "dualPipeline": {
-        "title": "五书模板 + CNIPA XML dual pipeline",
-        "description": "The same checks run over CPC 五书模板 Word drafts and CNIPA ST.36 XML filings; 段落编号 rules apply per input format (manual [NNNN] forbidden in .docx, sequential in XML)."
+        "title": "五书模板 + CNIPA XML",
+        "description": "Same checks across CPC 五书模板 Word drafts and CNIPA ST.36 XML filings; 段落编号 rules adapt per format."
       }
     },
     "cnGroups": {
@@ -524,16 +524,16 @@
     "twFeatures": {
       "title": "Interactive TW patent analysis",
       "claimTree": {
-        "title": "Claim tree & § 26(3) walker",
-        "description": "Interactive claim dependency tree backed by a 專利法 §26 第3項 walker covering both antecedent basis (先行詞) and written-description support (說明書支持) — cross-linked when the same term fails both — plus two-part-form checks (其特徵在於 / 其改良在於), single-sentence rule, and reference-recitation independent-claim handling (一種X，具備如請求項N所述的Y). A 4-tier CJK-aware matcher (symbol-table / normalized / raw / character-window) keeps false positives low."
+        "title": "Claim tree + 先行詞 walker",
+        "description": "Full claim-chain BFS walker for 先行詞 and 說明書支持 (§26 第3項) — goes beyond TIPO 偵錯系統's 符號說明 lookup-table comparison to catch real drafting gaps in the chain."
       },
       "specAbstract": {
         "title": "Specification & abstract checks",
-        "description": "Section ordering per 專利法施行細則 §17, paragraph-ending punctuation with strict/relaxed rules per section, figure-reference cross-checks, and the 250-character abstract limit (§21), among others."
+        "description": "Section ordering (§17), paragraph endings with per-section rules, figure-reference cross-checks, and the 250-character abstract limit (§21)."
       },
       "symbolTable": {
-        "title": "符號說明 cross-check (TW-specific)",
-        "description": "TW-only 符號說明 tables parsed natively and cross-checked against 實施方式, 圖式簡單說明, and 代表圖 symbol usage — no other jurisdiction has this section."
+        "title": "符號說明 cross-check (TW-only)",
+        "description": "TW-only 符號說明 parsed and cross-checked against 實施方式, 圖式簡單說明, and 代表圖 symbols — no other jurisdiction has this section."
       }
     },
     "tw": {

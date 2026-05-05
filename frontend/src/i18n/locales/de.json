@@ -404,15 +404,15 @@
       "title": "Interaktive Prüfung von US-Patentanmeldungen",
       "claimTree": {
         "title": "Anspruchsbaum & § 112-Walker",
-        "description": "Interaktiver Abhängigkeitsbaum für mehrfach abhängige und mehrfach unabhängige Strukturen, unterstützt von einem § 112-Walker für Rückbezug (§ 112(b)) und Stützung in der Beschreibung (§ 112(a)) — querverlinkt, wenn derselbe Begriff in beiden fehlt — sowie Prüfungen für Markush, Jepson, funktionelle Merkmalsangaben und Übergangsbegriffe."
+        "description": "Anspruchsbaum für mehrfach abhängige und mehrfach unabhängige Strukturen mit § 112-Walker für Rückbezug (b) und Stützung in der Beschreibung (a) — querverlinkt, wenn derselbe Begriff in beiden Prüfungen scheitert."
       },
       "specAbstract": {
         "title": "Struktur von Beschreibung & Zusammenfassung",
-        "description": "Abschnittsreihenfolge (MPEP § 608.01(a)), Absatznummerierung (§ 608.01(p)), Wortzahl der Zusammenfassung (§ 608.01(b)) und Querbezüge zwischen den Zeichnungen und der ausführlichen Beschreibung, unter anderem."
+        "description": "Abschnittsreihenfolge (§ 608.01(a)), Absatznummerierung (§ 608.01(p)), Wortzahl der Zusammenfassung (§ 608.01(b)) sowie Zeichnungs-Querbezüge."
       },
       "specSupport": {
-        "title": "Einschränkende Formulierungen & Ausarbeitungs-Guards",
-        "description": "Erkennt unklare oder einschränkende Begriffe („must“, „always“, „invention“) in Ansprüchen, Beschreibung und Zusammenfassung gemäß § 2173.05(b); kennzeichnet CRM-Ansprüche, bei denen der Zusatz „non-transitory“ gemäß § 101 fehlt."
+        "title": "Einschränkende Formulierungen & § 101-Guard",
+        "description": "Unklare oder einschränkende Begriffe gemäß § 2173.05(b); CRM-Ansprüche werden auf den „non-transitory“-Zusatz nach § 101 geprüft."
       }
     },
     "uspto": {
@@ -467,16 +467,16 @@
     "cnFeatures": {
       "title": "Interaktive Prüfung von CN-Patentanmeldungen",
       "claimTree": {
-        "title": "Anspruchsstruktur & Rückbezugs-Walker",
-        "description": "Interaktiver Anspruchs-Abhängigkeitsbaum mit Mehrfachabhängigkeits-Rendering, ergänzt durch einen BFS-Rückbezugs-Walker mit CJK-Bigramm-Tokenisierung, Prüfung der Gegenstands-Konsistenz, Format der Abhängigkeitszitate und geklammerter Bezugszeichen."
+        "title": "Anspruchsbaum & 引用基础-Walker",
+        "description": "Anspruchsbaum mit Breitensuch-Walker für 引用基础 (Rückbezug) auf CJK-Bigramm-Basis — durchläuft die gesamte Anspruchskette, kein flacher 符号说明-Abgleich. Thematische Konsistenz, Rückzitatsformat und Bezugszeichen-Klammern inklusive."
       },
       "specAbstract": {
         "title": "Prüfungen für Beschreibung & Zusammenfassung",
-        "description": "Fünf-Abschnitts-Reihenfolge (专利法实施细则 §20), Satzzeichen am Absatzende, Konsistenz der Figurenbezüge zwischen 附图说明 und 具体实施方式 sowie die 300-Zeichen-Grenze der Zusammenfassung (§26), unter anderem."
+        "description": "Abschnittsreihenfolge (§20), Satzzeichen am Absatzende, Konsistenz der Bezugszeichen sowie die 300-Zeichen-Grenze der Zusammenfassung (§26)."
       },
       "dualPipeline": {
-        "title": "五书模板 + CNIPA-XML-Dual-Pipeline",
-        "description": "Dieselben Prüfungen laufen über CPC-五书模板-Word-Entwürfe und CNIPA-ST.36-XML-Einreichungen; 段落编号-Regeln gelten je nach Eingabeformat (manuelles [NNNN] in .docx unzulässig, fortlaufend in XML)."
+        "title": "五书模板 + CNIPA-XML",
+        "description": "Gleiche Prüfungen für CPC-五书模板-Word-Entwürfe und CNIPA-ST.36-XML-Einreichungen; 段落编号-Regeln passen sich dem Format automatisch an."
       }
     },
     "cnGroups": {
@@ -525,15 +525,15 @@
       "title": "Interaktive Prüfung von TW-Patentanmeldungen",
       "claimTree": {
         "title": "Anspruchsbaum & § 26(3)-Walker",
-        "description": "Interaktiver Anspruchs-Abhängigkeitsbaum, unterstützt von einem 專利法 §26 第3項-Walker für Rückbezug (先行詞) und Stützung in der Beschreibung (說明書支持) — querverlinkt, wenn derselbe Begriff in beiden fehlt — sowie Prüfungen der zweiteiligen Anspruchsform (其特徵在於 / 其改良在於), der Ein-Satz-Regel und der Referenz-Rezitation in unabhängigen Ansprüchen (一種X，具備如請求項N所述的Y). Ein 4-stufiger CJK-Matcher (Bezugszeichenliste / normalisiert / roh / Zeichenfenster) hält False Positives gering."
+        "description": "Vollständiger Anspruchsketten-BFS-Walker für 先行詞 (Rückbezug) und 說明書支持 (Stützung) — geht über den 符號說明-Lookup-Vergleich des TIPO 偵錯系統 hinaus und erkennt echte Drafting-Lücken in der Kette."
       },
       "specAbstract": {
         "title": "Prüfungen für Beschreibung & Zusammenfassung",
-        "description": "Abschnittsreihenfolge gemäß 專利法施行細則 §17, Satzzeichen am Absatzende mit strengen/lockeren Regeln je Abschnitt, Querbezüge der Figuren und die 250-Zeichen-Grenze der Zusammenfassung (§21), unter anderem."
+        "description": "Abschnittsreihenfolge (§17), abschnittsspezifische Satzzeichenregeln am Absatzende, Zeichnungs-Querbezüge sowie die 250-Zeichen-Grenze der Zusammenfassung (§21)."
       },
       "symbolTable": {
         "title": "符號說明-Querabgleich (TW-spezifisch)",
-        "description": "TW-spezifische 符號說明-Tabellen werden nativ geparst und gegen die Bezugszeichen in 實施方式, 圖式簡單說明 und 代表圖 abgeglichen — keine andere Jurisdiktion hat diesen Abschnitt."
+        "description": "TW-spezifische 符號說明-Tabellen werden nativ geparst und gegen die Bezugszeichen in 實施方式, 圖式簡單說明 und 代表圖 abgeglichen — diese Sektion existiert nur in TW."
       }
     },
     "tw": {
