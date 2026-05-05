@@ -262,7 +262,12 @@
   "antecedentBasis": {
     "title": "선행사 기초 검토",
     "findings": "건",
-    "finding": "건"
+    "finding": "건",
+    "tierFilter": {
+      "label": "필터: ",
+      "showAll": "전체 표시 ({{count}}건)",
+      "showHighConf": "높은 신뢰도만 표시 ({{count}}건)"
+    }
   },
   "antecedent": {
     "didYouMean": "혹시 '{{term}}' (청구항 {{claim_id}}에서 도입됨)을 의미하셨나요?",

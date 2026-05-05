@@ -29,6 +29,35 @@ _CLAIM_BLOCK = re.compile(
     re.DOTALL,
 )
 
+# PDF→text whitespace collapse: dep-preamble "of claim N" sometimes loses
+# its space ("ofclaim N") in machine-translated/PDF-extract pipelines. The
+# walker then fails to match the dep-preamble exclusion and emits the
+# whole "the X ofclaim N" as a §112(b) reference. Normalize so downstream
+# regexes (incl. _DEP_REF above and the dep-preamble body-scan exclusion)
+# see canonical spacing. Idempotent on already-spaced text.
+#
+# R35 (2026-05-04): widened from `of\s*claims?` to `(of|to)\s*claims?`.
+# US round-1 corpus has 564 `toclaim N` occurrences (`according toclaim 7`)
+# in addition to 10316 `ofclaim` occurrences — same root cause (Google
+# Patents PDF→HTML extraction collapses prep-then-claim whitespace).
+# Without `to` coverage, dep-claims using `according to claim N` form
+# parsed as independent → broken chain → walker_fp inflation.
+_OFCLAIM_FIX = re.compile(r"\b(of|to)\s*(claims?)\b", re.IGNORECASE)
+
+# R35 (2026-05-04): claim-number → following-word boundary fix. After
+# the OFCLAIM normalization above, US corpus still has 1257 occurrences
+# of `claim N<word>` (no space between digit and following letter):
+# `claim 1wherein` 825x, `claim 1further` 214x, `claim 1comprising` 105x,
+# `claim 1where` 36x, etc. Python regex `\b` requires a non-word char
+# between the digit and the next letter to fire — without this fix, the
+# `_DEP_REF` regex (`claims?\s+\d+\b`) misses these and the affected
+# dep-claim falls back to independent classification → ancestor chain
+# empty → walker emits spurious antecedent findings on every body
+# reference. Idempotent on already-spaced text.
+_CLAIM_NUM_BOUNDARY_FIX = re.compile(
+    r"(\bclaims?\s+\d+)([a-zA-Z])", re.IGNORECASE
+)
+
 # Pattern to detect multiple dependency
 _MULTIPLE_DEP = re.compile(
     r"claim(s)?\s+\d+\s*(to|and|or|-)\s*(claim(s)?\s+)?\d+",
@@ -119,7 +148,13 @@ def parse_claims(claims_text: str) -> list[Claim]:
     claims = []
     for match in _CLAIM_BLOCK.finditer(cleaned):
         claim_number = int(match.group(1))
-        claim_text = match.group(2).strip()
+        # Lowercase the preposition (of/to) to match the original
+        # ofclaim-fix behavior; preserve the `Claim`/`claim` capitalization.
+        claim_text = _OFCLAIM_FIX.sub(
+            lambda m: f"{m.group(1).lower()} {m.group(2)}",
+            match.group(2).strip(),
+        )
+        claim_text = _CLAIM_NUM_BOUNDARY_FIX.sub(r"\1 \2", claim_text)
 
         independent = not _DEP_REF.search(claim_text)
         multiple_dependent = bool(_MULTIPLE_DEP.search(claim_text))

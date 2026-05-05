@@ -6,7 +6,10 @@ from __future__ import annotations
 
 import pytest
 
-from patentlint.analysis.cjk_ordinal_guard import ordinal_guard
+from patentlint.analysis.cjk_ordinal_guard import (
+    normalize_arabic_ordinal_to_cjk,
+    ordinal_guard,
+)
 
 
 class TestNumericOrdinal:
@@ -102,3 +105,87 @@ class TestSymmetry:
     ])
     def test_symmetric(self, a, b):
         assert ordinal_guard(a, b) == ordinal_guard(b, a)
+
+
+class TestNormalizeArabicOrdinalToCjk:
+    """R33 walker-mine M2: half-width Arabic ordinals fold to CJK form."""
+
+    def test_single_digit(self):
+        assert normalize_arabic_ordinal_to_cjk("第1電極") == "第一電極"
+        assert normalize_arabic_ordinal_to_cjk("第2電極") == "第二電極"
+        assert normalize_arabic_ordinal_to_cjk("第9電極") == "第九電極"
+
+    def test_two_digit_teens(self):
+        assert normalize_arabic_ordinal_to_cjk("第10端子") == "第十端子"
+        assert normalize_arabic_ordinal_to_cjk("第11端子") == "第十一端子"
+        assert normalize_arabic_ordinal_to_cjk("第19端子") == "第十九端子"
+
+    def test_two_digit_round_tens(self):
+        assert normalize_arabic_ordinal_to_cjk("第20部") == "第二十部"
+        assert normalize_arabic_ordinal_to_cjk("第90部") == "第九十部"
+
+    def test_two_digit_compound(self):
+        assert normalize_arabic_ordinal_to_cjk("第25層") == "第二十五層"
+        assert normalize_arabic_ordinal_to_cjk("第99層") == "第九十九層"
+
+    def test_already_cjk_unchanged(self):
+        # Idempotent on already-CJK form (no 第N+digit pattern present)
+        assert normalize_arabic_ordinal_to_cjk("第一電極") == "第一電極"
+        assert normalize_arabic_ordinal_to_cjk("第二十五層") == "第二十五層"
+
+    def test_three_or_more_digits_unchanged(self):
+        # Element-label range; not normalized to avoid mis-handling
+        # rare large ordinals or label numbers like 第100段
+        assert normalize_arabic_ordinal_to_cjk("第123段") == "第123段"
+        assert normalize_arabic_ordinal_to_cjk("第1000部") == "第1000部"
+
+    def test_paren_label_untouched(self):
+        # Element labels in parens (101) lack a leading 第, so they
+        # must NOT be normalized — only the ordinal prefix is.
+        assert normalize_arabic_ordinal_to_cjk("第1電極(101)") == "第一電極(101)"
+        assert normalize_arabic_ordinal_to_cjk("第2端子（202）") == "第二端子（202）"
+
+    def test_no_di_unchanged(self):
+        # Fast path: no 第 in text → return as-is
+        assert normalize_arabic_ordinal_to_cjk("電極") == "電極"
+        assert normalize_arabic_ordinal_to_cjk("123") == "123"
+        assert normalize_arabic_ordinal_to_cjk("") == ""
+
+    def test_multiple_ordinals(self):
+        assert normalize_arabic_ordinal_to_cjk("第1電極與第2電極") == "第一電極與第二電極"
+
+    def test_di_without_digit_unchanged(self):
+        # 第 followed by CJK numeral or non-digit → no transformation
+        assert normalize_arabic_ordinal_to_cjk("第十電極") == "第十電極"
+        assert normalize_arabic_ordinal_to_cjk("第A型") == "第A型"
+
+
+class TestNormalizeIntegration:
+    """End-to-end: TW + CN normalize_reference_term*/normalize_candidate_intro*
+    fold 第1/第2 with 第一/第二 for matching purposes (round-1 cluster T1 + CN parity).
+    """
+
+    def test_tw_reference_normalize_folds_arabic_ordinal(self):
+        from patentlint.analysis.tw_claims import (
+            normalize_candidate_intro,
+            normalize_reference_term,
+        )
+        # Same component — JP-translated style vs canonical TW style
+        ref_arabic = normalize_reference_term("該第1電極")
+        ref_cjk = normalize_reference_term("該第一電極")
+        assert ref_arabic == ref_cjk
+        intro_arabic = normalize_candidate_intro("一第1電極")
+        intro_cjk = normalize_candidate_intro("一第一電極")
+        assert intro_arabic == intro_cjk
+
+    def test_cn_reference_normalize_folds_arabic_ordinal(self):
+        from patentlint.analysis.cn_claims import (
+            normalize_candidate_intro_cn,
+            normalize_reference_term_cn,
+        )
+        ref_arabic = normalize_reference_term_cn("所述第1电极")
+        ref_cjk = normalize_reference_term_cn("所述第一电极")
+        assert ref_arabic == ref_cjk
+        intro_arabic = normalize_candidate_intro_cn("一第1电极")
+        intro_cjk = normalize_candidate_intro_cn("一第一电极")
+        assert intro_arabic == intro_cjk

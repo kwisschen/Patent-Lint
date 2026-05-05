@@ -11,9 +11,16 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from patentlint.analysis.cjk_ordinal_guard import ordinal_guard
+from patentlint.analysis.cjk_ordinal_guard import (
+    normalize_arabic_ordinal_to_cjk,
+    ordinal_guard,
+)
 from patentlint.analysis.cjk_tokenize import jaccard, tokenize_cn
-from patentlint.analysis.utils import _dx
+from patentlint.analysis.utils import (
+    _dx,
+    compute_confidence_score,
+    make_document_dedup_key,
+)
 from patentlint.analysis.connection_relationships import (
     _CN_CONNECTION_CONFIG,
     check_connection_relationships,
@@ -1193,6 +1200,26 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "覆盖", "分离", "比较", "判断", "决定", "分析",
         "包括以下", "执行以下", "进行以下",
         "执行以下操作", "执行以下操",
+        # === R32 (2026-05-04) — passive trailing residue ===
+        # 被: passive marker (`<noun>被<verb>`). Compound nouns ending in
+        #   `被` are vanishingly rare in CN patent claims (棉被/被服 are
+        #   household items, not patent terms). Empirically: walker emits
+        #   `单元被`/`子单元被` from CN114357105B c12/c15 spec-support FPs
+        #   where bare `单元`/`子单元` is the canonical intro.
+        #
+        # NOT included: 通信/通讯. Initially considered, but corpus audit
+        # showed compound NOUNS like `侧链路中继通信` / `无线通信` use
+        # 通信 as HEAD noun at suffix position; symmetric strip would
+        # bridge legit-flagged refs to bare `侧链路中继` and silence 7
+        # protect:false legit-drafting-error labels in CN115398975B c1-8
+        # (LLM ensemble Phase 2c verified). Reserved for a context-aware
+        # mechanism (verb-mode vs noun-mode) outside R32 scope.
+        '被',
+        # === R32 (2026-05-04) — verb-suffix trailing residues (CN parity) ===
+        # Cluster-mined from round-1 CN corpus.
+        '延伸',  # 51 walker_fp / 0 legit. (Risk audited per TW.)
+        '指示',  # 42 walker_fp / 0 legit. Verb form ("indicate").
+                # NOTE: 指示牌 / 指示灯 noun compounds at PREFIX position.
         # === R30 (2026-05-03) — sample-derived adverbial / adjectival trims
         # 进一步: adverbial ("further"), fragment of 进一步包括/进一步具有.
         #   Multi-char so safe against noun compounds (第一步/一步走 unaffected).
@@ -1498,6 +1525,37 @@ def clean_noun_phrase_cn(text: str) -> str:
             if current[-1] != '\u57fa' or current[-2] not in _CHEMISTRY_BEFORE_JI_CN:
                 current = current[:-1]
 
+    # R54 (2026-05-05): regex-based verb-phrase trailing strip.
+    # Catches over-capture patterns the literal allowlist doesn't cover:
+    #   `\u9501\u626d\u6574\u4f53\u5448\u5706\u67f1\u5f62` \u2192 `\u9501\u626d` (\u6574\u4f53\u5448X = "overall is X" descriptor)
+    #   `\u7ea4\u7ef4\u6750\u6599\u8f74\u5411\u5730\u6392\u5217` \u2192 `\u7ea4\u7ef4\u6750\u6599` (XY\u5730ZW = adverbial-verb suffix)
+    # Both confirmed walker over-capture per user 2026-05-05 phone-judge
+    # (CN103443870A c19, CN106654630B c10).
+    #
+    # Adverbial regex constrains the pre-\u5730 portion to 2-3 chars (typical
+    # CN adverbials: \u8f74\u5411, \u5e73\u7a33, \u5782\u76f4, \u81ea\u52a8). Wider {1,4} bracket consumed
+    # head-noun chars greedily (`\u7ea4\u7ef4\u6750\u6599\u8f74\u5411\u5730\u6392\u5217` \u2192 `\u7ea4\u7ef4`); narrower
+    # {2,3} leaves head noun intact (`\u7ea4\u7ef4\u6750\u6599`).
+    #
+    # Verb portion 1-3 chars (\u6392\u5217, \u8fd0\u52a8, \u5f62\u6210).
+    # Head-noun group \u22652 chars (residual guard).
+    _R54_OVERALL_DESC = re.compile(
+        r'^([\u4e00-\u9fff]{2,})\u6574\u4f53\u5448[\u4e00-\u9fff]{1,8}$'
+    )
+    _R54_ADVERBIAL_VERB = re.compile(
+        r'^([\u4e00-\u9fff]{2,})[\u4e00-\u9fff]{2,3}\u5730[\u4e00-\u9fff]{1,3}$'
+    )
+    for _ in range(4):
+        before = current
+        m = _R54_OVERALL_DESC.match(current)
+        if m:
+            current = m.group(1)
+        m = _R54_ADVERBIAL_VERB.match(current)
+        if m:
+            current = m.group(1)
+        if current == before:
+            break
+
     return current
 
 
@@ -1514,6 +1572,16 @@ _POSSESSIVE_其_PREFIX_RE_CN: re.Pattern[str] = re.compile(
 )
 
 
+# R32 (2026-05-04): leading conjunction-residue strip. CN drafters use
+# `和/或X` (and/or X) constructions in lists. Walker captures `/或X` as
+# leading residue when the conjunction-split mechanism fails on the
+# slash. Empirical: `/或第二功能模块` from CN115485995B c12 spec-support FP
+# where canonical intro is `第二功能模块`.
+_LEADING_CONJ_RESIDUE_RE_CN: re.Pattern[str] = re.compile(
+    r'^(?:/或|/和|和/或|或/|/)'
+)
+
+
 def strip_leading_quantifier_cn(text: str) -> str:
     """Strip one matching leading quantifier (ADR-095 Rule 2).
 
@@ -1522,6 +1590,10 @@ def strip_leading_quantifier_cn(text: str) -> str:
     """
     if not text:
         return text
+    # R32: leading conjunction residue (`/或`, `和/或`) strip
+    m = _LEADING_CONJ_RESIDUE_RE_CN.match(text)
+    if m and len(text) - m.end() >= 2:
+        text = text[m.end():]
     m = _AT_LEAST_N_PREFIX_RE_CN.match(text)
     if m and len(text) - m.end() >= 2:
         text = text[m.end():]
@@ -1601,8 +1673,13 @@ def normalize_reference_term_cn(
     R7 (2026-04-30): + strip_leading_verb_cn for `所述形成p型源极／漏极`
     style references that carry a leading verb prefix (符号见 ADR-095
     addendum / TW R7 commit).
+
+    R33 (2026-05-04): + normalize_arabic_ordinal_to_cjk at the head so
+    JP-translated drafts using `第1` / `第2` collapse with canonical
+    `第一` / `第二` intros for matching purposes.
     """
-    t = strip_reference_form_prefix_cn(text)
+    t = normalize_arabic_ordinal_to_cjk(text)
+    t = strip_reference_form_prefix_cn(t)
     t = strip_leading_qualifier_cn(t, strict_qualifier_matching=strict_qualifier_matching)
     t = clean_noun_phrase_cn(t)
     t = strip_leading_quantifier_cn(t)
@@ -1629,7 +1706,8 @@ def normalize_candidate_intro_cn(
     the _INTRO_PATTERN_CN captures a reference-prefix artifact as part
     of the bare noun group.
     """
-    t = strip_leading_qualifier_cn(text, strict_qualifier_matching=strict_qualifier_matching)
+    t = normalize_arabic_ordinal_to_cjk(text)
+    t = strip_leading_qualifier_cn(t, strict_qualifier_matching=strict_qualifier_matching)
     t = clean_noun_phrase_cn(t)
     t = strip_leading_quantifier_cn(t)
     t = strip_reference_form_prefix_cn(t)
@@ -2051,7 +2129,22 @@ _F10_NOUN_REJECTS_CN: tuple[str, ...] = (
 # stripped to surface bare X. Residual ≥ 2 protects compound nouns
 # starting with 有 (有限/有机/有效) — those are 2-char with residual 0/1
 # after strip, so still protected.
-_LEADING_VERB_PREFIXES_CN: tuple[str, ...] = ('形成', '制造', '有')
+_LEADING_VERB_PREFIXES_CN: tuple[str, ...] = tuple(sorted(
+    (
+        '形成', '制造', '有',
+        # R32 (2026-05-04): connective-verb prefixes — TW parity.
+        # Empirical: `即根据各数字内容` / `使得各数字内容关联` shape leaks
+        # into spec-support via shared extract_introductions_cn helper.
+        # Multi-char longest-first.
+        '即根据', '即基于', '即依据', '即依照',
+        '根据', '基于', '依据', '依照',
+        '为了', '借以', '借由', '通过',
+        '使得', '使其', '从而', '进而', '并且',
+        '用以', '用于',
+    ),
+    key=len,
+    reverse=True,
+))
 _LEADING_VERB_RESIDUAL_FLOOR_CN: int = 2
 
 
@@ -2143,13 +2236,21 @@ _F19_VERB_NP_ZHI_RE_CN = re.compile(
     r'[之的]'
 )
 
-# F20 — `(以|借由|透过|经由) X (verb)` instrumental intro. `以` excluded
-# when followed by `及` (conjunction `以及`).
+# F20 — `(以|借由|透过|经由|将) X (verb)` instrumental/object intro.
+# `以` excluded when followed by `及` (conjunction `以及`).
+# R41 (2026-05-04): added `将` (instrumental object marker, very
+# common in CN claims for `将<noun><verb>` constructions like
+# `将第一激发光输出`/`将信号发送`/`将数据传输`). Extended trailing-
+# verb list with output/send/transmit/etc. to cover the most common
+# 将-shape cases. Phase A on post-R36 corpus showed CN `发光` cluster
+# 48 wfp / 0 legit (top: `第二激发光` 14, `第一激发光` 13) — parent
+# claim 1 introduces 第一激发光 via `将第一激发光输出` shape that
+# F20 didn't recognize.
 _F20_PREP_NP_VERB_RE_CN = re.compile(
-    r'(?:以(?!及)|借由|透过|经由)'
+    r'(?:以(?!及)|借由|透过|经由|将)'
     r'(?P<noun>' + _F14_NOUN_CLASS_CN + r'{2,8}'
     r'(?:\([A-Za-z0-9]+\))?)'
-    r'(?:夹持|覆盖|包含|包括|具有|含有|具备|设有|设置|配置|形成|构成|连接|连结|提供|分隔|划分|实施|分为|构建|测量|蚀刻|除去|装设|安装)'
+    r'(?:夹持|覆盖|包含|包括|具有|含有|具备|设有|设置|配置|形成|构成|连接|连结|提供|分隔|划分|实施|分为|构建|测量|蚀刻|除去|装设|安装|输出|输入|发送|接收|传输|传送|生成|获取|获得|确定|存储|读取|写入|执行|处理|计算)'
 )
 
 
@@ -2564,8 +2665,15 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
     # full and abbrev so later `所述<Abbr>` references resolve.
     # Phase 2c Refinement B (Christopher: LHT/VH-region pattern is common).
     # CN form: `中心单元-控制面(CU-CP)`, `超参数自适应选择策略单元(HASS)`.
+    # R34 (2026-05-04): mirror of TW R34 widening \u2014 accept full-width
+    # \u5168\u89d2 parens AND lowercase-full-form-then-uppercase-abbrev shape
+    # (`\u7528\u6237\u8bbe\u5907(user equipment, UE)`). Cross-jurisdiction parity.
     _PAREN_ABBREV_RE_R30 = re.compile(
-        r'([\u4e00-\u9fff]{2,12})\(([A-Z][A-Za-z0-9\-]{0,15})\)'
+        r'([\u4e00-\u9fff]{2,12})'
+        r'[(\uff08]\s*'
+        r'(?:[a-z][A-Za-z0-9\- ]{0,40}[,;\uff0c\uff1b]\s*)?'
+        r'([A-Z][A-Za-z0-9\-]{0,15})'
+        r'\s*[)\uff09]'
     )
     for pa_m in _PAREN_ABBREV_RE_R30.finditer(text):
         full_noun = pa_m.group(1)
@@ -2576,6 +2684,147 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
         if full_noun not in seen_norms:
             seen_norms.add(full_noun)
             extras.append((pa_m.group(0), full_noun))
+
+    # R50 (2026-05-05): Chinese-name-Latin-abbrev juxtaposition (no parens).
+    # Drafters introduce telecom/protocol acronyms via Chinese-then-Latin
+    # format with NO parens between them: `所述IGP报文包括类型长度值TLV`
+    # introduces both 类型长度值 (the descriptor) AND TLV (the acronym).
+    # Phase 1 cluster `SHAPE|CN|ASCII_UPPER:SHORT` (81 wfp / 0 legit on
+    # supplement_v2 corpus, 2026-05-05).
+    #
+    # Trigger: must be preceded by Pattern B-style introducer
+    # (`包括`/`包含`/`为`/`是`) so we don't over-extract from random
+    # Chinese-Latin neighbor pairs.
+    #
+    # Boundary check after the Latin abbrev: punctuation, common
+    # particles, sentence end. Prevents the regex from greedily eating
+    # into mixed-script compound nouns where Latin and Chinese are
+    # genuinely distinct tokens.
+    #
+    # Both the Chinese descriptor and Latin acronym register as intros;
+    # the walker's normal exact-match resolves `所述TLV` references
+    # against the Latin form.
+    _CN_LATIN_ABBREV_RE = re.compile(
+        r'(?:包括|包含|为|是)\s*'
+        r'([一-鿿]{2,12})'
+        r'([A-Z][A-Za-z0-9]{1,4})'
+        r'(?=[，。；,;:、(（]|的|所述|实施|是|为|具有|$|\s)'
+    )
+    for la_m in _CN_LATIN_ABBREV_RE.finditer(text):
+        chinese = la_m.group(1)
+        latin = la_m.group(2)
+        if latin not in seen_norms and len(latin) >= 2:
+            seen_norms.add(latin)
+            extras.append((la_m.group(0), latin))
+        if chinese not in seen_norms:
+            seen_norms.add(chinese)
+            extras.append((la_m.group(0), chinese))
+
+    # R50b (2026-05-05): AF-style Pattern A preamble juxtaposition.
+    # Drafters embed acronyms in Pattern A preambles via function-role
+    # suffix anchoring:
+    #
+    #   `一种由与通信网络相关联的应用功能AF实施的方法`
+    #            └──── 应用功能AF: 应用功能 = "application function" descriptor,
+    #                              AF = "Application Function" acronym
+    #
+    # Phase 1 supplement_v2 cluster SHAPE|CN|ASCII_UPPER:SHORT residual
+    # 52 wfp after R50 (R50 only handles 包括/包含-triggered shapes).
+    #
+    # Anchor: well-known telecom/protocol function-role suffixes that
+    # ALWAYS signal "<noun phrase><suffix><acronym>" pattern. Narrow
+    # allowlist so we don't over-extract from random Chinese-Latin
+    # neighbor pairs. Drafters universally use these CJK suffixes for
+    # functional/network entities — high precision.
+    _CN_FUNCTION_SUFFIXES = (
+        r'功能|服务|系统|网络|设备|单元|协议|平面|层|消息|报文|网元|节点'
+    )
+    _CN_FUNCTION_LATIN_ABBREV_RE = re.compile(
+        r'([一-鿿]{1,8}(?:' + _CN_FUNCTION_SUFFIXES + r'))'
+        r'([A-Z][A-Za-z0-9]{1,4})'
+        r'(?=[，。；,;:、(（]|的|所述|实施|是|为|具有|包括|包含|$|\s)'
+    )
+    for la_m in _CN_FUNCTION_LATIN_ABBREV_RE.finditer(text):
+        chinese = la_m.group(1)
+        latin = la_m.group(2)
+        if latin not in seen_norms and len(latin) >= 2:
+            seen_norms.add(latin)
+            extras.append((la_m.group(0), latin))
+        if chinese not in seen_norms:
+            seen_norms.add(chinese)
+            extras.append((la_m.group(0), chinese))
+
+    # R51 (2026-05-05): facilitate-verb verbal-noun introduction.
+    # CN method-claim drafters introduce verbal nouns via constructions
+    # like `便于操作的执行` ("facilitates operation's execution") where
+    # 操作 (the operation) is intended as a noun-introduction. Subsequent
+    # `所述操作` references should resolve.
+    #
+    # Phase 1 supplement_v2 cluster `TAIL|CN|操作` + `HEAD|CN|操作`
+    # (65 wfp / 0 legit, 13 distinct drafts).
+    #
+    # Trigger verbs limited to clear "facilitate/realize" semantics. NOT
+    # 用于 (for-use-of, much broader and risks over-extraction). NOT
+    # 使 / 让 (causative, too generic).
+    #
+    # Pattern: <facilitate-verb> <X> 的 <Y>
+    #   register X as intro (Y is captured by other extractors)
+    _CN_FACILITATE_VERBS = r'便于|促进|完成|实现|执行|支持|有助于'
+    _CN_FACILITATE_X_DE_Y_RE = re.compile(
+        r'(?:' + _CN_FACILITATE_VERBS + r')'
+        r'([一-鿿]{2,8})'
+        r'的[一-鿿]{1,8}'
+    )
+    for fv_m in _CN_FACILITATE_X_DE_Y_RE.finditer(text):
+        x_term = fv_m.group(1)
+        if x_term not in seen_norms and len(x_term) >= 2:
+            seen_norms.add(x_term)
+            extras.append((fv_m.group(0), x_term))
+
+    # R37 (2026-05-04): mirror of TW R37 F22 — list-item bare-noun
+    # extraction WITHOUT colon trigger. CN parity: parent claim
+    # introduces multiple components in `<verb><N1>、<N2>以及<N3>`
+    # comma-list shape:
+    #   `导电端子包括差分信号端子、第一接地端子以及第二接地端子`
+    # Trigger verbs limited to `包括`/`包含` (most reliable list verbs).
+    # Each item must be 2-12 pure CJK chars (filters out fragments
+    # with embedded Latin/digit/punctuation). Reference-prefix items
+    # are skipped (they're not new intros).
+    # R44 (2026-05-04): expand triggers to 具有/具备/设有/含有 BUT only
+    # when the captured list has >=2 commas (3+ items) — single-comma
+    # lists with these triggers were too noisy on R37/R38 gate-3
+    # spec-support test. 3+ items strongly signal a list (not a
+    # possessive or modifier sequence).
+    _F22_NO_COLON_LIST_CN = re.compile(
+        r'(?:包括|包含)'
+        r'((?:[一-鿿]{2,12}[、，])+'
+        r'(?:[一-鿿]{2,12}(?:以及|及|和|或))?'
+        r'[一-鿿]{2,12})'
+        r'|'
+        r'(?:具有|具备|设有|含有)'
+        r'((?:[一-鿿]{2,12}[、，]){2,}'
+        r'(?:[一-鿿]{2,12}(?:以及|及|和|或))?'
+        r'[一-鿿]{2,12})'
+    )
+    _F22_LIST_SPLIT_CN = re.compile(r'[、，]|以及|及|和|或')
+    for fl_m in _F22_NO_COLON_LIST_CN.finditer(text):
+        # Either group 1 (包括/包含 with >=1 comma) or group 2
+        # (具有/具备/设有/含有 with >=2 commas) captures the list.
+        list_text = fl_m.group(1) or fl_m.group(2)
+        if not list_text:
+            continue
+        for item_raw in _F22_LIST_SPLIT_CN.split(list_text):
+            item = item_raw.strip()
+            if not item or len(item) < 2:
+                continue
+            if item.startswith(_REF_PREFIX_SET_CN):
+                continue
+            if not all('一' <= ch <= '鿿' for ch in item):
+                continue
+            if item in seen_norms:
+                continue
+            seen_norms.add(item)
+            extras.append((fl_m.group(0), item))
 
     return cleaned + extras
 
@@ -2816,6 +3065,88 @@ def check_antecedent_basis_cn(
             ):
                 intros_by_term.setdefault(normalized, (ancestor.id, depth))
 
+        # R32 (2026-05-04): Path A equivalent for CN — chain-level
+        # ordinal-prefix bridging. Mirror of TW R32. Two guards:
+        #   1. Multi-modifier ambiguity (no other 第N+suffix in chain).
+        #   2. Prefix-conflict (suffix not followed by 1-3 CJK in claim
+        #      text outside the ordinal-prefixed source intro itself).
+        _R32_ORDINAL_RE_CN = re.compile(r'^第[一二三四五六七八九十百0-9]+')
+        suffix_count_chain_cn: dict[str, int] = {}
+        suffix_anchor_chain_cn: dict[str, tuple[int, int]] = {}
+        for norm, (ancestor_id, depth) in intros_by_term.items():
+            mo = _R32_ORDINAL_RE_CN.match(norm)
+            if not mo:
+                continue
+            suffix = norm[mo.end():]
+            if len(suffix) < 2:
+                continue
+            suffix_count_chain_cn[suffix] = suffix_count_chain_cn.get(suffix, 0) + 1
+            existing = suffix_anchor_chain_cn.get(suffix)
+            if existing is None or depth < existing[1]:
+                suffix_anchor_chain_cn[suffix] = (ancestor_id, depth)
+        for suffix, count in suffix_count_chain_cn.items():
+            if count > 1:
+                continue
+            if suffix in intros_by_term:
+                continue
+            conflict_re = re.compile(re.escape(suffix) + r'[一-鿿]{1,3}')
+            has_conflict = False
+            for ancestor in chain:
+                full_re = re.compile(r'第[一二三四五六七八九十百0-9]+' + re.escape(suffix))
+                consumed = full_re.sub('', ancestor.text)
+                if conflict_re.search(consumed):
+                    has_conflict = True
+                    break
+            if has_conflict:
+                continue
+            intros_by_term[suffix] = suffix_anchor_chain_cn[suffix]
+
+        # R52-CN (2026-05-05): head-noun-suffix bridging for compound nouns.
+        # CN parity of TW R52 (commit 930ad0c). When a chain intro is
+        # `<modifier><HEAD>` where HEAD is a known compound head-noun
+        # suffix (Simplified script), register `<HEAD>` separately so dep
+        # claims using the bare head can resolve.
+        #
+        # Phase 1 supplement_v2 cluster `TAIL|CN|导体层` (31 wfp / 0 legit)
+        # and similar patterns. CN drafters of chemistry/materials claims
+        # use Pattern A on full compound (e.g. `半导体导体层`) but back-
+        # reference using just the head (`所述导体层`).
+        #
+        # Architectural mirror of R32 ordinal bridge + R52 TW:
+        #   1. Multi-modifier ambiguity guard
+        #   2. Conflict guard (HEAD already an intro)
+        #   3. Suffix allowlist — Simplified-script equivalents of TW R52
+        _R52_HEAD_SUFFIXES_CN = (
+            # Pharma/chemistry (R52-CN original)
+            "组合物", "化合物", "溶液", "溶剂", "配方",
+            "混合物", "复合物", "产物", "药剂", "抗体",
+            "导体层", "聚合物",
+            # R56-CN (2026-05-05): electronic/circuit head nouns
+            # (Simplified parity of R56 TW). Phase 1 supplement_v2.
+            "电路系统", "晶体管", "区块链", "管理功能",
+            "参考电压", "定位辅助", "操作单元",
+            "指令集", "传送信息",
+        )
+        head_count_cn: dict[str, int] = {}
+        head_anchor_cn: dict[str, tuple[int, int]] = {}
+        for norm, (ancestor_id, depth) in intros_by_term.items():
+            for suffix in _R52_HEAD_SUFFIXES_CN:
+                if (
+                    norm.endswith(suffix)
+                    and len(norm) > len(suffix)
+                ):
+                    head_count_cn[suffix] = head_count_cn.get(suffix, 0) + 1
+                    existing = head_anchor_cn.get(suffix)
+                    if existing is None or depth < existing[1]:
+                        head_anchor_cn[suffix] = (ancestor_id, depth)
+                    break
+        for suffix, count in head_count_cn.items():
+            if count > 1:
+                continue
+            if suffix in intros_by_term:
+                continue
+            intros_by_term[suffix] = head_anchor_cn[suffix]
+
 
         # Q1 tw_contamination rejection pre-pass. The TC-plural prefixes
         # 该等 / 该些 are not valid in CN drafting (CNIPA审查指南 uses 所述).
@@ -2847,6 +3178,16 @@ def check_antecedent_basis_cn(
                 "suggested_match": None,
                 "cross_ref": None,
                 "category": "tw_contamination",
+                "document_dedup_key": make_document_dedup_key(
+                    normalized_term or raw_noun, prefix
+                ),
+                # Q1 path is a rule-based detection of TC-plural prefixes
+                # (该等/该些) on a CN doc. Not pattern-based — the prefix
+                # alone is the violation under CNIPA审查指南 guidance to
+                # use 所述. Very rarely a false positive in practice;
+                # ship a fixed high confidence so the tier-display knob
+                # treats these as high-confidence by default.
+                "confidence_score": 90,
             }
             if not normalized_term:
                 finding["note"] = "cleanup_empty"
@@ -2897,6 +3238,21 @@ def check_antecedent_basis_cn(
                     ):
                         best_len = len(intro)
                         resolved_intro = intro
+
+            # R46 (2026-05-04): mirror of TW R46 — ordinal-prefix-to-
+            # Latin-abbrev bridge. Reference `第N<X>` where X is short
+            # uppercase Latin abbrev (2-5 chars) and `<X>` is registered
+            # as an intro -> bridge. Common in CN 5G/wireless drafts.
+            if resolved_intro is None:
+                m_ord = re.match(r'^第[一二三四五六七八九十百0-9]+', normalized_term)
+                if m_ord:
+                    bare = normalized_term[m_ord.end():]
+                    if (
+                        bare and 2 <= len(bare) <= 5
+                        and bare.isupper() and bare.isascii()
+                        and bare in intros_by_term
+                    ):
+                        resolved_intro = bare
 
             # R29 (2026-05-03) — Resolution-side architectural mechanisms
             # (forward-prefix with boundary, symmetric clean, cross-branch
@@ -3018,6 +3374,22 @@ def check_antecedent_basis_cn(
                     suggested_match and suggested_match.get("cross_branch")
                 ) if suggested_match else False,
             }
+            confidence_score = compute_confidence_score(
+                term=normalized_term,
+                prefix=prefix,
+                intros_pool_size=len(intros_by_term),
+                has_suggested_match=suggested_match is not None,
+                suggested_cross_branch=bool(
+                    suggested_match and suggested_match.get("cross_branch")
+                ),
+                suggested_jaccard=best_score if suggested_match else None,
+                suggested_same_claim=bool(
+                    suggested_match
+                    and suggested_match.get("claim_id") == claim.id
+                ),
+                reference_form=reference_form,
+                jurisdiction="CN",
+            )
             issues.append(
                 {
                     "claim_id": claim.id,
@@ -3027,6 +3399,10 @@ def check_antecedent_basis_cn(
                     "suggested_match": suggested_match,
                     "cross_ref": None,
                     "diagnostics": diagnostics,
+                    "document_dedup_key": make_document_dedup_key(
+                        normalized_term, reference_form
+                    ),
+                    "confidence_score": confidence_score,
                 }
             )
 

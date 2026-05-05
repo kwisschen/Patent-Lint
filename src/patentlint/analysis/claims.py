@@ -15,7 +15,9 @@ from patentlint.analysis.en_normalize import en_number_key
 from patentlint.analysis.utils import (
     _DEFINITE_REF, _QUANTIFIER_STOPS, _dx,
     extract_introductions, extract_introductions_permissive,
+    extract_pattern_a_intros,
     extract_abbreviation_intros, clean_noun_phrase,
+    compute_confidence_score, make_document_dedup_key,
     strip_contextual_verb, token_set_jaccard,
 )
 from patentlint.diagnostic_extractors import extract_special_format
@@ -244,12 +246,47 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
         chain = get_ancestor_chain(claim, claims)
         claim_text_lower = claim.text.lower()
 
+        # R32-US (2026-05-04): exclude dep preamble from body-reference
+        # scan ONLY when entity-consistent with parent. The dep preamble
+        # (`The X of claim N`) refers back to the parent via `of claim N`;
+        # if X matches the parent's head noun, scanning it as body text
+        # produces 2300+ walker_fp emissions (`method ofclaim 1`-shape).
+        # When X DOESN'T match the parent's head noun, it's a real §112(b)
+        # entity-mismatch drafting error (e.g., US11740393B2 c9: `The
+        # energy harvesting system of claim 1` but c1 introduces `image
+        # capturing system`). Body scan must still flag those.
+        #
+        # Use same-length whitespace mask so char offsets in downstream
+        # context-extraction still align with the original claim text.
+        dep_m = _DEP_PREAMBLE.match(claim.text)
+        body_scan_text = claim_text_lower
+        if dep_m:
+            dep_head_str = dep_m.group(2).strip()
+            parent_claim_id = int(dep_m.group(3))
+            dep_head = _extract_head_noun(dep_head_str)
+            parent_claim = next((c for c in claims if c.id == parent_claim_id), None)
+            parent_head = None
+            if parent_claim:
+                parent_info = _preamble_head_info(parent_claim)
+                if parent_info:
+                    parent_head = parent_info[0]
+            if dep_head and parent_head and _heads_match(dep_head, parent_head):
+                body_scan_offset = dep_m.end()
+                body_scan_text = (
+                    (' ' * body_scan_offset) + claim_text_lower[body_scan_offset:]
+                )
+
         # Gather all introductions, tracking the ancestor claim each came from.
         # When the same intro phrase appears in multiple ancestors, prefer the
         # lowest claim id (the earliest claim that introduced the term) so
         # did-you-mean attributes references to the original intro, not a
         # re-mention in a nearer ancestor.
         intros_by_term: dict[str, int] = {}
+        # R42 (2026-05-04): track which intros came from
+        # `extract_abbreviation_intros` separately so a downstream
+        # multi-abbrev bridge can recognize compound references
+        # like `the MAC PDU` against parent abbrev intros `MAC`+`PDU`.
+        abbrev_intros: set[str] = set()
 
         def _record(phrase: str, ancestor_id: int) -> None:
             existing = intros_by_term.get(phrase)
@@ -262,6 +299,121 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                 _record(phrase, ancestor.id)
             for abbrev_intro in extract_abbreviation_intros(ancestor.text):
                 _record(abbrev_intro, ancestor.id)
+                # Bare lowercase abbrev (no trailing word) → confirmed
+                # abbreviation. Multi-word forms (`mac protocol data unit`)
+                # are excluded from the abbrev set; we want only the
+                # compact acronym entries.
+                if abbrev_intro.isalpha() and 2 <= len(abbrev_intro) <= 5:
+                    abbrev_intros.add(abbrev_intro)
+
+        # R32-US (2026-05-04): head-noun-from-intro. Promote the LAST
+        # word of multi-word Pattern A intros as a separate intro entry
+        # so a body reference like `the method` resolves against an intro
+        # `method for delivering an e-commerce order` (head noun of the
+        # apparatus-claim preamble).
+        #
+        # Three guards (audited against round-1 705-draft US corpus):
+        #
+        #   1. Pattern A only — promoted heads come from
+        #      `extract_pattern_a_intros` (strict `a/an X` matches), NOT
+        #      from `extract_bare_noun_intros` (comprising lists with
+        #      gerund phrases like `collecting information`) or
+        #      self-definition / wherein-bare-subject extractors. The
+        #      gerund-phrase exclusion preserves protect:true label
+        #      US20240185203A1 c1 `the information` (real §112(b) defect
+        #      where `information` was first introduced via the gerund
+        #      `collecting information`, not via Pattern A).
+        #
+        #   2. Multi-modifier ambiguity — if 2+ Pattern A intros share
+        #      the same last word (e.g., `first surface` + `second
+        #      surface`), bare `surface` is statutorily ambiguous and
+        #      MUST stay flagged. Preserves US7839645B2 c15 protect:true
+        #      `the surface`.
+        #
+        #   3. Last-word floor of 4 chars + _SKIP_TERMS / _QUANTIFIER_STOPS
+        #      exclusion — prevents over-resolution on common short
+        #      ambiguous tokens (set/data/user/one/two).
+        pattern_a_phrases: list[tuple[str, int]] = []
+        for ancestor in chain:
+            for phrase in extract_pattern_a_intros(ancestor.text):
+                pattern_a_phrases.append((phrase, ancestor.id))
+
+        last_word_count: dict[str, int] = {}
+        for phrase, _ in pattern_a_phrases:
+            words = phrase.split()
+            if len(words) < 2:
+                continue
+            lw = words[-1].strip(' ,.;:()')
+            last_word_count[lw] = last_word_count.get(lw, 0) + 1
+
+        for phrase, ancestor_id in pattern_a_phrases:
+            words = phrase.split()
+            if len(words) < 2:
+                continue
+            last_word = words[-1].strip(' ,.;:()')
+            if len(last_word) < 4:
+                continue
+            if last_word in _SKIP_TERMS:
+                continue
+            if last_word in _QUANTIFIER_STOPS:
+                continue
+            if last_word in intros_by_term:
+                continue
+            if last_word_count.get(last_word, 0) > 1:
+                continue
+            _record(last_word, ancestor_id)
+
+        # R40 (2026-05-04): leading-bigram registration with
+        # participle-suffix gate. Phase A on the post-R36 corpus
+        # showed `aggregate metric` 75 wfp / 0 legit — parent intro
+        # `aggregate metric indicative` over-captures the trailing
+        # `indicative` (an `-ive` participle) before hitting `of`
+        # stop word. Bare reference `the aggregate metric` doesn't
+        # match.
+        #
+        # Mechanism: for a 3-word Pattern A intro `<W1> <W2> <W3>`,
+        # register the leading bigram `<W1> <W2>` IF AND ONLY IF
+        # the third word ends in `-ive`/`-ing`/`-ed`/`-able`/`-ous`/
+        # `-ory`/`-ant`/`-ent` (typical participle/adjective endings
+        # that signal over-capture, NOT a real compound noun head).
+        # This excludes the test case `common voltage difference
+        # circuit` (`circuit` is a real noun head) so the existing
+        # `test_long_intro_does_not_mask_short_reference` regression
+        # gate stays green.
+        _PARTICIPLE_SUFFIX = (
+            'ive', 'ing', 'ed', 'able', 'ous', 'ory', 'ant', 'ent',
+        )
+        leading_bigram_count: dict[str, int] = {}
+        for phrase, _ in pattern_a_phrases:
+            words = phrase.split()
+            if len(words) == 3:
+                tail = words[-1].strip(' ,.;:()').lower()
+                if any(tail.endswith(suf) for suf in _PARTICIPLE_SUFFIX):
+                    bg = ' '.join(words[:2]).strip(' ,.;:()')
+                    leading_bigram_count[bg] = leading_bigram_count.get(bg, 0) + 1
+
+        for phrase, ancestor_id in pattern_a_phrases:
+            words = phrase.split()
+            if len(words) != 3:
+                continue
+            tail = words[-1].strip(' ,.;:()').lower()
+            if not any(tail.endswith(suf) for suf in _PARTICIPLE_SUFFIX):
+                continue
+            bigram = ' '.join(words[:2]).strip(' ,.;:()')
+            bg_words = bigram.split()
+            if len(bg_words) != 2:
+                continue
+            if any(len(w) < 3 for w in bg_words):
+                continue
+            if len(bigram) < 7:
+                continue
+            if any(w in _SKIP_TERMS or w in _QUANTIFIER_STOPS for w in bg_words):
+                continue
+            if bigram in intros_by_term:
+                continue
+            if leading_bigram_count.get(bigram, 0) > 1:
+                continue
+            _record(bigram, ancestor_id)
 
         intros = set(intros_by_term.keys())
 
@@ -272,7 +424,7 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
 
         # Find definite references ("the X" and "said X") in this claim
         seen: set[tuple[str, str]] = set()
-        for m in _DEFINITE_REF.finditer(claim_text_lower):
+        for m in _DEFINITE_REF.finditer(body_scan_text):
             term = clean_noun_phrase(m.group("noun").strip())
             term = strip_contextual_verb(term, claim_text_lower[m.end():])
             if not term:
@@ -287,12 +439,26 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
             ):
                 continue
             # Primary: bidirectional word-boundary exact match.
-            # Fallback: ADR-095 Rule 3 analogue — number-agnostic key match
-            # for plural-intro / singular-reference pairs.
+            # Fallback 1: ADR-095 Rule 3 analogue — number-agnostic key
+            # match for plural-intro / singular-reference pairs.
+            # Fallback 2 (R42): multi-abbrev compound bridge — when the
+            # reference is exactly N short uppercase-acronym words and
+            # EVERY component is a registered abbreviation intro from
+            # the chain (`MAC PDU` ref vs intros `MAC` + `PDU`), accept.
+            # Reference compound is a defined-term juxtaposition; both
+            # halves were established as separate abbrev intros via
+            # `<full term> (ABBR)` parenthetical definitions.
             has_basis = any(
                 _word_boundary_match(intro, term) and _word_boundary_match(term, intro)
                 for intro in intros
             ) or en_number_key(term) in intros_by_number_key
+            if not has_basis and abbrev_intros:
+                term_words = term.split()
+                if (
+                    2 <= len(term_words) <= 4
+                    and all(w in abbrev_intros for w in term_words)
+                ):
+                    has_basis = True
 
             if not has_basis:
                 if term not in _SKIP_TERMS and not term.startswith("fig") and not term.startswith("claim"):
@@ -429,6 +595,23 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                                 and suggested_match.get("cross_branch")
                             ) if suggested_match else False,
                         }
+                        confidence_score = compute_confidence_score(
+                            term=term,
+                            prefix=prefix,
+                            intros_pool_size=len(intros_by_term),
+                            has_suggested_match=suggested_match is not None,
+                            suggested_cross_branch=bool(
+                                suggested_match
+                                and suggested_match.get("cross_branch")
+                            ),
+                            suggested_jaccard=fb_best_score if suggested_match else None,
+                            suggested_same_claim=bool(
+                                suggested_match
+                                and suggested_match.get("claim_id") == claim.id
+                            ),
+                            reference_form=reference_form,
+                            jurisdiction="US",
+                        )
                         issues.append({
                             "claim_id": claim.id,
                             "term": term,
@@ -437,6 +620,10 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                             "suggested_match": suggested_match,
                             "cross_ref": None,
                             "diagnostics": diagnostics,
+                            "document_dedup_key": make_document_dedup_key(
+                                term, reference_form
+                            ),
+                            "confidence_score": confidence_score,
                         })
 
     issues.sort(key=lambda x: (x["claim_id"], x["term"], x["reference_form"]))
@@ -483,7 +670,16 @@ _DEP_PREAMBLE = re.compile(
     #   "The X as claimed in claim N"  (British form)
     #   "The X as recited in claim N"
     #   "The X as set forth in claim N"
-    r"^(The|An?)\s+(.*?)\s+"
+    #
+    # R32-US (2026-05-04): leading `\d+\.` claim-number prefix tolerated
+    # (Claim.text often retains the parser's claim number); connector→
+    # claim spacing relaxed from \s+ to \s* so Google Patents HTML
+    # extraction artifacts (`ofclaim 1`, `according toclaim 1`) still
+    # match. ~2300 walker_fp emissions on the round-1 705-draft US corpus
+    # arose from dep-preamble detection failing → walker scanned the
+    # preamble as body text and emitted `the method ofclaim 1` as a
+    # bogus reference.
+    r"^(?:\d+\s*[.\-]?\s*)?(The|An?)\s+(.*?)\s+"
     r"(?:"
     r"of"
     r"|according\s+to"
@@ -491,7 +687,7 @@ _DEP_PREAMBLE = re.compile(
     r"|as\s+claimed\s+in"
     r"|as\s+recited\s+in"
     r"|as\s+set\s+forth\s+in"
-    r")\s+claims?\s+(\d+)",
+    r")\s*claims?\s+(\d+)",
     re.IGNORECASE,
 )
 

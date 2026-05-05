@@ -58,7 +58,16 @@ def _depluralize_word(word: str) -> str:
         return word[:-2]
 
     # Rule 4: plain -s with guards
-    if len(lowered) > 2 and lowered.endswith("s"):
+    # R39 (2026-05-04): tightened minimum from `>2` to `>3`. 3-char
+    # `-s` words in patent claims are dominantly acronym-plurals
+    # (`OMS`, `OFT` no, `OMS` yes, `UEs`, `APs`, `MACs`) where the
+    # trailing s is part of the acronym, not a plural marker.
+    # Stripping caused walker over-bridges: ref `OM` was silenced by
+    # intro `OMS` because both depluralized to `om`. Real 3-char
+    # plurals (`pcs`, `kids`) are uncommon in formal patent claim
+    # language; the larger word base (>=4 chars) covers ordinary
+    # patent vocabulary (`circuits`, `inductors`, `signals`, etc.).
+    if len(lowered) > 3 and lowered.endswith("s"):
         for bad in _NOT_PLURAL_ENDINGS:
             if lowered.endswith(bad):
                 return word
