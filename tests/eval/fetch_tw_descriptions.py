@@ -35,6 +35,11 @@ SUPPLEMENT_V2 = PROJECT_ROOT / "tests/eval/phase2b_results_supplement_v2.json"
 OUTPUT = PROJECT_ROOT / "tests/eval/tw_descriptions.json"
 
 
+def output_path_for(jurisdiction: str) -> Path:
+    """Per-jurisdiction cache file path."""
+    return PROJECT_ROOT / f"tests/eval/{jurisdiction.lower()}_descriptions.json"
+
+
 def extract_description(html: str) -> tuple[str, str | None]:
     """Return (description_text, symbol_table_text|None) from raw HTML.
 
@@ -72,8 +77,8 @@ def extract_description(html: str) -> tuple[str, str | None]:
     return plain, symbol_text
 
 
-def fetch_one(client: httpx.Client, patent_id: str) -> dict | None:
-    url = f"https://patents.google.com/patent/{patent_id}/zh"
+def fetch_one(client: httpx.Client, patent_id: str, lang: str = "zh") -> dict | None:
+    url = f"https://patents.google.com/patent/{patent_id}/{lang}"
     try:
         r = client.get(url, follow_redirects=True, timeout=25)
         if r.status_code != 200:
@@ -92,17 +97,26 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=None, help="Cap fetch count for testing")
     ap.add_argument("--sleep", type=float, default=1.5, help="Seconds between requests")
+    ap.add_argument(
+        "--jurisdiction",
+        choices=["TW", "CN", "US"],
+        default="TW",
+        help="Which jurisdiction's supplement_v2 patents to fetch",
+    )
     args = ap.parse_args()
 
     verdicts = json.loads(SUPPLEMENT_V2.read_text())["verdicts"]
-    tw_ids = sorted({v["patent_id"] for v in verdicts if v.get("jurisdiction") == "TW"})
+    pids = sorted({v["patent_id"] for v in verdicts if v.get("jurisdiction") == args.jurisdiction})
     if args.limit:
-        tw_ids = tw_ids[: args.limit]
+        pids = pids[: args.limit]
+
+    output = output_path_for(args.jurisdiction)
+    lang = {"TW": "zh", "CN": "zh", "US": "en"}[args.jurisdiction]
 
     cache: dict[str, dict] = {}
-    if OUTPUT.exists():
-        cache = json.loads(OUTPUT.read_text())
-        print(f"Loaded cache: {len(cache)} entries")
+    if output.exists():
+        cache = json.loads(output.read_text())
+        print(f"Loaded cache ({output.name}): {len(cache)} entries")
 
     headers = {
         "User-Agent": (
@@ -113,22 +127,22 @@ def main() -> int:
     with httpx.Client(headers=headers) as client:
         n_new = 0
         n_st = 0
-        for i, pid in enumerate(tw_ids):
+        for i, pid in enumerate(pids):
             if pid in cache and "description" in cache[pid] and cache[pid]["description"]:
                 # Already fetched — re-extract symbol_table if missing
                 continue
-            rec = fetch_one(client, pid)
+            rec = fetch_one(client, pid, lang=lang)
             cache[pid] = rec
             n_new += 1
             if rec and rec.get("symbol_table_text"):
                 n_st += 1
             if n_new % 10 == 0:
-                OUTPUT.write_text(json.dumps(cache, ensure_ascii=False, indent=2))
+                output.write_text(json.dumps(cache, ensure_ascii=False, indent=2))
                 desc_len = len(rec.get("description") or "") if rec else 0
-                print(f"  [{i+1}/{len(tw_ids)}] {pid} desc_chars={desc_len} st={'Y' if rec.get('symbol_table_text') else '-'}")
+                print(f"  [{i+1}/{len(pids)}] {pid} desc_chars={desc_len} st={'Y' if rec.get('symbol_table_text') else '-'}")
             time.sleep(args.sleep)
 
-    OUTPUT.write_text(json.dumps(cache, ensure_ascii=False, indent=2))
+    output.write_text(json.dumps(cache, ensure_ascii=False, indent=2))
     total_with_st = sum(1 for v in cache.values() if v.get("symbol_table_text"))
     total_with_desc = sum(1 for v in cache.values() if v.get("description"))
     print()

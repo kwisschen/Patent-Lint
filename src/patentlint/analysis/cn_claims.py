@@ -3380,6 +3380,23 @@ def check_antecedent_basis_cn(
             if normalized_term in _VERB_PREDICATE_TERMS_CN:
                 continue
 
+            # R62 (2026-05-05): bare-quantifier emit suppression (CN parity
+            # with TW). Drafters universally use 多个/复数/数个/至少 as
+            # quantifier prefixes (多个X, 复数X), NEVER as standalone nouns.
+            # Walker capture without proper leading-quantifier strip leaves
+            # the bare quantifier as the term. Mirror of TW
+            # _BARE_QUANTIFIER_TERMS_TW filter. Surfaced via supplement_v2
+            # hand-verification — `多个` flagged on CN121219509A c10.
+            if normalized_term in {
+                "多个", "复数", "数个", "至少", "若干", "一些",
+                "多个个", "复数个",
+            }:
+                continue
+            # R62: short residual structural fragments — single CJK char
+            # or 1-char Latin terms that escape the prefix-strip cascade.
+            if len(normalized_term) < 2:
+                continue
+
             # Structural fingerprint (ADR-145) — mirror of TW walker.
             # No claim content; counts + booleans only.
             diagnostics = {
