@@ -263,7 +263,7 @@
     "title": "Rückbezugs-Analyse",
     "findings": "Befunde",
     "finding": "Befund",
-    "disclaimer": "PatentLint nutzt keine KI und keine serverseitige Verarbeitung. Die Stufe „hohe Konfidenz“ priorisiert die handlungsrelevantesten Befunde. Bitte stets am Originalentwurf prüfen.",
+    "disclaimer": "PatentLint nutzt keine KI und keine serverseitige Verarbeitung. Bitte alle Befunde stets am Originalentwurf prüfen.",
     "tierFilter": {
       "label": "Filter: ",
       "showAll": "Alle anzeigen ({{count}})",
