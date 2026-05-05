@@ -101,6 +101,21 @@ _WALKER_DEGENERATE_FRAGMENTS_TW: frozenset[str] = frozenset({
     # only as part of compound 測量值/測量模組 (NOT captured as bare
     # term). Safe to suppress bare 測量 emissions.
     "測量",
+    # R68 (2026-05-06) — pure-action verbs surfaced via supplement_v2
+    # walker_fp mining. `所述確定` / `所述進行` / `所述獲得` etc. captured
+    # when drafter wrote `用於進行X` / `根據Y確定Z` / `所述獲得的W` style
+    # claim text — the walker regex stops at 的 (or other boundary) and
+    # leaves the bare verb. These verbs are NEVER used as standalone
+    # noun antecedents in TIPO claim diction; they appear only as
+    # compounds (確定值/獲得結果/進行步驟). Safe-suppress bare emissions.
+    # Mining counts (n=8366 TW walker_fp): 確定 ~15, 進行 ~3, 獲得 ~5,
+    # 判斷 ~4, 執行 (cited in trailing-pattern), 完成 ~3.
+    "確定",
+    "進行",
+    "獲得",
+    "判斷",
+    "執行",
+    "完成",
 })
 
 
