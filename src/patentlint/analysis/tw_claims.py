@@ -3842,6 +3842,31 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
             seen_norms.add(item)
             extras.append((fl_m.group(0), item))
 
+    # R53 (2026-05-05): chemistry formula self-introducer.
+    # TW pharmaceutical/chemistry drafters introduce formulas via:
+    #   `(b)式(I)的免疫偶聯物` — without `一` quantifier prefix
+    # Pattern A regex requires `一` lead-in so misses these. The notation
+    # 式(I)/式(II)/化合物(I) etc. is universally chemistry-formula in TW
+    # drafts; treat as self-introducing when present.
+    #
+    # Phase 1 supplement_v2 cluster `TAIL|TW|(I)` residual 44 wfp on
+    # TW202502813A claim 1 `(b)式(I)的免疫偶聯物` shape.
+    #
+    # Match: 式|化合物|化學式 + (Roman numeral 1-3 chars or digit 1-3)
+    _R53_FORMULA_RE_TW = re.compile(
+        r'(?:式|化合物|化學式|結構式)'
+        r'[(（]\s*'
+        r'([IVXivx]{1,4}|[a-z]?[0-9]{1,3}[a-z]?)'
+        r'\s*[)）]'
+    )
+    for m in _R53_FORMULA_RE_TW.finditer(text):
+        # Use the full matched text as the intro form
+        full = m.group(0)
+        if full in seen_norms:
+            continue
+        seen_norms.add(full)
+        extras.append((full, full))
+
     return cleaned + extras
 
 
