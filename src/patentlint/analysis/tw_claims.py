@@ -4131,7 +4131,27 @@ def check_antecedent_basis(
     # are legit defects, so the boost direction is empirically validated.
     symbol_table_norms: set[str] = set()
     symbol_table_lookup: dict[str, str] = {}  # normalized → original name
-    for entry in (doc.symbol_table or []):
+    # R61c (2026-05-05): TIPO-authoritative <numeral, name> anchor.
+    # 符號說明 entries map drawing numerals to element names per
+    # 專利法施行細則 §17. When a claim reference like 該齒輪(10)
+    # exactly matches an ST entry `10:齒輪`, the drafter has
+    # explicitly anchored the element via numeral — that's TIPO's
+    # authoritative use of 符號說明 (vs the loose presence flag of
+    # R61b which was empirically negative).
+    #
+    # Corpus measurement (tests/eval/measure_tipo_anchor.py):
+    #   paren_anchor_ok: 48 walker_fp, 0 legit (n=48 strict-judged) —
+    #   100% silencing precision, validated. Strict exact-match rule
+    #   protects the 110P000631US c11 第一銜接部銜接(222) legit case.
+    symbol_table_pairs: dict[str, str] = {}  # numeral → original name
+    # Pull from BOTH 符號說明 and 代表圖符號說明 (representative-drawing
+    # symbols) — both are authoritative under TIPO 專利法施行細則 §17.
+    # Some firms omit 代表圖符號說明 in working drafts but restore before
+    # filing; the parser surfaces both fields independently and the
+    # walker treats them as a unified lookup.
+    for entry in list(doc.symbol_table or []) + list(
+        getattr(doc, "representative_drawing_symbols", None) or []
+    ):
         nm = (entry.name or "").strip()
         if len(nm) < 2:
             continue
@@ -4142,6 +4162,10 @@ def check_antecedent_basis(
         if norm and len(norm) >= 2:
             symbol_table_norms.add(norm)
             symbol_table_lookup.setdefault(norm, nm)
+        # Numeral-keyed lookup for paren-anchor matching
+        numeral = (entry.numeral or "").strip()
+        if numeral and nm:
+            symbol_table_pairs.setdefault(numeral, nm)
 
     issues: list[dict] = []
 
@@ -4525,6 +4549,37 @@ def check_antecedent_basis(
                 getattr(claim, "quoted_references", None)
             )
 
+            # R61c (2026-05-05) — TIPO-authoritative <numeral, name>
+            # anchor. When the original reference contains a paren-numeral
+            # AND the symbol_table has matching numeral with name equal to
+            # the term (after stripping the paren), this is an explicit
+            # drafter anchor — silence by setting confidence to 0 (display
+            # tier filters at threshold ≥ 50 will exclude it; the finding
+            # remains in walker output for harness label-keyed accounting).
+            tipo_authoritative_anchor = False
+            paren_match = re.search(
+                r"[（(]\s*(\d{1,4}[A-Za-z]{0,2})\s*[）)]",
+                full_ref or "",
+            )
+            if paren_match and symbol_table_pairs:
+                numeral = paren_match.group(1).strip()
+                st_name = symbol_table_pairs.get(numeral)
+                if st_name:
+                    # Strip paren + reference-form prefix from term to get
+                    # bare element name for exact-match comparison.
+                    term_no_paren = re.sub(
+                        r"[（(]\s*\d{1,4}[A-Za-z]{0,2}\s*[）)]", "", normalized_term
+                    ).strip()
+                    st_name_no_paren = re.sub(
+                        r"[（(]\s*\d{1,4}[A-Za-z]{0,2}\s*[）)]", "", st_name
+                    ).strip()
+                    if (
+                        term_no_paren
+                        and st_name_no_paren
+                        and term_no_paren == st_name_no_paren
+                    ):
+                        tipo_authoritative_anchor = True
+
             # Structural fingerprint (ADR-145) — surfaces the walker's
             # intro-pool size, whether a did-you-mean fallback fired, and
             # whether the candidate is cross-branch. No claim text, no
@@ -4564,6 +4619,13 @@ def check_antecedent_basis(
                 reference_form=reference_form,
                 jurisdiction="TW",
             )
+            # R61c TIPO-authoritative silencer: drop confidence to 0 when
+            # paren numeral + ST entry give explicit drafter anchor.
+            # Empirically validated 100% silencing precision (48/48
+            # walker_fp, 0/48 legit) on TW supplement_v2 corpus.
+            if tipo_authoritative_anchor:
+                confidence_score = 0
+                diagnostics["tipo_authoritative_anchor"] = True
             issues.append(
                 {
                     "claim_id": claim.id,
@@ -4578,6 +4640,7 @@ def check_antecedent_basis(
                     ),
                     "confidence_score": confidence_score,
                     "term_in_symbol_table": term_in_symbol_table,
+                    "tipo_authoritative_anchor": tipo_authoritative_anchor,
                 }
             )
 
