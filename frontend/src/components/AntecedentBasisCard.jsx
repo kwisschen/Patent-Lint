@@ -426,7 +426,7 @@ export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }
         </StatusPill>
       </div>
       <div className="border-t border-border/40 px-4 py-2 text-xs text-muted-foreground italic">
-        {t('antecedentBasis.disclaimer', 'This walker uses heuristics; high-confidence tier prioritizes most-actionable findings. Always confirm against your draft.')}
+        {t('antecedentBasis.disclaimer', 'PatentLint does not use AI or server-side processing. High-confidence tier prioritizes most-actionable findings. Always confirm against your draft.')}
       </div>
       {hasMixedTiers && (
         <div className="flex items-center justify-end gap-2 border-t border-border/40 px-4 py-2 text-xs">
