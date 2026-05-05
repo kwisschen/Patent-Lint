@@ -38,6 +38,14 @@ _HEADER_DRAWINGS = re.compile(r"说明书附图")
 _SPEC_SUBSECTIONS = [
     ("technical_field", re.compile(r"^[\s\u3000]*技术领域[\s\u3000]*$")),
     ("background", re.compile(r"^[\s\u3000]*背景技术[\s\u3000]*$")),
+    # R64 (2026-05-05) TW parity: 先前技术 alongside 背景技术 (both
+    # treated as prior-art per CNIPA practice). Sub-headers under the
+    # prior-art discussion (literature citations) map here too so
+    # paragraphs in those subsections aren't dropped from numbering.
+    ("background", re.compile(r"^[\s\u3000]*先前技术[\s\u3000]*$")),
+    ("background", re.compile(r"^[\s\u3000]*先前技术文献[\s\u3000]*$")),
+    ("background", re.compile(r"^[\s\u3000]*专利文献[\s\u3000]*$")),
+    ("background", re.compile(r"^[\s\u3000]*非专利文献[\s\u3000]*$")),
     ("summary", re.compile(r"^[\s\u3000]*发明内容[\s\u3000]*$")),
     ("drawings_description", re.compile(r"^[\s\u3000]*附图说明[\s\u3000]*$")),
     ("detailed_description", re.compile(r"^[\s\u3000]*具体实施方式[\s\u3000]*$")),
