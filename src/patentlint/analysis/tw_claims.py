@@ -226,6 +226,61 @@ def _morphological_prefix_fallback_tw(
     return best
 
 
+def _symbol_table_dym_fallback_tw(
+    ref: str,
+    symbol_table_norms: set[str],
+    symbol_table_lookup: dict[str, str],
+    *,
+    min_shared_prefix: int = 3,
+    min_term_len: int = 3,
+) -> dict | None:
+    """R61b (b) — symbol_table did-you-mean enrichment.
+
+    When chain DYM and morphological-prefix fallback both miss, search
+    符號說明 entries for a leading-prefix-≥3 match. Returns
+    ``{"term": original_st_name, "claim_id": None, "source":
+    "symbol_table"}`` for the longest-shared-prefix match, or ``None``.
+
+    The ``source`` discriminator lets the UI render a distinct hint
+    ("declared in 符號說明") rather than a normal did-you-mean line —
+    symbol_table-sourced suggestions don't satisfy claim-level antecedent;
+    the user still needs to add a `一X` intro in the claim.
+    Tighter prefix floor (3 vs 2) than morphological fallback because
+    symbol_table names are shorter and false-prefix overlaps are higher.
+    """
+    if len(ref) < min_term_len:
+        return None
+    best_prefix_len = 0
+    best: dict | None = None
+    for intro_term in symbol_table_norms:
+        if len(intro_term) < min_term_len:
+            continue
+        if intro_term == ref:
+            return {
+                "term": symbol_table_lookup.get(intro_term, intro_term),
+                "claim_id": None,
+                "source": "symbol_table",
+            }
+        shared = 0
+        for a, b in zip(ref, intro_term):
+            if a != b:
+                break
+            if '一' <= a <= '鿿':
+                shared += 1
+            else:
+                break
+        if shared < min_shared_prefix:
+            continue
+        if shared > best_prefix_len:
+            best_prefix_len = shared
+            best = {
+                "term": symbol_table_lookup.get(intro_term, intro_term),
+                "claim_id": None,
+                "source": "symbol_table",
+            }
+    return best
+
+
 # Recognized TW dependency format patterns.
 # TIPO 偵錯系統 documentation (2023.5.30 版, Table 1 #20) accepts three
 # opening verbs for dependent claims — 如 / 依據 / 根據 — so the prefix is
@@ -4064,6 +4119,30 @@ def check_antecedent_basis(
     if not claims:
         return []
 
+    # R61b (2026-05-05): TIPO-style 符號說明 lookup-table — built once
+    # per document, used at emit-time for (a) confidence boost when a
+    # finding's term is a declared element name, (b) did-you-mean
+    # enrichment as a tertiary fallback when no chain intro matches,
+    # (c) sub-categorization flag on the finding payload.
+    #
+    # NOT a walker silencer — see ``feedback_no_symbol_table_antecedent_bridge.md``.
+    # symbol_table presence does not substitute for claim-level antecedent
+    # under §26 第3項. Hand-labeled local fixtures show 9/9 in_st findings
+    # are legit defects, so the boost direction is empirically validated.
+    symbol_table_norms: set[str] = set()
+    symbol_table_lookup: dict[str, str] = {}  # normalized → original name
+    for entry in (doc.symbol_table or []):
+        nm = (entry.name or "").strip()
+        if len(nm) < 2:
+            continue
+        norm = normalize_candidate_intro(
+            nm,
+            strict_qualifier_matching=strict_qualifier_matching,
+        )
+        if norm and len(norm) >= 2:
+            symbol_table_norms.add(norm)
+            symbol_table_lookup.setdefault(norm, nm)
+
     issues: list[dict] = []
 
     for claim in claims:
@@ -4421,6 +4500,31 @@ def check_antecedent_basis(
                 if fallback is not None:
                     suggested_match = fallback
 
+            # R61b (2026-05-05) (b) — symbol_table did-you-mean enrichment.
+            # Tertiary fallback after chain DYM + morphological-prefix
+            # fallback both miss. Tries to surface a 符號說明 entry that
+            # shares ≥3-char prefix with normalized_term. Marked
+            # ``source: "symbol_table"`` so the UI can render a distinct
+            # "declared in 符號說明 #N" hint instead of a normal
+            # did-you-mean line. Empty when no good match found.
+            if (
+                suggested_match is None
+                and resolved_intro is None
+                and symbol_table_norms
+            ):
+                st_match = _symbol_table_dym_fallback_tw(
+                    normalized_term, symbol_table_norms, symbol_table_lookup
+                )
+                if st_match is not None:
+                    suggested_match = st_match
+
+            # R61b (2026-05-05) (a)+(c) — symbol_table presence as
+            # confidence input + finding payload tag.
+            term_in_symbol_table = normalized_term in symbol_table_norms
+            is_quoted_reference_format = bool(
+                getattr(claim, "quoted_references", None)
+            )
+
             # Structural fingerprint (ADR-145) — surfaces the walker's
             # intro-pool size, whether a did-you-mean fallback fired, and
             # whether the candidate is cross-branch. No claim text, no
@@ -4433,6 +4537,8 @@ def check_antecedent_basis(
                 "suggested_cross_branch": bool(
                     suggested_match and suggested_match.get("cross_branch")
                 ) if suggested_match else False,
+                "term_in_symbol_table": term_in_symbol_table,
+                "is_quoted_reference_format": is_quoted_reference_format,
             }
             confidence_score = compute_confidence_score(
                 term=normalized_term,
@@ -4453,6 +4559,8 @@ def check_antecedent_basis(
                     suggested_match
                     and suggested_match.get("claim_id") == claim.id
                 ),
+                term_in_symbol_table=term_in_symbol_table,
+                is_quoted_reference_format=is_quoted_reference_format,
                 reference_form=reference_form,
                 jurisdiction="TW",
             )
@@ -4469,6 +4577,7 @@ def check_antecedent_basis(
                         normalized_term, reference_form
                     ),
                     "confidence_score": confidence_score,
+                    "term_in_symbol_table": term_in_symbol_table,
                 }
             )
 
