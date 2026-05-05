@@ -51,17 +51,42 @@ def annotate_term_in_spec(
     boosts `confidence_score` by +10 when match. Empty spec text leaves
     the field False; no score change.
     """
-    # R57c (2026-05-05): annotate term_in_spec for forward compatibility
-    # but DO NOT mutate confidence_score. Empirical test (abstract proxy
-    # on supplement_v2) showed term_in_spec is a slightly NEGATIVE signal
-    # for legit_drafting_error (over-captures share spec vocabulary).
+    # R57c (2026-05-05): annotated term_in_spec but did NOT mutate
+    # confidence_score — abstract proxy on supplement_v2 showed term_in_abs
+    # was a slight negative signal for legit (in 13.4% / out 18.7%).
+    #
+    # R61c (2026-05-05 evening): Path 1 corpus measurement using FULL
+    # spec body (Google Patents description fetch) on n=9382 judged TW
+    # supplement_v2 findings showed the inverse direction:
+    #
+    #   term_in_spec=True:   13.2% legit (n=9118 TP+FP)
+    #   term_in_spec=False:   0.8% legit (n=264 TP+FP)
+    #   baseline:            12.8% legit
+    #
+    # Absence is the strong walker_fp signal (~−12pp from baseline).
+    # Wire as a −15 confidence penalty when the term is missing from
+    # spec body — pushes walker over-captures out of the high-conf
+    # bucket. Magnitude calibrated so the floor lands these findings
+    # well below typical thresholds (~50 baseline → ~35 with penalty).
+    #
+    # Why this differs from the R57 abstract result: abstract is a
+    # tiny ~150-char excerpt; full spec body is 10-50K chars and
+    # captures actual element introductions the drafter wrote.
+    # Walker over-captures aren't in spec; legit defects are.
     if not spec_text:
         for f in findings:
             f["term_in_spec"] = False
+            # When we have NO spec text (e.g., parser-only fixture or
+            # corpus record without description), don't apply penalty
+            # — the False here means "no signal", not "validated absent".
         return
     for f in findings:
         term = (f.get("term") or "").strip()
-        f["term_in_spec"] = bool(term) and term in spec_text
+        in_spec = bool(term) and term in spec_text
+        f["term_in_spec"] = in_spec
+        if not in_spec and "confidence_score" in f:
+            # Validated walker over-capture signal — push out of bucket.
+            f["confidence_score"] = max(0, f["confidence_score"] - 15)
 
 
 def annotate_term_in_symbol_table(
