@@ -34,7 +34,6 @@ silenced_legit + false_fires.
 from __future__ import annotations
 
 import json
-import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -60,61 +59,57 @@ PHASE2B_RESULTS = {
     ],
 }
 
-# Claim parsing — matches phase2b_judging.py logic
-# R31 (2026-05-03): TW dep regex extended to match modern register
-# `如請求項<N>之<noun>` and `如請求項<N>所述之<noun>` shapes (e.g.,
-# `如請求項1之方法` / `如請求項1所述之方法`). Original regex required
-# `[項所]` immediately after the digit, missing entire dependent claim
-# population in TW corpus → all dependent claims parsed as independent
-# → walker chain traversal broken on TW corpus.
-_CN_DEP_RE = re.compile(r"根据权利要求(\d+)|如权利要求(\d+)|权利要求第?(\d+)项")
-_TW_DEP_RE = re.compile(
-    r"如(?:申請專利範圍第)?[第]?(\d+)(?:[項所之]|所述)"
-    r"|根據[第]?(\d+)項"
-    r"|請求項[第]?(\d+)"
-)
-
-
-def _parse_claim_text(raw: str, idx: int, jurisdiction: str):
-    from patentlint.models import Claim
-    if not raw or not raw.strip():
-        return None
-    m = re.match(r"^\s*(\d+)\s*[\.、．]", raw)
-    cid = int(m.group(1)) if m else idx
-    dep_re = _CN_DEP_RE if jurisdiction == 'CN' else _TW_DEP_RE
-    deps = []
-    for dm in dep_re.finditer(raw):
-        for g in dm.groups():
-            if g:
-                try:
-                    deps.append(int(g))
-                except ValueError:
-                    pass
-                break
-    deps = list(dict.fromkeys(deps))
-    return Claim(
-        id=cid,
-        text=raw.strip(),
-        independent=(len(deps) == 0),
-        multiple_dependent=(len(deps) > 1),
-        method_claim=False,
-        dependencies=deps,
-    )
+# Claim parsing — call PRODUCTION parsers directly so corpus walker output
+# matches what real .docx ingestion would produce. Inline regex copies
+# diverged from production in three jurisdictions, systematically biasing
+# walker FP/precision metrics:
+#
+#   US: previous fall-through used the TW regex → every dep claim parsed
+#       as independent → ancestor chain empty → spurious missing-antecedent
+#       findings for every body reference (~25k judged-wfp inflation).
+#   CN: previous regex matched only a single claim number per dep, missing
+#       range/enumeration/disjunction expansions (`权利要求1至5中任一项`,
+#       `权利要求1、2或3`) so the walker reached only the first parent.
+#   TW: previous regex didn't model 引用記載型式 (`一種X，具備如請求項N
+#       所述的Y`) — those are statutorily INDEPENDENT (own preamble) but
+#       still need chain traversal via `quoted_references`. The corpus
+#       harness misclassified them as dependent and dropped the
+#       quoted_references field, so the walker couldn't resolve intros
+#       that production correctly resolves.
+#
+# Switching to production parsers eliminates regex drift entirely. Each
+# corpus record is reshaped to the .docx-style input the production parser
+# expects (US/CN already have leading `N.` prefixes; TW needs them
+# synthesized from list position). All three return `list[Claim]` with
+# proper `dependencies` and (TW) `quoted_references` populated.
+from patentlint.parser.claims import parse_claims as _parse_us_claims  # noqa: E402
+from patentlint.parser.claims_cn import parse_cn_claims_docx as _parse_cn_claims  # noqa: E402
+from patentlint.parser.claims_tw import parse_tw_claims as _parse_tw_claims  # noqa: E402
 
 
 def _build_doc(record: dict, jurisdiction: str):
     from patentlint.models import CnPatentDocument, TwPatentDocument
     claims = record.get('claims') or []
-    parsed = [c for c in (_parse_claim_text(c, i + 1, jurisdiction)
-                          for i, c in enumerate(claims)) if c]
-    if not parsed:
+    if not claims:
         return None
+    if jurisdiction == 'US':
+        # US corpus claims carry leading `N. ` prefixes already.
+        parsed = _parse_us_claims('\n'.join(claims))
+        return parsed if parsed else None
     if jurisdiction == 'CN':
+        parsed = _parse_cn_claims('\n'.join(claims))
+        if not parsed:
+            return None
         return CnPatentDocument(claims=parsed, input_format='google_patents_html')
-    elif jurisdiction == 'TW':
+    if jurisdiction == 'TW':
+        # TW corpus claims have NO leading `N.` (claim 1 starts directly
+        # with `一種…`); synthesize from list position so production
+        # `_TW_CLAIM_NUM` regex finds boundaries.
+        paragraphs = [f"{i + 1}. {c}" for i, c in enumerate(claims)]
+        parsed = _parse_tw_claims(paragraphs)
+        if not parsed:
+            return None
         return TwPatentDocument(claims=parsed, input_format='google_patents_html')
-    elif jurisdiction == 'US':
-        return parsed  # US walker takes list[Claim] directly
     return None
 
 

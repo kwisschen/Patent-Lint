@@ -262,7 +262,12 @@
   "antecedentBasis": {
     "title": "先行詞の根拠の確認",
     "findings": "件",
-    "finding": "件"
+    "finding": "件",
+    "tierFilter": {
+      "label": "絞り込み：",
+      "showAll": "すべて表示（{{count}}件）",
+      "showHighConf": "高信頼度のみ（{{count}}件）"
+    }
   },
   "antecedent": {
     "didYouMean": "もしかして「{{term}}」（請求項{{claim_id}}で導入）ですか？",

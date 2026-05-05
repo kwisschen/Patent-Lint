@@ -46,6 +46,25 @@ class TestParseClaims:
         assert parse_claims("") == []
         assert parse_claims("   ") == []
 
+    def test_ofclaim_whitespace_collapse_normalized(self):
+        # PDF→text whitespace collapse: "of claim" → "ofclaim"
+        text = (
+            "1. A method comprising step A.\n"
+            "2. The method ofclaim 1, further comprising step B.\n"
+            "3. The apparatus OfClaim 1 wherein X.\n"
+            "4. The system ofclaims 1-2 wherein Y.\n"
+        )
+        claims = parse_claims(text)
+        assert len(claims) == 4
+        # canonical spacing restored
+        assert "of claim 1" in claims[1].text
+        assert "of Claim 1" in claims[2].text
+        assert "of claims 1-2" in claims[3].text
+        # dependency parsing now succeeds (was previously masked)
+        assert 1 in claims[1].dependencies
+        assert 1 in claims[2].dependencies
+        assert claims[3].multiple_dependent is True
+
 
 class TestIsMethodClaim:
     def test_method_before_comma(self):

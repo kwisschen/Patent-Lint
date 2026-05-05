@@ -693,6 +693,7 @@ async def judge_draft(
     anthropic_client: AsyncAnthropic,
     openai_client: AsyncOpenAI,
     system_prompt: str = SYSTEM_PROMPT_V2,
+    no_opus: bool = False,
 ) -> DraftEnsembleVerdict:
     """Run the per-draft ensemble: Sonnet + gpt-5-mini in parallel; if
     finding-level disagreements ≥ proportional Opus threshold, escalate the
@@ -748,7 +749,7 @@ async def judge_draft(
     disagree = _verdict_pair_disagreements(sonnet, gpt, findings)
     threshold = opus_escalation_threshold(len(findings))
     opus: DraftJudgment | None = None
-    if disagree >= threshold:
+    if not no_opus and disagree >= threshold:
         try:
             opus = await _judge_draft_anthropic(
                 anthropic_client, OPUS, system_prompt, user, len(findings)

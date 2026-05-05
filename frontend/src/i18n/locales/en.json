@@ -262,7 +262,12 @@
   "antecedentBasis": {
     "title": "Antecedent Basis Review",
     "findings": "findings",
-    "finding": "finding"
+    "finding": "finding",
+    "tierFilter": {
+      "label": "Filter:",
+      "showAll": "Show all ({{count}})",
+      "showHighConf": "High confidence only ({{count}})"
+    }
   },
   "antecedent": {
     "didYouMean": "Did you mean *{{term}}* (introduced in claim {{claim_id}})?",

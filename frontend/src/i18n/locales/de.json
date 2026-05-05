@@ -262,7 +262,12 @@
   "antecedentBasis": {
     "title": "Rückbezugs-Analyse",
     "findings": "Befunde",
-    "finding": "Befund"
+    "finding": "Befund",
+    "tierFilter": {
+      "label": "Filter: ",
+      "showAll": "Alle anzeigen ({{count}})",
+      "showHighConf": "Nur hohe Konfidenz ({{count}})"
+    }
   },
   "antecedent": {
     "didYouMean": "Meinten Sie *{{term}}* (eingeführt in Anspruch {{claim_id}})?",
