@@ -91,9 +91,10 @@ class TestConfidenceScore:
             suggested_cross_branch=True,
         )) == 50
 
-    def test_term_in_spec_boost(self):
-        # +10 for spec match (added on top of baseline 55)
-        assert compute_confidence_score(**_baseline(term_in_spec=True)) == 65
+    def test_term_in_spec_no_boost(self):
+        # R57c: term_in_spec REVERTED — empirical signal direction is
+        # negative on supplement_v2; no score change.
+        assert compute_confidence_score(**_baseline(term_in_spec=True)) == 55
 
     def test_clamp_low(self):
         # Stack penalties to drive low
@@ -111,7 +112,7 @@ class TestConfidenceScore:
         assert score >= 0
 
     def test_clamp_high(self):
-        # Stack positives
+        # Stack positives (term_in_spec no longer adds; R57c revert)
         score = compute_confidence_score(
             term="electronic_unit",  # 15 chars, ASCII
             prefix="said",
@@ -122,8 +123,8 @@ class TestConfidenceScore:
             suggested_same_claim=True,
             term_in_spec=True,
         )
-        # 50 - 3 (>12) + 5 (jaccard) + 8 (same_claim) + 5 (said) + 10 (in_spec) = 75
-        assert score == 75
+        # 50 - 3 (>12) + 5 (jaccard) + 8 (same_claim) + 5 (said) = 65
+        assert score == 65
         assert score <= 100
 
     def test_returns_int(self):
@@ -141,7 +142,7 @@ class TestConfidenceScore:
         assert compute_confidence_score(**_baseline(term="widget(1)")) < baseline
         # acronym << baseline
         assert compute_confidence_score(**_baseline(term="MAC")) < baseline
-        # term_in_spec > baseline
-        assert compute_confidence_score(**_baseline(term_in_spec=True)) > baseline
+        # term_in_spec REVERTED to neutral (R57c) — no score change
+        assert compute_confidence_score(**_baseline(term_in_spec=True)) == baseline
         # formal register > baseline
         assert compute_confidence_score(**_baseline(prefix="said")) > baseline
