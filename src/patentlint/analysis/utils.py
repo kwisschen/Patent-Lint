@@ -155,48 +155,65 @@ def compute_confidence_score(
 
     Clamped to [0, 100].
     """
-    score = 50
-    # Term-length / structural signals (empirically calibrated)
+    # R58 (2026-05-05) — ML-distilled v4 weights. Logistic regression on
+    # 19,645 supplement_v2 labeled findings provides empirically-grounded
+    # signal magnitudes (raw coefficients, original units):
+    #     is_us:             +1.93   → score +25
+    #     same_claim:        +0.33   → score +8
+    #     ref_len:           +0.15/c → folded into long_term bonus
+    #     paren_num/any:     -1.25   → score -12
+    #     latin_upper_short: -1.70   → score -18
+    #     has_latin:         -0.87   → handled via short-acronym + paren guards
+    #     ordinal_zh:        -0.48   → score -5
+    #     term_len > 10:     small-neg (over-capture) → score -3 if very long
+    #
+    # Per-jurisdiction calibration: post-R52 walker has US precision 35.5%,
+    # CN 14.5%, TW 12.7%. The is_us signal would massively help but is not
+    # currently passed via this signature; deferred to R59 if needed.
+    #
+    # Distillation discipline: ML output is walker code patches, NOT ML
+    # inference at runtime. Stays purely deterministic Python.
+    import re as _re
     term_str = term or ""
+    score = 50
+    # Term-length signals
     if 0 < len(term_str) <= 2:
         score += 8
-    if len(term_str) >= 8:
-        score -= 8
-    # Paren-ref structural fingerprint — empirical wfp correlation.
-    if "(" in term_str and ")" in term_str:
-        i = term_str.rfind("(")
-        j2 = term_str.rfind(")")
-        if i < j2:
-            inner = term_str[i + 1:j2]
-            if inner and any(c.isdigit() for c in inner):
-                score -= 5
-    # Acronym / parser-failure / chain-invalid penalties
+    elif 5 <= len(term_str) <= 10:
+        score += 5  # mid-length terms = empirically more legit
+    elif len(term_str) > 12:
+        score -= 3  # very-long = walker over-capture
+    # Paren-containing — strong WFP per LR (-1.25/-0.87)
+    if "(" in term_str or "（" in term_str:
+        score -= 12
+    # Short ASCII-uppercase Latin — strongest WFP signal (LR -1.70)
     if (
         term_str
         and len(term_str) <= 3
         and term_str.isascii()
         and term_str.isupper()
     ):
-        score -= 15
+        score -= 18
+    # Ordinal-Chinese-prefix — counter-intuitive WFP signal (LR -0.48)
+    if _re.match(r'^第[一二三四五六七八九十百0-9]+', term_str):
+        score -= 5
+    # Empty intro pool — slight WFP signal
     if intros_pool_size == 0:
-        score -= 15
-    # Suggested-match signals
+        score -= 5
+    # Suggested-match signals (LR + 0.33 for same_claim)
     if has_suggested_match:
         j = suggested_jaccard if suggested_jaccard is not None else 0.0
         if j >= 0.75:
             score += 5
         if suggested_same_claim:
-            score += 10
+            score += 8  # R58: stronger weight per LR
         if suggested_cross_branch and not suggested_same_claim:
             score -= 10
     # Formal-register prefix — minor positive
     if prefix and prefix.strip().lower() in _FORMAL_PREFIXES:
         score += 5
-    # R57 (2026-05-05): spec-body cross-validation. Term appearing in
-    # description body (technical field + background + summary +
-    # drawings description + detailed description) is strong positive
-    # signal: drafter introduced the concept, just didn't put it in a
-    # claim-chain Pattern A/B form. +10 boost.
+    # R57: spec-body cross-validation +10 (applied separately by
+    # `annotate_term_in_spec` in pipeline; included here for direct callers).
     if term_in_spec:
         score += 10
     return max(0, min(100, score))
