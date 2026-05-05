@@ -1523,29 +1523,33 @@ _NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以並
 # paren is part of the legitimate element identity (符號說明 entry name).
 _PAREN_NUM_TRAIL_RE = re.compile(r"[(（][0-9A-Za-z]{1,5}$")
 
-# R66 (2026-05-05): modifier+noun lookahead resolution — STATE-MODIFIER
-# constrained.
+# R66 (revised 2026-05-05): state-modifier capture extension.
 #
-# When walker captures `前述X` and claim text continues `的<head_noun>`,
-# the regex stopped at 的 by design (genitive marker excluded from
-# _NOUN_CHARS) but in state-modifier+head-noun constructions the head
-# noun is the actual antecedent. Surfaced by 神秘黑屏哥.docx c10:
-# 前述島狀的奈米片積層體 references 奈米片積層體 (introduced) with
-# state modifier 島狀. extract_introductions_tw already strips this
-# pattern on the intro side; symmetric resolution required on reference
-# side per feedback_symmetry_audit_normalize_chains.
+# When walker captures `前述<X>` and X is a pure state-modifier
+# adjective (island-shape, ring-shape, etc.), the captured term is
+# meaningless on its own — drafters write `前述島狀` not as a reference
+# but as a qualifier on the following head noun (`前述島狀的奈米片積層體`).
+# Without extension, the displayed reference_form is just `前述島狀`,
+# which doesn't make grammatical sense. With extension, the user sees
+# the full phrase they wrote.
+#
+# Walker resolution proceeds with the extended term — drafter-consistent
+# intro+ref form (both `<state>的<head>`) resolves via exact match;
+# drafter using only `<head>` as intro but `<state>的<head>` as ref
+# emits a real antecedent finding (the 神秘黑屏哥.docx c10 case).
 #
 # Constraint: 的 in Chinese has multiple roles — state-modifier
-# (`島狀的Y` = "island-shaped Y"), possessive (`A的B` = "A's B"), and
-# adjective. Only state-modifier maps "X is descriptive of Y, Y is the
-# head"; possessive (`該電子裝置的一插槽`) maps "X is a SEPARATE element,
-# Y is owned by X" — silencing X here masks legit drafter errors. To
-# distinguish, gate on captured-term suffix: 狀/形 are unambiguous state
-# suffixes (球狀, 環狀, 圓形, 矩形, U形). Possessive owners
-# (容納部/電子裝置/識別資料) end in noun-class suffixes (部/置/料)
-# that the gate excludes. Verified against TW harness 2026-05-05:
-# unconstrained version silenced 4 protect:true legit_drafting_error
-# labels; suffix-gated version silences 0 while preserving the c10 fix.
+# (`島狀的Y` = "island-shaped Y", Y is head), possessive (`A的B` =
+# "A's B", both are nouns), adjective. Extending the capture for
+# possessive frames would conflate A (the actual reference) with B
+# (a separate noun owned by A) — masking legit drafter errors. Gate
+# on captured-term suffix: 狀/形 are unambiguous state suffixes
+# (球狀, 環狀, 圓形, 矩形, U形). Possessive owners (容納部/電子裝置/
+# 識別資料) end in noun-class suffixes (部/置/料) that the gate
+# excludes. Verified against TW harness 2026-05-05: 4 protect:true
+# legit_drafting_error labels (容納部/電子裝置/識別資料) all retain
+# their findings; 神秘黑屏哥 c10 emits with full
+# `前述島狀的奈米片積層體` reference_form.
 _STATE_MODIFIER_SUFFIXES_TW = ("狀", "形")
 _DE_HEAD_NOUN_RE = re.compile(
     r"的(?P<head>[^\s，。；：、及與和之的該將能須應皆被於以並且其而還另時在更]{2,12})"
@@ -4528,13 +4532,53 @@ def check_antecedent_basis(
             # ahead in the claim text for the closing paren and extend.
             # Avoids 1015+ TW + 386 CN walker_fp findings caused by the
             # truncated capture failing to match symbol_table entries.
+            raw_noun_end = m.end()
             if _PAREN_NUM_TRAIL_RE.search(raw_noun):
-                tail_start = m.end()
                 if (
-                    tail_start < len(claim.text)
-                    and claim.text[tail_start] in (")", "）")
+                    raw_noun_end < len(claim.text)
+                    and claim.text[raw_noun_end] in (")", "）")
                 ):
-                    raw_noun = raw_noun + claim.text[tail_start]
+                    raw_noun = raw_noun + claim.text[raw_noun_end]
+                    raw_noun_end += 1
+
+            # R66 (revised 2026-05-05): state-modifier capture extension.
+            # When raw_noun ends in a state-modifier suffix (狀/形 — pure
+            # adjective/descriptor on its own) AND claim text continues
+            # `的<head_noun>`, extend the capture to include the head.
+            #
+            # Without extension, walker emits with reference_form like
+            # `前述島狀` — meaningless to drafter (`島狀` is "island-shape"
+            # adjective, can't be the antecedent on its own). Drafter
+            # actually wrote `前述島狀的奈米片積層體`. The extended capture
+            # surfaces the full phrase so the finding is intelligible.
+            #
+            # Resolution proceeds normally with the extended term: if the
+            # drafter ALSO introduced the same `<state>的<head>` form
+            # (consistent intro+ref), exact-match resolves and walker is
+            # silent. If the drafter only introduced the head noun (the
+            # 神秘黑屏哥 c10 case — 奈米片積層體 introduced, but reference
+            # adds `島狀的` qualifier), walker emits a real antecedent
+            # finding showing the user the full state-modifier+head form
+            # they wrote. Drafter can then either add the qualified form
+            # to claim 1 or simplify the reference.
+            #
+            # Suffix gate (狀/形) prevents this extension from firing on
+            # possessive references like `該電子裝置的一插槽` where 電子裝置
+            # is a separate (often undefined) noun — those end in noun-class
+            # suffixes (置/部/料), not state suffixes. Verified against TW
+            # harness: 4 protect:true legit_drafting_error labels
+            # (容納部/電子裝置/識別資料) end in non-state suffixes; gate
+            # excludes them; walker emits as before.
+            if (
+                raw_noun.endswith(_STATE_MODIFIER_SUFFIXES_TW)
+                and not raw_noun.startswith("第")
+                and raw_noun_end < len(claim.text)
+            ):
+                m_de = _DE_HEAD_NOUN_RE.match(claim.text, raw_noun_end)
+                if m_de:
+                    head_raw = m_de.group("head")
+                    raw_noun = raw_noun + "的" + head_raw
+                    raw_noun_end = raw_noun_end + 1 + len(head_raw)
 
             full_ref = f"{prefix}{raw_noun}"
             normalized_term = normalize_reference_term(
@@ -4639,30 +4683,6 @@ def check_antecedent_basis(
                         and bare in intros_by_term
                     ):
                         resolved_intro = bare
-
-            # R66 (2026-05-05): state-modifier+head-noun lookahead.
-            # When ref is `前述<state-modifier>` and claim text continues
-            # `的<head>`, try resolving the head noun against intros.
-            # Surfaced by 神秘黑屏哥.docx c10: 前述島狀的奈米片積層體 →
-            # 奈米片積層體 (introduced). Gated on state-suffix (狀/形)
-            # to avoid silencing possessive references — see the
-            # _STATE_MODIFIER_SUFFIXES_TW comment for rationale.
-            if (
-                resolved_intro is None
-                and normalized_term.endswith(_STATE_MODIFIER_SUFFIXES_TW)
-                and not normalized_term.startswith("第")
-            ):
-                tail_start = m.end()
-                if tail_start < len(claim.text):
-                    m_de = _DE_HEAD_NOUN_RE.match(claim.text, tail_start)
-                    if m_de:
-                        head_raw = m_de.group("head")
-                        head_normalized = normalize_reference_term(
-                            head_raw,
-                            strict_qualifier_matching=strict_qualifier_matching,
-                        )
-                        if head_normalized and head_normalized in intros_by_term:
-                            resolved_intro = head_normalized
 
             if resolved_intro is not None:
                 # Number-neutral match satisfies the antecedent under
