@@ -337,6 +337,18 @@ _BRACKET_CLAIM_MARKER = re.compile(r"^\[\d+\]")
 # c10 where `【0009】` was flagged for missing 。. These are structural,
 # not content paragraphs.
 _EMPTY_PARA_NUM_ONLY = re.compile(r"^【\d{4}】\s*$")
+# R65 (2026-05-05): bibliographic citation paragraphs. TIPO drafters use
+# `[專利文獻N]` / `[非專利文獻N]` to list patent + non-patent literature
+# under the prior_art section. These citation entries are bibliographic
+# references (`美國專利第10256321號說明書`), not prose sentences;
+# drafters conventionally omit trailing 。 since the entry's natural
+# terminal is the publication number/identifier.
+# User-reported FP on 神秘黑屏哥.docx — paragraph 5 was a citation entry
+# flagged for missing 。 under prose-paragraph rule. Pattern accepts an
+# optional 【NNNN】 prefix.
+_CITATION_PARA = re.compile(
+    r"^(?:【\d{4}】\s*)?\[(?:專利文獻|非專利文獻)\s*\d+\].*$"
+)
 
 
 def _is_skip_paragraph_ending(text: str) -> bool:
@@ -349,6 +361,9 @@ def _is_skip_paragraph_ending(text: str) -> bool:
         return True
     # R65: empty 【NNNN】 numbering markers (drafter spacers, no body)
     if _EMPTY_PARA_NUM_ONLY.match(text):
+        return True
+    # R65: bibliographic citation paragraphs ([專利文獻N] / [非專利文獻N])
+    if _CITATION_PARA.match(text):
         return True
     return False
 
