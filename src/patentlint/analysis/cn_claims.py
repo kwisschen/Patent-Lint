@@ -1073,7 +1073,12 @@ def check_markush_open_transition(cn_doc: CnPatentDocument) -> list[CheckItem]:
 # ── Walker normalization constants ───────────────────────────────────────
 
 # Noun exclusion class (mechanical TC→SC swap per v2 § 4).
-_NOUN_CHARS_CN = r"[^\s，。；：、及与和之的该将能须应皆被于以并且其而还另时在]{2,12}"
+# R67 (2026-05-05) sweep: added 由 — relational verb ("composed of"); not
+# a noun-internal char in patent claim diction. Empirical attestation:
+# CN112271269B c10 over-captured `交联网状结构由可交联配体` because regex
+# spanned 由. Compound nouns containing 由 (缘由/自由/由来/理由) are
+# non-patent-relevant; safe to add as boundary.
+_NOUN_CHARS_CN = r"[^\s，。；：、及与和之的该将能须应皆被于以并且其而还另时在由]{2,12}"
 # R62 (2026-05-05): post-match paren-numeral closure helper. Mirrors
 # the TW walker fix: when the captured noun ends with `(<alphanumeric>`
 # (open paren + 1-5 digits/letters, no closing paren), the {2,12}
@@ -1089,7 +1094,7 @@ _PAREN_NUM_TRAIL_RE_CN = re.compile(r"[(（][0-9A-Za-z]{1,5}$")
 # `所述<state>`. See tw_claims.py R66 comment for full rationale.
 _STATE_MODIFIER_SUFFIXES_CN = ("状", "形")
 _DE_HEAD_NOUN_RE_CN = re.compile(
-    r"的(?P<head>[^\s，。；：、及与和之的该将能须应皆被于以并且其而还另时在]{2,12})"
+    r"的(?P<head>[^\s，。；：、及与和之的该将能须应皆被于以并且其而还另时在由]{2,12})"
 )
 
 # R64 (2026-05-05) TW parity: display-side ordinal restoration. Walker
@@ -2193,6 +2198,13 @@ _LEADING_VERB_PREFIXES_CN: tuple[str, ...] = tuple(sorted(
         '为了', '借以', '借由', '通过',
         '使得', '使其', '从而', '进而', '并且',
         '用以', '用于',
+        # R67 (2026-05-05) sweep: 具有 — possession verb ("X has Y").
+        # Drafters write `所述具有酸解离性基的结构单元` where the actual
+        # antecedent is `结构单元` (or `酸解离性基`), not `具有酸解离性基`.
+        # Residual ≥ 2 protects 具有 + 1-char compounds (none expected
+        # in patent diction) while admitting 具有 + 2+-char nouns.
+        # Attestation: CN120266060A c8 captured `具有酸解离性基`.
+        '具有',
     ),
     key=len,
     reverse=True,
