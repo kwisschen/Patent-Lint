@@ -31,6 +31,34 @@ def _dx(**kwargs: Any) -> dict[str, Any]:
     return {k: v for k, v in kwargs.items() if v is not None}
 
 
+def annotate_term_in_spec(
+    findings: list[dict],
+    spec_text: str,
+) -> None:
+    """Annotate each walker finding with a `term_in_spec` boolean.
+
+    R57 (2026-05-05): cross-validate antecedent walker findings against
+    the document's specification body. When a flagged term ALSO appears
+    in the description (technical field + background + summary +
+    drawings description + detailed description / embodiment), the
+    drafter likely DID introduce the concept somewhere — even if the
+    claim-chain walker can't resolve the back-reference. The spec match
+    boosts confidence that the finding is a STYLISTIC issue (term
+    introduced in spec but referenced in claims without parallel intro)
+    vs. a pure walker FP (over-capture or fragment).
+
+    Mutates findings list in place; adds boolean field. Empty spec text
+    leaves the field False on all findings.
+    """
+    if not spec_text:
+        for f in findings:
+            f["term_in_spec"] = False
+        return
+    for f in findings:
+        term = (f.get("term") or "").strip()
+        f["term_in_spec"] = bool(term) and term in spec_text
+
+
 def make_document_dedup_key(term: str, reference_form: str) -> str:
     """Per-document dedup key for an antecedent-basis finding.
 
@@ -67,6 +95,7 @@ def compute_confidence_score(
     suggested_cross_branch: bool,
     suggested_jaccard: float | None = None,
     suggested_same_claim: bool = False,
+    term_in_spec: bool = False,
 ) -> int:
     """Confidence score (0–100) for an antecedent-basis finding.
 
@@ -159,6 +188,13 @@ def compute_confidence_score(
     # Formal-register prefix — minor positive
     if prefix and prefix.strip().lower() in _FORMAL_PREFIXES:
         score += 5
+    # R57 (2026-05-05): spec-body cross-validation. Term appearing in
+    # description body (technical field + background + summary +
+    # drawings description + detailed description) is strong positive
+    # signal: drafter introduced the concept, just didn't put it in a
+    # claim-chain Pattern A/B form. +10 boost.
+    if term_in_spec:
+        score += 10
     return max(0, min(100, score))
 
 # Hyphen-aware word token: matches "multi-stage", "non-transitory", "widget"
