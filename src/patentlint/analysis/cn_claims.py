@@ -3070,6 +3070,46 @@ def check_antecedent_basis_cn(
                 continue
             intros_by_term[suffix] = suffix_anchor_chain_cn[suffix]
 
+        # R52-CN (2026-05-05): head-noun-suffix bridging for compound nouns.
+        # CN parity of TW R52 (commit 930ad0c). When a chain intro is
+        # `<modifier><HEAD>` where HEAD is a known compound head-noun
+        # suffix (Simplified script), register `<HEAD>` separately so dep
+        # claims using the bare head can resolve.
+        #
+        # Phase 1 supplement_v2 cluster `TAIL|CN|导体层` (31 wfp / 0 legit)
+        # and similar patterns. CN drafters of chemistry/materials claims
+        # use Pattern A on full compound (e.g. `半导体导体层`) but back-
+        # reference using just the head (`所述导体层`).
+        #
+        # Architectural mirror of R32 ordinal bridge + R52 TW:
+        #   1. Multi-modifier ambiguity guard
+        #   2. Conflict guard (HEAD already an intro)
+        #   3. Suffix allowlist — Simplified-script equivalents of TW R52
+        _R52_HEAD_SUFFIXES_CN = (
+            "组合物", "化合物", "溶液", "溶剂", "配方",
+            "混合物", "复合物", "产物", "药剂", "抗体",
+            "导体层", "聚合物",
+        )
+        head_count_cn: dict[str, int] = {}
+        head_anchor_cn: dict[str, tuple[int, int]] = {}
+        for norm, (ancestor_id, depth) in intros_by_term.items():
+            for suffix in _R52_HEAD_SUFFIXES_CN:
+                if (
+                    norm.endswith(suffix)
+                    and len(norm) > len(suffix)
+                ):
+                    head_count_cn[suffix] = head_count_cn.get(suffix, 0) + 1
+                    existing = head_anchor_cn.get(suffix)
+                    if existing is None or depth < existing[1]:
+                        head_anchor_cn[suffix] = (ancestor_id, depth)
+                    break
+        for suffix, count in head_count_cn.items():
+            if count > 1:
+                continue
+            if suffix in intros_by_term:
+                continue
+            intros_by_term[suffix] = head_anchor_cn[suffix]
+
 
         # Q1 tw_contamination rejection pre-pass. The TC-plural prefixes
         # 该等 / 该些 are not valid in CN drafting (CNIPA审查指南 uses 所述).
