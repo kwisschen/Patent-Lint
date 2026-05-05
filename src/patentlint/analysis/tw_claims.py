@@ -4154,8 +4154,18 @@ def check_antecedent_basis(
         #      電極); R52 handles modifier-of-class case (醫藥組合物 →
         #      組合物).
         _R52_HEAD_SUFFIXES = (
+            # Pharma/chemistry (R52 original)
             "組合物", "化合物", "溶液", "溶劑", "配方",
             "混合物", "複合物", "產物", "藥劑", "抗體",
+            # R56 (2026-05-05): electronic/circuit head nouns. Phase 1
+            # supplement_v2 clusters TAIL|TW|路系統 (46 wfp on
+            # 電路系統 family), TAIL|TW|電晶體 (36 wfp), TAIL|TW|管理功能
+            # (35 wfp), HEAD|TW|區塊鏈 (35 wfp), HEAD|TW|參考電 (34 wfp on
+            # 參考電壓), HEAD|TW|定位輔 (32 wfp on 定位輔助). Drafters
+            # introduce `<modifier>電路系統` (Pattern A) but dep claims
+            # back-reference using just `電路系統` head.
+            "電路系統", "電晶體", "區塊鏈", "管理功能",
+            "參考電壓", "定位輔助", "操作單元", "傳送資訊",
         )
         head_count_chain: dict[str, int] = {}
         head_anchor_chain: dict[str, tuple[int, int]] = {}
