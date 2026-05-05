@@ -2654,6 +2654,41 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
             seen_norms.add(full_noun)
             extras.append((pa_m.group(0), full_noun))
 
+    # R50 (2026-05-05): Chinese-name-Latin-abbrev juxtaposition (no parens).
+    # Drafters introduce telecom/protocol acronyms via Chinese-then-Latin
+    # format with NO parens between them: `所述IGP报文包括类型长度值TLV`
+    # introduces both 类型长度值 (the descriptor) AND TLV (the acronym).
+    # Phase 1 cluster `SHAPE|CN|ASCII_UPPER:SHORT` (81 wfp / 0 legit on
+    # supplement_v2 corpus, 2026-05-05).
+    #
+    # Trigger: must be preceded by Pattern B-style introducer
+    # (`包括`/`包含`/`为`/`是`) so we don't over-extract from random
+    # Chinese-Latin neighbor pairs.
+    #
+    # Boundary check after the Latin abbrev: punctuation, common
+    # particles, sentence end. Prevents the regex from greedily eating
+    # into mixed-script compound nouns where Latin and Chinese are
+    # genuinely distinct tokens.
+    #
+    # Both the Chinese descriptor and Latin acronym register as intros;
+    # the walker's normal exact-match resolves `所述TLV` references
+    # against the Latin form.
+    _CN_LATIN_ABBREV_RE = re.compile(
+        r'(?:包括|包含|为|是)\s*'
+        r'([一-鿿]{2,12})'
+        r'([A-Z][A-Za-z0-9]{1,4})'
+        r'(?=[，。；,;:、(（]|的|所述|实施|是|为|具有|$|\s)'
+    )
+    for la_m in _CN_LATIN_ABBREV_RE.finditer(text):
+        chinese = la_m.group(1)
+        latin = la_m.group(2)
+        if latin not in seen_norms and len(latin) >= 2:
+            seen_norms.add(latin)
+            extras.append((la_m.group(0), latin))
+        if chinese not in seen_norms:
+            seen_norms.add(chinese)
+            extras.append((la_m.group(0), chinese))
+
     # R37 (2026-05-04): mirror of TW R37 F22 — list-item bare-noun
     # extraction WITHOUT colon trigger. CN parity: parent claim
     # introduces multiple components in `<verb><N1>、<N2>以及<N3>`
