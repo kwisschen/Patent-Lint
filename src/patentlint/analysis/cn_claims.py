@@ -2871,6 +2871,13 @@ def extract_introductions_cn(
     # the canonical method-claim head-noun reference `所述方法`.
     supplementary = _extract_supplementary_intros_cn(claim.text)
     for orig, norm in supplementary:
+        # R63 (2026-05-05) parity with TW — apply Arabic→CJK ordinal
+        # normalize so claim 1 supplementary intro `第1间隔件` registers
+        # as `第一间隔件`, matching dep claim references that go through
+        # `normalize_reference_term_cn` which already applies the convert.
+        # Without this the asymmetry produces spurious walker_fp findings
+        # on CN drafts using Arabic-ordinal element naming.
+        norm = normalize_arabic_ordinal_to_cjk(norm)
         norm = strip_leading_verb_cn(norm)
         if not norm or norm in seen:
             continue
