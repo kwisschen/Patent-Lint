@@ -19,6 +19,30 @@ function isCjkRefForm(term) {
   return CJK_REF_PREFIXES.some((p) => term.startsWith(p))
 }
 
+// R63 (2026-05-05): Arabic↔CJK ordinal map. Walker normalizes 第1→第一
+// at emit-time, so finding terms always carry CJK ordinals; raw claim
+// text may have either form. To highlight correctly in both directions,
+// every term-side ordinal token gets a regex alternation matching either
+// form. Symmetric with `normalize_arabic_ordinal_to_cjk` in tw_claims.py.
+const _ORDINAL_PAIRS = [
+  ['一', '1'], ['二', '2'], ['三', '3'], ['四', '4'], ['五', '5'],
+  ['六', '6'], ['七', '7'], ['八', '8'], ['九', '9'], ['十', '10'],
+]
+
+function expandOrdinalVariants(escaped) {
+  // For each `第<CJK>` or `第<Arabic>` substring, replace with regex
+  // alternation matching either form. Escape was already applied; we
+  // only inject alternation tokens which are regex-safe.
+  let out = escaped
+  for (const [cjk, ar] of _ORDINAL_PAIRS) {
+    // Replace literal `第<cjk>` with `第(?:<cjk>|<ar>)`
+    out = out.replaceAll(`第${cjk}`, `第(?:${cjk}|${ar})`)
+    // Replace literal `第<ar>` with `第(?:<cjk>|<ar>)`
+    out = out.replaceAll(`第${ar}`, `第(?:${cjk}|${ar})`)
+  }
+  return out
+}
+
 function highlightTerms(text, terms) {
   if (!terms.length) return text
 
@@ -31,7 +55,8 @@ function highlightTerms(text, terms) {
   for (const t of terms) {
     const escaped = t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
     if (isCjkRefForm(t)) {
-      cjkParts.push(escaped)
+      // Expand ordinal variants so 第一 also matches 第1 in claim text
+      cjkParts.push(expandOrdinalVariants(escaped))
     } else if (/^(?:the|said)\s+/i.test(t)) {
       refFormParts.push(escaped)
     } else {
