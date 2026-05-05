@@ -263,7 +263,7 @@
     "title": "先行詞基礎檢視",
     "findings": "項問題",
     "finding": "項問題",
-    "disclaimer": "PatentLint 不使用 AI，亦不採伺服器端處理；「高信心度」分級優先列出最可行動的疑義，最終仍請對照您的稿件確認。",
+    "disclaimer": "PatentLint 不使用 AI，亦不採伺服器端處理；最終仍請對照您的稿件確認所有疑義。",
     "tierFilter": {
       "label": "篩選：",
       "showAll": "全部顯示（{{count}} 項）",

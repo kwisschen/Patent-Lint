@@ -1,13 +1,11 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 // Copyright (c) 2025 Christopher Chen
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AlertTriangle, ChevronRight, Flag } from 'lucide-react'
 import { Button } from './ui/button'
 import { FrostCard } from './ui/frost-card'
 import { StatusPill } from './ui/status-pill'
 import { composeFeedback, sendReport, excerptAround, SAMPLE_SIZE } from '../lib/feedback'
-import { groupTier, TIER_HIGH } from '../lib/confidenceTier'
 import { useFeedback } from './FeedbackPicker'
 import ReportModal from './ReportModal'
 
@@ -349,10 +347,11 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
 
 export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }) {
   const { t, i18n } = useTranslation()
-  // Phase 5 tier filter (default OFF — preserves existing UX). When ON,
-  // hides groups whose findings are all below the high-conf tier per
-  // the calibrated TIER_THRESHOLDS in confidenceTier.js.
-  const [highConfOnly, setHighConfOnly] = useState(false)
+  // 2026-05-05: removed `highConfOnly` filter. Empirical measurement on
+  // TW supplement_v2 showed the conf≥65 bucket is mildly walker-bug
+  // enriched (75.3% statutory precision vs 78.8% whole-corpus) — the
+  // filter was misleading users into a slightly worse subset at 96%
+  // recall loss. Default-show-all is correct UX.
 
   if (!issues || issues.length === 0) return null
 
@@ -400,21 +399,7 @@ export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }
   groups.sort((a, b) => a.claimIds[0] - b.claimIds[0])
 
   const totalFindings = issues.length
-
-  // Phase 5 tier filter: assign each group's tier based on its findings'
-  // max confidence_score (per groupTier helper). Default-show all groups;
-  // when filter is on, show only groups with at least one high-conf finding.
-  const groupsWithTier = groups.map((g) => ({
-    ...g,
-    tier: groupTier(g.findings, jurisdiction),
-  }))
-  const visibleGroups = highConfOnly
-    ? groupsWithTier.filter((g) => g.tier === TIER_HIGH)
-    : groupsWithTier
-  const highConfGroupCount = groupsWithTier.filter(
-    (g) => g.tier === TIER_HIGH
-  ).length
-  const hasMixedTiers = highConfGroupCount > 0 && highConfGroupCount < groupsWithTier.length
+  const visibleGroups = groups
 
   return (
     <FrostCard tier="resting" accent="attention">
@@ -426,25 +411,8 @@ export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }
         </StatusPill>
       </div>
       <div className="border-t border-border/40 px-4 py-2 text-xs text-muted-foreground italic">
-        {t('antecedentBasis.disclaimer', 'PatentLint does not use AI or server-side processing. High-confidence tier prioritizes most-actionable findings. Always confirm against your draft.')}
+        {t('antecedentBasis.disclaimer', 'PatentLint does not use AI or server-side processing. Always confirm findings against your draft.')}
       </div>
-      {hasMixedTiers && (
-        <div className="flex items-center justify-end gap-2 border-t border-border/40 px-4 py-2 text-xs">
-          <span className="text-muted-foreground">
-            {t('antecedentBasis.tierFilter.label', 'Filter:')}
-          </span>
-          <Button
-            variant={highConfOnly ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setHighConfOnly(!highConfOnly)}
-            className="h-7 text-xs"
-          >
-            {highConfOnly
-              ? t('antecedentBasis.tierFilter.showAll', 'Show all ({{count}})', { count: groupsWithTier.length })
-              : t('antecedentBasis.tierFilter.showHighConf', 'High confidence only ({{count}})', { count: highConfGroupCount })}
-          </Button>
-        </div>
-      )}
       <div className="border-t border-border/40 px-1 py-1">
         {visibleGroups.map((group, i) => (
           <ClaimGroupRow
