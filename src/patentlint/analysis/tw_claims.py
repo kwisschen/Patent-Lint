@@ -1513,7 +1513,11 @@ def check_connection_relationships_tw(doc: TwPatentDocument) -> list[CheckItem]:
 # 該所述前述 prefix is stripped before this regex applies). 12 leaves
 # headroom for ordinal+qualifier+head-noun compounds without permitting
 # the runaway captures observed in the 2026-04-09 smoke test.
-_NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以並且其而還另時在更]{2,12}"
+# R67 (2026-05-05) sweep: added 由 — relational verb ("composed of"); not a
+# noun-internal char in patent claim diction. CN-side empirical attestation
+# (CN112271269B `结构由可交联配体`); preventatively added to TW for parity.
+# Compound nouns containing 由 (緣由/自由/由來/理由) are non-patent-relevant.
+_NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以並且其而還另時在更由]{2,12}"
 # R62 (2026-05-05): post-match paren-numeral closure.
 # When the captured noun ends with `(<alphanumeric>` (no closing paren)
 # AND the next char in claim text is `)`, the {2,12} length limit cut
@@ -1552,7 +1556,7 @@ _PAREN_NUM_TRAIL_RE = re.compile(r"[(（][0-9A-Za-z]{1,5}$")
 # `前述島狀的奈米片積層體` reference_form.
 _STATE_MODIFIER_SUFFIXES_TW = ("狀", "形")
 _DE_HEAD_NOUN_RE = re.compile(
-    r"的(?P<head>[^\s，。；：、及與和之的該將能須應皆被於以並且其而還另時在更]{2,12})"
+    r"的(?P<head>[^\s，。；：、及與和之的該將能須應皆被於以並且其而還另時在更由]{2,12})"
 )
 
 # R64 (2026-05-05): display-side ordinal restoration. Walker normalizes
@@ -2763,6 +2767,11 @@ _LEADING_VERB_PREFIXES_TW: tuple[str, ...] = tuple(sorted(
         # Risk audited: 用以 / 用於 do not appear as compound-noun prefixes
         # in patent claims (no 用以X-form noun in TIPO claim corpus).
         "用以", "用於",
+        # R67 (2026-05-05) sweep: 具有 — possession verb ("X has Y").
+        # CN parity. Drafters write `所述具有X的Y` where the actual
+        # antecedent is Y (or X), not `具有X`. Residual ≥ 2 floor
+        # protects against trivial 1-char strips.
+        "具有",
     ),
     key=len,
     reverse=True,

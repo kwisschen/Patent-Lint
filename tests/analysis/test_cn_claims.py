@@ -750,3 +750,46 @@ class TestParenAbbrevR34Cn:
     def test_lowercase_ff_comma_uppercase_abbrev(self):
         intros = self._intros("一种用户设备(user equipment, UE)，包括一处理器。")
         assert "UE" in intros, f"UE missing from {intros}"
+
+
+class TestGarbageCaptureSweepR67:
+    """R67 (2026-05-05) garbage-capture sweep on CN walker.
+
+    Two safe fixes:
+    1. 具有 added to _LEADING_VERB_PREFIXES_CN — strips possession verb
+       prefix so `所述具有酸解离性基的结构单元` resolves on the head
+       noun instead of emitting `具有酸解离性基` as a meaningless term.
+    2. 由 added to _NOUN_CHARS_CN regex boundary — prevents over-capture
+       across `X由Y` ("X composed of Y") relational frames. CN112271269B
+       previously emitted `交联网状结构由可交联配体` (the bare relational
+       句); now emits `交联网状结构` (the actual antecedent term).
+    """
+
+    def test_jou_strip_silences_meaningless_term(self):
+        """所述具有X的Y → walker no longer emits the meaningless `具有X`."""
+        from patentlint.analysis.cn_claims import check_antecedent_basis_cn
+        doc = _cn_doc([
+            _claim(
+                1,
+                "1. 一种组合物，所述具有酸解离性基的结构单元由下述式表示。",
+            ),
+        ])
+        issues = check_antecedent_basis_cn(doc)
+        # Walker should not surface `具有酸解离性基` as a reference term —
+        # 具有 is a verb, not part of an element name.
+        assert not any("具有" in i["term"] for i in issues), issues
+
+    def test_you_boundary_truncates_capture(self):
+        """所述<noun>由<another_noun> — capture stops before 由."""
+        from patentlint.analysis.cn_claims import check_antecedent_basis_cn
+        doc = _cn_doc([
+            _claim(
+                1,
+                "1. 一种结构，包含一可交联配体，"
+                "所述交联网状结构由可交联配体形成。",
+            ),
+        ])
+        issues = check_antecedent_basis_cn(doc)
+        # If walker emits, term should NOT span across 由.
+        for i in issues:
+            assert "由" not in i["term"], i
