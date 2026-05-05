@@ -1477,6 +1477,34 @@ _NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以並
 # paren is part of the legitimate element identity (符號說明 entry name).
 _PAREN_NUM_TRAIL_RE = re.compile(r"[(（][0-9A-Za-z]{1,5}$")
 
+# R66 (2026-05-05): modifier+noun lookahead resolution — STATE-MODIFIER
+# constrained.
+#
+# When walker captures `前述X` and claim text continues `的<head_noun>`,
+# the regex stopped at 的 by design (genitive marker excluded from
+# _NOUN_CHARS) but in state-modifier+head-noun constructions the head
+# noun is the actual antecedent. Surfaced by 神秘黑屏哥.docx c10:
+# 前述島狀的奈米片積層體 references 奈米片積層體 (introduced) with
+# state modifier 島狀. extract_introductions_tw already strips this
+# pattern on the intro side; symmetric resolution required on reference
+# side per feedback_symmetry_audit_normalize_chains.
+#
+# Constraint: 的 in Chinese has multiple roles — state-modifier
+# (`島狀的Y` = "island-shaped Y"), possessive (`A的B` = "A's B"), and
+# adjective. Only state-modifier maps "X is descriptive of Y, Y is the
+# head"; possessive (`該電子裝置的一插槽`) maps "X is a SEPARATE element,
+# Y is owned by X" — silencing X here masks legit drafter errors. To
+# distinguish, gate on captured-term suffix: 狀/形 are unambiguous state
+# suffixes (球狀, 環狀, 圓形, 矩形, U形). Possessive owners
+# (容納部/電子裝置/識別資料) end in noun-class suffixes (部/置/料)
+# that the gate excludes. Verified against TW harness 2026-05-05:
+# unconstrained version silenced 4 protect:true legit_drafting_error
+# labels; suffix-gated version silences 0 while preserving the c10 fix.
+_STATE_MODIFIER_SUFFIXES_TW = ("狀", "形")
+_DE_HEAD_NOUN_RE = re.compile(
+    r"的(?P<head>[^\s，。；：、及與和之的該將能須應皆被於以並且其而還另時在更]{2,12})"
+)
+
 # R64 (2026-05-05): display-side ordinal restoration. Walker normalizes
 # 第1 → 第一 (Arabic→CJK) for matching parity with intros. For UI display
 # the drafter's original ordinal form is preferred — showing 前述第一間隔件
@@ -4565,6 +4593,30 @@ def check_antecedent_basis(
                         and bare in intros_by_term
                     ):
                         resolved_intro = bare
+
+            # R66 (2026-05-05): state-modifier+head-noun lookahead.
+            # When ref is `前述<state-modifier>` and claim text continues
+            # `的<head>`, try resolving the head noun against intros.
+            # Surfaced by 神秘黑屏哥.docx c10: 前述島狀的奈米片積層體 →
+            # 奈米片積層體 (introduced). Gated on state-suffix (狀/形)
+            # to avoid silencing possessive references — see the
+            # _STATE_MODIFIER_SUFFIXES_TW comment for rationale.
+            if (
+                resolved_intro is None
+                and normalized_term.endswith(_STATE_MODIFIER_SUFFIXES_TW)
+                and not normalized_term.startswith("第")
+            ):
+                tail_start = m.end()
+                if tail_start < len(claim.text):
+                    m_de = _DE_HEAD_NOUN_RE.match(claim.text, tail_start)
+                    if m_de:
+                        head_raw = m_de.group("head")
+                        head_normalized = normalize_reference_term(
+                            head_raw,
+                            strict_qualifier_matching=strict_qualifier_matching,
+                        )
+                        if head_normalized and head_normalized in intros_by_term:
+                            resolved_intro = head_normalized
 
             if resolved_intro is not None:
                 # Number-neutral match satisfies the antecedent under

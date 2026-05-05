@@ -1634,3 +1634,87 @@ class TestParenAbbrevR34:
         intros = self._intros("一種裝置，包含一第一電極(101)。")
         # Element label digits don't form an UPPER abbrev — should not register
         assert "101" not in intros
+
+
+class TestStateModifierLookaheadR66:
+    """R66 (2026-05-05) state-modifier+head-noun lookahead resolution.
+
+    When walker captures `前述<state-modifier>` (e.g., `前述島狀`) and
+    claim text continues `的<head_noun>` where the head noun resolves
+    to an intro, suppress the finding. Surfaced by 神秘黑屏哥.docx c10:
+    `前述島狀的奈米片積層體` references 奈米片積層體 (introduced) with
+    state modifier 島狀.
+
+    Gated on _STATE_MODIFIER_SUFFIXES_TW (狀/形) to avoid silencing
+    possessive references like `該電子裝置的一插槽` where 電子裝置 is
+    a separate (and possibly undefined) reference.
+    """
+
+    def test_state_modifier_with_de_head_resolves(self):
+        """前述島狀的奈米片積層體 — head noun 奈米片積層體 introduced; suppress."""
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種方法，將一奈米片積層體圖案化為島狀，"
+                "從前述島狀的奈米片積層體的露出面側進行蝕刻。",
+            ),
+        ])
+        issues = check_antecedent_basis(doc)
+        # No finding for 前述島狀 — state-modifier+head-noun lookahead
+        # resolves via 奈米片積層體 intro.
+        assert not any(i["term"] == "島狀" for i in issues), issues
+
+    def test_possessive_not_silenced(self):
+        """該電子裝置的一插槽 — possessive frame; 電子裝置 must still flag.
+
+        Regression for 110P000868US c1 protect:true label. 電子裝置
+        ends in 置 (not 狀/形), so suffix gate prevents lookahead.
+        """
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種隨身碟，適用於多個行動裝置，"
+                "一連接埠，插入該電子裝置的一插槽內；"
+                "一儲存模組，配置以儲存資料。",
+            ),
+        ])
+        issues = check_antecedent_basis(doc)
+        # 電子裝置 has no intro; possessive `的一插槽` does not silence.
+        assert any(i["term"] == "電子裝置" for i in issues), issues
+
+    def test_locative_possessive_not_silenced(self):
+        """所述容納部的底面 — 容納部 ends in 部 (locative), not state suffix.
+
+        Regression for 110P000631US c1 protect:true label.
+        """
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種容器，包含一容納空間，所述容納部的底面距離一開口部。",
+            ),
+        ])
+        issues = check_antecedent_basis(doc)
+        assert any(i["term"] == "容納部" for i in issues), issues
+
+    def test_ordinal_state_modifier_not_resolved(self):
+        """第一狀 (with 第 prefix) — gate excludes ordinal-prefixed state terms."""
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種方法，包含一元件，該第一狀的元件被處理。",
+            ),
+        ])
+        issues = check_antecedent_basis(doc)
+        # 第一狀 must still flag — defensive against ambiguous ordinal+state.
+        assert any(i["term"] == "第一狀" for i in issues), issues
+
+    def test_xing_suffix_resolves(self):
+        """前述環形的Y — 形 suffix also enables lookahead."""
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種環，包含一墊圈，前述環形的墊圈具有彈性。",
+            ),
+        ])
+        issues = check_antecedent_basis(doc)
+        assert not any(i["term"] == "環形" for i in issues), issues
