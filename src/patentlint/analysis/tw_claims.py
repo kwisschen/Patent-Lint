@@ -677,9 +677,55 @@ def check_circular_dependency(doc: TwPatentDocument) -> list[CheckItem]:
 # ── Check 15 ─────────────────────────────────────────────────────────────
 
 
+def _collect_cycle_member_ids(doc: TwPatentDocument) -> set[int]:
+    """Return claim IDs that participate in any first-dep cycle.
+
+    Mirrors `check_circular_dependency`'s detection (first-dep walk +
+    revisit detection) but returns the set of all involved IDs across
+    every cycle. Used by `check_forward_dependency` to exclude
+    cycle-induced forward edges from its emit (R66 dedup against
+    circularDependency — both flag the same root cause when a multi-hop
+    cycle exists).
+    """
+    claims_by_id = {c.id: c for c in doc.claims}
+    cycle_ids: set[int] = set()
+    for claim in doc.claims:
+        if claim.independent:
+            continue
+        visited: set[int] = set()
+        path: list[int] = []
+        current = claim.id
+        while current in claims_by_id:
+            if current in visited:
+                cycle_ids.update(path)
+                break
+            visited.add(current)
+            path.append(current)
+            cur_claim = claims_by_id[current]
+            if cur_claim.independent or not cur_claim.dependencies:
+                break
+            current = cur_claim.dependencies[0]
+    return cycle_ids
+
+
 def check_forward_dependency(doc: TwPatentDocument) -> list[CheckItem]:
-    """Check if any claim depends on a higher-numbered claim."""
-    bad = [c.id for c in doc.claims if any(d > c.id for d in c.dependencies)]
+    """Check if any claim depends on a higher-numbered claim.
+
+    R66 (2026-05-05): exclude claim IDs that participate in any circular
+    cycle — those are already flagged by `check_circular_dependency`
+    with the same root cause (every multi-hop cycle has at least one
+    forward-pointing edge by ordering). Without dedup, a 5↔7 mutual
+    cycle emits BOTH `forwardDependency.amend` (claim 5) AND
+    `circularDependency.amend` (chain 5→7) for the same defect.
+    Pure forward refs (c2 deps=[5] without c5 cycling back) still emit
+    here — they're a distinct drafter mistake circularDependency misses.
+    """
+    cycle_ids = _collect_cycle_member_ids(doc)
+    bad = [
+        c.id for c in doc.claims
+        if any(d > c.id for d in c.dependencies)
+        and c.id not in cycle_ids
+    ]
 
     if bad:
         return [CheckItem(
