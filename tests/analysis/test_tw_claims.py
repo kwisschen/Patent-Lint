@@ -215,6 +215,36 @@ class TestForwardDependency:
         result = check_forward_dependency(doc)
         assert result[0].status == "pass"
 
+    def test_cycle_member_excluded_from_forward(self):
+        """R66 (2026-05-05) dedup: claims in a circular cycle are not
+        also flagged as forward-dependent. circularDependency is the
+        canonical finding for the same root cause.
+        """
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置。"),
+            # 5↔7 mutual cycle. c5 deps=[7] is forward; without dedup
+            # forwardDep would flag c5 in addition to circularDep's chain.
+            _claim(5, "5. 如請求項7。", independent=False, deps=[7]),
+            _claim(7, "7. 如請求項5。", independent=False, deps=[5]),
+        ])
+        circ = check_circular_dependency(doc)
+        fwd = check_forward_dependency(doc)
+        assert circ[0].status == "amend"
+        assert fwd[0].status == "pass"
+
+    def test_pure_forward_still_flags(self):
+        """Pure forward refs (no cycle) still emit forwardDep."""
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置。"),
+            _claim(2, "2. 如請求項5。", independent=False, deps=[5]),
+            _claim(5, "5. 如請求項1。", independent=False, deps=[1]),
+        ])
+        circ = check_circular_dependency(doc)
+        fwd = check_forward_dependency(doc)
+        assert circ[0].status == "pass"
+        assert fwd[0].status == "amend"
+        assert 2 in fwd[0].details_params["claims"]
+
 
 # ── Check 16: Single Sentence ────────────────────────────────────────────
 
