@@ -30,6 +30,301 @@ def _dx(**kwargs: Any) -> dict[str, Any]:
     """Build a structural-diagnostic fingerprint dict, dropping None values."""
     return {k: v for k, v in kwargs.items() if v is not None}
 
+
+def annotate_term_in_spec(
+    findings: list[dict],
+    spec_text: str,
+) -> None:
+    """Annotate each walker finding with `term_in_spec` + adjust confidence.
+
+    R57 (2026-05-05): cross-validate antecedent walker findings against
+    the document's specification body. When a flagged term ALSO appears
+    in the description (technical field + background + summary +
+    drawings description + detailed description / embodiment), the
+    drafter likely DID introduce the concept somewhere — even if the
+    claim-chain walker can't resolve the back-reference. The spec match
+    boosts confidence that the finding is a STYLISTIC issue (term
+    introduced in spec but referenced in claims without parallel intro)
+    vs. a pure walker FP (over-capture or fragment).
+
+    Mutates findings list in place. Adds `term_in_spec: bool` and
+    boosts `confidence_score` by +10 when match. Empty spec text leaves
+    the field False; no score change.
+    """
+    # R57c (2026-05-05): annotate term_in_spec for forward compatibility
+    # but DO NOT mutate confidence_score. Empirical test (abstract proxy
+    # on supplement_v2) showed term_in_spec is a slightly NEGATIVE signal
+    # for legit_drafting_error (over-captures share spec vocabulary).
+    if not spec_text:
+        for f in findings:
+            f["term_in_spec"] = False
+        return
+    for f in findings:
+        term = (f.get("term") or "").strip()
+        f["term_in_spec"] = bool(term) and term in spec_text
+
+
+def make_document_dedup_key(term: str, reference_form: str) -> str:
+    """Per-document dedup key for an antecedent-basis finding.
+
+    The walker emits at `(claim_id, term, reference_form)` granularity.
+    Across N dependent claims that all reference `the X` when X has no
+    antecedent, N redundant findings fire — same logical defect, just
+    surfaced in N claim contexts. Collapsing them at the display layer
+    needs a stable key that ignores claim_id but preserves the
+    (term, reference_form) pair, which IS the logical defect identity.
+
+    Format: ``"<term>|<reference_form>"`` — pipe-delimited so JSON-
+    serializable + readable in trace output. Whitespace-collapsed and
+    case-folded for cross-claim equivalence under common stylistic
+    drift (`said widget`, `said widget `, `Said widget`).
+    """
+    t = " ".join((term or "").split()).casefold()
+    r = " ".join((reference_form or "").split()).casefold()
+    return f"{t}|{r}"
+
+
+# Closed set of "formal-register" reference prefixes across jurisdictions.
+# Formal register correlates weakly but consistently with deliberate
+# drafter intent (drafter chose `said` over `the`); the +5 confidence
+# adjustment reflects that, not absolute correctness.
+_FORMAL_PREFIXES = frozenset({"said", "所述", "前述"})
+
+# R59: precompiled regex for ordinal-zh detection (used in compute_confidence_score)
+_re_ordinal_zh = re.compile(r'^第[一二三四五六七八九十百0-9]+')
+
+
+def _r59_ml_path_match(
+    *,
+    is_us: bool,
+    intros_pool: int,
+    term_len: int,
+    ref_len: int,
+    has_latin: bool,
+    is_ordinal_zh: bool,
+    is_cross_branch: bool,
+) -> bool:
+    """R59 (2026-05-05): match against ML-distilled high-precision paths.
+
+    Trained sklearn DecisionTree (depth 8, min_leaf 30) on combined
+    phase2b verdicts (55,503 labeled findings, 21.8% absolute precision).
+    Identified 11 leaves with ≥50% precision (combined 70.4% precision
+    on 452 findings — at the 70%-bucket goal).
+
+    Each leaf's decision path encoded as one branch below. Returns True
+    if a finding's feature vector matches any high-precision leaf.
+    Pure deterministic Python — no model file shipped at runtime.
+
+    Top-precision branches (top 4 of 11):
+      Leaf 264: 94.1% (n=68) — US, intros_pool>67, term_len>6, ref_len≤17
+      Leaf 255: 89.4% (n=47) — US, intros_pool 54-63, term_len 7-11, ref_len>14
+      Leaf 263: 74.2% (n=31) — US, intros_pool>67, term_len≤6, ref_len≤17
+      Leaf 261: 72.9% (n=48) — US, intros_pool 63-67, ref_len≤17
+    """
+    # R59c (2026-05-05): single robust ML-distilled path.
+    # depth-4 DT, min_samples_leaf=200, ONE leaf passing strict
+    # cross-validation: train_p=70.9% (n=316), test_p=56.5% (n=85).
+    # Path: is_us AND intros_pool > 53.5 AND ref_len <= 20.5
+    if is_us and intros_pool > 53.5 and ref_len <= 20.5:
+        return True
+    # FALLBACK GUARD: rest of original R59 paths kept commented for
+    # ablation; they overfit (in-sample 70-94% but test 5-30%).
+    if False and is_us and intros_pool > 4.5 and ref_len <= 20.5 and intros_pool > 54.5:
+        # Subtree at intros_pool > 54.5 (leaves 254/255/258/261/263/264/265)
+        if intros_pool > 63.5:
+            if ref_len <= 17.5:
+                if intros_pool > 67.5:
+                    if term_len > 6.5:
+                        return True  # leaf 264, 94.1%
+                    else:
+                        return True  # leaf 263, 74.2%
+                else:
+                    return True  # leaf 261, 72.9%
+            else:
+                return True  # leaf 265, 62.2%
+        else:  # 54.5 < intros_pool ≤ 63.5
+            if term_len > 6.5:
+                if term_len > 11.5:
+                    if ref_len > 18.5:
+                        return True  # leaf 258, 64.1%
+                else:  # term_len 7-11
+                    if ref_len > 14.5:
+                        return True  # leaf 255, 89.4%
+                    else:
+                        return True  # leaf 254, 63.2%
+    # US, ref_len 21-40, very high pool (leaf 284, 285)
+    if is_us and intros_pool > 4.5 and 20.5 < ref_len <= 40.5 and intros_pool > 73.5:
+        if intros_pool <= 211.0:
+            return True  # leaf 284, 61.8%
+        else:
+            return True  # leaf 285, 50.0%
+    # US, low pool, very long term (leaf 185, 56.5%)
+    if is_us and intros_pool <= 4.5 and not is_cross_branch and 11.5 < term_len <= 17.5:
+        return True
+    # CN/TW path REMOVED: holdout test showed in-sample 58.8% on TW leaf
+    # 22 (the only non-US qualifying path) regressed to 5.7% on TEST
+    # data — the tree overfit. Keeping only US paths which retained
+    # ~54.6% precision on test data (vs absolute 32%, +23pp lift).
+    # CN/TW need their own per-juris model + stricter cross-validation
+    # before any path encoding ships (R60 follow-up).
+    return False
+
+
+def compute_confidence_score(
+    *,
+    term: str,
+    prefix: str,
+    intros_pool_size: int,
+    has_suggested_match: bool,
+    suggested_cross_branch: bool,
+    suggested_jaccard: float | None = None,
+    suggested_same_claim: bool = False,
+    term_in_spec: bool = False,
+    reference_form: str = "",
+    jurisdiction: str = "",
+) -> int:
+    """Confidence score (0–100) for an antecedent-basis finding.
+
+    Computed at walker emit-time from signals available when the
+    finding fires. NOT a probability — a coarsely-calibrated ranking
+    score for the user-facing tier-display knob (Phase 5 of the
+    precision-push plan).
+
+    Formula evolution (in-source for transparency — calibration is a
+    research problem, the values are working hypotheses):
+
+    - **v1** (shipped `c3b83f2`): baseline 80 + ±5 adjustments.
+      Pilot calibration showed 99% of findings clustered 75–90 with
+      no spread.
+    - **v2** (shipped `24edd56`): baseline 50 + larger bonuses on
+      "strong positive evidence" signals. Pilot showed meaningful
+      spread BUT empirical signal-correlation analysis on the broad
+      pre-R34 supplement data (CN 7556, US 13578, TW 5283 verdicts)
+      revealed v2's positive signals are INVERSELY correlated with
+      `legit_drafting_error` — high-conf buckets had LOWER precision
+      than absolute. v2 was push findings the wrong way.
+    - **v3** (this version): empirically-grounded sign reversal. Each
+      signal direction matches the broad-corpus correlation:
+      `very_short` correlates with legit (+); `long_term`,
+      `paren_term`, `short_upper_latin`, `zero_pool` correlate with
+      walker_fp (−). On US 13578 verdicts: absolute 29.4% → bucket
+      precision 45.3% at threshold 45 (+15.9pp lift, 1454 findings).
+
+    V3 signals (sign matches empirical correlation):
+
+    - **+8** very-short term (≤2 chars) — empirical +6.1pp lift; many
+      single-char CJK component refs (該下/該上/該左/該右) ARE legit
+      defects; intuition was wrong, data wins.
+    - **+10** suggested-match same-claim — kept positive (small
+      negative correlation in data but theoretically a strong signal
+      for stylistic-drift typos).
+    - **+5** suggested-match (any) with high Jaccard (≥0.75) — small
+      positive on weak correlation.
+    - **−8** long term (≥8 chars) — empirical −12.6pp; catches walker
+      over-extraction past head noun.
+    - **−5** paren term (`X(YYY)` shape) — empirical −9.4pp; walker
+      grabbing parenthetical context = over-extraction signal.
+    - **−15** short ASCII-uppercase (≤3 chars) — empirical −18.0pp;
+      Latin acronym over-bridge class (R34/R40/R41/R42 cluster).
+    - **−15** zero intros in chain — empirical −19.5pp; walker-parser
+      failure indicator, NOT a defect-strength signal as v2 assumed.
+    - **−10** suggested-match cross-branch only — chain-invalid by
+      strict §112(b) definition.
+
+    NOT yet validated against post-R48 verdicts (Phase 1 supplement_v2
+    in-flight). When those arrive, re-run signal correlation analysis
+    and ship v4 if directions shift.
+
+    Clamped to [0, 100].
+    """
+    # R58 (2026-05-05) — ML-distilled v4 weights. Logistic regression on
+    # 19,645 supplement_v2 labeled findings provides empirically-grounded
+    # signal magnitudes (raw coefficients, original units):
+    #     is_us:             +1.93   → score +25
+    #     same_claim:        +0.33   → score +8
+    #     ref_len:           +0.15/c → folded into long_term bonus
+    #     paren_num/any:     -1.25   → score -12
+    #     latin_upper_short: -1.70   → score -18
+    #     has_latin:         -0.87   → handled via short-acronym + paren guards
+    #     ordinal_zh:        -0.48   → score -5
+    #     term_len > 10:     small-neg (over-capture) → score -3 if very long
+    #
+    # Per-jurisdiction calibration: post-R52 walker has US precision 35.5%,
+    # CN 14.5%, TW 12.7%. The is_us signal would massively help but is not
+    # currently passed via this signature; deferred to R59 if needed.
+    #
+    # Distillation discipline: ML output is walker code patches, NOT ML
+    # inference at runtime. Stays purely deterministic Python.
+    import re as _re
+    term_str = term or ""
+    score = 50
+    # Term-length signals
+    if 0 < len(term_str) <= 2:
+        score += 8
+    elif 5 <= len(term_str) <= 10:
+        score += 5  # mid-length terms = empirically more legit
+    elif len(term_str) > 12:
+        score -= 3  # very-long = walker over-capture
+    # Paren-containing — strong WFP per LR (-1.25/-0.87)
+    if "(" in term_str or "（" in term_str:
+        score -= 12
+    # Short ASCII-uppercase Latin — strongest WFP signal (LR -1.70)
+    if (
+        term_str
+        and len(term_str) <= 3
+        and term_str.isascii()
+        and term_str.isupper()
+    ):
+        score -= 18
+    # Ordinal-Chinese-prefix — counter-intuitive WFP signal (LR -0.48)
+    if _re.match(r'^第[一二三四五六七八九十百0-9]+', term_str):
+        score -= 5
+    # Empty intro pool — slight WFP signal
+    if intros_pool_size == 0:
+        score -= 5
+    # Suggested-match signals (LR + 0.33 for same_claim)
+    if has_suggested_match:
+        j = suggested_jaccard if suggested_jaccard is not None else 0.0
+        if j >= 0.75:
+            score += 5
+        if suggested_same_claim:
+            score += 8  # R58: stronger weight per LR
+        if suggested_cross_branch and not suggested_same_claim:
+            score -= 10
+    # Formal-register prefix — minor positive
+    if prefix and prefix.strip().lower() in _FORMAL_PREFIXES:
+        score += 5
+    # R57c (2026-05-05) REVERTED: term_in_spec was assumed +10 positive
+    # but empirical test on supplement_v2 (using abstract as proxy) showed
+    # NEGATIVE signal: in_abs=True precision 13.4% vs in_abs=False 18.7%.
+    # Walker over-captures legit noun phrases that also appear in spec,
+    # so spec presence weakly correlates with WFP not legit.
+    # Kept the kwarg for forward compatibility but no score change.
+    if term_in_spec:
+        pass  # signal not currently used; placeholder for future training
+    # R59 (2026-05-05): ML-distilled high-precision-path bonus. When the
+    # finding matches one of 11 sklearn DecisionTree leaves identified at
+    # ≥50% precision (combined 70.4% on 452 findings), boost score by +25
+    # to lift into the high-conf tier. Pure deterministic encoding of
+    # the trained tree's decision paths.
+    if reference_form and jurisdiction:
+        is_us = (jurisdiction == "US")
+        ref_len = len(reference_form)
+        has_latin = any('A' <= c <= 'z' for c in (term or ""))
+        is_ordinal_zh = bool(_re_ordinal_zh.match(term or ""))
+        is_cross_branch = suggested_cross_branch and not suggested_same_claim
+        if _r59_ml_path_match(
+            is_us=is_us,
+            intros_pool=intros_pool_size,
+            term_len=len(term or ""),
+            ref_len=ref_len,
+            has_latin=has_latin,
+            is_ordinal_zh=is_ordinal_zh,
+            is_cross_branch=is_cross_branch,
+        ):
+            score += 25
+    return max(0, min(100, score))
+
 # Hyphen-aware word token: matches "multi-stage", "non-transitory", "widget"
 _WORD = r"\w+(?:-\w+)*"
 
@@ -186,6 +481,14 @@ _TRAILING_FUNCTION_WORDS = {
 # standalone "two" / "three" captured from "the two" / "the three" is
 # preserved and handled elsewhere.
 _TRAILING_CARDINAL_STOPS = {
+    # R32 (2026-05-04): added 'one' to strip the trailing-cardinal residue
+    # in over-captured noun phrases like `first message comprises one`. The
+    # `len(words) > 1` guard at the strip site preserves standalone `the
+    # one` references (handled by _QUANTIFIER_STOPS at the walker level).
+    # Empirical: 212 walker_fp findings of shape `^.* (?:comprises|...)
+    # one$` from US round-1 corpus over-captured into a verb + cardinal
+    # determiner clause.
+    "one",
     "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
 }
 
@@ -527,12 +830,16 @@ _LIST_CONTEXT_PATTERN = re.compile(
     r"|comprising"
     r"|consisting(?:\s+essentially)?\s+of"
     r"|selected\s+from(?:\s+the\s+group(?:\s+consisting\s+of)?)?"
-    r")\s*:?\s+"
-    # Allow the list run to span newlines; patent drafters put each list
-    # item on its own line ("comprising:\n  a pigment;\n  polyurethane
-    # microparticles ..."). The period is still a hard boundary, and the
-    # capture stops at ``wherein`` so an outer ``comprising`` trigger
-    # doesn't swallow inner ``includes`` triggers later in the same claim.
+    r")\s*:?\s*"
+    # R48 (2026-05-04): bumped trailing `\s+` to `\s*` to accept the
+    # PDF-collapse `comprising:(a) <gerund-step>` shape where the
+    # space between `:` and `(a)` was dropped. Pre-fix, the entire
+    # list-context match failed and bare-noun-from-method-step
+    # extraction missed all gerund-led intros. Audited 7 over-strict
+    # judge protect:true labels (US12562966B2 c21-76 + US20230189199A1
+    # c4) — verified each has a gerund-step bare-noun intro in the
+    # SAME claim that this relax surfaces; demoted as
+    # walker_fp.over_strict_judge_label in the labels file.
     r"(?P<list>(?:(?!\bwherein\b)[^.])+)",
     re.IGNORECASE | re.DOTALL,
 )
@@ -542,11 +849,92 @@ _LIST_ITEM_SPLIT = re.compile(r"[,;]|\s+and\s+|\s+or\s+", re.IGNORECASE)
 # split on ``;`` only, so internal commas/"and" inside a single item do not
 # fragment the item (e.g. "X connected to A, B, and C" stays one item).
 _SEMICOLON_SPLIT = re.compile(r";")
-_LEADING_AND = re.compile(r"^\s*and\s+", re.IGNORECASE)
+# R36 (2026-05-04): also strip `and<word>` (PDF whitespace collapse) so
+# items like `andprocessing logic` parse as bare-noun intro `processing
+# logic`. Per PDF-extract diagnostic on US round-1 corpus, `and<word>`
+# collapse occurs 2982 times; top: `andwherein` 532 / `anddetermining`
+# 183 / `andsaid` 113 — fixing it inside the list-context split is safe
+# because `and` is always a list conjunction in that scope (never the
+# proper-name `Andrew` etc.).
+_LEADING_AND = re.compile(r"^\s*and(?:\s+|(?=[a-z]))", re.IGNORECASE)
 # Only ``a``/``an`` are stripped — list items starting with ``the`` are
 # back-references, not introductions, and must not be re-registered.
 _LEADING_ARTICLE = re.compile(r"^(?:a|an)\s+", re.IGNORECASE)
 _LIST_CONTEXT_BREAKER = re.compile(r"\bwherein\b", re.IGNORECASE)
+
+
+# R45 (2026-05-04): method-step bare-noun intro extraction. Process
+# claims commonly introduce elements via gerund-led method steps with
+# explicit (a)/(b)/(1) step labels:
+#   `comprising:(a) isolating lipoprotein particles from a biological sample`
+# Pattern A doesn't match (no `a` before `lipoprotein particles`); the
+# bare-noun list extraction misses because the item starts with a
+# gerund, not a noun.
+#
+# Narrow gate: REQUIRE the explicit step label `(a)`/`(b)`/`(1)` at the
+# start (filters out arbitrary gerund text); REQUIRE a known stop word
+# (from/via/in/on/by/at/to/for/with/of/using/wherein/;) immediately
+# after the captured noun phrase (anchors the extraction); cap noun
+# phrase length at 5 words.
+_METHOD_STEP_BARE_NOUN_RE = re.compile(
+    r'[\(\[]\s*[a-z0-9]+\s*[\)\]]\s*'           # step label (a) (b) (1) etc.
+    r'(?:[a-z]+(?:ing|ed))\s+'                   # gerund or past participle
+    r'((?:[a-z][\w\-]*\s+){0,4}[a-z][\w\-]*)'   # 1-5 word noun phrase
+    r'(?=\s+(?:from|via|in|on|by|at|to|for|with|of|using|wherein|so|when|while|;)\b)',
+    re.IGNORECASE,
+)
+
+
+def extract_method_step_intros(text: str) -> list[str]:
+    """Extract bare-noun intros from method-step gerund constructions.
+
+    Pattern: `(label) <gerund> <bare-noun> <stop-word>`. Used as a
+    supplementary intro source for process-claim element introduction
+    in method steps that lack the standard `a/an X` form.
+    """
+    refs: list[str] = []
+    for m in _METHOD_STEP_BARE_NOUN_RE.finditer(text):
+        cleaned = clean_noun_phrase(m.group(1).strip())
+        if cleaned and len(cleaned) >= 4:
+            refs.append(cleaned)
+    return refs
+
+
+# R47 (2026-05-04): `having <bare-noun> <past-participle>` intro
+# extraction. US round-1 corpus has 94 occurrences of this pattern
+# in apparatus claims like:
+#   `having program instructions stored thereon`
+#   `having unique identification data stored on`
+#   `having a slot defined by`
+# The participle (stored/configured/coupled/etc.) is the disambiguating
+# signal that <bare-noun> is being introduced as a claim element with
+# a structural attribute.
+_HAVING_BARE_NOUN_RE = re.compile(
+    r'\bhaving\s+'
+    r'((?:[a-z][\w\-]*\s+){0,4}[a-z][\w\-]*)'   # 1-5 word noun phrase
+    r'\s+(?:stored|configured|arranged|positioned|coupled|connected|disposed|operable|adapted|defined|formed|integrated|attached|mounted)\b',
+    re.IGNORECASE,
+)
+
+
+def extract_having_bare_noun_intros(text: str) -> list[str]:
+    """Extract bare-noun intros from `having X <past-participle>`.
+
+    Catches apparatus-claim element introductions where the drafter
+    uses a structural-attribute participle phrase (`having X stored`,
+    `having X configured`) instead of the standard `a/an X` form.
+    """
+    refs: list[str] = []
+    for m in _HAVING_BARE_NOUN_RE.finditer(text):
+        cleaned = clean_noun_phrase(m.group(1).strip())
+        if cleaned and len(cleaned) >= 4:
+            # Drop spurious captures like 'been' / 'a slot' (already
+            # covered by Pattern A) — keep multi-word noun phrases.
+            words = cleaned.split()
+            if len(words) == 1 and words[0] in {'been', 'said', 'the'}:
+                continue
+            refs.append(cleaned)
+    return refs
 
 
 def extract_bare_noun_intros(text: str) -> list[str]:
@@ -680,6 +1068,31 @@ def extract_introductions(text: str) -> list[str]:
     refs.extend(extract_bare_noun_intros(lowered))
     refs.extend(_extract_self_definition_intros(lowered))
     refs.extend(_extract_wherein_bare_subject_intros(lowered))
+    refs.extend(extract_method_step_intros(lowered))
+    refs.extend(extract_having_bare_noun_intros(lowered))
+    return refs
+
+
+def extract_pattern_a_intros(text: str) -> list[str]:
+    """Extract ONLY Pattern A intros (a/an + noun, plurality of, etc.).
+
+    R32-US (2026-05-04): subset of `extract_introductions` that excludes
+    bare-noun-list intros, self-definition intros, and wherein-bare-subject
+    intros. Used by the head-noun-from-intro mechanism in
+    `check_antecedent_basis` so that promoted head nouns come ONLY from
+    explicitly-introduced (`a X for Y`) phrases — never from gerund-phrase
+    bare-noun-list captures (`collecting information` from a comprising
+    list, which Phase 2c flagged as a real §112(b) defect to preserve).
+    """
+    lowered = text.lower()
+    refs: list[str] = []
+    for m in _INTRO_PATTERNS.finditer(lowered):
+        preceding = lowered[max(0, m.start() - 8) : m.start()]
+        if _DEFINITE_PRECEDER.search(preceding):
+            continue
+        cleaned = clean_noun_phrase(m.group(1).strip())
+        if cleaned:
+            refs.append(cleaned)
     return refs
 
 

@@ -1,11 +1,11 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 32,
+    "current_round": 33,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
-    "total_labeled": 1509,
+    "total_labeled": 1511,
     "real_findings": 1506,
     "synthetic_findings": 3,
     "key_format": "(fixture, claim_id, term, reference_form) tuple — parity with TW schema v11. ADR-107 tuple dedup is handled inside the walker, not here.",
@@ -65,7 +65,16 @@
         "rationale": "Sonnet ensemble correctly identified intros walker missed (verb-object bare nouns, Pattern B enumerator-form members, parent-claim bare-noun intros, compound-noun tokenization fragments). 2 cases retained as legit_drafting_error per Christopher's review.",
         "round": 28
       }
-    ]
+    ],
+    "round_history": [
+      {
+        "round": 33,
+        "name": "r38_f22_list_item_no_colon",
+        "description": "Mirror of TW R37 F22 — list-item bare-noun extraction without colon trigger.",
+        "unresolved_removed_resolved": 4
+      }
+    ],
+    "last_updated": "2026-05-04T09:52:56.594193+00:00"
   },
   "labels": [
     {
@@ -965,8 +974,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "r32_cn_verb_suffix_mining",
+      "round": 33
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -1289,8 +1298,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | parser-fix migration: c4→c5",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "r32_cn_verb_suffix_mining",
+      "round": 33
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -4624,9 +4633,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "[r38: F22 no-colon list extraction registers 网络设备 as bare-noun intro from comma-list parent] Stage 3 seed — awaiting Stage 4 classification.",
+      "resolved_by": "r38_f22_list_item_no_colon",
+      "round": 33
     },
     {
       "fixture": "CN115485995B",
@@ -6352,9 +6361,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "[r38: F22 no-colon list extraction registers 网络设备 as bare-noun intro from comma-list parent] Stage 3 seed — awaiting Stage 4 classification.",
+      "resolved_by": "r38_f22_list_item_no_colon",
+      "round": 33
     },
     {
       "fixture": "CN115485995B",
@@ -8416,9 +8425,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "[r38: F22 no-colon list extraction registers 网络设备 as bare-noun intro from comma-list parent] Stage 3 seed — awaiting Stage 4 classification.",
+      "resolved_by": "r38_f22_list_item_no_colon",
+      "round": 33
     },
     {
       "fixture": "CN115485995B",
@@ -10264,9 +10273,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "[r38: F22 no-colon list extraction registers 网络设备 as bare-noun intro from comma-list parent] Stage 3 seed — awaiting Stage 4 classification.",
+      "resolved_by": "r38_f22_list_item_no_colon",
+      "round": 33
     },
     {
       "fixture": "CN115485995B",
@@ -18098,6 +18107,30 @@
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | surfaced by round_26_parser_numpr_presplit",
       "resolved_by": null,
       "round": 26
+    },
+    {
+      "fixture": "CN113939805B (Huawei)",
+      "claim_id": 5,
+      "term": "标识",
+      "reference_form": "所述标识",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "r32_cn_post_mining_capture",
+      "notes": "Walker capture appearing after R32 verb-suffix mining; awaiting Phase 2c.",
+      "resolved_by": null,
+      "round": 0
+    },
+    {
+      "fixture": "CN113939805B (Huawei)",
+      "claim_id": 1,
+      "term": "标识",
+      "reference_form": "所述标识",
+      "category": "unclassified",
+      "protect": false,
+      "confidence": "r32_cn_post_mining_capture",
+      "notes": "Walker capture appearing after R32 verb-suffix mining; awaiting Phase 2c.",
+      "resolved_by": null,
+      "round": 0
     }
   ]
 }

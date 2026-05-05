@@ -57,6 +57,30 @@ _CN_DEPENDENCY = re.compile(
     r"\s*(?:所(?:述|记载|揭示|描述)的?)?"
 )
 
+# R43 (2026-05-04): "every preceding claim" multi-dep form. CN drafters
+# use `如前述权利要求中任一项所述` / `如以上任一权利要求所述` /
+# `如任一前述权利要求所述` to depend on ALL prior claims (functionally
+# equivalent to listing 1..N-1). Without recognition, claims of this
+# shape parse as INDEPENDENT and downstream walker chain traversal
+# fails — surfaced on CN115023827A c3-c14 (10 claims chain-broken;
+# ~25 chain-broken walker_fp findings on `阴极材料涂层` / `阳极材料
+# 涂层` / `固体聚合物电解质涂层` etc.).
+#
+# Pattern requires BOTH a "preceding" marker (前述/以上/前面/前) and
+# an "any" marker (任[一]?项?) in either word order around 权利要求.
+# Word boundaries: 前述/以上/前面/前 anchored to the verb/start, 任一项
+# adjacent to 权利要求. Tightness prevents false matches on bare
+# `权利要求` text fragments inside a non-dep clause.
+_CN_PRECEDING_CLAIMS_DEP = re.compile(
+    r"(?:如|根据|依据|按照|依照|基于|依)?\s*"
+    r"(?:"
+    r"(?:前述|以上|前面|前)\s*权利要求\s*(?:中\s*)?任\s*[一]?\s*项?"
+    r"|"
+    r"任\s*[一]?\s*(?:前述|以上|前面)\s*权利要求"
+    r")"
+    r"\s*(?:所(?:述|记载|揭示|描述)的?)?"
+)
+
 
 def _expand_dependency_spec(spec: str) -> list[int]:
     """Expand a dependency spec string into a list of parent claim numbers.
@@ -110,6 +134,11 @@ def parse_cn_claims_docx(text: str) -> list[Claim]:
         deps: list[int] = []
         for dep_match in _CN_DEPENDENCY.finditer(claim_text):
             deps.extend(_expand_dependency_spec(dep_match.group("spec")))
+
+        # R43 (2026-05-04): "every preceding claim" multi-dep form.
+        # `如前述权利要求中任一项所述` -> deps = [1..num-1].
+        if not deps and _CN_PRECEDING_CLAIMS_DEP.search(claim_text):
+            deps = list(range(1, num))
 
         # Remove self-references and deduplicate
         deps = sorted(set(d for d in deps if d != num))

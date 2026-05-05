@@ -11,9 +11,16 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from patentlint.analysis.cjk_ordinal_guard import ordinal_guard
+from patentlint.analysis.cjk_ordinal_guard import (
+    normalize_arabic_ordinal_to_cjk,
+    ordinal_guard,
+)
 from patentlint.analysis.cjk_tokenize import jaccard, tokenize_tw
-from patentlint.analysis.utils import _dx
+from patentlint.analysis.utils import (
+    _dx,
+    compute_confidence_score,
+    make_document_dedup_key,
+)
 from patentlint.analysis.connection_relationships import (
     _TW_CONNECTION_CONFIG,
     check_connection_relationships,
@@ -1491,6 +1498,33 @@ _REF_PATTERN_CAPTURE = re.compile(
 # ``sorted(..., key=len, reverse=True)`` is applied once at import time.
 _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
     (
+        # === R32 (2026-05-04) — passive trailing residue ===
+        # CN parity (added to _TRAILING_VERB_DENYLIST_CN same round).
+        # 被: passive marker. Compound nouns ending in 被 are vanishingly
+        #   rare in TIPO patent claims; suffix-position is uniformly verb.
+        #
+        # NOT included: 通訊/通信. Empirically silenced 7 protect:false
+        # legit_drafting_error labels in CN115398975B c1-8 where bare
+        # `所述側鏈路中繼通訊` is genuinely ambiguous (no Pattern A intro
+        # exists); 通訊 is the HEAD noun in compound `側鏈路中繼通訊`,
+        # not a verb. Verb-mode vs noun-mode disambiguation is out of
+        # R32 scope.
+        "被",
+        # === R32 (2026-05-04) — verb-suffix trailing residues ===
+        # Cluster-mined from round-1 TW corpus: each entry has ≥30
+        # walker_fp findings AND 0 legit_drafting_error findings (safe
+        # silence per ensemble verdict + Phase 2c noise-floor analysis).
+        # Compound-noun risk audited: each verb appears at PREFIX
+        # position in noun compounds, not suffix.
+        "發送",  # 40 walker_fp / 0 legit. `<noun>發送` over-capture.
+        "提供",  # 38 walker_fp / 0 legit.
+        "獲得",  # 31 walker_fp / 0 legit.
+        "隔開",  # 32 walker_fp / 0 legit. (`<noun>隔開` separator verb)
+        "延伸",  # 44 walker_fp / 0 legit. Risk: 延伸線 (extension line)
+                # at PREFIX position, suffix-position is uniformly verb.
+        "經組態",  # 57 walker_fp / 0 legit. Passive participle ("configured").
+        # NOTE: 發光 not added — `發光二極體` (LED) suffix risk too high
+        # for confident strip without per-claim context.
         # Verb suffixes
         "包含", "包括", "含有", "具有", "係", "為", "是", "設有", "具備",
         # Preposition-verbs
@@ -1639,6 +1673,10 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         "分離", "比較", "判斷", "決定", "分析",
         "包括以下", "執行以下", "進行以下",
         "執行以下操作", "執行以下操",
+        # R60 (2026-05-05): TW 執行 verb-suffix from cluster TAIL|TW|經量化
+        # (TWI890747B 36 wfp on `經量化權重資訊執行...`). 來執行 / 執行一或多
+        # / 執行第二推 / 執行 over-captures.
+        "來執行", "執行一或多", "執行第二推", "執行",
         # === R30 (2026-05-03) — sample-derived adverbial / adjectival trims
         # 進一步: adverbial fragment of 進一步包括/進一步具有.
         # 相關聯: adjectival fragment of <noun>相關聯的. Existing 相關 + 有關
@@ -2338,6 +2376,29 @@ def clean_noun_phrase_tw(text: str) -> str:
             break
         if not stripped:
             break
+
+    # R55 (2026-05-05): TW parity of CN R54 — adverbial-verb + 整體呈X
+    # over-capture strip. Same architecture, Traditional script.
+    # Anchored two-group regex: head noun (≥2 chars) + verb-phrase suffix.
+    # Pre-地 portion constrained to 2-3 chars (typical TW adverbials:
+    # 軸向, 平穩, 垂直, 自動).
+    _R55_OVERALL_DESC_TW = re.compile(
+        r'^([一-鿿]{2,})整體呈[一-鿿]{1,8}$'
+    )
+    _R55_ADVERBIAL_VERB_TW = re.compile(
+        r'^([一-鿿]{2,})[一-鿿]{2,3}地[一-鿿]{1,3}$'
+    )
+    for _ in range(4):
+        before = current
+        m = _R55_OVERALL_DESC_TW.match(current)
+        if m:
+            current = m.group(1)
+        m = _R55_ADVERBIAL_VERB_TW.match(current)
+        if m:
+            current = m.group(1)
+        if current == before:
+            break
+
     return current
 
 
@@ -2364,6 +2425,13 @@ _POSSESSIVE_其_PREFIX_RE_TW: re.Pattern[str] = re.compile(
     r'^其(?=[一-鿿]{2,})'
 )
 
+# R32 (2026-05-04): leading conjunction-residue strip — CN parity. TIPO
+# drafts occasionally use `/或X` (and/or X — particularly in JP-translated
+# patents). Walker captures `/或<noun>` as leading-residue intro.
+_LEADING_CONJ_RESIDUE_RE_TW: re.Pattern[str] = re.compile(
+    r'^(?:/或|/和|和/或|或/|/)'
+)
+
 
 def strip_leading_quantifier(text: str) -> str:
     """Strip one matching leading quantifier (ADR-095 Rule 2).
@@ -2381,6 +2449,10 @@ def strip_leading_quantifier(text: str) -> str:
     """
     if not text:
         return text
+    # R32: leading conjunction-residue strip (`/或`, `和/或`).
+    m = _LEADING_CONJ_RESIDUE_RE_TW.match(text)
+    if m and len(text) - m.end() >= 2:
+        text = text[m.end():]
     # R32: at-least-N regex strip (handles 至少三個/至少四個/至少100個).
     m = _AT_LEAST_N_PREFIX_RE_TW.match(text)
     if m and len(text) - m.end() >= 2:
@@ -2466,7 +2538,32 @@ _QUANTIFIER_AFTER_POSITION: tuple[str, ...] = (
 #   `形成器`           (3 chars)  → strip → `器`         (1 char  < 3) PROTECT
 # Multi-char specific tokens; no compound-noun risk because bare-noun
 # claim elements never have these as their literal head morpheme.
-_LEADING_VERB_PREFIXES_TW: tuple[str, ...] = ("形成", "製造")
+_LEADING_VERB_PREFIXES_TW: tuple[str, ...] = tuple(sorted(
+    (
+        "形成", "製造",
+        # R32 (2026-05-04): connective-verb prefixes that frequently bleed
+        # into intro captures. Empirical attestation in 110P000368 c6
+        # spec-support FPs `即根據各數位內容` / `使得各數位內容關聯`. These
+        # are clause-connective verbs ("namely according to" / "such that")
+        # that drafters use to connect description to a noun referent.
+        # Stripping them symmetrically (intro + reference) preserves
+        # antecedent matching while eliminating the over-capture surface
+        # in spec-support.
+        # Multi-char longest-first so `即根據` is stripped as a unit
+        # before `根據` would be tried separately.
+        "即根據", "即基於", "即依據", "即依照",
+        "根據", "基於", "依據", "依照",
+        "為了", "藉以", "藉由",
+        "使得", "使其", "從而", "進而", "並且",
+        # 用以/用於 — purpose markers; often precede noun-phrase intros
+        # (`用以驅動X` / `用於X`) where the canonical intro is the X.
+        # Risk audited: 用以 / 用於 do not appear as compound-noun prefixes
+        # in patent claims (no 用以X-form noun in TIPO claim corpus).
+        "用以", "用於",
+    ),
+    key=len,
+    reverse=True,
+))
 # Residual ≥ 2: `形成p型源極／汲極` (10) → 8 ≥ 2 ✓; `製造方法` (4) → 2 ≥ 2 ✓;
 # `形成器`/`形成物` (3) → 1 < 2 PROTECT; `製造商`/`製造廠` (3) → 1 < 2 PROTECT.
 _LEADING_VERB_RESIDUAL_FLOOR: int = 2
@@ -2525,13 +2622,15 @@ def normalize_reference_term(
     """Normalize a flagged reference term for antecedent matching.
 
     Composes:
-        strip_reference_form_prefix    (該/所述/前述/該等/該些)
-        → strip_leading_qualifier      (對應/相應/前+quantifier — NEW)
-        → clean_noun_phrase_tw         (interior cut + trailing strip)
-        → strip_leading_quantifier     (一/一個/複數/...)
-        → strip_leading_verb           (形成 — R7, residual ≥ 3 guard)
+        normalize_arabic_ordinal_to_cjk  (R33 — 第1→第一, 第2→第二)
+        → strip_reference_form_prefix    (該/所述/前述/該等/該些)
+        → strip_leading_qualifier        (對應/相應/前+quantifier)
+        → clean_noun_phrase_tw           (interior cut + trailing strip)
+        → strip_leading_quantifier       (一/一個/複數/...)
+        → strip_leading_verb             (形成 — R7, residual ≥ 3 guard)
     """
-    t = strip_reference_form_prefix(text)
+    t = normalize_arabic_ordinal_to_cjk(text)
+    t = strip_reference_form_prefix(t)
     t = strip_leading_qualifier(t, strict_qualifier_matching=strict_qualifier_matching)
     t = clean_noun_phrase_tw(t)
     t = strip_leading_quantifier(t)
@@ -2565,7 +2664,8 @@ def normalize_candidate_intro(
     invariant that the intro and reference normalize to the same
     string when they refer to the same entity.
     """
-    t = strip_leading_qualifier(text, strict_qualifier_matching=strict_qualifier_matching)
+    t = normalize_arabic_ordinal_to_cjk(text)
+    t = strip_leading_qualifier(t, strict_qualifier_matching=strict_qualifier_matching)
     t = clean_noun_phrase_tw(t)
     t = strip_leading_quantifier(t)
     t = strip_reference_form_prefix(t)
@@ -3079,11 +3179,15 @@ _F19_VERB_NP_ZHI_RE = re.compile(
 # `以` excluded when followed by `及` (conjunction `以及` = "as well as")
 # to prevent mid-conjunction false matches like `以及藉由矽層夾持` where
 # `以` would otherwise trigger and capture `及藉由矽層` as junk noun.
+# R41 (2026-05-04): added `將` (instrumental object marker, traditional
+# CJK; mirror of CN R41 `将`). Extended trailing verb list with
+# output/send/transmit/etc. forms to cover `將X輸出/發送/傳輸` shapes
+# in JP/CN-translated TW drafts.
 _F20_PREP_NP_VERB_RE = re.compile(
-    r'(?:以(?!及)|藉由|透過|經由)'
+    r'(?:以(?!及)|藉由|透過|經由|將)'
     r'(?P<noun>' + _F14_NOUN_CLASS + r'{2,8}'
     r'(?:\([A-Za-z0-9]+\))?)'
-    r'(?:夾持|覆蓋|包含|包括|具有|含有|具備|設有|設置|配置|形成|構成|連接|連結|提供|分隔|劃分|實施|分為|構建|測量|蝕刻|除去|裝設|安裝)'
+    r'(?:夾持|覆蓋|包含|包括|具有|含有|具備|設有|設置|配置|形成|構成|連接|連結|提供|分隔|劃分|實施|分為|構建|測量|蝕刻|除去|裝設|安裝|輸出|輸入|發送|接收|傳輸|傳送|生成|獲取|獲得|確定|存儲|讀取|寫入|執行|處理|計算)'
 )
 
 # ADJ/verb heads that must not start a bare-modifier noun capture.
@@ -3654,8 +3758,21 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
 
     # R30 mechanism #6 (2026-05-03): parenthetical abbreviation bridging.
     # Mirror of CN R30. `<full term>(<Abbr>)` registers both full and Abbr.
+    # R34 (2026-05-04): widen to cover two more shapes seen on the
+    # post-R34 corpus baseline (Phase A cluster: TW `\u7b2c\u4e00U` 68 wfp /
+    # `UE` 57 wfp / `\u4e00UE` 37 wfp, all 0-legit). Subsumes:
+    #   1. Full-width \u5168\u89d2 parens \u2014 `\u4f7f\u7528\u8005\u8a2d\u5099\uff08UE\uff09` (JP/CN-translated
+    #      drafts default to full-width punctuation; original ASCII-only
+    #      regex missed 50 of 98 walker_fp findings in cluster).
+    #   2. Lowercase-full-form-then-uppercase-abbrev \u2014 `\u4f7f\u7528\u8005\u8a2d\u5099(user
+    #      equipment, UE)` (formal patent style: define foreign term
+    #      first, then bracket the acronym; another 11 of 98).
     _PAREN_ABBREV_RE_R30_TW = re.compile(
-        r'([\u4e00-\u9fff]{2,12})\(([A-Z][A-Za-z0-9\-]{0,15})\)'
+        r'([\u4e00-\u9fff]{2,12})'
+        r'[(\uff08]\s*'
+        r'(?:[a-z][A-Za-z0-9\- ]{0,40}[,;\uff0c\uff1b]\s*)?'
+        r'([A-Z][A-Za-z0-9\-]{0,15})'
+        r'\s*[)\uff09]'
     )
     for pa_m in _PAREN_ABBREV_RE_R30_TW.finditer(text):
         full_noun = pa_m.group(1)
@@ -3705,6 +3822,77 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
             continue
         seen_norms.add(noun)
         extras.append((sl_m.group(0), noun))
+
+    # R37 (2026-05-04): F22 — list-item bare-noun extraction WITHOUT
+    # a colon trigger. Phase A on the post-R36 corpus surfaced ~85
+    # walker_fp findings per 100 patents (extrapolated ~800 across
+    # the full TW corpus) where the parent claim introduces multiple
+    # ordinal-prefixed components in a comma-list:
+    #   `導電端子包括差分訊號端子、第一接地端子以及第二接地端子`
+    # F15 requires a `:` colon after the trigger verb; this F22
+    # variant accepts a bare comma-list (one or more `、` between
+    # nouns) directly after the trigger verb. The presence of `、`
+    # is the disambiguating signal for "this is a list" vs the
+    # possessive `<noun>的<noun>` or modifier sequence shapes that
+    # would otherwise false-fire.
+    # R44 (2026-05-04): expand triggers to 具有/具備/設有/含有 BUT only
+    # when the captured list has >=2 commas (3+ items) — single-comma
+    # lists with these triggers were too noisy on R37 gate-3
+    # spec-support test (TW JP-translation fixture +1). 3+ items
+    # strongly signal a list (not a possessive or modifier sequence).
+    _F22_NO_COLON_LIST_TW = re.compile(
+        r'(?:包括|包含)'
+        r'((?:[一-鿿]{2,12}[、，])+'
+        r'(?:[一-鿿]{2,12}(?:以及|及|和|或))?'
+        r'[一-鿿]{2,12})'
+        r'|'
+        r'(?:具有|具備|設有|含有)'
+        r'((?:[一-鿿]{2,12}[、，]){2,}'
+        r'(?:[一-鿿]{2,12}(?:以及|及|和|或))?'
+        r'[一-鿿]{2,12})'
+    )
+    _F22_LIST_SPLIT_TW = re.compile(r'[、，]|以及|及|和|或')
+    for fl_m in _F22_NO_COLON_LIST_TW.finditer(text):
+        list_text = fl_m.group(1) or fl_m.group(2)
+        if not list_text:
+            continue
+        for item_raw in _F22_LIST_SPLIT_TW.split(list_text):
+            item = item_raw.strip()
+            if not item or len(item) < 2:
+                continue
+            if item.startswith(_REFERENCE_PREFIXES):
+                continue
+            if not all('一' <= ch <= '鿿' for ch in item):
+                continue
+            if item in seen_norms:
+                continue
+            seen_norms.add(item)
+            extras.append((fl_m.group(0), item))
+
+    # R53 (2026-05-05): chemistry formula self-introducer.
+    # TW pharmaceutical/chemistry drafters introduce formulas via:
+    #   `(b)式(I)的免疫偶聯物` — without `一` quantifier prefix
+    # Pattern A regex requires `一` lead-in so misses these. The notation
+    # 式(I)/式(II)/化合物(I) etc. is universally chemistry-formula in TW
+    # drafts; treat as self-introducing when present.
+    #
+    # Phase 1 supplement_v2 cluster `TAIL|TW|(I)` residual 44 wfp on
+    # TW202502813A claim 1 `(b)式(I)的免疫偶聯物` shape.
+    #
+    # Match: 式|化合物|化學式 + (Roman numeral 1-3 chars or digit 1-3)
+    _R53_FORMULA_RE_TW = re.compile(
+        r'(?:式|化合物|化學式|結構式)'
+        r'[(（]\s*'
+        r'([IVXivx]{1,4}|[a-z]?[0-9]{1,3}[a-z]?)'
+        r'\s*[)）]'
+    )
+    for m in _R53_FORMULA_RE_TW.finditer(text):
+        # Use the full matched text as the intro form
+        full = m.group(0)
+        if full in seen_norms:
+            continue
+        seen_norms.add(full)
+        extras.append((full, full))
 
     return cleaned + extras
 
@@ -3895,6 +4083,116 @@ def check_antecedent_basis(
             ):
                 intros_by_term.setdefault(normalized, (ancestor.id, depth))
 
+        # R32 (2026-05-04): Path A equivalent for TW — chain-level
+        # ordinal-prefix bridging. When a chain intro starts with `第N`
+        # and `X` (the suffix) is not already an intro, register `X` as
+        # a separate intro IFF:
+        #   1. Multi-modifier ambiguity guard — no other ordinal-prefixed
+        #      chain intro shares the same suffix `X` (preserves
+        #      `第一X` + `第二X` → bare `X` ambiguous).
+        #   2. Prefix-conflict guard — claim text doesn't contain
+        #      `X<1-3 CJK>` shape that would create over-resolution via
+        #      longest-prefix fallback (preserves `控制電路` ↔
+        #      `控制電路A` distinct-element flagging).
+        # Same chain-level bridge runs ONCE per walker iteration; uses
+        # nearest-ancestor depth for the bridged entry (depth tiebreak
+        # preserves did-you-mean ordering).
+        _R32_ORDINAL_RE_TW = re.compile(r'^第[一二三四五六七八九十百0-9]+')
+        suffix_count_chain: dict[str, int] = {}
+        suffix_anchor_chain: dict[str, tuple[int, int]] = {}
+        for norm, (ancestor_id, depth) in intros_by_term.items():
+            mo = _R32_ORDINAL_RE_TW.match(norm)
+            if not mo:
+                continue
+            suffix = norm[mo.end():]
+            if len(suffix) < 2:
+                continue
+            suffix_count_chain[suffix] = suffix_count_chain.get(suffix, 0) + 1
+            existing = suffix_anchor_chain.get(suffix)
+            if existing is None or depth < existing[1]:
+                suffix_anchor_chain[suffix] = (ancestor_id, depth)
+        for suffix, count in suffix_count_chain.items():
+            if count > 1:
+                continue  # multi-modifier ambiguity
+            if suffix in intros_by_term:
+                continue
+            # Prefix-conflict guard: scan claim text for <suffix><1-3 CJK>
+            # which would be a distinct element prefix-matched by the
+            # bridge. If present, do not bridge.
+            conflict_re = re.compile(re.escape(suffix) + r'[一-鿿]{1,3}')
+            has_conflict = False
+            for ancestor in chain:
+                if conflict_re.search(ancestor.text):
+                    # check it's not just the suffix as part of `第N+suffix`
+                    # (which is the source intro itself — not a conflict)
+                    full = '第' + r'[一二三四五六七八九十百0-9]+' + re.escape(suffix)
+                    full_re = re.compile(full)
+                    # If conflict_re finds something but full_re consumes
+                    # everything, no real conflict
+                    text = ancestor.text
+                    consumed = full_re.sub('', text)
+                    if conflict_re.search(consumed):
+                        has_conflict = True
+                        break
+            if has_conflict:
+                continue
+            intros_by_term[suffix] = suffix_anchor_chain[suffix]
+
+        # R52 (2026-05-05): head-noun-suffix bridging for compound nouns.
+        # When a chain intro is `<modifier><HEAD>` where HEAD is a known
+        # compound head-noun suffix (組合物 / 化合物 / 溶液 / ...), register
+        # `<HEAD>` separately so dep claims using the bare head can resolve.
+        #
+        # Phase 1 supplement_v2 cluster `HEAD/TAIL|TW|組合物` (59 wfp / 0
+        # legit). Drafters of TW pharmaceutical claims write
+        # `一種醫藥組合物` Pattern A but dependent claims back-reference
+        # using `該組合物` (head noun only).
+        #
+        # Guards (mirror of R32 ordinal-bridge architecture):
+        #   1. Multi-modifier ambiguity — when 2+ chain intros share the
+        #      same HEAD suffix, skip (drafter intends them distinct).
+        #   2. Conflict guard — if `<HEAD>` is already an intro, no-op.
+        #   3. Suffix allowlist — narrow set of well-known compound
+        #      head-nouns. Pharmaceutical/chemistry-heavy. R32's ordinal
+        #      bridge handles modifier-of-component case (第一電極 →
+        #      電極); R52 handles modifier-of-class case (醫藥組合物 →
+        #      組合物).
+        _R52_HEAD_SUFFIXES = (
+            # Pharma/chemistry (R52 original)
+            "組合物", "化合物", "溶液", "溶劑", "配方",
+            "混合物", "複合物", "產物", "藥劑", "抗體",
+            # R56 (2026-05-05): electronic/circuit head nouns. Phase 1
+            # supplement_v2 clusters TAIL|TW|路系統 (46 wfp on
+            # 電路系統 family), TAIL|TW|電晶體 (36 wfp), TAIL|TW|管理功能
+            # (35 wfp), HEAD|TW|區塊鏈 (35 wfp), HEAD|TW|參考電 (34 wfp on
+            # 參考電壓), HEAD|TW|定位輔 (32 wfp on 定位輔助). Drafters
+            # introduce `<modifier>電路系統` (Pattern A) but dep claims
+            # back-reference using just `電路系統` head.
+            "電路系統", "電晶體", "區塊鏈", "管理功能",
+            "參考電壓", "定位輔助", "操作單元", "傳送資訊",
+        )
+        head_count_chain: dict[str, int] = {}
+        head_anchor_chain: dict[str, tuple[int, int]] = {}
+        for norm, (ancestor_id, depth) in intros_by_term.items():
+            for suffix in _R52_HEAD_SUFFIXES:
+                if (
+                    norm.endswith(suffix)
+                    and len(norm) > len(suffix)  # has modifier prefix
+                ):
+                    head_count_chain[suffix] = (
+                        head_count_chain.get(suffix, 0) + 1
+                    )
+                    existing = head_anchor_chain.get(suffix)
+                    if existing is None or depth < existing[1]:
+                        head_anchor_chain[suffix] = (ancestor_id, depth)
+                    break
+        for suffix, count in head_count_chain.items():
+            if count > 1:
+                continue  # multi-modifier ambiguity
+            if suffix in intros_by_term:
+                continue
+            intros_by_term[suffix] = head_anchor_chain[suffix]
+
         # Dedup by normalized term within a claim — repeated greedy
         # captures of the same head noun (``該齒輪為金屬, 該齒輪設有齒``)
         # collapse to one finding. The displayable reference_form is
@@ -3998,6 +4296,27 @@ def check_antecedent_basis(
                     ):
                         best_len = len(intro)
                         resolved_intro = intro
+
+            # R46 (2026-05-04): ordinal-prefix-to-Latin-abbrev bridge.
+            # When reference is `第N<X>` where X is a short uppercase
+            # Latin abbrev (2-5 chars), and bare `<X>` exists as an
+            # intro in the chain, bridge. Common in 5G/wireless TIPO
+            # drafts: parent intro `(UE)` paren-abbrev registers `UE`,
+            # dep claim references `該第一UE` -> `第一UE`. The first/
+            # second UE is a SPECIFIC INSTANCE of the generic UE class,
+            # antecedent valid. Cluster Phase A on post-R44 corpus
+            # showed TW `第一U` 68 wfp / `一UE` 37 wfp / `UE` 57 wfp
+            # all 0-legit safe-silence clusters.
+            if resolved_intro is None:
+                m_ord = re.match(r'^第[一二三四五六七八九十百0-9]+', normalized_term)
+                if m_ord:
+                    bare = normalized_term[m_ord.end():]
+                    if (
+                        bare and 2 <= len(bare) <= 5
+                        and bare.isupper() and bare.isascii()
+                        and bare in intros_by_term
+                    ):
+                        resolved_intro = bare
 
             if resolved_intro is not None:
                 # Number-neutral match satisfies the antecedent under
@@ -4115,6 +4434,28 @@ def check_antecedent_basis(
                     suggested_match and suggested_match.get("cross_branch")
                 ) if suggested_match else False,
             }
+            confidence_score = compute_confidence_score(
+                term=normalized_term,
+                prefix=prefix,
+                intros_pool_size=len(intros_by_term),
+                has_suggested_match=suggested_match is not None,
+                suggested_cross_branch=bool(
+                    suggested_match and suggested_match.get("cross_branch")
+                ),
+                # `best_score` is set inside the `resolved_intro is None`
+                # branch above and remains in scope here; it may be 0.0
+                # when suggested_match came from the morphological-prefix
+                # fallback (which doesn't compute Jaccard).
+                suggested_jaccard=(
+                    best_score if suggested_match is not None else None
+                ),
+                suggested_same_claim=bool(
+                    suggested_match
+                    and suggested_match.get("claim_id") == claim.id
+                ),
+                reference_form=reference_form,
+                jurisdiction="TW",
+            )
             issues.append(
                 {
                     "claim_id": claim.id,
@@ -4124,6 +4465,10 @@ def check_antecedent_basis(
                     "suggested_match": suggested_match,
                     "cross_ref": None,
                     "diagnostics": diagnostics,
+                    "document_dedup_key": make_document_dedup_key(
+                        normalized_term, reference_form
+                    ),
+                    "confidence_score": confidence_score,
                 }
             )
 

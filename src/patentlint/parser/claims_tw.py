@@ -22,11 +22,18 @@ _TW_CLAIM_NUM = re.compile(r"^[\s\u3000]*(\d+)\s*[.．]\s*", re.MULTILINE)
 # accepted by the CN parser (_CN_DEPENDENCY) for cross-jurisdiction parity.
 _TW_DEP_PATTERN = re.compile(
     r"(?:如|依據|根據|依)?\s*請求項\s*"
-    r"(\d+)"
+    # R49 (2026-05-05): admit `第N項` particles between `請求項` and the
+    # digit. TIPO chemistry/medical drafters use the long form
+    # `如請求項第1項至第6項中任一項所述的方法` (Patent-Analyst supplement_v2
+    # cluster `TAIL|TW|(I)`, 54 walker_fp findings on TW202502382A and
+    # similar). Bare `請求項1` still works because both `第` and `項` are
+    # optional.
+    r"第?\s*(\d+)\s*項?"
     # Range tail: allow an explicit ``請求項`` before the end number
-    # (e.g. ``如請求項4至請求項10中任一項所述``).
-    r"(?:\s*(?:~|至|到)\s*(?:請求項\s*)?(\d+))?"
-    r"((?:\s*(?:或|、)\s*(?:請求項\s*)?\d+)*)"
+    # (e.g. ``如請求項4至請求項10中任一項所述``) and also `第N項` particles
+    # (R49: `至第6項`).
+    r"(?:\s*(?:~|至|到)\s*(?:請求項\s*)?第?\s*(\d+)\s*項?)?"
+    r"((?:\s*(?:或|、)\s*(?:請求項\s*)?第?\s*\d+\s*項?)*)"
     r"(?:\s*中\s*任一?項)?"
     # Trailing connective accepts TIPO-standard (所述) + JP-translation
     # variants (所記載, 所揭示, 所描述) + bare 之/的. All optional so a
@@ -45,6 +52,24 @@ _OR_NUMS = re.compile(r"(\d+)")
 # (quoted-reference format) use `一種X，具備如請求項N所述的Y` to declare
 # a new invention subject X while incorporating claim N's Y by reference.
 _TW_INDEP_PREAMBLE = re.compile(r"^(?:一種|一個)\s*")
+
+# R43 (2026-05-04): "every preceding claim" multi-dep form. TW parity
+# with CN R43. TIPO drafters use `如前述請求項中任一項所述` (296 corpus
+# occurrences) / `如以上請求項中任一項所述` / `根據前述請求項中任一項所述`
+# to depend on ALL prior claims. The numeric `_TW_DEP_PATTERN` requires
+# a digit after `請求項` and bails on this shape.
+#
+# Pattern requires BOTH a "preceding" marker (前述/以上/前面/前/前列) AND
+# an "any" marker (任[一]?項?) in either word order around `請求項`.
+_TW_PRECEDING_CLAIMS_DEP = re.compile(
+    r"(?:如|依據|根據|依)?\s*"
+    r"(?:"
+    r"(?:前述|以上|前面|前列|前)\s*請求項\s*(?:中\s*)?任\s*[一]?\s*項?"
+    r"|"
+    r"任\s*[一]?\s*(?:前述|以上|前面|前列)\s*請求項"
+    r")"
+    r"\s*(?:所(?:述|記載|揭示|描述))?[之的]?"
+)
 
 
 def parse_tw_claims(paragraphs: list[str]) -> list[Claim]:
@@ -102,6 +127,14 @@ def parse_tw_claims(paragraphs: list[str]) -> list[Claim]:
             if or_tail:
                 for m in _OR_NUMS.finditer(or_tail):
                     refs.append(int(m.group(1)))
+
+        # R43 (2026-05-04): "every preceding claim" multi-dep form.
+        # `如前述請求項中任一項所述` -> deps = [1..num-1]. Recognized
+        # only when no numeric deps were already matched (so explicit
+        # `如前述請求項1至5中任一項所述` ranges still work via the
+        # primary _TW_DEP_PATTERN).
+        if not refs and _TW_PRECEDING_CLAIMS_DEP.search(claim_text):
+            refs = list(range(1, num))
 
         # Deduplicate (keep self-refs for check detection downstream)
         refs = sorted(set(refs))
