@@ -3117,9 +3117,15 @@ def check_antecedent_basis_cn(
         #   2. Conflict guard (HEAD already an intro)
         #   3. Suffix allowlist — Simplified-script equivalents of TW R52
         _R52_HEAD_SUFFIXES_CN = (
+            # Pharma/chemistry (R52-CN original)
             "组合物", "化合物", "溶液", "溶剂", "配方",
             "混合物", "复合物", "产物", "药剂", "抗体",
             "导体层", "聚合物",
+            # R56-CN (2026-05-05): electronic/circuit head nouns
+            # (Simplified parity of R56 TW). Phase 1 supplement_v2.
+            "电路系统", "晶体管", "区块链", "管理功能",
+            "参考电压", "定位辅助", "操作单元",
+            "指令集", "传送信息",
         )
         head_count_cn: dict[str, int] = {}
         head_anchor_cn: dict[str, tuple[int, int]] = {}
