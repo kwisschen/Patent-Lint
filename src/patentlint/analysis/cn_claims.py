@@ -1213,6 +1213,16 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "覆盖", "分离", "比较", "判断", "决定", "分析",
         "包括以下", "执行以下", "进行以下",
         "执行以下操作", "执行以下操",
+        # === R63 (2026-05-05) — TW parity port (神秘黑屏哥.docx audit) ===
+        # `不同`/`仅` parity from TW. Pure adjective/adverb in both scripts.
+        # CJK `不同` is identical between Simplified and Traditional;
+        # `仅` is the SC form of TW `僅` (same meaning, "only/merely").
+        # Risk audit:
+        # - 不同 trailing: pure adjective, never noun-position-suffix.
+        # - 仅 trailing: adverb, never part of noun. 僅供/僅限 are
+        #   adverb+verb, not nouns.
+        # Min residual via R32 emit-time len < 2 filter.
+        "不同", "仅",
         # === R32 (2026-05-04) — passive trailing residue ===
         # 被: passive marker (`<noun>被<verb>`). Compound nouns ending in
         #   `被` are vanishingly rare in CN patent claims (棉被/被服 are
