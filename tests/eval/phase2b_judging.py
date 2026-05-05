@@ -24,6 +24,8 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import math
+import random
 import sys
 import time
 from collections import Counter, defaultdict
@@ -73,75 +75,19 @@ COST_HALT_THRESHOLD = 150.0
 PROGRESS_LOG_EVERY = 25
 
 
-# ---------- claim parsing (from raw text → Claim objects) ----------
+# ---------- claim parsing (delegates to production parsers) ----------
+#
+# R34 (2026-05-04): switched to production parsers to eliminate three
+# distinct regex-drift bugs that previously contaminated walker output
+# this script feeds to LLM judges. See round1_corpus_harness.py for the
+# detailed bug accounting (US fall-through to TW regex; CN missing
+# range/enum/disjunction expansion; TW missing 引用記載型式 chain bridges
+# via quoted_references). Importing parser/claims*.py keeps this script
+# in sync with production forever.
 
-
-import re  # noqa: E402
-
-_CN_CLAIM_NUM_RE = re.compile(r"^\s*(\d+)\s*[\.、．]")
-_CN_DEP_RE = re.compile(r"如?权利要求(\d+)|根据权利要求(\d+)")
-_TW_CLAIM_NUM_RE = re.compile(r"^\s*(\d+)\s*[\.、．]")
-# R31 (2026-05-03): TW dep regex extended to match modern register
-# `如請求項<N>之<noun>` and `如請求項<N>所述之<noun>` shapes (e.g.,
-# `如請求項1之方法` / `如請求項1所述之方法`). Original regex required
-# `[項所]` immediately after the digit, missing entire dependent claim
-# population in TW corpus. Same fix in tests/eval/round1_corpus_harness.py.
-_TW_DEP_RE = re.compile(
-    r"如(?:申請專利範圍第)?[第]?(\d+)(?:[項所之]|所述)"
-    r"|根據[第]?(\d+)項"
-    r"|請求項[第]?(\d+)"
-)
-
-
-def _parse_claim_text(
-    raw: str, claim_id: int, jurisdiction: str
-) -> Claim | None:
-    """Parse a single claim string into a Claim object.
-
-    `claim_id` is supplied by position in the input list (1-indexed) AS
-    FALLBACK. Where the claim text begins with a `N.` prefix (most CN/US
-    patents), we extract the actual claim number from the text — handles
-    cases where the patent has gaps in numbering (cancelled / withdrawn
-    claims that Google Patents skips). Verified 2026-05-03 against
-    US20210105435A1 which has actual claim 14 at list position 13.
-
-    For TW patents (bare-noun starts like `一種...`) and any other case
-    without a numeric prefix, falls back to the supplied position-based
-    `claim_id`.
-    """
-    if not raw or not raw.strip():
-        return None
-
-    # Try to extract actual patent claim number from leading "N." prefix.
-    # Falls back to position-based claim_id when no prefix present.
-    actual_id_match = re.match(r"^\s*(\d+)\s*[\.、．]", raw)
-    if actual_id_match:
-        claim_id = int(actual_id_match.group(1))
-
-    if jurisdiction == "CN":
-        dep_re = _CN_DEP_RE
-    else:
-        dep_re = _TW_DEP_RE
-
-    deps: list[int] = []
-    for dm in dep_re.finditer(raw):
-        for g in dm.groups():
-            if g:
-                try:
-                    deps.append(int(g))
-                except ValueError:
-                    pass
-                break
-    deps = list(dict.fromkeys(deps))  # dedup, preserve order
-
-    return Claim(
-        id=claim_id,
-        text=raw.strip(),
-        independent=(len(deps) == 0),
-        multiple_dependent=(len(deps) > 1),
-        method_claim=False,
-        dependencies=deps,
-    )
+from patentlint.parser.claims import parse_claims as _parse_us_claims  # noqa: E402
+from patentlint.parser.claims_cn import parse_cn_claims_docx as _parse_cn_claims  # noqa: E402
+from patentlint.parser.claims_tw import parse_tw_claims as _parse_tw_claims  # noqa: E402
 
 
 def build_doc_from_claims(
@@ -149,28 +95,35 @@ def build_doc_from_claims(
 ) -> CnPatentDocument | TwPatentDocument | list[Claim] | None:
     """Construct a jurisdiction-appropriate doc from a raw claims list.
 
+    Routes through production parsers (parser/claims.py +
+    parser/claims_cn.py + parser/claims_tw.py) so walker output sent to
+    judges matches what real .docx ingestion produces. US/CN corpus
+    claims carry leading 'N.' prefixes; TW corpus does not, so prepend
+    'i+1.' to each TW claim before calling parse_tw_claims.
+
     - CN → `CnPatentDocument(claims=...)`
     - TW → `TwPatentDocument(claims=...)`
-    - US → bare `list[Claim]` (US walker `check_antecedent_basis` takes a
-      claim list directly, not a Document wrapper)
+    - US → bare `list[Claim]` (US walker takes list[Claim] directly)
     - else → None
-
-    claim_id is assigned by 1-based position in the input list; this matches
-    Google Patents' rendering order which preserves the source claim sequence.
     """
-    parsed: list[Claim] = []
-    for idx, raw in enumerate(claims_list, 1):
-        c = _parse_claim_text(raw, idx, jurisdiction)
-        if c is not None:
-            parsed.append(c)
-    if not parsed:
+    if not claims_list:
         return None
+    if jurisdiction == "US":
+        parsed = _parse_us_claims("\n".join(claims_list))
+        return parsed if parsed else None
     if jurisdiction == "CN":
+        parsed = _parse_cn_claims("\n".join(claims_list))
+        if not parsed:
+            return None
         return CnPatentDocument(claims=parsed, input_format="google_patents_html")
     if jurisdiction == "TW":
+        # TW corpus claims lack leading 'N.'; synthesize from list position
+        # so production `_TW_CLAIM_NUM` regex finds boundaries.
+        paragraphs = [f"{i + 1}. {c}" for i, c in enumerate(claims_list)]
+        parsed = _parse_tw_claims(paragraphs)
+        if not parsed:
+            return None
         return TwPatentDocument(claims=parsed, input_format="google_patents_html")
-    if jurisdiction == "US":
-        return parsed
     return None
 
 
@@ -268,6 +221,66 @@ def issue_to_finding(issue: dict, window: int = 30) -> FindingInput:
     )
 
 
+# ---------- weighted sampling ----------
+
+
+def _weighted_sample_drafts(
+    drafts: list[tuple[dict, list[FindingInput], dict[int, str]]],
+    *,
+    target_per_jurisdiction: int,
+    seed: int,
+) -> list[tuple[dict, list[FindingInput], dict[int, str]]]:
+    """Stratified weighted sample without replacement.
+
+    Per jurisdiction, sample `target_per_jurisdiction` drafts with
+    probability proportional to `len(findings)` per draft. Drafts where
+    the R34 harness fix exposed the most new findings get highest
+    selection probability.
+
+    Implementation: Efraimidis-Spirakis A-ES algorithm — for each item
+    draw `key = -ln(uniform()) / weight`, then take the K items with
+    SMALLEST key. Equivalent to weighted-without-replacement sampling
+    in O(N log K). Pinned `seed` makes the run deterministic so a 5-
+    draft pilot is a strict prefix of the full sample.
+    """
+    rng = random.Random(seed)
+    by_juris: dict[str, list[tuple[dict, list[FindingInput], dict[int, str]]]] = (
+        defaultdict(list)
+    )
+    for d in drafts:
+        rec, _, _ = d
+        by_juris[rec.get("jurisdiction", "?")].append(d)
+
+    out: list[tuple[dict, list[FindingInput], dict[int, str]]] = []
+    for juris, juris_drafts in sorted(by_juris.items()):
+        if target_per_jurisdiction >= len(juris_drafts):
+            print(
+                f"  weighted-sample {juris}: target {target_per_jurisdiction} "
+                f"≥ available {len(juris_drafts)}, taking all"
+            )
+            out.extend(juris_drafts)
+            continue
+        keyed: list[tuple[float, tuple[dict, list[FindingInput], dict[int, str]]]] = []
+        for d in juris_drafts:
+            _, findings, _ = d
+            w = max(1, len(findings))
+            u = rng.random()
+            # avoid log(0); in practice rng.random() never returns 0
+            key = -math.log(u if u > 0 else 1e-12) / w
+            keyed.append((key, d))
+        keyed.sort(key=lambda kv: kv[0])
+        sampled = [d for _, d in keyed[:target_per_jurisdiction]]
+        out.extend(sampled)
+        total_findings = sum(len(d[1]) for d in juris_drafts)
+        sampled_findings = sum(len(d[1]) for d in sampled)
+        print(
+            f"  weighted-sample {juris}: {len(sampled)}/{len(juris_drafts)} drafts "
+            f"({sampled_findings}/{total_findings} findings, "
+            f"{100*sampled_findings/max(1,total_findings):.0f}% coverage)"
+        )
+    return out
+
+
 # ---------- main loop ----------
 
 
@@ -281,6 +294,10 @@ async def _run(
     output_results: Path = RESULTS_PATH,
     output_report: Path = REPORT_PATH,
     exclude_judged: list[Path] | None = None,
+    no_opus: bool = False,
+    cost_cap: float | None = None,
+    target_per_jurisdiction: int | None = None,
+    sample_seed: int = 20260505,
 ) -> dict:
     print(f"Loading corpus from {CORPUS_PARQUET_DIR} ...")
     records = load_corpus_records(CORPUS_PARQUET_DIR)
@@ -358,10 +375,33 @@ async def _run(
         print("No drafts to judge; exiting.")
         return {"drafts_judged": 0, "verdicts": []}
 
-    # Phase B: LLM judging with mid-run halt
+    # Stratified weighted sampling — when set, draws `target_per_jurisdiction`
+    # drafts per jurisdiction with probability proportional to walker-finding
+    # count. Pinned seed makes the pilot a deterministic prefix of the full
+    # run; combine with `--limit` to take the prefix.
+    if target_per_jurisdiction is not None:
+        print(
+            f"Weighted sampling: target {target_per_jurisdiction} drafts/"
+            f"jurisdiction (seed={sample_seed})"
+        )
+        drafts_to_judge = _weighted_sample_drafts(
+            drafts_to_judge,
+            target_per_jurisdiction=target_per_jurisdiction,
+            seed=sample_seed,
+        )
+        print(f"After sampling: {len(drafts_to_judge)} drafts to judge")
+
+    # Phase B: LLM judging with mid-run halt.
+    # Per-request timeout = 240s. Without an explicit timeout, a stuck
+    # connection can wedge `asyncio.gather` forever (hit during 2026-05-05
+    # overnight run — first launch hung silently for 1h with no progress
+    # because connections were established but no response packets flowed).
+    # 240s is well above typical sonnet-4-6 latency for ~30K-token prompts
+    # (10-60s) plus Anthropic's internal retries; setting it lower would
+    # spuriously fail high-finding drafts.
     anth_key, oai_key = load_keys()
-    anth = AsyncAnthropic(api_key=anth_key)
-    oai = AsyncOpenAI(api_key=oai_key)
+    anth = AsyncAnthropic(api_key=anth_key, timeout=240.0, max_retries=3)
+    oai = AsyncOpenAI(api_key=oai_key, timeout=240.0, max_retries=3)
 
     sem = asyncio.Semaphore(fetch_concurrency)
 
@@ -385,6 +425,7 @@ async def _run(
                     anthropic_client=anth,
                     openai_client=oai,
                     system_prompt=_system_prompt_for(rec["jurisdiction"]),
+                    no_opus=no_opus,
                 )
                 return rec, ensemble
             except Exception as exc:
@@ -396,6 +437,12 @@ async def _run(
     )
 
     # Run all in chunks of PROGRESS_LOG_EVERY for periodic progress + cost-halt
+    # Effective halt threshold — CLI --cost-cap overrides COST_HALT_THRESHOLD.
+    # Two halt triggers fire whichever comes first:
+    #   (a) cumulative cost_actual > effective_cap (hard ceiling)
+    #   (b) projected_total > effective_cap (early-warning extrapolation)
+    effective_cap = cost_cap if cost_cap is not None else COST_HALT_THRESHOLD
+
     t0 = time.monotonic()
     all_results: list[tuple[dict, DraftEnsembleVerdict | None]] = []
     halted = False
@@ -413,20 +460,29 @@ async def _run(
         n_done = len(all_results)
         elapsed = time.monotonic() - t0
         per_draft_actual = elapsed / max(1, n_done)
+        per_draft_cost = cost_actual / max(1, n_done)
         eta = per_draft_actual * (len(drafts_to_judge) - n_done)
+        projected_total = per_draft_cost * len(drafts_to_judge)
         print(
             f"  progress: {n_done}/{len(drafts_to_judge)} drafts "
             f"({100*n_done/len(drafts_to_judge):.0f}%), "
             f"elapsed {elapsed:.0f}s, ETA {eta:.0f}s, "
-            f"cost=${cost_actual:.2f} (actual from API usage)"
+            f"cost=${cost_actual:.2f} (per-draft ${per_draft_cost:.4f}, "
+            f"projected total ${projected_total:.2f}, cap ${effective_cap:.2f})"
         )
-        # Cost halt — extrapolated from actual telemetry.
-        projected_total = (cost_actual / max(1, n_done)) * len(drafts_to_judge)
-        if projected_total > COST_HALT_THRESHOLD:
+        # Hard halt — cumulative cost exceeded cap.
+        if cost_actual > effective_cap:
+            print(
+                f"  HALT — cumulative cost ${cost_actual:.2f} exceeded "
+                f"cap ${effective_cap:.2f}. Stopping at {n_done} drafts."
+            )
+            halted = True
+            break
+        # Early-warning halt — projected total exceeds cap.
+        if projected_total > effective_cap:
             print(
                 f"  HALT — projected total ${projected_total:.2f} exceeds "
-                f"halt threshold ${COST_HALT_THRESHOLD:.2f}. "
-                f"Stopping at {n_done} drafts judged."
+                f"cap ${effective_cap:.2f}. Stopping at {n_done} drafts."
             )
             halted = True
             break
@@ -576,6 +632,10 @@ async def _main_async(args: argparse.Namespace) -> int:
         output_results=output_results,
         output_report=output_report,
         exclude_judged=exclude_judged_paths,
+        no_opus=args.no_opus,
+        cost_cap=args.cost_cap,
+        target_per_jurisdiction=args.target_per_jurisdiction,
+        sample_seed=args.sample_seed,
     )
 
     output_results.write_text(json.dumps(result, ensure_ascii=False, indent=2))
@@ -611,6 +671,27 @@ def main() -> int:
     parser.add_argument("--exclude-judged", nargs="+", default=None,
                         help="One or more prior results JSON files; their "
                              "patent_ids are skipped (avoids re-judging).")
+    parser.add_argument("--no-opus", action="store_true",
+                        help="Disable Opus tiebreaker escalation. Sonnet+gpt-mini "
+                             "only. Lowers cost ~3-5x at the cost of ensemble "
+                             "tiebreaking on high-disagreement drafts.")
+    parser.add_argument("--cost-cap", type=float, default=120.0,
+                        help="USD cap on total run cost (default $120). HALTs "
+                             "the run and writes partial results when either "
+                             "(a) cumulative cost exceeds cap or (b) projected "
+                             "total cost (per-draft mean × total drafts) "
+                             "exceeds cap. Overrides the legacy "
+                             "COST_HALT_THRESHOLD constant ($150).")
+    parser.add_argument("--target-per-jurisdiction", type=int, default=None,
+                        help="If set, weighted-sample N drafts per jurisdiction "
+                             "(US/CN/TW separately) with probability "
+                             "proportional to walker-finding count. Default "
+                             "None = take all post-filter drafts.")
+    parser.add_argument("--sample-seed", type=int, default=20260505,
+                        help="Random seed for weighted sampling (default "
+                             "20260505). Pinned for determinism — pilot runs "
+                             "are strict prefixes of full runs given the "
+                             "same seed + larger --target-per-jurisdiction.")
     args = parser.parse_args()
     return asyncio.run(_main_async(args))
 
