@@ -1673,6 +1673,10 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         "分離", "比較", "判斷", "決定", "分析",
         "包括以下", "執行以下", "進行以下",
         "執行以下操作", "執行以下操",
+        # R60 (2026-05-05): TW 執行 verb-suffix from cluster TAIL|TW|經量化
+        # (TWI890747B 36 wfp on `經量化權重資訊執行...`). 來執行 / 執行一或多
+        # / 執行第二推 / 執行 over-captures.
+        "來執行", "執行一或多", "執行第二推", "執行",
         # === R30 (2026-05-03) — sample-derived adverbial / adjectival trims
         # 進一步: adverbial fragment of 進一步包括/進一步具有.
         # 相關聯: adjectival fragment of <noun>相關聯的. Existing 相關 + 有關
