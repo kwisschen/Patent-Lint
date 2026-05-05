@@ -1074,6 +1074,12 @@ def check_markush_open_transition(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
 # Noun exclusion class (mechanical TC→SC swap per v2 § 4).
 _NOUN_CHARS_CN = r"[^\s，。；：、及与和之的该将能须应皆被于以并且其而还另时在]{2,12}"
+# R62 (2026-05-05): post-match paren-numeral closure helper. Mirrors
+# the TW walker fix: when the captured noun ends with `(<alphanumeric>`
+# (open paren + 1-5 digits/letters, no closing paren), the {2,12}
+# length cap truncated inside an open paren-numeral. Walker emit-loop
+# extends the noun by 1 char if claim.text[match_end] is `)` or `）`.
+_PAREN_NUM_TRAIL_RE_CN = re.compile(r"[(（][0-9A-Za-z]{1,5}$")
 
 # Introduction multi-char quantifiers (TC→SC glyph swap).
 _INTRO_MULTI_QUANTIFIERS_CN = (
@@ -3202,6 +3208,17 @@ def check_antecedent_basis_cn(
             raw_noun = m.group("noun")
             if not raw_noun:
                 continue
+
+            # R62 (2026-05-05) paren-numeral closure (parallel of TW fix).
+            # When the regex {2,12} length cap truncates inside an open
+            # paren-numeral, look ahead for the closing paren and extend.
+            if _PAREN_NUM_TRAIL_RE_CN.search(raw_noun):
+                tail_start = m.end()
+                if (
+                    tail_start < len(claim.text)
+                    and claim.text[tail_start] in (")", "）")
+                ):
+                    raw_noun = raw_noun + claim.text[tail_start]
 
             full_ref = f"{prefix}{raw_noun}"
             normalized_term = normalize_reference_term_cn(
