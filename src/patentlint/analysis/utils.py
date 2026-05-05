@@ -51,16 +51,17 @@ def annotate_term_in_spec(
     boosts `confidence_score` by +10 when match. Empty spec text leaves
     the field False; no score change.
     """
+    # R57c (2026-05-05): annotate term_in_spec for forward compatibility
+    # but DO NOT mutate confidence_score. Empirical test (abstract proxy
+    # on supplement_v2) showed term_in_spec is a slightly NEGATIVE signal
+    # for legit_drafting_error (over-captures share spec vocabulary).
     if not spec_text:
         for f in findings:
             f["term_in_spec"] = False
         return
     for f in findings:
         term = (f.get("term") or "").strip()
-        in_spec = bool(term) and term in spec_text
-        f["term_in_spec"] = in_spec
-        if in_spec and "confidence_score" in f:
-            f["confidence_score"] = min(100, int(f["confidence_score"]) + 10)
+        f["term_in_spec"] = bool(term) and term in spec_text
 
 
 def make_document_dedup_key(term: str, reference_form: str) -> str:
@@ -293,10 +294,14 @@ def compute_confidence_score(
     # Formal-register prefix — minor positive
     if prefix and prefix.strip().lower() in _FORMAL_PREFIXES:
         score += 5
-    # R57: spec-body cross-validation +10 (applied separately by
-    # `annotate_term_in_spec` in pipeline; included here for direct callers).
+    # R57c (2026-05-05) REVERTED: term_in_spec was assumed +10 positive
+    # but empirical test on supplement_v2 (using abstract as proxy) showed
+    # NEGATIVE signal: in_abs=True precision 13.4% vs in_abs=False 18.7%.
+    # Walker over-captures legit noun phrases that also appear in spec,
+    # so spec presence weakly correlates with WFP not legit.
+    # Kept the kwarg for forward compatibility but no score change.
     if term_in_spec:
-        score += 10
+        pass  # signal not currently used; placeholder for future training
     # R59 (2026-05-05): ML-distilled high-precision-path bonus. When the
     # finding matches one of 11 sklearn DecisionTree leaves identified at
     # ≥50% precision (combined 70.4% on 452 findings), boost score by +25
