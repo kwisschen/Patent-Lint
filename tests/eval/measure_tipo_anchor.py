@@ -34,7 +34,6 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from tests.eval.measure_term_in_desc import (  # noqa: E402
-    extract_inline_symbol_table_names,
     load_sv2_verdicts,
 )
 from tests.eval.round1_corpus_harness import load_corpus, run_walker  # noqa: E402

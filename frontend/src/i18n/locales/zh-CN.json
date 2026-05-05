@@ -263,7 +263,7 @@
     "title": "引用基础检查",
     "findings": "项问题",
     "finding": "项问题",
-    "disclaimer": "本检查采启发式判读，「高置信度」分级优先列出最可行动的疑义；最终仍请对照您的说明书确认。",
+    "disclaimer": "PatentLint 不使用 AI，亦不采用服务器端处理；「高置信度」分级优先列出最可行动的疑义，最终仍请对照您的说明书确认。",
     "tierFilter": {
       "label": "筛选：",
       "showAll": "显示全部（{{count}} 项）",
