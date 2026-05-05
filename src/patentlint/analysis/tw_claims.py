@@ -1451,6 +1451,14 @@ def check_connection_relationships_tw(doc: TwPatentDocument) -> list[CheckItem]:
 # headroom for ordinal+qualifier+head-noun compounds without permitting
 # the runaway captures observed in the 2026-04-09 smoke test.
 _NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以並且其而還另時在更]{2,12}"
+# R62 (2026-05-05): post-match paren-numeral closure.
+# When the captured noun ends with `(<alphanumeric>` (no closing paren)
+# AND the next char in claim text is `)`, the {2,12} length limit cut
+# inside an open paren — extend match by 1 char to include `)`. Targeted
+# fix for the 1015+ TW + 386 CN walker bugs where 至少一個第一子區(104
+# truncated to `第一子區(104` after normalize, missing the `)`. Closing
+# paren is part of the legitimate element identity (符號說明 entry name).
+_PAREN_NUM_TRAIL_RE = re.compile(r"[(（][0-9A-Za-z]{1,5}$")
 
 # Introduction patterns — ordered longest-first so 至少一個 / 複數個 are
 # matched as single tokens before their shorter prefixes (一 / 複數). The
@@ -4324,6 +4332,20 @@ def check_antecedent_basis(
             raw_noun = m.group("noun")
             if not raw_noun:
                 continue
+
+            # R62 (2026-05-05) paren-numeral closure: when the regex
+            # length cap truncates inside an open paren-numeral
+            # (e.g., 至少一個第一子區(104 — 12 chars, missing `)`), look
+            # ahead in the claim text for the closing paren and extend.
+            # Avoids 1015+ TW + 386 CN walker_fp findings caused by the
+            # truncated capture failing to match symbol_table entries.
+            if _PAREN_NUM_TRAIL_RE.search(raw_noun):
+                tail_start = m.end()
+                if (
+                    tail_start < len(claim.text)
+                    and claim.text[tail_start] in (")", "）")
+                ):
+                    raw_noun = raw_noun + claim.text[tail_start]
 
             full_ref = f"{prefix}{raw_noun}"
             normalized_term = normalize_reference_term(
