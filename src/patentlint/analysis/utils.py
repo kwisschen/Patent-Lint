@@ -338,16 +338,33 @@ def compute_confidence_score(
     # Kept the kwarg for forward compatibility but no score change.
     if term_in_spec:
         pass  # signal not currently used; placeholder for future training
-    # R61b (2026-05-05): TIPO-style 符號說明 lookup-table boost.
-    # Empirical direction validated on local TW fixtures (9/9 in_st findings
-    # are legit defects; presence is correctly aligned with "real defect").
-    # Skipped on 引用記載型式 claims per separate-handling guidance — those
-    # claims resolve antecedent via quoted_references, not symbol_table.
-    # Magnitude is intentionally small (+5) — corpus-scale validation
-    # blocked on data acquisition (Path 1 in flight). Will recalibrate
-    # once corpus symbol_table data lands.
+    # R61b (2026-05-05): TIPO-style 符號說明 lookup-table — empirically
+    # NEUTRAL after corpus validation (Path 1 result, 2026-05-05).
+    #
+    # Initial direction (+5 boost) was based on local TW fixtures showing
+    # 9/9 in_st findings as legit defects. Corpus measurement on 9382
+    # judged supplement_v2 findings flipped the picture:
+    #
+    #   in_st (inline-mined):  9.7% legit (n=945)
+    #   not_in_st:            13.1% legit (n=8947)
+    #   baseline:             12.8% legit
+    #
+    # Symbol_table presence is mildly NEGATIVE for legit (-3pp), not
+    # positive. Local fixtures were biased: zero walker_fp ground-truth
+    # in their hand-labels (walker hardened against them over many
+    # rounds), so every in_st finding was guaranteed legit by sample
+    # construction. Corpus is authoritative.
+    #
+    # Held at zero until: (a) we have a clean structured-符號說明
+    # corpus signal (vs the inline-miner used in measure_term_in_desc.py)
+    # to discriminate production walker behavior from corpus-measured
+    # behavior, OR (b) we ship a re-judging round that distinguishes
+    # "trivial-amendable" from "substantive" subcategories of legit.
+    #
+    # Kept the kwargs in place so the (b) did-you-mean enrichment and
+    # (c) finding-payload flag continue working without churn.
     if term_in_symbol_table and not is_quoted_reference_format:
-        score += 5
+        pass  # corpus-empirical: signal is mildly negative, not positive
     # R59 (2026-05-05): ML-distilled high-precision-path bonus. When the
     # finding matches one of 11 sklearn DecisionTree leaves identified at
     # ≥50% precision (combined 70.4% on 452 findings), boost score by +25
