@@ -90,21 +90,54 @@ def main() -> int:
     lines.append(f"Source verdicts: `{verdicts_path}`\n")
     lines.append(f"- Drafts judged: {len(calib_result.get('per_jurisdiction', {}))}\n")
     lines.append("\n## Per-jurisdiction precision summary\n")
-    lines.append("| Juris | Total | legit | wfp | coverage | absolute_strict | suggested T_high |")
-    lines.append("|---|---:|---:|---:|---:|---:|---:|")
+    lines.append(
+        "| Juris | Total | legit | wfp | coverage | absolute_strict | "
+        "suggested T_high | lift |"
+    )
+    lines.append("|---|---:|---:|---:|---:|---:|---:|---:|")
     for juris, p in sorted(calib_result.get("per_jurisdiction", {}).items()):
-        # Find first threshold ≥70% precision with bucket_size ≥10
+        absolute = p.get("absolute_strict_precision", 0.0)
+        # Tier 1 selection: first threshold with bucket precision ≥70% AND
+        # bucket size ≥10 (the plan's stated target).
         suggested = None
+        suggested_lift = None
         for row in p.get("by_threshold", []):
             if row["bucket_precision"] >= 0.70 and row["bucket_size"] >= 10:
                 suggested = row["threshold"]
+                suggested_lift = row["bucket_precision"] - absolute
                 break
+        # Tier 2 fallback: when 70% target is unreachable on this corpus
+        # (the realistic case for post-R48 walker), pick the threshold with
+        # the largest precision-lift over absolute, requiring bucket size ≥50
+        # for statistical meaningfulness. Bucket size 50 is a reasonable
+        # stability floor for v3 formula on the supplement_v2 corpus.
+        if suggested is None:
+            best_lift = -1.0
+            best_threshold = None
+            for row in p.get("by_threshold", []):
+                if row["bucket_size"] >= 50:
+                    lift = row["bucket_precision"] - absolute
+                    if lift > best_lift:
+                        best_lift = lift
+                        best_threshold = row["threshold"]
+            suggested = best_threshold
+            suggested_lift = best_lift if best_threshold is not None else None
+        suggested_str = f"{suggested}*" if suggested else "N/A"
+        lift_str = (
+            f"+{100*suggested_lift:.1f}pp" if suggested_lift and suggested_lift > 0
+            else "N/A"
+        )
         lines.append(
             f"| {juris} | {p['total_findings']} | {p['legit_drafting_error']} | "
             f"{p['walker_fp']} | {p['coverage_gap']} | "
-            f"{100*p['absolute_strict_precision']:.1f}% | "
-            f"{suggested if suggested else 'N/A'} |"
+            f"{100*absolute:.1f}% | {suggested_str} | {lift_str} |"
         )
+    lines.append(
+        "\n*Asterisk on T_high* = fallback: best precision-lift threshold "
+        "with bucket_size ≥ 50 (the plan's 70% target wasn't reached on "
+        "this corpus; the asterisked value is the empirically-best "
+        "achievable threshold for the high-conf bucket).\n"
+    )
 
     lines.append("\n## Reports\n")
     lines.append(f"- Calibration: [`{calib_md.name}`]({calib_md})")
