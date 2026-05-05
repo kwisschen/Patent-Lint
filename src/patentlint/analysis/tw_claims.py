@@ -4086,6 +4086,51 @@ def check_antecedent_basis(
                 continue
             intros_by_term[suffix] = suffix_anchor_chain[suffix]
 
+        # R52 (2026-05-05): head-noun-suffix bridging for compound nouns.
+        # When a chain intro is `<modifier><HEAD>` where HEAD is a known
+        # compound head-noun suffix (組合物 / 化合物 / 溶液 / ...), register
+        # `<HEAD>` separately so dep claims using the bare head can resolve.
+        #
+        # Phase 1 supplement_v2 cluster `HEAD/TAIL|TW|組合物` (59 wfp / 0
+        # legit). Drafters of TW pharmaceutical claims write
+        # `一種醫藥組合物` Pattern A but dependent claims back-reference
+        # using `該組合物` (head noun only).
+        #
+        # Guards (mirror of R32 ordinal-bridge architecture):
+        #   1. Multi-modifier ambiguity — when 2+ chain intros share the
+        #      same HEAD suffix, skip (drafter intends them distinct).
+        #   2. Conflict guard — if `<HEAD>` is already an intro, no-op.
+        #   3. Suffix allowlist — narrow set of well-known compound
+        #      head-nouns. Pharmaceutical/chemistry-heavy. R32's ordinal
+        #      bridge handles modifier-of-component case (第一電極 →
+        #      電極); R52 handles modifier-of-class case (醫藥組合物 →
+        #      組合物).
+        _R52_HEAD_SUFFIXES = (
+            "組合物", "化合物", "溶液", "溶劑", "配方",
+            "混合物", "複合物", "產物", "藥劑", "抗體",
+        )
+        head_count_chain: dict[str, int] = {}
+        head_anchor_chain: dict[str, tuple[int, int]] = {}
+        for norm, (ancestor_id, depth) in intros_by_term.items():
+            for suffix in _R52_HEAD_SUFFIXES:
+                if (
+                    norm.endswith(suffix)
+                    and len(norm) > len(suffix)  # has modifier prefix
+                ):
+                    head_count_chain[suffix] = (
+                        head_count_chain.get(suffix, 0) + 1
+                    )
+                    existing = head_anchor_chain.get(suffix)
+                    if existing is None or depth < existing[1]:
+                        head_anchor_chain[suffix] = (ancestor_id, depth)
+                    break
+        for suffix, count in head_count_chain.items():
+            if count > 1:
+                continue  # multi-modifier ambiguity
+            if suffix in intros_by_term:
+                continue
+            intros_by_term[suffix] = head_anchor_chain[suffix]
+
         # Dedup by normalized term within a claim — repeated greedy
         # captures of the same head noun (``該齒輪為金屬, 該齒輪設有齒``)
         # collapse to one finding. The displayable reference_form is
