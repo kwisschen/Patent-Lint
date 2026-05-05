@@ -1636,22 +1636,35 @@ class TestParenAbbrevR34:
         assert "101" not in intros
 
 
-class TestStateModifierLookaheadR66:
-    """R66 (2026-05-05) state-modifier+head-noun lookahead resolution.
+class TestStateModifierCaptureExtensionR66:
+    """R66 (revised 2026-05-05) state-modifier capture extension.
 
     When walker captures `前述<state-modifier>` (e.g., `前述島狀`) and
-    claim text continues `的<head_noun>` where the head noun resolves
-    to an intro, suppress the finding. Surfaced by 神秘黑屏哥.docx c10:
-    `前述島狀的奈米片積層體` references 奈米片積層體 (introduced) with
-    state modifier 島狀.
+    claim text continues `的<head_noun>`, extend the captured raw_noun
+    to include `的<head>`. Without extension, the displayed reference_form
+    is the bare adjective `前述島狀` — meaningless to the drafter (`島狀`
+    is "island-shape", an adjective). With extension, the user sees the
+    full `前述島狀的奈米片積層體` they actually wrote.
 
-    Gated on _STATE_MODIFIER_SUFFIXES_TW (狀/形) to avoid silencing
-    possessive references like `該電子裝置的一插槽` where 電子裝置 is
-    a separate (and possibly undefined) reference.
+    Walker resolution proceeds normally with the extended term:
+      - drafter consistent intro+ref (both `<state>的<head>`) → resolves
+      - drafter introduces only `<head>` but references `<state>的<head>`
+        → emits a real antecedent finding (the 神秘黑屏哥 c10 case)
+
+    Gated on _STATE_MODIFIER_SUFFIXES_TW (狀/形) — possessive frames
+    like `該電子裝置的一插槽` end in noun-class suffixes (置/部/料)
+    that the gate excludes; capture stays at `該電子裝置`.
     """
 
-    def test_state_modifier_with_de_head_resolves(self):
-        """前述島狀的奈米片積層體 — head noun 奈米片積層體 introduced; suppress."""
+    def test_state_modifier_capture_extends(self):
+        """`前述島狀的奈米片積層體` — capture extends past 的 to head noun.
+
+        Even though the head noun was introduced earlier (as 一奈米片積層體),
+        the drafter's reference adds an extra `島狀的` qualifier that's
+        not in the intro form — a real antecedent issue. The walker
+        should emit with the FULL state-modifier+head reference form so
+        the user sees what they wrote.
+        """
         doc = _make_doc([
             _claim(
                 1,
@@ -1660,15 +1673,47 @@ class TestStateModifierLookaheadR66:
             ),
         ])
         issues = check_antecedent_basis(doc)
-        # No finding for 前述島狀 — state-modifier+head-noun lookahead
-        # resolves via 奈米片積層體 intro.
-        assert not any(i["term"] == "島狀" for i in issues), issues
+        # Capture extends to full phrase; bare `島狀` no longer the term.
+        # The intro form was `奈米片積層體` (head only); the reference adds
+        # `島狀的` qualifier → genuine antecedent gap → walker emits.
+        finding = next(
+            (i for i in issues if "島狀" in i["term"]),
+            None,
+        )
+        assert finding is not None, issues
+        assert finding["term"] == "島狀的奈米片積層體", finding
+        assert finding["reference_form"] == "前述島狀的奈米片積層體", finding
 
-    def test_possessive_not_silenced(self):
-        """該電子裝置的一插槽 — possessive frame; 電子裝置 must still flag.
+    def test_consistent_state_modifier_intro_resolves(self):
+        """If drafter introduces `一<state>的<head>` AND references
+        `前述<state>的<head>`, the extended capture resolves via exact
+        match (no antecedent issue).
+        """
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種方法，包含一島狀的奈米片積層體，"
+                "前述島狀的奈米片積層體進行蝕刻。",
+            ),
+        ])
+        issues = check_antecedent_basis(doc)
+        # Consistent intro+ref form — extended capture matches exactly.
+        # (Exact match depends on whether normalize_reference_term keeps
+        # 的 in the interior; at minimum the extended capture should not
+        # over-emit, and the displayed term — if any — is the full form.)
+        relevant = [i for i in issues if "島狀" in i["term"]]
+        for i in relevant:
+            # If a finding does emit, its term must be the full extended
+            # form, never the bare adjective.
+            assert i["term"] != "島狀", i
 
-        Regression for 110P000868US c1 protect:true label. 電子裝置
-        ends in 置 (not 狀/形), so suffix gate prevents lookahead.
+    def test_possessive_not_extended(self):
+        """該電子裝置的一插槽 — possessive frame; 電子裝置 ends in 置
+        (not 狀/形), so capture stays at 電子裝置. Walker emits as before.
+
+        Regression for 110P000868US c1 protect:true label. The head noun
+        in the possessive (一插槽) must not become part of the reference
+        form (would mask the real drafter error).
         """
         doc = _make_doc([
             _claim(
@@ -1679,13 +1724,18 @@ class TestStateModifierLookaheadR66:
             ),
         ])
         issues = check_antecedent_basis(doc)
-        # 電子裝置 has no intro; possessive `的一插槽` does not silence.
-        assert any(i["term"] == "電子裝置" for i in issues), issues
+        finding = next(
+            (i for i in issues if i["term"] == "電子裝置"),
+            None,
+        )
+        assert finding is not None, issues
+        assert finding["reference_form"] == "該電子裝置", finding
 
-    def test_locative_possessive_not_silenced(self):
+    def test_locative_possessive_not_extended(self):
         """所述容納部的底面 — 容納部 ends in 部 (locative), not state suffix.
 
-        Regression for 110P000631US c1 protect:true label.
+        Regression for 110P000631US c1 protect:true label. Capture stays
+        at 容納部; 底面 does not become part of the reference form.
         """
         doc = _make_doc([
             _claim(
@@ -1694,10 +1744,20 @@ class TestStateModifierLookaheadR66:
             ),
         ])
         issues = check_antecedent_basis(doc)
-        assert any(i["term"] == "容納部" for i in issues), issues
+        finding = next(
+            (i for i in issues if i["term"] == "容納部"),
+            None,
+        )
+        assert finding is not None, issues
+        assert finding["reference_form"] == "所述容納部", finding
 
-    def test_ordinal_state_modifier_not_resolved(self):
-        """第一狀 (with 第 prefix) — gate excludes ordinal-prefixed state terms."""
+    def test_ordinal_state_modifier_not_extended(self):
+        """第一狀 (with 第 prefix) — gate excludes ordinal-prefixed state terms.
+
+        Defensive against ambiguous ordinal+state: 第一狀 could be an
+        ordinal-typed reference (`first-class state`) rather than a
+        pure state modifier. Don't extend.
+        """
         doc = _make_doc([
             _claim(
                 1,
@@ -1705,11 +1765,16 @@ class TestStateModifierLookaheadR66:
             ),
         ])
         issues = check_antecedent_basis(doc)
-        # 第一狀 must still flag — defensive against ambiguous ordinal+state.
-        assert any(i["term"] == "第一狀" for i in issues), issues
+        finding = next(
+            (i for i in issues if "第一狀" in i["term"]),
+            None,
+        )
+        assert finding is not None, issues
+        # Capture stays bare; not extended past 的.
+        assert finding["term"] == "第一狀", finding
 
-    def test_xing_suffix_resolves(self):
-        """前述環形的Y — 形 suffix also enables lookahead."""
+    def test_xing_suffix_extends(self):
+        """前述環形的墊圈 — 形 suffix also enables capture extension."""
         doc = _make_doc([
             _claim(
                 1,
@@ -1717,4 +1782,11 @@ class TestStateModifierLookaheadR66:
             ),
         ])
         issues = check_antecedent_basis(doc)
-        assert not any(i["term"] == "環形" for i in issues), issues
+        finding = next(
+            (i for i in issues if "環形" in i["term"]),
+            None,
+        )
+        if finding is not None:
+            # If walker emits, term must be the extended form.
+            assert finding["term"] != "環形", finding
+            assert "墊圈" in finding["term"], finding

@@ -1081,10 +1081,12 @@ _NOUN_CHARS_CN = r"[^\s，。；：、及与和之的该将能须应皆被于以
 # extends the noun by 1 char if claim.text[match_end] is `)` or `）`.
 _PAREN_NUM_TRAIL_RE_CN = re.compile(r"[(（][0-9A-Za-z]{1,5}$")
 
-# R66 (2026-05-05) TW parity: state-modifier+head-noun lookahead.
-# Mirror of TW R66 — gated on state suffix (状/形 — Simplified parity
-# with TW 狀/形) to avoid silencing CN possessive references. See the
-# tw_claims.py R66 comment for full rationale.
+# R66 (revised 2026-05-05) TW parity: state-modifier capture extension.
+# Mirror of TW R66 capture-time fix — gated on Simplified state suffixes
+# 状/形. When raw_noun ends in such a suffix and `的<head>` follows,
+# extend the captured reference so the displayed reference_form is the
+# full `所述<state>的<head>` phrase rather than the bare adjective
+# `所述<state>`. See tw_claims.py R66 comment for full rationale.
 _STATE_MODIFIER_SUFFIXES_CN = ("状", "形")
 _DE_HEAD_NOUN_RE_CN = re.compile(
     r"的(?P<head>[^\s，。；：、及与和之的该将能须应皆被于以并且其而还另时在]{2,12})"
@@ -3295,13 +3297,30 @@ def check_antecedent_basis_cn(
             # R62 (2026-05-05) paren-numeral closure (parallel of TW fix).
             # When the regex {2,12} length cap truncates inside an open
             # paren-numeral, look ahead for the closing paren and extend.
+            raw_noun_end = m.end()
             if _PAREN_NUM_TRAIL_RE_CN.search(raw_noun):
-                tail_start = m.end()
                 if (
-                    tail_start < len(claim.text)
-                    and claim.text[tail_start] in (")", "）")
+                    raw_noun_end < len(claim.text)
+                    and claim.text[raw_noun_end] in (")", "）")
                 ):
-                    raw_noun = raw_noun + claim.text[tail_start]
+                    raw_noun = raw_noun + claim.text[raw_noun_end]
+                    raw_noun_end += 1
+
+            # R66 (revised 2026-05-05): TW parity — state-modifier capture
+            # extension. When raw_noun ends in 状/形 and `的<head>` follows,
+            # extend capture so the displayed reference_form is the full
+            # `所述<state>的<head>` phrase rather than the bare adjective.
+            # See tw_claims.py R66 comment for the full rationale.
+            if (
+                raw_noun.endswith(_STATE_MODIFIER_SUFFIXES_CN)
+                and not raw_noun.startswith("第")
+                and raw_noun_end < len(claim.text)
+            ):
+                m_de = _DE_HEAD_NOUN_RE_CN.match(claim.text, raw_noun_end)
+                if m_de:
+                    head_raw = m_de.group("head")
+                    raw_noun = raw_noun + "的" + head_raw
+                    raw_noun_end = raw_noun_end + 1 + len(head_raw)
 
             full_ref = f"{prefix}{raw_noun}"
             normalized_term = normalize_reference_term_cn(
@@ -3357,25 +3376,6 @@ def check_antecedent_basis_cn(
                         and bare in intros_by_term
                     ):
                         resolved_intro = bare
-
-            # R66 (2026-05-05): TW parity — state-modifier+head-noun lookahead.
-            # Gated on state suffix (状/形); see tw_claims.py R66 comment.
-            if (
-                resolved_intro is None
-                and normalized_term.endswith(_STATE_MODIFIER_SUFFIXES_CN)
-                and not normalized_term.startswith("第")
-            ):
-                tail_start = m.end()
-                if tail_start < len(claim.text):
-                    m_de = _DE_HEAD_NOUN_RE_CN.match(claim.text, tail_start)
-                    if m_de:
-                        head_raw = m_de.group("head")
-                        head_normalized = normalize_reference_term_cn(
-                            head_raw,
-                            strict_qualifier_matching=strict_qualifier_matching,
-                        )
-                        if head_normalized and head_normalized in intros_by_term:
-                            resolved_intro = head_normalized
 
             # R29 (2026-05-03) — Resolution-side architectural mechanisms
             # (forward-prefix with boundary, symmetric clean, cross-branch
