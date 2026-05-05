@@ -100,6 +100,18 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         "時",
         "連",
         "設",
+        # R63 (2026-05-05): garbage patterns surfaced via 神秘黑屏哥.docx
+        # method-claim audit. Walker over-captures process descriptions
+        # and locative phrases as "intros" then spec-support inventories
+        # them as "missing from spec":
+        # - `而成` — process-result marker (`X部分而成` = "after X");
+        #   never a noun. Strips `膜減少部分而成` → `膜減少部分`.
+        # - `部分而成` — longer variant; same pattern.
+        # - `面側` — locative-side suffix (`露出面側` = "exposed face side").
+        #   Strips to leave residual `露出` which then fails leading reject.
+        "部分而成",
+        "而成",
+        "面側",
     ),
     key=len,
     reverse=True,
@@ -122,6 +134,18 @@ _TW_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     "描述",
     "解鎖",
     "對該",
+    # R63 (2026-05-05) — verb-prefix walker captures from method claims
+    # (神秘黑屏哥.docx audit). These are verbs that walker captured as
+    # noun heads. Each is multi-char so unlike `有/為` they won't risk
+    # blanket-rejecting valid compound nouns starting with the same char.
+    # Risk audit: 露出部 (exposed part) is a valid noun — but `露出部` is
+    # 3 chars, walker normalize would NOT yield bare `露出` (2 chars,
+    # leading-reject below MIN length). So rejecting startswith("露出")
+    # only fires on `露出X` where X is the over-capture continuation,
+    # which by audit are all process descriptors not element names.
+    "露出",        # walker over-capture of process verb
+    "膜減少",     # film-reduction process (verb compound)
+    "回蝕",        # etch-back process verb
 )
 
 # Characters that appear ONLY as noun suffixes in TW patent diction
