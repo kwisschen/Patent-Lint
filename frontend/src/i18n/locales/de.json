@@ -263,6 +263,7 @@
     "title": "Rückbezugs-Analyse",
     "findings": "Befunde",
     "finding": "Befund",
+    "disclaimer": "Heuristisches Verfahren; die Stufe „hohe Konfidenz“ priorisiert die handlungsrelevantesten Befunde. Bitte stets am Originalentwurf prüfen.",
     "tierFilter": {
       "label": "Filter: ",
       "showAll": "Alle anzeigen ({{count}})",
@@ -321,7 +322,7 @@
     },
     "page": {
       "heroTitle": "Kein Upload. Keine KI. Keine Ausnahmen.",
-      "heroSubtext": "PatentLint läuft vollständig in Ihrem Browser. Ihre Patentanmeldung verlässt nie Ihr Gerät. Bewusst kontofrei, somit keine personenbezogenen Daten erfassbar. Die Analyse erfolgt lokal, die Ergebnisse gehören Ihnen.",
+      "heroSubtext": "PatentLint läuft vollständig in Ihrem Browser. Ihre Patentanmeldung verlässt nie Ihr Gerät. Die Analyse erfolgt lokal, die Ergebnisse gehören Ihnen. Kein Konto. Keine Telemetrie. Keine personenbezogenen Daten.",
       "tryIt": "Selbst überprüfen →",
       "compareTitle": "Wie schneidet PatentLint im Vergleich ab?",
       "compareDisclaimer": "Der Vergleich spiegelt allgemeine Architekturmuster wider. Einzelne Produkte können abweichen. „Word-Add-in-Tools“ und „Cloud-basierte Tools“ sind generische Kategorien, keine konkreten Produkte.",

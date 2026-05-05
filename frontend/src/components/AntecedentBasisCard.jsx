@@ -425,6 +425,9 @@ export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }
           {totalFindings} {totalFindings !== 1 ? t('antecedentBasis.findings') : t('antecedentBasis.finding')}
         </StatusPill>
       </div>
+      <div className="border-t border-border/40 px-4 py-2 text-xs text-muted-foreground italic">
+        {t('antecedentBasis.disclaimer', 'This walker uses heuristics; high-confidence tier prioritizes most-actionable findings. Always confirm against your draft.')}
+      </div>
       {hasMixedTiers && (
         <div className="flex items-center justify-end gap-2 border-t border-border/40 px-4 py-2 text-xs">
           <span className="text-muted-foreground">

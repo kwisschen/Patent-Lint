@@ -2,7 +2,7 @@
 // Copyright (c) 2025 Christopher Chen
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Check, Mail, ShieldCheck, Server, Github, Linkedin } from 'lucide-react'
+import { Check, Mail, ShieldCheck, Server, Linkedin } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
 import PageCTA from '../components/PageCTA'
 import { useCountUp } from '../hooks/useCountUp'
@@ -214,9 +214,9 @@ function CnCheckTable({ t }) {
   )
 
   return (
-    <div className="frost-card">
+    <div className="frost-card max-h-[70vh] overflow-y-auto">
       <table className="w-full text-left">
-        <thead>
+        <thead className="sticky top-0 z-10 bg-card backdrop-blur-sm">
           <tr className="border-b border-border bg-muted/30">
             <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
               {t('about.uspto.colCheck')}
@@ -397,9 +397,9 @@ function TwComparisonTable({ t }) {
   )
 
   return (
-    <div className="frost-card">
+    <div className="frost-card max-h-[70vh] overflow-y-auto">
       <table className="w-full text-left">
-        <thead>
+        <thead className="sticky top-0 z-10 bg-card backdrop-blur-sm">
           <tr className="border-b border-border bg-muted/30">
             <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
               {t('about.uspto.colCheck')}
@@ -466,9 +466,9 @@ function UsComparisonTable({ t }) {
   )
 
   return (
-    <div className="frost-card">
+    <div className="frost-card max-h-[70vh] overflow-y-auto">
       <table className="w-full text-left">
-        <thead>
+        <thead className="sticky top-0 z-10 bg-card backdrop-blur-sm">
           <tr className="border-b border-border bg-muted/30">
             <th className="px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
               {t('about.uspto.colCheck')}
@@ -783,7 +783,6 @@ function BuilderStory({ t }) {
 
   const links = [
     { href: 'mailto:kwisschen@gmail.com', icon: Mail, label: 'Email' },
-    { href: 'https://github.com/kwisschen', icon: Github, label: 'GitHub' },
     { href: 'https://linkedin.com/in/kwisschen', icon: Linkedin, label: 'LinkedIn' },
   ]
 
