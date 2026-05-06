@@ -79,20 +79,73 @@ _REFNUM_AFTER_NOUN = re.compile(
     r"(?:(?:the|a|an|said|each|first|second|third|fourth|fifth)\s+)?"
     r"((?:[a-z]{2,15}\s+){0,3}[a-z]{2,15})"
     r"\s+"
-    r"(\d{2,4})"
-    r"(?!\d)"        # not followed by another digit
-    r"(?!\.\d)"      # not followed by decimal point + digit
-    r"(?![%°])"      # not followed by % or degree
-    r"\b",
+    r"(\d{2,4}[a-z]?)"  # optional single-letter suffix: 10a, 10b
+    r"(?![\dA-Za-z])"   # no following digit/letter — anchored end
+    r"(?!\.\d)"         # not followed by decimal point + digit
+    r"(?![%°])",        # not followed by % or degree
     re.IGNORECASE,
 )
 
-# Pattern B: parenthetical numeral: "base plate (102)"
+# Pattern B: parenthetical numeral: "base plate (102)" / "(10a)"
 _REFNUM_PARENS = re.compile(
     r"((?:[a-z]{2,15}\s+){0,3}[a-z]{2,15})"
-    r"\s*\((\d{2,4})\)",
+    r"\s*\((\d{2,4}[a-z]?)\)",
     re.IGNORECASE,
 )
+
+# Pattern C: noun phrase + Latin-prefix reference designator like "LD1",
+# "HD2", "R1", "C2", "IC3", "Q1a", "LED1", "MOSFET2". Common in
+# electronics / circuit / semiconductor patents where reference labels
+# carry component-type prefixes instead of pure digits. Example from
+# testspec2: "first low-bridge switch LD1" / "second low-bridge switch LD2".
+#
+# The reference label MUST start with 1-5 uppercase letters, then 1-4
+# digits, with optional single-letter suffix (e.g., "R1a"). Pure digit
+# refs are handled by Pattern A above. Hyphenated forms ("LED-1") not
+# captured here — drafters typically don't hyphenate.
+#
+# Module-level (not IGNORECASE) so the [A-Z] requirement on the
+# prefix is enforced; the noun-phrase group uses an explicit case-
+# insensitive char class.
+# Letter-word fragment that allows internal hyphens ("low-bridge",
+# "high-bridge", "field-effect"). First char must be a letter; subsequent
+# chars are letters or interior hyphens. Trailing hyphen allowed in
+# patent diction (rare); rejected by max-length cap.
+_LATIN_WORD = r"[A-Za-z][A-Za-z\-]{1,18}"
+_REFNUM_LATIN_PREFIX = re.compile(
+    rf"((?:{_LATIN_WORD}\s+){{0,4}}{_LATIN_WORD})"
+    r"\s+"
+    r"([A-Z]{1,5}\d{1,4}[a-zA-Z]?)"
+    r"(?![A-Za-z0-9])"
+)
+
+# Pattern D: parenthetical Latin-prefix: "switch (LD1)"
+_REFNUM_LATIN_PAREN = re.compile(
+    rf"((?:{_LATIN_WORD}\s+){{0,4}}{_LATIN_WORD})"
+    r"\s*\(([A-Z]{1,5}\d{1,4}[a-zA-Z]?)\)"
+)
+
+# Latin-prefix denylist — common abbreviations / acronyms that look
+# like reference designators but aren't. Filters obvious noise; extend
+# as new collisions surface.
+_LATIN_PREFIX_DENYLIST = frozenset({
+    "FIG",  # FIG.1 / FIG1 — figure references, not element refs
+    "FIGS",
+    "EQ",   # EQ1 — equation reference
+    "VOL",
+    "NO",
+    "PG",
+    "PCT",  # patent treaty
+    "USC",
+    "USA",
+    "ISO",  # standards
+    "SEQ",  # sequence listings
+    # Common chemistry abbreviations that take numerical position labels
+    "PH",   # pH (case typo)
+    "CO",   # CO2
+    "DNA",
+    "RNA",
+})
 
 # Exclusion: unit followers
 _UNIT_PATTERN = re.compile(
@@ -123,11 +176,14 @@ def _is_year(num_str: str) -> bool:
 # water supply") and D1 inflates to false conflicts. Strip aggressively
 # so only the noun itself remains.
 _D1_LEADING_FUNCTION_WORDS = frozenset({
-    # Articles
+    # Articles + possessives
     "the", "a", "an", "said", "each", "every", "any", "some", "another", "this",
-    "that", "these", "those", "one",
+    "that", "these", "those", "one", "its", "their", "his", "her", "our", "your",
+    "another", "such",
     # Ordinals (often part of compound name, but for D1 dedup we treat
-    # 'first housing 102' and 'housing 102' as the same head noun)
+    # 'first housing 102' and 'housing 102' as the same head noun via
+    # the SEPARATE ordinal-aware extraction; this set is also used by
+    # the simple strip path when ordinals don't matter)
     "first", "second", "third", "fourth", "fifth", "sixth", "seventh",
     "eighth", "ninth", "tenth",
     # Prepositions
@@ -148,45 +204,81 @@ _D1_LEADING_FUNCTION_WORDS = frozenset({
     "having", "have", "has", "had",
     "comprising", "comprises", "comprise",
     "being", "been", "is", "are", "was", "were",
+    "connect", "connects", "connecting", "connected",
+    "couple", "couples", "coupling", "coupled",
+    "control", "controls", "controlling", "controlled",
+    "provide", "provides", "providing", "provided",
+    "form", "forms", "forming", "formed",
+    "dispose", "disposes", "disposing", "disposed",
+    "arrange", "arranges", "arranging", "arranged",
+    "use", "uses", "using", "used",
+    "also",
     # Demonstrative position
-    "type", "kind", "form",
+    "type", "kind",
     # Context-only nouns that creep in via "with respect to N" / "in
     # respect of N" / "such that N" / "ranges from N to" patterns —
     # pure noise as element identities, never real reference numerals.
-    "respect", "such", "respect", "regard", "regards", "case", "cases",
-    "side", "sides",  # "side" alone is too generic; "left side" / "lower side" pass through
+    "respect", "regard", "regards", "case", "cases",
 })
 
 
-def _d1_head_noun(phrase: str) -> str:
-    """Strip leading function words from a captured noun phrase to get
-    the bare head noun for D1 comparison.
+_D1_ORDINAL_WORDS = frozenset({
+    "first", "second", "third", "fourth", "fifth",
+    "sixth", "seventh", "eighth", "ninth", "tenth",
+    "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth",
+    "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th",
+})
 
-    `'from the water supply'` → `'water supply'`
-    `'manipulate the water supply'` → `'water supply'`
-    `'water supply'` → `'water supply'`
-    `'first housing'` → `'housing'`
-    `'for'` → `''` (drop — pure preposition, not a real element name)
 
-    Also drops trailing function words that crept in (`'water supply by'`).
-    Returns empty string for phrases that reduce to nothing.
+def _d1_extract_ordinal_and_head(phrase: str) -> tuple[str, str]:
+    """Split the ordinal prefix from the head noun so we can detect
+    'first switch LD1' vs 'third switch LD1' as distinct instances.
+
+    Returns (ordinal_or_empty, head_noun).
+    `'first low-bridge switch'` → `('first', 'low-bridge switch')`
+    `'low-bridge switch'`       → `('', 'low-bridge switch')`
+    `'from the water supply'`   → `('', 'water supply')`
+    `'for'`                     → `('', '')`
     """
     words = phrase.strip().lower().split()
-    while words and words[0] in _D1_LEADING_FUNCTION_WORDS:
+    # Strip leading articles/prepositions/verbs (NOT ordinals yet)
+    while words and (
+        words[0] in _D1_LEADING_FUNCTION_WORDS
+        and words[0] not in _D1_ORDINAL_WORDS
+    ):
         words.pop(0)
+    # Capture ordinal if present
+    ordinal = ""
+    if words and words[0] in _D1_ORDINAL_WORDS:
+        ordinal = words.pop(0)
+    # Continue stripping leading function words after the ordinal
+    while words and (
+        words[0] in _D1_LEADING_FUNCTION_WORDS
+        and words[0] not in _D1_ORDINAL_WORDS
+    ):
+        words.pop(0)
+    # Strip trailing function words
     while words and words[-1] in _D1_LEADING_FUNCTION_WORDS:
         words.pop()
     if not words:
-        return ""
-    # Single 1-char fragment → drop. Usually noise (regex catches odd splits).
+        return (ordinal, "")
     if len(words) == 1 and len(words[0]) < 2:
-        return ""
-    return " ".join(words)
+        return (ordinal, "")
+    return (ordinal, " ".join(words))
+
+
+def _d1_head_noun(phrase: str) -> str:
+    """Backward-compatible head-noun extractor — strips ordinal too.
+    Preserves the older behavior for callers that don't need ordinal
+    discrimination.
+    """
+    _, head = _d1_extract_ordinal_and_head(phrase)
+    return head
 
 
 def extract_numeral_name_pairs(
     spec_text: str,
-) -> list[tuple[int, str]]:
+) -> list[tuple[str, str]]:
     """Yield every `<head_noun, numeral>` pair from spec text (one per
     occurrence — NOT aggregated).
 
@@ -195,7 +287,12 @@ def extract_numeral_name_pairs(
     extract_reference_numeral_inventory below, which collapses to
     one canonical name per numeral and is used for completeness checks.
 
-    Returns list of (numeral_int, head_noun) tuples in document order.
+    Returns list of (numeral_str, head_noun) tuples in document order.
+    The numeral is a STRING — supports both pure-digit ("102") and
+    Latin-prefix designators ("LD1", "HD2", "R1", "IC2", "Q1a") common
+    in electronics/circuit patents. Pure-digit numerals are
+    canonicalized to a string of just the digits ("102" not "0102").
+
     Names are normalized via _d1_head_noun so sentential context
     (prepositions, verbs, articles, ordinals) doesn't inflate the
     apparent name set per numeral. Empty-name pairs (function-word-only
@@ -204,12 +301,14 @@ def extract_numeral_name_pairs(
     Filters mirror the inventory extractor (year exclusion, unit
     exclusion, paragraph-marker exclusion, 5+digit exclusion).
     """
-    pairs: list[tuple[int, str]] = []
+    pairs: list[tuple[str, str]] = []
+    seen_spans: set[tuple[int, int]] = set()
+    # Pure-digit patterns first; spans they cover are remembered so the
+    # Latin-prefix patterns don't double-claim overlapping text.
     for pattern in [_REFNUM_AFTER_NOUN, _REFNUM_PARENS]:
         for m in pattern.finditer(spec_text):
             noun = m.group(1).strip().lower()
             num_str = m.group(2)
-            num = int(num_str)
 
             if _is_year(num_str):
                 continue
@@ -224,10 +323,51 @@ def extract_numeral_name_pairs(
             if len(num_str) >= 5:
                 continue
 
-            head = _d1_head_noun(noun)
+            ordinal, head = _d1_extract_ordinal_and_head(noun)
             if not head:
                 continue
-            pairs.append((num, head))
+            # Append ordinal as a marker so 'first switch' and 'third switch'
+            # become distinct keys for D1 instance-collision detection.
+            keyed_name = f"{ordinal}|{head}" if ordinal else head
+            # Preserve letter suffix (10a vs 10b stay distinct).
+            digit_part = ""
+            for ch in num_str:
+                if ch.isdigit():
+                    digit_part += ch
+                else:
+                    break
+            suffix = num_str[len(digit_part):]
+            canonical = f"{int(digit_part)}{suffix}" if digit_part else num_str
+            pairs.append((canonical, keyed_name))
+            seen_spans.add((m.start(2), m.end(2)))
+
+    # Latin-prefix patterns — captured AFTER digit patterns so spans
+    # like "switch 1024" (digit) take precedence over a hypothetical
+    # mis-greedy Latin match.
+    for pattern in [_REFNUM_LATIN_PREFIX, _REFNUM_LATIN_PAREN]:
+        for m in pattern.finditer(spec_text):
+            noun = m.group(1).strip().lower()
+            ref = m.group(2)
+
+            if (m.start(2), m.end(2)) in seen_spans:
+                continue
+            prefix = "".join(c for c in ref if c.isalpha()).upper()
+            if prefix in _LATIN_PREFIX_DENYLIST:
+                continue
+            if any(w in _EXCLUDE_KEYWORDS for w in noun.split()):
+                continue
+            before = spec_text[max(0, m.start() - 2):m.start()]
+            if "[" in before:
+                continue
+            if noun.upper().split()[-1] == prefix:
+                continue
+
+            ordinal, head = _d1_extract_ordinal_and_head(noun)
+            if not head:
+                continue
+            keyed_name = f"{ordinal}|{head}" if ordinal else head
+            pairs.append((ref, keyed_name))
+            seen_spans.add((m.start(2), m.end(2)))
     return pairs
 
 
@@ -257,16 +397,57 @@ def _content_words(name: str) -> set[str]:
     return out
 
 
-def _names_form_real_d1_conflict(names: list[str]) -> bool:
-    """A list of names is a real D1 conflict only if AT LEAST ONE PAIR
-    shares no content word. Plural/singular / modifier-variant / partial-
-    name cases all share a content word and are correctly NOT flagged.
+def _split_ordinal_key(keyed: str) -> tuple[str, str]:
+    """Split 'first|low-bridge switch' → ('first', 'low-bridge switch').
+    Empty-ordinal returns ('', head)."""
+    if "|" in keyed:
+        ordinal, _, head = keyed.partition("|")
+        return ordinal, head
+    return "", keyed
 
-    Returns True if a disjoint pair exists; False otherwise.
+
+def _format_d1_name_for_display(keyed: str) -> str:
+    """Reverse the 'ordinal|head' encoding for surface display."""
+    ordinal, head = _split_ordinal_key(keyed)
+    if ordinal:
+        return f"{ordinal} {head}"
+    return head
+
+
+def _names_form_real_d1_conflict(names: list[str]) -> bool:
+    """A list of (ordinal-keyed) names is a real D1 conflict if EITHER:
+    (A) the same head noun appears with TWO OR MORE distinct ordinals
+        (same element type, different instance → drafter assigned same
+        numeral to two distinct instances; classic D1 typo), OR
+    (B) two head nouns share NO content word (truly different elements
+        sharing one numeral; the textbook D1 case).
+
+    Plural/singular / modifier-variant / partial-name cases share a
+    content word AND share ordinal, so they're NOT flagged.
+
+    Returns True if any conflict pair exists; False otherwise.
     """
     if len(names) < 2:
         return False
-    word_sets = [_content_words(n) for n in names]
+
+    decomposed = [_split_ordinal_key(n) for n in names]
+
+    # (A) Same head + 2+ distinct non-empty ordinals → instance collision
+    head_to_ordinals: dict[frozenset, set[str]] = {}
+    for ord_, head in decomposed:
+        if not head:
+            continue
+        head_key = frozenset(_content_words(head))
+        if not head_key:
+            continue
+        head_to_ordinals.setdefault(head_key, set()).add(ord_)
+    for ordinals in head_to_ordinals.values():
+        non_empty = {o for o in ordinals if o}
+        if len(non_empty) >= 2:
+            return True
+
+    # (B) Different head nouns sharing no content word → element collision
+    word_sets = [_content_words(head) for _, head in decomposed if head]
     for i in range(len(word_sets)):
         if not word_sets[i]:
             continue
@@ -319,42 +500,7 @@ def check_numeral_consistency(spec_text: str) -> list[CheckItem]:
             reference="MPEP § 608.01(g)",
         )]
 
-    # Build numeral → ordered-distinct-names AND counts.
-    # Two precision filters:
-    # 1. Each name kept only if it appears ≥2 times for this numeral
-    #    (single occurrences are regex noise from chemistry/range text).
-    # 2. The numeral itself must appear ≥3 times total — real reference
-    #    numerals are repeated; one-off matches are mostly measurements
-    #    (e.g., "10 wt%", "from 100 to 200").
-    from collections import Counter
-    by_numeral_counts: dict[int, Counter] = {}
-    by_numeral_total: Counter = Counter()
-    for num, name in pairs:
-        by_numeral_counts.setdefault(num, Counter())[name] += 1
-        by_numeral_total[num] += 1
-
-    by_numeral: dict[int, list[str]] = {}
-    for num, name_counts in by_numeral_counts.items():
-        if by_numeral_total[num] < 3:
-            continue
-        # Preserve doc-order for surface display; dedupe; keep only ≥2x.
-        seen: list[str] = []
-        seen_set: set[str] = set()
-        for raw_num, raw_name in pairs:
-            if raw_num != num or raw_name in seen_set:
-                continue
-            if name_counts[raw_name] < 2:
-                continue
-            seen_set.add(raw_name)
-            seen.append(raw_name)
-        if seen:
-            by_numeral[num] = seen
-
-    conflicts = [
-        (num, names)
-        for num, names in sorted(by_numeral.items())
-        if len(names) > 1 and _names_form_real_d1_conflict(names)
-    ]
+    conflicts = _detect_d1_conflicts(pairs, latin_pattern=False)
 
     if not conflicts:
         return [CheckItem(
@@ -364,19 +510,33 @@ def check_numeral_consistency(spec_text: str) -> list[CheckItem]:
             reference="MPEP § 608.01(g)",
         )]
 
-    # Cap displayed conflicts at 8 to bound payload size; "extra" carries
-    # the overflow count for the drafter.
+    # Cap displayed conflicts at 8 to bound payload size; "extra"
+    # carries the overflow count for the drafter.
     sample = conflicts[:8]
     extra = max(0, len(conflicts) - 8)
     findings = [
-        {"numeral": num, "names": names[:5]}  # cap names per numeral too
-        for num, names in sample
+        {
+            "numeral": c["numeral"],
+            "canonical": _format_d1_name_for_display(c["canonical"]),
+            "outliers": [
+                {
+                    "name": _format_d1_name_for_display(o["name"]),
+                    "count": o["count"],
+                }
+                for o in c["outliers"]
+            ],
+            "case": c["case"],  # 'instance' (A) or 'element' (B)
+        }
+        for c in sample
     ]
+    inline = "; ".join(_format_inline_conflict(c) for c in sample[:3])
+    if len(conflicts) > 3:
+        inline = inline + f" (+{len(conflicts) - 3} more)"
     return [CheckItem(
         status="amend",
         message=(
-            f"{len(conflicts)} reference numeral(s) used with multiple "
-            f"different element names (D1)."
+            f"{len(conflicts)} reference numeral(s) inconsistently used. "
+            f"Examples: {inline}"
         ),
         message_key="check.spec.numeralConsistency.amend",
         details_key="details.numeralConsistency",
@@ -384,14 +544,255 @@ def check_numeral_consistency(spec_text: str) -> list[CheckItem]:
             "count": len(conflicts),
             "findings": findings,
             "extra": extra,
+            "inline_summary": inline,
         },
         reference="MPEP § 608.01(g)",
         diagnostics={
             "conflict_count": len(conflicts),
-            "sample_numerals": [num for num, _ in sample],
-            "max_names_per_numeral": max(len(names) for _, names in conflicts),
+            "sample_numerals": [c["numeral"] for c in sample],
+            "instance_collisions": sum(1 for c in conflicts if c["case"] == "instance"),
+            "element_collisions": sum(1 for c in conflicts if c["case"] == "element"),
         },
     )]
+
+
+# ── D1 detection core (canonical + outliers) ─────────────────────────────
+#
+# Replaces the prior "≥2 per name + ≥3 total" precision-filter approach
+# which was the load-bearing source of false negatives: a single-
+# occurrence typo (the canonical D1 case — drafter changes ONE
+# paragraph's numeral) was filtered out as noise.
+#
+# The new design is canonical-vs-outliers:
+#
+#   1. For each numeral, find the CANONICAL element name — the most
+#      frequent name with at least N occurrences (3 for digit refs;
+#      2 for Latin-prefix refs).
+#   2. If no canonical exists (no name reaches the threshold), the
+#      numeral is mostly chemistry/range noise → don't emit.
+#   3. For each OTHER name on that numeral (any occurrence count),
+#      emit if it represents a real conflict:
+#        Case A (instance collision): same head noun but different
+#          ordinal — drafter put same numeral on two distinct instances
+#          (first switch + third switch both labeled LD1).
+#        Case B (element collision): no shared content word with the
+#          canonical — drafter typo (motor 10 + circuit 10).
+#
+# Single-occurrence outliers ARE real bugs by this definition. Multi-
+# occurrence chemistry text doesn't form a canonical so it's ignored.
+
+def _is_latin_prefix(num: str) -> bool:
+    """Latin-prefix designators (LD1, R1, IC2) start with a letter."""
+    return bool(num) and num[0].isalpha()
+
+
+def _format_d1_name_for_display(keyed: str) -> str:
+    """Reverse the 'ordinal|head' encoding for surface display."""
+    ordinal, head = _split_ordinal_key(keyed)
+    if ordinal:
+        return f"{ordinal} {head}"
+    return head
+
+
+def _merge_suffix_clusters_us(name_counts: "Counter[str]") -> "Counter[str]":
+    """Merge suffix-equivalent names: if A's surface form ends with B's
+    surface form (with B at least 2 content words), they refer to the same
+    noun captured with un-stripped leading subjects. Keep the shortest
+    member as cluster rep; sum counts."""
+    from collections import Counter
+
+    items = list(name_counts.items())
+    n = len(items)
+    parent = list(range(n))
+
+    def find(i: int) -> int:
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+
+    def union(i: int, j: int) -> None:
+        ri, rj = find(i), find(j)
+        if ri != rj:
+            parent[ri] = rj
+
+    surfaces = []
+    for name, _ in items:
+        ordinal, head = _split_ordinal_key(name)
+        surfaces.append(((ordinal + " ") if ordinal else "") + head)
+
+    def word_count(s: str) -> int:
+        return len([w for w in s.split() if w])
+
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                continue
+            si, sj = surfaces[i], surfaces[j]
+            if word_count(sj) >= 1 and (
+                si == sj
+                or si.endswith(" " + sj)
+                or si.endswith("-" + sj)
+            ):
+                union(i, j)
+
+    cluster_names: dict[int, str] = {}
+    cluster_counts: Counter = Counter()
+    for idx, (name, count) in enumerate(items):
+        root = find(idx)
+        cluster_counts[root] += count
+        if root not in cluster_names:
+            cluster_names[root] = name
+        else:
+            cur_name = cluster_names[root]
+            cur_ord, cur_head = _split_ordinal_key(cur_name)
+            cur_surf = ((cur_ord + " ") if cur_ord else "") + cur_head
+            new_surf = surfaces[idx]
+            if len(new_surf) < len(cur_surf):
+                cluster_names[root] = name
+
+    merged: Counter = Counter()
+    for root, total in cluster_counts.items():
+        merged[cluster_names[root]] = total
+    return merged
+
+
+def _detect_d1_conflicts(
+    pairs: list[tuple[str, str]],
+    latin_pattern: bool = False,
+) -> list[dict]:
+    """Build canonical + outliers per numeral; return list of conflict
+    dicts with case classification.
+
+    Each conflict dict has:
+      'numeral': str — the reference numeral (digit or Latin-prefix)
+      'canonical': str — most-frequent ordinal-keyed name
+      'canonical_count': int
+      'outliers': list[{'name': str, 'count': int}] — disjoint or
+                  ordinal-different names (the actual conflicts)
+      'case': 'instance' | 'element' — which D1 sub-case fired
+    """
+    from collections import Counter
+
+    by_num_counts: dict[str, Counter] = {}
+    for num, name in pairs:
+        by_num_counts.setdefault(num, Counter())[name] += 1
+    # Merge suffix-equivalent names per numeral so the cleanest short
+    # form wins counts (e.g., 'present disclosure comprises lens' merges
+    # into 'lens' before canonical selection).
+    for num in list(by_num_counts.keys()):
+        by_num_counts[num] = _merge_suffix_clusters_us(by_num_counts[num])
+
+    def _sort_key(item: tuple[str, Counter]) -> tuple[int, int, str]:
+        num = item[0]
+        digit_prefix = ""
+        for ch in num:
+            if ch.isdigit():
+                digit_prefix += ch
+            else:
+                break
+        if digit_prefix:
+            return (0, int(digit_prefix), num)
+        return (1, 0, num)
+
+    conflicts: list[dict] = []
+    for num, name_counts in sorted(by_num_counts.items(), key=_sort_key):
+        # Canonical-frequency threshold: a name must appear ≥2 times to
+        # qualify as canonical for that numeral. Single-occurrence-only
+        # captures (where every name is 1×) are mostly chemistry/range
+        # noise and produce no canonical → no D1.
+        # Latin-prefix refs accept canonical=1 — they're structurally
+        # unique designators with much lower noise risk.
+        canonical_threshold = 1 if _is_latin_prefix(num) else 2
+
+        sorted_names = name_counts.most_common()
+        if not sorted_names:
+            continue
+        canonical_name, canonical_count = sorted_names[0]
+        if canonical_count < canonical_threshold:
+            continue
+
+        # Decompose canonical
+        canonical_ord, canonical_head = _split_ordinal_key(canonical_name)
+        canonical_words = _content_words(canonical_head)
+
+        # Scan all OTHER names for real conflicts
+        outlier_records: list[dict] = []
+        case_instance = False
+        for name, count in sorted_names[1:]:
+            if name == canonical_name:
+                continue
+            other_ord, other_head = _split_ordinal_key(name)
+            other_words = _content_words(other_head)
+
+            # Suppress strip-residue outliers: the outlier name ends with
+            # canonical name (full ord + head), or head ends with canonical
+            # head. Captures un-stripped leading subjects: "present
+            # disclosure comprises lens 10" vs canonical "lens 10".
+            if (
+                canonical_name
+                and name != canonical_name
+                and (name.endswith(" " + canonical_name)
+                     or name.endswith("-" + canonical_name))
+            ):
+                continue
+            if (
+                canonical_head
+                and other_head
+                and other_ord == canonical_ord
+                and (
+                    other_head.endswith(" " + canonical_head)
+                    or other_head == canonical_head
+                )
+            ):
+                continue
+
+            # Case A: same head, different ordinal → instance collision
+            if (
+                canonical_words
+                and other_words
+                and canonical_words & other_words
+                and other_ord != canonical_ord
+                and (canonical_ord or other_ord)
+            ):
+                outlier_records.append({"name": name, "count": count})
+                case_instance = True
+                continue
+
+            # Case B: disjoint content words → element collision
+            if (
+                canonical_words
+                and other_words
+                and not (canonical_words & other_words)
+            ):
+                outlier_records.append({"name": name, "count": count})
+                continue
+
+        if outlier_records:
+            conflicts.append({
+                "numeral": num,
+                "canonical": canonical_name,
+                "canonical_count": canonical_count,
+                "outliers": outlier_records,
+                # If instance-collision pair found, prefer that label;
+                # otherwise it's element-collision.
+                "case": "instance" if case_instance else "element",
+            })
+
+    return conflicts
+
+
+def _format_inline_conflict(c: dict) -> str:
+    """One-line summary of a conflict for the message text."""
+    canonical = _format_d1_name_for_display(c["canonical"])
+    canonical_str = f"{canonical}×{c['canonical_count']}"
+    outliers_str = ", ".join(
+        f"{_format_d1_name_for_display(o['name'])}×{o['count']}"
+        for o in c["outliers"][:3]
+    )
+    if len(c["outliers"]) > 3:
+        outliers_str += "…"
+    return f"#{c['numeral']} ({canonical_str} vs {outliers_str})"
 
 
 def extract_reference_numeral_inventory(
@@ -411,10 +812,14 @@ def extract_reference_numeral_inventory(
         for m in pattern.finditer(spec_text):
             noun = m.group(1).strip().lower()
             num_str = m.group(2)
-            num = int(num_str)
+            # Inventory bucket is the digit-only parent: 10a → 10.
+            digit_only = "".join(ch for ch in num_str if ch.isdigit())
+            if not digit_only:
+                continue
+            num = int(digit_only)
 
-            # Exclusion: year
-            if _is_year(num_str):
+            # Exclusion: year (use digit-only form)
+            if _is_year(digit_only):
                 continue
 
             # Exclusion: keyword in noun phrase
@@ -433,7 +838,7 @@ def extract_reference_numeral_inventory(
                 continue
 
             # Exclusion: 5+ digits (patent number)
-            if len(num_str) >= 5:
+            if len(digit_only) >= 5:
                 continue
 
             occurrence_count[num] += 1

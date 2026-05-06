@@ -12,8 +12,10 @@ import re
 from collections import Counter
 
 from patentlint.analysis.cn_specification import (
+    _cn_detect_d1_conflicts as _cjk_detect_d1_conflicts,
     _cn_extract_numeral_name_pairs as _cjk_extract_numeral_name_pairs,
-    _cn_names_form_real_d1_conflict as _cjk_names_form_real_d1_conflict,
+    _cn_format_d1_name_for_display as _cjk_format_d1_name_for_display,
+    _cn_format_inline_conflict as _cjk_format_inline_conflict,
 )
 from patentlint.analysis.figure_refs import TW_PARSER
 from patentlint.analysis.utils import _dx
@@ -927,33 +929,7 @@ def check_numeral_consistency_tw(doc: TwPatentDocument) -> list[CheckItem]:
             reference="專利法施行細則 §19 第2款",
         )]
 
-    by_num_counts: dict[int, Counter] = {}
-    by_num_total: Counter = Counter()
-    for num, name in pairs:
-        by_num_counts.setdefault(num, Counter())[name] += 1
-        by_num_total[num] += 1
-
-    by_num: dict[int, list[str]] = {}
-    for num, name_counts in by_num_counts.items():
-        if by_num_total[num] < 3:
-            continue
-        seen: list[str] = []
-        seen_set: set[str] = set()
-        for raw_num, raw_name in pairs:
-            if raw_num != num or raw_name in seen_set:
-                continue
-            if name_counts[raw_name] < 2:
-                continue
-            seen_set.add(raw_name)
-            seen.append(raw_name)
-        if seen:
-            by_num[num] = seen
-
-    conflicts = [
-        (num, names)
-        for num, names in sorted(by_num.items())
-        if len(names) > 1 and _cjk_names_form_real_d1_conflict(names)
-    ]
+    conflicts = _cjk_detect_d1_conflicts(pairs)
 
     if not conflicts:
         return [CheckItem(
@@ -966,24 +942,38 @@ def check_numeral_consistency_tw(doc: TwPatentDocument) -> list[CheckItem]:
     sample = conflicts[:8]
     extra = max(0, len(conflicts) - 8)
     findings = [
-        {"numeral": num, "names": names[:5]}
-        for num, names in sample
+        {
+            "numeral": c["numeral"],
+            "canonical": _cjk_format_d1_name_for_display(c["canonical"]),
+            "outliers": [
+                {"name": _cjk_format_d1_name_for_display(o["name"]),
+                 "count": o["count"]}
+                for o in c["outliers"]
+            ],
+            "case": c["case"],
+        }
+        for c in sample
     ]
+    inline = "；".join(_cjk_format_inline_conflict(c) for c in sample[:3])
+    if len(conflicts) > 3:
+        inline = inline + f"（另 {len(conflicts) - 3} 處）"
     return [CheckItem(
         status="amend",
-        message=f"{len(conflicts)} 個元件代表符號用於指稱多個不同的元件名稱。",
+        message=f"{len(conflicts)} 個元件代表符號的使用前後不一致。範例：{inline}",
         message_key="check.tw.spec.numeralConsistency.amend",
         details_key="details.tw.numeralConsistency",
         details_params={
             "count": len(conflicts),
             "findings": findings,
             "extra": extra,
+            "inline_summary": inline,
         },
         reference="專利法施行細則 §19 第2款",
         diagnostics=_dx(
             conflict_count=len(conflicts),
-            sample_numerals=[num for num, _ in sample],
-            max_names_per_numeral=max(len(names) for _, names in conflicts),
+            sample_numerals=[c["numeral"] for c in sample],
+            instance_collisions=sum(1 for c in conflicts if c["case"] == "instance"),
+            element_collisions=sum(1 for c in conflicts if c["case"] == "element"),
         ),
     )]
 
@@ -1027,9 +1017,11 @@ def check_symbol_table_coverage_tw(doc: TwPatentDocument) -> list[CheckItem]:
         )]
 
     pairs = _cjk_extract_numeral_name_pairs(spec_text)
-    used_numerals: dict[int, str] = {}  # num → first head noun seen
+    used_numerals: dict[str, str] = {}  # num (str, may be Latin-prefix) → first head noun seen
     for num, name in pairs:
-        used_numerals.setdefault(num, name)
+        # Strip the ordinal-key prefix for display (D3 doesn't care about ordinal)
+        display_name = name.split("|", 1)[-1] if "|" in name else name
+        used_numerals.setdefault(num, display_name)
     if not used_numerals:
         return [CheckItem(
             status="pass",
@@ -1039,24 +1031,36 @@ def check_symbol_table_coverage_tw(doc: TwPatentDocument) -> list[CheckItem]:
         )]
 
     # Build set of declared numerals from symbol_table. Symbol-table
-    # entries can be ranges (S21~S25) or letter-prefixed (e.g., S21);
-    # for D3 coverage we compare against the digit numerals, so extract
-    # all digit-runs from the numeral string.
-    declared: set[int] = set()
+    # entries can be ranges (S21~S25), letter-prefixed (e.g., "S21"),
+    # or pure digits ("10"). Match against the STRING form so digit
+    # and Latin-prefix refs share the same comparison key.
+    declared: set[str] = set()
     for entry in doc.symbol_table:
         for piece in re.split(r"[~\-、,，]", entry.numeral):
+            piece = piece.strip()
+            if not piece:
+                continue
+            # Add raw form — Latin-prefix matching ("S21" stays "S21")
+            declared.add(piece)
+            # Also add the canonical digit-only form (strip leading zeros
+            # and any letter prefix) — matches the canonicalization used
+            # by extract_numeral_name_pairs which stores int-form digits.
             digits = "".join(c for c in piece if c.isdigit())
             if digits:
                 try:
-                    declared.add(int(digits))
+                    declared.add(str(int(digits)))
                 except ValueError:
                     continue
 
     undeclared = sorted(num for num in used_numerals if num not in declared)
     # Apply same precision filter as D1 — require ≥3 total occurrences
-    # to avoid measurement-numeral noise leaking into D3.
+    # for digit refs (filters chemistry/range noise); ≥2 for Latin prefix.
     pair_counts: Counter = Counter(num for num, _ in pairs)
-    undeclared = [n for n in undeclared if pair_counts[n] >= 3]
+
+    def _min_pair_count(num: str) -> int:
+        return 2 if (num and num[0].isalpha()) else 3
+
+    undeclared = [n for n in undeclared if pair_counts[n] >= _min_pair_count(n)]
 
     if not undeclared:
         return [CheckItem(
