@@ -829,6 +829,10 @@
         "amendContent": "発明の名称に使用できない語が含まれています：{{title_prohibited_items}}（MPEP § 608.01）。",
         "verify": "発明の名称が {{count}} 語です。MPEP § 606 は簡潔で具体的な名称を推奨しています。",
         "pass": "発明の名称は MPEP § 606 の要件を満たしています。"
+      },
+      "scopeLimitWording": {
+        "verify": "明細書中に「本発明」/「the (present) invention」の表現が {{count}} 箇所検出されました。",
+        "pass": "明細書にクレーム範囲を限定し得る表現は検出されませんでした。"
       }
     },
     "claims": {

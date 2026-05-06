@@ -829,6 +829,10 @@
         "amendContent": "Prohibited content in title: {{title_prohibited_items}} (MPEP § 608.01).",
         "verify": "Title has {{count}} words — MPEP § 606 recommends a short, specific title.",
         "pass": "Title meets MPEP § 606 requirements."
+      },
+      "scopeLimitWording": {
+        "verify": "Found {{count}} use(s) of \"the (present) invention\" / \"this invention\" in the specification.",
+        "pass": "No scope-limiting phrases detected in specification."
       }
     },
     "claims": {
