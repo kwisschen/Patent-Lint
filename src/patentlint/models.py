@@ -500,6 +500,10 @@ class AnalysisResult(BaseModel):
     # check-bundle fields and future-proof against multi-emit changes.
     scope_limit_checks: list[CheckItem] = Field(default_factory=list)
 
+    # Reference numeral consistency D1 (US, MPEP § 608.01(g)). Same shape
+    # as scope_limit_checks. Detects same-numeral / different-name conflicts.
+    numeral_consistency_checks: list[CheckItem] = Field(default_factory=list)
+
     # CN check results (populated by _run_cn_pipeline, empty for US)
     cn_specification_checks: list[CheckItem] = Field(default_factory=list)
     cn_claims_checks: list[CheckItem] = Field(default_factory=list)
@@ -851,6 +855,13 @@ class AnalysisResult(BaseModel):
         # absolutes; this targets Phillips claim-construction risk.
         for sc in self.scope_limit_checks:
             spec_checks.append(sc)
+
+        # Reference numeral consistency D1 (US, MPEP § 608.01(g)).
+        # Spec-content group; sits adjacent to scope-limit and
+        # restrictive-wording. Detects same-numeral / different-name
+        # conflicts.
+        for nc in self.numeral_consistency_checks:
+            spec_checks.append(nc)
 
         # Drawings overview in specification section
         has_drawing_issue = (
