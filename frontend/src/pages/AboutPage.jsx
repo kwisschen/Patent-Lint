@@ -215,13 +215,13 @@ function CnCheckTable({ t }) {
 
   return (
     <div className="frost-card !overflow-visible">
-      <table className="w-full text-left">
+      <table className="w-full text-left border-separate border-spacing-0">
         <thead>
           <tr className="border-b border-border bg-muted/30">
-            <th className="sticky top-0 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
+            <th className="sticky top-14 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
               {t('about.uspto.colCheck')}
             </th>
-            <th className="sticky top-0 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
+            <th className="sticky top-14 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
               {t('about.uspto.colPatentLint')}
             </th>
           </tr>
@@ -398,16 +398,16 @@ function TwComparisonTable({ t }) {
 
   return (
     <div className="frost-card !overflow-visible">
-      <table className="w-full text-left">
+      <table className="w-full text-left border-separate border-spacing-0">
         <thead>
           <tr className="border-b border-border bg-muted/30">
-            <th className="sticky top-0 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
+            <th className="sticky top-14 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
               {t('about.uspto.colCheck')}
             </th>
-            <th className="sticky top-0 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
+            <th className="sticky top-14 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
               {t('about.tw.colTipo')}
             </th>
-            <th className="sticky top-0 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
+            <th className="sticky top-14 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
               {t('about.uspto.colPatentLint')}
             </th>
           </tr>
@@ -467,16 +467,16 @@ function UsComparisonTable({ t }) {
 
   return (
     <div className="frost-card !overflow-visible">
-      <table className="w-full text-left">
+      <table className="w-full text-left border-separate border-spacing-0">
         <thead>
           <tr className="border-b border-border bg-muted/30">
-            <th className="sticky top-0 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
+            <th className="sticky top-14 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
               {t('about.uspto.colCheck')}
             </th>
-            <th className="sticky top-0 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
+            <th className="sticky top-14 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
               {t('about.uspto.colUSPTO')}
             </th>
-            <th className="sticky top-0 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
+            <th className="sticky top-14 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
               {t('about.uspto.colPatentLint')}
             </th>
           </tr>
