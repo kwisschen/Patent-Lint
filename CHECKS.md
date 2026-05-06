@@ -16,6 +16,8 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Prior art citations | § 608.01(c) | REVIEW / PASS | `check.spec.priorArt` | Background section cites prior art — review characterizations |
 | Required sections | § 608.01(a) | FIX / PASS | `checks.required_sections_missing` / `checks.required_sections_pass` | Required sections per MPEP § 608.01(a) are present |
 | Optional sections | § 608.01(a) | REVIEW | `checks.optional_section_missing` | Optional section not found (informational) |
+| Scope-limiting wording | MPEP § 2111; Phillips v. AWH 415 F.3d 1303 | REVIEW / PASS | `check.spec.scopeLimitWording` | "the (present) invention" / "this invention" in spec body — scope-limit risk under Phillips claim construction |
+| Reference numeral consistency (D1) | MPEP § 608.01(g) | FIX / PASS | `check.spec.numeralConsistency` | Same reference numeral used with multiple disjoint element names — drafter typo / copy-paste error |
 | Drawings overview † | § 608.02 | REVIEW / PASS | `check.spec.drawings` | Composite drawings summary (figures count, sequential, prior art, single-figure) |
 
 ## Claims
@@ -86,6 +88,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Patent type terminology | 审查指南 | REVIEW / PASS | `check.cn.spec.patentTypeTerminology` | 本发明 vs 本实用新型 consistency |
 | Title requirements | 审查指南 第一部分第一章 | FIX / PASS | `check.cn.spec.title` | Title ≤25 CJK chars, no trademarks/model numbers |
 | Spec must not reference claims | 专利法实施细则 §20 | FIX / PASS | `check.cn.spec.claimReference` | No 如权利要求N所述 in specification |
+| Reference numeral consistency (D1) | 专利法实施细则 §21 第2款; 审查指南 §3.3.1 | FIX / PASS | `check.cn.spec.numeralConsistency` | Same drawing reference (附图标记) used with multiple disjoint component names — 同一附图标记应当指代同一构件 |
 
 ## CN Claims (权利要求)
 
@@ -140,7 +143,9 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Patent type terminology | 專利審查基準 | REVIEW / PASS | `check.tw.spec.patentTypeTerminology` | 本發明 vs 本新型 consistency |
 | Title requirements | 專利審查基準 | FIX / PASS | `check.tw.spec.title` | Title concise, no trademarks or model numbers |
 | Spec must not reference claims | 專利法施行細則 §17 | FIX / PASS | `check.tw.spec.claimReference` | No 如請求項N所述 in specification |
+| Reference symbol consistency (D1) | 專利法施行細則 §19 第2款 | FIX / PASS | `check.tw.spec.numeralConsistency` | Same reference symbol used with multiple disjoint element names — 同一代表符號應指稱同一元件 |
 | 符號說明 presence | 專利法施行細則 §17 | FIX / PASS | `check.tw.spec.symbolTablePresence` | 符號說明 required when 圖式簡單說明 exists |
+| 符號說明 numeral coverage (D3) | 專利法施行細則 §19 第2款 | FIX / PASS | `check.tw.spec.symbolTableCoverage` | All reference symbols used in spec body must be declared in 符號說明 |
 | 符號說明 vs spec consistency | 專利審查基準 | REVIEW / PASS | `check.tw.spec.symbolTableConsistency` | Symbols in 符號說明 appear in 實施方式 |
 | Indigenous terminology | 原住民族傳統智慧創作保護條例 | REVIEW / PASS | `check.tw.spec.indigenousTerms` | Indigenous peoples terms flagged for drafter review |
 
