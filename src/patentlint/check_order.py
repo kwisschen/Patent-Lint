@@ -152,6 +152,17 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.tw.spec.claimReference.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 40),
     "check.tw.spec.claimReference.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 40),
 
+    # Numeral consistency D1 (per-jurisdiction). 实施细则 §21 / 施行細則 §19.
+    # idx 45 sits between claimReference (40) and TW symbolTablePresence (50).
+    "check.cn.spec.numeralConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 45),
+    "check.cn.spec.numeralConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 45),
+    "check.tw.spec.numeralConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 45),
+    "check.tw.spec.numeralConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 45),
+    # TW D3 — symbolTableCoverage sits between symbolTablePresence (50)
+    # and the ordering of subsequent checks, idx 55.
+    "check.tw.spec.symbolTableCoverage.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 55),
+    "check.tw.spec.symbolTableCoverage.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 55),
+
     "check.tw.spec.symbolTablePresence.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 50),
     "check.tw.spec.symbolTablePresence.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 50),
     "check.tw.spec.symbolTableConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 60),

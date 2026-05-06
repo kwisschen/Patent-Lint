@@ -459,7 +459,9 @@
         "checkMarkushTransition": "Markush group transitional phrase (§ 2117)",
         "checkOmnibusClaim": "Omnibus claim detection (§ 112(b))",
         "checkClaimPunctuation": "Claim punctuation (§ 608.01(m))",
-        "checkSequenceListing": "Sequence listing compliance (§ 2422)"
+        "checkSequenceListing": "Sequence listing compliance (§ 2422)",
+        "numeralConsistency": "Reference numeral consistency (MPEP § 608.01(g))",
+        "scopeLimitWording": "\"the present invention\" scope-limit warning (Phillips v. AWH)"
       }
     },
     "cnTitle": "PatentLint CNIPA Drafting Checks",
@@ -517,7 +519,8 @@
       "titleInAbstract": "Title in abstract",
       "commercialLanguage": "Commercial language",
       "priorArt": "Prior art figure references (审查指南 §4.2)",
-      "figuresSequential": "Figures numbered sequentially"
+      "figuresSequential": "Figures numbered sequentially",
+      "numeralConsistency": "Reference numeral consistency (实施细则 §21)"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統 supports utility-model filings only. PatentLint covers both utility models and inventions.",
@@ -533,7 +536,7 @@
       },
       "symbolTable": {
         "title": "符號說明 cross-check (TW-only)",
-        "description": "TW-only 符號說明 parsed and cross-checked against 實施方式, 圖式簡單說明, and 代表圖 symbols — no other jurisdiction has this section."
+        "description": "TW-only 符號說明 parsed and cross-checked against 實施方式, 圖式簡單說明, and 代表圖 — plus a coverage check that flags any reference symbol used in the spec body but missing from 符號說明 (施行細則 §19 第2款)."
       }
     },
     "tw": {
@@ -579,7 +582,9 @@
       "connectionRelationships": "Independent claim component connection relationships (連接關係)",
       "tipoIndigenous": "Indigenous peoples terminology (原住民族)",
       "figuresSequential": "Figures numbered sequentially",
-      "independentPreamble": "Independent claim preamble (一種)"
+      "independentPreamble": "Independent claim preamble (一種)",
+      "numeralConsistency": "Reference symbol consistency (施行細則 §19)",
+      "symbolTableCoverage": "All used symbols declared in 符號說明 (施行細則 §19)"
     },
     "stats": {
       "tests": "Automated Tests",
@@ -968,6 +973,10 @@
         "claimReference": {
           "amend": "Specification references claims in {{count}} paragraph(s) ({{paragraphs}}) (专利法实施细则 §20). Example: {{snippet}}",
           "pass": "Specification does not reference the claims."
+        },
+        "numeralConsistency": {
+          "amend": "{{count}} reference numeral(s) used with multiple different element names. The same drawing reference must designate the same component (实施细则 §21 第2款).",
+          "pass": "Reference numerals consistently identify their components."
         }
       },
       "claims": {
@@ -1124,6 +1133,14 @@
         "indigenousTerms": {
           "verify": "Indigenous peoples terminology found — verify compliance with 原住民族傳統智慧創作保護條例.",
           "pass": "No indigenous peoples terminology found."
+        },
+        "numeralConsistency": {
+          "amend": "{{count}} reference symbol(s) used with multiple different element names. The same reference symbol must designate the same element (施行細則 §19 第2款).",
+          "pass": "Reference symbols consistently identify their elements."
+        },
+        "symbolTableCoverage": {
+          "amend": "{{count}} reference symbol(s) appear in the specification but are missing from 符號說明.",
+          "pass": "All reference symbols used in the specification are declared in 符號說明."
         }
       },
       "claims": {
