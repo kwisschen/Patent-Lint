@@ -1297,15 +1297,21 @@ _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN: frozenset[str] = frozenset(
      # === R7-port (2026-04-30) — TW R7 parity ===
      # 使 (causative particle / verb fragment): residual ≥ 3 protects
      # 大使/天使/特使/使用 (all 2-char compounds, residual 1 < 3).
-     "使"}
+     "使",
+     # === R68 (2026-05-06) — supplement_v2 mining (TW parity) ===
+     # 来: verb tail particle in `所述<noun>来自X` constructions.
+     # 27 CN walker_fp findings end in 来 across supplement_v2.
+     # See tw_claims.py R68 comment for full rationale.
+     "来"}
 )
 
 # Relaxed-guard subset (residual ≥ 2 instead of ≥ 3).
 # Stage 4 R1 D4a — relaxed residual ≥ 2 guard for 2-char-stem residue strip.
 # R22 adds 由/沿; R24 adds 作/不/相/均/得 (mirrors trailing-verb registration).
+# R68 (2026-05-06) adds 来 (TW parity).
 _NOUNLIKE_RELAXED_SUFFIXES_CN: frozenset[str] = frozenset(
     {"上", "内", "后", "中", "用", "对", "由", "沿",
-     "作", "不", "相", "均", "得"}
+     "作", "不", "相", "均", "得", "来"}
 )
 
 # Phase 8c R22 — `中` very-relaxed (residual ≥ 1) for 2-char locative
