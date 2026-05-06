@@ -1078,18 +1078,22 @@ def check_symbol_table_coverage_tw(doc: TwPatentDocument) -> list[CheckItem]:
         for num in sample
     ]
     # Inline message names the undeclared numerals + their captured noun
-    # so users can navigate directly. Three-numeral preview matches the
-    # numeralConsistency display contract.
+    # in a universal-locale format. Just the numeral and the captured
+    # name in quotes — the surrounding i18n template provides the
+    # "reference symbol(s)" / "附圖標記" categorical word. ASCII parens +
+    # `(+N more)` overflow read cleanly in en/de/zh/ja/ko alike; only
+    # the CJK element name (which we cannot translate) carries source
+    # script.
     inline_parts = []
     for num in sample[:3]:
         name = used_numerals.get(num, "")
         if name:
-            inline_parts.append(f"#{num}（{name}）")
+            inline_parts.append(f'{num} ("{name}")')
         else:
-            inline_parts.append(f"#{num}")
-    inline = "、".join(inline_parts)
+            inline_parts.append(str(num))
+    inline = ", ".join(inline_parts)
     if len(undeclared) > 3:
-        inline = inline + f"（另 {len(undeclared) - 3} 個）"
+        inline = inline + f" (+{len(undeclared) - 3} more)"
     return [CheckItem(
         status="amend",
         message=f"{len(undeclared)} 個附圖標記出現於說明書內文但未列於符號說明：{inline}",
