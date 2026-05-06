@@ -355,3 +355,84 @@ class TestCheckTitle:
         assert all(
             r.message_key != "check.spec.title.verify" for r in results
         )
+
+
+class TestScopeLimitWording:
+    """check_scope_limit_wording — MPEP § 2111 + Phillips v. AWH.
+
+    Detects "the (present) invention" / "this invention" in spec body
+    text. REVIEW-level — many drafts use these benignly; the check
+    surfaces count + samples for drafter triage.
+    """
+
+    def test_pass_on_clean_spec(self):
+        from patentlint.analysis.specification import check_scope_limit_wording
+        results = check_scope_limit_wording(
+            "Embodiments may include a housing 102 and a controller 110."
+        )
+        assert len(results) == 1
+        assert results[0].status == "pass"
+        assert results[0].message_key == "check.spec.scopeLimitWording.pass"
+
+    def test_pass_on_empty(self):
+        from patentlint.analysis.specification import check_scope_limit_wording
+        results = check_scope_limit_wording("")
+        assert results[0].status == "pass"
+
+    def test_verify_present_invention(self):
+        from patentlint.analysis.specification import check_scope_limit_wording
+        results = check_scope_limit_wording(
+            "The present invention provides a system for processing data."
+        )
+        assert len(results) == 1
+        assert results[0].status == "verify"
+        assert results[0].message_key == "check.spec.scopeLimitWording.verify"
+        assert results[0].details_params["count"] == 1
+
+    def test_verify_this_invention(self):
+        from patentlint.analysis.specification import check_scope_limit_wording
+        results = check_scope_limit_wording(
+            "This invention relates to a system. In one aspect of this "
+            "invention, a controller is provided."
+        )
+        assert results[0].status == "verify"
+        assert results[0].details_params["count"] == 2
+
+    def test_verify_the_invention_alone(self):
+        """'the invention' (without 'present') should also fire."""
+        from patentlint.analysis.specification import check_scope_limit_wording
+        results = check_scope_limit_wording(
+            "Aspects of the invention will now be described."
+        )
+        assert results[0].status == "verify"
+
+    def test_case_insensitive(self):
+        from patentlint.analysis.specification import check_scope_limit_wording
+        results = check_scope_limit_wording(
+            "THE PRESENT INVENTION provides a system."
+        )
+        assert results[0].status == "verify"
+
+    def test_samples_capped_at_5(self):
+        """Sample list capped at 5; 'extra' carries the overflow count."""
+        from patentlint.analysis.specification import check_scope_limit_wording
+        text = " ".join(["The present invention does X."] * 8)
+        results = check_scope_limit_wording(text)
+        assert results[0].details_params["count"] == 8
+        assert len(results[0].details_params["samples"]) == 5
+        assert results[0].details_params["extra"] == 3
+
+    def test_does_not_match_unrelated_invention_word(self):
+        """'inventions' (plural) is intentionally not matched — different
+        register; drafters don't use it as a scope-defining phrase."""
+        from patentlint.analysis.specification import check_scope_limit_wording
+        results = check_scope_limit_wording(
+            "Various inventions in this field include systems."
+        )
+        # 'this field' shouldn't match; 'inventions' shouldn't match either.
+        # But 'various inventions' contains no whole-word 'invention' so the
+        # \binvention\b boundary excludes it.
+        # Actually re.IGNORECASE + \binvention\b matches 'invention' but
+        # not 'inventions' since \b is at the boundary.
+        # Verify pass behavior:
+        assert results[0].status == "pass"

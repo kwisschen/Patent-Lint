@@ -916,6 +916,10 @@
         "amendContent": "Unzulässiger Inhalt im Titel: {{title_prohibited_items}} (MPEP § 608.01).",
         "verify": "Titel hat {{count}} Wörter — MPEP § 606 empfiehlt einen kurzen, spezifischen Titel.",
         "pass": "Titel erfüllt MPEP § 606-Anforderungen."
+      },
+      "scopeLimitWording": {
+        "verify": "{{count}} Verwendung(en) von „die (vorliegende) Erfindung\" / „diese Erfindung\" in der Beschreibung gefunden.",
+        "pass": "Keine anspruchsbeschränkenden Formulierungen in der Beschreibung gefunden."
       }
     },
     "claims": {
