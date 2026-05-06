@@ -47,7 +47,7 @@ export default function NumeralFindingList({ findings, status = "amend", classNa
       {expanded && (
         <ul className="mt-1.5 space-y-1 pl-4 text-xs text-muted-foreground">
           {findings.map((f, i) => {
-            // D1 shape: has canonical + outliers
+            // D1 shape: { numeral, canonical, canonical_count, outliers }
             if (f.canonical !== undefined && Array.isArray(f.outliers)) {
               return (
                 <li key={i}>
@@ -63,7 +63,22 @@ export default function NumeralFindingList({ findings, status = "amend", classNa
                 </li>
               )
             }
-            // D3 shape: name + occurrences
+            // D3 grouped shape: { name, numerals: [], refnum_count, occurrences }
+            if (Array.isArray(f.numerals)) {
+              const nums = f.numerals.join(", ")
+              return (
+                <li key={i}>
+                  {f.name && <span>“{f.name}”</span>}
+                  <span className="ml-1 font-mono">({nums})</span>
+                  {f.refnum_count > 1 && (
+                    <span className="ml-1 opacity-70">
+                      , {f.refnum_count} refnums
+                    </span>
+                  )}
+                </li>
+              )
+            }
+            // D3 legacy shape: { numeral, name, occurrences }
             return (
               <li key={i}>
                 <span className="font-mono font-semibold">#{f.numeral}</span>

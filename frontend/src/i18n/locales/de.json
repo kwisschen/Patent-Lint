@@ -1226,7 +1226,7 @@
           "pass": "Bezugssymbole identifizieren die Elemente konsistent."
         },
         "symbolTableCoverage": {
-          "amend": "{{count}} Bezugssymbole erscheinen in der Beschreibung, fehlen jedoch in 符號說明: {{inline_summary}}",
+          "amend": "{{count}} undeklarierte Element(e) für {{refnum_count}} Bezugssymbole fehlen in 符號說明: {{inline_summary}}",
           "pass": "Alle in der Beschreibung verwendeten Bezugssymbole sind in 符號說明 deklariert."
         }
       },

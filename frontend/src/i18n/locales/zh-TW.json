@@ -1226,7 +1226,7 @@
           "pass": "元件代表符號與所指稱元件名稱一致。"
         },
         "symbolTableCoverage": {
-          "amend": "{{count}} 個附圖標記出現於說明書內文但未列於 符號說明 中：{{inline_summary}}",
+          "amend": "{{count}} 個未宣告之元件（共 {{refnum_count}} 個附圖標記）未列於 符號說明 中：{{inline_summary}}",
           "pass": "所有出現於說明書內文之附圖標記均已列於 符號說明 中。"
         }
       },
