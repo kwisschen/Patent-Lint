@@ -375,6 +375,15 @@ _BARE_NUMERAL = re.compile(
     r"(?!\s*(?:" + _CJK_UNIT_TOKENS_CN + r"))"
 )
 
+# Latin-prefix designators (R1, IC2, LED1) used for circuit / semiconductor
+# element references. Same \u5b9e\u65bd\u7ec6\u5219 \u00a721 \u7b2c2\u6b3e / \u00a722 rule \u2014 \u7b26\u53f7 covers
+# Latin-prefix too. CJK-anchored to skip standalone citations.
+_BARE_LATIN_REF = re.compile(
+    r"(?<!\()(?<=[\u4e00-\u9fff])"
+    r"\s?[A-Z]{1,5}\d{1,4}[a-zA-Z]?"
+    r"(?!\))(?![A-Za-z0-9])"
+)
+
 
 def _ref_numeral_finding_diag_cn(cid: int, claims: list) -> dict:
     """CN parallel of _ref_numeral_finding_diag_tw — adds context_after
@@ -382,6 +391,8 @@ def _ref_numeral_finding_diag_cn(cid: int, claims: list) -> dict:
     """
     text = next((c.text for c in claims if c.id == cid), "") or ""
     m = _BARE_NUMERAL.search(text)
+    if not m:
+        m = _BARE_LATIN_REF.search(text)
     if not m:
         return {"claim_id": cid, "first_match": None, "context_after": None}
     return {
@@ -395,7 +406,7 @@ def check_reference_numeral_parentheses(cn_doc: CnPatentDocument) -> list[CheckI
     """Find reference numerals in claims not enclosed in parentheses."""
     bad_claim_ids: list[int] = []
     for claim in cn_doc.claims:
-        if _BARE_NUMERAL.search(claim.text):
+        if _BARE_NUMERAL.search(claim.text) or _BARE_LATIN_REF.search(claim.text):
             bad_claim_ids.append(claim.id)
 
     if bad_claim_ids:

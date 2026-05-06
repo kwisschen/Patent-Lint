@@ -322,6 +322,25 @@ class TestRefNumeralParens:
         result = check_ref_numeral_parens(doc)
         assert result[0].status == "pass"
 
+    def test_latin_prefix_unbracketed_amend(self):
+        """LD1 / R1 / IC2 unbracketed Latin-prefix designators are still
+        符號 under 施行細則 §19 第3款 — must be flagged. Common in circuit
+        / semiconductor patents."""
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種電路，包含一電阻R1及一電晶體Q2。"),
+        ])
+        result = check_ref_numeral_parens(doc)
+        assert result[0].status == "amend"
+        assert result[0].details_params["claims"] == [1]
+
+    def test_latin_prefix_in_parens_pass(self):
+        """When Latin-prefix refs are properly bracketed, no flag."""
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種電路，包含一電阻(R1)及一電晶體(Q2)。"),
+        ])
+        result = check_ref_numeral_parens(doc)
+        assert result[0].status == "pass"
+
 
 # ── Check 18: Subject Consistency ────────────────────────────────────────
 

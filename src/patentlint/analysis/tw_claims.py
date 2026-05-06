@@ -345,6 +345,17 @@ _BARE_NUMERAL = re.compile(
     r"(?!\s*(?:" + _CJK_UNIT_TOKENS + r"))"  # not followed by CJK unit token
 )
 
+# Latin-prefix designators (LD1, R1, IC2, MOSFET3, LED1) used for circuit
+# / semiconductor element references. Same statutory rule (施行細則 §19
+# 第3款) applies — they are 符號 too. Pattern requires CJK preceding char
+# (so a bare standalone `R1` citation reference doesn't match) and
+# rejects when wrapped in parens.
+_BARE_LATIN_REF = re.compile(
+    r"(?<!\()(?<=[一-鿿])"
+    r"\s?[A-Z]{1,5}\d{1,4}[a-zA-Z]?"
+    r"(?!\))(?![A-Za-z0-9])"
+)
+
 # Subject extraction: text before 其特徵在於 or first comma
 _PREAMBLE_END = re.compile(r"(?:其特徵在於|其改良在於|，|,)")
 
@@ -861,6 +872,8 @@ def _ref_numeral_finding_diag(cid: int, claims: list) -> dict:
     text = next((c.text for c in claims if c.id == cid), "")
     m = _BARE_NUMERAL.search(text)
     if not m:
+        m = _BARE_LATIN_REF.search(text)
+    if not m:
         return {"claim_id": cid, "first_match": None, "context_after": None}
     return {
         "claim_id": cid,
@@ -879,7 +892,7 @@ def check_ref_numeral_parens(doc: TwPatentDocument) -> list[CheckItem]:
     """
     bad_claim_ids: list[int] = []
     for claim in doc.claims:
-        if _BARE_NUMERAL.search(claim.text):
+        if _BARE_NUMERAL.search(claim.text) or _BARE_LATIN_REF.search(claim.text):
             bad_claim_ids.append(claim.id)
 
     if bad_claim_ids:

@@ -274,6 +274,23 @@ class TestRefNumeralParentheses:
         assert results[0].details_params["count"] == 1
         assert results[0].details_params["claims"] == [2]
 
+    def test_latin_prefix_unbracketed_verify(self):
+        """R1 / IC2 unbracketed Latin-prefix designators are 符号 under
+        实施细则 §22 — must be flagged in CN claims too."""
+        doc = _cn_doc([
+            _claim(1, "1. 一种电路，包括一电阻R1和一晶体管Q2。"),
+        ])
+        results = check_reference_numeral_parentheses(doc)
+        assert results[0].status == "verify"
+        assert results[0].details_params["claims"] == [1]
+
+    def test_latin_prefix_in_parens_pass(self):
+        doc = _cn_doc([
+            _claim(1, "1. 一种电路，包括一电阻(R1)和一晶体管(Q2)。"),
+        ])
+        results = check_reference_numeral_parentheses(doc)
+        assert results[0].status == "pass"
+
 
 # ── Check 15: Subject matter consistency ──────────────────────────────────
 
