@@ -154,10 +154,10 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
 
     # Numeral consistency D1 (per-jurisdiction). 实施细则 §21 / 施行細則 §19.
     # idx 45 sits between claimReference (40) and TW symbolTablePresence (50).
-    "check.cn.spec.numeralConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 45),
-    "check.cn.spec.numeralConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 45),
-    "check.tw.spec.numeralConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 45),
-    "check.tw.spec.numeralConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 45),
+    "check.cn.spec.numeralConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    "check.cn.spec.numeralConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    "check.tw.spec.numeralConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    "check.tw.spec.numeralConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
     # TW D3 — symbolTableCoverage sits between symbolTablePresence (50)
     # and the ordering of subsequent checks, idx 55.
     "check.tw.spec.symbolTableCoverage.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 55),
@@ -192,10 +192,12 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     # see specification.py check_scope_limit_wording for rationale.
     "check.spec.scopeLimitWording.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 105),
     "check.spec.scopeLimitWording.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 105),
-    # Reference numeral consistency D1 (MPEP § 608.01(g)) — same group,
-    # idx 107 places it adjacent to scope-limit, before drawings.
-    "check.spec.numeralConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 107),
-    "check.spec.numeralConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 107),
+    # Reference numeral consistency D1 (MPEP § 608.01(g)) — placed
+    # immediately after figureRefConsistency (idx 10) since both check
+    # refnum usage in the spec. Consistent across US/CN/TW jurisdictions
+    # so users see the same relative position regardless of jurisdiction.
+    "check.spec.numeralConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    "check.spec.numeralConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
     "check.spec.drawings": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 110),
 
     # TW symbol-vs-representative-drawing is a spec-content cross-reference.

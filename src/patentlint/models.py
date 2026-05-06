@@ -754,6 +754,12 @@ class AnalysisResult(BaseModel):
             ))
 
         # --- Group 2: Spec content ---
+        # Reference numeral consistency D1 (US, MPEP § 608.01(g)) emits
+        # first in SPEC_CONTENT — same canonical position (idx 15) as
+        # CN/TW so users see refnum-checks early regardless of jurisdiction.
+        for nc in self.numeral_consistency_checks:
+            spec_checks.append(nc)
+
         from patentlint.analysis.specification import check_title as _check_us_title
         spec_checks.extend(_check_us_title(self.title))
 
@@ -855,13 +861,6 @@ class AnalysisResult(BaseModel):
         # absolutes; this targets Phillips claim-construction risk.
         for sc in self.scope_limit_checks:
             spec_checks.append(sc)
-
-        # Reference numeral consistency D1 (US, MPEP § 608.01(g)).
-        # Spec-content group; sits adjacent to scope-limit and
-        # restrictive-wording. Detects same-numeral / different-name
-        # conflicts.
-        for nc in self.numeral_consistency_checks:
-            spec_checks.append(nc)
 
         # Drawings overview in specification section
         has_drawing_issue = (

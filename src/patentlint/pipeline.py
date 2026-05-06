@@ -115,10 +115,11 @@ def _run_cn_pipeline(
         + cn_spec_analysis.check_paragraph_numbering(cn_doc)
         + cn_spec_analysis.check_paragraph_ending(cn_doc)
         + cn_spec_analysis.check_figure_reference_consistency(cn_doc)
+        # numeralConsistency follows figureRef — both validate refnum usage
+        + cn_spec_analysis.check_numeral_consistency_cn(cn_doc)
         + cn_spec_analysis.check_patent_type_terminology(cn_doc)
         + cn_spec_analysis.check_title(cn_doc)
         + cn_spec_analysis.check_spec_claim_reference(cn_doc)
-        + cn_spec_analysis.check_numeral_consistency_cn(cn_doc)
     )
 
     # --- Claims checks (9–21) ---
@@ -562,10 +563,11 @@ def _run_tw_pipeline(
         + tw_spec_analysis.check_paragraph_ending(tw_doc)
         + tw_cross_ref_analysis.check_bracket_format(tw_doc)
         + tw_spec_analysis.check_figure_ref_consistency(tw_doc)
+        # numeralConsistency follows figureRef — both validate refnum usage
+        + tw_spec_analysis.check_numeral_consistency_tw(tw_doc)  # idx 15
         + tw_spec_analysis.check_patent_type_terminology(tw_doc)
         + tw_spec_analysis.check_title(tw_doc)
         + tw_spec_analysis.check_spec_claim_reference(tw_doc)
-        + tw_spec_analysis.check_numeral_consistency_tw(tw_doc)  # idx 45
         + tw_spec_analysis.check_symbol_table_presence(tw_doc)   # idx 50
         + tw_spec_analysis.check_symbol_table_coverage_tw(tw_doc)  # idx 55
         + tw_spec_analysis.check_symbol_table_consistency(tw_doc)  # idx 60
