@@ -833,6 +833,10 @@
       "scopeLimitWording": {
         "verify": "明細書中に「本発明」/「the (present) invention」の表現が {{count}} 箇所検出されました。",
         "pass": "明細書にクレーム範囲を限定し得る表現は検出されませんでした。"
+      },
+      "numeralConsistency": {
+        "amend": "{{count}} 個の参照符号が複数の異なる要素名に使用されています。同一の参照符号が異なる要素を指定することはできません。",
+        "pass": "参照符号は要素を一貫して識別しています。"
       }
     },
     "claims": {

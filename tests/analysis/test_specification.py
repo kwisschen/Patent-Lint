@@ -436,3 +436,102 @@ class TestScopeLimitWording:
         # not 'inventions' since \b is at the boundary.
         # Verify pass behavior:
         assert results[0].status == "pass"
+
+
+class TestNumeralConsistencyD1:
+    """check_numeral_consistency — MPEP § 608.01(g) D1.
+
+    Same numeral with multiple distinct element names = drafter copy-paste
+    error. Same name with multiple numerals is permitted (legit multiple
+    instances) and intentionally NOT flagged.
+    """
+
+    def test_pass_on_clean_spec(self):
+        from patentlint.analysis.specification import check_numeral_consistency
+        results = check_numeral_consistency(
+            "The housing 102 holds a controller 110 connected to a sensor 120."
+        )
+        assert results[0].status == "pass"
+        assert results[0].message_key == "check.spec.numeralConsistency.pass"
+
+    def test_pass_on_empty(self):
+        from patentlint.analysis.specification import check_numeral_consistency
+        assert check_numeral_consistency("")[0].status == "pass"
+
+    def test_pass_on_no_numerals(self):
+        from patentlint.analysis.specification import check_numeral_consistency
+        assert check_numeral_consistency(
+            "The system has many parts that work together."
+        )[0].status == "pass"
+
+    def test_d1_same_numeral_different_names_amend(self):
+        """Real D1: numeral 102 used with two truly disjoint names, each
+        appearing ≥2 times. Precision filter requires both repetition
+        AND no shared content word."""
+        from patentlint.analysis.specification import check_numeral_consistency
+        results = check_numeral_consistency(
+            "The housing 102 holds a sensor. The housing 102 is metal. "
+            "The container 102 contains liquid. The container 102 is sealed."
+        )
+        assert results[0].status == "amend"
+        assert results[0].message_key == "check.spec.numeralConsistency.amend"
+        assert results[0].details_params["count"] == 1
+        finding = results[0].details_params["findings"][0]
+        assert finding["numeral"] == 102
+        assert "housing" in finding["names"]
+        assert "container" in finding["names"]
+
+    def test_single_occurrence_alternate_filtered(self):
+        """One occurrence of an alternate name is regex noise — don't flag.
+        Real D1 conflicts have both names appearing repeatedly."""
+        from patentlint.analysis.specification import check_numeral_consistency
+        results = check_numeral_consistency(
+            "The housing 102 holds a controller. The housing 102 is metal. "
+            "The housing 102 is durable. With respect to 102 grams, the result is X."
+        )
+        # 'respect' is a single-occurrence noise capture; should be filtered
+        assert results[0].status == "pass"
+
+    def test_low_total_occurrences_filtered(self):
+        """Numerals appearing <3 times total are likely measurements,
+        not real reference numerals. Don't flag."""
+        from patentlint.analysis.specification import check_numeral_consistency
+        # Each numeral appears only twice (1x each name) — below the
+        # ≥3-total threshold required for D1 emission
+        results = check_numeral_consistency(
+            "The housing 102 is heavy. The container 102 is light."
+        )
+        assert results[0].status == "pass"
+
+    def test_d2_same_name_different_numerals_does_not_fire(self):
+        """Multiple physical instances of same element type get distinct
+        numerals — this is normal drafting and must NOT fire."""
+        from patentlint.analysis.specification import check_numeral_consistency
+        results = check_numeral_consistency(
+            "The pillar 4 supports the frame. The pillar 5 supports the wall. "
+            "The pillar 6 supports the panel."
+        )
+        # Three pillars with three numerals — each numeral has only one name
+        # ('pillar'). D1 doesn't fire.
+        assert results[0].status == "pass"
+
+    def test_multiple_conflicts(self):
+        """Two genuine D1 conflicts — each name repeated."""
+        from patentlint.analysis.specification import check_numeral_consistency
+        results = check_numeral_consistency(
+            "The housing 102 is metal. The housing 102 is heavy. "
+            "The container 102 is plastic. The container 102 holds water. "
+            "The motor 200 spins fast. The motor 200 is electric. "
+            "The pump 200 fills the tank. The pump 200 is reliable."
+        )
+        assert results[0].status == "amend"
+        assert results[0].details_params["count"] == 2
+
+    def test_extract_pairs_returns_per_occurrence(self):
+        from patentlint.analysis.specification import extract_numeral_name_pairs
+        pairs = extract_numeral_name_pairs(
+            "The housing 102 is here. The housing 102 also appears again."
+        )
+        # Two occurrences of (102, 'housing') — both kept
+        assert len(pairs) == 2
+        assert all(p[0] == 102 and "housing" in p[1] for p in pairs)

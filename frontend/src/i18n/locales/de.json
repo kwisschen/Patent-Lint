@@ -833,6 +833,10 @@
       "scopeLimitWording": {
         "verify": "{{count}} Verwendung(en) von „die (vorliegende) Erfindung\" / „diese Erfindung\" in der Beschreibung gefunden.",
         "pass": "Keine anspruchsbeschränkenden Formulierungen in der Beschreibung gefunden."
+      },
+      "numeralConsistency": {
+        "amend": "{{count}} Bezugszeichen mit mehreren unterschiedlichen Elementbezeichnungen verwendet. Dasselbe Bezugszeichen darf nicht verschiedene Elemente bezeichnen.",
+        "pass": "Bezugszeichen identifizieren ihre Elemente konsistent."
       }
     },
     "claims": {

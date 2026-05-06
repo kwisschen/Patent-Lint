@@ -93,6 +93,8 @@ US_FORWARD_MAP = [
      lambda: [_make_check("us.req_sections.x")]),
     ("scope_limit_checks", "specification_checks",
      lambda: [_make_check("check.spec.scopeLimitWording.verify")]),
+    ("numeral_consistency_checks", "specification_checks",
+     lambda: [_make_check("check.spec.numeralConsistency.amend")]),
     # claims_checks accumulator
     ("restrictive_absolute_claims", "claims_checks", lambda: [3]),
     ("indefinite_wording_claims", "claims_checks", lambda: [7]),

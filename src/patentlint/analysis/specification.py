@@ -117,6 +117,283 @@ def _is_year(num_str: str) -> bool:
 
 
 
+# Leading function words to strip when extracting the HEAD NOUN of a
+# `<noun_phrase> <numeral>` capture. Without this, each capture carries
+# its sentential context (e.g., "from the water supply", "manipulate the
+# water supply") and D1 inflates to false conflicts. Strip aggressively
+# so only the noun itself remains.
+_D1_LEADING_FUNCTION_WORDS = frozenset({
+    # Articles
+    "the", "a", "an", "said", "each", "every", "any", "some", "another", "this",
+    "that", "these", "those", "one",
+    # Ordinals (often part of compound name, but for D1 dedup we treat
+    # 'first housing 102' and 'housing 102' as the same head noun)
+    "first", "second", "third", "fourth", "fifth", "sixth", "seventh",
+    "eighth", "ninth", "tenth",
+    # Prepositions
+    "from", "of", "to", "in", "on", "at", "with", "by", "for", "as",
+    "into", "onto", "upon", "via", "near", "around", "above", "below",
+    "between", "across", "through", "without", "within", "during",
+    # Conjunctions / aspectuals
+    "while", "when", "where", "and", "or", "but", "if", "after", "before",
+    "until", "since", "than",
+    # Common verbs that capture into the noun-phrase head
+    "manipulate", "manipulates", "manipulating",
+    "operate", "operates", "operating",
+    "include", "includes", "including",
+    "configure", "configured", "configuring",
+    "open", "opens", "opening", "close", "closes", "closing",
+    "shows", "showing", "show", "shown", "showed",
+    "off", "out", "up", "down", "back",
+    "having", "have", "has", "had",
+    "comprising", "comprises", "comprise",
+    "being", "been", "is", "are", "was", "were",
+    # Demonstrative position
+    "type", "kind", "form",
+    # Context-only nouns that creep in via "with respect to N" / "in
+    # respect of N" / "such that N" / "ranges from N to" patterns —
+    # pure noise as element identities, never real reference numerals.
+    "respect", "such", "respect", "regard", "regards", "case", "cases",
+    "side", "sides",  # "side" alone is too generic; "left side" / "lower side" pass through
+})
+
+
+def _d1_head_noun(phrase: str) -> str:
+    """Strip leading function words from a captured noun phrase to get
+    the bare head noun for D1 comparison.
+
+    `'from the water supply'` → `'water supply'`
+    `'manipulate the water supply'` → `'water supply'`
+    `'water supply'` → `'water supply'`
+    `'first housing'` → `'housing'`
+    `'for'` → `''` (drop — pure preposition, not a real element name)
+
+    Also drops trailing function words that crept in (`'water supply by'`).
+    Returns empty string for phrases that reduce to nothing.
+    """
+    words = phrase.strip().lower().split()
+    while words and words[0] in _D1_LEADING_FUNCTION_WORDS:
+        words.pop(0)
+    while words and words[-1] in _D1_LEADING_FUNCTION_WORDS:
+        words.pop()
+    if not words:
+        return ""
+    # Single 1-char fragment → drop. Usually noise (regex catches odd splits).
+    if len(words) == 1 and len(words[0]) < 2:
+        return ""
+    return " ".join(words)
+
+
+def extract_numeral_name_pairs(
+    spec_text: str,
+) -> list[tuple[int, str]]:
+    """Yield every `<head_noun, numeral>` pair from spec text (one per
+    occurrence — NOT aggregated).
+
+    Used by check_numeral_consistency for D1 (same numeral → multiple
+    different element names) detection. Different from
+    extract_reference_numeral_inventory below, which collapses to
+    one canonical name per numeral and is used for completeness checks.
+
+    Returns list of (numeral_int, head_noun) tuples in document order.
+    Names are normalized via _d1_head_noun so sentential context
+    (prepositions, verbs, articles, ordinals) doesn't inflate the
+    apparent name set per numeral. Empty-name pairs (function-word-only
+    captures) are filtered out.
+
+    Filters mirror the inventory extractor (year exclusion, unit
+    exclusion, paragraph-marker exclusion, 5+digit exclusion).
+    """
+    pairs: list[tuple[int, str]] = []
+    for pattern in [_REFNUM_AFTER_NOUN, _REFNUM_PARENS]:
+        for m in pattern.finditer(spec_text):
+            noun = m.group(1).strip().lower()
+            num_str = m.group(2)
+            num = int(num_str)
+
+            if _is_year(num_str):
+                continue
+            if any(w in _EXCLUDE_KEYWORDS for w in noun.split()):
+                continue
+            after = spec_text[m.end():][:5]
+            if _UNIT_PATTERN.match(after):
+                continue
+            before = spec_text[max(0, m.start() - 2):m.start()]
+            if "[" in before:
+                continue
+            if len(num_str) >= 5:
+                continue
+
+            head = _d1_head_noun(noun)
+            if not head:
+                continue
+            pairs.append((num, head))
+    return pairs
+
+
+def _content_words(name: str) -> set[str]:
+    """Return content-word set of a name for D1 disjointness comparison.
+
+    Strips short tokens (≤2 chars) and adds both the original and a
+    singularized variant so `'condenser lens'` and `'condenser lenses'`
+    share `'lens'`. Handles English `s` and `es` plural endings.
+    """
+    out: set[str] = set()
+    for w in name.split():
+        if len(w) <= 2:
+            continue
+        out.add(w)
+        # Add singularized variants — both 's' and 'es' stripped forms,
+        # so plural forms intersect with their singulars regardless of
+        # which one the drafter wrote first.
+        if (
+            len(w) >= 4
+            and w.endswith("s")
+            and not w.endswith(("ss", "us", "is"))
+        ):
+            out.add(w[:-1])
+        if len(w) >= 5 and w.endswith("es"):
+            out.add(w[:-2])
+    return out
+
+
+def _names_form_real_d1_conflict(names: list[str]) -> bool:
+    """A list of names is a real D1 conflict only if AT LEAST ONE PAIR
+    shares no content word. Plural/singular / modifier-variant / partial-
+    name cases all share a content word and are correctly NOT flagged.
+
+    Returns True if a disjoint pair exists; False otherwise.
+    """
+    if len(names) < 2:
+        return False
+    word_sets = [_content_words(n) for n in names]
+    for i in range(len(word_sets)):
+        if not word_sets[i]:
+            continue
+        for j in range(i + 1, len(word_sets)):
+            if not word_sets[j]:
+                continue
+            if not (word_sets[i] & word_sets[j]):
+                return True
+    return False
+
+
+def check_numeral_consistency(spec_text: str) -> list[CheckItem]:
+    """D1 — flag reference numerals that appear with multiple distinct
+    element names (e.g., "housing 102" and "container 102" both used).
+
+    Statutory: MPEP § 608.01(g) — "The same reference character should
+    not be used to designate different elements." A real drafting error
+    that's high-precision to detect: same numeral with two disjoint
+    noun-phrase identities is virtually always a typo or copy-paste bug.
+
+    NOTE: same NAME with different numerals is permitted (multiple
+    instances of "pillar" each get their own number). This check
+    deliberately does NOT flag that direction.
+
+    Precision filter: names are a real conflict ONLY IF at least one
+    pair of observed names shares no content word. This filters
+    plural/singular variants ("lens" / "lenses") and partial-name
+    variants ("water supply" / "the water supply") down to the
+    truly-disjoint cases.
+
+    Severity: FIX. The drafter should pick one numeral-name pairing
+    and rectify the others.
+    """
+    from patentlint.models import CheckItem
+
+    if not spec_text:
+        return [CheckItem(
+            status="pass",
+            message="Reference numerals are consistent (no spec text).",
+            message_key="check.spec.numeralConsistency.pass",
+            reference="MPEP § 608.01(g)",
+        )]
+
+    pairs = extract_numeral_name_pairs(spec_text)
+    if not pairs:
+        return [CheckItem(
+            status="pass",
+            message="No reference numerals detected.",
+            message_key="check.spec.numeralConsistency.pass",
+            reference="MPEP § 608.01(g)",
+        )]
+
+    # Build numeral → ordered-distinct-names AND counts.
+    # Two precision filters:
+    # 1. Each name kept only if it appears ≥2 times for this numeral
+    #    (single occurrences are regex noise from chemistry/range text).
+    # 2. The numeral itself must appear ≥3 times total — real reference
+    #    numerals are repeated; one-off matches are mostly measurements
+    #    (e.g., "10 wt%", "from 100 to 200").
+    from collections import Counter
+    by_numeral_counts: dict[int, Counter] = {}
+    by_numeral_total: Counter = Counter()
+    for num, name in pairs:
+        by_numeral_counts.setdefault(num, Counter())[name] += 1
+        by_numeral_total[num] += 1
+
+    by_numeral: dict[int, list[str]] = {}
+    for num, name_counts in by_numeral_counts.items():
+        if by_numeral_total[num] < 3:
+            continue
+        # Preserve doc-order for surface display; dedupe; keep only ≥2x.
+        seen: list[str] = []
+        seen_set: set[str] = set()
+        for raw_num, raw_name in pairs:
+            if raw_num != num or raw_name in seen_set:
+                continue
+            if name_counts[raw_name] < 2:
+                continue
+            seen_set.add(raw_name)
+            seen.append(raw_name)
+        if seen:
+            by_numeral[num] = seen
+
+    conflicts = [
+        (num, names)
+        for num, names in sorted(by_numeral.items())
+        if len(names) > 1 and _names_form_real_d1_conflict(names)
+    ]
+
+    if not conflicts:
+        return [CheckItem(
+            status="pass",
+            message="Reference numerals are consistent across the specification.",
+            message_key="check.spec.numeralConsistency.pass",
+            reference="MPEP § 608.01(g)",
+        )]
+
+    # Cap displayed conflicts at 8 to bound payload size; "extra" carries
+    # the overflow count for the drafter.
+    sample = conflicts[:8]
+    extra = max(0, len(conflicts) - 8)
+    findings = [
+        {"numeral": num, "names": names[:5]}  # cap names per numeral too
+        for num, names in sample
+    ]
+    return [CheckItem(
+        status="amend",
+        message=(
+            f"{len(conflicts)} reference numeral(s) used with multiple "
+            f"different element names (D1)."
+        ),
+        message_key="check.spec.numeralConsistency.amend",
+        details_key="details.numeralConsistency",
+        details_params={
+            "count": len(conflicts),
+            "findings": findings,
+            "extra": extra,
+        },
+        reference="MPEP § 608.01(g)",
+        diagnostics={
+            "conflict_count": len(conflicts),
+            "sample_numerals": [num for num, _ in sample],
+            "max_names_per_numeral": max(len(names) for _, names in conflicts),
+        },
+    )]
+
+
 def extract_reference_numeral_inventory(
     spec_text: str,
 ) -> list[ReferenceNumeral]:

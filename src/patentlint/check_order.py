@@ -181,6 +181,10 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     # see specification.py check_scope_limit_wording for rationale.
     "check.spec.scopeLimitWording.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 105),
     "check.spec.scopeLimitWording.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 105),
+    # Reference numeral consistency D1 (MPEP § 608.01(g)) — same group,
+    # idx 107 places it adjacent to scope-limit, before drawings.
+    "check.spec.numeralConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 107),
+    "check.spec.numeralConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 107),
     "check.spec.drawings": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 110),
 
     # TW symbol-vs-representative-drawing is a spec-content cross-reference.
