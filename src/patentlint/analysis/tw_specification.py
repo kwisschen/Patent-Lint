@@ -954,7 +954,7 @@ def check_numeral_consistency_tw(doc: TwPatentDocument) -> list[CheckItem]:
         }
         for c in sample
     ]
-    inline = "；".join(_cjk_format_inline_conflict(c) for c in sample[:3])
+    inline = "；".join(_cjk_format_inline_conflict(c, simp=False) for c in sample[:3])
     if len(conflicts) > 3:
         inline = inline + f"（另 {len(conflicts) - 3} 處）"
     return [CheckItem(
