@@ -1375,11 +1375,19 @@ def _cn_detect_d1_conflicts(pairs: list[tuple[str, str]]) -> list[dict]:
                 case_instance = True
                 continue
 
-            # Case B: disjoint CJK chars → element collision
+            # Case B: distinguishing-char collision. Strict disjoint
+            # misses CJK pairs that share a head noun but differ on
+            # the modifier (高壓電容 vs 低壓電容 share 壓/電/容 yet
+            # identify completely different parts). Real test: if BOTH
+            # names have CJK chars the OTHER lacks, they're naming
+            # different elements bound to the same numeral.
+            canonical_unique = canonical_chars - other_chars
+            other_unique = other_chars - canonical_chars
             if (
                 canonical_chars
                 and other_chars
-                and not (canonical_chars & other_chars)
+                and canonical_unique
+                and other_unique
             ):
                 outlier_records.append({"name": name, "count": count})
                 continue

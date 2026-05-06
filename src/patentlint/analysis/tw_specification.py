@@ -1099,6 +1099,7 @@ def check_symbol_table_coverage_tw(doc: TwPatentDocument) -> list[CheckItem]:
             "count": len(undeclared),
             "findings": findings,
             "extra": extra,
+            "inline_summary": inline,
         },
         reference="專利法施行細則 §19 第2款",
         diagnostics=_dx(
