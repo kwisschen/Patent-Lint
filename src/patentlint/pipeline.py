@@ -427,6 +427,12 @@ def _run_pipeline(
     )
     scope_limit_checks = spec_analysis.check_scope_limit_wording(scope_limit_text)
 
+    # --- Reference numeral consistency (D1, US, MPEP § 608.01(g)) ---
+    # Same scope as scope-limit (spec body — background + summary + DD).
+    # Detects same-numeral / different-name conflicts; permits same-name /
+    # different-numeral (legit multiple instances).
+    numeral_consistency_checks = spec_analysis.check_numeral_consistency(scope_limit_text)
+
     # --- Figure cross-reference consistency ---
     figure_xref_checks = drawings_analysis.check_figure_cross_references(
         drawings_section or "", detailed_desc_section or "",
@@ -494,6 +500,8 @@ def _run_pipeline(
         figure_xref_checks=figure_xref_checks,
         # Scope-limit wording (US, MPEP § 2111 + Phillips)
         scope_limit_checks=scope_limit_checks,
+        # Numeral consistency D1 (US, MPEP § 608.01(g))
+        numeral_consistency_checks=numeral_consistency_checks,
         # Abstract
         abstract_word_count=abstract_word_count,
         abstract_text=abstract_section or "",

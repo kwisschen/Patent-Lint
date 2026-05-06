@@ -920,6 +920,10 @@
       "scopeLimitWording": {
         "verify": "Found {{count}} use(s) of \"the (present) invention\" / \"this invention\" in the specification.",
         "pass": "No scope-limiting phrases detected in specification."
+      },
+      "numeralConsistency": {
+        "amend": "{{count}} reference numeral(s) used with multiple different element names. The same reference character should not designate different elements.",
+        "pass": "Reference numerals consistently identify their elements."
       }
     },
     "claims": {

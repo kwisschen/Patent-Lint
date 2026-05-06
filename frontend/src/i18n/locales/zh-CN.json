@@ -920,6 +920,10 @@
       "scopeLimitWording": {
         "verify": "说明书中检测到 {{count}} 处「本发明」/「本申请」/「the (present) invention」用语。",
         "pass": "说明书中未检测到限制权利要求范围的表述。"
+      },
+      "numeralConsistency": {
+        "amend": "{{count}} 个附图标记被用于指代多个不同的构件名称；同一附图标记不得指代不同的构件。",
+        "pass": "附图标记与所指代构件名称一致。"
       }
     },
     "claims": {
