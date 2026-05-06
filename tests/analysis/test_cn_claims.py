@@ -836,3 +836,42 @@ class TestVerbOnlySuppressionR68:
         ])
         issues = check_antecedent_basis_cn(doc)
         assert not any(i["term"] == "获得" for i in issues), issues
+
+
+class TestTrailingLaiSuppressionR68:
+    """R68 (2026-05-06) — trailing 来 verb-particle strip.
+
+    `所述<noun>来自X` constructions leave `<noun>来` as the term after
+    walker captures past the regex boundary. 来 is a verb tail particle
+    ("come"); strip it as a single-char trailing suffix.
+    """
+
+    def test_trailing_lai_stripped_cn(self):
+        from patentlint.analysis.cn_claims import check_antecedent_basis_cn
+        doc = _cn_doc([
+            _claim(
+                1,
+                "1. 一种装置，包含一信号源，所述测量值来自所述信号源。",
+            ),
+        ])
+        issues = check_antecedent_basis_cn(doc)
+        # No emit with bare `测量值来` — strip 来 → 测量值, then test
+        # against intros (not introduced as `一测量值` so emits as
+        # `测量值` cleanly OR is silent if drafter introduces it elsewhere).
+        for i in issues:
+            assert not i["term"].endswith("来"), i
+
+    def test_3char_trailing_lai_stripped_cn(self):
+        """3-char term ending in 来 — relaxed-guard set allows residual ≥ 2."""
+        from patentlint.analysis.cn_claims import check_antecedent_basis_cn
+        doc = _cn_doc([
+            _claim(
+                1,
+                "1. 一种装置，所述行为来自传感器输出。",
+            ),
+        ])
+        issues = check_antecedent_basis_cn(doc)
+        # `行为来` (3 chars) — strip 来 → `行为` (2 chars residual).
+        # Either silenced or emitted as bare `行为`, never `行为来`.
+        for i in issues:
+            assert not i["term"].endswith("来"), i

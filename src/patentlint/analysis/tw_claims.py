@@ -2008,7 +2008,18 @@ _NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset(
      #     end in 使 with productive prefix that residual ≥ 3 still allows
      #     to strip when justified. No corpus collisions in TW or CN
      #     fixture pool.
-     "使"}
+     "使",
+     # === R68 (2026-05-06) — supplement_v2 mining ===
+     # 來: verb tail particle in `所述<noun>來自X` ("the <noun> comes from
+     #     X") constructions. Walker captures `<noun>來自一` then strips
+     #     `自一` quantifier remnant, leaving `<noun>來` as the term.
+     #     Bare 來 is never an antecedent-noun ending. Compound nouns
+     #     ending in 來 (將來/由來/未來/從來) are temporal/idiomatic and
+     #     not typical claim antecedent references. Mining surfaced
+     #     25 TW walker_fp findings with this trailing pattern across
+     #     supplement_v2 corpus. Added to relaxed-guard set below for
+     #     residual ≥ 2 (handles 3-char `影像來` → `影像`).
+     "來"}
 )
 
 # Relaxed-guard subset: members of _NOUNLIKE_SINGLE_CHAR_SUFFIXES that
@@ -2036,7 +2047,7 @@ _NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset(
 # common over-capture shapes where the locative 中 should strip leaving
 # 2-char head (系統/區段/範圍). 中 standalone or as 2-char compound prefix
 # (中央/中文) is protected by the 0-position check (cut at idx > 1).
-_NOUNLIKE_RELAXED_SUFFIXES: frozenset[str] = frozenset({"上", "內", "中"})
+_NOUNLIKE_RELAXED_SUFFIXES: frozenset[str] = frozenset({"上", "內", "中", "來"})
 
 # ADR-095 Rule 2: leading quantifiers (stripped from both sides).
 # Ordered longest-first so 至少一個 is stripped as a single token before
