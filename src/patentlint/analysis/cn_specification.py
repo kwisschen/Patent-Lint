@@ -711,18 +711,34 @@ def check_spec_claim_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
 # Mirrors the US implementation in specification.py but uses CJK regex
 # patterns and char-level (not word-level) content overlap detection.
 
-# CJK noun + numeral pattern. Captures a 2-8 CJK-char noun phrase
-# followed by a 2-4 digit numeral with optional letter suffix
-# (e.g., "外殼102" / "壳体100" / "传感器120a"). Non-greedy on the
-# noun span so we capture the SHORTEST plausible head noun.
+# CJK noun + numeral pattern. Captures a 2-12 CJK-char noun phrase
+# followed by a 2-4 digit numeral with optional letter suffix.
+# Length cap raised from 8 to 12 so longer leading-verb prefixes
+# (連接第一手柄主體 = 8 chars; 包括一第一手柄主體 = 9 chars) are
+# captured INSIDE the noun group and can then be stripped by the
+# leading-verb logic. Tighter windows truncated those captures and
+# left un-strippable fragments like "括一第一手柄主體" as the head.
+# Element names rarely exceed 10 CJK chars so 12 is a safe ceiling.
 _CN_REFNUM_AFTER_NOUN = re.compile(
-    r"(?P<noun>[一-鿿]{2,8})\s*(?P<num>\d{2,4}[a-z]?)"
-    r"(?![\d.%])",  # not followed by another digit, decimal, or % unit
+    r"(?P<noun>[一-鿿]{2,12})\s*(?P<num>\d{2,4}[a-z]?)"
+    r"(?![\d.%])",
 )
-# Parenthetical: 外壳(102) / 壳体（100）
 _CN_REFNUM_PARENS = re.compile(
-    r"(?P<noun>[一-鿿]{2,8})\s*[(（](?P<num>\d{2,4}[a-z]?)[)）]"
+    r"(?P<noun>[一-鿿]{2,12})\s*[(（](?P<num>\d{2,4}[a-z]?)[)）]"
 )
+_CN_REFNUM_LATIN = re.compile(
+    r"(?P<noun>[一-鿿]{2,12})\s*(?P<num>[A-Z]{1,5}\d{1,4}[a-zA-Z]?)"
+    r"(?![A-Za-z0-9])"
+)
+_CN_REFNUM_LATIN_PARENS = re.compile(
+    r"(?P<noun>[一-鿿]{2,12})\s*[(（](?P<num>[A-Z]{1,5}\d{1,4}[a-zA-Z]?)[)）]"
+)
+# Same denylist as US — figure refs / equation refs / standards
+# acronyms that look like designators but aren't.
+_CN_LATIN_PREFIX_DENYLIST = frozenset({
+    "FIG", "FIGS", "EQ", "VOL", "NO", "PG", "PCT", "USC", "USA",
+    "ISO", "SEQ", "PH", "CO", "DNA", "RNA",
+})
 
 # Reference-form prefixes to strip from CJK names before D1 comparison.
 # These are statutory reference markers (该/所述/前述), not part of the
@@ -733,8 +749,22 @@ _CN_REF_PREFIXES = ("该等", "所述的", "所述", "前述", "该", "本", "�
 # "外壳" are the same head noun for D1 purposes (different INSTANCES
 # with their own numerals is the legitimate D2 case which D1 ignores).
 _CN_ORDINAL_RE = re.compile(r"^第[一二三四五六七八九十百零0-9]+")
-# Common quantifiers that may lead a captured noun phrase
-_CN_LEADING_QUANTIFIERS = ("多个", "复数个", "复数", "至少一个", "至少一", "一个", "一种", "一对")
+# Common quantifiers that may lead a captured noun phrase. Both Trad
+# and Simp variants. Bare "個" / "个" is also stripped — drafters write
+# "一個第一外齒狀結構" → after "一" strip + "個" strip → "第一外齒狀結構".
+_CN_LEADING_QUANTIFIERS = (
+    "多個", "多个",
+    "複數個", "复数个", "複數", "复数",
+    "至少一個", "至少一个", "至少一",
+    "一個", "一个",
+    "一種", "一种",
+    "一對", "一对",
+    "各個", "各个", "各一", "各",
+    "每個", "每个", "每一", "每",
+    "若干", "數個", "数个", "一些",
+    # Bare measure word — "個X" / "个X" can leak when 一 was already stripped
+    "個", "个",
+)
 # Leading verbs/particles/prepositions that creep into the captured noun
 # from compound sentences. After prefix/ordinal/quantifier strip these
 # are still iterated off as long as the residual remains ≥2 CJK chars.
@@ -743,11 +773,39 @@ _CN_LEADING_VERBS_PARTICLES = (
     "之", "至", "由", "将", "將", "盖", "蓋", "介", "经", "經",
     "自", "于", "於", "在", "向", "对", "對", "较", "較", "因",
     "为", "為", "及", "并", "並", "以", "從", "从", "或",
+    "的", "得", "地",  # genitive / aspect particles — drafter writes "的X" / "得X"
+    # Verb-fragment leading chars left when regex starts mid-compound
+    # (e.g., "包括一X" → captured "括一X" → strip 括 → "一X" → strip 一 → "X").
+    # These chars are never head-noun starts in TIPO/CNIPA patent diction.
+    # IMPORTANT: do NOT include first-chars of multi-char verbs in
+    # _CN_LEADING_MULTI_CHAR_VERBS (連/接/設/控/形/通/結/耦) — particles
+    # loop runs after multi-char-verb pass, so char-by-char stripping
+    # would prevent the multi-char match on the next iteration.
+    "括", "含", "與", "与", "和", "而", "且",
+    "者", "備", "备",
+    "持", "傳", "传", "送", "受", "做", "作",
+    "使", "讓", "让", "如", "若",
+    # Conjunctive / aspectual sentence connectors
+    "則", "则", "也", "但", "此", "即", "所", "是", "有", "再", "又",
+    # Single-char measure / quantifier residues
+    "個", "个", "種", "种", "對", "对", "项", "項",
 )
 # Single-CJK-char words that creep in as "names" (verbs, particles, etc.)
 # When a captured head noun reduces to one of these after stripping,
 # discard it as a real D1 candidate.
 _CN_NOISE_SINGLE_CHARS = frozenset({"于", "以", "对", "时", "中", "上", "下", "内", "外"})
+
+# Multi-char noise nouns: figure-reference phrases ("如圖 N" / "見圖 N" /
+# "如图 N") that sneak past the noun regex but aren't real element names.
+# Discard when the captured head reduces to one of these.
+_CN_NOISE_MULTI_CHAR = frozenset({
+    "如圖", "如图", "見圖", "见图", "於圖", "于图", "如圖式", "如图式",
+    "及圖", "及图", "在圖", "在图", "圖式", "图式",
+    "可參考", "可参考", "請參考", "请参考", "參考圖", "参考图",
+    "中的", "上的", "下的", "中之", "之中", "之內", "之内",
+    "或者", "比如", "例如",
+    "等等", "之外", "以外", "以内", "以內",
+})
 
 # Measurement / process / chemistry-context indicators. If a captured
 # head noun ENDS WITH or CONTAINS any of these, the numeral is almost
@@ -814,59 +872,194 @@ def _cn_is_measurement_context(name: str) -> bool:
     return any(tok in name for tok in _CN_PROCESS_CONTEXT_TOKENS)
 
 
+def _cn_strip_iterative(s: str, allow_ordinal_break: bool = False) -> str:
+    """Iteratively peel leading prefixes / verbs / quantifiers / particles
+    until the string stabilises. Single-pass stripping leaks fragments like
+    "則是設置在第一手柄主體" because each prefix layer (則 → 是 → 設置 → 在) is
+    a different category. Loop until no category matches."""
+    prev = None
+    while s and s != prev:
+        prev = s
+        for p in _CN_REF_PREFIXES:
+            if s.startswith(p):
+                s = s[len(p):]
+                break
+        for v in _CN_LEADING_MULTI_CHAR_VERBS:
+            if s.startswith(v):
+                s = s[len(v):]
+                break
+        for q in _CN_LEADING_QUANTIFIERS:
+            if s.startswith(q):
+                s = s[len(q):]
+                break
+        while s and len(s) >= 3 and s[0] in _CN_LEADING_VERBS_PARTICLES:
+            if allow_ordinal_break and s[0] == "第":
+                break
+            s = s[1:]
+        while s and len(s) >= 3 and s[0] == "一":
+            s = s[1:]
+    return s
+
+
 def _cn_d1_head_noun(raw: str) -> str:
     """Strip reference-form prefixes + ordinals + quantifiers from a
     captured CJK noun phrase to get the bare head noun for D1 dedup."""
     s = raw.strip()
-    # Strip leading reference-form prefix
-    for p in _CN_REF_PREFIXES:
-        if s.startswith(p):
-            s = s[len(p):]
-            break
-    # Strip leading ordinal
+    s = _cn_strip_iterative(s, allow_ordinal_break=False)
     m = _CN_ORDINAL_RE.match(s)
     if m:
         s = s[m.end():]
-    # Strip leading quantifier
-    for q in _CN_LEADING_QUANTIFIERS:
-        if s.startswith(q):
-            s = s[len(q):]
-            break
-    # Iteratively strip leading single-char verbs/particles. Stops as
-    # soon as residual would drop below 2 CJK chars or first char isn't
-    # in the strip set.
-    while s and len(s) >= 3 and s[0] in _CN_LEADING_VERBS_PARTICLES:
-        s = s[1:]
+        s = _cn_strip_iterative(s, allow_ordinal_break=False)
     if len(s) < 2:
         return ""
     if s in _CN_NOISE_SINGLE_CHARS:
         return ""
-    if _cn_is_measurement_context(s):
+    if s in _CN_NOISE_MULTI_CHAR:
+        return ""
+    # Short tail-anchored figure-reference noise: "至圖" / "和圖" / "由圖" /
+    # "如圖" / "在圖" / "從圖" / "及圖" / "顯示圖" — drafter writes
+    # "...至圖11" / "如圖10所示" and the regex slurps the connector.
+    # Trad+Simp 圖/图. Cap at 4 chars to avoid hitting real nouns like
+    # "示意圖" (schematic) or "結構圖" (structural diagram) that may be
+    # bound to a refnum legitimately.
+    # Tail-anchored 圖/图 always rejects: any noun ending in 圖/图 is a
+    # figure reference ("示意圖10" / "說明例如圖10" / "用于执行图3"), not an
+    # element bound to a refnum. Drafter convention is "...圖N所示" / "如
+    # 圖N" / "見圖N" — refnum identifies the figure, not the noun.
+    if s.endswith("圖") or s.endswith("图"):
         return ""
     return s
 
 
-def _cn_extract_numeral_name_pairs(text: str) -> list[tuple[int, str]]:
-    """Return per-occurrence (numeral, head_noun) pairs from CN spec text."""
-    pairs: list[tuple[int, str]] = []
+# CJK ordinals — used for instance-collision detection (D1 case A).
+_CN_ORDINAL_HEADS = ("第一", "第二", "第三", "第四", "第五", "第六",
+                     "第七", "第八", "第九", "第十")
+
+
+def _cn_extract_ordinal(name: str) -> tuple[str, str]:
+    """Split CJK ordinal prefix from head noun. '第一外殼' → ('第一', '外殼').
+    Returns (ordinal_or_empty, head_noun).
+    """
+    for ord_ in _CN_ORDINAL_HEADS:
+        if name.startswith(ord_):
+            return (ord_, name[len(ord_):])
+    return ("", name)
+
+
+def _cn_extract_numeral_name_pairs(text: str) -> list[tuple[str, str]]:
+    """Return per-occurrence (numeral_str, ordinal-keyed head_noun)
+    pairs from CN spec text. Numerals are STRINGS — supports both
+    digit-only ("100") and Latin-prefix ("CPU1", "R3") designators.
+    """
+    pairs: list[tuple[str, str]] = []
     seen_spans: set[tuple[int, int]] = set()
+
+    # Digit patterns first
     for pattern in [_CN_REFNUM_AFTER_NOUN, _CN_REFNUM_PARENS]:
         for m in pattern.finditer(text):
             span = (m.start(), m.end())
             if span in seen_spans:
                 continue
             seen_spans.add(span)
-            num_str = m.group("num").rstrip("abcdefghijklmnopqrstuvwxyz")
-            if not num_str:
+            full_num = m.group("num")
+            digit_part = full_num.rstrip("abcdefghijklmnopqrstuvwxyz")
+            if not digit_part:
                 continue
-            num = int(num_str)
-            if len(num_str) >= 5:
+            if len(digit_part) >= 5:
                 continue
-            head = _cn_d1_head_noun(m.group("noun"))
-            if not head:
+            # Preserve letter suffix so 10a, 10b, 10c stay distinct
+            # (drafter convention: same parent + sub-element disambig).
+            suffix = full_num[len(digit_part):]
+            num_str = f"{int(digit_part)}{suffix}"
+            raw_noun = m.group("noun")
+            # Apply existing reference-prefix/quantifier strip but
+            # KEEP the ordinal so we can detect 第一X / 第二X collisions.
+            head_with_ord = _cn_d1_head_noun_with_ordinal(raw_noun)
+            if not head_with_ord:
                 continue
-            pairs.append((num, head))
+            ordinal, head = _cn_extract_ordinal(head_with_ord)
+            keyed = f"{ordinal}|{head}" if ordinal else head
+            pairs.append((num_str, keyed))
+
+    # Latin-prefix patterns
+    for pattern in [_CN_REFNUM_LATIN, _CN_REFNUM_LATIN_PARENS]:
+        for m in pattern.finditer(text):
+            span = (m.start(), m.end())
+            if span in seen_spans:
+                continue
+            ref = m.group("num")
+            prefix = "".join(c for c in ref if c.isalpha()).upper()
+            if prefix in _CN_LATIN_PREFIX_DENYLIST:
+                continue
+            raw_noun = m.group("noun")
+            head_with_ord = _cn_d1_head_noun_with_ordinal(raw_noun)
+            if not head_with_ord:
+                continue
+            ordinal, head = _cn_extract_ordinal(head_with_ord)
+            keyed = f"{ordinal}|{head}" if ordinal else head
+            pairs.append((ref, keyed))
+            seen_spans.add(span)
     return pairs
+
+
+# Multi-char verbs that lead a captured noun phrase. "包括一基座" should
+# strip to "基座" so we don't think "包括一基座" is a distinct element name.
+# Both Trad + Simp variants. Empirically tuned against
+# tests/test_integration.py::TestTwInventionAllPass — invention_complete
+# fixture has "包括一基座" as a captured 包括-led noun phrase that needs
+# stripping to find the real head "基座".
+_CN_LEADING_MULTI_CHAR_VERBS = (
+    # Inclusion/possession verbs (the most common D1-noise leaders)
+    "包括", "包含", "含有",
+    "具有", "具備", "具备",
+    "構成", "构成",
+    "設置", "设置", "設於", "设于",
+    "提供", "形成", "成形", "形態", "形态",
+    # Connection verbs that creep into "controller HD1" type captures
+    "連接", "连接", "連通", "连通", "連結", "连结",
+    "耦合", "耦接", "結合", "结合",
+    "通過", "通过",
+    "接收", "接受",
+    "控制",
+    "接觸", "接触",
+    "安裝", "安装",
+    "對應", "对应",
+    "適用", "适用",
+    "介隔", "間隔", "间隔",
+    "其中",  # introductory phrase in claims
+    # 3-char multi-char verbs
+    "用以接", "用於接", "用于接",
+    "藉由", "借由",
+    # Modifier-prefixed verbs: drafter writes "電性連接", "機械式連結",
+    # "結構性附著". The strip removes the modifier so the connector verb
+    # is then handled by the existing connector entries above.
+    "電性", "电性", "機械", "机械", "物理", "化學", "化学",
+    "結構", "结构", "磁性", "光學", "光学", "熱性", "热性",
+)
+
+
+def _cn_d1_head_noun_with_ordinal(raw: str) -> str:
+    """Same as _cn_d1_head_noun but RETAINS the leading ordinal
+    (第一/第二/etc.) so callers can split it for instance-collision
+    detection. Iterative loop handles compound-prefix cases like
+    "則是設置在第一手柄主體" → "第一手柄主體"."""
+    s = raw.strip()
+    s = _cn_strip_iterative(s, allow_ordinal_break=True)
+    if len(s) < 2:
+        return ""
+    if s in _CN_NOISE_SINGLE_CHARS:
+        return ""
+    if s in _CN_NOISE_MULTI_CHAR:
+        return ""
+    if _cn_is_measurement_context(s):
+        return ""
+    # Tail-anchored 圖/图 always rejects: any noun ending in 圖/图 is a
+    # figure reference ("示意圖10" / "說明例如圖10" / "用于执行图3"), not an
+    # element bound to a refnum. Drafter convention is "...圖N所示" / "如
+    # 圖N" / "見圖N" — refnum identifies the figure, not the noun.
+    if s.endswith("圖") or s.endswith("图"):
+        return ""
+    return s
 
 
 def _cn_content_chars(name: str) -> set[str]:
@@ -875,11 +1068,51 @@ def _cn_content_chars(name: str) -> set[str]:
     return {c for c in name if "一" <= c <= "鿿"}
 
 
+def _cn_split_ordinal_key(keyed: str) -> tuple[str, str]:
+    """'第一|外殼' → ('第一', '外殼'); '外殼' → ('', '外殼')."""
+    if "|" in keyed:
+        ordinal, _, head = keyed.partition("|")
+        return ordinal, head
+    return "", keyed
+
+
+def _cn_format_d1_name_for_display(keyed: str) -> str:
+    """Reverse the 'ordinal|head' encoding for surface display."""
+    ordinal, head = _cn_split_ordinal_key(keyed)
+    if ordinal:
+        return f"{ordinal}{head}"  # CJK has no space
+    return head
+
+
 def _cn_names_form_real_d1_conflict(names: list[str]) -> bool:
-    """At least one pair of names shares NO CJK char → real conflict."""
+    """A list of (ordinal-keyed) names is a real D1 conflict if EITHER:
+    (A) the same head noun appears with TWO OR MORE distinct CJK
+        ordinals (第一/第二/etc.) — same element type, different
+        instance: drafter assigned same numeral to two distinct ones, OR
+    (B) two head nouns share NO CJK char — truly different elements
+        sharing one numeral.
+    """
     if len(names) < 2:
         return False
-    char_sets = [_cn_content_chars(n) for n in names]
+
+    decomposed = [_cn_split_ordinal_key(n) for n in names]
+
+    # (A) Same head + 2+ distinct non-empty ordinals → instance collision
+    head_to_ordinals: dict[frozenset, set[str]] = {}
+    for ord_, head in decomposed:
+        if not head:
+            continue
+        head_key = frozenset(_cn_content_chars(head))
+        if not head_key:
+            continue
+        head_to_ordinals.setdefault(head_key, set()).add(ord_)
+    for ordinals in head_to_ordinals.values():
+        non_empty = {o for o in ordinals if o}
+        if len(non_empty) >= 2:
+            return True
+
+    # (B) Different head nouns sharing no CJK char → element collision
+    char_sets = [_cn_content_chars(head) for _, head in decomposed if head]
     for i in range(len(char_sets)):
         if not char_sets[i]:
             continue
@@ -919,33 +1152,7 @@ def check_numeral_consistency_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
             reference="专利法实施细则 §21 第2款",
         )]
 
-    by_num_counts: dict[int, Counter] = {}
-    by_num_total: Counter = Counter()
-    for num, name in pairs:
-        by_num_counts.setdefault(num, Counter())[name] += 1
-        by_num_total[num] += 1
-
-    by_num: dict[int, list[str]] = {}
-    for num, name_counts in by_num_counts.items():
-        if by_num_total[num] < 3:
-            continue
-        seen: list[str] = []
-        seen_set: set[str] = set()
-        for raw_num, raw_name in pairs:
-            if raw_num != num or raw_name in seen_set:
-                continue
-            if name_counts[raw_name] < 2:
-                continue
-            seen_set.add(raw_name)
-            seen.append(raw_name)
-        if seen:
-            by_num[num] = seen
-
-    conflicts = [
-        (num, names)
-        for num, names in sorted(by_num.items())
-        if len(names) > 1 and _cn_names_form_real_d1_conflict(names)
-    ]
+    conflicts = _cn_detect_d1_conflicts(pairs)
 
     if not conflicts:
         return [CheckItem(
@@ -958,23 +1165,222 @@ def check_numeral_consistency_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
     sample = conflicts[:8]
     extra = max(0, len(conflicts) - 8)
     findings = [
-        {"numeral": num, "names": names[:5]}
-        for num, names in sample
+        {
+            "numeral": c["numeral"],
+            "canonical": _cn_format_d1_name_for_display(c["canonical"]),
+            "outliers": [
+                {
+                    "name": _cn_format_d1_name_for_display(o["name"]),
+                    "count": o["count"],
+                }
+                for o in c["outliers"]
+            ],
+            "case": c["case"],
+        }
+        for c in sample
     ]
+    inline = "；".join(_cn_format_inline_conflict(c) for c in sample[:3])
+    if len(conflicts) > 3:
+        inline = inline + f"（另 {len(conflicts) - 3} 处）"
     return [CheckItem(
         status="amend",
-        message=f"{len(conflicts)} 个附图标记被用于指代多个不同的构件名称。",
+        message=f"{len(conflicts)} 个附图标记的使用前后不一致。范例：{inline}",
         message_key="check.cn.spec.numeralConsistency.amend",
         details_key="details.cn.numeralConsistency",
         details_params={
             "count": len(conflicts),
             "findings": findings,
             "extra": extra,
+            "inline_summary": inline,
         },
         reference="专利法实施细则 §21 第2款",
         diagnostics=_dx(
             conflict_count=len(conflicts),
-            sample_numerals=[num for num, _ in sample],
-            max_names_per_numeral=max(len(names) for _, names in conflicts),
+            sample_numerals=[c["numeral"] for c in sample],
+            instance_collisions=sum(1 for c in conflicts if c["case"] == "instance"),
+            element_collisions=sum(1 for c in conflicts if c["case"] == "element"),
         ),
     )]
+
+
+# ── CN D1 detection core (canonical + outliers) ─────────────────────────
+#
+# Mirrors the US redesign in specification.py — see _detect_d1_conflicts
+# there for full rationale.
+
+def _cn_is_latin_prefix(num: str) -> bool:
+    return bool(num) and num[0].isalpha()
+
+
+def _cn_merge_suffix_clusters(name_counts: "Counter[str]") -> "Counter[str]":
+    """Merge suffix-equivalent names: if A's surface form ENDS WITH B's
+    surface form (with B ≥ 2 CJK chars), they refer to the same noun
+    captured with different leading-context. Keep the shortest member as
+    cluster representative; sum counts. Surfaces are computed via
+    _cn_split_ordinal_key so 'ord|head' encoding is decoded first."""
+    from collections import Counter
+
+    items = list(name_counts.items())
+    n = len(items)
+    parent = list(range(n))
+
+    def find(i: int) -> int:
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+
+    def union(i: int, j: int) -> None:
+        ri, rj = find(i), find(j)
+        if ri != rj:
+            parent[ri] = rj
+
+    surfaces = []
+    for name, _ in items:
+        ord_, head = _cn_split_ordinal_key(name)
+        surfaces.append((ord_ or "") + head)
+
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                continue
+            si, sj = surfaces[i], surfaces[j]
+            if len(sj) >= 2 and si.endswith(sj):
+                # i's surface ends with j's — same noun, j is shorter root
+                union(i, j)
+
+    cluster_names: dict[int, str] = {}
+    cluster_counts: Counter = Counter()
+    for idx, (name, count) in enumerate(items):
+        root = find(idx)
+        cluster_counts[root] += count
+        # Pick the shortest surface in cluster as representative
+        if root not in cluster_names:
+            cluster_names[root] = name
+        else:
+            cur_name = cluster_names[root]
+            cur_ord, cur_head = _cn_split_ordinal_key(cur_name)
+            cur_surf = (cur_ord or "") + cur_head
+            new_surf = surfaces[idx]
+            if len(new_surf) < len(cur_surf):
+                cluster_names[root] = name
+
+    merged: Counter = Counter()
+    for root, total in cluster_counts.items():
+        merged[cluster_names[root]] = total
+    return merged
+
+
+def _cn_detect_d1_conflicts(pairs: list[tuple[str, str]]) -> list[dict]:
+    """Build canonical + outliers per numeral; return conflict dicts."""
+    from collections import Counter
+
+    by_num_counts: dict[str, Counter] = {}
+    for num, name in pairs:
+        by_num_counts.setdefault(num, Counter())[name] += 1
+    # Merge suffix-equivalent names within each numeral bucket BEFORE
+    # canonical selection so the cleanest short form wins counts.
+    for num in list(by_num_counts.keys()):
+        by_num_counts[num] = _cn_merge_suffix_clusters(by_num_counts[num])
+
+    def _sort_key(item: tuple[str, Counter]) -> tuple[int, int, str]:
+        num = item[0]
+        # Split into digit-leading prefix (sortable as int) + suffix.
+        digit_prefix = ""
+        for ch in num:
+            if ch.isdigit():
+                digit_prefix += ch
+            else:
+                break
+        if digit_prefix:
+            return (0, int(digit_prefix), num)
+        return (1, 0, num)
+
+    conflicts: list[dict] = []
+    for num, name_counts in sorted(by_num_counts.items(), key=_sort_key):
+        # Canonical needs ≥2 occurrences for digit refs (filters
+        # chemistry where every name is 1×); ≥1 for Latin-prefix refs.
+        canonical_threshold = 1 if _cn_is_latin_prefix(num) else 2
+        sorted_names = name_counts.most_common()
+        if not sorted_names:
+            continue
+        canonical_name, canonical_count = sorted_names[0]
+        if canonical_count < canonical_threshold:
+            continue
+
+        canonical_ord, canonical_head = _cn_split_ordinal_key(canonical_name)
+        canonical_chars = _cn_content_chars(canonical_head)
+        # Surface-form canonical (ordinal+head joined, no pipe encoding) —
+        # used for tail-anchor suppression of strip-residue outliers.
+        canonical_surface = (canonical_ord or "") + canonical_head
+
+        outlier_records: list[dict] = []
+        case_instance = False
+        for name, count in sorted_names[1:]:
+            if name == canonical_name:
+                continue
+            other_ord, other_head = _cn_split_ordinal_key(name)
+            other_chars = _cn_content_chars(other_head)
+            other_surface = (other_ord or "") + other_head
+
+            # Suppress strip-residue outliers: outlier surface form ends
+            # with canonical surface form (same noun, un-categorized
+            # leading verb/preposition the iterative stripper missed).
+            if (
+                canonical_surface
+                and len(canonical_surface) >= 2
+                and other_surface != canonical_surface
+                and other_surface.endswith(canonical_surface)
+            ):
+                continue
+            if (
+                canonical_head
+                and len(canonical_head) >= 2
+                and other_head.endswith(canonical_head)
+                and other_ord == canonical_ord
+            ):
+                continue
+
+            # Case A: same head, different ordinal → instance collision
+            if (
+                canonical_chars
+                and other_chars
+                and canonical_chars & other_chars
+                and other_ord != canonical_ord
+                and (canonical_ord or other_ord)
+            ):
+                outlier_records.append({"name": name, "count": count})
+                case_instance = True
+                continue
+
+            # Case B: disjoint CJK chars → element collision
+            if (
+                canonical_chars
+                and other_chars
+                and not (canonical_chars & other_chars)
+            ):
+                outlier_records.append({"name": name, "count": count})
+                continue
+
+        if outlier_records:
+            conflicts.append({
+                "numeral": num,
+                "canonical": canonical_name,
+                "canonical_count": canonical_count,
+                "outliers": outlier_records,
+                "case": "instance" if case_instance else "element",
+            })
+
+    return conflicts
+
+
+def _cn_format_inline_conflict(c: dict) -> str:
+    canonical = _cn_format_d1_name_for_display(c["canonical"])
+    canonical_str = f"{canonical}×{c['canonical_count']}"
+    outliers_str = "、".join(
+        f"{_cn_format_d1_name_for_display(o['name'])}×{o['count']}"
+        for o in c["outliers"][:3]
+    )
+    if len(c["outliers"]) > 3:
+        outliers_str += "…"
+    return f"#{c['numeral']}（{canonical_str}对{outliers_str}）"

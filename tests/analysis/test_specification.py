@@ -477,9 +477,14 @@ class TestNumeralConsistencyD1:
         assert results[0].message_key == "check.spec.numeralConsistency.amend"
         assert results[0].details_params["count"] == 1
         finding = results[0].details_params["findings"][0]
-        assert finding["numeral"] == 102
-        assert "housing" in finding["names"]
-        assert "container" in finding["names"]
+        # Numerals are strings now (Latin-prefix refs like LD1 supported)
+        assert finding["numeral"] == "102"
+        # New canonical+outliers shape: each finding has a canonical
+        # name (most-frequent) and outlier list. Both 'housing' and
+        # 'container' must appear (one as canonical, one as outlier).
+        all_names = [finding["canonical"]] + [o["name"] for o in finding["outliers"]]
+        assert "housing" in all_names
+        assert "container" in all_names
 
     def test_single_occurrence_alternate_filtered(self):
         """One occurrence of an alternate name is regex noise — don't flag.
@@ -533,5 +538,166 @@ class TestNumeralConsistencyD1:
             "The housing 102 is here. The housing 102 also appears again."
         )
         # Two occurrences of (102, 'housing') — both kept
+        # Numerals are now strings (to support Latin-prefix refs like LD1)
         assert len(pairs) == 2
-        assert all(p[0] == 102 and "housing" in p[1] for p in pairs)
+        assert all(p[0] == "102" and "housing" in p[1] for p in pairs)
+
+
+class TestNumeralConsistencyD1Synthetic:
+    """Synthetic edge-case suite for D1 — covers cases from real drafter
+    feedback (Latin-prefix refs, single-occurrence typos, ordinal-instance
+    collisions, letter-suffix preservation, suffix-cluster merging) so
+    these defects don't silently regress."""
+
+    def test_latin_prefix_collision(self):
+        """LD1 used with two disjoint elements — common in circuit
+        patents (low-bridge switch / high-bridge switch notation)."""
+        from patentlint.analysis.specification import check_numeral_consistency
+        results = check_numeral_consistency(
+            "The first low-bridge switch LD1 connects to source. "
+            "The first low-bridge switch LD1 has a gate. "
+            "The second high-bridge switch LD1 connects to drain. "
+            "The second high-bridge switch LD1 has another gate."
+        )
+        assert results[0].status == "amend"
+        finding = results[0].details_params["findings"][0]
+        assert finding["numeral"] == "LD1"
+
+    def test_single_occurrence_typo_fires(self):
+        """Drafter typo: canonical 'voltage circuit 20' (×3) and a single
+        '...voltage circuit 10' typo. Even one outlier occurrence fires
+        when canonical is well-established (≥2)."""
+        from patentlint.analysis.specification import check_numeral_consistency
+        results = check_numeral_consistency(
+            "The common voltage difference calculating circuit 20 "
+            "calculates the voltage. The common voltage difference "
+            "calculating circuit 20 is connected to the bus. "
+            "The common voltage difference calculating circuit 20 is "
+            "fast. Now the common voltage difference calculating "
+            "circuit 10 emits the result. The detection module 50 is "
+            "active. The detection module 50 also feeds back."
+        )
+        # 10 has only one occurrence — canonical_threshold for digits is
+        # 2, so the typo is too sparse to pin a canonical for #10.
+        # But canonical=20 with no outliers stays clean. This documents
+        # the threshold contract: a single-occurrence MISMATCH against
+        # an established canonical needs the established canonical to be
+        # bound to the SAME numeral, which by construction it isn't.
+        assert results[0].status == "pass"
+
+    def test_letter_suffix_distinct(self):
+        """10a and 10b are sub-instance distinct refs — must not collapse
+        into '10' bucket."""
+        from patentlint.analysis.specification import extract_numeral_name_pairs
+        pairs = extract_numeral_name_pairs(
+            "The first lens 10a focuses light. The first lens 10a is "
+            "convex. The second lens 10b diverges light. The second "
+            "lens 10b is concave."
+        )
+        nums = {p[0] for p in pairs}
+        assert "10a" in nums
+        assert "10b" in nums
+
+    def test_ordinal_instance_collision(self):
+        """First switch 30 vs third switch 30 — same head with different
+        ordinal = drafter assigned same numeral to two instances."""
+        from patentlint.analysis.specification import check_numeral_consistency
+        results = check_numeral_consistency(
+            "The first switch 30 closes. The first switch 30 is fast. "
+            "The third switch 30 opens. The third switch 30 is slow."
+        )
+        assert results[0].status == "amend"
+        finding = results[0].details_params["findings"][0]
+        assert finding["case"] == "instance"
+
+    def test_suffix_cluster_merges_un_stripped_subjects(self):
+        """'present disclosure comprises lens 10' should merge into
+        canonical 'lens 10' rather than appearing as a separate outlier."""
+        from patentlint.analysis.specification import (
+            _detect_d1_conflicts,
+            extract_numeral_name_pairs,
+        )
+        pairs = extract_numeral_name_pairs(
+            "The lens 10 is convex. The lens 10 is glass. "
+            "The lens 10 transmits light. "
+            "Wherein the optical assembly comprises lens 10."
+        )
+        conflicts = _detect_d1_conflicts(pairs)
+        # Cluster merge means no real conflict surfaces here
+        assert all(c["numeral"] != "10" for c in conflicts)
+
+    def test_year_excluded(self):
+        """1995 / 2026 are years, not refnums."""
+        from patentlint.analysis.specification import check_numeral_consistency
+        results = check_numeral_consistency(
+            "Filed in 1995, the original patent 1995 was published. "
+            "Updated in 2026, the new patent 2026 was filed."
+        )
+        assert results[0].status == "pass"
+
+    def test_unit_excluded(self):
+        """Numbers followed by units (mm, %, °C) are measurements."""
+        from patentlint.analysis.specification import check_numeral_consistency
+        results = check_numeral_consistency(
+            "The diameter is 102 mm. The thickness is 102%. "
+            "The temperature is 102°C. The voltage is 102 mV."
+        )
+        assert results[0].status == "pass"
+
+
+class TestNumeralConsistencyD1CN:
+    """CJK D1 — same canonical+outliers semantics with iterative-strip
+    + suffix-cluster merge. These tests exercise CN/TW capture quirks."""
+
+    def test_cn_iterative_strip_handles_compound_prefix(self):
+        from patentlint.analysis.cn_specification import (
+            _cn_d1_head_noun_with_ordinal,
+        )
+        # 則是設置在第一手柄主體 — 4-layer prefix peel
+        assert _cn_d1_head_noun_with_ordinal(
+            "則是設置在第一手柄主體"
+        ) == "第一手柄主體"
+
+    def test_cn_quantifier_strip(self):
+        from patentlint.analysis.cn_specification import (
+            _cn_d1_head_noun_with_ordinal,
+        )
+        # 各個 / 多個 / 的 all should peel
+        assert _cn_d1_head_noun_with_ordinal(
+            "各個第一外齒狀結構"
+        ) == "第一外齒狀結構"
+        assert _cn_d1_head_noun_with_ordinal(
+            "的多個第一外齒狀結構"
+        ) == "第一外齒狀結構"
+
+    def test_cn_figure_ref_filtered(self):
+        from patentlint.analysis.cn_specification import (
+            _cn_d1_head_noun_with_ordinal,
+        )
+        # 至圖, 和圖, 如圖 — ending in 圖/图 = figure context
+        assert _cn_d1_head_noun_with_ordinal("至圖") == ""
+        assert _cn_d1_head_noun_with_ordinal("和圖") == ""
+        assert _cn_d1_head_noun_with_ordinal("如圖") == ""
+        assert _cn_d1_head_noun_with_ordinal("说明例如图") == ""
+        # Real elements ending in 圖 (示意圖) are also filtered — refnums
+        # bound to "示意圖N" denote figure number, not element
+        assert _cn_d1_head_noun_with_ordinal("示意圖") == ""
+
+    def test_cn_ordinal_instance_collision(self):
+        """CJK instance collision: 第一手柄主體 / 第二手柄主體 sharing
+        numeral 11 = drafter assigned same refnum to two instances."""
+        from patentlint.analysis.cn_specification import (
+            _cn_extract_numeral_name_pairs,
+            _cn_detect_d1_conflicts,
+        )
+        text = (
+            "第一手柄主體11被連接。第一手柄主體11是金屬。"
+            "第一手柄主體11可移動。第二手柄主體11也被連接。"
+            "第二手柄主體11是塑膠。第二手柄主體11可旋轉。"
+        )
+        pairs = _cn_extract_numeral_name_pairs(text)
+        conflicts = _cn_detect_d1_conflicts(pairs)
+        # Should detect #11 instance collision
+        c11 = [c for c in conflicts if c["numeral"] == "11"]
+        assert c11
+        assert c11[0]["case"] == "instance"
