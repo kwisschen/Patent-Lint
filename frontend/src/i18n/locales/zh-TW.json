@@ -1390,6 +1390,10 @@
     "fromClaim": "來自請求項 {{n}}",
     "more": "還有 {{n}} 項"
   },
+  "numeralFindings": {
+    "expand": "顯示全部 {{count}} 項",
+    "collapse": "收合"
+  },
   "terms": {
     "title": "服務條款",
     "lastUpdated": "最後更新：2026年4月30日",
