@@ -1184,6 +1184,7 @@ def check_numeral_consistency_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
             reference="专利法实施细则 §21 第2款",
         )]
 
+    # Severity sort already applied inside _cn_detect_d1_conflicts.
     sample = conflicts[:8]
     extra = max(0, len(conflicts) - 8)
     findings = [
@@ -1401,16 +1402,44 @@ def _cn_detect_d1_conflicts(pairs: list[tuple[str, str]]) -> list[dict]:
                 "case": "instance" if case_instance else "element",
             })
 
+    # Severity sort: most-confused numerals first so a new mutation
+    # visibly bubbles into the top-3 inline preview. Severity = number
+    # of distinct outliers, then total non-canonical occurrences.
+    def _severity_key(c: dict) -> tuple:
+        outlier_total = sum(o["count"] for o in c["outliers"])
+        n = c["numeral"]
+        digit_prefix = ""
+        for ch in n:
+            if ch.isdigit():
+                digit_prefix += ch
+            else:
+                break
+        num_sort = (0, int(digit_prefix), n) if digit_prefix else (1, 0, n)
+        return (-len(c["outliers"]), -outlier_total, num_sort)
+    conflicts.sort(key=_severity_key)
     return conflicts
 
 
-def _cn_format_inline_conflict(c: dict) -> str:
+def _cn_format_inline_conflict(c: dict, simp: bool = True) -> str:
+    """Plain-CJK one-line summary for the message text.
+
+    Format: 标记 N 同时用于：「名称1」(N×)、「名称2」(M×)
+    Colon-list form reads as "this numeral was used for these names"
+    without the cryptic 对 / unbracketed ×N of the original format.
+    Uses CJK quote brackets「」for element names so they stand out from
+    surrounding zh-TW/zh-CN/ja prose.
+
+    `simp=True` (default) outputs Simplified for CN callers; `simp=False`
+    outputs Traditional for TW callers so register stays consistent
+    across the whole message.
+    """
+    label = "标记" if simp else "標記"
+    connector = "同时用于：" if simp else "同時用於："
     canonical = _cn_format_d1_name_for_display(c["canonical"])
-    canonical_str = f"{canonical}×{c['canonical_count']}"
-    outliers_str = "、".join(
-        f"{_cn_format_d1_name_for_display(o['name'])}×{o['count']}"
-        for o in c["outliers"][:3]
-    )
+    parts = [f"「{canonical}」({c['canonical_count']}×)"]
+    for o in c["outliers"][:3]:
+        name = _cn_format_d1_name_for_display(o["name"])
+        parts.append(f"「{name}」({o['count']}×)")
     if len(c["outliers"]) > 3:
-        outliers_str += "…"
-    return f"#{c['numeral']}（{canonical_str}对{outliers_str}）"
+        parts.append("…")
+    return f"{label} {c['numeral']} {connector}" + "、".join(parts)
