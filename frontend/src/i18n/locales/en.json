@@ -1139,7 +1139,7 @@
           "pass": "Reference symbols consistently identify their elements."
         },
         "symbolTableCoverage": {
-          "amend": "{{count}} reference symbol(s) appear in the specification but are missing from 符號說明: {{inline_summary}}",
+          "amend": "{{count}} undeclared element(s) covering {{refnum_count}} reference symbols missing from 符號說明: {{inline_summary}}",
           "pass": "All reference symbols used in the specification are declared in 符號說明."
         }
       },

@@ -261,22 +261,41 @@ function numeralFindingsRow(details_params, status, fontName) {
   const visible = findings.slice(0, cap)
   const accent = statusColor(status)
   const lines = visible.map((f) => {
-    const numeralText = `#${f.numeral}`
-    let body = ""
+    // D1 shape: { numeral, canonical, canonical_count, outliers }
     if (f.canonical !== undefined && Array.isArray(f.outliers)) {
-      // D1 shape
-      body = ` "${f.canonical}" (${f.canonical_count}×)`
+      let body = ` "${f.canonical}" (${f.canonical_count}×)`
       for (const o of f.outliers) {
         body += `, "${o.name}" (${o.count}×)`
       }
-    } else if (f.name) {
-      // D3 shape
+      return {
+        text: [
+          { text: `#${f.numeral}`, color: accent, bold: true, fontSize: 9 },
+          { text: body, color: "#475569", fontSize: 9 },
+        ],
+        ...(fontName ? { font: fontName } : {}),
+      }
+    }
+    // D3 grouped shape: { name, numerals: [], refnum_count }
+    if (Array.isArray(f.numerals)) {
+      const nums = f.numerals.join(", ")
+      const tail = f.refnum_count > 1 ? `, ${f.refnum_count} refnums` : ""
+      return {
+        text: [
+          { text: f.name ? `"${f.name}"` : "", color: accent, bold: true, fontSize: 9 },
+          { text: ` (${nums}${tail})`, color: "#475569", fontSize: 9 },
+        ],
+        ...(fontName ? { font: fontName } : {}),
+      }
+    }
+    // D3 legacy shape: { numeral, name, occurrences }
+    let body = ""
+    if (f.name) {
       body = ` "${f.name}"`
       if (f.occurrences != null) body += ` (${f.occurrences}×)`
     }
     return {
       text: [
-        { text: numeralText, color: accent, bold: true, fontSize: 9 },
+        { text: `#${f.numeral}`, color: accent, bold: true, fontSize: 9 },
         { text: body, color: "#475569", fontSize: 9 },
       ],
       ...(fontName ? { font: fontName } : {}),

@@ -1139,7 +1139,7 @@
           "pass": "参照符号は要素を一貫して識別しています。"
         },
         "symbolTableCoverage": {
-          "amend": "{{count}} 個の参照符号が明細書に出現しますが、符號說明 に記載されていません。例：{{inline_summary}}",
+          "amend": "{{count}} 個の未記載要素（参照符号 {{refnum_count}} 個）が 符號說明 にありません。例：{{inline_summary}}",
           "pass": "明細書で使用されているすべての参照符号は 符號說明 に記載されています。"
         }
       },
