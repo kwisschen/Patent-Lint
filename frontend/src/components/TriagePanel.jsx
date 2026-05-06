@@ -11,6 +11,7 @@ import { useFeedback } from './FeedbackPicker'
 import { Button } from './ui/button'
 import { FrostCard } from './ui/frost-card'
 import FlaggedTermList from './FlaggedTermList'
+import NumeralFindingList from './NumeralFindingList'
 import ReportModal from './ReportModal'
 
 const GROUP_CONFIG = [
@@ -79,6 +80,15 @@ function TriageItem({ check, t, i18n, compact, jurisdiction }) {
             items={check.details_params.flagged_phrases.items}
             status={check.status}
             className="mt-0.5"
+          />
+        )}
+        {!compact && Array.isArray(check.details_params?.findings)
+            && check.details_params.findings.length > 3
+            && (check.message_key?.includes("numeralConsistency")
+                || check.message_key?.includes("symbolTableCoverage")) && (
+          <NumeralFindingList
+            findings={check.details_params.findings}
+            status={check.status}
           />
         )}
         {!compact && details && (

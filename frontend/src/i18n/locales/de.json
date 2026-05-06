@@ -1477,6 +1477,10 @@
     "fromClaim": "aus Anspruch {{n}}",
     "more": "+{{n}} weitere"
   },
+  "numeralFindings": {
+    "expand": "Alle {{count}} anzeigen",
+    "collapse": "Weniger anzeigen"
+  },
   "terms": {
     "title": "Nutzungsbedingungen",
     "lastUpdated": "Zuletzt aktualisiert: 30. April 2026",

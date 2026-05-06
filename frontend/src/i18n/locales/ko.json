@@ -1477,6 +1477,10 @@
     "fromClaim": "청구항 {{n}}",
     "more": "+{{n}}개 더"
   },
+  "numeralFindings": {
+    "expand": "전체 {{count}}개 표시",
+    "collapse": "접기"
+  },
   "terms": {
     "title": "이용약관",
     "lastUpdated": "최종 업데이트: 2026년 4월 30일",
