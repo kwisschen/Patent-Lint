@@ -805,8 +805,11 @@ _CN_LEADING_VERBS_PARTICLES = (
     # commonly bound to refnums in patent diction): 使 (使用者裝置 / 使用
     # 例), 持 (持有部), 傳 (傳輸器), 送 (送風口). Stripping them would
     # produce truncated head nouns like "用者裝置" / "輸器".
-    # Conjunctive / aspectual sentence connectors
-    "則", "则", "也", "但", "此", "即", "所", "是", "有", "再", "又",
+    # Conjunctive / aspectual sentence connectors. NOTE: do NOT include
+    # 所 here — it's the first char of ref-prefix 所述 and char-by-char
+    # stripping would consume 所 before ref-prefix has a chance to match
+    # 所述, leaving "述X" residue.
+    "則", "则", "也", "但", "此", "即", "是", "有", "再", "又",
     # Single-char measure / quantifier residues
     "個", "个", "種", "种", "對", "对", "项", "項",
 )
@@ -910,6 +913,50 @@ def _cn_is_measurement_context(name: str) -> bool:
     if name.endswith(_CN_CHEMISTRY_SUFFIXES):
         return True
     return any(tok in name for tok in _CN_PROCESS_CONTEXT_TOKENS)
+
+
+_CN_INTERIOR_VERB_MARKERS = (
+    # Modal / aspect verbs that signal "noun head follows"
+    "可以", "可以是", "可以為", "可以为",
+    "用以", "用於", "用于", "用作",
+    "通過", "通过", "透過", "透过", "經由", "经由",
+    "藉由", "借由",
+    "包括", "包含", "具有", "具備", "具备", "含有",
+    "形成", "形成有",
+    "設於", "设于", "設置於", "设置于",
+    # Common verbs in process/method drafts
+    "執行", "执行", "進行", "进行",
+)
+
+
+def _cn_strip_interior_verb(s: str) -> str:
+    """Cut on the LATEST interior verb-marker in a captured noun phrase.
+
+    Drafter writes "號可以通過功能擴充連接部 13" / "可以參考上述 S520" — the
+    regex captures everything before the refnum, including the verbal
+    predicate. The HEAD noun is what follows the LATEST verb marker
+    (because the marker introduces an action/relationship leading to
+    the noun).
+
+    Only triggers when the captured noun is > 6 chars (otherwise it's
+    already short / clean); applies after iterative strip + post-的.
+    Returns suffix after the marker if it's ≥ 2 CJK chars.
+    """
+    if len(s) <= 6:
+        return s
+    cut_pos = -1
+    cut_len = 0
+    for marker in _CN_INTERIOR_VERB_MARKERS:
+        pos = s.rfind(marker)
+        if pos > cut_pos:
+            cut_pos = pos
+            cut_len = len(marker)
+    if cut_pos < 0:
+        return s
+    suffix = s[cut_pos + cut_len:]
+    if len(suffix) < 2:
+        return s
+    return suffix
 
 
 def _cn_strip_post_de(s: str) -> str:
@@ -1183,9 +1230,8 @@ def _cn_d1_head_noun_with_ordinal(raw: str) -> str:
     # noun follows the marker. Run AFTER iterative strip so leading
     # particles are gone first.
     s = _cn_strip_post_de(s)
-    # If the post-的 cut exposed a leading ordinal (第一X), the ordinal
-    # is now back at the front — re-run iterative strip without ordinal
-    # break to strip any other lingering particles before the ordinal.
+    # If the post-de cut exposed a leading ordinal or other particles,
+    # re-run iterative strip to clean them.
     s = _cn_strip_iterative(s, allow_ordinal_break=True)
     if len(s) < 2:
         return ""
