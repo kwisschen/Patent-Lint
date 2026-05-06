@@ -653,24 +653,34 @@ def _merge_suffix_clusters_us(name_counts: "Counter[str]") -> "Counter[str]":
             ):
                 union(i, j)
 
-    cluster_names: dict[int, str] = {}
+    # Pick cluster rep = MOST FREQUENT (not shortest). Shortest-as-rep
+    # would merge "control module" (10×) into bare "module" (1×) when
+    # both share suffix — losing the identifying modifier. Most-frequent
+    # picks the form the drafter actually used; shortest is tiebreaker.
+    cluster_rep_count: dict[int, int] = {}
+    cluster_rep_name: dict[int, str] = {}
     cluster_counts: Counter = Counter()
     for idx, (name, count) in enumerate(items):
         root = find(idx)
         cluster_counts[root] += count
-        if root not in cluster_names:
-            cluster_names[root] = name
+        if root not in cluster_rep_count:
+            cluster_rep_count[root] = count
+            cluster_rep_name[root] = name
         else:
-            cur_name = cluster_names[root]
-            cur_ord, cur_head = _split_ordinal_key(cur_name)
-            cur_surf = ((cur_ord + " ") if cur_ord else "") + cur_head
-            new_surf = surfaces[idx]
-            if len(new_surf) < len(cur_surf):
-                cluster_names[root] = name
+            cur_count = cluster_rep_count[root]
+            if count > cur_count:
+                cluster_rep_count[root] = count
+                cluster_rep_name[root] = name
+            elif count == cur_count:
+                cur_ord, cur_head = _split_ordinal_key(cluster_rep_name[root])
+                cur_surf = ((cur_ord + " ") if cur_ord else "") + cur_head
+                new_surf = surfaces[idx]
+                if len(new_surf) < len(cur_surf):
+                    cluster_rep_name[root] = name
 
     merged: Counter = Counter()
     for root, total in cluster_counts.items():
-        merged[cluster_names[root]] = total
+        merged[cluster_rep_name[root]] = total
     return merged
 
 

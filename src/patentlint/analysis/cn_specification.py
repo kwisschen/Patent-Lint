@@ -722,11 +722,24 @@ def check_spec_claim_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
 _CN_REFNUM_AFTER_NOUN = re.compile(
     r"(?P<noun>[一-鿿]{2,12})\s*(?P<num>\d{2,4}[a-z]?)"
     # Reject digits followed by another digit, decimal, percent, degree
-    # signs (°/℃), or any Latin letter (mm/cm/μm/V/A/Hz/wt/etc.)
-    r"(?![\d.%°℃A-Za-z])",
+    # signs (°/℃), Latin letter (mm/cm/μm/V/A/Hz/wt/etc.), or a range
+    # separator (~/～/至/到/-) — those are handled by _CN_REFNUM_RANGE.
+    r"(?![\d.%°℃A-Za-z~～至到\-])",
 )
 _CN_REFNUM_PARENS = re.compile(
     r"(?P<noun>[一-鿿]{2,12})\s*[(（](?P<num>\d{2,4}[a-z]?)[)）]"
+)
+
+# Range refnum: drafter writes "隨身碟101~103" / "電池101至103" /
+# "感測器101-103" — same noun bound to ALL refnums in [start, end].
+# Match range separators ~ (ASCII), ～ (full-width tilde), 至, 到, 及,
+# and hyphen `-`. Cap range size at 30 to bound runaway-pattern risk.
+_CN_REFNUM_RANGE = re.compile(
+    r"(?P<noun>[一-鿿]{2,12})\s*"
+    r"(?P<start>\d{2,4})"
+    r"\s*[~～至到\-]\s*"
+    r"(?P<end>\d{2,4})"
+    r"(?![\d.%°℃A-Za-z])",
 )
 _CN_REFNUM_LATIN = re.compile(
     r"(?P<noun>[一-鿿]{2,12})\s*(?P<num>[A-Z]{1,5}\d{1,4}[a-zA-Z]?)"
@@ -898,7 +911,12 @@ def _cn_strip_iterative(s: str, allow_ordinal_break: bool = False) -> str:
     """Iteratively peel leading prefixes / verbs / quantifiers / particles
     until the string stabilises. Single-pass stripping leaks fragments like
     "則是設置在第一手柄主體" because each prefix layer (則 → 是 → 設置 → 在) is
-    a different category. Loop until no category matches."""
+    a different category. Loop until no category matches.
+
+    Guarded multi-char verbs (`_CN_LEADING_MULTI_CHAR_VERBS_GUARDED`)
+    only strip when the residual is ≥ 3 CJK chars, preserving compound
+    noun heads like 控制模組 / 通訊器 / 安裝座 where the leading word is
+    a noun-modifier rather than a verb."""
     prev = None
     while s and s != prev:
         prev = s
@@ -906,8 +924,12 @@ def _cn_strip_iterative(s: str, allow_ordinal_break: bool = False) -> str:
             if s.startswith(p):
                 s = s[len(p):]
                 break
-        for v in _CN_LEADING_MULTI_CHAR_VERBS:
+        for v in _CN_LEADING_MULTI_CHAR_VERBS_STRICT:
             if s.startswith(v):
+                s = s[len(v):]
+                break
+        for v in _CN_LEADING_MULTI_CHAR_VERBS_GUARDED:
+            if s.startswith(v) and len(s) - len(v) >= 3:
                 s = s[len(v):]
                 break
         for q in _CN_LEADING_QUANTIFIERS:
@@ -976,6 +998,33 @@ def _cn_extract_numeral_name_pairs(text: str) -> list[tuple[str, str]]:
     pairs: list[tuple[str, str]] = []
     seen_spans: set[tuple[int, int]] = set()
 
+    # Range pattern first — claims its span so the AFTER_NOUN pattern
+    # doesn't double-count the start/end refnums.
+    for m in _CN_REFNUM_RANGE.finditer(text):
+        span = (m.start(), m.end())
+        if span in seen_spans:
+            continue
+        seen_spans.add(span)
+        try:
+            start = int(m.group("start"))
+            end = int(m.group("end"))
+        except (TypeError, ValueError):
+            continue
+        if end < start:
+            continue
+        if end - start > 30:
+            # Bound runaway: drafters don't use ranges of 30+ refnums.
+            # Treat as the start refnum only.
+            end = start
+        raw_noun = m.group("noun")
+        head_with_ord = _cn_d1_head_noun_with_ordinal(raw_noun)
+        if not head_with_ord:
+            continue
+        ordinal, head = _cn_extract_ordinal(head_with_ord)
+        keyed = f"{ordinal}|{head}" if ordinal else head
+        for n in range(start, end + 1):
+            pairs.append((str(n), keyed))
+
     # Digit patterns first
     for pattern in [_CN_REFNUM_AFTER_NOUN, _CN_REFNUM_PARENS]:
         for m in pattern.finditer(text):
@@ -1030,14 +1079,28 @@ def _cn_extract_numeral_name_pairs(text: str) -> list[tuple[str, str]]:
 # tests/test_integration.py::TestTwInventionAllPass — invention_complete
 # fixture has "包括一基座" as a captured 包括-led noun phrase that needs
 # stripping to find the real head "基座".
-_CN_LEADING_MULTI_CHAR_VERBS = (
-    # Inclusion/possession verbs (the most common D1-noise leaders)
+_CN_LEADING_MULTI_CHAR_VERBS_STRICT = (
+    # Verbs that are unambiguously verbal in patent diction — strip
+    # whenever they lead a captured noun, regardless of residual length.
+    # Inclusion / possession verbs (the most common D1-noise leaders)
     "包括", "包含", "含有",
     "具有", "具備", "具备",
     "構成", "构成",
     "設置", "设置", "設於", "设于",
     "提供", "形成", "成形", "形態", "形态",
-    # Connection verbs that creep into "controller HD1" type captures
+    "其中",  # introductory phrase in claims
+    # 3-char multi-char verbs
+    "用以接", "用於接", "用于接",
+    "藉由", "借由",
+)
+
+# Verbs that double as noun-modifiers in compound noun heads. Examples:
+#   控制 + 模組 = "control module" (compound noun, do NOT strip 控制)
+#   控制 + 信號 = the verb form (strip is fine)
+# Heuristic: only strip if residual is ≥ 3 CJK chars. Compound-noun-head
+# residuals like 模組 (2 chars) / 元件 (2) / 裝置 (2) keep their modifier.
+_CN_LEADING_MULTI_CHAR_VERBS_GUARDED = (
+    # Connection / coupling verbs (also modifier in 連接器 / 連接埠)
     "連接", "连接", "連通", "连通", "連結", "连结",
     "耦合", "耦接", "結合", "结合",
     "通過", "通过",
@@ -1048,15 +1111,17 @@ _CN_LEADING_MULTI_CHAR_VERBS = (
     "對應", "对应",
     "適用", "适用",
     "介隔", "間隔", "间隔",
-    "其中",  # introductory phrase in claims
-    # 3-char multi-char verbs
-    "用以接", "用於接", "用于接",
-    "藉由", "借由",
-    # Modifier-prefixed verbs: drafter writes "電性連接", "機械式連結",
-    # "結構性附著". The strip removes the modifier so the connector verb
-    # is then handled by the existing connector entries above.
+    # Modifier-prefixed verbs: drafter writes "電性連接", "機械式連結".
+    # In standalone form (電性連接) these are verbal; in compound nouns
+    # like 電性接點 / 機械結構 the modifier is part of the head noun.
     "電性", "电性", "機械", "机械", "物理", "化學", "化学",
     "結構", "结构", "磁性", "光學", "光学", "熱性", "热性",
+)
+
+# Backward-compat alias — the iterative stripper now consults two lists.
+_CN_LEADING_MULTI_CHAR_VERBS = (
+    _CN_LEADING_MULTI_CHAR_VERBS_STRICT
+    + _CN_LEADING_MULTI_CHAR_VERBS_GUARDED
 )
 
 
@@ -1272,25 +1337,37 @@ def _cn_merge_suffix_clusters(name_counts: "Counter[str]") -> "Counter[str]":
                 # i's surface ends with j's — same noun, j is shorter root
                 union(i, j)
 
-    cluster_names: dict[int, str] = {}
+    # Pick cluster rep = MOST FREQUENT (not shortest). Earlier the
+    # shortest-as-rep approach merged "control module"-style canonicals
+    # into the bare "module" residue, hiding the modifier identifying
+    # which kind of module. Most-frequent picks the form the drafter
+    # actually used most often, with shortest as tiebreaker.
+    cluster_rep_count: dict[int, int] = {}
+    cluster_rep_name: dict[int, str] = {}
     cluster_counts: Counter = Counter()
     for idx, (name, count) in enumerate(items):
         root = find(idx)
         cluster_counts[root] += count
-        # Pick the shortest surface in cluster as representative
-        if root not in cluster_names:
-            cluster_names[root] = name
+        if root not in cluster_rep_count:
+            cluster_rep_count[root] = count
+            cluster_rep_name[root] = name
         else:
-            cur_name = cluster_names[root]
-            cur_ord, cur_head = _cn_split_ordinal_key(cur_name)
-            cur_surf = (cur_ord or "") + cur_head
-            new_surf = surfaces[idx]
-            if len(new_surf) < len(cur_surf):
-                cluster_names[root] = name
+            cur_count = cluster_rep_count[root]
+            if count > cur_count:
+                cluster_rep_count[root] = count
+                cluster_rep_name[root] = name
+            elif count == cur_count:
+                cur_name = cluster_rep_name[root]
+                cur_surf = (
+                    (_cn_split_ordinal_key(cur_name)[0] or "")
+                    + _cn_split_ordinal_key(cur_name)[1]
+                )
+                if len(surfaces[idx]) < len(cur_surf):
+                    cluster_rep_name[root] = name
 
     merged: Counter = Counter()
     for root, total in cluster_counts.items():
-        merged[cluster_names[root]] = total
+        merged[cluster_rep_name[root]] = total
     return merged
 
 
