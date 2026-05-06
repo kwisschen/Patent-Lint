@@ -920,6 +920,10 @@
       "scopeLimitWording": {
         "verify": "說明書中檢測到 {{count}} 處「本發明」/「本案」/「the (present) invention」用語。",
         "pass": "說明書中未檢測到限制請求項範圍的表述。"
+      },
+      "numeralConsistency": {
+        "amend": "{{count}} 個元件代表符號用於指稱多個不同的元件名稱；同一代表符號不得指稱不同元件。",
+        "pass": "元件代表符號與所指稱元件名稱一致。"
       }
     },
     "claims": {

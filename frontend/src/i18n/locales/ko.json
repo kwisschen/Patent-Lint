@@ -920,6 +920,10 @@
       "scopeLimitWording": {
         "verify": "명세서에서 \"본 발명\" / \"the (present) invention\" 표현이 {{count}}건 검출되었습니다.",
         "pass": "명세서에서 청구범위를 한정할 수 있는 표현이 검출되지 않았습니다."
+      },
+      "numeralConsistency": {
+        "amend": "{{count}}개의 도면 부호가 서로 다른 구성요소 이름에 사용되었습니다. 동일한 도면 부호가 서로 다른 구성요소를 지정해서는 안 됩니다.",
+        "pass": "도면 부호가 구성요소를 일관되게 식별합니다."
       }
     },
     "claims": {
