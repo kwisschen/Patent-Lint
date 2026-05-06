@@ -721,7 +721,9 @@ def check_spec_claim_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
 # Element names rarely exceed 10 CJK chars so 12 is a safe ceiling.
 _CN_REFNUM_AFTER_NOUN = re.compile(
     r"(?P<noun>[一-鿿]{2,12})\s*(?P<num>\d{2,4}[a-z]?)"
-    r"(?![\d.%])",
+    # Reject digits followed by another digit, decimal, percent, degree
+    # signs (°/℃), or any Latin letter (mm/cm/μm/V/A/Hz/wt/etc.)
+    r"(?![\d.%°℃A-Za-z])",
 )
 _CN_REFNUM_PARENS = re.compile(
     r"(?P<noun>[一-鿿]{2,12})\s*[(（](?P<num>\d{2,4}[a-z]?)[)）]"
@@ -836,6 +838,26 @@ _CN_PROCESS_CONTEXT_TAILS = (
     "时间", "時間", "次数", "次數",
     # Chemistry continuation — connector words that creep into the tail
     "并在", "並在", "并且", "並且", "与", "與", "及", "以及",
+    # Comparison operators / threshold language — strong measurement
+    # signal. "玻璃轉移溫度大於或等於 230" / "壓力小於 50" / etc.
+    "大於", "大于", "小於", "小于", "等於", "等于",
+    "大於或等於", "大于或等于", "小於或等於", "小于或等于",
+    "大於等於", "大于等于", "小於等於", "小于等于",
+    "不超過", "不超过", "不少於", "不少于",
+    "不大於", "不大于", "不小於", "不小于",
+    "至多為", "至多为", "至少為", "至少为",
+    "至多", "至少", "至於", "至于",
+    "高於", "高于", "低於", "低于",
+    "超過", "超过", "達到", "达到",
+    "範圍為", "范围为", "範圍是", "范围是",
+    # CJK measurement units — when captured as the tail, the numeral is
+    # almost certainly a measurement (10毫米 / 50微米 / 200克 / etc.).
+    # Range form `毫米至` / `公分至` also caught.
+    "毫米", "公釐", "公分", "公尺", "微米", "奈米", "纳米",
+    "毫克", "公克", "毫升", "公升", "微升",
+    "克", "升", "倍率", "倍",
+    "毫米至", "公釐至", "公分至", "微米至", "奈米至", "纳米至",
+    "克至", "升至",
 )
 _CN_PROCESS_CONTEXT_TOKENS = (
     "含量", "浓度", "濃度", "比例", "用量", "上限", "下限",

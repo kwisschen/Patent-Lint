@@ -282,7 +282,7 @@ def check_paragraph_numbering(doc: TwPatentDocument) -> list[CheckItem]:
         examples_str = ", ".join(bad_format[:5])
         return [CheckItem(
             status="amend",
-            message=f"{len(bad_format)} paragraph(s) use non-[NNNN] format.",
+            message=f"{len(bad_format)} paragraph(s) use non-[NNNN] format. Examples: {examples_str}",
             message_key="check.tw.spec.paragraphNumbering.amendFormat",
             details_key="details.tw.paragraphNumbering",
             details_params={"count": len(bad_format), "examples": examples_str},
@@ -1077,9 +1077,22 @@ def check_symbol_table_coverage_tw(doc: TwPatentDocument) -> list[CheckItem]:
          "occurrences": pair_counts[num]}
         for num in sample
     ]
+    # Inline message names the undeclared numerals + their captured noun
+    # so users can navigate directly. Three-numeral preview matches the
+    # numeralConsistency display contract.
+    inline_parts = []
+    for num in sample[:3]:
+        name = used_numerals.get(num, "")
+        if name:
+            inline_parts.append(f"#{num}（{name}）")
+        else:
+            inline_parts.append(f"#{num}")
+    inline = "、".join(inline_parts)
+    if len(undeclared) > 3:
+        inline = inline + f"（另 {len(undeclared) - 3} 個）"
     return [CheckItem(
         status="amend",
-        message=f"{len(undeclared)} 個附圖標記出現於說明書內文但未列於符號說明。",
+        message=f"{len(undeclared)} 個附圖標記出現於說明書內文但未列於符號說明：{inline}",
         message_key="check.tw.spec.symbolTableCoverage.amend",
         details_key="details.tw.symbolTableCoverage",
         details_params={
