@@ -510,6 +510,23 @@ def check_numeral_consistency(spec_text: str) -> list[CheckItem]:
             reference="MPEP § 608.01(g)",
         )]
 
+    # Display sort: surface the MOST-CONFUSED numerals first so a new
+    # mutation (e.g. drafter changes one LD3 → LD1) visibly bubbles into
+    # the top-3 inline preview. Severity = number of distinct outliers,
+    # then total non-canonical occurrences, then numeric order.
+    def _severity_key(c: dict) -> tuple:
+        outlier_total = sum(o["count"] for o in c["outliers"])
+        n = c["numeral"]
+        digit_prefix = ""
+        for ch in n:
+            if ch.isdigit():
+                digit_prefix += ch
+            else:
+                break
+        num_sort = (0, int(digit_prefix), n) if digit_prefix else (1, 0, n)
+        return (-len(c["outliers"]), -outlier_total, num_sort)
+    conflicts = sorted(conflicts, key=_severity_key)
+
     # Cap displayed conflicts at 8 to bound payload size; "extra"
     # carries the overflow count for the drafter.
     sample = conflicts[:8]
@@ -791,16 +808,21 @@ def _detect_d1_conflicts(
 
 
 def _format_inline_conflict(c: dict) -> str:
-    """One-line summary of a conflict for the message text."""
+    """Plain-English one-line summary of a conflict.
+
+    Format: numeral N used for: "name1" (N×), "name2" (M×)
+    The colon-list form reads as "this numeral was used for these
+    element names" without the cryptic "vs" / unbracketed "×N" that
+    the original technical format had.
+    """
     canonical = _format_d1_name_for_display(c["canonical"])
-    canonical_str = f"{canonical}×{c['canonical_count']}"
-    outliers_str = ", ".join(
-        f"{_format_d1_name_for_display(o['name'])}×{o['count']}"
-        for o in c["outliers"][:3]
-    )
+    parts = [f'"{canonical}" ({c["canonical_count"]}×)']
+    for o in c["outliers"][:3]:
+        name = _format_d1_name_for_display(o["name"])
+        parts.append(f'"{name}" ({o["count"]}×)')
     if len(c["outliers"]) > 3:
-        outliers_str += "…"
-    return f"#{c['numeral']} ({canonical_str} vs {outliers_str})"
+        parts.append("…")
+    return f"numeral {c['numeral']} used for: " + ", ".join(parts)
 
 
 def extract_reference_numeral_inventory(
