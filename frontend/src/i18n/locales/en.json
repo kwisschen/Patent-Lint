@@ -927,7 +927,7 @@
         "pass": "No scope-limiting phrases detected in specification."
       },
       "numeralConsistency": {
-        "amend": "{{count}} reference numeral(s) used with multiple different element names. The same reference character should not designate different elements.",
+        "amend": "{{count}} reference numeral(s) used with multiple different element names. Examples: {{inline_summary}}",
         "pass": "Reference numerals consistently identify their elements."
       }
     },
@@ -1062,7 +1062,7 @@
           "pass": "Specification does not reference the claims."
         },
         "numeralConsistency": {
-          "amend": "{{count}} reference numeral(s) used with multiple different element names. The same drawing reference must designate the same component (实施细则 §21 第2款).",
+          "amend": "{{count}} reference numeral(s) used with multiple different element names. Examples: {{inline_summary}} (实施细则 §21 第2款).",
           "pass": "Reference numerals consistently identify their components."
         }
       },
@@ -1222,11 +1222,11 @@
           "pass": "No indigenous peoples terminology found."
         },
         "numeralConsistency": {
-          "amend": "{{count}} reference symbol(s) used with multiple different element names. The same reference symbol must designate the same element (施行細則 §19 第2款).",
+          "amend": "{{count}} reference symbol(s) used with multiple different element names. Examples: {{inline_summary}} (施行細則 §19 第2款).",
           "pass": "Reference symbols consistently identify their elements."
         },
         "symbolTableCoverage": {
-          "amend": "{{count}} reference symbol(s) appear in the specification but are missing from 符號說明.",
+          "amend": "{{count}} reference symbol(s) appear in the specification but are missing from 符號說明: {{inline_summary}}",
           "pass": "All reference symbols used in the specification are declared in 符號說明."
         }
       },
