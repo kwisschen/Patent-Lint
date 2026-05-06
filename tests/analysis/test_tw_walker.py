@@ -1790,3 +1790,62 @@ class TestStateModifierCaptureExtensionR66:
             # If walker emits, term must be the extended form.
             assert finding["term"] != "環形", finding
             assert "墊圈" in finding["term"], finding
+
+
+class TestTrailingPrepositionStripR68c:
+    """R68c (2026-05-06) — trailing preposition strip (對/向/自).
+
+    Walker over-captures `<noun>對X` / `<noun>向X` / `<noun>各自` shapes;
+    trailing preposition/pronoun particle should be stripped via
+    _NOUNLIKE_SINGLE_CHAR_SUFFIXES with default residual ≥ 3 guard
+    (3-char compounds like 方向 / 應對 stay protected).
+    """
+
+    def test_trailing_dui_stripped(self):
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種裝置，包含一驗證模塊，所述驗證模塊對輸入資料進行檢驗。",
+            ),
+        ])
+        issues = check_antecedent_basis(doc)
+        for i in issues:
+            assert not i["term"].endswith("對"), i
+
+    def test_trailing_xiang_stripped(self):
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種電路，包含一輸出節點，所述輸出節點流向接地。",
+            ),
+        ])
+        issues = check_antecedent_basis(doc)
+        for i in issues:
+            assert not i["term"].endswith("向") or i["term"] == "方向", i
+
+    def test_compound_fang_xiang_protected(self):
+        """方向 (3 chars, residual 2) protected by default ≥ 3 guard."""
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種裝置，所述方向位於前端。",
+            ),
+        ])
+        issues = check_antecedent_basis(doc)
+        # `所述方向` — drafter's reference; walker emits or not depending
+        # on intro presence, but term should remain `方向` (not stripped to `方`)
+        for i in issues:
+            if "方向" in i.get("reference_form", "") or "方" == i["term"]:
+                # Accept either "方向" full term or a different finding entirely
+                assert i["term"] != "方", i
+
+    def test_trailing_zi_stripped(self):
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種抗體，包含一第二Fc結構域，所述第二Fc結構域各自具有特性。",
+            ),
+        ])
+        issues = check_antecedent_basis(doc)
+        for i in issues:
+            assert not i["term"].endswith("自"), i
