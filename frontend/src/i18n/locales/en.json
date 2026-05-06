@@ -1477,6 +1477,10 @@
     "fromClaim": "from claim {{n}}",
     "more": "+{{n}} more"
   },
+  "numeralFindings": {
+    "expand": "Show all {{count}}",
+    "collapse": "Show fewer"
+  },
   "terms": {
     "title": "Terms of Service",
     "lastUpdated": "Last updated: April 30, 2026",
