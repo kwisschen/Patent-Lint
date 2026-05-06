@@ -1849,3 +1849,58 @@ class TestTrailingPrepositionStripR68c:
         issues = check_antecedent_basis(doc)
         for i in issues:
             assert not i["term"].endswith("自"), i
+
+
+class TestNengCompoundExtensionR68d:
+    """R68d (2026-05-06) — mid-能 compound noun extension.
+
+    `<X>管理功` truncations from `<X>管理功能` are caused by 能 being
+    excluded from _NOUN_CHARS to prevent aux-verb 能 over-capture.
+    Targeted post-capture extension when raw_noun ends in a known
+    能-precursor (功/性/效/智/...) extends past 能 to recover the
+    full compound noun.
+    """
+
+    def test_gong_neng_compound_extends(self):
+        """`<X>管理功能` capture extends past 能."""
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種網路系統，包含一鑒權管理功能，"
+                "所述鑒權管理功能接收請求消息。",
+            ),
+        ])
+        issues = check_antecedent_basis(doc)
+        # Walker should resolve the full reference (intro+ref both
+        # `鑒權管理功能`); never emit truncated `鑒權管理功`.
+        for i in issues:
+            assert i["term"] != "鑒權管理功", i
+
+    def test_xing_neng_compound_extends(self):
+        """`性能` extension."""
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種裝置，包含一高性能模組，前述高性能能滿足需求。",
+            ),
+        ])
+        issues = check_antecedent_basis(doc)
+        for i in issues:
+            # `高性` truncation should not appear; either 高性能模組
+            # or 高性能 is the full term
+            assert i["term"] != "高性", i
+
+    def test_aux_neng_not_extended(self):
+        """`所述模組能執行X` — 模組 captured, 能 is aux-verb;
+        模 is NOT a precursor → no extension."""
+        doc = _make_doc([
+            _claim(
+                1,
+                "1. 一種裝置，包含一處理模組，所述模組能執行運算。",
+            ),
+        ])
+        issues = check_antecedent_basis(doc)
+        # Walker should capture `模組` clean; not extend across 能執行.
+        for i in issues:
+            assert "能執行" not in i["term"], i
+            assert "模組能" not in i["term"], i

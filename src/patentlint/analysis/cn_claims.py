@@ -1086,6 +1086,42 @@ _NOUN_CHARS_CN = r"[^\s，。；：、及与和之的该将能须应皆被于以
 # extends the noun by 1 char if claim.text[match_end] is `)` or `）`.
 _PAREN_NUM_TRAIL_RE_CN = re.compile(r"[(（][0-9A-Za-z]{1,5}$")
 
+# R68d (2026-05-06) TW parity: mid-能 noun capture extension. CN walker
+# excludes 能 from _NOUN_CHARS_CN to prevent aux-verb 能 over-capture,
+# but cuts compound nouns (功能/性能/智能/换能器/官能基) mid-word. See
+# tw_claims.py R68d comment for full rationale + precursor whitelist.
+# CN-side mining (supplement_v2): 52 CN walker_fp where context_after
+# starts at 能 — confirms the over-cut class.
+_NENG_PRECURSORS_CN = (
+    "功", "性", "效", "智", "动", "机", "官",
+    "才", "本", "势", "万", "全", "异", "燃", "换",
+)
+_NOUN_EXT_RE_CN = re.compile(
+    r"[^\s，。；：、及与和之的该将能须应皆被于以并且其而还另时在由]+"
+)
+
+
+def _extend_neng_compound_cn(
+    raw_noun: str, raw_noun_end: int, claim_text: str
+) -> tuple[str, int]:
+    """Mirror of _extend_neng_compound_tw with Simplified precursors."""
+    if not raw_noun or raw_noun[-1] not in _NENG_PRECURSORS_CN:
+        return raw_noun, raw_noun_end
+    if raw_noun_end >= len(claim_text) or claim_text[raw_noun_end] != "能":
+        return raw_noun, raw_noun_end
+    raw_noun = raw_noun + "能"
+    raw_noun_end += 1
+    if raw_noun_end < len(claim_text):
+        ext_m = _NOUN_EXT_RE_CN.match(claim_text, raw_noun_end)
+        if ext_m:
+            extra = ext_m.group()
+            room = 12 - len(raw_noun)
+            if room > 0:
+                added = extra[:room]
+                raw_noun = raw_noun + added
+                raw_noun_end += len(added)
+    return raw_noun, raw_noun_end
+
 # R66 (revised 2026-05-05) TW parity: state-modifier capture extension.
 # Mirror of TW R66 capture-time fix — gated on Simplified state suffixes
 # 状/形. When raw_noun ends in such a suffix and `的<head>` follows,
@@ -3333,6 +3369,11 @@ def check_antecedent_basis_cn(
                 ):
                     raw_noun = raw_noun + claim.text[raw_noun_end]
                     raw_noun_end += 1
+
+            # R68d (2026-05-06) TW parity: mid-能 noun extension.
+            raw_noun, raw_noun_end = _extend_neng_compound_cn(
+                raw_noun, raw_noun_end, claim.text
+            )
 
             # R66 (revised 2026-05-05): TW parity — state-modifier capture
             # extension. When raw_noun ends in 状/形 and `的<head>` follows,

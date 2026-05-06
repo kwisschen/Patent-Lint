@@ -1542,6 +1542,69 @@ _NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以並
 # paren is part of the legitimate element identity (符號說明 entry name).
 _PAREN_NUM_TRAIL_RE = re.compile(r"[(（][0-9A-Za-z]{1,5}$")
 
+# R68d (2026-05-06): mid-能 noun capture extension.
+#
+# 能 is excluded from the _NOUN_CHARS regex character class to prevent
+# auxiliary-verb 能 ("can/may") over-capture in `<noun>能<verb>` claim
+# constructions. But this exclusion cuts compound nouns like 功能 /
+# 性能 / 智能 / 換能器 / 官能基 mid-word — the regex stops at 能 and
+# leaves a truncated term (e.g., `<X>管理功` from `<X>管理功能`).
+#
+# Targeted extension: when raw_noun ends with a known 能-precursor
+# character (一個 commonly precedes 能 in compound nouns), extend past
+# 能 and continue matching noun chars up to the length cap.
+#
+# Precursor whitelist is conservative — covers the most-frequent
+# noun compounds in patent claim diction:
+#   功能 (function), 性能 (performance), 效能 (efficacy),
+#   智能 (intelligent), 動能 (kinetic energy), 機能 (mechanism),
+#   官能 (functional/sensory), 才能 (capability), 本能 (instinct),
+#   勢能 (potential energy), 萬能/全能 (universal),
+#   異能 (special ability), 燃能 (combustion energy),
+#   換能 (transducer prefix in 換能器).
+#
+# Mining (supplement_v2): 35 TW walker_fp + 52 CN walker_fp end with
+# context_after starting at 能, attesting this is a real over-cut
+# class. Auxiliary 能 cases (preceded by non-precursor chars like
+# 模組能 / 裝置能) leave precursor check unmatched → no extension.
+_NENG_PRECURSORS_TW = (
+    "功", "性", "效", "智", "動", "機", "官",
+    "才", "本", "勢", "萬", "全", "異", "燃", "換",
+)
+_NOUN_EXT_RE_TW = re.compile(
+    r"[^\s，。；：、及與和之的該將能須應皆被於以並且其而還另時在更由]+"
+)
+
+
+def _extend_neng_compound_tw(
+    raw_noun: str, raw_noun_end: int, claim_text: str
+) -> tuple[str, int]:
+    """Extend raw_noun past 能 if last char is a known 能-precursor.
+
+    Returns (possibly-extended-raw_noun, new-end-position). Handles the
+    `<noun>能<head>` compound-noun cut left by the _NOUN_CHARS exclusion
+    of 能.
+    """
+    if not raw_noun or raw_noun[-1] not in _NENG_PRECURSORS_TW:
+        return raw_noun, raw_noun_end
+    if raw_noun_end >= len(claim_text) or claim_text[raw_noun_end] != "能":
+        return raw_noun, raw_noun_end
+    # Extend by 能
+    raw_noun = raw_noun + "能"
+    raw_noun_end += 1
+    # Continue matching noun chars from new position, capped at total len 12
+    if raw_noun_end < len(claim_text):
+        ext_m = _NOUN_EXT_RE_TW.match(claim_text, raw_noun_end)
+        if ext_m:
+            extra = ext_m.group()
+            room = 12 - len(raw_noun)
+            if room > 0:
+                added = extra[:room]
+                raw_noun = raw_noun + added
+                raw_noun_end += len(added)
+    return raw_noun, raw_noun_end
+
+
 # R66 (revised 2026-05-05): state-modifier capture extension.
 #
 # When walker captures `前述<X>` and X is a pure state-modifier
@@ -4592,6 +4655,15 @@ def check_antecedent_basis(
                 ):
                     raw_noun = raw_noun + claim.text[raw_noun_end]
                     raw_noun_end += 1
+
+            # R68d (2026-05-06): mid-能 noun extension for compound nouns
+            # where 能 is internal (功能/性能/智能/換能器/官能基). See helper
+            # _extend_neng_compound_tw above for the precursor whitelist
+            # rationale. No-op when raw_noun's last char isn't a precursor
+            # (preserves auxiliary-verb 能 behavior for `<X>能<verb>`).
+            raw_noun, raw_noun_end = _extend_neng_compound_tw(
+                raw_noun, raw_noun_end, claim.text
+            )
 
             # R66 (revised 2026-05-05): state-modifier capture extension.
             # When raw_noun ends in a state-modifier suffix (狀/形 — pure
