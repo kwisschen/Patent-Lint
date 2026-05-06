@@ -1062,6 +1062,21 @@ def check_symbol_table_coverage_tw(doc: TwPatentDocument) -> list[CheckItem]:
 
     undeclared = [n for n in undeclared if pair_counts[n] >= _min_pair_count(n)]
 
+    # Suppression: if the captured name is ALREADY declared in
+    # symbol_table for a DIFFERENT refnum, the drafter declared the
+    # element type — subsequent refnums are legit instances of that
+    # type (TIPO accepts this convention). Only flag refnums whose
+    # captured name is unknown to the symbol table.
+    declared_names: set[str] = {
+        (entry.name or "").strip()
+        for entry in doc.symbol_table
+        if entry.name
+    }
+    undeclared = [
+        n for n in undeclared
+        if used_numerals.get(n, "") not in declared_names
+    ]
+
     if not undeclared:
         return [CheckItem(
             status="pass",
@@ -1070,13 +1085,45 @@ def check_symbol_table_coverage_tw(doc: TwPatentDocument) -> list[CheckItem]:
             reference="專利法施行細則 §19 第2款",
         )]
 
-    sample = undeclared[:10]
-    extra = max(0, len(undeclared) - 10)
-    findings = [
-        {"numeral": num, "name": used_numerals.get(num, ""),
-         "occurrences": pair_counts[num]}
-        for num in sample
-    ]
+    # GROUP findings by captured name. When 2+ refnums share the same
+    # name, the drafter likely intended them as instances of one element
+    # type but forgot to list any of them in 符號說明. Showing 8 separate
+    # rows for "預覽影像 705 / 706 / 707 / ..." is noise; one grouped
+    # finding "預覽影像 (705-712, 8 refnums)" is actionable.
+    grouped: dict[str, list[str]] = {}
+    for num in undeclared:
+        name = used_numerals.get(num, "")
+        grouped.setdefault(name, []).append(num)
+
+    def _numeral_sort_key(n: str) -> tuple:
+        digit_prefix = ""
+        for ch in n:
+            if ch.isdigit():
+                digit_prefix += ch
+            else:
+                break
+        return (0, int(digit_prefix), n) if digit_prefix else (1, 0, n)
+
+    # Each group is a finding; sort by group size (most refnums first)
+    # then by first numeral.
+    group_findings = []
+    for name, nums in grouped.items():
+        nums_sorted = sorted(nums, key=_numeral_sort_key)
+        group_findings.append({
+            "name": name,
+            "numerals": nums_sorted,
+            "refnum_count": len(nums),
+            "occurrences": sum(pair_counts[n] for n in nums),
+        })
+    group_findings.sort(
+        key=lambda g: (-g["refnum_count"], _numeral_sort_key(g["numerals"][0])),
+    )
+
+    sample = group_findings[:10]
+    extra = max(0, len(group_findings) - 10)
+    # Total individual refnums is what users want to see (matches old
+    # behavior); group count is supplementary.
+    findings = sample
     # Inline message names the undeclared numerals + their captured noun
     # in a universal-locale format. Just the numeral and the captured
     # name in quotes — the surrounding i18n template provides the
@@ -1084,31 +1131,60 @@ def check_symbol_table_coverage_tw(doc: TwPatentDocument) -> list[CheckItem]:
     # `(+N more)` overflow read cleanly in en/de/zh/ja/ko alike; only
     # the CJK element name (which we cannot translate) carries source
     # script.
+    # Inline format: "name" (refnum-list, N refnums). When there's only
+    # one refnum, omit the count suffix.
+    def _format_numerals(nums: list[str]) -> str:
+        # Compact contiguous digit ranges: 705,706,707,708 → 705-708.
+        digit_nums = [n for n in nums if n.isdigit()]
+        non_digit = [n for n in nums if not n.isdigit()]
+        digit_nums_int = sorted({int(n) for n in digit_nums})
+        ranges: list[str] = []
+        if digit_nums_int:
+            start = digit_nums_int[0]
+            end = start
+            for n in digit_nums_int[1:]:
+                if n == end + 1:
+                    end = n
+                else:
+                    ranges.append(f"{start}" if start == end else f"{start}-{end}")
+                    start = end = n
+            ranges.append(f"{start}" if start == end else f"{start}-{end}")
+        return ", ".join(ranges + non_digit)
+
     inline_parts = []
-    for num in sample[:3]:
-        name = used_numerals.get(num, "")
-        if name:
-            inline_parts.append(f'{num} ("{name}")')
+    for g in sample[:3]:
+        nums_str = _format_numerals(g["numerals"])
+        if g["refnum_count"] > 1:
+            nums_str += f", {g['refnum_count']} refnums"
+        if g["name"]:
+            inline_parts.append(f'"{g["name"]}" ({nums_str})')
         else:
-            inline_parts.append(str(num))
-    inline = ", ".join(inline_parts)
-    if len(undeclared) > 3:
-        inline = inline + f" (+{len(undeclared) - 3} more)"
+            inline_parts.append(f'({nums_str})')
+    inline = "; ".join(inline_parts)
+    if len(group_findings) > 3:
+        inline += f" (+{len(group_findings) - 3} more groups)"
+
+    total_refnums = len(undeclared)
+    total_groups = len(group_findings)
     return [CheckItem(
         status="amend",
-        message=f"{len(undeclared)} 個附圖標記出現於說明書內文但未列於符號說明：{inline}",
+        message=(
+            f"{total_groups} undeclared element(s) covering {total_refnums} 附圖"
+            f"標記，未列於符號說明：{inline}"
+        ),
         message_key="check.tw.spec.symbolTableCoverage.amend",
         details_key="details.tw.symbolTableCoverage",
         details_params={
-            "count": len(undeclared),
+            "count": total_groups,
+            "refnum_count": total_refnums,
             "findings": findings,
             "extra": extra,
             "inline_summary": inline,
         },
         reference="專利法施行細則 §19 第2款",
         diagnostics=_dx(
-            undeclared_count=len(undeclared),
-            sample_numerals=sample,
+            undeclared_count=total_refnums,
+            group_count=total_groups,
             symbol_table_size=len(doc.symbol_table),
         ),
     )]
