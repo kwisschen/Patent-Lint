@@ -1477,6 +1477,10 @@
     "fromClaim": "請求項 {{n}} より",
     "more": "他 {{n}} 件"
   },
+  "numeralFindings": {
+    "expand": "全 {{count}} 件を表示",
+    "collapse": "折りたたむ"
+  },
   "terms": {
     "title": "利用規約",
     "lastUpdated": "最終更新：2026年4月30日",
