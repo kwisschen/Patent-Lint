@@ -563,27 +563,28 @@ class TestNumeralConsistencyD1Synthetic:
         finding = results[0].details_params["findings"][0]
         assert finding["numeral"] == "LD1"
 
-    def test_single_occurrence_typo_fires(self):
-        """Drafter typo: canonical 'voltage circuit 20' (×3) and a single
-        '...voltage circuit 10' typo. Even one outlier occurrence fires
-        when canonical is well-established (≥2)."""
+    def test_single_occurrence_typo_with_existing_canonical(self):
+        """User's actual D1 case: drafter has 'voltage threshold setting
+        circuit 10' (×many, canonical) and ONE accidental 'voltage
+        difference calculating circuit 10' typo. The two phrases share
+        ('voltage', 'circuit') yet identify completely different parts;
+        Case B distinguishing-word check catches it."""
         from patentlint.analysis.specification import check_numeral_consistency
         results = check_numeral_consistency(
-            "The common voltage difference calculating circuit 20 "
-            "calculates the voltage. The common voltage difference "
-            "calculating circuit 20 is connected to the bus. "
-            "The common voltage difference calculating circuit 20 is "
-            "fast. Now the common voltage difference calculating "
-            "circuit 10 emits the result. The detection module 50 is "
-            "active. The detection module 50 also feeds back."
+            "The voltage threshold setting circuit 10 is fast. "
+            "The voltage threshold setting circuit 10 is connected. "
+            "The voltage threshold setting circuit 10 emits a signal. "
+            "The voltage threshold setting circuit 10 is calibrated. "
+            "Now the voltage difference calculating circuit 10 outputs."
         )
-        # 10 has only one occurrence — canonical_threshold for digits is
-        # 2, so the typo is too sparse to pin a canonical for #10.
-        # But canonical=20 with no outliers stays clean. This documents
-        # the threshold contract: a single-occurrence MISMATCH against
-        # an established canonical needs the established canonical to be
-        # bound to the SAME numeral, which by construction it isn't.
-        assert results[0].status == "pass"
+        assert results[0].status == "amend"
+        finding = results[0].details_params["findings"][0]
+        assert finding["numeral"] == "10"
+        # Inline summary must surface the conflicting names so users can
+        # navigate to the typo without opening details.
+        assert "inline_summary" in results[0].details_params
+        assert "threshold" in results[0].details_params["inline_summary"].lower()
+        assert "calculating" in results[0].details_params["inline_summary"].lower()
 
     def test_letter_suffix_distinct(self):
         """10a and 10b are sub-instance distinct refs — must not collapse

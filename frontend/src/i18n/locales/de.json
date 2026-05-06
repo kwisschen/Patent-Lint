@@ -840,7 +840,7 @@
         "pass": "Keine anspruchsbeschränkenden Formulierungen in der Beschreibung gefunden."
       },
       "numeralConsistency": {
-        "amend": "{{count}} Bezugszeichen mit mehreren unterschiedlichen Elementbezeichnungen verwendet. Dasselbe Bezugszeichen darf nicht verschiedene Elemente bezeichnen.",
+        "amend": "{{count}} Bezugszeichen mit mehreren unterschiedlichen Elementbezeichnungen verwendet. Beispiele: {{inline_summary}}",
         "pass": "Bezugszeichen identifizieren ihre Elemente konsistent."
       }
     },
@@ -975,7 +975,7 @@
           "pass": "Beschreibung verweist nicht auf die Ansprüche."
         },
         "numeralConsistency": {
-          "amend": "{{count}} Bezugszeichen wurden mit mehreren unterschiedlichen Elementbezeichnungen verwendet. Das gleiche Bezugszeichen muss dasselbe Bauteil bezeichnen (实施细则 §21 第2款).",
+          "amend": "{{count}} Bezugszeichen wurden mit mehreren unterschiedlichen Elementbezeichnungen verwendet. Beispiele: {{inline_summary}} (实施细则 §21 第2款).",
           "pass": "Bezugszeichen identifizieren die Bauteile konsistent."
         }
       },
@@ -1135,11 +1135,11 @@
           "pass": "Keine indigene Terminologie gefunden."
         },
         "numeralConsistency": {
-          "amend": "{{count}} Bezugssymbole wurden mit mehreren unterschiedlichen Elementbezeichnungen verwendet. Dasselbe Bezugssymbol muss dasselbe Element bezeichnen (施行細則 §19 第2款).",
+          "amend": "{{count}} Bezugssymbole wurden mit mehreren unterschiedlichen Elementbezeichnungen verwendet. Beispiele: {{inline_summary}} (施行細則 §19 第2款).",
           "pass": "Bezugssymbole identifizieren die Elemente konsistent."
         },
         "symbolTableCoverage": {
-          "amend": "{{count}} Bezugssymbole erscheinen in der Beschreibung, fehlen jedoch in 符號說明.",
+          "amend": "{{count}} Bezugssymbole erscheinen in der Beschreibung, fehlen jedoch in 符號說明: {{inline_summary}}",
           "pass": "Alle in der Beschreibung verwendeten Bezugssymbole sind in 符號說明 deklariert."
         }
       },

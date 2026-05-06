@@ -374,25 +374,25 @@ def extract_numeral_name_pairs(
 def _content_words(name: str) -> set[str]:
     """Return content-word set of a name for D1 disjointness comparison.
 
-    Strips short tokens (≤2 chars) and adds both the original and a
-    singularized variant so `'condenser lens'` and `'condenser lenses'`
-    share `'lens'`. Handles English `s` and `es` plural endings.
-    """
+    Strips short tokens (≤2 chars) and adds singularized variants so
+    `'condenser lens'` and `'condenser lenses'` share content. The
+    stripped forms must be ≥4 chars to avoid adding short fragments like
+    'len' (which would falsely intersect with unrelated short words)."""
     out: set[str] = set()
     for w in name.split():
         if len(w) <= 2:
             continue
         out.add(w)
-        # Add singularized variants — both 's' and 'es' stripped forms,
-        # so plural forms intersect with their singulars regardless of
-        # which one the drafter wrote first.
+        # Singularize: strip trailing 's' / 'es' but only when the
+        # stripped form is itself ≥4 chars (so 'lens' → 'len' doesn't
+        # leak as a content fragment).
         if (
-            len(w) >= 4
+            len(w) >= 5
             and w.endswith("s")
             and not w.endswith(("ss", "us", "is"))
         ):
             out.add(w[:-1])
-        if len(w) >= 5 and w.endswith("es"):
+        if len(w) >= 6 and w.endswith("es"):
             out.add(w[:-2])
     return out
 
@@ -759,11 +759,19 @@ def _detect_d1_conflicts(
                 case_instance = True
                 continue
 
-            # Case B: disjoint content words → element collision
+            # Case B: distinguishing-word collision. Strict disjoint
+            # missed cases like "voltage threshold setting circuit" vs
+            # "voltage difference calculating circuit" — they SHARE
+            # ("voltage", "circuit") yet identify completely different
+            # parts. Real test: if BOTH names have words the OTHER lacks,
+            # they're naming different elements.
+            canonical_unique = canonical_words - other_words
+            other_unique = other_words - canonical_words
             if (
                 canonical_words
                 and other_words
-                and not (canonical_words & other_words)
+                and canonical_unique
+                and other_unique
             ):
                 outlier_records.append({"name": name, "count": count})
                 continue
