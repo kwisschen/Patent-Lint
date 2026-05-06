@@ -2019,7 +2019,24 @@ _NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset(
      #     25 TW walker_fp findings with this trailing pattern across
      #     supplement_v2 corpus. Added to relaxed-guard set below for
      #     residual ≥ 2 (handles 3-char `影像來` → `影像`).
-     "來"}
+     "來",
+     # 對: preposition ("toward/to/regarding") trailing in `<noun>對X`
+     #     constructions. 134 TW walker_fp findings end in 對
+     #     (e.g., `驗證模塊對`, `銀行帳務平台對`). Default residual ≥ 3
+     #     guard protects 3-char compound nouns where residual is 2
+     #     (`所述應對` 等). CN parity already in
+     #     _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN as 对.
+     "對",
+     # 向: preposition ("toward") trailing. 85 TW walker_fp findings
+     #     end in 向 (`消費者操作單元向`, `輸出節點流向`). Default
+     #     residual ≥ 3 protects 3-char compounds (所述方向 → residual 2,
+     #     not stripped). 方向 / 流向 / 走向 / 趨向 stay safe.
+     "向",
+     # 自: preposition ("from") / pronoun particle ("self") trailing.
+     #     32 TW walker_fp findings end in 自 (`<noun>各自`, `<noun>來自`).
+     #     Default residual ≥ 3 protects 3-char compounds. Note 各自
+     #     residue further requires 各 strip downstream (not yet covered).
+     "自"}
 )
 
 # Relaxed-guard subset: members of _NOUNLIKE_SINGLE_CHAR_SUFFIXES that
