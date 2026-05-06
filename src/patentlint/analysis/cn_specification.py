@@ -776,6 +776,7 @@ _CN_LEADING_QUANTIFIERS = (
     "一對", "一对",
     "各個", "各个", "各一", "各",
     "每個", "每个", "每一", "每",
+    "各種", "各种", "各類", "各类", "各種類", "各种类",
     "若干", "數個", "数个", "一些",
     # Bare measure word — "個X" / "个X" can leak when 一 was already stripped
     "個", "个",
@@ -798,8 +799,12 @@ _CN_LEADING_VERBS_PARTICLES = (
     # would prevent the multi-char match on the next iteration.
     "括", "含", "與", "与", "和", "而", "且",
     "者", "備", "备",
-    "持", "傳", "传", "送", "受", "做", "作",
-    "使", "讓", "让", "如", "若",
+    "受", "做", "作",
+    "讓", "让", "如", "若",
+    # Removed from particles (each is the first char of a compound noun
+    # commonly bound to refnums in patent diction): 使 (使用者裝置 / 使用
+    # 例), 持 (持有部), 傳 (傳輸器), 送 (送風口). Stripping them would
+    # produce truncated head nouns like "用者裝置" / "輸器".
     # Conjunctive / aspectual sentence connectors
     "則", "则", "也", "但", "此", "即", "所", "是", "有", "再", "又",
     # Single-char measure / quantifier residues
@@ -907,6 +912,45 @@ def _cn_is_measurement_context(name: str) -> bool:
     return any(tok in name for tok in _CN_PROCESS_CONTEXT_TOKENS)
 
 
+def _cn_strip_post_de(s: str) -> str:
+    """Strip the modifier-clause prefix from a captured noun phrase.
+
+    Drafter writes "查詢得到的預覽影像N" / "標示的多個主題標籤連結N" /
+    "電池的供電裝置N" / "終端各種使用者裝置N" — the regex captures the
+    whole CJK run before the refnum, including a modifier marker
+    (的/之) or interior quantifier (多個/各種/複數). The HEAD noun is
+    the suffix after the LAST marker; everything before is a
+    relative-clause / possessive / quantified modifier that doesn't
+    identify the element.
+
+    Cuts on the LATEST occurrence of:
+      - 的 / 之 (modifier markers)
+      - any quantifier in _CN_LEADING_QUANTIFIERS that is ≥ 2 chars
+        (各種 / 多個 / 複數 / etc.) — these never appear inside a real
+        noun head, so taking their suffix is safe.
+    Loops until stable so chains like "X的Y各種Z" peel layer-by-layer.
+    """
+    # Pre-compute multi-char quantifiers (skip single-char like 個)
+    multi_char_quantifiers = tuple(
+        q for q in _CN_LEADING_QUANTIFIERS if len(q) >= 2
+    )
+    prev = None
+    while s and s != prev:
+        prev = s
+        cut = max(s.rfind("的"), s.rfind("之"))
+        for q in multi_char_quantifiers:
+            qpos = s.rfind(q)
+            if qpos > cut:
+                cut = qpos + len(q) - 1  # cut after the quantifier
+        if cut <= 0 or cut >= len(s) - 1:
+            break
+        suffix = s[cut + 1:]
+        if len(suffix) < 2:
+            break
+        s = suffix
+    return s
+
+
 def _cn_strip_iterative(s: str, allow_ordinal_break: bool = False) -> str:
     """Iteratively peel leading prefixes / verbs / quantifiers / particles
     until the string stabilises. Single-pass stripping leaks fragments like
@@ -949,6 +993,8 @@ def _cn_d1_head_noun(raw: str) -> str:
     """Strip reference-form prefixes + ordinals + quantifiers from a
     captured CJK noun phrase to get the bare head noun for D1 dedup."""
     s = raw.strip()
+    s = _cn_strip_iterative(s, allow_ordinal_break=False)
+    s = _cn_strip_post_de(s)
     s = _cn_strip_iterative(s, allow_ordinal_break=False)
     m = _CN_ORDINAL_RE.match(s)
     if m:
@@ -1131,6 +1177,15 @@ def _cn_d1_head_noun_with_ordinal(raw: str) -> str:
     detection. Iterative loop handles compound-prefix cases like
     "則是設置在第一手柄主體" → "第一手柄主體"."""
     s = raw.strip()
+    s = _cn_strip_iterative(s, allow_ordinal_break=True)
+    # Post-的/之 strip: "查詢得到的預覽影像" → "預覽影像", "電池的供電
+    # 裝置" → "供電裝置". Cuts the modifier-clause prefix when a ≥ 2-char
+    # noun follows the marker. Run AFTER iterative strip so leading
+    # particles are gone first.
+    s = _cn_strip_post_de(s)
+    # If the post-的 cut exposed a leading ordinal (第一X), the ordinal
+    # is now back at the front — re-run iterative strip without ordinal
+    # break to strip any other lingering particles before the ordinal.
     s = _cn_strip_iterative(s, allow_ordinal_break=True)
     if len(s) < 2:
         return ""
