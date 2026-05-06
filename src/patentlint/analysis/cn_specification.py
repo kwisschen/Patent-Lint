@@ -700,3 +700,281 @@ def check_spec_claim_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
         message_key="check.cn.spec.claimReference.pass",
         reference="专利法实施细则 §20",
     )]
+
+
+# ── D1 reference numeral consistency (CN) ──────────────────────────────
+# 专利法实施细则 §21 第2款 + 审查指南 §3.3.1 — 同一附图标记应当指代同一构件.
+# Same numeral must designate the same element. Different elements
+# require different numerals. Same name with different numerals is
+# permitted (multiple instances).
+#
+# Mirrors the US implementation in specification.py but uses CJK regex
+# patterns and char-level (not word-level) content overlap detection.
+
+# CJK noun + numeral pattern. Captures a 2-8 CJK-char noun phrase
+# followed by a 2-4 digit numeral with optional letter suffix
+# (e.g., "外殼102" / "壳体100" / "传感器120a"). Non-greedy on the
+# noun span so we capture the SHORTEST plausible head noun.
+_CN_REFNUM_AFTER_NOUN = re.compile(
+    r"(?P<noun>[一-鿿]{2,8})\s*(?P<num>\d{2,4}[a-z]?)"
+    r"(?![\d.%])",  # not followed by another digit, decimal, or % unit
+)
+# Parenthetical: 外壳(102) / 壳体（100）
+_CN_REFNUM_PARENS = re.compile(
+    r"(?P<noun>[一-鿿]{2,8})\s*[(（](?P<num>\d{2,4}[a-z]?)[)）]"
+)
+
+# Reference-form prefixes to strip from CJK names before D1 comparison.
+# These are statutory reference markers (该/所述/前述), not part of the
+# element name itself. Without stripping, "该外壳" and "外壳" would
+# appear as different names.
+_CN_REF_PREFIXES = ("该等", "所述的", "所述", "前述", "该", "本", "其")
+# Ordinal prefixes also strippable for D1 comparison — "第一外壳" and
+# "外壳" are the same head noun for D1 purposes (different INSTANCES
+# with their own numerals is the legitimate D2 case which D1 ignores).
+_CN_ORDINAL_RE = re.compile(r"^第[一二三四五六七八九十百零0-9]+")
+# Common quantifiers that may lead a captured noun phrase
+_CN_LEADING_QUANTIFIERS = ("多个", "复数个", "复数", "至少一个", "至少一", "一个", "一种", "一对")
+# Leading verbs/particles/prepositions that creep into the captured noun
+# from compound sentences. After prefix/ordinal/quantifier strip these
+# are still iterated off as long as the residual remains ≥2 CJK chars.
+# Both Trad + Simp variants included so the helpers work for both.
+_CN_LEADING_VERBS_PARTICLES = (
+    "之", "至", "由", "将", "將", "盖", "蓋", "介", "经", "經",
+    "自", "于", "於", "在", "向", "对", "對", "较", "較", "因",
+    "为", "為", "及", "并", "並", "以", "從", "从", "或",
+)
+# Single-CJK-char words that creep in as "names" (verbs, particles, etc.)
+# When a captured head noun reduces to one of these after stripping,
+# discard it as a real D1 candidate.
+_CN_NOISE_SINGLE_CHARS = frozenset({"于", "以", "对", "时", "中", "上", "下", "内", "外"})
+
+# Measurement / process / chemistry-context indicators. If a captured
+# head noun ENDS WITH or CONTAINS any of these, the numeral is almost
+# certainly a measurement value (含量为 10 / 浓度为 5wt% / etc.) rather
+# than a reference numeral. Exclude from D1 detection. Empirically tuned
+# against CN chemistry/biology fixtures (CN117427144B / CN120266060A)
+# where the regex pulled hundreds of process-context phrases as "names"
+# for measurement numerals.
+_CN_PROCESS_CONTEXT_TAILS = (
+    # Measurement-equals / preference-equals (Simp + Trad)
+    "为", "為",
+    "优选", "更优选", "进而优选", "特别优选",
+    "優選", "更優選", "進而優選", "特別優選",
+    "上限", "下限", "含量", "浓度", "濃度", "比例", "用量",
+    # Process verbs (Simp + Trad)
+    "加入", "溶于", "搅拌", "攪拌", "加热", "加熱",
+    "离心", "離心", "冷却", "冷卻", "升温", "升溫", "降温", "降溫",
+    "冷却至", "冷卻至", "加热至", "加熱至", "搅拌至", "攪拌至",
+    "冲洗", "沖洗", "培养", "培養", "反应", "反應",
+    "蒸馏", "蒸餾", "过滤", "過濾", "干燥", "乾燥", "混合",
+    "包括", "包含", "构成", "構成",
+    "对比例", "對比例",
+    # Measurement context — physical-property nouns (Simp + Trad)
+    "厚度", "直径", "直徑", "长度", "長度", "宽度", "寬度",
+    "高度", "深度", "重量", "质量", "質量",
+    "波长", "波長", "频率", "頻率", "温度", "溫度",
+    "压力", "壓力", "速度", "电压", "電壓", "电流", "電流", "功率",
+    "时间", "時間", "次数", "次數",
+    # Chemistry continuation — connector words that creep into the tail
+    "并在", "並在", "并且", "並且", "与", "與", "及", "以及",
+)
+_CN_PROCESS_CONTEXT_TOKENS = (
+    "含量", "浓度", "濃度", "比例", "用量", "上限", "下限",
+    "优选", "優選",
+    "加热搅拌", "加熱攪拌", "氮气冲洗", "氮氣沖洗",
+    "对比例", "對比例", "加入",
+    # Frequently mixed-case measurement units that shouldn't anchor
+    # reference numerals
+    "重量份至", "重量份",
+)
+# Chemistry compound suffixes — captured names ending in these are
+# almost certainly chemicals listed by weight/concentration in
+# chemistry/biology patents, not reference numerals to physical
+# elements. Empirically tuned against CN120266060A / CN117427144B.
+_CN_CHEMISTRY_SUFFIXES = (
+    "烯", "酸", "醇", "酮", "醚", "胺", "盐", "酯",
+    "烷", "烃", "糖", "苷", "蛋白", "肽", "酶",
+    "氢", "氧化物", "化合物", "树脂", "聚合物",
+    "腈", "醛", "酐", "肼",  # additional chemistry suffixes
+    # Common chemical-element radicals — captured noun ending in these
+    # is usually a chemical compound mention, not a reference numeral
+    "钠", "钾", "钙", "镁", "铁", "铝", "铜", "锌", "锂",
+)
+
+
+def _cn_is_measurement_context(name: str) -> bool:
+    """True if the captured noun phrase looks like measurement / process
+    context (chemistry/biology drafting), not a reference numeral.
+    """
+    if name.endswith(_CN_PROCESS_CONTEXT_TAILS):
+        return True
+    if name.endswith(_CN_CHEMISTRY_SUFFIXES):
+        return True
+    return any(tok in name for tok in _CN_PROCESS_CONTEXT_TOKENS)
+
+
+def _cn_d1_head_noun(raw: str) -> str:
+    """Strip reference-form prefixes + ordinals + quantifiers from a
+    captured CJK noun phrase to get the bare head noun for D1 dedup."""
+    s = raw.strip()
+    # Strip leading reference-form prefix
+    for p in _CN_REF_PREFIXES:
+        if s.startswith(p):
+            s = s[len(p):]
+            break
+    # Strip leading ordinal
+    m = _CN_ORDINAL_RE.match(s)
+    if m:
+        s = s[m.end():]
+    # Strip leading quantifier
+    for q in _CN_LEADING_QUANTIFIERS:
+        if s.startswith(q):
+            s = s[len(q):]
+            break
+    # Iteratively strip leading single-char verbs/particles. Stops as
+    # soon as residual would drop below 2 CJK chars or first char isn't
+    # in the strip set.
+    while s and len(s) >= 3 and s[0] in _CN_LEADING_VERBS_PARTICLES:
+        s = s[1:]
+    if len(s) < 2:
+        return ""
+    if s in _CN_NOISE_SINGLE_CHARS:
+        return ""
+    if _cn_is_measurement_context(s):
+        return ""
+    return s
+
+
+def _cn_extract_numeral_name_pairs(text: str) -> list[tuple[int, str]]:
+    """Return per-occurrence (numeral, head_noun) pairs from CN spec text."""
+    pairs: list[tuple[int, str]] = []
+    seen_spans: set[tuple[int, int]] = set()
+    for pattern in [_CN_REFNUM_AFTER_NOUN, _CN_REFNUM_PARENS]:
+        for m in pattern.finditer(text):
+            span = (m.start(), m.end())
+            if span in seen_spans:
+                continue
+            seen_spans.add(span)
+            num_str = m.group("num").rstrip("abcdefghijklmnopqrstuvwxyz")
+            if not num_str:
+                continue
+            num = int(num_str)
+            if len(num_str) >= 5:
+                continue
+            head = _cn_d1_head_noun(m.group("noun"))
+            if not head:
+                continue
+            pairs.append((num, head))
+    return pairs
+
+
+def _cn_content_chars(name: str) -> set[str]:
+    """For CJK strings, content "words" are individual CJK characters.
+    Two names share content iff they share at least one CJK char."""
+    return {c for c in name if "一" <= c <= "鿿"}
+
+
+def _cn_names_form_real_d1_conflict(names: list[str]) -> bool:
+    """At least one pair of names shares NO CJK char → real conflict."""
+    if len(names) < 2:
+        return False
+    char_sets = [_cn_content_chars(n) for n in names]
+    for i in range(len(char_sets)):
+        if not char_sets[i]:
+            continue
+        for j in range(i + 1, len(char_sets)):
+            if not char_sets[j]:
+                continue
+            if not (char_sets[i] & char_sets[j]):
+                return True
+    return False
+
+
+def check_numeral_consistency_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
+    """D1 — flag reference numerals appearing with multiple disjoint
+    element names in CN specifications.
+
+    Statutory: 专利法实施细则 §21 第2款 + 审查指南 §3.3.1 —
+    同一附图标记应当指代同一构件.
+
+    Same precision filters as US D1: ≥3 total occurrences, ≥2 per name,
+    and at least one disjoint pair of CJK-char sets.
+    """
+    spec_text = _all_spec_text(cn_doc)
+    if not spec_text:
+        return [CheckItem(
+            status="pass",
+            message="无附图标记一致性问题（说明书为空）。",
+            message_key="check.cn.spec.numeralConsistency.pass",
+            reference="专利法实施细则 §21 第2款",
+        )]
+
+    pairs = _cn_extract_numeral_name_pairs(spec_text)
+    if not pairs:
+        return [CheckItem(
+            status="pass",
+            message="未检测到附图标记。",
+            message_key="check.cn.spec.numeralConsistency.pass",
+            reference="专利法实施细则 §21 第2款",
+        )]
+
+    by_num_counts: dict[int, Counter] = {}
+    by_num_total: Counter = Counter()
+    for num, name in pairs:
+        by_num_counts.setdefault(num, Counter())[name] += 1
+        by_num_total[num] += 1
+
+    by_num: dict[int, list[str]] = {}
+    for num, name_counts in by_num_counts.items():
+        if by_num_total[num] < 3:
+            continue
+        seen: list[str] = []
+        seen_set: set[str] = set()
+        for raw_num, raw_name in pairs:
+            if raw_num != num or raw_name in seen_set:
+                continue
+            if name_counts[raw_name] < 2:
+                continue
+            seen_set.add(raw_name)
+            seen.append(raw_name)
+        if seen:
+            by_num[num] = seen
+
+    conflicts = [
+        (num, names)
+        for num, names in sorted(by_num.items())
+        if len(names) > 1 and _cn_names_form_real_d1_conflict(names)
+    ]
+
+    if not conflicts:
+        return [CheckItem(
+            status="pass",
+            message="附图标记与所指代构件名称一致。",
+            message_key="check.cn.spec.numeralConsistency.pass",
+            reference="专利法实施细则 §21 第2款",
+        )]
+
+    sample = conflicts[:8]
+    extra = max(0, len(conflicts) - 8)
+    findings = [
+        {"numeral": num, "names": names[:5]}
+        for num, names in sample
+    ]
+    return [CheckItem(
+        status="amend",
+        message=f"{len(conflicts)} 个附图标记被用于指代多个不同的构件名称。",
+        message_key="check.cn.spec.numeralConsistency.amend",
+        details_key="details.cn.numeralConsistency",
+        details_params={
+            "count": len(conflicts),
+            "findings": findings,
+            "extra": extra,
+        },
+        reference="专利法实施细则 §21 第2款",
+        diagnostics=_dx(
+            conflict_count=len(conflicts),
+            sample_numerals=[num for num, _ in sample],
+            max_names_per_numeral=max(len(names) for _, names in conflicts),
+        ),
+    )]
