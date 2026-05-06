@@ -1302,7 +1302,12 @@ _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN: frozenset[str] = frozenset(
      # 来: verb tail particle in `所述<noun>来自X` constructions.
      # 27 CN walker_fp findings end in 来 across supplement_v2.
      # See tw_claims.py R68 comment for full rationale.
-     "来"}
+     "来",
+     # 向: TW parity (CN 0 walker_fp this round but pre-emptive — CN
+     # drafters share the same `<noun>向X` preposition pattern).
+     "向",
+     # 自: TW parity (CN had 1 walker_fp, low signal — pre-emptive).
+     "自"}
 )
 
 # Relaxed-guard subset (residual ≥ 2 instead of ≥ 3).
