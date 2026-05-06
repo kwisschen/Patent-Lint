@@ -300,6 +300,86 @@ _TITLE_TRADEMARK_RE = re.compile(r"[®™©]")
 _TITLE_MODEL_NUMBER_RE = re.compile(r"\b[A-Z]{2,}[- ]?\d{2,}[A-Z0-9\-]*\b")
 
 
+# ── Scope-limit wording (US, MPEP § 2111 + Phillips v. AWH) ──────────────
+#
+# "The present invention" / "this invention" / "the invention" in spec body
+# can become a claim-scope limit under Phillips v. AWH Corp 415 F.3d 1303
+# (Fed. Cir. 2005) — the doctrine is that claims are interpreted in light
+# of the spec, and statements characterizing "the present invention"
+# are read as defining the invention itself.
+#
+# Different surface + different doctrine from check_restrictive_wording
+# (which targets CLAIMS under MPEP § 2173.01 indefiniteness). No dupe.
+#
+# REVIEW level — advisory; many drafts use these phrases benignly. The
+# check surfaces the count + sample paragraph indices so the drafter
+# can review each occurrence and rephrase to "in some embodiments" /
+# "the disclosed [system/method]" / "implementations may" etc. where
+# scope-limit risk exists.
+_SCOPE_LIMIT_WORDING_RE = re.compile(
+    r"\bthe\s+(?:present\s+)?invention\b|\bthis\s+invention\b",
+    re.IGNORECASE,
+)
+
+
+def check_scope_limit_wording(spec_body_text: str) -> list[CheckItem]:
+    """Detect "the (present) invention" / "this invention" in US spec body.
+
+    Returns a single VERIFY CheckItem when occurrences are present (with
+    occurrence count + sample snippets in details_params), or a single
+    PASS otherwise. Does NOT scan claims (those have separate restrictive-
+    wording rules under § 2173.01).
+    """
+    from patentlint.models import CheckItem
+
+    if not spec_body_text:
+        return [CheckItem(
+            status="pass",
+            message="No scope-limiting phrases detected in specification.",
+            message_key="check.spec.scopeLimitWording.pass",
+            reference="MPEP § 2111; Phillips v. AWH Corp",
+        )]
+
+    matches = list(_SCOPE_LIMIT_WORDING_RE.finditer(spec_body_text))
+    if not matches:
+        return [CheckItem(
+            status="pass",
+            message="No scope-limiting phrases detected in specification.",
+            message_key="check.spec.scopeLimitWording.pass",
+            reference="MPEP § 2111; Phillips v. AWH Corp",
+        )]
+
+    # Capture short context windows around each match for the drafter
+    # to triage. Cap at 5 samples (rest collapsed into +N more).
+    samples: list[dict] = []
+    for m in matches[:5]:
+        start = max(0, m.start() - 24)
+        end = min(len(spec_body_text), m.end() + 24)
+        snippet = spec_body_text[start:end].replace("\n", " ").strip()
+        samples.append({"phrase": m.group(0), "context": snippet})
+
+    count = len(matches)
+    return [CheckItem(
+        status="verify",
+        message=(
+            f"Found {count} use(s) of 'the (present) invention' / "
+            f"'this invention' in the specification."
+        ),
+        message_key="check.spec.scopeLimitWording.verify",
+        details_key="details.scopeLimitWording",
+        details_params={
+            "count": count,
+            "samples": samples,
+            "extra": max(0, count - 5),
+        },
+        reference="MPEP § 2111; Phillips v. AWH Corp 415 F.3d 1303",
+        diagnostics={
+            "match_count": count,
+            "sample_phrases": [s["phrase"] for s in samples],
+        },
+    )]
+
+
 def check_title(title: str) -> list[CheckItem]:
     """Check US patent title length and prohibited content (MPEP § 606 / § 608.01).
 

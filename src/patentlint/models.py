@@ -495,6 +495,11 @@ class AnalysisResult(BaseModel):
     required_sections_checks: list[CheckItem] = Field(default_factory=list)
     figure_xref_checks: list[CheckItem] = Field(default_factory=list)
 
+    # Scope-limit wording (US, MPEP § 2111 + Phillips v. AWH). Single-element
+    # list (one summary CheckItem); kept as a list for parity with other
+    # check-bundle fields and future-proof against multi-emit changes.
+    scope_limit_checks: list[CheckItem] = Field(default_factory=list)
+
     # CN check results (populated by _run_cn_pipeline, empty for US)
     cn_specification_checks: list[CheckItem] = Field(default_factory=list)
     cn_claims_checks: list[CheckItem] = Field(default_factory=list)
@@ -838,6 +843,14 @@ class AnalysisResult(BaseModel):
                 message="No restrictive wording found in specification.",
                 message_key="check.spec.restrictiveWording.pass",
             ))
+
+        # Scope-limit wording (US, MPEP § 2111 + Phillips v. AWH).
+        # Sits next to restrictive-wording in the spec-content group —
+        # both are drafting hygiene checks operating on spec body text.
+        # Distinct from restrictiveWording: that targets MPEP § 2173.01
+        # absolutes; this targets Phillips claim-construction risk.
+        for sc in self.scope_limit_checks:
+            spec_checks.append(sc)
 
         # Drawings overview in specification section
         has_drawing_issue = (

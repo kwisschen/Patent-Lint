@@ -916,6 +916,10 @@
         "amendContent": "발명의 명칭에 금지된 내용이 포함되어 있습니다: {{title_prohibited_items}} (MPEP § 608.01).",
         "verify": "발명의 명칭이 {{count}}단어 입니다. MPEP § 606 은 간결하고 구체적인 명칭을 권장합니다.",
         "pass": "발명의 명칭이 MPEP § 606 요건을 충족합니다."
+      },
+      "scopeLimitWording": {
+        "verify": "명세서에서 \"본 발명\" / \"the (present) invention\" 표현이 {{count}}건 검출되었습니다.",
+        "pass": "명세서에서 청구범위를 한정할 수 있는 표현이 검출되지 않았습니다."
       }
     },
     "claims": {

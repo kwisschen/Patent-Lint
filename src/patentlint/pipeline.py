@@ -418,6 +418,15 @@ def _run_pipeline(
     # --- Required sections check ---
     required_sections_checks = spec_analysis.check_required_sections(full_text)
 
+    # --- Scope-limit wording (US, MPEP § 2111 + Phillips v. AWH) ---
+    # Scan the spec BODY only — concatenate background + summary + detailed
+    # description. Title/claims/abstract have their own checks.
+    scope_limit_text = " ".join(
+        s for s in [background_section, summary_section, detailed_desc_section]
+        if s
+    )
+    scope_limit_checks = spec_analysis.check_scope_limit_wording(scope_limit_text)
+
     # --- Figure cross-reference consistency ---
     figure_xref_checks = drawings_analysis.check_figure_cross_references(
         drawings_section or "", detailed_desc_section or "",
@@ -483,6 +492,8 @@ def _run_pipeline(
         # Phase 5 — Issue #2 & #3
         required_sections_checks=required_sections_checks,
         figure_xref_checks=figure_xref_checks,
+        # Scope-limit wording (US, MPEP § 2111 + Phillips)
+        scope_limit_checks=scope_limit_checks,
         # Abstract
         abstract_word_count=abstract_word_count,
         abstract_text=abstract_section or "",

@@ -916,6 +916,10 @@
         "amendContent": "發明名稱含禁止內容：{{title_prohibited_items}}（MPEP § 608.01）。",
         "verify": "發明名稱共 {{count}} 個詞，MPEP § 606 建議簡短明確。",
         "pass": "發明名稱符合 MPEP § 606 規定。"
+      },
+      "scopeLimitWording": {
+        "verify": "說明書中檢測到 {{count}} 處「本發明」/「本案」/「the (present) invention」用語。",
+        "pass": "說明書中未檢測到限制請求項範圍的表述。"
       }
     },
     "claims": {
