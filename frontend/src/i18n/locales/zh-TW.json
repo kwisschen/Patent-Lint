@@ -314,7 +314,7 @@
       "step3": "沒有網路代表沒有雲端、沒有上傳、沒有任何資料外傳",
       "step4": "分析後，結果頁面的綠色圓點可確認零網路活動。",
       "testHeading": "眼見為憑",
-      "testDescription": "檢查是否有新版本。離開分頁再回來時也會執行相同的請求。",
+      "testDescription": "查詢是否有 PatentLint 新版本（僅比對版本資訊，無上傳）。離開分頁再回來時也會自動執行相同請求。",
       "testButton": "檢查更新",
       "logEmpty": "尚無請求",
       "noActivity": "未偵測到活動",
