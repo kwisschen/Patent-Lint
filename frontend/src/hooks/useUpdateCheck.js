@@ -22,13 +22,21 @@ const TOAST_ID = 'patentlint-update-available'
 // Visibility check gate. On a visibility-visible event, fire a version
 // check only if the tab was HIDDEN for at least this long. Models
 // actual user behavior ("I walked away, now I'm back") better than a
-// time-since-last-check throttle — rapid alt-tabbing stays silent (no
-// flicker from repeated checks) while a 2-3 min absence (typical push
-// + CI wait) reliably triggers a check on return. Previous approach
-// (15 min since last check) failed for Windows users with long-running
-// tabs who never hit the 15-min gap because they'd switched back in
-// between, so the throttle never cleared.
-const MIN_HIDDEN_MS_FOR_CHECK = 30 * 1000
+// time-since-last-check throttle — rapid alt-tabbing (instant tab-flips)
+// stays silent, but anything that looks like "I left and came back"
+// triggers a check on return. The trust-copy claim ("Same request runs
+// automatically when you return to the tab" / "離開分頁再回來時也會自動
+//執行相同請求") needs to hold during a hiring-manager / patent-attorney
+// demo where the user alt-tabs for 3-10 seconds to verify the claim.
+// 5 seconds catches that demo pattern while still ignoring sub-second
+// double-tabs and accidental focus loss.
+//
+// History: was 30 s — too long for demo verification (a 5-10 s alt-tab
+// was below threshold and the claim appeared to fail). Was 15 min in
+// an earlier iteration — Windows users with long-running tabs never
+// hit the 15-min gap because they'd switched back in between, so the
+// throttle never cleared.
+const MIN_HIDDEN_MS_FOR_CHECK = 5 * 1000
 
 /**
  * Fetches /version.json on page load and on tab focus, compares to the
@@ -194,12 +202,13 @@ export function useUpdateCheck() {
     }
 
     // Visibility-change: fire a check when the tab becomes visible IF
-    // it was hidden for at least MIN_HIDDEN_MS_FOR_CHECK. Models the
-    // "I walked away and came back" case (typical: push a deploy, wait
-    // for CI, switch back → 30+ sec hidden → check fires → toast if
-    // mismatch). Rapid alt-tabbing (hidden for a few seconds) stays
-    // silent, avoiding repeated flicker from checks that wouldn't find
-    // anything new.
+    // it was hidden for at least MIN_HIDDEN_MS_FOR_CHECK. Models both
+    // the "I walked away and came back" case (push a deploy, wait for
+    // CI, switch back → check fires → toast if mismatch) AND the demo
+    // verification case (a hiring manager / patent attorney alt-tabs
+    // for 3-10 seconds to check that the trust-copy claim holds — at
+    // 5s threshold, that demo reliably fires). Sub-second tab-flips
+    // and accidental focus loss stay silent (no flicker).
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'hidden') {
         lastHiddenMs.current = Date.now()
