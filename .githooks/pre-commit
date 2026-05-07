@@ -1,47 +1,87 @@
 #!/bin/sh
-# Phase 9 #39 — wheel staleness guard.
+# Pre-commit checks.
 #
-# Fails the commit if any src/patentlint/**/*.py has a newer mtime than
-# frontend/public/patentlint-*.whl. Catches the "walker code merged,
-# wheel stale" failure class at commit time rather than in the browser.
+# Block A (Phase 9 #39) — wheel staleness guard.
+#   Fails the commit if any src/patentlint/**/*.py has a newer mtime than
+#   frontend/public/patentlint-*.whl. Catches the "walker code merged,
+#   wheel stale" failure class at commit time rather than in the browser.
 #
-# Fast path: stops at the first three newer files. No wheel rebuild
-# happens here — the hook only compares mtimes.
+# Block B — trust-observer invariant gate.
+#   Any frontend file that registers a PerformanceObserver on type:
+#   'resource' must filter entries through isTrustRelevantResource (see
+#   frontend/src/lib/trustObserver.js). Raw observer entries include
+#   local disk reads (file://), blob/data URIs, and failed-offline
+#   fetches — none of which are network egress. Surfacing them as
+#   "network active" violates the no-upload trust copy. This bug
+#   shipped 2026-03-26 and went latent ~6 weeks before a real user
+#   (post-screenshot drag) tripped it. The grep gate ensures any
+#   future contributor adding a third observer can't bypass the rule
+#   without explicitly exempting the file.
 
 set -e
 
 REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
 if [ -z "$REPO_ROOT" ]; then
-    # Not in a git work tree — let git handle it.
     exit 0
 fi
 cd "$REPO_ROOT"
 
+# ---------------- Block A: wheel staleness ----------------
 WHEEL=$(ls frontend/public/patentlint-*.whl 2>/dev/null | head -n 1)
 
-if [ -z "$WHEEL" ]; then
-    # No wheel committed yet — nothing to compare against.
-    exit 0
+if [ -n "$WHEEL" ]; then
+    NEWER=$(find src/patentlint -name '*.py' -type f -newer "$WHEEL" 2>/dev/null | head -n 3)
+    if [ -n "$NEWER" ]; then
+        echo "" >&2
+        echo "[pre-commit] src/patentlint/ sources are newer than the committed wheel:" >&2
+        echo "$NEWER" | sed 's/^/    /' >&2
+        WHEEL_COUNT=$(find src/patentlint -name '*.py' -type f -newer "$WHEEL" 2>/dev/null | wc -l | tr -d ' ')
+        if [ "$WHEEL_COUNT" -gt 3 ]; then
+            echo "    (and $(($WHEEL_COUNT - 3)) more)" >&2
+        fi
+        echo "" >&2
+        echo "Rebuild the Pyodide wheel before committing:" >&2
+        echo "    cd frontend && npm run build:wheel" >&2
+        echo "" >&2
+        echo "Then stage the rebuilt wheel and retry your commit." >&2
+        echo "" >&2
+        exit 1
+    fi
 fi
 
-# Find up to three .py files under src/patentlint/ newer than the wheel.
-NEWER=$(find src/patentlint -name '*.py' -type f -newer "$WHEEL" 2>/dev/null | head -n 3)
+# ---------------- Block B: trust-observer invariant ----------------
+CANDIDATES=$(grep -rl "new PerformanceObserver" frontend/src 2>/dev/null || true)
+VIOLATIONS=""
+for file in $CANDIDATES; do
+    if ! grep -q "type: *['\"]resource['\"]" "$file"; then
+        continue
+    fi
+    if grep -q "trust-observer-exempt" "$file"; then
+        continue
+    fi
+    if ! grep -q "isTrustRelevantResource" "$file"; then
+        VIOLATIONS="$VIOLATIONS    $file
+"
+    fi
+done
 
-if [ -z "$NEWER" ]; then
-    exit 0
+if [ -n "$VIOLATIONS" ]; then
+    echo "" >&2
+    echo "[pre-commit] Trust-observer invariant violation:" >&2
+    printf "%s" "$VIOLATIONS" >&2
+    echo "" >&2
+    echo "Files that register a PerformanceObserver on type: 'resource'" >&2
+    echo "must filter entries through isTrustRelevantResource (see" >&2
+    echo "frontend/src/lib/trustObserver.js for the rule and rationale)." >&2
+    echo "" >&2
+    echo "Fix: import { isTrustRelevantResource } from '../lib/trustObserver'" >&2
+    echo "and call .filter(isTrustRelevantResource) on getEntries()." >&2
+    echo "" >&2
+    echo "If your observer is genuinely not a trust surface, add the comment" >&2
+    echo "// trust-observer-exempt: <reason>" >&2
+    echo "in the same file." >&2
+    echo "" >&2
+    exit 1
 fi
 
-echo "" >&2
-echo "[pre-commit] src/patentlint/ sources are newer than the committed wheel:" >&2
-echo "$NEWER" | sed 's/^/    /' >&2
-WHEEL_COUNT=$(find src/patentlint -name '*.py' -type f -newer "$WHEEL" 2>/dev/null | wc -l | tr -d ' ')
-if [ "$WHEEL_COUNT" -gt 3 ]; then
-    echo "    (and $(($WHEEL_COUNT - 3)) more)" >&2
-fi
-echo "" >&2
-echo "Rebuild the Pyodide wheel before committing:" >&2
-echo "    cd frontend && npm run build:wheel" >&2
-echo "" >&2
-echo "Then stage the rebuilt wheel and retry your commit." >&2
-echo "" >&2
-exit 1
+exit 0

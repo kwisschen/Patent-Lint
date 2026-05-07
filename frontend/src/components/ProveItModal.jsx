@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import LogoIcon from './LogoIcon'
+import { isTrustRelevantResource } from '../lib/trustObserver'
 
 const PANELS = [
   { icon: WifiOff, colorClass: 'text-amber-500', labelKey: 'security.prove.label1', textKey: 'security.prove.step1' },
@@ -79,24 +80,10 @@ export default function ProveItModal({ open, onOpenChange }) {
     const observer = new PerformanceObserver((list) => {
       const newEntries = list.getEntries()
         .filter((e) => !e.name.includes('favicon.svg'))
-        // Drop non-HTTP(S) entries: file://, blob:, data:. Dragging a
-        // .docx into the browser causes the OS / browser to load a drag-
-        // preview thumbnail off disk via file:// (commonly a recent
-        // screencaptureui screenshot from /var/folders/.../TemporaryItems/).
-        // It's a local disk read, not network egress — but if we surface
-        // it the trust panel's "live activity log" reads as "PatentLint
-        // just touched my files" precisely when the user trusted us with
-        // a draft. The indicator must only reflect TRUE network egress.
-        .filter((e) => /^https?:/i.test(e.name))
-        // Filter out failed-offline fetches: PerformanceResourceTiming
-        // entries fire even when the network is unreachable (the BROWSER
-        // attempted the request), but those entries have responseStart === 0
-        // because no response was ever received. If we counted them, an
-        // offline user clicking "check for updates" would see the indicator
-        // flip red and the GET appear in the log — exactly the trust signal
-        // we're trying to disprove. Successful fetches (network or cached)
-        // have responseStart > 0; only those count as "real" activity.
-        .filter((e) => e.responseStart > 0)
+        // Centralized filter — see lib/trustObserver.js for invariant
+        // and rationale. Drops file://, blob:, data:, and failed
+        // fetches so the activity log only shows real network egress.
+        .filter(isTrustRelevantResource)
         .map((e) => {
           entryIdRef.current += 1
           return {
