@@ -1548,7 +1548,7 @@
       "vercelLabel": "Vercel。",
       "vercel": "本サイトの静的アセットおよび Pyodide wheel をホスティングします。§3 に記載した標準的なリクエストメタデータを受信します。",
       "pyodideLabel": "Pyodide CDN。",
-      "pyodide": "初回アクセス時、お客様のブラウザは Pyodide CDN（jsdelivr／cloudflare）から Pyodide WebAssembly ランタイムを取得します。以降はランタイムが端末側にキャッシュされ、オフラインでも動作します。",
+      "pyodide": "初回アクセス時、お客様のブラウザは Pyodide CDN（jsDelivr）から Pyodide WebAssembly ランタイムを取得します。以降はランタイムが端末側にキャッシュされ、オフラインでも動作します。",
       "fontsLabel": "Google Fonts（CJK フォント、任意）。",
       "fonts": "zh-TW／zh-CN／ja／ko の UI でローカライズされた PDF を書き出される際、ブラウザは PDF 書き出し時に対応する Noto Sans CJK フォントを Google Fonts から取得します。フォントは初回取得後にキャッシュされます。英語 UI の PDF ではフォントの取得は発生しません。",
       "githubLabel": "GitHub。",

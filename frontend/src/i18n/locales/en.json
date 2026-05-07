@@ -1546,7 +1546,7 @@
       "vercelLabel": "Vercel.",
       "vercel": "Hosts the static Site assets and the Pyodide wheel. Receives the standard web request metadata described in § 3.",
       "pyodideLabel": "Pyodide CDN.",
-      "pyodide": "On first visit, your browser fetches the Pyodide WebAssembly runtime from the Pyodide CDN (jsdelivr / cloudflare). After that, the runtime is cached locally and works offline.",
+      "pyodide": "On first visit, your browser fetches the Pyodide WebAssembly runtime from the Pyodide CDN (jsDelivr). After that, the runtime is cached locally and works offline.",
       "fontsLabel": "Google Fonts (CJK font, optional).",
       "fonts": "If you export a localized PDF in zh-TW / zh-CN / ja / ko, your browser fetches the corresponding Noto Sans CJK font from Google Fonts at PDF-export time. The font is cached after first fetch. English-locale PDFs do not fetch any font.",
       "githubLabel": "GitHub.",

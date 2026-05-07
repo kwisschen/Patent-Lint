@@ -1548,7 +1548,7 @@
       "vercelLabel": "Vercel。",
       "vercel": "托管本网站之静态资产及 Pyodide wheel。接收 §3 所述之标准请求中介数据。",
       "pyodideLabel": "Pyodide CDN。",
-      "pyodide": "于您初次访问时，浏览器将自 Pyodide CDN（jsdelivr／cloudflare）取得 Pyodide WebAssembly 执行环境。其后，该环境将缓存于本机，并可离线运作。",
+      "pyodide": "于您初次访问时，浏览器将自 Pyodide CDN（jsDelivr）取得 Pyodide WebAssembly 执行环境。其后，该环境将缓存于本机，并可离线运作。",
       "fontsLabel": "Google Fonts（CJK 字体，可选）。",
       "fonts": "若您于 zh-TW／zh-CN／ja／ko 界面下导出本地化 PDF，浏览器将于导出时自 Google Fonts 取得对应之 Noto Sans CJK 字体。字体于初次取得后即予缓存。英文界面之 PDF 不会取得任何字体。",
       "githubLabel": "GitHub。",
