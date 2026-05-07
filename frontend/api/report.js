@@ -2,23 +2,9 @@
 // Copyright (c) 2025 Christopher Chen
 //
 // Vercel Edge Function — anonymous error-report endpoint.
-// Ports the original Cloudflare Pages Worker (frontend/public/_worker.js)
-// to Vercel's Edge runtime. Same Web-Standard Request/Response API,
-// near-identical logic; differences:
-//
-//   - Routing: Vercel's filesystem convention places this file at
-//     /api/report.js → handles `/api/report` automatically. No
-//     explicit URL match needed (the Cloudflare worker had to check
-//     `url.pathname` because it served all routes; Vercel only invokes
-//     this function on /api/report calls).
-//
-//   - Static assets: served by Vercel's edge from the build output
-//     directly, with no `env.ASSETS.fetch` indirection.
-//
-//   - Env vars: read from `process.env` instead of `env`. Vercel
-//     exposes both runtime env vars and build-time env vars via the
-//     same shape; configured in the project's dashboard under
-//     Settings → Environment Variables.
+// Reads payloads POSTed by ReportModal, validates origin + size + JSON
+// shape, and forwards a sanitized GitHub Issues create call. Runs at
+// the Vercel Edge runtime (Web Standard Request/Response API).
 //
 // Why GitHub Issues (instead of a custom DB):
 //   - Maintainer (and Claude Code via gh CLI) reads reports as
@@ -37,12 +23,10 @@ export const config = {
   runtime: 'edge',
 };
 
-// Origins permitted to POST /api/report. Production is patentlint.com.
-// patent-lint.vercel.app is the Vercel main deployment URL — included
-// so we can validate /api/report end-to-end on Vercel BEFORE cutting
-// DNS over from Cloudflare. Other sites posting to this endpoint get
-// rejected with 403 (anti-spam / anti-abuse — this endpoint backs a
-// GitHub Issues tracker we don't want strangers writing into).
+// Origins permitted to POST /api/report. Production is patentlint.com;
+// patent-lint.vercel.app is the Vercel default deployment URL. Other
+// origins get 403 (anti-spam — this endpoint backs a GitHub Issues
+// tracker we don't want strangers writing into).
 const ALLOWED_ORIGINS = new Set([
   "https://patentlint.com",
   "https://patent-lint.vercel.app",
