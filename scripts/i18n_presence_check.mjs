@@ -79,8 +79,9 @@ const EN_IDENTICAL_ALLOWLIST = [
     "privacy.s11.name",
     "privacy.s11.nameLabel",
     // Brand names in the third-party-services disclosure.
-    "privacy.s7.cloudflareLabel",
+    "privacy.s7.vercelLabel",
     "privacy.s7.pyodideLabel",
+    "privacy.s7.githubLabel",
     // DI-172 punctuation: Latin scripts use ": " with space; CJK uses "：".
     // Identical across EN/DE/KO is legitimate.
     "feedback.email.fieldColon",

@@ -191,10 +191,3 @@ jobs:
           tags: patentlint:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-# Deploy job removed 2026-05-08: production hosting moved from
-# Cloudflare Pages to Vercel. Vercel auto-deploys every push to main
-# via its native GitHub App integration — no GitHub Actions step
-# needed. The CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID secrets
-# are no longer used and can be removed from the repo's Actions
-# secrets when convenient.
