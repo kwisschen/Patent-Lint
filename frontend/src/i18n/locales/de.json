@@ -1492,11 +1492,11 @@
   },
   "privacy": {
     "title": "Datenschutzerklärung",
-    "lastUpdated": "Zuletzt aktualisiert: 30. April 2026",
-    "intro": "Diese Datenschutzerklärung beschreibt, wie patentlint.com (die „Website“) beim Besuch mit Daten umgeht. Die Anwendung PatentLint erfasst nichts über Sie — keine Analyse, keine Tracker, keine Cookies. Der einzige Datenfluss sind die üblichen Webanfrage-Metadaten, die unser Hosting-Anbieter (Cloudflare Pages) bei jedem Besuch sieht, wie jede andere Website auch. Diese Erklärung stellt diese Unterscheidung ausdrücklich klar.",
+    "lastUpdated": "Zuletzt aktualisiert: 8. Mai 2026",
+    "intro": "Diese Datenschutzerklärung beschreibt, wie patentlint.com (die „Website“) beim Besuch mit Daten umgeht. Die Anwendung PatentLint erfasst nichts über Sie — keine Analyse, keine Tracker, keine Cookies. Der einzige Datenfluss sind die üblichen Webanfrage-Metadaten, die unser Hosting-Anbieter (Vercel) bei jedem Besuch sieht, wie jede andere Website auch. Diese Erklärung stellt diese Unterscheidung ausdrücklich klar.",
     "s1": {
       "title": "Einführung",
-      "p1": "patentlint.com ist eine gehostete Webanwendung, die von Christopher Chen betrieben wird. Sie führt PatentLint aus, einen Patentanmeldungs-Checker, der Ihre Datei vollständig in Ihrem Browser über WebAssembly (Pyodide) prüft. Die Website wird als statische Assets von Cloudflare Pages ausgeliefert, ergänzt um eine einzelne Cloudflare Pages Function für den in § 6 beschriebenen freiwilligen Fehlermelde-Endpunkt. Es gibt keinen Analyseserver und keine Datenbank. Dateiinhalte werden nie von Ihrem Gerät übertragen.",
+      "p1": "patentlint.com ist eine gehostete Webanwendung, die von Christopher Chen betrieben wird. Sie führt PatentLint aus, einen Patentanmeldungs-Checker, der Ihre Datei vollständig in Ihrem Browser über WebAssembly (Pyodide) prüft. Die Website wird als statische Assets von Vercel ausgeliefert, ergänzt um eine einzelne Vercel Edge Function für den in § 6 beschriebenen freiwilligen Fehlermelde-Endpunkt. Es gibt keinen Analyseserver und keine Datenbank. Dateiinhalte werden nie von Ihrem Gerät übertragen.",
       "p2": "Diese Datenschutzerklärung gilt für Ihre Interaktionen mit der Website. Sie deckt nicht die PatentLint-Software ab, wenn Sie den Quellcode separat beziehen — dafür gilt die Software-Lizenz (PolyForm-Strict-1.0.0)."
     },
     "s2": {
@@ -1510,14 +1510,14 @@
       "p3": "Verarbeitungsumfang. Hinsichtlich des analysierten Patentbeschreibungsinhalts handelt PatentLint weder als „Verantwortlicher\" oder „Auftragsverarbeiter\" im Sinne von Art. 4 Nr. 7–8 DSGVO noch als „Business\" im Sinne von CCPA/CPRA. Dieser Inhalt wird ausschließlich in Ihrem Browser-Tab verarbeitet und niemals an einen PatentLint-Server übermittelt. Als Verantwortlicher fungieren wir lediglich für (i) den freiwilligen Diagnosebericht, den Sie über die Schaltfläche „Senden\" übermitteln, falls Sie dies wählen, und (ii) standardmäßige Hosting-Metadaten, die von unserem Static-Asset-Anbieter erfasst werden (siehe §3)."
     },
     "s3": {
-      "title": "Hosting-Metadaten am Cloudflare-Edge",
-      "p1": "Die Website wird auf Cloudflare Pages (einem CDN für statische Assets) gehostet. Wenn Ihr Browser die Website abruft, kann das Edge-Netzwerk von Cloudflare im Rahmen des normalen Hosting-Betriebs standardmäßige Webanfrage-Metadaten protokollieren:",
-      "log1": "Ihre IP-Adresse (von Cloudflare zur Leitwegfindung und zum DDoS-Schutz genutzt).",
+      "title": "Hosting-Metadaten am Vercel-Edge",
+      "p1": "Die Website wird auf Vercel (einem CDN für statische Assets) gehostet. Wenn Ihr Browser die Website abruft, kann das Edge-Netzwerk von Vercel im Rahmen des normalen Hosting-Betriebs standardmäßige Webanfrage-Metadaten protokollieren:",
+      "log1": "Ihre IP-Adresse (von Vercel zur Leitwegfindung und zum DDoS-Schutz genutzt).",
       "log2": "Den User-Agent-String Ihres Browsers.",
       "log3": "Den angefragten URL-Pfad und den HTTP-Antwortstatus.",
       "log4": "Einen Zeitstempel.",
-      "p2": "Dies sind dieselben Metadaten, die jeder Webhoster erhält — wir erweitern, anreichern oder verknüpfen sie nicht mit einer Identität und verwenden sie nicht für Analysen. Cloudflare speichert seine Edge-Protokolle gemäß der eigenen veröffentlichten Aufbewahrungsrichtlinie.",
-      "p3": "Nach Art. 4 (7) DSGVO sind wir technisch Verantwortlicher für diese Verarbeitung am Cloudflare-Edge. Wir greifen im ordentlichen Betrieb der Website nicht auf diese Protokolle zu; wir würden sie nur bei der Untersuchung eines Sicherheitsvorfalls einsehen."
+      "p2": "Dies sind dieselben Metadaten, die jeder Webhoster erhält — wir erweitern, anreichern oder verknüpfen sie nicht mit einer Identität und verwenden sie nicht für Analysen. Vercel speichert seine Edge-Protokolle gemäß der eigenen veröffentlichten Aufbewahrungsrichtlinie.",
+      "p3": "Nach Art. 4 (7) DSGVO sind wir technisch Verantwortlicher für diese Verarbeitung am Vercel-Edge. Wir greifen im ordentlichen Betrieb der Website nicht auf diese Protokolle zu; wir würden sie nur bei der Untersuchung eines Sicherheitsvorfalls einsehen."
     },
     "s4": {
       "title": "Keine Analyse oder Tracking",
@@ -1537,20 +1537,20 @@
       "title": "Freiwilliges Feedback",
       "p1": "Jeder Befund hat eine Schaltfläche „Melden“. Mit einem Klick öffnet sich ein Dialog, der genau das anzeigt, was gesendet wird — nichts ist verborgen. Der Dialog bietet zudem die Alternative „Per E-Mail senden“ an kwisschen@gmail.com, falls Sie selbst mehr Kontext schreiben möchten.",
       "p2": "Die anonyme Datenmenge enthält Zählwerte, den konkret markierten Begriff oder Ausdruck, einen kurzen Kontextausschnitt, Kategoriebezeichnungen (welche Prüfung, welche Regel, welcher Erkennungszweig) und einige strukturelle Kennwerte — auf höchstens fünf Funde pro Bericht begrenzt. Sie enthält keinen vollständigen Anspruchstext, keine vollständigen Absätze, keine Dateinamen, keine Datei-Metadaten, keine E-Mail, keinen Namen und keine IP.",
-      "p3": "Wenn Sie auf „Anonym senden“ klicken, sendet Ihr Browser die Datenmenge per HTTPS an eine Cloudflare-Pages-Function auf patentlint.com, die in einem privaten GitHub-Issues-Tracker, auf den nur der Maintainer zugreifen kann, einen Eintrag anlegt. Ihre IP und Browser-Header werden nicht an GitHub weitergeleitet. Meldungen lassen sich nicht mit Ihrer Identität verknüpfen.",
+      "p3": "Wenn Sie auf „Anonym senden“ klicken, sendet Ihr Browser die Datenmenge per HTTPS an eine Vercel Edge Function auf patentlint.com, die in einem privaten GitHub-Issues-Tracker, auf den nur der Maintainer zugreifen kann, einen Eintrag anlegt. Ihre IP und Browser-Header werden nicht an GitHub weitergeleitet. Meldungen lassen sich nicht mit Ihrer Identität verknüpfen.",
       "p4": "Nutzen Sie stattdessen die E-Mail-Alternative, erhalten wir nur das, was Sie selbst schreiben. Möchten Sie pseudonym senden, verwenden Sie einen E-Mail-Alias-Dienst (Apple Hide My Email, Gmail-Aliase, Firefox Relay, ProtonMail-Aliase); wir korrelieren Alias-Adressen nicht mit anderen Daten. Wir verwenden Feedback ausschließlich zur Fehlerbehebung und zur Antwort an Sie und geben es nicht an Dritte weiter."
     },
     "s7": {
       "title": "Drittanbieter-Dienste",
       "p1": "PatentLint nutzt für den Betrieb die folgenden Drittanbieter-Dienste. Jeder ist aus Transparenzgründen aufgeführt:",
-      "cloudflareLabel": "Cloudflare Pages.",
-      "cloudflare": "Hostet die statischen Website-Assets und das Pyodide-Wheel. Empfängt die unter § 3 beschriebenen standardmäßigen Webanfrage-Metadaten.",
+      "vercelLabel": "Vercel.",
+      "vercel": "Hostet die statischen Website-Assets und das Pyodide-Wheel. Empfängt die unter § 3 beschriebenen standardmäßigen Webanfrage-Metadaten.",
       "pyodideLabel": "Pyodide-CDN.",
       "pyodide": "Beim ersten Besuch lädt Ihr Browser die Pyodide-WebAssembly-Laufzeit vom Pyodide-CDN (jsdelivr / cloudflare). Danach wird die Laufzeit lokal zwischengespeichert und funktioniert offline.",
       "fontsLabel": "Google Fonts (CJK-Schrift, optional).",
       "fonts": "Wenn Sie einen lokalisierten PDF-Bericht in zh-TW / zh-CN / ja / ko exportieren, lädt Ihr Browser die entsprechende Noto-Sans-CJK-Schrift beim PDF-Export von Google Fonts. Die Schrift wird nach dem ersten Abruf zwischengespeichert. Englische und deutsche PDFs rufen keine Schrift ab.",
       "githubLabel": "GitHub.",
-      "github": "Anonyme Meldungen, die über die Schaltfläche „Senden“ im Melde-Dialog gesendet werden, leitet eine Cloudflare-Pages-Function an einen privaten GitHub-Issues-Tracker (kwisschen/Patent-Lint) weiter, auf den nur der Maintainer zugreifen kann. GitHub erhält ausschließlich die anonymisierte Datenmenge — keine IP, keine E-Mail, keine Browser-Header — und speichert die Einträge gemäß seiner eigenen Datenschutzrichtlinie.",
+      "github": "Anonyme Meldungen, die über die Schaltfläche „Senden“ im Melde-Dialog gesendet werden, leitet eine Vercel Edge Function an einen privaten GitHub-Issues-Tracker (kwisschen/Patent-Lint) weiter, auf den nur der Maintainer zugreifen kann. GitHub erhält ausschließlich die anonymisierte Datenmenge — keine IP, keine E-Mail, keine Browser-Header — und speichert die Einträge gemäß seiner eigenen Datenschutzrichtlinie.",
       "p2": "Wir nutzen keine weiteren Drittanbieter-Dienste. Kein CRM, keine E-Mail-Marketing-Plattform, kein Support-Ticketsystem, keine Drittanbieter-Protokollierung."
     },
     "s8": {
