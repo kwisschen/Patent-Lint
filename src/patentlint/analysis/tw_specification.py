@@ -962,6 +962,7 @@ def _build_tw_d1_check_item(conflicts: list[dict], status: str, suffix: str) -> 
         {
             "numeral": c["numeral"],
             "canonical": _cjk_format_d1_name_for_display(c["canonical"]),
+            "canonical_count": c["canonical_count"],
             "outliers": [
                 {"name": _cjk_format_d1_name_for_display(o["name"]),
                  "count": o["count"],
