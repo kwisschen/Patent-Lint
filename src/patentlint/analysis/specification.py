@@ -147,6 +147,39 @@ _LATIN_PREFIX_DENYLIST = frozenset({
     "CO",   # CO2
     "DNA",
     "RNA",
+    # Country codes that prefix patent / publication numbers in cited-by
+    # tables and bibliography sections (drafter doesn't bind a refnum to
+    # "US14123456" — that's a citation to a published US application).
+    "US", "WO", "EP", "JP", "KR", "TW", "CN", "DE", "FR", "GB",
+    "CA", "AU", "BR", "IN", "RU", "MX", "ES", "IT", "NL", "SE",
+    "FI", "DK", "AT", "CH", "BE", "PT", "PL", "IL", "ZA",
+    "HK", "SG", "AR", "TH", "VN", "MY", "ID",
+    # Standards / technical-org prefixes
+    "IEEE", "IETF", "RFC", "IEC", "ITU", "TS", "TR",
+    # Common chemistry / physics unit prefixes that look like Latin refs
+    "MM", "CM", "NM", "UM", "KM",
+    "MV", "KV", "MA", "KA", "MS", "NS",
+    "HZ", "KHZ", "MHZ", "GHZ", "WT", "MOL",
+    # Telecom / radio standards that appear with version numbers and
+    # would mis-fire as Latin-prefix refs
+    "CDMA", "GSM", "LTE", "UMTS", "WCDMA", "CDMA2000",
+    "P2P", "B2B", "B2C",
+    # Software / network / format acronyms
+    "SQL", "API", "URL", "URI", "URN", "JSON", "XML", "HTML", "CSS",
+    "TCP", "UDP", "HTTP", "HTTPS", "FTP", "DNS", "MAC", "IP", "USB",
+    "RSA", "AES", "SHA", "MD5",
+    # Pharmaceutical / biological gene + protein nomenclature that
+    # follows [A-Z]{2,5}\d{1,3} format. These are official symbols
+    # (HER2, CDK4, EGFR, BRCA1, KRAS, etc.) — never refnums.
+    "HER", "HER1", "HER2", "HER3", "HER4",
+    "CDK", "CDK1", "CDK2", "CDK4", "CDK6", "CDK7", "CDK9",
+    "EGFR", "VEGF", "VEGFR",
+    "BRCA", "BRCA1", "BRCA2",
+    "PTEN", "TP53", "KRAS", "NRAS", "HRAS", "BRAF",
+    "FLT3", "FLT4", "JAK1", "JAK2", "JAK3",
+    "PD1", "PDL1", "CTLA4",
+    "STAT3", "MTOR", "AKT1", "AKT2",
+    "RTK", "GPCR", "ATP", "ADP", "GTP", "CDP",
 })
 
 # Exclusion: unit followers
@@ -213,6 +246,14 @@ _D1_LEADING_FUNCTION_WORDS = frozenset({
     "having", "have", "has", "had",
     "comprising", "comprises", "comprise",
     "being", "been", "is", "are", "was", "were",
+    # Google Patents bibliography page text that bleeds into HTML extracts
+    "filed", "issued", "published", "granted", "abandoned", "expired",
+    "designated", "exemplified", "given", "cited",
+    "claimed", "claims", "wherein",
+    # Month names that appear in priority-date / filed-on contexts
+    "january", "february", "march", "april", "may", "june",
+    "july", "august", "september", "october", "november", "december",
+    "jan", "feb", "mar", "apr", "jun", "jul", "aug", "sep", "oct", "nov", "dec",
     "connect", "connects", "connecting", "connected",
     "couple", "couples", "coupling", "coupled",
     "control", "controls", "controlling", "controlled",
@@ -379,7 +420,9 @@ def extract_numeral_name_pairs(
             if (m.start(2), m.end(2)) in seen_spans:
                 continue
             prefix = "".join(c for c in ref if c.isalpha()).upper()
-            if prefix in _LATIN_PREFIX_DENYLIST:
+            # Reject if either the alpha-prefix OR the full normalized
+            # token (B2B/V02/P2P/CDMA2000) matches the denylist.
+            if prefix in _LATIN_PREFIX_DENYLIST or ref in _LATIN_PREFIX_DENYLIST:
                 continue
             if any(w in _EXCLUDE_KEYWORDS for w in noun.split()):
                 continue
