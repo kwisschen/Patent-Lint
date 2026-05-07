@@ -63,17 +63,22 @@ function TriageItem({ check, t, i18n, compact, jurisdiction }) {
     )
   }
 
+  // Layout: on mobile (sm breakpoint and below), stack section + citation
+  // ABOVE the message so the message can use full row width. On larger
+  // screens, keep them inline-left for compactness.
   return (
-    <div className="flex items-start gap-2 py-1.5 px-3 group">
-      <span className="shrink-0 text-[11px] text-muted-foreground mt-0.5">
-        {check.section}
-      </span>
-      {citation && (
-        <span className="citation-badge shrink-0 rounded px-1.5 py-0.5 text-[11px] font-mono leading-none mt-0.5">
-          {citation}
+    <div className="flex flex-col sm:flex-row items-start gap-1 sm:gap-2 py-1.5 px-3 group">
+      <div className="flex items-center gap-2 shrink-0">
+        <span className="text-[11px] text-muted-foreground">
+          {check.section}
         </span>
-      )}
-      <div className="min-w-0 flex-1">
+        {citation && (
+          <span className="citation-badge rounded px-1.5 py-0.5 text-[11px] font-mono leading-none">
+            {citation}
+          </span>
+        )}
+      </div>
+      <div className="min-w-0 flex-1 w-full">
         <span className="text-sm">{msg}</span>
         {!compact && check.details_params?.flagged_phrases?.items?.length > 0 && (
           <FlaggedTermList

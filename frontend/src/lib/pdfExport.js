@@ -263,9 +263,12 @@ function numeralFindingsRow(details_params, status, fontName) {
   const lines = visible.map((f) => {
     // D1 shape: { numeral, canonical, canonical_count, outliers }
     if (f.canonical !== undefined && Array.isArray(f.outliers)) {
-      let body = ` "${f.canonical}" (${f.canonical_count}×)`
+      const canonCount = (f.canonical_count != null && f.canonical_count > 0)
+        ? ` (${f.canonical_count}×)` : ""
+      let body = ` "${f.canonical}"${canonCount}`
       for (const o of f.outliers) {
-        body += `, "${o.name}" (${o.count}×)`
+        const oCount = (o.count != null && o.count > 0) ? ` (${o.count}×)` : ""
+        body += `, "${o.name}"${oCount}`
       }
       return {
         text: [
