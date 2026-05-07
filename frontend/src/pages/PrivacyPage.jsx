@@ -98,7 +98,7 @@ export default function PrivacyPage() {
         <p>{t('privacy.s7.p1')}</p>
         <ul>
           <li>
-            <strong>{t('privacy.s7.cloudflareLabel')}</strong> {t('privacy.s7.cloudflare')}
+            <strong>{t('privacy.s7.vercelLabel')}</strong> {t('privacy.s7.vercel')}
           </li>
           <li>
             <strong>{t('privacy.s7.pyodideLabel')}</strong> {t('privacy.s7.pyodide')}

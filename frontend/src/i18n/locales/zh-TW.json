@@ -1580,12 +1580,12 @@
   },
   "privacy": {
     "title": "隱私權政策",
-    "lastUpdated": "最後更新：2026年4月30日",
+    "lastUpdated": "最後更新：2026年5月8日",
     "translationNote": "本中譯本僅供參考。中文譯本與英文版本如有歧異，以英文版為準。",
-    "intro": "本隱私權政策說明 patentlint.com（下稱「本網站」）於您造訪時如何處理資料。PatentLint 應用程式本身不收集您的任何資料：未使用分析工具、未使用追蹤、未使用 cookies。唯一存在的資料流，係本網站之託管服務商 Cloudflare Pages 於每次造訪時所接收之標準網頁請求中介資料，與任何網站無異。本政策將上述區別予以明文揭露。",
+    "intro": "本隱私權政策說明 patentlint.com（下稱「本網站」）於您造訪時如何處理資料。PatentLint 應用程式本身不收集您的任何資料：未使用分析工具、未使用追蹤、未使用 cookies。唯一存在的資料流，係本網站之託管服務商 Vercel 於每次造訪時所接收之標準網頁請求中介資料，與任何網站無異。本政策將上述區別予以明文揭露。",
     "s1": {
       "title": "前言",
-      "p1": "patentlint.com 為 Christopher Chen 所營運之線上應用網站，提供 PatentLint 專利說明書檢查工具。檔案分析全程透過 WebAssembly（Pyodide）於您的瀏覽器內執行。本網站以 Cloudflare Pages 提供靜態資產，另設有單一 Cloudflare Pages Function 作為第 6 條所述之自願性錯誤回報端點；本網站並無分析伺服器，亦無資料庫。您的檔案內容絕不會自您的裝置傳出。",
+      "p1": "patentlint.com 為 Christopher Chen 所營運之線上應用網站，提供 PatentLint 專利說明書檢查工具。檔案分析全程透過 WebAssembly（Pyodide）於您的瀏覽器內執行。本網站以 Vercel 提供靜態資產，另設有單一 Vercel Edge Function 作為第 6 條所述之自願性錯誤回報端點；本網站並無分析伺服器，亦無資料庫。您的檔案內容絕不會自您的裝置傳出。",
       "p2": "本政策適用於您與本網站之互動。若您另行取得 PatentLint 軟體原始碼，則應依該軟體之授權（PolyForm-Strict-1.0.0）規範，不適用本政策。"
     },
     "s2": {
@@ -1599,14 +1599,14 @@
       "p3": "處理範圍。就您所分析之專利說明書內容，PatentLint 並非歐盟《一般資料保護規則》(GDPR) 第 4 條第 7-8 項所指之「資料控制者」或「資料處理者」，亦非美國加州《消費者隱私法》(CCPA)／《加州隱私權法》(CPRA) 所指之「商業實體」。該等內容全程於您之瀏覽器分頁內處理，不會傳輸至任何 PatentLint 伺服器。我們僅就下列範圍作為控制者：(i) 您主動點選「傳送」按鈕送出之自願性診斷回報；及 (ii) 我們之靜態資產供應商所記錄之標準託管中介資料（詳見 §3）。"
     },
     "s3": {
-      "title": "Cloudflare 邊緣託管之中介資料",
-      "p1": "本網站託管於 Cloudflare Pages（靜態資產 CDN）。當您的瀏覽器存取本網站時，Cloudflare 之邊緣節點為履行託管功能，可能記錄下列標準的請求中介資料：",
-      "log1": "您的 IP 位址（Cloudflare 用於路由及防範 DDoS 攻擊）。",
+      "title": "Vercel 邊緣託管之中介資料",
+      "p1": "本網站託管於 Vercel（靜態資產 CDN）。當您的瀏覽器存取本網站時，Vercel 之邊緣節點為履行託管功能，可能記錄下列標準的請求中介資料：",
+      "log1": "您的 IP 位址（Vercel 用於路由及防範 DDoS 攻擊）。",
       "log2": "您瀏覽器之 user-agent 字串。",
       "log3": "您所請求之 URL 路徑及對應之 HTTP 回應狀態。",
       "log4": "時間戳記。",
-      "p2": "上述為任何網站託管商均會接收之中介資料。我們並不對其進行擴充、加值、與身分連結，亦不作為任何分析用途。Cloudflare 依其自身公開之保存政策保留邊緣記錄。",
-      "p3": "依 GDPR 第 4 條第 7 款，本網站就 Cloudflare 邊緣處理而言，技術上屬於資料控制者。於日常營運中，我們並不存取該等記錄；僅於調查資安事件時始可能查閱。"
+      "p2": "上述為任何網站託管商均會接收之中介資料。我們並不對其進行擴充、加值、與身分連結，亦不作為任何分析用途。Vercel 依其自身公開之保存政策保留邊緣記錄。",
+      "p3": "依 GDPR 第 4 條第 7 款，本網站就 Vercel 邊緣處理而言，技術上屬於資料控制者。於日常營運中，我們並不存取該等記錄；僅於調查資安事件時始可能查閱。"
     },
     "s4": {
       "title": "不使用分析或追蹤工具",
@@ -1626,20 +1626,20 @@
       "title": "回饋意見之自願提供",
       "p1": "每項檢查項目皆設有「回報」按鈕。點擊後將開啟對話框，於傳送前完整顯示即將傳送之內容，無任何隱藏欄位。對話框另提供「以電子郵件寄送」之替代選項，收件人為 kwisschen@gmail.com，供您欲自行撰寫更多脈絡時使用。",
       "p2": "匿名傳送之資料包含計數、規則所標記之具體用語或詞句、簡短之前後文、分類標籤（屬何項檢查、何條規則、何個偵測分支），以及若干結構性指紋；每份回報至多 5 項發現。不含完整請求項內容、完整段落、檔案名稱、檔案中繼資料、電子郵件、姓名或 IP。",
-      "p3": "點擊「匿名傳送」後，您的瀏覽器以 HTTPS 將該資料傳送至 patentlint.com 之 Cloudflare Pages Function，並由其於僅維護者可讀取之私人 GitHub Issues 追蹤系統建立議題。您的 IP 與瀏覽器標頭並不會轉送至 GitHub。本回報無法連結至您本人。",
+      "p3": "點擊「匿名傳送」後，您的瀏覽器以 HTTPS 將該資料傳送至 patentlint.com 之 Vercel Edge Function，並由其於僅維護者可讀取之私人 GitHub Issues 追蹤系統建立議題。您的 IP 與瀏覽器標頭並不會轉送至 GitHub。本回報無法連結至您本人。",
       "p4": "若改採電子郵件方式，我方僅收到您主動撰寫之內容。如欲匿名寄送，建議使用電子郵件別名服務（Apple Hide My Email、Gmail 別名、Firefox Relay、ProtonMail 別名）；我方亦不將別名地址與任何其他資料進行關聯。回饋僅用於修復錯誤及回覆您，不分享予第三方。"
     },
     "s7": {
       "title": "第三方服務",
       "p1": "PatentLint 仰賴下列第三方服務以運作。為求透明，列舉如下：",
-      "cloudflareLabel": "Cloudflare Pages。",
-      "cloudflare": "託管本網站之靜態資產及 Pyodide wheel。接收 §3 所述之標準請求中介資料。",
+      "vercelLabel": "Vercel。",
+      "vercel": "託管本網站之靜態資產及 Pyodide wheel。接收 §3 所述之標準請求中介資料。",
       "pyodideLabel": "Pyodide CDN。",
       "pyodide": "於您初次造訪時，瀏覽器將自 Pyodide CDN（jsdelivr／cloudflare）取得 Pyodide WebAssembly 執行環境。其後，該環境將快取於本機，並可離線運作。",
       "fontsLabel": "Google Fonts（CJK 字型，選用）。",
       "fonts": "若您於 zh-TW／zh-CN／ja／ko 介面下匯出本地化 PDF，瀏覽器將於匯出時自 Google Fonts 取得對應之 Noto Sans CJK 字型。字型於初次取得後即予快取。英文介面之 PDF 不會擷取任何字型。",
       "githubLabel": "GitHub。",
-      "github": "於回報對話框點擊「傳送」後，匿名回報將由 Cloudflare Pages Function 轉送至僅維護者可存取之私人 GitHub Issues 追蹤系統（kwisschen/Patent-Lint）。GitHub 僅收到去識別化之資料內容，不含 IP、不含電子郵件、不含瀏覽器標頭，並依其自身之隱私權政策保管議題。",
+      "github": "於回報對話框點擊「傳送」後，匿名回報將由 Vercel Edge Function 轉送至僅維護者可存取之私人 GitHub Issues 追蹤系統（kwisschen/Patent-Lint）。GitHub 僅收到去識別化之資料內容，不含 IP、不含電子郵件、不含瀏覽器標頭，並依其自身之隱私權政策保管議題。",
       "p2": "我們未使用任何其他第三方服務。並無 CRM、未使用電子郵件行銷平台、未使用第三方客服票務系統，亦未使用第三方記錄服務。"
     },
     "s8": {
