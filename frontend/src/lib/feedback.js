@@ -428,10 +428,10 @@ export function dispatchFeedback(method, email) {
 // ---------------------------------------------------------------------------
 // Anonymous error-report endpoint (POST /api/report).
 //
-// Same-origin Pages Function — no CORS, no env-var URL, no token in
-// the bundle. The Function forwards to GitHub Issues on the
-// Patent-Lint repo, where the maintainer (and Claude Code via
-// `gh issue list --label report`) reads them.
+// Same-origin Edge Function (frontend/api/report.js) — no CORS, no
+// env-var URL, no token in the bundle. The function forwards to
+// GitHub Issues on the Patent-Lint repo, where the maintainer (and
+// Claude Code via `gh issue list --label report`) reads them.
 //
 // Trade-off vs. the mailto-based flow above:
 //   mailto: zero network calls from PatentLint's tab; user reviews
