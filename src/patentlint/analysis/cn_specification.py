@@ -805,6 +805,35 @@ def _cn_strip_stray_ascii_prefix(s: str) -> str:
 _CN_LATIN_PREFIX_DENYLIST = frozenset({
     "FIG", "FIGS", "EQ", "VOL", "NO", "PG", "PCT", "USC", "USA",
     "ISO", "SEQ", "PH", "CO", "DNA", "RNA",
+    # Country codes that prefix patent / publication numbers in cited-by
+    # tables; drafter doesn't bind a refnum to a citation.
+    "US", "WO", "EP", "JP", "KR", "TW", "CN", "DE", "FR", "GB",
+    "CA", "AU", "BR", "IN", "RU", "MX", "ES", "IT", "NL", "SE",
+    "FI", "DK", "AT", "CH", "BE", "PT", "PL", "IL", "ZA",
+    "HK", "SG", "AR", "TH", "VN", "MY", "ID",
+    # Standards / technical-org prefixes
+    "IEEE", "IETF", "RFC", "IEC", "ITU", "TS", "TR",
+    # Common chemistry / physics unit prefixes
+    "MM", "CM", "NM", "UM", "KM",
+    "MV", "KV", "MA", "KA", "MS", "NS",
+    "HZ", "KHZ", "MHZ", "GHZ", "WT", "MOL",
+    # Telecom / radio standards
+    "CDMA", "GSM", "LTE", "UMTS", "WCDMA", "CDMA2000",
+    "P2P", "B2B", "B2C",
+    # Software / network / format
+    "SQL", "API", "URL", "URI", "URN", "JSON", "XML", "HTML", "CSS",
+    "TCP", "UDP", "HTTP", "HTTPS", "FTP", "DNS", "MAC", "IP", "USB",
+    "RSA", "AES", "SHA", "MD5",
+    # Pharmaceutical / biological gene + protein nomenclature
+    "HER", "HER1", "HER2", "HER3", "HER4",
+    "CDK", "CDK1", "CDK2", "CDK4", "CDK6", "CDK7", "CDK9",
+    "EGFR", "VEGF", "VEGFR",
+    "BRCA", "BRCA1", "BRCA2",
+    "PTEN", "TP53", "KRAS", "NRAS", "HRAS", "BRAF",
+    "FLT3", "FLT4", "JAK1", "JAK2", "JAK3",
+    "PD1", "PDL1", "CTLA4",
+    "STAT3", "MTOR", "AKT1", "AKT2",
+    "RTK", "GPCR", "ATP", "ADP", "GTP", "CDP",
 })
 
 # Reference-form prefixes to strip from CJK names before D1 comparison.
@@ -1352,9 +1381,13 @@ def _cn_extract_numeral_name_pairs(text: str) -> list[tuple[str, str]]:
             if span in seen_spans:
                 continue
             ref = m.group("num")
+            ref_upper = ref.upper()
             prefix = "".join(c for c in ref if c.isalpha()).upper()
-            if prefix in _CN_LATIN_PREFIX_DENYLIST:
+            # Reject if either alpha-prefix OR full normalized token is
+            # in the denylist (B2B/V02/CDMA2000).
+            if prefix in _CN_LATIN_PREFIX_DENYLIST or ref_upper in _CN_LATIN_PREFIX_DENYLIST:
                 continue
+            ref = ref_upper  # normalize Latin-prefix refnum case
             raw_noun = m.group("noun")
             if not _cn_has_min_cjk(raw_noun, 2):
                 continue
