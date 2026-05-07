@@ -359,15 +359,46 @@ def check_single_sentence(cn_doc: CnPatentDocument) -> list[CheckItem]:
 # Exclude CJK unit tokens like 重量份, 重量百分比 etc. to avoid chemistry
 # false positives (mirror of tw_claims._BARE_NUMERAL CJK unit exclusion).
 _CJK_UNIT_TOKENS_CN = (
-    r"重量百分比|重量份|重量比|"
+    # Concentration / ratio (longest first)
+    r"重量百分比|重量份|重量比|质量百分比|"
+    r"体积百分比|体积比|原子百分比|"
     r"摩尔百分比|摩尔比|摩尔|"
-    r"体积百分比|体积比|质量百分比|原子百分比|"
-    r"毫克|公克|毫升|公升|微升|微米|纳米|公分|公釐|公尺|"
-    r"克|升|倍率|倍|份|个|颗|片|"
-    # R-refnum-1 (2026-04-30, cross-port from TW issue #25): Miller-index
-    # suffixes for crystallography in semiconductor patents. CNIPA
-    # drafters write `100面` / `110方向` identically to TIPO; same
-    # FP risk applies. Cross-port is symmetric per ADR-095.
+    # Length
+    r"毫米|公釐|公分|公尺|公里|"
+    r"微米|纳米|奈米|皮米|"
+    r"英寸|英吋|英尺|英里|"
+    # Mass
+    r"毫克|公克|微克|奈克|皮克|纳克|"
+    r"公斤|千克|公吨|盎司|磅|"
+    # Volume
+    r"毫升|公升|微升|奈升|皮升|纳升|"
+    r"立方厘米|立方公分|立方米|"
+    # Time
+    r"毫秒|微秒|纳秒|皮秒|"
+    r"分钟|小时|秒钟|"
+    # Pressure
+    r"千帕|百帕|兆帕|毫帕|微帕|"
+    r"大气压|毫巴|"
+    # Temperature
+    r"摄氏|华氏|开尔文|"
+    # Energy / power
+    r"千焦|兆焦|毫焦|焦耳|"
+    r"千卡|卡路里|"
+    r"千瓦|兆瓦|毫瓦|微瓦|"
+    r"电子伏特|"
+    # Voltage / current
+    r"毫伏|微伏|千伏|伏特|"
+    r"毫安|微安|千安|安培|"
+    # Concentration
+    r"毫摩尔|微摩尔|摩尔|"
+    r"百万分之|百分之|"
+    # Frequency / data
+    r"千赫|兆赫|吉赫|赫|"
+    r"千比特|兆比特|比特|字节|"
+    # Single-char
+    r"克|升|份|个|颗|片|秒|天|日|月|年|度|帕|巴|瓦|"
+    r"倍率|倍|"
+    # Miller-index crystallography suffixes
     r"结晶面|晶面|平面|方向|面"
 )
 _BARE_NUMERAL = re.compile(

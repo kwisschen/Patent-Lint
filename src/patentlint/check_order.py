@@ -155,8 +155,10 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     # Numeral consistency D1 (per-jurisdiction). 实施细则 §21 / 施行細則 §19.
     # idx 45 sits between claimReference (40) and TW symbolTablePresence (50).
     "check.cn.spec.numeralConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    "check.cn.spec.numeralConsistency.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
     "check.cn.spec.numeralConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
     "check.tw.spec.numeralConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    "check.tw.spec.numeralConsistency.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
     "check.tw.spec.numeralConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
     # TW D3 — symbolTableCoverage sits between symbolTablePresence (50)
     # and the ordering of subsequent checks, idx 55.
@@ -197,6 +199,7 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     # refnum usage in the spec. Consistent across US/CN/TW jurisdictions
     # so users see the same relative position regardless of jurisdiction.
     "check.spec.numeralConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    "check.spec.numeralConsistency.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
     "check.spec.numeralConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
     "check.spec.drawings": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 110),
 

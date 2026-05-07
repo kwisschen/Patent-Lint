@@ -928,6 +928,7 @@
       },
       "numeralConsistency": {
         "amend": "{{count}} reference numeral(s) used with multiple different element names. Examples: {{inline_summary}}",
+        "verify": "{{count}} reference numeral(s) with possibly inconsistent naming — please review. Examples: {{inline_summary}}",
         "pass": "Reference numerals consistently identify their elements."
       }
     },
@@ -1063,6 +1064,7 @@
         },
         "numeralConsistency": {
           "amend": "{{count}} reference numeral(s) used with multiple different element names. Examples: {{inline_summary}} (实施细则 §21 第2款).",
+          "verify": "{{count}} reference numeral(s) with possibly inconsistent naming — please review. Examples: {{inline_summary}} (实施细则 §21 第2款).",
           "pass": "Reference numerals consistently identify their components."
         }
       },
@@ -1223,6 +1225,7 @@
         },
         "numeralConsistency": {
           "amend": "{{count}} reference symbol(s) used with multiple different element names. Examples: {{inline_summary}} (施行細則 §19 第2款).",
+          "verify": "{{count}} reference symbol(s) with possibly inconsistent naming — please review. Examples: {{inline_summary}} (施行細則 §19 第2款).",
           "pass": "Reference symbols consistently identify their elements."
         },
         "symbolTableCoverage": {
