@@ -719,15 +719,25 @@ def check_spec_claim_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
 # leading-verb logic. Tighter windows truncated those captures and
 # left un-strippable fragments like "括一第一手柄主體" as the head.
 # Element names rarely exceed 10 CJK chars so 12 is a safe ceiling.
+#
+# Noun group: optional ASCII prefix + ≥2 CJK chars. Captures
+# semiconductor / electronics compound nouns like "n型電晶體" /
+# "p型區域" / "LED驅動器" / "USB介面" / "TFT基板" / "IGBT模組" intact
+# while REQUIRING the noun to end in a CJK character — otherwise
+# captures like "踩踏踏板E10" would split as noun="踏板E" + num="10"
+# instead of noun="踏板" + Latin-prefix-num="E10".
+# Format: 0-5 ASCII letters + 2-12 CJK chars (total length 2-17).
+_CN_NOUN_GROUP = r"[A-Za-z]{0,5}[一-鿿]{2,12}"
+
 _CN_REFNUM_AFTER_NOUN = re.compile(
-    r"(?P<noun>[一-鿿]{2,12})\s*(?P<num>\d{2,4}[a-z]?)"
+    rf"(?P<noun>{_CN_NOUN_GROUP})\s*(?P<num>\d{{2,4}}[a-z]?)"
     # Reject digits followed by another digit, decimal, percent, degree
     # signs (°/℃), Latin letter (mm/cm/μm/V/A/Hz/wt/etc.), or a range
     # separator (~/～/至/到/-) — those are handled by _CN_REFNUM_RANGE.
     r"(?![\d.%°℃A-Za-z~～至到\-])",
 )
 _CN_REFNUM_PARENS = re.compile(
-    r"(?P<noun>[一-鿿]{2,12})\s*[(（](?P<num>\d{2,4}[a-z]?)[)）]"
+    rf"(?P<noun>{_CN_NOUN_GROUP})\s*[(（](?P<num>\d{{2,4}}[a-z]?)[)）]"
 )
 
 # Range refnum: drafter writes "隨身碟101~103" / "電池101至103" /
@@ -735,19 +745,61 @@ _CN_REFNUM_PARENS = re.compile(
 # Match range separators ~ (ASCII), ～ (full-width tilde), 至, 到, 及,
 # and hyphen `-`. Cap range size at 30 to bound runaway-pattern risk.
 _CN_REFNUM_RANGE = re.compile(
-    r"(?P<noun>[一-鿿]{2,12})\s*"
+    rf"(?P<noun>{_CN_NOUN_GROUP})\s*"
     r"(?P<start>\d{2,4})"
     r"\s*[~～至到\-]\s*"
     r"(?P<end>\d{2,4})"
     r"(?![\d.%°℃A-Za-z])",
 )
 _CN_REFNUM_LATIN = re.compile(
-    r"(?P<noun>[一-鿿]{2,12})\s*(?P<num>[A-Z]{1,5}\d{1,4}[a-zA-Z]?)"
+    rf"(?P<noun>{_CN_NOUN_GROUP})\s*(?P<num>[A-Z]{{1,5}}\d{{1,4}}[a-zA-Z]?)"
     r"(?![A-Za-z0-9])"
 )
 _CN_REFNUM_LATIN_PARENS = re.compile(
-    r"(?P<noun>[一-鿿]{2,12})\s*[(（](?P<num>[A-Z]{1,5}\d{1,4}[a-zA-Z]?)[)）]"
+    rf"(?P<noun>{_CN_NOUN_GROUP})\s*[(（](?P<num>[A-Z]{{1,5}}\d{{1,4}}[a-zA-Z]?)[)）]"
 )
+
+
+def _cn_has_min_cjk(s: str, n: int = 2) -> bool:
+    """True if ``s`` contains at least ``n`` CJK chars. Mixed-script
+    captures must still be CJK-anchored to avoid English-fragment
+    matches like 'the X' inside CN/TW docs."""
+    count = 0
+    for ch in s:
+        if "一" <= ch <= "鿿":
+            count += 1
+            if count >= n:
+                return True
+    return False
+
+
+# Type-indicator characters that justify a single-letter ASCII prefix
+# in the captured noun (n型 / p型 / α形 / β狀). Without one of these
+# right after the single letter, the leading letter is more likely a
+# stray Latin label that bled into the noun (e.g., "F與兩剛輪" — F is a
+# class label that doesn't belong in the noun "兩剛輪").
+_CN_ASCII_PREFIX_TYPE_INDICATORS = frozenset({
+    "型", "形", "性", "狀", "状", "類", "类", "級", "级",
+})
+
+
+def _cn_strip_stray_ascii_prefix(s: str) -> str:
+    """Drop a single leading Latin letter when the next char is NOT a
+    compound-noun type indicator. Preserves "n型電晶體" / "LED驅動器"
+    while stripping "F與兩剛輪" → "與兩剛輪" (where 與 will then strip
+    via the particles pass)."""
+    if not s:
+        return s
+    if not s[0].isascii() or not s[0].isalpha():
+        return s
+    # Multi-letter ASCII prefix: keep (LED/USB/TFT/etc.)
+    if len(s) >= 2 and s[1].isascii() and s[1].isalpha():
+        return s
+    # Single-letter ASCII prefix followed by type-indicator: keep
+    if len(s) >= 2 and s[1] in _CN_ASCII_PREFIX_TYPE_INDICATORS:
+        return s
+    # Otherwise the leading letter is stray — drop it
+    return s[1:]
 # Same denylist as US — figure refs / equation refs / standards
 # acronyms that look like designators but aren't.
 _CN_LATIN_PREFIX_DENYLIST = frozenset({
@@ -833,6 +885,15 @@ _CN_NOISE_MULTI_CHAR = frozenset({
     "中的", "上的", "下的", "中之", "之中", "之內", "之内",
     "或者", "比如", "例如",
     "等等", "之外", "以外", "以内", "以內",
+    # Claim-reference nouns — "权利要求 32" / "申請專利範圍第N項" mean
+    # "claim N" / "claim of patent application", not element refnum N.
+    # Mirrors the US "claim/claims" entry in _EXCLUDE_KEYWORDS. Full
+    # Trad/Simp parity per Christopher's audit rule.
+    "權利要求", "权利要求", "申請專利範圍", "申请专利范围",
+    "請求項", "请求项", "權利", "权利",
+    # Step-reference nouns — "步驟S101" / "步驟 50" / "步骤 50" the
+    # captured noun "步驟" is a step label, not an element name.
+    "步驟", "步骤",
 })
 
 # Substring markers that flag a captured "noun" as a sentence fragment
@@ -1141,6 +1202,7 @@ def _cn_d1_head_noun(raw: str) -> str:
     """Strip reference-form prefixes + ordinals + quantifiers from a
     captured CJK noun phrase to get the bare head noun for D1 dedup."""
     s = raw.strip()
+    s = _cn_strip_stray_ascii_prefix(s)
     s = _cn_strip_iterative(s, allow_ordinal_break=False)
     s = _cn_strip_post_de(s)
     s = _cn_strip_trailing_verb(s)
@@ -1215,6 +1277,10 @@ def _cn_extract_numeral_name_pairs(text: str) -> list[tuple[str, str]]:
             # Treat as the start refnum only.
             end = start
         raw_noun = m.group("noun")
+        # Mixed ASCII-CJK regex requires ≥2 CJK chars to anchor as a
+        # real CJK noun phrase (filters English-only fragments).
+        if not _cn_has_min_cjk(raw_noun, 2):
+            continue
         head_with_ord = _cn_d1_head_noun_with_ordinal(raw_noun)
         if not head_with_ord:
             continue
@@ -1241,6 +1307,8 @@ def _cn_extract_numeral_name_pairs(text: str) -> list[tuple[str, str]]:
             suffix = full_num[len(digit_part):]
             num_str = f"{int(digit_part)}{suffix}"
             raw_noun = m.group("noun")
+            if not _cn_has_min_cjk(raw_noun, 2):
+                continue
             # Apply existing reference-prefix/quantifier strip but
             # KEEP the ordinal so we can detect 第一X / 第二X collisions.
             head_with_ord = _cn_d1_head_noun_with_ordinal(raw_noun)
@@ -1261,6 +1329,8 @@ def _cn_extract_numeral_name_pairs(text: str) -> list[tuple[str, str]]:
             if prefix in _CN_LATIN_PREFIX_DENYLIST:
                 continue
             raw_noun = m.group("noun")
+            if not _cn_has_min_cjk(raw_noun, 2):
+                continue
             head_with_ord = _cn_d1_head_noun_with_ordinal(raw_noun)
             if not head_with_ord:
                 continue
@@ -1329,6 +1399,9 @@ def _cn_d1_head_noun_with_ordinal(raw: str) -> str:
     detection. Iterative loop handles compound-prefix cases like
     "則是設置在第一手柄主體" → "第一手柄主體"."""
     s = raw.strip()
+    # Single-letter ASCII prefix that isn't part of compound noun:
+    # "F與兩剛輪" → "與兩剛輪" so subsequent strips can clean further.
+    s = _cn_strip_stray_ascii_prefix(s)
     s = _cn_strip_iterative(s, allow_ordinal_break=True)
     # Post-的/之 strip: "查詢得到的預覽影像" → "預覽影像", "電池的供電
     # 裝置" → "供電裝置". Cuts the modifier-clause prefix when a ≥ 2-char
