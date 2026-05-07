@@ -250,6 +250,10 @@ _D1_LEADING_FUNCTION_WORDS = frozenset({
     "filed", "issued", "published", "granted", "abandoned", "expired",
     "designated", "exemplified", "given", "cited",
     "claimed", "claims", "wherein",
+    # Section / structural headers from extracted patent HTML
+    "description", "abstract", "summary", "background", "references",
+    "field", "art", "embodiments", "claim",
+    "respective", "respectively", "ninety",
     # Month names that appear in priority-date / filed-on contexts
     "january", "february", "march", "april", "may", "june",
     "july", "august", "september", "october", "november", "december",
@@ -718,8 +722,11 @@ def _singularize_last_word(s: str) -> str:
 
     Used by cluster merge so plural-vs-singular variants
     ("filter capacitors" vs "filter capacitor") cluster as the same
-    noun. Three rules: -ies→-y (boundaries→boundary), -es→strip
-    (boxes→box), -s→strip (lenses→lense, condensers→condenser).
+    noun. Rules: -ies→-y (boundaries→boundary), -es→strip
+    (boxes→box), -s→strip (lenses→lense, caps→cap).
+    Threshold ≥4 chars for stripped form so 3-char plurals like "caps"
+    cluster with "cap" (the cluster check ALREADY requires the shorter
+    form be ≥1 word; very short noise won't propagate further).
     """
     if not s:
         return s
@@ -728,14 +735,14 @@ def _singularize_last_word(s: str) -> str:
     if not head:
         return s
     base = head
-    if len(head) >= 6 and head.endswith("ies"):
+    if len(head) >= 5 and head.endswith("ies"):
         base = head[:-3] + "y"
-    elif len(head) >= 6 and head.endswith("es"):
+    elif len(head) >= 5 and head.endswith("es"):
         base = head[:-2]
     elif (
-        len(head) >= 5
+        len(head) >= 4
         and head.endswith("s")
-        and not head.endswith(("ss", "us", "is"))
+        and not head.endswith(("ss", "us", "is", "ies"))
     ):
         base = head[:-1]
     if base == head:
