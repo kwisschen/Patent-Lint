@@ -396,7 +396,8 @@
   "about": {
     "productTitle": "PatentLint 是什麼？",
     "productTagline": "同類首創的專利稿件檢查工具，可離線於您的瀏覽器中正常運作。",
-    "productDesc1": "PatentLint完全在您的裝置上本機運行，為您在審查委員指出缺失之前先行檢出問題。網頁僅是入口。頁面載入後，PatentLint 便如桌面軟體般在您的裝置上獨立運作，您可關閉網路繼續使用。拖放美國、中國大陸或台灣的專利說明書，便可即時取得形式要件的合規報告與評分。無上傳、無雲端處理、無 AI。",
+    "productDesc1": "PatentLint完全在您的裝置上本機運行，為您在審查委員指出缺失之前先行檢出問題。網頁僅是入口。頁面載入後，PatentLint 便如桌面軟體般在您的裝置上獨立運作，您可關閉網路繼續使用。",
+    "productDesc1b": "拖放美國、中國大陸或台灣的專利說明書，便可即時取得形式要件的合規報告與評分。無上傳、無雲端處理、無 AI。",
     "productDesc2": "PatentLint 依據 USPTO（美國）、CNIPA（中國大陸）及 TIPO（台灣）的撰稿規則進行檢查，偵測審查規範中的常見問題，如缺乏先行詞基礎、不正確的請求項結構和限制性用語。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 驗證送件格式。PatentLint 檢查說明書本身。",
