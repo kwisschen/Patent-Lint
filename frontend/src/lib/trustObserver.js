@@ -27,17 +27,30 @@
 //     local disk / in-memory reads, never network egress
 //   - failed fetches (responseStart === 0): browser ATTEMPTED the request
 //     but no response arrived (offline, blocked, CORS rejection)
+//   - non-active initiator types (script, css, img, link, font, etc.):
+//     these are passive bundle/resource loads — the BROWSER fetching
+//     things to render the page (vite chunks, mermaid lazy-loaded
+//     diagram types, fonts, images, stylesheets). They are network
+//     egress in the technical sense, but never carry user data out;
+//     surfacing them as "network active" caused the red flash on
+//     every first analysis (mermaid alone splits into ~50 diagram
+//     chunks that load when ClaimDiagram first renders).
 //
 // What stays:
-//   - successful HTTP(S) fetches — the only thing that should ever be
-//     called "network activity" in the trust panel
+//   - successful HTTP(S) fetches initiated by code via `fetch()` or
+//     `XMLHttpRequest` — the only paths that can carry user data out.
+//     Examples that legitimately count: /api/report POST, /version.json
+//     update check, fonts.gstatic.com CJK font prefetch.
 //
 // If you add a new trust observer, import this helper. Do not write
 // your own filter inline — that's how this bug shipped in March and
 // went latent for 6 weeks.
+const ACTIVE_INITIATOR_TYPES = new Set(['fetch', 'xmlhttprequest'])
+
 export function isTrustRelevantResource(entry) {
   if (!entry || typeof entry.name !== 'string') return false
   if (!/^https?:/i.test(entry.name)) return false
   if (entry.responseStart === undefined || entry.responseStart <= 0) return false
+  if (!ACTIVE_INITIATOR_TYPES.has(entry.initiatorType)) return false
   return true
 }
