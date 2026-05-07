@@ -68,8 +68,10 @@ const EN_IDENTICAL_ALLOWLIST = [
     "about.arch.optional",
     "details.citations",
     "details.rawText",
-    // Pure interpolation placeholder — no translatable text.
+    // Pure interpolation placeholders — no translatable text.
     "details.sectionName",
+    "rubric.impactList.sectionLabel",
+    "rubric.gradePill",
     // Universal acronym/label.
     "common.betaBadge.label",
     // Proper names carried verbatim across locales (maintainer identity).
@@ -93,6 +95,13 @@ const EN_IDENTICAL_ALLOWLIST = [
     "feedback.email.fieldJurisdiction",
     "feedback.email.fieldBrowser",
     "feedback.email.fieldBuild",
+    // Pricing-tier name in commercialization page; "Team" is fully Duden-approved
+    // as a German business term and matches sibling pricing labels.
+    "commercial.standalone.name",
+    // CN-jurisdiction-specific term quoted in its native Simplified form.
+    // KO renders this consistently with the surrounding KO description body
+    // which also cites CN's Simplified form (五书模板, 段落编号) directly.
+    "about.cnFeatures.dualPipeline.title",
     // Latin-script punctuation conventions — CJK uses full-width variants.
     "punct.listSeparator",
     "punct.sentenceSeparator",
