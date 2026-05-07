@@ -152,6 +152,19 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.tw.spec.claimReference.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 40),
     "check.tw.spec.claimReference.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 40),
 
+    # Numeral consistency D1 (per-jurisdiction). 实施细则 §21 / 施行細則 §19.
+    # idx 45 sits between claimReference (40) and TW symbolTablePresence (50).
+    "check.cn.spec.numeralConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    "check.cn.spec.numeralConsistency.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    "check.cn.spec.numeralConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    "check.tw.spec.numeralConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    "check.tw.spec.numeralConsistency.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    "check.tw.spec.numeralConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    # TW D3 — symbolTableCoverage sits between symbolTablePresence (50)
+    # and the ordering of subsequent checks, idx 55.
+    "check.tw.spec.symbolTableCoverage.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 55),
+    "check.tw.spec.symbolTableCoverage.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 55),
+
     "check.tw.spec.symbolTablePresence.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 50),
     "check.tw.spec.symbolTablePresence.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 50),
     "check.tw.spec.symbolTableConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 60),
@@ -175,6 +188,19 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.spec.priorArt.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 90),
     "check.spec.restrictiveWording.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 100),
     "check.spec.restrictiveWording.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 100),
+    # Scope-limit wording (Phillips v. AWH, MPEP § 2111) — sits immediately
+    # after restrictiveWording in the spec-content group. Different
+    # doctrine + surface from the claims-side restrictiveWording check;
+    # see specification.py check_scope_limit_wording for rationale.
+    "check.spec.scopeLimitWording.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 105),
+    "check.spec.scopeLimitWording.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 105),
+    # Reference numeral consistency D1 (MPEP § 608.01(g)) — placed
+    # immediately after figureRefConsistency (idx 10) since both check
+    # refnum usage in the spec. Consistent across US/CN/TW jurisdictions
+    # so users see the same relative position regardless of jurisdiction.
+    "check.spec.numeralConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    "check.spec.numeralConsistency.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    "check.spec.numeralConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
     "check.spec.drawings": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 110),
 
     # TW symbol-vs-representative-drawing is a spec-content cross-reference.
