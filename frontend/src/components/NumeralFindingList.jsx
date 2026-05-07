@@ -49,17 +49,22 @@ export default function NumeralFindingList({ findings, status = "amend", classNa
           {findings.map((f, i) => {
             // D1 shape: { numeral, canonical, canonical_count, outliers }
             if (f.canonical !== undefined && Array.isArray(f.outliers)) {
+              const canonCount = (f.canonical_count != null && f.canonical_count > 0)
+                ? `(${f.canonical_count}×)` : ""
               return (
                 <li key={i}>
                   <span className="font-mono font-semibold">#{f.numeral}</span>
                   <span className="ml-2">
-                    “{f.canonical}” ({f.canonical_count}×)
+                    “{f.canonical}” {canonCount}
                   </span>
-                  {f.outliers.map((o, j) => (
-                    <span key={j} className="ml-1.5">
-                      , “{o.name}” ({o.count}×)
-                    </span>
-                  ))}
+                  {f.outliers.map((o, j) => {
+                    const oCount = (o.count != null && o.count > 0) ? `(${o.count}×)` : ""
+                    return (
+                      <span key={j} className="ml-1.5">
+                        , “{o.name}” {oCount}
+                      </span>
+                    )
+                  })}
                 </li>
               )
             }

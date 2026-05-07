@@ -719,6 +719,7 @@ def _build_d1_check_item(conflicts: list[dict], status: str, suffix: str) -> Che
         {
             "numeral": c["numeral"],
             "canonical": _format_d1_name_for_display(c["canonical"]),
+            "canonical_count": c["canonical_count"],
             "outliers": [
                 {
                     "name": _format_d1_name_for_display(o["name"]),
