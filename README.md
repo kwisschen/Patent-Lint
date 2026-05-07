@@ -202,7 +202,7 @@ curl http://localhost:8000/api/health
 | PDF | pdfmake (web) · weasyprint (Docker/CLI) |
 | CLI | Click |
 | Testing | pytest (2183 tests) |
-| CI/CD | GitHub Actions → Cloudflare Pages |
+| CI/CD | GitHub Actions (test, lint, wheel-verify, docker) + Vercel auto-deploy |
 | i18n | react-i18next (English, Deutsch, 繁體中文, 简体中文, 日本語, 한국어) — shared locale bundles across frontend + weasyprint PDF |
 
 ---
