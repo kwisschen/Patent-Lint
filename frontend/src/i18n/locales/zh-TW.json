@@ -928,6 +928,7 @@
       },
       "numeralConsistency": {
         "amend": "{{count}} 個元件代表符號用於指稱多個不同的元件名稱。範例：{{inline_summary}}",
+        "verify": "{{count}} 個元件代表符號可能使用不一致，建議複查。範例：{{inline_summary}}",
         "pass": "元件代表符號與所指稱元件名稱一致。"
       }
     },
@@ -1063,6 +1064,7 @@
         },
         "numeralConsistency": {
           "amend": "{{count}} 個附圖標記被用於指稱多個不同的構件名稱。範例：{{inline_summary}}（专利法实施细则 §21 第2款）。",
+          "verify": "{{count}} 個附圖標記可能使用不一致，建議複查。範例：{{inline_summary}}（专利法实施细则 §21 第2款）。",
           "pass": "附圖標記與所指稱構件名稱一致。"
         }
       },
@@ -1223,6 +1225,7 @@
         },
         "numeralConsistency": {
           "amend": "{{count}} 個元件代表符號被用於指稱多個不同的元件名稱。範例：{{inline_summary}}（專利法施行細則 §19 第2款）。",
+          "verify": "{{count}} 個元件代表符號可能使用不一致，建議複查。範例：{{inline_summary}}（專利法施行細則 §19 第2款）。",
           "pass": "元件代表符號與所指稱元件名稱一致。"
         },
         "symbolTableCoverage": {

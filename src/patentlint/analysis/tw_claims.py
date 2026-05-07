@@ -320,19 +320,49 @@ _TW_DEP_FORMAT = re.compile(
 # Exclude: ordinals (第N), measurements (digits followed by Latin or CJK unit
 # tokens like 重量份, 重量百分比, 莫耳, etc.), and dependency refs (請求項N).
 _CJK_UNIT_TOKENS = (
-    r"重量百分比|重量份|重量比|"
+    # Concentration / ratio (longest first for prefix-greedy alternation)
+    r"重量百分比|重量份|重量比|質量百分比|"
+    r"體積百分比|體積比|原子百分比|"
     r"莫耳百分比|莫耳比|莫耳|"
-    r"體積百分比|體積比|質量百分比|原子百分比|"
-    r"毫克|公克|毫升|公升|微升|微米|奈米|公分|公釐|公尺|"
-    r"克|升|倍率|倍|份|個|顆|片|"
+    # Length
+    r"毫米|公釐|公分|公尺|公里|公呎|"
+    r"微米|奈米|纳米|皮米|"
+    r"英寸|英吋|英尺|英里|"
+    # Mass / weight
+    r"毫克|公克|微克|奈克|皮克|"
+    r"公斤|千克|公噸|公吨|盎司|磅|"
+    # Volume
+    r"毫升|公升|微升|奈升|皮升|"
+    r"立方厘米|立方公分|立方米|立方公尺|"
+    # Time
+    r"毫秒|微秒|奈秒|皮秒|"
+    r"分鐘|小時|秒鐘|"
+    # Pressure
+    r"千帕|百帕|兆帕|毫帕|微帕|"
+    r"大氣壓|大气压|毫巴|"
+    # Temperature
+    r"攝氏|華氏|克爾文|"
+    # Energy / power
+    r"千焦|兆焦|毫焦|焦耳|"
+    r"千卡|卡路里|"
+    r"千瓦|兆瓦|毫瓦|微瓦|"
+    r"電子伏特|"
+    # Voltage / current
+    r"毫伏|微伏|千伏|伏特|"
+    r"毫安|微安|千安|安培|"
+    # Concentration (chemistry / biology)
+    r"毫摩爾|微摩爾|摩爾|"
+    r"百萬分之|百分之|"
+    # Frequency / data
+    r"千赫|兆赫|吉赫|赫|"
+    r"千比特|兆比特|比特|字節|"
+    # Single-char units
+    r"克|升|份|個|顆|片|秒|天|日|月|年|度|帕|巴|瓦|"
+    r"倍率|倍|"
     # R-refnum-1 (2026-04-30, issue #25): Miller-index suffixes for
     # crystallography in semiconductor patents. Drafters write `100面` /
     # `110方向` etc. as bare digits because the paren form `(100)面` is
-    # also conventional but optional (TIPO/CNIPA accept both). Pre-fix:
-    # walker mistook `100面` for an unbracketed element reference numeral
-    # (Claire's draft c12 `露出前述矽層之100面的狀態下實施`). Longer
-    # multi-char tokens listed first for readability — order doesn't
-    # matter for correctness in negative-lookahead alternation.
+    # also conventional but optional (TIPO/CNIPA accept both).
     r"結晶面|晶面|平面|方向|面"
 )
 _BARE_NUMERAL = re.compile(
