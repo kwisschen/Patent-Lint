@@ -830,6 +830,42 @@ _CN_NOISE_MULTI_CHAR = frozenset({
     "等等", "之外", "以外", "以内", "以內",
 })
 
+# Substring markers that flag a captured "noun" as a sentence fragment
+# rather than an element name. Drafter writes:
+#   "可以參考上述 S520" — refnum is a back-reference to a method step
+#   "執行上述 S510a" — same, action verb + back-ref
+#   "號可以通過功能擴充連接部 13" — sentence fragment with connector verb
+# When these markers appear ANYWHERE in the post-strip residual, the
+# captured chunk is NOT identifying an element — drop the pair.
+#
+# Markers chosen for high specificity:
+#   上述/前述/後述/后述 = back-reference to prior text
+#   通過/通过 = connector preposition between verb and noun
+#   可以 = modal aux verb
+#   執行/执行 = action verb in method-step contexts
+#   參考/参考 = reference verb
+#   所示 = "as shown" — figure reference
+#   用以/用於/用于 = purposive verb phrase
+#
+# The shorter markers (上述/前述/通過/可以) are unambiguous patent-spec
+# fragments — none of these substrings appear inside legitimate element
+# names in TIPO/CNIPA diction.
+_CN_FRAGMENT_MARKERS = (
+    "上述", "前述", "後述", "后述",
+    "通過", "通过",
+    "可以",
+    "執行", "执行",
+    "參考", "参考",
+    "所示", "如所",
+    "用以", "用於", "用于",
+)
+
+# Mode-context phrase: "方式一下" / "方式二下" / "方式X下" — drafter
+# writes "in mode N: <action>", refnum follows 下 (under). The captured
+# chunk is contextual, not an element name. Match 方式 + CJK ordinal
+# (一/二/.../十) optionally followed by 下/中/裡.
+_CN_MODE_CONTEXT_RE = re.compile(r"方式[一二三四五六七八九十]+[下中裡里]?")
+
 # Measurement / process / chemistry-context indicators. If a captured
 # head noun ENDS WITH or CONTAINS any of these, the numeral is almost
 # certainly a measurement value (含量为 10 / 浓度为 5wt% / etc.) rather
@@ -1065,6 +1101,9 @@ def _cn_d1_head_noun(raw: str) -> str:
     # 圖N" / "見圖N" — refnum identifies the figure, not the noun.
     if s.endswith("圖") or s.endswith("图"):
         return ""
+    # Sentence-fragment rejection — see _CN_FRAGMENT_MARKERS docs.
+    if any(marker in s for marker in _CN_FRAGMENT_MARKERS):
+        return ""
     return s
 
 
@@ -1246,6 +1285,16 @@ def _cn_d1_head_noun_with_ordinal(raw: str) -> str:
     # element bound to a refnum. Drafter convention is "...圖N所示" / "如
     # 圖N" / "見圖N" — refnum identifies the figure, not the noun.
     if s.endswith("圖") or s.endswith("图"):
+        return ""
+    # Sentence-fragment rejection: "執行上述", "可以參考上述", "通過X" —
+    # presence of any back-reference marker / connector verb in the
+    # residual means the captured chunk is a verbal predicate, not an
+    # element name. Drop the pair entirely.
+    if any(marker in s for marker in _CN_FRAGMENT_MARKERS):
+        return ""
+    # Mode-context phrases: "方式一下" / "方式二下" — refnum is bound to
+    # the action under that mode, not to "方式".
+    if _CN_MODE_CONTEXT_RE.search(s):
         return ""
     return s
 
