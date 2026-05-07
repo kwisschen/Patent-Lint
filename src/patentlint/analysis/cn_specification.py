@@ -1084,12 +1084,48 @@ _CN_PROCESS_CONTEXT_TAILS = (
     "範圍為", "范围为", "範圍是", "范围是",
     # CJK measurement units — when captured as the tail, the numeral is
     # almost certainly a measurement (10毫米 / 50微米 / 200克 / etc.).
-    # Range form `毫米至` / `公分至` also caught.
-    "毫米", "公釐", "公分", "公尺", "微米", "奈米", "纳米",
-    "毫克", "公克", "毫升", "公升", "微升",
+    # Range form `毫米至` / `公分至` also caught. Full Trad/Simp parity.
+    # Length
+    "毫米", "公釐", "公分", "公尺", "公里", "公分", "公呎",
+    "微米", "奈米", "纳米", "皮米",
+    "英寸", "英吋", "英尺", "英里",
+    # Mass / weight
+    "毫克", "公克", "毫公克", "微克", "奈克", "皮克", "纳克",
+    "公斤", "千克", "公噸", "公吨", "盎司", "磅",
     "克", "升", "倍率", "倍",
-    "毫米至", "公釐至", "公分至", "微米至", "奈米至", "纳米至",
-    "克至", "升至",
+    # Volume
+    "毫升", "公升", "微升", "奈升", "皮升", "纳升", "升",
+    "立方厘米", "立方公分", "立方米", "立方公尺",
+    # Time
+    "毫秒", "微秒", "奈秒", "纳秒", "皮秒",
+    "分鐘", "分钟", "小時", "小时",
+    "秒", "秒鐘", "秒钟", "天", "日", "週", "周", "月", "年",
+    # Pressure
+    "帕", "千帕", "百帕", "兆帕", "毫帕", "微帕",
+    "大氣壓", "大气压", "巴", "毫巴",
+    # Temperature
+    "攝氏", "摄氏", "華氏", "华氏", "克爾文", "开尔文",
+    "度", "℃", "°C", "°F", "K",
+    # Energy / power
+    "焦耳", "千焦", "兆焦", "毫焦",
+    "卡路里", "千卡", "卡",
+    "瓦", "千瓦", "兆瓦", "毫瓦", "微瓦",
+    "電子伏特", "电子伏特",
+    # Voltage / current
+    "伏特", "毫伏", "微伏", "千伏",
+    "安培", "毫安", "微安", "千安",
+    # Concentration
+    "摩爾", "摩尔", "毫摩爾", "毫摩尔", "微摩爾", "微摩尔",
+    "百萬分之", "百万分之", "百分之",
+    "重量百分比", "體積百分比", "体积百分比", "摩爾百分比",
+    "重量份", "重量比", "體積比", "体积比", "重量比例",
+    # Frequency / data rate
+    "赫", "千赫", "兆赫", "吉赫",
+    "比特", "字節", "字节", "千比特", "兆比特", "千字節", "兆字節",
+    # Range form (most common)
+    "毫米至", "公釐至", "公分至", "公尺至", "微米至", "奈米至", "纳米至",
+    "克至", "升至", "毫升至", "公升至",
+    "秒至", "分鐘至", "小時至",
 )
 _CN_PROCESS_CONTEXT_TOKENS = (
     "含量", "浓度", "濃度", "比例", "用量", "上限", "下限",
@@ -1601,7 +1637,23 @@ def check_numeral_consistency_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
             reference="专利法实施细则 §21 第2款",
         )]
 
-    # Severity sort already applied inside _cn_detect_d1_conflicts.
+    fix_conflicts = [c for c in conflicts if c.get("confidence") == "fix"]
+    review_conflicts = [c for c in conflicts if c.get("confidence") == "review"]
+    items: list[CheckItem] = []
+    if fix_conflicts:
+        items.append(_build_cn_d1_check_item(fix_conflicts, "amend", "amend"))
+    if review_conflicts:
+        items.append(_build_cn_d1_check_item(review_conflicts, "verify", "verify"))
+    return items or [CheckItem(
+        status="pass",
+        message="附图标记与所指代构件名称一致。",
+        message_key="check.cn.spec.numeralConsistency.pass",
+        reference="专利法实施细则 §21 第2款",
+    )]
+
+
+def _build_cn_d1_check_item(conflicts: list[dict], status: str, suffix: str) -> CheckItem:
+    """Build a CheckItem for a slice of CN D1 conflicts."""
     sample = conflicts[:8]
     extra = max(0, len(conflicts) - 8)
     findings = [
@@ -1612,20 +1664,28 @@ def check_numeral_consistency_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 {
                     "name": _cn_format_d1_name_for_display(o["name"]),
                     "count": o["count"],
+                    "confidence": o.get("confidence", "fix"),
                 }
                 for o in c["outliers"]
             ],
             "case": c["case"],
+            "confidence": c.get("confidence", "fix"),
         }
         for c in sample
     ]
-    inline = "；".join(_cn_format_inline_conflict(c) for c in sample[:3])
+    inline = "；".join(_cn_format_inline_conflict(c, simp=True) for c in sample[:3])
     if len(conflicts) > 3:
         inline = inline + f"（另 {len(conflicts) - 3} 处）"
-    return [CheckItem(
-        status="amend",
-        message=f"{len(conflicts)} 个附图标记的使用前后不一致。范例：{inline}",
-        message_key="check.cn.spec.numeralConsistency.amend",
+    is_fix = (status == "amend")
+    msg = (
+        f"{len(conflicts)} 个附图标记的使用前后不一致。范例：{inline}"
+        if is_fix
+        else f"{len(conflicts)} 个附图标记可能使用不一致，建议复查。范例：{inline}"
+    )
+    return CheckItem(
+        status=status,
+        message=msg,
+        message_key=f"check.cn.spec.numeralConsistency.{suffix}",
         details_key="details.cn.numeralConsistency",
         details_params={
             "count": len(conflicts),
@@ -1640,7 +1700,7 @@ def check_numeral_consistency_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
             instance_collisions=sum(1 for c in conflicts if c["case"] == "instance"),
             element_collisions=sum(1 for c in conflicts if c["case"] == "element"),
         ),
-    )]
+    )
 
 
 # ── CN D1 detection core (canonical + outliers) ─────────────────────────
@@ -1823,12 +1883,32 @@ def _cn_detect_d1_conflicts(pairs: list[tuple[str, str]]) -> list[dict]:
                 continue
 
         if outlier_records:
+            # Confidence tier per outlier (mirrors US logic):
+            #   "fix"    — high-confidence drafter typo
+            #   "review" — 1× outlier with zero shared chars against a
+            #              strong canonical (≥10×) — likely sentence-
+            #              fragment over-capture, but could be real D1.
+            for o in outlier_records:
+                _, o_head = _cn_split_ordinal_key(o["name"])
+                o_chars = _cn_content_chars(o_head)
+                shares_content = bool(canonical_chars & o_chars)
+                strong_canonical = canonical_count >= 10
+                weak_outlier = (o["count"] == 1)
+                if case_instance or shares_content or not weak_outlier or not strong_canonical:
+                    o["confidence"] = "fix"
+                else:
+                    o["confidence"] = "review"
+            severity = (
+                "fix" if any(o["confidence"] == "fix" for o in outlier_records)
+                else "review"
+            )
             conflicts.append({
                 "numeral": num,
                 "canonical": canonical_name,
                 "canonical_count": canonical_count,
                 "outliers": outlier_records,
                 "case": "instance" if case_instance else "element",
+                "confidence": severity,
             })
 
     # Severity sort: most-confused numerals first so a new mutation
