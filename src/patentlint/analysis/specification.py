@@ -213,6 +213,19 @@ _D1_LEADING_FUNCTION_WORDS = frozenset({
     "arrange", "arranges", "arranging", "arranged",
     "use", "uses", "using", "used",
     "also",
+    # Walker-derived parity (mirrors CN/TW _CN_FRAGMENT_MARKERS) —
+    # English equivalents that signal sentence-fragment captures.
+    "based", "according",
+    "obtained", "derived",
+    "aforementioned", "above-mentioned",
+    "perform", "performs", "performing", "performed",
+    "execute", "executes", "executing", "executed",
+    "obtain", "obtains", "obtaining",
+    "derive", "derives", "deriving",
+    "acquire", "acquires", "acquiring", "acquired",
+    "reference", "references", "referencing", "referenced",
+    "associate", "associates", "associating", "associated",
+    "via", "through",
     # Demonstrative position
     "type", "kind",
     # Context-only nouns that creep in via "with respect to N" / "in
