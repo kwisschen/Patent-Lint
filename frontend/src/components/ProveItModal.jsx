@@ -79,6 +79,15 @@ export default function ProveItModal({ open, onOpenChange }) {
     const observer = new PerformanceObserver((list) => {
       const newEntries = list.getEntries()
         .filter((e) => !e.name.includes('favicon.svg'))
+        // Drop non-HTTP(S) entries: file://, blob:, data:. Dragging a
+        // .docx into the browser causes the OS / browser to load a drag-
+        // preview thumbnail off disk via file:// (commonly a recent
+        // screencaptureui screenshot from /var/folders/.../TemporaryItems/).
+        // It's a local disk read, not network egress — but if we surface
+        // it the trust panel's "live activity log" reads as "PatentLint
+        // just touched my files" precisely when the user trusted us with
+        // a draft. The indicator must only reflect TRUE network egress.
+        .filter((e) => /^https?:/i.test(e.name))
         // Filter out failed-offline fetches: PerformanceResourceTiming
         // entries fire even when the network is unreachable (the BROWSER
         // attempted the request), but those entries have responseStart === 0
