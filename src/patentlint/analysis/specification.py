@@ -82,7 +82,13 @@ _REFNUM_AFTER_NOUN = re.compile(
     r"(\d{2,4}[a-z]?)"  # optional single-letter suffix: 10a, 10b
     r"(?![\dA-Za-z])"   # no following digit/letter — anchored end
     r"(?!\.\d)"         # not followed by decimal point + digit
-    r"(?![%°])",        # not followed by % or degree
+    r"(?![%°])"         # not followed by % or degree
+    # Reject sub-instance notation: drafter writes "21(0)" / "21(N)" /
+    # "21(N-1)" to label sub-instances of the array element 21. The
+    # parenthesized expression IS the sub-index, so the captured noun
+    # ("zeroth lens" before "21(0)") binds to the sub-instance, not to
+    # the parent refnum 21. Skip the capture in that case.
+    r"(?!\([\dN])",
     re.IGNORECASE,
 )
 
@@ -116,7 +122,9 @@ _REFNUM_LATIN_PREFIX = re.compile(
     rf"((?:{_LATIN_WORD}\s+){{0,4}}{_LATIN_WORD})"
     r"\s+"
     r"([A-Za-z]{1,5}\d{1,4}[a-zA-Z]?)"
-    r"(?![A-Za-z0-9])",
+    r"(?![A-Za-z0-9])"
+    # Reject sub-instance notation "DS1(0)" / "DS1(N)" / "DS1(N-1)"
+    r"(?!\([\dN])",
     re.IGNORECASE,
 )
 
