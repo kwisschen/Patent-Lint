@@ -88,8 +88,8 @@ const GROUP2_CHECKS = [
 const GROUP3_CHECKS = [
   // Spec structure (semantic)
   'specParaEndings',
-  // Spec content (figure cross-reference)
-  'figureCrossRef',
+  // Spec content (figure cross-reference + new D1 + scope-limit)
+  'figureCrossRef', 'numeralConsistency', 'scopeLimitWording',
   // Drawings (MPEP § 608.02 semantic rules — USPTO doesn't check pre-submission)
   'figureSequential', 'singleFigure', 'priorArtLabeling',
   // Claims structure (substantive half)
@@ -132,6 +132,7 @@ const CN_SPEC_CHECKS = [
   'paragraphEnding',                 // 审查指南
   // G2 spec content
   'figureRefConsistency',            // 审查指南
+  'numeralConsistency',              // 专利法实施细则 §21 第2款 (D1)
   'patentTypeTerminology',           // 审查指南
   'titleRequirements',               // 审查指南 第一部分第一章
   'specClaimReference',              // 专利法实施细则 §17
@@ -341,7 +342,9 @@ const TW_GROUP3_CHECKS = [
   // G1 spec-structure
   'requiredSections', 'sectionOrdering', 'paragraphNumbering', 'paragraphEnding', 'bracketFormat',
   // G2 spec-content
-  'title', 'claimReference', 'symbolTablePresence',
+  'title', 'claimReference',
+  // 符號說明 family — presence + D1 (consistency) + D3 (coverage)
+  'symbolTablePresence', 'numeralConsistency', 'symbolTableCoverage',
   // G3 drawings
   'figuresSequential',
   // G4 claims-structure

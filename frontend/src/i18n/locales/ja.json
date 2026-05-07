@@ -459,7 +459,9 @@
         "checkMarkushTransition": "Markush グループ移行句（§ 2117）",
         "checkOmnibusClaim": "オムニバス請求項の検出（§ 112(b)）",
         "checkClaimPunctuation": "請求項の句読点（§ 608.01(m)）",
-        "checkSequenceListing": "配列表の準拠性（§ 2422）"
+        "checkSequenceListing": "配列表の準拠性（§ 2422）",
+        "numeralConsistency": "参照符号の一貫性（MPEP § 608.01(g)）",
+        "scopeLimitWording": "\"the present invention\" 限定リスク警告（Phillips v. AWH）"
       }
     },
     "cnTitle": "PatentLint CNIPA 作成規則チェック",
@@ -517,7 +519,8 @@
       "titleInAbstract": "タイトルが要約に含まれている",
       "commercialLanguage": "商業的表現",
       "priorArt": "図面における先行技術参照（审查指南 §4.2）",
-      "figuresSequential": "図面番号が連続"
+      "figuresSequential": "図面番号が連続",
+      "numeralConsistency": "附图标记の一貫性（实施细则 §21）"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統 は実用新案出願のみ対応。PatentLint は実用新案と発明の両方に対応します。",
@@ -533,7 +536,7 @@
       },
       "symbolTable": {
         "title": "符號說明 の相互チェック（TW 固有）",
-        "description": "TW 固有の 符號說明 表をネイティブ解析し、實施方式・圖式簡單說明・代表圖 と相互チェックします。このセクションは TW のみに存在し、米国・中国の特許にはありません。"
+        "description": "TW 固有の 符號說明 表をネイティブ解析し、實施方式・圖式簡單說明・代表圖 と相互チェック。さらに、明細書中で使用されているが 符號說明 に記載されていない参照符号を検出するカバレッジチェックを実装（施行細則 §19 第2款）。"
       }
     },
     "tw": {
@@ -579,7 +582,9 @@
       "connectionRelationships": "独立クレーム構成要素の連接關係（專利審查基準 §2.4）",
       "tipoIndigenous": "先住民族関連用語のチェック",
       "figuresSequential": "図番号が連続",
-      "independentPreamble": "独立項の「一種」前置"
+      "independentPreamble": "独立項の「一種」前置",
+      "numeralConsistency": "元件代表符號の一貫性（施行細則 §19）",
+      "symbolTableCoverage": "明細書中で使用される全ての代表符号が 符號說明 に記載されている（施行細則 §19）"
     },
     "stats": {
       "tests": "自動テスト",
@@ -829,6 +834,15 @@
         "amendContent": "発明の名称に使用できない語が含まれています：{{title_prohibited_items}}（MPEP § 608.01）。",
         "verify": "発明の名称が {{count}} 語です。MPEP § 606 は簡潔で具体的な名称を推奨しています。",
         "pass": "発明の名称は MPEP § 606 の要件を満たしています。"
+      },
+      "scopeLimitWording": {
+        "verify": "明細書中に「本発明」/「the (present) invention」の表現が {{count}} 箇所検出されました。",
+        "pass": "明細書にクレーム範囲を限定し得る表現は検出されませんでした。"
+      },
+      "numeralConsistency": {
+        "amend": "{{count}} 個の参照符号が複数の異なる要素名に使用されています。例：{{inline_summary}}",
+        "verify": "{{count}} 個の参照符号で命名の不一致が疑われます。確認してください。例：{{inline_summary}}",
+        "pass": "参照符号は要素を一貫して識別しています。"
       }
     },
     "claims": {
@@ -960,6 +974,11 @@
         "claimReference": {
           "amend": "明細書が{{count}}段落で請求項を引用しています（{{paragraphs}}）（专利法实施细则 §20）。例：{{snippet}}",
           "pass": "明細書は請求項を引用していません。"
+        },
+        "numeralConsistency": {
+          "amend": "{{count}} 個の参照符号が複数の異なる構成要素名に使用されています。例：{{inline_summary}}（专利法实施细则 §21 第2款）。",
+          "verify": "{{count}} 個の参照符号で命名の不一致が疑われます。確認してください。例：{{inline_summary}}（专利法实施细则 §21 第2款）。",
+          "pass": "参照符号は構成要素を一貫して識別しています。"
         }
       },
       "claims": {
@@ -1116,6 +1135,15 @@
         "indigenousTerms": {
           "verify": "原住民関連用語が見つかりました。原住民族傳統智慧創作保護條例との整合をご確認ください。",
           "pass": "原住民関連用語は見つかりませんでした。"
+        },
+        "numeralConsistency": {
+          "amend": "{{count}} 個の参照符号が複数の異なる要素名に使用されています。例：{{inline_summary}}（專利法施行細則 §19 第2款）。",
+          "verify": "{{count}} 個の参照符号で命名の不一致が疑われます。確認してください。例：{{inline_summary}}（專利法施行細則 §19 第2款）。",
+          "pass": "参照符号は要素を一貫して識別しています。"
+        },
+        "symbolTableCoverage": {
+          "amend": "{{count}} 個の未記載要素（参照符号 {{refnum_count}} 個）が 符號說明 にありません。例：{{inline_summary}}",
+          "pass": "明細書で使用されているすべての参照符号は 符號說明 に記載されています。"
         }
       },
       "claims": {
@@ -1364,6 +1392,10 @@
     "fromParagraph": "段落 {{n}} より",
     "fromClaim": "請求項 {{n}} より",
     "more": "他 {{n}} 件"
+  },
+  "numeralFindings": {
+    "expand": "全 {{count}} 件を表示",
+    "collapse": "折りたたむ"
   },
   "terms": {
     "title": "利用規約",

@@ -115,6 +115,8 @@ def _run_cn_pipeline(
         + cn_spec_analysis.check_paragraph_numbering(cn_doc)
         + cn_spec_analysis.check_paragraph_ending(cn_doc)
         + cn_spec_analysis.check_figure_reference_consistency(cn_doc)
+        # numeralConsistency follows figureRef — both validate refnum usage
+        + cn_spec_analysis.check_numeral_consistency_cn(cn_doc)
         + cn_spec_analysis.check_patent_type_terminology(cn_doc)
         + cn_spec_analysis.check_title(cn_doc)
         + cn_spec_analysis.check_spec_claim_reference(cn_doc)
@@ -418,6 +420,21 @@ def _run_pipeline(
     # --- Required sections check ---
     required_sections_checks = spec_analysis.check_required_sections(full_text)
 
+    # --- Scope-limit wording (US, MPEP § 2111 + Phillips v. AWH) ---
+    # Scan the spec BODY only — concatenate background + summary + detailed
+    # description. Title/claims/abstract have their own checks.
+    scope_limit_text = " ".join(
+        s for s in [background_section, summary_section, detailed_desc_section]
+        if s
+    )
+    scope_limit_checks = spec_analysis.check_scope_limit_wording(scope_limit_text)
+
+    # --- Reference numeral consistency (D1, US, MPEP § 608.01(g)) ---
+    # Same scope as scope-limit (spec body — background + summary + DD).
+    # Detects same-numeral / different-name conflicts; permits same-name /
+    # different-numeral (legit multiple instances).
+    numeral_consistency_checks = spec_analysis.check_numeral_consistency(scope_limit_text)
+
     # --- Figure cross-reference consistency ---
     figure_xref_checks = drawings_analysis.check_figure_cross_references(
         drawings_section or "", detailed_desc_section or "",
@@ -483,6 +500,10 @@ def _run_pipeline(
         # Phase 5 — Issue #2 & #3
         required_sections_checks=required_sections_checks,
         figure_xref_checks=figure_xref_checks,
+        # Scope-limit wording (US, MPEP § 2111 + Phillips)
+        scope_limit_checks=scope_limit_checks,
+        # Numeral consistency D1 (US, MPEP § 608.01(g))
+        numeral_consistency_checks=numeral_consistency_checks,
         # Abstract
         abstract_word_count=abstract_word_count,
         abstract_text=abstract_section or "",
@@ -542,11 +563,14 @@ def _run_tw_pipeline(
         + tw_spec_analysis.check_paragraph_ending(tw_doc)
         + tw_cross_ref_analysis.check_bracket_format(tw_doc)
         + tw_spec_analysis.check_figure_ref_consistency(tw_doc)
+        # numeralConsistency follows figureRef — both validate refnum usage
+        + tw_spec_analysis.check_numeral_consistency_tw(tw_doc)  # idx 15
         + tw_spec_analysis.check_patent_type_terminology(tw_doc)
         + tw_spec_analysis.check_title(tw_doc)
         + tw_spec_analysis.check_spec_claim_reference(tw_doc)
-        + tw_spec_analysis.check_symbol_table_presence(tw_doc)
-        + tw_spec_analysis.check_symbol_table_consistency(tw_doc)
+        + tw_spec_analysis.check_symbol_table_presence(tw_doc)   # idx 50
+        + tw_spec_analysis.check_symbol_table_coverage_tw(tw_doc)  # idx 55
+        + tw_spec_analysis.check_symbol_table_consistency(tw_doc)  # idx 60
         + tw_spec_analysis.check_indigenous_terms(tw_doc)
     )
 

@@ -459,7 +459,9 @@
         "checkMarkushTransition": "Übergangsbegriff bei Markush-Gruppen (§ 2117)",
         "checkOmnibusClaim": "Erkennung von Omnibus-Ansprüchen (§ 112(b))",
         "checkClaimPunctuation": "Satzzeichen in Ansprüchen (§ 608.01(m))",
-        "checkSequenceListing": "Sequenzprotokoll-Konformität (§ 2422)"
+        "checkSequenceListing": "Sequenzprotokoll-Konformität (§ 2422)",
+        "numeralConsistency": "Bezugszeichen-Konsistenz (MPEP § 608.01(g))",
+        "scopeLimitWording": "„Die vorliegende Erfindung\"-Warnung (Phillips v. AWH)"
       }
     },
     "cnTitle": "PatentLint CNIPA-Ausarbeitungsprüfungen",
@@ -517,7 +519,8 @@
       "titleInAbstract": "Titel in der Zusammenfassung",
       "commercialLanguage": "Werbesprache",
       "priorArt": "Stand-der-Technik-Bezüge in Figuren (审查指南 §4.2)",
-      "figuresSequential": "Figuren fortlaufend nummeriert"
+      "figuresSequential": "Figuren fortlaufend nummeriert",
+      "numeralConsistency": "Konsistenz der 附图标记 (实施细则 §21)"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統 unterstützt nur Gebrauchsmuster-Anmeldungen. PatentLint deckt Gebrauchsmuster und Erfindungspatente ab.",
@@ -533,7 +536,7 @@
       },
       "symbolTable": {
         "title": "符號說明-Querabgleich (TW-spezifisch)",
-        "description": "TW-spezifische 符號說明-Tabellen werden nativ geparst und gegen die Bezugszeichen in 實施方式, 圖式簡單說明 und 代表圖 abgeglichen — diese Sektion existiert nur in TW."
+        "description": "TW-spezifische 符號說明-Tabellen werden nativ geparst und gegen 實施方式, 圖式簡單說明 und 代表圖 abgeglichen — zusätzlich erkennt eine Coverage-Prüfung jedes im Beschreibungstext verwendete Bezugssymbol, das in 符號說明 fehlt (施行細則 §19 第2款)."
       }
     },
     "tw": {
@@ -579,7 +582,9 @@
       "connectionRelationships": "Verbindungsbeziehungen der Komponenten im unabhängigen Anspruch (連接關係)",
       "tipoIndigenous": "Terminologie zu indigenen Völkern (原住民族)",
       "figuresSequential": "Figuren fortlaufend nummeriert",
-      "independentPreamble": "Unabhängiger Anspruch mit 一種"
+      "independentPreamble": "Unabhängiger Anspruch mit 一種",
+      "numeralConsistency": "Konsistenz der 元件代表符號 (施行細則 §19)",
+      "symbolTableCoverage": "Alle verwendeten Symbole im 符號說明 deklariert (施行細則 §19)"
     },
     "stats": {
       "tests": "Automatisierte Tests",
@@ -829,6 +834,15 @@
         "amendContent": "Unzulässiger Inhalt im Titel: {{title_prohibited_items}} (MPEP § 608.01).",
         "verify": "Titel hat {{count}} Wörter — MPEP § 606 empfiehlt einen kurzen, spezifischen Titel.",
         "pass": "Titel erfüllt MPEP § 606-Anforderungen."
+      },
+      "scopeLimitWording": {
+        "verify": "{{count}} Verwendung(en) von „die (vorliegende) Erfindung\" / „diese Erfindung\" in der Beschreibung gefunden.",
+        "pass": "Keine anspruchsbeschränkenden Formulierungen in der Beschreibung gefunden."
+      },
+      "numeralConsistency": {
+        "amend": "{{count}} Bezugszeichen mit mehreren unterschiedlichen Elementbezeichnungen verwendet. Beispiele: {{inline_summary}}",
+        "verify": "{{count}} Bezugszeichen mit möglicherweise inkonsistenter Benennung — bitte prüfen. Beispiele: {{inline_summary}}",
+        "pass": "Bezugszeichen identifizieren ihre Elemente konsistent."
       }
     },
     "claims": {
@@ -960,6 +974,11 @@
         "claimReference": {
           "amend": "Beschreibung verweist in {{count}} Absatz/Absätzen ({{paragraphs}}) auf Ansprüche (专利法实施细则 §20). Beispiel: {{snippet}}",
           "pass": "Beschreibung verweist nicht auf die Ansprüche."
+        },
+        "numeralConsistency": {
+          "amend": "{{count}} Bezugszeichen wurden mit mehreren unterschiedlichen Elementbezeichnungen verwendet. Beispiele: {{inline_summary}} (实施细则 §21 第2款).",
+          "verify": "{{count}} Bezugszeichen mit möglicherweise inkonsistenter Benennung — bitte prüfen. Beispiele: {{inline_summary}} (实施细则 §21 第2款).",
+          "pass": "Bezugszeichen identifizieren die Bauteile konsistent."
         }
       },
       "claims": {
@@ -1116,6 +1135,15 @@
         "indigenousTerms": {
           "verify": "Indigene Terminologie gefunden — Konformität mit 原住民族傳統智慧創作保護條例 prüfen.",
           "pass": "Keine indigene Terminologie gefunden."
+        },
+        "numeralConsistency": {
+          "amend": "{{count}} Bezugssymbole wurden mit mehreren unterschiedlichen Elementbezeichnungen verwendet. Beispiele: {{inline_summary}} (施行細則 §19 第2款).",
+          "verify": "{{count}} Bezugssymbole mit möglicherweise inkonsistenter Benennung — bitte prüfen. Beispiele: {{inline_summary}} (施行細則 §19 第2款).",
+          "pass": "Bezugssymbole identifizieren die Elemente konsistent."
+        },
+        "symbolTableCoverage": {
+          "amend": "{{count}} undeklarierte Element(e) für {{refnum_count}} Bezugssymbole fehlen in 符號說明: {{inline_summary}}",
+          "pass": "Alle in der Beschreibung verwendeten Bezugssymbole sind in 符號說明 deklariert."
         }
       },
       "claims": {
@@ -1364,6 +1392,10 @@
     "fromParagraph": "aus Absatz {{n}}",
     "fromClaim": "aus Anspruch {{n}}",
     "more": "+{{n}} weitere"
+  },
+  "numeralFindings": {
+    "expand": "Alle {{count}} anzeigen",
+    "collapse": "Weniger anzeigen"
   },
   "terms": {
     "title": "Nutzungsbedingungen",

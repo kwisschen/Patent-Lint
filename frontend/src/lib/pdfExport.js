@@ -247,6 +247,78 @@ function flaggedPhrasesRow(details_params, status, t, fontName) {
   }
 }
 
+// Numeral-conflict findings list for D1 / D3 — when there are more than
+// 3 findings, the inline message shows only top-3 + "(+N more)" trailer.
+// PDF readers can't click to expand, so we render the FULL list as
+// indented rows below the message line. Each row: numeral + name(s).
+const MAX_PDF_FINDINGS = 30
+
+function numeralFindingsRow(details_params, status, fontName) {
+  const findings = details_params?.findings
+  if (!Array.isArray(findings) || findings.length <= 3) return null
+  const total = findings.length
+  const cap = Math.min(MAX_PDF_FINDINGS, total)
+  const visible = findings.slice(0, cap)
+  const accent = statusColor(status)
+  const lines = visible.map((f) => {
+    // D1 shape: { numeral, canonical, canonical_count, outliers }
+    if (f.canonical !== undefined && Array.isArray(f.outliers)) {
+      let body = ` "${f.canonical}" (${f.canonical_count}×)`
+      for (const o of f.outliers) {
+        body += `, "${o.name}" (${o.count}×)`
+      }
+      return {
+        text: [
+          { text: `#${f.numeral}`, color: accent, bold: true, fontSize: 9 },
+          { text: body, color: "#475569", fontSize: 9 },
+        ],
+        ...(fontName ? { font: fontName } : {}),
+      }
+    }
+    // D3 grouped shape: { name, numerals: [], refnum_count }
+    if (Array.isArray(f.numerals)) {
+      const nums = f.numerals.join(", ")
+      const tail = f.refnum_count > 1 ? `, ${f.refnum_count} refnums` : ""
+      return {
+        text: [
+          { text: f.name ? `"${f.name}"` : "", color: accent, bold: true, fontSize: 9 },
+          { text: ` (${nums}${tail})`, color: "#475569", fontSize: 9 },
+        ],
+        ...(fontName ? { font: fontName } : {}),
+      }
+    }
+    // D3 legacy shape: { numeral, name, occurrences }
+    let body = ""
+    if (f.name) {
+      body = ` "${f.name}"`
+      if (f.occurrences != null) body += ` (${f.occurrences}×)`
+    }
+    return {
+      text: [
+        { text: `#${f.numeral}`, color: accent, bold: true, fontSize: 9 },
+        { text: body, color: "#475569", fontSize: 9 },
+      ],
+      ...(fontName ? { font: fontName } : {}),
+    }
+  })
+  if (total > cap) {
+    lines.push({
+      text: `… +${total - cap} more`,
+      color: "#94a3b8",
+      fontSize: 9,
+      italics: true,
+      ...(fontName ? { font: fontName } : {}),
+    })
+  }
+  return {
+    columns: [
+      { width: 60, text: "" },
+      { width: "*", stack: lines, margin: [0, 2, 0, 2] },
+    ],
+    margin: [0, 2, 0, 2],
+  }
+}
+
 // Two-cell callout card: 3pt colored strip + tinted content. Used for the
 // AMEND / VERIFY triage groups. Renders "— None" for an empty group.
 function triageCard(severity, items, t, fontName) {
@@ -439,6 +511,11 @@ function buildSectionChecks(sections, t, fontName) {
       const chipRow = flaggedPhrasesRow(item.details_params, item.status, t, fontName)
       if (chipRow) {
         content.push(chipRow)
+      }
+      if (item.message_key && (item.message_key.includes("numeralConsistency")
+          || item.message_key.includes("symbolTableCoverage"))) {
+        const findingsRow = numeralFindingsRow(item.details_params, item.status, fontName)
+        if (findingsRow) content.push(findingsRow)
       }
       const detailText = item.details_key && formatDetails(item.details_key, item.details_params, t) !== item.details_key
         ? formatDetails(item.details_key, item.details_params, t)
