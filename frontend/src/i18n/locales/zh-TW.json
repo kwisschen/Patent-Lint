@@ -459,7 +459,9 @@
         "checkMarkushTransition": "Markush 群組連接詞（§ 2117）",
         "checkOmnibusClaim": "概括請求項檢測（§ 112(b)）",
         "checkClaimPunctuation": "請求項標點符號（§ 608.01(m)）",
-        "checkSequenceListing": "序列表合規性（§ 2422）"
+        "checkSequenceListing": "序列表合規性（§ 2422）",
+        "numeralConsistency": "附圖標記一致性（MPEP § 608.01(g)）",
+        "scopeLimitWording": "\"the present invention\" 範圍限定警示（Phillips v. AWH）"
       }
     },
     "cnTitle": "PatentLint CNIPA 撰稿規則檢查",
@@ -517,7 +519,8 @@
       "titleInAbstract": "標題出現在摘要中",
       "commercialLanguage": "商業性用語",
       "priorArt": "附圖之先前技術引用（审查指南 §4.2）",
-      "figuresSequential": "附圖編號連續"
+      "figuresSequential": "附圖編號連續",
+      "numeralConsistency": "附圖標記一致性（實施細則 §21）"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統限新型申請。PatentLint 兼顧新型與發明申請文件。",
@@ -533,7 +536,7 @@
       },
       "symbolTable": {
         "title": "符號說明交叉比對（TW 特有）",
-        "description": "原生解析 TW 專屬的符號說明表，並與實施方式、圖式簡單說明、代表圖之符號使用情形交叉比對；此檢查為 TW 獨有，美國與中國大陸專利中並無此區塊。"
+        "description": "原生解析 TW 專屬的 符號說明 表，並與實施方式、圖式簡單說明、代表圖 之符號使用情形交叉比對；另含涵蓋度檢查，標記說明書內文使用但 符號說明 漏列之代表符號（施行細則 §19 第2款）。"
       }
     },
     "tw": {
@@ -579,7 +582,9 @@
       "connectionRelationships": "獨立項組件之連接關係（專利審查基準 §2.4）",
       "tipoIndigenous": "原住民族用語檢查",
       "figuresSequential": "圖號連續",
-      "independentPreamble": "獨立項須以「一種」開頭"
+      "independentPreamble": "獨立項須以「一種」開頭",
+      "numeralConsistency": "元件代表符號一致性（施行細則 §19）",
+      "symbolTableCoverage": "說明書中所有使用之代表符號於 符號說明 中均有載明（施行細則 §19）"
     },
     "stats": {
       "tests": "自動化測試",
@@ -916,6 +921,15 @@
         "amendContent": "發明名稱含禁止內容：{{title_prohibited_items}}（MPEP § 608.01）。",
         "verify": "發明名稱共 {{count}} 個詞，MPEP § 606 建議簡短明確。",
         "pass": "發明名稱符合 MPEP § 606 規定。"
+      },
+      "scopeLimitWording": {
+        "verify": "說明書中檢測到 {{count}} 處「本發明」/「本案」/「the (present) invention」用語。",
+        "pass": "說明書中未檢測到限制請求項範圍的表述。"
+      },
+      "numeralConsistency": {
+        "amend": "{{count}} 個元件代表符號用於指稱多個不同的元件名稱。範例：{{inline_summary}}",
+        "verify": "{{count}} 個元件代表符號可能使用不一致，建議複查。範例：{{inline_summary}}",
+        "pass": "元件代表符號與所指稱元件名稱一致。"
       }
     },
     "claims": {
@@ -1047,6 +1061,11 @@
         "claimReference": {
           "amend": "說明書在{{count}}個段落中引用了權利要求：{{paragraphs}}（专利法实施细则 §20）。範例：{{snippet}}",
           "pass": "說明書未引用權利要求。"
+        },
+        "numeralConsistency": {
+          "amend": "{{count}} 個附圖標記被用於指稱多個不同的構件名稱。範例：{{inline_summary}}（专利法实施细则 §21 第2款）。",
+          "verify": "{{count}} 個附圖標記可能使用不一致，建議複查。範例：{{inline_summary}}（专利法实施细则 §21 第2款）。",
+          "pass": "附圖標記與所指稱構件名稱一致。"
         }
       },
       "claims": {
@@ -1203,6 +1222,15 @@
         "indigenousTerms": {
           "verify": "發現原住民相關用語，請依《原住民族傳統智慧創作保護條例》確認是否衝突。",
           "pass": "未發現原住民相關用語。"
+        },
+        "numeralConsistency": {
+          "amend": "{{count}} 個元件代表符號被用於指稱多個不同的元件名稱。範例：{{inline_summary}}（專利法施行細則 §19 第2款）。",
+          "verify": "{{count}} 個元件代表符號可能使用不一致，建議複查。範例：{{inline_summary}}（專利法施行細則 §19 第2款）。",
+          "pass": "元件代表符號與所指稱元件名稱一致。"
+        },
+        "symbolTableCoverage": {
+          "amend": "{{count}} 個未宣告之元件（共 {{refnum_count}} 個附圖標記）未列於 符號說明 中：{{inline_summary}}",
+          "pass": "所有出現於說明書內文之附圖標記均已列於 符號說明 中。"
         }
       },
       "claims": {
@@ -1451,6 +1479,10 @@
     "fromParagraph": "來自段落 {{n}}",
     "fromClaim": "來自請求項 {{n}}",
     "more": "還有 {{n}} 項"
+  },
+  "numeralFindings": {
+    "expand": "顯示全部 {{count}} 項",
+    "collapse": "收合"
   },
   "terms": {
     "title": "服務條款",

@@ -104,8 +104,9 @@ class TestTwPipelineRouting:
         result = analyze_bytes(data, "test.docx", jurisdiction=Jurisdiction.TW)
         report = result.to_report_data()
         assert report.jurisdiction == Jurisdiction.TW
-        # 10 spec checks + 2 cross-ref checks + indigenousTerms (TIPO #19) = 13
-        assert len(report.specification_checks) == 13
+        # 10 spec checks + 2 cross-ref checks + indigenousTerms (TIPO #19)
+        # + numeralConsistency D1 + symbolTableCoverage D3 = 15
+        assert len(report.specification_checks) == 15
         # 18 claims checks + independentPreamble (TIPO #20 indep-half) = 19
         assert len(report.claims_checks) == 19
         # 4 abstract checks wired in Phase 7C-4
