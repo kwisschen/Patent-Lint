@@ -115,14 +115,16 @@ _LATIN_WORD = r"[A-Za-z][A-Za-z\-]{1,18}"
 _REFNUM_LATIN_PREFIX = re.compile(
     rf"((?:{_LATIN_WORD}\s+){{0,4}}{_LATIN_WORD})"
     r"\s+"
-    r"([A-Z]{1,5}\d{1,4}[a-zA-Z]?)"
-    r"(?![A-Za-z0-9])"
+    r"([A-Za-z]{1,5}\d{1,4}[a-zA-Z]?)"
+    r"(?![A-Za-z0-9])",
+    re.IGNORECASE,
 )
 
 # Pattern D: parenthetical Latin-prefix: "switch (LD1)"
 _REFNUM_LATIN_PAREN = re.compile(
     rf"((?:{_LATIN_WORD}\s+){{0,4}}{_LATIN_WORD})"
-    r"\s*\(([A-Z]{1,5}\d{1,4}[a-zA-Z]?)\)"
+    r"\s*\(([A-Za-z]{1,5}\d{1,4}[a-zA-Z]?)\)",
+    re.IGNORECASE,
 )
 
 # Latin-prefix denylist — common abbreviations / acronyms that look
@@ -360,7 +362,12 @@ def extract_numeral_name_pairs(
     for pattern in [_REFNUM_LATIN_PREFIX, _REFNUM_LATIN_PAREN]:
         for m in pattern.finditer(spec_text):
             noun = m.group(1).strip().lower()
-            ref = m.group(2)
+            ref_raw = m.group(2)
+            # Normalize Latin-prefix refnums to uppercase so case-
+            # inconsistent drafter usage ("lens E1" vs "lens e1") clusters
+            # under the same numeral. Drafter convention is uppercase;
+            # lowercase appearances are typos / inconsistencies.
+            ref = "".join(c.upper() if c.isalpha() else c for c in ref_raw)
 
             if (m.start(2), m.end(2)) in seen_spans:
                 continue
