@@ -18,7 +18,6 @@ occurrences) — these can't host a meaningful mutation test.
 """
 from __future__ import annotations
 
-import os
 import re
 from pathlib import Path
 from collections import Counter
