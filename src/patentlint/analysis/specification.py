@@ -163,6 +163,13 @@ _EXCLUDE_KEYWORDS = {
     "equation", "patent", "no", "number", "page", "version",
     "vol", "chapter", "section", "part", "item",
     "approximately", "about",
+    # Chemistry units / measurement context that produce phantom refnums
+    "phr",  # parts per hundred resin (chemistry industry unit)
+    "wt", "vol",  # weight-pct / volume-pct
+    "ppm", "ppb",  # parts per million/billion
+    "rpm", "psi", "bar",  # rotation / pressure
+    # Time / quantity prefixes that anchor measurements not refnums
+    "than", "over", "under", "exceed", "exceeds",
 }
 
 
@@ -391,29 +398,61 @@ def extract_numeral_name_pairs(
     return pairs
 
 
+_D1_CONTENT_STOPWORDS = frozenset({
+    # Articles / prepositions / conjunctions that carry no element-name
+    # meaning. When these appear in canonical_unique vs other_unique,
+    # they shouldn't count as distinguishing content. Without this
+    # filter, "terminal of the filter capacitor" vs "filter capacitors"
+    # had cu={"terminal", "the"} and ou={"capacitors"} → false D1 (when
+    # actually "the" / "of" are connective particles).
+    "the", "of", "and", "or", "but", "with", "without",
+    "for", "from", "into", "onto", "upon",
+    "via", "through", "between", "across",
+    "by", "as", "at", "in", "on", "to",
+    "than", "over", "under", "above", "below",
+    "while", "during", "after", "before",
+    "such", "any", "some", "another",
+    "having", "having", "include", "includes", "including",
+    "comprising", "comprises", "comprise",
+    "based", "according", "obtained",
+    "primary", "secondary",
+})
+
+
 def _content_words(name: str) -> set[str]:
     """Return content-word set of a name for D1 disjointness comparison.
 
-    Strips short tokens (≤2 chars) and adds singularized variants so
-    `'condenser lens'` and `'condenser lenses'` share content. The
-    stripped forms must be ≥4 chars to avoid adding short fragments like
-    'len' (which would falsely intersect with unrelated short words)."""
+    Strips short tokens (≤2 chars), filters English stopwords (the/of/
+    etc — connectives that carry no element-name meaning), and adds
+    singularized variants so plural-vs-singular doesn't create false
+    D1 conflicts. Three plural rules (English):
+      -ies → -y  (boundaries → boundary, switches→switch via -es path)
+      -es → ''   (boxes → box, when the unstripped is ≥6 chars)
+      -s → ''    (lenses→lense via -s path; condensers → condenser)
+    Stripped forms must be ≥4 chars to avoid short-fragment collisions
+    like 'lens' → 'len'."""
     out: set[str] = set()
     for w in name.split():
         if len(w) <= 2:
             continue
+        if w in _D1_CONTENT_STOPWORDS:
+            continue
         out.add(w)
-        # Singularize: strip trailing 's' / 'es' but only when the
-        # stripped form is itself ≥4 chars (so 'lens' → 'len' doesn't
-        # leak as a content fragment).
+        # -ies → -y: "boundaries" → "boundary"
+        if len(w) >= 6 and w.endswith("ies"):
+            out.add(w[:-3] + "y")
+        # -es → '': "boxes" → "box". Lower min length than -ies because
+        # -es words tend to be shorter base nouns.
+        if len(w) >= 6 and w.endswith("es"):
+            out.add(w[:-2])
+        # -s → '': "condenser" / "lens" — only when stripped form ≥4
+        # chars to avoid adding 3-char fragments.
         if (
             len(w) >= 5
             and w.endswith("s")
-            and not w.endswith(("ss", "us", "is"))
+            and not w.endswith(("ss", "us", "is", "ies"))
         ):
             out.add(w[:-1])
-        if len(w) >= 6 and w.endswith("es"):
-            out.add(w[:-2])
     return out
 
 
@@ -631,6 +670,36 @@ def _format_d1_name_for_display(keyed: str) -> str:
     return head
 
 
+def _singularize_last_word(s: str) -> str:
+    """Best-effort English singularization of the LAST word in `s`.
+
+    Used by cluster merge so plural-vs-singular variants
+    ("filter capacitors" vs "filter capacitor") cluster as the same
+    noun. Three rules: -ies→-y (boundaries→boundary), -es→strip
+    (boxes→box), -s→strip (lenses→lense, condensers→condenser).
+    """
+    if not s:
+        return s
+    parts = s.rsplit(" ", 1)
+    head = parts[-1]
+    if not head:
+        return s
+    base = head
+    if len(head) >= 6 and head.endswith("ies"):
+        base = head[:-3] + "y"
+    elif len(head) >= 6 and head.endswith("es"):
+        base = head[:-2]
+    elif (
+        len(head) >= 5
+        and head.endswith("s")
+        and not head.endswith(("ss", "us", "is"))
+    ):
+        base = head[:-1]
+    if base == head:
+        return s
+    return (parts[0] + " " + base) if len(parts) == 2 else base
+
+
 def _merge_suffix_clusters_us(name_counts: "Counter[str]") -> "Counter[str]":
     """Merge suffix-equivalent names: if A's surface form ends with B's
     surface form (with B at least 2 content words), they refer to the same
@@ -661,16 +730,27 @@ def _merge_suffix_clusters_us(name_counts: "Counter[str]") -> "Counter[str]":
     def word_count(s: str) -> int:
         return len([w for w in s.split() if w])
 
+    # Compare against BOTH raw and singularized forms of the shorter
+    # surface so plural variants cluster: "terminal of the filter
+    # capacitor" ends with " filter capacitor", which is the
+    # singularized form of "filter capacitors" — should union.
+    surfaces_sing = [_singularize_last_word(s) for s in surfaces]
+
     for i in range(n):
         for j in range(n):
             if i == j:
                 continue
             si, sj = surfaces[i], surfaces[j]
-            if word_count(sj) >= 1 and (
+            sj_sing = surfaces_sing[j]
+            joined = (
                 si == sj
                 or si.endswith(" " + sj)
                 or si.endswith("-" + sj)
-            ):
+                or si == sj_sing
+                or si.endswith(" " + sj_sing)
+                or si.endswith("-" + sj_sing)
+            )
+            if word_count(sj) >= 1 and joined:
                 union(i, j)
 
     # Pick cluster rep = MOST FREQUENT (not shortest). Shortest-as-rep
