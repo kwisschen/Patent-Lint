@@ -21,7 +21,7 @@ import RubricPage from './pages/RubricPage'
 import { usePyodide } from './hooks/usePyodide'
 import { useUpdateCheck } from './hooks/useUpdateCheck'
 import { Toaster } from './components/ui/sonner'
-import { downloadReport as downloadReportClient, prefetchCjkFont } from './lib/pdfExport'
+import { downloadReport as downloadReportClient } from './lib/pdfExport'
 import { preloadMermaidChunks } from './lib/preloadMermaid'
 import { getJurisdictionConfig, JURISDICTION_COLORS } from './lib/jurisdictionConfig'
 import { CHECKS_BY_JURISDICTION } from './generated/stats'
@@ -48,10 +48,6 @@ function App() {
     setEngineReady(true)
   }, [])
 
-  useEffect(() => {
-    prefetchCjkFont(i18n.language)
-  }, [i18n.language])
-
   // Pre-load mermaid's flowchart chunks during the initial loading
   // phase so they don't lazy-load (and burst into DevTools' Network
   // tab) the first time AnalysisReport renders the claim tree. See
@@ -63,13 +59,16 @@ function App() {
   // Home page state
   const [jurisdiction, setJurisdiction] = useState('US')
 
-  // Prefetch CJK font for jurisdiction (CN/TW content always contains CJK)
-  useEffect(() => {
-    const jConfig = getJurisdictionConfig(jurisdiction)
-    if (jConfig.cjkFont) {
-      prefetchCjkFont(jConfig.cjkFont)
-    }
-  }, [jurisdiction])
+  // Note: CJK font (Noto Sans TC/SC/JP/KR) is no longer prefetched
+  // at App mount. The fetch was a ~1MB GET to fonts.gstatic.com that
+  // appeared in DevTools' Network tab as if triggered by the user's
+  // drop event (the entry was actually from page load, but the user
+  // typically opens DevTools after dropping, so the timing read as
+  // "PatentLint just touched the network when I gave it my draft").
+  // The font is only consumed by PDF export. loadCjkFont in pdfExport.js
+  // handles on-demand fetching the first time the user clicks Download
+  // PDF — covered by the existing "Generating..." button state. Cached
+  // module-level after first download, so subsequent clicks are instant.
   const [homeState, setHomeState] = useState('idle')
   const [result, setResult] = useState(null)
   const [file, setFile] = useState(null)
