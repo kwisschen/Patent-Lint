@@ -1086,10 +1086,10 @@ def _detect_d1_conflicts(
 def _format_inline_conflict(c: dict) -> str:
     """Plain-English one-line summary of a conflict.
 
-    Format: numeral N used for: "name1" (N×), "name2" (M×)
-    The colon-list form reads as "this numeral was used for these
-    element names" without the cryptic "vs" / unbracketed "×N" that
-    the original technical format had.
+    Format: #N: "name1" (N×), "name2" (M×)
+    Uses `#N` prefix to match how patent practitioners reference
+    numerals consistently across jurisdictions; the colon-list form
+    reads as "this numeral was used for these element names".
     """
     canonical = _format_d1_name_for_display(c["canonical"])
     parts = [f'"{canonical}" ({c["canonical_count"]}×)']
@@ -1098,7 +1098,7 @@ def _format_inline_conflict(c: dict) -> str:
         parts.append(f'"{name}" ({o["count"]}×)')
     if len(c["outliers"]) > 3:
         parts.append("…")
-    return f"numeral {c['numeral']} used for: " + ", ".join(parts)
+    return f"#{c['numeral']}: " + ", ".join(parts)
 
 
 def extract_reference_numeral_inventory(
