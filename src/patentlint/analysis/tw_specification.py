@@ -9,7 +9,14 @@ against TIPO rules (專利法施行細則 and 專利審查基準).
 from __future__ import annotations
 
 import re
+from collections import Counter
 
+from patentlint.analysis.cn_specification import (
+    _cn_detect_d1_conflicts as _cjk_detect_d1_conflicts,
+    _cn_extract_numeral_name_pairs as _cjk_extract_numeral_name_pairs,
+    _cn_format_d1_name_for_display as _cjk_format_d1_name_for_display,
+    _cn_format_inline_conflict as _cjk_format_inline_conflict,
+)
 from patentlint.analysis.figure_refs import TW_PARSER
 from patentlint.analysis.utils import _dx
 from patentlint.models import CheckItem, TwPatentDocument, TwPatentType
@@ -275,7 +282,7 @@ def check_paragraph_numbering(doc: TwPatentDocument) -> list[CheckItem]:
         examples_str = ", ".join(bad_format[:5])
         return [CheckItem(
             status="amend",
-            message=f"{len(bad_format)} paragraph(s) use non-[NNNN] format.",
+            message=f"{len(bad_format)} paragraph(s) use non-[NNNN] format. Examples: {examples_str}",
             message_key="check.tw.spec.paragraphNumbering.amendFormat",
             details_key="details.tw.paragraphNumbering",
             details_params={"count": len(bad_format), "examples": examples_str},
@@ -868,4 +875,341 @@ def check_indigenous_terms(doc: TwPatentDocument) -> list[CheckItem]:
         message="No indigenous terminology references found.",
         message_key="check.tw.spec.indigenousTerms.pass",
         reference="原住民族傳統智慧創作保護條例",
+    )]
+
+
+# ── D1 + D3 reference symbol consistency (TW) ──────────────────────────
+# 專利法施行細則 §19 第2款 — 元件代表符號應一致 + 符號說明應載明圖式中所示之
+# 主要元件代表符號. Two related checks:
+#
+#   D1: same numeral used with multiple disjoint element names → FIX
+#       (drafter copy-paste / typo error)
+#   D3: numerals appearing in spec body but not declared in 符號說明 → FIX
+#       (drafter forgot to add element to symbol table)
+
+# Reuse the CN helpers — imports moved to top of file. Helpers are
+# Traditional/Simplified-agnostic since the comparison is char-based.
+
+
+def _tw_all_spec_text(doc) -> str:
+    """Concatenate body sections for D1 scan (excludes title/claims/
+    abstract/symbol_table — those have their own checks).
+    """
+    parts: list[str] = []
+    for section in (doc.technical_field, doc.prior_art, doc.disclosure,
+                    doc.embodiment):
+        for p in section or []:
+            parts.append(p)
+    return " ".join(parts)
+
+
+def check_numeral_consistency_tw(doc: TwPatentDocument) -> list[CheckItem]:
+    """D1 — same numeral used with multiple disjoint element names.
+
+    Statutory: 專利法施行細則 §19 第2款 — 元件代表符號應一致.
+    Same precision filters as CN/US: ≥3 total occurrences per numeral,
+    ≥2 occurrences per candidate name, disjoint CJK char sets between
+    at least one pair of names.
+    """
+    spec_text = _tw_all_spec_text(doc)
+    if not spec_text:
+        return [CheckItem(
+            status="pass",
+            message="無附圖標記一致性問題（說明書為空）。",
+            message_key="check.tw.spec.numeralConsistency.pass",
+            reference="專利法施行細則 §19 第2款",
+        )]
+
+    pairs = _cjk_extract_numeral_name_pairs(spec_text)
+    if not pairs:
+        return [CheckItem(
+            status="pass",
+            message="未檢測到附圖標記。",
+            message_key="check.tw.spec.numeralConsistency.pass",
+            reference="專利法施行細則 §19 第2款",
+        )]
+
+    conflicts = _cjk_detect_d1_conflicts(pairs)
+
+    if not conflicts:
+        return [CheckItem(
+            status="pass",
+            message="附圖標記與所指稱元件名稱一致。",
+            message_key="check.tw.spec.numeralConsistency.pass",
+            reference="專利法施行細則 §19 第2款",
+        )]
+
+    fix_conflicts = [c for c in conflicts if c.get("confidence") == "fix"]
+    review_conflicts = [c for c in conflicts if c.get("confidence") == "review"]
+    items: list[CheckItem] = []
+    if fix_conflicts:
+        items.append(_build_tw_d1_check_item(fix_conflicts, "amend", "amend"))
+    if review_conflicts:
+        items.append(_build_tw_d1_check_item(review_conflicts, "verify", "verify"))
+    return items or [CheckItem(
+        status="pass",
+        message="附圖標記與所指稱元件名稱一致。",
+        message_key="check.tw.spec.numeralConsistency.pass",
+        reference="專利法施行細則 §19 第2款",
+    )]
+
+
+def _build_tw_d1_check_item(conflicts: list[dict], status: str, suffix: str) -> CheckItem:
+    """Build a CheckItem for a slice of TW D1 conflicts."""
+    sample = conflicts[:8]
+    extra = max(0, len(conflicts) - 8)
+    findings = [
+        {
+            "numeral": c["numeral"],
+            "canonical": _cjk_format_d1_name_for_display(c["canonical"]),
+            "outliers": [
+                {"name": _cjk_format_d1_name_for_display(o["name"]),
+                 "count": o["count"],
+                 "confidence": o.get("confidence", "fix")}
+                for o in c["outliers"]
+            ],
+            "case": c["case"],
+            "confidence": c.get("confidence", "fix"),
+        }
+        for c in sample
+    ]
+    inline = "；".join(_cjk_format_inline_conflict(c, simp=False) for c in sample[:3])
+    if len(conflicts) > 3:
+        inline = inline + f"（另 {len(conflicts) - 3} 處）"
+    is_fix = (status == "amend")
+    msg = (
+        f"{len(conflicts)} 個元件代表符號的使用前後不一致。範例：{inline}"
+        if is_fix
+        else f"{len(conflicts)} 個元件代表符號可能使用不一致，建議複查。範例：{inline}"
+    )
+    return CheckItem(
+        status=status,
+        message=msg,
+        message_key=f"check.tw.spec.numeralConsistency.{suffix}",
+        details_key="details.tw.numeralConsistency",
+        details_params={
+            "count": len(conflicts),
+            "findings": findings,
+            "extra": extra,
+            "inline_summary": inline,
+        },
+        reference="專利法施行細則 §19 第2款",
+        diagnostics=_dx(
+            conflict_count=len(conflicts),
+            sample_numerals=[c["numeral"] for c in sample],
+            instance_collisions=sum(1 for c in conflicts if c["case"] == "instance"),
+            element_collisions=sum(1 for c in conflicts if c["case"] == "element"),
+        ),
+    )
+
+
+# ── D3 符號說明 numeral coverage (TW only) ───────────────────────────
+#
+# Numerals appearing in the spec body must be declared in 符號說明 per
+# 專利法施行細則 §19 第2款. Drafter mistake: adding "the housing 102"
+# in 實施方式 without declaring "102 housing" in 符號說明.
+#
+# Reverse direction (declared in 符號說明 but never used in spec) is
+# also a real defect (dead reference) but lower-precision — drafters
+# sometimes legitimately list elements shown in drawings without
+# describing them in detail. D3 implementation focuses on the high-
+# precision "used but not declared" direction.
+
+def check_symbol_table_coverage_tw(doc: TwPatentDocument) -> list[CheckItem]:
+    """D3 — numerals appearing in spec body but missing from 符號說明.
+
+    Statutory: 專利法施行細則 §19 第2款 — all reference symbols used in
+    the specification must be declared in 符號說明.
+
+    No-ops if symbol_table is empty (separate check_symbol_table_presence
+    handles that case).
+    """
+    if not doc.symbol_table:
+        return [CheckItem(
+            status="pass",
+            message="符號說明 not present (separate check).",
+            message_key="check.tw.spec.symbolTableCoverage.pass",
+            reference="專利法施行細則 §19 第2款",
+        )]
+
+    spec_text = _tw_all_spec_text(doc)
+    if not spec_text:
+        return [CheckItem(
+            status="pass",
+            message="符號說明 coverage check skipped (no spec body text).",
+            message_key="check.tw.spec.symbolTableCoverage.pass",
+            reference="專利法施行細則 §19 第2款",
+        )]
+
+    pairs = _cjk_extract_numeral_name_pairs(spec_text)
+    used_numerals: dict[str, str] = {}  # num (str, may be Latin-prefix) → first head noun seen
+    for num, name in pairs:
+        # Strip the ordinal-key prefix for display (D3 doesn't care about ordinal)
+        display_name = name.split("|", 1)[-1] if "|" in name else name
+        used_numerals.setdefault(num, display_name)
+    if not used_numerals:
+        return [CheckItem(
+            status="pass",
+            message="符號說明 coverage check skipped (no numerals in spec body).",
+            message_key="check.tw.spec.symbolTableCoverage.pass",
+            reference="專利法施行細則 §19 第2款",
+        )]
+
+    # Build set of declared numerals from symbol_table. Symbol-table
+    # entries can be ranges (S21~S25), letter-prefixed (e.g., "S21"),
+    # or pure digits ("10"). Match against the STRING form so digit
+    # and Latin-prefix refs share the same comparison key.
+    declared: set[str] = set()
+    for entry in doc.symbol_table:
+        for piece in re.split(r"[~\-、,，]", entry.numeral):
+            piece = piece.strip()
+            if not piece:
+                continue
+            # Add raw form — Latin-prefix matching ("S21" stays "S21")
+            declared.add(piece)
+            # Also add the canonical digit-only form (strip leading zeros
+            # and any letter prefix) — matches the canonicalization used
+            # by extract_numeral_name_pairs which stores int-form digits.
+            digits = "".join(c for c in piece if c.isdigit())
+            if digits:
+                try:
+                    declared.add(str(int(digits)))
+                except ValueError:
+                    continue
+
+    undeclared = sorted(num for num in used_numerals if num not in declared)
+    # Apply same precision filter as D1 — require ≥3 total occurrences
+    # for digit refs (filters chemistry/range noise); ≥2 for Latin prefix.
+    pair_counts: Counter = Counter(num for num, _ in pairs)
+
+    def _min_pair_count(num: str) -> int:
+        return 2 if (num and num[0].isalpha()) else 3
+
+    undeclared = [n for n in undeclared if pair_counts[n] >= _min_pair_count(n)]
+
+    # Suppression: if the captured name is ALREADY declared in
+    # symbol_table for a DIFFERENT refnum, the drafter declared the
+    # element type — subsequent refnums are legit instances of that
+    # type (TIPO accepts this convention). Only flag refnums whose
+    # captured name is unknown to the symbol table.
+    declared_names: set[str] = {
+        (entry.name or "").strip()
+        for entry in doc.symbol_table
+        if entry.name
+    }
+    undeclared = [
+        n for n in undeclared
+        if used_numerals.get(n, "") not in declared_names
+    ]
+
+    if not undeclared:
+        return [CheckItem(
+            status="pass",
+            message="符號說明 coverage complete.",
+            message_key="check.tw.spec.symbolTableCoverage.pass",
+            reference="專利法施行細則 §19 第2款",
+        )]
+
+    # GROUP findings by captured name. When 2+ refnums share the same
+    # name, the drafter likely intended them as instances of one element
+    # type but forgot to list any of them in 符號說明. Showing 8 separate
+    # rows for "預覽影像 705 / 706 / 707 / ..." is noise; one grouped
+    # finding "預覽影像 (705-712, 8 refnums)" is actionable.
+    grouped: dict[str, list[str]] = {}
+    for num in undeclared:
+        name = used_numerals.get(num, "")
+        grouped.setdefault(name, []).append(num)
+
+    def _numeral_sort_key(n: str) -> tuple:
+        digit_prefix = ""
+        for ch in n:
+            if ch.isdigit():
+                digit_prefix += ch
+            else:
+                break
+        return (0, int(digit_prefix), n) if digit_prefix else (1, 0, n)
+
+    # Each group is a finding; sort by group size (most refnums first)
+    # then by first numeral.
+    group_findings = []
+    for name, nums in grouped.items():
+        nums_sorted = sorted(nums, key=_numeral_sort_key)
+        group_findings.append({
+            "name": name,
+            "numerals": nums_sorted,
+            "refnum_count": len(nums),
+            "occurrences": sum(pair_counts[n] for n in nums),
+        })
+    group_findings.sort(
+        key=lambda g: (-g["refnum_count"], _numeral_sort_key(g["numerals"][0])),
+    )
+
+    sample = group_findings[:10]
+    extra = max(0, len(group_findings) - 10)
+    # Total individual refnums is what users want to see (matches old
+    # behavior); group count is supplementary.
+    findings = sample
+    # Inline message names the undeclared numerals + their captured noun
+    # in a universal-locale format. Just the numeral and the captured
+    # name in quotes — the surrounding i18n template provides the
+    # "reference symbol(s)" / "附圖標記" categorical word. ASCII parens +
+    # `(+N more)` overflow read cleanly in en/de/zh/ja/ko alike; only
+    # the CJK element name (which we cannot translate) carries source
+    # script.
+    # Inline format: "name" (refnum-list, N refnums). When there's only
+    # one refnum, omit the count suffix.
+    def _format_numerals(nums: list[str]) -> str:
+        # Compact contiguous digit ranges: 705,706,707,708 → 705-708.
+        digit_nums = [n for n in nums if n.isdigit()]
+        non_digit = [n for n in nums if not n.isdigit()]
+        digit_nums_int = sorted({int(n) for n in digit_nums})
+        ranges: list[str] = []
+        if digit_nums_int:
+            start = digit_nums_int[0]
+            end = start
+            for n in digit_nums_int[1:]:
+                if n == end + 1:
+                    end = n
+                else:
+                    ranges.append(f"{start}" if start == end else f"{start}-{end}")
+                    start = end = n
+            ranges.append(f"{start}" if start == end else f"{start}-{end}")
+        return ", ".join(ranges + non_digit)
+
+    inline_parts = []
+    for g in sample[:3]:
+        nums_str = _format_numerals(g["numerals"])
+        if g["refnum_count"] > 1:
+            nums_str += f", {g['refnum_count']} refnums"
+        if g["name"]:
+            inline_parts.append(f'"{g["name"]}" ({nums_str})')
+        else:
+            inline_parts.append(f'({nums_str})')
+    inline = "; ".join(inline_parts)
+    if len(group_findings) > 3:
+        inline += f" (+{len(group_findings) - 3} more groups)"
+
+    total_refnums = len(undeclared)
+    total_groups = len(group_findings)
+    return [CheckItem(
+        status="amend",
+        message=(
+            f"{total_groups} undeclared element(s) covering {total_refnums} 附圖"
+            f"標記，未列於符號說明：{inline}"
+        ),
+        message_key="check.tw.spec.symbolTableCoverage.amend",
+        details_key="details.tw.symbolTableCoverage",
+        details_params={
+            "count": total_groups,
+            "refnum_count": total_refnums,
+            "findings": findings,
+            "extra": extra,
+            "inline_summary": inline,
+        },
+        reference="專利法施行細則 §19 第2款",
+        diagnostics=_dx(
+            undeclared_count=total_refnums,
+            group_count=total_groups,
+            symbol_table_size=len(doc.symbol_table),
+        ),
     )]
