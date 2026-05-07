@@ -928,6 +928,7 @@
       },
       "numeralConsistency": {
         "amend": "{{count}} 個の参照符号が複数の異なる要素名に使用されています。例：{{inline_summary}}",
+        "verify": "{{count}} 個の参照符号で命名の不一致が疑われます。確認してください。例：{{inline_summary}}",
         "pass": "参照符号は要素を一貫して識別しています。"
       }
     },
@@ -1063,6 +1064,7 @@
         },
         "numeralConsistency": {
           "amend": "{{count}} 個の参照符号が複数の異なる構成要素名に使用されています。例：{{inline_summary}}（专利法实施细则 §21 第2款）。",
+          "verify": "{{count}} 個の参照符号で命名の不一致が疑われます。確認してください。例：{{inline_summary}}（专利法实施细则 §21 第2款）。",
           "pass": "参照符号は構成要素を一貫して識別しています。"
         }
       },
@@ -1223,6 +1225,7 @@
         },
         "numeralConsistency": {
           "amend": "{{count}} 個の参照符号が複数の異なる要素名に使用されています。例：{{inline_summary}}（專利法施行細則 §19 第2款）。",
+          "verify": "{{count}} 個の参照符号で命名の不一致が疑われます。確認してください。例：{{inline_summary}}（專利法施行細則 §19 第2款）。",
           "pass": "参照符号は要素を一貫して識別しています。"
         },
         "symbolTableCoverage": {

@@ -939,6 +939,23 @@ def check_numeral_consistency_tw(doc: TwPatentDocument) -> list[CheckItem]:
             reference="專利法施行細則 §19 第2款",
         )]
 
+    fix_conflicts = [c for c in conflicts if c.get("confidence") == "fix"]
+    review_conflicts = [c for c in conflicts if c.get("confidence") == "review"]
+    items: list[CheckItem] = []
+    if fix_conflicts:
+        items.append(_build_tw_d1_check_item(fix_conflicts, "amend", "amend"))
+    if review_conflicts:
+        items.append(_build_tw_d1_check_item(review_conflicts, "verify", "verify"))
+    return items or [CheckItem(
+        status="pass",
+        message="附圖標記與所指稱元件名稱一致。",
+        message_key="check.tw.spec.numeralConsistency.pass",
+        reference="專利法施行細則 §19 第2款",
+    )]
+
+
+def _build_tw_d1_check_item(conflicts: list[dict], status: str, suffix: str) -> CheckItem:
+    """Build a CheckItem for a slice of TW D1 conflicts."""
     sample = conflicts[:8]
     extra = max(0, len(conflicts) - 8)
     findings = [
@@ -947,20 +964,28 @@ def check_numeral_consistency_tw(doc: TwPatentDocument) -> list[CheckItem]:
             "canonical": _cjk_format_d1_name_for_display(c["canonical"]),
             "outliers": [
                 {"name": _cjk_format_d1_name_for_display(o["name"]),
-                 "count": o["count"]}
+                 "count": o["count"],
+                 "confidence": o.get("confidence", "fix")}
                 for o in c["outliers"]
             ],
             "case": c["case"],
+            "confidence": c.get("confidence", "fix"),
         }
         for c in sample
     ]
     inline = "；".join(_cjk_format_inline_conflict(c, simp=False) for c in sample[:3])
     if len(conflicts) > 3:
         inline = inline + f"（另 {len(conflicts) - 3} 處）"
-    return [CheckItem(
-        status="amend",
-        message=f"{len(conflicts)} 個元件代表符號的使用前後不一致。範例：{inline}",
-        message_key="check.tw.spec.numeralConsistency.amend",
+    is_fix = (status == "amend")
+    msg = (
+        f"{len(conflicts)} 個元件代表符號的使用前後不一致。範例：{inline}"
+        if is_fix
+        else f"{len(conflicts)} 個元件代表符號可能使用不一致，建議複查。範例：{inline}"
+    )
+    return CheckItem(
+        status=status,
+        message=msg,
+        message_key=f"check.tw.spec.numeralConsistency.{suffix}",
         details_key="details.tw.numeralConsistency",
         details_params={
             "count": len(conflicts),
@@ -975,7 +1000,7 @@ def check_numeral_consistency_tw(doc: TwPatentDocument) -> list[CheckItem]:
             instance_collisions=sum(1 for c in conflicts if c["case"] == "instance"),
             element_collisions=sum(1 for c in conflicts if c["case"] == "element"),
         ),
-    )]
+    )
 
 
 # ── D3 符號說明 numeral coverage (TW only) ───────────────────────────

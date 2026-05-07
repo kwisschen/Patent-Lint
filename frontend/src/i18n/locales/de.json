@@ -928,6 +928,7 @@
       },
       "numeralConsistency": {
         "amend": "{{count}} Bezugszeichen mit mehreren unterschiedlichen Elementbezeichnungen verwendet. Beispiele: {{inline_summary}}",
+        "verify": "{{count}} Bezugszeichen mit möglicherweise inkonsistenter Benennung — bitte prüfen. Beispiele: {{inline_summary}}",
         "pass": "Bezugszeichen identifizieren ihre Elemente konsistent."
       }
     },
@@ -1063,6 +1064,7 @@
         },
         "numeralConsistency": {
           "amend": "{{count}} Bezugszeichen wurden mit mehreren unterschiedlichen Elementbezeichnungen verwendet. Beispiele: {{inline_summary}} (实施细则 §21 第2款).",
+          "verify": "{{count}} Bezugszeichen mit möglicherweise inkonsistenter Benennung — bitte prüfen. Beispiele: {{inline_summary}} (实施细则 §21 第2款).",
           "pass": "Bezugszeichen identifizieren die Bauteile konsistent."
         }
       },
@@ -1223,6 +1225,7 @@
         },
         "numeralConsistency": {
           "amend": "{{count}} Bezugssymbole wurden mit mehreren unterschiedlichen Elementbezeichnungen verwendet. Beispiele: {{inline_summary}} (施行細則 §19 第2款).",
+          "verify": "{{count}} Bezugssymbole mit möglicherweise inkonsistenter Benennung — bitte prüfen. Beispiele: {{inline_summary}} (施行細則 §19 第2款).",
           "pass": "Bezugssymbole identifizieren die Elemente konsistent."
         },
         "symbolTableCoverage": {

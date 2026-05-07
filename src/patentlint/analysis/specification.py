@@ -183,10 +183,61 @@ _LATIN_PREFIX_DENYLIST = frozenset({
 })
 
 # Exclusion: unit followers
+# Comprehensive scientific-unit pattern. Match longer suffixes first so
+# "mmol" doesn't get truncated to "mm". Anchored with \b so partial
+# matches don't fire (e.g. "mmA" wouldn't match "mm").
 _UNIT_PATTERN = re.compile(
-    r"^\s*(?:mm|cm|m|km|µm|nm|in|ft|°[CF]|K|%|Hz|kHz|MHz|GHz|THz"
-    r"|V|mV|kV|A|mA|W|kW|MW|Ω|psi|bar|atm|Pa|kPa|MPa"
-    r"|g|kg|mg|lb|oz|mol|L|mL|dB|s|ms|µs|ns|rpm)\b",
+    r"^\s*(?:"
+    # Length (long-first so mm doesn't shadow mmol etc.)
+    r"mmHg|mmH2O|"
+    r"µm|um|μm|nm|pm|fm|Å|angstrom"
+    r"|mm|cm|dm|km|m|in|ft|yd|mil|mile|miles"
+    # Time
+    r"|days?|hours?|minutes?|seconds?|hr|hrs|min|mins|sec|secs"
+    r"|ms|µs|μs|us|ns|ps|fs|s"
+    # Frequency
+    r"|kHz|MHz|GHz|THz|Hz"
+    # Voltage / current / power / charge
+    r"|kV|mV|µV|μV|V"
+    r"|kA|mA|µA|μA|A"
+    r"|kW|MW|GW|mW|µW|μW|W"
+    r"|mC|µC|μC|nC|C"
+    r"|kΩ|MΩ|mΩ|Ω|ohm|ohms"
+    # Pressure
+    r"|psi|psia|psig|bar|mbar|atm|torr|mmHg"
+    r"|kPa|MPa|GPa|hPa|mPa|µPa|μPa|Pa"
+    # Mass / weight
+    r"|kg|mg|µg|μg|ng|pg|g"
+    r"|lb|lbs|oz|ton|tons"
+    # Concentration / amount
+    r"|mol|mmol|µmol|μmol|nmol|pmol"
+    r"|M|mM|µM|μM|nM|pM"
+    r"|N|wt%|vol%|mol%|w/v|w/w|v/v"
+    r"|ppm|ppb|ppt|phr|equiv|equivs"
+    # Volume
+    r"|mL|µL|μL|nL|pL|cL|dL|L"
+    r"|cc|cm3|ml|liter|liters"
+    # Temperature / energy / radiation
+    r"|°C|°F|°R|°K|K|kK"
+    r"|kJ|MJ|GJ|mJ|µJ|μJ|J"
+    r"|kcal|cal|BTU|Wh|kWh|MWh"
+    r"|eV|keV|MeV|GeV"
+    r"|Sv|mSv|µSv|μSv|Gy|mGy|µGy|μGy|Bq|Ci"
+    # Optical / magnetic
+    r"|lm|lux|lx|cd|nit|nits|sr"
+    r"|T|mT|µT|μT|G|Oe|Wb"
+    # Data / network rate
+    r"|bps|Kbps|Mbps|Gbps|Tbps|kbps|kB|MB|GB|TB|PB|kbit|Mbit|Gbit"
+    r"|baud"
+    # Sound / acceleration
+    r"|dB|dBm|dBu|dBi|dBA"
+    r"|rpm|fps|kph|mph|knots"
+    r"|m/s|km/h|ft/s"
+    # Angle
+    r"|°|deg|rad|sr|arcsec|arcmin"
+    # Percent (no boundary needed since it's punctuation)
+    r"|%"
+    r")\b",
 )
 
 # Exclusion: preceding keywords
@@ -633,8 +684,35 @@ def check_numeral_consistency(spec_text: str) -> list[CheckItem]:
         return (-len(c["outliers"]), -outlier_total, num_sort)
     conflicts = sorted(conflicts, key=_severity_key)
 
-    # Cap displayed conflicts at 8 to bound payload size; "extra"
-    # carries the overflow count for the drafter.
+    # Split by confidence: FIX (high-confidence drafter typo / instance
+    # collision / consistent variant) vs REVIEW (low-confidence single-
+    # occurrence outlier with zero shared content vs strong canonical —
+    # could be sentence-fragment over-capture or rare drafter error).
+    fix_conflicts = [c for c in conflicts if c.get("confidence") == "fix"]
+    review_conflicts = [c for c in conflicts if c.get("confidence") == "review"]
+
+    items: list[CheckItem] = []
+    if fix_conflicts:
+        items.append(_build_d1_check_item(
+            fix_conflicts, status="amend", suffix="amend",
+        ))
+    if review_conflicts:
+        items.append(_build_d1_check_item(
+            review_conflicts, status="verify", suffix="verify",
+        ))
+    if items:
+        return items
+    return [CheckItem(
+        status="pass",
+        message="Reference numerals are consistent across the specification.",
+        message_key="check.spec.numeralConsistency.pass",
+        reference="MPEP § 608.01(g)",
+    )]
+
+
+def _build_d1_check_item(conflicts: list[dict], status: str, suffix: str) -> CheckItem:
+    """Build a CheckItem for a slice of D1 conflicts (either fix-tier
+    or review-tier). Shared between the two emit paths."""
     sample = conflicts[:8]
     extra = max(0, len(conflicts) - 8)
     findings = [
@@ -645,23 +723,28 @@ def check_numeral_consistency(spec_text: str) -> list[CheckItem]:
                 {
                     "name": _format_d1_name_for_display(o["name"]),
                     "count": o["count"],
+                    "confidence": o.get("confidence", "fix"),
                 }
                 for o in c["outliers"]
             ],
-            "case": c["case"],  # 'instance' (A) or 'element' (B)
+            "case": c["case"],
+            "confidence": c.get("confidence", "fix"),
         }
         for c in sample
     ]
     inline = "; ".join(_format_inline_conflict(c) for c in sample[:3])
     if len(conflicts) > 3:
         inline = inline + f" (+{len(conflicts) - 3} more)"
-    return [CheckItem(
-        status="amend",
-        message=(
-            f"{len(conflicts)} reference numeral(s) inconsistently used. "
-            f"Examples: {inline}"
-        ),
-        message_key="check.spec.numeralConsistency.amend",
+    is_fix = (status == "amend")
+    message_prefix = (
+        f"{len(conflicts)} reference numeral(s) inconsistently used."
+        if is_fix
+        else f"{len(conflicts)} reference numeral(s) with possibly inconsistent naming — please review."
+    )
+    return CheckItem(
+        status=status,
+        message=f"{message_prefix} Examples: {inline}",
+        message_key=f"check.spec.numeralConsistency.{suffix}",
         details_key="details.numeralConsistency",
         details_params={
             "count": len(conflicts),
@@ -676,7 +759,7 @@ def check_numeral_consistency(spec_text: str) -> list[CheckItem]:
             "instance_collisions": sum(1 for c in conflicts if c["case"] == "instance"),
             "element_collisions": sum(1 for c in conflicts if c["case"] == "element"),
         },
-    )]
+    )
 
 
 # ── D1 detection core (canonical + outliers) ─────────────────────────────
@@ -954,14 +1037,38 @@ def _detect_d1_conflicts(
                 continue
 
         if outlier_records:
+            # Confidence tier per outlier:
+            #   "fix"    — high-confidence drafter typo: outlier_count ≥
+            #              2 (drafter wrote it consistently), OR shares
+            #              content with canonical (typo / variant of
+            #              same name), OR instance collision (case A).
+            #   "review" — low-confidence: 1× outlier with zero shared
+            #              content vs strong canonical (≥10×). Likely
+            #              sentence-fragment over-capture, but could be
+            #              real D1 — surface as REVIEW for user judgment.
+            for o in outlier_records:
+                o_words = _content_words(
+                    _split_ordinal_key(o["name"])[1]
+                )
+                shares_content = bool(canonical_words & o_words)
+                strong_canonical = canonical_count >= 10
+                weak_outlier = (o["count"] == 1)
+                if case_instance or shares_content or not weak_outlier or not strong_canonical:
+                    o["confidence"] = "fix"
+                else:
+                    o["confidence"] = "review"
+            # Conflict-level severity = highest tier among outliers
+            severity = (
+                "fix" if any(o["confidence"] == "fix" for o in outlier_records)
+                else "review"
+            )
             conflicts.append({
                 "numeral": num,
                 "canonical": canonical_name,
                 "canonical_count": canonical_count,
                 "outliers": outlier_records,
-                # If instance-collision pair found, prefer that label;
-                # otherwise it's element-collision.
                 "case": "instance" if case_instance else "element",
+                "confidence": severity,
             })
 
     return conflicts
