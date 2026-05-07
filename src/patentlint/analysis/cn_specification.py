@@ -853,6 +853,12 @@ _CN_LEADING_VERBS_PARTICLES = (
     "者", "備", "备",
     "受", "做", "作",
     "讓", "让", "如", "若",
+    # Verb-aspect markers that bleed into mid-sentence captures
+    # ("形成了像素界定層200" → 了像素界定層 → 像素界定層).
+    "了", "著", "着",
+    # 待 = "until/wait for" — sentence-fragment marker
+    # ("待細胞密度達到X時" → 待細胞密度 with refnum after)
+    "待",
     # Removed from particles (each is the first char of a compound noun
     # commonly bound to refnums in patent diction): 使 (使用者裝置 / 使用
     # 例), 持 (持有部), 傳 (傳輸器), 送 (送風口). Stripping them would
@@ -894,6 +900,20 @@ _CN_NOISE_MULTI_CHAR = frozenset({
     # Step-reference nouns — "步驟S101" / "步驟 50" / "步骤 50" the
     # captured noun "步驟" is a step label, not an element name.
     "步驟", "步骤",
+    # Chemistry / process / measurement context — exact-match rejection
+    # so 反應器/反應槽 (real nouns) survive while 反應約/退火/合成例
+    # (process narration) get filtered.
+    "退火",                 # anneal (verb-only)
+    "反應約", "反应约",      # "react approximately X" — narration
+    "反應後", "反应后",      # "after reaction"
+    "反應時", "反应时",      # "during reaction"
+    "合成例",               # synthesis-example label (chemistry pattern)
+    "對比例", "对比例",      # comparative-example label
+    "實施例", "实施例",      # working-example label
+    "計算結果", "计算结果",  # "computation result" — typically narration
+    "結果呈現", "结果呈现",  # "result presentation"
+    "固體和", "固体和",      # "solid + ..." — narration
+    "PBS溶液", "DMSO溶液",   # chemistry reagent solutions
 })
 
 # Substring markers that flag a captured "noun" as a sentence fragment
@@ -1147,6 +1167,13 @@ def _cn_strip_post_de(s: str) -> str:
     while s and s != prev:
         prev = s
         cut = max(s.rfind("的"), s.rfind("之"))
+        # Interior cut on 在 (locative preposition): "計算結果在結果呈現"
+        # → "結果呈現". Drafter convention: "X在Y N" binds N to Y.
+        # Conservative: only cut if 在 is interior (not at start) AND
+        # the suffix is ≥2 CJK chars.
+        zai_pos = s.rfind("在")
+        if zai_pos > 0 and zai_pos > cut:
+            cut = zai_pos
         for q in multi_char_quantifiers:
             qpos = s.rfind(q)
             if qpos > cut:
