@@ -1935,20 +1935,15 @@ def _cn_detect_d1_conflicts(pairs: list[tuple[str, str]]) -> list[dict]:
 
 
 def _cn_format_inline_conflict(c: dict, simp: bool = True) -> str:
-    """Plain-CJK one-line summary for the message text.
+    """One-line CJK summary using universal #N prefix.
 
-    Format: 标记 N 同时用于：「名称1」(N×)、「名称2」(M×)
-    Colon-list form reads as "this numeral was used for these names"
-    without the cryptic 对 / unbracketed ×N of the original format.
-    Uses CJK quote brackets「」for element names so they stand out from
-    surrounding zh-TW/zh-CN/ja prose.
-
-    `simp=True` (default) outputs Simplified for CN callers; `simp=False`
-    outputs Traditional for TW callers so register stays consistent
-    across the whole message.
+    Format: #N：「名称1」(N×)、「名称2」(M×)
+    The `#N` prefix matches patent-practitioner convention across
+    jurisdictions and stays consistent with the US/EN format.
+    CJK quote brackets「」keep element names visually distinct from
+    the surrounding zh-TW/zh-CN/ja prose. The full-width colon (：) is
+    locale-correct in both Trad + Simp.
     """
-    label = "标记" if simp else "標記"
-    connector = "同时用于：" if simp else "同時用於："
     canonical = _cn_format_d1_name_for_display(c["canonical"])
     parts = [f"「{canonical}」({c['canonical_count']}×)"]
     for o in c["outliers"][:3]:
@@ -1956,4 +1951,4 @@ def _cn_format_inline_conflict(c: dict, simp: bool = True) -> str:
         parts.append(f"「{name}」({o['count']}×)")
     if len(c["outliers"]) > 3:
         parts.append("…")
-    return f"{label} {c['numeral']} {connector}" + "、".join(parts)
+    return f"#{c['numeral']}：" + "、".join(parts)

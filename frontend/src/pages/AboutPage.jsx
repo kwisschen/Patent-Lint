@@ -45,6 +45,7 @@ function ProductStory({ t }) {
       </p>
       <div className="space-y-4 text-muted-foreground leading-relaxed">
         <p>{t('about.productDesc1')}</p>
+        <p>{t('about.productDesc1b')}</p>
         <p>{t('about.productDesc2')}</p>
       </div>
     </section>
