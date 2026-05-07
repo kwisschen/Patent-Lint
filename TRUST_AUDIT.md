@@ -9,12 +9,19 @@ PatentLint's primary trust claim is **No upload. No cloud processing. No AI.** E
 - **NetworkWidget** (`frontend/src/components/NetworkWidget.jsx`) — the persistent bottom-right "Outgoing data" counter.
 - **ProveItModal** (`frontend/src/components/ProveItModal.jsx`) — the airplane-mode demo + live activity log.
 - **Update-check banner** (`frontend/src/hooks/useUpdateCheck.js`) — the toast that fires after tab returns from being hidden ≥ 5s.
-- **Voluntary error-report pipeline** (`frontend/src/lib/feedback.js` + Pages Function `/api/report`) — the only intentional outbound POST in the app.
+- **Voluntary error-report pipeline** (`frontend/src/lib/feedback.js` + Vercel Edge Function `frontend/api/report.js` serving `/api/report`) — the only intentional outbound POST in the app.
 - **Trust copy** — `security.*`, `widget.*`, `dropzone.notice*` keys in `frontend/src/i18n/locales/*.json`.
 
 ## Pre-ship checklist
 
 Run before any push that touches the surfaces above, and at minimum monthly as a standing audit.
+
+### 0. Vercel project-setting audit (do once, then on every Vercel plan/integration change)
+- Confirm in **Vercel dashboard → patent-lint project → Settings**:
+  - **Web Analytics**: must be **disabled** (not installed). When enabled, Vercel injects `https://va.vercel-scripts.com/v1/script.debug.js` (dev) or production equivalents into HTML, which would violate the no-telemetry trust posture. Verifiable: `curl -s https://patentlint.com/ | grep -c va.vercel` must return 0.
+  - **Speed Insights**: must be **disabled** (not installed). Same reasoning — injects a `@vercel/speed-insights` beacon script. Verifiable: `curl -s https://patentlint.com/ | grep -c vercel-insights` must return 0.
+  - **Firewall** rules: enabling the platform-wide firewall is fine (request-level, no script injection); enabling **Bot management challenges** would inject JS — leave at default. Verifiable: `curl -s https://patentlint.com/ | grep -c cdn-cgi` must return 0 (Vercel doesn't use this path; this checks against accidental migration back to a Cloudflare-style provider).
+- Vercel doesn't add `Report-To` / `NEL` headers by default (verified 2026-05-08). If a future Vercel feature toggles these on, audit and disable.
 
 ### 1. Cold-start drop test
 - Hard-reload the page (Cmd+Shift+R).
@@ -65,6 +72,7 @@ These are enforced automatically — listed here for awareness.
 
 Trust violations that shipped and the audit gap each one revealed. New entries land at the top.
 
+- **2026-05-08 / hosting migration Cloudflare Pages → Vercel.** Cloudflare's free-plan zone-level **JavaScript Detections (JSD)** was injecting `/cdn-cgi/challenge-platform/scripts/jsd/main.js` into every HTML response — bot-detection telemetry that fingerprinted the browser and phoned home to Cloudflare on every visit. Independent of Bot Fight Mode (the JSD toggle was gated to Pro+). Plus default `Report-To` / `NEL` headers pointing to `a.nel.cloudflare.com`. Both were latent zone-level injections that `_worker.js` couldn't intercept (edge processing runs after Worker). **Audit gap closed:** migrated production hosting to Vercel (commits `afd880a` + `7fba442` + `5b349ed` + `bcb5035` + `189c0a9`). Vercel ships clean by default — `cdn-cgi` count: 0, `vercel-insights` count: 0, `va.vercel` count: 0, no Report-To, no NEL. DNS at Cloudflare points apex + www to Vercel via CNAME (DNS-only, grey cloud). Trust copy in 6 locales now strictly accurate. § 0 of this checklist now covers Vercel-side equivalents (Web Analytics, Speed Insights — both disabled).
 - **2026-05-07 / `deba456` — mermaid chunks lazy-loading on drop.** `5fe9ecc` made the indicator stay green by filtering `initiatorType: 'script'`, but the chunks STILL appeared in DevTools' Network tab on drop because mermaid's flowchart modules (flowDiagram, cose-bilkent, cytoscape, layout helpers) lazy-loaded the first time `ClaimDiagram` rendered the claim tree. With WiFi off the same entries reappeared as "(disk cache)" hits. Latent since `acb7986` (Apr 17, default-collapsed → default-expanded). **Audit gap closed:** added `lib/preloadMermaid.js` invoked from `App.jsx` during initial mount. Mermaid renders a minimal flowchart in parallel with Pyodide bootstrap, parking all flowchart-related modules in the JS module registry before the user can drop. Subsequent renders resolve locally with no fetch (not even a cache hit).
 - **2026-05-07 / `5fe9ecc` — passive-bundle-load leak.** `f3f6575`'s `^https?:` filter was too lenient: HTTPS-but-not-trust-relevant requests (mermaid's ~50 lazy-loaded diagram-type chunks, vite code-split bundles, fonts loaded via CSS) still flashed the dot red during the first analysis when ClaimDiagram first rendered. **Audit gap closed:** added `initiatorType` filter — only `fetch` and `xmlhttprequest` count as trust-relevant. Same trustObserver helper, one-line addition.
 - **2026-05-07 / `f3f6575` + `4d2669a` — `file://` drag-preview leak.** PerformanceObserver in `useNetworkMonitor` and `ProveItModal` surfaced macOS screencaptureui screenshot loads as "network active." Triggered for the first time after weeks of LinkedIn-prep screenshotting kept the temp directory hot. **Audit gap closed:** centralized the filter into `lib/trustObserver.js`; added `check_trust_observers.sh` running as pre-commit + CI gate.
