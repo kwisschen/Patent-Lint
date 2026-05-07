@@ -23,6 +23,7 @@ Thumbs.db
 *~
 .idea/
 .vscode/
+.claude/
 .python-version
 legacy/
 docs/
