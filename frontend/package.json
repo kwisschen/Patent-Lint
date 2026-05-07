@@ -11,6 +11,7 @@
     "build:version": "node scripts/emit-version.mjs",
     "build:stats": "node scripts/emit-stats.mjs",
     "build": "npm run build:wheel && npm run build:version && npm run build:stats && vite build",
+    "build:vercel": "npm run build:version && npm run build:stats && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "setup-hooks": "git -C .. config core.hooksPath .githooks",
