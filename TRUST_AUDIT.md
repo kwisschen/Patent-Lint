@@ -20,8 +20,10 @@ Run before any push that touches the surfaces above, and at minimum monthly as a
 - Hard-reload the page (Cmd+Shift+R).
 - Take a screenshot (Cmd+Shift+4) — this seeds the macOS screencaptureui temp directory, which is the trigger condition for the file:// drag-preview class of bug.
 - Drop a real `.docx` into the dropzone.
-- Confirm: AnalysisReport network dot stays **green** during and after analysis. The bottom-right widget counter stays at **0**.
-- If either turns red without the user explicitly sending a report, that's a violation. See `scripts/check_trust_observers.sh` for the related code-level gate.
+- Confirm: AnalysisReport network dot stays **green** during analysis, while the report renders, and after the claim tree fully draws. The bottom-right widget counter stays at **0**.
+- Specifically watch the moment ClaimDiagram first renders — mermaid lazy-loads ~50 diagram-type chunks the first time you see the tree. Those are own-bundle script loads (initiatorType `script`) and should NOT register as network-active. If the dot flashes red here, something regressed in the `initiatorType` filter — see `lib/trustObserver.js`.
+- Also watch the network dot during the next visibility-return ≥5s — `/version.json` GET (initiatorType `fetch`) SHOULD legitimately flash the dot briefly. That's correct behavior, not a bug.
+- If the dot turns red during analysis without the user explicitly sending a report, that's a violation. See `scripts/check_trust_observers.sh` for the related code-level gate.
 
 ### 2. Airplane-mode test
 - Disable WiFi + cellular on the host machine.
@@ -62,6 +64,7 @@ These are enforced automatically — listed here for awareness.
 
 Trust violations that shipped and the audit gap each one revealed. New entries land at the top.
 
+- **2026-05-07 / `5fe9ecc` — passive-bundle-load leak.** `f3f6575`'s `^https?:` filter was too lenient: HTTPS-but-not-trust-relevant requests (mermaid's ~50 lazy-loaded diagram-type chunks, vite code-split bundles, fonts loaded via CSS) still flashed the dot red during the first analysis when ClaimDiagram first rendered. **Audit gap closed:** added `initiatorType` filter — only `fetch` and `xmlhttprequest` count as trust-relevant. Same trustObserver helper, one-line addition.
 - **2026-05-07 / `f3f6575` + `4d2669a` — `file://` drag-preview leak.** PerformanceObserver in `useNetworkMonitor` and `ProveItModal` surfaced macOS screencaptureui screenshot loads as "network active." Triggered for the first time after weeks of LinkedIn-prep screenshotting kept the temp directory hot. **Audit gap closed:** centralized the filter into `lib/trustObserver.js`; added `check_trust_observers.sh` running as pre-commit + CI gate.
 - **2026-04-30 / `1e2aa6f` — offline-failed-fetch leak in ProveItModal.** PerformanceObserver counted entries with `responseStart === 0` (browser attempted, network unreachable). User in airplane mode clicking "test outgoing request" saw the indicator flash red. **Audit gap closed:** the same `responseStart > 0` filter is now part of `isTrustRelevantResource` and applied consistently.
 
