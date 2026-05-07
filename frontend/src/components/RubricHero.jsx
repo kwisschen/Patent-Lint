@@ -69,7 +69,8 @@ export default function RubricHero({ data, animate = false }) {
   const size = 144
   const strokeWidth = 14
   const radius = (size - strokeWidth) / 2
-  const circumference = 2 * Math.PI * radius
+  const cx = size / 2
+  const cy = size / 2
 
   const segments = [
     { key: 'pass', count: counts.pass, color: 'var(--pass-border)', label: t('status.pass') },
@@ -77,14 +78,40 @@ export default function RubricHero({ data, animate = false }) {
     { key: 'amend', count: counts.amend, color: 'var(--amend-border)', label: t('status.amend') },
   ].filter((s) => s.count > 0)
 
-  let offset = 0
+  // Render each segment as a discrete SVG <path> arc rather than a full
+  // <circle> with strokeDasharray. The dasharray approach left adjacent
+  // segments meeting at sub-pixel boundaries that anti-aliased
+  // inconsistently — most visible as a jagged seam at the 12 o'clock
+  // wrap-around where AMEND ends and PASS begins. Explicit paths with
+  // shared endpoint coordinates eliminate the alignment ambiguity.
+  //
+  // Single-segment edge case: a path A-command from a point to itself is
+  // a no-op (zero-length arc). When only one status type has findings we
+  // emit a full circle by drawing two half-arcs back-to-back.
+  let cumAngle = -Math.PI / 2 // start at 12 o'clock
   const arcs = segments.map((seg) => {
     const fraction = total > 0 ? seg.count / total : 0
-    const dash = fraction * circumference
-    const gap = circumference - dash
-    const arc = { ...seg, dashArray: `${dash} ${gap}`, dashOffset: -offset, targetDash: dash }
-    offset += dash
-    return arc
+    const sweep = fraction * 2 * Math.PI
+    const startAngle = cumAngle
+    const endAngle = startAngle + sweep
+    cumAngle = endAngle
+
+    const startX = cx + radius * Math.cos(startAngle)
+    const startY = cy + radius * Math.sin(startAngle)
+    const endX = cx + radius * Math.cos(endAngle)
+    const endY = cy + radius * Math.sin(endAngle)
+    const largeArc = sweep > Math.PI ? 1 : 0
+
+    let d
+    if (segments.length === 1) {
+      // Full circle as two half-arcs through the antipode.
+      const midX = cx + radius * Math.cos(startAngle + Math.PI)
+      const midY = cy + radius * Math.sin(startAngle + Math.PI)
+      d = `M ${startX} ${startY} A ${radius} ${radius} 0 0 1 ${midX} ${midY} A ${radius} ${radius} 0 0 1 ${startX} ${startY}`
+    } else {
+      d = `M ${startX} ${startY} A ${radius} ${radius} 0 ${largeArc} 1 ${endX} ${endY}`
+    }
+    return { ...seg, d }
   })
 
   const amendCount = useCountUp(counts.amend, 600, animate)
@@ -100,20 +127,22 @@ export default function RubricHero({ data, animate = false }) {
   return (
     <div className="flex flex-col items-center gap-3 px-4 py-5 sm:px-6 sm:py-6">
       <div className="relative" style={{ width: size, height: size }}>
-        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <svg
+          width={size}
+          height={size}
+          viewBox={`0 0 ${size} ${size}`}
+          shapeRendering="geometricPrecision"
+        >
           {arcs.map((arc) => (
-            <circle
+            <path
               key={arc.key}
-              cx={size / 2}
-              cy={size / 2}
-              r={radius}
+              d={arc.d}
               fill="none"
               stroke={arc.color}
               strokeWidth={strokeWidth}
-              strokeDasharray={drawn ? arc.dashArray : `0 ${circumference}`}
-              strokeDashoffset={arc.dashOffset}
               strokeLinecap="butt"
-              transform={`rotate(-90 ${size / 2} ${size / 2})`}
+              pathLength={100}
+              strokeDasharray={drawn ? '100 0' : '0 100'}
               style={{ transition: 'stroke-dasharray 800ms ease-out' }}
             />
           ))}
