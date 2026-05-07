@@ -3,14 +3,15 @@
 //
 // /privacy — Privacy Policy for patentlint.com.
 // Pairs with /terms. Both ship as part of ADR-139 (license migration
-// to PolyForm-Strict-1.0.0). Localized across en / zh-TW / zh-CN /
+// to PolyForm-Strict-1.0.0). Localized across en / de / zh-TW / zh-CN /
 // ja / ko via the shared frontend/src/i18n/locales bundles.
 //
 // PatentLint's data posture is near-zero (in-browser WASM analysis,
 // no analytics, no cookies). The Privacy Policy formalizes that
 // posture as statutory disclosure for enterprise vendor review and
-// GDPR Art. 4(7) data-controller compliance for Cloudflare-edge IP
-// logging.
+// GDPR Art. 4(7) data-controller compliance for Vercel-edge IP
+// logging (production hosting moved Cloudflare Pages → Vercel
+// 2026-05-08; Privacy § 3 reflects this).
 
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
