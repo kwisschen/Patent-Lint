@@ -61,3 +61,5 @@ tests/eval/phase2b_results_*_calibration.json
 tests/eval/phase2b_results_*_clusters.json
 tests/eval/phase2b_results_*_pilot.json
 tests/eval/tw_descriptions.json
+tests/eval/cn_descriptions.json
+tests/eval/us_descriptions.json
