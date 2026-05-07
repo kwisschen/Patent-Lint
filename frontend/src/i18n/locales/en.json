@@ -314,7 +314,7 @@
       "step3": "No internet means no cloud, no upload, no data sent anywhere",
       "step4": "After analysis, a green dot on the results page confirms zero network activity.",
       "testHeading": "Don't take our word for it",
-      "testDescription": "Checks for a new version of PatentLint (version compare only, no upload). Same request fires automatically when you return to the tab.",
+      "testDescription": "Checks for a new version of PatentLint (compares versions only, no upload). The same request runs automatically when you return to the tab.",
       "testButton": "Check for updates",
       "logEmpty": "No requests yet",
       "noActivity": "No activity detected",

@@ -314,7 +314,7 @@
       "step3": "Kein Internet heißt keine Cloud, kein Upload, keine Datenübertragung",
       "step4": "Nach der Prüfung bestätigt ein grüner Punkt auf der Ergebnisseite, dass keine Netzwerkaktivität stattgefunden hat.",
       "testHeading": "Vertrauen Sie nicht allein unserem Wort",
-      "testDescription": "Sucht nach einer neuen PatentLint-Version (nur Versionsabgleich, keine Datenübertragung). Dieselbe Anfrage wird automatisch ausgelöst, wenn Sie zum Tab zurückkehren.",
+      "testDescription": "Prüft, ob eine neue PatentLint-Version verfügbar ist (nur Versionsabgleich, kein Upload). Dieselbe Anfrage erfolgt automatisch, wenn Sie zum Tab zurückkehren.",
       "testButton": "Auf Updates prüfen",
       "logEmpty": "Noch keine Anfragen",
       "noActivity": "Keine Aktivität erkannt",
