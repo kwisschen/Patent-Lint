@@ -54,6 +54,14 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'frontend/package-lock.json'
 
+      - name: Trust-observer invariant gate
+        # Closes the `git commit --no-verify` loophole on the local
+        # pre-commit hook. Same script, same exit codes — a contributor
+        # who skips the local hook still gets blocked at PR time.
+        # See scripts/check_trust_observers.sh and frontend/src/lib/
+        # trustObserver.js for rule + rationale.
+        run: sh scripts/check_trust_observers.sh
+
       - name: Install & build
         run: |
           cd frontend
