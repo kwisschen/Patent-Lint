@@ -816,7 +816,12 @@ _CN_LEADING_VERBS_PARTICLES = (
 # Single-CJK-char words that creep in as "names" (verbs, particles, etc.)
 # When a captured head noun reduces to one of these after stripping,
 # discard it as a real D1 candidate.
-_CN_NOISE_SINGLE_CHARS = frozenset({"于", "以", "对", "时", "中", "上", "下", "内", "外"})
+_CN_NOISE_SINGLE_CHARS = frozenset({
+    # Simp + Trad parity — TW fixtures use Trad (對/時/內/於) while CN
+    # uses Simp (对/时/内/于). Both must reject when residual collapses.
+    "于", "於", "以", "对", "對", "时", "時",
+    "中", "上", "下", "内", "內", "外",
+})
 
 # Multi-char noise nouns: figure-reference phrases ("如圖 N" / "見圖 N" /
 # "如图 N") that sneak past the noun regex but aren't real element names.
@@ -851,13 +856,31 @@ _CN_NOISE_MULTI_CHAR = frozenset({
 # fragments — none of these substrings appear inside legitimate element
 # names in TIPO/CNIPA diction.
 _CN_FRAGMENT_MARKERS = (
+    # Back-reference language — "above-mentioned" / "aforementioned"
     "上述", "前述", "後述", "后述",
+    # Connector prepositions / aux verbs
     "通過", "通过",
     "可以",
     "執行", "执行",
     "參考", "参考",
     "所示", "如所",
     "用以", "用於", "用于",
+    # === Walker-derived (tw_claims._F12_ADJ_REJECTS_TW + cn_claims
+    # _F12_ADJ_REJECTS_CN) — verbal phrases the walker rejects as
+    # candidate head-noun. Same logic applies to D1: any post-strip
+    # residual containing these is a sentence fragment, not a noun.
+    # FULL Trad/Simp parity (Christopher's audit rule):
+    "進行", "进行",       # proceed / conduct — pure verbal in patent diction
+    "獲得", "获得",       # obtain
+    "獲取", "获取",       # acquire
+    "基於", "基于",       # based on
+    "根據", "根据",       # according to
+    "來自", "来自",       # come from
+    "屬於", "属于",       # belong to
+    "經過", "经过",       # pass through
+    "能夠", "能够",       # be able to (pairs with 可以)
+    # Method-step narration verbs
+    "依據", "依据",       # in accordance with
 )
 
 # Mode-context phrase: "方式一下" / "方式二下" / "方式X下" — drafter
@@ -865,6 +888,48 @@ _CN_FRAGMENT_MARKERS = (
 # chunk is contextual, not an element name. Match 方式 + CJK ordinal
 # (一/二/.../十) optionally followed by 下/中/裡.
 _CN_MODE_CONTEXT_RE = re.compile(r"方式[一二三四五六七八九十]+[下中裡里]?")
+
+# Trailing verbs to strip from a captured noun before validation.
+# Mirrors tw_claims._TRAILING_VERB_DENYLIST + cn_claims
+# _TRAILING_VERB_DENYLIST_CN — verbs that can appear AT THE END of a
+# captured chunk because the regex pulled in the verb following the
+# noun head. Strip-then-check is safer than reject-the-whole-capture.
+# FULL Trad/Simp parity per Christopher's audit rule.
+_CN_TRAILING_VERB_STRIP = (
+    # Multi-char first (longest-match)
+    "進行", "进行",
+    "獲得", "获得", "獲取", "获取",
+    "包含", "包括", "含有",
+    "具有", "具備", "具备",
+    "通過", "通过",
+    "經由", "经由", "藉由", "借由",
+    "基於", "基于", "根據", "根据",
+    "屬於", "属于", "來自", "来自",
+    "經過", "经过",
+    "能夠", "能够",
+    "依據", "依据",
+    "進入", "进入", "離開", "离开",
+    "形成", "成形",
+    "設置", "设置",
+)
+
+
+def _cn_strip_trailing_verb(s: str) -> str:
+    """Strip trailing verbal fragment from a captured noun phrase.
+
+    Drafter writes "操作面進行 50" — captured "操作面進行" with 進行 as
+    a trailing verb. Walker strips these via _TRAILING_VERB_DENYLIST;
+    D1 mirrors the same logic. Loops until stable so chains like
+    "X進行包含" peel layer-by-layer.
+    """
+    prev = None
+    while s and s != prev:
+        prev = s
+        for v in _CN_TRAILING_VERB_STRIP:
+            if s.endswith(v) and len(s) - len(v) >= 2:
+                s = s[: -len(v)]
+                break
+    return s
 
 # Measurement / process / chemistry-context indicators. If a captured
 # head noun ENDS WITH or CONTAINS any of these, the numeral is almost
@@ -1078,6 +1143,7 @@ def _cn_d1_head_noun(raw: str) -> str:
     s = raw.strip()
     s = _cn_strip_iterative(s, allow_ordinal_break=False)
     s = _cn_strip_post_de(s)
+    s = _cn_strip_trailing_verb(s)
     s = _cn_strip_iterative(s, allow_ordinal_break=False)
     m = _CN_ORDINAL_RE.match(s)
     if m:
@@ -1269,6 +1335,9 @@ def _cn_d1_head_noun_with_ordinal(raw: str) -> str:
     # noun follows the marker. Run AFTER iterative strip so leading
     # particles are gone first.
     s = _cn_strip_post_de(s)
+    # Trailing-verb strip: "操作面進行" → "操作面". Mirrors walker
+    # _TRAILING_VERB_DENYLIST logic.
+    s = _cn_strip_trailing_verb(s)
     # If the post-de cut exposed a leading ordinal or other particles,
     # re-run iterative strip to clean them.
     s = _cn_strip_iterative(s, allow_ordinal_break=True)
