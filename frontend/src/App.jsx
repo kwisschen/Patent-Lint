@@ -22,6 +22,7 @@ import { usePyodide } from './hooks/usePyodide'
 import { useUpdateCheck } from './hooks/useUpdateCheck'
 import { Toaster } from './components/ui/sonner'
 import { downloadReport as downloadReportClient, prefetchCjkFont } from './lib/pdfExport'
+import { preloadMermaidChunks } from './lib/preloadMermaid'
 import { getJurisdictionConfig, JURISDICTION_COLORS } from './lib/jurisdictionConfig'
 import { CHECKS_BY_JURISDICTION } from './generated/stats'
 
@@ -50,6 +51,14 @@ function App() {
   useEffect(() => {
     prefetchCjkFont(i18n.language)
   }, [i18n.language])
+
+  // Pre-load mermaid's flowchart chunks during the initial loading
+  // phase so they don't lazy-load (and burst into DevTools' Network
+  // tab) the first time AnalysisReport renders the claim tree. See
+  // lib/preloadMermaid.js for the full rationale.
+  useEffect(() => {
+    preloadMermaidChunks()
+  }, [])
 
   // Home page state
   const [jurisdiction, setJurisdiction] = useState('US')

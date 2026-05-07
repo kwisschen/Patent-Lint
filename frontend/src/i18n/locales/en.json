@@ -1586,7 +1586,7 @@
   },
   "rubric": {
     "trust": {
-      "line": "This grade only reflects PatentLint's check results. It is not a judgment on the draft's substantive content."
+      "line": "This grade only reflects PatentLint's check results, and is not a judgment on the draft's substantive content."
     },
     "completenessGate": {
       "title": "Draft incomplete — grade unavailable",
