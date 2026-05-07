@@ -498,6 +498,23 @@ def extract_numeral_name_pairs(
             ordinal, head = _d1_extract_ordinal_and_head(noun)
             if not head:
                 continue
+
+            # Math-variable subscript pattern: drafter writes "Dsn is Ds1"
+            # (defining Dsn as the generic n-th element) where the head
+            # noun resolves to `<refnum-prefix><single-lowercase-letter>`.
+            # Drafter's intent is to define notation, not bind Dsn as
+            # element name for refnum DS1. Check AFTER function-word
+            # strip so the head noun is the actual content word.
+            head_last = head.split()[-1] if head.split() else ""
+            if (
+                head_last
+                and len(head_last) == len(prefix) + 1
+                and head_last[: len(prefix)].upper() == prefix
+                and head_last[-1].isalpha()
+                and not head_last[-1].isdigit()
+            ):
+                continue
+
             keyed_name = f"{ordinal}|{head}" if ordinal else head
             pairs.append((ref, keyed_name))
             seen_spans.add((m.start(2), m.end(2)))
