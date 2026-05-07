@@ -1635,7 +1635,7 @@
       "vercelLabel": "Vercel.",
       "vercel": "본 사이트의 정적 자산 및 Pyodide wheel을 호스팅합니다. §3에 기재한 표준 요청 메타데이터를 수신합니다.",
       "pyodideLabel": "Pyodide CDN.",
-      "pyodide": "최초 방문 시 귀하의 브라우저는 Pyodide CDN(jsdelivr／cloudflare)에서 Pyodide WebAssembly 런타임을 가져옵니다. 이후 런타임은 단말기에 캐시되어 오프라인에서도 동작합니다.",
+      "pyodide": "최초 방문 시 귀하의 브라우저는 Pyodide CDN(jsDelivr)에서 Pyodide WebAssembly 런타임을 가져옵니다. 이후 런타임은 단말기에 캐시되어 오프라인에서도 동작합니다.",
       "fontsLabel": "Google Fonts(CJK 폰트, 선택).",
       "fonts": "zh-TW／zh-CN／ja／ko UI에서 현지화된 PDF를 내보내실 경우, 브라우저는 PDF 내보내기 시 해당 Noto Sans CJK 폰트를 Google Fonts에서 가져옵니다. 폰트는 최초 취득 후 캐시됩니다. 영어 UI의 PDF에서는 폰트 취득이 발생하지 아니합니다.",
       "githubLabel": "GitHub.",

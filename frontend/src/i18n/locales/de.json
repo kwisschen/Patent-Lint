@@ -1633,7 +1633,7 @@
       "vercelLabel": "Vercel.",
       "vercel": "Hostet die statischen Website-Assets und das Pyodide-Wheel. Empfängt die unter § 3 beschriebenen standardmäßigen Webanfrage-Metadaten.",
       "pyodideLabel": "Pyodide-CDN.",
-      "pyodide": "Beim ersten Besuch lädt Ihr Browser die Pyodide-WebAssembly-Laufzeit vom Pyodide-CDN (jsdelivr / cloudflare). Danach wird die Laufzeit lokal zwischengespeichert und funktioniert offline.",
+      "pyodide": "Beim ersten Besuch lädt Ihr Browser die Pyodide-WebAssembly-Laufzeit vom Pyodide-CDN (jsDelivr). Danach wird die Laufzeit lokal zwischengespeichert und funktioniert offline.",
       "fontsLabel": "Google Fonts (CJK-Schrift, optional).",
       "fonts": "Wenn Sie einen lokalisierten PDF-Bericht in zh-TW / zh-CN / ja / ko exportieren, lädt Ihr Browser die entsprechende Noto-Sans-CJK-Schrift beim PDF-Export von Google Fonts. Die Schrift wird nach dem ersten Abruf zwischengespeichert. Englische und deutsche PDFs rufen keine Schrift ab.",
       "githubLabel": "GitHub.",
