@@ -8,6 +8,7 @@ import { Button } from "./ui/button"
 import { composeFeedback, sendReport } from "../lib/feedback"
 import { useFeedback } from "./FeedbackPicker"
 import FlaggedTermList from "./FlaggedTermList"
+import NumeralFindingList from "./NumeralFindingList"
 import ReportModal from "./ReportModal"
 
 const CITATION_MAP = {
@@ -103,34 +104,46 @@ export default function CheckItem({ status, message, message_key, details, detai
     )
   }
 
+  // Layout: on mobile (<sm = 640px), stack the status pill + citation
+  // ABOVE the message so the message body can use full row width
+  // (otherwise the message wraps in a narrow right-side column). On
+  // larger screens, keep the inline-row layout for compactness.
+  const isExpandableD1D3 =
+    Array.isArray(details_params?.findings)
+    && details_params.findings.length > 3
+    && (message_key?.includes('numeralConsistency')
+        || message_key?.includes('symbolTableCoverage'))
+
   return (
     <div
       className="py-2 px-3 border-l-[3px]"
       style={{ borderLeftColor: `var(--${status}-border)` }}
     >
-      <div className="flex items-center gap-2">
-        <span
-          className="inline-block rounded px-1.5 py-0.5 text-[10px] font-bold uppercase leading-none"
-          style={{
-            backgroundColor: `var(--${status}-bg)`,
-            color: `var(--${status}-tag-text)`,
-          }}
-        >
-          {t(`status.${status}`)}
-        </span>
-        {citation && (
-          <span className="citation-badge inline-block rounded px-1.5 py-0.5 text-[11px] font-mono leading-none">
-            {citation}
+      <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2">
+        <div className="flex items-center gap-2 shrink-0">
+          <span
+            className="inline-block rounded px-1.5 py-0.5 text-[10px] font-bold uppercase leading-none"
+            style={{
+              backgroundColor: `var(--${status}-bg)`,
+              color: `var(--${status}-tag-text)`,
+            }}
+          >
+            {t(`status.${status}`)}
           </span>
-        )}
-        <span className="text-sm flex-1">{displayMessage}</span>
+          {citation && (
+            <span className="citation-badge inline-block rounded px-1.5 py-0.5 text-[11px] font-mono leading-none">
+              {citation}
+            </span>
+          )}
+        </div>
+        <span className="text-sm flex-1 min-w-0">{displayMessage}</span>
         <Button
           variant="ghost"
           size="xs"
           onClick={handleReport}
           title={t('feedback.reportProblem')}
           aria-label={t('feedback.reportProblem')}
-          className="shrink-0"
+          className="shrink-0 self-start sm:self-auto"
         >
           <Flag />
           <span className="hidden sm:inline">{t('feedback.report')}</span>
@@ -150,11 +163,18 @@ export default function CheckItem({ status, message, message_key, details, detai
         <FlaggedTermList
           items={details_params.flagged_phrases.items}
           status={status}
-          className="mt-1 ml-10 sm:ml-[52px]"
+          className="mt-1 sm:ml-[52px]"
+        />
+      )}
+      {isExpandableD1D3 && (
+        <NumeralFindingList
+          findings={details_params.findings}
+          status={status}
+          className="sm:ml-[52px]"
         />
       )}
       {displayDetails && (
-        <p className="text-xs text-muted-foreground mt-1 ml-10 sm:ml-[52px]">{displayDetails}</p>
+        <p className="text-xs text-muted-foreground mt-1 sm:ml-[52px]">{displayDetails}</p>
       )}
     </div>
   )
