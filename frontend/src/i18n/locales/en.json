@@ -284,7 +284,7 @@
   },
   "triage": {
     "title": "Priority Summary",
-    "amend": "Needs Fix",
+    "amend": "Needs Fixing",
     "amendEmpty": "No fixes needed.",
     "verify": "Needs Review",
     "verifyEmpty": "No items to review.",
@@ -396,7 +396,8 @@
   "about": {
     "productTitle": "What is PatentLint?",
     "productTagline": "A first-of-its-kind patent draft checker that runs offline in your browser.",
-    "productDesc1": "PatentLint runs entirely on your own device, catching issues for you before the examiner does. The webpage is just the entry point. Once loaded, PatentLint runs on your device like desktop software — you can disconnect from the internet and keep using it. Drop a U.S., Chinese, or Taiwanese patent draft for an instant compliance report and grade on formal requirements. No uploads, no cloud processing, no AI.",
+    "productDesc1": "PatentLint runs entirely on your own device, catching issues for you before the examiner does. The webpage is just the entry point. Once loaded, PatentLint runs on your device like desktop software — you can disconnect from the internet and keep using it.",
+    "productDesc1b": "Drop a U.S., Chinese, or Taiwanese patent draft for an instant compliance report and grade on formal requirements. No uploads, no cloud processing, no AI.",
     "productDesc2": "PatentLint checks drafting rules from the USPTO (U.S.), CNIPA (China), and TIPO (Taiwan), detecting issues commonly flagged by examination standards, such as missing antecedent basis, incorrect claim structure, and restrictive wording.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center validates filing format. PatentLint checks the draft itself.",
@@ -1381,7 +1382,7 @@
     "header": "PatentLint Analysis Report",
     "headerTw": "PatentLint — Taiwan Patent Specification Report",
     "securityNote": "Analyzed on your device -- not uploaded to the cloud.",
-    "amend": "Needs Fix",
+    "amend": "Needs Fixing",
     "verify": "Needs Review",
     "pass": "Passed",
     "claimDependency": "Claim Dependency Tree",
