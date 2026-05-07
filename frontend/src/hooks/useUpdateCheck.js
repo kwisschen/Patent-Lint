@@ -22,20 +22,25 @@ const TOAST_ID = 'patentlint-update-available'
 // Visibility check gate. On a visibility-visible event, fire a version
 // check only if the tab was HIDDEN for at least this long. Models
 // actual user behavior ("I walked away, now I'm back") better than a
-// time-since-last-check throttle — rapid alt-tabbing (instant tab-flips)
-// stays silent, but anything that looks like "I left and came back"
-// triggers a check on return. The trust-copy claim ("Same request runs
+// Sub-second tab-flips (browser preview gestures, instant Cmd+Tab) stay
+// silent, but anything that looks like "I left and came back" triggers
+// a check on return. The trust-copy claim ("Same request runs
 // automatically when you return to the tab" / "離開分頁再回來時也會自動
-//執行相同請求") needs to hold during a hiring-manager / patent-attorney
-// demo where the user alt-tabs for 3-10 seconds to verify the claim.
-// 5 seconds catches that demo pattern while still ignoring sub-second
-// double-tabs and accidental focus loss.
+// 執行相同請求") needs to hold during a hiring-manager / patent-attorney
+// demo where the user alt-tabs for 5-10 seconds to verify it.
+// 5 seconds catches that demo pattern while balancing the results-page
+// trust concern: any outgoing fetch briefly flashes the trust-panel dot
+// red, and a user who just analyzed a sensitive draft and sees a red
+// flash 3 s after returning could panic ("is my data being uploaded?!").
+// 5 s reduces the frequency of that flash during normal alt-tab usage
+// without sacrificing demo-verify integrity (a fast verifier who alt-
+// tabs for <5 s can still click the "Check for updates" button to fire
+// manually).
 //
-// History: was 30 s — too long for demo verification (a 5-10 s alt-tab
-// was below threshold and the claim appeared to fail). Was 15 min in
-// an earlier iteration — Windows users with long-running tabs never
-// hit the 15-min gap because they'd switched back in between, so the
-// throttle never cleared.
+// History: was 30 s — too long, demo verifiers alt-tabbing for 5-10 s
+// saw nothing fire and assumed the claim was wrong. An earlier 15 min
+// iteration failed entirely on Windows long-running tabs (users
+// switched back before the gap cleared).
 const MIN_HIDDEN_MS_FOR_CHECK = 5 * 1000
 
 /**
@@ -206,9 +211,9 @@ export function useUpdateCheck() {
     // the "I walked away and came back" case (push a deploy, wait for
     // CI, switch back → check fires → toast if mismatch) AND the demo
     // verification case (a hiring manager / patent attorney alt-tabs
-    // for 3-10 seconds to check that the trust-copy claim holds — at
-    // 5s threshold, that demo reliably fires). Sub-second tab-flips
-    // and accidental focus loss stay silent (no flicker).
+    // for 5-10 seconds to verify the trust-copy claim — at 5 s
+    // threshold, that demo reliably fires). Sub-second tab-flips and
+    // accidental focus loss stay silent (no flicker).
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'hidden') {
         lastHiddenMs.current = Date.now()
