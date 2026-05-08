@@ -4332,6 +4332,40 @@ def extract_introductions_tw(
                 seen.add(normalized)
                 pairs.append((original, normalized))
 
+        # R67 (2026-05-08) — symmetric state-modifier+head-noun lookahead.
+        # The walker's reference-side capture (R66, 22c8b80) extends
+        # `前述<state>` past 的 to `前述<state>的<head>` when the captured
+        # noun ends in a state suffix (狀/形). For the antecedent walker
+        # to silence consistent intro+ref pairs, the intro side needs the
+        # symmetric extension — otherwise an intro `一島狀的奈米片積層體`
+        # registers as bare `島狀` while the ref normalizes to
+        # `島狀的奈米片積層體`, producing a spurious mismatch.
+        #
+        # Per `feedback_symmetry_audit_normalize_chains.md`: every
+        # normalize transform on emit/match side needs symmetric counterpart
+        # on intro/display side. R66 patched only the emit side; this
+        # closes the intro-side gap.
+        #
+        # Same suffix gate as R66 (狀/形) prevents this from firing on
+        # possessive intros like `一電子裝置的一插槽` where 電子裝置 ends
+        # in a non-state suffix.
+        if (
+            bare_noun.endswith(_STATE_MODIFIER_SUFFIXES_TW)
+            and not bare_noun.startswith("第")
+        ):
+            m_de = _DE_HEAD_NOUN_RE.match(claim.text, m.end())
+            if m_de:
+                head_raw = m_de.group("head")
+                extended_bare = bare_noun + "的" + head_raw
+                extended_normalized = normalize_candidate_intro(
+                    extended_bare,
+                    strict_qualifier_matching=strict_qualifier_matching,
+                )
+                if extended_normalized and extended_normalized not in seen:
+                    seen.add(extended_normalized)
+                    extended_original = original + "的" + head_raw
+                    pairs.append((extended_original, extended_normalized))
+
     # --- Supplementary patterns (bare-noun intros without 一 prefix) ---
     # Supplementary `_extract_supplementary_intros` already applies its own
     # cleanup pipeline (interior cut + trailing strip + conjunction-split).
