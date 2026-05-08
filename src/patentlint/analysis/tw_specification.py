@@ -329,7 +329,12 @@ def check_paragraph_numbering(doc: TwPatentDocument) -> list[CheckItem]:
 # ── Check 4 ──────────────────────────────────────────────────────────────
 
 
-_BRACKET_SUBHEADING = re.compile(r"^\[.+\]$")
+# Accepts optional 【NNNN】 paragraph-number prefix so drafter-numbered
+# sub-section labels like `【0003】[先前技術文獻]` are recognized as
+# structural labels, not prose paragraphs (R67, 2026-05-08). Without
+# the prefix gate, paragraphEnding fired on every numbered ASCII-bracket
+# sub-section label — bug class #8 from the real-drafter audit taxonomy.
+_BRACKET_SUBHEADING = re.compile(r"^(?:【\d{4}】\s*)?\[.+\]$")
 _SYMBOL_TABLE_ENTRY = re.compile(
     r"^[A-Za-z0-9~\-]+\s*(?:[‧·.…：:\t]\s*[‧·.…]*\s*|\s{2,}).+"
 )
