@@ -409,7 +409,7 @@
       },
       "specAbstract": {
         "title": "Specification & abstract structure",
-        "description": "Section ordering (§ 608.01(a)), paragraph numbering (§ 608.01(p)), abstract word count (§ 608.01(b)), and figure-reference cross-checks."
+        "description": "Section ordering (§ 608.01(a)), paragraph numbering (§ 608.01(p)), abstract word count (§ 608.01(b)), figure-reference cross-checks, and reference-numeral consistency (§ 608.01(g))."
       },
       "specSupport": {
         "title": "Restrictive wording & § 101 guards",
@@ -474,8 +474,8 @@
         "description": "Dependency tree with a BFS antecedent walker over CJK bigrams covering the full claim chain. Subject consistency, dependency format, and bracketed reference numerals included."
       },
       "specAbstract": {
-        "title": "Specification & abstract checks",
-        "description": "Section ordering (§20), paragraph endings, figure-reference consistency, and the 300-character abstract limit (§26)."
+        "title": "Specification & abstract structure",
+        "description": "Section ordering (§20), paragraph endings, figure-reference consistency, the 300-character abstract limit (§26), and reference-numeral consistency (实施细则 §21)."
       },
       "dualPipeline": {
         "title": "五书模板 + CNIPA XML",
@@ -532,8 +532,8 @@
         "description": "Full claim-chain BFS walker for 先行詞 and 說明書支持 (§26 第3項) — goes beyond TIPO 偵錯系統's 符號說明 lookup-table comparison to catch real drafting gaps in the chain."
       },
       "specAbstract": {
-        "title": "Specification & abstract checks",
-        "description": "Section ordering (§17), paragraph endings with per-section rules, figure-reference cross-checks, and the 250-character abstract limit (§21)."
+        "title": "Specification & abstract structure",
+        "description": "Section ordering (§17), paragraph endings with per-section rules, figure-reference cross-checks, the 250-character abstract limit (§21), and reference-symbol consistency (施行細則 §19)."
       },
       "symbolTable": {
         "title": "符號說明 cross-check (TW-only)",

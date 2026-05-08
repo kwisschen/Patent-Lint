@@ -409,7 +409,7 @@
       },
       "specAbstract": {
         "title": "Struktur von Beschreibung & Zusammenfassung",
-        "description": "Abschnittsreihenfolge (§ 608.01(a)), Absatznummerierung (§ 608.01(p)), Wortzahl der Zusammenfassung (§ 608.01(b)) sowie Zeichnungs-Querbezüge."
+        "description": "Abschnittsreihenfolge (§ 608.01(a)), Absatznummerierung (§ 608.01(p)), Wortzahl der Zusammenfassung (§ 608.01(b)), Zeichnungs-Querbezüge sowie Bezugszeichen-Konsistenz (§ 608.01(g))."
       },
       "specSupport": {
         "title": "Einschränkende Formulierungen & § 101-Guard",
@@ -474,8 +474,8 @@
         "description": "Anspruchsbaum mit Breitensuch-Walker für 引用基础 (Rückbezug) auf CJK-Bigramm-Basis — durchläuft die gesamte Anspruchskette. Thematische Konsistenz, Rückzitatsformat und Bezugszeichen-Klammern inklusive."
       },
       "specAbstract": {
-        "title": "Prüfungen für Beschreibung & Zusammenfassung",
-        "description": "Abschnittsreihenfolge (§20), Satzzeichen am Absatzende, Konsistenz der Bezugszeichen sowie die 300-Zeichen-Grenze der Zusammenfassung (§26)."
+        "title": "Struktur von Beschreibung & Zusammenfassung",
+        "description": "Abschnittsreihenfolge (§20), Satzzeichen am Absatzende, Querverweise zu Figuren, die 300-Zeichen-Grenze der Zusammenfassung (§26) sowie Bezugszeichen-Konsistenz (实施细则 §21)."
       },
       "dualPipeline": {
         "title": "五书模板 + CNIPA-XML",
@@ -532,8 +532,8 @@
         "description": "Vollständiger Anspruchsketten-BFS-Walker für 先行詞 (Rückbezug) und 說明書支持 (Stützung) — geht über den 符號說明-Lookup-Vergleich des TIPO 偵錯系統 hinaus und erkennt echte Drafting-Lücken in der Kette."
       },
       "specAbstract": {
-        "title": "Prüfungen für Beschreibung & Zusammenfassung",
-        "description": "Abschnittsreihenfolge (§17), abschnittsspezifische Satzzeichenregeln am Absatzende, Zeichnungs-Querbezüge sowie die 250-Zeichen-Grenze der Zusammenfassung (§21)."
+        "title": "Struktur von Beschreibung & Zusammenfassung",
+        "description": "Abschnittsreihenfolge (§17), abschnittsspezifische Satzzeichenregeln am Absatzende, Zeichnungs-Querbezüge, die 250-Zeichen-Grenze der Zusammenfassung (§21) sowie Bezugszeichen-Konsistenz (施行細則 §19)."
       },
       "symbolTable": {
         "title": "符號說明-Querabgleich (TW-spezifisch)",
