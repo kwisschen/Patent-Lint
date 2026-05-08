@@ -702,3 +702,41 @@ class TestNumeralConsistencyD1CN:
         c11 = [c for c in conflicts if c["numeral"] == "11"]
         assert c11
         assert c11[0]["case"] == "instance"
+
+    def test_r67_interior_verb_split_silences_clause_capture(self):
+        """R67 (issue #29) — clause-spanning capture truncates to head noun.
+
+        Drafter writes `當使用者踩踏踏板E10` (4×) and `端連接一踏板E10`
+        (1×). The 12-CJK-char greedy noun-group regex captures the
+        whole clause, producing fake D1 conflict between
+        `當使用者踩踏踏板` (canonical, clause-with-verb) and
+        `端連接一踏板` (outlier, also clause-with-verb).
+
+        Post-fix: both reduce to bare `踏板`; no conflict surfaces.
+        """
+        from patentlint.analysis.cn_specification import (
+            _cn_d1_head_noun_with_ordinal,
+        )
+        assert _cn_d1_head_noun_with_ordinal("當使用者踩踏踏板") == "踏板"
+        assert _cn_d1_head_noun_with_ordinal("端連接一踏板") == "踏板"
+        assert _cn_d1_head_noun_with_ordinal("共同形成一封閉空間") == "封閉空間"
+        assert _cn_d1_head_noun_with_ordinal("應設置於封閉空間") == "封閉空間"
+
+    def test_r67_interior_verb_preserves_compound_nouns(self):
+        """R67 (issue #29) — verb-root morphemes inside compound nouns
+        must NOT trigger split. Anti-corpus guard for `連接器` /
+        `形成部` style legitimate element names.
+        """
+        from patentlint.analysis.cn_specification import (
+            _cn_d1_head_noun_with_ordinal,
+            _cn_split_on_interior_verb,
+        )
+        # The split helper alone (no surrounding strip cleanup):
+        assert _cn_split_on_interior_verb("第一連接器") == "第一連接器"
+        assert _cn_split_on_interior_verb("連接件") == "連接件"
+        assert _cn_split_on_interior_verb("連接座") == "連接座"
+        assert _cn_split_on_interior_verb("組織圖像形成部") == "組織圖像形成部"
+        assert _cn_split_on_interior_verb("形成體") == "形成體"
+        # Full head-noun pipeline with ordinal-bearing capture:
+        assert _cn_d1_head_noun_with_ordinal("第一連接器") == "第一連接器"
+        assert _cn_d1_head_noun_with_ordinal("組織圖像形成部") == "組織圖像形成部"
