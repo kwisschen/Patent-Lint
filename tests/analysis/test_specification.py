@@ -703,16 +703,15 @@ class TestNumeralConsistencyD1CN:
         assert c11
         assert c11[0]["case"] == "instance"
 
-    def test_r67_interior_verb_split_silences_clause_capture(self):
-        """R67 (issue #29) — clause-spanning capture truncates to head noun.
+    def test_r67_interior_verb_split_issue_29_originals(self):
+        """R67 (issue #29) — the four literal over-captures from the
+        user-reported fixture must each truncate to the bound noun.
 
-        Drafter writes `當使用者踩踏踏板E10` (4×) and `端連接一踏板E10`
-        (1×). The 12-CJK-char greedy noun-group regex captures the
-        whole clause, producing fake D1 conflict between
-        `當使用者踩踏踏板` (canonical, clause-with-verb) and
-        `端連接一踏板` (outlier, also clause-with-verb).
-
-        Post-fix: both reduce to bare `踏板`; no conflict surfaces.
+        Drafter writes `當使用者踩踏踏板E10` (4×) + `端連接一踏板E10`
+        (1×) + `共同形成一封閉空間SP2` + `應設置於封閉空間SP2`. The
+        12-CJK-char greedy noun-group regex captures the whole clause,
+        producing fake D1 conflicts. Post-fix: every clause reduces
+        to the bound noun (`踏板` / `封閉空間`); no conflict surfaces.
         """
         from patentlint.analysis.cn_specification import (
             _cn_d1_head_noun_with_ordinal,
@@ -722,21 +721,75 @@ class TestNumeralConsistencyD1CN:
         assert _cn_d1_head_noun_with_ordinal("共同形成一封閉空間") == "封閉空間"
         assert _cn_d1_head_noun_with_ordinal("應設置於封閉空間") == "封閉空間"
 
+    def test_r67_interior_verb_split_pattern_coverage(self):
+        """R67 — same bug class with mutated context. Per skill
+        section 8 future-proofing: connection / spatial / form /
+        reference / containment verbs all matching the
+        `<adverb><verb><quantifier-or-prep><noun>` shape must split.
+        """
+        from patentlint.analysis.cn_specification import (
+            _cn_d1_head_noun_with_ordinal,
+        )
+        # Connection verbs
+        assert _cn_d1_head_noun_with_ordinal("抵接該基座的彈簧片") == "彈簧片"
+        assert _cn_d1_head_noun_with_ordinal("配合一基座的卡扣") == "卡扣"
+        # Spatial verbs
+        assert _cn_d1_head_noun_with_ordinal("位於頂端的散熱片") == "散熱片"
+        assert _cn_d1_head_noun_with_ordinal("安裝在底座上的風扇") == "風扇"
+        assert _cn_d1_head_noun_with_ordinal("容納於外殼內的電路板") == "電路板"
+        # Form / composition
+        assert _cn_d1_head_noun_with_ordinal("構成主結構的支柱") == "支柱"
+        assert _cn_d1_head_noun_with_ordinal("嵌入主體的銷桿") == "銷桿"
+        # Reference / correspondence
+        assert _cn_d1_head_noun_with_ordinal("對應於前述基座的螺孔") == "螺孔"
+
+    def test_r67_interior_verb_simplified_chinese_parity(self):
+        """R67 — Simplified-Chinese mirror of issue #29 originals.
+        CN drafters using Simplified character set get the same fix
+        through the same shared helpers (cross-jurisdiction parity).
+        """
+        from patentlint.analysis.cn_specification import (
+            _cn_d1_head_noun_with_ordinal,
+        )
+        assert _cn_d1_head_noun_with_ordinal("当用户踩踏踏板") == "踏板"
+        assert _cn_d1_head_noun_with_ordinal("端连接一踏板") == "踏板"
+        assert _cn_d1_head_noun_with_ordinal("共同形成一封闭空间") == "封闭空间"
+        assert _cn_d1_head_noun_with_ordinal("应设置于封闭空间") == "封闭空间"
+        # Simplified anti-corpus — verb root inside compound noun preserved
+        # (`第一连接器` ends in `器`; full chain through R67 split keeps it).
+        # `形成部` standalone (3 chars) is collapsed by pre-existing
+        # `_cn_strip_iterative` behavior unrelated to R67; the longer
+        # `组织图像形成部` form is the realistic case and is preserved.
+        assert _cn_d1_head_noun_with_ordinal("第一连接器") == "第一连接器"
+        assert _cn_d1_head_noun_with_ordinal("组织图像形成部") == "组织图像形成部"
+
     def test_r67_interior_verb_preserves_compound_nouns(self):
-        """R67 (issue #29) — verb-root morphemes inside compound nouns
-        must NOT trigger split. Anti-corpus guard for `連接器` /
-        `形成部` style legitimate element names.
+        """R67 — verb-root morphemes inside compound nouns must NOT
+        trigger split. Anti-corpus guard for the standard patent
+        element-morpheme suffixes (器/件/體/座/面/部/腔/...).
         """
         from patentlint.analysis.cn_specification import (
             _cn_d1_head_noun_with_ordinal,
             _cn_split_on_interior_verb,
         )
-        # The split helper alone (no surrounding strip cleanup):
-        assert _cn_split_on_interior_verb("第一連接器") == "第一連接器"
-        assert _cn_split_on_interior_verb("連接件") == "連接件"
-        assert _cn_split_on_interior_verb("連接座") == "連接座"
-        assert _cn_split_on_interior_verb("組織圖像形成部") == "組織圖像形成部"
-        assert _cn_split_on_interior_verb("形成體") == "形成體"
-        # Full head-noun pipeline with ordinal-bearing capture:
+        # The split helper alone — these are ≥4 chars so the helper runs.
+        # Each contains a verb compound followed by a noun-suffix char.
+        for compound in [
+            "第一連接器",      # 連接 + 器
+            "組織圖像形成部",  # 形成 + 部
+            "前述抵接面",      # 抵接 + 面
+            "上方接觸點",      # 接觸 + 點
+            "下方接觸面",      # 接觸 + 面
+            "中央安裝座",      # 安裝 + 座
+            "底部容納腔",      # 容納 + 腔
+            "頂部容納部",      # 容納 + 部
+            "後方樞接件",      # 樞接 + 件
+            "前述結合器",      # 結合 + 器
+            "侧壁配合件",      # 配合 + 件
+        ]:
+            assert _cn_split_on_interior_verb(compound) == compound, (
+                f"split helper wrongly truncated {compound!r}"
+            )
+        # End-to-end pipeline preservation:
         assert _cn_d1_head_noun_with_ordinal("第一連接器") == "第一連接器"
         assert _cn_d1_head_noun_with_ordinal("組織圖像形成部") == "組織圖像形成部"
