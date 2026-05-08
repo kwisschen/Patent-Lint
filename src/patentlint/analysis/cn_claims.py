@@ -3028,6 +3028,28 @@ def extract_introductions_cn(
                 seen.add(normalized)
                 pairs.append((original, normalized))
 
+        # R67 (2026-05-08) — symmetric state-modifier+head-noun lookahead.
+        # CN parity with the TW R67 intro-side extension. Mirrors the
+        # walker reference-side R66 logic so consistent intro+ref pairs
+        # like `一岛状的纳米片积层体` ↔ `所述岛状的纳米片积层体` resolve
+        # without spurious walker_fp.
+        if (
+            bare_noun.endswith(_STATE_MODIFIER_SUFFIXES_CN)
+            and not bare_noun.startswith("第")
+        ):
+            m_de = _DE_HEAD_NOUN_RE_CN.match(claim.text, m.end())
+            if m_de:
+                head_raw = m_de.group("head")
+                extended_bare = bare_noun + "的" + head_raw
+                extended_normalized = normalize_candidate_intro_cn(
+                    extended_bare,
+                    strict_qualifier_matching=strict_qualifier_matching,
+                )
+                if extended_normalized and extended_normalized not in seen:
+                    seen.add(extended_normalized)
+                    extended_original = original + "的" + head_raw
+                    pairs.append((extended_original, extended_normalized))
+
     # R7 (2026-04-30): also apply strip_leading_verb_cn to supplementary
     # intros so a captured `制造方法` (from F14 on `之制造方法`) registers
     # as `方法` after stripping the leading 制造 verb prefix — matching
