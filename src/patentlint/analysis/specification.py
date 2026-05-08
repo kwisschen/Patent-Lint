@@ -9,7 +9,7 @@ sequence listing references, and reference numeral consistency.
 import re
 from collections import Counter
 
-from patentlint.analysis.utils import _dx
+from patentlint.analysis.utils import _dx, numeral_context_excerpt
 from patentlint.models import CheckItem, ReferenceNumeral, SpecWordingResult
 
 # Narrowing language per MPEP 2111.01(II): "critical, important, essential,
@@ -719,11 +719,11 @@ def check_numeral_consistency(spec_text: str) -> list[CheckItem]:
     items: list[CheckItem] = []
     if fix_conflicts:
         items.append(_build_d1_check_item(
-            fix_conflicts, status="amend", suffix="amend",
+            fix_conflicts, status="amend", suffix="amend", spec_text=spec_text,
         ))
     if review_conflicts:
         items.append(_build_d1_check_item(
-            review_conflicts, status="verify", suffix="verify",
+            review_conflicts, status="verify", suffix="verify", spec_text=spec_text,
         ))
     if items:
         return items
@@ -735,9 +735,23 @@ def check_numeral_consistency(spec_text: str) -> list[CheckItem]:
     )]
 
 
-def _build_d1_check_item(conflicts: list[dict], status: str, suffix: str) -> CheckItem:
+def _build_d1_check_item(
+    conflicts: list[dict],
+    status: str,
+    suffix: str,
+    spec_text: str,
+) -> CheckItem:
     """Build a CheckItem for a slice of D1 conflicts (either fix-tier
-    or review-tier). Shared between the two emit paths."""
+    or review-tier). Shared between the two emit paths.
+
+    R67 (2026-05-08): per-finding diagnostic now carries the canonical
+    element name, the top outlier name, and a short context excerpt
+    around the conflicting numeral (≤12 chars on each side). Anonymous
+    error reports (issue #27, #28) returned only bare digits like
+    ``[10, 15, 30, 35]`` — useless for triage. With this enrichment a
+    reviewer can read the report and immediately see ``"#102: lens
+    (5×) vs holder (2×); near …assembly of lens 102 within…"``.
+    """
     sample = conflicts[:8]
     extra = max(0, len(conflicts) - 8)
     findings = [
@@ -758,6 +772,29 @@ def _build_d1_check_item(conflicts: list[dict], status: str, suffix: str) -> Che
         }
         for c in sample
     ]
+    diag_samples = []
+    for c in sample:
+        canonical = _format_d1_name_for_display(c["canonical"])
+        top_outlier_name = (
+            _format_d1_name_for_display(c["outliers"][0]["name"])
+            if c["outliers"] else None
+        )
+        top_outlier_count = (
+            c["outliers"][0]["count"] if c["outliers"] else None
+        )
+        excerpt = numeral_context_excerpt(
+            spec_text, c["numeral"], canonical,
+        )
+        diag_samples.append({
+            "numeral": c["numeral"],
+            "canonical": canonical,
+            "canonical_count": c["canonical_count"],
+            "top_outlier": top_outlier_name,
+            "top_outlier_count": top_outlier_count,
+            "outliers_count": len(c["outliers"]),
+            "case": c["case"],
+            "context_excerpt": excerpt,
+        })
     inline = "; ".join(_format_inline_conflict(c) for c in sample[:3])
     if len(conflicts) > 3:
         inline = inline + f" (+{len(conflicts) - 3} more)"
@@ -781,9 +818,9 @@ def _build_d1_check_item(conflicts: list[dict], status: str, suffix: str) -> Che
         reference="MPEP § 608.01(g)",
         diagnostics={
             "conflict_count": len(conflicts),
-            "sample_numerals": [c["numeral"] for c in sample],
             "instance_collisions": sum(1 for c in conflicts if c["case"] == "instance"),
             "element_collisions": sum(1 for c in conflicts if c["case"] == "element"),
+            "samples": diag_samples,
         },
     )
 
