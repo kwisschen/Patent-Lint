@@ -197,19 +197,28 @@ def fixture_tw_arabic_cjk_ordinal_mix() -> bytes:
 
 
 def fixture_tw_citation_labels() -> bytes:
-    """R65 (745bfd0) — bibliographic [專利文獻N] label paragraphs.
+    """R65 (745bfd0) + R67 (bracket-subheading prefix) — citation + sub-section
+    labels in prior-art subsection.
 
-    Drafters list prior-art literature inline without prose-paragraph
-    terminal punctuation: ``[專利文獻1]TW I999999B``. The paragraph-
-    ending check must skip these (and the parallel ``[非專利文獻N]X``
-    form). The `[先前技術文獻]` standalone label is NOT covered by R65
-    and is omitted to keep the fixture targeting only R65's silencer.
+    Drafters use TWO patterns under 【先前技術】:
+      1. Sub-section labels like `[先前技術文獻]` (standalone bracket
+         label, no body content) — should be treated as structural
+         markers, not prose. Originally R65 only excluded these from
+         bracketFormat's canonical-name comparison; the TW
+         `_BRACKET_SUBHEADING` regex did NOT accept the `【NNNN】`
+         paragraph-number prefix common in TIPO drafts. R67
+         (2026-05-08) extended the regex to accept the prefix.
+      2. Citation-with-content patterns like `[專利文獻1]TW I999999B`
+         (R65 745bfd0).
+
+    Both must be skipped from paragraphEnding's prose-punctuation rule.
     """
     prior_art = [
         "【0002】習知技術存在散熱不佳之問題。",
-        "【0003】[專利文獻1]TW I999999B",
-        "【0004】[專利文獻2]TW I888888B",
-        "【0005】[非專利文獻1]Smith et al., Heat Sink Design, 2020",
+        "【0003】[先前技術文獻]",
+        "【0004】[專利文獻1]TW I999999B",
+        "【0005】[專利文獻2]TW I888888B",
+        "【0006】[非專利文獻1]Smith et al., Heat Sink Design, 2020",
     ]
     claims = [
         "1. 一種散熱裝置，包含一基座以及一散熱片，前述散熱片設置於前述基座之上。",
@@ -249,6 +258,67 @@ def fixture_tw_locative_bare_noun_intro() -> bytes:
     symbol_lines = ["100  半導體基板", "200  閘極絕緣層", "300  閘極電極"]
     return _build_tw_minimal(
         claims, invention_lines=invention, symbol_lines=symbol_lines,
+    )
+
+
+def fixture_tw_state_modifier_lookahead() -> bytes:
+    """R66 (22c8b80) + R67 (2026-05-08) — state-modifier symmetry.
+
+    Drafter introduces a state-modifier-qualified noun (`一島狀的奈米片
+    積層體`) and references it in a dependent claim (`前述島狀的奈米片
+    積層體`). The walker's R66 reference-side lookahead extends past 的
+    to the head noun; R67 (this session) adds the symmetric extension
+    on the intro side so consistent intro+ref pairs resolve without
+    spurious walker_fp.
+
+    Without R67, the intro `一島狀的奈米片積層體` registered as bare
+    `島狀` (intro pattern stops at 的) while the ref normalized to
+    `島狀的奈米片積層體` — asymmetric mismatch → emit. Per the symmetry-
+    audit invariant (memory feedback_symmetry_audit_normalize_chains).
+    """
+    claims = [
+        "1. 一種半導體裝置，包含一基板以及一島狀的奈米片積層體，前述奈米片積層體形成於前述基板上。",
+        "2. 如請求項1所述之半導體裝置，其中前述島狀的奈米片積層體之厚度為100奈米至500奈米。",
+    ]
+    symbol_lines = ["100  基板", "200  奈米片積層體"]
+    return _build_tw_minimal(claims, symbol_lines=symbol_lines)
+
+
+def fixture_cn_state_modifier_lookahead() -> bytes:
+    """R66 (22c8b80) + R67 (2026-05-08) CN port — state-modifier symmetry.
+
+    CN parallel of `tw_state_modifier_lookahead` using Simplified state
+    suffixes (状/形). Verifies the R67 intro-side extension was ported
+    to `cn_claims.py::extract_introductions_cn` along with the walker
+    reference-side R66 logic.
+    """
+    abstract = (
+        "本发明提供一种半导体装置。所述半导体装置包含一基板以及一岛状的纳米"
+        "片积层体。所述岛状的纳米片积层体之厚度受到精密控制，可提升半导体装"
+        "置之电气特性。本发明适用于先进半导体工艺，对应应用领域包含逻辑器件"
+        "及储存器件。所述纳米片积层体之实施方式具体说明如下文。"
+    )
+    title = "一种半导体装置"
+    claims = [
+        "1. 一种半导体装置，包含一基板以及一岛状的纳米片积层体，所述纳米片积层体形成于所述基板上。",
+        "2. 如权利要求1所述的半导体装置，其特征在于，所述岛状的纳米片积层体之厚度为100纳米至500纳米。",
+    ]
+    invention = [
+        "本发明提供一种半导体装置，解决现有技术中之电气特性不佳问题。",
+        "所述半导体装置包含一岛状的纳米片积层体，所述纳米片积层体形成于一基板上。",
+        "通过控制所述岛状的纳米片积层体之厚度，可提升器件电气特性。",
+    ]
+    embodiment = [
+        "下面结合附图说明本发明的具体实施方式。",
+        "如图1所示，半导体装置包含基板100及岛状的纳米片积层体200。",
+        "所述岛状的纳米片积层体200之厚度为100纳米至500纳米。",
+    ]
+    return _build_cn_minimal(
+        abstract_body=abstract,
+        title=title,
+        claims_lines=claims,
+        invention_lines=invention,
+        embodiment_lines=embodiment,
     )
 
 
@@ -326,6 +396,55 @@ def fixture_cn_locative_bare_noun_intro() -> bytes:
         invention_lines=invention,
         embodiment_lines=embodiment,
     )
+
+
+def fixture_tw_supplementary_intro_arabic_ordinals() -> bytes:
+    """R63 (e0635ca) — Arabic↔CJK normalize on the SUPPLEMENTARY intro path.
+
+    Companion to `tw_arabic_cjk_ordinal_mix` which exercises the main
+    intro path. R63's actual fix targets `_extract_supplementary_intros`
+    (F8 VP-modifier `相配合的Y` etc.) — without R63 the supplementary
+    path only ran `strip_leading_verb_tw` while the reference path ran
+    the full normalize chain including Arabic→CJK. The asymmetry
+    surfaced 12 walker FPs on Claire's 神秘黑屏哥.docx.
+
+    Uses F8's `相配合的<Y starting with 第>` pattern: F8 captures the
+    Arabic-ordinal noun, R63 normalizes 第1→第一, dep claim ref
+    `前述第二散熱片` resolves cleanly.
+    """
+    claims = [
+        "1. 一種散熱裝置，包含一基座、與前述基座相配合的第1散熱片、以及與前述基座相配合的第2散熱片。",
+        "2. 如請求項1所述之散熱裝置，其中前述第二散熱片為金屬材質。",
+    ]
+    symbol_lines = ["100  基座", "11   第1散熱片", "12   第2散熱片"]
+    return _build_tw_minimal(claims, symbol_lines=symbol_lines)
+
+
+def fixture_tw_self_loop_drafter_typo() -> bytes:
+    """R64 (5cca2bb) — chain-broken walker emit suppression on self-loop.
+
+    Drafter accidentally writes `如請求項4所述之X` inside claim 4 itself
+    (self-reference typo). The dependency chain is broken at claim 4.
+    R64's chain-broken walker suppression: skip the antecedent walker
+    when chain[-1].dependencies != [] (drafter self-loop or cycle
+    upstream) — dependent claims c5/c6 should NOT cascade-emit walker
+    findings inherited from the broken chain.
+
+    Real defects on the fixture:
+      - claim 4 self-dependency typo → emits selfDependent.amend
+      - claim 4's references should NOT cascade walker FPs to c5/c6
+
+    Per memory feedback_real_drafter_drafts_have_different_bugs.md
+    bug class #5.
+    """
+    claims = [
+        "1. 一種散熱裝置，包含一基座以及一散熱片，前述散熱片設置於前述基座之上。",
+        "2. 如請求項1所述之散熱裝置，更包含一風扇。",
+        "3. 如請求項2所述之散熱裝置，其中前述風扇之轉速為每分鐘1000轉至3000轉。",
+        "4. 如請求項4所述之散熱裝置，其中前述基座為金屬材質。",
+        "5. 如請求項4所述之散熱裝置，更包含一控制電路。",
+    ]
+    return _build_tw_minimal(claims)
 
 
 def fixture_cn_drafter_realistic_baseline() -> bytes:
@@ -461,6 +580,62 @@ FIXTURES: list[FixtureSpec] = [
         ),
         expected_keys=(
             "check.tw.claims.antecedentBasis.pass",
+        ),
+    ),
+    FixtureSpec(
+        name="tw_state_modifier_lookahead",
+        bug_class="State-modifier symmetry — intro-side lookahead",
+        fix_round="R66+R67",
+        fix_sha="22c8b80+(this session)",
+        jurisdiction=Jurisdiction.TW,
+        builder=fixture_tw_state_modifier_lookahead,
+        silenced_keys=(
+            "check.tw.claims.antecedentBasis.amend",
+        ),
+        expected_keys=(
+            "check.tw.claims.antecedentBasis.pass",
+        ),
+    ),
+    FixtureSpec(
+        name="cn_state_modifier_lookahead",
+        bug_class="CN port — state-modifier symmetry intro-side lookahead",
+        fix_round="R66+R67",
+        fix_sha="22c8b80+(this session)",
+        jurisdiction=Jurisdiction.CN,
+        builder=fixture_cn_state_modifier_lookahead,
+        silenced_keys=(
+            "check.cn.claims.antecedentBasis.amend",
+        ),
+        expected_keys=(
+            "check.cn.claims.antecedentBasis.pass",
+        ),
+    ),
+    FixtureSpec(
+        name="tw_supplementary_intro_arabic_ordinals",
+        bug_class="R63 actual fix path — supplementary-intro Arabic→CJK",
+        fix_round="R63",
+        fix_sha="e0635ca",
+        jurisdiction=Jurisdiction.TW,
+        builder=fixture_tw_supplementary_intro_arabic_ordinals,
+        silenced_keys=(
+            "check.tw.claims.antecedentBasis.amend",
+        ),
+        expected_keys=(
+            "check.tw.claims.antecedentBasis.pass",
+        ),
+    ),
+    FixtureSpec(
+        name="tw_self_loop_drafter_typo",
+        bug_class="Self-loop drafter typo — chain-broken walker suppression",
+        fix_round="R64",
+        fix_sha="5cca2bb",
+        jurisdiction=Jurisdiction.TW,
+        builder=fixture_tw_self_loop_drafter_typo,
+        silenced_keys=(
+            "check.tw.claims.antecedentBasis.amend",
+        ),
+        expected_keys=(
+            "check.tw.claims.selfDependent.amend",
         ),
     ),
     FixtureSpec(
