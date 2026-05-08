@@ -31,6 +31,55 @@ def _dx(**kwargs: Any) -> dict[str, Any]:
     return {k: v for k, v in kwargs.items() if v is not None}
 
 
+def numeral_context_excerpt(
+    spec_text: str,
+    numeral: str,
+    name_clean: str | None = None,
+    before: int = 12,
+    after: int = 12,
+) -> str | None:
+    """Return a short context excerpt around the first occurrence of
+    ``numeral`` in ``spec_text``.
+
+    Format: ``"…<before-chars> <numeral> <after-chars>…"``. When
+    ``name_clean`` is provided, prefer occurrences where the name
+    appears within ±30 chars of the numeral so the excerpt actually
+    illustrates the conflict pair (avoids returning a year-like or
+    unrelated occurrence).
+
+    Returns None when no qualifying occurrence is found. Excerpt size
+    is bounded (12 chars before + 12 chars after by default) to stay
+    within the "structural fingerprint" privacy boundary — same
+    convention as `context_after` in `_ref_numeral_finding_diag` and
+    other walker diagnostics. Newlines are collapsed so the excerpt
+    fits on one report-payload line.
+
+    Used by `numeralConsistency` (TW/CN/US) to enrich the diagnostic
+    with an actual snippet of where the conflict occurred (R67
+    2026-05-08 — anonymous reports were emitting bare digits with
+    no surrounding context, useless for triage).
+    """
+    if not spec_text or not numeral:
+        return None
+    pat = re.compile(r"(?<!\d)" + re.escape(numeral) + r"(?!\d)")
+    matches = list(pat.finditer(spec_text))
+    if not matches:
+        return None
+    chosen = matches[0]
+    if name_clean:
+        needle = name_clean.lower()
+        for m in matches:
+            ctx = spec_text[max(0, m.start() - 30): m.end() + 30].lower()
+            if needle in ctx:
+                chosen = m
+                break
+    start = max(0, chosen.start() - before)
+    end = min(len(spec_text), chosen.end() + after)
+    snippet = spec_text[start:end].replace("\n", " ").replace("\t", " ").strip()
+    snippet = re.sub(r"\s{2,}", " ", snippet)
+    return f"…{snippet}…"
+
+
 def annotate_term_in_spec(
     findings: list[dict],
     spec_text: str,

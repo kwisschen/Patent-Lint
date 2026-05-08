@@ -18,7 +18,7 @@ from patentlint.analysis.cn_specification import (
     _cn_format_inline_conflict as _cjk_format_inline_conflict,
 )
 from patentlint.analysis.figure_refs import TW_PARSER
-from patentlint.analysis.utils import _dx
+from patentlint.analysis.utils import _dx, numeral_context_excerpt
 from patentlint.models import CheckItem, TwPatentDocument, TwPatentType
 
 # Canonical section order per 專利法施行細則 §17
@@ -948,9 +948,9 @@ def check_numeral_consistency_tw(doc: TwPatentDocument) -> list[CheckItem]:
     review_conflicts = [c for c in conflicts if c.get("confidence") == "review"]
     items: list[CheckItem] = []
     if fix_conflicts:
-        items.append(_build_tw_d1_check_item(fix_conflicts, "amend", "amend"))
+        items.append(_build_tw_d1_check_item(fix_conflicts, "amend", "amend", spec_text))
     if review_conflicts:
-        items.append(_build_tw_d1_check_item(review_conflicts, "verify", "verify"))
+        items.append(_build_tw_d1_check_item(review_conflicts, "verify", "verify", spec_text))
     return items or [CheckItem(
         status="pass",
         message="附圖標記與所指稱元件名稱一致。",
@@ -959,7 +959,12 @@ def check_numeral_consistency_tw(doc: TwPatentDocument) -> list[CheckItem]:
     )]
 
 
-def _build_tw_d1_check_item(conflicts: list[dict], status: str, suffix: str) -> CheckItem:
+def _build_tw_d1_check_item(
+    conflicts: list[dict],
+    status: str,
+    suffix: str,
+    spec_text: str,
+) -> CheckItem:
     """Build a CheckItem for a slice of TW D1 conflicts."""
     sample = conflicts[:8]
     extra = max(0, len(conflicts) - 8)
@@ -1002,9 +1007,30 @@ def _build_tw_d1_check_item(conflicts: list[dict], status: str, suffix: str) -> 
         reference="專利法施行細則 §19 第2款",
         diagnostics=_dx(
             conflict_count=len(conflicts),
-            sample_numerals=[c["numeral"] for c in sample],
             instance_collisions=sum(1 for c in conflicts if c["case"] == "instance"),
             element_collisions=sum(1 for c in conflicts if c["case"] == "element"),
+            samples=[
+                {
+                    "numeral": c["numeral"],
+                    "canonical": _cjk_format_d1_name_for_display(c["canonical"]),
+                    "canonical_count": c["canonical_count"],
+                    "top_outlier": (
+                        _cjk_format_d1_name_for_display(c["outliers"][0]["name"])
+                        if c["outliers"] else None
+                    ),
+                    "top_outlier_count": (
+                        c["outliers"][0]["count"] if c["outliers"] else None
+                    ),
+                    "outliers_count": len(c["outliers"]),
+                    "case": c["case"],
+                    "context_excerpt": numeral_context_excerpt(
+                        spec_text,
+                        c["numeral"],
+                        _cjk_format_d1_name_for_display(c["canonical"]),
+                    ),
+                }
+                for c in sample
+            ],
         ),
     )
 
