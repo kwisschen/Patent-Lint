@@ -42,6 +42,7 @@ import re
 from patentlint.analysis.cjk_tokenize import tokenize_tw
 from patentlint.analysis.tw_claims import (
     extract_introductions_tw,
+    normalize_arabic_ordinal_to_cjk,
     normalize_reference_term,
 )
 from patentlint.models import Claim, TwPatentDocument, UnsupportedTerm
@@ -75,6 +76,13 @@ _TW_BOILERPLATE_TERMS: frozenset[str] = frozenset({
     "上述",
     "如上所述",
     "如請求項",
+    # R67 (2026-05-08) — method-claim listing boilerplate. `下列步驟` /
+    # `下列方法` / `下列特徵` are universal "the following <X>" patterns
+    # that introduce a list, not a noun being claimed. Walker captures
+    # them via the main intro pattern from `其包含下列步驟：...`.
+    "下列步驟",
+    "下列方法",
+    "下列特徵",
 })
 
 # Trailing clause tokens observed in audit as walker-captured verbal tails
@@ -112,6 +120,14 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         "部分而成",
         "而成",
         "面側",
+        # R67 (2026-05-08): walker over-capture truncated at ordinal-prefix
+        # `第` without the trailing ordinal number. Drafter wrote
+        # `相配合的第1散熱片` but the F-head/post-process path captured up
+        # to `相配合的第` (digit `1` outside _NOUN_CHARS class). Bare `第`
+        # at the END of a captured term is always a truncated ordinal —
+        # 第 alone is never a legitimate noun-phrase terminus.
+        "的第",
+        "第",
     ),
     key=len,
     reverse=True,
@@ -157,7 +173,22 @@ _TW_SUFFIX_ONLY_LEADS: frozenset[str] = frozenset({"部", "端", "埠"})
 # Clause markers that signal the captured text is a comparison/relation
 # clause, not a noun phrase. Reject any term containing these as an
 # interior substring.
-_TW_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = ("超過", "超出", "彼此")
+# R67 (2026-05-08): added `相配合` (mutually-fitting). Verb-phrase
+# describing inter-component relationship, never part of a noun's name
+# in TIPO drafting. Walker over-capture from
+# `與前述X相配合的第N<NOUN>` (F-head supplementary) leaks `X相配合`
+# residue after trailing-strip; interior reject closes the loop.
+_TW_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = (
+    "超過",
+    "超出",
+    "彼此",
+    # `相配` covers the verb-phrase root: 相配合 / 相配對 / 相配置 are
+    # all relational verbs, never part of a noun's name in TIPO drafting.
+    # Walker over-captures from `與X相配合的Y` shapes that survive
+    # trailing-token stripping because the 合/對/置 suffix may be
+    # truncated mid-capture.
+    "相配",
+)
 
 # Leading prepositions that survive walker normalization (audit #2 found
 # 於所述基板 / 到所述第一電子裝置 / 在X 等 as residues). Strip these
@@ -347,14 +378,22 @@ def _collect_symbol_names(doc: TwPatentDocument) -> set[str]:
     glossary; ``representative_drawing_symbols`` is the 代表圖之符號說明
     cover-page legend. Both are drafter-authored glossary declarations —
     terms listed there are spec-supported by definition.
+
+    R67 (2026-05-08) — Arabic→CJK ordinal normalization applied
+    symmetrically with the claim-side normalize chain. Drafter writes
+    `第1間隔件` in the symbol table; claim-side `normalize_reference_term`
+    converts the dep claim's `前述第二間隔件` to `第一間隔件` / `第二間隔件`
+    (CJK). Without the symbol-side normalize, Tier 0 missed every
+    Arabic-ordinal-named symbol entry — symmetric to R63's walker fix
+    on the supplementary-intro path.
     """
     names: set[str] = set()
     for entry in doc.symbol_table:
         if entry.name:
-            names.add(entry.name)
+            names.add(normalize_arabic_ordinal_to_cjk(entry.name))
     for entry in doc.representative_drawing_symbols:
         if entry.name:
-            names.add(entry.name)
+            names.add(normalize_arabic_ordinal_to_cjk(entry.name))
     return names
 
 
@@ -364,13 +403,18 @@ def _collect_spec_text(doc: TwPatentDocument) -> str:
     Per §2.1 of the plan: technical_field + prior_art + disclosure +
     embodiment. Excludes drawings_description + symbol_table (handled
     separately) + abstract_text.
+
+    R67 (2026-05-08) — Arabic→CJK ordinal normalization applied so the
+    Tier 1 / Tier 3 substring checks see the same ordinal form the
+    claim-side normalize produces. Without this, drafter's `第1散熱片`
+    in spec body misses against claim's normalized `第一散熱片`.
     """
     parts: list[str] = []
     parts.extend(doc.technical_field)
     parts.extend(doc.prior_art)
     parts.extend(doc.disclosure)
     parts.extend(doc.embodiment)
-    return "\n".join(parts)
+    return normalize_arabic_ordinal_to_cjk("\n".join(parts))
 
 
 def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:

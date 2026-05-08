@@ -56,6 +56,7 @@ import re
 from patentlint.analysis.cjk_tokenize import tokenize_cn
 from patentlint.analysis.cn_claims import (
     extract_introductions_cn,
+    normalize_arabic_ordinal_to_cjk,
     normalize_reference_term_cn,
 )
 from patentlint.models import Claim, CnPatentDocument, UnsupportedTerm
@@ -121,6 +122,13 @@ _CN_BOILERPLATE_TERMS: frozenset[str] = frozenset({
     # Walker over-strip of 非瞬时性 (non-transitory) — drops 时性 leaving
     # bare 非瞬 (CN115952274B). Length-2 fragment, never a real term.
     "非瞬",
+    # R67 (2026-05-08) — method-claim listing boilerplate. Universal
+    # "the following <X>" pattern. CN parity with TW filter.
+    "下列步骤",
+    "下列方法",
+    "下列特征",
+    "以下步骤",
+    "以下方法",
 })
 
 # Trailing clause tokens from native-CN drafting conventions. Applied
@@ -155,6 +163,18 @@ _CN_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # where walker truncated 配置.
         "设置", "配置", "配",
         "时",
+        # R67 (2026-05-08): walker over-capture truncated at preposition
+        # `以`. Drafter wrote `一基板以及一岛状...`, walker capture spanned
+        # `包含一基板以及一岛状` (post-process produced multiple candidates
+        # one of which terminated mid-conjunction). Bare `以` trailing
+        # is always a truncated preposition — `以` is never the terminus
+        # of a legitimate compound noun.
+        "以及",
+        "以",
+        # R67: parity with TW _TW_SPEC_SUPPORT_TRAILING_TOKENS additions.
+        # `第` alone at term end = truncated ordinal prefix.
+        "的第",
+        "第",
     ),
     key=len,
     reverse=True,
@@ -511,12 +531,19 @@ def _collect_spec_text_cn(doc: CnPatentDocument) -> str:
     disclosure of the invention; a claim term supported only by
     背景技术 is itself a §26 第4款 violation), drawings_description
     (figure captions, FP risk), abstract_text (not written-description).
+
+    R67 (2026-05-08) — Arabic→CJK ordinal normalization applied so the
+    Tier 1 / Tier 3 substring checks see the same ordinal form the
+    claim-side normalize chain produces. Without this, drafter's
+    `第1间隔件` in spec body misses against claim's normalized
+    `第一间隔件`. Symmetric to R63 walker fix on the supplementary
+    intro path.
     """
     parts: list[str] = []
     parts.extend(doc.technical_field)
     parts.extend(doc.summary)
     parts.extend(doc.detailed_description)
-    return "\n".join(parts)
+    return normalize_arabic_ordinal_to_cjk("\n".join(parts))
 
 
 def _build_inventory_cn(
