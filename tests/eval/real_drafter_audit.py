@@ -81,23 +81,35 @@ def _add_cn_section_break(doc: Document, next_header_text: str) -> None:
 def _build_tw_minimal(
     claims_text: list[str],
     *,
+    title: str = "散熱裝置",
+    technical_field_line: str = "【0001】本發明係關於一種散熱裝置。",
     symbol_lines: list[str] | None = None,
     embodiment_lines: list[str] | None = None,
     prior_art_header: str = "【先前技術】",
     prior_art_lines: list[str] | None = None,
     invention_lines: list[str] | None = None,
+    drawings_desc_line: str = "【0004】第1圖係散熱裝置之示意圖。",
+    abstract_line: str = "本發明提供一種散熱裝置。",
 ) -> bytes:
-    """Build a minimal TW .docx with optional per-section overrides.
+    """Build a minimal-but-complete TW .docx with full per-section override.
 
-    ``prior_art_header`` lets a fixture exercise the section-name alias
-    paths (e.g., 【背景技術】 vs 【先前技術】).
+    All section bodies and the title accept overrides. Defaults model a
+    coherent heat-sink draft so the fixture is self-consistent across
+    titleSubjectMatch / paragraphNumbering / symbolTableConsistency
+    checks. Fixtures targeting non-heat-sink subject matter MUST override
+    the title + technical_field + drawings_desc + abstract to match.
+
+    Default paragraph numbering: 【0001】 technical → 【0002】 prior_art →
+    【0003】 invention → 【0004】 drawings_desc → 【0005】 embodiment.
+    Any override list must continue the sequence to keep
+    paragraphNumbering check happy.
     """
     doc = Document()
     lines: list[str] = [
         "【發明名稱】",
-        "散熱裝置",
+        title,
         "【技術領域】",
-        "【0001】本發明係關於一種散熱裝置。",
+        technical_field_line,
         prior_art_header,
     ]
     if prior_art_lines is not None:
@@ -109,25 +121,27 @@ def _build_tw_minimal(
     if invention_lines is not None:
         lines.extend(invention_lines)
     else:
-        lines.append("【0003】本發明提供一種散熱裝置。")
+        lines.append("【0003】本發明提供一種散熱裝置，包含一基座以及一散熱片。")
 
-    lines.extend(["【圖式簡單說明】", "【0004】第1圖係散熱裝置之示意圖。"])
+    lines.extend(["【圖式簡單說明】", drawings_desc_line])
     lines.append("【實施方式】")
     if embodiment_lines is not None:
         lines.extend(embodiment_lines)
     else:
-        lines.append("【0005】請參閱第1圖，散熱裝置100包括一基座10。")
+        lines.append(
+            "【0005】請參閱第1圖，散熱裝置100包括一基座10以及一散熱片20，前述散熱片20設置於前述基座10之上。"
+        )
 
     lines.append("【符號說明】")
     if symbol_lines is not None:
         lines.extend(symbol_lines)
     else:
-        lines.extend(["100  散熱裝置", "10   基座"])
+        lines.extend(["100  散熱裝置", "10   基座", "20   散熱片"])
 
     lines.append("【申請專利範圍】")
     lines.extend(claims_text)
 
-    lines.extend(["【摘要】", "本發明提供一種散熱裝置。", "【代表圖】", "第1圖"])
+    lines.extend(["【摘要】", abstract_line, "【代表圖】", "第1圖"])
 
     for line in lines:
         doc.add_paragraph(line)
@@ -206,13 +220,21 @@ def fixture_tw_arabic_cjk_ordinal_mix() -> bytes:
         "1. 一種散熱裝置，包含一基座、一第1間隔件、以及一第2間隔件，前述第1間隔件設置於前述基座之上。",
         "2. 如請求項1所述之散熱裝置，其中前述第二間隔件為金屬材質。",
     ]
+    embodiment = [
+        "【0005】請參閱第1圖，散熱裝置100包括一基座10、一第1間隔件11以及一第2間隔件12，前述第1間隔件11設置於前述基座10之上。",
+        "【0006】前述第2間隔件12設置於前述基座10之另一面。",
+    ]
     symbol_lines = [
         "100  散熱裝置",
         "10   基座",
         "11   第1間隔件",
         "12   第2間隔件",
     ]
-    return _build_tw_minimal(claims, symbol_lines=symbol_lines)
+    return _build_tw_minimal(
+        claims,
+        symbol_lines=symbol_lines,
+        embodiment_lines=embodiment,
+    )
 
 
 def fixture_tw_citation_labels() -> bytes:
@@ -234,10 +256,10 @@ def fixture_tw_citation_labels() -> bytes:
     """
     prior_art = [
         "【0002】習知技術存在散熱不佳之問題。",
-        "【0003】[先前技術文獻]",
-        "【0004】[專利文獻1]TW I999999B",
-        "【0005】[專利文獻2]TW I888888B",
-        "【0006】[非專利文獻1]Smith et al., Heat Sink Design, 2020",
+        "[先前技術文獻]",
+        "[專利文獻1]TW I999999B",
+        "[專利文獻2]TW I888888B",
+        "[非專利文獻1]Smith et al., Heat Sink Design, 2020",
     ]
     claims = [
         "1. 一種散熱裝置，包含一基座以及一散熱片，前述散熱片設置於前述基座之上。",
@@ -266,17 +288,26 @@ def fixture_tw_locative_bare_noun_intro() -> bytes:
     前述半導體基板 then resolves cleanly.
     """
     invention = [
-        "【0003】本發明提供一種半導體裝置之製造方法。",
-        "【0004】於半導體基板的一主面上形成一閘極絕緣層。",
-        "【0005】於前述閘極絕緣層上形成一閘極電極。",
+        "【0003】本發明提供一種半導體裝置之製造方法。所述方法包含於一半導體基板的一主面上形成一閘極絕緣層，以及於前述閘極絕緣層上形成一閘極電極。",
+    ]
+    embodiment = [
+        "【0005】請參閱第1圖，於半導體基板100的一主面上形成一閘極絕緣層200。",
+        "【0006】其後於前述閘極絕緣層200上形成一閘極電極300。",
     ]
     claims = [
         "1. 一種半導體裝置之製造方法，其包含下列步驟：於一半導體基板的一主面上形成一閘極絕緣層；以及於前述閘極絕緣層上形成一閘極電極。",
-        "2. 如請求項1所述之製造方法，其中前述半導體基板為矽基板。",
+        "2. 如請求項1所述之半導體裝置之製造方法，其中前述半導體基板為矽基板。",
     ]
     symbol_lines = ["100  半導體基板", "200  閘極絕緣層", "300  閘極電極"]
     return _build_tw_minimal(
-        claims, invention_lines=invention, symbol_lines=symbol_lines,
+        claims,
+        title="半導體裝置之製造方法",
+        technical_field_line="【0001】本發明係關於一種半導體裝置之製造方法。",
+        invention_lines=invention,
+        drawings_desc_line="【0004】第1圖係半導體裝置之製造步驟示意圖。",
+        embodiment_lines=embodiment,
+        symbol_lines=symbol_lines,
+        abstract_line="本發明提供一種半導體裝置之製造方法。",
     )
 
 
@@ -295,12 +326,28 @@ def fixture_tw_state_modifier_lookahead() -> bytes:
     `島狀的奈米片積層體` — asymmetric mismatch → emit. Per the symmetry-
     audit invariant (memory feedback_symmetry_audit_normalize_chains).
     """
+    invention = [
+        "【0003】本發明提供一種半導體裝置，包含一基板以及一島狀的奈米片積層體，前述島狀的奈米片積層體形成於前述基板上。前述島狀的奈米片積層體之厚度為100奈米至500奈米。",
+    ]
+    embodiment = [
+        "【0005】請參閱第1圖，半導體裝置1包括一基板10以及一島狀的奈米片積層體20。",
+        "【0006】前述島狀的奈米片積層體20形成於前述基板10之上，且前述島狀的奈米片積層體20之厚度為100奈米至500奈米。",
+    ]
     claims = [
-        "1. 一種半導體裝置，包含一基板以及一島狀的奈米片積層體，前述奈米片積層體形成於前述基板上。",
+        "1. 一種半導體裝置，包含一基板以及一島狀的奈米片積層體，前述島狀的奈米片積層體形成於前述基板上。",
         "2. 如請求項1所述之半導體裝置，其中前述島狀的奈米片積層體之厚度為100奈米至500奈米。",
     ]
-    symbol_lines = ["100  基板", "200  奈米片積層體"]
-    return _build_tw_minimal(claims, symbol_lines=symbol_lines)
+    symbol_lines = ["1   半導體裝置", "10  基板", "20  島狀的奈米片積層體"]
+    return _build_tw_minimal(
+        claims,
+        title="半導體裝置",
+        technical_field_line="【0001】本發明係關於一種半導體裝置。",
+        invention_lines=invention,
+        drawings_desc_line="【0004】第1圖係半導體裝置之示意圖。",
+        embodiment_lines=embodiment,
+        symbol_lines=symbol_lines,
+        abstract_line="本發明提供一種半導體裝置。",
+    )
 
 
 def fixture_cn_state_modifier_lookahead() -> bytes:
@@ -319,7 +366,7 @@ def fixture_cn_state_modifier_lookahead() -> bytes:
     )
     title = "一种半导体装置"
     claims = [
-        "1. 一种半导体装置，包含一基板以及一岛状的纳米片积层体，所述纳米片积层体形成于所述基板上。",
+        "1. 一种半导体装置，其特征在于，包含一基板以及一岛状的纳米片积层体，所述岛状的纳米片积层体形成于所述基板上。",
         "2. 如权利要求1所述的半导体装置，其特征在于，所述岛状的纳米片积层体之厚度为100纳米至500纳米。",
     ]
     invention = [
@@ -347,19 +394,32 @@ def fixture_tw_empty_paragraph_spacers() -> bytes:
     Drafters insert bare `【NNNN】` paragraphs as section spacers between
     prose paragraphs. The R65 fix recognizes these as empty spacers and
     skips them in the paragraph-ending check (no terminal-punctuation
-    requirement on a marker that has no body content). Reuses the
-    existing prior_art_lines override to inject the spacer between two
-    real prose paragraphs.
+    requirement on a marker that has no body content). Spacer is
+    UNNUMBERED so it doesn't break the global paragraphNumbering
+    sequence — the actual fixture trigger is the bare 【NNNN】 form
+    appearing as a body paragraph.
     """
     prior_art = [
         "【0002】習知技術存在散熱不佳之問題。",
-        "【0003】",  # bare spacer — must be skipped by R65
-        "【0004】習知方案在高溫下效能下降。",
+        "【0003】",  # bare spacer — must be skipped by R65 + not break numbering
+        "習知方案在高溫下效能下降。",
     ]
     claims = [
         "1. 一種散熱裝置，包含一基座以及一散熱片，前述散熱片設置於前述基座之上。",
     ]
-    return _build_tw_minimal(claims, prior_art_lines=prior_art)
+    invention_lines = [
+        "【0004】本發明提供一種散熱裝置，包含一基座以及一散熱片。",
+    ]
+    embodiment_lines = [
+        "【0006】請參閱第1圖，散熱裝置100包括一基座10以及一散熱片20，前述散熱片20設置於前述基座10之上。",
+    ]
+    return _build_tw_minimal(
+        claims,
+        prior_art_lines=prior_art,
+        invention_lines=invention_lines,
+        embodiment_lines=embodiment_lines,
+        drawings_desc_line="【0005】第1圖係散熱裝置之示意圖。",
+    )
 
 
 def fixture_tw_subsection_bracket_brackets() -> bytes:
@@ -375,7 +435,7 @@ def fixture_tw_subsection_bracket_brackets() -> bytes:
     prior_art = [
         "【0002】習知技術存在散熱不佳之問題。",
         "【先前技術文獻】",
-        "【0003】[專利文獻1]TW I999999B",
+        "[專利文獻1]TW I999999B",
     ]
     claims = [
         "1. 一種散熱裝置，包含一基座以及一散熱片，前述散熱片設置於前述基座之上。",
@@ -395,7 +455,7 @@ def fixture_cn_locative_bare_noun_intro() -> bytes:
     )
     title = "一种半导体装置的制造方法"
     claims = [
-        "1. 一种半导体装置的制造方法，包含下列步骤：于一半导体基板的一主面侧形成一栅极绝缘层；以及于所述栅极绝缘层上形成一栅极电极。",
+        "1. 一种半导体装置的制造方法，其特征在于，包含下列步骤：于一半导体基板的一主面侧形成一栅极绝缘层；以及于所述栅极绝缘层上形成一栅极电极。",
         "2. 如权利要求1所述的制造方法，其特征在于，所述半导体基板为硅基板。",
     ]
     invention = [
@@ -432,11 +492,17 @@ def fixture_tw_supplementary_intro_arabic_ordinals() -> bytes:
     `前述第二散熱片` resolves cleanly.
     """
     claims = [
-        "1. 一種散熱裝置，包含一基座、與前述基座相配合的第1散熱片、以及與前述基座相配合的第2散熱片。",
-        "2. 如請求項1所述之散熱裝置，其中前述第二散熱片為金屬材質。",
+        "1. 一種散熱裝置，其包含一基座以及與前述基座相配合的第1散熱片，前述第1散熱片設置於前述基座之上。",
+        "2. 如請求項1所述之散熱裝置，更包含與前述基座相配合的第2散熱片，前述第二散熱片為金屬材質。",
     ]
-    symbol_lines = ["100  基座", "11   第1散熱片", "12   第2散熱片"]
-    return _build_tw_minimal(claims, symbol_lines=symbol_lines)
+    embodiment = [
+        "【0005】請參閱第1圖，散熱裝置100包括一基座10、一第1散熱片11以及一第2散熱片12。",
+        "【0006】前述第1散熱片11設置於前述基座10之上，前述第2散熱片12設置於前述基座10之另一面。",
+    ]
+    symbol_lines = ["100  散熱裝置", "10   基座", "11   第1散熱片", "12   第2散熱片"]
+    return _build_tw_minimal(
+        claims, symbol_lines=symbol_lines, embodiment_lines=embodiment,
+    )
 
 
 def fixture_tw_self_loop_drafter_typo() -> bytes:
