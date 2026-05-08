@@ -403,6 +403,9 @@ _CJK_UNIT_TOKENS_CN = (
 )
 _BARE_NUMERAL = re.compile(
     r"(?<!\()(?<=[\u4e00-\u9fff])\s?\d{2,4}(?!\))"
+    r"(?!\d)"  # R67 (2026-05-08): must match full digit run; without this
+               # the regex backtracks from `100\u7eb3\u7c73` to `10` (0\u7eb3\u7c73
+               # doesn't match the unit list), producing a FP. TW parity.
     r"(?!\s*(?:" + _CJK_UNIT_TOKENS_CN + r"))"
 )
 
@@ -3032,7 +3035,9 @@ def extract_introductions_cn(
         # CN parity with the TW R67 intro-side extension. Mirrors the
         # walker reference-side R66 logic so consistent intro+ref pairs
         # like `一岛状的纳米片积层体` ↔ `所述岛状的纳米片积层体` resolve
-        # without spurious walker_fp.
+        # without spurious walker_fp. Also drops the bare state-modifier
+        # form (e.g. `岛状`) from inventory once the extended form is
+        # captured — bare 岛状 alone is the modifier, not a claim noun.
         if (
             bare_noun.endswith(_STATE_MODIFIER_SUFFIXES_CN)
             and not bare_noun.startswith("第")
@@ -3045,10 +3050,29 @@ def extract_introductions_cn(
                     extended_bare,
                     strict_qualifier_matching=strict_qualifier_matching,
                 )
-                if extended_normalized and extended_normalized not in seen:
-                    seen.add(extended_normalized)
-                    extended_original = original + "的" + head_raw
-                    pairs.append((extended_original, extended_normalized))
+                if extended_normalized:
+                    bare_norms_to_drop: set[str] = set()
+                    for cand in candidates:
+                        cand_norm = normalize_candidate_intro_cn(
+                            cand,
+                            strict_qualifier_matching=strict_qualifier_matching,
+                        )
+                        if (
+                            cand_norm
+                            and cand_norm != extended_normalized
+                            and cand_norm.endswith(_STATE_MODIFIER_SUFFIXES_CN)
+                        ):
+                            bare_norms_to_drop.add(cand_norm)
+                    if bare_norms_to_drop:
+                        seen -= bare_norms_to_drop
+                        pairs[:] = [
+                            (o, n) for (o, n) in pairs
+                            if n not in bare_norms_to_drop
+                        ]
+                    if extended_normalized not in seen:
+                        seen.add(extended_normalized)
+                        extended_original = original + "的" + head_raw
+                        pairs.append((extended_original, extended_normalized))
 
     # R7 (2026-04-30): also apply strip_leading_verb_cn to supplementary
     # intros so a captured `制造方法` (from F14 on `之制造方法`) registers
