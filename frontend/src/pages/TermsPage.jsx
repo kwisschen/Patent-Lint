@@ -102,6 +102,7 @@ export default function TermsPage() {
             Contact <a href="mailto:kwisschen@gmail.com">kwisschen@gmail.com</a> to discuss commercial licensing terms. Pricing and terms are negotiated case-by-case based on deployment model, scope, and organization size.
           </Trans>
         </p>
+        <p>{t('terms.s4.future')}</p>
       </LegalSection>
 
       <LegalSection number="5" titleKey="terms.s5.title">
@@ -121,6 +122,7 @@ export default function TermsPage() {
       <LegalSection number="8" titleKey="terms.s8.title">
         <p>{t('terms.s8.p1')}</p>
         <p>{t('terms.s8.p2')}</p>
+        <p>{t('terms.s8.p3')}</p>
       </LegalSection>
 
       <LegalSection number="9" titleKey="terms.s9.title">
@@ -152,6 +154,38 @@ export default function TermsPage() {
 
       <LegalSection number="12" titleKey="terms.s12.title">
         <p>{t('terms.s12.p1')}</p>
+      </LegalSection>
+
+      <LegalSection number="13" titleKey="terms.s13.title">
+        <p>
+          <strong>{t('terms.s13.entireAgreementLabel')}</strong>{' '}
+          {t('terms.s13.entireAgreement')}
+        </p>
+        <p>
+          <strong>{t('terms.s13.severabilityLabel')}</strong>{' '}
+          {t('terms.s13.severability')}
+        </p>
+        <p>
+          <strong>{t('terms.s13.noWaiverLabel')}</strong>{' '}
+          {t('terms.s13.noWaiver')}
+        </p>
+      </LegalSection>
+
+      <LegalSection number="14" titleKey="terms.s14.title">
+        <p>{t('terms.s14.p1')}</p>
+      </LegalSection>
+
+      <LegalSection number="15" titleKey="terms.s15.title">
+        <p>{t('terms.s15.p1')}</p>
+      </LegalSection>
+
+      <LegalSection number="16" titleKey="terms.s16.title">
+        <p>{t('terms.s16.p1')}</p>
+        <p>
+          <Trans i18nKey="terms.s16.p2">
+            Designated agent: Christopher Chen, <a href="mailto:kwisschen@gmail.com">kwisschen@gmail.com</a>. Counter-notices and the repeat-infringer policy follow 17 U.S.C. § 512.
+          </Trans>
+        </p>
       </LegalSection>
 
       <LegalPageFooter>
