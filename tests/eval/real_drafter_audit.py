@@ -1,19 +1,38 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025 Christopher Chen
-"""Real-drafter audit harness — bug-class regression gates for R63–R66 fixes.
+"""Real-drafter audit harness — bug-class regression gates for R63-R67 fixes.
 
 Programmatic .docx fixtures that each isolate one bug class from the
 real-drafter audit taxonomy (see memory
 `feedback_real_drafter_drafts_have_different_bugs.md`). Every fixture
 embeds the trigger pattern that previously caused a false positive and
-that the post-R65/R66 walker, parser, or section-map fix correctly
+that the post-R65/R66/R67 walker, parser, or section-map fix correctly
 silences.
 
 The audit runner runs each fixture through ``analyze_bytes`` and asserts
 two things per fixture:
   - silenced_keys: count of findings on these check_keys must be 0
-  - expected_keys: each must have ≥1 finding (recall — the silencer
+  - expected_keys: each must have >=1 finding (recall - the silencer
     didn't over-silence and crush legitimate emits)
+
+**Targeted, not whole-document clean.** Each fixture is minimal - the
+goal is to exercise ONE bug-class trigger. Fixtures may emit unrelated
+amend/verify findings (most commonly `specSupport.amend` because the
+minimal embodiment body doesn't repeat every claim term). The harness
+assertion only watches `silenced_keys`; ancillary emits are intentional
+fixture-design noise, not regressions. The only fixture that asserts
+whole-document cleanness is ``cn_drafter_realistic_baseline``, which
+mirrors ``tests/test_integration.py::TestCnDrafterRealisticBaseline``.
+
+**Known residual gap not closed in this harness.** The R67 intro-side
+state-modifier extension covers the main `_INTRO_PATTERN` path. The
+supplementary-intro paths (F7a `形成於X的Y`, F8 `相配合的Y`,
+F7d `於X的Y`, F9 `透過Y連接`) do NOT yet have the symmetric extension.
+A real-drafter case combining F7a-shape phrasing with a state-modifier
+qualifier (e.g., `形成於X之島狀的Y` with reference `前述島狀的Y`)
+would still produce a walker FP. R67 was not extended to the
+supplementary paths because the empirical signal hasn't surfaced -
+per DR-1 (empirical grounding before drafting).
 
 Run: ``python tests/eval/real_drafter_audit.py``
 Outputs to stdout + writes a markdown report to
@@ -427,24 +446,40 @@ def fixture_tw_self_loop_drafter_typo() -> bytes:
     (self-reference typo). The dependency chain is broken at claim 4.
     R64's chain-broken walker suppression: skip the antecedent walker
     when chain[-1].dependencies != [] (drafter self-loop or cycle
-    upstream) — dependent claims c5/c6 should NOT cascade-emit walker
+    upstream) — dependent claim 5 should NOT cascade-emit walker
     findings inherited from the broken chain.
 
     Real defects on the fixture:
       - claim 4 self-dependency typo → emits selfDependent.amend
-      - claim 4's references should NOT cascade walker FPs to c5/c6
+      - claim 4's references should NOT cascade walker FPs to c5
 
     Per memory feedback_real_drafter_drafts_have_different_bugs.md
     bug class #5.
     """
     claims = [
         "1. 一種散熱裝置，包含一基座以及一散熱片，前述散熱片設置於前述基座之上。",
-        "2. 如請求項1所述之散熱裝置，更包含一風扇。",
-        "3. 如請求項2所述之散熱裝置，其中前述風扇之轉速為每分鐘1000轉至3000轉。",
-        "4. 如請求項4所述之散熱裝置，其中前述基座為金屬材質。",
-        "5. 如請求項4所述之散熱裝置，更包含一控制電路。",
+        "2. 如請求項1所述之散熱裝置，更包含一風扇，前述風扇耦接於前述基座。",
+        "3. 如請求項2所述之散熱裝置，其中前述基座之材質為金屬。",
+        "4. 如請求項4所述之散熱裝置，其中前述基座為鋁合金。",
+        "5. 如請求項4所述之散熱裝置，更包含一控制電路，前述控制電路耦接於前述風扇。",
     ]
-    return _build_tw_minimal(claims)
+    embodiment = [
+        "【0005】請參閱第1圖，散熱裝置100包括一基座10、一散熱片20、一風扇30以及一控制電路40。",
+        "【0006】前述散熱片20設置於前述基座10之上，前述風扇30耦接於前述基座10。",
+        "【0007】前述控制電路40耦接於前述風扇30，用以控制前述風扇30之運轉。",
+    ]
+    symbol_lines = [
+        "100  散熱裝置",
+        "10   基座",
+        "20   散熱片",
+        "30   風扇",
+        "40   控制電路",
+    ]
+    return _build_tw_minimal(
+        claims,
+        symbol_lines=symbol_lines,
+        embodiment_lines=embodiment,
+    )
 
 
 def fixture_cn_drafter_realistic_baseline() -> bytes:
