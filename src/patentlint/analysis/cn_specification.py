@@ -1003,6 +1003,68 @@ _CN_FRAGMENT_MARKERS = (
 # (一/二/.../十) optionally followed by 下/中/裡.
 _CN_MODE_CONTEXT_RE = re.compile(r"方式[一二三四五六七八九十]+[下中裡里]?")
 
+
+# R67 (2026-05-08, issue #29) — interior-verb split.
+#
+# When the noun-group regex captures a clause-spanning chunk like
+# `當使用者踩踏踏板` (8 CJK chars before E10) instead of the bound
+# element name `踏板`, the post-capture cleanup needs to recognize the
+# verb compound and truncate to its suffix. Empirically grounded on
+# issue #29 fixture (110P000641JP派譯版-FV.DOCX): `踩踏踏板` and
+# `連接一踏板` and `形成一封閉空間` and `設置於封閉空間` all need to
+# become their head noun (踏板 / 封閉空間).
+#
+# Conditional rule: split ONLY when the char immediately AFTER the
+# verb compound is NOT a noun-suffix. Real compound nouns containing
+# verb roots — `連接器` / `連接件` / `形成部` / `組織圖像形成部` —
+# attach the verb root as a morpheme (verb + 器/件/部 = noun). The
+# noun-suffix preserve list keeps those intact.
+#
+# Trad/Simp parity. Verbs from this list cause split when followed by
+# non-suffix chars; nouns from the preserve list block the split.
+_CN_INTERIOR_VERB_SPLIT_TARGETS = (
+    # From issue #29 (TW semiconductor draft):
+    "踩踏",
+    "連接", "连接",
+    "形成",
+    "設置", "设置",
+    "設於", "设于",
+    # Common patent-narrative verbs in noun-bound clauses:
+    "包含", "包括",
+    "具有",
+)
+# Chars immediately after a verb compound that mean the verb is part of
+# a compound noun (don't split). Includes 体/体 Trad/Simp pairs.
+_CN_NOUN_SUFFIX_PRESERVE = frozenset({
+    "器", "件", "體", "体", "置", "料", "部", "管", "塊", "块",
+    "層", "层", "座", "段", "盤", "盘", "板", "孔", "槽", "面",
+    "壁", "蓋", "盖", "圈", "環", "环", "套", "桿", "杆",
+})
+
+
+def _cn_split_on_interior_verb(s: str) -> str:
+    """Truncate to the suffix after the LAST interior verb compound,
+    when the verb is followed by a non-noun-suffix char. See R67 doc
+    for `_CN_INTERIOR_VERB_SPLIT_TARGETS` above."""
+    if not s or len(s) <= 4:
+        return s
+    best_split = -1
+    for verb in _CN_INTERIOR_VERB_SPLIT_TARGETS:
+        idx = s.rfind(verb)
+        if idx < 0:
+            continue
+        end = idx + len(verb)
+        if end >= len(s):
+            continue
+        next_char = s[end]
+        if next_char in _CN_NOUN_SUFFIX_PRESERVE:
+            continue
+        if end > best_split:
+            best_split = end
+    if best_split < 0:
+        return s
+    return s[best_split:]
+
 # Trailing verbs to strip from a captured noun before validation.
 # Mirrors tw_claims._TRAILING_VERB_DENYLIST + cn_claims
 # _TRAILING_VERB_DENYLIST_CN — verbs that can appear AT THE END of a
@@ -1302,6 +1364,8 @@ def _cn_d1_head_noun(raw: str) -> str:
     s = _cn_strip_iterative(s, allow_ordinal_break=False)
     s = _cn_strip_post_de(s)
     s = _cn_strip_trailing_verb(s)
+    # R67 (2026-05-08, issue #29) — see `_cn_split_on_interior_verb`.
+    s = _cn_split_on_interior_verb(s)
     s = _cn_strip_iterative(s, allow_ordinal_break=False)
     m = _CN_ORDINAL_RE.match(s)
     if m:
@@ -1511,6 +1575,8 @@ def _cn_d1_head_noun_with_ordinal(raw: str) -> str:
     # Trailing-verb strip: "操作面進行" → "操作面". Mirrors walker
     # _TRAILING_VERB_DENYLIST logic.
     s = _cn_strip_trailing_verb(s)
+    # R67 (2026-05-08, issue #29) — see `_cn_split_on_interior_verb`.
+    s = _cn_split_on_interior_verb(s)
     # If the post-de cut exposed a leading ordinal or other particles,
     # re-run iterative strip to clean them.
     s = _cn_strip_iterative(s, allow_ordinal_break=True)
