@@ -172,6 +172,13 @@
       "clipboard": "In die Zwischenablage kopieren",
       "remember": "Auswahl merken"
     },
+    "toast": {
+      "mailto": "E-Mail bereit",
+      "mailtoDescription": "Falls sich Ihr Mailprogramm nicht geöffnet hat: Der Text liegt bereits in der Zwischenablage. Bitte senden an {{email}}.",
+      "clipboard": "In Zwischenablage kopiert",
+      "clipboardDescription": "Fügen Sie den Text in Ihr Mailprogramm ein und senden Sie an {{email}}.",
+      "copyEmail": "Adresse kopieren"
+    },
     "emailGreeting": "Hallo Christopher,",
     "bodyPlaceholder": "[In ein oder zwei Sätzen: Was stimmt an diesem Befund nicht — handelt es sich um einen False Positive, eine falsche Kategorisierung, oder hat die Prüfung etwas übersehen? Bitte KEINEN Anspruchstext oder sonstigen Entwurfsinhalt einfügen; der Befund selbst ist bereits angehängt.]",
     "footerIntro": "Ich möchte Feedback zu PatentLint geben.",

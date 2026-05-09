@@ -4,7 +4,7 @@
 import { emitOutgoing } from './outgoingRequests'
 
 // Source of truth for the maintainer email; mirrors Footer.jsx usage.
-const MAINTAINER_EMAIL = 'kwisschen@gmail.com'
+export const MAINTAINER_EMAIL = 'kwisschen@gmail.com'
 
 // Gmail web compose URL. Supports ?to=, ?su=, ?body= query params, and
 // ?view=cm&fs=1 to open directly in the full-screen compose modal.

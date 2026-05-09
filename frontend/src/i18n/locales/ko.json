@@ -172,6 +172,13 @@
       "clipboard": "클립보드에 복사",
       "remember": "내 선택 기억하기"
     },
+    "toast": {
+      "mailto": "이메일이 준비되었습니다",
+      "mailtoDescription": "메일 앱이 열리지 않으면 본문이 이미 클립보드에 복사되어 있습니다. {{email}}로 보내주세요.",
+      "clipboard": "클립보드에 복사되었습니다",
+      "clipboardDescription": "원하시는 메일 앱에 붙여넣어 {{email}}로 보내주세요.",
+      "copyEmail": "주소 복사"
+    },
     "email": {
       "subjectFinding": "PatentLint 검사 결과 보고: {{checkKey}}",
       "subjectFooter": "PatentLint 피드백",

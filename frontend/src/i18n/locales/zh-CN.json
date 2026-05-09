@@ -172,6 +172,13 @@
       "clipboard": "复制到剪贴板",
       "remember": "记住我的选择"
     },
+    "toast": {
+      "mailto": "邮件已备妥",
+      "mailtoDescription": "若您的邮件程序未开启，内文已复制至剪贴板。请寄至 {{email}}。",
+      "clipboard": "已复制至剪贴板",
+      "clipboardDescription": "请粘贴至任一邮件程序，寄至 {{email}}。",
+      "copyEmail": "复制信箱地址"
+    },
     "email": {
       "subjectFinding": "PatentLint 分析结果反馈：{{checkKey}}",
       "subjectFooter": "PatentLint 使用反馈",
