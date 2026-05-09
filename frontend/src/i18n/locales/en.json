@@ -172,6 +172,13 @@
       "clipboard": "Copy to clipboard",
       "remember": "Remember my selection"
     },
+    "toast": {
+      "mailto": "Email ready",
+      "mailtoDescription": "If your mail app didn't open, the email body is on your clipboard. Send to {{email}}.",
+      "clipboard": "Email copied to clipboard",
+      "clipboardDescription": "Paste into any email app and send to {{email}}.",
+      "copyEmail": "Copy address"
+    },
     "emailGreeting": "Hi Christopher,",
     "bodyPlaceholder": "[In a sentence or two, tell us what's wrong with this finding — is this a false positive, a miscategorization, or did the check miss something? Do NOT paste claim text or any other draft content; the structured payload above is the only thing that should leave your device.]",
     "footerIntro": "I'd like to share some feedback about PatentLint.",
