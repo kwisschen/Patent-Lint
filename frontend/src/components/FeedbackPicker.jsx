@@ -60,6 +60,12 @@ export function FeedbackProvider({ children }) {
   // confirmation — toast still useful as a parallel signal that the
   // body has been copied (in case the tab is closed accidentally).
   //
+  // Persistence: `duration: Infinity` + `closeButton: true`. Realistic
+  // user flow is "open my mail app, paste body, then come back here for
+  // the maintainer's address." An auto-dismiss timer (any value) means
+  // the address can disappear before the user finishes pasting — bad
+  // UX. The user explicitly closes the toast when done.
+  //
   // No action button on purpose: an earlier "Copy address" button would
   // overwrite the body that `dispatchFeedback` had just placed on the
   // clipboard, destroying the safety net. The maintainer email address
@@ -76,7 +82,8 @@ export function FeedbackProvider({ children }) {
         : 'feedback.toast.clipboardDescription'
       toast(t(titleKey), {
         description: t(descKey, { email: MAINTAINER_EMAIL }),
-        duration: 8000,
+        duration: Infinity,
+        closeButton: true,
       })
     }
   }, [t])
