@@ -1533,8 +1533,7 @@
       "requires2": "Bereitstellung der Software als gehosteter Dienst für Dritte.",
       "requires3": "Weiterverteilung modifizierter oder unveränderter Versionen der Software.",
       "requires4": "Einbindung der Software (oder Teilen davon) in ein anderes von Ihnen vertriebenes Produkt.",
-      "contact": "Kontaktieren Sie <1>kwisschen@gmail.com</1>, um kommerzielle Lizenzbedingungen zu besprechen. Preise und Bedingungen werden je nach Bereitstellungsmodell, Umfang und Organisationsgröße einzelfallbezogen verhandelt.",
-      "future": "Christopher Chen kann zukünftig auch gehostete kommerzielle Abonnementstufen anbieten. Solche Stufen werden durch zusätzliche, beim Anmelden präsentierte Bedingungen geregelt, die diese Bedingungen ergänzen; nichts in diesen Bedingungen begründet eine Verpflichtung, eine bestimmte Stufe anzubieten."
+      "contact": "Kontaktieren Sie <1>kwisschen@gmail.com</1>, um kommerzielle Lizenzbedingungen zu besprechen. Preise und Bedingungen werden je nach Bereitstellungsmodell, Umfang und Organisationsgröße einzelfallbezogen verhandelt."
     },
     "s5": {
       "title": "Die Nutzung der Website gewährt keine Software-Rechte",
@@ -1579,7 +1578,7 @@
     "s13": {
       "title": "Allgemeine Bestimmungen",
       "entireAgreementLabel": "Vollständige Vereinbarung.",
-      "entireAgreement": "Diese Bedingungen bilden zusammen mit der Datenschutzerklärung und einer etwaigen kommerziellen Lizenzvereinbarung für eine kostenpflichtige Stufe die vollständige Vereinbarung zwischen Ihnen und Christopher Chen über die Website und die Software und ersetzen alle früheren oder gleichzeitigen Mitteilungen zu diesem Gegenstand.",
+      "entireAgreement": "Diese Bedingungen bilden zusammen mit der Datenschutzerklärung und einer etwaigen kommerziellen Lizenzvereinbarung gemäß § 4 die vollständige Vereinbarung zwischen Ihnen und Christopher Chen über die Website und die Software und ersetzen alle früheren oder gleichzeitigen Mitteilungen zu diesem Gegenstand.",
       "severabilityLabel": "Salvatorische Klausel.",
       "severability": "Sollte eine Bestimmung dieser Bedingungen unwirksam oder undurchsetzbar sein, bleiben die übrigen Bestimmungen in vollem Umfang bestehen, und die unwirksame Bestimmung wird im erforderlichen Mindestmaß angepasst, um sie durchsetzbar zu machen.",
       "noWaiverLabel": "Kein Verzicht.",
@@ -1591,7 +1590,7 @@
     },
     "s15": {
       "title": "Abtretung",
-      "p1": "Sie dürfen Ihre Rechte aus diesen Bedingungen nicht ohne vorherige schriftliche Zustimmung von Christopher Chen abtreten oder übertragen. Christopher Chen darf diese Bedingungen an einen Rechtsnachfolger abtreten — einschließlich einer später zum Betrieb der Website oder der Software gegründeten Geschäftseinheit — durch eine Mitteilung auf der Website."
+      "p1": "Sie dürfen Ihre Rechte aus diesen Bedingungen nicht ohne vorherige schriftliche Zustimmung von Christopher Chen abtreten oder übertragen. Christopher Chen darf diese Bedingungen an einen Rechtsnachfolger durch eine Mitteilung auf der Website abtreten."
     },
     "s16": {
       "title": "Urheberrechtsverletzungen",
