@@ -176,8 +176,7 @@
       "mailto": "メールの準備ができました",
       "mailtoDescription": "メールアプリが開かない場合、本文はクリップボードにコピー済みです。送信先：{{email}}",
       "clipboard": "クリップボードにコピーしました",
-      "clipboardDescription": "任意のメールアプリに貼り付けて、{{email}} までお送りください。",
-      "copyEmail": "メールアドレスをコピー"
+      "clipboardDescription": "任意のメールアプリに貼り付けて、{{email}} までお送りください。"
     },
     "email": {
       "subjectFinding": "PatentLint チェック結果のご報告：{{checkKey}}",

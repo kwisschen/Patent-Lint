@@ -59,6 +59,12 @@ export function FeedbackProvider({ children }) {
   // Gmail / Outlook web open in a new tab so the new-tab itself is the
   // confirmation — toast still useful as a parallel signal that the
   // body has been copied (in case the tab is closed accidentally).
+  //
+  // No action button on purpose: an earlier "Copy address" button would
+  // overwrite the body that `dispatchFeedback` had just placed on the
+  // clipboard, destroying the safety net. The maintainer email address
+  // is visible inside the toast description as plain selectable text;
+  // users who need it can highlight and copy without losing the body.
   const dispatchAndConfirm = useCallback((method, email) => {
     dispatchFeedback(method, email)
     if (method === 'mailto' || method === 'clipboard') {
@@ -71,16 +77,6 @@ export function FeedbackProvider({ children }) {
       toast(t(titleKey), {
         description: t(descKey, { email: MAINTAINER_EMAIL }),
         duration: 8000,
-        action: {
-          label: t('feedback.toast.copyEmail'),
-          onClick: () => {
-            try {
-              navigator.clipboard?.writeText(MAINTAINER_EMAIL)
-            } catch {
-              // best-effort; clipboard may be unavailable in some contexts
-            }
-          },
-        },
       })
     }
   }, [t])
