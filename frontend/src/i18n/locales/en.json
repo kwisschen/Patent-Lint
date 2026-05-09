@@ -1533,8 +1533,7 @@
       "requires2": "Offering the Software as a hosted service to third parties.",
       "requires3": "Redistributing modified or unmodified versions of the Software.",
       "requires4": "Including the Software (or parts of it) in another product you distribute.",
-      "contact": "Contact <1>kwisschen@gmail.com</1> to discuss commercial licensing terms. Pricing and terms are negotiated case-by-case based on deployment model, scope, and organization size.",
-      "future": "Christopher Chen may also offer hosted commercial subscription tiers in the future. Those tiers will be governed by additional terms presented at sign-up, layered on top of these Terms; nothing in these Terms creates an obligation to offer any particular tier."
+      "contact": "Contact <1>kwisschen@gmail.com</1> to discuss commercial licensing terms. Pricing and terms are negotiated case-by-case based on deployment model, scope, and organization size."
     },
     "s5": {
       "title": "Using the Site does not grant Software rights",
@@ -1579,7 +1578,7 @@
     "s13": {
       "title": "General terms",
       "entireAgreementLabel": "Entire agreement.",
-      "entireAgreement": "These Terms, together with the Privacy Policy and any commercial license agreement that applies to a paid tier, constitute the entire agreement between you and Christopher Chen regarding the Site and the Software, and supersede any prior or contemporaneous communications on the subject.",
+      "entireAgreement": "These Terms, together with the Privacy Policy and any commercial license agreement under § 4, constitute the entire agreement between you and Christopher Chen regarding the Site and the Software, and supersede any prior or contemporaneous communications on the subject.",
       "severabilityLabel": "Severability.",
       "severability": "If any provision of these Terms is held invalid or unenforceable, the remaining provisions remain in full force and effect, and the invalid provision will be modified to the minimum extent necessary to make it enforceable.",
       "noWaiverLabel": "No waiver.",
@@ -1591,7 +1590,7 @@
     },
     "s15": {
       "title": "Assignment",
-      "p1": "You may not assign or transfer your rights under these Terms without prior written consent from Christopher Chen. Christopher Chen may assign these Terms to a successor in interest — including any business entity later formed to operate the Site or the Software — by posting notice on the Site."
+      "p1": "You may not assign or transfer your rights under these Terms without prior written consent from Christopher Chen. Christopher Chen may assign these Terms to a successor in interest by posting notice on the Site."
     },
     "s16": {
       "title": "Copyright concerns",

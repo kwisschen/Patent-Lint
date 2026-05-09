@@ -102,7 +102,6 @@ export default function TermsPage() {
             Contact <a href="mailto:kwisschen@gmail.com">kwisschen@gmail.com</a> to discuss commercial licensing terms. Pricing and terms are negotiated case-by-case based on deployment model, scope, and organization size.
           </Trans>
         </p>
-        <p>{t('terms.s4.future')}</p>
       </LegalSection>
 
       <LegalSection number="5" titleKey="terms.s5.title">
