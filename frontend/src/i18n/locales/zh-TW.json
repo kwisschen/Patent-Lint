@@ -172,6 +172,13 @@
       "clipboard": "複製到剪貼簿",
       "remember": "記住我的選擇"
     },
+    "toast": {
+      "mailto": "郵件已備妥",
+      "mailtoDescription": "若您的郵件程式未開啟，內文已複製至剪貼簿。請寄至 {{email}}。",
+      "clipboard": "已複製至剪貼簿",
+      "clipboardDescription": "請貼入任一郵件程式，寄至 {{email}}。",
+      "copyEmail": "複製信箱位址"
+    },
     "email": {
       "subjectFinding": "PatentLint 分析結果回報：{{checkKey}}",
       "subjectFooter": "PatentLint 使用回饋",

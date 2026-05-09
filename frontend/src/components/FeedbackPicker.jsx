@@ -20,6 +20,7 @@
 // - Preference persists in localStorage across tab sessions.
 import { createContext, useCallback, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { AtSign, Clipboard, Lock, Mail } from 'lucide-react'
 import {
   Dialog,
@@ -33,6 +34,7 @@ import {
   dispatchFeedback,
   getFeedbackMethod,
   setFeedbackMethod,
+  MAINTAINER_EMAIL,
 } from '../lib/feedback'
 
 const FeedbackContext = createContext(null)
@@ -48,25 +50,60 @@ export function FeedbackProvider({ children }) {
   // locking users into a method they picked once but didn't love.
   const [remember, setRemember] = useState(false)
 
+  // Dispatch + show a confirmation toast that surfaces the
+  // clipboard-fallback path. Critical for `mailto:` on systems with no
+  // registered protocol handler (e.g. Windows desktop without Outlook /
+  // Mail / Thunderbird) — anchor click silently no-ops, modal closes,
+  // and without a toast the user has no signal that anything happened.
+  // For `clipboard` method the toast is the only visible confirmation.
+  // Gmail / Outlook web open in a new tab so the new-tab itself is the
+  // confirmation — toast still useful as a parallel signal that the
+  // body has been copied (in case the tab is closed accidentally).
+  const dispatchAndConfirm = useCallback((method, email) => {
+    dispatchFeedback(method, email)
+    if (method === 'mailto' || method === 'clipboard') {
+      const titleKey = method === 'mailto'
+        ? 'feedback.toast.mailto'
+        : 'feedback.toast.clipboard'
+      const descKey = method === 'mailto'
+        ? 'feedback.toast.mailtoDescription'
+        : 'feedback.toast.clipboardDescription'
+      toast(t(titleKey), {
+        description: t(descKey, { email: MAINTAINER_EMAIL }),
+        duration: 8000,
+        action: {
+          label: t('feedback.toast.copyEmail'),
+          onClick: () => {
+            try {
+              navigator.clipboard?.writeText(MAINTAINER_EMAIL)
+            } catch {
+              // best-effort; clipboard may be unavailable in some contexts
+            }
+          },
+        },
+      })
+    }
+  }, [t])
+
   const sendFeedback = useCallback((email, options = {}) => {
     const saved = getFeedbackMethod()
     if (saved) {
       // User previously picked + chose to remember. Dispatch directly.
-      dispatchFeedback(saved, email)
+      dispatchAndConfirm(saved, email)
       return
     }
     const verb = options.verb === 'report' ? 'report' : 'send'
     setPending({ email, verb })
-  }, [])
+  }, [dispatchAndConfirm])
 
   const handlePick = useCallback((method) => {
     if (!pending) return
     if (remember) {
       setFeedbackMethod(method)
     }
-    dispatchFeedback(method, pending.email)
+    dispatchAndConfirm(method, pending.email)
     setPending(null)
-  }, [pending, remember])
+  }, [pending, remember, dispatchAndConfirm])
 
   const handleOpenChange = useCallback((open) => {
     if (!open) setPending(null)
