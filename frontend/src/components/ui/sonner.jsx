@@ -21,8 +21,15 @@ export function Toaster({ ...props }) {
             'group-[.toast]:bg-[var(--attention-text)] group-[.toast]:text-[var(--attention-bg)] group-[.toast]:rounded-md group-[.toast]:px-3 group-[.toast]:py-1.5 group-[.toast]:font-medium group-[.toast]:text-sm group-[.toast]:ml-auto',
           cancelButton:
             'group-[.toast]:bg-transparent group-[.toast]:text-[var(--attention-text)] group-[.toast]:opacity-70 hover:group-[.toast]:opacity-100 group-[.toast]:px-3 group-[.toast]:py-1.5 group-[.toast]:text-sm',
+          // Monochrome close button — neutral B&W contrast against the
+          // warm/amber toast palette so it reads as a system control,
+          // not part of the toast's content. Inverse colors auto-flip
+          // between light and dark mode via CSS variables (foreground
+          // is dark in light mode + light in dark mode; background is
+          // the reverse). Filled-inverse is "eye-catching enough"
+          // without competing with the toast's amber attention.
           closeButton:
-            'group-[.toast]:!bg-[var(--attention-bg)] group-[.toast]:!text-[var(--attention-text)] group-[.toast]:!border-[var(--attention-border)] group-[.toast]:opacity-70 hover:group-[.toast]:opacity-100',
+            'group-[.toast]:!bg-[var(--foreground)] group-[.toast]:!text-[var(--background)] group-[.toast]:!border-transparent group-[.toast]:opacity-90 hover:group-[.toast]:opacity-100 group-[.toast]:transition-opacity',
         },
       }}
       {...props}
