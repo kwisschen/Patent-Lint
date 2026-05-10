@@ -1441,7 +1441,7 @@
     },
     "s4": {
       "title": "Die Software-Lizenz — PolyForm-Strict-1.0.0",
-      "p1": "Die Software ist quelloffen unter PolyForm-Strict-1.0.0 bereitgestellt. Der vollständige Lizenztext ist unter <1>polyformproject.org/licenses/strict/1.0.0</1> und in der LICENSE-Datei des Software-Repositorys abrufbar.",
+      "p1": "Die Software wird unter der Quelltext-verfügbaren Lizenz PolyForm-Strict-1.0.0 bereitgestellt (keine OSI-konforme Open-Source-Lizenz). Der vollständige Lizenztext ist unter <1>polyformproject.org/licenses/strict/1.0.0</1> und in der LICENSE-Datei des Software-Repositorys abrufbar.",
       "permittedHeading": "Zulässige Nutzungen der Software:",
       "permitted1": "Lesen und Studieren des Quellcodes.",
       "permitted2": "Evaluierung der Software zur Entscheidung über eine Lizenzierung („Acceptance Testing“).",
