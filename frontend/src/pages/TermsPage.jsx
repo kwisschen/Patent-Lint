@@ -112,10 +112,12 @@ export default function TermsPage() {
         <p>{t('terms.s6.p1')}</p>
         <p>{t('terms.s6.p2')}</p>
         <p>{t('terms.s6.p3')}</p>
+        <p>{t('terms.s6.p4')}</p>
       </LegalSection>
 
       <LegalSection number="7" titleKey="terms.s7.title">
         <p>{t('terms.s7.p1')}</p>
+        <p>{t('terms.s7.p2')}</p>
       </LegalSection>
 
       <LegalSection number="8" titleKey="terms.s8.title">
@@ -185,6 +187,11 @@ export default function TermsPage() {
             Designated agent: Christopher Chen, <a href="mailto:kwisschen@gmail.com">kwisschen@gmail.com</a>. Counter-notices and the repeat-infringer policy follow 17 U.S.C. § 512.
           </Trans>
         </p>
+      </LegalSection>
+
+      <LegalSection number="17" titleKey="terms.s17.title">
+        <p>{t('terms.s17.p1')}</p>
+        <p>{t('terms.s17.p2')}</p>
       </LegalSection>
 
       <LegalPageFooter>

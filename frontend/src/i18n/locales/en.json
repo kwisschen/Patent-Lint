@@ -1493,7 +1493,7 @@
   },
   "terms": {
     "title": "Terms of Service",
-    "lastUpdated": "Last updated: May 8, 2026",
+    "lastUpdated": "Last updated: May 9, 2026",
     "intro": "These Terms govern your use of the patentlint.com website (the \"Site\") and the PatentLint software (the \"Software\"). By using the Site, you agree to these Terms.",
     "s1": {
       "title": "The Site vs. the Software",
@@ -1549,11 +1549,13 @@
       "title": "No legal advice",
       "p1": "PatentLint is an automated drafting aid. Its output is preliminary and not a substitute for review by a qualified patent professional. Nothing the Site produces constitutes legal advice. Do not rely solely on PatentLint output for patent prosecution, filing, or enforcement decisions.",
       "p2": "Check categories include antecedent-basis analysis, specification-support analysis (TW under 專利法 §26 第3項; US under § 112(a)), section ordering, claim punctuation, and other rule-based verifications — these flag candidates for your review, not legal determinations.",
-      "p3": "An overall letter grade summarizes the rule-based findings but is not a substantive review. An A grade does not mean the draft is filing-ready; it means PatentLint's catalog found no flagged issues."
+      "p3": "An overall letter grade summarizes the rule-based findings but is not a substantive review. An A grade does not mean the draft is filing-ready; it means PatentLint's catalog found no flagged issues.",
+      "p4": "You assume sole responsibility for verifying any PatentLint finding before acting on it. Using the Site or the Software does not create any client–attorney, agent, or fiduciary relationship between you and Christopher Chen."
     },
     "s7": {
       "title": "Warranty disclaimer",
-      "p1": "The Site and the Software are provided \"AS IS\" without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, or non-infringement. You use them at your own risk."
+      "p1": "The Site and the Software are provided \"AS IS\" without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, or non-infringement. You use them at your own risk.",
+      "p2": "Without limiting the foregoing, Christopher Chen makes no warranty as to the accuracy, completeness, currency, or correspondence of PatentLint output with any patent office's filing requirements or any applicable rules of professional conduct. Rule catalogs evolve over time and across jurisdictions; you are responsible for verifying current applicability."
     },
     "s8": {
       "title": "Limitation of liability",
@@ -1602,6 +1604,11 @@
       "title": "Copyright concerns",
       "p1": "If you believe material on the Site infringes your copyright, send a notice that includes (i) identification of the copyrighted work, (ii) identification of the allegedly infringing material with sufficient detail to locate it, (iii) your contact information, (iv) a statement under penalty of perjury that you have a good-faith belief that the use is unauthorized, and (v) your physical or electronic signature.",
       "p2": "Designated agent: Christopher Chen, <1>kwisschen@gmail.com</1>. Counter-notices and the repeat-infringer policy follow 17 U.S.C. § 512."
+    },
+    "s17": {
+      "title": "Your indemnification of Christopher Chen",
+      "p1": "You agree to defend, indemnify, and hold Christopher Chen harmless from and against any claim, damages, losses, liabilities, costs, or expenses (including reasonable attorneys' fees) arising out of or related to: (a) your use of PatentLint output without independent verification by a registered patent practitioner; (b) your violation of these Terms or any applicable law (including without limitation USPTO 37 CFR § 11 or any equivalent rules of professional conduct in your jurisdiction); (c) your violation of any third party's intellectual property rights or other rights; or (d) your use of the Site or the Software in connection with any document you do not have authority to load.",
+      "p2": "Christopher Chen reserves the right to assume the exclusive defense and control of any matter otherwise subject to indemnification by you, in which case you will cooperate fully in asserting any available defenses."
     },
     "copyright": "Copyright © 2025–2026 Christopher Chen. All rights reserved.",
     "crossLinks": "See also: <1>Privacy Policy</1> · <3>Security</3>"
