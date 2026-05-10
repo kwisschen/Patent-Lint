@@ -329,11 +329,7 @@
       'Noto Sans KR', sans-serif;
   }
   html {
-    @apply font-sans bg-background;
-    color-scheme: light;
-  }
-  html.dark {
-    color-scheme: dark;
+    @apply font-sans;
   }
 }
 
