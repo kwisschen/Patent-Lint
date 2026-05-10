@@ -1548,7 +1548,7 @@
     "s6": {
       "title": "Keine Rechtsberatung",
       "p1": "PatentLint ist eine automatisierte Ausarbeitungshilfe. Ihre Ausgabe ist vorläufig und ersetzt nicht die Prüfung durch einen qualifizierten Patentprofi. Nichts, was die Website ausgibt, stellt Rechtsberatung dar. Verlassen Sie sich bei Entscheidungen zu Patentverfahren, Einreichung oder Durchsetzung nicht allein auf PatentLint-Ausgaben.",
-      "p2": "Zu den Prüfkategorien zählen Rückbezugs-Analyse, Stützungs-Prüfung der Beschreibung (TW nach 專利法 §26 第3項; USA nach § 112(a)), Abschnittsreihenfolge, Anspruchs-Interpunktion und weitere regelbasierte Verifikationen — diese markieren Kandidaten für Ihre Prüfung, keine rechtlichen Feststellungen.",
+      "p2": "Zu den Prüfkategorien zählen Rückbezugs-Analyse, Stützungs-Prüfung der Beschreibung (USA nach § 112(a); CN nach 专利法 §26 第4款; TW nach 專利法 §26 第3項), Abschnittsreihenfolge, Anspruchs-Interpunktion und weitere regelbasierte Verifikationen — diese markieren Kandidaten für Ihre Prüfung, keine rechtlichen Feststellungen.",
       "p3": "Die zusammenfassende Notenstufe fasst die regelbasierten Befunde zusammen und stellt keine substanzielle Prüfung dar. Ein A bedeutet nicht, dass die Anmeldung einreichungsreif ist, sondern lediglich, dass PatentLints Prüfkatalog keine markierten Mängel gefunden hat.",
       "p4": "Sie übernehmen die alleinige Verantwortung für die Überprüfung jedes PatentLint-Befunds, bevor Sie darauf reagieren. Durch die Nutzung der Website oder der Software entsteht zwischen Ihnen und Christopher Chen kein Mandantenverhältnis, kein Vertretungsverhältnis und kein Treuhandverhältnis."
     },
