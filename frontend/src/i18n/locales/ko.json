@@ -1529,7 +1529,7 @@
     },
     "s4": {
       "title": "본 소프트웨어의 라이선스: PolyForm-Strict-1.0.0",
-      "p1": "본 소프트웨어는 PolyForm-Strict-1.0.0에 따라 소스가 공개됩니다. 라이선스 전문은 <1>polyformproject.org/licenses/strict/1.0.0</1> 및 본 소프트웨어 저장소의 LICENSE 파일에 게시되어 있습니다.",
+      "p1": "본 소프트웨어의 소스 코드는 PolyForm-Strict-1.0.0(소스 열람 가능 라이선스이며, OSI 공인 오픈소스 라이선스는 아닙니다)에 따라 제공됩니다. 라이선스 전문은 <1>polyformproject.org/licenses/strict/1.0.0</1> 및 본 소프트웨어 저장소의 LICENSE 파일에 게시되어 있습니다.",
       "permittedHeading": "본 소프트웨어의 허용되는 이용:",
       "permitted1": "소스 코드의 열람 및 연구.",
       "permitted2": "라이선스 취득 여부를 판단하기 위한 평가(즉 '인수 테스트').",
