@@ -58,9 +58,7 @@ tests/fixtures/*/local/**
 smoke-test-pyodide.html
 temp/
 # Auto-generated analysis artifacts (regenerable via tests.eval.post_phase1_runner)
-tests/eval/phase2b_results_*_calibration.json
-tests/eval/phase2b_results_*_clusters.json
-tests/eval/phase2b_results_*_pilot.json
+tests/eval/phase2b_results*.json
 tests/eval/tw_descriptions.json
 tests/eval/cn_descriptions.json
 tests/eval/us_descriptions.json
