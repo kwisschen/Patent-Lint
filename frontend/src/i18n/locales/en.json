@@ -1461,7 +1461,7 @@
     "s6": {
       "title": "No legal advice",
       "p1": "PatentLint is an automated drafting aid. Its output is preliminary and not a substitute for review by a qualified patent professional. Nothing the Site produces constitutes legal advice. Do not rely solely on PatentLint output for patent prosecution, filing, or enforcement decisions.",
-      "p2": "Check categories include antecedent-basis analysis, specification-support analysis (TW under 專利法 §26 第3項; US under § 112(a)), section ordering, claim punctuation, and other rule-based verifications — these flag candidates for your review, not legal determinations.",
+      "p2": "Check categories include antecedent-basis analysis, specification-support analysis (US under § 112(a); CN under 专利法 §26 第4款; TW under 專利法 §26 第3項), section ordering, claim punctuation, and other rule-based verifications — these flag candidates for your review, not legal determinations.",
       "p3": "An overall letter grade summarizes the rule-based findings but is not a substantive review. An A grade does not mean the draft is filing-ready; it means PatentLint's catalog found no flagged issues.",
       "p4": "You assume sole responsibility for verifying any PatentLint finding before acting on it. Using the Site or the Software does not create any client–attorney, agent, or fiduciary relationship between you and Christopher Chen."
     },
