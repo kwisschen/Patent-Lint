@@ -1529,7 +1529,7 @@
     },
     "s4": {
       "title": "本ソフトウェアの許諾：PolyForm-Strict-1.0.0",
-      "p1": "本ソフトウェアは PolyForm-Strict-1.0.0 の下でソースコードが公開されています。許諾全文は <1>polyformproject.org/licenses/strict/1.0.0</1> および本ソフトウェアリポジトリ内の LICENSE ファイルに記載されています。",
+      "p1": "本ソフトウェアのソースコードは、PolyForm-Strict-1.0.0（ソース閲覧可能なライセンス。OSI 認定のオープンソースライセンスではありません）の下で提供されます。許諾全文は <1>polyformproject.org/licenses/strict/1.0.0</1> および本ソフトウェアリポジトリ内の LICENSE ファイルに記載されています。",
       "permittedHeading": "本ソフトウェアの許容される利用：",
       "permitted1": "ソースコードの閲覧および研究。",
       "permitted2": "許諾を受けるか否かを判断するための評価（いわゆる「受入テスト」）。",

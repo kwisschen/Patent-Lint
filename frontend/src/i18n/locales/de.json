@@ -693,7 +693,7 @@
       },
       "q6": {
         "q": "Wie ist die Lizenzierung gestaltet?",
-        "a": "PolyForm-Strict-1.0.0 (quelloffen, öffentlich) zuzüglich eines einseitigen kommerziellen Beibriefs für die interne kommerzielle Nutzung. Der Beibrief ist eine Seite lang; die Prüfung durch die Rechtsabteilung dauert in der Regel unter 30 Minuten."
+        "a": "PolyForm-Strict-1.0.0 (eine Quelltext-verfügbare Lizenz; keine OSI-konforme Open-Source-Lizenz) zuzüglich eines einseitigen kommerziellen Beibriefs für die interne kommerzielle Nutzung. Der Beibrief ist eine Seite lang; die Prüfung durch die Rechtsabteilung dauert in der Regel unter 30 Minuten."
       },
       "q7": {
         "q": "Wie überprüfen wir, was tatsächlich läuft?",
@@ -1528,7 +1528,7 @@
     },
     "s4": {
       "title": "Die Software-Lizenz — PolyForm-Strict-1.0.0",
-      "p1": "Die Software ist quelloffen unter PolyForm-Strict-1.0.0 bereitgestellt. Der vollständige Lizenztext ist unter <1>polyformproject.org/licenses/strict/1.0.0</1> und in der LICENSE-Datei des Software-Repositorys abrufbar.",
+      "p1": "Die Software wird unter der Quelltext-verfügbaren Lizenz PolyForm-Strict-1.0.0 bereitgestellt (keine OSI-konforme Open-Source-Lizenz). Der vollständige Lizenztext ist unter <1>polyformproject.org/licenses/strict/1.0.0</1> und in der LICENSE-Datei des Software-Repositorys abrufbar.",
       "permittedHeading": "Zulässige Nutzungen der Software:",
       "permitted1": "Lesen und Studieren des Quellcodes.",
       "permitted2": "Evaluierung der Software zur Entscheidung über eine Lizenzierung („Acceptance Testing“).",

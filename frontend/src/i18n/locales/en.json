@@ -693,7 +693,7 @@
       },
       "q6": {
         "q": "How is this licensed?",
-        "a": "PolyForm-Strict-1.0.0 (source-available, public) plus a one-page commercial side letter granting internal commercial-use rights. Side letter is single-page; GC review typically takes under 30 minutes."
+        "a": "PolyForm-Strict-1.0.0 (a source-available license; not OSI open source) plus a one-page commercial side letter granting internal commercial-use rights. Side letter is single-page; GC review typically takes under 30 minutes."
       },
       "q7": {
         "q": "How do we verify what is running?",
