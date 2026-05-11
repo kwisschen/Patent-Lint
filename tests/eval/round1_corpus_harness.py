@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
+# Copyright (c) 2025–2026 Christopher Chen
 """Round-1 corpus harness — runs walker on full corpus + joins to Phase 2b
 ensemble verdicts for accuracy measurement.
 

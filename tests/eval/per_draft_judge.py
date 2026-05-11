@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
+# Copyright (c) 2025–2026 Christopher Chen
 """Per-draft LLM ensemble for PatentLint round 1 (Phase 2a + 2b).
 
 Distinct from `llm_judges.py` (which is per-finding, vicinity-only, Haiku-primary):

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
+# Copyright (c) 2025–2026 Christopher Chen
 """Reconcile US labels file with current walker output.
 
 Walker has evolved since Phase 2b ran (R7+, R30, R31, R32). The

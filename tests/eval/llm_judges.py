@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
+# Copyright (c) 2025–2026 Christopher Chen
 """Cross-family LLM ensemble for PatentLint triage + Step 0 calibration.
 
 Runs Haiku 4.5 + gpt-5-mini in parallel on a finding's diagnostic payload;

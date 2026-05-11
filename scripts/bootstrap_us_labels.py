@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
+# Copyright (c) 2025–2026 Christopher Chen
 """Bootstrap US antecedent labels file from Phase 2b ensemble verdicts.
 
 Produces ``tests/fixtures/us/antecedent_labels_us.json`` modelled after

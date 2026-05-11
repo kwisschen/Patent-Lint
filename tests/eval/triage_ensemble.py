@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
+# Copyright (c) 2025–2026 Christopher Chen
 """Autonomous triage of open `report`-labeled GitHub issues using cross-family LLM ensemble.
 
 Fetches issue payloads via `gh`, classifies each finding via Haiku 4.5 + gpt-5-mini

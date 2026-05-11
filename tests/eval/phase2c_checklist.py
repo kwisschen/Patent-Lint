@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
+# Copyright (c) 2025–2026 Christopher Chen
 """Phase 2c spot-check checklist generator.
 
 Reads Phase 2b results JSON(s), samples cases for Christopher/Claire review,
