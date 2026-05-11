@@ -7,7 +7,8 @@
     "us": "美国专利",
     "cn": "中国专利",
     "tw": "台湾专利",
-    "label": "地区"
+    "label": "地区",
+    "epc": "欧洲专利 (EPC)"
   },
   "dropzone": {
     "tagline": "依据 {{count}} 项 USPTO 撰写规则，自动为您检查专利说明书。",
