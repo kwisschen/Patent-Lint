@@ -90,22 +90,41 @@ def _run_epc_pipeline(
 ) -> AnalysisResult:
     """EPC English-input analysis pipeline.
 
-    Scaffolding-stage: returns a well-formed empty ``AnalysisResult`` so the
-    pipeline can be wired end-to-end and the jurisdiction picker can route to
-    EPC without crashing. Real check logic ships per-G-group in subsequent
-    commits, gated on statute-research grounding per DR-1.
-
     Input contract: English ``.docx`` text only at v1 (the
     jurisdiction-mismatch detector gates non-English EPC input upstream).
     DE / FR EPC check engines are explicitly out of v1 scope.
+
+    v1 scope by 7-canonical-group:
+      G1 (spec structure): implemented — see epc_specification.run_g1_spec_structure_checks
+      G2 (spec content):  pending
+      G3 (drawings):      pending
+      G4 (claims structure): pending
+      G5 (claims cross-jurisdiction): pending
+      G6 (§ 112-equivalent, walker): pending
+      G7 (abstract):       pending
     """
+    from patentlint.analysis.epc_specification import run_g1_spec_structure_checks
+    from patentlint.parser.sections_epc import (
+        extract_abstract_section_epc,
+        extract_title_epc,
+    )
+
+    title = extract_title_epc(full_text)
+    abstract_text = extract_abstract_section_epc(full_text)
+    abstract_word_count = len(abstract_text.split()) if abstract_text else 0
+
+    spec_checks = run_g1_spec_structure_checks(full_text)
+
     result = AnalysisResult(
         jurisdiction=Jurisdiction.EPC,
-        title="",
+        title=title,
         likely_patent=likely_patent,
         patent_detection_reason=patent_detection_reason,
         has_tracked_changes=has_tracked_changes,
         suggested_jurisdiction=suggested_jurisdiction,
+        abstract_text=abstract_text,
+        abstract_word_count=abstract_word_count,
+        epc_specification_checks=spec_checks,
     )
     return result
 
