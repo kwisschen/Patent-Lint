@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """DOCX document loader using python-docx.
 
 Extracts numbered paragraphs from patent .docx files, tracking paragraph and claim

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Tests for CN specification-support analysis (专利法 §26 第4款).
 
 Mirrors tests/analysis/test_tw_spec_support.py with CN-specific cases:

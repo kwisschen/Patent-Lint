@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """TW specification-support analysis (說明書支持分析).
 
 Implements 專利法 §26 第3項 ("申請專利範圍…必須為說明書所支持") and the

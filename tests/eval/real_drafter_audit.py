@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Real-drafter audit harness — bug-class regression gates for R63-R67 fixes.
 
 Programmatic .docx fixtures that each isolate one bug class from the

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Regenerate Phase 8c synthetic CN parity fixtures.
 
 Both fixtures are committable (no real IP). Structure models the 五书

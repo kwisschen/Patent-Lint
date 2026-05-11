@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Parity tests — CN .docx loader vs CNIPA XML loader.
 
 Both loaders must produce matching claim counts and normalized claim text

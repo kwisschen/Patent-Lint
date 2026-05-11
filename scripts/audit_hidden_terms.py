@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Audit CheckItem emit sites for params-template mismatch.
 
 Walks every Python file in src/patentlint/analysis and src/patentlint/models.py,

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
+// Copyright (c) 2025–2026 Christopher Chen
 /* global __BUILD_HASH__ */
 import { useEffect, useRef } from 'react'
 import { toast } from 'sonner'

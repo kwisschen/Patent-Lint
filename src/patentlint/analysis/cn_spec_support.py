@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """CN specification-support analysis (说明书支持分析).
 
 Implements 专利法 §26 第4款 ("权利要求书应当以说明书为依据") and the

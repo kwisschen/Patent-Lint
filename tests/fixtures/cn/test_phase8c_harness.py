@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Unit tests for the Phase 8c CN harness ADR-110 / ADR-111 divergences.
 
 Covers the two structural divergences from TW:

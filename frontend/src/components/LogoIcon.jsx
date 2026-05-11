@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025 Christopher Chen
+// Copyright (c) 2025–2026 Christopher Chen
 export default function LogoIcon({ className = "w-6 h-6" }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" className={className} aria-hidden="true">

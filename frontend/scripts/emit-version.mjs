@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
+// Copyright (c) 2025–2026 Christopher Chen
+//
 // scripts/emit-version.mjs
 // Generates public/version.json at build time with the current git hash.
 // Called by `npm run build` between build:wheel and vite build.

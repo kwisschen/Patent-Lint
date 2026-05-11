@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025-2026 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Phase 1 US antecedent walker labeled regression harness (bootstrap).
 
 Structural port of ``tests/fixtures/{cn,tw}/_phase{8c,8b}_harness.py``

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Random uniform-sample judging for apples-to-apples corpus precision.
 
 Phase 2b's `phase2b_judging.py` samples weighted by walker-finding count

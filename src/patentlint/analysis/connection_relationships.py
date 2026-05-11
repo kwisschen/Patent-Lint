@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Connection-relationship clarity check (TW + CN parity).
 
 TIPO 專利審查基準 第二篇第一章 §2.4 and CNIPA 审查指南 第二部分 第二章

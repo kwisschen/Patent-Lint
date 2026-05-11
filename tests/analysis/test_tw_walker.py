@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Phase 8b TW antecedent walker — BFS resolution tests.
 
 Covers exact-match resolution, number-neutral matching (ADR-095 Rule 3),

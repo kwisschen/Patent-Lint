@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Phase 8b TW antecedent walker — did-you-mean layer tests.
 
 Covers char-bigram Jaccard suggestion at threshold 0.40 (ADR-094),

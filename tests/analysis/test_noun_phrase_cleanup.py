@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Tests for noun phrase cleanup and capture width (Bugs 3, 5, 6b, 10, 11, 12)."""
 
 from patentlint.analysis.utils import (

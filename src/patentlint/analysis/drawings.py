@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Brief Description of Drawings analysis.
 
 Figure counting, sequential ordering, single-figure format, and prior art reference detection.
