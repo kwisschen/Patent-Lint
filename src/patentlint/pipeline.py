@@ -104,7 +104,10 @@ def _run_epc_pipeline(
       G7 (abstract):       pending
     """
     from patentlint.analysis.epc_abstract import run_g7_abstract_checks
-    from patentlint.analysis.epc_claims import run_g4_claims_structure_checks
+    from patentlint.analysis.epc_claims import (
+        run_g4_claims_structure_checks,
+        run_g5_claims_cross_jurisdiction_checks,
+    )
     from patentlint.analysis.epc_drawings import run_g3_drawings_checks
     from patentlint.analysis.epc_specification import (
         run_g1_spec_structure_checks,
@@ -127,6 +130,7 @@ def _run_epc_pipeline(
     spec_checks.extend(run_g2_spec_content_checks(full_text))
     drawings_checks = run_g3_drawings_checks(full_text)
     claims_checks = run_g4_claims_structure_checks(claims)
+    claims_checks.extend(run_g5_claims_cross_jurisdiction_checks(claims))
     abstract_checks = run_g7_abstract_checks(abstract_text)
 
     independent_count = sum(1 for c in claims if c.independent)
