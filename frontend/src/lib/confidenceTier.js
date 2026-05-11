@@ -27,7 +27,7 @@
 // post-R48 walker, 2026-05-05). Each T_HIGH is the threshold where
 // bucket precision peaks above the absolute baseline by the largest
 // yield × precision tradeoff with bucket_size ≥ 10.
-// Format: { US: { high: N, low: N }, CN: ..., TW: ... }
+// Format: { US: { high: N, low: N }, CN: ..., TW: ..., EPC: ... }
 //
 // Refresh by re-running:
 //   python -m tests.eval.calibrate_confidence_threshold \
@@ -38,6 +38,11 @@ export const TIER_THRESHOLDS = {
   US: { high: 50, low: 30 }, // 40.4% bucket precision (+4.9pp vs absolute 35.5%, 803 findings)
   CN: { high: 65, low: 30 }, // 20.8% bucket precision (+6.4pp vs absolute 14.4%, 606 findings)
   TW: { high: 65, low: 30 }, // 17.5% bucket precision (+4.9pp vs absolute 12.6%, 702 findings)
+  // EPC walker shares the US implementation (port + EPC dep-preamble pre-strip).
+  // v1 inherits the conservative DEFAULT until real-corpus FP measurement; the
+  // explicit entry makes the catalog complete and exists to be replaced once a
+  // calibration pass runs on real EPC drafts.
+  EPC: { high: 60, low: 30 },
   // Default-fallback for any jurisdiction not explicitly listed.
   DEFAULT: { high: 60, low: 30 },
 }
@@ -49,7 +54,7 @@ export const TIER_LOW = 'low'
 /**
  * Map a confidence score to a tier label.
  * @param {number|null|undefined} score 0..100 confidence score
- * @param {string} jurisdiction One of "US", "CN", "TW" (case-insensitive)
+ * @param {string} jurisdiction One of "US", "CN", "TW", "EPC" (case-insensitive)
  * @returns {string} TIER_HIGH | TIER_MEDIUM | TIER_LOW
  */
 export function tierForScore(score, jurisdiction = 'DEFAULT') {
