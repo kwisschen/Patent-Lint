@@ -80,6 +80,25 @@ TW_FORWARD_MAP = [
                "cross_ref": None}]),
 ]
 
+# EPC: scaffolding stage. The adapter forwards the four EPC check-list
+# fields onto the ReportData accumulators 1:1 (same shape as TW/CN). Real
+# check emission lands per-G-group in subsequent commits; the parity test
+# locks the forwarding contract from day one.
+EPC_FORWARD_MAP = [
+    ("epc_specification_checks", "specification_checks",
+     lambda: [_make_check("epc.spec.x")]),
+    ("epc_claims_checks", "claims_checks",
+     lambda: [_make_check("epc.claims.x")]),
+    ("epc_abstract_checks", "abstract_checks",
+     lambda: [_make_check("epc.abstract.x")]),
+    ("epc_drawings_checks", "drawings_checks",
+     lambda: [_make_check("epc.drawings.x")]),
+    ("antecedent_basis_issues", "antecedent_basis_issues",
+     lambda: [{"claim_id": 1, "term": "widget", "reference_form": "the widget",
+               "claim_text": "1. A widget.", "suggested_match": None,
+               "cross_ref": None}]),
+]
+
 # US: adapter synthesizes CheckItems from flat fields. For each flat source
 # field the adapter reads, assert the corresponding destination *_checks
 # accumulator ends up non-empty. The adapter also forwards
@@ -184,6 +203,28 @@ class TestReportDataAdapterParityTW:
         assert _nonempty_list_report_field(report, "claim_trees")
 
 
+class TestReportDataAdapterParityEPC:
+    """EPC adapter forwards every declared source field onto ReportData."""
+
+    @pytest.mark.parametrize("src,dest,factory", EPC_FORWARD_MAP,
+                             ids=[m[0] for m in EPC_FORWARD_MAP])
+    def test_field_forwards(self, src: str, dest: str, factory):
+        kwargs = _base_kwargs(Jurisdiction.EPC)
+        kwargs[src] = factory()
+        result = AnalysisResult(**kwargs)
+        report = result.to_report_data()
+        assert _nonempty_list_report_field(report, dest), (
+            f"EPC adapter dropped {src} -> {dest}. "
+            f"Source had {len(kwargs[src])} entries; destination is empty."
+        )
+
+    def test_claim_trees_populated_from_claims(self):
+        kwargs = _base_kwargs(Jurisdiction.EPC)
+        kwargs["claims"] = [_make_claim(1)]
+        report = AnalysisResult(**kwargs).to_report_data()
+        assert _nonempty_list_report_field(report, "claim_trees")
+
+
 class TestReportDataAdapterParityUS:
     """US adapter synthesizes CheckItems from flat fields.
 
@@ -263,6 +304,7 @@ class TestForwardMapsAreExhaustive:
         forwarded = (
             {m[0] for m in CN_FORWARD_MAP}
             | {m[0] for m in TW_FORWARD_MAP}
+            | {m[0] for m in EPC_FORWARD_MAP}
             | {m[0] for m in US_FORWARD_MAP}
         )
         accounted = forwarded | self.KNOWN_NON_FORWARDED_LIST_FIELDS
