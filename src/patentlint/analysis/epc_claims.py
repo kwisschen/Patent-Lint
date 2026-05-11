@@ -409,6 +409,278 @@ def check_transition_phrase_epc(claims: list[Claim]) -> list[CheckItem]:
     )]
 
 
+# ---------------------------------------------------------------------------
+# G5 (cross-jurisdiction / format guards) checks
+# ---------------------------------------------------------------------------
+
+
+# Rule 43(6) EPC: claims must not reference description / drawings by
+# paragraph or figure number. Common English forms drafters slip in:
+#   - "see paragraph [0010]"
+#   - "as described in paragraph 10"
+#   - "with reference to Fig. 5"        ← in claim body, NOT as ref sign
+#   - "as shown in Figure 3"
+# The ref-signs-in-parens convention (Rule 43(7)) means a parenthesised
+# "(see Fig. 5)" is acceptable; bare prose references like "shown in
+# Fig. 5" inside a claim body are not.
+_CLAIM_SPEC_REF_RE = re.compile(
+    r"\b("
+    r"see\s+paragraph\s+\[?\d+\]?"
+    r"|as\s+(?:described|shown|illustrated|set\s+forth)\s+in\s+(?:paragraph|Figure|FIG\.?|Fig\.?)\s+\[?\d+\]?"
+    r"|with\s+reference\s+to\s+(?:paragraph|Figure|FIG\.?|Fig\.?)\s+\[?\d+\]?"
+    r"|in\s+paragraph\s+\[?\d+\]?"
+    r")\b",
+    re.IGNORECASE,
+)
+
+
+# Markush group format detection. EPC accepts the same "selected from the
+# group consisting of A, B, and C" form as US. Guidelines F-IV § 4.20
+# requires the closed-group format; "selected from A, B, or C" (without
+# "the group consisting of") is technically incorrect.
+_MARKUSH_GOOD_RE = re.compile(
+    r"selected\s+from\s+(?:the\s+)?group\s+consisting\s+of\b",
+    re.IGNORECASE,
+)
+_MARKUSH_BAD_RE = re.compile(
+    r"selected\s+from\s+(?!(?:the\s+)?group\s+consisting\s+of)"
+    r"(?:[\w\s,]+?)\s+(?:or|and)\b",
+    re.IGNORECASE,
+)
+
+
+# Rule 43(1) two-part form: preamble + characterising portion. Detection
+# looks for either "characterised in that" or "characterised by"
+# anywhere in an independent claim. Advisory only — Rule 43(1) is
+# "where appropriate", not mandatory.
+_TWO_PART_RE = re.compile(
+    r"\bcharacter(?:i[sz]ed)\s+(?:in\s+that|by)\b",
+    re.IGNORECASE,
+)
+
+
+def check_claims_spec_reference_epc(claims: list[Claim]) -> list[CheckItem]:
+    """Verify claims do not reference description / drawings per Rule 43(6) EPC.
+
+    A claim that says "see paragraph [0010]" or "as shown in Fig. 5"
+    violates Rule 43(6), which requires claims to be self-contained.
+    Parenthesised reference signs per Rule 43(7) are fine; the check
+    runs on text with parenthesised content stripped.
+    """
+    flagged: list[int] = []
+    for c in claims:
+        stripped = re.sub(r"\([^()]*\)", "", c.text)
+        if _CLAIM_SPEC_REF_RE.search(stripped):
+            flagged.append(c.id)
+    if flagged:
+        return [CheckItem(
+            status="amend",
+            message=(
+                f"Claim(s) {', '.join(str(i) for i in flagged)} reference description "
+                f"or drawings — Rule 43(6) EPC requires claims to be self-contained."
+            ),
+            message_key="check.epc.claims.specReference.amend",
+            details=", ".join(str(i) for i in flagged),
+            reference="Rule 43(6) EPC",
+            diagnostics=_dx(
+                flagged_count=len(flagged),
+                flagged_claim_id=flagged[0],
+            ),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="No claim references description or drawings.",
+        message_key="check.epc.claims.specReference.pass",
+        reference="Rule 43(6) EPC",
+    )]
+
+
+def check_multi_dep_on_multi_dep_epc(claims: list[Claim]) -> list[CheckItem]:
+    """Verify multi-dependent claims do not depend on other multi-dependent claims.
+
+    Rule 43(4) EPC permits multi-dependent claims but does not allow
+    a multi-dependent claim to depend on another multi-dependent claim
+    (chained multi-dep). This mirrors the US MPEP § 608.01(n) prohibition.
+    """
+    by_id = {c.id: c for c in claims}
+    bad: list[int] = []
+    for c in claims:
+        if not c.multiple_dependent:
+            continue
+        # Check whether any parent is itself multi-dep
+        for parent_id in c.dependencies:
+            parent = by_id.get(parent_id)
+            if parent and parent.multiple_dependent:
+                bad.append(c.id)
+                break
+    if bad:
+        return [CheckItem(
+            status="amend",
+            message=(
+                f"Claim(s) {', '.join(str(i) for i in bad)} are multi-dependent claims "
+                f"that depend on another multi-dependent claim — Rule 43(4) EPC prohibits this."
+            ),
+            message_key="check.epc.claims.multiDepOnMultiDep.amend",
+            details=", ".join(str(i) for i in bad),
+            reference="Rule 43(4) EPC",
+            diagnostics=_dx(
+                flagged_count=len(bad),
+                flagged_claim_id=bad[0],
+            ),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="No multi-dependent claim depends on another multi-dependent claim.",
+        message_key="check.epc.claims.multiDepOnMultiDep.pass",
+        reference="Rule 43(4) EPC",
+    )]
+
+
+def check_markush_format_epc(claims: list[Claim]) -> list[CheckItem]:
+    """Verify Markush group format per Guidelines F-IV § 4.20.
+
+    EPO accepts "selected from the group consisting of A, B, and C"
+    (closed Markush). Forms like "selected from A, B, or C" without the
+    "group consisting of" phrasing are technically open-ended and
+    flagged for review.
+    """
+    bad: list[int] = []
+    for c in claims:
+        if _MARKUSH_BAD_RE.search(c.text) and not _MARKUSH_GOOD_RE.search(c.text):
+            bad.append(c.id)
+    if bad:
+        return [CheckItem(
+            status="verify",
+            message=(
+                f"Claim(s) {', '.join(str(i) for i in bad)} use a Markush-style "
+                f"alternative that may need the closed 'selected from the group "
+                f"consisting of' form per Guidelines F-IV § 4.20."
+            ),
+            message_key="check.epc.claims.markushFormat.verify",
+            details=", ".join(str(i) for i in bad),
+            reference="EPO Guidelines F-IV § 4.20",
+            diagnostics=_dx(
+                flagged_count=len(bad),
+                flagged_claim_id=bad[0],
+            ),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="Markush groups (if any) use the closed format.",
+        message_key="check.epc.claims.markushFormat.pass",
+        reference="EPO Guidelines F-IV § 4.20",
+    )]
+
+
+def check_independent_claim_count_epc(claims: list[Claim]) -> list[CheckItem]:
+    """Advisory check on independent claim count per Rule 43(2) EPC.
+
+    Rule 43(2) limits a European patent application to one independent
+    claim per category (product / process / apparatus / use) unless one
+    of the four Rule 43(3) exceptions applies:
+      (a) interrelated products
+      (b) different uses of a product or apparatus
+      (c) alternative solutions to a particular problem
+    Detection of the exceptions is high-FP risk, so v1 emits a REVIEW
+    advisory when more than one independent claim exists in any single
+    category, with no attempt to identify which Rule 43(3) exception
+    might apply.
+    """
+    independents = [c for c in claims if c.independent]
+    if len(independents) <= 1:
+        return [CheckItem(
+            status="pass",
+            message="Single independent claim — Rule 43(2) EPC satisfied.",
+            message_key="check.epc.claims.independentClaimCount.pass",
+            reference="Rule 43(2) EPC",
+        )]
+    # Crude category split: method vs non-method
+    methods = sum(1 for c in independents if c.method_claim)
+    non_methods = len(independents) - methods
+    if methods > 1 or non_methods > 1:
+        return [CheckItem(
+            status="verify",
+            message=(
+                f"Found {len(independents)} independent claims ({methods} method, "
+                f"{non_methods} non-method). Rule 43(2) EPC limits to one "
+                f"independent claim per category unless a Rule 43(3) exception "
+                f"applies (interrelated products / different uses / alternative "
+                f"solutions). Verify."
+            ),
+            message_key="check.epc.claims.independentClaimCount.verify",
+            reference="Rule 43(2) EPC; Rule 43(3) EPC",
+            diagnostics=_dx(
+                independent_count=len(independents),
+                method_count=methods,
+                non_method_count=non_methods,
+            ),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="Independent claim count per category satisfies Rule 43(2) EPC.",
+        message_key="check.epc.claims.independentClaimCount.pass",
+        reference="Rule 43(2) EPC",
+    )]
+
+
+def check_two_part_form_epc(claims: list[Claim]) -> list[CheckItem]:
+    """Advisory check on Rule 43(1) two-part form (where appropriate).
+
+    Rule 43(1) recommends — but does not require — the two-part form
+    (preamble + "characterised in that" + characterising portion) for
+    independent claims defining an invention over closest prior art.
+    Detection looks for the phrase in any independent claim. Status
+    'pass' when ≥1 independent claim uses two-part form; 'verify' when
+    no independent claim does (advisory: drafter may want to consider
+    it). Never 'amend' — Rule 43(1) is conditional.
+    """
+    independents = [c for c in claims if c.independent]
+    if not independents:
+        return [CheckItem(
+            status="pass",
+            message="No independent claims to check for two-part form.",
+            message_key="check.epc.claims.twoPartForm.pass",
+            reference="Rule 43(1) EPC",
+        )]
+    has_two_part = any(_TWO_PART_RE.search(c.text) for c in independents)
+    if has_two_part:
+        return [CheckItem(
+            status="pass",
+            message="At least one independent claim uses the two-part form per Rule 43(1) EPC.",
+            message_key="check.epc.claims.twoPartForm.pass",
+            reference="Rule 43(1) EPC",
+        )]
+    return [CheckItem(
+        status="verify",
+        message=(
+            "No independent claim uses the two-part form (preamble + "
+            "'characterised in that'). Rule 43(1) EPC recommends this form "
+            "where appropriate; verify whether the closest prior art warrants it."
+        ),
+        message_key="check.epc.claims.twoPartForm.verify",
+        reference="Rule 43(1) EPC",
+        diagnostics=_dx(independent_count=len(independents)),
+    )]
+
+
+def run_g5_claims_cross_jurisdiction_checks(claims: list[Claim]) -> list[CheckItem]:
+    """Run all G5 claims-cross-jurisdiction checks.
+
+      1. claimsSpecReference
+      2. multiDepOnMultiDep
+      3. markushFormat
+      4. independentClaimCount (advisory)
+      5. twoPartForm (advisory)
+    """
+    results: list[CheckItem] = []
+    results.extend(check_claims_spec_reference_epc(claims))
+    results.extend(check_multi_dep_on_multi_dep_epc(claims))
+    results.extend(check_markush_format_epc(claims))
+    results.extend(check_independent_claim_count_epc(claims))
+    results.extend(check_two_part_form_epc(claims))
+    return results
+
+
 def run_g4_claims_structure_checks(claims: list[Claim]) -> list[CheckItem]:
     """Run all G4 claims-structure checks in canonical 7-group order.
 

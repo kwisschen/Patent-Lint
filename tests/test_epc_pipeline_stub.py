@@ -41,7 +41,7 @@ def test_run_epc_pipeline_stub_returns_well_formed_result():
     assert result.jurisdiction == Jurisdiction.EPC
     assert len(result.epc_specification_checks) == 8
     assert len(result.epc_drawings_checks) == 4
-    assert len(result.epc_claims_checks) == 8
+    assert len(result.epc_claims_checks) == 13
     assert len(result.epc_abstract_checks) == 2
 
 
@@ -66,5 +66,5 @@ def test_epc_report_data_adapter_round_trips():
     # G7 ships 2 abstract. G5 + G6 claims still pending.
     assert len(report.specification_checks) == 8
     assert len(report.drawings_checks) == 4
-    assert len(report.claims_checks) == 8
+    assert len(report.claims_checks) == 13
     assert len(report.abstract_checks) == 2
