@@ -365,3 +365,158 @@ def run_g1_spec_structure_checks(full_text: str) -> list[CheckItem]:
     results.extend(check_paragraph_ending_epc(full_text))
     results.extend(check_title_required_epc(full_text))
     return results
+
+
+# ---------------------------------------------------------------------------
+# G2 (content) checks
+# ---------------------------------------------------------------------------
+
+
+# Spec-body references to claims, prohibited per EPO Guidelines F-IV § 4.3.
+# Captures the common English forms EPC drafters slip into:
+#   - "as claimed in claim 5"
+#   - "according to claim 3"
+#   - "in claim 7"
+#   - "claim 2 specifies"
+#   - "claims 1 to 5"
+# Case-insensitive at match time so capitalization variants land too.
+_EPC_CLAIM_REF_RE = re.compile(
+    r"\b(?:"
+    r"as\s+claimed\s+in\s+claims?\s+\d+"
+    r"|according\s+to\s+claims?\s+\d+"
+    r"|in\s+claims?\s+\d+(?:\s+to\s+\d+)?\s+(?:above|herein|specifies|recites|requires|provides|states)"
+    r"|claims?\s+\d+(?:\s+to\s+\d+)?\s+(?:above|specifies|recites|requires|provides|states)"
+    r"|recited\s+in\s+claims?\s+\d+"
+    r"|set\s+forth\s+in\s+claims?\s+\d+"
+    r")\b",
+    re.IGNORECASE,
+)
+
+
+def check_figure_ref_consistency_epc(full_text: str) -> list[CheckItem]:
+    """Verify figure references are consistent per Rule 46(2)(h) EPC.
+
+    Rule 46(2)(h) requires the description to refer to each figure of the
+    drawings; reuses the US figure-cross-reference helper, which extracts
+    Fig./FIG./Figure references and compares the brief description of
+    drawings against the detailed description body.
+    """
+    from patentlint.analysis.drawings import check_figure_cross_references
+    from patentlint.parser.sections_epc import (
+        extract_detailed_description_section_epc,
+        extract_drawings_description_section_epc,
+    )
+
+    brief = extract_drawings_description_section_epc(full_text)
+    detailed = extract_detailed_description_section_epc(full_text)
+    results = check_figure_cross_references(brief, detailed)
+    if not results:
+        return [CheckItem(
+            status="pass",
+            message="No figure references detected — figure-reference consistency is vacuously satisfied.",
+            message_key="check.epc.spec.figureRefConsistency.pass",
+            reference="Rule 46(2)(h) EPC",
+        )]
+    # Re-key existing CheckItems into the EPC namespace + add EPC reference.
+    re_keyed: list[CheckItem] = []
+    for item in results:
+        re_keyed.append(CheckItem(
+            status=item.status,
+            message=item.message,
+            message_key=item.message_key.replace("check.spec.figureXref", "check.epc.spec.figureRefConsistency")
+                          .replace("checks.figureXref", "check.epc.spec.figureRefConsistency"),
+            details=item.details,
+            details_key=item.details_key,
+            details_params=item.details_params,
+            reference="Rule 46(2)(h) EPC",
+            diagnostics=item.diagnostics,
+        ))
+    return re_keyed
+
+
+def check_numeral_consistency_epc(full_text: str) -> list[CheckItem]:
+    """D1-style numeral consistency per Rule 43(7) EPC.
+
+    Rule 43(7) EPC specifies reference signs in claims appear in
+    parentheses and that they tie back to the description; reuses the US
+    D1 detector for same-numeral / different-name conflicts in the spec
+    body. The check fires when one numeral is paired with two or more
+    disjoint element names (a typo / copy-paste bug signal).
+    """
+    from patentlint.analysis.specification import check_numeral_consistency
+    from patentlint.parser.sections_epc import extract_description_section_epc
+
+    description = extract_description_section_epc(full_text)
+    results = check_numeral_consistency(description)
+    re_keyed: list[CheckItem] = []
+    for item in results:
+        re_keyed.append(CheckItem(
+            status=item.status,
+            message=item.message,
+            message_key=item.message_key.replace("check.spec.numeralConsistency", "check.epc.spec.numeralConsistency"),
+            details=item.details,
+            details_key=item.details_key,
+            details_params=item.details_params,
+            reference="Rule 43(7) EPC; Rule 46(2)(h) EPC",
+            diagnostics=item.diagnostics,
+        ))
+    return re_keyed
+
+
+def check_claim_reference_in_spec_epc(full_text: str) -> list[CheckItem]:
+    """Flag spec text that references claims by number (Guidelines F-IV § 4.3).
+
+    EPO examiners cite Guidelines F-IV § 4.3 against descriptions that
+    contain phrases like "as claimed in claim 5" — the description must
+    stand on its own and not rely on the claims for clarity. Detection
+    runs on the extracted description body so that the title and claims
+    themselves are not scanned.
+    """
+    from patentlint.parser.sections_epc import extract_description_section_epc
+
+    description = extract_description_section_epc(full_text)
+    if not description:
+        return [CheckItem(
+            status="pass",
+            message="No description body to check.",
+            message_key="check.epc.spec.claimReferenceInSpec.pass",
+            reference="EPO Guidelines F-IV § 4.3",
+        )]
+    match = _EPC_CLAIM_REF_RE.search(description)
+    if match:
+        snippet = match.group()[:80]
+        return [CheckItem(
+            status="amend",
+            message="Description references a specific claim — Guidelines F-IV § 4.3 requires the description to stand on its own.",
+            message_key="check.epc.spec.claimReferenceInSpec.amend",
+            details=snippet,
+            details_key="details.epc.claimReferenceInSpec",
+            details_params={"detail": snippet},
+            reference="EPO Guidelines F-IV § 4.3",
+            diagnostics=_dx(
+                snippet_charlen=len(snippet),
+                matched_phrase=match.group()[:80],
+                match_position=match.start(),
+                description_charlen=len(description),
+            ),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="No claim references found in description.",
+        message_key="check.epc.spec.claimReferenceInSpec.pass",
+        reference="EPO Guidelines F-IV § 4.3",
+    )]
+
+
+def run_g2_spec_content_checks(full_text: str) -> list[CheckItem]:
+    """Run all G2 spec-content checks in canonical 7-group order.
+
+      1. figureRefConsistency
+      2. numeralConsistency
+      3. claimReferenceInSpec
+    """
+    results: list[CheckItem] = []
+    results.extend(check_figure_ref_consistency_epc(full_text))
+    results.extend(check_numeral_consistency_epc(full_text))
+    results.extend(check_claim_reference_in_spec_epc(full_text))
+    return results

@@ -42,7 +42,7 @@ def test_run_epc_pipeline_stub_returns_well_formed_result():
     # G1 spec-structure checks emit 5 CheckItems (mix of amend/verify/pass
     # depending on the input). Empty text triggers amends for missing
     # title + sections.
-    assert len(result.epc_specification_checks) == 5
+    assert len(result.epc_specification_checks) == 8
     assert result.epc_claims_checks == []
     assert result.epc_abstract_checks == []
     assert result.epc_drawings_checks == []
@@ -65,9 +65,9 @@ def test_epc_report_data_adapter_round_trips():
     report = result.to_report_data()
     assert isinstance(report, ReportData)
     assert report.jurisdiction == Jurisdiction.EPC
-    # G1 ships 5 spec-structure checks; G2-G7 still pending so other lists
+    # G1 + G2 ship 8 spec checks; G3-G7 still pending so other lists
     # remain empty at this stage of the implementation plan.
-    assert len(report.specification_checks) == 5
+    assert len(report.specification_checks) == 8
     assert report.claims_checks == []
     assert report.abstract_checks == []
     assert report.drawings_checks == []
