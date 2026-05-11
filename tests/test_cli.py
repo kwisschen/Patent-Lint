@@ -104,6 +104,73 @@ class TestAnalyzeCommand:
         assert result.exit_code == 0
 
 
+class TestJurisdictionFlag:
+    """CLI --jurisdiction option correctly routes to the right Jurisdiction enum."""
+
+    def test_us_jurisdiction_default(self, tmp_path):
+        """No --jurisdiction → defaults to US."""
+        from patentlint.models import Jurisdiction
+        docx_file = tmp_path / "test.docx"
+        docx_file.touch()
+
+        runner = CliRunner()
+        with patch("patentlint.cli.analyze_file", return_value=_mock_result()) as m:
+            result = runner.invoke(main, ["analyze", str(docx_file)])
+
+        assert result.exit_code in (0, 1)
+        _, kwargs = m.call_args
+        assert kwargs["jurisdiction"] == Jurisdiction.US
+
+    def test_epc_jurisdiction_routes(self, tmp_path):
+        """--jurisdiction epc passes Jurisdiction.EPC to analyze_file."""
+        from patentlint.models import Jurisdiction
+        docx_file = tmp_path / "test.docx"
+        docx_file.touch()
+
+        mock = _mock_result()
+        mock.jurisdiction = Jurisdiction.EPC
+        runner = CliRunner()
+        with patch("patentlint.cli.analyze_file", return_value=mock) as m:
+            result = runner.invoke(main, ["analyze", str(docx_file), "--jurisdiction", "epc"])
+
+        assert result.exit_code in (0, 1)
+        _, kwargs = m.call_args
+        assert kwargs["jurisdiction"] == Jurisdiction.EPC
+
+    def test_epc_jurisdiction_case_insensitive(self, tmp_path):
+        """--jurisdiction EPC (upper-case) also routes correctly."""
+        from patentlint.models import Jurisdiction
+        docx_file = tmp_path / "test.docx"
+        docx_file.touch()
+
+        mock = _mock_result()
+        mock.jurisdiction = Jurisdiction.EPC
+        runner = CliRunner()
+        with patch("patentlint.cli.analyze_file", return_value=mock) as m:
+            result = runner.invoke(main, ["analyze", str(docx_file), "--jurisdiction", "EPC"])
+
+        assert result.exit_code in (0, 1)
+        _, kwargs = m.call_args
+        assert kwargs["jurisdiction"] == Jurisdiction.EPC
+
+    def test_invalid_jurisdiction_rejected(self, tmp_path):
+        """--jurisdiction xyz rejected by click.Choice."""
+        docx_file = tmp_path / "test.docx"
+        docx_file.touch()
+
+        runner = CliRunner()
+        result = runner.invoke(main, ["analyze", str(docx_file), "--jurisdiction", "xyz"])
+        # click rejects bad choices with exit code 2 (usage error)
+        assert result.exit_code == 2
+
+    def test_help_lists_epc(self):
+        """patentlint analyze --help should list epc as a valid choice."""
+        runner = CliRunner()
+        result = runner.invoke(main, ["analyze", "--help"])
+        assert result.exit_code == 0
+        assert "epc" in result.output.lower()
+
+
 class TestLocaleFlag:
     def test_pdf_locale_passthrough(self, tmp_path):
         """--locale forwards to render_pdf."""
