@@ -174,16 +174,16 @@ def check_figure_count_epc(full_text: str) -> list[CheckItem]:
 
 
 def run_g3_drawings_checks(full_text: str) -> list[CheckItem]:
-    """Run all G3 drawings checks in canonical 7-group order.
+    """Run all G3 drawings checks in canonical idx order:
 
-      1. figuresSequential
-      2. singleFigureLabel
-      3. priorArtLabeling
-      4. figureCount (informational)
+      1. figureCount (idx 10, informational)
+      2. singleFigureLabel (idx 20)
+      3. priorArtLabeling (idx 30)
+      4. figuresSequential (idx 40)
     """
     results: list[CheckItem] = []
-    results.extend(check_figures_sequential_epc(full_text))
+    results.extend(check_figure_count_epc(full_text))
     results.extend(check_single_figure_label_epc(full_text))
     results.extend(check_prior_art_labeling_epc(full_text))
-    results.extend(check_figure_count_epc(full_text))
+    results.extend(check_figures_sequential_epc(full_text))
     return results

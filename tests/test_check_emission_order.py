@@ -146,6 +146,27 @@ class TestTwEmissionOrder:
             _assert_monotonic(items, "TW", bucket_name)
 
 
+class TestEpcEmissionOrder:
+    """EPC pipeline (``_run_epc_pipeline``) obeys the canonical order."""
+
+    def test_epc_all_buckets_clean(self):
+        from patentlint.pipeline import _run_epc_pipeline
+
+        # Minimal English text — pipeline will emit pass/amend/verify
+        # checks across all 4 buckets. The monotonic gate validates
+        # emission order; the registered-key gate validates that every
+        # emitted message_key is in CANONICAL_CHECK_ORDER.
+        result = _run_epc_pipeline("any english text for epc emission order test")
+        for bucket_name, items in (
+            ("epc_specification_checks", result.epc_specification_checks),
+            ("epc_claims_checks", result.epc_claims_checks),
+            ("epc_abstract_checks", result.epc_abstract_checks),
+            ("epc_drawings_checks", result.epc_drawings_checks),
+        ):
+            _assert_all_registered(items, "EPC", bucket_name)
+            _assert_monotonic(items, "EPC", bucket_name)
+
+
 class TestCanonicalConstantInternalConsistency:
     """Sanity gates on the canonical constant itself."""
 
