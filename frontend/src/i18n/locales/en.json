@@ -1493,7 +1493,7 @@
   },
   "terms": {
     "title": "Terms of Service",
-    "lastUpdated": "Last updated: May 10, 2026",
+    "lastUpdated": "Last updated: May 11, 2026",
     "intro": "These Terms govern your use of the patentlint.com website (the \"Site\") and the PatentLint software (the \"Software\"). By using the Site, you agree to these Terms.",
     "s1": {
       "title": "The Site vs. the Software",
@@ -1501,8 +1501,9 @@
       "siteLabel": "The Site (patentlint.com).",
       "siteDesc": "A hosted web application, free for individual practitioners' personal use and for organizations evaluating before commercial licensing (see § 4). When you load a patent draft, analysis runs entirely in your browser via WebAssembly — your draft never leaves your device. The Site is operated by Christopher Chen.",
       "softwareLabel": "The Software.",
-      "softwareDesc": "The underlying source code, published in a private repository. The Software is licensed under PolyForm-Strict-1.0.0 (see § 4).",
-      "p2": "These Terms cover your use of both. Different rules apply depending on which you are using."
+      "softwareDesc": "The underlying source code, source-available under PolyForm-Strict-1.0.0 (see § 4 for license terms).",
+      "p2": "These Terms cover your use of both. Different rules apply depending on which you are using.",
+      "statusNote": "<1>Project status.</1> PatentLint is currently maintained as an open-source portfolio project. The Site remains free for individual practitioners and for organizations evaluating before commercial licensing (§ 4). Commercial deployment under § 4 is preserved as an option but new commercial customers are not being actively onboarded during this period. Inquiries via the contact in § 4 remain welcome."
     },
     "s2": {
       "title": "Using the Site",

@@ -2,13 +2,18 @@
 
 [![CI](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml/badge.svg)](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml)
 [![Live Demo](https://img.shields.io/badge/demo-patentlint.com-blue)](https://patentlint.com)
-[![Tests](https://img.shields.io/badge/tests-2183-brightgreen)](#)
+[![Tests](https://img.shields.io/badge/tests-2371-brightgreen)](#)
+[![License: PolyForm-Strict-1.0.0](https://img.shields.io/badge/license-PolyForm--Strict--1.0.0-orange)](LICENSE)
 
 **No account. No install. No upload.**
 
 PatentLint checks U.S., Chinese, and Taiwanese patent application drafts against USPTO, CNIPA, and TIPO drafting rules — entirely in your browser. Your file never leaves your device.
 
 **[Try it →](https://patentlint.com)**
+
+## Status
+
+PatentLint is currently maintained as an open-source portfolio project by Christopher Chen during an AI-engineering job search. The hosted demo at [patentlint.com](https://patentlint.com) remains free for individual practitioners and for organizations evaluating the tool. The source is published under [PolyForm-Strict-1.0.0](LICENSE) — commercial deployment under § 4 of the [Terms](https://patentlint.com/terms) remains available, but commercial customers are not actively being onboarded during this period. Inquiries welcome at the contact link below.
 
 ![PatentLint analysis results](https://patentlint.com/screenshot-hero.png)
 
@@ -149,7 +154,7 @@ Visit **[patentlint.com](https://patentlint.com)** — nothing to install.
 ```bash
 # Backend
 pip install -e ".[api,dev]"
-pytest -v                    # 2183 tests
+pytest -v                    # 2371 tests
 uvicorn patentlint.api.app:app --port 8000 --reload
 
 # Frontend (separate terminal)
@@ -201,7 +206,7 @@ curl http://localhost:8000/api/health
 | Frontend | React 18, Vite 6, Tailwind CSS v4, shadcn/ui |
 | PDF | pdfmake (web) · weasyprint (Docker/CLI) |
 | CLI | Click |
-| Testing | pytest (2183 tests) |
+| Testing | pytest (2371 tests) |
 | CI/CD | GitHub Actions (test, lint, wheel-verify, docker) + Vercel auto-deploy |
 | i18n | react-i18next (English, Deutsch, 繁體中文, 简体中文, 日本語, 한국어) — shared locale bundles across frontend + weasyprint PDF |
 
@@ -246,4 +251,4 @@ PatentLint is source-available under **PolyForm-Strict-1.0.0** — see [LICENSE]
 
 The patentlint.com hosted service is free for individual evaluation. Commercial deployment or redistribution requires a separate license — [contact Christopher Chen](mailto:kwisschen@gmail.com) to discuss terms. See also the [Terms of Service](https://patentlint.com/terms) for the hosted site and the source-code license.
 
-Copyright © 2025 Christopher Chen. All rights reserved.
+Copyright © 2025–2026 Christopher Chen. All rights reserved.
