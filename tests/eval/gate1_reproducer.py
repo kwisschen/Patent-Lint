@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
+# Copyright (c) 2025–2026 Christopher Chen
 """Gate 1 reproducer for tonight's walker_fp candidates from triage.
 
 Per `triage-report` skill §5b Gate 1: synthesize a minimal fixture from the
