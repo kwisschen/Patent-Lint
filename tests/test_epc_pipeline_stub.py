@@ -34,17 +34,14 @@ def _make_minimal_docx_bytes() -> bytes:
 
 
 def test_run_epc_pipeline_stub_returns_well_formed_result():
-    """Pipeline runs G1 spec-structure checks (5 emissions). G2-G7 are still
-    pending so their respective check lists stay empty."""
+    """Pipeline runs G1 + G2 spec checks (8) + G7 abstract checks (2).
+    G3 drawings + G4-G6 claims still pending so those lists stay empty."""
     result = _run_epc_pipeline("any english text", suggested_jurisdiction=None)
     assert isinstance(result, AnalysisResult)
     assert result.jurisdiction == Jurisdiction.EPC
-    # G1 spec-structure checks emit 5 CheckItems (mix of amend/verify/pass
-    # depending on the input). Empty text triggers amends for missing
-    # title + sections.
     assert len(result.epc_specification_checks) == 8
+    assert len(result.epc_abstract_checks) == 2
     assert result.epc_claims_checks == []
-    assert result.epc_abstract_checks == []
     assert result.epc_drawings_checks == []
 
 
@@ -65,9 +62,9 @@ def test_epc_report_data_adapter_round_trips():
     report = result.to_report_data()
     assert isinstance(report, ReportData)
     assert report.jurisdiction == Jurisdiction.EPC
-    # G1 + G2 ship 8 spec checks; G3-G7 still pending so other lists
-    # remain empty at this stage of the implementation plan.
+    # G1 + G2 ship 8 spec checks; G7 ships 2 abstract checks; G3 drawings
+    # and G4-G6 claims still pending so those lists remain empty.
     assert len(report.specification_checks) == 8
+    assert len(report.abstract_checks) == 2
     assert report.claims_checks == []
-    assert report.abstract_checks == []
     assert report.drawings_checks == []
