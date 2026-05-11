@@ -87,6 +87,68 @@ _CNIPA_MARKERS: tuple[str, ...] = (
     "实用新型内容",
 )
 
+# EPC-distinctive surface markers in English. Patent drafters at EPC firms
+# pin their work to EPC vocabulary even when the application targets a
+# member state national route — these terms are not in normal US drafting
+# vocabulary, so a US-selected upload that hits any of them is a real
+# mismatch signal (not a stylistic noise signal).
+#
+# Conservative scope on purpose: only terms that are EPC-specific AND
+# unlikely to appear in a US draft. "according to claim" is intentionally
+# excluded — too generic; US drafters use it too. British-spelling tells
+# like "characterised" are picked up via the case-insensitive match
+# because EPC two-part-form preambles almost always include them, and
+# US drafters spell with -ize.
+_EPC_MARKERS: tuple[str, ...] = (
+    "european patent",
+    "european patent application",
+    "european patent office",
+    "epc ",
+    " epc",
+    "article 84",
+    "article 56",
+    "article 83",
+    "article 78",
+    "article 123",
+    "rule 43",
+    "rule 42",
+    "rule 47",
+    "characterised in that",
+    "characterising portion",
+    "any preceding claim",
+    "any one of claims",
+    "epo guidelines",
+)
+
+# US-distinctive surface markers in English. Anchor terms that EPC drafters
+# (even British-spelling habituated ones) would not produce: USPTO + MPEP +
+# 35 U.S.C. § citations are diagnostic of a US-filed draft. Non-transitory
+# CRM boilerplate is § 101-specific. "FIG." in caps is the US convention
+# (EPC drafts write "Fig." or "fig."), but case-insensitive matching makes
+# that brittle — handled via a separate cased check below.
+_US_MARKERS: tuple[str, ...] = (
+    "uspto",
+    "united states patent and trademark office",
+    "35 u.s.c.",
+    "35 usc",
+    " mpep ",
+    "mpep §",
+    "mpep section",
+    "non-transitory computer-readable",
+    "non-transitory computer readable",
+    "method of claim",  # US heavily prefers "method of claim N" over EPC "method according to claim N"
+    "system of claim",
+    "device of claim",
+    "apparatus of claim",
+)
+
+# How big a marker-count delta we require before suggesting an EPC ↔ US
+# switch. Set deliberately high: false-positive suggestions on this axis
+# would hit every US drafter who happens to cite an EPC counterpart, or
+# every EPC drafter who mentions a US priority document. 2 means: clearly
+# one-sided, not just trace appearances.
+_EN_MARKER_MIN_DELTA = 2
+
 
 def _sample_text(text: str) -> str:
     """Return at most the first ~50 paragraphs / ~10k chars of ``text``.
@@ -128,9 +190,9 @@ def detect_jurisdiction_mismatch(
     """Suggest a different supported jurisdiction if the document looks
     mismatched.
 
-    Returns one of ``"US"``, ``"CN"``, ``"TW"`` or ``None``. ``None``
-    means: signal is ambiguous, or the document looks consistent with
-    the selected jurisdiction.
+    Returns one of ``"US"``, ``"CN"``, ``"TW"``, ``"EPC"`` or ``None``.
+    ``None`` means: signal is ambiguous, or the document looks consistent
+    with the selected jurisdiction.
 
     The detector is intentionally conservative — when in doubt it
     returns ``None`` and lets the existing NonPatent banner handle the
@@ -146,25 +208,42 @@ def detect_jurisdiction_mismatch(
     cjk = _cjk_ratio(sample)
     tipo = _count_markers(sample, _TIPO_MARKERS)
     cnipa = _count_markers(sample, _CNIPA_MARKERS)
+    # English markers are phrases that frequently straddle .docx paragraph
+    # boundaries ("method of claim\n   1, wherein..."), so collapse runs of
+    # whitespace before counting so newlines + indentation don't hide hits.
+    # CJK marker counts above stay on the unmodified sample (TIPO / CNIPA
+    # headers don't straddle whitespace runs).
+    sample_lower_norm = re.sub(r"\s+", " ", sample.lower())
+    epc_markers = _count_markers(sample_lower_norm, _EPC_MARKERS)
+    us_markers = _count_markers(sample_lower_norm, _US_MARKERS)
 
     if selected == Jurisdiction.US:
-        if cjk <= _CJK_HIGH:
-            return None
-        # Heavy CJK content with US selected → suggest TW or CN.
-        if tipo > cnipa:
-            return Jurisdiction.TW.value
-        if cnipa > tipo:
+        if cjk > _CJK_HIGH:
+            # Heavy CJK content with US selected → suggest TW or CN.
+            if tipo > cnipa:
+                return Jurisdiction.TW.value
+            if cnipa > tipo:
+                return Jurisdiction.CN.value
+            # Marker tie (or both zero — possible on a CJK doc lacking the
+            # specific surface markers we look for, e.g., a JP-translated
+            # draft that has had its headers normalized). Fall back to CN —
+            # it's the larger filing volume of the two, so the suggestion is
+            # more often right; if it isn't, the user can still pick TW from
+            # the home picker after switching back.
             return Jurisdiction.CN.value
-        # Marker tie (or both zero — possible on a CJK doc lacking the
-        # specific surface markers we look for, e.g., a JP-translated
-        # draft that has had its headers normalized). Fall back to CN —
-        # it's the larger filing volume of the two, so the suggestion is
-        # more often right; if it isn't, the user can still pick TW from
-        # the home picker after switching back.
-        return Jurisdiction.CN.value
+        # English / Latin-script content with US selected → check for EPC
+        # tells. Require a strong delta so US drafts that merely cite an
+        # EPC counterpart don't get bumped.
+        if epc_markers - us_markers >= _EN_MARKER_MIN_DELTA and epc_markers > 0:
+            return Jurisdiction.EPC.value
+        return None
 
     if selected == Jurisdiction.CN:
         if cjk < _CJK_LOW:
+            # Latin-script under CN selection → US or EPC. Prefer EPC when
+            # the EPC-distinct markers fire; otherwise US (existing default).
+            if epc_markers - us_markers >= _EN_MARKER_MIN_DELTA and epc_markers > 0:
+                return Jurisdiction.EPC.value
             return Jurisdiction.US.value
         if tipo > cnipa and tipo > 0:
             return Jurisdiction.TW.value
@@ -172,9 +251,28 @@ def detect_jurisdiction_mismatch(
 
     if selected == Jurisdiction.TW:
         if cjk < _CJK_LOW:
+            if epc_markers - us_markers >= _EN_MARKER_MIN_DELTA and epc_markers > 0:
+                return Jurisdiction.EPC.value
             return Jurisdiction.US.value
         if cnipa > tipo and cnipa > 0:
             return Jurisdiction.CN.value
+        return None
+
+    if selected == Jurisdiction.EPC:
+        if cjk > _CJK_HIGH:
+            # Heavy CJK with EPC selected → flag the mismatch with the
+            # most-likely-correct CJK jurisdiction.
+            if tipo > cnipa:
+                return Jurisdiction.TW.value
+            if cnipa > tipo:
+                return Jurisdiction.CN.value
+            return Jurisdiction.CN.value
+        # Latin-script EPC: only flip to US if US markers clearly dominate.
+        # This is the asymmetric direction — many EPC drafts legitimately
+        # cite US prior art, so we set a higher bar here than the US-side
+        # check by requiring zero EPC markers to fire.
+        if us_markers - epc_markers >= _EN_MARKER_MIN_DELTA and us_markers > 0 and epc_markers == 0:
+            return Jurisdiction.US.value
         return None
 
     return None
