@@ -138,9 +138,56 @@ const JURISDICTION_CONFIG = {
     specSupportPassKey: 'check.tw.claims.specSupport.pass',
     specSupportReferenceCite: '專利法 §26 第3項',
   },
+  EPC: {
+    // EPC English drafts share the US shape — Latin-script .docx, word-count
+    // abstract (50-150 per Rule 47(2) + EPO Guidelines F-II § 2.3), single
+    // consolidated claims block. Statute pins differ (Art. 84 EPC / Rule 43
+    // / Rule 46 / Rule 47) and the Section112 heading reads "Art. 84 EPC
+    // Analysis" rather than "§ 112 Analysis". v1 beta — frontend picker
+    // shipped 2026-05-11; real-corpus walker FP tuning pending.
+    acceptedFormats: {
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
+    },
+    cjkFont: null,
+    showPatentType: false,
+    showClaimTree: true,
+    abstractUnit: 'words',
+    abstractOutOfRange: (count) => count < 50 || count > 150,
+    consolidateClaimsChecks: true,
+    filterInternalSpecChecks: true,
+    filterInternalDrawingsChecks: true,
+    // EPC dropzone copy reuses US English keys at v1; locale-specific
+    // EPC dropzone copy can land if a real EPC user asks for it.
+    taglineKey: 'dropzone.tagline',
+    titleKey: 'dropzone.title',
+    noticeKey: 'dropzone.notice',
+    rejectKey: 'dropzone.reject',
+    rejectMultipleTypeKey: 'dropzone.rejectMultipleType',
+    abstractLabelKey: 'summary.abstractWords',
+    abstractRangeKey: 'summary.outsideRange',
+    pdfAbstractKey: 'pdf.abstractWordCount',
+    specSectionKey: 'section.specification',
+    claimsSectionKey: 'section.claims',
+    drawingsSectionKey: 'section.drawings',
+    drawingsShortKey: 'section.drawingsShort',
+    abstractSectionKey: 'section.abstract',
+    section112TitleKey: 'section112.titleEpc',
+    section112PassKey: 'check.epc.claims.antecedentBasis.pass',
+    pdfHeaderKey: 'pdf.header',
+    supportsSpecSupport: true,
+    specSupportTitleKey: 'specSupport.title',
+    specSupportPassKey: 'check.epc.claims.specSupport.pass',
+    specSupportReferenceCite: 'Art. 84 EPC',
+  },
 }
 
-export const JURISDICTION_COLORS = { US: '#2563EB', CN: '#DC2626', TW: '#0D9488' }
+// Indigo for EPC — distinct from US blue, CN red, TW teal; Latin-region-coded.
+export const JURISDICTION_COLORS = {
+  US: '#2563EB',
+  CN: '#DC2626',
+  TW: '#0D9488',
+  EPC: '#4F46E5',
+}
 
 export function getJurisdictionConfig(jurisdiction) {
   return JURISDICTION_CONFIG[jurisdiction] || JURISDICTION_CONFIG.US

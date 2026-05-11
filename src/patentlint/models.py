@@ -608,7 +608,9 @@ class AnalysisResult(BaseModel):
         if not all_rows:
             return []
 
-        if self.jurisdiction != Jurisdiction.US:
+        # US + EPC use method-vs-apparatus split (English claim parsers
+        # detect "method"/"process" in preamble); CN/TW use single group.
+        if self.jurisdiction not in (Jurisdiction.US, Jurisdiction.EPC):
             return [ClaimTreeGroup(label="Claims", rows=all_rows)]
 
         claim_trees: list[ClaimTreeGroup] = []
