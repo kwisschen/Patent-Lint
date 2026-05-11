@@ -1765,3 +1765,200 @@ class TestTwRealFixtureUtilityModel:
         assert any(c.status == "pass" for c in type_checks), (
             "Utility model patent type terminology check should pass"
         )
+
+
+# ---------------------------------------------------------------------------
+# EPC fixture builder + integration tests
+# ---------------------------------------------------------------------------
+
+
+def _build_epc_full_length() -> bytes:
+    """Realistic-shape EPC English patent draft with 6 claims.
+
+    Uses EPC-specific drafting conventions:
+      - "characterised in that" two-part form on the independent claim
+      - "according to any preceding claim" + "any one of claims N to M"
+        dependency forms (parser-tested)
+      - Reference signs in parentheses per Rule 43(7) EPC
+      - "Fig." labels (EPC convention) rather than US "FIG."
+      - Title before first section header (Rule 41(2)(b))
+      - Sections in Rule 42(1) canonical order: TECHNICAL FIELD →
+        BACKGROUND ART → SUMMARY → BRIEF DESCRIPTION OF THE DRAWINGS
+        → DETAILED DESCRIPTION
+    """
+    doc = Document()
+    _add_us_numbering(doc)  # share the US numbering helper — same Word numbering shape
+
+    headers = {
+        "Adaptive Signal-Processing Apparatus for Communication Devices",
+        "TECHNICAL FIELD",
+        "BACKGROUND ART",
+        "SUMMARY OF THE INVENTION",
+        "BRIEF DESCRIPTION OF THE DRAWINGS",
+        "DETAILED DESCRIPTION OF THE EMBODIMENTS",
+        "CLAIMS",
+        "ABSTRACT",
+    }
+    spec_paragraphs = [
+        "Adaptive Signal-Processing Apparatus for Communication Devices",
+        "TECHNICAL FIELD",
+        "The present invention relates to signal-processing apparatuses, in particular to adaptive filtering for communication devices.",
+        "BACKGROUND ART",
+        "Adaptive filters are commonly used in communication-device receivers to suppress channel noise and intersymbol interference.",
+        "Known adaptive filters use fixed-step least-mean-square (LMS) update rules, which suffer from slow convergence in non-stationary channels.",
+        "SUMMARY OF THE INVENTION",
+        "It is an object of the present invention to provide an adaptive signal-processing apparatus that converges faster than known fixed-step LMS adaptive filters in non-stationary channels.",
+        "The object is achieved by an apparatus comprising a processor and a memory, in which the processor executes a variable-step update rule that adjusts to a measured signal-to-noise ratio.",
+        "BRIEF DESCRIPTION OF THE DRAWINGS",
+        "Fig. 1 shows a block diagram of an apparatus according to a first embodiment of the invention.",
+        "Fig. 2 shows a flow diagram of a method according to the first embodiment.",
+        "Fig. 3 shows a graph comparing convergence of the apparatus of Fig. 1 with prior-art fixed-step LMS.",
+        "DETAILED DESCRIPTION OF THE EMBODIMENTS",
+        "Referring to Fig. 1, an adaptive signal-processing apparatus (10) comprises a processor (12), a memory (14) coupled to the processor (12), and a communication interface (16) coupled to the processor (12). The memory (14) stores a variable-step update rule and convergence parameters.",
+        "Referring to Fig. 2, a method of operating the apparatus (10) comprises: receiving an input signal at the communication interface (16); estimating a signal-to-noise ratio at the processor (12); and updating the convergence parameters in the memory (14) using the variable-step update rule whose step size depends on the estimated signal-to-noise ratio.",
+        "Referring to Fig. 3, the apparatus (10) achieves a convergence time approximately 35 percent shorter than a fixed-step LMS adaptive filter when operating in a non-stationary channel having signal-to-noise ratios between 5 dB and 20 dB.",
+    ]
+    for text in spec_paragraphs:
+        para = doc.add_paragraph(text)
+        if text not in headers:
+            _set_para_num(para, "1")
+
+    doc.add_paragraph("CLAIMS")
+
+    claims = [
+        "An adaptive signal-processing apparatus (10) comprising a processor (12) and a memory (14) coupled to the processor (12), characterised in that the memory (14) stores a variable-step update rule and the processor (12) is configured to execute the variable-step update rule with a step size that depends on a measured signal-to-noise ratio.",
+        "The apparatus (10) according to claim 1, wherein the processor (12) is configured to estimate the signal-to-noise ratio from an input signal received at a communication interface (16) of the apparatus (10).",
+        "The apparatus (10) according to any preceding claim, further comprising a communication interface (16) coupled to the processor (12).",
+        "The apparatus (10) according to any one of claims 1 to 3, wherein the communication interface (16) is a wireless interface.",
+        "The apparatus (10) according to claim 1 or 2, wherein the processor (12) comprises a microcontroller.",
+        "A method of operating an adaptive signal-processing apparatus (10), the method comprising: receiving an input signal at a communication interface (16); estimating a signal-to-noise ratio at a processor (12); and updating convergence parameters in a memory (14) using a variable-step update rule whose step size depends on the estimated signal-to-noise ratio.",
+    ]
+    for text in claims:
+        para = doc.add_paragraph(text)
+        _set_para_num(para, "2")
+
+    doc.add_paragraph("ABSTRACT")
+    doc.add_paragraph(
+        "An adaptive signal-processing apparatus comprises a processor and a memory storing a variable-step update rule. The processor estimates a signal-to-noise ratio from an input signal received at a communication interface and updates convergence parameters using the variable-step update rule with a step size that depends on the estimated signal-to-noise ratio. The apparatus achieves faster convergence than fixed-step LMS adaptive filters in non-stationary channels."
+    )
+
+    return _doc_to_bytes(doc)
+
+
+class TestEpcFullLength:
+    """End-to-end EPC pipeline test against a realistic-shape fixture."""
+
+    def test_jurisdiction_routes_to_epc(self):
+        result = analyze_bytes(_build_epc_full_length(), "epc_patent.docx", Jurisdiction.EPC)
+        assert result.jurisdiction == Jurisdiction.EPC
+
+    def test_claims_parsed_with_epc_dep_forms(self):
+        """EPC-specific phrasings ('any preceding claim', 'any one of claims
+        N to M', 'claim N or M') should resolve to expanded dependency lists."""
+        result = analyze_bytes(_build_epc_full_length(), "epc_patent.docx", Jurisdiction.EPC)
+        # 6 claims: 1 independent apparatus + 4 dependent apparatus + 1 independent method
+        assert len(result.claims) == 6
+        # Claim 1 independent (no dep ref)
+        assert result.claims[0].independent is True
+        assert result.claims[0].dependencies == []
+        # Claim 2 simple dep
+        assert result.claims[1].dependencies == [1]
+        # Claim 3 'any preceding claim' → [1, 2]
+        assert result.claims[2].dependencies == [1, 2]
+        assert result.claims[2].multiple_dependent is True
+        # Claim 4 'any one of claims 1 to 3' → [1, 2, 3]
+        assert result.claims[3].dependencies == [1, 2, 3]
+        assert result.claims[3].multiple_dependent is True
+        # Claim 5 'claim 1 or 2' → [1, 2]
+        assert result.claims[4].dependencies == [1, 2]
+        assert result.claims[4].multiple_dependent is True
+        # Claim 6 independent method
+        assert result.claims[5].independent is True
+        assert result.claims[5].method_claim is True
+
+    def test_claim_counts_method_and_apparatus(self):
+        result = analyze_bytes(_build_epc_full_length(), "epc_patent.docx", Jurisdiction.EPC)
+        # 2 independent (1 apparatus + 1 method), 4 dependent (apparatus)
+        assert result.independent_claims_count == 2
+        assert result.dependent_claims_count == 4
+
+    def test_all_four_check_buckets_populated(self):
+        result = analyze_bytes(_build_epc_full_length(), "epc_patent.docx", Jurisdiction.EPC)
+        report = result.to_report_data()
+        assert len(report.specification_checks) > 0
+        assert len(report.claims_checks) > 0
+        assert len(report.drawings_checks) > 0
+        assert len(report.abstract_checks) > 0
+
+    def test_rubric_routing_buckets_populated(self):
+        """The rubric routing should put EPC claims/drawings/abstract checks
+        in their respective rubric sections — not all in Specification.
+        Regression guard for the rubric routing fix."""
+        from patentlint.rubric import compute_rubric_grade, detect_has_drawings, flatten_checks_from_lists
+        result = analyze_bytes(_build_epc_full_length(), "epc_patent.docx", Jurisdiction.EPC)
+        report = result.to_report_data()
+        has_drawings = detect_has_drawings(
+            figures_count=report.figure_count,
+            figure_refs=None,
+        )
+        all_checks = flatten_checks_from_lists(
+            report.specification_checks,
+            report.claims_checks,
+            report.abstract_checks,
+            report.drawings_checks,
+        )
+        grade = compute_rubric_grade(
+            jurisdiction=result.jurisdiction,
+            all_checks=all_checks,
+            has_drawings=has_drawings,
+        )
+        # Every rubric section must be marked applicable (none are N/A
+        # because the fixture has drawings + claims + abstract)
+        applicable_sections = [s for s in grade.section_grades if s.applicable]
+        assert len(applicable_sections) >= 4, (
+            f"Expected ≥4 applicable rubric sections, got {len(applicable_sections)}"
+        )
+        # Claims rubric section should have non-zero check counts — if
+        # rubric routing was broken, all claims would have routed into
+        # Specification and this would be zero.
+        from patentlint.rubric import RubricSection
+        claims_section = next((s for s in grade.section_grades if s.section == RubricSection.CLAIMS), None)
+        assert claims_section is not None, "CLAIMS rubric section missing"
+        total_claims_checks = claims_section.fix_count + claims_section.review_count + claims_section.pass_count
+        assert total_claims_checks > 0, (
+            f"CLAIMS rubric section is empty (fix={claims_section.fix_count}, "
+            f"review={claims_section.review_count}, pass={claims_section.pass_count}) — "
+            f"rubric routing for EPC checks is likely broken"
+        )
+
+    def test_g6_walker_checks_route_to_ab_ss_rubric(self):
+        """EPC walker findings (antecedent + spec support) must route into
+        the ANTECEDENT_SPEC_SUPPORT rubric section, not into CLAIMS. Regression
+        guard for the EPC prefix added to _ANTECEDENT_SPEC_SUPPORT_KEY_PREFIXES."""
+        from patentlint.rubric import compute_rubric_grade, detect_has_drawings, flatten_checks_from_lists, RubricSection
+        result = analyze_bytes(_build_epc_full_length(), "epc_patent.docx", Jurisdiction.EPC)
+        report = result.to_report_data()
+        has_drawings = detect_has_drawings(
+            figures_count=report.figure_count,
+            figure_refs=None,
+        )
+        all_checks = flatten_checks_from_lists(
+            report.specification_checks,
+            report.claims_checks,
+            report.abstract_checks,
+            report.drawings_checks,
+        )
+        grade = compute_rubric_grade(
+            jurisdiction=result.jurisdiction,
+            all_checks=all_checks,
+            has_drawings=has_drawings,
+        )
+        # AB+SS section should have ≥2 emissions (antecedent.pass + specSupport.pass
+        # on clean fixture)
+        ab_ss = next((s for s in grade.section_grades if s.section == RubricSection.ANTECEDENT_SPEC_SUPPORT), None)
+        assert ab_ss is not None, "ANTECEDENT_SPEC_SUPPORT rubric section missing"
+        total = ab_ss.fix_count + ab_ss.review_count + ab_ss.pass_count
+        assert total >= 2, (
+            f"AB+SS rubric section has {total} checks — expected ≥2 "
+            f"(antecedent + spec_support). EPC walker routing is broken."
+        )
