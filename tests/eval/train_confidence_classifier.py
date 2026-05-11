@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Path 5 ML — train classifier to identify discriminating walker signals.
 
 Trains a sklearn DecisionTreeClassifier on the Phase 1 supplement_v2

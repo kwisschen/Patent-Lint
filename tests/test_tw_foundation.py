@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Tests for Phase 7A: TW jurisdiction foundation (enum, model, pipeline, CLI)."""
 
 from __future__ import annotations

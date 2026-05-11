@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Jurisdiction-mismatch detection (Issue #9 / ADR-082 revisited).
 
 When a user selects jurisdiction A but uploads a draft from jurisdiction B,

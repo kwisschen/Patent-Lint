@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Shared detection-reason codes used by the three jurisdiction detectors.
 
 When :func:`detect_patent_document` / ``_cn`` / ``_tw`` rejects a document,

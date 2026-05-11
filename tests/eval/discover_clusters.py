@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Cluster-discovery tool for Phase 3 walker recall mining.
 
 Reads a `phase2b_results*.json` ensemble-verdict file, extracts every

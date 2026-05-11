@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025 Christopher Chen
+// Copyright (c) 2025–2026 Christopher Chen
 //
 // StatusPill — single source of truth for PASS / REVIEW / FIX / attention
 // chips across PatentLint. Replaces 7 inline implementations that all

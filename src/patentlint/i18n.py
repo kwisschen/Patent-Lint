@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """i18n helper — loads frontend locale JSON and provides translation.
 
 Single source of truth is ``frontend/src/i18n/locales/*.json``. In a

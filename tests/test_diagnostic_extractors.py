@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Per-script context-window sanity for the report-modal preview.
 
 These values are a privacy-facing contract: the modal preview shows the

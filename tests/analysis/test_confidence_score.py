@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Tests for `compute_confidence_score` v4 (R58).
 
 V4 weights are ML-distilled from logistic regression on 19,645

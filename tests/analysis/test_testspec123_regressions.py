@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Regression tests grounded in TestSpec123.docx (user-supplied US fixture).
 
 The fixture lives in the user's iCloud Test Cases folder and is not

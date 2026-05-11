@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Pytest gate for the real-drafter audit harness.
 
 Wraps ``tests/eval/real_drafter_audit.py``'s fixture set as a parametrized

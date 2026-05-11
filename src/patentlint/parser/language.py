@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Shared language-script helpers for jurisdiction detection.
 
 Used by :func:`detect_patent_document` (US), :func:`detect_patent_document_cn`

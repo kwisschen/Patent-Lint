@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Tests for the leading qualifier strip (ADR-095 addendum 2026-04-09)."""
 
 from __future__ import annotations

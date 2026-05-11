@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Phase B3 — R21-analog DYM quality-reject filter for the TW walker.
 
 Covers the three filters in ``_dym_quality_reject_tw``:

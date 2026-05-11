@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025 Christopher Chen
+// Copyright (c) 2025–2026 Christopher Chen
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
