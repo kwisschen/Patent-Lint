@@ -7,7 +7,8 @@
     "us": "US Patent",
     "cn": "CN Patent",
     "tw": "TW Patent",
-    "label": "Region"
+    "label": "Region",
+    "epc": "EPÜ-Patent"
   },
   "dropzone": {
     "tagline": "Prüfen Sie Ihre Beschreibung automatisch gegen {{count}} USPTO-Ausarbeitungsregeln.",
@@ -113,7 +114,8 @@
   "section112": {
     "title": "§ 112 Analyse",
     "titleTw": "Rückbezugs-Analyse",
-    "titleTwSpec": "§ 26(3) Analyse"
+    "titleTwSpec": "§ 26(3) Analyse",
+    "titleEpc": "Art. 84 EPÜ — Analyse"
   },
   "results": {
     "nonPatentWarning": "Dieses Dokument ist möglicherweise keine US-Patentbeschreibung",

@@ -20,7 +20,12 @@ import { Download, RotateCcw, ShieldCheck } from 'lucide-react'
 import { useNetworkMonitor } from '../hooks/useNetworkMonitor'
 import { getJurisdictionConfig, JURISDICTION_COLORS } from '../lib/jurisdictionConfig'
 
-const JURISDICTION_I18N = { US: 'jurisdiction.us', CN: 'jurisdiction.cn', TW: 'jurisdiction.tw' }
+const JURISDICTION_I18N = {
+  US: 'jurisdiction.us',
+  CN: 'jurisdiction.cn',
+  TW: 'jurisdiction.tw',
+  EPC: 'jurisdiction.epc',
+}
 
 /**
  * Consolidate claims_checks to reduce visual noise:
