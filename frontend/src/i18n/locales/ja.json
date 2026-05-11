@@ -113,7 +113,8 @@
   "section112": {
     "title": "§ 112 分析",
     "titleTw": "先行詞分析",
-    "titleTwSpec": "§26 第3項分析"
+    "titleTwSpec": "§26 第3項分析",
+    "titleEpc": "第84条 EPC 解析"
   },
   "results": {
     "nonPatentWarning": "この文書は米国特許明細書ではない可能性があります",
@@ -626,7 +627,63 @@
     "builderSister": "その姉妹プロジェクトである Agentic Patent Analyst は、オープンソースの LangGraph ワークフローで、拒絶理由通知を読み解き、各拒絶理由を吟味し、意見書・補正書の戦略を起草します。",
     "licenseNote": "PatentLint は個人利用が無料で、PolyForm-Strict-1.0.0 のもとソースを公開しています。完全なソースコードは GitHub にあります。",
     "tableFootnote": "2026年4月時点。両ツールとも継続的に更新される可能性があります。",
-    "twTableFootnote": "TIPO の検査項目は「專利申請文件輔助偵錯系統：功能介紹與使用指南」(2023.5.30 版) に基づき照合。TIPO 偵錯系統 は実用新案出願のみ対応；PatentLint は実用新案と発明の両方に対応します。両ツールとも継続的に更新される可能性があります。"
+    "twTableFootnote": "TIPO の検査項目は「專利申請文件輔助偵錯系統：功能介紹與使用指南」(2023.5.30 版) に基づき照合。TIPO 偵錯系統 は実用新案出願のみ対応；PatentLint は実用新案と発明の両方に対応します。両ツールとも継続的に更新される可能性があります。",
+    "epcTitle": "PatentLint EPC 特許明細書チェック",
+    "epcSubtitle": "EPC ドラフトルール（第78条、施行規則第41-47条、EPO 審査ガイドライン F 部）に基づく {{count}} 項目の構造的チェック。",
+    "epcFeatures": {
+      "title": "EPC 特許インタラクティブ解析",
+      "claimTree": {
+        "title": "請求項依存ツリー + 第84条ウォーカー",
+        "description": "請求項間の依存ツリーに、先行詞および明細書のサポート ウォーカー（EPC 第84条）を組み合わせます。EPC 固有の依存表現——「any preceding claim」「any one of claims N to M」——は解析時に事前展開されます。"
+      },
+      "specAbstract": {
+        "title": "明細書および要約書の構造",
+        "description": "施行規則第42(1)条が定める明細書サブセクションの順序（技術分野 → 背景技術 → 発明の概要 → 図面の簡単な説明 → 詳細な説明）、図面参照の一貫性（第46(2)(h)条）、参照符号の一貫性（第43(7)条、第46(2)(h)条）、および 50-150 語の要約書字数制限（第47(2)条、EPO 審査ガイドライン F-II § 2.3）。"
+      },
+      "twoPartForm": {
+        "title": "二部形式 + Markush + 第43(2)条",
+        "description": "施行規則第43(1)条の二部形式（を特徴とする）を検出し、Markush 群形式（EPO 審査ガイドライン F-IV § 4.20）を確認し、同一カテゴリーで独立請求項が複数ある場合は第43(2)条の確認事項を通知します。"
+      }
+    },
+    "epcGroups": {
+      "specification": "明細書",
+      "claims": "請求項",
+      "drawings": "図面",
+      "abstract": "要約書"
+    },
+    "epcChecks": {
+      "requiredSections": "必要セクション（第78(1)条、施行規則第41条、第42(1)条）",
+      "sectionOrdering": "セクション順序（施行規則第42(1)条が定めるサブセクション順序）",
+      "paragraphNumbering": "段落番号（推奨チェック）",
+      "paragraphEnding": "段落末尾の句読点",
+      "titleRequired": "発明の名称（施行規則第41(2)(b)条）",
+      "figureRefConsistency": "図面参照の一貫性（施行規則第46(2)(h)条）",
+      "numeralConsistency": "参照符号の一貫性（施行規則第43(7)条、第46(2)(h)条）",
+      "claimReferenceInSpec": "明細書で請求項を引用してはならない（EPO 審査ガイドライン F-IV § 4.3）",
+      "sequential": "請求項の連続番号（施行規則第43(5)条）",
+      "dependencyFormat": "従属形式（施行規則第43(4)条）",
+      "selfDependent": "請求項は自己従属してはならない",
+      "forwardDependency": "請求項は後方従属してはならない",
+      "singleSentence": "請求項は一文で記載する（施行規則第43(4)条、審査ガイドライン F-IV § 4.10）",
+      "refSignsInParens": "参照符号は括弧で囲む（施行規則第43(7)条）",
+      "subjectConsistency": "請求項主題の一貫性（審査ガイドライン F-IV § 3.4）",
+      "transitionPhrase": "移行句——comprising / consisting of / を特徴とする（審査ガイドライン F-IV § 4.13）",
+      "claimsSpecReference": "請求項は明細書または図面を引用してはならない（施行規則第43(6)条）",
+      "multiDepOnMultiDep": "多項従属請求項は他の多項従属請求項に従属してはならない（施行規則第43(4)条）",
+      "markushFormat": "Markush 群形式（審査ガイドライン F-IV § 4.20）",
+      "independentClaimCount": "カテゴリー別の独立請求項数（施行規則第43(2)、43(3)条、推奨）",
+      "twoPartForm": "二部形式（施行規則第43(1)条、推奨）",
+      "antecedentBasis": "先行詞ウォーカー——第84条、審査ガイドライン F-IV § 4.5",
+      "specSupport": "明細書のサポート——第84条（明細書サポート要件）",
+      "restrictiveAbsolutes": "制限的絶対表現（審査ガイドライン F-IV § 4.7、推奨）",
+      "punctuation": "請求項の句読点（審査ガイドライン F-IV § 4.10）",
+      "figuresSequential": "図面の連続番号（施行規則第46(2)(a)条）",
+      "singleFigureLabel": "図面が一つのみの場合のラベル形式（審査ガイドライン F-V § 1.2）",
+      "priorArtLabeling": "従来技術の図面の表示（施行規則第46(2)(h)条）",
+      "wordCount": "要約書の字数（50-150）——施行規則第47(2)条、審査ガイドライン F-II § 2.3",
+      "structure": "要約書の構造——単一段落、請求項スタイルの表現を避ける、効能的言辞を避ける"
+    },
+    "epcTableFootnote": "データ基準：2026年5月、v1 Beta。v1 は英語 EPC ドラフトのみ対応；DE/FR チェックエンジンは今後開発予定。ウォーカー類チェック（先行詞、明細書のサポート）は実コーパスでの FP 率測定後に格上げ予定のため、現在は REVIEW ステータスで提供しています。"
   },
   "commercial": {
     "hero": {
