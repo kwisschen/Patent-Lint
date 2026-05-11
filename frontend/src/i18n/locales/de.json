@@ -626,7 +626,63 @@
     "builderSister": "Das Schwesterprojekt, der Agentic Patent Analyst, ist ein quelloffener LangGraph-Workflow, der Prüfungsbescheide liest, jeden Zurückweisungsgrund beurteilt und Argumentations- oder Änderungsstrategien entwirft.",
     "licenseNote": "PatentLint ist für die individuelle Nutzung kostenlos und quelloffen unter PolyForm-Strict-1.0.0. Der vollständige Quellcode liegt auf GitHub.",
     "tableFootnote": "Stand: April 2026. Beide Systeme können weiterentwickelt werden.",
-    "twTableFootnote": "TIPO-Abdeckung abgeglichen mit 專利申請文件輔助偵錯系統 — 功能介紹與使用指南 (Ausgabe 30.05.2023). TIPO 偵錯系統 unterstützt nur Gebrauchsmuster-Anmeldungen; PatentLint unterstützt Gebrauchsmuster und Erfindungspatente. Beide Systeme können weiterentwickelt werden."
+    "twTableFootnote": "TIPO-Abdeckung abgeglichen mit 專利申請文件輔助偵錯系統 — 功能介紹與使用指南 (Ausgabe 30.05.2023). TIPO 偵錯系統 unterstützt nur Gebrauchsmuster-Anmeldungen; PatentLint unterstützt Gebrauchsmuster und Erfindungspatente. Beide Systeme können weiterentwickelt werden.",
+    "epcTitle": "PatentLint EPÜ-Prüfungen für Patentanmeldungen",
+    "epcSubtitle": "{{count}} strukturelle Prüfungen gegen EPÜ-Regelwerk (Art. 78 / Regel 41-47 + EPA-Richtlinien Teil F).",
+    "epcFeatures": {
+      "title": "Interaktive EPÜ-Patentanalyse",
+      "claimTree": {
+        "title": "Anspruchsbaum + Art.-84-Walker",
+        "description": "Abhängigkeitsbaum für Ansprüche mit englischen Rückbezugs- und Stützungs-Walkern (Art. 84 EPÜ). EPÜ-spezifische Rückbezugsformen — „any preceding claim\", „any one of claims N to M\" — werden zum Parse-Zeitpunkt vor-extrahiert und expandiert."
+      },
+      "specAbstract": {
+        "title": "Beschreibungs- und Zusammenfassungs-Struktur",
+        "description": "Reihenfolge der Regel-42(1)-Teilabschnitte (technisches Gebiet → Stand der Technik → Darstellung der Erfindung → Beschreibung der Zeichnungen → detaillierte Beschreibung), Konsistenz der Figurenverweise (Regel 46(2)(h)), Konsistenz der Bezugszeichen (Regel 43(7) + Regel 46(2)(h)) und 50-150-Wort-Grenze für Zusammenfassung (Regel 47(2) + EPA-Richtlinien F-II § 2.3)."
+      },
+      "twoPartForm": {
+        "title": "Zweiteilige Form + Markush + R. 43(2)",
+        "description": "Erkennt zweiteilige Form gemäß Regel 43(1) („dadurch gekennzeichnet, dass\"), prüft Markush-Formel-Format (EPA-Richtlinien F-IV § 4.20) und meldet mehr als einen unabhängigen Anspruch je Kategorie für Regel-43(2)-Prüfung."
+      }
+    },
+    "epcGroups": {
+      "specification": "Beschreibung",
+      "claims": "Ansprüche",
+      "drawings": "Zeichnungen",
+      "abstract": "Zusammenfassung"
+    },
+    "epcChecks": {
+      "requiredSections": "Erforderliche Abschnitte (Art. 78(1) + Regel 41 + Regel 42(1) EPÜ)",
+      "sectionOrdering": "Abschnittsreihenfolge (Regel 42(1) EPÜ)",
+      "paragraphNumbering": "Absatznummerierung (Hinweis)",
+      "paragraphEnding": "Absatzende-Interpunktion",
+      "titleRequired": "Titel erforderlich (Regel 41(2)(b) EPÜ)",
+      "figureRefConsistency": "Konsistenz der Figurenverweise (Regel 46(2)(h) EPÜ)",
+      "numeralConsistency": "Konsistenz der Bezugszeichen (Regel 43(7) + Regel 46(2)(h) EPÜ)",
+      "claimReferenceInSpec": "Keine Anspruchsverweise in der Beschreibung (EPA-Richtlinien F-IV § 4.3)",
+      "sequential": "Ansprüche fortlaufend nummeriert (Regel 43(5) EPÜ)",
+      "dependencyFormat": "Rückbezugsformat (Regel 43(4) EPÜ)",
+      "selfDependent": "Selbst-rückbezogene Ansprüche",
+      "forwardDependency": "Vorwärts-Rückbezug",
+      "singleSentence": "Ein Satz pro Anspruch (Regel 43(4) + Richtlinien F-IV § 4.10)",
+      "refSignsInParens": "Bezugszeichen in Klammern (Regel 43(7) EPÜ)",
+      "subjectConsistency": "Konsistenz des Anspruchsgegenstands (Richtlinien F-IV § 3.4)",
+      "transitionPhrase": "Übergangsbegriff — umfassend / bestehend aus / dadurch gekennzeichnet, dass (Richtlinien F-IV § 4.13)",
+      "claimsSpecReference": "Ansprüche dürfen nicht auf Beschreibung / Zeichnungen verweisen (Regel 43(6) EPÜ)",
+      "multiDepOnMultiDep": "Mehrfachrückbezug auf Mehrfachrückbezug unzulässig (Regel 43(4) EPÜ)",
+      "markushFormat": "Markush-Formel-Format (Richtlinien F-IV § 4.20)",
+      "independentClaimCount": "Anzahl unabhängiger Ansprüche je Kategorie (Regel 43(2) + 43(3) EPÜ, Hinweis)",
+      "twoPartForm": "Zweiteilige Form (Regel 43(1) EPÜ, Hinweis)",
+      "antecedentBasis": "Rückbezug-Walker — Art. 84 EPÜ + Richtlinien F-IV § 4.5",
+      "specSupport": "Stützung in der Beschreibung — Art. 84 EPÜ (Stützungserfordernis)",
+      "restrictiveAbsolutes": "Restriktive Absolutheiten (Richtlinien F-IV § 4.7, Hinweis)",
+      "punctuation": "Anspruchs-Interpunktion (Richtlinien F-IV § 4.10)",
+      "figuresSequential": "Figuren fortlaufend nummeriert (Regel 46(2)(a) EPÜ)",
+      "singleFigureLabel": "Bezeichnung bei nur einer Figur (Richtlinien F-V § 1.2)",
+      "priorArtLabeling": "Kennzeichnung von Stand-der-Technik-Figuren (Regel 46(2)(h) EPÜ)",
+      "wordCount": "Wortanzahl der Zusammenfassung (50-150) — Regel 47(2) + Richtlinien F-II § 2.3",
+      "structure": "Struktur der Zusammenfassung — ein Absatz, keine anspruchsartigen Formulierungen, keine wertenden Aussagen"
+    },
+    "epcTableFootnote": "Stand: Mai 2026; v1 Beta. EPÜ nur mit englischsprachiger Eingabe in v1; DE/FR-Prüfmaschinen zurückgestellt. Walker-Prüfungen (Rückbezug + Stützung) liefern PRÜFEN bis zur realen Korpus-FP-Messung."
   },
   "commercial": {
     "hero": {
