@@ -663,6 +663,219 @@ def check_two_part_form_epc(claims: list[Claim]) -> list[CheckItem]:
     )]
 
 
+# ---------------------------------------------------------------------------
+# G6 (§ 112-equivalent) checks
+# ---------------------------------------------------------------------------
+
+
+# Restrictive absolutes in claims (Guidelines F-IV § 4.7 — terms that
+# over-qualify a limitation can create indefiniteness). Mirrors the US
+# regex; EPO Guidelines align with MPEP § 2173.01 on this language.
+_EPC_RESTRICTIVE_ABS_RE = re.compile(
+    r"\b(always|never|must|solely|every|required|essential|critical|key|vital)\b",
+    re.IGNORECASE,
+)
+
+
+def check_claim_punctuation_epc(claims: list[Claim]) -> list[CheckItem]:
+    """Verify claim punctuation per Guidelines F-IV § 4.10.
+
+    Sub-checks (port from US claim-punctuation logic — English regex
+    works identically):
+      - Missing final period
+      - Extra / misplaced periods inside the claim body
+    """
+    from patentlint.analysis.claims import find_extra_periods, find_missing_periods
+
+    results: list[CheckItem] = []
+
+    for claim_id in find_missing_periods(claims):
+        results.append(CheckItem(
+            status="amend",
+            message=f"Claim {claim_id} does not end with a period.",
+            message_key="check.epc.claims.punctuation.missingPeriod.amend",
+            details_params={"claimNumber": str(claim_id)},
+            reference="EPO Guidelines F-IV § 4.10",
+            diagnostics=_dx(flagged_claim_id=claim_id, total_claims=len(claims)),
+        ))
+
+    for claim_id in find_extra_periods(claims):
+        results.append(CheckItem(
+            status="amend",
+            message=f"Claim {claim_id} contains extra or misplaced periods.",
+            message_key="check.epc.claims.punctuation.extraPeriod.amend",
+            details_params={"claimNumber": str(claim_id)},
+            reference="EPO Guidelines F-IV § 4.10",
+            diagnostics=_dx(flagged_claim_id=claim_id, total_claims=len(claims)),
+        ))
+
+    if not results:
+        results.append(CheckItem(
+            status="pass",
+            message="All claims end with a single period.",
+            message_key="check.epc.claims.punctuation.pass",
+            reference="EPO Guidelines F-IV § 4.10",
+        ))
+    return results
+
+
+def check_restrictive_absolutes_epc(claims: list[Claim]) -> list[CheckItem]:
+    """Advisory check on restrictive absolutes in claims per Guidelines F-IV § 4.7.
+
+    REVIEW status. EPO Guidelines F-IV § 4.7 flags absolute terms
+    ("must", "essential", "required", etc.) as potentially creating
+    indefiniteness. Detection is a regex pass over each claim body.
+    """
+    flagged: list[int] = []
+    for c in claims:
+        if _EPC_RESTRICTIVE_ABS_RE.search(c.text):
+            flagged.append(c.id)
+    if flagged:
+        return [CheckItem(
+            status="verify",
+            message=(
+                f"Claim(s) {', '.join(str(i) for i in flagged)} contain restrictive "
+                f"absolutes (must / essential / required / etc.). Verify per "
+                f"Guidelines F-IV § 4.7."
+            ),
+            message_key="check.epc.claims.restrictiveAbsolutes.verify",
+            details=", ".join(str(i) for i in flagged),
+            reference="EPO Guidelines F-IV § 4.7",
+            diagnostics=_dx(
+                flagged_count=len(flagged),
+                flagged_claim_id=flagged[0],
+            ),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="No restrictive absolutes detected in claims.",
+        message_key="check.epc.claims.restrictiveAbsolutes.pass",
+        reference="EPO Guidelines F-IV § 4.7",
+    )]
+
+
+def check_antecedent_basis_epc(claims: list[Claim]) -> tuple[list[CheckItem], list[dict]]:
+    """Antecedent basis walker (port from US) per Art. 84 + Guidelines F-IV § 4.5.
+
+    REVIEW status (locked decision: ADR-154-style promotion to FIX only
+    after real-corpus FP measurement). Reuses the US walker because EPC
+    claims are English and share the "the X" / "a X" structure with US
+    claims. EPC-specific dep-preamble variants ("any preceding claim",
+    "any one of claims N to M") are pre-stripped from each claim's text
+    before walking so the US dep-preamble exclusion logic doesn't get
+    confused — they still inform the dependency graph via the parser.
+
+    Returns (summary CheckItem list, raw issues for AnalysisResult).
+    """
+    from patentlint.analysis.claims import check_antecedent_basis
+
+    # Pre-strip EPC-specific dep-preamble phrases so the US walker's
+    # internal regex doesn't mis-classify them as antecedent references.
+    epc_dep_pattern = re.compile(
+        r"\b(?:"
+        r"according\s+to\s+any\s+preceding\s+claim"
+        r"|according\s+to\s+any(?:\s+one)?\s+of\s+claims?\s+\d+(?:\s*(?:to|and|or|-)\s*\d+)?"
+        r"|any\s+preceding\s+claim"
+        r"|any(?:\s+one)?\s+of\s+claims?\s+\d+(?:\s*(?:to|and|or|-)\s*\d+)?"
+        r")\b",
+        re.IGNORECASE,
+    )
+    pre_stripped_claims = [
+        Claim(
+            id=c.id,
+            text=epc_dep_pattern.sub("according to claim 1", c.text),
+            independent=c.independent,
+            multiple_dependent=c.multiple_dependent,
+            method_claim=c.method_claim,
+            dependencies=c.dependencies,
+            quoted_references=c.quoted_references,
+        )
+        for c in claims
+    ]
+    issues = check_antecedent_basis(pre_stripped_claims)
+    # Re-key any per-finding diagnostics to the EPC namespace
+    for issue in issues:
+        if isinstance(issue, dict):
+            issue.setdefault("jurisdiction", "EPC")
+
+    if issues:
+        summary = [CheckItem(
+            status="verify",
+            message=(
+                f"Antecedent-basis walker flagged {len(issues)} possible issue(s). "
+                f"Verify per Art. 84 EPC + Guidelines F-IV § 4.5."
+            ),
+            message_key="check.epc.claims.antecedentBasis.verify",
+            reference="Art. 84 EPC; EPO Guidelines F-IV § 4.5",
+            diagnostics=_dx(issue_count=len(issues)),
+        )]
+    else:
+        summary = [CheckItem(
+            status="pass",
+            message="No antecedent-basis issues detected by walker.",
+            message_key="check.epc.claims.antecedentBasis.pass",
+            reference="Art. 84 EPC; EPO Guidelines F-IV § 4.5",
+        )]
+    return summary, issues
+
+
+def check_spec_support_epc(claims: list[Claim], spec_text: str) -> tuple[list[CheckItem], list]:
+    """Spec-support walker per Art. 84 EPC (support requirement).
+
+    REVIEW status. Reuses the US check_spec_support which extracts
+    claim terms and checks them against the spec body. EPC Art. 84
+    ("the claims ... shall be supported by the description") expresses
+    the same requirement as US § 112(a) written description.
+    """
+    from patentlint.analysis.claims import check_spec_support
+
+    unsupported = check_spec_support(claims, spec_text)
+    if unsupported:
+        summary = [CheckItem(
+            status="verify",
+            message=(
+                f"Spec-support walker flagged {len(unsupported)} possible "
+                f"unsupported claim term(s). Verify per Art. 84 EPC."
+            ),
+            message_key="check.epc.claims.specSupport.verify",
+            reference="Art. 84 EPC",
+            diagnostics=_dx(unsupported_count=len(unsupported)),
+        )]
+    else:
+        summary = [CheckItem(
+            status="pass",
+            message="No unsupported claim terms detected by walker.",
+            message_key="check.epc.claims.specSupport.pass",
+            reference="Art. 84 EPC",
+        )]
+    return summary, unsupported
+
+
+def run_g6_section_112_checks(
+    claims: list[Claim],
+    spec_text: str,
+) -> tuple[list[CheckItem], list[dict], list]:
+    """Run all G6 § 112-equivalent checks.
+
+      1. claimPunctuation
+      2. restrictiveAbsolutes
+      3. antecedentBasis (walker)
+      4. specSupport (walker)
+
+    Returns (check_items, antecedent_basis_issues, unsupported_terms).
+    Walker outputs feed AnalysisResult.antecedent_basis_issues and
+    AnalysisResult.unsupported_terms alongside the summary CheckItem.
+    """
+    results: list[CheckItem] = []
+    results.extend(check_claim_punctuation_epc(claims))
+    results.extend(check_restrictive_absolutes_epc(claims))
+    ab_summary, ab_issues = check_antecedent_basis_epc(claims)
+    results.extend(ab_summary)
+    ss_summary, ss_terms = check_spec_support_epc(claims, spec_text)
+    results.extend(ss_summary)
+    return results, ab_issues, ss_terms
+
+
 def run_g5_claims_cross_jurisdiction_checks(claims: list[Claim]) -> list[CheckItem]:
     """Run all G5 claims-cross-jurisdiction checks.
 

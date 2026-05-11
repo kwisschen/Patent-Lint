@@ -107,6 +107,7 @@ def _run_epc_pipeline(
     from patentlint.analysis.epc_claims import (
         run_g4_claims_structure_checks,
         run_g5_claims_cross_jurisdiction_checks,
+        run_g6_section_112_checks,
     )
     from patentlint.analysis.epc_drawings import run_g3_drawings_checks
     from patentlint.analysis.epc_specification import (
@@ -117,6 +118,7 @@ def _run_epc_pipeline(
     from patentlint.parser.sections_epc import (
         extract_abstract_section_epc,
         extract_claims_section_epc,
+        extract_description_section_epc,
         extract_title_epc,
     )
 
@@ -129,8 +131,11 @@ def _run_epc_pipeline(
     spec_checks = run_g1_spec_structure_checks(full_text)
     spec_checks.extend(run_g2_spec_content_checks(full_text))
     drawings_checks = run_g3_drawings_checks(full_text)
+    description_text = extract_description_section_epc(full_text)
     claims_checks = run_g4_claims_structure_checks(claims)
     claims_checks.extend(run_g5_claims_cross_jurisdiction_checks(claims))
+    g6_checks, ab_issues, ss_terms = run_g6_section_112_checks(claims, description_text)
+    claims_checks.extend(g6_checks)
     abstract_checks = run_g7_abstract_checks(abstract_text)
 
     independent_count = sum(1 for c in claims if c.independent)
@@ -148,6 +153,8 @@ def _run_epc_pipeline(
         claims=claims,
         independent_claims_count=independent_count,
         dependent_claims_count=dependent_count,
+        antecedent_basis_issues=ab_issues,
+        unsupported_terms=ss_terms,
         epc_specification_checks=spec_checks,
         epc_drawings_checks=drawings_checks,
         epc_claims_checks=claims_checks,
