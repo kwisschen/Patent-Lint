@@ -1962,3 +1962,135 @@ class TestEpcFullLength:
             f"AB+SS rubric section has {total} checks — expected ≥2 "
             f"(antecedent + spec_support). EPC walker routing is broken."
         )
+
+
+def _build_epc_defective() -> bytes:
+    """EPC fixture with multiple deliberate defects to exercise amend paths.
+
+    Defects designed to trigger specific EPC checks:
+      - Missing title (Rule 41(2)(b) violation)
+      - Out-of-order sections — BACKGROUND ART before TECHNICAL FIELD
+        (Rule 42(1) violation)
+      - Section omission — no Abstract
+      - Figure gap — Fig. 1, Fig. 3, Fig. 4 (Rule 46(2)(a) violation)
+      - Bare numerals in claim body — "processor 12" without parens
+        (Rule 43(7) violation)
+      - Forward dependency — claim 2 depends on claim 5
+      - Claim references spec body — "see paragraph 5" in claim
+        (Rule 43(6) violation)
+      - Description references claim — "as claimed in claim 1"
+        (EPO Guidelines F-IV § 4.3 violation)
+    """
+    doc = Document()
+    _add_us_numbering(doc)
+
+    # NO title line — straight into a section header (out of order)
+    headers = {
+        "BACKGROUND ART",
+        "TECHNICAL FIELD",
+        "BRIEF DESCRIPTION OF THE DRAWINGS",
+        "DETAILED DESCRIPTION OF THE EMBODIMENTS",
+        "CLAIMS",
+    }
+    spec_paragraphs = [
+        "BACKGROUND ART",
+        "Adaptive filters are well known.",
+        "TECHNICAL FIELD",
+        "The invention relates to adaptive filters, as claimed in claim 1.",
+        "BRIEF DESCRIPTION OF THE DRAWINGS",
+        "Fig. 1 shows the apparatus.",
+        "Fig. 3 shows a flow.",
+        "Fig. 4 shows results.",
+        "DETAILED DESCRIPTION OF THE EMBODIMENTS",
+        "Referring to Fig. 1, an apparatus 10 has a processor 12.",
+    ]
+    for text in spec_paragraphs:
+        para = doc.add_paragraph(text)
+        if text not in headers:
+            _set_para_num(para, "1")
+
+    doc.add_paragraph("CLAIMS")
+
+    claims = [
+        "An apparatus comprising a processor and a memory.",
+        "The apparatus of claim 5, wherein the processor is dual-core.",
+        "The apparatus of claim 1, wherein the apparatus comprises a processor 12 and a memory 14.",
+        "The apparatus of claim 1, see paragraph 5, wherein the memory stores parameters.",
+        "The apparatus of claim 1.",
+    ]
+    for text in claims:
+        para = doc.add_paragraph(text)
+        _set_para_num(para, "2")
+
+    # NO ABSTRACT section
+    return _doc_to_bytes(doc)
+
+
+class TestEpcMultiDefect:
+    """Defective-EPC-fixture suite — verifies amend paths fire + grade drops."""
+
+    def test_multiple_findings_emitted(self):
+        result = analyze_bytes(_build_epc_defective(), "defective.docx", Jurisdiction.EPC)
+        report = result.to_report_data()
+        all_checks = (
+            report.specification_checks
+            + report.claims_checks
+            + report.abstract_checks
+            + report.drawings_checks
+        )
+        amend_items = [c for c in all_checks if c.status == "amend"]
+        assert len(amend_items) >= 3, (
+            f"Expected ≥3 amend findings on a deliberately-defective fixture, "
+            f"got {len(amend_items)}: "
+            f"{[c.message_key for c in amend_items]}"
+        )
+
+    def test_required_sections_amend_fires(self):
+        """Missing Abstract should trigger requiredSections.amend."""
+        result = analyze_bytes(_build_epc_defective(), "defective.docx", Jurisdiction.EPC)
+        spec_keys = [c.message_key for c in result.epc_specification_checks]
+        assert "check.epc.spec.requiredSections.amend" in spec_keys, (
+            f"requiredSections.amend should fire on missing-Abstract fixture; "
+            f"saw {spec_keys}"
+        )
+
+    def test_section_ordering_amend_fires(self):
+        """BACKGROUND ART before TECHNICAL FIELD should trigger sectionOrdering.amend."""
+        result = analyze_bytes(_build_epc_defective(), "defective.docx", Jurisdiction.EPC)
+        spec_keys = [c.message_key for c in result.epc_specification_checks]
+        assert "check.epc.spec.sectionOrdering.amend" in spec_keys, (
+            f"sectionOrdering.amend should fire on out-of-order sections; "
+            f"saw {spec_keys}"
+        )
+
+    def test_figures_sequential_amend_fires(self):
+        """Fig. 1, 3, 4 (missing 2) should trigger figuresSequential.amend."""
+        result = analyze_bytes(_build_epc_defective(), "defective.docx", Jurisdiction.EPC)
+        drawings_keys = [c.message_key for c in result.epc_drawings_checks]
+        assert "check.epc.drawings.figuresSequential.amend" in drawings_keys, (
+            f"figuresSequential.amend should fire on gap-Fig fixture; "
+            f"saw {drawings_keys}"
+        )
+
+    def test_forward_dependency_amend_fires(self):
+        """Claim 2 depending on claim 5 should trigger forwardDependency.amend."""
+        result = analyze_bytes(_build_epc_defective(), "defective.docx", Jurisdiction.EPC)
+        claims_keys = [c.message_key for c in result.epc_claims_checks]
+        assert "check.epc.claims.forwardDependency.amend" in claims_keys, (
+            f"forwardDependency.amend should fire when c2 depends on c5; "
+            f"saw {claims_keys}"
+        )
+
+    def test_grade_drops_below_a(self):
+        """Multiple FIX findings should push the rubric grade below A range."""
+        result = analyze_bytes(_build_epc_defective(), "defective.docx", Jurisdiction.EPC)
+        if result.rubric_grade and result.rubric_grade.is_complete:
+            # Grade letter should be C+ or worse with this many defects.
+            # The completeness gate may also fire (missing abstract = empty
+            # in some classifiers), in which case is_complete is False and
+            # we don't assert on the letter.
+            assert result.rubric_grade.score < 90, (
+                f"Expected score < 90 on defective fixture (multiple FIX "
+                f"findings); got {result.rubric_grade.score} "
+                f"(letter {result.rubric_grade.letter})"
+            )
