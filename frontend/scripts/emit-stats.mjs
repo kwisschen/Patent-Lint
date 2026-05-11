@@ -55,8 +55,12 @@ function countChecks() {
     'TW Abstract': 'TW',
     'TW Cross-Reference': 'TW',
     'TW Drawings': 'TW',
+    'EPC Specification': 'EPC',
+    'EPC Claims': 'EPC',
+    'EPC Abstract': 'EPC',
+    'EPC Drawings': 'EPC',
   }
-  const counts = { US: 0, CN: 0, TW: 0 }
+  const counts = { US: 0, CN: 0, TW: 0, EPC: 0 }
   let current = null
   for (const line of text.split('\n')) {
     const headerMatch = line.match(/^## (.+?)(?:\s*\(.*\))?$/)
@@ -73,7 +77,7 @@ function countChecks() {
     if (first.includes('†')) continue
     counts[current] += 1
   }
-  const total = counts.US + counts.CN + counts.TW
+  const total = counts.US + counts.CN + counts.TW + counts.EPC
   return { total, perJurisdiction: counts }
 }
 
