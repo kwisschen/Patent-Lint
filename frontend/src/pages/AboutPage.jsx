@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025 Christopher Chen
+// Copyright (c) 2025–2026 Christopher Chen
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Check, Mail, ShieldCheck, Server, Linkedin } from 'lucide-react'
+import { Check, Mail, ShieldCheck, Server, Linkedin, Github } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
 import PageCTA from '../components/PageCTA'
 import { useCountUp } from '../hooks/useCountUp'
@@ -787,6 +787,7 @@ function BuilderStory({ t }) {
 
   const links = [
     { href: 'mailto:kwisschen@gmail.com', icon: Mail, label: 'Email' },
+    { href: 'https://github.com/kwisschen/Patent-Lint', icon: Github, label: 'GitHub' },
     { href: 'https://linkedin.com/in/kwisschen', icon: Linkedin, label: 'LinkedIn' },
   ]
 
@@ -825,6 +826,9 @@ function BuilderStory({ t }) {
           </a>
         ))}
       </div>
+      <p className="text-xs text-muted-foreground italic mt-6 leading-relaxed">
+        {t('about.licenseNote')}
+      </p>
     </section>
   )
 }

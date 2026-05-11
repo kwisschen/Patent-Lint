@@ -22,12 +22,12 @@
     <div id="root"></div>
     <!-- Stale-bundle recovery: after a deploy, a long-lived tab's cached
          index.html may reference a JS chunk whose file no longer exists
-         on Cloudflare Pages (the hash changed). Cloudflare then serves
-         index.html as the SPA fallback, so the browser expects JS but
-         gets HTML → "Failed to load module script: MIME text/html"
-         error and a blank page. This listener auto-reloads once if that
-         happens so the tab self-heals. sessionStorage guard prevents
-         a reload loop if the issue persists. -->
+         on the host (the hash changed). The host then serves index.html
+         as the SPA fallback, so the browser expects JS but gets HTML →
+         "Failed to load module script: MIME text/html" error and a blank
+         page. This listener auto-reloads once if that happens so the tab
+         self-heals. sessionStorage guard prevents a reload loop if the
+         issue persists. -->
     <script>
       window.addEventListener('error', function (event) {
         var target = event.target
