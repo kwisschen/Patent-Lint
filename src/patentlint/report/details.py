@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Pre-renders structured ``details_params`` fields, then translates.
 
 Python mirror of ``frontend/src/lib/detailsFormatter.js``. Most check

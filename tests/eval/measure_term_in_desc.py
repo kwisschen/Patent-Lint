@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Measure term_in_description signal direction on TW supplement_v2 corpus.
 
 Path 1 of TIPO-style hybrid measurement (2026-05-05). Joins:

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025 Christopher Chen
+// Copyright (c) 2025–2026 Christopher Chen
 //
 // Vercel Edge Function — anonymous error-report endpoint.
 // Reads payloads POSTed by ReportModal, validates origin + size + JSON

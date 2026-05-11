@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025 Christopher Chen
+// Copyright (c) 2025–2026 Christopher Chen
 //
 // Phase A — i18n presence check.
 //

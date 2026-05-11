@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Corpus-wide D1 mutation smoke test.
 
 Iterates every fixture × jurisdiction. For each, finds the strongest

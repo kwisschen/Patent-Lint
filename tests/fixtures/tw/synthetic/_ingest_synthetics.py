@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Ingest synthetic fixtures into TW harness manifest + labels.
 
 Phase A3 deliverable. Also re-runnable during Phase G when corpus grows

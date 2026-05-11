@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025 Christopher Chen
+// Copyright (c) 2025–2026 Christopher Chen
 //
 // /commercial — pricing + tier cards + FAQ for enterprise-deployment
 // licensing. Surface for the "PatentLint for enterprises" pitch (vector

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Phase 8c Stage 1.5 ground-truth claim-count audit.
 
 For each real CN .docx fixture in ``tests/fixtures/cn/local/``, this

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Fetch description bodies for TW supplement_v2 patents from Google Patents.
 
 Path 1 of the TIPO-style hybrid antecedent measurement (2026-05-05).

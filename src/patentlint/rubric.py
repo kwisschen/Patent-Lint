@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Scoring rubric — converts FIX/REVIEW/PASS findings into a deterministic grade.
 
 Reads the existing 109-check catalog (no new rules added). Buckets each

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025 Christopher Chen
+// Copyright (c) 2025–2026 Christopher Chen
 /* global __BUILD_HASH__ */
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'

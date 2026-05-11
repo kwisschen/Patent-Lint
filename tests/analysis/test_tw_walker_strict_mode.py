@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Phase 8b TW antecedent walker — strict_plural_reference_matching tests.
 
 Per ADR-095, the walker treats plural reference forms (該等X / 該些X)

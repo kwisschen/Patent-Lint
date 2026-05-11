@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025 Christopher Chen
+# Copyright (c) 2025–2026 Christopher Chen
 """Generate synthetic TW patent .docx fixtures for walker-mechanism coverage.
 
 Phase A2 deliverable: 9 committable .docx fixtures covering mechanism
