@@ -53,7 +53,7 @@ export default function SummaryBar({ data, animate = false }) {
 
   return (
     <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-      {data.jurisdiction === 'US' && data.claim_trees?.length > 0 && (
+      {(data.jurisdiction === 'US' || data.jurisdiction === 'EPC') && data.claim_trees?.length > 0 && (
         <FrostCard tier="resting" interactive className="p-4">
           <p className="text-sm text-muted-foreground">{t('summary.claimCategories')}</p>
           <div className="mt-1 space-y-0.5">
