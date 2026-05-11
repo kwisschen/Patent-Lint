@@ -103,7 +103,10 @@ def _run_epc_pipeline(
       G6 (§ 112-equivalent, walker): pending
       G7 (abstract):       pending
     """
-    from patentlint.analysis.epc_specification import run_g1_spec_structure_checks
+    from patentlint.analysis.epc_specification import (
+        run_g1_spec_structure_checks,
+        run_g2_spec_content_checks,
+    )
     from patentlint.parser.sections_epc import (
         extract_abstract_section_epc,
         extract_title_epc,
@@ -114,6 +117,7 @@ def _run_epc_pipeline(
     abstract_word_count = len(abstract_text.split()) if abstract_text else 0
 
     spec_checks = run_g1_spec_structure_checks(full_text)
+    spec_checks.extend(run_g2_spec_content_checks(full_text))
 
     result = AnalysisResult(
         jurisdiction=Jurisdiction.EPC,
