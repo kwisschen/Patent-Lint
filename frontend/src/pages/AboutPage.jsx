@@ -176,6 +176,62 @@ const CN_DRAWINGS_CHECKS = [
   'figuresSequential',               // 审查指南
 ]
 
+// EPC table: single-column "what PatentLint covers" framing — no public
+// EPO pre-filing debug system to compare against (EPO Form 1001 is filing
+// metadata only). v1 beta — 30 user-facing checks; the figureCount † row
+// is informational and excluded from the marketing table per US/CN/TW
+// convention. Statute pins on each row tie back to Art. 78 / Rule 41 /
+// Rule 42 / Rule 43 / Rule 46 / Rule 47 EPC and the EPO Guidelines for
+// Examination Part F (formal requirements).
+const EPC_SPEC_CHECKS = [
+  // G1 spec structure
+  'requiredSections',                // Art. 78(1) + Rule 41 + Rule 42(1) EPC
+  'sectionOrdering',                 // Rule 42(1) EPC
+  'paragraphNumbering',              // EPO Guidelines F-II § 4.5 (advisory)
+  'paragraphEnding',                 // drafting hygiene (no specific EPC rule)
+  'titleRequired',                   // Rule 41(2)(b) EPC
+  // G2 spec content
+  'figureRefConsistency',            // Rule 46(2)(h) EPC
+  'numeralConsistency',              // Rule 43(7) + Rule 46(2)(h) EPC
+  'claimReferenceInSpec',            // EPO Guidelines F-IV § 4.3
+]
+
+const EPC_CLAIMS_CHECKS = [
+  // G4 claims structure
+  'sequential',                      // Rule 43(5) EPC
+  'dependencyFormat',                // Rule 43(4) EPC
+  'selfDependent',                   // Rule 43(4) EPC
+  'forwardDependency',               // Rule 43(4) EPC
+  'singleSentence',                  // Rule 43(4) + EPO Guidelines F-IV § 4.10
+  'refSignsInParens',                // Rule 43(7) EPC
+  'subjectConsistency',              // EPO Guidelines F-IV § 3.4
+  'transitionPhrase',                // EPO Guidelines F-IV § 4.13
+  // G5 claims cross-jurisdiction
+  'claimsSpecReference',             // Rule 43(6) EPC
+  'multiDepOnMultiDep',              // Rule 43(4) EPC
+  'markushFormat',                   // EPO Guidelines F-IV § 4.20
+  'independentClaimCount',           // Rule 43(2) + 43(3) EPC (advisory)
+  'twoPartForm',                     // Rule 43(1) EPC (advisory)
+  // G6 §112-equivalent (Art. 84 EPC clarity + support)
+  'antecedentBasis',                 // Art. 84 EPC + EPO Guidelines F-IV § 4.5
+  'specSupport',                     // Art. 84 EPC (support requirement)
+  'restrictiveAbsolutes',            // EPO Guidelines F-IV § 4.7
+  'punctuation',                     // EPO Guidelines F-IV § 4.10
+]
+
+const EPC_DRAWINGS_CHECKS = [
+  // G3 drawings (figureCount † informational row excluded by convention)
+  'figuresSequential',               // Rule 46(2)(a) EPC
+  'singleFigureLabel',               // EPO Guidelines F-V § 1.2
+  'priorArtLabeling',                // Rule 46(2)(h) EPC
+]
+
+const EPC_ABSTRACT_CHECKS = [
+  // G7 abstract
+  'wordCount',                       // Rule 47(2) + EPO Guidelines F-II § 2.3
+  'structure',                       // Rule 47(2) + EPO Guidelines F-II § 2.3
+]
+
 function CnCheckTable({ t }) {
   const [cnRef1, cnInView1] = useInView()
   const [cnRef2, cnInView2] = useInView()
@@ -237,9 +293,74 @@ function CnCheckTable({ t }) {
   )
 }
 
+function EpcCheckTable({ t }) {
+  const [epcRef1, epcInView1] = useInView()
+  const [epcRef2, epcInView2] = useInView()
+  const [epcRef3, epcInView3] = useInView()
+  const [epcRef4, epcInView4] = useInView()
+
+  const renderEpcGroup = (ref, inView, titleKey, checks, delay) => (
+    <tbody
+      ref={ref}
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(16px)',
+        transition: `opacity 500ms ease ${delay}ms, transform 500ms ease ${delay}ms`,
+      }}
+    >
+      <tr>
+        <td
+          colSpan={2}
+          className="pt-6 pb-2 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wider"
+        >
+          {t(titleKey)}
+        </td>
+      </tr>
+      {checks.map((key) => (
+        <tr
+          key={key}
+          className="border-b border-border/50 hover:bg-muted/50 transition-colors border-l-2 border-l-indigo-200 dark:border-l-indigo-800"
+        >
+          <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm text-foreground">
+            {t(`about.epcChecks.${key}`)}
+          </td>
+          <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-center sm:w-40">
+            <CheckMark active isPatentLint />
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  )
+
+  return (
+    <div className="frost-card !overflow-visible">
+      <table className="w-full text-left border-separate border-spacing-0">
+        <thead>
+          <tr className="border-b border-border bg-muted/30">
+            <th className="sticky top-14 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground">
+              {t('about.uspto.colCheck')}
+            </th>
+            <th className="sticky top-14 z-20 bg-card backdrop-blur-sm px-2 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm font-semibold text-foreground text-center whitespace-nowrap sm:w-40">
+              {t('about.uspto.colPatentLint')}
+            </th>
+          </tr>
+        </thead>
+        {renderEpcGroup(epcRef1, epcInView1, 'about.epcGroups.specification', EPC_SPEC_CHECKS, 0)}
+        {renderEpcGroup(epcRef2, epcInView2, 'about.epcGroups.claims', EPC_CLAIMS_CHECKS, 150)}
+        {renderEpcGroup(epcRef3, epcInView3, 'about.epcGroups.drawings', EPC_DRAWINGS_CHECKS, 300)}
+        {renderEpcGroup(epcRef4, epcInView4, 'about.epcGroups.abstract', EPC_ABSTRACT_CHECKS, 450)}
+      </table>
+      <p className="text-xs text-muted-foreground italic px-2 py-3">
+        {t('about.epcTableFootnote')}
+      </p>
+    </div>
+  )
+}
+
 const US_FEATURE_KEYS = ['claimTree', 'specAbstract', 'specSupport']
 const CN_FEATURE_KEYS = ['claimTree', 'specAbstract', 'dualPipeline']
 const TW_FEATURE_KEYS = ['claimTree', 'specAbstract', 'symbolTable']
+const EPC_FEATURE_KEYS = ['claimTree', 'specAbstract', 'twoPartForm']
 
 const FEATURE_ACCENT = {
   US: {
@@ -256,6 +377,11 @@ const FEATURE_ACCENT = {
     border: 'border-l-teal-200 dark:border-l-teal-800',
     glow: 'rgba(13, 148, 136, 0.18)',
     sheen: 'rgba(45, 212, 191, 0.22)',
+  },
+  EPC: {
+    border: 'border-l-indigo-200 dark:border-l-indigo-800',
+    glow: 'rgba(79, 70, 229, 0.18)',
+    sheen: 'rgba(129, 140, 248, 0.22)',
   },
 }
 
@@ -512,7 +638,7 @@ function ComparisonTable({ t }) {
           role="radiogroup"
           aria-label={t('jurisdiction.label')}
         >
-          {['US', 'CN', 'TW'].map((j) => (
+          {['US', 'CN', 'TW', 'EPC'].map((j) => (
             <button
               key={j}
               role="radio"
@@ -530,11 +656,19 @@ function ComparisonTable({ t }) {
           ))}
         </div>
         <h2 className="text-3xl font-bold text-foreground mb-2">
-          {t(activeTab === 'CN' ? 'about.cnTitle' : activeTab === 'TW' ? 'about.twTitle' : 'about.usptoTitle')}
+          {t(
+            activeTab === 'CN' ? 'about.cnTitle' :
+            activeTab === 'TW' ? 'about.twTitle' :
+            activeTab === 'EPC' ? 'about.epcTitle' :
+            'about.usptoTitle'
+          )}
         </h2>
         <p className="text-muted-foreground">
           {t(
-            activeTab === 'CN' ? 'about.cnSubtitle' : activeTab === 'TW' ? 'about.twSubtitle' : 'about.usptoSubtitle',
+            activeTab === 'CN' ? 'about.cnSubtitle' :
+            activeTab === 'TW' ? 'about.twSubtitle' :
+            activeTab === 'EPC' ? 'about.epcSubtitle' :
+            'about.usptoSubtitle',
             { count: CHECKS_BY_JURISDICTION[activeTab] }
           )}
         </p>
@@ -556,6 +690,12 @@ function ComparisonTable({ t }) {
         <>
           <JurisdictionFeatureBlock t={t} jurisdiction="TW" cardKeys={TW_FEATURE_KEYS} />
           <TwComparisonTable t={t} />
+        </>
+      )}
+      {activeTab === 'EPC' && (
+        <>
+          <JurisdictionFeatureBlock t={t} jurisdiction="EPC" cardKeys={EPC_FEATURE_KEYS} />
+          <EpcCheckTable t={t} />
         </>
       )}
     </section>

@@ -626,7 +626,63 @@
     "builderSister": "Its companion project, the Agentic Patent Analyst, is an open-source LangGraph workflow that reads Office Actions, weighs each examiner rejection, and drafts argument or amendment strategies.",
     "licenseNote": "PatentLint is free for individual use and source-available under PolyForm-Strict-1.0.0. The full source is on GitHub.",
     "tableFootnote": "As of April 2026; both tools may continue to evolve.",
-    "twTableFootnote": "TIPO coverage audited against 專利申請文件輔助偵錯系統 — 功能介紹與使用指南 (2023.5.30 版). TIPO 偵錯系統 supports utility-model filings only; PatentLint supports both utility models and inventions. Both tools may continue to evolve."
+    "twTableFootnote": "TIPO coverage audited against 專利申請文件輔助偵錯系統 — 功能介紹與使用指南 (2023.5.30 版). TIPO 偵錯系統 supports utility-model filings only; PatentLint supports both utility models and inventions. Both tools may continue to evolve.",
+    "epcTitle": "PatentLint EPC Drafting Checks",
+    "epcSubtitle": "{{count}} structural checks against EPC drafting rules (Art. 78 / Rule 41-47 + EPO Guidelines Part F).",
+    "epcFeatures": {
+      "title": "Interactive EPC patent analysis",
+      "claimTree": {
+        "title": "Claim tree + Art. 84 walker",
+        "description": "Dependency tree across claims with English antecedent-basis + spec-support walkers (Art. 84 EPC). EPC-specific dep-preamble forms — \"any preceding claim\", \"any one of claims N to M\" — are pre-stripped and expanded at parse time."
+      },
+      "specAbstract": {
+        "title": "Specification & abstract structure",
+        "description": "Rule 42(1) sub-section ordering (technical field → background → summary → drawings description → detailed description), figure-reference consistency (Rule 46(2)(h)), reference-numeral consistency (Rule 43(7) + Rule 46(2)(h)), and 50-150 word abstract limit (Rule 47(2) + EPO Guidelines F-II § 2.3)."
+      },
+      "twoPartForm": {
+        "title": "Two-part form + Markush + R.43(2)",
+        "description": "Detects Rule 43(1) two-part form (\"characterised in that\"), checks Markush group format (EPO Guidelines F-IV § 4.20), and flags more than one independent claim per category for Rule 43(2) verification."
+      }
+    },
+    "epcGroups": {
+      "specification": "Specification",
+      "claims": "Claims",
+      "drawings": "Drawings",
+      "abstract": "Abstract"
+    },
+    "epcChecks": {
+      "requiredSections": "Required sections (Art. 78(1) + Rule 41 + Rule 42(1) EPC)",
+      "sectionOrdering": "Section ordering (Rule 42(1) EPC canonical order)",
+      "paragraphNumbering": "Paragraph numbering (advisory)",
+      "paragraphEnding": "Paragraph ending punctuation",
+      "titleRequired": "Title required (Rule 41(2)(b) EPC)",
+      "figureRefConsistency": "Figure reference consistency (Rule 46(2)(h) EPC)",
+      "numeralConsistency": "Reference numeral consistency (Rule 43(7) + Rule 46(2)(h) EPC)",
+      "claimReferenceInSpec": "No claim references in description (EPO Guidelines F-IV § 4.3)",
+      "sequential": "Claims numbered sequentially (Rule 43(5) EPC)",
+      "dependencyFormat": "Dependency format (Rule 43(4) EPC)",
+      "selfDependent": "Self-dependent claims",
+      "forwardDependency": "Forward dependency",
+      "singleSentence": "Single sentence per claim (Rule 43(4) + Guidelines F-IV § 4.10)",
+      "refSignsInParens": "Reference signs in parentheses (Rule 43(7) EPC)",
+      "subjectConsistency": "Subject matter consistency (Guidelines F-IV § 3.4)",
+      "transitionPhrase": "Transitional phrase — comprising / consisting of / characterised in that (Guidelines F-IV § 4.13)",
+      "claimsSpecReference": "Claims must not reference description / drawings (Rule 43(6) EPC)",
+      "multiDepOnMultiDep": "Multi-dep cannot depend on another multi-dep (Rule 43(4) EPC)",
+      "markushFormat": "Markush group format (Guidelines F-IV § 4.20)",
+      "independentClaimCount": "Independent-claim count per category (Rule 43(2) + 43(3) EPC, advisory)",
+      "twoPartForm": "Two-part form (Rule 43(1) EPC, advisory)",
+      "antecedentBasis": "Antecedent basis (先行詞 walker) — Art. 84 EPC + Guidelines F-IV § 4.5",
+      "specSupport": "Specification support — Art. 84 EPC (support requirement)",
+      "restrictiveAbsolutes": "Restrictive absolutes (Guidelines F-IV § 4.7, advisory)",
+      "punctuation": "Claim punctuation (Guidelines F-IV § 4.10)",
+      "figuresSequential": "Figures numbered sequentially (Rule 46(2)(a) EPC)",
+      "singleFigureLabel": "Single-figure label form (Guidelines F-V § 1.2)",
+      "priorArtLabeling": "Prior-art figure labeling (Rule 46(2)(h) EPC)",
+      "wordCount": "Abstract word count (50-150) — Rule 47(2) + Guidelines F-II § 2.3",
+      "structure": "Abstract structure — single paragraph, no claim-style phraseology, no merit language"
+    },
+    "epcTableFootnote": "As of May 2026; v1 beta. EPC English-input only at v1; DE/FR check engines deferred. Walker checks (antecedent basis + specification support) ship as REVIEW status until real-corpus FP measurement runs."
   },
   "details": {
     "paragraphs": "Paragraphs: {{list}}",
