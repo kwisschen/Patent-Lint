@@ -43,6 +43,11 @@ export default function TermsPage() {
           </li>
         </ul>
         <p>{t('terms.s1.p2')}</p>
+        <p>
+          <Trans i18nKey="terms.s1.statusNote">
+            <strong>Project status.</strong>
+          </Trans>
+        </p>
       </LegalSection>
 
       <LegalSection number="2" titleKey="terms.s2.title">

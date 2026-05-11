@@ -1406,7 +1406,7 @@
   },
   "terms": {
     "title": "Nutzungsbedingungen",
-    "lastUpdated": "Zuletzt aktualisiert: 10. Mai 2026",
+    "lastUpdated": "Zuletzt aktualisiert: 11. Mai 2026",
     "intro": "Diese Nutzungsbedingungen regeln Ihre Nutzung der Website patentlint.com (die „Website“) und der Software PatentLint (die „Software“). Durch Nutzung der Website stimmen Sie diesen Bedingungen zu.",
     "s1": {
       "title": "Die Website vs. die Software",
@@ -1414,8 +1414,9 @@
       "siteLabel": "Die Website (patentlint.com).",
       "siteDesc": "Eine gehostete Webanwendung, kostenlos für die persönliche Nutzung durch einzelne Patentpraktiker und für Organisationen zur Evaluierung vor einer kommerziellen Lizenzierung (siehe § 4). Wenn Sie eine Patentanmeldung laden, läuft die Prüfung vollständig in Ihrem Browser über WebAssembly — Ihr Entwurf verlässt nie Ihr Gerät. Die Website wird von Christopher Chen betrieben.",
       "softwareLabel": "Die Software.",
-      "softwareDesc": "Der zugrunde liegende Quellcode, veröffentlicht in einem privaten Repository. Die Software ist unter PolyForm-Strict-1.0.0 lizenziert (siehe § 4).",
-      "p2": "Diese Bedingungen gelten für die Nutzung beider. Unterschiedliche Regeln gelten je nachdem, welche Sie nutzen."
+      "softwareDesc": "Der zugrunde liegende Quellcode, quelltextverfügbar unter PolyForm-Strict-1.0.0 (Lizenzbedingungen siehe § 4).",
+      "p2": "Diese Bedingungen gelten für die Nutzung beider. Unterschiedliche Regeln gelten je nachdem, welche Sie nutzen.",
+      "statusNote": "<1>Projektstatus.</1> Die Website bleibt für einzelne Praktiker sowie für Organisationen, die vor einer kommerziellen Lizenzierung (§ 4) evaluieren, kostenlos. Eine kommerzielle Bereitstellung gemäß § 4 bleibt als Option bestehen; neue kommerzielle Kunden werden in diesem Zeitraum jedoch nicht aktiv aufgenommen. Anfragen an die in § 4 angegebene Kontaktadresse sind weiterhin willkommen."
     },
     "s2": {
       "title": "Nutzung der Website",
