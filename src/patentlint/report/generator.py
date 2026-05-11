@@ -55,6 +55,18 @@ _JURISDICTION_KEYS: dict[Jurisdiction, dict[str, str]] = {
         "abstract": "section.tw.abstract",
         "abstractCounter": "pdf.abstractCharCount",
     },
+    Jurisdiction.EPC: {
+        # EPC English drafts share the US section-label keys (Latin
+        # script, English vocabulary). Statute-specific labels for
+        # individual checks come from the CheckItem.message_key →
+        # check.epc.* locale keys, not from this section-heading map.
+        "pdfHeader": "pdf.header",
+        "specification": "section.specification",
+        "drawings": "section.drawings",
+        "claims": "section.claims",
+        "abstract": "section.abstract",
+        "abstractCounter": "pdf.abstractWordCount",
+    },
 }
 
 
@@ -100,7 +112,12 @@ def _build_env(locale: str) -> Environment:
     # by emit-stats.mjs at vite build time from CHECKS.md. Mirroring the
     # value here keeps the weasyprint PDF and the pdfmake PDF in sync;
     # update both when CHECKS.md count changes.
-    env.globals["checks_total"] = 109
+    # Total check count for the rubric.version footer. EPC v1 beta added
+    # 30 user-facing EPC checks (5 G1 + 3 G2 + 4 G3 + 8 G4 + 5 G5 + 4 G6
+    # + 2 G7); aggregate is now US 42 + CN 33 + TW 39 + EPC 30 = 144 per
+    # frontend/src/generated/stats.js (auto-generated from CHECKS.md
+    # row count). Update both when CHECKS.md count changes.
+    env.globals["checks_total"] = 144
     env.filters["localize_message"] = lambda item: localize_message(item, locale)
     env.filters["localize_details"] = lambda item: localize_details(item, locale)
     return env
