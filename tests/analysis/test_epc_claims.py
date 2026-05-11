@@ -17,14 +17,20 @@ from __future__ import annotations
 
 from patentlint.analysis.epc_claims import (
     check_claims_sequential_epc,
+    check_claims_spec_reference_epc,
     check_dependency_format_epc,
     check_forward_dependency_epc,
+    check_independent_claim_count_epc,
+    check_markush_format_epc,
+    check_multi_dep_on_multi_dep_epc,
     check_reference_signs_in_parens_epc,
     check_self_dependent_epc,
     check_single_sentence_per_claim_epc,
     check_subject_consistency_epc,
     check_transition_phrase_epc,
+    check_two_part_form_epc,
     run_g4_claims_structure_checks,
+    run_g5_claims_cross_jurisdiction_checks,
 )
 from patentlint.models import Claim
 
@@ -217,3 +223,132 @@ def test_g4_runner_emits_all_eight_checks():
     assert len(results) == 8
     for r in results:
         assert r.status == "pass", f"Expected pass but got {r.status}: {r.message}"
+
+
+# ---------------------------------------------------------------------------
+# G5 (cross-jurisdiction / format guards) tests
+# ---------------------------------------------------------------------------
+
+
+# --- claimsSpecReference ------------------------------------------------------
+
+
+def test_claims_spec_reference_canonical_passes():
+    results = check_claims_spec_reference_epc(CANONICAL_CLAIMS)
+    assert results[0].status == "pass"
+
+
+def test_claims_spec_reference_amends_on_paragraph():
+    claim = _make(1, "An apparatus, see paragraph [0010], comprising a processor.")
+    results = check_claims_spec_reference_epc([claim])
+    assert results[0].status == "amend"
+
+
+def test_claims_spec_reference_amends_on_figure_prose():
+    claim = _make(1, "An apparatus as shown in Fig. 5, comprising a processor.")
+    results = check_claims_spec_reference_epc([claim])
+    assert results[0].status == "amend"
+
+
+def test_claims_spec_reference_parenthesised_figure_passes():
+    """Parenthesised figure mentions are reference signs, not spec refs."""
+    claim = _make(1, "An apparatus (see Fig. 5) comprising a processor (12).")
+    results = check_claims_spec_reference_epc([claim])
+    assert results[0].status == "pass"
+
+
+# --- multiDepOnMultiDep -------------------------------------------------------
+
+
+def test_multi_dep_on_multi_dep_canonical_passes():
+    results = check_multi_dep_on_multi_dep_epc(CANONICAL_CLAIMS)
+    assert results[0].status == "pass"
+
+
+def test_multi_dep_on_multi_dep_amends():
+    """Claim 4 (multi-dep) depending on claim 3 (also multi-dep) violates."""
+    claims = [
+        _make(1, "An apparatus comprising X."),
+        _make(2, "The apparatus of claim 1.", independent=False, deps=[1]),
+        _make(3, "The apparatus of claim 1 or 2.", independent=False, deps=[1, 2], multi=True),
+        _make(4, "The apparatus of claim 2 or 3.", independent=False, deps=[2, 3], multi=True),
+    ]
+    results = check_multi_dep_on_multi_dep_epc(claims)
+    assert results[0].status == "amend"
+
+
+# --- markushFormat ------------------------------------------------------------
+
+
+def test_markush_format_canonical_passes():
+    """No Markush construct in canonical fixture."""
+    results = check_markush_format_epc(CANONICAL_CLAIMS)
+    assert results[0].status == "pass"
+
+
+def test_markush_format_closed_form_passes():
+    claim = _make(1, "An apparatus comprising a material selected from the group consisting of A, B, and C.")
+    results = check_markush_format_epc([claim])
+    assert results[0].status == "pass"
+
+
+def test_markush_format_open_form_verifies():
+    claim = _make(1, "An apparatus comprising a material selected from aluminum, steel, or titanium.")
+    results = check_markush_format_epc([claim])
+    assert results[0].status == "verify"
+
+
+# --- independentClaimCount ----------------------------------------------------
+
+
+def test_independent_claim_count_single_passes():
+    results = check_independent_claim_count_epc(CANONICAL_CLAIMS)
+    assert results[0].status == "pass"
+
+
+def test_independent_claim_count_multiple_non_method_verifies():
+    """Two non-method independent claims trigger Rule 43(2) advisory."""
+    claims = [
+        _make(1, "An apparatus comprising X."),
+        _make(2, "A system comprising Y."),
+    ]
+    results = check_independent_claim_count_epc(claims)
+    assert results[0].status == "verify"
+
+
+def test_independent_claim_count_one_method_one_apparatus_passes():
+    """One method + one apparatus independent claim is allowed (Rule 43(2))."""
+    claims = [
+        _make(1, "An apparatus comprising X."),
+        _make(2, "A method of using X, comprising:", method=True),
+    ]
+    results = check_independent_claim_count_epc(claims)
+    assert results[0].status == "pass"
+
+
+# --- twoPartForm --------------------------------------------------------------
+
+
+def test_two_part_form_canonical_passes():
+    """Canonical fixture has 'characterised' nowhere; verify status advisory."""
+    results = check_two_part_form_epc(CANONICAL_CLAIMS)
+    assert results[0].status == "verify"
+
+
+def test_two_part_form_characterised_passes():
+    claim = _make(1, "An apparatus, characterised in that the processor is dual-core.")
+    results = check_two_part_form_epc([claim])
+    assert results[0].status == "pass"
+
+
+def test_two_part_form_no_independent_claims_passes():
+    results = check_two_part_form_epc([])
+    assert results[0].status == "pass"
+
+
+# --- Aggregator ---------------------------------------------------------------
+
+
+def test_g5_runner_emits_all_five_checks():
+    results = run_g5_claims_cross_jurisdiction_checks(CANONICAL_CLAIMS)
+    assert len(results) == 5
