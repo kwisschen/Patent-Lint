@@ -135,6 +135,15 @@ SECTION_APPLICABILITY: dict[Jurisdiction, dict[RubricSection, dict]] = {
         RubricSection.ANTECEDENT_SPEC_SUPPORT: {"required": True},
         RubricSection.ABSTRACT: {"required": True},
     },
+    Jurisdiction.EPC: {
+        RubricSection.SPECIFICATION: {"required": True},
+        # Rule 42(1)(d) EPC: brief description of drawings required when
+        # drawings exist; mirrors the US / CN / TW conditional pattern.
+        RubricSection.DRAWINGS: {"conditional": "has_drawings"},
+        RubricSection.CLAIMS: {"required": True},
+        RubricSection.ANTECEDENT_SPEC_SUPPORT: {"required": True},
+        RubricSection.ABSTRACT: {"required": True},
+    },
 }
 
 
@@ -147,9 +156,11 @@ _ANTECEDENT_SPEC_SUPPORT_KEY_PREFIXES = (
     "check.claims.antecedentBasis.",
     "check.cn.claims.antecedentBasis.",
     "check.tw.claims.antecedentBasis.",
+    "check.epc.claims.antecedentBasis.",
     "checks.spec_support_",
     "check.cn.claims.specSupport.",
     "check.tw.claims.specSupport.",
+    "check.epc.claims.specSupport.",
 )
 
 # Several checks emit in the SPEC bucket but are conceptually drawings
@@ -160,6 +171,7 @@ _ANTECEDENT_SPEC_SUPPORT_KEY_PREFIXES = (
 _DRAWINGS_KEY_PREFIXES_FROM_OTHER_BUCKETS = (
     "check.cn.spec.figureRefConsistency.",
     "check.tw.spec.figureRefConsistency.",
+    "check.epc.spec.figureRefConsistency.",
     "check.tw.spec.symbolTablePresence.",
     "check.tw.spec.symbolTableConsistency.",
     "check.tw.crossRef.symbolVsRepDrawing.",
@@ -176,6 +188,7 @@ _REQUIRED_SECTIONS_AMEND_KEYS = frozenset({
     "checks.required_sections_missing",       # US
     "check.cn.spec.requiredSections.amend",   # CN
     "check.tw.spec.requiredSections.amend",   # TW
+    "check.epc.spec.requiredSections.amend",  # EPC
 })
 
 # Drawings-related section names as they appear in CheckItem.details_params

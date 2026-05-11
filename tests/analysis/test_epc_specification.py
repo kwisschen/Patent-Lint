@@ -198,10 +198,12 @@ This one is also missing
     assert results[0].status == "verify"
 
 
-def test_g1_runner_emits_all_five_checks():
+def test_g1_runner_emits_all_four_structure_checks():
+    """G1 emits requiredSections / sectionOrdering / paragraphNumbering /
+    paragraphEnding (4 checks). titleRequired moved to run_g2 (it is a
+    G2 SPEC_CONTENT check per canonical placement)."""
     results = run_g1_spec_structure_checks(EPC_DRAFT_CANONICAL)
-    assert len(results) == 5
-    # All G1 checks pass on the canonical draft
+    assert len(results) == 4
     for r in results:
         assert r.status == "pass", f"Expected pass but got {r.status}: {r.message}"
 
@@ -306,9 +308,10 @@ def test_claim_reference_in_spec_according_to_claim_amends():
     assert results[0].status == "amend"
 
 
-def test_g2_runner_emits_all_three_checks():
+def test_g2_runner_emits_all_four_content_checks():
+    """G2 emits figureRefConsistency / numeralConsistency / titleRequired
+    / claimReferenceInSpec (4 checks; titleRequired migrated from G1)."""
     results = run_g2_spec_content_checks(EPC_DRAFT_CANONICAL)
-    assert len(results) == 3
-    # All G2 checks pass on the canonical draft
+    assert len(results) == 4
     for r in results:
         assert r.status == "pass", f"Expected pass but got {r.status}: {r.message}"

@@ -428,6 +428,108 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
 
     "check.tw.abstract.representativeDrawing.pass": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 70),
     "check.tw.abstract.representativeDrawing.verify": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 70),
+
+    # =====================================================================
+    # EPC bucket assignments (v1 beta) — mirror US/CN/TW canonical idx
+    # values for parallel keys. Anchors the rubric routing (every key
+    # registered here ends up in the right RubricSection via
+    # section_for_message_key); also documents the canonical group +
+    # index for any future EPC-emission-order monotonicity test.
+    # =====================================================================
+    # --- SPEC / Group 1: spec structure ---
+    "check.epc.spec.requiredSections.amend": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 20),
+    "check.epc.spec.requiredSections.pass": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 20),
+    "check.epc.spec.sectionOrdering.amend": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 30),
+    "check.epc.spec.sectionOrdering.pass": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 30),
+    "check.epc.spec.paragraphNumbering.verify": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 40),
+    "check.epc.spec.paragraphNumbering.pass": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 40),
+    "check.epc.spec.paragraphEnding.verify": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 50),
+    "check.epc.spec.paragraphEnding.pass": (CheckBucket.SPEC, CheckGroup.SPEC_STRUCTURE, 50),
+
+    # --- SPEC / Group 2: spec content ---
+    # figureRefConsistency is dual-routed to DRAWINGS by the rubric's
+    # explicit prefix list; still register here for the canonical map.
+    "check.epc.spec.figureRefConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 10),
+    "check.epc.spec.figureRefConsistency.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 10),
+    "check.epc.spec.figureRefConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 10),
+    "check.epc.spec.numeralConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    "check.epc.spec.numeralConsistency.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    "check.epc.spec.numeralConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
+    "check.epc.spec.titleRequired.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 30),
+    "check.epc.spec.titleRequired.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 30),
+    "check.epc.spec.titleRequired.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 30),
+    "check.epc.spec.claimReferenceInSpec.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 40),
+    "check.epc.spec.claimReferenceInSpec.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 40),
+
+    # --- DRAWINGS / Group 3 ---
+    "check.epc.drawings.figureCount.pass": (CheckBucket.DRAWINGS, CheckGroup.DRAWINGS, 10),
+    "check.epc.drawings.singleFigureLabel.verify": (CheckBucket.DRAWINGS, CheckGroup.DRAWINGS, 20),
+    "check.epc.drawings.singleFigureLabel.pass": (CheckBucket.DRAWINGS, CheckGroup.DRAWINGS, 20),
+    "check.epc.drawings.priorArtLabeling.verify": (CheckBucket.DRAWINGS, CheckGroup.DRAWINGS, 30),
+    "check.epc.drawings.priorArtLabeling.pass": (CheckBucket.DRAWINGS, CheckGroup.DRAWINGS, 30),
+    "check.epc.drawings.figuresSequential.amend": (CheckBucket.DRAWINGS, CheckGroup.DRAWINGS, 40),
+    "check.epc.drawings.figuresSequential.pass": (CheckBucket.DRAWINGS, CheckGroup.DRAWINGS, 40),
+
+    # --- CLAIMS / Group 4: claims structure ---
+    "check.epc.claims.sequential.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 10),
+    "check.epc.claims.sequential.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 10),
+    "check.epc.claims.dependencyFormat.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 20),
+    "check.epc.claims.dependencyFormat.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 20),
+    "check.epc.claims.selfDependent.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 30),
+    "check.epc.claims.selfDependent.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 30),
+    "check.epc.claims.forwardDependency.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 50),
+    "check.epc.claims.forwardDependency.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 50),
+    "check.epc.claims.singleSentence.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 60),
+    "check.epc.claims.singleSentence.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 60),
+    "check.epc.claims.refSignsInParens.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 70),
+    "check.epc.claims.refSignsInParens.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 70),
+    "check.epc.claims.subjectConsistency.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 80),
+    "check.epc.claims.subjectConsistency.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 80),
+    "check.epc.claims.transitionPhrase.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 90),
+    "check.epc.claims.transitionPhrase.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 90),
+
+    # --- CLAIMS / Group 5: cross-jurisdiction / format guards ---
+    "check.epc.claims.specReference.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 20),
+    "check.epc.claims.specReference.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 20),
+    "check.epc.claims.multiDepOnMultiDep.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 30),
+    "check.epc.claims.multiDepOnMultiDep.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 30),
+    # markushFormat (Guidelines F-IV § 4.20) — EPC treats Markush as a
+    # format guard for closed groups. Sits in CROSS_JURISDICTION rather
+    # than SECTION_112 (US convention) so the run_g5 runner stays
+    # monotonic.
+    "check.epc.claims.markushFormat.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 35),
+    "check.epc.claims.markushFormat.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 35),
+    # EPC-specific advisories — independentClaimCount (Rule 43(2)+(3))
+    # and twoPartForm (Rule 43(1)) — get late CROSS_JURISDICTION idx
+    # values so they emit after structural guards within the runner.
+    "check.epc.claims.independentClaimCount.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 75),
+    "check.epc.claims.independentClaimCount.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 75),
+    "check.epc.claims.twoPartForm.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 95),
+    "check.epc.claims.twoPartForm.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 95),
+
+    # --- CLAIMS / Group 6: § 112-equivalent (Art. 84 EPC) ---
+    # EPC-specific idx values arrange emit order to be monotonic with
+    # the run_g6 runner: punctuation → restrictiveAbsolutes → antecedent
+    # → spec_support → markushFormat. Punctuation gets the lowest idx
+    # (5) so it emits first in the SECTION_112 group; restrictiveAbsolutes
+    # at idx 10; antecedent at the canonical 20; spec_support at 30;
+    # markushFormat at 50.
+    "check.epc.claims.punctuation.missingPeriod.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 5),
+    "check.epc.claims.punctuation.extraPeriod.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 5),
+    "check.epc.claims.punctuation.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 5),
+    "check.epc.claims.restrictiveAbsolutes.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 10),
+    "check.epc.claims.restrictiveAbsolutes.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 10),
+    "check.epc.claims.antecedentBasis.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 20),
+    "check.epc.claims.antecedentBasis.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 20),
+    "check.epc.claims.specSupport.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 30),
+    "check.epc.claims.specSupport.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 30),
+
+    # --- ABSTRACT / Group 7 ---
+    "check.epc.abstract.wordCount.amend": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 10),
+    "check.epc.abstract.wordCount.verify": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 10),
+    "check.epc.abstract.wordCount.pass": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 10),
+    "check.epc.abstract.structure.amend": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 60),
+    "check.epc.abstract.structure.pass": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 60),
 }
 
 
