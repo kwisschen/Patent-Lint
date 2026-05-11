@@ -29,8 +29,13 @@ class TestJurisdictionEnum:
     def test_tw_enum_from_string(self):
         assert Jurisdiction("TW") == Jurisdiction.TW
 
-    def test_all_three_jurisdictions(self):
-        assert set(Jurisdiction) == {Jurisdiction.US, Jurisdiction.CN, Jurisdiction.TW}
+    def test_all_jurisdictions(self):
+        assert set(Jurisdiction) == {
+            Jurisdiction.US,
+            Jurisdiction.CN,
+            Jurisdiction.TW,
+            Jurisdiction.EPC,
+        }
 
 
 class TestTwPatentType:

@@ -80,6 +80,36 @@ def _attach_rubric_grade(
     )
 
 
+def _run_epc_pipeline(
+    full_text: str,
+    *,
+    likely_patent: bool = True,
+    patent_detection_reason: str | None = None,
+    has_tracked_changes: bool = False,
+    suggested_jurisdiction: str | None = None,
+) -> AnalysisResult:
+    """EPC English-input analysis pipeline.
+
+    Scaffolding-stage: returns a well-formed empty ``AnalysisResult`` so the
+    pipeline can be wired end-to-end and the jurisdiction picker can route to
+    EPC without crashing. Real check logic ships per-G-group in subsequent
+    commits, gated on statute-research grounding per DR-1.
+
+    Input contract: English ``.docx`` text only at v1 (the
+    jurisdiction-mismatch detector gates non-English EPC input upstream).
+    DE / FR EPC check engines are explicitly out of v1 scope.
+    """
+    result = AnalysisResult(
+        jurisdiction=Jurisdiction.EPC,
+        title="",
+        likely_patent=likely_patent,
+        patent_detection_reason=patent_detection_reason,
+        has_tracked_changes=has_tracked_changes,
+        suggested_jurisdiction=suggested_jurisdiction,
+    )
+    return result
+
+
 def _run_cn_pipeline(
     cn_doc: CnPatentDocument,
     *,
@@ -832,6 +862,18 @@ def analyze_file(
         msg = f"Unsupported file type for CN jurisdiction: {file_path}"
         raise ValueError(msg)
 
+    if jurisdiction == Jurisdiction.EPC:
+        if not lower.endswith(".docx"):
+            msg = f"Unsupported file type for EPC jurisdiction: {file_path}"
+            raise ValueError(msg)
+        loaded_epc = load_docx(file_path)
+        suggested = detect_jurisdiction_mismatch(loaded_epc.full_text, Jurisdiction.EPC)
+        return _run_epc_pipeline(
+            loaded_epc.full_text,
+            has_tracked_changes=loaded_epc.has_tracked_changes,
+            suggested_jurisdiction=suggested,
+        )
+
     # US jurisdiction (existing behavior, unchanged)
     loaded = load_docx(file_path)
     suggested = detect_jurisdiction_mismatch(loaded.full_text, Jurisdiction.US)
@@ -917,6 +959,21 @@ def analyze_bytes(
             )
         msg = f"Unsupported file type for CN jurisdiction: {filename}"
         raise ValueError(msg)
+
+    if jurisdiction == Jurisdiction.EPC:
+        if not lower.endswith(".docx"):
+            msg = f"Unsupported file type for EPC jurisdiction: {filename}"
+            raise ValueError(msg)
+        with tempfile.NamedTemporaryFile(suffix=".docx", delete=True) as tmp:
+            tmp.write(content)
+            tmp.flush()
+            loaded_epc = load_docx(tmp.name)
+        suggested = detect_jurisdiction_mismatch(loaded_epc.full_text, Jurisdiction.EPC)
+        return _run_epc_pipeline(
+            loaded_epc.full_text,
+            has_tracked_changes=loaded_epc.has_tracked_changes,
+            suggested_jurisdiction=suggested,
+        )
 
     # US jurisdiction
     if not lower.endswith(".docx"):
