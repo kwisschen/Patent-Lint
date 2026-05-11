@@ -113,7 +113,8 @@
   "section112": {
     "title": "§ 112 분석",
     "titleTw": "선행사 분석",
-    "titleTwSpec": "§26 제3항 분석"
+    "titleTwSpec": "§26 제3항 분석",
+    "titleEpc": "제84조 EPC 분석"
   },
   "results": {
     "nonPatentWarning": "이 문서는 미국 특허 명세서가 아닐 수 있습니다",
@@ -626,7 +627,63 @@
     "builderSister": "그 자매 프로젝트인 Agentic Patent Analyst는 오픈소스 LangGraph 워크플로우로, 거절이유통지서를 해독하고, 각 거절이유를 검증하며, 의견서·보정서 전략을 기안합니다.",
     "licenseNote": "PatentLint은 개인 이용에 무료이며, PolyForm-Strict-1.0.0 라이선스로 소스가 공개되어 있습니다. 전체 소스 코드는 GitHub에서 확인할 수 있습니다.",
     "tableFootnote": "2026년 4월 기준. 두 도구 모두 지속적으로 업데이트될 수 있습니다.",
-    "twTableFootnote": "TIPO 검사 항목은「專利申請文件輔助偵錯系統：功能介紹與使用指南」(2023.5.30 판) 을 기준으로 비교. TIPO 偵錯系統 은 실용신안 출원만 지원하며, PatentLint 는 실용신안과 발명을 모두 지원합니다. 두 도구 모두 지속적으로 업데이트될 수 있습니다."
+    "twTableFootnote": "TIPO 검사 항목은「專利申請文件輔助偵錯系統：功能介紹與使用指南」(2023.5.30 판) 을 기준으로 비교. TIPO 偵錯系統 은 실용신안 출원만 지원하며, PatentLint 는 실용신안과 발명을 모두 지원합니다. 두 도구 모두 지속적으로 업데이트될 수 있습니다.",
+    "epcTitle": "PatentLint EPC 명세서 검사",
+    "epcSubtitle": "EPC 작성 규칙(제78조, 시행규칙 제41-47조, EPO 심사 지침 F부)에 따른 {{count}}개 구조적 검사 항목.",
+    "epcFeatures": {
+      "title": "EPC 특허 상호작용 분석",
+      "claimTree": {
+        "title": "청구항 의존 트리 + 제84조 워커",
+        "description": "청구항 간 의존 트리와 선행어 및 명세서 뒷받침 워커(EPC 제84조)를 결합합니다. EPC 고유 의존 표현 —— 「any preceding claim」, 「any one of claims N to M」 —— 은 파싱 단계에서 사전 처리 및 확장됩니다."
+      },
+      "specAbstract": {
+        "title": "명세서 및 요약서 구조",
+        "description": "시행규칙 제42(1)조에 따른 명세서 하위 절 순서(기술 분야 → 배경 기술 → 발명의 요약 → 도면의 간단한 설명 → 발명의 상세한 설명), 도면 참조 일관성(제46(2)(h)조), 참조부호 일관성(제43(7)조, 제46(2)(h)조), 그리고 50-150 단어 요약서 제한(제47(2)조, EPO 심사 지침 F-II § 2.3)."
+      },
+      "twoPartForm": {
+        "title": "2부 형식 + Markush + 제43(2)조",
+        "description": "시행규칙 제43(1)조 2부 형식(을 특징으로 하는)을 검출하고, Markush 그룹 형식(EPO 심사 지침 F-IV § 4.20)을 확인하며, 동일 카테고리에 독립항이 두 개 이상 있을 경우 제43(2)조 검토 사항을 안내합니다."
+      }
+    },
+    "epcGroups": {
+      "specification": "명세서",
+      "claims": "청구항",
+      "drawings": "도면",
+      "abstract": "요약서"
+    },
+    "epcChecks": {
+      "requiredSections": "필수 섹션(제78(1)조, 시행규칙 제41조, 제42(1)조)",
+      "sectionOrdering": "섹션 순서(시행규칙 제42(1)조에 따른 하위 절 순서)",
+      "paragraphNumbering": "단락 번호(권장 검사)",
+      "paragraphEnding": "단락 종결 부호",
+      "titleRequired": "발명의 명칭(시행규칙 제41(2)(b)조)",
+      "figureRefConsistency": "도면 참조 일관성(시행규칙 제46(2)(h)조)",
+      "numeralConsistency": "참조부호 일관성(시행규칙 제43(7)조, 제46(2)(h)조)",
+      "claimReferenceInSpec": "명세서에서 청구항을 인용해서는 안 됨(EPO 심사 지침 F-IV § 4.3)",
+      "sequential": "청구항 연속 번호(시행규칙 제43(5)조)",
+      "dependencyFormat": "종속 형식(시행규칙 제43(4)조)",
+      "selfDependent": "청구항은 자기 자신에 종속될 수 없음",
+      "forwardDependency": "청구항은 후순위에 종속될 수 없음",
+      "singleSentence": "청구항당 한 문장(시행규칙 제43(4)조, 심사 지침 F-IV § 4.10)",
+      "refSignsInParens": "참조부호는 괄호 안에 표기(시행규칙 제43(7)조)",
+      "subjectConsistency": "청구항 주제 일관성(심사 지침 F-IV § 3.4)",
+      "transitionPhrase": "전환구 —— comprising / consisting of / 을 특징으로 하는(심사 지침 F-IV § 4.13)",
+      "claimsSpecReference": "청구항은 명세서 또는 도면을 인용해서는 안 됨(시행규칙 제43(6)조)",
+      "multiDepOnMultiDep": "다중 종속항은 다른 다중 종속항에 종속될 수 없음(시행규칙 제43(4)조)",
+      "markushFormat": "Markush 그룹 형식(심사 지침 F-IV § 4.20)",
+      "independentClaimCount": "카테고리별 독립항 수(시행규칙 제43(2), 43(3)조, 권장)",
+      "twoPartForm": "2부 형식(시행규칙 제43(1)조, 권장)",
+      "antecedentBasis": "선행어 워커 —— 제84조, 심사 지침 F-IV § 4.5",
+      "specSupport": "명세서의 뒷받침 —— 제84조(뒷받침 요건)",
+      "restrictiveAbsolutes": "제한적 절대 표현(심사 지침 F-IV § 4.7, 권장)",
+      "punctuation": "청구항 부호 사용(심사 지침 F-IV § 4.10)",
+      "figuresSequential": "도면 연속 번호(시행규칙 제46(2)(a)조)",
+      "singleFigureLabel": "단일 도면 라벨 형식(심사 지침 F-V § 1.2)",
+      "priorArtLabeling": "선행 기술 도면 표시(시행규칙 제46(2)(h)조)",
+      "wordCount": "요약서 단어 수(50-150) —— 시행규칙 제47(2)조, 심사 지침 F-II § 2.3",
+      "structure": "요약서 구조 —— 단일 단락, 청구항 스타일 표현 지양, 효능적 표현 지양"
+    },
+    "epcTableFootnote": "기준일: 2026년 5월, v1 Beta. v1은 영문 EPC 명세서만 지원하며 DE/FR 검사 엔진은 추후 개발 예정입니다. 워커류 검사(선행어, 명세서의 뒷받침)는 실제 코퍼스 FP 율 측정 후 격상 예정이므로 현재 REVIEW 상태로 제공됩니다."
   },
   "commercial": {
     "hero": {
