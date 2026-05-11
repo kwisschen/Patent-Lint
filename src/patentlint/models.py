@@ -56,6 +56,7 @@ class Jurisdiction(str, Enum):
     US = "US"
     CN = "CN"
     TW = "TW"
+    EPC = "EPC"
 
 
 class CnPatentType(str, Enum):
@@ -521,6 +522,14 @@ class AnalysisResult(BaseModel):
     tw_abstract_checks: list[CheckItem] = Field(default_factory=list)
     tw_drawings_checks: list[CheckItem] = Field(default_factory=list)
 
+    # EPC check results (populated by _run_epc_pipeline, empty for other
+    # jurisdictions). v1 ships English specs only; the
+    # jurisdiction-mismatch detector gates DE / FR EPC input upstream.
+    epc_specification_checks: list[CheckItem] = Field(default_factory=list)
+    epc_claims_checks: list[CheckItem] = Field(default_factory=list)
+    epc_abstract_checks: list[CheckItem] = Field(default_factory=list)
+    epc_drawings_checks: list[CheckItem] = Field(default_factory=list)
+
     # Document-level flags
     likely_patent: bool = True
     patent_detection_reason: str | None = None
@@ -569,6 +578,8 @@ class AnalysisResult(BaseModel):
             return self._to_cn_report_data()
         if self.jurisdiction == Jurisdiction.TW:
             return self._to_tw_report_data()
+        if self.jurisdiction == Jurisdiction.EPC:
+            return self._to_epc_report_data()
         return self._to_us_report_data()
 
     def _build_claim_trees(self) -> list[ClaimTreeGroup]:
@@ -655,6 +666,38 @@ class AnalysisResult(BaseModel):
             claims_checks=list(self.tw_claims_checks),
             abstract_checks=list(self.tw_abstract_checks),
             drawings_checks=list(self.tw_drawings_checks),
+            claim_trees=self._build_claim_trees(),
+            antecedent_basis_issues=self.antecedent_basis_issues,
+            unsupported_terms=self.unsupported_terms,
+            likely_patent=self.likely_patent,
+            patent_detection_reason=self.patent_detection_reason,
+            has_tracked_changes=self.has_tracked_changes,
+            jurisdiction_mismatch=self.jurisdiction_mismatch,
+            suggested_jurisdiction=self.suggested_jurisdiction,
+            rubric_grade=self.rubric_grade,
+        )
+
+    def _to_epc_report_data(self) -> ReportData:
+        """Build ReportData for EPC jurisdiction from pre-computed check lists.
+
+        v1 ships English specs only; ``antecedent_basis_issues`` and
+        ``unsupported_terms`` are populated by the walker port once Sessions
+        8-9 of the implementation plan land. At scaffolding stage all check
+        lists are empty.
+        """
+        return ReportData(
+            jurisdiction=self.jurisdiction,
+            patent_type=self.patent_type,
+            paragraph_count=self.paragraph_count,
+            total_claims=self.total_claims,
+            independent_count=self.independent_claims_count,
+            dependent_count=self.dependent_claims_count,
+            figure_count=self.figures_count,
+            abstract_word_count=self.abstract_word_count,
+            specification_checks=list(self.epc_specification_checks),
+            claims_checks=list(self.epc_claims_checks),
+            abstract_checks=list(self.epc_abstract_checks),
+            drawings_checks=list(self.epc_drawings_checks),
             claim_trees=self._build_claim_trees(),
             antecedent_basis_issues=self.antecedent_basis_issues,
             unsupported_terms=self.unsupported_terms,
