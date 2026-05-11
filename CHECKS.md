@@ -196,9 +196,60 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Figure count † | 專利審查基準 | PASS | `check.tw.drawings.figureCount` | Number of figures found |
 | Figures sequential | 專利審查基準 | FIX / PASS | `check.tw.drawings.figuresSequential` | Figure numbers form a contiguous 1..N set (sub-figure suffixes collapsed) |
 
+## EPC Specification
+
+| Check | Reference | Severity | message_key | Description |
+|-------|-----------|----------|-------------|-------------|
+| Required sections | Art. 78 + Rule 41 + Rule 42(1) EPC | FIX / PASS | `check.epc.spec.requiredSections` | Title, description (any Rule 42(1) sub-section), claims, abstract present |
+| Section ordering | Rule 42(1) EPC | FIX / PASS | `check.epc.spec.sectionOrdering` | Description sub-sections in (a) technical field → (b) background art → (c) summary → (d) drawings description → (e) detailed description order |
+| Paragraph numbering | EPO Guidelines F-II § 4.5 | REVIEW / PASS | `check.epc.spec.paragraphNumbering` | Sequential [NNNN]-style paragraph numbering when present (advisory — EPC does not mandate paragraph numbering) |
+| Paragraph ending | (drafting hygiene) | REVIEW / PASS | `check.epc.spec.paragraphEnding` | Description-body paragraphs end with standard terminal punctuation |
+| Title required | Rule 41(2)(b) EPC | FIX / VERIFY / PASS | `check.epc.spec.titleRequired` | Title present and concise (< 500 chars) |
+| Figure-reference consistency | Rule 46(2)(h) EPC | REVIEW / PASS | `check.epc.spec.figureRefConsistency` | Figures declared in brief description match figures referenced in detailed description |
+| Reference-numeral consistency | Rule 43(7) + Rule 46(2)(h) EPC | FIX / PASS | `check.epc.spec.numeralConsistency` | Same reference numeral used with multiple disjoint element names |
+| Claim-reference-in-spec | EPO Guidelines F-IV § 4.3 | FIX / PASS | `check.epc.spec.claimReferenceInSpec` | Description must not reference claims ("as claimed in claim N", "according to claim N", etc.) |
+
+## EPC Drawings
+
+| Check | Reference | Severity | message_key | Description |
+|-------|-----------|----------|-------------|-------------|
+| Figures sequential | Rule 46(2)(a) EPC | FIX / PASS | `check.epc.drawings.figuresSequential` | Figure numbers 1..N consecutive |
+| Single-figure label | EPO Guidelines F-V § 1.2 | REVIEW / PASS | `check.epc.drawings.singleFigureLabel` | Single-figure draft uses a recognised label form (Fig./FIG./Figure) |
+| Prior-art labeling | Rule 46(2)(h) EPC | REVIEW / PASS | `check.epc.drawings.priorArtLabeling` | Figures depicting prior art are labeled accordingly |
+| Figure count † | Rule 46(2)(a) EPC | PASS | `check.epc.drawings.figureCount` | Number of unique figure IDs detected |
+
+## EPC Claims
+
+| Check | Reference | Severity | message_key | Description |
+|-------|-----------|----------|-------------|-------------|
+| Claims sequential | Rule 43(5) EPC | FIX / PASS | `check.epc.claims.sequential` | Claim numbering 1..N consecutive |
+| Dependency format | Rule 43(4) EPC | FIX / PASS | `check.epc.claims.dependencyFormat` | Dependent claims explicitly reference parent (e.g., "according to claim N") |
+| Self-dependent | Rule 43(4) EPC | FIX / PASS | `check.epc.claims.selfDependent` | No claim depends on itself |
+| Forward dependency | Rule 43(4) EPC | FIX / PASS | `check.epc.claims.forwardDependency` | No claim depends on a higher-numbered claim |
+| Single sentence per claim | Rule 43(4) + EPO Guidelines F-IV § 4.10 | REVIEW / PASS | `check.epc.claims.singleSentence` | Each claim is a single sentence (e.g./i.e./etc. abbreviations tolerated) |
+| Reference signs in parens | Rule 43(7) EPC | REVIEW / PASS | `check.epc.claims.refSignsInParens` | Reference signs in claims placed in parentheses; bare numerals flagged |
+| Subject consistency | EPO Guidelines F-IV § 3.4 | REVIEW / PASS | `check.epc.claims.subjectConsistency` | Dependent claim subject matches parent claim |
+| Transition phrase | EPO Guidelines F-IV § 4.13 | REVIEW / PASS | `check.epc.claims.transitionPhrase` | Independent claims use an EPC-recognised transitional phrase (comprising / consisting of / characterised in that) |
+| Claim-spec reference | Rule 43(6) EPC | FIX / PASS | `check.epc.claims.specReference` | Claims must not reference description or drawings in prose |
+| Multi-dep on multi-dep | Rule 43(4) EPC | FIX / PASS | `check.epc.claims.multiDepOnMultiDep` | Multi-dependent claim cannot depend on another multi-dependent claim |
+| Markush format | EPO Guidelines F-IV § 4.20 | REVIEW / PASS | `check.epc.claims.markushFormat` | Markush groups use the closed "selected from the group consisting of" form |
+| Independent-claim count | Rule 43(2) + Rule 43(3) EPC | REVIEW / PASS | `check.epc.claims.independentClaimCount` | One independent claim per category (advisory; Rule 43(3) exceptions not auto-detected) |
+| Two-part form | Rule 43(1) EPC | REVIEW / PASS | `check.epc.claims.twoPartForm` | Preamble + "characterised in that" form (advisory — Rule 43(1) is conditional) |
+| Antecedent basis (walker) | Art. 84 EPC + EPO Guidelines F-IV § 4.5 | REVIEW / PASS | `check.epc.claims.antecedentBasis` | "the X" without prior "a X" — walker port from US with EPC dep-preamble pre-stripping |
+| Specification support (walker) | Art. 84 EPC | REVIEW / PASS | `check.epc.claims.specSupport` | Claim terms supported by description body |
+| Restrictive absolutes | EPO Guidelines F-IV § 4.7 | REVIEW / PASS | `check.epc.claims.restrictiveAbsolutes` | Absolute terms (must, always, never, essential, etc.) flagged |
+| Claim punctuation | EPO Guidelines F-IV § 4.10 | FIX / PASS | `check.epc.claims.punctuation` | Each claim ends with a single period; no misplaced periods inside the body |
+
+## EPC Abstract
+
+| Check | Reference | Severity | message_key | Description |
+|-------|-----------|----------|-------------|-------------|
+| Abstract word count | Rule 47(2) + EPO Guidelines F-II § 2.3 | FIX / REVIEW / PASS | `check.epc.abstract.wordCount` | 50-150 words (EPO practice); FIX > 150, REVIEW < 50 |
+| Abstract structure | Rule 47(2) + EPO Guidelines F-II § 2.3 | FIX / PASS | `check.epc.abstract.structure` | Single paragraph; no implied openers, claim-style phraseology, or merit / self-referential language |
+
 ---
 
-**Total checks: 109** (40 US + 32 CN + 37 TW; † summary rows excluded)
+**Total checks: 144** (42 US + 33 CN + 39 TW + 30 EPC; † summary rows excluded)
 
 † Internal: not rendered as a CheckItem card in the web UI or PDF report. Used for stats aggregation and CLI output only.
 

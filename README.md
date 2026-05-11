@@ -2,12 +2,12 @@
 
 [![CI](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml/badge.svg)](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml)
 [![Live Demo](https://img.shields.io/badge/demo-patentlint.com-blue)](https://patentlint.com)
-[![Tests](https://img.shields.io/badge/tests-2371-brightgreen)](#)
+[![Tests](https://img.shields.io/badge/tests-2497-brightgreen)](#)
 [![License: PolyForm-Strict-1.0.0](https://img.shields.io/badge/license-PolyForm--Strict--1.0.0-orange)](LICENSE)
 
 **No account. No install. No upload.**
 
-PatentLint checks U.S., Chinese, and Taiwanese patent application drafts against USPTO, CNIPA, and TIPO drafting rules — entirely in your browser. Your file never leaves your device.
+PatentLint checks U.S., Chinese, Taiwanese, and European (EPC) patent application drafts against USPTO, CNIPA, TIPO, and EPO drafting rules — entirely in your browser. Your file never leaves your device.
 
 **[Try it →](https://patentlint.com)**
 
@@ -27,8 +27,8 @@ PatentLint is currently maintained as an open-source portfolio project by Christ
 
 ## How It Works
 
-1. **Drop** a patent draft into the browser (.docx for US/TW, .docx/.xml/.zip for CN)
-2. **Analyze** — 109 checks run instantly via WebAssembly (no server, no upload)
+1. **Drop** a patent draft into the browser (.docx for US/TW/EPC, .docx/.xml/.zip for CN)
+2. **Analyze** — 144 checks run instantly via WebAssembly (no server, no upload)
 3. **Report** — download a PDF or copy a summary to clipboard
 
 ---
@@ -43,9 +43,11 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 
 ## What It Checks
 
-109 automated checks across three jurisdictions, each classified as **PASS**, **REVIEW**, or **FIX**.
+144 automated checks across four jurisdictions, each classified as **PASS**, **REVIEW**, or **FIX**.
 
-### U.S. Patent Applications (40 checks)
+> **EPC support is v1 beta.** The full 30-check EPC catalog runs end-to-end via CLI and REST API. The frontend jurisdiction picker integration and real-corpus FP tuning are next on the roadmap.
+
+### U.S. Patent Applications (42 checks)
 
 | Section | Checks | Reference |
 |---------|--------|-----------|
@@ -54,7 +56,7 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 | **Claims** | Numbering, dependencies, periods, punctuation, indefinite terms, transitional phrases, means-plus-function (§ 112(f)), antecedent basis (§ 112(b)), preamble consistency (§ 112(d)), specification support (§ 112(a)), claim similarity, special formats (Jepson / CRM / Markush / omnibus) | 35 U.S.C. § 101, § 112; MPEP § 2117–2173 |
 | **Abstract** | Word count (50–150), single paragraph, legal phraseology, implied phrases, self-praising language | MPEP § 608.01(b) |
 
-### Chinese Patent Applications (32 checks)
+### Chinese Patent Applications (33 checks)
 
 | Section | Checks | Reference |
 |---------|--------|-----------|
@@ -63,7 +65,7 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 | **Abstract** | Character count (≤300), title match, commercial language | 专利法实施细则 §23 |
 | **Drawings** | Figures sequential, figure count | 审查指南 |
 
-### Taiwanese Patent Applications (37 checks)
+### Taiwanese Patent Applications (39 checks)
 
 | Section | Checks | Reference |
 |---------|--------|-----------|
@@ -72,7 +74,18 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 | **Abstract** | Character count (≤250), title match, commercial language, representative drawing (代表圖) designation | 專利法施行細則 §21 |
 | **Drawings** | Figures sequential, figure count | 專利法施行細則 §17 |
 
-Supported input: `.docx` for US and TW; `.docx`, CNIPA filing XML (`.xml`), and `.zip` archives for CN.
+### European (EPC) Patent Applications — English drafts (30 checks, v1 beta)
+
+| Section | Checks | Reference |
+|---------|--------|-----------|
+| **Specification** | Required sections, section ordering (Rule 42(1) sub-section order), paragraph numbering (advisory), paragraph ending, title required, figure-reference consistency, reference-numeral consistency, claim-reference-in-spec | Art. 78 + Rule 41 + Rule 42 + Rule 43(7) + Rule 46(2)(h) EPC; Guidelines F-II + F-IV § 4.3 |
+| **Drawings** | Figures sequential, single-figure label, prior-art labeling, figure count | Rule 46(2)(a) + Rule 46(2)(h) EPC; Guidelines F-V § 1.2 |
+| **Claims** | Sequential numbering, dependency format, self/forward dependency, single sentence per claim, reference signs in parens, subject consistency, transitional phrase, claim-spec reference, multi-dep on multi-dep, Markush format, independent-claim count per category, two-part form (advisory), **antecedent basis — Art. 84 walker**, **specification support — Art. 84 walker**, restrictive absolutes, claim punctuation | Art. 84 EPC; Rule 43 EPC; Guidelines F-IV § 3.4, § 4.5, § 4.7, § 4.10, § 4.13, § 4.20 |
+| **Abstract** | Word count (50–150), structure (single paragraph, no claim-style phraseology, no merit language) | Rule 47(2) EPC; Guidelines F-II § 2.3 |
+
+EPC English input only at v1 (DE/FR check engines deferred). The English-language jurisdiction-mismatch banner detects EPC vs US tells ("characterised in that", "any preceding claim", Article 84 citations) and routes accordingly.
+
+Supported input: `.docx` for US, TW, and EPC; `.docx`, CNIPA filing XML (`.xml`), and `.zip` archives for CN.
 
 Full inventory: [CHECKS.md](CHECKS.md)
 
@@ -125,19 +138,19 @@ src/patentlint/
 ├── cli.py           # Click CLI (analyze, batch)
 ├── i18n.py          # Locale bundle loader + i18next-style translator
 ├── parser/          # Section extraction, claim parsing, .docx/.xml/.zip loading
-├── analysis/        # Rule checks (US + CN + TW) — all pure functions, independently testable
+├── analysis/        # Rule checks (US + CN + TW + EPC) — all pure functions, independently testable
 ├── report/          # PDF report generation (Jinja2 + weasyprint; locale-aware)
 └── api/             # FastAPI REST endpoints
 
 frontend/
 ├── src/components/  # DropZone, ClaimTree, TriagePanel, Section112Container, …
 ├── src/lib/         # pdfExport.js (client-side PDF via pdfmake), detailsFormatter.js
-├── src/pages/       # SecurityPage, AboutPage
+├── src/pages/       # SecurityPage, AboutPage, TermsPage, PrivacyPage, CommercialPage, RubricPage
 ├── src/hooks/       # usePyodide, useNetworkMonitor
-└── src/i18n/        # Locale files (en, zh-TW, zh-CN, ja, ko) — shared with Python
+└── src/i18n/        # Locale files (en, de, zh-TW, zh-CN, ja, ko) — shared with Python
 ```
 
-The `parser/` and `analysis/` packages have **zero framework dependencies** — they run identically in Pyodide (browser), FastAPI (Docker), and Click (CLI). The same engine handles US, CN, and TW jurisdictions; `pipeline.py` routes to the appropriate parser and check modules.
+The `parser/` and `analysis/` packages have **zero framework dependencies** — they run identically in Pyodide (browser), FastAPI (Docker), and Click (CLI). The same engine handles US, CN, TW, and EPC jurisdictions; `pipeline.py` routes to the appropriate parser and check modules.
 
 ---
 
@@ -154,7 +167,7 @@ Visit **[patentlint.com](https://patentlint.com)** — nothing to install.
 ```bash
 # Backend
 pip install -e ".[api,dev]"
-pytest -v                    # 2371 tests
+pytest -v                    # 2497 tests
 uvicorn patentlint.api.app:app --port 8000 --reload
 
 # Frontend (separate terminal)
@@ -168,6 +181,7 @@ cd frontend && npm install && npm run dev
 patentlint analyze patent-draft.docx                                          # US (default)
 patentlint analyze filing.xml --jurisdiction cn                               # CN filing XML
 patentlint analyze tw-draft.docx --jurisdiction tw                            # TW .docx
+patentlint analyze epc-draft.docx --jurisdiction epc                          # EPC English .docx (v1 beta)
 patentlint analyze patent-draft.docx -o report.json                           # JSON to file
 patentlint analyze patent-draft.docx --format pdf -o report.pdf               # PDF report
 patentlint analyze tw-draft.docx --format pdf --locale zh-TW -o report.pdf    # Localized PDF
@@ -206,7 +220,7 @@ curl http://localhost:8000/api/health
 | Frontend | React 18, Vite 6, Tailwind CSS v4, shadcn/ui |
 | PDF | pdfmake (web) · weasyprint (Docker/CLI) |
 | CLI | Click |
-| Testing | pytest (2371 tests) |
+| Testing | pytest (2497 tests) |
 | CI/CD | GitHub Actions (test, lint, wheel-verify, docker) + Vercel auto-deploy |
 | i18n | react-i18next (English, Deutsch, 繁體中文, 简体中文, 日本語, 한국어) — shared locale bundles across frontend + weasyprint PDF |
 
@@ -218,12 +232,14 @@ PatentLint's UI is available in six languages. Patent-specific terms follow offi
 
 | Language | Patent Office | Terminology Standard |
 |----------|--------------|---------------------|
-| English | USPTO | MPEP |
+| English | USPTO + EPO | MPEP + EPC / EPO Guidelines |
 | Deutsch | EPA / DPMA | EPÜ / PatG |
 | 繁體中文 | TIPO (經濟部智慧財產局) | 專利審查基準 |
 | 简体中文 | CNIPA (国家知识产权局) | 专利审查指南 |
 | 日本語 | JPO (特許庁) | 特許・実用新案審査基準 |
 | 한국어 | KIPO (특허청) | 특허·실용신안 심사기준 |
+
+EPC drafts must be in English at v1; DE/FR EPC check engines are deferred. The jurisdiction-mismatch detector recognises EPC-specific tells ("characterised in that", Article citations, "any preceding claim") and routes accordingly.
 
 ---
 
