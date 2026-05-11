@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
+# Copyright (c) 2025–2026 Christopher Chen
 """Step 0 calibration — round 1 §7 LLM-judge gating against PatentLint's hand-labeled corpus.
 
 Stratified samples from CN + TW antecedent labels, runs the walker per fixture

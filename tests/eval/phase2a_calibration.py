@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
+# Copyright (c) 2025–2026 Christopher Chen
 """Phase 2a calibration — round 1 §4 prompt R&D against the 21 hand-labeled
 fixtures.
 
