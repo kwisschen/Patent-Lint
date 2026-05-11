@@ -40,9 +40,9 @@ def test_run_epc_pipeline_stub_returns_well_formed_result():
     assert isinstance(result, AnalysisResult)
     assert result.jurisdiction == Jurisdiction.EPC
     assert len(result.epc_specification_checks) == 8
+    assert len(result.epc_drawings_checks) == 4
     assert len(result.epc_abstract_checks) == 2
     assert result.epc_claims_checks == []
-    assert result.epc_drawings_checks == []
 
 
 def test_analyze_bytes_routes_epc_jurisdiction_without_crashing():
@@ -62,9 +62,9 @@ def test_epc_report_data_adapter_round_trips():
     report = result.to_report_data()
     assert isinstance(report, ReportData)
     assert report.jurisdiction == Jurisdiction.EPC
-    # G1 + G2 ship 8 spec checks; G7 ships 2 abstract checks; G3 drawings
-    # and G4-G6 claims still pending so those lists remain empty.
+    # G1 + G2 ship 8 spec checks; G3 ships 4 drawings checks; G7 ships 2
+    # abstract checks. G4-G6 claims still pending so that list stays empty.
     assert len(report.specification_checks) == 8
+    assert len(report.drawings_checks) == 4
     assert len(report.abstract_checks) == 2
     assert report.claims_checks == []
-    assert report.drawings_checks == []

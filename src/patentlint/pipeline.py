@@ -104,6 +104,7 @@ def _run_epc_pipeline(
       G7 (abstract):       pending
     """
     from patentlint.analysis.epc_abstract import run_g7_abstract_checks
+    from patentlint.analysis.epc_drawings import run_g3_drawings_checks
     from patentlint.analysis.epc_specification import (
         run_g1_spec_structure_checks,
         run_g2_spec_content_checks,
@@ -119,6 +120,7 @@ def _run_epc_pipeline(
 
     spec_checks = run_g1_spec_structure_checks(full_text)
     spec_checks.extend(run_g2_spec_content_checks(full_text))
+    drawings_checks = run_g3_drawings_checks(full_text)
     abstract_checks = run_g7_abstract_checks(abstract_text)
 
     result = AnalysisResult(
@@ -131,6 +133,7 @@ def _run_epc_pipeline(
         abstract_text=abstract_text,
         abstract_word_count=abstract_word_count,
         epc_specification_checks=spec_checks,
+        epc_drawings_checks=drawings_checks,
         epc_abstract_checks=abstract_checks,
     )
     return result
