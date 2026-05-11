@@ -356,14 +356,15 @@ def run_g1_spec_structure_checks(full_text: str) -> list[CheckItem]:
       2. sectionOrdering
       3. paragraphNumbering
       4. paragraphEnding
-      5. titleRequired (G2-anchor; surfaced here for now until G2 grows)
+
+    titleRequired emits in G2 (run_g2_spec_content_checks) per canonical
+    bucket placement — title is a G2 SPEC_CONTENT check.
     """
     results: list[CheckItem] = []
     results.extend(check_required_sections_epc(full_text))
     results.extend(check_section_ordering_epc(full_text))
     results.extend(check_paragraph_numbering_epc(full_text))
     results.extend(check_paragraph_ending_epc(full_text))
-    results.extend(check_title_required_epc(full_text))
     return results
 
 
@@ -511,12 +512,15 @@ def check_claim_reference_in_spec_epc(full_text: str) -> list[CheckItem]:
 def run_g2_spec_content_checks(full_text: str) -> list[CheckItem]:
     """Run all G2 spec-content checks in canonical 7-group order.
 
-      1. figureRefConsistency
-      2. numeralConsistency
-      3. claimReferenceInSpec
+      1. figureRefConsistency (idx 10)
+      2. numeralConsistency (idx 15)
+      3. titleRequired (idx 30) — emitted here, not in run_g1, to keep
+         the spec_checks emission monotonic in canonical (group, idx)
+      4. claimReferenceInSpec (idx 40)
     """
     results: list[CheckItem] = []
     results.extend(check_figure_ref_consistency_epc(full_text))
     results.extend(check_numeral_consistency_epc(full_text))
+    results.extend(check_title_required_epc(full_text))
     results.extend(check_claim_reference_in_spec_epc(full_text))
     return results
