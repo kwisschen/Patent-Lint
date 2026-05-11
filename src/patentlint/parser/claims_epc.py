@@ -107,7 +107,17 @@ def parse_dependencies_epc(
         if start <= end:
             deps.update(range(start, end + 1))
 
-    # "claims N and M" / "claim N or M"
+    # Comma-separated alternation: "claim 1, 2 or 3" / "claims 1, 2, 3 and 4".
+    # Captures the entire numeric list after "claim(s)" so 3+-way alternation
+    # works (the older "claim N and/or M" regex below only catches pairs).
+    for m in re.finditer(
+        r"\bclaims?\s+((?:\d+\s*(?:,|and|or)\s*)+\d+)\b",
+        text, re.IGNORECASE,
+    ):
+        for n in re.findall(r"\d+", m.group(1)):
+            deps.add(int(n))
+
+    # "claims N and M" / "claim N or M" — two-way alternation (pair form)
     for m in re.finditer(
         r"\bclaims?\s+(\d+)\s*(?:and|or)\s*(?:claims?\s+)?(\d+)\b",
         text, re.IGNORECASE,
