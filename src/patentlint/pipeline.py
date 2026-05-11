@@ -104,24 +104,33 @@ def _run_epc_pipeline(
       G7 (abstract):       pending
     """
     from patentlint.analysis.epc_abstract import run_g7_abstract_checks
+    from patentlint.analysis.epc_claims import run_g4_claims_structure_checks
     from patentlint.analysis.epc_drawings import run_g3_drawings_checks
     from patentlint.analysis.epc_specification import (
         run_g1_spec_structure_checks,
         run_g2_spec_content_checks,
     )
+    from patentlint.parser.claims_epc import parse_claims_epc
     from patentlint.parser.sections_epc import (
         extract_abstract_section_epc,
+        extract_claims_section_epc,
         extract_title_epc,
     )
 
     title = extract_title_epc(full_text)
     abstract_text = extract_abstract_section_epc(full_text)
     abstract_word_count = len(abstract_text.split()) if abstract_text else 0
+    claims_section = extract_claims_section_epc(full_text)
+    claims = parse_claims_epc(claims_section)
 
     spec_checks = run_g1_spec_structure_checks(full_text)
     spec_checks.extend(run_g2_spec_content_checks(full_text))
     drawings_checks = run_g3_drawings_checks(full_text)
+    claims_checks = run_g4_claims_structure_checks(claims)
     abstract_checks = run_g7_abstract_checks(abstract_text)
+
+    independent_count = sum(1 for c in claims if c.independent)
+    dependent_count = sum(1 for c in claims if not c.independent)
 
     result = AnalysisResult(
         jurisdiction=Jurisdiction.EPC,
@@ -132,8 +141,12 @@ def _run_epc_pipeline(
         suggested_jurisdiction=suggested_jurisdiction,
         abstract_text=abstract_text,
         abstract_word_count=abstract_word_count,
+        claims=claims,
+        independent_claims_count=independent_count,
+        dependent_claims_count=dependent_count,
         epc_specification_checks=spec_checks,
         epc_drawings_checks=drawings_checks,
+        epc_claims_checks=claims_checks,
         epc_abstract_checks=abstract_checks,
     )
     return result
