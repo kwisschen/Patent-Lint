@@ -113,7 +113,8 @@
   "section112": {
     "title": "§ 112 分析",
     "titleTw": "先行詞分析",
-    "titleTwSpec": "§26 第3項分析"
+    "titleTwSpec": "§26 第3項分析",
+    "titleEpc": "第84條 EPC 分析"
   },
   "results": {
     "nonPatentWarning": "此文件可能不是美國專利說明書",
@@ -626,7 +627,63 @@
     "builderSister": "其姊妹專案 Agentic Patent Analyst 為公開原始碼的 LangGraph workflow，可解讀 OA、評斷核駁理由、並撰擬答辯與修正策略。",
     "licenseNote": "PatentLint 對個人使用免費，並依 PolyForm-Strict-1.0.0 公開原始碼。完整原始碼可於 GitHub 取得。",
     "tableFootnote": "截至 2026 年 4 月；兩者均可能持續演進。",
-    "twTableFootnote": "TIPO 檢查項目依「專利申請文件輔助偵錯系統：功能介紹與使用指南」（2023.5.30 版）比對。TIPO 偵錯系統僅適用新型專利申請；PatentLint 同時支援新型與發明。兩者均可能持續演進。"
+    "twTableFootnote": "TIPO 檢查項目依「專利申請文件輔助偵錯系統：功能介紹與使用指南」（2023.5.30 版）比對。TIPO 偵錯系統僅適用新型專利申請；PatentLint 同時支援新型與發明。兩者均可能持續演進。",
+    "epcTitle": "PatentLint EPC 專利稿件檢查",
+    "epcSubtitle": "{{count}} 項結構性檢查，依循 EPC 規範（第78條、施行細則第41-47條，以及 EPO 審查指南 F 部）。",
+    "epcFeatures": {
+      "title": "EPC 專利交互式分析",
+      "claimTree": {
+        "title": "請求項依附樹狀圖 + 第84條 walker",
+        "description": "完整請求項依附樹狀圖，搭配先行詞與說明書支持 walker（依 EPC 第84條）。EPC 特有的依附用語——「any preceding claim」、「any one of claims N to M」——於剖析階段預先處理並展開。"
+      },
+      "specAbstract": {
+        "title": "說明書與摘要結構",
+        "description": "施行細則第42(1)條規定之說明書次節順序（技術領域 → 先前技術 → 發明內容 → 圖式簡單說明 → 實施方式）、圖式參照一致性（第46(2)(h)條）、參考標記一致性（第43(7)條、第46(2)(h)條），以及 50-150 字摘要限制（第47(2)條、EPO 審查指南 F-II § 2.3）。"
+      },
+      "twoPartForm": {
+        "title": "二段式 + Markush + 第43(2)條",
+        "description": "偵測施行細則第43(1)條二段式（其特徵在於），檢查 Markush 群組形式（EPO 審查指南 F-IV § 4.20），並就同一專利類別出現多於一項獨立項時提示第43(2)條檢核事項。"
+      }
+    },
+    "epcGroups": {
+      "specification": "說明書",
+      "claims": "申請專利範圍",
+      "drawings": "圖式",
+      "abstract": "摘要"
+    },
+    "epcChecks": {
+      "requiredSections": "必要章節（第78(1)條、施行細則第41條、第42(1)條）",
+      "sectionOrdering": "章節順序（施行細則第42(1)條規定之次節序）",
+      "paragraphNumbering": "段落編號（建議性檢核）",
+      "paragraphEnding": "段落結尾標點",
+      "titleRequired": "發明名稱（施行細則第41(2)(b)條）",
+      "figureRefConsistency": "圖式參照一致性（施行細則第46(2)(h)條）",
+      "numeralConsistency": "參考標記一致性（施行細則第43(7)條、第46(2)(h)條）",
+      "claimReferenceInSpec": "說明書中不得引用請求項（EPO 審查指南 F-IV § 4.3）",
+      "sequential": "請求項連續編號（施行細則第43(5)條）",
+      "dependencyFormat": "依附形式（施行細則第43(4)條）",
+      "selfDependent": "請求項不得自我依附",
+      "forwardDependency": "請求項不得向後依附",
+      "singleSentence": "每項請求項以單句為之（施行細則第43(4)條、審查指南 F-IV § 4.10）",
+      "refSignsInParens": "參考標記應加括號（施行細則第43(7)條）",
+      "subjectConsistency": "請求項主題一致性（審查指南 F-IV § 3.4）",
+      "transitionPhrase": "連接詞——comprising / consisting of / 其特徵在於（審查指南 F-IV § 4.13）",
+      "claimsSpecReference": "請求項不得引用說明書或圖式（施行細則第43(6)條）",
+      "multiDepOnMultiDep": "多項附屬項不得依附另一多項附屬項（施行細則第43(4)條）",
+      "markushFormat": "Markush 群組形式（審查指南 F-IV § 4.20）",
+      "independentClaimCount": "各專利類別之獨立項數（施行細則第43(2)、43(3)條，建議性）",
+      "twoPartForm": "二段式（施行細則第43(1)條，建議性）",
+      "antecedentBasis": "先行詞 walker——第84條、審查指南 F-IV § 4.5",
+      "specSupport": "說明書支持——第84條（說明書支持要件）",
+      "restrictiveAbsolutes": "限制性絕對用語（審查指南 F-IV § 4.7，建議性）",
+      "punctuation": "請求項標點（審查指南 F-IV § 4.10）",
+      "figuresSequential": "圖式連續編號（施行細則第46(2)(a)條）",
+      "singleFigureLabel": "單一圖式之標示方式（審查指南 F-V § 1.2）",
+      "priorArtLabeling": "先前技術圖式之標示（施行細則第46(2)(h)條）",
+      "wordCount": "摘要字數（50-150）——施行細則第47(2)條、審查指南 F-II § 2.3",
+      "structure": "摘要結構——單一段落，避免請求項風格用語，避免功利性語言"
+    },
+    "epcTableFootnote": "資料日期：2026年5月；v1 Beta。v1 僅支援英文 EPC 稿件；DE/FR 檢查引擎尚待開發。Walker 類檢核（先行詞、說明書支持）採「檢視」狀態，待真實語料庫 FP 率測量後再行升級。"
   },
   "details": {
     "paragraphs": "段落：{{list}}",

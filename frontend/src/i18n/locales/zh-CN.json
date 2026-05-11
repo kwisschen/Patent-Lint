@@ -113,7 +113,8 @@
   "section112": {
     "title": "§ 112 分析",
     "titleTw": "引用基础分析",
-    "titleTwSpec": "§26 第3項分析"
+    "titleTwSpec": "§26 第3項分析",
+    "titleEpc": "第84条 EPC 分析"
   },
   "results": {
     "nonPatentWarning": "此文档可能不是美国专利说明书",
@@ -626,7 +627,63 @@
     "builderSister": "其姊妹项目 Agentic Patent Analyst 为开源 LangGraph workflow，可解读 OA、评判驳回理由、并起草答复与修改策略。",
     "licenseNote": "PatentLint 个人使用免费，依 PolyForm-Strict-1.0.0 公开源代码。完整源代码托管于 GitHub。",
     "tableFootnote": "截至 2026 年 4 月；两者均可能持续演进。",
-    "twTableFootnote": "TIPO 检查项目依据「专利申请文件辅助侦错系统：功能介绍与使用指南」（2023.5.30 版）比对。TIPO 偵錯系統仅适用实用新型申请；PatentLint 同时支援实用新型与发明。两者均可能持续演进。"
+    "twTableFootnote": "TIPO 检查项目依据「专利申请文件辅助侦错系统：功能介绍与使用指南」（2023.5.30 版）比对。TIPO 偵錯系統仅适用实用新型申请；PatentLint 同时支援实用新型与发明。两者均可能持续演进。",
+    "epcTitle": "PatentLint EPC 专利稿件检查",
+    "epcSubtitle": "{{count}} 项结构性检查，依据 EPC 规则（第78条、实施细则第41-47条，以及 EPO 审查指南 F 部分）。",
+    "epcFeatures": {
+      "title": "EPC 专利交互式分析",
+      "claimTree": {
+        "title": "权利要求依附树状图 + 第84条 walker",
+        "description": "完整权利要求依附树状图，配合引用基础与说明书支持 walker（依 EPC 第84条）。EPC 特有的依附表述——「any preceding claim」、「any one of claims N to M」——在解析阶段预处理并展开。"
+      },
+      "specAbstract": {
+        "title": "说明书与摘要结构",
+        "description": "实施细则第42(1)条规定之说明书子节顺序（技术领域 → 背景技术 → 发明内容 → 附图说明 → 具体实施方式）、图示引用一致性（第46(2)(h)条）、参考标记一致性（第43(7)条、第46(2)(h)条），以及 50-150 词摘要限制（第47(2)条、EPO 审查指南 F-II § 2.3）。"
+      },
+      "twoPartForm": {
+        "title": "两段式 + Markush + 第43(2)条",
+        "description": "检测实施细则第43(1)条两段式（其特征在于），检查 Markush 群组形式（EPO 审查指南 F-IV § 4.20），并对同一权利要求类别出现多项独立权利要求时提示第43(2)条审核事项。"
+      }
+    },
+    "epcGroups": {
+      "specification": "说明书",
+      "claims": "权利要求",
+      "drawings": "附图",
+      "abstract": "摘要"
+    },
+    "epcChecks": {
+      "requiredSections": "必要章节（第78(1)条、实施细则第41条、第42(1)条）",
+      "sectionOrdering": "章节顺序（实施细则第42(1)条规定之子节顺序）",
+      "paragraphNumbering": "段落编号（建议性检查）",
+      "paragraphEnding": "段落结尾标点",
+      "titleRequired": "发明名称（实施细则第41(2)(b)条）",
+      "figureRefConsistency": "图示引用一致性（实施细则第46(2)(h)条）",
+      "numeralConsistency": "参考标记一致性（实施细则第43(7)条、第46(2)(h)条）",
+      "claimReferenceInSpec": "说明书中不得引用权利要求（EPO 审查指南 F-IV § 4.3）",
+      "sequential": "权利要求连续编号（实施细则第43(5)条）",
+      "dependencyFormat": "依附形式（实施细则第43(4)条）",
+      "selfDependent": "权利要求不得自我依附",
+      "forwardDependency": "权利要求不得向后依附",
+      "singleSentence": "每项权利要求以单句为之（实施细则第43(4)条、审查指南 F-IV § 4.10）",
+      "refSignsInParens": "参考标记应加括号（实施细则第43(7)条）",
+      "subjectConsistency": "权利要求主题一致性（审查指南 F-IV § 3.4）",
+      "transitionPhrase": "连接词——comprising / consisting of / 其特征在于（审查指南 F-IV § 4.13）",
+      "claimsSpecReference": "权利要求不得引用说明书或附图（实施细则第43(6)条）",
+      "multiDepOnMultiDep": "多项从属权利要求不得依附另一多项从属权利要求（实施细则第43(4)条）",
+      "markushFormat": "Markush 群组形式（审查指南 F-IV § 4.20）",
+      "independentClaimCount": "各权利要求类别之独立项数（实施细则第43(2)、43(3)条，建议性）",
+      "twoPartForm": "两段式（实施细则第43(1)条，建议性）",
+      "antecedentBasis": "引用基础 walker——第84条、审查指南 F-IV § 4.5",
+      "specSupport": "说明书支持——第84条（说明书支持要件）",
+      "restrictiveAbsolutes": "限制性绝对用语（审查指南 F-IV § 4.7，建议性）",
+      "punctuation": "权利要求标点（审查指南 F-IV § 4.10）",
+      "figuresSequential": "附图连续编号（实施细则第46(2)(a)条）",
+      "singleFigureLabel": "单一附图之标示方式（审查指南 F-V § 1.2）",
+      "priorArtLabeling": "现有技术附图之标示（实施细则第46(2)(h)条）",
+      "wordCount": "摘要字数（50-150）——实施细则第47(2)条、审查指南 F-II § 2.3",
+      "structure": "摘要结构——单段落，避免权利要求风格用语，避免功利性语言"
+    },
+    "epcTableFootnote": "数据截止：2026年5月；v1 Beta。v1 仅支持英文 EPC 稿件；DE/FR 检查引擎暂未开发。Walker 类检查（引用基础、说明书支持）采用「审视」状态，待真实语料库 FP 率测量后再行升级。"
   },
   "details": {
     "paragraphs": "段落：{{list}}",
