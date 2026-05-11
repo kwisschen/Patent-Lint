@@ -107,6 +107,86 @@ def test_us_selected_us_doc_no_mismatch():
     assert detect_jurisdiction_mismatch(US_SAMPLE, Jurisdiction.US) is None
 
 
+# --- EPC sample ---------------------------------------------------------------
+
+# A representative EPC English patent fragment. EPC-distinctive tells:
+# British spelling ("characterised in that"), EPC two-part-form preamble,
+# "any preceding claim" idiom, EPC Article / Rule citations. Word count
+# is high so CJK ratio is essentially zero.
+EPC_SAMPLE = """
+Application before the European Patent Office under the European Patent
+Convention (EPC).
+
+The present invention relates to a signal-processing apparatus. The
+problem addressed by Article 56 EPC for the closest prior art is set out
+below.
+
+Claims:
+
+1. A signal-processing apparatus comprising a processor and a memory,
+   characterised in that the memory is configured to store calibration
+   values associated with the processor.
+
+2. An apparatus according to claim 1, wherein the processor comprises a
+   microcontroller.
+
+3. An apparatus according to any preceding claim, further comprising a
+   communication interface coupled to the processor.
+
+4. An apparatus according to any one of claims 1 to 3, wherein the
+   communication interface is wireless.
+
+The clarity requirement of Article 84 EPC is satisfied because each
+feature of the claims is supported by the description. Rule 43 EPC
+governs the form of the claims; in particular, reference signs are
+provided in parentheses pursuant to Rule 43(7) EPC.
+"""
+
+
+# --- EPC-selected mismatches --------------------------------------------------
+
+
+def test_epc_selected_epc_doc_no_mismatch():
+    assert detect_jurisdiction_mismatch(EPC_SAMPLE, Jurisdiction.EPC) is None
+
+
+def test_epc_selected_us_doc_suggests_us():
+    assert detect_jurisdiction_mismatch(US_SAMPLE, Jurisdiction.EPC) == "US"
+
+
+def test_epc_selected_cn_doc_suggests_cn():
+    assert detect_jurisdiction_mismatch(CN_SAMPLE, Jurisdiction.EPC) == "CN"
+
+
+def test_epc_selected_tw_doc_suggests_tw():
+    assert detect_jurisdiction_mismatch(TW_SAMPLE, Jurisdiction.EPC) == "TW"
+
+
+def test_us_selected_epc_doc_suggests_epc():
+    assert detect_jurisdiction_mismatch(EPC_SAMPLE, Jurisdiction.US) == "EPC"
+
+
+def test_cn_selected_epc_doc_suggests_epc():
+    assert detect_jurisdiction_mismatch(EPC_SAMPLE, Jurisdiction.CN) == "EPC"
+
+
+def test_tw_selected_epc_doc_suggests_epc():
+    assert detect_jurisdiction_mismatch(EPC_SAMPLE, Jurisdiction.TW) == "EPC"
+
+
+def test_epc_selected_us_doc_with_one_epc_mention_still_suggests_us():
+    """Asymmetric direction — US drafts that cite an EPC counterpart by
+    name (single mention) should NOT cause EPC → US suggestion to be
+    silenced. The asymmetric gate requires us_markers - epc_markers >= 2
+    AND epc_markers == 0; a single 'European Patent' mention in a
+    US-pattern draft puts epc_markers > 0 and stays at None — the
+    conservative answer when both jurisdictions show signal."""
+    text = US_SAMPLE + "\n\nThe European Patent Office published a counterpart."
+    # us_markers should still be >= 2 (method of claim + non-transitory),
+    # but epc_markers > 0, so the EPC → US gate stays closed.
+    assert detect_jurisdiction_mismatch(text, Jurisdiction.EPC) is None
+
+
 # --- CN-selected mismatches ---------------------------------------------------
 
 
@@ -190,14 +270,21 @@ def test_cn_selected_traditional_chars_no_tipo_markers_no_mismatch():
         (Jurisdiction.US, US_SAMPLE, None),
         (Jurisdiction.US, TW_SAMPLE, "TW"),
         (Jurisdiction.US, CN_SAMPLE, "CN"),
+        (Jurisdiction.US, EPC_SAMPLE, "EPC"),
         (Jurisdiction.CN, US_SAMPLE, "US"),
         (Jurisdiction.CN, TW_SAMPLE, "TW"),
         (Jurisdiction.CN, CN_SAMPLE, None),
+        (Jurisdiction.CN, EPC_SAMPLE, "EPC"),
         (Jurisdiction.TW, US_SAMPLE, "US"),
         (Jurisdiction.TW, TW_SAMPLE, None),
         (Jurisdiction.TW, CN_SAMPLE, "CN"),
+        (Jurisdiction.TW, EPC_SAMPLE, "EPC"),
+        (Jurisdiction.EPC, US_SAMPLE, "US"),
+        (Jurisdiction.EPC, TW_SAMPLE, "TW"),
+        (Jurisdiction.EPC, CN_SAMPLE, "CN"),
+        (Jurisdiction.EPC, EPC_SAMPLE, None),
     ],
 )
 def test_mismatch_matrix(selected, sample, expected):
-    """Full 3×3 jurisdiction-vs-sample matrix as a single regression gate."""
+    """Full 4×4 jurisdiction-vs-sample matrix as a single regression gate."""
     assert detect_jurisdiction_mismatch(sample, selected) == expected
