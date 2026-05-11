@@ -787,7 +787,7 @@ function BuilderStory({ t }) {
 
   const links = [
     { href: 'mailto:kwisschen@gmail.com', icon: Mail, label: 'Email' },
-    { href: 'https://github.com/kwisschen/Patent-Lint', icon: Github, label: 'GitHub' },
+    { href: 'https://github.com/kwisschen', icon: Github, label: 'GitHub' },
     { href: 'https://linkedin.com/in/kwisschen', icon: Linkedin, label: 'LinkedIn' },
   ]
 
