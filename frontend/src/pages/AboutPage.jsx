@@ -629,7 +629,7 @@ function ComparisonTable({ t }) {
     <section>
       <div className="text-center mb-8">
         <div
-          className="flex items-center justify-center gap-1 rounded-lg p-1 mb-4 w-fit mx-auto ring-1"
+          className="grid grid-cols-2 sm:grid-cols-4 gap-1 rounded-lg p-1 mb-4 ring-1 w-full max-w-md sm:max-w-xl mx-auto"
           style={{
             backgroundImage: 'var(--frost-resting-bg)',
             boxShadow: 'var(--frost-resting-inner-light)',
@@ -644,14 +644,14 @@ function ComparisonTable({ t }) {
               role="radio"
               aria-checked={activeTab === j}
               onClick={() => setActiveTab(j)}
-              className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all ${
+              className={`flex items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium transition-all ${
                 activeTab === j
                   ? 'bg-card text-foreground shadow-md ring-1 ring-foreground/15'
                   : 'text-muted-foreground hover:text-foreground hover:bg-card/40'
               }`}
             >
               <JurisdictionBadge code={j} />
-              {t(`jurisdiction.${j.toLowerCase()}`)}
+              <span className="truncate">{t(`jurisdiction.${j.toLowerCase()}`)}</span>
             </button>
           ))}
         </div>

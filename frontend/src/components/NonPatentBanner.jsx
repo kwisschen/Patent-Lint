@@ -28,6 +28,7 @@ const JURISDICTION_SUFFIXES = {
   US: 'Us',
   CN: 'Cn',
   TW: 'Tw',
+  EPC: 'Epc',
 }
 
 function buildCandidateKeys(field, jurisdiction, reason) {

@@ -27,7 +27,12 @@
     "titleTw": "拖放您的专利 .docx 开始本地分析",
     "noticeTw": "支持台湾专利说明书（.docx）",
     "rejectTw": "仅接受 .docx 文件",
-    "rejectMultipleTypeTw": "请拖放单个 .docx 文件。"
+    "rejectMultipleTypeTw": "请拖放单个 .docx 文件。",
+    "taglineEpc": "依据 {{count}} 项 EPO 撰写规则，自动为您检查专利说明书。",
+    "titleEpc": "拖放您的专利 .docx 开始本地分析",
+    "noticeEpc": "支持欧洲专利说明书（.docx）",
+    "rejectEpc": "仅接受 .docx 文件",
+    "rejectMultipleTypeEpc": "请拖放单个 .docx 文件。"
   },
   "home": {
     "pricing": {
@@ -124,10 +129,12 @@
     "nonPatentWarningDetailsCn": "PatentLint 为专利说明书设计。此文件似乎未包含标准中国说明书章节（技术领域、背景技术等）、编号权利要求或可辨识的格式，分析结果可能不具参考意义。",
     "nonPatentWarningTw": "此文件可能不是台湾专利说明书",
     "nonPatentWarningDetailsTw": "PatentLint 为专利说明书设计。此文件似乎未包含标准台湾说明书章节（【技術領域】、【先前技術】等）、请求项或段落编号，分析结果可能不具参考意义。",
+    "nonPatentWarningEpc": "此文件可能不是欧洲专利说明书",
+    "nonPatentWarningDetailsEpc": "PatentLint 为专利说明书设计。此文件似乎未包含标准欧洲说明书章节（Technical Field、Background Art 等）、编号权利要求或段落编号，分析结果可能不具参考意义。",
     "nonPatentWarningCrossScriptJapanese": "此文件疑为日本专利",
-    "nonPatentWarningDetailsCrossScriptJapanese": "PatentLint 在此文件中检测到大量日文假名（平假名或片假名）。本工具目前尚未支持日本专利，仅适用于美国、中国大陆（简体）及台湾（繁体）专利说明书。您仍可继续查看分析结果，但输出内容对日文说明书可能不具参考意义。",
+    "nonPatentWarningDetailsCrossScriptJapanese": "PatentLint 在此文件中检测到大量日文假名（平假名或片假名）。本工具目前尚未支持日本专利，仅适用于美国、中国大陆（简体）、台湾（繁体）及欧洲（EPC 英文）专利说明书。您仍可继续查看分析结果，但输出内容对日文说明书可能不具参考意义。",
     "nonPatentWarningCrossScriptKorean": "此文件疑为韩国专利",
-    "nonPatentWarningDetailsCrossScriptKorean": "PatentLint 在此文件中检测到大量韩文字（谚文）。本工具目前尚未支持韩国专利，仅适用于美国、中国大陆（简体）及台湾（繁体）专利说明书。您仍可继续查看分析结果，但输出内容对韩文说明书可能不具参考意义。",
+    "nonPatentWarningDetailsCrossScriptKorean": "PatentLint 在此文件中检测到大量韩文字（谚文）。本工具目前尚未支持韩国专利，仅适用于美国、中国大陆（简体）、台湾（繁体）及欧洲（EPC 英文）专利说明书。您仍可继续查看分析结果，但输出内容对韩文说明书可能不具参考意义。",
     "showResultsAnyway": "仍然显示结果",
     "trackedChangesWarning": "此文档包含修订标记，可能影响分析准确性。请在文字处理软件中接受或拒绝所有更改后，重新进行分析。",
     "analyzeAgain": "重新检查",
@@ -405,8 +412,8 @@
     "productTitle": "PatentLint 是什么？",
     "productTagline": "同类首创的专利说明书检查工具，可离线于您的浏览器中正常运作。",
     "productDesc1": "PatentLint 完全在您的设备上本地运行，为您在审查员指出缺陷之前先行检出问题。网页只是入口。页面载入后，PatentLint 便如桌面软件般在您的设备上独立运行，您可断网继续使用。",
-    "productDesc1b": "拖放美国、中国或台湾的专利说明书，便可即时获取形式要件的合规报告与评分。无上传、无云端处理、无 AI。",
-    "productDesc2": "PatentLint 依据 USPTO（美国）、CNIPA（中国）及 TIPO（台湾）的撰写规则进行检查，检测审查规范中的常见问题，如缺乏引用基础、不正确的权利要求结构和限制性用语。",
+    "productDesc1b": "拖放美国、中国、台湾或欧洲的专利说明书，便可即时获取形式要件的合规报告与评分。无上传、无云端处理、无 AI。",
+    "productDesc2": "PatentLint 依据 USPTO（美国）、CNIPA（中国）、TIPO（台湾）及 EPO（欧洲）的撰写规则进行检查，检测审查规范中的常见问题，如缺乏引用基础、不正确的权利要求结构和限制性用语。",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center 验证提交格式。PatentLint 检查说明书本身。",
     "usFeatures": {
@@ -625,8 +632,8 @@
     "builderPain": "专利实务工作者对以下问题多半不陌生。引用基础、权利要求用语在说明书中找不到支持、附图说明介绍过的附图编号具体实施方式却未述及、权利要求引用关系绕着绕着变成循环引用。这些检查本身并不困难，只是相当繁琐，也很容易遗漏。",
     "builderDesc1": "PatentLint 的开发者是一位专利工程师，十多年来始终身处此流程之中，经手过数千份说明书，亲眼见证同类问题反复发生。现有工具要么只能安装于 Windows，要么必须将客户尚未递交的说明书上传至他方服务器。前者仅限于特定操作系统；后者则要求在案件正式递交之前，便将说明书送出事务所。",
     "builderDesc2": "本分析引擎由 Python 编写，再编译为 WebAssembly，完全于浏览器内运行，笔记本、平板、手机皆可使用，全程不上传、不留记录。也就是说，无论是在飞机上、事务所内网的电脑，或是客户尚未授权的设备，均可照常安心使用。",
-    "builderSister": "其姊妹项目 Agentic Patent Analyst 为开源 LangGraph workflow，可解读 OA、评判驳回理由、并起草答复与修改策略。",
-    "licenseNote": "PatentLint 个人使用免费，依 PolyForm-Strict-1.0.0 公开源代码。完整源代码托管于 GitHub。",
+    "builderSister": "其姊妹项目 Agentic Patent Analyst 为 Apache 2.0 开源、基于 LangGraph 构建的 AI 智能体，可解读 OA、评判各项审查意见、起草答复与修改策略，并以客户语言及事务所惯用文风撰写审查意见分析报告。",
+    "licenseNote": "PatentLint 个人使用免费。源代码依 PolyForm-Strict-1.0.0 条款于 GitHub 公开（商业使用须另行授权）。",
     "tableFootnote": "截至 2026 年 4 月；两者均可能持续演进。",
     "twTableFootnote": "TIPO 检查项目依据「专利申请文件辅助侦错系统：功能介绍与使用指南」（2023.5.30 版）比对。TIPO 偵錯系統仅适用实用新型申请；PatentLint 同时支援实用新型与发明。两者均可能持续演进。",
     "epcTitle": "PatentLint EPC 专利稿件检查",
@@ -684,7 +691,7 @@
       "wordCount": "摘要字数（50-150）——实施细则第47(2)条、审查指南 F-II § 2.3",
       "structure": "摘要结构——单段落，避免权利要求风格用语，避免功利性语言"
     },
-    "epcTableFootnote": "数据截止：2026年5月；v1 Beta。v1 仅支持英文 EPC 稿件；DE/FR 检查引擎暂未开发。Walker 类检查（引用基础、说明书支持）采用「审视」状态，待真实语料库 FP 率测量后再行升级。"
+    "epcTableFootnote": "截至 2026 年 5 月。EPC 检查目前为 Beta 阶段，仅支持英文撰写的欧洲专利说明书；PatentLint 将持续演进。"
   },
   "details": {
     "paragraphs": "段落：{{list}}",
@@ -1347,7 +1354,7 @@
     "offline_note": "首次加载后可离线使用",
     "feature1_title": "无上传。无云端处理。无 AI。",
     "feature1_desc": "您的机密专利说明书不会离开您的设备。您的文件绝不会被上传，PatentLint 也不会知道您的身份。",
-    "feature2_title": "USPTO／CNIPA／TIPO 检查与权利要求树状图",
+    "feature2_title": "USPTO／CNIPA／TIPO／EPO 检查与权利要求树状图",
     "feature2_desc": "检测限制性用语、不确定用语及缺乏引用基础等问题，并以交互式树状图呈现权利要求从属关系。",
     "feature3_title": "权利要求树状图",
     "feature3_desc": "交互式从属关系树状图和 Mermaid 图表，一目了然地呈现权利要求结构。",
@@ -1711,7 +1718,7 @@
       "title": "PatentLint 如何为稿件评等",
       "subtitle": "评分标准确定且不使用 AI 判断或机器学习。",
       "weightsTitle": "章节权重",
-      "weightsIntro": "每项检查均归入下列五大章节之一。权重在美国、中国与台湾申请间皆相同。",
+      "weightsIntro": "每项检查均归入下列五大章节之一。权重在美国、中国、台湾及欧洲（EPC）申请间皆相同。",
       "gateTitle": "「修正」门槛机制",
       "gateIntro": "法定瑕疵主导整体评等：只要存在 1 项修正，评等上限即降至 A-，无论其余章节是否完善。此设计呼应实务分流逻辑：先排除关键瑕疵，再论细部品质。",
       "gateRule": "{{count}} 项修正 → 最高 {{letter}}",
