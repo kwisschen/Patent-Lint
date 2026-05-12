@@ -1530,7 +1530,7 @@
       "softwareLabel": "Die Software.",
       "softwareDesc": "Der zugrunde liegende Quellcode, quelltextverfügbar unter PolyForm-Strict-1.0.0 (Lizenzbedingungen siehe § 4).",
       "p2": "Diese Bedingungen gelten für die Nutzung beider. Unterschiedliche Regeln gelten je nachdem, welche Sie nutzen.",
-      "statusNote": "<1>Projektstatus:</1> PatentLint wird als persönliches Projekt geführt. Die Website ist für einzelne Praktiker kostenlos. Etwaige kommerzielle Lizenzvereinbarungen gemäß § 4 werden privat auf Anfrage abgewickelt, nicht aktiv beworben; der Maintainer wirbt nicht aktiv neue kommerzielle Kunden ein."
+      "statusNote": "<1>Projektstatus:</1> PatentLint wird als persönliches Projekt geführt. Die Website ist für einzelne Praktiker kostenlos. Etwaige kommerzielle Lizenzvereinbarungen gemäß § 4 werden privat auf Anfrage abgewickelt."
     },
     "s2": {
       "title": "Nutzung der Website",
@@ -1688,7 +1688,7 @@
       "title": "Freiwilliges Feedback",
       "p1": "Jeder Befund hat eine Schaltfläche „Melden“. Mit einem Klick öffnet sich ein Dialog, der genau das anzeigt, was gesendet wird — nichts ist verborgen. Der Dialog bietet zudem die Alternative „Per E-Mail senden“ an kwisschen@gmail.com, falls Sie selbst mehr Kontext schreiben möchten.",
       "p2": "Die anonyme Datenmenge enthält Zählwerte, den konkret markierten Begriff oder Ausdruck, einen kurzen Kontextausschnitt, Kategoriebezeichnungen (welche Prüfung, welche Regel, welcher Erkennungszweig) und einige strukturelle Kennwerte — auf höchstens fünf Funde pro Bericht begrenzt. Sie enthält keinen vollständigen Anspruchstext, keine vollständigen Absätze, keine Dateinamen, keine Datei-Metadaten, keine E-Mail, keinen Namen und keine IP.",
-      "p3": "Wenn Sie auf „Anonym senden“ klicken, sendet Ihr Browser die Datenmenge per HTTPS an eine Vercel Edge Function auf patentlint.com, die in einem privaten GitHub-Issues-Tracker, auf den nur der Maintainer zugreifen kann, einen Eintrag anlegt. Ihre IP und Browser-Header werden nicht an GitHub weitergeleitet. Meldungen lassen sich nicht mit Ihrer Identität verknüpfen.",
+      "p3": "Wenn Sie auf „Anonym senden“ klicken, sendet Ihr Browser die Datenmenge per HTTPS an eine Vercel Edge Function auf patentlint.com, die im öffentlichen Open-Source-Repository kwisschen/Patent-Lint auf GitHub einen Eintrag anlegt. Die Datenmenge wird vor dem Versand in Ihrem Browser bewusst de-identifiziert (keine IP, keine E-Mail, keine Browser-Header, kein vollständiger Anspruchstext — siehe § 6 oben), damit die Veröffentlichung als GitHub-Issue anonym bleibt. Ihre IP und Browser-Header werden nicht an GitHub weitergeleitet.",
       "p4": "Nutzen Sie stattdessen die E-Mail-Alternative, erhalten wir nur das, was Sie selbst schreiben. Möchten Sie pseudonym senden, verwenden Sie einen E-Mail-Alias-Dienst (Apple Hide My Email, Gmail-Aliase, Firefox Relay, ProtonMail-Aliase); wir korrelieren Alias-Adressen nicht mit anderen Daten. Wir verwenden Feedback ausschließlich zur Fehlerbehebung und zur Antwort an Sie und geben es nicht an Dritte weiter."
     },
     "s7": {

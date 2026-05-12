@@ -1530,7 +1530,7 @@
       "softwareLabel": "The Software.",
       "softwareDesc": "The underlying source code, source-available under PolyForm-Strict-1.0.0 (see § 4 for license terms).",
       "p2": "These Terms cover your use of both. Different rules apply depending on which you are using.",
-      "statusNote": "<1>Project status:</1> PatentLint is maintained as a personal project. The Site is free for individual practitioners. Any commercial licensing arrangement under § 4 is handled privately on inquiry, not actively promoted, and the maintainer is not actively soliciting new commercial customers."
+      "statusNote": "<1>Project status:</1> PatentLint is maintained as a personal project. The Site is free for individual practitioners. Any commercial licensing arrangement under § 4 is handled privately on inquiry."
     },
     "s2": {
       "title": "Using the Site",
@@ -1688,7 +1688,7 @@
       "title": "Voluntary feedback",
       "p1": "Each finding has a \"Report\" button. Clicking it opens a dialog that previews exactly what will be sent — nothing is hidden. The dialog also offers a \"Send by email\" alternative addressed to kwisschen@gmail.com if you would rather write more context yourself.",
       "p2": "The anonymous payload contains counts, the specific term or phrase the rule flagged, a short surrounding excerpt, category labels (which check, which rule, which detection branch), and a few structural fingerprints — capped at five findings per report. It does not contain your full claim text, full paragraphs, file names, file metadata, your email, your name, or your IP.",
-      "p3": "When you click \"Send anonymously,\" your browser POSTs the payload over HTTPS to a Vercel Edge Function on patentlint.com that creates an issue in a private GitHub Issues tracker only the maintainer can read. Your IP and browser headers are not forwarded to GitHub. Reports cannot be linked back to your identity.",
+      "p3": "When you click \"Send anonymously,\" your browser POSTs the payload over HTTPS to a Vercel Edge Function on patentlint.com, which creates an issue on the public open-source GitHub repository kwisschen/Patent-Lint. The payload is intentionally de-identified before it leaves your browser (no IP, no email, no browser headers, no full claim text — see § 6 above) so that publishing it as a GitHub issue remains anonymous. Your IP and browser headers are not forwarded to GitHub.",
       "p4": "If you use the email alternative instead, we receive whatever you write. To send pseudonymously, use an email-aliasing service (Apple Hide My Email, Gmail aliases, Firefox Relay, ProtonMail aliases); we do not correlate alias addresses with any other data. We use feedback only to fix bugs and reply to you, and we do not share it with third parties."
     },
     "s7": {
