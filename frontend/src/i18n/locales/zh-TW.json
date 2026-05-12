@@ -486,7 +486,7 @@
         "checkOmnibusClaim": "概括請求項檢測（§ 112(b)）",
         "checkClaimPunctuation": "請求項標點符號（§ 608.01(m)）",
         "checkSequenceListing": "序列表合規性（§ 2422）",
-        "numeralConsistency": "附圖標記一致性（MPEP § 608.01(g)）",
+        "numeralConsistency": "元件符號一致性（MPEP § 608.01(g)）",
         "scopeLimitWording": "\"the present invention\" 範圍限定警示（Phillips v. AWH）",
         "excessClaims": "超項費門檻（37 CFR 1.16(h)/(i)）"
       }
@@ -560,7 +560,7 @@
       },
       "specAbstract": {
         "title": "說明書與摘要結構",
-        "description": "章節順序（§17）、段落結尾依章節嚴格／寬鬆規則適用、附圖引用交叉比對、摘要 250 字上限（§21），以及元件代表符號一致性（施行細則 §19）。"
+        "description": "章節順序（§17）、段落結尾依章節嚴格／寬鬆規則適用、附圖引用交叉比對、摘要 250 字上限（§21），以及元件符號一致性（施行細則 §19）。"
       },
       "symbolTable": {
         "title": "符號說明交叉比對（TW 特有）",
@@ -611,7 +611,7 @@
       "tipoIndigenous": "原住民族用語檢查",
       "figuresSequential": "圖號連續",
       "independentPreamble": "獨立項須以「一種」開頭",
-      "numeralConsistency": "元件代表符號一致性（施行細則 §19）",
+      "numeralConsistency": "元件符號一致性（施行細則 §19）",
       "symbolTableCoverage": "說明書中所有使用之代表符號於 符號說明 中均有載明（施行細則 §19）",
       "excessClaims": "超項費門檻（專利規費收取準則 §5）"
     },
@@ -935,9 +935,9 @@
         "pass": "說明書中未檢測到限制請求項範圍的表述。"
       },
       "numeralConsistency": {
-        "amend": "{{count}} 個元件代表符號用於指稱多個不同的元件名稱。範例：{{inline_summary}}",
-        "verify": "{{count}} 個元件代表符號可能使用不一致，建議複查。範例：{{inline_summary}}",
-        "pass": "元件代表符號與所指稱元件名稱一致。"
+        "amend": "{{count}} 個元件符號用於指稱多個不同的元件名稱。範例：{{inline_summary}}",
+        "verify": "{{count}} 個元件符號可能使用不一致，建議複查。範例：{{inline_summary}}",
+        "pass": "元件符號與所指稱元件名稱一致。"
       }
     },
     "claims": {
@@ -1260,7 +1260,7 @@
         },
         "refNumeralParens": {
           "verify": "{{count}}項權利要求中的附圖標記未加括號：{{claims}}。",
-          "pass": "未偵測到請求項中未加括號之元件符號。"
+          "pass": "未偵測到請求項中未加括號之附圖標記。"
         },
         "subjectConsistency": {
           "verify": "{{claims}} 的主題名稱與母項不一致（共 {{count}} 項）。",
@@ -1397,12 +1397,12 @@
           "pass": "未發現原住民相關用語。"
         },
         "numeralConsistency": {
-          "amend": "{{count}} 個元件代表符號被用於指稱多個不同的元件名稱。範例：{{inline_summary}}（專利法施行細則 §19 第2款）。",
-          "verify": "{{count}} 個元件代表符號可能使用不一致，建議複查。範例：{{inline_summary}}（專利法施行細則 §19 第2款）。",
-          "pass": "元件代表符號與所指稱元件名稱一致。"
+          "amend": "{{count}} 個元件符號被用於指稱多個不同的元件名稱。範例：{{inline_summary}}（專利法施行細則 §19 第2款）。",
+          "verify": "{{count}} 個元件符號可能使用不一致，建議複查。範例：{{inline_summary}}（專利法施行細則 §19 第2款）。",
+          "pass": "元件符號與所指稱元件名稱一致。"
         },
         "symbolTableCoverage": {
-          "amend": "{{count}} 個元件（共 {{refnum_count}} 個附圖標記）未列於 符號說明 中：{{inline_summary}}",
+          "amend": "{{count}} 個元件（共 {{refnum_count}} 個元件符號）未列於 符號說明 中：{{inline_summary}}",
           "pass": "未偵測到符號說明涵蓋問題。"
         }
       },
