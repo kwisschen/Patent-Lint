@@ -5,12 +5,12 @@
   },
   "jurisdiction": {
     "us": "美国专利",
-    "epc": "欧洲专利 (EPC)",
+    "epc": "欧洲专利",
     "cn": "中国专利",
     "tw": "台湾专利",
     "label": "地区",
     "usPlural": "美国专利",
-    "epcPlural": "欧洲专利 (EPC)",
+    "epcPlural": "欧洲专利",
     "cnPlural": "中国专利",
     "twPlural": "台湾专利"
   },
@@ -901,7 +901,7 @@
       "paragraphSequential": {
         "missing": "说明书中未发现段落编号。",
         "amend": "段落编号不连续（MPEP § 608.01(p)）。",
-        "pass": "段落编号连续。"
+        "pass": "未检测到段落编号问题。"
       },
       "paragraphEnding": {
         "pass": "未检测到段落结尾标点问题。",
@@ -951,7 +951,7 @@
       },
       "sequential": {
         "amend": "权利要求编号不连续（MPEP § 608.01(m)）。",
-        "pass": "权利要求编号连续。"
+        "pass": "未检测到权利要求编号问题。"
       },
       "multipleDependent": {
         "verify": "发现多项从属权利要求：请留意规费及链式多项从属规则（MPEP § 608.01(n)；§ 112(e)）。",
@@ -967,7 +967,7 @@
       },
       "missingPeriod": {
         "amend": "权利要求缺少句号（MPEP § 608.01(m)）。",
-        "pass": "所有权利要求均以句号结尾。"
+        "pass": "未检测到权利要求缺少句号。"
       },
       "extraPeriod": {
         "amend": "权利要求含有多余或错位句号（MPEP § 608.01(m)）。",
@@ -1196,7 +1196,7 @@
         },
         "requiredSections": {
           "amend": "缺少必要章节：{{sections}}（专利法 §26 第1款、专利法实施细则 §20）。",
-          "pass": "所有必要章节均已包含。"
+          "pass": "未检测到必要章节缺漏。"
         },
         "sectionOrdering": {
           "amend": "说明书章节顺序不符合规定（专利法实施细则 §20）。",
@@ -1210,7 +1210,7 @@
           "amendXmlDuplicate": "检测到 {{count}} 个重复的段落编号：{{paragraphs}}（审查指南）。"
         },
         "paragraphEnding": {
-          "pass": "所有段落均以有效标点结尾。",
+          "pass": "未检测到段落结尾标点问题（CNIPA 惯例）。",
           "verify": "{{count}} 个段落未以有效中文标点结尾：{{paragraphs}}（审查指南）。"
         },
         "figureRefConsistency": {
@@ -1256,7 +1256,7 @@
         },
         "singleSentence": {
           "amend": "{{count}} 项权利要求包含多个句子：{{claims}}（审查指南 第二部分第二章）。",
-          "pass": "所有权利要求均为单句。"
+          "pass": "未检测到多句权利要求。"
         },
         "refNumeralParens": {
           "verify": "{{count}} 项权利要求中的附图标记未加括号：{{claims}}。",
@@ -1326,7 +1326,7 @@
         "titleMatch": {
           "verify": "摘要中未出现发明名称。",
           "pass": "摘要中包含发明名称。",
-          "passCompound": "发明名称各部分（{{halves}}）均已在摘要中出现。"
+          "passCompound": "已于摘要中检测到发明名称之各部分（{{halves}}）。"
         },
         "commercialLanguage": {
           "amend": "摘要包含商业性宣传用语：{{terms}}。",
@@ -1352,7 +1352,7 @@
       "spec": {
         "requiredSections": {
           "amend": "依專利法 §25 第1項及專利法施行細則 §17，缺少必要章节。",
-          "pass": "所有必要章节均已包含。"
+          "pass": "未检测到必要章节缺漏。"
         },
         "sectionOrdering": {
           "amend": "依專利法施行細則 §17，章节顺序不正确。",
@@ -1364,7 +1364,7 @@
           "amendFormat": "{{count}}个段落未使用【NNNN】格式。示例：{{examples}}（專利法施行細則 §17）。"
         },
         "paragraphEnding": {
-          "pass": "所有段落均以正确标点结尾。",
+          "pass": "未检测到段落结尾标点问题（TIPO 惯例）。",
           "verify": "{{count}}个段落缺少结尾标点：{{paragraphs}}（專利審查基準）。"
         },
         "figureRefConsistency": {
@@ -1402,8 +1402,8 @@
           "pass": "元件代表符號與所指稱元件名稱一致。"
         },
         "symbolTableCoverage": {
-          "amend": "{{count}} 个未声明的元件（共 {{refnum_count}} 个附图标记）未列于 符號說明 中：{{inline_summary}}",
-          "pass": "未检测到符号说明涵盖问题——已声明之 符號說明 涵盖已检测之元件符号。"
+          "amend": "{{count}} 个元件（共 {{refnum_count}} 个附图标记）未列于 符號說明 中：{{inline_summary}}",
+          "pass": "未检测到符号说明涵盖问题。"
         }
       },
       "claims": {
@@ -1429,7 +1429,7 @@
         },
         "singleSentence": {
           "amend": "{{count}}项请求项非单句撰写：{{claims}}。",
-          "pass": "所有请求项均为单句。",
+          "pass": "未检测到多句请求项。",
           "amendMissingPeriod": "{{count}}项请求项缺少句末句号：{{claims}}。",
           "amendMultiSentence": "{{count}}项请求项非单句撰写：{{claims}}。"
         },
@@ -1502,7 +1502,7 @@
         "titleMatch": {
           "verify": "摘要中未包含发明名称/新型名称。",
           "pass": "摘要中包含发明名称/新型名称。",
-          "passCompound": "发明名称/新型名称各部分（{{halves}}）均已在摘要中出现。"
+          "passCompound": "已于摘要中检测到发明名称／新型名称之各部分（{{halves}}）。"
         },
         "commercialLanguage": {
           "amend": "摘要包含商业性宣传用语（專利法施行細則 §21）。",

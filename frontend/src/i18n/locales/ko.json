@@ -5,12 +5,12 @@
   },
   "jurisdiction": {
     "us": "미국 특허",
-    "epc": "유럽 특허 (EPC)",
+    "epc": "유럽 특허",
     "cn": "중국 특허",
     "tw": "대만 특허",
     "label": "지역",
     "usPlural": "미국 특허",
-    "epcPlural": "유럽 특허 (EPC)",
+    "epcPlural": "유럽 특허",
     "cnPlural": "중국 특허",
     "twPlural": "대만 특허"
   },
@@ -901,7 +901,7 @@
       "paragraphSequential": {
         "missing": "명세서에서 단락 번호가 발견되지 않았습니다.",
         "amend": "단락 번호가 순차적이지 않습니다(MPEP § 608.01(p)).",
-        "pass": "단락 번호가 순차적입니다."
+        "pass": "단락 번호 관련 사항이 감지되지 않았습니다."
       },
       "paragraphEnding": {
         "pass": "단락 종결 구두점 관련 문제가 감지되지 않았습니다.",
@@ -951,7 +951,7 @@
       },
       "sequential": {
         "amend": "청구항 번호가 순차적이지 않습니다(MPEP § 608.01(m)).",
-        "pass": "청구항 번호가 순차적입니다."
+        "pass": "청구항 번호 관련 사항이 감지되지 않았습니다."
       },
       "multipleDependent": {
         "verify": "다중 종속항이 발견되었습니다: 수수료 및 다중 종속 연쇄 규칙을 확인하세요(MPEP § 608.01(n); § 112(e)).",
@@ -967,7 +967,7 @@
       },
       "missingPeriod": {
         "amend": "마침표가 누락된 청구항이 있습니다(MPEP § 608.01(m)).",
-        "pass": "모든 청구항이 마침표로 끝납니다."
+        "pass": "청구항 마침표 관련 사항이 감지되지 않았습니다."
       },
       "extraPeriod": {
         "amend": "불필요하거나 잘못 배치된 마침표가 있는 청구항이 있습니다(MPEP § 608.01(m)).",
@@ -1196,7 +1196,7 @@
         },
         "requiredSections": {
           "amend": "필수 섹션이 누락되었습니다: {{sections}} (专利法 §26 第1款・专利法实施细则 §20).",
-          "pass": "모든 필수 섹션이 존재합니다."
+          "pass": "필수 항목 누락이 감지되지 않았습니다."
         },
         "sectionOrdering": {
           "amend": "명세서 섹션이 규정된 순서와 다릅니다 (专利法实施细则 §20).",
@@ -1210,7 +1210,7 @@
           "amendXmlDuplicate": "중복된 단락 번호가 {{count}}개 있습니다: {{paragraphs}} (审查指南)."
         },
         "paragraphEnding": {
-          "pass": "모든 명세서 단락이 중국어 문장 종결 부호로 끝납니다.",
+          "pass": "단락 종결 부호 관련 사항이 감지되지 않았습니다(CNIPA 관용).",
           "verify": "중국어 문장 종결 부호로 끝나지 않는 단락이 {{count}}개 있습니다: {{paragraphs}} (审查指南)."
         },
         "figureRefConsistency": {
@@ -1256,7 +1256,7 @@
         },
         "singleSentence": {
           "amend": "다문장 청구항이 {{count}}개 있습니다: {{claims}}(审查指南 第二部分第二章).",
-          "pass": "모든 청구항이 단일 문장으로 작성되어 있습니다."
+          "pass": "복수 문장 청구항이 감지되지 않았습니다."
         },
         "refNumeralParens": {
           "verify": "{{count}}개 청구항에서 참조 부호가 괄호로 둘러싸여 있지 않습니다: {{claims}}.",
@@ -1326,7 +1326,7 @@
         "titleMatch": {
           "verify": "요약서가 발명의 명칭(发明名称)을 언급하지 않습니다.",
           "pass": "요약서에 발명의 명칭이 포함되어 있습니다.",
-          "passCompound": "발명의 명칭 각 부분({{halves}})이 요약서에 모두 기재되어 있습니다."
+          "passCompound": "발명의 명칭 각 부분({{halves}})이 요약서에서 감지되었습니다."
         },
         "commercialLanguage": {
           "amend": "요약서에 상업적·광고성 표현이 포함되어 있습니다: {{terms}}.",
@@ -1352,7 +1352,7 @@
       "spec": {
         "requiredSections": {
           "amend": "필수 섹션이 누락되었습니다 (專利法 §25 第1項・專利法施行細則 §17).",
-          "pass": "모든 필수 섹션이 존재합니다."
+          "pass": "필수 항목 누락이 감지되지 않았습니다."
         },
         "sectionOrdering": {
           "amend": "명세서 섹션이 규정된 순서와 다릅니다 (專利法施行細則 §17).",
@@ -1364,7 +1364,7 @@
           "amendFormat": "【NNNN】 형식이 아닌 단락이 {{count}}개 있습니다. 예: {{examples}} (專利法施行細則 §17)."
         },
         "paragraphEnding": {
-          "pass": "모든 명세서 단락이 중국어 문장 종결 부호로 끝납니다.",
+          "pass": "단락 종결 부호 관련 사항이 감지되지 않았습니다(TIPO 관용).",
           "verify": "종결 부호가 누락된 단락이 {{count}}개 있습니다: {{paragraphs}} (專利審查基準)."
         },
         "figureRefConsistency": {
@@ -1402,8 +1402,8 @@
           "pass": "부호가 요소를 일관되게 식별합니다."
         },
         "symbolTableCoverage": {
-          "amend": "{{count}}개의 미선언 구성요소(부호 {{refnum_count}}개)가 符號說明에 기재되어 있지 않습니다. 예시: {{inline_summary}}",
-          "pass": "기호 표의 포괄성 문제가 감지되지 않았습니다 —— 선언된 符號說明이 감지된 참조 기호를 포괄합니다."
+          "amend": "{{count}}개의 구성요소(부호 {{refnum_count}}개)가 符號說明에 기재되지 않았습니다. 예시: {{inline_summary}}",
+          "pass": "符號說明 포괄성 관련 사항이 감지되지 않았습니다."
         }
       },
       "claims": {
@@ -1429,7 +1429,7 @@
         },
         "singleSentence": {
           "amend": "다문장 청구항이 {{count}}개 있습니다: {{claims}}.",
-          "pass": "모든 청구항이 단일 문장으로 작성되어 있습니다.",
+          "pass": "복수 문장 청구항이 감지되지 않았습니다.",
           "amendMissingPeriod": "{{count}}개 청구항에 종결 마침표가 누락되었습니다: {{claims}}.",
           "amendMultiSentence": "다문장 청구항이 {{count}}개 있습니다: {{claims}}."
         },
@@ -1502,7 +1502,7 @@
         "titleMatch": {
           "verify": "요약서가 發明名稱/新型名稱을 언급하지 않을 수 있습니다.",
           "pass": "요약서에 發明名稱/新型名稱이 포함되어 있습니다.",
-          "passCompound": "發明名稱/新型名稱 각 부분({{halves}})이 요약서에 모두 기재되어 있습니다."
+          "passCompound": "發明名稱／新型名稱 각 부분({{halves}})이 요약서에서 감지되었습니다."
         },
         "commercialLanguage": {
           "amend": "요약서에 상업적 표현이 포함되어 있습니다(專利法施行細則 §21).",

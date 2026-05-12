@@ -901,7 +901,7 @@
       "paragraphSequential": {
         "missing": "Keine Absatznummerierung in der Beschreibung gefunden.",
         "amend": "Absatznummern sind nicht fortlaufend (MPEP § 608.01(p)).",
-        "pass": "Absatznummern sind fortlaufend."
+        "pass": "Keine Absatznummerierungs-Befunde festgestellt."
       },
       "paragraphEnding": {
         "pass": "Keine Absatz-Endsatzzeichen-Probleme festgestellt.",
@@ -951,7 +951,7 @@
       },
       "sequential": {
         "amend": "Anspruchsnummern sind nicht fortlaufend (MPEP § 608.01(m)).",
-        "pass": "Anspruchsnummern sind fortlaufend."
+        "pass": "Keine Befunde zur Anspruchsnummerierung festgestellt."
       },
       "multipleDependent": {
         "verify": "Mehrfach abhängige Ansprüche gefunden — Gebühren und Multi-Multi-Regel prüfen (MPEP § 608.01(n); § 112(e)).",
@@ -967,7 +967,7 @@
       },
       "missingPeriod": {
         "amend": "Ansprüchen fehlt der abschließende Punkt (MPEP § 608.01(m)).",
-        "pass": "Alle Ansprüche enden mit einem Punkt."
+        "pass": "Keine fehlenden Anspruchspunkte festgestellt."
       },
       "extraPeriod": {
         "amend": "Ansprüche mit zusätzlichen oder falsch platzierten Punkten (MPEP § 608.01(m)).",
@@ -1196,7 +1196,7 @@
         },
         "requiredSections": {
           "amend": "Erforderliche Abschnitte fehlen: {{sections}} (专利法 §26 第1款、专利法实施细则 §20).",
-          "pass": "Alle erforderlichen Abschnitte vorhanden."
+          "pass": "Keine fehlenden Pflichtabschnitte festgestellt."
         },
         "sectionOrdering": {
           "amend": "Abschnitte der Beschreibung nicht in vorgeschriebener Reihenfolge (专利法实施细则 §20).",
@@ -1210,7 +1210,7 @@
           "amendXmlDuplicate": "{{count}} doppelte Absatznummer(n): {{paragraphs}} (审查指南)."
         },
         "paragraphEnding": {
-          "pass": "Alle Absätze der Beschreibung enden mit gültigem chinesischen Satzend-Zeichen.",
+          "pass": "Keine Absatzende-Befunde festgestellt (gemäß CNIPA-Konvention).",
           "verify": "{{count}} Absatz/Absätze ohne gültiges chinesisches Satzend-Zeichen: {{paragraphs}} (审查指南)."
         },
         "figureRefConsistency": {
@@ -1256,7 +1256,7 @@
         },
         "singleSentence": {
           "amend": "{{count}} Mehrsatz-Anspruch/Ansprüche: {{claims}} (审查指南 第二部分第二章).",
-          "pass": "Alle Ansprüche als einzelne Sätze formuliert."
+          "pass": "Keine mehrsätzigen Ansprüche festgestellt."
         },
         "refNumeralParens": {
           "verify": "Bezugszeichen nicht in Klammern in {{count}} Anspruch/Ansprüchen: {{claims}}.",
@@ -1326,7 +1326,7 @@
         "titleMatch": {
           "verify": "Zusammenfassung nimmt nicht auf den Erfindungstitel (发明名称) Bezug.",
           "pass": "Erfindungstitel in der Zusammenfassung referenziert.",
-          "passCompound": "Alle Titelbestandteile ({{halves}}) in der Zusammenfassung referenziert."
+          "passCompound": "Titelbestandteile in der Zusammenfassung festgestellt: {{halves}}."
         },
         "commercialLanguage": {
           "amend": "Werbesprache in der Zusammenfassung: {{terms}}.",
@@ -1352,7 +1352,7 @@
       "spec": {
         "requiredSections": {
           "amend": "Erforderliche Abschnitte fehlen gemäß 專利法 §25 第1項 und 專利法施行細則 §17.",
-          "pass": "Alle erforderlichen Abschnitte vorhanden."
+          "pass": "Keine fehlenden Pflichtabschnitte festgestellt."
         },
         "sectionOrdering": {
           "amend": "Abschnitte der Beschreibung nicht in vorgeschriebener Reihenfolge (專利法施行細則 §17).",
@@ -1364,7 +1364,7 @@
           "amendFormat": "{{count}} Absatz/Absätze nicht im 【NNNN】-Format. Beispiele: {{examples}} (專利法施行細則 §17)."
         },
         "paragraphEnding": {
-          "pass": "Alle Absätze der Beschreibung enden mit gültigem Satzzeichen.",
+          "pass": "Keine Absatzende-Befunde festgestellt (gemäß TIPO-Konvention).",
           "verify": "{{count}} Absatz/Absätze ohne Satzzeichen am Ende: {{paragraphs}} (專利審查基準)."
         },
         "figureRefConsistency": {
@@ -1402,8 +1402,8 @@
           "pass": "Bezugssymbole identifizieren die Elemente konsistent."
         },
         "symbolTableCoverage": {
-          "amend": "{{count}} undeklarierte Element(e) für {{refnum_count}} Bezugssymbole fehlen in 符號說明: {{inline_summary}}",
-          "pass": "Keine Lücken bei der Symboltabellen-Abdeckung festgestellt — 符號說明 deckt erkannte Bezugszeichen ab."
+          "amend": "{{count}} Element(e) für {{refnum_count}} Bezugssymbol(e) fehlen in 符號說明: {{inline_summary}}",
+          "pass": "Keine Lücken bei der Symboltabellen-Abdeckung festgestellt."
         }
       },
       "claims": {
@@ -1429,7 +1429,7 @@
         },
         "singleSentence": {
           "amend": "{{count}} Mehrsatz-Anspruch/Ansprüche: {{claims}}.",
-          "pass": "Alle Ansprüche als einzelne Sätze formuliert.",
+          "pass": "Keine mehrsätzigen Ansprüche festgestellt.",
           "amendMissingPeriod": "{{count}} Anspruch/Ansprüche ohne abschließendes Satzzeichen: {{claims}}.",
           "amendMultiSentence": "{{count}} Mehrsatz-Anspruch/Ansprüche: {{claims}}."
         },
@@ -1502,7 +1502,7 @@
         "titleMatch": {
           "verify": "Zusammenfassung nimmt möglicherweise nicht auf den Erfindungs-/Gebrauchsmustertitel (發明名稱/新型名稱) Bezug.",
           "pass": "Erfindungs-/Gebrauchsmustertitel in der Zusammenfassung referenziert.",
-          "passCompound": "Alle Titelbestandteile ({{halves}}) in der Zusammenfassung referenziert."
+          "passCompound": "Titelbestandteile in der Zusammenfassung festgestellt: {{halves}}."
         },
         "commercialLanguage": {
           "amend": "Werbesprache in der Zusammenfassung (專利法施行細則 §21).",

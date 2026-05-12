@@ -791,6 +791,13 @@ function buildAntecedentBasis(issues, t) {
   return [
     accentedHeader(t('pdf.antecedentBasis'), '#f59e0b', undefined),
     {
+      text: t('antecedentBasis.disclaimer'),
+      fontSize: 8,
+      italics: true,
+      color: '#6b7280',
+      margin: [0, 0, 0, 6],
+    },
+    {
       table: {
         headerRows: 1,
         widths: [50, '*'],
@@ -848,6 +855,13 @@ function buildSpecSupport(unsupportedTerms, t) {
 
   return [
     accentedHeader(t('pdf.specSupport'), '#f59e0b', undefined),
+    {
+      text: t('antecedentBasis.disclaimer'),
+      fontSize: 8,
+      italics: true,
+      color: '#6b7280',
+      margin: [0, 0, 0, 6],
+    },
     {
       table: {
         headerRows: 1,

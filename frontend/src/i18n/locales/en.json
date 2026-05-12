@@ -901,7 +901,7 @@
       "paragraphSequential": {
         "missing": "No paragraph numbering found in specification.",
         "amend": "Paragraph numbers are not sequential (MPEP § 608.01(p)).",
-        "pass": "Paragraph numbers are sequential."
+        "pass": "No paragraph-numbering issues detected."
       },
       "paragraphEnding": {
         "pass": "No paragraph-ending punctuation issues detected.",
@@ -951,7 +951,7 @@
       },
       "sequential": {
         "amend": "Claim numbers are not sequential (MPEP § 608.01(m)).",
-        "pass": "Claim numbers are sequential."
+        "pass": "No claim-sequence issues detected."
       },
       "multipleDependent": {
         "verify": "Multiple-dependent claims found — review fees and chained-multi rule (MPEP § 608.01(n); § 112(e)).",
@@ -967,7 +967,7 @@
       },
       "missingPeriod": {
         "amend": "Claims missing a final period (MPEP § 608.01(m)).",
-        "pass": "All claims end with a period."
+        "pass": "No missing-period issues detected in claims."
       },
       "extraPeriod": {
         "amend": "Claims with extra or misplaced periods (MPEP § 608.01(m)).",
@@ -1196,7 +1196,7 @@
         },
         "requiredSections": {
           "amend": "Missing required sections: {{sections}} (专利法 §26 第1款、专利法实施细则 §20).",
-          "pass": "All required sections are present."
+          "pass": "No missing required sections detected."
         },
         "sectionOrdering": {
           "amend": "Specification sections out of prescribed order (专利法实施细则 §20).",
@@ -1210,7 +1210,7 @@
           "amendXmlDuplicate": "{{count}} duplicate paragraph number(s): {{paragraphs}} (审查指南)."
         },
         "paragraphEnding": {
-          "pass": "All specification paragraphs end with valid Chinese punctuation.",
+          "pass": "No paragraph-ending issues detected (per CNIPA convention).",
           "verify": "{{count}} paragraph(s) not ending with valid Chinese punctuation: {{paragraphs}} (审查指南)."
         },
         "figureRefConsistency": {
@@ -1256,7 +1256,7 @@
         },
         "singleSentence": {
           "amend": "{{count}} multi-sentence claim(s): {{claims}} (审查指南 第二部分第二章).",
-          "pass": "All claims formed as single sentences."
+          "pass": "No multi-sentence claims detected."
         },
         "refNumeralParens": {
           "verify": "Reference numerals not in parentheses in {{count}} claim(s): {{claims}}.",
@@ -1326,7 +1326,7 @@
         "titleMatch": {
           "verify": "Abstract does not reference the invention title (发明名称).",
           "pass": "Invention title referenced in abstract.",
-          "passCompound": "All title components ({{halves}}) referenced in abstract."
+          "passCompound": "Title components detected in the abstract: {{halves}}."
         },
         "commercialLanguage": {
           "amend": "Commercial or advertising language in abstract: {{terms}}.",
@@ -1352,7 +1352,7 @@
       "spec": {
         "requiredSections": {
           "amend": "Missing required sections per 專利法 §25 第1項 and 專利法施行細則 §17.",
-          "pass": "All required sections are present."
+          "pass": "No missing required sections detected."
         },
         "sectionOrdering": {
           "amend": "Specification sections out of prescribed order (專利法施行細則 §17).",
@@ -1364,7 +1364,7 @@
           "amendFormat": "{{count}} paragraph(s) not in 【NNNN】 format. Examples: {{examples}} (專利法施行細則 §17)."
         },
         "paragraphEnding": {
-          "pass": "All specification paragraphs end with valid punctuation.",
+          "pass": "No paragraph-ending issues detected (per TIPO convention).",
           "verify": "{{count}} paragraph(s) missing ending punctuation: {{paragraphs}} (專利審查基準)."
         },
         "figureRefConsistency": {
@@ -1402,8 +1402,8 @@
           "pass": "Reference symbols consistently identify their elements."
         },
         "symbolTableCoverage": {
-          "amend": "{{count}} undeclared element(s) covering {{refnum_count}} reference symbols missing from 符號說明: {{inline_summary}}",
-          "pass": "No symbol-table coverage issues detected — declared 符號說明 covers detected reference symbols."
+          "amend": "{{count}} element(s) covering {{refnum_count}} reference symbol(s) missing from 符號說明: {{inline_summary}}",
+          "pass": "No symbol-table coverage issues detected."
         }
       },
       "claims": {
@@ -1429,7 +1429,7 @@
         },
         "singleSentence": {
           "amend": "{{count}} multi-sentence claim(s): {{claims}}.",
-          "pass": "All claims formed as single sentences.",
+          "pass": "No multi-sentence claims detected.",
           "amendMissingPeriod": "{{count}} claim(s) missing the ending period: {{claims}}.",
           "amendMultiSentence": "{{count}} multi-sentence claim(s): {{claims}}."
         },
@@ -1502,7 +1502,7 @@
         "titleMatch": {
           "verify": "Abstract may not reference the invention/utility-model title (發明名稱/新型名稱).",
           "pass": "Invention/utility-model title referenced in abstract.",
-          "passCompound": "All title components ({{halves}}) referenced in abstract."
+          "passCompound": "Title components detected in the abstract: {{halves}}."
         },
         "commercialLanguage": {
           "amend": "Commercial or advertising language in abstract (專利法施行細則 §21).",

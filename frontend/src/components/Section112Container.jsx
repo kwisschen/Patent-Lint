@@ -52,6 +52,15 @@ export default function Section112Container({
         <div className="flex-1 border-t border-border/50" />
       </div>
 
+      {/* Always-visible disclaimer — protects against user assuming the
+          analysis is comprehensive even when the card surface is empty.
+          Same i18n key was previously only rendered inside AntecedentBasisCard
+          (i.e. only when there were findings); moved here so it shows
+          regardless of finding state across all 4 jurisdictions. */}
+      <p className="text-xs text-muted-foreground italic leading-relaxed">
+        {t('antecedentBasis.disclaimer')}
+      </p>
+
       {hasAntecedentIssues ? (
         <AntecedentBasisCard issues={antecedentBasisIssues} claimTrees={claimTrees} jurisdiction={jurisdiction} />
       ) : (

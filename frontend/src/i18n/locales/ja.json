@@ -5,12 +5,12 @@
   },
   "jurisdiction": {
     "us": "米国特許",
-    "epc": "欧州特許 (EPC)",
+    "epc": "欧州特許",
     "cn": "中国特許",
     "tw": "台湾特許",
     "label": "地域",
     "usPlural": "米国特許",
-    "epcPlural": "欧州特許 (EPC)",
+    "epcPlural": "欧州特許",
     "cnPlural": "中国特許",
     "twPlural": "台湾特許"
   },
@@ -901,7 +901,7 @@
       "paragraphSequential": {
         "missing": "明細書に段落番号が見つかりません。",
         "amend": "段落番号が連続していません（MPEP § 608.01(p)）。",
-        "pass": "段落番号は連続しています。"
+        "pass": "段落番号に関する所見は検出されませんでした。"
       },
       "paragraphEnding": {
         "pass": "段落の終端句読点に関する問題は検出されませんでした。",
@@ -951,7 +951,7 @@
       },
       "sequential": {
         "amend": "請求項番号が連続していません（MPEP § 608.01(m)）。",
-        "pass": "請求項番号は連続しています。"
+        "pass": "請求項番号に関する所見は検出されませんでした。"
       },
       "multipleDependent": {
         "verify": "多数項従属請求項が見つかりました：手数料および多数項従属の連鎖制限にご留意ください（MPEP § 608.01(n)；§ 112(e)）。",
@@ -967,7 +967,7 @@
       },
       "missingPeriod": {
         "amend": "請求項にピリオドが欠落しています（MPEP § 608.01(m)）。",
-        "pass": "すべての請求項はピリオドで終わっています。"
+        "pass": "請求項末尾の句点に関する所見は検出されませんでした。"
       },
       "extraPeriod": {
         "amend": "請求項に余分または誤配置のピリオドがあります（MPEP § 608.01(m)）。",
@@ -1196,7 +1196,7 @@
         },
         "requiredSections": {
           "amend": "必要な章を欠いています：{{sections}}（专利法 §26 第1款・专利法实施细则 §20）。",
-          "pass": "必要な章が全て揃っています。"
+          "pass": "必須章の欠落は検出されませんでした。"
         },
         "sectionOrdering": {
           "amend": "明細書の章の順序が規定と異なります（专利法实施细则 §20）。",
@@ -1210,7 +1210,7 @@
           "amendXmlDuplicate": "重複する段落番号が{{count}}件あります：{{paragraphs}}（审查指南）。"
         },
         "paragraphEnding": {
-          "pass": "全ての段落が中国語の句点で終わっています。",
+          "pass": "段落末尾の句読点に関する所見は検出されませんでした（CNIPA 慣用）。",
           "verify": "句読点で終わっていない段落が{{count}}件あります：{{paragraphs}}（审查指南）。"
         },
         "figureRefConsistency": {
@@ -1256,7 +1256,7 @@
         },
         "singleSentence": {
           "amend": "複数文を含む請求項が{{count}}項あります：{{claims}}（审查指南 第二部分第二章）。",
-          "pass": "全ての請求項が単文で記載されています。"
+          "pass": "複数文の請求項は検出されませんでした。"
         },
         "refNumeralParens": {
           "verify": "{{count}}項で参照符号が括弧で囲まれていません：{{claims}}。",
@@ -1326,7 +1326,7 @@
         "titleMatch": {
           "verify": "要約に発明の名称（发明名称）が言及されていません。",
           "pass": "要約に発明の名称が記載されています。",
-          "passCompound": "発明の名称の各部分（{{halves}}）が要約に記載されています。"
+          "passCompound": "発明の名称の各部分（{{halves}}）が要約で検出されました。"
         },
         "commercialLanguage": {
           "amend": "要約に商業的・宣伝的表現が含まれています：{{terms}}。",
@@ -1352,7 +1352,7 @@
       "spec": {
         "requiredSections": {
           "amend": "必要な章を欠いています（專利法 §25 第1項・專利法施行細則 §17）。",
-          "pass": "必要な章が全て揃っています。"
+          "pass": "必須章の欠落は検出されませんでした。"
         },
         "sectionOrdering": {
           "amend": "明細書の章の順序が規定と異なります（專利法施行細則 §17）。",
@@ -1364,7 +1364,7 @@
           "amendFormat": "【NNNN】形式でない段落が{{count}}件あります。例：{{examples}}（專利法施行細則 §17）。"
         },
         "paragraphEnding": {
-          "pass": "全ての段落が中国語の句点で終わっています。",
+          "pass": "段落末尾の句読点に関する所見は検出されませんでした（TIPO 慣用）。",
           "verify": "句読点で終わっていない段落が{{count}}件あります：{{paragraphs}}（專利審查基準）。"
         },
         "figureRefConsistency": {
@@ -1402,8 +1402,8 @@
           "pass": "参照符号は要素を一貫して識別しています。"
         },
         "symbolTableCoverage": {
-          "amend": "{{count}} 個の未記載要素（参照符号 {{refnum_count}} 個）が 符號說明 にありません。例：{{inline_summary}}",
-          "pass": "符号表の網羅性の問題は検出されませんでした —— 宣言された 符號說明 が検出された参照符号を網羅しています。"
+          "amend": "{{count}} 個の要素（参照符号 {{refnum_count}} 個）が 符號說明 に記載されていません。例：{{inline_summary}}",
+          "pass": "符號說明 の網羅性に関する所見は検出されませんでした。"
         }
       },
       "claims": {
@@ -1429,7 +1429,7 @@
         },
         "singleSentence": {
           "amend": "複数文を含む請求項が{{count}}項あります：{{claims}}。",
-          "pass": "全ての請求項が単文で記載されています。",
+          "pass": "複数文の請求項は検出されませんでした。",
           "amendMissingPeriod": "{{count}}項で末尾の句点が欠けています：{{claims}}。",
           "amendMultiSentence": "複数文を含む請求項が{{count}}項あります：{{claims}}。"
         },
@@ -1502,7 +1502,7 @@
         "titleMatch": {
           "verify": "要約に發明名稱/新型名稱が言及されていない可能性があります。",
           "pass": "要約に發明名稱/新型名稱が記載されています。",
-          "passCompound": "發明名稱/新型名稱の各部分（{{halves}}）が要約に記載されています。"
+          "passCompound": "發明名稱／新型名稱の各部分（{{halves}}）が要約で検出されました。"
         },
         "commercialLanguage": {
           "amend": "要約に商業的表現が含まれています（專利法施行細則 §21）。",

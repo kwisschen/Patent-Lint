@@ -436,9 +436,6 @@ export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }
           {totalFindings} {totalFindings !== 1 ? t('antecedentBasis.findings') : t('antecedentBasis.finding')}
         </StatusPill>
       </div>
-      <div className="border-t border-border/40 px-4 py-2 text-xs text-muted-foreground italic">
-        {t('antecedentBasis.disclaimer', 'PatentLint does not use AI or server-side processing. Always confirm findings against your draft.')}
-      </div>
       <div className="border-t border-border/40 px-1 py-1">
         {visibleGroups.map((group, i) => (
           <ClaimGroupRow

@@ -617,6 +617,7 @@
 {% if data.antecedent_basis_issues %}
 <div class="antecedent-basis">
   <h3>{{ t('pdf.antecedentBasis') }}</h3>
+  <p class="hint" style="font-size: 9px; color: #6b7280; font-style: italic; margin-bottom: 6px;">{{ t('antecedentBasis.disclaimer') }}</p>
   <table>
     <thead>
       <tr><th>{{ t('pdf.claim') }}</th><th>{{ t('pdf.antecedentTerms') }}</th></tr>
@@ -645,6 +646,7 @@
 {% if data.unsupported_terms %}
 <div class="antecedent-basis">
   <h3>{{ t('pdf.specSupport') }}</h3>
+  <p class="hint" style="font-size: 9px; color: #6b7280; font-style: italic; margin-bottom: 6px;">{{ t('antecedentBasis.disclaimer') }}</p>
   <table>
     <thead>
       <tr><th>{{ t('pdf.claim') }}</th><th>{{ t('pdf.specTerms') }}</th></tr>
