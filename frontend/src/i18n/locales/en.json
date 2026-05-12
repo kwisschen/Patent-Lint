@@ -413,7 +413,7 @@
       "telemetry": "PatentLint includes no analytics scripts, tracking pixels, cookies, or third-party tracking integrations. No usage data is collected or transmitted automatically.",
       "telemetryLink": "Voluntary error reports → Privacy §6",
       "selfHostedTitle": "On-Premises Deployment",
-      "selfHosted": "For organizations with strict data-sovereignty requirements or air-gapped networks, an on-premises deployment is available on private inquiry. Compliance with any specific regulatory regime (e.g., ITAR, EAR, GDPR, sectoral standards) remains the organization's own determination, not a representation by PatentLint.",
+      "selfHosted": "For organizations with strict data-sovereignty requirements or air-gapped networks, an on-premises deployment is available on private inquiry. Compliance with any specific regulatory regime (e.g., ITAR, EAR, GDPR, sectoral standards) remains the organization's own determination.",
       "contactEnterprise": "Contact for enterprise deployment →"
     }
   },
@@ -622,7 +622,7 @@
       "browser": "Your Browser",
       "optional": "Optional: On-premises (Docker / CLI)",
       "zeroBadge": "Zero network requests during analysis",
-      "selfHostBadge": "On-premises option for air-gapped and ITAR-sensitive environments",
+      "selfHostBadge": "On-premises option for air-gapped deployments",
       "node": {
         "analysisEngine": "Analysis Engine",
         "pdfReport": "PDF Report"

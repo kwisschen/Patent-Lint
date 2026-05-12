@@ -413,7 +413,7 @@
       "telemetry": "PatentLint 不包含分析脚本、追踪像素、cookies 或第三方追踪集成。本应用程序不会自动收集或传输任何使用数据。",
       "telemetryLink": "主动发送之错误反馈 → 隐私政策 §6",
       "selfHostedTitle": "本地部署",
-      "selfHosted": "对于有严格数据主权要求或物理隔离网络之组织，可于私下洽询取得本地部署。任何特定法规（例如 ITAR、EAR、GDPR、行业标准）之遵循情形，仍由贵单位自行判断，并非 PatentLint 之保证。",
+      "selfHosted": "对于有严格数据主权要求或物理隔离网络之组织，可于私下洽询取得本地部署。任何特定法规（例如 ITAR、EAR、GDPR、行业标准）之遵循情形，仍由贵单位自行判断。",
       "contactEnterprise": "咨询企业部署方案 →"
     }
   },
@@ -622,7 +622,7 @@
       "browser": "您的浏览器",
       "optional": "可选：本地部署（Docker / CLI）",
       "zeroBadge": "分析过程中零网络请求",
-      "selfHostBadge": "本地部署选项，适用于物理隔离网络与 ITAR 敏感环境",
+      "selfHostBadge": "本地部署选项，适用于物理隔离网络",
       "node": {
         "analysisEngine": "分析引擎",
         "pdfReport": "PDF 报告"

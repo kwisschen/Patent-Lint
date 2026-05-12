@@ -413,7 +413,7 @@
       "telemetry": "PatentLint 不包含分析腳本、追蹤像素、cookies 或第三方追蹤整合。本應用程式不會自動收集或傳送任何使用資料。",
       "telemetryLink": "主動傳送之錯誤回報 → 隱私權政策 §6",
       "selfHostedTitle": "地端部署",
-      "selfHosted": "對於有嚴格資料主權要求或實體隔離網路之組織，可於私下洽詢取得地端部署。任何特定法規（例如 ITAR、EAR、GDPR、產業標準）之遵循情形，仍由貴單位自行判斷，並非 PatentLint 之保證。",
+      "selfHosted": "對於有嚴格資料主權要求或實體隔離網路之組織，可於私下洽詢取得地端部署。任何特定法規（例如 ITAR、EAR、GDPR、產業標準）之遵循情形，仍由貴單位自行判斷。",
       "contactEnterprise": "洽詢企業部署方案 →"
     }
   },
@@ -622,7 +622,7 @@
       "browser": "您的瀏覽器",
       "optional": "選配：地端部署（Docker / CLI）",
       "zeroBadge": "分析過程中零網路請求",
-      "selfHostBadge": "地端部署選項，適用於實體隔離網路與 ITAR 敏感環境",
+      "selfHostBadge": "地端部署選項，適用於實體隔離網路",
       "node": {
         "analysisEngine": "分析引擎",
         "pdfReport": "PDF 報告"
