@@ -1530,7 +1530,7 @@
       "softwareLabel": "Die Software.",
       "softwareDesc": "Der zugrunde liegende Quellcode, quelltextverfügbar unter PolyForm-Strict-1.0.0 (Lizenzbedingungen siehe § 4).",
       "p2": "Diese Bedingungen gelten für die Nutzung beider. Unterschiedliche Regeln gelten je nachdem, welche Sie nutzen.",
-      "statusNote": "<1>Projektstatus.</1> PatentLint wird als persönliches Projekt geführt. Die Website ist für einzelne Praktiker kostenlos. Etwaige kommerzielle Lizenzvereinbarungen gemäß § 4 werden privat auf Anfrage abgewickelt, nicht aktiv beworben; der Maintainer wirbt nicht aktiv neue kommerzielle Kunden ein."
+      "statusNote": "<1>Projektstatus:</1> PatentLint wird als persönliches Projekt geführt. Die Website ist für einzelne Praktiker kostenlos. Etwaige kommerzielle Lizenzvereinbarungen gemäß § 4 werden privat auf Anfrage abgewickelt, nicht aktiv beworben; der Maintainer wirbt nicht aktiv neue kommerzielle Kunden ein."
     },
     "s2": {
       "title": "Nutzung der Website",
