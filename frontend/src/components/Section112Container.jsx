@@ -14,7 +14,9 @@ import { FrostCard } from './ui/frost-card'
 // sibling card happens to have findings.
 function PassCard({ titleKey, messageKey }) {
   const { t, i18n } = useTranslation()
-  const msg = i18n.exists(messageKey) ? t(messageKey) : messageKey
+  // Fall back to a generic localized pass message if the specific key
+  // isn't defined for this jurisdiction; never render the raw key as text.
+  const msg = i18n.exists(messageKey) ? t(messageKey) : t('status.allChecksPassed')
 
   return (
     <FrostCard tier="resting" accent="pass">

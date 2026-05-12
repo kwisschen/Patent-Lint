@@ -418,14 +418,21 @@ def check_figure_ref_consistency_epc(full_text: str) -> list[CheckItem]:
             message_key="check.epc.spec.figureRefConsistency.pass",
             reference="Rule 46(2)(h) EPC",
         )]
-    # Re-key existing CheckItems into the EPC namespace + add EPC reference.
+    # Re-key US `checks.figure_xref_*` (snake_case) into the EPC namespace
+    # and override the reference. The US helper emits keys whose i18n
+    # entries cite MPEP § 608.02; without the re-key, EPC-jurisdiction
+    # users see MPEP text in their results.
+    _XREF_KEY_MAP = {
+        "checks.figure_xref_orphaned_brief": "check.epc.spec.figureRefConsistency.orphanedBrief.amend",
+        "checks.figure_xref_orphaned_detailed": "check.epc.spec.figureRefConsistency.orphanedDetailed.amend",
+        "checks.figure_xref_pass": "check.epc.spec.figureRefConsistency.pass",
+    }
     re_keyed: list[CheckItem] = []
     for item in results:
         re_keyed.append(CheckItem(
             status=item.status,
             message=item.message,
-            message_key=item.message_key.replace("check.spec.figureXref", "check.epc.spec.figureRefConsistency")
-                          .replace("checks.figureXref", "check.epc.spec.figureRefConsistency"),
+            message_key=_XREF_KEY_MAP.get(item.message_key, item.message_key),
             details=item.details,
             details_key=item.details_key,
             details_params=item.details_params,

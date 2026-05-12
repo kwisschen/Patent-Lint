@@ -149,6 +149,75 @@ _US_MARKERS: tuple[str, ...] = (
 # one-sided, not just trace appearances.
 _EN_MARKER_MIN_DELTA = 2
 
+# Common German function words + EPÜ-specific terms. Frequency-anchored:
+# any EPC draft written in German will hit a handful of these in the first
+# few paragraphs (article+noun agreement, common verbs, EPC headings).
+_DE_MARKERS: tuple[str, ...] = (
+    " der ",
+    " die ",
+    " das ",
+    " den ",
+    " dem ",
+    " des ",
+    " ein ",
+    " eine ",
+    " einen ",
+    " einer ",
+    " und ",
+    " ist ",
+    " sind ",
+    " nicht ",
+    " auch ",
+    " auf ",
+    " mit ",
+    " für ",
+    " wird ",
+    " werden ",
+    " dadurch gekennzeichnet",
+    "patentansprüche",
+    "beschreibung",
+    "erfindung",
+    "ausführungsbeispiel",
+    "ansprüche",
+    "merkmale",
+    "gemäß",
+)
+
+# Common French function words + EPC-French-specific terms. Same approach
+# as DE: load-bearing function words + EPC-template phrases.
+_FR_MARKERS: tuple[str, ...] = (
+    " le ",
+    " la ",
+    " les ",
+    " un ",
+    " une ",
+    " des ",
+    " du ",
+    " de la ",
+    " et ",
+    " est ",
+    " sont ",
+    " dans ",
+    " avec ",
+    " pour ",
+    " que ",
+    " qui ",
+    " caractérisé en ce que",
+    "revendications",
+    "revendication",
+    "description",
+    "invention",
+    "abrégé",
+    "selon la revendication",
+    "mode de réalisation",
+)
+
+# How many distinct DE / FR markers must fire before flagging an EPC
+# draft as non-English. 6 = clearly non-English-flavored text, not just
+# trace foreign-language phrasing (e.g., a French priority citation in
+# an otherwise-English EPC draft).
+_EPC_NONEN_MARKER_MIN = 6
+
 
 def _sample_text(text: str) -> str:
     """Return at most the first ~50 paragraphs / ~10k chars of ``text``.
@@ -181,6 +250,33 @@ def _cjk_ratio(text: str) -> float:
 
 def _count_markers(text: str, markers: tuple[str, ...]) -> int:
     return sum(text.count(m) for m in markers)
+
+
+def detect_epc_unsupported_language(text: str) -> str | None:
+    """Detect whether an EPC-selected draft is written in DE or FR.
+
+    EPC v1 supports English-input drafts only (DE / FR check engines
+    deferred). When a user drops a German or French draft into EPC, the
+    pipeline still runs but its findings are not meaningful for that
+    language. Returns ``"de"`` / ``"fr"`` so the frontend can render an
+    advisory banner explaining the English-only scope. Returns ``None``
+    when the language is English or the signal is ambiguous (e.g., short
+    docs with no function words yet).
+    """
+
+    sample = _sample_text(text)
+    if not sample:
+        return None
+    # Function-word matching is case-insensitive but our marker lists are
+    # already lower-case; normalize for cheap whole-word containment.
+    sample_lower = " " + re.sub(r"\s+", " ", sample.lower()) + " "
+    de_hits = sum(1 for m in _DE_MARKERS if m in sample_lower)
+    fr_hits = sum(1 for m in _FR_MARKERS if m in sample_lower)
+    if de_hits >= _EPC_NONEN_MARKER_MIN and de_hits > fr_hits:
+        return "de"
+    if fr_hits >= _EPC_NONEN_MARKER_MIN and fr_hits > de_hits:
+        return "fr"
+    return None
 
 
 def detect_jurisdiction_mismatch(
@@ -267,11 +363,14 @@ def detect_jurisdiction_mismatch(
             if cnipa > tipo:
                 return Jurisdiction.CN.value
             return Jurisdiction.CN.value
-        # Latin-script EPC: only flip to US if US markers clearly dominate.
-        # This is the asymmetric direction — many EPC drafts legitimately
-        # cite US prior art, so we set a higher bar here than the US-side
-        # check by requiring zero EPC markers to fire.
-        if us_markers - epc_markers >= _EN_MARKER_MIN_DELTA and us_markers > 0 and epc_markers == 0:
+        # Latin-script EPC: flip to US when US markers clearly dominate.
+        # Symmetric to the US-side check above — the previous asymmetric
+        # `epc_markers == 0` gate failed on the common case of a US draft
+        # whose spec body never types "USPTO" / "MPEP" / "35 U.S.C." but
+        # uses US-only phrasings (`method of claim N`, `system of claim N`).
+        # If a US draft legitimately cites an EPC counterpart, the delta
+        # gate (≥ 2) still keeps the bar high enough to avoid noise.
+        if us_markers - epc_markers >= _EN_MARKER_MIN_DELTA and us_markers > 0:
             return Jurisdiction.US.value
         return None
 

@@ -93,7 +93,8 @@
   "status": {
     "pass": "合格",
     "verify": "確認",
-    "amend": "修正"
+    "amend": "修正",
+    "allChecksPassed": "すべてのチェック項目に合格しました。"
   },
   "button": {
     "downloadPdf": "PDF レポートを保存",
@@ -135,6 +136,10 @@
     "nonPatentWarningDetailsTw": "PatentLint は特許明細書向けに設計されています。この文書には標準的な台湾明細書セクション（【技術領域】、【先前技術】など）、請求項、または段落番号が含まれていないようです。チェック結果は参考にならない場合があります。",
     "nonPatentWarningEpc": "この文書は欧州特許明細書ではない可能性があります",
     "nonPatentWarningDetailsEpc": "PatentLint は特許明細書向けに設計されています。この文書には標準的な欧州明細書セクション（Technical Field、Background Art など）、番号付きクレーム、または段落番号が含まれていないようです。チェック結果は参考にならない場合があります。",
+    "nonPatentWarningEpcNonEnglishDe": "EPC v1 は英語の欧州特許明細書のみに対応しています",
+    "nonPatentWarningDetailsEpcNonEnglishDe": "このファイルから相当量のドイツ語コンテンツを検出しました。EPC v1 は現在、英語で作成された欧州特許明細書のみをチェック対象としています。DE／FR チェックエンジンは今後対応予定です。結果を表示することもできますが、ドイツ語明細書に対する分析結果は意味をなさない場合があります。",
+    "nonPatentWarningEpcNonEnglishFr": "EPC v1 は英語の欧州特許明細書のみに対応しています",
+    "nonPatentWarningDetailsEpcNonEnglishFr": "このファイルから相当量のフランス語コンテンツを検出しました。EPC v1 は現在、英語で作成された欧州特許明細書のみをチェック対象としています。DE／FR チェックエンジンは今後対応予定です。結果を表示することもできますが、フランス語明細書に対する分析結果は意味をなさない場合があります。",
     "nonPatentWarningCrossScriptJapanese": "この文書は日本の特許明細書と見られます",
     "nonPatentWarningDetailsCrossScriptJapanese": "このファイルから相当量の日本語かな（ひらがな・カタカナ）を検出しました。本ツールは現時点で日本の特許明細書に対応しておらず、米国、欧州（EPC 英文）、中国本土（簡体字）、および台湾（繁体字）の明細書を対象としています。結果を表示することもできますが、日本語明細書に対する分析結果は意味をなさない場合があります。",
     "nonPatentWarningCrossScriptKorean": "この文書は韓国の特許明細書と見られます",
@@ -1009,6 +1014,27 @@
         "pass": "図面番号は連続しています。"
       },
       "count": "{{count}} 個の図面が見つかりました。"
+    },
+    "epc": {
+      "spec": {
+        "figureRefConsistency": {
+          "orphanedBrief": {
+            "amend": "図面の簡単な説明に記載されていますが、詳細な説明では参照されていない図があります（EPC Rule 46(2)(h)）。"
+          },
+          "orphanedDetailed": {
+            "amend": "詳細な説明で参照されていますが、図面の簡単な説明には記載されていない図があります（EPC Rule 46(2)(h)）。"
+          },
+          "pass": "図面の簡単な説明と詳細な説明の図面参照が整合しています。"
+        }
+      },
+      "claims": {
+        "antecedentBasis": {
+          "pass": "すべての請求項用語に先行詞の根拠があります（Art. 84 EPC）。"
+        },
+        "specSupport": {
+          "pass": "すべての請求項用語が明細書で裏付けられています（Art. 84 EPC）。"
+        }
+      }
     },
     "cn": {
       "spec": {

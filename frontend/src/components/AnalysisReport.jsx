@@ -153,9 +153,12 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
   const { t } = useTranslation()
   const { active: networkActive } = useNetworkMonitor()
 
-  // Non-patent document gate
+  // Non-patent document gate. EPC v1 English-only is also gated here so
+  // a DE / FR draft surfaces the advisory banner before showing the
+  // (degraded) results.
   const isNonPatent = data.likely_patent === false
-  const [showResults, setShowResults] = useState(!isNonPatent)
+  const hasEpcUnsupportedLanguage = Boolean(data.epc_unsupported_language)
+  const [showResults, setShowResults] = useState(!isNonPatent && !hasEpcUnsupportedLanguage)
 
   // Tracked changes gate
   const hasTrackedChanges = data.has_tracked_changes === true
@@ -286,11 +289,21 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
     )
   }
 
+  // EPC v1 supports English-input drafts only. When the EPC pipeline
+  // detected DE / FR content, surface a banner with that reason code
+  // ahead of the generic content_missing path. Reusing NonPatentBanner
+  // preserves the existing dismiss-to-see-results UX.
+  const epcLanguageReason = data.epc_unsupported_language === 'de'
+    ? 'epc_non_english_de'
+    : data.epc_unsupported_language === 'fr'
+    ? 'epc_non_english_fr'
+    : null
+
   if (!showResults) {
     return (
       <NonPatentBanner
         jurisdiction={data.jurisdiction}
-        reason={data.patent_detection_reason || 'content_missing'}
+        reason={epcLanguageReason || data.patent_detection_reason || 'content_missing'}
         onShowResults={() => {
           setShowResults(true)
           // Reset cascade so results animate in fresh

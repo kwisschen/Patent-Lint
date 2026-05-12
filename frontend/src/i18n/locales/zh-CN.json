@@ -93,7 +93,8 @@
   "status": {
     "pass": "通过",
     "verify": "检视",
-    "amend": "修正"
+    "amend": "修正",
+    "allChecksPassed": "所有检查项均已通过。"
   },
   "button": {
     "downloadPdf": "保存 PDF 报告",
@@ -135,6 +136,10 @@
     "nonPatentWarningDetailsTw": "PatentLint 为专利说明书设计。此文件似乎未包含标准台湾说明书章节（【技術領域】、【先前技術】等）、请求项或段落编号，分析结果可能不具参考意义。",
     "nonPatentWarningEpc": "此文件可能不是欧洲专利说明书",
     "nonPatentWarningDetailsEpc": "PatentLint 为专利说明书设计。此文件似乎未包含标准欧洲说明书章节（Technical Field、Background Art 等）、编号权利要求或段落编号，分析结果可能不具参考意义。",
+    "nonPatentWarningEpcNonEnglishDe": "EPC v1 目前仅支持英文撰写的欧洲专利说明书",
+    "nonPatentWarningDetailsEpcNonEnglishDe": "PatentLint 在此文件中检测到大量德文内容。EPC v1 目前仅检查英文撰写的欧洲专利说明书，德文／法文检查引擎尚在规划中。您仍可继续查看分析结果，但对德文稿件可能不具参考意义。",
+    "nonPatentWarningEpcNonEnglishFr": "EPC v1 目前仅支持英文撰写的欧洲专利说明书",
+    "nonPatentWarningDetailsEpcNonEnglishFr": "PatentLint 在此文件中检测到大量法文内容。EPC v1 目前仅检查英文撰写的欧洲专利说明书，德文／法文检查引擎尚在规划中。您仍可继续查看分析结果，但对法文稿件可能不具参考意义。",
     "nonPatentWarningCrossScriptJapanese": "此文件疑为日本专利",
     "nonPatentWarningDetailsCrossScriptJapanese": "PatentLint 在此文件中检测到大量日文假名（平假名或片假名）。本工具目前尚未支持日本专利，仅适用于美国、欧洲（EPC 英文）、中国大陆（简体）及台湾（繁体）专利说明书。您仍可继续查看分析结果，但输出内容对日文说明书可能不具参考意义。",
     "nonPatentWarningCrossScriptKorean": "此文件疑为韩国专利",
@@ -1009,6 +1014,27 @@
         "pass": "附图编号连续。"
       },
       "count": "发现 {{count}} 张附图。"
+    },
+    "epc": {
+      "spec": {
+        "figureRefConsistency": {
+          "orphanedBrief": {
+            "amend": "附图在「附图说明」中有描述，但「具体实施方式」中未引用（EPC Rule 46(2)(h)）。"
+          },
+          "orphanedDetailed": {
+            "amend": "附图在「具体实施方式」中有引用，但「附图说明」中未描述（EPC Rule 46(2)(h)）。"
+          },
+          "pass": "「附图说明」与「具体实施方式」中的附图引用一致。"
+        }
+      },
+      "claims": {
+        "antecedentBasis": {
+          "pass": "所有权利要求用语均具备引用基础（Art. 84 EPC）。"
+        },
+        "specSupport": {
+          "pass": "所有权利要求用语均在说明书中获得支持（Art. 84 EPC）。"
+        }
+      }
     },
     "cn": {
       "spec": {
