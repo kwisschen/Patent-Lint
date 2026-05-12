@@ -1036,12 +1036,12 @@
       "spec": {
         "figureRefConsistency": {
           "orphanedBrief": {
-            "amend": "附图在「「Brief Description of Drawings」」中有描述，但「「Detailed Description」」中未引用（EPC Rule 46(2)(h)）。"
+            "amend": "附图在「Brief Description of Drawings」中有描述，但「Detailed Description」中未引用（EPC Rule 46(2)(h)）。"
           },
           "orphanedDetailed": {
-            "amend": "附图在「「Detailed Description」」中有引用，但「「Brief Description of Drawings」」中未描述（EPC Rule 46(2)(h)）。"
+            "amend": "附图在「Detailed Description」中有引用，但「Brief Description of Drawings」中未描述（EPC Rule 46(2)(h)）。"
           },
-          "pass": "未检测到「「Brief Description of Drawings」」与「「Detailed Description」」之间的附图引用不一致。"
+          "pass": "未检测到「Brief Description of Drawings」与「Detailed Description」之间的附图引用不一致。"
         },
         "titleContent": {
           "amend": "发明名称似乎含有不适格内容（商标或型号）—— EPO Guidelines F-II § 4 期待具描述性之发明名称。",
