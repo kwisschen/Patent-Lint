@@ -1036,12 +1036,12 @@
       "spec": {
         "figureRefConsistency": {
           "orphanedBrief": {
-            "amend": "図面の簡単な説明に記載されていますが、詳細な説明では参照されていない図があります（EPC Rule 46(2)(h)）。"
+            "amend": "「Brief Description of Drawings」に記載されていますが、詳細な説明では参照されていない図があります（EPC Rule 46(2)(h)）。"
           },
           "orphanedDetailed": {
-            "amend": "詳細な説明で参照されていますが、図面の簡単な説明には記載されていない図があります（EPC Rule 46(2)(h)）。"
+            "amend": "詳細な説明で参照されていますが、「Brief Description of Drawings」には記載されていない図があります（EPC Rule 46(2)(h)）。"
           },
-          "pass": "図面の簡単な説明と詳細な説明の間で図面参照の不一致は検出されませんでした。"
+          "pass": "「Brief Description of Drawings」と詳細な説明の間で図面参照の不一致は検出されませんでした。"
         },
         "titleContent": {
           "amend": "発明の名称に不適切な内容（商標または型番）が含まれているようです —— EPO Guidelines F-II § 4 は発明の説明的な名称を求めています。",
@@ -1180,7 +1180,7 @@
           "pass": "図番号の連続性に関する所見は検出されませんでした（Rule 46(2)(a) EPC）。"
         },
         "priorArtLabeling": {
-          "verify": "図面の簡単な説明が先行技術に言及しています —— 該当の図が Rule 46(2)(h) EPC に従い表示されているかご確認ください。",
+          "verify": "「Brief Description of Drawings」が先行技術に言及しています —— 該当の図が Rule 46(2)(h) EPC に従い表示されているかご確認ください。",
           "pass": "先行技術の図表示に関する所見は検出されませんでした（Rule 46(2)(h) EPC）。"
         },
         "singleFigureLabel": {

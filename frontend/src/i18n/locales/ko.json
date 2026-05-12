@@ -1036,12 +1036,12 @@
       "spec": {
         "figureRefConsistency": {
           "orphanedBrief": {
-            "amend": "도면의 간단한 설명에는 기재되어 있으나, 상세한 설명에서 참조되지 않은 도면이 있습니다(EPC Rule 46(2)(h))."
+            "amend": "「Brief Description of Drawings」에는 기재되어 있으나, 상세한 설명에서 참조되지 않은 도면이 있습니다(EPC Rule 46(2)(h))."
           },
           "orphanedDetailed": {
-            "amend": "상세한 설명에서 참조되었으나, 도면의 간단한 설명에 기재되지 않은 도면이 있습니다(EPC Rule 46(2)(h))."
+            "amend": "상세한 설명에서 참조되었으나, 「Brief Description of Drawings」에 기재되지 않은 도면이 있습니다(EPC Rule 46(2)(h))."
           },
-          "pass": "도면의 간단한 설명과 상세한 설명 사이의 도면 참조 불일치가 감지되지 않았습니다."
+          "pass": "「Brief Description of Drawings」과 상세한 설명 사이의 도면 참조 불일치가 감지되지 않았습니다."
         },
         "titleContent": {
           "amend": "발명의 명칭에 부적격한 내용(상표 또는 모델 번호)이 포함된 것으로 보입니다 —— EPO Guidelines F-II § 4는 설명적인 발명의 명칭을 요구합니다.",
@@ -1180,7 +1180,7 @@
           "pass": "도면 번호 연속성 관련 사항이 감지되지 않았습니다(Rule 46(2)(a) EPC)."
         },
         "priorArtLabeling": {
-          "verify": "도면의 간단한 설명이 선행기술을 언급합니다 —— 해당 도면이 Rule 46(2)(h) EPC에 따라 표시되었는지 확인하십시오.",
+          "verify": "「Brief Description of Drawings」이 선행기술을 언급합니다 —— 해당 도면이 Rule 46(2)(h) EPC에 따라 표시되었는지 확인하십시오.",
           "pass": "선행기술 도면 표시 관련 사항이 감지되지 않았습니다(Rule 46(2)(h) EPC)."
         },
         "singleFigureLabel": {
