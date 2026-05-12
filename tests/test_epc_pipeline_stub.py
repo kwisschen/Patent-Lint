@@ -34,15 +34,14 @@ def _make_minimal_docx_bytes() -> bytes:
 
 
 def test_run_epc_pipeline_stub_returns_well_formed_result():
-    """Pipeline runs G1 + G2 spec checks (8) + G7 abstract checks (2).
-    G3 drawings + G4-G6 claims still pending so those lists stay empty."""
+    """Pipeline runs G1 + G2 spec checks (9) + G3 (4) + G4-G6 claims (17) + G7 (4)."""
     result = _run_epc_pipeline("any english text", suggested_jurisdiction=None)
     assert isinstance(result, AnalysisResult)
     assert result.jurisdiction == Jurisdiction.EPC
-    assert len(result.epc_specification_checks) == 8
+    assert len(result.epc_specification_checks) == 9
     assert len(result.epc_drawings_checks) == 4
     assert len(result.epc_claims_checks) == 17
-    assert len(result.epc_abstract_checks) == 2
+    assert len(result.epc_abstract_checks) == 4
 
 
 def test_analyze_bytes_routes_epc_jurisdiction_without_crashing():
@@ -62,12 +61,12 @@ def test_epc_report_data_adapter_round_trips():
     report = result.to_report_data()
     assert isinstance(report, ReportData)
     assert report.jurisdiction == Jurisdiction.EPC
-    # G1 + G2 ship 8 spec checks; G3 ships 4 drawings; G4 ships 8 claims;
-    # G7 ships 2 abstract. G5 + G6 claims still pending.
-    assert len(report.specification_checks) == 8
+    # G1 + G2 ship 9 spec checks; G3 ships 4 drawings; G4-G6 ship 17
+    # claims; G7 ships 4 abstract.
+    assert len(report.specification_checks) == 9
     assert len(report.drawings_checks) == 4
     assert len(report.claims_checks) == 17
-    assert len(report.abstract_checks) == 2
+    assert len(report.abstract_checks) == 4
 
 
 def test_epc_pipeline_attaches_rubric_grade():

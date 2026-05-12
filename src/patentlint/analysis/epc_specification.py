@@ -471,6 +471,64 @@ def check_numeral_consistency_epc(full_text: str) -> list[CheckItem]:
     return re_keyed
 
 
+def check_title_content_epc(full_text: str) -> list[CheckItem]:
+    """Flag prohibited content in the title per Rule 41(2)(b) EPC + Guidelines F-II § 4.
+
+    EPO Guidelines F-II § 4 mirror the US MPEP § 606 prohibition against
+    trademarks, model/grade designations, and similar non-descriptive
+    content in the title of invention. Reuses the US regex helpers since
+    the prohibited patterns (™ / ® symbols, ALL-CAPS model numbers like
+    ``RAM-1024``) are language-neutral. Title-length is already covered
+    by ``check_title_required_epc``; this check focuses on content.
+    """
+    from patentlint.analysis.specification import _TITLE_MODEL_NUMBER_RE, _TITLE_TRADEMARK_RE
+
+    title = extract_title_epc(full_text)
+    if not title:
+        # Missing-title path is owned by check_title_required_epc; emit a
+        # vacuous pass here so the canonical-emission gate stays monotonic.
+        return [CheckItem(
+            status="pass",
+            message="No title content to check.",
+            message_key="check.epc.spec.titleContent.pass",
+            reference="Rule 41(2)(b) EPC; EPO Guidelines F-II § 4",
+        )]
+
+    items: list[dict] = []
+    tm = _TITLE_TRADEMARK_RE.search(title)
+    if tm:
+        items.append({"kind": "trademark", "token": tm.group()})
+    mn = _TITLE_MODEL_NUMBER_RE.search(title)
+    if mn:
+        items.append({"kind": "model", "token": mn.group()})
+
+    if items:
+        return [CheckItem(
+            status="amend",
+            message=(
+                "Title contains prohibited content (trademark or model "
+                "number) — EPO Guidelines F-II § 4 require a descriptive "
+                "title of the invention."
+            ),
+            message_key="check.epc.spec.titleContent.amend",
+            details=", ".join(it.get("token", "") for it in items),
+            reference="Rule 41(2)(b) EPC; EPO Guidelines F-II § 4",
+            diagnostics=_dx(
+                flagged_count=len(items),
+                title_charlen=len(title),
+                flagged_kinds=[it.get("kind") for it in items],
+                tokens_sample=[(it.get("token") or "")[:32] for it in items[:5]],
+            ),
+        )]
+
+    return [CheckItem(
+        status="pass",
+        message="Title contains no trademark or model-number tokens.",
+        message_key="check.epc.spec.titleContent.pass",
+        reference="Rule 41(2)(b) EPC; EPO Guidelines F-II § 4",
+    )]
+
+
 def check_claim_reference_in_spec_epc(full_text: str) -> list[CheckItem]:
     """Flag spec text that references claims by number (Guidelines F-IV § 4.3).
 
@@ -523,11 +581,13 @@ def run_g2_spec_content_checks(full_text: str) -> list[CheckItem]:
       2. numeralConsistency (idx 15)
       3. titleRequired (idx 30) — emitted here, not in run_g1, to keep
          the spec_checks emission monotonic in canonical (group, idx)
-      4. claimReferenceInSpec (idx 40)
+      4. titleContent (idx 35)
+      5. claimReferenceInSpec (idx 40)
     """
     results: list[CheckItem] = []
     results.extend(check_figure_ref_consistency_epc(full_text))
     results.extend(check_numeral_consistency_epc(full_text))
     results.extend(check_title_required_epc(full_text))
+    results.extend(check_title_content_epc(full_text))
     results.extend(check_claim_reference_in_spec_epc(full_text))
     return results

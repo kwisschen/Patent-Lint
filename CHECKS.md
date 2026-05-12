@@ -207,6 +207,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Title required | Rule 41(2)(b) EPC | FIX / VERIFY / PASS | `check.epc.spec.titleRequired` | Title present and concise (< 500 chars) |
 | Figure-reference consistency | Rule 46(2)(h) EPC | REVIEW / PASS | `check.epc.spec.figureRefConsistency` | Figures declared in brief description match figures referenced in detailed description |
 | Reference-numeral consistency | Rule 43(7) + Rule 46(2)(h) EPC | FIX / PASS | `check.epc.spec.numeralConsistency` | Same reference numeral used with multiple disjoint element names |
+| Title content | Rule 41(2)(b) + EPO Guidelines F-II § 4 | FIX / PASS | `check.epc.spec.titleContent` | Title must not contain trademarks (™ / ®) or model/grade numbers |
 | Claim-reference-in-spec | EPO Guidelines F-IV § 4.3 | FIX / PASS | `check.epc.spec.claimReferenceInSpec` | Description must not reference claims ("as claimed in claim N", "according to claim N", etc.) |
 
 ## EPC Drawings
@@ -245,11 +246,13 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
 | Abstract word count | Rule 47(2) + EPO Guidelines F-II § 2.3 | FIX / REVIEW / PASS | `check.epc.abstract.wordCount` | 50-150 words (EPO practice); FIX > 150, REVIEW < 50 |
+| Abstract title-match | EPO Guidelines F-II § 2.3.5 | REVIEW / PASS | `check.epc.abstract.titleMatch` | At least one content word from the title appears in the abstract body |
+| Abstract claim-reference | EPO Guidelines F-II § 2.3.3 | FIX / PASS | `check.epc.abstract.claimReference` | Abstract must not cite specific claims ("claim N", "claims N to M") |
 | Abstract structure | Rule 47(2) + EPO Guidelines F-II § 2.3 | FIX / PASS | `check.epc.abstract.structure` | Single paragraph; no implied openers, claim-style phraseology, or merit / self-referential language |
 
 ---
 
-**Total checks: 144** (42 US + 30 EPC + 33 CN + 39 TW; † summary rows excluded)
+**Total checks: 147** (42 US + 33 EPC + 33 CN + 39 TW; † summary rows excluded)
 
 † Internal: not rendered as a CheckItem card in the web UI or PDF report. Used for stats aggregation and CLI output only.
 
