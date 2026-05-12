@@ -798,7 +798,10 @@
         "singleSentence": "依审查指南 第二部分第二章，每项权利要求应当为一个以句号（。）结尾的完整句子，以确保保护范围明确。",
         "transitionPhrase": "依审查指南，独立权利要求应包含「其特征在于」等特征部分连接词，用于区分前序部分（现有技术）与特征部分（新颖要素）。"
       },
-      "independentPreamble": "审查指南 第二部分第二章 §3.1.1 范例用「一种X」写法；专利法实施细则 §24 仅要求载明主题名称，并未强制「一种」字样。若合于发明型态，可改写为「一种X」。"
+      "independentPreamble": "审查指南 第二部分第二章 §3.1.1 范例用「一种X」写法；专利法实施细则 §24 仅要求载明主题名称，并未强制「一种」字样。若合于发明型态，可改写为「一种X」。",
+      "numeralConsistency": "{{count}} 个附图标记使用不一致。范例：{{inline_summary}}",
+      "markushOpenTransition": "权利要求 {{claims}} 使用开放式 Markush 连接词（{{transitions}}）；请依审查指南 §9.3 改为封闭式「组成的」。",
+      "omnibusClaims": "权利要求 {{claims}} 为综合式（引用说明书／附图而非技术特征）；请依审查指南 §3.3 改写。"
     },
     "tw": {
       "requiredSections": "依專利法 §25 第1項，完整專利申請须包含摘要、說明書（技術領域、先前技術、發明內容／新型內容、實施方式）及申請專利範圍；依專利法施行細則 §17，有图式时說明書亦须包含圖式簡單說明与符號說明。缺少：{{sections}}。",
@@ -857,7 +860,9 @@
       "singleSentenceMissingPeriod": "依專利法施行細則 §18，每一请求项须以单一句号（。）结尾。请为标记之请求项补上句末句号。",
       "singleSentenceMultiSentence": "依專利法施行細則 §18，每一请求项须为单句，仅于末尾有一个句号（。）。请移除句中之句号或重新拆分标记之请求项。",
       "independentPreamble": "TIPO 偵錯系統将此列为惯例错误。專利法施行細則 §18 与專利審查基準要求前序部分载明标的名称，并未强制使用「一種」字样。若合于发明型态，可改写为「一種X」。",
-      "indigenousTerms": "用语：{{terms}}。依《原住民族傳統智慧創作保護條例》，请确认本申请未与受保护的传统智慧创作冲突。"
+      "indigenousTerms": "用语：{{terms}}。依《原住民族傳統智慧創作保護條例》，请确认本申请未与受保护的传统智慧创作冲突。",
+      "numeralConsistency": "{{count}} 个元件符号使用不一致。范例：{{inline_summary}}",
+      "symbolTableCoverage": "{{count}} 个元件（共 {{refnum_count}} 个元件符号）未列于 符號說明 中：{{inline_summary}}"
     },
     "titleProhibited": {
       "trademark": "商标符号「{{token}}」",
@@ -873,8 +878,11 @@
     "titleWordCount": "依 MPEP § 606，发明名称宜简短明确（实际 {{count}} 词；通常 2–7 词为宜）。请考虑精简。",
     "epc": {
       "orphanedBriefFigures": "附图：{{list}}。请于「Detailed Description」中新增对该等附图之引用，或自「Brief Description of Drawings」中移除（EPC 惯例用语）。",
-      "orphanedDetailedFigures": "附图：{{list}}。请于「Brief Description of Drawings」中新增对该等附图之描述，或自「Detailed Description」中移除引用（EPC 惯例用语）。"
-    }
+      "orphanedDetailedFigures": "附图：{{list}}。请于「Brief Description of Drawings」中新增对该等附图之描述，或自「Detailed Description」中移除引用（EPC 惯例用语）。",
+      "claimReferenceInSpec": "说明书引用权利要求：{{detail}}"
+    },
+    "numeralConsistency": "{{count}} 个元件符号使用不一致。范例：{{inline_summary}}",
+    "scopeLimitWording": "检测到 {{count}} 处限制性用语。范例：{{samples}}"
   },
   "common": {
     "close": "关闭",
@@ -1071,6 +1079,11 @@
           "amend": "发明名称似有缺漏 —— Rule 41(2)(b) EPC 期待载明发明名称。",
           "verify": "发明名称字数异常偏长（{{count}} 字符）；请确认是否简明指出发明（Rule 41(2)(b) EPC）。",
           "pass": "未检测到发明名称缺漏（Rule 41(2)(b) EPC）。"
+        },
+        "numeralConsistency": {
+          "amend": "{{count}} 个元件符号用于指代多个不同的元件名称（Rule 43(7) EPC；Rule 46(2)(h) EPC）。范例：{{inline_summary}}",
+          "verify": "{{count}} 个元件符号可能使用不一致，建议依 Rule 43(7) EPC + Rule 46(2)(h) EPC 复查。范例：{{inline_summary}}",
+          "pass": "未检测到元件符号一致性问题（Rule 43(7) EPC；Rule 46(2)(h) EPC）。"
         }
       },
       "claims": {
@@ -1162,7 +1175,7 @@
           "pass": "摘要未引用特定权利要求。"
         },
         "structure": {
-          "amend": "摘要结构似不符 Rule 47(2) EPC / Guidelines F-II § 2.3：{{detail}}。",
+          "amend": "摘要结构似不符 Rule 47(2) EPC / Guidelines F-II § 2.3，请检视是否为单段落、是否含隐含／套语式开头、权利要求式法律用语、自夸／自指性用语。",
           "pass": "未检测到摘要结构问题（Rule 47(2) EPC）。"
         },
         "wordCount": {

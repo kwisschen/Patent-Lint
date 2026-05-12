@@ -798,7 +798,10 @@
         "singleSentence": "審査指南 第二部第二章により、各請求項は句点（。）で終わる一文で記載する必要があります。保護範囲を明確にするためです。",
         "transitionPhrase": "審査指南により、独立請求項には「其特征在于」などの二部形式の移行句を含め、前書き（従来技術）と特徴部（新規要素）を区別する必要があります。"
       },
-      "independentPreamble": "审查指南 第二部分第二章 §3.1.1 は「一种X」を標準形として例示しています；实施细则 §22 は主题名称 の記載のみを要求し、「一种」の字句を明示的には強制していません。発明の態様に合えば「一种X」形式への書換えをご検討ください。"
+      "independentPreamble": "审查指南 第二部分第二章 §3.1.1 は「一种X」を標準形として例示しています；实施细则 §22 は主题名称 の記載のみを要求し、「一种」の字句を明示的には強制していません。発明の態様に合えば「一种X」形式への書換えをご検討ください。",
+      "numeralConsistency": "{{count}} 個の参照符号が不一致。例：{{inline_summary}}",
+      "markushOpenTransition": "請求項 {{claims}} で開放式の Markush 連結語（{{transitions}}）が使用されています。审查指南 §9.3 により閉鎖式「组成的」に変更してください。",
+      "omnibusClaims": "請求項 {{claims}} は包括的請求項（明細書／図面を参照し特徴を直接記載していない）です。审查指南 §3.3 により書き直してください。"
     },
     "tw": {
       "requiredSections": "專利法 §25 第1項により、出願には摘要、說明書（技術領域、先前技術、發明內容／新型內容、實施方式）、申請專利範圍が必要です。專利法施行細則 §17により、図面がある場合は說明書に圖式簡單說明および符號說明も含める必要があります。不足：{{sections}}。",
@@ -857,7 +860,9 @@
       "singleSentenceMissingPeriod": "專利法施行細則 §18により、各請求項は末尾に句点（。）を1つ付ける必要があります。該当する請求項に句点を追加してください。",
       "singleSentenceMultiSentence": "專利法施行細則 §18により、各請求項は末尾に句点（。）が1つだけの単文である必要があります。途中の句点を削除するか、該当する請求項を分割してください。",
       "independentPreamble": "TIPO 偵錯系統は慣行違反として検出します。專利法施行細則 §18 と專利審查基準 は前文に標的名稱 を記載することを要求しますが、「一種」の字句を明示的に強制しているわけではありません。発明の態様に合えば「一種X」形式への書換えをご検討ください。",
-      "indigenousTerms": "用語：{{terms}}。原住民族傳統智慧創作保護條例により、本出願が保護された伝統的創作と抵触しないかご確認ください。"
+      "indigenousTerms": "用語：{{terms}}。原住民族傳統智慧創作保護條例により、本出願が保護された伝統的創作と抵触しないかご確認ください。",
+      "numeralConsistency": "{{count}} 個の参照符号が不一致。例：{{inline_summary}}",
+      "symbolTableCoverage": "{{count}} 個の要素（参照符号 {{refnum_count}} 個）が 符號說明 に記載されていません。例：{{inline_summary}}"
     },
     "titleProhibited": {
       "trademark": "商標記号「{{token}}」",
@@ -873,8 +878,11 @@
     "titleWordCount": "MPEP § 606 により、発明の名称は簡潔で具体的であるべきです（実際 {{count}} 語；通常 2〜7 語）。短縮をご検討ください。",
     "epc": {
       "orphanedBriefFigures": "図面：{{list}}。「Detailed Description」に該当図面への参照を追加するか、「Brief Description of Drawings」から削除してください（EPC 慣用語）。",
-      "orphanedDetailedFigures": "図面：{{list}}。「Brief Description of Drawings」に該当図面の説明を追加するか、「Detailed Description」から参照を削除してください（EPC 慣用語）。"
-    }
+      "orphanedDetailedFigures": "図面：{{list}}。「Brief Description of Drawings」に該当図面の説明を追加するか、「Detailed Description」から参照を削除してください（EPC 慣用語）。",
+      "claimReferenceInSpec": "明細書が請求項を参照しています：{{detail}}"
+    },
+    "numeralConsistency": "{{count}} 個の参照符号が不一致。例：{{inline_summary}}",
+    "scopeLimitWording": "{{count}} 件の限定的表現を検出しました。例：{{samples}}"
   },
   "common": {
     "close": "閉じる",
@@ -1071,6 +1079,11 @@
           "amend": "発明の名称が欠落しているようです —— Rule 41(2)(b) EPC は発明の名称を求めています。",
           "verify": "発明の名称が異例に長いようです（{{count}} 文字）。発明を簡潔に示しているかをご確認ください（Rule 41(2)(b) EPC）。",
           "pass": "発明の名称の欠落は検出されませんでした（Rule 41(2)(b) EPC）。"
+        },
+        "numeralConsistency": {
+          "amend": "{{count}} 個の参照符号が複数の異なる要素名に使用されています（Rule 43(7) EPC；Rule 46(2)(h) EPC）。例：{{inline_summary}}",
+          "verify": "{{count}} 個の参照符号で名称が一致しない可能性があります。Rule 43(7) EPC + Rule 46(2)(h) EPC によりご確認ください。例：{{inline_summary}}",
+          "pass": "参照符号の一致性に関する所見は検出されませんでした（Rule 43(7) EPC；Rule 46(2)(h) EPC）。"
         }
       },
       "claims": {
@@ -1162,7 +1175,7 @@
           "pass": "要約は特定の請求項を参照していません。"
         },
         "structure": {
-          "amend": "要約の構造が Rule 47(2) EPC / Guidelines F-II § 2.3 に適合しない可能性があります：{{detail}}。",
+          "amend": "要約の構造が Rule 47(2) EPC / Guidelines F-II § 2.3 に適合しない可能性があります。単一段落であるか、暗黙的／定型的な書き出し、請求項風の法律用語、自賛・自己言及的な表現の有無をご確認ください。",
           "pass": "要約の構造に関する所見は検出されませんでした（Rule 47(2) EPC）。"
         },
         "wordCount": {

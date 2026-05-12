@@ -391,7 +391,7 @@ class TestSubjectNameConsistency:
         results = check_subject_name_consistency(doc)
         unclear = [
             r for r in results
-            if r.message_key == "check.cn.claims.subjectConsistencyParseUnclear"
+            if r.message_key == "check.cn.claims.subjectConsistencyParseUnclear.verify"
         ]
         mismatch = [
             r for r in results

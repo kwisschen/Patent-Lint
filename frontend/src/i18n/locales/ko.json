@@ -798,7 +798,10 @@
         "singleSentence": "심사지남 제2부 제2장에 따라, 각 청구항은 마침표(。)로 끝나는 하나의 완전한 문장이어야 합니다. 보호 범위를 명확히 하기 위함입니다.",
         "transitionPhrase": "심사지남에 따라, 독립 청구항은 '其特征在于' 등 2부 형식의 연결어를 포함하여 전제부(선행기술)와 특징부(신규 요소)를 구분해야 합니다."
       },
-      "independentPreamble": "审查指南 第二部分第二章 §3.1.1 은 「一种X」 를 표준형 예시로 제시합니다; 实施细则 §22 는 主题名称 의 기재만 요구하며 「一种」 문구를 명시적으로 강제하지는 않습니다. 발명 유형에 부합한다면 「一种X」 형식으로 재작성을 검토하세요."
+      "independentPreamble": "审查指南 第二部分第二章 §3.1.1 은 「一种X」 를 표준형 예시로 제시합니다; 实施细则 §22 는 主题名称 의 기재만 요구하며 「一种」 문구를 명시적으로 강제하지는 않습니다. 발명 유형에 부합한다면 「一种X」 형식으로 재작성을 검토하세요.",
+      "numeralConsistency": "{{count}}개의 부호 불일치. 예시: {{inline_summary}}",
+      "markushOpenTransition": "청구항 {{claims}}이(가) 개방형 Markush 연결어({{transitions}})를 사용합니다. 审查指南 §9.3에 따라 폐쇄형 「组成的」으로 변경하십시오.",
+      "omnibusClaims": "청구항 {{claims}}은(는) 포괄적 청구항(특징 대신 명세서/도면 참조)입니다. 审查指南 §3.3에 따라 다시 작성하십시오."
     },
     "tw": {
       "requiredSections": "專利法 §25 第1項에 따라 출원에는 摘要, 說明書(技術領域, 先前技術, 發明內容/新型內容, 實施方式), 申請專利範圍이 포함되어야 하며, 專利法施行細則 §17에 따라 도면이 있는 경우 說明書에 圖式簡單說明 및 符號說明도 포함되어야 합니다. 누락: {{sections}}.",
@@ -857,7 +860,9 @@
       "singleSentenceMissingPeriod": "專利法施行細則 §18에 따라 각 請求項은 끝에 마침표(。)가 하나 있어야 합니다. 표시된 請求項에 마침표를 추가하십시오.",
       "singleSentenceMultiSentence": "專利法施行細則 §18에 따라 각 請求項은 끝에 마침표(。)가 하나만 있는 단일 문장이어야 합니다. 중간의 마침표를 제거하거나 표시된 請求項을 분할하십시오.",
       "independentPreamble": "TIPO 偵錯系統은 관례 위반으로 표시합니다. 專利法施行細則 §18 과 專利審査基準은 전제부에 標的名稱 을 기재할 것을 요구하지만 「一種」 문구를 명시적으로 강제하지는 않습니다. 발명 유형에 부합한다면 「一種X」 형식으로 재작성을 검토하세요.",
-      "indigenousTerms": "용어: {{terms}}. 原住民族傳統智慧創作保護條例 에 따라 본 출원이 보호받는 전통 지식 창작물과 상충하지 않는지 확인하세요."
+      "indigenousTerms": "용어: {{terms}}. 原住民族傳統智慧創作保護條例 에 따라 본 출원이 보호받는 전통 지식 창작물과 상충하지 않는지 확인하세요.",
+      "numeralConsistency": "{{count}}개의 부호 불일치. 예시: {{inline_summary}}",
+      "symbolTableCoverage": "{{count}}개의 구성요소(부호 {{refnum_count}}개)가 符號說明에 기재되지 않았습니다. 예시: {{inline_summary}}"
     },
     "titleProhibited": {
       "trademark": "상표 기호「{{token}}」",
@@ -873,8 +878,11 @@
     "titleWordCount": "MPEP § 606 에 따라 발명의 명칭은 간결하고 구체적이어야 합니다 (실제 {{count}}단어; 보통 2–7 단어). 축약을 고려하세요.",
     "epc": {
       "orphanedBriefFigures": "도면: {{list}}. 「Detailed Description」에 해당 도면에 대한 참조를 추가하거나, 「Brief Description of Drawings」에서 제거하십시오(EPC 관용어).",
-      "orphanedDetailedFigures": "도면: {{list}}. 「Brief Description of Drawings」에 해당 도면의 설명을 추가하거나, 「Detailed Description」에서 참조를 제거하십시오(EPC 관용어)."
-    }
+      "orphanedDetailedFigures": "도면: {{list}}. 「Brief Description of Drawings」에 해당 도면의 설명을 추가하거나, 「Detailed Description」에서 참조를 제거하십시오(EPC 관용어).",
+      "claimReferenceInSpec": "명세서가 청구항을 참조합니다: {{detail}}"
+    },
+    "numeralConsistency": "{{count}}개의 부호 불일치. 예시: {{inline_summary}}",
+    "scopeLimitWording": "{{count}}건의 제한적 표현이 감지되었습니다. 예시: {{samples}}"
   },
   "common": {
     "close": "닫기",
@@ -1071,6 +1079,11 @@
           "amend": "발명의 명칭이 누락된 것으로 보입니다 —— Rule 41(2)(b) EPC는 발명의 명칭을 요구합니다.",
           "verify": "발명의 명칭이 비정상적으로 길어 보입니다({{count}}자). 발명을 간결하게 나타내고 있는지 확인하십시오(Rule 41(2)(b) EPC).",
           "pass": "발명의 명칭 누락이 감지되지 않았습니다(Rule 41(2)(b) EPC)."
+        },
+        "numeralConsistency": {
+          "amend": "{{count}}개의 부호가 서로 다른 구성요소 이름에 사용되고 있습니다(Rule 43(7) EPC; Rule 46(2)(h) EPC). 예시: {{inline_summary}}",
+          "verify": "{{count}}개의 부호에서 명칭이 일치하지 않을 가능성이 있습니다. Rule 43(7) EPC + Rule 46(2)(h) EPC에 따라 검토하십시오. 예시: {{inline_summary}}",
+          "pass": "부호 일치성 관련 사항이 감지되지 않았습니다(Rule 43(7) EPC; Rule 46(2)(h) EPC)."
         }
       },
       "claims": {
@@ -1162,7 +1175,7 @@
           "pass": "요약이 특정 청구항을 참조하지 않습니다."
         },
         "structure": {
-          "amend": "요약의 구조가 Rule 47(2) EPC / Guidelines F-II § 2.3에 부합하지 않을 수 있습니다: {{detail}}.",
+          "amend": "요약의 구조가 Rule 47(2) EPC / Guidelines F-II § 2.3에 부합하지 않을 수 있습니다. 단일 단락 형식, 함축적/관습적 도입부, 청구항식 법률 표현, 자찬/자기 언급 표현 여부를 검토하십시오.",
           "pass": "요약 구조 관련 사항이 감지되지 않았습니다(Rule 47(2) EPC)."
         },
         "wordCount": {

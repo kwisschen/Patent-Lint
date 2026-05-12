@@ -1473,7 +1473,7 @@ class TestSubjectConsistencySplit:
         unclear = [
             f for f in findings
             if f.message_key
-            == "check.tw.claims.subjectConsistencyParseUnclear"
+            == "check.tw.claims.subjectConsistencyParseUnclear.verify"
         ]
         mismatch = [
             f for f in findings
@@ -1503,7 +1503,7 @@ class TestSubjectConsistencySplit:
         unclear = [
             f for f in findings
             if f.message_key
-            == "check.tw.claims.subjectConsistencyParseUnclear"
+            == "check.tw.claims.subjectConsistencyParseUnclear.verify"
         ]
         assert len(mismatch) == 1 and mismatch[0].details_params["claims"] == [2]
         assert len(unclear) == 1 and unclear[0].details_params["claims"] == [3]

@@ -798,7 +798,10 @@
         "singleSentence": "Gemäß 审查指南 第二部分第二章 muss jeder Anspruch ein einziger Satz sein, der mit 。 endet, damit der Schutzbereich eindeutig bleibt.",
         "transitionPhrase": "Gemäß 审查指南 sollte ein unabhängiger Anspruch einen zweiteiligen Übergang (z. B. 其特征在于) enthalten, der den Oberbegriff (Stand der Technik) vom kennzeichnenden Teil (neuartige Merkmale) trennt."
       },
-      "independentPreamble": "审查指南 第二部分第二章 §3.1.1 verwendet 一种X als Standardform; 专利法实施细则 §24 verlangt die Nennung des 主题名称, nicht wörtlich „一种\". Nach 一种X umformulieren."
+      "independentPreamble": "审查指南 第二部分第二章 §3.1.1 verwendet 一种X als Standardform; 专利法实施细则 §24 verlangt die Nennung des 主题名称, nicht wörtlich „一种\". Nach 一种X umformulieren.",
+      "numeralConsistency": "{{count}} inkonsistent verwendete Bezugszeichen. Beispiele: {{inline_summary}}",
+      "markushOpenTransition": "Anspruch/Ansprüche {{claims}} verwenden offene Markush-Übergänge ({{transitions}}); auf die geschlossene Form 「组成的」 gemäß 审查指南 §9.3 umstellen.",
+      "omnibusClaims": "Anspruch/Ansprüche {{claims}} sind Omnibus-Ansprüche (Bezug auf Beschreibung/Zeichnungen statt Merkmale); umformulieren gemäß 审查指南 §3.3."
     },
     "tw": {
       "requiredSections": "Eine vollständige TIPO-Einreichung erfordert 摘要, 說明書 (技術領域, 先前技術, 發明內容/新型內容, 實施方式) und 申請專利範圍 gemäß 專利法 §25 第1項. Bei vorhandenen Zeichnungen sind zusätzlich 圖式簡單說明 und 符號說明 gemäß 專利法施行細則 §17 erforderlich. Fehlend: {{sections}}.",
@@ -857,7 +860,9 @@
       "singleSentenceMissingPeriod": "Gemäß 專利法施行細則 §18 muss jeder Anspruch mit einem einzelnen 。 enden. Ergänzen Sie das abschließende Satzzeichen in den gekennzeichneten Ansprüchen.",
       "singleSentenceMultiSentence": "Gemäß 專利法施行細則 §18 muss jeder Anspruch ein Satz mit genau einem 。 am Ende sein. Entfernen Sie Punkte innerhalb des Anspruchs oder strukturieren Sie die gekennzeichneten Ansprüche um.",
       "independentPreamble": "Das TIPO 偵錯系統 markiert dies als Konventionsfehler. 專利法施行細則 §18 + 專利審查基準 verlangen, dass die Präambel den 標的名稱 (Bezeichnung des Anspruchsgegenstands) nennt, schreiben jedoch nicht wörtlich „一種\" vor. Nach 一種X umformulieren, sofern dies zum Erfindungsgegenstand passt.",
-      "indigenousTerms": "Begriffe: {{terms}}. Gemäß 原住民族傳統智慧創作保護條例 prüfen, ob die Anmeldung geschützten traditionellen Schöpfungen nicht widerspricht."
+      "indigenousTerms": "Begriffe: {{terms}}. Gemäß 原住民族傳統智慧創作保護條例 prüfen, ob die Anmeldung geschützten traditionellen Schöpfungen nicht widerspricht.",
+      "numeralConsistency": "{{count}} inkonsistent verwendete Bezugszeichen. Beispiele: {{inline_summary}}",
+      "symbolTableCoverage": "{{count}} Element(e) für {{refnum_count}} Bezugszeichen fehlen in 符號說明: {{inline_summary}}"
     },
     "titleProhibited": {
       "trademark": "Markensymbol „{{token}}“",
@@ -873,8 +878,11 @@
     "titleWordCount": "Gemäß MPEP § 606 sollten Titel kurz und spezifisch sein ({{count}} Wörter gefunden; üblich sind 2–7 Wörter). Erwägen Sie eine Kürzung.",
     "epc": {
       "orphanedBriefFigures": "Figuren: {{list}}. Fügen Sie entweder einen Verweis auf diese Figuren in der ausführlichen Beschreibung hinzu oder entfernen Sie sie aus der Kurzbeschreibung der Zeichnungen (gemäß EPC-Konvention).",
-      "orphanedDetailedFigures": "Figuren: {{list}}. Fügen Sie entweder eine Beschreibung dieser Figuren in der Kurzbeschreibung der Zeichnungen hinzu oder entfernen Sie den Verweis aus der ausführlichen Beschreibung (gemäß EPC-Konvention)."
-    }
+      "orphanedDetailedFigures": "Figuren: {{list}}. Fügen Sie entweder eine Beschreibung dieser Figuren in der Kurzbeschreibung der Zeichnungen hinzu oder entfernen Sie den Verweis aus der ausführlichen Beschreibung (gemäß EPC-Konvention).",
+      "claimReferenceInSpec": "Die Beschreibung verweist auf einen Anspruch: {{detail}}"
+    },
+    "numeralConsistency": "{{count}} inkonsistent verwendete Bezugszeichen. Beispiele: {{inline_summary}}",
+    "scopeLimitWording": "{{count}} einschränkende Formulierung(en) festgestellt. Beispiele: {{samples}}"
   },
   "common": {
     "close": "Schließen",
@@ -1071,6 +1079,11 @@
           "amend": "Titel scheint zu fehlen — Regel 41(2)(b) EPÜ bittet um eine Bezeichnung der Erfindung.",
           "verify": "Titel erscheint ungewöhnlich lang ({{count}} Zeichen); prüfen Sie, ob er die Erfindung knapp benennt (Regel 41(2)(b) EPÜ).",
           "pass": "Keine Titel-Befunde festgestellt (Regel 41(2)(b) EPÜ)."
+        },
+        "numeralConsistency": {
+          "amend": "{{count}} Bezugszeichen für mehrere unterschiedliche Elementnamen verwendet (Regel 43(7) EPÜ; Regel 46(2)(h) EPÜ). Beispiele: {{inline_summary}}",
+          "verify": "{{count}} Bezugszeichen mit möglicherweise inkonsistenter Benennung — prüfen nach Regel 43(7) EPÜ + Regel 46(2)(h) EPÜ. Beispiele: {{inline_summary}}",
+          "pass": "Keine Befunde zur Bezugszeichen-Konsistenz festgestellt (Regel 43(7) EPÜ; Regel 46(2)(h) EPÜ)."
         }
       },
       "claims": {
@@ -1162,7 +1175,7 @@
           "pass": "Die Zusammenfassung verweist nicht auf bestimmte Ansprüche."
         },
         "structure": {
-          "amend": "Die Zusammenfassung erfüllt ggf. Regel 47(2) EPÜ / Richtlinien F-II § 2.3 nicht: {{detail}}.",
+          "amend": "Die Zusammenfassung erfüllt ggf. Regel 47(2) EPÜ / Richtlinien F-II § 2.3 nicht — prüfen auf einzelne Absatzform, implizite/floskelhafte Einleitungen, anspruchsähnliche Rechtssprache sowie wertende/selbstbezügliche Formulierungen.",
           "pass": "Keine Befunde zur Zusammenfassungsstruktur festgestellt (Regel 47(2) EPÜ)."
         },
         "wordCount": {

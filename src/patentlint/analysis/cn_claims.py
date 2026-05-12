@@ -673,7 +673,7 @@ def check_subject_name_consistency(cn_doc: CnPatentDocument) -> list[CheckItem]:
         results.append(CheckItem(
             status="verify",
             message=f"{len(unclear_ids)} dependent claim(s) with an unrecognized preamble — couldn't verify subject consistency (claims: {claims_str}).",
-            message_key="check.cn.claims.subjectConsistencyParseUnclear",
+            message_key="check.cn.claims.subjectConsistencyParseUnclear.verify",
             details=f"{len(unclear_ids)} claims",
             details_key="details.cn.subjectConsistencyParseUnclear",
             details_params={"count": len(unclear_ids), "claims": unclear_ids},

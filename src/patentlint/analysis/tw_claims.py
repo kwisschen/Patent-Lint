@@ -1101,7 +1101,7 @@ def check_subject_consistency(doc: TwPatentDocument) -> list[CheckItem]:
         results.append(CheckItem(
             status="verify",
             message=f"{len(unclear_ids)} dependent claim(s) with an unrecognized preamble — couldn't verify subject consistency (claims: {claims_str}).",
-            message_key="check.tw.claims.subjectConsistencyParseUnclear",
+            message_key="check.tw.claims.subjectConsistencyParseUnclear.verify",
             details=f"{len(unclear_ids)} claims",
             details_key="details.tw.subjectConsistencyParseUnclear",
             details_params={"count": len(unclear_ids), "claims": unclear_ids},
