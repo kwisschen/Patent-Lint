@@ -229,8 +229,44 @@ export function useUpdateCheck() {
     }
 
     document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    // bfcache-restoration handler. iOS WebKit (Safari + Chrome via WKWebView)
+    // aggressively suspends backgrounded tabs and restores them from a page
+    // snapshot when reopened — bypassing both the mount-time check and, in
+    // some cases, the visibilitychange path. The user can sit on a stale
+    // build for days, clicking the update toast without effect, because the
+    // restored snapshot's reload navigation can itself be bfcache-restored.
+    //
+    // `pageshow` fires on every page display; the `persisted` flag is true
+    // only when the page was restored from bfcache (vs. a fresh load). When
+    // we detect that path, skip the toast UI entirely and force a hard
+    // reload if the build is stale — bfcache-restore is by definition "user
+    // just reopened the tab," so they shouldn't have to manually click
+    // through a toast that may itself be frozen in the snapshot.
+    //
+    // Scoped to bfcache-restore via `e.persisted`, so desktop / Android /
+    // any-browser back-button into a fresh page is a silent no-op — the
+    // mount-time check handles those. This is the device-agnostic
+    // alternative to `Cache-Control: no-store` (which would have killed
+    // bfcache for every device, sacrificing the instant back-navigation
+    // benefit on platforms that weren't actually broken).
+    const handlePageShow = (e) => {
+      if (!e.persisted) return
+      fetch(`/version.json?t=${Date.now()}`, { cache: 'no-store' })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((data) => {
+          if (!data?.buildHash || data.buildHash === __BUILD_HASH__) return
+          const url = new URL(window.location.href)
+          url.searchParams.set('_r', String(Date.now()))
+          window.location.replace(url.toString())
+        })
+        .catch(() => {})
+    }
+    window.addEventListener('pageshow', handlePageShow)
+
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('pageshow', handlePageShow)
     }
   }, [t])
 }
