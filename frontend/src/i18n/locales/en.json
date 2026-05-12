@@ -464,6 +464,7 @@
         "figureCrossRef": "Figure cross-reference consistency",
         "pdfCompliance": "PDF/A compliance",
         "marginCheck": "Page margins",
+        "fontFamilyCheck": "Supported font families",
         "fontSizeCheck": "Font size requirements",
         "lineSpacing": "Line spacing",
         "pageNumbering": "Page numbering",
@@ -1541,7 +1542,7 @@
   "terms": {
     "title": "Terms of Service",
     "lastUpdated": "Last updated: May 12, 2026",
-    "intro": "These Terms govern your use of the patentlint.com website (the \"Site\") and the PatentLint software (the \"Software\"). By using the Site, you agree to these Terms.",
+    "intro": "These Terms govern your use of the patentlint.com website (the \"Site\") and the PatentLint software (the \"Software\"). Using the Site means these Terms apply.",
     "s1": {
       "title": "The Site vs. the Software",
       "p1": "PatentLint has two forms:",
@@ -1602,7 +1603,7 @@
     },
     "s7": {
       "title": "Warranty disclaimer",
-      "p1": "The Site and the Software are provided \"AS IS\" without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, or non-infringement. You use them at your own risk.",
+      "p1": "The Site and the Software are provided \"AS IS\" without warranty of any kind, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, or non-infringement.",
       "p2": "Without limiting the foregoing, Christopher Chen makes no warranty as to the accuracy, completeness, currency, or correspondence of PatentLint output with any patent office's filing requirements or any applicable rules of professional conduct. Rule catalogs evolve over time and across jurisdictions; you are responsible for verifying current applicability."
     },
     "s8": {
@@ -1617,7 +1618,7 @@
     },
     "s10": {
       "title": "Changes to these Terms",
-      "p1": "These Terms may be updated from time to time. Material changes will be announced via a banner on the Site for at least 14 days before taking effect. Continued use of the Site after the effective date constitutes acceptance."
+      "p1": "These Terms may be updated from time to time. Material changes will be announced via a banner on the Site for at least 14 days before taking effect. If you keep using the Site after the effective date, the updated Terms apply."
     },
     "s11": {
       "title": "Contact",
@@ -1673,7 +1674,7 @@
     "s2": {
       "title": "Your patent drafts",
       "p1": "Patent drafts you load into the Site never actually leave your device — the file stays in the browser tab and is processed there. Analysis runs on a Pyodide / WebAssembly engine in that tab. There is no server-side analysis path on patentlint.com; the Site is served as static assets, with a single voluntary error-report endpoint (§ 6) that runs only on explicit user submission.",
-      "p2": "Specifically, we never:",
+      "p2": "Specifically, this Site does not:",
       "never1": "Receive or transmit the content of your patent drafts.",
       "never2": "Store filenames, claim text, specification body, or any patent-specific data.",
       "never3": "Send draft content to any third party (including AI providers, OCR services, or document processors).",
@@ -1726,7 +1727,7 @@
     },
     "s8": {
       "title": "Your rights",
-      "p1": "Under GDPR, CCPA, and similar privacy regimes, you have rights regarding your personal data. To the extent these rights apply to data we process:",
+      "p1": "Even though the Site collects almost nothing, here are your rights under GDPR, CCPA, and similar privacy regimes:",
       "accessLabel": "Right of access.",
       "access": "You may ask what personal data we hold about you. We do not store user data in the ordinary course of operating the Site (see § 2 and § 4); requests will typically confirm we have nothing on file beyond any voluntary email correspondence you have sent us.",
       "deletionLabel": "Right of deletion.",
@@ -1786,7 +1787,7 @@
       "weightsTitle": "Section weights",
       "weightsIntro": "Every check we run rolls into one of these five sections. Weights are fixed across US, EPC, CN, and TW filings.",
       "gateTitle": "How the FIX gate works",
-      "gateIntro": "Statutory blockers headline the grade. One FIX caps the grade at A-, regardless of how clean the rest of the draft is. This matches partner-triage reality — the question is always \"any blockers, then how clean?\"",
+      "gateIntro": "FIX-level findings headline the grade. One FIX caps the grade at A-, regardless of how clean the rest of the draft is. This matches partner-triage reality — the question is always \"any blockers, then how clean?\"",
       "gateRule": "{{count}} FIX → max {{letter}}",
       "conditionalTitle": "When sections are not applicable",
       "conditionalIntro": "Two scenarios shape the Drawings section. First — when no drawings are detected (chemistry, methods, business processes), the section is marked N/A and its 10% weight redistributes proportionally across the other four sections; legitimately drawing-free drafts incur no penalty. Second — when drawings exist (FIG. references found in the body) but the Brief Description of Drawings section is missing, the resulting required-section FIX lands in the Drawings rubric so the section pill reflects the actual gap.",
@@ -1795,7 +1796,7 @@
       "trustTitle": "No AI judgment",
       "trustIntro": "Every input to your grade is a FIX/REVIEW/PASS status set by a deterministic checker. Every output is a pure arithmetic aggregation. The same draft always gets the same grade. PatentLint never uploads your draft anywhere — analysis runs entirely in your browser.",
       "disclaimerTitle": "What an A grade does and does not mean",
-      "disclaimerIntro": "An A grade means PatentLint's rule catalog found no issues. It does not mean your draft is filing-ready. Substantive review by a registered practitioner is still recommended.",
+      "disclaimerIntro": "An A grade means PatentLint's rule catalog raised no FIX-level findings. It does not mean your draft is filing-ready. Substantive review by a registered practitioner is still recommended.",
       "reportTitle": "Help us improve — report misjudgments",
       "reportIntro": "No checker is perfect. Walker-based checks (antecedent basis, specification support, figure references) carry a small false-positive risk; with grading now in place, a wrongly-flagged FIX can cost the draft a letter rank. The Report button on each triage item opens a dialog that previews exactly what will be sent — counts, the flagged term, a short surrounding excerpt, and category labels, capped at five findings — so we can pinpoint the bug from a de-identified payload."
     },

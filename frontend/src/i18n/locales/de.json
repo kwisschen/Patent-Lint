@@ -464,6 +464,7 @@
         "figureCrossRef": "Konsistenz der Figurenquerbezüge",
         "pdfCompliance": "PDF/A-Konformität",
         "marginCheck": "Seitenränder",
+        "fontFamilyCheck": "Zulässige Schriftarten",
         "fontSizeCheck": "Schriftgrößen-Anforderungen",
         "lineSpacing": "Zeilenabstand",
         "pageNumbering": "Seitennummerierung",
@@ -1541,7 +1542,7 @@
   "terms": {
     "title": "Nutzungsbedingungen",
     "lastUpdated": "Zuletzt aktualisiert: 12. Mai 2026",
-    "intro": "Diese Nutzungsbedingungen regeln Ihre Nutzung der Website patentlint.com (die „Website“) und der Software PatentLint (die „Software“). Durch Nutzung der Website stimmen Sie diesen Bedingungen zu.",
+    "intro": "Diese Nutzungsbedingungen regeln Ihre Nutzung der Website patentlint.com (die „Website“) und der Software PatentLint (die „Software“). Mit der Nutzung der Website gelten diese Bedingungen.",
     "s1": {
       "title": "Die Website vs. die Software",
       "p1": "PatentLint hat zwei Erscheinungsformen:",
@@ -1602,7 +1603,7 @@
     },
     "s7": {
       "title": "Gewährleistungsausschluss",
-      "p1": "Die Website und die Software werden „WIE BESEHEN“ bereitgestellt, ohne jegliche ausdrückliche oder stillschweigende Gewährleistung, insbesondere ohne Gewährleistung der Marktgängigkeit, der Eignung für einen bestimmten Zweck oder der Nichtverletzung fremder Rechte. Die Nutzung erfolgt auf eigenes Risiko.",
+      "p1": "Die Website und die Software werden „WIE BESEHEN“ bereitgestellt, ohne jegliche ausdrückliche oder stillschweigende Gewährleistung, insbesondere ohne Gewährleistung der Marktgängigkeit, der Eignung für einen bestimmten Zweck oder der Nichtverletzung fremder Rechte.",
       "p2": "Ohne Einschränkung des Vorstehenden gibt Christopher Chen keinerlei Gewährleistung hinsichtlich der Richtigkeit, Vollständigkeit, Aktualität oder Übereinstimmung der PatentLint-Ausgabe mit den Anmeldungsanforderungen einer Patentbehörde oder mit anwendbaren Berufsregeln. Prüfkataloge entwickeln sich über die Zeit und zwischen Rechtsordnungen; Sie sind dafür verantwortlich, die aktuelle Anwendbarkeit zu prüfen."
     },
     "s8": {
@@ -1617,7 +1618,7 @@
     },
     "s10": {
       "title": "Änderungen dieser Bedingungen",
-      "p1": "Diese Bedingungen können von Zeit zu Zeit aktualisiert werden. Wesentliche Änderungen werden mindestens 14 Tage vor Inkrafttreten über ein Banner auf der Website angekündigt. Die fortgesetzte Nutzung der Website nach dem Wirksamkeitsdatum gilt als Zustimmung."
+      "p1": "Diese Bedingungen können von Zeit zu Zeit aktualisiert werden. Wesentliche Änderungen werden mindestens 14 Tage vor Inkrafttreten über ein Banner auf der Website angekündigt. Wenn Sie die Website nach dem Wirksamkeitsdatum weiter nutzen, gelten die aktualisierten Bedingungen."
     },
     "s11": {
       "title": "Kontakt",
@@ -1726,7 +1727,7 @@
     },
     "s8": {
       "title": "Ihre Rechte",
-      "p1": "Nach DSGVO, CCPA und ähnlichen Datenschutzregelwerken haben Sie Rechte in Bezug auf Ihre personenbezogenen Daten. Soweit diese Rechte auf von uns verarbeitete Daten anwendbar sind:",
+      "p1": "Auch wenn die Website fast nichts erfasst — Ihre Rechte nach DSGVO, CCPA und ähnlichen Datenschutzregelwerken im Überblick:",
       "accessLabel": "Auskunftsrecht.",
       "access": "Sie können erfragen, welche personenbezogenen Daten wir über Sie vorhalten. Wir speichern im ordentlichen Betrieb der Website keine Nutzerdaten (siehe § 2 und § 4); Anfragen bestätigen typischerweise, dass wir über freiwillige E-Mail-Korrespondenz hinaus nichts vorhalten.",
       "deletionLabel": "Recht auf Löschung.",
@@ -1786,7 +1787,7 @@
       "weightsTitle": "Abschnittsgewichtung",
       "weightsIntro": "Jede Prüfung fließt in einen dieser fünf Abschnitte ein. Die Gewichtung ist für US-, EPÜ-, CN- und TW-Anmeldungen identisch.",
       "gateTitle": "Wie die FEHLER-Sperre wirkt",
-      "gateIntro": "Gesetzliche Mängel führen die Bewertung an. Bereits ein FEHLER begrenzt die Note auf A-, unabhängig davon, wie sorgfältig der Rest der Schrift verfasst ist. Das entspricht dem realen Triage-Ablauf — zuerst auf blockierende Mängel prüfen, dann auf die Sorgfalt der Ausarbeitung.",
+      "gateIntro": "FEHLER-Befunde führen die Bewertung an. Bereits ein FEHLER begrenzt die Note auf A-, unabhängig davon, wie sorgfältig der Rest der Schrift verfasst ist. Das entspricht dem realen Triage-Ablauf — zuerst auf blockierende Mängel prüfen, dann auf die Sorgfalt der Ausarbeitung.",
       "gateRule": "{{count}} FEHLER → höchstens {{letter}}",
       "conditionalTitle": "Wenn Abschnitte nicht zutreffen",
       "conditionalIntro": "Der Zeichnungs-Abschnitt verhält sich in zwei Szenarien unterschiedlich. Erstens — wenn keine Zeichnungen erkannt werden (Chemie, Verfahren, Geschäftsmodelle), wird der Abschnitt als „n. z.\" markiert und seine 10 % Gewichtung anteilig auf die übrigen vier Abschnitte verteilt; rechtmäßig zeichnungsfreie Schriften werden nicht bestraft. Zweitens — wenn Zeichnungen vorhanden sind (Bezugnahmen wie „FIG.\" im Beschreibungstext) und der Abschnitt „Kurze Beschreibung der Zeichnungen\" fehlt, fließt die entsprechende Beanstandung in den Zeichnungs-Abschnitt ein, damit die Abschnittsanzeige die tatsächliche Lücke widerspiegelt.",
@@ -1795,7 +1796,7 @@
       "trustTitle": "Kein KI-Urteil",
       "trustIntro": "Jede Eingabe in Ihre Bewertung ist ein KORRIGIEREN/PRÜFEN/OK-Status, gesetzt von einem deterministischen Prüfer. Jede Ausgabe ist eine reine arithmetische Aggregation. Dieselbe Schrift erhält stets dieselbe Bewertung. PatentLint lädt Ihre Schrift nirgendwo hoch — die Prüfung läuft vollständig in Ihrem Browser.",
       "disclaimerTitle": "Was eine A-Bewertung bedeutet — und was nicht",
-      "disclaimerIntro": "Eine A-Bewertung bedeutet, dass der Prüfkatalog von PatentLint keine Beanstandungen gefunden hat. Sie bedeutet nicht, dass Ihre Schrift einreichungsbereit ist. Eine inhaltliche Prüfung durch eine zugelassene Vertretung wird weiterhin empfohlen.",
+      "disclaimerIntro": "Eine A-Bewertung bedeutet, dass der Prüfkatalog von PatentLint keine FEHLER-Befunde ausgelöst hat. Sie bedeutet nicht, dass Ihre Schrift einreichungsbereit ist. Eine inhaltliche Prüfung durch eine zugelassene Vertretung wird weiterhin empfohlen.",
       "reportTitle": "Helfen Sie uns weiter — falsche Treffer melden",
       "reportIntro": "Kein Prüfer ist fehlerfrei. Walker-basierte Prüfungen (Rückbezug, Stützung, Bezugnahmen auf Zeichnungen) tragen ein geringes Fehlerrisiko; da die Bewertung nun davon abhängt, kann eine ungerechtfertigte Beanstandung eine Notenstufe kosten. Der „Melden“-Knopf an jedem Triage-Eintrag öffnet einen Dialog, der genau anzeigt, was gesendet wird — Zählwerte, der markierte Begriff, ein kurzer Kontextausschnitt und Kategoriebezeichnungen, auf höchstens fünf Funde begrenzt — sodass wir den Fehler aus einer anonymisierten Datenmenge eingrenzen können."
     },

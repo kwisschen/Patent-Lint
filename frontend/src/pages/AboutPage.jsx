@@ -81,9 +81,15 @@ const GROUP1_CHECKS = [
 
 const GROUP2_CHECKS = [
   // Filing-format-specific checks (PDF / margins / typography) — outside the
-  // canonical 7-group ordering; leave as-is.
-  'pdfCompliance', 'marginCheck', 'fontSizeCheck', 'lineSpacing',
-  'pageNumbering', 'headerFooter', 'filingReceipt',
+  // canonical 7-group ordering. Only rows confirmed in USPTO's authoritative
+  // DOCX_Feedback_Errors_and_Warnings catalog are kept.
+  // fontFamilyCheck = INVALID_FONT + INVALID_FONT_CHAR (font family not on
+  // USPTO supported list, or character not renderable in current font).
+  // Removed (Patent Center catalog has no entry):
+  //   - fontSizeCheck — INVALID_FONT validates family, not 12pt floor
+  //   - headerFooter  — only page-numbering is validated (already a row below)
+  'pdfCompliance', 'marginCheck', 'fontFamilyCheck', 'lineSpacing',
+  'pageNumbering', 'filingReceipt',
 ]
 
 const GROUP3_CHECKS = [
@@ -95,7 +101,9 @@ const GROUP3_CHECKS = [
   'figureSequential', 'singleFigure', 'priorArtLabeling',
   // Claims structure (substantive half)
   'transitionPhrase',
-  // Claims cross-jurisdiction (restrictive wording family + fee thresholds)
+  // Claims cross-jurisdiction (restrictive wording family + drafting-time fee
+  // advisory — Patent Center calculates excess-claims fee at filing submission,
+  // not at drafting time; PatentLint surfaces it pre-filing)
   'restrictiveWording', 'indefiniteTerms', 'excessClaims',
   // Claims §112 analysis
   'meansPlusFunction', 'antecedentBasis', 'specSupport', 'preambleConsistency',
@@ -469,7 +477,6 @@ const TW_GROUP1_CHECKS = [
   'titleSubjectMatch',           // TIPO #15 (新型名稱 vs 請求項標的名稱)
   'claimsSymbolTableConsistency',// TIPO #13 (申請專利範圍 vs 符號說明/代表圖符號簡單說明)
   'connectionRelationships',     // TIPO #14 (獨立項主要構件連結/對應關係)
-  'excessClaims',                // 專利規費收取準則 §5
   // G6 claims §112-equivalent
   'antecedentBasis',             // TIPO #11 + #12 (先行詞 + 不當依附)
 ]
@@ -485,8 +492,9 @@ const TW_GROUP3_CHECKS = [
   'figuresSequential',
   // G4 claims-structure
   'sequential', 'transitionPhrase',
-  // G5 claims-cross-jurisdiction
-  'specDrawingRef',
+  // G5 claims-cross-jurisdiction (specDrawingRef + 超項費 fee threshold —
+  // 偵錯系統 doesn't flag at drafting; TIPO e-filing calculates at submission)
+  'specDrawingRef', 'excessClaims',
   // G6 claims §26 第3項 semantic walker analysis
   'specSupport',
   // G7 abstract
