@@ -53,13 +53,23 @@ function walkInputs(dir, frontendDir, inputs) {
   }
 }
 
+// Root-level files that affect the production bundle but live outside
+// src/ or public/. vite.config.js is the load-bearing one — changing
+// plugins / aliases / define values produces a different bundle.
+const ROOT_FILES = [
+  'index.html',
+  'vite.config.js',
+]
+
 export function computeContentBuildHash(frontendDir) {
   const inputs = []
   walkInputs(join(frontendDir, 'src'), frontendDir, inputs)
   walkInputs(join(frontendDir, 'public'), frontendDir, inputs)
-  const indexHtml = join(frontendDir, 'index.html')
-  if (existsSync(indexHtml)) {
-    inputs.push(relative(frontendDir, indexHtml))
+  for (const f of ROOT_FILES) {
+    const fp = join(frontendDir, f)
+    if (existsSync(fp)) {
+      inputs.push(relative(frontendDir, fp))
+    }
   }
   // Deterministic order across operating systems
   inputs.sort()
