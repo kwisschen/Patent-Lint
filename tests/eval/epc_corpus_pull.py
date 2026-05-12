@@ -56,7 +56,7 @@ OPS_TOKEN_URL = "https://ops.epo.org/3.2/auth/accesstoken"
 # Bare /search returns just publication-references (lightweight); pagination
 # via X-OPS-Range header, not URL param.
 OPS_SEARCH_URL = "https://ops.epo.org/3.2/rest-services/published-data/search"
-OPS_PUBLISHED_URL = "https://ops.epo.org/3.2/rest-services/published-data/publication/epodoc/{pub_no}/biblio,description,claims"
+OPS_PUBLISHED_BASE = "https://ops.epo.org/3.2/rest-services/published-data/publication/epodoc/{pub_no}/{section}"
 
 # Token bucket pacing — EPO non-paying tier doesn't publish exact limits
 # but practitioner reports converge on ~1 request / second sustained.
@@ -67,7 +67,7 @@ REQUEST_INTERVAL_SECONDS = 1.0
 # vs B1 etc.) filtering happens client-side after fetch. `pn=EP*` alone
 # triggers HTTP 413 (millions of results); the date+CPC combo bounds
 # each subclass query to a few hundred results.
-SEARCH_QUERY = "lg=EN AND pd>=20240101"
+SEARCH_QUERY = "pn=EP4* AND pd>=20240101"
 
 # CPC subclasses to stratify across so the corpus isn't biased toward one
 # field. ~5 drafts per subclass × 40 subclasses = ~200 target. Picked to
@@ -214,13 +214,18 @@ def search_publications(token: str, cpc_subclass: str, max_results: int = 25) ->
         number = doc.get("doc-number", {}).get("$", "")
         kind = doc.get("kind", {}).get("$", "")
         if country == "EP" and number and kind == "A1":
-            pub_nos.append(f"EP{number}{kind}")
+            # Store as "EP4736802" (no kind code) — OPS epodoc fetch
+            # rejects the concatenated "EP4736802A1" form. The kind
+            # filter above ensures we only enqueue A1 publications.
+            pub_nos.append(f"EP{number}")
     return pub_nos
 
 
-def fetch_full_text(token: str, pub_no: str) -> dict:
-    """Fetch biblio + description + claims for a publication number."""
-    url = OPS_PUBLISHED_URL.format(pub_no=pub_no)
+def _fetch_section(token: str, pub_no: str, section: str) -> dict:
+    """Fetch one section of a publication. OPS rejects the combined
+    `biblio,description,claims` path with 400 — sections must be fetched
+    individually."""
+    url = OPS_PUBLISHED_BASE.format(pub_no=pub_no, section=section)
     req = urllib.request.Request(
         url,
         headers={
@@ -230,6 +235,27 @@ def fetch_full_text(token: str, pub_no: str) -> dict:
     )
     with urllib.request.urlopen(req, timeout=60) as resp:
         return json.loads(resp.read().decode())
+
+
+def fetch_full_text(token: str, pub_no: str) -> dict:
+    """Fetch description + claims and return a merged document.
+
+    Returns a synthetic structure mimicking the combined-fetch shape
+    that the caller's extract_text expects, so the rest of the pipeline
+    doesn't change.
+    """
+    description = _fetch_section(token, pub_no, "description")
+    time.sleep(REQUEST_INTERVAL_SECONDS)
+    claims = _fetch_section(token, pub_no, "claims")
+    # Merge into a single OPS-shaped document
+    merged_root = description.get("ops:world-patent-data", {})
+    desc_ft = (merged_root.get("ftxt:fulltext-documents", {})
+                          .get("ftxt:fulltext-document", {}))
+    claims_root = claims.get("ops:world-patent-data", {})
+    claims_ft = (claims_root.get("ftxt:fulltext-documents", {})
+                            .get("ftxt:fulltext-document", {}))
+    desc_ft["claims"] = claims_ft.get("claims", {})
+    return description
 
 
 def extract_text(full_text_doc: dict) -> str:
