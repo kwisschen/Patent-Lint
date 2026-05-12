@@ -95,8 +95,8 @@ const GROUP3_CHECKS = [
   'figureSequential', 'singleFigure', 'priorArtLabeling',
   // Claims structure (substantive half)
   'transitionPhrase',
-  // Claims cross-jurisdiction (restrictive wording family)
-  'restrictiveWording', 'indefiniteTerms',
+  // Claims cross-jurisdiction (restrictive wording family + fee thresholds)
+  'restrictiveWording', 'indefiniteTerms', 'excessClaims',
   // Claims §112 analysis
   'meansPlusFunction', 'antecedentBasis', 'specSupport', 'preambleConsistency',
   'checkJepsonPriorArt', 'checkCrmNonTransitory', 'checkMarkushTransition', 'checkOmnibusClaim',
@@ -156,6 +156,7 @@ const CN_CLAIMS_CHECKS = [
   'claimsSpecReference',             // 审查指南 第二部分第二章
   'multiMultiDependency',            // 专利法实施细则 §22
   'connectionRelationships',         // 审查指南 §3.2.1 + 专利法 §26.4
+  'excessClaims',                    // 实施细则 §93 + CNIPA 收费办法
   // G6 claims §112-equivalent (引用基础 + 说明书支持)
   'antecedentBasis',                 // 审查指南 第二部分第二章 §3.2.2
   'specSupport',                     // 专利法 §26 第4款 + 审查指南 §3.2.1 (ADR-151)
@@ -218,6 +219,7 @@ const EPC_CLAIMS_CHECKS = [
   'specSupport',                     // Art. 84 EPC (support requirement)
   'restrictiveAbsolutes',            // EPO Guidelines F-IV § 4.7
   'punctuation',                     // EPO Guidelines F-IV § 4.10
+  'excessClaims',                    // Rule 45 EPC fee threshold
 ]
 
 const EPC_DRAWINGS_CHECKS = [
@@ -467,6 +469,7 @@ const TW_GROUP1_CHECKS = [
   'titleSubjectMatch',           // TIPO #15 (新型名稱 vs 請求項標的名稱)
   'claimsSymbolTableConsistency',// TIPO #13 (申請專利範圍 vs 符號說明/代表圖符號簡單說明)
   'connectionRelationships',     // TIPO #14 (獨立項主要構件連結/對應關係)
+  'excessClaims',                // 專利規費收取準則 §5
   // G6 claims §112-equivalent
   'antecedentBasis',             // TIPO #11 + #12 (先行詞 + 不當依附)
 ]

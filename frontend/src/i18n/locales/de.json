@@ -486,7 +486,8 @@
         "checkClaimPunctuation": "Satzzeichen in Ansprüchen (§ 608.01(m))",
         "checkSequenceListing": "Sequenzprotokoll-Konformität (§ 2422)",
         "numeralConsistency": "Bezugszeichen-Konsistenz (MPEP § 608.01(g))",
-        "scopeLimitWording": "„Die vorliegende Erfindung\"-Warnung (Phillips v. AWH)"
+        "scopeLimitWording": "„Die vorliegende Erfindung\"-Warnung (Phillips v. AWH)",
+        "excessClaims": "Anspruchsgebühren-Schwelle (37 CFR 1.16(h)/(i))"
       }
     },
     "cnTitle": "PatentLint CNIPA-Ausarbeitungsprüfungen",
@@ -545,7 +546,8 @@
       "commercialLanguage": "Werbesprache",
       "priorArt": "Stand-der-Technik-Bezüge in Figuren (审查指南 §4.2)",
       "figuresSequential": "Figuren fortlaufend nummeriert",
-      "numeralConsistency": "Konsistenz der 附图标记 (实施细则 §21)"
+      "numeralConsistency": "Konsistenz der 附图标记 (实施细则 §21)",
+      "excessClaims": "Anspruchsgebühren-Schwelle (实施细则 §93 + CNIPA-Gebührenordnung)"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統 unterstützt nur Gebrauchsmuster-Anmeldungen. PatentLint deckt Gebrauchsmuster und Erfindungspatente ab.",
@@ -609,7 +611,8 @@
       "figuresSequential": "Figuren fortlaufend nummeriert",
       "independentPreamble": "Unabhängiger Anspruch mit 一種",
       "numeralConsistency": "Konsistenz der 元件代表符號 (施行細則 §19)",
-      "symbolTableCoverage": "Alle verwendeten Symbole im 符號說明 deklariert (施行細則 §19)"
+      "symbolTableCoverage": "Alle verwendeten Symbole im 符號說明 deklariert (施行細則 §19)",
+      "excessClaims": "Anspruchsgebühren-Schwelle (Patentgebührenverordnung §5, TIPO)"
     },
     "stats": {
       "tests": "Automatisierte Tests",
@@ -639,9 +642,9 @@
     "enterpriseContact": "Enterprise-Bereitstellung →",
     "builderTitle": "Hintergrund",
     "builderPain": "Wer mit Patenten arbeitet, kennt die Routine. Rückbezüge. Anspruchsbegriffe, die in der Beschreibung fehlen. Figuren, die in der Zeichnungsbeschreibung angekündigt, aber im Text nie referenziert werden. Abhängigkeitsketten, die unbemerkt zirkulär werden. Nichts davon ist schwer. Alles davon ist mühsam. Alles davon lässt sich leicht übersehen.",
-    "builderDesc1": "PatentLint wurde von einem Patentingenieur gebaut, der über ein Jahrzehnt in diesem Arbeitsablauf verbracht, Tausende Anmeldungen geprüft und dieselben Fehlerkategorien immer wieder hat durchrutschen sehen. Bestehende Optionen waren entweder reine Windows-Desktop-Installationen oder Cloud-Dienste, bei denen die noch nicht eingereichte Anmeldung eines Mandanten auf einen fremden Server hochgeladen werden musste. Das eine bindet Sie an ein bestimmtes Betriebssystem. Das andere schickt den Entwurf aus der Kanzlei, bevor er überhaupt eingereicht ist.",
-    "builderDesc2": "Die Analyse-Engine ist in Python geschrieben und wird zu WebAssembly kompiliert. Sie läuft vollständig im Browser, auf Laptop, Tablet oder Smartphone, ohne Upload und ohne Protokollierung. Das heißt: Sie funktioniert im Flugzeug, auf gesperrten Kanzleirechnern, auf allem, was ein Mandant noch nicht freigegeben hat.",
-    "builderSister": "Das Schwesterprojekt, der Agentic Patent Analyst, ist ein quelloffener (Apache 2.0) LangGraph-basierter KI-Agent, der Prüfungsbescheide liest, jeden Einwand des Prüfers beurteilt, Argumentations- oder Änderungsstrategien entwirft und den Bescheids-Analysebericht in der Sprache des Mandanten und im Schreibstil der Kanzlei verfasst.",
+    "builderDesc1": "PatentLint wurde von einem Patentingenieur gebaut, der über ein Jahrzehnt in diesem Arbeitsablauf verbracht, Tausende Anmeldungen geprüft und dieselben Fehlerkategorien hat durchrutschen sehen. Bestehende Optionen waren entweder reine Windows-Desktop-Installationen oder Cloud-Dienste, bei denen die noch nicht eingereichte Anmeldung eines Mandanten auf einen fremden Server hochgeladen werden musste.",
+    "builderDesc2": "Die Analyse-Engine ist in Python geschrieben und wird zu WebAssembly kompiliert. Sie läuft vollständig im Browser, auf Laptop, Tablet oder Smartphone, ohne Upload und ohne Protokollierung. Sie funktioniert im Flugzeug, auf gesperrten Kanzleirechnern, auf allem, was ein Mandant noch nicht freigegeben hat.",
+    "builderSister": "Das Schwesterprojekt, der Agentic Patent Analyst, ist ein LangGraph-basierter KI-Agent (quelloffen, Apache 2.0), der Prüfungsbescheide liest, jeden Einwand des Prüfers beurteilt, Argumentations- oder Änderungsstrategien entwirft und den Bescheids-Analysebericht in der Sprache des Mandanten und im Schreibstil der Kanzlei verfasst.",
     "licenseNote": "PatentLint ist für die persönliche Nutzung kostenlos. Der Quellcode ist unter PolyForm-Strict-1.0.0 (quelltext-verfügbar) auf GitHub einsehbar.",
     "tableFootnote": "Stand: April 2026. Beide Systeme können weiterentwickelt werden.",
     "cnTableFootnote": "Stand: Mai 2026. PatentLint kann weiterentwickelt werden.",
@@ -702,7 +705,8 @@
       "wordCount": "Wortanzahl der Zusammenfassung (50-150) — Regel 47(2) + Richtlinien F-II § 2.3",
       "titleMatch": "Zusammenfassung bezieht sich auf die im Titel genannte Erfindung (Richtlinien F-II § 2.3.5)",
       "claimReference": "Zusammenfassung verweist nicht auf bestimmte Ansprüche (Richtlinien F-II § 2.3.3)",
-      "structure": "Struktur der Zusammenfassung — ein Absatz, keine anspruchsartigen Formulierungen, keine wertenden Aussagen"
+      "structure": "Struktur der Zusammenfassung — ein Absatz, keine anspruchsartigen Formulierungen, keine wertenden Aussagen",
+      "excessClaims": "Anspruchsgebühren-Schwelle (Regel 45 EPÜ)"
     },
     "epcTableFootnote": "Stand: Mai 2026. Die EPÜ-Unterstützung befindet sich in der Beta-Phase und prüft derzeit englischsprachige Patentschriften. PatentLint kann weiterentwickelt werden."
   },
@@ -980,7 +984,11 @@
       "missingTransition": "Anspruch {{claimNumber}} fehlt ein Übergangsbegriff (z. B. 'comprising', 'consisting of')",
       "missingTransitionDetails": "Anspruch {{claimNumber}} enthält keinen anerkannten Übergangsbegriff. Jeder Anspruch muss einen Übergangsbegriff wie 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by' oder 'characterized in that' zwischen Oberbegriff und Anspruchskörper enthalten.",
       "transitionsPresent": "Alle Ansprüche enthalten Übergangsbegriffe.",
-      "overview": "Anspruchs-Übersicht."
+      "overview": "Anspruchs-Übersicht.",
+      "excessClaims": {
+        "verify": "Mehrkosten für Ansprüche möglich (37 CFR 1.16(h)/(i)). Prüfen Sie Ihre Anmeldegebühr für jeden unabhängigen Anspruch über 3 sowie jeden Anspruch über 20.",
+        "pass": "Keine Auslöser für Anspruchsgebühren festgestellt (37 CFR 1.16(h)/(i): höchstens 20 Ansprüche insgesamt und höchstens 3 unabhängige Ansprüche)."
+      }
     },
     "abstract": {
       "legalPhraseology": {
@@ -1041,6 +1049,10 @@
         },
         "specSupport": {
           "pass": "Keine nicht-gestützten Anspruchsmerkmale festgestellt (Art. 84 EPÜ)."
+        },
+        "excessClaims": {
+          "verify": "Anspruchsanzahl überschreitet 15. Regel 45 EPÜ erhebt eine Anspruchsgebühr für den 16. bis 50. Anspruch und eine erhöhte Gebühr ab dem 51. Anspruch. Prüfen Sie Ihre Anmeldegebühr.",
+          "pass": "Keine Auslöser für Anspruchsgebühren festgestellt (Regel 45 EPÜ: höchstens 15 Ansprüche insgesamt)."
         }
       },
       "abstract": {
@@ -1177,6 +1189,10 @@
         "independentPreamble": {
           "pass": "Keine 「一种」-Präambel-Probleme in unabhängigen Ansprüchen festgestellt.",
           "verify": "{{claims}}: unabhängige Ansprüche beginnen üblicherweise mit 「一种」 (审查指南 §3.1.1 Standardform; Gesetz verlangt 主题名称, nicht wörtlich 一种)."
+        },
+        "excessClaims": {
+          "verify": "Gesamtzahl der Ansprüche überschreitet 10. CNIPA erhebt eine zusätzliche Gebühr pro Anspruch über 10 (Erfindungspatente: ¥150 je Anspruch). Prüfen Sie Ihre Anmeldegebühr.",
+          "pass": "Keine Auslöser für Anspruchsgebühren festgestellt (CNIPA 实施细则 §93: höchstens 10 Ansprüche insgesamt)."
         }
       },
       "abstract": {
@@ -1349,6 +1365,10 @@
         "independentPreamble": {
           "pass": "Keine 「一種」-Präambel-Probleme in unabhängigen Ansprüchen festgestellt.",
           "verify": "{{claims}}: unabhängige Ansprüche beginnen üblicherweise mit 「一種」 (TIPO-偵錯系統-Konvention; Gesetz verlangt den 標的名稱, nicht wörtlich 一種)."
+        },
+        "excessClaims": {
+          "verify": "Gesamtzahl der Ansprüche überschreitet 10. TIPO erhebt eine zusätzliche Gebühr pro Anspruch über 10 (Erfindungspatente: NT$800 je Anspruch). Prüfen Sie Ihre Anmeldegebühr.",
+          "pass": "Keine Auslöser für Anspruchsgebühren festgestellt (TIPO 專利規費收取準則 §5: höchstens 10 Ansprüche insgesamt)."
         }
       },
       "abstract": {

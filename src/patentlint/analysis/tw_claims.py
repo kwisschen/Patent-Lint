@@ -632,6 +632,36 @@ def check_independent_preamble(doc: TwPatentDocument) -> list[CheckItem]:
 # ── Check 13 ─────────────────────────────────────────────────────────────
 
 
+def check_excess_claims_count_tw(doc: TwPatentDocument) -> list[CheckItem]:
+    """Flag claims that exceed TIPO fee-free threshold (10 claims).
+
+    TIPO 專利規費收取準則 §5: the invention-patent application base fee
+    includes the first 10 claims; an additional per-claim fee applies
+    for each claim above 10 (NT$800/claim for invention applications).
+    Status verify when total exceeds 10; PASS otherwise. Threshold
+    uses strict ``>``.
+    """
+    total = len(doc.claims)
+    if total <= 10:
+        return [CheckItem(
+            status="pass",
+            message=f"未偵測到 TIPO 超項費觸發條件（請求項總數 {total} 項，專利規費收取準則 §5 免費門檻為 10 項以內）。",
+            message_key="check.tw.claims.excessClaims.pass",
+            reference="專利規費收取準則 §5",
+            diagnostics=_dx(total_count=total),
+        )]
+    return [CheckItem(
+        status="verify",
+        message=(
+            f"請求項總數 {total} 項，超過 TIPO 之 10 項免費門檻 —— "
+            f"自第 11 項起每項加收超項費（發明專利每項 NT$800）。請查核申請規費。"
+        ),
+        message_key="check.tw.claims.excessClaims.verify",
+        reference="專利規費收取準則 §5",
+        diagnostics=_dx(total_count=total, excess_count=total - 10),
+    )]
+
+
 def check_self_dependent(doc: TwPatentDocument) -> list[CheckItem]:
     """Check if any claim depends on itself."""
     bad = [c.id for c in doc.claims if c.id in c.dependencies]

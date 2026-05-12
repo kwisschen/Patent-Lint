@@ -486,7 +486,8 @@
         "checkClaimPunctuation": "Claim punctuation (§ 608.01(m))",
         "checkSequenceListing": "Sequence listing compliance (§ 2422)",
         "numeralConsistency": "Reference numeral consistency (MPEP § 608.01(g))",
-        "scopeLimitWording": "\"the present invention\" scope-limit warning (Phillips v. AWH)"
+        "scopeLimitWording": "\"the present invention\" scope-limit warning (Phillips v. AWH)",
+        "excessClaims": "Excess-claims fee threshold (37 CFR 1.16(h)/(i))"
       }
     },
     "cnTitle": "PatentLint CNIPA Drafting Checks",
@@ -545,7 +546,8 @@
       "commercialLanguage": "Commercial language",
       "priorArt": "Prior art figure references (审查指南 §4.2)",
       "figuresSequential": "Figures numbered sequentially",
-      "numeralConsistency": "Reference numeral consistency (实施细则 §21)"
+      "numeralConsistency": "Reference numeral consistency (实施细则 §21)",
+      "excessClaims": "Excess-claims fee threshold (实施细则 §93 + CNIPA 收费办法)"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統 supports utility-model filings only. PatentLint covers both utility models and inventions.",
@@ -609,7 +611,8 @@
       "figuresSequential": "Figures numbered sequentially",
       "independentPreamble": "Independent claim preamble (一種)",
       "numeralConsistency": "Reference symbol consistency (施行細則 §19)",
-      "symbolTableCoverage": "All used symbols declared in 符號說明 (施行細則 §19)"
+      "symbolTableCoverage": "All used symbols declared in 符號說明 (施行細則 §19)",
+      "excessClaims": "Excess-claims fee threshold (專利規費收取準則 §5)"
     },
     "stats": {
       "tests": "Automated Tests",
@@ -639,9 +642,9 @@
     "enterpriseContact": "Enterprise deployment →",
     "builderTitle": "Background",
     "builderPain": "Every patent professional knows the drill. Antecedent basis. Claim terms missing from the spec. Figures declared in the drawings description but never referenced in the body. Dependency chains that quietly become circular. None of it is hard. All of it is tedious. All of it is easy to miss.",
-    "builderDesc1": "PatentLint was built by a patent engineer who spent over a decade inside that workflow, reviewing thousands of drafts and watching the same categories of errors slip through again and again. Existing options were either Windows-only desktop installs or cloud services that required uploading a client's unfiled application to someone else's server. One locks you to a specific OS. The other sends the draft out of your firm before it's even on file.",
-    "builderDesc2": "The analysis engine is written in Python and compiles to WebAssembly. It runs entirely in the browser, on a laptop, tablet, or phone, with nothing uploaded and nothing logged. That means it works on an airplane, on a locked-down firm machine, on anything a client hasn't signed off on yet.",
-    "builderSister": "Its companion project, the Agentic Patent Analyst, is an open-source (Apache 2.0) LangGraph-based AI agent that reads Office Actions, weighs each examiner rejection, drafts argument or amendment strategies, and writes the client OA-response analysis report in the client's language and the firm's voice.",
+    "builderDesc1": "PatentLint was built by a patent engineer who spent over a decade inside that workflow, reviewing thousands of drafts and watching the same categories of errors slip through. Existing options were either Windows-only desktop installs or cloud services that required uploading a client's unfiled application to someone else's server.",
+    "builderDesc2": "The analysis engine is written in Python and compiles to WebAssembly. It runs entirely in the browser, on a laptop, tablet, or phone, with nothing uploaded and nothing logged. It works on an airplane, on a locked-down firm machine, on anything a client hasn't signed off on yet.",
+    "builderSister": "Its companion project, the Agentic Patent Analyst, is a LangGraph-based AI agent (open-source, Apache 2.0) that reads Office Actions, weighs each examiner rejection, drafts argument or amendment strategies, and writes the client OA-response analysis report in the client's language and the firm's voice.",
     "licenseNote": "PatentLint is free for individual use. The source is published on GitHub under PolyForm-Strict-1.0.0 (source-available).",
     "tableFootnote": "As of April 2026; both tools may continue to evolve.",
     "cnTableFootnote": "As of May 2026. PatentLint may continue to evolve.",
@@ -702,7 +705,8 @@
       "wordCount": "Abstract word count (50-150) — Rule 47(2) + Guidelines F-II § 2.3",
       "titleMatch": "Abstract refers to the title's invention (Guidelines F-II § 2.3.5)",
       "claimReference": "Abstract does not reference specific claims (Guidelines F-II § 2.3.3)",
-      "structure": "Abstract structure — single paragraph, no claim-style phraseology, no merit language"
+      "structure": "Abstract structure — single paragraph, no claim-style phraseology, no merit language",
+      "excessClaims": "Excess-claims fee threshold (Rule 45 EPC)"
     },
     "epcTableFootnote": "As of May 2026. EPC support is in beta and currently checks English-language specifications. PatentLint may continue to evolve."
   },
@@ -980,7 +984,11 @@
       "missingTransition": "Claim {{claimNumber}} is missing a transitional phrase (e.g., 'comprising', 'consisting of')",
       "missingTransitionDetails": "Claim {{claimNumber}} does not contain a recognized transitional phrase. Every claim must include a transitional phrase such as 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by', or 'characterized in that' between the preamble and the claim body.",
       "transitionsPresent": "All claims contain transitional phrases.",
-      "overview": "Claims overview."
+      "overview": "Claims overview.",
+      "excessClaims": {
+        "verify": "Excess-claims fees may apply (37 CFR 1.16(h)/(i)). Verify your filing-fee calculation accounts for each independent claim above 3 and each total claim above 20.",
+        "pass": "No excess-claims fee triggers detected (37 CFR 1.16(h)/(i): no more than 20 total claims and no more than 3 independent claims)."
+      }
     },
     "abstract": {
       "legalPhraseology": {
@@ -1041,6 +1049,10 @@
         },
         "specSupport": {
           "pass": "No unsupported claim terms detected (Art. 84 EPC)."
+        },
+        "excessClaims": {
+          "verify": "Total claim count exceeds 15. Rule 45 EPC charges a per-claim fee for the 16th through 50th claim, with a higher per-claim fee from the 51st onward. Verify your filing fee.",
+          "pass": "No excess-claims fee triggers detected (Rule 45 EPC: no more than 15 total claims)."
         }
       },
       "abstract": {
@@ -1177,6 +1189,10 @@
         "independentPreamble": {
           "pass": "No 「一种」-preamble issues detected in independent claims.",
           "verify": "{{claims}}: independent claim(s) typically open with 「一种」 (审查指南 §3.1.1 canonical form; statute requires 主题名称, not literal 一种)."
+        },
+        "excessClaims": {
+          "verify": "Total claim count exceeds 10. CNIPA charges an additional per-claim fee for each claim above 10 (¥150/claim for invention applications). Verify your filing fee.",
+          "pass": "No excess-claims fee triggers detected (CNIPA 实施细则 §93: no more than 10 total claims)."
         }
       },
       "abstract": {
@@ -1349,6 +1365,10 @@
         "independentPreamble": {
           "pass": "No 「一種」-preamble issues detected in independent claims.",
           "verify": "{{claims}}: independent claim(s) typically open with 「一種」 (TIPO 偵錯系統 convention; statute requires subject-matter name, not literal 一種)."
+        },
+        "excessClaims": {
+          "verify": "Total claim count exceeds 10. TIPO charges an additional per-claim fee for each claim above 10 (NT$800/claim for invention applications). Verify your filing fee.",
+          "pass": "No excess-claims fee triggers detected (TIPO 專利規費收取準則 §5: no more than 10 total claims)."
         }
       },
       "abstract": {

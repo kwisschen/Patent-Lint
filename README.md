@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml/badge.svg)](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml)
 [![Live Demo](https://img.shields.io/badge/demo-patentlint.com-blue)](https://patentlint.com)
-[![Tests](https://img.shields.io/badge/tests-2497-brightgreen)](#)
+[![Tests](https://img.shields.io/badge/tests-2560-brightgreen)](#)
 [![License: PolyForm-Strict-1.0.0](https://img.shields.io/badge/license-PolyForm--Strict--1.0.0-orange)](LICENSE)
 
 **No account. No install. No upload.**
@@ -28,7 +28,7 @@ The hosted demo at [patentlint.com](https://patentlint.com) is free for individu
 ## How It Works
 
 1. **Drop** a patent draft into the browser (.docx for US/TW/EPC, .docx/.xml/.zip for CN)
-2. **Analyze** — 144 checks run instantly via WebAssembly (no server, no upload)
+2. **Analyze** — 151 checks run instantly via WebAssembly (no server, no upload)
 3. **Report** — download a PDF or copy a summary to clipboard
 
 ---
@@ -43,45 +43,45 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 
 ## What It Checks
 
-144 automated checks across four jurisdictions, each classified as **PASS**, **REVIEW**, or **FIX**.
+151 automated checks across four jurisdictions, each classified as **PASS**, **REVIEW**, or **FIX**.
 
-> **EPC support is v1 beta.** The full 30-check EPC catalog runs end-to-end via CLI and REST API. The frontend jurisdiction picker integration and real-corpus FP tuning are next on the roadmap.
+> **EPC support is v1 beta.** The full 34-check EPC catalog runs end-to-end via CLI and REST API. The frontend jurisdiction picker integration shipped 2026-05-11; real-corpus FP tuning calibrated against 174 EP-A1 drafts pulled via the EPO OPS API.
 
-### U.S. Patent Applications (42 checks)
+### U.S. Patent Applications (43 checks)
 
 | Section | Checks | Reference |
 |---------|--------|-----------|
 | **Specification** | Required sections, paragraph numbering, restrictive wording, sequence listing, prior art citations, figure cross-reference consistency | MPEP § 608.01(a)(m)(p), § 2173.01 |
 | **Drawings** | Figure count, sequential numbering, single-figure format, prior art labeling, reference numeral consistency (spec ↔ drawings) | MPEP § 608.02 |
-| **Claims** | Numbering, dependencies, periods, punctuation, indefinite terms, transitional phrases, means-plus-function (§ 112(f)), antecedent basis (§ 112(b)), preamble consistency (§ 112(d)), specification support (§ 112(a)), claim similarity, special formats (Jepson / CRM / Markush / omnibus) | 35 U.S.C. § 101, § 112; MPEP § 2117–2173 |
+| **Claims** | Numbering, dependencies, periods, punctuation, indefinite terms, transitional phrases, means-plus-function (§ 112(f)), antecedent basis (§ 112(b)), preamble consistency (§ 112(d)), specification support (§ 112(a)), claim similarity, special formats (Jepson / CRM / Markush / omnibus), excess-claims fee threshold (37 CFR 1.16(h)/(i)) | 35 U.S.C. § 41(a)(2), § 101, § 112; 37 CFR 1.16; MPEP § 2117–2173 |
 | **Abstract** | Word count (50–150), single paragraph, legal phraseology, implied phrases, self-praising language | MPEP § 608.01(b) |
 
-### Chinese Patent Applications (33 checks)
+### European (EPC) Patent Applications — English drafts (34 checks, v1 beta)
+
+| Section | Checks | Reference |
+|---------|--------|-----------|
+| **Specification** | Required sections, section ordering (Rule 42(1) sub-section order), paragraph numbering (advisory), paragraph ending, title required, title content (no trademarks / model numbers), figure-reference consistency, reference-numeral consistency, claim-reference-in-spec | Art. 78 + Rule 41 + Rule 42 + Rule 43(7) + Rule 46(2)(h) EPC; Guidelines F-II § 4 + F-IV § 4.3 |
+| **Drawings** | Figures sequential, single-figure label, prior-art labeling, figure count | Rule 46(2)(a) + Rule 46(2)(h) EPC; Guidelines F-V § 1.2 |
+| **Claims** | Sequential numbering, dependency format, self/forward dependency, single sentence per claim, reference signs in parens, subject consistency, transitional phrase, claim-spec reference, multi-dep on multi-dep, Markush format, independent-claim count per category, two-part form (advisory), **antecedent basis — Art. 84 walker**, **specification support — Art. 84 walker**, restrictive absolutes, claim punctuation, excess-claims fee threshold (Rule 45 EPC) | Art. 84 EPC; Rule 43 + Rule 45 EPC; Guidelines F-IV § 3.4, § 4.5, § 4.7, § 4.10, § 4.13, § 4.20 |
+| **Abstract** | Word count (50–150), title-match, claim-reference, structure (single paragraph, no claim-style phraseology, no merit language) | Rule 47(2) EPC; Guidelines F-II § 2.3, § 2.3.3, § 2.3.5 |
+
+### Chinese Patent Applications (34 checks)
 
 | Section | Checks | Reference |
 |---------|--------|-----------|
 | **Specification** | Required sections, section ordering, paragraph numbering/ending, figure reference consistency, patent type terminology, title, claim references in spec | 专利法实施细则 §17, 审查指南 |
-| **Claims** | Sequential numbering, dependency format, self/forward dependencies, single sentence, reference numeral parentheses, subject consistency, transition phrases, Taiwan terminology, spec/drawing references, chained multi-dependencies, dependent ordering, connection relationships, antecedent basis (BFS walker) | 专利法实施细则 §22, 审查指南 |
+| **Claims** | Sequential numbering, dependency format, self/forward dependencies, single sentence, reference numeral parentheses, subject consistency, transition phrases, Taiwan terminology, spec/drawing references, chained multi-dependencies, dependent ordering, connection relationships, antecedent basis (BFS walker), excess-claims fee threshold (实施细则 §93 + CNIPA 收费办法) | 专利法实施细则 §22, §93; 审查指南 |
 | **Abstract** | Character count (≤300), title match, commercial language | 专利法实施细则 §23 |
 | **Drawings** | Figures sequential, figure count | 审查指南 |
 
-### Taiwanese Patent Applications (39 checks)
+### Taiwanese Patent Applications (40 checks)
 
 | Section | Checks | Reference |
 |---------|--------|-----------|
 | **Specification** | Required sections, section ordering, paragraph numbering (【NNNN】 format), paragraph ending, figure reference consistency, patent type terminology (本發明 vs 本新型), title, spec-claim references, 符號說明 presence + consistency, bracket format (【】) | 專利法施行細則 §17, 專利審查基準 |
-| **Claims** | Sequential, dependency format (§18), self / forward / circular dependency, single sentence (§18), reference numeral parens (§19), subject consistency, transition phrase (其特徵在於), CN-term contamination guard, spec/drawing refs, multi-dep on multi-dep, multi-dep alternative form, title-subject match, 符號說明 consistency, **antecedent basis (先行詞) — ancestor-chain walker**, **specification support (說明書支持) — §26 第3項**, connection relationships, 代表圖 vs 符號說明 consistency | 專利法 §26 第3項, 專利法施行細則 §17–§21, 專利審查基準 |
+| **Claims** | Sequential, dependency format (§18), self / forward / circular dependency, single sentence (§18), reference numeral parens (§19), subject consistency, transition phrase (其特徵在於), CN-term contamination guard, spec/drawing refs, multi-dep on multi-dep, multi-dep alternative form, title-subject match, 符號說明 consistency, **antecedent basis (先行詞) — ancestor-chain walker**, **specification support (說明書支持) — §26 第3項**, connection relationships, 代表圖 vs 符號說明 consistency, excess-claims fee threshold (專利規費收取準則 §5) | 專利法 §26 第3項, 專利法施行細則 §17–§21, 專利規費收取準則 §5, 專利審查基準 |
 | **Abstract** | Character count (≤250), title match, commercial language, representative drawing (代表圖) designation | 專利法施行細則 §21 |
 | **Drawings** | Figures sequential, figure count | 專利法施行細則 §17 |
-
-### European (EPC) Patent Applications — English drafts (30 checks, v1 beta)
-
-| Section | Checks | Reference |
-|---------|--------|-----------|
-| **Specification** | Required sections, section ordering (Rule 42(1) sub-section order), paragraph numbering (advisory), paragraph ending, title required, figure-reference consistency, reference-numeral consistency, claim-reference-in-spec | Art. 78 + Rule 41 + Rule 42 + Rule 43(7) + Rule 46(2)(h) EPC; Guidelines F-II + F-IV § 4.3 |
-| **Drawings** | Figures sequential, single-figure label, prior-art labeling, figure count | Rule 46(2)(a) + Rule 46(2)(h) EPC; Guidelines F-V § 1.2 |
-| **Claims** | Sequential numbering, dependency format, self/forward dependency, single sentence per claim, reference signs in parens, subject consistency, transitional phrase, claim-spec reference, multi-dep on multi-dep, Markush format, independent-claim count per category, two-part form (advisory), **antecedent basis — Art. 84 walker**, **specification support — Art. 84 walker**, restrictive absolutes, claim punctuation | Art. 84 EPC; Rule 43 EPC; Guidelines F-IV § 3.4, § 4.5, § 4.7, § 4.10, § 4.13, § 4.20 |
-| **Abstract** | Word count (50–150), structure (single paragraph, no claim-style phraseology, no merit language) | Rule 47(2) EPC; Guidelines F-II § 2.3 |
 
 EPC English input only at v1 (DE/FR check engines deferred). The English-language jurisdiction-mismatch banner detects EPC vs US tells ("characterised in that", "any preceding claim", Article 84 citations) and routes accordingly.
 
@@ -145,7 +145,7 @@ src/patentlint/
 frontend/
 ├── src/components/  # DropZone, ClaimTree, TriagePanel, Section112Container, …
 ├── src/lib/         # pdfExport.js (client-side PDF via pdfmake), detailsFormatter.js
-├── src/pages/       # SecurityPage, AboutPage, TermsPage, PrivacyPage, CommercialPage, RubricPage
+├── src/pages/       # SecurityPage, AboutPage, TermsPage, PrivacyPage, RubricPage
 ├── src/hooks/       # usePyodide, useNetworkMonitor
 └── src/i18n/        # Locale files (en, de, zh-TW, zh-CN, ja, ko) — shared with Python
 ```
@@ -167,7 +167,7 @@ Visit **[patentlint.com](https://patentlint.com)** — nothing to install.
 ```bash
 # Backend
 pip install -e ".[api,dev]"
-pytest -v                    # 2497 tests
+pytest -v                    # 2560 tests
 uvicorn patentlint.api.app:app --port 8000 --reload
 
 # Frontend (separate terminal)
@@ -220,7 +220,7 @@ curl http://localhost:8000/api/health
 | Frontend | React 18, Vite 6, Tailwind CSS v4, shadcn/ui |
 | PDF | pdfmake (web) · weasyprint (Docker/CLI) |
 | CLI | Click |
-| Testing | pytest (2497 tests) |
+| Testing | pytest (2560 tests) |
 | CI/CD | GitHub Actions (test, lint, wheel-verify, docker) + Vercel auto-deploy |
 | i18n | react-i18next (English, Deutsch, 繁體中文, 简体中文, 日本語, 한국어) — shared locale bundles across frontend + weasyprint PDF |
 

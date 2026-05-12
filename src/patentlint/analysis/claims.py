@@ -145,6 +145,56 @@ _MEANS_PLUS_FUNCTION = re.compile(
 )
 
 
+def check_excess_claims_count(claims: list[Claim]) -> list[CheckItem]:
+    """Flag claims that exceed 37 CFR 1.16(h)/(i) fee-free thresholds.
+
+    37 CFR 1.16(h) charges a per-claim fee for each independent claim
+    in excess of 3. 37 CFR 1.16(i) charges a per-claim fee for each
+    claim (independent or dependent) in excess of 20. Statute base:
+    35 U.S.C. § 41(a)(2). Status verify when either threshold is
+    exceeded; PASS otherwise. Thresholds use strict ``>``, matching the
+    "in excess of" language in the regulation.
+    """
+    total = len(claims)
+    indep = sum(1 for c in claims if c.independent)
+    over_total = total > 20
+    over_indep = indep > 3
+    if not over_total and not over_indep:
+        return [CheckItem(
+            status="pass",
+            message=(
+                f"No excess-claims fee triggers detected "
+                f"({total} total, {indep} independent — within "
+                f"37 CFR 1.16(h)/(i) fee-free thresholds)."
+            ),
+            message_key="check.claims.excessClaims.pass",
+            reference="37 CFR 1.16(h)(i); 35 U.S.C. § 41(a)(2)",
+            diagnostics=_dx(total_count=total, independent_count=indep),
+        )]
+    issues = []
+    if over_total:
+        issues.append(f"total claims {total} exceeds 20")
+    if over_indep:
+        issues.append(f"independent claims {indep} exceeds 3")
+    return [CheckItem(
+        status="verify",
+        message=(
+            f"Excess-claims fees may apply ({'; '.join(issues)}). "
+            f"37 CFR 1.16(h) charges per-claim fee for each independent "
+            f"claim above 3; 37 CFR 1.16(i) charges per-claim fee for "
+            f"each claim above 20. Verify your filing fee."
+        ),
+        message_key="check.claims.excessClaims.verify",
+        reference="37 CFR 1.16(h)(i); 35 U.S.C. § 41(a)(2)",
+        diagnostics=_dx(
+            total_count=total,
+            independent_count=indep,
+            over_total=over_total,
+            over_indep=over_indep,
+        ),
+    )]
+
+
 def detect_means_plus_function(claims: list[Claim]) -> list[int]:
     """Detect claims invoking 35 U.S.C. § 112(f) means-plus-function.
 

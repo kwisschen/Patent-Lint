@@ -301,6 +301,85 @@ def test_fn_cn_walker_catches_missing_intro():
     )
 
 
+# === Excess-claims fee thresholds (arithmetic only — 0/0 modulo parser) =====
+
+
+def test_fn_us_excess_claims_caught_total():
+    """US: total claim count > 20 fires excess-claims verify (37 CFR 1.16(i))."""
+    from patentlint.analysis.claims import check_excess_claims_count
+
+    claims = [Claim(id=i, text=f"{i}. A widget.", independent=(i == 1), dependencies=[] if i == 1 else [1]) for i in range(1, 22)]
+    items = check_excess_claims_count(claims)
+    assert any(it.status == "verify" for it in items), "Expected verify for 21 claims"
+
+
+def test_fn_us_excess_claims_caught_independent():
+    """US: > 3 independent claims fires excess-claims verify (37 CFR 1.16(h))."""
+    from patentlint.analysis.claims import check_excess_claims_count
+
+    claims = [Claim(id=i, text=f"{i}. A widget.", independent=True, dependencies=[]) for i in range(1, 5)]
+    items = check_excess_claims_count(claims)
+    assert any(it.status == "verify" for it in items)
+
+
+def test_fn_us_excess_claims_passes_at_boundary():
+    """US: exactly 20 total / 3 independent passes (regulation says 'in excess of')."""
+    from patentlint.analysis.claims import check_excess_claims_count
+
+    claims = [
+        Claim(id=i, text=f"{i}. A widget.",
+              independent=(i in (1, 2, 3)),
+              dependencies=[] if i in (1, 2, 3) else [1])
+        for i in range(1, 21)
+    ]
+    items = check_excess_claims_count(claims)
+    assert all(it.status == "pass" for it in items)
+
+
+def test_fn_epc_excess_claims_caught():
+    """EPC: > 15 total claims fires excess-claims verify (Rule 45 EPC)."""
+    from patentlint.analysis.epc_claims import check_excess_claims_count_epc
+
+    claims = [Claim(id=i, text=f"{i}. A widget.", independent=(i == 1), dependencies=[] if i == 1 else [1]) for i in range(1, 17)]
+    items = check_excess_claims_count_epc(claims)
+    assert any(it.status == "verify" for it in items)
+
+
+def test_fn_epc_excess_claims_passes_at_boundary():
+    """EPC: exactly 15 claims passes."""
+    from patentlint.analysis.epc_claims import check_excess_claims_count_epc
+
+    claims = [Claim(id=i, text=f"{i}. A widget.", independent=(i == 1), dependencies=[] if i == 1 else [1]) for i in range(1, 16)]
+    items = check_excess_claims_count_epc(claims)
+    assert all(it.status == "pass" for it in items)
+
+
+def test_fn_cn_excess_claims_caught():
+    """CN: > 10 total claims fires excess-claims verify (实施细则 §93)."""
+    from patentlint.analysis.cn_claims import check_excess_claims_count_cn
+    from patentlint.models import CnPatentDocument
+
+    doc = CnPatentDocument(claims=[
+        Claim(id=i, text=f"{i}. 一种装置。", independent=(i == 1), dependencies=[] if i == 1 else [1])
+        for i in range(1, 12)
+    ])
+    items = check_excess_claims_count_cn(doc)
+    assert any(it.status == "verify" for it in items)
+
+
+def test_fn_tw_excess_claims_caught():
+    """TW: > 10 total claims fires excess-claims verify (專利規費收取準則 §5)."""
+    from patentlint.analysis.tw_claims import check_excess_claims_count_tw
+    from patentlint.models import TwPatentDocument
+
+    doc = TwPatentDocument(claims=[
+        Claim(id=i, text=f"{i}. 一種裝置。", independent=(i == 1), dependencies=[] if i == 1 else [1])
+        for i in range(1, 12)
+    ])
+    items = check_excess_claims_count_tw(doc)
+    assert any(it.status == "verify" for it in items)
+
+
 def test_fn_tw_walker_catches_missing_intro():
     """TW walker should catch '該X' where no prior '一X' intro."""
     from patentlint.analysis.tw_claims import check_antecedent_basis

@@ -486,7 +486,8 @@
         "checkClaimPunctuation": "청구항 부호 (§ 608.01(m))",
         "checkSequenceListing": "서열 목록 규정 준수 (§ 2422)",
         "numeralConsistency": "참조 부호 일관성 (MPEP § 608.01(g))",
-        "scopeLimitWording": "\"the present invention\" 범위 한정 경고 (Phillips v. AWH)"
+        "scopeLimitWording": "\"the present invention\" 범위 한정 경고 (Phillips v. AWH)",
+        "excessClaims": "초과 청구항 수수료 임계값(37 CFR 1.16(h)/(i))"
       }
     },
     "cnTitle": "PatentLint CNIPA 작성 규칙 검사",
@@ -545,7 +546,8 @@
       "commercialLanguage": "상업적 표현",
       "priorArt": "도면의 선행기술 참조(审查指南 §4.2)",
       "figuresSequential": "도면 번호 연속성",
-      "numeralConsistency": "도면 부호 일관성 (实施细则 §21)"
+      "numeralConsistency": "도면 부호 일관성 (实施细则 §21)",
+      "excessClaims": "초과 청구항 수수료 임계값(实施细则 §93 + CNIPA 수수료 규정)"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統 은 실용신안 출원만 지원합니다. PatentLint 는 실용신안과 발명을 모두 지원합니다.",
@@ -609,7 +611,8 @@
       "figuresSequential": "도면 번호 연속성",
       "independentPreamble": "독립항 「一種」 전제부",
       "numeralConsistency": "대표 부호 일관성 (施行細則 §19)",
-      "symbolTableCoverage": "명세서에서 사용되는 모든 부호가 符號說明에 기재되어 있음 (施行細則 §19)"
+      "symbolTableCoverage": "명세서에서 사용되는 모든 부호가 符號說明에 기재되어 있음 (施行細則 §19)",
+      "excessClaims": "초과 청구항 수수료 임계값(專利規費收取準則 §5)"
     },
     "stats": {
       "tests": "자동화 테스트",
@@ -639,9 +642,9 @@
     "enterpriseContact": "엔터프라이즈 배포 →",
     "builderTitle": "배경",
     "builderPain": "특허 실무에 종사하시는 분이라면 다음과 같은 문제가 낯설지 않으실 것입니다. 선행사 근거, 청구항 용어가 명세서에 등장하지 않는 경우, 도면의 간단한 설명에 소개된 도면 번호가 실시예에서 누락되는 경우, 청구항 종속 관계가 어느새 순환하게 되는 경우. 모두 어려운 확인은 아니지만, 상당히 번거롭고 놓치기 쉬운 작업입니다.",
-    "builderDesc1": "PatentLint는 10년 넘게 이 업무에 몸담으며 수천 건의 명세서를 검토하고, 같은 종류의 실수가 반복해서 지나쳐지는 상황을 지켜본 특허 엔지니어가 만든 도구입니다. 기존 선택지는 크게 두 가지였습니다. Windows 전용 데스크톱 프로그램이거나, 클라이언트의 미출원 명세서를 타사 서버에 업로드해야 하는 클라우드 서비스입니다. 전자는 특정 운영체제에 묶여 있고, 후자는 출원 전 원고를 사무소 밖으로 내보내야 합니다.",
-    "builderDesc2": "본 분석 엔진은 Python으로 작성되어 WebAssembly로 컴파일됩니다. 노트북, 태블릿, 스마트폰 어느 기기에서든 브라우저 내에서만 동작하며, 어떠한 업로드도 기록도 남기지 않습니다. 따라서 기내에서도, 사무소의 폐쇄망 단말에서도, 클라이언트의 승인이 나지 않은 단말에서도 그대로 안심하고 사용하실 수 있습니다.",
-    "builderSister": "그 자매 프로젝트인 Agentic Patent Analyst는 오픈소스(Apache 2.0) LangGraph 기반 AI 에이전트로, 거절이유통지서를 분석하고 각 거절이유를 검토하며 의견서·보정서 전략을 기안하고, 의뢰인의 언어와 사무소의 문체로 거절이유 대응 분석 보고서를 작성합니다.",
+    "builderDesc1": "PatentLint는 10년 넘게 이 업무에 몸담으며 수천 건의 명세서를 검토하고, 같은 종류의 실수가 반복해서 지나쳐지는 상황을 지켜본 특허 엔지니어가 만든 도구입니다. 기존 선택지는 Windows 전용 데스크톱 프로그램이거나, 클라이언트의 미출원 명세서를 타사 서버에 업로드해야 하는 클라우드 서비스입니다.",
+    "builderDesc2": "본 분석 엔진은 Python으로 작성되어 WebAssembly로 컴파일됩니다. 노트북, 태블릿, 스마트폰 어느 기기에서든 브라우저 내에서만 동작하며, 어떠한 업로드도 기록도 남기지 않습니다. 기내에서도, 사무소의 폐쇄망 단말에서도, 클라이언트의 승인이 나지 않은 단말에서도 그대로 안심하고 사용하실 수 있습니다.",
+    "builderSister": "그 자매 프로젝트인 Agentic Patent Analyst는 LangGraph 기반 AI 에이전트(오픈소스, Apache 2.0)로, 거절이유통지서를 분석하고 각 거절이유를 검토하며 의견서·보정서 전략을 기안하고, 의뢰인의 언어와 사무소의 문체로 거절이유 대응 분석 보고서를 작성합니다.",
     "licenseNote": "PatentLint 은 개인 사용에는 무료입니다. 소스 코드는 PolyForm-Strict-1.0.0(소스 열람 가능 라이선스) 하에 GitHub 에서 공개되어 있습니다.",
     "tableFootnote": "2026년 4월 기준. 두 도구 모두 지속적으로 업데이트될 수 있습니다.",
     "cnTableFootnote": "2026년 5월 기준. PatentLint는 지속적으로 개선될 수 있습니다.",
@@ -702,7 +705,8 @@
       "wordCount": "요약서 단어 수(50-150) —— 시행규칙 제47(2)조, 심사 지침 F-II § 2.3",
       "titleMatch": "요약서가 발명의 명칭에 언급된 발명을 참조함(심사 지침 F-II § 2.3.5)",
       "claimReference": "요약서가 특정 청구항을 참조하지 않음(심사 지침 F-II § 2.3.3)",
-      "structure": "요약서 구조 —— 단일 단락, 청구항 스타일 표현 지양, 효능적 표현 지양"
+      "structure": "요약서 구조 —— 단일 단락, 청구항 스타일 표현 지양, 효능적 표현 지양",
+      "excessClaims": "초과 청구항 수수료 임계값(Rule 45 EPC)"
     },
     "epcTableFootnote": "2026년 5월 기준. EPC 검사는 현재 베타 단계이며 영어로 작성된 유럽 특허 명세서를 대상으로 합니다. PatentLint는 지속적으로 개선될 수 있습니다."
   },
@@ -980,7 +984,11 @@
       "missingTransition": "청구항 {{claimNumber}}에 연결어(예: 'comprising', 'consisting of')가 누락되었습니다",
       "missingTransitionDetails": "청구항 {{claimNumber}}에 인식 가능한 연결어가 포함되어 있지 않습니다. 모든 청구항에는 전제부와 본문 사이에 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by' 또는 'characterized in that' 등의 연결어가 포함되어야 합니다.",
       "transitionsPresent": "모든 청구항에 연결어가 포함되어 있습니다.",
-      "overview": "청구항 개요."
+      "overview": "청구항 개요.",
+      "excessClaims": {
+        "verify": "초과 청구항 수수료가 발생할 수 있습니다(37 CFR 1.16(h)/(i)). 독립항 3개 초과분 및 전체 청구항 20개 초과분에 대한 출원 수수료 계산을 확인하십시오.",
+        "pass": "초과 청구항 수수료 발생 조건이 감지되지 않았습니다(37 CFR 1.16(h)/(i): 전체 청구항 20개 이하, 독립항 3개 이하)."
+      }
     },
     "abstract": {
       "legalPhraseology": {
@@ -1041,6 +1049,10 @@
         },
         "specSupport": {
           "pass": "명세서에서 뒷받침되지 않는 청구항 용어가 감지되지 않았습니다(Art. 84 EPC)."
+        },
+        "excessClaims": {
+          "verify": "총 청구항 수가 15개를 초과합니다. Rule 45 EPC 는 제16~50항에 청구항당 수수료를, 제51항 이상에는 더 높은 청구항당 수수료를 부과합니다. 출원 수수료를 확인하십시오.",
+          "pass": "초과 청구항 수수료 발생 조건이 감지되지 않았습니다(Rule 45 EPC: 전체 청구항 15개 이하)."
         }
       },
       "abstract": {
@@ -1177,6 +1189,10 @@
         "independentPreamble": {
           "pass": "독립항의 「一种」 전제부 관련 문제가 감지되지 않았습니다.",
           "verify": "{{claims}}: 독립 청구항은 일반적으로 「一种」 으로 시작합니다 (审查指南 §3.1.1 표준형; 实施细则 §22 는 主题名称 만 요구하며 「一种」 문구를 강제하지는 않습니다)."
+        },
+        "excessClaims": {
+          "verify": "총 청구항 수가 10개를 초과합니다. CNIPA 는 10개를 초과하는 청구항에 대해 추가 수수료를 부과합니다(발명특허 청구항당 ¥150). 출원 수수료를 확인하십시오.",
+          "pass": "초과 청구항 수수료 발생 조건이 감지되지 않았습니다(CNIPA 实施细则 §93: 전체 청구항 10개 이하)."
         }
       },
       "abstract": {
@@ -1349,6 +1365,10 @@
         "independentPreamble": {
           "pass": "독립항의 「一種」 전제부 관련 문제가 감지되지 않았습니다.",
           "verify": "{{claims}}: 독립항은 일반적으로 「一種」 으로 시작합니다 (TIPO 偵錯系統 관례; 施行細則 §18 은 標的名稱 만 요구하며 「一種」 문구를 강제하지는 않습니다)."
+        },
+        "excessClaims": {
+          "verify": "총 청구항 수가 10개를 초과합니다. TIPO 는 10개를 초과하는 청구항에 대해 추가 수수료를 부과합니다(발명특허 청구항당 NT$800). 출원 수수료를 확인하십시오.",
+          "pass": "초과 청구항 수수료 발생 조건이 감지되지 않았습니다(TIPO 專利規費收取準則 §5: 전체 청구항 10개 이하)."
         }
       },
       "abstract": {

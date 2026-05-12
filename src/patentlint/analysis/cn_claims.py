@@ -188,6 +188,36 @@ def check_dependency_format(cn_doc: CnPatentDocument) -> list[CheckItem]:
 # ── Check 11 ─────────────────────────────────────────────────────────────
 
 
+def check_excess_claims_count_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
+    """Flag claims that exceed CNIPA fee-free threshold (10 claims).
+
+    CNIPA 实施细则 §93 + 国家发改委 收费标准: the invention-patent
+    application base fee includes the first 10 claims; additional
+    per-claim fee applies for each claim above 10 (¥150/claim for
+    invention applications). Status verify when total exceeds 10;
+    PASS otherwise. Threshold uses strict ``>``.
+    """
+    total = len(cn_doc.claims)
+    if total <= 10:
+        return [CheckItem(
+            status="pass",
+            message=f"未检测到 CNIPA 超项费触发条件（权利要求总数 {total} 项，实施细则 §93 免费阈值为 10 项以内）。",
+            message_key="check.cn.claims.excessClaims.pass",
+            reference="专利法实施细则 §93; CNIPA 收费办法",
+            diagnostics=_dx(total_count=total),
+        )]
+    return [CheckItem(
+        status="verify",
+        message=(
+            f"权利要求总数 {total} 项，超过 CNIPA 之 10 项免费阈值 —— "
+            f"自第 11 项起每项加收超项费（发明专利每项 ¥150）。请核实申请费用。"
+        ),
+        message_key="check.cn.claims.excessClaims.verify",
+        reference="专利法实施细则 §93; CNIPA 收费办法",
+        diagnostics=_dx(total_count=total, excess_count=total - 10),
+    )]
+
+
 def check_self_dependent(cn_doc: CnPatentDocument) -> list[CheckItem]:
     """Check if any claim depends on itself."""
     bad = _dedupe_claim_ids([c.id for c in cn_doc.claims if c.id in c.dependencies])

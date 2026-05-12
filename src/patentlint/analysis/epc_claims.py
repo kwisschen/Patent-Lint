@@ -572,6 +572,45 @@ def check_markush_format_epc(claims: list[Claim]) -> list[CheckItem]:
     )]
 
 
+def check_excess_claims_count_epc(claims: list[Claim]) -> list[CheckItem]:
+    """Flag claims that exceed Rule 45 EPC fee-free threshold.
+
+    Rule 45 EPC charges a per-claim fee for the 16th through 50th claim
+    and a higher per-claim fee from the 51st claim onward. Rule 162(1)
+    EPC applies the same thresholds for Euro-PCT regional entry.
+    Status verify when total exceeds 15; PASS otherwise.
+    """
+    total = len(claims)
+    if total <= 15:
+        return [CheckItem(
+            status="pass",
+            message=(
+                f"No excess-claims fee triggers detected "
+                f"({total} total — within Rule 45 EPC fee-free threshold of 15)."
+            ),
+            message_key="check.epc.claims.excessClaims.pass",
+            reference="Rule 45 EPC; Rule 162(1) EPC",
+            diagnostics=_dx(total_count=total),
+        )]
+    excess_first_tier = min(total - 15, 35)  # claims 16-50
+    excess_high_tier = max(0, total - 50)    # claims 51+
+    return [CheckItem(
+        status="verify",
+        message=(
+            f"Total claim count {total} exceeds 15. Rule 45 EPC charges a "
+            f"per-claim fee for the 16th through 50th claim, with a higher "
+            f"per-claim fee from the 51st onward. Verify your filing fee."
+        ),
+        message_key="check.epc.claims.excessClaims.verify",
+        reference="Rule 45 EPC; Rule 162(1) EPC",
+        diagnostics=_dx(
+            total_count=total,
+            excess_first_tier=excess_first_tier,
+            excess_high_tier=excess_high_tier,
+        ),
+    )]
+
+
 def check_independent_claim_count_epc(claims: list[Claim]) -> list[CheckItem]:
     """Advisory check on independent claim count per Rule 43(2) EPC.
 
@@ -884,6 +923,7 @@ def run_g5_claims_cross_jurisdiction_checks(claims: list[Claim]) -> list[CheckIt
       3. markushFormat
       4. independentClaimCount (advisory)
       5. twoPartForm (advisory)
+      6. excessClaims (Rule 45 EPC fee threshold)
     """
     results: list[CheckItem] = []
     results.extend(check_claims_spec_reference_epc(claims))
@@ -891,6 +931,7 @@ def run_g5_claims_cross_jurisdiction_checks(claims: list[Claim]) -> list[CheckIt
     results.extend(check_markush_format_epc(claims))
     results.extend(check_independent_claim_count_epc(claims))
     results.extend(check_two_part_form_epc(claims))
+    results.extend(check_excess_claims_count_epc(claims))
     return results
 
 

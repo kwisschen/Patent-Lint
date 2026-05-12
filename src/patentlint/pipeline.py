@@ -243,6 +243,7 @@ def _run_cn_pipeline(
         + cn_claims_analysis.check_claims_spec_reference(cn_doc)
         + cn_claims_analysis.check_multi_multi_dependency(cn_doc)
         + cn_claims_analysis.check_connection_relationships_cn(cn_doc)
+        + cn_claims_analysis.check_excess_claims_count_cn(cn_doc)
     )
 
     # Phase 8c: CN antecedent walker (parallel to TW). Emits structured
@@ -442,6 +443,7 @@ def _run_pipeline(
     if claims:
         claim_ids = [c.id for c in claims]
         punctuation_checks = claims_analysis.check_claim_punctuation(claims)
+        excess_claims_checks = claims_analysis.check_excess_claims_count(claims)
         multiple_deps = claims_analysis.find_multiple_dependents(claims)
         chained_multi_deps = claims_analysis.find_chained_multi_dependents(claims)
         self_deps = claims_analysis.find_self_dependent_claims(claims)
@@ -473,6 +475,7 @@ def _run_pipeline(
     else:
         claim_ids = []
         punctuation_checks = []
+        excess_claims_checks = []
         multiple_deps = []
         chained_multi_deps = []
         self_deps = []
@@ -584,6 +587,7 @@ def _run_pipeline(
         claims_sequential=claims_seq,
         last_sequential_claim=last_seq_claim,
         punctuation_checks=punctuation_checks,
+        excess_claims_checks=excess_claims_checks,
         multiple_dependent_claims=multiple_deps,
         chained_multi_dep_claims=chained_multi_deps,
         self_dependent_claims=self_deps,
@@ -691,6 +695,7 @@ def _run_tw_pipeline(
         + tw_claims_analysis.check_title_subject_match(tw_doc)
         + tw_claims_analysis.check_claims_symbol_table_consistency(tw_doc)
         + tw_claims_analysis.check_connection_relationships_tw(tw_doc)
+        + tw_claims_analysis.check_excess_claims_count_tw(tw_doc)
     )
 
     # Phase 8b: walker emits structured per-occurrence findings. Both the

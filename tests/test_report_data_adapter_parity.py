@@ -123,6 +123,8 @@ US_FORWARD_MAP = [
     ("means_plus_function_claims", "claims_checks", lambda: [2]),
     ("punctuation_checks", "claims_checks",
      lambda: [_make_check("us.punctuation.x")]),
+    ("excess_claims_checks", "claims_checks",
+     lambda: [_make_check("check.claims.excessClaims.verify")]),
     ("preamble_checks", "claims_checks",
      lambda: [_make_check("us.preamble.x")]),
     ("transition_checks", "claims_checks",

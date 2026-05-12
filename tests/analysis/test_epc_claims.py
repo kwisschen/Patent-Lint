@@ -354,9 +354,11 @@ def test_two_part_form_no_independent_claims_passes():
 # --- Aggregator ---------------------------------------------------------------
 
 
-def test_g5_runner_emits_all_five_checks():
+def test_g5_runner_emits_all_six_checks():
+    """G5 emits claimsSpecRef + multiDepOnMultiDep + markushFormat +
+    independentClaimCount + twoPartForm + excessClaims = 6 checks."""
     results = run_g5_claims_cross_jurisdiction_checks(CANONICAL_CLAIMS)
-    assert len(results) == 5
+    assert len(results) == 6
 
 
 # ---------------------------------------------------------------------------

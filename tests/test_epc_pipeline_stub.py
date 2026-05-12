@@ -40,7 +40,7 @@ def test_run_epc_pipeline_stub_returns_well_formed_result():
     assert result.jurisdiction == Jurisdiction.EPC
     assert len(result.epc_specification_checks) == 9
     assert len(result.epc_drawings_checks) == 4
-    assert len(result.epc_claims_checks) == 17
+    assert len(result.epc_claims_checks) == 18
     assert len(result.epc_abstract_checks) == 4
 
 
@@ -61,11 +61,11 @@ def test_epc_report_data_adapter_round_trips():
     report = result.to_report_data()
     assert isinstance(report, ReportData)
     assert report.jurisdiction == Jurisdiction.EPC
-    # G1 + G2 ship 9 spec checks; G3 ships 4 drawings; G4-G6 ship 17
-    # claims; G7 ships 4 abstract.
+    # G1 + G2 ship 9 spec checks; G3 ships 4 drawings; G4-G6 ship 18
+    # claims (incl. excess-claims fee threshold); G7 ships 4 abstract.
     assert len(report.specification_checks) == 9
     assert len(report.drawings_checks) == 4
-    assert len(report.claims_checks) == 17
+    assert len(report.claims_checks) == 18
     assert len(report.abstract_checks) == 4
 
 

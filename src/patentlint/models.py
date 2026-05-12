@@ -487,6 +487,7 @@ class AnalysisResult(BaseModel):
     claims_sequential: bool = True
     last_sequential_claim: int = 0
     punctuation_checks: list[CheckItem] = Field(default_factory=list)
+    excess_claims_checks: list[CheckItem] = Field(default_factory=list)
     multiple_dependent_claims: list[int] = Field(default_factory=list)
     chained_multi_dep_claims: list[int] = Field(default_factory=list)
     self_dependent_claims: list[int] = Field(default_factory=list)
@@ -1122,6 +1123,13 @@ class AnalysisResult(BaseModel):
                 message="No indefinite or relative wording found in claims.",
                 message_key="check.claims.indefiniteWording.pass",
             ))
+
+        # Excess-claims fee threshold (37 CFR 1.16(h)/(i)) emits last in G5
+        # at slot 85 — after restrictiveAbsolutes (80) + indefiniteWording (82)
+        # — mirroring CN/TW/EPC where excessClaims is the last cross-
+        # jurisdiction check. User-visible order is consistent across all 4.
+        for ec in self.excess_claims_checks:
+            claims_checks.append(ec)
 
         # --- G6: Claims § 112 analysis ---
         if self.means_plus_function_claims:

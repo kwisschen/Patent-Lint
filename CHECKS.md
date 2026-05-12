@@ -45,6 +45,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Omnibus claim | § 112(b) | FIX | `claims.omnibusClaim` | Claim references description/drawings without specific features |
 | Special formats pass | — | PASS | `claims.specialFormatsPass` | No special claim format issues detected |
 | Spec support | § 112(a) | FIX / PASS | `checks.spec_support_unsupported_terms` / `checks.spec_support_pass` | Claim terms found/not found in specification (3-tier matching) |
+| Excess-claims fee threshold | 37 CFR 1.16(h)/(i) + 35 U.S.C. § 41(a)(2) | REVIEW / PASS | `check.claims.excessClaims` | Total claims > 20 or independent claims > 3 trigger USPTO per-claim fees |
 | Claims overview † | — | PASS | `check.claims.overview` | Summary: independent, dependent, and total claim counts |
 
 ## Brief Description of Drawings
@@ -112,6 +113,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Specification support (说明书支持) | 专利法 §26 第4款 + 审查指南 第二部分第二章 §3.2.1 | FIX / PASS | `check.cn.claims.specSupport` | 3-tier match (aggressively-normalized exact → raw exact → ±30-char CJK bigram window) for every claim intro against technical_field + summary + detailed_description (背景技术 excluded per §2.2.3 — prior-art context, not disclosure). Inventory hygiene: paren + bare-numeral reference strip, leading preposition strip (于/到/在/自/由/从/向/对), mid-phrase reference-prefix recovery, conjunction split including disjunctive 或 (X或Y → X, Y), length cap 12, existential-verb leading reject (设有/装有/配置有/设置有), CN-drafting trailing-token strip (之间/位于/构成/设置 etc.), tw_contamination skip (该等/该些 parser artifacts not double-reported) |
 | Omnibus claim | 审查指南 第二部分第二章 §3.3 | FIX / PASS | `check.cn.claims.omnibus` | Claim references 说明书/附图 without reciting specific technical features |
 | Markush open transition | 审查指南 第二部分第十章 §9.3 | FIX / PASS | `check.cn.claims.markushOpenTransition` | Markush group uses 包括/具有/含有 instead of 组成的 (closed transition) — improper Markush = substantive rejection per §9.3 |
+| Excess-claims fee threshold | 实施细则 §93 + CNIPA 收费办法 | REVIEW / PASS | `check.cn.claims.excessClaims` | Total claim count > 10 triggers CNIPA per-claim fee (¥150 per excess claim for invention patents) |
 
 ## CN Abstract (摘要)
 
@@ -172,6 +174,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Antecedent basis (先行詞) | 專利審查基準 | REVIEW / PASS | `check.tw.claims.antecedentBasis` | BFS ancestor-chain walker with cycle protection; char-bigram Jaccard tokenization (threshold 0.40) with CJK ordinal guard pre-filter; did-you-mean suggestion layer on borderline misses; known limitations: semantic-disjunction intro regex, bigram Jaccard precision ceiling, multi-hop chain-walking gaps (Phase 9) |
 | Specification support (說明書支持) | 專利法 §26 第3項 | FIX / PASS | `check.tw.claims.specSupport` | 4-tier match (symbol-table whitelist + representative-drawing symbols → aggressively-normalized exact → raw exact → ±30-char CJK bigram window) for every claim intro against technical_field + prior_art + disclosure + embodiment. Inventory-level hygiene: TIPO §19 trailing parenthetical reference numerals stripped, leading preposition strip (於/到/在/自/由), mid-phrase reference-prefix recovery, conjunction split (X及Y → X, Y), length cap 12, leading-verb + interior clause-marker reject (ADR-138) |
 | Component connection relationships | 專利審查基準 §2.4 | REVIEW / PASS | `check.tw.claims.connectionRelationships` | Independent apparatus/system claims must describe how their listed components are arranged (carve-outs: method, CRM, MPF, composition) |
+| Excess-claims fee threshold | 專利規費收取準則 §5 | REVIEW / PASS | `check.tw.claims.excessClaims` | Total claim count > 10 triggers TIPO per-claim fee (NT$800 per excess claim for invention patents) |
 
 ## TW Abstract (摘要)
 
@@ -240,6 +243,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Specification support (walker) | Art. 84 EPC | REVIEW / PASS | `check.epc.claims.specSupport` | Claim terms supported by description body |
 | Restrictive absolutes | EPO Guidelines F-IV § 4.7 | REVIEW / PASS | `check.epc.claims.restrictiveAbsolutes` | Absolute terms (must, always, never, essential, etc.) flagged |
 | Claim punctuation | EPO Guidelines F-IV § 4.10 | FIX / PASS | `check.epc.claims.punctuation` | Each claim ends with a single period; no misplaced periods inside the body |
+| Excess-claims fee threshold | Rule 45 EPC + Rule 162(1) EPC | REVIEW / PASS | `check.epc.claims.excessClaims` | Total claim count > 15 triggers Rule 45 EPC per-claim fees (claims 16-50, higher rate 51+) |
 
 ## EPC Abstract
 
@@ -252,7 +256,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 ---
 
-**Total checks: 147** (42 US + 33 EPC + 33 CN + 39 TW; † summary rows excluded)
+**Total checks: 151** (43 US + 34 EPC + 34 CN + 40 TW; † summary rows excluded)
 
 † Internal: not rendered as a CheckItem card in the web UI or PDF report. Used for stats aggregation and CLI output only.
 

@@ -343,10 +343,18 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.tw.claims.connectionRelationships.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 70),
     "check.tw.claims.connectionRelationships.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 70),
 
+    # Excess-claims fee thresholds (jurisdiction-specific fee schedules).
+    "check.cn.claims.excessClaims.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 75),
+    "check.cn.claims.excessClaims.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 75),
+    "check.tw.claims.excessClaims.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 75),
+    "check.tw.claims.excessClaims.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 75),
+
     "check.claims.restrictiveAbsolutes.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 80),
     "check.claims.restrictiveAbsolutes.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 80),
     "check.claims.indefiniteWording.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 82),
     "check.claims.indefiniteWording.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 82),
+    "check.claims.excessClaims.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 85),
+    "check.claims.excessClaims.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 85),
 
     # --- Group 6: Claims § 112 analysis ---
     "check.claims.meansFunction.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 10),
@@ -508,6 +516,8 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.epc.claims.independentClaimCount.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 75),
     "check.epc.claims.twoPartForm.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 95),
     "check.epc.claims.twoPartForm.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 95),
+    "check.epc.claims.excessClaims.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 97),
+    "check.epc.claims.excessClaims.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 97),
 
     # --- CLAIMS / Group 6: § 112-equivalent (Art. 84 EPC) ---
     # EPC-specific idx values arrange emit order to be monotonic with

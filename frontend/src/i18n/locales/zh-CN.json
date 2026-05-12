@@ -486,7 +486,8 @@
         "checkClaimPunctuation": "权利要求标点符号（§ 608.01(m)）",
         "checkSequenceListing": "序列表合规性（§ 2422）",
         "numeralConsistency": "附图标记一致性（MPEP § 608.01(g)）",
-        "scopeLimitWording": "\"the present invention\" 范围限定警示（Phillips v. AWH）"
+        "scopeLimitWording": "\"the present invention\" 范围限定警示（Phillips v. AWH）",
+        "excessClaims": "超项费门槛（37 CFR 1.16(h)/(i)）"
       }
     },
     "cnTitle": "PatentLint CNIPA 撰写规则检查",
@@ -545,7 +546,8 @@
       "commercialLanguage": "商业性用语",
       "priorArt": "附图之现有技术引用（审查指南 §4.2）",
       "figuresSequential": "附图编号连续",
-      "numeralConsistency": "附图标记一致性（实施细则 §21）"
+      "numeralConsistency": "附图标记一致性（实施细则 §21）",
+      "excessClaims": "超项费门槛（实施细则 §93 + CNIPA 收费办法）"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統仅限实用新型申请。PatentLint 兼顾实用新型与发明申请文件。",
@@ -609,7 +611,8 @@
       "figuresSequential": "图号连续",
       "independentPreamble": "独立项须以「一種」开头",
       "numeralConsistency": "元件代表符号一致性（施行细则 §19）",
-      "symbolTableCoverage": "说明书中所有使用的代表符号在 符号说明 中均有声明（施行细则 §19）"
+      "symbolTableCoverage": "说明书中所有使用的代表符号在 符号说明 中均有声明（施行细则 §19）",
+      "excessClaims": "超项费门槛（專利規費收取準則 §5）"
     },
     "stats": {
       "tests": "自动化测试",
@@ -639,9 +642,9 @@
     "enterpriseContact": "企业部署咨询 →",
     "builderTitle": "背景",
     "builderPain": "专利实务工作者对以下问题多半不陌生。引用基础、权利要求用语在说明书中找不到支持、附图说明介绍过的附图编号具体实施方式却未述及、权利要求引用关系绕着绕着变成循环引用。这些检查本身并不困难，只是相当繁琐，也很容易遗漏。",
-    "builderDesc1": "PatentLint 的开发者是一位专利工程师，十多年来始终身处此流程之中，经手过数千份说明书，亲眼见证同类问题反复发生。现有工具要么只能安装于 Windows，要么必须将客户尚未递交的说明书上传至他方服务器。前者仅限于特定操作系统；后者则要求在案件正式递交之前，便将说明书送出事务所。",
-    "builderDesc2": "本分析引擎由 Python 编写，再编译为 WebAssembly，完全于浏览器内运行，笔记本、平板、手机皆可使用，全程不上传、不留记录。也就是说，无论是在飞机上、事务所内网的电脑，或是客户尚未授权的设备，均可照常安心使用。",
-    "builderSister": "其姊妹项目 Agentic Patent Analyst 为 Apache 2.0 开源、基于 LangGraph 构建的 AI 智能体，可解读 OA、评判各项审查意见、起草答复与修改策略，并以客户语言及事务所惯用文风撰写审查意见分析报告。",
+    "builderDesc1": "PatentLint 的开发者是一位专利工程师，十多年来始终身处此流程之中，经手过数千份说明书，亲眼见证同类问题反复发生。现有工具要么只能安装于 Windows，要么必须将客户尚未递交的说明书上传至他方服务器。",
+    "builderDesc2": "本分析引擎由 Python 编写，再编译为 WebAssembly，完全于浏览器内运行，笔记本、平板、手机皆可使用，全程不上传、不留记录。无论是在飞机上、事务所内网的电脑，或是客户尚未授权的设备，均可照常安心使用。",
+    "builderSister": "其姊妹项目 Agentic Patent Analyst 为基于 LangGraph 构建的 AI 智能体（Apache 2.0 开源），可解读 OA、评判各项审查意见、起草答复与修改策略，并以客户语言及事务所惯用文风撰写审查意见分析报告。",
     "licenseNote": "PatentLint 个人使用免费。源代码依 PolyForm-Strict-1.0.0 条款于 GitHub 公开（源代码可供阅览）。",
     "tableFootnote": "截至 2026 年 4 月；两者均可能持续演进。",
     "cnTableFootnote": "截至 2026 年 5 月。PatentLint 将持续演进。",
@@ -702,7 +705,8 @@
       "wordCount": "摘要字数（50-150）——实施细则第47(2)条、审查指南 F-II § 2.3",
       "titleMatch": "摘要与发明名称所指之发明相符（审查指南 F-II § 2.3.5）",
       "claimReference": "摘要不引用特定权利要求（审查指南 F-II § 2.3.3）",
-      "structure": "摘要结构——单段落，避免权利要求风格用语，避免功利性语言"
+      "structure": "摘要结构——单段落，避免权利要求风格用语，避免功利性语言",
+      "excessClaims": "超项费门槛（Rule 45 EPC）"
     },
     "epcTableFootnote": "截至 2026 年 5 月。EPC 检查目前为 Beta 阶段，仅支持英文撰写的欧洲专利说明书；PatentLint 将持续演进。"
   },
@@ -980,7 +984,11 @@
       "missingTransition": "权利要求 {{claimNumber}} 缺少连接词（例如 'comprising'、'consisting of'）",
       "missingTransitionDetails": "权利要求 {{claimNumber}} 未包含任何公认的连接词。每项权利要求必须在前序部分与主体之间包含连接词，例如 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' 或 'characterized in that'。",
       "transitionsPresent": "所有权利要求均包含连接词。",
-      "overview": "权利要求概览。"
+      "overview": "权利要求概览。",
+      "excessClaims": {
+        "verify": "可能产生美国超项费（37 CFR 1.16(h)/(i)）：独立项超过 3 项及总权利要求超过 20 项各自加收费用。请核实申请费用计算。",
+        "pass": "未检测到美国超项费触发条件（37 CFR 1.16(h)/(i)：总权利要求不超过 20 项且独立项不超过 3 项）。"
+      }
     },
     "abstract": {
       "legalPhraseology": {
@@ -1041,11 +1049,15 @@
         },
         "specSupport": {
           "pass": "未检测到未获说明书支持之权利要求用语（Art. 84 EPC）。"
+        },
+        "excessClaims": {
+          "verify": "权利要求总数超过 15 项。Rule 45 EPC 对第 16 至 50 项收取每项超项费，第 51 项以上收取较高之每项超项费。请核实申请费用。",
+          "pass": "未检测到 EPC 超项费触发条件（Rule 45 EPC：总权利要求不超过 15 项）。"
         }
       },
       "abstract": {
         "titleMatch": {
-          "verify": "摘要似乎未提及发明名称所指之发明 —— 未检测到内容字词重叠（EPO Guidelines F-II § 2.3.5）。",
+          "verify": "摘要与发明名称所示之发明未见一致 —— 未检测到内容字词重叠（EPO Guidelines F-II § 2.3.5）。",
           "pass": "摘要与发明名称所指之发明相符。"
         },
         "claimReference": {
@@ -1177,6 +1189,10 @@
         "independentPreamble": {
           "pass": "未检测到独立项缺少「一种」前序之问题。",
           "verify": "{{claims}}：独立权利要求通常以「一种」开头（审查指南 §3.1.1 范例写法；实施细则 §22 仅要求主题名称，并未强制「一种」字样）。"
+        },
+        "excessClaims": {
+          "verify": "权利要求总数超过 10 项。CNIPA 对 11 项起每项加收超项费（发明专利每项 ¥150）。请核实申请费用。",
+          "pass": "未检测到 CNIPA 超项费触发条件（实施细则 §93：总权利要求不超过 10 项）。"
         }
       },
       "abstract": {
@@ -1349,6 +1365,10 @@
         "independentPreamble": {
           "pass": "未检测到独立项缺少「一種」前序之问题。",
           "verify": "{{claims}}：独立项通常以「一種」开头（TIPO 偵錯系統惯例；施行細則 §18 仅要求载明标的名称，并未强制「一種」字样）。"
+        },
+        "excessClaims": {
+          "verify": "请求项总数超过 10 项。TIPO 对 11 项起每项加收超项费（发明专利每项 NT$800）。请核实申请规费。",
+          "pass": "未检测到 TIPO 超项费触发条件（專利規費收取準則 §5：总请求项不超过 10 项）。"
         }
       },
       "abstract": {

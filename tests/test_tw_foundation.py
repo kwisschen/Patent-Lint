@@ -112,8 +112,9 @@ class TestTwPipelineRouting:
         # 10 spec checks + 2 cross-ref checks + indigenousTerms (TIPO #19)
         # + numeralConsistency D1 + symbolTableCoverage D3 = 15
         assert len(report.specification_checks) == 15
-        # 18 claims checks + independentPreamble (TIPO #20 indep-half) = 19
-        assert len(report.claims_checks) == 19
+        # 18 claims checks + independentPreamble (TIPO #20 indep-half) +
+        # excessClaims (fee threshold) = 20
+        assert len(report.claims_checks) == 20
         # 4 abstract checks wired in Phase 7C-4
         assert len(report.abstract_checks) == 4
         # 2 drawings checks (figures sequential + figure count)

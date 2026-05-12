@@ -486,7 +486,8 @@
         "checkClaimPunctuation": "請求項の句読点（§ 608.01(m)）",
         "checkSequenceListing": "配列表の準拠性（§ 2422）",
         "numeralConsistency": "参照符号の一貫性（MPEP § 608.01(g)）",
-        "scopeLimitWording": "\"the present invention\" 限定リスク警告（Phillips v. AWH）"
+        "scopeLimitWording": "\"the present invention\" 限定リスク警告（Phillips v. AWH）",
+        "excessClaims": "超過請求項手数料の閾値（37 CFR 1.16(h)/(i)）"
       }
     },
     "cnTitle": "PatentLint CNIPA 作成規則チェック",
@@ -545,7 +546,8 @@
       "commercialLanguage": "商業的表現",
       "priorArt": "図面における先行技術参照（审查指南 §4.2）",
       "figuresSequential": "図面番号が連続",
-      "numeralConsistency": "附图标记の一貫性（实施细则 §21）"
+      "numeralConsistency": "附图标记の一貫性（实施细则 §21）",
+      "excessClaims": "超過請求項手数料の閾値（实施细则 §93 + CNIPA 収費弁法）"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統 は実用新案出願のみ対応。PatentLint は実用新案と発明の両方に対応します。",
@@ -609,7 +611,8 @@
       "figuresSequential": "図番号が連続",
       "independentPreamble": "独立項の「一種」前置",
       "numeralConsistency": "元件代表符號の一貫性（施行細則 §19）",
-      "symbolTableCoverage": "明細書中で使用される全ての代表符号が 符號說明 に記載されている（施行細則 §19）"
+      "symbolTableCoverage": "明細書中で使用される全ての代表符号が 符號說明 に記載されている（施行細則 §19）",
+      "excessClaims": "超過請求項手数料の閾値（專利規費收取準則 §5）"
     },
     "stats": {
       "tests": "自動テスト",
@@ -639,9 +642,9 @@
     "enterpriseContact": "エンタープライズ導入 →",
     "builderTitle": "背景",
     "builderPain": "特許実務に携わる方であれば、以下のような問題には心当たりがあるはずです。先行詞の根拠、請求項の用語が明細書に見当たらないこと、図面の簡単な説明に記載された図面番号が実施形態で言及されていないこと、請求項の従属関係がいつの間にか循環していること。いずれも難しい作業ではなく、ただ相応に手間がかかり、見落としやすいというだけのことです。",
-    "builderDesc1": "PatentLint は、十年以上にわたりこの実務に従事し、数千件の明細書を確認するなかで、同種のミスが繰り返し見落とされる状況を目の当たりにしてきた特許技術者が作ったものです。既存のツールには大きく二つの選択肢がありました。一つは Windows 専用のデスクトップアプリ、もう一つはクライアントの未出願の明細書を他社のサーバーに送信する必要のあるクラウドサービスです。前者は特定の OS に限定され、後者は案件が出願される前に明細書を事務所の外へ送り出すことを求めます。",
+    "builderDesc1": "PatentLint は、十年以上にわたりこの実務に従事し、数千件の明細書を確認するなかで、同種のミスが繰り返し見落とされる状況を目の当たりにしてきた特許技術者が作ったものです。既存のツールは、Windows 専用のデスクトップアプリか、クライアントの未出願の明細書を他社のサーバーに送信する必要のあるクラウドサービスのいずれかでした。",
     "builderDesc2": "本解析エンジンは Python で記述され、WebAssembly にコンパイルされています。ノートパソコン、タブレット、スマートフォンのいずれにおいても、ブラウザ内で完結して動作し、アップロードも記録も一切行いません。機内でも、事務所の閉域ネットワーク端末でも、クライアントの承認が下りていない端末でも、そのまま安心してお使いいただけます。",
-    "builderSister": "その姉妹プロジェクトである Agentic Patent Analyst は、オープンソース（Apache 2.0）の LangGraph ベース AI エージェントで、拒絶理由通知を読み解き、各拒絶理由を吟味し、意見書・補正書の戦略を起草するとともに、依頼人の言語と事務所の文体で拒絶理由応答分析報告書を作成します。",
+    "builderSister": "その姉妹プロジェクトである Agentic Patent Analyst は、LangGraph ベース AI エージェント（オープンソース、Apache 2.0）であり、拒絶理由通知を読み解き、各拒絶理由を吟味し、意見書・補正書の戦略を起草するとともに、依頼人の言語と事務所の文体で拒絶理由応答分析報告書を作成します。",
     "licenseNote": "PatentLint は個人利用が無料です。ソースコードは PolyForm-Strict-1.0.0（ソース閲覧可能ライセンス）のもと GitHub で公開しています。",
     "tableFootnote": "2026年4月時点。両ツールとも継続的に更新される可能性があります。",
     "cnTableFootnote": "2026 年 5 月時点。PatentLint は今後も継続的に改良される可能性があります。",
@@ -702,7 +705,8 @@
       "wordCount": "要約書の字数（50-150）——施行規則第47(2)条、審査ガイドライン F-II § 2.3",
       "titleMatch": "要約は発明の名称に挙げられた発明を参照する（審査ガイドライン F-II § 2.3.5）",
       "claimReference": "要約は特定の請求項を参照しない（審査ガイドライン F-II § 2.3.3）",
-      "structure": "要約書の構造——単一段落、請求項スタイルの表現を避ける、効能的言辞を避ける"
+      "structure": "要約書の構造——単一段落、請求項スタイルの表現を避ける、効能的言辞を避ける",
+      "excessClaims": "超過請求項手数料の閾値（Rule 45 EPC）"
     },
     "epcTableFootnote": "2026 年 5 月時点。EPC チェックは現在ベータ版であり、英語で作成された欧州特許明細書を対象としています。PatentLint は今後も継続的に改良される可能性があります。"
   },
@@ -980,7 +984,11 @@
       "missingTransition": "請求項 {{claimNumber}} に移行句がありません（例：'comprising'、'consisting of'）",
       "missingTransitionDetails": "請求項 {{claimNumber}} に公認の移行句が含まれていません。各請求項には、前文と本体の間に 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' または 'characterized in that' などの移行句が必要です。",
       "transitionsPresent": "すべての請求項に移行句が含まれています。",
-      "overview": "特許請求の範囲の概要。"
+      "overview": "特許請求の範囲の概要。",
+      "excessClaims": {
+        "verify": "超過請求項手数料が発生する可能性があります（37 CFR 1.16(h)/(i)）。独立請求項 3 項超過分および総請求項 20 項超過分の出願料計算をご確認ください。",
+        "pass": "超過請求項手数料の発生条件は検出されませんでした（37 CFR 1.16(h)/(i)：請求項総数 20 以下、かつ独立請求項 3 以下）。"
+      }
     },
     "abstract": {
       "legalPhraseology": {
@@ -1041,6 +1049,10 @@
         },
         "specSupport": {
           "pass": "明細書で裏付けられていない請求項用語は検出されませんでした（Art. 84 EPC）。"
+        },
+        "excessClaims": {
+          "verify": "総請求項数が 15 項を超えています。Rule 45 EPC により、第 16 項から第 50 項まで請求項ごとに手数料が発生し、第 51 項以降はより高額の手数料が発生します。出願料をご確認ください。",
+          "pass": "超過請求項手数料の発生条件は検出されませんでした（Rule 45 EPC：請求項総数 15 以下）。"
         }
       },
       "abstract": {
@@ -1177,6 +1189,10 @@
         "independentPreamble": {
           "pass": "独立請求項における「一种」前文の問題は検出されませんでした。",
           "verify": "{{claims}}：独立请求项は通常「一种」で始まります（审查指南 §3.1.1 の標準形；实施细则 §22 は主题名称 の記載を要求するのみで「一种」の字句を強制しません）。"
+        },
+        "excessClaims": {
+          "verify": "総請求項数が 10 項を超えています。CNIPA は 10 項を超える請求項について追加手数料を徴収します（発明特許 1 項あたり ¥150）。出願料をご確認ください。",
+          "pass": "超過請求項手数料の発生条件は検出されませんでした（CNIPA 实施细则 §93：請求項総数 10 以下）。"
         }
       },
       "abstract": {
@@ -1349,6 +1365,10 @@
         "independentPreamble": {
           "pass": "独立請求項における「一種」前文の問題は検出されませんでした。",
           "verify": "{{claims}}：独立項は通常「一種」で始まります（TIPO 偵錯系統の慣行；施行細則 §18 は標的名稱 の記載を要求するのみで「一種」の字句を強制しません）。"
+        },
+        "excessClaims": {
+          "verify": "総請求項数が 10 項を超えています。TIPO は 10 項を超える請求項について追加手数料を徴収します（発明特許 1 項あたり NT$800）。出願料をご確認ください。",
+          "pass": "超過請求項手数料の発生条件は検出されませんでした（TIPO 專利規費收取準則 §5：請求項総数 10 以下）。"
         }
       },
       "abstract": {
