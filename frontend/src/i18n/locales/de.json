@@ -895,7 +895,7 @@
         "pass": "Absatznummern sind fortlaufend."
       },
       "paragraphEnding": {
-        "pass": "Alle Absätze haben gültige Satzzeichen am Ende.",
+        "pass": "Keine Absatz-Endsatzzeichen-Probleme festgestellt.",
         "verify": "Absätze mit ungültigen oder fehlenden Satzzeichen am Ende (MPEP § 608.01(p))."
       },
       "sequenceListing": {
@@ -919,7 +919,7 @@
         "amendLength": "Titel hat {{count}} Zeichen — MPEP § 606 lässt maximal 500 Zeichen zu.",
         "amendContent": "Unzulässiger Inhalt im Titel: {{title_prohibited_items}} (MPEP § 608.01).",
         "verify": "Titel hat {{count}} Wörter — MPEP § 606 empfiehlt einen kurzen, spezifischen Titel.",
-        "pass": "Titel erfüllt MPEP § 606-Anforderungen."
+        "pass": "Keine unzulässigen Titelinhalte festgestellt (MPEP § 606 Marken-/Modellnummern-Muster)."
       },
       "scopeLimitWording": {
         "verify": "{{count}} Verwendung(en) von „die (vorliegende) Erfindung\" / „diese Erfindung\" in der Beschreibung gefunden.",
@@ -992,7 +992,7 @@
         "pass": "Keine anpreisende oder selbstbezügliche Sprache in der Zusammenfassung gefunden."
       },
       "structure": {
-        "amend": "Zusammenfassung hat zusätzliche Absätze oder ungültiges Ende — muss ein einziger Absatz sein (MPEP § 608.01(b)).",
+        "amend": "Die Zusammenfassung hat zusätzliche Absätze oder eine ungewöhnliche Endung — die EPÜ-Praxis ist ein einzelner Absatz (MPEP § 608.01(b)).",
         "pass": "Zusammenfassung ist ein einziger Absatz mit gültigem Ende."
       },
       "impliedPhrases": {
@@ -1028,19 +1028,19 @@
           "orphanedDetailed": {
             "amend": "Figur(en) in der detaillierten Beschreibung referenziert, aber in der Kurzbeschreibung der Zeichnungen nicht beschrieben (Regel 46(2)(h) EPÜ)."
           },
-          "pass": "Alle Figurenreferenzen stimmen zwischen Kurzbeschreibung und detaillierter Beschreibung überein."
+          "pass": "Keine Inkonsistenzen bei Figurenreferenzen zwischen Kurzbeschreibung und detaillierter Beschreibung festgestellt."
         },
         "titleContent": {
-          "amend": "Der Titel enthält unzulässige Inhalte (Marken oder Modellnummern) — EPA-Richtlinien F-II § 4 verlangen einen beschreibenden Titel der Erfindung.",
-          "pass": "Der Titel enthält keine Marken- oder Modellnummer-Tokens."
+          "amend": "Der Titel scheint unzulässige Inhalte zu enthalten (Marken oder Modellnummern) — EPA-Richtlinien F-II § 4 bitten um einen beschreibenden Titel der Erfindung.",
+          "pass": "Keine Marken- oder Modellnummer-Tokens im Titel festgestellt."
         }
       },
       "claims": {
         "antecedentBasis": {
-          "pass": "Alle Anspruchsmerkmale haben einen Rückbezug (Art. 84 EPÜ)."
+          "pass": "Keine Rückbezugs-Probleme festgestellt (Art. 84 EPÜ)."
         },
         "specSupport": {
-          "pass": "Alle Anspruchsmerkmale sind in der Beschreibung gestützt (Art. 84 EPÜ)."
+          "pass": "Keine nicht-gestützten Anspruchsmerkmale festgestellt (Art. 84 EPÜ)."
         }
       },
       "abstract": {
@@ -1089,7 +1089,7 @@
         "title": {
           "amendLength": "Titel überschreitet 25-Zeichen-Grenze ({{count}} Zeichen) (审查指南 第一部分第一章).",
           "amendContent": "Unzulässiger Inhalt im Titel: {{title_prohibited_items}} (审查指南 第一部分第一章).",
-          "pass": "Titel erfüllt CNIPA-Anforderungen.",
+          "pass": "Keine unzulässigen Titelinhalte festgestellt (CNIPA-Einreichungsrichtlinien).",
           "amendMissing": "Titel fehlt in der Beschreibung (审查指南 第一部分第一章)."
         },
         "claimReference": {
@@ -1109,7 +1109,7 @@
         },
         "dependencyFormat": {
           "amend": "Falsches Abhängigkeitsformat in {{count}} Anspruch/Ansprüchen: {{claims}} (专利法实施细则 §25).",
-          "pass": "Alle Abhängigkeits-Rückbezüge korrekt formatiert."
+          "pass": "Keine Probleme im Abhängigkeitsformat festgestellt."
         },
         "selfDependent": {
           "amend": "Selbstabhängigkeit in {{claims}} (专利法实施细则 §25).",
@@ -1117,7 +1117,7 @@
         },
         "forwardDependency": {
           "amend": "{{claims}} verweist/verweisen auf einen nachfolgenden Anspruch (Vorwärtsabhängigkeit) (专利法实施细则 §25).",
-          "pass": "Alle Abhängigkeiten verweisen auf vorausgehende Ansprüche."
+          "pass": "Keine Vorwärts-Abhängigkeits-Probleme festgestellt."
         },
         "singleSentence": {
           "amend": "{{count}} Mehrsatz-Anspruch/Ansprüche: {{claims}} (审查指南 第二部分第二章).",
@@ -1125,18 +1125,18 @@
         },
         "refNumeralParens": {
           "verify": "Bezugszeichen nicht in Klammern in {{count}} Anspruch/Ansprüchen: {{claims}}.",
-          "pass": "Alle Bezugszeichen in Klammern gesetzt."
+          "pass": "Keine Bezugszeichen ohne Klammern in den Ansprüchen festgestellt."
         },
         "subjectConsistency": {
           "verify": "Gegenstand weicht vom Elternanspruch ab in {{claims}} (insgesamt {{count}}).",
-          "pass": "Alle abhängigen Ansprüche stimmen im Gegenstand mit ihrem Elternanspruch überein."
+          "pass": "Keine Probleme der Gegenstandskonsistenz zwischen abhängigen Ansprüchen und Stammansprüchen festgestellt."
         },
         "subjectConsistencyParseUnclear": {
           "verify": "{{count}} abhängige(r) Anspruch/Ansprüche mit nicht erkanntem Oberbegriff — Gegenstands-Konsistenz konnte nicht verifiziert werden: {{claims}}."
         },
         "transitionPhrase": {
           "verify": "{{count}} unabhängige(r) Anspruch/Ansprüche ohne erkennbaren Übergangsbegriff: {{claims}}.",
-          "pass": "Alle unabhängigen Ansprüche enthalten einen Übergangsbegriff."
+          "pass": "Keine fehlenden Übergangsformulierungen in unabhängigen Ansprüchen festgestellt."
         },
         "twTerminology": {
           "amend": "TIPO-Terminologie '请求项' erkannt — CNIPA-Einreichungen müssen '权利要求' verwenden.",
@@ -1156,14 +1156,14 @@
         },
         "connectionRelationships": {
           "verify": "Unabhängiger Anspruch {{claim_id}} führt {{sample_names}} ohne strukturelles Verbindungsverb auf.",
-          "pass": "Alle unabhängigen Vorrichtungs-/System-Ansprüche beschreiben Komponentenverbindungen."
+          "pass": "Keine fehlenden Verbindungsbeziehungen in unabhängigen Vorrichtungs-/Systemansprüchen festgestellt."
         },
         "antecedentBasis": {
-          "pass": "Alle Anspruchsbegriffe haben Rückbezug (审查指南).",
+          "pass": "Keine Rückbezugs-Probleme festgestellt (审查指南).",
           "amend": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 该/所述-Bezug ohne vorherige Einführung (z. B. 一 / 至少一 / 多个 + Substantiv) (审查指南)."
         },
         "specSupport": {
-          "pass": "Alle Anspruchsbegriffe sind in der Beschreibung gestützt (审查指南).",
+          "pass": "Keine nicht-gestützten Anspruchsmerkmale festgestellt (审查指南).",
           "amend": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Stützung in der Beschreibung sein — Nominalphrase des Anspruchs nicht im Beschreibungsteil gefunden (审查指南 第二部分第二章 §3.2.1)."
         },
         "omnibus": {
@@ -1175,7 +1175,7 @@
           "amend": "{{claims}}: Markush-Formel nutzt offenen Übergangsbegriff ({{transitions}}) anstelle von 组成的 (审查指南 第二部分第十章 §9.3)."
         },
         "independentPreamble": {
-          "pass": "Alle unabhängigen Ansprüche beginnen mit 「一种」.",
+          "pass": "Keine 「一种」-Präambel-Probleme in unabhängigen Ansprüchen festgestellt.",
           "verify": "{{claims}}: unabhängige Ansprüche beginnen üblicherweise mit 「一种」 (审查指南 §3.1.1 Standardform; Gesetz verlangt 主题名称, nicht wörtlich 一种)."
         }
       },
@@ -1238,7 +1238,7 @@
         },
         "title": {
           "amendContent": "Unzulässiger Inhalt im Titel: {{title_prohibited_items}} (專利審查基準).",
-          "pass": "Titel erfüllt TIPO-Anforderungen.",
+          "pass": "Keine unzulässigen Titelinhalte festgestellt (TIPO-Einreichungsrichtlinien).",
           "amendMissing": "Titel fehlt in der Beschreibung (專利審查基準)."
         },
         "claimReference": {
@@ -1264,7 +1264,7 @@
         },
         "symbolTableCoverage": {
           "amend": "{{count}} undeklarierte Element(e) für {{refnum_count}} Bezugssymbole fehlen in 符號說明: {{inline_summary}}",
-          "pass": "Alle in der Beschreibung verwendeten Bezugssymbole sind in 符號說明 deklariert."
+          "pass": "Keine Lücken bei der Symboltabellen-Abdeckung festgestellt — 符號說明 deckt erkannte Bezugszeichen ab."
         }
       },
       "claims": {
@@ -1274,7 +1274,7 @@
         },
         "dependencyFormat": {
           "amend": "Nicht erkannte Abhängigkeits-Form in {{count}} Anspruch/Ansprüchen: {{claims}} (專利法施行細則 §18).",
-          "pass": "Alle Abhängigkeits-Rückbezüge korrekt formatiert."
+          "pass": "Keine Probleme im Abhängigkeitsformat festgestellt."
         },
         "selfDependent": {
           "amend": "Selbstabhängige(r) Anspruch/Ansprüche erkannt (專利法施行細則 §18).",
@@ -1286,7 +1286,7 @@
         },
         "forwardDependency": {
           "amend": "{{claims}} verweist/verweisen auf einen nachfolgenden Anspruch (Vorwärtsabhängigkeit) (專利法施行細則 §18).",
-          "pass": "Alle Abhängigkeiten verweisen auf vorausgehende Ansprüche."
+          "pass": "Keine Vorwärts-Abhängigkeits-Probleme festgestellt."
         },
         "singleSentence": {
           "amend": "{{count}} Mehrsatz-Anspruch/Ansprüche: {{claims}}.",
@@ -1295,19 +1295,19 @@
           "amendMultiSentence": "{{count}} Mehrsatz-Anspruch/Ansprüche: {{claims}}."
         },
         "refNumeralParens": {
-          "pass": "Alle Bezugszeichen in Klammern gesetzt.",
+          "pass": "Keine Bezugszeichen ohne Klammern in den Ansprüchen festgestellt.",
           "amend": "Bezugszeichen nicht in Klammern in {{count}} Anspruch/Ansprüchen: {{claims}} (專利法施行細則 §19)."
         },
         "subjectConsistency": {
           "verify": "Gegenstand weicht vom Elternanspruch ab in {{claims}} (insgesamt {{count}}).",
-          "pass": "Alle abhängigen Ansprüche stimmen im Gegenstand mit ihrem Elternanspruch überein."
+          "pass": "Keine Probleme der Gegenstandskonsistenz zwischen abhängigen Ansprüchen und Stammansprüchen festgestellt."
         },
         "subjectConsistencyParseUnclear": {
           "verify": "{{count}} abhängige(r) Anspruch/Ansprüche mit nicht erkanntem Oberbegriff — Gegenstands-Konsistenz konnte nicht verifiziert werden: {{claims}}."
         },
         "transitionPhrase": {
           "verify": "{{count}} unabhängige(r) Anspruch/Ansprüche ohne Übergangsbegriff: {{claims}}.",
-          "pass": "Alle unabhängigen Ansprüche enthalten einen Übergangsbegriff."
+          "pass": "Keine fehlenden Übergangsformulierungen in unabhängigen Ansprüchen festgestellt."
         },
         "cnTerminology": {
           "amend": "CNIPA-Terminologie im TW-Dokument erkannt.",
@@ -1319,11 +1319,11 @@
         },
         "multiDepOnMultiDep": {
           "amend": "Multi-Multi-Abhängigkeit: ein mehrfach abhängiger Anspruch hängt von einem weiteren mehrfach abhängigen ab.",
-          "pass": "Alle mehrfach abhängigen Ansprüche haben eine gültige Abhängigkeitsstruktur."
+          "pass": "Keine ungültigen Strukturen mehrfach abhängiger Ansprüche festgestellt."
         },
         "multiDepAlternative": {
           "amend": "Mehrfach abhängige(r) Anspruch/Ansprüche nicht in alternativer Form abgefasst.",
-          "pass": "Alle mehrfach abhängigen Ansprüche in alternativer Form abgefasst."
+          "pass": "Keine Probleme der Alternativ-Form-Ausarbeitung bei mehrfach abhängigen Ansprüchen festgestellt."
         },
         "titleSubjectMatch": {
           "verify": "Titel „{{title}}“ entspricht möglicherweise nicht den Gegenständen der unabhängigen Ansprüche: {{subjects}}.",
@@ -1336,18 +1336,18 @@
         },
         "connectionRelationships": {
           "verify": "Unabhängiger Anspruch {{claim_id}} führt {{sample_names}} ohne strukturelles Verbindungsverb auf.",
-          "pass": "Alle unabhängigen Vorrichtungs-/System-Ansprüche beschreiben Komponentenverbindungen."
+          "pass": "Keine fehlenden Verbindungsbeziehungen in unabhängigen Vorrichtungs-/Systemansprüchen festgestellt."
         },
         "antecedentBasis": {
-          "pass": "Alle Anspruchsbegriffe haben Rückbezug.",
+          "pass": "Keine Rückbezugs-Probleme festgestellt.",
           "amend": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 該/所述/前述-Bezug ohne vorherige Einführung (z. B. 一 / 至少一 / 複數個 + Substantiv)."
         },
         "specSupport": {
-          "pass": "Alle Anspruchsbegriffe in der Beschreibung gestützt.",
+          "pass": "Keine nicht-gestützten Anspruchsmerkmale festgestellt.",
           "amend": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Stützung in der Beschreibung sein — Nominalphrase des Anspruchs nicht im Beschreibungsteil gefunden."
         },
         "independentPreamble": {
-          "pass": "Alle unabhängigen Ansprüche beginnen mit 「一種」.",
+          "pass": "Keine 「一種」-Präambel-Probleme in unabhängigen Ansprüchen festgestellt.",
           "verify": "{{claims}}: unabhängige Ansprüche beginnen üblicherweise mit 「一種」 (TIPO-偵錯系統-Konvention; Gesetz verlangt den 標的名稱, nicht wörtlich 一種)."
         }
       },
@@ -1377,7 +1377,7 @@
         },
         "bracketFormat": {
           "amend": "Abschnittsüberschriften nicht im erforderlichen 【】-Klammerformat: {{headers}} (專利法施行細則 §17).",
-          "pass": "Alle Abschnittsüberschriften im erforderlichen 【】-Klammerformat."
+          "pass": "Keine 【】-Klammerformat-Probleme in Abschnittsüberschriften festgestellt."
         }
       },
       "drawings": {
@@ -1520,7 +1520,7 @@
   },
   "terms": {
     "title": "Nutzungsbedingungen",
-    "lastUpdated": "Zuletzt aktualisiert: 11. Mai 2026",
+    "lastUpdated": "Zuletzt aktualisiert: 12. Mai 2026",
     "intro": "Diese Nutzungsbedingungen regeln Ihre Nutzung der Website patentlint.com (die „Website“) und der Software PatentLint (die „Software“). Durch Nutzung der Website stimmen Sie diesen Bedingungen zu.",
     "s1": {
       "title": "Die Website vs. die Software",
@@ -1535,7 +1535,7 @@
     "s2": {
       "title": "Nutzung der Website",
       "p1": "Die Website ist kostenlos zur persönlichen Nutzung sowie zur Evaluierung von PatentLint vor einer kommerziellen Lizenzierung (siehe § 4). Sie dürfen:",
-      "may1": "Patentanmeldungen zur Prüfung gegen US-, CN- oder TW-Rechtsregelwerke laden.",
+      "may1": "Patentanmeldungen zur Prüfung gegen US-, EPÜ-, CN- oder TW-Rechtsregelwerke laden.",
       "may2": "Prüfberichte für eigene Zwecke exportieren.",
       "may3": "Die Prüfungsergebnisse für Ihre eigenen Ausarbeitungsentscheidungen verwenden.",
       "p2": "Sie dürfen nicht:",
@@ -1576,7 +1576,7 @@
     "s6": {
       "title": "Keine Rechtsberatung",
       "p1": "PatentLint ist eine automatisierte Ausarbeitungshilfe. Ihre Ausgabe ist vorläufig und ersetzt nicht die Prüfung durch einen qualifizierten Patentprofi. Nichts, was die Website ausgibt, stellt Rechtsberatung dar. Verlassen Sie sich bei Entscheidungen zu Patentverfahren, Einreichung oder Durchsetzung nicht allein auf PatentLint-Ausgaben.",
-      "p2": "Zu den Prüfkategorien zählen Rückbezugs-Analyse, Stützungs-Prüfung der Beschreibung (USA nach § 112(a); CN nach 专利法 §26 第4款; TW nach 專利法 §26 第3項), Abschnittsreihenfolge, Anspruchs-Interpunktion und weitere regelbasierte Verifikationen — diese markieren Kandidaten für Ihre Prüfung, keine rechtlichen Feststellungen.",
+      "p2": "Zu den Prüfkategorien zählen Rückbezugs-Analyse, Stützungs-Prüfung der Beschreibung (USA nach § 112(a); EPÜ nach Art. 84; CN nach 专利法 §26 第4款; TW nach 專利法 §26 第3項), Abschnittsreihenfolge, Anspruchs-Interpunktion und weitere regelbasierte Verifikationen — diese markieren Kandidaten für Ihre Prüfung, keine rechtlichen Feststellungen.",
       "p3": "Die zusammenfassende Notenstufe fasst die regelbasierten Befunde zusammen und stellt keine substanzielle Prüfung dar. Ein A bedeutet nicht, dass die Anmeldung einreichungsreif ist, sondern lediglich, dass PatentLints Prüfkatalog keine markierten Mängel gefunden hat.",
       "p4": "Sie übernehmen die alleinige Verantwortung für die Überprüfung jedes PatentLint-Befunds, bevor Sie darauf reagieren. Durch die Nutzung der Website oder der Software entsteht zwischen Ihnen und Christopher Chen kein Mandantenverhältnis, kein Vertretungsverhältnis und kein Treuhandverhältnis."
     },
@@ -1643,7 +1643,7 @@
   },
   "privacy": {
     "title": "Datenschutzerklärung",
-    "lastUpdated": "Zuletzt aktualisiert: 8. Mai 2026",
+    "lastUpdated": "Zuletzt aktualisiert: 12. Mai 2026",
     "intro": "Diese Datenschutzerklärung beschreibt, wie patentlint.com (die „Website“) beim Besuch mit Daten umgeht. Die Anwendung PatentLint erfasst nichts über Sie — keine Analyse, keine Tracker, keine Cookies. Der einzige Datenfluss sind die üblichen Webanfrage-Metadaten, die unser Hosting-Anbieter (Vercel) bei jedem Besuch sieht, wie jede andere Website auch. Diese Erklärung stellt diese Unterscheidung ausdrücklich klar.",
     "s1": {
       "title": "Einführung",
@@ -1701,7 +1701,7 @@
       "fontsLabel": "Google Fonts (CJK-Schrift, optional).",
       "fonts": "Wenn Sie einen lokalisierten PDF-Bericht in zh-TW / zh-CN / ja / ko exportieren, lädt Ihr Browser die entsprechende Noto-Sans-CJK-Schrift beim PDF-Export von Google Fonts. Die Schrift wird nach dem ersten Abruf zwischengespeichert. Englische und deutsche PDFs rufen keine Schrift ab.",
       "githubLabel": "GitHub.",
-      "github": "Anonyme Meldungen, die über die Schaltfläche „Senden“ im Melde-Dialog gesendet werden, leitet eine Vercel Edge Function an einen privaten GitHub-Issues-Tracker (kwisschen/Patent-Lint) weiter, auf den nur der Maintainer zugreifen kann. GitHub erhält ausschließlich die anonymisierte Datenmenge — keine IP, keine E-Mail, keine Browser-Header — und speichert die Einträge gemäß seiner eigenen Datenschutzrichtlinie.",
+      "github": "Anonyme Meldungen, die über die Schaltfläche „Senden“ im Melde-Dialog gesendet werden, leitet eine Vercel Edge Function an den GitHub-Issues-Tracker des öffentlichen Open-Source-Repositorys kwisschen/Patent-Lint weiter. Die Datenmenge wird vor dem Versand in Ihrem Browser bewusst de-identifiziert (keine IP, keine E-Mail, keine Browser-Header, kein vollständiger Anspruchstext — siehe § 6), damit die Veröffentlichung als GitHub-Issue anonym bleibt. Die Einträge werden gemäß der Datenschutzrichtlinie von GitHub gespeichert.",
       "p2": "Wir nutzen keine weiteren Drittanbieter-Dienste. Kein CRM, keine E-Mail-Marketing-Plattform, kein Support-Ticketsystem, keine Drittanbieter-Protokollierung."
     },
     "s8": {

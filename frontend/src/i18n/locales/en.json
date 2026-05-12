@@ -895,7 +895,7 @@
         "pass": "Paragraph numbers are sequential."
       },
       "paragraphEnding": {
-        "pass": "All paragraphs have valid ending punctuation.",
+        "pass": "No paragraph-ending punctuation issues detected.",
         "verify": "Paragraphs with invalid or missing ending punctuation (MPEP § 608.01(p))."
       },
       "sequenceListing": {
@@ -919,7 +919,7 @@
         "amendLength": "Title has {{count}} characters — MPEP § 606 caps at 500 characters.",
         "amendContent": "Prohibited content in title: {{title_prohibited_items}} (MPEP § 608.01).",
         "verify": "Title has {{count}} words — MPEP § 606 recommends a short, specific title.",
-        "pass": "Title meets MPEP § 606 requirements."
+        "pass": "No prohibited title content detected (MPEP § 606 trademark / model-number patterns)."
       },
       "scopeLimitWording": {
         "verify": "Found {{count}} use(s) of \"the (present) invention\" / \"this invention\" in the specification.",
@@ -992,7 +992,7 @@
         "pass": "No merit or self-referential language found in abstract."
       },
       "structure": {
-        "amend": "Abstract has extra paragraphs or invalid ending — must be a single paragraph (MPEP § 608.01(b)).",
+        "amend": "Abstract has extra paragraphs or non-terminal ending — Rule 47(2) practice is a single paragraph (MPEP § 608.01(b)).",
         "pass": "Abstract is a single paragraph with valid ending."
       },
       "impliedPhrases": {
@@ -1028,19 +1028,19 @@
           "orphanedDetailed": {
             "amend": "Figure(s) referenced in Detailed Description but not described in Brief Description of Drawings (Rule 46(2)(h) EPC)."
           },
-          "pass": "All figure references are consistent between Brief Description of Drawings and Detailed Description."
+          "pass": "No figure-reference inconsistencies detected between Brief Description of Drawings and Detailed Description."
         },
         "titleContent": {
-          "amend": "Title contains prohibited content (trademark or model number) — EPO Guidelines F-II § 4 require a descriptive title of the invention.",
-          "pass": "Title contains no trademark or model-number tokens."
+          "amend": "Title appears to contain prohibited content (trademark or model number) — EPO Guidelines F-II § 4 ask for a descriptive title of the invention.",
+          "pass": "No trademark or model-number tokens detected in title."
         }
       },
       "claims": {
         "antecedentBasis": {
-          "pass": "All claim terms have antecedent basis (Art. 84 EPC)."
+          "pass": "No antecedent-basis issues detected (Art. 84 EPC)."
         },
         "specSupport": {
-          "pass": "All claim terms supported by the specification (Art. 84 EPC)."
+          "pass": "No unsupported claim terms detected (Art. 84 EPC)."
         }
       },
       "abstract": {
@@ -1089,7 +1089,7 @@
         "title": {
           "amendLength": "Title over the 25-character limit ({{count}} characters) (审查指南 第一部分第一章).",
           "amendContent": "Prohibited content in title: {{title_prohibited_items}} (审查指南 第一部分第一章).",
-          "pass": "Title meets CNIPA requirements.",
+          "pass": "No prohibited title content detected (CNIPA filing guidelines).",
           "amendMissing": "Title missing from specification (审查指南 第一部分第一章)."
         },
         "claimReference": {
@@ -1109,7 +1109,7 @@
         },
         "dependencyFormat": {
           "amend": "Incorrect dependency format in {{count}} claim(s): {{claims}} (专利法实施细则 §25).",
-          "pass": "All dependency references correctly formatted."
+          "pass": "No dependency-format issues detected."
         },
         "selfDependent": {
           "amend": "Self-dependency in {{claims}} (专利法实施细则 §25).",
@@ -1117,7 +1117,7 @@
         },
         "forwardDependency": {
           "amend": "{{claims}} reference(s) a subsequent claim (forward dependency) (专利法实施细则 §25).",
-          "pass": "All dependencies reference preceding claims."
+          "pass": "No forward-dependency issues detected."
         },
         "singleSentence": {
           "amend": "{{count}} multi-sentence claim(s): {{claims}} (审查指南 第二部分第二章).",
@@ -1125,18 +1125,18 @@
         },
         "refNumeralParens": {
           "verify": "Reference numerals not in parentheses in {{count}} claim(s): {{claims}}.",
-          "pass": "All reference numerals enclosed in parentheses."
+          "pass": "No unparenthesized reference numerals detected in claims."
         },
         "subjectConsistency": {
           "verify": "Subject matter inconsistent with parent in {{claims}} ({{count}} total).",
-          "pass": "All dependent claim subject matter matches their parent."
+          "pass": "No subject-consistency issues detected between dependent claims and parents."
         },
         "subjectConsistencyParseUnclear": {
           "verify": "{{count}} dependent claim(s) with an unrecognized preamble — couldn't verify subject consistency: {{claims}}."
         },
         "transitionPhrase": {
           "verify": "{{count}} independent claim(s) may lack a transition phrase: {{claims}}.",
-          "pass": "All independent claims contain a transition phrase."
+          "pass": "No missing-transition-phrase issues detected in independent claims."
         },
         "twTerminology": {
           "amend": "TIPO terminology '请求项' detected — CNIPA filings must use '权利要求'.",
@@ -1156,14 +1156,14 @@
         },
         "connectionRelationships": {
           "verify": "Independent claim {{claim_id}} lists {{sample_names}} without a structural connection verb.",
-          "pass": "All independent device/system claims describe component connections."
+          "pass": "No missing-connection-relationship issues detected in independent device/system claims."
         },
         "antecedentBasis": {
-          "pass": "All claim terms have antecedent basis (审查指南).",
+          "pass": "No antecedent-basis issues detected (审查指南).",
           "amend": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 该/所述 reference without a prior introduction (e.g., 一 / 至少一 / 多个 + noun) (审查指南)."
         },
         "specSupport": {
-          "pass": "All claim terms supported by the specification (审查指南).",
+          "pass": "No unsupported claim terms detected (审查指南).",
           "amend": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body (审查指南 第二部分第二章 §3.2.1)."
         },
         "omnibus": {
@@ -1175,7 +1175,7 @@
           "amend": "{{claims}}: Markush group uses open transition ({{transitions}}) instead of 组成的 (审查指南 第二部分第十章 §9.3)."
         },
         "independentPreamble": {
-          "pass": "All independent claims open with 「一种」.",
+          "pass": "No 「一种」-preamble issues detected in independent claims.",
           "verify": "{{claims}}: independent claim(s) typically open with 「一种」 (审查指南 §3.1.1 canonical form; statute requires 主题名称, not literal 一种)."
         }
       },
@@ -1238,7 +1238,7 @@
         },
         "title": {
           "amendContent": "Prohibited content in title: {{title_prohibited_items}} (專利審查基準).",
-          "pass": "Title meets TIPO requirements.",
+          "pass": "No prohibited title content detected (TIPO filing guidelines).",
           "amendMissing": "Title missing from specification (專利審查基準)."
         },
         "claimReference": {
@@ -1264,7 +1264,7 @@
         },
         "symbolTableCoverage": {
           "amend": "{{count}} undeclared element(s) covering {{refnum_count}} reference symbols missing from 符號說明: {{inline_summary}}",
-          "pass": "All reference symbols used in the specification are declared in 符號說明."
+          "pass": "No symbol-table coverage issues detected — declared 符號說明 covers detected reference symbols."
         }
       },
       "claims": {
@@ -1274,7 +1274,7 @@
         },
         "dependencyFormat": {
           "amend": "Unrecognized dependency format in {{count}} claim(s): {{claims}} (專利法施行細則 §18).",
-          "pass": "All dependency references correctly formatted."
+          "pass": "No dependency-format issues detected."
         },
         "selfDependent": {
           "amend": "Self-dependent claim(s) detected (專利法施行細則 §18).",
@@ -1286,7 +1286,7 @@
         },
         "forwardDependency": {
           "amend": "{{claims}} reference(s) a subsequent claim (forward dependency) (專利法施行細則 §18).",
-          "pass": "All dependencies reference preceding claims."
+          "pass": "No forward-dependency issues detected."
         },
         "singleSentence": {
           "amend": "{{count}} multi-sentence claim(s): {{claims}}.",
@@ -1295,19 +1295,19 @@
           "amendMultiSentence": "{{count}} multi-sentence claim(s): {{claims}}."
         },
         "refNumeralParens": {
-          "pass": "All reference numerals enclosed in parentheses.",
+          "pass": "No unparenthesized reference numerals detected in claims.",
           "amend": "Reference numerals not in parentheses in {{count}} claim(s): {{claims}} (專利法施行細則 §19)."
         },
         "subjectConsistency": {
           "verify": "Subject matter inconsistent with parent in {{claims}} ({{count}} total).",
-          "pass": "All dependent claim subject matter matches their parent."
+          "pass": "No subject-consistency issues detected between dependent claims and parents."
         },
         "subjectConsistencyParseUnclear": {
           "verify": "{{count}} dependent claim(s) with an unrecognized preamble — couldn't verify subject consistency: {{claims}}."
         },
         "transitionPhrase": {
           "verify": "{{count}} independent claim(s) missing a transition phrase: {{claims}}.",
-          "pass": "All independent claims contain a transition phrase."
+          "pass": "No missing-transition-phrase issues detected in independent claims."
         },
         "cnTerminology": {
           "amend": "CNIPA terminology detected in TW document.",
@@ -1319,11 +1319,11 @@
         },
         "multiDepOnMultiDep": {
           "amend": "Multi-multi dependency: a multi-dependent claim depends on another multi-dependent claim.",
-          "pass": "All multi-dependent claims have a valid dependency structure."
+          "pass": "No invalid multi-dependent claim structures detected."
         },
         "multiDepAlternative": {
           "amend": "Multi-dependent claim(s) not drafted in alternative form.",
-          "pass": "All multi-dependent claims drafted in alternative form."
+          "pass": "No alternative-form drafting issues detected in multi-dependent claims."
         },
         "titleSubjectMatch": {
           "verify": "Title \"{{title}}\" may not match the independent claim subjects: {{subjects}}.",
@@ -1336,18 +1336,18 @@
         },
         "connectionRelationships": {
           "verify": "Independent claim {{claim_id}} lists {{sample_names}} without a structural connection verb.",
-          "pass": "All independent apparatus/system claims describe component connections."
+          "pass": "No missing-connection-relationship issues detected in independent apparatus/system claims."
         },
         "antecedentBasis": {
-          "pass": "All claim terms have antecedent basis.",
+          "pass": "No antecedent-basis issues detected.",
           "amend": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 該/所述/前述 reference without a prior introduction (e.g., 一 / 至少一 / 複數個 + noun)."
         },
         "specSupport": {
-          "pass": "All claim terms supported by the specification.",
+          "pass": "No unsupported claim terms detected.",
           "amend": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body."
         },
         "independentPreamble": {
-          "pass": "All independent claims open with 「一種」.",
+          "pass": "No 「一種」-preamble issues detected in independent claims.",
           "verify": "{{claims}}: independent claim(s) typically open with 「一種」 (TIPO 偵錯系統 convention; statute requires subject-matter name, not literal 一種)."
         }
       },
@@ -1377,7 +1377,7 @@
         },
         "bracketFormat": {
           "amend": "Section headers not in the required 【】 bracket format: {{headers}} (專利法施行細則 §17).",
-          "pass": "All section headers use the required 【】 bracket format."
+          "pass": "No 【】 bracket-format issues detected in section headers."
         }
       },
       "drawings": {
@@ -1520,7 +1520,7 @@
   },
   "terms": {
     "title": "Terms of Service",
-    "lastUpdated": "Last updated: May 11, 2026",
+    "lastUpdated": "Last updated: May 12, 2026",
     "intro": "These Terms govern your use of the patentlint.com website (the \"Site\") and the PatentLint software (the \"Software\"). By using the Site, you agree to these Terms.",
     "s1": {
       "title": "The Site vs. the Software",
@@ -1535,7 +1535,7 @@
     "s2": {
       "title": "Using the Site",
       "p1": "The Site is free for personal use, and for organizations evaluating PatentLint before commercial licensing (see § 4). You may:",
-      "may1": "Load patent drafts for analysis across US, CN, or TW jurisdiction rule sets.",
+      "may1": "Load patent drafts for analysis across US, EPC, CN, or TW jurisdiction rule sets.",
       "may2": "Export analysis reports for your own reference.",
       "may3": "Use the analysis output to inform your own drafting decisions.",
       "p2": "You may not:",
@@ -1576,7 +1576,7 @@
     "s6": {
       "title": "No legal advice",
       "p1": "PatentLint is an automated drafting aid. Its output is preliminary and not a substitute for review by a qualified patent professional. Nothing the Site produces constitutes legal advice. Do not rely solely on PatentLint output for patent prosecution, filing, or enforcement decisions.",
-      "p2": "Check categories include antecedent-basis analysis, specification-support analysis (US under § 112(a); CN under 专利法 §26 第4款; TW under 專利法 §26 第3項), section ordering, claim punctuation, and other rule-based verifications — these flag candidates for your review, not legal determinations.",
+      "p2": "Check categories include antecedent-basis analysis, specification-support analysis (US under § 112(a); EPC under Art. 84; CN under 专利法 §26 第4款; TW under 專利法 §26 第3項), section ordering, claim punctuation, and other rule-based verifications — these flag candidates for your review, not legal determinations.",
       "p3": "An overall letter grade summarizes the rule-based findings but is not a substantive review. An A grade does not mean the draft is filing-ready; it means PatentLint's catalog found no flagged issues.",
       "p4": "You assume sole responsibility for verifying any PatentLint finding before acting on it. Using the Site or the Software does not create any client–attorney, agent, or fiduciary relationship between you and Christopher Chen."
     },
@@ -1643,7 +1643,7 @@
   },
   "privacy": {
     "title": "Privacy Policy",
-    "lastUpdated": "Last updated: May 8, 2026",
+    "lastUpdated": "Last updated: May 12, 2026",
     "intro": "This Privacy Policy describes how patentlint.com (the \"Site\") handles data when you visit. The PatentLint application collects nothing about you — no analytics, no trackers, no cookies. The only data flow is the standard web request metadata our hosting provider (Vercel) sees on every visit, as it does for any website. This Policy makes that distinction explicit.",
     "s1": {
       "title": "Introduction",
@@ -1701,7 +1701,7 @@
       "fontsLabel": "Google Fonts (CJK font, optional).",
       "fonts": "If you export a localized PDF in zh-TW / zh-CN / ja / ko, your browser fetches the corresponding Noto Sans CJK font from Google Fonts at PDF-export time. The font is cached after first fetch. English-locale PDFs do not fetch any font.",
       "githubLabel": "GitHub.",
-      "github": "Anonymous reports submitted via the \"Send\" button in the report dialog are forwarded by a Vercel Edge Function to a private GitHub Issues tracker (kwisschen/Patent-Lint) only the maintainer can access. GitHub receives the de-identified payload only — no IP, no email, no browser headers — and stores issues under its own privacy policy.",
+      "github": "Anonymous reports submitted via the \"Send\" button in the report dialog are forwarded by a Vercel Edge Function to a GitHub Issues tracker on the public open-source repository kwisschen/Patent-Lint. The payload is intentionally de-identified before it leaves your browser (no IP, no email, no browser headers, no full claim text — see § 6) so that publishing it as a GitHub issue remains anonymous. Issues are stored under GitHub's own privacy policy.",
       "p2": "We do not use any other third-party services. No CRM, no email-marketing platform, no support ticketing system, no third-party logging."
     },
     "s8": {

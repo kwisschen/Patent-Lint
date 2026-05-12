@@ -895,7 +895,7 @@
         "pass": "段落编号连续。"
       },
       "paragraphEnding": {
-        "pass": "所有段落结尾标点符号正确。",
+        "pass": "未检测到段落结尾标点问题。",
         "verify": "段落结尾标点符号无效或缺失（MPEP § 608.01(p)）。"
       },
       "sequenceListing": {
@@ -919,7 +919,7 @@
         "amendLength": "发明名称共 {{count}} 个字符，超过 MPEP § 606 所定 500 字符上限。",
         "amendContent": "发明名称含禁止内容：{{title_prohibited_items}}（MPEP § 608.01）。",
         "verify": "发明名称共 {{count}} 个词，MPEP § 606 建议简短明确。",
-        "pass": "发明名称符合 MPEP § 606 规定。"
+        "pass": "未检测到不适格之标题内容（MPEP § 606 商标／型号样式）。"
       },
       "scopeLimitWording": {
         "verify": "说明书中检测到 {{count}} 处「本发明」/「本申请」/「the (present) invention」用语。",
@@ -992,7 +992,7 @@
         "pass": "摘要未发现评价性或自指性用语。"
       },
       "structure": {
-        "amend": "摘要含有多余段落或结尾无效：须为单一段落（MPEP § 608.01(b)）。",
+        "amend": "摘要含有额外段落或非标准结尾——实务上摘要为单一段落（MPEP § 608.01(b)）。",
         "pass": "摘要为单一段落且结尾正确。"
       },
       "impliedPhrases": {
@@ -1028,19 +1028,19 @@
           "orphanedDetailed": {
             "amend": "附图在「具体实施方式」中有引用，但「附图说明」中未描述（EPC Rule 46(2)(h)）。"
           },
-          "pass": "「附图说明」与「具体实施方式」中的附图引用一致。"
+          "pass": "未检测到「附图说明」与「具体实施方式」之间的附图引用不一致。"
         },
         "titleContent": {
-          "amend": "发明名称含有不适格内容（商标或型号）—— EPO Guidelines F-II § 4 要求发明名称具描述性。",
-          "pass": "发明名称未含商标或型号标记。"
+          "amend": "发明名称似乎含有不适格内容（商标或型号）—— EPO Guidelines F-II § 4 期待具描述性之发明名称。",
+          "pass": "未在发明名称中检测到商标或型号标记。"
         }
       },
       "claims": {
         "antecedentBasis": {
-          "pass": "所有权利要求用语均具备引用基础（Art. 84 EPC）。"
+          "pass": "未检测到引用基础问题（Art. 84 EPC）。"
         },
         "specSupport": {
-          "pass": "所有权利要求用语均在说明书中获得支持（Art. 84 EPC）。"
+          "pass": "未检测到未获说明书支持之权利要求用语（Art. 84 EPC）。"
         }
       },
       "abstract": {
@@ -1089,7 +1089,7 @@
         "title": {
           "amendLength": "发明名称超过25个汉字，共{{count}}个字（审查指南 第一部分第一章）。",
           "amendContent": "发明名称包含禁止内容：{{title_prohibited_items}}（审查指南 第一部分第一章）。",
-          "pass": "发明名称符合要求。",
+          "pass": "未检测到不适格之标题内容（CNIPA 申请指南）。",
           "amendMissing": "未发现发明名称（审查指南 第一部分第一章）。"
         },
         "claimReference": {
@@ -1109,7 +1109,7 @@
         },
         "dependencyFormat": {
           "amend": "{{count}} 项权利要求的引用格式不正确：{{claims}}（专利法实施细则 §25）。",
-          "pass": "所有从属权利要求的引用格式正确。"
+          "pass": "未检测到从属项格式问题。"
         },
         "selfDependent": {
           "amend": "{{claims}} 引用了自身（专利法实施细则 §25）。",
@@ -1117,7 +1117,7 @@
         },
         "forwardDependency": {
           "amend": "{{claims}} 引用在后之权利要求（专利法实施细则 §25）。",
-          "pass": "未发现引用在后之情形。"
+          "pass": "未检测到向前引用问题。"
         },
         "singleSentence": {
           "amend": "{{count}} 项权利要求包含多个句子：{{claims}}（审查指南 第二部分第二章）。",
@@ -1125,18 +1125,18 @@
         },
         "refNumeralParens": {
           "verify": "{{count}} 项权利要求中的附图标记未加括号：{{claims}}。",
-          "pass": "权利要求中所有附图标记均已加括号。"
+          "pass": "未检测到权利要求中未加括号之元件符号。"
         },
         "subjectConsistency": {
           "verify": "{{claims}} 的主题名称与母项不一致（共 {{count}} 项）。",
-          "pass": "从属权利要求的主题名称一致。"
+          "pass": "未检测到从属项与上位项之间的主题不一致问题。"
         },
         "subjectConsistencyParseUnclear": {
           "verify": "{{count}} 项从属权利要求之前序未被识别，无法验证主题名称一致性：{{claims}}。"
         },
         "transitionPhrase": {
           "verify": "{{count}} 项独立权利要求缺少连接词（如「其特征在于」）：{{claims}}。",
-          "pass": "所有独立权利要求均包含连接词。"
+          "pass": "未检测到独立项缺少连接词之问题。"
         },
         "twTerminology": {
           "amend": "发现台湾专利用语“请求项”，CNIPA 申请应使用“权利要求”。",
@@ -1156,14 +1156,14 @@
         },
         "connectionRelationships": {
           "verify": "独立权利要求 {{claim_id}} 列出 {{sample_names}}，未记载彼此的结构连接关系。",
-          "pass": "所有独立装置／系统权利要求均已记载组件的连接关系。"
+          "pass": "未检测到独立装置／系统项缺少组件连接关系之问题。"
         },
         "antecedentBasis": {
-          "pass": "所有引用之用语皆有引用基础（审查指南）。",
+          "pass": "未检测到引用基础问题（审查指南）。",
           "amend": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少引用基础（审查指南）：「该／所述」引用未见对应之先前引介（例如以「一」、「至少一」、「多个」加名词之形式）。"
         },
         "specSupport": {
-          "pass": "所有权利要求用语皆获说明书支持（审查指南）。",
+          "pass": "未检测到未获说明书支持之权利要求用语（审查指南）。",
           "amend": "{{claims}} 共有 {{issue_count}} 个权利要求用语疑似未获说明书支持（审查指南 第二部分第二章 §3.2.1）。"
         },
         "omnibus": {
@@ -1175,7 +1175,7 @@
           "amend": "{{claims}}：马库什权利要求使用开放式连接词（{{transitions}}），应改为封闭式「组成的」（审查指南 第二部分第十章 §9.3）。"
         },
         "independentPreamble": {
-          "pass": "所有独立权利要求均以「一种」开头。",
+          "pass": "未检测到独立项缺少「一种」前序之问题。",
           "verify": "{{claims}}：独立权利要求通常以「一种」开头（审查指南 §3.1.1 范例写法；实施细则 §22 仅要求主题名称，并未强制「一种」字样）。"
         }
       },
@@ -1238,7 +1238,7 @@
         },
         "title": {
           "amendContent": "发明名称/新型名称包含不当内容：{{title_prohibited_items}}（專利審查基準）。",
-          "pass": "发明名称/新型名称符合要求。",
+          "pass": "未检测到不适格之发明名称内容（TIPO 申请指南）。",
           "amendMissing": "未发现发明名称/新型名称（專利審查基準）。"
         },
         "claimReference": {
@@ -1264,7 +1264,7 @@
         },
         "symbolTableCoverage": {
           "amend": "{{count}} 个未声明的元件（共 {{refnum_count}} 个附图标记）未列于 符號說明 中：{{inline_summary}}",
-          "pass": "所有说明书中使用的附图标记均已列于 符號說明 中。"
+          "pass": "未检测到符号说明涵盖问题——已声明之 符號說明 涵盖已检测之元件符号。"
         }
       },
       "claims": {
@@ -1274,7 +1274,7 @@
         },
         "dependencyFormat": {
           "amend": "{{count}}项请求项之依附格式无法识别：{{claims}}（專利法施行細則 §18）。",
-          "pass": "所有依附引用均使用正确格式。"
+          "pass": "未检测到从属项格式问题。"
         },
         "selfDependent": {
           "amend": "发现自我依附之请求项（專利法施行細則 §18）。",
@@ -1286,7 +1286,7 @@
         },
         "forwardDependency": {
           "amend": "{{claims}} 依附在后之请求项（專利法施行細則 §18）。",
-          "pass": "无依附在后之情形。"
+          "pass": "未检测到向前引用问题。"
         },
         "singleSentence": {
           "amend": "{{count}}项请求项非单句撰写：{{claims}}。",
@@ -1295,19 +1295,19 @@
           "amendMultiSentence": "{{count}}项请求项非单句撰写：{{claims}}。"
         },
         "refNumeralParens": {
-          "pass": "所有请求项之元件符号均已加括号。",
+          "pass": "未检测到权利要求中未加括号之元件符号。",
           "amend": "{{count}}项请求项之元件符号未加括号：{{claims}}（專利法施行細則 §19）。"
         },
         "subjectConsistency": {
           "verify": "{{claims}} 的主题名称与母项不一致（共 {{count}} 项）。",
-          "pass": "所有附属项之主题名称均与母项一致。"
+          "pass": "未检测到从属项与上位项之间的主题不一致问题。"
         },
         "subjectConsistencyParseUnclear": {
           "verify": "{{count}}项附属请求项之前序未被识别，无法验证主题名称一致性：{{claims}}。"
         },
         "transitionPhrase": {
           "verify": "{{count}}项独立项缺少连接词（如「其特徵在於」或「其改良在於」）：{{claims}}。",
-          "pass": "所有独立项均包含连接词。"
+          "pass": "未检测到独立项缺少连接词之问题。"
         },
         "cnTerminology": {
           "amend": "在台湾专利说明书中发现大陆专利用语。",
@@ -1319,11 +1319,11 @@
         },
         "multiDepOnMultiDep": {
           "amend": "多项附属项依附于另一多项附属项。",
-          "pass": "多项从属权利要求之依附关系正确。"
+          "pass": "未检测到多项从属项之结构问题。"
         },
         "multiDepAlternative": {
           "amend": "多项附属项未使用择一形式。",
-          "pass": "所有多项附属项均使用择一形式。"
+          "pass": "未检测到多项从属项之择一形式撰写问题。"
         },
         "titleSubjectMatch": {
           "verify": "发明名称/新型名称「{{title}}」与独立项标的「{{subjects}}」不一致。",
@@ -1336,18 +1336,18 @@
         },
         "connectionRelationships": {
           "verify": "獨立項 {{claim_id}} 列出 {{sample_names}}，未記載彼此之結構連接關係。",
-          "pass": "所有獨立裝置／系統項均已記載組件之連接關係。"
+          "pass": "未检测到独立装置／系统项缺少组件连接关系之问题。"
         },
         "antecedentBasis": {
-          "pass": "所有引用之用语均有引用基础。",
+          "pass": "未检测到先行词基础问题。",
           "amend": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少引用基础：「該／所述／前述」引用未见对应之先前引介（例如以「一」、「至少一」、「复数个」加名词之形式）。"
         },
         "specSupport": {
-          "pass": "所有权利要求用语均获说明书支持。",
+          "pass": "未检测到未获说明书支持之权利要求用语。",
           "amend": "{{claims}} 共有 {{issue_count}} 个权利要求用语疑似未获说明书支持。"
         },
         "independentPreamble": {
-          "pass": "所有独立项均以「一種」开头。",
+          "pass": "未检测到独立项缺少「一種」前序之问题。",
           "verify": "{{claims}}：独立项通常以「一種」开头（TIPO 偵錯系統惯例；施行細則 §18 仅要求载明标的名称，并未强制「一種」字样）。"
         }
       },
@@ -1377,7 +1377,7 @@
         },
         "bracketFormat": {
           "amend": "下列章节标题未使用【】格式：{{headers}}（專利法施行細則 §17）。",
-          "pass": "所有章节标题均使用正确之【】格式。"
+          "pass": "未检测到章节标题之【】括号格式问题。"
         }
       },
       "drawings": {
@@ -1520,7 +1520,7 @@
   },
   "terms": {
     "title": "服务条款",
-    "lastUpdated": "最后更新：2026年5月11日",
+    "lastUpdated": "最后更新：2026年5月12日",
     "translationNote": "本译文仅供参考。中译本与英文版本如有歧异，以英文版为准。",
     "intro": "本条款规范您对 patentlint.com 网站（下称「本网站」）及 PatentLint 软件（下称「本软件」）之使用。当您使用本网站，即表示同意遵守本条款。",
     "s1": {
@@ -1536,7 +1536,7 @@
     "s2": {
       "title": "使用本网站",
       "p1": "本网站可供个人使用、及供机构于商业授权前评估 PatentLint 免费使用（详见第 4 条）。您得：",
-      "may1": "载入专利说明书，依 US、CN 或 TW 管辖区规则进行分析。",
+      "may1": "载入专利说明书，依 US、EPC、CN 或 TW 管辖区规则进行分析。",
       "may2": "为自身参考目的导出分析报告。",
       "may3": "依分析结果辅助您自身的撰稿判断。",
       "p2": "您不得：",
@@ -1577,7 +1577,7 @@
     "s6": {
       "title": "非属法律意见",
       "p1": "PatentLint 为自动化撰稿辅助工具。其输出仅供初步参考，无法替代具备资格之专利专业人员之审阅。本网站所产生之任何内容均不构成法律意见。请勿仅凭 PatentLint 之输出，作为专利申请、答辩或行使权利之依据。",
-      "p2": "检查项目包括引用基础分析、说明书支持分析（US 依 § 112(a)；CN 依 专利法 §26 第4款；TW 依 專利法 §26 第3項）、章节顺序、权利要求标点，以及其他规则式检查。各项检查系标示供您审阅之候选事项，并非法律判断。",
+      "p2": "检查项目包括引用基础分析、说明书支持分析（US 依 § 112(a)；EPC 依 Art. 84；CN 依 专利法 §26 第4款；TW 依 專利法 §26 第3項）、章节顺序、权利要求标点，以及其他规则式检查。各项检查系标示供您审阅之候选事项，并非法律判断。",
       "p3": "整体等第评分仅为规则检查结果之汇总，并非实质审查。获得 A 等并不代表说明书已可提交，仅表示 PatentLint 之检查项目未检出标记之缺陷。",
       "p4": "您须自行负责就 PatentLint 之任何分析结果于采取行动前进行验证。使用本网站或本软件并不于您与 Christopher Chen 之间构成任何委任、代理或受托关系。"
     },
@@ -1644,7 +1644,7 @@
   },
   "privacy": {
     "title": "隐私政策",
-    "lastUpdated": "最后更新：2026年5月8日",
+    "lastUpdated": "最后更新：2026年5月12日",
     "translationNote": "本译文仅供参考。中译本与英文版本如有歧异，以英文版为准。",
     "intro": "本隐私政策说明 patentlint.com（下称「本网站」）于您访问时如何处理数据。PatentLint 应用程序本身不收集您的任何数据：未使用分析工具、未使用追踪、未使用 cookies。唯一存在的数据流，系本网站之托管服务商 Vercel 于每次访问时所接收之标准网页请求中介数据，与任何网站无异。本政策将上述区别予以明文披露。",
     "s1": {
@@ -1703,7 +1703,7 @@
       "fontsLabel": "Google Fonts（CJK 字体，可选）。",
       "fonts": "若您于 zh-TW／zh-CN／ja／ko 界面下导出本地化 PDF，浏览器将于导出时自 Google Fonts 取得对应之 Noto Sans CJK 字体。字体于初次取得后即予缓存。英文界面之 PDF 不会取得任何字体。",
       "githubLabel": "GitHub。",
-      "github": "于反馈对话框点击「发送」后，匿名反馈将由 Vercel Edge Function 转发至仅维护者可访问之私有 GitHub Issues 追踪系统（kwisschen/Patent-Lint）。GitHub 仅收到去标识化之数据内容，不含 IP、不含邮箱、不含浏览器标头，并依其自身之隐私政策保管议题。",
+      "github": "于反馈对话框点击「发送」后，匿名反馈将由 Vercel Edge Function 转发至公开源代码项目 kwisschen/Patent-Lint 之 GitHub Issues 追踪系统。数据在离开您的浏览器前已经过去标识化处理（不含 IP、不含邮箱、不含浏览器标头，亦不含完整权利要求文字 —— 详见 § 6），以确保即使以 GitHub Issue 形式公开仍维持匿名。议题依 GitHub 自身之隐私政策保管。",
       "p2": "我们未使用任何其他第三方服务。并无 CRM、未使用电子邮件营销平台、未使用第三方客服票务系统，亦未使用第三方日志服务。"
     },
     "s8": {
