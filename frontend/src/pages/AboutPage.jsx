@@ -638,7 +638,7 @@ function ComparisonTable({ t }) {
           role="radiogroup"
           aria-label={t('jurisdiction.label')}
         >
-          {['US', 'CN', 'TW', 'EPC'].map((j) => (
+          {['US', 'EPC', 'CN', 'TW'].map((j) => (
             <button
               key={j}
               role="radio"
@@ -651,23 +651,23 @@ function ComparisonTable({ t }) {
               }`}
             >
               <JurisdictionBadge code={j} />
-              <span className="truncate">{t(`jurisdiction.${j.toLowerCase()}`)}</span>
+              <span className="truncate">{t(`jurisdiction.${j.toLowerCase()}Plural`)}</span>
             </button>
           ))}
         </div>
         <h2 className="text-3xl font-bold text-foreground mb-2">
           {t(
+            activeTab === 'EPC' ? 'about.epcTitle' :
             activeTab === 'CN' ? 'about.cnTitle' :
             activeTab === 'TW' ? 'about.twTitle' :
-            activeTab === 'EPC' ? 'about.epcTitle' :
             'about.usptoTitle'
           )}
         </h2>
         <p className="text-muted-foreground">
           {t(
+            activeTab === 'EPC' ? 'about.epcSubtitle' :
             activeTab === 'CN' ? 'about.cnSubtitle' :
             activeTab === 'TW' ? 'about.twSubtitle' :
-            activeTab === 'EPC' ? 'about.epcSubtitle' :
             'about.usptoSubtitle',
             { count: CHECKS_BY_JURISDICTION[activeTab] }
           )}
@@ -680,6 +680,12 @@ function ComparisonTable({ t }) {
           <UsComparisonTable t={t} />
         </>
       )}
+      {activeTab === 'EPC' && (
+        <>
+          <JurisdictionFeatureBlock t={t} jurisdiction="EPC" cardKeys={EPC_FEATURE_KEYS} />
+          <EpcCheckTable t={t} />
+        </>
+      )}
       {activeTab === 'CN' && (
         <>
           <JurisdictionFeatureBlock t={t} jurisdiction="CN" cardKeys={CN_FEATURE_KEYS} />
@@ -690,12 +696,6 @@ function ComparisonTable({ t }) {
         <>
           <JurisdictionFeatureBlock t={t} jurisdiction="TW" cardKeys={TW_FEATURE_KEYS} />
           <TwComparisonTable t={t} />
-        </>
-      )}
-      {activeTab === 'EPC' && (
-        <>
-          <JurisdictionFeatureBlock t={t} jurisdiction="EPC" cardKeys={EPC_FEATURE_KEYS} />
-          <EpcCheckTable t={t} />
         </>
       )}
     </section>

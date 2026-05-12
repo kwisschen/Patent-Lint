@@ -160,7 +160,7 @@ function App() {
                     role="radiogroup"
                     aria-label={t('jurisdiction.label')}
                   >
-                    {['US', 'CN', 'TW', 'EPC'].map((j) => (
+                    {['US', 'EPC', 'CN', 'TW'].map((j) => (
                       <button
                         key={j}
                         role="radio"

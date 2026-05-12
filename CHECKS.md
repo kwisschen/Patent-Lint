@@ -249,7 +249,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 ---
 
-**Total checks: 144** (42 US + 33 CN + 39 TW + 30 EPC; † summary rows excluded)
+**Total checks: 144** (42 US + 30 EPC + 33 CN + 39 TW; † summary rows excluded)
 
 † Internal: not rendered as a CheckItem card in the web UI or PDF report. Used for stats aggregation and CLI output only.
 
