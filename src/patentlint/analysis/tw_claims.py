@@ -637,9 +637,12 @@ def check_excess_claims_count_tw(doc: TwPatentDocument) -> list[CheckItem]:
 
     TIPO 專利規費收取準則 §5: the invention-patent application base fee
     includes the first 10 claims; an additional per-claim fee applies
-    for each claim above 10 (NT$800/claim for invention applications).
-    Status verify when total exceeds 10; PASS otherwise. Threshold
-    uses strict ``>``.
+    for each claim above 10. Status verify when total exceeds 10; PASS
+    otherwise. Threshold uses strict ``>``.
+
+    Specific per-claim amount is intentionally NOT embedded in messages
+    so the check stays future-proof against TIPO fee schedule changes;
+    drafters are asked to verify against the current schedule.
     """
     total = len(doc.claims)
     if total <= 10:
@@ -654,7 +657,7 @@ def check_excess_claims_count_tw(doc: TwPatentDocument) -> list[CheckItem]:
         status="verify",
         message=(
             f"請求項總數 {total} 項，超過 TIPO 之 10 項免費門檻 —— "
-            f"自第 11 項起每項加收超項費（發明專利每項 NT$800）。請查核申請規費。"
+            f"自第 11 項起每項加收超項費。請對照當前 TIPO 收費辦法查核規費。"
         ),
         message_key="check.tw.claims.excessClaims.verify",
         reference="專利規費收取準則 §5",

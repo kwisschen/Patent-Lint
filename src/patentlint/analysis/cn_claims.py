@@ -193,9 +193,12 @@ def check_excess_claims_count_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
     CNIPA 实施细则 §93 + 国家发改委 收费标准: the invention-patent
     application base fee includes the first 10 claims; additional
-    per-claim fee applies for each claim above 10 (¥150/claim for
-    invention applications). Status verify when total exceeds 10;
-    PASS otherwise. Threshold uses strict ``>``.
+    per-claim fee applies for each claim above 10. Status verify when
+    total exceeds 10; PASS otherwise. Threshold uses strict ``>``.
+
+    Specific per-claim amount is intentionally NOT embedded in messages
+    so the check stays future-proof against CNIPA fee schedule changes;
+    drafters are asked to verify against the current schedule.
     """
     total = len(cn_doc.claims)
     if total <= 10:
@@ -210,7 +213,7 @@ def check_excess_claims_count_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
         status="verify",
         message=(
             f"权利要求总数 {total} 项，超过 CNIPA 之 10 项免费阈值 —— "
-            f"自第 11 项起每项加收超项费（发明专利每项 ¥150）。请核实申请费用。"
+            f"自第 11 项起每项加收超项费。请对照当前 CNIPA 收费办法核实规费。"
         ),
         message_key="check.cn.claims.excessClaims.verify",
         reference="专利法实施细则 §93; CNIPA 收费办法",

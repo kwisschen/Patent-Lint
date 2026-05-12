@@ -1314,7 +1314,7 @@
           "verify": "{{claims}}: unabhängige Ansprüche beginnen üblicherweise mit 「一种」 (审查指南 §3.1.1 Standardform; Gesetz verlangt 主题名称, nicht wörtlich 一种)."
         },
         "excessClaims": {
-          "verify": "Gesamtzahl der Ansprüche überschreitet 10. CNIPA erhebt eine zusätzliche Gebühr pro Anspruch über 10 (Erfindungspatente: ¥150 je Anspruch). Prüfen Sie Ihre Anmeldegebühr.",
+          "verify": "Gesamtzahl der Ansprüche überschreitet 10. CNIPA erhebt eine zusätzliche Gebühr pro Anspruch über 10. Bitte aktuelle Gebühr je Anspruch anhand der CNIPA-Gebührenordnung prüfen.",
           "pass": "Keine Auslöser für Anspruchsgebühren festgestellt (CNIPA 实施细则 §93: höchstens 10 Ansprüche insgesamt)."
         }
       },
@@ -1490,7 +1490,7 @@
           "verify": "{{claims}}: unabhängige Ansprüche beginnen üblicherweise mit 「一種」 (TIPO-偵錯系統-Konvention; Gesetz verlangt den 標的名稱, nicht wörtlich 一種)."
         },
         "excessClaims": {
-          "verify": "Gesamtzahl der Ansprüche überschreitet 10. TIPO erhebt eine zusätzliche Gebühr pro Anspruch über 10 (Erfindungspatente: NT$800 je Anspruch). Prüfen Sie Ihre Anmeldegebühr.",
+          "verify": "Gesamtzahl der Ansprüche überschreitet 10. TIPO erhebt eine zusätzliche Gebühr pro Anspruch über 10. Bitte aktuelle Gebühr je Anspruch anhand der TIPO-Gebührenordnung prüfen.",
           "pass": "Keine Auslöser für Anspruchsgebühren festgestellt (TIPO 專利規費收取準則 §5: höchstens 10 Ansprüche insgesamt)."
         }
       },

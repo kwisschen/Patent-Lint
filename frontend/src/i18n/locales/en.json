@@ -1314,7 +1314,7 @@
           "verify": "{{claims}}: independent claim(s) typically open with 「一种」 (审查指南 §3.1.1 canonical form; statute requires 主题名称, not literal 一种)."
         },
         "excessClaims": {
-          "verify": "Total claim count exceeds 10. CNIPA charges an additional per-claim fee for each claim above 10 (¥150/claim for invention applications). Verify your filing fee.",
+          "verify": "Total claim count exceeds 10. CNIPA charges an additional per-claim fee for each claim above 10. Verify the current per-claim fee against the CNIPA fee schedule.",
           "pass": "No excess-claims fee triggers detected (CNIPA 实施细则 §93: no more than 10 total claims)."
         }
       },
@@ -1490,7 +1490,7 @@
           "verify": "{{claims}}: independent claim(s) typically open with 「一種」 (TIPO 偵錯系統 convention; statute requires subject-matter name, not literal 一種)."
         },
         "excessClaims": {
-          "verify": "Total claim count exceeds 10. TIPO charges an additional per-claim fee for each claim above 10 (NT$800/claim for invention applications). Verify your filing fee.",
+          "verify": "Total claim count exceeds 10. TIPO charges an additional per-claim fee for each claim above 10. Verify the current per-claim fee against the TIPO fee schedule.",
           "pass": "No excess-claims fee triggers detected (TIPO 專利規費收取準則 §5: no more than 10 total claims)."
         }
       },
