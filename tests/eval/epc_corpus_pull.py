@@ -261,36 +261,38 @@ def fetch_full_text(token: str, pub_no: str) -> dict:
 def extract_text(full_text_doc: dict) -> str:
     """Flatten OPS full-text JSON into plain text for fixture storage.
 
-    OPS returns description + claims as nested arrays of language-tagged
-    paragraph objects. This extractor picks English content and joins
-    with double-newlines so the loader can split on \\n\\n later.
+    OPS has different shapes for description vs claims:
+      - description: ftxt:fulltext-document.description.p[] (paragraph list)
+      - claims: ftxt:fulltext-document.claims.claim.claim-text[] (claim list)
+
+    A "CLAIMS" header is inserted before the claims so the EPC parser
+    (``extract_claims_section_epc``) finds them.
     """
     sections: list[str] = []
     root = full_text_doc.get("ops:world-patent-data", {})
-    # Description
-    desc = (
-        root.get("ftxt:fulltext-documents", {})
-        .get("ftxt:fulltext-document", {})
-        .get("description", {})
-    )
+    ft_doc = (root.get("ftxt:fulltext-documents", {})
+                  .get("ftxt:fulltext-document", {}))
+    # Description — uses `p` paragraphs
+    desc = ft_doc.get("description", {})
     if isinstance(desc, dict):
-        sections.append(_flatten_text_block(desc, lang="EN"))
-    # Claims
-    claims = (
-        root.get("ftxt:fulltext-documents", {})
-        .get("ftxt:fulltext-document", {})
-        .get("claims", {})
-    )
+        desc_text = _flatten_paragraphs(desc, lang="EN")
+        if desc_text:
+            sections.append(desc_text)
+    # Claims — uses `claim.claim-text[]` nested structure
+    claims = ft_doc.get("claims", {})
     if isinstance(claims, dict):
-        sections.append(_flatten_text_block(claims, lang="EN"))
+        claims_text = _flatten_claims(claims, lang="EN")
+        if claims_text:
+            sections.append("CLAIMS\n\n" + claims_text)
     return "\n\n".join(s for s in sections if s.strip())
 
 
-def _flatten_text_block(block: dict, lang: str = "EN") -> str:
-    """Recursively flatten an OPS text block. Only matches the requested lang."""
+def _flatten_paragraphs(block: dict, lang: str = "EN") -> str:
+    """Flatten a description-style block with `p` paragraph nodes."""
     if not isinstance(block, dict):
         return ""
-    if block.get("@lang", "").upper() != lang and block.get("@lang"):
+    block_lang = block.get("@lang", "").upper()
+    if block_lang and block_lang != lang:
         return ""
     paragraphs = block.get("p")
     if paragraphs is None:
@@ -307,6 +309,50 @@ def _flatten_text_block(block: dict, lang: str = "EN") -> str:
         if text:
             lines.append(text)
     return "\n\n".join(lines)
+
+
+def _flatten_claims(block: dict, lang: str = "EN") -> str:
+    """Flatten the claims block — handles claim.claim-text[] nesting."""
+    if not isinstance(block, dict):
+        return ""
+    block_lang = block.get("@lang", "").upper()
+    if block_lang and block_lang != lang:
+        return ""
+    claim = block.get("claim")
+    if claim is None:
+        return ""
+    if isinstance(claim, dict):
+        claim = [claim]
+    lines: list[str] = []
+    # OPS often packs all numbered claims into a single `claim` element's
+    # `claim-text[]` array — claim 1's main text + bullets + sub-parts +
+    # claim 2's main text + bullets + ... all in sequence. Boundaries
+    # between numbered claims are inferred from "N. " prefixes at the
+    # start of a claim-text element. Use `\n` between every text part
+    # so the EPC parser's `^[\d{1,3}\.\s` boundary regex catches each
+    # numbered claim start.
+    for c in claim:
+        if not isinstance(c, dict):
+            continue
+        texts = c.get("claim-text")
+        if texts is None:
+            continue
+        if isinstance(texts, dict):
+            texts = [texts]
+        for t in texts:
+            if isinstance(t, dict):
+                txt = t.get("$", "")
+            else:
+                txt = str(t)
+            txt = re.sub(r"\s+", " ", txt).strip()
+            if not txt:
+                continue
+            # Insert blank line before a new numbered claim ("1." etc.)
+            # to give the parser a clean newline-anchored start.
+            if re.match(r"^\d{1,3}\.\s", txt) and lines:
+                lines.append("")
+            lines.append(txt)
+    return "\n".join(lines)
 
 
 # --- Main puller -------------------------------------------------------------
