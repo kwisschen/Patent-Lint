@@ -13,7 +13,7 @@ PatentLint checks U.S., European (EPC), Chinese, and Taiwanese patent applicatio
 
 ## Status
 
-- **151 checks** across U.S., European (EPC), Chinese, and Taiwanese filings — mapped to USPTO MPEP, EPO Guidelines, CNIPA 审查指南, and TIPO 偵錯系統
+- **151 checks** across U.S., European (EPC), Chinese, and Taiwanese filings — mapped to USPTO MPEP, EPO Guidelines, CNIPA 审查指南, and TIPO 專利審查基準
 - **2560 tests** passing on every commit; full pytest + ruff gate in CI
 - **6 UI languages** (English, German, Traditional + Simplified Chinese, Japanese, Korean) with locale-aware PDF generation
 - **Source-available** under [PolyForm-Strict-1.0.0](LICENSE) — free for individuals and for organizations evaluating the tool; commercial licensing handled on inquiry (see [Terms § 4](https://patentlint.com/terms))
