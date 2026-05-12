@@ -870,7 +870,11 @@
     "titleMissing": "依 MPEP § 606，每件發明專利申請均須載明發明名稱。請於說明書首頁加上發明名稱。",
     "titleLength": "依 MPEP § 606，發明名稱不得超過 500 字元（實際 {{count}} 字元）。請縮短名稱。",
     "titleContent": "依 MPEP § 608.01，發明名稱不得含商標或產品型號。請移除禁止內容。",
-    "titleWordCount": "依 MPEP § 606，發明名稱宜簡短明確（實際 {{count}} 詞；通常 2–7 詞為宜）。請考慮精簡。"
+    "titleWordCount": "依 MPEP § 606，發明名稱宜簡短明確（實際 {{count}} 詞；通常 2–7 詞為宜）。請考慮精簡。",
+    "epc": {
+      "orphanedBriefFigures": "圖式：{{list}}。請於「Detailed Description」中新增對該等圖式之引用，或自「Brief Description of Drawings」中移除（EPC 慣例用語）。",
+      "orphanedDetailedFigures": "圖式：{{list}}。請於「Brief Description of Drawings」中新增對該等圖式之描述，或自「Detailed Description」中移除引用（EPC 慣例用語）。"
+    }
   },
   "common": {
     "close": "關閉",

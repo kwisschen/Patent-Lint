@@ -870,7 +870,11 @@
     "titleMissing": "Gemäß MPEP § 606 muss jede Patentanmeldung einen Titel enthalten. Fügen Sie der Beschreibung einen Titel hinzu.",
     "titleLength": "Gemäß MPEP § 606 darf der Titel 500 Zeichen nicht überschreiten ({{count}} gefunden). Kürzen Sie den Titel.",
     "titleContent": "Gemäß MPEP § 608.01 darf der Titel keine Marken oder Modellnummern enthalten. Entfernen Sie die unzulässigen Inhalte.",
-    "titleWordCount": "Gemäß MPEP § 606 sollten Titel kurz und spezifisch sein ({{count}} Wörter gefunden; üblich sind 2–7 Wörter). Erwägen Sie eine Kürzung."
+    "titleWordCount": "Gemäß MPEP § 606 sollten Titel kurz und spezifisch sein ({{count}} Wörter gefunden; üblich sind 2–7 Wörter). Erwägen Sie eine Kürzung.",
+    "epc": {
+      "orphanedBriefFigures": "Figuren: {{list}}. Fügen Sie entweder einen Verweis auf diese Figuren in der ausführlichen Beschreibung hinzu oder entfernen Sie sie aus der Kurzbeschreibung der Zeichnungen (gemäß EPC-Konvention).",
+      "orphanedDetailedFigures": "Figuren: {{list}}. Fügen Sie entweder eine Beschreibung dieser Figuren in der Kurzbeschreibung der Zeichnungen hinzu oder entfernen Sie den Verweis aus der ausführlichen Beschreibung (gemäß EPC-Konvention)."
+    }
   },
   "common": {
     "close": "Schließen",

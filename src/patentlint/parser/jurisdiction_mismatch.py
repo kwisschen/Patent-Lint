@@ -149,6 +149,15 @@ _US_MARKERS: tuple[str, ...] = (
 # one-sided, not just trace appearances.
 _EN_MARKER_MIN_DELTA = 2
 
+# Cased "FIG." figure-label convention. US drafters write "FIG. 1"; EPC
+# drafters write "Fig. 1" (Guidelines F-V § 1.2). When a draft has many
+# capitalized FIG. references and few/no lowercase Fig. references, that's
+# a strong US tell that the lowercased marker scan misses. Threshold set
+# at 5 so a stray figure-caption in an otherwise-EPC draft doesn't trip.
+_FIG_CASED_RE = re.compile(r"\bFIG\.")
+_FIG_MIXED_RE = re.compile(r"\bFig\.|\bfig\.")
+_FIG_CASED_MIN = 5
+
 # Common German function words + EPÜ-specific terms. Frequency-anchored:
 # any EPC draft written in German will hit a handful of these in the first
 # few paragraphs (article+noun agreement, common verbs, EPC headings).
@@ -312,6 +321,19 @@ def detect_jurisdiction_mismatch(
     sample_lower_norm = re.sub(r"\s+", " ", sample.lower())
     epc_markers = _count_markers(sample_lower_norm, _EPC_MARKERS)
     us_markers = _count_markers(sample_lower_norm, _US_MARKERS)
+
+    # Cased FIG./Fig. count on the WHOLE document (no lowercasing, no sample
+    # truncation). Figure references typically appear in the Detailed
+    # Description section, well past the first 50 paragraphs the marker scan
+    # samples — so we scan the full text for this specific signal. When
+    # capitalized FIG. dominates (US convention) over mixed-case Fig./fig.
+    # (EPC convention per Guidelines F-V § 1.2), boost us_markers so the
+    # detector catches plain US drafts that lack USPTO/MPEP/35 U.S.C. tells.
+    fig_cased = len(_FIG_CASED_RE.findall(text))
+    fig_mixed = len(_FIG_MIXED_RE.findall(text))
+    if fig_cased >= _FIG_CASED_MIN and fig_cased > fig_mixed * 2:
+        # Treat as +2 us markers — enough to satisfy the delta gate alone.
+        us_markers += 2
 
     if selected == Jurisdiction.US:
         if cjk > _CJK_HIGH:

@@ -870,7 +870,11 @@
     "titleMissing": "MPEP § 606 에 따라 모든 특허 출원은 발명의 명칭을 포함해야 합니다. 명세서 첫 부분에 명칭을 추가하세요.",
     "titleLength": "MPEP § 606 에 따라 발명의 명칭은 500자를 초과할 수 없습니다 (실제 {{count}}자). 명칭을 줄이세요.",
     "titleContent": "MPEP § 608.01 에 따라 발명의 명칭에 상표나 모델 번호를 포함할 수 없습니다. 해당 내용을 제거하세요.",
-    "titleWordCount": "MPEP § 606 에 따라 발명의 명칭은 간결하고 구체적이어야 합니다 (실제 {{count}}단어; 보통 2–7 단어). 축약을 고려하세요."
+    "titleWordCount": "MPEP § 606 에 따라 발명의 명칭은 간결하고 구체적이어야 합니다 (실제 {{count}}단어; 보통 2–7 단어). 축약을 고려하세요.",
+    "epc": {
+      "orphanedBriefFigures": "도면: {{list}}. 「Detailed Description」에 해당 도면에 대한 참조를 추가하거나, 「Brief Description of Drawings」에서 제거하십시오(EPC 관용어).",
+      "orphanedDetailedFigures": "도면: {{list}}. 「Brief Description of Drawings」에 해당 도면의 설명을 추가하거나, 「Detailed Description」에서 참조를 제거하십시오(EPC 관용어)."
+    }
   },
   "common": {
     "close": "닫기",

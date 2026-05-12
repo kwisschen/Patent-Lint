@@ -424,13 +424,18 @@ def check_figure_ref_consistency_epc(full_text: str) -> list[CheckItem]:
             reference="Rule 46(2)(h) EPC",
         )]
     # Re-key US `checks.figure_xref_*` (snake_case) into the EPC namespace
-    # and override the reference. The US helper emits keys whose i18n
-    # entries cite MPEP § 608.02; without the re-key, EPC-jurisdiction
-    # users see MPEP text in their results.
+    # and override the reference + details_key. The US helper emits keys
+    # whose i18n entries cite MPEP § 608.02 + use TIPO-flavored zh-TW
+    # terminology (實施方式 / 圖式簡單說明); without the re-key, EPC-
+    # jurisdiction users see those leak through under CJK locales.
     _XREF_KEY_MAP = {
         "checks.figure_xref_orphaned_brief": "check.epc.spec.figureRefConsistency.orphanedBrief.amend",
         "checks.figure_xref_orphaned_detailed": "check.epc.spec.figureRefConsistency.orphanedDetailed.amend",
         "checks.figure_xref_pass": "check.epc.spec.figureRefConsistency.pass",
+    }
+    _XREF_DETAILS_KEY_MAP = {
+        "details.orphanedBriefFigures": "details.epc.orphanedBriefFigures",
+        "details.orphanedDetailedFigures": "details.epc.orphanedDetailedFigures",
     }
     re_keyed: list[CheckItem] = []
     for item in results:
@@ -439,7 +444,7 @@ def check_figure_ref_consistency_epc(full_text: str) -> list[CheckItem]:
             message=item.message,
             message_key=_XREF_KEY_MAP.get(item.message_key, item.message_key),
             details=item.details,
-            details_key=item.details_key,
+            details_key=_XREF_DETAILS_KEY_MAP.get(item.details_key, item.details_key),
             details_params=item.details_params,
             reference="Rule 46(2)(h) EPC",
             diagnostics=item.diagnostics,

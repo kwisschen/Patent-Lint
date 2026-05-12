@@ -870,7 +870,11 @@
     "titleMissing": "依 MPEP § 606，每件发明专利申请均须载明发明名称。请于说明书首页加上发明名称。",
     "titleLength": "依 MPEP § 606，发明名称不得超过 500 字符（实际 {{count}} 字符）。请缩短名称。",
     "titleContent": "依 MPEP § 608.01，发明名称不得含商标或产品型号。请移除禁止内容。",
-    "titleWordCount": "依 MPEP § 606，发明名称宜简短明确（实际 {{count}} 词；通常 2–7 词为宜）。请考虑精简。"
+    "titleWordCount": "依 MPEP § 606，发明名称宜简短明确（实际 {{count}} 词；通常 2–7 词为宜）。请考虑精简。",
+    "epc": {
+      "orphanedBriefFigures": "附图：{{list}}。请于「Detailed Description」中新增对该等附图之引用，或自「Brief Description of Drawings」中移除（EPC 惯例用语）。",
+      "orphanedDetailedFigures": "附图：{{list}}。请于「Brief Description of Drawings」中新增对该等附图之描述，或自「Detailed Description」中移除引用（EPC 惯例用语）。"
+    }
   },
   "common": {
     "close": "关闭",

@@ -870,7 +870,11 @@
     "titleMissing": "MPEP § 606 により、特許出願には必ず発明の名称を記載する必要があります。明細書の冒頭に名称を追記してください。",
     "titleLength": "MPEP § 606 により、発明の名称は 500 文字を超えてはなりません（実際 {{count}} 文字）。名称を短縮してください。",
     "titleContent": "MPEP § 608.01 により、発明の名称に商標や型番を含めることはできません。該当箇所を削除してください。",
-    "titleWordCount": "MPEP § 606 により、発明の名称は簡潔で具体的であるべきです（実際 {{count}} 語；通常 2〜7 語）。短縮をご検討ください。"
+    "titleWordCount": "MPEP § 606 により、発明の名称は簡潔で具体的であるべきです（実際 {{count}} 語；通常 2〜7 語）。短縮をご検討ください。",
+    "epc": {
+      "orphanedBriefFigures": "図面：{{list}}。「Detailed Description」に該当図面への参照を追加するか、「Brief Description of Drawings」から削除してください（EPC 慣用語）。",
+      "orphanedDetailedFigures": "図面：{{list}}。「Brief Description of Drawings」に該当図面の説明を追加するか、「Detailed Description」から参照を削除してください（EPC 慣用語）。"
+    }
   },
   "common": {
     "close": "閉じる",

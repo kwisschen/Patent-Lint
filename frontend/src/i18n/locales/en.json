@@ -870,7 +870,11 @@
     "titleMissing": "Per MPEP § 606, every utility patent application must open with a title. Add a title to the specification header.",
     "titleLength": "Per MPEP § 606, the title must not exceed 500 characters ({{count}} found). Shorten the title.",
     "titleContent": "Per MPEP § 608.01, the title must not contain trademarks or model / product codes. Remove the prohibited content.",
-    "titleWordCount": "Per MPEP § 606, titles should be short and specific ({{count}} words found; 2–7 words is typical). Consider condensing the title."
+    "titleWordCount": "Per MPEP § 606, titles should be short and specific ({{count}} words found; 2–7 words is typical). Consider condensing the title.",
+    "epc": {
+      "orphanedBriefFigures": "Figures: {{list}}. Either add a reference to these figures in the Detailed Description or remove them from the Brief Description of Drawings.",
+      "orphanedDetailedFigures": "Figures: {{list}}. Either add a description for these figures in the Brief Description of Drawings or remove the reference from the Detailed Description."
+    }
   },
   "common": {
     "close": "Close",
