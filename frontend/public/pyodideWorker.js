@@ -20,9 +20,19 @@ self.onmessage = async (event) => {
                 indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.27.7/full/'
             });
 
-            // Stage 2: Load pre-compiled WASM packages (micropip, lxml, pydantic, pydantic-core)
+            // Stage 2: Load pre-compiled WASM packages (micropip + pydantic).
+            // lxml is intentionally deferred — it's only needed for CNIPA XML/ZIP
+            // uploads (a niche format <5% of users). DOCX inputs (the common case)
+            // never need it. When a user uploads an XML/ZIP file, the analyze
+            // handler below detects the extension and pulls lxml lazily before
+            // calling into the Python pipeline. Saves ~1.7 MB raw / ~700 KB
+            // compressed on first load for the typical DOCX user. Trust posture
+            // unchanged: this is a static-library fetch from the same Pyodide
+            // CDN we already use at boot, not a file-upload path — the user's
+            // document never leaves their browser. (Same pattern as the existing
+            // Noto Sans CJK font lazy-fetch on first localized-PDF export.)
             self.postMessage({ type: 'progress', stage: 'wasm_packages', percent: 40, message: 'Loading document parser...' });
-            await pyodide.loadPackage(['micropip', 'lxml', 'pydantic']);
+            await pyodide.loadPackage(['micropip', 'pydantic']);
 
             // Stage 3: Install pure-Python packages via micropip
             self.postMessage({ type: 'progress', stage: 'packages', percent: 65, message: 'Loading analysis engine...' });
@@ -48,9 +58,27 @@ self.onmessage = async (event) => {
 
     if (type === 'analyze') {
         try {
-            // payload is ArrayBuffer of the .docx file
+            // payload is ArrayBuffer of the user's file (.docx / .xml / .zip)
             const uint8 = new Uint8Array(payload);
             const jurisdiction = event.data.jurisdiction || 'US';
+            const filename = (event.data.filename || '').toLowerCase();
+
+            // Lazy-load lxml only when the file is CNIPA XML or ZIP.
+            // Detection: filename extension is the primary signal; we also
+            // sniff the first 5 bytes for "<?xml" as a defense for renamed
+            // files. DOCX (= ZIP starting with "PK\x03\x04") is excluded from
+            // the lxml path even though it's technically a ZIP — CN's XML-in-
+            // ZIP wrapper has a different inner layout that the docx_loader
+            // doesn't touch. Only Jurisdiction.CN + .xml or .zip extension
+            // routes through xml_loader (per pipeline.py CN branch).
+            const looksXml = filename.endsWith('.xml')
+                || (filename.endsWith('.zip') && jurisdiction === 'CN')
+                || (uint8.length >= 5 && new TextDecoder().decode(uint8.slice(0, 5)) === '<?xml');
+            if (looksXml) {
+                self.postMessage({ type: 'progress', stage: 'lxml', percent: 50, message: 'Loading XML parser...' });
+                await pyodide.loadPackage('lxml');
+            }
+
             // Pass bytes to Python
             pyodide.globals.set('docx_bytes', pyodide.toPy(uint8));
             pyodide.globals.set('filename', event.data.filename);

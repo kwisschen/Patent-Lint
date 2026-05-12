@@ -29,7 +29,11 @@ from patentlint.parser.docx_loader import load_docx, load_docx_cn, load_docx_tw
 from patentlint.parser.jurisdiction_mismatch import detect_jurisdiction_mismatch
 from patentlint.parser.sections_cn import classify_document_cn, extract_cn_sections_from_docx
 from patentlint.parser.sections_tw import classify_document_tw, extract_tw_sections
-from patentlint.parser.xml_loader import extract_cn_xml_from_zip, parse_cnipa_xml
+# xml_loader is lazy-imported at the 4 XML/ZIP call sites below — pulling
+# it in eagerly forces `lxml` (1.7 MB compressed Pyodide package) onto every
+# DOCX analysis. CNIPA XML/ZIP uploads are a niche format (<5% of users);
+# DOCX is the common path. Function-local import keeps the lxml dependency
+# load lazy. Python's module cache makes subsequent calls free.
 from patentlint.rubric import (
     compute_rubric_grade,
     detect_completeness_gap,
@@ -899,6 +903,7 @@ def analyze_file(
 
     if jurisdiction == Jurisdiction.CN:
         if lower.endswith(".xml"):
+            from patentlint.parser.xml_loader import parse_cnipa_xml
             with open(file_path, "rb") as f:
                 cn_doc = parse_cnipa_xml(f.read())
             return _run_cn_pipeline(
@@ -907,6 +912,7 @@ def analyze_file(
                 strict_qualifier_matching=cn_strict_qualifier_matching,
             )
         if lower.endswith(".zip"):
+            from patentlint.parser.xml_loader import extract_cn_xml_from_zip, parse_cnipa_xml
             with open(file_path, "rb") as f:
                 xml_data, _ = extract_cn_xml_from_zip(f.read())
             cn_doc = parse_cnipa_xml(xml_data)
@@ -996,6 +1002,7 @@ def analyze_bytes(
 
     if jurisdiction == Jurisdiction.CN:
         if lower.endswith(".zip"):
+            from patentlint.parser.xml_loader import extract_cn_xml_from_zip, parse_cnipa_xml
             xml_data, _ = extract_cn_xml_from_zip(content)
             cn_doc = parse_cnipa_xml(xml_data)
             return _run_cn_pipeline(
@@ -1004,6 +1011,7 @@ def analyze_bytes(
                 strict_qualifier_matching=cn_strict_qualifier_matching,
             )
         if lower.endswith(".xml"):
+            from patentlint.parser.xml_loader import parse_cnipa_xml
             cn_doc = parse_cnipa_xml(content)
             return _run_cn_pipeline(
                 cn_doc,

@@ -1842,7 +1842,7 @@
       "vercelLabel": "Vercel。",
       "vercel": "託管本網站之靜態資產及 Pyodide wheel。接收 §3 所述之標準請求中介資料。",
       "pyodideLabel": "Pyodide CDN。",
-      "pyodide": "於您初次造訪時，瀏覽器將自 Pyodide CDN（jsDelivr）取得 Pyodide WebAssembly 執行環境。其後，該環境將快取於本機，並可離線運作。",
+      "pyodide": "於您初次造訪時，瀏覽器將自 Pyodide CDN（jsDelivr）取得 Pyodide WebAssembly 執行環境。其後，該環境將快取於本機，並可離線運作。若您分析 CNIPA XML 或 ZIP 檔案，瀏覽器將另自同一 CDN 取得 lxml 套件，首次取得後同樣於本機快取。",
       "fontsLabel": "Google Fonts（CJK 字型，選用）。",
       "fonts": "若您於 zh-TW／zh-CN／ja／ko 介面下匯出本地化 PDF，瀏覽器將於匯出時自 Google Fonts 取得對應之 Noto Sans CJK 字型。字型於初次取得後即予快取。英文介面之 PDF 不會擷取任何字型。",
       "githubLabel": "GitHub。",
