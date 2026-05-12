@@ -16,6 +16,7 @@ PatentLint checks U.S., European (EPC), Chinese, and Taiwanese patent applicatio
 - **151 checks** across U.S., European (EPC), Chinese, and Taiwanese filings — mapped to USPTO MPEP, EPO Guidelines, CNIPA 审查指南, and TIPO 專利審查基準
 - **2560 tests** passing on every commit; full pytest + ruff gate in CI
 - **6 UI languages** (English, German, Traditional + Simplified Chinese, Japanese, Korean) with locale-aware PDF generation
+- **Walker confidence signals** distilled offline from small sklearn classifiers + cloud-LLM ensemble judging on a public granted-patents corpus; the runtime is pure deterministic Python with no model file or AI inference
 - **Source-available** under [PolyForm-Strict-1.0.0](LICENSE) — free for individuals and for organizations evaluating the tool; commercial licensing handled on inquiry (see [Terms § 4](https://patentlint.com/terms))
 
 ![PatentLint analysis results](https://patentlint.com/screenshot-hero.png)
@@ -99,8 +100,10 @@ Full inventory: [CHECKS.md](CHECKS.md)
 | Tier | Analysis | PDF | Server? | Trust Model |
 |------|----------|-----|---------|-------------|
 | **Web** (default) | Pyodide/WASM in browser | pdfmake (client-side) | No — static hosting | Zero-trust: airplane mode verifiable |
-| **Docker** | Local FastAPI | weasyprint | Yes (your machine) | On-premise |
+| **Docker** | Local FastAPI | weasyprint | Yes (your machine) | On-premise — commercial deployment requires a separate license |
 | **Cloud API** (future) | Hosted FastAPI | weasyprint | Yes (our infra) | Process + discard |
+
+The Web tier on patentlint.com is free for individual evaluation. Building the Docker image from source for personal evaluation is permitted by the license; deploying it at a firm, company, or organization (including for client matters) requires a [separate commercial license](#license).
 
 ---
 
@@ -200,6 +203,8 @@ docker build -t patentlint .
 docker run -p 8000:8000 patentlint
 # → http://localhost:8000 (web UI + API)
 ```
+
+> For evaluation. Commercial deployment of the Docker / CLI / REST API tier at a firm, company, or organization (including for client work) requires a separate license — see [License](#license).
 
 ### REST API
 
