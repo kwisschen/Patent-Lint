@@ -642,7 +642,7 @@
     "builderDesc1": "PatentLint was built by a patent engineer who spent over a decade inside that workflow, reviewing thousands of drafts and watching the same categories of errors slip through again and again. Existing options were either Windows-only desktop installs or cloud services that required uploading a client's unfiled application to someone else's server. One locks you to a specific OS. The other sends the draft out of your firm before it's even on file.",
     "builderDesc2": "The analysis engine is written in Python and compiles to WebAssembly. It runs entirely in the browser, on a laptop, tablet, or phone, with nothing uploaded and nothing logged. That means it works on an airplane, on a locked-down firm machine, on anything a client hasn't signed off on yet.",
     "builderSister": "Its companion project, the Agentic Patent Analyst, is an open-source (Apache 2.0) LangGraph-based AI agent that reads Office Actions, weighs each examiner rejection, drafts argument or amendment strategies, and writes the client OA-response analysis report in the client's language and the firm's voice.",
-    "licenseNote": "PatentLint is free for individual use. The source is published on GitHub under PolyForm-Strict-1.0.0 (source-available; commercial use requires a separate license).",
+    "licenseNote": "PatentLint is free for individual use. The source is published on GitHub under PolyForm-Strict-1.0.0 (source-available).",
     "tableFootnote": "As of April 2026; both tools may continue to evolve.",
     "cnTableFootnote": "As of May 2026. PatentLint may continue to evolve.",
     "twTableFootnote": "TIPO coverage audited against 專利申請文件輔助偵錯系統 — 功能介紹與使用指南 (2023.5.30 版). TIPO 偵錯系統 supports utility-model filings only; PatentLint supports both utility models and inventions. Both tools may continue to evolve.",
@@ -1526,11 +1526,11 @@
       "title": "The Site vs. the Software",
       "p1": "PatentLint has two forms:",
       "siteLabel": "The Site (patentlint.com).",
-      "siteDesc": "A hosted web application, free for individual practitioners' personal use. When you load a patent draft, analysis runs entirely in your browser via WebAssembly — your draft never leaves your device. PatentLint is operated as a personal project by Christopher Chen, an individual practitioner acting in personal capacity, not as a business entity.",
+      "siteDesc": "A hosted web application, free for individual practitioners' personal use. When you load a patent draft, analysis runs entirely in your browser via WebAssembly — your draft never leaves your device. PatentLint is operated by Christopher Chen as a personal project, not as a business entity.",
       "softwareLabel": "The Software.",
       "softwareDesc": "The underlying source code, source-available under PolyForm-Strict-1.0.0 (see § 4 for license terms).",
       "p2": "These Terms cover your use of both. Different rules apply depending on which you are using.",
-      "statusNote": "<1>Project status:</1> PatentLint is maintained as a personal project. The Site is free for individual practitioners. Any commercial licensing arrangement under § 4 is handled privately on inquiry."
+      "statusNote": "<1>Project status:</1> PatentLint is maintained as a personal project, free for individual practitioners. Commercial licensing under § 4 is handled privately on inquiry."
     },
     "s2": {
       "title": "Using the Site",
@@ -1577,7 +1577,7 @@
       "title": "No legal advice",
       "p1": "PatentLint is an automated drafting aid. Its output is preliminary and not a substitute for review by a qualified patent professional. Nothing the Site produces constitutes legal advice. Do not rely solely on PatentLint output for patent prosecution, filing, or enforcement decisions.",
       "p2": "Check categories include antecedent-basis analysis, specification-support analysis (US under § 112(a); EPC under Art. 84; CN under 专利法 §26 第4款; TW under 專利法 §26 第3項), section ordering, claim punctuation, and other rule-based verifications — these flag candidates for your review, not legal determinations.",
-      "p3": "An overall letter grade summarizes the rule-based findings but is not a substantive review. An A grade does not mean the draft is filing-ready; it means PatentLint's catalog found no flagged issues.",
+      "p3": "An overall letter grade summarizes rule-based findings only — an A means PatentLint's catalog found no flagged issues, not that the draft is filing-ready.",
       "p4": "You assume sole responsibility for verifying any PatentLint finding before acting on it. Using the Site or the Software does not create any client–attorney, agent, or fiduciary relationship between you and Christopher Chen."
     },
     "s7": {
@@ -1644,7 +1644,7 @@
   "privacy": {
     "title": "Privacy Policy",
     "lastUpdated": "Last updated: May 12, 2026",
-    "intro": "This Privacy Policy describes how patentlint.com (the \"Site\") handles data when you visit. The PatentLint application collects nothing about you — no analytics, no trackers, no cookies. The only data flow is the standard web request metadata our hosting provider (Vercel) sees on every visit, as it does for any website. This Policy makes that distinction explicit.",
+    "intro": "This Privacy Policy describes how patentlint.com (the \"Site\") handles data when you visit. The PatentLint application collects nothing about you — no analytics, no trackers, no cookies. The only data flow is the standard web request metadata our hosting provider (Vercel) sees on every visit, as it does for any website.",
     "s1": {
       "title": "Introduction",
       "p1": "patentlint.com is a hosted web application operated by Christopher Chen. It runs PatentLint, a patent drafting checker that analyzes your file entirely in your browser using WebAssembly (Pyodide). The Site is served as static assets from Vercel, with a single Vercel Edge Function for the voluntary error-report endpoint described in § 6. There is no analysis server and no database. Your file content is never transmitted off your device.",
