@@ -413,7 +413,7 @@
       "telemetry": "PatentLint는 분석 스크립트, 추적 픽셀, 쿠키, 서드파티 추적 통합을 포함하지 않습니다. 사용 데이터를 자동으로 수집하거나 전송하지 않습니다.",
       "telemetryLink": "자발적 오류 보고 → 개인정보 처리방침 §6",
       "selfHostedTitle": "온프레미스 배포",
-      "selfHosted": "On-premises deployment is available on private inquiry. Compliance with any specific regulatory regime remains the organization's own determination.",
+      "selfHosted": "엄격한 데이터 주권 요건이나 에어갭 네트워크가 필요한 조직에는 온프레미스 배포가 비공개 문의에 따라 제공됩니다. 특정 규제(ITAR, EAR, GDPR, 업계 표준 등) 준수 여부는 해당 조직의 판단이며 PatentLint 의 표명이 아닙니다.",
       "contactEnterprise": "엔터프라이즈 배포 문의 →"
     }
   },

@@ -413,7 +413,7 @@
       "telemetry": "PatentLint enthält keine Analyse-Skripte, Tracking-Pixel, Cookies oder Drittanbieter-Tracking. Es werden keine Nutzungsdaten automatisch erfasst oder übertragen.",
       "telemetryLink": "Freiwillige Fehlermeldungen → Datenschutz §6",
       "selfHostedTitle": "On-Premises-Bereitstellung",
-      "selfHosted": "On-premises deployment is available on private inquiry. Compliance with any specific regulatory regime remains the organization's own determination.",
+      "selfHosted": "Für Organisationen mit strengen Datensouveränitätsanforderungen oder Air-Gap-Netzwerken steht eine On-Premises-Bereitstellung auf private Anfrage zur Verfügung. Die Einhaltung konkreter regulatorischer Vorgaben (z. B. ITAR, EAR, DSGVO, branchenspezifische Standards) bleibt eine eigene Bewertung der Organisation und keine Zusicherung seitens PatentLint.",
       "contactEnterprise": "Kontakt für Enterprise-Bereitstellung →"
     }
   },
