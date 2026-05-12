@@ -27,7 +27,12 @@
     "titleTw": "Drop your patent .docx to begin local analysis",
     "noticeTw": "Supports Taiwan patent specifications (.docx)",
     "rejectTw": "Only .docx files are accepted",
-    "rejectMultipleTypeTw": "Please drop a single .docx file."
+    "rejectMultipleTypeTw": "Please drop a single .docx file.",
+    "taglineEpc": "Automatically check your specification against {{count}} EPO drafting rules.",
+    "titleEpc": "Drop your patent .docx to begin local analysis",
+    "noticeEpc": "Supports European patent specifications (.docx)",
+    "rejectEpc": "Only .docx files are accepted",
+    "rejectMultipleTypeEpc": "Please drop a single .docx file."
   },
   "home": {
     "pricing": {
@@ -124,10 +129,12 @@
     "nonPatentWarningDetailsCn": "PatentLint is designed for patent application drafts. This file does not appear to contain standard Chinese specification sections (技术领域, 背景技术, etc.), numbered claims, or recognized formatting. Analysis results may not be meaningful for non-Chinese or non-patent documents.",
     "nonPatentWarningTw": "This document may not be a Taiwanese patent specification",
     "nonPatentWarningDetailsTw": "PatentLint is designed for patent application drafts. This file does not appear to contain standard Taiwanese specification sections (【技術領域】, 【先前技術】, etc.), numbered claims (請求項), or paragraph numbering. Analysis results may not be meaningful for non-Taiwanese or non-patent documents.",
+    "nonPatentWarningEpc": "This document may not be a European patent specification",
+    "nonPatentWarningDetailsEpc": "PatentLint is designed for patent application drafts. This file does not appear to contain standard European specification sections (Technical Field, Background Art, etc.), numbered claims, or paragraph numbering. Analysis results may not be meaningful for non-European or non-patent documents.",
     "nonPatentWarningCrossScriptJapanese": "This looks like a Japanese patent document",
-    "nonPatentWarningDetailsCrossScriptJapanese": "PatentLint detected substantial Japanese kana (hiragana or katakana) in this file. Japanese drafts aren't currently supported — this tool checks U.S., Simplified Chinese, and Traditional Chinese patent specifications. You can still view the results, but the output may not be useful for a Japanese draft.",
+    "nonPatentWarningDetailsCrossScriptJapanese": "PatentLint detected substantial Japanese kana (hiragana or katakana) in this file. Japanese drafts aren't currently supported — this tool checks U.S., Simplified Chinese, Traditional Chinese, and European (EPC English) patent specifications. You can still view the results, but the output may not be useful for a Japanese draft.",
     "nonPatentWarningCrossScriptKorean": "This looks like a Korean patent document",
-    "nonPatentWarningDetailsCrossScriptKorean": "PatentLint detected substantial Hangul content in this file. Korean drafts aren't currently supported — this tool checks U.S., Simplified Chinese, and Traditional Chinese patent specifications. You can still view the results, but the output may not be useful for a Korean draft.",
+    "nonPatentWarningDetailsCrossScriptKorean": "PatentLint detected substantial Hangul content in this file. Korean drafts aren't currently supported — this tool checks U.S., Simplified Chinese, Traditional Chinese, and European (EPC English) patent specifications. You can still view the results, but the output may not be useful for a Korean draft.",
     "showResultsAnyway": "Show results anyway",
     "trackedChangesWarning": "This document contains tracked changes, which may affect analysis accuracy. Accept or reject all changes in your word processor, then analyze again.",
     "analyzeAgain": "Analyze Again",
@@ -405,8 +412,8 @@
     "productTitle": "What is PatentLint?",
     "productTagline": "A first-of-its-kind patent draft checker that runs offline in your browser.",
     "productDesc1": "PatentLint runs entirely on your own device, catching issues for you before the examiner does. The webpage is just the entry point. Once loaded, PatentLint runs on your device like desktop software — you can disconnect from the internet and keep using it.",
-    "productDesc1b": "Drop a U.S., Chinese, or Taiwanese patent draft for an instant compliance report and grade on formal requirements. No uploads, no cloud processing, no AI.",
-    "productDesc2": "PatentLint checks drafting rules from the USPTO (U.S.), CNIPA (China), and TIPO (Taiwan), detecting issues commonly flagged by examination standards, such as missing antecedent basis, incorrect claim structure, and restrictive wording.",
+    "productDesc1b": "Drop a U.S., Chinese, Taiwanese, or European patent draft for an instant compliance report and grade on formal requirements. No uploads, no cloud processing, no AI.",
+    "productDesc2": "PatentLint checks drafting rules from the USPTO (U.S.), CNIPA (China), TIPO (Taiwan), and EPO (Europe), detecting issues commonly flagged by examination standards, such as missing antecedent basis, incorrect claim structure, and restrictive wording.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
     "usptoSubtitle": "USPTO Patent Center validates filing format. PatentLint checks the draft itself.",
     "usFeatures": {
@@ -625,8 +632,8 @@
     "builderPain": "Every patent professional knows the drill. Antecedent basis. Claim terms missing from the spec. Figures declared in the drawings description but never referenced in the body. Dependency chains that quietly become circular. None of it is hard. All of it is tedious. All of it is easy to miss.",
     "builderDesc1": "PatentLint was built by a patent engineer who spent over a decade inside that workflow, reviewing thousands of drafts and watching the same categories of errors slip through again and again. Existing options were either Windows-only desktop installs or cloud services that required uploading a client's unfiled application to someone else's server. One locks you to a specific OS. The other sends the draft out of your firm before it's even on file.",
     "builderDesc2": "The analysis engine is written in Python and compiles to WebAssembly. It runs entirely in the browser, on a laptop, tablet, or phone, with nothing uploaded and nothing logged. That means it works on an airplane, on a locked-down firm machine, on anything a client hasn't signed off on yet.",
-    "builderSister": "Its companion project, the Agentic Patent Analyst, is an open-source LangGraph workflow that reads Office Actions, weighs each examiner rejection, and drafts argument or amendment strategies.",
-    "licenseNote": "PatentLint is free for individual use and source-available under PolyForm-Strict-1.0.0. The full source is on GitHub.",
+    "builderSister": "Its companion project, the Agentic Patent Analyst, is an open-source (Apache 2.0) LangGraph-based AI agent that reads Office Actions, weighs each examiner rejection, drafts argument or amendment strategies, and writes the client OA-response analysis report in the client's language and the firm's voice.",
+    "licenseNote": "PatentLint is free for individual use. The source is published on GitHub under PolyForm-Strict-1.0.0 (source-available; commercial use requires a separate license).",
     "tableFootnote": "As of April 2026; both tools may continue to evolve.",
     "twTableFootnote": "TIPO coverage audited against 專利申請文件輔助偵錯系統 — 功能介紹與使用指南 (2023.5.30 版). TIPO 偵錯系統 supports utility-model filings only; PatentLint supports both utility models and inventions. Both tools may continue to evolve.",
     "epcTitle": "PatentLint EPC Drafting Checks",
@@ -684,7 +691,7 @@
       "wordCount": "Abstract word count (50-150) — Rule 47(2) + Guidelines F-II § 2.3",
       "structure": "Abstract structure — single paragraph, no claim-style phraseology, no merit language"
     },
-    "epcTableFootnote": "As of May 2026; v1 beta. EPC English-input only at v1; DE/FR check engines deferred. Walker checks (antecedent basis + specification support) ship as REVIEW status until real-corpus FP measurement runs."
+    "epcTableFootnote": "As of May 2026. EPC support is in beta and currently checks English-language specifications. PatentLint may continue to evolve."
   },
   "commercial": {
     "hero": {
@@ -1434,7 +1441,7 @@
     "offline_note": "Works offline after first load",
     "feature1_title": "No Upload. No Cloud Processing. No AI.",
     "feature1_desc": "Your confidential patent drafts never leave your device. Your file is never uploaded, and PatentLint doesn't even know who you are.",
-    "feature2_title": "USPTO | CNIPA | TIPO Checks & Claim Tree",
+    "feature2_title": "USPTO | CNIPA | TIPO | EPO Checks & Claim Tree",
     "feature2_desc": "Catches restrictive wording, indefinite terms, and antecedent basis gaps. Visualizes claim dependencies with an interactive tree.",
     "feature3_title": "Claim Tree Visualization",
     "feature3_desc": "Interactive dependency tree and Mermaid diagram show your claim structure at a glance.",
@@ -1796,7 +1803,7 @@
       "title": "How PatentLint scores your draft",
       "subtitle": "A deterministic rubric — no AI judgment, no machine learning.",
       "weightsTitle": "Section weights",
-      "weightsIntro": "Every check we run rolls into one of these five sections. Weights are fixed across US, CN, and TW filings.",
+      "weightsIntro": "Every check we run rolls into one of these five sections. Weights are fixed across US, CN, TW, and EPC filings.",
       "gateTitle": "How the FIX gate works",
       "gateIntro": "Statutory blockers headline the grade. One FIX caps the grade at A-, regardless of how clean the rest of the draft is. This matches partner-triage reality — the question is always \"any blockers, then how clean?\"",
       "gateRule": "{{count}} FIX → max {{letter}}",

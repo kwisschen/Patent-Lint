@@ -156,13 +156,11 @@ const JURISDICTION_CONFIG = {
     consolidateClaimsChecks: true,
     filterInternalSpecChecks: true,
     filterInternalDrawingsChecks: true,
-    // EPC dropzone copy reuses US English keys at v1; locale-specific
-    // EPC dropzone copy can land if a real EPC user asks for it.
-    taglineKey: 'dropzone.tagline',
-    titleKey: 'dropzone.title',
-    noticeKey: 'dropzone.notice',
-    rejectKey: 'dropzone.reject',
-    rejectMultipleTypeKey: 'dropzone.rejectMultipleType',
+    taglineKey: 'dropzone.taglineEpc',
+    titleKey: 'dropzone.titleEpc',
+    noticeKey: 'dropzone.noticeEpc',
+    rejectKey: 'dropzone.rejectEpc',
+    rejectMultipleTypeKey: 'dropzone.rejectMultipleTypeEpc',
     abstractLabelKey: 'summary.abstractWords',
     abstractRangeKey: 'summary.outsideRange',
     pdfAbstractKey: 'pdf.abstractWordCount',
