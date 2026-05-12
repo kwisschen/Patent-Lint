@@ -7,13 +7,13 @@
 
 **No account. No install. No upload.**
 
-PatentLint checks U.S., Chinese, Taiwanese, and European (EPC) patent application drafts against USPTO, CNIPA, TIPO, and EPO drafting rules — entirely in your browser. Your file never leaves your device.
+PatentLint checks U.S., European (EPC), Chinese, and Taiwanese patent application drafts against USPTO, EPO, CNIPA, and TIPO drafting rules — entirely in your browser. Your file never leaves your device.
 
 **[Try it →](https://patentlint.com)**
 
 ## Status
 
-The hosted demo at [patentlint.com](https://patentlint.com) remains free for individual practitioners and for organizations evaluating the tool. The source is published under [PolyForm-Strict-1.0.0](LICENSE) — commercial deployment under § 4 of the [Terms](https://patentlint.com/terms) remains available, but commercial customers are not actively being onboarded during this period. Inquiries welcome at the contact link below.
+The hosted demo at [patentlint.com](https://patentlint.com) is free for individual practitioners and for organizations evaluating the tool. The source is published under [PolyForm-Strict-1.0.0](LICENSE) — commercial deployment under § 4 of the [Terms](https://patentlint.com/terms) remains available, but new commercial customers are not actively being onboarded during this period. Inquiries welcome at the contact link below.
 
 ![PatentLint analysis results](https://patentlint.com/screenshot-hero.png)
 
@@ -138,7 +138,7 @@ src/patentlint/
 ├── cli.py           # Click CLI (analyze, batch)
 ├── i18n.py          # Locale bundle loader + i18next-style translator
 ├── parser/          # Section extraction, claim parsing, .docx/.xml/.zip loading
-├── analysis/        # Rule checks (US + CN + TW + EPC) — all pure functions, independently testable
+├── analysis/        # Rule checks (US + EPC + CN + TW) — all pure functions, independently testable
 ├── report/          # PDF report generation (Jinja2 + weasyprint; locale-aware)
 └── api/             # FastAPI REST endpoints
 
@@ -150,7 +150,7 @@ frontend/
 └── src/i18n/        # Locale files (en, de, zh-TW, zh-CN, ja, ko) — shared with Python
 ```
 
-The `parser/` and `analysis/` packages have **zero framework dependencies** — they run identically in Pyodide (browser), FastAPI (Docker), and Click (CLI). The same engine handles US, CN, TW, and EPC jurisdictions; `pipeline.py` routes to the appropriate parser and check modules.
+The `parser/` and `analysis/` packages have **zero framework dependencies** — they run identically in Pyodide (browser), FastAPI (Docker), and Click (CLI). The same engine handles US, EPC, CN, and TW jurisdictions; `pipeline.py` routes to the appropriate parser and check modules.
 
 ---
 
