@@ -599,7 +599,7 @@
       "multiDepOnMultiDep": "多项附属项不得依附另一多项附属项",
       "multiDepAlternative": "多项附属项须采择一形式",
       "titleSubjectMatch": "发明名称与请求项标的一致",
-      "antecedentBasis": "引用基础分析",
+      "antecedentBasis": "先行词分析",
       "specSupport": "说明书对请求项用语之支持（專利法 §26 第3項）",
       "charCount": "摘要字数（250字以下）",
       "titleMatch": "发明名称出现于摘要中",
@@ -828,7 +828,7 @@
       "titleSubjectMatch": "依專利審查基準，发明名称/新型名称应与独立项之标的名称一致。请检查标记之请求项。",
       "claims": {
         "symbolTableConsistency": {
-          "missingFromTable": "权利要求中的元件符号在符号说明中未定义：{{numerals_with_locations}}"
+          "missingFromTable": "请求项中的元件符号在符号说明中未定义：{{numerals_with_locations}}"
         }
       },
       "antecedentBasis": "「该」「所述」「前述」加名词应于同一请求项或母项中有对应之先前引介。「一」加名词为惯用形式；其他可接受之引介包括「一个」、「至少一」、「复数个」、「多个」加名词等。以正则表达式检测，结果为近似值，请自行确认。",
@@ -843,8 +843,8 @@
       },
       "bracketFormat": "依專利法施行細則 §17，章节标题应使用全角方括号【】。发现：{{detail}}。",
       "connectionRelationships": "標記之組件：{{sample_names}}（共 {{component_count}} 個）。請補充連接、設置於、耦接 等動詞用語，記載組件之間的結構連接關係。",
-      "antecedentBasisTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语缺少引用基础。详见下方「引用基础检查」区块。",
-      "specSupportTerms": "{{claim_count}}项权利要求共{{issue_count}}个用语疑似未获说明书支持。详见下方「说明书支持检视」区块。",
+      "antecedentBasisTerms": "{{claim_count}}项请求项共{{issue_count}}个用语缺少先行词。详见下方「先行词检查」区块。",
+      "specSupportTerms": "{{claim_count}}项请求项共{{issue_count}}个用语疑似未获说明书支持。详见下方「说明书支持检视」区块。",
       "titleMissing": "依專利審查基準，说明书必须包含发明名称/新型名称。请于说明书首部添加。",
       "figureRefInconsistency": {
         "onlyDrawings": "仅在圖式簡單說明中提及：{{figs}}",
@@ -1434,7 +1434,7 @@
           "amendMultiSentence": "{{count}}项请求项非单句撰写：{{claims}}。"
         },
         "refNumeralParens": {
-          "pass": "未检测到权利要求中未加括号之元件符号。",
+          "pass": "未检测到请求项中未加括号之元件符号。",
           "amend": "{{count}}项请求项之元件符号未加括号：{{claims}}（專利法施行細則 §19）。"
         },
         "subjectConsistency": {
@@ -1479,11 +1479,11 @@
         },
         "antecedentBasis": {
           "pass": "未检测到先行词基础问题。",
-          "amend": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少引用基础：「該／所述／前述」引用未见对应之先前引介（例如以「一」、「至少一」、「复数个」加名词之形式）。"
+          "amend": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少先行词：「該／所述／前述」引用未见对应之先前引介（例如以「一」、「至少一」、「复数个」加名词之形式）。"
         },
         "specSupport": {
-          "pass": "未检测到未获说明书支持之权利要求用语。",
-          "amend": "{{claims}} 共有 {{issue_count}} 个权利要求用语疑似未获说明书支持。"
+          "pass": "未检测到未获说明书支持之请求项用语。",
+          "amend": "{{claims}} 共有 {{issue_count}} 个请求项用语疑似未获说明书支持。"
         },
         "independentPreamble": {
           "pass": "未检测到独立项缺少「一種」前序之问题。",

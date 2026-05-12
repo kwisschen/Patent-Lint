@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 // Copyright (c) 2025–2026 Christopher Chen
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Check, Mail, ShieldCheck, Server, Linkedin, Github } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
@@ -335,7 +335,7 @@ function EpcCheckTable({ t }) {
       {checks.map((key) => (
         <tr
           key={key}
-          className="border-b border-border/50 hover:bg-muted/50 transition-colors border-l-2 border-l-indigo-200 dark:border-l-indigo-800"
+          className="border-b border-border/50 hover:bg-muted/50 transition-colors border-l-2 border-l-purple-200 dark:border-l-purple-800"
         >
           <td className="px-2 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm text-foreground">
             {t(`about.epcChecks.${key}`)}
@@ -395,9 +395,9 @@ const FEATURE_ACCENT = {
     sheen: 'rgba(45, 212, 191, 0.22)',
   },
   EPC: {
-    border: 'border-l-indigo-200 dark:border-l-indigo-800',
-    glow: 'rgba(79, 70, 229, 0.18)',
-    sheen: 'rgba(129, 140, 248, 0.22)',
+    border: 'border-l-purple-300 dark:border-l-purple-700',
+    glow: 'rgba(126, 34, 206, 0.20)',
+    sheen: 'rgba(168, 85, 247, 0.22)',
   },
 }
 
@@ -641,11 +641,46 @@ function UsComparisonTable({ t }) {
 
 function ComparisonTable({ t }) {
   const [activeTab, setActiveTab] = useState('US')
+  // Floating-picker visibility tracking. The top picker is rendered in the
+  // normal flow; when it scrolls out of view AND we're still inside the
+  // ComparisonTable section, a compact vertical picker fades in on the
+  // right edge of the viewport. Click on a floating pill scrolls back to
+  // the section top so the user sees the new tab's content from the start
+  // — not stranded mid-table from a different jurisdiction's row.
+  const [pickerInView, setPickerInView] = useState(true)
+  const [sectionInView, setSectionInView] = useState(false)
+  const pickerRef = useRef(null)
+  const sectionRef = useRef(null)
+
+  useEffect(() => {
+    const pickerObs = new IntersectionObserver(
+      ([entry]) => setPickerInView(entry.isIntersecting),
+      { threshold: 0, rootMargin: '-40px 0px 0px 0px' },
+    )
+    const sectionObs = new IntersectionObserver(
+      ([entry]) => setSectionInView(entry.isIntersecting),
+      { threshold: 0 },
+    )
+    if (pickerRef.current) pickerObs.observe(pickerRef.current)
+    if (sectionRef.current) sectionObs.observe(sectionRef.current)
+    return () => {
+      pickerObs.disconnect()
+      sectionObs.disconnect()
+    }
+  }, [])
+
+  const showFloating = !pickerInView && sectionInView
+
+  const handleFloatingPick = (j) => {
+    setActiveTab(j)
+    sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   return (
-    <section>
+    <section ref={sectionRef}>
       <div className="text-center mb-8">
         <div
+          ref={pickerRef}
           className="grid grid-cols-2 sm:grid-cols-4 gap-1 rounded-lg p-1 mb-4 ring-1 w-full max-w-md sm:max-w-xl mx-auto"
           style={{
             backgroundImage: 'var(--frost-resting-bg)',
@@ -715,6 +750,85 @@ function ComparisonTable({ t }) {
           <TwComparisonTable t={t} />
         </>
       )}
+
+      {/* Floating jurisdiction picker — two breakpoint-specific variants:
+            Desktop (md+): vertical pillar on the right edge, pills slide
+              in from the right with a 60ms cascade
+            Mobile (< md): horizontal capsule pinned at the top (above the
+              fold), pills slide down from above with a 50ms cascade.
+              Wrapped in a backdrop-blurred capsule so it stays legible
+              against scrolling content underneath. Uses active:* not
+              hover:* since mobile has no hover state.
+          Both share the same showFloating gate + click behavior (scroll
+          back to section top so the new tab renders from row 1). */}
+      <div
+        className={`hidden md:flex fixed right-4 top-1/2 -translate-y-1/2 z-30 flex-col gap-2.5 transition-opacity duration-300 ease-out ${
+          showFloating ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        aria-hidden={!showFloating}
+        role="radiogroup"
+        aria-label={t('jurisdiction.label')}
+      >
+        {['US', 'EPC', 'CN', 'TW'].map((j, i) => (
+          <button
+            key={j}
+            role="radio"
+            aria-checked={activeTab === j}
+            onClick={() => handleFloatingPick(j)}
+            className={`w-11 h-11 rounded-full flex items-center justify-center text-white text-[10px] font-bold tracking-wider shadow-lg transform transition-all ease-out duration-300 ${
+              showFloating ? 'translate-x-0' : 'translate-x-20'
+            } ${
+              activeTab === j
+                ? 'ring-2 ring-foreground/40 ring-offset-2 ring-offset-background scale-110'
+                : 'opacity-75 hover:opacity-100 hover:scale-105'
+            }`}
+            style={{
+              backgroundColor: JURISDICTION_COLORS[j],
+              transitionDelay: showFloating ? `${i * 60}ms` : '0ms',
+            }}
+            title={t(`jurisdiction.${j.toLowerCase()}Plural`)}
+          >
+            {j}
+          </button>
+        ))}
+      </div>
+
+      {/* Mobile floating picker — pinned just below the sticky site header
+          (h-14 = 56px, so top-16 = 64px gives an 8px gap below header).
+          z-30 stays below the header's z-50 so modals layered above the
+          header (z-50+) still render over this picker. Pills are 44×44px
+          (w-11 h-11) to meet iOS HIG touch-target minimum. */}
+      <div
+        className={`flex md:hidden fixed top-16 left-1/2 -translate-x-1/2 z-30 flex-row gap-1.5 px-2 py-2 rounded-full bg-card/85 backdrop-blur-md shadow-lg ring-1 ring-border/50 transition-opacity duration-300 ease-out ${
+          showFloating ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        aria-hidden={!showFloating}
+        role="radiogroup"
+        aria-label={t('jurisdiction.label')}
+      >
+        {['US', 'EPC', 'CN', 'TW'].map((j, i) => (
+          <button
+            key={j}
+            role="radio"
+            aria-checked={activeTab === j}
+            onClick={() => handleFloatingPick(j)}
+            className={`w-11 h-11 rounded-full flex items-center justify-center text-white text-[10px] font-bold tracking-wider transform transition-all ease-out duration-300 ${
+              showFloating ? 'translate-y-0' : '-translate-y-12'
+            } ${
+              activeTab === j
+                ? 'ring-2 ring-foreground/40 ring-offset-1 ring-offset-card scale-110'
+                : 'opacity-75 active:opacity-100 active:scale-105'
+            }`}
+            style={{
+              backgroundColor: JURISDICTION_COLORS[j],
+              transitionDelay: showFloating ? `${i * 50}ms` : '0ms',
+            }}
+            aria-label={t(`jurisdiction.${j.toLowerCase()}Plural`)}
+          >
+            {j}
+          </button>
+        ))}
+      </div>
     </section>
   )
 }

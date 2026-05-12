@@ -496,8 +496,8 @@
     "cnFeatures": {
       "title": "互動式中國大陸專利分析",
       "claimTree": {
-        "title": "請求項樹與 引用基础 分析器",
-        "description": "請求項相依樹搭配廣度優先的 引用基础 分析器（基於 CJK bigram 比對），覆蓋整條請求項鏈；含主題一致性、引用格式與括號標記檢查。"
+        "title": "權利要求樹與 引用基礎 分析器",
+        "description": "權利要求相依樹搭配廣度優先的 引用基礎 分析器（基於 CJK bigram 比對），覆蓋整條權利要求鏈；含主題一致性、引用格式與括號標記檢查。"
       },
       "specAbstract": {
         "title": "說明書與摘要結構",
@@ -784,8 +784,8 @@
       "abstractCharCount": "根據专利法实施细则 §26，摘要不得超過300個漢字。請縮短摘要。",
       "abstractTitleMatch": "根據审查指南，摘要應與發明名稱一致。請確認摘要是否體現了發明名稱。",
       "commercialLanguage": "根據专利法实施细则 §26，摘要不得包含商業性宣傳用語（商业性宣传用语）。請刪除上列標記用語。",
-      "antecedentBasisTerms": "{{claim_count}}項請求項共{{issue_count}}個用語缺少先行詞。詳見下方「先行詞基礎檢視」區塊。",
-      "specSupportTerms": "{{claim_count}}項請求項共{{issue_count}}個用語疑似未獲說明書支持。詳見下方「說明書支持檢視」區塊。",
+      "antecedentBasisTerms": "{{claim_count}}項權利要求共{{issue_count}}個用語缺少引用基礎。詳見下方「引用基礎檢視」區塊。",
+      "specSupportTerms": "{{claim_count}}項權利要求共{{issue_count}}個用語疑似未獲說明書支持。詳見下方「說明書支持檢視」區塊。",
       "titleMissing": "根據審查指南 第一部分第一章，說明書必須包含發明名稱。請於說明書首部添加發明名稱。",
       "figureRefInconsistency": {
         "onlyDrawings": "僅於附图说明中提及：{{figs}}",
@@ -1260,7 +1260,7 @@
         },
         "refNumeralParens": {
           "verify": "{{count}}項權利要求中的附圖標記未加括號：{{claims}}。",
-          "pass": "未偵測到請求項中未加括號之附圖標記。"
+          "pass": "未偵測到權利要求中未加括號之附圖標記。"
         },
         "subjectConsistency": {
           "verify": "{{claims}} 的主題名稱與母項不一致（共 {{count}} 項）。",
@@ -1294,11 +1294,11 @@
           "pass": "未偵測到獨立裝置／系統項缺少組件連接關係之問題。"
         },
         "antecedentBasis": {
-          "pass": "未偵測到先行詞基礎問題（审查指南）。",
-          "amend": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少先行詞（审查指南）：「该／所述」引用未見對應之先前引介（例如以「一」、「至少一」、「多个」加名詞之形式）。"
+          "pass": "未偵測到引用基礎問題（审查指南）。",
+          "amend": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少引用基礎（审查指南）：「该／所述」引用未見對應之先前引介（例如以「一」、「至少一」、「多个」加名詞之形式）。"
         },
         "specSupport": {
-          "pass": "未偵測到未獲說明書支持之請求項用語（审查指南）。",
+          "pass": "未偵測到未獲說明書支持之權利要求用語（审查指南）。",
           "amend": "{{claims}} 共有 {{issue_count}} 個權利要求用語疑似未獲說明書支持（审查指南 第二部分第二章 §3.2.1）。"
         },
         "omnibus": {
@@ -1306,8 +1306,8 @@
           "pass": "未發現援引式權利要求。"
         },
         "markushOpenTransition": {
-          "pass": "馬庫什請求項均使用封閉式連接詞「组成的」。",
-          "amend": "{{claims}}：馬庫什請求項使用開放式連接詞（{{transitions}}），應改為封閉式「组成的」（审查指南 第二部分第十章 §9.3）。"
+          "pass": "馬庫什權利要求均使用封閉式連接詞「组成的」。",
+          "amend": "{{claims}}：馬庫什權利要求使用開放式連接詞（{{transitions}}），應改為封閉式「组成的」（审查指南 第二部分第十章 §9.3）。"
         },
         "independentPreamble": {
           "pass": "未偵測到獨立項缺少「一种」前序之問題。",

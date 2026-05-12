@@ -179,12 +179,19 @@ const JURISDICTION_CONFIG = {
   },
 }
 
-// Indigo for EPC — distinct from US blue, CN red, TW teal; Latin-region-coded.
+// Purple for EPC — distinct from US blue, CN red, TW teal. Iteration
+// history: indigo (#4F46E5) sat only 23° in hue from US blue and read
+// as "another blue"; amber-700 (#B45309) sat only ~32° from CN red and
+// read as "warm-color sibling". Purple-700 (#7E22CE) sits 47° from US
+// blue (cool but distinctly purple, not blue), 90° from CN red, and
+// 95° from TW teal — visually distinct from all three on first glance.
+// 7.05:1 contrast against white text (best of the four jurisdictions);
+// reads "formal / heraldic / legal" rather than warning-flavored.
 export const JURISDICTION_COLORS = {
   US: '#2563EB',
   CN: '#DC2626',
   TW: '#0D9488',
-  EPC: '#4F46E5',
+  EPC: '#7E22CE',
 }
 
 export function getJurisdictionConfig(jurisdiction) {
