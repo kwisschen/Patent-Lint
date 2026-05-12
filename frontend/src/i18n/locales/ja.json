@@ -653,7 +653,7 @@
     "epcTitle": "PatentLint EPC 特許明細書チェック",
     "epcSubtitle": "EPC ドラフトルール（第78条、施行規則第41-47条、EPO 審査ガイドライン F 部）に基づく {{count}} 項目の構造的チェック。",
     "epcFeatures": {
-      "title": "EPC 特許インタラクティブ解析",
+      "title": "インタラクティブな欧州特許チェック",
       "claimTree": {
         "title": "請求項依存ツリー + 第84条ウォーカー",
         "description": "請求項間の依存ツリーに、先行詞および明細書のサポート ウォーカー（EPC 第84条）を組み合わせます。EPC 固有の依存表現（「any preceding claim」「any one of claims N to M」）は解析時に事前展開されます。"

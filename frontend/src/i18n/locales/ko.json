@@ -653,7 +653,7 @@
     "epcTitle": "PatentLint EPC 명세서 검사",
     "epcSubtitle": "EPC 작성 규칙(제78조, 시행규칙 제41-47조, EPO 심사 지침 F부)에 따른 {{count}}개 구조적 검사 항목.",
     "epcFeatures": {
-      "title": "EPC 특허 상호작용 분석",
+      "title": "인터랙티브 유럽 특허 분석",
       "claimTree": {
         "title": "청구항 의존 트리 + 제84조 워커",
         "description": "청구항 간 의존 트리와 선행어 및 명세서 뒷받침 워커(EPC 제84조)를 결합합니다. EPC 고유 의존 표현（「any preceding claim」, 「any one of claims N to M」）은 파싱 단계에서 사전 처리 및 확장됩니다."

@@ -653,14 +653,14 @@
     "epcTitle": "PatentLint EPC 专利稿件检查",
     "epcSubtitle": "{{count}} 项结构性检查，依据 EPC 规则（第78条、实施细则第41-47条，以及 EPO 审查指南 F 部分）。",
     "epcFeatures": {
-      "title": "EPC 专利交互式分析",
+      "title": "交互式欧洲专利分析",
       "claimTree": {
         "title": "权利要求依附树状图 + 第84条 walker",
         "description": "完整权利要求依附树状图，配合引用基础与说明书支持 walker（依 EPC 第84条）。EPC 特有的依附表述（「any preceding claim」、「any one of claims N to M」）在解析阶段预处理并展开。"
       },
       "specAbstract": {
         "title": "说明书与摘要结构",
-        "description": "实施细则第42(1)条规定之说明书子节顺序（技术领域 → 背景技术 → 发明内容 → 附图说明 → 具体实施方式）、图示引用一致性（第46(2)(h)条）、参考标记一致性（第43(7)条、第46(2)(h)条），以及 50-150 词摘要限制（第47(2)条、EPO 审查指南 F-II § 2.3）。"
+        "description": "实施细则第42(1)条规定之说明书子节顺序（技术领域 → 背景技术 → 发明内容 → 附图说明 → 具体实施方式）、图示引用一致性（第46(2)(h)条）、元件符号一致性（第43(7)条、第46(2)(h)条），以及 50-150 词摘要限制（第47(2)条、EPO 审查指南 F-II § 2.3）。"
       },
       "twoPartForm": {
         "title": "两段式 + Markush + 第43(2)条",
@@ -681,14 +681,14 @@
       "titleRequired": "发明名称（实施细则第41(2)(b)条）",
       "titleContent": "发明名称内容：不含商标或型号（审查指南 F-II § 4）",
       "figureRefConsistency": "图示引用一致性（实施细则第46(2)(h)条）",
-      "numeralConsistency": "参考标记一致性（实施细则第43(7)条、第46(2)(h)条）",
+      "numeralConsistency": "元件符号一致性（实施细则第43(7)条、第46(2)(h)条）",
       "claimReferenceInSpec": "说明书中不得引用权利要求（EPO 审查指南 F-IV § 4.3）",
       "sequential": "权利要求连续编号（实施细则第43(5)条）",
       "dependencyFormat": "依附形式（实施细则第43(4)条）",
       "selfDependent": "权利要求不得自我依附",
       "forwardDependency": "权利要求不得向后依附",
       "singleSentence": "每项权利要求以单句为之（实施细则第43(4)条、审查指南 F-IV § 4.10）",
-      "refSignsInParens": "参考标记应加括号（实施细则第43(7)条）",
+      "refSignsInParens": "元件符号应加括号（实施细则第43(7)条）",
       "subjectConsistency": "权利要求主题一致性（审查指南 F-IV § 3.4）",
       "transitionPhrase": "连接词：comprising / consisting of / 其特征在于（审查指南 F-IV § 4.13）",
       "claimsSpecReference": "权利要求不得引用说明书或附图（实施细则第43(6)条）",
@@ -813,7 +813,7 @@
       "title": "发明名称/新型名称应简洁，不得包含商标、型号或无关文字。",
       "claimReference": "依專利法施行細則 §17，说明书不得引用特定请求项（如「如請求項N所述」）。发现：{{detail}}。",
       "symbolTablePresence": "依專利法施行細則 §17，有圖式簡單說明时，须包含符號說明章节，列出元件符号及名称。",
-      "symbolTableConsistency": "依專利審查基準，符号说明条目应与实施方式中使用的参考符号一致。请确认完整性。",
+      "symbolTableConsistency": "依專利審查基準，符号说明条目应与实施方式中使用的元件符号一致。请确认完整性。",
       "claimsSequential": "依專利審查基準，请求项编号须从1开始连续编列。",
       "dependencyFormat": "依專利法施行細則 §18，依附须使用正确格式（如請求項N所述之、如請求項N之等）。请检查标记之请求项。",
       "selfDependent": "依專利法施行細則 §18，请求项不得依附于自身。自我依附：{{claims}}。",

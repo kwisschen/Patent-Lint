@@ -653,7 +653,7 @@
     "epcTitle": "PatentLint EPÜ-Prüfungen für Patentanmeldungen",
     "epcSubtitle": "{{count}} strukturelle Prüfungen gegen EPÜ-Regelwerk (Art. 78 / Regel 41-47 + EPA-Richtlinien Teil F).",
     "epcFeatures": {
-      "title": "Interaktive EPÜ-Patentanalyse",
+      "title": "Interaktive Prüfung von EPÜ-Patentanmeldungen",
       "claimTree": {
         "title": "Anspruchsbaum + Art.-84-Walker",
         "description": "Abhängigkeitsbaum für Ansprüche mit englischen Rückbezugs- und Stützungs-Walkern (Art. 84 EPÜ). EPÜ-spezifische Rückbezugsformen — „any preceding claim\", „any one of claims N to M\" — werden zum Parse-Zeitpunkt vor-extrahiert und expandiert."
