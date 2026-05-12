@@ -138,7 +138,7 @@ def _run_epc_pipeline(
     claims_checks.extend(run_g5_claims_cross_jurisdiction_checks(claims))
     g6_checks, ab_issues, ss_terms = run_g6_section_112_checks(claims, description_text)
     claims_checks.extend(g6_checks)
-    abstract_checks = run_g7_abstract_checks(abstract_text)
+    abstract_checks = run_g7_abstract_checks(abstract_text, title=title)
 
     independent_count = sum(1 for c in claims if c.independent)
     dependent_count = sum(1 for c in claims if not c.independent)

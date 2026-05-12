@@ -644,6 +644,7 @@
     "builderSister": "Das Schwesterprojekt, der Agentic Patent Analyst, ist ein quelloffener (Apache 2.0) LangGraph-basierter KI-Agent, der Prüfungsbescheide liest, jeden Einwand des Prüfers beurteilt, Argumentations- oder Änderungsstrategien entwirft und den Bescheids-Analysebericht in der Sprache des Mandanten und im Schreibstil der Kanzlei verfasst.",
     "licenseNote": "PatentLint ist für die persönliche Nutzung kostenlos. Der Quellcode ist unter PolyForm-Strict-1.0.0 (quelltext-verfügbar; kommerzielle Nutzung lizenzpflichtig) auf GitHub einsehbar.",
     "tableFootnote": "Stand: April 2026. Beide Systeme können weiterentwickelt werden.",
+    "cnTableFootnote": "Stand: Mai 2026. PatentLint kann weiterentwickelt werden.",
     "twTableFootnote": "TIPO-Abdeckung abgeglichen mit 專利申請文件輔助偵錯系統 — 功能介紹與使用指南 (Ausgabe 30.05.2023). TIPO 偵錯系統 unterstützt nur Gebrauchsmuster-Anmeldungen; PatentLint unterstützt Gebrauchsmuster und Erfindungspatente. Beide Systeme können weiterentwickelt werden.",
     "epcTitle": "PatentLint EPÜ-Prüfungen für Patentanmeldungen",
     "epcSubtitle": "{{count}} strukturelle Prüfungen gegen EPÜ-Regelwerk (Art. 78 / Regel 41-47 + EPA-Richtlinien Teil F).",
@@ -674,6 +675,7 @@
       "paragraphNumbering": "Absatznummerierung (Hinweis)",
       "paragraphEnding": "Absatzende-Interpunktion",
       "titleRequired": "Titel erforderlich (Regel 41(2)(b) EPÜ)",
+      "titleContent": "Titelinhalt — keine Marken oder Modellnummern (Richtlinien F-II § 4)",
       "figureRefConsistency": "Konsistenz der Figurenverweise (Regel 46(2)(h) EPÜ)",
       "numeralConsistency": "Konsistenz der Bezugszeichen (Regel 43(7) + Regel 46(2)(h) EPÜ)",
       "claimReferenceInSpec": "Keine Anspruchsverweise in der Beschreibung (EPA-Richtlinien F-IV § 4.3)",
@@ -698,6 +700,8 @@
       "singleFigureLabel": "Bezeichnung bei nur einer Figur (Richtlinien F-V § 1.2)",
       "priorArtLabeling": "Kennzeichnung von Stand-der-Technik-Figuren (Regel 46(2)(h) EPÜ)",
       "wordCount": "Wortanzahl der Zusammenfassung (50-150) — Regel 47(2) + Richtlinien F-II § 2.3",
+      "titleMatch": "Zusammenfassung bezieht sich auf die im Titel genannte Erfindung (Richtlinien F-II § 2.3.5)",
+      "claimReference": "Zusammenfassung verweist nicht auf bestimmte Ansprüche (Richtlinien F-II § 2.3.3)",
       "structure": "Struktur der Zusammenfassung — ein Absatz, keine anspruchsartigen Formulierungen, keine wertenden Aussagen"
     },
     "epcTableFootnote": "Stand: Mai 2026. Die EPÜ-Unterstützung befindet sich in der Beta-Phase und prüft derzeit englischsprachige Patentschriften. PatentLint kann weiterentwickelt werden."
@@ -1025,6 +1029,10 @@
             "amend": "Figur(en) in der detaillierten Beschreibung referenziert, aber in der Kurzbeschreibung der Zeichnungen nicht beschrieben (Regel 46(2)(h) EPÜ)."
           },
           "pass": "Alle Figurenreferenzen stimmen zwischen Kurzbeschreibung und detaillierter Beschreibung überein."
+        },
+        "titleContent": {
+          "amend": "Der Titel enthält unzulässige Inhalte (Marken oder Modellnummern) — EPA-Richtlinien F-II § 4 verlangen einen beschreibenden Titel der Erfindung.",
+          "pass": "Der Titel enthält keine Marken- oder Modellnummer-Tokens."
         }
       },
       "claims": {
@@ -1033,6 +1041,16 @@
         },
         "specSupport": {
           "pass": "Alle Anspruchsmerkmale sind in der Beschreibung gestützt (Art. 84 EPÜ)."
+        }
+      },
+      "abstract": {
+        "titleMatch": {
+          "verify": "Die Zusammenfassung scheint sich nicht auf die im Titel genannte Erfindung zu beziehen — keine inhaltliche Wortüberlappung erkennbar (EPA-Richtlinien F-II § 2.3.5).",
+          "pass": "Die Zusammenfassung bezieht sich auf die im Titel genannte Erfindung."
+        },
+        "claimReference": {
+          "amend": "Die Zusammenfassung verweist auf bestimmte Ansprüche — EPA-Richtlinien F-II § 2.3.3 verlangen, dass die Zusammenfassung in sich selbst geschlossen ist.",
+          "pass": "Die Zusammenfassung verweist nicht auf bestimmte Ansprüche."
         }
       }
     },

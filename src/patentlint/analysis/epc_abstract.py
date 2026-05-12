@@ -14,6 +14,8 @@ re-keys CheckItems into the EPC namespace + cites EPC statutes.
 
 from __future__ import annotations
 
+import re
+
 from patentlint.analysis.abstract import (
     count_words,
     detect_implied_phrases,
@@ -22,6 +24,37 @@ from patentlint.analysis.abstract import (
 )
 from patentlint.analysis.utils import _dx
 from patentlint.models import CheckItem
+
+
+# Minimal English stop-word list for title-match noun-overlap detection.
+# Kept short on purpose: only function words and very common adjectives
+# that carry no topical signal. Anything load-bearing for the invention
+# (e.g., "method", "system", "apparatus") should still count toward
+# overlap so the check fires on substantive divergence between title
+# and abstract.
+_EN_STOPWORDS: frozenset[str] = frozenset({
+    "a", "an", "the", "and", "or", "but", "for", "of", "in", "on",
+    "to", "with", "from", "by", "at", "as", "is", "are", "was", "were",
+    "be", "been", "being", "this", "that", "these", "those", "it", "its",
+    "such", "more", "any", "some", "all", "each", "having", "having",
+    "comprising", "comprises", "comprise", "including", "includes",
+    "include", "thereof", "wherein", "said",
+})
+
+# Match "claim N", "claims N", "claim N to M", "claims N-M", etc.
+_ABSTRACT_CLAIM_REF_RE = re.compile(
+    r"\bclaims?\s+\d+(?:\s*(?:to|and|or|[\-,–])\s*\d+)*",
+    re.IGNORECASE,
+)
+
+
+def _title_content_words(title: str) -> list[str]:
+    """Extract content-bearing words from a title for overlap matching."""
+    if not title:
+        return []
+    # Drop punctuation, lowercase, then filter stopwords + short tokens.
+    tokens = re.findall(r"[A-Za-z]{4,}", title.lower())
+    return [t for t in tokens if t not in _EN_STOPWORDS]
 
 
 # EPO Guidelines F-II § 2.3 + Rule 47(2) practice: abstracts are typically
@@ -164,13 +197,132 @@ def check_abstract_structure_epc(abstract_text: str) -> list[CheckItem]:
     )]
 
 
-def run_g7_abstract_checks(abstract_text: str) -> list[CheckItem]:
+def check_abstract_title_match_epc(abstract_text: str, title: str) -> list[CheckItem]:
+    """Verify the abstract refers to the same invention as the title.
+
+    EPO Guidelines F-II § 2.3.5: the abstract should give a clear summary
+    of the invention named in the title. A complete topical mismatch is
+    a strong signal of a wrong-file paste or a stale title. Detection is
+    cheap: extract content words (length ≥ 4, not in stopwords) from the
+    title and check whether any appear in the abstract body. A single
+    overlap is enough to pass — EPC drafters legitimately re-phrase the
+    title in the abstract.
+
+    Status:
+      - ``verify`` when both title and abstract are non-empty but no
+        title content word appears in the abstract.
+      - ``pass`` when overlap exists, or when title / abstract is empty
+        (the empty cases are handled by titleRequired / wordCount and
+        emitting amend here would double-flag).
+    """
+    abstract_clean = (abstract_text or "").strip()
+    title_clean = (title or "").strip()
+    if not abstract_clean or not title_clean:
+        return [CheckItem(
+            status="pass",
+            message="Abstract title-match not applicable (title or abstract empty).",
+            message_key="check.epc.abstract.titleMatch.pass",
+            reference="EPO Guidelines F-II § 2.3.5",
+        )]
+
+    title_words = _title_content_words(title_clean)
+    if not title_words:
+        return [CheckItem(
+            status="pass",
+            message="Title has no content words to match against.",
+            message_key="check.epc.abstract.titleMatch.pass",
+            reference="EPO Guidelines F-II § 2.3.5",
+        )]
+
+    abstract_lower = abstract_clean.lower()
+    matched = [w for w in title_words if w in abstract_lower]
+    if matched:
+        return [CheckItem(
+            status="pass",
+            message="Abstract references the title's invention.",
+            message_key="check.epc.abstract.titleMatch.pass",
+            reference="EPO Guidelines F-II § 2.3.5",
+            diagnostics=_dx(
+                title_word_count=len(title_words),
+                matched_count=len(matched),
+                matched_sample=matched[:5],
+            ),
+        )]
+
+    return [CheckItem(
+        status="verify",
+        message=(
+            "Abstract may not refer to the invention named in the title "
+            "(no content-word overlap detected). EPO Guidelines F-II § 2.3.5 "
+            "ask the abstract to summarize the invention named in the title."
+        ),
+        message_key="check.epc.abstract.titleMatch.verify",
+        reference="EPO Guidelines F-II § 2.3.5",
+        diagnostics=_dx(
+            title_word_count=len(title_words),
+            matched_count=0,
+            title_words_sample=title_words[:5],
+        ),
+    )]
+
+
+def check_abstract_claim_reference_epc(abstract_text: str) -> list[CheckItem]:
+    """Flag claim-number references in the abstract per Guidelines F-II § 2.3.3.
+
+    EPO Guidelines F-II § 2.3.3: the abstract must be self-contained and
+    must not cross-reference specific claims by number. Regex matches
+    "claim N", "claims N", "claim N to M", "claims N-M", etc.
+    """
+    body = (abstract_text or "").strip()
+    if not body:
+        return [CheckItem(
+            status="pass",
+            message="No abstract text to check.",
+            message_key="check.epc.abstract.claimReference.pass",
+            reference="EPO Guidelines F-II § 2.3.3",
+        )]
+
+    matches = list(_ABSTRACT_CLAIM_REF_RE.finditer(body))
+    if not matches:
+        return [CheckItem(
+            status="pass",
+            message="Abstract does not reference specific claims.",
+            message_key="check.epc.abstract.claimReference.pass",
+            reference="EPO Guidelines F-II § 2.3.3",
+        )]
+
+    snippets = [m.group() for m in matches[:5]]
+    return [CheckItem(
+        status="amend",
+        message=(
+            "Abstract references specific claim(s) (" + ", ".join(snippets) + ") — "
+            "EPO Guidelines F-II § 2.3.3 require the abstract to be "
+            "self-contained and not cross-reference claims by number."
+        ),
+        message_key="check.epc.abstract.claimReference.amend",
+        details=", ".join(snippets),
+        reference="EPO Guidelines F-II § 2.3.3",
+        diagnostics=_dx(
+            flagged_count=len(matches),
+            matches_sample=snippets,
+        ),
+    )]
+
+
+def run_g7_abstract_checks(
+    abstract_text: str,
+    title: str = "",
+) -> list[CheckItem]:
     """Run all G7 abstract checks in canonical 7-group order.
 
-      1. abstractWordCount
-      2. abstractStructure
+      1. abstractWordCount       (idx 10)
+      2. abstractTitleMatch      (idx 20)
+      3. abstractClaimReference  (idx 30)
+      4. abstractStructure       (idx 60)
     """
     results: list[CheckItem] = []
     results.extend(check_abstract_word_count_epc(abstract_text))
+    results.extend(check_abstract_title_match_epc(abstract_text, title))
+    results.extend(check_abstract_claim_reference_epc(abstract_text))
     results.extend(check_abstract_structure_epc(abstract_text))
     return results

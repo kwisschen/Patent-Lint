@@ -644,6 +644,7 @@
     "builderSister": "Its companion project, the Agentic Patent Analyst, is an open-source (Apache 2.0) LangGraph-based AI agent that reads Office Actions, weighs each examiner rejection, drafts argument or amendment strategies, and writes the client OA-response analysis report in the client's language and the firm's voice.",
     "licenseNote": "PatentLint is free for individual use. The source is published on GitHub under PolyForm-Strict-1.0.0 (source-available; commercial use requires a separate license).",
     "tableFootnote": "As of April 2026; both tools may continue to evolve.",
+    "cnTableFootnote": "As of May 2026. PatentLint may continue to evolve.",
     "twTableFootnote": "TIPO coverage audited against 專利申請文件輔助偵錯系統 — 功能介紹與使用指南 (2023.5.30 版). TIPO 偵錯系統 supports utility-model filings only; PatentLint supports both utility models and inventions. Both tools may continue to evolve.",
     "epcTitle": "PatentLint EPC Drafting Checks",
     "epcSubtitle": "{{count}} structural checks against EPC drafting rules (Art. 78 / Rule 41-47 + EPO Guidelines Part F).",
@@ -674,6 +675,7 @@
       "paragraphNumbering": "Paragraph numbering (advisory)",
       "paragraphEnding": "Paragraph ending punctuation",
       "titleRequired": "Title required (Rule 41(2)(b) EPC)",
+      "titleContent": "Title content — no trademarks or model numbers (Guidelines F-II § 4)",
       "figureRefConsistency": "Figure reference consistency (Rule 46(2)(h) EPC)",
       "numeralConsistency": "Reference numeral consistency (Rule 43(7) + Rule 46(2)(h) EPC)",
       "claimReferenceInSpec": "No claim references in description (EPO Guidelines F-IV § 4.3)",
@@ -698,6 +700,8 @@
       "singleFigureLabel": "Single-figure label form (Guidelines F-V § 1.2)",
       "priorArtLabeling": "Prior-art figure labeling (Rule 46(2)(h) EPC)",
       "wordCount": "Abstract word count (50-150) — Rule 47(2) + Guidelines F-II § 2.3",
+      "titleMatch": "Abstract refers to the title's invention (Guidelines F-II § 2.3.5)",
+      "claimReference": "Abstract does not reference specific claims (Guidelines F-II § 2.3.3)",
       "structure": "Abstract structure — single paragraph, no claim-style phraseology, no merit language"
     },
     "epcTableFootnote": "As of May 2026. EPC support is in beta and currently checks English-language specifications. PatentLint may continue to evolve."
@@ -1025,6 +1029,10 @@
             "amend": "Figure(s) referenced in Detailed Description but not described in Brief Description of Drawings (Rule 46(2)(h) EPC)."
           },
           "pass": "All figure references are consistent between Brief Description of Drawings and Detailed Description."
+        },
+        "titleContent": {
+          "amend": "Title contains prohibited content (trademark or model number) — EPO Guidelines F-II § 4 require a descriptive title of the invention.",
+          "pass": "Title contains no trademark or model-number tokens."
         }
       },
       "claims": {
@@ -1033,6 +1041,16 @@
         },
         "specSupport": {
           "pass": "All claim terms supported by the specification (Art. 84 EPC)."
+        }
+      },
+      "abstract": {
+        "titleMatch": {
+          "verify": "Abstract may not refer to the invention named in the title — no content-word overlap detected (Guidelines F-II § 2.3.5).",
+          "pass": "Abstract references the title's invention."
+        },
+        "claimReference": {
+          "amend": "Abstract references specific claim(s) — Guidelines F-II § 2.3.3 require the abstract to be self-contained.",
+          "pass": "Abstract does not reference specific claims."
         }
       }
     },

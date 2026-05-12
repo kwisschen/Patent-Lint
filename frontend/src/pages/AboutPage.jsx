@@ -193,6 +193,7 @@ const EPC_SPEC_CHECKS = [
   // G2 spec content
   'figureRefConsistency',            // Rule 46(2)(h) EPC
   'numeralConsistency',              // Rule 43(7) + Rule 46(2)(h) EPC
+  'titleContent',                    // Rule 41(2)(b) + EPO Guidelines F-II § 4
   'claimReferenceInSpec',            // EPO Guidelines F-IV § 4.3
 ]
 
@@ -229,6 +230,8 @@ const EPC_DRAWINGS_CHECKS = [
 const EPC_ABSTRACT_CHECKS = [
   // G7 abstract
   'wordCount',                       // Rule 47(2) + EPO Guidelines F-II § 2.3
+  'titleMatch',                      // EPO Guidelines F-II § 2.3.5
+  'claimReference',                  // EPO Guidelines F-II § 2.3.3
   'structure',                       // Rule 47(2) + EPO Guidelines F-II § 2.3
 ]
 
@@ -289,6 +292,9 @@ function CnCheckTable({ t }) {
         {renderCnGroup(cnRef3, cnInView3, 'about.cnGroups.abstract', CN_ABSTRACT_CHECKS, 300)}
         {renderCnGroup(cnRef4, cnInView4, 'about.cnGroups.drawings', CN_DRAWINGS_CHECKS, 450)}
       </table>
+      <p className="text-xs text-muted-foreground italic px-2 py-3">
+        {t('about.cnTableFootnote')}
+      </p>
     </div>
   )
 }

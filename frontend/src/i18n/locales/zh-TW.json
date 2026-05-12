@@ -644,6 +644,7 @@
     "builderSister": "其姊妹專案 Agentic Patent Analyst 為 Apache 2.0 開源、以 LangGraph 構建的 AI 代理人，可解讀 OA、評斷各項核駁理由、撰擬答辯與修正策略，並以客戶語言及事務所慣用文風撰寫核駁分析報告。",
     "licenseNote": "PatentLint 個人使用免費。原始碼依 PolyForm-Strict-1.0.0 條款於 GitHub 公開（商業使用須另行授權）。",
     "tableFootnote": "截至 2026 年 4 月；兩者均可能持續演進。",
+    "cnTableFootnote": "截至 2026 年 5 月。PatentLint 將持續演進。",
     "twTableFootnote": "TIPO 檢查項目依「專利申請文件輔助偵錯系統：功能介紹與使用指南」（2023.5.30 版）比對。TIPO 偵錯系統僅適用新型專利申請；PatentLint 同時支援新型與發明。兩者均可能持續演進。",
     "epcTitle": "PatentLint EPC 專利稿件檢查",
     "epcSubtitle": "{{count}} 項結構性檢查，依循 EPC 規範（第78條、施行細則第41-47條，以及 EPO 審查指南 F 部）。",
@@ -674,6 +675,7 @@
       "paragraphNumbering": "段落編號（建議性檢核）",
       "paragraphEnding": "段落結尾標點",
       "titleRequired": "發明名稱（施行細則第41(2)(b)條）",
+      "titleContent": "發明名稱內容 —— 不含商標或型號（審查指南 F-II § 4）",
       "figureRefConsistency": "圖式參照一致性（施行細則第46(2)(h)條）",
       "numeralConsistency": "參考標記一致性（施行細則第43(7)條、第46(2)(h)條）",
       "claimReferenceInSpec": "說明書中不得引用請求項（EPO 審查指南 F-IV § 4.3）",
@@ -698,6 +700,8 @@
       "singleFigureLabel": "單一圖式之標示方式（審查指南 F-V § 1.2）",
       "priorArtLabeling": "先前技術圖式之標示（施行細則第46(2)(h)條）",
       "wordCount": "摘要字數（50-150）——施行細則第47(2)條、審查指南 F-II § 2.3",
+      "titleMatch": "摘要與發明名稱所指之發明相符（審查指南 F-II § 2.3.5）",
+      "claimReference": "摘要不引用特定請求項（審查指南 F-II § 2.3.3）",
       "structure": "摘要結構——單一段落，避免請求項風格用語，避免功利性語言"
     },
     "epcTableFootnote": "截至 2026 年 5 月。EPC 檢查目前為 Beta 階段，僅支援英文撰寫的歐洲專利說明書；PatentLint 將持續演進。"
@@ -1025,6 +1029,10 @@
             "amend": "圖式於「實施方式」中有引用，但「圖式簡單說明」中未描述（EPC Rule 46(2)(h)）。"
           },
           "pass": "「圖式簡單說明」與「實施方式」中的圖式引用相符。"
+        },
+        "titleContent": {
+          "amend": "發明名稱含有不適格內容（商標或型號）—— EPO Guidelines F-II § 4 要求發明名稱具描述性。",
+          "pass": "發明名稱未含商標或型號標記。"
         }
       },
       "claims": {
@@ -1033,6 +1041,16 @@
         },
         "specSupport": {
           "pass": "所有請求項用語均於說明書中獲得支持（Art. 84 EPC）。"
+        }
+      },
+      "abstract": {
+        "titleMatch": {
+          "verify": "摘要似乎未提及發明名稱所指之發明 —— 未偵測到內容字詞重疊（EPO Guidelines F-II § 2.3.5）。",
+          "pass": "摘要與發明名稱所指之發明相符。"
+        },
+        "claimReference": {
+          "amend": "摘要引用特定請求項 —— EPO Guidelines F-II § 2.3.3 要求摘要須自足、不得交叉引用請求項。",
+          "pass": "摘要未引用特定請求項。"
         }
       }
     },

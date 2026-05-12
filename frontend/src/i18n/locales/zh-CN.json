@@ -644,6 +644,7 @@
     "builderSister": "其姊妹项目 Agentic Patent Analyst 为 Apache 2.0 开源、基于 LangGraph 构建的 AI 智能体，可解读 OA、评判各项审查意见、起草答复与修改策略，并以客户语言及事务所惯用文风撰写审查意见分析报告。",
     "licenseNote": "PatentLint 个人使用免费。源代码依 PolyForm-Strict-1.0.0 条款于 GitHub 公开（商业使用须另行授权）。",
     "tableFootnote": "截至 2026 年 4 月；两者均可能持续演进。",
+    "cnTableFootnote": "截至 2026 年 5 月。PatentLint 将持续演进。",
     "twTableFootnote": "TIPO 检查项目依据「专利申请文件辅助侦错系统：功能介绍与使用指南」（2023.5.30 版）比对。TIPO 偵錯系統仅适用实用新型申请；PatentLint 同时支援实用新型与发明。两者均可能持续演进。",
     "epcTitle": "PatentLint EPC 专利稿件检查",
     "epcSubtitle": "{{count}} 项结构性检查，依据 EPC 规则（第78条、实施细则第41-47条，以及 EPO 审查指南 F 部分）。",
@@ -674,6 +675,7 @@
       "paragraphNumbering": "段落编号（建议性检查）",
       "paragraphEnding": "段落结尾标点",
       "titleRequired": "发明名称（实施细则第41(2)(b)条）",
+      "titleContent": "发明名称内容 —— 不含商标或型号（审查指南 F-II § 4）",
       "figureRefConsistency": "图示引用一致性（实施细则第46(2)(h)条）",
       "numeralConsistency": "参考标记一致性（实施细则第43(7)条、第46(2)(h)条）",
       "claimReferenceInSpec": "说明书中不得引用权利要求（EPO 审查指南 F-IV § 4.3）",
@@ -698,6 +700,8 @@
       "singleFigureLabel": "单一附图之标示方式（审查指南 F-V § 1.2）",
       "priorArtLabeling": "现有技术附图之标示（实施细则第46(2)(h)条）",
       "wordCount": "摘要字数（50-150）——实施细则第47(2)条、审查指南 F-II § 2.3",
+      "titleMatch": "摘要与发明名称所指之发明相符（审查指南 F-II § 2.3.5）",
+      "claimReference": "摘要不引用特定权利要求（审查指南 F-II § 2.3.3）",
       "structure": "摘要结构——单段落，避免权利要求风格用语，避免功利性语言"
     },
     "epcTableFootnote": "截至 2026 年 5 月。EPC 检查目前为 Beta 阶段，仅支持英文撰写的欧洲专利说明书；PatentLint 将持续演进。"
@@ -1025,6 +1029,10 @@
             "amend": "附图在「具体实施方式」中有引用，但「附图说明」中未描述（EPC Rule 46(2)(h)）。"
           },
           "pass": "「附图说明」与「具体实施方式」中的附图引用一致。"
+        },
+        "titleContent": {
+          "amend": "发明名称含有不适格内容（商标或型号）—— EPO Guidelines F-II § 4 要求发明名称具描述性。",
+          "pass": "发明名称未含商标或型号标记。"
         }
       },
       "claims": {
@@ -1033,6 +1041,16 @@
         },
         "specSupport": {
           "pass": "所有权利要求用语均在说明书中获得支持（Art. 84 EPC）。"
+        }
+      },
+      "abstract": {
+        "titleMatch": {
+          "verify": "摘要似乎未提及发明名称所指之发明 —— 未检测到内容字词重叠（EPO Guidelines F-II § 2.3.5）。",
+          "pass": "摘要与发明名称所指之发明相符。"
+        },
+        "claimReference": {
+          "amend": "摘要引用特定权利要求 —— EPO Guidelines F-II § 2.3.3 要求摘要须自足、不得交叉引用权利要求。",
+          "pass": "摘要未引用特定权利要求。"
         }
       }
     },

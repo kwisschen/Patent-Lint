@@ -458,6 +458,8 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.epc.spec.titleRequired.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 30),
     "check.epc.spec.titleRequired.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 30),
     "check.epc.spec.titleRequired.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 30),
+    "check.epc.spec.titleContent.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 35),
+    "check.epc.spec.titleContent.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 35),
     "check.epc.spec.claimReferenceInSpec.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 40),
     "check.epc.spec.claimReferenceInSpec.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 40),
 
@@ -528,6 +530,10 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.epc.abstract.wordCount.amend": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 10),
     "check.epc.abstract.wordCount.verify": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 10),
     "check.epc.abstract.wordCount.pass": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 10),
+    "check.epc.abstract.titleMatch.verify": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 20),
+    "check.epc.abstract.titleMatch.pass": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 20),
+    "check.epc.abstract.claimReference.amend": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 30),
+    "check.epc.abstract.claimReference.pass": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 30),
     "check.epc.abstract.structure.amend": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 60),
     "check.epc.abstract.structure.pass": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 60),
 }

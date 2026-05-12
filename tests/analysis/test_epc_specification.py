@@ -20,6 +20,7 @@ from patentlint.analysis.epc_specification import (
     check_paragraph_numbering_epc,
     check_required_sections_epc,
     check_section_ordering_epc,
+    check_title_content_epc,
     check_title_required_epc,
     run_g1_spec_structure_checks,
     run_g2_spec_content_checks,
@@ -308,10 +309,51 @@ def test_claim_reference_in_spec_according_to_claim_amends():
     assert results[0].status == "amend"
 
 
-def test_g2_runner_emits_all_four_content_checks():
+def test_g2_runner_emits_all_five_content_checks():
     """G2 emits figureRefConsistency / numeralConsistency / titleRequired
-    / claimReferenceInSpec (4 checks; titleRequired migrated from G1)."""
+    / titleContent / claimReferenceInSpec (5 checks)."""
     results = run_g2_spec_content_checks(EPC_DRAFT_CANONICAL)
-    assert len(results) == 4
+    assert len(results) == 5
     for r in results:
         assert r.status == "pass", f"Expected pass but got {r.status}: {r.message}"
+
+
+# --- Title content (Rule 41(2)(b) + Guidelines F-II § 4) ---------------------
+
+
+def test_title_content_passes_on_descriptive_title():
+    results = check_title_content_epc(EPC_DRAFT_CANONICAL)
+    assert len(results) == 1
+    assert results[0].status == "pass"
+    assert "Rule 41(2)(b)" in (results[0].reference or "")
+
+
+def test_title_content_amends_on_trademark_symbol():
+    """Title with ™ / ® / © triggers an amend per Guidelines F-II § 4."""
+    text = EPC_DRAFT_CANONICAL.replace(
+        "A signal-processing apparatus for adaptive filtering",
+        "A FilterFast™ apparatus for adaptive filtering",
+    )
+    results = check_title_content_epc(text)
+    assert len(results) == 1
+    assert results[0].status == "amend"
+    assert "trademark" in str(results[0].diagnostics).lower()
+
+
+def test_title_content_amends_on_model_number():
+    """ALL-CAPS model-number patterns (RAM-1024, X-12P) trigger an amend."""
+    text = EPC_DRAFT_CANONICAL.replace(
+        "A signal-processing apparatus for adaptive filtering",
+        "Improvements to the RAM-1024 memory module",
+    )
+    results = check_title_content_epc(text)
+    assert len(results) == 1
+    assert results[0].status == "amend"
+    assert "model" in str(results[0].diagnostics).lower()
+
+
+def test_title_content_vacuous_pass_when_title_missing():
+    """When the title is empty, this check defers to check_title_required_epc."""
+    results = check_title_content_epc("\n\nTECHNICAL FIELD\n\nThe invention is described.")
+    assert len(results) == 1
+    assert results[0].status == "pass"
