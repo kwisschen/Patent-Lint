@@ -14,7 +14,6 @@ import NetworkWidget from './components/NetworkWidget'
 import { FeedbackProvider } from './components/FeedbackPicker'
 import SecurityPage from './pages/SecurityPage'
 import AboutPage from './pages/AboutPage'
-import CommercialPage from './pages/CommercialPage'
 import TermsPage from './pages/TermsPage'
 import PrivacyPage from './pages/PrivacyPage'
 import RubricPage from './pages/RubricPage'
@@ -230,7 +229,6 @@ function App() {
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/rubric" element={<RubricPage />} />
-          <Route path="/commercial" element={<CommercialPage />} />
         </Routes>
       </Layout>
 
