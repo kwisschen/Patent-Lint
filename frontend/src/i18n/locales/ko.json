@@ -1042,18 +1042,110 @@
         "titleContent": {
           "amend": "발명의 명칭에 부적격한 내용(상표 또는 모델 번호)이 포함된 것으로 보입니다 —— EPO Guidelines F-II § 4는 설명적인 발명의 명칭을 요구합니다.",
           "pass": "발명의 명칭에서 상표 또는 모델 번호 토큰이 감지되지 않았습니다."
+        },
+        "claimReferenceInSpec": {
+          "amend": "명세서가 특정 청구항을 참조합니다('{{detail}}') —— Guidelines F-IV § 4.3은 명세서가 자기 완결적일 것을 요구합니다.",
+          "pass": "명세서에서 청구항 상호 참조가 감지되지 않았습니다(Guidelines F-IV § 4.3)."
+        },
+        "paragraphEnding": {
+          "verify": "{{count}}개의 단락이 표준 종결 부호로 끝나지 않습니다. 작성 관행에 관한 안내이며, EPC에 명문 규정은 없습니다.",
+          "pass": "단락 종결 부호에 관한 사항이 감지되지 않았습니다."
+        },
+        "paragraphNumbering": {
+          "verify": "단락 번호가 감지되었으나 완전히 연속되지 않습니다 —— 시작 [{{first}}], 예상 [{{expected}}]까지; {{count}}개 검출, 종료 [{{last}}](Guidelines F-II § 4.5).",
+          "pass": "단락 번호 관련 사항이 감지되지 않았습니다 —— EPC는 단락 번호를 의무화하지 않습니다(Guidelines F-II § 4.5)."
+        },
+        "requiredSections": {
+          "amend": "Art. 78(1) EPC에 따라 다음 필수 항목이 누락된 것으로 보입니다: {{sections}}.",
+          "pass": "필수 항목 누락이 감지되지 않았습니다(Art. 78(1) EPC; Rule 42(1) EPC)."
+        },
+        "sectionOrdering": {
+          "amend": "명세서 하위 항목의 순서가 Rule 42(1) EPC 표준 순서와 다른 것으로 보입니다. 관찰: {{observed}}. 예상: {{expected}}.",
+          "pass": "항목 순서 관련 사항이 감지되지 않았습니다(Rule 42(1) EPC)."
+        },
+        "titleRequired": {
+          "amend": "발명의 명칭이 누락된 것으로 보입니다 —— Rule 41(2)(b) EPC는 발명의 명칭을 요구합니다.",
+          "verify": "발명의 명칭이 비정상적으로 길어 보입니다({{count}}자). 발명을 간결하게 나타내고 있는지 확인하십시오(Rule 41(2)(b) EPC).",
+          "pass": "발명의 명칭 누락이 감지되지 않았습니다(Rule 41(2)(b) EPC)."
         }
       },
       "claims": {
         "antecedentBasis": {
-          "pass": "선행어 기초 관련 문제가 감지되지 않았습니다(Art. 84 EPC)."
+          "pass": "선행어 기초 관련 문제가 감지되지 않았습니다(Art. 84 EPC).",
+          "verify": "선행어 워커가 {{count}}건의 가능한 사항을 보고했습니다. Art. 84 EPC 및 Guidelines F-IV § 4.5에 따라 검토하십시오."
         },
         "specSupport": {
-          "pass": "명세서에서 뒷받침되지 않는 청구항 용어가 감지되지 않았습니다(Art. 84 EPC)."
+          "pass": "명세서에서 뒷받침되지 않는 청구항 용어가 감지되지 않았습니다(Art. 84 EPC).",
+          "verify": "명세서 뒷받침 워커가 {{count}}건의 뒷받침이 부족할 수 있는 청구항 용어를 보고했습니다. Art. 84 EPC에 따라 검토하십시오."
         },
         "excessClaims": {
           "verify": "총 청구항 수가 15개를 초과합니다. Rule 45 EPC 는 제16~50항에 청구항당 수수료를, 제51항 이상에는 더 높은 청구항당 수수료를 부과합니다. 출원 수수료를 확인하십시오.",
           "pass": "초과 청구항 수수료 발생 조건이 감지되지 않았습니다(Rule 45 EPC: 전체 청구항 15개 이하)."
+        },
+        "dependencyFormat": {
+          "amend": "청구항 {{claims}}은(는) 종속항으로 보이나, 인용하는 상위 청구항을 명시하지 않았습니다 —— Rule 43(4) EPC는 명시적 인용(예: 'according to claim N')을 요구합니다.",
+          "pass": "인용 형식 관련 사항이 감지되지 않았습니다(Rule 43(4) EPC)."
+        },
+        "forwardDependency": {
+          "amend": "청구항의 후방 인용: {{claims}}(Rule 43(4) EPC).",
+          "pass": "후방 인용 관련 사항이 감지되지 않았습니다(Rule 43(4) EPC)."
+        },
+        "independentClaimCount": {
+          "verify": "독립항을 {{count}}건 감지했습니다(방법 {{methods}}, 비방법 {{nonMethods}}). Rule 43(2) EPC는 원칙적으로 카테고리별 독립항을 1건으로 제한하며, Rule 43(3)의 예외(상호 관련된 물건 / 다른 용도 / 대체 해결 수단)에 해당하는 경우에만 복수를 허용합니다. 확인하십시오.",
+          "pass": "독립항 수 관련 사항이 감지되지 않았습니다(Rule 43(2) EPC)."
+        },
+        "markushFormat": {
+          "verify": "청구항 {{claims}}이(가) Markush 형식의 선택적 표현을 사용하고 있으며, 폐쇄형 'selected from the group consisting of' 형식이 필요할 수 있습니다(Guidelines F-IV § 4.20).",
+          "pass": "Markush 형식 관련 사항이 감지되지 않았습니다(Guidelines F-IV § 4.20)."
+        },
+        "multiDepOnMultiDep": {
+          "amend": "청구항 {{claims}}은(는) 다중 종속항이며, 인용하는 청구항도 다중 종속항입니다 —— Rule 43(4) EPC는 이러한 연쇄적 다중 인용을 허용하지 않습니다.",
+          "pass": "연쇄적 다중 인용이 감지되지 않았습니다(Rule 43(4) EPC)."
+        },
+        "punctuation": {
+          "extraPeriod": {
+            "amend": "청구항 {{claimNumber}}에 불필요하거나 위치가 부적절한 마침표가 있습니다(Guidelines F-IV § 4.10)."
+          },
+          "missingPeriod": {
+            "amend": "청구항 {{claimNumber}}이(가) 마침표로 끝나지 않습니다(Guidelines F-IV § 4.10)."
+          },
+          "pass": "청구항 구두점 관련 사항이 감지되지 않았습니다(Guidelines F-IV § 4.10)."
+        },
+        "refSignsInParens": {
+          "verify": "청구항 {{claims}}에 괄호로 묶이지 않은 숫자가 있습니다 —— Rule 43(7) EPC는 인용 부호를 괄호로 표기할 것을 권장합니다.",
+          "pass": "인용 부호 괄호 표기 관련 사항이 감지되지 않았습니다(Rule 43(7) EPC)."
+        },
+        "restrictiveAbsolutes": {
+          "verify": "청구항 {{claims}}에 절대적 한정어(must / essential / required 등)가 포함되어 있습니다. Guidelines F-IV § 4.7에 따라 검토하십시오.",
+          "pass": "절대적 한정어가 감지되지 않았습니다(Guidelines F-IV § 4.7)."
+        },
+        "selfDependent": {
+          "amend": "청구항 자기 인용: {{claims}}(Rule 43(4) EPC).",
+          "pass": "자기 인용 청구항이 감지되지 않았습니다(Rule 43(4) EPC)."
+        },
+        "sequential": {
+          "amend": "청구항 번호가 연속되지 않는 것으로 보입니다. 누락 청구항: {{claims}}(Rule 43(5) EPC).",
+          "pass": "청구항 번호 연속성 관련 사항이 감지되지 않았습니다(Rule 43(5) EPC)."
+        },
+        "singleSentence": {
+          "verify": "청구항 {{claims}}이(가) 복수의 문장을 포함하는 것으로 보입니다 —— Guidelines F-IV § 4.10은 청구항을 1문으로 작성할 것을 권장합니다.",
+          "pass": "복수 문장 청구항이 감지되지 않았습니다(Guidelines F-IV § 4.10)."
+        },
+        "specReference": {
+          "amend": "청구항 {{claims}}이(가) 명세서 또는 도면을 참조합니다 —— Rule 43(6) EPC는 청구항이 자기 완결적일 것을 요구합니다.",
+          "pass": "청구항에서 명세서/도면 참조가 감지되지 않았습니다(Rule 43(6) EPC)."
+        },
+        "subjectConsistency": {
+          "verify": "청구항 {{claims}}의 주제가 상위 청구항과 일치하지 않을 수 있습니다 —— Guidelines F-IV § 3.4에 따라 검토하십시오.",
+          "pass": "주제 일치성 관련 사항이 감지되지 않았습니다(Guidelines F-IV § 3.4)."
+        },
+        "transitionPhrase": {
+          "verify": "독립항 {{claims}}이(가) EPC에서 인정되는 연결구(comprising / consisting of / characterised in that)를 포함하지 않는 것으로 보입니다. Guidelines F-IV § 4.13에 따라 검토하십시오.",
+          "pass": "연결구 관련 사항이 감지되지 않았습니다(Guidelines F-IV § 4.13)."
+        },
+        "twoPartForm": {
+          "verify": "어떤 독립항도 2부 형식(전제부 + 'characterised in that')을 사용하지 않습니다. Rule 43(1) EPC는 적절한 경우 이 형식을 권장합니다. 가장 근접한 선행기술에 비추어 적용 여부를 검토하십시오.",
+          "pass": "2부 형식 관련 사항이 감지되지 않았습니다(Rule 43(1) EPC)."
         }
       },
       "abstract": {
@@ -1064,6 +1156,32 @@
         "claimReference": {
           "amend": "요약이 특정 청구항을 참조합니다 — EPO Guidelines F-II § 2.3.3은 요약이 자기 완결적이고 청구항을 상호 참조하지 않을 것을 요구합니다.",
           "pass": "요약이 특정 청구항을 참조하지 않습니다."
+        },
+        "structure": {
+          "amend": "요약의 구조가 Rule 47(2) EPC / Guidelines F-II § 2.3에 부합하지 않을 수 있습니다: {{detail}}.",
+          "pass": "요약 구조 관련 사항이 감지되지 않았습니다(Rule 47(2) EPC)."
+        },
+        "wordCount": {
+          "amend": "요약은 {{count}}단어로, Guidelines F-II § 2.3의 상한 150단어를 초과합니다.",
+          "verify": "요약은 {{count}}단어로, Guidelines F-II § 2.3의 하한 50단어에 미달합니다.",
+          "pass": "요약 단어 수 관련 사항이 감지되지 않았습니다(Rule 47(2) EPC; 50–150단어)."
+        }
+      },
+      "drawings": {
+        "figureCount": {
+          "pass": "{{count}}개의 도면을 감지했습니다(Rule 46(2)(a) EPC)."
+        },
+        "figuresSequential": {
+          "amend": "도면 번호가 연속되지 않는 것으로 보입니다. 누락 도면 번호: {{detail}}(Rule 46(2)(a) EPC).",
+          "pass": "도면 번호 연속성 관련 사항이 감지되지 않았습니다(Rule 46(2)(a) EPC)."
+        },
+        "priorArtLabeling": {
+          "verify": "도면의 간단한 설명이 선행기술을 언급합니다 —— 해당 도면이 Rule 46(2)(h) EPC에 따라 표시되었는지 확인하십시오.",
+          "pass": "선행기술 도면 표시 관련 사항이 감지되지 않았습니다(Rule 46(2)(h) EPC)."
+        },
+        "singleFigureLabel": {
+          "verify": "단일 도면이 감지되었으나 인근에서 Fig./FIG./Figure 라벨을 찾을 수 없습니다(Guidelines F-V § 1.2).",
+          "pass": "단일 도면 라벨 관련 사항이 감지되지 않았습니다(Guidelines F-V § 1.2)."
         }
       }
     },

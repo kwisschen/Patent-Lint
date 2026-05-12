@@ -76,6 +76,7 @@ def check_claims_sequential_epc(claims: list[Claim]) -> list[CheckItem]:
             status="amend",
             message=f"Claims are not sequentially numbered. Missing claim(s): {', '.join(str(g) for g in gaps)}.",
             message_key="check.epc.claims.sequential.amend",
+            details_params={"claims": ", ".join(str(g) for g in gaps)},
             details=", ".join(str(g) for g in gaps),
             reference="Rule 43(5) EPC",
             diagnostics=_dx(
@@ -111,6 +112,7 @@ def check_dependency_format_epc(claims: list[Claim]) -> list[CheckItem]:
                 f"requires explicit reference (e.g., 'according to claim N')."
             ),
             message_key="check.epc.claims.dependencyFormat.amend",
+            details_params={"claims": ", ".join(str(i) for i in bad)},
             details=", ".join(str(i) for i in bad),
             reference="Rule 43(4) EPC",
             diagnostics=_dx(
@@ -140,6 +142,7 @@ def check_self_dependent_epc(claims: list[Claim]) -> list[CheckItem]:
             status="amend",
             message=f"Self-dependent claim(s): {', '.join(str(i) for i in bad)}.",
             message_key="check.epc.claims.selfDependent.amend",
+            details_params={"claims": ", ".join(str(i) for i in bad)},
             details=", ".join(str(i) for i in bad),
             reference="Rule 43(4) EPC",
             diagnostics=_dx(flagged_count=len(bad), flagged_claim_id=bad[0]),
@@ -165,6 +168,7 @@ def check_forward_dependency_epc(claims: list[Claim]) -> list[CheckItem]:
             status="amend",
             message=f"Forward-referencing claim(s): {', '.join(str(i) for i in bad)}.",
             message_key="check.epc.claims.forwardDependency.amend",
+            details_params={"claims": ", ".join(str(i) for i in bad)},
             details=", ".join(str(i) for i in bad),
             reference="Rule 43(4) EPC",
             diagnostics=_dx(
@@ -214,6 +218,7 @@ def check_single_sentence_per_claim_epc(claims: list[Claim]) -> list[CheckItem]:
                 f"sentence per claim."
             ),
             message_key="check.epc.claims.singleSentence.verify",
+            details_params={"claims": ", ".join(str(i) for i in bad)},
             details=", ".join(str(i) for i in bad),
             reference="Rule 43(4) EPC; EPO Guidelines F-IV § 4.10",
             diagnostics=_dx(
@@ -277,6 +282,7 @@ def check_reference_signs_in_parens_epc(claims: list[Claim]) -> list[CheckItem]:
                 f"reference signs to be parenthesised."
             ),
             message_key="check.epc.claims.refSignsInParens.verify",
+            details_params={"claims": ", ".join(str(i) for i in flagged_claims)},
             details=", ".join(str(i) for i in flagged_claims),
             reference="Rule 43(7) EPC",
             diagnostics=_dx(
@@ -354,6 +360,7 @@ def check_subject_consistency_epc(claims: list[Claim]) -> list[CheckItem]:
                 f"that does not match the parent claim — verify per Guidelines F-IV § 3.4."
             ),
             message_key="check.epc.claims.subjectConsistency.verify",
+            details_params={"claims": ", ".join(str(i) for i in bad)},
             details=", ".join(str(i) for i in bad),
             reference="EPO Guidelines F-IV § 3.4",
             diagnostics=_dx(
@@ -394,6 +401,7 @@ def check_transition_phrase_epc(claims: list[Claim]) -> list[CheckItem]:
                 f"characterised in that). Verify per Guidelines F-IV § 4.13."
             ),
             message_key="check.epc.claims.transitionPhrase.verify",
+            details_params={"claims": ", ".join(str(i) for i in bad)},
             details=", ".join(str(i) for i in bad),
             reference="EPO Guidelines F-IV § 4.13",
             diagnostics=_dx(
@@ -480,6 +488,7 @@ def check_claims_spec_reference_epc(claims: list[Claim]) -> list[CheckItem]:
                 f"or drawings — Rule 43(6) EPC requires claims to be self-contained."
             ),
             message_key="check.epc.claims.specReference.amend",
+            details_params={"claims": ", ".join(str(i) for i in flagged)},
             details=", ".join(str(i) for i in flagged),
             reference="Rule 43(6) EPC",
             diagnostics=_dx(
@@ -521,6 +530,7 @@ def check_multi_dep_on_multi_dep_epc(claims: list[Claim]) -> list[CheckItem]:
                 f"that depend on another multi-dependent claim — Rule 43(4) EPC prohibits this."
             ),
             message_key="check.epc.claims.multiDepOnMultiDep.amend",
+            details_params={"claims": ", ".join(str(i) for i in bad)},
             details=", ".join(str(i) for i in bad),
             reference="Rule 43(4) EPC",
             diagnostics=_dx(
@@ -557,6 +567,7 @@ def check_markush_format_epc(claims: list[Claim]) -> list[CheckItem]:
                 f"consisting of' form per Guidelines F-IV § 4.20."
             ),
             message_key="check.epc.claims.markushFormat.verify",
+            details_params={"claims": ", ".join(str(i) for i in bad)},
             details=", ".join(str(i) for i in bad),
             reference="EPO Guidelines F-IV § 4.20",
             diagnostics=_dx(
@@ -647,6 +658,7 @@ def check_independent_claim_count_epc(claims: list[Claim]) -> list[CheckItem]:
                 f"solutions). Verify."
             ),
             message_key="check.epc.claims.independentClaimCount.verify",
+            details_params={"count": str(len(independents)), "methods": str(methods), "nonMethods": str(non_methods)},
             reference="Rule 43(2) EPC; Rule 43(3) EPC",
             diagnostics=_dx(
                 independent_count=len(independents),
@@ -778,6 +790,7 @@ def check_restrictive_absolutes_epc(claims: list[Claim]) -> list[CheckItem]:
                 f"Guidelines F-IV § 4.7."
             ),
             message_key="check.epc.claims.restrictiveAbsolutes.verify",
+            details_params={"claims": ", ".join(str(i) for i in flagged)},
             details=", ".join(str(i) for i in flagged),
             reference="EPO Guidelines F-IV § 4.7",
             diagnostics=_dx(
@@ -845,6 +858,7 @@ def check_antecedent_basis_epc(claims: list[Claim]) -> tuple[list[CheckItem], li
                 f"Verify per Art. 84 EPC + Guidelines F-IV § 4.5."
             ),
             message_key="check.epc.claims.antecedentBasis.verify",
+            details_params={"count": str(len(issues))},
             reference="Art. 84 EPC; EPO Guidelines F-IV § 4.5",
             diagnostics=_dx(issue_count=len(issues)),
         )]
@@ -877,6 +891,7 @@ def check_spec_support_epc(claims: list[Claim], spec_text: str) -> tuple[list[Ch
                 f"unsupported claim term(s). Verify per Art. 84 EPC."
             ),
             message_key="check.epc.claims.specSupport.verify",
+            details_params={"count": str(len(unsupported))},
             reference="Art. 84 EPC",
             diagnostics=_dx(unsupported_count=len(unsupported)),
         )]

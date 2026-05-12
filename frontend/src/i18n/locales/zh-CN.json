@@ -1042,18 +1042,110 @@
         "titleContent": {
           "amend": "发明名称似乎含有不适格内容（商标或型号）—— EPO Guidelines F-II § 4 期待具描述性之发明名称。",
           "pass": "未在发明名称中检测到商标或型号标记。"
+        },
+        "claimReferenceInSpec": {
+          "amend": "说明书引用了特定权利要求（「{{detail}}」）—— Guidelines F-IV § 4.3 期待说明书能够自足。",
+          "pass": "未在说明书中检测到权利要求交叉引用（Guidelines F-IV § 4.3）。"
+        },
+        "paragraphEnding": {
+          "verify": "{{count}} 段未以标准终止符号结尾。属撰写惯例提示；EPC 并无明文要求。",
+          "pass": "未检测到段落结尾标点问题。"
+        },
+        "paragraphNumbering": {
+          "verify": "已检测到段落编号但并非完全连续 —— 起始 [{{first}}]，预期至 [{{expected}}]；共 {{count}} 个编号，止于 [{{last}}]（Guidelines F-II § 4.5）。",
+          "pass": "未检测到段落编号问题 —— EPC 不强制要求段落编号（Guidelines F-II § 4.5）。"
+        },
+        "requiredSections": {
+          "amend": "依 Art. 78(1) EPC，下列必要章节似有缺漏：{{sections}}。",
+          "pass": "未检测到必要章节缺漏（Art. 78(1) EPC；Rule 42(1) EPC）。"
+        },
+        "sectionOrdering": {
+          "amend": "说明书次章节顺序似不符 Rule 42(1) EPC 规范顺序。观察到：{{observed}}。预期：{{expected}}。",
+          "pass": "未检测到章节顺序问题（Rule 42(1) EPC）。"
+        },
+        "titleRequired": {
+          "amend": "发明名称似有缺漏 —— Rule 41(2)(b) EPC 期待载明发明名称。",
+          "verify": "发明名称字数异常偏长（{{count}} 字符）；请确认是否简明指出发明（Rule 41(2)(b) EPC）。",
+          "pass": "未检测到发明名称缺漏（Rule 41(2)(b) EPC）。"
         }
       },
       "claims": {
         "antecedentBasis": {
-          "pass": "未检测到引用基础问题（Art. 84 EPC）。"
+          "pass": "未检测到引用基础问题（Art. 84 EPC）。",
+          "verify": "引用基础分析共 {{count}} 项可能问题。请依 Art. 84 EPC 及 Guidelines F-IV § 4.5 检视。"
         },
         "specSupport": {
-          "pass": "未检测到未获说明书支持之权利要求用语（Art. 84 EPC）。"
+          "pass": "未检测到未获说明书支持之权利要求用语（Art. 84 EPC）。",
+          "verify": "说明书支持分析共 {{count}} 项可能未获支持之用语。请依 Art. 84 EPC 检视。"
         },
         "excessClaims": {
           "verify": "权利要求总数超过 15 项。Rule 45 EPC 对第 16 至 50 项收取每项超项费，第 51 项以上收取较高之每项超项费。请核实申请费用。",
           "pass": "未检测到 EPC 超项费触发条件（Rule 45 EPC：总权利要求不超过 15 项）。"
+        },
+        "dependencyFormat": {
+          "amend": "权利要求 {{claims}} 似为从属权利要求，但未明确引用所引权利要求 —— Rule 43(4) EPC 期待明确引用（例如「according to claim N」）。",
+          "pass": "未检测到引用关系格式问题（Rule 43(4) EPC）。"
+        },
+        "forwardDependency": {
+          "amend": "权利要求向后引用：{{claims}}（Rule 43(4) EPC）。",
+          "pass": "未检测到向后引用问题（Rule 43(4) EPC）。"
+        },
+        "independentClaimCount": {
+          "verify": "共检测到 {{count}} 项独立权利要求（方法 {{methods}}；非方法 {{nonMethods}}）。Rule 43(2) EPC 原则上每一范畴仅允许一项独立权利要求，除非适用 Rule 43(3) 例外（相互关联之产品 / 不同用途 / 替代方案）。请检视。",
+          "pass": "未检测到独立权利要求数量问题（Rule 43(2) EPC）。"
+        },
+        "markushFormat": {
+          "verify": "权利要求 {{claims}} 采用 Markush 式选择用语，可能需采封闭式「selected from the group consisting of」（Guidelines F-IV § 4.20）。",
+          "pass": "未检测到 Markush 格式问题（Guidelines F-IV § 4.20）。"
+        },
+        "multiDepOnMultiDep": {
+          "amend": "权利要求 {{claims}} 为多项引用，且其所引权利要求亦为多项引用 —— Rule 43(4) EPC 不允许此种链式多项引用。",
+          "pass": "未检测到链式多项引用（Rule 43(4) EPC）。"
+        },
+        "punctuation": {
+          "extraPeriod": {
+            "amend": "权利要求 {{claimNumber}} 含多余或位置不当之句点（Guidelines F-IV § 4.10）。"
+          },
+          "missingPeriod": {
+            "amend": "权利要求 {{claimNumber}} 未以句点结尾（Guidelines F-IV § 4.10）。"
+          },
+          "pass": "未检测到权利要求标点问题（Guidelines F-IV § 4.10）。"
+        },
+        "refSignsInParens": {
+          "verify": "权利要求 {{claims}} 含未加括号之裸露编号 —— Rule 43(7) EPC 期待附图标记以括号表示。",
+          "pass": "未检测到附图标记加括号问题（Rule 43(7) EPC）。"
+        },
+        "restrictiveAbsolutes": {
+          "verify": "权利要求 {{claims}} 出现绝对性用语（must / essential / required 等）。请依 Guidelines F-IV § 4.7 检视。",
+          "pass": "未检测到绝对性用语（Guidelines F-IV § 4.7）。"
+        },
+        "selfDependent": {
+          "amend": "权利要求自我引用：{{claims}}（Rule 43(4) EPC）。",
+          "pass": "未检测到自我引用之权利要求（Rule 43(4) EPC）。"
+        },
+        "sequential": {
+          "amend": "权利要求编号似不连续。缺漏权利要求：{{claims}}（Rule 43(5) EPC）。",
+          "pass": "未检测到权利要求编号不连续（Rule 43(5) EPC）。"
+        },
+        "singleSentence": {
+          "verify": "权利要求 {{claims}} 似含多句 —— Guidelines F-IV § 4.10 期待单一权利要求为一句。",
+          "pass": "未检测到多句权利要求（Guidelines F-IV § 4.10）。"
+        },
+        "specReference": {
+          "amend": "权利要求 {{claims}} 引用说明书或附图 —— Rule 43(6) EPC 期待权利要求自足。",
+          "pass": "未检测到权利要求引用说明书或附图（Rule 43(6) EPC）。"
+        },
+        "subjectConsistency": {
+          "verify": "权利要求 {{claims}} 之主语似与所引权利要求不一致 —— 请依 Guidelines F-IV § 3.4 检视。",
+          "pass": "未检测到主语一致性问题（Guidelines F-IV § 3.4）。"
+        },
+        "transitionPhrase": {
+          "verify": "独立权利要求 {{claims}} 似未使用 EPC 惯用转折短语（comprising / consisting of / characterised in that）。请依 Guidelines F-IV § 4.13 检视。",
+          "pass": "未检测到转折短语使用问题（Guidelines F-IV § 4.13）。"
+        },
+        "twoPartForm": {
+          "verify": "无独立权利要求采用两段式撰写（前序 +「characterised in that」）。Rule 43(1) EPC 视情形建议采用两段式；请依最近现有技术判断是否适用。",
+          "pass": "未检测到两段式撰写相关问题（Rule 43(1) EPC）。"
         }
       },
       "abstract": {
@@ -1064,6 +1156,32 @@
         "claimReference": {
           "amend": "摘要引用特定权利要求 —— EPO Guidelines F-II § 2.3.3 要求摘要须自足、不得交叉引用权利要求。",
           "pass": "摘要未引用特定权利要求。"
+        },
+        "structure": {
+          "amend": "摘要结构似不符 Rule 47(2) EPC / Guidelines F-II § 2.3：{{detail}}。",
+          "pass": "未检测到摘要结构问题（Rule 47(2) EPC）。"
+        },
+        "wordCount": {
+          "amend": "摘要计 {{count}} 字，超过 Guidelines F-II § 2.3 上限 150 字。",
+          "verify": "摘要计 {{count}} 字，低于 Guidelines F-II § 2.3 下限 50 字。",
+          "pass": "未检测到摘要字数问题（Rule 47(2) EPC；50–150 字）。"
+        }
+      },
+      "drawings": {
+        "figureCount": {
+          "pass": "检测到 {{count}} 幅图（Rule 46(2)(a) EPC）。"
+        },
+        "figuresSequential": {
+          "amend": "附图编号似不连续。缺漏图号：{{detail}}（Rule 46(2)(a) EPC）。",
+          "pass": "未检测到附图编号不连续（Rule 46(2)(a) EPC）。"
+        },
+        "priorArtLabeling": {
+          "verify": "附图说明提及现有技术 —— 请确认相关附图已依 Rule 46(2)(h) EPC 标示。",
+          "pass": "未检测到现有技术附图标示问题（Rule 46(2)(h) EPC）。"
+        },
+        "singleFigureLabel": {
+          "verify": "检测到单幅附图，但附近未见 Fig./FIG./Figure 标签（Guidelines F-V § 1.2）。",
+          "pass": "未检测到单幅附图标签问题（Guidelines F-V § 1.2）。"
         }
       }
     },

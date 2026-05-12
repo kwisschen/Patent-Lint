@@ -1042,18 +1042,110 @@
         "titleContent": {
           "amend": "Title appears to contain prohibited content (trademark or model number) — EPO Guidelines F-II § 4 ask for a descriptive title of the invention.",
           "pass": "No trademark or model-number tokens detected in title."
+        },
+        "claimReferenceInSpec": {
+          "amend": "Description references a specific claim ('{{detail}}') — Guidelines F-IV § 4.3 ask the description to stand on its own.",
+          "pass": "No description-side claim references detected (Guidelines F-IV § 4.3)."
+        },
+        "paragraphEnding": {
+          "verify": "{{count}} paragraph(s) end without standard terminal punctuation. Drafting-hygiene advisory; no specific EPC rule mandates it.",
+          "pass": "No paragraph-ending issues detected."
+        },
+        "paragraphNumbering": {
+          "verify": "Paragraph numbers detected but not strictly sequential — starting at [{{first}}], expected up to [{{expected}}]; found {{count}} numbers ending at [{{last}}] (Guidelines F-II § 4.5).",
+          "pass": "No paragraph-numbering issues detected — EPC does not mandate paragraph numbers (Guidelines F-II § 4.5)."
+        },
+        "requiredSections": {
+          "amend": "Required sections appear to be missing per Art. 78(1) EPC: {{sections}}.",
+          "pass": "No missing required sections detected (Art. 78(1) EPC; Rule 42(1) EPC)."
+        },
+        "sectionOrdering": {
+          "amend": "Description sub-sections appear out of Rule 42(1) EPC canonical order. Observed: {{observed}}. Expected: {{expected}}.",
+          "pass": "No section-ordering issues detected (Rule 42(1) EPC)."
+        },
+        "titleRequired": {
+          "amend": "Title appears to be missing — Rule 41(2)(b) EPC asks for a title of the invention.",
+          "verify": "Title appears unusually long ({{count}} characters); verify it identifies the invention concisely (Rule 41(2)(b) EPC).",
+          "pass": "No title-presence issues detected (Rule 41(2)(b) EPC)."
         }
       },
       "claims": {
         "antecedentBasis": {
-          "pass": "No antecedent-basis issues detected (Art. 84 EPC)."
+          "pass": "No antecedent-basis issues detected (Art. 84 EPC).",
+          "verify": "Antecedent-basis walker flagged {{count}} possible issue(s). Verify per Art. 84 EPC + Guidelines F-IV § 4.5."
         },
         "specSupport": {
-          "pass": "No unsupported claim terms detected (Art. 84 EPC)."
+          "pass": "No unsupported claim terms detected (Art. 84 EPC).",
+          "verify": "Spec-support walker flagged {{count}} possible unsupported claim term(s). Verify per Art. 84 EPC."
         },
         "excessClaims": {
           "verify": "Total claim count exceeds 15. Rule 45 EPC charges a per-claim fee for the 16th through 50th claim, with a higher per-claim fee from the 51st onward. Verify your filing fee.",
           "pass": "No excess-claims fee triggers detected (Rule 45 EPC: no more than 15 total claims)."
+        },
+        "dependencyFormat": {
+          "amend": "Claim(s) {{claims}} look dependent but do not explicitly reference a parent claim — Rule 43(4) EPC asks for explicit reference (e.g., 'according to claim N').",
+          "pass": "No dependency-format issues detected (Rule 43(4) EPC)."
+        },
+        "forwardDependency": {
+          "amend": "Forward-referencing claim(s) detected: {{claims}} (Rule 43(4) EPC).",
+          "pass": "No forward-dependency issues detected (Rule 43(4) EPC)."
+        },
+        "independentClaimCount": {
+          "verify": "Found {{count}} independent claims ({{methods}} method, {{nonMethods}} non-method). Rule 43(2) EPC limits one independent claim per category unless a Rule 43(3) exception applies (interrelated products / different uses / alternative solutions). Verify.",
+          "pass": "No independent-claim-count issues detected (Rule 43(2) EPC)."
+        },
+        "markushFormat": {
+          "verify": "Claim(s) {{claims}} use a Markush-style alternative that may need the closed 'selected from the group consisting of' form (Guidelines F-IV § 4.20).",
+          "pass": "No Markush-format issues detected (Guidelines F-IV § 4.20)."
+        },
+        "multiDepOnMultiDep": {
+          "amend": "Claim(s) {{claims}} are multi-dependent claims that depend on another multi-dependent claim — Rule 43(4) EPC does not permit this.",
+          "pass": "No chained multi-dependent claims detected (Rule 43(4) EPC)."
+        },
+        "punctuation": {
+          "extraPeriod": {
+            "amend": "Claim {{claimNumber}} contains extra or misplaced periods (Guidelines F-IV § 4.10)."
+          },
+          "missingPeriod": {
+            "amend": "Claim {{claimNumber}} does not end with a period (Guidelines F-IV § 4.10)."
+          },
+          "pass": "No claim-punctuation issues detected (Guidelines F-IV § 4.10)."
+        },
+        "refSignsInParens": {
+          "verify": "Claim(s) {{claims}} contain bare numeral(s) not in parentheses — Rule 43(7) EPC prefers reference signs to be parenthesised.",
+          "pass": "No reference-sign-parenthesisation issues detected (Rule 43(7) EPC)."
+        },
+        "restrictiveAbsolutes": {
+          "verify": "Claim(s) {{claims}} contain restrictive absolutes (must / essential / required / etc.). Verify per Guidelines F-IV § 4.7.",
+          "pass": "No restrictive-absolute issues detected (Guidelines F-IV § 4.7)."
+        },
+        "selfDependent": {
+          "amend": "Self-dependent claim(s) detected: {{claims}} (Rule 43(4) EPC).",
+          "pass": "No self-dependent claims detected (Rule 43(4) EPC)."
+        },
+        "sequential": {
+          "amend": "Claims appear not to be sequentially numbered. Missing claim(s): {{claims}} (Rule 43(5) EPC).",
+          "pass": "No claim-sequence issues detected (Rule 43(5) EPC)."
+        },
+        "singleSentence": {
+          "verify": "Claim(s) {{claims}} appear to contain multiple sentences — Guidelines F-IV § 4.10 prefers one sentence per claim.",
+          "pass": "No multi-sentence claims detected (Guidelines F-IV § 4.10)."
+        },
+        "specReference": {
+          "amend": "Claim(s) {{claims}} reference the description or drawings — Rule 43(6) EPC asks claims to be self-contained.",
+          "pass": "No spec/drawings references detected in claims (Rule 43(6) EPC)."
+        },
+        "subjectConsistency": {
+          "verify": "Claim(s) {{claims}} may have a subject that does not match the parent claim — verify per Guidelines F-IV § 3.4.",
+          "pass": "No subject-consistency issues detected (Guidelines F-IV § 3.4)."
+        },
+        "transitionPhrase": {
+          "verify": "Independent claim(s) {{claims}} appear to lack an EPC-recognised transitional phrase (comprising / consisting of / characterised in that). Verify per Guidelines F-IV § 4.13.",
+          "pass": "No transition-phrase issues detected (Guidelines F-IV § 4.13)."
+        },
+        "twoPartForm": {
+          "verify": "No independent claim uses the two-part form (preamble + 'characterised in that'). Rule 43(1) EPC recommends this form where appropriate; verify whether the closest prior art warrants it.",
+          "pass": "No two-part-form issues detected (Rule 43(1) EPC)."
         }
       },
       "abstract": {
@@ -1064,6 +1156,32 @@
         "claimReference": {
           "amend": "Abstract references specific claim(s) — Guidelines F-II § 2.3.3 require the abstract to be self-contained.",
           "pass": "Abstract does not reference specific claims."
+        },
+        "structure": {
+          "amend": "Abstract structure may not conform to Rule 47(2) EPC / Guidelines F-II § 2.3: {{detail}}.",
+          "pass": "No abstract-structure issues detected (Rule 47(2) EPC)."
+        },
+        "wordCount": {
+          "amend": "Abstract is {{count}} words, exceeding the Guidelines F-II § 2.3 guide of 150 words maximum.",
+          "verify": "Abstract is {{count}} words, below the Guidelines F-II § 2.3 guide of 50 words minimum.",
+          "pass": "No abstract-word-count issues detected (Rule 47(2) EPC; 50–150 words)."
+        }
+      },
+      "drawings": {
+        "figureCount": {
+          "pass": "Detected {{count}} figure(s) (Rule 46(2)(a) EPC)."
+        },
+        "figuresSequential": {
+          "amend": "Figures appear not to be sequential. Missing figure number(s): {{detail}} (Rule 46(2)(a) EPC).",
+          "pass": "No figure-sequence issues detected (Rule 46(2)(a) EPC)."
+        },
+        "priorArtLabeling": {
+          "verify": "Drawings description references prior art — verify the figure(s) are labeled accordingly per Rule 46(2)(h) EPC.",
+          "pass": "No prior-art-labeling issues detected (Rule 46(2)(h) EPC)."
+        },
+        "singleFigureLabel": {
+          "verify": "Single figure detected but no Fig./FIG./Figure label found near it (Guidelines F-V § 1.2).",
+          "pass": "No single-figure-label issues detected (Guidelines F-V § 1.2)."
         }
       }
     },

@@ -75,6 +75,7 @@ def check_title_required_epc(full_text: str) -> list[CheckItem]:
             status="verify",
             message="Title appears unusually long; verify it identifies the invention concisely.",
             message_key="check.epc.spec.titleRequired.verify",
+            details_params={"count": str(len(title))},
             reference="Rule 41(2)(b) EPC",
             diagnostics=_dx(title_charlen=len(title)),
         )]
@@ -142,6 +143,7 @@ def check_required_sections_epc(full_text: str) -> list[CheckItem]:
             details_key="details.missingSections",
             details_params={
                 "list": ", ".join(missing),
+                "sections": ", ".join(missing),
                 "flagged_phrases": {
                     "items": [{"kind": "section", "token": s} for s in missing]
                 },
@@ -223,6 +225,7 @@ def check_section_ordering_epc(full_text: str) -> list[CheckItem]:
                 f"Expected: {' → '.join(canonical_subset)}."
             ),
             message_key="check.epc.spec.sectionOrdering.amend",
+            details_params={"observed": " → ".join(observed_order), "expected": " → ".join(canonical_subset)},
             reference="Rule 42(1) EPC",
             diagnostics=_dx(
                 observed_order=observed_order,
@@ -271,6 +274,7 @@ def check_paragraph_numbering_epc(full_text: str) -> list[CheckItem]:
                 f"found {len(numbers)} numbers ending at [{numbers[-1]:04d}]."
             ),
             message_key="check.epc.spec.paragraphNumbering.verify",
+            details_params={"first": f"{numbers[0]:04d}", "expected": f"{expected[-1]:04d}", "count": str(len(numbers)), "last": f"{numbers[-1]:04d}"},
             reference="EPO Guidelines F-II § 4.5",
             diagnostics=_dx(
                 total_numbers=len(numbers),
@@ -333,6 +337,7 @@ def check_paragraph_ending_epc(full_text: str) -> list[CheckItem]:
                 f"This is a drafting-hygiene advisory; no specific EPC rule mandates it."
             ),
             message_key="check.epc.spec.paragraphEnding.verify",
+            details_params={"count": str(len(flagged))},
             details=", ".join(str(n) for n in flagged[:20]),
             diagnostics=_dx(
                 flagged_count=len(flagged),

@@ -1042,18 +1042,110 @@
         "titleContent": {
           "amend": "Der Titel scheint unzulässige Inhalte zu enthalten (Marken oder Modellnummern) — EPA-Richtlinien F-II § 4 bitten um einen beschreibenden Titel der Erfindung.",
           "pass": "Keine Marken- oder Modellnummer-Tokens im Titel festgestellt."
+        },
+        "claimReferenceInSpec": {
+          "amend": "Die Beschreibung verweist auf einen bestimmten Anspruch („{{detail}}“) — Richtlinien F-IV § 4.3 bitten darum, dass die Beschreibung für sich selbst steht.",
+          "pass": "Keine Anspruchsverweise in der Beschreibung festgestellt (Richtlinien F-IV § 4.3)."
+        },
+        "paragraphEnding": {
+          "verify": "{{count}} Absatz/Absätze enden nicht mit Standard-Schlusszeichen. Hinweis zur Schreibhygiene; keine konkrete EPÜ-Regel schreibt dies vor.",
+          "pass": "Keine Absatzende-Befunde festgestellt."
+        },
+        "paragraphNumbering": {
+          "verify": "Absatznummern festgestellt, aber nicht streng fortlaufend — beginnend bei [{{first}}], erwartet bis [{{expected}}]; gefunden {{count}} Nummern, endend bei [{{last}}] (Richtlinien F-II § 4.5).",
+          "pass": "Keine Absatznummerierungs-Befunde festgestellt — das EPÜ schreibt Absatznummern nicht vor (Richtlinien F-II § 4.5)."
+        },
+        "requiredSections": {
+          "amend": "Erforderliche Abschnitte scheinen zu fehlen gemäß Art. 78(1) EPÜ: {{sections}}.",
+          "pass": "Keine fehlenden Pflichtabschnitte festgestellt (Art. 78(1) EPÜ; Regel 42(1) EPÜ)."
+        },
+        "sectionOrdering": {
+          "amend": "Beschreibungsabschnitte erscheinen nicht in der kanonischen Reihenfolge nach Regel 42(1) EPÜ. Beobachtet: {{observed}}. Erwartet: {{expected}}.",
+          "pass": "Keine Abschnittsreihenfolge-Befunde festgestellt (Regel 42(1) EPÜ)."
+        },
+        "titleRequired": {
+          "amend": "Titel scheint zu fehlen — Regel 41(2)(b) EPÜ bittet um eine Bezeichnung der Erfindung.",
+          "verify": "Titel erscheint ungewöhnlich lang ({{count}} Zeichen); prüfen Sie, ob er die Erfindung knapp benennt (Regel 41(2)(b) EPÜ).",
+          "pass": "Keine Titel-Befunde festgestellt (Regel 41(2)(b) EPÜ)."
         }
       },
       "claims": {
         "antecedentBasis": {
-          "pass": "Keine Rückbezugs-Probleme festgestellt (Art. 84 EPÜ)."
+          "pass": "Keine Rückbezugs-Probleme festgestellt (Art. 84 EPÜ).",
+          "verify": "Der Rückbezugs-Walker hat {{count}} mögliche Punkt(e) gemeldet. Prüfen nach Art. 84 EPÜ + Richtlinien F-IV § 4.5."
         },
         "specSupport": {
-          "pass": "Keine nicht-gestützten Anspruchsmerkmale festgestellt (Art. 84 EPÜ)."
+          "pass": "Keine nicht-gestützten Anspruchsmerkmale festgestellt (Art. 84 EPÜ).",
+          "verify": "Der Stützungs-Walker hat {{count}} möglicherweise nicht gestützte Anspruchsbegriffe gemeldet. Prüfen nach Art. 84 EPÜ."
         },
         "excessClaims": {
           "verify": "Anspruchsanzahl überschreitet 15. Regel 45 EPÜ erhebt eine Anspruchsgebühr für den 16. bis 50. Anspruch und eine erhöhte Gebühr ab dem 51. Anspruch. Prüfen Sie Ihre Anmeldegebühr.",
           "pass": "Keine Auslöser für Anspruchsgebühren festgestellt (Regel 45 EPÜ: höchstens 15 Ansprüche insgesamt)."
+        },
+        "dependencyFormat": {
+          "amend": "Anspruch/Ansprüche {{claims}} wirken abhängig, verweisen aber nicht ausdrücklich auf einen übergeordneten Anspruch — Regel 43(4) EPÜ bittet um ausdrücklichen Rückbezug (z. B. „nach Anspruch N“).",
+          "pass": "Keine Rückbezugs-Format-Befunde festgestellt (Regel 43(4) EPÜ)."
+        },
+        "forwardDependency": {
+          "amend": "Vorwärts-Rückbezug bei Anspruch/Ansprüchen: {{claims}} (Regel 43(4) EPÜ).",
+          "pass": "Keine Vorwärts-Rückbezugs-Befunde festgestellt (Regel 43(4) EPÜ)."
+        },
+        "independentClaimCount": {
+          "verify": "{{count}} unabhängige Ansprüche festgestellt ({{methods}} Verfahren, {{nonMethods}} sonstige). Regel 43(2) EPÜ erlaubt nur einen unabhängigen Anspruch je Kategorie, sofern keine Ausnahme nach Regel 43(3) greift (in Wechselbeziehung stehende Erzeugnisse / verschiedene Verwendungen / alternative Lösungen). Prüfen.",
+          "pass": "Keine Befunde zur Anzahl unabhängiger Ansprüche festgestellt (Regel 43(2) EPÜ)."
+        },
+        "markushFormat": {
+          "verify": "Anspruch/Ansprüche {{claims}} verwenden eine Markush-Alternative, die ggf. die geschlossene Form „selected from the group consisting of“ benötigt (Richtlinien F-IV § 4.20).",
+          "pass": "Keine Markush-Format-Befunde festgestellt (Richtlinien F-IV § 4.20)."
+        },
+        "multiDepOnMultiDep": {
+          "amend": "Anspruch/Ansprüche {{claims}} sind mehrfach abhängige Ansprüche, die auf einen weiteren mehrfach abhängigen Anspruch Bezug nehmen — Regel 43(4) EPÜ lässt dies nicht zu.",
+          "pass": "Keine verketteten mehrfach-abhängigen Ansprüche festgestellt (Regel 43(4) EPÜ)."
+        },
+        "punctuation": {
+          "extraPeriod": {
+            "amend": "Anspruch {{claimNumber}} enthält überzählige oder falsch platzierte Punkte (Richtlinien F-IV § 4.10)."
+          },
+          "missingPeriod": {
+            "amend": "Anspruch {{claimNumber}} endet nicht mit einem Punkt (Richtlinien F-IV § 4.10)."
+          },
+          "pass": "Keine Anspruchszeichen-Befunde festgestellt (Richtlinien F-IV § 4.10)."
+        },
+        "refSignsInParens": {
+          "verify": "Anspruch/Ansprüche {{claims}} enthalten unverklammerte Zahlen — Regel 43(7) EPÜ bevorzugt Bezugszeichen in Klammern.",
+          "pass": "Keine Befunde zu unverklammerten Bezugszeichen festgestellt (Regel 43(7) EPÜ)."
+        },
+        "restrictiveAbsolutes": {
+          "verify": "Anspruch/Ansprüche {{claims}} enthalten restriktive Absolutbegriffe (muss / wesentlich / erforderlich / usw.). Prüfen nach Richtlinien F-IV § 4.7.",
+          "pass": "Keine restriktiven Absolutbegriffe festgestellt (Richtlinien F-IV § 4.7)."
+        },
+        "selfDependent": {
+          "amend": "Selbst-rückbezogene Anspruch/Ansprüche: {{claims}} (Regel 43(4) EPÜ).",
+          "pass": "Keine selbst-rückbezogenen Ansprüche festgestellt (Regel 43(4) EPÜ)."
+        },
+        "sequential": {
+          "amend": "Ansprüche erscheinen nicht fortlaufend nummeriert. Fehlende Anspruch/Ansprüche: {{claims}} (Regel 43(5) EPÜ).",
+          "pass": "Keine Befunde zur Anspruchsnummerierung festgestellt (Regel 43(5) EPÜ)."
+        },
+        "singleSentence": {
+          "verify": "Anspruch/Ansprüche {{claims}} enthalten anscheinend mehrere Sätze — Richtlinien F-IV § 4.10 bevorzugen einen Satz je Anspruch.",
+          "pass": "Keine mehrsätzigen Ansprüche festgestellt (Richtlinien F-IV § 4.10)."
+        },
+        "specReference": {
+          "amend": "Anspruch/Ansprüche {{claims}} verweisen auf die Beschreibung oder die Zeichnungen — Regel 43(6) EPÜ bittet darum, dass Ansprüche für sich selbst stehen.",
+          "pass": "Keine Verweise auf Beschreibung/Zeichnungen in den Ansprüchen festgestellt (Regel 43(6) EPÜ)."
+        },
+        "subjectConsistency": {
+          "verify": "Anspruch/Ansprüche {{claims}} weisen ggf. einen Gegenstand auf, der nicht zum übergeordneten Anspruch passt — prüfen nach Richtlinien F-IV § 3.4.",
+          "pass": "Keine Gegenstands-Befunde festgestellt (Richtlinien F-IV § 3.4)."
+        },
+        "transitionPhrase": {
+          "verify": "Unabhängige Anspruch/Ansprüche {{claims}} scheinen keinen EPÜ-üblichen Übergangsbegriff zu enthalten (umfassend / bestehend aus / dadurch gekennzeichnet, dass). Prüfen nach Richtlinien F-IV § 4.13.",
+          "pass": "Keine Übergangsbegriff-Befunde festgestellt (Richtlinien F-IV § 4.13)."
+        },
+        "twoPartForm": {
+          "verify": "Kein unabhängiger Anspruch verwendet die zweiteilige Anspruchsfassung (Oberbegriff + „dadurch gekennzeichnet, dass“). Regel 43(1) EPÜ empfiehlt diese Form, soweit zweckmäßig; prüfen, ob der nächstliegende Stand der Technik dies nahelegt.",
+          "pass": "Keine Befunde zur zweiteiligen Anspruchsfassung festgestellt (Regel 43(1) EPÜ)."
         }
       },
       "abstract": {
@@ -1064,6 +1156,32 @@
         "claimReference": {
           "amend": "Die Zusammenfassung verweist auf bestimmte Ansprüche — EPA-Richtlinien F-II § 2.3.3 verlangen, dass die Zusammenfassung in sich selbst geschlossen ist.",
           "pass": "Die Zusammenfassung verweist nicht auf bestimmte Ansprüche."
+        },
+        "structure": {
+          "amend": "Die Zusammenfassung erfüllt ggf. Regel 47(2) EPÜ / Richtlinien F-II § 2.3 nicht: {{detail}}.",
+          "pass": "Keine Befunde zur Zusammenfassungsstruktur festgestellt (Regel 47(2) EPÜ)."
+        },
+        "wordCount": {
+          "amend": "Die Zusammenfassung umfasst {{count}} Wörter und übersteigt den Richtwert der Richtlinien F-II § 2.3 von höchstens 150 Wörtern.",
+          "verify": "Die Zusammenfassung umfasst {{count}} Wörter und liegt unter dem Richtwert der Richtlinien F-II § 2.3 von mindestens 50 Wörtern.",
+          "pass": "Keine Befunde zum Umfang der Zusammenfassung festgestellt (Regel 47(2) EPÜ; 50–150 Wörter)."
+        }
+      },
+      "drawings": {
+        "figureCount": {
+          "pass": "{{count}} Figur(en) erkannt (Regel 46(2)(a) EPÜ)."
+        },
+        "figuresSequential": {
+          "amend": "Figuren erscheinen nicht fortlaufend nummeriert. Fehlende Figurennummer(n): {{detail}} (Regel 46(2)(a) EPÜ).",
+          "pass": "Keine Befunde zur Figurennummerierung festgestellt (Regel 46(2)(a) EPÜ)."
+        },
+        "priorArtLabeling": {
+          "verify": "Die Figurenbeschreibung verweist auf den Stand der Technik — prüfen, ob die Figur(en) entsprechend gekennzeichnet sind (Regel 46(2)(h) EPÜ).",
+          "pass": "Keine Stand-der-Technik-Kennzeichnungs-Befunde festgestellt (Regel 46(2)(h) EPÜ)."
+        },
+        "singleFigureLabel": {
+          "verify": "Eine Figur erkannt, aber kein Fig./FIG./Figure-Label in der Nähe gefunden (Richtlinien F-V § 1.2).",
+          "pass": "Keine Befunde zum Einzel-Figur-Label festgestellt (Richtlinien F-V § 1.2)."
         }
       }
     },

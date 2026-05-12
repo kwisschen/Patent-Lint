@@ -79,6 +79,7 @@ def check_abstract_word_count_epc(abstract_text: str) -> list[CheckItem]:
             status="amend",
             message="Abstract is missing or empty.",
             message_key="check.epc.abstract.wordCount.amend",
+            details_params={"count": str(word_count)},
             reference="Rule 47(2) EPC",
             diagnostics=_dx(word_count=0),
         )]
@@ -91,6 +92,7 @@ def check_abstract_word_count_epc(abstract_text: str) -> list[CheckItem]:
                 f"F-II § 2.3 guide of {_EPC_ABSTRACT_MAX} words maximum."
             ),
             message_key="check.epc.abstract.wordCount.amend",
+            details_params={"count": str(word_count)},
             reference="Rule 47(2) EPC; EPO Guidelines F-II § 2.3",
             diagnostics=_dx(
                 word_count=word_count,
@@ -107,6 +109,7 @@ def check_abstract_word_count_epc(abstract_text: str) -> list[CheckItem]:
                 f"F-II § 2.3 guide of {_EPC_ABSTRACT_MIN} words minimum."
             ),
             message_key="check.epc.abstract.wordCount.verify",
+            details_params={"count": str(word_count)},
             reference="Rule 47(2) EPC; EPO Guidelines F-II § 2.3",
             diagnostics=_dx(
                 word_count=word_count,
@@ -178,6 +181,7 @@ def check_abstract_structure_epc(abstract_text: str) -> list[CheckItem]:
                 + "; ".join(issues) + "."
             ),
             message_key="check.epc.abstract.structure.amend",
+            details_params={"detail": "; ".join(issues)},
             details="; ".join(issues),
             reference="Rule 47(2) EPC; EPO Guidelines F-II § 2.3",
             diagnostics=_dx(

@@ -1042,18 +1042,110 @@
         "titleContent": {
           "amend": "發明名稱似乎含有不適格內容（商標或型號）—— EPO Guidelines F-II § 4 期待具描述性之發明名稱。",
           "pass": "未於發明名稱中偵測到商標或型號標記。"
+        },
+        "claimReferenceInSpec": {
+          "amend": "說明書引用特定請求項（「{{detail}}」）—— Guidelines F-IV § 4.3 期待說明書能自足。",
+          "pass": "未於說明書中偵測到請求項交叉引用（Guidelines F-IV § 4.3）。"
+        },
+        "paragraphEnding": {
+          "verify": "{{count}} 段未以標準終止符號結尾。屬撰寫慣例提醒；EPC 並無明文要求。",
+          "pass": "未偵測到段落結尾標點問題。"
+        },
+        "paragraphNumbering": {
+          "verify": "已偵測到段落編號但未完全連續 —— 起始 [{{first}}]，預期至 [{{expected}}]；共 {{count}} 個編號，止於 [{{last}}]（Guidelines F-II § 4.5）。",
+          "pass": "未偵測到段落編號問題 —— EPC 不強制要求段落編號（Guidelines F-II § 4.5）。"
+        },
+        "requiredSections": {
+          "amend": "依 Art. 78(1) EPC，下列必要章節似有缺漏：{{sections}}。",
+          "pass": "未偵測到必要章節缺漏（Art. 78(1) EPC；Rule 42(1) EPC）。"
+        },
+        "sectionOrdering": {
+          "amend": "說明書次章節順序似不符 Rule 42(1) EPC 之規範順序。觀察到：{{observed}}。預期：{{expected}}。",
+          "pass": "未偵測到章節順序問題（Rule 42(1) EPC）。"
+        },
+        "titleRequired": {
+          "amend": "發明名稱似有缺漏 —— Rule 41(2)(b) EPC 期待載明發明名稱。",
+          "verify": "發明名稱字數異常偏長（{{count}} 字元）；請確認是否簡明指出發明（Rule 41(2)(b) EPC）。",
+          "pass": "未偵測到發明名稱缺漏（Rule 41(2)(b) EPC）。"
         }
       },
       "claims": {
         "antecedentBasis": {
-          "pass": "未偵測到先行詞基礎問題（Art. 84 EPC）。"
+          "pass": "未偵測到先行詞基礎問題（Art. 84 EPC）。",
+          "verify": "先行詞分析共 {{count}} 項可能問題。請依 Art. 84 EPC 及 Guidelines F-IV § 4.5 檢視。"
         },
         "specSupport": {
-          "pass": "未偵測到未獲說明書支持之請求項用語（Art. 84 EPC）。"
+          "pass": "未偵測到未獲說明書支持之請求項用語（Art. 84 EPC）。",
+          "verify": "說明書支持分析共 {{count}} 項可能未獲支持之用語。請依 Art. 84 EPC 檢視。"
         },
         "excessClaims": {
           "verify": "請求項總數超過 15 項。Rule 45 EPC 對第 16 至 50 項收取每項超項費，第 51 項以上收取較高之每項超項費。請查核申請規費。",
           "pass": "未偵測到 EPC 超項費觸發條件（Rule 45 EPC：總請求項不超過 15 項）。"
+        },
+        "dependencyFormat": {
+          "amend": "請求項 {{claims}} 似為附屬項，惟未明確引用所附屬之請求項 —— Rule 43(4) EPC 期待明確引用（例如「according to claim N」）。",
+          "pass": "未偵測到附屬關係格式問題（Rule 43(4) EPC）。"
+        },
+        "forwardDependency": {
+          "amend": "請求項向後引用：{{claims}}（Rule 43(4) EPC）。",
+          "pass": "未偵測到向後引用問題（Rule 43(4) EPC）。"
+        },
+        "independentClaimCount": {
+          "verify": "共偵測到 {{count}} 項獨立項（方法 {{methods}}；非方法 {{nonMethods}}）。Rule 43(2) EPC 原則上每一範疇僅准一獨立項，除非適用 Rule 43(3) 例外（相互關聯之產品 / 不同用途 / 替代方案）。請檢視。",
+          "pass": "未偵測到獨立項數量問題（Rule 43(2) EPC）。"
+        },
+        "markushFormat": {
+          "verify": "請求項 {{claims}} 使用 Markush 式選擇語，可能需採封閉式「selected from the group consisting of」（Guidelines F-IV § 4.20）。",
+          "pass": "未偵測到 Markush 格式問題（Guidelines F-IV § 4.20）。"
+        },
+        "multiDepOnMultiDep": {
+          "amend": "請求項 {{claims}} 為多項附屬，且其所附屬之請求項亦為多項附屬 —— Rule 43(4) EPC 不允許此種鏈式多項附屬。",
+          "pass": "未偵測到鏈式多項附屬（Rule 43(4) EPC）。"
+        },
+        "punctuation": {
+          "extraPeriod": {
+            "amend": "請求項 {{claimNumber}} 含多餘或位置不當之句點（Guidelines F-IV § 4.10）。"
+          },
+          "missingPeriod": {
+            "amend": "請求項 {{claimNumber}} 未以句點結尾（Guidelines F-IV § 4.10）。"
+          },
+          "pass": "未偵測到請求項標點問題（Guidelines F-IV § 4.10）。"
+        },
+        "refSignsInParens": {
+          "verify": "請求項 {{claims}} 含未加括號之裸露編號 —— Rule 43(7) EPC 期待元件符號以括號表示。",
+          "pass": "未偵測到元件符號加括號問題（Rule 43(7) EPC）。"
+        },
+        "restrictiveAbsolutes": {
+          "verify": "請求項 {{claims}} 出現絕對性用語（must / essential / required 等）。請依 Guidelines F-IV § 4.7 檢視。",
+          "pass": "未偵測到絕對性用語（Guidelines F-IV § 4.7）。"
+        },
+        "selfDependent": {
+          "amend": "請求項自我附屬：{{claims}}（Rule 43(4) EPC）。",
+          "pass": "未偵測到自我附屬之請求項（Rule 43(4) EPC）。"
+        },
+        "sequential": {
+          "amend": "請求項編號似不連續。缺漏請求項：{{claims}}（Rule 43(5) EPC）。",
+          "pass": "未偵測到請求項編號不連續（Rule 43(5) EPC）。"
+        },
+        "singleSentence": {
+          "verify": "請求項 {{claims}} 似含多句 —— Guidelines F-IV § 4.10 期待單一請求項為一句。",
+          "pass": "未偵測到多句請求項（Guidelines F-IV § 4.10）。"
+        },
+        "specReference": {
+          "amend": "請求項 {{claims}} 引用說明書或圖式 —— Rule 43(6) EPC 期待請求項自足。",
+          "pass": "未偵測到請求項引用說明書或圖式（Rule 43(6) EPC）。"
+        },
+        "subjectConsistency": {
+          "verify": "請求項 {{claims}} 之主詞似與所附屬之請求項不一致 —— 請依 Guidelines F-IV § 3.4 檢視。",
+          "pass": "未偵測到主詞一致性問題（Guidelines F-IV § 3.4）。"
+        },
+        "transitionPhrase": {
+          "verify": "獨立項 {{claims}} 似未使用 EPC 慣用連接詞（comprising / consisting of / characterised in that）。請依 Guidelines F-IV § 4.13 檢視。",
+          "pass": "未偵測到連接詞使用問題（Guidelines F-IV § 4.13）。"
+        },
+        "twoPartForm": {
+          "verify": "無獨立項採二段式撰寫(前言 +「characterised in that」)。Rule 43(1) EPC 視情形建議採二段式；請依最近先前技術判斷是否適用。",
+          "pass": "未偵測到二段式撰寫相關問題（Rule 43(1) EPC）。"
         }
       },
       "abstract": {
@@ -1064,6 +1156,32 @@
         "claimReference": {
           "amend": "摘要引用特定請求項 —— EPO Guidelines F-II § 2.3.3 要求摘要須自足、不得交叉引用請求項。",
           "pass": "摘要未引用特定請求項。"
+        },
+        "structure": {
+          "amend": "摘要結構似不符 Rule 47(2) EPC / Guidelines F-II § 2.3：{{detail}}。",
+          "pass": "未偵測到摘要結構問題（Rule 47(2) EPC）。"
+        },
+        "wordCount": {
+          "amend": "摘要計 {{count}} 字，超過 Guidelines F-II § 2.3 上限 150 字。",
+          "verify": "摘要計 {{count}} 字，低於 Guidelines F-II § 2.3 下限 50 字。",
+          "pass": "未偵測到摘要字數問題（Rule 47(2) EPC；50–150 字）。"
+        }
+      },
+      "drawings": {
+        "figureCount": {
+          "pass": "偵測到 {{count}} 圖（Rule 46(2)(a) EPC）。"
+        },
+        "figuresSequential": {
+          "amend": "圖式編號似不連續。缺漏圖號：{{detail}}（Rule 46(2)(a) EPC）。",
+          "pass": "未偵測到圖式編號不連續（Rule 46(2)(a) EPC）。"
+        },
+        "priorArtLabeling": {
+          "verify": "圖式簡單說明提及先前技術 —— 請確認相關圖式已依 Rule 46(2)(h) EPC 標示。",
+          "pass": "未偵測到先前技術圖式標示問題（Rule 46(2)(h) EPC）。"
+        },
+        "singleFigureLabel": {
+          "verify": "偵測到單一圖式，惟附近未見 Fig./FIG./Figure 標籤（Guidelines F-V § 1.2）。",
+          "pass": "未偵測到單一圖式標籤問題（Guidelines F-V § 1.2）。"
         }
       }
     },

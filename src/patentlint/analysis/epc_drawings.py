@@ -64,6 +64,7 @@ def check_figures_sequential_epc(full_text: str) -> list[CheckItem]:
             f"{', '.join(str(n) for n in missing) if missing else 'see diagnostic'}."
         ),
         message_key="check.epc.drawings.figuresSequential.amend",
+        details_params={"detail": ", ".join(str(n) for n in missing) if missing else "see diagnostic"},
         details=", ".join(str(n) for n in missing) if missing else None,
         reference="Rule 46(2)(a) EPC",
         diagnostics=_dx(
@@ -168,6 +169,7 @@ def check_figure_count_epc(full_text: str) -> list[CheckItem]:
         status="pass",
         message=f"Detected {count} figure(s).",
         message_key="check.epc.drawings.figureCount.pass",
+        details_params={"count": str(count)},
         reference="Rule 46(2)(a) EPC",
         diagnostics=_dx(figure_count=count),
     )]

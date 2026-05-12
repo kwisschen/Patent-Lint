@@ -1042,18 +1042,110 @@
         "titleContent": {
           "amend": "発明の名称に不適切な内容（商標または型番）が含まれているようです —— EPO Guidelines F-II § 4 は発明の説明的な名称を求めています。",
           "pass": "発明の名称に商標または型番トークンは検出されませんでした。"
+        },
+        "claimReferenceInSpec": {
+          "amend": "明細書が特定の請求項を参照しています（「{{detail}}」）—— Guidelines F-IV § 4.3 は明細書が自己完結であることを求めています。",
+          "pass": "明細書における請求項の相互参照は検出されませんでした（Guidelines F-IV § 4.3）。"
+        },
+        "paragraphEnding": {
+          "verify": "{{count}} 段落が標準の終止符で終わっていません。作成上の慣例に関する確認事項であり、EPC に明文の要件はありません。",
+          "pass": "段落末尾の句読点に関する所見は検出されませんでした。"
+        },
+        "paragraphNumbering": {
+          "verify": "段落番号が検出されましたが、完全に連続していません —— 開始 [{{first}}]、想定 [{{expected}}] まで；検出 {{count}} 個、終了 [{{last}}]（Guidelines F-II § 4.5）。",
+          "pass": "段落番号に関する所見は検出されませんでした —— EPC は段落番号を必須としていません（Guidelines F-II § 4.5）。"
+        },
+        "requiredSections": {
+          "amend": "Art. 78(1) EPC により、次の必須項目に欠落があるようです：{{sections}}。",
+          "pass": "必須項目の欠落は検出されませんでした（Art. 78(1) EPC；Rule 42(1) EPC）。"
+        },
+        "sectionOrdering": {
+          "amend": "明細書の小項目の順序が Rule 42(1) EPC の規定順序と異なるようです。検出：{{observed}}。想定：{{expected}}。",
+          "pass": "項目順序に関する所見は検出されませんでした（Rule 42(1) EPC）。"
+        },
+        "titleRequired": {
+          "amend": "発明の名称が欠落しているようです —— Rule 41(2)(b) EPC は発明の名称を求めています。",
+          "verify": "発明の名称が異例に長いようです（{{count}} 文字）。発明を簡潔に示しているかをご確認ください（Rule 41(2)(b) EPC）。",
+          "pass": "発明の名称の欠落は検出されませんでした（Rule 41(2)(b) EPC）。"
         }
       },
       "claims": {
         "antecedentBasis": {
-          "pass": "先行詞の根拠に関する問題は検出されませんでした（Art. 84 EPC）。"
+          "pass": "先行詞の根拠に関する問題は検出されませんでした（Art. 84 EPC）。",
+          "verify": "先行詞ウォーカーが {{count}} 件の所見を示しました。Art. 84 EPC および Guidelines F-IV § 4.5 によりご確認ください。"
         },
         "specSupport": {
-          "pass": "明細書で裏付けられていない請求項用語は検出されませんでした（Art. 84 EPC）。"
+          "pass": "明細書で裏付けられていない請求項用語は検出されませんでした（Art. 84 EPC）。",
+          "verify": "明細書サポートウォーカーが {{count}} 件の裏付けが不十分な可能性のある用語を示しました。Art. 84 EPC によりご確認ください。"
         },
         "excessClaims": {
           "verify": "総請求項数が 15 項を超えています。Rule 45 EPC により、第 16 項から第 50 項まで請求項ごとに手数料が発生し、第 51 項以降はより高額の手数料が発生します。出願料をご確認ください。",
           "pass": "超過請求項手数料の発生条件は検出されませんでした（Rule 45 EPC：請求項総数 15 以下）。"
+        },
+        "dependencyFormat": {
+          "amend": "請求項 {{claims}} は従属項のようですが、引用する親請求項を明示していません —— Rule 43(4) EPC は明示的な引用（例：「according to claim N」）を求めています。",
+          "pass": "引用関係の形式に関する所見は検出されませんでした（Rule 43(4) EPC）。"
+        },
+        "forwardDependency": {
+          "amend": "請求項の後方引用：{{claims}}（Rule 43(4) EPC）。",
+          "pass": "後方引用に関する所見は検出されませんでした（Rule 43(4) EPC）。"
+        },
+        "independentClaimCount": {
+          "verify": "独立項を {{count}} 件検出しました（方法 {{methods}}、非方法 {{nonMethods}}）。Rule 43(2) EPC は原則として各カテゴリーにつき独立項を 1 件に限り、Rule 43(3) の例外（相互に関連する物 / 異なる用途 / 代替的解決手段）に該当する場合のみ複数を認めます。ご確認ください。",
+          "pass": "独立項の数に関する所見は検出されませんでした（Rule 43(2) EPC）。"
+        },
+        "markushFormat": {
+          "verify": "請求項 {{claims}} は Markush 形式の択一表現を用いており、閉じた形式「selected from the group consisting of」が必要となる場合があります（Guidelines F-IV § 4.20）。",
+          "pass": "Markush 形式に関する所見は検出されませんでした（Guidelines F-IV § 4.20）。"
+        },
+        "multiDepOnMultiDep": {
+          "amend": "請求項 {{claims}} は多項引用であり、かつ多項引用を引用しています —— Rule 43(4) EPC はこの連鎖的な多項引用を認めていません。",
+          "pass": "連鎖的な多項引用は検出されませんでした（Rule 43(4) EPC）。"
+        },
+        "punctuation": {
+          "extraPeriod": {
+            "amend": "請求項 {{claimNumber}} に余分なまたは位置不適切な句点があります（Guidelines F-IV § 4.10）。"
+          },
+          "missingPeriod": {
+            "amend": "請求項 {{claimNumber}} が句点で終わっていません（Guidelines F-IV § 4.10）。"
+          },
+          "pass": "請求項の句読点に関する所見は検出されませんでした（Guidelines F-IV § 4.10）。"
+        },
+        "refSignsInParens": {
+          "verify": "請求項 {{claims}} に括弧で囲まれていない数字があります —— Rule 43(7) EPC は引用符号を括弧で囲むことを推奨しています。",
+          "pass": "引用符号の括弧表記に関する所見は検出されませんでした（Rule 43(7) EPC）。"
+        },
+        "restrictiveAbsolutes": {
+          "verify": "請求項 {{claims}} に絶対的限定語（must / essential / required 等）が含まれています。Guidelines F-IV § 4.7 によりご確認ください。",
+          "pass": "絶対的限定語は検出されませんでした（Guidelines F-IV § 4.7）。"
+        },
+        "selfDependent": {
+          "amend": "請求項の自己引用：{{claims}}（Rule 43(4) EPC）。",
+          "pass": "自己引用の請求項は検出されませんでした（Rule 43(4) EPC）。"
+        },
+        "sequential": {
+          "amend": "請求項番号が連続していないようです。欠番：{{claims}}（Rule 43(5) EPC）。",
+          "pass": "請求項番号の連続性に関する所見は検出されませんでした（Rule 43(5) EPC）。"
+        },
+        "singleSentence": {
+          "verify": "請求項 {{claims}} は複数の文を含むようです —— Guidelines F-IV § 4.10 は請求項を 1 文で表現することを求めています。",
+          "pass": "複数文の請求項は検出されませんでした（Guidelines F-IV § 4.10）。"
+        },
+        "specReference": {
+          "amend": "請求項 {{claims}} が明細書または図面を参照しています —— Rule 43(6) EPC は請求項が自己完結であることを求めています。",
+          "pass": "請求項からの明細書・図面への参照は検出されませんでした（Rule 43(6) EPC）。"
+        },
+        "subjectConsistency": {
+          "verify": "請求項 {{claims}} の主題が親請求項と一致しない可能性があります —— Guidelines F-IV § 3.4 によりご確認ください。",
+          "pass": "主題の一致性に関する所見は検出されませんでした（Guidelines F-IV § 3.4）。"
+        },
+        "transitionPhrase": {
+          "verify": "独立項 {{claims}} は EPC の標準的な連結句（comprising / consisting of / characterised in that）を含まないようです。Guidelines F-IV § 4.13 によりご確認ください。",
+          "pass": "連結句に関する所見は検出されませんでした（Guidelines F-IV § 4.13）。"
+        },
+        "twoPartForm": {
+          "verify": "独立項に二部形式（前提部 +「characterised in that」）が用いられていません。Rule 43(1) EPC は適切な場合にこの形式を推奨しています。最も近接する先行技術に照らしご確認ください。",
+          "pass": "二部形式に関する所見は検出されませんでした（Rule 43(1) EPC）。"
         }
       },
       "abstract": {
@@ -1064,6 +1156,32 @@
         "claimReference": {
           "amend": "要約が特定の請求項を参照しています — EPO Guidelines F-II § 2.3.3 は要約を自己完結的とし、特定の請求項を相互参照しないことを要求しています。",
           "pass": "要約は特定の請求項を参照していません。"
+        },
+        "structure": {
+          "amend": "要約の構造が Rule 47(2) EPC / Guidelines F-II § 2.3 に適合しない可能性があります：{{detail}}。",
+          "pass": "要約の構造に関する所見は検出されませんでした（Rule 47(2) EPC）。"
+        },
+        "wordCount": {
+          "amend": "要約は {{count}} 語で、Guidelines F-II § 2.3 の目安である上限 150 語を超えています。",
+          "verify": "要約は {{count}} 語で、Guidelines F-II § 2.3 の目安である下限 50 語を下回っています。",
+          "pass": "要約の語数に関する所見は検出されませんでした（Rule 47(2) EPC；50〜150 語）。"
+        }
+      },
+      "drawings": {
+        "figureCount": {
+          "pass": "{{count}} 図を検出しました（Rule 46(2)(a) EPC）。"
+        },
+        "figuresSequential": {
+          "amend": "図番号が連続していないようです。欠番：{{detail}}（Rule 46(2)(a) EPC）。",
+          "pass": "図番号の連続性に関する所見は検出されませんでした（Rule 46(2)(a) EPC）。"
+        },
+        "priorArtLabeling": {
+          "verify": "図面の簡単な説明が先行技術に言及しています —— 該当の図が Rule 46(2)(h) EPC に従い表示されているかご確認ください。",
+          "pass": "先行技術の図表示に関する所見は検出されませんでした（Rule 46(2)(h) EPC）。"
+        },
+        "singleFigureLabel": {
+          "verify": "単一の図を検出しましたが、近くに Fig./FIG./Figure のラベルが見当たりません（Guidelines F-V § 1.2）。",
+          "pass": "単一図のラベルに関する所見は検出されませんでした（Guidelines F-V § 1.2）。"
         }
       }
     },
