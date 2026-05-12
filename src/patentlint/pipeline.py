@@ -103,6 +103,7 @@ def _run_epc_pipeline(
       G6 (§ 112-equivalent, walker): pending
       G7 (abstract):       pending
     """
+    from patentlint.analysis.drawings import _extract_figure_ids
     from patentlint.analysis.epc_abstract import run_g7_abstract_checks
     from patentlint.analysis.epc_claims import (
         run_g4_claims_structure_checks,
@@ -115,6 +116,7 @@ def _run_epc_pipeline(
         run_g2_spec_content_checks,
     )
     from patentlint.parser.claims_epc import parse_claims_epc
+    from patentlint.parser.jurisdiction_mismatch import detect_epc_unsupported_language
     from patentlint.parser.sections_epc import (
         extract_abstract_section_epc,
         extract_claims_section_epc,
@@ -140,6 +142,9 @@ def _run_epc_pipeline(
 
     independent_count = sum(1 for c in claims if c.independent)
     dependent_count = sum(1 for c in claims if not c.independent)
+    figure_ids = _extract_figure_ids(full_text)
+    figures_count = len(figure_ids)
+    epc_unsupported_language = detect_epc_unsupported_language(full_text)
 
     result = AnalysisResult(
         jurisdiction=Jurisdiction.EPC,
@@ -147,7 +152,9 @@ def _run_epc_pipeline(
         likely_patent=likely_patent,
         patent_detection_reason=patent_detection_reason,
         has_tracked_changes=has_tracked_changes,
+        jurisdiction_mismatch=bool(suggested_jurisdiction),
         suggested_jurisdiction=suggested_jurisdiction,
+        epc_unsupported_language=epc_unsupported_language,
         abstract_text=abstract_text,
         abstract_word_count=abstract_word_count,
         claims=claims,
@@ -159,6 +166,14 @@ def _run_epc_pipeline(
         epc_drawings_checks=drawings_checks,
         epc_claims_checks=claims_checks,
         epc_abstract_checks=abstract_checks,
+    )
+    _attach_rubric_grade(
+        result,
+        has_drawings=detect_has_drawings(figures_count=figures_count),
+        title=title,
+        has_claims=bool(claims),
+        has_spec_body=bool(description_text and description_text.strip()),
+        has_abstract=bool(abstract_text and abstract_text.strip()),
     )
     return result
 

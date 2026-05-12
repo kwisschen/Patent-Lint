@@ -355,6 +355,14 @@ class ReportData(BaseModel):
     jurisdiction_mismatch: bool = False
     suggested_jurisdiction: str | None = None
 
+    # EPC v1 supports English-input drafts only (DE / FR check engines
+    # deferred). When EPC is selected but the document is written in DE
+    # or FR (or other EPO national language), this field carries the
+    # detected language code ("de" / "fr") and the frontend renders an
+    # "EPC v1 is English-only" advisory banner. None means English (or
+    # the language is ambiguous / not EPC).
+    epc_unsupported_language: str | None = None
+
     # Rubric grade (forwarded from AnalysisResult). Allows the PDF
     # template + frontend report to read the grade from a single
     # canonical surface.
@@ -539,6 +547,9 @@ class AnalysisResult(BaseModel):
     jurisdiction_mismatch: bool = False
     suggested_jurisdiction: str | None = None
 
+    # EPC v1 English-input gate — see ReportData.epc_unsupported_language.
+    epc_unsupported_language: str | None = None
+
     # Abstract
     abstract_word_count: int = 0
     # Raw abstract text — populated for US runs from the parser's
@@ -708,6 +719,7 @@ class AnalysisResult(BaseModel):
             has_tracked_changes=self.has_tracked_changes,
             jurisdiction_mismatch=self.jurisdiction_mismatch,
             suggested_jurisdiction=self.suggested_jurisdiction,
+            epc_unsupported_language=self.epc_unsupported_language,
             rubric_grade=self.rubric_grade,
         )
 

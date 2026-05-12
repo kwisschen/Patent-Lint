@@ -93,7 +93,8 @@
   "status": {
     "pass": "OK",
     "verify": "PRÜFEN",
-    "amend": "KORRIGIEREN"
+    "amend": "KORRIGIEREN",
+    "allChecksPassed": "Alle Prüfungen bestanden."
   },
   "button": {
     "downloadPdf": "PDF-Bericht speichern",
@@ -135,6 +136,10 @@
     "nonPatentWarningDetailsTw": "PatentLint ist für Patentanmeldungsentwürfe konzipiert. Diese Datei enthält offenbar keine üblichen taiwanesischen Beschreibungsabschnitte (【技術領域】, 【先前技術】 usw.), nummerierte Ansprüche (請求項) oder Absatznummerierung. Prüfergebnisse für nicht-taiwanesische oder Nicht-Patentdokumente können wenig aussagekräftig sein.",
     "nonPatentWarningEpc": "Dieses Dokument ist möglicherweise keine europäische Patentschrift",
     "nonPatentWarningDetailsEpc": "PatentLint ist für Patentanmeldungsentwürfe konzipiert. Diese Datei enthält offenbar keine üblichen europäischen Beschreibungsabschnitte (Technical Field, Background Art usw.), nummerierte Ansprüche oder Absatznummerierung. Prüfergebnisse für nicht-europäische oder Nicht-Patentdokumente können wenig aussagekräftig sein.",
+    "nonPatentWarningEpcNonEnglishDe": "EPÜ v1 unterstützt derzeit nur englischsprachige Anmeldungen",
+    "nonPatentWarningDetailsEpcNonEnglishDe": "PatentLint hat erheblichen deutschsprachigen Inhalt in dieser Datei festgestellt. EPÜ v1 prüft derzeit ausschließlich englischsprachige europäische Patentschriften — DE- und FR-Prüfmaschinen sind in Vorbereitung. Die Ergebnisse lassen sich dennoch anzeigen, sind für eine deutschsprachige Anmeldung aber vermutlich nicht aussagekräftig.",
+    "nonPatentWarningEpcNonEnglishFr": "EPÜ v1 unterstützt derzeit nur englischsprachige Anmeldungen",
+    "nonPatentWarningDetailsEpcNonEnglishFr": "PatentLint hat erheblichen französischsprachigen Inhalt in dieser Datei festgestellt. EPÜ v1 prüft derzeit ausschließlich englischsprachige europäische Patentschriften — DE- und FR-Prüfmaschinen sind in Vorbereitung. Die Ergebnisse lassen sich dennoch anzeigen, sind für eine französischsprachige Anmeldung aber vermutlich nicht aussagekräftig.",
     "nonPatentWarningCrossScriptJapanese": "Dieses Dokument wirkt wie ein japanisches Patent",
     "nonPatentWarningDetailsCrossScriptJapanese": "PatentLint hat einen nennenswerten Anteil japanischer Silbenschrift (Hiragana oder Katakana) in dieser Datei festgestellt. Japanische Entwürfe werden derzeit nicht unterstützt — PatentLint prüft US-, europäische (EPC-englische), vereinfachte chinesische und traditionelle chinesische Patentschriften. Die Ergebnisse lassen sich dennoch anzeigen, sind für einen japanischen Entwurf aber vermutlich nicht aussagekräftig.",
     "nonPatentWarningCrossScriptKorean": "Dieses Dokument wirkt wie ein koreanisches Patent",
@@ -1096,6 +1101,27 @@
         "pass": "Figuren sind in fortlaufender Reihenfolge."
       },
       "count": "{{count}} Figur(en) gefunden."
+    },
+    "epc": {
+      "spec": {
+        "figureRefConsistency": {
+          "orphanedBrief": {
+            "amend": "Figur(en) in der Kurzbeschreibung der Zeichnungen beschrieben, aber in der detaillierten Beschreibung nicht referenziert (Regel 46(2)(h) EPÜ)."
+          },
+          "orphanedDetailed": {
+            "amend": "Figur(en) in der detaillierten Beschreibung referenziert, aber in der Kurzbeschreibung der Zeichnungen nicht beschrieben (Regel 46(2)(h) EPÜ)."
+          },
+          "pass": "Alle Figurenreferenzen stimmen zwischen Kurzbeschreibung und detaillierter Beschreibung überein."
+        }
+      },
+      "claims": {
+        "antecedentBasis": {
+          "pass": "Alle Anspruchsmerkmale haben einen Rückbezug (Art. 84 EPÜ)."
+        },
+        "specSupport": {
+          "pass": "Alle Anspruchsmerkmale sind in der Beschreibung gestützt (Art. 84 EPÜ)."
+        }
+      }
     },
     "cn": {
       "spec": {

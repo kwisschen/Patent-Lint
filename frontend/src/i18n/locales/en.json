@@ -93,7 +93,8 @@
   "status": {
     "pass": "PASS",
     "verify": "REVIEW",
-    "amend": "FIX"
+    "amend": "FIX",
+    "allChecksPassed": "All checks passed."
   },
   "button": {
     "downloadPdf": "Save PDF Report",
@@ -135,6 +136,10 @@
     "nonPatentWarningDetailsTw": "PatentLint is designed for patent application drafts. This file does not appear to contain standard Taiwanese specification sections (【技術領域】, 【先前技術】, etc.), numbered claims (請求項), or paragraph numbering. Analysis results may not be meaningful for non-Taiwanese or non-patent documents.",
     "nonPatentWarningEpc": "This document may not be a European patent specification",
     "nonPatentWarningDetailsEpc": "PatentLint is designed for patent application drafts. This file does not appear to contain standard European specification sections (Technical Field, Background Art, etc.), numbered claims, or paragraph numbering. Analysis results may not be meaningful for non-European or non-patent documents.",
+    "nonPatentWarningEpcNonEnglishDe": "EPC v1 supports English-language drafts only",
+    "nonPatentWarningDetailsEpcNonEnglishDe": "PatentLint detected substantial German content in this file. EPC v1 currently checks English-language European patent specifications only — DE / FR check engines are on the roadmap. You can still view the results, but the findings may not be meaningful for a German draft.",
+    "nonPatentWarningEpcNonEnglishFr": "EPC v1 supports English-language drafts only",
+    "nonPatentWarningDetailsEpcNonEnglishFr": "PatentLint detected substantial French content in this file. EPC v1 currently checks English-language European patent specifications only — DE / FR check engines are on the roadmap. You can still view the results, but the findings may not be meaningful for a French draft.",
     "nonPatentWarningCrossScriptJapanese": "This looks like a Japanese patent document",
     "nonPatentWarningDetailsCrossScriptJapanese": "PatentLint detected substantial Japanese kana (hiragana or katakana) in this file. Japanese drafts aren't currently supported — this tool checks U.S., European (EPC English), Simplified Chinese, and Traditional Chinese patent specifications. You can still view the results, but the output may not be useful for a Japanese draft.",
     "nonPatentWarningCrossScriptKorean": "This looks like a Korean patent document",
@@ -1096,6 +1101,27 @@
         "pass": "Figures are in sequential order."
       },
       "count": "{{count}} figure(s) found."
+    },
+    "epc": {
+      "spec": {
+        "figureRefConsistency": {
+          "orphanedBrief": {
+            "amend": "Figure(s) described in Brief Description of Drawings but not referenced in Detailed Description (Rule 46(2)(h) EPC)."
+          },
+          "orphanedDetailed": {
+            "amend": "Figure(s) referenced in Detailed Description but not described in Brief Description of Drawings (Rule 46(2)(h) EPC)."
+          },
+          "pass": "All figure references are consistent between Brief Description of Drawings and Detailed Description."
+        }
+      },
+      "claims": {
+        "antecedentBasis": {
+          "pass": "All claim terms have antecedent basis (Art. 84 EPC)."
+        },
+        "specSupport": {
+          "pass": "All claim terms supported by the specification (Art. 84 EPC)."
+        }
+      }
     },
     "cn": {
       "spec": {

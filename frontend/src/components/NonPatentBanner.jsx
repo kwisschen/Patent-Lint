@@ -21,6 +21,8 @@ const REASONS = {
   content_missing: 'ContentMissing',
   cross_script_japanese: 'CrossScriptJapanese',
   cross_script_korean: 'CrossScriptKorean',
+  epc_non_english_de: 'EpcNonEnglishDe',
+  epc_non_english_fr: 'EpcNonEnglishFr',
   weak_signal: 'WeakSignal',
 }
 
