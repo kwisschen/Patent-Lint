@@ -1526,11 +1526,11 @@
       "title": "Die Website vs. die Software",
       "p1": "PatentLint hat zwei Erscheinungsformen:",
       "siteLabel": "Die Website (patentlint.com).",
-      "siteDesc": "Eine gehostete Webanwendung, kostenlos für die persönliche Nutzung durch einzelne Patentpraktiker und für Organisationen zur Evaluierung vor einer kommerziellen Lizenzierung (siehe § 4). Wenn Sie eine Patentanmeldung laden, läuft die Prüfung vollständig in Ihrem Browser über WebAssembly — Ihr Entwurf verlässt nie Ihr Gerät. Die Website wird von Christopher Chen betrieben.",
+      "siteDesc": "Eine gehostete Webanwendung, kostenlos für die persönliche Nutzung durch einzelne Praktiker. Beim Laden eines Patententwurfs läuft die Prüfung vollständig in Ihrem Browser via WebAssembly — Ihr Entwurf verlässt Ihr Gerät nicht. PatentLint wird als persönliches Projekt von Christopher Chen geführt, einem einzelnen Praktiker in persönlicher Eigenschaft, nicht als Unternehmen.",
       "softwareLabel": "Die Software.",
       "softwareDesc": "Der zugrunde liegende Quellcode, quelltextverfügbar unter PolyForm-Strict-1.0.0 (Lizenzbedingungen siehe § 4).",
       "p2": "Diese Bedingungen gelten für die Nutzung beider. Unterschiedliche Regeln gelten je nachdem, welche Sie nutzen.",
-      "statusNote": "<1>Projektstatus.</1> Die Website bleibt für einzelne Praktiker sowie für Organisationen, die vor einer kommerziellen Lizenzierung (§ 4) evaluieren, kostenlos. Eine kommerzielle Bereitstellung gemäß § 4 bleibt als Option bestehen; neue kommerzielle Kunden werden in diesem Zeitraum jedoch nicht aktiv aufgenommen. Anfragen an die in § 4 angegebene Kontaktadresse sind weiterhin willkommen."
+      "statusNote": "<1>Projektstatus.</1> PatentLint wird als persönliches Projekt geführt. Die Website ist für einzelne Praktiker kostenlos. Etwaige kommerzielle Lizenzvereinbarungen gemäß § 4 werden privat auf Anfrage abgewickelt, nicht aktiv beworben; der Maintainer wirbt nicht aktiv neue kommerzielle Kunden ein."
     },
     "s2": {
       "title": "Nutzung der Website",
@@ -1567,7 +1567,7 @@
       "requires2": "Bereitstellung der Software als gehosteter Dienst für Dritte.",
       "requires3": "Weiterverteilung modifizierter oder unveränderter Versionen der Software.",
       "requires4": "Einbindung der Software (oder Teilen davon) in ein anderes von Ihnen vertriebenes Produkt.",
-      "contact": "Kontaktieren Sie <1>kwisschen@gmail.com</1>, um kommerzielle Lizenzbedingungen zu besprechen. Preise und Bedingungen werden je nach Bereitstellungsmodell, Umfang und Organisationsgröße einzelfallbezogen verhandelt."
+      "contact": "Kommerzielle Lizenzvereinbarungen unter PolyForm-Strict-1.0.0 werden privat auf Anfrage abgewickelt. Wenn Ihre Organisation eine kommerzielle Lizenz benötigt, wenden Sie sich an <1>kwisschen@gmail.com</1>."
     },
     "s5": {
       "title": "Die Nutzung der Website gewährt keine Software-Rechte",

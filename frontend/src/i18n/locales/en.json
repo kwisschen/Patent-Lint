@@ -1526,11 +1526,11 @@
       "title": "The Site vs. the Software",
       "p1": "PatentLint has two forms:",
       "siteLabel": "The Site (patentlint.com).",
-      "siteDesc": "A hosted web application, free for individual practitioners' personal use and for organizations evaluating before commercial licensing (see § 4). When you load a patent draft, analysis runs entirely in your browser via WebAssembly — your draft never leaves your device. The Site is operated by Christopher Chen.",
+      "siteDesc": "A hosted web application, free for individual practitioners' personal use. When you load a patent draft, analysis runs entirely in your browser via WebAssembly — your draft never leaves your device. PatentLint is operated as a personal project by Christopher Chen, an individual practitioner acting in personal capacity, not as a business entity.",
       "softwareLabel": "The Software.",
       "softwareDesc": "The underlying source code, source-available under PolyForm-Strict-1.0.0 (see § 4 for license terms).",
       "p2": "These Terms cover your use of both. Different rules apply depending on which you are using.",
-      "statusNote": "<1>Project status.</1> The Site remains free for individual practitioners and for organizations evaluating before commercial licensing (§ 4). Commercial deployment under § 4 is preserved as an option, but new commercial customers are not being actively onboarded during this period. Inquiries via the contact in § 4 remain welcome."
+      "statusNote": "<1>Project status.</1> PatentLint is maintained as a personal project. The Site is free for individual practitioners. Any commercial licensing arrangement under § 4 is handled privately on inquiry, not actively promoted, and the maintainer is not actively soliciting new commercial customers."
     },
     "s2": {
       "title": "Using the Site",
@@ -1567,7 +1567,7 @@
       "requires2": "Offering the Software as a hosted service to third parties.",
       "requires3": "Redistributing modified or unmodified versions of the Software.",
       "requires4": "Including the Software (or parts of it) in another product you distribute.",
-      "contact": "Contact <1>kwisschen@gmail.com</1> to discuss commercial licensing terms. Pricing and terms are negotiated case-by-case based on deployment model, scope, and organization size."
+      "contact": "Commercial licensing arrangements under PolyForm-Strict-1.0.0 are handled privately on inquiry. If your organization needs a commercial license, contact <1>kwisschen@gmail.com</1>."
     },
     "s5": {
       "title": "Using the Site does not grant Software rights",
