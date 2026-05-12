@@ -656,7 +656,7 @@
       "title": "EPC 专利交互式分析",
       "claimTree": {
         "title": "权利要求依附树状图 + 第84条 walker",
-        "description": "完整权利要求依附树状图，配合引用基础与说明书支持 walker（依 EPC 第84条）。EPC 特有的依附表述——「any preceding claim」、「any one of claims N to M」——在解析阶段预处理并展开。"
+        "description": "完整权利要求依附树状图，配合引用基础与说明书支持 walker（依 EPC 第84条）。EPC 特有的依附表述（「any preceding claim」、「any one of claims N to M」）在解析阶段预处理并展开。"
       },
       "specAbstract": {
         "title": "说明书与摘要结构",
@@ -679,7 +679,7 @@
       "paragraphNumbering": "段落编号（建议性检查）",
       "paragraphEnding": "段落结尾标点",
       "titleRequired": "发明名称（实施细则第41(2)(b)条）",
-      "titleContent": "发明名称内容 —— 不含商标或型号（审查指南 F-II § 4）",
+      "titleContent": "发明名称内容：不含商标或型号（审查指南 F-II § 4）",
       "figureRefConsistency": "图示引用一致性（实施细则第46(2)(h)条）",
       "numeralConsistency": "参考标记一致性（实施细则第43(7)条、第46(2)(h)条）",
       "claimReferenceInSpec": "说明书中不得引用权利要求（EPO 审查指南 F-IV § 4.3）",
@@ -690,23 +690,23 @@
       "singleSentence": "每项权利要求以单句为之（实施细则第43(4)条、审查指南 F-IV § 4.10）",
       "refSignsInParens": "参考标记应加括号（实施细则第43(7)条）",
       "subjectConsistency": "权利要求主题一致性（审查指南 F-IV § 3.4）",
-      "transitionPhrase": "连接词——comprising / consisting of / 其特征在于（审查指南 F-IV § 4.13）",
+      "transitionPhrase": "连接词：comprising / consisting of / 其特征在于（审查指南 F-IV § 4.13）",
       "claimsSpecReference": "权利要求不得引用说明书或附图（实施细则第43(6)条）",
       "multiDepOnMultiDep": "多项从属权利要求不得依附另一多项从属权利要求（实施细则第43(4)条）",
       "markushFormat": "Markush 群组形式（审查指南 F-IV § 4.20）",
       "independentClaimCount": "各权利要求类别之独立项数（实施细则第43(2)、43(3)条，建议性）",
       "twoPartForm": "两段式（实施细则第43(1)条，建议性）",
-      "antecedentBasis": "引用基础 walker——第84条、审查指南 F-IV § 4.5",
-      "specSupport": "说明书支持——第84条（说明书支持要件）",
+      "antecedentBasis": "引用基础 walker：第84条、审查指南 F-IV § 4.5",
+      "specSupport": "说明书支持：第84条（说明书支持要件）",
       "restrictiveAbsolutes": "限制性绝对用语（审查指南 F-IV § 4.7，建议性）",
       "punctuation": "权利要求标点（审查指南 F-IV § 4.10）",
       "figuresSequential": "附图连续编号（实施细则第46(2)(a)条）",
       "singleFigureLabel": "单一附图之标示方式（审查指南 F-V § 1.2）",
       "priorArtLabeling": "现有技术附图之标示（实施细则第46(2)(h)条）",
-      "wordCount": "摘要字数（50-150）——实施细则第47(2)条、审查指南 F-II § 2.3",
+      "wordCount": "摘要字数（50-150）：实施细则第47(2)条、审查指南 F-II § 2.3",
       "titleMatch": "摘要与发明名称所指之发明相符（审查指南 F-II § 2.3.5）",
       "claimReference": "摘要不引用特定权利要求（审查指南 F-II § 2.3.3）",
-      "structure": "摘要结构——单段落，避免权利要求风格用语，避免功利性语言",
+      "structure": "摘要结构：单段落，避免权利要求风格用语，避免功利性语言",
       "excessClaims": "超项费门槛（Rule 45 EPC）"
     },
     "epcTableFootnote": "截至 2026 年 5 月。EPC 检查目前为 Beta 阶段，仅支持英文撰写的欧洲专利说明书；PatentLint 将持续演进。"
@@ -1013,7 +1013,7 @@
         "pass": "摘要未发现评价性或自指性用语。"
       },
       "structure": {
-        "amend": "摘要含有额外段落或非标准结尾——实务上摘要为单一段落（MPEP § 608.01(b)）。",
+        "amend": "摘要含有额外段落或非标准结尾：实务上摘要为单一段落（MPEP § 608.01(b)）。",
         "pass": "摘要为单一段落且结尾正确。"
       },
       "impliedPhrases": {
@@ -1052,11 +1052,11 @@
           "pass": "未检测到「Brief Description of Drawings」与「Detailed Description」之间的附图引用不一致。"
         },
         "titleContent": {
-          "amend": "发明名称似乎含有不适格内容（商标或型号）—— EPO Guidelines F-II § 4 期待具描述性之发明名称。",
+          "amend": "发明名称似乎含有不适格内容（商标或型号）：EPO Guidelines F-II § 4 期待具描述性之发明名称。",
           "pass": "未在发明名称中检测到商标或型号标记。"
         },
         "claimReferenceInSpec": {
-          "amend": "说明书引用了特定权利要求（「{{detail}}」）—— Guidelines F-IV § 4.3 期待说明书能够自足。",
+          "amend": "说明书引用了特定权利要求（「{{detail}}」）：Guidelines F-IV § 4.3 期待说明书能够自足。",
           "pass": "未在说明书中检测到权利要求交叉引用（Guidelines F-IV § 4.3）。"
         },
         "paragraphEnding": {
@@ -1064,8 +1064,8 @@
           "pass": "未检测到段落结尾标点问题。"
         },
         "paragraphNumbering": {
-          "verify": "已检测到段落编号但并非完全连续 —— 起始 [{{first}}]，预期至 [{{expected}}]；共 {{count}} 个编号，止于 [{{last}}]（Guidelines F-II § 4.5）。",
-          "pass": "未检测到段落编号问题 —— EPC 不强制要求段落编号（Guidelines F-II § 4.5）。"
+          "verify": "已检测到段落编号但并非完全连续：起始 [{{first}}]，预期至 [{{expected}}]；共 {{count}} 个编号，止于 [{{last}}]（Guidelines F-II § 4.5）。",
+          "pass": "未检测到段落编号问题：EPC 不强制要求段落编号（Guidelines F-II § 4.5）。"
         },
         "requiredSections": {
           "amend": "依 Art. 78(1) EPC，下列必要章节似有缺漏：{{sections}}。",
@@ -1076,7 +1076,7 @@
           "pass": "未检测到章节顺序问题（Rule 42(1) EPC）。"
         },
         "titleRequired": {
-          "amend": "发明名称似有缺漏 —— Rule 41(2)(b) EPC 期待载明发明名称。",
+          "amend": "发明名称似有缺漏：Rule 41(2)(b) EPC 期待载明发明名称。",
           "verify": "发明名称字数异常偏长（{{count}} 字符）；请确认是否简明指出发明（Rule 41(2)(b) EPC）。",
           "pass": "未检测到发明名称缺漏（Rule 41(2)(b) EPC）。"
         },
@@ -1100,7 +1100,7 @@
           "pass": "未检测到 EPC 超项费触发条件（Rule 45 EPC：总权利要求不超过 15 项）。"
         },
         "dependencyFormat": {
-          "amend": "权利要求 {{claims}} 似为从属权利要求，但未明确引用所引权利要求 —— Rule 43(4) EPC 期待明确引用（例如「according to claim N」）。",
+          "amend": "权利要求 {{claims}} 似为从属权利要求，但未明确引用所引权利要求：Rule 43(4) EPC 期待明确引用（例如「according to claim N」）。",
           "pass": "未检测到引用关系格式问题（Rule 43(4) EPC）。"
         },
         "forwardDependency": {
@@ -1116,7 +1116,7 @@
           "pass": "未检测到 Markush 格式问题（Guidelines F-IV § 4.20）。"
         },
         "multiDepOnMultiDep": {
-          "amend": "权利要求 {{claims}} 为多项引用，且其所引权利要求亦为多项引用 —— Rule 43(4) EPC 不允许此种链式多项引用。",
+          "amend": "权利要求 {{claims}} 为多项引用，且其所引权利要求亦为多项引用：Rule 43(4) EPC 不允许此种链式多项引用。",
           "pass": "未检测到链式多项引用（Rule 43(4) EPC）。"
         },
         "punctuation": {
@@ -1129,7 +1129,7 @@
           "pass": "未检测到权利要求标点问题（Guidelines F-IV § 4.10）。"
         },
         "refSignsInParens": {
-          "verify": "权利要求 {{claims}} 含未加括号之裸露编号 —— Rule 43(7) EPC 期待元件符号以括号表示。",
+          "verify": "权利要求 {{claims}} 含未加括号之裸露编号：Rule 43(7) EPC 期待元件符号以括号表示。",
           "pass": "未检测到元件符号加括号问题（Rule 43(7) EPC）。"
         },
         "restrictiveAbsolutes": {
@@ -1145,15 +1145,15 @@
           "pass": "未检测到权利要求编号不连续（Rule 43(5) EPC）。"
         },
         "singleSentence": {
-          "verify": "权利要求 {{claims}} 似含多句 —— Guidelines F-IV § 4.10 期待单一权利要求为一句。",
+          "verify": "权利要求 {{claims}} 似含多句：Guidelines F-IV § 4.10 期待单一权利要求为一句。",
           "pass": "未检测到多句权利要求（Guidelines F-IV § 4.10）。"
         },
         "specReference": {
-          "amend": "权利要求 {{claims}} 引用说明书或附图 —— Rule 43(6) EPC 期待权利要求自足。",
+          "amend": "权利要求 {{claims}} 引用说明书或附图：Rule 43(6) EPC 期待权利要求自足。",
           "pass": "未检测到权利要求引用说明书或附图（Rule 43(6) EPC）。"
         },
         "subjectConsistency": {
-          "verify": "权利要求 {{claims}} 之主语似与所引权利要求不一致 —— 请依 Guidelines F-IV § 3.4 检视。",
+          "verify": "权利要求 {{claims}} 之主语似与所引权利要求不一致：请依 Guidelines F-IV § 3.4 检视。",
           "pass": "未检测到主语一致性问题（Guidelines F-IV § 3.4）。"
         },
         "transitionPhrase": {
@@ -1167,11 +1167,11 @@
       },
       "abstract": {
         "titleMatch": {
-          "verify": "摘要与发明名称所示之发明未见一致 —— 未检测到内容字词重叠（EPO Guidelines F-II § 2.3.5）。",
+          "verify": "摘要与发明名称所示之发明未见一致：未检测到内容字词重叠（EPO Guidelines F-II § 2.3.5）。",
           "pass": "摘要与发明名称所指之发明相符。"
         },
         "claimReference": {
-          "amend": "摘要引用特定权利要求 —— EPO Guidelines F-II § 2.3.3 要求摘要须自足、不得交叉引用权利要求。",
+          "amend": "摘要引用特定权利要求：EPO Guidelines F-II § 2.3.3 要求摘要须自足、不得交叉引用权利要求。",
           "pass": "摘要未引用特定权利要求。"
         },
         "structure": {
@@ -1193,7 +1193,7 @@
           "pass": "未检测到附图编号不连续（Rule 46(2)(a) EPC）。"
         },
         "priorArtLabeling": {
-          "verify": "「Brief Description of Drawings」提及现有技术 —— 请确认相关附图已依 Rule 46(2)(h) EPC 标示。",
+          "verify": "「Brief Description of Drawings」提及现有技术：请确认相关附图已依 Rule 46(2)(h) EPC 标示。",
           "pass": "未检测到现有技术附图标示问题（Rule 46(2)(h) EPC）。"
         },
         "singleFigureLabel": {
@@ -1683,7 +1683,7 @@
       "title": "本网站与本软件之区别",
       "p1": "PatentLint 以两种形式提供：",
       "siteLabel": "本网站（patentlint.com）。",
-      "siteDesc": "一个托管的网络应用程序，免费供个别从业人员个人使用。当您载入专利草稿时，分析完全在您的浏览器中通过 WebAssembly 执行 —— 您的草稿不会离开您的设备。PatentLint 由 Christopher Chen 以个人项目形式维护，并非以商业实体身份运作。",
+      "siteDesc": "一个托管的网络应用程序，免费供个别从业人员个人使用。当您载入专利草稿时，分析完全在您的浏览器中通过 WebAssembly 执行：您的草稿不会离开您的设备。PatentLint 由 Christopher Chen 以个人项目形式维护，并非以商业实体身份运作。",
       "softwareLabel": "本软件。",
       "softwareDesc": "底层源代码，依 PolyForm-Strict-1.0.0 提供源代码可供查阅之授权（授权条款详见 §4）。",
       "p2": "本条款涵盖前述两者之使用。依您所使用之形式，适用之规范有所不同。",
@@ -1734,7 +1734,7 @@
       "title": "非属法律意见",
       "p1": "PatentLint 为自动化撰稿辅助工具。其输出仅供初步参考，无法替代具备资格之专利专业人员之审阅。本网站所产生之任何内容均不构成法律意见。请勿仅凭 PatentLint 之输出，作为专利申请、答辩或行使权利之依据。",
       "p2": "检查项目包括引用基础分析、说明书支持分析（US 依 § 112(a)；EPC 依 Art. 84；CN 依 专利法 §26 第4款；TW 依 專利法 §26 第3項）、章节顺序、权利要求标点，以及其他规则式检查。各项检查系标示供您审阅之候选事项，并非法律判断。",
-      "p3": "整体字母评级仅汇整规则式检查结果 —— A 等代表 PatentLint 之规则目录未发现标记项目，并不代表稿件已可提交申请。",
+      "p3": "整体字母评级仅汇整规则式检查结果：A 等代表 PatentLint 之规则目录未发现标记项目，并不代表稿件已可提交申请。",
       "p4": "您须自行负责就 PatentLint 之任何分析结果于采取行动前进行验证。使用本网站或本软件并不于您与 Christopher Chen 之间构成任何委任、代理或受托关系。"
     },
     "s7": {
@@ -1846,7 +1846,7 @@
       "title": "反馈意见之自愿提供",
       "p1": "每项检查项目均设有「报告」按钮。点击后将打开对话框，于发送前完整显示即将发送之内容，无任何隐藏字段。对话框另提供「以邮箱发送」之替代选项，收件人为 kwisschen@gmail.com，供您欲自行撰写更多上下文时使用。",
       "p2": "匿名发送之数据包含计数、规则所标记之具体用语或词句、简短之前后文、分类标签（属何项检查、何条规则、何个检测分支），以及若干结构性指纹；每份反馈至多 5 项发现。不含完整权利要求内容、完整段落、文件名、文件元数据、邮箱、姓名或 IP。",
-      "p3": "点击「匿名提交」后，您的浏览器以 HTTPS 将该数据传送至 patentlint.com 之 Vercel Edge Function，并于公开源代码项目 kwisschen/Patent-Lint 之 GitHub 议题追踪系统建立议题。数据在离开您的浏览器前已经过去标识化处理（不含 IP、不含邮箱、不含浏览器标头，亦不含完整权利要求文字 —— 详见上方 § 6），以确保即使以 GitHub Issue 形式公开仍维持匿名。您的 IP 与浏览器标头不会转发至 GitHub。",
+      "p3": "点击「匿名提交」后，您的浏览器以 HTTPS 将该数据传送至 patentlint.com 之 Vercel Edge Function，并于公开源代码项目 kwisschen/Patent-Lint 之 GitHub 议题追踪系统建立议题。数据在离开您的浏览器前已经过去标识化处理（不含 IP、不含邮箱、不含浏览器标头，亦不含完整权利要求文字：详见上方 § 6），以确保即使以 GitHub Issue 形式公开仍维持匿名。您的 IP 与浏览器标头不会转发至 GitHub。",
       "p4": "若改采邮箱方式，我方仅收到您主动撰写之内容。如欲匿名发送，建议使用电子邮件别名服务（Apple Hide My Email、Gmail 别名、Firefox Relay、ProtonMail 别名）；我方亦不将别名地址与任何其他数据进行关联。反馈仅用于修复错误及回复您，不分享给第三方。"
     },
     "s7": {
@@ -1859,7 +1859,7 @@
       "fontsLabel": "Google Fonts（CJK 字体，可选）。",
       "fonts": "若您于 zh-TW／zh-CN／ja／ko 界面下导出本地化 PDF，浏览器将于导出时自 Google Fonts 取得对应之 Noto Sans CJK 字体。字体于初次取得后即予缓存。英文界面之 PDF 不会取得任何字体。",
       "githubLabel": "GitHub。",
-      "github": "于反馈对话框点击「发送」后，匿名反馈将由 Vercel Edge Function 转发至公开源代码项目 kwisschen/Patent-Lint 之 GitHub Issues 追踪系统。数据在离开您的浏览器前已经过去标识化处理（不含 IP、不含邮箱、不含浏览器标头，亦不含完整权利要求文字 —— 详见 § 6），以确保即使以 GitHub Issue 形式公开仍维持匿名。议题依 GitHub 自身之隐私政策保管。",
+      "github": "于反馈对话框点击「发送」后，匿名反馈将由 Vercel Edge Function 转发至公开源代码项目 kwisschen/Patent-Lint 之 GitHub Issues 追踪系统。数据在离开您的浏览器前已经过去标识化处理（不含 IP、不含邮箱、不含浏览器标头，亦不含完整权利要求文字：详见 § 6），以确保即使以 GitHub Issue 形式公开仍维持匿名。议题依 GitHub 自身之隐私政策保管。",
       "p2": "我们未使用任何其他第三方服务。并无 CRM、未使用电子邮件营销平台、未使用第三方客服票务系统，亦未使用第三方日志服务。"
     },
     "s8": {

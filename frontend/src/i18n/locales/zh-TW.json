@@ -656,7 +656,7 @@
       "title": "EPC 專利交互式分析",
       "claimTree": {
         "title": "請求項依附樹狀圖 + 第84條 walker",
-        "description": "完整請求項依附樹狀圖，搭配先行詞與說明書支持 walker（依 EPC 第84條）。EPC 特有的依附用語——「any preceding claim」、「any one of claims N to M」——於剖析階段預先處理並展開。"
+        "description": "完整請求項依附樹狀圖，搭配先行詞與說明書支持 walker（依 EPC 第84條）。EPC 特有的依附用語（「any preceding claim」、「any one of claims N to M」）於剖析階段預先處理並展開。"
       },
       "specAbstract": {
         "title": "說明書與摘要結構",
@@ -679,7 +679,7 @@
       "paragraphNumbering": "段落編號（建議性檢核）",
       "paragraphEnding": "段落結尾標點",
       "titleRequired": "發明名稱（施行細則第41(2)(b)條）",
-      "titleContent": "發明名稱內容 —— 不含商標或型號（審查指南 F-II § 4）",
+      "titleContent": "發明名稱內容：不含商標或型號（審查指南 F-II § 4）",
       "figureRefConsistency": "圖式參照一致性（施行細則第46(2)(h)條）",
       "numeralConsistency": "參考標記一致性（施行細則第43(7)條、第46(2)(h)條）",
       "claimReferenceInSpec": "說明書中不得引用請求項（EPO 審查指南 F-IV § 4.3）",
@@ -690,23 +690,23 @@
       "singleSentence": "每項請求項以單句為之（施行細則第43(4)條、審查指南 F-IV § 4.10）",
       "refSignsInParens": "參考標記應加括號（施行細則第43(7)條）",
       "subjectConsistency": "請求項主題一致性（審查指南 F-IV § 3.4）",
-      "transitionPhrase": "連接詞——comprising / consisting of / 其特徵在於（審查指南 F-IV § 4.13）",
+      "transitionPhrase": "連接詞：comprising / consisting of / 其特徵在於（審查指南 F-IV § 4.13）",
       "claimsSpecReference": "請求項不得引用說明書或圖式（施行細則第43(6)條）",
       "multiDepOnMultiDep": "多項附屬項不得依附另一多項附屬項（施行細則第43(4)條）",
       "markushFormat": "Markush 群組形式（審查指南 F-IV § 4.20）",
       "independentClaimCount": "各專利類別之獨立項數（施行細則第43(2)、43(3)條，建議性）",
       "twoPartForm": "二段式（施行細則第43(1)條，建議性）",
-      "antecedentBasis": "先行詞 walker——第84條、審查指南 F-IV § 4.5",
-      "specSupport": "說明書支持——第84條（說明書支持要件）",
+      "antecedentBasis": "先行詞 walker：第84條、審查指南 F-IV § 4.5",
+      "specSupport": "說明書支持：第84條（說明書支持要件）",
       "restrictiveAbsolutes": "限制性絕對用語（審查指南 F-IV § 4.7，建議性）",
       "punctuation": "請求項標點（審查指南 F-IV § 4.10）",
       "figuresSequential": "圖式連續編號（施行細則第46(2)(a)條）",
       "singleFigureLabel": "單一圖式之標示方式（審查指南 F-V § 1.2）",
       "priorArtLabeling": "先前技術圖式之標示（施行細則第46(2)(h)條）",
-      "wordCount": "摘要字數（50-150）——施行細則第47(2)條、審查指南 F-II § 2.3",
+      "wordCount": "摘要字數（50-150）：施行細則第47(2)條、審查指南 F-II § 2.3",
       "titleMatch": "摘要與發明名稱所指之發明相符（審查指南 F-II § 2.3.5）",
       "claimReference": "摘要不引用特定請求項（審查指南 F-II § 2.3.3）",
-      "structure": "摘要結構——單一段落，避免請求項風格用語，避免功利性語言",
+      "structure": "摘要結構：單一段落，避免請求項風格用語，避免功利性語言",
       "excessClaims": "超項費門檻（Rule 45 EPC）"
     },
     "epcTableFootnote": "截至 2026 年 5 月。EPC 檢查目前為 Beta 階段，僅支援英文撰寫的歐洲專利說明書；PatentLint 將持續演進。"
@@ -1013,7 +1013,7 @@
         "pass": "摘要未發現評價性或自指性用語。"
       },
       "structure": {
-        "amend": "摘要含有額外段落或非標準結尾——實務上摘要為單一段落（MPEP § 608.01(b)）。",
+        "amend": "摘要含有額外段落或非標準結尾：實務上摘要為單一段落（MPEP § 608.01(b)）。",
         "pass": "摘要為單一段落且結尾正確。"
       },
       "impliedPhrases": {
@@ -1052,11 +1052,11 @@
           "pass": "未偵測到「Brief Description of Drawings」與「Detailed Description」之間的圖式引用不一致。"
         },
         "titleContent": {
-          "amend": "發明名稱似乎含有不適格內容（商標或型號）—— EPO Guidelines F-II § 4 期待具描述性之發明名稱。",
+          "amend": "發明名稱似乎含有不適格內容（商標或型號）：EPO Guidelines F-II § 4 期待具描述性之發明名稱。",
           "pass": "未於發明名稱中偵測到商標或型號標記。"
         },
         "claimReferenceInSpec": {
-          "amend": "說明書引用特定請求項（「{{detail}}」）—— Guidelines F-IV § 4.3 期待說明書能自足。",
+          "amend": "說明書引用特定請求項（「{{detail}}」）：Guidelines F-IV § 4.3 期待說明書能自足。",
           "pass": "未於說明書中偵測到請求項交叉引用（Guidelines F-IV § 4.3）。"
         },
         "paragraphEnding": {
@@ -1064,8 +1064,8 @@
           "pass": "未偵測到段落結尾標點問題。"
         },
         "paragraphNumbering": {
-          "verify": "已偵測到段落編號但未完全連續 —— 起始 [{{first}}]，預期至 [{{expected}}]；共 {{count}} 個編號，止於 [{{last}}]（Guidelines F-II § 4.5）。",
-          "pass": "未偵測到段落編號問題 —— EPC 不強制要求段落編號（Guidelines F-II § 4.5）。"
+          "verify": "已偵測到段落編號但未完全連續：起始 [{{first}}]，預期至 [{{expected}}]；共 {{count}} 個編號，止於 [{{last}}]（Guidelines F-II § 4.5）。",
+          "pass": "未偵測到段落編號問題：EPC 不強制要求段落編號（Guidelines F-II § 4.5）。"
         },
         "requiredSections": {
           "amend": "依 Art. 78(1) EPC，下列必要章節似有缺漏：{{sections}}。",
@@ -1076,7 +1076,7 @@
           "pass": "未偵測到章節順序問題（Rule 42(1) EPC）。"
         },
         "titleRequired": {
-          "amend": "發明名稱似有缺漏 —— Rule 41(2)(b) EPC 期待載明發明名稱。",
+          "amend": "發明名稱似有缺漏：Rule 41(2)(b) EPC 期待載明發明名稱。",
           "verify": "發明名稱字數異常偏長（{{count}} 字元）；請確認是否簡明指出發明（Rule 41(2)(b) EPC）。",
           "pass": "未偵測到發明名稱缺漏（Rule 41(2)(b) EPC）。"
         },
@@ -1100,7 +1100,7 @@
           "pass": "未偵測到 EPC 超項費觸發條件（Rule 45 EPC：總請求項不超過 15 項）。"
         },
         "dependencyFormat": {
-          "amend": "請求項 {{claims}} 似為附屬項，惟未明確引用所附屬之請求項 —— Rule 43(4) EPC 期待明確引用（例如「according to claim N」）。",
+          "amend": "請求項 {{claims}} 似為附屬項，惟未明確引用所附屬之請求項：Rule 43(4) EPC 期待明確引用（例如「according to claim N」）。",
           "pass": "未偵測到附屬關係格式問題（Rule 43(4) EPC）。"
         },
         "forwardDependency": {
@@ -1116,7 +1116,7 @@
           "pass": "未偵測到 Markush 格式問題（Guidelines F-IV § 4.20）。"
         },
         "multiDepOnMultiDep": {
-          "amend": "請求項 {{claims}} 為多項附屬，且其所附屬之請求項亦為多項附屬 —— Rule 43(4) EPC 不允許此種鏈式多項附屬。",
+          "amend": "請求項 {{claims}} 為多項附屬，且其所附屬之請求項亦為多項附屬：Rule 43(4) EPC 不允許此種鏈式多項附屬。",
           "pass": "未偵測到鏈式多項附屬（Rule 43(4) EPC）。"
         },
         "punctuation": {
@@ -1129,7 +1129,7 @@
           "pass": "未偵測到請求項標點問題（Guidelines F-IV § 4.10）。"
         },
         "refSignsInParens": {
-          "verify": "請求項 {{claims}} 含未加括號之裸露編號 —— Rule 43(7) EPC 期待元件符號以括號表示。",
+          "verify": "請求項 {{claims}} 含未加括號之裸露編號：Rule 43(7) EPC 期待元件符號以括號表示。",
           "pass": "未偵測到元件符號加括號問題（Rule 43(7) EPC）。"
         },
         "restrictiveAbsolutes": {
@@ -1145,15 +1145,15 @@
           "pass": "未偵測到請求項編號不連續（Rule 43(5) EPC）。"
         },
         "singleSentence": {
-          "verify": "請求項 {{claims}} 似含多句 —— Guidelines F-IV § 4.10 期待單一請求項為一句。",
+          "verify": "請求項 {{claims}} 似含多句：Guidelines F-IV § 4.10 期待單一請求項為一句。",
           "pass": "未偵測到多句請求項（Guidelines F-IV § 4.10）。"
         },
         "specReference": {
-          "amend": "請求項 {{claims}} 引用說明書或圖式 —— Rule 43(6) EPC 期待請求項自足。",
+          "amend": "請求項 {{claims}} 引用說明書或圖式：Rule 43(6) EPC 期待請求項自足。",
           "pass": "未偵測到請求項引用說明書或圖式（Rule 43(6) EPC）。"
         },
         "subjectConsistency": {
-          "verify": "請求項 {{claims}} 之主詞似與所附屬之請求項不一致 —— 請依 Guidelines F-IV § 3.4 檢視。",
+          "verify": "請求項 {{claims}} 之主詞似與所附屬之請求項不一致：請依 Guidelines F-IV § 3.4 檢視。",
           "pass": "未偵測到主詞一致性問題（Guidelines F-IV § 3.4）。"
         },
         "transitionPhrase": {
@@ -1167,11 +1167,11 @@
       },
       "abstract": {
         "titleMatch": {
-          "verify": "摘要與發明名稱所示之發明未見一致 —— 未偵測到內容字詞重疊（EPO Guidelines F-II § 2.3.5）。",
+          "verify": "摘要與發明名稱所示之發明未見一致：未偵測到內容字詞重疊（EPO Guidelines F-II § 2.3.5）。",
           "pass": "摘要與發明名稱所指之發明相符。"
         },
         "claimReference": {
-          "amend": "摘要引用特定請求項 —— EPO Guidelines F-II § 2.3.3 要求摘要須自足、不得交叉引用請求項。",
+          "amend": "摘要引用特定請求項：EPO Guidelines F-II § 2.3.3 要求摘要須自足、不得交叉引用請求項。",
           "pass": "摘要未引用特定請求項。"
         },
         "structure": {
@@ -1193,7 +1193,7 @@
           "pass": "未偵測到圖式編號不連續（Rule 46(2)(a) EPC）。"
         },
         "priorArtLabeling": {
-          "verify": "「Brief Description of Drawings」提及先前技術 —— 請確認相關圖式已依 Rule 46(2)(h) EPC 標示。",
+          "verify": "「Brief Description of Drawings」提及先前技術：請確認相關圖式已依 Rule 46(2)(h) EPC 標示。",
           "pass": "未偵測到先前技術圖式標示問題（Rule 46(2)(h) EPC）。"
         },
         "singleFigureLabel": {
@@ -1683,7 +1683,7 @@
       "title": "本網站與本軟體的區別",
       "p1": "PatentLint 以兩種形式提供：",
       "siteLabel": "本網站（patentlint.com）。",
-      "siteDesc": "一個託管的網路應用程式，免費供個別從業人員個人使用。當您載入專利草稿時，分析完全在您的瀏覽器中透過 WebAssembly 執行 —— 您的草稿不會離開您的裝置。PatentLint 由 Christopher Chen 以個人專案形式維護，並非以商業實體身份運作。",
+      "siteDesc": "一個託管的網路應用程式，免費供個別從業人員個人使用。當您載入專利草稿時，分析完全在您的瀏覽器中透過 WebAssembly 執行：您的草稿不會離開您的裝置。PatentLint 由 Christopher Chen 以個人專案形式維護，並非以商業實體身份運作。",
       "softwareLabel": "本軟體。",
       "softwareDesc": "底層原始碼，依 PolyForm-Strict-1.0.0 提供原始碼可供查閱之授權（授權條款詳見 §4）。",
       "p2": "本條款涵蓋上述兩者之使用。依您所使用之形式，適用之規範有所不同。",
@@ -1734,7 +1734,7 @@
       "title": "非屬法律意見",
       "p1": "PatentLint 為自動化撰稿輔助工具。其輸出僅供初步參考，無法替代具備資格之專利專業人員之審閱。本網站所產生之任何內容均不構成法律意見。請勿僅憑 PatentLint 之輸出，作為專利申請、答辯或行使權利之依據。",
       "p2": "檢查項目包括先行詞基礎分析、說明書支持分析（US 依 § 112(a)；EPC 依 Art. 84；CN 依 专利法 §26 第4款；TW 依 專利法 §26 第3項）、章節順序、請求項標點，以及其他規則式檢查。各項檢查係標示供您審閱之候選事項，並非法律判斷。",
-      "p3": "整體字母評等僅彙整規則式檢查結果 —— A 等代表 PatentLint 之規則目錄未發現標記項目，並不代表稿件已可提交申請。",
+      "p3": "整體字母評等僅彙整規則式檢查結果：A 等代表 PatentLint 之規則目錄未發現標記項目，並不代表稿件已可提交申請。",
       "p4": "您須自行負責就 PatentLint 之任何分析結果於採取行動前進行驗證。使用本網站或本軟體並不於您與 Christopher Chen 之間構成任何委任、代理或受託關係。"
     },
     "s7": {
@@ -1846,7 +1846,7 @@
       "title": "回饋意見之自願提供",
       "p1": "每項檢查項目皆設有「回報」按鈕。點擊後將開啟對話框，於傳送前完整顯示即將傳送之內容，無任何隱藏欄位。對話框另提供「以電子郵件寄送」之替代選項，收件人為 kwisschen@gmail.com，供您欲自行撰寫更多脈絡時使用。",
       "p2": "匿名傳送之資料包含計數、規則所標記之具體用語或詞句、簡短之前後文、分類標籤（屬何項檢查、何條規則、何個偵測分支），以及若干結構性指紋；每份回報至多 5 項發現。不含完整請求項內容、完整段落、檔案名稱、檔案中繼資料、電子郵件、姓名或 IP。",
-      "p3": "點擊「匿名提交」後，您的瀏覽器以 HTTPS 將該資料傳送至 patentlint.com 之 Vercel Edge Function，並於公開原始碼專案 kwisschen/Patent-Lint 之 GitHub 議題追蹤系統建立議題。資料於離開您的瀏覽器前即經去識別化處理（不含 IP、不含電子郵件、不含瀏覽器標頭，亦不含完整請求項文字 —— 詳見上方 § 6），以確保即使以 GitHub Issue 形式公開亦維持匿名。您的 IP 與瀏覽器標頭不會轉送至 GitHub。",
+      "p3": "點擊「匿名提交」後，您的瀏覽器以 HTTPS 將該資料傳送至 patentlint.com 之 Vercel Edge Function，並於公開原始碼專案 kwisschen/Patent-Lint 之 GitHub 議題追蹤系統建立議題。資料於離開您的瀏覽器前即經去識別化處理（不含 IP、不含電子郵件、不含瀏覽器標頭，亦不含完整請求項文字：詳見上方 § 6），以確保即使以 GitHub Issue 形式公開亦維持匿名。您的 IP 與瀏覽器標頭不會轉送至 GitHub。",
       "p4": "若改採電子郵件方式，我方僅收到您主動撰寫之內容。如欲匿名寄送，建議使用電子郵件別名服務（Apple Hide My Email、Gmail 別名、Firefox Relay、ProtonMail 別名）；我方亦不將別名地址與任何其他資料進行關聯。回饋僅用於修復錯誤及回覆您，不分享予第三方。"
     },
     "s7": {
@@ -1859,7 +1859,7 @@
       "fontsLabel": "Google Fonts（CJK 字型，選用）。",
       "fonts": "若您於 zh-TW／zh-CN／ja／ko 介面下匯出本地化 PDF，瀏覽器將於匯出時自 Google Fonts 取得對應之 Noto Sans CJK 字型。字型於初次取得後即予快取。英文介面之 PDF 不會擷取任何字型。",
       "githubLabel": "GitHub。",
-      "github": "於回報對話框點擊「傳送」後，匿名回報將由 Vercel Edge Function 轉送至公開原始碼專案 kwisschen/Patent-Lint 之 GitHub Issues 追蹤系統。資料於離開您的瀏覽器前即經去識別化處理（不含 IP、不含電子郵件、不含瀏覽器標頭，亦不含完整請求項文字 —— 詳見 § 6），以確保即使以 GitHub Issue 形式公開亦維持匿名。議題依 GitHub 自身之隱私權政策保管。",
+      "github": "於回報對話框點擊「傳送」後，匿名回報將由 Vercel Edge Function 轉送至公開原始碼專案 kwisschen/Patent-Lint 之 GitHub Issues 追蹤系統。資料於離開您的瀏覽器前即經去識別化處理（不含 IP、不含電子郵件、不含瀏覽器標頭，亦不含完整請求項文字：詳見 § 6），以確保即使以 GitHub Issue 形式公開亦維持匿名。議題依 GitHub 自身之隱私權政策保管。",
       "p2": "我們未使用任何其他第三方服務。並無 CRM、未使用電子郵件行銷平台、未使用第三方客服票務系統，亦未使用第三方記錄服務。"
     },
     "s8": {

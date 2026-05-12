@@ -656,7 +656,7 @@
       "title": "EPC 특허 상호작용 분석",
       "claimTree": {
         "title": "청구항 의존 트리 + 제84조 워커",
-        "description": "청구항 간 의존 트리와 선행어 및 명세서 뒷받침 워커(EPC 제84조)를 결합합니다. EPC 고유 의존 표현 —— 「any preceding claim」, 「any one of claims N to M」 —— 은 파싱 단계에서 사전 처리 및 확장됩니다."
+        "description": "청구항 간 의존 트리와 선행어 및 명세서 뒷받침 워커(EPC 제84조)를 결합합니다. EPC 고유 의존 표현（「any preceding claim」, 「any one of claims N to M」）은 파싱 단계에서 사전 처리 및 확장됩니다."
       },
       "specAbstract": {
         "title": "명세서 및 요약서 구조",
@@ -679,7 +679,7 @@
       "paragraphNumbering": "단락 번호(권장 검사)",
       "paragraphEnding": "단락 종결 부호",
       "titleRequired": "발명의 명칭(시행규칙 제41(2)(b)조)",
-      "titleContent": "발명의 명칭 내용 —— 상표 또는 모델 번호 미포함(심사 지침 F-II § 4)",
+      "titleContent": "발명의 명칭 내용：상표 또는 모델 번호 미포함(심사 지침 F-II § 4)",
       "figureRefConsistency": "도면 참조 일관성(시행규칙 제46(2)(h)조)",
       "numeralConsistency": "참조부호 일관성(시행규칙 제43(7)조, 제46(2)(h)조)",
       "claimReferenceInSpec": "명세서에서 청구항을 인용해서는 안 됨(EPO 심사 지침 F-IV § 4.3)",
@@ -690,23 +690,23 @@
       "singleSentence": "청구항당 한 문장(시행규칙 제43(4)조, 심사 지침 F-IV § 4.10)",
       "refSignsInParens": "참조부호는 괄호 안에 표기(시행규칙 제43(7)조)",
       "subjectConsistency": "청구항 주제 일관성(심사 지침 F-IV § 3.4)",
-      "transitionPhrase": "전환구 —— comprising / consisting of / 을 특징으로 하는(심사 지침 F-IV § 4.13)",
+      "transitionPhrase": "전환구：comprising / consisting of / 을 특징으로 하는(심사 지침 F-IV § 4.13)",
       "claimsSpecReference": "청구항은 명세서 또는 도면을 인용해서는 안 됨(시행규칙 제43(6)조)",
       "multiDepOnMultiDep": "다중 종속항은 다른 다중 종속항에 종속될 수 없음(시행규칙 제43(4)조)",
       "markushFormat": "Markush 그룹 형식(심사 지침 F-IV § 4.20)",
       "independentClaimCount": "카테고리별 독립항 수(시행규칙 제43(2), 43(3)조, 권장)",
       "twoPartForm": "2부 형식(시행규칙 제43(1)조, 권장)",
-      "antecedentBasis": "선행어 워커 —— 제84조, 심사 지침 F-IV § 4.5",
-      "specSupport": "명세서의 뒷받침 —— 제84조(뒷받침 요건)",
+      "antecedentBasis": "선행어 워커：제84조, 심사 지침 F-IV § 4.5",
+      "specSupport": "명세서의 뒷받침：제84조(뒷받침 요건)",
       "restrictiveAbsolutes": "제한적 절대 표현(심사 지침 F-IV § 4.7, 권장)",
       "punctuation": "청구항 부호 사용(심사 지침 F-IV § 4.10)",
       "figuresSequential": "도면 연속 번호(시행규칙 제46(2)(a)조)",
       "singleFigureLabel": "단일 도면 라벨 형식(심사 지침 F-V § 1.2)",
       "priorArtLabeling": "선행 기술 도면 표시(시행규칙 제46(2)(h)조)",
-      "wordCount": "요약서 단어 수(50-150) —— 시행규칙 제47(2)조, 심사 지침 F-II § 2.3",
+      "wordCount": "요약서 단어 수(50-150)：시행규칙 제47(2)조, 심사 지침 F-II § 2.3",
       "titleMatch": "요약서가 발명의 명칭에 언급된 발명을 참조함(심사 지침 F-II § 2.3.5)",
       "claimReference": "요약서가 특정 청구항을 참조하지 않음(심사 지침 F-II § 2.3.3)",
-      "structure": "요약서 구조 —— 단일 단락, 청구항 스타일 표현 지양, 효능적 표현 지양",
+      "structure": "요약서 구조：단일 단락, 청구항 스타일 표현 지양, 효능적 표현 지양",
       "excessClaims": "초과 청구항 수수료 임계값(Rule 45 EPC)"
     },
     "epcTableFootnote": "2026년 5월 기준. EPC 검사는 현재 베타 단계이며 영어로 작성된 유럽 특허 명세서를 대상으로 합니다. PatentLint는 지속적으로 개선될 수 있습니다."
@@ -1013,7 +1013,7 @@
         "pass": "요약서에서 평가적 또는 자기 언급적 용어가 발견되지 않았습니다."
       },
       "structure": {
-        "amend": "요약서에 추가 단락 또는 비표준 종결이 있습니다 —— 실무상 요약서는 단일 단락입니다(MPEP § 608.01(b)).",
+        "amend": "요약서에 추가 단락 또는 비표준 종결이 있습니다：실무상 요약서는 단일 단락입니다(MPEP § 608.01(b)).",
         "pass": "요약서가 단일 단락이며 결미가 유효합니다."
       },
       "impliedPhrases": {
@@ -1052,11 +1052,11 @@
           "pass": "「Brief Description of Drawings」과 상세한 설명 사이의 도면 참조 불일치가 감지되지 않았습니다."
         },
         "titleContent": {
-          "amend": "발명의 명칭에 부적격한 내용(상표 또는 모델 번호)이 포함된 것으로 보입니다 —— EPO Guidelines F-II § 4는 설명적인 발명의 명칭을 요구합니다.",
+          "amend": "발명의 명칭에 부적격한 내용(상표 또는 모델 번호)이 포함된 것으로 보입니다：EPO Guidelines F-II § 4는 설명적인 발명의 명칭을 요구합니다.",
           "pass": "발명의 명칭에서 상표 또는 모델 번호 토큰이 감지되지 않았습니다."
         },
         "claimReferenceInSpec": {
-          "amend": "명세서가 특정 청구항을 참조합니다('{{detail}}') —— Guidelines F-IV § 4.3은 명세서가 자기 완결적일 것을 요구합니다.",
+          "amend": "명세서가 특정 청구항을 참조합니다('{{detail}}')：Guidelines F-IV § 4.3은 명세서가 자기 완결적일 것을 요구합니다.",
           "pass": "명세서에서 청구항 상호 참조가 감지되지 않았습니다(Guidelines F-IV § 4.3)."
         },
         "paragraphEnding": {
@@ -1064,8 +1064,8 @@
           "pass": "단락 종결 부호에 관한 사항이 감지되지 않았습니다."
         },
         "paragraphNumbering": {
-          "verify": "단락 번호가 감지되었으나 완전히 연속되지 않습니다 —— 시작 [{{first}}], 예상 [{{expected}}]까지; {{count}}개 검출, 종료 [{{last}}](Guidelines F-II § 4.5).",
-          "pass": "단락 번호 관련 사항이 감지되지 않았습니다 —— EPC는 단락 번호를 의무화하지 않습니다(Guidelines F-II § 4.5)."
+          "verify": "단락 번호가 감지되었으나 완전히 연속되지 않습니다：시작 [{{first}}], 예상 [{{expected}}]까지; {{count}}개 검출, 종료 [{{last}}](Guidelines F-II § 4.5).",
+          "pass": "단락 번호 관련 사항이 감지되지 않았습니다：EPC는 단락 번호를 의무화하지 않습니다(Guidelines F-II § 4.5)."
         },
         "requiredSections": {
           "amend": "Art. 78(1) EPC에 따라 다음 필수 항목이 누락된 것으로 보입니다: {{sections}}.",
@@ -1076,7 +1076,7 @@
           "pass": "항목 순서 관련 사항이 감지되지 않았습니다(Rule 42(1) EPC)."
         },
         "titleRequired": {
-          "amend": "발명의 명칭이 누락된 것으로 보입니다 —— Rule 41(2)(b) EPC는 발명의 명칭을 요구합니다.",
+          "amend": "발명의 명칭이 누락된 것으로 보입니다：Rule 41(2)(b) EPC는 발명의 명칭을 요구합니다.",
           "verify": "발명의 명칭이 비정상적으로 길어 보입니다({{count}}자). 발명을 간결하게 나타내고 있는지 확인하십시오(Rule 41(2)(b) EPC).",
           "pass": "발명의 명칭 누락이 감지되지 않았습니다(Rule 41(2)(b) EPC)."
         },
@@ -1100,7 +1100,7 @@
           "pass": "초과 청구항 수수료 발생 조건이 감지되지 않았습니다(Rule 45 EPC: 전체 청구항 15개 이하)."
         },
         "dependencyFormat": {
-          "amend": "청구항 {{claims}}은(는) 종속항으로 보이나, 인용하는 상위 청구항을 명시하지 않았습니다 —— Rule 43(4) EPC는 명시적 인용(예: 'according to claim N')을 요구합니다.",
+          "amend": "청구항 {{claims}}은(는) 종속항으로 보이나, 인용하는 상위 청구항을 명시하지 않았습니다：Rule 43(4) EPC는 명시적 인용(예: 'according to claim N')을 요구합니다.",
           "pass": "인용 형식 관련 사항이 감지되지 않았습니다(Rule 43(4) EPC)."
         },
         "forwardDependency": {
@@ -1116,7 +1116,7 @@
           "pass": "Markush 형식 관련 사항이 감지되지 않았습니다(Guidelines F-IV § 4.20)."
         },
         "multiDepOnMultiDep": {
-          "amend": "청구항 {{claims}}은(는) 다중 종속항이며, 인용하는 청구항도 다중 종속항입니다 —— Rule 43(4) EPC는 이러한 연쇄적 다중 인용을 허용하지 않습니다.",
+          "amend": "청구항 {{claims}}은(는) 다중 종속항이며, 인용하는 청구항도 다중 종속항입니다：Rule 43(4) EPC는 이러한 연쇄적 다중 인용을 허용하지 않습니다.",
           "pass": "연쇄적 다중 인용이 감지되지 않았습니다(Rule 43(4) EPC)."
         },
         "punctuation": {
@@ -1129,7 +1129,7 @@
           "pass": "청구항 구두점 관련 사항이 감지되지 않았습니다(Guidelines F-IV § 4.10)."
         },
         "refSignsInParens": {
-          "verify": "청구항 {{claims}}에 괄호로 묶이지 않은 숫자가 있습니다 —— Rule 43(7) EPC는 인용 부호를 괄호로 표기할 것을 권장합니다.",
+          "verify": "청구항 {{claims}}에 괄호로 묶이지 않은 숫자가 있습니다：Rule 43(7) EPC는 인용 부호를 괄호로 표기할 것을 권장합니다.",
           "pass": "인용 부호 괄호 표기 관련 사항이 감지되지 않았습니다(Rule 43(7) EPC)."
         },
         "restrictiveAbsolutes": {
@@ -1145,15 +1145,15 @@
           "pass": "청구항 번호 연속성 관련 사항이 감지되지 않았습니다(Rule 43(5) EPC)."
         },
         "singleSentence": {
-          "verify": "청구항 {{claims}}이(가) 복수의 문장을 포함하는 것으로 보입니다 —— Guidelines F-IV § 4.10은 청구항을 1문으로 작성할 것을 권장합니다.",
+          "verify": "청구항 {{claims}}이(가) 복수의 문장을 포함하는 것으로 보입니다：Guidelines F-IV § 4.10은 청구항을 1문으로 작성할 것을 권장합니다.",
           "pass": "복수 문장 청구항이 감지되지 않았습니다(Guidelines F-IV § 4.10)."
         },
         "specReference": {
-          "amend": "청구항 {{claims}}이(가) 명세서 또는 도면을 참조합니다 —— Rule 43(6) EPC는 청구항이 자기 완결적일 것을 요구합니다.",
+          "amend": "청구항 {{claims}}이(가) 명세서 또는 도면을 참조합니다：Rule 43(6) EPC는 청구항이 자기 완결적일 것을 요구합니다.",
           "pass": "청구항에서 명세서/도면 참조가 감지되지 않았습니다(Rule 43(6) EPC)."
         },
         "subjectConsistency": {
-          "verify": "청구항 {{claims}}의 주제가 상위 청구항과 일치하지 않을 수 있습니다 —— Guidelines F-IV § 3.4에 따라 검토하십시오.",
+          "verify": "청구항 {{claims}}의 주제가 상위 청구항과 일치하지 않을 수 있습니다：Guidelines F-IV § 3.4에 따라 검토하십시오.",
           "pass": "주제 일치성 관련 사항이 감지되지 않았습니다(Guidelines F-IV § 3.4)."
         },
         "transitionPhrase": {
@@ -1167,11 +1167,11 @@
       },
       "abstract": {
         "titleMatch": {
-          "verify": "요약이 발명의 명칭에 언급된 발명을 참조하지 않는 것으로 보입니다 — 내용 단어 중첩이 감지되지 않았습니다(EPO Guidelines F-II § 2.3.5).",
+          "verify": "요약이 발명의 명칭에 언급된 발명을 참조하지 않는 것으로 보입니다：내용 단어 중첩이 감지되지 않았습니다(EPO Guidelines F-II § 2.3.5).",
           "pass": "요약이 발명의 명칭에 언급된 발명을 참조합니다."
         },
         "claimReference": {
-          "amend": "요약이 특정 청구항을 참조합니다 — EPO Guidelines F-II § 2.3.3은 요약이 자기 완결적이고 청구항을 상호 참조하지 않을 것을 요구합니다.",
+          "amend": "요약이 특정 청구항을 참조합니다：EPO Guidelines F-II § 2.3.3은 요약이 자기 완결적이고 청구항을 상호 참조하지 않을 것을 요구합니다.",
           "pass": "요약이 특정 청구항을 참조하지 않습니다."
         },
         "structure": {
@@ -1193,7 +1193,7 @@
           "pass": "도면 번호 연속성 관련 사항이 감지되지 않았습니다(Rule 46(2)(a) EPC)."
         },
         "priorArtLabeling": {
-          "verify": "「Brief Description of Drawings」이 선행기술을 언급합니다 —— 해당 도면이 Rule 46(2)(h) EPC에 따라 표시되었는지 확인하십시오.",
+          "verify": "「Brief Description of Drawings」이 선행기술을 언급합니다：해당 도면이 Rule 46(2)(h) EPC에 따라 표시되었는지 확인하십시오.",
           "pass": "선행기술 도면 표시 관련 사항이 감지되지 않았습니다(Rule 46(2)(h) EPC)."
         },
         "singleFigureLabel": {
@@ -1683,7 +1683,7 @@
       "title": "본 사이트와 본 소프트웨어의 구분",
       "p1": "PatentLint는 두 가지 형태로 제공됩니다.",
       "siteLabel": "본 사이트(patentlint.com).",
-      "siteDesc": "호스팅된 웹 애플리케이션으로, 개별 실무자의 개인 사용에 한해 무료입니다. 특허 초안을 불러오면 분석은 WebAssembly 를 통해 전적으로 브라우저 내에서 수행되며 —— 초안은 사용자의 기기를 벗어나지 않습니다. PatentLint 는 Christopher Chen 이 개인 프로젝트로 운영하며, 사업체로 운영되는 것이 아닙니다.",
+      "siteDesc": "호스팅된 웹 애플리케이션으로, 개별 실무자의 개인 사용에 한해 무료입니다. 특허 초안을 불러오면 분석은 WebAssembly 를 통해 전적으로 브라우저 내에서 수행되며：초안은 사용자의 기기를 벗어나지 않습니다. PatentLint 는 Christopher Chen 이 개인 프로젝트로 운영하며, 사업체로 운영되는 것이 아닙니다.",
       "softwareLabel": "본 소프트웨어.",
       "softwareDesc": "기반 소스 코드는 PolyForm-Strict-1.0.0에 따라 소스 열람 가능 라이선스로 제공됩니다(라이선스 조건은 §4 참조).",
       "p2": "본 약관은 양자 모두에 적용됩니다. 이용 형태에 따라 적용되는 규정이 달라집니다.",
@@ -1734,7 +1734,7 @@
       "title": "법적 자문에 해당하지 않습니다",
       "p1": "PatentLint는 자동화된 작성 보조 도구입니다. 그 출력은 예비적인 것으로, 자격 있는 특허 전문가의 검토를 대체할 수 없습니다. 본 사이트가 산출하는 어떠한 내용도 법적 자문에 해당하지 않습니다. PatentLint의 출력만을 근거로 특허 출원, 답변 또는 권리 행사 결정을 내리지 마시기 바랍니다.",
       "p2": "검사 항목으로는 선행사 기초 분석, 명세서 뒷받침 분석(US는 § 112(a); EPC는 Art. 84; CN은 专利法 §26 第4款; TW는 專利法 §26 第3項), 섹션 순서, 청구항 구두점, 기타 규칙 기반 검사가 포함됩니다. 각 검사는 귀하의 검토 대상 후보를 표시하는 것이며, 법적 판단이 아닙니다.",
-      "p3": "전체 등급은 규칙 기반 검사 결과만을 종합한 것입니다 —— A 등급은 PatentLint 의 검사 항목에서 표시 사항이 발견되지 않았음을 의미하며, 출원 준비가 완료되었음을 의미하지 않습니다.",
+      "p3": "전체 등급은 규칙 기반 검사 결과만을 종합한 것입니다：A 등급은 PatentLint 의 검사 항목에서 표시 사항이 발견되지 않았음을 의미하며, 출원 준비가 완료되었음을 의미하지 않습니다.",
       "p4": "귀하는 PatentLint의 어떠한 검사 결과에 대하여도 조치를 취하기 전에 이를 검증할 단독 책임을 부담합니다. 본 사이트 또는 본 소프트웨어의 이용으로 귀하와 Christopher Chen 사이에 의뢰인-변리사 관계, 대리 관계 또는 수탁 관계가 성립하지 않습니다."
     },
     "s7": {
@@ -1846,7 +1846,7 @@
       "title": "자발적 피드백",
       "p1": "각 검출 항목에는 “보고” 버튼이 제공됩니다. 클릭하시면 대화 상자가 열리며, 전송될 내용 그대로가 송신 전에 표시됩니다. 숨겨진 필드는 없습니다. 대화 상자에는 “이메일로 보내기” 대안(수신처 kwisschen@gmail.com)도 제공되어, 직접 더 자세한 맥락을 작성하시고자 하는 경우 이용하실 수 있습니다.",
       "p2": "익명으로 전송되는 데이터에는 건수, 규칙이 표시한 구체적 용어 또는 구문, 전후의 짧은 맥락, 분류 라벨(어떤 점검·어떤 규칙·어떤 검출 분기인지), 그리고 약간의 구조적 지문이 포함되며 보고당 최대 5건의 발견으로 제한됩니다. 청구항 전체 내용, 단락 전문, 파일명, 파일 메타데이터, 이메일, 성함, IP는 포함되지 않습니다.",
-      "p3": "“익명으로 보내기”를 누르시면 브라우저가 HTTPS 로 해당 데이터를 patentlint.com 의 Vercel Edge Function 으로 전송하고, 공개 오픈소스 프로젝트 kwisschen/Patent-Lint 의 GitHub Issue 트래커에 이슈를 생성합니다. 데이터는 브라우저를 떠나기 전에 의도적으로 비식별화되며(IP·이메일·브라우저 헤더 미포함, 청구항 전문 미포함 —— 위 § 6 참조), GitHub Issue 로 공개되더라도 익명성이 유지됩니다. 귀하의 IP 와 브라우저 헤더는 GitHub 으로 전달되지 않습니다.",
+      "p3": "“익명으로 보내기”를 누르시면 브라우저가 HTTPS 로 해당 데이터를 patentlint.com 의 Vercel Edge Function 으로 전송하고, 공개 오픈소스 프로젝트 kwisschen/Patent-Lint 의 GitHub Issue 트래커에 이슈를 생성합니다. 데이터는 브라우저를 떠나기 전에 의도적으로 비식별화되며(IP·이메일·브라우저 헤더 미포함, 청구항 전문 미포함：위 § 6 참조), GitHub Issue 로 공개되더라도 익명성이 유지됩니다. 귀하의 IP 와 브라우저 헤더는 GitHub 으로 전달되지 않습니다.",
       "p4": "이메일 대안을 선택하시는 경우, 당사는 귀하께서 작성하신 내용만을 수신합니다. 익명으로 보내고자 하시는 경우 이메일 별칭 서비스(Apple Hide My Email, Gmail 별칭, Firefox Relay, ProtonMail 별칭)의 이용을 권장드리며, 당사는 별칭 주소를 다른 데이터와 연관시키지 않습니다. 피드백은 결함 수정 및 회신에만 사용하며, 제3자와 공유하지 않습니다."
     },
     "s7": {
@@ -1859,7 +1859,7 @@
       "fontsLabel": "Google Fonts(CJK 폰트, 선택).",
       "fonts": "zh-TW／zh-CN／ja／ko UI에서 현지화된 PDF를 내보내실 경우, 브라우저는 PDF 내보내기 시 해당 Noto Sans CJK 폰트를 Google Fonts에서 가져옵니다. 폰트는 최초 취득 후 캐시됩니다. 영어 UI의 PDF에서는 폰트 취득이 발생하지 않습니다.",
       "githubLabel": "GitHub.",
-      "github": "보고 대화 상자의 “보내기” 버튼으로 전송된 익명 보고는 Vercel Edge Function 을 통해 공개 오픈소스 프로젝트 kwisschen/Patent-Lint 의 GitHub Issues 트래커로 전달됩니다. 데이터는 브라우저를 떠나기 전에 의도적으로 비식별화되며(IP·이메일·브라우저 헤더 미포함, 청구항 전문 미포함 —— § 6 참조), GitHub Issue 로 공개되더라도 익명성이 유지됩니다. 이슈는 GitHub 자체의 개인정보처리방침에 따라 보관됩니다.",
+      "github": "보고 대화 상자의 “보내기” 버튼으로 전송된 익명 보고는 Vercel Edge Function 을 통해 공개 오픈소스 프로젝트 kwisschen/Patent-Lint 의 GitHub Issues 트래커로 전달됩니다. 데이터는 브라우저를 떠나기 전에 의도적으로 비식별화되며(IP·이메일·브라우저 헤더 미포함, 청구항 전문 미포함：§ 6 참조), GitHub Issue 로 공개되더라도 익명성이 유지됩니다. 이슈는 GitHub 자체의 개인정보처리방침에 따라 보관됩니다.",
       "p2": "그 외의 제3자 서비스는 사용하지 않습니다. CRM, 이메일 마케팅 플랫폼, 제3자 고객지원 티켓팅 시스템, 제3자 로깅 서비스, 모두 사용하지 않습니다."
     },
     "s8": {

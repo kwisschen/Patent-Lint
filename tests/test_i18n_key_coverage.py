@@ -154,3 +154,47 @@ def test_all_locales_have_the_same_keys_as_en():
             )
     if failures:
         pytest.fail("\n".join(failures))
+
+
+# CJK locales must not contain em dashes (U+2014). Em dashes are a Latin-
+# script convention; CJK uses 「：」 / 「（）」 / 「、」 etc. for the same semantic
+# roles. CLAUDE.md project rule: "No em dashes in CJK locales."
+# Bug surfaced 2026-05-12: 104 em-dash occurrences across 4 CJK locales
+# slipped through multiple translation passes. Scrubbed + this gate added.
+CJK_LOCALE_FILES = {"zh-TW.json", "zh-CN.json", "ja.json", "ko.json"}
+
+
+def _walk_leaves_with_paths(d, prefix=""):
+    """Yield (path, str_value) for every string leaf."""
+    if isinstance(d, dict):
+        for k, v in d.items():
+            yield from _walk_leaves_with_paths(v, f"{prefix}.{k}" if prefix else k)
+    elif isinstance(d, str):
+        yield prefix, d
+
+
+def test_no_em_dashes_in_cjk_locales():
+    """CJK locales (zh-TW, zh-CN, ja, ko) must not contain U+2014 em dashes."""
+    locales_dir = EN_JSON.parent
+    failures = []
+    for locale_file in sorted(locales_dir.glob("*.json")):
+        if locale_file.name not in CJK_LOCALE_FILES:
+            continue
+        data = json.loads(locale_file.read_text())
+        hits = []
+        for path, val in _walk_leaves_with_paths(data):
+            if "—" in val:  # em dash
+                hits.append((path, val))
+        if hits:
+            failures.append(
+                f"\n{locale_file.name}: {len(hits)} em-dash occurrence(s):\n"
+                + "\n".join(f"  ✗ {p}\n     {v[:120]}" for p, v in hits[:5])
+                + (f"\n  ... and {len(hits) - 5} more" if len(hits) > 5 else "")
+            )
+    if failures:
+        pytest.fail(
+            "\n".join(failures)
+            + "\n\nCJK convention: replace with 「：」 (definition / connector), "
+            "「（…）」 (apposition / parenthetical), or 「、」 (list separator). "
+            "Project rule documented in CLAUDE.md."
+        )
