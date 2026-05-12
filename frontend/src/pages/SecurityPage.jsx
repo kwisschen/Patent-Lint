@@ -256,6 +256,11 @@ function TechDetailsSection() {
                   {t('about.enterpriseContact')}
                 </a>
               )}
+              {key === 'ai' && (
+                <p className="text-sm text-muted-foreground/85 leading-relaxed mt-3 pl-3 border-l border-border">
+                  {t('security.tech.aiDevNote')}
+                </p>
+              )}
               {key === 'telemetry' && (
                 <Link
                   to="/privacy"
