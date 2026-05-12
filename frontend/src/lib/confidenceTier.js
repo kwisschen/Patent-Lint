@@ -39,10 +39,13 @@ export const TIER_THRESHOLDS = {
   CN: { high: 65, low: 30 }, // 20.8% bucket precision (+6.4pp vs absolute 14.4%, 606 findings)
   TW: { high: 65, low: 30 }, // 17.5% bucket precision (+4.9pp vs absolute 12.6%, 702 findings)
   // EPC walker shares the US implementation (port + EPC dep-preamble pre-strip).
-  // v1 inherits the conservative DEFAULT until real-corpus FP measurement; the
-  // explicit entry makes the catalog complete and exists to be replaced once a
-  // calibration pass runs on real EPC drafts.
-  EPC: { high: 60, low: 30 },
+  // Calibrated 2026-05-12 against 174 EP-A1 English drafts pulled from EPO OPS:
+  // confidence distribution clusters tightly in the 40-59 range (85.6% of
+  // 3785 antecedent findings), with the p75 mark at 50 and p25 at 40. Tighter
+  // distribution than US (whose walker emits a wider noise floor); calibration
+  // ran via tests/eval/epc_walker_fp_classify.py against
+  // tests/fixtures/epc/local/walker_calibration.json.
+  EPC: { high: 50, low: 40 }, // 47% high-tier / 47% medium / 2% low (174-draft corpus)
   // Default-fallback for any jurisdiction not explicitly listed.
   DEFAULT: { high: 60, low: 30 },
 }
