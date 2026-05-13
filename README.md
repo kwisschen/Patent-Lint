@@ -5,15 +5,17 @@
 [![Tests](https://img.shields.io/badge/tests-2560-brightgreen)](#)
 [![License: PolyForm-Strict-1.0.0](https://img.shields.io/badge/license-PolyForm--Strict--1.0.0-orange)](LICENSE)
 
+A patent draft checker that runs **entirely in your browser** — pure Python analysis engine compiled to WebAssembly via Pyodide.
+
 **No account. No install. No upload.**
 
-PatentLint checks U.S., European (EPC), Chinese, and Taiwanese patent application drafts against USPTO, EPO, CNIPA, and TIPO drafting rules — entirely in your browser. Your file never leaves your device.
+151 checks against USPTO MPEP, EPO Guidelines, CNIPA 审查指南, and TIPO 專利審查基準, covering U.S., European (EPC), Chinese, and Taiwanese patent application drafts. Your file never leaves your device — verifiable in airplane mode.
 
 **[Try it →](https://patentlint.com)**
 
 ## Status
 
-- **151 checks** across U.S., European (EPC), Chinese, and Taiwanese filings — mapped to USPTO MPEP, EPO Guidelines, CNIPA 审查指南, and TIPO 專利審查基準
+- **Check catalog**: 43 U.S. + 34 EPC + 34 CN + 40 TW = 151 deterministic checks; per-jurisdiction breakdown in [CHECKS.md](CHECKS.md)
 - **2560 tests** passing on every commit; full pytest + ruff gate in CI
 - **6 UI languages** (English, German, Traditional + Simplified Chinese, Japanese, Korean) with locale-aware PDF generation
 - **Walker confidence signals** distilled offline from small sklearn classifiers + cloud-LLM ensemble judging on a public granted-patents corpus; the runtime is pure deterministic Python with no model file or AI inference
