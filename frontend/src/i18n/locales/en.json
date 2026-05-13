@@ -409,7 +409,6 @@
       "pdf": "PDF reports are generated entirely in your browser using pdfmake. Your document content never leaves your device, not even for the report.",
       "aiTitle": "AI / LLM",
       "ai": "PatentLint does not use AI, machine learning, or large language models. All checks are deterministic, rule-based pattern matching against patent office guidelines. Your text is never sent to any AI service.",
-      "aiDevNote": "Development pipeline note: small local machine-learning models (sklearn) and cloud LLMs were used offline against a public granted-patents corpus to evaluate check accuracy and identify discriminating signals. The learned thresholds were translated by hand into deterministic Python in the confidence-score function. No model file is loaded at runtime, no AI inference runs in the deployed pipeline, and no text you submit ever reaches any AI service or model.",
       "telemetryTitle": "Telemetry & Analytics (No Usage)",
       "telemetry": "PatentLint includes no analytics scripts, tracking pixels, cookies, or third-party tracking integrations. No usage data is collected or transmitted automatically.",
       "telemetryLink": "Voluntary error reports → Privacy §6",
