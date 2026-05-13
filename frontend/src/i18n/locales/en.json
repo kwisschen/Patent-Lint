@@ -407,7 +407,7 @@
       "network": "After the initial page load (which loads the analysis engine), zero network requests are made during analysis. Verify this in your browser's DevTools Network tab, or simply turn on airplane mode.",
       "pdfTitle": "PDF Generation",
       "pdf": "PDF reports are generated entirely in your browser using pdfmake. Your document content never leaves your device, not even for the report.",
-      "aiTitle": "AI / LLM",
+      "aiTitle": "AI / LLM (No Usage)",
       "ai": "PatentLint does not use AI, machine learning, or large language models. All checks are deterministic, rule-based pattern matching against patent office guidelines. Your text is never sent to any AI service.",
       "telemetryTitle": "Telemetry & Analytics (No Usage)",
       "telemetry": "PatentLint includes no analytics scripts, tracking pixels, cookies, or third-party tracking integrations. No usage data is collected or transmitted automatically.",

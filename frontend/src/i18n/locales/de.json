@@ -407,7 +407,7 @@
       "network": "Nach dem ersten Seitenaufruf (der die Analyse-Engine lädt) werden während der Prüfung keinerlei Netzwerkanfragen gestellt. Prüfen Sie dies im Netzwerk-Tab der DevTools Ihres Browsers oder aktivieren Sie einfach den Flugmodus.",
       "pdfTitle": "PDF-Erzeugung",
       "pdf": "PDF-Berichte werden vollständig in Ihrem Browser über pdfmake erzeugt. Ihr Dokumentinhalt verlässt nie Ihr Gerät, auch nicht für den Bericht.",
-      "aiTitle": "KI / LLM",
+      "aiTitle": "KI / LLM (nicht genutzt)",
       "ai": "PatentLint verwendet keine KI, kein Machine Learning und keine großen Sprachmodelle. Alle Prüfungen erfolgen deterministisch durch regelbasierten Mustervergleich gegen die Richtlinien der Patentämter. Ihr Text wird nie an einen KI-Dienst gesendet.",
       "telemetryTitle": "Telemetrie & Analyse (nicht genutzt)",
       "telemetry": "PatentLint enthält keine Analyse-Skripte, Tracking-Pixel, Cookies oder Drittanbieter-Tracking. Es werden keine Nutzungsdaten automatisch erfasst oder übertragen.",
