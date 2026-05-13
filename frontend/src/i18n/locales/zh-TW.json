@@ -200,6 +200,7 @@
       "subjectFinding": "PatentLint 分析結果回報：{{checkKey}}",
       "subjectFooter": "PatentLint 使用回饋",
       "subjectEnterprise": "PatentLint 企業諮詢",
+      "subjectBuilder": "您好，想與您聊聊 PatentLint",
       "fieldColon": "：",
       "fieldCheck": "檢查項目",
       "fieldMessage": "訊息內容",
@@ -265,7 +266,9 @@
     "footerIntro": "我想就 PatentLint 提供一些意見回饋。",
     "footerPlaceholder": "[歡迎分享任何意見：bug 回報、功能建議、使用疑問或一般感想。回報 bug 時，附上您的瀏覽器與作業系統有助我重現；提出功能建議時，以一句話說明使用情境會很有幫助。您無需分享任何業務機密資訊。]",
     "enterpriseIntro": "我想洽詢 PatentLint 的企業部署方案。",
+    "builderIntro": "想就 PatentLint 寫信給您，以下是我想請教或分享的內容：",
     "enterprisePlaceholder": "[請簡要說明您的部署需求：事務所或團隊規模與專業領域、執業地區、預估文件量、評估時程，以及任何特殊要求（例如為符合 ITAR 或資料主權法規而採行的內網或 air-gapped 安裝、SSO 整合、客製化檢查項目等）。]",
+    "builderPlaceholder": "[您想分享的任何內容，例如合作意向、協作機會、專案回饋，或單純的問候。此為與開發者直接聯繫的管道；若為技術錯誤回報，使用應用程式內的「Report」按鈕效果更佳。]",
     "reportModal": {
       "title": "傳送匿名錯誤回報嗎？",
       "body": "PatentLint 透過 HTTPS 接收一小段結構化資料以調查本項檢查：計數、實際標記到的用語或詞句、簡短的前後文，以及分類標籤。不含實質請求項內容、不含完整段落、不含電子郵件、不留 IP，下方所示即為我方接收的全部內容。",

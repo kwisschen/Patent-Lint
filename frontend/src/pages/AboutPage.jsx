@@ -7,7 +7,7 @@ import { useInView } from '../hooks/useInView'
 import PageCTA from '../components/PageCTA'
 import { useCountUp } from '../hooks/useCountUp'
 import { JURISDICTION_COLORS } from '../lib/jurisdictionConfig'
-import { composeEnterprise } from '../lib/feedback'
+import { composeEnterprise, composeBuilderContact } from '../lib/feedback'
 import { useFeedback } from '../components/FeedbackPicker'
 import { TESTS_DISPLAY, CHECKS_DISPLAY, CHECKS_BY_JURISDICTION } from '../generated/stats'
 
@@ -1055,9 +1055,19 @@ function ArchitectureDiagram({ t }) {
    ──────────────────────────────────────────── */
 function BuilderStory({ t }) {
   const [ref, inView] = useInView()
+  const { sendFeedback } = useFeedback()
+
+  // Email button routes through FeedbackPicker (composeBuilderContact)
+  // instead of a plain mailto: — gives users on locked-down work laptops
+  // without a default mail-client handler a working Gmail-web fallback.
+  // GitHub + LinkedIn stay as plain anchors since they target external URLs.
+  const handleEmailClick = (e) => {
+    e.preventDefault()
+    sendFeedback(composeBuilderContact(t))
+  }
 
   const links = [
-    { href: 'mailto:kwisschen@gmail.com', icon: Mail, label: 'Email' },
+    { onClick: handleEmailClick, icon: Mail, label: 'Email' },
     { href: 'https://github.com/kwisschen', icon: Github, label: 'GitHub' },
     { href: 'https://linkedin.com/in/kwisschen', icon: Linkedin, label: 'LinkedIn' },
   ]
@@ -1081,21 +1091,31 @@ function BuilderStory({ t }) {
         <p>{t('about.builderSister')}</p>
       </div>
       <div className="flex flex-wrap gap-3 mt-8">
-        {links.map(({ href, icon: Icon, label }) => (
-          <a
-            key={label}
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-border text-sm font-medium text-foreground bg-card hover:shadow-md transition-all duration-200"
-            style={{ transitionTimingFunction: 'var(--ease-bounce)' }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)' }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)' }}
-          >
-            <Icon size={16} />
-            {label}
-          </a>
-        ))}
+        {links.map(({ href, onClick, icon: Icon, label }) => {
+          const sharedProps = {
+            className: "inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-border text-sm font-medium text-foreground bg-card hover:shadow-md transition-all duration-200",
+            style: { transitionTimingFunction: 'var(--ease-bounce)' },
+            onMouseEnter: (e) => { e.currentTarget.style.transform = 'translateY(-2px)' },
+            onMouseLeave: (e) => { e.currentTarget.style.transform = 'translateY(0)' },
+          }
+          const inner = <><Icon size={16} />{label}</>
+          // Email link uses onClick → picker modal; GitHub/LinkedIn use href → external nav.
+          return onClick ? (
+            <button key={label} type="button" onClick={onClick} {...sharedProps}>
+              {inner}
+            </button>
+          ) : (
+            <a
+              key={label}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              {...sharedProps}
+            >
+              {inner}
+            </a>
+          )
+        })}
       </div>
       <p className="text-xs text-muted-foreground italic mt-6 leading-relaxed">
         {t('about.licenseNote')}

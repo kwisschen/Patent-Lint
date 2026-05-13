@@ -393,6 +393,22 @@ export function composeEnterprise(t) {
   return buildEmail(subject, body)
 }
 
+// Compose builder-bio contact (about-page personal Email button). Generic
+// scaffold for hiring inquiries / collaboration / feedback / hello —
+// routes through FeedbackPicker so users on locked-down work laptops
+// without a mailto handler still get a working Gmail-web fallback.
+export function composeBuilderContact(t) {
+  const subject = t('feedback.email.subjectBuilder')
+  const body = [
+    t('feedback.emailGreeting'),
+    '',
+    t('feedback.builderIntro'),
+    '',
+    t('feedback.builderPlaceholder'),
+  ].join('\n')
+  return buildEmail(subject, body)
+}
+
 // Dispatch a composed email via the given method. Clipboard write is
 // always performed (silent fail) as a safety-net fallback regardless
 // of method — even a Gmail user can tab away and paste elsewhere if
