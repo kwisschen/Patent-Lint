@@ -655,7 +655,7 @@
     "epcFeatures": {
       "title": "Interaktive Prüfung von EPÜ-Patentanmeldungen",
       "claimTree": {
-        "title": "Anspruchsbaum + Art.-84-Walker",
+        "title": "Anspruchsbaum & Art.-84-Walker",
         "description": "Abhängigkeitsbaum für Ansprüche mit englischen Rückbezugs- und Stützungs-Walkern (Art. 84 EPÜ). EPÜ-spezifische Rückbezugsformen — „any preceding claim\", „any one of claims N to M\" — werden zum Parse-Zeitpunkt vor-extrahiert und expandiert."
       },
       "specAbstract": {
@@ -1676,7 +1676,7 @@
   },
   "terms": {
     "title": "Nutzungsbedingungen",
-    "lastUpdated": "Zuletzt aktualisiert: 12. Mai 2026",
+    "lastUpdated": "Zuletzt aktualisiert: 13. Mai 2026",
     "intro": "Diese Nutzungsbedingungen regeln Ihre Nutzung der Website patentlint.com (die „Website“) und der Software PatentLint (die „Software“). Mit der Nutzung der Website gelten diese Bedingungen.",
     "s1": {
       "title": "Die Website vs. die Software",
@@ -1749,7 +1749,7 @@
     },
     "s9": {
       "title": "Anwendbares Recht",
-      "p1": "Diese Bedingungen unterliegen dem Recht der Republik China (Taiwan), ohne Berücksichtigung ihrer kollisionsrechtlichen Grundsätze. Die Parteien unterwerfen sich für Streitigkeiten aus diesen Bedingungen der ausschließlichen Zuständigkeit des Bezirksgerichts Taipeh."
+      "p1": "Diese Bedingungen unterliegen dem Recht Taiwans, ohne Berücksichtigung seiner kollisionsrechtlichen Grundsätze. Die Parteien unterwerfen sich für Streitigkeiten aus diesen Bedingungen der ausschließlichen Zuständigkeit des Bezirksgerichts Taipeh."
     },
     "s10": {
       "title": "Änderungen dieser Bedingungen",

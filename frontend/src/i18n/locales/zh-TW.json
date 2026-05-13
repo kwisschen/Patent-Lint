@@ -538,7 +538,7 @@
       "multiMultiDependency": "多項從屬的從屬",
       "dependentOrdering": "從屬權利要求排序",
       "connectionRelationships": "組件連接關係（审查指南 §3.2.1）",
-      "antecedentBasis": "引用基礎走訪器（审查指南 §3.2.2）",
+      "antecedentBasis": "引用基礎分析器（审查指南 §3.2.2）",
       "specSupport": "權利要求用語之說明書支持（专利法 §26 第4款）",
       "omnibus": "援引式權利要求（审查指南 §3.3）",
       "markushOpenTransition": "馬庫什組開放式連接詞（审查指南 §9.3）",
@@ -655,8 +655,8 @@
     "epcFeatures": {
       "title": "互動式歐洲專利分析",
       "claimTree": {
-        "title": "請求項依附樹狀圖 + 第84條 walker",
-        "description": "完整請求項依附樹狀圖，搭配先行詞與說明書支持 walker（依 EPC 第84條）。EPC 特有的依附用語（「any preceding claim」、「any one of claims N to M」）於剖析階段預先處理並展開。"
+        "title": "請求項樹與 第84條 分析器",
+        "description": "完整請求項依附樹狀圖，搭配先行詞與說明書支持分析器（依 EPC 第84條）。EPC 特有的依附用語（「any preceding claim」、「any one of claims N to M」）於剖析階段預先處理並展開。"
       },
       "specAbstract": {
         "title": "說明書與摘要結構",
@@ -696,7 +696,7 @@
       "markushFormat": "Markush 群組形式（審查指南 F-IV § 4.20）",
       "independentClaimCount": "各專利類別之獨立項數（施行細則第43(2)、43(3)條，建議性）",
       "twoPartForm": "二段式（施行細則第43(1)條，建議性）",
-      "antecedentBasis": "先行詞 walker：第84條、審查指南 F-IV § 4.5",
+      "antecedentBasis": "先行詞分析器：第84條、審查指南 F-IV § 4.5",
       "specSupport": "說明書支持：第84條（說明書支持要件）",
       "restrictiveAbsolutes": "限制性絕對用語（審查指南 F-IV § 4.7，建議性）",
       "punctuation": "請求項標點（審查指南 F-IV § 4.10）",
@@ -1161,7 +1161,7 @@
           "pass": "未偵測到連接詞使用問題（Guidelines F-IV § 4.13）。"
         },
         "twoPartForm": {
-          "verify": "無獨立項採二段式撰寫(前言 +「characterised in that」)。Rule 43(1) EPC 視情形建議採二段式；請依最近先前技術判斷是否適用。",
+          "verify": "無獨立項採二段式撰寫（前言 +「characterised in that」）。Rule 43(1) EPC 視情形建議採二段式；請依最近先前技術判斷是否適用。",
           "pass": "未偵測到二段式撰寫相關問題（Rule 43(1) EPC）。"
         }
       },
@@ -1676,7 +1676,7 @@
   },
   "terms": {
     "title": "服務條款",
-    "lastUpdated": "最後更新：2026年5月12日",
+    "lastUpdated": "最後更新：2026年5月13日",
     "translationNote": "本中譯本僅供參考。中文譯本與英文版本如有歧異，以英文版為準。",
     "intro": "本條款規範您對 patentlint.com 網站（下稱「本網站」）及 PatentLint 軟體（下稱「本軟體」）之使用。當您使用本網站，本條款即適用於您。",
     "s1": {
@@ -1750,7 +1750,7 @@
     },
     "s9": {
       "title": "準據法",
-      "p1": "本條款依中華民國（台灣）法律解釋及適用，並排除衝突法則之適用。雙方就因本條款所生爭議，合意以臺灣臺北地方法院為第一審管轄法院。"
+      "p1": "本條款依臺灣法律解釋及適用，並排除衝突法則之適用。雙方就因本條款所生爭議，合意以臺灣臺北地方法院為第一審管轄法院。"
     },
     "s10": {
       "title": "本條款之變更",

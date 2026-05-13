@@ -538,7 +538,7 @@
       "multiMultiDependency": "多项从属的从属",
       "dependentOrdering": "从属权利要求排序",
       "connectionRelationships": "组件连接关系（审查指南 §3.2.1）",
-      "antecedentBasis": "引用基础走查器（审查指南 §3.2.2）",
+      "antecedentBasis": "引用基础分析器（审查指南 §3.2.2）",
       "specSupport": "权利要求用语之说明书支持（专利法 §26 第4款）",
       "omnibus": "援引式权利要求（审查指南 §3.3）",
       "markushOpenTransition": "马库什开放式连接词（审查指南 §9.3）",
@@ -655,8 +655,8 @@
     "epcFeatures": {
       "title": "交互式欧洲专利分析",
       "claimTree": {
-        "title": "权利要求依附树状图 + 第84条 walker",
-        "description": "完整权利要求依附树状图，配合引用基础与说明书支持 walker（依 EPC 第84条）。EPC 特有的依附表述（「any preceding claim」、「any one of claims N to M」）在解析阶段预处理并展开。"
+        "title": "权利要求树与 第84条 分析器",
+        "description": "完整权利要求依附树状图，配合引用基础与说明书支持分析器（依 EPC 第84条）。EPC 特有的依附表述（「any preceding claim」、「any one of claims N to M」）在解析阶段预处理并展开。"
       },
       "specAbstract": {
         "title": "说明书与摘要结构",
@@ -696,7 +696,7 @@
       "markushFormat": "Markush 群组形式（审查指南 F-IV § 4.20）",
       "independentClaimCount": "各权利要求类别之独立项数（实施细则第43(2)、43(3)条，建议性）",
       "twoPartForm": "两段式（实施细则第43(1)条，建议性）",
-      "antecedentBasis": "引用基础 walker：第84条、审查指南 F-IV § 4.5",
+      "antecedentBasis": "引用基础分析器：第84条、审查指南 F-IV § 4.5",
       "specSupport": "说明书支持：第84条（说明书支持要件）",
       "restrictiveAbsolutes": "限制性绝对用语（审查指南 F-IV § 4.7，建议性）",
       "punctuation": "权利要求标点（审查指南 F-IV § 4.10）",
@@ -1676,7 +1676,7 @@
   },
   "terms": {
     "title": "服务条款",
-    "lastUpdated": "最后更新：2026年5月12日",
+    "lastUpdated": "最后更新：2026年5月13日",
     "translationNote": "本译文仅供参考。中译本与英文版本如有歧异，以英文版为准。",
     "intro": "本条款规范您对 patentlint.com 网站（下称「本网站」）及 PatentLint 软件（下称「本软件」）之使用。当您使用本网站，本条款即适用于您。",
     "s1": {
@@ -1750,7 +1750,7 @@
     },
     "s9": {
       "title": "准据法",
-      "p1": "本条款依台湾（中华民国）法律解释及适用，并排除冲突法则之适用。双方就因本条款所生争议，合意以台湾台北地方法院为第一审管辖法院。"
+      "p1": "本条款依台湾法律解释及适用，并排除冲突法则之适用。双方就因本条款所生争议，合意以台湾台北地方法院为第一审管辖法院。"
     },
     "s10": {
       "title": "本条款之变更",

@@ -538,7 +538,7 @@
       "multiMultiDependency": "다중 종속의 다중 종속",
       "dependentOrdering": "종속 청구항 순서",
       "connectionRelationships": "구성요소 연결관계 (审查指南 §3.2.1)",
-      "antecedentBasis": "선행사 워커(引用基础, 审查指南 §3.2.2)",
+      "antecedentBasis": "引用基础 분석기(审查指南 §3.2.2)",
       "specSupport": "청구항 용어의 명세서 뒷받침(专利法 §26 第4款)",
       "omnibus": "포괄 청구항(审查指南 §3.3)",
       "markushOpenTransition": "마쿠시군 개방형 전환어(审查指南 §9.3)",
@@ -655,8 +655,8 @@
     "epcFeatures": {
       "title": "인터랙티브 유럽 특허 분석",
       "claimTree": {
-        "title": "청구항 의존 트리 + 제84조 워커",
-        "description": "청구항 간 의존 트리와 선행어 및 명세서 뒷받침 워커(EPC 제84조)를 결합합니다. EPC 고유 의존 표현（「any preceding claim」, 「any one of claims N to M」）은 파싱 단계에서 사전 처리 및 확장됩니다."
+        "title": "청구항 트리와 제84조 분석기",
+        "description": "청구항 간 의존 트리와 선행어 및 명세서 뒷받침 분석기(EPC 제84조)를 결합합니다. EPC 고유 의존 표현(「any preceding claim」, 「any one of claims N to M」)은 파싱 단계에서 사전 처리 및 확장됩니다."
       },
       "specAbstract": {
         "title": "명세서 및 요약서 구조",
@@ -696,7 +696,7 @@
       "markushFormat": "Markush 그룹 형식(심사 지침 F-IV § 4.20)",
       "independentClaimCount": "카테고리별 독립항 수(시행규칙 제43(2), 43(3)조, 권장)",
       "twoPartForm": "2부 형식(시행규칙 제43(1)조, 권장)",
-      "antecedentBasis": "선행어 워커：제84조, 심사 지침 F-IV § 4.5",
+      "antecedentBasis": "선행어 분석기：제84조, 심사 지침 F-IV § 4.5",
       "specSupport": "명세서의 뒷받침：제84조(뒷받침 요건)",
       "restrictiveAbsolutes": "제한적 절대 표현(심사 지침 F-IV § 4.7, 권장)",
       "punctuation": "청구항 부호 사용(심사 지침 F-IV § 4.10)",
@@ -1089,11 +1089,11 @@
       "claims": {
         "antecedentBasis": {
           "pass": "선행어 기초 관련 문제가 감지되지 않았습니다(Art. 84 EPC).",
-          "verify": "선행어 워커가 {{count}}건의 가능한 사항을 보고했습니다. Art. 84 EPC 및 Guidelines F-IV § 4.5에 따라 검토하십시오."
+          "verify": "선행어 분석기가 {{count}}건의 가능한 사항을 보고했습니다. Art. 84 EPC 및 Guidelines F-IV § 4.5에 따라 검토하십시오."
         },
         "specSupport": {
           "pass": "명세서에서 뒷받침되지 않는 청구항 용어가 감지되지 않았습니다(Art. 84 EPC).",
-          "verify": "명세서 뒷받침 워커가 {{count}}건의 뒷받침이 부족할 수 있는 청구항 용어를 보고했습니다. Art. 84 EPC에 따라 검토하십시오."
+          "verify": "명세서 뒷받침 분석기가 {{count}}건의 뒷받침이 부족할 수 있는 청구항 용어를 보고했습니다. Art. 84 EPC에 따라 검토하십시오."
         },
         "excessClaims": {
           "verify": "총 청구항 수가 15개를 초과합니다. Rule 45 EPC 는 제16~50항에 청구항당 수수료를, 제51항 이상에는 더 높은 청구항당 수수료를 부과합니다. 출원 수수료를 확인하십시오.",
@@ -1676,7 +1676,7 @@
   },
   "terms": {
     "title": "이용약관",
-    "lastUpdated": "최종 업데이트: 2026년 5월 12일",
+    "lastUpdated": "최종 업데이트: 2026년 5월 13일",
     "translationNote": "본 한국어 번역은 참고용입니다. 한국어 번역과 영어 원문 간에 차이가 있는 경우 영어 원문이 우선합니다.",
     "intro": "본 약관은 patentlint.com 웹사이트(이하 '본 사이트') 및 PatentLint 소프트웨어(이하 '본 소프트웨어')의 이용에 관한 사항을 정합니다. 본 사이트를 이용하시면 본 약관이 적용됩니다.",
     "s1": {
@@ -1750,7 +1750,7 @@
     },
     "s9": {
       "title": "준거법",
-      "p1": "본 약관은 대만(중화민국) 법률을 준거법으로 하며, 그 저촉법 원칙은 적용되지 않습니다. 본 약관에 따른 분쟁에 대하여 양 당사자는 타이페이 지방법원의 전속관할에 동의합니다."
+      "p1": "본 약관은 대만 법률을 준거법으로 하며, 그 저촉법 원칙은 적용되지 않습니다. 본 약관에 따른 분쟁에 대하여 양 당사자는 타이페이 지방법원의 전속관할에 동의합니다."
     },
     "s10": {
       "title": "본 약관의 변경",
