@@ -203,7 +203,7 @@
     "enterpriseIntro": "I'd like to inquire about enterprise deployment of PatentLint.",
     "builderIntro": "Wanted to reach out about PatentLint. Here's what I'd love to ask or share:",
     "enterprisePlaceholder": "[Tell us about your deployment needs — firm or team size and practice area, regions you work in, approximate document volume, evaluation timeline, and any specific requirements (e.g., on-premises or air-gapped install for ITAR or data sovereignty, SSO integration, custom rule packs).]",
-    "builderPlaceholder": "[Anything you'd like to share — interest in working together, a collaboration idea, feedback on the project, or just a hello. This is the builder-contact channel; technical bug reports work better through the in-app Report button.]",
+    "builderPlaceholder": "[Anything you'd like to share — interest in working together, a collaboration idea, feedback on the project, a copy or terminology correction, or just a hello. This is the builder-contact channel; finding-level bug reports work better through the in-app \"Looks wrong?\" button.]",
     "email": {
       "subjectFinding": "PatentLint findings report — {{checkKey}}",
       "subjectFooter": "PatentLint feedback",

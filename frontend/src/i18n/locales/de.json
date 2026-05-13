@@ -203,7 +203,7 @@
     "enterpriseIntro": "Ich möchte eine Anfrage zur Enterprise-Bereitstellung von PatentLint stellen.",
     "builderIntro": "Ich wollte Ihnen kurz zu PatentLint schreiben. Hier ist, was ich gerne fragen oder mitteilen möchte:",
     "enterprisePlaceholder": "[Beschreiben Sie Ihren Einsatzbedarf — Kanzlei- oder Teamgröße und Fachgebiet, Regionen, in denen Sie tätig sind, ungefähres Dokumentenvolumen, Evaluierungszeitraum und besondere Anforderungen (z. B. On-Premises- oder Air-Gap-Installation für ITAR- oder Datenschutzanforderungen, SSO, eigene Prüfungen).]",
-    "builderPlaceholder": "[Worum es geht — Interesse an einer Zusammenarbeit, eine Kooperationsidee, Feedback zum Projekt oder einfach ein Hallo. Dies ist der direkte Draht zum Entwickler; technische Fehlerberichte funktionieren am besten über den Report-Button in der App.]",
+    "builderPlaceholder": "[Worum es geht — Interesse an einer Zusammenarbeit, eine Kooperationsidee, Feedback zum Projekt, eine Korrektur zu Texten oder Terminologie, oder einfach ein Hallo. Dies ist der direkte Draht zum Entwickler; konkrete Fehlerberichte zu einzelnen Befunden funktionieren am besten über den „Sieht falsch aus?“-Button in der App.]",
     "email": {
       "subjectFinding": "PatentLint Befundbericht — {{checkKey}}",
       "subjectFooter": "PatentLint Feedback",
