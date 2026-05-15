@@ -230,7 +230,11 @@ _UNIT_PATTERN = re.compile(
     r"|kJ|MJ|GJ|mJ|µJ|μJ|J"
     r"|kcal|cal|BTU|Wh|kWh|MWh"
     r"|eV|keV|MeV|GeV"
-    r"|Sv|mSv|µSv|μSv|Gy|mGy|µGy|μGy|Bq|Ci"
+    # kGy + MGy added 2026-05-15 (issue #39) — radiation-dose units with
+    # SI kilo / mega prefixes. The Gy / mGy / µGy entries below cover the
+    # base + milli + micro prefixes; kGy is common in industrial
+    # sterilization dosages; MGy in high-dose applications.
+    r"|kGy|MGy|Sv|mSv|µSv|μSv|Gy|mGy|µGy|μGy|Bq|Ci"
     # Optical / magnetic
     r"|lm|lux|lx|cd|nit|nits|sr"
     r"|T|mT|µT|μT|G|Oe|Wb"
@@ -294,6 +298,13 @@ _D1_LEADING_FUNCTION_WORDS = frozenset({
     # Conjunctions / aspectuals
     "while", "when", "where", "and", "or", "but", "if", "after", "before",
     "until", "since", "than",
+    # Quantifier-comparison residues. `than` (above) handles `more than X`
+    # but leaves `more` attached to the head-noun trail. Same for `at
+    # least` / `at most` patterns — `at` is a generic preposition so
+    # we can't EXCLUDE the numeral entirely, but stripping `least` /
+    # `most` / `more` / `less` from the head-noun trail collapses
+    # `dose of at least` → `dose`. Issue #39 (2026-05-15).
+    "least", "most", "more", "less",
     # Common verbs that capture into the noun-phrase head
     "manipulate", "manipulates", "manipulating",
     "operate", "operates", "operating",
