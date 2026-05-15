@@ -83,6 +83,13 @@ _TW_BOILERPLATE_TERMS: frozenset[str] = frozenset({
     "下列步驟",
     "下列方法",
     "下列特徵",
+    # Reported via issue #44: 如請求項X至Y中任一項所記載 dependency
+    # boilerplate. `如請求項` prefix is already filtered, but the walker
+    # tokenization sometimes yields the residue `項所記載` (or the
+    # 所-less variant `項記載`) as a standalone term. Both are
+    # spec-support boilerplate, not a referable noun phrase.
+    "項所記載",
+    "項記載",
 })
 
 # Trailing clause tokens observed in audit as walker-captured verbal tails
