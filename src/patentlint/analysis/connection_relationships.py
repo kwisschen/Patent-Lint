@@ -32,6 +32,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
+from patentlint.diagnostic_extractors import extract_connection_relationships
 from patentlint.models import CheckItem, Claim
 
 
@@ -360,14 +361,40 @@ def check_connection_relationships(
             reference=config.reference,
         )]
 
+    # Pre-compute the per-flag short-name tuple once so we can both
+    # render the per-claim CheckItem message AND feed the diagnostic
+    # extractor without recomputing component-name heads.
+    flagged_with_names: list[tuple[int, int, list[str], list[str]]] = [
+        (claim_id, count, sample_components, [_component_name(c) for c in sample_components])
+        for claim_id, count, sample_components in flagged
+    ]
+    # The extractor surfaces a per-claim `findings[]` so ReportModal
+    # payloads carry actionable detail (issue #48 — previously emitted
+    # empty diagnostic trails). It takes the (claim_id, count, names)
+    # triples; rebuild that view.
+    extractor_input = [
+        (claim_id, count, sample_names)
+        for claim_id, count, _, sample_names in flagged_with_names
+    ]
+    diagnostics_payload = extract_connection_relationships(extractor_input, claims)
+
     items: list[CheckItem] = []
-    for claim_id, count, sample in flagged:
-        sample_names = [_component_name(c) for c in sample]
+    for claim_id, count, sample_components, sample_names in flagged_with_names:
         # English fallback message — locale templates render sample_names
         # via the JS detailsFormatter for proper list-separator handling.
         names_inline = ", ".join(sample_names)
         if count > len(sample_names):
             names_inline += ", etc."
+        # Per-claim CheckItem carries the slice of the aggregate findings
+        # list belonging to THIS claim, so a per-claim Report click ships
+        # only the relevant finding (mirrors how antecedent + spec-support
+        # cards filter their findings before send).
+        per_claim_diag = dict(diagnostics_payload)
+        if per_claim_diag.get("findings"):
+            per_claim_diag["findings"] = [
+                f for f in per_claim_diag["findings"]
+                if f.get("claim_id") == claim_id
+            ]
         items.append(CheckItem(
             status="verify",
             message=(
@@ -379,9 +406,10 @@ def check_connection_relationships(
             details_params={
                 "claim_id": claim_id,
                 "component_count": count,
-                "sample_components": sample,
+                "sample_components": sample_components,
                 "sample_names": sample_names,
             },
+            diagnostics=per_claim_diag,
             reference=config.reference,
         ))
     return items
