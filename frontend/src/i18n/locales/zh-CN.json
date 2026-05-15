@@ -319,6 +319,9 @@
     "items": "个项目",
     "item": "个项目"
   },
+  "sectionDetail": {
+    "title": "章节分析"
+  },
   "security": {
     "airplaneDemoAlt": "演示：在飞行模式下无网络连接分析专利说明书",
     "badge": {

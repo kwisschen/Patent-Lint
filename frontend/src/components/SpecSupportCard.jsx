@@ -13,7 +13,9 @@ import ReportModal from './ReportModal'
 function ClaimRow({ claimNumber, phrases, crossRefPhrases, claimText, jurisdiction }) {
   const { t, i18n } = useTranslation()
   const { sendFeedback } = useFeedback()
-  const [expanded, setExpanded] = useState(false)
+  // Default-expanded so per-finding Report buttons surface without an
+  // extra click — matches AntecedentBasisCard sibling behavior.
+  const [expanded, setExpanded] = useState(true)
   const [reportModalOpen, setReportModalOpen] = useState(false)
   const hasCrossRef = crossRefPhrases.length > 0
 

@@ -319,6 +319,9 @@
     "items": "건",
     "item": "건"
   },
+  "sectionDetail": {
+    "title": "섹션별 분석"
+  },
   "security": {
     "airplaneDemoAlt": "데모: 네트워크 연결 없이 비행기 모드에서 특허 초안을 분석하는 모습",
     "badge": {
