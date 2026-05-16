@@ -305,6 +305,25 @@ _D1_LEADING_FUNCTION_WORDS = frozenset({
     # `most` / `more` / `less` from the head-noun trail collapses
     # `dose of at least` → `dose`. Issue #39 (2026-05-15).
     "least", "most", "more", "less",
+    # Identity / anaphoric / sequential / positional / additive modifiers
+    # that connect a numbered reference to prior context without being
+    # part of the element's actual name. In `<modifier> + <noun> + <numeral>`,
+    # the numeral uniquely identifies the element; the modifier is
+    # rhetorical glue. D1 dedup correctly treats `the wheel 102` and
+    # `the corresponding wheel 102` as the same element (numeral 102 IS
+    # the identity), so stripping the modifier prevents false-conflict
+    # noise from drafter style variation. Added 2026-05-15 per user
+    # feedback on PR #53.
+    #
+    # Anaphoric / identity:
+    "corresponding", "other", "same", "aforesaid",
+    # Sequential (positional in a list / series):
+    "next", "previous", "prior", "subsequent", "succeeding",
+    "preceding", "following", "latter", "former",
+    # Positional / proximity (which one of nearby elements):
+    "adjacent", "nearest", "neighboring", "neighbouring", "opposite",
+    # Additive (one of multiple instances):
+    "additional", "further", "remaining",
     # Common verbs that capture into the noun-phrase head
     "manipulate", "manipulates", "manipulating",
     "operate", "operates", "operating",
