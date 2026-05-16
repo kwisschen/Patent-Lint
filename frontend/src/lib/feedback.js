@@ -196,6 +196,16 @@ export const FIELD_LABEL_KEYS = {
   orphans: 'feedback.email.fieldOrphans',
   brief_figs_sample: 'feedback.email.fieldBriefFigsSample',
   detailed_figs_sample: 'feedback.email.fieldDetailedFigsSample',
+  // Added 2026-05-15 with PR #54 + #56 diagnostic enrichments —
+  // connection_relationships findings + numeralConsistency outlier
+  // context + symbolVsRepDrawing numeral string. Without these, the
+  // ReportModal preview rendered raw snake_case keys.
+  sample_names: 'feedback.email.fieldSampleNames',
+  sample_name_charlens: 'feedback.email.fieldSampleNameCharlens',
+  sample_count: 'feedback.email.fieldSampleCount',
+  component_count: 'feedback.email.fieldComponentCount',
+  top_outlier_context_excerpt: 'feedback.email.fieldTopOutlierContextExcerpt',
+  numeral: 'feedback.email.fieldNumeral',
 }
 
 // Format a key→value section as a localized "Label: value" stack. Drops

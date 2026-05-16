@@ -267,6 +267,12 @@
       "fieldOrphans": "Verwaiste Figuren",
       "fieldBriefFigsSample": "Figuren in Kurzbeschreibung (Stichprobe)",
       "fieldDetailedFigsSample": "Figuren in Detailbeschreibung (Stichprobe)",
+      "fieldSampleNames": "Beispiel-Namen",
+      "fieldSampleNameCharlens": "Längen der Beispiel-Namen",
+      "fieldSampleCount": "Beispielanzahl",
+      "fieldComponentCount": "Komponentenanzahl",
+      "fieldTopOutlierContextExcerpt": "Ausreißer-Kontext",
+      "fieldNumeral": "Bezugszeichen",
       "diagnosticHeader": "Diagnose-Spur (anonymisiert — siehe Datenschutz §6):"
     },
     "reportModal": {
