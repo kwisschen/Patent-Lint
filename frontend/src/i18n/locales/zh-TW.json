@@ -176,7 +176,7 @@
     "report": "看起來不對？",
     "reportProblem": "回報疑似誤判",
     "picker": {
-      "title": "您的專利說明書不會離開您的裝置",
+      "title": "您的稿件不會離開您的裝置",
       "send": {
         "description": "郵件已備妥，剪貼簿中也有相同內容備用。請選擇傳送方式：",
         "mailto": "以 Outlook 或行動裝置傳送",
