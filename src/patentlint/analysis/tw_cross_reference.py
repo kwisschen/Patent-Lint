@@ -65,6 +65,12 @@ def check_symbol_vs_rep_drawing(doc: TwPatentDocument) -> list[CheckItem]:
                 findings=[
                     {
                         "kind": m["kind"],
+                        # Issue #49 (2026-05-15): include the actual numeral
+                        # string (privacy-safe — digits/Latin only, never
+                        # draft prose) so triage can verify which symbols
+                        # were flagged. With only charlens, every short
+                        # numeral looked identical.
+                        "numeral": m.get("numeral"),
                         "numeral_charlen": len(m.get("numeral") or ""),
                         "rep_name_charlen": len(m.get("rep_name") or ""),
                         "table_name_charlen": len(m.get("table_name") or "") if m.get("table_name") is not None else None,

@@ -1028,6 +1028,21 @@ def _build_tw_d1_check_item(
                         c["numeral"],
                         _cjk_format_d1_name_for_display(c["canonical"]),
                     ),
+                    # Outlier context — issue #47 (2026-05-15). Previously
+                    # only the canonical's context was surfaced, which made
+                    # it impossible to tell from the issue body whether
+                    # the outlier was (a) a drafter typo near the canonical
+                    # occurrences or (b) a separate element that walker
+                    # adjacency-paired by mistake. With the outlier's own
+                    # excerpt the next similar report self-classifies.
+                    "top_outlier_context_excerpt": (
+                        numeral_context_excerpt(
+                            spec_text,
+                            c["numeral"],
+                            _cjk_format_d1_name_for_display(c["outliers"][0]["name"]),
+                        )
+                        if c["outliers"] else None
+                    ),
                 }
                 for c in sample
             ],

@@ -578,6 +578,11 @@ _VERB_STOPS = {
     "turn", "turns", "turned", "turning",
     "stop", "stops", "stopped", "stopping",
     "multiply", "multiplies", "multiplied", "multiplying",
+    # 5-char verb form below the _is_likely_third_person_verb 6-char floor.
+    # Reported via issue #41: "electronic elements completely falls" captured
+    # as a reference term. Adding 'falls' to the explicit denylist rather
+    # than dropping the floor, to avoid catching legitimate 5-char nouns.
+    "falls",
     # Modal verbs
     "must", "shall", "should", "can", "could", "may", "might", "will", "would",
 }
