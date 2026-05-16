@@ -259,6 +259,12 @@
       "fieldOrphans": "고아 도면",
       "fieldBriefFigsSample": "도면의 간단한 설명에 나열된 도면 (샘플)",
       "fieldDetailedFigsSample": "상세한 설명에서 인용된 도면 (샘플)",
+      "fieldSampleNames": "샘플 이름",
+      "fieldSampleNameCharlens": "샘플 이름 길이",
+      "fieldSampleCount": "샘플 수",
+      "fieldComponentCount": "구성요소 수",
+      "fieldTopOutlierContextExcerpt": "이상치 컨텍스트",
+      "fieldNumeral": "부호",
       "diagnosticHeader": "진단 자취(비식별 처리, 개인정보 처리방침 §6 참조):"
     },
     "emailGreeting": "Christopher 님께,",

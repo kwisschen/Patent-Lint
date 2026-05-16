@@ -190,7 +190,8 @@ def _morphological_prefix_fallback_tw(
     intros_by_term: dict,
     *,
     min_shared_prefix: int = 2,
-    min_term_len: int = 3,
+    min_ref_len: int = 2,
+    min_intro_len: int = 3,
 ) -> dict | None:
     """Phase F5 — morphological-prefix fallback DYM.
 
@@ -202,19 +203,29 @@ def _morphological_prefix_fallback_tw(
     below threshold but the shared morphological stem makes the intent
     clear.
 
+    ``min_ref_len`` was historically 3, which silently excluded common
+    2-char CJK technical terms (電感, 電池, 馬達, 電源, 軸承, 電源,
+    相位差 has 3, but 電感 has 2). Issue #42 (2026-05-15) — drafter
+    referenced ``前述電感`` with the introducing form ``電感元件`` (or
+    similar) presumably in the ancestor; walker silently returned no
+    fallback because the 3-char floor rejected the 2-char ref. Split
+    into ref / intro min-lengths: ref ≥ 2 (allow 2-char CJK technical
+    terms), intro ≥ 3 (still need a longer pool entry to be a
+    meaningful suggestion — same-length matches would just be self).
+
     Returns ``{"term": intro_term, "claim_id": ancestor_id}`` for the
     longest-shared-prefix match, or ``None`` if no candidate qualifies.
     Ties broken by nearer ancestor (smaller depth), then by insertion
     order.
     """
-    if len(ref) < min_term_len:
+    if len(ref) < min_ref_len:
         return None
 
     best_prefix_len = 0
     best_depth: int | None = None
     best: dict | None = None
     for intro_term, (ancestor_id, depth) in intros_by_term.items():
-        if len(intro_term) < min_term_len:
+        if len(intro_term) < min_intro_len:
             continue
         if intro_term == ref:
             continue

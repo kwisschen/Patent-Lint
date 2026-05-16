@@ -395,6 +395,58 @@ def extract_no_paragraph_numbering(input_format: str, paragraph_count: int) -> d
 # ---------------------------------------------------------------------------
 
 
+def extract_connection_relationships(
+    flagged: list[tuple[int, int, list[str]]],
+    claims,
+) -> dict[str, Any]:
+    """Per-issue diagnostic fingerprint for connectionRelationships
+    (TW + CN). Issue #48 (2026-05-15) surfaced the gap — the check was
+    emitting bare top-level CheckItems with no `findings[]` payload, so
+    reports landed with empty diagnostic trails and could not be
+    triaged from the issue body alone.
+
+    Each entry in ``flagged`` is the ``(claim_id, total_component_count,
+    sample_component_names)`` tuple that ``check_connection_relationships``
+    builds. ``sample_component_names`` is the pre-computed short-noun-
+    phrase list (head before first separator) from ``_component_name``.
+
+    The diagnostic shape mirrors ``extract_antecedent_basis``:
+      - top-level: flagged_count + total_claims + per-claim findings
+      - per finding: claim_id, component_count, sample_count,
+        sample_name_charlens, claim_text_charlen, plus the short
+        sample_names (capped at 3, each truncated to MATCH_MAX) so
+        triage can quickly see WHAT was captured — drafter-real
+        components (drafter error) vs sub-clause fragments
+        (walker over-capture).
+    """
+    if not flagged:
+        return {}
+    claims_by_id = {c.id: c for c in claims}
+    sample = flagged[:SAMPLE_SIZE]
+    out_findings = []
+    for claim_id, component_count, sample_names in sample:
+        claim = claims_by_id.get(claim_id)
+        claim_text = (claim.text if claim is not None else "") or ""
+        # Cap the names list (so a 30-component claim doesn't ship 30
+        # entries) and truncate each name for length-safety. The
+        # _component_name helper already returns the short head, so
+        # most names are 2-15 CJK chars — MATCH_MAX is generous.
+        sample_names_capped = list(sample_names[:3])
+        out_findings.append({
+            "claim_id": claim_id,
+            "component_count": component_count,
+            "sample_count": len(sample_names_capped),
+            "sample_names": [_truncate(n, MATCH_MAX) for n in sample_names_capped],
+            "sample_name_charlens": [len(n or "") for n in sample_names_capped],
+            "claim_text_charlen": len(claim_text),
+        })
+    return {
+        "flagged_count": len(flagged),
+        "total_claims": len(claims),
+        "findings": out_findings,
+    }
+
+
 def extract_claim_id_list(claim_ids: list[int], claims, reason_code: str | None = None) -> dict[str, Any]:
     """Generic claim-ID-list extractor — multipleDependent, selfDependent,
     chainedMultiDep, meansFunction, etc. Surfaces the IDs plus a short

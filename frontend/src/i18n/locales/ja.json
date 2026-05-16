@@ -259,6 +259,12 @@
       "fieldOrphans": "孤立した図",
       "fieldBriefFigsSample": "図面の簡単な説明の図（サンプル）",
       "fieldDetailedFigsSample": "詳細な説明の図（サンプル）",
+      "fieldSampleNames": "サンプル名",
+      "fieldSampleNameCharlens": "サンプル名の文字数",
+      "fieldSampleCount": "サンプル数",
+      "fieldComponentCount": "構成要素数",
+      "fieldTopOutlierContextExcerpt": "外れ値のコンテキスト",
+      "fieldNumeral": "符号",
       "diagnosticHeader": "診断軌跡（非識別化済み、プライバシーポリシー §6 参照）："
     },
     "emailGreeting": "Christopher 様",

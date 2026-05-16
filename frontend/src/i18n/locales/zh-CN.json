@@ -259,6 +259,12 @@
       "fieldOrphans": "孤立图式",
       "fieldBriefFigsSample": "附图说明所列图式（样本）",
       "fieldDetailedFigsSample": "具体实施方式所引用图式（样本）",
+      "fieldSampleNames": "样本名称",
+      "fieldSampleNameCharlens": "样本名称字数",
+      "fieldSampleCount": "样本数量",
+      "fieldComponentCount": "组件数量",
+      "fieldTopOutlierContextExcerpt": "离群值上下文",
+      "fieldNumeral": "符号",
       "diagnosticHeader": "诊断轨迹（已去标识化，详见隐私政策 §6）："
     },
     "emailGreeting": "Christopher 你好，",
