@@ -135,6 +135,13 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # 第 alone is never a legitimate noun-phrase terminus.
         "的第",
         "第",
+        # Reported via issue #45: trailing 以 captured into the noun phrase
+        # at clause boundaries (`第二狀態以進行調整` → walker captures
+        # `第二狀態以` before the next-clause-introducing 進行). `以` here
+        # is the verbal connector "in order to / by way of", never a
+        # noun-phrase terminus in TIPO drafting. Single-char, applied
+        # last in the longest-first iteration order.
+        "以",
     ),
     key=len,
     reverse=True,
