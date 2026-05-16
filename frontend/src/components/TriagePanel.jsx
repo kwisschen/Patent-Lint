@@ -188,7 +188,7 @@ export default function TriagePanel({ data }) {
 
   return (
     <div className="space-y-2">
-      <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
+      <h3 className="text-base font-bold text-foreground uppercase tracking-wide mb-3">
         {t('triage.title')}
       </h3>
       {GROUP_CONFIG.map(({ status, titleKey, emptyKey, Icon }) => (

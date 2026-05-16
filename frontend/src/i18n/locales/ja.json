@@ -325,6 +325,9 @@
     "items": "件",
     "item": "件"
   },
+  "sectionDetail": {
+    "title": "章節別の分析"
+  },
   "security": {
     "airplaneDemoAlt": "デモ：機内モードでネットワーク接続なしに特許明細書をチェック",
     "badge": {

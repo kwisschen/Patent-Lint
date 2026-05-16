@@ -325,6 +325,9 @@
     "items": "個項目",
     "item": "個項目"
   },
+  "sectionDetail": {
+    "title": "章節分析"
+  },
   "security": {
     "airplaneDemoAlt": "示範：在飛航模式下無網路連線分析專利說明書",
     "badge": {

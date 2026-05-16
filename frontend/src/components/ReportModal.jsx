@@ -98,7 +98,7 @@ export default function ReportModal({
           <p className="mb-2 text-xs font-medium text-muted-foreground">
             {t('feedback.reportModal.previewHeading')}
           </p>
-          <pre className="overflow-x-auto text-xs font-mono leading-5 text-foreground/90 whitespace-pre-wrap break-all">
+          <pre className="max-h-72 overflow-y-auto overflow-x-auto text-xs font-mono leading-5 text-foreground/90 whitespace-pre-wrap break-all">
             {entries
               .map(([key, value]) => {
                 const labelKey = FIELD_LABEL_KEYS[key]

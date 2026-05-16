@@ -325,6 +325,9 @@
     "items": "Einträge",
     "item": "Eintrag"
   },
+  "sectionDetail": {
+    "title": "Abschnittsdetails"
+  },
   "security": {
     "airplaneDemoAlt": "Demo: Prüfung einer Patentanmeldung im Flugmodus ohne Netzwerkverbindung",
     "badge": {

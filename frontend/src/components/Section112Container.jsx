@@ -46,9 +46,9 @@ export default function Section112Container({
   return (
     <FrostCard tier="resting" className="mt-4 p-4 space-y-3">
       <div className="flex items-center gap-2">
-        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+        <h3 className="text-base font-bold text-foreground uppercase tracking-wide">
           {t(jConfig.section112TitleKey)}
-        </span>
+        </h3>
         <div className="flex-1 border-t border-border/50" />
       </div>
 

@@ -373,6 +373,12 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
       </div>
 
       <div className="space-y-3" style={cascadeDelay(5)}>
+        {/* Parallel h3 to TriagePanel's internal "Priority Summary" header
+            so the per-section group reads as a symmetric labeled block.
+            Outer space-y-5 provides the inter-group gap. */}
+        <h3 className="text-base font-bold text-foreground uppercase tracking-wide mb-3">
+          {t('sectionDetail.title')}
+        </h3>
         <SectionPanel
           title={t(jConfig.specSectionKey)}
           checks={consolidatedData.specification_checks}

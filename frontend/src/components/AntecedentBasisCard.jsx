@@ -126,7 +126,10 @@ function formatClaimRange(ids, t) {
 }
 
 function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, jurisdiction }) {
-  const [expanded, setExpanded] = useState(false)
+  // Default-expanded so per-finding Report buttons surface without an
+  // extra click — gets users into the diagnostic trail faster on §112
+  // findings where the bug-report path matters most.
+  const [expanded, setExpanded] = useState(true)
   const [reportModalOpen, setReportModalOpen] = useState(false)
   const [reportContext, setReportContext] = useState(null)
   const { sendFeedback } = useFeedback()

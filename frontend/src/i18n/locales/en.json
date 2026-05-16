@@ -325,6 +325,9 @@
     "items": "items",
     "item": "item"
   },
+  "sectionDetail": {
+    "title": "Section detail"
+  },
   "security": {
     "airplaneDemoAlt": "Demo: analyzing a patent draft in airplane mode with no network connection",
     "badge": {
