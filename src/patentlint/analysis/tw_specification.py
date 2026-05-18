@@ -1258,5 +1258,26 @@ def check_symbol_table_coverage_tw(doc: TwPatentDocument) -> list[CheckItem]:
             undeclared_count=total_refnums,
             group_count=total_groups,
             symbol_table_size=len(doc.symbol_table),
+            # Issues #60/#62 (2026-05-18): per-finding enrichment so triage
+            # can see which numerals were flagged (range form? sub-suffix?
+            # contiguous?) without needing the user's draft. Mirrors the
+            # PR #56 convention: numeral strings (digits/Latin only,
+            # privacy-safe) are surfaced; the captured CJK element name
+            # stays charlen-only to preserve user trust in the payload
+            # preview. parsed_table_numerals_sample lets triage cross-check
+            # whether the spec-flagged numerals are actually absent from
+            # the symbol_table or just stored under a different key.
+            findings=[
+                {
+                    "numerals": g["numerals"],
+                    "numerals_count": len(g["numerals"]),
+                    "occurrences": g["occurrences"],
+                    "name_charlen": len(g["name"]) if g["name"] else 0,
+                }
+                for g in sample
+            ],
+            parsed_table_numerals_sample=[
+                e.numeral for e in doc.symbol_table[:10]
+            ],
         ),
     )]
