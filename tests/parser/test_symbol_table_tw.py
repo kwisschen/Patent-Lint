@@ -83,10 +83,30 @@ class TestParseTwSymbolTableUnit:
         assert result[0].numeral == "S1"
 
     def test_range_numeral(self):
-        """Numeral with tilde: 10~12."""
+        """Range notation 10~12 expands to discrete entries (issues #61/#63).
+
+        Pre-fix behaviour was to store '10~12' as a single key, which caused
+        symbolVsRepDrawing FPs when drafter wrote the range in one section
+        and the enumerated form in the other. Range expansion mirrors the
+        CN refnum-range convention and is bounded to <=30 spans.
+        """
         result = parse_tw_symbol_table(["10~12‧‧‧散熱鰭片"])
+        assert [(e.numeral, e.name) for e in result] == [
+            ("10", "散熱鰭片"),
+            ("11", "散熱鰭片"),
+            ("12", "散熱鰭片"),
+        ]
+
+    def test_range_numeral_oversized_falls_back(self):
+        """Spans > 30 fall back to the raw token (anti-runaway guard)."""
+        result = parse_tw_symbol_table(["10~100‧‧‧保留"])
         assert len(result) == 1
-        assert result[0].numeral == "10~12"
+        assert result[0].numeral == "10~100"
+
+    def test_range_numeral_fullwidth_tilde(self):
+        """Full-width tilde 10～12 expands the same as ASCII 10~12."""
+        result = parse_tw_symbol_table(["10～12‧‧‧散熱鰭片"])
+        assert [e.numeral for e in result] == ["10", "11", "12"]
 
     def test_hyphen_numeral(self):
         """Numeral with hyphen: 10-1."""

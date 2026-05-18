@@ -15,6 +15,16 @@ from patentlint.models import CheckItem, TwPatentDocument
 
 _FIG_NUM_RE = re.compile(r"(\d+)")
 
+# Sub-suffix dash normalizer: collapse `43-a` ≡ `43a` so symbol-table and
+# rep-drawing lookup tolerates the dash-vs-concat variation common in TIPO
+# drafting practice (issues #61/#63). Also lowercases trailing letters
+# (`43A` ≡ `43a`) so case differences across sections don't FP.
+_SUBSUFFIX_DASH_RE = re.compile(r"(\d)-([A-Za-z])")
+
+
+def _normalize_symbol_numeral(numeral: str) -> str:
+    return _SUBSUFFIX_DASH_RE.sub(r"\1\2", numeral.strip()).lower()
+
 
 # ── Check 31 ────────────────────────────────────────────────────────────
 
@@ -28,23 +38,29 @@ def check_symbol_vs_rep_drawing(doc: TwPatentDocument) -> list[CheckItem]:
     if not doc.representative_drawing_symbols:
         return []
 
-    # Build lookup from symbol_table: numeral -> name
-    symbol_map = {entry.numeral: entry.name for entry in doc.symbol_table}
+    # Build lookup from symbol_table: normalized numeral -> name. Normalizer
+    # collapses sub-suffix dash variation so 43-a in one section matches 43a
+    # in the other (TIPO drafters use both forms interchangeably).
+    symbol_map = {
+        _normalize_symbol_numeral(entry.numeral): entry.name
+        for entry in doc.symbol_table
+    }
 
     mismatches: list[dict] = []
     for sym in doc.representative_drawing_symbols:
-        if sym.numeral not in symbol_map:
+        lookup_key = _normalize_symbol_numeral(sym.numeral)
+        if lookup_key not in symbol_map:
             mismatches.append({
                 "kind": "not_in_table",
                 "numeral": sym.numeral,
                 "rep_name": sym.name,
             })
-        elif symbol_map[sym.numeral] != sym.name:
+        elif symbol_map[lookup_key] != sym.name:
             mismatches.append({
                 "kind": "name_mismatch",
                 "numeral": sym.numeral,
                 "rep_name": sym.name,
-                "table_name": symbol_map[sym.numeral],
+                "table_name": symbol_map[lookup_key],
             })
 
     if mismatches:
@@ -62,6 +78,18 @@ def check_symbol_vs_rep_drawing(doc: TwPatentDocument) -> list[CheckItem]:
                 name_mismatch_count=name_mismatch,
                 total_rep_symbols=len(doc.representative_drawing_symbols),
                 total_table_entries=len(doc.symbol_table),
+                # Issues #61/#63 (2026-05-18): include actual numerals captured
+                # by the parser for each side so triage can immediately see
+                # whether the missing numerals are absent from the table or
+                # stored under a different key (range form, sub-suffix dash,
+                # etc.). Privacy-safe — numerals are digits/Latin only and
+                # never draft prose, mirroring the per-finding numeral field.
+                parsed_table_numerals_sample=[
+                    e.numeral for e in doc.symbol_table[:10]
+                ],
+                parsed_rep_numerals_sample=[
+                    s.numeral for s in doc.representative_drawing_symbols[:10]
+                ],
                 findings=[
                     {
                         "kind": m["kind"],
