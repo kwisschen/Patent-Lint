@@ -734,7 +734,7 @@ _CN_REFNUM_AFTER_NOUN = re.compile(
     # Reject digits followed by another digit, decimal, percent, degree
     # signs (°/℃), Latin letter (mm/cm/μm/V/A/Hz/wt/etc.), or a range
     # separator (~/～/至/到/-) — those are handled by _CN_REFNUM_RANGE.
-    r"(?![\d.%°℃A-Za-z~～至到\-])"
+    r"(?![\d.%％°℃A-Za-z~～至到\-])"
     # Reject sub-instance notation "21(0)" / "21(N)" / "21(N-1)" —
     # parenthesized expression is the sub-index, not a separate refnum.
     r"(?!\([\dNn])",
@@ -752,7 +752,7 @@ _CN_REFNUM_RANGE = re.compile(
     r"(?P<start>\d{2,4})"
     r"\s*[~～至到\-]\s*"
     r"(?P<end>\d{2,4})"
-    r"(?![\d.%°℃A-Za-z])",
+    r"(?![\d.%％°℃A-Za-z])",
 )
 _CN_REFNUM_LATIN = re.compile(
     rf"(?P<noun>{_CN_NOUN_GROUP})\s*(?P<num>[A-Z]{{1,5}}\d{{1,4}}[a-zA-Z]?)"

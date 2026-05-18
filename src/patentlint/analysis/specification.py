@@ -82,7 +82,7 @@ _REFNUM_AFTER_NOUN = re.compile(
     r"(\d{2,4}[a-z]?)"  # optional single-letter suffix: 10a, 10b
     r"(?![\dA-Za-z])"   # no following digit/letter — anchored end
     r"(?!\.\d)"         # not followed by decimal point + digit
-    r"(?![%°])"         # not followed by % or degree
+    r"(?![%％°])"         # not followed by % or degree
     # Reject sub-instance notation: drafter writes "21(0)" / "21(N)" /
     # "21(N-1)" to label sub-instances of the array element 21. The
     # parenthesized expression IS the sub-index, so the captured noun
