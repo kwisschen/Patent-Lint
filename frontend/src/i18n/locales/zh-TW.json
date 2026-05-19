@@ -657,7 +657,7 @@
     "builderPain": "專利實務工作者對以下問題多半不陌生。先行詞基礎、請求項用語在說明書中找不到支持、圖式簡單說明介紹過的圖式編號實施方式卻未述及、請求項依附關係繞著繞著變成循環引用。這些檢查本身並不困難，只是相當繁瑣，也很容易遺漏。",
     "builderDesc1": "PatentLint 的開發者是一位專利工程師，十多年來皆身處此流程之中，經手過數千份稿件，親眼見證同類型的問題反覆發生。現有工具不是只能安裝於 Windows，就是必須將客戶尚未送件的稿件上傳至他方伺服器。",
     "builderDesc2": "本分析引擎由 Python 撰寫，再編譯為 WebAssembly，完全於瀏覽器內執行，筆電、平板、手機皆可使用，全程不上傳、不留記錄。無論是在飛機上、事務所鎖網的電腦，或是客戶尚未核准的設備，皆可照常安心使用。",
-    "builderSister": "其姊妹專案 Agentic Patent Analyst 為以 LangGraph 構建的 AI 代理人（Apache 2.0 開源），可解讀 OA、評斷各項核駁理由、撰擬答辯與修正策略，並以客戶語言及事務所慣用文風撰寫核駁分析報告。",
+    "builderSister": "其姊妹專案 Agentic Patent Analyst 為以 LangGraph 構建的 AI 代理人，可解讀 OA、評斷各項核駁理由、撰擬答辯與修正策略，並以客戶語言及事務所慣用文風撰寫核駁分析報告。",
     "licenseNote": "PatentLint 個人使用免費。原始碼依 PolyForm-Strict-1.0.0 條款於 GitHub 公開（原始碼可供閱覽）。",
     "tableFootnote": "截至 2026 年 4 月；兩者均可能持續演進。",
     "cnTableFootnote": "截至 2026 年 5 月。PatentLint 將持續演進。",
@@ -1858,7 +1858,7 @@
       "title": "回饋意見之自願提供",
       "p1": "每項檢查項目皆設有「回報」按鈕。點擊後將開啟對話框，於傳送前完整顯示即將傳送之內容，無任何隱藏欄位。對話框另提供「以電子郵件寄送」之替代選項，收件人為 kwisschen@gmail.com，供您欲自行撰寫更多脈絡時使用。",
       "p2": "匿名傳送之資料包含計數、規則所標記之具體用語或詞句、簡短之前後文、分類標籤（屬何項檢查、何條規則、何個偵測分支），以及若干結構性指紋；每份回報至多 5 項發現。不含完整請求項內容、完整段落、檔案名稱、檔案中繼資料、電子郵件、姓名或 IP。",
-      "p3": "點擊「匿名提交」後，您的瀏覽器以 HTTPS 將該資料傳送至 patentlint.com 之 Vercel Edge Function，並於公開原始碼專案 kwisschen/Patent-Lint 之 GitHub 議題追蹤系統建立議題。資料於離開您的瀏覽器前即經去識別化處理（不含 IP、不含電子郵件、不含瀏覽器標頭，亦不含完整請求項文字：詳見上方 § 6），以確保即使以 GitHub Issue 形式公開亦維持匿名。您的 IP 與瀏覽器標頭不會轉送至 GitHub。",
+      "p3": "點擊「匿名提交」後，您的瀏覽器以 HTTPS 將該資料傳送至 patentlint.com 之 Vercel Edge Function，並於公開儲存庫 kwisschen/Patent-Lint 之 GitHub 議題追蹤系統建立議題。資料於離開您的瀏覽器前即經去識別化處理（不含 IP、不含電子郵件、不含瀏覽器標頭，亦不含完整請求項文字：詳見上方 § 6），以確保即使以 GitHub Issue 形式公開亦維持匿名。您的 IP 與瀏覽器標頭不會轉送至 GitHub。",
       "p4": "若改採電子郵件方式，我方僅收到您主動撰寫之內容。如欲匿名寄送，建議使用電子郵件別名服務（Apple Hide My Email、Gmail 別名、Firefox Relay、ProtonMail 別名）；我方亦不將別名地址與任何其他資料進行關聯。回饋僅用於修復錯誤及回覆您，不分享予第三方。"
     },
     "s7": {
@@ -1871,7 +1871,7 @@
       "fontsLabel": "Google Fonts（CJK 字型，選用）。",
       "fonts": "若您於 zh-TW／zh-CN／ja／ko 介面下匯出本地化 PDF，瀏覽器將於匯出時自 Google Fonts 取得對應之 Noto Sans CJK 字型。字型於初次取得後即予快取。英文介面之 PDF 不會擷取任何字型。",
       "githubLabel": "GitHub。",
-      "github": "於回報對話框點擊「傳送」後，匿名回報將由 Vercel Edge Function 轉送至公開原始碼專案 kwisschen/Patent-Lint 之 GitHub Issues 追蹤系統。資料於離開您的瀏覽器前即經去識別化處理（不含 IP、不含電子郵件、不含瀏覽器標頭，亦不含完整請求項文字：詳見 § 6），以確保即使以 GitHub Issue 形式公開亦維持匿名。議題依 GitHub 自身之隱私權政策保管。",
+      "github": "於回報對話框點擊「傳送」後，匿名回報將由 Vercel Edge Function 轉送至公開儲存庫 kwisschen/Patent-Lint 之 GitHub Issues 追蹤系統。資料於離開您的瀏覽器前即經去識別化處理（不含 IP、不含電子郵件、不含瀏覽器標頭，亦不含完整請求項文字：詳見 § 6），以確保即使以 GitHub Issue 形式公開亦維持匿名。議題依 GitHub 自身之隱私權政策保管。",
       "p2": "我們未使用任何其他第三方服務。並無 CRM、未使用電子郵件行銷平台、未使用第三方客服票務系統，亦未使用第三方記錄服務。"
     },
     "s8": {
