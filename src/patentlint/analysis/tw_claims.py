@@ -19,6 +19,7 @@ from patentlint.analysis.cjk_tokenize import jaccard, tokenize_tw
 from patentlint.analysis.utils import (
     _dx,
     compute_confidence_score,
+    first_ancestor_with_term,
     make_document_dedup_key,
 )
 from patentlint.analysis.connection_relationships import (
@@ -5179,6 +5180,15 @@ def check_antecedent_basis(
             if tipo_authoritative_anchor:
                 confidence_score = 0
                 diagnostics["tipo_authoritative_anchor"] = True
+            # Parent-claim diagnostic enrichment: does the flagged term
+            # appear verbatim in an ancestor claim? If so the
+            # introduction exists but in a shape the intro extractor
+            # missed (walker FP); if not, a genuine §26 第3項 gap.
+            # `ancestor_match_text` stays in-process — the diagnostic
+            # extractor windows it down before it reaches the payload.
+            anc_match_id, anc_match_text = first_ancestor_with_term(
+                chain, normalized_term
+            )
             issues.append(
                 {
                     "claim_id": claim.id,
@@ -5194,6 +5204,9 @@ def check_antecedent_basis(
                     "confidence_score": confidence_score,
                     "term_in_symbol_table": term_in_symbol_table,
                     "tipo_authoritative_anchor": tipo_authoritative_anchor,
+                    "ancestor_claim_ids": [c.id for c in chain[1:]],
+                    "ancestor_match_claim_id": anc_match_id,
+                    "ancestor_match_text": anc_match_text,
                 }
             )
 

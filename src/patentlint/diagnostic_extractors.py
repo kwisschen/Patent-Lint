@@ -21,8 +21,12 @@ Design principles
   across scripts. Han chars carry ~4x the morpheme density of Latin
   chars; Japanese mixes Han with kana inflection and long katakana
   technical terms (closer to Latin than Han); Hangul is syllabic.
-  Never the whole claim text or paragraph. The user sees every
-  fragment in the modal preview and can decline.
+  The ancestor-introduction excerpt uses a deliberately smaller second
+  tier (Latin 16 / JA 12 / Hangul 10 / Han 7) — it only needs to show
+  the introduction's grammatical shape, and it exposes a second
+  claim's prose, so the window is held to the minimum. Never the whole
+  claim text or paragraph. The user sees every fragment in the modal
+  preview and can decline.
 - **No identity, no link to identity**: no email, no IP, no file path,
   no session ID, no OS user info ever appears in any extractor output.
 
@@ -64,11 +68,33 @@ CONTEXT_WINDOW_LATIN = 30
 CONTEXT_WINDOW_JA = 22
 CONTEXT_WINDOW_HANGUL = 18
 CONTEXT_WINDOW_HAN = 12
+
+# Ancestor-introduction excerpt windows — deliberately ~half the
+# child-claim context window above. The ancestor excerpt exists only to
+# reveal the *shape* of the introduction: the token immediately before
+# the term (an article → recognized intro / back-ref; a verb → bare
+# verb-object intro; a preposition / compound interior → mis-token).
+# It is NOT meant to show full vicinity. A second claim's prose appears
+# in the payload here, so the window is held to the minimum that still
+# answers "what shape is this introduction?", keeping the modal-preview
+# trust surface small. Same four script tiers as the child window.
+ANCESTOR_WINDOW_LATIN = 16
+ANCESTOR_WINDOW_JA = 12
+ANCESTOR_WINDOW_HANGUL = 10
+ANCESTOR_WINDOW_HAN = 7
+
 TERM_MAX = 80
 MATCH_MAX = 120
 EXCERPT_MAX = 60
 PREAMBLE_MAX = 60
 SAMPLE_SIZE = 5
+
+_ANCESTOR_WINDOW_BY_BASE = {
+    CONTEXT_WINDOW_LATIN: ANCESTOR_WINDOW_LATIN,
+    CONTEXT_WINDOW_JA: ANCESTOR_WINDOW_JA,
+    CONTEXT_WINDOW_HANGUL: ANCESTOR_WINDOW_HANGUL,
+    CONTEXT_WINDOW_HAN: ANCESTOR_WINDOW_HAN,
+}
 
 
 def _context_window_for(text: str) -> int:
@@ -107,6 +133,16 @@ def _context_window_for(text: str) -> int:
     return CONTEXT_WINDOW_LATIN
 
 
+def _ancestor_window_for(text: str) -> int:
+    """Half-size sibling of ``_context_window_for`` for the ancestor-
+    introduction excerpt. Reuses the same content-driven script
+    detection, then maps each script's child window onto its smaller
+    ancestor window (see ``ANCESTOR_WINDOW_*`` rationale)."""
+    return _ANCESTOR_WINDOW_BY_BASE.get(
+        _context_window_for(text), ANCESTOR_WINDOW_LATIN
+    )
+
+
 def _truncate(s: Any, n: int) -> str | None:
     """Return ``s`` cast to str and truncated to ``n`` codepoints, or
     None if ``s`` is None/empty. CJK chars are 1 codepoint each in
@@ -119,14 +155,18 @@ def _truncate(s: Any, n: int) -> str | None:
     return text[:n]
 
 
-def _excerpt_around(text: str, target: str, before: int | None = None, after: int | None = None) -> tuple[str | None, str | None, int | None]:
+def _excerpt_around(text: str, target: str, before: int | None = None, after: int | None = None, case_insensitive: bool = False) -> tuple[str | None, str | None, int | None]:
     """Return (context_before, context_after, char_offset) for the first
     occurrence of ``target`` inside ``text``. Window size is picked from
     the script of ``text`` when ``before``/``after`` are not given.
+    ``case_insensitive`` locates the match without regard to case but
+    still slices the windows from the original-cased ``text`` — used for
+    the ancestor excerpt, where the walker's normalized (lowercased)
+    term may not case-match the raw ancestor claim text.
     Returns all-None if not found or if either input is empty."""
     if not text or not target:
         return None, None, None
-    idx = text.find(target)
+    idx = text.lower().find(target.lower()) if case_insensitive else text.find(target)
     if idx < 0:
         return None, None, None
     window = _context_window_for(text)
@@ -168,7 +208,7 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
         claim_text = f.get("claim_text") or ""
         ctx_before, ctx_after, offset = _excerpt_around(claim_text, term)
         suggested = f.get("suggested_match") or {}
-        out_findings.append({
+        out = {
             "claim_id": f.get("claim_id"),
             "term": _truncate(term, TERM_MAX),
             "reference_form": _truncate(f.get("reference_form"), 40),
@@ -179,7 +219,31 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
             "context_before": ctx_before,
             "context_after": ctx_after,
             "claim_text_charlen": len(claim_text) if claim_text else 0,
-        })
+        }
+        # Parent-claim diagnostic. Emitted only when the walker supplied
+        # ancestor data (US + TW antecedent walkers as of 2026-05-21).
+        # `term_in_ancestor_text` is the bit that splits a walker FP
+        # (term IS introduced in a parent claim but in a shape the intro
+        # extractor missed) from a genuine §112 gap (term in no
+        # ancestor) — without it, an anonymous child-claim report cannot
+        # be classified. The ancestor excerpt uses the deliberately
+        # smaller _ancestor_window_for window; the full ancestor text
+        # stays in-process and never reaches the payload.
+        if "ancestor_claim_ids" in f:
+            anc_text = f.get("ancestor_match_text") or ""
+            anc_before = anc_after = anc_offset = None
+            if anc_text:
+                w = _ancestor_window_for(anc_text)
+                anc_before, anc_after, anc_offset = _excerpt_around(
+                    anc_text, term, before=w, after=w, case_insensitive=True
+                )
+            out["ancestor_claim_ids"] = f.get("ancestor_claim_ids")
+            out["term_in_ancestor_text"] = bool(anc_text)
+            out["ancestor_match_claim_id"] = f.get("ancestor_match_claim_id")
+            out["ancestor_char_offset"] = anc_offset
+            out["ancestor_context_before"] = anc_before
+            out["ancestor_context_after"] = anc_after
+        out_findings.append(out)
     return {
         "issue_count": len(findings),
         "claim_count": len({f.get("claim_id") for f in findings if f.get("claim_id") is not None}),
