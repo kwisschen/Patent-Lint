@@ -40,6 +40,12 @@ class TestCleanNounPhraseTw:
         # When 通過 IS at the trailing edge, it strips cleanly.
         assert clean_noun_phrase_tw("遊戲控制器通過") == "遊戲控制器"
 
+    def test_strips_trailing_coverb_cong(self):
+        # Issue #75: `控制電流從所述控制節點流經` — walker over-captured
+        # `控制電流從`; 從 ("from") is a coverb in suffix position and
+        # strips to the clean head noun `控制電流`.
+        assert clean_noun_phrase_tw("控制電流從") == "控制電流"
+
     def test_strips_still_includes_variant(self):
         # 還包含 strips as a single token (listed longest-first).
         assert clean_noun_phrase_tw("齒輪還包含") == "齒輪"
