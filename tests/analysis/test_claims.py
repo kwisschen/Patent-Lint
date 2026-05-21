@@ -280,6 +280,32 @@ class TestAntecedentBasis:
         flagged_terms = [i["term"] for i in issues if i["claim_id"] == 1]
         assert any("processor" in t for t in flagged_terms)
 
+    def test_finite_verb_not_overcaptured(self):
+        """N+V clauses (`X comprises Y`, `X meets Y`, `X respectively
+        reaches Y`) must not bleed the verb + object into the captured
+        term. Regression for the over-capture FP class (issues #72/#73).
+        """
+        claims = [
+            Claim(
+                id=1,
+                text=(
+                    "A device comprising a hardware module, wherein the "
+                    "hardware module comprises a human interface and the "
+                    "confidence measurement meets a threshold."
+                ),
+                independent=True,
+                method_claim=False,
+            ),
+        ]
+        issues = check_antecedent_basis(claims)
+        terms = [i["term"] for i in issues if i["claim_id"] == 1]
+        # No emitted term may carry a trailing finite verb / its object.
+        for t in terms:
+            assert "comprises" not in t, f"verb bled into term: {t!r}"
+            assert "meets" not in t, f"verb bled into term: {t!r}"
+        # The clean head noun is still flagged (no intro for it here).
+        assert any(t == "confidence measurement" for t in terms), terms
+
 
 class TestTransitionsRegexWherein:
     """`_TRANSITIONS` recognizes `wherein` (no colon) as a preamble/body boundary."""
