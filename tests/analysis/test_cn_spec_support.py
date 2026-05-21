@@ -201,6 +201,30 @@ class TestInteriorRejectCn:
         assert _has_interior_reject_cn("单元被进一步") is True
         assert _has_interior_reject_cn("方向依次") is True
         assert _has_interior_reject_cn("第一轴线相背地") is True
+
+    def test_coupling_predicate_rejected(self):
+        """Parity mirror of TW #76 — `<verb>一<noun>` coupling predicate."""
+        assert _has_interior_reject_cn("第一端耦接一输入电压") is True
+        assert _has_interior_reject_cn("控制端连接一负载") is True
+
+    def test_coupling_noun_compound_accepted(self):
+        """`连接器` / `耦合器` (no `一`) are real nouns — not rejected."""
+        assert _has_interior_reject_cn("连接器") is False
+        assert _has_interior_reject_cn("耦合器") is False
+
+
+class TestSpecSupportMethodClauseFpCn:
+    """Parity mirror of the TW #69/#77/#78 method-clause over-capture
+    fixes (2026-05-21 cross-jurisdiction sweep)."""
+
+    def test_distributive_quantifier_stripped(self):
+        assert _strip_spec_support_trailing_tokens_cn("电压各") == "电压"
+
+    def test_process_verb_stripped(self):
+        assert _strip_spec_support_trailing_tokens_cn("两端减薄") == "两端"
+
+    def test_qizhong_fragment_rejected(self):
+        assert _has_leading_reject_cn("中一个") is True
         assert _has_interior_reject_cn("相向地转动以使") is True
 
     def test_purposive_phrases_rejected(self):

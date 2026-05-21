@@ -225,6 +225,37 @@ class TestInteriorReject:
     def test_clean_noun_accepted(self):
         assert _has_interior_reject("預定扭力值") is False
 
+    def test_coupling_predicate_rejected(self):
+        """Issue #76: `<verb>一<noun>` coupling predicate is a clause."""
+        assert _has_interior_reject("第一端耦接一輸入電壓") is True
+        assert _has_interior_reject("控制端連接一負載") is True
+
+    def test_coupling_noun_compound_accepted(self):
+        """`耦接器` / `連接部` (no `一`) are real nouns — not rejected."""
+        assert _has_interior_reject("耦接器") is False
+        assert _has_interior_reject("連接部") is False
+
+
+class TestSpecSupportMethodClauseFP:
+    """Method-claim over-capture FPs from the 2026-05-21 firm-draft
+    queue (issues #69/#76/#77/#78)."""
+
+    def test_distributive_quantifier_stripped(self):
+        # #77: `電壓各` → `各` trailing-stripped → clean head `電壓`.
+        assert _strip_spec_support_trailing_tokens("電壓各") == "電壓"
+
+    def test_process_verb_stripped(self):
+        # #69: `兩端減薄` → `減薄` process verb trailing-stripped.
+        assert _strip_spec_support_trailing_tokens("兩端減薄") == "兩端"
+
+    def test_prepositional_fragment_rejected(self):
+        # #69: `介由使用…` prepositional connector — leading reject.
+        assert _has_leading_reject("介由使用半導體材料") is True
+
+    def test_qizhong_fragment_rejected(self):
+        # #78: `中一個` stranded `其中一個` connective — leading reject.
+        assert _has_leading_reject("中一個") is True
+
 
 class TestBoilerplate:
     def test_exact_match(self):

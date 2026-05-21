@@ -142,6 +142,14 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # noun-phrase terminus in TIPO drafting. Single-char, applied
         # last in the longest-first iteration order.
         "以",
+        # Issues #77 / #69 (2026-05-21): method-claim over-capture.
+        # - `各` — distributive quantifier ("each"); `電壓各到達門檻` →
+        #   walker captures `電壓各`. `各` is never a noun terminus; strip
+        #   leaves the clean head noun `電壓`.
+        # - `減薄` — process verb ("thin / reduce"); `兩端減薄` is a
+        #   predicate clause, never an element name.
+        "減薄",
+        "各",
     ),
     key=len,
     reverse=True,
@@ -176,6 +184,14 @@ _TW_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     "露出",        # walker over-capture of process verb
     "膜減少",     # film-reduction process (verb compound)
     "回蝕",        # etch-back process verb
+    # Issues #69 / #78 (2026-05-21):
+    # - `介由` — prepositional connector ("by way of / using");
+    #   `介由使用半導體材料的犧牲膜` over-captured as an intro.
+    # - `中一` — stranded `其中一(個)` connective fragment; the walker
+    #   dropped the leading `其`, leaving `中一個`. `中一` never leads a
+    #   real TIPO noun (中央/中心 do not start `中一`).
+    "介由",
+    "中一",
 )
 
 # Characters that appear ONLY as noun suffixes in TW patent diction
@@ -202,6 +218,15 @@ _TW_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = (
     # trailing-token stripping because the 合/對/置 suffix may be
     # truncated mid-capture.
     "相配",
+    # Issue #76 (2026-05-21): a coupling/connection verb taking an
+    # indefinite object (`<verb>一<NOUN>`) is a relational predicate,
+    # never a noun's name — `第一端耦接一輸入電壓` over-captured whole.
+    # Gated on the `一` so a real noun compound (耦接器 / 連接部) whose
+    # verb root is NOT followed by `一` stays inventoried.
+    "耦接一",
+    "耦合一",
+    "連接一",
+    "連結一",
 )
 
 # Leading prepositions that survive walker normalization (audit #2 found
