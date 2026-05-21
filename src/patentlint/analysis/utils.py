@@ -1344,3 +1344,30 @@ def token_set_jaccard(a: str, b: str) -> float:
     if not tokens_a or not tokens_b:
         return 0.0
     return len(tokens_a & tokens_b) / len(tokens_a | tokens_b)
+
+
+def first_ancestor_with_term(chain: list, term: str) -> tuple[int | None, str | None]:
+    """Find the first proper ancestor whose text literally contains ``term``.
+
+    ``chain`` is the ``[claim, ...ancestors]`` list the antecedent
+    walkers build via ``get_ancestor_chain*``; index 0 (the claim
+    itself) is skipped — only parent claims are scanned. Match is
+    case-insensitive substring.
+
+    Returns ``(ancestor_claim_id, ancestor_claim_text)`` for the first
+    match, else ``(None, None)``.
+
+    Enriches an antecedent-basis finding with a parent-claim diagnostic:
+    a term flagged as lacking antecedent basis that DOES appear verbatim
+    in an ancestor was introduced there in a shape the intro extractor
+    missed (walker FP); a term absent from every ancestor is a genuine
+    §112 antecedent gap. Lets the de-identified report payload
+    self-classify the finding without the user's draft.
+    """
+    term_lc = (term or "").strip().lower()
+    if not term_lc:
+        return None, None
+    for ancestor in chain[1:]:
+        if term_lc in (getattr(ancestor, "text", "") or "").lower():
+            return ancestor.id, ancestor.text
+    return None, None

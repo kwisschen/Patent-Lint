@@ -19,6 +19,7 @@ from patentlint.analysis.utils import (
     extract_abbreviation_intros, clean_noun_phrase,
     compute_confidence_score, make_document_dedup_key,
     strip_contextual_verb, token_set_jaccard,
+    first_ancestor_with_term,
 )
 from patentlint.diagnostic_extractors import extract_special_format
 from patentlint.models import Claim, CheckItem, UnsupportedTerm
@@ -662,6 +663,15 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                             reference_form=reference_form,
                             jurisdiction="US",
                         )
+                        # Parent-claim diagnostic enrichment: does the
+                        # flagged term appear verbatim in an ancestor
+                        # claim? If so the introduction exists but in a
+                        # shape the intro extractor missed (walker FP);
+                        # if not, a genuine §112 gap. `ancestor_match_text`
+                        # stays in-process — the extractor windows it.
+                        anc_match_id, anc_match_text = first_ancestor_with_term(
+                            chain, term
+                        )
                         issues.append({
                             "claim_id": claim.id,
                             "term": term,
@@ -674,6 +684,9 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                                 term, reference_form
                             ),
                             "confidence_score": confidence_score,
+                            "ancestor_claim_ids": [c.id for c in chain[1:]],
+                            "ancestor_match_claim_id": anc_match_id,
+                            "ancestor_match_text": anc_match_text,
                         })
 
     issues.sort(key=lambda x: (x["claim_id"], x["term"], x["reference_form"]))

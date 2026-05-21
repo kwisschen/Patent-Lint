@@ -8,12 +8,16 @@ would change what users see, so the per-script values are pinned here.
 """
 
 from patentlint.diagnostic_extractors import (
+    ANCESTOR_WINDOW_HAN,
+    ANCESTOR_WINDOW_LATIN,
     CONTEXT_WINDOW_HAN,
     CONTEXT_WINDOW_HANGUL,
     CONTEXT_WINDOW_JA,
     CONTEXT_WINDOW_LATIN,
+    _ancestor_window_for,
     _context_window_for,
     _excerpt_around,
+    extract_antecedent_basis,
 )
 
 
@@ -77,3 +81,93 @@ class TestExcerptHonorsPerScriptWindow:
         before, after, _ = _excerpt_around(en, "TARGET", before=5, after=5)
         assert before == "AAAAA"
         assert after == "BBBBB"
+
+    def test_case_insensitive_find_slices_from_original(self):
+        en = "Configured To Control Electrostatic Energy Discharged"
+        before, after, off = _excerpt_around(
+            en, "electrostatic energy", before=12, after=12,
+            case_insensitive=True,
+        )
+        # match located case-insensitively, window sliced original-cased
+        assert off == en.lower().find("electrostatic energy")
+        assert "Control" in before  # original casing preserved, not lowered
+        assert after == " Discharged"
+
+
+class TestAncestorWindowTier:
+    """The ancestor-introduction excerpt uses a deliberately smaller
+    second window tier — it only reveals the introduction's grammatical
+    shape and exposes a second claim's prose, so it must stay tight."""
+
+    def test_ancestor_window_is_smaller_than_child(self):
+        assert ANCESTOR_WINDOW_LATIN < CONTEXT_WINDOW_LATIN
+        assert ANCESTOR_WINDOW_HAN < CONTEXT_WINDOW_HAN
+
+    def test_ancestor_window_per_script(self):
+        assert _ancestor_window_for("configured to control the circuit") == ANCESTOR_WINDOW_LATIN
+        assert _ancestor_window_for("一種雙向靜電放電保護電路其中放電電路") == ANCESTOR_WINDOW_HAN
+
+
+class TestAncestorBasisEnrichment:
+    """Parent-claim diagnostic on antecedent-basis findings — the bit
+    that splits a walker FP from a genuine §112 gap in an anonymous
+    child-claim report."""
+
+    def _finding(self, **kw):
+        base = {
+            "claim_id": 5,
+            "term": "electrostatic energy",
+            "reference_form": "the electrostatic energy",
+            "claim_text": "The circuit of claim 1, wherein the electrostatic energy is discharged.",
+            "suggested_match": None,
+        }
+        base.update(kw)
+        return base
+
+    def test_term_found_in_ancestor_emits_window(self):
+        f = self._finding(
+            ancestor_claim_ids=[1],
+            ancestor_match_claim_id=1,
+            ancestor_match_text=(
+                "An ESD circuit configured to control electrostatic "
+                "energy discharged from the control node."
+            ),
+        )
+        out = extract_antecedent_basis([f], total_claims=5)["findings"][0]
+        assert out["term_in_ancestor_text"] is True
+        assert out["ancestor_match_claim_id"] == 1
+        # window reveals the verb preceder, bounded to the Latin tier
+        assert "control" in out["ancestor_context_before"]
+        assert len(out["ancestor_context_before"]) <= ANCESTOR_WINDOW_LATIN
+
+    def test_term_absent_from_ancestor_is_false(self):
+        f = self._finding(
+            ancestor_claim_ids=[1],
+            ancestor_match_claim_id=None,
+            ancestor_match_text=None,
+        )
+        out = extract_antecedent_basis([f], total_claims=5)["findings"][0]
+        assert out["term_in_ancestor_text"] is False
+        assert out["ancestor_context_before"] is None
+
+    def test_full_ancestor_text_never_reaches_payload(self):
+        # Sentinel placed far from the term — well outside the bounded
+        # ancestor window — so a leak would mean the full text shipped.
+        secret = (
+            "An ESD circuit SENTINEL_PROSE having very many intervening "
+            "words of claim prose configured to control electrostatic energy."
+        )
+        f = self._finding(
+            ancestor_claim_ids=[1], ancestor_match_claim_id=1,
+            ancestor_match_text=secret,
+        )
+        out = extract_antecedent_basis([f], total_claims=5)["findings"][0]
+        assert "ancestor_match_text" not in out
+        assert "SENTINEL_PROSE" not in str(out)
+
+    def test_walker_without_ancestor_data_omits_block(self):
+        # CN / EPC walkers (not yet enriched) must not get a misleading
+        # term_in_ancestor_text:false — the block is omitted entirely.
+        out = extract_antecedent_basis([self._finding()], total_claims=5)["findings"][0]
+        assert "term_in_ancestor_text" not in out
+        assert "ancestor_claim_ids" not in out
