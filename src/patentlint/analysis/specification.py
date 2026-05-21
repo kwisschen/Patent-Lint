@@ -375,6 +375,13 @@ _D1_LEADING_FUNCTION_WORDS = frozenset({
     # respect of N" / "such that N" / "ranges from N to" patterns —
     # pure noise as element identities, never real reference numerals.
     "respect", "regard", "regards", "case", "cases",
+    # Plural-instance quantifier. "first resistor R1" and "a plurality
+    # of first resistors R1" are the SAME element — the numeral R1 is
+    # the identity; "plurality of" is a count descriptor, not part of
+    # the name. Stripping it (paired with the plurality-aware
+    # singularization in _d1_extract_ordinal_and_head) collapses the
+    # two onto one key. Issue #74 (2026-05-21).
+    "plurality",
 })
 
 
@@ -386,6 +393,26 @@ _D1_ORDINAL_WORDS = frozenset({
 })
 
 
+def _d1_singularize(word: str) -> str:
+    """Conservatively reduce a known-plural English noun to its singular.
+
+    Called ONLY for the head noun of a `plurality of <plural-noun>`
+    phrase, where the noun is grammatically guaranteed plural — so the
+    reduction is correct by construction, not a guess. Handles the
+    regular -ies / sibilant -es / -s endings; leaves -ss words and very
+    short tokens untouched. Issue #74 (2026-05-21).
+    """
+    if len(word) <= 3 or word.endswith("ss"):
+        return word
+    if word.endswith("ies"):
+        return word[:-3] + "y"
+    if word.endswith(("ses", "xes", "zes", "ches", "shes")):
+        return word[:-2]
+    if word.endswith("s"):
+        return word[:-1]
+    return word
+
+
 def _d1_extract_ordinal_and_head(phrase: str) -> tuple[str, str]:
     """Split the ordinal prefix from the head noun so we can detect
     'first switch LD1' vs 'third switch LD1' as distinct instances.
@@ -394,9 +421,15 @@ def _d1_extract_ordinal_and_head(phrase: str) -> tuple[str, str]:
     `'first low-bridge switch'` → `('first', 'low-bridge switch')`
     `'low-bridge switch'`       → `('', 'low-bridge switch')`
     `'from the water supply'`   → `('', 'water supply')`
+    `'plurality of first resistors'` → `('first', 'resistor')`
     `'for'`                     → `('', '')`
     """
     words = phrase.strip().lower().split()
+    # When the phrase is a `plurality of <plural-noun>` descriptor, the
+    # head noun is guaranteed plural — flag it so the head's last word
+    # can be singularized after extraction, collapsing it onto the
+    # singular-form occurrence of the same element. Issue #74.
+    has_plurality = "plurality" in words
     # Strip leading articles/prepositions/verbs (NOT ordinals yet)
     while words and (
         words[0] in _D1_LEADING_FUNCTION_WORDS
@@ -420,6 +453,8 @@ def _d1_extract_ordinal_and_head(phrase: str) -> tuple[str, str]:
         return (ordinal, "")
     if len(words) == 1 and len(words[0]) < 2:
         return (ordinal, "")
+    if has_plurality:
+        words[-1] = _d1_singularize(words[-1])
     return (ordinal, " ".join(words))
 
 
