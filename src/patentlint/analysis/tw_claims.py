@@ -1924,6 +1924,12 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         "所", "前",
         # Resultative particles (added 2026-04-09)
         "到", "出",
+        # 從: coverb "from" (issue #75, 2026-05-21). `控制電流從所述
+        # 控制節點流經` → walker over-captured `控制電流從`; the real
+        # element is `控制電流`. 從 is a coverb in suffix position —
+        # never a noun terminus in TIPO drafting (從動 etc. carry 從 at
+        # PREFIX position, unaffected by the trailing strip).
+        "從",
         # === Added 2026-04-10 F2 ===
         # 介: verb particle from 介於 ("falls between"). Corpus
         #     attestation: 第一夾角介於 on 110P000158 c1/c3. Compound
