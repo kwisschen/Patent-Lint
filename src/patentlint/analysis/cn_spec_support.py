@@ -175,6 +175,11 @@ _CN_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # `第` alone at term end = truncated ordinal prefix.
         "的第",
         "第",
+        # 2026-05-21: parity mirror of the TW #77/#69 spec-support fix.
+        # `各` — distributive quantifier ("each"), never a noun terminus;
+        # `减薄` — process verb ("thin / reduce"), a predicate fragment.
+        "减薄",
+        "各",
     ),
     key=len,
     reverse=True,
@@ -222,6 +227,9 @@ _CN_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     # Walker fragment from 如权利要求N项所述 — `项所` strands when 述
     # gets cut by interior boundary detection (CN114357105B claim 6).
     "项所",
+    # 2026-05-21: parity mirror of TW #78 — `中一` is a stranded
+    # `其中一(个)` connective fragment (walker dropped the leading 其).
+    "中一",
 )
 
 # Characters that appear ONLY as noun suffixes in CN patent diction
@@ -278,6 +286,13 @@ _CN_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = (
     # (e.g., 被覆层 / 被加热部).
     "被进",
     "被执行",
+    # 2026-05-21: parity mirror of TW #76 — a coupling/connection verb
+    # taking an indefinite object (`<verb>一<NOUN>`) is a relational
+    # predicate, never a noun's name. Gated on `一` so real noun
+    # compounds (连接器 / 耦合器, no `一`) stay inventoried.
+    "耦接一",
+    "耦合一",
+    "连接一",
 )
 
 # Leading prepositions that survive walker normalization. Strip these
