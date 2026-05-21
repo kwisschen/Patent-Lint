@@ -476,6 +476,14 @@ _STOP_WORDS = (
     r"inside|outside|throughout|until|without|"
     r"but|if|so|yet|nor|who|whom|whose|where|when|while|"
     r"wherein|comprising|consisting|including|having|configured|"
+    # Finite (3sg / base) forms of the transitional + enumeration verbs.
+    # The -ing gerunds above were stopped, but `_NP_CORE` bled through
+    # `X comprises Y` / `X consists of Y` clauses (389 `comprises` walker
+    # FPs in the US pool: `hardware input data comprises human interface`
+    # captured whole). `meets` / `reaches` mirror the same N+V over-capture
+    # (`confidence measurement meets`, `second node respectively reaches`).
+    # All are unambiguous verbs — never noun-phrase constituents.
+    r"comprises|comprise|consists|consist|meets|reaches|"
     r"adapted|arranged|coupled|connected|mounted|disposed|storing|determining|corresponding|"
     r"extends|provides|receives|generates|produces|performs|"
     r"executes|transmits|operates|determines|defines|forms|"
