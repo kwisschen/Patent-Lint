@@ -1182,10 +1182,20 @@ _NOUN_EXT_RE_CN = re.compile(
 def _extend_neng_compound_cn(
     raw_noun: str, raw_noun_end: int, claim_text: str
 ) -> tuple[str, int]:
-    """Mirror of _extend_neng_compound_tw with Simplified precursors."""
-    if not raw_noun or raw_noun[-1] not in _NENG_PRECURSORS_CN:
+    """Mirror of _extend_neng_compound_tw with Simplified precursors.
+
+    能量 / 能源 follow-gate (parity mirror of TW issue #75): 能 followed
+    by 量 or 源 is unambiguously the noun "energy" / "energy source" —
+    extend by exactly that 3-char compound (no greedy continuation).
+    """
+    if not raw_noun:
         return raw_noun, raw_noun_end
     if raw_noun_end >= len(claim_text) or claim_text[raw_noun_end] != "能":
+        return raw_noun, raw_noun_end
+    follow = claim_text[raw_noun_end + 1: raw_noun_end + 2]
+    if follow in ("量", "源"):
+        return raw_noun + "能" + follow, raw_noun_end + 2
+    if raw_noun[-1] not in _NENG_PRECURSORS_CN:
         return raw_noun, raw_noun_end
     raw_noun = raw_noun + "能"
     raw_noun_end += 1
@@ -1290,6 +1300,11 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "包", "通", "经", "借",
         "所", "前",
         "到", "出",
+        # 从: coverb "from" — cross-jurisdiction mirror of the TW #75
+        # fix (PR #83). `<noun>从` over-capture; 从 is a coverb in suffix
+        # position, never a noun terminus (从动 carries 从 at PREFIX).
+        # Corpus-clean: CN phase-8c harness delta 0 vs pristine baseline.
+        "从",
         "介",
         "位",
         "或",

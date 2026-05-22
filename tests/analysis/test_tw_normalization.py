@@ -13,7 +13,32 @@ from patentlint.analysis.tw_claims import (
     normalize_reference_term,
     strip_leading_quantifier,
     strip_reference_form_prefix,
+    _extend_neng_compound_tw,
 )
+
+
+class TestExtendNengCompoundTw:
+    """能量 / 能源 follow-gate — issue #75. 能 is excluded from the
+    _NOUN_CHARS class, so `<noun>能量` is cut at 能; the follow-gate
+    re-extends when 能 is followed by the noun-forming 量 / 源."""
+
+    def test_energy_compound_reextended(self):
+        # 靜電能量 — cut to 靜電 by the 能 exclusion; 電 is not a classic
+        # 能-precursor, so only the 能量 follow-gate recovers it.
+        assert _extend_neng_compound_tw("靜電", 2, "靜電能量大於一值") == ("靜電能量", 4)
+
+    def test_energy_source_compound_reextended(self):
+        assert _extend_neng_compound_tw("靜電", 2, "靜電能源為主") == ("靜電能源", 4)
+
+    def test_follow_gate_stops_before_comparison_verb(self):
+        # No greedy continuation — must not swallow the trailing 大 of 大於.
+        noun, _ = _extend_neng_compound_tw("放電", 2, "放電能量大於一門檻值")
+        assert noun == "放電能量"
+
+    def test_modal_neng_not_extended(self):
+        # 模組能控制 — 能 here is the modal "can"; not followed by 量/源
+        # and 組 is not a precursor → no extension.
+        assert _extend_neng_compound_tw("模組", 2, "模組能控制電流") == ("模組", 2)
 
 
 class TestCleanNounPhraseTw:
