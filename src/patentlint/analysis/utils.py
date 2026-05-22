@@ -484,6 +484,13 @@ _STOP_WORDS = (
     # (`confidence measurement meets`, `second node respectively reaches`).
     # All are unambiguous verbs — never noun-phrase constituents.
     r"comprises|comprise|consists|consist|meets|reaches|"
+    # R3 (2026-05-22): further finite 3sg verbs that bled into the NP
+    # capture across `<noun> <verb>` claim clauses — issues #86 (`the
+    # leakage inspection region presents`), #87 (`annular groove
+    # constitutes`), #88 (`contact lens storage solution flows`),
+    # #89 (`presents`), #92 (`control unit uses`). The walker's own
+    # did-you-mean already names the clean head noun in every case.
+    r"presents|constitutes|flows|uses|"
     r"adapted|arranged|coupled|connected|mounted|disposed|storing|determining|corresponding|"
     r"extends|provides|receives|generates|produces|performs|"
     r"executes|transmits|operates|determines|defines|forms|"
