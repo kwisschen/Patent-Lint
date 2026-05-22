@@ -1685,15 +1685,31 @@ _NOUN_EXT_RE_TW = re.compile(
 def _extend_neng_compound_tw(
     raw_noun: str, raw_noun_end: int, claim_text: str
 ) -> tuple[str, int]:
-    """Extend raw_noun past 能 if last char is a known 能-precursor.
+    """Extend raw_noun past 能 if it is part of a noun compound.
 
     Returns (possibly-extended-raw_noun, new-end-position). Handles the
     `<noun>能<head>` compound-noun cut left by the _NOUN_CHARS exclusion
     of 能.
+
+    Two gates:
+      * 能量 / 能源 follow-gate (issue #75) — when 能 is immediately
+        followed by 量 or 源 it is unambiguously the noun "energy" /
+        "energy source"; extend by exactly that 3-char compound and
+        stop (no greedy continuation, which would over-capture a
+        trailing comparison verb such as 大於). This catches 靜電能量 /
+        放電能量 / 靜電能源 whose precursor char 電 is not a classic
+        能-precursor.
+      * precursor whitelist — 功能 / 性能 / 動能 … extend then continue
+        matching noun chars (功能單元 etc.).
     """
-    if not raw_noun or raw_noun[-1] not in _NENG_PRECURSORS_TW:
+    if not raw_noun:
         return raw_noun, raw_noun_end
     if raw_noun_end >= len(claim_text) or claim_text[raw_noun_end] != "能":
+        return raw_noun, raw_noun_end
+    follow = claim_text[raw_noun_end + 1: raw_noun_end + 2]
+    if follow in ("量", "源"):
+        return raw_noun + "能" + follow, raw_noun_end + 2
+    if raw_noun[-1] not in _NENG_PRECURSORS_TW:
         return raw_noun, raw_noun_end
     # Extend by 能
     raw_noun = raw_noun + "能"

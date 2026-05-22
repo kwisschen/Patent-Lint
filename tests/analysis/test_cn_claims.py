@@ -19,8 +19,23 @@ from patentlint.analysis.cn_claims import (
     check_tw_terminology,
     detect_markush_open_transition_cn,
     detect_omnibus_claims_cn,
+    _extend_neng_compound_cn,
 )
 from patentlint.models import Claim, CnPatentDocument
+
+
+class TestExtendNengCompoundCn:
+    """能量 / 能源 follow-gate — parity mirror of TW issue #75."""
+
+    def test_energy_compound_reextended(self):
+        assert _extend_neng_compound_cn("静电", 2, "静电能量大于一值") == ("静电能量", 4)
+
+    def test_follow_gate_stops_before_comparison_verb(self):
+        noun, _ = _extend_neng_compound_cn("放电", 2, "放电能量大于一阈值")
+        assert noun == "放电能量"
+
+    def test_modal_neng_not_extended(self):
+        assert _extend_neng_compound_cn("模块", 2, "模块能控制电流") == ("模块", 2)
 
 
 def _claim(id: int, text: str, independent: bool = True,
