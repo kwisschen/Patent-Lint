@@ -171,3 +171,56 @@ class TestAncestorBasisEnrichment:
         out = extract_antecedent_basis([self._finding()], total_claims=5)["findings"][0]
         assert "term_in_ancestor_text" not in out
         assert "ancestor_claim_ids" not in out
+
+
+class TestDidYouMeanSourceEnrichment:
+    """Issue #70: a null `did_you_mean_claim_id` is ambiguous — surface
+    `did_you_mean_source` + `term_in_symbol_table` so a symbol-table hit
+    is distinguishable from a chain/morphological hit."""
+
+    def _finding(self, **kw):
+        base = {
+            "claim_id": 2,
+            "term": "背面側接觸子",
+            "reference_form": "前述背面側接觸子",
+            "claim_text": "如請求項1所述的裝置，其中前述背面側接觸子的寬度。",
+        }
+        base.update(kw)
+        return base
+
+    def test_symbol_table_source_surfaced(self):
+        # The #70 shape: did-you-mean is an exact 符號說明 hit — no claim
+        # id by design. `did_you_mean_source` makes that legible.
+        f = self._finding(
+            suggested_match={
+                "term": "背面側接觸子", "claim_id": None,
+                "source": "symbol_table",
+            },
+            term_in_symbol_table=True,
+        )
+        out = extract_antecedent_basis([f], total_claims=5)["findings"][0]
+        assert out["did_you_mean_claim_id"] is None
+        assert out["did_you_mean_source"] == "symbol_table"
+        assert out["term_in_symbol_table"] is True
+
+    def test_chain_source_is_null(self):
+        # A chain DYM carries a claim id and no explicit source.
+        f = self._finding(
+            suggested_match={"term": "背面接觸子", "claim_id": 1},
+            term_in_symbol_table=False,
+        )
+        out = extract_antecedent_basis([f], total_claims=5)["findings"][0]
+        assert out["did_you_mean_source"] is None
+        assert out["did_you_mean_claim_id"] == 1
+        assert out["term_in_symbol_table"] is False
+
+    def test_non_tw_finding_omits_symbol_table_field(self):
+        # US/CN findings have no 符號說明 — the field is omitted, not False.
+        f = {
+            "claim_id": 2, "term": "widget", "reference_form": "the widget",
+            "claim_text": "The apparatus wherein the widget is blue.",
+            "suggested_match": None,
+        }
+        out = extract_antecedent_basis([f], total_claims=5)["findings"][0]
+        assert "term_in_symbol_table" not in out
+        assert out["did_you_mean_source"] is None

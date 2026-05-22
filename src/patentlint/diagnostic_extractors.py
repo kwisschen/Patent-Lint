@@ -214,12 +214,30 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
             "reference_form": _truncate(f.get("reference_form"), 40),
             "did_you_mean": _truncate(suggested.get("term") if isinstance(suggested, dict) else None, TERM_MAX),
             "did_you_mean_claim_id": suggested.get("claim_id") if isinstance(suggested, dict) else None,
+            # Issue #70: which lookup produced the did-you-mean. A null
+            # `did_you_mean_claim_id` is ambiguous on its own — it means
+            # either a chain/morphological hit whose id wasn't threaded,
+            # OR a 符號說明 (symbol-table) hit which has no claim id by
+            # design. `did_you_mean_source` disambiguates: "symbol_table"
+            # ⇒ the term is a declared element but has no claim-level
+            # intro (a legitimate §26 flag, not a walker FP — 符號說明 is
+            # a lookup, never an antecedent-basis silencer); null ⇒
+            # chain/morphological (and `did_you_mean_claim_id` is set).
+            "did_you_mean_source": suggested.get("source") if isinstance(suggested, dict) else None,
             "category": _truncate(f.get("category"), 40),
             "char_offset": offset,
             "context_before": ctx_before,
             "context_after": ctx_after,
             "claim_text_charlen": len(claim_text) if claim_text else 0,
         }
+        # Issue #70: TW walker tags each finding with `term_in_symbol_table`
+        # — whether the flagged term is a declared 符號說明 element. For a
+        # parent-claim FP report this is the decisive classifier: a
+        # declared element with no ancestor intro is a legitimate
+        # claim-drafting flag, not a walker bug. TW-only (CN/US have no
+        # 符號說明) — surfaced only when the walker supplied it.
+        if "term_in_symbol_table" in f:
+            out["term_in_symbol_table"] = bool(f.get("term_in_symbol_table"))
         # Parent-claim diagnostic. Emitted only when the walker supplied
         # ancestor data (US + TW antecedent walkers as of 2026-05-21).
         # `term_in_ancestor_text` is the bit that splits a walker FP
