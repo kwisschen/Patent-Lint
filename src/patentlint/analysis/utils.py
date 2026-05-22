@@ -1386,3 +1386,49 @@ def first_ancestor_with_term(chain: list, term: str) -> tuple[int | None, str | 
         if term_lc in (getattr(ancestor, "text", "") or "").lower():
             return ancestor.id, ancestor.text
     return None, None
+
+
+_ARTICLE_BEFORE_RE = re.compile(r"(?:\bthe|\bsaid|\ba|\ban)\s+$", re.IGNORECASE)
+
+
+def has_bare_noun_introduction(
+    claim_text: str, chain: list, term: str, ref_offset: int
+) -> bool:
+    """True if the multi-word noun phrase ``term`` is introduced earlier.
+
+    "Introduced earlier" = a whole-phrase, article-less occurrence of
+    ``term`` that precedes the reference in document order: in
+    ``claim_text`` strictly before ``ref_offset``, or anywhere in an
+    ancestor claim (``chain[1:]`` — every ancestor is wholly earlier).
+
+    MPEP § 2173.05(e): antecedent basis need not be an explicit ``a/an``
+    — if the scope is reasonably ascertainable, ``the X`` after a prior
+    article-less mention of the same specific term is not indefinite.
+    The intro-pattern extractors only register quantified (``a X``,
+    ``a plurality of X``) or framed introductions; they miss the
+    article-less first mention — a preamble term (``based on
+    ultra-wideband connection``) or a verb object (``generate real-time
+    driving environment information``). This rescue closes that gap.
+
+    Gated **multi-word** (≥2 whitespace tokens): a lone bare noun is too
+    generic for an article-less occurrence to be a deliberate
+    introduction. An occurrence preceded by ``the/said`` (a
+    back-reference) — or by ``a/an`` (a Pattern-A intro the extractors
+    already handle) — does not count; only a fresh article-less mention.
+    """
+    t = (term or "").strip().lower()
+    if not t or len(t.split()) < 2:
+        return False
+    pat = re.compile(r"(?<![a-z0-9])" + re.escape(t) + r"(?![a-z0-9])")
+    low = (claim_text or "").lower()
+    for m in pat.finditer(low):
+        if m.start() >= ref_offset:
+            break
+        if not _ARTICLE_BEFORE_RE.search(low[max(0, m.start() - 6): m.start()]):
+            return True
+    for ancestor in chain[1:]:
+        atext = (getattr(ancestor, "text", "") or "").lower()
+        for m in pat.finditer(atext):
+            if not _ARTICLE_BEFORE_RE.search(atext[max(0, m.start() - 6): m.start()]):
+                return True
+    return False

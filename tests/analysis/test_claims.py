@@ -306,6 +306,56 @@ class TestAntecedentBasis:
         # The clean head noun is still flagged (no intro for it here).
         assert any(t == "confidence measurement" for t in terms), terms
 
+    def test_bare_noun_introduction_same_claim(self):
+        """R4 (issue #91): a multi-word term first mentioned article-less
+        earlier in the SAME claim (preamble term / verb object) has
+        antecedent basis — MPEP § 2173.05(e)."""
+        claims = [
+            Claim(
+                id=1, independent=True, dependencies=[], method_claim=False,
+                text=(
+                    "A control system based on ultra-wideband connection, "
+                    "comprising a radar unit configured to generate "
+                    "real-time driving environment information, wherein the "
+                    "ultra-wideband connection is established and a signal "
+                    "is generated from the real-time driving environment "
+                    "information."
+                ),
+            ),
+        ]
+        terms = [i["term"] for i in check_antecedent_basis(claims)]
+        assert "ultra-wideband connection" not in terms, terms
+        assert "real-time driving environment information" not in terms, terms
+
+    def test_bare_noun_introduction_cross_claim(self):
+        """R4 (#71): a multi-word term introduced article-less in a parent
+        claim gives a child-claim `the X` antecedent basis."""
+        claims = [
+            Claim(id=1, independent=True, dependencies=[], method_claim=False,
+                  text="An ESD circuit configured to control electrostatic "
+                       "energy discharged from a control node."),
+            Claim(id=2, independent=False, dependencies=[1], method_claim=False,
+                  text="The circuit of claim 1, wherein the electrostatic "
+                       "energy at the control node is monitored."),
+        ]
+        terms = [i["term"] for i in check_antecedent_basis(claims)
+                 if i["claim_id"] == 2]
+        assert "electrostatic energy" not in terms, terms
+
+    def test_bare_noun_intro_genuine_defect_still_flagged(self):
+        """A genuinely-undefined multi-word term (no prior mention at all)
+        must still be flagged — the rescue requires a real prior occ."""
+        claims = [
+            Claim(id=1, independent=True, dependencies=[], method_claim=False,
+                  text="An apparatus comprising a base."),
+            Claim(id=2, independent=False, dependencies=[1], method_claim=False,
+                  text="The apparatus of claim 1, wherein the thermal relay "
+                       "module is engaged."),
+        ]
+        terms = [i["term"] for i in check_antecedent_basis(claims)
+                 if i["claim_id"] == 2]
+        assert any("thermal relay module" in t for t in terms), terms
+
     def test_finite_verb_not_overcaptured_r3(self):
         """R3 (issues #86–#89, #92): `presents` / `constitutes` / `flows`
         / `uses` must terminate the noun-phrase capture, not bleed in."""

@@ -19,7 +19,7 @@ from patentlint.analysis.utils import (
     extract_abbreviation_intros, clean_noun_phrase,
     compute_confidence_score, make_document_dedup_key,
     strip_contextual_verb, token_set_jaccard,
-    first_ancestor_with_term,
+    first_ancestor_with_term, has_bare_noun_introduction,
 )
 from patentlint.diagnostic_extractors import extract_special_format
 from patentlint.models import Claim, CheckItem, UnsupportedTerm
@@ -510,6 +510,17 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                     and all(w in abbrev_intros for w in term_words)
                 ):
                     has_basis = True
+
+            # Bare-noun introduction (R4, issues #71/#91/#92): a
+            # multi-word term first mentioned article-less — earlier in
+            # this claim, or in an ancestor — has antecedent basis by
+            # implication (MPEP § 2173.05(e)). The intro-pattern
+            # extractors only register quantified / framed intros, so
+            # preamble terms and verb objects slip through.
+            if not has_basis and has_bare_noun_introduction(
+                claim.text, chain, term, m.start()
+            ):
+                has_basis = True
 
             if not has_basis:
                 if term not in _SKIP_TERMS and not term.startswith("fig") and not term.startswith("claim"):
