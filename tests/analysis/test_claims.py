@@ -306,6 +306,31 @@ class TestAntecedentBasis:
         # The clean head noun is still flagged (no intro for it here).
         assert any(t == "confidence measurement" for t in terms), terms
 
+    def test_finite_verb_not_overcaptured_r3(self):
+        """R3 (issues #86–#89, #92): `presents` / `constitutes` / `flows`
+        / `uses` must terminate the noun-phrase capture, not bleed in."""
+        claims = [
+            Claim(
+                id=1,
+                text=(
+                    "A device wherein the leakage inspection region "
+                    "presents a defect, the annular groove constitutes a "
+                    "seal, the storage solution flows through a channel, "
+                    "and the control unit uses a sensor."
+                ),
+                independent=True,
+                method_claim=False,
+            ),
+        ]
+        terms = [i["term"] for i in check_antecedent_basis(claims)
+                 if i["claim_id"] == 1]
+        for verb in ("presents", "constitutes", "flows", "uses"):
+            for t in terms:
+                assert verb not in t, f"{verb!r} bled into term: {t!r}"
+        # Clean head nouns still surface (no intro for them here).
+        assert "leakage inspection region" in terms, terms
+        assert "annular groove" in terms, terms
+
 
 class TestTransitionsRegexWherein:
     """`_TRANSITIONS` recognizes `wherein` (no colon) as a preamble/body boundary."""
