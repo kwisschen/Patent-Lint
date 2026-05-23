@@ -55,7 +55,7 @@
         "description": "Intro site has `X和Y` / `X与Y` / `X及Y` shape; walker registered the whole string as a single intro rather than splitting on the conjunction. Downstream references to just X or just Y fail to resolve. R14f target."
       }
     ],
-    "notes": " | Schema v11 triage (2026-04-16): auto-classified 423 active labels from 'unclassified' into walker_fp / miss_intro / ambig categories. Active-pool composition now: ambig=41 miss_intro.coverage_gap=146 tw_contamination=3 walker_fp.cross_branch_sibling=169 walker_fp.fragment=6 walker_fp.over_capture=59 walker_fp.trailing_residue=2. Classifier: shape heuristics + ancestor-chain search + trim-strip fallback. The 41 'ambig' entries are residual; cross_branch_sibling is Option B territory (Phase 9 #54). Categories walker_fp.* / miss_intro.* added to metadata for ADR-110 validation.",
+    "notes": " | Schema v11 triage (2026-04-16): auto-classified 423 active labels from 'unclassified' into walker_fp / miss_intro / ambig categories. Active-pool composition now: ambig=41 miss_intro.coverage_gap=146 tw_contamination=3 walker_fp.cross_branch_sibling=169 walker_fp.fragment=6 walker_fp.over_capture=59 walker_fp.trailing_residue=2. Classifier: shape heuristics + ancestor-chain search + trim-strip fallback. The 41 'ambig' entries are residual; cross_branch_sibling is Option B territory (Phase 9 #54). Categories walker_fp.* / miss_intro.* added to metadata for ADR-110 validation. | R35 pre-round re-triage (2026-05-23): CN110276410B c1/c4 已知不良 demoted legit_drafting_error→miss_intro.coverage_gap, protect true→false. 存在已知不良 is a verb-object bare-noun introduction (MPEP § 2173.05(e) / 审查指南 明确 standard); reverses R20 cross-branch classification which missed the in-claim verb-object intro. Mirrors US R4 and TW R7 doctrine.",
     "review_log": [
       {
         "date": "2026-05-02",
@@ -118,10 +118,10 @@
       "claim_id": 1,
       "term": "已知不良",
       "reference_form": "所述已知不良",
-      "category": "legit_drafting_error",
-      "protect": true,
+      "category": "miss_intro.coverage_gap",
+      "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [4]; real §112(b) defect (parallel-invention drafter error)",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [4]; real §112(b) defect (parallel-invention drafter error) | R35 pre-round re-triage (2026-05-23): demoted legit_drafting_error/protect:true → miss_intro.coverage_gap/protect:false. R20 classified as a parallel-invention cross-branch defect because the walker F-family did not capture an in-claim intro for 已知不良. But c1 contains 在检测对象存在已知不良时 — 存在 is in _F6_VERB_ALT_CN and 已知不良 is its article-less object — a verb-object bare-noun introduction. Under MPEP § 2173.05(e) reasonable-ascertainability / 审查指南 明确 standard the article-less first mention establishes antecedent basis; the drafter 所述 explicitly back-references. The conditional wrapper 在...时 does not change article-rule analysis. Mirrors US R4 (PR #94) re-triage of 70 over-strict labels and TW R7 (commit 41de7797) re-triage of 2 tw_copula_tiers 输入信号 labels. R20 protection was specific to cross-branch resolution; the R35 has_bare_noun_introduction_cn rescue uses a different mechanism (in-claim bare-noun) that R20 reasoning did not address.",
       "resolved_by": null,
       "round": 0
     },
@@ -370,10 +370,10 @@
       "claim_id": 4,
       "term": "已知不良",
       "reference_form": "所述已知不良",
-      "category": "legit_drafting_error",
-      "protect": true,
+      "category": "miss_intro.coverage_gap",
+      "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error)",
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error) | R35 pre-round re-triage (2026-05-23): demoted legit_drafting_error/protect:true → miss_intro.coverage_gap/protect:false. R20 classified as a parallel-invention cross-branch defect because the walker F-family did not capture an in-claim intro for 已知不良. But c1 contains 在检测对象存在已知不良时 — 存在 is in _F6_VERB_ALT_CN and 已知不良 is its article-less object — a verb-object bare-noun introduction. Under MPEP § 2173.05(e) reasonable-ascertainability / 审查指南 明确 standard the article-less first mention establishes antecedent basis; the drafter 所述 explicitly back-references. The conditional wrapper 在...时 does not change article-rule analysis. Mirrors US R4 (PR #94) re-triage of 70 over-strict labels and TW R7 (commit 41de7797) re-triage of 2 tw_copula_tiers 输入信号 labels. R20 protection was specific to cross-branch resolution; the R35 has_bare_noun_introduction_cn rescue uses a different mechanism (in-claim bare-noun) that R20 reasoning did not address.",
       "resolved_by": null,
       "round": 0
     },
