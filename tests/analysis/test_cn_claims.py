@@ -907,3 +907,111 @@ class TestTrailingLaiSuppressionR68:
         # Either silenced or emitted as bare `行为`, never `行为来`.
         for i in issues:
             assert not i["term"].endswith("来"), i
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# R35 — CN bare-noun-introduction rescue (mirror of TW R7)
+# ─────────────────────────────────────────────────────────────────────────
+
+
+class TestBareNounIntroductionCn:
+    """End-to-end: the rescue resolves verb-object intros, guards hold."""
+
+    def test_verb_object_intro_resolves(self):
+        """接收输入信号 (verb-object) resolves 所述输入信号."""
+        from patentlint.analysis.cn_claims import check_antecedent_basis_cn
+        doc = _cn_doc([
+            _claim(1, "1. 一种方法，包括接收输入信号，并处理所述输入信号。"),
+        ])
+        assert check_antecedent_basis_cn(doc) == []
+
+    def test_存在_X_in_conditional_clause_resolves(self):
+        """在存在已知不良时…所述已知不良 — verb-object in 在…时 clause
+        (the CN110276410B BOE case that motivated R20 reversal)."""
+        from patentlint.analysis.cn_claims import check_antecedent_basis_cn
+        doc = _cn_doc([
+            _claim(1, "1. 一种方法，在检测对象存在已知不良时，"
+                      "抽取与所述已知不良有关的生产数据。"),
+        ])
+        assert check_antecedent_basis_cn(doc) == []
+
+    def test_ancestor_verb_object_resolves_dependent(self):
+        """ancestor 接收输入信号 resolves 所述输入信号 in dep claim."""
+        from patentlint.analysis.cn_claims import check_antecedent_basis_cn
+        doc = _cn_doc([
+            _claim(1, "1. 一种方法，包括接收输入信号。"),
+            _claim(2, "2. 根据权利要求1所述的方法，其中所述输入信号被放大。",
+                   independent=False, dependencies=[1]),
+        ])
+        assert check_antecedent_basis_cn(doc) == []
+
+    def test_compound_tail_still_flagged(self):
+        """使用者介面-style: 接口 as tail of 图形接口 is NOT a bare intro
+        (guard a — whole-compound-boundary)."""
+        from patentlint.analysis.cn_claims import check_antecedent_basis_cn
+        doc = _cn_doc([
+            _claim(1, "1. 一种方法，包括一程序。"),
+            _claim(2, "2. 根据权利要求1所述的方法，其中所述程序形成一图形界面，"
+                      "并显示在该界面上。",
+                   independent=False, dependencies=[1]),
+        ])
+        issues = check_antecedent_basis_cn(doc)
+        assert any(i["term"] == "界面" for i in issues), issues
+
+    def test_possessive_de_still_flagged(self):
+        """U盘的标识 — 的-headed occurrence rejected outright (guard b)."""
+        from patentlint.analysis.cn_claims import check_antecedent_basis_cn
+        doc = _cn_doc([
+            _claim(1, "1. 一种装置，包括一U盘，所述U盘的标识数据被存储，"
+                      "并读取所述标识数据。"),
+        ])
+        issues = check_antecedent_basis_cn(doc)
+        assert any(i["term"] == "标识数据" for i in issues), issues
+
+    def test_pure_missing_antecedent_still_flagged(self):
+        """该外壳 with no intro anywhere stays flagged."""
+        from patentlint.analysis.cn_claims import check_antecedent_basis_cn
+        doc = _cn_doc([
+            _claim(1, "1. 一种装置，包括一基板。"),
+            _claim(2, "2. 根据权利要求1所述的装置，其中该外壳围绕所述基板。",
+                   independent=False, dependencies=[1]),
+        ])
+        issues = check_antecedent_basis_cn(doc)
+        assert any("外壳" in i["term"] for i in issues), issues
+
+
+class TestBareNounHelperCn:
+    """Direct unit coverage of has_bare_noun_introduction_cn boundaries."""
+
+    def test_verb_object_accepted(self):
+        from patentlint.analysis.cn_claims import has_bare_noun_introduction_cn
+        txt = "一种方法，包括接收输入信号，并处理所述输入信号。"
+        ro = txt.find("所述输入信号")
+        assert has_bare_noun_introduction_cn(txt, [_claim(1, txt)], "输入信号", ro)
+
+    def test_存在_in_conditional_clause_accepted(self):
+        """在检测对象存在X时 — verb-object regardless of conditional wrapper."""
+        from patentlint.analysis.cn_claims import has_bare_noun_introduction_cn
+        txt = "在检测对象存在已知不良时，抽取所述已知不良。"
+        ro = txt.find("所述已知不良")
+        assert has_bare_noun_introduction_cn(txt, [_claim(1, txt)], "已知不良", ro)
+
+    def test_compound_tail_rejected(self):
+        from patentlint.analysis.cn_claims import has_bare_noun_introduction_cn
+        txt = "其中所述程序形成一图形界面，并显示在该界面上。"
+        ro = txt.find("该界面")
+        assert not has_bare_noun_introduction_cn(
+            txt, [_claim(1, txt)], "界面", ro)
+
+    def test_possessive_de_rejected(self):
+        from patentlint.analysis.cn_claims import has_bare_noun_introduction_cn
+        txt = "所述U盘的标识数据被存储，并读取所述标识数据。"
+        ro = txt.find("所述标识数据")
+        assert not has_bare_noun_introduction_cn(
+            txt, [_claim(1, txt)], "标识数据", ro)
+
+    def test_short_term_below_gate(self):
+        from patentlint.analysis.cn_claims import has_bare_noun_introduction_cn
+        txt = "包括轴承，所述轴承转动。"
+        ro = txt.find("所述轴承")
+        assert not has_bare_noun_introduction_cn(txt, [_claim(1, txt)], "轴承", ro)

@@ -9,6 +9,7 @@ against CNIPA rules (专利法实施细则 and 审查指南).
 from __future__ import annotations
 
 import re
+import unicodedata
 from typing import Any
 
 from patentlint.analysis.cjk_ordinal_guard import (
@@ -3308,6 +3309,118 @@ def _is_bare_genus_self_reference_cn(term: str, claim_text: str) -> bool:
     return bool(_GENUS_PREAMBLE_RE_CN.search(claim_text))
 
 
+# R35 (2026-05-23) — bare-noun-introduction rescue (CN mirror of TW R7
+# has_bare_noun_introduction_tw and US R4 utils.has_bare_noun_introduction).
+#
+# A multi-character noun first mentioned article-less -- as a verb or
+# coverb object (接收输入信号 / 基于超宽频连接) or a clause / enumeration
+# item -- establishes antecedent basis under the same MPEP s 2173.05(e)
+# reasonable-ascertainability standard CNIPA 审查指南 applies (清楚 /
+# 明确). The intro extractors register only quantified / framed intros
+# plus F10 de-NOUN gated to component-suffix nouns, so article-less data
+# / attribute nouns slip through.
+#
+# Two CJK-aware guards (the two bugs that halted the naive TW R5 port):
+#   (a) whole-compound-boundary -- an occurrence whose neighbour char is
+#       a noun-compounding CJK ideograph is the tail / head of a longer
+#       compound, not a standalone mention.
+#   (b) possessive guard -- an occurrence headed by 的 or 之 is never
+#       counted: <noun>的X is surface-identical to a <verb-phrase>的X
+#       relative clause. The F10 extractor already handles the safely-
+#       disambiguable subset (component-suffix nouns); the rescue defers
+#       to F10 there and rejects 的 / 之 outright.
+_BARE_NOUN_INTRO_VERBS_CN: tuple[str, ...] = tuple(
+    sorted(
+        {v for v in _F6_VERB_ALT_CN.split("|") if v}
+        | {"基于", "来自", "通过", "经由", "利用", "依据", "依"},
+        key=len,
+        reverse=True,
+    )
+)
+# Noun-compounding CJK ideographs = CJK range minus the _NOUN_CHARS_CN
+# exclusion set (clause stops, conjunctions, possessive markers, modals).
+_BARE_NOUN_BOUNDARY_CN: frozenset[str] = frozenset(
+    _NOUN_CHARS_CN[_NOUN_CHARS_CN.index("s") + 1 : _NOUN_CHARS_CN.index("]")]
+)
+_BARE_NOUN_CJK_RE_CN: re.Pattern[str] = re.compile(r"[一-鿿]")
+_BARE_NOUN_MIN_LEN_CN = 4
+
+
+def _bare_noun_compound_char_cn(c: str) -> bool:
+    """True if c is a CJK ideograph that compounds into a noun phrase."""
+    return bool(_BARE_NOUN_CJK_RE_CN.match(c)) and c not in _BARE_NOUN_BOUNDARY_CN
+
+
+def _bare_noun_left_clean_cn(text: str, i: int) -> bool:
+    """True if the occurrence at i is a fresh, article-less left boundary."""
+    if i == 0:
+        return True
+    if text[i - 1] in ("该", "一"):
+        return False  # reference / quantifier
+    if i >= 2 and text[i - 2:i] in ("所述", "前述"):
+        return False
+    # Verb-object / coverb-object: the run before the term ends with a
+    # verb. Checked first -- coverbs (基于) end in a boundary char (于).
+    if any(text[:i].endswith(v) for v in _BARE_NOUN_INTRO_VERBS_CN):
+        return True
+    c = text[i - 1]
+    if c.isspace() or unicodedata.category(c)[0] == "P":
+        return True  # clause boundary / enumeration item
+    # CJK ideograph not preceded by a verb -- compound tail (guard a),
+    # 的 / 之 possessive marker (guard b), or a conjunction / modal not
+    # verb-led. All rejected conservatively.
+    return False
+
+
+def _bare_noun_right_clean_cn(text: str, j: int) -> bool:
+    """True if the term is not the head of a longer noun compound (guard a)."""
+    if j >= len(text):
+        return True
+    return not _bare_noun_compound_char_cn(text[j])
+
+
+def has_bare_noun_introduction_cn(
+    claim_text: str, chain: list, term: str, ref_offset: int
+) -> bool:
+    """True if multi-character noun ``term`` is introduced earlier article-less.
+
+    "Introduced earlier" = a whole-phrase, article-less occurrence of
+    ``term`` preceding the reference in document order: in ``claim_text``
+    before ``ref_offset``, or anywhere in an ancestor claim (``chain[1:]``
+    -- every ancestor is wholly earlier). Gated multi-character
+    (>= 4 CJK chars). Digit / paren-numeral terms are excluded -- those
+    resolve via the paren-asymmetry path. See the constant block above
+    for the (a) compound-boundary and (b) possessive guards.
+    """
+    t = (term or "").strip()
+    if len(t) < _BARE_NOUN_MIN_LEN_CN:
+        return False
+    if any(ch.isdigit() for ch in t) or "(" in t:
+        return False
+    n = len(t)
+
+    def _scan(text: str, limit: int | None) -> bool:
+        start = 0
+        while True:
+            idx = text.find(t, start)
+            if idx < 0:
+                return False
+            if limit is not None and idx >= limit:
+                return False
+            if _bare_noun_left_clean_cn(text, idx) and _bare_noun_right_clean_cn(
+                text, idx + n
+            ):
+                return True
+            start = idx + 1
+
+    if _scan(claim_text or "", ref_offset):
+        return True
+    for ancestor in chain[1:]:
+        if _scan(getattr(ancestor, "text", "") or "", None):
+            return True
+    return False
+
+
 def check_antecedent_basis_cn(
     doc: CnPatentDocument,
     *,
@@ -3592,6 +3705,17 @@ def check_antecedent_basis_cn(
             # restricted to the capture-side fix (F11 ;-segment continuation
             # in _extract_supplementary_intros_cn) plus conservative trim-
             # verb extensions, both of which respect the chain invariant.
+
+            # R35 (2026-05-23): bare-noun-introduction rescue (CN mirror of
+            # TW R7). A multi-character noun first mentioned article-less
+            # (verb / coverb object, clause item) has antecedent basis by
+            # implication (审查指南 第二部分 第二章 §3.2 清楚 / 明确).
+            # The intro extractors miss article-less data / attribute
+            # nouns; this closes the gap. See has_bare_noun_introduction_cn.
+            if resolved_intro is None and has_bare_noun_introduction_cn(
+                claim.text, chain, normalized_term, m.start()
+            ):
+                continue
 
             if resolved_intro is not None:
                 if not strict_plural_reference_matching:
