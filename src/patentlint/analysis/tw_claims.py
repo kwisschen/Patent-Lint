@@ -9,6 +9,7 @@ against TIPO rules (專利法施行細則 and 專利審查基準).
 from __future__ import annotations
 
 import re
+import unicodedata
 from typing import Any
 
 from patentlint.analysis.cjk_ordinal_guard import (
@@ -4567,6 +4568,124 @@ def _f_head_indep_conflict_tw(head: str, claim_text: str) -> bool:
     return bool(pattern.search(claim_text))
 
 
+# R7 (2026-05-23) — bare-noun-introduction rescue. Port of US R4
+# utils.has_bare_noun_introduction with CJK-aware boundary detection.
+#
+# A multi-character noun first mentioned article-less -- as a verb or
+# coverb object (接收輸入訊號 / 基於超寬頻連接) or a clause / enumeration
+# item -- establishes antecedent basis under MPEP s 2173.05(e)
+# reasonable-ascertainability. TIPO s 26 third-paragraph applies the
+# same clarity standard; the 一 article is a drafting convention, not a
+# statutory requirement. The _INTRO_PATTERN / F-family extractors
+# register only quantified (一X) or framed intros, plus F10 de-NOUN
+# gated to mechanical-component suffixes -- so article-less data /
+# attribute nouns slip through. This resolution-time rescue closes it.
+#
+# CJK has no word boundaries, so two guards keep the rescue from
+# silencing real defects (the two bugs that halted the naive R5 port):
+#   (a) whole-compound-boundary -- an occurrence whose neighbour char is
+#       a noun-compounding CJK ideograph is the tail / head of a longer
+#       compound, not a standalone mention (使用者介面 is not a bare
+#       mention when it sits inside 圖形使用者介面).
+#   (b) possessive guard -- an occurrence headed by 的 or 之 is never
+#       counted: <noun>的X (隨身碟的識別資料) is surface-identical to a
+#       <verb-phrase>的X relative clause. The F10 extractor already
+#       handles the safely-disambiguable subset (component-suffix
+#       nouns); the rescue defers to F10 there and rejects 的 / 之.
+_BARE_NOUN_INTRO_VERBS_TW: tuple[str, ...] = tuple(
+    sorted(
+        {v for v in _F6_VERB_ALT_TW.split("|") if v}
+        | {"基於", "來自", "透過", "經由", "利用", "依據", "依"},
+        key=len,
+        reverse=True,
+    )
+)
+# Noun-compounding CJK ideographs = CJK range minus the _NOUN_CHARS
+# exclusion set (clause stops, conjunctions, possessive markers, modals).
+_BARE_NOUN_BOUNDARY_TW: frozenset[str] = frozenset(
+    _NOUN_CHARS[_NOUN_CHARS.index("s") + 1 : _NOUN_CHARS.index("]")]
+)
+_BARE_NOUN_CJK_RE: re.Pattern[str] = re.compile(r"[一-鿿]")
+_BARE_NOUN_MIN_LEN_TW = 4
+
+
+def _bare_noun_compound_char_tw(c: str) -> bool:
+    """True if c is a CJK ideograph that compounds into a noun phrase."""
+    return bool(_BARE_NOUN_CJK_RE.match(c)) and c not in _BARE_NOUN_BOUNDARY_TW
+
+
+def _bare_noun_left_clean_tw(text: str, i: int) -> bool:
+    """True if the occurrence at i is a fresh, article-less left boundary."""
+    if i == 0:
+        return True
+    if text[i - 1] in ("該", "一"):
+        return False  # reference / quantifier -- not a fresh mention
+    if i >= 2 and text[i - 2:i] in ("所述", "前述", "該等", "該些"):
+        return False
+    # Verb-object / coverb-object: the run before the term ends with a
+    # verb. Checked first -- coverbs (基於) end in a boundary char (於).
+    if any(text[:i].endswith(v) for v in _BARE_NOUN_INTRO_VERBS_TW):
+        return True
+    c = text[i - 1]
+    if c.isspace() or unicodedata.category(c)[0] == "P":
+        return True  # clause boundary / enumeration item
+    # A CJK ideograph not preceded by a verb -- compound tail (guard a),
+    # 的 / 之 possessive marker (guard b), or a conjunction / modal not
+    # verb-led. All rejected conservatively.
+    return False
+
+
+def _bare_noun_right_clean_tw(text: str, j: int) -> bool:
+    """True if the term is not the head of a longer noun compound (guard a)."""
+    if j >= len(text):
+        return True
+    return not _bare_noun_compound_char_tw(text[j])
+
+
+def has_bare_noun_introduction_tw(
+    claim_text: str, chain: list, term: str, ref_offset: int
+) -> bool:
+    """True if multi-character noun ``term`` is introduced earlier article-less.
+
+    "Introduced earlier" = a whole-phrase, article-less occurrence of
+    ``term`` preceding the reference in document order: in ``claim_text``
+    before ``ref_offset``, or anywhere in an ancestor claim (``chain[1:]``
+    -- every ancestor is wholly earlier). Gated multi-character (>= 4 CJK
+    chars): a short bare noun is too generic for an article-less mention
+    to be a deliberate introduction. Digit / paren-numeral terms are
+    excluded -- those resolve via the paren-asymmetry path. See the
+    constant block above for the (a) compound-boundary and (b)
+    possessive guards.
+    """
+    t = (term or "").strip()
+    if len(t) < _BARE_NOUN_MIN_LEN_TW:
+        return False
+    if any(ch.isdigit() for ch in t) or "(" in t:
+        return False
+    n = len(t)
+
+    def _scan(text: str, limit: int | None) -> bool:
+        start = 0
+        while True:
+            idx = text.find(t, start)
+            if idx < 0:
+                return False
+            if limit is not None and idx >= limit:
+                return False
+            if _bare_noun_left_clean_tw(text, idx) and _bare_noun_right_clean_tw(
+                text, idx + n
+            ):
+                return True
+            start = idx + 1
+
+    if _scan(claim_text or "", ref_offset):
+        return True
+    for ancestor in chain[1:]:
+        if _scan(getattr(ancestor, "text", "") or "", None):
+            return True
+    return False
+
+
 def check_antecedent_basis(
     doc: TwPatentDocument,
     *,
@@ -4996,6 +5115,17 @@ def check_antecedent_basis(
                         and bare in intros_by_term
                     ):
                         resolved_intro = bare
+
+            # R7 (2026-05-23): bare-noun-introduction rescue. A multi-
+            # character noun first mentioned article-less (verb / coverb
+            # object, clause item) has antecedent basis by implication
+            # (MPEP s 2173.05(e) / TIPO s 26 clarity). The intro
+            # extractors miss article-less data / attribute nouns; this
+            # closes the gap. See has_bare_noun_introduction_tw.
+            if resolved_intro is None and has_bare_noun_introduction_tw(
+                claim.text, chain, normalized_term, m.start()
+            ):
+                continue
 
             if resolved_intro is not None:
                 # Number-neutral match satisfies the antecedent under

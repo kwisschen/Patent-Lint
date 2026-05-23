@@ -18,6 +18,7 @@ from patentlint.analysis.tw_claims import (
     check_antecedent_basis,
     extract_introductions_tw,
     get_ancestor_chain_tw,
+    has_bare_noun_introduction_tw,
 )
 from patentlint.models import Claim, TwPatentDocument, TwPatentType
 
@@ -1904,3 +1905,106 @@ class TestNengCompoundExtensionR68d:
         for i in issues:
             assert "能執行" not in i["term"], i
             assert "模組能" not in i["term"], i
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# R7 — bare-noun-introduction rescue
+#
+# A multi-character noun first mentioned article-less (verb / coverb
+# object, clause item) establishes antecedent basis (MPEP § 2173.05(e);
+# TIPO § 26 第3項 clarity). Two CJK-aware guards prevent the rescue from
+# silencing real defects — the two bugs that halted the naive R5 port.
+# ─────────────────────────────────────────────────────────────────────────
+
+
+class TestBareNounIntroduction:
+    """End-to-end: the rescue resolves verb-object intros, guards hold."""
+
+    def test_verb_object_intro_resolves(self):
+        """接收輸入訊號 (verb-object, article-less) resolves 所述輸入訊號.
+
+        The F-family extractors register 訊號 only (輸入 stripped as a
+        verb head); the ≥4-char reference 輸入訊號 stays unresolved until
+        the bare-noun rescue matches the whole-phrase verb-object intro.
+        """
+        doc = _make_doc([
+            _claim(1, "1. 一種方法，包含接收輸入訊號，並處理所述輸入訊號。"),
+        ])
+        assert check_antecedent_basis(doc) == []
+
+    def test_ancestor_verb_object_intro_resolves_dependent(self):
+        """所述輸入訊號 in claim 2 resolves via claim 1 接收輸入訊號."""
+        doc = _make_doc([
+            _claim(1, "1. 一種方法，包含接收輸入訊號。"),
+            _claim(2, "2. 如請求項1所述之方法，其中所述輸入訊號被放大。",
+                   independent=False, deps=[1]),
+        ])
+        assert check_antecedent_basis(doc) == []
+
+    def test_compound_tail_still_flagged(self):
+        """使用者介面 as the tail of 圖形使用者介面 is NOT a bare intro —
+        guard (a), the bug-1 case (110P000368)."""
+        doc = _make_doc([
+            _claim(1, "1. 一種方法，包含一程式。"),
+            _claim(2, "2. 如請求項1所述之方法，其中該程式形成一圖形使用者介面，"
+                      "並顯示於該使用者介面上。",
+                   independent=False, deps=[1]),
+        ])
+        issues = check_antecedent_basis(doc)
+        assert any(i["term"] == "使用者介面" for i in issues), issues
+
+    def test_possessive_de_still_flagged(self):
+        """隨身碟的識別資料 is a possessive, not an introduction —
+        guard (b), the bug-2 case (110P000868)."""
+        doc = _make_doc([
+            _claim(1, "1. 一種裝置，包含一隨身碟，所述隨身碟的識別資料被儲存，"
+                      "並讀取所述識別資料。"),
+        ])
+        issues = check_antecedent_basis(doc)
+        assert any(i["term"] == "識別資料" for i in issues), issues
+
+    def test_pure_missing_antecedent_still_flagged(self):
+        """該機殼 with no intro anywhere stays flagged (adversarial guardrail)."""
+        doc = _make_doc([
+            _claim(1, "1. 一種裝置，包含一基板。"),
+            _claim(2, "2. 如請求項1所述之裝置，其中該機殼圍繞所述基板。",
+                   independent=False, deps=[1]),
+        ])
+        issues = check_antecedent_basis(doc)
+        assert any("機殼" in i["term"] for i in issues), issues
+
+
+class TestBareNounHelper:
+    """Direct unit coverage of has_bare_noun_introduction_tw boundaries."""
+
+    def test_verb_object_accepted(self):
+        txt = "一種方法，包含接收輸入訊號，並處理所述輸入訊號。"
+        ro = txt.find("所述輸入訊號")
+        assert has_bare_noun_introduction_tw(txt, [_claim(1, txt)], "輸入訊號", ro)
+
+    def test_compound_tail_rejected(self):
+        """圖形使用者介面 — 使用者介面 is the compound tail (guard a)."""
+        txt = "其中該程式形成一圖形使用者介面，並顯示於該使用者介面上。"
+        ro = txt.find("該使用者介面")
+        assert not has_bare_noun_introduction_tw(
+            txt, [_claim(1, txt)], "使用者介面", ro)
+
+    def test_possessive_de_rejected(self):
+        """隨身碟的識別資料 — 識別資料 is headed by 的 (guard b)."""
+        txt = "所述隨身碟的識別資料被儲存，並讀取所述識別資料。"
+        ro = txt.find("所述識別資料")
+        assert not has_bare_noun_introduction_tw(
+            txt, [_claim(1, txt)], "識別資料", ro)
+
+    def test_short_term_below_gate(self):
+        """A 2-char term is too generic — below the ≥4-char gate."""
+        txt = "包含軸承，所述軸承轉動。"
+        ro = txt.find("所述軸承")
+        assert not has_bare_noun_introduction_tw(txt, [_claim(1, txt)], "軸承", ro)
+
+    def test_digit_paren_term_excluded(self):
+        """Paren-numeral terms route through the paren-asymmetry path."""
+        txt = "包含設置樞軸(2221)，所述樞軸(2221)旋轉。"
+        ro = txt.find("所述樞軸")
+        assert not has_bare_noun_introduction_tw(
+            txt, [_claim(1, txt)], "樞軸(2221)", ro)
