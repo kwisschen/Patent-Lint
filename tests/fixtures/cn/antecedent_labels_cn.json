@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 34,
+    "current_round": 35,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -122,8 +122,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [4]; real §112(b) defect (parallel-invention drafter error) | R35 pre-round re-triage (2026-05-23): demoted legit_drafting_error/protect:true → miss_intro.coverage_gap/protect:false. R20 classified as a parallel-invention cross-branch defect because the walker F-family did not capture an in-claim intro for 已知不良. But c1 contains 在检测对象存在已知不良时 — 存在 is in _F6_VERB_ALT_CN and 已知不良 is its article-less object — a verb-object bare-noun introduction. Under MPEP § 2173.05(e) reasonable-ascertainability / 审查指南 明确 standard the article-less first mention establishes antecedent basis; the drafter 所述 explicitly back-references. The conditional wrapper 在...时 does not change article-rule analysis. Mirrors US R4 (PR #94) re-triage of 70 over-strict labels and TW R7 (commit 41de7797) re-triage of 2 tw_copula_tiers 输入信号 labels. R20 protection was specific to cross-branch resolution; the R35 has_bare_noun_introduction_cn rescue uses a different mechanism (in-claim bare-noun) that R20 reasoning did not address.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_35_bare_noun_introduction",
+      "round": 35
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -374,8 +374,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | R20 re-triage: independent claim references term introduced only in parallel independent claims [1]; real §112(b) defect (parallel-invention drafter error) | R35 pre-round re-triage (2026-05-23): demoted legit_drafting_error/protect:true → miss_intro.coverage_gap/protect:false. R20 classified as a parallel-invention cross-branch defect because the walker F-family did not capture an in-claim intro for 已知不良. But c1 contains 在检测对象存在已知不良时 — 存在 is in _F6_VERB_ALT_CN and 已知不良 is its article-less object — a verb-object bare-noun introduction. Under MPEP § 2173.05(e) reasonable-ascertainability / 审查指南 明确 standard the article-less first mention establishes antecedent basis; the drafter 所述 explicitly back-references. The conditional wrapper 在...时 does not change article-rule analysis. Mirrors US R4 (PR #94) re-triage of 70 over-strict labels and TW R7 (commit 41de7797) re-triage of 2 tw_copula_tiers 输入信号 labels. R20 protection was specific to cross-branch resolution; the R35 has_bare_noun_introduction_cn rescue uses a different mechanism (in-claim bare-noun) that R20 reasoning did not address.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_35_bare_noun_introduction",
+      "round": 35
     },
     {
       "fixture": "CN110276410B (BOE)",
@@ -1478,8 +1478,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_35_bare_noun_introduction",
+      "round": 35
     },
     {
       "fixture": "CN113939805B (Huawei)",
@@ -11702,8 +11702,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_35_bare_noun_introduction",
+      "round": 35
     },
     {
       "fixture": "CN115952274B",
@@ -12902,8 +12902,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification. | parser-fix migration: c45→c46",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_35_bare_noun_introduction",
+      "round": 35
     },
     {
       "fixture": "CN115952274B",
@@ -13922,8 +13922,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_35_bare_noun_introduction",
+      "round": 35
     },
     {
       "fixture": "CN117427144B",
@@ -13982,8 +13982,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_35_bare_noun_introduction",
+      "round": 35
     },
     {
       "fixture": "CN117427144B",
@@ -14534,8 +14534,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "round_35_bare_noun_introduction",
+      "round": 35
     },
     {
       "fixture": "CN213655447U (BYD)",
