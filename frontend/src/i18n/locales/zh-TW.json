@@ -719,7 +719,10 @@
       "titleMatch": "摘要與發明名稱所指之發明相符（審查指南 F-II § 2.3.5）",
       "claimReference": "摘要不引用特定請求項（審查指南 F-II § 2.3.3）",
       "structure": "摘要結構：單一段落，避免請求項風格用語，避免功利性語言",
-      "excessClaims": "超項費門檻（Rule 45 EPC）"
+      "excessClaims": "超項費門檻（Rule 45 EPC）",
+      "meansPlusFunction": "功能性特徵描述（審查指南 F-IV § 6.5）",
+      "crmNonTransitory": "電腦可讀媒體：「非暫態」限定（第52(2)(c)條）",
+      "omnibus": "統括式請求項（審查指南 F-IV § 4.17）"
     },
     "epcTableFootnote": "截至 2026 年 5 月。EPC 檢查目前為 Beta 階段，僅支援英文撰寫的歐洲專利說明書；PatentLint 將持續演進。"
   },
@@ -1175,6 +1178,18 @@
         "twoPartForm": {
           "verify": "無獨立項採二段式撰寫（前言 +「characterised in that」）。Rule 43(1) EPC 視情形建議採二段式；請依最近先前技術判斷是否適用。",
           "pass": "未偵測到二段式撰寫相關問題（Rule 43(1) EPC）。"
+        },
+        "meansPlusFunction": {
+          "verify": "請求項 {{claims}} 使用功能性特徵描述（'means for / step for'）；請確認該特徵已獲說明書支持，且通常知識者無需付出不合理的負擔即可實施（EPC 第84條；審查指南 F-IV § 6.5）。",
+          "pass": "未發現含有功能性特徵描述（'means-plus-function'）的請求項。"
+        },
+        "crmNonTransitory": {
+          "verify": "請求項 {{claims}} 涉及電腦可讀媒體但未限定為「非暫態」；請確認暫時性信號之保護範圍非為本意（EPC 第52(2)(c)條；審查指南 G-II § 3.6）。",
+          "pass": "未發現缺少「非暫態」限定的電腦可讀媒體請求項。"
+        },
+        "omnibus": {
+          "amend": "請求項 {{claims}} 疑似為統括式（omnibus）請求項：未記載具體技術特徵，僅參考說明書或圖式；可能違反 EPC 第84條明確性要求（審查指南 F-IV § 4.17）。",
+          "pass": "未發現統括式請求項。"
         }
       },
       "abstract": {

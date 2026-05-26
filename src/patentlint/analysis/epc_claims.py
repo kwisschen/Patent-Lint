@@ -34,6 +34,12 @@ from __future__ import annotations
 
 import re
 
+from patentlint.analysis.claims import (
+    _CRM_MEDIUM,
+    _MEANS_PLUS_FUNCTION,
+    _NON_TRANSITORY,
+    _OMNIBUS_LANG,
+)
 from patentlint.analysis.utils import _dx
 from patentlint.models import CheckItem, Claim
 
@@ -583,6 +589,122 @@ def check_markush_format_epc(claims: list[Claim]) -> list[CheckItem]:
     )]
 
 
+def check_means_plus_function_epc(claims: list[Claim]) -> list[CheckItem]:
+    """Detect § 112(f)-style functional 'means/step/mechanism/module for X-ing' language.
+
+    EPO Guidelines F-IV § 6.5 — functional features are admissible only
+    where the skilled person can identify means without undue burden,
+    and Art. 84 EPC requires support and clarity for the function. The
+    check emits VERIFY (advisory) rather than AMEND because functional
+    language is permitted under EPC when properly supported.
+    """
+    bad = [c.id for c in claims if _MEANS_PLUS_FUNCTION.search(c.text)]
+    if bad:
+        return [CheckItem(
+            status="verify",
+            message=(
+                f"Claim(s) {', '.join(str(i) for i in bad)} use functional "
+                f"'means for / step for' language — confirm Art. 84 support "
+                f"and that the skilled person can identify the means without "
+                f"undue burden (Guidelines F-IV § 6.5)."
+            ),
+            message_key="check.epc.claims.meansPlusFunction.verify",
+            details_params={"claims": ", ".join(str(i) for i in bad)},
+            details=", ".join(str(i) for i in bad),
+            reference="EPO Guidelines F-IV § 6.5; Art. 84 EPC",
+            diagnostics=_dx(
+                flagged_count=len(bad),
+                flagged_claim_id=bad[0],
+            ),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="No functional 'means-plus-function' claim language detected.",
+        message_key="check.epc.claims.meansPlusFunction.pass",
+        reference="EPO Guidelines F-IV § 6.5",
+    )]
+
+
+def check_crm_non_transitory_epc(claims: list[Claim]) -> list[CheckItem]:
+    """Flag computer-readable medium claims missing 'non-transitory'.
+
+    Art. 52(2)(c) EPC excludes 'programs for computers as such' from
+    patentability; Guidelines G-II § 3.6 distinguishes claims directed
+    at technical processes from those reciting bare programs. A claim
+    to a computer-readable medium that omits 'non-transitory' may be
+    read to cover transitory signals (carrier waves), which lack the
+    technical character required by T 0258/03 and risk objection.
+    """
+    bad = [
+        c.id for c in claims
+        if c.independent
+        and _CRM_MEDIUM.search(c.text)
+        and not _NON_TRANSITORY.search(c.text)
+    ]
+    if bad:
+        return [CheckItem(
+            status="verify",
+            message=(
+                f"Claim(s) {', '.join(str(i) for i in bad)} recite a computer-"
+                f"readable medium without the 'non-transitory' qualifier — "
+                f"confirm coverage of transitory signals is not unintended "
+                f"(Art. 52(2)(c) EPC; Guidelines G-II § 3.6)."
+            ),
+            message_key="check.epc.claims.crmNonTransitory.verify",
+            details_params={"claims": ", ".join(str(i) for i in bad)},
+            details=", ".join(str(i) for i in bad),
+            reference="EPO Guidelines G-II § 3.6; Art. 52(2)(c) EPC",
+            diagnostics=_dx(
+                flagged_count=len(bad),
+                flagged_claim_id=bad[0],
+            ),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="No computer-readable medium claims missing 'non-transitory'.",
+        message_key="check.epc.claims.crmNonTransitory.pass",
+        reference="EPO Guidelines G-II § 3.6",
+    )]
+
+
+def check_omnibus_claims_epc(claims: list[Claim]) -> list[CheckItem]:
+    """Flag omnibus claims (reference description/drawings instead of features).
+
+    Art. 84 EPC + Guidelines F-IV § 4.17 — claims must define the matter
+    for which protection is sought; references such as 'substantially as
+    described' or 'as shown in the drawings' fail the clarity requirement.
+    """
+    bad = []
+    for claim in claims:
+        word_count = len(claim.text.split())
+        if word_count < 50 and _OMNIBUS_LANG.search(claim.text):
+            bad.append(claim.id)
+    if bad:
+        return [CheckItem(
+            status="amend",
+            message=(
+                f"Claim(s) {', '.join(str(i) for i in bad)} appear to be "
+                f"omnibus — they reference the description or drawings "
+                f"instead of reciting features. Art. 84 EPC clarity objection "
+                f"is likely (Guidelines F-IV § 4.17)."
+            ),
+            message_key="check.epc.claims.omnibus.amend",
+            details_params={"claims": ", ".join(str(i) for i in bad)},
+            details=", ".join(str(i) for i in bad),
+            reference="EPO Guidelines F-IV § 4.17; Art. 84 EPC",
+            diagnostics=_dx(
+                flagged_count=len(bad),
+                flagged_claim_id=bad[0],
+            ),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="No omnibus claims detected.",
+        message_key="check.epc.claims.omnibus.pass",
+        reference="EPO Guidelines F-IV § 4.17",
+    )]
+
+
 def check_excess_claims_count_epc(claims: list[Claim]) -> list[CheckItem]:
     """Flag claims that exceed Rule 45 EPC fee-free threshold.
 
@@ -944,6 +1066,9 @@ def run_g5_claims_cross_jurisdiction_checks(claims: list[Claim]) -> list[CheckIt
     results.extend(check_claims_spec_reference_epc(claims))
     results.extend(check_multi_dep_on_multi_dep_epc(claims))
     results.extend(check_markush_format_epc(claims))
+    results.extend(check_means_plus_function_epc(claims))
+    results.extend(check_crm_non_transitory_epc(claims))
+    results.extend(check_omnibus_claims_epc(claims))
     results.extend(check_independent_claim_count_epc(claims))
     results.extend(check_two_part_form_epc(claims))
     results.extend(check_excess_claims_count_epc(claims))

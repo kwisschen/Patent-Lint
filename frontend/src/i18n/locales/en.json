@@ -719,7 +719,10 @@
       "titleMatch": "Abstract refers to the title's invention (Guidelines F-II § 2.3.5)",
       "claimReference": "Abstract does not reference specific claims (Guidelines F-II § 2.3.3)",
       "structure": "Abstract structure — single paragraph, no claim-style phraseology, no merit language",
-      "excessClaims": "Excess-claims fee threshold (Rule 45 EPC)"
+      "excessClaims": "Excess-claims fee threshold (Rule 45 EPC)",
+      "meansPlusFunction": "Means-plus-function language (Guidelines F-IV § 6.5)",
+      "crmNonTransitory": "Computer-readable medium — non-transitory qualifier (Art. 52(2)(c))",
+      "omnibus": "Omnibus claims (Guidelines F-IV § 4.17)"
     },
     "epcTableFootnote": "As of May 2026. EPC support is in beta and currently checks English-language specifications. PatentLint may continue to evolve."
   },
@@ -1175,6 +1178,18 @@
         "twoPartForm": {
           "verify": "No independent claim uses the two-part form (preamble + 'characterised in that'). Rule 43(1) EPC recommends this form where appropriate; verify whether the closest prior art warrants it.",
           "pass": "No two-part-form issues detected (Rule 43(1) EPC)."
+        },
+        "meansPlusFunction": {
+          "verify": "Claim(s) {{claims}} use functional 'means for / step for' language — confirm Art. 84 EPC support and that the skilled person can identify the means without undue burden (Guidelines F-IV § 6.5).",
+          "pass": "No functional 'means-plus-function' claim language detected."
+        },
+        "crmNonTransitory": {
+          "verify": "Claim(s) {{claims}} recite a computer-readable medium without the 'non-transitory' qualifier — confirm coverage of transitory signals is not unintended (Art. 52(2)(c) EPC; Guidelines G-II § 3.6).",
+          "pass": "No computer-readable medium claims missing the 'non-transitory' qualifier."
+        },
+        "omnibus": {
+          "amend": "Claim(s) {{claims}} appear to be omnibus — they reference the description or drawings instead of reciting features. Art. 84 EPC clarity objection is likely (Guidelines F-IV § 4.17).",
+          "pass": "No omnibus claims detected."
         }
       },
       "abstract": {

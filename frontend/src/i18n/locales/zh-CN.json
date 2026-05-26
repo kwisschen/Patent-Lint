@@ -719,7 +719,10 @@
       "titleMatch": "摘要与发明名称所指之发明相符（审查指南 F-II § 2.3.5）",
       "claimReference": "摘要不引用特定权利要求（审查指南 F-II § 2.3.3）",
       "structure": "摘要结构：单段落，避免权利要求风格用语，避免功利性语言",
-      "excessClaims": "超项费门槛（Rule 45 EPC）"
+      "excessClaims": "超项费门槛（Rule 45 EPC）",
+      "meansPlusFunction": "功能性特征描述（审查指南 F-IV § 6.5）",
+      "crmNonTransitory": "计算机可读介质：“非暂态”限定（第52(2)(c)条）",
+      "omnibus": "概括式权利要求（审查指南 F-IV § 4.17）"
     },
     "epcTableFootnote": "截至 2026 年 5 月。EPC 检查目前为 Beta 阶段，仅支持英文撰写的欧洲专利说明书；PatentLint 将持续演进。"
   },
@@ -1175,6 +1178,18 @@
         "twoPartForm": {
           "verify": "无独立权利要求采用两段式撰写（前序 +「characterised in that」）。Rule 43(1) EPC 视情形建议采用两段式；请依最近现有技术判断是否适用。",
           "pass": "未检测到两段式撰写相关问题（Rule 43(1) EPC）。"
+        },
+        "meansPlusFunction": {
+          "verify": "权利要求 {{claims}} 使用功能性特征描述（'means for / step for'）；请确认该特征已获说明书支持，且本领域技术人员无需付出不合理的负担即可实施（EPC 第84条；审查指南 F-IV § 6.5）。",
+          "pass": "未发现含有功能性特征描述（'means-plus-function'）的权利要求。"
+        },
+        "crmNonTransitory": {
+          "verify": "权利要求 {{claims}} 涉及计算机可读介质但未限定为“非暂态”；请确认暂时性信号的保护范围非属本意（EPC 第52(2)(c)条；审查指南 G-II § 3.6）。",
+          "pass": "未发现缺少“非暂态”限定的计算机可读介质权利要求。"
+        },
+        "omnibus": {
+          "amend": "权利要求 {{claims}} 疑似为概括式（omnibus）权利要求：未记载具体技术特征，仅参引说明书或附图；可能违反 EPC 第84条清楚性要求（审查指南 F-IV § 4.17）。",
+          "pass": "未发现概括式权利要求。"
         }
       },
       "abstract": {
