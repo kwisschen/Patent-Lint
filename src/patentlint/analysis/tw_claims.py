@@ -384,7 +384,7 @@ _BARE_NUMERAL = re.compile(
     r"\s?\d{2,4}"                    # 2-4 digit number
     r"(?!\))"                        # not followed by )
     r"(?!\d)"                        # must match full number, no partial
-    r"(?!\s*[°℃%a-zA-Z])"           # not followed by Latin unit/measurement
+    r"(?!\s*[°℃%μµa-zA-Z])"        # R-refnum-2 (#100): also μ/µ (Greek/micro)
     r"(?!\s*(?:" + _CJK_UNIT_TOKENS + r"))"  # not followed by CJK unit token
 )
 
