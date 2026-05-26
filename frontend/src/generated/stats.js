@@ -7,7 +7,7 @@
 // CHECKS_DISPLAY: CHECKS.md row count floored to nearest 5 (for the "+ checks" card).
 // RAW values are kept for reference / telemetry / tests.
 
-export const TESTS_RAW = 2653
+export const TESTS_RAW = 2665
 export const TESTS_DISPLAY = 2600
 export const CHECKS_RAW = 151
 export const CHECKS_DISPLAY = 150

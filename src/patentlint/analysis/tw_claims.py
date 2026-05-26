@@ -1574,6 +1574,191 @@ def check_connection_relationships_tw(doc: TwPatentDocument) -> list[CheckItem]:
     return check_connection_relationships(doc.claims, _TW_CONNECTION_CONFIG)
 
 
+# ── Check 27/28/29 — TW special-format claim checks ──────────────────────
+#
+# Traditional-Chinese parallel of the US/CN special-format trio (Markush,
+# Omnibus, CRM). Doctrinal anchors:
+#   - Markush:  TIPO 專利審查基準 第二篇第十章 (closed group requirement
+#               mirrors CNIPA 审查指南 第二部分第十章 §9.3).
+#   - Omnibus:  專利法 §26 第3項 (clarity) + 專利審查基準 §3.5 — claims
+#               must recite features, not reference the spec or drawings.
+#   - CRM:      專利法 §21 (eligible subject matter) — claims to a 電腦
+#               可讀媒體 without 非暫態 / 非暫時性 risk covering transitory
+#               signals which fall outside eligible subject matter.
+
+# Open-transition Markush trigger — mirror of `_MARKUSH_OPEN_CN` with
+# Traditional-Chinese characters. The closed form uses 組成 / 所組成.
+_MARKUSH_OPEN_TW = re.compile(
+    r"選自由[^，。；]{0,80}?(包括|具有|含有)"
+)
+_MARKUSH_CLOSED_TW = re.compile(r"選自由[^，。；]{0,80}?組成")
+
+
+def detect_markush_open_transition_tw(doc: TwPatentDocument) -> list[tuple[int, str]]:
+    """Return (claim_id, open_transition) pairs for TW Markush claims
+    using 包括 / 具有 / 含有 instead of the closed 組成."""
+    out: list[tuple[int, str]] = []
+    for claim in doc.claims:
+        text = claim.text or ""
+        m = _MARKUSH_OPEN_TW.search(text)
+        if m and not _MARKUSH_CLOSED_TW.search(text):
+            out.append((claim.id, m.group(1)))
+    return out
+
+
+def check_markush_open_transition_tw(doc: TwPatentDocument) -> list[CheckItem]:
+    """Emit CheckItem for TW Markush claims using open transition (FIX).
+
+    Improper Markush is a substantive issue per 專利審查基準 第二篇第十章
+    (Markush must use the closed 選自由...組成的群組 form). Open
+    transitions (包括 / 具有 / 含有) signal an open-ended group, which
+    a TIPO examiner is likely to flag on the merits.
+    """
+    pairs = detect_markush_open_transition_tw(doc)
+    if pairs:
+        ids = [cid for cid, _ in pairs]
+        transitions = sorted({t for _, t in pairs})
+        claims_str = ", ".join(str(i) for i in ids)
+        return [CheckItem(
+            status="amend",
+            message=f"Markush claim(s) use open-ended transition instead of 組成: {claims_str}.",
+            message_key="check.tw.claims.markushOpenTransition.amend",
+            details=claims_str,
+            details_key="details.tw.markushOpenTransition",
+            details_params={"claims": ids, "transitions": transitions},
+            reference="專利審查基準 第二篇第十章",
+            diagnostics=_dx(
+                flagged_count=len(ids),
+                total_claims=len(doc.claims),
+                flagged_claim_id=ids[0] if ids else None,
+                transitions=transitions,
+                findings=[
+                    {
+                        "claim_id": cid,
+                        "open_transition": tw_word,
+                        "preamble": (next((c.text for c in doc.claims if c.id == cid), "") or "")[:120],
+                    }
+                    for cid, tw_word in pairs[:5]
+                ],
+            ),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="Markush groups use the closed transition 組成.",
+        message_key="check.tw.claims.markushOpenTransition.pass",
+        reference="專利審查基準 第二篇第十章",
+    )]
+
+
+# Omnibus trigger — mirror of `_OMNIBUS_LANG_CN`, Traditional script.
+_OMNIBUS_LANG_TW = re.compile(
+    r"如說明書(?:及附圖)?(?:所述|所描述|所記載)"
+    r"|如說明書和附圖(?:所述|所描述|所示|所描述的)"
+    r"|如(?:附圖|圖)\s*\d*(?:所示|所述|所描述)"
+    r"|基本上如說明書(?:所述|所描述)"
+    r"|如(?:前述|前文)(?:所述|所描述)說明書"
+)
+
+
+def detect_omnibus_claims_tw(doc: TwPatentDocument) -> list[int]:
+    """Return IDs of TW claims referencing 說明書/附圖 instead of features.
+
+    Length threshold (< 40 CJK chars) guards against false positives on
+    long detailed claims that incidentally mention 說明書.
+    """
+    out: list[int] = []
+    for claim in doc.claims:
+        text = claim.text or ""
+        cjk_count = sum(1 for ch in text if "一" <= ch <= "鿿")
+        if cjk_count < 40 and _OMNIBUS_LANG_TW.search(text):
+            out.append(claim.id)
+    return out
+
+
+def check_omnibus_claims_tw(doc: TwPatentDocument) -> list[CheckItem]:
+    """Emit CheckItem for TW omnibus claims (FIX) — 專利法 §26 第3項."""
+    ids = detect_omnibus_claims_tw(doc)
+    if ids:
+        claims_str = ", ".join(str(i) for i in ids)
+        return [CheckItem(
+            status="amend",
+            message=f"Omnibus claim(s) reference 說明書/附圖 instead of reciting features: {claims_str}.",
+            message_key="check.tw.claims.omnibus.amend",
+            details=claims_str,
+            details_key="details.tw.omnibusClaims",
+            details_params={"claims": ids},
+            reference="專利法 §26 第3項; 專利審查基準 第二篇",
+            diagnostics=_dx(
+                flagged_count=len(ids),
+                total_claims=len(doc.claims),
+                flagged_claim_id=ids[0] if ids else None,
+                findings=[
+                    {"claim_id": cid, "preamble": (next((c.text for c in doc.claims if c.id == cid), "") or "")[:80]}
+                    for cid in ids[:5]
+                ],
+            ),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="No omnibus claims found.",
+        message_key="check.tw.claims.omnibus.pass",
+        reference="專利法 §26 第3項",
+    )]
+
+
+# CRM trigger — TW drafters commonly write 電腦可讀媒體 / 機器可讀媒體 /
+# 儲存媒體 / 電腦可讀儲存媒體. The closed qualifier 非暫態 / 非暫時性
+# constrains the claim to non-transitory media, avoiding the §21 eligibility
+# concern that a bare 電腦可讀媒體 could read on transitory signals.
+_CRM_MEDIUM_TW = re.compile(
+    r"(?:電腦|機器)\s*可讀(?:儲存)?媒體"
+    r"|儲存媒體"
+    r"|記錄媒體"
+)
+_NON_TRANSITORY_TW = re.compile(r"非暫態|非暫時性")
+
+
+def check_crm_non_transitory_tw(doc: TwPatentDocument) -> list[CheckItem]:
+    """Flag TW computer-readable medium claims missing 非暫態/非暫時性.
+
+    專利法 §21 limits patentable subject matter; a claim to a 電腦可讀
+    媒體 without the 非暫態 qualifier may cover transitory signals
+    (carrier waves), which fall outside §21 eligible subject matter.
+    """
+    bad = [
+        c.id for c in doc.claims
+        if c.independent
+        and _CRM_MEDIUM_TW.search(c.text or "")
+        and not _NON_TRANSITORY_TW.search(c.text or "")
+    ]
+    if bad:
+        claims_str = ", ".join(str(i) for i in bad)
+        return [CheckItem(
+            status="amend",
+            message=f"Computer-readable medium claim(s) missing 非暫態/非暫時性: {claims_str}.",
+            message_key="check.tw.claims.crmNonTransitory.amend",
+            details=claims_str,
+            details_key="details.tw.crmNonTransitory",
+            details_params={"claims": bad},
+            reference="專利法 §21",
+            diagnostics=_dx(
+                flagged_count=len(bad),
+                total_claims=len(doc.claims),
+                flagged_claim_id=bad[0] if bad else None,
+                findings=[
+                    {"claim_id": cid, "preamble": (next((c.text for c in doc.claims if c.id == cid), "") or "")[:80]}
+                    for cid in bad[:5]
+                ],
+            ),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="No CRM claims missing 非暫態.",
+        message_key="check.tw.claims.crmNonTransitory.pass",
+        reference="專利法 §21",
+    )]
+
+
 # ── Check 27 ─────────────────────────────────────────────────────────────
 
 # Boundary character class for the noun-phrase regex captures.

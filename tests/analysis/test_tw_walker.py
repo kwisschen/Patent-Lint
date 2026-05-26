@@ -2008,3 +2008,85 @@ class TestBareNounHelper:
         ro = txt.find("所述樞軸")
         assert not has_bare_noun_introduction_tw(
             txt, [_claim(1, txt)], "樞軸(2221)", ro)
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# TW special-format trio — Markush, Omnibus, CRM (gap-fill from audit)
+# ─────────────────────────────────────────────────────────────────────────
+
+
+class TestTwMarkushOpenTransition:
+    def _doc(self, claims):
+        return _make_doc(claims)
+
+    def test_open_includes_amend(self):
+        from patentlint.analysis.tw_claims import check_markush_open_transition_tw
+        doc = self._doc([_claim(1, "1. 一種組合物，其包含選自由甲醇、乙醇、丙醇包括其異構體之溶劑。")])
+        r = check_markush_open_transition_tw(doc)
+        assert r[0].status == "amend"
+
+    def test_open_has_amend(self):
+        from patentlint.analysis.tw_claims import check_markush_open_transition_tw
+        doc = self._doc([_claim(1, "1. 一種材料，其包含選自由鐵、鎳、鈷具有合金特性之元素。")])
+        assert check_markush_open_transition_tw(doc)[0].status == "amend"
+
+    def test_closed_組成_pass(self):
+        from patentlint.analysis.tw_claims import check_markush_open_transition_tw
+        doc = self._doc([_claim(1, "1. 一種組合物，其包含選自由甲醇、乙醇、丙醇組成的群組之溶劑。")])
+        assert check_markush_open_transition_tw(doc)[0].status == "pass"
+
+    def test_no_markush_pass(self):
+        from patentlint.analysis.tw_claims import check_markush_open_transition_tw
+        doc = self._doc([_claim(1, "1. 一種裝置，包括一基板。")])
+        assert check_markush_open_transition_tw(doc)[0].status == "pass"
+
+
+class TestTwOmnibusClaims:
+    def _doc(self, claims):
+        return _make_doc(claims)
+
+    def test_如說明書所述_amend(self):
+        from patentlint.analysis.tw_claims import check_omnibus_claims_tw
+        doc = self._doc([_claim(1, "1. 一種裝置，如說明書所述。")])
+        assert check_omnibus_claims_tw(doc)[0].status == "amend"
+
+    def test_如附圖所示_amend(self):
+        from patentlint.analysis.tw_claims import check_omnibus_claims_tw
+        doc = self._doc([_claim(1, "1. 一種方法，如附圖所示。")])
+        assert check_omnibus_claims_tw(doc)[0].status == "amend"
+
+    def test_substantive_claim_pass(self):
+        from patentlint.analysis.tw_claims import check_omnibus_claims_tw
+        doc = self._doc([_claim(1, "1. 一種裝置，包括一基板、一處理器及一記憶體，配置以接收訊號並執行運算。")])
+        assert check_omnibus_claims_tw(doc)[0].status == "pass"
+
+
+class TestTwCrmNonTransitory:
+    def _doc(self, claims):
+        return _make_doc(claims)
+
+    def test_電腦可讀媒體_missing_amend(self):
+        from patentlint.analysis.tw_claims import check_crm_non_transitory_tw
+        doc = self._doc([_claim(1, "1. 一種電腦可讀媒體，其儲存有指令以執行方法。")])
+        assert check_crm_non_transitory_tw(doc)[0].status == "amend"
+
+    def test_儲存媒體_missing_amend(self):
+        from patentlint.analysis.tw_claims import check_crm_non_transitory_tw
+        doc = self._doc([_claim(1, "1. 一種儲存媒體，其儲存有資料。")])
+        assert check_crm_non_transitory_tw(doc)[0].status == "amend"
+
+    def test_with_非暫態_pass(self):
+        from patentlint.analysis.tw_claims import check_crm_non_transitory_tw
+        doc = self._doc([_claim(1, "1. 一種非暫態電腦可讀媒體，其儲存有指令。")])
+        assert check_crm_non_transitory_tw(doc)[0].status == "pass"
+
+    def test_with_非暫時性_pass(self):
+        from patentlint.analysis.tw_claims import check_crm_non_transitory_tw
+        doc = self._doc([_claim(1, "1. 一種非暫時性電腦可讀儲存媒體，其儲存指令。")])
+        assert check_crm_non_transitory_tw(doc)[0].status == "pass"
+
+    def test_machine_readable_媒體_pass(self):
+        """機器可讀媒體 also a recognised CRM target."""
+        from patentlint.analysis.tw_claims import check_crm_non_transitory_tw
+        doc = self._doc([_claim(1, "1. 一種機器可讀媒體，其儲存指令。")])
+        assert check_crm_non_transitory_tw(doc)[0].status == "amend"

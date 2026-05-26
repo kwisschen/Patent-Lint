@@ -113,8 +113,9 @@ class TestTwPipelineRouting:
         # + numeralConsistency D1 + symbolTableCoverage D3 = 15
         assert len(report.specification_checks) == 15
         # 18 claims checks + independentPreamble (TIPO #20 indep-half) +
-        # excessClaims (fee threshold) = 20
-        assert len(report.claims_checks) == 20
+        # excessClaims (fee threshold) = 20; +3 special-format checks
+        # (markushOpenTransition + omnibus + crmNonTransitory) = 23
+        assert len(report.claims_checks) == 23
         # 4 abstract checks wired in Phase 7C-4
         assert len(report.abstract_checks) == 4
         # 2 drawings checks (figures sequential + figure count)
