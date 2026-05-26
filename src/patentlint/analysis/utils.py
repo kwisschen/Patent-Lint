@@ -463,7 +463,14 @@ def compute_confidence_score(
     return max(0, min(100, score))
 
 # Hyphen-aware word token: matches "multi-stage", "non-transitory", "widget"
-_WORD = r"\w+(?:-\w+)*"
+# R5 (2026-05-26): extend NP joiners to U+2010 HYPHEN and U+2011 NON-BREAKING
+# HYPHEN in addition to ASCII U+002D. Drafters who write `large‑size silicon
+# carbide particle` with U+2011 (issue #97) or `flow‑channel layer` with U+2011
+# (issue #103 / spec extractor) previously had NP captures truncated at the
+# hyphen, emitting bare `large` / `channel layer` (1-3 token fragments) instead
+# of the full compound. Same `_WORD` is shared by US claims walker (this file)
+# and the spec numeralConsistency name extractor — one change covers both.
+_WORD = r"\w+(?:[-\u2010\u2011]\w+)*"
 
 # Captures noun phrases (up to 6 words) after "the"/"said" or "a"/"an".
 _STOP_WORDS = (
@@ -491,6 +498,11 @@ _STOP_WORDS = (
     # #89 (`presents`), #92 (`control unit uses`). The walker's own
     # did-you-mean already names the clean head noun in every case.
     r"presents|constitutes|flows|uses|"
+    # R5 (2026-05-26): `accounts` as 3sg finite verb only — lookahead on
+    # `\s+for` discriminates the `<noun> accounts for X` verb-object pattern
+    # (#98 alumina, #99 silica) from the bare-noun usage (`financial accounts`,
+    # `accounts receivable`) which active US labels confirm exists in corpus.
+    r"accounts(?=\s+for)|"
     r"adapted|arranged|coupled|connected|mounted|disposed|storing|determining|corresponding|"
     r"extends|provides|receives|generates|produces|performs|"
     r"executes|transmits|operates|determines|defines|forms|"
