@@ -1126,6 +1126,66 @@ def check_markush_open_transition(cn_doc: CnPatentDocument) -> list[CheckItem]:
     )]
 
 
+# ── Check 24 (CRM non-transitory) ────────────────────────────────────────
+#
+# 专利法 §25 excludes mental activities / abstract methods; 审查指南
+# 第二部分第九章 governs computer-implemented inventions. A claim to a
+# 计算机可读介质 / 计算机可读存储介质 without the 非暂态 / 非暂时性
+# qualifier may be read to cover transitory signals (carrier waves),
+# which fall outside patentable subject matter. CN drafters commonly
+# write 计算机可读介质 (介质 is CNIPA standard; 媒体 is rarer but
+# accepted) — both forms covered. Independent claims only — dep
+# claims inherit medium type from the parent.
+
+_CRM_MEDIUM_CN = re.compile(
+    r"(?:计算机|机器)\s*可读(?:存储)?(?:介质|媒体)"
+    r"|存储介质"
+    r"|记录介质"
+)
+_NON_TRANSITORY_CN = re.compile(r"非暂态|非暂时性|非临时性")
+
+
+def check_crm_non_transitory_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
+    """Flag CN computer-readable medium claims missing 非暂态/非暂时性.
+
+    专利法 §25 (excluded subject matter) + 审查指南 第二部分第九章
+    (computer-implemented inventions). A claim to a 计算机可读介质
+    without 非暂态 may cover transitory signals which fall outside
+    patentable subject matter.
+    """
+    bad = [
+        c.id for c in cn_doc.claims
+        if c.independent
+        and _CRM_MEDIUM_CN.search(c.text or "")
+        and not _NON_TRANSITORY_CN.search(c.text or "")
+    ]
+    if bad:
+        claims_str = ", ".join(str(i) for i in bad)
+        return [CheckItem(
+            status="amend",
+            message=f"Computer-readable medium claim(s) missing 非暂态/非暂时性: {claims_str}.",
+            message_key="check.cn.claims.crmNonTransitory.amend",
+            details=claims_str,
+            details_key="details.cn.crmNonTransitory",
+            details_params={"claims": bad},
+            reference="专利法 §25; 审查指南 第二部分第九章",
+            diagnostics=_dx(
+                flagged_count=len(bad),
+                total_claims=len(cn_doc.claims),
+                flagged_claim_id=bad[0] if bad else None,
+                findings=[
+                    {"claim_id": cid, "preamble": (next((c.text for c in cn_doc.claims if c.id == cid), "") or "")[:80]}
+                    for cid in bad[:5]
+                ],
+            ),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="No CRM claims missing 非暂态.",
+        message_key="check.cn.claims.crmNonTransitory.pass",
+        reference="专利法 §25",
+    )]
+
 
 # ─────────────────────────────────────────────────────────────────────────
 # Phase 8c Stage 2 — CN antecedent-basis BFS walker

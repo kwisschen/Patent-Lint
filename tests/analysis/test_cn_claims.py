@@ -1015,3 +1015,42 @@ class TestBareNounHelperCn:
         txt = "包括轴承，所述轴承转动。"
         ro = txt.find("所述轴承")
         assert not has_bare_noun_introduction_cn(txt, [_claim(1, txt)], "轴承", ro)
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# CN CRM non-transitory check (gap-fill: 专利法 §25 + 审查指南)
+# ─────────────────────────────────────────────────────────────────────────
+
+
+class TestCnCrmNonTransitory:
+    def test_计算机可读介质_missing_amend(self):
+        from patentlint.analysis.cn_claims import check_crm_non_transitory_cn
+        doc = _cn_doc([_claim(1, "1. 一种计算机可读介质，其存储有指令用于执行方法。")])
+        assert check_crm_non_transitory_cn(doc)[0].status == "amend"
+
+    def test_存储介质_missing_amend(self):
+        from patentlint.analysis.cn_claims import check_crm_non_transitory_cn
+        doc = _cn_doc([_claim(1, "1. 一种存储介质，存储有数据。")])
+        assert check_crm_non_transitory_cn(doc)[0].status == "amend"
+
+    def test_with_非暂态_pass(self):
+        from patentlint.analysis.cn_claims import check_crm_non_transitory_cn
+        doc = _cn_doc([_claim(1, "1. 一种非暂态计算机可读介质，其存储有指令。")])
+        assert check_crm_non_transitory_cn(doc)[0].status == "pass"
+
+    def test_with_非暂时性_pass(self):
+        from patentlint.analysis.cn_claims import check_crm_non_transitory_cn
+        doc = _cn_doc([_claim(1, "1. 一种非暂时性计算机可读存储介质，存储指令。")])
+        assert check_crm_non_transitory_cn(doc)[0].status == "pass"
+
+    def test_machine_readable_media_amend(self):
+        """机器可读介质 also a recognised CRM target."""
+        from patentlint.analysis.cn_claims import check_crm_non_transitory_cn
+        doc = _cn_doc([_claim(1, "1. 一种机器可读介质，存储指令。")])
+        assert check_crm_non_transitory_cn(doc)[0].status == "amend"
+
+    def test_media_alternative_媒体_amend(self):
+        """计算机可读媒体 (less common but accepted) — recognised."""
+        from patentlint.analysis.cn_claims import check_crm_non_transitory_cn
+        doc = _cn_doc([_claim(1, "1. 一种计算机可读媒体，存储指令。")])
+        assert check_crm_non_transitory_cn(doc)[0].status == "amend"

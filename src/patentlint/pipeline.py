@@ -355,11 +355,13 @@ def _run_cn_pipeline(
             )
         ]
 
-    # G6 — omnibus (§3.3) and Markush open transition (§9.3) emit after
-    # the spec-support tile per the canonical claims §112 order.
+    # G6 — omnibus (§3.3), Markush open transition (§9.3), and CRM non-
+    # transitory (§25 + 审查指南 第二部分第九章) emit after the spec-
+    # support tile per the canonical claims §112 order.
     claims_checks = list(claims_checks) + (
         cn_claims_analysis.check_omnibus_claims(cn_doc)
         + cn_claims_analysis.check_markush_open_transition(cn_doc)
+        + cn_claims_analysis.check_crm_non_transitory_cn(cn_doc)
     )
 
     # --- Abstract checks (21–23) ---
