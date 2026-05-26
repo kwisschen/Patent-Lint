@@ -999,6 +999,13 @@ _LIST_CONTEXT_PATTERN = re.compile(
     r"|comprising"
     r"|consisting(?:\s+essentially)?\s+of"
     r"|selected\s+from(?:\s+the\s+group(?:\s+consisting\s+of)?)?"
+    # R6 (2026-05-26, missed triage on #98/#99): Markush enumeration
+    # `(at\s+least\s+)?one\s+of A, B, and C` — claim 1 of the silicon-
+    # carbide composite case introduces `alumina`/`silica` via the closed
+    # Markush list `at least one of silicon carbide, alumina, and silica`.
+    # Without this trigger, the list items are not registered as intros
+    # and downstream `the alumina` / `the silica` references flag.
+    r"|(?:at\s+least\s+)?one\s+(?:or\s+more\s+)?of"
     r")\s*:?\s*"
     # R48 (2026-05-04): bumped trailing `\s+` to `\s*` to accept the
     # PDF-collapse `comprising:(a) <gerund-step>` shape where the

@@ -472,6 +472,83 @@ class TestAntecedentBasis:
         ]
         assert check_antecedent_basis(claims) == []
 
+    def test_markush_at_least_one_of_intros_r6(self):
+        """R6 (missed-triage on #98/#99): a Markush enumeration
+        `at least one of A, B, and C` introduces each member as an
+        antecedent under MPEP § 2173.05(e). Mirrors the silicon-carbide
+        composite case where claim 1 says `at least one of silicon carbide,
+        alumina, and silica` — `the alumina` and `the silica` in dep
+        claims resolve cleanly."""
+        claims = [
+            Claim(
+                id=1,
+                text=(
+                    "A composite comprising a metallic copper phase and a "
+                    "ceramic phase, wherein the ceramic phase is composed "
+                    "of at least one of silicon carbide, alumina, and silica."
+                ),
+                independent=True, method_claim=False,
+            ),
+            Claim(
+                id=5,
+                text=(
+                    "The composite of claim 1, wherein the alumina accounts "
+                    "for at least 5% of total mass."
+                ),
+                independent=False, dependencies=[1], method_claim=False,
+            ),
+            Claim(
+                id=7,
+                text=(
+                    "The composite of claim 1, wherein the silica accounts "
+                    "for 1% to 20% of total mass."
+                ),
+                independent=False, dependencies=[1], method_claim=False,
+            ),
+        ]
+        assert check_antecedent_basis(claims) == []
+
+    def test_markush_one_of_no_at_least_r6(self):
+        """R6 — bare `one of A, B, and C` also triggers list-context
+        extraction. Common in shorter Markush expressions."""
+        claims = [
+            Claim(
+                id=1,
+                text=(
+                    "A signal processor selecting one of bone, tissue, "
+                    "and nerves for ultrasound emission."
+                ),
+                independent=True, method_claim=False,
+            ),
+            Claim(
+                id=2,
+                text="The signal processor of claim 1, wherein the bone is targeted.",
+                independent=False, dependencies=[1], method_claim=False,
+            ),
+        ]
+        terms = [i["term"] for i in check_antecedent_basis(claims)]
+        assert "bone" not in terms, terms
+
+    def test_one_or_more_of_intros_r6(self):
+        """R6 — `one or more of A, B, and C` variant."""
+        claims = [
+            Claim(
+                id=1,
+                text=(
+                    "A method comprising selecting one or more of methanol, "
+                    "ethanol, and propanol as a solvent."
+                ),
+                independent=True, method_claim=False,
+            ),
+            Claim(
+                id=2,
+                text="The method of claim 1, wherein the ethanol is anhydrous.",
+                independent=False, dependencies=[1], method_claim=False,
+            ),
+        ]
+        terms = [i["term"] for i in check_antecedent_basis(claims)]
+        assert "ethanol" not in terms, terms
+
 
 class TestTransitionsRegexWherein:
     """`_TRANSITIONS` recognizes `wherein` (no colon) as a preamble/body boundary."""
