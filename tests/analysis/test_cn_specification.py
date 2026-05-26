@@ -531,3 +531,78 @@ class TestSpecClaimReference:
         )
         results = check_spec_claim_reference(doc)
         assert results[0].status == "amend"
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# R-refnum-2 — measurement-unit exclusion (issues #100/#101/#102)
+# ─────────────────────────────────────────────────────────────────────────
+
+
+class TestRefnumMeasurementExclusion:
+    """The CJK refnum extractor must reject `\\d+\\s*<unit>` measurement
+    patterns. Drafters write `平均粒徑可在10 μm至100 μm的範圍` (per #101
+    TW report) — the digits are measurement values, not component
+    reference numerals. Pre-fix the extractor captured `10` as a refnum
+    paired with the clause-fragment `平均粒徑可在` as its "name."
+    """
+
+    def test_micro_meter_with_space_not_captured(self):
+        """Greek small letter mu (U+03BC) — `10 μm` with whitespace."""
+        from patentlint.analysis.cn_specification import (
+            _cn_extract_numeral_name_pairs,
+        )
+        text = "平均粒徑可在10 μm至100 μm的範圍。"
+        assert _cn_extract_numeral_name_pairs(text) == []
+
+    def test_micro_meter_no_space_not_captured(self):
+        """`10μm` (no whitespace) — same exclusion via \\s* lookahead."""
+        from patentlint.analysis.cn_specification import (
+            _cn_extract_numeral_name_pairs,
+        )
+        text = "粒徑為10μm的顆粒。"
+        assert _cn_extract_numeral_name_pairs(text) == []
+
+    def test_micro_sign_codepoint_also_excluded(self):
+        """Micro sign U+00B5 (`µ`) — visually identical to U+03BC,
+        sometimes used by drafters from copy/paste sources."""
+        from patentlint.analysis.cn_specification import (
+            _cn_extract_numeral_name_pairs,
+        )
+        text = "粒徑為10µm的顆粒。"  # U+00B5 micro sign
+        assert _cn_extract_numeral_name_pairs(text) == []
+
+    def test_other_si_units_with_letter_excluded(self):
+        """`10 mm`, `100 nm`, `5 wt%` — pre-existing letter exclusion
+        works once \\s* lookahead is added."""
+        from patentlint.analysis.cn_specification import (
+            _cn_extract_numeral_name_pairs,
+        )
+        for text in (
+            "粒徑為10 mm的顆粒。",
+            "厚度為100 nm的薄膜。",
+            "含量為5 wt%。",
+        ):
+            assert _cn_extract_numeral_name_pairs(text) == [], text
+
+    def test_real_refnum_still_captured(self):
+        """Negative control — real component refnums (`齒輪10`) must
+        still be captured. The fix narrowly targets measurement contexts."""
+        from patentlint.analysis.cn_specification import (
+            _cn_extract_numeral_name_pairs,
+        )
+        text = "所述齒輪10與所述軸件20連接。"
+        pairs = _cn_extract_numeral_name_pairs(text)
+        nums = [n for n, _ in pairs]
+        assert "10" in nums and "20" in nums, pairs
+
+    def test_real_refnum_followed_by_measurement_unchanged(self):
+        """`齒輪10之直徑為10 μm` — first `10` (refnum) captured, second
+        `10` (measurement) excluded."""
+        from patentlint.analysis.cn_specification import (
+            _cn_extract_numeral_name_pairs,
+        )
+        text = "所述齒輪10之直徑為10 μm。"
+        pairs = _cn_extract_numeral_name_pairs(text)
+        # Exactly one capture: the refnum 10 paired with 齒輪
+        assert len(pairs) == 1, pairs
+        assert pairs[0] == ("10", "齒輪"), pairs
