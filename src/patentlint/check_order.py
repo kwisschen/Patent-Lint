@@ -391,6 +391,8 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.cn.claims.omnibus.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
     "check.cn.claims.markushOpenTransition.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
     "check.cn.claims.markushOpenTransition.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
+    "check.cn.claims.crmNonTransitory.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
+    "check.cn.claims.crmNonTransitory.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
 
     # TW special-format trio (markush + omnibus + CRM) — mirror of CN
     # placement in CLAIMS_SECTION_112 at idx 50. Doctrinal anchors:

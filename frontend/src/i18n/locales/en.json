@@ -560,7 +560,8 @@
       "priorArt": "Prior art figure references (审查指南 §4.2)",
       "figuresSequential": "Figures numbered sequentially",
       "numeralConsistency": "Reference numeral consistency (实施细则 §21)",
-      "excessClaims": "Excess-claims fee threshold (实施细则 §93 + CNIPA 收费办法)"
+      "excessClaims": "Excess-claims fee threshold (实施细则 §93 + CNIPA 收费办法)",
+      "crmNonTransitory": "Computer-readable medium 非暂态 qualifier (专利法 §25; 审查指南 第二部分第九章)"
     },
     "twTitle": "PatentLint vs. TIPO 偵錯系統",
     "twSubtitle": "TIPO 偵錯系統 supports utility-model filings only. PatentLint covers both utility models and inventions.",
@@ -819,7 +820,8 @@
       "independentPreamble": "审查指南 第二部分第二章 §3.1.1 uses 一种X as the canonical form; 专利法实施细则 §24 requires the preamble to state the 主题名称 (subject-matter name) but does not literally mandate 一种. Consider rewriting to the 一种X form.",
       "numeralConsistency": "{{count}} reference numeral(s) used inconsistently. Examples: {{inline_summary}}",
       "markushOpenTransition": "Claim(s) {{claims}} use open-ended Markush transitions ({{transitions}}); switch to the closed form 「组成的」 per 审查指南 §9.3.",
-      "omnibusClaims": "Claim(s) {{claims}} are omnibus-style (reference description/drawings instead of features); rewrite per 审查指南 §3.3."
+      "omnibusClaims": "Claim(s) {{claims}} are omnibus-style (reference description/drawings instead of features); rewrite per 审查指南 §3.3.",
+      "crmNonTransitory": "Claim(s) {{claims}} recite a computer-readable medium without 非暂态. Add the 非暂态 / 非暂时性 qualifier to confine the claim to non-transitory media and avoid §25 subject-matter issues (审查指南 第二部分第九章)."
     },
     "tw": {
       "requiredSections": "A complete TIPO filing requires 摘要, 說明書 (技術領域, 先前技術, 發明內容/新型內容, 實施方式), and 申請專利範圍 per 專利法 §25 第1項. When drawings are present, 圖式簡單說明 and 符號說明 are also required per 專利法施行細則 §17. Missing: {{sections}}.",
@@ -1362,6 +1364,10 @@
         "excessClaims": {
           "verify": "Total claim count exceeds 10. CNIPA charges an additional per-claim fee for each claim above 10. Verify the current per-claim fee against the CNIPA fee schedule.",
           "pass": "No excess-claims fee triggers detected (CNIPA 实施细则 §93: no more than 10 total claims)."
+        },
+        "crmNonTransitory": {
+          "amend": "Claim(s) {{claims}} recite a 计算机可读介质 without 非暂态 / 非暂时性. 专利法 §25 — transitory signals fall outside patentable subject matter; add the qualifier to confine the claim to non-transitory media.",
+          "pass": "Computer-readable medium claims correctly include 非暂态 / 非暂时性."
         }
       },
       "abstract": {
