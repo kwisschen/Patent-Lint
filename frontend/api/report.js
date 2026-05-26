@@ -7,7 +7,7 @@
 // the Vercel Edge runtime (Web Standard Request/Response API).
 //
 // Why GitHub Issues (instead of a custom DB):
-//   - Maintainer (and Claude Code via gh CLI) reads reports as
+//   - Maintainer (and scheduled automation via gh CLI) reads reports as
 //     `gh issue list --label report` — no separate UI to build.
 //   - GitHub's issue UI handles search, labels, comments, mobile
 //     notifications, and reactions for triage.
