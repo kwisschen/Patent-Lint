@@ -810,6 +810,17 @@ def _run_tw_pipeline(
             )
         ]
 
+    # G6 special-format trio (markush + omnibus + CRM) — registered in
+    # CANONICAL_CHECK_ORDER at CLAIMS_SECTION_112 idx 50, so they emit
+    # AFTER antecedent (idx 20) and spec-support (idx 30) per the
+    # check-emission-order monotonicity invariant.
+    claims_checks = (
+        list(claims_checks)
+        + list(tw_claims_analysis.check_markush_open_transition_tw(tw_doc))
+        + list(tw_claims_analysis.check_omnibus_claims_tw(tw_doc))
+        + list(tw_claims_analysis.check_crm_non_transitory_tw(tw_doc))
+    )
+
     # --- Abstract checks (27–30) ---
     abstract_checks = (
         tw_abstract_analysis.check_abstract_char_count(tw_doc)

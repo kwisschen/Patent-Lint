@@ -625,7 +625,10 @@
       "independentPreamble": "Independent claim preamble (一種)",
       "numeralConsistency": "Reference symbol consistency (施行細則 §19)",
       "symbolTableCoverage": "All used symbols declared in 符號說明 (施行細則 §19)",
-      "excessClaims": "Excess-claims fee threshold (專利規費收取準則 §5)"
+      "excessClaims": "Excess-claims fee threshold (專利規費收取準則 §5)",
+      "markushOpenTransition": "Markush group transition (專利審查基準 第二篇第十章)",
+      "omnibus": "Omnibus claim (專利法 §26 第3項)",
+      "crmNonTransitory": "Computer-readable medium 非暫態 qualifier (專利法 §21)"
     },
     "stats": {
       "tests": "Automated Tests",
@@ -877,7 +880,10 @@
       "independentPreamble": "TIPO 偵錯系統 flags this as a convention error. 專利法施行細則 §18 + 專利審查基準 require the preamble to state the 標的名稱 (subject-matter name) but do not literally mandate 「一種」. Consider rewriting to the 一種X form if that matches the invention.",
       "indigenousTerms": "Terms: {{terms}}. Per 原住民族傳統智慧創作保護條例, verify the filing does not conflict with protected traditional creations.",
       "numeralConsistency": "{{count}} reference symbol(s) used inconsistently. Examples: {{inline_summary}}",
-      "symbolTableCoverage": "{{count}} element(s) covering {{refnum_count}} reference symbol(s) missing from 符號說明: {{inline_summary}}"
+      "symbolTableCoverage": "{{count}} element(s) covering {{refnum_count}} reference symbol(s) missing from 符號說明: {{inline_summary}}",
+      "markushOpenTransition": "Claim(s) {{claims}} use open-ended Markush transitions ({{transitions}}); switch to the closed form 選自由…組成的群組 per 專利審查基準 第二篇第十章.",
+      "omnibusClaims": "Claim(s) {{claims}} are omnibus-style (reference 說明書/附圖 instead of features). Recite the technical features expressly to satisfy 專利法 §26 第3項.",
+      "crmNonTransitory": "Claim(s) {{claims}} recite a computer-readable medium without 非暫態. Add the 非暫態 / 非暫時性 qualifier to confine the claim to non-transitory media and avoid §21 eligibility issues."
     },
     "titleProhibited": {
       "trademark": "Trademark symbol \"{{token}}\"",
@@ -1532,6 +1538,18 @@
         "excessClaims": {
           "verify": "Total claim count exceeds 10. TIPO charges an additional per-claim fee for each claim above 10. Verify the current per-claim fee against the TIPO fee schedule.",
           "pass": "No excess-claims fee triggers detected (TIPO 專利規費收取準則 §5: no more than 10 total claims)."
+        },
+        "markushOpenTransition": {
+          "amend": "Claim(s) {{claims}} use an open Markush transition ({{transitions}}) instead of the closed 組成 (專利審查基準 第二篇第十章). TIPO examiners treat open Markush as substantively improper.",
+          "pass": "Markush groups use the closed transition 組成."
+        },
+        "omnibus": {
+          "amend": "Claim(s) {{claims}} reference 說明書/附圖 instead of reciting features (omnibus). 專利法 §26 第3項 clarity objection likely.",
+          "pass": "No omnibus claims found."
+        },
+        "crmNonTransitory": {
+          "amend": "Claim(s) {{claims}} recite a 電腦可讀媒體 without the 非暫態 / 非暫時性 qualifier. 專利法 §21 — transitory signals fall outside eligible subject matter; add the qualifier to constrain the claim to non-transitory media.",
+          "pass": "Computer-readable medium claims correctly include 非暫態 / 非暫時性."
         }
       },
       "abstract": {

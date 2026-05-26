@@ -625,7 +625,10 @@
       "independentPreamble": "独立项须以「一種」开头",
       "numeralConsistency": "元件符号一致性（施行细则 §19）",
       "symbolTableCoverage": "说明书中所有使用的代表符号在 符号说明 中均有声明（施行细则 §19）",
-      "excessClaims": "超项费门槛（專利規費收取準則 §5）"
+      "excessClaims": "超项费门槛（專利規費收取準則 §5）",
+      "markushOpenTransition": "马库什连接词（專利審查基準 第二篇第十章）",
+      "omnibus": "概括式权利要求（專利法 §26 第3項）",
+      "crmNonTransitory": "电脑可读媒体「非暫態」限定（專利法 §21）"
     },
     "stats": {
       "tests": "自动化测试",
@@ -877,7 +880,10 @@
       "independentPreamble": "TIPO 偵錯系統将此列为惯例错误。專利法施行細則 §18 与專利審查基準要求前序部分载明标的名称，并未强制使用「一種」字样。若合于发明型态，可改写为「一種X」。",
       "indigenousTerms": "用语：{{terms}}。依《原住民族傳統智慧創作保護條例》，请确认本申请未与受保护的传统智慧创作冲突。",
       "numeralConsistency": "{{count}} 个元件符号使用不一致。范例：{{inline_summary}}",
-      "symbolTableCoverage": "{{count}} 个元件（共 {{refnum_count}} 个元件符号）未列于 符號說明 中：{{inline_summary}}"
+      "symbolTableCoverage": "{{count}} 个元件（共 {{refnum_count}} 个元件符号）未列于 符號說明 中：{{inline_summary}}",
+      "markushOpenTransition": "权利要求 {{claims}} 使用马库什式开放性连接词（{{transitions}}）；请改采封闭式「選自由…組成的群組」形式（專利審查基準 第二篇第十章）。",
+      "omnibusClaims": "权利要求 {{claims}} 为概括式权利要求（参考说明书/附图而非技术特征）；请明确记载技术特征以符合 專利法 §26 第3項。",
+      "crmNonTransitory": "权利要求 {{claims}} 为未限定「非暫態」的电脑可读媒体权利要求；请加注「非暫態」/「非暫時性」以限定为非暂时性媒体，避免 §21 适格性疑虑。"
     },
     "titleProhibited": {
       "trademark": "商标符号「{{token}}」",
@@ -1532,6 +1538,18 @@
         "excessClaims": {
           "verify": "请求项总数超过 10 项。TIPO 对 11 项起每项加收超项费。请对照当前 TIPO 收费办法核实规费。",
           "pass": "未检测到 TIPO 超项费触发条件（專利規費收取準則 §5：总请求项不超过 10 项）。"
+        },
+        "markushOpenTransition": {
+          "amend": "权利要求 {{claims}} 使用马库什式开放性连接词（{{transitions}}），而非封闭式「組成」（專利審查基準 第二篇第十章）。TIPO 审查员可能据此提出实质性驳回。",
+          "pass": "马库什组使用封闭式连接词「組成」。"
+        },
+        "omnibus": {
+          "amend": "权利要求 {{claims}} 未记载具体技术特征，仅参考说明书/附图（概括式权利要求）。可能违反 專利法 §26 第3項 清楚性要求。",
+          "pass": "未发现概括式权利要求。"
+        },
+        "crmNonTransitory": {
+          "amend": "权利要求 {{claims}} 涉及电脑可读媒体但未限定为「非暫態」/「非暫時性」。專利法 §21：暂时性信号（如载波）非属可专利标的；请加注「非暫態」以限定为非暂时性媒体。",
+          "pass": "电脑可读媒体权利要求已正确限定为「非暫態」/「非暫時性」。"
         }
       },
       "abstract": {

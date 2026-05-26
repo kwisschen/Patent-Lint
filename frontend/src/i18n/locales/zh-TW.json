@@ -625,7 +625,10 @@
       "independentPreamble": "獨立項須以「一種」開頭",
       "numeralConsistency": "元件符號一致性（施行細則 §19）",
       "symbolTableCoverage": "說明書中所有使用之代表符號於 符號說明 中均有載明（施行細則 §19）",
-      "excessClaims": "超項費門檻（專利規費收取準則 §5）"
+      "excessClaims": "超項費門檻（專利規費收取準則 §5）",
+      "markushOpenTransition": "馬庫西連接詞（專利審查基準 第二篇第十章）",
+      "omnibus": "統括式請求項（專利法 §26 第3項）",
+      "crmNonTransitory": "電腦可讀媒體「非暫態」限定（專利法 §21）"
     },
     "stats": {
       "tests": "自動化測試",
@@ -877,7 +880,10 @@
       "independentPreamble": "TIPO 偵錯系統將此列為慣例錯誤。專利法施行細則 §18 與專利審查基準要求前序部分載明標的名稱，並未強制要求使用「一種」字樣。若合於發明型態，可改寫為「一種X」。",
       "indigenousTerms": "用語：{{terms}}。依《原住民族傳統智慧創作保護條例》，請確認本申請未與受保護之傳統智慧創作衝突。",
       "numeralConsistency": "{{count}} 個元件符號使用不一致。範例：{{inline_summary}}",
-      "symbolTableCoverage": "{{count}} 個元件（共 {{refnum_count}} 個元件符號）未列於 符號說明 中：{{inline_summary}}"
+      "symbolTableCoverage": "{{count}} 個元件（共 {{refnum_count}} 個元件符號）未列於 符號說明 中：{{inline_summary}}",
+      "markushOpenTransition": "請求項 {{claims}} 使用馬庫西式開放性連接詞（{{transitions}}）；請改採封閉式「選自由…組成的群組」形式（專利審查基準 第二篇第十章）。",
+      "omnibusClaims": "請求項 {{claims}} 為統括式請求項（參考說明書/附圖而非技術特徵）；請明確記載技術特徵以符合專利法 §26 第3項。",
+      "crmNonTransitory": "請求項 {{claims}} 為未限定「非暫態」的電腦可讀媒體請求項；請加註「非暫態」/「非暫時性」以限定為非暫時性媒體，避免 §21 適格性疑慮。"
     },
     "titleProhibited": {
       "trademark": "商標符號「{{token}}」",
@@ -1532,6 +1538,18 @@
         "excessClaims": {
           "verify": "請求項總數超過 10 項。TIPO 對 11 項起每項加收超項費。請對照當前 TIPO 收費辦法查核規費。",
           "pass": "未偵測到 TIPO 超項費觸發條件（專利規費收取準則 §5：總請求項不超過 10 項）。"
+        },
+        "markushOpenTransition": {
+          "amend": "請求項 {{claims}} 使用馬庫西式開放性連接詞（{{transitions}}），而非封閉式「組成」（專利審查基準 第二篇第十章）。TIPO 審查委員可能據此提出實質性核駁。",
+          "pass": "馬庫西群組已使用封閉式連接詞「組成」。"
+        },
+        "omnibus": {
+          "amend": "請求項 {{claims}} 未記載具體技術特徵，僅參考說明書/附圖（統括式請求項）。可能違反專利法 §26 第3項明確性要求。",
+          "pass": "未發現統括式請求項。"
+        },
+        "crmNonTransitory": {
+          "amend": "請求項 {{claims}} 涉及電腦可讀媒體但未限定為「非暫態」/「非暫時性」。專利法 §21：暫時性信號（如載波）非屬可專利標的；請加註「非暫態」以限定為非暫時性媒體。",
+          "pass": "電腦可讀媒體請求項已正確限定為「非暫態」/「非暫時性」。"
         }
       },
       "abstract": {
