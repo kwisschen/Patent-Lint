@@ -381,6 +381,97 @@ class TestAntecedentBasis:
         assert "leakage inspection region" in terms, terms
         assert "annular groove" in terms, terms
 
+    def test_accounts_for_verb_not_overcaptured_r5(self):
+        """R5 (issues #98 / #99): `<noun> accounts for X%` — `accounts` is a
+        3sg finite verb in this pattern and must terminate NP capture. The
+        lookahead `accounts(?=\\s+for)` distinguishes the verb from the
+        bare-noun usage tested separately below."""
+        claims = [
+            Claim(
+                id=1,
+                text="A sintered body comprising silicon carbide and an alumina.",
+                independent=True, method_claim=False,
+            ),
+            Claim(
+                id=2,
+                text=(
+                    "The sintered body of claim 1, wherein the alumina "
+                    "accounts for at least 5% of a total mass."
+                ),
+                independent=False, dependencies=[1], method_claim=False,
+            ),
+        ]
+        terms = [i["term"] for i in check_antecedent_basis(claims)]
+        for t in terms:
+            assert "accounts" not in t, f"`accounts` bled into term: {t!r}"
+
+    def test_accounts_noun_usage_preserved_r5(self):
+        """R5 negative-control: bare-noun `accounts` (`financial accounts`,
+        `accounts receivable`) must NOT be silenced — the verb-gating
+        lookahead `(?=\\s+for)` discriminates."""
+        claims = [
+            Claim(
+                id=1,
+                text="A method comprising managing financial accounts.",
+                independent=True, method_claim=False,
+            ),
+            Claim(
+                id=2,
+                text=(
+                    "The method of claim 1, wherein the financial accounts "
+                    "are encrypted."
+                ),
+                independent=False, dependencies=[1], method_claim=False,
+            ),
+        ]
+        # Resolves cleanly — intro `financial accounts` matches ref the same.
+        assert check_antecedent_basis(claims) == []
+
+    def test_unicode_hyphen_np_span_r5(self):
+        """R5 (issues #97 / #103): U+2010 HYPHEN and U+2011 NON-BREAKING
+        HYPHEN must be NP-internal joiners, same as ASCII U+002D. Drafters
+        using non-breaking hyphens (`large‑size silicon carbide particle`)
+        previously had NP captures truncated at the hyphen."""
+        claims = [
+            Claim(
+                id=1,
+                text=(
+                    "A sintered body comprising silicon carbide particles "
+                    "of various sizes."
+                ),
+                independent=True, method_claim=False,
+            ),
+            Claim(
+                id=2,
+                text=(
+                    "The sintered body of claim 1, wherein the large‑size "
+                    "silicon carbide particle is greater than the medium‑size "
+                    "silicon carbide particle."
+                ),
+                independent=False, dependencies=[1], method_claim=False,
+            ),
+        ]
+        terms = [i["term"] for i in check_antecedent_basis(claims)]
+        # NP span across U+2011 — emit full compounds, not truncated `large`/`medium`
+        assert all(t not in ("large", "medium") for t in terms), terms
+        assert any("large‑size" in t for t in terms), terms
+
+    def test_ascii_hyphen_unchanged_r5(self):
+        """R5 negative-control: ASCII `-` behavior unchanged."""
+        claims = [
+            Claim(
+                id=1,
+                text="A device comprising a high-voltage relay.",
+                independent=True, method_claim=False,
+            ),
+            Claim(
+                id=2,
+                text="The device of claim 1, wherein the high-voltage relay is closed.",
+                independent=False, dependencies=[1], method_claim=False,
+            ),
+        ]
+        assert check_antecedent_basis(claims) == []
+
 
 class TestTransitionsRegexWherein:
     """`_TRANSITIONS` recognizes `wherein` (no colon) as a preamble/body boundary."""
