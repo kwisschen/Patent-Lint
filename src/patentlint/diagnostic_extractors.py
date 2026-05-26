@@ -5,8 +5,8 @@
 Each function in this module produces a detailed-but-bounded
 fingerprint dict for one check family. The fingerprint is what the
 modal previews to the user before they consent to send, what lands in
-the GitHub issue body, and what Claude Code reads via `gh issue list`
-to propose fixes.
+the GitHub issue body, and what scheduled triage automation reads via
+`gh issue list` to propose fixes.
 
 Design principles
 -----------------
