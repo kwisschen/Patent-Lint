@@ -9,6 +9,6 @@
 
 export const TESTS_RAW = 2671
 export const TESTS_DISPLAY = 2600
-export const CHECKS_RAW = 151
-export const CHECKS_DISPLAY = 150
-export const CHECKS_BY_JURISDICTION = {"US":43,"CN":34,"TW":40,"EPC":34}
+export const CHECKS_RAW = 158
+export const CHECKS_DISPLAY = 155
+export const CHECKS_BY_JURISDICTION = {"US":43,"CN":35,"TW":43,"EPC":37}
