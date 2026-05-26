@@ -34,13 +34,17 @@ def _make_minimal_docx_bytes() -> bytes:
 
 
 def test_run_epc_pipeline_stub_returns_well_formed_result():
-    """Pipeline runs G1 + G2 spec checks (9) + G3 (4) + G4-G6 claims (17) + G7 (4)."""
+    """Pipeline runs G1+G2 spec checks (9) + G3 (4) + G4-G6 claims (21) + G7 (4).
+
+    Claims count was 18 before the EPC special-format trio (MPF + CRM +
+    Omnibus) landed in G5; now 21.
+    """
     result = _run_epc_pipeline("any english text", suggested_jurisdiction=None)
     assert isinstance(result, AnalysisResult)
     assert result.jurisdiction == Jurisdiction.EPC
     assert len(result.epc_specification_checks) == 9
     assert len(result.epc_drawings_checks) == 4
-    assert len(result.epc_claims_checks) == 18
+    assert len(result.epc_claims_checks) == 21
     assert len(result.epc_abstract_checks) == 4
 
 
@@ -65,7 +69,7 @@ def test_epc_report_data_adapter_round_trips():
     # claims (incl. excess-claims fee threshold); G7 ships 4 abstract.
     assert len(report.specification_checks) == 9
     assert len(report.drawings_checks) == 4
-    assert len(report.claims_checks) == 18
+    assert len(report.claims_checks) == 21
     assert len(report.abstract_checks) == 4
 
 

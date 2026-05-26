@@ -509,6 +509,21 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     # monotonic.
     "check.epc.claims.markushFormat.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 35),
     "check.epc.claims.markushFormat.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 35),
+    # meansPlusFunction (Guidelines F-IV § 6.5 + Art. 84) — functional
+    # language is advisory under EPC (admissible when supported), so VERIFY
+    # not AMEND. Slot 40 keeps the special-format cluster contiguous after
+    # markush at 35.
+    "check.epc.claims.meansPlusFunction.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 40),
+    "check.epc.claims.meansPlusFunction.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 40),
+    # crmNonTransitory (Art. 52(2)(c) + Guidelines G-II § 3.6) — VERIFY
+    # because EPC has no strict 'non-transitory' requirement like USPTO §
+    # 101, but transitory-signal coverage risks Art. 52(2) objection.
+    "check.epc.claims.crmNonTransitory.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 45),
+    "check.epc.claims.crmNonTransitory.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 45),
+    # omnibus (Art. 84 + Guidelines F-IV § 4.17) — AMEND because Art. 84
+    # clarity objection is substantive, not advisory.
+    "check.epc.claims.omnibus.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 50),
+    "check.epc.claims.omnibus.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 50),
     # EPC-specific advisories — independentClaimCount (Rule 43(2)+(3))
     # and twoPartForm (Rule 43(1)) — get late CROSS_JURISDICTION idx
     # values so they emit after structural guards within the runner.

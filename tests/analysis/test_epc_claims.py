@@ -354,11 +354,13 @@ def test_two_part_form_no_independent_claims_passes():
 # --- Aggregator ---------------------------------------------------------------
 
 
-def test_g5_runner_emits_all_six_checks():
+def test_g5_runner_emits_all_nine_checks():
     """G5 emits claimsSpecRef + multiDepOnMultiDep + markushFormat +
-    independentClaimCount + twoPartForm + excessClaims = 6 checks."""
+    meansPlusFunction + crmNonTransitory + omnibus + independentClaimCount
+    + twoPartForm + excessClaims = 9 checks (3 added in the EPC
+    special-format trio: MPF, CRM, omnibus)."""
     results = run_g5_claims_cross_jurisdiction_checks(CANONICAL_CLAIMS)
-    assert len(results) == 6
+    assert len(results) == 9
 
 
 # ---------------------------------------------------------------------------
@@ -453,3 +455,85 @@ def test_g6_runner_emits_four_summary_checks():
     assert len(results) == 4
     assert isinstance(ab_issues, list)
     assert isinstance(ss_terms, list)
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# EPC special-format trio — MPF, CRM, Omnibus (G5 cross-jurisdiction)
+# ─────────────────────────────────────────────────────────────────────────
+
+
+class TestEpcSpecialFormats:
+    """EPO Guidelines F-IV / G-II references; reuses US claims.py regexes."""
+
+    def _mk(self, num, text, ind=True):
+        from patentlint.models import Claim
+        return Claim(id=num, text=text, independent=ind, dependencies=[], multiple_dependent=False)
+
+    def test_mpf_means_for_verify(self):
+        from patentlint.analysis.epc_claims import check_means_plus_function_epc
+        results = check_means_plus_function_epc([
+            self._mk(1, "An apparatus comprising means for transmitting data to a receiver.")
+        ])
+        assert results[0].status == "verify"
+        assert results[0].message_key == "check.epc.claims.meansPlusFunction.verify"
+        assert results[0].reference == "EPO Guidelines F-IV § 6.5; Art. 84 EPC"
+
+    def test_mpf_structural_pass(self):
+        from patentlint.analysis.epc_claims import check_means_plus_function_epc
+        results = check_means_plus_function_epc([
+            self._mk(1, "An apparatus comprising a processor coupled to a memory.")
+        ])
+        assert results[0].status == "pass"
+
+    def test_mpf_by_means_of_not_flagged(self):
+        """`by means of` is prepositional, not § 112(f)-style."""
+        from patentlint.analysis.epc_claims import check_means_plus_function_epc
+        results = check_means_plus_function_epc([
+            self._mk(1, "A method performed by means of a sensor.")
+        ])
+        assert results[0].status == "pass"
+
+    def test_crm_missing_nontransitory_verify(self):
+        from patentlint.analysis.epc_claims import check_crm_non_transitory_epc
+        results = check_crm_non_transitory_epc([
+            self._mk(1, "A computer-readable medium storing instructions to perform a method.")
+        ])
+        assert results[0].status == "verify"
+        assert results[0].message_key == "check.epc.claims.crmNonTransitory.verify"
+
+    def test_crm_with_nontransitory_pass(self):
+        from patentlint.analysis.epc_claims import check_crm_non_transitory_epc
+        results = check_crm_non_transitory_epc([
+            self._mk(1, "A non-transitory computer-readable medium storing instructions.")
+        ])
+        assert results[0].status == "pass"
+
+    def test_crm_non_transitory_no_hyphen_pass(self):
+        """Variant: 'non transitory' (space, not hyphen) still recognised."""
+        from patentlint.analysis.epc_claims import check_crm_non_transitory_epc
+        results = check_crm_non_transitory_epc([
+            self._mk(1, "A non transitory storage medium with data.")
+        ])
+        assert results[0].status == "pass"
+
+    def test_omnibus_substantially_as_shown_amend(self):
+        from patentlint.analysis.epc_claims import check_omnibus_claims_epc
+        results = check_omnibus_claims_epc([
+            self._mk(1, "A device substantially as shown in the drawings.")
+        ])
+        assert results[0].status == "amend"
+        assert results[0].message_key == "check.epc.claims.omnibus.amend"
+
+    def test_omnibus_substantially_as_described_amend(self):
+        from patentlint.analysis.epc_claims import check_omnibus_claims_epc
+        results = check_omnibus_claims_epc([
+            self._mk(1, "An apparatus substantially as described herein.")
+        ])
+        assert results[0].status == "amend"
+
+    def test_omnibus_substantive_claim_pass(self):
+        from patentlint.analysis.epc_claims import check_omnibus_claims_epc
+        results = check_omnibus_claims_epc([
+            self._mk(1, "An apparatus comprising a sensor and a processor for receiving signals.")
+        ])
+        assert results[0].status == "pass"

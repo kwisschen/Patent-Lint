@@ -719,7 +719,10 @@
       "titleMatch": "Zusammenfassung bezieht sich auf die im Titel genannte Erfindung (Richtlinien F-II § 2.3.5)",
       "claimReference": "Zusammenfassung verweist nicht auf bestimmte Ansprüche (Richtlinien F-II § 2.3.3)",
       "structure": "Struktur der Zusammenfassung — ein Absatz, keine anspruchsartigen Formulierungen, keine wertenden Aussagen",
-      "excessClaims": "Anspruchsgebühren-Schwelle (Regel 45 EPÜ)"
+      "excessClaims": "Anspruchsgebühren-Schwelle (Regel 45 EPÜ)",
+      "meansPlusFunction": "Funktionelle Merkmalsangabe (Richtlinien F-IV § 6.5)",
+      "crmNonTransitory": "Computerlesbares Medium — 'nichtflüchtig'-Zusatz (Art. 52(2)(c))",
+      "omnibus": "Omnibus-Ansprüche (Richtlinien F-IV § 4.17)"
     },
     "epcTableFootnote": "Stand: Mai 2026. Die EPÜ-Unterstützung befindet sich in der Beta-Phase und prüft derzeit englischsprachige Patentschriften. PatentLint kann weiterentwickelt werden."
   },
@@ -1175,6 +1178,18 @@
         "twoPartForm": {
           "verify": "Kein unabhängiger Anspruch verwendet die zweiteilige Anspruchsfassung (Oberbegriff + „dadurch gekennzeichnet, dass“). Regel 43(1) EPÜ empfiehlt diese Form, soweit zweckmäßig; prüfen, ob der nächstliegende Stand der Technik dies nahelegt.",
           "pass": "Keine Befunde zur zweiteiligen Anspruchsfassung festgestellt (Regel 43(1) EPÜ)."
+        },
+        "meansPlusFunction": {
+          "verify": "Anspruch/Ansprüche {{claims}} verwenden funktionelle Merkmalsangaben ('means for / step for') — Stützung nach Art. 84 EPÜ und Ausführbarkeit durch den Fachmann ohne unzumutbaren Aufwand bestätigen (Richtlinien F-IV § 6.5).",
+          "pass": "Keine funktionellen Merkmalsangaben ('means-plus-function') in den Ansprüchen festgestellt."
+        },
+        "crmNonTransitory": {
+          "verify": "Anspruch/Ansprüche {{claims}} beanspruchen ein computerlesbares Medium ohne den Zusatz 'nichtflüchtig' — bestätigen, dass die Erfassung flüchtiger Signale nicht unbeabsichtigt ist (Art. 52(2)(c) EPÜ; Richtlinien G-II § 3.6).",
+          "pass": "Keine Ansprüche auf computerlesbare Medien ohne 'nichtflüchtig'-Zusatz festgestellt."
+        },
+        "omnibus": {
+          "amend": "Anspruch/Ansprüche {{claims}} sind als Omnibus-Anspruch formuliert — sie verweisen auf die Beschreibung oder Zeichnungen anstatt Merkmale zu nennen. Klarheitseinwand nach Art. 84 EPÜ wahrscheinlich (Richtlinien F-IV § 4.17).",
+          "pass": "Keine Omnibus-Ansprüche festgestellt."
         }
       },
       "abstract": {
