@@ -170,6 +170,7 @@ const CN_CLAIMS_CHECKS = [
   'specSupport',                     // 专利法 §26 第4款 + 审查指南 §3.2.1 (ADR-151)
   'omnibus',                         // 审查指南 第二部分第二章 §3.3
   'markushOpenTransition',           // 审查指南 第二部分第十章 §9.3
+  'crmNonTransitory',                // 专利法 §25 + 审查指南 第二部分第九章
 ]
 
 const CN_ABSTRACT_CHECKS = [
@@ -220,6 +221,9 @@ const EPC_CLAIMS_CHECKS = [
   'claimsSpecReference',             // Rule 43(6) EPC
   'multiDepOnMultiDep',              // Rule 43(4) EPC
   'markushFormat',                   // EPO Guidelines F-IV § 4.20
+  'meansPlusFunction',               // EPO Guidelines F-IV § 6.5 + Art. 84 EPC (advisory)
+  'crmNonTransitory',                // Art. 52(2)(c) EPC + Guidelines G-II § 3.6 (advisory)
+  'omnibus',                         // Art. 84 EPC + Guidelines F-IV § 4.17
   'independentClaimCount',           // Rule 43(2) + 43(3) EPC (advisory)
   'twoPartForm',                     // Rule 43(1) EPC (advisory)
   // G6 §112-equivalent (Art. 84 EPC clarity + support)
@@ -497,6 +501,8 @@ const TW_GROUP3_CHECKS = [
   'specDrawingRef', 'excessClaims',
   // G6 claims §26 第3項 semantic walker analysis
   'specSupport',
+  // G6 special-format trio (專利審查基準 + 專利法 §21/§26)
+  'markushOpenTransition', 'omnibus', 'crmNonTransitory',
   // G7 abstract
   'charCount', 'titleMatch', 'commercialLanguage', 'representativeDrawing',
 ]

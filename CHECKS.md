@@ -113,6 +113,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Specification support (说明书支持) | 专利法 §26 第4款 + 审查指南 第二部分第二章 §3.2.1 | FIX / PASS | `check.cn.claims.specSupport` | 3-tier match (aggressively-normalized exact → raw exact → ±30-char CJK bigram window) for every claim intro against technical_field + summary + detailed_description (背景技术 excluded per §2.2.3 — prior-art context, not disclosure). Inventory hygiene: paren + bare-numeral reference strip, leading preposition strip (于/到/在/自/由/从/向/对), mid-phrase reference-prefix recovery, conjunction split including disjunctive 或 (X或Y → X, Y), length cap 12, existential-verb leading reject (设有/装有/配置有/设置有), CN-drafting trailing-token strip (之间/位于/构成/设置 etc.), tw_contamination skip (该等/该些 parser artifacts not double-reported) |
 | Omnibus claim | 审查指南 第二部分第二章 §3.3 | FIX / PASS | `check.cn.claims.omnibus` | Claim references 说明书/附图 without reciting specific technical features |
 | Markush open transition | 审查指南 第二部分第十章 §9.3 | FIX / PASS | `check.cn.claims.markushOpenTransition` | Markush group uses 包括/具有/含有 instead of 组成的 (closed transition) — improper Markush = substantive rejection per §9.3 |
+| CRM non-transitory | 专利法 §25 + 审查指南 第二部分第九章 | FIX / PASS | `check.cn.claims.crmNonTransitory` | Independent claim to 计算机可读介质 / 存储介质 / 机器可读介质 missing 非暂态 / 非暂时性 qualifier — transitory signals fall outside §25 patentable subject matter |
 | Excess-claims fee threshold | 实施细则 §93 + CNIPA 收费办法 | REVIEW / PASS | `check.cn.claims.excessClaims` | Total claim count > 10 triggers CNIPA per-claim fee (¥150 per excess claim for invention patents) |
 
 ## CN Abstract (摘要)
@@ -175,6 +176,9 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Specification support (說明書支持) | 專利法 §26 第3項 | FIX / PASS | `check.tw.claims.specSupport` | 4-tier match (symbol-table whitelist + representative-drawing symbols → aggressively-normalized exact → raw exact → ±30-char CJK bigram window) for every claim intro against technical_field + prior_art + disclosure + embodiment. Inventory-level hygiene: TIPO §19 trailing parenthetical reference numerals stripped, leading preposition strip (於/到/在/自/由), mid-phrase reference-prefix recovery, conjunction split (X及Y → X, Y), length cap 12, leading-verb + interior clause-marker reject (ADR-138) |
 | Component connection relationships | 專利審查基準 §2.4 | REVIEW / PASS | `check.tw.claims.connectionRelationships` | Independent apparatus/system claims must describe how their listed components are arranged (carve-outs: method, CRM, MPF, composition) |
 | Excess-claims fee threshold | 專利規費收取準則 §5 | REVIEW / PASS | `check.tw.claims.excessClaims` | Total claim count > 10 triggers TIPO per-claim fee (NT$800 per excess claim for invention patents) |
+| Markush open transition | 專利審查基準 第二篇第十章 | FIX / PASS | `check.tw.claims.markushOpenTransition` | Markush group uses 包括/具有/含有 instead of 組成 (closed transition) — improper Markush = substantive rejection on the merits |
+| Omnibus claim | 專利法 §26 第3項 + 專利審查基準 | FIX / PASS | `check.tw.claims.omnibus` | Claim references 說明書/附圖 without reciting specific technical features |
+| CRM non-transitory | 專利法 §21 | FIX / PASS | `check.tw.claims.crmNonTransitory` | Independent claim to 電腦可讀媒體 / 儲存媒體 / 機器可讀媒體 missing 非暫態 / 非暫時性 qualifier — transitory signals fall outside §21 patentable subject matter |
 
 ## TW Abstract (摘要)
 
@@ -237,6 +241,9 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Claim-spec reference | Rule 43(6) EPC | FIX / PASS | `check.epc.claims.specReference` | Claims must not reference description or drawings in prose |
 | Multi-dep on multi-dep | Rule 43(4) EPC | FIX / PASS | `check.epc.claims.multiDepOnMultiDep` | Multi-dependent claim cannot depend on another multi-dependent claim |
 | Markush format | EPO Guidelines F-IV § 4.20 | REVIEW / PASS | `check.epc.claims.markushFormat` | Markush groups use the closed "selected from the group consisting of" form |
+| Means-plus-function language | EPO Guidelines F-IV § 6.5 + Art. 84 EPC | REVIEW / PASS | `check.epc.claims.meansPlusFunction` | Functional 'means for / step for' language flagged for Art. 84 support and that the skilled person can identify the means without undue burden |
+| CRM non-transitory | Art. 52(2)(c) EPC + EPO Guidelines G-II § 3.6 | REVIEW / PASS | `check.epc.claims.crmNonTransitory` | Independent claim to computer-readable medium missing 'non-transitory' — transitory signals risk Art. 52(2) objection on technical-character grounds (T 0258/03) |
+| Omnibus claim | Art. 84 EPC + EPO Guidelines F-IV § 4.17 | FIX / PASS | `check.epc.claims.omnibus` | Claim references description/drawings ("substantially as shown / described") instead of reciting features — Art. 84 clarity objection |
 | Independent-claim count | Rule 43(2) + Rule 43(3) EPC | REVIEW / PASS | `check.epc.claims.independentClaimCount` | One independent claim per category (advisory; Rule 43(3) exceptions not auto-detected) |
 | Two-part form | Rule 43(1) EPC | REVIEW / PASS | `check.epc.claims.twoPartForm` | Preamble + "characterised in that" form (advisory — Rule 43(1) is conditional) |
 | Antecedent basis (walker) | Art. 84 EPC + EPO Guidelines F-IV § 4.5 | REVIEW / PASS | `check.epc.claims.antecedentBasis` | "the X" without prior "a X" — walker port from US with EPC dep-preamble pre-stripping |
