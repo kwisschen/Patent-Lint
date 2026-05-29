@@ -1,0 +1,353 @@
+{
+  "metadata": {
+    "commit": "b04331e93681f643053efc67501001d923730122",
+    "fixture_count": 20,
+    "total_findings": 77,
+    "implementation_function": "patentlint.analysis.tw_spec_support.check_spec_support_tw",
+    "note": "Drift baseline for TW spec-support extractor. Captured via tests/fixtures/tw/_spec_support_harness.py --capture. Re-capture after every walker change that intentionally shifts the spec-support output set."
+  },
+  "fixtures": {
+    "108P001015JP派譯版-FV": [],
+    "109P001046US.DE.JP派譯版-FV": [
+      {
+        "claim_id": 4,
+        "phrase": "第二通訊模組"
+      }
+    ],
+    "110P000158US.JP.EPC派譯版-FV": [
+      {
+        "claim_id": 3,
+        "phrase": "第二交線"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "第二連接面"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "第二頂面"
+      }
+    ],
+    "110P000368US-JP,KR案派譯版-FV": [],
+    "110P000631US.JP.DE派譯版-FV": [
+      {
+        "claim_id": 1,
+        "phrase": "L1"
+      },
+      {
+        "claim_id": 1,
+        "phrase": "L2"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "重複使用性吸管"
+      },
+      {
+        "claim_id": 8,
+        "phrase": "最低點"
+      }
+    ],
+    "110P000633US.JP派譯版-FV": [],
+    "110P000633US.JP派譯版-FV_1": [],
+    "110P000641JP派譯版-FV": [
+      {
+        "claim_id": 3,
+        "phrase": "三個"
+      },
+      {
+        "claim_id": 14,
+        "phrase": "預定扭力值"
+      }
+    ],
+    "110P000840US.JP.DE派譯版-FV": [],
+    "110P000868US.JP派譯版-FV": [],
+    "tw_adversarial_negatives": [
+      {
+        "claim_id": 1,
+        "phrase": "基板"
+      },
+      {
+        "claim_id": 1,
+        "phrase": "晶片"
+      },
+      {
+        "claim_id": 1,
+        "phrase": "連接部"
+      }
+    ],
+    "tw_copula_tiers": [
+      {
+        "claim_id": 1,
+        "phrase": "權重"
+      },
+      {
+        "claim_id": 1,
+        "phrase": "訊號"
+      },
+      {
+        "claim_id": 1,
+        "phrase": "輸出結果"
+      },
+      {
+        "claim_id": 2,
+        "phrase": "感測器模組"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "加熱單元"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "反應腔室"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "水蒸氣"
+      },
+      {
+        "claim_id": 4,
+        "phrase": "第一水蒸氣"
+      },
+      {
+        "claim_id": 4,
+        "phrase": "第二水蒸"
+      },
+      {
+        "claim_id": 5,
+        "phrase": "主體"
+      },
+      {
+        "claim_id": 5,
+        "phrase": "其中"
+      },
+      {
+        "claim_id": 5,
+        "phrase": "固定件"
+      },
+      {
+        "claim_id": 5,
+        "phrase": "金屬螺栓"
+      },
+      {
+        "claim_id": 5,
+        "phrase": "鋁合金外殼"
+      },
+      {
+        "claim_id": 6,
+        "phrase": "固定狀態"
+      }
+    ],
+    "tw_formula_reference": [
+      {
+        "claim_id": 1,
+        "phrase": "偏置值"
+      },
+      {
+        "claim_id": 1,
+        "phrase": "權重值"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "L-3"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "L-4"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "述電容元件之電容值符合式"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "述電阻元件之電阻值符合式"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "電容元件"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "電阻元件"
+      },
+      {
+        "claim_id": 4,
+        "phrase": "R1"
+      },
+      {
+        "claim_id": 4,
+        "phrase": "電阻值"
+      }
+    ],
+    "tw_markush": [
+      {
+        "claim_id": 1,
+        "phrase": "群組"
+      },
+      {
+        "claim_id": 2,
+        "phrase": "金屬離子"
+      },
+      {
+        "claim_id": 4,
+        "phrase": "聲學模型"
+      }
+    ],
+    "tw_plural_prefix": [
+      {
+        "claim_id": 1,
+        "phrase": "感測器"
+      },
+      {
+        "claim_id": 1,
+        "phrase": "控制器"
+      }
+    ],
+    "tw_quoted_reference": [
+      {
+        "claim_id": 1,
+        "phrase": "處理器"
+      },
+      {
+        "claim_id": 1,
+        "phrase": "記憶體"
+      },
+      {
+        "claim_id": 2,
+        "phrase": "資料"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "執行指令"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "電腦可讀儲存媒體"
+      },
+      {
+        "claim_id": 4,
+        "phrase": "供電給"
+      },
+      {
+        "claim_id": 4,
+        "phrase": "設備"
+      },
+      {
+        "claim_id": 4,
+        "phrase": "電源模組"
+      }
+    ],
+    "tw_symbol_table": [
+      {
+        "claim_id": 1,
+        "phrase": "基板"
+      },
+      {
+        "claim_id": 1,
+        "phrase": "基板10"
+      },
+      {
+        "claim_id": 1,
+        "phrase": "散熱裝置100"
+      },
+      {
+        "claim_id": 1,
+        "phrase": "晶片20"
+      },
+      {
+        "claim_id": 2,
+        "phrase": "連接部30"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "封裝體"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "封裝體40"
+      }
+    ],
+    "tw_jepson_two_part": [
+      {
+        "claim_id": 1,
+        "phrase": "神經網路運算"
+      },
+      {
+        "claim_id": 1,
+        "phrase": "處理器"
+      },
+      {
+        "claim_id": 1,
+        "phrase": "記憶體"
+      },
+      {
+        "claim_id": 2,
+        "phrase": "乘加陣列"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "基座"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "扭力感測器"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "施加扭力"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "臂部"
+      }
+    ],
+    "tw_dym_edge_cases": [
+      {
+        "claim_id": 1,
+        "phrase": "控制器"
+      },
+      {
+        "claim_id": 1,
+        "phrase": "控制系統"
+      },
+      {
+        "claim_id": 2,
+        "phrase": "狀態訊號"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "溫度"
+      },
+      {
+        "claim_id": 3,
+        "phrase": "溫度感測器"
+      },
+      {
+        "claim_id": 4,
+        "phrase": "閾值"
+      },
+      {
+        "claim_id": 5,
+        "phrase": "快取記憶體"
+      },
+      {
+        "claim_id": 5,
+        "phrase": "處理器"
+      },
+      {
+        "claim_id": 5,
+        "phrase": "運算設備"
+      },
+      {
+        "claim_id": 6,
+        "phrase": "指令序列"
+      }
+    ],
+    "spec1": [
+      {
+        "claim_id": 9,
+        "phrase": "間具有一上壁部"
+      }
+    ]
+  }
+}
