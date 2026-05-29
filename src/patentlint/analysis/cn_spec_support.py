@@ -230,6 +230,14 @@ _CN_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     # 2026-05-21: parity mirror of TW #78 — `中一` is a stranded
     # `其中一(个)` connective fragment (walker dropped the leading 其).
     "中一",
+    # 2026-05-29 — issue #145. Drafter claim 10 preamble
+    # `一种用于折叠支撑脚组件的折叠支撑脚` had `种用` over-captured: walker
+    # strips the leading `一` quantifier and lands on `种` (kind), then
+    # extends through `用` (used) before the `于` boundary cuts the
+    # capture. `一种用于X的Y` is the universal CN preamble form per
+    # 审查指南 §3.1.1; `种用` is never a real noun head. Multi-char so
+    # no FN risk on `种类` / `品种` legitimate compounds.
+    "种用",
 )
 
 # Characters that appear ONLY as noun suffixes in CN patent diction
