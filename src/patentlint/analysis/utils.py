@@ -498,6 +498,17 @@ _STOP_WORDS = (
     # #89 (`presents`), #92 (`control unit uses`). The walker's own
     # did-you-mean already names the clean head noun in every case.
     r"presents|constitutes|flows|uses|"
+    # R7 (2026-05-29): finite-verb over-capture (drained from
+    # 2026-05-29 report queue — issues #120 `guiding pattern exceeds`,
+    # #127 `second mounting portion extend`, #128 `encapsulation layer
+    # jointly constitute`, #135 `second magnetic component stays`).
+    # `exceeds` joins the existing `meets|reaches` measurement-comparison
+    # family; `extend`/`constitute` cover the base-form gaps left by
+    # R2/R3 (which seeded only the 3sg `extends`/`constitutes`); `stays`
+    # is a positional verb common in mechanical claims. All four are
+    # unambiguous finite verbs in claim diction — MPEP § 2173.05(e)
+    # treats only noun phrases as §112(b) reference targets.
+    r"exceeds|extend|constitute|stays|"
     # R5 (2026-05-26): `accounts` as 3sg finite verb only — lookahead on
     # `\s+for` discriminates the `<noun> accounts for X` verb-object pattern
     # (#98 alumina, #99 silica) from the bare-noun usage (`financial accounts`,
