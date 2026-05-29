@@ -78,12 +78,13 @@ export default function CheckItem({ status, message, message_key, details, detai
     setReportModalOpen(true)
   }
 
-  const handleAnonymousConfirm = () =>
+  const handleAnonymousConfirm = (userComment) =>
     sendReport({
       checkKey: message_key || 'generic',
       jurisdiction: jurisdiction || 'unknown',
       locale: i18n.language,
       diagnostics: diagnostics || {},
+      userComment,
     })
 
   const handleMailtoFallback = () => {

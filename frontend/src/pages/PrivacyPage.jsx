@@ -91,6 +91,7 @@ export default function PrivacyPage() {
       <LegalSection number="6" titleKey="privacy.s6.title">
         <p>{t('privacy.s6.p1')}</p>
         <p>{t('privacy.s6.p2')}</p>
+        <p>{t('privacy.s6.p2b')}</p>
         <p>{t('privacy.s6.p3')}</p>
         <p>{t('privacy.s6.p4')}</p>
       </LegalSection>
