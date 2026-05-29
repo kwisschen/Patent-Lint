@@ -381,6 +381,37 @@ class TestAntecedentBasis:
         assert "leakage inspection region" in terms, terms
         assert "annular groove" in terms, terms
 
+    def test_finite_verb_not_overcaptured_r7(self):
+        """R7 (issues #120 / #127 / #128 / #135): `exceeds` / `extend` /
+        `constitute` / `stays` must terminate NP capture. R2/R3 covered
+        the 3sg `extends`/`constitutes` but left base-form gaps that
+        bled through `<noun> exceeds X` / `<noun> jointly constitute X`
+        / `<noun> stays in X` claim clauses."""
+        claims = [
+            Claim(
+                id=1,
+                text=(
+                    "An apparatus wherein the guiding pattern exceeds a "
+                    "preset range, the second mounting portion extend "
+                    "toward each other, the encapsulation layer jointly "
+                    "constitute an integrated structure, and the second "
+                    "magnetic component stays in the first position."
+                ),
+                independent=True,
+                method_claim=False,
+            ),
+        ]
+        terms = [i["term"] for i in check_antecedent_basis(claims)
+                 if i["claim_id"] == 1]
+        for verb in ("exceeds", "extend", "constitute", "stays"):
+            for t in terms:
+                assert verb not in t, f"{verb!r} bled into term: {t!r}"
+        # Head nouns still surface (no intro for them in this fragment).
+        assert any("guiding pattern" in t for t in terms), terms
+        assert any("second mounting portion" in t for t in terms), terms
+        assert any("encapsulation layer" in t for t in terms), terms
+        assert any("second magnetic component" in t for t in terms), terms
+
     def test_accounts_for_verb_not_overcaptured_r5(self):
         """R5 (issues #98 / #99): `<noun> accounts for X%` — `accounts` is a
         3sg finite verb in this pattern and must terminate NP capture. The
