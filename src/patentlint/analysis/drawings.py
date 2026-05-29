@@ -119,8 +119,8 @@ def compute_missing_figure_numbers(text: str) -> list[int]:
     Mirrors the CN ``check_figures_sequential`` shape (cn_abstract.py:129):
     collect parent numbers, compute ``range(1, max+1) - actual``. Sub-figure
     suffix ordering violations are handled by ``are_figures_sequential`` and
-    are not reported here — this helper reports only the attorney-actionable
-    gap subset (e.g. FIG. 1, FIG. 3 → ``[2]``).
+    by ``compute_suffix_violations`` — this helper reports only the
+    parent-integer gap subset (e.g. FIG. 1, FIG. 3 → ``[2]``).
     """
     refs = extract_figure_references(text)
     if not refs:
@@ -128,6 +128,65 @@ def compute_missing_figure_numbers(text: str) -> list[int]:
     numbers = {r.number for r in refs}
     max_n = max(numbers)
     return sorted(set(range(1, max_n + 1)) - numbers)
+
+
+def compute_suffix_violations(text: str) -> list[dict]:
+    """Return sub-figure suffix-ordering violations.
+
+    Issue #112: when ``are_figures_sequential`` returns False because of a
+    sub-figure suffix violation (e.g. FIG. 1A → FIG. 1C without 1B), the
+    parent-gap helper ``compute_missing_figure_numbers`` returns ``[]``
+    because no parent integer is missing. The user then gets a `.amend`
+    flag with an empty ``missing_numbers`` field and no idea where the
+    violation is. This helper closes that gap.
+
+    Each violation is one of:
+      * ``{"parent": int, "kind": "missing_suffix", "first": str, "second": str}``
+        — one side of a same-parent pair lacks a suffix
+        (e.g. FIG. 1 → FIG. 1A or FIG. 1A → FIG. 1)
+      * ``{"parent": int, "kind": "gap", "after": "A", "expected": "B", "got": "C"}``
+        — adjacent suffixes skip a letter
+      * ``{"parent": int, "kind": "out_of_order", "after": "C", "got": "A"}``
+        — adjacent suffix goes backwards
+
+    Structural metadata only — letters and integers, no draft content.
+    """
+    refs = extract_figure_references(text)
+    violations: list[dict] = []
+    if len(refs) < 2:
+        return violations
+    prev = refs[0]
+    for cur in refs[1:]:
+        if cur.number == prev.number:
+            if not prev.has_suffix or not cur.has_suffix:
+                violations.append({
+                    "parent": cur.number,
+                    "kind": "missing_suffix",
+                    "first": prev.suffix or "",
+                    "second": cur.suffix or "",
+                })
+            else:
+                prev_ord = ord(prev.suffix)
+                cur_ord = ord(cur.suffix)
+                if cur_ord == prev_ord + 1:
+                    pass
+                elif cur_ord <= prev_ord:
+                    violations.append({
+                        "parent": cur.number,
+                        "kind": "out_of_order",
+                        "after": prev.suffix,
+                        "got": cur.suffix,
+                    })
+                else:
+                    violations.append({
+                        "parent": cur.number,
+                        "kind": "gap",
+                        "after": prev.suffix,
+                        "expected": chr(prev_ord + 1),
+                        "got": cur.suffix,
+                    })
+        prev = cur
+    return violations
 
 
 def is_single_figure(text: str) -> bool:

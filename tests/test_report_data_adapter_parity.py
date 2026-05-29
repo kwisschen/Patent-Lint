@@ -278,6 +278,12 @@ class TestForwardMapsAreExhaustive:
         # Consumed into the US figures_sequential amend CheckItem's
         # details_params by _to_us_report_data; not a raw list on ReportData.
         "figures_missing",
+        # Same disposition as figures_missing — surfaced inside the US
+        # figuresSequential amend CheckItem's diagnostic payload via
+        # _to_us_report_data (suffix_violations field), not as a raw list
+        # on ReportData. Added 2026-05-29 for issue #112 (suffix-ordering
+        # violations were firing .amend with empty missing_numbers).
+        "figures_suffix_violations",
         # Consumed into the US abstract impliedPhrases CheckItem's
         # details_params by _to_us_report_data; not a raw list on ReportData.
         "abstract_implied_phrases",
