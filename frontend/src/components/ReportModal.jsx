@@ -29,7 +29,11 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { buildReportPayload, FIELD_LABEL_KEYS } from '@/lib/feedback'
+import {
+  buildReportPayload,
+  FIELD_LABEL_KEYS,
+  USER_COMMENT_MAX_CHARS,
+} from '@/lib/feedback'
 
 export default function ReportModal({
   open,
@@ -44,17 +48,21 @@ export default function ReportModal({
   const { t } = useTranslation()
   const [submitting, setSubmitting] = useState(false)
   const [result, setResult] = useState(null)
+  const [userComment, setUserComment] = useState('')
 
   useEffect(() => {
     if (open) {
       setSubmitting(false)
       setResult(null)
+      setUserComment('')
     }
   }, [open])
 
   // Build the exact wire payload using the same helper sendReport
   // uses. The user sees what's actually transmitted; no separate
-  // "preview" rendering that could diverge.
+  // "preview" rendering that could diverge. The user-comment field
+  // re-renders on every keystroke so the preview reflects the wire
+  // payload at all times.
   const payload = useMemo(
     () =>
       buildReportPayload({
@@ -62,18 +70,27 @@ export default function ReportModal({
         jurisdiction,
         locale,
         diagnostics: diagnostics || {},
+        userComment,
       }),
-    [checkKey, jurisdiction, locale, diagnostics],
+    [checkKey, jurisdiction, locale, diagnostics, userComment],
   )
 
+  // Preview omits the comment from the JSON-style list — it's rendered
+  // separately in its own block so the user can see their input
+  // verbatim (more honest than dropping it into a sorted key:value list).
   const entries = useMemo(
-    () => Object.entries(payload).sort(([a], [b]) => a.localeCompare(b)),
+    () => Object.entries(payload)
+      .filter(([k]) => k !== 'user_comment')
+      .sort(([a], [b]) => a.localeCompare(b)),
     [payload],
   )
 
+  const trimmedComment = userComment.trim()
+  const commentCharsLeft = USER_COMMENT_MAX_CHARS - userComment.length
+
   const handleSend = async () => {
     setSubmitting(true)
-    const outcome = await onConfirm()
+    const outcome = await onConfirm(trimmedComment || null)
     setSubmitting(false)
     if (outcome?.ok) {
       setResult('success')
@@ -131,6 +148,38 @@ export default function ReportModal({
               })
               .join('\n')}
           </pre>
+        </div>
+
+        {/* Optional free-form user comment. Wire payload is the
+            de-identified diagnostic; this box is the ONE field that
+            carries user-authored text. The notice immediately below
+            makes the not-de-identified nature explicit so the user can
+            decide whether to type. */}
+        <div className="space-y-1">
+          <label
+            htmlFor="report-modal-user-comment"
+            className="text-xs font-medium text-muted-foreground"
+          >
+            {t('feedback.reportModal.commentLabel')}
+          </label>
+          <textarea
+            id="report-modal-user-comment"
+            value={userComment}
+            onChange={(e) => setUserComment(e.target.value.slice(0, USER_COMMENT_MAX_CHARS))}
+            disabled={submitting || result === 'success'}
+            maxLength={USER_COMMENT_MAX_CHARS}
+            rows={3}
+            placeholder={t('feedback.reportModal.commentPlaceholder')}
+            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-y min-h-[4.5rem]"
+          />
+          <div className="flex justify-between text-[11px] text-muted-foreground">
+            <span>{t('feedback.reportModal.commentNotice')}</span>
+            {userComment.length > 0 && (
+              <span className={commentCharsLeft < 50 ? 'text-amber-700 dark:text-amber-400' : ''}>
+                {commentCharsLeft}
+              </span>
+            )}
+          </div>
         </div>
 
         <p className="text-sm text-muted-foreground">

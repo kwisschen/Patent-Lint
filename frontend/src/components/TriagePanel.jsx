@@ -37,12 +37,13 @@ function TriageItem({ check, t, i18n, compact, jurisdiction }) {
     setReportModalOpen(true)
   }
 
-  const handleAnonymousConfirm = () =>
+  const handleAnonymousConfirm = (userComment) =>
     sendReport({
       checkKey: check.message_key || 'generic',
       jurisdiction: jurisdiction || 'unknown',
       locale: i18n.language,
       diagnostics: check.diagnostics || {},
+      userComment,
     })
 
   const handleMailtoFallback = () => {

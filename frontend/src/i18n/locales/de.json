@@ -284,7 +284,10 @@
       "emailFallback": "Lieber per E-Mail? Per mailto senden",
       "toastSuccess": "Danke — Meldung empfangen.",
       "toastFailure": "Senden gerade nicht möglich — bitte per E-Mail versuchen.",
-      "deidNotice": "Meldungen lassen sich nicht mit Ihrer Identität verknüpfen. Wir erfassen weder E-Mail noch IP oder Kontodaten; gesendet werden ausschließlich die oben gezeigten anonymisierten Fragmente."
+      "deidNotice": "Meldungen lassen sich nicht mit Ihrer Identität verknüpfen. Wir erfassen weder E-Mail noch IP oder Kontodaten; gesendet werden ausschließlich die oben gezeigten anonymisierten Fragmente.",
+      "commentLabel": "Etwas hinzufügen? (optional)",
+      "commentPlaceholder": "z. B. „Dieser Begriff wird bereits in Anspruch 1 eingeführt — Übersehen der Rückbezugskette.“ Hilft bei der Triage, wenn die Diagnose allein nicht ausreicht.",
+      "commentNotice": "Was Sie hier eingeben, wird unverändert übermittelt — keine vertraulichen Inhalte einfügen."
     }
   },
   "cta": {
@@ -1895,6 +1898,7 @@
       "title": "Freiwilliges Feedback",
       "p1": "Jeder Befund hat eine Schaltfläche „Melden“. Mit einem Klick öffnet sich ein Dialog, der genau das anzeigt, was gesendet wird — nichts ist verborgen. Der Dialog bietet zudem die Alternative „Per E-Mail senden“ an kwisschen@gmail.com, falls Sie selbst mehr Kontext schreiben möchten.",
       "p2": "Die anonyme Datenmenge enthält Zählwerte, den konkret markierten Begriff oder Ausdruck, einen kurzen Kontextausschnitt, Kategoriebezeichnungen (welche Prüfung, welche Regel, welcher Erkennungszweig) und einige strukturelle Kennwerte — auf höchstens fünf Funde pro Bericht begrenzt. Sie enthält keinen vollständigen Anspruchstext, keine vollständigen Absätze, keine Dateinamen, keine Datei-Metadaten, keine E-Mail, keinen Namen und keine IP.",
+      "p2b": "Wenn Sie das optionale Kommentarfeld in diesem Dialog ausfüllen, wird Ihr Text unverändert in die Meldung übernommen — Sie kontrollieren, was hineingelangt. Behandeln Sie alles, was Sie dort eingeben, als für den Maintainer sichtbar; fügen Sie keine vertraulichen Inhalte ein.",
       "p3": "Wenn Sie auf „Anonym senden“ klicken, sendet Ihr Browser die Datenmenge per HTTPS an eine Vercel Edge Function auf patentlint.com, die im öffentlichen Repository kwisschen/Patent-Lint auf GitHub einen Eintrag anlegt. Die Datenmenge wird vor dem Versand in Ihrem Browser bewusst de-identifiziert (keine IP, keine E-Mail, keine Browser-Header, kein vollständiger Anspruchstext — siehe § 6 oben), damit die Veröffentlichung als GitHub-Issue anonym bleibt. Ihre IP und Browser-Header werden nicht an GitHub weitergeleitet.",
       "p4": "Nutzen Sie stattdessen die E-Mail-Alternative, erhalten wir nur das, was Sie selbst schreiben. Möchten Sie pseudonym senden, verwenden Sie einen E-Mail-Alias-Dienst (Apple Hide My Email, Gmail-Aliase, Firefox Relay, ProtonMail-Aliase); wir korrelieren Alias-Adressen nicht mit anderen Daten. Wir verwenden Feedback ausschließlich zur Fehlerbehebung und zur Antwort an Sie und geben es nicht an Dritte weiter."
     },

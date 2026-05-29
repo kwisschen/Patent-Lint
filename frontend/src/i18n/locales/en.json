@@ -284,7 +284,10 @@
       "emailFallback": "Prefer email? Send via mailto instead",
       "toastSuccess": "Thank you — report received.",
       "toastFailure": "Couldn't send right now — try email instead.",
-      "deidNotice": "Reports cannot be linked to your identity. No email, IP, or account info is recorded — only the de-identified fragments shown above are sent."
+      "deidNotice": "Reports cannot be linked to your identity. No email, IP, or account info is recorded — only the de-identified fragments shown above are sent.",
+      "commentLabel": "Anything to add? (optional)",
+      "commentPlaceholder": "e.g. \"This term is actually introduced in claim 1 — chain inheritance miss.\" Helps with triage when the diagnostic alone isn't enough.",
+      "commentNotice": "What you type here is sent as-is — avoid pasting confidential text."
     }
   },
   "cta": {
@@ -1895,6 +1898,7 @@
       "title": "Voluntary feedback",
       "p1": "Each finding has a \"Report\" button. Clicking it opens a dialog that previews exactly what will be sent — nothing is hidden. The dialog also offers a \"Send by email\" alternative addressed to kwisschen@gmail.com if you would rather write more context yourself.",
       "p2": "The anonymous payload contains counts, the specific term or phrase the rule flagged, a short surrounding excerpt, category labels (which check, which rule, which detection branch), and a few structural fingerprints — capped at five findings per report. It does not contain your full claim text, full paragraphs, file names, file metadata, your email, your name, or your IP.",
+      "p2b": "If you fill in the optional comment field in that dialog, your typed text is included in the report as-is — you control what goes into it. Treat anything you type there as visible to the maintainer; do not paste sensitive content.",
       "p3": "When you click \"Send anonymously,\" your browser POSTs the payload over HTTPS to a Vercel Edge Function on patentlint.com, which creates an issue on the public GitHub repository kwisschen/Patent-Lint. The payload is intentionally de-identified before it leaves your browser (no IP, no email, no browser headers, no full claim text — see § 6 above) so that publishing it as a GitHub issue remains anonymous. Your IP and browser headers are not forwarded to GitHub.",
       "p4": "If you use the email alternative instead, we receive whatever you write. To send pseudonymously, use an email-aliasing service (Apple Hide My Email, Gmail aliases, Firefox Relay, ProtonMail aliases); we do not correlate alias addresses with any other data. We use feedback only to fix bugs and reply to you, and we do not share it with third parties."
     },

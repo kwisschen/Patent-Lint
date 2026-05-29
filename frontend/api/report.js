@@ -112,6 +112,12 @@ async function handleReport(request, origin) {
   return json({ ok: true }, 202, origin);
 }
 
+// Cap the optional user-comment field server-side as defence in depth
+// (the modal also caps at 1000 chars). Anything beyond gets truncated
+// — the alternative would be to reject the whole report, but losing a
+// useful diagnostic to a stray over-long comment is the wrong trade.
+const USER_COMMENT_MAX_CHARS = 1500;
+
 function buildIssue(payload) {
   const checkKey = payload.check_key;
   const fingerprint =
@@ -120,19 +126,32 @@ function buildIssue(payload) {
       : "";
   const title = `[report] ${checkKey}${fingerprint}`;
 
-  // Render the payload as pretty JSON inside a fenced ```json block.
-  // Top-level keys are sorted for stable diffs across reports; nested
-  // findings arrays are preserved as objects (a flat `${k}: ${v}`
-  // template would stringify arrays via Array.prototype.toString,
-  // which collapses every finding to `[object Object]`).
+  // Separate the optional user-comment from the structural diagnostic
+  // payload. The diagnostic stays in the fenced JSON block (its
+  // contract is "de-identified structural metadata"); the comment
+  // renders as its own block-quoted section below, both for visual
+  // separation during triage AND so the trust contract of the JSON
+  // block ("only de-identified fields") isn't muddied by free-form
+  // text.
+  const { user_comment: rawUserComment, ...diagnosticPayload } = payload;
+  const userComment =
+    typeof rawUserComment === "string"
+      ? rawUserComment.trim().slice(0, USER_COMMENT_MAX_CHARS)
+      : "";
+
+  // Render the diagnostic payload as pretty JSON inside a fenced
+  // ```json block. Top-level keys are sorted for stable diffs across
+  // reports; nested findings arrays are preserved as objects (a flat
+  // `${k}: ${v}` template would stringify arrays via Array.prototype
+  // .toString, which collapses every finding to `[object Object]`).
   const sortedPayload = Object.fromEntries(
-    Object.keys(payload)
+    Object.keys(diagnosticPayload)
       .sort()
-      .map((k) => [k, payload[k]]),
+      .map((k) => [k, diagnosticPayload[k]]),
   );
   const json_block = JSON.stringify(sortedPayload, null, 2);
 
-  const body = [
+  const sections = [
     "Anonymous error report submitted via the ReportModal.",
     "",
     "```json",
@@ -140,7 +159,28 @@ function buildIssue(payload) {
     "```",
     "",
     "_Submitted via `POST /api/report`. De-identified payload only — no full claim text, no full paragraphs, no email, no IP. See Privacy §6._",
-  ].join("\n");
+  ];
+
+  if (userComment) {
+    // Block-quote each line of the comment with `> ` so any markdown
+    // (including injected `</details>` / triple-backticks / image
+    // syntax) renders as plain text rather than disrupting the issue
+    // body.
+    const quoted = userComment
+      .split("\n")
+      .map((line) => `> ${line}`)
+      .join("\n");
+    sections.push(
+      "",
+      "---",
+      "",
+      "**User comment** _(free-form, not de-identified — typed by the reporter)_:",
+      "",
+      quoted,
+    );
+  }
+
+  const body = sections.join("\n");
 
   const labels = ["report"];
   if (

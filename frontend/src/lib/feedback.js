@@ -470,11 +470,18 @@ export function dispatchFeedback(method, email) {
 // in-modal tertiary fallback.
 // ---------------------------------------------------------------------------
 
+// Frontend cap for the optional user-comment field. The /api/report
+// Edge Function enforces its own cap (currently 1500 chars) as a
+// defence-in-depth limit; clipping here gives an immediate signal in
+// the modal preview before the payload goes over the wire.
+export const USER_COMMENT_MAX_CHARS = 1000
+
 export function buildReportPayload({
   checkKey,
   jurisdiction,
   locale,
   diagnostics,
+  userComment,
 }) {
   const payload = {
     check_key: checkKey || 'unknown',
@@ -488,6 +495,15 @@ export function buildReportPayload({
       payload[k] = v
     }
   }
+  // The user-comment field is the only payload field that carries
+  // free-form, NOT-de-identified text from the user. Privacy §6 spells
+  // out the contract — empty / whitespace-only strings are dropped so
+  // the field never appears in the issue body unless the user actually
+  // typed something.
+  if (typeof userComment === 'string') {
+    const trimmed = userComment.trim().slice(0, USER_COMMENT_MAX_CHARS)
+    if (trimmed) payload.user_comment = trimmed
+  }
   return payload
 }
 
@@ -495,8 +511,8 @@ export function buildReportPayload({
 // { ok: true, payload } on 2xx, { ok: false, reason } on any
 // failure. The modal maps reason → localized toast string; raw HTTP
 // detail never reaches the user.
-export async function sendReport({ checkKey, jurisdiction, locale, diagnostics }) {
-  const payload = buildReportPayload({ checkKey, jurisdiction, locale, diagnostics })
+export async function sendReport({ checkKey, jurisdiction, locale, diagnostics, userComment }) {
+  const payload = buildReportPayload({ checkKey, jurisdiction, locale, diagnostics, userComment })
 
   emitOutgoing('/api/report')
   let response

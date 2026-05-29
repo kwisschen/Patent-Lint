@@ -186,13 +186,14 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
     setReportModalOpen(true)
   }
 
-  const handleAnonymousConfirm = () => {
+  const handleAnonymousConfirm = (userComment) => {
     if (!reportContext) return { ok: false, reason: 'no_context' }
     return sendReport({
       checkKey: 'antecedentBasis',
       jurisdiction: jurisdiction || 'unknown',
       locale: i18n.language,
       diagnostics: reportContext.diagnostics,
+      userComment,
     })
   }
 
