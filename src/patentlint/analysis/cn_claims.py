@@ -3394,7 +3394,17 @@ def _is_bare_genus_self_reference_cn(term: str, claim_text: str) -> bool:
 _BARE_NOUN_INTRO_VERBS_CN: tuple[str, ...] = tuple(
     sorted(
         {v for v in _F6_VERB_ALT_CN.split("|") if v}
-        | {"基于", "来自", "通过", "经由", "利用", "依据", "依"},
+        | {"基于", "来自", "通过", "经由", "利用", "依据", "依"}
+        # R36 (2026-05-29): include F11 locative verbs as bare-noun-intro
+        # contexts. Issues #141 / #142 — drafter wrote
+        # `限位于第三位置或第四位置二者之一` (constrained to be at position 3 or
+        # position 4, one of the two). The `endswith(verb)` left-clean
+        # check missed because `位于` / `设于` / `置于` etc. are the
+        # canonical locative verbs in CN claim diction yet weren't in the
+        # bare-noun verb set. Already known to other arms (F11 at line
+        # 2194). MPEP-equivalent: 审查指南 第二部分第二章 §3.2.5
+        # (clear/明确 standard).
+        | {"位于", "置于", "设于", "应用于", "作用于", "布置于", "固定于"},
         key=len,
         reverse=True,
     )
@@ -3402,7 +3412,14 @@ _BARE_NOUN_INTRO_VERBS_CN: tuple[str, ...] = tuple(
 # Noun-compounding CJK ideographs = CJK range minus the _NOUN_CHARS_CN
 # exclusion set (clause stops, conjunctions, possessive markers, modals).
 _BARE_NOUN_BOUNDARY_CN: frozenset[str] = frozenset(
-    _NOUN_CHARS_CN[_NOUN_CHARS_CN.index("s") + 1 : _NOUN_CHARS_CN.index("]")]
+    set(_NOUN_CHARS_CN[_NOUN_CHARS_CN.index("s") + 1 : _NOUN_CHARS_CN.index("]")])
+    # R36 (2026-05-29): 或 (or) is a Markush enumerator that separates
+    # bare noun mentions in claim diction; never part of a noun's name.
+    # Issues #141 / #142 — drafter wrote `限位于第三位置或第四位置二者之一`;
+    # without 或 in the boundary set, `_bare_noun_right_clean_cn`
+    # treated `第三位置或...` as a longer compound and rejected the
+    # bare intro.
+    | {"或"}
 )
 _BARE_NOUN_CJK_RE_CN: re.Pattern[str] = re.compile(r"[一-鿿]")
 _BARE_NOUN_MIN_LEN_CN = 4
@@ -3428,15 +3445,52 @@ def _bare_noun_left_clean_cn(text: str, i: int) -> bool:
     c = text[i - 1]
     if c.isspace() or unicodedata.category(c)[0] == "P":
         return True  # clause boundary / enumeration item
+    # R36 (2026-05-29): CJK noun-enumeration conjunctions ({或, 及, 与, 和})
+    # are clause boundaries — they introduce the next noun in a Markush
+    # `A或B`, `A、B及C`, etc. enumeration. Issues #141 / #142 — drafter
+    # wrote `限位于第三位置或第四位置二者之一`; the second mention `第四位置`
+    # is preceded by `或` (CJK letter, not Unicode punctuation), so the
+    # Unicode-category check above missed it.
+    #
+    # Critical narrowing: this set MUST NOT include 的 / 之 / 其 / 被 / 由
+    # even though they're in `_BARE_NOUN_BOUNDARY_CN`. They're possessive /
+    # pronoun / passive markers that head relative clauses (e.g.
+    # `所述X相关的Y` = "the Y related to X"), where Y is NOT a fresh bare
+    # intro — that's exactly the guard (b) the function docstring describes.
+    # Accepting them would silence real §112(b) defects like
+    # CN115485995B c82/c124's `第一训练信号` (R20 parallel-invention
+    # drafter-error protect:true labels).
+    if c in _BARE_NOUN_ENUMERATORS_CN:
+        return True
     # CJK ideograph not preceded by a verb -- compound tail (guard a),
     # 的 / 之 possessive marker (guard b), or a conjunction / modal not
     # verb-led. All rejected conservatively.
     return False
 
 
+_BARE_NOUN_MARKUSH_CLOSERS_CN: tuple[str, ...] = ("二者", "三者", "四者", "任一", "任意")
+
+# R36 (2026-05-29): CJK noun-enumeration conjunctions accepted as left
+# boundaries in `_bare_noun_left_clean_cn`. Strict subset of
+# `_BARE_NOUN_BOUNDARY_CN` — explicitly excludes 的 / 之 / 其 / 被 / 由
+# (possessive / pronoun / passive markers) which head relative clauses
+# and must remain rejected per guard (b).
+_BARE_NOUN_ENUMERATORS_CN: frozenset[str] = frozenset({"或", "及", "与", "和"})
+
+
 def _bare_noun_right_clean_cn(text: str, j: int) -> bool:
     """True if the term is not the head of a longer noun compound (guard a)."""
     if j >= len(text):
+        return True
+    # R36 (2026-05-29): Markush closers `N者` / `任一` mark the end of an
+    # `X或Y二者之一` enumeration — the term is the last enumeration item,
+    # not the head of a longer compound. Issues #141 / #142 — drafter
+    # wrote `第三位置或第四位置二者之一`; without this carve-out the right
+    # side of `第四位置` was `二` (CJK char, not a boundary), so the bare
+    # intro was rejected. The closers are unambiguous Markush idioms;
+    # `第二X` wouldn't end a term that starts mid-compound just before
+    # `第二` (drafters separate enumeration items with 或 / 、).
+    if any(text[j:].startswith(closer) for closer in _BARE_NOUN_MARKUSH_CLOSERS_CN):
         return True
     return not _bare_noun_compound_char_cn(text[j])
 

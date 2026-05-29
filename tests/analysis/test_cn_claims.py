@@ -1016,6 +1016,44 @@ class TestBareNounHelperCn:
         ro = txt.find("所述轴承")
         assert not has_bare_noun_introduction_cn(txt, [_claim(1, txt)], "轴承", ro)
 
+    # R36 (2026-05-29) — issues #141 / #142. Drafter wrote
+    # `限位于第三位置或第四位置二者之一` then referenced both `该第三位置`
+    # and `该第四位置`. Three mechanisms cover the case: (a) locative verb
+    # `位于` accepted as bare-intro context; (b) Markush enumerator `或`
+    # accepted as left clause boundary; (c) Markush closer `二者` accepted
+    # as right clause boundary.
+
+    def test_r36_locative_verb_intro(self):
+        from patentlint.analysis.cn_claims import has_bare_noun_introduction_cn
+        txt = "该弹性件用于将该延伸部限位于第三位置，并允许在该第三位置切换。"
+        ro = txt.find("该第三位置")
+        assert has_bare_noun_introduction_cn(txt, [_claim(1, txt)], "第三位置", ro)
+
+    def test_r36_markush_enumerator_left_boundary(self):
+        from patentlint.analysis.cn_claims import has_bare_noun_introduction_cn
+        txt = "该弹性件用于将该延伸部限位于第三位置或第四位置二者之一，并在该第四位置切换。"
+        ro = txt.find("该第四位置")
+        assert has_bare_noun_introduction_cn(txt, [_claim(1, txt)], "第四位置", ro)
+
+    def test_r36_markush_closer_right_boundary(self):
+        from patentlint.analysis.cn_claims import has_bare_noun_introduction_cn
+        # Even with the `或` left-boundary acceptance, the right side of
+        # `第四位置` here is `二` — the Markush-closer carve-out lets it pass.
+        txt = "限位于第三位置或第四位置二者之一，并在该第四位置切换。"
+        ro = txt.find("该第四位置")
+        assert has_bare_noun_introduction_cn(txt, [_claim(1, txt)], "第四位置", ro)
+
+    def test_r36_possessive_de_still_rejected(self):
+        # Critical negative control: `所述X相关的Y` must still reject Y as
+        # a bare intro, even though `的` is in _BARE_NOUN_BOUNDARY_CN.
+        # If this assertion fails, R36 over-broadened the left set and
+        # would silence real §112(b) defects per CN115485995B c82/c124.
+        from patentlint.analysis.cn_claims import has_bare_noun_introduction_cn
+        txt = "所述第三信号相关的第一训练信号与所述第六信号相关的第二训练信号。"
+        # Use end-of-text as ref_offset so the _scan looks at every occurrence
+        assert not has_bare_noun_introduction_cn(
+            txt, [_claim(1, txt)], "第一训练信号", len(txt))
+
 
 # ─────────────────────────────────────────────────────────────────────────
 # CN CRM non-transitory check (gap-fill: 专利法 §25 + 审查指南)
