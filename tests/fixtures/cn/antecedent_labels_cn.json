@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 35,
+    "current_round": 36,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -72,9 +72,26 @@
         "name": "r38_f22_list_item_no_colon",
         "description": "Mirror of TW R37 F22 — list-item bare-noun extraction without colon trigger.",
         "unresolved_removed_resolved": 4
+      },
+      {
+        "round": 36,
+        "name": "r36_locative_verb_and_markush_enumerator",
+        "description": "Extended bare-noun-introduction recognition with (a) F11 locative verbs (位于 / 置于 / 设于 / 应用于 / 作用于 / 布置于 / 固定于) added to _BARE_NOUN_INTRO_VERBS_CN; (b) Markush noun-enumeration conjunctions {或, 及, 与, 和} accepted as left clause boundaries via the new _BARE_NOUN_ENUMERATORS_CN frozenset (strict subset of _BARE_NOUN_BOUNDARY_CN — possessive markers 的/之/其/被/由 stay rejected per guard b); (c) Markush closers {二者, 三者, 四者, 任一, 任意} accepted as right clause boundaries. Drained from 2026-05-29 report queue (#141, #142 — `限位于第三位置或第四位置二者之一`). Mirror of US R6 list-context Markush extension.",
+        "fixtures_silenced": 13,
+        "shipped_at": "2026-05-29T08:29:19.016764+00:00"
       }
     ],
-    "last_updated": "2026-05-04T09:52:56.594193+00:00"
+    "last_updated": "2026-05-04T09:52:56.594193+00:00",
+    "category_counts": {
+      "unclassified": 1059,
+      "miss_intro.coverage_gap": 250,
+      "walker_fp.over_capture": 78,
+      "legit_drafting_error": 13,
+      "walker_fp.cross_branch_sibling": 96,
+      "walker_fp.fragment": 9,
+      "walker_fp.trailing_residue": 4,
+      "tw_contamination": 3
+    }
   },
   "labels": [
     {
@@ -5690,8 +5707,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "r36_locative_verb_and_markush_enumerator",
+      "round": 36
     },
     {
       "fixture": "CN115485995B",
@@ -5762,8 +5779,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "r36_locative_verb_and_markush_enumerator",
+      "round": 36
     },
     {
       "fixture": "CN115485995B",
@@ -5834,8 +5851,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "r36_locative_verb_and_markush_enumerator",
+      "round": 36
     },
     {
       "fixture": "CN115485995B",
@@ -5882,8 +5899,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "r36_locative_verb_and_markush_enumerator",
+      "round": 36
     },
     {
       "fixture": "CN115485995B",
@@ -5930,8 +5947,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "r36_locative_verb_and_markush_enumerator",
+      "round": 36
     },
     {
       "fixture": "CN115485995B",
@@ -9614,8 +9631,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "r36_locative_verb_and_markush_enumerator",
+      "round": 36
     },
     {
       "fixture": "CN115485995B",
@@ -9710,8 +9727,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "r36_locative_verb_and_markush_enumerator",
+      "round": 36
     },
     {
       "fixture": "CN115485995B",
@@ -9770,8 +9787,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "r36_locative_verb_and_markush_enumerator",
+      "round": 36
     },
     {
       "fixture": "CN115485995B",
@@ -9830,8 +9847,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "r36_locative_verb_and_markush_enumerator",
+      "round": 36
     },
     {
       "fixture": "CN115485995B",
@@ -9878,8 +9895,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "r36_locative_verb_and_markush_enumerator",
+      "round": 36
     },
     {
       "fixture": "CN115485995B",
@@ -16557,8 +16574,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "Resurfaced by global ordinal ≥4 intro filter (R7.5). | parser-fix migration: c89→c90",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "r36_locative_verb_and_markush_enumerator",
+      "round": 36
     },
     {
       "fixture": "CN115485995B",
@@ -16977,8 +16994,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "r36_locative_verb_and_markush_enumerator",
+      "round": 36
     },
     {
       "fixture": "CN115485995B",
@@ -17037,8 +17054,8 @@
       "protect": false,
       "confidence": "seed",
       "notes": "R8 shifting: resurfaced from 进行 interior verb split.",
-      "resolved_by": null,
-      "round": 0
+      "resolved_by": "r36_locative_verb_and_markush_enumerator",
+      "round": 36
     },
     {
       "fixture": "CN116662522B",
