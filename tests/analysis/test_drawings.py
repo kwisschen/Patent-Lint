@@ -6,6 +6,7 @@ from patentlint.analysis.drawings import (
     get_figure_count,
     are_figures_sequential,
     compute_missing_figure_numbers,
+    compute_suffix_violations,
     is_single_figure,
     uses_wrong_label_for_single_figure,
     contains_prior_art_references,
@@ -72,6 +73,59 @@ class TestComputeMissingFigureNumbers:
         assert compute_missing_figure_numbers(
             "FIG. 1A is a view.\nFIG. 1B is another view.\nFIG. 3 is a different one."
         ) == [2]
+
+
+class TestComputeSuffixViolations:
+    """Issue #112: when a draft fires figuresSequential.amend because of
+    sub-figure suffix ordering (FIG. 1A → FIG. 1C without 1B) instead of
+    a parent-integer gap, missing_numbers is empty. This helper surfaces
+    the suffix-side violations so the diagnostic payload can self-explain."""
+
+    def test_no_violations_when_sequential(self):
+        assert compute_suffix_violations(
+            "FIG. 1A is a view.\nFIG. 1B is another view.\nFIG. 2 is overview."
+        ) == []
+
+    def test_no_violations_when_no_figures(self):
+        assert compute_suffix_violations("No figures.") == []
+
+    def test_gap_in_suffix(self):
+        result = compute_suffix_violations(
+            "FIG. 1A is a view.\nFIG. 1C is a third view."
+        )
+        assert result == [{
+            "parent": 1, "kind": "gap",
+            "after": "A", "expected": "B", "got": "C",
+        }]
+
+    def test_out_of_order_suffix(self):
+        result = compute_suffix_violations(
+            "FIG. 1B is a view.\nFIG. 1A is another view."
+        )
+        assert result == [{
+            "parent": 1, "kind": "out_of_order",
+            "after": "B", "got": "A",
+        }]
+
+    def test_missing_suffix_on_one_side(self):
+        # The extractor synthesizes a space-suffix for bare FIG. N when
+        # followed by another same-parent suffix-bearing ref. Verify the
+        # helper flags the missing-letter side.
+        result = compute_suffix_violations(
+            "FIG. 1A is a view.\nFIG. 1 is the whole assembly."
+        )
+        assert len(result) == 1
+        assert result[0]["parent"] == 1
+        assert result[0]["kind"] == "missing_suffix"
+
+    def test_multiple_violations_surfaced(self):
+        result = compute_suffix_violations(
+            "FIG. 1A is a view.\nFIG. 1D is another.\nFIG. 2A.\nFIG. 2C."
+        )
+        # Both parent=1 (A→D gap) and parent=2 (A→C gap) should fire.
+        assert len(result) == 2
+        kinds = {(v["parent"], v["kind"]) for v in result}
+        assert (1, "gap") in kinds and (2, "gap") in kinds
 
 
 class TestSingleFigure:

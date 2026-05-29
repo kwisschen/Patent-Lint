@@ -506,6 +506,11 @@ def _run_pipeline(
         if (drawings_section and not figures_seq)
         else []
     )
+    figures_suffix_violations = (
+        drawings_analysis.compute_suffix_violations(drawings_section)
+        if (drawings_section and not figures_seq)
+        else []
+    )
     single_fig = drawings_analysis.is_single_figure(full_text)
     wrong_label = drawings_analysis.uses_wrong_label_for_single_figure(full_text) if single_fig else False
     prior_art_drawings = drawings_analysis.contains_prior_art_references(drawings_section) if drawings_section else False
@@ -579,6 +584,7 @@ def _run_pipeline(
         figures_count=figures_count,
         figures_sequential=figures_seq,
         figures_missing=figures_missing,
+        figures_suffix_violations=figures_suffix_violations,
         contains_prior_art_in_drawings=prior_art_drawings,
         single_figure=single_fig,
         wrong_label_for_single_figure=wrong_label,

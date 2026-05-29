@@ -26,6 +26,7 @@ from patentlint.analysis.drawings import (
     _extract_figure_ids,
     are_figures_sequential,
     compute_missing_figure_numbers,
+    compute_suffix_violations,
     contains_prior_art_references,
     is_single_figure,
     uses_wrong_label_for_single_figure,
@@ -57,6 +58,7 @@ def check_figures_sequential_epc(full_text: str) -> list[CheckItem]:
         )]
 
     missing = compute_missing_figure_numbers(full_text)
+    suffix_violations = compute_suffix_violations(full_text)
     return [CheckItem(
         status="amend",
         message=(
@@ -71,6 +73,12 @@ def check_figures_sequential_epc(full_text: str) -> list[CheckItem]:
             missing_count=len(missing),
             missing_numbers=missing,
             first_missing=missing[0] if missing else None,
+            # Issue #112: when the failure is suffix-ordering (FIG. 1A →
+            # FIG. 1C without 1B) instead of a parent-integer gap, the
+            # missing list is empty. Surface the suffix-side violations
+            # explicitly so the next similar report self-diagnoses.
+            suffix_violations_count=len(suffix_violations),
+            suffix_violations=suffix_violations[:10] if suffix_violations else None,
         ),
     )]
 

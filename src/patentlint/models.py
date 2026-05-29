@@ -472,6 +472,7 @@ class AnalysisResult(BaseModel):
     figures_count: int = 0
     figures_sequential: bool = True
     figures_missing: list[int] = Field(default_factory=list)
+    figures_suffix_violations: list[dict] = Field(default_factory=list)
     contains_prior_art_in_drawings: bool = False
     single_figure: bool = False
     wrong_label_for_single_figure: bool = False
@@ -1429,6 +1430,17 @@ class AnalysisResult(BaseModel):
                     total_figures=self.figures_count,
                     missing_figures=self.figures_missing[:10] if self.figures_missing else None,
                     first_missing=self.figures_missing[0] if self.figures_missing else None,
+                    # Issue #112: surface sub-figure suffix-ordering violations
+                    # (FIG. 1A → FIG. 1C without 1B) that fire .amend but leave
+                    # missing_figures empty. Structural metadata only.
+                    suffix_violations_count=(
+                        len(self.figures_suffix_violations)
+                        if self.figures_suffix_violations else 0
+                    ),
+                    suffix_violations=(
+                        self.figures_suffix_violations[:10]
+                        if self.figures_suffix_violations else None
+                    ),
                 ),
             ))
         else:
