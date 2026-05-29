@@ -71,6 +71,19 @@ class TestFullwidthPeriod:
         assert claims[0].independent is True
 
 
+class TestIdeographicComma:
+    def test_ideographic_comma_numbering(self):
+        text = (
+            "1、一种折叠支撑脚组件，其特征在于，包括壳体。\n"
+            "2、根据权利要求1所述的折叠支撑脚组件，其特征在于，所述折叠支撑脚包括枢轴。"
+        )
+        claims = parse_cn_claims_docx(text)
+        assert len(claims) == 2
+        assert [c.id for c in claims] == [1, 2]
+        assert claims[0].independent is True
+        assert claims[1].dependencies == [1]
+
+
 class TestEmptyText:
     def test_empty_text(self):
         assert parse_cn_claims_docx("") == []

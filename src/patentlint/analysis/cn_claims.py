@@ -256,8 +256,10 @@ def check_self_dependent(cn_doc: CnPatentDocument) -> list[CheckItem]:
     )]
 
 
-# Strip the ``N. `` / ``N．`` claim-number prefix before checking preamble.
-_CN_CLAIM_NUM_PREFIX = re.compile(r"^[\s　]*\d+\s*[.．。]\s*")
+# Strip the ``N. `` / ``N．`` / ``N、`` claim-number prefix before checking
+# preamble. Mirror of ``parser/claims_cn.py::_CN_CLAIM_NUM`` — keep the
+# terminator class in sync.
+_CN_CLAIM_NUM_PREFIX = re.compile(r"^[\s　]*\d+\s*[.．。、]\s*")
 
 
 def check_independent_preamble(cn_doc: CnPatentDocument) -> list[CheckItem]:

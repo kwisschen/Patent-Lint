@@ -8,8 +8,11 @@ import re
 
 from patentlint.models import Claim
 
-# Claim number: "1." or "1．" or "1。" at start of line
-_CN_CLAIM_NUM = re.compile(r"^[\s\u3000]*(\d+)\s*[.．。]\s*", re.MULTILINE)
+# Claim number: "1." or "1．" or "1。" or "1、" at start of line.
+# The 顿号 (U+3001) terminator is common in firm-template CN drafts even
+# though 专利法实施细则 §22 only mandates Arabic numerals (no fixed
+# terminator).
+_CN_CLAIM_NUM = re.compile(r"^[\s\u3000]*(\d+)\s*[.．。、]\s*", re.MULTILINE)
 
 # Mid-paragraph claim boundary: drafters sometimes pack two claims into one
 # Word paragraph (no newline between them). Preprocessing inserts a newline
@@ -19,7 +22,7 @@ _CN_CLAIM_NUM = re.compile(r"^[\s\u3000]*(\d+)\s*[.．。]\s*", re.MULTILINE)
 # step references (`步骤S2`, `2.3`), inline enumerations, and formulas.
 _MID_PARAGRAPH_CLAIM_BOUNDARY = re.compile(
     r"(?:(?<=[。；！？])[\s\u3000]+|(?<=[\s\u3000]{2}))"
-    r"(\d+)[\s\u3000]*[.．。][\s\u3000]*"
+    r"(\d+)[\s\u3000]*[.．。、][\s\u3000]*"
     r"(?=[一如根其权依包对将在本])"
 )
 
