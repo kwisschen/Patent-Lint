@@ -110,6 +110,14 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         "移動",
         "樞接",
         "超過",
+        # R7 trailing comparison verbs — mirror of 超過 (exceeds).
+        # Issues #106 (`有通道寬度大於`), #108 (`通道寬度大於`),
+        # #130 (`寬度小於`), #133 (`最大外徑大於`) — `大於`/`小於`
+        # are unambiguous comparison verbs in TIPO drafting, never
+        # noun-phrase termini. 專利法 §26 第3項 spec-support is for
+        # noun phrases only.
+        "大於",
+        "小於",
         "相",
         "形",
         "時",

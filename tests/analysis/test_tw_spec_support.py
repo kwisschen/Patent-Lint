@@ -158,6 +158,20 @@ class TestStripSpecSupportTrailingTokens:
         # A 2-char term with a trailing 1-char token would go to empty; prevent.
         assert _strip_spec_support_trailing_tokens("相") == "相"
 
+    # R7 (2026-05-29): comparison-verb trailing strips. Issues #106/
+    # #108/#130/#133 — `大於`/`小於` mirror the existing `超過` entry.
+    def test_大於_stripped(self):
+        assert _strip_spec_support_trailing_tokens("通道寬度大於") == "通道寬度"
+
+    def test_大於_stripped_after_leading_有(self):
+        assert _strip_spec_support_trailing_tokens("有通道寬度大於") == "有通道寬度"
+
+    def test_小於_stripped(self):
+        assert _strip_spec_support_trailing_tokens("寬度小於") == "寬度"
+
+    def test_大於_stripped_on_longer_head(self):
+        assert _strip_spec_support_trailing_tokens("最大外徑大於") == "最大外徑"
+
 
 class TestSplitOnConjunction:
     def test_split_on_及(self):
