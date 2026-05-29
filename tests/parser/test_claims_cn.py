@@ -275,3 +275,35 @@ class TestMidParagraphClaimBoundary:
         claims = parse_cn_claims_docx(text)
         assert [c.id for c in claims] == [1, 2]
         assert claims[1].independent is True
+
+class TestBodyQuotedReference:
+    """引用記載型式 body-cross-ref recognition (CN) — mirror of TW's
+    Claim.quoted_references mechanism. Body refs like
+    `如权利要求N所述的X` inside an independent claim body should populate
+    quoted_references so the antecedent walker can chain via incorporation
+    even when the statutory dependencies classification doesn't route
+    through them. Statute pin: 审查指南 第二部分第二章 §3.3 + MPEP-equiv
+    "明确" antecedent standard."""
+
+    def test_body_cross_ref_populates_quoted_references(self):
+        text = (
+            "1. 一种发光封装结构，包括基板和LED芯片。\n"
+            "16. 一种发光模块，包括：\n"
+            "如权利要求1所述的发光封装结构；以及\n"
+            "设置在所述发光封装结构上方的光学透镜。"
+        )
+        claims = parse_cn_claims_docx(text)
+        c16 = next(c for c in claims if c.id == 16)
+        assert 1 in c16.quoted_references, (
+            f"expected 1 in quoted_references, got {c16.quoted_references}"
+        )
+
+    def test_self_ref_dropped(self):
+        text = (
+            "1. 一种装置。\n"
+            "5. 根据权利要求1所述的装置，其中包括如权利要求5所述的部件。"
+        )
+        claims = parse_cn_claims_docx(text)
+        c5 = next(c for c in claims if c.id == 5)
+        assert 5 not in c5.quoted_references
+

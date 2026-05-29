@@ -146,11 +146,40 @@ def parse_cn_claims_docx(text: str) -> list[Claim]:
         # Remove self-references and deduplicate
         deps = sorted(set(d for d in deps if d != num))
 
+        # 引用記載型式 / incorporation-by-reference body cross-refs (TW
+        # parity, see claims_tw.py:120). Scans for `如/根据/依据/...
+        # 权利要求N 所述[的]X` patterns anywhere in the body. Refs that
+        # match the SAME _CN_DEPENDENCY pattern already used for the
+        # statutory dependency extraction above — but here we ALSO route
+        # them to quoted_references so the antecedent walker has the
+        # incorporation signal explicitly. For backward-compatibility,
+        # the broad `deps = ...` scan above continues to capture all body
+        # refs into dependencies as well — the walker dedup'es when
+        # building its chain queue, so the two lists may overlap without
+        # double-traversal. Future ADR may split classification cleanly
+        # (preamble → dependencies, body → quoted_references) — this
+        # populates quoted_references now so the walker is forward-ready.
+        quoted_refs: list[int] = []
+        for dep_match in _CN_DEPENDENCY.finditer(claim_text):
+            spec = dep_match.group("spec")
+            for ref_num in _expand_dependency_spec(spec):
+                if ref_num == num:
+                    continue
+                quoted_refs.append(ref_num)
+        # quoted_references records every body cross-ref INDEPENDENTLY
+        # of the dependencies extraction above (which also currently
+        # captures body refs into deps for back-compat with downstream
+        # multi-dep / chain-format checks). Overlap is intentional and
+        # the walker's `visited` set deduplicates during BFS. Only
+        # self-refs are dropped to prevent walker loops.
+        quoted_refs = sorted(set(quoted_refs))
+
         claims.append(Claim(
             id=num,
             text=claim_text,
             independent=len(deps) == 0,
             dependencies=deps,
+            quoted_references=quoted_refs,
             multiple_dependent=len(deps) > 1,
             method_claim=False,
         ))

@@ -1991,6 +1991,13 @@ def get_ancestor_chain_cn(claim: Claim, all_claims: list[Claim]) -> list[Claim]:
     claims_by_id = {c.id: c for c in all_claims}
     chain: list[Claim] = [claim]
     visited: set[int] = {claim.id}
+    # Chain uses dependencies ONLY. Claim.quoted_references is populated
+    # by the parser for body cross-refs (`如权利要求N所述的X`) but extending
+    # the chain blanket-grants antecedent for ALL of claim N's intros —
+    # broader than CNIPA 审查指南 § 3.3 cross-reference doctrine, which
+    # says the body cross-ref provides antecedent only for the named
+    # element X. Element-scoped chain traversal is a future ADR.
+    # See analysis/claims.py:_chain — same design choice.
     queue: list[int] = list(claim.dependencies)
     while queue:
         parent_id = queue.pop(0)

@@ -22,6 +22,33 @@ _DEP_REF = re.compile(
     re.IGNORECASE,
 )
 
+# Body cross-reference shape: `(the|said) <NP up to 5 words>
+# (of|according to|as recited in|...) claim N`. Detects 引用記載型式
+# (incorporation-by-reference) inside the claim body — the English
+# equivalent of TW `如請求項N所述的X`. Common in TW/JP-translated US
+# drafts: `A module, comprising: the X according to claim 1; ...`.
+#
+# Populates Claim.quoted_references so the antecedent walker can chain
+# to the referenced claim even when the statutory independence
+# classification doesn't route through dependencies. The 5-word NP cap
+# distinguishes body cross-refs (typically `the <short head noun>
+# according to claim N`) from a long preamble that happens to end in
+# `of claim N` — without the cap, an entire body sentence preceding
+# `claim N` would match.
+#
+# MPEP § 2173.05(b) "reasonably ascertainable" antecedent standard
+# supports treating these body cross-refs as antecedent-providing for
+# their named element; MPEP § 608.01(n) recognizes cross-reference
+# forms.
+_BODY_CROSS_REF = re.compile(
+    r"\b(?:the|said)\s+"
+    r"[\w\-]+(?:\s+[\w\-]+){0,4}\s+"
+    r"(?:of|according\s+to|"
+    r"as\s+(?:in|claimed\s+in|recited\s+in|set\s+forth\s+in|defined\s+in))"
+    r"\s*claims?\s+(\d+)\b",
+    re.IGNORECASE,
+)
+
 # Pattern to match individual claim blocks.
 # Uses [\r\n] instead of \n for cross-platform .docx compatibility.
 _CLAIM_BLOCK = re.compile(
@@ -161,6 +188,30 @@ def parse_claims(claims_text: str) -> list[Claim]:
         method = is_method_claim(claim_text)
         dependencies = parse_dependencies(claim_text, independent, claim_number)
 
+        # 引用記載型式 / incorporation-by-reference body cross-refs.
+        # Scans claim body for `(the|said) <NP> (of|according to|...)
+        # claim N` patterns and routes those N's to quoted_references —
+        # the antecedent walker traverses both dependencies and
+        # quoted_references to build the chain. Mirrors TW parser's
+        # existing `quoted_references` semantics (see claims_tw.py:120).
+        #
+        # Overlap policy: the broad `parse_dependencies` scan above also
+        # captures these body-form refs into `dependencies` for backward
+        # compatibility with downstream multi-dep / chain-format checks
+        # written before the quoted_references mechanism existed.
+        # quoted_references records the body-form refs INDEPENDENTLY so
+        # future ADRs that split the statutory classification (preamble-
+        # only dependencies) have a clean signal already populated. The
+        # walker `visited` set deduplicates the overlap during BFS.
+        # Only self-refs are filtered (walker-loop guard).
+        quoted_refs = []
+        for cross_ref_match in _BODY_CROSS_REF.finditer(claim_text):
+            ref_num = int(cross_ref_match.group(1))
+            if ref_num == claim_number:
+                continue
+            quoted_refs.append(ref_num)
+        quoted_refs = sorted(set(quoted_refs))
+
         claims.append(Claim(
             id=claim_number,
             text=claim_text,
@@ -168,6 +219,7 @@ def parse_claims(claims_text: str) -> list[Claim]:
             multiple_dependent=multiple_dependent,
             method_claim=method,
             dependencies=dependencies,
+            quoted_references=quoted_refs,
         ))
 
     return claims
