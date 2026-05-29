@@ -177,6 +177,16 @@ class TestLeadingRejectCn:
         assert _has_leading_reject_cn("第一连接器") is False
         assert _has_leading_reject_cn("开口部") is False  # 部 as suffix is fine
 
+    def test_zhongyong_preamble_fragment_rejected(self):
+        # Issue #145: `一种用于X的Y` is the universal CN preamble form
+        # per 审查指南 §3.1.1. The walker over-captures `种用` after
+        # stripping the leading `一` quantifier and landing on `种`
+        # before `于` cuts the capture. `种用` is never a real noun head.
+        assert _has_leading_reject_cn("种用") is True
+        # Negative controls: legitimate compounds starting with 种 still pass
+        assert _has_leading_reject_cn("种类") is False
+        assert _has_leading_reject_cn("品种") is False
+
 
 class TestInteriorRejectCn:
     """_has_interior_reject_cn: comprehensive structural markers."""
