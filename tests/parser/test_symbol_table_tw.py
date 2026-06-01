@@ -114,6 +114,54 @@ class TestParseTwSymbolTableUnit:
         assert len(result) == 1
         assert result[0].numeral == "10-1"
 
+    # Issue #159 — letter-prefixed range coverage. TIPO 符號說明 drafters
+    # write `PHA1~PHAn`, `PR1~PRn`, `L1~Ln`, `C1~Cn` to mean "enumerated
+    # family up to n" without committing to a specific upper bound. Spec
+    # then uses `PR2`, `PR5`, etc. Pre-fix, the walker rejected these as
+    # not covered. Post-fix, open `<prefix>n` ranges expand to the safe
+    # cap (20), enumerated `<prefix>k~<prefix>m` ranges expand to the
+    # literal range.
+
+    def test_letter_prefix_open_range(self):
+        """PR1~PRn → PR1, PR2, ..., PR20 (capped)."""
+        result = parse_tw_symbol_table(["PR1~PRn‧‧‧光阻"])
+        nums = [e.numeral for e in result]
+        assert "PR1" in nums
+        assert "PR2" in nums
+        assert "PR20" in nums
+        assert "PR21" not in nums
+
+    def test_letter_prefix_open_range_fullwidth_tilde(self):
+        """Full-width tilde variant: PR1～PRn → same expansion."""
+        result = parse_tw_symbol_table(["PR1～PRn‧‧‧光阻"])
+        nums = [e.numeral for e in result]
+        assert "PR2" in nums
+
+    def test_letter_prefix_enumerated_range(self):
+        """LD1~LD5 → enumerated 5-item range (not open-ended)."""
+        result = parse_tw_symbol_table(["LD1~LD5‧‧‧雷射二極體"])
+        nums = [e.numeral for e in result]
+        assert nums == ["LD1", "LD2", "LD3", "LD4", "LD5"]
+
+    def test_letter_prefix_multichar(self):
+        """Multi-char prefix: PHA1~PHAn."""
+        result = parse_tw_symbol_table(["PHA1~PHAn‧‧‧相位"])
+        nums = [e.numeral for e in result]
+        assert "PHA1" in nums and "PHA5" in nums and "PHA20" in nums
+
+    def test_letter_prefix_oversized_falls_back(self):
+        """Enumerated range > 30 falls back to raw token."""
+        result = parse_tw_symbol_table(["P1~P100‧‧‧大量"])
+        assert len(result) == 1
+        assert result[0].numeral == "P1~P100"
+
+    def test_letter_prefix_mismatched_prefix_no_expand(self):
+        """Mismatched prefixes (LD1~PR5) don't match the letter-range
+        regex — fall through to raw token."""
+        result = parse_tw_symbol_table(["LD1~PR5‧‧‧誤"])
+        assert len(result) == 1
+        assert result[0].numeral == "LD1~PR5"
+
     def test_ellipsis_separator(self):
         """… (single ellipsis character) separator."""
         result = parse_tw_symbol_table(["10…基板"])
