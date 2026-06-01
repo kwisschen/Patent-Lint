@@ -4849,6 +4849,102 @@ def _bare_noun_right_clean_tw(text: str, j: int) -> bool:
     return not _bare_noun_compound_char_tw(text[j])
 
 
+def has_possessive_introduction_tw(
+    claim_text: str, chain: list, term: str, ref_offset: int
+) -> bool:
+    """R9 (2026-06-01) — issue #134.
+
+    True if ``term`` appears earlier in possessive position
+    ``(所述|前述|該)<X>之<term>``, where the genitive owner X is itself
+    referenced. Y (the term) gets antecedent basis from this first
+    article-less possessive mention.
+
+    Differs from ``has_bare_noun_introduction_tw``:
+
+    - NO 4-char min-len gate. The structural pattern is unambiguous
+      because it requires a definite-reference prefix (``所述/前述/該``)
+      before the genitive ``之``, so short locative-attribute nouns
+      (``頂面`` / ``底面`` / ``側面`` / ``端面`` / ``頂端`` / ``底端``)
+      qualify. Without this carve-out the 4-char gate blocks all 2-3
+      char locative attributes from possessive intros.
+
+    - Accepts ``之``-headed left context. ``has_bare_noun_introduction_tw``
+      guard (b) blanket-rejects ``之`` to defend against verb-phrase
+      relative-clause ambiguity. That defense doesn't apply here
+      because the required ``所述/前述/該<X>之`` prefix anchors the
+      construction as definite genitive — there's no verb-phrase
+      relative-clause reading of ``所述X之Y`` in TIPO drafting.
+
+    Reproduction: claim 8 of the user's draft writes
+    ``所述第二波長發光元件之頂面外露於所述反射層``. ``頂面`` is intro'd
+    article-less as the said-element's attribute. Later ``所述頂面``
+    references resolve via this intro.
+
+    Statute pin: TIPO 專利法 §26 第3項 "明確" antecedent standard;
+    MPEP § 2173.05(e) "reasonably ascertainable" equivalent. The
+    possessive-position first mention of a known entity's attribute
+    is a recognized intro form across both jurisdictions.
+    """
+    t = (term or "").strip()
+    if not t or len(t) < 2:
+        return False
+    if any(ch.isdigit() for ch in t) or "(" in t:
+        return False
+    # R9 narrowing (parity with CN R37): ordinal-led terms (第一X /
+    # 第二X / ...) are EXCLUDED. Doctrine is ambiguous — `所述X之第一Y`
+    # may be either (a) a definitional intro of the first Y of X, OR
+    # (b) a definite reference to a previously-introduced "first Y"
+    # that strict §26 第3項 requires to have its own clean intro. CN
+    # corpus has documented protect:true labels under reading (b) (e.g.,
+    # CN115485995B c82/c124 — `所述第三信号相关的第一训练信号`); TW
+    # corpus doesn't currently have evidence either way, so apply the
+    # CN-conservative reading for cross-jurisdiction parity. Covers
+    # the unambiguous locative-attribute cases (頂面/底面/側面/端面 —
+    # non-ordinal short nouns that R9 was designed for).
+    if t.startswith("第"):
+        return False
+
+    def _scan(text: str, limit: int | None) -> bool:
+        start = 0
+        while True:
+            idx = text.find(t, start)
+            if idx < 0:
+                return False
+            if limit is not None and idx >= limit:
+                return False
+            # Possessive intro shape: text[idx-1] is 之 AND the 15-char
+            # window before 之 contains 所述/前述/該 (the definite-reference
+            # marker on the genitive owner). The 15-char window is tight
+            # enough to keep the marker structurally close to the 之
+            # without admitting unrelated mentions earlier in the clause.
+            #
+            # Right-clean check is INTENTIONALLY skipped for this arm.
+            # The structural pattern (所述/前述/該<X>之<term>) is
+            # unambiguous; <term> is the head of the possessive phrase
+            # regardless of what follows. The common shape `<term>外露於`
+            # / `<term>突出於` / `<term>包含` etc. would fail the standard
+            # right-clean (verb starts like 外/突/包 aren't in the boundary
+            # set) and block legitimate possessive intros for short
+            # locative attributes (頂面/底面/側面/端面/頂端/底端 — exactly
+            # the case the R9 arm is designed to cover). FP risk: drafter
+            # uses `所述X之頂面型` and walker searches for `頂面` — but
+            # walker references would strip qualifiers to the same noun
+            # the drafter consistently uses (`頂面型`), so the search
+            # term doesn't mismatch in practice.
+            if idx >= 1 and text[idx - 1] == "之":
+                look_back = text[max(0, idx - 16):idx - 1]
+                if any(marker in look_back for marker in ("所述", "前述", "該")):
+                    return True
+            start = idx + 1
+
+    if _scan(claim_text or "", ref_offset):
+        return True
+    for ancestor in chain[1:]:
+        if _scan(getattr(ancestor, "text", "") or "", None):
+            return True
+    return False
+
+
 def has_bare_noun_introduction_tw(
     claim_text: str, chain: list, term: str, ref_offset: int
 ) -> bool:
@@ -5330,6 +5426,19 @@ def check_antecedent_basis(
             # extractors miss article-less data / attribute nouns; this
             # closes the gap. See has_bare_noun_introduction_tw.
             if resolved_intro is None and has_bare_noun_introduction_tw(
+                claim.text, chain, normalized_term, m.start()
+            ):
+                continue
+
+            # R9 (2026-06-01): possessive-introduction rescue. A short
+            # locative-attribute noun first mentioned article-less in
+            # ``(所述|前述|該)<X>之<noun>`` possessive position gets
+            # antecedent basis from this intro. Bypasses the 4-char
+            # min-len gate of has_bare_noun_introduction_tw because the
+            # structural pattern (definite-reference + 之 + noun) is
+            # unambiguous. See has_possessive_introduction_tw for
+            # full rationale.
+            if resolved_intro is None and has_possessive_introduction_tw(
                 claim.text, chain, normalized_term, m.start()
             ):
                 continue

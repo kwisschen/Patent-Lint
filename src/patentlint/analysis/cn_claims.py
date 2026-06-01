@@ -3502,6 +3502,81 @@ def _bare_noun_right_clean_cn(text: str, j: int) -> bool:
     return not _bare_noun_compound_char_cn(text[j])
 
 
+def has_possessive_introduction_cn(
+    claim_text: str, chain: list, term: str, ref_offset: int
+) -> bool:
+    """R37 (2026-06-01) — TW R9 parity (issue #134 generalization).
+
+    True if ``term`` appears earlier in possessive position
+    ``(所述|前述|该)<X>(的|之)<term>``, where the genitive owner X is
+    itself referenced. Y (the term) gets antecedent basis from this
+    first article-less possessive mention.
+
+    CN-specific notes:
+    - Accepts BOTH 的 (modern CNIPA standard) and 之 (classical /
+      JP-translation variant) as genitive markers. TW uses 之
+      predominantly; CN drafters split between 的 and 之.
+    - Markers ``所述`` / ``前述`` / ``该`` (CN simplified — TW equivalent
+      is ``該``).
+
+    Differs from ``has_bare_noun_introduction_cn``:
+    - NO 4-char min-len gate (the structural pattern is unambiguous so
+      short locative attributes 顶面/底面/侧面/端面/顶端/底端 qualify).
+    - Accepts ``的``/``之``-headed left context. Guard (b) in
+      ``has_bare_noun_introduction_cn`` blanket-rejects these to defend
+      against verb-phrase relative-clause ambiguity. That defense
+      doesn't apply when the required ``所述/前述/该<X>(的|之)`` prefix
+      anchors the construction as definite genitive.
+
+    Statute pin: CNIPA 审查指南 第二部分第二章 §3.2 "清楚" / "明确"
+    antecedent standard; MPEP § 2173.05(e) equivalent.
+    """
+    t = (term or "").strip()
+    if not t or len(t) < 2:
+        return False
+    if any(ch.isdigit() for ch in t) or "(" in t:
+        return False
+    # CN R37 narrowing: ordinal-led terms (第一X / 第二X / ...) are
+    # EXCLUDED. Doctrine is ambiguous — `所述X的第一Y` may be either
+    # (a) a definitional intro of "the first Y of X" in possessive
+    # position, OR (b) a definite reference to a previously-introduced
+    # "first Y" that strict §112(b) requires to have its own clean
+    # intro. The R20 corpus maintainer chose reading (b) (e.g.,
+    # CN115485995B c82/c124's `所述第三信号相关的第一训练信号` is
+    # marked protect:true as a real §112(b) defect). To preserve that
+    # protect AND still cover the unambiguous locative-attribute
+    # pattern (顶面/底面/侧面/端面 — non-ordinal short nouns that R9 was
+    # designed for), exclude terms starting with the 第 ordinal prefix.
+    if t.startswith("第"):
+        return False
+
+    def _scan(text: str, limit: int | None) -> bool:
+        start = 0
+        while True:
+            idx = text.find(t, start)
+            if idx < 0:
+                return False
+            if limit is not None and idx >= limit:
+                return False
+            # Possessive intro shape: text[idx-1] is 的 OR 之 AND the
+            # 15-char window before that marker contains 所述/前述/该.
+            if idx >= 1 and text[idx - 1] in ("的", "之"):
+                look_back = text[max(0, idx - 16):idx - 1]
+                if any(marker in look_back for marker in ("所述", "前述", "该")):
+                    # Right-clean intentionally skipped (same rationale as
+                    # has_possessive_introduction_tw — verb-start chars
+                    # would block legitimate intros of short locatives).
+                    return True
+            start = idx + 1
+
+    if _scan(claim_text or "", ref_offset):
+        return True
+    for ancestor in chain[1:]:
+        if _scan(getattr(ancestor, "text", "") or "", None):
+            return True
+    return False
+
+
 def has_bare_noun_introduction_cn(
     claim_text: str, chain: list, term: str, ref_offset: int
 ) -> bool:
@@ -3835,6 +3910,11 @@ def check_antecedent_basis_cn(
             # implication (审查指南 第二部分 第二章 §3.2 清楚 / 明确).
             # The intro extractors miss article-less data / attribute
             # nouns; this closes the gap. See has_bare_noun_introduction_cn.
+            if resolved_intro is None and has_possessive_introduction_cn(
+                claim.text, chain, normalized_term, m.start()
+            ):
+                continue
+
             if resolved_intro is None and has_bare_noun_introduction_cn(
                 claim.text, chain, normalized_term, m.start()
             ):
