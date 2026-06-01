@@ -518,6 +518,15 @@ _STOP_WORDS = (
     # is added to _ADVERB_STOPS (trailing strip) to handle the adverb-
     # before-verb shape `<noun> successively <verb>`.
     r"occur|approach|"
+    # Issue #136 (2026-06-01): `face` is ambiguous noun/verb — legitimate
+    # noun in `terminal face` / `mounting face` / `contact face` etc.
+    # but clearly the matrix verb in `the first magnetic bowl face toward
+    # each other` (parallel `first`/`second` + `toward each other`
+    # collocation). Lookahead-gated stop (mirrors `accounts(?=\s+for)`
+    # pattern below): `face` terminates NP capture ONLY when followed
+    # by spatial prepositions `toward|towards|inward|outward|away|each
+    # other` (verb usage). Bare `face` (noun) is unaffected.
+    r"face(?=\s+(?:toward|towards|inward|outward|away|each\s+other))|"
     # R5 (2026-05-26): `accounts` as 3sg finite verb only — lookahead on
     # `\s+for` discriminates the `<noun> accounts for X` verb-object pattern
     # (#98 alumina, #99 silica) from the bare-noun usage (`financial accounts`,
