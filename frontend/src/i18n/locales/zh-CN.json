@@ -304,7 +304,9 @@
       "label": "筛选：",
       "showAll": "显示全部（{{count}} 项）",
       "showHighConf": "仅显示高置信度（{{count}} 项）"
-    }
+    },
+    "higherConfidenceBadge": "较高置信",
+    "higherConfidenceTitle": "本项目位于置信分较高的子集中（在已标注的美国语料上测得约 70% 的精确度）。请仍对照您的稿件确认，这是排序提示而非保证。"
   },
   "antecedent": {
     "didYouMean": "您是否指的是“{{term}}”（于权利要求{{claim_id}}中引入）？",

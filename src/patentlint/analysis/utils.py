@@ -389,6 +389,26 @@ def compute_confidence_score(
     # Ordinal-Chinese-prefix — counter-intuitive WFP signal (LR -0.48)
     if _re.match(r'^第[一二三四五六七八九十百0-9]+', term_str):
         score -= 5
+    # 2026-06-01 confidence-tuning: English-ordinal-led terms (`first X` /
+    # `second X` / `third X`) are over-represented in walker_fp at high
+    # confidence per LR analysis (coef -0.85). Bumped penalty to -10.
+    if _re.match(r'^(first|second|third|fourth|fifth)\s+', term_str.lower()):
+        score -= 10
+    # 2026-06-01 confidence-tuning: single-word English terms (no
+    # whitespace in term, no digit) are over-represented in walker_fp
+    # at high confidence (LR coef -0.49) — these are typically generic
+    # domain nouns (cancer / instructions / operations / customers / data)
+    # that get bound to refs but are spec-defined rather than claim-intro'd.
+    # Gated by jurisdiction (US/EPC English) and digit-absence so CJK
+    # terms + Latin acronyms with digits are unaffected.
+    if (
+        jurisdiction in ("US", "EPC")
+        and term_str
+        and term_str.isascii()
+        and " " not in term_str
+        and not any(c.isdigit() for c in term_str)
+    ):
+        score -= 5
     # Empty intro pool — slight WFP signal
     if intros_pool_size == 0:
         score -= 5

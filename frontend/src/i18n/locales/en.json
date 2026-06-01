@@ -304,7 +304,9 @@
       "label": "Filter:",
       "showAll": "Show all ({{count}})",
       "showHighConf": "High confidence only ({{count}})"
-    }
+    },
+    "higherConfidenceBadge": "Higher confidence",
+    "higherConfidenceTitle": "This finding is ranked among the top-confidence subset (measured 70% precision on labeled US corpus at this threshold). Still verify against your draft — this is a ranking, not a guarantee."
   },
   "antecedent": {
     "didYouMean": "Did you mean *{{term}}* (introduced in claim {{claim_id}})?",

@@ -237,6 +237,20 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
     }
   }
 
+  // 2026-06-01: per-finding higher-confidence badge. Measured 70% precision
+  // at confidence_score>=80 on US 4321-finding corpus (vs 38% baseline).
+  // English-jurisdiction only — CN/TW corpora are too small to support
+  // reliable per-finding scoring (precision <50% historically). Honest
+  // language: "Higher confidence" (probabilistic ranking), not "High
+  // confidence" (which implies guarantee). Badge fires per-group when
+  // ANY finding in the group meets the threshold.
+  const HIGHER_CONF_THRESHOLD = 80
+  const ENGLISH_JURISDICTIONS = new Set(['US', 'EPC'])
+  const hasHigherConfidence = (
+    ENGLISH_JURISDICTIONS.has(jurisdiction)
+    && findings.some((f) => (f.confidence_score ?? 0) >= HIGHER_CONF_THRESHOLD)
+  )
+
   return (
     <div>
       <div
@@ -264,6 +278,20 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
             </span>
           ))}
         </span>
+        {hasHigherConfidence && (
+          <span
+            className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium"
+            style={{
+              backgroundColor: 'transparent',
+              color: 'var(--attention-text)',
+              border: '1px solid var(--attention-border)',
+              opacity: 0.85,
+            }}
+            title={t('antecedentBasis.higherConfidenceTitle')}
+          >
+            {t('antecedentBasis.higherConfidenceBadge')}
+          </span>
+        )}
         <span
           className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold"
           style={{ backgroundColor: 'var(--attention-bg)', color: 'var(--attention-text)', border: '1px solid var(--attention-border)' }}
