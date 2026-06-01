@@ -1963,6 +1963,122 @@ class TestBareNounIntroduction:
         issues = check_antecedent_basis(doc)
         assert any(i["term"] == "識別資料" for i in issues), issues
 
+    # R8 (2026-06-01) — issues #104 / #105. Drafter introduced terms
+    # article-less in patterns R7's verb-object arm didn't recognize:
+    # #104 `係在半導體基板的一主面側...` (locative preposition 在 + bare
+    # noun in claim 1 preamble); #105 `形成將犧牲片層與通道層...` (verb
+    # 形成 + BA-particle 將 + bare noun in claim 1 body). R8 extends the
+    # verb list with TIPO locative coverbs (在, 位於, 置於, 設於, etc.)
+    # and adds 將-bridging in _bare_noun_left_clean_tw so verb+將+noun
+    # registers as a valid bare-noun intro context.
+
+    def test_r8_locative_preposition_zai_intro(self):
+        """係在X的Y... — 在 (locative preposition) before article-less
+        noun establishes intro. Issue #104 reproduction."""
+        doc = _make_doc([
+            _claim(1, "1. 一種半導體裝置的製造方法，係在半導體基板的一主面側"
+                      "具有複數的叉片型電晶體；以及於前述半導體基板的一主面上，"
+                      "形成X。"),
+        ])
+        issues = check_antecedent_basis(doc)
+        assert not any(i["term"] == "半導體基板" for i in issues), issues
+
+    def test_r8_ba_particle_bridges_verb_and_object(self):
+        """形成將X與Y... — 將 (BA-particle) bridges verb 形成 and bare
+        object 犧牲片層. Issue #105 reproduction."""
+        doc = _make_doc([
+            _claim(1, "1. 一種方法，包含形成將犧牲片層與通道層依此順序"
+                      "交互積層而成的奈米片積層體。"),
+            _claim(2, "2. 如請求項1所述之方法，其中去除前述犧牲片層。",
+                   independent=False, deps=[1]),
+        ])
+        issues = check_antecedent_basis(doc)
+        assert not any(i["term"] == "犧牲片層" for i in issues), issues
+
+    def test_r8_locative_verb_weiyu_intro(self):
+        """X位於Y... — 位於 (located at) is a TIPO locative verb;
+        article-less X after it is intro. F11 parity with CN R36."""
+        doc = _make_doc([
+            _claim(1, "1. 一種裝置，包含一基板，所述基板位於電晶體之上方，"
+                      "且所述電晶體連接於電源。"),
+        ])
+        issues = check_antecedent_basis(doc)
+        assert not any(i["term"] == "電晶體" for i in issues), issues
+
+    # R9 (2026-06-01) — issue #134. Drafter wrote
+    # `所述第二波長發光元件之頂面外露於所述反射層` in claim 8 — 頂面
+    # introduced article-less in possessive position
+    # `所述<X>之<term>`. R7/R8 don't cover this because (a) 頂面 is
+    # 2 chars (below the 4-char gate) and (b) `之` is rejected by
+    # guard (b) in _bare_noun_left_clean_tw. R9's new
+    # has_possessive_introduction_tw is a separate arm that handles
+    # exactly this pattern: requires a definite-reference prefix
+    # (所述/前述/該) before the genitive 之 to anchor the construction
+    # as unambiguous possessive (not verb-phrase relative clause).
+
+    def test_r9_possessive_intro_short_locative(self):
+        """所述X之頂面 — 2-char locative attribute intro'd in possessive
+        position. Issue #134 reproduction."""
+        from patentlint.analysis.tw_claims import has_possessive_introduction_tw
+        text = ("所述第二波長發光元件之頂面外露於所述反射層，"
+                "且所述封裝層的所述出光面至所述第二波長發光元件之所述頂面"
+                "的距離介於50~300μm。")
+        ref = text.find("所述頂面")
+        assert has_possessive_introduction_tw(text, [], "頂面", ref) is True
+
+    def test_r9_possessive_intro_nested_zhong_zhi(self):
+        """所述X中之Y — nested possessive (X中之Y = "Y in X")."""
+        from patentlint.analysis.tw_claims import has_possessive_introduction_tw
+        text = "所述第一裝置中之控制器運行，並所述控制器執行任務。"
+        ref = text.find("所述控制器執行")
+        assert has_possessive_introduction_tw(text, [], "控制器", ref) is True
+
+    def test_r9_requires_definite_reference_marker(self):
+        """Negative control: 之 without 所述/前述/該 marker before — must
+        reject. `<verb-phrase>之Y` is ambiguous relative-clause shape
+        that the possessive arm explicitly does NOT accept."""
+        from patentlint.analysis.tw_claims import has_possessive_introduction_tw
+        text = "具有第一電晶體之外觀，且所述外觀為平整。"
+        ref = text.find("所述外觀")
+        assert has_possessive_introduction_tw(text, [], "外觀", ref) is False
+
+    def test_r9_minlen_2_chars_accepted(self):
+        """Verify 2-char terms qualify (gate bypassed for this arm).
+        R7/R8's has_bare_noun_introduction_tw rejects 2-char terms via
+        _BARE_NOUN_MIN_LEN_TW = 4."""
+        from patentlint.analysis.tw_claims import has_possessive_introduction_tw
+        # 2-char locative attribute
+        text = "所述支架之底面接觸基板，且所述底面被覆蓋。"
+        ref = text.find("所述底面被")
+        assert has_possessive_introduction_tw(text, [], "底面", ref) is True
+
+    def test_r9_ordinal_led_term_excluded(self):
+        """Critical narrowing for CN parity: ordinal-led terms (第一X /
+        第二X / ...) are EXCLUDED. Doctrine is ambiguous for ordinals in
+        possessive position; CN corpus has protect:true labels under
+        the strict reading. Negative control."""
+        from patentlint.analysis.tw_claims import has_possessive_introduction_tw
+        text = "所述第三信號相關之第一訓練信號與所述第一訓練信號為相關。"
+        ref = text.find("所述第一訓練信號為")
+        assert has_possessive_introduction_tw(
+            text, [], "第一訓練信號", ref) is False
+
+    def test_r8_possessive_zhi_still_rejected_by_guard_b(self):
+        """Critical negative control: possessive 之 (the TW equivalent of
+        possessive 的) before a noun must STILL reject bare-noun-intro
+        via guard (b). Direct unit test of _bare_noun_left_clean_tw —
+        full-walker integration may pick up the intro via other extractor
+        paths (F-family), but the bare-noun-rescue must respect guard (b)
+        to prevent silencing real §112(b) defects on relative-clause
+        shapes when no other intro path applies."""
+        from patentlint.analysis.tw_claims import _bare_noun_left_clean_tw
+        # `相關之犧牲片層` — possessive 之 immediately before noun
+        text = "所述第三信號相關之犧牲片層為金屬。"
+        idx = text.find("犧牲片層")
+        assert _bare_noun_left_clean_tw(text, idx) is False, (
+            "R8 over-broadened guard (b): possessive 之 accepted"
+        )
+
     def test_pure_missing_antecedent_still_flagged(self):
         """該機殼 with no intro anywhere stays flagged (adversarial guardrail)."""
         doc = _make_doc([

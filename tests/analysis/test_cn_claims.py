@@ -958,15 +958,61 @@ class TestBareNounIntroductionCn:
         issues = check_antecedent_basis_cn(doc)
         assert any(i["term"] == "界面" for i in issues), issues
 
-    def test_possessive_de_still_flagged(self):
-        """U盘的标识 — 的-headed occurrence rejected outright (guard b)."""
+    def test_possessive_de_resolves_via_r37_possessive_arm(self):
+        """`所述U盘的标识数据` is now correctly resolved as a possessive
+        intro of 标识数据 (U盘's identification data) via the R37
+        has_possessive_introduction_cn arm. Pre-R37 this was flagged
+        under the stricter doctrine where 的-headed was blanket-rejected
+        as ambiguous relative-clause; R37's narrowed scope (requires
+        definite-reference 所述/前述/该 prefix + non-ordinal term)
+        correctly identifies this as pure possessive (U盘 is a noun,
+        not a verb/adjective phrase). Guard (b) on has_bare_noun_introduction_cn
+        is preserved separately for the bare-noun arm — see
+        test_r36_possessive_de_still_rejected (which tests the bare-noun
+        function directly)."""
         from patentlint.analysis.cn_claims import check_antecedent_basis_cn
         doc = _cn_doc([
             _claim(1, "1. 一种装置，包括一U盘，所述U盘的标识数据被存储，"
                       "并读取所述标识数据。"),
         ])
         issues = check_antecedent_basis_cn(doc)
-        assert any(i["term"] == "标识数据" for i in issues), issues
+        assert not any(i["term"] == "标识数据" for i in issues), issues
+
+    # R37 (2026-06-01) — TW R9 parity. has_possessive_introduction_cn
+    # closes the (所述|前述|该)<X>(的|之)<term> coverage gap for short
+    # locative-attribute possessive intros (顶面/底面/侧面/端面).
+    # Ordinal-led terms (第一X etc.) excluded to preserve R20 protect
+    # calls on CN115485995B c82/c124.
+
+    def test_r37_possessive_de_intro_short_locative(self):
+        from patentlint.analysis.cn_claims import has_possessive_introduction_cn
+        text = "所述第二波长发光元件的顶面外露于所述反射层，且所述顶面被覆盖。"
+        ref = text.find("所述顶面被")
+        assert has_possessive_introduction_cn(text, [], "顶面", ref) is True
+
+    def test_r37_possessive_zhi_intro_classical_variant(self):
+        # 之 (classical / JP-translation variant) also accepted in CN.
+        from patentlint.analysis.cn_claims import has_possessive_introduction_cn
+        text = "所述支架之底面接触基板，且所述底面被覆盖。"
+        ref = text.find("所述底面被")
+        assert has_possessive_introduction_cn(text, [], "底面", ref) is True
+
+    def test_r37_requires_definite_reference_marker(self):
+        # Negative control: 的 without 所述/前述/该 prefix — must reject.
+        from patentlint.analysis.cn_claims import has_possessive_introduction_cn
+        text = "具有第一晶体管的外观，且所述外观为平整。"
+        ref = text.find("所述外观")
+        assert has_possessive_introduction_cn(text, [], "外观", ref) is False
+
+    def test_r37_ordinal_led_term_excluded(self):
+        # Critical narrowing: 第一X / 第二X / ... excluded. Preserves R20
+        # protect labels on CN115485995B c82/c124's `所述第三信号相关的
+        # 第一训练信号` shape.
+        from patentlint.analysis.cn_claims import has_possessive_introduction_cn
+        text = "所述第三信号相关的第一训练信号与所述第一训练信号为相关。"
+        ref = text.find("所述第一训练信号为")
+        assert has_possessive_introduction_cn(
+            text, [], "第一训练信号", ref) is False
 
     def test_pure_missing_antecedent_still_flagged(self):
         """该外壳 with no intro anywhere stays flagged."""
