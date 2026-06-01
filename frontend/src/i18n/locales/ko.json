@@ -306,7 +306,7 @@
       "showHighConf": "높은 신뢰도만 표시 ({{count}}건)"
     },
     "higherConfidenceBadge": "신뢰도 상위",
-    "higherConfidenceTitle": "본 항목은 신뢰도 상위 서브셋에 속합니다 (라벨링된 미국 코퍼스에서 약 70% 정밀도 측정). 그래도 명세서로 직접 확인하세요. 이는 순위 표시이며 보장이 아닙니다."
+    "higherConfidenceTitle": "본 항목은 신뢰도 상위 서브셋에 속합니다 (라벨링된 미국 코퍼스에서 약 69% 정밀도 측정, 기준선 38%). 그래도 명세서로 직접 확인하세요. 이는 순위 표시이며 보장이 아닙니다."
   },
   "antecedent": {
     "didYouMean": "혹시 '{{term}}' (청구항 {{claim_id}}에서 도입됨)을 의미하셨나요?",

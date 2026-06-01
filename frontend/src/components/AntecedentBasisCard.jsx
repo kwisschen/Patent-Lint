@@ -237,14 +237,19 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
     }
   }
 
-  // 2026-06-01: per-finding higher-confidence badge. Measured 70% precision
-  // at confidence_score>=80 on US 4321-finding corpus (vs 38% baseline).
+  // 2026-06-01: per-finding higher-confidence badge. Threshold 75
+  // chosen over 80 after initial deploy showed the 80-threshold variant
+  // was effectively invisible (only 2.5% of corpus findings qualified
+  // → ~0 findings/draft in practice). At 75 the precision is 69.0%
+  // (vs the 70.0% target — 1pp honest gap), but coverage is 3× wider
+  // at 7.2% — visible badge that materially helps drafter triage.
+  // The 1pp gap is disclosed in the title attribute.
   // English-jurisdiction only — CN/TW corpora are too small to support
   // reliable per-finding scoring (precision <50% historically). Honest
   // language: "Higher confidence" (probabilistic ranking), not "High
   // confidence" (which implies guarantee). Badge fires per-group when
   // ANY finding in the group meets the threshold.
-  const HIGHER_CONF_THRESHOLD = 80
+  const HIGHER_CONF_THRESHOLD = 75
   const ENGLISH_JURISDICTIONS = new Set(['US', 'EPC'])
   const hasHigherConfidence = (
     ENGLISH_JURISDICTIONS.has(jurisdiction)
