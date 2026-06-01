@@ -538,6 +538,11 @@ _STOP_WORDS = (
     # is added to _ADVERB_STOPS (trailing strip) to handle the adverb-
     # before-verb shape `<noun> successively <verb>`.
     r"occur|approach|"
+    # 2026-06-01 batch — additional finite verbs from US bulk-report
+    # batch (mechanical adapter / monitor mount drafter): `move`
+    # (positional / kinematic verb), `complies` (3sg conformance
+    # verb). Both unambiguous finite verbs in claim diction.
+    r"move|complies|"
     # Issue #136 (2026-06-01): `face` is ambiguous noun/verb — legitimate
     # noun in `terminal face` / `mounting face` / `contact face` etc.
     # but clearly the matrix verb in `the first magnetic bowl face toward
