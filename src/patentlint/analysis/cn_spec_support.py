@@ -306,6 +306,14 @@ _CN_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = (
     "耦接一",
     "耦合一",
     "连接一",
+    # 2026-06-01 (issue #177): possession verb taking an indefinite object
+    # — `<noun>具有一<noun>` ("X has a Y") is a predication, never the
+    # name of a noun. Spec-support inventory walker captured the entire
+    # span `间具有一锐角` (`间` locative + `具有一` possession + `锐角`)
+    # as a duplicate intro alongside the clean `锐角`. The clean form
+    # already inventoried; this rejects the duplicate. Gated on `一` so
+    # genuine compounds with `具有` at PREFIX (e.g. `具有性`) stay safe.
+    "具有一",
 )
 
 # Leading prepositions that survive walker normalization. Strip these

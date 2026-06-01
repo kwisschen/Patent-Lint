@@ -1475,6 +1475,12 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # 相关联: adjectival ("related/associated"), fragment of <noun>相关联的.
         #   Existing 相关 + 有关 catch 2-char form; 3-char form needs explicit.
         "进一步", "相关联",
+        # === R-batch-r3 (2026-06-01) — locative/positional verb trims
+        # 相邻: adjectival ("adjacent"). Never a noun-suffix in CN patent
+        #   diction — appears at PREFIX position in legitimate compounds
+        #   (相邻边缘 / 相邻区域 / 相邻通道). Closes tw_contamination
+        #   over-capture `限位导槽分别相邻` → `限位导槽` (issue #171).
+        "相邻",
     ),
     key=len,
     reverse=True,
