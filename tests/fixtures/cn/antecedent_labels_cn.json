@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 37,
+    "current_round": 38,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -86,6 +86,16 @@
         "description": "TW R9 parity — added has_possessive_introduction_cn for the (所述|前述|该)<X>(的|之)<term> possessive intro pattern. CN uses both 的 (modern CNIPA standard) and 之 (classical / JP-translation variant) as genitive markers. Bypasses the 4-char min-len gate for unambiguous structural pattern. Ordinal-led terms (第一X / 第二X / ...) EXCLUDED — doctrine is ambiguous for ordinal-enumerated terms in possessive position, and the R20 corpus labels (CN115485995B c82/c124's `所述第三信号相关的第一训练信号`) are protect:true under the strict reading. The 第-prefix exclusion preserves R20's protect calls while covering the common locative-attribute pattern (顶面/底面/侧面/端面 etc.). Closes #134's CN-equivalent class — no CN report has surfaced this specific shape yet but TW R9 + CN R37 ship together for cross-jurisdiction parity per the user's standing instruction.",
         "fixtures_silenced": 32,
         "shipped_at": "2026-06-01T03:57:11.400062+00:00"
+      },
+      {
+        "round": 38,
+        "name": "r38_locative_adjective_trailing_strip",
+        "description": "Added 相邻 (adjacent) to _TRAILING_VERB_DENYLIST_CN. Pure adjective in CN patent diction; appears only at PREFIX position in legitimate compounds (相邻边缘 / 相邻区域 / 相邻通道). Fixes tw_contamination Q1 path over-capture `限位导槽分别相邻` → `限位导槽` from a real user report (issue #171). Cross-jurisdiction parity: TW already covers via existing trailing-strip pipeline. 0 active corpus labels silenced (rule extension only — corpus didn't contain this specific pattern; mechanism added per real user signal per DR-1 empirical grounding).",
+        "user_attested_issues": [
+          171
+        ],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-06-01T11:21:49.220132+00:00"
       }
     ],
     "last_updated": "2026-05-04T09:52:56.594193+00:00",
