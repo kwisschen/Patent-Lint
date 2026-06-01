@@ -184,6 +184,21 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # interior matches because those are part of longer compounds).
         "成",
         "上",
+        # 2026-06-01 — cross-jurisdiction parity with CN spec_support
+        # (CN PR #181 added 抵靠 / 穿设 / 穿過 / 分别穿过 from real CN
+        # reports #174 / #175 / #176). All four are Traditional-form-
+        # compatible perforation / abutment verbs commonly used in
+        # mechanical TIPO drafting; risk audit shows none appear as
+        # noun-suffix in TIPO patent diction (抵靠 is purely "abut
+        # against"; 穿設 / 穿過 are perforation verbs; 分別穿過 is the
+        # respectively-quantified verb phrase). Cross-jurisdiction
+        # parity per standing instruction — TW corpus doesn't have a
+        # current report of this exact class, but generalizing now
+        # closes the gap before it surfaces.
+        "分別穿過",
+        "穿設",
+        "穿過",
+        "抵靠",
     ),
     key=len,
     reverse=True,
