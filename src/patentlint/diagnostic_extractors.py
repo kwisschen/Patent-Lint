@@ -259,6 +259,22 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
                 if start >= 0 and claim_text[start:offset].lower().endswith(marker.lower()):
                     ref_marker_before = marker.strip()
                     break
+        # 2026-06-01 (issue #178/#179): NP-stop diagnostic. For Latin-script
+        # findings, `term_word_count` + `next_word_after_term` together
+        # surface over-stop bugs autonomously: a term of 1-2 words with
+        # a stop-word-class next word (preposition/conjunction/verb) is
+        # the signature of _NP_CORE truncating mid-compound. Combined
+        # with the existing `np_boundary_char`, future triage can tell
+        # an over-stop apart from a legit missing-antecedent without
+        # seeing the draft. Privacy-safe: just the head of one word.
+        term_word_count = len(term.split()) if term else 0
+        next_word_after_term = None
+        if offset is not None and isinstance(offset, int):
+            end_pos = offset + len(term)
+            tail = claim_text[end_pos:end_pos + 32] if end_pos < len(claim_text) else ""
+            tail_match = _ab_re.match(r"\s*([A-Za-z一-鿿]{1,20})", tail)
+            if tail_match:
+                next_word_after_term = tail_match.group(1)[:20]
         out = {
             "claim_id": f.get("claim_id"),
             "term": _truncate(term, TERM_MAX),
@@ -266,6 +282,8 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
             "did_you_mean": _truncate(suggested.get("term") if isinstance(suggested, dict) else None, TERM_MAX),
             "did_you_mean_claim_id": suggested.get("claim_id") if isinstance(suggested, dict) else None,
             "np_boundary_char": np_boundary_char,
+            "next_word_after_term": next_word_after_term,
+            "term_word_count": term_word_count,
             "ref_marker_before": ref_marker_before,
             "body_cross_refs": body_cross_refs_per_claim.get(f.get("claim_id"), [])[:10],
             # Issue #70: which lookup produced the did-you-mean. A null

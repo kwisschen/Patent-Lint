@@ -11,6 +11,24 @@ from typing import Any, Optional
 
 import snowballstemmer as _sb
 
+# 2026-06-01 (issue #178): `through hole(s)` is a patent-diction compound
+# noun (a hole that passes through a substrate; MPEP § 2173 element-naming
+# convention). _NP_CORE in utils.py truncates at `through` because it's
+# listed as a preposition in _STOP_WORDS. When the captured term is
+# exactly a bare cardinal AND the immediate source-text continuation
+# is `through hole(s)`, restore the compound by post-extension at the
+# definite-ref consumer site. This is tighter than a regex-level
+# _NP_CORE change: cardinal-only gate prevents over-extension in
+# verb-preposition contexts like `the X mounted through holes in the wall`.
+_BARE_CARDINAL_TAIL = re.compile(
+    r"^(?:two|three|four|five|six|seven|eight|nine|ten|\d+)$",
+    re.IGNORECASE,
+)
+_THROUGH_HOLE_CONTINUATION = re.compile(
+    r"^\s+through\s+(?P<head>holes?)\b",
+    re.IGNORECASE,
+)
+
 from patentlint.analysis.en_normalize import en_number_key
 from patentlint.analysis.utils import (
     _DEFINITE_REF, _QUANTIFIER_STOPS, _dx,
@@ -491,7 +509,11 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
         # Find definite references ("the X" and "said X") in this claim
         seen: set[tuple[str, str]] = set()
         for m in _DEFINITE_REF.finditer(body_scan_text):
-            term = clean_noun_phrase(m.group("noun").strip())
+            raw_noun = m.group("noun").strip()
+            ext_m = _THROUGH_HOLE_CONTINUATION.match(body_scan_text[m.end():])
+            if ext_m and _BARE_CARDINAL_TAIL.match(raw_noun):
+                raw_noun = f"{raw_noun} through {ext_m.group('head')}"
+            term = clean_noun_phrase(raw_noun)
             term = strip_contextual_verb(term, claim_text_lower[m.end():])
             if not term:
                 continue
