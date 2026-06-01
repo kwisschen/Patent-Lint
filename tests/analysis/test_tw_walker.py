@@ -1963,6 +1963,64 @@ class TestBareNounIntroduction:
         issues = check_antecedent_basis(doc)
         assert any(i["term"] == "識別資料" for i in issues), issues
 
+    # R8 (2026-06-01) — issues #104 / #105. Drafter introduced terms
+    # article-less in patterns R7's verb-object arm didn't recognize:
+    # #104 `係在半導體基板的一主面側...` (locative preposition 在 + bare
+    # noun in claim 1 preamble); #105 `形成將犧牲片層與通道層...` (verb
+    # 形成 + BA-particle 將 + bare noun in claim 1 body). R8 extends the
+    # verb list with TIPO locative coverbs (在, 位於, 置於, 設於, etc.)
+    # and adds 將-bridging in _bare_noun_left_clean_tw so verb+將+noun
+    # registers as a valid bare-noun intro context.
+
+    def test_r8_locative_preposition_zai_intro(self):
+        """係在X的Y... — 在 (locative preposition) before article-less
+        noun establishes intro. Issue #104 reproduction."""
+        doc = _make_doc([
+            _claim(1, "1. 一種半導體裝置的製造方法，係在半導體基板的一主面側"
+                      "具有複數的叉片型電晶體；以及於前述半導體基板的一主面上，"
+                      "形成X。"),
+        ])
+        issues = check_antecedent_basis(doc)
+        assert not any(i["term"] == "半導體基板" for i in issues), issues
+
+    def test_r8_ba_particle_bridges_verb_and_object(self):
+        """形成將X與Y... — 將 (BA-particle) bridges verb 形成 and bare
+        object 犧牲片層. Issue #105 reproduction."""
+        doc = _make_doc([
+            _claim(1, "1. 一種方法，包含形成將犧牲片層與通道層依此順序"
+                      "交互積層而成的奈米片積層體。"),
+            _claim(2, "2. 如請求項1所述之方法，其中去除前述犧牲片層。",
+                   independent=False, deps=[1]),
+        ])
+        issues = check_antecedent_basis(doc)
+        assert not any(i["term"] == "犧牲片層" for i in issues), issues
+
+    def test_r8_locative_verb_weiyu_intro(self):
+        """X位於Y... — 位於 (located at) is a TIPO locative verb;
+        article-less X after it is intro. F11 parity with CN R36."""
+        doc = _make_doc([
+            _claim(1, "1. 一種裝置，包含一基板，所述基板位於電晶體之上方，"
+                      "且所述電晶體連接於電源。"),
+        ])
+        issues = check_antecedent_basis(doc)
+        assert not any(i["term"] == "電晶體" for i in issues), issues
+
+    def test_r8_possessive_zhi_still_rejected_by_guard_b(self):
+        """Critical negative control: possessive 之 (the TW equivalent of
+        possessive 的) before a noun must STILL reject bare-noun-intro
+        via guard (b). Direct unit test of _bare_noun_left_clean_tw —
+        full-walker integration may pick up the intro via other extractor
+        paths (F-family), but the bare-noun-rescue must respect guard (b)
+        to prevent silencing real §112(b) defects on relative-clause
+        shapes when no other intro path applies."""
+        from patentlint.analysis.tw_claims import _bare_noun_left_clean_tw
+        # `相關之犧牲片層` — possessive 之 immediately before noun
+        text = "所述第三信號相關之犧牲片層為金屬。"
+        idx = text.find("犧牲片層")
+        assert _bare_noun_left_clean_tw(text, idx) is False, (
+            "R8 over-broadened guard (b): possessive 之 accepted"
+        )
+
     def test_pure_missing_antecedent_still_flagged(self):
         """該機殼 with no intro anywhere stays flagged (adversarial guardrail)."""
         doc = _make_doc([

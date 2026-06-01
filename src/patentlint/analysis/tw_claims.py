@@ -4780,7 +4780,18 @@ def _f_head_indep_conflict_tw(head: str, claim_text: str) -> bool:
 _BARE_NOUN_INTRO_VERBS_TW: tuple[str, ...] = tuple(
     sorted(
         {v for v in _F6_VERB_ALT_TW.split("|") if v}
-        | {"基於", "來自", "透過", "經由", "利用", "依據", "依"},
+        | {"基於", "來自", "透過", "經由", "利用", "依據", "依"}
+        # R8 (2026-06-01): F11 locative verbs accepted as bare-noun-intro
+        # contexts (TW parity with CN R36). Issue #104 — drafter wrote
+        # `係在半導體基板的一主面側` in claim 1's preamble, intro'd
+        # 半導體基板 article-less after the locative preposition `在`.
+        # Other forms: `位於X` (located at X), `設於X` (disposed at X),
+        # `置於X` (placed at X), etc. All are TIPO-canonical locative
+        # constructions where the noun after the locative is the
+        # introduced element. 在 alone (single-char locative preposition)
+        # is sufficient for the `在X` case because TW drafters typically
+        # write `在前述X` for references — bare `在X` denotes intro.
+        | {"在", "位於", "置於", "設於", "應用於", "作用於", "布置於", "固定於"},
         key=len,
         reverse=True,
     )
@@ -4810,6 +4821,17 @@ def _bare_noun_left_clean_tw(text: str, i: int) -> bool:
     # Verb-object / coverb-object: the run before the term ends with a
     # verb. Checked first -- coverbs (基於) end in a boundary char (於).
     if any(text[:i].endswith(v) for v in _BARE_NOUN_INTRO_VERBS_TW):
+        return True
+    # R8 (2026-06-01): 將 (BA-particle) bridges verb and object — issue
+    # #105 drafter wrote `形成將犧牲片層與通道層` in claim 1, intro'd
+    # 犧牲片層 after `形成 將`. The BA construction puts the object before
+    # the operating verb's effect (`form [BA] X = form by handling X`).
+    # 將 is the canonical TIPO BA particle (`把` is the colloquial CN
+    # equivalent — defer to CN R37 if reported). Walks back one char and
+    # re-tries the verb endswith check.
+    if text[:i].endswith("將") and any(
+        text[:i - 1].endswith(v) for v in _BARE_NOUN_INTRO_VERBS_TW
+    ):
         return True
     c = text[i - 1]
     if c.isspace() or unicodedata.category(c)[0] == "P":
