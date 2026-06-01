@@ -381,6 +381,34 @@ class TestAntecedentBasis:
         assert "leakage inspection region" in terms, terms
         assert "annular groove" in terms, terms
 
+    def test_finite_verb_not_overcaptured_r8(self):
+        """R8 (issue #152): `occur` / `approach` are event-domain finite
+        verbs that bled through `<noun phrase> [adverb] <verb>` claim
+        clauses (PLL / clock-domain drafters). `successively` (adverb)
+        is now also stripped from NP tails via _ADVERB_STOPS. Word
+        boundary semantics preserve `non-naturally occurring pathogen`
+        (gerund, different word from base `occur`)."""
+        claims = [
+            Claim(
+                id=1,
+                text=(
+                    "A PLL wherein the master comparison signal occur "
+                    "at preset intervals, and the phase-delayed clock "
+                    "signal successively approach the locked frequency."
+                ),
+                independent=True,
+                method_claim=False,
+            ),
+        ]
+        terms = [i["term"] for i in check_antecedent_basis(claims)
+                 if i["claim_id"] == 1]
+        for verb in ("occur", "approach", "successively"):
+            for t in terms:
+                assert verb not in t, f"{verb!r} bled into term: {t!r}"
+        # Head nouns still surface as flagged refs (no intro in synthetic).
+        assert any("master comparison signal" in t for t in terms), terms
+        assert any("phase-delayed clock signal" in t for t in terms), terms
+
     def test_finite_verb_not_overcaptured_r7(self):
         """R7 (issues #120 / #127 / #128 / #135): `exceeds` / `extend` /
         `constitute` / `stays` must terminate NP capture. R2/R3 covered
