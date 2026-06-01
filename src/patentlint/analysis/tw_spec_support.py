@@ -118,6 +118,14 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # noun phrases only.
         "大於",
         "小於",
+        # R10 (2026-06-01): trailing process / locative verbs from issues
+        # #111 (`主面側蝕刻` → strip `蝕刻`) and #129 (`位部沿` → strip `沿`).
+        # 蝕刻 (etching) is a process verb, 沿 is a locative preposition
+        # ("along") — neither is a noun-phrase terminus in TIPO drafting.
+        # Anti-corpus checked: zero baseline findings on _spec_support_harness
+        # end with either token.
+        "蝕刻",
+        "沿",
         "相",
         "形",
         "時",
