@@ -157,6 +157,11 @@ _CN_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         "构成", "组成", "形成", "制造",
         # Relational pairs
         "相连", "相接", "相对", "相邻",
+        # 2026-06-01 batch — adapter / fastener drafter spec-support
+        # over-captures: trailing 抵靠 (abut), 穿设 (set-through),
+        # 分别穿过 (respectively pass-through). All verb-phrase tails
+        # never noun-phrase termini in CNIPA drafting.
+        "抵靠", "穿设", "穿過", "分别穿过",
         # Comparison
         "超过", "介于", "大于", "小于", "等于",
         # Generic verbal residues. 配 catches 避让组件配 (CN213655447U)

@@ -13,7 +13,12 @@ import ReportModal from './ReportModal'
 // CJK reference-form prefixes used by the TW walker (該/所述/前述/該等/該些).
 // Matched without word boundaries because CJK text has no whitespace
 // breaks; the regex relies on the prefix character itself as the anchor.
-const CJK_REF_PREFIXES = ['該等', '該些', '所述', '前述', '該']
+// 2026-06-01: added Simplified Chinese variants (该等 / 该些 / 该).
+// Without these CN finding terms fell through to the English-wrap
+// regex branch (`(?:the|said)\s+...`) which never matches CJK text →
+// no highlights appeared on CN drafts. 所述 / 前述 are identical
+// across Traditional/Simplified so they cover both already.
+const CJK_REF_PREFIXES = ['該等', '該些', '该等', '该些', '所述', '前述', '該', '该']
 
 function isCjkRefForm(term) {
   return CJK_REF_PREFIXES.some((p) => term.startsWith(p))
@@ -63,16 +68,26 @@ function highlightTerms(text, terms) {
       bareParts.push(escaped)
     }
   }
-  const englishAlternatives = [...refFormParts]
-  if (bareParts.length) {
-    englishAlternatives.push(`(?:the|said)\\s+(?:${bareParts.join('|')})`)
+  // 2026-06-01: sort alternatives by length DESCENDING. JavaScript
+  // regex alternation is leftmost (first matching alternative wins),
+  // not longest. Without this sort, a finding for `the two` would
+  // shadow the longer `the two clamping members respectively move`
+  // finding — only the `the two` prefix would highlight, leaving the
+  // rest of the longer term unhighlighted. Same bug class for CJK.
+  const byLengthDesc = (a, b) => b.length - a.length
+  const sortedCjk = [...cjkParts].sort(byLengthDesc)
+  const sortedRefForm = [...refFormParts].sort(byLengthDesc)
+  const sortedBare = [...bareParts].sort(byLengthDesc)
+  const englishAlternatives = [...sortedRefForm]
+  if (sortedBare.length) {
+    englishAlternatives.push(`(?:the|said)\\s+(?:${sortedBare.join('|')})`)
   }
 
   // Build a single combined pattern: CJK alternatives match verbatim
   // (no \b around them because \b doesn't fire between CJK chars in
   // JavaScript regex), English alternatives are wrapped in word
   // boundaries via a non-capturing alternation branch.
-  const cjkBranch = cjkParts.length ? `(?:${cjkParts.join('|')})` : null
+  const cjkBranch = sortedCjk.length ? `(?:${sortedCjk.join('|')})` : null
   const englishBranch = englishAlternatives.length
     ? `(?:\\b(?:${englishAlternatives.join('|')})\\b)`
     : null
