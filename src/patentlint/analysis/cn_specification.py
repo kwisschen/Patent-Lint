@@ -1072,6 +1072,16 @@ _CN_INTERIOR_VERB_SPLIT_TARGETS: tuple[str, ...] = tuple(sorted(
         "包含",
         "包括",
         "具有",
+        # Signal-flow verbs added 2026-06-01 for issue #158 — drafter wrote
+        # `外部電路接收一斜波訊號RAMP1` and the element-name extractor
+        # captured the entire 9-char clause. Splitting on 接收 takes the
+        # right side `一斜波訊號`, which then strips `一` → clean `斜波訊號`.
+        # 輸出 (output) / 輸入 (input) added for symmetry — same shape
+        # (`<NP><verb><quantifier><actual-noun>`).
+        "接收", "接收",
+        "輸出", "输出",
+        "輸入", "输入",
+        "供應", "供应",
     ),
     key=len,
     reverse=True,
@@ -1113,6 +1123,37 @@ def _cn_split_on_interior_verb(s: str) -> str:
             continue
         next_char = s[end]
         if next_char in _CN_NOUN_SUFFIX_PRESERVE:
+            continue
+        if end > best_split:
+            best_split = end
+    if best_split < 0:
+        return s
+    return s[best_split:]
+
+
+# Issue #158 (2026-06-01): in `<NP_A>與<NP_B>RAMPn` shapes (drafter
+# joins two co-compared signals with 與 / 和 / 及 before the numeral),
+# the element bound to the numeral is NP_B (the right side). Split on
+# the LAST CJK noun-enumeration conjunction and keep the suffix.
+# Single-char so no overlap with verb-list entries; never preserved
+# as a noun-compound continuation (the conjunctions are already in
+# the _NOUN_CHARS exclusion class).
+_CN_INTERIOR_CONJUNCTIONS: tuple[str, ...] = ("與", "与", "和", "及")
+
+
+def _cn_split_on_interior_conjunction(s: str) -> str:
+    """Truncate to the suffix after the LAST interior CJK noun-enumeration
+    conjunction. Closes the `<NP_A>與<NP_B>` over-capture class for the
+    numeralConsistency element-name extractor (#158)."""
+    if not s or len(s) <= 4:
+        return s
+    best_split = -1
+    for conj in _CN_INTERIOR_CONJUNCTIONS:
+        idx = s.rfind(conj)
+        if idx < 0:
+            continue
+        end = idx + len(conj)
+        if end >= len(s):
             continue
         if end > best_split:
             best_split = end
@@ -1421,6 +1462,11 @@ def _cn_d1_head_noun(raw: str) -> str:
     s = _cn_strip_trailing_verb(s)
     # R67 (2026-05-08, issue #29) — see `_cn_split_on_interior_verb`.
     s = _cn_split_on_interior_verb(s)
+    # 2026-06-01 — issue #158: `<NP_A>與<NP_B>` co-comparison conjunction.
+    # Walker captures the whole left context before a Latin numeral
+    # (`誤差放大訊號與斜波訊號RAMP1`); split on the last 與/和/及 keeps
+    # the actual numeral-bound element (`斜波訊號`).
+    s = _cn_split_on_interior_conjunction(s)
     s = _cn_strip_iterative(s, allow_ordinal_break=False)
     m = _CN_ORDINAL_RE.match(s)
     if m:

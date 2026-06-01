@@ -1824,7 +1824,7 @@ def check_crm_non_transitory_tw(doc: TwPatentDocument) -> list[CheckItem]:
 # noun-internal char in patent claim diction. CN-side empirical attestation
 # (CN112271269B `结构由可交联配体`); preventatively added to TW for parity.
 # Compound nouns containing 由 (緣由/自由/由來/理由) are non-patent-relevant.
-_NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以並且其而還另時在更由又亦]{2,12}"
+_NOUN_CHARS = r"[^\s，。；：、及與和之的該將能須應皆被於以並且其而還另時在更由又亦逐從]{2,12}"
 # R62 (2026-05-05): post-match paren-numeral closure.
 # When the captured noun ends with `(<alphanumeric>` (no closing paren)
 # AND the next char in claim text is `)`, the {2,12} length limit cut
