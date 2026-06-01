@@ -509,6 +509,15 @@ _STOP_WORDS = (
     # unambiguous finite verbs in claim diction — MPEP § 2173.05(e)
     # treats only noun phrases as §112(b) reference targets.
     r"exceeds|extend|constitute|stays|"
+    # R8 (2026-06-01): clock-domain / PLL-class verbs surfaced by issue
+    # #152 (`master comparison signal occur`, `phase-delayed clock signal
+    # successively approach`). `occur` / `approach` are unambiguous
+    # event-domain verbs (different word from `occurring` gerund which
+    # CAN be part of a compound noun like `non-naturally occurring
+    # pathogen` — word boundary semantics protect that). `successively`
+    # is added to _ADVERB_STOPS (trailing strip) to handle the adverb-
+    # before-verb shape `<noun> successively <verb>`.
+    r"occur|approach|"
     # R5 (2026-05-26): `accounts` as 3sg finite verb only — lookahead on
     # `\s+for` discriminates the `<noun> accounts for X` verb-object pattern
     # (#98 alumina, #99 silica) from the bare-noun usage (`financial accounts`,
@@ -578,6 +587,10 @@ _ADVERB_STOPS = {
     "slidably", "pivotally", "movably", "fixedly",
     "substantially", "essentially", "approximately",
     "typically", "normally", "merely", "primarily",
+    # R8 (2026-06-01): sequential / iteration adverbs surfaced by #152
+    # (`phase-delayed clock signal successively approach` — `successively`
+    # bled between noun head and trailing verb).
+    "successively", "sequentially", "iteratively", "progressively",
     # Patent function words
     "thereof", "therein", "thereto", "thereby", "therefrom",
     "thereon", "therethrough", "therebetween",
