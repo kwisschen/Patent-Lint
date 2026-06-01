@@ -304,7 +304,9 @@
       "label": "絞り込み：",
       "showAll": "すべて表示（{{count}}件）",
       "showHighConf": "高信頼度のみ（{{count}}件）"
-    }
+    },
+    "higherConfidenceBadge": "信頼度高め",
+    "higherConfidenceTitle": "本項目は信頼度上位サブセットに含まれます（ラベル付き米国コーパス上で約 70% の精度を計測）。ご自身の原稿で必ず確認してください。これは順位付けであり、保証ではありません。"
   },
   "antecedent": {
     "didYouMean": "もしかして「{{term}}」（請求項{{claim_id}}で導入）ですか？",

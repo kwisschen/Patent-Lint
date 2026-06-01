@@ -304,7 +304,9 @@
       "label": "Filter: ",
       "showAll": "Alle anzeigen ({{count}})",
       "showHighConf": "Nur hohe Konfidenz ({{count}})"
-    }
+    },
+    "higherConfidenceBadge": "Höhere Konfidenz",
+    "higherConfidenceTitle": "Dieser Befund gehört zur Top-Konfidenz-Teilmenge (gemessen 70 % Präzision auf einem etikettierten US-Korpus bei dieser Schwelle). Bitte trotzdem gegen Ihren Entwurf prüfen — dies ist eine Rangordnung, keine Garantie."
   },
   "antecedent": {
     "didYouMean": "Meinten Sie *{{term}}* (eingeführt in Anspruch {{claim_id}})?",

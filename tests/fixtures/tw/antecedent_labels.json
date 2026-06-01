@@ -125,7 +125,7 @@
       {
         "round": 9,
         "name": "r9_possessive_introduction",
-        "description": "Added has_possessive_introduction_tw — new resolution arm for possessive bare-noun intros of the shape `(所述|前述|該)<X>之<Y>` where Y is intro'd as X's attribute. Bypasses the 4-char min-len gate because the structural pattern (definite-reference + 之 + noun) is unambiguous and short locative attributes (頂面/底面/側面/端面/頂端/底端) are exactly the target. Right-clean check intentionally skipped for this arm (verb-start chars like 外/突/包 aren't in the boundary set and would block legitimate intros of `所述X之頂面外露於...` shape). Closes user-attested issue #134 (claim 8 `所述第二波長發光元件之頂面外露於`).",
+        "description": "Added has_possessive_introduction_tw — new resolution arm for possessive bare-noun intros of the shape `(所述|前述|該)<X>之<Y>` where Y is intro'd as X's attribute. Bypasses the 4-char min-len gate because the structural pattern (definite-reference + 之 + noun) is unambiguous and short locative attributes (頂面/底面/側面/端面/頂端/底端) are exactly the target. Right-clean check intentionally skipped for this arm (verb-start chars like 外/突/包 aren't in the boundary set and would block legitimate intros of `所述X之頂面外露於...` shape). Closes user-attested issue #134 (claim 8 `所述第二波長發光元件之頂面外露於`). Ships in PR alongside CN R37 (parity port — mirror mechanism in has_possessive_introduction_cn for 的/之 genitives; same ordinal-led narrowing applied for cross-jurisdiction safety).",
         "fixtures_silenced": 2,
         "user_attested_issues": [
           134
