@@ -11,6 +11,19 @@ from typing import Any, Optional
 
 import snowballstemmer as _sb
 
+from patentlint.analysis.en_normalize import en_number_key
+from patentlint.analysis.utils import (
+    _DEFINITE_REF, _QUANTIFIER_STOPS, _dx,
+    extract_introductions, extract_introductions_permissive,
+    extract_pattern_a_intros,
+    extract_abbreviation_intros, clean_noun_phrase,
+    compute_confidence_score, make_document_dedup_key,
+    strip_contextual_verb, token_set_jaccard,
+    first_ancestor_with_term, has_bare_noun_introduction,
+)
+from patentlint.diagnostic_extractors import extract_special_format
+from patentlint.models import Claim, CheckItem, UnsupportedTerm
+
 # 2026-06-01 (issue #178): `through hole(s)` is a patent-diction compound
 # noun (a hole that passes through a substrate; MPEP § 2173 element-naming
 # convention). _NP_CORE in utils.py truncates at `through` because it's
@@ -28,19 +41,6 @@ _THROUGH_HOLE_CONTINUATION = re.compile(
     r"^\s+through\s+(?P<head>holes?)\b",
     re.IGNORECASE,
 )
-
-from patentlint.analysis.en_normalize import en_number_key
-from patentlint.analysis.utils import (
-    _DEFINITE_REF, _QUANTIFIER_STOPS, _dx,
-    extract_introductions, extract_introductions_permissive,
-    extract_pattern_a_intros,
-    extract_abbreviation_intros, clean_noun_phrase,
-    compute_confidence_score, make_document_dedup_key,
-    strip_contextual_verb, token_set_jaccard,
-    first_ancestor_with_term, has_bare_noun_introduction,
-)
-from patentlint.diagnostic_extractors import extract_special_format
-from patentlint.models import Claim, CheckItem, UnsupportedTerm
 
 
 def find_missing_periods(claims: list[Claim]) -> list[int]:
