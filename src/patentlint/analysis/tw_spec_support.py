@@ -166,6 +166,17 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         #   predicate clause, never an element name.
         "減薄",
         "各",
+        # 2026-06-01 — issues #109 (`下部成` → strip `成`) and #132
+        # (`軸上` → strip `上`). 成 = formation verb suffix
+        # (`形成`/`構成`/`組成`); 上 = locative preposition ("on/above").
+        # Both are single-char clause-boundary tokens that never form
+        # the noun-phrase head in TIPO drafting. Anti-corpus checked:
+        # zero spec_support_baseline findings end with either token.
+        # Trailing tokens iterate longest-first, so 成 / 上 only fire
+        # as standalone trailing strips (won't break 成膜/上方-style
+        # interior matches because those are part of longer compounds).
+        "成",
+        "上",
     ),
     key=len,
     reverse=True,
