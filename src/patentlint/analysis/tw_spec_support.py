@@ -141,6 +141,13 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # - `面側` — locative-side suffix (`露出面側` = "exposed face side").
         #   Strips to leave residual `露出` which then fails leading reject.
         "部分而成",
+        # 2026-06-01 — issue #110. Drafter wrote `膜厚而成膜` (film
+        # thickness, formed by depositing film). Walker captured the
+        # whole thing because the existing `而成` trailing-token doesn't
+        # fire when extra chars follow (`而成` is interior here, not
+        # trailing). Adding `而成膜` as a specific 4-char trailing token
+        # strips the verb-phrase tail cleanly → `膜厚`.
+        "而成膜",
         "而成",
         "面側",
         # R67 (2026-05-08): walker over-capture truncated at ordinal-prefix
