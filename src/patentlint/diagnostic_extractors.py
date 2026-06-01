@@ -64,10 +64,17 @@ from typing import Any
 # Helper primitives
 # ---------------------------------------------------------------------------
 
-CONTEXT_WINDOW_LATIN = 30
-CONTEXT_WINDOW_JA = 22
-CONTEXT_WINDOW_HANGUL = 18
-CONTEXT_WINDOW_HAN = 12
+# 2026-06-01: context windows widened (30/22/18/12 → 60/45/35/25) to
+# enable autonomous triage of reports without asking the user for
+# additional draft context. The previous narrow windows frequently
+# truncated surrounding verb/possessive/Markush boundaries that
+# determine walker-FP vs legit-defect classification. Mirror of the
+# client-side change in frontend/src/lib/feedback.js so server-side
+# and client-side report payloads agree.
+CONTEXT_WINDOW_LATIN = 60
+CONTEXT_WINDOW_JA = 45
+CONTEXT_WINDOW_HANGUL = 35
+CONTEXT_WINDOW_HAN = 25
 
 # Ancestor-introduction excerpt windows — deliberately ~half the
 # child-claim context window above. The ancestor excerpt exists only to
@@ -203,17 +210,64 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
         return {}
     sample = findings[:SAMPLE_SIZE]
     out_findings = []
+    # Body cross-references in this finding-set's claims — list of cited
+    # claim numbers extracted from `the X according to claim N` /
+    # `如請求項N所述的Y` body shapes. Surfaces #124 / #143-class cases
+    # autonomously: triage can see whether the term has a possible
+    # cross-claim incorporation source without needing the draft.
+    import re as _ab_re
+    body_cross_refs_per_claim = {}
+    for f in findings:
+        cid = f.get("claim_id")
+        if cid is None or cid in body_cross_refs_per_claim:
+            continue
+        ct = f.get("claim_text") or ""
+        # Match `claim N` cross-references regardless of language
+        # (Latin `claim N`, CJK `請求項N` / `权利要求N`).
+        refs = set()
+        for m in _ab_re.finditer(r"\bclaims?\s+(\d+)\b", ct, _ab_re.IGNORECASE):
+            refs.add(int(m.group(1)))
+        for m in _ab_re.finditer(r"(?:請求項|权利要求|权利要求)\s*(\d+)", ct):
+            refs.add(int(m.group(1)))
+        # Exclude self-references
+        body_cross_refs_per_claim[cid] = sorted(r for r in refs if r != cid)
     for f in sample:
         term = f.get("term") or ""
         claim_text = f.get("claim_text") or ""
         ctx_before, ctx_after, offset = _excerpt_around(claim_text, term)
         suggested = f.get("suggested_match") or {}
+        # NP-boundary char: the single char IMMEDIATELY after the matched
+        # term in claim text. Tells me what stopped the NP capture and
+        # whether a stop-word / boundary-set extension would fix it
+        # (e.g., if next char is 又 / 從 / 之 / 'comprises' that's a
+        # missing exclusion). Privacy-safe — single CJK or ASCII char.
+        np_boundary_char = None
+        if offset is not None and isinstance(offset, int):
+            end_pos = offset + len(term)
+            if 0 <= end_pos < len(claim_text):
+                np_boundary_char = claim_text[end_pos]
+        # Leading reference-marker presence — surfaces 所述/前述/該/the/said
+        # immediately preceding the term, which informs whether the
+        # walker captured a reference vs an article-less intro. Helps
+        # classify possessive-intro (#134) / chain-inheritance (#124)
+        # cases without the draft.
+        ref_marker_before = None
+        if offset is not None and isinstance(offset, int) and offset > 0:
+            for marker in ("所述", "前述", "該等", "該些", "該", "前述",
+                            "said ", "the "):
+                start = offset - len(marker)
+                if start >= 0 and claim_text[start:offset].lower().endswith(marker.lower()):
+                    ref_marker_before = marker.strip()
+                    break
         out = {
             "claim_id": f.get("claim_id"),
             "term": _truncate(term, TERM_MAX),
             "reference_form": _truncate(f.get("reference_form"), 40),
             "did_you_mean": _truncate(suggested.get("term") if isinstance(suggested, dict) else None, TERM_MAX),
             "did_you_mean_claim_id": suggested.get("claim_id") if isinstance(suggested, dict) else None,
+            "np_boundary_char": np_boundary_char,
+            "ref_marker_before": ref_marker_before,
+            "body_cross_refs": body_cross_refs_per_claim.get(f.get("claim_id"), [])[:10],
             # Issue #70: which lookup produced the did-you-mean. A null
             # `did_you_mean_claim_id` is ambiguous on its own — it means
             # either a chain/morphological hit whose id wasn't threaded,
@@ -293,11 +347,27 @@ def extract_spec_support(unsupported_terms, total_claims: int, spec_paragraph_co
                 "tiers_checked": getattr(ut, "tiers_checked", None),
                 "cross_ref": getattr(ut, "cross_ref", None),
             }
+        phrase = ut_dict.get("phrase") or ""
+        # Phrase shape markers — surfacing without draft access whether
+        # the captured phrase shows leading-qualifier retention (so_shu)
+        # or terminal compound-noun-suffix presence (so we can tell
+        # whether normalize chain stripped the qualifier vs failed to,
+        # and whether the trailing chars belong to a known suffix class).
+        first_chars = phrase[:2] if phrase else ""
+        last_char = phrase[-1] if phrase else ""
+        has_leading_ref_marker = any(
+            phrase.startswith(m) for m in ("所述", "前述", "該等", "該些", "該", "said ", "the ")
+        )
+        # Token-shape hints for triage without draft access.
         out_findings.append({
             "claim_id": ut_dict.get("claim_number"),
-            "phrase": _truncate(ut_dict.get("phrase"), TERM_MAX),
+            "phrase": _truncate(phrase, TERM_MAX),
             "tiers_checked": ut_dict.get("tiers_checked"),
             "cross_ref": ut_dict.get("cross_ref"),
+            "phrase_charlen": len(phrase),
+            "phrase_first_chars": first_chars,
+            "phrase_last_char": last_char,
+            "has_leading_ref_marker": has_leading_ref_marker,
         })
     return {
         "issue_count": len(unsupported_terms),

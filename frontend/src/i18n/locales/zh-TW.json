@@ -306,7 +306,7 @@
       "showHighConf": "僅顯示高信心度（{{count}} 項）"
     },
     "higherConfidenceBadge": "較高信心",
-    "higherConfidenceTitle": "本項目位於信心分數較高的子集中（於有標註的美國語料測得約 69% 的精確度，相較基線 38%）。仍請對照您的稿件確認，此為排序提示而非保證。"
+    "higherConfidenceTitle": "本項目位於信心分數較高的子集中（於有標註的英文語料測得約 66% 的精確度，相較基線 38%）。仍請對照您的稿件確認，此為排序提示而非保證。"
   },
   "antecedent": {
     "didYouMean": "您是否指的是「{{term}}」（於請求項{{claim_id}}中導入）？",
