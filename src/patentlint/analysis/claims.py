@@ -259,6 +259,21 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
 
         Multi-dependent claims (e.g., "claim 5 of claim 1 or claim 3")
         collect introductions from every ancestor path.
+
+        Chain construction uses ``dependencies`` only. ``Claim.quoted_references``
+        is populated by the parser for body cross-refs of the form
+        `the X according to claim N` (引用記載型式 incorporation-by-reference),
+        but extending the chain to traverse those references blanket-grants
+        antecedent for ALL of claim N's intros — broader than the US/CN
+        doctrine, which says the cross-ref only provides antecedent for the
+        SPECIFIC element X named in the cross-ref. Element-scoped chain
+        traversal is a future ADR (separate PR); until that lands, the
+        chain stays dependencies-only.
+
+        TW walker has the same field but uses broad chain extension —
+        permissible because TW practitioner convention treats 引用記載型式
+        as wholesale incorporation. US/CN follow stricter MPEP / 审查指南
+        readings.
         """
         claims_by_id = {c.id: c for c in all_claims}
         chain = [claim]

@@ -46,6 +46,69 @@ class TestParseClaims:
         assert parse_claims("") == []
         assert parse_claims("   ") == []
 
+    def test_body_quoted_reference_populates_quoted_references(self):
+        # 引用記載型式 / body cross-ref: `the X according to claim N` inside
+        # an independent claim body should populate Claim.quoted_references.
+        # The walker traverses both dependencies and quoted_references.
+        text = (
+            "1. A light-emitting packaging structure comprising a substrate.\n"
+            "16. A light-emitting module, comprising:\n"
+            "the light-emitting packaging structure according to claim 1; and\n"
+            "an optical lens disposed over the light-emitting packaging structure.\n"
+        )
+        claims = parse_claims(text)
+        c16 = next(c for c in claims if c.id == 16)
+        # Body cross-ref to claim 1 must be picked up:
+        assert 1 in c16.quoted_references, (
+            f"expected 1 in quoted_references, got {c16.quoted_references}"
+        )
+
+    def test_body_quoted_reference_captures_all_body_form_refs(self):
+        # Body cross-refs are recorded INDEPENDENTLY of the broad
+        # dependencies extraction. For claim 2 (`The method of claim 1,
+        # wherein the apparatus of claim 3 is used`), both `the method
+        # of claim 1` (preamble form, also a body-shape match by the
+        # regex) and `the apparatus of claim 3` (body cross-ref) match
+        # _BODY_CROSS_REF. The walker's BFS dedups via `visited`.
+        text = (
+            "1. A method.\n"
+            "2. The method of claim 1, wherein the apparatus of claim 3 is used.\n"
+            "3. A separate apparatus.\n"
+        )
+        claims = parse_claims(text)
+        c2 = next(c for c in claims if c.id == 2)
+        # Both refs captured. (Self-ref 2 is dropped if present, which
+        # it isn't here.)
+        assert 1 in c2.quoted_references
+        assert 3 in c2.quoted_references
+
+    def test_body_quoted_reference_self_ref_dropped(self):
+        # Pathological: claim 5 body has `the method of claim 5` — should
+        # be dropped to prevent walker loops.
+        text = (
+            "1. A method.\n"
+            "5. The method of claim 1, wherein the X of claim 5 is configured.\n"
+        )
+        claims = parse_claims(text)
+        c5 = next(c for c in claims if c.id == 5)
+        assert 5 not in c5.quoted_references
+
+    def test_body_quoted_reference_np_cap_excludes_long_preambles(self):
+        # The 5-word NP cap prevents an entire body sentence preceding
+        # `claim N` from spuriously matching as a cross-ref. Here the
+        # phrase before `according to claim 1` is a long preamble (>5
+        # words between `the` and `according`), so it must NOT match.
+        text = (
+            "1. A method.\n"
+            "16. A module having an exceedingly long preamble fragment "
+            "comprising: the X. According to claim 1, the X is configured.\n"
+        )
+        claims = parse_claims(text)
+        c16 = next(c for c in claims if c.id == 16)
+        # The actual body cross-ref is malformed (the X with no connector),
+        # so quoted_references should NOT spuriously contain 1.
+        assert 1 not in c16.quoted_references
+
     def test_ofclaim_whitespace_collapse_normalized(self):
         # PDF→text whitespace collapse: "of claim" → "ofclaim"
         text = (
