@@ -79,10 +79,17 @@ function buildHash() {
 // extractor produces. Detection is content-driven (reads claim text), not
 // UI-locale-driven: a US user analyzing a TW patent still gets the Han
 // window because the claim text itself is Han-dominant.
-const CONTEXT_WINDOW_LATIN = 30
-const CONTEXT_WINDOW_JA = 22
-const CONTEXT_WINDOW_HANGUL = 18
-const CONTEXT_WINDOW_HAN = 12
+// 2026-06-01: widened from 30/22/18/12 to 60/45/35/25 so anonymous
+// report payloads carry enough surrounding context (verb-object /
+// possessive / Markush boundaries) for autonomous triage without
+// asking the user for additional draft text. Mirrored in
+// src/patentlint/diagnostic_extractors.py. Still well under
+// Privacy §6 "full paragraph" threshold, still capped to 5
+// findings/report.
+const CONTEXT_WINDOW_LATIN = 60
+const CONTEXT_WINDOW_JA = 45
+const CONTEXT_WINDOW_HANGUL = 35
+const CONTEXT_WINDOW_HAN = 25
 
 export const SAMPLE_SIZE = 5
 

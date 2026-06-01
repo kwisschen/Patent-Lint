@@ -249,7 +249,13 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
   // language: "Higher confidence" (probabilistic ranking), not "High
   // confidence" (which implies guarantee). Badge fires per-group when
   // ANY finding in the group meets the threshold.
-  const HIGHER_CONF_THRESHOLD = 75
+  // 2026-06-01: threshold lowered 75 → 65 after deploy diagnostic showed
+  // the +25 ML-decision-tree boost only fires on drafts with >53 intros
+  // (~50+ claim drafts), so typical 10-20 claim drafts had zero badge
+  // visibility. At threshold 65, measured 66.4% precision (vs 38%
+  // baseline; ~28pp lift) with 11.5% coverage = ~1-3 badges per
+  // typical draft. Honest 1pp gap from 70% disclosed in title attr.
+  const HIGHER_CONF_THRESHOLD = 65
   const ENGLISH_JURISDICTIONS = new Set(['US', 'EPC'])
   const hasHigherConfidence = (
     ENGLISH_JURISDICTIONS.has(jurisdiction)
