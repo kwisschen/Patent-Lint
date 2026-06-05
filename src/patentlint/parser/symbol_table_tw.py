@@ -11,8 +11,17 @@ from patentlint.models import SymbolEntry
 # Matches: numeral + separator + name
 # Separators: ‧ (U+2027), · (U+00B7), . (ASCII), … (ellipsis), ： (fullwidth colon),
 #             : (ASCII colon), tab, or sequences of dots/middle dots
+#
+# The numeral group is a separator-joined list of alphanumeric tokens. The
+# list separators (、 , ，) may carry trailing whitespace, so comma-and-space
+# forms like `210, 220, 230` parse the same as the tight `210,220,230`
+# (issue #184 — drafters routinely space out enumerated reference numerals;
+# the old `[...、,，]+` class disallowed the interior space so `210, 220,
+# 230：欄位` was rejected wholesale and every numeral reported undeclared).
+# An individual token still cannot contain whitespace, so the trailing
+# separator (： / tab / 2-space gap) before the name is unambiguous.
 TW_SYMBOL_PATTERN = re.compile(
-    r"^([A-Za-z0-9~～\-、,，]+)\s*"
+    r"^([A-Za-z0-9~～\-]+(?:\s*[、,，]\s*[A-Za-z0-9~～\-]+)*)\s*"
     r"(?:[‧·.…：:\t]\s*[‧·.…]*\s*|\s{2,})"
     r"(.+)$"
 )
