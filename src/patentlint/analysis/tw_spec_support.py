@@ -199,6 +199,28 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         "穿設",
         "穿過",
         "抵靠",
+        # 2026-06-05 batch (battery-pack / JP-translated mechanical drafts,
+        # report queue #187 / #193 / #194). Trailing verbal / adverbial
+        # tails the walker over-captured past the head noun:
+        # - `共同地` / `可通訊地` — manner adverbs (X + 地 adverbial particle);
+        #   never noun termini (`夾持部共同地` → `夾持部`, `檢體採集支援系統
+        #   可通訊地` → `檢體採集支援系統`, which then matches the spec via
+        #   substring even with an embedded reference numeral). Multi-char
+        #   so they only fire on the exact adverb, not on any noun ending
+        #   in 地 (土地/基地/場地 stay inventoried).
+        # - `緊靠` — abutment verb, same family as the existing `抵靠`
+        #   (`夾持部緊靠` → `夾持部`). Fires only when the term ENDS in 緊靠
+        #   (verb usage); a real `緊靠部`/`緊靠面` noun ends in 部/面 and is
+        #   untouched.
+        # - `不平行` — negation + adjective predicate (`第一外側壁不平行` →
+        #   `第一外側壁`); never a noun's name.
+        # CN (Simplified) mirror deferred per DR-1 — no CN report of these
+        # tokens yet; CN↔TW spec-support mirroring has been report-driven
+        # in both directions (CN #174/#175/#176 → TW 抵靠/穿設/穿過).
+        "可通訊地",
+        "共同地",
+        "不平行",
+        "緊靠",
     ),
     key=len,
     reverse=True,
@@ -241,6 +263,11 @@ _TW_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     #   real TIPO noun (中央/中心 do not start `中一`).
     "介由",
     "中一",
+    # 2026-06-05 — issue #194. `其中兩個` with the leading `其` dropped by
+    # the walker leaves `中兩個` (`相鄰的其中兩個第二外側壁` → walker captured
+    # `中兩個`). Mirror of `中一` above — `中兩` never leads a real TIPO noun
+    # (中央/中心 do not start `中兩`).
+    "中兩",
 )
 
 # Characters that appear ONLY as noun suffixes in TW patent diction
