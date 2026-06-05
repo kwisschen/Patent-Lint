@@ -172,6 +172,32 @@ class TestStripSpecSupportTrailingTokens:
     def test_大於_stripped_on_longer_head(self):
         assert _strip_spec_support_trailing_tokens("最大外徑大於") == "最大外徑"
 
+    # 2026-06-05 batch (issues #187 / #193 / #194): trailing verbal /
+    # adverbial tails over-captured past the head noun.
+    def test_共同地_adverb_stripped(self):
+        assert _strip_spec_support_trailing_tokens("夾持部共同地") == "夾持部"
+
+    def test_可通訊地_adverb_stripped(self):
+        # #187 — once the adverb is stripped, the head noun matches the spec
+        # via substring even with an embedded reference numeral.
+        assert (
+            _strip_spec_support_trailing_tokens("檢體採集支援系統可通訊地")
+            == "檢體採集支援系統"
+        )
+
+    def test_緊靠_verb_stripped(self):
+        assert _strip_spec_support_trailing_tokens("夾持部緊靠") == "夾持部"
+
+    def test_不平行_predicate_stripped(self):
+        assert _strip_spec_support_trailing_tokens("第一外側壁不平行") == "第一外側壁"
+
+    def test_2026_06_05_tokens_do_not_touch_legit_nouns(self):
+        """FN guard — real nouns ending in the same characters stay intact.
+        The adverb/verb tokens are multi-char and the verb fires only when
+        the term ENDS in the verb, so 緊靠部/緊靠面 (ending 部/面) are safe."""
+        for noun in ("土地", "基地", "場地", "緊靠部", "緊靠面", "平行板"):
+            assert _strip_spec_support_trailing_tokens(noun) == noun
+
 
 class TestSplitOnConjunction:
     def test_split_on_及(self):
@@ -227,6 +253,12 @@ class TestLeadingReject:
         assert _has_leading_reject("容器本體") is False
         assert _has_leading_reject("蓋組件") is False
         assert _has_leading_reject("第一電極") is False
+
+    def test_中兩_stranded_fragment_rejected(self):
+        # #194: `相鄰的其中兩個` → walker dropped `其`, leaving `中兩個`.
+        # Mirror of `中一`. Real nouns (中央/中心) don't start `中兩`.
+        assert _has_leading_reject("中兩個") is True
+        assert _has_leading_reject("中央處理器") is False
 
 
 class TestInteriorReject:
