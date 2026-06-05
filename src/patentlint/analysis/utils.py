@@ -543,6 +543,21 @@ _STOP_WORDS = (
     # (positional / kinematic verb), `complies` (3sg conformance
     # verb). Both unambiguous finite verbs in claim diction.
     r"move|complies|"
+    # R11 (2026-06-04): finite-verb over-capture from the 2026-06-04 report
+    # batch (battery-pack / clamping-member mechanical drafter). `passes`
+    # is the matrix verb in `the <noun> passes through the <hole>` clauses
+    # (#188 `pressing member passes`, #189 `clamping member passes`, #190
+    # `first/second extension arm passes`); `correspond` is the base-form
+    # gap left by the existing 3sg `corresponds` (#188 `two poles
+    # respectively correspond` — plural subject takes base form, mirror of
+    # R7's base-form `extend|constitute`). The intervening `respectively`
+    # adverb is already stripped by `_ADVERB_STOPS`. Both unambiguous finite
+    # verbs in claim diction — MPEP § 2173.05(e) treats only noun phrases as
+    # §112(b) reference targets. Shared `_NP_CORE` covers the spec-support
+    # extractor too (#192 same `<arm> passes` over-capture, cross-CHECK
+    # symmetry for free). No CN/TW report of the analogous verb yet —
+    # deferred per DR-1 (CJK 穿經/穿過 is a single token, different shape).
+    r"passes|correspond|"
     # Issue #136 (2026-06-01): `face` is ambiguous noun/verb — legitimate
     # noun in `terminal face` / `mounting face` / `contact face` etc.
     # but clearly the matrix verb in `the first magnetic bowl face toward

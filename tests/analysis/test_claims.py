@@ -440,6 +440,56 @@ class TestAntecedentBasis:
         assert any("encapsulation layer" in t for t in terms), terms
         assert any("second magnetic component" in t for t in terms), terms
 
+    def test_finite_verb_not_overcaptured_r11(self):
+        """R11 (issues #188 / #189 / #190 / #192): `passes` (3sg) is the
+        matrix verb in `the <noun> passes through the <hole>` clauses;
+        `correspond` (base form, plural subject) is the gap left by the
+        existing 3sg `corresponds`. The intervening `respectively` adverb
+        is stripped by _ADVERB_STOPS. Neither may bleed into the term."""
+        claims = [
+            Claim(
+                id=1,
+                text=(
+                    "An apparatus wherein the pressing member passes through "
+                    "the first through hole, the first extension arm passes "
+                    "through two adjacent ones of the first outer sidewalls, "
+                    "and the two poles respectively correspond in position "
+                    "to the first inner surface."
+                ),
+                independent=True,
+                method_claim=False,
+            ),
+        ]
+        terms = [i["term"] for i in check_antecedent_basis(claims)
+                 if i["claim_id"] == 1]
+        for tok in ("passes", "correspond", "respectively"):
+            for t in terms:
+                assert tok not in t, f"{tok!r} bled into term: {t!r}"
+        # Head nouns still surface as clean refs (no intro in this fragment).
+        assert any("pressing member" in t for t in terms), terms
+        assert any("first extension arm" in t for t in terms), terms
+        assert any("two poles" in t for t in terms), terms
+        # `bypasses` / `corresponds` / `corresponding` are unaffected
+        # (word-boundary semantics: `passes` is not matched inside
+        # `bypasses`, and the 3sg/-ing forms are separate alternatives).
+        from patentlint.analysis.utils import _DEFINITE_REF, clean_noun_phrase
+        caps = [clean_noun_phrase(m.group("noun").strip())
+                for m in _DEFINITE_REF.finditer("the second clutch bypasses the gear")]
+        assert "second clutch bypasses" in caps, caps
+
+    def test_spec_support_shares_passes_correspond_stop_r11(self):
+        """R11 cross-CHECK (#192): the spec-support noun-phrase extractor
+        shares `_NP_CORE`/`_STOP_WORDS`, so the same `<arm> passes`
+        over-capture is fixed on the §112(a) engine for free."""
+        from patentlint.analysis.utils import extract_noun_phrases
+        phrases = extract_noun_phrases(
+            "the first extension arm passes through two adjacent ones of "
+            "the first outer sidewalls"
+        )
+        for p in phrases:
+            assert "passes" not in p, f"`passes` bled into spec-support phrase: {p!r}"
+        assert any("first extension arm" in p for p in phrases), phrases
+
     def test_accounts_for_verb_not_overcaptured_r5(self):
         """R5 (issues #98 / #99): `<noun> accounts for X%` — `accounts` is a
         3sg finite verb in this pattern and must terminate NP capture. The
