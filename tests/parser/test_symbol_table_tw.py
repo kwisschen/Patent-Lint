@@ -177,3 +177,35 @@ class TestParseTwSymbolTableUnit:
         result = parse_tw_symbol_table(["10:基板"])
         assert len(result) == 1
         assert result[0].name == "基板"
+
+    def test_comma_space_separated_numerals(self):
+        """Issue #184 — enumerated numerals separated by comma-and-space
+        (`210, 220, 230`) must parse identically to the tight `210,220,230`.
+        The interior space previously broke the numeral group, so every
+        numeral in the row was reported undeclared."""
+        result = parse_tw_symbol_table(["210, 220, 230：欄位說明"])
+        assert [e.numeral for e in result] == ["210", "220", "230"]
+        assert all(e.name == "欄位說明" for e in result)
+
+    def test_comma_space_letter_prefix_numerals(self):
+        """#184 — same comma-and-space form with letter-prefixed numerals."""
+        result = parse_tw_symbol_table(["RS11, RS14：訊號"])
+        assert [e.numeral for e in result] == ["RS11", "RS14"]
+
+    def test_comma_space_two_space_separator(self):
+        """#184 — comma-and-space list with a 2-space gap before the name
+        (no colon) still parses; the list continuation requires a literal
+        separator so the trailing gap is unambiguous."""
+        result = parse_tw_symbol_table(["210, 220, 230  欄位"])
+        assert [e.numeral for e in result] == ["210", "220", "230"]
+
+    def test_space_before_and_after_separator(self):
+        """#184 — whitespace on both sides of the separator is tolerated."""
+        result = parse_tw_symbol_table(["100、 101 、102：隨身碟"])
+        assert [e.numeral for e in result] == ["100", "101", "102"]
+
+    def test_tight_comma_list_unchanged(self):
+        """#184 regression guard — the pre-existing tight comma form keeps
+        parsing exactly as before."""
+        result = parse_tw_symbol_table(["100、100a：容器本體"])
+        assert [e.numeral for e in result] == ["100", "100a"]
