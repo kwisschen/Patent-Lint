@@ -230,6 +230,14 @@ _CN_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     "以使",
     "以控",
     "以从",
+    # 2026-06-09 batch (#228/#234): leading `以<verb>` purpose-clause
+    # connectors ("in order to <verb>"). `以取得处于实体连接状态的…` (#228)
+    # and `以通过该传输接口发送…` (#234) are verb clauses captured at the
+    # start, never noun phrases. Same 2-char `以<verb>` shape as 以使/以控/
+    # 以从. Safe vs nouns: 以太网 (Ethernet) starts 以太, 以下步骤 starts
+    # 以下 — neither matches 以取/以通.
+    "以取",
+    "以通",
     # Direct parallels to TW audit tokens
     "有多",
     "有一",
