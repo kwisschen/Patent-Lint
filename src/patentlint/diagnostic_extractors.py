@@ -275,6 +275,34 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
             tail_match = _ab_re.match(r"\s*([A-Za-z一-鿿]{1,20})", tail)
             if tail_match:
                 next_word_after_term = tail_match.group(1)[:20]
+        # Same-claim earlier-introduction signal. Independent of the
+        # walker's intro-validity guards (has_bare_noun_introduction_*
+        # etc.): a plain check for whether the flagged term's string
+        # appears in the claim text BEFORE the flagged reference. When
+        # True, the term was almost certainly introduced earlier in the
+        # SAME claim (article-less / bare-noun, or a verb-object intro)
+        # but in a shape the intro extractor missed — a walker FP, not a
+        # genuine §112 gap. This is the same-claim sibling of
+        # `term_in_ancestor_text` (which covers the parent/ancestor case),
+        # and together they let triage classify the bare-noun /
+        # ancestor-chain FP family from the payload alone. Reported users
+        # said "same claim introduces X already" (#206/#207 US,
+        # #221/#224/#225 CN) — exactly this signal. Jurisdiction-agnostic:
+        # a substring scan over the de-identified claim_text the walker
+        # already supplies (no new draft content reaches the payload).
+        term_earlier_in_claim = False
+        if term and claim_text:
+            ref_form = f.get("reference_form") or ""
+            haystack = claim_text.lower()
+            ref_pos = haystack.find(ref_form.lower()) if ref_form else -1
+            if ref_pos < 0:
+                # reference_form not located verbatim (the walker may have
+                # normalized it); fall back to the term's own LAST
+                # occurrence as the reference proxy so the "before"
+                # window excludes the flagged reference itself.
+                ref_pos = haystack.rfind(term.lower())
+            if ref_pos > 0:
+                term_earlier_in_claim = term.lower() in haystack[:ref_pos]
         out = {
             "claim_id": f.get("claim_id"),
             "term": _truncate(term, TERM_MAX),
@@ -284,6 +312,7 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
             "np_boundary_char": np_boundary_char,
             "next_word_after_term": next_word_after_term,
             "term_word_count": term_word_count,
+            "term_earlier_in_claim": term_earlier_in_claim,
             "ref_marker_before": ref_marker_before,
             "body_cross_refs": body_cross_refs_per_claim.get(f.get("claim_id"), [])[:10],
             # Issue #70: which lookup produced the did-you-mean. A null

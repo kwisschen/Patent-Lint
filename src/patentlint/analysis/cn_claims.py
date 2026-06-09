@@ -20,6 +20,7 @@ from patentlint.analysis.cjk_tokenize import jaccard, tokenize_cn
 from patentlint.analysis.utils import (
     _dx,
     compute_confidence_score,
+    first_ancestor_with_term,
     make_document_dedup_key,
 )
 from patentlint.analysis.connection_relationships import (
@@ -4068,6 +4069,17 @@ def check_antecedent_basis_cn(
                 reference_form=reference_form,
                 jurisdiction="CN",
             )
+            # Parent-claim diagnostic enrichment (US/TW parity, 2026-06-09):
+            # does the flagged term appear verbatim in an ancestor claim?
+            # If so the introduction exists but in a shape the intro
+            # extractor missed (walker FP); if not, a genuine §112 gap.
+            # `ancestor_match_text` stays in-process — the extractor windows
+            # it. Brings CN to parity with the US/TW antecedent walkers so
+            # CN child-claim reports (#222/#223/#226) self-classify from the
+            # payload via `term_in_ancestor_text`.
+            anc_match_id, anc_match_text = first_ancestor_with_term(
+                chain, normalized_term
+            )
             issues.append(
                 {
                     "claim_id": claim.id,
@@ -4081,6 +4093,9 @@ def check_antecedent_basis_cn(
                         normalized_term, reference_form
                     ),
                     "confidence_score": confidence_score,
+                    "ancestor_claim_ids": [c.id for c in chain[1:]],
+                    "ancestor_match_claim_id": anc_match_id,
+                    "ancestor_match_text": anc_match_text,
                 }
             )
 
