@@ -249,6 +249,16 @@ class TestSpecSupportMethodClauseFpCn:
         for noun in ("夏至", "冬至", "截至"):
             assert _strip_spec_support_trailing_tokens_cn(noun) == noun
 
+    def test_yi_verb_purpose_clause_rejected(self):
+        # 2026-06-09 (#228/#234): leading `以<verb>` purpose clauses.
+        assert _has_leading_reject_cn("以取得处于实体连接状态") is True
+        assert _has_leading_reject_cn("以通过该传输接口") is True
+
+    def test_yi_verb_does_not_touch_yi_nouns(self):
+        # FN guard: 以太网/以下 start with 以 but not 以取/以通.
+        for noun in ("以太网", "以太坊", "以下步骤"):
+            assert _has_leading_reject_cn(noun) is False
+
     def test_purposive_phrases_rejected(self):
         assert _has_interior_reject_cn("单元用于向第二设备") is True
         assert _has_interior_reject_cn("X以使Y") is True
