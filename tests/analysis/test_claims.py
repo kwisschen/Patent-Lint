@@ -762,6 +762,50 @@ class TestClaimTransitions:
         assert len(results) == 1
         assert results[0].status == "pass"
 
+    def test_transition_before_colon_not_at_boundary_passes(self):
+        """#212/#213: a transition phrase that sits earlier in the preamble
+        ahead of a body-introducing colon (not immediately before it) must
+        still count. Previously the colon-gate suppressed the fallback and
+        these were flagged as missing a transition."""
+        claims = [
+            # #212 — `comprising performing, by a device, … processes:`
+            Claim(
+                id=1,
+                text=(
+                    "A power planning method for reducing timing impacts, "
+                    "comprising performing, by a computing device, the "
+                    "following processes:\ncomparing values; adjusting a plan."
+                ),
+                independent=True, method_claim=True,
+            ),
+            # #213 — CRM `… medium comprising a plurality of instructions "
+            # that, when executed, cause the processor to:`
+            Claim(
+                id=15,
+                text=(
+                    "A non-transitory computer-readable medium, the medium "
+                    "comprising a plurality of instructions that, when "
+                    "executed by a processor, cause the processor to: "
+                    "compare values; adjust a plan."
+                ),
+                independent=True, method_claim=False,
+            ),
+        ]
+        results = check_claim_transitions(claims)
+        assert all(r.status == "pass" for r in results), [r.message for r in results]
+
+    def test_colon_with_no_pre_colon_transition_still_amends(self):
+        """Guard: a real missing-transition (colon present, but no transition
+        phrase before it) is still flagged; an incidental `having` INSIDE the
+        colon-introduced body must not rescue it."""
+        claims = [
+            Claim(id=1, text="A method for processing: step A; step B.", independent=True, method_claim=True),
+            Claim(id=2, text="A device for control: a module having a memory; a processor.", independent=True),
+        ]
+        results = check_claim_transitions(claims)
+        amended = [r for r in results if r.status == "amend"]
+        assert len(amended) == 2, [r.message for r in results]
+
     def test_having_passes(self):
         """Claim with 'having' as transition → PASS."""
         claims = [Claim(id=1, text="A device having a processor and a memory.", independent=True)]
