@@ -1180,6 +1180,19 @@ def check_claim_transitions(claims: list[Claim]) -> list[CheckItem]:
         if not has_transition:
             if ":" not in claim.text:
                 has_transition = _TRANSITION_PHRASES.search(claim.text)
+            else:
+                # Colon present but the transition is not immediately before
+                # it. A transition word can still legitimately sit earlier in
+                # the preamble ahead of a body-introducing colon, e.g.
+                # `... method, comprising performing, by a device, the
+                # following processes:` (#212) or `... medium comprising a
+                # plurality of instructions that, when executed, cause the
+                # processor to:` (#213). The transition's role is to divide
+                # preamble from body, so it must appear BEFORE the first
+                # colon — scan only that span (avoids matching an incidental
+                # `having`/`including` inside the colon-introduced body).
+                pre_colon = claim.text.split(":", 1)[0]
+                has_transition = _TRANSITION_PHRASES.search(pre_colon)
         if not has_transition:
             results.append(CheckItem(
                 status="amend",
