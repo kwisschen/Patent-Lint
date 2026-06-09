@@ -185,6 +185,14 @@ _CN_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # `减薄` — process verb ("thin / reduce"), a predicate fragment.
         "减薄",
         "各",
+        # 2026-06-09 batch (USB-hub / display auto-config CN drafter, report
+        # queue #228/#232/#233). `至该` ("to the …") is the goal-preposition
+        # + demonstrative tail of `发送<X>指令至该显示器` clauses, captured
+        # whole as `查询指令至该` / `启动指令至该` / `窗口指定指令至该`. Never a
+        # noun-phrase terminus — strips to the clean head `<X>指令`. 2-char
+        # so it can't fire mid-noun (夏至/冬至 end in 至, not 至该). Already
+        # present as a LEADING reject; the trailing form is the new arm.
+        "至该",
     ),
     key=len,
     reverse=True,
