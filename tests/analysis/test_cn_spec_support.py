@@ -237,6 +237,18 @@ class TestSpecSupportMethodClauseFpCn:
         assert _has_leading_reject_cn("中一个") is True
         assert _has_interior_reject_cn("相向地转动以使") is True
 
+    def test_zhigai_goal_preposition_stripped(self):
+        # 2026-06-09 (#228/#232/#233): `发送<X>指令至该显示器` →
+        # the `至该` ("to the") goal-preposition tail strips off.
+        assert _strip_spec_support_trailing_tokens_cn("查询指令至该") == "查询指令"
+        assert _strip_spec_support_trailing_tokens_cn("启动指令至该") == "启动指令"
+        assert _strip_spec_support_trailing_tokens_cn("窗口指定指令至该") == "窗口指定指令"
+
+    def test_zhigai_does_not_touch_zhi_nouns(self):
+        # FN guard: 至 ends real nouns (夏至/冬至) but 至该 (2-char) does not.
+        for noun in ("夏至", "冬至", "截至"):
+            assert _strip_spec_support_trailing_tokens_cn(noun) == noun
+
     def test_purposive_phrases_rejected(self):
         assert _has_interior_reject_cn("单元用于向第二设备") is True
         assert _has_interior_reject_cn("X以使Y") is True
