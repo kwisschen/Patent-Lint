@@ -166,11 +166,82 @@ class TestAncestorBasisEnrichment:
         assert "SENTINEL_PROSE" not in str(out)
 
     def test_walker_without_ancestor_data_omits_block(self):
-        # CN / EPC walkers (not yet enriched) must not get a misleading
-        # term_in_ancestor_text:false — the block is omitted entirely.
+        # A walker finding that doesn't supply ancestor keys must not get a
+        # misleading term_in_ancestor_text:false — the block is omitted
+        # entirely. (US/CN/TW walkers all supply the keys in production; a
+        # bare synthetic finding here does not.)
         out = extract_antecedent_basis([self._finding()], total_claims=5)["findings"][0]
         assert "term_in_ancestor_text" not in out
         assert "ancestor_claim_ids" not in out
+
+
+class TestTermEarlierInClaimEnrichment:
+    """Same-claim earlier-introduction signal (2026-06-09). Splits a
+    walker FP (term introduced earlier in the SAME claim, article-less /
+    verb-object, but missed by the intro extractor) from a genuine §112
+    gap — the same-claim sibling of term_in_ancestor_text. Reported users
+    said "same claim introduces X already" (#206/#207 US, #221/#224/#225
+    CN)."""
+
+    def test_term_introduced_earlier_in_same_claim_true(self):
+        # 'eyes' is mentioned article-less ("having eyes") before the
+        # flagged definite reference ("the eyes") in the same claim.
+        f = {
+            "claim_id": 9,
+            "term": "eyes",
+            "reference_form": "the eyes",
+            "claim_text": (
+                "The method of claim 1, comprising obtaining facial images "
+                "having eyes of multiple persons; extracting features of "
+                "gazing behaviors of the eyes."
+            ),
+            "suggested_match": None,
+        }
+        out = extract_antecedent_basis([f], total_claims=9)["findings"][0]
+        assert out["term_earlier_in_claim"] is True
+
+    def test_term_earlier_in_same_claim_cjk_true(self):
+        # CN: 控制指令 introduced (发送控制指令) before the reference 该控制指令.
+        f = {
+            "claim_id": 1,
+            "term": "控制指令",
+            "reference_form": "该控制指令",
+            "claim_text": (
+                "一种方法，包括：通过主机发送控制指令至显示器，"
+                "其中该控制指令用于切换显示。"
+            ),
+            "suggested_match": None,
+        }
+        out = extract_antecedent_basis([f], total_claims=1)["findings"][0]
+        assert out["term_earlier_in_claim"] is True
+
+    def test_term_not_earlier_when_only_the_reference_present(self):
+        # A genuine missing-antecedent: the term appears only once (the
+        # flagged reference). No earlier mention → False.
+        f = {
+            "claim_id": 2,
+            "term": "special widget",
+            "reference_form": "the special widget",
+            "claim_text": "The device of claim 1, wherein the special widget rotates.",
+            "suggested_match": None,
+        }
+        out = extract_antecedent_basis([f], total_claims=2)["findings"][0]
+        assert out["term_earlier_in_claim"] is False
+
+    def test_over_capture_garbage_term_is_false(self):
+        # An over-captured clause fragment that does not recur earlier
+        # stays False (won't mislabel a real over-capture FP as introduced).
+        f = {
+            "claim_id": 1,
+            "term": "目标影像输入端口发送控制",
+            "reference_form": "该目标影像输入端口发送控制",
+            "claim_text": (
+                "一种方法，包括：通过主机从该目标影像输入端口发送控制指令至显示器。"
+            ),
+            "suggested_match": None,
+        }
+        out = extract_antecedent_basis([f], total_claims=1)["findings"][0]
+        assert out["term_earlier_in_claim"] is False
 
 
 class TestDidYouMeanSourceEnrichment:
