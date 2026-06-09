@@ -477,6 +477,39 @@ class TestAntecedentBasis:
                 for m in _DEFINITE_REF.finditer("the second clutch bypasses the gear")]
         assert "second clutch bypasses" in caps, caps
 
+    def test_finite_verb_not_overcaptured_r12(self):
+        """R12 (issues #205 / #200 / #218 / #216-220): `depends` / `stores`
+        (3sg verbs) and the temporal adverb `again` must terminate NP
+        capture. `not` and `refers` were deliberately withheld
+        (legit_drift) — not covered here."""
+        claims = [
+            Claim(
+                id=1,
+                text=(
+                    "An apparatus wherein the virtual plane depends on a "
+                    "pose, the storage circuit further stores a plurality "
+                    "of records, the host stores a pairing setting, and "
+                    "transmits the control command again to cause a switch."
+                ),
+                independent=True,
+                method_claim=False,
+            ),
+        ]
+        terms = [i["term"] for i in check_antecedent_basis(claims)
+                 if i["claim_id"] == 1]
+        for tok in ("depends", "stores", "again"):
+            for t in terms:
+                assert tok not in t, f"{tok!r} bled into term: {t!r}"
+        assert any("virtual plane" in t for t in terms), terms
+        assert any("storage circuit" in t for t in terms), terms
+        assert any("control command" in t for t in terms), terms
+        # Guard: the logic-gate noun `the NOT gate` is preserved (no `not`
+        # stop-word), and `refers` is NOT stripped (legit labels protected).
+        from patentlint.analysis.utils import _DEFINITE_REF, clean_noun_phrase
+        not_caps = [clean_noun_phrase(m.group("noun").strip())
+                    for m in _DEFINITE_REF.finditer("the not gate receives a signal")]
+        assert "not gate" in not_caps, not_caps
+
     def test_spec_support_shares_passes_correspond_stop_r11(self):
         """R11 cross-CHECK (#192): the spec-support noun-phrase extractor
         shares `_NP_CORE`/`_STOP_WORDS`, so the same `<arm> passes`

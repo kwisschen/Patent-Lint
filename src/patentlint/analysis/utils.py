@@ -558,6 +558,18 @@ _STOP_WORDS = (
     # symmetry for free). No CN/TW report of the analogous verb yet —
     # deferred per DR-1 (CJK 穿經/穿過 is a single token, different shape).
     r"passes|correspond|"
+    # R12 (2026-06-09): finite-verb over-capture from the 2026-06-09 US
+    # report batch. `depends` (3sg, `the virtual plane depends on …` #205)
+    # and `stores` (3sg, `the storage circuit further stores …` #200,
+    # `the host stores …` #218) are unambiguous matrix verbs — never noun
+    # termini in claim diction. Two tokens were deliberately NOT added
+    # because active labels would legit_drift (queued for a US walker-round
+    # with DR-10 re-triage): `refers` (4 `legit_drafting_error` labels), and
+    # `not` (4 `scheduling pdcch not` legit labels — the `the <noun> not
+    # <verb>ing` shape from #216/#217 stays queued). Spec-support shares
+    # `_NP_CORE` (cross-CHECK covered for free). No CN/TW report of the
+    # analogous verbs — deferred per DR-1.
+    r"depends|stores|"
     # Issue #136 (2026-06-01): `face` is ambiguous noun/verb — legitimate
     # noun in `terminal face` / `mounting face` / `contact face` etc.
     # but clearly the matrix verb in `the first magnetic bowl face toward
@@ -640,6 +652,15 @@ _ADVERB_STOPS = {
     # (`phase-delayed clock signal successively approach` — `successively`
     # bled between noun head and trailing verb).
     "successively", "sequentially", "iteratively", "progressively",
+    # R12 (2026-06-09): `again` is a temporal adverb that bled between the
+    # noun head and a trailing infinitive in `transmit the control command
+    # again to cause …` (#216/#217/#219/#220 — `control command again` →
+    # `control command`). Never a noun terminus. (`also` looked like the
+    # same shape but was NOT added — as an _ADVERB_STOPS member it strips on
+    # the INTRO side too, spuriously introducing `players` from `players
+    # also …` and legit_drifting 4 US labels; the `triple store also`
+    # residue is dual-labeled instead.)
+    "again",
     # Patent function words
     "thereof", "therein", "thereto", "thereby", "therefrom",
     "thereon", "therethrough", "therebetween",
