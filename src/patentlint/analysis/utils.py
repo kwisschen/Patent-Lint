@@ -562,14 +562,21 @@ _STOP_WORDS = (
     # report batch. `depends` (3sg, `the virtual plane depends on …` #205)
     # and `stores` (3sg, `the storage circuit further stores …` #200,
     # `the host stores …` #218) are unambiguous matrix verbs — never noun
-    # termini in claim diction. Two tokens were deliberately NOT added
-    # because active labels would legit_drift (queued for a US walker-round
-    # with DR-10 re-triage): `refers` (4 `legit_drafting_error` labels), and
-    # `not` (4 `scheduling pdcch not` legit labels — the `the <noun> not
-    # <verb>ing` shape from #216/#217 stays queued). Spec-support shares
-    # `_NP_CORE` (cross-CHECK covered for free). No CN/TW report of the
-    # analogous verbs — deferred per DR-1.
+    # termini in claim diction. `not` is NOT added — `the strand not
+    # conjugated to the label` is a legitimate negative-limitation noun
+    # phrase, so `not` has real NP uses (queued for a US walker-round).
+    # Spec-support shares `_NP_CORE` (cross-CHECK covered for free). No
+    # CN/TW report of the analogous verbs — deferred per DR-1.
     r"depends|stores|"
+    # R13 (2026-06-09): `refers` (3sg) — `the reference point refers to a
+    # center …` (#204) over-captured `reference point refers`. Unambiguous
+    # finite verb (`X refers to Y`). The 4 active `particular zone refers`
+    # labels that previously blocked this were re-triaged this round
+    # (legit_drafting_error → walker_fp, DR-10): their own notes call them
+    # "verb phrase fragment, not a noun" and the clean head `particular
+    # zone` is introduced via `a particular zone` (Pattern A) — so they
+    # were doubly mis-shaped corpus labels, not real §112 defects.
+    r"refers|"
     # Issue #136 (2026-06-01): `face` is ambiguous noun/verb — legitimate
     # noun in `terminal face` / `mounting face` / `contact face` etc.
     # but clearly the matrix verb in `the first magnetic bowl face toward
