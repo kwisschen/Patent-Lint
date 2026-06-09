@@ -510,6 +510,31 @@ class TestAntecedentBasis:
                     for m in _DEFINITE_REF.finditer("the not gate receives a signal")]
         assert "not gate" in not_caps, not_caps
 
+    def test_finite_verb_not_overcaptured_r13(self):
+        """R13 (#204): `refers` (3sg) must terminate NP capture. `not` is
+        NOT a stop word — `the strand not conjugated to the label` is a
+        legitimate negative-limitation noun phrase."""
+        claims = [
+            Claim(
+                id=1,
+                text="An apparatus wherein the reference point refers to a center of a head.",
+                independent=True, method_claim=False,
+            ),
+        ]
+        terms = [i["term"] for i in check_antecedent_basis(claims)
+                 if i["claim_id"] == 1]
+        for t in terms:
+            assert "refers" not in t, f"`refers` bled into term: {t!r}"
+        assert any("reference point" in t for t in terms), terms
+        # Guard: `not` is NOT a stop word — it survives NP capture (the term
+        # retains `not`, rather than truncating to `strand`), so a
+        # negative-limitation noun phrase is not split at `not`.
+        from patentlint.analysis.utils import _DEFINITE_REF, clean_noun_phrase
+        caps = [clean_noun_phrase(m.group("noun").strip())
+                for m in _DEFINITE_REF.finditer(
+                    "the strand not conjugated to the label is detected")]
+        assert any("strand not" in c for c in caps), caps
+
     def test_spec_support_shares_passes_correspond_stop_r11(self):
         """R11 cross-CHECK (#192): the spec-support noun-phrase extractor
         shares `_NP_CORE`/`_STOP_WORDS`, so the same `<arm> passes`
