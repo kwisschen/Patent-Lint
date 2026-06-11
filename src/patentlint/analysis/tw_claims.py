@@ -384,7 +384,9 @@ _BARE_NUMERAL = re.compile(
     r"\s?\d{2,4}"                    # 2-4 digit number
     r"(?!\))"                        # not followed by )
     r"(?!\d)"                        # must match full number, no partial
-    r"(?!\s*[°℃%μµa-zA-Z])"        # R-refnum-2 (#100): also μ/µ (Greek/micro)
+    r"(?!\s*[°℃%μµΩΩa-zA-Z])"      # R-refnum-2 (#100): μ/µ; (#251) Ω/Ω
+    # (Greek capital omega U+03A9 + ohm sign U+2126) — `107 Ω·cm` is a
+    # resistivity VALUE, not a 符號. Mirror of the μm measurement exclusion.
     r"(?!\s*(?:" + _CJK_UNIT_TOKENS + r"))"  # not followed by CJK unit token
 )
 

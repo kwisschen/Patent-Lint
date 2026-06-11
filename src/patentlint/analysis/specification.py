@@ -280,6 +280,25 @@ def _is_year(num_str: str) -> bool:
 # its sentential context (e.g., "from the water supply", "manipulate the
 # water supply") and D1 inflates to false conflicts. Strip aggressively
 # so only the noun itself remains.
+# Trailing finite verbs / participles that a `<noun> <verb> <numeral>`
+# context bleeds into the element-name capture (issue #256). Curated to
+# unambiguous verb forms — none is ever an element-name noun (the `-ing`
+# *nouns* opening/coating/bearing/housing/coupling/spring/ring/wiring are
+# deliberately NOT here). Cross-CHECK mirror of the §112 _STOP_WORDS verbs.
+_D1_TRAILING_VERBS = frozenset({
+    "defines", "defining",
+    "exceeds", "exceeding",
+    "comprises", "comprising",
+    "includes", "including",
+    "surrounds", "surrounding",
+    "connects", "connecting",
+    "extends", "extending",
+    "receives", "receiving",
+    "contacts", "contacting",
+    "engages", "engaging",
+    "abuts", "abutting",
+})
+
 _D1_LEADING_FUNCTION_WORDS = frozenset({
     # Articles + possessives
     "the", "a", "an", "said", "each", "every", "any", "some", "another", "this",
@@ -448,6 +467,16 @@ def _d1_extract_ordinal_and_head(phrase: str) -> tuple[str, str]:
         words.pop(0)
     # Strip trailing function words
     while words and words[-1] in _D1_LEADING_FUNCTION_WORDS:
+        words.pop()
+    # Strip a trailing finite verb / participle. Issue #256: `the body
+    # defines 1114` / `a wall exceeding the opening 1114` captured
+    # `body defines` / `wall exceeding` as the element name, making 1114
+    # look like it denotes inconsistent elements. The head noun is the
+    # part BEFORE the verb. Curated to unambiguous verb forms only — never
+    # element-name nouns (cf. the `-ing` nouns opening/coating/bearing/
+    # housing/coupling/spring, which are deliberately excluded). Mirrors
+    # the §112 _STOP_WORDS finite-verb family (cross-CHECK).
+    while words and words[-1] in _D1_TRAILING_VERBS:
         words.pop()
     if not words:
         return (ordinal, "")
