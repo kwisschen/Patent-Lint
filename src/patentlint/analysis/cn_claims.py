@@ -3434,6 +3434,17 @@ _BARE_NOUN_BOUNDARY_CN: frozenset[str] = frozenset(
     # treated `第三位置或...` as a longer compound and rejected the
     # bare intro.
     | {"或"}
+    # R39 (2026-06-11): 至 (goal-preposition "to") terminates a verb-object
+    # bare-noun introduction. Issues #221/#222/#223 — drafter wrote
+    # `通过该主机发送控制指令至该显示器`; the object `控制指令` is a complete
+    # bare-noun intro, but without 至 in the boundary set
+    # `_bare_noun_right_clean_cn` treated `控制指令至...` as a longer
+    # compound and rejected it, so `该控制指令` was flagged as lacking
+    # antecedent. 至 is a goal-preposition, never a noun-compound interior
+    # char (夏至/冬至 END in 至; it is not a continuation char after a
+    # noun). Corpus-neutral: ephemeral sim showed 0 delta across all 16
+    # CN fixtures (the verb-object-至 pattern is not in the corpus pool).
+    | {"至"}
 )
 _BARE_NOUN_CJK_RE_CN: re.Pattern[str] = re.compile(r"[一-鿿]")
 _BARE_NOUN_MIN_LEN_CN = 4
