@@ -268,6 +268,11 @@ _TW_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     # `中兩個`). Mirror of `中一` above — `中兩` never leads a real TIPO noun
     # (中央/中心 do not start `中兩`).
     "中兩",
+    # 2026-06-11 — issue #246 (JP-translated 對位裝置 draft). `朝往` is an
+    # adverb ("toward / heading to"), captured standalone from
+    # `朝往前述基板吸引前述光罩的吸引機構`. Never a noun; no real TIPO noun
+    # starts `朝往` (朝向角度 starts 朝向, not 朝往).
+    "朝往",
 )
 
 # Characters that appear ONLY as noun suffixes in TW patent diction
@@ -303,6 +308,11 @@ _TW_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = (
     "耦合一",
     "連接一",
     "連結一",
+    # 2026-06-11 — issue #248. `面且互相正交` is a predicate clause
+    # ("...face, and mutually orthogonal..."); `互相` ("mutually") is an
+    # adverb, never part of a noun's name. 互鎖 / 相互 are different
+    # 2-char sequences, so a noun like 互鎖機構 / 相互作用 is unaffected.
+    "互相",
 )
 
 # Leading prepositions that survive walker normalization (audit #2 found

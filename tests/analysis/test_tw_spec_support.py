@@ -254,6 +254,11 @@ class TestLeadingReject:
         assert _has_leading_reject("蓋組件") is False
         assert _has_leading_reject("第一電極") is False
 
+    def test_朝往_adverb_rejected(self):
+        # #246: 朝往 ("toward") is an adverb captured standalone.
+        assert _has_leading_reject("朝往") is True
+        assert _has_leading_reject("朝向角度") is False  # FN guard
+
     def test_中兩_stranded_fragment_rejected(self):
         # #194: `相鄰的其中兩個` → walker dropped `其`, leaving `中兩個`.
         # Mirror of `中一`. Real nouns (中央/中心) don't start `中兩`.
@@ -275,6 +280,12 @@ class TestInteriorReject:
         """Issue #76: `<verb>一<noun>` coupling predicate is a clause."""
         assert _has_interior_reject("第一端耦接一輸入電壓") is True
         assert _has_interior_reject("控制端連接一負載") is True
+
+    def test_互相_adverb_clause_rejected(self):
+        # #248: 面且互相正交 is a predicate clause; 互相 ("mutually") adverb.
+        assert _has_interior_reject("面且互相正交") is True
+        assert _has_interior_reject("互鎖機構") is False  # FN guard
+        assert _has_interior_reject("相互作用") is False  # FN guard
 
     def test_coupling_noun_compound_accepted(self):
         """`耦接器` / `連接部` (no `一`) are real nouns — not rejected."""
