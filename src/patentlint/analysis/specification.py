@@ -249,7 +249,15 @@ _UNIT_PATTERN = re.compile(
     r"|°|deg|rad|sr|arcsec|arcmin"
     # Percent (no boundary needed since it's punctuation)
     r"|%"
-    r")\b",
+    # Issue #264: the trailing boundary was `\b`, which FAILS after a
+    # punctuation-ending unit (`vol%` / `wt%` / `mol%` / bare `%`): `%` is a
+    # non-word char, so there is no word boundary after it, and the whole
+    # unit match failed — `the main bag structure being 100 vol%` was NOT
+    # excluded and `100` was captured as a phantom refnum. A negative
+    # lookahead for an alphanumeric continuation keeps the original intent
+    # (don't let `m` match inside `meters`) while admitting units that end
+    # in `%` or other punctuation.
+    r")(?![A-Za-z0-9])",
 )
 
 # Exclusion: preceding keywords
