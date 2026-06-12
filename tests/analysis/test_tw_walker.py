@@ -755,6 +755,24 @@ class TestTrailingVerb至:
         assert "解鎖指令" in nouns, f"Expected 解鎖指令 in {nouns}"
 
 
+class TestTrailingVerb不:
+    """#267: 不 (negation particle) in _TRAILING_VERB_DENYLIST — CN parity."""
+
+    def test_negation_bu_stripped(self):
+        """所述哺乳類動物不包括人類 → references 哺乳類動物 (不 stripped, 包括
+        already excluded as a verb)."""
+        from patentlint.analysis.tw_claims import normalize_reference_term
+        # the trailing strip runs inside the walker normalize chain
+        assert normalize_reference_term("所述哺乳類動物不") == "哺乳類動物"
+
+    def test_bu_prefix_noun_not_stripped(self):
+        """FN guard: 不 at position 0 (不鏽鋼/不織布) is protected by the
+        endswith position check — only a TRAILING 不 strips."""
+        from patentlint.analysis.tw_claims import normalize_reference_term
+        assert normalize_reference_term("所述不鏽鋼") == "不鏽鋼"
+        assert normalize_reference_term("所述不織布") == "不織布"
+
+
 class TestTrailingVerb依序:
     """Tests for 依序 in _TRAILING_VERB_DENYLIST."""
 
