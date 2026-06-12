@@ -977,7 +977,15 @@ def check_ref_numeral_parens(doc: TwPatentDocument) -> list[CheckItem]:
     """
     bad_claim_ids: list[int] = []
     for claim in doc.claims:
-        if _BARE_NUMERAL.search(claim.text) or _BARE_LATIN_REF.search(claim.text):
+        # #241: mask claim-reference enumerations before scanning for bare
+        # refnums. `如請求項12或13的…` — the `13` (a claim number after 或)
+        # was read as a reference numeral because the `(?<!請求項)`/`(?<!至)`
+        # lookbeheads in _BARE_NUMERAL only guard the FIRST number, not the
+        # 或/、-enumerated continuations. _TW_DEP_FORMAT already recognizes
+        # the whole `請求項N(或|、|至)M…` span; blanking it leaves real
+        # element refnums (元件210、220) untouched (no 請求項 prefix).
+        scan_text = _TW_DEP_FORMAT.sub(lambda m: " " * len(m.group()), claim.text)
+        if _BARE_NUMERAL.search(scan_text) or _BARE_LATIN_REF.search(scan_text):
             bad_claim_ids.append(claim.id)
 
     if bad_claim_ids:

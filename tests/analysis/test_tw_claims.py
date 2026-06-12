@@ -914,3 +914,18 @@ class TestIndependentPreamble:
         ])
         results = check_independent_preamble(doc)
         assert results[0].status == "pass"
+
+
+def test_claim_reference_enumeration_not_refnum_241():
+    """#241: `如請求項12或13的…` — the claim number 13 (after 或) must not be
+    read as a bare reference numeral, while real element refnums and refnum
+    LISTS (元件210、220) still flag."""
+    from patentlint.analysis.tw_claims import check_ref_numeral_parens
+    from patentlint.models import Claim, TwPatentDocument
+    def mk(text):
+        c = Claim(id=1, independent=False, method_claim=False, dependencies=[12], text=text)
+        return TwPatentDocument(claims=[c], title="x", abstract="x", disclosure=[], embodiment=[], technical_field=[], prior_art=[], symbol_table=[], representative_drawing_symbols=[])
+    assert check_ref_numeral_parens(mk("如請求項12或13的對位方法，其中包括步驟。"))[0].status == "pass"
+    # FN guards: real refnums still flagged (no 請求項 prefix → not masked)
+    assert check_ref_numeral_parens(mk("如請求項1的方法，其中元件210連接。"))[0].status == "amend"
+    assert check_ref_numeral_parens(mk("如請求項1的方法，其中元件210、220連接。"))[0].status == "amend"
