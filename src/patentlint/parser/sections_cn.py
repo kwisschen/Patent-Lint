@@ -26,7 +26,13 @@ from patentlint.parser.language import (
 # ---------------------------------------------------------------------------
 
 _HEADER_SPEC = re.compile(r"说明书(?!摘要|附图)")
-_HEADER_CLAIMS = re.compile(r"权利要求书")
+# Issue #257: some drafters head the claims section with the bare `权利要求`
+# (no 书 book-suffix). `_classify_header` only ever sees a Word section's
+# HEADER field (a clean section name, never claim body text), so admitting
+# the optional 书 here cannot mis-fire on an embedded `如权利要求1所述`
+# body reference. Root-causes #257 (requiredSections), #259 (title), #260
+# (claimReference — claims boundary was mislocated when the header missed).
+_HEADER_CLAIMS = re.compile(r"权利要求书?")
 _HEADER_ABSTRACT = re.compile(r"说明书摘要|摘要(?!附图)")
 _HEADER_ABSTRACT_DRAWING = re.compile(r"摘要附图")
 _HEADER_DRAWINGS = re.compile(r"说明书附图")
@@ -87,7 +93,7 @@ def _compact(text: str) -> str:
 
 
 # Compact-form anchor tokens. Matched after whitespace collapse.
-_BA_CLAIMS_RE = re.compile(r"^权利要求书(?:\d+/\d+页)?$")
+_BA_CLAIMS_RE = re.compile(r"^权利要求书?(?:\d+/\d+页)?$")  # 书 optional (#257)
 _BA_SPEC_RE = re.compile(r"^说明书(?:\d+/\d+页)?$")
 _BA_ABSTRACT_RE = re.compile(r"^(?:说明书摘要|摘要)(?:\d+/\d+页)?$")
 _BA_ABSTRACT_DRAWING_RE = re.compile(r"^(?:说明书)?摘要附图(?:\d+/\d+页)?$")
@@ -423,7 +429,7 @@ def classify_document_cn(paragraphs: list[str]) -> DetectionResult:
         for _, pattern in _SPEC_SUBSECTIONS:
             if pattern.match(stripped):
                 return (True, DetectionReason.PATENT_DETECTED)
-        if stripped in ("权利要求书", "说明书摘要"):
+        if stripped in ("权利要求书", "权利要求", "说明书摘要"):
             return (True, DetectionReason.PATENT_DETECTED)
 
     # --- Layer 4: Numbered-claims fallback (requires CJK dominance) ---

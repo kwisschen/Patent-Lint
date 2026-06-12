@@ -697,3 +697,27 @@ class TestPresplitMidParagraph:
         doc = extract_cn_sections_from_docx([section])
         ids = [c.id for c in doc.claims]
         assert ids == [1, 2, 3, 4, 5, 6, 7]
+
+
+def test_bare_quanliyaoqiu_header_recognized_257():
+    """#257: a claims section headed `权利要求` (no 书 book-suffix) is
+    recognized, so requiredSections / claimReference / boundary don't break.
+    The Word header field is a clean section name, so the relaxation cannot
+    mis-fire on an embedded `如权利要求1所述` body reference."""
+    from patentlint.parser.docx_loader import DocxSection
+    from patentlint.parser.sections_cn import (
+        extract_cn_sections_from_docx,
+        _classify_body_anchor,
+        _BA_CLAIMS_RE,
+    )
+    secs = [
+        DocxSection(header_text="说明书", paragraphs=["技术领域", "本发明涉及产品。", "具体实施方式", "实施例。"], numpr_flags=[]),
+        DocxSection(header_text="权利要求", paragraphs=["1. 一种产品，包括镜片。", "2. 根据权利要求1所述的产品。"], numpr_flags=[True, True]),
+    ]
+    doc = extract_cn_sections_from_docx(secs)
+    assert len(doc.claims) == 2
+    assert doc.section_source_strategies.get("claims") in {"page_header", "body_anchor"}
+    # Guards: embedded body reference + numbered claim line are NOT headers
+    assert _classify_body_anchor("如权利要求1所述") is None
+    assert _BA_CLAIMS_RE.match("权利要求") is not None
+    assert _BA_CLAIMS_RE.match("权利要求1") is None
