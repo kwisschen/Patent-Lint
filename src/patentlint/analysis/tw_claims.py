@@ -2113,6 +2113,12 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         "還包含", "還包括",
         "並且", "以及",
         "並", "且", "其", "其中", "還", "另",
+        # 不: negation particle — `所述哺乳類動物不包括人類` (#267) leaves a
+        # dangling trailing 不 once the verb (包括) is excluded. 不 is never
+        # a noun morpheme (不鏽鋼/不織布 carry 不 at position 0, protected by
+        # the endswith position check). CN parity — _TRAILING_VERB_DENYLIST_CN
+        # already carries 不.
+        "不",
         # Partial captures — single-character fragments that indicate the
         # regex stopped mid-word. Ordered after multi-char tokens.
         "包", "通", "經", "藉",
