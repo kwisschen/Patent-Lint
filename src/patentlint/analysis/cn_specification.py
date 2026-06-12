@@ -1744,6 +1744,12 @@ def _cn_d1_head_noun_with_ordinal(raw: str) -> str:
     s = _cn_strip_trailing_verb(s)
     # R67 (2026-05-08, issue #29) — see `_cn_split_on_interior_verb`.
     s = _cn_split_on_interior_verb(s)
+    # Issue #242: parity with `_cn_d1_head_noun` — the `<NP_A>與<NP_B>`
+    # conjunction split (#158) was wired into the non-ordinal head-noun
+    # helper but NOT this ordinal-keyed one, so `係亦可為與步驟S50` kept the
+    # `係亦可為與步驟` clause instead of cutting to `步驟` (then dropped as a
+    # generic term). Keep the right-hand element bound to the numeral.
+    s = _cn_split_on_interior_conjunction(s)
     # If the post-de cut exposed a leading ordinal or other particles,
     # re-run iterative strip to clean them.
     s = _cn_strip_iterative(s, allow_ordinal_break=True)

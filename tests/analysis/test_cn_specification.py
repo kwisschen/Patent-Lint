@@ -621,3 +621,18 @@ def test_cjk_single_char_unit_does_not_drop_refnum_266():
     from patentlint.analysis.cn_specification import _cn_extract_numeral_name_pairs
     assert _cn_extract_numeral_name_pairs("按鈕10升起並轉動") == [("10", "按鈕")]
     assert _cn_extract_numeral_name_pairs("感測器20連接") == [("20", "感測器")]
+
+
+def test_interior_conjunction_split_parity_242():
+    """#242: `係亦可為與步驟S50` — the ordinal-keyed head-noun extractor
+    must apply the same `<NP_A>與<NP_B>` conjunction split (#158) as the
+    non-ordinal one. Result: `步驟` (then dropped as generic) → no phantom
+    refnum for S50; and `散熱片與基板10` keeps the right element `基板`."""
+    from patentlint.analysis.cn_specification import (
+        _cn_extract_numeral_name_pairs,
+        _cn_d1_head_noun_with_ordinal,
+    )
+    assert _cn_extract_numeral_name_pairs("中之閾值，係亦可為與步驟S50中之閾值相同") == []
+    assert _cn_d1_head_noun_with_ordinal("係亦可為與步驟") == ""
+    # #158 semantics preserved in the ordinal path
+    assert _cn_extract_numeral_name_pairs("該散熱片與基板10連接") == [("10", "基板")]
