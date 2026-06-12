@@ -793,3 +793,15 @@ class TestNumeralConsistencyD1CN:
         # End-to-end pipeline preservation:
         assert _cn_d1_head_noun_with_ordinal("第一連接器") == "第一連接器"
         assert _cn_d1_head_noun_with_ordinal("組織圖像形成部") == "組織圖像形成部"
+
+
+def test_percent_unit_excluded_from_refnums_264():
+    """#264: `vol%`/`wt%`/`mol%`/bare `%` units no longer escape the unit
+    exclusion (the trailing \\b failed after the punctuation `%`)."""
+    from patentlint.analysis.specification import extract_numeral_name_pairs
+    pairs = extract_numeral_name_pairs(
+        "a total capacity of the main bag structure being 100 vol%"
+    )
+    assert pairs == [], pairs
+    # real refnum still captured
+    assert extract_numeral_name_pairs("the housing 102 holds the lid") == [("102", "housing")]

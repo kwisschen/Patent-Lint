@@ -606,3 +606,18 @@ class TestRefnumMeasurementExclusion:
         # Exactly one capture: the refnum 10 paired with 齒輪
         assert len(pairs) == 1, pairs
         assert pairs[0] == ("10", "齒輪"), pairs
+
+
+def test_cjk_measurement_tail_excluded_266():
+    """#266: `10毫升` / `100 毫升` are measurement values, not refnums."""
+    from patentlint.analysis.cn_specification import _cn_extract_numeral_name_pairs
+    assert _cn_extract_numeral_name_pairs("每公斤體重 10毫升至12 毫升以內") == []
+    assert _cn_extract_numeral_name_pairs("其定義為每100 毫升溶液") == []
+
+
+def test_cjk_single_char_unit_does_not_drop_refnum_266():
+    """FN guard: single-char units (升/克/度) are NOT in the tail set, so a
+    real refnum followed by a verb/noun starting with that char is kept."""
+    from patentlint.analysis.cn_specification import _cn_extract_numeral_name_pairs
+    assert _cn_extract_numeral_name_pairs("按鈕10升起並轉動") == [("10", "按鈕")]
+    assert _cn_extract_numeral_name_pairs("感測器20連接") == [("20", "感測器")]

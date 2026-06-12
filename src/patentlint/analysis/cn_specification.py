@@ -1324,6 +1324,63 @@ def _cn_is_measurement_context(name: str) -> bool:
     return any(tok in name for tok in _CN_PROCESS_CONTEXT_TOKENS)
 
 
+# Multi-char CJK measurement units used to test the TAIL after a numeral
+# (issue #266: `10毫升至12 毫升` / `每100 毫升` captured `10`/`100` as phantom
+# refnums because the regex tail-lookahead only covered Latin units + range
+# separators, not CJK units). This is the CJK mirror of the US
+# `_UNIT_PATTERN.match(after)` exclusion.
+#
+# Curated EXPLICITLY (not derived from `_CN_PROCESS_CONTEXT_TAILS`, which is
+# a broad process/connector set that also holds conjunctions like `以及` and
+# process phrases like `冷却至`/`高度` — those would FN-drop real refnums,
+# e.g. `服务器120以及…`). Multi-char measurement units ONLY — single-char
+# units (克/升/度/天/年/秒/倍) and single-char-base range forms (克至/升至)
+# are excluded because they collide with noun/verb starts (升起 rise, 克服
+# overcome, 度過 spend, 天線 antenna).
+_CN_TAIL_MEASUREMENT_UNITS: tuple[str, ...] = tuple(sorted({
+    # Length
+    "毫米", "公釐", "公分", "公尺", "公里", "公呎",
+    "微米", "奈米", "纳米", "皮米", "英寸", "英吋", "英尺", "英里",
+    # Mass
+    "毫克", "公克", "毫公克", "微克", "奈克", "皮克", "纳克",
+    "公斤", "千克", "公噸", "公吨", "盎司",
+    # Volume
+    "毫升", "公升", "微升", "奈升", "皮升", "纳升",
+    "立方厘米", "立方公分", "立方米", "立方公尺",
+    # Time (multi-char only)
+    "毫秒", "微秒", "奈秒", "纳秒", "皮秒",
+    "分鐘", "分钟", "小時", "小时", "秒鐘", "秒钟",
+    # Pressure
+    "千帕", "百帕", "兆帕", "毫帕", "微帕", "大氣壓", "大气压", "毫巴",
+    # Temperature (multi-char)
+    "攝氏", "摄氏", "華氏", "华氏", "克爾文", "开尔文",
+    # Energy / power
+    "焦耳", "千焦", "兆焦", "毫焦", "卡路里", "千卡",
+    "千瓦", "兆瓦", "毫瓦", "微瓦", "電子伏特", "电子伏特",
+    # Voltage / current
+    "伏特", "毫伏", "微伏", "千伏", "安培", "毫安", "微安", "千安",
+    # Concentration
+    "摩爾", "摩尔", "毫摩爾", "毫摩尔", "微摩爾", "微摩尔",
+    "百萬分之", "百万分之", "百分之",
+    "重量百分比", "體積百分比", "体积百分比", "摩爾百分比",
+    "重量份", "重量比", "體積比", "体积比", "重量比例",
+    # Frequency / data
+    "千赫", "兆赫", "吉赫", "比特", "字節", "字节",
+    "千比特", "兆比特", "千字節", "兆字節",
+    # Range forms (multi-char unit base + 至)
+    "毫米至", "公釐至", "公分至", "公尺至", "微米至", "奈米至", "纳米至",
+    "毫升至", "公升至", "分鐘至", "小時至",
+}, key=len, reverse=True))
+
+
+def _cn_tail_is_measurement(text: str, pos: int) -> bool:
+    """True if the numeral ending at ``pos`` is immediately followed
+    (modulo whitespace) by a multi-char CJK measurement unit, making it a
+    measurement value rather than a reference numeral."""
+    tail = text[pos:pos + 12].lstrip()
+    return any(tail.startswith(u) for u in _CN_TAIL_MEASUREMENT_UNITS)
+
+
 _CN_INTERIOR_VERB_MARKERS = (
     # Modal / aspect verbs that signal "noun head follows"
     "可以", "可以是", "可以為", "可以为",
@@ -1526,6 +1583,10 @@ def _cn_extract_numeral_name_pairs(text: str) -> list[tuple[str, str]]:
         if span in seen_spans:
             continue
         seen_spans.add(span)
+        # Tail-measurement exclusion (#266): `100至200毫升` is a measurement
+        # range, not a refnum range.
+        if _cn_tail_is_measurement(text, m.end("end")):
+            continue
         try:
             start = int(m.group("start"))
             end = int(m.group("end"))
@@ -1567,6 +1628,11 @@ def _cn_extract_numeral_name_pairs(text: str) -> list[tuple[str, str]]:
             # (drafter convention: same parent + sub-element disambig).
             suffix = full_num[len(digit_part):]
             num_str = f"{int(digit_part)}{suffix}"
+            # Tail-measurement exclusion (#266): `10毫升` / `100 毫升` is a
+            # measurement value, not a refnum. CJK mirror of the US
+            # _UNIT_PATTERN tail check.
+            if _cn_tail_is_measurement(text, m.end("num")):
+                continue
             raw_noun = m.group("noun")
             if not _cn_has_min_cjk(raw_noun, 2):
                 continue
