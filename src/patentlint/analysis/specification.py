@@ -217,6 +217,12 @@ _UNIT_PATTERN = re.compile(
     # Mass / weight
     r"|kg|mg|µg|μg|ng|pg|g"
     r"|lb|lbs|oz|ton|tons"
+    # Molecular weight (dalton + SI prefixes). Issue #181: biopolymer
+    # specs write "50 kDa", "200 kDa", "1,000 kDa" for molecular weights;
+    # without these, the numeral was captured as a phantom reference
+    # numeral and surfaced as a numeralConsistency conflict. (wt% / kg
+    # were already covered; kDa was the gap.)
+    r"|MDa|kDa|Da"
     # Concentration / amount
     r"|mol|mmol|µmol|μmol|nmol|pmol"
     r"|M|mM|µM|μM|nM|pM"
