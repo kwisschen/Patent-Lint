@@ -805,3 +805,30 @@ def test_percent_unit_excluded_from_refnums_264():
     assert pairs == [], pairs
     # real refnum still captured
     assert extract_numeral_name_pairs("the housing 102 holds the lid") == [("102", "housing")]
+
+
+def test_dalton_molecular_weight_excluded_from_refnums_181():
+    """#181: dalton molecular-weight units (`Da` / `kDa` / `MDa`) are
+    measurements, not reference numerals. Biopolymer specs write
+    `10 kDa`, `200 kDa`, `900 Da`; without these units the numeral was
+    captured as a phantom refnum and surfaced as a numeralConsistency
+    conflict."""
+    from patentlint.analysis.specification import (
+        check_numeral_consistency,
+        extract_numeral_name_pairs,
+    )
+    for text in (
+        "the hyaluronic acid has a molecular weight of between 10 kDa and 50 kDa",
+        "the gelatin has a molecular weight of 200 kDa",
+        "a small molecule drug having a molecular weight of less than 900 Da",
+        "the polymer has a molecular weight of 5 MDa",
+    ):
+        assert extract_numeral_name_pairs(text) == [], text
+    # FN guard: a real refnum whose noun merely starts with "Da..." is
+    # not a unit (lookahead blocks `Database`/`Day`).
+    assert extract_numeral_name_pairs("the housing 102 holds the lid") == [("102", "housing")]
+    # End-to-end: a spec full of kDa molecular weights does not trip D1.
+    assert check_numeral_consistency(
+        "The hyaluronic acid has a molecular weight of between 10 kDa and 1000 kDa. "
+        "The gelatin has a molecular weight of 200 kDa. The collagen is 50 kDa."
+    )[0].status == "pass"
