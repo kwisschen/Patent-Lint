@@ -11,13 +11,15 @@
 //     `gh issue list --label report` — no separate UI to build.
 //   - GitHub's issue UI handles search, labels, comments, mobile
 //     notifications, and reactions for triage.
-//   - Issues live in the private Patent-Lint repo, so they're
-//     maintainer-only.
+//   - Issues live in the private kwisschen/patentlint-reports repo
+//     (split out from the public code repo on 2026-06-17), so the
+//     de-identified report payloads are maintainer-only — not visible
+//     to the public even though the code repo is public.
 //
 // Env vars (set in Vercel dashboard → Settings → Environment Variables):
 //   GITHUB_ISSUES_TOKEN   fine-grained PAT scoped to Issues:Write
-//                         on kwisschen/Patent-Lint only
-//   GITHUB_ISSUES_REPO    "kwisschen/Patent-Lint" (defaults if unset)
+//                         on kwisschen/patentlint-reports only
+//   GITHUB_ISSUES_REPO    "kwisschen/patentlint-reports" (defaults if unset)
 
 export const config = {
   runtime: 'edge',
@@ -38,7 +40,7 @@ const DEFAULT_CORS_ORIGIN = "https://patentlint.com";
 // rejecting spam-sized bodies. Well under GitHub Issues 64 KB body
 // limit.
 const MAX_BODY_BYTES = 16 * 1024;
-const DEFAULT_REPO = "kwisschen/Patent-Lint";
+const DEFAULT_REPO = "kwisschen/patentlint-reports";
 
 export default async function handler(request) {
   const origin = request.headers.get("origin") ?? "";
