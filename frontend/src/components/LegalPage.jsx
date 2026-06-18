@@ -93,12 +93,12 @@ export function LegalSection({ number, titleKey, children, delay = 0 }) {
       }}
     >
       <h2 className="text-lg sm:text-xl font-bold text-foreground flex items-baseline gap-2 sm:gap-3">
-        <span className="text-xs sm:text-sm font-mono font-semibold text-muted-foreground shrink-0 tabular-nums">
+        <span className="text-xs sm:text-sm font-mono font-semibold text-brand shrink-0 tabular-nums">
           §&nbsp;{number}
         </span>
         <span className="leading-tight">{t(titleKey)}</span>
       </h2>
-      <div className="text-sm sm:text-base text-muted-foreground leading-relaxed space-y-4 [&_strong]:text-foreground [&_strong]:font-semibold [&_a]:text-foreground [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-primary [&_ul]:list-disc [&_ul]:pl-5 sm:[&_ul]:pl-6 [&_ul]:space-y-2 [&_li]:leading-relaxed [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-xs [&_code]:font-mono">
+      <div className="text-sm sm:text-base text-muted-foreground leading-relaxed space-y-4 [&_strong]:text-foreground [&_strong]:font-semibold [&_a]:text-foreground [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-brand [&_ul]:list-disc [&_ul]:pl-5 sm:[&_ul]:pl-6 [&_ul]:space-y-2 [&_li]:leading-relaxed [&_code]:bg-muted [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-xs [&_code]:font-mono">
         {children}
       </div>
     </section>
