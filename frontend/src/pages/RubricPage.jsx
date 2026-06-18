@@ -38,7 +38,7 @@ export default function RubricPage() {
     <div className="mx-auto w-full max-w-3xl px-4 py-8 space-y-12">
       {/* Hero */}
       <header className="space-y-3 text-center">
-        <h1 className="text-4xl font-bold text-foreground">{t('rubric.page.title')}</h1>
+        <h1 className="text-gradient-brand text-4xl font-bold">{t('rubric.page.title')}</h1>
         <p className="text-lg text-muted-foreground">{t('rubric.page.subtitle')}</p>
       </header>
 

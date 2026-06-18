@@ -35,8 +35,8 @@ export default function Header({ onReset, canReset }) {
         </div>
         <div className="flex items-center gap-1">
           <nav className="flex items-center gap-4 text-sm text-muted-foreground mr-3">
-            <Link to="/security" className="transition-colors hover:text-brand">{t('footer.security')}</Link>
-            <Link to="/about" className="transition-colors hover:text-brand">{t('footer.about')}</Link>
+            <Link to="/security" className="relative transition-colors hover:text-brand after:pointer-events-none after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-brand after:transition-transform after:duration-200 hover:after:scale-x-100">{t('footer.security')}</Link>
+            <Link to="/about" className="relative transition-colors hover:text-brand after:pointer-events-none after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-brand after:transition-transform after:duration-200 hover:after:scale-x-100">{t('footer.about')}</Link>
           </nav>
           <LanguageSwitcher />
           <ThemeToggle />
