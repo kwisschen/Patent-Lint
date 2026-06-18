@@ -54,7 +54,7 @@ function HeroSection({ onShowProveIt }) {
         }}
       />
 
-      <h1 className="text-4xl font-bold text-foreground">
+      <h1 className="text-gradient-brand text-4xl font-bold">
         {t('security.page.heroTitle')}
       </h1>
 

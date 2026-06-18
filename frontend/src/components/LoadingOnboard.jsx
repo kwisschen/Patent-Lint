@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next'
 import { ShieldCheck, FileSearch, Globe } from 'lucide-react'
 
 const FEATURES = [
-  { icon: FileSearch, titleKey: 'loading.feature2_title', descKey: 'loading.feature2_desc' },
-  { icon: ShieldCheck, titleKey: 'loading.feature1_title', descKey: 'loading.feature1_desc' },
-  { icon: Globe, titleKey: 'loading.feature4_title', descKey: 'loading.feature4_desc' },
+  { icon: FileSearch, titleKey: 'loading.feature2_title', descKey: 'loading.feature2_desc', chip: 'bg-brand/10 text-brand' },
+  { icon: ShieldCheck, titleKey: 'loading.feature1_title', descKey: 'loading.feature1_desc', chip: 'bg-accent-teal/10 text-accent-teal' },
+  { icon: Globe, titleKey: 'loading.feature4_title', descKey: 'loading.feature4_desc', chip: 'bg-accent-cyan/10 text-accent-cyan' },
 ]
 
 const STAGGER_MS = 700
@@ -97,8 +97,8 @@ export default function LoadingOnboard({ progress, onReady }) {
     >
       <div className="min-h-full flex items-center justify-center py-8 md:py-0 md:pb-[20vh]">
         <div className="flex flex-col items-center gap-6 max-w-md px-6 text-center">
-        {/* Logo */}
-        <h1 className="text-3xl font-bold tracking-tight">PatentLint</h1>
+        {/* Logo — animated multi-hue gradient wordmark (sister-project parity) */}
+        <h1 className="text-gradient-brand text-3xl font-bold tracking-tight">PatentLint</h1>
 
         {/* Progress bar */}
         <div className="w-full">
@@ -110,7 +110,7 @@ export default function LoadingOnboard({ progress, onReady }) {
                 transition: 'width 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
                 background: isReady
                   ? 'var(--color-green-500, #22c55e)'
-                  : 'linear-gradient(90deg, var(--color-blue-500, #3b82f6), var(--color-cyan-500, #06b6d4))',
+                  : 'linear-gradient(90deg, var(--brand), var(--accent-cyan))',
               }}
             />
           </div>
@@ -134,7 +134,7 @@ export default function LoadingOnboard({ progress, onReady }) {
 
         {/* Feature list — time-staggered reveal */}
         <div className="w-full flex flex-col gap-3 text-left">
-          {FEATURES.map(({ icon: Icon, titleKey, descKey }, i) => {
+          {FEATURES.map(({ icon: Icon, titleKey, descKey, chip }, i) => {
             const show = i < revealCount
             return (
               <div
@@ -146,7 +146,9 @@ export default function LoadingOnboard({ progress, onReady }) {
                   transition: 'opacity 0.4s ease, transform 0.4s ease',
                 }}
               >
-                <Icon className="h-5 w-5 mt-0.5 shrink-0 text-muted-foreground" />
+                <span className={`flex size-9 shrink-0 items-center justify-center rounded-xl ${chip}`}>
+                  <Icon className="h-5 w-5" />
+                </span>
                 <div>
                   <p className="text-sm font-medium leading-tight">{t(titleKey)}</p>
                   <p className="text-xs text-muted-foreground mt-0.5 leading-snug">{t(descKey)}</p>

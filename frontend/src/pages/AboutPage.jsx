@@ -37,10 +37,10 @@ function ProductStory({ t }) {
         transition: 'opacity 600ms ease, transform 600ms ease',
       }}
     >
-      <h2 className="text-3xl font-bold text-foreground mb-6">
+      <h2 className="text-gradient-brand mb-6 text-3xl font-bold">
         {t('about.productTitle')}
       </h2>
-      <p className="text-lg font-medium text-primary mb-4">
+      <p className="text-lg font-medium text-brand mb-4">
         {t('about.productTagline')}
       </p>
       <div className="space-y-4 text-muted-foreground leading-relaxed">

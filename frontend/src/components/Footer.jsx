@@ -35,19 +35,19 @@ export default function Footer() {
         <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2" aria-label="Footer">
           <Link
             to="/terms"
-            className="footer-link hover:text-foreground transition-colors duration-200"
+            className="footer-link transition-colors duration-200 hover:text-brand"
           >
             {t('footer.terms')}
           </Link>
           <Link
             to="/privacy"
-            className="footer-link hover:text-foreground transition-colors duration-200"
+            className="footer-link transition-colors duration-200 hover:text-brand"
           >
             {t('footer.privacy')}
           </Link>
           <Link
             to="/rubric"
-            className="footer-link hover:text-foreground transition-colors duration-200"
+            className="footer-link transition-colors duration-200 hover:text-brand"
           >
             {t('footer.rubric')}
           </Link>
@@ -58,7 +58,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={onClick}
-              className="footer-link hover:text-foreground transition-colors duration-200"
+              className="footer-link transition-colors duration-200 hover:text-brand"
             >
               {label}
             </a>
