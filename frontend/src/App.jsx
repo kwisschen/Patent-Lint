@@ -148,9 +148,17 @@ function App() {
           <Route path="/" element={
             <div className="mx-auto w-full max-w-5xl px-4 py-8">
               {homeState === 'idle' && (
-                <div className="flex flex-col items-center justify-center min-h-[40vh] sm:min-h-[60vh]">
+                <div className="relative isolate flex min-h-[40vh] flex-col items-center justify-center overflow-hidden sm:min-h-[60vh]">
+                  {/* Colorful animated backdrop — soft brand + accent glows that
+                      breathe, matching the sister project's gradient mesh.
+                      pointer-events-none + clipped so it never affects layout. */}
+                  <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+                    <div className="absolute left-1/4 top-2 size-72 -translate-x-1/2 rounded-full bg-brand/20 blur-3xl motion-safe:animate-[node-glint_6s_ease-in-out_infinite]" />
+                    <div className="absolute right-1/4 top-12 size-64 translate-x-1/2 rounded-full bg-accent-cyan/20 blur-3xl motion-safe:animate-[node-glint_7.5s_ease-in-out_infinite]" />
+                    <div className="absolute bottom-2 left-1/2 size-72 -translate-x-1/2 rounded-full bg-accent-amber/15 blur-3xl motion-safe:animate-[node-glint_9s_ease-in-out_infinite]" />
+                  </div>
                   <div
-                    className="grid grid-cols-2 sm:grid-cols-4 gap-1 rounded-lg p-1 mt-3 mb-4 ring-1 w-full max-w-md sm:max-w-xl mx-auto"
+                    className="grid grid-cols-2 gap-1 rounded-lg p-1 mt-3 mb-4 ring-1 w-full max-w-md sm:max-w-xl mx-auto sm:grid-cols-4 motion-safe:animate-[fade-up_0.5s_ease-out_both]"
                     style={{
                       backgroundImage: 'var(--frost-resting-bg)',
                       boxShadow: 'var(--frost-resting-inner-light)',
@@ -165,10 +173,10 @@ function App() {
                         role="radio"
                         aria-checked={jurisdiction === j}
                         onClick={() => setJurisdiction(j)}
-                        className={`flex items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium transition-all duration-[var(--motion-duration-fast)] ${
+                        className={`flex items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium transition-all duration-200 ${
                           jurisdiction === j
-                            ? 'bg-card text-foreground shadow-md ring-1 ring-foreground/15'
-                            : 'text-muted-foreground hover:text-foreground hover:bg-card/40'
+                            ? 'bg-brand text-brand-foreground shadow-md shadow-brand/25 sm:scale-[1.03]'
+                            : 'text-muted-foreground hover:-translate-y-0.5 hover:bg-brand/[0.06] hover:text-foreground motion-reduce:hover:translate-y-0'
                         }`}
                       >
                         <JurisdictionBadge code={j} />
@@ -176,8 +184,18 @@ function App() {
                       </button>
                     ))}
                   </div>
-                  <p className="text-base sm:text-lg text-muted-foreground text-center mb-4">{t(getJurisdictionConfig(jurisdiction).taglineKey, { count: CHECKS_BY_JURISDICTION[jurisdiction] })}</p>
-                  <DropZone onFile={handleFile} onShowProveIt={() => setShowProveIt(true)} jurisdiction={jurisdiction} />
+                  <p
+                    className="mb-5 text-center text-lg font-medium text-foreground/90 sm:text-xl motion-safe:animate-[fade-up_0.5s_ease-out_both]"
+                    style={{ animationDelay: '80ms' }}
+                  >
+                    {t(getJurisdictionConfig(jurisdiction).taglineKey, { count: CHECKS_BY_JURISDICTION[jurisdiction] })}
+                  </p>
+                  <div
+                    className="w-full motion-safe:animate-[fade-up_0.5s_ease-out_both]"
+                    style={{ animationDelay: '160ms' }}
+                  >
+                    <DropZone onFile={handleFile} onShowProveIt={() => setShowProveIt(true)} jurisdiction={jurisdiction} />
+                  </div>
                 </div>
               )}
 

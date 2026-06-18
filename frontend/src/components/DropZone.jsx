@@ -54,14 +54,14 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
       <div
         {...getRootProps()}
         className={`
-          shine-on-hover
+          group shine-on-hover
           flex flex-col items-center justify-center gap-4
           w-full min-h-[280px] p-6 md:p-12 rounded-xl
           border-2 cursor-pointer
           transition-all duration-[var(--motion-duration-base)]
           ${isDragActive
             ? 'border-solid border-[var(--pass-border)] bg-blue-50/50 dark:bg-blue-950/30 scale-[1.015] shadow-[var(--frost-elevated-shadow)]'
-            : 'border-dashed border-gray-300 dark:border-gray-600 hover:border-muted-foreground/50 dropzone-breathe shadow-[var(--frost-resting-shadow)]'
+            : 'border-dashed border-brand/35 hover:border-brand/60 dropzone-breathe shadow-[var(--frost-resting-shadow)] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand/10 motion-reduce:hover:translate-y-0'
           }
         `}
         style={{
@@ -70,7 +70,17 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
         }}
       >
         <input {...getInputProps()} />
-        <FilePlus2 className={`h-12 w-12 transition-colors duration-200 ${isDragActive ? 'text-[var(--pass-text)]' : 'text-muted-foreground'}`} />
+        {/* Vivid gradient icon chip (brand to cyan) that springs on hover —
+            the focal point, matching the sister project's icon treatment. */}
+        <span
+          className={`flex size-16 items-center justify-center rounded-2xl text-white shadow-lg transition-all duration-300 ease-[var(--ease-spring)] ${
+            isDragActive
+              ? 'scale-110 bg-[var(--pass-text)]'
+              : 'bg-gradient-to-br from-brand to-accent-cyan shadow-brand/30 group-hover:scale-110 group-hover:-rotate-6 motion-reduce:group-hover:scale-100 motion-reduce:group-hover:rotate-0'
+          }`}
+        >
+          <FilePlus2 className="h-7 w-7" />
+        </span>
         <div className="text-center">
           <p className="text-base font-medium">{t(jConfig.titleKey)}</p>
           <p className="text-sm text-muted-foreground mt-1">{t('dropzone.subtitle')}</p>
