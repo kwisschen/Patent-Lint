@@ -191,7 +191,7 @@ function App() {
                     {t(getJurisdictionConfig(jurisdiction).taglineKey, { count: CHECKS_BY_JURISDICTION[jurisdiction] })}
                   </p>
                   <div
-                    className="w-full motion-safe:animate-[fade-up_0.5s_ease-out_both]"
+                    className="flex w-full flex-col items-center motion-safe:animate-[fade-up_0.5s_ease-out_both]"
                     style={{ animationDelay: '160ms' }}
                   >
                     <DropZone onFile={handleFile} onShowProveIt={() => setShowProveIt(true)} jurisdiction={jurisdiction} />
