@@ -170,7 +170,8 @@
     "github": "GitHub",
     "linkedin": "LinkedIn",
     "feedback": "意见反馈",
-    "rubric": "评分标准"
+    "rubric": "评分标准",
+    "sister": "PatentNode：审查意见答复工具"
   },
   "feedback": {
     "report": "看起来不对？",
@@ -2009,5 +2010,10 @@
     "endpointDesc": {
       "report": "匿名错误反馈（仅含诊断轨迹，未含稿件内容）"
     }
+  },
+  "crossPromo": {
+    "oaTitle": "已提交申请并收到审查意见通知书？",
+    "oaBody": "PatentNode 会解读驳回理由，并为您起草权利要求修改与答复。",
+    "oaCta": "试用 PatentNode"
   }
 }

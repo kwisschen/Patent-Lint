@@ -16,7 +16,7 @@ import NonPatentBanner from './NonPatentBanner'
 import TrackedChangesBanner from './TrackedChangesBanner'
 import JurisdictionMismatchBanner from './JurisdictionMismatchBanner'
 import { Button } from '@/components/ui/button'
-import { Download, RotateCcw, ShieldCheck } from 'lucide-react'
+import { Download, RotateCcw, ShieldCheck, FileCheck2, ArrowRight } from 'lucide-react'
 import { useNetworkMonitor } from '../hooks/useNetworkMonitor'
 import { getJurisdictionConfig, JURISDICTION_COLORS } from '../lib/jurisdictionConfig'
 
@@ -433,6 +433,39 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
           grade={sectionGradeFor('abstract')?.score != null ? letterFromScore(sectionGradeFor('abstract')) : null}
           applicable={sectionGradeFor('abstract')?.applicable !== false}
         />
+      </div>
+
+      {/* Contextual cross-product callout — once a draft is reviewed, the
+          natural next milestone is filing and (eventually) an Office Action.
+          Calm card, brand-tinted, points to the sister product PatentNode.
+          Placed after the section detail so it reads as a "what's next"
+          pointer, not a competing CTA. */}
+      <div style={cascadeDelay(6)}>
+        <a
+          href="https://patentnode.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative block overflow-hidden rounded-xl border border-border bg-card/60 px-5 py-4 transition-all duration-[var(--motion-duration-base)] hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-[var(--frost-elevated-shadow)] motion-reduce:hover:translate-y-0"
+        >
+          {/* soft brand wash that brightens on hover */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-brand to-accent-cyan"
+          />
+          <div className="flex items-center gap-4 pl-2">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-brand to-accent-cyan text-white shadow-sm shadow-brand/25 transition-transform duration-[var(--motion-duration-base)] group-hover:scale-105">
+              <FileCheck2 className="h-5 w-5" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="font-semibold text-foreground">{t('crossPromo.oaTitle')}</p>
+              <p className="mt-0.5 text-sm text-muted-foreground">{t('crossPromo.oaBody')}</p>
+            </div>
+            <span className="hidden shrink-0 items-center gap-1 text-sm font-medium text-brand transition-colors duration-200 group-hover:text-accent-cyan sm:inline-flex">
+              {t('crossPromo.oaCta')}
+              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
+            </span>
+          </div>
+        </a>
       </div>
 
       {/* Spacer so content isn't hidden behind sticky bar */}

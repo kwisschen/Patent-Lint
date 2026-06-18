@@ -25,8 +25,12 @@ export default function Footer() {
     { label: t('footer.feedback'), href: '#', onClick: handleFeedbackClick },
   ]
 
+  // pb-16 (not py-6) gives the footer content clearance above the fixed
+  // NetworkWidget pill (bottom-4, ~52px tall). Without it the rightmost
+  // footer link (now the PatentNode cross-link) sits under the pill at
+  // scroll-bottom on short pages / ~1280px laptops.
   return (
-    <footer className="border-t border-gray-200 dark:border-gray-800 py-6 px-4">
+    <footer className="border-t border-gray-200 dark:border-gray-800 pt-6 pb-16 px-4">
       <div className="mx-auto max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500 dark:text-gray-400">
         <span>
           {t('footer.builtBy')}
@@ -63,6 +67,18 @@ export default function Footer() {
               {label}
             </a>
           ))}
+          {/* Sister-product cross-link — funnels filed-application users to
+              PatentNode for OA responses. Brand-tinted + arrow so it reads
+              as an outbound product pointer, not another legal link. */}
+          <a
+            href="https://patentnode.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-1 font-medium text-brand transition-colors duration-200 hover:text-accent-cyan"
+          >
+            {t('footer.sister')}
+            <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+          </a>
         </nav>
       </div>
     </footer>
