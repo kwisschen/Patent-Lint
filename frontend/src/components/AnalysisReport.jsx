@@ -460,8 +460,10 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
               <p className="font-semibold text-foreground">{t('crossPromo.oaTitle')}</p>
               <p className="mt-0.5 text-sm text-muted-foreground">{t('crossPromo.oaBody')}</p>
             </div>
-            <span className="hidden shrink-0 items-center gap-1 text-sm font-medium text-brand transition-colors duration-200 group-hover:text-accent-cyan sm:inline-flex">
-              {t('crossPromo.oaCta')}
+            {/* Label hides on mobile but the arrow stays as a tap affordance
+                (the whole card is the link). */}
+            <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-brand transition-colors duration-200 group-hover:text-accent-cyan">
+              <span className="hidden sm:inline">{t('crossPromo.oaCta')}</span>
               <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
             </span>
           </div>
