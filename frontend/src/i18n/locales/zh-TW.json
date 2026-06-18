@@ -171,7 +171,7 @@
     "linkedin": "LinkedIn",
     "feedback": "意見回饋",
     "rubric": "評分標準",
-    "sister": "PatentNode：OA 答辯工具"
+    "sister": "PatentNode：OA 答辯系統"
   },
   "feedback": {
     "report": "看起來不對？",
@@ -2013,7 +2013,7 @@
   },
   "crossPromo": {
     "oaTitle": "已提出申請並收到核駁理由通知書？",
-    "oaBody": "PatentNode 會解讀核駁理由，並為您草擬請求項修正與答辯。",
+    "oaBody": "PatentNode 會解讀核駁理由，為您草擬請求項修正與答辯主張。",
     "oaCta": "試用 PatentNode"
   }
 }

@@ -2011,7 +2011,7 @@
   },
   "crossPromo": {
     "oaTitle": "Eingereicht und einen Bescheid erhalten?",
-    "oaBody": "PatentNode liest den Bescheid und entwirft Ihre Anspruchsänderungen und Argumente.",
+    "oaBody": "PatentNode analysiert den Bescheid und entwirft Ihre Anspruchsänderungen und Argumente.",
     "oaCta": "PatentNode testen"
   }
 }
