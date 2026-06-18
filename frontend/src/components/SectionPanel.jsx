@@ -44,7 +44,7 @@ export default function SectionPanel({
   // so the body content doesn't lift unnecessarily when the user
   // approaches the toggle.
   return (
-    <FrostCard tier="resting" className="overflow-hidden">
+    <FrostCard tier="resting" className="overflow-hidden transition-all duration-[var(--motion-duration-base)] hover:-translate-y-0.5 hover:shadow-[var(--frost-elevated-shadow)] motion-reduce:hover:translate-y-0">
       <button
         className="flex w-full items-center justify-between px-4 py-3 text-left transition-colors duration-[var(--motion-duration-fast)] hover:bg-foreground/[0.03]"
         onClick={() => setOpen(!open)}

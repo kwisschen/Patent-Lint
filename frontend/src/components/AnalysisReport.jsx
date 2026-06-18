@@ -354,7 +354,13 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
 
       {/* Hero: rubric grade letter + score + status legend (replaces
           finding-count hero per the scoring repositioning). */}
-      <div style={cascadeDelay(0)}>
+      <div className="relative isolate" style={cascadeDelay(0)}>
+        {/* Soft colorful glow behind the grade hero — elevates the focal point
+            without touching the functional grade/status colors. */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute left-1/3 top-0 size-48 -translate-x-1/2 rounded-full bg-brand/15 blur-3xl motion-safe:animate-[node-glint_7s_ease-in-out_infinite]" />
+          <div className="absolute right-1/3 top-4 size-44 translate-x-1/2 rounded-full bg-accent-cyan/15 blur-3xl motion-safe:animate-[node-glint_8.5s_ease-in-out_infinite]" />
+        </div>
         <RubricHero data={consolidatedData} animate={mounted} />
       </div>
       <div style={cascadeDelay(1)}>
@@ -376,7 +382,8 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
         {/* Parallel h3 to TriagePanel's internal "Priority Summary" header
             so the per-section group reads as a symmetric labeled block.
             Outer space-y-5 provides the inter-group gap. */}
-        <h3 className="text-base font-bold text-foreground uppercase tracking-wide mb-3">
+        <h3 className="mb-3 flex items-center gap-2 text-base font-bold uppercase tracking-wide text-foreground">
+          <span aria-hidden className="h-4 w-1 rounded-full bg-gradient-to-b from-brand to-accent-cyan" />
           {t('sectionDetail.title')}
         </h3>
         <SectionPanel
