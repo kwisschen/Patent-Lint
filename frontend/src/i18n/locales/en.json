@@ -170,7 +170,8 @@
     "github": "GitHub",
     "linkedin": "LinkedIn",
     "feedback": "Feedback",
-    "rubric": "How we score"
+    "rubric": "How we score",
+    "sister": "PatentNode: Office Action responses"
   },
   "feedback": {
     "report": "Looks wrong?",
@@ -2007,5 +2008,10 @@
     "endpointDesc": {
       "report": "Anonymous error report — diagnostic trail only, no draft content."
     }
+  },
+  "crossPromo": {
+    "oaTitle": "Filed and got an Office Action?",
+    "oaBody": "PatentNode reads the rejection and drafts your amendments and arguments.",
+    "oaCta": "Try PatentNode"
   }
 }

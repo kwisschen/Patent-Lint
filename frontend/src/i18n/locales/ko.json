@@ -170,7 +170,8 @@
     "github": "GitHub",
     "linkedin": "LinkedIn",
     "feedback": "피드백",
-    "rubric": "평가 기준"
+    "rubric": "평가 기준",
+    "sister": "PatentNode: 거절이유 대응 도구"
   },
   "feedback": {
     "report": "잘못됐나요?",
@@ -2009,5 +2010,10 @@
     "endpointDesc": {
       "report": "익명 오류 보고 (진단 자취만 포함, 원고 내용 없음)"
     }
+  },
+  "crossPromo": {
+    "oaTitle": "출원 후 거절이유통지를 받으셨나요?",
+    "oaBody": "PatentNode가 거절이유를 분석하고 보정서와 의견서 초안을 작성합니다.",
+    "oaCta": "PatentNode 사용해 보기"
   }
 }

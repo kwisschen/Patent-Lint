@@ -170,7 +170,8 @@
     "github": "GitHub",
     "linkedin": "LinkedIn",
     "feedback": "フィードバック",
-    "rubric": "評価基準"
+    "rubric": "評価基準",
+    "sister": "PatentNode：拒絶理由対応ツール"
   },
   "feedback": {
     "report": "違うかも？",
@@ -2009,5 +2010,10 @@
     "endpointDesc": {
       "report": "匿名のエラー報告（診断軌跡のみ、原稿の内容を含みません）"
     }
+  },
+  "crossPromo": {
+    "oaTitle": "出願後、拒絶理由通知を受け取りましたか？",
+    "oaBody": "PatentNode が拒絶理由を読み解き、補正書と意見書のドラフトを作成します。",
+    "oaCta": "PatentNode を試す"
   }
 }

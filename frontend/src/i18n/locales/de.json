@@ -170,7 +170,8 @@
     "github": "GitHub",
     "linkedin": "LinkedIn",
     "feedback": "Feedback",
-    "rubric": "Bewertung"
+    "rubric": "Bewertung",
+    "sister": "PatentNode: Bescheidserwiderungen"
   },
   "feedback": {
     "report": "Sieht falsch aus?",
@@ -2007,5 +2008,10 @@
     "endpointDesc": {
       "report": "Anonymer Fehlerbericht: nur Diagnose-Spur, kein Entwurfsinhalt."
     }
+  },
+  "crossPromo": {
+    "oaTitle": "Eingereicht und einen Bescheid erhalten?",
+    "oaBody": "PatentNode liest den Bescheid und entwirft Ihre Anspruchsänderungen und Argumente.",
+    "oaCta": "PatentNode testen"
   }
 }
