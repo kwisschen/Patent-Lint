@@ -2,7 +2,7 @@
 // Copyright (c) 2025–2026 Christopher Chen
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation, Trans } from 'react-i18next'
-import { Check, Mail, ShieldCheck, Server, Network, Github } from 'lucide-react'
+import { Check, Mail, ShieldCheck, Server, Github } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
 import PageCTA from '../components/PageCTA'
 import { useCountUp } from '../hooks/useCountUp'
@@ -1059,6 +1059,24 @@ function ArchitectureDiagram({ t }) {
 /* ────────────────────────────────────────────
    Section 4: Builder Story
    ──────────────────────────────────────────── */
+/* PatentNode brand mark — node-graph glyph ported from the PatentNode
+   (Agentic Patent Analyst) design system (components/logo-icon.tsx).
+   fill="currentColor" so it inherits the button's text color. */
+function PatentNodeGlyph({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 2048 2048" fill="currentColor" aria-hidden="true" style={{ display: 'block' }}>
+      <circle cx="1024" cy="1024" r="248" />
+      <circle cx="1024" cy="300" r="150" />
+      <circle cx="1651" cy="1386" r="150" />
+      <circle cx="397" cy="1386" r="150" />
+      <rect x="982" y="300" width="84" height="724" />
+      <rect x="982" y="300" width="84" height="724" transform="rotate(120 1024 1024)" />
+      <rect x="982" y="300" width="84" height="724" transform="rotate(240 1024 1024)" />
+      <path d="M 1024 424 L 1544 724 L 1544 1324 L 1024 1624 L 504 1324 L 504 724 Z M 1024 538 L 603 781 L 603 1267 L 1024 1510 L 1445 1267 L 1445 781 Z" fillRule="evenodd" />
+    </svg>
+  )
+}
+
 function BuilderStory({ t }) {
   const [ref, inView] = useInView()
   const { sendFeedback } = useFeedback()
@@ -1066,7 +1084,9 @@ function BuilderStory({ t }) {
   // Email button routes through FeedbackPicker (composeBuilderContact)
   // instead of a plain mailto: — gives users on locked-down work laptops
   // without a default mail-client handler a working Gmail-web fallback.
-  // GitHub + PatentNode stay as plain anchors since they target external URLs.
+  // GitHub stays a plain anchor (external URL); Email routes through the
+  // FeedbackPicker. PatentNode is rendered separately as a gradient CTA
+  // below — it's a sister-product cross-link, not a neutral utility pill.
   const handleEmailClick = (e) => {
     e.preventDefault()
     sendFeedback(composeBuilderContact(t))
@@ -1075,7 +1095,6 @@ function BuilderStory({ t }) {
   const links = [
     { onClick: handleEmailClick, icon: Mail, label: 'Email' },
     { href: 'https://github.com/kwisschen/Patent-Lint', icon: Github, label: 'GitHub' },
-    { href: 'https://patentnode.com', icon: Network, label: 'PatentNode', brand: true },
   ]
 
   return (
@@ -1101,15 +1120,15 @@ function BuilderStory({ t }) {
         </p>
       </div>
       <div className="flex flex-wrap gap-3 mt-8">
-        {links.map(({ href, onClick, icon: Icon, label, brand }) => {
+        {links.map(({ href, onClick, icon: Icon, label }) => {
           const sharedProps = {
-            className: `inline-flex items-center gap-2 px-5 py-2.5 rounded-full border text-sm font-medium hover:shadow-md transition-all duration-200 ${brand ? 'border-brand/40 bg-brand/5 text-brand' : 'border-border bg-card text-foreground'}`,
+            className: "inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-border bg-card text-sm font-medium text-foreground hover:shadow-md transition-all duration-200",
             style: { transitionTimingFunction: 'var(--ease-bounce)' },
             onMouseEnter: (e) => { e.currentTarget.style.transform = 'translateY(-2px)' },
             onMouseLeave: (e) => { e.currentTarget.style.transform = 'translateY(0)' },
           }
           const inner = <><Icon size={16} />{label}</>
-          // Email link uses onClick → picker modal; GitHub/LinkedIn use href → external nav.
+          // Email link uses onClick → picker modal; GitHub uses href → external nav.
           return onClick ? (
             <button key={label} type="button" onClick={onClick} {...sharedProps}>
               {inner}
@@ -1126,6 +1145,22 @@ function BuilderStory({ t }) {
             </a>
           )
         })}
+        {/* Sister-product cross-link rendered as a gradient CTA with PatentNode's
+            own node mark — reads as a premium outbound product pointer rather
+            than another utility pill (brand→cyan matches the results cross-promo). */}
+        <a
+          href="https://patentnode.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-transparent bg-gradient-to-br from-brand to-accent-cyan text-sm font-medium text-white shadow-md shadow-brand/30 hover:shadow-lg hover:shadow-brand/40 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
+          style={{ transitionTimingFunction: 'var(--ease-bounce)' }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)' }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)' }}
+        >
+          <PatentNodeGlyph size={17} />
+          PatentNode
+          <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+        </a>
       </div>
       <p className="text-xs text-muted-foreground italic mt-6 leading-relaxed">
         {t('about.licenseNote')}
