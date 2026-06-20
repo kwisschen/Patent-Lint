@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 // Copyright (c) 2025–2026 Christopher Chen
 import { useState, useEffect, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Check, Mail, ShieldCheck, Server, Linkedin, Github } from 'lucide-react'
+import { useTranslation, Trans } from 'react-i18next'
+import { Check, Mail, ShieldCheck, Server, Network, Github } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
 import PageCTA from '../components/PageCTA'
 import { useCountUp } from '../hooks/useCountUp'
@@ -1066,7 +1066,7 @@ function BuilderStory({ t }) {
   // Email button routes through FeedbackPicker (composeBuilderContact)
   // instead of a plain mailto: — gives users on locked-down work laptops
   // without a default mail-client handler a working Gmail-web fallback.
-  // GitHub + LinkedIn stay as plain anchors since they target external URLs.
+  // GitHub + PatentNode stay as plain anchors since they target external URLs.
   const handleEmailClick = (e) => {
     e.preventDefault()
     sendFeedback(composeBuilderContact(t))
@@ -1074,8 +1074,8 @@ function BuilderStory({ t }) {
 
   const links = [
     { onClick: handleEmailClick, icon: Mail, label: 'Email' },
-    { href: 'https://github.com/kwisschen', icon: Github, label: 'GitHub' },
-    { href: 'https://linkedin.com/in/kwisschen', icon: Linkedin, label: 'LinkedIn' },
+    { href: 'https://github.com/kwisschen/Patent-Lint', icon: Github, label: 'GitHub' },
+    { href: 'https://patentnode.com', icon: Network, label: 'PatentNode', brand: true },
   ]
 
   return (
@@ -1094,12 +1094,16 @@ function BuilderStory({ t }) {
         <p>{t('about.builderPain')}</p>
         <p>{t('about.builderDesc1')}</p>
         <p>{t('about.builderDesc2')}</p>
-        <p>{t('about.builderSister')}</p>
+        <p>
+          <Trans i18nKey="about.builderSister">
+            Its companion project, <a href="https://patentnode.com" target="_blank" rel="noopener noreferrer" className="font-medium text-brand underline underline-offset-2 transition-colors hover:text-accent-cyan">PatentNode</a>, is a LangGraph-based AI agent that reads Office Actions, weighs each examiner rejection, drafts argument or amendment strategies, and writes the client OA-response analysis report in the client's language and the firm's voice.
+          </Trans>
+        </p>
       </div>
       <div className="flex flex-wrap gap-3 mt-8">
-        {links.map(({ href, onClick, icon: Icon, label }) => {
+        {links.map(({ href, onClick, icon: Icon, label, brand }) => {
           const sharedProps = {
-            className: "inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-border text-sm font-medium text-foreground bg-card hover:shadow-md transition-all duration-200",
+            className: `inline-flex items-center gap-2 px-5 py-2.5 rounded-full border text-sm font-medium hover:shadow-md transition-all duration-200 ${brand ? 'border-brand/40 bg-brand/5 text-brand' : 'border-border bg-card text-foreground'}`,
             style: { transitionTimingFunction: 'var(--ease-bounce)' },
             onMouseEnter: (e) => { e.currentTarget.style.transform = 'translateY(-2px)' },
             onMouseLeave: (e) => { e.currentTarget.style.transform = 'translateY(0)' },
