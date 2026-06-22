@@ -228,10 +228,14 @@ def _stub_verdict(term: str | None, reference_form: str | None) -> tuple[str, st
 # ── Mode: corpus (the durable recurrence fix) ──────────────────────────────
 def run_corpus_mode(jurisdiction: str, limit: int, cost_cap: float, dry_run: bool) -> LoopResult:
     res = LoopResult(mode="corpus", jurisdiction=jurisdiction)
-    h = _import_harness()
+    # Check corpus presence BEFORE importing the harness — the harness pulls
+    # pyarrow (the [eval] extra), which CI's [dev] install doesn't have. When
+    # the corpus is absent there's nothing to do anyway, so bail first. (This
+    # is what failed PR #296's `test` job.)
     if not corpus_root().exists():
         res.notes.append(f"corpus root absent: {corpus_root()} — skipping")
         return res
+    h = _import_harness()
     records = h.load_corpus(jurisdiction)[: max(limit, 0) or None]
     gold = {}
     try:
