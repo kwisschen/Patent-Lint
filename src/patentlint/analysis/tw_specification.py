@@ -361,6 +361,13 @@ _EMPTY_PARA_NUM_ONLY = re.compile(r"^【\d{4}】\s*$")
 _CITATION_PARA = re.compile(
     r"^(?:【\d{4}】\s*)?\[(?:專利文獻|非專利文獻)\s*\d+\].*$"
 )
+# JP-translation-style section headings delimited by full-width angle
+# brackets, e.g. `＜＜1．　背景＞＞` / `＜2．1　詳細構成＞` (patentlint-reports#195,
+# build 1176cad2). These are section headers — they legitimately end with
+# the closing bracket ＞ (U+FF1E), not sentence punctuation. FN-safe: a
+# prose paragraph is never wrapped end-to-end in ＜…＞. Optional 【NNNN】
+# prefix accepted, mirroring the other structural-label patterns.
+_ANGLE_BRACKET_HEADING = re.compile(r"^(?:【\d{4}】\s*)?＜{1,2}.+＞{1,2}$")
 
 
 def _is_skip_paragraph_ending(text: str) -> bool:
@@ -376,6 +383,9 @@ def _is_skip_paragraph_ending(text: str) -> bool:
         return True
     # R65: bibliographic citation paragraphs ([專利文獻N] / [非專利文獻N])
     if _CITATION_PARA.match(text):
+        return True
+    # #195: JP-translation-style full-width angle-bracket section headings
+    if _ANGLE_BRACKET_HEADING.match(text.strip()):
         return True
     return False
 

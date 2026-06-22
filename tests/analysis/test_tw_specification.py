@@ -376,6 +376,16 @@ class TestParagraphEnding:
         items = check_paragraph_ending(doc)
         assert items[0].status == "pass"
 
+    def test_angle_bracket_headings_skipped_195(self):
+        """#195: JP-translation-style section headings delimited by full-width
+        angle brackets (＜＜1．背景＞＞ / ＜2．1詳細構成＞) end with ＞, not sentence
+        punctuation — they're headers and must be exempt. A prose paragraph
+        with an INLINE ＜…＞ is NOT a heading and stays checked."""
+        from patentlint.analysis.tw_specification import _is_skip_paragraph_ending
+        for h in ("＜＜1．　背景＞＞", "＜2．1　詳細構成＞", "【0016】＜＜1．背景＞＞"):
+            assert _is_skip_paragraph_ending(h), h
+        assert not _is_skip_paragraph_ending("一種裝置，其包含＜元件＞與其他構件")
+
 
 # ── Check 5: Figure Reference Consistency ────────────────────────────────
 
