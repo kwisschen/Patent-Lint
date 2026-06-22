@@ -34,12 +34,14 @@ const ALLOWED_ORIGINS = new Set([
   "https://patent-lint.vercel.app",
 ]);
 const DEFAULT_CORS_ORIGIN = "https://patentlint.com";
-// 16 KB cap accommodates the richer per-check extractor payloads
-// (up to 5 findings × ~300 bytes each + aggregate fields). Worst-case
-// observed ~3 KB; cap leaves comfortable headroom while still
-// rejecting spam-sized bodies. Well under GitHub Issues 64 KB body
-// limit.
-const MAX_BODY_BYTES = 16 * 1024;
+// 32 KB cap accommodates the structured per-check extractor payload
+// (up to 5 findings × ~300 bytes each + aggregate fields, worst-case
+// observed ~3 KB) PLUS the now-larger free-form user comment (up to
+// 12000 chars from the modal). bodyText.length counts characters, so
+// this is a generous ceiling that still rejects spam-sized bodies; the
+// user-comment truncation below is what actually bounds the GitHub
+// issue-body size (well under GitHub's 64 KB limit even for CJK).
+const MAX_BODY_BYTES = 32 * 1024;
 const DEFAULT_REPO = "kwisschen/patentlint-reports";
 
 export default async function handler(request) {
@@ -115,10 +117,13 @@ async function handleReport(request, origin) {
 }
 
 // Cap the optional user-comment field server-side as defence in depth
-// (the modal also caps at 1000 chars). Anything beyond gets truncated
-// — the alternative would be to reject the whole report, but losing a
-// useful diagnostic to a stray over-long comment is the wrong trade.
-const USER_COMMENT_MAX_CHARS = 1500;
+// (the modal caps at 12000 chars; this 14000 ceiling leaves headroom
+// for a non-modal client). Anything beyond gets truncated — the
+// alternative would be to reject the whole report, but losing a useful
+// diagnostic to a stray over-long comment is the wrong trade. 14000
+// chars (≈42 KB if all CJK) + the structured payload stays under
+// GitHub's 64 KB issue-body limit.
+const USER_COMMENT_MAX_CHARS = 14000;
 
 function buildIssue(payload) {
   const checkKey = payload.check_key;

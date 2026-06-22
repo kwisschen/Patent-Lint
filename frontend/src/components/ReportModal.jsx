@@ -168,14 +168,14 @@ export default function ReportModal({
             onChange={(e) => setUserComment(e.target.value.slice(0, USER_COMMENT_MAX_CHARS))}
             disabled={submitting || result === 'success'}
             maxLength={USER_COMMENT_MAX_CHARS}
-            rows={3}
+            rows={6}
             placeholder={t('feedback.reportModal.commentPlaceholder')}
-            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-y min-h-[4.5rem]"
+            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-y min-h-[7rem] max-h-[60vh]"
           />
           <div className="flex justify-between text-[11px] text-muted-foreground">
             <span>{t('feedback.reportModal.commentNotice')}</span>
             {userComment.length > 0 && (
-              <span className={commentCharsLeft < 50 ? 'text-amber-700 dark:text-amber-400' : ''}>
+              <span className={commentCharsLeft < 200 ? 'text-amber-700 dark:text-amber-400' : ''}>
                 {commentCharsLeft}
               </span>
             )}
