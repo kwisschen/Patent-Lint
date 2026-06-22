@@ -45,6 +45,14 @@ dev = [
     "httpx>=0.27",
     "ruff>=0.4,<1",
 ]
+# Dev-time AI eval tooling (ADR-158/159): the LLM-judge loop + corpus harness.
+# NOT a runtime dependency — PatentLint's runtime is AI-free (trust badge);
+# these SDKs are only for the maintainer's `tests/eval/` pipeline.
+eval = [
+    "anthropic>=0.40",
+    "openai>=1.40",
+    "pyarrow>=15",
+]
 all = ["patentlint[api,dev]"]
 
 [project.scripts]
