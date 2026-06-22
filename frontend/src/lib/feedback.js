@@ -478,10 +478,13 @@ export function dispatchFeedback(method, email) {
 // ---------------------------------------------------------------------------
 
 // Frontend cap for the optional user-comment field. The /api/report
-// Edge Function enforces its own cap (currently 1500 chars) as a
+// Edge Function enforces its own cap (currently 14000 chars) as a
 // defence-in-depth limit; clipping here gives an immediate signal in
-// the modal preview before the payload goes over the wire.
-export const USER_COMMENT_MAX_CHARS = 1000
+// the modal preview before the payload goes over the wire. Raised from
+// 1000 → 12000 so users can paste substantial context (claim text, OA
+// excerpts); still well under GitHub's 64 KB issue-body limit even for
+// CJK (12000 CJK chars ≈ 36 KB).
+export const USER_COMMENT_MAX_CHARS = 12000
 
 export function buildReportPayload({
   checkKey,
