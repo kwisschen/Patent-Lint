@@ -859,6 +859,16 @@ _CN_ORDINAL_RE = re.compile(r"^第[一二三四五六七八九十百零0-9]+")
 # and Simp variants. Bare "個" / "个" is also stripped — drafters write
 # "一個第一外齒狀結構" → after "一" strip + "個" strip → "第一外齒狀結構".
 _CN_LEADING_QUANTIFIERS = (
+    # Quantifier + classifier (條/个) bigrams and at-least-N forms that
+    # lead a captured noun (#213/#244): 多條導通線路 → 導通線路;
+    # 兩個所述上側柱 → (兩個 strip) 所述上側柱 → (ref-prefix) 上側柱.
+    # Listed FIRST so the longest form wins the prefix race over bare
+    # 每/多. Multi-char so FN-safe — none is ever a noun head (cf. bare
+    # 條, which starts 條碼/條紋 and is handled by a ref-guarded rule).
+    "至少一條", "至少一条", "少一條", "少一条",
+    "多條", "多条", "每條", "每条", "兩條", "两条",
+    "三條", "三条", "數條", "数条", "一條", "一条",
+    "兩個", "两个", "三個", "三个",
     "多個", "多个",
     "複數個", "复数个", "複數", "复数",
     "至少一個", "至少一个", "至少一",
@@ -1500,6 +1510,15 @@ def _cn_strip_iterative(s: str, allow_ordinal_break: bool = False) -> str:
             if s.startswith(q):
                 s = s[len(q):]
                 break
+        # Bare leading classifier 條/条 ONLY when immediately followed by a
+        # reference prefix (條所述X / 条所述X, #244) — safe because the noun
+        # heads 條碼/條紋/條狀 (bar-code/stripe/strip-shaped) are never
+        # followed by 所述/該/前述. Bounded to the ref-prefix case so we
+        # never FN-drop a genuine 條-initial element name.
+        if s[:1] in ("條", "条") and any(
+            s[1:].startswith(p) for p in _CN_REF_PREFIXES
+        ):
+            s = s[1:]
         while s and len(s) >= 3 and s[0] in _CN_LEADING_VERBS_PARTICLES:
             if allow_ordinal_break and s[0] == "第":
                 break
