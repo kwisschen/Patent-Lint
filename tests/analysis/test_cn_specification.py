@@ -595,6 +595,25 @@ class TestRefnumMeasurementExclusion:
         nums = [n for n, _ in pairs]
         assert "10" in nums and "20" in nums, pairs
 
+    def test_quantifier_classifier_over_capture_collapses_213_244(self):
+        """#213/#244: quantifier+classifier prefixes (兩個/多條/每條/至少一條)
+        and 條+ref (條所述) bled into the captured numeralConsistency element
+        name, producing phantom conflicts (條所述導通線路 vs 多條導通線路 for the
+        same numeral). They must collapse to the bare head noun."""
+        from patentlint.analysis.cn_specification import _cn_d1_head_noun
+        for raw, want in {
+            "兩個所述上側柱": "上側柱",
+            "條所述導通線路": "導通線路",
+            "多條導通線路": "導通線路",
+            "條所述串接線路": "串接線路",
+            "少一條串接線路": "串接線路",
+            "至少一條串接線路": "串接線路",
+        }.items():
+            assert _cn_d1_head_noun(raw) == want, (raw, _cn_d1_head_noun(raw))
+        # FN guards — bare 條-initial nouns keep their 條 (no ref prefix follows)
+        for noun in ("條碼", "條紋", "條狀結構"):
+            assert _cn_d1_head_noun(noun) == noun, noun
+
     def test_real_refnum_followed_by_measurement_unchanged(self):
         """`齒輪10之直徑為10 μm` — first `10` (refnum) captured, second
         `10` (measurement) excluded."""
