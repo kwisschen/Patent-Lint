@@ -308,6 +308,10 @@ def _judge_per_draft(findings, claims_by_pid, jurisdiction, cost_cap, res):
     for f in findings:
         by_pid.setdefault(f.get("patent_id"), []).append(f)
     anth_key, oai_key = J.load_keys()
+    # Per-jurisdiction system prompt. judge_draft DEFAULTS to the CN/TW prompt
+    # (該/所述/前述); US §112(b) needs the English a/an/the prompt. Selecting the
+    # wrong one silently mis-judges every US draft — caught in the pre-run probe.
+    system_prompt = J.SYSTEM_PROMPT_US_V1 if jurisdiction == "US" else J.SYSTEM_PROMPT_V2
 
     async def run():
         anth, oai = AsyncAnthropic(api_key=anth_key), AsyncOpenAI(api_key=oai_key)
@@ -329,16 +333,27 @@ def _judge_per_draft(findings, claims_by_pid, jurisdiction, cost_cap, res):
                     v = await J.judge_draft(
                         str(pid), jurisdiction, chain, finputs,
                         anthropic_client=anth, openai_client=oai,
+                        system_prompt=system_prompt,
                     )
                 except Exception as e:  # one bad draft shouldn't abort the run
                     res.notes.append(f"draft {pid} judge failed: {type(e).__name__}")
                     continue
                 res.est_cost_usd += v.total_cost()
-                agreement = "unanimous" if v.disagreement_count == 0 else "split"
+                # PER-FINDING agreement (not draft-level): a finding is
+                # 'unanimous' only when Sonnet AND gpt-5-mini independently gave
+                # the SAME category that became final. A draft-level proxy
+                # (disagreement_count==0) is too coarse — one disagreement on a
+                # 14-finding US draft would wrongly taint all 14. Caught in probe.
+                def _cats(j):
+                    return {(fv.claim_id, fv.term): fv.category for fv in (j.verdicts if j else [])}
+                s_cats, g_cats = _cats(v.sonnet), _cats(v.gpt_mini)
                 vmap = {(fv.claim_id, fv.term): fv for fv in v.final_verdicts}
                 for f in fs:
-                    fv = vmap.get((int(f.get("claim_id") or 0), f.get("term") or ""))
+                    fkey = (int(f.get("claim_id") or 0), f.get("term") or "")
+                    fv = vmap.get(fkey)
                     cat = fv.category if fv else "ambig"
+                    s, g = s_cats.get(fkey), g_cats.get(fkey)
+                    agreement = "unanimous" if (s is not None and s == g == cat) else "split"
                     res.judged += 1
                     res.proposed.append(ProposedLabel(
                         jurisdiction=jurisdiction,
