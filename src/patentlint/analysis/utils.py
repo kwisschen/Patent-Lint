@@ -886,6 +886,31 @@ def _is_trailing_relational_adj(word: str) -> bool:
     return word in _RELATIONAL_ADJ_STOPS
 
 
+# Predicative post-nominal adjectives — they sit after the head noun as a
+# reduced relative clause taking a preposition ("a first signal INDICATIVE of
+# X", "a product OPERABLE to Y", "a circuit RESPONSIVE to Z"). The intro
+# extractor over-captures them onto the noun ("first signal indicative") so a
+# later "the first signal" no longer matches → false positive (ADR-159
+# missed_introduction class; suggested_match='first signal indicative'). Strip
+# ONLY when trailing AFTER a head noun — clean_noun_phrase walks from the end
+# and a single-word NP falls back to the original, so a bare noun use is
+# preserved. Curated to clearly-adjectival -ive/-ble forms (never head nouns in
+# the trailing position); the corpus FN-guard (silenced_legit==0) gates this.
+# US-only (CJK walkers tokenize differently).
+_POST_NOMINAL_PREDICATIVE_ADJ = frozenset({
+    # DR-1: only the forms empirically driving corpus FPs + their unambiguous
+    # -ive/-ble cousins. The broader set (representative/characteristic/
+    # accessible/…) over-generalised intros and the corpus FN-guard caught it
+    # silencing 8 real `legit` defects — kept out. These remaining words are
+    # never head nouns in the trailing position.
+    "indicative", "operable", "responsive",
+})
+
+
+def _is_trailing_predicative_adj(word: str) -> bool:
+    return word in _POST_NOMINAL_PREDICATIVE_ADJ
+
+
 def _is_trailing_ly_adverb(word: str) -> bool:
     """Detect -ly adverbs that terminate over-captured NPs.
 
@@ -928,6 +953,7 @@ def _should_strip_trailing(word: str) -> bool:
         or _is_trailing_distributive(w)
         or _is_trailing_arithmetic(w)
         or _is_trailing_relational_adj(w)
+        or _is_trailing_predicative_adj(w)
     ):
         return True
     # Strip trailing -ing verbs/gerunds (mirrors single-word rejection at clean_noun_phrase)
