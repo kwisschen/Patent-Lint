@@ -48,12 +48,16 @@ Read the open `report` queue (private tracker) → synthesize a privacy-safe fix
 - **Proposes, never applies** — output is `proposed_labels/*.json` (gitignored); `/walker-round` + human gate the entry into `antecedent_labels_*.json`.
 - **Budget-capped** — hard `--cost-cap`; estimate intentionally high so the cap is a real ceiling.
 
-## Roadmap (next increments, not in this PR)
-1. **Upgrade `corpus` mode to `per_draft_judge`** (full claim-chain context, Sonnet-primary) — higher CJK accuracy than the per-finding `llm_judges`; the ensemble called many of this run's findings `ambig` precisely because per-finding context is thin.
-2. **Auto-propose `/walker-round` input** — cluster the `walker_fp` proposals by mechanism (over-capture vs trailing-residue vs bare-noun-intro) and emit a round plan.
-3. **Feed the harness** — a reviewed pathway from `proposed_labels` → `antecedent_labels_*.json` with `resolved_by`/`protect`/`round` per ADR-111.
-4. **Judge-calibration guard** — before any model swap, re-score against `phase2b_results*.json` gold (≥75% agreement, mirroring `frontier_baseline_eval.py`) so judge drift can't launder regressions into the labels.
-5. **Nightly standing run** — once fire-execution auth is restored (currently broken), schedule `corpus` mode per-jurisdiction; until then, run as a manual CLI (canonical, like the rest of `tests/eval/`).
+## Update 2026-06-23 — #1/#2/#3 shipped
+- **#1 per-draft judge (DONE):** `corpus` mode now defaults to `per_draft_judge` (full claim-chain, Sonnet-primary, Opus tiebreaker). Far more decisive than the per-finding judge — a TW generation run (limit 150, **$4.06**) judged **148 new findings → 134 `walker_fp` / 11 `legit_drafting_error` / 3 other**, vs the per-finding judge's all-`ambig`. Each proposal carries the draft's ensemble `agreement` (`unanimous` when both cross-family judges agreed, no Opus).
+- **#2 automated labels feed (DONE):** `apply_proposed_labels.py` auto-applies **unanimous `walker_fp`** into a separate, reversible gold (`phase2b_results_<juris>_autoapply.json`, wired into `round1_corpus_harness.PHASE2B_RESULTS`), queues the rest (`legit`/split → `needs_review_*.json`, human-gated), and GATES by reloading the merged gold. First run auto-applied **28** unanimous FP labels (corpus verdicts 31,552 → 31,580). Like all the gold, the file is **local-only (gitignored)**; the committed harness map skips it gracefully where absent.
+- **#3 pre-`/walker-round` step (DONE):** the `walker-round` skill now runs the loop + apply as a mandatory Phase-0.0 so a round always validates against a freshly-judged corpus.
+
+## Roadmap (remaining)
+- **Judge-calibration guard** — before any model swap, re-score against the curated `phase2b_results*.json` gold (≥75% agreement, mirroring `frontier_baseline_eval.py`) so judge drift can't launder regressions into the labels.
+- **Auto-cluster `/walker-round` input** — group `walker_fp` proposals by mechanism (over-capture / trailing-residue / bare-noun-intro) and emit a round plan.
+- **Nightly standing run** — once fire-execution auth is restored (currently broken), schedule `corpus` mode per-jurisdiction; until then it's a manual CLI / the walker-round pre-step.
+- **Human-fold the `legit` candidates** — the `needs_review` queue's `legit_drafting_error` verdicts are `protect:true` candidates; fold them into `antecedent_labels_*.json` by hand (they're the FN-guards that let aggressive FP fixes ship safely).
 
 ## Why this ends the recurrence
 Each `corpus`-mode run converts unlabeled real-draft walker findings into judged labels. Over a few runs the labeled corpus stops being a thin slice of hand-picked fixtures and becomes a broad, AI-judged map of how the walker behaves on real drafts — including the `protect:true` legit findings that the drift gate needs to guarantee a fix doesn't introduce an FN. At that point `/walker-round` can ship the over-capture/bare-noun-intro fixes that currently defer, and they stay fixed.
