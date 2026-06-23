@@ -1091,7 +1091,9 @@ def clean_noun_phrase(phrase: str) -> str:
 # Abbreviation pattern: "full term (ABBREV) trailing_noun"
 _ABBREVIATION_PATTERN = re.compile(
     r"\b(?:[a-z][\w-]*\s+){1,5}"    # 1-5 words before abbreviation
-    r"\(([A-Z]{2,})\)\s*"            # (ABBREV) — 2+ uppercase letters
+    r"\(([A-Z]{2,}s?)\)\s*"         # (ABBREV) — 2+ uppercase letters, optional
+                                     # plural `s` (`(OIDs)`, `(CSSDs)`) so the
+                                     # pluralized acronym `the oids` resolves
     r"(\w+)?",                        # optional trailing noun
 )
 
