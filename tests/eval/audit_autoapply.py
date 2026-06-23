@@ -11,12 +11,14 @@
 # is a false NEGATIVE injected into the walker — the exact failure the
 # maintainer asked to guard against.
 #
-# This audit runs an INDEPENDENT, STRONGER third judge (Opus 4.7) over every
-# auto-applied finding, using the same calibrated prompt the ensemble uses.
-# Any finding Opus does NOT also call walker_fp is treated as an FN risk and
-# PULLED from the autoapply gold (with a report). Opus only ran on the
-# *disagreement* drafts during generation, so the unanimous set it never saw —
-# this is genuinely new scrutiny, not a re-run.
+# This audit re-judges every auto-applied finding with an ADVERSARIAL SKEPTICAL
+# prompt (Sonnet 4.6 by default — the FN-guard's power is the inverted framing,
+# not model tier, so Opus would be ~5x the cost for no added value). The prompt
+# flips the prior: "two judges called these false positives; your job is to find
+# any that are actually REAL §112 defects — err toward flagging real defects."
+# Any finding the audit does NOT also confirm as walker_fp is an FN risk and is
+# PULLED from the autoapply gold into a reversible quarantine.
+#   --model opus  is available for a stronger (costlier) pass when warranted.
 #
 # Usage:
 #   python tests/eval/audit_autoapply.py --jurisdiction TW --cost-cap 1.5
@@ -29,7 +31,21 @@ import sys
 from pathlib import Path
 
 THIS_DIR = Path(__file__).resolve().parent
-EST_PER_DRAFT_OPUS = 0.06  # conservative Opus per-draft estimate for the cap
+EST_PER_DRAFT = 0.02  # conservative Sonnet per-draft estimate for the cap
+
+# Adversarial framing — appended to the calibrated base prompt. Flips the prior
+# so the re-judge actively hunts FN risks instead of rubber-stamping the FP call.
+_ADVERSARIAL_SUFFIX = """
+
+--- ADVERSARIAL FN-AUDIT MODE ---
+Each finding below was already classified as a FALSE POSITIVE (walker_fp) by two
+other judges who agreed. Your job is the OPPOSITE check: scrutinise each one for
+whether it is actually a REAL §112 / §26 antecedent-basis DEFECT that the walker
+correctly caught. Err toward flagging a real defect — wrongly silencing a real
+defect (a false negative) is worse than retaining an over-cautious label. Only
+output category "walker_fp" if you can point to the term's genuine introduction
+(Pattern A/B) earlier in the same claim or an ancestor; otherwise output
+"legit_drafting_error" (or coverage_gap / ambig as the rules dictate)."""
 
 
 def autoapply_path(jurisdiction: str) -> Path:
@@ -43,7 +59,7 @@ def _import():
     return J, h
 
 
-def audit(jurisdiction: str, cost_cap: float) -> dict:
+def audit(jurisdiction: str, cost_cap: float, model: str = "sonnet") -> dict:
     J, h = _import()
     gold_path = autoapply_path(jurisdiction)
     if not gold_path.exists():
@@ -54,7 +70,9 @@ def audit(jurisdiction: str, cost_cap: float) -> dict:
     claims_by_pid = {r.get("patent_id"): (r.get("claims") or []) for r in h.load_corpus(jurisdiction)}
     from anthropic import AsyncAnthropic
     anth_key, _ = J.load_keys()
-    system_prompt = J.SYSTEM_PROMPT_US_V1 if jurisdiction == "US" else J.SYSTEM_PROMPT_V2
+    judge_model = J.OPUS if model == "opus" else J.SONNET
+    base = J.SYSTEM_PROMPT_US_V1 if jurisdiction == "US" else J.SYSTEM_PROMPT_V2
+    system_prompt = base + _ADVERSARIAL_SUFFIX
 
     # collect (pid, [findings]) from the gold's verdict entries
     drafts = []
@@ -89,11 +107,11 @@ def audit(jurisdiction: str, cost_cap: float) -> dict:
                 ]
                 user = J._format_user_prompt(str(pid), jurisdiction, chain, finputs)
                 try:
-                    judgment = await J._judge_draft_anthropic(anth, J.OPUS, system_prompt, user, len(finputs))
+                    judgment = await J._judge_draft_anthropic(anth, judge_model, system_prompt, user, len(finputs))
                 except Exception as e:
                     flips.append({"patent_id": pid, "error": type(e).__name__})
                     continue
-                spent += J.estimate_cost(judgment) or EST_PER_DRAFT_OPUS
+                spent += J.estimate_cost(judgment) or EST_PER_DRAFT
                 opus_cat = {(v.claim_id, v.term): v.category for v in judgment.verdicts}
                 for f in fs:
                     key = (int(f.get("claim_id") or 0), f.get("term") or "")
@@ -152,9 +170,10 @@ def audit(jurisdiction: str, cost_cap: float) -> dict:
 def main() -> int:
     ap = argparse.ArgumentParser(description="Adversarial Opus FN-audit of auto-applied walker_fp (ADR-159)")
     ap.add_argument("--jurisdiction", choices=["CN", "TW", "US"], required=True)
-    ap.add_argument("--cost-cap", type=float, default=1.5)
+    ap.add_argument("--cost-cap", type=float, default=1.0)
+    ap.add_argument("--model", choices=["sonnet", "opus"], default="sonnet")
     args = ap.parse_args()
-    print(json.dumps(audit(args.jurisdiction, args.cost_cap), ensure_ascii=False, indent=2))
+    print(json.dumps(audit(args.jurisdiction, args.cost_cap, args.model), ensure_ascii=False, indent=2))
     return 0
 
 
