@@ -577,6 +577,17 @@ _STOP_WORDS = (
     # zone` is introduced via `a particular zone` (Pattern A) — so they
     # were doubly mis-shaped corpus labels, not real §112 defects.
     r"refers|"
+    # R16 (2026-06-23, ADR-159 Zero-FP Sweep 1A): `conforms` (3sg) — the
+    # matrix verb in `the interface conforms to <standard>` (US9582415B2
+    # c6/c7/c12/c13) over-captured `interface conforms`. Unambiguous finite
+    # verb (`X conforms to Y`); no noun sense in claim diction. The clean head
+    # `the interface` resolves to `an interface` (Pattern A, claim 1). The
+    # base form `conform` and 3sg sibling are not added (no corpus signal);
+    # `replicates` was withheld — it carries a real biotech noun sense
+    # (`triplicate replicates`), so it needs a gated round, not a bare add.
+    # Shared `_NP_CORE` covers the spec-support extractor (cross-CHECK). EPC
+    # reuses the US walker. No CN/TW report — DR-1.
+    r"conforms|"
     # Issue #136 (2026-06-01): `face` is ambiguous noun/verb — legitimate
     # noun in `terminal face` / `mounting face` / `contact face` etc.
     # but clearly the matrix verb in `the first magnetic bowl face toward
