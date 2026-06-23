@@ -69,7 +69,21 @@ _CLAIM_BLOCK = re.compile(
 # Patents PDF→HTML extraction collapses prep-then-claim whitespace).
 # Without `to` coverage, dep-claims using `according to claim N` form
 # parsed as independent → broken chain → walker_fp inflation.
-_OFCLAIM_FIX = re.compile(r"\b(of|to)\s*(claims?)\b", re.IGNORECASE)
+#
+# R15 (2026-06-23, ADR-159 Zero-FP Sweep 1A): widened to add `in`. US
+# round-1 corpus has 543 `inclaim N` occurrences — the `as claimed in
+# claim N` / `as recited in claim N` / `as defined in claim N` dependency
+# forms whose `in claim` space collapsed (`claimed inclaim 1`). `\bclaims?`
+# needs a word boundary before `claim`, which `inclaim` lacks, so `_DEP_REF`
+# missed them → those dep-claims classified independent → ancestor chain
+# empty → every body reference (`the host computer`, `the BIOS`, ...) emitted
+# as a spurious §112(b) finding (US9158628B2 alone: ~100). Same PDF/HTML
+# whitespace-collapse root cause as `of`/`to`; same documented artifact as
+# R11's `as inclaim 1` dep break. `\bin` cannot match inside `within`,
+# `main`, `obtain` (no word boundary before the embedded `in`). Resolving a
+# dependency only ADDS ancestor-intro coverage → can only SILENCE antecedent
+# FPs, never hide a real missing antecedent (maximally FN-safe).
+_OFCLAIM_FIX = re.compile(r"\b(of|to|in)\s*(claims?)\b", re.IGNORECASE)
 
 # R35 (2026-05-04): claim-number → following-word boundary fix. After
 # the OFCLAIM normalization above, US corpus still has 1257 occurrences

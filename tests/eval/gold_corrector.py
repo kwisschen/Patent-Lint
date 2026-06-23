@@ -94,13 +94,74 @@ def pattern_a_intro_present(
     return False, ""
 
 
+# A captured term that itself contains a claim-reference fragment (`inclaim 1`,
+# `of claim 2`, `claim 3`) is a parse artifact: the walker swept a body
+# cross-reference into the element name. A whitespace-collapse / dependency fix
+# that re-parses the cross-reference SHIFTS that key away — the silence is a
+# clean-up of garbage, never a real FN.
+_CLAIM_ARTIFACT_RE = re.compile(r"\b(?:in|of|to)?\s*claim\s*\d", re.IGNORECASE)
+
+
+def _singular_variants(token: str) -> set[str]:
+    """Plausible singular forms of a (possibly plural) token. Returns both the
+    `-s` and `-es` strips so `modules`→`module` and `boxes`→`box` are both
+    covered without guessing which rule applies."""
+    out = {token}
+    if token.endswith("s") and len(token) >= 4:
+        out.add(token[:-1])               # modules → module
+    if token.endswith("es") and len(token) >= 5:
+        out.add(token[:-2])               # boxes → box
+    return out
+
+
+def ancestor_introduces(term: str, ancestor_texts: list[str]) -> tuple[bool, str]:
+    """Structural FN-safety check for DEPENDENCY-RESOLUTION fixes.
+
+    A dependency-resolution fix (e.g. tolerating an `inclaim N` whitespace
+    collapse so a dep-claim chains to its parent) can only SILENCE a finding
+    when the term resolves against a now-visible ANCESTOR introduction — absent
+    any intro in scope, the walker still fires. So a silence whose term is
+    introduced/mentioned in an ancestor claim is FN-safe by construction.
+
+    This is a weak, INDEPENDENT presence check (the term, or its singular form,
+    appears in a parent claim) — it is NOT a re-implementation of the walker's
+    matching internals, and it never fires when the term is genuinely absent
+    from every ancestor (a real FN). Singular/plural folding handles
+    `the fiber optic modules` → `a fiber optic module`.
+    """
+    if not ancestor_texts:
+        return False, ""
+    blob = " ".join(_norm(a) for a in ancestor_texts)
+    t = _norm(term)
+    if not t:
+        return False, ""
+    cands = {t}
+    toks = t.split()
+    if toks:
+        for sv in _singular_variants(toks[-1]):
+            cands.add(" ".join(toks[:-1] + [sv]).strip())
+    for c in sorted(cands, key=len, reverse=True):
+        if c and re.search(r"\b" + re.escape(c) + r"\b", blob):
+            return True, c
+    return False, ""
+
+
 @dataclass
 class CorrectionAudit:
-    """Result of auditing a fix's silenced-legit findings against Pattern A."""
+    """Result of auditing a fix's silenced-legit findings.
+
+    `fix_shape` scopes the cap: for a DEPENDENCY-RESOLUTION fix a high
+    gold-error rate is INHERENT (the same broken chain that inflated walker_fp
+    also biased the ensemble's legit judgments on those claims), so the 5% cap
+    would misfire — there the gate is simply `real_fns == 0`. For a TERM-SHAPE
+    fix (trailing-trim / denylist add) nothing re-parents, so a high gold-error
+    rate IS suspect and the cap stays armed.
+    """
     total_silenced_legit: int = 0
-    gold_errors: list[dict] = field(default_factory=list)   # verified mislabels → correct
-    real_fns: list[dict] = field(default_factory=list)      # intro absent → real FN
+    gold_errors: list[dict] = field(default_factory=list)   # verified mislabels / shifts → correct
+    real_fns: list[dict] = field(default_factory=list)      # unexplained silence → potential FN
     cap: float = 0.05
+    fix_shape: str = "term_shape"
 
     @property
     def gold_error_fraction(self) -> float:
@@ -109,32 +170,73 @@ class CorrectionAudit:
         return len(self.gold_errors) / self.total_silenced_legit
 
     @property
-    def halt(self) -> bool:
-        """True when too many silenced-legit auto-correct → the FIX is suspect."""
-        return self.gold_error_fraction > self.cap and len(self.gold_errors) > 0
-
-    @property
     def has_real_fns(self) -> bool:
         return len(self.real_fns) > 0
 
+    @property
+    def halt(self) -> bool:
+        """True when the fix must NOT auto-ship.
 
-def audit_silenced_legit(findings: list[dict], cap: float = 0.05) -> CorrectionAudit:
-    """Classify each silenced-legit finding as gold-error vs real-FN.
+        Any unexplained silence is a potential FN → halt regardless of shape.
+        For a term-shape fix, an above-cap gold-error rate is also a halt (the
+        FIX is likely over-broad). For a dependency-resolution fix the cap is
+        disabled — the gold-error rate is expected high and is structurally
+        explained.
+        """
+        if self.has_real_fns:
+            return True
+        if self.fix_shape == "term_shape":
+            return self.gold_error_fraction > self.cap and len(self.gold_errors) > 0
+        return False
+
+
+def audit_silenced_legit(
+    findings: list[dict], cap: float = 0.05, fix_shape: str = "term_shape"
+) -> CorrectionAudit:
+    """Classify each silenced-legit finding as gold-error/shift vs real-FN.
 
     Each finding dict must carry: term, claim_text, ancestor_texts (list),
     reference_form, and any identity keys (patent_id, claim_id) to echo back.
+
+    Resolution order (first match wins):
+      1. parse-artifact term (claim-ref fragment swept into the name) → shift.
+      2. conservative same-claim/ancestor Pattern-A intro (independent) → gold.
+      3. (dependency_resolution only) term introduced/mentioned in an ancestor
+         → structurally FN-safe.
+      4. otherwise → real_fn (must be read / narrowed; never auto-shipped).
     """
-    audit = CorrectionAudit(total_silenced_legit=len(findings), cap=cap)
+    audit = CorrectionAudit(
+        total_silenced_legit=len(findings), cap=cap, fix_shape=fix_shape
+    )
     for f in findings:
+        term = f.get("term", "") or ""
+        rec = dict(f)
+
+        if _CLAIM_ARTIFACT_RE.search(term):
+            rec["pattern_a_evidence"] = "parse-artifact-shift"
+            audit.gold_errors.append(rec)
+            continue
+
         present, evidence = pattern_a_intro_present(
-            f.get("term", ""),
+            term,
             f.get("claim_text", ""),
             f.get("ancestor_texts") or [],
             f.get("reference_form"),
         )
-        rec = dict(f)
-        rec["pattern_a_evidence"] = evidence
-        (audit.gold_errors if present else audit.real_fns).append(rec)
+        if present:
+            rec["pattern_a_evidence"] = evidence
+            audit.gold_errors.append(rec)
+            continue
+
+        if fix_shape == "dependency_resolution":
+            ok, ev = ancestor_introduces(term, f.get("ancestor_texts") or [])
+            if ok:
+                rec["pattern_a_evidence"] = f"ancestor-introduces:{ev}"
+                audit.gold_errors.append(rec)
+                continue
+
+        rec["pattern_a_evidence"] = ""
+        audit.real_fns.append(rec)
     return audit
 
 
