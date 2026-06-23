@@ -83,7 +83,13 @@ _CLAIM_BLOCK = re.compile(
 # `main`, `obtain` (no word boundary before the embedded `in`). Resolving a
 # dependency only ADDS ancestor-intro coverage → can only SILENCE antecedent
 # FPs, never hide a real missing antecedent (maximally FN-safe).
-_OFCLAIM_FIX = re.compile(r"\b(of|to|in)\s*(claims?)\b", re.IGNORECASE)
+_OFCLAIM_FIX = re.compile(r"\b(of|to|in|with|as)\s*(claims?)\b", re.IGNORECASE)
+# R17 (2026-06-24): `with`/`as` join the prep set. `withclaim N` (34x) is the
+# `in accordance with claim N` dependency preamble; `asclaim N` (17x) is the
+# `... media as [claimed/recited in] claim N` form — both whitespace-collapsed
+# so `_DEP_REF` missed them and the dep-claim parsed independent. Same FN-safe
+# dependency-resolution play as R15. Only the COLLAPSED form is newly affected
+# (properly-spaced `as claim N` already triggers `_DEP_REF`).
 
 # R35 (2026-05-04): claim-number → following-word boundary fix. After
 # the OFCLAIM normalization above, US corpus still has 1257 occurrences
