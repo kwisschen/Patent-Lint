@@ -98,15 +98,16 @@ NEEDS_HUMAN = {"coverage_gap", "diagnostic_mis_attribution", "ambig"}
 
 @dataclass
 class ProposedLabel:
-    """A judged finding proposed (never auto-applied) for the labels file."""
+    """A judged finding proposed for the labels file."""
     jurisdiction: str
     source: str            # 'corpus:<patent_id>' or 'report:#<n>'
     claim_id: int | None
     term: str | None
     reference_form: str | None
     verdict: str           # Category
-    confidence: str        # 'llm-ensemble' | 'dry-run-stub'
+    confidence: str        # 'per-draft-ensemble' | 'per-finding-ensemble' | 'dry-run-stub'
     proposed_action: str   # 'silence_fp' | 'protect' | 'needs_human'
+    agreement: str = "unknown"  # 'unanimous' | 'split' | 'unknown' — gates auto-apply (#2)
     rationale: str = ""
 
 
@@ -125,6 +126,10 @@ class LoopResult:
         by_action: dict[str, int] = {}
         for p in self.proposed:
             by_action[p.proposed_action] = by_action.get(p.proposed_action, 0) + 1
+        # #2 auto-apply gate: unanimous walker_fp verdicts are eligible for the
+        # automated labels feed; everything else queues for human review.
+        auto = sum(1 for p in self.proposed
+                   if p.verdict == "walker_fp" and p.agreement == "unanimous")
         return {
             "mode": self.mode,
             "jurisdiction": self.jurisdiction,
@@ -133,6 +138,7 @@ class LoopResult:
             "judged": self.judged,
             "proposed_total": len(self.proposed),
             "by_action": by_action,
+            "auto_applyable_unanimous_fp": auto,
             "est_cost_usd": round(self.est_cost_usd, 4),
             "notes": self.notes,
         }
@@ -226,7 +232,8 @@ def _stub_verdict(term: str | None, reference_form: str | None) -> tuple[str, st
 
 
 # ── Mode: corpus (the durable recurrence fix) ──────────────────────────────
-def run_corpus_mode(jurisdiction: str, limit: int, cost_cap: float, dry_run: bool) -> LoopResult:
+def run_corpus_mode(jurisdiction: str, limit: int, cost_cap: float, dry_run: bool,
+                    judge_mode: str = "per-draft") -> LoopResult:
     res = LoopResult(mode="corpus", jurisdiction=jurisdiction)
     # Check corpus presence BEFORE importing the harness — the harness pulls
     # pyarrow (the [eval] extra), which CI's [dev] install doesn't have. When
@@ -237,6 +244,7 @@ def run_corpus_mode(jurisdiction: str, limit: int, cost_cap: float, dry_run: boo
         return res
     h = _import_harness()
     records = h.load_corpus(jurisdiction)[: max(limit, 0) or None]
+    claims_by_pid = {r.get("patent_id"): (r.get("claims") or []) for r in records}
     gold = {}
     try:
         gold = h.load_ensemble_verdicts(jurisdiction)
@@ -255,26 +263,104 @@ def run_corpus_mode(jurisdiction: str, limit: int, cost_cap: float, dry_run: boo
         else:
             new.append(f)
 
-    # Stage C: judge the new findings (FP / legit / coverage-gap).
-    verdicts = _judge_findings(
-        new, lambda f: (jurisdiction, "antecedentBasis"), dry_run, cost_cap, res,
-    )
-    # Stage D: emit proposed labels (proposes, never auto-applies).
-    for f, (verdict, rationale) in zip(new, verdicts):
-        if verdict is None:  # skipped by cost cap
-            continue
-        res.proposed.append(ProposedLabel(
-            jurisdiction=jurisdiction,
-            source=f"corpus:{f.get('patent_id')}",
-            claim_id=f.get("claim_id"),
-            term=f.get("term"),
-            reference_form=f.get("reference_form"),
-            verdict=verdict,
-            confidence="dry-run-stub" if dry_run else "llm-ensemble",
-            proposed_action=action_for(verdict),
-            rationale=rationale,
-        ))
+    # Stage C+D: judge the new findings, then emit proposed labels.
+    if not dry_run and judge_mode == "per-draft":
+        # Per-DRAFT judge (per_draft_judge.py): Sonnet-primary, full claim-chain
+        # context, Opus tiebreaker. ~3x more decisive on CJK reference forms
+        # than the per-finding judge. Carries per-finding agreement so #2's
+        # auto-apply can gate on unanimity.
+        _judge_per_draft(new, claims_by_pid, jurisdiction, cost_cap, res)
+    else:
+        verdicts = _judge_findings(
+            new, lambda f: (jurisdiction, "antecedentBasis"), dry_run, cost_cap, res,
+        )
+        for f, (verdict, rationale) in zip(new, verdicts):
+            if verdict is None:  # skipped by cost cap
+                continue
+            res.proposed.append(ProposedLabel(
+                jurisdiction=jurisdiction,
+                source=f"corpus:{f.get('patent_id')}",
+                claim_id=f.get("claim_id"),
+                term=f.get("term"),
+                reference_form=f.get("reference_form"),
+                verdict=verdict,
+                confidence="dry-run-stub" if dry_run else "per-finding-ensemble",
+                proposed_action=action_for(verdict),
+                agreement="unknown",
+                rationale=rationale,
+            ))
     return res
+
+
+def _judge_per_draft(findings, claims_by_pid, jurisdiction, cost_cap, res):
+    """Judge findings grouped by draft via per_draft_judge (full claim-chain
+    context). Sets per-finding agreement from the draft's ensemble disagreement
+    (0 disagreements → 'unanimous' → eligible for #2 auto-apply)."""
+    if not findings:
+        return
+    sys.path.insert(0, str(THIS_DIR))
+    import per_draft_judge as J  # noqa: E402
+    J.ANALYST_ENV = analyst_env_path()
+    from anthropic import AsyncAnthropic
+    from openai import AsyncOpenAI
+
+    by_pid: dict = {}
+    for f in findings:
+        by_pid.setdefault(f.get("patent_id"), []).append(f)
+    anth_key, oai_key = J.load_keys()
+
+    async def run():
+        anth, oai = AsyncAnthropic(api_key=anth_key), AsyncOpenAI(api_key=oai_key)
+        try:
+            for pid, fs in by_pid.items():
+                if cost_cap and res.est_cost_usd >= cost_cap:
+                    res.notes.append("cost cap reached; remaining drafts unjudged")
+                    break
+                claims = claims_by_pid.get(pid) or []
+                chain = {i + 1: claims[i] for i in range(len(claims))}
+                finputs = [
+                    J.FindingInput(
+                        claim_id=int(f.get("claim_id") or 0), term=f.get("term") or "",
+                        reference_form=f.get("reference_form") or "", char_offset=0,
+                        context_before="", context_after="",
+                    ) for f in fs
+                ]
+                try:
+                    v = await J.judge_draft(
+                        str(pid), jurisdiction, chain, finputs,
+                        anthropic_client=anth, openai_client=oai,
+                    )
+                except Exception as e:  # one bad draft shouldn't abort the run
+                    res.notes.append(f"draft {pid} judge failed: {type(e).__name__}")
+                    continue
+                res.est_cost_usd += v.total_cost()
+                agreement = "unanimous" if v.disagreement_count == 0 else "split"
+                vmap = {(fv.claim_id, fv.term): fv for fv in v.final_verdicts}
+                for f in fs:
+                    fv = vmap.get((int(f.get("claim_id") or 0), f.get("term") or ""))
+                    cat = fv.category if fv else "ambig"
+                    res.judged += 1
+                    res.proposed.append(ProposedLabel(
+                        jurisdiction=jurisdiction,
+                        source=f"corpus:{pid}",
+                        claim_id=f.get("claim_id"),
+                        term=f.get("term"),
+                        reference_form=f.get("reference_form"),
+                        verdict=cat,
+                        confidence="per-draft-ensemble",
+                        proposed_action=action_for(cat),
+                        agreement=agreement,
+                        rationale=(fv.reasoning[:200] if fv else ""),
+                    ))
+        finally:
+            for c in (anth, oai):
+                close = getattr(c, "close", None)
+                if close:
+                    try:
+                        await close()
+                    except Exception:
+                        pass
+    asyncio.run(run())
 
 
 def _judge_findings(findings, ctx, dry_run, cost_cap, res):
@@ -408,18 +494,22 @@ def main() -> int:
     ap.add_argument("--limit", type=int, default=40)
     ap.add_argument("--cost-cap", type=float, default=5.0, help="USD hard cap on LLM spend")
     ap.add_argument("--dry-run", action="store_true", help="no LLM spend; deterministic stub verdicts")
+    ap.add_argument("--judge", choices=["per-draft", "per-finding"], default="per-draft",
+                    help="per-draft = full claim-chain Sonnet ensemble (more accurate, default)")
     ap.add_argument("--stamp", default="run", help="output filename stamp (pass a date)")
     args = ap.parse_args()
 
     if args.mode == "corpus":
-        res = run_corpus_mode(args.jurisdiction, args.limit, args.cost_cap, args.dry_run)
+        res = run_corpus_mode(args.jurisdiction, args.limit, args.cost_cap, args.dry_run,
+                              judge_mode=args.judge)
     else:
         res = run_reports_mode(args.limit, args.cost_cap, args.dry_run)
 
     out = write_proposed(res, args.stamp)
     print(json.dumps(res.summary(), ensure_ascii=False, indent=2))
     print(f"\nProposed labels written to: {out}")
-    print("Review + gate via /walker-round before any enter antecedent_labels_*.json.")
+    print("Auto-applyable (unanimous walker_fp) feed via apply_proposed_labels.py; "
+          "the ADR-111 harness gate + you stay authoritative.")
     return 0
 
 

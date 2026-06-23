@@ -51,13 +51,18 @@ PHASE2B_RESULTS = {
     'CN': [
         PROJECT_ROOT / 'tests/eval/phase2b_results.json',
         PROJECT_ROOT / 'tests/eval/phase2b_results_cn_supplement.json',
+        # ADR-159: standing-loop auto-applied unanimous walker_fp verdicts.
+        # Separate + reversible (delete to undo); written by apply_proposed_labels.py.
+        PROJECT_ROOT / 'tests/eval/phase2b_results_cn_autoapply.json',
     ],
     'TW': [
         PROJECT_ROOT / 'tests/eval/phase2b_results_tw.json',
         PROJECT_ROOT / 'tests/eval/phase2b_results_tw_supplement.json',
+        PROJECT_ROOT / 'tests/eval/phase2b_results_tw_autoapply.json',
     ],
     'US': [
         PROJECT_ROOT / 'tests/eval/phase2b_results_us.json',
+        PROJECT_ROOT / 'tests/eval/phase2b_results_us_autoapply.json',
     ],
 }
 
