@@ -9,7 +9,14 @@ sequence listing references, and reference numeral consistency.
 import re
 from collections import Counter
 
-from patentlint.analysis.utils import _dx, numeral_context_excerpt
+from patentlint.analysis.utils import (
+    _dx,
+    numeral_context_excerpt,
+    _ADVERB_STOPS,
+    _VERB_STOPS,
+    _ING_VERB_ONLY,
+    _is_likely_past_participle,
+)
 from patentlint.models import CheckItem, ReferenceNumeral, SpecWordingResult
 
 # Narrowing language per MPEP 2111.01(II): "critical, important, essential,
@@ -1088,6 +1095,97 @@ def _merge_suffix_clusters_us(name_counts: "Counter[str]") -> "Counter[str]":
     return merged
 
 
+# Clause markers — copula / auxiliary / relativizer / negator. None of these
+# can appear inside a real compound element name, so their presence anywhere in
+# a captured "<noun> <numeral>" name means the capture over-ran into a sentence
+# clause ("be executed by processor 504", "suggestion is displayed 1308",
+# "car that binds CLDN18"). Such captures are NOT element identities and must
+# not seed a D1 conflict. (Engine-3 over-capture sweep, ADR-159.)
+_D1_CLAUSE_WORDS = frozenset({
+    "be", "is", "are", "was", "were", "been", "being",
+    "do", "does", "did", "not", "that", "which", "who", "whose", "whom",
+})
+
+# -ly adverbs are never element names; these few -ly words ARE patent nouns.
+_D1_LY_NOUN_ALLOWLIST = frozenset({
+    "supply", "assembly", "family", "anomaly", "subassembly", "resupply",
+    "ally", "poly",
+})
+
+# Curated -ing / base-form VERBS that over-capture as a D1 element-name head.
+# Empirical denylist (mirrors the _VERB_STOPS discipline) — each is a true verb
+# that is NEVER a patent element noun. CRITICAL: this is a CLOSED SET, NOT a
+# generic `-ing` rule. A generic `-ing`/`-s` rejection wrongly drops real patent
+# nouns (grating / winding / cladding / outputs / inputs) and silences genuine
+# D1 conflicts (FN) — e.g. `output grating` vs `second grating`, `waveguide
+# inputs` vs `waveguide outputs`. So only listed verbs are rejected; -ing/-s
+# nouns pass.
+_D1_NONNOUN_VERB_HEADS = frozenset({
+    "displaying", "generating", "submitting", "removing", "altering",
+    "committing", "designating", "detecting", "gathering", "enumerating",
+    "creating", "getting", "indicating", "depicting", "adding", "summarize",
+})
+
+
+def _d1_head_is_nonnoun(word: str) -> bool:
+    """True when a token can never be the HEAD noun of an element name: a
+    curated verb, past participle (-ed), or adverb (-ly / curated). Reuses the
+    §112 walker's verb/adverb sets so the D1 element-name extractor and the
+    antecedent/spec-support walkers agree on what counts as a noun (cross-CHECK).
+
+    Uses ONLY unambiguous signals — curated verb/adverb sets, the -ed participle
+    test, and -ly adverbs. It does NOT apply a generic `-ing` or 3rd-person-`-s`
+    rule, because those wrongly reject real patent nouns (grating / winding /
+    cladding / outputs / inputs), silencing genuine D1 conflicts (FN).
+    FN-safety is the hard gate (ADR-159).
+    """
+    w = word.lower().rstrip(".,;:")
+    if (
+        w in _ADVERB_STOPS
+        or w in _VERB_STOPS
+        or w in _ING_VERB_ONLY
+        or w in _D1_NONNOUN_VERB_HEADS
+    ):
+        return True
+    if _is_likely_past_participle(w):  # -ed participle (with _ED_NOUNS guard)
+        return True
+    if w.endswith("ly") and len(w) >= 5 and w not in _D1_LY_NOUN_ALLOWLIST:
+        return True
+    return False
+
+
+def _is_plausible_element_name(keyed_name: str) -> bool:
+    """Does an extracted D1 ``ordinal|head`` name look like a real element noun
+    phrase, vs sentence-context over-capture?
+
+    A reference numeral binds to a NOUN (the element). Over-capture bleeds
+    verbs, gerunds, adverbs, and clause fragments into the captured name, which
+    then seeds phantom D1 conflicts (the same numeral "named" by several junk
+    fragments). Rejecting non-noun names is FN-safe: a genuine D1 defect needs
+    the SAME numeral bound to two DIFFERENT element NOUNS, and a real element
+    name always passes this test.
+
+    Rejects only when CLEARLY not a noun phrase:
+      * the HEAD (last word) is a verb / gerund / participle / adverb; or
+      * a CLAUSE marker (copula / not / that / which) sits anywhere in the name.
+
+    Deliberately does NOT reject past-participle / 3sg words in the BODY —
+    those are adjectival modifiers of real elements ("integrated circuit",
+    "curved surface", "printed circuit board"); rejecting them would drop real
+    conflicts (FN).
+    """
+    _, head = _split_ordinal_key(keyed_name)
+    words = [w for w in head.split() if w]
+    if not words:
+        return False
+    if _d1_head_is_nonnoun(words[-1]):
+        return False
+    for w in words:
+        if w.lower().rstrip(".,;:") in _D1_CLAUSE_WORDS:
+            return False
+    return True
+
+
 def _detect_d1_conflicts(
     pairs: list[tuple[str, str]],
     latin_pattern: bool = False,
@@ -1107,6 +1205,13 @@ def _detect_d1_conflicts(
 
     by_num_counts: dict[str, Counter] = {}
     for num, name in pairs:
+        # Engine-3 over-capture guard (ADR-159): a name that is a verb /
+        # gerund / adverb / clause fragment is sentence-context bleed, not an
+        # element identity — never let it seed or join a D1 conflict. FN-safe:
+        # a real D1 defect needs two distinct element NOUNS on one numeral, and
+        # real element names pass _is_plausible_element_name.
+        if not _is_plausible_element_name(name):
+            continue
         by_num_counts.setdefault(num, Counter())[name] += 1
     # Merge suffix-equivalent names per numeral so the cleanest short
     # form wins counts (e.g., 'present disclosure comprises lens' merges
