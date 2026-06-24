@@ -136,6 +136,7 @@ export function excerptAround(text, target) {
 // preview — same labels users see in the modal show up in their email
 // client when they choose the mailto fallback.
 export const FIELD_LABEL_KEYS = {
+  disposition: 'feedback.email.fieldDisposition',
   check_key: 'feedback.email.fieldCheck',
   message: 'feedback.email.fieldMessage',
   details: 'feedback.email.fieldDetails',
@@ -492,10 +493,19 @@ export function buildReportPayload({
   locale,
   diagnostics,
   userComment,
+  disposition,
 }) {
   const payload = {
     check_key: checkKey || 'unknown',
     patentlint_build: buildHash(),
+  }
+  // ADR-159 advisory tier: a report carries the reporter's DISPOSITION so the
+  // §112 walker findings become first-class LABELS, not just bug reports —
+  // 'confirmed_defect' = the flag is a correct catch (a real-defect / TP label
+  // for the gold corpus), 'false_positive' = the flag is wrong (a walker_fp
+  // label). The intake (api/report.js) maps each to a GitHub label.
+  if (disposition === 'confirmed_defect' || disposition === 'false_positive') {
+    payload.disposition = disposition
   }
   if (jurisdiction) payload.jurisdiction = jurisdiction
   if (locale) payload.locale = locale
@@ -521,8 +531,8 @@ export function buildReportPayload({
 // { ok: true, payload } on 2xx, { ok: false, reason } on any
 // failure. The modal maps reason → localized toast string; raw HTTP
 // detail never reaches the user.
-export async function sendReport({ checkKey, jurisdiction, locale, diagnostics, userComment }) {
-  const payload = buildReportPayload({ checkKey, jurisdiction, locale, diagnostics, userComment })
+export async function sendReport({ checkKey, jurisdiction, locale, diagnostics, userComment, disposition }) {
+  const payload = buildReportPayload({ checkKey, jurisdiction, locale, diagnostics, userComment, disposition })
 
   emitOutgoing('/api/report')
   let response

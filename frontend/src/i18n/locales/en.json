@@ -274,7 +274,8 @@
       "fieldComponentCount": "Component count",
       "fieldTopOutlierContextExcerpt": "Outlier context",
       "fieldNumeral": "Numeral",
-      "diagnosticHeader": "Diagnostic trail (de-identified — see Privacy §6):"
+      "diagnosticHeader": "Diagnostic trail (de-identified — see Privacy §6):",
+      "fieldDisposition": "Disposition"
     },
     "reportModal": {
       "title": "Send an anonymous report?",
@@ -288,7 +289,19 @@
       "deidNotice": "Reports cannot be linked to your identity. No email, IP, or account info is recorded — only the de-identified fragments shown above are sent.",
       "commentLabel": "Anything to add? (optional)",
       "commentPlaceholder": "e.g. \"This term is actually introduced in claim 1 — chain inheritance miss.\" Helps with triage when the diagnostic alone isn't enough.",
-      "commentNotice": "What you type here is sent as-is — avoid pasting confidential text."
+      "commentNotice": "What you type here is sent as-is — avoid pasting confidential text.",
+      "dispositionHeading": "What are you sending?",
+      "dispositionWhy": "Both directions help: confirmed catches and false positives train the checker on real drafts.",
+      "disposition": {
+        "false_positive": {
+          "label": "This flag is wrong",
+          "hint": "A false positive — this reference shouldn’t be flagged."
+        },
+        "confirmed_defect": {
+          "label": "This is a correct catch",
+          "hint": "Confirming a real § 112 issue the checker found."
+        }
+      }
     }
   },
   "cta": {

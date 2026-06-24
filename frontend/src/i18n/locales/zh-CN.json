@@ -266,7 +266,8 @@
       "fieldComponentCount": "组件数量",
       "fieldTopOutlierContextExcerpt": "离群值上下文",
       "fieldNumeral": "符号",
-      "diagnosticHeader": "诊断轨迹（已去标识化，详见隐私政策 §6）："
+      "diagnosticHeader": "诊断轨迹（已去标识化，详见隐私政策 §6）：",
+      "fieldDisposition": "判定"
     },
     "emailGreeting": "Christopher 你好，",
     "bodyPlaceholder": "[请用一两句话说明此项分析结果的问题：是误判、分类错误，还是检查遗漏了什么？请勿粘贴权利要求文字或任何文稿内容；分析结果本身已自动附上。]",
@@ -288,7 +289,19 @@
       "deidNotice": "本反馈无法关联至您本人。我方不收集邮箱、IP 或账户信息；仅传送上方所示的去标识化片段，无其他数据。",
       "commentLabel": "想补充说明吗？（选填）",
       "commentPlaceholder": "例如：“此用语其实已在权利要求 1 中介绍过，属链式继承的未识别案例。” 当诊断信息不足以说明问题时，这些补充说明有助于判读。",
-      "commentNotice": "此栏输入内容将原样发送，请避免粘贴机密信息。"
+      "commentNotice": "此栏输入内容将原样发送，请避免粘贴机密信息。",
+      "dispositionHeading": "您要提交哪一类？",
+      "dispositionWhy": "两种反馈都有帮助：确认的正确标记与误报均可用于在真实稿件上改进分析器。",
+      "disposition": {
+        "false_positive": {
+          "label": "此标记有误",
+          "hint": "误报：此引用不应被标记。"
+        },
+        "confirmed_defect": {
+          "label": "确为正确标记",
+          "hint": "确认这是分析器发现的真实 § 112 问题。"
+        }
+      }
     }
   },
   "cta": {

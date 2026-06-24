@@ -266,7 +266,8 @@
       "fieldComponentCount": "構成要素数",
       "fieldTopOutlierContextExcerpt": "外れ値のコンテキスト",
       "fieldNumeral": "符号",
-      "diagnosticHeader": "診断軌跡（非識別化済み、プライバシーポリシー §6 参照）："
+      "diagnosticHeader": "診断軌跡（非識別化済み、プライバシーポリシー §6 参照）：",
+      "fieldDisposition": "判定"
     },
     "emailGreeting": "Christopher 様",
     "bodyPlaceholder": "[一、二文で、この検出結果の何が問題かお教えください：誤検出でしょうか、分類の誤りでしょうか、それとも検査の取りこぼしでしょうか？請求項の文言や明細書内容は一切貼り付けないでください。検出結果自体は自動で添付されます。]",
@@ -288,7 +289,19 @@
       "deidNotice": "レポートはご本人と紐付けられません。メールアドレス、IP、アカウント情報は一切収集せず、上記に表示された匿名加工済みの断片のみを送信します。",
       "commentLabel": "補足コメント（任意）",
       "commentPlaceholder": "例：「この用語は請求項 1 で既に導入済みです（チェーン継承の未検出ケース）」など。診断情報だけでは状況を伝えきれない場合に役立ちます。",
-      "commentNotice": "ここに入力した内容はそのまま送信されます。機密情報は記入しないでください。"
+      "commentNotice": "ここに入力した内容はそのまま送信されます。機密情報は記入しないでください。",
+      "dispositionHeading": "どちらを送信しますか？",
+      "dispositionWhy": "どちらの回答も役立ちます。正しい指摘の確認も誤検出も、実際の原稿での分析器の改善に使われます。",
+      "disposition": {
+        "false_positive": {
+          "label": "この指摘は誤り",
+          "hint": "誤検出：この参照は指摘すべきではありません。"
+        },
+        "confirmed_defect": {
+          "label": "正しい指摘",
+          "hint": "分析器が見つけた本当の § 112 問題であることを確認します。"
+        }
+      }
     }
   },
   "cta": {

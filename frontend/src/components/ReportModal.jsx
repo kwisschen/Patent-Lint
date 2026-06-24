@@ -44,19 +44,25 @@ export default function ReportModal({
   diagnostics,
   onConfirm,
   onMailtoFallback,
+  initialDisposition,
 }) {
   const { t } = useTranslation()
   const [submitting, setSubmitting] = useState(false)
   const [result, setResult] = useState(null)
   const [userComment, setUserComment] = useState('')
+  // Disposition makes the report a first-class LABEL (ADR-159): the reporter
+  // says whether this §112 flag is a false positive or a confirmed real issue.
+  // 'false_positive' is the default (the historical "report a problem" intent).
+  const [disposition, setDisposition] = useState('false_positive')
 
   useEffect(() => {
     if (open) {
       setSubmitting(false)
       setResult(null)
       setUserComment('')
+      setDisposition(initialDisposition || 'false_positive')
     }
-  }, [open])
+  }, [open, initialDisposition])
 
   // Build the exact wire payload using the same helper sendReport
   // uses. The user sees what's actually transmitted; no separate
@@ -71,8 +77,9 @@ export default function ReportModal({
         locale,
         diagnostics: diagnostics || {},
         userComment,
+        disposition,
       }),
-    [checkKey, jurisdiction, locale, diagnostics, userComment],
+    [checkKey, jurisdiction, locale, diagnostics, userComment, disposition],
   )
 
   // Preview omits the comment from the JSON-style list — it's rendered
@@ -90,7 +97,7 @@ export default function ReportModal({
 
   const handleSend = async () => {
     setSubmitting(true)
-    const outcome = await onConfirm(trimmedComment || null)
+    const outcome = await onConfirm(trimmedComment || null, disposition)
     setSubmitting(false)
     if (outcome?.ok) {
       setResult('success')
@@ -110,6 +117,41 @@ export default function ReportModal({
             {t('feedback.reportModal.body')}
           </DialogDescription>
         </DialogHeader>
+
+        <div className="space-y-1.5">
+          <p className="text-xs font-medium text-muted-foreground">
+            {t('feedback.reportModal.dispositionHeading')}
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {['false_positive', 'confirmed_defect'].map((d) => {
+              const active = disposition === d
+              return (
+                <button
+                  key={d}
+                  type="button"
+                  onClick={() => setDisposition(d)}
+                  disabled={submitting || result === 'success'}
+                  aria-pressed={active}
+                  className={`rounded-md border px-3 py-2 text-left text-xs transition-colors ${
+                    active
+                      ? 'border-primary bg-primary/10 ring-1 ring-primary'
+                      : 'border-input hover:bg-muted/50'
+                  }`}
+                >
+                  <span className="block font-medium text-foreground">
+                    {t(`feedback.reportModal.disposition.${d}.label`)}
+                  </span>
+                  <span className="mt-0.5 block text-[11px] leading-snug text-muted-foreground">
+                    {t(`feedback.reportModal.disposition.${d}.hint`)}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+          <p className="text-[11px] leading-snug text-muted-foreground">
+            {t('feedback.reportModal.dispositionWhy')}
+          </p>
+        </div>
 
         <div className="frost-card !rounded-md p-3">
           <p className="mb-2 text-xs font-medium text-muted-foreground">

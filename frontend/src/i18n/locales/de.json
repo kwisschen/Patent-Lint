@@ -274,7 +274,8 @@
       "fieldComponentCount": "Komponentenanzahl",
       "fieldTopOutlierContextExcerpt": "Ausreißer-Kontext",
       "fieldNumeral": "Bezugszeichen",
-      "diagnosticHeader": "Diagnose-Spur (anonymisiert — siehe Datenschutz §6):"
+      "diagnosticHeader": "Diagnose-Spur (anonymisiert — siehe Datenschutz §6):",
+      "fieldDisposition": "Einordnung"
     },
     "reportModal": {
       "title": "Anonyme Meldung senden?",
@@ -288,7 +289,19 @@
       "deidNotice": "Meldungen lassen sich nicht mit Ihrer Identität verknüpfen. Wir erfassen weder E-Mail noch IP oder Kontodaten; gesendet werden ausschließlich die oben gezeigten anonymisierten Fragmente.",
       "commentLabel": "Etwas hinzufügen? (optional)",
       "commentPlaceholder": "z. B. „Dieser Begriff wird bereits in Anspruch 1 eingeführt — Übersehen der Rückbezugskette.“ Hilft bei der Triage, wenn die Diagnose allein nicht ausreicht.",
-      "commentNotice": "Was Sie hier eingeben, wird unverändert übermittelt — keine vertraulichen Inhalte einfügen."
+      "commentNotice": "Was Sie hier eingeben, wird unverändert übermittelt — keine vertraulichen Inhalte einfügen.",
+      "dispositionHeading": "Was senden Sie?",
+      "dispositionWhy": "Beides hilft: bestätigte Treffer und Fehlalarme verbessern die Prüfung an echten Entwürfen.",
+      "disposition": {
+        "false_positive": {
+          "label": "Fehlalarm",
+          "hint": "Ein Fehlalarm — dieser Bezug sollte nicht markiert werden."
+        },
+        "confirmed_defect": {
+          "label": "Korrekter Treffer",
+          "hint": "Bestätigung eines echten § 112-Problems."
+        }
+      }
     }
   },
   "cta": {
