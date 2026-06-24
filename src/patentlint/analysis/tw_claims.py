@@ -2320,6 +2320,16 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         # FN-guard auto-narrows any gray verb that silences gold-legit or cascades.
         "加入", "界定", "移除", "患有", "接受", "傳播", "轉化", "串聯",
         "暴露", "平行", "保持",
+        # === R12 (2026-06-24) — final clean-residual sweep. 附接 (attach —
+        # `電極匯流排附接`; distinct from the held 接合=joint/對接). The noun sense
+        # carries a suffix (附接部/附接件) so the bare form is predicate-only at
+        # the tail. HELD OUT despite a passing gold FN-guard: 引導 (guide) and
+        # 確定 (determine) — both have noun/adj senses with NO distinguishing
+        # suffix (所述引導 = "the guide", 確定的 = "determined"), so a clean gold
+        # sample doesn't rule out real-draft FNs (the same noun-gray caution
+        # that held 關聯/結合; cf. 垂直, which was cleared only because 垂直度
+        # carries 度). Ship the morphologically-clean verb only.
+        "附接",
     ),
     key=len,
     reverse=True,
