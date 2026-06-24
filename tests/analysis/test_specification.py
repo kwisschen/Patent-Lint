@@ -621,6 +621,59 @@ class TestD1ElementNameOverCapture:
         assert "motor" in names and "bracket" in names
 
 
+class TestD1BioSymbolAndMutation:
+    """Engine-3 R2 (ADR-159): biology/clinical biomarker symbols and amino-acid
+    substitution notation are mis-captured as Latin-prefix reference designators
+    and over-flag D1. They are never drawing elements, so they must not enter
+    the numeral-name pair stream — while real electronic designators (R1, LD1,
+    IC2, and uppercase-suffixed U1A) must still be captured (FN-safety)."""
+
+    def _nums(self, spec):
+        from patentlint.analysis.specification import extract_numeral_name_pairs
+        return {n for n, _ in extract_numeral_name_pairs(spec)}
+
+    def test_amino_acid_mutation_not_captured(self):
+        spec = (
+            "The variant K417T improves binding. The K417T mutation is shown. "
+            "A D614G substitution and the L234F change are described. "
+            "The antibody has an S228P hinge mutation."
+        )
+        nums = self._nums(spec)
+        assert "K417T" not in nums and "D614G" not in nums
+        assert "L234F" not in nums and "S228P" not in nums
+
+    def test_immunology_prefixes_not_captured(self):
+        spec = (
+            "The CD3 receptor binds. A CD8 cell is shown. The CD28 domain. "
+            "An anti-CLDN18 antibody. The IGG1 constant region. "
+            "The IL7R chain. A TNF inhibitor with HBA1C readout."
+        )
+        nums = self._nums(spec)
+        for sym in ("CD3", "CD8", "CD28", "CLDN18", "IGG1", "IL7R", "HBA1C"):
+            assert sym not in nums, sym
+
+    def test_x2x_telecom_not_captured(self):
+        spec = (
+            "A D2D link is used. The V2V message and V2I signaling. "
+            "The V2X interface enables communication."
+        )
+        nums = self._nums(spec)
+        for sym in ("D2D", "V2V", "V2I", "V2X"):
+            assert sym not in nums, sym
+
+    def test_real_designators_still_captured(self):
+        # FN-safety: electronic designators (incl. 1-digit and uppercase-suffix
+        # forms that superficially resemble X2X/mutation) must survive.
+        spec = (
+            "The resistor R1 connects. The capacitor C2 filters. "
+            "The chip IC2 controls. The switch LD1 opens. "
+            "The subunit U1A is biased. The node C2D routes data."
+        )
+        nums = self._nums(spec)
+        for sym in ("R1", "C2", "IC2", "LD1", "U1A", "C2D"):
+            assert sym in nums, sym
+
+
 class TestNumeralConsistencyD1Synthetic:
     """Synthetic edge-case suite for D1 — covers cases from real drafter
     feedback (Latin-prefix refs, single-occurrence typos, ordinal-instance
