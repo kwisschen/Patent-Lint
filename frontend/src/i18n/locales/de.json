@@ -307,7 +307,13 @@
       "showHighConf": "Nur hohe Konfidenz ({{count}})"
     },
     "higherConfidenceBadge": "Höhere Konfidenz",
-    "higherConfidenceTitle": "Dieser Befund gehört zur Teilmenge mit höherer Konfidenz (gemessen ca. 66 % Präzision auf einem etikettierten englischen Korpus bei dieser Schwelle, gegenüber 38 % Basislinie). Bitte trotzdem gegen Ihren Entwurf prüfen — dies ist eine Rangordnung, keine Garantie."
+    "higherConfidenceTitle": "Dieser Befund gehört zur Teilmenge mit höherer Konfidenz (gemessen ca. 66 % Präzision auf einem etikettierten englischen Korpus bei dieser Schwelle, gegenüber 38 % Basislinie). Bitte trotzdem gegen Ihren Entwurf prüfen — dies ist eine Rangordnung, keine Garantie.",
+    "advisorySubtitle": "Hinweis — nicht benotet. Bestätigen Sie, dass jeder Bezug auf ein zuvor eingeführtes Element zurückgeht.",
+    "toVerify": "zu prüfen",
+    "allReviewedPill": "Alle geprüft",
+    "reviewedCount": "{{count}} geprüft",
+    "markReviewed": "Sieht gut aus",
+    "undoReviewed": "Rückgängig"
   },
   "antecedent": {
     "didYouMean": "Meinten Sie *{{term}}* (eingeführt in Anspruch {{claim_id}})?",
@@ -319,7 +325,8 @@
     "title": "Stützungs-Prüfung der Beschreibung",
     "items": "Begriffe",
     "item": "Begriff",
-    "crossRefAntecedent": "Ebenfalls in der Rückbezugs-Prüfung oben gekennzeichnet."
+    "crossRefAntecedent": "Ebenfalls in der Rückbezugs-Prüfung oben gekennzeichnet.",
+    "advisorySubtitle": "Hinweis — nicht benotet. Bestätigen Sie, dass jeder Anspruchsbegriff in der Beschreibung gestützt ist."
   },
   "triage": {
     "title": "Prioritäten-Übersicht",

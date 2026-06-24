@@ -2,7 +2,7 @@
 // Copyright (c) 2025–2026 Christopher Chen
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AlertTriangle, ChevronRight, Flag } from 'lucide-react'
+import { ListChecks, ChevronRight, Flag, Check, RotateCcw } from 'lucide-react'
 import { Button } from './ui/button'
 import { FrostCard } from './ui/frost-card'
 import { StatusPill } from './ui/status-pill'
@@ -140,11 +140,12 @@ function formatClaimRange(ids, t) {
   return t('claimDiagram.claimsLabel', { range: ranges.join(', ') })
 }
 
-function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, jurisdiction }) {
-  // Default-expanded so per-finding Report buttons surface without an
-  // extra click — gets users into the diagnostic trail faster on §112
-  // findings where the bug-report path matters most.
-  const [expanded, setExpanded] = useState(true)
+function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, jurisdiction, reviewed, onToggleReviewed }) {
+  // Advisory triage: a reviewed row collapses to a calm "reviewed" state and
+  // drops out of the header's "to verify" count. Default-expanded for
+  // un-reviewed rows so the did-you-mean hint + claim text surface without an
+  // extra click; a reviewed row starts collapsed.
+  const [expanded, setExpanded] = useState(!reviewed)
   const [reportModalOpen, setReportModalOpen] = useState(false)
   const [reportContext, setReportContext] = useState(null)
   const { sendFeedback } = useFeedback()
@@ -278,7 +279,7 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
   )
 
   return (
-    <div>
+    <div className={`transition-opacity duration-200 ${reviewed ? 'opacity-55' : ''}`}>
       <div
         role="button"
         tabIndex={0}
@@ -296,7 +297,7 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
         <span className="text-sm font-medium shrink-0" style={{ color: 'var(--attention-text)' }}>
           {label}
         </span>
-        <span className="text-sm text-muted-foreground flex-1 truncate">
+        <span className={`text-sm text-muted-foreground flex-1 truncate ${reviewed ? 'line-through' : ''}`}>
           {terms.map((term, i) => (
             <span key={i}>
               {i > 0 && ', '}
@@ -318,12 +319,25 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
             {t('antecedentBasis.higherConfidenceBadge')}
           </span>
         )}
-        <span
-          className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold"
-          style={{ backgroundColor: 'var(--attention-bg)', color: 'var(--attention-text)', border: '1px solid var(--attention-border)' }}
+        {!reviewed && (
+          <span
+            className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold"
+            style={{ backgroundColor: 'var(--attention-bg)', color: 'var(--attention-text)', border: '1px solid var(--attention-border)' }}
+          >
+            {findingCount} {findingCount === 1 ? t('antecedentBasis.finding') : t('antecedentBasis.findings')}
+          </span>
+        )}
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onToggleReviewed() }}
+          className="shrink-0 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium border transition-colors hover:bg-[var(--attention-bg)]"
+          style={{ color: 'var(--attention-text)', borderColor: 'var(--attention-border)' }}
+          aria-pressed={reviewed}
+          title={reviewed ? t('antecedentBasis.undoReviewed') : t('antecedentBasis.markReviewed')}
         >
-          {findingCount} {findingCount === 1 ? t('antecedentBasis.finding') : t('antecedentBasis.findings')}
-        </span>
+          {reviewed ? <RotateCcw className="h-3 w-3" /> : <Check className="h-3 w-3" />}
+          <span>{reviewed ? t('antecedentBasis.undoReviewed') : t('antecedentBasis.markReviewed')}</span>
+        </button>
       </div>
       <div className={`overflow-hidden transition-all duration-200 ease-in-out ${expanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}>
         {terms.map((label) => {
@@ -482,31 +496,63 @@ export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }
   groups.forEach((g) => g.claimIds.sort((a, b) => a - b))
   groups.sort((a, b) => a.claimIds[0] - b.claimIds[0])
 
-  const totalFindings = issues.length
   const visibleGroups = groups
+  // Stable per-group key (claim ids + term set) for the session-only review
+  // state. No persistence / no server — matches the no-upload trust model;
+  // refresh clears it.
+  const groupKey = (g) => `${g.claimIds.join(',')}|${g.terms.join(' ')}`
+  const [reviewed, setReviewed] = useState(() => new Set())
+  const toggleReviewed = (key) =>
+    setReviewed((prev) => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+
+  const reviewedCount = visibleGroups.filter((g) => reviewed.has(groupKey(g))).length
+  const openCount = visibleGroups.length - reviewedCount
+  const allReviewed = openCount === 0
 
   return (
     <FrostCard tier="resting" accent="attention">
-      <div className="flex items-center gap-3 px-4 py-3 pl-5">
-        <AlertTriangle className="h-5 w-5 shrink-0" style={{ color: 'var(--attention-border)' }} />
-        <h3 className="text-sm font-semibold flex-1">{t('antecedentBasis.title')}</h3>
-        <StatusPill status="attention" shape="pill">
-          {totalFindings} {totalFindings !== 1 ? t('antecedentBasis.findings') : t('antecedentBasis.finding')}
+      <div className="flex items-start gap-3 px-4 py-3 pl-5">
+        <ListChecks className="h-5 w-5 shrink-0 mt-0.5" style={{ color: 'var(--attention-border)' }} />
+        <div className="flex-1 min-w-0">
+          <h3 className="text-sm font-semibold">{t('antecedentBasis.title')}</h3>
+          <p className="text-[11px] leading-snug text-muted-foreground mt-0.5">
+            {t('antecedentBasis.advisorySubtitle')}
+          </p>
+        </div>
+        <StatusPill status={allReviewed ? 'pass' : 'attention'} shape="pill">
+          {allReviewed
+            ? t('antecedentBasis.allReviewedPill')
+            : `${openCount} ${t('antecedentBasis.toVerify')}`}
         </StatusPill>
       </div>
+      {reviewedCount > 0 && !allReviewed && (
+        <div className="px-5 pb-1 -mt-1 text-[11px] text-muted-foreground">
+          {t('antecedentBasis.reviewedCount', { count: reviewedCount })}
+        </div>
+      )}
       <div className="border-t border-border/40 px-1 py-1">
-        {visibleGroups.map((group, i) => (
-          <ClaimGroupRow
-            key={i}
-            claimIds={group.claimIds}
-            terms={group.terms}
-            findings={group.findings}
-            claimTextMap={claimTextMap}
-            t={t}
-            i18n={i18n}
-            jurisdiction={jurisdiction}
-          />
-        ))}
+        {visibleGroups.map((group, i) => {
+          const key = groupKey(group)
+          return (
+            <ClaimGroupRow
+              key={i}
+              claimIds={group.claimIds}
+              terms={group.terms}
+              findings={group.findings}
+              claimTextMap={claimTextMap}
+              t={t}
+              i18n={i18n}
+              jurisdiction={jurisdiction}
+              reviewed={reviewed.has(key)}
+              onToggleReviewed={() => toggleReviewed(key)}
+            />
+          )
+        })}
       </div>
     </FrostCard>
   )

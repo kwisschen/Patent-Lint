@@ -307,7 +307,13 @@
       "showHighConf": "僅顯示高信心度（{{count}} 項）"
     },
     "higherConfidenceBadge": "較高信心",
-    "higherConfidenceTitle": "本項目位於信心分數較高的子集中（於有標註的英文語料測得約 66% 的精確度，相較基線 38%）。仍請對照您的稿件確認，此為排序提示而非保證。"
+    "higherConfidenceTitle": "本項目位於信心分數較高的子集中（於有標註的英文語料測得約 66% 的精確度，相較基線 38%）。仍請對照您的稿件確認，此為排序提示而非保證。",
+    "advisorySubtitle": "僅供參考，不計入評分。請確認每處引用均可追溯至先前引介之元件。",
+    "toVerify": "待確認",
+    "allReviewedPill": "已全部確認",
+    "reviewedCount": "已確認 {{count}} 處",
+    "markReviewed": "看起來沒問題",
+    "undoReviewed": "復原"
   },
   "antecedent": {
     "didYouMean": "您是否指的是「{{term}}」（於請求項{{claim_id}}中導入）？",
@@ -319,7 +325,8 @@
     "title": "說明書支持檢視",
     "items": "個用語",
     "item": "個用語",
-    "crossRefAntecedent": "亦於上方之先行詞基礎檢視中標記。"
+    "crossRefAntecedent": "亦於上方之先行詞基礎檢視中標記。",
+    "advisorySubtitle": "僅供參考，不計入評分。請確認每個請求項用語於說明書中均有書面說明支持。"
   },
   "triage": {
     "title": "優先處理摘要",

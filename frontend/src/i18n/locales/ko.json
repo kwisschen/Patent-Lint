@@ -307,7 +307,13 @@
       "showHighConf": "높은 신뢰도만 표시 ({{count}}건)"
     },
     "higherConfidenceBadge": "신뢰도 상위",
-    "higherConfidenceTitle": "본 항목은 신뢰도가 더 높은 서브셋에 속합니다 (라벨링된 영어 코퍼스에서 약 66% 정밀도 측정, 기준선 38%). 그래도 명세서로 직접 확인하세요. 이는 순위 표시이며 보장이 아닙니다."
+    "higherConfidenceTitle": "본 항목은 신뢰도가 더 높은 서브셋에 속합니다 (라벨링된 영어 코퍼스에서 약 66% 정밀도 측정, 기준선 38%). 그래도 명세서로 직접 확인하세요. 이는 순위 표시이며 보장이 아닙니다.",
+    "advisorySubtitle": "참고용이며 채점에 반영되지 않습니다. 각 참조가 앞서 도입된 요소에 대응하는지 확인하십시오.",
+    "toVerify": "확인 필요",
+    "allReviewedPill": "모두 확인됨",
+    "reviewedCount": "{{count}}건 확인됨",
+    "markReviewed": "문제 없음",
+    "undoReviewed": "실행 취소"
   },
   "antecedent": {
     "didYouMean": "혹시 '{{term}}' (청구항 {{claim_id}}에서 도입됨)을 의미하셨나요?",
@@ -319,7 +325,8 @@
     "title": "명세서 뒷받침 검토",
     "items": "건",
     "item": "건",
-    "crossRefAntecedent": "위의 선행사 기초 검토에서도 지적되었습니다."
+    "crossRefAntecedent": "위의 선행사 기초 검토에서도 지적되었습니다.",
+    "advisorySubtitle": "참고용이며 채점에 반영되지 않습니다. 각 청구항 용어가 명세서의 서면 개시로 뒷받침되는지 확인하십시오."
   },
   "triage": {
     "title": "우선순위 요약",
