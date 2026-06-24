@@ -5,7 +5,38 @@
 from patentlint.analysis.utils import (
     clean_noun_phrase, extract_noun_phrases, extract_abbreviation_intros,
     extract_definite_refs, extract_introductions, extract_bare_noun_intros,
+    _strip_comparative_tail,
 )
+
+
+def _ct(s: str) -> str:
+    return " ".join(_strip_comparative_tail(s.split()))
+
+
+class TestComparativeTailStrip:
+    """WS-A3 (examiner-grounded): a reference ending in `than` over-captured a
+    comparative clause. Strip it back to the head noun — reference-side only."""
+
+    def test_other_than(self):
+        assert _ct("first element other than") == "first element"
+
+    def test_comparative_adj_than(self):
+        assert _ct("second element wider than") == "second element"
+        assert _ct("value greater than") == "value"
+        assert _ct("pdsch starting later than") == "pdsch starting"
+
+    def test_bare_than(self):
+        assert _ct("substrate than") == "substrate"
+
+    def test_copula_remnant_removed(self):
+        assert _ct("first gap is greater than") == "first gap"
+
+    def test_non_comparative_untouched(self):
+        # FN-safety: `than` not final → no strip; `other`/`greater` survive.
+        assert _ct("other end") == "other end"
+        assert _ct("greater portion") == "greater portion"
+        assert _ct("first layer") == "first layer"
+        assert _ct("inner diameter") == "inner diameter"
 
 
 class TestStripping:

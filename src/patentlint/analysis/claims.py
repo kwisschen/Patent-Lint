@@ -16,7 +16,7 @@ from patentlint.analysis.utils import (
     _DEFINITE_REF, _QUANTIFIER_STOPS, _dx,
     extract_introductions, extract_introductions_permissive,
     extract_pattern_a_intros,
-    extract_abbreviation_intros, clean_noun_phrase,
+    extract_abbreviation_intros, clean_noun_phrase, _strip_comparative_tail,
     compute_confidence_score, make_document_dedup_key,
     strip_contextual_verb, token_set_jaccard,
     first_ancestor_with_term, has_bare_noun_introduction,
@@ -513,6 +513,13 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
             ext_m = _THROUGH_HOLE_CONTINUATION.match(body_scan_text[m.end():])
             if ext_m and _BARE_CARDINAL_TAIL.match(raw_noun):
                 raw_noun = f"{raw_noun} through {ext_m.group('head')}"
+            # WS-A3 (2026-06-24, examiner-grounded): strip a trailing comparative
+            # clause from the REFERENCE (`the first element other than …`, `the
+            # value greater than …`) — `than` is never a noun-phrase terminus.
+            # Reference-side only (NOT in clean_noun_phrase) so it can't generalize
+            # an intro and mask a real defect. FN-safe: 201 examiner-unconfirmed
+            # corpus instances, 0 of 2,965 examiner-confirmed defects altered.
+            raw_noun = " ".join(_strip_comparative_tail(raw_noun.split())) or raw_noun
             term = clean_noun_phrase(raw_noun)
             term = strip_contextual_verb(term, claim_text_lower[m.end():])
             if not term:
