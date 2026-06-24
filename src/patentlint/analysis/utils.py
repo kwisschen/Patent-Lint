@@ -1035,9 +1035,53 @@ def _is_trailing_variable_identifier(word: str, prev_word: str | None) -> bool:
     return True
 
 
+# Closed set of comparative words that precede `than` in a comparative clause.
+# Used ONLY when the term ends in `than` (see _strip_comparative_tail), so these
+# are removed strictly in the comparative context — a noun ending in "-er"
+# (layer/member/container) is never in this set, and `other`/`greater` survive
+# in non-comparative positions ("the other end", "the greater portion").
+_COMPARATIVE_TRAILING = frozenset({
+    "other", "greater", "less", "lesser", "more", "fewer", "larger", "smaller",
+    "wider", "narrower", "higher", "lower", "longer", "shorter", "bigger",
+    "thinner", "thicker", "deeper", "shallower", "closer", "farther", "further",
+    "stronger", "weaker", "faster", "slower", "heavier", "lighter", "denser",
+    "broader", "finer", "coarser", "rather", "better", "worse", "cooler",
+    "warmer", "hotter", "colder", "brighter", "darker", "greater", "nearer",
+    "later", "earlier", "sooner", "younger", "older", "fewer", "slimmer",
+})
+
+_COMPARATIVE_COPULA = frozenset({
+    "is", "are", "be", "being", "becomes", "become", "that", "which", "no",
+})
+
+
+def _strip_comparative_tail(words: list[str]) -> list[str]:
+    """Strip a trailing comparative clause when the phrase ends in `than`.
+
+    `than` always introduces a comparative complement, so a captured NP that
+    ends in `than` over-ran the head noun. Drop `than`, then a preceding
+    closed-set comparative / `other`, then any copula remnant. Requiring `than`
+    as the final token keeps non-comparative uses intact.
+    """
+    if not words or words[-1].lower().rstrip(".,;:") != "than":
+        return words
+    out = words[:-1]
+    if out and out[-1].lower().rstrip(".,;:") in _COMPARATIVE_TRAILING:
+        out = out[:-1]
+        while out and out[-1].lower().rstrip(".,;:") in _COMPARATIVE_COPULA:
+            out = out[:-1]
+    return out if out else words
+
+
 def clean_noun_phrase(phrase: str) -> str:
     """Strip trailing verbs, adverbs, and function words from a noun phrase."""
     words = phrase.strip().split()
+    # NOTE: the comparative-tail strip (_strip_comparative_tail) is deliberately
+    # NOT applied here — clean_noun_phrase cleans BOTH references and intros, and
+    # stripping `… larger than` from an INTRO (`an inner diameter larger than the
+    # inner diameters …`) creates a too-general intro that spuriously resolves an
+    # unrelated plural reference (a real FN; US7811436B2 c18). The comparative
+    # strip is applied REFERENCE-side only, at the _DEFINITE_REF site in claims.py.
     # Strip a trailing 1-2 char variable identifier ("viewing distance vd",
     # "physical distance dz"). Applied once before the generic trailing-word
     # loop so subsequent rules see the cleaned tail.
