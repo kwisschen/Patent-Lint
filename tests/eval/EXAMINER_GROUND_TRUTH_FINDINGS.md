@@ -57,16 +57,20 @@ signal is non-zero, non-100%, and the matches are real.
   true benign rate needs the full-corpus run + cross-referencing amendment history
   (WS-A3-scale / WS-A4).
 
-## Next (handed off)
-- **WS-A3 at scale:** run the join over all 86k EdgeXpert apps (not just the 1,843
-  examiner-flagged) → corpus-wide benign-rate signal (terms the walker flags that
-  NO examiner ever flagged anywhere → strongest benign candidates). The 1,837-app
-  run is slow (~min/400 apps) — batch it.
-- **WS-A4:** use `us_examiner_legit.json` as authoritative FN-guards to re-attempt
-  the missed-linkage fix safely, and to train/calibrate a US confidence
-  discriminator with the examiner labels (the missed-linkage capstone showed
-  surface heuristics can't separate real bare-intros from real defects without
-  semantic labels — examiner labels are exactly that signal for the recall side).
+## WS-A3 at scale + WS-A4 FN-guard — DONE (2026-06-24): examiner labels found + killed an FP class
+
+Ran the walker over all **1,837 examiner apps → 43,134 findings, 2,965 examiner-confirmed (6.9%)**. Mined the **40,169** examiner-unconfirmed-but-OCR-surviving findings (within apps where the examiner *did* review §112, so a non-flag is a stronger benign signal) by trailing-token mechanism:
+
+- The benign survivors are **dominated by legit noun heads** (device/layer/system/portion/surface…) — i.e. genuine `the <noun>` references where the antecedent question is *semantic*, NOT over-captures. This **confirms the US antecedent over-capture lever is essentially exhausted** (R14–R17 tapped it).
+- The **only** clean non-noun trailing cluster was **`than` (201)** — comparative-clause over-capture (`the first element other than …`, `the value greater than …`). `not` (54) is the documented FN-risky negation class (legitimate negative limitations), correctly excluded.
+
+**This became US R18 (PR #308):** a reference-side comparative-tail strip, validated by a **dual FN-guard** — the LLM gold (`silenced_walker_fp=21 / silenced_legit=0`) AND the authoritative examiner labels (**0 of 2,965 examiner-confirmed defects altered**). The examiner ground truth also caught the design trap: an early intro-side version masked a real plural-reference defect (US7811436B2 c18) — fixed by applying the strip reference-side only. **This is WS-A4 in action: examiner labels used as an authoritative FN-guard to ship a fix the LLM-gold sample alone couldn't fully de-risk.**
+
+**Cross-CHECK (spec-support):** `extract_noun_phrases` (spec-support's path) over-captures the same comparative tails, BUT a corpus before/after showed **0 spec-support findings change** — its fuzzy tier-2/3 word-window matching already absorbs the tail, so the over-capture causes no spec-support FP. Mirror **not shipped** (inert).
+
+## Still next (handed off)
+- **Full 86k benign-rate:** extend the join beyond the 1,843 examiner apps to all 86k → terms the walker flags that NO examiner *ever* flagged corpus-wide (strongest benign candidates) + amendment-history cross-reference for a true benign rate.
+- **WS-A4 discriminator:** train/calibrate a US confidence model with the examiner labels (recall side) — the capstone showed surface heuristics can't separate real bare-intros from real defects without semantic labels; the examiner labels are that signal. (The free over-capture lever is now exhausted for US antecedent — remaining FPs are semantic / missed-intro, needing this.)
 
 ## Reproduce
 ```
