@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 42,
+    "current_round": 43,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -129,6 +129,14 @@
         "round": 42,
         "name": "r42_trailing_verb_overcapture_batch_2",
         "description": "ADR-159 Path-to-80 over-capture mining (second CN batch). Added 6 trailing VERBS to _TRAILING_VERB_DENYLIST_CN (套设/靠近/接近/加入/实施/指定) from the CN gold walker_fp 2-char trailing cluster (each legit==0 per ensemble gold). FN-guard: validate_fix silenced_walker_fp=31 / silenced_legit=0. A generous 7-verb batch (adding 混合) was AUTO-NARROWED by the FN-guard: although no gold-legit reference term ENDS in 混合, stripping it turned the intro-side `与氧源混合` (mixed with an oxygen source) into a false bare-noun intro of 氧源, silencing 4 real `所述氧源` defects in CN1384805A (intro-cascade FN). Strong independent-NOUN-sense verbs (偏移=offset / 关联=association / 结合=junction) were HELD OUT pre-guard on noun-sense judgment (DR-1). Corpus-silent on the 16 CN docx fixtures (fixtures_silenced=0; unresolved_new/removed=0, protect_violations=0). CN-specific verbs; no clean US/TW parity (verb forms differ) — TW over-capture is a separate mining round.",
+        "user_attested_issues": [],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-06-24T00:00:00+00:00"
+      },
+      {
+        "round": 43,
+        "name": "r43_relational_predicate_overcapture_batch",
+        "description": "ADR-159 Path-to-80 over-capture mining (third CN batch). Added 5 relational/geometric PREDICATE verbs to _TRAILING_VERB_DENYLIST_CN (垂直/平行/暴露/啮合/保持) from the CN gold walker_fp 2-char trailing cluster (each legit==0). As tails these are predicates (第三方向垂直 = 'third direction is perpendicular'; 输出轴线平行; 连接段至少部分暴露; 输入小齿轮啮合; 屏蔽构件保持) and their noun senses carry a distinguishing suffix (垂直度/平行度 carry 度, 保持架 carries 架). 垂直/平行 were held conservatively in R41; the gold + geometry now clear them. FN-guard: validate_fix silenced_walker_fp=58 / silenced_legit=0 — full batch passed, no narrow needed. protect_violations=0, fixtures_silenced=0, 1818 tests. Post-R43 the CN clean trailing-VERB over-capture pool is EXHAUSTED: remaining legit==0 2-char clusters are NOUNS (missed-intro FPs — 气流/发光/颗粒/薄层/阶段, semantic not over-capture) or held-out noun-gray verbs (接触/存储/配置/控制 carry legit). CN-specific verbs; TW parity is a separate round.",
         "user_attested_issues": [],
         "fixtures_silenced": 0,
         "shipped_at": "2026-06-24T00:00:00+00:00"

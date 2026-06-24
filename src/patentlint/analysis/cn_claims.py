@@ -1514,6 +1514,16 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # (intro-cascade FN). The surviving set is verb-only at the noun tail
         # AND cascade-clean over the CN gold.
         "套设", "靠近", "接近", "加入", "实施", "指定",
+        # === R43 (2026-06-24) — third over-capture batch: relational/geometric
+        # PREDICATE verbs at the tail (CN gold 2-char trailing cluster, each
+        # legit==0). 垂直/平行 (perpendicular/parallel — `第三方向垂直`,
+        # `输出轴线平行`; the noun senses 垂直度/平行度 carry 度 so the bare form
+        # is predicate-only at the tail — these were held conservatively in R41
+        # but the gold + geometry now clear them), 暴露 (exposed —
+        # `连接段至少部分暴露`), 啮合 (mesh/engage — `输入小齿轮啮合`),
+        # 保持 (maintain/hold — `屏蔽构件保持`; the noun 保持架 carries 架).
+        # FN-guard auto-narrows any that silence gold-legit or cascade (cf. 混合).
+        "垂直", "平行", "暴露", "啮合", "保持",
     ),
     key=len,
     reverse=True,
