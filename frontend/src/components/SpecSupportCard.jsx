@@ -189,11 +189,16 @@ export default function SpecSupportCard({ unsupportedTerms, claimTrees, jurisdic
 
   return (
     <FrostCard tier="resting" accent="attention">
-      <div className="flex items-center gap-3 px-4 py-3 pl-5">
-        <FileSearch className="h-5 w-5 shrink-0" style={{ color: 'var(--attention-border)' }} />
-        <h3 className="text-sm font-semibold flex-1">{t('specSupport.title')}</h3>
+      <div className="flex items-start gap-3 px-4 py-3 pl-5">
+        <FileSearch className="h-5 w-5 shrink-0 mt-0.5" style={{ color: 'var(--attention-border)' }} />
+        <div className="flex-1 min-w-0">
+          <h3 className="text-sm font-semibold">{t('specSupport.title')}</h3>
+          <p className="text-[11px] leading-snug text-muted-foreground mt-0.5">
+            {t('specSupport.advisorySubtitle')}
+          </p>
+        </div>
         <StatusPill status="attention" shape="pill">
-          {totalItems} {totalItems !== 1 ? t('specSupport.items') : t('specSupport.item')}
+          {totalItems} {t('antecedentBasis.toVerify')}
         </StatusPill>
       </div>
       <div className="border-t border-border/40 px-1 py-1">

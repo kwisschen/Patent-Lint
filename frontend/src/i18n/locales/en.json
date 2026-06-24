@@ -307,7 +307,13 @@
       "showHighConf": "High confidence only ({{count}})"
     },
     "higherConfidenceBadge": "Higher confidence",
-    "higherConfidenceTitle": "This finding is ranked among the higher-confidence subset (measured ~66% precision on a labeled English corpus at this threshold, vs 38% baseline). Still verify against your draft — this is a ranking, not a guarantee."
+    "higherConfidenceTitle": "This finding is ranked among the higher-confidence subset (measured ~66% precision on a labeled English corpus at this threshold, vs 38% baseline). Still verify against your draft — this is a ranking, not a guarantee.",
+    "advisorySubtitle": "Advisory — not graded. Confirm each reference traces back to an element introduced earlier.",
+    "toVerify": "to verify",
+    "allReviewedPill": "All reviewed",
+    "reviewedCount": "{{count}} reviewed",
+    "markReviewed": "Looks fine",
+    "undoReviewed": "Undo"
   },
   "antecedent": {
     "didYouMean": "Did you mean *{{term}}* (introduced in claim {{claim_id}})?",
@@ -319,7 +325,8 @@
     "title": "Specification Support Review",
     "items": "terms",
     "item": "term",
-    "crossRefAntecedent": "Also flagged in the antecedent-basis review above."
+    "crossRefAntecedent": "Also flagged in the antecedent-basis review above.",
+    "advisorySubtitle": "Advisory — not graded. Confirm each claim term has written-description support in the specification."
   },
   "triage": {
     "title": "Priority Summary",

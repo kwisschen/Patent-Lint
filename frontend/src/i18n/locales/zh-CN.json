@@ -307,7 +307,13 @@
       "showHighConf": "仅显示高置信度（{{count}} 项）"
     },
     "higherConfidenceBadge": "较高置信",
-    "higherConfidenceTitle": "本项目位于置信分较高的子集中（在已标注的英文语料上测得约 66% 的精确度，相较基线 38%）。请仍对照您的稿件确认，这是排序提示而非保证。"
+    "higherConfidenceTitle": "本项目位于置信分较高的子集中（在已标注的英文语料上测得约 66% 的精确度，相较基线 38%）。请仍对照您的稿件确认，这是排序提示而非保证。",
+    "advisorySubtitle": "仅供参考，不计入评分。请确认每处引用均可追溯至先前引介之元件。",
+    "toVerify": "待确认",
+    "allReviewedPill": "已全部确认",
+    "reviewedCount": "已确认 {{count}} 处",
+    "markReviewed": "看起来没问题",
+    "undoReviewed": "撤销"
   },
   "antecedent": {
     "didYouMean": "您是否指的是“{{term}}”（于权利要求{{claim_id}}中引入）？",
@@ -319,7 +325,8 @@
     "title": "说明书支持检查",
     "items": "个用语",
     "item": "个用语",
-    "crossRefAntecedent": "亦于上方之引用基础检查中标记。"
+    "crossRefAntecedent": "亦于上方之引用基础检查中标记。",
+    "advisorySubtitle": "仅供参考，不计入评分。请确认每个权利要求用语于说明书中均有书面描述支持。"
   },
   "triage": {
     "title": "优先处理摘要",
