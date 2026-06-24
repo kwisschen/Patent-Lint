@@ -266,7 +266,8 @@
       "fieldComponentCount": "구성요소 수",
       "fieldTopOutlierContextExcerpt": "이상치 컨텍스트",
       "fieldNumeral": "부호",
-      "diagnosticHeader": "진단 자취(비식별 처리, 개인정보 처리방침 §6 참조):"
+      "diagnosticHeader": "진단 자취(비식별 처리, 개인정보 처리방침 §6 참조):",
+      "fieldDisposition": "판정"
     },
     "emailGreeting": "Christopher 님께,",
     "bodyPlaceholder": "[한두 문장으로 이 검사 결과의 문제점을 알려 주세요: 오탐인지, 분류 오류인지, 검사가 놓친 부분이 있는지. 청구항 문구나 초안 내용은 절대 붙여넣지 마세요. 검사 결과 자체는 자동으로 첨부됩니다.]",
@@ -288,7 +289,19 @@
       "deidNotice": "보고는 귀하 개인과 연결되지 않습니다. 이메일, IP, 계정 정보는 일절 수집하지 않으며, 위에 표시된 비식별 처리된 단편만 전송됩니다.",
       "commentLabel": "추가 설명 (선택)",
       "commentPlaceholder": "예: “이 용어는 청구항 1 에서 이미 도입되었습니다 (체인 상속 미인식 케이스)”. 진단 정보만으로 부족할 때 분류 작업에 도움이 됩니다.",
-      "commentNotice": "이 칸의 내용은 그대로 전송됩니다. 기밀 정보는 입력하지 마세요."
+      "commentNotice": "이 칸의 내용은 그대로 전송됩니다. 기밀 정보는 입력하지 마세요.",
+      "dispositionHeading": "무엇을 보내시나요?",
+      "dispositionWhy": "두 가지 모두 도움이 됩니다. 올바른 지적 확인과 오탐 모두 실제 원고에서 분석기를 개선하는 데 사용됩니다.",
+      "disposition": {
+        "false_positive": {
+          "label": "잘못된 지적",
+          "hint": "오탐: 이 참조는 표시되지 않아야 합니다."
+        },
+        "confirmed_defect": {
+          "label": "올바른 지적",
+          "hint": "분석기가 찾은 실제 § 112 문제임을 확인합니다."
+        }
+      }
     }
   },
   "cta": {

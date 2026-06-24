@@ -266,7 +266,8 @@
       "fieldComponentCount": "元件數量",
       "fieldTopOutlierContextExcerpt": "離群值上下文",
       "fieldNumeral": "符號",
-      "diagnosticHeader": "診斷軌跡（已去識別化，詳見隱私權政策 §6）："
+      "diagnosticHeader": "診斷軌跡（已去識別化，詳見隱私權政策 §6）：",
+      "fieldDisposition": "判定"
     },
     "emailGreeting": "Christopher 您好，",
     "bodyPlaceholder": "[請用一兩句話說明此項分析結果的問題：是誤判、分類錯誤，還是檢查遺漏了什麼？請勿貼上請求項文字或任何稿件內容；分析結果本身已自動附上。]",
@@ -288,7 +289,19 @@
       "deidNotice": "本回報無法連結至您本人。我方不收集電子郵件、IP 或帳號資訊；僅傳送上方所示的去識別化片段，無其他資料。",
       "commentLabel": "想補充說明嗎？（選填）",
       "commentPlaceholder": "例如：「此用語其實已在請求項 1 介紹過，屬鏈式繼承的未識別案例。」當診斷資訊不足以說明問題時，這些補充說明有助於判讀。",
-      "commentNotice": "此欄位輸入內容將原樣傳送，請避免貼上機密資訊。"
+      "commentNotice": "此欄位輸入內容將原樣傳送，請避免貼上機密資訊。",
+      "dispositionHeading": "您要提交哪一類？",
+      "dispositionWhy": "兩種回饋都有幫助：確認的正確標記與誤報均可用於在真實稿件上改進分析器。",
+      "disposition": {
+        "false_positive": {
+          "label": "此標記有誤",
+          "hint": "誤報：此引用不應被標記。"
+        },
+        "confirmed_defect": {
+          "label": "確為正確標記",
+          "hint": "確認這是分析器發現的真實 § 112 問題。"
+        }
+      }
     }
   },
   "cta": {

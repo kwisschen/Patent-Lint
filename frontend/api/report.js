@@ -125,13 +125,31 @@ async function handleReport(request, origin) {
 // GitHub's 64 KB issue-body limit.
 const USER_COMMENT_MAX_CHARS = 14000;
 
+// Disposition → first-class GitHub label (ADR-159). A §112 walker report is a
+// LABEL for the gold corpus, not just a bug report. Reuses the triage-report
+// skill's EXISTING convention (its TP-attestation overlay + step 6f already
+// ingest the `TP` label into gold): 'confirmed_defect' = the reporter (a
+// practitioner reviewing a real draft) confirms the flag is a correct catch →
+// `TP` (true positive → a `legit_drafting_error` gold label); 'false_positive'
+// = the flag is wrong → `FP` (→ a `walker_fp` gold label). This closes the gap
+// the skill noted ("users can't set GitHub labels from the ReportModal") — the
+// disposition control now sets the label server-side.
+const DISPOSITION_LABEL = {
+  confirmed_defect: "TP",
+  false_positive: "FP",
+};
+
 function buildIssue(payload) {
   const checkKey = payload.check_key;
   const fingerprint =
     typeof payload.fixture_shape_hash === "string"
       ? ` (${payload.fixture_shape_hash})`
       : "";
-  const title = `[report] ${checkKey}${fingerprint}`;
+  const disposition =
+    typeof payload.disposition === "string" ? payload.disposition : "";
+  const dispLabel = DISPOSITION_LABEL[disposition];
+  const titleTag = dispLabel ? ` · ${dispLabel}` : "";
+  const title = `[report] ${checkKey}${titleTag}${fingerprint}`;
 
   // Separate the optional user-comment from the structural diagnostic
   // payload. The diagnostic stays in the fenced JSON block (its
@@ -158,8 +176,15 @@ function buildIssue(payload) {
   );
   const json_block = JSON.stringify(sortedPayload, null, 2);
 
+  const dispositionLine = dispLabel
+    ? disposition === "confirmed_defect"
+      ? "**Disposition: confirmed real issue (true positive)** — reporter confirms this flag is a correct catch. Ingest as a `legit_drafting_error` gold label."
+      : "**Disposition: false positive** — reporter says this flag is wrong. Ingest as a `walker_fp` gold label."
+    : "";
+
   const sections = [
     "Anonymous error report submitted via the ReportModal.",
+    ...(dispositionLine ? ["", dispositionLine] : []),
     "",
     "```json",
     json_block,
@@ -195,6 +220,9 @@ function buildIssue(payload) {
     /^[a-z]{2,3}$/i.test(payload.jurisdiction)
   ) {
     labels.push(payload.jurisdiction.toLowerCase());
+  }
+  if (dispLabel) {
+    labels.push(dispLabel);
   }
 
   return { title, body, labels };
