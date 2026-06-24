@@ -29,15 +29,18 @@ The antecedent walker over-flags (~70% FP) because it **cannot distinguish a ben
 ### WS-E — term_in_spec discrimination test (US, scraped spec on OUR 705 gold corpus) · free · autonomous · after US scrape
 - **E1** With real spec + real gold, measure whether term_in_spec discriminates FP from legit on US (the test the claims-only corpus + abstract proxy couldn't do properly). Decides if spec is a usable US confidence signal.
 
-## Sequencing across sessions
-- **This session:** lock plan; wait for scrape; **WS-A1** (§112 parser); **WS-E1** when US scrape lands.
-- **Next:** WS-B1 (immediate FN-safe FP reduction) ∥ WS-A2→A3→A4 (the strategic build). Then WS-D1/D2. WS-C only after surfacing the $ ask.
-- US scraping is NOT a separate need — EdgeXpert dominates for US labels; the scrape's US value is only WS-E1 (term_in_spec on our gold corpus).
+## Status (updated 2026-06-24)
+- ✅ **WS-A1** §112 parser → `us_examiner_legit.json` (1,843 apps / 2,964 terms).
+- ✅ **WS-E1** (#305) — `term_in_spec` is a DEAD US signal (100% of judged terms in-spec; retires the spec-confidence hypothesis for US).
+- ✅ **WS-B1** (#306, CN R40) — CJK direction-noun `向` guard, −121 CN walker_fp / 0 FN. (TW had no analogous bug; deferred-with-evidence.)
+- ✅ **WS-A2/A3** (#307) — ODP claims parser (92% parse) + walker↔examiner term-level join (56% recall of surviving examiner defects; 6.9% examiner-confirmed).
+- ✅ **WS-A3-at-scale + WS-A4 (in action) + US R18** (#308/#309) — full 1,837-app examiner mining proved US antecedent over-capture is EXHAUSTED except the comparative `than` class (201); shipped US R18 with a DUAL FN-guard (LLM gold + 0/2,965 examiner-confirmed altered). Examiner labels caught a real intro-side FN (US7811436B2 c18) → reference-side-only design.
+- ⏭ **NEXT:** (1) full 86k benign-rate (extend the join beyond examiner apps); (2) **WS-A4 discriminator** — train a US confidence model with examiner labels (the lever now that free over-capture is tapped); (3) CN/TW remaining tail (LLM-gold only, delicate) / WS-D spec-support+ref-numeral probing. WS-C judging ($) only after surfacing the ask.
 
 ## Self-audit / correction loops (mandatory every chunk)
-- Every fix: FN-guard `silenced_legit==0` + fixture harness `protect_violations==0` + targeted pytest + CI green. Auto-narrow/defer on FN.
+- Every fix: FN-guard `silenced_legit==0` + fixture harness `protect_violations==0` + targeted pytest + CI green. **US fixes additionally pass the examiner-§112 FN-guard (0 of 2,965 examiner-confirmed defects altered)** — authoritative, stronger than the LLM-gold sample. Auto-narrow/defer on FN.
 - Every measurement: sanity-check against known cases before trusting a number (e.g. the 0%-overlap artifact was a version-misalignment, not a result — always ask "is this real or an integration bug?").
-- Every turn/session: commit + push everything, update `project_fp_class_campaign.md`, leave a next-session handoff message.
+- Every turn/session: commit + push everything, update `project_fp_class_campaign.md`, leave a next-session handoff message, **AND report FP-% ended this turn + cumulative** (user standing ask).
 - Adjust course on new findings; surface anything significant or $-spending BEFORE acting.
 
 ## Reliability × efficiency (why this ordering)
