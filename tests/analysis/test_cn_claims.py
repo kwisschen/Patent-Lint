@@ -908,6 +908,20 @@ class TestTrailingLaiSuppressionR68:
         for i in issues:
             assert not i["term"].endswith("来"), i
 
+    def test_direction_noun_xiang_not_stripped_cn(self):
+        """WS-B1: 向 is a bound noun suffix in direction nouns (方向/轴向/…) —
+        must NOT be stripped (was truncating 所述圆周方向 → 圆周方, a corpus FP)."""
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn
+        for noun in ("圆周方向", "第一方向", "第一取向", "轴向", "径向"):
+            assert clean_noun_phrase_cn(noun) == noun, noun
+
+    def test_non_direction_xiang_still_stripped_cn(self):
+        """The 向 guard is narrow: a non-direction stem before 向 still strips
+        (preposition 'toward'), residual ≥ 3 retained."""
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn
+        # 器 is not a direction stem → 向 strips; residual 传感器 (3) ≥ 3.
+        assert clean_noun_phrase_cn("传感器向") == "传感器"
+
 
 # ─────────────────────────────────────────────────────────────────────────
 # R35 — CN bare-noun-introduction rescue (mirror of TW R7)
