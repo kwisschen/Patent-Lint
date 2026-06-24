@@ -1496,6 +1496,24 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # noun, so stripping them silenced real defects (direct + intro-side
         # cascade). The surviving set is verb-only at the noun tail.
         "穿过", "断开", "切换", "前进", "对准", "穿刺", "嵌入",
+        # === R42 (2026-06-24) — second examiner/gold-mined trailing-verb
+        # over-capture batch (CN gold walker_fp, 2-char trailing cluster, each
+        # legit==0 in the ensemble gold). Same discipline as R41: noun-sense
+        # compounds carry a distinguishing suffix so the bare verb only appears
+        # verb-mode at the tail — 套设 (sleeve-FIT; the noun is 套筒/套件),
+        # 靠近/接近 (approach; the noun 接近度 carries 度), 加入 (add/join),
+        # 实施 (implement; the noun 实施例 carries 例), 指定 (designate).
+        # Strong independent-NOUN-sense verbs were HELD OUT pre-guard on
+        # noun-sense judgment (DR-1), even though the gold flags them clean:
+        # 偏移 (offset — a bare noun in 位置偏移), 关联 (association —
+        # 关联关系/关联性), 结合 (combination/junction — 结合部). And the
+        # FN-guard AUTO-NARROWED 混合 (mix): although no gold-legit reference
+        # term ENDS in 混合, stripping it turned the intro-side `与氧源混合`
+        # ("mixed with an oxygen source") into a false bare-noun intro of 氧源,
+        # which silenced 4 real `所述氧源` §112 defects in CN1384805A
+        # (intro-cascade FN). The surviving set is verb-only at the noun tail
+        # AND cascade-clean over the CN gold.
+        "套设", "靠近", "接近", "加入", "实施", "指定",
     ),
     key=len,
     reverse=True,
