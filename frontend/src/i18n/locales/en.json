@@ -1021,7 +1021,8 @@
       },
       "antecedentBasis": {
         "pass": "No antecedent basis issues detected (§ 112(b)).",
-        "amend": "Possible missing antecedent basis — \"the X\" / \"said X\" may lack a prior \"a X\" introduction (§ 112(b))."
+        "amend": "Possible missing antecedent basis — \"the X\" / \"said X\" may lack a prior \"a X\" introduction (§ 112(b)).",
+        "verify": "Antecedent basis — references to verify (§ 112(b)): confirm each “the X” / “said X” traces back to a prior “a X” introduction."
       },
       "missingTransition": "Claim {{claimNumber}} is missing a transitional phrase (e.g., 'comprising', 'consisting of')",
       "missingTransitionDetails": "Claim {{claimNumber}} does not contain a recognized transitional phrase. Every claim must include a transitional phrase such as 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by', or 'characterized in that' between the preamble and the claim body.",
@@ -1349,11 +1350,13 @@
         },
         "antecedentBasis": {
           "pass": "No antecedent-basis issues detected (审查指南).",
-          "amend": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 该/所述 reference without a prior introduction (e.g., 一 / 至少一 / 多个 + noun) (审查指南)."
+          "amend": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 该/所述 reference without a prior introduction (e.g., 一 / 至少一 / 多个 + noun) (审查指南).",
+          "verify": "{{issue_count}} reference(s) in {{claims}} to verify for antecedent basis — confirm each 该/所述 reference traces back to a prior introduction (审查指南)."
         },
         "specSupport": {
           "pass": "No unsupported claim terms detected (审查指南).",
-          "amend": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body (审查指南 第二部分第二章 §3.2.1)."
+          "amend": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body (审查指南 第二部分第二章 §3.2.1).",
+          "verify": "{{issue_count}} claim term(s) in {{claims}} to verify for specification support — confirm each appears in the specification body (审查指南 第二部分第二章 §3.2.1)."
         },
         "omnibus": {
           "amend": "{{claims}}: claim references 说明书/附图 instead of reciting features (审查指南 第二部分第二章 §3.3).",
@@ -1537,11 +1540,13 @@
         },
         "antecedentBasis": {
           "pass": "No antecedent-basis issues detected.",
-          "amend": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 該/所述/前述 reference without a prior introduction (e.g., 一 / 至少一 / 複數個 + noun)."
+          "amend": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 該/所述/前述 reference without a prior introduction (e.g., 一 / 至少一 / 複數個 + noun).",
+          "verify": "{{issue_count}} reference(s) in {{claims}} to verify for antecedent basis — confirm each 該/所述/前述 reference traces back to a prior introduction."
         },
         "specSupport": {
           "pass": "No unsupported claim terms detected.",
-          "amend": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body."
+          "amend": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body.",
+          "verify": "{{issue_count}} claim term(s) in {{claims}} to verify for specification support — confirm each appears in the specification body."
         },
         "independentPreamble": {
           "pass": "No 「一種」-preamble issues detected in independent claims.",
@@ -1674,7 +1679,7 @@
     "preamble_noun_mismatch": "Preamble noun differs between dependent and independent claim (MPEP § 608.01(m)).",
     "preamble_indefinite_article": "Indefinite article in dependent claim preamble — should be 'The' (MPEP § 608.01(m)).",
     "preamble_parse_unclear": "Couldn't verify preamble consistency for {{count}} dependent claim(s) with unrecognized preamble forms (MPEP § 608.01(n)).",
-    "spec_support_unsupported_terms": "Claim terms not found in the specification — each claim term should have written-description support (§ 112(a)).",
+    "spec_support_unsupported_terms": "Specification support — claim terms to verify (§ 112(a)): confirm each claim term has written-description support in the specification.",
     "spec_support_pass": "All claim terms found in the specification (§ 112(a) written-description support).",
     "required_sections_pass": "All required sections per MPEP § 608.01(a) are present.",
     "required_sections_missing": "Missing required sections per MPEP § 608.01(a).",

@@ -1164,10 +1164,17 @@ class AnalysisResult(BaseModel):
             ab_claim_ids = sorted({item["claim_id"] for item in self.antecedent_basis_issues})
             claim_count = len(ab_claim_ids)
             claims_checks.append(CheckItem(
-                status="amend",
-                message="Possible missing antecedent basis found.",
-                message_key="check.claims.antecedentBasis.amend",
-                details=f"{issue_count} issues across {claim_count} claims",
+                # Advisory tier (ADR-159): the §112(b) antecedent walker is ~70%
+                # benign on real drafts and the FP/defect split is not
+                # deterministically recoverable (proven 5 ways — see
+                # tests/eval/EXAMINER_GROUND_TRUTH_FINDINGS.md). So it asserts
+                # nothing: "verify" status + a `.verify` key in
+                # rubric.ADVISORY_REVIEW_KEYS = visible "references to verify"
+                # with zero grade impact, not a FIX.
+                status="verify",
+                message="References to verify for antecedent basis.",
+                message_key="check.claims.antecedentBasis.verify",
+                details=f"{issue_count} references across {claim_count} claims",
                 details_key="details.antecedentBasisTerms",
                 details_params={"count": str(issue_count), "claims": str(claim_count)},
                 diagnostics=extract_antecedent_basis(self.antecedent_basis_issues, len(self.claims)),
@@ -1183,8 +1190,11 @@ class AnalysisResult(BaseModel):
             from patentlint.diagnostic_extractors import extract_spec_support
             unique_phrases = sorted(set(ut.phrase for ut in self.unsupported_terms))
             claims_checks.append(CheckItem(
-                status="amend",
-                message="Claim terms not found in specification.",
+                # Advisory tier (ADR-159) — same rationale as antecedent above:
+                # the §112(a) spec-support walker is FP-heavy, so "verify"
+                # status + ADVISORY_REVIEW_KEYS membership = zero grade impact.
+                status="verify",
+                message="Claim terms to verify for specification support.",
                 message_key="checks.spec_support_unsupported_terms",
                 details=f"Terms: {', '.join(unique_phrases[:10])}",
                 details_key="details.specSupportUnsupported",

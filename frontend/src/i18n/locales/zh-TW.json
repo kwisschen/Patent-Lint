@@ -1021,7 +1021,8 @@
       },
       "antecedentBasis": {
         "pass": "未偵測到先行詞基礎問題（§ 112(b)）。",
-        "amend": "可能缺少先行詞基礎（§ 112(b)）：「the X／said X」疑似未有先前之「a X」引介。"
+        "amend": "可能缺少先行詞基礎（§ 112(b)）：「the X／said X」疑似未有先前之「a X」引介。",
+        "verify": "先行詞（待確認之引用，§ 112(b)）：請確認每處「the X／said X」均可追溯至先前之「a X」引介。"
       },
       "missingTransition": "請求項 {{claimNumber}} 缺少連接詞（例如 'comprising'、'consisting of'）",
       "missingTransitionDetails": "請求項 {{claimNumber}} 未包含任何公認的連接詞。每項請求項必須在前言與主體之間包含連接詞，例如 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' 或 'characterized in that'。",
@@ -1349,11 +1350,13 @@
         },
         "antecedentBasis": {
           "pass": "未偵測到引用基礎問題（审查指南）。",
-          "amend": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少引用基礎（审查指南）：「该／所述」引用未見對應之先前引介（例如以「一」、「至少一」、「多个」加名詞之形式）。"
+          "amend": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少引用基礎（审查指南）：「该／所述」引用未見對應之先前引介（例如以「一」、「至少一」、「多个」加名詞之形式）。",
+          "verify": "{{claims}} 共有 {{issue_count}} 處引用待確認引用基礎（审查指南）：請確認每處「该／所述」引用均可追溯至先前引介。"
         },
         "specSupport": {
           "pass": "未偵測到未獲說明書支持之權利要求用語（审查指南）。",
-          "amend": "{{claims}} 共有 {{issue_count}} 個權利要求用語疑似未獲說明書支持（审查指南 第二部分第二章 §3.2.1）。"
+          "amend": "{{claims}} 共有 {{issue_count}} 個權利要求用語疑似未獲說明書支持（审查指南 第二部分第二章 §3.2.1）。",
+          "verify": "{{claims}} 共有 {{issue_count}} 個權利要求用語待確認說明書支持（审查指南 第二部分第二章 §3.2.1）：請確認每個用語見於說明書正文。"
         },
         "omnibus": {
           "amend": "{{claims}}：權利要求以「如說明書所述」等方式援引說明書或附圖，未具體記載技術特徵（审查指南 第二部分第二章 §3.3）。",
@@ -1537,11 +1540,13 @@
         },
         "antecedentBasis": {
           "pass": "未偵測到先行詞基礎問題。",
-          "amend": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少先行詞：「該／所述／前述」引用未見對應之先前引介（例如以「一」、「至少一」、「複數個」加名詞之形式）。"
+          "amend": "{{claims}} 共有 {{issue_count}} 個用語疑似缺少先行詞：「該／所述／前述」引用未見對應之先前引介（例如以「一」、「至少一」、「複數個」加名詞之形式）。",
+          "verify": "{{claims}} 共有 {{issue_count}} 處引用待確認先行詞：請確認每處「該／所述／前述」引用均可追溯至先前引介。"
         },
         "specSupport": {
           "pass": "未偵測到未獲說明書支持之請求項用語。",
-          "amend": "{{claims}} 共有 {{issue_count}} 個請求項用語疑似未獲說明書支持。"
+          "amend": "{{claims}} 共有 {{issue_count}} 個請求項用語疑似未獲說明書支持。",
+          "verify": "{{claims}} 共有 {{issue_count}} 個請求項用語待確認說明書支持：請確認每個用語見於說明書正文。"
         },
         "independentPreamble": {
           "pass": "未偵測到獨立項缺少「一種」前序之問題。",
@@ -1674,7 +1679,7 @@
     "preamble_noun_mismatch": "附屬項與獨立項前言之標的名稱不同（MPEP § 608.01(m)）。",
     "preamble_indefinite_article": "附屬項前言使用不定冠詞，應使用「The」（MPEP § 608.01(m)）。",
     "preamble_parse_unclear": "{{count}}項附屬請求項之前言未被識別，無法驗證前言一致性（MPEP § 608.01(n)）。",
-    "spec_support_unsupported_terms": "請求項用語於說明書中未找到：每個用語須於說明書中有書面說明支持（§ 112(a)）。",
+    "spec_support_unsupported_terms": "說明書支持（待確認之請求項用語，§ 112(a)）：請確認每個用語於說明書中均有書面說明支持。",
     "spec_support_pass": "所有請求項用語均可於說明書中找到（§ 112(a) 書面說明支持）。",
     "required_sections_pass": "符合 MPEP § 608.01(a) 之所有必要章節均已存在。",
     "required_sections_missing": "缺少 MPEP § 608.01(a) 規定之必要章節。",

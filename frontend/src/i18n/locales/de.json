@@ -1021,7 +1021,8 @@
       },
       "antecedentBasis": {
         "pass": "Keine Rückbezugs-Mängel erkannt (§ 112(b)).",
-        "amend": "Möglicher fehlender Rückbezug — „the X“ / „said X“ ohne vorherige Einführung „a X“ (§ 112(b))."
+        "amend": "Möglicher fehlender Rückbezug — „the X“ / „said X“ ohne vorherige Einführung „a X“ (§ 112(b)).",
+        "verify": "Rückbezug — zu prüfende Bezüge (§ 112(b)): bestätigen Sie, dass jedes „the X“ / „said X“ auf eine vorherige Einführung „a X“ zurückgeht."
       },
       "missingTransition": "Anspruch {{claimNumber}} fehlt ein Übergangsbegriff (z. B. 'comprising', 'consisting of')",
       "missingTransitionDetails": "Anspruch {{claimNumber}} enthält keinen anerkannten Übergangsbegriff. Jeder Anspruch muss einen Übergangsbegriff wie 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by' oder 'characterized in that' zwischen Oberbegriff und Anspruchskörper enthalten.",
@@ -1349,11 +1350,13 @@
         },
         "antecedentBasis": {
           "pass": "Keine Rückbezugs-Probleme festgestellt (审查指南).",
-          "amend": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 该/所述-Bezug ohne vorherige Einführung (z. B. 一 / 至少一 / 多个 + Substantiv) (审查指南)."
+          "amend": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 该/所述-Bezug ohne vorherige Einführung (z. B. 一 / 至少一 / 多个 + Substantiv) (审查指南).",
+          "verify": "{{issue_count}} zu prüfende(r) Bezug(e) in {{claims}} für den Rückbezug — bestätigen Sie, dass jeder 该/所述-Bezug auf eine vorherige Einführung zurückgeht (审查指南)."
         },
         "specSupport": {
           "pass": "Keine nicht-gestützten Anspruchsmerkmale festgestellt (审查指南).",
-          "amend": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Stützung in der Beschreibung sein — Nominalphrase des Anspruchs nicht im Beschreibungsteil gefunden (审查指南 第二部分第二章 §3.2.1)."
+          "amend": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Stützung in der Beschreibung sein — Nominalphrase des Anspruchs nicht im Beschreibungsteil gefunden (审查指南 第二部分第二章 §3.2.1).",
+          "verify": "{{issue_count}} zu prüfende(r) Anspruchsbegriff(e) in {{claims}} für die Stützung — bestätigen Sie, dass jeder im Beschreibungsteil vorkommt (审查指南 第二部分第二章 §3.2.1)."
         },
         "omnibus": {
           "amend": "{{claims}}: Anspruch verweist auf 说明书/附图 statt Merkmale zu benennen (审查指南 第二部分第二章 §3.3).",
@@ -1537,11 +1540,13 @@
         },
         "antecedentBasis": {
           "pass": "Keine Rückbezugs-Probleme festgestellt.",
-          "amend": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 該/所述/前述-Bezug ohne vorherige Einführung (z. B. 一 / 至少一 / 複數個 + Substantiv)."
+          "amend": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Rückbezug sein — 該/所述/前述-Bezug ohne vorherige Einführung (z. B. 一 / 至少一 / 複數個 + Substantiv).",
+          "verify": "{{issue_count}} zu prüfende(r) Bezug(e) in {{claims}} für den Rückbezug — bestätigen Sie, dass jeder 該/所述/前述-Bezug auf eine vorherige Einführung zurückgeht."
         },
         "specSupport": {
           "pass": "Keine nicht-gestützten Anspruchsmerkmale festgestellt.",
-          "amend": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Stützung in der Beschreibung sein — Nominalphrase des Anspruchs nicht im Beschreibungsteil gefunden."
+          "amend": "{{issue_count}} Begriff(e) in {{claims}} könnten ohne Stützung in der Beschreibung sein — Nominalphrase des Anspruchs nicht im Beschreibungsteil gefunden.",
+          "verify": "{{issue_count}} zu prüfende(r) Anspruchsbegriff(e) in {{claims}} für die Stützung — bestätigen Sie, dass jeder im Beschreibungsteil vorkommt."
         },
         "independentPreamble": {
           "pass": "Keine 「一種」-Präambel-Probleme in unabhängigen Ansprüchen festgestellt.",
@@ -1674,7 +1679,7 @@
     "preamble_noun_mismatch": "Substantiv im Oberbegriff weicht zwischen abhängigem und unabhängigem Anspruch ab (MPEP § 608.01(m)).",
     "preamble_indefinite_article": "Unbestimmter Artikel im abhängigen Anspruchs-Oberbegriff — sollte 'The' sein (MPEP § 608.01(m)).",
     "preamble_parse_unclear": "Oberbegriff-Konsistenz für {{count}} abhängige(n) Anspruch/Ansprüche mit nicht erkannten Formen konnte nicht verifiziert werden (MPEP § 608.01(n)).",
-    "spec_support_unsupported_terms": "Anspruchsbegriffe nicht in der Beschreibung gefunden — jeder Anspruchsbegriff sollte in der Beschreibung gestützt sein (§ 112(a)).",
+    "spec_support_unsupported_terms": "Stützung in der Beschreibung — zu prüfende Anspruchsbegriffe (§ 112(a)): bestätigen Sie, dass jeder Anspruchsbegriff in der Beschreibung gestützt ist.",
     "spec_support_pass": "Alle Anspruchsbegriffe in der Beschreibung gefunden (§ 112(a) Stützung in der Beschreibung).",
     "required_sections_pass": "Alle gemäß MPEP § 608.01(a) erforderlichen Abschnitte vorhanden.",
     "required_sections_missing": "Erforderliche Abschnitte gemäß MPEP § 608.01(a) fehlen.",

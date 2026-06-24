@@ -85,6 +85,23 @@ ADVISORY_REVIEW_KEYS: frozenset[str] = frozenset({
     "check.cn.drawings.priorArt.verify",
     # TW
     "check.tw.spec.indigenousTerms.verify",
+    # §112 walker checks — advisory re-tier (ADR-159). Antecedent basis
+    # (§112(b)) and spec support (§112(a)) are ~70% benign on real drafts and
+    # the FP/defect split is NOT deterministically recoverable (proven 5 ways:
+    # recal-ceiling, confidence-layer, examiner-label discriminator (AUC 0.60),
+    # nonlinear, and the strict-spec signal — see
+    # tests/eval/EXAMINER_GROUND_TRUTH_FINDINGS.md / CONFIDENCE_LAYER_FINDINGS.md).
+    # Asserting a FIX (or even a −3 REVIEW) for a mostly-benign, undistinguishable
+    # flag is dishonest scoring, so these surface as visible "references/terms to
+    # verify" with ZERO grade impact across all 4 jurisdictions.
+    "check.claims.antecedentBasis.verify",
+    "check.cn.claims.antecedentBasis.verify",
+    "check.tw.claims.antecedentBasis.verify",
+    "check.epc.claims.antecedentBasis.verify",
+    "checks.spec_support_unsupported_terms",
+    "check.cn.claims.specSupport.verify",
+    "check.tw.claims.specSupport.verify",
+    "check.epc.claims.specSupport.verify",
 })
 
 
