@@ -1504,9 +1504,23 @@ _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN: frozenset[str] = frozenset(
      "来",
      # 向: TW parity (CN 0 walker_fp this round but pre-emptive — CN
      # drafters share the same `<noun>向X` preposition pattern).
+     # GUARDED below by _DIRECTION_STEM_BEFORE_XIANG_CN: 向 is a bound noun
+     # suffix in 方向/轴向/径向/… (direction nouns), NOT a strippable
+     # preposition. Without the guard, `所述圆周方向` truncates to `圆周方`
+     # (CN117837052A c32, a real corpus walker_fp). WS-B1 (2026-06-24).
      "向",
      # 自: TW parity (CN had 1 walker_fp, low signal — pre-emptive).
      "自"}
+)
+
+# WS-B1 (2026-06-24) — direction-noun stems that bind 向 as a NOUN suffix
+# (方向/轴向/径向/横向/纵向/周向/切向/法向/侧向/竖向/斜向/单向/双向/同向/反向/
+# 正向/逆向/定向/指向/取向/转向/导向). When a captured term ends in `<stem>向`,
+# the 向 is part of the head noun and must NOT be stripped. Over-inclusion is
+# FN-safe: at worst it leaves a pre-existing over-capture (FP-direction), it can
+# never over-silence a real defect. Grounded by the 圆周方向→圆周方 corpus FP.
+_DIRECTION_STEM_BEFORE_XIANG_CN: frozenset[str] = frozenset(
+    "方径轴横纵周切法侧竖斜单双同反正逆定指取转导"
 )
 
 # Relaxed-guard subset (residual ≥ 2 instead of ≥ 3).
@@ -1765,6 +1779,9 @@ def clean_noun_phrase_cn(text: str) -> str:
             if not current.endswith(verb):
                 continue
             if len(current) <= len(verb):
+                continue
+            # WS-B1: 向 binds as a noun suffix in direction nouns (方向/轴向/…).
+            if verb == "向" and current[-2] in _DIRECTION_STEM_BEFORE_XIANG_CN:
                 continue
             if verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN:
                 if verb in _NOUNLIKE_VERY_RELAXED_SUFFIXES_CN:

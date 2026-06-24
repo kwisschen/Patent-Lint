@@ -54,6 +54,9 @@ PHASE2B_RESULTS = {
         # ADR-159: standing-loop auto-applied unanimous walker_fp verdicts.
         # Separate + reversible (delete to undo); written by apply_proposed_labels.py.
         PROJECT_ROOT / 'tests/eval/phase2b_results_cn_autoapply.json',
+        # ADR-159 verified gold corrections (LAST = highest precedence). Each
+        # entry is a finding a maintainer READ and confirmed (shift or mislabel).
+        PROJECT_ROOT / 'tests/eval/phase2b_results_cn_corrections.json',
     ],
     'TW': [
         PROJECT_ROOT / 'tests/eval/phase2b_results_tw.json',
