@@ -695,10 +695,16 @@ class AnalysisResult(BaseModel):
     def _to_epc_report_data(self) -> ReportData:
         """Build ReportData for EPC jurisdiction from pre-computed check lists.
 
-        v1 ships English specs only; ``antecedent_basis_issues`` and
-        ``unsupported_terms`` are populated by the walker port once Sessions
-        8-9 of the implementation plan land. At scaffolding stage all check
-        lists are empty.
+        v1 ships English specs only. The §112-equivalent walker port HAS
+        landed: ``run_g6_section_112_checks`` (epc_claims.py) reuses the US
+        walker, so ``antecedent_basis_issues`` and ``unsupported_terms`` are
+        populated for EPC with the same finding shape as US, and flow through
+        the shared Section112Container / AntecedentBasisCard / SpecSupportCard
+        (jurisdictionConfig EPC has ``showClaimTree: true`` + the
+        ``section112.titleEpc`` Art. 84 heading). The §112 checks emit advisory
+        ``status="verify"`` (ADR-159; their ``.verify`` keys are in
+        ``rubric.ADVISORY_REVIEW_KEYS`` → zero grade impact), so the advisory
+        card UX + interactive triage render for EPC for free.
         """
         return ReportData(
             jurisdiction=self.jurisdiction,
