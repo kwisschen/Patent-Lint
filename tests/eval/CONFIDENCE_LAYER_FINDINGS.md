@@ -32,6 +32,18 @@ Could we just *re-weight* `compute_confidence_score` (free, no new data) to sepa
 
 **Even the optimal model is essentially at base rate — ~zero discrimination.** The information needed to tell an FP from a real §112 defect is simply **not present in the claim-local features.** So no recalibration on the current feature set can work. This is the deepest reason the problem is hard: the walker fires with local context, but the disambiguating evidence (does the term appear in the *specification*? is it the same entity as an earlier element, semantically?) lives outside those features.
 
+## Does the spec-presence signal transfer? NO — US-only-mild, CJK-counterproductive. (`spec_presence_probe.py`)
+
+The #1 free-ish hypothesis was "wire spec-presence into the confidence signal." Using the corpus `abstract` as a proxy for `term_in_spec`:
+
+| Juris | base legit | P(legit \| in abstract) | P(legit \| not) | demote-if-in: FP removed / legit lost |
+|---|---|---|---|---|
+| US | 37.7% | 0.296 | 0.403 | 27.6% / 19.2% (favorable-ish) |
+| TW | 23.8% | 0.269 | 0.219 | 36.3% / **42.8%** (losing) |
+| CN | 23.0% | 0.285 | 0.199 | 33.8% / **45.0%** (losing) |
+
+On **US** the signal points the right way (a term in the abstract is *less* likely a real defect → demotable), but only mildly. On **TW/CN it points the WRONG way** — an in-abstract term is *more* likely a real defect, so demoting on it loses more real defects than FPs. The spec/abstract-presence signal is **jurisdiction-specific**, not a universal lever; CJK calibration must be independent and is the hardest. (The full specification, vs the abstract proxy, may behave better — but this must be measured per-jurisdiction, not assumed.)
+
 ## Implication for the path to 80–90%
 
 The confidence layer is the right FN-free lever, but the ceiling experiment proves re-weighting current signals is **not enough** — it needs **new information**:
