@@ -2297,6 +2297,15 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         # 相關聯: adjectival fragment of <noun>相關聯的. Existing 相關 + 有關
         # catch 2-char form; 3-char form needs explicit.
         "進一步", "相關聯",
+        # === R10 (2026-06-24) — gold-mined trailing-verb over-capture batch.
+        # Mirror of CN R41: from the TW gold walker_fp over-capture cluster
+        # (2,035 no-intro over-captures where a trailing verb over-ran the head
+        # noun). Verb-only-at-tail set; noun-sense verbs (接合=joint / 配置 /
+        # 控制 / 接觸 / 儲存 / 正交 / 垂直 / 對接 / 聯接) HELD OUT (the CN R41
+        # FN-guard showed these silence real defects). FN-guard further removed
+        # 耦接/耦合 (noun `電耦合`/`熱耦合`=coupling) + 穿過 (over-capture
+        # `運行穿過` whose clean head was a real defect + intro-side cascade).
+        "轉換", "斷開", "切換", "嵌入",
     ),
     key=len,
     reverse=True,
