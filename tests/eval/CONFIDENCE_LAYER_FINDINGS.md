@@ -44,6 +44,18 @@ The #1 free-ish hypothesis was "wire spec-presence into the confidence signal." 
 
 On **US** the signal points the right way (a term in the abstract is *less* likely a real defect → demotable), but only mildly. On **TW/CN it points the WRONG way** — an in-abstract term is *more* likely a real defect, so demoting on it loses more real defects than FPs. The spec/abstract-presence signal is **jurisdiction-specific**, not a universal lever; CJK calibration must be independent and is the hardest. (The full specification, vs the abstract proxy, may behave better — but this must be measured per-jurisdiction, not assumed.)
 
+## WS-E1 — the FULL spec, not the abstract proxy: `term_in_spec` is a DEAD signal on US. (`term_in_spec_probe.py`)
+
+The probes above used the corpus `abstract` as a proxy because the corpus was claims-only. WS-E1 closes that gap: the full Google-Patents **specification** (description body) is now scraped for all **705/705** US gold drafts (`us_descriptions.json`, gitignored; median spec 225k chars, min 47k). Re-running the spec-presence test against the *real* spec instead of the abstract:
+
+| Juris | judged findings (w/ spec) | term IN spec | term NOT in spec | P(legit \| in) | P(legit \| out) |
+|---|---|---|---|---|---|
+| US | 7,888 (100% have spec) | **7,888 (100%)** | **0** | 0.377 (= base) | — (empty) |
+
+**`term_in_spec` is non-discriminating on US: 100% of judged claim terms appear in the specification**, so `P(legit | in spec)` is exactly the base rate (37.7%) and the "NOT in spec" cell — the only place a signal could live — is **empty**. Verified not an integration artifact: the matcher returns False for garbage strings, and every one of the 705 specs is ≥47k chars (a 225k-char-median document contains every claim-element noun phrase whether or not the claim properly introduced its antecedent).
+
+This **retires the "wire `term_in_spec` into runtime confidence" hypothesis for US** (the lower-bound caveat in §"Why" / §"Does spec-presence transfer" was optimistic — the full spec is *worse* than the abstract proxy as a discriminator, not better, because it is exhaustive). It is the empirical confirmation of the campaign's **capstone**: §112(b) antecedent basis is claims-internal; the spec always contains the term, so spec-presence cannot tell a benign reference from a real defect. A usable spec-derived signal would have to be far stricter than boolean presence (e.g. term introduced as `a <term>` near a reference numeral, or semantic entity-identity) — i.e. exactly the judging-funded semantic features below, not a free substring test. **Net: spec is NOT a usable US confidence signal; do not finish-then-mine the US scrape for this purpose.** (The scrape remains useful for spec-support/ref-numeral engines, WS-D.)
+
 ## Implication for the path to 80–90%
 
 The confidence layer is the right FN-free lever, but the ceiling experiment proves re-weighting current signals is **not enough** — it needs **new information**:
@@ -56,6 +68,8 @@ This corroborates the portfolio decision: free walker fixes alone hit a wall (st
 ## Reproduce
 
 ```
-python tests/eval/confidence_layer_probe.py
+python tests/eval/confidence_layer_probe.py     # threshold sweep, all 3 corpora (~5 min)
+python tests/eval/spec_presence_probe.py         # abstract-proxy presence test
+python tests/eval/term_in_spec_probe.py US       # WS-E1: full scraped spec (needs us_descriptions.json)
 ```
-(Runs the walker over all three corpora; ~5 min. Requires the local gold + corpus.)
+(All run the walker over the local corpus + gold; the `term_in_spec` probe additionally needs the gitignored `us_descriptions.json` scrape.)
