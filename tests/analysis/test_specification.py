@@ -543,6 +543,84 @@ class TestNumeralConsistencyD1:
         assert all(p[0] == "102" and "housing" in p[1] for p in pairs)
 
 
+class TestD1ElementNameOverCapture:
+    """Engine-3 over-capture sweep (ADR-159): a reference numeral binds to an
+    element NOUN, so a captured "name" that is a verb / gerund / adverb / clause
+    fragment is sentence-context bleed, not an element identity, and must not
+    seed a phantom D1 conflict. FN-safe: a real D1 defect needs two distinct
+    element NOUNS on one numeral, which always survive the filter."""
+
+    def test_plausible_predicate_rejects_nonnoun_heads(self):
+        from patentlint.analysis.specification import _is_plausible_element_name
+        # -ed participles, -ly adverbs, and curated -ing/base verbs.
+        for junk in (
+            "generated", "incubated", "transferred", "summarize", "covalently",
+            "preferably", "displaying", "submitting", "committing",
+            "designating", "altering", "removing",
+        ):
+            assert not _is_plausible_element_name(junk), junk
+
+    def test_plausible_predicate_rejects_clause_fragments(self):
+        from patentlint.analysis.specification import _is_plausible_element_name
+        for clause in (
+            "be executed by processor", "suggestion is displayed",
+            "do not generate", "car that binds", "which control may enter",
+            "be similar",
+        ):
+            assert not _is_plausible_element_name(clause), clause
+
+    def test_plausible_predicate_accepts_real_element_names(self):
+        from patentlint.analysis.specification import _is_plausible_element_name
+        # Real element nouns — INCLUDING past-participle ADJECTIVE modifiers in
+        # the body ("integrated"/"curved"/"printed"/"threaded") AND -ing / -s
+        # patent nouns (grating / winding / cladding / outputs / inputs). A
+        # generic -ing or -s rejection would drop these and silence genuine D1
+        # conflicts (FN) — e.g. "output grating" vs "second grating".
+        for ok in (
+            "housing", "coupling", "vpn gateway", "time period", "sealing plate",
+            "integrated circuit", "curved surface", "printed circuit board",
+            "threaded rod", "first|interruption indicator", "storage media",
+            "grating", "output grating", "winding", "two secondary windings",
+            "cladding", "strengthened outer cladding", "outputs", "inputs",
+            "waveguide outputs", "beam combiner outputs", "locking member",
+        ):
+            assert _is_plausible_element_name(ok), ok
+
+    def test_verb_overcapture_outlier_does_not_create_fix_conflict(self):
+        """A numeral with a real consistent element name plus a one-off verb /
+        gerund over-capture must NOT surface as a FIX-tier D1 conflict."""
+        from patentlint.analysis.specification import check_numeral_consistency
+        spec = (
+            "The actuator 130 moves the arm. The actuator 130 is electric. "
+            "The actuator 130 is mounted. The signal is generated 130 by logic. "
+            "The data is displaying 130 results."
+        )
+        results = check_numeral_consistency(spec)
+        # 'generated'/'displaying' are over-capture, not a second element name —
+        # no asserted (amend/FIX) conflict for numeral 130.
+        assert all(
+            r.message_key != "check.spec.numeralConsistency.amend" for r in results
+        )
+
+    def test_real_two_noun_conflict_still_fires(self):
+        """FN-safety: a genuine D1 (two real element nouns, each repeated, on
+        one numeral) still fires at FIX even alongside verb over-capture."""
+        from patentlint.analysis.specification import check_numeral_consistency
+        spec = (
+            "The motor 200 spins. The motor 200 is electric. "
+            "The bracket 200 holds it. The bracket 200 is steel. "
+            "The torque is generated 200 here."  # over-capture noise
+        )
+        results = check_numeral_consistency(spec)
+        amend = [r for r in results if r.message_key == "check.spec.numeralConsistency.amend"]
+        assert amend, "real motor↔bracket D1 conflict must still fire at FIX"
+        names = []
+        for f in amend[0].details_params["findings"]:
+            if f["numeral"] == "200":
+                names = [f["canonical"]] + [o["name"] for o in f["outliers"]]
+        assert "motor" in names and "bracket" in names
+
+
 class TestNumeralConsistencyD1Synthetic:
     """Synthetic edge-case suite for D1 — covers cases from real drafter
     feedback (Latin-prefix refs, single-occurrence typos, ordinal-instance
