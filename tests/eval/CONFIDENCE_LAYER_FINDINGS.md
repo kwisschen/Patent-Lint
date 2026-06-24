@@ -65,9 +65,33 @@ The confidence layer is the right FN-free lever, but the ceiling experiment prov
 
 This corroborates the portfolio decision: free walker fixes alone hit a wall (structural lever exhausted on US; TW/CN remaining FPs are the *uncertain* tail — non-unanimous judge verdicts + delicate single-draft tokenization/ordinal cases), so reliable 80–90% needs judging-funded confidence recalibration + the spec-presence signal at runtime.
 
+## WS-A4 — the authoritative-label test closes the discriminator question (2026-06-24, `us_discriminator_probe.py`)
+
+The recalibration ceiling above used the LLM ensemble gold. The last open question was
+whether **authoritative** labels (real USPTO examiner §112 rejections) would reveal signal
+the noisy LLM gold hid. They do not. Ran the walker over 1,837 examiner apps (42,982
+OCR-surviving findings), labeled by examiner-confirmed real defect (6.9% base rate), and
+fit a classifier over the **richest deterministic emit-time feature set** (string shape +
+chain context + production `confidence_score` + reference-numeral / repeated-reference
+identity signals):
+
+| model | AUC | top-5% bucket precision | lift |
+|---|---|---|---|
+| Logistic regression | 0.599 | 9.6% | 1.39× |
+| Gradient boosting | 0.625 | 12.8% | 1.84× |
+
+Even nonlinear + authoritative labels ≈ base rate. **Fourth independent confirmation**
+(recal_ceiling + confidence_layer + this LR + GB) — robust across label source, feature
+richness, and model class. The discriminator-by-demotion lever is **dead on deterministic
+features**. Since runtime is AI-free, this closes it for US, and by the same mechanism the
+CN-flat result above is feature-poverty (not label-poverty) — so **judging-$ will not unlock
+a CJK discriminator.** The only remaining FP levers are free + deterministic: over-capture
+batches + Engine 2/3 sweeps. (Full writeup: `EXAMINER_GROUND_TRUTH_FINDINGS.md`.)
+
 ## Reproduce
 
 ```
+python tests/eval/us_discriminator_probe.py     # WS-A4 discriminator ceiling (examiner labels)
 python tests/eval/confidence_layer_probe.py     # threshold sweep, all 3 corpora (~5 min)
 python tests/eval/spec_presence_probe.py         # abstract-proxy presence test
 python tests/eval/term_in_spec_probe.py US       # WS-E1: full scraped spec (needs us_descriptions.json)

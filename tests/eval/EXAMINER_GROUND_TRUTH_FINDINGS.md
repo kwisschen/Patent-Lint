@@ -68,9 +68,67 @@ Ran the walker over all **1,837 examiner apps → 43,134 findings, 2,965 examine
 
 **Cross-CHECK (spec-support):** `extract_noun_phrases` (spec-support's path) over-captures the same comparative tails, BUT a corpus before/after showed **0 spec-support findings change** — its fuzzy tier-2/3 word-window matching already absorbs the tail, so the over-capture causes no spec-support FP. Mirror **not shipped** (inert).
 
+## WS-A4 DISCRIMINATOR — TESTED AND DEAD on deterministic features (2026-06-24, `us_discriminator_probe.py`)
+
+The WS-A4 hypothesis was: *train a US confidence discriminator on the authoritative
+examiner labels (instead of the noisy LLM gold) to demote the FP tail out of the
+confident "FIX" bucket.* **Tested directly and REFUTED.** This closes the discriminator
+question for US.
+
+Built the strongest-possible test of the hypothesis: ran the walker over the 1,837
+examiner apps → **42,982 OCR-surviving findings**, labeled each by the authoritative
+examiner ground truth (positive = examiner-confirmed real §112 defect; base rate 6.9%),
+and fit a classifier over the **richest deterministic feature set** available at
+walker emit-time:
+
+- string shape: term/ref length, word count, paren, short-acronym, ordinal-led,
+  single-word, generic-head, head length;
+- chain context: `intros_pool_size`, `has_suggested_match`, `suggested_cross_branch`,
+  `ancestor_match`, `num_ancestors`, and the production `confidence_score`;
+- patent-element identity: head-noun-attached-to-a-reference-numeral, repeated-`the X`
+  reference count.
+
+| model | AUC | top-5% bucket precision | lift over 6.9% base |
+|---|---|---|---|
+| Logistic regression | 0.599 | 9.6% | 1.39× |
+| Gradient boosting (nonlinear) | 0.625 | 12.8% | 1.84× |
+
+Even the **nonlinear** model over the richest features + **authoritative** labels lands
+at ~13% top-bucket precision — nowhere near the ~70% the product's high-confidence
+"FIX" bucket needs ([[feedback_target_metric_high_conf_bucket]]). The flat ~1.4–1.8×
+lift across every threshold is the signature of **feature poverty, not label or model
+poverty.**
+
+**This is now the THIRD–FOURTH independent confirmation** of the same wall:
+1. `recal_ceiling_probe.py` — optimal LR on LLM gold ≈ base rate;
+2. `confidence_layer_probe.py` — production `confidence_score` flat (CN especially);
+3. `us_discriminator_probe.py` LR — examiner labels, 17 rich features → AUC 0.599;
+4. `us_discriminator_probe.py` GB — nonlinear → AUC 0.625.
+
+Robust across **label source** (LLM ↔ examiner), **feature richness** (7 ↔ 17), and
+**model class** (linear ↔ nonlinear). The signal that separates a benign antecedent
+reference from a real §112 defect is **not present in any deterministic, runtime-available
+feature** — it is semantic (is `the X` the same entity as an earlier element?), and
+PatentLint runtime is **AI-free** (ADR-158: LLM at dev-time, distilled to deterministic
+Python), so the discriminator must use deterministic features.
+
+**Strategic / budget implication (money-saving):** the examiner labels are excellent as
+an **FN-guard** (they shipped US R18 — see above) but **NOT** as a discriminator-training
+signal, because the *feature space* — not the labels — is the bottleneck. By the same
+logic, **CN/TW judging-$ would NOT unlock a CJK discriminator either** (labels were never
+the limit). So do **not** spend judging-$ on the discriminator path. The remaining levers
+that actually work are all **free + deterministic + FN-guardable**: over-capture
+extraction batches (diminishing) and the untouched Engine 2 (spec-support) / Engine 3
+(ref-numeral) FP pools. The irreducible semantic tail stays in the FIX bucket — a genuine
+product ceiling for an AI-free §112(b) checker, best framed as *candidate flags for
+attorney review* rather than assertions.
+
+Reproduce: `python3 tests/eval/us_discriminator_probe.py` (rebuilds in ~3.5 min; add
+`--cache` to reuse the feature matrix).
+
 ## Still next (handed off)
-- **Full 86k benign-rate:** extend the join beyond the 1,843 examiner apps to all 86k → terms the walker flags that NO examiner *ever* flagged corpus-wide (strongest benign candidates) + amendment-history cross-reference for a true benign rate.
-- **WS-A4 discriminator:** train/calibrate a US confidence model with the examiner labels (recall side) — the capstone showed surface heuristics can't separate real bare-intros from real defects without semantic labels; the examiner labels are that signal. (The free over-capture lever is now exhausted for US antecedent — remaining FPs are semantic / missed-intro, needing this.)
+- **Full 86k benign-rate:** extend the join beyond the 1,843 examiner apps to all 86k → terms the walker flags that NO examiner *ever* flagged corpus-wide (strongest benign candidates) + amendment-history cross-reference for a true benign rate. (Characterization only — does not change the discriminator conclusion above.)
+- **Free FP levers (the only ones left):** continue over-capture extraction batches (CN R42 shipped −31 this session) until each jurisdiction's clean trailing-verb pool is exhausted; then open Engine 2 (spec-support) + Engine 3 (ref-numeral) sweeps (untouched FP pools, deterministic FN-guards).
 
 ## Reproduce
 ```
