@@ -1021,7 +1021,8 @@
       },
       "antecedentBasis": {
         "pass": "未检测到引用基础问题（§ 112(b)）。",
-        "amend": "可能缺少引用基础（§ 112(b)）：「the X／said X」疑似未有先前之「a X」引介。"
+        "amend": "可能缺少引用基础（§ 112(b)）：「the X／said X」疑似未有先前之「a X」引介。",
+        "verify": "引用基础（待确认之引用，§ 112(b)）：请确认每处「the X／said X」均可追溯至先前之「a X」引介。"
       },
       "missingTransition": "权利要求 {{claimNumber}} 缺少连接词（例如 'comprising'、'consisting of'）",
       "missingTransitionDetails": "权利要求 {{claimNumber}} 未包含任何公认的连接词。每项权利要求必须在前序部分与主体之间包含连接词，例如 'comprising'、'consisting of'、'consisting essentially of'、'including'、'containing'、'characterized by' 或 'characterized in that'。",
@@ -1349,11 +1350,13 @@
         },
         "antecedentBasis": {
           "pass": "未检测到引用基础问题（审查指南）。",
-          "amend": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少引用基础（审查指南）：「该／所述」引用未见对应之先前引介（例如以「一」、「至少一」、「多个」加名词之形式）。"
+          "amend": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少引用基础（审查指南）：「该／所述」引用未见对应之先前引介（例如以「一」、「至少一」、「多个」加名词之形式）。",
+          "verify": "{{claims}} 共有 {{issue_count}} 处引用待确认引用基础（审查指南）：请确认每处「该／所述」引用均可追溯至先前引介。"
         },
         "specSupport": {
           "pass": "未检测到未获说明书支持之权利要求用语（审查指南）。",
-          "amend": "{{claims}} 共有 {{issue_count}} 个权利要求用语疑似未获说明书支持（审查指南 第二部分第二章 §3.2.1）。"
+          "amend": "{{claims}} 共有 {{issue_count}} 个权利要求用语疑似未获说明书支持（审查指南 第二部分第二章 §3.2.1）。",
+          "verify": "{{claims}} 共有 {{issue_count}} 个权利要求用语待确认说明书支持（审查指南 第二部分第二章 §3.2.1）：请确认每个用语见于说明书正文。"
         },
         "omnibus": {
           "amend": "{{claims}}：权利要求以「如说明书所述」等方式援引说明书或附图，未具体记载技术特征（审查指南 第二部分第二章 §3.3）。",
@@ -1537,11 +1540,13 @@
         },
         "antecedentBasis": {
           "pass": "未检测到先行词基础问题。",
-          "amend": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少先行词：「該／所述／前述」引用未见对应之先前引介（例如以「一」、「至少一」、「复数个」加名词之形式）。"
+          "amend": "{{claims}} 共有 {{issue_count}} 个用语疑似缺少先行词：「該／所述／前述」引用未见对应之先前引介（例如以「一」、「至少一」、「复数个」加名词之形式）。",
+          "verify": "{{claims}} 共有 {{issue_count}} 处引用待确认先行词：请确认每处「該／所述／前述」引用均可追溯至先前引介。"
         },
         "specSupport": {
           "pass": "未检测到未获说明书支持之请求项用语。",
-          "amend": "{{claims}} 共有 {{issue_count}} 个请求项用语疑似未获说明书支持。"
+          "amend": "{{claims}} 共有 {{issue_count}} 个请求项用语疑似未获说明书支持。",
+          "verify": "{{claims}} 共有 {{issue_count}} 个请求项用语待确认说明书支持：请确认每个用语见于说明书正文。"
         },
         "independentPreamble": {
           "pass": "未检测到独立项缺少「一種」前序之问题。",
@@ -1674,7 +1679,7 @@
     "preamble_noun_mismatch": "从属权利要求与独立权利要求前序部分的主题名称不同（MPEP § 608.01(m)）。",
     "preamble_indefinite_article": "从属权利要求前序使用了不定冠词，应使用「The」（MPEP § 608.01(m)）。",
     "preamble_parse_unclear": "{{count}}项从属权利要求之前序未被识别，无法验证前序一致性（MPEP § 608.01(n)）。",
-    "spec_support_unsupported_terms": "权利要求用语在说明书中未找到：每个用语须在说明书中有书面描述支持（§ 112(a)）。",
+    "spec_support_unsupported_terms": "说明书支持（待确认之权利要求用语，§ 112(a)）：请确认每个用语于说明书中均有书面描述支持。",
     "spec_support_pass": "所有权利要求用语均可在说明书中找到（§ 112(a) 书面描述支持）。",
     "required_sections_pass": "符合 MPEP § 608.01(a) 的所有必要章节均已存在。",
     "required_sections_missing": "缺少 MPEP § 608.01(a) 规定的必要章节。",

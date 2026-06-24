@@ -491,17 +491,17 @@ class TestAdvisoryReviews:
         checks = [
             _check("verify", "check.spec.crossReference.verify"),
             _check("verify", "check.spec.priorArt.verify"),
-            _check("verify", "check.claims.antecedentBasis.verify"),  # non-advisory
+            _check("verify", "check.spec.paragraphEnding.verify"),  # non-advisory
         ]
         grade = compute_rubric_grade(
             jurisdiction=Jurisdiction.US,
             all_checks=checks,
             has_drawings=True,
         )
-        # Only the antecedent item should land in the impact list — the two
-        # advisory items are filtered out.
+        # Only the paragraph-ending item should land in the impact list — the
+        # two advisory items are filtered out.
         keys_in_impact = {item.message_key for item in grade.impact_list}
-        assert "check.claims.antecedentBasis.verify" in keys_in_impact
+        assert "check.spec.paragraphEnding.verify" in keys_in_impact
         assert "check.spec.crossReference.verify" not in keys_in_impact
         assert "check.spec.priorArt.verify" not in keys_in_impact
 
@@ -518,11 +518,43 @@ class TestAdvisoryReviews:
         )
         with_review = compute_rubric_grade(
             jurisdiction=Jurisdiction.TW,
-            all_checks=[_check("verify", "check.tw.claims.antecedentBasis.verify")],
+            all_checks=[_check("verify", "check.tw.spec.paragraphEnding.verify")],
             has_drawings=False,
         )
         assert clean.score == 100
         assert with_review.score < 100, "any non-advisory REVIEW must visibly drop the score below 100"
+
+    def test_section_112_walker_checks_are_advisory(self):
+        # ADR-159 advisory re-tier: antecedent basis (§112(b)) and spec support
+        # (§112(a)) are FP-heavy and not deterministically separable, so they
+        # must carry ZERO grade impact in every jurisdiction — a draft whose
+        # only flags are §112 walker findings still scores 100 / grade A.
+        from patentlint.rubric import ADVISORY_REVIEW_KEYS
+        s112_keys = [
+            "check.claims.antecedentBasis.verify",
+            "check.cn.claims.antecedentBasis.verify",
+            "check.tw.claims.antecedentBasis.verify",
+            "check.epc.claims.antecedentBasis.verify",
+            "checks.spec_support_unsupported_terms",
+            "check.cn.claims.specSupport.verify",
+            "check.tw.claims.specSupport.verify",
+            "check.epc.claims.specSupport.verify",
+        ]
+        for k in s112_keys:
+            assert k in ADVISORY_REVIEW_KEYS, k
+        # End-to-end: US draft carrying both §112 walker items still scores 100.
+        grade = compute_rubric_grade(
+            jurisdiction=Jurisdiction.US,
+            all_checks=[
+                _check("verify", "check.claims.antecedentBasis.verify"),
+                _check("verify", "checks.spec_support_unsupported_terms"),
+            ],
+            has_drawings=True,
+        )
+        assert grade.score == 100
+        impact_keys = {item.message_key for item in grade.impact_list}
+        assert "check.claims.antecedentBasis.verify" not in impact_keys
+        assert "checks.spec_support_unsupported_terms" not in impact_keys
 
     def test_advisory_still_appears_in_section_pass_count(self):
         # Advisory items bucket as PASS for grading purposes.

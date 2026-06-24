@@ -275,10 +275,12 @@ def _run_cn_pipeline(
         claim_count = len(claim_ids)
         claims_checks = list(claims_checks) + [
             CheckItem(
-                status="amend",
-                message="Possible missing antecedent basis found.",
-                message_key="check.cn.claims.antecedentBasis.amend",
-                details=f"{issue_count} term(s) may lack antecedent basis across {claim_count} claim(s).",
+                # Advisory tier (ADR-159) — visible "references to verify",
+                # zero grade impact via ADVISORY_REVIEW_KEYS.
+                status="verify",
+                message="References to verify for antecedent basis.",
+                message_key="check.cn.claims.antecedentBasis.verify",
+                details=f"{issue_count} reference(s) to verify across {claim_count} claim(s).",
                 details_key="details.cn.antecedentBasisTerms",
                 details_params={
                     "issue_count": issue_count,
@@ -327,10 +329,11 @@ def _run_cn_pipeline(
         )
         claims_checks = list(claims_checks) + [
             CheckItem(
-                status="amend",
-                message="Possible claim terms not supported by the specification.",
-                message_key="check.cn.claims.specSupport.amend",
-                details=f"{issue_count} term(s) may lack specification support across {claim_count} claim(s).",
+                # Advisory tier (ADR-159) — zero grade impact via ADVISORY_REVIEW_KEYS.
+                status="verify",
+                message="Claim terms to verify for specification support.",
+                message_key="check.cn.claims.specSupport.verify",
+                details=f"{issue_count} term(s) to verify for specification support across {claim_count} claim(s).",
                 details_key="details.cn.specSupportTerms",
                 details_params={
                     "issue_count": issue_count,
@@ -756,10 +759,12 @@ def _run_tw_pipeline(
         claim_count = len(claim_ids)
         claims_checks = list(claims_checks) + [
             CheckItem(
-                status="amend",
-                message="Possible missing antecedent basis found.",
-                message_key="check.tw.claims.antecedentBasis.amend",
-                details=f"{issue_count} term(s) may lack antecedent basis across {claim_count} claim(s).",
+                # Advisory tier (ADR-159) — visible "references to verify",
+                # zero grade impact via ADVISORY_REVIEW_KEYS.
+                status="verify",
+                message="References to verify for antecedent basis.",
+                message_key="check.tw.claims.antecedentBasis.verify",
+                details=f"{issue_count} reference(s) to verify across {claim_count} claim(s).",
                 details_key="details.tw.antecedentBasisTerms",
                 details_params={
                     "issue_count": issue_count,
@@ -790,10 +795,11 @@ def _run_tw_pipeline(
         )
         claims_checks = list(claims_checks) + [
             CheckItem(
-                status="amend",
-                message="Possible claim terms not supported by the specification.",
-                message_key="check.tw.claims.specSupport.amend",
-                details=f"{issue_count} term(s) may lack specification support across {claim_count} claim(s).",
+                # Advisory tier (ADR-159) — zero grade impact via ADVISORY_REVIEW_KEYS.
+                status="verify",
+                message="Claim terms to verify for specification support.",
+                message_key="check.tw.claims.specSupport.verify",
+                details=f"{issue_count} term(s) to verify for specification support across {claim_count} claim(s).",
                 details_key="details.tw.specSupportTerms",
                 details_params={
                     "issue_count": issue_count,

@@ -1021,7 +1021,8 @@
       },
       "antecedentBasis": {
         "pass": "선행사 기초 문제가 검출되지 않았습니다(§ 112(b)).",
-        "amend": "선행사 기초 누락 가능성(§ 112(b)): 'the X / said X'에 선행하는 'a X' 도입이 명세서상에 없을 수 있습니다."
+        "amend": "선행사 기초 누락 가능성(§ 112(b)): 'the X / said X'에 선행하는 'a X' 도입이 명세서상에 없을 수 있습니다.",
+        "verify": "선행사(확인이 필요한 참조, § 112(b)): 각 'the X / said X'가 선행하는 'a X' 도입에 대응하는지 확인하십시오."
       },
       "missingTransition": "청구항 {{claimNumber}}에 연결어(예: 'comprising', 'consisting of')가 누락되었습니다",
       "missingTransitionDetails": "청구항 {{claimNumber}}에 인식 가능한 연결어가 포함되어 있지 않습니다. 모든 청구항에는 전제부와 본문 사이에 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by' 또는 'characterized in that' 등의 연결어가 포함되어야 합니다.",
@@ -1349,11 +1350,13 @@
         },
         "antecedentBasis": {
           "pass": "선행사 기초 관련 문제가 감지되지 않았습니다(审查指南).",
-          "amend": "{{claims}}에서 선행사가 없을 수 있는 용어 {{issue_count}}개(审查指南): '该 / 所述' 참조에 대한 선행 도입이 보이지 않습니다(예: '一' / '至少一' / '多个' + 명사 형식)."
+          "amend": "{{claims}}에서 선행사가 없을 수 있는 용어 {{issue_count}}개(审查指南): '该 / 所述' 참조에 대한 선행 도입이 보이지 않습니다(예: '一' / '至少一' / '多个' + 명사 형식).",
+          "verify": "{{claims}}에서 선행사 확인이 필요한 참조 {{issue_count}}건(审查指南): 각 '该 / 所述' 참조가 선행 도입에 대응하는지 확인하십시오."
         },
         "specSupport": {
           "pass": "명세서에서 뒷받침되지 않는 청구항 용어가 감지되지 않았습니다(审查指南).",
-          "amend": "{{claims}}에서 명세서의 뒷받침이 부족할 수 있는 청구항 용어 {{issue_count}}개(审查指南 第二部分第二章 §3.2.1)."
+          "amend": "{{claims}}에서 명세서의 뒷받침이 부족할 수 있는 청구항 용어 {{issue_count}}개(审查指南 第二部分第二章 §3.2.1).",
+          "verify": "{{claims}}에서 명세서 뒷받침 확인이 필요한 청구항 용어 {{issue_count}}개(审查指南 第二部分第二章 §3.2.1): 각 용어가 명세서 본문에 나타나는지 확인하십시오."
         },
         "omnibus": {
           "amend": "{{claims}}: 청구항이 구체적 기술적 특징을 기재하지 않고 说明书·附图를 원용하고 있습니다 (审查指南 第二部分第二章 §3.3).",
@@ -1537,11 +1540,13 @@
         },
         "antecedentBasis": {
           "pass": "선행사 기초 관련 문제가 감지되지 않았습니다.",
-          "amend": "{{claims}}에서 선행사가 없을 수 있는 용어 {{issue_count}}개: '該 / 所述 / 前述' 참조에 대한 선행 도입이 보이지 않습니다(예: '一' / '至少一' / '複數個' + 명사 형식)."
+          "amend": "{{claims}}에서 선행사가 없을 수 있는 용어 {{issue_count}}개: '該 / 所述 / 前述' 참조에 대한 선행 도입이 보이지 않습니다(예: '一' / '至少一' / '複數個' + 명사 형식).",
+          "verify": "{{claims}}에서 선행사 확인이 필요한 참조 {{issue_count}}건: 각 '該 / 所述 / 前述' 참조가 선행 도입에 대응하는지 확인하십시오."
         },
         "specSupport": {
           "pass": "명세서에서 뒷받침되지 않는 청구항 용어가 감지되지 않았습니다.",
-          "amend": "{{claims}}에서 명세서의 뒷받침이 부족할 수 있는 청구항 용어 {{issue_count}}개."
+          "amend": "{{claims}}에서 명세서의 뒷받침이 부족할 수 있는 청구항 용어 {{issue_count}}개.",
+          "verify": "{{claims}}에서 명세서 뒷받침 확인이 필요한 청구항 용어 {{issue_count}}개: 각 용어가 명세서 본문에 나타나는지 확인하십시오."
         },
         "independentPreamble": {
           "pass": "독립항의 「一種」 전제부 관련 문제가 감지되지 않았습니다.",
@@ -1674,7 +1679,7 @@
     "preamble_noun_mismatch": "종속항과 독립항 간 전제부 명사 불일치(MPEP § 608.01(m)).",
     "preamble_indefinite_article": "종속항 전제부에 부정관사가 사용되었습니다. 'The'를 사용해야 합니다(MPEP § 608.01(m)).",
     "preamble_parse_unclear": "{{count}}개 종속 청구항의 전제부를 인식하지 못해 전제부 일관성을 검증할 수 없습니다(MPEP § 608.01(n)).",
-    "spec_support_unsupported_terms": "명세서에서 찾을 수 없는 청구항 용어: 각 용어는 명세서상의 서면 개시로 뒷받침되어야 합니다(§ 112(a)).",
+    "spec_support_unsupported_terms": "명세서 뒷받침(확인이 필요한 청구항 용어, § 112(a)): 각 용어가 명세서의 서면 개시로 뒷받침되는지 확인하십시오.",
     "spec_support_pass": "모든 청구항 용어가 명세서에서 발견되었습니다(§ 112(a) 서면 개시 요건).",
     "required_sections_pass": "MPEP § 608.01(a)에 따른 모든 필수 섹션이 존재합니다.",
     "required_sections_missing": "MPEP § 608.01(a)에 따른 필수 섹션이 누락되었습니다.",
