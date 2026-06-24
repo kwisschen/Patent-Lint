@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 40,
+    "current_round": 41,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -113,6 +113,14 @@
         "round": 40,
         "name": "r40_direction_noun_xiang_suffix_guard",
         "description": "WS-B1 (ADR-159 Path-to-80). Guarded the trailing `向` single-char strip so it does NOT fire when 向 is a bound NOUN suffix in a direction noun (方向/轴向/径向/横向/纵向/周向/切向/法向/侧向/竖向/斜向/单向/双向/同向/反向/正向/逆向/定向/指向/取向/转向/导向) via _DIRECTION_STEM_BEFORE_XIANG_CN. The `向` strip was a speculative TW-parity PRE-EMPTIVE add with the code comment 'CN 0 walker_fp this round' (a DR-1 violation); it truncated `所述圆周方向` to `圆周方` — a real corpus walker_fp (CN117837052A c32). Ends 121 CN antecedent walker_fp on the eval corpus, 0 FNs (3 direction-noun defects SHIFT to their corrected terms 第一方向/第一取向 and re-fire — ADR-111 dual-labeled in phase2b_results_cn_corrections.json). Fixtures_silenced: 0 (direction-noun truncation pattern not in the 16 CN docx fixtures; unresolved_new=0/unresolved_removed=0/protect_violations=0). CN-only this round; TW parity tracked separately (TW shares 方向 chars — checked next). Over-inclusion of stems is FN-safe: not-stripping can only leave a pre-existing over-capture, never over-silence a real defect.",
+        "user_attested_issues": [],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-06-24T00:00:00+00:00"
+      },
+      {
+        "round": 41,
+        "name": "r41_trailing_verb_overcapture_batch",
+        "description": "WS-A3/campaign over-capture mining. Added 7 trailing VERBS to _TRAILING_VERB_DENYLIST_CN (穿过/断开/切换/前进/对准/穿刺/嵌入) from the CN gold walker_fp over-capture cluster (2,129 no-intro over-captures; e.g. 开关断开→开关, 第一光束移→…). FN-guard: validate_fix silenced_walker_fp=58 / silenced_legit=0. An initial 14-verb batch silenced 10 gold-legit (布置=layout/接合=joint/插入=insertion/对接/联接/卡合/贴合 carry real NOUN senses + intro-side cascade) → narrowed to the verb-only-at-tail set per the FN-guard (the autonomy contract's auto-narrow). Corpus-silent on the 16 CN docx fixtures (fixtures_silenced=0; unresolved_new/removed=0, protect_violations=0). CN-specific verbs; no clean US/TW parity (English/Traditional verb forms differ) — TW over-capture batch is a separate mining round.",
         "user_attested_issues": [],
         "fixtures_silenced": 0,
         "shipped_at": "2026-06-24T00:00:00+00:00"

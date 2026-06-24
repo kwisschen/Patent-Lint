@@ -1482,6 +1482,20 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         #   (相邻边缘 / 相邻区域 / 相邻通道). Closes tw_contamination
         #   over-capture `限位导槽分别相邻` → `限位导槽` (issue #171).
         "相邻",
+        # === R41 (2026-06-24) — examiner/gold-mined trailing-verb over-capture
+        # batch. Mined from CN gold walker_fp over-capture cluster (2,129
+        # no-intro over-captures; these verbs over-ran the head noun, e.g.
+        # `换挡拨叉接合`/`开关断开`/`第一光束移动`). All are unambiguous VERBS in
+        # trailing position; noun-sense compounds carry a suffix (插入件/对接器/
+        # 联接器/穿刺针) so the bare 2-char verb only appears verb-mode at the
+        # tail. The FN-guard (silenced_legit==0 over the CN gold) vets each;
+        # gray noun-sense verbs (接触/存储/垂直/平行) were HELD OUT, and the
+        # FN-guard further removed 布置/接合/插入/对接/联接/卡合/贴合 — each
+        # carries a real NOUN sense (布置=layout, 接合=joint, 插入=insertion,
+        # 对接/联接=coupling/docking) that the LLM gold flagged as a legit head
+        # noun, so stripping them silenced real defects (direct + intro-side
+        # cascade). The surviving set is verb-only at the noun tail.
+        "穿过", "断开", "切换", "前进", "对准", "穿刺", "嵌入",
     ),
     key=len,
     reverse=True,
