@@ -2306,6 +2306,20 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         # 耦接/耦合 (noun `電耦合`/`熱耦合`=coupling) + 穿過 (over-capture
         # `運行穿過` whose clean head was a real defect + intro-side cascade).
         "轉換", "斷開", "切換", "嵌入",
+        # === R11 (2026-06-24) — second TW over-capture batch (TW gold walker_fp
+        # 2-char trailing cluster, each legit==0). Verb-only-at-tail predicates:
+        # 加入 (join — CN R42 parity), 界定 (define — `限制系統界定`), 移除
+        # (remove), 患有 (suffer-from, medical — `個體患有`), 接受 (accept/
+        # receive), 傳播 (propagate), 轉化 (convert), 串聯 (in-series),
+        # 暴露 (exposed — CN R43 parity), 平行 (parallel — CN R43 parity; noun
+        # 平行度 carries 度), 保持 (maintain — CN R43 parity; noun 保持架 carries
+        # 架). PARITY CHECK (cross-juris discipline): CN R43's 垂直/嚙合 were HELD
+        # OUT here — the TW gold carries 1 legit each (`表面呈垂直`, `內齒嚙合`),
+        # so mirroring them would silence real defects (denylists drift). Strong
+        # independent-noun verbs 交換 (exchange) / 分佈 (distribution) also held.
+        # FN-guard auto-narrows any gray verb that silences gold-legit or cascades.
+        "加入", "界定", "移除", "患有", "接受", "傳播", "轉化", "串聯",
+        "暴露", "平行", "保持",
     ),
     key=len,
     reverse=True,
