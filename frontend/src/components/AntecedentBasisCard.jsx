@@ -6,7 +6,7 @@ import { ListChecks, ChevronRight, Flag, Check, RotateCcw } from 'lucide-react'
 import { Button } from './ui/button'
 import { FrostCard } from './ui/frost-card'
 import { StatusPill } from './ui/status-pill'
-import { composeFeedback, sendReport, excerptAroundReference, SAMPLE_SIZE } from '../lib/feedback'
+import { composeFeedback, sendReport, excerptAroundReference, candidateIntroExcerpt, SAMPLE_SIZE } from '../lib/feedback'
 import { useFeedback } from './FeedbackPicker'
 import ReportModal from './ReportModal'
 
@@ -246,12 +246,20 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
   const hintsByLabel = {}
   for (const f of findings) {
     const label = f.reference_form || f.term
-    if (!hintsByLabel[label]) hintsByLabel[label] = { didYouMean: null, crossRef: null }
+    if (!hintsByLabel[label]) hintsByLabel[label] = { didYouMean: null, crossRef: null, candidateIntro: null }
     if (f.suggested_match && !hintsByLabel[label].didYouMean) {
       hintsByLabel[label].didYouMean = f.suggested_match
     }
     if (f.cross_ref === 'spec_support') {
       hintsByLabel[label].crossRef = 'spec_support'
+    }
+    // Candidate-introduction hint: the flagged term appears earlier in the
+    // SAME claim, article-less (or with an intro quantifier) — it may already
+    // be introduced. Surfaced as a fact for the user to verify (self-
+    // classification), not a verdict — honors the §112 advisory framing.
+    if (!hintsByLabel[label].candidateIntro && f.term) {
+      const ci = candidateIntroExcerpt(claimTextMap[f.claim_id] || '', f.term, f.reference_form)
+      if (ci) hintsByLabel[label].candidateIntro = { ...ci, term: f.term }
     }
   }
 
@@ -368,7 +376,7 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
             the user reads the flagged claim text first, then the suggestion. */}
         {terms.map((label) => {
           const hints = hintsByLabel[label]
-          if (!hints || (!hints.didYouMean && !hints.crossRef)) return null
+          if (!hints || (!hints.didYouMean && !hints.crossRef && !hints.candidateIntro)) return null
           return (
             <div
               key={`hints-${label}`}
@@ -398,6 +406,19 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
               })()}
               {hints.crossRef === 'spec_support' && (
                 <div>{t('antecedent.crossRefSpecSupport')}</div>
+              )}
+              {hints.candidateIntro && (
+                <div>
+                  {t(
+                    hints.candidateIntro.marker === 'article_less'
+                      ? 'antecedent.candidateIntroArticleLess'
+                      : 'antecedent.candidateIntroQuantifier',
+                    {
+                      term: hints.candidateIntro.term,
+                      marker: hints.candidateIntro.marker,
+                    },
+                  )}
+                </div>
               )}
             </div>
           )
@@ -488,6 +509,63 @@ export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }
   const openCount = visibleGroups.length - reviewedCount
   const allReviewed = openCount === 0
 
+  // ── Section-level batch report ────────────────────────────────────────
+  // Bundle every finding in the section into ONE report. NEUTRAL disposition:
+  // a §112 section is a mix of real defects and FPs, so a blanket FP/TP verdict
+  // would poison the gold — the maintainer triages each finding on its merits.
+  const { sendFeedback: sendBatchFeedback } = useFeedback()
+  const [batchModalOpen, setBatchModalOpen] = useState(false)
+  const BATCH_MAX = 25
+  const buildBatchDiagnostics = () => {
+    const findingsList = issues.slice(0, BATCH_MAX).map((f) => {
+      const claimText = claimTextMap[f.claim_id] || ''
+      const { context_before, context_after, char_offset } = excerptAroundReference(
+        claimText, f.term || '', f.reference_form || null)
+      const suggested = f.suggested_match || {}
+      return {
+        claim_id: f.claim_id,
+        term: f.term || null,
+        reference_form: f.reference_form || null,
+        did_you_mean: suggested.term || null,
+        did_you_mean_claim_id: suggested.claim_id || null,
+        category: f.category || null,
+        char_offset,
+        context_before,
+        context_after,
+        claim_text_charlen: claimText.length,
+      }
+    })
+    return {
+      batch: true,
+      findings_in_group: issues.length,
+      findings: findingsList,
+      claim_count: Object.keys(byClaim).length,
+      ...(issues.length > BATCH_MAX && { findings_truncated_to: BATCH_MAX }),
+    }
+  }
+  const handleBatchConfirm = (userComment, disposition) =>
+    sendReport({
+      checkKey: 'antecedentBasis',
+      jurisdiction: jurisdiction || 'unknown',
+      locale: i18n.language,
+      diagnostics: buildBatchDiagnostics(),
+      userComment,
+      disposition,
+    })
+  const handleBatchMailto = () =>
+    sendBatchFeedback(
+      composeFeedback(
+        {
+          check_key: 'antecedentBasis',
+          jurisdiction: jurisdiction || 'unknown',
+          diagnostics: buildBatchDiagnostics(),
+        },
+        t,
+        { locale: i18n.language },
+      ),
+      { verb: 'report' },
+    )
+
   return (
     <FrostCard tier="resting" accent="attention">
       <div className="flex items-start gap-3 px-4 py-3 pl-5">
@@ -503,6 +581,17 @@ export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }
             ? t('antecedentBasis.allReviewedPill')
             : `${openCount} ${t('antecedentBasis.toVerify')}`}
         </StatusPill>
+        <Button
+          variant="ghost"
+          size="xs"
+          onClick={() => setBatchModalOpen(true)}
+          title={t('feedback.reportAll')}
+          aria-label={t('feedback.reportAll')}
+          className="shrink-0"
+        >
+          <Flag />
+          <span className="hidden sm:inline">{t('feedback.reportAll')}</span>
+        </Button>
       </div>
       {reviewedCount > 0 && !allReviewed && (
         <div className="px-5 pb-1 -mt-1 text-[11px] text-muted-foreground">
@@ -528,6 +617,18 @@ export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }
           )
         })}
       </div>
+      <ReportModal
+        open={batchModalOpen}
+        onOpenChange={setBatchModalOpen}
+        checkKey="antecedentBasis"
+        jurisdiction={jurisdiction || 'unknown'}
+        locale={i18n.language}
+        diagnostics={buildBatchDiagnostics()}
+        onConfirm={handleBatchConfirm}
+        onMailtoFallback={handleBatchMailto}
+        batchMode
+        batchCount={issues.length}
+      />
     </FrostCard>
   )
 }

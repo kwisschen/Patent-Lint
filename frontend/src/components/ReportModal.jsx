@@ -45,6 +45,8 @@ export default function ReportModal({
   onConfirm,
   onMailtoFallback,
   initialDisposition,
+  batchMode = false,
+  batchCount = 0,
 }) {
   const { t } = useTranslation()
   const [submitting, setSubmitting] = useState(false)
@@ -120,6 +122,14 @@ export default function ReportModal({
           </DialogDescription>
         </DialogHeader>
 
+        {batchMode ? (
+          // Batch (section-level) report: a single blanket FP/TP verdict would
+          // mislabel the mixed real/false findings in a §112 section, so batch
+          // sends carry NO disposition — each finding is triaged on its merits.
+          <div className="rounded-md border border-border/60 bg-muted/40 px-3 py-2 text-xs leading-snug text-muted-foreground">
+            {t('feedback.reportModal.batchNote', { count: batchCount })}
+          </div>
+        ) : (
         <div className="space-y-1.5">
           <p className="text-xs font-medium text-muted-foreground">
             {t('feedback.reportModal.dispositionHeading')}
@@ -160,6 +170,7 @@ export default function ReportModal({
             {t('feedback.reportModal.dispositionWhy')}
           </p>
         </div>
+        )}
 
         <div className="frost-card !rounded-md p-3">
           <p className="mb-2 text-xs font-medium text-muted-foreground">
@@ -263,7 +274,7 @@ export default function ReportModal({
           </Button>
           <Button
             onClick={handleSend}
-            disabled={submitting || result === 'success' || !disposition}
+            disabled={submitting || result === 'success' || (!disposition && !batchMode)}
           >
             {t('feedback.reportModal.send')}
           </Button>

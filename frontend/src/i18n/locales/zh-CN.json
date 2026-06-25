@@ -175,6 +175,7 @@
   },
   "feedback": {
     "report": "意见反馈",
+    "reportAll": "全部反馈",
     "reportProblem": "对此检查提供反馈",
     "picker": {
       "title": "您的稿件不会离开您的设备",
@@ -301,7 +302,8 @@
           "label": "确认为正确标记",
           "hint": "分析器是对的，这是待修正的真实问题。"
         }
-      }
+      },
+      "batchNote": "批量反馈：本节全部 {{count}} 项标记将一并送出以供审阅。不附带逐项判定，每项将单独评估。"
     }
   },
   "cta": {
@@ -332,7 +334,9 @@
     "didYouMean": "您是否指的是“{{term}}”（于权利要求{{claim_id}}中引入）？",
     "didYouMeanCrossBranch": "您是否指的是“{{term}}”（于权利要求 {{claim_id}} 中引入，但该权利要求不在本权利要求的相依链中）？",
     "crossBranchAntecedent": "在权利要求 {{claim_id}} 中引入，但该权利要求不在本权利要求的相依链中。请调整相依结构或以「a」重新引入该用语。",
-    "crossRefSpecSupport": "亦于下方之说明书支持检查中标记。"
+    "crossRefSpecSupport": "亦于下方之说明书支持检查中标记。",
+    "candidateIntroArticleLess": "“{{term}}”在本权利要求前文已出现（未带限定词），可能已经引入，请核实。",
+    "candidateIntroQuantifier": "“{{term}}”在本权利要求前文已以“{{marker}}”引入，请核实。"
   },
   "specSupport": {
     "title": "说明书支持检查",

@@ -175,6 +175,7 @@
   },
   "feedback": {
     "report": "Send feedback",
+    "reportAll": "Report all",
     "reportProblem": "Send feedback on this check",
     "picker": {
       "title": "Your draft stays on your device",
@@ -301,7 +302,8 @@
           "label": "This is a correct catch",
           "hint": "The checker is right — a genuine issue to fix."
         }
-      }
+      },
+      "batchNote": "Batch report: all {{count}} flagged item(s) in this section will be sent together for review. No per-item verdict is attached — each is assessed on its own."
     }
   },
   "cta": {
@@ -332,7 +334,9 @@
     "didYouMean": "Did you mean *{{term}}* (introduced in claim {{claim_id}})?",
     "didYouMeanCrossBranch": "Did you mean *{{term}}* (introduced in claim {{claim_id}}, which is not in this claim's dependency chain)?",
     "crossBranchAntecedent": "Introduced in claim {{claim_id}}, which is not in this claim's dependency chain. Restructure the dependency or re-introduce the term with \"a\".",
-    "crossRefSpecSupport": "Also flagged in the specification-support review below."
+    "crossRefSpecSupport": "Also flagged in the specification-support review below.",
+    "candidateIntroArticleLess": "*{{term}}* also appears earlier in this claim without an article — it may already be introduced; verify.",
+    "candidateIntroQuantifier": "*{{term}}* appears earlier in this claim with \"{{marker}}\" — it may already be introduced; verify."
   },
   "specSupport": {
     "title": "Specification Support Review",

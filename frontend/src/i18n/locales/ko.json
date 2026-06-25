@@ -175,6 +175,7 @@
   },
   "feedback": {
     "report": "의견 보내기",
+    "reportAll": "전체 신고",
     "reportProblem": "이 점검에 대한 의견 보내기",
     "picker": {
       "title": "귀하의 원고는 기기를 벗어나지 않습니다",
@@ -301,7 +302,8 @@
           "label": "올바른 지적",
           "hint": "분석기의 지적이 맞습니다. 수정해야 할 실제 문제입니다."
         }
-      }
+      },
+      "batchNote": "일괄 신고: 이 섹션의 표시된 {{count}}개 항목을 함께 검토용으로 전송합니다. 항목별 판정은 첨부되지 않으며 각 항목은 개별적으로 평가됩니다."
     }
   },
   "cta": {
@@ -332,7 +334,9 @@
     "didYouMean": "혹시 '{{term}}' (청구항 {{claim_id}}에서 도입됨)을 의미하셨나요?",
     "didYouMeanCrossBranch": "혹시 '{{term}}' (청구항 {{claim_id}}에서 도입되었으나, 해당 청구항은 본 청구항의 종속 계열에 포함되지 않음)을 의미하셨나요?",
     "crossBranchAntecedent": "청구항 {{claim_id}}에서 도입되었으나, 해당 청구항은 본 청구항의 종속 계열에 포함되지 않습니다. 종속 구조를 조정하거나 용어를 “a”로 다시 도입하세요.",
-    "crossRefSpecSupport": "아래의 명세서 뒷받침 검토에서도 지적되었습니다."
+    "crossRefSpecSupport": "아래의 명세서 뒷받침 검토에서도 지적되었습니다.",
+    "candidateIntroArticleLess": "'{{term}}'은(는) 본 청구항 앞부분에 한정사 없이 이미 나타납니다. 이미 도입되었을 수 있으니 확인하십시오.",
+    "candidateIntroQuantifier": "'{{term}}'은(는) 본 청구항 앞부분에서 '{{marker}}'와(과) 함께 도입되었습니다. 확인하십시오."
   },
   "specSupport": {
     "title": "명세서 뒷받침 검토",
