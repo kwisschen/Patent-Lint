@@ -435,6 +435,39 @@ _SUBJECT_END_RE = re.compile(r"(?:[，,；。]|其特徵在於|其改良在於|�
 # Leading quantifier for normalization
 _LEADING_QUANTIFIER = re.compile(r"^(?:一種|一個|該|所述|所述的)\s*")
 
+
+def _dep_preamble_subject_end(text: str) -> int:
+    """Return the end offset of a dependent claim's incorporation-by-reference
+    preamble subject, or 0 if the claim has no recognized dep preamble.
+
+    For `如請求項N所述的<SUBJECT>，…` the SUBJECT (e.g. `穿戴式人體照射裝置`)
+    is the parent claim's element brought in by reference — it is NOT a fresh
+    introduction. Intro captures whose match starts before this offset are
+    therefore redundant re-captures of the parent's subject (the parent claim
+    + the ancestor chain already establish it). Report #268 (2026-06-25): the
+    lazy F10b `的NOUN` capture truncated the 9-char subject `穿戴式人體照射裝置`
+    at the first component-suffix char (`體`) → `穿戴式人體`, which then failed
+    spec-support matching → false missing-support. Suppressing captures inside
+    the preamble subject span ends that truncation FP at the source, FN-safely:
+    the parent claim still inventories the full subject and the ancestor chain
+    still resolves body references to it.
+    """
+    # Skip a leading claim-number prefix (`9. ` / `9．`) — the parser stores
+    # claim.text with the number, but offsets must map back to claim.text, so
+    # track how many chars we skipped (`^`-anchored _DEP_PREFIX_RE can't start
+    # mid-string). Mirrors _extract_subject_with_path's number strip.
+    num_m = re.match(r"^\s*\d+\s*[.．]\s*", text)
+    offset = num_m.end() if num_m else 0
+    body = text[offset:]
+    m = _DEP_PREFIX_RE.match(body)
+    if not m:
+        return 0
+    boundary = _SUBJECT_END_RE.search(body, m.end())
+    # End of subject span = first clause boundary after the preamble connective,
+    # else end of text (single-clause dep claim). Add the stripped-number
+    # offset back so the result indexes the original claim.text.
+    return offset + (boundary.start() if boundary else len(body))
+
 # Transitional phrases (broader set per prompt).
 # 具備 / 具有 are added for 引用記載型式 (quoted-reference) independent
 # claims that declare a new subject and incorporate claim N's component:
@@ -2111,6 +2144,15 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         "延伸",  # 44 walker_fp / 0 legit. Risk: 延伸線 (extension line)
                 # at PREFIX position, suffix-position is uniformly verb.
         "經組態",  # 57 walker_fp / 0 legit. Passive participle ("configured").
+        # 排列: arrangement verb. Report #266 (2026-06-25) — `多個所述光源組
+        # 沿一預設方向排列` over-captured the intro as `預設方向排列`, so the
+        # reference `所述預設方向` failed to match → false missing-antecedent.
+        # 排列 is the clause predicate ("arranged"), not part of the element
+        # name. Compound-noun risk: 排列組合 carries 排列 at PREFIX position
+        # (unaffected by trailing strip); a suffix-position element ending in
+        # 排列 is rare and FN-guarded by validate_fix. CN parity measured on
+        # the CN corpus before mirroring (DR-1: no CN report yet).
+        "排列",
         # NOTE: 發光 not added — `發光二極體` (LED) suffix risk too high
         # for confident strip without per-claim context.
         # Verb suffixes
@@ -4065,11 +4107,20 @@ _F10B_BARE_DE_NOUN_RE = re.compile(
 )
 
 
-def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
+def _extract_supplementary_intros(
+    text: str, suppress_before: int = 0,
+) -> list[tuple[str, str]]:
     """Extract bare-noun introductions from supplementary patterns.
 
     Returns (original_span, normalized_term) pairs, same contract as
     extract_introductions_tw's main loop.
+
+    ``suppress_before`` (report #268): when > 0, drop any pair whose captured
+    span begins inside a dependent claim's incorporation-by-reference preamble
+    subject (offset < ``suppress_before``). The lazy F10b ``的NOUN`` fallback
+    truncates the preamble subject (`穿戴式人體照射裝置` → `穿戴式人體`); since
+    that subject is the parent claim's element (covered by the ancestor chain),
+    suppressing it here ends the truncation FP without dropping any body intro.
     """
     results: list[tuple[str, str]] = []
 
@@ -4605,13 +4656,23 @@ def _extract_supplementary_intros(text: str) -> list[tuple[str, str]]:
         seen_norms.add(full)
         extras.append((full, full))
 
-    return cleaned + extras
+    combined = cleaned + extras
+    if suppress_before:
+        # Drop captures whose first occurrence sits inside the dependent-claim
+        # preamble subject span. Body intros (after the first clause boundary)
+        # occur at/after suppress_before and are retained.
+        combined = [
+            (orig, norm) for (orig, norm) in combined
+            if not (0 <= text.find(orig) < suppress_before)
+        ]
+    return combined
 
 
 def extract_introductions_tw(
     claim: Claim,
     *,
     strict_qualifier_matching: bool = False,
+    suppress_dep_preamble: bool = False,
 ) -> list[tuple[str, str]]:
     """Extract introductions from a TW claim as (original, normalized) pairs.
 
@@ -4634,7 +4695,24 @@ def extract_introductions_tw(
     """
     pairs: list[tuple[str, str]] = []
     seen: set[str] = set()
+    # Report #268: optionally suppress intro captures inside a dependent
+    # claim's incorporation-by-reference preamble subject
+    # (`如請求項N所述的<SUBJECT>`). The subject is the parent's element, not a
+    # fresh intro — and the lazy F10b fallback truncates it
+    # (穿戴式人體照射裝置 → 穿戴式人體), producing spurious spec-support misses.
+    # SPEC-SUPPORT ONLY (suppress_dep_preamble=True): the §112(a) inventory
+    # double-counts the parent subject under the dependent claim, so dropping
+    # it there is FN-safe (the parent claim still inventories the full form).
+    # The §112(b) antecedent walker (default False) MUST keep these intros —
+    # they resolve the dependent claim's own body references to the subject,
+    # which the ancestor chain does not fully cover (validate_fix: removing
+    # them injected +47 unresolved-reference FPs).
+    _subject_end = (
+        _dep_preamble_subject_end(claim.text) if suppress_dep_preamble else 0
+    )
     for m in _INTRO_PATTERN.finditer(claim.text):
+        if _subject_end and m.start() < _subject_end:
+            continue
         original = m.group(0)
         bare_noun = m.group(1)
 
@@ -4720,7 +4798,9 @@ def extract_introductions_tw(
     # `製造方法` (from F14 on `之製造方法`) registers as `方法` after
     # stripping the leading 製造 verb prefix — matching the canonical
     # method-claim head-noun reference `該方法`.
-    supplementary = _extract_supplementary_intros(claim.text)
+    supplementary = _extract_supplementary_intros(
+        claim.text, suppress_before=_subject_end,
+    )
     for orig, norm in supplementary:
         # R63 (2026-05-05): symmetric Arabic-ordinal normalization.
         # The main intro path runs `normalize_candidate_intro` which

@@ -62,6 +62,10 @@ PHASE2B_RESULTS = {
         PROJECT_ROOT / 'tests/eval/phase2b_results_tw.json',
         PROJECT_ROOT / 'tests/eval/phase2b_results_tw_supplement.json',
         PROJECT_ROOT / 'tests/eval/phase2b_results_tw_autoapply.json',
+        # ADR-159 verified gold corrections (LAST = highest precedence). Each
+        # entry is a finding a maintainer READ and confirmed the ensemble
+        # mislabeled (over-strict legit on a term that IS introduced).
+        PROJECT_ROOT / 'tests/eval/phase2b_results_tw_corrections.json',
     ],
     'US': [
         PROJECT_ROOT / 'tests/eval/phase2b_results_us.json',
