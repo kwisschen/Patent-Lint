@@ -59,6 +59,7 @@ smoke-test-pyodide.html
 temp/
 # Auto-generated analysis artifacts (regenerable via tests.eval.post_phase1_runner)
 tests/eval/phase2b_results*.json
+tests/eval/d1_probe_*.json
 tests/eval/tw_descriptions.json
 tests/eval/cn_descriptions.json
 tests/eval/us_descriptions.json
