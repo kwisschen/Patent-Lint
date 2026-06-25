@@ -830,6 +830,10 @@ _CN_LATIN_PREFIX_DENYLIST = frozenset({
     # Telecom / radio standards
     "CDMA", "GSM", "LTE", "UMTS", "WCDMA", "CDMA2000",
     "P2P", "B2B", "B2C",
+    # X2X communication-mode abbreviations (device-/vehicle-to-X). Closed set
+    # of telecom protocol terms, never drawing-element designators. Mirror of
+    # the US Engine-3 R2 fix.
+    "D2D", "V2V", "V2I", "V2N", "V2P", "V2X", "V2G", "M2M",
     # Software / network / format
     "SQL", "API", "URL", "URI", "URN", "JSON", "XML", "HTML", "CSS",
     "TCP", "UDP", "HTTP", "HTTPS", "FTP", "DNS", "MAC", "IP", "USB",
@@ -844,6 +848,20 @@ _CN_LATIN_PREFIX_DENYLIST = frozenset({
     "PD1", "PDL1", "CTLA4",
     "STAT3", "MTOR", "AKT1", "AKT2",
     "RTK", "GPCR", "ATP", "ADP", "GTP", "CDP",
+})
+
+# Engine-3 R2 mirror (ADR-159) — amino-acid substitution notation (K417T /
+# D614G / L234F): IUPAC amino-acid letter + >=2-digit residue position + IUPAC
+# letter. A biology/clinical symbol, never a reference designator. The >=2-digit
+# guard + AA-letter set spare real uppercase-suffixed labels (U1A / C2D).
+_CN_AA_MUTATION_RE = re.compile(r"^[ACDEFGHIKLMNPQRSTVWY]\d{2,4}[ACDEFGHIKLMNPQRSTVWY]$")
+_CN_LEADING_ALPHA_RE = re.compile(r"^[A-Z]+")
+# Immunology / clinical biomarker leading-prefixes mis-captured as Latin-prefix
+# designators (CD3 / CLDN18 / IGG4 / IL7R / TNFa / HBA1C). Curated like the
+# gene/protein denylist; never label a drawing element.
+_CN_BIO_LEADING_PREFIXES = frozenset({
+    "CD", "CLDN", "IGG", "IGM", "IGA", "IGE", "IGD",
+    "IL", "TNF", "IFN", "HBA",
 })
 
 # Reference-form prefixes to strip from CJK names before D1 comparison.
@@ -1676,6 +1694,14 @@ def _cn_extract_numeral_name_pairs(text: str) -> list[tuple[str, str]]:
             # Reject if either alpha-prefix OR full normalized token is
             # in the denylist (B2B/V02/CDMA2000).
             if prefix in _CN_LATIN_PREFIX_DENYLIST or ref_upper in _CN_LATIN_PREFIX_DENYLIST:
+                continue
+            # Engine-3 R2 mirror: amino-acid mutation notation + immunology/
+            # clinical biomarker prefixes are bio symbols, not reference
+            # designators. FN-safe (same domain-curated basis as the US fix).
+            if _CN_AA_MUTATION_RE.match(ref_upper):
+                continue
+            _lead = _CN_LEADING_ALPHA_RE.match(ref_upper)
+            if _lead and _lead.group() in _CN_BIO_LEADING_PREFIXES:
                 continue
             ref = ref_upper  # normalize Latin-prefix refnum case
             raw_noun = m.group("noun")
