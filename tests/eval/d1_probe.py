@@ -108,7 +108,9 @@ async def judge(client, sem, juris, r, usage):
                 messages=[{"role": "user", "content": _user_prompt(juris, r)}],
             )
         except Exception as e:
-            r["verdict"] = "error"; r["reason"] = str(e)[:60]; return r
+            r["verdict"] = "error"
+            r["reason"] = str(e)[:60]
+            return r
         usage["in"] += resp.usage.input_tokens
         usage["out"] += resp.usage.output_tokens
         txt = resp.content[0].text if resp.content else "{}"
@@ -152,7 +154,7 @@ async def main_async(args):
     print(f"  overcapture-class: ~{est_oc:.0f} FP  (of {n_oc_total})")
     print(f"  protect-class:     ~{est_pr:.0f} FP  (of {n_pr_total})")
     print(f"  TOTAL est. addressable FP (CN): ~{est_oc + est_pr:.0f}")
-    print(f"  (TW shares the extractor; expect a similar-magnitude pool.)")
+    print("  (TW shares the extractor; expect a similar-magnitude pool.)")
     # cost (Sonnet 4.6: $3 / Mtok in, $15 / Mtok out)
     cost = usage["in"] / 1e6 * 3 + usage["out"] / 1e6 * 15
     print(f"\ntokens in={usage['in']} out={usage['out']}  est. cost ${cost:.3f}")
