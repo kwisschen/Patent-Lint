@@ -2094,6 +2094,14 @@ def normalize_candidate_intro_cn(
     t = strip_leading_quantifier_cn(t)
     t = strip_reference_form_prefix_cn(t)
     t = strip_leading_verb_cn(t)
+    # #245 mirror (TW R14 → CN): strip an inline English-word parenthetical gloss
+    # that bled into the captured intro (`一中介片（interposer）` → `中介片（interpos`),
+    # so it matches the bare reference `所述中介片`. INTRO SIDE ONLY (the reference
+    # normalize keeps the paren) so gloss-bearing abbreviations whose abbreviation
+    # IS the element identity keep their own intro requirement. ≥3 pure letters so
+    # designators `（A1）` / reference numerals `（10）` are preserved; closing paren
+    # optional for the _INTRO_PATTERN-truncated tail. FN-guarded on the CN corpus.
+    t = re.sub(r"[(（][A-Za-z]{3,}(?:[)）]|$)", "", t)
     return t
 
 
