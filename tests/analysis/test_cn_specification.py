@@ -657,6 +657,34 @@ def test_interior_conjunction_split_parity_242():
     assert _cn_extract_numeral_name_pairs("該散熱片與基板10連接") == [("10", "基板")]
 
 
+class TestCnD1FnSafePrune:
+    """FN-safe CJK extraction-noise prune (gold-validated 2026-06-25, CN+TW): a 1x
+    ordinal variant or substring of the canonical is dropped; distinct nouns and
+    repeated outliers are kept."""
+
+    def test_prune_ordinal_variant_single_occurrence(self):
+        from patentlint.analysis.cn_specification import _cn_prune_fn_safe_outliers
+        # '第二|外殼' (1x) vs canonical '第一|外殼' — same base noun, drop
+        assert _cn_prune_fn_safe_outliers(
+            [{"name": "第二|外殼", "count": 1}], "第一|外殼") == []
+
+    def test_prune_substring_fragment_single_occurrence(self):
+        from patentlint.analysis.cn_specification import _cn_prune_fn_safe_outliers
+        # '容槽' (1x) is a substring of '軸承容槽' — fragment, drop
+        assert _cn_prune_fn_safe_outliers(
+            [{"name": "|容槽", "count": 1}], "|軸承容槽") == []
+
+    def test_prune_keeps_distinct_noun(self):
+        from patentlint.analysis.cn_specification import _cn_prune_fn_safe_outliers
+        outs = [{"name": "|電極", "count": 1}]  # distinct element vs 阵列 — KEEP
+        assert _cn_prune_fn_safe_outliers(outs, "|阵列") == outs
+
+    def test_prune_keeps_repeated_outlier(self):
+        from patentlint.analysis.cn_specification import _cn_prune_fn_safe_outliers
+        outs = [{"name": "第二|外殼", "count": 2}]  # 2x, not a bleed — KEEP
+        assert _cn_prune_fn_safe_outliers(outs, "第一|外殼") == outs
+
+
 class TestCnD1BioSymbolAndMutation:
     """Engine-3 R2 mirror (ADR-159): CJK D1 must not capture biology/clinical
     biomarker symbols or amino-acid mutation notation as Latin-prefix reference

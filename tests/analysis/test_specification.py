@@ -629,6 +629,41 @@ class TestD1ElementNameOverCapture:
         assert "motor" in names and "bracket" in names
 
 
+class TestD1FnSafePrune:
+    """FN-safe extraction-noise prune (gold-validated 2026-06-25): a 1x ordinal
+    variant or substring of the canonical is dropped; distinct nouns and repeated
+    outliers are kept (the FN boundary)."""
+
+    def test_prune_ordinal_variant_single_occurrence(self):
+        from patentlint.analysis.specification import _prune_fn_safe_outliers
+        assert _prune_fn_safe_outliers(
+            [{"name": "second|switch", "count": 1}], "first|switch") == []
+
+    def test_prune_substring_fragment_single_occurrence(self):
+        from patentlint.analysis.specification import _prune_fn_safe_outliers
+        assert _prune_fn_safe_outliers(
+            [{"name": "|slot", "count": 1}], "|bearing slot") == []
+
+    def test_prune_keeps_distinct_noun(self):
+        from patentlint.analysis.specification import _prune_fn_safe_outliers
+        outs = [{"name": "|bracket", "count": 1}]  # distinct element — FN-safe KEEP
+        assert _prune_fn_safe_outliers(outs, "|motor") == outs
+
+    def test_prune_keeps_repeated_outlier(self):
+        from patentlint.analysis.specification import _prune_fn_safe_outliers
+        outs = [{"name": "second|switch", "count": 2}]  # 2x, not a bleed — KEEP
+        assert _prune_fn_safe_outliers(outs, "first|switch") == outs
+
+    def test_ordinal_variant_single_occurrence_pruned_end_to_end(self):
+        from patentlint.analysis.specification import check_numeral_consistency
+        # canonical 'first switch' (3x) + one 'second switch' bleed → pruned → pass
+        results = check_numeral_consistency(
+            "The first switch 30 closes. The first switch 30 opens. "
+            "The first switch 30 is fast. The second switch 30 is slow."
+        )
+        assert results[0].status == "pass"
+
+
 class TestD1BioSymbolAndMutation:
     """Engine-3 R2 (ADR-159): biology/clinical biomarker symbols and amino-acid
     substitution notation are mis-captured as Latin-prefix reference designators
