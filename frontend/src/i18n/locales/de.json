@@ -174,8 +174,8 @@
     "sister": "PatentNode: Bescheidserwiderungen"
   },
   "feedback": {
-    "report": "Sieht falsch aus?",
-    "reportProblem": "Vermutlichen Fehlalarm melden",
+    "report": "Feedback senden",
+    "reportProblem": "Feedback zu dieser Prüfung senden",
     "picker": {
       "title": "Ihr Entwurf bleibt auf Ihrem Gerät",
       "send": {
@@ -184,9 +184,9 @@
         "gmail": "Über Gmail senden"
       },
       "report": {
-        "description": "Ihr Fehlerbericht ist bereit, mit demselben Inhalt in der Zwischenablage. Wie möchten Sie ihn senden?",
-        "mailto": "Über Outlook oder Mobile melden",
-        "gmail": "Über Gmail melden"
+        "description": "Ihr Feedback ist bereit, mit demselben Inhalt in der Zwischenablage. Wie möchten Sie es senden?",
+        "mailto": "Über Outlook oder Mobile senden",
+        "gmail": "Über Gmail senden"
       },
       "clipboard": "In die Zwischenablage kopieren",
       "remember": "Auswahl merken"
@@ -206,7 +206,7 @@
     "enterprisePlaceholder": "[Beschreiben Sie Ihren Einsatzbedarf — Kanzlei- oder Teamgröße und Fachgebiet, Regionen, in denen Sie tätig sind, ungefähres Dokumentenvolumen, Evaluierungszeitraum und besondere Anforderungen (z. B. On-Premises- oder Air-Gap-Installation für ITAR- oder Datenschutzanforderungen, SSO, eigene Prüfungen).]",
     "builderPlaceholder": "[Worum es geht — Interesse an einer Zusammenarbeit, eine Kooperationsidee, Feedback zum Projekt, eine Korrektur zu Texten oder Terminologie, oder einfach ein Hallo. Dies ist der direkte Draht zum Entwickler; konkrete Fehlerberichte zu einzelnen Befunden funktionieren am besten über den „Sieht falsch aus?“-Button in der App.]",
     "email": {
-      "subjectFinding": "PatentLint Befundbericht — {{checkKey}}",
+      "subjectFinding": "PatentLint-Feedback — {{checkKey}}",
       "subjectFooter": "PatentLint Feedback",
       "subjectEnterprise": "PatentLint Enterprise-Anfrage",
       "subjectBuilder": "Hallo! Kurz zu PatentLint",
@@ -278,28 +278,28 @@
       "fieldDisposition": "Einordnung"
     },
     "reportModal": {
-      "title": "Anonyme Meldung senden?",
-      "body": "Ein kleines strukturiertes Paket geht über HTTPS an PatentLint, damit wir diese Prüfung untersuchen können: Zählwerte, der markierte Begriff oder Ausdruck, ein kurzer Kontextausschnitt und Kategoriebezeichnungen. Keinen vollständigen Anspruchstext, keine vollständigen Absätze, keine E-Mail, keine IP — und was Sie unten sehen, ist genau das, was bei uns ankommt.",
+      "title": "Anonymes Feedback senden?",
+      "body": "Ein kleines strukturiertes Paket geht über HTTPS an PatentLint, damit wir diese Prüfung verbessern können: Zählwerte, der markierte Begriff oder Ausdruck, ein kurzer Kontextausschnitt und Kategoriebezeichnungen. Keinen vollständigen Anspruchstext, keine vollständigen Absätze, keine E-Mail, keine IP — und was Sie unten sehen, ist genau das, was bei uns ankommt.",
       "previewHeading": "Sendeinhalt:",
       "send": "Anonym senden",
       "cancel": "Abbrechen",
       "emailFallback": "Lieber per E-Mail? Per mailto senden",
-      "toastSuccess": "Danke — Meldung empfangen.",
+      "toastSuccess": "Danke — Feedback erhalten.",
       "toastFailure": "Senden gerade nicht möglich — bitte per E-Mail versuchen.",
-      "deidNotice": "Meldungen lassen sich nicht mit Ihrer Identität verknüpfen. Wir erfassen weder E-Mail noch IP oder Kontodaten; gesendet werden ausschließlich die oben gezeigten anonymisierten Fragmente.",
+      "deidNotice": "Ihr Feedback lässt sich nicht mit Ihrer Identität verknüpfen. Wir erfassen weder E-Mail noch IP oder Kontodaten; gesendet werden ausschließlich die oben gezeigten anonymisierten Fragmente.",
       "commentLabel": "Etwas hinzufügen? (optional)",
-      "commentPlaceholder": "z. B. „Dieser Begriff wird bereits in Anspruch 1 eingeführt — Übersehen der Rückbezugskette.“ Hilft bei der Triage, wenn die Diagnose allein nicht ausreicht.",
+      "commentPlaceholder": "z. B. „Dieser Begriff ist bereits in Anspruch 1 offenbart.“ Eine kurze Notiz hilft, wenn die Angaben oben nicht ausreichen.",
       "commentNotice": "Was Sie hier eingeben, wird unverändert übermittelt — keine vertraulichen Inhalte einfügen.",
-      "dispositionHeading": "Was senden Sie?",
-      "dispositionWhy": "Beides hilft: bestätigte Treffer und Fehlalarme verbessern die Prüfung an echten Entwürfen.",
+      "dispositionHeading": "Ist diese Markierung korrekt?",
+      "dispositionWhy": "Beide Antworten helfen — ein bestätigter Treffer wie eine falsche Markierung verbessern die Prüfung an echten Entwürfen.",
       "disposition": {
         "false_positive": {
-          "label": "Fehlalarm",
-          "hint": "Ein Fehlalarm — dieser Bezug sollte nicht markiert werden."
+          "label": "Markierung ist falsch",
+          "hint": "Hier markiert, aber eigentlich kein Problem."
         },
         "confirmed_defect": {
           "label": "Korrekter Treffer",
-          "hint": "Bestätigung eines echten § 112-Problems."
+          "hint": "Die Prüfung hat recht — ein echtes, behebenswertes Problem."
         }
       }
     }

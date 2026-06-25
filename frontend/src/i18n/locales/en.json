@@ -174,8 +174,8 @@
     "sister": "PatentNode: Office Action responses"
   },
   "feedback": {
-    "report": "Looks wrong?",
-    "reportProblem": "Report a suspected misflag",
+    "report": "Send feedback",
+    "reportProblem": "Send feedback on this check",
     "picker": {
       "title": "Your draft stays on your device",
       "send": {
@@ -184,9 +184,9 @@
         "gmail": "Send via Gmail"
       },
       "report": {
-        "description": "Your error report is ready, with the same content on your clipboard. How would you like to send it?",
-        "mailto": "Report via Outlook or Mobile",
-        "gmail": "Report via Gmail"
+        "description": "Your feedback is ready, with the same content on your clipboard. How would you like to send it?",
+        "mailto": "Send via Outlook or Mobile",
+        "gmail": "Send via Gmail"
       },
       "clipboard": "Copy to clipboard",
       "remember": "Remember my selection"
@@ -206,7 +206,7 @@
     "enterprisePlaceholder": "[Tell us about your deployment needs — firm or team size and practice area, regions you work in, approximate document volume, evaluation timeline, and any specific requirements (e.g., on-premises or air-gapped install for ITAR or data sovereignty, SSO integration, custom rule packs).]",
     "builderPlaceholder": "[Anything you'd like to share — interest in working together, a collaboration idea, feedback on the project, a copy or terminology correction, or just a hello. This is the builder-contact channel; finding-level bug reports work better through the in-app \"Looks wrong?\" button.]",
     "email": {
-      "subjectFinding": "PatentLint findings report — {{checkKey}}",
+      "subjectFinding": "PatentLint feedback — {{checkKey}}",
       "subjectFooter": "PatentLint feedback",
       "subjectEnterprise": "PatentLint enterprise inquiry",
       "subjectBuilder": "Hi there — about PatentLint",
@@ -278,28 +278,28 @@
       "fieldDisposition": "Disposition"
     },
     "reportModal": {
-      "title": "Send an anonymous report?",
-      "body": "A small structured payload is sent to PatentLint over HTTPS so we can investigate this check: counts, the flagged term or phrase, a short surrounding excerpt, and category labels. No full claim text, no full paragraphs, no email, no IP — and what you see below is exactly what we get.",
+      "title": "Send anonymous feedback?",
+      "body": "A small structured payload is sent to PatentLint over HTTPS so we can improve this check: counts, the flagged term or phrase, a short surrounding excerpt, and category labels. No full claim text, no full paragraphs, no email, no IP — and what you see below is exactly what we get.",
       "previewHeading": "Content to send:",
       "send": "Send anonymously",
       "cancel": "Cancel",
       "emailFallback": "Prefer email? Send via mailto instead",
-      "toastSuccess": "Thank you — report received.",
+      "toastSuccess": "Thanks — feedback received.",
       "toastFailure": "Couldn't send right now — try email instead.",
-      "deidNotice": "Reports cannot be linked to your identity. No email, IP, or account info is recorded — only the de-identified fragments shown above are sent.",
+      "deidNotice": "Your feedback can't be linked to your identity. No email, IP, or account info is recorded — only the de-identified fragments shown above are sent.",
       "commentLabel": "Anything to add? (optional)",
-      "commentPlaceholder": "e.g. \"This term is actually introduced in claim 1 — chain inheritance miss.\" Helps with triage when the diagnostic alone isn't enough.",
+      "commentPlaceholder": "e.g. “This term is already disclosed in claim 1.” A short note helps when the details above aren’t enough.",
       "commentNotice": "What you type here is sent as-is — avoid pasting confidential text.",
-      "dispositionHeading": "What are you sending?",
-      "dispositionWhy": "Both directions help: confirmed catches and false positives train the checker on real drafts.",
+      "dispositionHeading": "Is this flag correct?",
+      "dispositionWhy": "Either answer helps — confirming a correct catch or flagging a wrong one both improve the checker on real drafts.",
       "disposition": {
         "false_positive": {
           "label": "This flag is wrong",
-          "hint": "A false positive — this reference shouldn’t be flagged."
+          "hint": "The checker flagged this, but it isn’t actually a problem."
         },
         "confirmed_defect": {
           "label": "This is a correct catch",
-          "hint": "Confirming a real § 112 issue the checker found."
+          "hint": "The checker is right — a real issue worth fixing."
         }
       }
     }

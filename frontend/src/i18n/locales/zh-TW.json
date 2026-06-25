@@ -174,8 +174,8 @@
     "sister": "PatentNode：OA 答辯系統"
   },
   "feedback": {
-    "report": "看起來不對？",
-    "reportProblem": "回報疑似誤判",
+    "report": "意見回饋",
+    "reportProblem": "針對此檢查提供意見回饋",
     "picker": {
       "title": "您的稿件不會離開您的裝置",
       "send": {
@@ -184,9 +184,9 @@
         "gmail": "以 Gmail 傳送"
       },
       "report": {
-        "description": "錯誤回報已備妥，剪貼簿中也有相同內容備用。請選擇回報方式：",
-        "mailto": "以 Outlook 或行動裝置回報",
-        "gmail": "以 Gmail 回報"
+        "description": "意見回饋內容已備妥，剪貼簿中也有相同內容備用。請選擇傳送方式：",
+        "mailto": "以 Outlook 或行動裝置傳送",
+        "gmail": "以 Gmail 傳送"
       },
       "clipboard": "複製到剪貼簿",
       "remember": "記住我的選擇"
@@ -198,7 +198,7 @@
       "clipboardDescription": "請貼入任一郵件程式，寄至 {{email}}。"
     },
     "email": {
-      "subjectFinding": "PatentLint 分析結果回報：{{checkKey}}",
+      "subjectFinding": "PatentLint 意見回饋：{{checkKey}}",
       "subjectFooter": "PatentLint 使用回饋",
       "subjectEnterprise": "PatentLint 企業諮詢",
       "subjectBuilder": "您好，想與您聊聊 PatentLint",
@@ -278,28 +278,28 @@
     "enterprisePlaceholder": "[請簡要說明您的部署需求：事務所或團隊規模與專業領域、執業地區、預估文件量、評估時程，以及任何特殊要求（例如為符合 ITAR 或資料主權法規而採行的內網或 air-gapped 安裝、SSO 整合、客製化檢查項目等）。]",
     "builderPlaceholder": "[您想分享的任何內容，例如合作意向、協作機會、專案回饋、用語或文案的補充建議，或單純的問候。此為與開發者直接聯繫的管道；若為個別檢查項目的錯誤回報，使用應用程式內的「看起來不對？」按鈕效果更佳。]",
     "reportModal": {
-      "title": "傳送匿名錯誤回報嗎？",
-      "body": "PatentLint 透過 HTTPS 接收一小段結構化資料以調查本項檢查：計數、實際標記到的用語或詞句、簡短的前後文，以及分類標籤。不含實質請求項內容、不含完整段落、不含電子郵件、不留 IP，下方所示即為我方接收的全部內容。",
+      "title": "傳送匿名意見回饋嗎？",
+      "body": "PatentLint 透過 HTTPS 接收一小段結構化資料，用以改進本項檢查：計數、實際標記到的用語或詞句、簡短的前後文，以及分類標籤。不含實質請求項內容、不含完整段落、不含電子郵件、不留 IP，下方所示即為我方接收的全部內容。",
       "previewHeading": "傳送內容：",
       "send": "匿名傳送",
       "cancel": "取消",
       "emailFallback": "想用電子郵件？改用 mailto 傳送",
-      "toastSuccess": "感謝您，已收到回報。",
+      "toastSuccess": "感謝您，已收到您的意見回饋。",
       "toastFailure": "目前無法傳送，請改用電子郵件。",
-      "deidNotice": "本回報無法連結至您本人。我方不收集電子郵件、IP 或帳號資訊；僅傳送上方所示的去識別化片段，無其他資料。",
+      "deidNotice": "您的意見回饋無法連結至您本人。我方不收集電子郵件、IP 或帳號資訊；僅傳送上方所示的去識別化片段，無其他資料。",
       "commentLabel": "想補充說明嗎？（選填）",
-      "commentPlaceholder": "例如：「此用語其實已在請求項 1 介紹過，屬鏈式繼承的未識別案例。」當診斷資訊不足以說明問題時，這些補充說明有助於判讀。",
+      "commentPlaceholder": "例如：「此用語其實已在請求項 1 揭露過。」當上方資訊不足以說明時，簡短說明會很有幫助。",
       "commentNotice": "此欄位輸入內容將原樣傳送，請避免貼上機密資訊。",
-      "dispositionHeading": "您要提交哪一類？",
-      "dispositionWhy": "兩種回饋都有幫助：確認的正確標記與誤報均可用於在真實稿件上改進分析器。",
+      "dispositionHeading": "這個標記正確嗎？",
+      "dispositionWhy": "兩種回答都有幫助：確認正確的標記、指出不當的標記，都能用真實稿件改進分析器。",
       "disposition": {
         "false_positive": {
           "label": "此標記有誤",
-          "hint": "誤報：此引用不應被標記。"
+          "hint": "分析器在此作了標記，但其實並非問題。"
         },
         "confirmed_defect": {
-          "label": "確為正確標記",
-          "hint": "確認這是分析器發現的真實 § 112 問題。"
+          "label": "確認為正確標記",
+          "hint": "分析器是對的，這是值得修正的真實問題。"
         }
       }
     }

@@ -50,17 +50,19 @@ export default function ReportModal({
   const [submitting, setSubmitting] = useState(false)
   const [result, setResult] = useState(null)
   const [userComment, setUserComment] = useState('')
-  // Disposition makes the report a first-class LABEL (ADR-159): the reporter
-  // says whether this §112 flag is a false positive or a confirmed real issue.
-  // 'false_positive' is the default (the historical "report a problem" intent).
-  const [disposition, setDisposition] = useState('false_positive')
+  // Disposition makes the feedback a first-class LABEL (ADR-159): the reporter
+  // says whether this flag is a false positive or a confirmed real issue.
+  // Starts UNSET — the button now reads "Send feedback" (not "Looks wrong"),
+  // so we don't pre-bias toward false_positive; the reporter must choose, which
+  // keeps the confirmed-catch (TP) gold honest.
+  const [disposition, setDisposition] = useState(null)
 
   useEffect(() => {
     if (open) {
       setSubmitting(false)
       setResult(null)
       setUserComment('')
-      setDisposition(initialDisposition || 'false_positive')
+      setDisposition(initialDisposition || null)
     }
   }, [open, initialDisposition])
 
@@ -125,6 +127,16 @@ export default function ReportModal({
           <div className="grid grid-cols-2 gap-2">
             {['false_positive', 'confirmed_defect'].map((d) => {
               const active = disposition === d
+              // Faint red (false positive) / green (correct catch) tints carry
+              // the meaning without X / check glyphs — cleaner and
+              // language-agnostic. The tint deepens + gains a ring when active.
+              const tint = d === 'false_positive'
+                ? (active
+                    ? 'border-red-400 bg-red-50 ring-1 ring-red-300 dark:border-red-700 dark:bg-red-950/40 dark:ring-red-800'
+                    : 'border-red-200/70 bg-red-50/40 hover:bg-red-50/80 dark:border-red-900/40 dark:bg-red-950/15 dark:hover:bg-red-950/30')
+                : (active
+                    ? 'border-emerald-500 bg-emerald-50 ring-1 ring-emerald-300 dark:border-emerald-700 dark:bg-emerald-950/40 dark:ring-emerald-800'
+                    : 'border-emerald-200/70 bg-emerald-50/40 hover:bg-emerald-50/80 dark:border-emerald-900/40 dark:bg-emerald-950/15 dark:hover:bg-emerald-950/30')
               return (
                 <button
                   key={d}
@@ -132,11 +144,7 @@ export default function ReportModal({
                   onClick={() => setDisposition(d)}
                   disabled={submitting || result === 'success'}
                   aria-pressed={active}
-                  className={`rounded-md border px-3 py-2 text-left text-xs transition-colors ${
-                    active
-                      ? 'border-primary bg-primary/10 ring-1 ring-primary'
-                      : 'border-input hover:bg-muted/50'
-                  }`}
+                  className={`rounded-md border px-3 py-2 text-left text-xs transition-colors ${tint}`}
                 >
                   <span className="block font-medium text-foreground">
                     {t(`feedback.reportModal.disposition.${d}.label`)}
@@ -255,7 +263,7 @@ export default function ReportModal({
           </Button>
           <Button
             onClick={handleSend}
-            disabled={submitting || result === 'success'}
+            disabled={submitting || result === 'success' || !disposition}
           >
             {t('feedback.reportModal.send')}
           </Button>
