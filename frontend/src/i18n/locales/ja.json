@@ -295,7 +295,7 @@
       "disposition": {
         "false_positive": {
           "label": "この指摘は誤り",
-          "hint": "ここで指摘されていますが、実際には問題ありません。"
+          "hint": "ここで指摘していますが、実際には問題ではないかもしれません。"
         },
         "confirmed_defect": {
           "label": "正しい指摘",

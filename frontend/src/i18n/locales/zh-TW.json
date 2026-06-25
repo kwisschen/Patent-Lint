@@ -295,7 +295,7 @@
       "disposition": {
         "false_positive": {
           "label": "此標記有誤",
-          "hint": "分析器標記了此處，但其實並無問題。"
+          "hint": "分析器標記了此處，但未必真的有問題。"
         },
         "confirmed_defect": {
           "label": "確認為正確標記",
