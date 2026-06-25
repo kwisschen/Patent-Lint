@@ -2204,6 +2204,13 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         # 排列 is rare and FN-guarded by validate_fix. CN parity measured on
         # the CN corpus before mirroring (DR-1: no CN report yet).
         "排列",
+        # R16 (2026-06-26): trailing predicate verbs from the normalization-
+        # asymmetry probe (intro exists; the clause verb bled into the reference).
+        # 引起 (cause), 調整 (adjust). Noun compounds carry them at PREFIX (調整機構)
+        # or with a suffix (調整器), unaffected by the endswith trailing strip.
+        # 配置 EXCLUDED (noun-gray: 處理器配置 is protect:true); 施加 WITHHELD on the
+        # gate (`連接施加`→`連接` silenced a gold-legit doubled-verb capture). FN-guarded.
+        "引起", "調整",
         # NOTE: 發光 not added — `發光二極體` (LED) suffix risk too high
         # for confident strip without per-claim context.
         # Verb suffixes
