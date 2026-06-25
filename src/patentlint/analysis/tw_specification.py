@@ -954,13 +954,13 @@ def check_numeral_consistency_tw(doc: TwPatentDocument) -> list[CheckItem]:
             reference="專利法施行細則 §19 第2款",
         )]
 
-    fix_conflicts = [c for c in conflicts if c.get("confidence") == "fix"]
-    review_conflicts = [c for c in conflicts if c.get("confidence") == "review"]
+    # ADVISORY re-tier (2026-06-25) — reference-numeral D1 is ~87% FP on real TW
+    # firm drafts with a semantic FP/real split; emit a single ADVISORY "verify"
+    # item (zero grade via ADVISORY_REVIEW_KEYS), mirroring §112 (#314). Nothing
+    # hidden → FN-safe.
     items: list[CheckItem] = []
-    if fix_conflicts:
-        items.append(_build_tw_d1_check_item(fix_conflicts, "amend", "amend", spec_text))
-    if review_conflicts:
-        items.append(_build_tw_d1_check_item(review_conflicts, "verify", "verify", spec_text))
+    if conflicts:
+        items.append(_build_tw_d1_check_item(conflicts, "verify", "verify", spec_text))
     return items or [CheckItem(
         status="pass",
         message="附圖標記與所指稱元件名稱一致。",

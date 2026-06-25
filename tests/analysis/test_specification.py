@@ -473,8 +473,10 @@ class TestNumeralConsistencyD1:
             "The housing 102 holds a sensor. The housing 102 is metal. "
             "The container 102 contains liquid. The container 102 is sealed."
         )
-        assert results[0].status == "amend"
-        assert results[0].message_key == "check.spec.numeralConsistency.amend"
+        # Advisory re-tier (2026-06-25): D1 surfaces as a non-graded "verify"
+        # item, not an asserted "amend" — measured ~87% FP on real drafts.
+        assert results[0].status == "verify"
+        assert results[0].message_key == "check.spec.numeralConsistency.verify"
         assert results[0].details_params["count"] == 1
         finding = results[0].details_params["findings"][0]
         # Numerals are strings now (Latin-prefix refs like LD1 supported)
@@ -529,7 +531,7 @@ class TestNumeralConsistencyD1:
             "The motor 200 spins fast. The motor 200 is electric. "
             "The pump 200 fills the tank. The pump 200 is reliable."
         )
-        assert results[0].status == "amend"
+        assert results[0].status == "verify"  # advisory re-tier (2026-06-25)
         assert results[0].details_params["count"] == 2
 
     def test_extract_pairs_returns_per_occurrence(self):
@@ -597,14 +599,20 @@ class TestD1ElementNameOverCapture:
         )
         results = check_numeral_consistency(spec)
         # 'generated'/'displaying' are over-capture, not a second element name —
-        # no asserted (amend/FIX) conflict for numeral 130.
-        assert all(
-            r.message_key != "check.spec.numeralConsistency.amend" for r in results
-        )
+        # the R1 filter must drop them so numeral 130 does not surface as a
+        # conflict at all (not even as an advisory verify item).
+        flagged = [
+            f["numeral"]
+            for r in results
+            if r.message_key == "check.spec.numeralConsistency.verify"
+            for f in r.details_params["findings"]
+        ]
+        assert "130" not in flagged
 
-    def test_real_two_noun_conflict_still_fires(self):
-        """FN-safety: a genuine D1 (two real element nouns, each repeated, on
-        one numeral) still fires at FIX even alongside verb over-capture."""
+    def test_real_two_noun_conflict_still_surfaced(self):
+        """FN-safety: a genuine D1 (two real element nouns, each repeated, on one
+        numeral) is still SURFACED (now as an advisory 'verify' item, not hidden)
+        even alongside verb over-capture."""
         from patentlint.analysis.specification import check_numeral_consistency
         spec = (
             "The motor 200 spins. The motor 200 is electric. "
@@ -612,10 +620,10 @@ class TestD1ElementNameOverCapture:
             "The torque is generated 200 here."  # over-capture noise
         )
         results = check_numeral_consistency(spec)
-        amend = [r for r in results if r.message_key == "check.spec.numeralConsistency.amend"]
-        assert amend, "real motor↔bracket D1 conflict must still fire at FIX"
+        item = [r for r in results if r.message_key == "check.spec.numeralConsistency.verify"]
+        assert item, "real motor↔bracket D1 conflict must still be surfaced (advisory)"
         names = []
-        for f in amend[0].details_params["findings"]:
+        for f in item[0].details_params["findings"]:
             if f["numeral"] == "200":
                 names = [f["canonical"]] + [o["name"] for o in f["outliers"]]
         assert "motor" in names and "bracket" in names
@@ -690,7 +698,7 @@ class TestNumeralConsistencyD1Synthetic:
             "The second high-bridge switch LD1 connects to drain. "
             "The second high-bridge switch LD1 has another gate."
         )
-        assert results[0].status == "amend"
+        assert results[0].status == "verify"  # advisory re-tier (2026-06-25)
         finding = results[0].details_params["findings"][0]
         assert finding["numeral"] == "LD1"
 
@@ -708,7 +716,7 @@ class TestNumeralConsistencyD1Synthetic:
             "The voltage threshold setting circuit 10 is calibrated. "
             "Now the voltage difference calculating circuit 10 outputs."
         )
-        assert results[0].status == "amend"
+        assert results[0].status == "verify"  # advisory re-tier (2026-06-25)
         finding = results[0].details_params["findings"][0]
         assert finding["numeral"] == "10"
         # Inline summary must surface the conflicting names so users can
@@ -738,7 +746,7 @@ class TestNumeralConsistencyD1Synthetic:
             "The first switch 30 closes. The first switch 30 is fast. "
             "The third switch 30 opens. The third switch 30 is slow."
         )
-        assert results[0].status == "amend"
+        assert results[0].status == "verify"  # advisory re-tier (2026-06-25)
         finding = results[0].details_params["findings"][0]
         assert finding["case"] == "instance"
 

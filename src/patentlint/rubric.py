@@ -102,6 +102,17 @@ ADVISORY_REVIEW_KEYS: frozenset[str] = frozenset({
     "check.cn.claims.specSupport.verify",
     "check.tw.claims.specSupport.verify",
     "check.epc.claims.specSupport.verify",
+    # Reference-numeral consistency (D1, MPEP § 608.01(g) / 实施细则 §21 / 施行細則
+    # §19 / Rule 43(7) EPC) — advisory re-tier (2026-06-25). Measured ~87% FP on
+    # real drafts (clean-DOCX probe), and the FP-vs-real split is SEMANTIC
+    # (mis-attribution of a neighbouring numeral's element, synonyms/variants of
+    # one element, ordinal variants) with no deterministic separator — the same
+    # wall as §112. Emitted as a single advisory "to verify" item with ZERO grade
+    # impact; every conflict stays visible (FN-safe — nothing hidden).
+    "check.spec.numeralConsistency.verify",
+    "check.cn.spec.numeralConsistency.verify",
+    "check.tw.spec.numeralConsistency.verify",
+    "check.epc.spec.numeralConsistency.verify",
 })
 
 
