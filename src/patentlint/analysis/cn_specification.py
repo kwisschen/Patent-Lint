@@ -743,7 +743,16 @@ _CN_REFNUM_AFTER_NOUN = re.compile(
     r"(?!\s*[\d.%％°℃μµA-Za-z~～至到\-])"
     # Reject sub-instance notation "21(0)" / "21(N)" / "21(N-1)" —
     # parenthesized expression is the sub-index, not a separate refnum.
-    r"(?!\([\dNn])",
+    r"(?!\([\dNn])"
+    # Reject reference-sign LEGEND keys: in an inline list `115：第一控制模組
+    # 116：第一無線通訊模組`, the noun-before-numeral regex otherwise binds
+    # entry k's name to entry k+1's numeral (`第一控制模組 116`) — the single
+    # biggest source of TW D1 false positives (#265-270 root cause). A numeral
+    # immediately followed by a colon is a legend KEY (numeral-first binding),
+    # so the noun preceding it is a bled value, not this numeral's name. FN-safe:
+    # `num：` is never an element-naming binding (legend/step/list context). The
+    # numeral's real body usages are captured elsewhere.
+    r"(?!\s*[：:])",
 )
 _CN_REFNUM_PARENS = re.compile(
     rf"(?P<noun>{_CN_NOUN_GROUP})\s*[(（](?P<num>\d{{2,4}}[a-z]?)[)）]"

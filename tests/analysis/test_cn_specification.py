@@ -657,6 +657,35 @@ def test_interior_conjunction_split_parity_242():
     assert _cn_extract_numeral_name_pairs("該散熱片與基板10連接") == [("10", "基板")]
 
 
+class TestCnD1LegendBleed:
+    """Reference-sign legend `NNN：name` must not bleed entry k's name onto
+    entry k+1's numeral (the dominant TW D1 FP root cause, #265-270)."""
+
+    def test_legend_does_not_bleed_name_to_next_numeral(self):
+        from patentlint.analysis.cn_specification import (
+            _cn_extract_numeral_name_pairs,
+        )
+        # Inline reference-sign list: each name belongs to its OWN (preceding)
+        # numeral; the noun-first regex must NOT bind 控制模組 to 116.
+        legend = "主要元件符號說明：115：第一控制模組 116：第一無線通訊模組 117：第一電池模組"
+        pairs = _cn_extract_numeral_name_pairs(legend)
+        names_116 = [nm for n, nm in pairs if n == "116"]
+        # 第一控制模組 (115's name) must NOT appear bound to 116
+        assert all("控制模組" not in nm for nm in names_116)
+
+    def test_genuine_body_conflict_still_detected(self):
+        from patentlint.analysis.cn_specification import (
+            _cn_detect_d1_conflicts,
+            _cn_extract_numeral_name_pairs,
+        )
+        # Both names used in BODY prose (not legend) on numeral 22 → real D1.
+        body = ("一控制電路22接收訊號。所述控制電路22輸出。所述控制電路22運作。"
+                "所述控制單元22增加亮度。所述控制單元22啟動。")
+        confs = _cn_detect_d1_conflicts(_cn_extract_numeral_name_pairs(body))
+        nums = {str(c["numeral"]) for c in confs}
+        assert "22" in nums  # genuine body inconsistency survives the legend fix
+
+
 class TestCnD1FnSafePrune:
     """FN-safe CJK extraction-noise prune (gold-validated 2026-06-25, CN+TW): a 1x
     ordinal variant or substring of the canonical is dropped; distinct nouns and
