@@ -848,7 +848,8 @@
       "numeralConsistency": "{{count}} inkonsistent verwendete Bezugszeichen. Beispiele: {{inline_summary}}",
       "markushOpenTransition": "Anspruch/Ansprüche {{claims}} verwenden offene Markush-Übergänge ({{transitions}}); auf die geschlossene Form 「组成的」 gemäß 审查指南 §9.3 umstellen.",
       "omnibusClaims": "Anspruch/Ansprüche {{claims}} sind Omnibus-Ansprüche (Bezug auf Beschreibung/Zeichnungen statt Merkmale); umformulieren gemäß 审查指南 §3.3.",
-      "crmNonTransitory": "Anspruch/Ansprüche {{claims}} beanspruchen ein computerlesbares Medium ohne 非暂态. Den Zusatz 非暂态 / 非暂时性 einfügen, um den Anspruch auf nichtflüchtige Medien zu beschränken und §25-Patentierbarkeitsprobleme zu vermeiden (审查指南 第二部分第九章)."
+      "crmNonTransitory": "Anspruch/Ansprüche {{claims}} beanspruchen ein computerlesbares Medium ohne 非暂态. Den Zusatz 非暂态 / 非暂时性 einfügen, um den Anspruch auf nichtflüchtige Medien zu beschränken und §25-Patentierbarkeitsprobleme zu vermeiden (审查指南 第二部分第九章).",
+      "indefiniteWordingClaims": "Ansprüche: {{list}}. Beispielhafte oder bevorzugende Begriffe wie 例如 / 诸如 / 较佳 / 优选 lassen den Anspruchsumfang unklar. Nach 审查指南 第二部分第二章 § 3.2.2 jeden markierten Begriff prüfen und durch eine präzise Angabe ersetzen oder streichen, falls nicht erforderlich."
     },
     "tw": {
       "requiredSections": "Eine vollständige TIPO-Einreichung erfordert 摘要, 說明書 (技術領域, 先前技術, 發明內容/新型內容, 實施方式) und 申請專利範圍 gemäß 專利法 §25 第1項. Bei vorhandenen Zeichnungen sind zusätzlich 圖式簡單說明 und 符號說明 gemäß 專利法施行細則 §17 erforderlich. Fehlend: {{sections}}.",
@@ -912,7 +913,8 @@
       "symbolTableCoverage": "{{count}} Element(e) für {{refnum_count}} Bezugszeichen fehlen in 符號說明: {{inline_summary}}",
       "markushOpenTransition": "Anspruch/Ansprüche {{claims}} verwenden offene Markush-Übergänge ({{transitions}}); wechseln Sie zur geschlossenen Form 選自由…組成的群組 (TIPO-Prüfungsrichtlinien 第二篇第十章).",
       "omnibusClaims": "Anspruch/Ansprüche {{claims}} sind als Omnibus-Ansprüche formuliert (verweisen auf 說明書/附圖 statt Merkmale). Merkmale ausdrücklich nennen, um Patentgesetz §26 第3項 zu erfüllen.",
-      "crmNonTransitory": "Anspruch/Ansprüche {{claims}} beanspruchen ein computerlesbares Medium ohne 非暫態. Den Zusatz 非暫態 / 非暫時性 einfügen, um den Anspruch auf nichtflüchtige Medien zu beschränken und §21-Patentierbarkeitsprobleme zu vermeiden."
+      "crmNonTransitory": "Anspruch/Ansprüche {{claims}} beanspruchen ein computerlesbares Medium ohne 非暫態. Den Zusatz 非暫態 / 非暫時性 einfügen, um den Anspruch auf nichtflüchtige Medien zu beschränken und §21-Patentierbarkeitsprobleme zu vermeiden.",
+      "indefiniteWordingClaims": "Ansprüche: {{list}}. Beispielhafte oder bevorzugende Begriffe wie 例如 / 諸如 / 較佳 / 優選 lassen den Anspruchsumfang unklar. Nach 專利審查基準 jeden markierten Begriff prüfen und durch eine präzise Angabe ersetzen oder streichen, falls nicht erforderlich."
     },
     "titleProhibited": {
       "trademark": "Markensymbol „{{token}}“",
@@ -1402,6 +1404,10 @@
         "crmNonTransitory": {
           "amend": "Anspruch/Ansprüche {{claims}} beanspruchen ein 计算机可读介质 ohne den Zusatz 非暂态 / 非暂时性. Patentgesetz §25 — flüchtige Signale fallen aus dem patentfähigen Gegenstand heraus; den Zusatz einfügen, um den Anspruch auf nichtflüchtige Medien zu beschränken.",
           "pass": "Ansprüche auf computerlesbare Medien enthalten korrekterweise 非暂态 / 非暂时性."
+        },
+        "indefiniteWording": {
+          "verify": "Anspruch/Ansprüche enthalten unbestimmte oder beispielhafte Begriffe (例如 / 诸如 / 较佳 / 优选). Klarheit nach 审查指南 § 3.2.2 prüfen.",
+          "pass": "Keine unbestimmten oder beispielhaften Begriffe in den Ansprüchen festgestellt."
         }
       },
       "abstract": {
@@ -1592,6 +1598,10 @@
         "crmNonTransitory": {
           "amend": "Anspruch/Ansprüche {{claims}} beanspruchen ein 電腦可讀媒體 ohne den Zusatz 非暫態 / 非暫時性. Patentgesetz §21 — flüchtige Signale fallen aus dem patentfähigen Gegenstand heraus; den Zusatz einfügen, um den Anspruch auf nichtflüchtige Medien zu beschränken.",
           "pass": "Ansprüche auf computerlesbare Medien enthalten korrekterweise 非暫態 / 非暫時性."
+        },
+        "indefiniteWording": {
+          "verify": "Anspruch/Ansprüche enthalten unbestimmte oder beispielhafte Begriffe (例如 / 諸如 / 較佳 / 優選). Klarheit nach 專利審查基準 prüfen.",
+          "pass": "Keine unbestimmten oder beispielhaften Begriffe in den Ansprüchen festgestellt."
         }
       },
       "abstract": {

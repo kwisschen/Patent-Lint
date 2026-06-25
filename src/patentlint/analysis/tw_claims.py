@@ -677,6 +677,57 @@ def check_independent_preamble(doc: TwPatentDocument) -> list[CheckItem]:
     )]
 
 
+# ── Indefinite / exemplary wording (TIPO 專利審查基準 — 明確 §2.3) ──
+
+# CONSERVATIVE list (2026-06-25, corpus-frequency-audited). Traditional-Chinese
+# mirror of CN check_indefinite_wording_cn (and the US § 2173.05(b)/(d) check) at
+# CJK-appropriate precision. Only the LOW-frequency, high-confidence exemplary
+# (例如/諸如) + preferential (較佳/優選) terms are flagged. 等 and 約 are
+# DELIBERATELY EXCLUDED — the real-corpus probe showed 等 in 39% of TW drafts
+# (often legitimate: 等於/同等/等級/等等) and 約 in 10% (measurement tolerances,
+# definite when the spec supplies a standard), so flagging them would be noise.
+# REVIEW tier — definiteness is examiner-judgment-in-context.
+_INDEFINITE_WORDING_TW_RE = re.compile(r"例如|諸如|較佳|優選")
+
+
+def check_indefinite_wording_tw(doc: TwPatentDocument) -> list[CheckItem]:
+    """Flag exemplary / preferential wording in claims (TIPO 明確 §2.3)."""
+    flagged: list[int] = []
+    phrases: list[dict] = []
+    for c in doc.claims:
+        found = sorted({m.group(0) for m in _INDEFINITE_WORDING_TW_RE.finditer(c.text)})
+        if found:
+            flagged.append(c.id)
+            phrases.extend({"location": c.id, "token": tok, "kind": "phrase"} for tok in found)
+    if not flagged:
+        return [CheckItem(
+            status="pass",
+            message="未偵測到不明確或例示性用語。",
+            message_key="check.tw.claims.indefiniteWording.pass",
+            reference="專利審查基準 第二篇第一章",
+        )]
+    return [CheckItem(
+        status="verify",
+        message="偵測到不明確或例示性用語，建議核實請求項是否明確。",
+        message_key="check.tw.claims.indefiniteWording.verify",
+        details_key="details.tw.indefiniteWordingClaims",
+        details_params={
+            "list": str(flagged),
+            "flagged_phrases": {"items": phrases},
+        },
+        reference="專利審查基準 第二篇第一章",
+        diagnostics=_dx(
+            flagged_claim_count=len(flagged),
+            flagged_phrase_count=len(phrases),
+            flagged_claims_sample=flagged[:5],
+            flagged_phrases_sample=[
+                {"location": p["location"], "token": p["token"], "kind": p["kind"]}
+                for p in phrases[:5]
+            ],
+        ),
+    )]
+
+
 # ── Check 13 ─────────────────────────────────────────────────────────────
 
 
