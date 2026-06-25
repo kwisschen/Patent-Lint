@@ -1839,6 +1839,33 @@ def _cn_split_ordinal_key(keyed: str) -> tuple[str, str]:
     return "", keyed
 
 
+def _cn_prune_fn_safe_outliers(outlier_records: list[dict], canonical_name: str) -> list[dict]:
+    """Drop FN-SAFE extraction-noise outliers from a CJK D1 conflict (CN + TW).
+
+    Validated against the LLM D1 gold set (2026-06-25, tests/eval/d1_prune_eval.py)
+    with ZERO genuine catches hidden across the CN (36) + TW (32) gold real_d1.
+    A SINGLE-occurrence outlier is dropped when it is either (a) an ordinal
+    variant of the canonical (same base noun, different ordinal — a '第一X'/'第二X'
+    tokenization bleed) or (b) a substring/superstring of the canonical base
+    (a fragment capture). The higher-yield mis-attribution rule was REJECTED by
+    the same gold (it hid 81% of genuine TW typos — a real cross-numeral typo is
+    structurally identical to a bleed)."""
+    def _norm(keyed: str) -> str:
+        return _cn_split_ordinal_key(keyed)[1].replace(" ", "")
+    cn = _norm(canonical_name)
+    kept: list[dict] = []
+    for o in outlier_records:
+        if o["count"] == 1 and cn:
+            on = _norm(o["name"])
+            if on:
+                if on == cn and o["name"] != canonical_name:
+                    continue  # (a) ordinal variant
+                if on != cn and (on in cn or cn in on):
+                    continue  # (b) substring / superstring fragment
+        kept.append(o)
+    return kept
+
+
 def _cn_format_d1_name_for_display(keyed: str) -> str:
     """Reverse the 'ordinal|head' encoding for surface display."""
     ordinal, head = _cn_split_ordinal_key(keyed)
@@ -2196,6 +2223,9 @@ def _cn_detect_d1_conflicts(pairs: list[tuple[str, str]]) -> list[dict]:
             ):
                 outlier_records.append({"name": name, "count": count})
                 continue
+
+        # FN-safe extraction-noise prune (gold-validated; see helper docstring).
+        outlier_records = _cn_prune_fn_safe_outliers(outlier_records, canonical_name)
 
         if outlier_records:
             # Confidence tier per outlier (mirrors US logic):

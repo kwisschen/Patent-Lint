@@ -750,6 +750,36 @@ def _split_ordinal_key(keyed: str) -> tuple[str, str]:
     return "", keyed
 
 
+def _prune_fn_safe_outliers(outlier_records: list[dict], canonical_name: str) -> list[dict]:
+    """Drop FN-SAFE extraction-noise outliers from a D1 conflict.
+
+    Validated against the LLM D1 gold set (2026-06-25, tests/eval/d1_prune_eval.py)
+    with ZERO genuine catches hidden across 71 gold real_d1 (US 3 / CN 36 / TW 32).
+    A SINGLE-occurrence outlier is dropped when it is either:
+      (a) an ordinal variant of the canonical — identical base noun, differing
+          only by ordinal ('first X' vs 'second X') — a tokenization bleed; or
+      (b) a substring/superstring of the canonical base — a fragment capture.
+    The higher-yield mis-attribution rule (outlier == a neighbouring numeral's
+    name) was REJECTED by the same gold: it hid 81% of genuine TW typos because a
+    real cross-numeral typo is structurally identical to an extraction bleed."""
+    def _norm(keyed: str) -> str:
+        return _split_ordinal_key(keyed)[1].lower().replace(" ", "")
+    cn = _norm(canonical_name)
+    kept: list[dict] = []
+    for o in outlier_records:
+        if o["count"] == 1 and cn:
+            on = _norm(o["name"])
+            if on:
+                # (a) ordinal variant: same base noun, different ordinal
+                if on == cn and o["name"] != canonical_name:
+                    continue
+                # (b) substring / superstring fragment of the canonical base
+                if on != cn and (on in cn or cn in on):
+                    continue
+        kept.append(o)
+    return kept
+
+
 def _format_d1_name_for_display(keyed: str) -> str:
     """Reverse the 'ordinal|head' encoding for surface display."""
     ordinal, head = _split_ordinal_key(keyed)
@@ -1357,6 +1387,9 @@ def _detect_d1_conflicts(
             ):
                 outlier_records.append({"name": name, "count": count})
                 continue
+
+        # FN-safe extraction-noise prune (gold-validated; see helper docstring).
+        outlier_records = _prune_fn_safe_outliers(outlier_records, canonical_name)
 
         if outlier_records:
             # Confidence tier per outlier:
