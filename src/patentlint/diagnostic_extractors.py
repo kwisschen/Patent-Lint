@@ -187,6 +187,52 @@ def _excerpt_around(text: str, target: str, before: int | None = None, after: in
     return ctx_before, ctx_after, idx
 
 
+def _excerpt_around_reference(
+    text: str, term: str, reference_form: str | None,
+    before: int | None = None, after: int | None = None,
+) -> tuple[str | None, str | None, int | None]:
+    """Return (context_before, context_after, char_offset) anchored on the
+    FLAGGED REFERENCE occurrence of ``term`` — not its first mention.
+
+    The §112(b) walker flags a *reference* (`所述X` / `the X`) that lacks an
+    introduction. Anchoring the diagnostic on ``text.find(term)`` (the FIRST
+    occurrence) is wrong: the first mention is frequently the introduction
+    itself, so the trail showed the term being properly introduced while the
+    card claimed it was missing — confusing, and it hid that the flag was on a
+    later occurrence (reported on issues #265/#266/#267, all jurisdictions).
+
+    Resolution order, jurisdiction-agnostic:
+      1. locate ``reference_form`` (e.g. `所述預設方向` / `the skin`); anchor on
+         the ``term`` inside it (the reference form ends with the bare term);
+      2. else fall back to the term's LAST occurrence (`rfind`) — the reference
+         is the later mention, never the first;
+      3. else all-None.
+    """
+    if not text or not term:
+        return None, None, None
+    idx = -1
+    if reference_form:
+        ref_idx = text.lower().find(reference_form.lower())
+        if ref_idx >= 0:
+            # term sits at the tail of the reference form (prefix + term)
+            inner = reference_form.lower().rfind(term.lower())
+            idx = ref_idx + (inner if inner >= 0 else max(0, len(reference_form) - len(term)))
+    if idx < 0:
+        # no verbatim reference form → the flagged occurrence is the LAST one
+        idx = text.lower().rfind(term.lower())
+    if idx < 0:
+        return None, None, None
+    window = _context_window_for(text)
+    if before is None:
+        before = window
+    if after is None:
+        after = window
+    ctx_before = text[max(0, idx - before): idx] or None
+    end = idx + len(term)
+    ctx_after = text[end: end + after] or None
+    return ctx_before, ctx_after, idx
+
+
 def _claim_preamble(claim_text: str | None, n: int = PREAMBLE_MAX) -> str | None:
     """First ``n`` chars of a claim. Useful for showing the user 'this
     is the claim you flagged' without dumping the whole claim."""
@@ -234,7 +280,10 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
     for f in sample:
         term = f.get("term") or ""
         claim_text = f.get("claim_text") or ""
-        ctx_before, ctx_after, offset = _excerpt_around(claim_text, term)
+        # Anchor the trail on the FLAGGED REFERENCE (所述X / the X), not the
+        # first mention (which is often the introduction) — issues #265/266/267.
+        ctx_before, ctx_after, offset = _excerpt_around_reference(
+            claim_text, term, f.get("reference_form"))
         suggested = f.get("suggested_match") or {}
         # NP-boundary char: the single char IMMEDIATELY after the matched
         # term in claim text. Tells me what stopped the NP capture and

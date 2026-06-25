@@ -325,7 +325,7 @@
     "toVerify": "待確認",
     "allReviewedPill": "已全部確認",
     "reviewedCount": "已確認 {{count}} 處",
-    "markReviewed": "看起來沒問題",
+    "markReviewed": "標記為已檢視",
     "undoReviewed": "復原"
   },
   "antecedent": {

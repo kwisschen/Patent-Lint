@@ -325,7 +325,7 @@
     "toVerify": "zu prüfen",
     "allReviewedPill": "Alle geprüft",
     "reviewedCount": "{{count}} geprüft",
-    "markReviewed": "Sieht gut aus",
+    "markReviewed": "Als geprüft markieren",
     "undoReviewed": "Rückgängig"
   },
   "antecedent": {

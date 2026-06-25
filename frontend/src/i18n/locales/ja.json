@@ -325,7 +325,7 @@
     "toVerify": "要確認",
     "allReviewedPill": "すべて確認済み",
     "reviewedCount": "{{count}}件確認済み",
-    "markReviewed": "問題なし",
+    "markReviewed": "確認済みにする",
     "undoReviewed": "元に戻す"
   },
   "antecedent": {

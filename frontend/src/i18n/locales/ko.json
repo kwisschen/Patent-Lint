@@ -325,7 +325,7 @@
     "toVerify": "확인 필요",
     "allReviewedPill": "모두 확인됨",
     "reviewedCount": "{{count}}건 확인됨",
-    "markReviewed": "문제 없음",
+    "markReviewed": "검토 완료로 표시",
     "undoReviewed": "실행 취소"
   },
   "antecedent": {
