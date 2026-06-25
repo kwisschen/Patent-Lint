@@ -1925,13 +1925,13 @@ def check_numeral_consistency_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
             reference="专利法实施细则 §21 第2款",
         )]
 
-    fix_conflicts = [c for c in conflicts if c.get("confidence") == "fix"]
-    review_conflicts = [c for c in conflicts if c.get("confidence") == "review"]
+    # ADVISORY re-tier (2026-06-25) — reference-numeral D1 is ~87% FP on real
+    # drafts with a semantic FP/real split (mis-attribution / synonym / ordinal
+    # variant); emit a single ADVISORY "verify" item (zero grade via
+    # ADVISORY_REVIEW_KEYS), mirroring §112 (#314). Nothing hidden → FN-safe.
     items: list[CheckItem] = []
-    if fix_conflicts:
-        items.append(_build_cn_d1_check_item(fix_conflicts, "amend", "amend", spec_text))
-    if review_conflicts:
-        items.append(_build_cn_d1_check_item(review_conflicts, "verify", "verify", spec_text))
+    if conflicts:
+        items.append(_build_cn_d1_check_item(conflicts, "verify", "verify", spec_text))
     return items or [CheckItem(
         status="pass",
         message="附图标记与所指代构件名称一致。",

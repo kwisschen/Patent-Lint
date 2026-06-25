@@ -871,21 +871,20 @@ def check_numeral_consistency(spec_text: str) -> list[CheckItem]:
         return (-len(c["outliers"]), -outlier_total, num_sort)
     conflicts = sorted(conflicts, key=_severity_key)
 
-    # Split by confidence: FIX (high-confidence drafter typo / instance
-    # collision / consistent variant) vs REVIEW (low-confidence single-
-    # occurrence outlier with zero shared content vs strong canonical —
-    # could be sentence-fragment over-capture or rare drafter error).
-    fix_conflicts = [c for c in conflicts if c.get("confidence") == "fix"]
-    review_conflicts = [c for c in conflicts if c.get("confidence") == "review"]
-
+    # ADVISORY re-tier (2026-06-25). Reference-numeral D1 measures ~87% false
+    # positive on REAL drafts (clean-DOCX probe, d1_probe.py), and the FP-vs-real
+    # split is SEMANTIC (mis-attribution of a neighbouring numeral's element,
+    # synonyms/variants of one element, ordinal variants) with NO deterministic
+    # separator — the same wall as §112. So D1 is no longer asserted as a graded
+    # FIX; it is emitted as a single ADVISORY "to verify" item (zero grade impact
+    # via rubric.ADVISORY_REVIEW_KEYS), mirroring the §112 re-tier (#314). Nothing
+    # is hidden — every conflict stays visible for the drafter to verify — so this
+    # is FN-safe by construction. The per-finding `confidence` field still orders
+    # the list (high-signal conflicts first).
     items: list[CheckItem] = []
-    if fix_conflicts:
+    if conflicts:
         items.append(_build_d1_check_item(
-            fix_conflicts, status="amend", suffix="amend", spec_text=spec_text,
-        ))
-    if review_conflicts:
-        items.append(_build_d1_check_item(
-            review_conflicts, status="verify", suffix="verify", spec_text=spec_text,
+            conflicts, status="verify", suffix="verify", spec_text=spec_text,
         ))
     if items:
         return items

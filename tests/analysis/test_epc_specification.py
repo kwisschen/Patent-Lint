@@ -241,10 +241,11 @@ def test_numeral_consistency_canonical_passes():
     assert results[0].status == "pass"
 
 
-def test_numeral_consistency_conflict_amends():
-    """Same numeral (10) attached to two disjoint element names — when one
-    name appears repeatedly (canonical_count >= 2) and the other appears
-    once — is a real drafting error and should amend. The US D1 detector
+def test_numeral_consistency_conflict_surfaces_advisory():
+    """Same numeral (10) attached to two disjoint element names — surfaced as an
+    advisory 'verify' item (D1 advisory re-tier, 2026-06-25), not an asserted
+    'amend'. The conflict is still detected and shown; it just no longer affects
+    the grade (EPC inherits the US re-tier). The US D1 detector
     requires the canonical name to have at least 2 occurrences before
     treating any other name on the same numeral as a conflict."""
     text = """Title here
@@ -278,8 +279,11 @@ A filter.
 """
     results = check_numeral_consistency_epc(text)
     assert len(results) >= 1
-    # At least one finding should flag the conflict
-    assert any(r.status == "amend" for r in results)
+    # Conflict surfaced as an advisory verify item (not a graded amend)
+    assert any(r.status == "verify" for r in results)
+    assert any(
+        r.message_key == "check.epc.spec.numeralConsistency.verify" for r in results
+    )
 
 
 def test_claim_reference_in_spec_canonical_passes():
