@@ -657,6 +657,27 @@ def test_interior_conjunction_split_parity_242():
     assert _cn_extract_numeral_name_pairs("該散熱片與基板10連接") == [("10", "基板")]
 
 
+class TestCnD1ParentChildPrefixBleed:
+    """A parent element's name bled onto a Latin-prefix sub-element (E714 → E7141)
+    is a part-whole reference, not a conflict; pure-digit numerals are not
+    treated as parent/child."""
+
+    def test_parent_name_on_child_suppressed(self):
+        from patentlint.analysis.cn_specification import _cn_is_parent_name_bleed
+        dom = {"E714": "外端蓋", "E7141": "外穿孔"}
+        assert _cn_is_parent_name_bleed("E7141", "外端蓋", dom) is True
+
+    def test_sibling_not_suppressed(self):
+        from patentlint.analysis.cn_specification import _cn_is_parent_name_bleed
+        dom = {"E713": "驅動單元", "E714": "外端蓋"}
+        assert _cn_is_parent_name_bleed("E714", "驅動單元", dom) is False
+
+    def test_pure_digit_prefix_not_treated_as_hierarchy(self):
+        from patentlint.analysis.cn_specification import _cn_is_parent_name_bleed
+        dom = {"10": "殼體", "100": "電路"}
+        assert _cn_is_parent_name_bleed("100", "殼體", dom) is False
+
+
 class TestCnD1LegendBleed:
     """Reference-sign legend `NNN：name` must not bleed entry k's name onto
     entry k+1's numeral (the dominant TW D1 FP root cause, #265-270)."""
