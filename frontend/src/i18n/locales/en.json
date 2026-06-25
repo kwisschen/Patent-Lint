@@ -299,7 +299,7 @@
         },
         "confirmed_defect": {
           "label": "This is a correct catch",
-          "hint": "The checker is right — a real issue worth fixing."
+          "hint": "The checker is right — a genuine issue to fix."
         }
       }
     }
