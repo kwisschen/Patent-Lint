@@ -2617,6 +2617,12 @@ _LEADING_QUANTIFIER_DENYLIST: tuple[str, ...] = tuple(sorted(
         "若干個", "若干",
         "一些", "某些",
         "多種", "多類", "多組", "多對",
+        # #252 (2026-06-25): 多條 ("multiple <long-thin items>") — `多條導通線路`
+        # references as `所述導通線路`. 條 is a measure word here. NOT generalized
+        # to 多層/多片/多支 etc. — those collide with compound nouns (多層板,
+        # 多片式) where the classifier is part of the head; 條-initial nouns
+        # (條碼/條紋) are rare enough that the FN-guard cleared 多條.
+        "多條",
         "至少兩個", "至少兩", "兩個", "兩種",
     ),
     key=len,
@@ -3444,6 +3450,17 @@ def normalize_candidate_intro(
     t = strip_leading_quantifier(t)
     t = strip_reference_form_prefix(t)
     t = strip_leading_verb_tw(t)
+    # #245: strip an inline English-word parenthetical gloss that bled into the
+    # captured intro (`一中介片（interposer）` → `中介片（interpos`; _INTRO_PATTERN
+    # truncates the gloss mid-word, leaving an unclosed `（Latin` tail). INTRO
+    # SIDE ONLY — the reference side (normalize_reference_term) keeps the paren,
+    # so a gloss-bearing reference like `該信使核糖核酸(mRNA)` (where the
+    # abbreviation IS the element identity) still requires its own intro and its
+    # legit §112 finding is preserved (validate_fix: intro-only strip leaves
+    # those 3 bio/chemistry FNs firing). Content ≥3 PURE letters so designators
+    # `（A）`/`（A1）` and reference numerals `（10）` are untouched; closing paren
+    # optional for the truncated-tail case.
+    t = re.sub(r"[(（][A-Za-z]{3,}(?:[)）]|$)", "", t)
     return t
 
 
@@ -4865,6 +4882,15 @@ def extract_introductions_tw(
         # using 前述第一間隔件 / 前述第二間隔件 emit incorrectly.
         norm = normalize_arabic_ordinal_to_cjk(norm)
         norm = strip_leading_verb_tw(norm)
+        # #252 (2026-06-25): strip the `多條` plural quantifier on supplementary
+        # intros. A supplementary capture like `多條導通線路` (from a `包含：…`
+        # list) kept its `多條` while the reference `所述導通線路` normalized to
+        # `導通線路` → spurious mismatch + self-suggest (did_you_mean == term).
+        # NARROW to `多條` only: applying the full strip_leading_quantifier here
+        # silenced 9 gold-legit (the single-char 一/各/個 strips collide with
+        # supplementary-captured compound heads — validate_fix 2026-06-25).
+        if norm.startswith("多條") and len(norm) > 2:
+            norm = norm[2:]
         if not norm or norm in seen:
             continue
         # R32 (2026-05-04): drop intros with newline/colon — capture
