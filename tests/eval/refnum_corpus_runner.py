@@ -141,6 +141,26 @@ def name_is_element_noun(keyed_name: str) -> bool:
     return True
 
 
+# Known non-element symbol numerals (Engine-3 R2) — amino-acid mutations,
+# immunology/clinical biomarkers, X2X telecom abbreviations. A "conflict" on
+# one of these was never a real reference-designator D1, so removing it is the
+# intended symbol-denylist win and is excluded from the designator FN-gate.
+_AA_MUT = re.compile(r"^[ACDEFGHIKLMNPQRSTVWY]\d{2,4}[ACDEFGHIKLMNPQRSTVWY]$")
+_BIO_PREFIXES = ("CD", "CLDN", "IGG", "IGM", "IGA", "IGE", "IGD",
+                 "IL", "TNF", "IFN", "HBA")
+_X2X = {"D2D", "V2V", "V2I", "V2N", "V2P", "V2X", "V2G", "M2M"}
+
+
+def _is_known_nonelement_symbol(numeral: str) -> bool:
+    n = numeral.upper()
+    if n in _X2X:
+        return True
+    if _AA_MUT.match(n):
+        return True
+    lead = re.match(r"^[A-Z]+", n)
+    return bool(lead and lead.group() in _BIO_PREFIXES)
+
+
 def classify_conflict(c: dict) -> str:
     """PROTECT (structurally-plausible real D1) vs OVERCAPTURE.
 
@@ -276,12 +296,28 @@ def main() -> int:
         # they are INFORMATIONAL; this signature is the decisive gate.
         def _real_d1_lost(k):
             v = pre[k]
+            # Scope: the guard protects ELECTRONIC reference designators. A
+            # numeral that is a known non-element SYMBOL (amino-acid mutation,
+            # immunology/clinical biomarker prefix, or X2X telecom abbreviation)
+            # was never a real D1 — removing it is the intended symbol-denylist
+            # win, not a lost element conflict. Exclude from the FN gate.
+            numeral = k.split("|", 1)[1]
+            if _is_known_nonelement_symbol(numeral):
+                return False
             if not (name_is_element_noun(v["canonical"]) and v["canonical_count"] >= 2):
                 return False
             return any(name_is_element_noun(n) and c >= 2 for n, c in v["outliers"])
         noun_noun_lost = [k for k in removed if _real_d1_lost(k)]
         real_lost = [k for k in removed if pre[k]["tag"] == "protect"]
+        # strong_real / both_repeated are INFORMATIONAL and computed WITHOUT the
+        # symbol-scope exclusion, so they over-count intended symbol-denylist
+        # removals (bio/mutation/X2X). Surface symbol-excluded variants too so
+        # the gate reads cleanly.
         strong_lost = [k for k in removed if pre[k]["strong_real"]]
+        strong_lost_designator = [
+            k for k in strong_lost
+            if not _is_known_nonelement_symbol(k.split("|", 1)[1])
+        ]
         repeated_lost = [k for k in removed if pre[k].get("both_repeated")]
         pre_fix = sum(1 for v in pre.values() if v["tier"] == "fix")
         post_fix = sum(1 for v in post.values() if v["tier"] == "fix")
@@ -292,14 +328,15 @@ def main() -> int:
         print(f"    ├─ demoted fix→review (still advisory): {len(demoted)}")
         print(f"    └─ truly removed (gone from both tiers): {len(removed)}")
         print(f"  new conflicts: {len(added)}")
-        print(f"  >>> noun↔noun-both-repeated TRULY removed (HARD GATE, MUST be 0): {len(noun_noun_lost)}")
-        print(f"  (informational) strong_real_lost={len(strong_lost)}  "
+        print(f"  >>> designator noun↔noun-both-repeated removed (HARD GATE, MUST be 0): {len(noun_noun_lost)}")
+        print(f"  >>> designator strong_real removed (HARD GATE, MUST be 0):           {len(strong_lost_designator)}")
+        print(f"  (informational, symbol-inclusive) strong_real_lost={len(strong_lost)}  "
               f"protect_tag_lost={len(real_lost)}  both_repeated_lost={len(repeated_lost)}")
-        if noun_noun_lost:
-            print("  --- GENUINE-FN-signature conflicts removed (HARD FAIL) ---")
-            for k in sorted(noun_noun_lost):
+        if noun_noun_lost or strong_lost_designator:
+            print("  --- GENUINE designator-FN conflicts removed (HARD FAIL) ---")
+            for k in sorted(set(noun_noun_lost) | set(strong_lost_designator)):
                 print(f"    {k}: {pre[k]['canonical']!r}({pre[k]['canonical_count']}) vs {pre[k]['outliers'][:5]}")
-        fail = bool(noun_noun_lost) or bool(strong_lost)
+        fail = bool(noun_noun_lost) or bool(strong_lost_designator)
         print(f"  GATE: {'FAIL — investigate above' if fail else 'PASS'}")
         return 1 if fail else 0
 

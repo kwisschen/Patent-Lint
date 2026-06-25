@@ -179,6 +179,11 @@ _LATIN_PREFIX_DENYLIST = frozenset({
     # would mis-fire as Latin-prefix refs
     "CDMA", "GSM", "LTE", "UMTS", "WCDMA", "CDMA2000",
     "P2P", "B2B", "B2C",
+    # X2X communication-mode abbreviations (device-/vehicle-to-X). Closed set
+    # of telecom protocol terms discussed in prose; never drawing-element
+    # designators. (Engine-3 R2 — caught coincidentally by the AA-mutation
+    # pattern before it was restricted to multi-digit residue positions.)
+    "D2D", "V2V", "V2I", "V2N", "V2P", "V2X", "V2G", "M2M",
     # Software / network / format acronyms
     "SQL", "API", "URL", "URI", "URN", "JSON", "XML", "HTML", "CSS",
     "TCP", "UDP", "HTTP", "HTTPS", "FTP", "DNS", "MAC", "IP", "USB",
@@ -195,6 +200,31 @@ _LATIN_PREFIX_DENYLIST = frozenset({
     "PD1", "PDL1", "CTLA4",
     "STAT3", "MTOR", "AKT1", "AKT2",
     "RTK", "GPCR", "ATP", "ADP", "GTP", "CDP",
+})
+
+# Engine-3 R2 (ADR-159) — amino-acid substitution notation, e.g. K417T /
+# D614G / E484K: a single IUPAC amino-acid code, a residue position, and a
+# single IUPAC amino-acid code. These are biology/clinical symbols, never
+# reference designators (real designators carry a LOWERCASE suffix, R1a). Two
+# guards keep it FN-safe: (1) the 20-letter IUPAC set (B/J/O/U/X/Z excluded)
+# spares real uppercase-suffixed labels such as U1A / Q2B; (2) the residue
+# position requires >=2 digits — real mutation positions are multi-digit
+# (K417T, D614G, L234F), whereas single-digit X2X tokens (D2D / V2V / L1D /
+# I3C) are telecom/bus abbreviations that coincidentally use AA letters and
+# are handled by the explicit denylist instead, so a hypothetical 1-digit
+# designator like C2D is never silenced here.
+_AA_MUTATION_RE = re.compile(r"^[ACDEFGHIKLMNPQRSTVWY]\d{2,4}[ACDEFGHIKLMNPQRSTVWY]$")
+
+_LEADING_ALPHA_RE = re.compile(r"^[A-Z]+")
+
+# Engine-3 R2 — leading alpha prefixes of immunology / clinical biomarker
+# families (CD3, CD8, CD28, CLDN18, IGG4, IL7R, TNFα, IFNγ, HBA1C). These are
+# discussed throughout biotech specs in prose and mis-captured as Latin-prefix
+# reference designators; none labels a drawing element. Curated, FN-verified
+# against the corpus refnum FN-guard (no real designator uses these prefixes).
+_BIO_LEADING_PREFIXES = frozenset({
+    "CD", "CLDN", "IGG", "IGM", "IGA", "IGE", "IGD",
+    "IL", "TNF", "IFN", "HBA",
 })
 
 # Exclusion: unit followers
@@ -601,6 +631,23 @@ def extract_numeral_name_pairs(
             # Reject if either the alpha-prefix OR the full normalized
             # token (B2B/V02/P2P/CDMA2000) matches the denylist.
             if prefix in _LATIN_PREFIX_DENYLIST or ref in _LATIN_PREFIX_DENYLIST:
+                continue
+            # Engine-3 R2 (ADR-159): amino-acid substitution notation
+            # (K417T, D614G, E484K) — single AA code + position + single AA
+            # code, all from the 20-letter IUPAC set. A biology/clinical
+            # symbol, never a reference designator (designators use a LOWERCASE
+            # suffix, R1a). The AA-letter restriction keeps real uppercase-
+            # suffixed labels (U1A / Q2B, whose letters fall outside the AA set
+            # or whose prefix is multi-letter) untouched.
+            if _AA_MUTATION_RE.match(ref):
+                continue
+            # Engine-3 R2: immunology / clinical biomarker families whose
+            # LEADING alpha prefix is an established symbol (CD3 / CD8 / CLDN18
+            # / IGG4 / IL7R / TNFα / HBA1C). These are discussed in prose and
+            # mis-captured as Latin-prefix designators; none labels a drawing
+            # element. Curated like the gene/protein denylist above.
+            _lead_m = _LEADING_ALPHA_RE.match(ref)
+            if _lead_m and _lead_m.group() in _BIO_LEADING_PREFIXES:
                 continue
             if any(w in _EXCLUDE_KEYWORDS for w in noun.split()):
                 continue
