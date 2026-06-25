@@ -588,6 +588,18 @@ _STOP_WORDS = (
     # Shared `_NP_CORE` covers the spec-support extractor (cross-CHECK). EPC
     # reuses the US walker. No CN/TW report — DR-1.
     r"conforms|"
+    # R19 (2026-06-25, ADR-159): `follows` (3sg) — trailing finite verb surfaced
+    # by the normalization-asymmetry probe (gold walker_fp where the bare-noun
+    # intro already exists; the relative-clause verb bled into the reference,
+    # e.g. `second field follows`). Unambiguous finite verb (`X follows Y`), no
+    # claim noun sense; clean head resolves to its Pattern-A intro. FN-guarded
+    # (validate_fix silenced_legit==0). The siblings `matches`/`fails`/`intends`
+    # were WITHHELD — each silenced gold-legit (`authentication data matches`,
+    # `usage fraction fails`, `customer intends`): the strip resolves a reference
+    # the gold treats as a real §112 defect, and the deterministic gold-corrector
+    # can't verify those overnight (need a gated round + claim read). Shared
+    # `_NP_CORE` → spec-support too. EPC reuses US. No CN/TW report — DR-1.
+    r"follows|"
     # Issue #136 (2026-06-01): `face` is ambiguous noun/verb — legitimate
     # noun in `terminal face` / `mounting face` / `contact face` etc.
     # but clearly the matrix verb in `the first magnetic bowl face toward
