@@ -71,10 +71,10 @@ from typing import Any
 # determine walker-FP vs legit-defect classification. Mirror of the
 # client-side change in frontend/src/lib/feedback.js so server-side
 # and client-side report payloads agree.
-CONTEXT_WINDOW_LATIN = 60
-CONTEXT_WINDOW_JA = 45
-CONTEXT_WINDOW_HANGUL = 35
-CONTEXT_WINDOW_HAN = 25
+CONTEXT_WINDOW_LATIN = 80
+CONTEXT_WINDOW_JA = 60
+CONTEXT_WINDOW_HANGUL = 45
+CONTEXT_WINDOW_HAN = 35
 
 # Ancestor-introduction excerpt windows — deliberately ~half the
 # child-claim context window above. The ancestor excerpt exists only to
