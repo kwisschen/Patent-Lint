@@ -1358,6 +1358,11 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
     (
         "包含", "包括", "含有", "具有", "系", "为", "是", "设有", "具备",
         "通过", "经由", "借由", "基于", "透过", "根据", "依据",
+        # NOTE: 排列 (arrange) intentionally NOT mirrored from TW R13 (#266).
+        # On the CN corpus it is FN-safe but corpus-silent AND regresses
+        # `纤维材料轴向地排列` (strips only 排列, stranding the adverb 轴向地)
+        # where the CN pipeline already yields the clean 纤维材料. Re-attempt
+        # only with 轴向地-class adverb handling + a CN report (DR-1).
         "还包含", "还包括",
         "并且", "以及",
         "并", "且", "其", "其中", "还", "另",
