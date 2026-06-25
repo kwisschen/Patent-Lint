@@ -175,6 +175,7 @@
   },
   "feedback": {
     "report": "Feedback senden",
+    "reportAll": "Alle melden",
     "reportProblem": "Feedback zu dieser Prüfung senden",
     "picker": {
       "title": "Ihr Entwurf bleibt auf Ihrem Gerät",
@@ -301,7 +302,8 @@
           "label": "Korrekter Treffer",
           "hint": "Die Prüfung hat recht — ein echtes, zu behebendes Problem."
         }
-      }
+      },
+      "batchNote": "Sammelmeldung: alle {{count}} markierten Punkte dieses Abschnitts werden gemeinsam zur Prüfung gesendet. Keine Einzelbewertung wird angehängt; jeder Punkt wird einzeln beurteilt."
     }
   },
   "cta": {
@@ -332,7 +334,9 @@
     "didYouMean": "Meinten Sie *{{term}}* (eingeführt in Anspruch {{claim_id}})?",
     "didYouMeanCrossBranch": "Meinten Sie *{{term}}* (eingeführt in Anspruch {{claim_id}}, der nicht zur Abhängigkeitskette dieses Anspruchs gehört)?",
     "crossBranchAntecedent": "Eingeführt in Anspruch {{claim_id}}, der nicht zur Abhängigkeitskette dieses Anspruchs gehört. Restrukturieren Sie die Abhängigkeit oder führen Sie den Begriff erneut mit „a“ ein.",
-    "crossRefSpecSupport": "Ebenfalls in der Stützungs-Prüfung der Beschreibung unten gekennzeichnet."
+    "crossRefSpecSupport": "Ebenfalls in der Stützungs-Prüfung der Beschreibung unten gekennzeichnet.",
+    "candidateIntroArticleLess": "*{{term}}* erscheint zuvor in diesem Anspruch ohne Artikel; möglicherweise bereits eingeführt — bitte prüfen.",
+    "candidateIntroQuantifier": "*{{term}}* erscheint zuvor in diesem Anspruch mit „{{marker}}“; möglicherweise bereits eingeführt — bitte prüfen."
   },
   "specSupport": {
     "title": "Stützungs-Prüfung der Beschreibung",

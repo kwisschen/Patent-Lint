@@ -175,6 +175,7 @@
   },
   "feedback": {
     "report": "意見回饋",
+    "reportAll": "全部回報",
     "reportProblem": "針對此檢查提供意見回饋",
     "picker": {
       "title": "您的稿件不會離開您的裝置",
@@ -301,7 +302,8 @@
           "label": "確認為正確標記",
           "hint": "分析器是對的，這是待修正的真實問題。"
         }
-      }
+      },
+      "batchNote": "批次回報：本節全部 {{count}} 項標記將一併送出以供審閱。不附帶逐項判定，每項將單獨評估。"
     }
   },
   "cta": {
@@ -332,7 +334,9 @@
     "didYouMean": "您是否指的是「{{term}}」（於請求項{{claim_id}}中導入）？",
     "didYouMeanCrossBranch": "您是否指的是「{{term}}」（於請求項 {{claim_id}} 中導入，但該請求項不在本請求項的相依鏈中）？",
     "crossBranchAntecedent": "於請求項 {{claim_id}} 中引入，但該請求項不在本請求項的相依鏈中。請調整附屬結構，或於本請求項中以不定冠詞（「a」）重新導入該用語。",
-    "crossRefSpecSupport": "亦於下方之說明書支持檢視中標記。"
+    "crossRefSpecSupport": "亦於下方之說明書支持檢視中標記。",
+    "candidateIntroArticleLess": "「{{term}}」在本請求項前文已出現（未帶限定詞），可能已經導入，請核實。",
+    "candidateIntroQuantifier": "「{{term}}」在本請求項前文已以「{{marker}}」導入，請核實。"
   },
   "specSupport": {
     "title": "說明書支持檢視",

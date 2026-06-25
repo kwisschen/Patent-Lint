@@ -157,7 +157,9 @@ function ClaimRow({ claimNumber, phrases, crossRefPhrases, claimText, jurisdicti
 }
 
 export default function SpecSupportCard({ unsupportedTerms, claimTrees, jurisdiction }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const { sendFeedback } = useFeedback()
+  const [batchModalOpen, setBatchModalOpen] = useState(false)
 
   if (!unsupportedTerms || unsupportedTerms.length === 0) return null
 
@@ -188,6 +190,54 @@ export default function SpecSupportCard({ unsupportedTerms, claimTrees, jurisdic
   const claimIds = Object.keys(grouped).map(Number).sort((a, b) => a - b)
   const totalItems = unsupportedTerms.length
 
+  // ── Section-level batch report (neutral disposition; see AntecedentBasisCard) ──
+  const BATCH_MAX = 25
+  const buildBatchDiagnostics = () => {
+    const findingsList = unsupportedTerms.slice(0, BATCH_MAX).map((u) => {
+      const text = claimTextMap[u.claim_number] || ''
+      const { context_before, context_after, char_offset } = excerptAround(text, u.phrase)
+      return {
+        claim_id: u.claim_number,
+        phrase: u.phrase,
+        cross_ref: u.cross_ref === 'antecedent' ? 'antecedent' : null,
+        char_offset,
+        context_before,
+        context_after,
+        claim_text_charlen: text.length,
+      }
+    })
+    return {
+      batch: true,
+      findings_in_group: totalItems,
+      findings: findingsList,
+      claim_count: claimIds.length,
+      hit_count: totalItems,
+      ...(totalItems > BATCH_MAX && { findings_truncated_to: BATCH_MAX }),
+    }
+  }
+  const handleBatchConfirm = (userComment, disposition) =>
+    sendReport({
+      checkKey: 'specSupport',
+      jurisdiction: jurisdiction || 'unknown',
+      locale: i18n.language,
+      diagnostics: buildBatchDiagnostics(),
+      userComment,
+      disposition,
+    })
+  const handleBatchMailto = () =>
+    sendFeedback(
+      composeFeedback(
+        {
+          check_key: 'specSupport',
+          jurisdiction: jurisdiction || 'unknown',
+          diagnostics: buildBatchDiagnostics(),
+        },
+        t,
+        { locale: i18n.language },
+      ),
+      { verb: 'report' },
+    )
+
   return (
     <FrostCard tier="resting" accent="attention">
       <div className="flex items-start gap-3 px-4 py-3 pl-5">
@@ -201,6 +251,17 @@ export default function SpecSupportCard({ unsupportedTerms, claimTrees, jurisdic
         <StatusPill status="attention" shape="pill">
           {totalItems} {t('antecedentBasis.toVerify')}
         </StatusPill>
+        <Button
+          variant="ghost"
+          size="xs"
+          onClick={() => setBatchModalOpen(true)}
+          title={t('feedback.reportAll')}
+          aria-label={t('feedback.reportAll')}
+          className="shrink-0"
+        >
+          <MessageSquare />
+          <span className="hidden sm:inline">{t('feedback.reportAll')}</span>
+        </Button>
       </div>
       <div className="border-t border-border/40 px-1 py-1">
         {claimIds.map((id) => (
@@ -214,6 +275,18 @@ export default function SpecSupportCard({ unsupportedTerms, claimTrees, jurisdic
           />
         ))}
       </div>
+      <ReportModal
+        open={batchModalOpen}
+        onOpenChange={setBatchModalOpen}
+        checkKey="specSupport"
+        jurisdiction={jurisdiction || 'unknown'}
+        locale={i18n.language}
+        diagnostics={buildBatchDiagnostics()}
+        onConfirm={handleBatchConfirm}
+        onMailtoFallback={handleBatchMailto}
+        batchMode
+        batchCount={totalItems}
+      />
     </FrostCard>
   )
 }

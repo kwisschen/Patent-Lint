@@ -156,6 +156,49 @@ export function excerptAroundReference(text, term, referenceForm) {
   return { context_before, context_after, char_offset: idx }
 }
 
+// Candidate-introduction excerpt: when `term` appears EARLIER in the claim
+// than the flagged reference, return that earliest occurrence's context + the
+// marker immediately preceding it. Mirrors Python's intro_candidate_* fields
+// (diagnostic_extractors). The marker is a FACT, not a verdict — article_less /
+// intro-quantifier (一/a) earlier mentions are candidate missed introductions
+// (likely FP); a reference marker (該/所述/the) means the earliest mention is
+// itself a reference (genuine gap). Returns null when there is no earlier
+// occurrence or the earliest mention is itself a reference.
+const _CANDIDATE_REF_MARKERS = ['所述', '前述', '該等', '該些', '該', 'said ', 'the ']
+const _CANDIDATE_INTRO_MARKERS = ['一種', '一個', '一', '每一', '至少一', '複數', '多個', 'at least one ', 'an ', 'a ']
+
+export function candidateIntroExcerpt(text, term, referenceForm) {
+  if (!text || !term) return null
+  const lower = text.toLowerCase()
+  // Locate the flagged reference position (so we only surface occurrences
+  // that precede it).
+  let refPos = -1
+  if (referenceForm) refPos = lower.indexOf(referenceForm.toLowerCase())
+  if (refPos < 0) refPos = lower.lastIndexOf(term.toLowerCase())
+  const earlyIdx = lower.indexOf(term.toLowerCase())
+  if (earlyIdx < 0 || (refPos >= 0 && earlyIdx >= refPos)) return null
+  // Classify the marker immediately preceding the earliest occurrence.
+  let marker = 'article_less'
+  for (const grp of [_CANDIDATE_REF_MARKERS, _CANDIDATE_INTRO_MARKERS]) {
+    let hit = null
+    for (const mk of grp) {
+      const s = earlyIdx - mk.length
+      if (s >= 0 && text.slice(s, earlyIdx).toLowerCase().endsWith(mk.toLowerCase())) {
+        hit = mk.trim()
+        break
+      }
+    }
+    if (hit) { marker = hit; break }
+  }
+  // Earliest mention is itself a reference → not a candidate introduction.
+  if (_CANDIDATE_REF_MARKERS.some((m) => marker === m.trim())) return null
+  const w = contextWindowFor(text)
+  const contextBefore = text.slice(Math.max(0, earlyIdx - w), earlyIdx) || null
+  const end = earlyIdx + term.length
+  const contextAfter = text.slice(end, end + w) || null
+  return { marker, contextBefore, contextAfter, offset: earlyIdx }
+}
+
 // Per-key locale-bundle path for each known metadata key. Keys not in
 // this map fall back to a sentence-case version of the raw key so new
 // fields work without code changes (and the maintainer still sees a

@@ -175,6 +175,7 @@
   },
   "feedback": {
     "report": "フィードバック",
+    "reportAll": "すべて報告",
     "reportProblem": "このチェックにフィードバックを送る",
     "picker": {
       "title": "原稿はお客様の端末内に留まります",
@@ -301,7 +302,8 @@
           "label": "正しい指摘",
           "hint": "分析器の指摘は正しく、修正すべき実際の問題です。"
         }
-      }
+      },
+      "batchNote": "一括報告：本セクションの {{count}} 件すべての指摘をまとめて確認用に送信します。個別の判定は付与されず、各項目は個別に評価されます。"
     }
   },
   "cta": {
@@ -332,7 +334,9 @@
     "didYouMean": "もしかして「{{term}}」（請求項{{claim_id}}で導入）ですか？",
     "didYouMeanCrossBranch": "もしかして「{{term}}」（請求項 {{claim_id}} で導入されていますが、当該請求項は本請求項の従属系列に含まれません）ですか？",
     "crossBranchAntecedent": "請求項 {{claim_id}} で導入されていますが、当該請求項は本請求項の従属系列に含まれません。従属関係を見直すか、「a」で用語を再導入してください。",
-    "crossRefSpecSupport": "下記の明細書サポートの確認でも指摘されています。"
+    "crossRefSpecSupport": "下記の明細書サポートの確認でも指摘されています。",
+    "candidateIntroArticleLess": "「{{term}}」は本請求項の前文に限定詞なしで既に現れています。既に導入済みの可能性があります。ご確認ください。",
+    "candidateIntroQuantifier": "「{{term}}」は本請求項の前文で「{{marker}}」とともに導入されています。ご確認ください。"
   },
   "specSupport": {
     "title": "明細書サポートの確認",
