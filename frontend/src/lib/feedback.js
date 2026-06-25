@@ -86,10 +86,10 @@ function buildHash() {
 // src/patentlint/diagnostic_extractors.py. Still well under
 // Privacy §6 "full paragraph" threshold, still capped to 5
 // findings/report.
-const CONTEXT_WINDOW_LATIN = 60
-const CONTEXT_WINDOW_JA = 45
-const CONTEXT_WINDOW_HANGUL = 35
-const CONTEXT_WINDOW_HAN = 25
+const CONTEXT_WINDOW_LATIN = 80
+const CONTEXT_WINDOW_JA = 60
+const CONTEXT_WINDOW_HANGUL = 45
+const CONTEXT_WINDOW_HAN = 35
 
 export const SAMPLE_SIZE = 5
 

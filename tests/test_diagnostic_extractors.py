@@ -95,13 +95,13 @@ class TestExcerptHonorsPerScriptWindow:
         assert before is not None and len(before) <= CONTEXT_WINDOW_HAN
         assert after is not None and len(after) <= CONTEXT_WINDOW_HAN
 
-    def test_japanese_window_is_18(self):
+    def test_japanese_window_bounds(self):
         ja = "本発明はユーザインターフェースであって、前記ユーザ装置を備えることを特徴とする発明である。"
         before, after, _ = _excerpt_around(ja, "前記ユーザ装置")
         assert before is not None and len(before) <= CONTEXT_WINDOW_JA
         assert after is not None and len(after) <= CONTEXT_WINDOW_JA
 
-    def test_latin_window_keeps_full_30(self):
+    def test_latin_window_bounds(self):
         en = "A user interface comprising the user device displayed on the browser opening the page above."
         before, after, _ = _excerpt_around(en, "user device")
         assert before is not None and len(before) <= CONTEXT_WINDOW_LATIN
