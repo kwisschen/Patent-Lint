@@ -54,13 +54,25 @@ _END = re.compile(
     r"|Non-Patent Citations|Similar Documents|Priority And Related Applications)"
 )
 
+# CJK (CN/TW) body markers — the Google-Patents CN/TW description carries an
+# English biblio header, then the CJK spec body from the first section heading.
+_SEC_CJK = re.compile(
+    r"(技术领域|技術領域|背景技术|背景技術|发明内容|發明內容|具体实施|具體實施"
+    r"|实施方式|實施方式|附图说明|附圖說明)"
+)
+_END_CJK = re.compile(
+    r"(Patent Citations|Cited By|Family Cites|Similar Documents|Priority date"
+    r"|Legal Events|Claims\s*\(|Patent Citations \(\d+\))"
+)
 
-def spec_body(text: str) -> str:
-    m = _SEC.search(text)
+
+def spec_body(text: str, juris: str = "US") -> str:
+    sec, end = (_SEC, _END) if juris == "US" else (_SEC_CJK, _END_CJK)
+    m = sec.search(text)
     start = m.start() if m else 0
-    e = _END.search(text, start)
-    end = e.start() if e else len(text)
-    return text[start:end]
+    e = end.search(text, start)
+    stop = e.start() if e else len(text)
+    return text[start:stop]
 
 
 # --- structural plausibility of a captured element name ---------------------
@@ -77,6 +89,36 @@ from patentlint.analysis.specification import (  # noqa: E402
     _detect_d1_conflicts as us_detect,
     _split_ordinal_key,
 )
+from patentlint.analysis.cn_specification import (  # noqa: E402
+    _cn_extract_numeral_name_pairs as cn_pairs,
+    _cn_detect_d1_conflicts as cn_detect,
+    _CN_FRAGMENT_MARKERS,
+)
+
+# Leading CJK connector/particle chars that are never the FIRST char of a real
+# element noun (conjunctions / prepositions / genitive particles). Used by the
+# CJK plausibility predicate (a name starting with one is sentence bleed) and by
+# the connector-variant dedup fix. Conservative subset of
+# cn_specification._CN_LEADING_VERBS_PARTICLES.
+_CN_LEADING_CONNECTORS = frozenset(
+    "和及與与於于到的或並并而且以之至由在向從从對对"
+)
+
+
+def _cn_name_is_element_noun(keyed_name: str) -> bool:
+    """CJK plausibility: >=2 CJK chars, not led by a connector/particle, no
+    sentence-fragment marker. The independent FN-guard signal for CN/TW D1 —
+    a real element noun passes; connector-bled / clause-fragment captures fail."""
+    _, head = _split_ordinal_key(keyed_name)
+    head = head.strip()
+    cjk = [c for c in head if "一" <= c <= "鿿"]
+    if len(cjk) < 2:
+        return False
+    if head[0] in _CN_LEADING_CONNECTORS:
+        return False
+    if any(mk in head for mk in _CN_FRAGMENT_MARKERS):
+        return False
+    return True
 
 
 # Self-contained mirror of specification._is_plausible_element_name. NOT imported
@@ -116,7 +158,7 @@ def _head_is_nonnoun(w: str) -> bool:
     return False
 
 
-def name_is_element_noun(keyed_name: str) -> bool:
+def name_is_element_noun(keyed_name: str, juris: str = "US") -> bool:
     """Structural test: does this D1 element-name LOOK like a real element noun
     phrase (vs sentence-context over-capture)?
 
@@ -128,7 +170,10 @@ def name_is_element_noun(keyed_name: str) -> bool:
     those are usually adjectival modifiers of a real element ("integrated
     circuit", "curved surface", "printed circuit board"), so rejecting them
     would drop real conflicts (FN). Mirrors specification._is_plausible_element_name.
+    For CN/TW, dispatches to the CJK predicate.
     """
+    if juris != "US":
+        return _cn_name_is_element_noun(keyed_name)
     _, head = _split_ordinal_key(keyed_name)
     words = [w for w in head.split() if w]
     if not words:
@@ -161,32 +206,31 @@ def _is_known_nonelement_symbol(numeral: str) -> bool:
     return bool(lead and lead.group() in _BIO_PREFIXES)
 
 
-def classify_conflict(c: dict) -> str:
+def classify_conflict(c: dict, juris: str = "US") -> str:
     """PROTECT (structurally-plausible real D1) vs OVERCAPTURE.
 
     PROTECT requires: canonical is an element noun AND >=1 outlier is an
     element noun AND they genuinely differ. Everything else is OVERCAPTURE.
     """
-    canon = c["canonical"]
-    if not name_is_element_noun(canon):
+    if not name_is_element_noun(c["canonical"], juris):
         return "overcapture"
     for o in c["outliers"]:
-        if name_is_element_noun(o["name"]):
+        if name_is_element_noun(o["name"], juris):
             return "protect"
     return "overcapture"
 
 
-def is_strong_real(c: dict) -> bool:
+def is_strong_real(c: dict, juris: str = "US") -> bool:
     """The strongest deterministic real-D1 signal: both the canonical and a
     clean outlier are written REPEATEDLY (drafter consistently used both),
     so it is very unlikely to be one-off over-capture. These are the
     conflicts a name-cleaning fix MUST preserve."""
-    if classify_conflict(c) != "protect":
+    if classify_conflict(c, juris) != "protect":
         return False
     if c["canonical_count"] < 3:
         return False
     for o in c["outliers"]:
-        if o["count"] >= 2 and name_is_element_noun(o["name"]):
+        if o["count"] >= 2 and name_is_element_noun(o["name"], juris):
             return True
     return False
 
@@ -219,19 +263,19 @@ def collect_conflicts(juris: str) -> list[tuple[str, dict]]:
     the junk outliers that made it look strong — that is a WIN (fewer false
     assertions), not a removal. Tracking FIX-only would mis-count a demotion as
     a silenced conflict and falsely trip the guard."""
-    if juris != "US":
-        raise NotImplementedError("CN/TW wired after US sweep (cn_specification mirror)")
     descs = _load_descs(juris)
+    extract, detect = (us_pairs, us_detect) if juris == "US" else (cn_pairs, cn_detect)
     out: list[tuple[str, dict]] = []
     for pid, obj in descs.items():
         raw = (obj or {}).get("description") or ""
         if not raw:
             continue
-        spec = spec_body(raw)
-        if len(spec) < 2000:
+        spec = spec_body(raw, juris)
+        if len(spec) < 1500:
             continue
-        pairs = us_pairs(spec)
-        for c in us_detect(pairs, latin_pattern=False):
+        pairs = extract(spec)
+        confs = detect(pairs, latin_pattern=False) if juris == "US" else detect(pairs)
+        for c in confs:
             if c.get("confidence") not in ("fix", "review"):
                 continue
             out.append((pid, c))
@@ -248,8 +292,8 @@ def snapshot(juris: str) -> dict:
     for pid, c in confs:
         snap[_key(pid, c)] = {
             "tier": c.get("confidence"),
-            "tag": classify_conflict(c),
-            "strong_real": is_strong_real(c),
+            "tag": classify_conflict(c, juris),
+            "strong_real": is_strong_real(c, juris),
             "both_repeated": both_repeated(c),
             "canonical": c["canonical"],
             "canonical_count": c["canonical_count"],
@@ -294,19 +338,23 @@ def main() -> int:
         # `real_lost`/`both_repeated` heuristics below over-flag benign collapses
         # (a junk name being dropped leaves a single noun or all-1x residue), so
         # they are INFORMATIONAL; this signature is the decisive gate.
+        juris = args.juris
+
         def _real_d1_lost(k):
             v = pre[k]
             # Scope: the guard protects ELECTRONIC reference designators. A
             # numeral that is a known non-element SYMBOL (amino-acid mutation,
             # immunology/clinical biomarker prefix, or X2X telecom abbreviation)
             # was never a real D1 — removing it is the intended symbol-denylist
-            # win, not a lost element conflict. Exclude from the FN gate.
+            # win, not a lost element conflict. Exclude from the FN gate. (US-only
+            # symbol set; the CJK connector-dedup targets connector-bled names,
+            # not symbols.)
             numeral = k.split("|", 1)[1]
-            if _is_known_nonelement_symbol(numeral):
+            if juris == "US" and _is_known_nonelement_symbol(numeral):
                 return False
-            if not (name_is_element_noun(v["canonical"]) and v["canonical_count"] >= 2):
+            if not (name_is_element_noun(v["canonical"], juris) and v["canonical_count"] >= 2):
                 return False
-            return any(name_is_element_noun(n) and c >= 2 for n, c in v["outliers"])
+            return any(name_is_element_noun(n, juris) and c >= 2 for n, c in v["outliers"])
         noun_noun_lost = [k for k in removed if _real_d1_lost(k)]
         real_lost = [k for k in removed if pre[k]["tag"] == "protect"]
         # strong_real / both_repeated are INFORMATIONAL and computed WITHOUT the
@@ -316,7 +364,7 @@ def main() -> int:
         strong_lost = [k for k in removed if pre[k]["strong_real"]]
         strong_lost_designator = [
             k for k in strong_lost
-            if not _is_known_nonelement_symbol(k.split("|", 1)[1])
+            if not (juris == "US" and _is_known_nonelement_symbol(k.split("|", 1)[1]))
         ]
         repeated_lost = [k for k in removed if pre[k].get("both_repeated")]
         pre_fix = sum(1 for v in pre.values() if v["tier"] == "fix")
@@ -349,11 +397,11 @@ def main() -> int:
         oc_examples = []
         protect_examples = []
         for pid, c in confs:
-            t = classify_conflict(c)
+            t = classify_conflict(c, args.juris)
             tags[t] += 1
             if c["numeral"] and c["numeral"][0].isalpha():
                 latin += 1
-            if is_strong_real(c):
+            if is_strong_real(c, args.juris):
                 strong += 1
                 if len(protect_examples) < 30:
                     protect_examples.append((pid, c["numeral"], c["canonical"],
