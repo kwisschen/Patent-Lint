@@ -38,6 +38,17 @@ Verdicts (pick exactly one):
 
 Answer ONLY with strict JSON: {"verdict":"real_d1|false_positive|unsure","reason":"<=18 words"}"""
 
+SYSTEM_US = """You audit findings from PatentLint's D1 reference-numeral consistency check on US patent specifications (MPEP § 608.01(g): the SAME reference character must not designate DIFFERENT elements).
+
+The check flagged a numeral because it found that numeral bound to MULTIPLE distinct captured "element names" in the spec. Decide if that is a REAL inconsistency or a FALSE POSITIVE of the name-extraction.
+
+Verdicts (pick exactly one):
+- real_d1: the numeral genuinely labels TWO OR MORE DIFFERENT elements (a true drafting typo). Each name is a bona-fide element noun denoting a DIFFERENT thing (e.g. "motor 10" vs "circuit 10").
+- false_positive: at least one "name" is NOT a distinct element identity. Causes: (a) the names are synonyms / variants / abbreviations of the SAME element ("storage media" vs "digital memory"; "controller" vs "control unit"); (b) a captured name is a verb/clause/over-capture fragment; (c) the numeral is not an element reference numeral at all (a method-step number, a measurement/quantity value, a year, a math variable, a biological/chemical symbol); (d) one name is a mis-extracted fragment or a mis-attributed NEIGHBOURING numeral's element.
+- unsure: genuinely cannot tell from the given info.
+
+Answer ONLY with strict JSON: {"verdict":"real_d1|false_positive|unsure","reason":"<=18 words"}"""
+
 
 def _excerpt(spec: str, numeral: str) -> str:
     """A short context window around an occurrence of the numeral in the spec."""
@@ -104,7 +115,7 @@ async def judge(client, sem, juris, r, usage):
     async with sem:
         try:
             resp = await client.messages.create(
-                model=SONNET, max_tokens=120, system=SYSTEM,
+                model=SONNET, max_tokens=120, system=(SYSTEM_US if juris == 'US' else SYSTEM),
                 messages=[{"role": "user", "content": _user_prompt(juris, r)}],
             )
         except Exception as e:
@@ -173,7 +184,7 @@ async def main_async(args):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--juris", default="CN", choices=["CN", "TW"])
+    ap.add_argument("--juris", default="CN", choices=["CN", "TW", "US"])
     ap.add_argument("--n-oc", type=int, default=85)
     ap.add_argument("--n-protect", type=int, default=40)
     asyncio.run(main_async(ap.parse_args()))

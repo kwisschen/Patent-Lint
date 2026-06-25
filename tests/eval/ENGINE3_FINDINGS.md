@@ -144,3 +144,19 @@ python3 tests/eval/refnum_corpus_runner.py --juris US --snapshot /tmp/pre.json
 # ... edit specification.py ...
 python3 tests/eval/refnum_corpus_runner.py --juris US --compare /tmp/pre.json
 ```
+
+## CORRECTION (2026-06-25, d1_probe.py) — "US over-capture exhausted" ≠ "US D1 clean"
+The "US frontier reached" section above is about the OVER-CAPTURE class only. An
+LLM probe (Sonnet, 40-sample US "protect"-class) judged it **~100% false
+positive** — the structural `_is_plausible_element_name` predicate is a poor
+proxy: it classifies ~6,432 US D1 FIX conflicts as "protect" (real-candidate),
+but they are dominated by FPs it cannot see — figure numbers read as element
+numerals, synonyms/abbreviations of ONE element, over-capture fragments, and
+mis-attributed neighbouring numerals. So US D1 is NOT clean; it has a large
+graded-FP pool just like CN/TW. The same probe on CN gave ~86%. Caveats: the
+corpus is Google-Patents HTML (extraction noise inflates the rate) and it is a
+single-judge short-context probe, so the true production rate is high but likely
+below 100%. Reducing this pool needs the deterministic-cleaning + gold-FN-guard
+program (figure-number / measurement / step-number exclusion, neighbour-numeral
+disambiguation, synonym/variant merge), validated against a cheap (~$5) D1 gold
+set. Applies to US, CN, and TW.
