@@ -2,7 +2,7 @@
 // Copyright (c) 2025–2026 Christopher Chen
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FileSearch, ChevronRight, Flag } from 'lucide-react'
+import { FileSearch, ChevronRight, MessageSquare } from 'lucide-react'
 import { Button } from './ui/button'
 import { FrostCard } from './ui/frost-card'
 import { StatusPill } from './ui/status-pill'
@@ -137,7 +137,7 @@ function ClaimRow({ claimNumber, phrases, crossRefPhrases, claimText, jurisdicti
             aria-label={t('feedback.reportProblem')}
             className="shrink-0"
           >
-            <Flag />
+            <MessageSquare />
             <span className="hidden sm:inline">{t('feedback.report')}</span>
           </Button>
         </div>

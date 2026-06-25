@@ -2,7 +2,7 @@
 // Copyright (c) 2025–2026 Christopher Chen
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flag } from 'lucide-react'
+import { MessageSquare } from 'lucide-react'
 import { formatDetails } from "../lib/detailsFormatter"
 import { Button } from "./ui/button"
 import { composeFeedback, sendReport } from "../lib/feedback"
@@ -146,7 +146,7 @@ export default function CheckItem({ status, message, message_key, details, detai
           aria-label={t('feedback.reportProblem')}
           className="shrink-0 self-start sm:self-auto"
         >
-          <Flag />
+          <MessageSquare />
           <span className="hidden sm:inline">{t('feedback.report')}</span>
         </Button>
         <ReportModal

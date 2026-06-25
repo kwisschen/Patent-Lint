@@ -2,7 +2,7 @@
 // Copyright (c) 2025–2026 Christopher Chen
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AlertCircle, Search, CheckCircle, ChevronDown, Flag } from 'lucide-react'
+import { AlertCircle, Search, CheckCircle, ChevronDown, MessageSquare } from 'lucide-react'
 import { getCitation } from './CheckItem'
 import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
 import { formatDetails } from '../lib/detailsFormatter'
@@ -113,7 +113,7 @@ function TriageItem({ check, t, i18n, compact, jurisdiction }) {
             aria-label={t('feedback.reportProblem')}
             className="shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
           >
-            <Flag />
+            <MessageSquare />
             <span className="hidden sm:inline">{t('feedback.report')}</span>
           </Button>
           <ReportModal

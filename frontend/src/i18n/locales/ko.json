@@ -174,8 +174,8 @@
     "sister": "PatentNode: 거절이유 대응 시스템"
   },
   "feedback": {
-    "report": "잘못됐나요?",
-    "reportProblem": "오탐으로 의심되는 항목 신고",
+    "report": "의견 보내기",
+    "reportProblem": "이 점검에 대한 의견 보내기",
     "picker": {
       "title": "귀하의 원고는 기기를 벗어나지 않습니다",
       "send": {
@@ -184,9 +184,9 @@
         "gmail": "Gmail로 보내기"
       },
       "report": {
-        "description": "오류 보고서가 준비되었으며 동일한 내용이 클립보드에도 저장되어 있습니다. 보고하실 방법을 선택해 주십시오:",
-        "mailto": "Outlook 또는 모바일로 신고",
-        "gmail": "Gmail로 신고"
+        "description": "의견이 준비되었으며 동일한 내용이 클립보드에도 저장되어 있습니다. 보내실 방법을 선택해 주십시오:",
+        "mailto": "Outlook 또는 모바일로 보내기",
+        "gmail": "Gmail로 보내기"
       },
       "clipboard": "클립보드에 복사",
       "remember": "내 선택 기억하기"
@@ -198,7 +198,7 @@
       "clipboardDescription": "원하시는 메일 앱에 붙여넣어 {{email}}로 보내주세요."
     },
     "email": {
-      "subjectFinding": "PatentLint 검사 결과 보고: {{checkKey}}",
+      "subjectFinding": "PatentLint 의견: {{checkKey}}",
       "subjectFooter": "PatentLint 피드백",
       "subjectEnterprise": "PatentLint 기업 도입 문의",
       "subjectBuilder": "안녕하세요, PatentLint 관련 문의드립니다",
@@ -278,28 +278,28 @@
     "enterprisePlaceholder": "[도입 요구 사항을 간략히 설명해 주세요: 로펌 또는 팀 규모와 업종, 실무 지역, 예상 문서량, 검토 일정, 특정 요구 사항(예: ITAR 또는 데이터 주권 규정에 대응하는 온프레미스 또는 에어갭 설치, SSO 연동, 커스텀 검사 항목 등).]",
     "builderPlaceholder": "[공유하고 싶으신 내용을 자유롭게 작성해 주세요(협업 의향, 협력 제안, 프로젝트에 대한 피드백, 표현이나 용어 보완 제안, 또는 단순한 인사 등). 본 채널은 개발자에게 직접 연락하기 위한 통로입니다. 개별 검사 항목의 오류 보고는 앱 내 「잘못됐나요?」 버튼을 이용해 주시기 바랍니다.]",
     "reportModal": {
-      "title": "익명 오류 보고를 보내시겠습니까?",
-      "body": "PatentLint 가 HTTPS 를 통해 작은 구조화된 데이터를 받아 본 점검을 조사하는 데 사용합니다. 건수, 표시된 용어 또는 구문, 전후의 짧은 문맥, 분류 라벨이 포함됩니다. 청구항 전문, 단락 전문, 이메일, IP 는 포함되지 않으며, 아래에 보이는 것이 저희가 받는 전부입니다.",
+      "title": "익명으로 의견을 보내시겠습니까?",
+      "body": "PatentLint 가 HTTPS 를 통해 작은 구조화된 데이터를 받아 본 점검을 개선하는 데 사용합니다. 건수, 표시된 용어 또는 구문, 전후의 짧은 문맥, 분류 라벨이 포함됩니다. 청구항 전문, 단락 전문, 이메일, IP 는 포함되지 않으며, 아래에 보이는 것이 저희가 받는 전부입니다.",
       "previewHeading": "전송 내용:",
       "send": "익명으로 보내기",
       "cancel": "취소",
       "emailFallback": "이메일을 선호하시나요? mailto 로 보내기",
-      "toastSuccess": "감사합니다. 보고를 수신했습니다.",
+      "toastSuccess": "감사합니다. 의견을 받았습니다.",
       "toastFailure": "지금 보낼 수 없습니다. 이메일로 시도해 보세요.",
-      "deidNotice": "보고는 귀하 개인과 연결되지 않습니다. 이메일, IP, 계정 정보는 일절 수집하지 않으며, 위에 표시된 비식별 처리된 단편만 전송됩니다.",
+      "deidNotice": "보내신 의견은 귀하 개인과 연결되지 않습니다. 이메일, IP, 계정 정보는 일절 수집하지 않으며, 위에 표시된 비식별 처리된 단편만 전송됩니다.",
       "commentLabel": "추가 설명 (선택)",
-      "commentPlaceholder": "예: “이 용어는 청구항 1 에서 이미 도입되었습니다 (체인 상속 미인식 케이스)”. 진단 정보만으로 부족할 때 분류 작업에 도움이 됩니다.",
+      "commentPlaceholder": "예: “이 용어는 청구항 1 에 이미 개시되어 있습니다.” 위 정보만으로 부족할 때 짧은 설명이 도움이 됩니다.",
       "commentNotice": "이 칸의 내용은 그대로 전송됩니다. 기밀 정보는 입력하지 마세요.",
-      "dispositionHeading": "무엇을 보내시나요?",
-      "dispositionWhy": "두 가지 모두 도움이 됩니다. 올바른 지적 확인과 오탐 모두 실제 원고에서 분석기를 개선하는 데 사용됩니다.",
+      "dispositionHeading": "이 지적이 맞나요?",
+      "dispositionWhy": "어느 쪽이든 도움이 됩니다. 올바른 지적 확인과 잘못된 지적 신고 모두 실제 원고로 분석기를 개선하는 데 쓰입니다.",
       "disposition": {
         "false_positive": {
           "label": "잘못된 지적",
-          "hint": "오탐: 이 참조는 표시되지 않아야 합니다."
+          "hint": "여기에 표시되었지만 실제로는 문제가 아닙니다."
         },
         "confirmed_defect": {
           "label": "올바른 지적",
-          "hint": "분석기가 찾은 실제 § 112 문제임을 확인합니다."
+          "hint": "분석기 지적이 맞습니다. 수정해야 할 실제 문제입니다."
         }
       }
     }
