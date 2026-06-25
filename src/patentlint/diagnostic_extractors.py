@@ -108,15 +108,19 @@ def _context_window_for(text: str) -> int:
     """Pick a per-script context window so the modal preview shows
     roughly equivalent linguistic content regardless of script.
 
-    - Han (zh-TW / zh-CN): 12 — each char ≈ 1 morpheme, very dense.
-    - Japanese: 22 — kana inflection + long katakana technical terms
+    Widths were widened twice for richer self-sufficient trails (latest
+    #337, 2026-06-23); current values are the module constants below
+    (Han 35 / JA 60 / Hangul 45 / Latin 80), tuned so each script holds
+    roughly equivalent linguistic content:
+    - Han (zh-TW / zh-CN): 35 — each char ≈ 1 morpheme, very dense.
+    - Japanese: 60 — kana inflection + long katakana technical terms
       (e.g. インターフェース = 8 chars for one concept) inflate token
       count well beyond pure Han or Hangul, so JA needs more chars to
       hold the same semantic content. Detected via kana presence —
       CN/TW drafts virtually never contain hiragana/katakana, so even
       a few kana chars are a near-perfect Japanese signal.
-    - Hangul: 18 — syllabic blocks, denser than JA's mixed scripts.
-    - Latin (en/de): 30 — ~5 chars/word.
+    - Hangul: 45 — syllabic blocks, denser than JA's mixed scripts.
+    - Latin (en/de): 80 — ~5 chars/word.
 
     Detection is content-driven (reads ``text``), not UI-locale-driven:
     a US user analyzing a TW patent still gets the Han window because
@@ -352,6 +356,49 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
                 ref_pos = haystack.rfind(term.lower())
             if ref_pos > 0:
                 term_earlier_in_claim = term.lower() in haystack[:ref_pos]
+        # Candidate-introduction excerpt (the self-sufficiency upgrade,
+        # 2026-06-25). `term_earlier_in_claim` only says the term appears
+        # earlier — but the FP-vs-legit call hinges on HOW: an article-less
+        # earlier mention (`attached to skin` / `貼附於人體`) is a missed
+        # bare-noun introduction (walker FP), whereas an earlier mention that
+        # is ITSELF a reference (`the X` / `所述X`) or sits only inside a verb
+        # phrase (`collecting information`) is a genuine §112 gap. So when the
+        # term occurs earlier, emit a SECOND bounded excerpt anchored on that
+        # earliest occurrence + the marker immediately preceding it, so a
+        # report self-classifies without the draft. Marker is reported as a
+        # FACT (not a verdict) — the article-less-vs-intro-quantifier-vs-
+        # reference distinction is the classifier; the excerpt shows whether
+        # the earliest mention is a bare noun or buried in a verb phrase.
+        # Privacy §6: uses the smaller ancestor-sized window; same in-claim
+        # text the walker already supplies (no new draft content).
+        intro_candidate_marker = None
+        intro_ctx_before = intro_ctx_after = intro_candidate_offset = None
+        if term_earlier_in_claim and claim_text:
+            early_idx = claim_text.lower().find(term.lower())
+            if 0 <= early_idx < (ref_pos if ref_pos > 0 else len(claim_text)):
+                w = _ancestor_window_for(claim_text)
+                intro_ctx_before = claim_text[max(0, early_idx - w): early_idx] or None
+                e_end = early_idx + len(term)
+                intro_ctx_after = claim_text[e_end: e_end + w] or None
+                intro_candidate_offset = early_idx
+                # Classify the leading marker. Reference markers (該/所述/the)
+                # mean the earliest mention is itself a reference → term never
+                # introduced (legit-leaning); intro quantifiers (一/a/an) mean
+                # an explicit introduction (FP-leaning); neither → article-less
+                # bare noun (read the excerpt: bare-noun intro vs verb-phrase).
+                _REF_MARKERS = ("所述", "前述", "該等", "該些", "該", "said ", "the ")
+                _INTRO_MARKERS = ("一種", "一個", "一", "每一", "至少一", "複數", "多個",
+                                  "at least one ", "an ", "a ")
+                marker = "article_less"
+                for grp in (_REF_MARKERS, _INTRO_MARKERS):
+                    for mk in grp:
+                        s = early_idx - len(mk)
+                        if s >= 0 and claim_text[s:early_idx].lower().endswith(mk.lower()):
+                            marker = mk.strip()
+                            break
+                    if marker != "article_less":
+                        break
+                intro_candidate_marker = marker
         out = {
             "claim_id": f.get("claim_id"),
             "term": _truncate(term, TERM_MAX),
@@ -362,6 +409,10 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
             "next_word_after_term": next_word_after_term,
             "term_word_count": term_word_count,
             "term_earlier_in_claim": term_earlier_in_claim,
+            "intro_candidate_marker": intro_candidate_marker,
+            "intro_candidate_offset": intro_candidate_offset,
+            "intro_candidate_context_before": intro_ctx_before,
+            "intro_candidate_context_after": intro_ctx_after,
             "ref_marker_before": ref_marker_before,
             "body_cross_refs": body_cross_refs_per_claim.get(f.get("claim_id"), [])[:10],
             # Issue #70: which lookup produced the did-you-mean. A null

@@ -275,6 +275,75 @@ class TestTermEarlierInClaimEnrichment:
         assert out["term_earlier_in_claim"] is False
 
 
+class TestIntroCandidateExcerpt:
+    """2026-06-25: when the term occurs earlier, surface a second bounded
+    excerpt anchored on that earliest occurrence + the leading marker, so a
+    report self-classifies (article-less missed intro = FP vs term only ever
+    referenced = legit) without the draft."""
+
+    def test_article_less_earlier_mention_us(self):
+        # 'skin' introduced article-less ("attached to skin") then "the skin".
+        f = {
+            "claim_id": 4,
+            "term": "skin",
+            "reference_form": "the skin",
+            "claim_text": (
+                "The device of claim 3, wherein the housing is attached to "
+                "skin of a human body, and the light source faces the skin."
+            ),
+            "suggested_match": None,
+        }
+        out = extract_antecedent_basis([f], total_claims=4)["findings"][0]
+        assert out["term_earlier_in_claim"] is True
+        assert out["intro_candidate_marker"] == "article_less"
+        # the excerpt shows the bare-noun intro context
+        assert "attached to" in (out["intro_candidate_context_before"] or "")
+        assert out["intro_candidate_offset"] is not None
+
+    def test_article_less_earlier_mention_cjk(self):
+        # 人體 introduced article-less (貼附於人體) then 所述人體.
+        f = {
+            "claim_id": 4,
+            "term": "人體",
+            "reference_form": "所述人體",
+            "claim_text": (
+                "如請求項3所述的裝置，其中所述殼體貼附於人體的皮膚，"
+                "並且光源面向所述人體。"
+            ),
+            "suggested_match": None,
+        }
+        out = extract_antecedent_basis([f], total_claims=4)["findings"][0]
+        assert out["term_earlier_in_claim"] is True
+        assert out["intro_candidate_marker"] == "article_less"
+        assert out["intro_candidate_offset"] is not None
+
+    def test_intro_quantifier_marker(self):
+        # term first appears WITH an intro quantifier (一) → marker reports it.
+        f = {
+            "claim_id": 3,
+            "term": "電池",
+            "reference_form": "所述電池",
+            "claim_text": "如請求項1所述的裝置，更包含一電池，其中所述電池供電。",
+            "suggested_match": None,
+        }
+        out = extract_antecedent_basis([f], total_claims=3)["findings"][0]
+        assert out["term_earlier_in_claim"] is True
+        assert out["intro_candidate_marker"] == "一"
+
+    def test_no_candidate_when_term_never_earlier(self):
+        # term appears only as the flagged reference → no candidate excerpt.
+        f = {
+            "claim_id": 2,
+            "term": "special widget",
+            "reference_form": "the special widget",
+            "claim_text": "The device of claim 1, wherein the special widget rotates.",
+            "suggested_match": None,
+        }
+        out = extract_antecedent_basis([f], total_claims=2)["findings"][0]
+        assert out["intro_candidate_marker"] is None
+        assert out["intro_candidate_context_before"] is None
+
+
 class TestDidYouMeanSourceEnrichment:
     """Issue #70: a null `did_you_mean_claim_id` is ambiguous — surface
     `did_you_mean_source` + `term_in_symbol_table` so a symbol-table hit
