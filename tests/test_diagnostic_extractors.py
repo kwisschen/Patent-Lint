@@ -17,8 +17,39 @@ from patentlint.diagnostic_extractors import (
     _ancestor_window_for,
     _context_window_for,
     _excerpt_around,
+    _excerpt_around_reference,
     extract_antecedent_basis,
 )
+
+
+class TestExcerptAnchorsOnReference:
+    """The diagnostic trail must anchor on the FLAGGED REFERENCE (所述X / the X),
+    not the first mention (often the introduction) — issues #265/266/267."""
+
+    def test_latin_anchors_on_reference_not_intro(self):
+        # 'skin' introduced (bare) early, referenced as 'the skin' late.
+        text = ("wherein the housing is attached to skin of a human body, "
+                "and the light source faces the skin of the human body")
+        before, after, off = _excerpt_around_reference(text, "skin", "the skin")
+        # offset must land on the SECOND 'skin' (the reference), not the first
+        assert off == text.rfind("skin")
+        assert before.endswith("the ")  # the reference prefix precedes it
+
+    def test_cjk_anchors_on_reference(self):
+        text = "多個所述光源組沿一預設方向排列，並且所述預設方向與所述帶體不垂直"
+        before, after, off = _excerpt_around_reference(text, "預設方向", "所述預設方向")
+        # anchor on the 預設方向 inside 所述預設方向 (the reference), not the
+        # first 預設方向 in 一預設方向排列
+        assert off == text.find("所述預設方向") + len("所述")
+        assert before.endswith("所述")
+
+    def test_fallback_to_last_occurrence_when_reference_form_absent(self):
+        text = "a widget here and the widget there"
+        before, after, off = _excerpt_around_reference(text, "widget", None)
+        assert off == text.rfind("widget")
+
+    def test_missing_term_returns_none(self):
+        assert _excerpt_around_reference("nothing here", "absent", "the absent") == (None, None, None)
 
 
 class TestContextWindowForScript:

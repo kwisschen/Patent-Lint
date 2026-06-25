@@ -325,7 +325,7 @@
     "toVerify": "to verify",
     "allReviewedPill": "All reviewed",
     "reviewedCount": "{{count}} reviewed",
-    "markReviewed": "Looks fine",
+    "markReviewed": "Mark reviewed",
     "undoReviewed": "Undo"
   },
   "antecedent": {

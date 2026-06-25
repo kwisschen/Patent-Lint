@@ -6,7 +6,7 @@ import { ListChecks, ChevronRight, Flag, Check, RotateCcw } from 'lucide-react'
 import { Button } from './ui/button'
 import { FrostCard } from './ui/frost-card'
 import { StatusPill } from './ui/status-pill'
-import { composeFeedback, sendReport, excerptAround, SAMPLE_SIZE } from '../lib/feedback'
+import { composeFeedback, sendReport, excerptAroundReference, SAMPLE_SIZE } from '../lib/feedback'
 import { useFeedback } from './FeedbackPicker'
 import ReportModal from './ReportModal'
 
@@ -166,7 +166,8 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
     // produces, filtered to this claim only. Triage tooling already keys on
     // `findings: [...]` — no special-case handling needed.
     const findingsList = claimFindings.slice(0, SAMPLE_SIZE).map((f) => {
-      const { context_before, context_after, char_offset } = excerptAround(claimText, f.term || '')
+      const { context_before, context_after, char_offset } = excerptAroundReference(
+        claimText, f.term || '', f.reference_form || null)
       const suggested = f.suggested_match || {}
       return {
         claim_id: f.claim_id,
@@ -254,30 +255,14 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
     }
   }
 
-  // 2026-06-01: per-finding higher-confidence badge. Threshold 75
-  // chosen over 80 after initial deploy showed the 80-threshold variant
-  // was effectively invisible (only 2.5% of corpus findings qualified
-  // → ~0 findings/draft in practice). At 75 the precision is 69.0%
-  // (vs the 70.0% target — 1pp honest gap), but coverage is 3× wider
-  // at 7.2% — visible badge that materially helps drafter triage.
-  // The 1pp gap is disclosed in the title attribute.
-  // English-jurisdiction only — CN/TW corpora are too small to support
-  // reliable per-finding scoring (precision <50% historically). Honest
-  // language: "Higher confidence" (probabilistic ranking), not "High
-  // confidence" (which implies guarantee). Badge fires per-group when
-  // ANY finding in the group meets the threshold.
-  // 2026-06-01: threshold lowered 75 → 65 after deploy diagnostic showed
-  // the +25 ML-decision-tree boost only fires on drafts with >53 intros
-  // (~50+ claim drafts), so typical 10-20 claim drafts had zero badge
-  // visibility. At threshold 65, measured 66.4% precision (vs 38%
-  // baseline; ~28pp lift) with 11.5% coverage = ~1-3 badges per
-  // typical draft. Honest 1pp gap from 70% disclosed in title attr.
-  const HIGHER_CONF_THRESHOLD = 65
-  const ENGLISH_JURISDICTIONS = new Set(['US', 'EPC'])
-  const hasHigherConfidence = (
-    ENGLISH_JURISDICTIONS.has(jurisdiction)
-    && findings.some((f) => (f.confidence_score ?? 0) >= HIGHER_CONF_THRESHOLD)
-  )
+  // 2026-06-25: the per-finding "Higher confidence" badge was REMOVED. It
+  // ranked findings by `confidence_score`, but the confidence discriminator was
+  // subsequently proven dead (no deterministic runtime feature separates a
+  // benign §112 reference from a real defect — AUC ~0.60 with authoritative
+  // examiner labels + nonlinear models; see project_fp_class_campaign). Showing
+  // a "Higher confidence" chip on advisory findings we cannot actually rank
+  // projects false confidence and discourages the verification these heuristic
+  // findings require — the opposite of the advisory framing's intent.
 
   return (
     <div className={`transition-opacity duration-200 ${reviewed ? 'opacity-55' : ''}`}>
@@ -306,20 +291,6 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
             </span>
           ))}
         </span>
-        {hasHigherConfidence && (
-          <span
-            className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium"
-            style={{
-              backgroundColor: 'transparent',
-              color: 'var(--attention-text)',
-              border: '1px solid var(--attention-border)',
-              opacity: 0.85,
-            }}
-            title={t('antecedentBasis.higherConfidenceTitle')}
-          >
-            {t('antecedentBasis.higherConfidenceBadge')}
-          </span>
-        )}
         {!reviewed && (
           <span
             className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold"

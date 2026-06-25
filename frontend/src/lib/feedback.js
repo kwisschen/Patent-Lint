@@ -127,6 +127,35 @@ export function excerptAround(text, target) {
   return { context_before, context_after, char_offset: idx }
 }
 
+// Anchor the excerpt on the FLAGGED REFERENCE occurrence of `term` (所述X /
+// the X), not its first mention (often the introduction). Mirrors Python's
+// `_excerpt_around_reference` (issues #265/266/267). Resolution: locate
+// `referenceForm` and anchor on the term inside it; else the term's LAST
+// occurrence; else all-null.
+export function excerptAroundReference(text, term, referenceForm) {
+  if (!text || !term) {
+    return { context_before: null, context_after: null, char_offset: null }
+  }
+  const lower = text.toLowerCase()
+  let idx = -1
+  if (referenceForm) {
+    const refIdx = lower.indexOf(referenceForm.toLowerCase())
+    if (refIdx >= 0) {
+      const inner = referenceForm.toLowerCase().lastIndexOf(term.toLowerCase())
+      idx = refIdx + (inner >= 0 ? inner : Math.max(0, referenceForm.length - term.length))
+    }
+  }
+  if (idx < 0) idx = lower.lastIndexOf(term.toLowerCase())
+  if (idx < 0) {
+    return { context_before: null, context_after: null, char_offset: null }
+  }
+  const window = contextWindowFor(text)
+  const context_before = text.slice(Math.max(0, idx - window), idx) || null
+  const end = idx + term.length
+  const context_after = text.slice(end, end + window) || null
+  return { context_before, context_after, char_offset: idx }
+}
+
 // Per-key locale-bundle path for each known metadata key. Keys not in
 // this map fall back to a sentence-case version of the raw key so new
 // fields work without code changes (and the maintainer still sees a
