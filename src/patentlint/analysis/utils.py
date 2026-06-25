@@ -600,6 +600,15 @@ _STOP_WORDS = (
     # can't verify those overnight (need a gated round + claim read). Shared
     # `_NP_CORE` → spec-support too. EPC reuses US. No CN/TW report — DR-1.
     r"follows|"
+    # R20 (2026-06-25, ADR-159): batch of trailing 3sg finite verbs from the
+    # normalization-asymmetry probe (relative-clause matrix verbs that bled into
+    # the captured reference; the bare-noun head already has its intro). Noun-gray
+    # verbs (sets/interfaces/transforms/results) EXCLUDED per the campaign's
+    # noun-sense caution. FN-guard auto-narrowed the batch: occurs/sends/remains/
+    # continues WITHHELD (each silenced gold-legit — e.g. `display area continues`,
+    # `unlicensed spectrum occurs` — resolving references the gold treats as real
+    # defects; unverifiable overnight). Shipped subset = silenced_legit==0.
+    r"differs|acts|equals|obtains|enters|"
     # Issue #136 (2026-06-01): `face` is ambiguous noun/verb — legitimate
     # noun in `terminal face` / `mounting face` / `contact face` etc.
     # but clearly the matrix verb in `the first magnetic bowl face toward
