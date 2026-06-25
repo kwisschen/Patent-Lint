@@ -4886,9 +4886,13 @@ def extract_introductions_tw(
         # intros. A supplementary capture like `多條導通線路` (from a `包含：…`
         # list) kept its `多條` while the reference `所述導通線路` normalized to
         # `導通線路` → spurious mismatch + self-suggest (did_you_mean == term).
-        # NARROW to `多條` only: applying the full strip_leading_quantifier here
-        # silenced 9 gold-legit (the single-char 一/各/個 strips collide with
-        # supplementary-captured compound heads — validate_fix 2026-06-25).
+        # NARROW to `多條` only: the full strip_leading_quantifier silenced 9
+        # gold-legit here (single-char 一/各/其 collide with supplementary compound
+        # heads), and even the multi-char plural-only set (R15 attempt, reverted)
+        # silenced 1 — `複數個變壓器`→`變壓器` bridges a plural intro to a singular
+        # `該變壓器` reference, which the deterministic gold-corrector can't verify
+        # (a plural intro is not a singular Pattern-A match). 多條 is clean because
+        # `多條導通線路`↔`所述導通線路` preserves plurality.
         if norm.startswith("多條") and len(norm) > 2:
             norm = norm[2:]
         if not norm or norm in seen:
