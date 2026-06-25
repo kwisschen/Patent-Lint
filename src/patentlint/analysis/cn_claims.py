@@ -1409,6 +1409,13 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
     (
         "包含", "包括", "含有", "具有", "系", "为", "是", "设有", "具备",
         "通过", "经由", "借由", "基于", "透过", "根据", "依据",
+        # R45 (2026-06-26): trailing predicate verbs from the CN normalization-
+        # asymmetry probe (intro keeps the clause verb; reference is clean).
+        # 引起/调整 mirror TW R15; 共混 (blend), 附接 (attach — mirrors TW R12),
+        # 配置成 (configured-as — the VERB construction, distinct from noun 配置).
+        # Noun compounds carry these with a suffix (调整器/共混物/附接件), so the
+        # endswith strip doesn't touch them. FN-guarded.
+        "引起", "调整", "共混", "附接", "配置成",
         # NOTE: 排列 (arrange) intentionally NOT mirrored from TW R13 (#266).
         # On the CN corpus it is FN-safe but corpus-silent AND regresses
         # `纤维材料轴向地排列` (strips only 排列, stranding the adverb 轴向地)
