@@ -83,33 +83,59 @@ symbols outside the curated denylist. Reducing further would need DRAWING data
 (to tell a real reference numeral from a method-step / time-slot number), which
 is not currently scraped. Same ceiling shape as the antecedent engine.
 
-## CN / TW — deferred with evidence
+## CN / TW — connector-variant dedup BUILT, MEASURED, and REJECTED (net-negative)
 TW D1 **reuses** the CN extractor (`tw_specification._cjk_extract_numeral_name_pairs`
 /`_cjk_detect_d1_conflicts` are aliases of the `_cn_*` functions), so a CJK fix
 is a single change in `cn_specification.py` covering both. CN/TW over-flag too
-(~6,687 FIX conflicts over `cn_descriptions.json`), but the CN extractor is
-already mature (`_cn_strip_trailing_verb`, `_CN_FRAGMENT_MARKERS`, extensive
-measurement/process-context exclusion). The residual CJK FP classes are
-**FN-risky without CJK D1 judged gold**:
-- **Leading-connector → 1-char collapse** (`和缸`/`及缸`/`于缸` → `缸`): the strip
-  is blocked at ≥3 chars precisely because reducing to a 1-char noun is unsafe —
-  `与门` (AND gate) → `门` would be a real FN.
-- Bio symbols + clause fragments need delicate CJK judgment.
+(7,282 FIX+REVIEW conflicts / 6,687 FIX over `cn_descriptions.json`), but the CN
+extractor is already mature (`_cn_strip_trailing_verb`, `_CN_FRAGMENT_MARKERS`,
+extensive measurement/process-context exclusion, `_cn_merge_suffix_clusters`).
 
-The documented future-safe candidate is a **connector-variant DEDUP**: merge
-names that are identical after stripping a leading connector (`和`/`及`/`于`/…)
-*only when another name shares the residual* — never dropping a standalone real
-noun. It needs its own careful round with a CJK FN-guard; marginal yield is low,
-so it was not rushed unsupervised.
+The candidate fix was a **connector-variant dedup**: merge names identical after
+stripping leading connector/particle chars (`及缸`/`于缸`/`的缸` → `缸`). It was
+**implemented with a CJK FN-guard** (`refnum_corpus_runner.py --juris CN`, CJK
+plausibility predicate + designator-scoped gate) and **measured on the full
+corpus** — then **reverted**, for two empirical reasons:
 
-## Engine 2 (spec-support) — inert for over-capture
+1. **Net-negative on FP count.** FIX-tier conflicts went 6,687 → 6,698 (**+11
+   conflicts**, not fewer): the gate PASSED (0 designator FN) but the merge
+   removed 7 and *created 18 new* conflicts. Root cause: connector-variants are
+   individually 1× — *below* the digit canonical threshold (2), so they are
+   already correctly ignored as noise. Summing them on merge **promotes ignored
+   noise to a flagged conflict.** The dedup is counterproductive.
+2. **The genuinely-helpful cases can't be touched FN-safely.** Fully collapsing
+   `和缸`/`与缸`/`或缸` needs `和`/`与`/`或` in the strip set, but those create
+   real FNs: `与门` (AND gate) and `或门` (OR gate) both strip to `门`, so a
+   genuine D1 (one numeral on two different gates) would be silenced. The
+   1-char-residual clusters (`缸`/`轴`/`框`) live exactly in this danger zone.
+   The safe (≥2-char-residual) connector-variants are already collapsed by
+   `_cn_merge_suffix_clusters` when the bare noun appears.
+
+**Conclusion:** CN/TW D1 over-capture cannot be reduced FN-safely with
+deterministic character rules beyond the existing suffix-merge. It genuinely
+needs **CJK D1 judged gold** (none exists) to validate the risky-connector /
+1-char-residual merges and the bio-symbol/clause-fragment classes. The runner's
+CN FN-guard support is committed so that work is one snapshot/compare away once
+gold exists.
+
+## Engine 2 (spec-support) — MEASURED inert for over-capture
 `claims.check_spec_support` extracts claim noun phrases via
-`utils.extract_noun_phrases`, which already calls `clean_noun_phrase`, and then
+`utils.extract_noun_phrases`, which already calls `clean_noun_phrase` (so it
+already has Engine 1's cleaning — Engines 1 and 2 *share* the extractor), then
 matches against the spec with a 3-tier (exact / stemmed-window / word-window)
-fuzzy matcher that **already absorbs over-capture tails** (confirmed by the US
-R18 cross-check, where the comparative-tail mirror was inert). Spec-support is
-also now ADVISORY (#314). So there is no clean over-capture win in Engine 2; the
-cleaner shared helpers it would inherit from Engine 3 do not move its needle.
+fuzzy matcher that **absorbs over-capture tails**.
+
+**Measured** over the 705-draft US corpus (`specsup_char.py`): only **189 flags
+across 59/703 drafts** (vs Engine 3's ~7,000 and antecedent's thousands). The
+189 are dominated by **Google-Patents OCR whitespace-collapse artifacts** —
+`comprisesa data line`, `systemreceive`, `value krfor`, `kmno4sulfuric`,
+`includingdetermining` — i.e. adjacent words run together in the HTML text
+extraction, which does **not** happen in a clean DOCX upload. The genuine
+over-capture is already absorbed by the fuzzy matcher; what survives is corpus
+extraction noise, and the check is ADVISORY (#314). So there is **no clean
+production over-capture FP class** in Engine 2 — confirmed by measurement, not
+assumption. (A whitespace-collapse splitter would only improve the eval corpus,
+not production, so it was not pursued.)
 
 ## Reproduce
 ```
