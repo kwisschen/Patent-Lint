@@ -609,6 +609,15 @@ _STOP_WORDS = (
     # `unlicensed spectrum occurs` — resolving references the gold treats as real
     # defects; unverifiable overnight). Shipped subset = silenced_legit==0.
     r"differs|acts|equals|obtains|enters|"
+    # R21 (2026-06-26, ADR-159): long-tail batch of trailing 3sg finite verbs
+    # (normalization-asymmetry probe, count>=2). Noun-gray verbs excluded a
+    # priori (processes/hosts/reads/issues/changes/triggers/supplies/links).
+    # FN-guard narrowed: finishes/completes WITHHELD (silenced gold-legit
+    # `personal computer finishes`/`completes`). Shipped subset silenced 88
+    # walker_fp / 0 legit; examiner FN-guard 0 of 2,964.
+    r"accesses|schedules|displays|forwards|opens|varies|resides|"
+    r"denotes|derives|mismatches|deletes|arrives|manages|displaces|succeeds|"
+    r"refuses|desires|"
     # Issue #136 (2026-06-01): `face` is ambiguous noun/verb — legitimate
     # noun in `terminal face` / `mounting face` / `contact face` etc.
     # but clearly the matrix verb in `the first magnetic bowl face toward
