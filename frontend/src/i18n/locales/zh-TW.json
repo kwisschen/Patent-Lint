@@ -171,7 +171,7 @@
     "linkedin": "LinkedIn",
     "feedback": "意見回饋",
     "rubric": "評分標準",
-    "sister": "PatentNode：審查意見書答辯系統"
+    "sister": "PatentNode：OA 答辯系統"
   },
   "feedback": {
     "report": "意見回饋",
@@ -2037,7 +2037,7 @@
     }
   },
   "crossPromo": {
-    "oaTitle": "有待處理的審查意見書？",
+    "oaTitle": "有待處理的審查意見（OA）嗎？",
     "oaBody": "PatentNode 能為您解讀核駁理由，草擬請求項修正與答辯主張，並撰寫分析報告。",
     "oaCta": "試用 PatentNode"
   }

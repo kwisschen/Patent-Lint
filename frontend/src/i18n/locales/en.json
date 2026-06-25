@@ -2035,7 +2035,7 @@
     }
   },
   "crossPromo": {
-    "oaTitle": "A pending Office Action?",
+    "oaTitle": "Responding to an Office Action?",
     "oaBody": "PatentNode reads the rejection, drafts your claim amendments and arguments, and writes the analysis report.",
     "oaCta": "Try PatentNode"
   }

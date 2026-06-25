@@ -2035,7 +2035,7 @@
     }
   },
   "crossPromo": {
-    "oaTitle": "Ein offener Bescheid?",
+    "oaTitle": "Bescheid erhalten?",
     "oaBody": "PatentNode analysiert den Bescheid, entwirft Ihre Anspruchsänderungen und Argumente und erstellt den Analysebericht.",
     "oaCta": "PatentNode testen"
   }

@@ -171,7 +171,7 @@
     "linkedin": "LinkedIn",
     "feedback": "意见反馈",
     "rubric": "评分标准",
-    "sister": "PatentNode：审查意见答复系统"
+    "sister": "PatentNode：OA 答复系统"
   },
   "feedback": {
     "report": "意见反馈",
@@ -2037,7 +2037,7 @@
     }
   },
   "crossPromo": {
-    "oaTitle": "有待处理的审查意见通知书？",
+    "oaTitle": "有待处理的审查意见（OA）吗？",
     "oaBody": "PatentNode 会解读审查意见，为您起草权利要求修改与意见陈述，并撰写分析报告。",
     "oaCta": "试用 PatentNode"
   }
