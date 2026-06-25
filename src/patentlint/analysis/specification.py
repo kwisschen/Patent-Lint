@@ -95,7 +95,14 @@ _REFNUM_AFTER_NOUN = re.compile(
     # parenthesized expression IS the sub-index, so the captured noun
     # ("zeroth lens" before "21(0)") binds to the sub-instance, not to
     # the parent refnum 21. Skip the capture in that case.
-    r"(?!\([\dN])",
+    r"(?!\([\dN])"
+    # Reject reference-list LEGEND keys: in a list `115: control module
+    # 116: wireless module`, the noun-before-numeral capture otherwise binds
+    # entry k's name to entry k+1's numeral. A numeral immediately followed by
+    # a colon is a legend KEY (numeral-first binding), so the preceding noun is
+    # a bled value — parity with the CJK fix (#334). FN-safe: `num:` is never an
+    # element-naming binding (legend / step / list context).
+    r"(?!\s*:)",
     re.IGNORECASE,
 )
 

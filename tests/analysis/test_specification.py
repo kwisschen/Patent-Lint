@@ -629,6 +629,33 @@ class TestD1ElementNameOverCapture:
         assert "motor" in names and "bracket" in names
 
 
+class TestD1LegendBleed:
+    """Reference-list legend `NNN: name` must not bind entry k's name to entry
+    k+1's numeral (parity with the CJK fix #334)."""
+
+    def test_legend_does_not_bleed_name_to_next_numeral(self):
+        from patentlint.analysis.specification import extract_numeral_name_pairs
+        legend = "Reference numerals: 115: control module 116: wireless module"
+        pairs = extract_numeral_name_pairs(legend)
+        names_116 = [nm for n, nm in pairs if n == "116"]
+        assert all("control" not in nm for nm in names_116)
+
+    def test_genuine_body_conflict_still_detected(self):
+        from patentlint.analysis.specification import check_numeral_consistency
+        body = ("The control circuit 22 receives a signal. The control circuit 22 "
+                "outputs. The control circuit 22 runs. The control unit 22 "
+                "increases brightness. The control unit 22 starts.")
+        results = check_numeral_consistency(body)
+        # genuine body inconsistency on 22 survives the legend fix
+        flagged = [
+            f["numeral"]
+            for r in results
+            if r.message_key == "check.spec.numeralConsistency.verify"
+            for f in r.details_params.get("findings", [])
+        ]
+        assert "22" in flagged
+
+
 class TestD1FnSafePrune:
     """FN-safe extraction-noise prune (gold-validated 2026-06-25): a 1x ordinal
     variant or substring of the canonical is dropped; distinct nouns and repeated
