@@ -964,3 +964,44 @@ class TestTwIndefiniteWording:
         doc = self._doc("1. 一種裝置，其中第一齒輪等於第二齒輪，直徑約為5毫米。")
         res = check_indefinite_wording_tw(doc)
         assert res[0].status == "pass"
+
+
+# --- R14: parenthetical-gloss bleed (#245) + 多條 quantifier (#252) ----------
+
+
+class TestTwWalkerR14:
+    def _doc(self, *texts):
+        from patentlint.models import Claim, TwPatentDocument
+        claims = [
+            Claim(id=i + 1, text=t, independent=(i == 0), dependencies=[] if i == 0 else [1])
+            for i, t in enumerate(texts)
+        ]
+        return TwPatentDocument(claims=claims, input_format="google_patents_html")
+
+    def test_paren_gloss_bleed_resolved(self):
+        # #245: 一中介片（interposer） … 所述中介片 — English gloss bled into the
+        # intro; reference must still resolve.
+        from patentlint.analysis.tw_claims import check_antecedent_basis
+        doc = self._doc(
+            "1. 一種半導體裝置，包含一中介片（interposer），其中所述中介片連接一基板。"
+        )
+        terms = {r.get("term") for r in check_antecedent_basis(doc)}
+        assert "中介片" not in terms
+
+    def test_bio_abbreviation_gloss_preserved(self):
+        # FN-guard: a gloss-bearing reference (該X(mRNA)) where the abbreviation
+        # IS the identity must NOT be silenced (intro-side-only strip).
+        from patentlint.analysis.tw_claims import normalize_reference_term
+        # reference side keeps the paren
+        assert "(mRNA)" in normalize_reference_term("該信使核糖核酸(mRNA)") or \
+               normalize_reference_term("該信使核糖核酸(mRNA)") == "信使核糖核酸(mRNA)"
+
+    def test_duotiao_quantifier_resolved(self):
+        # #252: 多條導通線路 (supplementary list intro) … 所述導通線路.
+        from patentlint.analysis.tw_claims import check_antecedent_basis
+        doc = self._doc(
+            "1. 一種裝置，其中所述線路結構包含有：多條導通線路，埋置於一絕緣體之內；"
+            "其中每條所述導通線路外露。"
+        )
+        terms = {r.get("term") for r in check_antecedent_basis(doc)}
+        assert "導通線路" not in terms
