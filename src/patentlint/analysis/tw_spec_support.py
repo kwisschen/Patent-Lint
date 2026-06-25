@@ -564,7 +564,9 @@ def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:
     seen: dict[str, int] = {}
     inventory: list[tuple[str, str]] = []
     for claim in claims:
-        for orig, norm in extract_introductions_tw(claim):
+        for orig, norm in extract_introductions_tw(
+            claim, suppress_dep_preamble=True
+        ):
             # Apply spec-support normalization (adds preposition +
             # parenthetical-numeral strip over the walker's intro
             # normalization).
@@ -658,7 +660,9 @@ def check_spec_support_tw(doc: TwPatentDocument) -> list[UnsupportedTerm]:
     # normalized term may come from multiple intros across claims).
     raw_by_norm: dict[str, list[str]] = {}
     for claim in doc.claims:
-        for orig, norm in extract_introductions_tw(claim):
+        for orig, norm in extract_introductions_tw(
+            claim, suppress_dep_preamble=True
+        ):
             final = _normalize_for_spec_support_tw(norm or orig)
             if not final:
                 continue
