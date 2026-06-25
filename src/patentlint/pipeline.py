@@ -248,6 +248,7 @@ def _run_cn_pipeline(
         + cn_claims_analysis.check_multi_multi_dependency(cn_doc)
         + cn_claims_analysis.check_connection_relationships_cn(cn_doc)
         + cn_claims_analysis.check_excess_claims_count_cn(cn_doc)
+        + cn_claims_analysis.check_indefinite_wording_cn(cn_doc)
     )
 
     # Phase 8c: CN antecedent walker (parallel to TW). Emits structured
@@ -711,6 +712,7 @@ def _run_tw_pipeline(
         + tw_claims_analysis.check_claims_symbol_table_consistency(tw_doc)
         + tw_claims_analysis.check_connection_relationships_tw(tw_doc)
         + tw_claims_analysis.check_excess_claims_count_tw(tw_doc)
+        + tw_claims_analysis.check_indefinite_wording_tw(tw_doc)
     )
 
     # Phase 8b: walker emits structured per-occurrence findings. Both the

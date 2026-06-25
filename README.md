@@ -9,13 +9,13 @@ A patent draft checker that runs **entirely in your browser** — pure Python an
 
 **No account. No install. No upload.**
 
-159 checks against USPTO MPEP, EPO Guidelines, CNIPA 审查指南, and TIPO 專利審查基準, covering U.S., European (EPC), Chinese, and Taiwanese patent application drafts. Your file never leaves your device — verifiable in airplane mode.
+161 checks against USPTO MPEP, EPO Guidelines, CNIPA 审查指南, and TIPO 專利審查基準, covering U.S., European (EPC), Chinese, and Taiwanese patent application drafts. Your file never leaves your device — verifiable in airplane mode.
 
 **[Try it →](https://patentlint.com)**
 
 ## Status
 
-- **Check catalog**: 43 U.S. + 38 EPC + 35 CN + 43 TW = 159 deterministic checks; per-jurisdiction breakdown in [CHECKS.md](CHECKS.md)
+- **Check catalog**: 43 U.S. + 38 EPC + 36 CN + 44 TW = 161 deterministic checks; per-jurisdiction breakdown in [CHECKS.md](CHECKS.md)
 - **2560 tests** passing on every commit; full pytest + ruff gate in CI
 - **6 UI languages** (English, German, Traditional + Simplified Chinese, Japanese, Korean) with locale-aware PDF generation
 - **Walker confidence signals** distilled offline from small sklearn classifiers + cloud-LLM ensemble judging on a public granted-patents corpus; the runtime is pure deterministic Python with no model file or AI inference
@@ -34,7 +34,7 @@ A patent draft checker that runs **entirely in your browser** — pure Python an
 ## How It Works
 
 1. **Drop** a patent draft into the browser (.docx for US/TW/EPC, .docx/.xml/.zip for CN)
-2. **Analyze** — 159 checks run instantly via WebAssembly (no server, no upload)
+2. **Analyze** — 161 checks run instantly via WebAssembly (no server, no upload)
 3. **Report** — download a PDF or copy a summary to clipboard
 
 ---
@@ -49,7 +49,7 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 
 ## What It Checks
 
-159 automated checks across four jurisdictions, each classified as **PASS**, **REVIEW**, or **FIX**.
+161 automated checks across four jurisdictions, each classified as **PASS**, **REVIEW**, or **FIX**.
 
 > **EPC support is v1 beta.** The full 34-check EPC catalog runs end-to-end via CLI and REST API. The frontend jurisdiction picker integration shipped 2026-05-11; real-corpus FP tuning calibrated against 174 EP-A1 drafts pulled via the EPO OPS API.
 

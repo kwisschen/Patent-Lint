@@ -929,3 +929,38 @@ def test_claim_reference_enumeration_not_refnum_241():
     # FN guards: real refnums still flagged (no 請求項 prefix → not masked)
     assert check_ref_numeral_parens(mk("如請求項1的方法，其中元件210連接。"))[0].status == "amend"
     assert check_ref_numeral_parens(mk("如請求項1的方法，其中元件210、220連接。"))[0].status == "amend"
+
+
+# --- indefiniteWording (TIPO 明確 §2.3, conservative exemplary list) ----------
+
+
+class TestTwIndefiniteWording:
+    def _doc(self, *texts):
+        from patentlint.models import Claim, TwPatentDocument
+        claims = [
+            Claim(id=i + 1, text=t, independent=(i == 0), dependencies=[] if i == 0 else [1])
+            for i, t in enumerate(texts)
+        ]
+        return TwPatentDocument(claims=claims, input_format="google_patents_html")
+
+    def test_clean_claim_passes(self):
+        from patentlint.analysis.tw_claims import check_indefinite_wording_tw
+        doc = self._doc("1. 一種裝置，包含一殼體、一控制電路及一光源組。")
+        res = check_indefinite_wording_tw(doc)
+        assert res[0].status == "pass"
+        assert res[0].message_key == "check.tw.claims.indefiniteWording.pass"
+
+    def test_exemplary_verifies(self):
+        from patentlint.analysis.tw_claims import check_indefinite_wording_tw
+        doc = self._doc("1. 一種裝置，包含一感測器，例如溫度感測器。")
+        res = check_indefinite_wording_tw(doc)
+        assert res[0].status == "verify"
+        assert res[0].message_key == "check.tw.claims.indefiniteWording.verify"
+        assert res[0].diagnostics["flagged_claim_count"] == 1
+
+    def test_deng_and_yue_excluded(self):
+        """等 / 約 deliberately NOT flagged (corpus-noise; legit senses)."""
+        from patentlint.analysis.tw_claims import check_indefinite_wording_tw
+        doc = self._doc("1. 一種裝置，其中第一齒輪等於第二齒輪，直徑約為5毫米。")
+        res = check_indefinite_wording_tw(doc)
+        assert res[0].status == "pass"

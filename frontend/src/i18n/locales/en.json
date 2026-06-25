@@ -848,7 +848,8 @@
       "numeralConsistency": "{{count}} reference numeral(s) used inconsistently. Examples: {{inline_summary}}",
       "markushOpenTransition": "Claim(s) {{claims}} use open-ended Markush transitions ({{transitions}}); switch to the closed form 「组成的」 per 审查指南 §9.3.",
       "omnibusClaims": "Claim(s) {{claims}} are omnibus-style (reference description/drawings instead of features); rewrite per 审查指南 §3.3.",
-      "crmNonTransitory": "Claim(s) {{claims}} recite a computer-readable medium without 非暂态. Add the 非暂态 / 非暂时性 qualifier to confine the claim to non-transitory media and avoid §25 subject-matter issues (审查指南 第二部分第九章)."
+      "crmNonTransitory": "Claim(s) {{claims}} recite a computer-readable medium without 非暂态. Add the 非暂态 / 非暂时性 qualifier to confine the claim to non-transitory media and avoid §25 subject-matter issues (审查指南 第二部分第九章).",
+      "indefiniteWordingClaims": "Claims: {{list}}. Exemplary or preferential terms such as 例如 / 诸如 / 较佳 / 优选 leave claim scope unclear. Per 审查指南 第二部分第二章 § 3.2.2, review each flagged term and replace with a precise limitation or remove if unnecessary."
     },
     "tw": {
       "requiredSections": "A complete TIPO filing requires 摘要, 說明書 (技術領域, 先前技術, 發明內容/新型內容, 實施方式), and 申請專利範圍 per 專利法 §25 第1項. When drawings are present, 圖式簡單說明 and 符號說明 are also required per 專利法施行細則 §17. Missing: {{sections}}.",
@@ -912,7 +913,8 @@
       "symbolTableCoverage": "{{count}} element(s) covering {{refnum_count}} reference symbol(s) missing from 符號說明: {{inline_summary}}",
       "markushOpenTransition": "Claim(s) {{claims}} use open-ended Markush transitions ({{transitions}}); switch to the closed form 選自由…組成的群組 per 專利審查基準 第二篇第十章.",
       "omnibusClaims": "Claim(s) {{claims}} are omnibus-style (reference 說明書/附圖 instead of features). Recite the technical features expressly to satisfy 專利法 §26 第3項.",
-      "crmNonTransitory": "Claim(s) {{claims}} recite a computer-readable medium without 非暫態. Add the 非暫態 / 非暫時性 qualifier to confine the claim to non-transitory media and avoid §21 eligibility issues."
+      "crmNonTransitory": "Claim(s) {{claims}} recite a computer-readable medium without 非暫態. Add the 非暫態 / 非暫時性 qualifier to confine the claim to non-transitory media and avoid §21 eligibility issues.",
+      "indefiniteWordingClaims": "Claims: {{list}}. Exemplary or preferential terms such as 例如 / 諸如 / 較佳 / 優選 leave claim scope unclear. Per 專利審查基準, review each flagged term and replace with a precise limitation or remove if unnecessary."
     },
     "titleProhibited": {
       "trademark": "Trademark symbol \"{{token}}\"",
@@ -1402,6 +1404,10 @@
         "crmNonTransitory": {
           "amend": "Claim(s) {{claims}} recite a 计算机可读介质 without 非暂态 / 非暂时性. 专利法 §25 — transitory signals fall outside patentable subject matter; add the qualifier to confine the claim to non-transitory media.",
           "pass": "Computer-readable medium claims correctly include 非暂态 / 非暂时性."
+        },
+        "indefiniteWording": {
+          "verify": "Claim(s) contain indefinite or exemplary wording (例如 / 诸如 / 较佳 / 优选). Verify clarity per 审查指南 § 3.2.2.",
+          "pass": "No indefinite or exemplary wording detected in claims."
         }
       },
       "abstract": {
@@ -1592,6 +1598,10 @@
         "crmNonTransitory": {
           "amend": "Claim(s) {{claims}} recite a 電腦可讀媒體 without the 非暫態 / 非暫時性 qualifier. 專利法 §21 — transitory signals fall outside eligible subject matter; add the qualifier to constrain the claim to non-transitory media.",
           "pass": "Computer-readable medium claims correctly include 非暫態 / 非暫時性."
+        },
+        "indefiniteWording": {
+          "verify": "Claim(s) contain indefinite or exemplary wording (例如 / 諸如 / 較佳 / 優選). Verify clarity per 專利審查基準.",
+          "pass": "No indefinite or exemplary wording detected in claims."
         }
       },
       "abstract": {

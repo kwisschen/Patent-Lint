@@ -115,6 +115,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Markush open transition | 审查指南 第二部分第十章 §9.3 | FIX / PASS | `check.cn.claims.markushOpenTransition` | Markush group uses 包括/具有/含有 instead of 组成的 (closed transition) — improper Markush = substantive rejection per §9.3 |
 | CRM non-transitory | 专利法 §25 + 审查指南 第二部分第九章 | FIX / PASS | `check.cn.claims.crmNonTransitory` | Independent claim to 计算机可读介质 / 存储介质 / 机器可读介质 missing 非暂态 / 非暂时性 qualifier — transitory signals fall outside §25 patentable subject matter |
 | Excess-claims fee threshold | 实施细则 §93 + CNIPA 收费办法 | REVIEW / PASS | `check.cn.claims.excessClaims` | Total claim count > 10 triggers CNIPA per-claim fee (¥150 per excess claim for invention patents) |
+| Indefinite wording | 审查指南 第二部分第二章 §3.2.2 (清楚) | REVIEW / PASS | `check.cn.claims.indefiniteWording` | Exemplary/preferential terms (例如, 诸如, 较佳, 优选) — conservative list; 等/约 excluded as corpus-noise. Mirror of US §2173.05(b)/(d) |
 
 ## CN Abstract (摘要)
 
@@ -176,6 +177,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Specification support (說明書支持) | 專利法 §26 第3項 | FIX / PASS | `check.tw.claims.specSupport` | 4-tier match (symbol-table whitelist + representative-drawing symbols → aggressively-normalized exact → raw exact → ±30-char CJK bigram window) for every claim intro against technical_field + prior_art + disclosure + embodiment. Inventory-level hygiene: TIPO §19 trailing parenthetical reference numerals stripped, leading preposition strip (於/到/在/自/由), mid-phrase reference-prefix recovery, conjunction split (X及Y → X, Y), length cap 12, leading-verb + interior clause-marker reject (ADR-138) |
 | Component connection relationships | 專利審查基準 §2.4 | REVIEW / PASS | `check.tw.claims.connectionRelationships` | Independent apparatus/system claims must describe how their listed components are arranged (carve-outs: method, CRM, MPF, composition) |
 | Excess-claims fee threshold | 專利規費收取準則 §5 | REVIEW / PASS | `check.tw.claims.excessClaims` | Total claim count > 10 triggers TIPO per-claim fee (NT$800 per excess claim for invention patents) |
+| Indefinite wording | 專利審查基準 第二篇第一章 (明確) | REVIEW / PASS | `check.tw.claims.indefiniteWording` | Exemplary/preferential terms (例如, 諸如, 較佳, 優選) — conservative list; 等/約 excluded as corpus-noise. Mirror of US §2173.05(b)/(d) |
 | Markush open transition | 專利審查基準 第二篇第十章 | FIX / PASS | `check.tw.claims.markushOpenTransition` | Markush group uses 包括/具有/含有 instead of 組成 (closed transition) — improper Markush = substantive rejection on the merits |
 | Omnibus claim | 專利法 §26 第3項 + 專利審查基準 | FIX / PASS | `check.tw.claims.omnibus` | Claim references 說明書/附圖 without reciting specific technical features |
 | CRM non-transitory | 專利法 §21 | FIX / PASS | `check.tw.claims.crmNonTransitory` | Independent claim to 電腦可讀媒體 / 儲存媒體 / 機器可讀媒體 missing 非暫態 / 非暫時性 qualifier — transitory signals fall outside §21 patentable subject matter |
@@ -264,9 +266,9 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 ---
 
-**Total checks: 152** (43 US + 35 EPC + 34 CN + 40 TW; † summary rows excluded)
+**Total checks: 154** (43 US + 35 EPC + 35 CN + 41 TW; † summary rows excluded)
 
-> Note: this footer's per-jurisdiction tally has drifted from the README catalog count (which tracks 159). The footer reflects mechanical per-row deltas; a full recount/reconciliation against `check_order.py` (the source of truth) is a separate documentation pass.
+> Note: this footer's per-jurisdiction tally has drifted from the README catalog count (which tracks 161). The footer reflects mechanical per-row deltas; a full recount/reconciliation against `check_order.py` (the source of truth) is a separate documentation pass.
 
 † Internal: not rendered as a CheckItem card in the web UI or PDF report. Used for stats aggregation and CLI output only.
 

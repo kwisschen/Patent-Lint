@@ -1152,3 +1152,37 @@ class TestCnCrmNonTransitory:
         from patentlint.analysis.cn_claims import check_crm_non_transitory_cn
         doc = _cn_doc([_claim(1, "1. 一种计算机可读媒体，存储指令。")])
         assert check_crm_non_transitory_cn(doc)[0].status == "amend"
+
+
+# --- indefiniteWording (审查指南 §3.2.2, conservative exemplary list) ---------
+
+
+class TestCnIndefiniteWording:
+    def _doc(self, *texts):
+        claims = [
+            Claim(id=i + 1, text=t, independent=(i == 0), dependencies=[] if i == 0 else [1])
+            for i, t in enumerate(texts)
+        ]
+        return CnPatentDocument(claims=claims, input_format="google_patents_html")
+
+    def test_clean_claim_passes(self):
+        from patentlint.analysis.cn_claims import check_indefinite_wording_cn
+        doc = self._doc("1. 一种装置，包括一壳体、一控制电路及一光源组。")
+        res = check_indefinite_wording_cn(doc)
+        assert res[0].status == "pass"
+        assert res[0].message_key == "check.cn.claims.indefiniteWording.pass"
+
+    def test_exemplary_verifies(self):
+        from patentlint.analysis.cn_claims import check_indefinite_wording_cn
+        doc = self._doc("1. 一种装置，包括一传感器，例如温度传感器。")
+        res = check_indefinite_wording_cn(doc)
+        assert res[0].status == "verify"
+        assert res[0].message_key == "check.cn.claims.indefiniteWording.verify"
+        assert res[0].diagnostics["flagged_claim_count"] == 1
+
+    def test_deng_and_yue_excluded(self):
+        """等 / 约 deliberately NOT flagged (corpus-noise; legit senses)."""
+        from patentlint.analysis.cn_claims import check_indefinite_wording_cn
+        doc = self._doc("1. 一种装置，其中第一齿轮等于第二齿轮，直径约为5毫米。")
+        res = check_indefinite_wording_cn(doc)
+        assert res[0].status == "pass"
