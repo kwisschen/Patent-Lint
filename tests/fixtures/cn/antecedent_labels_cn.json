@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 44,
+    "current_round": 45,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -150,6 +150,14 @@
         ],
         "fixtures_silenced": 0,
         "shipped_at": "2026-06-25T00:00:00+00:00"
+      },
+      {
+        "round": 45,
+        "name": "r45_trailing_verb_batch",
+        "description": "ADR-159 — trailing predicate verbs from the CN normalization-asymmetry probe: 引起 (cause) / 调整 (adjust, mirrors TW R15) / 共混 (blend) / 附接 (attach, mirrors TW R12) / 配置成 (configured-as, the verb construction, distinct from noun 配置) added to _TRAILING_VERB_DENYLIST_CN. Noun compounds carry these with a suffix (调整器/共混物/附接件), so the endswith strip doesn't touch them. validate_fix silenced_walker_fp=31 / silenced_legit=0. Note: the bulk of CN antecedent-asymmetry FPs are TRUNCATIONS (控制器→控, 定时器→定, 延迟电路→第一延迟) — the FN-delicate CJK under-capture class, deferred.",
+        "user_attested_issues": [],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-06-26T00:00:00+00:00"
       }
     ],
     "last_updated": "2026-06-11T11:58:29.220952+00:00",
