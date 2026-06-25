@@ -757,6 +757,27 @@ def _split_ordinal_key(keyed: str) -> tuple[str, str]:
     return "", keyed
 
 
+def _is_parent_name_bleed(num: str, outlier_name: str, dom_name: dict[str, str]) -> bool:
+    """True when ``outlier_name`` is the dominant name of a PARENT numeral whose
+    Latin-prefix designator is a strict prefix of ``num`` (R1 ⊂ R11) — a parent
+    element's name bled onto a hierarchical sub-element. Restricted to Latin-prefix
+    children so pure-digit coincidences (10 ⊂ 100) are never treated as hierarchy.
+    Gold-audited FN-safe (2026-06-25): drops hierarchical-bleed false positives
+    without removing any genuine sibling/cross-element conflict. Mirror of the CJK
+    `_cn_is_parent_name_bleed`."""
+    if not num or not num[0].isalpha():
+        return False
+    for parent, dom in dom_name.items():
+        if (
+            parent != num
+            and len(parent) >= 2
+            and num.startswith(parent)
+            and dom == outlier_name
+        ):
+            return True
+    return False
+
+
 def _prune_fn_safe_outliers(outlier_records: list[dict], canonical_name: str) -> list[dict]:
     """Drop FN-SAFE extraction-noise outliers from a D1 conflict.
 
@@ -1302,6 +1323,13 @@ def _detect_d1_conflicts(
     for num in list(by_num_counts.keys()):
         by_num_counts[num] = _merge_suffix_clusters_us(by_num_counts[num])
 
+    # Dominant name per numeral — for parent-child prefix-bleed suppression
+    # (a Latin-prefix sub-element R11 is a child of R1; the parent's name bleeding
+    # onto the child once is a part-whole reference, not a conflict).
+    _dom_name: dict[str, str] = {
+        n: c.most_common(1)[0][0] for n, c in by_num_counts.items() if c
+    }
+
     def _sort_key(item: tuple[str, Counter]) -> tuple[int, int, str]:
         num = item[0]
         digit_prefix = ""
@@ -1340,6 +1368,12 @@ def _detect_d1_conflicts(
         case_instance = False
         for name, count in sorted_names[1:]:
             if name == canonical_name:
+                continue
+            # Parent-child prefix bleed (Latin-prefix children only): a 1x
+            # outlier that is the dominant name of a prefix-ancestor numeral
+            # (R1 ⊂ R11) is a hierarchical part-whole reference, not a conflict.
+            # Gold-audited FN-safe; pure-digit numerals are excluded.
+            if count == 1 and _is_parent_name_bleed(num, name, _dom_name):
                 continue
             other_ord, other_head = _split_ordinal_key(name)
             other_words = _content_words(other_head)

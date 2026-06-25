@@ -1848,6 +1848,30 @@ def _cn_split_ordinal_key(keyed: str) -> tuple[str, str]:
     return "", keyed
 
 
+def _cn_is_parent_name_bleed(num: str, outlier_name: str, dom_name: dict[str, str]) -> bool:
+    """True when ``outlier_name`` is the dominant name of a PARENT numeral whose
+    Latin-prefix designator is a strict prefix of ``num`` — i.e. a parent
+    element's name bled onto a hierarchical sub-element (外端蓋 E714 → 外穿孔 E7141).
+
+    Restricted to Latin-prefix children (``num`` starts with a letter): for these,
+    a prefix relationship (E714 ⊂ E7141, C3 ⊂ C31) is an unambiguous parent/child
+    sub-numbering convention. Pure-digit numerals are excluded because 10 ⊂ 100 is
+    coincidence, not hierarchy. Gold-audited FN-safe (2026-06-25): drops the
+    hierarchical-bleed false positives that dominate deep-numeral drafts while
+    leaving every genuine sibling/cross-element conflict intact."""
+    if not num or not num[0].isalpha():
+        return False
+    for parent, dom in dom_name.items():
+        if (
+            parent != num
+            and len(parent) >= 2
+            and num.startswith(parent)
+            and dom == outlier_name
+        ):
+            return True
+    return False
+
+
 def _cn_prune_fn_safe_outliers(outlier_records: list[dict], canonical_name: str) -> list[dict]:
     """Drop FN-SAFE extraction-noise outliers from a CJK D1 conflict (CN + TW).
 
@@ -2146,6 +2170,14 @@ def _cn_detect_d1_conflicts(pairs: list[tuple[str, str]]) -> list[dict]:
     for num in list(by_num_counts.keys()):
         by_num_counts[num] = _cn_merge_suffix_clusters(by_num_counts[num])
 
+    # Dominant name per numeral — used for parent-child prefix-bleed suppression
+    # (a sub-element's hierarchical designator E7141 is a child of E714; the
+    # parent's name bleeding onto the child once is a part-whole reference, not a
+    # naming conflict). See _cn_is_parent_name_bleed.
+    _dom_name: dict[str, str] = {
+        n: c.most_common(1)[0][0] for n, c in by_num_counts.items() if c
+    }
+
     def _sort_key(item: tuple[str, Counter]) -> tuple[int, int, str]:
         num = item[0]
         # Split into digit-leading prefix (sortable as int) + suffix.
@@ -2181,6 +2213,15 @@ def _cn_detect_d1_conflicts(pairs: list[tuple[str, str]]) -> list[dict]:
         case_instance = False
         for name, count in sorted_names[1:]:
             if name == canonical_name:
+                continue
+            # Parent-child prefix bleed: a single-occurrence outlier that is the
+            # dominant name of a numeral whose Latin-prefix designator is a
+            # strict prefix (parent) of this one — e.g. 外端蓋(E714) captured once
+            # on its sub-element 外穿孔(E7141) — is a part-whole hierarchical
+            # reference, not a naming conflict. Restricted to Latin-prefix
+            # children so pure-digit neighbours (10 vs 100) are never treated as
+            # parent/child. FN-safe: gold-audited, drops no genuine catch.
+            if count == 1 and _cn_is_parent_name_bleed(num, name, _dom_name):
                 continue
             other_ord, other_head = _cn_split_ordinal_key(name)
             other_chars = _cn_content_chars(other_head)

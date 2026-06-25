@@ -656,6 +656,29 @@ class TestD1LegendBleed:
         assert "22" in flagged
 
 
+class TestD1ParentChildPrefixBleed:
+    """A parent element's name bled onto a Latin-prefix sub-element (R1 → R11) is
+    a part-whole reference, not a conflict; pure-digit numerals are never treated
+    as parent/child."""
+
+    def test_parent_name_on_child_suppressed(self):
+        from patentlint.analysis.specification import _is_parent_name_bleed
+        dom = {"R1": "rigid wheel", "R11": "tooth structure"}
+        assert _is_parent_name_bleed("R11", "rigid wheel", dom) is True
+
+    def test_sibling_not_suppressed(self):
+        from patentlint.analysis.specification import _is_parent_name_bleed
+        dom = {"R1": "rigid wheel", "R2": "flex wheel"}
+        # R1 is not a prefix of R2 → sibling, not parent-child
+        assert _is_parent_name_bleed("R2", "rigid wheel", dom) is False
+
+    def test_pure_digit_prefix_not_treated_as_hierarchy(self):
+        from patentlint.analysis.specification import _is_parent_name_bleed
+        dom = {"10": "housing", "100": "circuit"}
+        # 10 ⊂ 100 is coincidence, not hierarchy — must NOT suppress
+        assert _is_parent_name_bleed("100", "housing", dom) is False
+
+
 class TestD1FnSafePrune:
     """FN-safe extraction-noise prune (gold-validated 2026-06-25): a 1x ordinal
     variant or substring of the canonical is dropped; distinct nouns and repeated
