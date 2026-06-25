@@ -350,7 +350,7 @@ def main() -> int:
             # symbol set; the CJK connector-dedup targets connector-bled names,
             # not symbols.)
             numeral = k.split("|", 1)[1]
-            if juris == "US" and _is_known_nonelement_symbol(numeral):
+            if _is_known_nonelement_symbol(numeral):
                 return False
             if not (name_is_element_noun(v["canonical"], juris) and v["canonical_count"] >= 2):
                 return False
@@ -364,7 +364,7 @@ def main() -> int:
         strong_lost = [k for k in removed if pre[k]["strong_real"]]
         strong_lost_designator = [
             k for k in strong_lost
-            if not (juris == "US" and _is_known_nonelement_symbol(k.split("|", 1)[1]))
+            if not _is_known_nonelement_symbol(k.split("|", 1)[1])
         ]
         repeated_lost = [k for k in removed if pre[k].get("both_repeated")]
         pre_fix = sum(1 for v in pre.values() if v["tier"] == "fix")

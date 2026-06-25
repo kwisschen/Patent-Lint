@@ -655,3 +655,29 @@ def test_interior_conjunction_split_parity_242():
     assert _cn_d1_head_noun_with_ordinal("係亦可為與步驟") == ""
     # #158 semantics preserved in the ordinal path
     assert _cn_extract_numeral_name_pairs("該散熱片與基板10連接") == [("10", "基板")]
+
+
+class TestCnD1BioSymbolAndMutation:
+    """Engine-3 R2 mirror (ADR-159): CJK D1 must not capture biology/clinical
+    biomarker symbols or amino-acid mutation notation as Latin-prefix reference
+    designators — they are never drawing elements. Real designators (R1/IC2/
+    uppercase-suffix U1A, and 1-digit C2D) must still be captured. Covers CN
+    AND TW (tw_specification reuses this extractor)."""
+
+    def _nums(self, text):
+        from patentlint.analysis.cn_specification import _cn_extract_numeral_name_pairs
+        return {n for n, _ in _cn_extract_numeral_name_pairs(text)}
+
+    def test_bio_and_mutation_symbols_not_captured(self):
+        # CJK noun must precede the ref for the Latin pattern to fire.
+        nums = self._nums(
+            "抗體 CD3 與抗體 CD8 結合。受體 CLDN18 表現。"
+            "突變 K417T 與突變 L858R。鏈路 V2X 通訊。"
+        )
+        for sym in ("CD3", "CD8", "CLDN18", "K417T", "L858R", "V2X"):
+            assert sym not in nums, sym
+
+    def test_real_designators_still_captured(self):
+        nums = self._nums("電阻 R1 與電容 C2。晶片 IC2。節點 C2D 連接。")
+        for sym in ("R1", "C2", "IC2", "C2D"):
+            assert sym in nums, sym
