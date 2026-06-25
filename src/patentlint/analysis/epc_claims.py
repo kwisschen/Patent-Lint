@@ -928,6 +928,47 @@ def check_restrictive_absolutes_epc(claims: list[Claim]) -> list[CheckItem]:
     )]
 
 
+def check_indefinite_wording_epc(claims: list[Claim]) -> list[CheckItem]:
+    """Advisory check on indefinite / relative / exemplary wording in claims
+    per EPO Guidelines F-IV § 4.6 (relative terms) + Art. 84 (clarity).
+
+    REVIEW status — mirror of the US § 2173.05(b)/(d) check. Imports the US
+    regex directly (not a copy) so the US↔EPC violation list stays in sync:
+    any future addition to ``_INDEFINITE_WORDING_CLAIM_RE`` propagates to EPC
+    automatically. Definiteness is examiner-judgment-in-context, so the matched
+    word is a flag (REVIEW), not an asserted error (FIX).
+    """
+    from patentlint.parser.claims import _INDEFINITE_WORDING_CLAIM_RE
+
+    flagged: list[int] = []
+    for c in claims:
+        if _INDEFINITE_WORDING_CLAIM_RE.search(c.text):
+            flagged.append(c.id)
+    if flagged:
+        return [CheckItem(
+            status="verify",
+            message=(
+                f"Claim(s) {', '.join(str(i) for i in flagged)} contain indefinite "
+                f"or relative wording (may / substantially / such as / etc.). "
+                f"Verify per Guidelines F-IV § 4.6 + Art. 84."
+            ),
+            message_key="check.epc.claims.indefiniteWording.verify",
+            details_params={"claims": ", ".join(str(i) for i in flagged)},
+            details=", ".join(str(i) for i in flagged),
+            reference="EPO Guidelines F-IV § 4.6",
+            diagnostics=_dx(
+                flagged_count=len(flagged),
+                flagged_claim_id=flagged[0],
+            ),
+        )]
+    return [CheckItem(
+        status="pass",
+        message="No indefinite or relative wording detected in claims.",
+        message_key="check.epc.claims.indefiniteWording.pass",
+        reference="EPO Guidelines F-IV § 4.6",
+    )]
+
+
 def check_antecedent_basis_epc(claims: list[Claim]) -> tuple[list[CheckItem], list[dict]]:
     """Antecedent basis walker (port from US) per Art. 84 + Guidelines F-IV § 4.5.
 
@@ -1035,8 +1076,9 @@ def run_g6_section_112_checks(
 
       1. claimPunctuation
       2. restrictiveAbsolutes
-      3. antecedentBasis (walker)
-      4. specSupport (walker)
+      3. indefiniteWording
+      4. antecedentBasis (walker)
+      5. specSupport (walker)
 
     Returns (check_items, antecedent_basis_issues, unsupported_terms).
     Walker outputs feed AnalysisResult.antecedent_basis_issues and
@@ -1045,6 +1087,7 @@ def run_g6_section_112_checks(
     results: list[CheckItem] = []
     results.extend(check_claim_punctuation_epc(claims))
     results.extend(check_restrictive_absolutes_epc(claims))
+    results.extend(check_indefinite_wording_epc(claims))
     ab_summary, ab_issues = check_antecedent_basis_epc(claims)
     results.extend(ab_summary)
     ss_summary, ss_terms = check_spec_support_epc(claims, spec_text)

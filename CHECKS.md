@@ -249,6 +249,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Antecedent basis (walker) | Art. 84 EPC + EPO Guidelines F-IV § 4.5 | REVIEW / PASS | `check.epc.claims.antecedentBasis` | "the X" without prior "a X" — walker port from US with EPC dep-preamble pre-stripping |
 | Specification support (walker) | Art. 84 EPC | REVIEW / PASS | `check.epc.claims.specSupport` | Claim terms supported by description body |
 | Restrictive absolutes | EPO Guidelines F-IV § 4.7 | REVIEW / PASS | `check.epc.claims.restrictiveAbsolutes` | Absolute terms (must, always, never, essential, etc.) flagged |
+| Indefinite wording | EPO Guidelines F-IV § 4.6 + Art. 84 EPC | REVIEW / PASS | `check.epc.claims.indefiniteWording` | Relative/indefinite/exemplary terms (may, substantially, such as, e.g., etc.) — mirror of US § 2173.05(b)/(d), shared regex |
 | Claim punctuation | EPO Guidelines F-IV § 4.10 | FIX / PASS | `check.epc.claims.punctuation` | Each claim ends with a single period; no misplaced periods inside the body |
 | Excess-claims fee threshold | Rule 45 EPC + Rule 162(1) EPC | REVIEW / PASS | `check.epc.claims.excessClaims` | Total claim count > 15 triggers Rule 45 EPC per-claim fees (claims 16-50, higher rate 51+) |
 
@@ -263,7 +264,9 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 ---
 
-**Total checks: 151** (43 US + 34 EPC + 34 CN + 40 TW; † summary rows excluded)
+**Total checks: 152** (43 US + 35 EPC + 34 CN + 40 TW; † summary rows excluded)
+
+> Note: this footer's per-jurisdiction tally has drifted from the README catalog count (which tracks 159). The footer reflects mechanical per-row deltas; a full recount/reconciliation against `check_order.py` (the source of truth) is a separate documentation pass.
 
 † Internal: not rendered as a CheckItem card in the web UI or PDF report. Used for stats aggregation and CLI output only.
 

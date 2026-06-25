@@ -741,6 +741,7 @@
       "antecedentBasis": "선행사 분석기：제84조, 심사 지침 F-IV § 4.5",
       "specSupport": "명세서의 뒷받침：제84조(뒷받침 요건)",
       "restrictiveAbsolutes": "제한적 절대 표현(심사 지침 F-IV § 4.7, 권장)",
+      "indefiniteWording": "불명확·상대적 표현(심사 지침 F-IV § 4.6, 권장)",
       "punctuation": "청구항 부호 사용(심사 지침 F-IV § 4.10)",
       "figuresSequential": "도면 연속 번호(시행규칙 제46(2)(a)조)",
       "singleFigureLabel": "단일 도면 라벨 형식(심사 지침 F-V § 1.2)",
@@ -1185,6 +1186,10 @@
         "restrictiveAbsolutes": {
           "verify": "청구항 {{claims}}에 절대적 한정어(must / essential / required 등)가 포함되어 있습니다. Guidelines F-IV § 4.7에 따라 검토하십시오.",
           "pass": "절대적 한정어가 감지되지 않았습니다(Guidelines F-IV § 4.7)."
+        },
+        "indefiniteWording": {
+          "verify": "청구항 {{claims}}에 불명확하거나 상대적인 표현(may / substantially / such as 등)이 포함되어 있습니다. Guidelines F-IV § 4.6 + Art. 84에 따라 검토하십시오.",
+          "pass": "불명확하거나 상대적인 표현이 감지되지 않았습니다(Guidelines F-IV § 4.6)."
         },
         "selfDependent": {
           "amend": "청구항 자기 인용: {{claims}}(Rule 43(4) EPC).",

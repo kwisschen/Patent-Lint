@@ -741,6 +741,7 @@
       "antecedentBasis": "先行詞解析器：第84条、審査ガイドライン F-IV § 4.5",
       "specSupport": "明細書のサポート：第84条（明細書サポート要件）",
       "restrictiveAbsolutes": "制限的絶対表現（審査ガイドライン F-IV § 4.7、推奨）",
+      "indefiniteWording": "不明確・相対的表現（審査ガイドライン F-IV § 4.6、推奨）",
       "punctuation": "請求項の句読点（審査ガイドライン F-IV § 4.10）",
       "figuresSequential": "図面の連続番号（施行規則第46(2)(a)条）",
       "singleFigureLabel": "図面が一つのみの場合のラベル形式（審査ガイドライン F-V § 1.2）",
@@ -1185,6 +1186,10 @@
         "restrictiveAbsolutes": {
           "verify": "請求項 {{claims}} に絶対的限定語（must / essential / required 等）が含まれています。Guidelines F-IV § 4.7 によりご確認ください。",
           "pass": "絶対的限定語は検出されませんでした（Guidelines F-IV § 4.7）。"
+        },
+        "indefiniteWording": {
+          "verify": "請求項 {{claims}} に不明確または相対的な用語（may / substantially / such as 等）が含まれています。Guidelines F-IV § 4.6 + Art. 84 によりご確認ください。",
+          "pass": "不明確または相対的な用語は検出されませんでした（Guidelines F-IV § 4.6）。"
         },
         "selfDependent": {
           "amend": "請求項の自己引用：{{claims}}（Rule 43(4) EPC）。",
