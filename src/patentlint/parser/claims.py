@@ -131,9 +131,23 @@ _INDEFINITE_WORDING_CLAIM_RE = re.compile(
     r"|relatively|fairly|reasonably"
     r"|essentially|similar|comparable"
     r"|close|near|fast|slow|hard|soft|wide|narrow"
-    r"|preferably|or the like"
+    # MPEP § 2173.05(d) optional / preferential language (2026-06-25 audit):
+    # `optionally` / `if|as desired` / `as needed` / `where appropriate` make
+    # it unclear whether the limitation is required; `preferably`/`desirably`
+    # are preferential. All high-confidence § 112(b) red flags, low FP in a
+    # claim limitation. Kept REVIEW (not FIX) — see check tier note in models.py.
+    r"|preferably|desirably|optionally"
+    r"|if desired|as desired|as needed|as appropriate|where appropriate"
+    r"|in particular"
     r")\b"
-    r"|\b(for example|such as|kind of|type of)\b",
+    # MPEP § 2173.05(d) open-ended / exemplary language. `and the like`
+    # mirrors the existing `or the like`; `e.g.`/`etc.` are the abbreviated
+    # forms of `for example`. A lookbehind keeps `e.g.`/`etc.` from matching
+    # inside a word; the trailing period is matched literally. `i.e.` is
+    # intentionally excluded — it restates/defines (often DEFINITE), unlike
+    # the open-ended exemplars.
+    r"|\b(for example|such as|kind of|type of|and the like|or the like)\b"
+    r"|(?<![A-Za-z])(?:e\.g\.|etc\.)",
     re.IGNORECASE,
 )
 
@@ -333,6 +347,11 @@ def detect_restrictive_absolutes_in_claims(claims: list[Claim]) -> ClaimWordingR
 
 
 def detect_indefinite_wording_in_claims(claims: list[Claim]) -> ClaimWordingResult:
-    """Detect MPEP § 2173.05(b) relative/indefinite terminology (may, substantially,
-    approximately, generally, typically, relatively, similar, preferably, for example, etc.)."""
+    """Detect MPEP § 2173.05(b) relative/indefinite + § 2173.05(d) optional/
+    exemplary terminology (may, substantially, approximately, generally,
+    relatively, similar, preferably, optionally, if/as desired, for example,
+    such as, e.g., etc., and/or the like). REVIEW tier, not FIX — definiteness
+    is examiner-judgment-in-context (degree terms are definite when the spec
+    supplies a standard, § 2173.05(b)), so the matched word is a flag, not a
+    verdict."""
     return _scan_claims(_INDEFINITE_WORDING_CLAIM_RE, claims)

@@ -397,6 +397,33 @@ def test_restrictive_absolutes_verifies():
     assert results[0].status == "verify"
 
 
+# --- indefiniteWording (mirror of US § 2173.05(b)/(d), Guidelines F-IV § 4.6) -
+
+
+def test_indefinite_wording_canonical_passes():
+    from patentlint.analysis.epc_claims import check_indefinite_wording_epc
+    results = check_indefinite_wording_epc(CANONICAL_CLAIMS)
+    assert results[0].status == "pass"
+    assert results[0].message_key == "check.epc.claims.indefiniteWording.pass"
+
+
+def test_indefinite_wording_verifies():
+    from patentlint.analysis.epc_claims import check_indefinite_wording_epc
+    claim = _make(1, "An apparatus comprising a substantially flat plate, such as a disk.")
+    results = check_indefinite_wording_epc([claim])
+    assert results[0].status == "verify"
+    assert results[0].message_key == "check.epc.claims.indefiniteWording.verify"
+
+
+def test_indefinite_wording_reuses_us_regex():
+    """EPC imports the US regex (self-syncing mirror) — new US tokens like
+    `optionally` / `e.g.` are caught by EPC without a separate list."""
+    from patentlint.analysis.epc_claims import check_indefinite_wording_epc
+    claim = _make(1, "An apparatus wherein the plate is optionally coated, e.g., with paint.")
+    results = check_indefinite_wording_epc([claim])
+    assert results[0].status == "verify"
+
+
 # --- antecedentBasis walker ---------------------------------------------------
 
 
@@ -446,13 +473,13 @@ def test_spec_support_with_text_does_not_crash():
 # --- Aggregator ---------------------------------------------------------------
 
 
-def test_g6_runner_emits_four_summary_checks():
-    """G6 emits punctuation (1+) + restrictive_absolutes (1) + antecedent
-    summary (1) + spec-support summary (1). With clean fixture, punctuation
-    is single-pass so total is 4."""
+def test_g6_runner_emits_five_summary_checks():
+    """G6 emits punctuation (1+) + restrictive_absolutes (1) +
+    indefinite_wording (1) + antecedent summary (1) + spec-support summary (1).
+    With clean fixture, punctuation is single-pass so total is 5."""
     spec_text = "The apparatus 10 includes a processor 12 and a memory 14."
     results, ab_issues, ss_terms = run_g6_section_112_checks(CANONICAL_CLAIMS, spec_text)
-    assert len(results) == 4
+    assert len(results) == 5
     assert isinstance(ab_issues, list)
     assert isinstance(ss_terms, list)
 

@@ -559,6 +559,8 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.epc.claims.punctuation.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 5),
     "check.epc.claims.restrictiveAbsolutes.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 10),
     "check.epc.claims.restrictiveAbsolutes.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 10),
+    "check.epc.claims.indefiniteWording.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 15),
+    "check.epc.claims.indefiniteWording.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 15),
     "check.epc.claims.antecedentBasis.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 20),
     "check.epc.claims.antecedentBasis.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 20),
     "check.epc.claims.specSupport.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 30),

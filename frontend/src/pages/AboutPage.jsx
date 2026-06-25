@@ -230,6 +230,7 @@ const EPC_CLAIMS_CHECKS = [
   'antecedentBasis',                 // Art. 84 EPC + EPO Guidelines F-IV § 4.5
   'specSupport',                     // Art. 84 EPC (support requirement)
   'restrictiveAbsolutes',            // EPO Guidelines F-IV § 4.7
+  'indefiniteWording',               // EPO Guidelines F-IV § 4.6 + Art. 84 EPC
   'punctuation',                     // EPO Guidelines F-IV § 4.10
   'excessClaims',                    // Rule 45 EPC fee threshold
 ]

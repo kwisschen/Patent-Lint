@@ -741,6 +741,7 @@
       "antecedentBasis": "Antecedent basis (先行詞 walker) — Art. 84 EPC + Guidelines F-IV § 4.5",
       "specSupport": "Specification support — Art. 84 EPC (support requirement)",
       "restrictiveAbsolutes": "Restrictive absolutes (Guidelines F-IV § 4.7, advisory)",
+      "indefiniteWording": "Indefinite / relative wording (Guidelines F-IV § 4.6, advisory)",
       "punctuation": "Claim punctuation (Guidelines F-IV § 4.10)",
       "figuresSequential": "Figures numbered sequentially (Rule 46(2)(a) EPC)",
       "singleFigureLabel": "Single-figure label form (Guidelines F-V § 1.2)",
@@ -1185,6 +1186,10 @@
         "restrictiveAbsolutes": {
           "verify": "Claim(s) {{claims}} contain restrictive absolutes (must / essential / required / etc.). Verify per Guidelines F-IV § 4.7.",
           "pass": "No restrictive-absolute issues detected (Guidelines F-IV § 4.7)."
+        },
+        "indefiniteWording": {
+          "verify": "Claim(s) {{claims}} contain indefinite or relative wording (may / substantially / such as / etc.). Verify per Guidelines F-IV § 4.6 + Art. 84.",
+          "pass": "No indefinite or relative wording detected (Guidelines F-IV § 4.6)."
         },
         "selfDependent": {
           "amend": "Self-dependent claim(s) detected: {{claims}} (Rule 43(4) EPC).",

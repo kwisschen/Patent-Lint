@@ -741,6 +741,7 @@
       "antecedentBasis": "Rückbezug-Walker — Art. 84 EPÜ + Richtlinien F-IV § 4.5",
       "specSupport": "Stützung in der Beschreibung — Art. 84 EPÜ (Stützungserfordernis)",
       "restrictiveAbsolutes": "Restriktive Absolutheiten (Richtlinien F-IV § 4.7, Hinweis)",
+      "indefiniteWording": "Unbestimmte / relative Begriffe (Richtlinien F-IV § 4.6, Hinweis)",
       "punctuation": "Anspruchs-Interpunktion (Richtlinien F-IV § 4.10)",
       "figuresSequential": "Figuren fortlaufend nummeriert (Regel 46(2)(a) EPÜ)",
       "singleFigureLabel": "Bezeichnung bei nur einer Figur (Richtlinien F-V § 1.2)",
@@ -1185,6 +1186,10 @@
         "restrictiveAbsolutes": {
           "verify": "Anspruch/Ansprüche {{claims}} enthalten restriktive Absolutbegriffe (muss / wesentlich / erforderlich / usw.). Prüfen nach Richtlinien F-IV § 4.7.",
           "pass": "Keine restriktiven Absolutbegriffe festgestellt (Richtlinien F-IV § 4.7)."
+        },
+        "indefiniteWording": {
+          "verify": "Anspruch/Ansprüche {{claims}} enthalten unbestimmte oder relative Begriffe (may / substantially / such as / usw.). Prüfen nach Richtlinien F-IV § 4.6 + Art. 84.",
+          "pass": "Keine unbestimmten oder relativen Begriffe festgestellt (Richtlinien F-IV § 4.6)."
         },
         "selfDependent": {
           "amend": "Selbst-rückbezogene Anspruch/Ansprüche: {{claims}} (Regel 43(4) EPÜ).",

@@ -741,6 +741,7 @@
       "antecedentBasis": "先行詞分析器：第84條、審查指南 F-IV § 4.5",
       "specSupport": "說明書支持：第84條（說明書支持要件）",
       "restrictiveAbsolutes": "限制性絕對用語（審查指南 F-IV § 4.7，建議性）",
+      "indefiniteWording": "不明確／相對性用語（審查指南 F-IV § 4.6，建議性）",
       "punctuation": "請求項標點（審查指南 F-IV § 4.10）",
       "figuresSequential": "圖式連續編號（施行細則第46(2)(a)條）",
       "singleFigureLabel": "單一圖式之標示方式（審查指南 F-V § 1.2）",
@@ -1185,6 +1186,10 @@
         "restrictiveAbsolutes": {
           "verify": "請求項 {{claims}} 出現絕對性用語（must / essential / required 等）。請依 Guidelines F-IV § 4.7 檢視。",
           "pass": "未偵測到絕對性用語（Guidelines F-IV § 4.7）。"
+        },
+        "indefiniteWording": {
+          "verify": "請求項 {{claims}} 出現不明確或相對性用語（may / substantially / such as 等）。請依 Guidelines F-IV § 4.6 + Art. 84 檢視。",
+          "pass": "未偵測到不明確或相對性用語（Guidelines F-IV § 4.6）。"
         },
         "selfDependent": {
           "amend": "請求項自我附屬：{{claims}}（Rule 43(4) EPC）。",

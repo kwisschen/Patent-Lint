@@ -741,6 +741,7 @@
       "antecedentBasis": "引用基础分析器：第84条、审查指南 F-IV § 4.5",
       "specSupport": "说明书支持：第84条（说明书支持要件）",
       "restrictiveAbsolutes": "限制性绝对用语（审查指南 F-IV § 4.7，建议性）",
+      "indefiniteWording": "不确定／相对性用语（审查指南 F-IV § 4.6，建议性）",
       "punctuation": "权利要求标点（审查指南 F-IV § 4.10）",
       "figuresSequential": "附图连续编号（实施细则第46(2)(a)条）",
       "singleFigureLabel": "单一附图之标示方式（审查指南 F-V § 1.2）",
@@ -1185,6 +1186,10 @@
         "restrictiveAbsolutes": {
           "verify": "权利要求 {{claims}} 出现绝对性用语（must / essential / required 等）。请依 Guidelines F-IV § 4.7 检视。",
           "pass": "未检测到绝对性用语（Guidelines F-IV § 4.7）。"
+        },
+        "indefiniteWording": {
+          "verify": "权利要求 {{claims}} 出现不确定或相对性用语（may / substantially / such as 等）。请依 Guidelines F-IV § 4.6 + Art. 84 检视。",
+          "pass": "未检测到不确定或相对性用语（Guidelines F-IV § 4.6）。"
         },
         "selfDependent": {
           "amend": "权利要求自我引用：{{claims}}（Rule 43(4) EPC）。",
