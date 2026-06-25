@@ -295,7 +295,7 @@
       "disposition": {
         "false_positive": {
           "label": "This flag is wrong",
-          "hint": "The checker flagged this, but it isn’t actually a problem."
+          "hint": "PatentLint flagged this, but it may not actually be a problem."
         },
         "confirmed_defect": {
           "label": "This is a correct catch",

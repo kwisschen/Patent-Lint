@@ -295,7 +295,7 @@
       "disposition": {
         "false_positive": {
           "label": "Markierung ist falsch",
-          "hint": "Hier markiert, aber eigentlich kein Problem."
+          "hint": "Hier markiert, aber möglicherweise kein echtes Problem."
         },
         "confirmed_defect": {
           "label": "Korrekter Treffer",
