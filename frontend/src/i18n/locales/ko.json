@@ -2057,7 +2057,7 @@
   },
   "crossPromo": {
     "oaTitle": "대응이 필요한 거절이유통지가 있으신가요?",
-    "oaBody": "PatentNode가 거절이유를 분석하고 보정서·의견서 초안과 분석 보고서를 작성합니다.",
+    "oaBody": "PatentNode가 거절이유를 대신 해석해 드립니다…",
     "oaCta": "PatentNode 사용해 보기"
   }
 }
