@@ -2916,6 +2916,17 @@ _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
         #       Grep: X朝向 as compound noun ×0 — safe.
         "相互", "朝向",
 
+        # === R17 (2026-06-26) — report-drain over-capture cluster ===
+        # The clause verb bled into the captured 該等<noun> reference. 貫穿/代入/
+        # 維持 are clean verbs (0 gold-FN, 0 protect-violation). Reports: #289
+        # (該等第一切槽貫穿), #280 (該環境參數代入一運算式), #281 (所述目標週期中
+        # 維持). 貫穿 is additionally noun-suffix-guarded (貫穿孔). The 中 locative
+        # tail in #281 is handled by the locative-before-verb cut below.
+        # 填充 WITHHELD — noun-gray: the phase8b adversarial fixture's protect:true
+        # `導熱材填充` (a nominalized "filling") is broken by the cut, and a tail
+        # `填充` is shape-indistinguishable from the verb usage `…內填充有X`. So
+        # #291 (內填充) is deferred — it needs a claim-read gold-correction.
+        "貫穿", "代入", "維持",
         # NOT added (interior to legitimate noun compounds):
         # 編碼 (編碼器), 識別 (識別碼/識別資料),
         # 通訊 (通訊模組), 傳動 (傳動件),
@@ -3112,6 +3123,12 @@ def clean_noun_phrase_tw(text: str) -> str:
         '決定', '感測', '偵測', '監測', '辨識', '識別', '解析',
         '處理', '控制', '驅動', '檢出', '判定', '計算', '生成',
         '輸出', '輸入', '儲存', '存取', '讀取', '寫入',
+        # R17 (2026-06-26): 貫穿 forms a noun compound with a suffix — 貫穿孔
+        # (through-hole), 貫穿部 — where the verb is part of the element identity,
+        # not a clause boundary. Guarded so 該等第二貫穿孔 is NOT cut to 第二
+        # (gold-legit FN caught by validate_fix). The over-capture case
+        # 該等第一切槽貫穿 has no suffix after 貫穿, so the cut still fires.
+        '貫穿',
     }
     earliest_idx: int | None = None
     for verb in _INTERIOR_VERB_BOUNDARIES:
@@ -3130,6 +3147,20 @@ def clean_noun_phrase_tw(text: str) -> str:
                     continue  # 對象決定+部 etc. (text length ≤ 8)
             if earliest_idx is None or absolute_idx < earliest_idx:
                 earliest_idx = absolute_idx
+
+    # R17 (2026-06-26): locative-before-verb cut. When the interior verb is
+    # immediately preceded by a locative postposition (內/中) — i.e. the captured
+    # head is `<noun>內<verb>` / `<noun>中<verb>` (該等第二切槽內填充… /
+    # 所述目標週期中維持) — move the cut to the locative so the bare head survives.
+    # FN-safe: fires ONLY when the char directly precedes a content verb (a clause
+    # boundary), never inside a noun (室內溫度 has 內 before 溫, not a verb), and the
+    # >2 guard protects short compounds (體內 — the 內 sits at idx ≤1).
+    # The negation 未 was DELIBERATELY EXCLUDED here: stripping a trailing 未<verb>
+    # (該購買確認未識別…) can reveal a bare noun that spuriously matches a
+    # differently-qualified intro (第一產品購買確認 vs 第二產品之該購買確認) —
+    # validate_fix caught it silencing a gold-legit possessive-qualifier defect.
+    if earliest_idx is not None and earliest_idx > 2 and text[earliest_idx - 1] in ("內", "中"):
+        earliest_idx -= 1
 
     current = text[:earliest_idx] if earliest_idx is not None else text
 
