@@ -1362,6 +1362,12 @@ _INTRO_MULTI_QUANTIFIERS_CN = (
     r"两(?![端侧])",
     r"[二三四五六七八九十]+个",
     "一个", "一种", "一对",
+    # R46 (2026-06-26): plural quantifier + MEASURE WORD (条/道) — Simplified
+    # mirror of TW R16 (#288). 复数条<noun> / 多道<noun> captured 条<noun> (the
+    # measure leaked) so 该<noun> never matched its intro. FN-safe by the
+    # _NOUN_CHARS_CN {2,12} floor (复数条码→backtracks to 条码). Listed before
+    # 复数个/复数 so the longer measure-bearing token wins the ordered alternation.
+    "复数条", "复数道", "多条", "多道", "数条", "数道",
     "复数个", "多个", "数个",
     "复数",
 )
@@ -1763,6 +1769,14 @@ _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
         # Compound-noun risk: 夹持器/覆盖层/露出口 absent from CN corpus
         # per grep (verbs only, no compound-noun collision).
         "夹持", "覆盖", "露出",
+        # R47 (2026-06-26): Simplified mirror of TW R17 (#289/#280) — the clause
+        # verb bled into the captured 该<noun> reference. 贯穿/代入 are clean verbs;
+        # 贯穿 is noun-suffix-guarded below (贯穿孔/贯穿部 compounds). 维持 (shipped
+        # for TW) was WITHHELD for CN: validate_fix --juris CN caught it silencing
+        # a gold-legit (`所述机械臂臂身维持期望构型` — the cut reveals 机械臂臂身,
+        # a possessive/bare-noun gray-zone reference the gold treats as a real
+        # defect). Attorney-over-corpus discipline: withhold on conflict.
+        "贯穿", "代入",
     ),
     key=len,
     reverse=True,
@@ -1859,6 +1873,10 @@ def clean_noun_phrase_cn(text: str) -> str:
         '决定', '感测', '侦测', '监测', '辨识', '识别', '解析',
         '处理', '控制', '驱动', '检出', '判定', '计算', '生成',
         '输出', '输入', '存储', '存取', '读取', '写入',
+        # R47 (2026-06-26): 贯穿 forms 贯穿孔 (through-hole) / 贯穿部 — the verb is
+        # part of the element. Guarded so 该第二贯穿孔 is NOT cut to 第二 (TW R17
+        # parity). The over-capture 该第一切槽贯穿 has no suffix after 贯穿 → cuts.
+        '贯穿',
     }
     earliest_idx: int | None = None
     for verb in _INTERIOR_VERB_BOUNDARIES_CN:
