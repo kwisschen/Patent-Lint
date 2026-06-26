@@ -2056,8 +2056,8 @@
     }
   },
   "crossPromo": {
-    "oaTitle": "有未处理的审查意见（OA）吗？",
-    "oaBody": "让 PatentNode 替您解读驳回理由…",
+    "oaTitle": "有待处理的审查意见（OA）吗？",
+    "oaBody": "PatentNode 会解读审查意见，为您起草权利要求修改与意见陈述，并撰写分析报告。",
     "oaCta": "试用 PatentNode"
   }
 }
