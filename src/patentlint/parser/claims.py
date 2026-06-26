@@ -115,8 +115,17 @@ _MULTIPLE_DEP = re.compile(
 # with absolute language ("must," "essential," "required," etc.) unnecessarily
 # narrows scope and can create §112(b) indefiniteness when the specification
 # doesn't actually require the absoluteness asserted.
+# `key` is intentionally NOT a bare alternation member (#286): it is heavily
+# overloaded as an element NOUN ("a key", "the key", "key 12", "pressing the
+# key", "a key state") — flagging every occurrence is a false positive. It is a
+# restrictive absolute only ADJECTIVALLY, modifying an importance-noun ("a key
+# feature/aspect/factor…"). Group 2 fires only in that adjectival context; the
+# element-noun use is left alone. The other terms are unambiguously restrictive.
 _RESTRICTIVE_ABSOLUTES_CLAIM_RE = re.compile(
-    r"\b(always|never|must|solely|every|required|essential|critical|key|vital)\b",
+    r"\b(always|never|must|solely|every|required|essential|critical|vital)\b"
+    r"|\b(key)(?=\s+(?:feature|aspect|factor|role|advantage|benefit|innovation"
+    r"|point|characteristic|difference|distinction|parameter|requirement"
+    r"|consideration|importance)s?\b)",
     re.IGNORECASE,
 )
 
