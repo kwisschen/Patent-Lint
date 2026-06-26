@@ -621,10 +621,15 @@ _STOP_WORDS = (
     # R22 (2026-06-26, ADR-159): trailing finite verbs from the report-queue
     # drain — #275 (`control circuit finds`), #287 (`first cutting grooves
     # penetrate`). `penetrate(s)` has no noun sense; `finds` noun-sense
-    # (archaeological finds) is absent from claim corpora. `counts` (#276) WITHHELD
-    # — the FN-guard caught it silencing a gold-legit (noun-gray: bit/pulse/vote
-    # counts are real references); needs claim-read gold-correction to ship.
+    # (archaeological finds) is absent from claim corpora.
     r"finds|penetrate|penetrates|"
+    # R23 (2026-06-26): `counts` (#276 `conversion circuit counts a coarse
+    # oscillation period`) — noun-gray (bit/pulse/vote counts are real elements),
+    # so a bare stop silenced a gold-legit (caught by the FN-guard in R22).
+    # Lookahead-gated like `accounts(?=\s+for)`: fire ONLY when followed by an
+    # article/determiner (the verb-object pattern `counts a/an/the X`); the noun
+    # usage (`the bit counts.` / `counts of …`) is unaffected.
+    r"counts(?=\s+(?:a|an|the)\b)|"
     # Issue #136 (2026-06-01): `face` is ambiguous noun/verb — legitimate
     # noun in `terminal face` / `mounting face` / `contact face` etc.
     # but clearly the matrix verb in `the first magnetic bowl face toward
