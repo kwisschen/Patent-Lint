@@ -105,8 +105,9 @@ export default function ReportModal({
     setSubmitting(false)
     if (outcome?.ok) {
       setResult('success')
-      // Auto-close after a beat so the user sees the success state.
-      setTimeout(() => onOpenChange(false), 1200)
+      // Auto-close after a brief beat — long enough to register the success
+      // confirmation, short enough not to add perceptible latency.
+      setTimeout(() => onOpenChange(false), 500)
     } else {
       setResult('failure')
     }
