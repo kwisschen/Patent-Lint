@@ -2113,6 +2113,18 @@ _INTRO_MULTI_QUANTIFIERS = (
     # starting with 所述.
     r"[二三四五六七八九十]+個",
     "一個", "一種", "一對",
+    # R16 (2026-06-26): plural quantifier + MEASURE WORD (條/道) before the noun.
+    # Drafters write 複數條延伸部 (條 = measure for strips/lines) / 複數道第一切槽
+    # (道 = measure for slots) — the bare 複數 token captured 條延伸部 (measure
+    # leaked), so the reference 該等延伸部 never matched its in-claim intro
+    # (reports #288/#289/#290/#291/#292; the 該等X plural-definite reference is
+    # standard TIPO usage). FN-safe by the _NOUN_CHARS {2,12} floor: an ambiguous
+    # 複數條碼 (barcode) / 複數道路 (roads) leaves a 1-char residual (碼/路) that
+    # fails the ≥2 capture, so the regex backtracks to bare 複數 and captures the
+    # real 2-char noun (條碼/道路) — no false intro. Listed before 複數個/複數/多個
+    # so the longer measure-bearing token wins the ordered alternation. MPEP
+    # §2173.05(e) / 專利法 §26 第3項 — article-less plural first mention = basis.
+    "複數條", "複數道", "多條", "多道", "數條", "數道",
     "複數個", "多個", "數個",
     "複數",
 )
