@@ -2182,6 +2182,11 @@ _REF_PATTERN_CAPTURE = re.compile(
 # ``sorted(..., key=len, reverse=True)`` is applied once at import time.
 _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
     (
+        # === R18 (2026-06-26) — normalization-asymmetry probe batch ===
+        # Trailing predicate verbs that bled into the captured reference (the
+        # bare-noun head already has its intro). Each is FN-guarded by validate_fix
+        # (silenced_legit==0); noun-gray verbs held a priori. 塗佈/持有/贊助/開始.
+        "塗佈", "持有", "贊助", "開始",
         # === R32 (2026-05-04) — passive trailing residue ===
         # CN parity (added to _TRAILING_VERB_DENYLIST_CN same round).
         # 被: passive marker. Compound nouns ending in 被 are vanishingly
