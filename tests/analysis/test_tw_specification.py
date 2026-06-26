@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from patentlint.analysis.tw_specification import (
     check_figure_ref_consistency,
+    check_numeral_consistency_tw,
     check_paragraph_ending,
     check_paragraph_numbering,
     check_patent_type_terminology,
@@ -757,3 +758,44 @@ class TestIndigenousTerms:
         assert "阿美族" in terms
         assert "布農族" in terms
         assert "部落" in terms
+
+
+class TestNumeralConsistencySymbolTableAnchoring:
+    """符號說明 declared-name anchoring for D1 over-capture (reports #284/#244).
+
+    When the 符號說明 declares a numeral's element, body captures that are the
+    declared element plus over-captured quantifier/verb-clause noise collapse
+    back to the declared name — FN-safely (a genuinely different element name,
+    sharing no containment with the declared name, still fires).
+    """
+
+    def test_verb_clause_overcapture_collapses_to_declared(self):
+        # R3 declared 電阻; body over-captures `可透過電阻` / `是以電阻` around it.
+        doc = _make_doc(
+            embodiment=[
+                "按鍵訊號KP可透過電阻R3輸出至多工器。輸出端是以電阻R3的一端。"
+                "電阻R3連接於節點。又電阻R3的兩端。"
+            ],
+            symbol_table=[SymbolEntry(numeral="R3", name="電阻")],
+        )
+        result = check_numeral_consistency_tw(doc)
+        assert all(r.status == "pass" for r in result), [r.message_key for r in result]
+
+    def test_real_inconsistency_still_fires(self):
+        # Negative control: numeral R3 declared 電阻 but body also names it 電容
+        # (a genuinely different element) — must still surface (FN-safety).
+        doc = _make_doc(
+            embodiment=["電阻R3連接。電阻R3的兩端。又電容R3接地。電容R3充電。"],
+            symbol_table=[SymbolEntry(numeral="R3", name="電阻")],
+        )
+        result = check_numeral_consistency_tw(doc)
+        assert any(r.status != "pass" for r in result), [r.message_key for r in result]
+
+    def test_no_symbol_table_unchanged(self):
+        # Without a 符號說明, anchoring is a no-op (pairs pass through unchanged).
+        doc = _make_doc(
+            embodiment=["電阻R3連接。電阻R3的兩端。又電容R3接地。電容R3充電。"],
+            symbol_table=[],
+        )
+        result = check_numeral_consistency_tw(doc)
+        assert any(r.status != "pass" for r in result), [r.message_key for r in result]

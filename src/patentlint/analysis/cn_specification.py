@@ -1119,6 +1119,15 @@ _CN_INTERIOR_VERB_SPLIT_TARGETS: tuple[str, ...] = tuple(sorted(
         "輸出", "输出",
         "輸入", "输入",
         "供應", "供应",
+        # NOTE (2026-06-26): conduit/"via" verbs 透過/通過/是以 were trialed here
+        # for TW reports #284/#244 (`可透過電阻R3` → wanted `電阻`) but REVERTED —
+        # the refnum FN-guard (refnum_corpus_runner --juris TW) flagged 3 genuine
+        # designator conflicts (`光耦合到光連接器` vs `透過光連接器` for one numeral):
+        # the split is ASYMMETRIC (collapses the 透過-variant but not the 到-variant),
+        # creating a NEW mismatch. The TW over-capture is instead ended FN-safely by
+        # the 符號說明 declared-name anchoring in tw_specification (collapses ALL
+        # containing-variants to the SAME declared element). A symmetric char-rule
+        # split would need 到/耦合 too — too broad to add without CJK gold.
     ),
     key=len,
     reverse=True,

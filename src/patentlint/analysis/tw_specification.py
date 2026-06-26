@@ -12,6 +12,7 @@ import re
 from collections import Counter
 
 from patentlint.analysis.cn_specification import (
+    _cn_d1_head_noun as _cjk_d1_head_noun,
     _cn_detect_d1_conflicts as _cjk_detect_d1_conflicts,
     _cn_extract_numeral_name_pairs as _cjk_extract_numeral_name_pairs,
     _cn_format_d1_name_for_display as _cjk_format_d1_name_for_display,
@@ -918,13 +919,66 @@ def _tw_all_spec_text(doc) -> str:
     return " ".join(parts)
 
 
+def _tw_declared_numeral_names(doc) -> dict:
+    """Build {numeral: normalized declared element name} from the 符號說明
+    (+ 代表圖之符號簡單說明) — the drafter's authoritative numeral→element
+    table (專利法施行細則 §17 第1款第4目 / §19). This is ground truth the body
+    D1 scan can anchor against: TW (unlike US/CN) declares the canonical name
+    for every reference numeral, so an over-captured body variant can be
+    collapsed back to the declared element. Declared names are normalized
+    through the same head-noun stripper as body captures so the comparison is
+    apples-to-apples (a quantifier in the table, e.g. `多個 容器`, reduces too).
+    First declaration wins on duplicate numerals.
+    """
+    declared: dict[str, str] = {}
+    entries = list(getattr(doc, "symbol_table", None) or []) + list(
+        getattr(doc, "representative_drawing_symbols", None) or []
+    )
+    for entry in entries:
+        num = (getattr(entry, "numeral", "") or "").strip()
+        name = _cjk_d1_head_noun((getattr(entry, "name", "") or "").strip())
+        if num and name and num not in declared:
+            declared[num] = name
+    return declared
+
+
+def _tw_anchor_pairs_to_declared(
+    pairs: list[tuple[str, str]], declared: dict
+) -> list[tuple[str, str]]:
+    """Collapse a captured (numeral, name) to its 符號說明-declared name when
+    the capture CONTAINS or IS CONTAINED BY the declared name — i.e. the
+    capture is the declared element plus over-captured quantifier / verb-clause
+    noise. Real reports this ends: `224 → 條所述導通線路 / 多條導通線路` (both
+    contain declared `導通線路`); `R3 → KP可透過電阻 / 輸出端是以電阻` (both
+    contain declared `電阻`).
+
+    FN-safe by construction: a genuinely DIFFERENT element name shares no
+    containment relationship with the declared name, so it is left untouched
+    and a real §19 naming inconsistency (or a body↔table mismatch) still
+    surfaces. Numerals absent from the table (e.g. method-step labels) pass
+    through unchanged.
+    """
+    if not declared:
+        return pairs
+    out: list[tuple[str, str]] = []
+    for num, name in pairs:
+        d = declared.get(num)
+        if d and name and name != d and (d in name or name in d):
+            out.append((num, d))
+        else:
+            out.append((num, name))
+    return out
+
+
 def check_numeral_consistency_tw(doc: TwPatentDocument) -> list[CheckItem]:
     """D1 — same numeral used with multiple disjoint element names.
 
     Statutory: 專利法施行細則 §19 第2款 — 元件代表符號應一致.
     Same precision filters as CN/US: ≥3 total occurrences per numeral,
     ≥2 occurrences per candidate name, disjoint CJK char sets between
-    at least one pair of names.
+    at least one pair of names. TW additionally anchors body captures to the
+    declared 符號說明 table (FN-safe over-capture collapse — see
+    _tw_anchor_pairs_to_declared).
     """
     spec_text = _tw_all_spec_text(doc)
     if not spec_text:
@@ -943,6 +997,12 @@ def check_numeral_consistency_tw(doc: TwPatentDocument) -> list[CheckItem]:
             message_key="check.tw.spec.numeralConsistency.pass",
             reference="專利法施行細則 §19 第2款",
         )]
+
+    # Anchor body captures to the 符號說明 declared names BEFORE collision
+    # detection: collapses over-captured variants (quantifier/verb-clause noise)
+    # back to the drafter's declared element so they don't masquerade as a
+    # naming conflict. FN-safe (see _tw_anchor_pairs_to_declared).
+    pairs = _tw_anchor_pairs_to_declared(pairs, _tw_declared_numeral_names(doc))
 
     conflicts = _cjk_detect_d1_conflicts(pairs)
 
