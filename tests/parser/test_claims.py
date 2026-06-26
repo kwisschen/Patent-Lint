@@ -207,6 +207,25 @@ class TestRestrictiveAbsolutes:
         result = detect_restrictive_absolutes_in_claims(claims)
         assert result.improper_claims == []
 
+    def test_does_not_flag_key_as_element_noun(self):
+        # #286: "key" is overloaded as a physical element noun — flagging every
+        # occurrence is an FP. Element-noun uses must NOT flag.
+        claims = [
+            Claim(id=1, text="A device comprising a key configured to actuate, wherein the key detects a pressed state of the key.", independent=True),
+            Claim(id=2, text="The device, wherein the control circuit detects a key state of the key.", independent=True),
+            Claim(id=3, text="A keyboard comprising a key 12 and a housing.", independent=True),
+        ]
+        result = detect_restrictive_absolutes_in_claims(claims)
+        assert result.improper_claims == []
+
+    def test_flags_key_only_adjectivally(self):
+        # "key" IS a restrictive absolute when it adjectivally modifies an
+        # importance-noun ("a key feature") — that use still flags.
+        claims = [Claim(id=1, text="The invention is defined by a key feature of the housing.", independent=True)]
+        result = detect_restrictive_absolutes_in_claims(claims)
+        assert 1 in result.improper_claims
+        assert "key" in result.formatted_phrases
+
 
 class TestIndefiniteWording:
     """MPEP § 2173.05(b): relative / indefinite terminology."""
