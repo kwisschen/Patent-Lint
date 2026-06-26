@@ -39,8 +39,9 @@ function TriageItem({ check, t, i18n, compact, jurisdiction }) {
   const isSpecSupport = mk === 'checks.spec_support_unsupported_terms' || /specSupport/.test(mk)
   // Only offer the jump when the target section/card actually renders for this
   // jurisdiction (the §112 container is gated on showClaimTree; the spec-support
-  // card additionally on supportsSpecSupport — e.g. CN renders no spec-support
-  // card). Avoids a polished button that jumps to nothing.
+  // card additionally on supportsSpecSupport — currently true for US/EPC/TW/CN,
+  // but the guard keeps the pill honest if a future jurisdiction omits it).
+  // Avoids a polished button that jumps to nothing.
   const jConfig = getJurisdictionConfig(jurisdiction)
   const jumpTarget =
     check.status === 'pass' || !jConfig.showClaimTree ? null

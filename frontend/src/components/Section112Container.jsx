@@ -72,8 +72,10 @@ export default function Section112Container({
         )}
       </div>
 
-      {/* ADR-138: TW now renders SpecSupportCard alongside US. CN stays
-          gated off via supportsSpecSupport=false pending real drafter corpus. */}
+      {/* Spec-support card. US/EPC/TW/CN all enable it (supportsSpecSupport).
+          CN's ADR-138 gate (precision concerns on publication-doc fixtures) was
+          mooted by the #314 advisory re-tier — it surfaces "terms to verify"
+          with zero grade impact, so imprecision is bounded. */}
       {jConfig.supportsSpecSupport && (
         <div id="section112-specsupport" className="scroll-mt-20">
           {hasUnsupportedTerms ? (
