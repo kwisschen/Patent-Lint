@@ -932,6 +932,14 @@ _RELATIONAL_ADJ_STOPS = frozenset({
     "similar", "identical", "equal", "equivalent",
     "proximate", "distal", "proximal", "medial", "lateral",
     "closer", "nearer", "farther",
+    # R24 (2026-06-26, ADR-159): post-nominal adjectives in reduced relative
+    # clauses that bled into the captured reference (`the transceiver different
+    # from …`, `the engine resident in …`, `the spool means movable to …`) — the
+    # bare-noun head already has its intro. Surfaced by the normalization-asymmetry
+    # probe; FN-guarded by validate_fix. None is a noun head. `prior` (prior art) /
+    # `used` (legit labels) / `also`/`only` (intro-side strip) deliberately held.
+    "different", "separate", "subsequent", "resident",
+    "configurable", "movable", "moveable", "extendable", "installable",
 })
 
 
