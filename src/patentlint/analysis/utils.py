@@ -630,6 +630,10 @@ _STOP_WORDS = (
     # article/determiner (the verb-object pattern `counts a/an/the X`); the noun
     # usage (`the bit counts.` / `counts of …`) is unaffected.
     r"counts(?=\s+(?:a|an|the)\b)|"
+    # R25 (2026-06-26): `sent` (passive participle — `the dns response sent to …`)
+    # and `prior` lookahead-gated to the relational `prior to` (so the `prior art`
+    # noun is untouched). Both surfaced by the asymmetry probe; FN-guarded.
+    r"sent|prior(?=\s+to\b)|"
     # Issue #136 (2026-06-01): `face` is ambiguous noun/verb — legitimate
     # noun in `terminal face` / `mounting face` / `contact face` etc.
     # but clearly the matrix verb in `the first magnetic bowl face toward
