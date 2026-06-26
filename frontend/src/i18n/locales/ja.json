@@ -353,7 +353,10 @@
     "verifyEmpty": "確認が必要な項目はありません。",
     "pass": "合格",
     "items": "件",
-    "item": "件"
+    "item": "件",
+    "jumpAntecedent": "先行詞の根拠",
+    "jumpSpecSupport": "明細書サポート",
+    "jumpTo": "{{section}}へ移動"
   },
   "sectionDetail": {
     "title": "章節別の分析"

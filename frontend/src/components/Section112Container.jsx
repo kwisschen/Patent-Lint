@@ -61,19 +61,28 @@ export default function Section112Container({
         {t('antecedentBasis.disclaimer')}
       </p>
 
-      {hasAntecedentIssues ? (
-        <AntecedentBasisCard issues={antecedentBasisIssues} claimTrees={claimTrees} jurisdiction={jurisdiction} />
-      ) : (
-        <PassCard titleKey="antecedentBasis.title" messageKey={jConfig.section112PassKey} />
-      )}
+      {/* `id` + scroll-mt are the jump-to targets for the polished pills in
+          the TriagePanel review items (so a long, dense §112 review line can be
+          skipped in favour of a one-click jump down to the per-claim card). */}
+      <div id="section112-antecedent" className="scroll-mt-20">
+        {hasAntecedentIssues ? (
+          <AntecedentBasisCard issues={antecedentBasisIssues} claimTrees={claimTrees} jurisdiction={jurisdiction} />
+        ) : (
+          <PassCard titleKey="antecedentBasis.title" messageKey={jConfig.section112PassKey} />
+        )}
+      </div>
 
       {/* ADR-138: TW now renders SpecSupportCard alongside US. CN stays
           gated off via supportsSpecSupport=false pending real drafter corpus. */}
-      {jConfig.supportsSpecSupport && (hasUnsupportedTerms ? (
-        <SpecSupportCard unsupportedTerms={unsupportedTerms} claimTrees={claimTrees} jurisdiction={jurisdiction} />
-      ) : (
-        <PassCard titleKey={jConfig.specSupportTitleKey} messageKey={jConfig.specSupportPassKey} />
-      ))}
+      {jConfig.supportsSpecSupport && (
+        <div id="section112-specsupport" className="scroll-mt-20">
+          {hasUnsupportedTerms ? (
+            <SpecSupportCard unsupportedTerms={unsupportedTerms} claimTrees={claimTrees} jurisdiction={jurisdiction} />
+          ) : (
+            <PassCard titleKey={jConfig.specSupportTitleKey} messageKey={jConfig.specSupportPassKey} />
+          )}
+        </div>
+      )}
     </FrostCard>
   )
 }

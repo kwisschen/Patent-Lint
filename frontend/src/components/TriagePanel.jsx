@@ -2,7 +2,7 @@
 // Copyright (c) 2025–2026 Christopher Chen
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AlertCircle, Search, CheckCircle, ChevronDown, MessageSquare } from 'lucide-react'
+import { AlertCircle, Search, CheckCircle, ChevronDown, MessageSquare, CornerDownRight } from 'lucide-react'
 import { getCitation } from './CheckItem'
 import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
 import { formatDetails } from '../lib/detailsFormatter'
@@ -29,6 +29,30 @@ function TriageItem({ check, t, i18n, compact, jurisdiction }) {
   // Pass findings aren't reportable — nothing to diagnose when nothing
   // went wrong.
   const showReport = check.status !== 'pass'
+
+  // §112 jump-to: the antecedent-basis and spec-support review lines are long,
+  // dense sentences. Offer a polished one-click pill that jumps down to the
+  // per-claim card instead of forcing the user to parse the description. Only
+  // on the verify/amend rows (the card — not a pass placeholder — is the target).
+  const mk = check.message_key || ''
+  const isAntecedent = /antecedentBasis/.test(mk)
+  const isSpecSupport = mk === 'checks.spec_support_unsupported_terms' || /specSupport/.test(mk)
+  // Only offer the jump when the target section/card actually renders for this
+  // jurisdiction (the §112 container is gated on showClaimTree; the spec-support
+  // card additionally on supportsSpecSupport — e.g. CN renders no spec-support
+  // card). Avoids a polished button that jumps to nothing.
+  const jConfig = getJurisdictionConfig(jurisdiction)
+  const jumpTarget =
+    check.status === 'pass' || !jConfig.showClaimTree ? null
+      : isAntecedent ? 'section112-antecedent'
+      : (isSpecSupport && jConfig.supportsSpecSupport) ? 'section112-specsupport'
+      : null
+  const jumpLabelKey = isAntecedent ? 'triage.jumpAntecedent' : 'triage.jumpSpecSupport'
+  const handleJump = () => {
+    document
+      .getElementById(jumpTarget)
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   // Default flow: open the anonymous-send modal. Modal previews the
   // exact wire payload, fires sendReport on confirm. Mailto remains
@@ -81,6 +105,21 @@ function TriageItem({ check, t, i18n, compact, jurisdiction }) {
       </div>
       <div className="min-w-0 flex-1 w-full">
         <span className="text-sm">{msg}</span>
+        {jumpTarget && (
+          <div className="mt-1.5">
+            <button
+              type="button"
+              onClick={handleJump}
+              title={t('triage.jumpTo', { section: t(jumpLabelKey) })}
+              aria-label={t('triage.jumpTo', { section: t(jumpLabelKey) })}
+              className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold transition-colors hover:bg-[var(--attention-bg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--attention-border)]"
+              style={{ color: 'var(--attention-text)', borderColor: 'var(--attention-border)' }}
+            >
+              <CornerDownRight className="h-3.5 w-3.5" />
+              {t(jumpLabelKey)}
+            </button>
+          </div>
+        )}
         {!compact && check.details_params?.flagged_phrases?.items?.length > 0 && (
           <FlaggedTermList
             items={check.details_params.flagged_phrases.items}
@@ -97,7 +136,9 @@ function TriageItem({ check, t, i18n, compact, jurisdiction }) {
             status={check.status}
           />
         )}
-        {!compact && details && (
+        {/* Suppress the "see § 112 analysis below" pointer detail when the
+            jump pill already provides that affordance (avoids redundancy). */}
+        {!compact && details && !jumpTarget && (
           <p className="text-xs text-muted-foreground mt-0.5">
             {details}
           </p>

@@ -353,7 +353,10 @@
     "verifyEmpty": "검토 대상 항목이 없습니다.",
     "pass": "통과",
     "items": "건",
-    "item": "건"
+    "item": "건",
+    "jumpAntecedent": "선행사 기초",
+    "jumpSpecSupport": "명세서 뒷받침",
+    "jumpTo": "{{section}}(으)로 이동"
   },
   "sectionDetail": {
     "title": "섹션별 분석"

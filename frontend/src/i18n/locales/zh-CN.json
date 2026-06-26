@@ -353,7 +353,10 @@
     "verifyEmpty": "无需检视的项目。",
     "pass": "通过",
     "items": "个项目",
-    "item": "个项目"
+    "item": "个项目",
+    "jumpAntecedent": "引用基础",
+    "jumpSpecSupport": "说明书支持",
+    "jumpTo": "跳至{{section}}"
   },
   "sectionDetail": {
     "title": "章节分析"
