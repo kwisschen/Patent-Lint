@@ -353,7 +353,10 @@
     "verifyEmpty": "Keine zur Prüfung markierten Punkte.",
     "pass": "Bestanden",
     "items": "Einträge",
-    "item": "Eintrag"
+    "item": "Eintrag",
+    "jumpAntecedent": "Rückbezug",
+    "jumpSpecSupport": "Stützung",
+    "jumpTo": "Zu {{section}} springen"
   },
   "sectionDetail": {
     "title": "Abschnittsdetails"

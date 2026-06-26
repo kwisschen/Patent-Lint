@@ -353,7 +353,10 @@
     "verifyEmpty": "無需檢視之項目。",
     "pass": "通過",
     "items": "個項目",
-    "item": "個項目"
+    "item": "個項目",
+    "jumpAntecedent": "先行詞基礎",
+    "jumpSpecSupport": "說明書支持",
+    "jumpTo": "跳至{{section}}"
   },
   "sectionDetail": {
     "title": "章節分析"

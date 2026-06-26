@@ -353,7 +353,10 @@
     "verifyEmpty": "No items to review.",
     "pass": "Passed",
     "items": "items",
-    "item": "item"
+    "item": "item",
+    "jumpAntecedent": "Antecedent Basis",
+    "jumpSpecSupport": "Spec Support",
+    "jumpTo": "Jump to {{section}}"
   },
   "sectionDetail": {
     "title": "Section detail"
