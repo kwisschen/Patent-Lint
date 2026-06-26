@@ -91,29 +91,90 @@ async function handleReport(request, origin) {
 
   const issue = buildIssue(payload);
 
-  let ghResponse;
-  try {
-    ghResponse = await fetch(`https://api.github.com/repos/${repo}/issues`, {
-      method: "POST",
-      headers: {
-        accept: "application/vnd.github+json",
-        authorization: `Bearer ${token}`,
-        "user-agent": "patentlint-report-endpoint",
-        "content-type": "application/json",
-        "x-github-api-version": "2022-11-28",
-      },
-      body: JSON.stringify(issue),
+  // Create the GitHub issue, but DON'T make the user wait the full round-trip.
+  // The report is already validated; GitHub's create is the slow part (~0.5-1.5s).
+  // This promise never rejects — it resolves to a small result object.
+  const ghCreate = fetch(`https://api.github.com/repos/${repo}/issues`, {
+    method: "POST",
+    headers: {
+      accept: "application/vnd.github+json",
+      authorization: `Bearer ${token}`,
+      "user-agent": "patentlint-report-endpoint",
+      "content-type": "application/json",
+      "x-github-api-version": "2022-11-28",
+    },
+    body: JSON.stringify(issue),
+  })
+    .then(async (r) => {
+      if (!r.ok) {
+        console.error(
+          "github issue create failed:",
+          r.status,
+          await r.text().catch(() => ""),
+        );
+        return { ok: false };
+      }
+      return { ok: true };
+    })
+    .catch((e) => {
+      console.error("github unreachable:", String(e));
+      return { ok: false, unreachable: true };
     });
-  } catch {
+
+  // Race the create against a short window. FAST failures (an expired/invalid
+  // token 401s in ~200ms, a malformed issue 422s) finish inside the window and
+  // surface synchronously — so the user sees a real error and an auth lapse is
+  // never silent. If the create is still in flight after the window, ACK now
+  // (the report is accepted) and finish creating it in the background. This is
+  // the latency win: the user's response no longer waits on GitHub.
+  let timer;
+  const window = new Promise((resolve) => {
+    timer = setTimeout(() => resolve({ pending: true }), ACK_WINDOW_MS);
+  });
+  const outcome = await Promise.race([ghCreate, window]);
+  clearTimeout(timer);
+
+  if (outcome.pending) {
+    // Keep the function alive past this response so ghCreate completes. If the
+    // runtime context isn't available, FALL BACK to awaiting — never drop a
+    // report. (We respond 202 either way: the create is in flight / accepted.)
+    if (!keepAlive(ghCreate)) {
+      await ghCreate;
+    }
+    return json({ ok: true }, 202, origin);
+  }
+  if (outcome.unreachable) {
     return json({ ok: false, reason: "github_unreachable" }, 502, origin);
   }
-
-  if (!ghResponse.ok) {
-    console.error("github issue create failed:", ghResponse.status, await ghResponse.text());
+  if (!outcome.ok) {
     return json({ ok: false, reason: "github_create_failed" }, 502, origin);
   }
-
   return json({ ok: true }, 202, origin);
+}
+
+// How long to wait for GitHub before acknowledging optimistically. Long enough
+// for a fast failure (bad token / malformed) to surface synchronously; short
+// enough that a slow-but-healthy create acks early instead of stalling the user.
+const ACK_WINDOW_MS = 500;
+
+// Extend the edge function's lifetime past the response so a backgrounded
+// promise (the GitHub issue create) completes. Vercel populates a request-scoped
+// context keyed by this well-known Symbol; @vercel/functions' `waitUntil()` reads
+// the same thing — accessing it directly keeps us dep-free (that package pulls in
+// a heavy CLI/OIDC dependency graph we don't want in the edge bundle). Returns
+// true iff the promise was handed off; false means no context, so the caller
+// must await instead (never drop a report).
+function keepAlive(promise) {
+  try {
+    const ctx = globalThis[Symbol.for("@vercel/request-context")]?.get?.();
+    if (ctx && typeof ctx.waitUntil === "function") {
+      ctx.waitUntil(promise);
+      return true;
+    }
+  } catch {
+    // fall through — caller awaits
+  }
+  return false;
 }
 
 // Cap the optional user-comment field server-side as defence in depth
