@@ -535,6 +535,24 @@ class TestAntecedentBasis:
                     "the strand not conjugated to the label is detected")]
         assert any("strand not" in c for c in caps), caps
 
+    def test_conditional_removes_stops_r26(self):
+        """R26 (asymmetry probe): `conditional` (post-nominal predicative adj)
+        and `removes` (3sg verb) terminate NP capture. `operative` is NOT a
+        stop (withheld — the functional `operative to <verb>` clause)."""
+        from patentlint.analysis.utils import _DEFINITE_REF, clean_noun_phrase
+
+        def cap(text):
+            return [clean_noun_phrase(m.group("noun").strip())
+                    for m in _DEFINITE_REF.finditer(text)]
+
+        assert any("trace enabler" in c and "conditional" not in c
+                   for c in cap("the trace enabler conditional on a flag"))
+        assert any("second direction" in c and "removes" not in c
+                   for c in cap("the second direction removes the layer"))
+        # operative stays attached (withheld to preserve `operative to` intros)
+        assert any("operative" in c
+                   for c in cap("the amplifier unit operative to amplify"))
+
     def test_spec_support_shares_passes_correspond_stop_r11(self):
         """R11 cross-CHECK (#192): the spec-support noun-phrase extractor
         shares `_NP_CORE`/`_STOP_WORDS`, so the same `<arm> passes`
