@@ -61,6 +61,32 @@ class TestExtendShiCompoundCn:
         assert _extend_shi_compound_cn("监听", 2, "监听时，触发启动") == ("监听", 2)
 
 
+class TestExtendYingCompoundCn:
+    """R48 应-compound precursor-gate — reaction/effect/sense nouns truncated
+    by the _NOUN_CHARS_CN 应-exclusion (反应器→反, 晶化反应→晶化反)."""
+
+    def test_reaction_compound_reextended(self):
+        from patentlint.analysis.cn_claims import _extend_ying_compound_cn
+        assert _extend_ying_compound_cn("晶化反", 3, "晶化反应，压力为") == (
+            "晶化反应", 4
+        )
+
+    def test_reactor_compound_reextended(self):
+        from patentlint.analysis.cn_claims import _extend_ying_compound_cn
+        noun, _ = _extend_ying_compound_cn("第一反", 3, "第一反应器，用于")
+        assert noun == "第一反应器"
+
+    def test_gray_adverb_not_extended(self):
+        # 执行相应 — 相 is NOT in the precursor whitelist (相应 = adverb).
+        from patentlint.analysis.cn_claims import _extend_ying_compound_cn
+        assert _extend_ying_compound_cn("执行相", 3, "执行相应的操作") == ("执行相", 3)
+
+    def test_modal_ying_not_extended(self):
+        # 系统应该 — 统 is not a reaction precursor → modal guard preserved.
+        from patentlint.analysis.cn_claims import _extend_ying_compound_cn
+        assert _extend_ying_compound_cn("系统", 2, "系统应该启动") == ("系统", 2)
+
+
 def _claim(id: int, text: str, independent: bool = True,
            dependencies: list[int] | None = None,
            multiple_dependent: bool = False) -> Claim:
