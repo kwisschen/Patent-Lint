@@ -47,8 +47,14 @@ class TestExtendShiYingCompoundTw:
         assert noun == "終端效應器"
 
     def test_modal_ying_not_extended(self):
-        # 應該/應力 — 應 not followed by 器 → the modal guard is preserved.
+        # 應該/應力 — 應 not followed by 器 AND 統 not a reaction precursor
+        # → the modal guard is preserved.
         assert _extend_ying_compound_tw("系統", 2, "系統應該啟動") == ("系統", 2)
+
+    def test_terminal_reaction_precursor_reextended(self):
+        # R20 precursor arm: 去氫反應 (no 器 suffix) — 反 precursor extends.
+        noun, _ = _extend_ying_compound_tw("去氫反", 3, "去氫反應，溫度為")
+        assert noun == "去氫反應"
 
 
 def _make_doc(**kwargs) -> TwPatentDocument:

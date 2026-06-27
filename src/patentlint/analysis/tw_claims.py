@@ -2044,18 +2044,26 @@ def _extend_shi_compound_tw(
     return raw_noun, raw_noun_end
 
 
+# R20 (2026-06-27): precursor whitelist for the terminal 反應/效應/感應/響應
+# class (no 器 suffix) — CN R48 parity. Only unambiguous-noun roots; the gray
+# verb/adverb roots 對應/順應/呼應 are EXCLUDED (mirror of _YING_PRECURSORS_CN).
+_YING_PRECURSORS_TW = ("反", "效", "感", "響")
+
+
 def _extend_ying_compound_tw(
     raw_noun: str, raw_noun_end: int, claim_text: str
 ) -> tuple[str, int]:
     """Extend a noun truncated at the excluded 應 char when 應 forms an
-    X應器 effector/reactor/sensor compound (末端效應器/反應器/感應器). Gated
-    on the follow-char being 器 — modal 應 (應該/應當/應力) is never followed
-    by 器."""
+    X應器 effector/reactor/sensor compound (末端效應器/反應器/感應器 — follow
+    char 器, never modal) OR a terminal reaction/effect compound (去氫反應/
+    第一順序效應 — precursor in the reaction-noun whitelist). Modal 應
+    (應該/應當/應力) has neither a 器 follow nor a reaction precursor."""
     if not raw_noun:
         return raw_noun, raw_noun_end
     if raw_noun_end >= len(claim_text) or claim_text[raw_noun_end] != "應":
         return raw_noun, raw_noun_end
-    if claim_text[raw_noun_end + 1: raw_noun_end + 2] != "器":
+    follow_is_qi = claim_text[raw_noun_end + 1: raw_noun_end + 2] == "器"
+    if not follow_is_qi and raw_noun[-1] not in _YING_PRECURSORS_TW:
         return raw_noun, raw_noun_end
     raw_noun = raw_noun + "應"
     raw_noun_end += 1
