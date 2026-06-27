@@ -87,6 +87,30 @@ class TestExtendYingCompoundCn:
         assert _extend_ying_compound_cn("系统", 2, "系统应该启动") == ("系统", 2)
 
 
+class TestLeadingQuantifierCapTruncationCn:
+    """R49 — _NOUN_CHARS_CN {2,12} cap truncates a long compound when a leading
+    quantifier eats the budget (一个或更多个便携式手持控制器→…控)."""
+
+    def test_quantifier_inflated_compound_resolves(self):
+        # End-to-end: the reference now matches its bare intro, no FP.
+        from patentlint.models import Claim, CnPatentDocument
+        from patentlint.analysis.cn_claims import check_antecedent_basis_cn
+        text = (
+            "1.一种系统，包括：一个或更多个便携式手持控制器，"
+            "其中所述一个或更多个便携式手持控制器用于操作。"
+        )
+        doc = CnPatentDocument(
+            title="系统", claims=[Claim(id=1, text=text, independent=True)]
+        )
+        flagged = [
+            f["term"] for f in check_antecedent_basis_cn(doc)
+            if "便携式手持控" in f["term"]
+        ]
+        # The mid-compound truncation (…控) must not be emitted as a missing
+        # antecedent; the reference resolves against the bare intro.
+        assert all(t.endswith("控制器") for t in flagged), flagged
+
+
 def _claim(id: int, text: str, independent: bool = True,
            dependencies: list[int] | None = None,
            multiple_dependent: bool = False) -> Claim:

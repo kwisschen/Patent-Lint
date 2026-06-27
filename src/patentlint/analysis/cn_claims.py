@@ -1384,6 +1384,17 @@ def _extend_shi_compound_cn(
 _YING_PRECURSORS_CN = ("反", "效", "感", "响")
 
 
+# R49 (2026-06-27): leading-quantifier cap-truncation. The _NOUN_CHARS_CN
+# {2,12} cap truncates a long compound noun mid-word when a leading quantifier
+# eats the budget: 所述一个或更多个便携式手持控制器 → 一个或更多个便携式手持控
+# (CN109171977A c1, the 制器 cluster). The quantifier is stripped by normalize
+# anyway, so it should NOT count against the noun's length budget. Detect a
+# leading quantifier and restore exactly the budget it consumed.
+_LEADING_QUANTIFIER_RE_CN = re.compile(
+    r"^(?:一个或更多个|一个或多个|至少一个|或更多个|或多个|复数个|多个|数个|两个|一个|复数|一种|一对)"
+)
+
+
 def _extend_ying_compound_cn(
     raw_noun: str, raw_noun_end: int, claim_text: str
 ) -> tuple[str, int]:
@@ -4084,6 +4095,23 @@ def check_antecedent_basis_cn(
             raw_noun, raw_noun_end = _extend_ying_compound_cn(
                 raw_noun, raw_noun_end, claim.text
             )
+
+            # R49 (2026-06-27): leading-quantifier cap-truncation. Restore the
+            # {2,12} budget a leading quantifier consumed so a long compound
+            # (一个或更多个便携式手持控制器) isn't cut mid-word at the cap.
+            if (
+                len(raw_noun) >= 12
+                and raw_noun_end < len(claim.text)
+                and _LEADING_QUANTIFIER_RE_CN.match(raw_noun)
+            ):
+                ext_m = _NOUN_EXT_RE_CN.match(claim.text, raw_noun_end)
+                if ext_m:
+                    q = _LEADING_QUANTIFIER_RE_CN.match(raw_noun).group(0)
+                    room = (12 + len(q)) - len(raw_noun)
+                    if room > 0:
+                        added = ext_m.group()[:room]
+                        raw_noun = raw_noun + added
+                        raw_noun_end += len(added)
 
             # R66 (revised 2026-05-05): TW parity — state-modifier capture
             # extension. When raw_noun ends in 状/形 and `的<head>` follows,
