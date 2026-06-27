@@ -2007,6 +2007,70 @@ def _extend_neng_compound_tw(
     return raw_noun, raw_noun_end
 
 
+# R19 (2026-06-27): 時 / 應 compound capture extensions — Traditional
+# mirror of CN R47 (_extend_shi_compound_cn). _NOUN_CHARS (TW) excludes
+# 時 to stop the `於X時` when-clause over-capture and 應 to stop the
+# modal 應該/應當/應力 over-capture, but those exclusions truncate
+# timer/clock/period compound nouns (定時器→定, 時間/時序/時段) and the
+# 效應器/反應器/感應器 (effector/reactor/sensor) class (末端效應器→末端效,
+# the 12-instance `應器` cluster surfaced by asymmetry_probe.py). Both are
+# FN-safe follow-gates: a when-clause 時 / modal 應 is never followed by
+# these noun suffixes.
+_SHI_NOUN_SUFFIXES_TW = ("器", "鐘", "序", "隙", "刻", "延", "段", "間")
+
+
+def _extend_shi_compound_tw(
+    raw_noun: str, raw_noun_end: int, claim_text: str
+) -> tuple[str, int]:
+    """Extend a noun truncated at the excluded 時 char when 時 forms a
+    timer/clock/period compound (定時器/時鐘/時序/時間…)."""
+    if not raw_noun:
+        return raw_noun, raw_noun_end
+    if raw_noun_end >= len(claim_text) or claim_text[raw_noun_end] != "時":
+        return raw_noun, raw_noun_end
+    if claim_text[raw_noun_end + 1: raw_noun_end + 2] not in _SHI_NOUN_SUFFIXES_TW:
+        return raw_noun, raw_noun_end
+    raw_noun = raw_noun + "時"
+    raw_noun_end += 1
+    if raw_noun_end < len(claim_text):
+        ext_m = _NOUN_EXT_RE_TW.match(claim_text, raw_noun_end)
+        if ext_m:
+            extra = ext_m.group()
+            room = 12 - len(raw_noun)
+            if room > 0:
+                added = extra[:room]
+                raw_noun = raw_noun + added
+                raw_noun_end += len(added)
+    return raw_noun, raw_noun_end
+
+
+def _extend_ying_compound_tw(
+    raw_noun: str, raw_noun_end: int, claim_text: str
+) -> tuple[str, int]:
+    """Extend a noun truncated at the excluded 應 char when 應 forms an
+    X應器 effector/reactor/sensor compound (末端效應器/反應器/感應器). Gated
+    on the follow-char being 器 — modal 應 (應該/應當/應力) is never followed
+    by 器."""
+    if not raw_noun:
+        return raw_noun, raw_noun_end
+    if raw_noun_end >= len(claim_text) or claim_text[raw_noun_end] != "應":
+        return raw_noun, raw_noun_end
+    if claim_text[raw_noun_end + 1: raw_noun_end + 2] != "器":
+        return raw_noun, raw_noun_end
+    raw_noun = raw_noun + "應"
+    raw_noun_end += 1
+    if raw_noun_end < len(claim_text):
+        ext_m = _NOUN_EXT_RE_TW.match(claim_text, raw_noun_end)
+        if ext_m:
+            extra = ext_m.group()
+            room = 12 - len(raw_noun)
+            if room > 0:
+                added = extra[:room]
+                raw_noun = raw_noun + added
+                raw_noun_end += len(added)
+    return raw_noun, raw_noun_end
+
+
 # R66 (revised 2026-05-05): state-modifier capture extension.
 #
 # When walker captures `前述<X>` and X is a pure state-modifier
@@ -5538,6 +5602,15 @@ def check_antecedent_basis(
             # rationale. No-op when raw_noun's last char isn't a precursor
             # (preserves auxiliary-verb 能 behavior for `<X>能<verb>`).
             raw_noun, raw_noun_end = _extend_neng_compound_tw(
+                raw_noun, raw_noun_end, claim.text
+            )
+
+            # R19 (2026-06-27): mid-時 timer/clock + mid-應 effector/reactor
+            # compound extensions (CN R47 mirror; 定時器→定 / 末端效應器→末端效).
+            raw_noun, raw_noun_end = _extend_shi_compound_tw(
+                raw_noun, raw_noun_end, claim.text
+            )
+            raw_noun, raw_noun_end = _extend_ying_compound_tw(
                 raw_noun, raw_noun_end, claim.text
             )
 

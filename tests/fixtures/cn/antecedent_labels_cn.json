@@ -1,12 +1,12 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 46,
+    "current_round": 47,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
-    "total_labeled": 1511,
-    "real_findings": 1506,
+    "total_labeled": 1517,
+    "real_findings": 1517,
     "synthetic_findings": 3,
     "key_format": "(fixture, claim_id, term, reference_form) tuple — parity with TW schema v11. ADR-107 tuple dedup is handled inside the walker, not here.",
     "categories": [
@@ -166,9 +166,17 @@
         "user_attested_issues": [],
         "fixtures_silenced": 0,
         "shipped_at": "2026-06-26T00:00:00+00:00"
+      },
+      {
+        "round": 47,
+        "name": "r47_shi_compound_truncation_extension",
+        "description": "ADR-159 normalization-asymmetry probe (truncation/under-capture class). _NOUN_CHARS_CN excludes 时 (to stop the 在X时 when-clause over-capture) but truncates timer/clock/period compound nouns mid-word: 第一定时器→第一定 (CN115701183B c13), 录入时间项→录入, 第一起始时刻→第一起始. Added _extend_shi_compound_cn (mirror of _extend_neng_compound_cn): when a captured noun ends right before 时 and 时 is followed by a timer/clock/period suffix (器/钟/序/隙/刻/延/段/间), extend through the compound + greedy noun continuation. FN-safe by the follow-gate (a when-clause 时 is never followed by these noun suffixes). validate_fix silenced_walker_fp=93 / silenced_legit=0 (6 corrections.json entries: 4 pure-FP 起始/有效/预设/空白, 3 shift dual-labels 初始时间/最终时间/加热时间). phase8c protect_violations=0; 7 unresolved_removed (all protect:false FPs: 第N起始 cross_branch_sibling + 录入 coverage_gap, intros verified to exist bare) + 5 unresolved_new (第N起始时刻 shifts) reconciled here.",
+        "user_attested_issues": [],
+        "fixtures_silenced": 7,
+        "shipped_at": "2026-06-27T00:00:00+00:00"
       }
     ],
-    "last_updated": "2026-06-11T11:58:29.220952+00:00",
+    "last_updated": "2026-06-27T03:29:09.626002+00:00",
     "category_counts": {
       "unclassified": 1059,
       "miss_intro.coverage_gap": 250,
@@ -4593,9 +4601,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R47 时-compound truncation fix: reference truncated at excluded 时 (起始时刻/录入时间项); resolves or shifts to the fuller compound.",
+      "resolved_by": "round_47_shi_compound_truncation",
+      "round": 47
     },
     {
       "fixture": "CN115485995B",
@@ -4641,9 +4649,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R47 时-compound truncation fix: reference truncated at excluded 时 (起始时刻/录入时间项); resolves or shifts to the fuller compound.",
+      "resolved_by": "round_47_shi_compound_truncation",
+      "round": 47
     },
     {
       "fixture": "CN115485995B",
@@ -6333,9 +6341,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R47 时-compound truncation fix: reference truncated at excluded 时 (起始时刻/录入时间项); resolves or shifts to the fuller compound.",
+      "resolved_by": "round_47_shi_compound_truncation",
+      "round": 47
     },
     {
       "fixture": "CN115485995B",
@@ -8421,9 +8429,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R47 时-compound truncation fix: reference truncated at excluded 时 (起始时刻/录入时间项); resolves or shifts to the fuller compound.",
+      "resolved_by": "round_47_shi_compound_truncation",
+      "round": 47
     },
     {
       "fixture": "CN115485995B",
@@ -10257,9 +10265,9 @@
       "category": "walker_fp.cross_branch_sibling",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R47 时-compound truncation fix: reference truncated at excluded 时 (起始时刻/录入时间项); resolves or shifts to the fuller compound.",
+      "resolved_by": "round_47_shi_compound_truncation",
+      "round": 47
     },
     {
       "fixture": "CN115485995B",
@@ -10989,9 +10997,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R47 时-compound truncation fix: reference truncated at excluded 时 (起始时刻/录入时间项); resolves or shifts to the fuller compound.",
+      "resolved_by": "round_47_shi_compound_truncation",
+      "round": 47
     },
     {
       "fixture": "CN115952274B",
@@ -12201,9 +12209,9 @@
       "category": "miss_intro.coverage_gap",
       "protect": false,
       "confidence": "seed",
-      "notes": "Stage 3 seed — awaiting Stage 4 classification.",
-      "resolved_by": null,
-      "round": 0
+      "notes": "Stage 3 seed — awaiting Stage 4 classification. | R47 时-compound truncation fix: reference truncated at excluded 时 (起始时刻/录入时间项); resolves or shifts to the fuller compound.",
+      "resolved_by": "round_47_shi_compound_truncation",
+      "round": 47
     },
     {
       "fixture": "CN115952274B",
@@ -18247,6 +18255,66 @@
       "notes": "CN112271269B c10 intro shape: 位于所述量子点本体表面的交联网状结构 — relative-clause 的 with ref-prefixed possessor inside the chunk. F10 的NOUN extractor expected to cover (结构 is a component-suffix tail) but does not fire here; investigate in a future CN walker round. The upcoming CN bare-noun rescue (R35 mirror of TW R7) does NOT cover this case — its possessive guard rejects 的-headed occurrences (mirrors F10 precedent for non-component nouns).",
       "resolved_by": "r37_possessive_introduction",
       "round": 37
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 33,
+      "term": "第四起始时刻",
+      "reference_form": "所述第四起始时刻",
+      "category": "walker_fp.cross_branch_sibling",
+      "protect": false,
+      "confidence": "high",
+      "notes": "R47 时-compound shift: 起始时刻 introduced bare elsewhere (在第一起始时刻之后…) → FP re-fires under the corrected fuller term. ADR-111 dual-label.",
+      "resolved_by": "round_47_shi_compound_truncation",
+      "round": 47
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 34,
+      "term": "第一起始时刻",
+      "reference_form": "所述第一起始时刻",
+      "category": "miss_intro.coverage_gap",
+      "protect": false,
+      "confidence": "high",
+      "notes": "R47 时-compound shift: 起始时刻 introduced bare elsewhere (在第一起始时刻之后…) → FP re-fires under the corrected fuller term. ADR-111 dual-label.",
+      "resolved_by": "round_47_shi_compound_truncation",
+      "round": 47
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 71,
+      "term": "第四起始时刻",
+      "reference_form": "所述第四起始时刻",
+      "category": "walker_fp.cross_branch_sibling",
+      "protect": false,
+      "confidence": "high",
+      "notes": "R47 时-compound shift: 起始时刻 introduced bare elsewhere (在第一起始时刻之后…) → FP re-fires under the corrected fuller term. ADR-111 dual-label.",
+      "resolved_by": "round_47_shi_compound_truncation",
+      "round": 47
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 112,
+      "term": "第四起始时刻",
+      "reference_form": "所述第四起始时刻",
+      "category": "walker_fp.cross_branch_sibling",
+      "protect": false,
+      "confidence": "high",
+      "notes": "R47 时-compound shift: 起始时刻 introduced bare elsewhere (在第一起始时刻之后…) → FP re-fires under the corrected fuller term. ADR-111 dual-label.",
+      "resolved_by": "round_47_shi_compound_truncation",
+      "round": 47
+    },
+    {
+      "fixture": "CN115485995B",
+      "claim_id": 150,
+      "term": "第四起始时刻",
+      "reference_form": "所述第四起始时刻",
+      "category": "walker_fp.cross_branch_sibling",
+      "protect": false,
+      "confidence": "high",
+      "notes": "R47 时-compound shift: 起始时刻 introduced bare elsewhere (在第一起始时刻之后…) → FP re-fires under the corrected fuller term. ADR-111 dual-label.",
+      "resolved_by": "round_47_shi_compound_truncation",
+      "round": 47
     }
   ]
 }

@@ -1325,6 +1325,47 @@ def _extend_neng_compound_cn(
                 raw_noun_end += len(added)
     return raw_noun, raw_noun_end
 
+# R47 (2026-06-27): 时-compound capture extension (parity with
+# _extend_neng_compound_cn). _NOUN_CHARS_CN excludes 时 to stop the
+# `在X时` when-clause over-capture, but that truncates timer/clock compound
+# nouns mid-word: 定时器→定, 第一定时器→第一定 (CN115701183B c13), 计时器,
+# 时钟/时序/时隙/时段/时刻/时延/时间. A when-clause 时 is ALWAYS followed by
+# punctuation or a verb/connective (，。；或则…), NEVER by a timer/clock/period
+# noun suffix — so gating the extension on the follow-char being such a suffix
+# is FN-safe (mirrors the 能量/能源 follow-gate). The truncation class was
+# surfaced by the normalization-asymmetry probe (asymmetry_probe.py): term
+# 第一定 vs did_you_mean 第一定时器 — the intro is right there, only the
+# reference truncated → FN-safe under-capture repair.
+_SHI_NOUN_SUFFIXES_CN = ("器", "钟", "序", "隙", "刻", "延", "段", "间")
+
+
+def _extend_shi_compound_cn(
+    raw_noun: str, raw_noun_end: int, claim_text: str
+) -> tuple[str, int]:
+    """Extend a noun truncated at the excluded 时 char when 时 forms a
+    timer/clock/period compound (定时器/时钟/时序/时间…). FN-safe: a when-clause
+    时 is never followed by these noun suffixes."""
+    if not raw_noun:
+        return raw_noun, raw_noun_end
+    if raw_noun_end >= len(claim_text) or claim_text[raw_noun_end] != "时":
+        return raw_noun, raw_noun_end
+    follow = claim_text[raw_noun_end + 1: raw_noun_end + 2]
+    if follow not in _SHI_NOUN_SUFFIXES_CN:
+        return raw_noun, raw_noun_end
+    raw_noun = raw_noun + "时"
+    raw_noun_end += 1
+    if raw_noun_end < len(claim_text):
+        ext_m = _NOUN_EXT_RE_CN.match(claim_text, raw_noun_end)
+        if ext_m:
+            extra = ext_m.group()
+            room = 12 - len(raw_noun)
+            if room > 0:
+                added = extra[:room]
+                raw_noun = raw_noun + added
+                raw_noun_end += len(added)
+    return raw_noun, raw_noun_end
+
+
 # R66 (revised 2026-05-05) TW parity: state-modifier capture extension.
 # Mirror of TW R66 capture-time fix — gated on Simplified state suffixes
 # 状/形. When raw_noun ends in such a suffix and `的<head>` follows,
@@ -3985,6 +4026,12 @@ def check_antecedent_basis_cn(
 
             # R68d (2026-05-06) TW parity: mid-能 noun extension.
             raw_noun, raw_noun_end = _extend_neng_compound_cn(
+                raw_noun, raw_noun_end, claim.text
+            )
+
+            # R47 (2026-06-27): mid-时 timer/clock compound extension
+            # (定时器→第一定 truncation, CN115701183B c13). FN-safe follow-gate.
+            raw_noun, raw_noun_end = _extend_shi_compound_cn(
                 raw_noun, raw_noun_end, claim.text
             )
 
