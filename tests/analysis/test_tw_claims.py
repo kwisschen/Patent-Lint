@@ -21,7 +21,34 @@ from patentlint.analysis.tw_claims import (
     check_title_subject_match,
     check_transition_phrase,
 )
+from patentlint.analysis.tw_claims import (
+    _extend_shi_compound_tw,
+    _extend_ying_compound_tw,
+)
 from patentlint.models import Claim, SymbolEntry, TwPatentDocument, TwPatentType
+
+
+class TestExtendShiYingCompoundTw:
+    """R19 時/應 compound follow-gates — timer/clock + effector/reactor nouns
+    truncated by the _NOUN_CHARS 時/應 exclusions (定時器→定, 終端效應器→終端效).
+    Traditional mirror of CN R47."""
+
+    def test_timer_compound_reextended(self):
+        assert _extend_shi_compound_tw("第一定", 3, "第一定時器，該第一定時器") == (
+            "第一定時器", 5
+        )
+
+    def test_when_clause_shi_not_extended(self):
+        # 於X時， — 時 followed by a comma, not a noun suffix → unchanged.
+        assert _extend_shi_compound_tw("偵測", 2, "偵測時，觸發啟動") == ("偵測", 2)
+
+    def test_effector_compound_reextended(self):
+        noun, _ = _extend_ying_compound_tw("終端效", 3, "終端效應器，相對於")
+        assert noun == "終端效應器"
+
+    def test_modal_ying_not_extended(self):
+        # 應該/應力 — 應 not followed by 器 → the modal guard is preserved.
+        assert _extend_ying_compound_tw("系統", 2, "系統應該啟動") == ("系統", 2)
 
 
 def _make_doc(**kwargs) -> TwPatentDocument:
