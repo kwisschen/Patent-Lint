@@ -2016,7 +2016,7 @@ def _extend_neng_compound_tw(
 # the 12-instance `應器` cluster surfaced by asymmetry_probe.py). Both are
 # FN-safe follow-gates: a when-clause 時 / modal 應 is never followed by
 # these noun suffixes.
-_SHI_NOUN_SUFFIXES_TW = ("器", "鐘", "序", "隙", "刻", "延", "段", "間")
+_SHI_NOUN_SUFFIXES_TW = ("器", "鐘", "序", "隙", "刻", "延", "段", "間", "脈")
 
 
 def _extend_shi_compound_tw(
@@ -2062,8 +2062,12 @@ def _extend_ying_compound_tw(
         return raw_noun, raw_noun_end
     if raw_noun_end >= len(claim_text) or claim_text[raw_noun_end] != "應":
         return raw_noun, raw_noun_end
-    follow_is_qi = claim_text[raw_noun_end + 1: raw_noun_end + 2] == "器"
-    if not follow_is_qi and raw_noun[-1] not in _YING_PRECURSORS_TW:
+    # 器 (device) / 機 (machine) / 者 (agent) — device/agent suffixes that
+    # never follow the modal 應 (應該/應當/應力); X應器 / X應機 / X應者群.
+    follow_is_noun = claim_text[raw_noun_end + 1: raw_noun_end + 2] in (
+        "器", "機", "者",
+    )
+    if not follow_is_noun and raw_noun[-1] not in _YING_PRECURSORS_TW:
         return raw_noun, raw_noun_end
     raw_noun = raw_noun + "應"
     raw_noun_end += 1

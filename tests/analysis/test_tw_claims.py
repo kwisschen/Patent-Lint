@@ -56,6 +56,17 @@ class TestExtendShiYingCompoundTw:
         noun, _ = _extend_ying_compound_tw("去氫反", 3, "去氫反應，溫度為")
         assert noun == "去氫反應"
 
+    def test_clock_pulse_suffix_reextended(self):
+        # R22: 時脈 (clock) — 脈 added to the 時 follow-gate.
+        noun, _ = _extend_shi_compound_tw("關斷", 2, "關斷時脈信號，並且")
+        assert noun.startswith("關斷時脈")
+
+    def test_ying_machine_agent_suffix_reextended(self):
+        # R22: 應機 (machine) / 應者 (agent) — 機/者 added to the 應 follow-gate.
+        assert _extend_ying_compound_tw("域自適", 3, "域自適應機，用於")[0] == (
+            "域自適應機"
+        )
+
 
 def _make_doc(**kwargs) -> TwPatentDocument:
     """Build a TwPatentDocument with sensible defaults."""
