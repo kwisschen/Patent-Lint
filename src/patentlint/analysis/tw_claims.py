@@ -2259,6 +2259,13 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         # bare-noun head already has its intro). Each is FN-guarded by validate_fix
         # (silenced_legit==0); noun-gray verbs held a priori. 塗佈/持有/贊助/開始.
         "塗佈", "持有", "贊助", "開始",
+        # === R21 (2026-06-27) — asymmetry-probe clean action verbs ===
+        # 放置/穿戴 trailing predicate over-capture (the bare-noun head already
+        # has its intro). Each FN-guarded by validate_fix (silenced_legit==0).
+        # 對準 WITHHELD — `所述電連接器的配合方向對準` (TWM675652U c10) strips to
+        # the real missing-antecedent 配合方向 (no bare intro) → FN. Noun-gray
+        # 分配 (allocation) / 插入 (insertion) / 伸長 (伸長率) HELD a priori.
+        "放置", "穿戴",
         # === R32 (2026-05-04) — passive trailing residue ===
         # CN parity (added to _TRAILING_VERB_DENYLIST_CN same round).
         # 被: passive marker. Compound nouns ending in 被 are vanishingly
