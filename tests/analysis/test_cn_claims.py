@@ -38,6 +38,29 @@ class TestExtendNengCompoundCn:
         assert _extend_neng_compound_cn("模块", 2, "模块能控制电流") == ("模块", 2)
 
 
+class TestExtendShiCompoundCn:
+    """R47 时-compound follow-gate — timer/clock/period nouns truncated by
+    the _NOUN_CHARS_CN 时-exclusion (定时器→定, 录入时间项→录入)."""
+
+    def test_timer_compound_reextended(self):
+        # 配置第一定时器，… — comma bounds the compound (real drafting shape).
+        from patentlint.analysis.cn_claims import _extend_shi_compound_cn
+        assert _extend_shi_compound_cn("第一定", 3, "第一定时器，所述第一定时器") == (
+            "第一定时器", 5
+        )
+
+    def test_time_period_compound_reextended(self):
+        from patentlint.analysis.cn_claims import _extend_shi_compound_cn
+        noun, _ = _extend_shi_compound_cn("录入", 2, "录入时间项，从外部库")
+        assert noun == "录入时间项"
+
+    def test_when_clause_shi_not_extended(self):
+        # 在X时， — 时 is followed by a comma/connective, never a noun
+        # suffix → the follow-gate leaves the when-clause boundary intact.
+        from patentlint.analysis.cn_claims import _extend_shi_compound_cn
+        assert _extend_shi_compound_cn("监听", 2, "监听时，触发启动") == ("监听", 2)
+
+
 def _claim(id: int, text: str, independent: bool = True,
            dependencies: list[int] | None = None,
            multiple_dependent: bool = False) -> Claim:
