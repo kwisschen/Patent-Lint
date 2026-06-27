@@ -634,6 +634,9 @@ _STOP_WORDS = (
     # and `prior` lookahead-gated to the relational `prior to` (so the `prior art`
     # noun is untouched). Both surfaced by the asymmetry probe; FN-guarded.
     r"sent|prior(?=\s+to\b)|"
+    # R26 (2026-06-27, asymmetry probe): `removes` 3sg finite verb
+    # (`the second direction removes …`) — no noun sense in claim diction.
+    r"removes|"
     # Issue #136 (2026-06-01): `face` is ambiguous noun/verb — legitimate
     # noun in `terminal face` / `mounting face` / `contact face` etc.
     # but clearly the matrix verb in `the first magnetic bowl face toward
@@ -969,6 +972,13 @@ _POST_NOMINAL_PREDICATIVE_ADJ = frozenset({
     # silencing 8 real `legit` defects — kept out. These remaining words are
     # never head nouns in the trailing position.
     "indicative", "operable", "responsive",
+    # R26 (2026-06-27, asymmetry probe): `conditional` (-al) — post-nominal
+    # predicative adjective never used as a head noun in the trailing position
+    # (`trace enabler conditional`). `operative` WITHHELD — the FN-guard caught
+    # it silencing 2 gold-legit (`amplifier unit operative to amplify`, the
+    # functional `operative to <verb>` clause that carries intro semantics like
+    # `configured to`). FN-guarded (silenced_legit==0).
+    "conditional",
 })
 
 
