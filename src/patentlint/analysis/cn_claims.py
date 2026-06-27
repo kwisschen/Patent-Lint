@@ -1366,6 +1366,50 @@ def _extend_shi_compound_cn(
     return raw_noun, raw_noun_end
 
 
+# R48 (2026-06-27): 应-compound capture extension (Simplified mirror of the
+# TW _extend_ying_compound_tw, R19). _NOUN_CHARS_CN excludes 应 to stop the
+# modal 应该/应当 over-capture, but that truncates reaction/effect/sensor
+# compound nouns mid-word: 晶化反应→晶化反, 水热反应→水热反, 第一反应器→第一反,
+# 效应器→效, 感应线圈→感. UNLIKE 时 (a clean follow-gate), 应 can be terminal
+# (反应) so a follow-char gate misses 反应; instead gate on the PRECURSOR char
+# (the char before 应) being a reaction/effect/sense/response root — those
+# precursors never precede the modal 应该/应当 (反应该/效应当 are not drafting
+# diction). Mirrors the _NENG_PRECURSORS_CN precursor arm. Surfaced by the
+# asymmetry probe (晶化反 vs did_you_mean 晶化反应). Precursor set is
+# CONSERVATIVE — only chars that form an unambiguous NOUN with 应:
+# 反应 (reaction), 效应 (effect), 感应 (induction), 响应 (response). The
+# gray verb/adverb roots 对应/相应 (correspondingly) / 顺应 / 呼应 / 适应 /
+# 供应 are EXCLUDED — `相` over-captured the adverb `执行相应` (CN115952274B
+# c1) in a first attempt; the FN-guard fixture harness caught it.
+_YING_PRECURSORS_CN = ("反", "效", "感", "响")
+
+
+def _extend_ying_compound_cn(
+    raw_noun: str, raw_noun_end: int, claim_text: str
+) -> tuple[str, int]:
+    """Extend a noun truncated at the excluded 应 char when it forms a
+    reaction/effect/sense/response compound (反应/反应器/效应器/感应…). FN-safe:
+    gated on a precursor whitelist that never precedes the modal 应该/应当."""
+    if not raw_noun:
+        return raw_noun, raw_noun_end
+    if raw_noun_end >= len(claim_text) or claim_text[raw_noun_end] != "应":
+        return raw_noun, raw_noun_end
+    if raw_noun[-1] not in _YING_PRECURSORS_CN:
+        return raw_noun, raw_noun_end
+    raw_noun = raw_noun + "应"
+    raw_noun_end += 1
+    if raw_noun_end < len(claim_text):
+        ext_m = _NOUN_EXT_RE_CN.match(claim_text, raw_noun_end)
+        if ext_m:
+            extra = ext_m.group()
+            room = 12 - len(raw_noun)
+            if room > 0:
+                added = extra[:room]
+                raw_noun = raw_noun + added
+                raw_noun_end += len(added)
+    return raw_noun, raw_noun_end
+
+
 # R66 (revised 2026-05-05) TW parity: state-modifier capture extension.
 # Mirror of TW R66 capture-time fix — gated on Simplified state suffixes
 # 状/形. When raw_noun ends in such a suffix and `的<head>` follows,
@@ -4032,6 +4076,12 @@ def check_antecedent_basis_cn(
             # R47 (2026-06-27): mid-时 timer/clock compound extension
             # (定时器→第一定 truncation, CN115701183B c13). FN-safe follow-gate.
             raw_noun, raw_noun_end = _extend_shi_compound_cn(
+                raw_noun, raw_noun_end, claim.text
+            )
+
+            # R48 (2026-06-27): mid-应 reaction/effect compound extension
+            # (反应器→第一反, 晶化反应→晶化反). TW 應 mirror; precursor-gated.
+            raw_noun, raw_noun_end = _extend_ying_compound_cn(
                 raw_noun, raw_noun_end, claim.text
             )
 
