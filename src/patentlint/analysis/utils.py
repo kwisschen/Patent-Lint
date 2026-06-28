@@ -642,6 +642,13 @@ _STOP_WORDS = (
     # `matches`/`failures` are gray, so fire ONLY in the verb-object pattern
     # `<noun> matches/fails the/a/an X` / `fails to`). FN-guarded.
     r"intends|occurs|matches(?=\s+(?:a|an|the)\b)|fails(?=\s+(?:to|a|an|the)\b)|"
+    # R28 (2026-06-27, asymmetry probe): pure 3sg verbs sends/continues +
+    # lookahead-gated `sets(?=\s+(?:a|an|the))` (the noun `data sets` is
+    # preserved). WITHHELD: `results` (`results in` ambiguous — verb vs noun
+    # `the results in the database`, 2 FNs); `remains` (interior `<nodes>
+    # remains available` strips to an un-re-firing `second computing nodes`,
+    # 2 FNs — US10642603B2). FN-guarded.
+    r"sends|continues|sets(?=\s+(?:a|an|the)\b)|"
     # Issue #136 (2026-06-01): `face` is ambiguous noun/verb — legitimate
     # noun in `terminal face` / `mounting face` / `contact face` etc.
     # but clearly the matrix verb in `the first magnetic bowl face toward

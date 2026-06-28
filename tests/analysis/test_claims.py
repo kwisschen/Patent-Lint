@@ -571,6 +571,14 @@ class TestAntecedentBasis:
                    for c in cap("the usage fraction fails to exceed a limit"))
         assert any("metadata tag" in c and "matches" not in c
                    for c in cap("the metadata tag matches the second tag"))
+        # R28: sends/continues (pure verbs); sets gated; results/remains withheld
+        assert any("display area" in c and "continues" not in c
+                   for c in cap("the display area continues to render"))
+        assert any("cloud service application" in c and "sends" not in c
+                   for c in cap("the cloud service application sends a packet"))
+        # `results in` ambiguous → NOT stripped (withheld)
+        assert any("test results" in c
+                   for c in cap("the test results in the database are stored"))
 
     def test_spec_support_shares_passes_correspond_stop_r11(self):
         """R11 cross-CHECK (#192): the spec-support noun-phrase extractor
