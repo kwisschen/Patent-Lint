@@ -649,6 +649,14 @@ _STOP_WORDS = (
     # remains available` strips to an un-re-firing `second computing nodes`,
     # 2 FNs — US10642603B2). FN-guarded.
     r"sends|continues|sets(?=\s+(?:a|an|the)\b)|"
+    # R29 (2026-06-28, asymmetry re-verify): base-form gaps left by the 3sg
+    # `executes`/`reflects` already in this set — plural/coordinate subjects
+    # take the base form (`the executable code execute`, `the certainty score
+    # reflect`). Both are verb-only in claim diction (the nouns are
+    # `execution`/`executable` and `reflection`), so no lookahead gate is
+    # needed; the walker's own did-you-mean already names the clean head noun
+    # (`executable code` / `certainty score`). FN-guarded.
+    r"execute|reflect|"
     # Issue #136 (2026-06-01): `face` is ambiguous noun/verb — legitimate
     # noun in `terminal face` / `mounting face` / `contact face` etc.
     # but clearly the matrix verb in `the first magnetic bowl face toward
