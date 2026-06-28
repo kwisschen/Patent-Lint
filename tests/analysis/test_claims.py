@@ -553,6 +553,25 @@ class TestAntecedentBasis:
         assert any("operative" in c
                    for c in cap("the amplifier unit operative to amplify"))
 
+    def test_intends_occurs_matches_fails_stops_r27(self):
+        """R27 (asymmetry probe): `intends`/`occurs` (pure verbs) always stop;
+        `matches`/`fails` stop ONLY in the verb-object lookahead pattern, so the
+        noun senses (`the matches`, `the failures`) are preserved."""
+        from patentlint.analysis.utils import _DEFINITE_REF, clean_noun_phrase
+
+        def cap(text):
+            return [clean_noun_phrase(m.group("noun").strip())
+                    for m in _DEFINITE_REF.finditer(text)]
+
+        assert any("first customer" in c and "intends" not in c
+                   for c in cap("the first customer intends to buy"))
+        assert any("serosal tissue" in c and "occurs" not in c
+                   for c in cap("the serosal tissue occurs at a site"))
+        assert any("usage fraction" in c and "fails" not in c
+                   for c in cap("the usage fraction fails to exceed a limit"))
+        assert any("metadata tag" in c and "matches" not in c
+                   for c in cap("the metadata tag matches the second tag"))
+
     def test_spec_support_shares_passes_correspond_stop_r11(self):
         """R11 cross-CHECK (#192): the spec-support noun-phrase extractor
         shares `_NP_CORE`/`_STOP_WORDS`, so the same `<arm> passes`

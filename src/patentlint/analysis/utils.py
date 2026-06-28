@@ -637,6 +637,11 @@ _STOP_WORDS = (
     # R26 (2026-06-27, asymmetry probe): `removes` 3sg finite verb
     # (`the second direction removes …`) — no noun sense in claim diction.
     r"removes|"
+    # R27 (2026-06-27, asymmetry probe): `intends`/`occurs` (pure 3sg verbs,
+    # no noun sense) + lookahead-gated `matches`/`fails` (noun senses
+    # `matches`/`failures` are gray, so fire ONLY in the verb-object pattern
+    # `<noun> matches/fails the/a/an X` / `fails to`). FN-guarded.
+    r"intends|occurs|matches(?=\s+(?:a|an|the)\b)|fails(?=\s+(?:to|a|an|the)\b)|"
     # Issue #136 (2026-06-01): `face` is ambiguous noun/verb — legitimate
     # noun in `terminal face` / `mounting face` / `contact face` etc.
     # but clearly the matrix verb in `the first magnetic bowl face toward
