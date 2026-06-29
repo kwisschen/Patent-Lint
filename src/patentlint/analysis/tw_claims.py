@@ -2530,6 +2530,21 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         # that held 關聯/結合; cf. 垂直, which was cleared only because 垂直度
         # carries 度). Ship the morphologically-clean verb only.
         "附接",
+        # === 2026-06-29 (report #301) — verb-clause over-capture ===
+        # 交錯配置 ("interleaved arrangement") — the predicate of
+        # `複數條延伸部交錯配置以界定…`; the reference 該複數條延伸部
+        # over-ran into the arrangement verb-clause. 交錯配置 is a 4-char
+        # verb-phrase, never an element-name terminus; the bare 配置
+        # (noun-gray, 處理器配置) stays HELD — only the specific 交錯配置
+        # compound strips. Pairs with the 複數條 measure-word reference
+        # strip below (the head noun is 延伸部).
+        "交錯配置",
+        # 低 — verb-fragment of the comparison predicate 低於 ("lower
+        # than"), stranded when the regex stops before 於 (報告 #309
+        # `該電容電壓低`). Must be in BOTH this denylist (so the strip
+        # loop tries it) AND _NOUNLIKE_SINGLE_CHAR_SUFFIXES (residual ≥ 3
+        # guard) — the exact dual-registration pattern of 位 (位於).
+        "低",
     ),
     key=len,
     reverse=True,
@@ -2662,7 +2677,16 @@ _NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset(
      #     32 TW walker_fp findings end in 自 (`<noun>各自`, `<noun>來自`).
      #     Default residual ≥ 3 protects 3-char compounds. Note 各自
      #     residue further requires 各 strip downstream (not yet covered).
-     "自"}
+     "自",
+     # 低: verb-fragment of the comparison predicate 低於 ("lower than"),
+     #     stranded when the noun-class regex stops before 於 (in the
+     #     _NOUN_CHARS exclusion). Direct mirror of 位 (位於) above.
+     #     Report #309 (`該電容電壓低` from `…電容電壓低於一電容啟動電壓`
+     #     → 電容電壓, residual 4 ≥ 3). Compound nouns ending in 低
+     #     (最低/偏低/降低/高低) are 2-char with residual 1 < 3 → protected
+     #     by the default guard. 低於 is a comparison verb in TIPO drafting,
+     #     never a noun terminus (mirror of 大於/小於 in spec-support).
+     "低"}
 )
 
 # Relaxed-guard subset: members of _NOUNLIKE_SINGLE_CHAR_SUFFIXES that
@@ -2730,6 +2754,15 @@ _LEADING_QUANTIFIER_DENYLIST: tuple[str, ...] = tuple(sorted(
         # 多片式) where the classifier is part of the head; 條-initial nouns
         # (條碼/條紋) are rare enough that the FN-guard cleared 多條.
         "多條",
+        # === 2026-06-29 (report #301) — measure-word reference symmetry ===
+        # R16 (#363) added 複數條/複數道/多道/數條/數道 to the INTRO multi-
+        # quantifier set so `複數條延伸部` introduces the bare noun 延伸部,
+        # but the REFERENCE side only carried 多條 — so `該複數條延伸部`
+        # normalized to `條延伸部` (measure word leaked) and never matched
+        # its own in-claim intro 延伸部 (symmetry-audit gap). Mirror the
+        # R16 set here. Same FN-safety as 多條: an ambiguous 複數條碼 leaves
+        # a 1-char residual that the residual guard rejects downstream.
+        "複數條", "複數道", "數條", "數道", "多道",
         "至少兩個", "至少兩", "兩個", "兩種",
     ),
     key=len,
