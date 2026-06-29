@@ -657,6 +657,18 @@ _STOP_WORDS = (
     # needed; the walker's own did-you-mean already names the clean head noun
     # (`executable code` / `certainty score`). FN-guarded.
     r"execute|reflect|"
+    # R30 (2026-06-29, report #307/#308): battery/power-domain matrix verbs
+    # `charges`/`discharges` over-captured into the antecedent reference
+    # (`the energy storage unit selectively charges`, `the energy storage
+    # module discharges`). Both have noun senses (electric charges, the
+    # discharges), so they fire ONLY in the verb-coordination pattern —
+    # `charges` solely before `or` (the `charges or discharges` battery
+    # pair; `charges from/to the supplier/account` stays a noun),
+    # `discharges` before or/to/from (rarely a noun). Never the `the
+    # charges the user pays` reading. `selectively` is already an
+    # _ADVERB_STOPS member so the residue strips to the clean head.
+    # FN-guarded (examiner 0, corpus silenced_legit 0).
+    r"charges(?=\s+or\b)|discharges(?=\s+(?:or|to|from)\b)|"
     # Issue #136 (2026-06-01): `face` is ambiguous noun/verb — legitimate
     # noun in `terminal face` / `mounting face` / `contact face` etc.
     # but clearly the matrix verb in `the first magnetic bowl face toward
