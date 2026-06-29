@@ -1962,6 +1962,35 @@ _NOUN_EXT_RE_TW = re.compile(
 )
 
 
+# Content verbs that follow the adverbial 部分 ("partly V"). When a captured
+# reference ending in 部分 is immediately followed by one of these in the claim
+# text, the 部分 is the adverb, not a "portion" noun → trim it. (#292; mirror of
+# tw_spec_support._BUFEN_FOLLOWING_VERBS.)
+_BUFEN_FOLLOWING_VERBS_TW: tuple[str, ...] = (
+    "延伸", "延展", "覆蓋", "包覆", "包圍", "圍繞", "環繞", "突出", "凸出",
+    "伸出", "重疊", "交疊", "暴露", "外露", "露出", "貼附", "抵接", "抵靠",
+    "嵌入", "穿過", "穿設", "凹陷", "凸起", "顯露", "夾持", "插入",
+)
+
+
+def _trim_bufen_before_verb_tw(
+    raw_noun: str, raw_noun_end: int, claim_text: str
+) -> tuple[str, int]:
+    """Trim a trailing adverbial 部分 when the claim continues with a verb.
+
+    `該等延伸部部分延伸至…` → the reference captured `延伸部部分` is `延伸部`
+    (head) + adverbial `部分` ("partly") before the verb `延伸`. FN-safe by the
+    verb-gate: a genuine `X部分` portion-element (第二外殼部分, 最外側部分) is
+    followed by a particle / noun / clause-end, not a verb. (#292.)
+    """
+    if not raw_noun.endswith("部分") or len(raw_noun) <= 3:
+        return raw_noun, raw_noun_end
+    after = claim_text[raw_noun_end:]
+    if any(after.startswith(v) for v in _BUFEN_FOLLOWING_VERBS_TW):
+        return raw_noun[:-2], raw_noun_end - 2
+    return raw_noun, raw_noun_end
+
+
 def _extend_neng_compound_tw(
     raw_noun: str, raw_noun_end: int, claim_text: str
 ) -> tuple[str, int]:
@@ -5663,6 +5692,14 @@ def check_antecedent_basis(
                 raw_noun, raw_noun_end, claim.text
             )
             raw_noun, raw_noun_end = _extend_ying_compound_tw(
+                raw_noun, raw_noun_end, claim.text
+            )
+
+            # 部分 verb-gate (#292): trim a trailing adverbial 部分 when the
+            # claim continues with a content verb (部分延伸 = "partly extends").
+            # Inverse of the extend helpers — a real X部分 portion-element is
+            # followed by a particle/clause-end, not a verb, so it survives.
+            raw_noun, raw_noun_end = _trim_bufen_before_verb_tw(
                 raw_noun, raw_noun_end, claim.text
             )
 
