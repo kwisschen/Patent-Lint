@@ -221,6 +221,23 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         "共同地",
         "不平行",
         "緊靠",
+        # 2026-06-29 batch (super-sonic transducer draft, report #302/#303/
+        # #304). Trailing tails the walker over-captured past the head noun
+        # in 透過一<noun>電性連接 / X與Y之間 clauses:
+        # - `電性` — the leading bound morpheme of the verb phrase 電性連接
+        #   ("electrically connect") / 電性耦接; the walker stops at 電性
+        #   before the excluded 連 (`導電膠體電性` → `導電膠體`,
+        #   `另一導電膠體電性` → `另一導電膠體`). 電性 is never a noun-phrase
+        #   terminus in TIPO drafting — a conductivity noun is 導電性
+        #   (導電+性), not a bare trailing 電性. Anti-corpus: zero
+        #   spec_support_baseline phrases end in or contain 電性.
+        # - `之間` — locative postposition ("between"); `第二表面之間` →
+        #   `第二表面`. Never a noun terminus. Anti-corpus clean.
+        # `部分` (#305 `延伸部部分`) DEFERRED — noun-gray (a real `X部分`
+        # portion-element would FN-drop); needs a verb-followed gate the
+        # captured phrase can't supply.
+        "電性",
+        "之間",
     ),
     key=len,
     reverse=True,
