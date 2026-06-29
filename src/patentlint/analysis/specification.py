@@ -507,6 +507,21 @@ def _d1_extract_ordinal_and_head(phrase: str) -> tuple[str, str]:
     # can be singularized after extraction, collapsing it onto the
     # singular-form occurrence of the same element. Issue #74.
     has_plurality = "plurality" in words
+    # Leading-CLAUSE jump (issue #306/#310): the leading-function-word strip
+    # below only removes tokens it enumerates, so an unrecognized verb/clause
+    # ahead of the element ("normalize the difference D2", "amount corresponds
+    # to the difference D2", "flowing through the filter inductor L1") blocks it
+    # and the whole clause is captured as the name — making one numeral look
+    # like it labels inconsistent elements. When an article (the/a/an/said) is
+    # present, the element name is the noun phrase AFTER THE LAST article; the
+    # text before it is sentential glue. FN-SAFE for D1 conflict detection: any
+    # genuine distinguishing modifier sits AFTER the article ("the input valve"
+    # vs "the output valve" keep input/output and stay distinct), so real
+    # §608.01(g) conflicts survive — only the leading clause is dropped.
+    _articles = ("the", "a", "an", "said")
+    _last_art = max((i for i, w in enumerate(words) if w in _articles), default=-1)
+    if 0 <= _last_art < len(words) - 1:
+        words = words[_last_art + 1:]
     # Strip leading articles/prepositions/verbs (NOT ordinals yet)
     while words and (
         words[0] in _D1_LEADING_FUNCTION_WORDS
