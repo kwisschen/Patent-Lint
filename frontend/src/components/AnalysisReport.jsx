@@ -375,7 +375,10 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
         </div>
       )}
       <div style={cascadeDelay(4)}>
-        <TriagePanel data={consolidatedData} />
+        {/* Key by draft identity so the per-session Review→Fix promotions in
+            TriagePanel (index-keyed) reset on a new upload or jurisdiction
+            switch — stale indices would otherwise mis-map onto new findings. */}
+        <TriagePanel key={`triage-${filename || 'draft'}-${consolidatedData.jurisdiction}`} data={consolidatedData} />
       </div>
 
       <div className="space-y-3" style={cascadeDelay(5)}>
