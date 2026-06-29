@@ -151,6 +151,15 @@ _CN_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
     (
         # Spatial
         "之间", "之上", "之下", "之内", "之外",
+        # 2026-06-29 cross-jurisdiction parity with TW spec-support
+        # (TW reports #302/#303 added 電性): 电性 is the bound morpheme
+        # leading the verb phrase 电性连接 ("electrically connect") /
+        # 电性耦接; the walker stops at 电性 before the excluded 连
+        # (导电胶体电性 → 导电胶体). Never a noun terminus in CNIPA
+        # drafting — conductivity is 导电性 (导电+性), not bare 电性.
+        # Generalizing now (no CN report yet; zero CN corpus findings
+        # contain 电性, so additive-only) per the standing CN↔TW mirror.
+        "电性",
         # Locative copulas
         "位于", "设于", "置于", "处于",
         # Action verbs (manufacturing / construction)
