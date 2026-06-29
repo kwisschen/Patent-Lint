@@ -348,8 +348,8 @@
   "triage": {
     "title": "Prioritäten-Übersicht",
     "amend": "Korrektur erforderlich",
-    "amendEmptyClean": "Keine Punkte zur Korrektur oder Prüfung markiert.",
-    "amendEmptyReview": "Nichts wurde automatisch als korrekturbedürftig markiert — die unten unter „Prüfung nötig“ aufgeführten Punkte können dennoch eine Korrektur erfordern. Mit „Als Korrektur einstufen“ hierher verschieben.",
+    "amendEmptyClean": "Nichts zur Korrektur oder Prüfung markiert.",
+    "amendEmptyReview": "Keine Korrekturen markiert — siehe „Prüfung nötig“ unten.",
     "promote": "Als Korrektur einstufen",
     "promoteTitle": "Diesen Punkt nach „Korrektur erforderlich“ verschieben",
     "demote": "Zur Prüfung verschieben",

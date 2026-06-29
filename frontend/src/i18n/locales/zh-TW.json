@@ -348,8 +348,8 @@
   "triage": {
     "title": "優先處理摘要",
     "amend": "需修正",
-    "amendEmptyClean": "沒有標記為需修正或需檢視的項目。",
-    "amendEmptyReview": "沒有自動標記為需修正的項目；但下方「需檢視」中的項目仍可能需要修正。可使用「標為需修正」將其移至此處。",
+    "amendEmptyClean": "沒有需修正或需檢視的項目。",
+    "amendEmptyReview": "沒有需修正的項目；請查看下方的「需檢視」。",
     "promote": "標為需修正",
     "promoteTitle": "將此項目移至「需修正」",
     "demote": "移回需檢視",

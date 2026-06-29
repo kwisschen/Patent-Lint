@@ -348,8 +348,8 @@
   "triage": {
     "title": "Priority Summary",
     "amend": "Needs Fixing",
-    "amendEmptyClean": "No items were flagged for fixing or review.",
-    "amendEmptyReview": "Nothing was auto-flagged as a required fix — but the items under Needs Review below may still need one. Use “Treat as fix” to move any up here.",
+    "amendEmptyClean": "Nothing flagged to fix or review.",
+    "amendEmptyReview": "No required fixes flagged — see Needs Review below.",
     "promote": "Treat as fix",
     "promoteTitle": "Move this item up to Needs Fixing",
     "demote": "Move to review",

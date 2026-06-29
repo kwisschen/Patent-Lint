@@ -115,8 +115,8 @@ function TriageItem({ check, t, i18n, compact, jurisdiction, canPromote, isPromo
             {t('triage.promotedBadge')}
           </span>
         )}
-        <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-          {jumpTarget && (
+        {jumpTarget && (
+          <div className="mt-1.5">
             <button
               type="button"
               onClick={handleJump}
@@ -128,7 +128,39 @@ function TriageItem({ check, t, i18n, compact, jurisdiction, canPromote, isPromo
               <CornerDownRight className="h-3.5 w-3.5" />
               {t(jumpLabelKey)}
             </button>
-          )}
+          </div>
+        )}
+        {!compact && check.details_params?.flagged_phrases?.items?.length > 0 && (
+          <FlaggedTermList
+            items={check.details_params.flagged_phrases.items}
+            status={check.status}
+            className="mt-0.5"
+          />
+        )}
+        {!compact && Array.isArray(check.details_params?.findings)
+            && check.details_params.findings.length > 3
+            && (check.message_key?.includes("numeralConsistency")
+                || check.message_key?.includes("symbolTableCoverage")) && (
+          <NumeralFindingList
+            findings={check.details_params.findings}
+            status={check.status}
+          />
+        )}
+        {/* Suppress the "see § 112 analysis below" pointer detail when the
+            jump pill already provides that affordance (avoids redundancy). */}
+        {!compact && details && !jumpTarget && (
+          <p className="text-xs text-muted-foreground mt-0.5">
+            {details}
+          </p>
+        )}
+      </div>
+      {/* Right-side action cluster — anchored to the row's right edge (and the
+          bottom on mobile), so the Treat-as-fix / Move-to-review controls sit
+          in a CONSISTENT position regardless of the left section/citation width
+          or the message length. Promote/demote are always visible; the report
+          button keeps its hover-reveal below them. */}
+      {(canPromote || isPromoted || showReport) && (
+        <div className="flex flex-row sm:flex-col items-start sm:items-end gap-1.5 shrink-0">
           {/* Promote a Review item up to Needs Fixing — the user's own triage
               call (a flag we surfaced for review may, on their reading, be a
               real defect). Grade-neutral: PatentLint's deterministic verdict is
@@ -158,55 +190,32 @@ function TriageItem({ check, t, i18n, compact, jurisdiction, canPromote, isPromo
               {t('triage.demote')}
             </button>
           )}
+          {showReport && (
+            <>
+              <Button
+                variant="ghost"
+                size="xs"
+                onClick={handleReport}
+                title={t('feedback.reportProblem')}
+                aria-label={t('feedback.reportProblem')}
+                className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
+              >
+                <MessageSquare />
+                <span className="hidden sm:inline">{t('feedback.report')}</span>
+              </Button>
+              <ReportModal
+                open={reportModalOpen}
+                onOpenChange={setReportModalOpen}
+                checkKey={check.message_key || 'generic'}
+                jurisdiction={jurisdiction || 'unknown'}
+                locale={i18n.language}
+                diagnostics={check.diagnostics || {}}
+                onConfirm={handleAnonymousConfirm}
+                onMailtoFallback={handleMailtoFallback}
+              />
+            </>
+          )}
         </div>
-        {!compact && check.details_params?.flagged_phrases?.items?.length > 0 && (
-          <FlaggedTermList
-            items={check.details_params.flagged_phrases.items}
-            status={check.status}
-            className="mt-0.5"
-          />
-        )}
-        {!compact && Array.isArray(check.details_params?.findings)
-            && check.details_params.findings.length > 3
-            && (check.message_key?.includes("numeralConsistency")
-                || check.message_key?.includes("symbolTableCoverage")) && (
-          <NumeralFindingList
-            findings={check.details_params.findings}
-            status={check.status}
-          />
-        )}
-        {/* Suppress the "see § 112 analysis below" pointer detail when the
-            jump pill already provides that affordance (avoids redundancy). */}
-        {!compact && details && !jumpTarget && (
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {details}
-          </p>
-        )}
-      </div>
-      {showReport && (
-        <>
-          <Button
-            variant="ghost"
-            size="xs"
-            onClick={handleReport}
-            title={t('feedback.reportProblem')}
-            aria-label={t('feedback.reportProblem')}
-            className="shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
-          >
-            <MessageSquare />
-            <span className="hidden sm:inline">{t('feedback.report')}</span>
-          </Button>
-          <ReportModal
-            open={reportModalOpen}
-            onOpenChange={setReportModalOpen}
-            checkKey={check.message_key || 'generic'}
-            jurisdiction={jurisdiction || 'unknown'}
-            locale={i18n.language}
-            diagnostics={check.diagnostics || {}}
-            onConfirm={handleAnonymousConfirm}
-            onMailtoFallback={handleMailtoFallback}
-          />
-        </>
       )}
     </div>
   )
