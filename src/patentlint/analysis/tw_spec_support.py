@@ -233,11 +233,21 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         #   spec_support_baseline phrases end in or contain 電性.
         # - `之間` — locative postposition ("between"); `第二表面之間` →
         #   `第二表面`. Never a noun terminus. Anti-corpus clean.
-        # `部分` (#305 `延伸部部分`) DEFERRED — noun-gray (a real `X部分`
-        # portion-element would FN-drop); needs a verb-followed gate the
-        # captured phrase can't supply.
+        # `部分` (#305 `延伸部部分`) is handled by the verb-gated strip in
+        # _build_inventory (NOT here) — a real `X部分` portion-element would
+        # FN-drop in a blanket trailing strip; the FN-safe discriminator is
+        # the FOLLOWING verb (部分延伸 = "partly extends"), visible only with
+        # claim context.
         "電性",
         "之間",
+        # 2026-06-29 (report #294) — `的<positional-generic>` possessive tail.
+        # `壓電材料層的周邊` → `壓電材料層` (環繞該壓電材料層的周邊 = "surround
+        # the periphery of the piezo layer"; the element is 壓電材料層, 周邊 is
+        # a generic position). 的+{周邊/周圍/外圍/邊緣/周緣/周側} are possessive
+        # + generic-positional nouns — never the claimed element themselves.
+        # Conservative: only the clearly-positional generics (NOT 的表面/的底部
+        # which can be claimed sub-elements). Anti-corpus: 0/77 baseline.
+        "的周邊", "的周圍", "的外圍", "的邊緣", "的周緣", "的周側",
     ),
     key=len,
     reverse=True,
@@ -559,6 +569,36 @@ def _collect_spec_text(doc: TwPatentDocument) -> str:
     return normalize_arabic_ordinal_to_cjk("\n".join(parts))
 
 
+# Content verbs that commonly follow the adverbial 部分 ("partly V"). When a
+# captured span ending in 部分 is immediately followed by one of these in the
+# claim text, the 部分 is the adverb, not a "portion" noun, so the head noun
+# ends before it. Position/motion/formation verbs from TIPO claim diction.
+_BUFEN_FOLLOWING_VERBS: tuple[str, ...] = (
+    "延伸", "延展", "覆蓋", "包覆", "包圍", "圍繞", "環繞", "突出", "凸出",
+    "伸出", "重疊", "交疊", "暴露", "外露", "露出", "貼附", "抵接", "抵靠",
+    "嵌入", "穿過", "穿設", "凹陷", "凸起", "顯露", "夾持", "插入",
+)
+
+
+def _strip_trailing_bufen_before_verb(term: str, claim_text: str) -> str:
+    """Strip a trailing adverbial 部分 when the claim text shows 部分 + verb.
+
+    `延伸部部分延伸至…` → the captured `延伸部部分` is `延伸部` (head) + adverbial
+    `部分` ("partly") before the verb `延伸`. FN-safe by the verb-gate: a genuine
+    `X部分` portion-element (第二外殼部分, 最外側部分) is followed in the claim by a
+    particle / noun / clause-end, not a verb, so it is left intact. (#292/#305.)
+    """
+    if not term or not term.endswith("部分") or len(term) <= 3:
+        return term
+    pos = claim_text.find(term)
+    if pos < 0:
+        return term
+    after = claim_text[pos + len(term):]
+    if any(after.startswith(v) for v in _BUFEN_FOLLOWING_VERBS):
+        return term[:-2]
+    return term
+
+
 def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:
     """Build deduped claim-term inventory from intros across all claims.
 
@@ -584,6 +624,15 @@ def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:
         for orig, norm in extract_introductions_tw(
             claim, suppress_dep_preamble=True
         ):
+            # 部分 verb-gate (#292/#305): an over-capture ending in 部分 that is
+            # immediately FOLLOWED by a content verb in the claim text is the
+            # adverbial 部分 ("partly", e.g. 延伸部部分延伸 = "the extension partly
+            # extends") — strip it to recover the head noun (延伸部). FN-safe by
+            # the verb-gate: a genuine `X部分` portion-element (第二外殼部分,
+            # 最外側部分) is followed by a particle/noun/clause-end, NOT a verb,
+            # so it is untouched (a blanket trailing strip would FN-drop those).
+            orig = _strip_trailing_bufen_before_verb(orig, claim.text)
+            norm = _strip_trailing_bufen_before_verb(norm, claim.text)
             # Apply spec-support normalization (adds preposition +
             # parenthetical-numeral strip over the walker's intro
             # normalization).
