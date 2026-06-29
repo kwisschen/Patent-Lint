@@ -2213,6 +2213,16 @@ def _cn_detect_d1_conflicts(pairs: list[tuple[str, str]]) -> list[dict]:
             continue
 
         canonical_ord, canonical_head = _cn_split_ordinal_key(canonical_name)
+        # Method-step labels (步骤/步驟 + designator, e.g. S7071/S8051) are
+        # 专利法实施细则 §17 / 專利法施行細則 §17 process steps, NOT §19/§22
+        # element reference symbols. The captured "name" is a verb-clause
+        # ending in 步骤/步驟 (可透過步驟 / 分別對步驟) — a step reference,
+        # never an element-symbol naming conflict. Skip the whole numeral
+        # when its canonical name is a step reference. FN-safe: a drawing
+        # element symbol's name never ends in 步骤/步驟. (TW report #284;
+        # CN parity free — shared detector.)
+        if canonical_head.endswith(("步骤", "步驟")):
+            continue
         canonical_chars = _cn_content_chars(canonical_head)
         # Surface-form canonical (ordinal+head joined, no pipe encoding) —
         # used for tail-anchor suppression of strip-residue outliers.
