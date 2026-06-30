@@ -1419,12 +1419,27 @@ _CN_TAIL_MEASUREMENT_UNITS: tuple[str, ...] = tuple(sorted({
 }, key=len, reverse=True))
 
 
+# Single-char 度 (degree — angle/temperature) is a measurement unit, but the
+# unit set above is deliberately multi-char to avoid single-char collisions.
+# 度 needs special handling: `90度` (90 degrees, #312/#313 — captured as a
+# phantom refnum 90 with names 轉動/大致) IS a measurement, but 度 also starts
+# non-unit compounds where it is NOT a unit. Treat digit+度 as a measurement
+# UNLESS 度 is immediately followed by one of these compound-formers.
+_CN_DEGREE_NONUNIT_FOLLOW = frozenset("過过量數数假日盤盘化")
+
+
 def _cn_tail_is_measurement(text: str, pos: int) -> bool:
     """True if the numeral ending at ``pos`` is immediately followed
     (modulo whitespace) by a multi-char CJK measurement unit, making it a
     measurement value rather than a reference numeral."""
     tail = text[pos:pos + 12].lstrip()
-    return any(tail.startswith(u) for u in _CN_TAIL_MEASUREMENT_UNITS)
+    if any(tail.startswith(u) for u in _CN_TAIL_MEASUREMENT_UNITS):
+        return True
+    # 度 (degree): `90度` / `大致90度` / `90度角` → measurement; but `120度過`
+    # (passes), `度量`/`度數`/`度假` → not a unit, leave as a refnum candidate.
+    if tail.startswith("度") and tail[1:2] not in _CN_DEGREE_NONUNIT_FOLLOW:
+        return True
+    return False
 
 
 _CN_INTERIOR_VERB_MARKERS = (
