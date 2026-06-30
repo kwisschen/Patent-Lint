@@ -142,6 +142,25 @@ _US_MARKERS: tuple[str, ...] = (
     "apparatus of claim",
 )
 
+# STRONG US markers — unambiguous statutory / CRM tells that an EPC drafter
+# would never produce. Distinct from the WEAK convention signals above
+# (`method of claim` phrasing + cased `FIG.`), which legitimately appear in
+# EPC drafts (Euro-direct filings off a US priority, varied figure-label
+# casing). Overriding an EXPLICIT EPC selection requires ≥1 strong marker —
+# weak convention signals alone must not flip a deliberate EPC choice to US
+# (#320: an EPC spec was mis-flagged "Looks like a US specification").
+_US_STRONG_MARKERS: tuple[str, ...] = (
+    "uspto",
+    "united states patent and trademark office",
+    "35 u.s.c.",
+    "35 usc",
+    " mpep ",
+    "mpep §",
+    "mpep section",
+    "non-transitory computer-readable",
+    "non-transitory computer readable",
+)
+
 # How big a marker-count delta we require before suggesting an EPC ↔ US
 # switch. Set deliberately high: false-positive suggestions on this axis
 # would hit every US drafter who happens to cite an EPC counterpart, or
@@ -321,6 +340,7 @@ def detect_jurisdiction_mismatch(
     sample_lower_norm = re.sub(r"\s+", " ", sample.lower())
     epc_markers = _count_markers(sample_lower_norm, _EPC_MARKERS)
     us_markers = _count_markers(sample_lower_norm, _US_MARKERS)
+    us_strong = _count_markers(sample_lower_norm, _US_STRONG_MARKERS)
 
     # Cased FIG./Fig. count on the WHOLE document (no lowercasing, no sample
     # truncation). Figure references typically appear in the Detailed
@@ -392,7 +412,16 @@ def detect_jurisdiction_mismatch(
         # uses US-only phrasings (`method of claim N`, `system of claim N`).
         # If a US draft legitimately cites an EPC counterpart, the delta
         # gate (≥ 2) still keeps the bar high enough to avoid noise.
-        if us_markers - epc_markers >= _EN_MARKER_MIN_DELTA and us_markers > 0:
+        #
+        # #320: an EXPLICIT EPC selection must not be flipped to US on weak
+        # convention signals alone (cased FIG. + `method of claim` phrasing,
+        # both common in Euro-direct EPC drafts). Require ≥1 STRONG US marker
+        # (USPTO / MPEP / 35 U.S.C. / non-transitory CRM) — the user
+        # deliberately chose EPC, so overriding needs an unambiguous tell.
+        if (
+            us_markers - epc_markers >= _EN_MARKER_MIN_DELTA
+            and us_strong >= 1
+        ):
             return Jurisdiction.US.value
         return None
 
