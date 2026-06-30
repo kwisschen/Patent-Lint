@@ -940,10 +940,17 @@ def check_indefinite_wording_epc(claims: list[Claim]) -> list[CheckItem]:
     """
     from patentlint.parser.claims import _INDEFINITE_WORDING_CLAIM_RE
 
+    # Collect the ACTUAL matched wording per claim, not just the claim IDs
+    # (#311: emitting "7, 9" with no terms is useless). Mirrors the
+    # flagged_phrases surfacing US/CN/TW already do — the FlaggedTermList
+    # component renders details_params.flagged_phrases.items.
     flagged: list[int] = []
+    phrases: list[dict] = []
     for c in claims:
-        if _INDEFINITE_WORDING_CLAIM_RE.search(c.text):
+        found = sorted({m.group(0) for m in _INDEFINITE_WORDING_CLAIM_RE.finditer(c.text)})
+        if found:
             flagged.append(c.id)
+            phrases.extend({"location": c.id, "token": tok, "kind": "phrase"} for tok in found)
     if flagged:
         return [CheckItem(
             status="verify",
@@ -953,12 +960,20 @@ def check_indefinite_wording_epc(claims: list[Claim]) -> list[CheckItem]:
                 f"Verify per Guidelines F-IV § 4.6 + Art. 84."
             ),
             message_key="check.epc.claims.indefiniteWording.verify",
-            details_params={"claims": ", ".join(str(i) for i in flagged)},
+            details_params={
+                "claims": ", ".join(str(i) for i in flagged),
+                "flagged_phrases": {"items": phrases},
+            },
             details=", ".join(str(i) for i in flagged),
             reference="EPO Guidelines F-IV § 4.6",
             diagnostics=_dx(
                 flagged_count=len(flagged),
                 flagged_claim_id=flagged[0],
+                flagged_phrase_count=len(phrases),
+                flagged_phrases_sample=[
+                    {"location": p["location"], "token": p["token"], "kind": p["kind"]}
+                    for p in phrases[:5]
+                ],
             ),
         )]
     return [CheckItem(
