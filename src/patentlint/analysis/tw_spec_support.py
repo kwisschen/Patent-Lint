@@ -248,6 +248,17 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # Conservative: only the clearly-positional generics (NOT 的表面/的底部
         # which can be claimed sub-elements). Anti-corpus: 0/77 baseline.
         "的周邊", "的周圍", "的外圍", "的邊緣", "的周緣", "的周側",
+        # 2026-06-30 batch (screen-bracket draft, reports #314/#317). FN-safe
+        # subset of the over-capture cluster:
+        # - `連通於` / `固定於` — verb+於 predicate phrases (`外側且連通於`→外側,
+        #   `有固定於`→ dropped as <2-char noise). Never a noun-phrase terminus.
+        # - `且` — the conjunction "and/also" (`外側且` → 外側). Never ends an
+        #   element name; mirror of the existing 及/與/和 conjunction handling.
+        # Anti-corpus: 0/77 baseline end in any. The rest of the cluster
+        # (鄰近/轉動 noun-gray, 受/自/排 single-char needing residual guards,
+        # 的末端/的外表面 possessive, 有/桿定 leading-clause) is FN-delicate →
+        # queued for a TW spec-support /walker-round (#315/#318/#319 + residuals).
+        "連通於", "固定於", "且",
     ),
     key=len,
     reverse=True,
