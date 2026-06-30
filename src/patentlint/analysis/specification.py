@@ -295,8 +295,11 @@ _UNIT_PATTERN = re.compile(
     r"|dB|dBm|dBu|dBi|dBA"
     r"|rpm|fps|kph|mph|knots"
     r"|m/s|km/h|ft/s"
-    # Angle
-    r"|°|deg|rad|sr|arcsec|arcmin"
+    # Angle (cross-jurisdiction mirror of the TW 度 fix #312/#313: `90 degrees`
+    # was captured as a phantom refnum. `°` already excluded; the spelled-out
+    # word needs explicit longest-first alternatives since the trailing
+    # non-alnum boundary blocks bare `deg` from matching `degrees`.)
+    r"|degrees|degree|°|deg|rad|sr|arcsec|arcmin"
     # Percent (no boundary needed since it's punctuation)
     r"|%"
     # Issue #264: the trailing boundary was `\b`, which FAILS after a
@@ -607,7 +610,7 @@ def extract_numeral_name_pairs(
                 continue
             if any(w in _EXCLUDE_KEYWORDS for w in noun.split()):
                 continue
-            after = spec_text[m.end():][:5]
+            after = spec_text[m.end():][:12]
             if _UNIT_PATTERN.match(after):
                 continue
             before = spec_text[max(0, m.start() - 2):m.start()]
@@ -1536,7 +1539,7 @@ def extract_reference_numeral_inventory(
                 continue
 
             # Exclusion: unit follower
-            after = spec_text[m.end():][:5]
+            after = spec_text[m.end():][:12]
             if _UNIT_PATTERN.match(after):
                 continue
 
