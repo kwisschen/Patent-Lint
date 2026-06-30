@@ -248,6 +248,12 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # Conservative: only the clearly-positional generics (NOT 的表面/的底部
         # which can be claimed sub-elements). Anti-corpus: 0/77 baseline.
         "的周邊", "的周圍", "的外圍", "的邊緣", "的周緣", "的周側",
+        # 2026-07-01 (#315): 的末端 — possessive + positional generic ("the end
+        # of X"; 鎖定部的末端 → 鎖定部). 末端 is a location point, never the
+        # claimed element itself (those carry 端部/端子). Anti-corpus 0/77.
+        # `的外表面` (#317) NOT added — a surface can be a claimed structural
+        # element; deferred as a maintainer call.
+        "的末端",
         # 2026-06-30 batch (screen-bracket draft, reports #314/#317). FN-safe
         # subset of the over-capture cluster:
         # - `連通於` / `固定於` — verb+於 predicate phrases (`外側且連通於`→外側,
@@ -259,6 +265,11 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # 的末端/的外表面 possessive, 有/桿定 leading-clause) is FN-delicate →
         # queued for a TW spec-support /walker-round (#315/#318/#319 + residuals).
         "連通於", "固定於", "且",
+        # 2026-07-01 (#315): 分別 ("respectively/separately") is a pure manner
+        # adverb — never an element-name terminus. Anti-corpus 0/77. (The verb
+        # it modifies — 鄰近 etc. — is stripped first by the predicate verb-gate
+        # in _build_inventory, leaving 坡面分別 → strip 分別 here → 坡面.)
+        "分別",
     ),
     key=len,
     reverse=True,
@@ -610,6 +621,41 @@ def _strip_trailing_bufen_before_verb(term: str, claim_text: str) -> str:
     return term
 
 
+# Gray predicate tokens (noun OR verb/coverb) that over-capture into the
+# spec-support inventory when used verbally (#315/#317/#318/#319: 阻力墊片受…,
+# 位置轉動至…, 坡面…鄰近於…, 局部自…). A blanket strip would FN-drop a real
+# `X轉動` / `各自` noun, so we strip ONLY when the claim continues with a
+# preposition / coverb / 所述-reference — the unambiguous verbal signature.
+# A genuine noun ending in one of these is followed by a particle (的/，/。)
+# or another noun, never these markers, so it is left intact.
+_TW_PREDICATE_TAILS: tuple[str, ...] = ("轉動", "鄰近", "連通", "受", "自")
+_TW_PREDICATE_FOLLOW_MARKERS: tuple[str, ...] = (
+    "至", "於", "到", "向", "在", "沿", "所述", "該", "予", "與", "和",
+)
+
+
+def _strip_trailing_predicate_before_marker(term: str, claim_text: str) -> str:
+    """Strip a trailing gray predicate token when the claim continues with a
+    preposition / coverb marker (the verbal signature). Iterative so a stacked
+    `坡面…鄰近` (then `分別` via the plain trailing strip) fully unwinds.
+    FN-safe: a nominal `馬達轉動的` / `各自的` is followed by 的, not a marker.
+    """
+    for _ in range(4):
+        if not claim_text:
+            break
+        hit = next((t for t in _TW_PREDICATE_TAILS if term.endswith(t)), None)
+        if hit is None or len(term) - len(hit) < 2:
+            break
+        pos = claim_text.find(term)
+        if pos < 0:
+            break
+        after = claim_text[pos + len(term):]
+        if not any(after.startswith(m) for m in _TW_PREDICATE_FOLLOW_MARKERS):
+            break
+        term = term[: -len(hit)]
+    return term
+
+
 def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:
     """Build deduped claim-term inventory from intros across all claims.
 
@@ -644,6 +690,12 @@ def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:
             # so it is untouched (a blanket trailing strip would FN-drop those).
             orig = _strip_trailing_bufen_before_verb(orig, claim.text)
             norm = _strip_trailing_bufen_before_verb(norm, claim.text)
+            # Gray-predicate verb-gate (#315/#317/#318/#319): strip a trailing
+            # 受/自/轉動/鄰近/連通 when the claim continues with a preposition/
+            # coverb marker (verbal signature); nominal forms (followed by 的)
+            # survive.
+            orig = _strip_trailing_predicate_before_marker(orig, claim.text)
+            norm = _strip_trailing_predicate_before_marker(norm, claim.text)
             # Apply spec-support normalization (adds preposition +
             # parenthetical-numeral strip over the walker's intro
             # normalization).
