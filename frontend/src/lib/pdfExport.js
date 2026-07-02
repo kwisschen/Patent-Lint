@@ -594,7 +594,7 @@ function letterFromScore(score, applicable) {
 // "label letter" row separated by mid-dots; the letter itself carries
 // the tier color, no boxes around individual pills. Cleaner than the
 // previous bordered-chip-row treatment, prints sharp.
-function buildRubricCover(rubricGrade, t, fontName) {
+function buildRubricCover(rubricGrade, t, fontName, checkByKey = {}) {
   if (!rubricGrade) return []
   const fontProp = fontName ? { font: fontName } : {}
 
@@ -680,12 +680,51 @@ function buildRubricCover(rubricGrade, t, fontName) {
     })
   }
 
+  // Biggest-impact items (ADR-154 grade levers): the top unaddressed findings
+  // ranked by how many points resolving each would add. This is the report's
+  // actionable "how to raise the grade" list — computed on rubric_grade but
+  // previously rendered nowhere. Uses the real finding message (looked up by
+  // message_key) so it names the specific fix, not a generic label.
+  const impact = (rubricGrade.impact_list || []).filter((i) => i.delta > 0)
+  if (impact.length) {
+    cover.push({
+      text: t('rubric.impactList.title'),
+      fontSize: 10,
+      bold: true,
+      color: '#334155',
+      margin: [0, 14, 0, 4],
+      ...fontProp,
+    })
+    impact.forEach((imp) => {
+      const check = checkByKey[imp.message_key]
+      const label = check
+        ? sanitizeText(translateMessage(check, t))
+        : t('rubric.impactList.sectionLabel', {
+            section: t(`rubric.section.${imp.section}`, { defaultValue: imp.section }),
+          })
+      cover.push({
+        text: [
+          { text: '•  ', color: statusColor(imp.status), bold: true, ...fontProp },
+          { text: label, color: '#334155', ...fontProp },
+          {
+            text: `   (${t('rubric.impactList.delta', { delta: imp.delta })})`,
+            color: '#64748b',
+            italics: true,
+            ...fontProp,
+          },
+        ],
+        fontSize: 9,
+        margin: [12, 0, 12, 2],
+      })
+    })
+  }
+
   cover.push({
     text: t('rubric.version', { version: rubricGrade.rubric_version || '1.0', count: CHECKS_RAW }),
     fontSize: 7,
     color: '#9ca3af',
     alignment: 'center',
-    margin: [0, 8, 0, 12],
+    margin: [0, 12, 0, 12],
     ...fontProp,
   })
 
@@ -922,6 +961,24 @@ export async function downloadReport(reportData, t, language, originalFilename) 
     { name: t(jConfig.abstractSectionKey), items: reportData.abstract_checks || [] },
   ])
 
+  // Lookup for the rubric impact-list: map each check's message_key to its
+  // CheckItem so the grade-lever list can render the real finding message.
+  const checkByKey = {}
+  for (const s of sections) {
+    for (const it of s.items) {
+      if (it.message_key && !checkByKey[it.message_key]) checkByKey[it.message_key] = it
+    }
+  }
+
+  // Claim-category split (method vs apparatus) — parity with the web SummaryBar.
+  // Only meaningful when the draft has both groups (US/EPC apparatus+method).
+  const _trees = reportData.claim_trees || []
+  const _methodGroup = _trees.find((g) => g.label === 'Method Claims')
+  const _apparatusGroup = _trees.find((g) => g.label === 'Apparatus Claims')
+  const showClaimCategories = !!(_methodGroup && _apparatusGroup)
+  const methodCount = _methodGroup?.rows?.length ?? 0
+  const apparatusCount = _apparatusGroup?.rows?.length ?? 0
+
   const now = new Date()
   const dateStr = now.toLocaleDateString(language === 'en' ? 'en-US' : language, {
     year: 'numeric',
@@ -989,7 +1046,7 @@ export async function downloadReport(reportData, t, language, originalFilename) 
 
       // Rubric cover (grade letter + section-grade table) — appears
       // before the rest of the report so the grade is the headline.
-      ...buildRubricCover(reportData.rubric_grade, t, fontName),
+      ...buildRubricCover(reportData.rubric_grade, t, fontName, checkByKey),
 
       // Non-patent warning (if applicable)
       ...(reportData.likely_patent === false ? [
@@ -1032,6 +1089,10 @@ export async function downloadReport(reportData, t, language, originalFilename) 
                 fontSize: 10,
               },
             ],
+            ...(showClaimCategories ? [[
+              { text: t('pdf.claimCategories'), bold: true, color: '#555555', fontSize: 10 },
+              { text: t('pdf.categoryCounts', { method: methodCount, apparatus: apparatusCount }), fontSize: 10 },
+            ]] : []),
             [
               { text: t('pdf.figures'), bold: true, color: '#555555', fontSize: 10 },
               { text: String(reportData.figure_count ?? 0), fontSize: 10 },
