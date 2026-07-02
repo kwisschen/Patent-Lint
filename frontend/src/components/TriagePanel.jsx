@@ -146,9 +146,16 @@ function TriageItem({ check, t, i18n, compact, jurisdiction, canPromote, isPromo
             status={check.status}
           />
         )}
-        {/* Suppress the "see § 112 analysis below" pointer detail when the
-            jump pill already provides that affordance (avoids redundancy). */}
-        {!compact && details && !jumpTarget && (
+        {/* Render the raw `details` line ONLY when it adds information the
+            user can't already see. Suppress it when:
+              - the jump pill already provides the affordance, or
+              - it merely echoes claim numbers already in the message (the
+                "3, 8" / "7, 9" anti-pattern — many checks set
+                details=", ".join(claim_ids), which duplicates "Claim(s) 3, 8…"), or
+              - flagged_phrases pills already surface the offending content. */}
+        {!compact && details && !jumpTarget
+          && !(typeof msg === 'string' && msg.includes(String(details).trim()))
+          && !(check.details_params?.flagged_phrases?.items?.length > 0) && (
           <p className="text-xs text-muted-foreground mt-0.5">
             {details}
           </p>
