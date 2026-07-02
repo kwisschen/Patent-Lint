@@ -280,6 +280,16 @@ def check_reference_signs_in_parens_epc(claims: list[Claim]) -> list[CheckItem]:
         # Only emit when we have at least one finding per claim — collapse
         # duplicates for the message.
         flagged_claims = sorted({f["claim_id"] for f in flagged})
+        # Surface the ACTUAL bare numerals as pills (not the claim numbers,
+        # which are already in the message). Dedupe per (claim, token).
+        seen: set[tuple[int, str]] = set()
+        phrases: list[dict] = []
+        for f in flagged:
+            key = (f["claim_id"], f["token"])
+            if key in seen:
+                continue
+            seen.add(key)
+            phrases.append({"location": f["claim_id"], "token": f["token"], "kind": "reference"})
         return [CheckItem(
             status="verify",
             message=(
@@ -288,13 +298,16 @@ def check_reference_signs_in_parens_epc(claims: list[Claim]) -> list[CheckItem]:
                 f"reference signs to be parenthesised."
             ),
             message_key="check.epc.claims.refSignsInParens.verify",
-            details_params={"claims": ", ".join(str(i) for i in flagged_claims)},
-            details=", ".join(str(i) for i in flagged_claims),
+            details_params={
+                "claims": ", ".join(str(i) for i in flagged_claims),
+                "flagged_phrases": {"items": phrases},
+            },
             reference="Rule 43(7) EPC",
             diagnostics=_dx(
                 flagged_count=len(flagged),
                 flagged_claim_id=flagged_claims[0] if flagged_claims else None,
-                sample_tokens=[f["token"] for f in flagged[:5]],
+                flagged_phrase_count=len(phrases),
+                flagged_phrases_sample=phrases[:5],
             ),
         )]
     return [CheckItem(
@@ -899,10 +912,15 @@ def check_restrictive_absolutes_epc(claims: list[Claim]) -> list[CheckItem]:
     ("must", "essential", "required", etc.) as potentially creating
     indefiniteness. Detection is a regex pass over each claim body.
     """
+    # Collect the ACTUAL matched absolute words (not just claim IDs), mirroring
+    # the indefiniteWording check, so the FlaggedTermList shows WHICH word.
     flagged: list[int] = []
+    phrases: list[dict] = []
     for c in claims:
-        if _EPC_RESTRICTIVE_ABS_RE.search(c.text):
+        found = sorted({m.group(0) for m in _EPC_RESTRICTIVE_ABS_RE.finditer(c.text)})
+        if found:
             flagged.append(c.id)
+            phrases.extend({"location": c.id, "token": tok, "kind": "phrase"} for tok in found)
     if flagged:
         return [CheckItem(
             status="verify",
@@ -912,12 +930,16 @@ def check_restrictive_absolutes_epc(claims: list[Claim]) -> list[CheckItem]:
                 f"Guidelines F-IV § 4.7."
             ),
             message_key="check.epc.claims.restrictiveAbsolutes.verify",
-            details_params={"claims": ", ".join(str(i) for i in flagged)},
-            details=", ".join(str(i) for i in flagged),
+            details_params={
+                "claims": ", ".join(str(i) for i in flagged),
+                "flagged_phrases": {"items": phrases},
+            },
             reference="EPO Guidelines F-IV § 4.7",
             diagnostics=_dx(
                 flagged_count=len(flagged),
                 flagged_claim_id=flagged[0],
+                flagged_phrase_count=len(phrases),
+                flagged_phrases_sample=phrases[:5],
             ),
         )]
     return [CheckItem(

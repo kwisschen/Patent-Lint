@@ -523,7 +523,14 @@ function buildSectionChecks(sections, t, fontName) {
       const detailText = item.details_key && formatDetails(item.details_key, item.details_params, t) !== item.details_key
         ? formatDetails(item.details_key, item.details_params, t)
         : item.details
-      if (detailText) {
+      // Suppress the detail line when it merely echoes claim numbers already in
+      // the message (the "3, 8" / "7, 9" anti-pattern) or when the chip row
+      // already surfaces the offending content — mirrors the TriagePanel guard.
+      const detailRedundant = detailText && (
+        (typeof msg === 'string' && msg.includes(String(detailText).trim()))
+        || item.details_params?.flagged_phrases?.items?.length > 0
+      )
+      if (detailText && !detailRedundant) {
         content.push({
           text: sanitizeText(detailText),
           fontSize: 9,
