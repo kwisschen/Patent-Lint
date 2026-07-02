@@ -324,7 +324,7 @@ function numeralFindingsRow(details_params, status, fontName) {
 
 // Two-cell callout card: 3pt colored strip + tinted content. Used for the
 // AMEND / VERIFY triage groups. Renders "— None" for an empty group.
-function triageCard(severity, items, t, fontName) {
+function triageCard(severity, items, t, fontName, emptyText) {
   const label = severity === 'amend' ? t('pdf.amend') : t('pdf.verify')
   const accent = statusColor(severity)
   const bg = statusTint(severity)
@@ -340,8 +340,12 @@ function triageCard(severity, items, t, fontName) {
 
   let bodyContent
   if (items.length === 0) {
+    // Honest empty copy (mirrors the web TriagePanel): never a bare "—" that
+    // could read as "clean" — surface the context-aware message so an empty
+    // Needs Fixing card points to the review items instead of implying nothing
+    // needs attention.
     bodyContent = [{
-      text: '—',
+      text: emptyText || '—',
       italics: true,
       color: '#94a3b8',
       fontSize: 10,
@@ -430,9 +434,16 @@ function buildTriagePanel(sections, t, fontName) {
     }
   }
 
+  const hasReview = groups.verify.length > 0
+  // Context-aware empty copy for the Needs Fixing card (mirrors the web).
+  const amendEmpty = hasReview
+    ? t('triage.amendEmptyReview', { defaultValue: 'No required fixes flagged — see the review items below.' })
+    : t('triage.amendEmptyClean', { defaultValue: 'No items were flagged for fixing or review.' })
+  const verifyEmpty = t('triage.verifyEmpty', { defaultValue: 'No items to review.' })
+
   const content = [accentedHeader(t('pdf.triage.title'), STATUS_COLORS.AMEND, fontName)]
-  content.push(triageCard('amend', groups.amend, t, fontName))
-  content.push(triageCard('verify', groups.verify, t, fontName))
+  content.push(triageCard('amend', groups.amend, t, fontName, amendEmpty))
+  content.push(triageCard('verify', groups.verify, t, fontName, verifyEmpty))
   return content
 }
 
@@ -738,8 +749,13 @@ function buildClaimTable(claimTrees, t) {
   return content
 }
 
-function buildAntecedentBasis(issues, t) {
+function buildAntecedentBasis(issues, t, fontName) {
   if (!issues || issues.length === 0) return []
+  // The term / reference_form / did-you-mean cells carry CJK glyphs (該X, 導電膠體,
+  // …). pdfmake's defaultStyle.font does NOT reliably propagate into table cells,
+  // so — like every other builder — set the CJK font explicitly per node, else
+  // CN/TW/JP/KO terms render as tofu.
+  const ff = fontName ? { font: fontName } : {}
 
   // Group by claim_id; preserve per-finding hints (suggested_match, cross_ref)
   // for an inline hint cell rendered below the term cell.
@@ -752,8 +768,8 @@ function buildAntecedentBasis(issues, t) {
 
   const body = [
     [
-      { text: t('pdf.claimNumber'), bold: true, fillColor: '#fef3c7', color: '#92400e' },
-      { text: t('pdf.antecedentTerms'), bold: true, fillColor: '#fef3c7', color: '#92400e' },
+      { text: t('pdf.claimNumber'), bold: true, fillColor: '#fef3c7', color: '#92400e', ...ff },
+      { text: t('pdf.antecedentTerms'), bold: true, fillColor: '#fef3c7', color: '#92400e', ...ff },
     ],
   ]
 
@@ -779,7 +795,7 @@ function buildAntecedentBasis(issues, t) {
       }
     }
 
-    const cellStack = [{ text: termsText, fontSize: 9 }]
+    const cellStack = [{ text: termsText, fontSize: 9, ...ff }]
     if (hintLines.length > 0) {
       cellStack.push({
         text: hintLines.join('\n'),
@@ -787,22 +803,24 @@ function buildAntecedentBasis(issues, t) {
         italics: true,
         color: '#92400e',
         margin: [0, 2, 0, 0],
+        ...ff,
       })
     }
     body.push([
-      { text: cid, fontSize: 9 },
+      { text: cid, fontSize: 9, ...ff },
       { stack: cellStack },
     ])
   }
 
   return [
-    accentedHeader(t('pdf.antecedentBasis'), '#f59e0b', undefined),
+    accentedHeader(t('pdf.antecedentBasis'), '#f59e0b', fontName),
     {
       text: t('antecedentBasis.disclaimer'),
       fontSize: 8,
       italics: true,
       color: '#6b7280',
       margin: [0, 0, 0, 6],
+      ...ff,
     },
     {
       table: {
@@ -820,8 +838,11 @@ function buildAntecedentBasis(issues, t) {
   ]
 }
 
-function buildSpecSupport(unsupportedTerms, t) {
+function buildSpecSupport(unsupportedTerms, t, fontName) {
   if (!unsupportedTerms || unsupportedTerms.length === 0) return []
+  // Phrase cells carry CJK glyphs — set the CJK font per node (defaultStyle
+  // doesn't propagate into table cells; see buildAntecedentBasis).
+  const ff = fontName ? { font: fontName } : {}
 
   // Group by claim_number; track whether any finding in the group carries
   // a cross-reference hint to the antecedent-basis card.
@@ -838,13 +859,13 @@ function buildSpecSupport(unsupportedTerms, t) {
 
   const body = [
     [
-      { text: t('pdf.claimNumber'), bold: true, fillColor: '#fef3c7', color: '#92400e' },
-      { text: t('pdf.specTerms'), bold: true, fillColor: '#fef3c7', color: '#92400e' },
+      { text: t('pdf.claimNumber'), bold: true, fillColor: '#fef3c7', color: '#92400e', ...ff },
+      { text: t('pdf.specTerms'), bold: true, fillColor: '#fef3c7', color: '#92400e', ...ff },
     ],
   ]
 
   for (const cid of Object.keys(grouped).sort((a, b) => Number(a) - Number(b))) {
-    const cellStack = [{ text: grouped[cid].join(', '), fontSize: 9 }]
+    const cellStack = [{ text: grouped[cid].join(', '), fontSize: 9, ...ff }]
     if (hasCrossRef[cid]) {
       cellStack.push({
         text: sanitizeText(t('specSupport.crossRefAntecedent')),
@@ -852,22 +873,24 @@ function buildSpecSupport(unsupportedTerms, t) {
         italics: true,
         color: '#92400e',
         margin: [0, 2, 0, 0],
+        ...ff,
       })
     }
     body.push([
-      { text: cid, fontSize: 9 },
+      { text: cid, fontSize: 9, ...ff },
       { stack: cellStack },
     ])
   }
 
   return [
-    accentedHeader(t('pdf.specSupport'), '#f59e0b', undefined),
+    accentedHeader(t('pdf.specSupport'), '#f59e0b', fontName),
     {
       text: t('antecedentBasis.disclaimer'),
       fontSize: 8,
       italics: true,
       color: '#6b7280',
       margin: [0, 0, 0, 6],
+      ...ff,
     },
     {
       table: {
@@ -1031,10 +1054,10 @@ export async function downloadReport(reportData, t, language, originalFilename) 
       ...buildPassSummary(sections, t, fontName),
 
       // Antecedent basis
-      ...buildAntecedentBasis(reportData.antecedent_basis_issues, t),
+      ...buildAntecedentBasis(reportData.antecedent_basis_issues, t, fontName),
 
       // Spec support
-      ...buildSpecSupport(reportData.unsupported_terms, t),
+      ...buildSpecSupport(reportData.unsupported_terms, t, fontName),
 
       // Claim-dependency table intentionally omitted from PDF — the
       // dependency structure is already conveyed by claim text itself
