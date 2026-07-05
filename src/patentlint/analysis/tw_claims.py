@@ -2294,6 +2294,12 @@ _REF_PATTERN_CAPTURE = re.compile(
 # ``sorted(..., key=len, reverse=True)`` is applied once at import time.
 _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
     (
+        # #341 (2026-07) — 達成 ("achieve/accomplish"), a predicate verb that bled
+        # into the captured reference (`一導電材料達成所述鍵合` → intro over-captures
+        # `導電材料達成`, mismatching the bare reference 導電材料). Never a noun
+        # terminus; the endswith strip preserves 達成率/達成度. FN-guarded by
+        # validate_fix (silenced_legit==0). CN parity (达成) deferred per DR-1.
+        "達成",
         # === R18 (2026-06-26) — normalization-asymmetry probe batch ===
         # Trailing predicate verbs that bled into the captured reference (the
         # bare-noun head already has its intro). Each is FN-guarded by validate_fix
@@ -3318,6 +3324,16 @@ def clean_noun_phrase_tw(text: str) -> str:
     # validate_fix caught it silencing a gold-legit possessive-qualifier defect.
     if earliest_idx is not None and earliest_idx > 2 and text[earliest_idx - 1] in ("內", "中"):
         earliest_idx -= 1
+
+    # #339 — 區分別 is 區 (region-noun suffix, as in 源極區/汲極區) + 分別
+    # ("respectively"), NOT the verb 區分. When the 區分 interior-cut boundary is
+    # immediately followed by 別, shift the cut one char right so the region-noun
+    # 區 survives (第一源極區分別 → 第一源極區, which matches the same-claim intro
+    # 第一源極區). The genuine verb case 地域區分 (no trailing 別) still cuts to 地域.
+    if (earliest_idx is not None
+            and text[earliest_idx:earliest_idx + 2] == "區分"
+            and text[earliest_idx + 2:earliest_idx + 3] == "別"):
+        earliest_idx += 1
 
     current = text[:earliest_idx] if earliest_idx is not None else text
 

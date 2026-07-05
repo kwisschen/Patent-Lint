@@ -1998,6 +1998,15 @@ def clean_noun_phrase_cn(text: str) -> str:
             if earliest_idx is None or absolute_idx < earliest_idx:
                 earliest_idx = absolute_idx
 
+    # #339 CN parity (mirror of the TW 区分别 别-gate) — 区分别 is 区 (region-noun
+    # suffix, 源极区/漏极区) + 分别 ("respectively"), NOT the verb 区分. Shift the
+    # cut one char right so the region-noun 区 survives (第一源极区分别 →
+    # 第一源极区). The genuine verb case 该地域区分 (no trailing 别) still cuts to 地域.
+    if (earliest_idx is not None
+            and text[earliest_idx:earliest_idx + 2] == "区分"
+            and text[earliest_idx + 2:earliest_idx + 3] == "别"):
+        earliest_idx += 1
+
     current = text[:earliest_idx] if earliest_idx is not None else text
 
     for _ in range(16):
