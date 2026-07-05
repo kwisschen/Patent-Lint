@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 49,
+    "current_round": 50,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -190,6 +190,16 @@
         "user_attested_issues": [],
         "fixtures_silenced": 0,
         "shipped_at": "2026-06-27T00:00:00+00:00"
+      },
+      {
+        "round": 50,
+        "name": "r50_qufenbie_gate_parity",
+        "description": "2026-07 — #339 CN parity MIRROR of TW R25 區分别 別-gate: 区分别 = 区 (region-noun suffix 源极区/漏极区) + 分别, not the verb 区分; shift the 区分 interior cut one char right so 第一源极区分别 → 第一源极区; the genuine verb 该地域区分 (no trailing 别) still cuts to 地域. validate_fix silenced_legit=0 (2 ambig 区分别 FPs silenced, corpus-silent); phase8c protect_violations=0. 专利法 §26 / cross-jurisdiction parity with TW R25. round 49->50.",
+        "user_attested_issues": [
+          339
+        ],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-07-06T00:00:00+00:00"
       }
     ],
     "last_updated": "2026-06-27T16:35:50.225897+00:00",
