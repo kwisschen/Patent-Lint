@@ -1021,7 +1021,7 @@
         "pass": "No restrictive absolutes found in claims."
       },
       "indefiniteWording": {
-        "verify": "Indefinite or relative wording found in claims (MPEP § 2173.05(b)).",
+        "verify": "Indefinite or relative wording found in claim(s) {{claims}} (MPEP § 2173.05(b)).",
         "pass": "No indefinite or relative wording found in claims."
       },
       "sequential": {
@@ -1421,7 +1421,7 @@
           "pass": "Computer-readable medium claims correctly include 非暂态 / 非暂时性."
         },
         "indefiniteWording": {
-          "verify": "Claim(s) contain indefinite or exemplary wording (例如 / 诸如 / 较佳 / 优选). Verify clarity per 审查指南 § 3.2.2.",
+          "verify": "Claim(s) {{claims}} contain indefinite or exemplary wording (例如 / 诸如 / 较佳 / 优选). Verify clarity per 审查指南 § 3.2.2.",
           "pass": "No indefinite or exemplary wording detected in claims."
         }
       },
@@ -1615,7 +1615,7 @@
           "pass": "Computer-readable medium claims correctly include 非暫態 / 非暫時性."
         },
         "indefiniteWording": {
-          "verify": "Claim(s) contain indefinite or exemplary wording (例如 / 諸如 / 較佳 / 優選). Verify clarity per 專利審查基準.",
+          "verify": "Claim(s) {{claims}} contain indefinite or exemplary wording (例如 / 諸如 / 較佳 / 優選). Verify clarity per 專利審查基準.",
           "pass": "No indefinite or exemplary wording detected in claims."
         }
       },

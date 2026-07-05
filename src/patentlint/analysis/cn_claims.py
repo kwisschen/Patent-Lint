@@ -208,7 +208,7 @@ def check_indefinite_wording_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
         found = sorted({m.group(0) for m in _INDEFINITE_WORDING_CN_RE.finditer(c.text)})
         if found:
             flagged.append(c.id)
-            phrases.extend({"location": c.id, "token": tok, "kind": "phrase"} for tok in found)
+            phrases.extend({"location": c.id, "token": tok, "kind": "term"} for tok in found)
     if not flagged:
         return [CheckItem(
             status="pass",
@@ -223,6 +223,7 @@ def check_indefinite_wording_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
         details_key="details.cn.indefiniteWordingClaims",
         details_params={
             "list": str(flagged),
+            "claims": ", ".join(str(i) for i in flagged),
             "flagged_phrases": {"items": phrases},
         },
         reference="审查指南 第二部分第二章 §3.2.2",
