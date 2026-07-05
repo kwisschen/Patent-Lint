@@ -242,6 +242,47 @@ def _extract_figure_ids(text: str) -> set[str]:
     return ids
 
 
+def _fig_parent_and_suffix(fig_id: str) -> tuple[str, str]:
+    """Split a figure id into (numeric-parent, alpha-suffix): '7A' -> ('7', 'A')."""
+    num_part = "".join(ch for ch in fig_id if ch.isdigit())
+    alpha_part = "".join(ch for ch in fig_id if not ch.isdigit())
+    return num_part, alpha_part
+
+
+def _reconcile_subfigure_coverage(orphans: list[str], other_side: set[str]) -> list[str]:
+    """Drop orphans that a subfigure/parent on the other side already covers.
+
+    37 CFR 1.84(u)(2): partial views bear the same figure number with a capital-
+    letter suffix (FIG. 7A/7B/7C ARE the views of figure 7), and a collective
+    reference to bare "FIG. 7" is understood to encompass its partial views
+    (MPEP § 608.02). So an orphan is spurious when:
+      * it is a bare parent "N" and the other side describes any subfigure "N<s>";
+      * it is a subfigure "N<s>" and the other side describes the bare parent "N".
+
+    Narrower than a full parent-integer collapse (the CN/TW figure_refs sibling
+    already collapses to parent integers): sibling-only coverage (7A covering 7B
+    with no bare "7" anywhere) is NOT applied, so genuine subfigure-vs-subfigure
+    mismatches still surface. FN-safe against the existing orphan tests.
+    """
+    other_bare_parents = {
+        p for (p, s) in (_fig_parent_and_suffix(o) for o in other_side) if not s
+    }
+    other_parents_with_subfigure = {
+        p for (p, s) in (_fig_parent_and_suffix(o) for o in other_side) if s
+    }
+    kept: list[str] = []
+    for fig_id in orphans:
+        parent, suffix = _fig_parent_and_suffix(fig_id)
+        if suffix:
+            if parent in other_bare_parents:
+                continue  # subfigure covered by bare parent reference
+        else:
+            if parent in other_parents_with_subfigure:
+                continue  # bare parent covered by its lettered subfigures
+        kept.append(fig_id)
+    return kept
+
+
 def check_figure_cross_references(
     brief_description: str, detailed_description: str
 ) -> list[CheckItem]:
@@ -262,8 +303,12 @@ def check_figure_cross_references(
 
     results: list[CheckItem] = []
 
-    orphaned_brief = sorted(brief_figs - detailed_figs, key=_sort_fig_id)
-    orphaned_detailed = sorted(detailed_figs - brief_figs, key=_sort_fig_id)
+    orphaned_brief = _reconcile_subfigure_coverage(
+        sorted(brief_figs - detailed_figs, key=_sort_fig_id), detailed_figs
+    )
+    orphaned_detailed = _reconcile_subfigure_coverage(
+        sorted(detailed_figs - brief_figs, key=_sort_fig_id), brief_figs
+    )
 
     if orphaned_brief:
         fig_list = ", ".join(orphaned_brief)
