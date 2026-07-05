@@ -577,7 +577,14 @@ _LEADING_QUANTIFIER = re.compile(r"^(?:一种|一个|该|所述|所述的)\s*")
 # is 所述 — parse the dep preamble tolerantly so subject extraction succeeds.
 _DEP_PREAMBLE_CONNECTIVE_CN = r"(?:所(?:述|记载|揭示|描述)的?|的)?"
 _DEP_PREFIX_RE_CN = re.compile(
-    r"^(?:如|根据|依)权利要求\s*\d+"
+    # TW #328 parity (subject-extractor must agree with the dep parser): add
+    # 依据 to the opener set and make the opener OPTIONAL so the bare
+    # `权利要求N所述的…` form routes to dep_prefix instead of a spurious
+    # subjectConsistency parseUnclear. Advisory-tier check; the structural
+    # 权利要求N + connective preamble is still required, so FN-safe. (The wider
+    # 按照 / 依照 / 基于 openers stay unrecognized here — no CN report, and one
+    # is an intentional parseUnclear test fixture; add on report per DR-1.)
+    r"^(?:如|根据|依据|依)?权利要求\s*\d+"
     r"(?:\s*(?:~|至|到)\s*\d+)?"
     r"(?:\s*(?:或|、)\s*\d+)*"
     r"(?:\s*中\s*任一?项)?"

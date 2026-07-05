@@ -420,7 +420,13 @@ _DEP_PREAMBLE_CONNECTIVE = r"(?:所(?:述|記載|揭示|描述)[之的]|[之的]
 # regex so `_extract_subject_with_path` no longer falls through on
 # claims using the older form.
 _DEP_PREFIX_RE = re.compile(
-    r"^(?:如|根據|依)(?:請求項|申請專利範圍第)\s*\d+"
+    # Opener parity with the dep parser _TW_DEP_PATTERN (claims_tw.py): the
+    # three accepted TIPO openers 如 / 依據 / 根據 (+ short 依), and the opener
+    # is OPTIONAL so the bare `請求項N所述之…` form also routes to dep_prefix
+    # instead of falling through to a spurious subjectConsistency parseUnclear
+    # (#328). Advisory-tier check (zero grade impact); the structural
+    # 請求項N + connective preamble is still required, so FN-safe.
+    r"^(?:如|依據|根據|依)?(?:請求項|申請專利範圍第)\s*\d+"
     r"(?:項)?"  # `項` follows N in the older 申請專利範圍第N項 form only
     r"(?:\s*(?:~|至|到)\s*\d+(?:項)?)?"
     r"(?:\s*(?:或|、)\s*\d+(?:項)?)*"
