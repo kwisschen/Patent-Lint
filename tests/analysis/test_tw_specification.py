@@ -644,6 +644,44 @@ class TestSymbolTableConsistency:
         payload = items[0].details_params["symbol_table_inconsistency"]
         assert "30" in payload["undefined"]
 
+    def test_symbol_referenced_outside_embodiment_not_flagged(self):
+        # #329: a symbol described in 發明內容 / 圖式簡單說明 (not 實施方式) IS used;
+        # the unreferenced search spans the whole 說明書, not embodiment alone.
+        doc = _make_doc(
+            symbol_table=[
+                SymbolEntry(numeral="C1", name="電容"),
+                SymbolEntry(numeral="C2", name="電阻"),
+            ],
+            disclosure=["本發明的電容(C1)用於濾波。"],
+            drawings_description=["圖1為電阻(C2)的示意圖。"],
+            embodiment=["本實施方式描述整體運作。"],
+        )
+        items = check_symbol_table_consistency(doc)
+        assert items[0].status == "pass"
+
+    def test_fullwidth_numeral_matches_halfwidth(self):
+        # #338: a full-width reference numeral in the spec matches its
+        # half-width declaration in 符號說明 (NFKC width-normalization).
+        doc = _make_doc(
+            symbol_table=[SymbolEntry(numeral="100", name="本體")],
+            embodiment=["本體 １００ 為主要結構。"],
+        )
+        items = check_symbol_table_consistency(doc)
+        assert items[0].status == "pass"
+
+    def test_symbol_used_nowhere_still_flagged(self):
+        # FN-guard: broadening the search corpus must not hide a truly
+        # unreferenced symbol.
+        doc = _make_doc(
+            symbol_table=[SymbolEntry(numeral="999", name="幽靈元件")],
+            disclosure=["本發明相關說明。"],
+            embodiment=["實施方式段落。"],
+        )
+        items = check_symbol_table_consistency(doc)
+        assert items[0].status == "verify"
+        payload = items[0].details_params["symbol_table_inconsistency"]
+        assert "999" in payload["unreferenced"]
+
     def test_both_unreferenced_and_undefined(self):
         doc = _make_doc(
             symbol_table=[

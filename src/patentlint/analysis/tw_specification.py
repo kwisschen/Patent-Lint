@@ -9,6 +9,7 @@ against TIPO rules (專利法施行細則 and 專利審查基準).
 from __future__ import annotations
 
 import re
+import unicodedata
 from collections import Counter
 
 from patentlint.analysis.cn_specification import (
@@ -773,13 +774,23 @@ def check_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckItem]:
 
     embodiment_text = "\n".join(doc.embodiment)
 
-    # Check defined but unreferenced
+    # Check defined but unreferenced.
+    # 專利法施行細則 §17 + 專利審查基準 govern reference-sign consistency across the
+    # WHOLE 說明書 (description), not the 實施方式 section alone: a symbol described
+    # in 發明內容 / 圖式簡單說明 / etc. IS "used." Search the full spec body so a
+    # symbol referenced outside 實施方式 is not falsely "unreferenced" (#329).
+    # NFKC-normalize both sides so a full-width numeral (１００) matches its
+    # half-width form (100) (#338).
+    spec_text_cmp = unicodedata.normalize("NFKC", _all_spec_text(doc))
     unreferenced = []
     for entry in doc.symbol_table:
         # For range numerals (e.g., S21~S25, 3001~3010), check if any
         # component appears in the text
         parts = re.split(r"[~\-]", entry.numeral)
-        found = any(p in embodiment_text for p in parts if p.strip())
+        found = any(
+            unicodedata.normalize("NFKC", p) in spec_text_cmp
+            for p in parts if p.strip()
+        )
         if not found:
             unreferenced.append(entry.numeral)
 
