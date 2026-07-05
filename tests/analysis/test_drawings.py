@@ -267,3 +267,38 @@ class TestFigureCrossReferences:
         assert "7" in orphaned[0].details
         assert "5" not in orphaned[0].details
         assert "6" not in orphaned[0].details
+
+    def test_bare_parent_covered_by_lettered_subfigures(self):
+        # Report #345: both sections describe FIG. 7A/7B/7C + 8A/8B/8C; the
+        # detailed description ALSO uses a collective bare "FIG. 7" / "FIG. 8".
+        # The bare parent must not be flagged as orphaned when its lettered
+        # subfigures are described on the other side (37 CFR 1.84(u)(2)).
+        brief = (
+            "FIG. 7A shows.\nFIG. 7B shows.\nFIG. 7C shows.\n"
+            "FIG. 8A shows.\nFIG. 8B shows.\nFIG. 8C shows."
+        )
+        detailed = (
+            "FIG. 7A. FIG. 7B. FIG. 7C. FIG. 8A. FIG. 8B. FIG. 8C. "
+            "Collectively, FIG. 7 and FIG. 8 illustrate the assembly."
+        )
+        results = check_figure_cross_references(brief, detailed)
+        assert len(results) == 1
+        assert results[0].status == "pass"
+
+    def test_lettered_subfigure_covered_by_bare_parent(self):
+        # Reverse direction: brief uses lettered 3A/3B, detailed uses bare FIG. 3.
+        brief = "FIG. 3A shows X.\nFIG. 3B shows Y."
+        detailed = "As shown in FIG. 3, the assembly operates."
+        results = check_figure_cross_references(brief, detailed)
+        assert len(results) == 1
+        assert results[0].status == "pass"
+
+    def test_sibling_subfigure_only_still_flags(self):
+        # FN-guard: subfigure-vs-subfigure mismatch with NO bare parent bridge
+        # is a genuine inconsistency and must still surface.
+        brief = "FIG. 4A shows X."
+        detailed = "As shown in FIG. 4B, the widget."
+        results = check_figure_cross_references(brief, detailed)
+        keys = {r.message_key for r in results}
+        assert "checks.figure_xref_orphaned_brief" in keys
+        assert "checks.figure_xref_orphaned_detailed" in keys
