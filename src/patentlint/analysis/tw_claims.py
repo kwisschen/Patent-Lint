@@ -704,7 +704,7 @@ def check_indefinite_wording_tw(doc: TwPatentDocument) -> list[CheckItem]:
         found = sorted({m.group(0) for m in _INDEFINITE_WORDING_TW_RE.finditer(c.text)})
         if found:
             flagged.append(c.id)
-            phrases.extend({"location": c.id, "token": tok, "kind": "phrase"} for tok in found)
+            phrases.extend({"location": c.id, "token": tok, "kind": "term"} for tok in found)
     if not flagged:
         return [CheckItem(
             status="pass",
@@ -719,6 +719,7 @@ def check_indefinite_wording_tw(doc: TwPatentDocument) -> list[CheckItem]:
         details_key="details.tw.indefiniteWordingClaims",
         details_params={
             "list": str(flagged),
+            "claims": ", ".join(str(i) for i in flagged),
             "flagged_phrases": {"items": phrases},
         },
         reference="專利審查基準 第二篇第一章",

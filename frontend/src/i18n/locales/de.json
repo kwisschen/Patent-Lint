@@ -1021,7 +1021,7 @@
         "pass": "Keine einschränkenden Absolutismen in den Ansprüchen gefunden."
       },
       "indefiniteWording": {
-        "verify": "Unbestimmte oder relative Formulierungen in den Ansprüchen gefunden (MPEP § 2173.05(b)).",
+        "verify": "Unbestimmte oder relative Formulierungen in Anspruch/Ansprüchen {{claims}} gefunden (MPEP § 2173.05(b)).",
         "pass": "Keine unbestimmten oder relativen Formulierungen in den Ansprüchen gefunden."
       },
       "sequential": {
@@ -1421,7 +1421,7 @@
           "pass": "Ansprüche auf computerlesbare Medien enthalten korrekterweise 非暂态 / 非暂时性."
         },
         "indefiniteWording": {
-          "verify": "Anspruch/Ansprüche enthalten unbestimmte oder beispielhafte Begriffe (例如 / 诸如 / 较佳 / 优选). Klarheit nach 审查指南 § 3.2.2 prüfen.",
+          "verify": "Anspruch/Ansprüche {{claims}} enthalten unbestimmte oder beispielhafte Begriffe (例如 / 诸如 / 较佳 / 优选). Klarheit nach 审查指南 § 3.2.2 prüfen.",
           "pass": "Keine unbestimmten oder beispielhaften Begriffe in den Ansprüchen festgestellt."
         }
       },
@@ -1615,7 +1615,7 @@
           "pass": "Ansprüche auf computerlesbare Medien enthalten korrekterweise 非暫態 / 非暫時性."
         },
         "indefiniteWording": {
-          "verify": "Anspruch/Ansprüche enthalten unbestimmte oder beispielhafte Begriffe (例如 / 諸如 / 較佳 / 優選). Klarheit nach 專利審查基準 prüfen.",
+          "verify": "Anspruch/Ansprüche {{claims}} enthalten unbestimmte oder beispielhafte Begriffe (例如 / 諸如 / 較佳 / 優選). Klarheit nach 專利審查基準 prüfen.",
           "pass": "Keine unbestimmten oder beispielhaften Begriffe in den Ansprüchen festgestellt."
         }
       },

@@ -1027,6 +1027,20 @@ class TestTwIndefiniteWording:
         res = check_indefinite_wording_tw(doc)
         assert res[0].status == "pass"
 
+    def test_verify_names_claims_and_uses_term_kind(self):
+        """#346: the verify finding surfaces the flagged claim numbers in the
+        title (details_params.claims, mirroring EPC) and tags the chip kind
+        'term' so it renders 'from claim N' not 'from paragraph N'."""
+        from patentlint.analysis.tw_claims import check_indefinite_wording_tw
+        doc = self._doc(
+            "1. 一種裝置，包含一感測器，例如溫度感測器。",
+            "2. 如請求項1所述之方法，其中該參數較佳為正。",
+        )
+        res = check_indefinite_wording_tw(doc)
+        assert res[0].status == "verify"
+        assert res[0].details_params["claims"] == "1, 2"
+        assert res[0].details_params["flagged_phrases"]["items"][0]["kind"] == "term"
+
 
 # --- R14: parenthetical-gloss bleed (#245) + 多條 quantifier (#252) ----------
 

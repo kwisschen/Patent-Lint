@@ -1070,8 +1070,10 @@ class AnalysisResult(BaseModel):
         # see category-appropriate titles and chips — avoids the confusion of
         # "can" appearing under a card titled "restrictive absolutes".
         if self.restrictive_absolute_claims:
+            # kind="term": these flags are claim-scoped, so the FlaggedTermList
+            # chip must read "from claim N", not "from paragraph N" (#346).
             restrictive_items = _parse_formatted_phrases(
-                self.restrictive_absolute_phrases_formatted, kind="phrase"
+                self.restrictive_absolute_phrases_formatted, kind="term"
             )
             claims_checks.append(CheckItem(
                 status="verify",
@@ -1101,19 +1103,32 @@ class AnalysisResult(BaseModel):
             ))
 
         if self.indefinite_wording_claims:
+            # kind="term": claim-scoped chip reads "from claim N" (#346).
             indefinite_items = _parse_formatted_phrases(
-                self.indefinite_wording_phrases_formatted, kind="phrase"
+                self.indefinite_wording_phrases_formatted, kind="term"
             )
+            # Surface the flagged claim numbers in the title itself (parity with
+            # the EPC indefiniteWording check, which already interpolates
+            # {{claims}}) rather than only in the details paragraph (#346).
+            indefinite_claims_str = ", ".join(
+                str(i) for i in self.indefinite_wording_claims
+            )
+            indefinite_params: dict = {
+                "list": str(self.indefinite_wording_claims),
+                "claims": indefinite_claims_str,
+            }
+            if indefinite_items:
+                indefinite_params["flagged_phrases"] = {"items": indefinite_items}
             claims_checks.append(CheckItem(
                 status="verify",
-                message="Indefinite or relative wording found in claims.",
+                message=(
+                    "Indefinite or relative wording found in claim(s) "
+                    f"{indefinite_claims_str}."
+                ),
                 message_key="check.claims.indefiniteWording.verify",
                 details=f"Claims: {self.indefinite_wording_claims}",
                 details_key="details.indefiniteWordingClaims",
-                details_params={
-                    "list": str(self.indefinite_wording_claims),
-                    "flagged_phrases": {"items": indefinite_items},
-                } if indefinite_items else {"list": str(self.indefinite_wording_claims)},
+                details_params=indefinite_params,
                 diagnostics=_dx(
                     flagged_claim_count=len(self.indefinite_wording_claims),
                     flagged_phrase_count=len(indefinite_items) or None,
