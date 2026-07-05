@@ -1752,7 +1752,7 @@
     "missingPeriodDetails": "請求項 {{claimNumber}} 缺少結尾句號。依據 MPEP § 608.01(m)，每項請求項必須以單一句號結尾。",
     "extraPeriod": "請求項 {{claimNumber}} 包含多餘或位置不當的句號。",
     "extraPeriodDetails": "請求項 {{claimNumber}} 在非預期位置出現句號。依據 MPEP § 608.01(m)，請求項僅應在末尾包含一個句號。",
-    "whereinComma": "請求項 {{claimNumber}}：請檢查 'wherein' 子句前的逗號用法。",
+    "whereinComma": "請求項 {{claimNumber}}：請檢查 'wherein' 之後的逗號用法。",
     "whereinCommaDetails": "請求項 {{claimNumber}} 的 'wherein' 子句前後逗號使用不正確。請依據 MPEP § 608.01(m) 檢查標點符號。",
     "punctuationPass": "所有請求項標點符號正確。"
   },

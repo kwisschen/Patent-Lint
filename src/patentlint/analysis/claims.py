@@ -1450,7 +1450,7 @@ def check_claim_punctuation(claims: list[Claim]) -> list[CheckItem]:
     for claim_id in detect_incorrect_wherein_commas(claims):
         results.append(CheckItem(
             status="verify",
-            message=f"Claim {claim_id}: review comma usage before 'wherein' clause.",
+            message=f"Claim {claim_id}: review comma usage after 'wherein'.",
             message_key="claims.whereinComma",
             details=f"Claim {claim_id} may have incorrect comma placement around a 'wherein' clause. Review punctuation per MPEP § 608.01(m).",
             details_key="claims.whereinCommaDetails",
