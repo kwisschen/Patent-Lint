@@ -1752,7 +1752,7 @@
     "missingPeriodDetails": "Anspruch {{claimNumber}} fehlt der abschließende Punkt. Jeder Anspruch muss gemäß MPEP § 608.01(m) mit einem einzelnen Punkt enden.",
     "extraPeriod": "Anspruch {{claimNumber}} enthält überzählige oder falsch platzierte Punkte.",
     "extraPeriodDetails": "Anspruch {{claimNumber}} hat Punkte an unerwarteten Stellen. Ein Anspruch sollte gemäß MPEP § 608.01(m) nur einen Punkt ganz am Ende enthalten.",
-    "whereinComma": "Anspruch {{claimNumber}}: Kommasetzung vor 'wherein'-Klausel prüfen.",
+    "whereinComma": "Anspruch {{claimNumber}}: Kommasetzung nach 'wherein' prüfen.",
     "whereinCommaDetails": "Anspruch {{claimNumber}} könnte eine falsche Kommasetzung um eine 'wherein'-Klausel aufweisen. Prüfen Sie die Interpunktion gemäß MPEP § 608.01(m).",
     "punctuationPass": "Alle Ansprüche weisen korrekte Interpunktion auf."
   },

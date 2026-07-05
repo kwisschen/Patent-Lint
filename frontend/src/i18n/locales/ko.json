@@ -1752,7 +1752,7 @@
     "missingPeriodDetails": "청구항 {{claimNumber}}에 마지막 마침표가 누락되었습니다. MPEP § 608.01(m)에 따라 모든 청구항은 마침표로 끝나야 합니다.",
     "extraPeriod": "청구항 {{claimNumber}}에 불필요하거나 잘못 배치된 마침표가 있습니다.",
     "extraPeriodDetails": "청구항 {{claimNumber}}에 예상치 않은 위치에 마침표가 있습니다. MPEP § 608.01(m)에 따라 청구항에는 맨 끝에 마침표가 하나만 있어야 합니다.",
-    "whereinComma": "청구항 {{claimNumber}}: 'wherein' 절 앞의 쉼표 사용을 검토하세요.",
+    "whereinComma": "청구항 {{claimNumber}}: 'wherein' 뒤의 쉼표 사용을 검토하세요.",
     "whereinCommaDetails": "청구항 {{claimNumber}}의 'wherein' 절 주변에 쉼표가 잘못 배치되었을 수 있습니다. MPEP § 608.01(m)에 따라 부호를 검토하세요.",
     "punctuationPass": "모든 청구항의 부호가 올바릅니다."
   },

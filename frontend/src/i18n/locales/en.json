@@ -1752,7 +1752,7 @@
     "missingPeriodDetails": "Claim {{claimNumber}} is missing its final period. Every claim must end with a single period per MPEP § 608.01(m).",
     "extraPeriod": "Claim {{claimNumber}} contains extra or misplaced periods.",
     "extraPeriodDetails": "Claim {{claimNumber}} has periods in unexpected positions. A claim should contain only one period at the very end per MPEP § 608.01(m).",
-    "whereinComma": "Claim {{claimNumber}}: review comma usage before 'wherein' clause.",
+    "whereinComma": "Claim {{claimNumber}}: review comma usage after 'wherein'.",
     "whereinCommaDetails": "Claim {{claimNumber}} may have incorrect comma placement around a 'wherein' clause. Review punctuation per MPEP § 608.01(m).",
     "punctuationPass": "All claims have correct punctuation."
   },

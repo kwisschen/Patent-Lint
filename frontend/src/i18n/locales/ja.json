@@ -1752,7 +1752,7 @@
     "missingPeriodDetails": "請求項 {{claimNumber}} に末尾のピリオドがありません。MPEP § 608.01(m) に基づき、各請求項は単一のピリオドで終わる必要があります。",
     "extraPeriod": "請求項 {{claimNumber}} に余分または誤配置のピリオドがあります。",
     "extraPeriodDetails": "請求項 {{claimNumber}} の予期しない位置にピリオドがあります。MPEP § 608.01(m) に基づき、請求項のピリオドは末尾に一つだけ配置すべきです。",
-    "whereinComma": "請求項 {{claimNumber}}：'wherein' 節の前のコンマの使用を確認してください。",
+    "whereinComma": "請求項 {{claimNumber}}：'wherein' の後のコンマの使用を確認してください。",
     "whereinCommaDetails": "請求項 {{claimNumber}} の 'wherein' 節前後のコンマの使用が正しくない可能性があります。MPEP § 608.01(m) に基づき句読点を確認してください。",
     "punctuationPass": "すべての請求項の句読点は正確です。"
   },

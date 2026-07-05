@@ -1752,7 +1752,7 @@
     "missingPeriodDetails": "权利要求 {{claimNumber}} 缺少结尾句号。依据 MPEP § 608.01(m)，每项权利要求必须以单一句号结尾。",
     "extraPeriod": "权利要求 {{claimNumber}} 包含多余或位置不当的句号。",
     "extraPeriodDetails": "权利要求 {{claimNumber}} 在非预期位置出现句号。依据 MPEP § 608.01(m)，权利要求应仅在末尾包含一个句号。",
-    "whereinComma": "权利要求 {{claimNumber}}：请检查 'wherein' 子句前的逗号用法。",
+    "whereinComma": "权利要求 {{claimNumber}}：请检查 'wherein' 之后的逗号用法。",
     "whereinCommaDetails": "权利要求 {{claimNumber}} 的 'wherein' 子句前后逗号使用不正确。请依据 MPEP § 608.01(m) 检查标点符号。",
     "punctuationPass": "所有权利要求标点符号正确。"
   },
