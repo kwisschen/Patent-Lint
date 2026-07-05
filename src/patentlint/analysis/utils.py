@@ -785,6 +785,11 @@ _VERB_STOPS = {
     "pushes", "pulls", "holds", "moves", "slides", "rotates",
     "engages", "extends", "receives", "supports", "contacts",
     "connects", "abuts", "faces", "carries", "covers",
+    # #327 — base-form 'abut' (plural/coordinate subjects take the base form:
+    # "two ends of the elastic member respectively abut against ..."). The 3sg
+    # 'abuts' was already stopped; 'abut' has no noun sense (the noun is
+    # 'abutment'), so the whole-word strip is FN-safe and symmetric.
+    "abut",
     "executes", "transmits", "generates", "determines", "operates",
     "leaves", "allows", "enables", "prevents", "permits",
     "encompasses", "contains", "produces", "creates", "maintains",
