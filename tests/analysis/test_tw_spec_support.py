@@ -16,6 +16,7 @@ from patentlint.analysis.tw_spec_support import (
     _split_on_conjunction,
     _strip_spec_support_trailing_tokens,
     _strip_trailing_conjunction,
+    _strip_trailing_predicate_before_marker,
     _tier3_char_window,
     attach_cross_references_tw,
     check_spec_support_tw,
@@ -552,3 +553,59 @@ class TestEmptyAndMinimalDocs:
         result = check_spec_support_tw(doc)
         phrases = [ut.phrase for ut in result]
         assert "特殊元件" in phrases
+
+
+class TestSpecSupportRound202607:
+    """2026-07 TW spec-support over-capture round (#321/#333/#334/#335/#342/
+    #343/#344/#348/#350/#351)."""
+
+    def test_321_conjunction_after_token_strip(self):
+        # A trailing token (位於) re-exposes a dangling 及 → re-strip collapses it.
+        assert _normalize_for_spec_support_tw("鎖定部及位於") == "鎖定部"
+
+    def test_333_lingwai_leading_reject(self):
+        assert _has_leading_reject("另外兩個") is True
+        assert _has_leading_reject("另一實施例") is False  # FN-guard
+
+    def test_334_meige_boilerplate(self):
+        assert _is_boilerplate("每個") is True
+        assert _is_boilerplate("每一彈性臂") is True
+
+    def test_335_neiao_formation_predicate(self):
+        assert _strip_trailing_predicate_before_marker(
+            "第二擋牆內凹", "由第二擋牆內凹形成的結構"
+        ) == "第二擋牆"
+        # nominal X內凹的 (followed by 的) is untouched
+        assert _strip_trailing_predicate_before_marker(
+            "第二擋牆內凹", "第二擋牆內凹的表面"
+        ) == "第二擋牆內凹"
+
+    def test_342_de_yi_and_cardinal_measure(self):
+        assert _normalize_for_spec_support_tw("第二晶粒的一第二晶圓") == "第二晶圓"
+        assert _normalize_for_spec_support_tw("垂直堆疊晶粒組二個") == "垂直堆疊晶粒組"
+        # FN-guards: nouns that merely contain 個 / 的 are unaffected
+        assert _normalize_for_spec_support_tw("整個殼體") == "整個殼體"
+        assert _normalize_for_spec_support_tw("十字接頭") == "十字接頭"
+
+    def test_343_dacheng_trailing_verb(self):
+        assert _normalize_for_spec_support_tw("導電材料達成") == "導電材料"
+
+    def test_344_leading_method_verb_yi(self):
+        assert _normalize_for_spec_support_tw("提供一導線框架") == "導線框架"
+        assert _normalize_for_spec_support_tw("設置一第二導電元件") == "第二導電元件"
+        # FN-guards: coverb 設置於 and genuine nouns untouched
+        assert _normalize_for_spec_support_tw("設置面") == "設置面"
+        assert _normalize_for_spec_support_tw("提供者") == "提供者"
+
+    def test_348_yixiang_leading_reject(self):
+        assert _has_leading_reject("以向一水體樣本") is True
+        assert _has_leading_reject("以太網路") is False  # FN-guard
+        assert _has_leading_reject("向量") is False  # FN-guard
+
+    def test_350_stranded_quantifier_recover_left(self):
+        assert _split_on_conjunction("第一基板及一個") == ["第一基板"]
+        # FN-guard: short non-quantifier residue stays whole
+        assert _split_on_conjunction("組件及A") == ["組件及A"]
+
+    def test_351_leading_ref_marker_strip(self):
+        assert _normalize_for_spec_support_tw("各所述天線") == "天線"

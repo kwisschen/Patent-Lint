@@ -376,6 +376,11 @@ _BARE_REF_NUMERAL_CN_RE = re.compile(
 # both are within claim scope. TW audit didn't surface 或-split because
 # TIPO drafters prefer the word 或者 which is distinct.
 _CN_CONJUNCTIONS: tuple[str, ...] = ("以及", "及", "和", "与", "或")
+# #350 parity — bare quantifiers that, on the right of a conjunction with no
+# noun after them, mark a walker-over-captured clause boundary (X 及 一个).
+_CN_BARE_QUANTIFIERS: frozenset[str] = frozenset({
+    "一", "一个", "一种", "两", "二", "两个", "多个", "若干", "各", "至少一",
+})
 
 # Sliding-window size (in CJK characters) for Tier 3 proximity matching.
 # Same ±30-char width as TW — Chinese noun phrases are 2-4 chars; ±30
@@ -446,6 +451,10 @@ def _normalize_for_spec_support_cn(
     )
     t = _strip_trailing_conjunction_cn(t)
     t = _strip_spec_support_trailing_tokens_cn(t)
+    # #321 parity — re-run the conjunction strip after the token strip: a token
+    # strip can remove an intervening predicate/preposition and re-expose a
+    # dangling coordinating conjunction (基部及位于 → 基部及 → 基部).
+    t = _strip_trailing_conjunction_cn(t)
     # Re-strip trailing numerals exposed by the verb strip.
     t = _PAREN_REF_NUMERAL_RE.sub("", t).strip()
     t = _BARE_REF_NUMERAL_CN_RE.sub("", t).strip()
@@ -559,16 +568,16 @@ def _split_on_conjunction_cn(
         if idx < 0:
             continue
         left = term[:idx].strip()
-        right = term[idx + len(conj):].strip()
+        raw_right = term[idx + len(conj):].strip()
         # Right side may carry a leading quantifier the walker preserved
         # because it started mid-phrase. Re-normalize.
         right = (
             normalize_reference_term_cn(
-                right,
+                raw_right,
                 strict_qualifier_matching=strict_qualifier_matching,
             )
-            if right
-            else right
+            if raw_right
+            else raw_right
         )
         if len(left) >= _MIN_INVENTORY_LENGTH and len(right) >= _MIN_INVENTORY_LENGTH:
             return (
@@ -580,6 +589,15 @@ def _split_on_conjunction_cn(
                     right,
                     strict_qualifier_matching=strict_qualifier_matching,
                 )
+            )
+        # #350 parity — stranded leading-quantifier tail (X及一个): keep the left
+        # noun, drop the tail. Gated on an EXACT bare-quantifier set (not a
+        # blanket right<MIN test) so a short non-quantifier residue (基板及A)
+        # stays whole.
+        if len(left) >= _MIN_INVENTORY_LENGTH and raw_right in _CN_BARE_QUANTIFIERS:
+            return _split_on_conjunction_cn(
+                left,
+                strict_qualifier_matching=strict_qualifier_matching,
             )
     return [term]
 
