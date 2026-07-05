@@ -90,6 +90,12 @@ _TW_BOILERPLATE_TERMS: frozenset[str] = frozenset({
     # spec-support boilerplate, not a referable noun phrase.
     "項所記載",
     "項記載",
+    # #334 — distributive quantifiers 每個 / 每一 ("each one"). Prefix-matched
+    # (_is_boilerplate), so the bare residue AND a 每個X / 每一X back-reference
+    # compound drop; the real head noun is separately inventoried via its own
+    # 一X intro, so this cannot silence a genuine §26第3項 finding.
+    "每個",
+    "每一",
 })
 
 # Trailing clause tokens observed in audit as walker-captured verbal tails
@@ -118,6 +124,10 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # noun phrases only.
         "大於",
         "小於",
+        # #343 — `達成` (achieve/accomplish), a predicate verb never a noun
+        # terminus. 2-char, so (key=len desc) it is tried before the 1-char
+        # `成`, which would otherwise leave the residual `導電材料達`.
+        "達成",
         # R10 (2026-06-01): trailing process / locative verbs from issues
         # #111 (`主面側蝕刻` → strip `蝕刻`) and #129 (`位部沿` → strip `沿`).
         # 蝕刻 (etching) is a process verb, 沿 is a locative preposition
@@ -322,6 +332,15 @@ _TW_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     # `朝往前述基板吸引前述光罩的吸引機構`. Never a noun; no real TIPO noun
     # starts `朝往` (朝向角度 starts 朝向, not 朝往).
     "朝往",
+    # 2026-07 batch:
+    # - #333 `另外` — adverb/determiner ("besides / the other"), captured
+    #   standalone (`另外兩個`). Never leads a TIPO element name; the real head
+    #   noun is separately inventoried.
+    # - #348 `以向` — 以-purpose + 向-coverb clause fragment (`以向一水體樣本`),
+    #   mirror of the existing 以控 / 以從. FN-safe: 以太網路 (Ethernet, 以太…)
+    #   and 向量 (vector, 向…) are unaffected — the reject is the 2-char lead.
+    "另外",
+    "以向",
 )
 
 # Characters that appear ONLY as noun suffixes in TW patent diction
@@ -432,14 +451,51 @@ def _normalize_for_spec_support_tw(text: str) -> str:
         if t.startswith(prep) and len(t) > len(prep):
             t = t[len(prep):]
             break
+    # #344 — leading method-step verb 提供一X / 設置一X: drop the verb so the
+    # 一-quantifier normalizer below recovers the head noun (提供一導線框架 →
+    # 導線框架). Gated on the following 一 (the indefinite-article intro marker)
+    # so the coverb 設置於 (→於) and genuine nouns 設置面 / 提供者 are untouched.
+    # The head noun is independently inventoried via its own 一X intro, so this
+    # only removes a redundant duplicate entry — zero coverage loss.
+    for verb in ("提供", "設置"):
+        if t.startswith(verb + "一") and len(t) > len(verb):
+            t = t[len(verb):]
+            break
     t = normalize_reference_term(t)
+    # #351 — strip a leading reference marker that survived normalize (a leading
+    # distributive quantifier can block the position-0 reference-form strip,
+    # stranding 所述 / 該 / 前述). A noun name never opens with a reference marker.
+    for pfx in ("前述", "所述", "該"):
+        if t.startswith(pfx) and len(t) > len(pfx):
+            t = t[len(pfx):]
+            break
+    # #342 (1) — de-yi possessive: X的一Y → Y (the head noun after 的一). The
+    # walker over-captured the possessor + 的一; the claimed element is Y. Only
+    # exposes the real head — if Y were truly unsupported it would still flag.
+    if "的一" in t:
+        suffix = t.rsplit("的一", 1)[1].strip()
+        if len(suffix) >= _MIN_INVENTORY_LENGTH:
+            t = normalize_reference_term(suffix)
     t = _recover_from_midphrase_prefix(t)
     t = _strip_trailing_conjunction(t)
     t = _strip_spec_support_trailing_tokens(t)
+    # #321 — re-run the trailing-conjunction strip AFTER the trailing-token
+    # strip: a token strip can remove an intervening predicate/preposition
+    # (位於) and re-expose a dangling coordinating conjunction (鎖定部及位於 →
+    # 鎖定部及) that the earlier pass could not reach. Collapses 鎖定部及 → 鎖定部,
+    # which dedups against the head-noun entry already in the inventory.
+    t = _strip_trailing_conjunction(t)
     # Re-strip trailing numerals exposed by the verb strip
     # (栓軸部(2212a)樞接 → 栓軸部(2212a) after 樞接 strip, now the paren
     # is at end and can be removed).
     t = _TRAILING_REF_NUMERAL_RE.sub("", t).strip()
+    # #342 (2) — trailing cardinal measure: X<cardinal>個 → X (垂直堆疊晶粒組二個
+    # → 垂直堆疊晶粒組). A measure-word count is never part of an element name.
+    # Guarded so the head remains an inventory-length noun (spares 整個/十字…
+    # which do not end in <cardinal>個).
+    measure_stripped = re.sub(r"[一二兩三四五六七八九十]+個$", "", t)
+    if measure_stripped != t and len(measure_stripped) >= _MIN_INVENTORY_LENGTH:
+        t = measure_stripped
     return t
 
 
@@ -517,6 +573,14 @@ def _strip_trailing_conjunction(term: str) -> str:
     return term
 
 
+# #350 — bare quantifiers that, on the right of a conjunction with no noun
+# after them, mark a walker-over-captured clause boundary (X 及 一個).
+_TW_BARE_QUANTIFIERS: frozenset[str] = frozenset({
+    "一", "一個", "一種", "一對", "兩", "二", "兩個",
+    "複數", "複數個", "多個", "若干", "一些", "各", "至少一",
+})
+
+
 def _split_on_conjunction(term: str) -> list[str]:
     """Split a walker-captured conjunction phrase into constituent nouns.
 
@@ -536,12 +600,19 @@ def _split_on_conjunction(term: str) -> list[str]:
         if idx < 0:
             continue
         left = term[:idx].strip()
-        right = term[idx + len(conj):].strip()
+        raw_right = term[idx + len(conj):].strip()
         # Right side may carry a leading quantifier (一/複數/一個) that the
         # walker preserved because it started mid-phrase. Re-normalize.
-        right = normalize_reference_term(right) if right else right
+        right = normalize_reference_term(raw_right) if raw_right else raw_right
         if len(left) >= _MIN_INVENTORY_LENGTH and len(right) >= _MIN_INVENTORY_LENGTH:
             return _split_on_conjunction(left) + _split_on_conjunction(right)
+        # #350 — stranded leading-quantifier tail: `X及一個` / `X與複數` — the
+        # walker over-captured a clause boundary, leaving a bare quantifier with
+        # no noun on the right. Keep the left noun, drop the tail. Gated on an
+        # EXACT bare-quantifier set (NOT a blanket right<MIN test): a short
+        # non-quantifier residue like `組件及A` (model letter) must stay whole.
+        if len(left) >= _MIN_INVENTORY_LENGTH and raw_right in _TW_BARE_QUANTIFIERS:
+            return _split_on_conjunction(left)
     return [term]
 
 
@@ -628,18 +699,26 @@ def _strip_trailing_bufen_before_verb(term: str, claim_text: str) -> str:
 # preposition / coverb / 所述-reference — the unambiguous verbal signature.
 # A genuine noun ending in one of these is followed by a particle (的/，/。)
 # or another noun, never these markers, so it is left intact.
-_TW_PREDICATE_TAILS: tuple[str, ...] = ("轉動", "鄰近", "連通", "受", "自")
+# #335 — 內凹 ("recessed inward") is a stative verb in `…第二擋牆內凹形成`
+# ("formed by … being recessed inward"), not part of the noun phrase.
+_TW_PREDICATE_TAILS: tuple[str, ...] = ("轉動", "鄰近", "連通", "內凹", "受", "自")
 _TW_PREDICATE_FOLLOW_MARKERS: tuple[str, ...] = (
     "至", "於", "到", "向", "在", "沿", "所述", "該", "予", "與", "和",
 )
+# #335 — formation verbs. A trailing predicate tail followed by one of these is
+# verbal (`…內凹形成` = "formed by being recessed"). Kept as a dedicated tuple
+# (not merged into the preposition/coverb markers) to bound the strip's reach.
+_TW_FORMATION_FOLLOW_MARKERS: tuple[str, ...] = ("形成", "而成", "構成")
 
 
 def _strip_trailing_predicate_before_marker(term: str, claim_text: str) -> str:
     """Strip a trailing gray predicate token when the claim continues with a
-    preposition / coverb marker (the verbal signature). Iterative so a stacked
-    `坡面…鄰近` (then `分別` via the plain trailing strip) fully unwinds.
-    FN-safe: a nominal `馬達轉動的` / `各自的` is followed by 的, not a marker.
+    preposition / coverb / formation marker (the verbal signature). Iterative so
+    a stacked `坡面…鄰近` (then `分別` via the plain trailing strip) fully unwinds.
+    FN-safe: a nominal `馬達轉動的` / `各自的` / `X內凹的` is followed by 的, not a
+    marker.
     """
+    markers = _TW_PREDICATE_FOLLOW_MARKERS + _TW_FORMATION_FOLLOW_MARKERS
     for _ in range(4):
         if not claim_text:
             break
@@ -650,7 +729,7 @@ def _strip_trailing_predicate_before_marker(term: str, claim_text: str) -> str:
         if pos < 0:
             break
         after = claim_text[pos + len(term):]
-        if not any(after.startswith(m) for m in _TW_PREDICATE_FOLLOW_MARKERS):
+        if not any(after.startswith(m) for m in markers):
             break
         term = term[: -len(hit)]
     return term

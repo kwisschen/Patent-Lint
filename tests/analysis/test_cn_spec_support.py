@@ -157,6 +157,15 @@ class TestSplitOnConjunctionCn:
         result = _split_on_conjunction_cn("基板及A")
         assert result == ["基板及A"]
 
+    def test_350_stranded_quantifier_recover_left(self):
+        # #350 CN parity: X及一个 with a bare-quantifier tail → keep left noun.
+        assert _split_on_conjunction_cn("第一基板及一个") == ["第一基板"]
+        # FN-guard: a short non-quantifier residue still stays whole (above).
+
+    def test_321_conjunction_after_token_strip(self):
+        # #321 CN parity: token strip re-exposes a dangling 及 → re-strip.
+        assert _normalize_for_spec_support_cn("基部及位于") == "基部"
+
 
 class TestLeadingRejectCn:
     """_has_leading_reject_cn: CN existential-verb + suffix-only leads."""
