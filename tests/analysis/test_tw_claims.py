@@ -427,6 +427,24 @@ class TestSubjectConsistency:
         result = check_subject_consistency(doc)
         assert result[0].status == "pass"
 
+    def test_yiju_opener_routes_to_dep_prefix(self):
+        """#328: 依據 is an accepted TIPO dep opener (parity with the parser);
+        a consistent 依據-opened dep claim passes, not parseUnclear."""
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種裝置，其特徵在於包含一基座。"),
+            _claim(2, "2. 依據請求項1所述之裝置，其中該基座為金屬。",
+                   independent=False, deps=[1]),
+        ])
+        result = check_subject_consistency(doc)
+        assert result[0].status == "pass"
+
+    def test_bare_dep_preamble_routes_to_dep_prefix(self):
+        """#328: the opener-less `請求項N所述之…` form is a valid dep preamble."""
+        from patentlint.analysis.tw_claims import _extract_subject_with_path
+        assert _extract_subject_with_path(
+            "請求項1所述之裝置，其中該基座為金屬。"
+        ) == ("裝置", "dep_prefix")
+
 
 # ── Check 19: Transition Phrase ──────────────────────────────────────────
 

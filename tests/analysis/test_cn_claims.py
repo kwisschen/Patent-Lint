@@ -490,6 +490,18 @@ class TestSubjectNameConsistency:
         assert unclear[0].diagnostics is not None
         assert unclear[0].diagnostics["dep_path"] == "fallthrough"
 
+    def test_yiju_and_bare_openers_route_to_dep_prefix(self):
+        """#328 CN parity: 依据 and the opener-less bare form route to
+        dep_prefix (agreeing with the _CN_DEPENDENCY parser), not fallthrough.
+        The wider 基于 opener stays unrecognized (see parseUnclear test)."""
+        from patentlint.analysis.cn_claims import _extract_subject_with_path
+        assert _extract_subject_with_path(
+            "依据权利要求1所述的装置，其特征在于还包括Z。"
+        )[1] == "dep_prefix"
+        assert _extract_subject_with_path(
+            "权利要求1所述的装置，其特征在于还包括Z。"
+        )[1] == "dep_prefix"
+
     def test_diagnostics_attached_on_verify(self):
         """Mismatch finding carries structural fingerprint."""
         doc = _cn_doc([
