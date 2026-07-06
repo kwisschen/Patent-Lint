@@ -678,6 +678,23 @@ _STOP_WORDS = (
     # by spatial prepositions `toward|towards|inward|outward|away|each
     # other` (verb usage). Bare `face` (noun) is unaffected.
     r"face(?=\s+(?:toward|towards|inward|outward|away|each\s+other))|"
+    # R32 (2026-07-06, report #326): `drive` / `swing` over-captured into the
+    # antecedent reference when a plural / coordinate subject takes the
+    # base-form finite verb (`the two guiding slots respectively drive the
+    # two guiding structures`; `the two swing arms swing on the side
+    # surface`). Both are noun-gray — `drive` is a noun in `disk drive` /
+    # `drive shaft` / `drive unit`; `swing` in `swing arm` — so a bare stop
+    # is FN-unsafe. Lookahead-gated (mirrors `counts` / `face`): `drive`
+    # fires ONLY in verb-object shape (followed by an object determiner),
+    # `swing` ONLY before a spatial preposition (the `face` gate pattern).
+    # The compound noun-modifier occurrence (`swing arm`, `drive shaft`) is
+    # followed by its head noun, not the gate token, so it is untouched;
+    # `respectively` between subject and verb is already an _ADVERB_STOPS
+    # member. FN-guarded (examiner 0, corpus silenced_legit 0). Shared
+    # `_NP_CORE` covers the spec-support extractor (cross-CHECK). EPC reuses
+    # US. No CN/TW mirror (English-verb over-capture) — TW `對接` is a
+    # separate interior-cut class (#330/#331).
+    r"drive(?=\s+(?:a|an|the)\b)|swing(?=\s+(?:on|toward|towards|inward|outward|away)\b)|"
     # R5 (2026-05-26): `accounts` as 3sg finite verb only — lookahead on
     # `\s+for` discriminates the `<noun> accounts for X` verb-object pattern
     # (#98 alumina, #99 silica) from the bare-noun usage (`financial accounts`,
@@ -1722,6 +1739,18 @@ def has_bare_noun_introduction(
     """
     t = (term or "").strip().lower()
     if not t or len(t.split()) < 2:
+        # DEFERRED R33 (reports #336/#337): a single-word GERUND process-noun
+        # (`bonding`) recited earlier in article-less verb-object position
+        # (`bonding the wafers`) DOES supply antecedent (MPEP §2173.05(e)), so
+        # `the bonding` in a dependent claim is not indefinite. The mechanism
+        # is built + PA-corpus-validated (validate_fix: 3 gold FPs silenced /
+        # 0 legit) but BLOCKED on the examiner FN-guard: us_examiner_legit.json
+        # carries 24 single-word gerund terms (the bonding / filling / heating
+        # / cooling / mating / sensing / winding / …) that must be cleared via
+        # the examiner ODP join (tests/eval/ws_a3_examiner_join.py), which
+        # needs the EdgeXpert DB (Tailscale, unreachable this session). Ship
+        # only after that join returns 0 silenced examiner terms. The TW mirror
+        # (#340) has no examiner-DB dependency and ships independently.
         return False
     pat = re.compile(r"(?<![a-z0-9])" + re.escape(t) + r"(?![a-z0-9])")
     low = (claim_text or "").lower()
