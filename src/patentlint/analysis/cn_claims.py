@@ -1987,6 +1987,15 @@ def clean_noun_phrase_cn(text: str) -> str:
         idx = search_text.find(verb)
         if idx >= 0 and (idx + search_offset) >= min_absolute_idx:
             absolute_idx = idx + search_offset
+            # #349 CN parity (mirror of TW): an interior verb immediately
+            # followed by the device-noun 天线 is a noun-modifier of an antenna
+            # compound (发射接收天线 / 接收天线 / 传送天线), not a clause boundary.
+            # FN-safe: 天线 is unambiguously a noun head; the over-capture case
+            # never has 天线 as the verb's next token. Prevents the truncation
+            # 发射接收天线 -> 发射. No CN report — free TW->CN parity (DR-1 exempt:
+            # identical structural bug on the shared normalizer design).
+            if text[absolute_idx + len(verb):].startswith("天线"):
+                continue
             # R31 noun-compound guard (length-bounded): skip cut if verb is
             # in whitelist, char after is noun-suffix, total len ≤ 8.
             if (verb in _R31_NOUN_COMPOUND_VERBS_CN

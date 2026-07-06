@@ -3301,6 +3301,17 @@ def clean_noun_phrase_tw(text: str) -> str:
         # total before the verb in the absolute original text.
         if idx >= 0 and (idx + search_offset) > 1:
             absolute_idx = idx + search_offset
+            # #349 (2026-07-06): an interior verb immediately followed by the
+            # device-noun 天線 is a noun-modifier of an antenna compound
+            # (發射接收天線 / 接收天線 / 傳送天線), not a clause boundary. FN-safe:
+            # 天線 is unambiguously a noun head, so no verb reading of `接收天線`
+            # exists; the over-capture case (接收 governing a clause) never has
+            # 天線 as its next token. Prevents the truncation 發射接收天線 -> 發射
+            # that surfaced as a spec-support FP (所述發射). Symmetric on the
+            # intro + reference normalize paths, so antecedent matching is
+            # unaffected. Mirrors the R31 noun-suffix guard for a 2-char suffix.
+            if text[absolute_idx + len(verb):].startswith("天線"):
+                continue
             # R31 noun-compound guard (length-bounded):
             if (verb in _R31_NOUN_COMPOUND_VERBS_TW
                     and len(text) <= 8):
