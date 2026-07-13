@@ -700,6 +700,29 @@ _STOP_WORDS = (
     # (#98 alumina, #99 silica) from the bare-noun usage (`financial accounts`,
     # `accounts receivable`) which active US labels confirm exists in corpus.
     r"accounts(?=\s+for)|"
+    # R33 (2026-07-13, report #374): interior verb terminator. `_STOP_WORDS` is
+    # the ONLY interior cut the US NP capture has (the trailing cleaner in
+    # `clean_noun_phrase` pops from the end and cannot reach a verb that has an
+    # object behind it). The base form `include` was missing — only the 3sg
+    # `includes` was a stop — so a plural subject ran the capture straight
+    # through into the object: `wherein the reaction condition data include feed
+    # temperature, feed pressure…` captured `the reaction condition data include
+    # feed temperature`. FN-safe as a bare stop: `include` has no noun sense in
+    # patent diction (the noun is `inclusion`). EPC reuses the US walker, so it
+    # inherits this for free.
+    #
+    # `using` was TRIALED IN THIS ROUND AND WITHHELD (reports #357/#364). It
+    # cleanly recovers `the target zone` from `the target zone using another
+    # sensing data`, but validate_fix caught it silencing 2 gold-legit defects —
+    # `the resection using dynamic visualization data` (US11896442B2 c16) and
+    # `the language model using textual data` (US20220309089A1 c7). Those are
+    # structurally IDENTICAL to #357 (`the <head> using <NP>`), so no surface
+    # gate can separate them. The cut is not what fails: it exposes an intro-side
+    # gap (the bare head resolves against a bare-noun intro the ensemble does not
+    # accept) that the over-capture had been accidentally masking. Shipping it
+    # would trade 2 real defects for the FP — an FN, which we never ship. The
+    # `using` class is therefore blocked on the intro side, not here.
+    r"include|"
     r"adapted|arranged|coupled|connected|mounted|disposed|storing|determining|corresponding|"
     r"extends|provides|receives|generates|produces|performs|"
     r"executes|transmits|operates|determines|defines|forms|"
@@ -807,6 +830,24 @@ _VERB_STOPS = {
     # 'abuts' was already stopped; 'abut' has no noun sense (the noun is
     # 'abutment'), so the whole-word strip is FN-safe and symmetric.
     "abut",
+    # R33 (2026-07-13, reports #362 + #375) — never-noun verb forms that
+    # over-captured into the trailing position of a reference/intro:
+    #   enters / re-enters — `the sensing system re-enters the offline phase`
+    #     (the NP capture stops at the object determiner `the`, leaving the
+    #     finite verb as the trailing token). No noun sense exists (the noun
+    #     is `entry`/`entrance`), so a bare strip is FN-safe. `re-enters` is a
+    #     single `_WORD` token (the pattern spans hyphens), so it needs its own
+    #     entry — the `enters` entry does NOT cover it.
+    #   built — irregular past participle, so it is invisible to the `-ed`
+    #     heuristic in `_is_likely_past_participle` (that was the gap): the
+    #     INTRO `a chemical theoretical model built by data fitting` captured
+    #     `chemical theoretical model built`, which then failed to match the
+    #     bare reference `the chemical theoretical model` (#375). Stripped in
+    #     the TRAILING cleaner (not `_STOP_WORDS`) deliberately: the compound
+    #     modifier `built-in` is one hyphenated `_WORD` token here and so is
+    #     untouched, whereas a `_STOP_WORDS` entry would terminate the capture
+    #     of `the built-in memory` at `built` (a real FN).
+    "enters", "re-enters", "built",
     "executes", "transmits", "generates", "determines", "operates",
     "leaves", "allows", "enables", "prevents", "permits",
     "encompasses", "contains", "produces", "creates", "maintains",
@@ -1101,6 +1142,18 @@ def _should_strip_trailing(word: str) -> bool:
 _CONTEXTUAL_VERB_STOPS = {
     "output":  frozenset({"to", "from", "by", "with", "via", "on", "into", "onto", "toward", "towards"}),
     "input":   frozenset({"to", "from", "by", "with", "via", "on", "into", "onto"}),
+    # R33 (2026-07-13, reports #362/#363): `scans` / `monitors` as 3sg finite
+    # verbs (`the first sensing apparatus scans the target zone`; `the sensing
+    # system monitors the target zone in real time`). Both are genuinely
+    # noun-gray — `scans` is a noun in `the CT scans`, `monitors` in `the
+    # display monitors` — so a bare `_VERB_STOPS` entry would be FN-unsafe.
+    # Gated on a following object determiner, which is the verb-object shape:
+    # the plural-noun reading is followed by a predicate (`the monitors are
+    # coupled…`), never by `a`/`an`/`the`. Same gate as R32's `drive`.
+    # (`_is_likely_third_person_verb` cannot reach either: `scans` is below its
+    # 6-char floor, and `-ors` is not one of its verb suffixes.)
+    "scans":    frozenset({"a", "an", "the"}),
+    "monitors": frozenset({"a", "an", "the"}),
     "range":   frozenset({"from", "between", "to", "over", "in", "through"}),
     "ranges":  frozenset({"from", "between", "to", "over", "in", "through"}),
     "ranged":  frozenset({"from", "between", "to", "over", "in", "through"}),
