@@ -2294,6 +2294,34 @@ _REF_PATTERN_CAPTURE = re.compile(
 # ``sorted(..., key=len, reverse=True)`` is applied once at import time.
 _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
     (
+        # === R27 (2026-07-13) — report-driven trailing predicate verbs ===
+        # Each bled into the captured term (intro or reference), leaving the
+        # bare-noun head unmatched against its counterpart. All are endswith
+        # strips, so noun compounds that merely CONTAIN the verb are untouched
+        # (樞接部 / 樞接件 do not END in 樞接). FN-guarded by validate_fix
+        # (silenced_legit==0) + fixture protect_violations==0.
+        #   樞接 ("pivotally connect") — #354/#355: the intro
+        #     `以一轉軸線樞接於所述框架` over-captured to 轉軸線樞接, so the
+        #     reference 所述轉軸線 found no intro.
+        #   拍攝 ("photograph") / 運行 ("operate/run") — #366/#369: BOTH sides of
+        #     the same pair were over-captured — intro `於一線上階段運行的一照相機`
+        #     -> 線上階段運行, reference `該照相機於該線上階段拍攝該目標區域`
+        #     -> 該線上階段拍攝 — so the noun 線上階段 ("online phase") never
+        #     matched itself. 運行 is the noun-grayest of the four (it can head a
+        #     noun phrase, "the operation"), so it is the one that most needs the
+        #     empirical gate: validate_fix confirms 0 gold-legit silenced.
+        "樞接", "拍攝", "運行",
+        # 催化下 — #381/#382/#383/#384 (four reports, one root cause). NOT a bare
+        # trailing verb but the Chinese verbal-locative frame 在<N><V>下 ("under
+        # the <V> of <N>"): the intro `在一觸媒催化下進行反應` over-captured to
+        # 觸媒催化下, so every 所述觸媒 reference across claims 6/7/13/14 was
+        # orphaned. The strip must include the 下 because that is where the
+        # capture ends — a bare 催化 entry would never fire. Deliberately NOT
+        # generalized to other <V>下 frames (作用下 / 控制下): DR-1, no report
+        # attests them, and the endswith form makes each a one-line add when one
+        # does. FN-safe: no noun ends in 催化下, and the catalyst noun 催化劑 is
+        # untouched (it does not end in 催化下).
+        "催化下",
         # #341 (2026-07) — 達成 ("achieve/accomplish"), a predicate verb that bled
         # into the captured reference (`一導電材料達成所述鍵合` → intro over-captures
         # `導電材料達成`, mismatching the bare reference 導電材料). Never a noun
@@ -2857,6 +2885,17 @@ _PLURAL_REFERENCE_PREFIXES: tuple[str, ...] = tuple(sorted(
 # Ordered longest-first so 設有/包含 strip before single-char tokens.
 _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
     (
+        # === R27 (2026-07-13, report #356) ===
+        # 排成: arrangement verb ("arranged into"). The intro
+        # `多個所述齒條沿一直線方向排成一列` over-captured to 直線方向排成一列,
+        # so the reference 所述直線方向 was orphaned. This is an INTERIOR cut,
+        # not a trailing strip: the over-capture has a real noun (一列, "a row")
+        # BEHIND the verb, which the endswith-based trailing pass can never
+        # reach — the same reason 設有 lives here. No compound-noun risk: 排成
+        # is purely verbal (the arrangement nouns are 排列 / 陣列, neither of
+        # which contains 排成), so the > 1 index gate plus the exceptions set
+        # leave every real noun intact.
+        "排成",
         # === Phase 8b R7 — Added 2026-04-30 (Claire-draft audit) ===
         # 覆蓋: process verb ("cover"). Observed in c10/c13/c15 of the
         #     Claire draft (`被前述閘極電極覆蓋的前述p型通道層`,
@@ -3311,6 +3350,21 @@ def clean_noun_phrase_tw(text: str) -> str:
             # intro + reference normalize paths, so antecedent matching is
             # unaffected. Mirrors the R31 noun-suffix guard for a 2-char suffix.
             if text[absolute_idx + len(verb):].startswith("天線"):
+                continue
+            # R27 (2026-07-13, reports #352/#353): the cut lands on the HEAD of a
+            # known compound noun. `_INTERIOR_CUT_EXCEPTIONS` was only ever
+            # consulted as a PREFIX of the captured text, so a compound whose
+            # protected noun sits at the TAIL was unprotected: 對接連接器
+            # ("docking connector") cut at the interior verb 連接 -> 對接, even
+            # though 連接器 is itself a declared exception. The reference
+            # 所述對接連接器 then no longer matched its 一對接連接器 intro.
+            # Generalizes the #349 天線 guard from one hard-coded device noun to
+            # the whole declared-compound set, and is FN-safe by the same
+            # argument as the prefix protection it mirrors: if the text starting
+            # AT the verb is a known compound noun, the verb is noun-internal
+            # (the head of 連接器 / 接收器 / 傳送器), not a clause boundary. A real
+            # clause boundary (底座設有一孔洞) has no declared compound at the cut.
+            if _longest_protected_prefix(text[absolute_idx:]) > 0:
                 continue
             # R31 noun-compound guard (length-bounded):
             if (verb in _R31_NOUN_COMPOUND_VERBS_TW

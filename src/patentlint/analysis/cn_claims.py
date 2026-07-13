@@ -1517,6 +1517,21 @@ _REF_PATTERN_CAPTURE_CN = re.compile(
 # tw_claims.py lines 869–990).
 _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
     (
+        # === R52 (2026-07-13) — TW R27 parity (reports #354/#355, #366, #381-#384) ===
+        # Trailing predicate verbs that bled into the captured term, orphaning
+        # the bare-noun head. All verified LATENT on the CN side by direct probe
+        # before the fix (clean_noun_phrase_cn left each over-capture intact), so
+        # these are real parity bugs, not speculative mirrors. endswith strips, so
+        # noun compounds that merely CONTAIN the verb are untouched (枢接部 does not
+        # END in 枢接). 运行 was ALREADY present on the CN side — the asymmetry ran the
+        # other way for that one, which is exactly what the parity check is for.
+        #   枢接 ("pivotally connect") — TW #354/#355.
+        #   拍摄 ("photograph") — TW #366.
+        #   催化下 — TW #381-#384: the verbal-locative frame 在<N><V>下 ("under the
+        #     <V> of <N>"). The strip must include the 下 because that is where the
+        #     capture ends; a bare 催化 entry would never fire. The catalyst noun
+        #     催化剂 is untouched (it does not end in 催化下).
+        "枢接", "拍摄", "催化下",
         "包含", "包括", "含有", "具有", "系", "为", "是", "设有", "具备",
         "通过", "经由", "借由", "基于", "透过", "根据", "依据",
         # R45 (2026-06-26): trailing predicate verbs from the CN normalization-
@@ -1828,6 +1843,12 @@ _PLURAL_REFERENCE_PREFIXES_CN: tuple[str, ...] = tuple(sorted(
 # lines 1138–1331 for the historical risk-review rationale per verb.
 _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
     (
+        # R52 (2026-07-13) — TW R27 parity (report #356). 排成 ("arranged into"):
+        # an INTERIOR cut, not a trailing strip, because the over-capture has a
+        # real noun BEHIND the verb (一列, "a row") that the endswith pass can
+        # never reach. Purely verbal — the arrangement nouns are 排列 / 阵列,
+        # neither of which contains 排成 — so no compound-noun risk.
+        "排成",
         "设有", "包含", "包括", "具有", "含有", "具备",
         "系为", "系于", "为", "是", "系",
         "所述", "前述", "该等", "该些",
@@ -1996,6 +2017,23 @@ def clean_noun_phrase_cn(text: str) -> str:
             # identical structural bug on the shared normalizer design).
             if text[absolute_idx + len(verb):].startswith("天线"):
                 continue
+            # R52 (2026-07-13) — the TW R27 tail-compound guard (reports
+            # #352/#353) was TRIALED HERE AND WITHHELD. It is genuinely latent on
+            # CN (clean_noun_phrase_cn('对接连接器') -> '对接' truncates exactly as
+            # TW did), but MEASURED on the CN corpus it is net-harmful: on
+            # CN120359669A it correctly retires 6 truncation artifacts
+            # (所述插头 / 所述插座, which exist nowhere in the draft — the real
+            # references are 所述插头连接器 / 所述插座连接器) but ADDS 8 findings,
+            # several malformed: 所述插头连接器(100)从插 and 所述插座连接器(200)移除.
+            # Root cause: the CN noun capture admits the parenthesized reference
+            # numeral and does not treat 从 as a boundary char (TW's _NOUN_CHARS
+            # excludes 從), so the interior cut at 连接 had been silently acting as
+            # a garbage collector for a capture-side defect. Removing the cut
+            # exposes it, trading 6 artifact findings for new FPs — so the CN
+            # mirror is BLOCKED ON a capture-side fix (strip the trailing
+            # refnum-paren + add the 从 boundary), not on this guard. TW ships
+            # alone; the CN capture fix is the tracked follow-up.
+            pass
             # R31 noun-compound guard (length-bounded): skip cut if verb is
             # in whitelist, char after is noun-suffix, total len ≤ 8.
             if (verb in _R31_NOUN_COMPOUND_VERBS_CN
