@@ -1515,6 +1515,13 @@ _REF_PATTERN_CAPTURE_CN = re.compile(
 
 # Trailing-verb denylist (mechanical TC→SC swap; historical rationale in
 # tw_claims.py lines 869–990).
+# Noun compounds ending in 匹配 that must survive the trailing-verb strip (see
+# the R53 guard at the strip site). 匹配 is noun-gray: it is a predicate in the
+# 与…相匹配 construction (strip) but the head of an element name in 阻抗匹配
+# (do not strip). Extend this set when a report attests another such compound.
+_MATCH_NOUN_COMPOUNDS_CN: frozenset[str] = frozenset({"阻抗匹配"})
+
+
 _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
     (
         # === R52 (2026-07-13) — TW R27 parity (reports #354/#355, #366, #381-#384) ===
@@ -2065,6 +2072,20 @@ def clean_noun_phrase_cn(text: str) -> str:
                 continue
             # WS-B1: 向 binds as a noun suffix in direction nouns (方向/轴向/…).
             if verb == "向" and current[-2] in _DIRECTION_STEM_BEFORE_XIANG_CN:
+                continue
+            # R53 (2026-07-13) — noun-compound guard for the trailing 匹配.
+            # The bare 匹配 strip is LOAD-BEARING (it is what recovers 策略 from
+            # the very common 与…相匹配 predicate: 所述策略相匹配 -> 策略, gold-legit
+            # on CN105354747B c18/c45 — removing it was trialed this round and
+            # measured net-harmful, re-introducing the 策略相匹配 over-capture).
+            # But as an UNCONDITIONAL endswith strip it was also a latent FALSE
+            # NEGATIVE that predates this round: 阻抗匹配 ("impedance matching") is
+            # a real element name in RF drafts, so a genuine 所述阻抗匹配 antecedent
+            # defect was truncated to 阻抗 and could never be flagged. Guarding the
+            # noun compound keeps the predicate strip while closing the FN. TW never
+            # carried a bare 匹配 entry, so it has no equivalent exposure — the
+            # standing cross-jurisdiction parity check is what surfaced this.
+            if verb == "匹配" and current in _MATCH_NOUN_COMPOUNDS_CN:
                 continue
             if verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN:
                 if verb in _NOUNLIKE_VERY_RELAXED_SUFFIXES_CN:
