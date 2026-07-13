@@ -2885,6 +2885,20 @@ _PLURAL_REFERENCE_PREFIXES: tuple[str, ...] = tuple(sorted(
 # Ordered longest-first so 設有/包含 strip before single-char tokens.
 _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
     (
+        # === R28 (2026-07-13, report #367) ===
+        # 中匹配 / 內匹配: the verb 匹配 ("match") gated on a preceding LOCATIVE.
+        # The spec-support extractor captured 物件中匹配 from
+        # `從該...辨識出的該一或多個物件中匹配出該目標區域內相同的...`, and the
+        # verb-bearing phrase then failed the fuzzy spec match -> FP.
+        # 匹配 is NOUN-GRAY and so is deliberately NOT a bare boundary token:
+        # 阻抗匹配 ("impedance matching") is a real element name in RF drafts, and
+        # a bare 匹配 cut would truncate it to 阻抗 (a false negative). Encoding the
+        # locative INTO the token is what makes this FN-safe: 阻抗匹配 contains no
+        # 中匹配 / 內匹配, so it is untouched, while 物件中匹配 cuts at the 中 and the
+        # existing locative rule recovers the bare head 物件. This is the
+        # locative-gated shape of R17's locative-before-verb cut, and it is the
+        # extension point for any future noun-gray verb of the same class.
+        "中匹配", "內匹配",
         # === R27 (2026-07-13, report #356) ===
         # 排成: arrangement verb ("arranged into"). The intro
         # `多個所述齒條沿一直線方向排成一列` over-captured to 直線方向排成一列,
