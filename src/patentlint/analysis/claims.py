@@ -18,7 +18,8 @@ from patentlint.analysis.utils import (
     extract_pattern_a_intros,
     extract_abbreviation_intros, clean_noun_phrase, _strip_comparative_tail,
     compute_confidence_score, make_document_dedup_key,
-    strip_contextual_verb, token_set_jaccard,
+    strip_contextual_verb, strip_trailing_adverb, token_set_jaccard,
+    _is_likely_past_participle,
     first_ancestor_with_term, has_bare_noun_introduction,
 )
 from patentlint.diagnostic_extractors import extract_special_format
@@ -231,6 +232,30 @@ _SKIP_TERMS = {"invention", "present invention", "same", "following", "above", "
 # antecedent. Walk-time skip rather than extraction-time carve-out so
 # the heuristic stays narrow and inspectable.
 _MARKUSH_GROUP_TRAIL = re.compile(r"^\s+(?:consisting\s+of|of)\b", re.IGNORECASE)
+# R34 (2026-07-18, report #400): partitive trail after a pronoun head —
+# `the switched one OF THE plurality of channels`. Requires a determiner
+# after `of` so a genuine compound (`the one of a kind marker`) is untouched.
+_PARTITIVE_OF_TRAIL = re.compile(
+    r"^\s+of\s+(?:the|a|an|said|these|those|each)\b", re.IGNORECASE
+)
+
+
+def _is_partitive_pronoun_head(term: str) -> bool:
+    """True when ``term`` heads on a partitive pronoun rather than an element.
+
+    Plural ``ones`` always qualifies. Singular ``one`` qualifies only when its
+    modifier is a past participle, which keeps the guard clear of the
+    ordinal/quantifier/deictic singulars the US examiner corpus confirms as
+    real §112(b) defects (``the first one``, ``the at least one``).
+    """
+    words = term.lower().split()
+    if not words:
+        return False
+    if words[-1] == "ones":
+        return True
+    if words[-1] == "one" and len(words) >= 2:
+        return _is_likely_past_participle(words[-2])
+    return False
 
 
 def _word_boundary_match(needle: str, haystack: str) -> bool:
@@ -522,10 +547,35 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
             raw_noun = " ".join(_strip_comparative_tail(raw_noun.split())) or raw_noun
             term = clean_noun_phrase(raw_noun)
             term = strip_contextual_verb(term, claim_text_lower[m.end():])
+            # R34 (2026-07-18, report #397): drop a trailing manner adverb
+            # left behind once the finite verb it modifies is stripped
+            # (`the ports closely join …` → `ports closely` → `ports`).
+            term = strip_trailing_adverb(term)
             if not term:
                 continue
             # Skip standalone quantifiers/pronouns ("the one", "the another")
             if term.lower() in _QUANTIFIER_STOPS:
+                continue
+            # R34 (2026-07-18, report #400): partitive pronoun. `the switched
+            # one of the plurality of channels` heads on the PRONOUN `one`,
+            # not on an element — the element is whatever follows `of`, and it
+            # is checked independently by its own reference. The bare `the
+            # one` case is already covered by `_QUANTIFIER_STOPS` above.
+            #
+            # Deliberately NARROW, because the US examiner ground truth
+            # carries four confirmed §112(b) rejections whose term ends in a
+            # singular `one` (`the respective one`, `the at least one`, `the
+            # current one`, `the first one`). Every one of those modifiers is
+            # an ordinal/quantifier/deictic — NONE is a past participle. So
+            # the guard fires only for:
+            #   * plural `ones`  (`the remaining ones`, `the different ones`)
+            #   * singular `one` modified by a PAST PARTICIPLE (`the switched
+            #     one`, `the selected one`) — the participle names a selection
+            #     operation, which is unambiguously partitive.
+            # Verified reachability: 0 of the 3,173 examiner-confirmed terms.
+            if _is_partitive_pronoun_head(term) and (
+                _PARTITIVE_OF_TRAIL.match(claim_text_lower[m.end():])
+            ):
                 continue
             # Markush "the group consisting of A, B, C" — 'group' is the
             # head of the Markush definition, not a missing antecedent.

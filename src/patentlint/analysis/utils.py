@@ -1154,6 +1154,19 @@ _CONTEXTUAL_VERB_STOPS = {
     # 6-char floor, and `-ors` is not one of its verb suffixes.)
     "scans":    frozenset({"a", "an", "the"}),
     "monitors": frozenset({"a", "an", "the"}),
+    # R34 (2026-07-18, reports #391 + #397): same 3sg/base-form finite-verb
+    # shape as R33, gated identically on a following object determiner.
+    #   sandwich — `the third die and the first die sandwich the first
+    #     sandwiching portion` (#391). Noun-gray: `a die sandwich` is a real
+    #     stacked structure, so a bare `_VERB_STOPS` entry would be FN-unsafe.
+    #     The noun reading is always followed by a predicate, never by
+    #     `a`/`an`/`the`.
+    #   join — `to make one of the ports closely join the other of the ports`
+    #     (#397). Noun-gray in software claims (`the join operation`, `the
+    #     join between the two tables`), where the following token is a noun
+    #     or preposition — never a bare object determiner.
+    "sandwich": frozenset({"a", "an", "the"}),
+    "join":     frozenset({"a", "an", "the"}),
     "range":   frozenset({"from", "between", "to", "over", "in", "through"}),
     "ranges":  frozenset({"from", "between", "to", "over", "in", "through"}),
     "ranged":  frozenset({"from", "between", "to", "over", "in", "through"}),
@@ -1161,6 +1174,28 @@ _CONTEXTUAL_VERB_STOPS = {
 }
 
 _NEXT_WORD_RE = re.compile(r"\s*([A-Za-z][A-Za-z'\u2019-]*)")
+_NEXT_TWO_WORDS_RE = re.compile(
+    r"\s*([A-Za-z][A-Za-z'\u2019-]*)\s+([A-Za-z][A-Za-z'\u2019-]*)"
+)
+
+# R34 (2026-07-18, reports #386/#401): two-token contextual verb stops. A
+# handful of noun-gray verbs take a PREPOSITIONAL object rather than a bare
+# determiner, so the one-token gate above cannot reach them \u2014 but gating on
+# the bare preposition alone would be FN-unsafe.
+#
+# WITHHELD \u2014 `switches` (reports #386/#401, `the selection line switches to
+# the channel`). The natural gate is `to the`/`to a`/`to an`, but the US
+# examiner ground truth carries TWO confirmed \u00a7112(b) rejections whose term is
+# the plural NOUN `switches` (`the main switches` \u2014 app 18599360; `the
+# semi-conductor switches` \u2014 app 18573531), and a noun+PP reading (`the main
+# switches to the load`) is indistinguishable from the verb reading under any
+# fixed-width lookahead. Neither application is in the round-1 corpus, and
+# their claim text lives only in the EdgeXpert DB, which is unreachable \u2014 the
+# same blocker as the deferred R33-gerund class (#336/#337). Corpus-silent
+# either way (0 occurrences of `X switches to/between DET` in 10,898 US
+# findings), so shipping it would buy nothing measurable and risk an FN.
+# Queued for /walker-round once the examiner FN-guard is runnable.
+_CONTEXTUAL_VERB_STOPS_2W: dict[str, frozenset[str]] = {}
 
 
 def strip_contextual_verb(term: str, following_text: str) -> str:
@@ -1175,14 +1210,59 @@ def strip_contextual_verb(term: str, following_text: str) -> str:
         return term
     last = words[-1].lower().rstrip(".,;:")
     complements = _CONTEXTUAL_VERB_STOPS.get(last)
-    if not complements:
+    if complements:
+        m = _NEXT_WORD_RE.match(following_text)
+        if m and m.group(1).lower() in complements:
+            return " ".join(words[:-1])
         return term
-    m = _NEXT_WORD_RE.match(following_text)
-    if not m:
+    complements_2w = _CONTEXTUAL_VERB_STOPS_2W.get(last)
+    if complements_2w:
+        m2 = _NEXT_TWO_WORDS_RE.match(following_text)
+        if m2 and f"{m2.group(1).lower()} {m2.group(2).lower()}" in complements_2w:
+            return " ".join(words[:-1])
+    return term
+
+
+# R34 (2026-07-18, report #397): manner adverbs that over-captured into the
+# trailing position of a REFERENCE noun phrase once the finite verb they
+# modify was stripped (`the ports closely join the other \u2026` \u2192 `ports closely`
+# after the `join` stop fires). A trailing `-ly` adverb is never a noun head,
+# but a blanket `-ly` suffix test is NOT safe \u2014 `assembly`, `supply`, `poly`
+# and `anomaly` are real patent nouns. Hence an explicit curated set of the
+# manner adverbs that actually occur in claim predicates.
+#
+# Reference-side ONLY (never in `clean_noun_phrase`), following the WS-A3
+# precedent: an intro-side strip could generalize an introduction and mask a
+# real \u00a7112(b) defect, whereas a reference-side strip can only ever relax the
+# match for the reference that already over-captured.
+_TRAILING_ADVERB_STOPS = frozenset({
+    "closely", "directly", "indirectly", "fixedly", "slidably", "rotatably",
+    "pivotally", "movably", "removably", "detachably", "electrically",
+    "mechanically", "thermally", "optically", "operatively", "operably",
+    "communicatively", "respectively", "selectively", "sequentially",
+    "simultaneously", "partially", "completely", "substantially",
+    # NOT `further`: it is a focus particle, not a manner adverb, and in
+    # `the generating further comprises …` it heads the claim-transition
+    # idiom rather than over-capturing. Measured on the US corpus it ends
+    # ZERO FPs and merely re-keys 31 gerund-process-step findings from
+    # `generating further` to `generating` — churn that would need ADR-111
+    # dual-labeling for no precision gain, and that collides with the
+    # DEFERRED R33-gerund class (#336/#337). DR-1: no report evidences it.
+})
+
+
+def strip_trailing_adverb(term: str) -> str:
+    """Strip a trailing manner adverb from an over-captured reference phrase.
+
+    Requires at least one remaining token so a standalone adverb capture is
+    left untouched for the existing short-residual guards to reject.
+    """
+    if not term:
         return term
-    if m.group(1).lower() not in complements:
-        return term
-    return " ".join(words[:-1])
+    words = term.split()
+    while len(words) > 1 and words[-1].lower().rstrip(".,;:") in _TRAILING_ADVERB_STOPS:
+        words = words[:-1]
+    return " ".join(words)
 
 
 _VARIABLE_IDENTIFIER_RE = re.compile(r"^[a-z][a-z0-9]?'?$")
