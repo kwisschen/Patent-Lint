@@ -1524,6 +1524,10 @@ _MATCH_NOUN_COMPOUNDS_CN: frozenset[str] = frozenset({"阻抗匹配"})
 
 _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
     (
+        # === R54 (2026-07-18) - TW R29 parity (reports #389/#390, #394/#395/#396) ===
+        # Verified LATENT on the CN side by direct probe before the fix (same
+        # discipline as R52: probe first, mirror only what actually reproduces).
+        "划分", "随着",
         # === R52 (2026-07-13) — TW R27 parity (reports #354/#355, #366, #381-#384) ===
         # Trailing predicate verbs that bled into the captured term, orphaning
         # the bare-noun head. All verified LATENT on the CN side by direct probe
@@ -1850,6 +1854,9 @@ _PLURAL_REFERENCE_PREFIXES_CN: tuple[str, ...] = tuple(sorted(
 # lines 1138–1331 for the historical risk-review rationale per verb.
 _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
     (
+        # === R54 (2026-07-18) - TW R29 parity (reports #394/#395/#396) ===
+        # Interior counterparts of the R54 trailing strips; latent-verified.
+        "随着", "满足下式", "满足下列", "满足以下", "满足如下",
         # R52 (2026-07-13) — TW R27 parity (report #356). 排成 ("arranged into"):
         # an INTERIOR cut, not a trailing strip, because the over-capture has a
         # real noun BEHIND the verb (一列, "a row") that the endswith pass can

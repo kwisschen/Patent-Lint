@@ -1271,3 +1271,18 @@ class TestCnIndefiniteWording:
         doc = self._doc("1. 一种装置，其中第一齿轮等于第二齿轮，直径约为5毫米。")
         res = check_indefinite_wording_cn(doc)
         assert res[0].status == "pass"
+
+
+class TestR54TrailingAndInteriorVerbParity:
+    """R54 (2026-07-18) — TW R29 parity, verified latent on CN before mirroring."""
+
+    def test_trailing_and_interior_verbs(self):
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn as C
+        assert C("预定输入电流值划分为多个级距") == "预定输入电流值"
+        assert C("柱镜焦度随着一方位角变化") == "柱镜焦度"
+        assert C("等效球面焦度满足下式") == "等效球面焦度"
+
+    def test_satisfy_narrowed_to_formula_idiom(self):
+        """FN-guard: a bare 满足 strip would truncate 'meets or exceeds'."""
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn as C
+        assert C("运行长度满足或超过所述阈值") == "运行长度满足或超过"

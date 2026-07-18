@@ -1081,3 +1081,76 @@ class TestTwWalkerR14:
         )
         terms = {r.get("term") for r in check_antecedent_basis(doc)}
         assert "導通線路" not in terms
+
+
+class TestR29StrandedRelationalHeadAndLexemeSplit:
+    """R29 (2026-07-18) — reports #389/#390, #394/#395, #396.
+
+    Each test pairs the FP that must be silenced with the FN-guard case that
+    must survive.
+    """
+
+    @staticmethod
+    def _terms(claims):
+        from patentlint.models import TwPatentDocument
+        from patentlint.analysis.tw_claims import check_antecedent_basis
+        doc = TwPatentDocument(claims=claims)
+        return {f["term"] for f in check_antecedent_basis(doc)}
+
+    def test_stranded_relational_head_trimmed(self):
+        """該些級距對應至 → 級距, not 級距對 (scan halts inside 對應)."""
+        from patentlint.analysis.tw_claims import clean_noun_phrase_tw
+        from patentlint.models import Claim
+        claims = [
+            Claim(id=1, number=1, independent=True,
+                  text="一種電子裝置，包括一處理模組、多個級距與多個通道。"),
+            Claim(id=7, number=7, independent=False, dependencies=[1],
+                  text="如請求項1所述的電子裝置，其中該些級距對應至該些通道。"),
+        ]
+        assert "級距對" not in self._terms(claims)
+        assert clean_noun_phrase_tw("級距對應至該些通道") == "級距"
+
+    def test_stranded_head_trim_is_greedy(self):
+        """相對應 is three characters — both 相 and 對 strand, so trim both."""
+        from patentlint.analysis.tw_claims import _trim_dangling_ying_verb_head_tw
+        text = "所述形狀因數相對應的第一區域"
+        noun = "形狀因數相對"
+        end = text.index("應")
+        assert _trim_dangling_ying_verb_head_tw(noun, end, text)[0] == "形狀因數"
+
+    def test_genuine_noun_ending_in_head_char_survives(self):
+        """FN-guard: 對 followed by 接 is a compound (對接部), never trimmed."""
+        from patentlint.analysis.tw_claims import _trim_dangling_ying_verb_head_tw
+        text = "所述對接部與所述殼體"
+        assert _trim_dangling_ying_verb_head_tw("對接部", 5, text)[0] == "對接部"
+
+    def test_trailing_and_interior_verbs(self):
+        from patentlint.analysis.tw_claims import clean_noun_phrase_tw as C
+        assert C("預定輸入電流值劃分為多個級距") == "預定輸入電流值"
+        assert C("柱鏡焦度隨著一方位角變化") == "柱鏡焦度"
+        assert C("等效球面焦度滿足下式") == "等效球面焦度"
+
+    def test_satisfy_verb_narrowed_to_formula_idiom(self):
+        """FN-guard: bare 滿足 would silence a gold-legit 'meets or exceeds'."""
+        from patentlint.analysis.tw_claims import clean_noun_phrase_tw as C
+        assert C("運行長度滿足或超過所述臨限") == "運行長度滿足或超過"
+
+    def test_deng_headed_lexeme_resplit(self):
+        """該等效球面焦度 is 該 + 等效球面焦度, not 該等 + 效球面焦度."""
+        from patentlint.analysis.tw_claims import strip_reference_form_prefix as S
+        assert S("該等效球面焦度") == "等效球面焦度"
+
+    def test_plural_deng_determiner_still_strips(self):
+        """FN-guard: 該等 is a live plural determiner for every other noun."""
+        from patentlint.analysis.tw_claims import strip_reference_form_prefix as S
+        assert S("該等分散式SRAM模組") == "分散式SRAM模組"
+        assert S("該等距離") == "距離"
+        assert S("該等溫度") == "溫度"
+        assert S("該等元件") == "元件"
+
+    def test_spec_support_inherits_the_verb_fix(self):
+        """Engine 2 delegates to clean_noun_phrase_tw — #396 fixed for free."""
+        from patentlint.analysis.tw_spec_support import (
+            _normalize_for_spec_support_tw as N,
+        )
+        assert N("柱鏡焦度隨著一方") == "柱鏡焦度"
