@@ -133,6 +133,31 @@ class TestNormalizeArabicOrdinalToCjk:
         assert normalize_arabic_ordinal_to_cjk("第一電極") == "第一電極"
         assert normalize_arabic_ordinal_to_cjk("第二十五層") == "第二十五層"
 
+    def test_zero_padded_ordinal_does_not_crash(self):
+        # REGRESSION: _arabic_digits_to_cjk_numeral indexed the digit map by
+        # the RAW substring, so a zero-padded ordinal raised KeyError('02')
+        # and crashed the CN/TW antecedent walkers (via
+        # normalize_reference_term_*) and both spec-support collectors on any
+        # draft using the form. 10 CN + 9 TW corpus drafts hit it.
+        assert normalize_arabic_ordinal_to_cjk("第01電極") == "第一電極"
+        assert normalize_arabic_ordinal_to_cjk("第02電極") == "第二電極"
+        assert normalize_arabic_ordinal_to_cjk("第09電極") == "第九電極"
+
+    def test_fullwidth_digit_ordinal_does_not_crash(self):
+        # Same root cause: str.isdigit() is True for U+FF10..U+FF19 and int()
+        # accepts them, so a fullwidth ordinal reached the map with a key that
+        # was never in it. CJK drafters use the fullwidth form routinely.
+        assert normalize_arabic_ordinal_to_cjk("第１電極") == "第一電極"
+        assert normalize_arabic_ordinal_to_cjk("第２電極") == "第二電極"
+        assert normalize_arabic_ordinal_to_cjk("第１０端子") == "第十端子"
+
+    def test_padded_and_fullwidth_bridge_to_cjk_form(self):
+        # The fix is not merely crash-avoidance: folding these to the CJK form
+        # is what lets a claim written 第02電極 match a spec written 第二電極.
+        from patentlint.analysis.cn_claims import normalize_reference_term_cn
+        assert normalize_reference_term_cn("所述第02电极") == "第二电极"
+        assert normalize_reference_term_cn("所述第１电极") == "第一电极"
+
     def test_three_or_more_digits_unchanged(self):
         # Element-label range; not normalized to avoid mis-handling
         # rare large ordinals or label numbers like 第100段

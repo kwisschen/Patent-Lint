@@ -85,7 +85,13 @@ def _arabic_digits_to_cjk_numeral(digits: str) -> str:
     if n == 0:
         return "零"
     if 1 <= n <= 9:
-        return _ARABIC_TO_CJK_DIGIT[digits]
+        # Index by the PARSED value, never the raw substring: a zero-padded
+        # ordinal (第02) and a FULLWIDTH digit (第１ — str.isdigit() is True for
+        # U+FF10..U+FF19, and int() accepts them) both reach here with a key
+        # that is not in the map, and the lookup raised KeyError. That crashed
+        # the CN/TW antecedent walkers via normalize_reference_term_* and both
+        # spec-support collectors on any draft using either form.
+        return _ARABIC_TO_CJK_DIGIT[str(n)]
     if 10 <= n <= 19:
         ones = _ARABIC_TO_CJK_DIGIT[str(n - 10)] if n > 10 else ""
         return "十" + ones
