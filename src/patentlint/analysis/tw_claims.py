@@ -2119,6 +2119,98 @@ def _extend_ying_compound_tw(
     return raw_noun, raw_noun_end
 
 
+# R29 (2026-07-18, reports #389/#390) — the INVERSE of the 應-extension above.
+# 應 is an excluded char in _NOUN_CHARS, so the noun scan halts AT it. When the
+# following verb is a two-character 對應/順應/呼應/相應 compound, that halt lands
+# in the MIDDLE of the verb and leaves its first character glued to the noun:
+#   該些級距對應至該些通道  ->  noun scan stops at 應  ->  captured 級距對
+# `_extend_ying_compound_tw` deliberately excludes these heads from extension
+# (they are verbs, not 反應/效應 nouns), but nothing trimmed the dangling head.
+#
+# FN-safe by construction: the trim fires ONLY when the very next character is
+# 應, i.e. the dangling head is provably one half of the verb. A genuine noun
+# ending in one of these characters (一對 "a pair", 相 "phase") is followed by a
+# particle or clause boundary, never by 應.
+_YING_VERB_HEADS_TW = ("對", "順", "呼", "相", "適", "因")
+
+# Determiners that mark a stranded 對 as the PREPOSITION 對 ("on/toward")
+# rather than part of the element name: 對該X / 對所述X / 對一X.
+_RELATIONAL_HEAD_FOLLOWERS_TW = ("該", "一")
+
+
+def _is_relational_preposition_tw(
+    text: str, i: int, *, allow_ying: bool = False
+) -> bool:
+    """True if the relational head at ``text[i]`` ends the noun rather than
+    compounding into it.
+
+    Two shapes, and BOTH sides of the walker must agree on them or a matched
+    intro/reference pair splits into a spurious finding:
+      * 應 - the head is the first half of the verb 對應 / 相對應 ("corresponds
+        to"), which the noun scan halts inside because 應 is an excluded char.
+      * a determiner - the head is the preposition 對 ("perform ... ON the
+        ..."), as in 對該X / 對所述X / 對一X.
+    A genuine compound (對接部 / 對準標記) has 接 / 準 after the head, so neither
+    shape matches and the noun stays intact.
+    """
+    tail = text[i + 1:i + 3]
+    if tail[:1] in _RELATIONAL_HEAD_FOLLOWERS_TW or tail[:2] in (
+        "所述", "該些", "該等",
+    ):
+        return True
+    # The 應 shape is honoured ONLY on the capture side (allow_ying=True).
+    # Extending it to the bare-noun right boundary was trialed and REVERTED:
+    # it rescued 當前烹飪設備對應的分配次數 as an "introduction", silencing a
+    # gold-legit finding. The determiner shape carries an explicit intro
+    # context (基於X對所述Y / 利用X對該Y); a bare clause-initial subject before
+    # 對應 does not, so treating it as an introduction is an FN. DR-1: no
+    # report evidences the 應 shape on the boundary side.
+    return allow_ying and tail[:1] == "應"
+
+# R29 (2026-07-18, report #395) - 等-headed technical lexemes where 等 opens
+# the compound instead of marking plurality. In 該等效球面焦度 ("the
+# equivalent spherical power") the drafter wrote 該 + 等效球面焦度, but the
+# longest-first prefix match reads 該等 + 效球面焦度. Closed set: every member
+# is a fixed technical lexeme, and the guard only ever restores a character
+# the drafter actually wrote, so it cannot mask a defect.
+# DELIBERATELY a single entry. A wider list was trialed and REVERTED: 該等 is
+# a live plural determiner, so 該等分散式SRAM模組 mis-split on 等分, 該等距離
+# would mis-split on 等距, 該等溫度 on 等溫, and so on - the collision surface
+# is every noun starting with 分/距/值/溫/壓/速/厚/離. DR-1: ship only the
+# lexeme the report evidences. (等效 carries the same theoretical collision
+# with 該等 + 效能; it is corpus-clean, and #395 is real evidence.)
+_DENG_HEADED_LEXEMES_TW = ("等效",)
+
+
+
+def _trim_dangling_ying_verb_head_tw(
+    raw_noun: str, raw_noun_end: int, claim_text: str
+) -> tuple[str, int]:
+    """Drop noun-final characters that are really the head of a X應 verb.
+
+    Trims GREEDILY, because the stranded head is not always one character:
+    相對應 ("correspond to") is a three-character verb, so the scan halts with
+    BOTH 相 and 對 glued to the noun (形狀因數相對). Removing only the last one
+    leaves 形狀因數相 - dirtier than the pre-fix capture, and it defeats the
+    downstream two-character strips. Trim while the tail keeps matching.
+    """
+
+    # Two shapes strand the head, and BOTH must trim or the two sides key
+    # differently: 應 (the scan halted mid-對應/相對應) and a following
+    # determiner (對 as the preposition in 對<det>...進行, "perform ... on
+    # the ..."). Measured: trimming only the 應 shape split 6 previously
+    # matched intro/reference pairs into new findings, because the intro
+    # carried the determiner shape and the reference carried the 應 shape.
+    if not raw_noun or not _is_relational_preposition_tw(
+        claim_text, raw_noun_end - 1, allow_ying=True
+    ):
+        return raw_noun, raw_noun_end
+    while len(raw_noun) > 2 and raw_noun[-1] in _YING_VERB_HEADS_TW:
+        raw_noun = raw_noun[:-1]
+        raw_noun_end -= 1
+    return raw_noun, raw_noun_end
+
+
 # R66 (revised 2026-05-05): state-modifier capture extension.
 #
 # When walker captures `前述<X>` and X is a pure state-modifier
@@ -2294,6 +2386,28 @@ _REF_PATTERN_CAPTURE = re.compile(
 # ``sorted(..., key=len, reverse=True)`` is applied once at import time.
 _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
     (
+        # === R29 (2026-07-18) - report-driven trailing predicate verbs ===
+        # Same endswith-strip shape as R27. Each bled into the captured term
+        # and orphaned its bare-noun head against the counterpart reference.
+        # All three verified latent on BOTH sides by direct probe before the
+        # fix, so the CN mirror (R54) is a real parity bug, not speculation.
+        #   PARTITION verb - #389/#390: the INTRO captured the noun plus the
+        #     verb, so the c7 bare reference never matched. Same process-noun
+        #     register as the already-listed analyse / judge / compare entries.
+        #   ALONG-WITH co-verb - #394/#395/#396: a pure function word with no
+        #     noun sense at all, so the strip is unconditionally FN-safe. It
+        #     also reaches Engine 2 for free - the spec-support normalizer
+        #     delegates to clean_noun_phrase_tw, which is what fixes #396
+        #     (cross-CHECK symmetry with no extra code).
+        # SATISFY was NARROWED to the formula idiom only (see the interior
+        # set): a bare strip silenced a gold-legit finding on TW202423085A c20
+        # ("... the run length MEETS OR EXCEEDS the threshold run length"),
+        # where the antecedent inherits through a c19 dependency chain that
+        # cannot be verified from the payload. Honest uncertainty beats an FN.
+        # NOT added: the INTERVAL noun (#399). It is a real noun head, so a
+        # bare stop would truncate a genuine compound - a false negative. It
+        # needs a compound guard, not a stop; queued for /walker-round.
+        "劃分", "隨著",
         # === R27 (2026-07-13) — report-driven trailing predicate verbs ===
         # Each bled into the captured term (intro or reference), leaving the
         # bare-noun head unmatched against its counterpart. All are endswith
@@ -2885,6 +2999,17 @@ _PLURAL_REFERENCE_PREFIXES: tuple[str, ...] = tuple(sorted(
 # Ordered longest-first so 設有/包含 strip before single-char tokens.
 _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
     (
+        # === R29 (2026-07-18, reports #394/#395/#396) ===
+        # Interior counterparts of the R29 trailing strips. The trailing entry
+        # only fires when the capture ENDS at the verb; these two also occur
+        # mid-capture, where only an interior cut can reach them:
+        #   ALONG-WITH co-verb - #396 spec-support phrase (noun + co-verb +
+        #     following object). A pure function word, no noun sense, so the
+        #     cut is unconditionally FN-safe.
+        #   SATISFY verb - #395 (noun + verb + "the following formula").
+        # Both inherit the R27 tail-compound interior-cut guard, so a declared
+        # compound whose protected noun sits at the tail is not cut.
+        "隨著", "滿足下式", "滿足下列", "滿足以下", "滿足如下",
         # === R28 (2026-07-13, report #367) ===
         # 中匹配 / 內匹配: the verb 匹配 ("match") gated on a preceding LOCATIVE.
         # The spec-support extractor captured 物件中匹配 from
@@ -3558,7 +3683,19 @@ def strip_reference_form_prefix(text: str) -> str:
         return text
     for prefix in _REFERENCE_FORM_PREFIXES:
         if text.startswith(prefix) and len(text) > len(prefix):
-            return text[len(prefix):]
+            residual = text[len(prefix):]
+            # R29 (2026-07-18, report #395): do NOT let the plural prefix 該等
+            # swallow the head of an 等-initial technical lexeme. The prefix
+            # list is longest-first, so 該等效球面焦度 ("the equivalent
+            # spherical power") strips as 該等 + 效球面焦度 - a term the
+            # drafter never wrote, which then cannot match its own
+            # introduction 一等效球面焦度. Restore the 等 and treat the
+            # prefix as the singular 該.
+            if prefix == "該等" and (
+                ("等" + residual[:1]) in _DENG_HEADED_LEXEMES_TW
+            ):
+                return "等" + residual
+            return residual
     return text
 
 
@@ -5086,6 +5223,18 @@ def extract_introductions_tw(
         original = m.group(0)
         bare_noun = m.group(1)
 
+        # R29 (2026-07-18): SYMMETRY duty for the dangling-應 trim. The
+        # reference side trims a stranded 對/相 left by the noun scan halting
+        # mid-對應/相對應; the intro side must trim identically or the two
+        # sides key differently and a matched pair splits into a spurious
+        # finding (measured: 14 new FPs, e.g. an intro registering as
+        # <noun>對 while its reference normalized to <noun>). Offset-aware,
+        # exactly like the reference side, so a genuine noun ending in one of
+        # these characters (followed by punctuation, not 應) is untouched.
+        bare_noun, _ = _trim_dangling_ying_verb_head_tw(
+            bare_noun, m.end(1), claim.text
+        )
+
         # F3 post-processing: may produce multiple candidates from one match
         candidates = _postprocess_intro_capture(bare_noun, m, claim.text)
 
@@ -5357,6 +5506,15 @@ def _bare_noun_left_clean_tw(text: str, i: int) -> bool:
 def _bare_noun_right_clean_tw(text: str, j: int) -> bool:
     """True if the term is not the head of a longer noun compound (guard a)."""
     if j >= len(text):
+        return True
+    # R29 (2026-07-18): a stranded relational head followed by a DETERMINER is
+    # the preposition 對 ("perform ... on the ..."), which ends the noun - not
+    # a compounding character. Without this, trimming 人工智慧模型對 -> 人工智慧模型
+    # on the reference side left the bare-noun rescue unable to see the very
+    # same intro (measured: 6 new FPs on one corpus patent). Narrow by design:
+    # a genuine compound (對接部 / 對準標記) has 接 / 準 after 對, not a
+    # determiner, so guard (a) still rejects it.
+    if text[j] in _YING_VERB_HEADS_TW and _is_relational_preposition_tw(text, j):
         return True
     return not _bare_noun_compound_char_tw(text[j])
 
@@ -5796,6 +5954,11 @@ def check_antecedent_basis(
             raw_noun, raw_noun_end = _extend_ying_compound_tw(
                 raw_noun, raw_noun_end, claim.text
             )
+            # R29 (#389/#390): inverse of the above — drop a dangling 對/順/呼
+            # left glued to the noun when the scan halted mid-對應 verb.
+            raw_noun, raw_noun_end = _trim_dangling_ying_verb_head_tw(
+                raw_noun, raw_noun_end, claim.text
+            )
 
             # 部分 verb-gate (#292): trim a trailing adverbial 部分 when the
             # claim continues with a content verb (部分延伸 = "partly extends").
@@ -5893,7 +6056,16 @@ def check_antecedent_basis(
             # showing 第一 when draft has 第1 confuses the user. Restore
             # Arabic ordinal in displayed reference_form when raw has it.
             display_term = _restore_original_ordinals(normalized_term, raw_noun)
-            reference_form = f"{prefix}{display_term}"
+            # R29 (2026-07-18, report #395): keep the DISPLAY prefix in sync
+            # with the 等-headed re-split in strip_reference_form_prefix. That
+            # guard hands back a term that still carries its leading 等, so
+            # re-joining it to the raw 該等 prefix would render 該等等效…
+            # Symmetry duty: every emit/match-side transform needs its
+            # display-side counterpart.
+            display_prefix = prefix
+            if prefix == "該等" and display_term.startswith("等"):
+                display_prefix = "該"
+            reference_form = f"{display_prefix}{display_term}"
 
             # Resolution order:
             #   1. Exact normalized match against any ancestor intro.
