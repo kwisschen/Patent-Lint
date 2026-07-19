@@ -1134,3 +1134,79 @@ class TestCounts:
         ]
         assert count_independent(claims) == 2
         assert count_dependent(claims) == 2
+
+
+class TestR34ReferenceSideOverCapture:
+    """R34 (2026-07-18) — reports #391 / #397 / #400.
+
+    Three reference-side over-capture mechanisms. Each test pairs the FP that
+    must be silenced with the FN-guard case that must keep firing.
+    """
+
+    @staticmethod
+    def _terms(claims):
+        return {f["term"] for f in check_antecedent_basis(claims)}
+
+    def test_sandwich_finite_verb_gated_on_object_determiner(self):
+        """`the first die sandwich the first ...` — verb, not a `die sandwich`."""
+        claims = [
+            Claim(id=1, independent=True, text=(
+                "A package comprising a first die, a third die and a first "
+                "sandwiching portion."
+            )),
+            Claim(id=7, independent=False, dependencies=[1], text=(
+                "The package of claim 1, wherein the third die and the first "
+                "die sandwich the first sandwiching portion."
+            )),
+        ]
+        assert "first die sandwich" not in self._terms(claims)
+
+    def test_sandwich_noun_reading_still_flagged(self):
+        """FN-guard: no object determiner follows -> genuine noun, stays flagged."""
+        claims = [
+            Claim(id=1, independent=True, text="A package comprising a first die."),
+            Claim(id=7, independent=False, dependencies=[1], text=(
+                "The package of claim 1, wherein the die sandwich is mounted "
+                "on a substrate."
+            )),
+        ]
+        assert "die sandwich" in self._terms(claims)
+
+    def test_trailing_manner_adverb_stripped_after_verb_stop(self):
+        """`the ports closely join the other ...` -> `ports`, not `ports closely join`."""
+        claims = [
+            Claim(id=2, independent=True, text="A device comprising a substrate having two ports."),
+            Claim(id=3, independent=False, dependencies=[2], text=(
+                "The device of claim 2, further comprising a material wrapping "
+                "around the ports to make one of the ports closely join the "
+                "other of the ports."
+            )),
+        ]
+        assert "ports closely join" not in self._terms(claims)
+
+    def test_ly_noun_is_not_treated_as_adverb(self):
+        """FN-guard: `assembly` ends in -ly but is a noun — must survive."""
+        from patentlint.analysis.utils import strip_trailing_adverb
+        assert strip_trailing_adverb("drive assembly") == "drive assembly"
+        assert strip_trailing_adverb("power supply") == "power supply"
+        assert strip_trailing_adverb("ports closely") == "ports"
+
+    def test_partitive_past_participle_pronoun_skipped(self):
+        """`the switched one of the plurality of channels` heads on a pronoun."""
+        claims = [
+            Claim(id=1, independent=True, text=(
+                "An apparatus comprising a plurality of channels, wherein a "
+                "voltage is converted through a scale corresponding to the "
+                "switched one of the plurality of channels."
+            )),
+        ]
+        assert "switched one" not in self._terms(claims)
+
+    def test_partitive_ordinal_singular_still_flagged(self):
+        """FN-guard: the examiner corpus confirms `the first one` as a real
+        defect, so an ordinal-modified singular must NOT be skipped."""
+        from patentlint.analysis.claims import _is_partitive_pronoun_head
+        assert _is_partitive_pronoun_head("remaining ones") is True
+        assert _is_partitive_pronoun_head("switched one") is True
+        for examiner_term in ("first one", "at least one", "respective one", "current one"):
+            assert _is_partitive_pronoun_head(examiner_term) is False
