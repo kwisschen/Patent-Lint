@@ -18,7 +18,9 @@ from patentlint.analysis.cn_specification import (
     _cn_extract_numeral_name_pairs as _cjk_extract_numeral_name_pairs,
     _cn_format_d1_name_for_display as _cjk_format_d1_name_for_display,
     _cn_format_inline_conflict as _cjk_format_inline_conflict,
+    _cn_split_ordinal_key as _cjk_split_ordinal_key,
 )
+
 from patentlint.analysis.figure_refs import TW_PARSER
 from patentlint.analysis.utils import _dx, numeral_context_excerpt
 from patentlint.models import CheckItem, TwPatentDocument, TwPatentType
@@ -953,6 +955,12 @@ def _tw_declared_numeral_names(doc) -> dict:
     return declared
 
 
+# Unanchored ordinal probe. _CN_ORDINAL_RE is ^-anchored, so it cannot see
+# the ordinal in an unkeyed capture like 該第一外殼 where a 該 / 所述 prefix
+# precedes it - which is exactly the shape that defeated the first attempt.
+_TW_ORDINAL_ANYWHERE_RE = re.compile(r"第[一二三四五六七八九十百零0-9]+")
+
+
 def _tw_anchor_pairs_to_declared(
     pairs: list[tuple[str, str]], declared: dict
 ) -> list[tuple[str, str]]:
@@ -963,19 +971,50 @@ def _tw_anchor_pairs_to_declared(
     contain declared `導通線路`); `R3 → KP可透過電阻 / 輸出端是以電阻` (both
     contain declared `電阻`).
 
-    FN-safe by construction: a genuinely DIFFERENT element name shares no
-    containment relationship with the declared name, so it is left untouched
-    and a real §19 naming inconsistency (or a body↔table mismatch) still
-    surfaces. Numerals absent from the table (e.g. method-step labels) pass
-    through unchanged.
+    A genuinely DIFFERENT element name shares no containment relationship with
+    the declared name, so it is left untouched and a real §19 naming
+    inconsistency (or a body↔table mismatch) still surfaces. Numerals absent
+    from the table (e.g. method-step labels) pass through unchanged.
+
+    ORDINAL PRESERVATION (2026-07-20) - this function previously claimed to be
+    "FN-safe by construction" and was NOT. Body captures are ordinal-KEYED
+    ("第一|外殼") while `declared` holds the ordinal-STRIPPED head ("外殼"), so
+    the containment test ran on the raw keyed string: "外殼" in "第一|外殼" is
+    True, and BOTH 第一外殼 and 第二外殼 collapsed to a bare "外殼". That erased
+    the very distinction D1 exists to catch. Verified end to end through
+    check_numeral_consistency_tw: 第一外殼30 x3 vs 第二外殼30 x3 - two distinct
+    names each repeated, the STRONGEST genuine-D1 signature - reported `verify`
+    with no symbol table but `pass` once numeral 30 was declared, under both
+    declaration styles. So supplying the 符號說明 table that 專利法施行細則 §17
+    REQUIRES made the checker miss a real defect: the more complete the draft,
+    the worse the analysis. Exposure was 146 of 591 declared entries (24.7%) in
+    the real TW fixtures.
+
+    The fix compares only the HEAD noun and re-attaches the body's ordinal, so
+    over-capture still collapses (設計|隱形眼鏡 -> 隱形眼鏡 against declared
+    隱形眼鏡) while ordinal-distinguished siblings stay distinct.
     """
     if not declared:
         return pairs
     out: list[tuple[str, str]] = []
     for num, name in pairs:
         d = declared.get(num)
-        if d and name and name != d and (d in name or name in d):
-            out.append((num, d))
+        ordinal, head = _cjk_split_ordinal_key(name)
+        # An ordinal the BODY wrote is never noise - it is the distinction D1
+        # exists to catch. Two shapes carry one: the extractor's explicit
+        # "第一|外殼" key, and an ordinal embedded in an unkeyed capture
+        # ("該第一外殼", where the 該 prefix stopped the key from forming).
+        # Collapsing either onto a declared name that has no ordinal erases it.
+        # Preserving only the keyed shape is NOT enough: the unkeyed siblings
+        # still collapsed onto the bare declared head and then outvoted the
+        # keyed pair, so the instance-collision stayed silent.
+        body_has_ordinal = bool(ordinal) or bool(_TW_ORDINAL_ANYWHERE_RE.search(head))
+        declared_has_ordinal = bool(d) and bool(_TW_ORDINAL_ANYWHERE_RE.search(d))
+        if body_has_ordinal and not declared_has_ordinal:
+            out.append((num, name))
+            continue
+        if d and head and head != d and (d in head or head in d):
+            out.append((num, f"{ordinal}|{d}" if ordinal else d))
         else:
             out.append((num, name))
     return out
