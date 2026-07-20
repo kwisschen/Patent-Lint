@@ -1183,19 +1183,37 @@ _NEXT_TWO_WORDS_RE = re.compile(
 # determiner, so the one-token gate above cannot reach them \u2014 but gating on
 # the bare preposition alone would be FN-unsafe.
 #
-# WITHHELD \u2014 `switches` (reports #386/#401, `the selection line switches to
-# the channel`). The natural gate is `to the`/`to a`/`to an`, but the US
-# examiner ground truth carries TWO confirmed \u00a7112(b) rejections whose term is
-# the plural NOUN `switches` (`the main switches` \u2014 app 18599360; `the
-# semi-conductor switches` \u2014 app 18573531), and a noun+PP reading (`the main
-# switches to the load`) is indistinguishable from the verb reading under any
-# fixed-width lookahead. Neither application is in the round-1 corpus, and
-# their claim text lives only in the EdgeXpert DB, which is unreachable \u2014 the
-# same blocker as the deferred R33-gerund class (#336/#337). Corpus-silent
-# either way (0 occurrences of `X switches to/between DET` in 10,898 US
-# findings), so shipping it would buy nothing measurable and risk an FN.
-# Queued for /walker-round once the examiner FN-guard is runnable.
-_CONTEXTUAL_VERB_STOPS_2W: dict[str, frozenset[str]] = {}
+# R35 (2026-07-20, reports #386/#401) — `switches` as a 3sg finite verb
+# (`the selection line switches to the channel`). This was WITHHELD across
+# three sessions with the note "queued until the examiner FN-guard is
+# runnable", because the US examiner ground truth carries TWO confirmed
+# §112(b) rejections whose term is the plural NOUN `switches`
+# (`the main switches` — app 18599360; `the semi-conductor switches` —
+# app 18573531), and a term-level check cannot clear them.
+#
+# UNBLOCKED. Both applications' claim text was pulled from EdgeXpert and read
+# directly, and the feared collision does not occur:
+#   18599360  "...adjust the switching instants of the main switches TO CONTROL
+#             the commutation-induced current difference..."   -> `to control`,
+#             an infinitive, NOT a determiner.
+#   18573531  "...the semi-conductor switches ARE DESIGNED as GaN power
+#             switches..."                                     -> no `switches
+#             to` construction anywhere in the claims.
+# So the two-token `to the` / `to a` / `to an` gate is provably disjoint from
+# both. The standing worry (`the main switches to the load`, a noun+PP reading
+# indistinguishable under fixed-width lookahead) is real in the abstract but
+# has ZERO instances in the authoritative ground truth — which is exactly the
+# question only the DB could answer, and why the class waited for it.
+#
+# Verified with tests/eval/examiner_fn_guard.py (new this round): recalled
+# examiner-confirmed terms 1347 -> 1347, LOST 0 of 1347.
+#
+# This is the FIRST use of the two-word mechanism. `_CONTEXTUAL_VERB_STOPS_2W`
+# was built empty in R34 in anticipation of precisely this case; the consumer
+# below was already wired.
+_CONTEXTUAL_VERB_STOPS_2W: dict[str, frozenset[str]] = {
+    "switches": frozenset({"to the", "to a", "to an"}),
+}
 
 
 def strip_contextual_verb(term: str, following_text: str) -> str:
@@ -1511,6 +1529,76 @@ def extract_method_step_intros(text: str) -> list[str]:
     return refs
 
 
+# R35 (2026-07-20, reports #336/#337) — the GERUND ITSELF as an intro.
+#
+# `extract_method_step_intros` above registers the gerund's OBJECT
+# (`bonding a first die` -> `first die`). It does not register the gerund, so a
+# later `wherein the bonding is metal-to-metal direct bonding` had no
+# antecedent and fired. The drafter DID introduce it: the method step
+# `bonding a first die to a second die` names the act.
+#
+# THIS CLASS WAS BLOCKED FOR THREE SESSIONS on the examiner FN-guard, because
+# `us_examiner_legit.json` carries 24 single-word gerund terms that a
+# TERM-level check cannot clear — and, importantly, several are ordinary -ing
+# NOUNS rather than process gerunds: `the housing` (x3), `the opening` (x2),
+# `the winding`, `the beginning`, `the remaining`. Registering an intro for
+# those from an unrelated gerund use would silence a real examiner rejection.
+#
+# MEASURED against all 24, using the actual EdgeXpert claim text: only 2
+# (`the punching`, `the mining`) have ANY gerund+object use at all, and
+# NEITHER is in method-step position, so the step-headed gate reaches 0 of 24.
+# Confirmed end to end by tests/eval/examiner_fn_guard.py: recalled
+# examiner-confirmed terms unchanged, LOST 0.
+#
+# The gate is deliberately the METHOD-STEP position, not a bare -ing test:
+#   * step-headed  `; bonding a first die to ...`      -> intro (the act is named)
+#   * mid-clause   `a chamber housing the components`  -> NOT an intro
+# The second shape is the one that would endanger `the housing` / `the opening`,
+# and it is exactly what the position gate excludes. This also keeps clear of
+# the standing protect:true label US20240185203A1 c1 `the information`, which
+# is a real defect on the gerund's OBJECT (`collecting information`) — this
+# extractor never registers the object, only the head.
+_GERUND_HEAD_STEP_RE = re.compile(
+    r'(?:^|[;:]\s*|comprising\s*:?\s*|[\(\[]\s*[a-z0-9]+\s*[\)\]]\s*)'
+    r'([a-z][\w\-]*ing)\s+'                      # the gerund heading the step
+    r'(?:a|an|the|at\s+least)\b',                # taking an explicit object
+    re.IGNORECASE,
+)
+
+# -ing words that are ordinary nouns or non-eventive, so naming one in step
+# position still does not introduce an "act". Kept tight and evidence-driven:
+# every member is attested as an examiner-rejected NOUN term in
+# us_examiner_legit.json, so excluding them can only ever preserve a real
+# defect, never create one.
+_NON_EVENTIVE_ING = frozenset({
+    "housing", "opening", "winding", "beginning", "remaining", "sliding",
+    "casing", "coating", "spring", "bearing", "ring", "string", "wiring",
+    "tubing", "packaging", "building",
+})
+
+
+def extract_gerund_head_intros(text: str) -> list[str]:
+    """Register a method-step gerund head as an introduction of the act.
+
+    Position-gated (step-initial only) and filtered against -ing words that
+    are ordinary nouns. See the block comment above for the measurement that
+    unblocked this against real USPTO examiner ground truth.
+    """
+    refs: list[str] = []
+    for m in _GERUND_HEAD_STEP_RE.finditer(text):
+        g = m.group(1).lower()
+        if g in _NON_EVENTIVE_ING:
+            continue
+        # Deliberately NOT run through clean_noun_phrase: that helper's job is
+        # to STRIP verbs, and it reduces most gerunds to the empty string
+        # (heating/cooling/curing/mating/sensing/filling all -> ''), which
+        # would leave this extractor silently inert except for the handful of
+        # gerunds absent from the verb-stop list. Here the gerund IS the term.
+        if len(g) >= 4:
+            refs.append(g)
+    return refs
+
+
 # R47 (2026-05-04): `having <bare-noun> <past-participle>` intro
 # extraction. US round-1 corpus has 94 occurrences of this pattern
 # in apparatus claims like:
@@ -1680,6 +1768,7 @@ def extract_introductions(text: str) -> list[str]:
     refs.extend(_extract_self_definition_intros(lowered))
     refs.extend(_extract_wherein_bare_subject_intros(lowered))
     refs.extend(extract_method_step_intros(lowered))
+    refs.extend(extract_gerund_head_intros(lowered))
     refs.extend(extract_having_bare_noun_intros(lowered))
     return refs
 

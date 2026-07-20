@@ -4,6 +4,7 @@
 
 from patentlint.models import Claim
 from patentlint.parser.claims import parse_claims, parse_dependencies
+from patentlint.analysis.utils import strip_contextual_verb
 from patentlint.analysis.claims import (
     find_missing_periods,
     has_extra_periods,
@@ -1210,3 +1211,63 @@ class TestR34ReferenceSideOverCapture:
         assert _is_partitive_pronoun_head("switched one") is True
         for examiner_term in ("first one", "at least one", "respective one", "current one"):
             assert _is_partitive_pronoun_head(examiner_term) is False
+
+class TestR35SwitchesAndGerundHead:
+    """R35 (2026-07-20) — two US classes unblocked by the EdgeXpert examiner
+    FN-guard (tests/eval/examiner_fn_guard.py). Both had been deferred for
+    three sessions with the note "queued until the examiner guard is runnable".
+    """
+
+    def test_switches_finite_verb_stripped_before_determiner(self):
+        # Report #386/#401: `the selection line switches to the channel`.
+        assert strip_contextual_verb(
+            "the selection line switches", "to the channel"
+        ) == "the selection line"
+
+    def test_switches_noun_survives_infinitive(self):
+        # Examiner app 18599360: `the main switches TO CONTROL the ...`.
+        # A confirmed real 112(b) term - the gate must not reach it.
+        assert strip_contextual_verb(
+            "the main switches", "to control the commutation-induced current"
+        ) == "the main switches"
+
+    def test_switches_noun_survives_predicate(self):
+        # Examiner app 18573531: `the semi-conductor switches ARE DESIGNED ...`.
+        assert strip_contextual_verb(
+            "the semi-conductor switches", "are designed as GaN power switches"
+        ) == "the semi-conductor switches"
+
+    def test_gerund_head_step_introduces_the_act(self):
+        # Report #336/#337: the method step names the act, so `the bonding`
+        # in a later claim has an antecedent.
+        claims = parse_claims(
+            "1. A method of forming a package, comprising: bonding a first "
+            "die to a second die; and encapsulating the first die.\n"
+            "5. The structure according to claim 1, wherein the bonding is "
+            "metal-to-metal direct bonding or eutectic bonding."
+        )
+        terms = [f["term"] for f in check_antecedent_basis(claims)]
+        assert "bonding" not in terms
+
+    def test_gerund_head_absent_still_fires(self):
+        # NEGATIVE CONTROL - without the step there is no antecedent, so the
+        # finding must survive. This is the FN-safety of the mechanism.
+        claims = parse_claims(
+            "1. An apparatus comprising a first die and a second die.\n"
+            "5. The apparatus of claim 1, wherein the bonding is eutectic "
+            "bonding."
+        )
+        terms = [f["term"] for f in check_antecedent_basis(claims)]
+        assert "bonding" in terms
+
+    def test_non_eventive_ing_noun_never_introduced(self):
+        # `housing` / `opening` are ordinary -ing NOUNS and are examiner-
+        # rejected terms in the ground truth. A mid-clause participial use
+        # must never register an introduction for them.
+        from patentlint.analysis.utils import extract_gerund_head_intros
+        assert extract_gerund_head_intros(
+            "the device includes a chamber housing the components"
+        ) == []
+        assert extract_gerund_head_intros(
+            "an apparatus comprising a housing and an opening"
+        ) == []
