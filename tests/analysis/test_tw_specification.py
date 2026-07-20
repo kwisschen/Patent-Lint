@@ -837,3 +837,64 @@ class TestNumeralConsistencySymbolTableAnchoring:
         )
         result = check_numeral_consistency_tw(doc)
         assert any(r.status != "pass" for r in result), [r.message_key for r in result]
+
+    # --- ordinal preservation (2026-07-20) ------------------------------
+    # The anchor used to compare the declared ORDINAL-STRIPPED head against the
+    # raw ordinal-KEYED body capture, so "外殼" in "第一|外殼" was True and both
+    # 第一外殼 and 第二外殼 collapsed to a bare "外殼". Supplying the 符號說明
+    # table that 專利法施行細則 §17 REQUIRES therefore made the checker MISS a
+    # genuine instance collision. This whole path had no automated coverage,
+    # which is how the defect survived from 2026-06-26.
+
+    _ORDINAL_BODY = (
+        "第一外殼30具有開口。所述第一外殼30由金屬製成。該第一外殼30固定於基座。"
+        "第二外殼30設於相對側。所述第二外殼30以塑膠製成。該第二外殼30可拆卸。"
+    )
+
+    def test_ordinal_instance_collision_survives_bare_declared_name(self):
+        # 第一外殼30 x3 vs 第二外殼30 x3 is the STRONGEST genuine-D1 signature.
+        doc = _make_doc(
+            embodiment=[self._ORDINAL_BODY],
+            symbol_table=[SymbolEntry(numeral="30", name="外殼")],
+        )
+        result = check_numeral_consistency_tw(doc)
+        assert any(r.status != "pass" for r in result), [
+            r.message_key for r in result
+        ]
+
+    def test_ordinal_instance_collision_survives_ordinal_declared_name(self):
+        # Same body, declared with the ordinal form - must also still fire.
+        doc = _make_doc(
+            embodiment=[self._ORDINAL_BODY],
+            symbol_table=[SymbolEntry(numeral="30", name="第一外殼")],
+        )
+        result = check_numeral_consistency_tw(doc)
+        assert any(r.status != "pass" for r in result), [
+            r.message_key for r in result
+        ]
+
+    def test_ordinal_collision_fires_without_symbol_table(self):
+        # Baseline: the collision was always caught WITHOUT a table. The bug
+        # was that declaring the numeral silenced it, so this control pins the
+        # invariant that the table must never make analysis worse.
+        doc = _make_doc(embodiment=[self._ORDINAL_BODY], symbol_table=[])
+        result = check_numeral_consistency_tw(doc)
+        assert any(r.status != "pass" for r in result), [
+            r.message_key for r in result
+        ]
+
+    def test_non_ordinal_overcapture_still_collapses(self):
+        # The ordinal guard must not disable the anchor's real win: a leading
+        # verb glued onto the declared element name (report #393 shape) carries
+        # no ordinal, so it still collapses to the declared name.
+        doc = _make_doc(
+            embodiment=[
+                "近視控制隱形眼鏡10為主體。所述近視控制隱形眼鏡10具有光學區。"
+                "該近視控制隱形眼鏡10之外緣。設計隱形眼鏡10時應考量。"
+            ],
+            symbol_table=[SymbolEntry(numeral="10", name="隱形眼鏡")],
+        )
+        result = check_numeral_consistency_tw(doc)
+        assert all(r.status == "pass" for r in result), [
+            r.message_key for r in result
+        ]
