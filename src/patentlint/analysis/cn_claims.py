@@ -1528,6 +1528,13 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # Verified LATENT on the CN side by direct probe before the fix (same
         # discipline as R52: probe first, mirror only what actually reproduces).
         "划分", "随着",
+        # === R55 (2026-07-20) - TW R30 parity, report #399 ===
+        # 间隔<verb> spacing collocations. Bare 间隔 is deliberately ABSENT for
+        # the same FN reason as TW (时间间隔 / 子载波间隔 are real element
+        # names). Corpus-silent on CN (0/0/0) but latent-safe parity; note CN
+        # lacks bare 排列 entirely, so these compounds fix 间距间隔排列 WITHOUT
+        # taking on the separate DR-1 question of whether bare 排列 is CN-safe.
+        "间隔排列", "间隔设置", "间隔布置", "间隔配置", "间隔分布",
         # === R52 (2026-07-13) — TW R27 parity (reports #354/#355, #366, #381-#384) ===
         # Trailing predicate verbs that bled into the captured term, orphaning
         # the bare-noun head. All verified LATENT on the CN side by direct probe

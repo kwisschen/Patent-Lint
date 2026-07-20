@@ -2386,6 +2386,26 @@ _REF_PATTERN_CAPTURE = re.compile(
 # ``sorted(..., key=len, reverse=True)`` is applied once at import time.
 _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
     (
+        # === R30 (2026-07-20, report #399) - 間隔 as a spacing ADVERB ===
+        # A bare 間隔 stop would be a FALSE NEGATIVE: 時間間隔 ("time
+        # interval"), 子載波間隔 ("subcarrier spacing") and 第一子間隔 are real
+        # element names, and a bare strip truncates them. So 間隔 never enters
+        # this list; only the full adverb+verb collocations do.
+        # This also answers the ordering question the triage raised: no guard on
+        # the original string is needed and no pass reordering is required,
+        # because the trailing pass tests LONGEST-FIRST and breaks on the first
+        # match, so 間隔排列 is consumed as a UNIT before any shorter token can
+        # dismantle it. Zero FN surface by construction, not merely a measured
+        # zero rate. Measured 1 gold walker_fp / 0 legit / 0 new fires
+        # (TWI760222B c1 第一方向間隔佈置).
+        "間隔排列", "間隔設置", "間隔設有", "間隔配置",
+        "間隔分佈", "間隔分布", "間隔佈置", "間隔布置",
+        "間隔地設置", "間隔地排列",
+        # WITHHELD: 間隔開, the highest-frequency collocation (88 corpus
+        # occurrences) and the unsafe one - measured 1 gold-legit FN
+        # (TWM656437U c11 該第一方向) plus 7 manufactured findings whose
+        # residual is an adverbial fragment (彼此 / 水平), not a noun head.
+        # Needs a residual-shape guard, measured separately.
         # === R29 (2026-07-18) - report-driven trailing predicate verbs ===
         # Same endswith-strip shape as R27. Each bled into the captured term
         # and orphaned its bare-noun head against the counterpart reference.
@@ -3010,6 +3030,15 @@ _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
         # Both inherit the R27 tail-compound interior-cut guard, so a declared
         # compound whose protected noun sits at the tail is not cut.
         "隨著", "滿足下式", "滿足下列", "滿足以下", "滿足如下",
+        # === R30 (2026-07-20, report #399) - 來自 co-verb ===
+        # "comes from". Pure coverb with no noun sense (the source noun is
+        # 來源, which does not contain 來自), so the cut is unconditionally
+        # FN-safe. CN has carried 来自 since R9; TW never did - an FP-direction
+        # parity gap that left the tw_copula_tiers fixture RED at HEAD with
+        # unresolved_new: 1 (輸入訊號來自一感測器模組). Interior, not trailing:
+        # the capture continues into the object (一感測器模組), which an
+        # endswith pass can never reach.
+        "來自",
         # === R28 (2026-07-13, report #367) ===
         # 中匹配 / 內匹配: the verb 匹配 ("match") gated on a preceding LOCATIVE.
         # The spec-support extractor captured 物件中匹配 from
@@ -3853,7 +3882,17 @@ def normalize_reference_term(
     t = strip_leading_qualifier(t, strict_qualifier_matching=strict_qualifier_matching)
     t = clean_noun_phrase_tw(t)
     t = strip_leading_quantifier(t)
+    _pre_verb = t
     t = strip_leading_verb_tw(t)
+    if t != _pre_verb:
+        # R30 (2026-07-20): the leading-verb strip can EXPOSE a quantifier that
+        # was sitting behind the verb (所述根據多個X -> 多個X), which the single
+        # earlier pass could not see. Without this the reference keys 多個X while
+        # the intro keys X, and A1's supplementary fix alone manufactured 1 FP.
+        # Deliberately CONDITIONAL on the verb strip having consumed something:
+        # an unconditional second pass would double-strip stacked quantifiers,
+        # which strip_leading_quantifier's non-iterative contract protects.
+        t = strip_leading_quantifier(t)
     return t
 
 
@@ -5344,8 +5383,17 @@ def extract_introductions_tw(
         # `該變壓器` reference, which the deterministic gold-corrector can't verify
         # (a plural intro is not a singular Pattern-A match). 多條 is clean because
         # `多條導通線路`↔`所述導通線路` preserves plurality.
-        if norm.startswith("多條") and len(norm) > 2:
-            norm = norm[2:]
+        # R30 (2026-07-20, report #388): 多個 gets the same treatment, for the
+        # same reason. `多個X` <-> `該些X` / `所述多個X` preserves plurality
+        # exactly as `多條X` <-> `所述導通線路` does, so the bridge cannot turn a
+        # plural intro into a singular match. Measured 10 gold walker_fp / 0
+        # legit. Still a per-token allowlist, NOT the full quantifier strip: the
+        # measurements quoted above (9 silenced by the full strip, 1 by the
+        # multi-char plural set) stand and are why this stays narrow.
+        for _plural_q in ("多條", "多個"):
+            if norm.startswith(_plural_q) and len(norm) > 2:
+                norm = norm[2:]
+                break
         if not norm or norm in seen:
             continue
         # R32 (2026-05-04): drop intros with newline/colon — capture
