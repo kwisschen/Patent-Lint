@@ -63,9 +63,15 @@ def _build_doc_with_spec(record, juris: str, spec_text: str, harness):
         )
     if juris == "CN":
         from patentlint.models import CnPatentDocument
+        # CnPatentDocument's body field is `detailed_description`; there is no
+        # `embodiments` field. Passing one silently dropped the spec (pydantic
+        # ignores extras), so _collect_spec_text_cn saw an EMPTY spec and every
+        # claim term counted as unsupported — 58,943 findings over 1,025 drafts
+        # vs TW's 137, and a term written 7 times in the spec still "failed".
+        # That made the CN no-growth gate VACUOUS (noise compared to noise).
         return CnPatentDocument(
             title="x", claims=base.claims, technical_field=[], background=[],
-            summary=[], embodiments=[spec_text],
+            summary=[], detailed_description=[spec_text],
         )
     raise SystemExit(f"unsupported juris {juris}")
 
