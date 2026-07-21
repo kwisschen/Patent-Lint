@@ -1524,6 +1524,20 @@ _MATCH_NOUN_COMPOUNDS_CN: frozenset[str] = frozenset({"阻抗匹配"})
 
 _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
     (
+        # === R56 (2026-07-22) - TW R31 parity (reports #416/#417/#423) ===
+        # Verified LATENT on the CN side by direct probe before the fix (same
+        # discipline as R52/R54): the Simplified analog of the reported TW draft
+        # over-captured `正压电容开关受控` / `正压电容开关彼此串接` -> the reference
+        # 所述正压电容开关 found no intro, exactly as on TW, and clean_noun_phrase_cn
+        # left both intact. An invisible FN-direction parity gap (the sibling was
+        # the over-flagger and no CN report could ever surface it). 受控 is a
+        # passive marker with no noun sense in suffix position; 彼此串接 is added
+        # as the full reciprocal-adverb+verb collocation (never bare 串接). The
+        # sibling TW R31 also carries a 对-at-ref-prefix-truncation trim that is
+        # deliberately NOT mirrored: the CN analog #418 does NOT reproduce (CN's
+        # forward-prefix resolution already resolves 外部控制电路 through the 对
+        # over-capture - consistent with the settled "CN bare 对 buys nothing").
+        "受控", "彼此串接",
         # === R54 (2026-07-18) - TW R29 parity (reports #389/#390, #394/#395/#396) ===
         # Verified LATENT on the CN side by direct probe before the fix (same
         # discipline as R52: probe first, mirror only what actually reproduces).
