@@ -49,7 +49,7 @@ function ClaimRow({ claimNumber, phrases, crossRefPhrases, claimText, jurisdicti
     }
   }
 
-  const handleAnonymousConfirm = (userComment, disposition) =>
+  const handleAnonymousConfirm = (userComment, disposition, findingDispositions) =>
     sendReport({
       checkKey: 'specSupport',
       jurisdiction: jurisdiction || 'unknown',
@@ -57,6 +57,7 @@ function ClaimRow({ claimNumber, phrases, crossRefPhrases, claimText, jurisdicti
       diagnostics: buildDiagnostics(),
       userComment,
       disposition,
+      findingDispositions,
     })
 
   const handleMailtoFallback = () => {

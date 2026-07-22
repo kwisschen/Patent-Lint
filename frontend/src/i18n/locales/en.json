@@ -292,6 +292,7 @@
       "commentPlaceholder": "e.g. “This term is already disclosed in claim 1.” A short note helps when the details above aren’t enough.",
       "commentNotice": "What you type here is sent as-is — avoid pasting confidential text.",
       "dispositionHeading": "Is this flag correct?",
+      "perFindingHeading": "This report covers several flags. Mark each one.",
       "dispositionWhy": "Either answer helps — confirming a correct catch or flagging a wrong one both improve the checker on real drafts.",
       "disposition": {
         "false_positive": {

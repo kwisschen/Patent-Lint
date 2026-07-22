@@ -208,8 +208,14 @@ function buildIssue(payload) {
       : "";
   const disposition =
     typeof payload.disposition === "string" ? payload.disposition : "";
+  // A multi-finding report can be a genuine MIX of real defects and FPs, in
+  // which case the client sends disposition = 'mixed' and a per-finding
+  // `disposition` on each finding. Carry BOTH the TP and FP labels so the
+  // report surfaces under either query; the maintainer ingests each finding on
+  // its own label (see the per-finding `disposition` fields in the JSON block).
+  const isMixed = disposition === "mixed";
   const dispLabel = DISPOSITION_LABEL[disposition];
-  const titleTag = dispLabel ? ` · ${dispLabel}` : "";
+  const titleTag = isMixed ? " · TP/FP" : dispLabel ? ` · ${dispLabel}` : "";
   const title = `[report] ${checkKey}${titleTag}${fingerprint}`;
 
   // Separate the optional user-comment from the structural diagnostic
@@ -237,11 +243,13 @@ function buildIssue(payload) {
   );
   const json_block = JSON.stringify(sortedPayload, null, 2);
 
-  const dispositionLine = dispLabel
-    ? disposition === "confirmed_defect"
-      ? "**Disposition: confirmed real issue (true positive)** — reporter confirms this flag is a correct catch. Ingest as a `legit_drafting_error` gold label."
-      : "**Disposition: false positive** — reporter says this flag is wrong. Ingest as a `walker_fp` gold label."
-    : "";
+  const dispositionLine = isMixed
+    ? "**Disposition: mixed** — the reporter marked each finding individually (see the per-finding `disposition` field in the JSON block). Ingest each finding on its own label: `confirmed_defect` findings as `legit_drafting_error`, `false_positive` findings as `walker_fp`."
+    : dispLabel
+      ? disposition === "confirmed_defect"
+        ? "**Disposition: confirmed real issue (true positive)** — reporter confirms this flag is a correct catch. Ingest as a `legit_drafting_error` gold label."
+        : "**Disposition: false positive** — reporter says this flag is wrong. Ingest as a `walker_fp` gold label."
+      : "";
 
   const sections = [
     "Anonymous error report submitted via the ReportModal.",
@@ -282,7 +290,9 @@ function buildIssue(payload) {
   ) {
     labels.push(payload.jurisdiction.toLowerCase());
   }
-  if (dispLabel) {
+  if (isMixed) {
+    labels.push("TP", "FP");
+  } else if (dispLabel) {
     labels.push(dispLabel);
   }
 

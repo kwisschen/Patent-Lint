@@ -292,6 +292,7 @@
       "commentPlaceholder": "例如：“此用语其实已在权利要求 1 中揭露过。”当上方信息不足以说明时，简短说明会很有帮助。",
       "commentNotice": "此栏输入内容将原样发送，请避免粘贴机密信息。",
       "dispositionHeading": "这个标记正确吗？",
+      "perFindingHeading": "本次报告包含多个标记，请逐项判定。",
       "dispositionWhy": "两种回答都有帮助：确认正确的标记、指出不当的标记，都能用真实稿件改进分析器。",
       "disposition": {
         "false_positive": {

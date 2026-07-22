@@ -30,10 +30,25 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import {
+  aggregateDisposition,
   buildReportPayload,
   FIELD_LABEL_KEYS,
   USER_COMMENT_MAX_CHARS,
 } from '@/lib/feedback'
+
+// Faint red (false positive) / green (correct catch) tints carry the meaning
+// without X / check glyphs — cleaner and language-agnostic. The tint deepens +
+// gains a ring when active. Shared by the single- and per-finding controls.
+function dispositionTint(d, active) {
+  if (d === 'false_positive') {
+    return active
+      ? 'border-red-400 bg-red-50 ring-1 ring-red-300 dark:border-red-700 dark:bg-red-950/40 dark:ring-red-800'
+      : 'border-red-200/70 bg-red-50/40 hover:bg-red-50/80 dark:border-red-900/40 dark:bg-red-950/15 dark:hover:bg-red-950/30'
+  }
+  return active
+    ? 'border-emerald-500 bg-emerald-50 ring-1 ring-emerald-300 dark:border-emerald-700 dark:bg-emerald-950/40 dark:ring-emerald-800'
+    : 'border-emerald-200/70 bg-emerald-50/40 hover:bg-emerald-50/80 dark:border-emerald-900/40 dark:bg-emerald-950/15 dark:hover:bg-emerald-950/30'
+}
 
 export default function ReportModal({
   open,
@@ -59,14 +74,44 @@ export default function ReportModal({
   // keeps the confirmed-catch (TP) gold honest.
   const [disposition, setDisposition] = useState(null)
 
+  // A single §112 report bundles up to SAMPLE_SIZE findings, and one claim is
+  // routinely a MIX of real defects and FPs — so a single blanket verdict
+  // mislabels the set (the #373/#374 lossy-label gap). When there are ≥2
+  // findings (and it isn't a section-level batch), collect a disposition PER
+  // finding; the payload then carries each finding's own verdict and a 'mixed'
+  // report-level aggregate.
+  const findings = Array.isArray(diagnostics?.findings) ? diagnostics.findings : null
+  const perFinding = !batchMode && findings != null && findings.length >= 2
+  const [findingDispositions, setFindingDispositions] = useState([])
+
   useEffect(() => {
     if (open) {
       setSubmitting(false)
       setResult(null)
       setUserComment('')
       setDisposition(initialDisposition || null)
+      const n = Array.isArray(diagnostics?.findings) ? diagnostics.findings.length : 0
+      setFindingDispositions(
+        !batchMode && n >= 2 ? Array(n).fill(initialDisposition || null) : [],
+      )
     }
-  }, [open, initialDisposition])
+    // Reset when the modal opens; findings/batchMode are stable for a given open.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
+
+  const setFindingDisposition = (idx, value) =>
+    setFindingDispositions((prev) => {
+      const next = [...prev]
+      next[idx] = value
+      return next
+    })
+
+  const dispositionReady = batchMode
+    ? true
+    : perFinding
+      ? findingDispositions.length === findings.length &&
+        findingDispositions.every((d) => d)
+      : !!disposition
 
   // Build the exact wire payload using the same helper sendReport
   // uses. The user sees what's actually transmitted; no separate
@@ -82,8 +127,9 @@ export default function ReportModal({
         diagnostics: diagnostics || {},
         userComment,
         disposition,
+        findingDispositions: perFinding ? findingDispositions : undefined,
       }),
-    [checkKey, jurisdiction, locale, diagnostics, userComment, disposition],
+    [checkKey, jurisdiction, locale, diagnostics, userComment, disposition, perFinding, findingDispositions],
   )
 
   // Preview omits the comment from the JSON-style list — it's rendered
@@ -101,7 +147,11 @@ export default function ReportModal({
 
   const handleSend = async () => {
     setSubmitting(true)
-    const outcome = await onConfirm(trimmedComment || null, disposition)
+    const outcome = await onConfirm(
+      trimmedComment || null,
+      perFinding ? aggregateDisposition(findingDispositions) : disposition,
+      perFinding ? findingDispositions : undefined,
+    )
     setSubmitting(false)
     if (outcome?.ok) {
       setResult('success')
@@ -130,6 +180,51 @@ export default function ReportModal({
           <div className="rounded-md border border-border/60 bg-muted/40 px-3 py-2 text-xs leading-snug text-muted-foreground">
             {t('feedback.reportModal.batchNote', { count: batchCount })}
           </div>
+        ) : perFinding ? (
+          // Per-finding disposition: a report of ≥2 findings on one claim is
+          // routinely a mix, so each finding gets its own verdict. The wire
+          // payload carries each finding's disposition + a 'mixed' aggregate.
+          <div className="space-y-1.5">
+            <p className="text-xs font-medium text-muted-foreground">
+              {t('feedback.reportModal.perFindingHeading')}
+            </p>
+            <div className="space-y-1.5">
+              {findings.map((f, idx) => {
+                const term = f.reference_form || f.term || `#${idx + 1}`
+                return (
+                  <div
+                    key={idx}
+                    className="rounded-md border border-border/50 bg-muted/20 px-2.5 py-2"
+                  >
+                    <p className="mb-1.5 font-mono text-[11px] leading-snug text-foreground/90 break-all">
+                      <span className="text-muted-foreground">[{idx + 1}]</span>{' '}
+                      &quot;{term}&quot;
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {['false_positive', 'confirmed_defect'].map((d) => {
+                        const active = findingDispositions[idx] === d
+                        return (
+                          <button
+                            key={d}
+                            type="button"
+                            onClick={() => setFindingDisposition(idx, d)}
+                            disabled={submitting || result === 'success'}
+                            aria-pressed={active}
+                            className={`rounded-md border px-2.5 py-1.5 text-center text-[11px] font-medium text-foreground transition-colors ${dispositionTint(d, active)}`}
+                          >
+                            {t(`feedback.reportModal.disposition.${d}.label`)}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+            <p className="text-[11px] leading-snug text-muted-foreground">
+              {t('feedback.reportModal.dispositionWhy')}
+            </p>
+          </div>
         ) : (
         <div className="space-y-1.5">
           <p className="text-xs font-medium text-muted-foreground">
@@ -138,16 +233,6 @@ export default function ReportModal({
           <div className="grid grid-cols-2 gap-2">
             {['false_positive', 'confirmed_defect'].map((d) => {
               const active = disposition === d
-              // Faint red (false positive) / green (correct catch) tints carry
-              // the meaning without X / check glyphs — cleaner and
-              // language-agnostic. The tint deepens + gains a ring when active.
-              const tint = d === 'false_positive'
-                ? (active
-                    ? 'border-red-400 bg-red-50 ring-1 ring-red-300 dark:border-red-700 dark:bg-red-950/40 dark:ring-red-800'
-                    : 'border-red-200/70 bg-red-50/40 hover:bg-red-50/80 dark:border-red-900/40 dark:bg-red-950/15 dark:hover:bg-red-950/30')
-                : (active
-                    ? 'border-emerald-500 bg-emerald-50 ring-1 ring-emerald-300 dark:border-emerald-700 dark:bg-emerald-950/40 dark:ring-emerald-800'
-                    : 'border-emerald-200/70 bg-emerald-50/40 hover:bg-emerald-50/80 dark:border-emerald-900/40 dark:bg-emerald-950/15 dark:hover:bg-emerald-950/30')
               return (
                 <button
                   key={d}
@@ -155,7 +240,7 @@ export default function ReportModal({
                   onClick={() => setDisposition(d)}
                   disabled={submitting || result === 'success'}
                   aria-pressed={active}
-                  className={`rounded-md border px-3 py-2 text-left text-xs transition-colors ${tint}`}
+                  className={`rounded-md border px-3 py-2 text-left text-xs transition-colors ${dispositionTint(d, active)}`}
                 >
                   <span className="block font-medium text-foreground">
                     {t(`feedback.reportModal.disposition.${d}.label`)}
@@ -275,7 +360,7 @@ export default function ReportModal({
           </Button>
           <Button
             onClick={handleSend}
-            disabled={submitting || result === 'success' || (!disposition && !batchMode)}
+            disabled={submitting || result === 'success' || !dispositionReady}
           >
             {t('feedback.reportModal.send')}
           </Button>
