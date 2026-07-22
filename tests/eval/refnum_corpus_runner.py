@@ -27,6 +27,20 @@
 #   python tests/eval/refnum_corpus_runner.py --juris US --compare  /tmp/pre_us_refnum.json
 #
 # --characterize dumps the FP pool by class for sweep planning.
+#
+# COVERAGE NOTE (explicit, per the #413/#414 gate-audit, 2026-07-22): this runner
+# invokes the shared numeral EXTRACTOR + conflict DETECTOR directly
+# (extract_numeral_name_pairs / _cn_extract_numeral_name_pairs + _detect_d1_*),
+# NOT the doc-level check_numeral_consistency_tw. It therefore does NOT build a
+# TwPatentDocument and CANNOT exercise the TW 符號說明-anchoring path
+# (_tw_anchor_pairs_to_declared, which collapses body captures onto the declared
+# symbol-table name before collision detection — the #284/#244 FN-safe lever, and
+# the site of the #414 reachable FN). The scraped Google-Patents descriptions have
+# no clean 符號說明 table to anchor against, so a doc-level TW mode would have no
+# corpus data to run on anyway. That path is gated SOLELY by the pytest controls
+# in tests/analysis/test_tw_specification.py (the #414 regression tests, incl. a
+# no-table invariant). Do NOT read a green run of this runner as coverage of the
+# TW symbol-table anchor; a regression there is invisible here by construction.
 from __future__ import annotations
 
 import argparse
