@@ -1167,6 +1167,27 @@ _CONTEXTUAL_VERB_STOPS = {
     #     or preposition — never a bare object determiner.
     "sandwich": frozenset({"a", "an", "the"}),
     "join":     frozenset({"a", "an", "the"}),
+    # R36 (2026-07-22, private-tracker reports #427 + #409/#410): two more
+    # base/3sg finite verbs that over-captured into the trailing position of a
+    # REFERENCE noun phrase, gated identically on a following object determiner.
+    #   face — `the first active surface and the second active surface face the
+    #     lead frame` (#427). Genuinely noun-gray: `the mounting face`, `the
+    #     die face` are real element names, so a bare `_VERB_STOPS` entry would
+    #     be FN-unsafe. In the noun reading the trailing token is `of` / a
+    #     predicate / punctuation — never a bare object determiner, so the
+    #     `a`/`an`/`the` gate is disjoint. (The 3sg `faces` is already an
+    #     unconditional `_VERB_STOPS` entry; base-form `face` takes a plural /
+    #     coordinate subject — `surface A and surface B face C` — exactly the
+    #     `abut` situation from #327.)
+    #   pre-charges — `the inductor pre-charges the flying capacitor module`
+    #     (#410); `the flying capacitor pre-charging method pre-charges the …`
+    #     (#409). Hyphenated 3sg verb: `_is_likely_third_person_verb` misses it
+    #     (its base `charges` is in `_ES_NOUNS`, and `-rges` is not a verb
+    #     suffix), so it needs an explicit entry. Noun-gray (`the pre-charges of
+    #     the capacitors` is a plural noun), hence the determiner gate — the
+    #     noun reading is followed by `of`, never by `a`/`an`/`the`.
+    "face":        frozenset({"a", "an", "the"}),
+    "pre-charges": frozenset({"a", "an", "the"}),
     "range":   frozenset({"from", "between", "to", "over", "in", "through"}),
     "ranges":  frozenset({"from", "between", "to", "over", "in", "through"}),
     "ranged":  frozenset({"from", "between", "to", "over", "in", "through"}),
