@@ -765,7 +765,19 @@ _INTRO_PATTERNS = re.compile(
     r"at\s+least\s+(?:one|a|an)\s+"        # at least one widget
     r"|one\s+or\s+more\s+"                  # one or more widgets
     r"|a\s+plurality\s+of\s+"              # a plurality of widgets
-    r"|(?:one|two|three|four|five|six|seven|eight|nine|ten)\s+"  # five widgets
+    r"|(?:one|two|three|four|five|six|seven|eight|nine|ten|\d+)\s+"  # five widgets / 5 widgets
+    # R37 (2026-07-22): the `\d+` arm closes an internal asymmetry — the
+    # REFERENCE side (`_BARE_CARDINAL_TAIL` in claims.py) has long accepted a
+    # bare `\d+` cardinal, but the INTRO side matched WORD cardinals only, so a
+    # digit-quantified introduction (`comprising 2 ports`) registered `2 ports`
+    # but never the bare `ports`, and a later `the ports` reference flagged as
+    # missing antecedent (`two ports` resolves it, `2 ports` did not). Adding
+    # the digit arm is INTRO-side and purely additive: it can only register
+    # additional bare-noun introductions, never remove a finding-that-should-
+    # fire on the reference side. FN-safety is not merely "by construction" —
+    # a spurious intro (e.g. a measurement `5 volts`) could in principle silence
+    # a real defect — so it is MEASURED: the examiner FN-guard (recalled_lost==0)
+    # and validate_fix US (silenced_legit==0) both gate it.
     # Generic a/an last — captures any following noun phrase, including
     # ones that begin with an ordinal (first/second/.../tenth/...)
     r"|(?:a|an)\s+"                          # a widget, a first widget, an apparatus
