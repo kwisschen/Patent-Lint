@@ -55,13 +55,13 @@ def _build_doc_with_spec(record, juris: str, spec_text: str, harness):
         return None
     if juris == "TW":
         from patentlint.models import TwPatentDocument, TwPatentType
-        return TwPatentDocument(
+        doc = TwPatentDocument(
             patent_type=TwPatentType.INVENTION, title="x",
             technical_field=[], prior_art=[], disclosure=[],
             drawings_description=[], embodiment=[spec_text], symbol_table=[],
             claims=base.claims, abstract_text="",
         )
-    if juris == "CN":
+    elif juris == "CN":
         from patentlint.models import CnPatentDocument
         # CnPatentDocument's body field is `detailed_description`; there is no
         # `embodiments` field. Passing one silently dropped the spec (pydantic
@@ -69,11 +69,42 @@ def _build_doc_with_spec(record, juris: str, spec_text: str, harness):
         # claim term counted as unsupported — 58,943 findings over 1,025 drafts
         # vs TW's 137, and a term written 7 times in the spec still "failed".
         # That made the CN no-growth gate VACUOUS (noise compared to noise).
-        return CnPatentDocument(
+        doc = CnPatentDocument(
             title="x", claims=base.claims, technical_field=[], background=[],
             summary=[], detailed_description=[spec_text],
         )
-    raise SystemExit(f"unsupported juris {juris}")
+    else:
+        raise SystemExit(f"unsupported juris {juris}")
+    _assert_spec_survived(doc, juris, spec_text)
+    return doc
+
+
+def _assert_spec_survived(doc, juris: str, spec_text: str) -> None:
+    """#413 non-vacuity guard — the durable fix for the class, not the instance.
+
+    Both patent-document models use pydantic ``extra='ignore'``, so a wrong
+    field name is dropped SILENTLY and the spec vanishes with no error. That is
+    exactly how the CN arm ran vacuous for months (``embodiments=`` instead of
+    ``detailed_description=``): every claim term counted unsupported and the
+    "no-growth" gate compared noise to noise. Round-trip the injected spec
+    through the SAME collector the check uses and fail LOUD if it did not
+    survive, so any future field-name drift trips on the first draft instead of
+    quietly producing confident garbage. (An empty spec is legitimately empty.)
+    """
+    if not spec_text.strip():
+        return
+    from patentlint.analysis.cn_spec_support import _collect_spec_text_cn
+    from patentlint.analysis.tw_spec_support import _collect_spec_text
+    collect = _collect_spec_text if juris == "TW" else _collect_spec_text_cn
+    field = "embodiment" if juris == "TW" else "detailed_description"
+    if not collect(doc).strip():
+        raise SystemExit(
+            f"specsup runner VACUITY GUARD ({juris}): the injected spec did not "
+            f"survive into doc.{field} -> the collector (collected text is empty "
+            f"while spec_text is non-empty). A field name was almost certainly "
+            f"dropped by pydantic extra='ignore' — the #413 failure mode. Any "
+            f"'no-growth' number from this runner in this state is vacuous."
+        )
 
 
 def _checker(juris: str):
