@@ -559,6 +559,21 @@ export function dispatchFeedback(method, email) {
 // CJK (12000 CJK chars ≈ 36 KB).
 export const USER_COMMENT_MAX_CHARS = 12000
 
+const VALID_DISPOSITIONS = new Set(['confirmed_defect', 'false_positive'])
+
+// Reduce a set of per-finding dispositions to ONE report-level value:
+// all-confirmed → 'confirmed_defect', all-false → 'false_positive', a genuine
+// MIX of both → 'mixed' (api/report.js applies both TP + FP labels for it). A
+// report with only one distinct verdict is not a mix; nulls are ignored.
+export function aggregateDisposition(findingDispositions) {
+  if (!Array.isArray(findingDispositions)) return null
+  const present = findingDispositions.filter((d) => VALID_DISPOSITIONS.has(d))
+  if (present.length === 0) return null
+  const distinct = new Set(present)
+  if (distinct.size === 1) return present[0]
+  return 'mixed'
+}
+
 export function buildReportPayload({
   checkKey,
   jurisdiction,
@@ -566,6 +581,7 @@ export function buildReportPayload({
   diagnostics,
   userComment,
   disposition,
+  findingDispositions,
 }) {
   const payload = {
     check_key: checkKey || 'unknown',
@@ -576,14 +592,37 @@ export function buildReportPayload({
   // 'confirmed_defect' = the flag is a correct catch (a real-defect / TP label
   // for the gold corpus), 'false_positive' = the flag is wrong (a walker_fp
   // label). The intake (api/report.js) maps each to a GitHub label.
-  if (disposition === 'confirmed_defect' || disposition === 'false_positive') {
-    payload.disposition = disposition
+  //
+  // A report carries up to SAMPLE_SIZE findings, and a single §112 claim is
+  // routinely a MIX of real defects and FPs — so one blanket disposition
+  // mislabels the set (the #373/#374 lossy-label gap). When the caller supplies
+  // PER-FINDING dispositions, attach each to its finding and derive the
+  // report-level value as the aggregate (a real mix → 'mixed'); the maintainer
+  // then ingests each finding on its own label.
+  const perFinding =
+    Array.isArray(findingDispositions) &&
+    Array.isArray(diagnostics?.findings) &&
+    findingDispositions.length === diagnostics.findings.length
+  const aggregate = perFinding ? aggregateDisposition(findingDispositions) : null
+  const topLevel = aggregate || disposition
+  if (VALID_DISPOSITIONS.has(topLevel) || topLevel === 'mixed') {
+    payload.disposition = topLevel
   }
   if (jurisdiction) payload.jurisdiction = jurisdiction
   if (locale) payload.locale = locale
   if (diagnostics && typeof diagnostics === 'object') {
     for (const [k, v] of Object.entries(diagnostics)) {
       if (v === null || v === undefined || v === '') continue
+      // Attach the per-finding disposition to each finding without mutating the
+      // caller's diagnostics object.
+      if (k === 'findings' && perFinding) {
+        payload.findings = v.map((f, i) =>
+          VALID_DISPOSITIONS.has(findingDispositions[i])
+            ? { ...f, disposition: findingDispositions[i] }
+            : f,
+        )
+        continue
+      }
       payload[k] = v
     }
   }
@@ -603,8 +642,8 @@ export function buildReportPayload({
 // { ok: true, payload } on 2xx, { ok: false, reason } on any
 // failure. The modal maps reason → localized toast string; raw HTTP
 // detail never reaches the user.
-export async function sendReport({ checkKey, jurisdiction, locale, diagnostics, userComment, disposition }) {
-  const payload = buildReportPayload({ checkKey, jurisdiction, locale, diagnostics, userComment, disposition })
+export async function sendReport({ checkKey, jurisdiction, locale, diagnostics, userComment, disposition, findingDispositions }) {
+  const payload = buildReportPayload({ checkKey, jurisdiction, locale, diagnostics, userComment, disposition, findingDispositions })
 
   emitOutgoing('/api/report')
   let response

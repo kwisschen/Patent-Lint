@@ -292,6 +292,7 @@
       "commentPlaceholder": "예: “이 용어는 청구항 1 에 이미 개시되어 있습니다.” 위 정보만으로 부족할 때 짧은 설명이 도움이 됩니다.",
       "commentNotice": "이 칸의 내용은 그대로 전송됩니다. 기밀 정보는 입력하지 마세요.",
       "dispositionHeading": "이 지적이 맞나요?",
+      "perFindingHeading": "이 신고에는 여러 지적이 포함되어 있습니다. 각각 개별적으로 판정해 주세요.",
       "dispositionWhy": "어느 쪽이든 도움이 됩니다. 올바른 지적 확인과 잘못된 지적 신고 모두 실제 원고로 분석기를 개선하는 데 쓰입니다.",
       "disposition": {
         "false_positive": {

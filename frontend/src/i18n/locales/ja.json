@@ -292,6 +292,7 @@
       "commentPlaceholder": "例：「この用語は請求項 1 で既に開示されています」など。上記だけでは伝わりにくいときに役立ちます。",
       "commentNotice": "ここに入力した内容はそのまま送信されます。機密情報は記入しないでください。",
       "dispositionHeading": "この指摘は妥当ですか？",
+      "perFindingHeading": "この報告には複数の指摘が含まれます。それぞれ個別にご判定ください。",
       "dispositionWhy": "どちらの回答も役立ちます。正しい指摘の確認も、不適切な指摘のご報告も、実際の原稿で分析器の改善に使われます。",
       "disposition": {
         "false_positive": {

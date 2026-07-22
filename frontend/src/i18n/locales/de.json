@@ -292,6 +292,7 @@
       "commentPlaceholder": "z. B. „Dieser Begriff ist bereits in Anspruch 1 offenbart.“ Eine kurze Notiz hilft, wenn die Angaben oben nicht ausreichen.",
       "commentNotice": "Was Sie hier eingeben, wird unverändert übermittelt — keine vertraulichen Inhalte einfügen.",
       "dispositionHeading": "Ist diese Markierung korrekt?",
+      "perFindingHeading": "Dieser Bericht umfasst mehrere Markierungen. Bitte jede einzeln bewerten.",
       "dispositionWhy": "Beide Antworten helfen — sowohl bestätigte Treffer als auch falsche Markierungen verbessern die Prüfung an echten Entwürfen.",
       "disposition": {
         "false_positive": {
