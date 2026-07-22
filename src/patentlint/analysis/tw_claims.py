@@ -2386,6 +2386,26 @@ _REF_PATTERN_CAPTURE = re.compile(
 # ``sorted(..., key=len, reverse=True)`` is applied once at import time.
 _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
     (
+        # === R31 (2026-07-22) - report-driven trailing predicate verbs ===
+        # From one firm drafter's TW draft (飛馳電容預充電電路, reports
+        # #416/#417/#423). Each bled into the captured intro (or the
+        # spec-support inventory term, which delegates to clean_noun_phrase_tw),
+        # orphaning the bare-noun head against its counterpart reference.
+        #   受控 ("is controlled", 受=passive marker + 控): the intro
+        #     `多個所述正壓電容開關受控於所述外部控制電路` over-captured to
+        #     正壓電容開關受控, so the reference 所述正壓電容開關 found no intro
+        #     (#416/#417) - and the spec-support inventory captured the same
+        #     受控 tail (#423). 受 is a passive marker with no noun sense in
+        #     suffix position, so the endswith strip is unconditionally FN-safe
+        #     (no TIPO element name ends in 受控).
+        #   彼此串接 ("series-connected with each other"): the intro
+        #     `多個正壓電容開關彼此串接` over-captured the reciprocal adverb
+        #     彼此 + verb 串接. Added as the FULL collocation rather than bare
+        #     串接 (which is mildly noun-gray as 串接結構/串接部) - DR-1, the
+        #     report evidences 彼此串接 and 彼此 has no noun reading, so the
+        #     collocation is FN-safe by construction. The residual 正壓電容開關
+        #     is the real element head.
+        "受控", "彼此串接",
         # === R30 (2026-07-20, report #399) - 間隔 as a spacing ADVERB ===
         # A bare 間隔 stop would be a FALSE NEGATIVE: 時間間隔 ("time
         # interval"), 子載波間隔 ("subcarrier spacing") and 第一子間隔 are real
@@ -4073,10 +4093,27 @@ def _postprocess_intro_capture(
             return [remainder] if remainder else []
 
     # Rule 1b: contains ref prefix at position > 0 → truncate
+    #
+    # R31 (2026-07-22, reports #418/#419/#420/#421): after truncating at the
+    # ref prefix, re-apply the R29 dangling-relational-head trim to the
+    # TRUNCATED candidate. The raw-bare_noun trim at the extract_introductions_tw
+    # call site runs BEFORE this truncation, so it never sees the stranded head
+    # that truncation exposes: `一外部控制電路對所述飛馳電容模組進行` captures
+    # `外部控制電路對所述飛馳電`, which truncates at 所述 to `外部控制電路對` — and
+    # the trailing 對 is the PREPOSITION 對 ("perform … ON the …"), provably so
+    # because the char we truncated at is itself a determiner (所述/該/該等/該些).
+    # Offset-aware, reusing the exact reference-side predicate so a matched
+    # intro/reference pair keys identically (the R29 four-consumer symmetry
+    # rule). A genuine compound (對接部) has 接 after 對, not a ref prefix, so it
+    # never reaches this branch.
+    noun_abs_start = match.start() + (len(match.group(0)) - len(match.group(1)))
     for prefix in _REFERENCE_FORM_PREFIXES:
         idx = bare_noun.find(prefix)
         if idx > 0:
             bare_noun = bare_noun[:idx]
+            bare_noun, _ = _trim_dangling_ying_verb_head_tw(
+                bare_noun, noun_abs_start + idx, claim_text,
+            )
             break
 
     # Rule 2: embedded 一 splitting

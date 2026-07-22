@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 55,
+    "current_round": 56,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -257,9 +257,21 @@
         "name": "r55_tw_r30_parity_jiange_compounds",
         "description": "TW R30 parity (report #399). Adds only the 间隔<verb> spacing collocations. Bare 间隔 is deliberately ABSENT for the same false-negative reason as TW: 时间间隔 and 子载波间隔 are real element names, so a bare stop would truncate them and a genuine 所述时间间隔 defect could never fire. Corpus-silent on CN (validate_fix 0/0/0, silenced_legit=0) but latent-safe parity. Note CN lacks bare 排列 in its denylist entirely, so these compounds fix 间距间隔排列 latently WITHOUT taking on the separate DR-1 question of whether bare 排列 is CN-safe; bare 排列 was NOT added. The other TW R30 arms are deliberately NOT mirrored: (a)/(b) are specific to the TW supplementary-intro path and the TW leading-verb strip, and (d) 来自 has been in the CN trailing denylist since R9 - CN was the SOURCE of that parity fix, not its target. ALSO THIS ROUND, and recorded here because it is the reason no CN 对 fix shipped: the queued CN bare 对 pair-noun lever was investigated to ground truth and WITHHELD. The strip is real (fires 3,323 times over 841 distinct captures; 228 distinct pair-nouns such as 导电元件对 / 端子对 / 密钥对 / 差分信号对 are truncated), but the fix buys nothing in EITHER engine. Engine 1: the forward-prefix resolution at cn_claims.py normalized_term.startswith(intro) resolves 电极对 against an 电极 intro whether or not the strip ran, so un-stripping recovered ZERO pair-noun findings while costing 41 dirtier captures, 8 manufactured findings and 4 walker_fp regressions. Engine 2: the pair-noun IS present in the spec on every corpus draft that uses one, so support resolves either way - 331 -> 331 against the REPAIRED spec-support harness. The apparent +4 win measured earlier was an artifact of a harness bug (the runner passed embodiments= to CnPatentDocument, which has no such field, so pydantic dropped the spec and every term counted unsupported: 58,943 findings vs TW's 137). Fixed in PR #413. Re-open the 对 class only if a real draft report evidences it.",
         "fixtures_silenced": 0
+      },
+      {
+        "round": 56,
+        "name": "r56_tw_r31_parity_shoukong_bicichuanjie",
+        "description": "TW R31 parity (reports #416/#417/#423). Mirrored 受控 + 彼此串接 to _TRAILING_VERB_DENYLIST_CN, verified LATENT on CN by direct probe first (same discipline as R52/R54): the Simplified analog `正压电容开关受控` / `正压电容开关彼此串接` over-captured identically, orphaning 所述正压电容开关 - an invisible FN-direction parity gap no CN report could surface. 受控 is a passive marker with no suffix-position noun sense; 彼此串接 is the full reciprocal-adverb+verb collocation. The sibling TW R31 also carries a 对-at-ref-prefix-truncation trim deliberately NOT mirrored here: the CN analog #418 does NOT reproduce, because CN forward-prefix resolution already resolves 外部控制电路 through the 对 over-capture (consistent with the settled 'CN bare 对 buys nothing'). GATES: validate_fix CN silenced_legit=0 (corpus-silent, FP-ending proven by reproducer); specsup CN 336 no growth; fixture protect_violations=0, unresolved_new=0; 2885 pytest.",
+        "user_attested_issues": [
+          416,
+          417,
+          423
+        ],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-07-21T16:39:40+00:00"
       }
     ],
-    "last_updated": "2026-07-20",
+    "last_updated": "2026-07-21T16:39:40+00:00",
     "category_counts": {
       "unclassified": 1059,
       "miss_intro.coverage_gap": 250,
