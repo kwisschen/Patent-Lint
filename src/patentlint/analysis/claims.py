@@ -226,6 +226,22 @@ def detect_means_plus_function(claims: list[Claim]) -> list[int]:
 
 _SKIP_TERMS = {"invention", "present invention", "same", "following", "above", "below"}
 
+# R38 (2026-07-23, reports #409/#414): cataphoric leading modifier. `the
+# following steps:`, `the following types`, `the following information` point at
+# the enumerated list that FOLLOWS in the text, not at a previously-introduced
+# element, so they owe no antecedent under MPEP 2173.05(e). `following` is
+# already curated as a non-element modifier in `_SKIP_TERMS` (intro side); this
+# gates a multi-word REFERENCE by its head word, which a whole-term stop cannot
+# reach (`following steps` != `following`). FN-safe on the authoritative ground
+# truth: the examiner FN-guard confirms 0 of the recalled examiner-confirmed
+# defects begin with `following` (us_examiner_legit has ZERO). The LLM-ensemble
+# gold had over-labeled 32 `the following <list-noun>` findings as legit; the
+# attorney (reports #409/#414) confirms the whole class is FP, so those are
+# gold-corrected to walker_fp in phase2b_results_us_corrections.json (R38).
+# DR-1: `above`/`below` (also curated in `_SKIP_TERMS`) are held out - no report
+# evidences them and no gold/examiner term is above/below-headed; add on report.
+_CATAPHORIC_LEADING = frozenset({"following"})
+
 # Markush "the group" trailing context: when a "the X" reference where
 # X is exactly "group" is followed by "consisting of" or "of", the term
 # is the head noun of a Markush group definition rather than a missing
@@ -555,6 +571,11 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                 continue
             # Skip standalone quantifiers/pronouns ("the one", "the another")
             if term.lower() in _QUANTIFIER_STOPS:
+                continue
+            # R38 (2026-07-23, reports #409/#414): cataphoric leading modifier
+            # ("the FOLLOWING steps:", "the FOLLOWING types") — a reference to the
+            # enumerated list that follows, not a missing antecedent.
+            if term.split()[0].lower() in _CATAPHORIC_LEADING:
                 continue
             # R34 (2026-07-18, report #400): partitive pronoun. `the switched
             # one of the plurality of channels` heads on the PRONOUN `one`,
@@ -1580,6 +1601,14 @@ def check_spec_support(
 
             # Skip generic/boilerplate terms
             if phrase_lower in _GENERIC_TERMS or phrase_lower in _BOILERPLATE_TERMS:
+                continue
+
+            # R38 (2026-07-23, report #414): cataphoric leading modifier ("the
+            # following steps:") — a reference to the enumerated list, never a
+            # written-description-bearing element (mirror of the antecedent-side
+            # guard). FN-safe: `following` is never the leading word of a real
+            # element name.
+            if phrase_lower.split()[0] in _CATAPHORIC_LEADING:
                 continue
 
             # Skip single common words
