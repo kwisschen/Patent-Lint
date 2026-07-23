@@ -2502,6 +2502,25 @@ _POST_DE_ORDINAL_PATTERN_CN = re.compile(
     r'的(第[一二三四五六七八九十\d]+' + _CJK_NO_DE_CN + r'+(?:\([A-Za-z0-9]+\))?)'
 )
 
+# R58 (2026-07-23) - TW R33 parity. Article-less introduction via a PLATING verb
+# 镀(有) + ordinal noun (`所述第一背面上镀有第一底部铜层`). Latent-verified on CN
+# (the Simplified analog fires identically). 镀 is noun-gray (镀层/镀膜 are nouns),
+# so it cannot go in _F6_VERB_ALT_CN; this dedicated pattern is gated on the
+# ordinal 第N (the first-mention signal), never a bare NP.
+_PLATING_ORDINAL_INTRO_CN = re.compile(
+    r'(?:镀有|镀)'
+    r'(第[一二三四五六七八九十\d]+' + _CJK_NO_DE_CN + r'+(?:\([A-Za-z0-9]+\))?)'
+    r'(?![的之])'
+)
+_PLATING_ORDINAL_TAIL_CN = re.compile(
+    r'镀(?:有)?(第[一二三四五六七八九十\d]+' + _CJK_NO_DE_CN + r'+)$'
+)
+
+
+def _strip_plating_prefix_cn(noun: str) -> str:
+    m = _PLATING_ORDINAL_TAIL_CN.search(noun)
+    return m.group(1) if m else noun
+
 # Phase 8c R14c.2 — F6 bare-noun relax.
 # Adds a third capture arm: bare NP (≥3 CJK chars, no ordinal, no paren).
 # Gated by:
@@ -2943,6 +2962,9 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
     for m in _PARTICIPIAL_YI_DE_PATTERN_CN.finditer(text):
         noun = m.group(1)
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        # R58: strip an embedded plating verb before the ordinal head
+        # (镀第N<noun>); the real element is the trailing ordinal noun.
+        normalized = _strip_plating_prefix_cn(normalized)
         has_numeral = '(' in noun
         has_ordinal = normalized.startswith('第')
         cjk_len = sum(1 for c in normalized if '\u4e00' <= c <= '\u9fff')
@@ -2952,6 +2974,12 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
 
     # F7c: 的第Y — post-的 ordinal noun
     for m in _POST_DE_ORDINAL_PATTERN_CN.finditer(text):
+        noun = m.group(1)
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        results.append((m.group(0), normalized))
+
+    # R58: plating verb + ordinal noun (镀有第一底部铜层 -> 第一底部铜层).
+    for m in _PLATING_ORDINAL_INTRO_CN.finditer(text):
         noun = m.group(1)
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
         results.append((m.group(0), normalized))

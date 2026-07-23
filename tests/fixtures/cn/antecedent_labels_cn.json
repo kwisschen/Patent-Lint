@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 57,
+    "current_round": 58,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -277,6 +277,19 @@
         "user_attested_issues": [
           424,
           425
+        ],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-07-23T00:00:00+00:00"
+      },
+      {
+        "round": 58,
+        "name": "r58_tw_r33_parity_plating_ordinal_intro",
+        "description": "TW R33 parity (reports #429/#430/#432/#433). Mirrored the plating-verb + ordinal intro (_PLATING_ORDINAL_INTRO_CN 镀有|镀 + 第N<noun>) and the tail-anchored spec-support strip (_strip_plating_prefix_cn), both verified LATENT on CN by direct probe first (镀有第一底部铜层 was a missed intro on CN too; 表面上镀第一顶部铜层 -> 第一顶部铜层). 镀 is noun-gray (镀层/镀膜), so the dedicated ordinal-gated pattern - never the general F6 list - is the FN-safe shape. GATES: validate_fix CN silenced_legit=0; specsup CN 336 no-growth; fixture protect_violations=0, unresolved_new=0; 2885 pytest.",
+        "user_attested_issues": [
+          429,
+          430,
+          432,
+          433
         ],
         "fixtures_silenced": 0,
         "shipped_at": "2026-07-23T00:00:00+00:00"
