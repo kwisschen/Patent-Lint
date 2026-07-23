@@ -2386,6 +2386,15 @@ _REF_PATTERN_CAPTURE = re.compile(
 # ``sorted(..., key=len, reverse=True)`` is applied once at import time.
 _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
     (
+        # === R32 (2026-07-23, report #424, spec-support) ===
+        # 所對 - the stranded head of 所對應 ("that which corresponds to").
+        # `輸出電容所對應的所述輸出電壓` captures 電容所對 because 應 is excluded
+        # from _NOUN_CHARS, so the scan halts mid-對應 leaving 所+對 glued to the
+        # noun. The R29 dangling-對應 trim runs at CAPTURE sites, not on the
+        # spec-support inventory path (clean_noun_phrase_tw), so the tail survives
+        # there. endswith strip: 電容所對 -> 電容. FN-safe - no TIPO element name
+        # ends in 所對 (所-suffix nouns are 場所/研究所/事務所, not X所對).
+        "所對",
         # === R31 (2026-07-22) - report-driven trailing predicate verbs ===
         # From one firm drafter's TW draft (飛馳電容預充電電路, reports
         # #416/#417/#423). Each bled into the captured intro (or the
@@ -3039,6 +3048,16 @@ _PLURAL_REFERENCE_PREFIXES: tuple[str, ...] = tuple(sorted(
 # Ordered longest-first so 設有/包含 strip before single-char tokens.
 _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
     (
+        # === R32 (2026-07-23, report #425, spec-support) ===
+        # 控制多個 ("control multiple") - the intro/inventory capture over-ran a
+        # noun into the verb 控制 plus the quantifier 多個 of its object
+        # (`依據多個預充電階段控制多個所述正壓電容開關` -> captured
+        # 預充電階段控制多個). Added as the full verb+quantifier COLLOCATION, not
+        # bare 控制, because 控制 is noun-gray (控制電路 / 控制器 / 溫度控制模組,
+        # where 控制 is a noun-modifier FOLLOWED BY A NOUN, never by 多個). A cut
+        # on bare 控制 would truncate those real compounds; 控制多個 is
+        # unambiguously verbal, so the interior cut is FN-safe by construction.
+        "控制多個",
         # === R29 (2026-07-18, reports #394/#395/#396) ===
         # Interior counterparts of the R29 trailing strips. The trailing entry
         # only fires when the capture ENDS at the verb; these two also occur
