@@ -4314,6 +4314,39 @@ _BARE_AFTER_VERB_PATTERN = re.compile(
 
 _CLAUSE_BOUNDARY_RE = re.compile(r'[；，、。]')
 
+# R33 (2026-07-23, reports #429/#430/#432/#433): article-less introduction via a
+# PLATING verb + ordinal noun. Drafters introduce a metal layer with 鍍(有) /
+# 上鍍 ("plate(d with)") and the ordinal 第N as the first-mention marker, DROPPING
+# the 一 quantifier: `所述第一背面上鍍有第一底部銅層`, `於所述第一封裝體的表面上鍍
+# 第一頂部銅層`. 鍍 cannot go in the general F6 verb list (`_F6_VERB_ALT_TW`)
+# because it is noun-gray - 鍍層 / 鍍膜 are nouns, and the F6 arm-3 bare-NP branch
+# would mis-split 鍍金屬層 -> 金屬層 (a false intro, and a potential FN if a real
+# `所述金屬層` reference resolved against it). This DEDICATED pattern is gated on
+# the ordinal 第N, the unambiguous first-mention signal, so it never captures a
+# bare NP. A reference form (`鍍有所述第一底部銅層` / `鍍有該第一…`) is not matched
+# - 所述/該 sits between 鍍有 and 第, so the `鍍有第` juxtaposition never occurs.
+# `鍍` alone also covers 上鍍 (the pattern finds `鍍第N` inside `上鍍第N`).
+_PLATING_ORDINAL_INTRO_TW = re.compile(
+    r'(?:鍍有|鍍)'
+    r'(第[一二三四五六七八九十\d]+' + _CJK_NO_DE_ZHI_TW + r'+(?:\([A-Za-z0-9]+\))?)'
+    r'(?![的之])'
+)
+
+# Companion to the dedicated pattern above: when the `一X的Y` intro arm
+# (_PARTICIPIAL_YI_DE_PATTERN) captures a `Y` that EMBEDS the plating verb before
+# its ordinal head (`表面上鍍第一頂部銅層`), the real element is the trailing
+# 第N<noun>. Strip the pre-鍍 locative/verb prefix so the spec-support inventory
+# checks 第一頂部銅層 (which is in the spec), not the garbage phrase. Anchored to
+# the END so it only fires when the ordinal noun is the tail.
+_PLATING_ORDINAL_TAIL_TW = re.compile(
+    r'鍍(?:有)?(第[一二三四五六七八九十\d]+' + _CJK_NO_DE_ZHI_TW + r'+)$'
+)
+
+
+def _strip_plating_prefix_tw(noun: str) -> str:
+    m = _PLATING_ORDINAL_TAIL_TW.search(noun)
+    return m.group(1) if m else noun
+
 _REF_PREFIX_SET = ('所述', '該', '前述')
 
 # F5a: Ref-prefix possessive (所述|該|前述)X的Y
@@ -4808,6 +4841,9 @@ def _extract_supplementary_intros(
     for m in _PARTICIPIAL_YI_DE_PATTERN.finditer(text):
         noun = m.group(1)
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        # R33: a `一X的<locative>鍍第N<noun>` capture embeds the plating verb; the
+        # real element is the trailing 第N<noun> (reports #432/#433, spec-support).
+        normalized = _strip_plating_prefix_tw(normalized)
         has_numeral = '(' in noun
         has_ordinal = normalized.startswith('第')
         cjk_len = sum(1 for c in normalized if '\u4e00' <= c <= '\u9fff')
@@ -4817,6 +4853,12 @@ def _extract_supplementary_intros(
 
     # F7c: 的第Y — post-的 ordinal noun
     for m in _POST_DE_ORDINAL_PATTERN.finditer(text):
+        noun = m.group(1)
+        normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
+        results.append((m.group(0), normalized))
+
+    # R33: plating verb + ordinal noun (鍍有第一底部銅層 -> 第一底部銅層).
+    for m in _PLATING_ORDINAL_INTRO_TW.finditer(text):
         noun = m.group(1)
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
         results.append((m.group(0), normalized))
