@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 56,
+    "current_round": 57,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -269,9 +269,20 @@
         ],
         "fixtures_silenced": 0,
         "shipped_at": "2026-07-21T16:39:40+00:00"
+      },
+      {
+        "round": 57,
+        "name": "r57_tw_r32_parity_kongzhi_duoge_suodui",
+        "description": "TW R32 parity (reports #424/#425, spec-support). Mirrored 控制多个 (_INTERIOR_VERB_BOUNDARIES_CN) + 所对 (_TRAILING_VERB_DENYLIST_CN), both verified LATENT on CN by direct probe first: 预充电阶段控制多个 over-captured identically, and 电容所对 was WORSE than inert (the pre-existing bare-对 strip left 电容所; the full 所对 collocation strips both -> 电容). Both FN-safe (控制多个 is verb+quantifier, never a noun compound; no CN element ends in 所对). Corpus-silent (validate_fix silenced_legit=0; specsup CN 336 no-growth); fixture protect_violations=0, unresolved_new=0; 2885 pytest.",
+        "user_attested_issues": [
+          424,
+          425
+        ],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-07-23T00:00:00+00:00"
       }
     ],
-    "last_updated": "2026-07-21T16:39:40+00:00",
+    "last_updated": "2026-07-23T00:00:00+00:00",
     "category_counts": {
       "unclassified": 1059,
       "miss_intro.coverage_gap": 250,

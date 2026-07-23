@@ -1524,6 +1524,13 @@ _MATCH_NOUN_COMPOUNDS_CN: frozenset[str] = frozenset({"阻抗匹配"})
 
 _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
     (
+        # === R57 (2026-07-23) - TW R32 parity (report #424, spec-support) ===
+        # 所对 - the stranded head of 所对应 ("that which corresponds to").
+        # Latent on CN, and the pre-existing bare-对 strip made it WORSE, not
+        # inert: 电容所对 -> 电容所 (对 stripped, 所 stranded). Adding the full
+        # 所对 collocation strips both: 电容所对 -> 电容. FN-safe - no CN element
+        # name ends in 所对 (所-suffix nouns are 场所/研究所/事务所).
+        "所对",
         # === R56 (2026-07-22) - TW R31 parity (reports #416/#417/#423) ===
         # Verified LATENT on the CN side by direct probe before the fix (same
         # discipline as R52/R54): the Simplified analog of the reported TW draft
@@ -1875,6 +1882,12 @@ _PLURAL_REFERENCE_PREFIXES_CN: tuple[str, ...] = tuple(sorted(
 # lines 1138–1331 for the historical risk-review rationale per verb.
 _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
     (
+        # === R57 (2026-07-23) - TW R32 parity (report #425, spec-support) ===
+        # 控制多个 ("control multiple") - latent on CN (the Simplified analog
+        # 预充电阶段控制多个 over-captures identically). Full verb+quantifier
+        # collocation, never bare 控制 (noun-gray: 控制电路 / 控制器 /
+        # 温度控制模块). FN-safe by construction.
+        "控制多个",
         # === R54 (2026-07-18) - TW R29 parity (reports #394/#395/#396) ===
         # Interior counterparts of the R54 trailing strips; latent-verified.
         "随着", "满足下式", "满足下列", "满足以下", "满足如下",
