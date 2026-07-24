@@ -1056,3 +1056,32 @@ def test_dalton_molecular_weight_excluded_from_refnums_181():
         "The hyaluronic acid has a molecular weight of between 10 kDa and 1000 kDa. "
         "The gelatin has a molecular weight of 200 kDa. The collagen is 50 kDa."
     )[0].status == "pass"
+
+
+def test_ampere_current_unit_excluded_from_refnums_434():
+    """#434: the spelled-out current unit (`Amperes`/`amps`/`ampere`) is a
+    measurement, not a reference numeral. `statically reserving 20 Amperes`
+    left `20` as a phantom refnum that collided with the element `network 20`."""
+    from patentlint.analysis.specification import (
+        check_numeral_consistency,
+        extract_numeral_name_pairs,
+    )
+    for text in (
+        "statically reserving 20 Amperes from the total capacity",
+        "a current of 20 amps flows through the coil",
+        "the rated current is 5 Ampere",
+    ):
+        assert extract_numeral_name_pairs(text) == [], text
+    # FN guards: real refnums whose noun merely starts with "Amp..." are not
+    # units (the trailing boundary blocks `amplifier`/`amplitude`).
+    assert extract_numeral_name_pairs("the amplifier 30 boosts the signal") == [
+        ("30", "amplifier")
+    ]
+    assert extract_numeral_name_pairs("the housing 102 holds the lid") == [("102", "housing")]
+    # End-to-end (the report scenario): `network 20` used consistently, with one
+    # `20 Amperes` measurement — no longer a D1 conflict.
+    assert check_numeral_consistency(
+        "A network 20 connects the nodes. The network 20 routes packets. "
+        "The network 20 has ports. The network 20 is redundant. The network 20 scales. "
+        "The controller is capable of statically reserving 20 Amperes from the total capacity."
+    )[0].status == "pass"
