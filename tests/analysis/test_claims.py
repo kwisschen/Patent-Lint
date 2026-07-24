@@ -640,6 +640,65 @@ class TestAntecedentBasis:
         # Resolves cleanly — intro `financial accounts` matches ref the same.
         assert check_antecedent_basis(claims) == []
 
+    def test_r39_gated_verb_prep_stops_not_overcaptured(self):
+        """R39 (reports #444/#435/#436): `surround`/`takes`/`via` terminate NP
+        capture in the verb/preposition reading (determiner/cardinal-gated)."""
+        # #444 — base-form `surround` (coordinate subject) + object determiner.
+        c = [
+            Claim(id=18, text=(
+                "A power module comprising a first power converter, a first "
+                "magnetic column body, and a coil, wherein a primary coil and a "
+                "secondary coil of a first transformer of the first power "
+                "converter surround the first magnetic column body."
+            ), independent=True, method_claim=False),
+        ]
+        assert not any("surround" in i["term"] for i in check_antecedent_basis(c))
+        # #435 — `takes up` matrix verb.
+        c = [
+            Claim(id=7, text="A bag comprising a stress buffer pattern.",
+                  independent=True, method_claim=False),
+            Claim(id=9, text=(
+                "The bag of claim 7, wherein the stress buffer pattern takes up "
+                "20% to 80% of a total area."
+            ), independent=False, dependencies=[7], method_claim=False),
+        ]
+        assert not any("takes" in i["term"] for i in check_antecedent_basis(c))
+        # #436 — preposition `via` before a cardinal.
+        c = [
+            Claim(id=10, text="A method comprising forming a bottom sealing structure.",
+                  independent=True, method_claim=False),
+            Claim(id=11, text=(
+                "The method of claim 10, forming a section of the bottom sealing "
+                "structure via two sealing operations."
+            ), independent=False, dependencies=[10], method_claim=False),
+        ]
+        assert not any("via" in i["term"] for i in check_antecedent_basis(c))
+
+    def test_r39_noun_senses_preserved(self):
+        """R39 negative-controls: the noun senses are FN-safe.
+        - `via` the semiconductor element (head, followed by a verb) is kept.
+        - `surround`/`takes` gates fire only before a determiner/particle, so a
+          `via a` gerund reference (gold-legit) is NOT cut."""
+        # Semiconductor `via` as head resolves against its intro (not silenced).
+        c = [
+            Claim(id=1, text="A device comprising a first via and a second via.",
+                  independent=True, method_claim=False),
+            Claim(id=2, text="The device of claim 1, wherein the first via is filled.",
+                  independent=False, dependencies=[1], method_claim=False),
+        ]
+        assert check_antecedent_basis(c) == []
+        # `via a <NP>` (article, not cardinal) is NOT gated — `via` stays in the
+        # captured reference (the gold-legit `the extracting performed via a …`
+        # shape that validate_fix protects).
+        c = [
+            Claim(id=1, text="A method.", independent=True, method_claim=False),
+            Claim(id=2, text=(
+                "The method of claim 1, wherein the extracting performed via a "
+                "solvent is repeated."
+            ), independent=False, dependencies=[1], method_claim=False),
+        ]
+        assert any("via" in i["term"] for i in check_antecedent_basis(c))
+
     def test_unicode_hyphen_np_span_r5(self):
         """R5 (issues #97 / #103): U+2010 HYPHEN and U+2011 NON-BREAKING
         HYPHEN must be NP-internal joiners, same as ASCII U+002D. Drafters
