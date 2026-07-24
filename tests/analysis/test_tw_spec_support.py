@@ -609,3 +609,54 @@ class TestSpecSupportRound202607:
 
     def test_351_leading_ref_marker_strip(self):
         assert _normalize_for_spec_support_tw("各所述天線") == "天線"
+
+
+class TestSpecSupportRoundR34:
+    """R34 TW spec-support over-capture round (#439/#440/#441/#442/#443) —
+    one firm drafter's planar-transformer draft."""
+
+    def test_439_442_leading_baokuo_baohan(self):
+        # Leading transitional verb 包括/包含 stripped so the head noun surfaces.
+        assert _normalize_for_spec_support_tw("包括一第一平板") == "第一平板"
+        assert _normalize_for_spec_support_tw("包含一第一磁柱體") == "第一磁柱體"
+        # FN-guards: real nouns opening with 包 (but not 包括/包含) are untouched.
+        assert _normalize_for_spec_support_tw("包覆層") == "包覆層"
+        assert _normalize_for_spec_support_tw("包裝結構") == "包裝結構"
+
+    def test_440_trailing_xianglin(self):
+        # 相鄰 ("adjacent to") trailing relational verb stripped.
+        assert _normalize_for_spec_support_tw("第二次級繞組層相鄰") == "第二次級繞組層"
+        # FN-guard: a positional element carries a noun head (相鄰區), untouched.
+        assert _normalize_for_spec_support_tw("相鄰區") == "相鄰區"
+
+    def test_441_stranded_short_left_split(self):
+        # A sub-2-char left before 及 (區, stranded from 設置區) is dropped;
+        # the clean coordinate noun is kept.
+        assert _split_on_conjunction("區及一第二次級繞組") == ["第二次級繞組"]
+        # FN-guards: a ≥2-char left splits normally; a short non-quantifier
+        # RIGHT residue (model letter) stays whole (#350).
+        assert _split_on_conjunction("第一基板及第二基板") == ["第一基板", "第二基板"]
+        assert _split_on_conjunction("組件及A") == ["組件及A"]
+
+    def test_443_trailing_locative_clause(self):
+        # Interior 於/在 + determiner opens a locative predicate → strip the tail.
+        assert _normalize_for_spec_support_tw("第二電源轉換器於一次") == "第二電源轉換器"
+        assert _normalize_for_spec_support_tw("第一開關電路在一表面") == "第一開關電路"
+        # FN-guard: 在 NOT followed by a determiner is part of the noun and the
+        # gate (idx≥2, next char a determiner) leaves 內在電阻 intact.
+        assert _normalize_for_spec_support_tw("內在電阻") == "內在電阻"
+
+    def test_440_f1_TP_preserved(self):
+        # The confirmed-defect finding (#440-f1) must still be inventoried.
+        claim = _make_claim(
+            2,
+            "如請求項1所述的平板變壓器，其中該多層電路板更包括一第一輔助初級繞組層，"
+            "該第一輔助初級繞組層與該第一初級繞組層並聯連接，且該第一輔助初級繞組層與"
+            "該些次級繞組層中的一第二次級繞組層相鄰設置。",
+            independent=False,
+            deps=[1],
+        )
+        inv = [t for _, t in _build_inventory([claim])]
+        assert "第一輔助初級繞組層" in inv
+        # And the over-captures are gone.
+        assert "第二次級繞組層相鄰" not in inv

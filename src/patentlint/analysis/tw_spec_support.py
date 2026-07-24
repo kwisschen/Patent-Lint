@@ -136,6 +136,12 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # end with either token.
         "蝕刻",
         "沿",
+        # R34 (#440) — `相鄰` ("adjacent to", a mutual-relation verb) trailing
+        # tail (第二次級繞組層相鄰設置 → 第二次級繞組層相鄰 after 設置 strip → strip
+        # 相鄰). 2-char, tried before the 1-char `相` (which only fires when the
+        # term ends in a bare `相`). FN-safe: no TIPO element name ends in 相鄰
+        # (a positional element carries 相鄰區/相鄰面 ending in 區/面).
+        "相鄰",
         "相",
         "形",
         "時",
@@ -461,6 +467,18 @@ def _normalize_for_spec_support_tw(text: str) -> str:
         if t.startswith(verb + "一") and len(t) > len(verb):
             t = t[len(verb):]
             break
+    # R34 (#439/#442) — leading transitional verb 包括/包含 ("comprising/
+    # including"), a 連接詞 per TIPO §2.3.3 and never part of a noun's name. A
+    # sub-element enumeration `一磁芯，包括一第一平板` over-captures the transition
+    # into the term. Strip it so the 一-quantifier normalizer below recovers the
+    # head noun (包括一第一平板 → 第一平板); the head is independently inventoried
+    # via its own 一X intro, so this only removes a redundant duplicate (zero
+    # coverage loss). FN-safe: a real element name never opens with the 2-char
+    # 包括/包含 (包覆層 cladding-layer / 包裝 packaging start with 包 but not these).
+    for verb in ("包括", "包含"):
+        if t.startswith(verb) and len(t) > len(verb):
+            t = t[len(verb):]
+            break
     t = normalize_reference_term(t)
     # #351 — strip a leading reference marker that survived normalize (a leading
     # distributive quantifier can block the position-0 reference-form strip,
@@ -477,6 +495,7 @@ def _normalize_for_spec_support_tw(text: str) -> str:
         if len(suffix) >= _MIN_INVENTORY_LENGTH:
             t = normalize_reference_term(suffix)
     t = _recover_from_midphrase_prefix(t)
+    t = _strip_trailing_locative_clause(t)
     t = _strip_trailing_conjunction(t)
     t = _strip_spec_support_trailing_tokens(t)
     # #321 — re-run the trailing-conjunction strip AFTER the trailing-token
@@ -573,6 +592,34 @@ def _strip_trailing_conjunction(term: str) -> str:
     return term
 
 
+# R34 (#443) — determiners that open a trailing locative predicate after an
+# interior preposition 於/在. A noun's name never contains 於一/於該/在一/在該…;
+# such a span is always the locative clause `於一次側` / `在該表面上`.
+_TW_LOCATIVE_CLAUSE_DETERMINERS: frozenset[str] = frozenset(
+    {"一", "該", "其", "前", "所", "此", "各"}
+)
+
+
+def _strip_trailing_locative_clause(term: str) -> str:
+    """Strip a trailing interior-locative clause `X於<det>…` / `X在<det>…`.
+
+    (#443: 第二電源轉換器於一次側 → 第二電源轉換器.) An interior 於/在 followed
+    by a determiner/quantifier opens a locative predicate, never continues a
+    noun's name, so everything from the preposition is clause tail. Gated on the
+    head before the preposition being inventory-length so a leading-preposition
+    residue (位於一表面 → 位, sub-_MIN) is left for the length filter, not emitted.
+    """
+    for prep in ("於", "在"):
+        idx = term.find(prep)
+        if (
+            idx >= _MIN_INVENTORY_LENGTH
+            and idx + len(prep) < len(term)
+            and term[idx + len(prep)] in _TW_LOCATIVE_CLAUSE_DETERMINERS
+        ):
+            return term[:idx]
+    return term
+
+
 # #350 — bare quantifiers that, on the right of a conjunction with no noun
 # after them, mark a walker-over-captured clause boundary (X 及 一個).
 _TW_BARE_QUANTIFIERS: frozenset[str] = frozenset({
@@ -606,6 +653,15 @@ def _split_on_conjunction(term: str) -> list[str]:
         right = normalize_reference_term(raw_right) if raw_right else raw_right
         if len(left) >= _MIN_INVENTORY_LENGTH and len(right) >= _MIN_INVENTORY_LENGTH:
             return _split_on_conjunction(left) + _split_on_conjunction(right)
+        # R34 (#441) — stranded SHORT left fragment: `區及一第二次級繞組` — the
+        # walker stripped the verb `設置` from the element name `設置區`, stranding
+        # a bare `區` before the coordinating `及`. A sub-_MIN left can never be a
+        # real inventory term (the ≥2-char floor drops it regardless), so keep the
+        # clean right noun. Mirror of #350 (which drops a stranded short RIGHT
+        # quantifier); FN-safe because dropping a 1-char left loses no inventoriable
+        # term while recovering the coordinate noun the drafter actually wrote.
+        if len(right) >= _MIN_INVENTORY_LENGTH and 0 < len(left) < _MIN_INVENTORY_LENGTH:
+            return _split_on_conjunction(right)
         # #350 — stranded leading-quantifier tail: `X及一個` / `X與複數` — the
         # walker over-captured a clause boundary, leaving a bare quantifier with
         # no noun on the right. Keep the left noun, drop the tail. Gated on an
