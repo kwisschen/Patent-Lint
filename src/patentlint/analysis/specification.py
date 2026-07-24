@@ -252,6 +252,13 @@ _UNIT_PATTERN = re.compile(
     # Voltage / current / power / charge
     r"|kV|mV|µV|μV|V"
     r"|kA|mA|µA|μA|A"
+    # Issue #434: the spelled-out current unit. The `A` symbol above cannot
+    # match `Amperes` (the `(?![A-Za-z0-9])` boundary correctly stops it inside
+    # the word), so `statically reserving 20 Amperes` left `20` as a phantom
+    # reference numeral (mirror of the #312 spelled-out `degrees` fix). Both
+    # cases; longest-first. `amp`/`amps` are safe under the trailing boundary —
+    # `amplifier`/`ample` continue with an alnum char and do not match.
+    r"|[Aa]mperes|[Aa]mpere|[Aa]mps|[Aa]mp"
     r"|kW|MW|GW|mW|µW|μW|W"
     r"|mC|µC|μC|nC|C"
     r"|kΩ|MΩ|mΩ|Ω|ohm|ohms"
