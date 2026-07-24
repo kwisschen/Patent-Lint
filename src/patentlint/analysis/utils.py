@@ -695,6 +695,29 @@ _STOP_WORDS = (
     # US. No CN/TW mirror (English-verb over-capture) — TW `對接` is a
     # separate interior-cut class (#330/#331).
     r"drive(?=\s+(?:a|an|the)\b)|swing(?=\s+(?:on|toward|towards|inward|outward|away)\b)|"
+    # R39 (2026-07-24, reports #444/#435/#436): three noun-gray tokens that
+    # over-captured into the antecedent reference, each gated to the verb/
+    # preposition reading so the noun sense is preserved.
+    # - `surround` (#444, `the first power converter surround the first magnetic
+    #   column body`): base-form finite verb with a coordinate subject (`a
+    #   primary coil and a secondary coil … surround`). The 3sg `surrounds` was
+    #   already a bare stop; the base form is noun-gray (`a window surround`, `a
+    #   surround`), so it is determiner-gated to the verb-object shape.
+    # - `takes` (#435, `the stress buffer pattern takes up 20% to 80%`): the
+    #   matrix verb `takes up`. Noun-gray (`multiple takes`, `the takes`), gated
+    #   on the phrasal particle `up` / an object determiner.
+    # - `via` (#436, `the bottom sealing structure via two sealing operations`):
+    #   the preposition "by way of". `via` is ALSO a semiconductor element noun
+    #   (`a conductive via`, `the first via`), so a bare stop would be an FN. It is
+    #   gated to a following CARDINAL only (`via two`, the reported shape) — NOT an
+    #   article: the article form `<gerund> performed via a <NP>` is a gold-legit
+    #   §112 reference (US20250377871A1 c15 `the extracting performed via a …`)
+    #   that validate_fix flagged, so admitting `via a` would be an FN. The noun
+    #   `via` as a captured head is never followed by a bare cardinal, so the
+    #   cardinal gate is FN-safe against the element sense too.
+    r"surround(?=\s+(?:a|an|the|each)\b)|"
+    r"takes(?=\s+(?:up|a|an|the)\b)|"
+    r"via(?=\s+(?:one|two|three|four|five|six|seven|eight|nine|ten)\b)|"
     # R5 (2026-05-26): `accounts` as 3sg finite verb only — lookahead on
     # `\s+for` discriminates the `<noun> accounts for X` verb-object pattern
     # (#98 alumina, #99 silica) from the bare-noun usage (`financial accounts`,
