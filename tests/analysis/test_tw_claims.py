@@ -445,6 +445,37 @@ class TestSubjectConsistency:
             "請求項1所述之裝置，其中該基座為金屬。"
         ) == ("裝置", "dep_prefix")
 
+    def test_reference_form_indep_subject_strips_citation_437(self):
+        """#437: a 引用記載型式 claim `一種如請求項N所述的X` opens with 一種 but is
+        dependent in substance; its subject is X, not `如請求項N所述的X`. A child
+        that cites it must not fire a spurious subject mismatch."""
+        from patentlint.analysis.tw_claims import (
+            _extract_subject_with_path,
+            _normalize_subject,
+        )
+        subj, path = _extract_subject_with_path(
+            "10. 一種如請求項1所述的高可靠度的細胞培養袋的製造方法，其包括："
+        )
+        assert _normalize_subject(subj) == "高可靠度的細胞培養袋的製造方法", subj
+        assert path == "indep_prefix"
+        # FN-guard: a plain independent claim (no citation) is untouched.
+        assert _normalize_subject(
+            _extract_subject_with_path("1. 一種高可靠度的細胞培養袋的製造方法，其包括：")[0]
+        ) == "高可靠度的細胞培養袋的製造方法"
+
+    def test_reference_form_parent_child_consistent_pass_437(self):
+        """End-to-end: a dependent claim whose parent is a 引用記載型式 claim
+        (both share subject X) passes, not verify."""
+        doc = _make_doc(claims=[
+            _claim(1, "1. 一種高可靠度的細胞培養袋的製造方法，其包括提供一基材。"),
+            _claim(10, "10. 一種如請求項1所述的高可靠度的細胞培養袋的製造方法，"
+                       "其中該基材為高分子。", independent=False, deps=[1]),
+            _claim(11, "11. 如請求項10所述的高可靠度的細胞培養袋的製造方法，"
+                       "其中該步驟包括加熱。", independent=False, deps=[10]),
+        ])
+        result = check_subject_consistency(doc)
+        assert result[0].status == "pass", result[0].details_params
+
 
 # ── Check 19: Transition Phrase ──────────────────────────────────────────
 

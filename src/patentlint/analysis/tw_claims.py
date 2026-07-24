@@ -515,6 +515,17 @@ def _extract_subject_with_path(claim_text: str) -> tuple[str, str]:
     indep_m = _INDEP_PREFIX_RE.match(text)
     if indep_m:
         body = text[indep_m.end():]
+        # #437 — 引用記載型式 (incorporation-by-reference) claim: `一種如請求項N
+        # 所述的X` opens with the indep marker 一種 but is dependent in substance
+        # (it cites claim N). Its real subject is X, not `如請求項N所述的X`. Strip
+        # the citation preamble so the subject matches the sibling dependent's
+        # (which routes through dep_prefix and already strips its own citation),
+        # instead of firing a spurious subjectConsistency mismatch. FN-safe: a
+        # plain indep claim `一種X` has no `如請求項N所述` after 一種, so `body` is
+        # left untouched.
+        cite_m = _DEP_PREFIX_RE.match(body)
+        if cite_m:
+            body = body[cite_m.end():]
         end_m = _SUBJECT_END_RE.search(body)
         return (
             (body[:end_m.start()] if end_m else body).strip(),
