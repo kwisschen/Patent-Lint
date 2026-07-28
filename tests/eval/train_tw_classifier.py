@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """TW-specific ML retrain with R61c features (2026-05-05).
 
 Earlier attempt found zero generalizable paths on TW under strict CV
@@ -15,7 +15,7 @@ splits by patent_id (no in-draft leakage), reports any leaves with
 ≥50% precision in BOTH train and test (the strict CV gate that earlier
 filtered ZERO paths for TW).
 
-Output is HUMAN-REVIEWED. ML never ships at runtime — distilled paths
+Output is HUMAN-REVIEWED. ML never ships at runtime - distilled paths
 are encoded as deterministic Python in compute_confidence_score.
 """
 from __future__ import annotations
@@ -165,7 +165,7 @@ def main() -> int:
             pid_rows.append(pid)
 
     if not X_rows:
-        print("No labeled features extracted — abort.")
+        print("No labeled features extracted - abort.")
         return 1
 
     feat_names = list(X_rows[0].keys())
@@ -225,7 +225,7 @@ def main() -> int:
     for thr in [0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80]:
         mask = y_proba >= thr
         if mask.sum() < 5:
-            print(f"  thr={thr:.2f}: bucket_size={mask.sum():4d} (skipped — too small)")
+            print(f"  thr={thr:.2f}: bucket_size={mask.sum():4d} (skipped - too small)")
             continue
         bp = y_te[mask].mean()
         print(f"  thr={thr:.2f}: bucket_size={mask.sum():4d}  precision={bp:.3f} "

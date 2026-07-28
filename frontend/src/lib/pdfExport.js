@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 /* global __BUILD_HASH__ */
 import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
@@ -7,14 +7,14 @@ import { formatDetails } from './detailsFormatter'
 import { CHECKS_RAW } from '../generated/stats'
 
 // Register bundled Roboto fonts into pdfmake's internal VirtualFileSystem.
-// In module/bundler context, vfs_fonts.js does NOT auto-register — we must
+// In module/bundler context, vfs_fonts.js does NOT auto-register - we must
 // call addVirtualFileSystem() explicitly (it calls fs.writeFileSync internally).
 pdfMake.addVirtualFileSystem(pdfFonts)
 
 /**
  * Replace Unicode glyphs that pdfmake's bundled Roboto font cannot render.
  * Applied to all dynamic/user-facing text before it enters pdfmake nodes.
- * CJK text is left intact — CJK fonts handle those glyphs.
+ * CJK text is left intact - CJK fonts handle those glyphs.
  */
 function sanitizeText(str) {
   if (!str) return str
@@ -22,8 +22,8 @@ function sanitizeText(str) {
     .replace(/[←→➜➔]/g, '>')
     .replace(/[•▸▪■◆►▶]/g, '-')
     .replace(/[✓✔☑]/g, '[x]')
-    .replace(/—/g, '--')
-    .replace(/–/g, '-')
+    .replace(/-/g, '--')
+    .replace(/-/g, '-')
     .replace(/…/g, '...')
     .replace(/©/g, '(c)')
 }
@@ -85,7 +85,7 @@ export async function prefetchCjkFont(language) {
   try {
     await loadCjkFont(language)
   } catch {
-    // Silent prefetch failure — will retry at save time
+    // Silent prefetch failure - will retry at save time
   }
 }
 
@@ -99,7 +99,7 @@ function translateMessage(item, t) {
   return item.message
 }
 
-// message_keys for UI-internal checks — excluded from PDF entirely
+// message_keys for UI-internal checks - excluded from PDF entirely
 const INTERNAL_CHECK_KEYS = new Set([
   'check.drawings.count',
   'check.spec.drawings',
@@ -116,7 +116,7 @@ function filterInternalChecks(sections) {
 // --- Shared presentation helpers ---
 
 // Section header: title text + short colored accent line beneath. No
-// frost band, no fill — relies on whitespace and the colored bar to
+// frost band, no fill - relies on whitespace and the colored bar to
 // read as a section break. Mirrors filing convention (paper +
 // printed heading, no decorative chrome).
 function accentedHeader(text, accentColor, fontName) {
@@ -145,7 +145,7 @@ function accentedHeader(text, accentColor, fontName) {
 // Compact filled pill showing the status label (AMEND / VERIFY).
 // Solid status color background, white text, no rim border. lineHeight: 1
 // prevents pdfmake's default leading from creating extra space below CJK
-// glyphs (which fill the full em-square — without lineHeight: 1 the cell
+// glyphs (which fill the full em-square - without lineHeight: 1 the cell
 // gets extra height from line-height that pushes the visual character
 // to the top of the rectangle).
 function statusPill(status, t, fontName) {
@@ -247,7 +247,7 @@ function flaggedPhrasesRow(details_params, status, t, fontName) {
   }
 }
 
-// Numeral-conflict findings list for D1 / D3 — when there are more than
+// Numeral-conflict findings list for D1 / D3 - when there are more than
 // 3 findings, the inline message shows only top-3 + "(+N more)" trailer.
 // PDF readers can't click to expand, so we render the FULL list as
 // indented rows below the message line. Each row: numeral + name(s).
@@ -323,7 +323,7 @@ function numeralFindingsRow(details_params, status, fontName) {
 }
 
 // Two-cell callout card: 3pt colored strip + tinted content. Used for the
-// AMEND / VERIFY triage groups. Renders "— None" for an empty group.
+// AMEND / VERIFY triage groups. Renders "- None" for an empty group.
 function triageCard(severity, items, t, fontName, emptyText) {
   const label = severity === 'amend' ? t('pdf.amend') : t('pdf.verify')
   const accent = statusColor(severity)
@@ -340,12 +340,12 @@ function triageCard(severity, items, t, fontName, emptyText) {
 
   let bodyContent
   if (items.length === 0) {
-    // Honest empty copy (mirrors the web TriagePanel): never a bare "—" that
-    // could read as "clean" — surface the context-aware message so an empty
+    // Honest empty copy (mirrors the web TriagePanel): never a bare "-" that
+    // could read as "clean" - surface the context-aware message so an empty
     // Needs Fixing card points to the review items instead of implying nothing
     // needs attention.
     bodyContent = [{
-      text: emptyText || '—',
+      text: emptyText || '-',
       italics: true,
       color: '#94a3b8',
       fontSize: 10,
@@ -437,7 +437,7 @@ function buildTriagePanel(sections, t, fontName) {
   const hasReview = groups.verify.length > 0
   // Context-aware empty copy for the Needs Fixing card (mirrors the web).
   const amendEmpty = hasReview
-    ? t('triage.amendEmptyReview', { defaultValue: 'No required fixes flagged — see the review items below.' })
+    ? t('triage.amendEmptyReview', { defaultValue: 'No required fixes flagged - see the review items below.' })
     : t('triage.amendEmptyClean', { defaultValue: 'No items were flagged for fixing or review.' })
   const verifyEmpty = t('triage.verifyEmpty', { defaultValue: 'No items to review.' })
 
@@ -497,7 +497,7 @@ function buildSectionChecks(sections, t, fontName) {
 
   const content = []
   for (const section of sections) {
-    // Only AMEND then VERIFY — no PASS items in section details
+    // Only AMEND then VERIFY - no PASS items in section details
     const amendItems = section.items.filter((c) => c.status === 'amend')
     const verifyItems = section.items.filter((c) => c.status === 'verify')
     const orderedItems = [...amendItems, ...verifyItems]
@@ -536,7 +536,7 @@ function buildSectionChecks(sections, t, fontName) {
         : item.details
       // Suppress the detail line when it merely echoes claim numbers already in
       // the message (the "3, 8" / "7, 9" anti-pattern) or when the chip row
-      // already surfaces the offending content — mirrors the TriagePanel guard.
+      // already surfaces the offending content - mirrors the TriagePanel guard.
       const detailRedundant = detailText && (
         (typeof msg === 'string' && msg.includes(String(detailText).trim()))
         || item.details_params?.flagged_phrases?.items?.length > 0
@@ -565,7 +565,7 @@ function buildSectionChecks(sections, t, fontName) {
 // --verify-border / --amend-border on light mode); PDFs don't have a
 // dark mode, so light-mode hex values are canonical.
 function gradeColor(letter) {
-  if (!letter || letter === '—') return '#6b7280'
+  if (!letter || letter === '-') return '#6b7280'
   if (letter.startsWith('A')) return '#2563eb'  // blue, web pass-border
   if (letter.startsWith('B') || letter.startsWith('C')) return '#16a34a'  // green, verify-border
   return '#dc2626'  // D / F red, amend-border
@@ -589,7 +589,7 @@ function letterFromScore(score, applicable) {
 }
 
 // Cover treatment: NO container/wrapper around the rubric. Letter grade
-// sits cleanly on the page (filing-cover-sheet convention — paper +
+// sits cleanly on the page (filing-cover-sheet convention - paper +
 // printed letter, nothing else). Section grades render as an inline
 // "label letter" row separated by mid-dots; the letter itself carries
 // the tier color, no boxes around individual pills. Cleaner than the
@@ -624,7 +624,7 @@ function buildRubricCover(rubricGrade, t, fontName, checkByKey = {}) {
     ]
   }
 
-  const letter = rubricGrade.letter || '—'
+  const letter = rubricGrade.letter || '-'
   const score = rubricGrade.score ?? 0
   const cover = [
     {
@@ -682,7 +682,7 @@ function buildRubricCover(rubricGrade, t, fontName, checkByKey = {}) {
 
   // Biggest-impact items (ADR-154 grade levers): the top unaddressed findings
   // ranked by how many points resolving each would add. This is the report's
-  // actionable "how to raise the grade" list — computed on rubric_grade but
+  // actionable "how to raise the grade" list - computed on rubric_grade but
   // previously rendered nowhere. Uses the real finding message (looked up by
   // message_key) so it names the specific fix, not a generic label.
   const impact = (rubricGrade.impact_list || []).filter((i) => i.delta > 0)
@@ -792,7 +792,7 @@ function buildAntecedentBasis(issues, t, fontName) {
   if (!issues || issues.length === 0) return []
   // The term / reference_form / did-you-mean cells carry CJK glyphs (該X, 導電膠體,
   // …). pdfmake's defaultStyle.font does NOT reliably propagate into table cells,
-  // so — like every other builder — set the CJK font explicitly per node, else
+  // so - like every other builder - set the CJK font explicitly per node, else
   // CN/TW/JP/KO terms render as tofu.
   const ff = fontName ? { font: fontName } : {}
 
@@ -879,7 +879,7 @@ function buildAntecedentBasis(issues, t, fontName) {
 
 function buildSpecSupport(unsupportedTerms, t, fontName) {
   if (!unsupportedTerms || unsupportedTerms.length === 0) return []
-  // Phrase cells carry CJK glyphs — set the CJK font per node (defaultStyle
+  // Phrase cells carry CJK glyphs - set the CJK font per node (defaultStyle
   // doesn't propagate into table cells; see buildAntecedentBasis).
   const ff = fontName ? { font: fontName } : {}
 
@@ -970,7 +970,7 @@ export async function downloadReport(reportData, t, language, originalFilename) 
     }
   }
 
-  // Claim-category split (method vs apparatus) — parity with the web SummaryBar.
+  // Claim-category split (method vs apparatus) - parity with the web SummaryBar.
   // Only meaningful when the draft has both groups (US/EPC apparatus+method).
   const _trees = reportData.claim_trees || []
   const _methodGroup = _trees.find((g) => g.label === 'Method Claims')
@@ -1004,7 +1004,7 @@ export async function downloadReport(reportData, t, language, originalFilename) 
     try {
       cjkBase64 = await loadCjkFont(cjkLanguage)
     } catch {
-      console.warn('CJK font unavailable (offline?) — falling back to default font')
+      console.warn('CJK font unavailable (offline?) - falling back to default font')
     }
   }
 
@@ -1025,7 +1025,7 @@ export async function downloadReport(reportData, t, language, originalFilename) 
 
     footer: (currentPage, pageCount) => {
       const year = new Date().getFullYear()
-      const copyrightRange = year > 2025 ? `2025–${year}` : '2025'
+      const copyrightRange = year > 2025 ? `2025-${year}` : '2025'
       return {
         stack: [
           { text: 'Generated by PatentLint  ·  patentlint.com', alignment: 'center', fontSize: 8, color: '#999999' },
@@ -1044,7 +1044,7 @@ export async function downloadReport(reportData, t, language, originalFilename) 
         style: 'securityNote',
       },
 
-      // Rubric cover (grade letter + section-grade table) — appears
+      // Rubric cover (grade letter + section-grade table) - appears
       // before the rest of the report so the grade is the headline.
       ...buildRubricCover(reportData.rubric_grade, t, fontName, checkByKey),
 
@@ -1120,7 +1120,7 @@ export async function downloadReport(reportData, t, language, originalFilename) 
       // Spec support
       ...buildSpecSupport(reportData.unsupported_terms, t, fontName),
 
-      // Claim-dependency table intentionally omitted from PDF — the
+      // Claim-dependency table intentionally omitted from PDF - the
       // dependency structure is already conveyed by claim text itself
       // ("如請求項N所述" prefixes), and a static table can't be expanded
       // like the web ClaimTree. The web version stays interactive; the
@@ -1160,7 +1160,7 @@ export async function downloadReport(reportData, t, language, originalFilename) 
       ...(fontName ? { font: fontName } : {}),
     },
     // Push orphan section headers to the next page. accentedHeader
-    // tags itself with headlineLevel: 1 — when such a node has no
+    // tags itself with headlineLevel: 1 - when such a node has no
     // following nodes on the same page, force a break before it so
     // the header travels with its body content rather than sitting
     // alone at the bottom of a page.

@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Phase 8c Stage 1.5 ground-truth claim-count audit.
 
 For each real CN .docx fixture in ``tests/fixtures/cn/local/``, this
 script prints two numbers:
 
-1. **Loader count** — claims recovered by the production pipeline
+1. **Loader count** - claims recovered by the production pipeline
    (``extract_cn_sections_from_docx(load_docx_cn(path))``).
-2. **Ground-truth count** — stricter heuristic that walks the raw
+2. **Ground-truth count** - stricter heuristic that walks the raw
    python-docx paragraph stream, locates the claims section positionally,
    and counts only claim starts whose numbering is monotonically
    increasing.
@@ -20,7 +20,7 @@ Invoke::
 
     python tests/fixtures/cn/local/_audit_claim_counts.py
 
-Output goes to stdout as a markdown-formatted table — the writeup pastes
+Output goes to stdout as a markdown-formatted table - the writeup pastes
 the table verbatim. Real patent filenames are part of the table, so the
 table itself does NOT belong in source control (the script does).
 """
@@ -45,7 +45,7 @@ from patentlint.parser.sections_cn import extract_cn_sections_from_docx  # noqa:
 _CLAIMS_HEADER_RE = re.compile(r"^[\s\u3000]*权\s*利\s*要\s*求\s*书")
 _SPEC_HEADER_RE = re.compile(r"^[\s\u3000]*说\s*明\s*书(?!\s*摘\s*要|\s*附\s*图)")
 _CLAIM_START_TYPED_RE = re.compile(r"^[\s\u3000]*(\d+)\s*[.．。、]")
-# Spec sub-section headers — if any appear, the claims region has ended
+# Spec sub-section headers - if any appear, the claims region has ended
 # (some patents have no standalone 说明书 anchor between claims and spec).
 _SPEC_SUBSECTION_HEADERS = {
     "技术领域", "背景技术", "发明内容", "附图说明", "具体实施方式",
@@ -80,7 +80,7 @@ def ground_truth_count(path: Path) -> int:
 
     in_claims = False
     after_claims = False
-    # Synthetic counter — numPr paragraphs don't carry numbers in text.
+    # Synthetic counter - numPr paragraphs don't carry numbers in text.
     synthetic_counter = 0
     claim_starts = 0
     last_typed_num = 0
@@ -93,7 +93,7 @@ def ground_truth_count(path: Path) -> int:
             continue
         if after_claims:
             continue
-        # End of claims region: 说明书 header (spec starts) — but NOT
+        # End of claims region: 说明书 header (spec starts) - but NOT
         # 说明书摘要 / 说明书附图.
         if _SPEC_HEADER_RE.match(text):
             after_claims = True
@@ -103,7 +103,7 @@ def ground_truth_count(path: Path) -> int:
         if text in ("说明书摘要", "摘要"):
             after_claims = True
             continue
-        # Spec sub-section header — claims region is over.
+        # Spec sub-section header - claims region is over.
         if text in _SPEC_SUBSECTION_HEADERS:
             after_claims = True
             continue
@@ -111,7 +111,7 @@ def ground_truth_count(path: Path) -> int:
         typed_match = _CLAIM_START_TYPED_RE.match(text)
         if typed_match:
             n = int(typed_match.group(1))
-            # Monotonic requirement — skip stray numerals that don't
+            # Monotonic requirement - skip stray numerals that don't
             # continue the sequence.
             if n == last_typed_num + 1 or (last_typed_num == 0 and n == 1):
                 claim_starts += 1

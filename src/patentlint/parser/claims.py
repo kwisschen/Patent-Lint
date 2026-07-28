@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Patent claim parsing and analysis.
 
 Parses claim text into structured Claim objects and detects
@@ -24,7 +24,7 @@ _DEP_REF = re.compile(
 
 # Body cross-reference shape: `(the|said) <NP up to 5 words>
 # (of|according to|as recited in|...) claim N`. Detects 引用記載型式
-# (incorporation-by-reference) inside the claim body — the English
+# (incorporation-by-reference) inside the claim body - the English
 # equivalent of TW `如請求項N所述的X`. Common in TW/JP-translated US
 # drafts: `A module, comprising: the X according to claim 1; ...`.
 #
@@ -33,7 +33,7 @@ _DEP_REF = re.compile(
 # classification doesn't route through dependencies. The 5-word NP cap
 # distinguishes body cross-refs (typically `the <short head noun>
 # according to claim N`) from a long preamble that happens to end in
-# `of claim N` — without the cap, an entire body sentence preceding
+# `of claim N` - without the cap, an entire body sentence preceding
 # `claim N` would match.
 #
 # MPEP § 2173.05(b) "reasonably ascertainable" antecedent standard
@@ -65,13 +65,13 @@ _CLAIM_BLOCK = re.compile(
 #
 # R35 (2026-05-04): widened from `of\s*claims?` to `(of|to)\s*claims?`.
 # US round-1 corpus has 564 `toclaim N` occurrences (`according toclaim 7`)
-# in addition to 10316 `ofclaim` occurrences — same root cause (Google
+# in addition to 10316 `ofclaim` occurrences - same root cause (Google
 # Patents PDF→HTML extraction collapses prep-then-claim whitespace).
 # Without `to` coverage, dep-claims using `according to claim N` form
 # parsed as independent → broken chain → walker_fp inflation.
 #
 # R15 (2026-06-23, ADR-159 Zero-FP Sweep 1A): widened to add `in`. US
-# round-1 corpus has 543 `inclaim N` occurrences — the `as claimed in
+# round-1 corpus has 543 `inclaim N` occurrences - the `as claimed in
 # claim N` / `as recited in claim N` / `as defined in claim N` dependency
 # forms whose `in claim` space collapsed (`claimed inclaim 1`). `\bclaims?`
 # needs a word boundary before `claim`, which `inclaim` lacks, so `_DEP_REF`
@@ -86,7 +86,7 @@ _CLAIM_BLOCK = re.compile(
 _OFCLAIM_FIX = re.compile(r"\b(of|to|in|with|as)\s*(claims?)\b", re.IGNORECASE)
 # R17 (2026-06-24): `with`/`as` join the prep set. `withclaim N` (34x) is the
 # `in accordance with claim N` dependency preamble; `asclaim N` (17x) is the
-# `... media as [claimed/recited in] claim N` form — both whitespace-collapsed
+# `... media as [claimed/recited in] claim N` form - both whitespace-collapsed
 # so `_DEP_REF` missed them and the dep-claim parsed independent. Same FN-safe
 # dependency-resolution play as R15. Only the COLLAPSED form is newly affected
 # (properly-spaced `as claim N` already triggers `_DEP_REF`).
@@ -96,7 +96,7 @@ _OFCLAIM_FIX = re.compile(r"\b(of|to|in|with|as)\s*(claims?)\b", re.IGNORECASE)
 # of `claim N<word>` (no space between digit and following letter):
 # `claim 1wherein` 825x, `claim 1further` 214x, `claim 1comprising` 105x,
 # `claim 1where` 36x, etc. Python regex `\b` requires a non-word char
-# between the digit and the next letter to fire — without this fix, the
+# between the digit and the next letter to fire - without this fix, the
 # `_DEP_REF` regex (`claims?\s+\d+\b`) misses these and the affected
 # dep-claim falls back to independent classification → ancestor chain
 # empty → walker emits spurious antecedent findings on every body
@@ -117,7 +117,7 @@ _MULTIPLE_DEP = re.compile(
 # doesn't actually require the absoluteness asserted.
 # `key` is intentionally NOT a bare alternation member (#286): it is heavily
 # overloaded as an element NOUN ("a key", "the key", "key 12", "pressing the
-# key", "a key state") — flagging every occurrence is a false positive. It is a
+# key", "a key state") - flagging every occurrence is a false positive. It is a
 # restrictive absolute only ADJECTIVALLY, modifying an importance-noun ("a key
 # feature/aspect/factor…"). Group 2 fires only in that adjectival context; the
 # element-noun use is left alone. The other terms are unambiguously restrictive.
@@ -144,7 +144,7 @@ _INDEFINITE_WORDING_CLAIM_RE = re.compile(
     # `optionally` / `if|as desired` / `as needed` / `where appropriate` make
     # it unclear whether the limitation is required; `preferably`/`desirably`
     # are preferential. All high-confidence § 112(b) red flags, low FP in a
-    # claim limitation. Kept REVIEW (not FIX) — see check tier note in models.py.
+    # claim limitation. Kept REVIEW (not FIX) - see check tier note in models.py.
     r"|preferably|desirably|optionally"
     r"|if desired|as desired|as needed|as appropriate|where appropriate"
     r"|in particular"
@@ -153,7 +153,7 @@ _INDEFINITE_WORDING_CLAIM_RE = re.compile(
     # mirrors the existing `or the like`; `e.g.`/`etc.` are the abbreviated
     # forms of `for example`. A lookbehind keeps `e.g.`/`etc.` from matching
     # inside a word; the trailing period is matched literally. `i.e.` is
-    # intentionally excluded — it restates/defines (often DEFINITE), unlike
+    # intentionally excluded - it restates/defines (often DEFINITE), unlike
     # the open-ended exemplars.
     r"|\b(for example|such as|kind of|type of|and the like|or the like)\b"
     r"|(?<![A-Za-z])(?:e\.g\.|etc\.)",
@@ -233,7 +233,7 @@ def parse_claims(claims_text: str) -> list[Claim]:
 
         # 引用記載型式 / incorporation-by-reference body cross-refs.
         # Scans claim body for `(the|said) <NP> (of|according to|...)
-        # claim N` patterns and routes those N's to quoted_references —
+        # claim N` patterns and routes those N's to quoted_references -
         # the antecedent walker traverses both dependencies and
         # quoted_references to build the chain. Mirrors TW parser's
         # existing `quoted_references` semantics (see claims_tw.py:120).
@@ -359,7 +359,7 @@ def detect_indefinite_wording_in_claims(claims: list[Claim]) -> ClaimWordingResu
     """Detect MPEP § 2173.05(b) relative/indefinite + § 2173.05(d) optional/
     exemplary terminology (may, substantially, approximately, generally,
     relatively, similar, preferably, optionally, if/as desired, for example,
-    such as, e.g., etc., and/or the like). REVIEW tier, not FIX — definiteness
+    such as, e.g., etc., and/or the like). REVIEW tier, not FIX - definiteness
     is examiner-judgment-in-context (degree terms are definite when the spec
     supplies a standard, § 2173.05(b)), so the matched word is a flag, not a
     verdict."""

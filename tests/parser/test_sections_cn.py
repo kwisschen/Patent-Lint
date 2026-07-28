@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for CN patent .docx section extraction."""
 
 from __future__ import annotations
@@ -193,7 +193,7 @@ class TestExtractTitle:
 
 
 # ---------------------------------------------------------------------------
-# _extract_inid_title_abstract (Phase 9 #70 — publication fallback)
+# _extract_inid_title_abstract (Phase 9 #70 - publication fallback)
 # ---------------------------------------------------------------------------
 
 
@@ -267,7 +267,7 @@ class TestExtractInidTitleAbstract:
         assert abstract == ["摘要内容。"]
 
     def test_drafter_file_returns_empty(self):
-        """Drafter 五书模板 files have no INID cover — extraction returns empty."""
+        """Drafter 五书模板 files have no INID cover - extraction returns empty."""
         paras = [
             "一种测试装置",
             "技术领域",
@@ -293,7 +293,7 @@ class TestExtractInidTitleAbstract:
 
 
 # ---------------------------------------------------------------------------
-# _merge_publication_continuations (Phase 9 #69 — PDF-column fragmentation)
+# _merge_publication_continuations (Phase 9 #69 - PDF-column fragmentation)
 # ---------------------------------------------------------------------------
 
 
@@ -336,7 +336,7 @@ class TestMergePublicationContinuations:
         assert result[2] == "[0011]\t新章节段落。"
 
     def test_drafter_file_no_numbering_passthrough(self):
-        """Drafter 五书模板 files have no [NNNN] numbering — return unchanged."""
+        """Drafter 五书模板 files have no [NNNN] numbering - return unchanged."""
         paras = [
             "本发明涉及一种测试装置。",
             "所述装置包括处理器。",
@@ -577,7 +577,7 @@ class TestDetectPatentDocumentCn:
 
     def test_adr_150_tw_upload_reports_content_missing(self):
         """A TW draft uploaded to the CN selector has no cross-script
-        issue — both are zh. Report content_missing (the doc doesn't
+        issue - both are zh. Report content_missing (the doc doesn't
         match CN patterns) so the banner copy is accurate."""
         from patentlint.parser.sections_cn import classify_document_cn
         from patentlint.parser.detection import DetectionReason
@@ -592,7 +592,7 @@ class TestDetectPatentDocumentCn:
 
 
 # ---------------------------------------------------------------------------
-# _presplit_mid_paragraph — Phase 9 #59 fix
+# _presplit_mid_paragraph - Phase 9 #59 fix
 # ---------------------------------------------------------------------------
 
 
@@ -631,7 +631,7 @@ class TestPresplitMidParagraph:
         assert out_flags == [False, False]
 
     def test_numpr_flag_only_on_first_chunk(self):
-        # numPr-flagged continuation paragraph (rare but possible) —
+        # numPr-flagged continuation paragraph (rare but possible) -
         # second chunk starts with a typed prefix and must NOT carry
         # the numPr flag or the backfill counter would double-advance.
         paras = [

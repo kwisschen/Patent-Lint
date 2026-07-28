@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""EPC corpus puller — fetches English EP-A1 drafts from EPO OPS.
+# Copyright (c) 2025-2026 Christopher Chen
+"""EPC corpus puller - fetches English EP-A1 drafts from EPO OPS.
 
 Pulls a stratified sample of English-language EP-A1 (pre-grant
 publication) documents from the EPO Open Patent Services (OPS) v3.2
@@ -11,7 +11,7 @@ downstream walker-FP calibration pass.
 
 Credential discovery:
 
-  1. ``OPS_CONSUMER_KEY`` + ``OPS_CONSUMER_SECRET`` env vars (preferred —
+  1. ``OPS_CONSUMER_KEY`` + ``OPS_CONSUMER_SECRET`` env vars (preferred -
      no file read)
   2. ``~/.config/patentlint/ops.env`` (KEY=value format)
   3. ``--credentials <path>`` CLI flag
@@ -21,8 +21,8 @@ Usage:
   python3 tests/eval/epc_corpus_pull.py --target 10 --dry-run
 
 Outputs:
-  - tests/fixtures/epc/local/EP*.txt — one file per draft (raw text)
-  - tests/fixtures/epc/local/manifest.json — list of pulled docs +
+  - tests/fixtures/epc/local/EP*.txt - one file per draft (raw text)
+  - tests/fixtures/epc/local/manifest.json - list of pulled docs +
     CPC subclasses + word counts
 
 EPO OPS rate limits at the Non-paying tier:
@@ -58,11 +58,11 @@ OPS_TOKEN_URL = "https://ops.epo.org/3.2/auth/accesstoken"
 OPS_SEARCH_URL = "https://ops.epo.org/3.2/rest-services/published-data/search"
 OPS_PUBLISHED_BASE = "https://ops.epo.org/3.2/rest-services/published-data/publication/epodoc/{pub_no}/{section}"
 
-# Token bucket pacing — EPO non-paying tier doesn't publish exact limits
+# Token bucket pacing - EPO non-paying tier doesn't publish exact limits
 # but practitioner reports converge on ~1 request / second sustained.
 REQUEST_INTERVAL_SECONDS = 1.0
 
-# Search query — English EP publications from 2024+. OPS CQL doesn't
+# Search query - English EP publications from 2024+. OPS CQL doesn't
 # accept `pk` as an index name (CLIENT.InvalidIndex), so kind-code (A1
 # vs B1 etc.) filtering happens client-side after fetch. `pn=EP*` alone
 # triggers HTTP 413 (millions of results); the date+CPC combo bounds
@@ -196,7 +196,7 @@ def search_publications(token: str, cpc_subclass: str, max_results: int = 25) ->
         except Exception:
             pass
         raise RuntimeError(f"HTTP {e.code}: {body}") from e
-    # OPS biblio search returns a nested structure — extract publication numbers.
+    # OPS biblio search returns a nested structure - extract publication numbers.
     results = (
         data.get("ops:world-patent-data", {})
         .get("ops:biblio-search", {})
@@ -214,7 +214,7 @@ def search_publications(token: str, cpc_subclass: str, max_results: int = 25) ->
         number = doc.get("doc-number", {}).get("$", "")
         kind = doc.get("kind", {}).get("$", "")
         if country == "EP" and number and kind == "A1":
-            # Store as "EP4736802" (no kind code) — OPS epodoc fetch
+            # Store as "EP4736802" (no kind code) - OPS epodoc fetch
             # rejects the concatenated "EP4736802A1" form. The kind
             # filter above ensures we only enqueue A1 publications.
             pub_nos.append(f"EP{number}")
@@ -223,7 +223,7 @@ def search_publications(token: str, cpc_subclass: str, max_results: int = 25) ->
 
 def _fetch_section(token: str, pub_no: str, section: str) -> dict:
     """Fetch one section of a publication. OPS rejects the combined
-    `biblio,description,claims` path with 400 — sections must be fetched
+    `biblio,description,claims` path with 400 - sections must be fetched
     individually."""
     url = OPS_PUBLISHED_BASE.format(pub_no=pub_no, section=section)
     req = urllib.request.Request(
@@ -272,13 +272,13 @@ def extract_text(full_text_doc: dict) -> str:
     root = full_text_doc.get("ops:world-patent-data", {})
     ft_doc = (root.get("ftxt:fulltext-documents", {})
                   .get("ftxt:fulltext-document", {}))
-    # Description — uses `p` paragraphs
+    # Description - uses `p` paragraphs
     desc = ft_doc.get("description", {})
     if isinstance(desc, dict):
         desc_text = _flatten_paragraphs(desc, lang="EN")
         if desc_text:
             sections.append(desc_text)
-    # Claims — uses `claim.claim-text[]` nested structure
+    # Claims - uses `claim.claim-text[]` nested structure
     claims = ft_doc.get("claims", {})
     if isinstance(claims, dict):
         claims_text = _flatten_claims(claims, lang="EN")
@@ -312,7 +312,7 @@ def _flatten_paragraphs(block: dict, lang: str = "EN") -> str:
 
 
 def _flatten_claims(block: dict, lang: str = "EN") -> str:
-    """Flatten the claims block — handles claim.claim-text[] nesting."""
+    """Flatten the claims block - handles claim.claim-text[] nesting."""
     if not isinstance(block, dict):
         return ""
     block_lang = block.get("@lang", "").upper()
@@ -325,7 +325,7 @@ def _flatten_claims(block: dict, lang: str = "EN") -> str:
         claim = [claim]
     lines: list[str] = []
     # OPS often packs all numbered claims into a single `claim` element's
-    # `claim-text[]` array — claim 1's main text + bullets + sub-parts +
+    # `claim-text[]` array - claim 1's main text + bullets + sub-parts +
     # claim 2's main text + bullets + ... all in sequence. Boundaries
     # between numbered claims are inferred from "N. " prefixes at the
     # start of a claim-text element. Use `\n` between every text part
@@ -374,7 +374,7 @@ def pull_corpus(
     }
 
     if dry_run:
-        print(f"DRY RUN — would pull {target} drafts across "
+        print(f"DRY RUN - would pull {target} drafts across "
               f"{len(CPC_SUBCLASSES)} CPC subclasses into {output_dir}")
         manifest["dry_run"] = True
         return manifest

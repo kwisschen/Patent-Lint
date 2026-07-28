@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 //
-// Vercel Edge Function — anonymous error-report endpoint.
+// Vercel Edge Function - anonymous error-report endpoint.
 // Reads payloads POSTed by ReportModal, validates origin + size + JSON
 // shape, and forwards a sanitized GitHub Issues create call. Runs at
 // the Vercel Edge runtime (Web Standard Request/Response API).
 //
 // Why GitHub Issues (instead of a custom DB):
 //   - Maintainer (and scheduled automation via gh CLI) reads reports as
-//     `gh issue list --label report` — no separate UI to build.
+//     `gh issue list --label report` - no separate UI to build.
 //   - GitHub's issue UI handles search, labels, comments, mobile
 //     notifications, and reactions for triage.
 //   - Issues live in the private kwisschen/patentlint-reports repo
 //     (split out from the public code repo on 2026-06-17), so the
-//     de-identified report payloads are maintainer-only — not visible
+//     de-identified report payloads are maintainer-only - not visible
 //     to the public even though the code repo is public.
 //
 // Env vars (set in Vercel dashboard → Settings → Environment Variables):
@@ -27,7 +27,7 @@ export const config = {
 
 // Origins permitted to POST /api/report. Production is patentlint.com;
 // patent-lint.vercel.app is the Vercel default deployment URL. Other
-// origins get 403 (anti-spam — this endpoint backs a GitHub Issues
+// origins get 403 (anti-spam - this endpoint backs a GitHub Issues
 // tracker we don't want strangers writing into).
 const ALLOWED_ORIGINS = new Set([
   "https://patentlint.com",
@@ -93,7 +93,7 @@ async function handleReport(request, origin) {
 
   // Create the GitHub issue, but DON'T make the user wait the full round-trip.
   // The report is already validated; GitHub's create is the slow part (~0.5-1.5s).
-  // This promise never rejects — it resolves to a small result object.
+  // This promise never rejects - it resolves to a small result object.
   const ghCreate = fetch(`https://api.github.com/repos/${repo}/issues`, {
     method: "POST",
     headers: {
@@ -123,7 +123,7 @@ async function handleReport(request, origin) {
 
   // Race the create against a short window. FAST failures (an expired/invalid
   // token 401s in ~200ms, a malformed issue 422s) finish inside the window and
-  // surface synchronously — so the user sees a real error and an auth lapse is
+  // surface synchronously - so the user sees a real error and an auth lapse is
   // never silent. If the create is still in flight after the window, ACK now
   // (the report is accepted) and finish creating it in the background. This is
   // the latency win: the user's response no longer waits on GitHub.
@@ -136,7 +136,7 @@ async function handleReport(request, origin) {
 
   if (outcome.pending) {
     // Keep the function alive past this response so ghCreate completes. If the
-    // runtime context isn't available, FALL BACK to awaiting — never drop a
+    // runtime context isn't available, FALL BACK to awaiting - never drop a
     // report. (We respond 202 either way: the create is in flight / accepted.)
     if (!keepAlive(ghCreate)) {
       await ghCreate;
@@ -160,7 +160,7 @@ const ACK_WINDOW_MS = 500;
 // Extend the edge function's lifetime past the response so a backgrounded
 // promise (the GitHub issue create) completes. Vercel populates a request-scoped
 // context keyed by this well-known Symbol; @vercel/functions' `waitUntil()` reads
-// the same thing — accessing it directly keeps us dep-free (that package pulls in
+// the same thing - accessing it directly keeps us dep-free (that package pulls in
 // a heavy CLI/OIDC dependency graph we don't want in the edge bundle). Returns
 // true iff the promise was handed off; false means no context, so the caller
 // must await instead (never drop a report).
@@ -172,14 +172,14 @@ function keepAlive(promise) {
       return true;
     }
   } catch {
-    // fall through — caller awaits
+    // fall through - caller awaits
   }
   return false;
 }
 
 // Cap the optional user-comment field server-side as defence in depth
 // (the modal caps at 12000 chars; this 14000 ceiling leaves headroom
-// for a non-modal client). Anything beyond gets truncated — the
+// for a non-modal client). Anything beyond gets truncated - the
 // alternative would be to reject the whole report, but losing a useful
 // diagnostic to a stray over-long comment is the wrong trade. 14000
 // chars (≈42 KB if all CJK) + the structured payload stays under
@@ -193,7 +193,7 @@ const USER_COMMENT_MAX_CHARS = 14000;
 // practitioner reviewing a real draft) confirms the flag is a correct catch →
 // `TP` (true positive → a `legit_drafting_error` gold label); 'false_positive'
 // = the flag is wrong → `FP` (→ a `walker_fp` gold label). This closes the gap
-// the skill noted ("users can't set GitHub labels from the ReportModal") — the
+// the skill noted ("users can't set GitHub labels from the ReportModal") - the
 // disposition control now sets the label server-side.
 const DISPOSITION_LABEL = {
   confirmed_defect: "TP",
@@ -244,11 +244,11 @@ function buildIssue(payload) {
   const json_block = JSON.stringify(sortedPayload, null, 2);
 
   const dispositionLine = isMixed
-    ? "**Disposition: mixed** — the reporter marked each finding individually (see the per-finding `disposition` field in the JSON block). Ingest each finding on its own label: `confirmed_defect` findings as `legit_drafting_error`, `false_positive` findings as `walker_fp`."
+    ? "**Disposition: mixed** - the reporter marked each finding individually (see the per-finding `disposition` field in the JSON block). Ingest each finding on its own label: `confirmed_defect` findings as `legit_drafting_error`, `false_positive` findings as `walker_fp`."
     : dispLabel
       ? disposition === "confirmed_defect"
-        ? "**Disposition: confirmed real issue (true positive)** — reporter confirms this flag is a correct catch. Ingest as a `legit_drafting_error` gold label."
-        : "**Disposition: false positive** — reporter says this flag is wrong. Ingest as a `walker_fp` gold label."
+        ? "**Disposition: confirmed real issue (true positive)** - reporter confirms this flag is a correct catch. Ingest as a `legit_drafting_error` gold label."
+        : "**Disposition: false positive** - reporter says this flag is wrong. Ingest as a `walker_fp` gold label."
       : "";
 
   const sections = [
@@ -259,7 +259,7 @@ function buildIssue(payload) {
     json_block,
     "```",
     "",
-    "_Submitted via `POST /api/report`. De-identified payload only — no full claim text, no full paragraphs, no email, no IP. See Privacy §6._",
+    "_Submitted via `POST /api/report`. De-identified payload only - no full claim text, no full paragraphs, no email, no IP. See Privacy §6._",
   ];
 
   if (userComment) {
@@ -275,7 +275,7 @@ function buildIssue(payload) {
       "",
       "---",
       "",
-      "**User comment** _(free-form, not de-identified — typed by the reporter)_:",
+      "**User comment** _(free-form, not de-identified - typed by the reporter)_:",
       "",
       quoted,
     );

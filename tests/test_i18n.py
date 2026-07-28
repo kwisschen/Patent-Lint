@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Unit tests for the i18n helper."""
 
 import pytest
@@ -105,7 +105,7 @@ class TestTranslate:
         assert translate("does.not.exist") == "does.not.exist"
 
     def test_fallback_to_en_on_missing_in_locale(self):
-        # Add a key that only exists in en for this test — we verify the
+        # Add a key that only exists in en for this test - we verify the
         # fallback path works by picking a known-present key and
         # requesting a locale that doesn't have a spec-support review
         # entry. Since all 5 locales do have pdf.header, fall back is

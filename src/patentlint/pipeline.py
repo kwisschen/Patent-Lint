@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""PatentLint analysis pipeline — zero web-framework dependencies.
+# Copyright (c) 2025-2026 Christopher Chen
+"""PatentLint analysis pipeline - zero web-framework dependencies.
 
 Entry points for CLI and API. This module is also what Pyodide calls in the browser.
 """
@@ -29,7 +29,7 @@ from patentlint.parser.docx_loader import load_docx, load_docx_cn, load_docx_tw
 from patentlint.parser.jurisdiction_mismatch import detect_jurisdiction_mismatch
 from patentlint.parser.sections_cn import classify_document_cn, extract_cn_sections_from_docx
 from patentlint.parser.sections_tw import classify_document_tw, extract_tw_sections
-# xml_loader is lazy-imported at the 4 XML/ZIP call sites below — pulling
+# xml_loader is lazy-imported at the 4 XML/ZIP call sites below - pulling
 # it in eagerly forces `lxml` (1.7 MB compressed Pyodide package) onto every
 # DOCX analysis. CNIPA XML/ZIP uploads are a niche format (<5% of users);
 # DOCX is the common path. Function-local import keeps the lxml dependency
@@ -42,7 +42,7 @@ from patentlint.rubric import (
 )
 
 
-# Issue #9 / ADR-082 revisit (2026-04-27) — language/jurisdiction mismatch
+# Issue #9 / ADR-082 revisit (2026-04-27) - language/jurisdiction mismatch
 # detection lives in ``patentlint.parser.jurisdiction_mismatch`` and is
 # wired in at the ``analyze_file`` / ``analyze_bytes`` entry points below.
 # Result rides on AnalysisResult.jurisdiction_mismatch / suggested_jurisdiction.
@@ -99,7 +99,7 @@ def _run_epc_pipeline(
     DE / FR EPC check engines are explicitly out of v1 scope.
 
     v1 scope by 7-canonical-group:
-      G1 (spec structure): implemented — see epc_specification.run_g1_spec_structure_checks
+      G1 (spec structure): implemented - see epc_specification.run_g1_spec_structure_checks
       G2 (spec content):  pending
       G3 (drawings):      pending
       G4 (claims structure): pending
@@ -201,7 +201,7 @@ def _run_cn_pipeline(
         + len(cn_doc.detailed_description)
     )
 
-    # --- Specification checks (1–9) ---
+    # --- Specification checks (1-9) ---
     spec_checks: list[CheckItem] = []
     if has_tracked_changes:
         spec_checks.append(CheckItem(
@@ -217,14 +217,14 @@ def _run_cn_pipeline(
         + cn_spec_analysis.check_paragraph_numbering(cn_doc)
         + cn_spec_analysis.check_paragraph_ending(cn_doc)
         + cn_spec_analysis.check_figure_reference_consistency(cn_doc)
-        # numeralConsistency follows figureRef — both validate refnum usage
+        # numeralConsistency follows figureRef - both validate refnum usage
         + cn_spec_analysis.check_numeral_consistency_cn(cn_doc)
         + cn_spec_analysis.check_patent_type_terminology(cn_doc)
         + cn_spec_analysis.check_title(cn_doc)
         + cn_spec_analysis.check_spec_claim_reference(cn_doc)
     )
 
-    # --- Claims checks (9–21) ---
+    # --- Claims checks (9-21) ---
     # Emission order follows canonical groups (ADR-149):
     #   G4 claims-structure: sequential → dependency_format → self_dependent
     #     → forward_dependency → single_sentence → ref_numeral_parens
@@ -276,7 +276,7 @@ def _run_cn_pipeline(
         claim_count = len(claim_ids)
         claims_checks = list(claims_checks) + [
             CheckItem(
-                # Advisory tier (ADR-159) — visible "references to verify",
+                # Advisory tier (ADR-159) - visible "references to verify",
                 # zero grade impact via ADVISORY_REVIEW_KEYS.
                 status="verify",
                 message="References to verify for antecedent basis.",
@@ -302,10 +302,10 @@ def _run_cn_pipeline(
             )
         ]
 
-    # G6 spec_support — CN port of ADR-138 TW spec-support. Emits
+    # G6 spec_support - CN port of ADR-138 TW spec-support. Emits
     # UnsupportedTerm findings for claim noun phrases that fail the 3-tier
     # match (normalized exact / raw exact / char-window). No Tier 0
-    # symbol-table whitelist — CN has no 符号说明 surface. Statute anchor:
+    # symbol-table whitelist - CN has no 符号说明 surface. Statute anchor:
     # 专利法 §26 第4款 + 审查指南 第二部分第二章 §3.2.1.
     cn_unsupported_terms = cn_spec_support_analysis.check_spec_support_cn(
         cn_doc,
@@ -330,7 +330,7 @@ def _run_cn_pipeline(
         )
         claims_checks = list(claims_checks) + [
             CheckItem(
-                # Advisory tier (ADR-159) — zero grade impact via ADVISORY_REVIEW_KEYS.
+                # Advisory tier (ADR-159) - zero grade impact via ADVISORY_REVIEW_KEYS.
                 status="verify",
                 message="Claim terms to verify for specification support.",
                 message_key="check.cn.claims.specSupport.verify",
@@ -359,7 +359,7 @@ def _run_cn_pipeline(
             )
         ]
 
-    # G6 — omnibus (§3.3), Markush open transition (§9.3), and CRM non-
+    # G6 - omnibus (§3.3), Markush open transition (§9.3), and CRM non-
     # transitory (§25 + 审查指南 第二部分第九章) emit after the spec-
     # support tile per the canonical claims §112 order.
     claims_checks = list(claims_checks) + (
@@ -368,14 +368,14 @@ def _run_cn_pipeline(
         + cn_claims_analysis.check_crm_non_transitory_cn(cn_doc)
     )
 
-    # --- Abstract checks (21–23) ---
+    # --- Abstract checks (21-23) ---
     abstract_checks = (
         cn_abstract_analysis.check_abstract_char_count(cn_doc)
         + cn_abstract_analysis.check_abstract_title_match(cn_doc)
         + cn_abstract_analysis.check_commercial_language(cn_doc)
     )
 
-    # --- Drawings checks (24–25) ---
+    # --- Drawings checks (24-25) ---
     # Emission order: figure_count → figures_sequential per Phase 10C
     # document-order invariant (see CLAUDE.md "Check-ordering consistency
     # invariant"). Swapped from legacy sequential-then-count order.
@@ -537,7 +537,7 @@ def _run_pipeline(
     required_sections_checks = spec_analysis.check_required_sections(full_text)
 
     # --- Scope-limit wording (US, MPEP § 2111 + Phillips v. AWH) ---
-    # Scan the spec BODY only — concatenate background + summary + detailed
+    # Scan the spec BODY only - concatenate background + summary + detailed
     # description. Title/claims/abstract have their own checks.
     scope_limit_text = " ".join(
         s for s in [background_section, summary_section, detailed_desc_section]
@@ -546,7 +546,7 @@ def _run_pipeline(
     scope_limit_checks = spec_analysis.check_scope_limit_wording(scope_limit_text)
 
     # --- Reference numeral consistency (D1, US, MPEP § 608.01(g)) ---
-    # Same scope as scope-limit (spec body — background + summary + DD).
+    # Same scope as scope-limit (spec body - background + summary + DD).
     # Detects same-numeral / different-name conflicts; permits same-name /
     # different-numeral (legit multiple instances).
     numeral_consistency_checks = spec_analysis.check_numeral_consistency(scope_limit_text)
@@ -613,9 +613,9 @@ def _run_pipeline(
         transition_checks=transition_checks,
         special_format_checks=special_format_checks,
         unsupported_terms=unsupported_terms,
-        # Drawings — reference numerals
+        # Drawings - reference numerals
         reference_numerals=ref_numerals,
-        # Phase 5 — Issue #2 & #3
+        # Phase 5 - Issue #2 & #3
         required_sections_checks=required_sections_checks,
         figure_xref_checks=figure_xref_checks,
         # Scope-limit wording (US, MPEP § 2111 + Phillips)
@@ -665,7 +665,7 @@ def _run_tw_pipeline(
         + len(tw_doc.embodiment)
     )
 
-    # --- Specification checks (1–11) ---
+    # --- Specification checks (1-11) ---
     # Emission order follows canonical groups (ADR-149):
     #   G1 spec-structure: required_sections → section_ordering
     #     → paragraph_numbering → paragraph_ending → bracket_format
@@ -681,7 +681,7 @@ def _run_tw_pipeline(
         + tw_spec_analysis.check_paragraph_ending(tw_doc)
         + tw_cross_ref_analysis.check_bracket_format(tw_doc)
         + tw_spec_analysis.check_figure_ref_consistency(tw_doc)
-        # numeralConsistency follows figureRef — both validate refnum usage
+        # numeralConsistency follows figureRef - both validate refnum usage
         + tw_spec_analysis.check_numeral_consistency_tw(tw_doc)  # idx 15
         + tw_spec_analysis.check_patent_type_terminology(tw_doc)
         + tw_spec_analysis.check_title(tw_doc)
@@ -692,7 +692,7 @@ def _run_tw_pipeline(
         + tw_spec_analysis.check_indigenous_terms(tw_doc)
     )
 
-    # --- Claims checks (11–27) ---
+    # --- Claims checks (11-27) ---
     claims_checks = (
         tw_claims_analysis.check_claims_sequential(tw_doc)
         + tw_claims_analysis.check_dependency_format(tw_doc)
@@ -738,11 +738,11 @@ def _run_tw_pipeline(
     # ADR-138: TW specification-support check (專利法 §26 第3項).
     # Emits UnsupportedTerm findings for claim noun phrases that fail
     # the 4-tier match (symbol table / normalized exact / raw exact /
-    # char-window). Walker-tuning flags intentionally NOT forwarded —
+    # char-window). Walker-tuning flags intentionally NOT forwarded -
     # spec-support normalization is a separate semantic axis.
     tw_unsupported_terms = tw_spec_support_analysis.check_spec_support_tw(tw_doc)
     # ADR-138 supersedes ADR-091's "TW cross_ref expected to remain null"
-    # — populate cross_ref on overlapping (claim_id, term) pairs so the
+    # - populate cross_ref on overlapping (claim_id, term) pairs so the
     # Section112 frontend cards render sibling-check hint lines.
     tw_spec_support_analysis.attach_cross_references_tw(
         tw_antecedent_basis,
@@ -750,7 +750,7 @@ def _run_tw_pipeline(
     )
     # Emit antecedent tile BEFORE spec-support tile so the summary-grid
     # ordering matches Section112Container (antecedent card renders first,
-    # spec-support card renders below). Both cite 專利法 §26 第3項 — they
+    # spec-support card renders below). Both cite 專利法 §26 第3項 - they
     # are sibling sub-requirements under the same statute clause
     # (ADR-138), so the umbrella heading + the two tiles carry a single
     # coherent citation.
@@ -761,7 +761,7 @@ def _run_tw_pipeline(
         claim_count = len(claim_ids)
         claims_checks = list(claims_checks) + [
             CheckItem(
-                # Advisory tier (ADR-159) — visible "references to verify",
+                # Advisory tier (ADR-159) - visible "references to verify",
                 # zero grade impact via ADVISORY_REVIEW_KEYS.
                 status="verify",
                 message="References to verify for antecedent basis.",
@@ -797,7 +797,7 @@ def _run_tw_pipeline(
         )
         claims_checks = list(claims_checks) + [
             CheckItem(
-                # Advisory tier (ADR-159) — zero grade impact via ADVISORY_REVIEW_KEYS.
+                # Advisory tier (ADR-159) - zero grade impact via ADVISORY_REVIEW_KEYS.
                 status="verify",
                 message="Claim terms to verify for specification support.",
                 message_key="check.tw.claims.specSupport.verify",
@@ -826,7 +826,7 @@ def _run_tw_pipeline(
             )
         ]
 
-    # G6 special-format trio (markush + omnibus + CRM) — registered in
+    # G6 special-format trio (markush + omnibus + CRM) - registered in
     # CANONICAL_CHECK_ORDER at CLAIMS_SECTION_112 idx 50, so they emit
     # AFTER antecedent (idx 20) and spec-support (idx 30) per the
     # check-emission-order monotonicity invariant.
@@ -837,7 +837,7 @@ def _run_tw_pipeline(
         + list(tw_claims_analysis.check_crm_non_transitory_tw(tw_doc))
     )
 
-    # --- Abstract checks (27–30) ---
+    # --- Abstract checks (27-30) ---
     abstract_checks = (
         tw_abstract_analysis.check_abstract_char_count(tw_doc)
         + tw_abstract_analysis.check_abstract_title_match(tw_doc)
@@ -850,7 +850,7 @@ def _run_tw_pipeline(
     # bracket_format moved to its G1 slot above (ADR-149).
     spec_checks = list(spec_checks) + tw_cross_ref_analysis.check_symbol_vs_rep_drawing(tw_doc)
 
-    # --- Drawings checks (33–34) ---
+    # --- Drawings checks (33-34) ---
     # Emission order: figure_count → figures_sequential per Phase 10C
     # document-order invariant (see CLAUDE.md "Check-ordering consistency
     # invariant"). Swapped from legacy sequential-then-count order.

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 //
-// StatusPill — single source of truth for PASS / REVIEW / FIX / attention
+// StatusPill - single source of truth for PASS / REVIEW / FIX / attention
 // chips across PatentLint. Replaces 7 inline implementations that all
 // derived from the same --pass-* / --verify-* / --amend-* / --attention-*
 // CSS-variable families with subtly different sizes and paddings.
@@ -14,8 +14,8 @@
 //
 // Status meanings:
 //   pass     = blue   (PatentLint's "passed check" hue)
-//   verify   = green  (REVIEW — practitioner discretion)
-//   amend    = red    (FIX — substantive issue)
+//   verify   = green  (REVIEW - practitioner discretion)
+//   amend    = red    (FIX - substantive issue)
 //   attention= amber  (warnings, banner accents)
 //   muted    = neutral (citation badges, non-status labels)
 import * as React from "react"

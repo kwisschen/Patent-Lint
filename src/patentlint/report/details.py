@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Pre-renders structured ``details_params`` fields, then translates.
 
 Python mirror of ``frontend/src/lib/detailsFormatter.js``. Most check
@@ -28,7 +28,7 @@ from patentlint.i18n import translate
 
 
 class _CheckItemLike(Protocol):
-    """Structural type — covers ``CheckItem`` and any shim used in tests."""
+    """Structural type - covers ``CheckItem`` and any shim used in tests."""
 
     status: str
     message: str
@@ -269,7 +269,7 @@ def format_details(
 
     Returns an empty string if ``key`` is falsy. Returns the translated
     template (with missing placeholders preserved) when ``details_params``
-    is absent — matches the frontend ``formatDetails`` contract.
+    is absent - matches the frontend ``formatDetails`` contract.
     """
     if not key:
         return ""
@@ -304,7 +304,7 @@ def localize_message(item: _CheckItemLike, locale: str = "en") -> str:
     """Translate ``item.message_key`` or fall back to ``item.message``.
 
     Falls back when the translation reduces to the key itself
-    (indicating both the requested locale and ``en`` lack the entry) —
+    (indicating both the requested locale and ``en`` lack the entry) -
     users see the English fallback stored in ``CheckItem.message``
     rather than a raw key leaking through.
     """

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""PatentLint CLI — analyze patent .docx files from the command line.
+# Copyright (c) 2025-2026 Christopher Chen
+"""PatentLint CLI - analyze patent .docx files from the command line.
 
 Usage:
     patentlint analyze <file> [--format json|pdf] [-o/--output PATH]
@@ -35,7 +35,7 @@ _LOCALE_HELP = (
 @click.group()
 @click.version_option(version="1.0.0", prog_name="patentlint")
 def main():
-    """PatentLint — Patent draft quality checker."""
+    """PatentLint - Patent draft quality checker."""
 
 
 @main.command()

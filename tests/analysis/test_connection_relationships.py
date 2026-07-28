@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for patentlint.analysis.connection_relationships.
 
 Covers the shared check applied to both TW and CN claim sets via the
 two pre-built configs. Tests use the public ``check_connection_relationships``
-entry point with synthetic ``Claim`` objects — no fixture .docx loading.
+entry point with synthetic ``Claim`` objects - no fixture .docx loading.
 """
 
 from patentlint.analysis.connection_relationships import (
@@ -47,7 +47,7 @@ class TestTwPositive:
         assert results[0].status == "verify"
 
     def test_quoted_reference_form_flagged(self):
-        # 引用記載型式 — 具備 is a transition phrase, not a connection verb.
+        # 引用記載型式 - 具備 is a transition phrase, not a connection verb.
         text = (
             "一種帶蓋容器，"
             "具備如請求項1所述之蓋組件、以及一容器本體。"
@@ -251,7 +251,7 @@ class TestExtendedLexiconCoverage:
     """Verbs added after Phase 0 corpus audit must keep these claims passing."""
 
     def test_tw_she_you_setting_construction(self):
-        # 設有/安裝於 — TW spec1 C1 shape
+        # 設有/安裝於 - TW spec1 C1 shape
         text = (
             "一種蓋組件，包括：一蓋本體；以及一蓋體，"
             "透過一鉸鏈部旋動自如地安裝於所述蓋本體；"
@@ -261,13 +261,13 @@ class TestExtendedLexiconCoverage:
         assert results[0].status == "pass"
 
     def test_tw_anzhuangyou_mounting(self):
-        # 安裝有 — TW spec1 C10 shape (帶蓋容器)
+        # 安裝有 - TW spec1 C10 shape (帶蓋容器)
         text = "一種帶蓋容器，具備如請求項1所述之蓋組件、以及安裝有所述蓋組件的一容器本體。"
         results = check_connection_relationships([_claim(10, text)], _TW_CONNECTION_CONFIG)
         assert results[0].status == "pass"
 
     def test_cn_kinematic_verbs(self):
-        # 转动/移动/形成 — BYD CN213655447U C1 shape (folding mechanism)
+        # 转动/移动/形成 - BYD CN213655447U C1 shape (folding mechanism)
         text = (
             "一种折叠机构，所述折叠机构包括两个屏幕支撑组件以及两个避让组件；"
             "每个所述屏幕支撑组件包括固定支撑板和活动支撑板；"
@@ -278,7 +278,7 @@ class TestExtendedLexiconCoverage:
         assert results[0].status == "pass"
 
     def test_cn_constructed_as(self):
-        # 被构造为 — common in mechanical apparatus claims
+        # 被构造为 - common in mechanical apparatus claims
         text = (
             "一种装置，包括：一第一构件；以及一第二构件，"
             "所述第二构件被构造为能够与所述第一构件配合。"

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Measure term_in_description signal direction on TW supplement_v2 corpus.
 
 Path 1 of TIPO-style hybrid measurement (2026-05-05). Joins:
@@ -8,13 +8,13 @@ Path 1 of TIPO-style hybrid measurement (2026-05-05). Joins:
   3. walker run on the corpus (re-run via round1_corpus_harness)
 
 For each TW walker finding, computes three signals:
-  - term_in_description: bool — does the normalized term appear in the
+  - term_in_description: bool - does the normalized term appear in the
     fetched description body? (broad)
-  - term_in_inline_symbol_table: bool — does the term appear as the
+  - term_in_inline_symbol_table: bool - does the term appear as the
     name half of an inline `<numeral>：<name>` symbol-table-style
     pattern in the description? (narrow proxy for 符號說明 entries)
-  - term_in_symbol_table_section: bool — appears in an explicitly
-    extracted 符號說明 section (rare — Google Patents flattens)
+  - term_in_symbol_table_section: bool - appears in an explicitly
+    extracted 符號說明 section (rare - Google Patents flattens)
 
 Then groups by ensemble category (walker_fp / legit / ...) and reports:
   - precision-by-presence rate per signal
@@ -96,7 +96,7 @@ def main() -> int:
     findings_set = run_walker(records, "TW")
     print(f"Walker findings (TW): {len(findings_set)}")
 
-    # Load ensemble verdicts — supplement_v2 specifically (the 250-patent set)
+    # Load ensemble verdicts - supplement_v2 specifically (the 250-patent set)
     verdicts = load_sv2_verdicts()
     print(f"Verdicts available (supplement_v2): {len(verdicts)}")
 

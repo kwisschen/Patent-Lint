@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Autonomous triage of open `report`-labeled GitHub issues using cross-family LLM ensemble.
 
 Fetches issue payloads via `gh`, classifies each finding via Haiku 4.5 + gpt-5-mini
@@ -37,7 +37,7 @@ TW_LABELS = PATENTLINT_ROOT / "tests/fixtures/tw/antecedent_labels.json"
 
 # Fix-shipped commits (descendant-of-report-build verified via git merge-base earlier in session)
 FIX_SHIPPED = {
-    17: ["6746b7d", "28398d5"],  # TW requiredSections — initial fix + follow-up
+    17: ["6746b7d", "28398d5"],  # TW requiredSections - initial fix + follow-up
     25: ["cf1884a"],  # refNumeralParens Miller-index suppression
 }
 
@@ -54,7 +54,7 @@ REPORT_BUILD = {
 
 # R7 walker fix that may have addressed antecedentBasis / specSupport FPs
 R7_FIX_COMMITS = {
-    "antecedentBasis": "623e2d6",  # "R7 systematic audit — 33 antecedent + 4 spec-support FPs → 0 on real-draft"
+    "antecedentBasis": "623e2d6",  # "R7 systematic audit - 33 antecedent + 4 spec-support FPs → 0 on real-draft"
     "specSupport": "623e2d6",
     "antecedentBasis_followups": ["caab84c", "b5f3648"],
 }
@@ -150,7 +150,7 @@ def format_comment_modern(
     timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
     lines = [
-        f"**Autonomous triage** ({timestamp}) — cross-family LLM ensemble (Haiku 4.5 + gpt-5-mini, Sonnet 4.6 tiebreaker on disagreement). Per the `triage-report` skill: classification only; not solo-patching, not invoking `walker-round` (post-closeout walkers require ≥3 same-jurisdiction confirmed FPs to trigger).",
+        f"**Autonomous triage** ({timestamp}) - cross-family LLM ensemble (Haiku 4.5 + gpt-5-mini, Sonnet 4.6 tiebreaker on disagreement). Per the `triage-report` skill: classification only; not solo-patching, not invoking `walker-round` (post-closeout walkers require ≥3 same-jurisdiction confirmed FPs to trigger).",
         "",
         "**Per-finding ensemble verdicts:**",
         "",
@@ -177,7 +177,7 @@ def format_comment_modern(
 
     # Gate 1
     lines.append(
-        "- **Gate 1 (Reproducer):** DEFERRED — autonomous triage did not synthesize a minimal "
+        "- **Gate 1 (Reproducer):** DEFERRED - autonomous triage did not synthesize a minimal "
         "harness fixture; recommend re-running the user's draft against the post-R7 build "
         "to verify whether findings persist before any walker-round invocation."
     )
@@ -198,10 +198,10 @@ def format_comment_modern(
         elif count == -2:
             g2_lines.append(f"  - `{t}`: labels file unparseable (deferred)")
         elif count == 0:
-            g2_lines.append(f"  - `{t}`: 0 `protect:true` matches — proposed relaxation safe")
+            g2_lines.append(f"  - `{t}`: 0 `protect:true` matches - proposed relaxation safe")
         else:
             sample_str = ", ".join(samples)
-            g2_lines.append(f"  - `{t}`: **{count} `protect:true` matches** (samples: {sample_str}) — narrow any relaxation to avoid silencing")
+            g2_lines.append(f"  - `{t}`: **{count} `protect:true` matches** (samples: {sample_str}) - narrow any relaxation to avoid silencing")
     if g2_lines:
         lines.append("- **Gate 2 (Anti-corpus):** for each walker_fp verdict, grep `protect:true` in CN/TW labels JSON:")
         lines.extend(g2_lines)
@@ -216,7 +216,7 @@ def format_comment_modern(
     elif check_class == "antecedentBasis" and jurisdiction.upper() == "CN":
         statute = "CN 专利法 §26 第4款 + 审查指南 第二部分第二章 §3.2.1"
     else:
-        statute = "[STATUTE PIN — verify in morning]"
+        statute = "[STATUTE PIN - verify in morning]"
     lines.append(f"- **Gate 3 (Statute pin):** {statute}. Cited from prior PatentLint precedent; novel statute interpretation NOT auto-resolved.")
 
     # Gate 4
@@ -251,7 +251,7 @@ def format_comment_modern(
 
 
 def format_comment_pre_extractor(issue: dict, payload: dict | None) -> str:
-    """Skill §6c — pre-extractor / legacy / malformed."""
+    """Skill §6c - pre-extractor / legacy / malformed."""
     n = issue["number"]
     build = REPORT_BUILD.get(n, "?")
     timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -261,13 +261,13 @@ def format_comment_pre_extractor(issue: dict, payload: dict | None) -> str:
         hc = payload.get("hit_count", payload.get("findings_in_group", "?"))
         findings_summary = f" Top-level signal: check_key=`{ck}`, hit_count={hc}, jurisdiction={payload.get('jurisdiction', '?')}."
     return (
-        f"**Autonomous triage** ({timestamp}): pre-extractor payload shape — "
+        f"**Autonomous triage** ({timestamp}): pre-extractor payload shape - "
         f"missing `findings[]` array and namespaced `check.tw.claims.specSupport.*` prefix. "
         f"Build `{build}` predates the `ea19383` extractor sweep, so per-finding context "
         f"(term, reference_form, context_before/after, char_offset) is **unrecoverable from "
         f"this submission alone**.{findings_summary}\n\n"
         f"**Recommended action:** close as triaged-stale. If the FP reproduces on the current "
-        f"`main` build (post `ea19383` + R7 walker audit `623e2d6`), please resubmit — the new "
+        f"`main` build (post `ea19383` + R7 walker audit `623e2d6`), please resubmit - the new "
         f"diagnostic payload renders fully with per-finding context.\n\n"
         f"Per skill §7: not closing this issue programmatically."
     )
@@ -284,7 +284,7 @@ def format_comment_close_pending(issue: dict, payload: dict | None) -> str:
         f"**Autonomous triage** ({timestamp}): fix verifiably shipped after this report.\n\n"
         f"- Report build: `{build}`\n"
         f"- Fix commit(s): {fix_str}\n"
-        f"- Verified `git merge-base --is-ancestor {build} {fix_shas[-1]}` returns true — "
+        f"- Verified `git merge-base --is-ancestor {build} {fix_shas[-1]}` returns true - "
         f"fix descends from the build the user reported on.\n\n"
         f"**Recommended action:** maintainer closes this issue (per skill §7, autonomous "
         f"triage does not close). If the user retries on the current `main` build and the "

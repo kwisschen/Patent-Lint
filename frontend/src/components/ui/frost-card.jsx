@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 //
-// FrostCard — translucent layered surface used across PatentLint for
+// FrostCard - translucent layered surface used across PatentLint for
 // cards, panels, and hero blocks. Apple LiquidGlass aesthetic adapted
 // for web: backdrop blur + saturation boost so surfaces absorb hue
 // from content behind them. Backed by the .frost-card-* utility
@@ -20,7 +20,7 @@ import { cva } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const frostCardVariants = cva(
-  // Base — `relative` + `overflow-hidden` contains the inner-light highlight
+  // Base - `relative` + `overflow-hidden` contains the inner-light highlight
   // and the accent ::before bar.
   "relative text-card-foreground transition-shadow duration-[var(--motion-duration-base)]",
   {

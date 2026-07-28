@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for patentlint.analysis.abstract."""
 
 from patentlint.analysis.abstract import (
@@ -169,12 +169,12 @@ class TestDetectorMutualExclusivity:
         for phrase in _IMPLIED_PHRASES:
             assert not _LEGAL_PHRASEOLOGY_ABSTRACT_RE.search(phrase), (
                 f"Token '{phrase}' is in _IMPLIED_PHRASES and also matches "
-                f"_LEGAL_PHRASEOLOGY_ABSTRACT_RE — remove from the latter. "
+                f"_LEGAL_PHRASEOLOGY_ABSTRACT_RE - remove from the latter. "
                 f"Dedicated detectors take precedence."
             )
             assert not _MERIT_LANGUAGE_ABSTRACT_RE.search(phrase), (
                 f"Token '{phrase}' is in _IMPLIED_PHRASES and also matches "
-                f"_MERIT_LANGUAGE_ABSTRACT_RE — remove from the latter."
+                f"_MERIT_LANGUAGE_ABSTRACT_RE - remove from the latter."
             )
 
     def test_legal_and_merit_detectors_cover_disjoint_tokens(self):

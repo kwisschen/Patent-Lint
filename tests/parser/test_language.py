@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Tests for patentlint.parser.language — CJK script detection helpers."""
+# Copyright (c) 2025-2026 Christopher Chen
+"""Tests for patentlint.parser.language - CJK script detection helpers."""
 
 from __future__ import annotations
 
@@ -131,7 +131,7 @@ class TestIsHangulChar:
         assert is_hangul_char("A") is False
 
     def test_cjk_kanji_excluded(self):
-        """Hangul check is strict — CJK kanji must not match."""
+        """Hangul check is strict - CJK kanji must not match."""
         assert is_hangul_char("漢") is False
 
     def test_empty(self):
@@ -156,7 +156,7 @@ class TestIsHiraganaOrKatakana:
         assert is_hiragana_or_katakana("청") is False
 
     def test_middle_dot_excluded(self):
-        """U+30FB (KATAKANA MIDDLE DOT) is script=Common per Unicode —
+        """U+30FB (KATAKANA MIDDLE DOT) is script=Common per Unicode -
         used in Traditional Chinese typography (保溫・保冷). Rejecting a
         TW draft on a single middle dot is the ADR-150 bug."""
         assert is_hiragana_or_katakana("・") is False
@@ -175,7 +175,7 @@ class TestIsHiraganaOrKatakana:
         assert is_hiragana_or_katakana("゛") is False
 
     def test_katakana_iteration_marks_included(self):
-        """U+30FD..U+30FF are script=Katakana — legitimate JP signal."""
+        """U+30FD..U+30FF are script=Katakana - legitimate JP signal."""
         assert is_hiragana_or_katakana("ヽ") is True
         assert is_hiragana_or_katakana("ヾ") is True
 
@@ -207,7 +207,7 @@ class TestContainsHangul:
         assert contains_hangul("") is False
 
     def test_single_hangul_is_enough(self):
-        """Presence check — a single Hangul char is sufficient."""
+        """Presence check - a single Hangul char is sufficient."""
         assert contains_hangul("Hello 한") is True
 
 
@@ -219,7 +219,7 @@ class TestContainsHiraganaOrKatakana:
         assert contains_hiragana_or_katakana("プロセッサを含む装置。") is True
 
     def test_pure_kanji_is_false(self):
-        """Kanji-only is shared across CN/TW/JP — not Japanese-specific."""
+        """Kanji-only is shared across CN/TW/JP - not Japanese-specific."""
         assert contains_hiragana_or_katakana("本发明涉及装置。") is False
 
     def test_korean_is_false(self):

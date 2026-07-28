@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for patentlint.parser.claims."""
 
 from patentlint.models import Claim
@@ -83,7 +83,7 @@ class TestParseClaims:
         assert 3 in c2.quoted_references
 
     def test_body_quoted_reference_self_ref_dropped(self):
-        # Pathological: claim 5 body has `the method of claim 5` — should
+        # Pathological: claim 5 body has `the method of claim 5` - should
         # be dropped to prevent walker loops.
         text = (
             "1. A method.\n"
@@ -150,22 +150,22 @@ class TestWhereinComma:
         assert detect_incorrect_wherein_commas(claims) == []
 
     def test_parenthetical_in_each(self):
-        """'wherein, in each of the groups, the...' — parenthetical prep phrase, not a false positive."""
+        """'wherein, in each of the groups, the...' - parenthetical prep phrase, not a false positive."""
         claims = [Claim(id=1, text="A method wherein, in each of the groups, the elements are processed.", independent=True, method_claim=True)]
         assert detect_incorrect_wherein_commas(claims) == []
 
     def test_parenthetical_for_each(self):
-        """'wherein, for each item in the list, a value is computed' — parenthetical."""
+        """'wherein, for each item in the list, a value is computed' - parenthetical."""
         claims = [Claim(id=1, text="A method wherein, for each item in the list, a value is computed.", independent=True, method_claim=True)]
         assert detect_incorrect_wherein_commas(claims) == []
 
     def test_parenthetical_during_operation(self):
-        """'wherein, during the operation, the motor rotates' — parenthetical."""
+        """'wherein, during the operation, the motor rotates' - parenthetical."""
         claims = [Claim(id=1, text="An apparatus wherein, during the operation, the motor rotates.", independent=True, method_claim=False)]
         assert detect_incorrect_wherein_commas(claims) == []
 
     def test_parenthetical_with_respect(self):
-        """'wherein, with respect to the axis, the arm extends' — parenthetical."""
+        """'wherein, with respect to the axis, the arm extends' - parenthetical."""
         claims = [Claim(id=1, text="A device wherein, with respect to the axis, the arm extends.", independent=True, method_claim=False)]
         assert detect_incorrect_wherein_commas(claims) == []
 
@@ -175,7 +175,7 @@ class TestWhereinComma:
         assert 1 in detect_incorrect_wherein_commas(claims)
 
     def test_non_parenthetical_comma_still_flagged(self):
-        """'wherein, the element is large' — comma before non-conditional should be flagged."""
+        """'wherein, the element is large' - comma before non-conditional should be flagged."""
         claims = [Claim(id=1, text="A method wherein, the element is large.", independent=True, method_claim=True)]
         assert 1 in detect_incorrect_wherein_commas(claims)
 
@@ -208,7 +208,7 @@ class TestRestrictiveAbsolutes:
         assert result.improper_claims == []
 
     def test_does_not_flag_key_as_element_noun(self):
-        # #286: "key" is overloaded as a physical element noun — flagging every
+        # #286: "key" is overloaded as a physical element noun - flagging every
         # occurrence is an FP. Element-noun uses must NOT flag.
         claims = [
             Claim(id=1, text="A device comprising a key configured to actuate, wherein the key detects a pressed state of the key.", independent=True),
@@ -220,7 +220,7 @@ class TestRestrictiveAbsolutes:
 
     def test_flags_key_only_adjectivally(self):
         # "key" IS a restrictive absolute when it adjectivally modifies an
-        # importance-noun ("a key feature") — that use still flags.
+        # importance-noun ("a key feature") - that use still flags.
         claims = [Claim(id=1, text="The invention is defined by a key feature of the housing.", independent=True)]
         result = detect_restrictive_absolutes_in_claims(claims)
         assert 1 in result.improper_claims
@@ -267,7 +267,7 @@ class TestIndefiniteWording:
 class TestClaimDetectorMutualExclusivity:
     """Invariant: a token caught by detect_restrictive_absolutes_in_claims
     must NOT also be caught by detect_indefinite_wording_in_claims (and vice
-    versa). Same design as the abstract split — clean MPEP subcategorization."""
+    versa). Same design as the abstract split - clean MPEP subcategorization."""
 
     def test_disjoint_coverage(self):
         text = (

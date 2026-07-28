@@ -1,12 +1,12 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# d1_prune_eval.py — pick an FN-SAFE deterministic pruning rule for the
+# d1_prune_eval.py - pick an FN-SAFE deterministic pruning rule for the
 # reference-numeral (D1) advisory count (ADR-159, user-authorized gold step,
 # 2026-06-25). Loads the LLM gold verdicts (real_d1 vs false_positive), re-runs
 # the detector per draft to recover the FULL numeral→dominant-name map, then for
 # each candidate pruning rule reports, per jurisdiction:
-#   FP-suppressed (good)   vs   real_d1-suppressed (FN — HARD GATE: must be 0).
+#   FP-suppressed (good)   vs   real_d1-suppressed (FN - HARD GATE: must be 0).
 # Only rules with 0 genuine catches suppressed are eligible to ship.
 from __future__ import annotations
 
@@ -118,7 +118,7 @@ def rule_misattr_anyname(conf, dom_map):
 
 def rule_ordinal_variant(conf, dom_map):
     """Drop a 1x outlier that differs from the canonical ONLY by ordinal prefix
-    (same base noun) — '第一X' vs '第二X' single-occurrence = bleed."""
+    (same base noun) - '第一X' vs '第二X' single-occurrence = bleed."""
     drop = set()
     canon_base = _norm(conf["canonical"])
     for o in conf["outliers"]:
@@ -165,7 +165,7 @@ def main():
     grand = {}
     for juris, gf in GOLD_FILES.items():
         if not gf.exists():
-            print(f"{juris}: gold file missing ({gf.name}) — skip")
+            print(f"{juris}: gold file missing ({gf.name}) - skip")
             continue
         gold = json.loads(gf.read_text())
         # index verdict by (pid, numeral)

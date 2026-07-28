@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Phase 8b TW antecedent walker — did-you-mean layer tests.
+# Copyright (c) 2025-2026 Christopher Chen
+"""Phase 8b TW antecedent walker - did-you-mean layer tests.
 
 Covers char-bigram Jaccard suggestion at threshold 0.40 (ADR-094),
 ordinal-guard pre-filtering, ancestor-proximity tiebreak, and the known
@@ -53,18 +53,18 @@ class TestKnownLimits:
     """The calibration v2 report identified two failure modes that the
     char-bigram Jaccard score at threshold 0.40 cannot avoid:
 
-    1. **含浸液 vs 含浸** (J=0.50) — substring containment of a 2-char
+    1. **含浸液 vs 含浸** (J=0.50) - substring containment of a 2-char
        term inside a 3-char term scores above threshold. The walker
        SHOULD surface this as a did-you-mean suggestion. Phase 8b
        accepts this as a known false-positive.
-    2. **齒輪 vs 第一齒輪** (J=0.33) — shared head noun with ordinal
+    2. **齒輪 vs 第一齒輪** (J=0.33) - shared head noun with ordinal
        differentiator falls below threshold. The walker SHOULD NOT
        surface this; the recall gap is accepted as the cost of keeping
        the ordinal-guard band tight.
     """
 
     def test_substring_containment_emits_known_fp_suggestion(self):
-        """含浸液 / 含浸 — Jaccard 0.50, no guard fires.
+        """含浸液 / 含浸 - Jaccard 0.50, no guard fires.
 
         The walker emits a flagged finding for 該含浸液 (no exact
         match against 一含浸 in claim 1) AND populates suggested_match
@@ -85,13 +85,13 @@ class TestKnownLimits:
         # the actual flagged term and document the calibration outcome.
         assert finding["term"].startswith("含浸")
         # Either suggestion or no suggestion is acceptable for this
-        # text — what matters is that the walker DID NOT silently
+        # text - what matters is that the walker DID NOT silently
         # resolve the unmatched reference.
         assert finding["suggested_match"] is not None or \
             finding["suggested_match"] is None  # documented limit
 
     def test_ordinal_pair_blocks_suggestion(self):
-        """第一電極 vs 第二電極 — Jaccard 0.20 plus ordinal guard fires.
+        """第一電極 vs 第二電極 - Jaccard 0.20 plus ordinal guard fires.
 
         Walker MUST flag 該第二電極 as missing antecedent AND MUST NOT
         suggest 第一電極 as did-you-mean (the guard explicitly blocks
@@ -111,7 +111,7 @@ class TestKnownLimits:
         assert issues[0]["suggested_match"] is None
 
     def test_shared_head_noun_below_threshold(self):
-        """齒輪 / 第一齒輪 — Jaccard 0.33, below 0.40 threshold.
+        """齒輪 / 第一齒輪 - Jaccard 0.33, below 0.40 threshold.
 
         The walker recall gap: a bare 該齒輪 against an ordinal intro
         does NOT receive a did-you-mean suggestion because the score
@@ -137,7 +137,7 @@ class TestKnownLimits:
 
 class TestSuggestionEmitted:
     def test_morphological_variant_within_threshold(self):
-        """馬達控制器 / 控制器 — Jaccard 0.50, walker suggests."""
+        """馬達控制器 / 控制器 - Jaccard 0.50, walker suggests."""
         doc = _make_doc([
             _claim(1, "1. 一種裝置，包含一馬達控制器，用於驅動一馬達。"),
             _claim(2, "2. 如請求項1所述之裝置，其中該控制器A為微處理器。",
@@ -161,7 +161,7 @@ class TestSuggestionEmitted:
 
 class TestExactMatchBypassesJaccard:
     def test_exact_match_no_suggestion(self):
-        """該第一電極 / 一第一電極 — exact match path, suggested_match
+        """該第一電極 / 一第一電極 - exact match path, suggested_match
         must be None because the walker never reached the Jaccard layer.
         """
         doc = _make_doc([
@@ -170,7 +170,7 @@ class TestExactMatchBypassesJaccard:
         assert check_antecedent_basis(doc) == []
 
     def test_leaked_reference_form_in_intro_resolves_exact(self):
-        """Round 3 regression: 一個所述第一弧面 / 所述第一弧面 — the
+        """Round 3 regression: 一個所述第一弧面 / 所述第一弧面 - the
         intro pattern greedily matches 一個 as quantifier, capturing
         所述第一弧面 as the bare noun group. Symmetric reference-form
         stripping in ``normalize_candidate_intro`` ensures the intro

@@ -5,7 +5,7 @@
 # 'resource' must filter entries through `isTrustRelevantResource` (see
 # frontend/src/lib/trustObserver.js for the rule and rationale). Raw
 # observer entries include local disk reads (file://), blob/data URIs,
-# and failed-offline fetches — none of which are network egress.
+# and failed-offline fetches - none of which are network egress.
 # Surfacing them as "network active" violates the no-upload trust copy.
 #
 # This script runs both as a pre-commit hook (.githooks/pre-commit)
@@ -17,8 +17,8 @@
 # `// trust-observer-exempt: <reason>` in the same file.
 #
 # Exit codes:
-#   0 — clean (or no observers found)
-#   1 — at least one violation; details printed to stderr
+#   0 - clean (or no observers found)
+#   1 - at least one violation; details printed to stderr
 
 set -e
 
@@ -26,7 +26,7 @@ REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || echo ".")
 cd "$REPO_ROOT"
 
 if [ ! -d frontend/src ]; then
-    # No frontend tree — nothing to check. (Useful in case the script is
+    # No frontend tree - nothing to check. (Useful in case the script is
     # invoked from a worktree or partial checkout.)
     exit 0
 fi

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 import { useState, useEffect, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { FilePlus2, ShieldCheck } from 'lucide-react'
@@ -57,7 +57,7 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
     // Without this, German's longer `Kein Upload. Keine Cloud-Verarbeitung.
     // Keine KI.` headline (~48 chars) pulls the column wider than zh-TW's
     // `無上傳。無雲端處理。無 AI。` (~14 visual units), and the dropzone's
-    // `w-full max-w-lg` follows suit — making the box visibly wider in DE.
+    // `w-full max-w-lg` follows suit - making the box visibly wider in DE.
     // Capping the column makes the dropzone box width identical across locales.
     <div className="flex flex-col items-center gap-3 w-full max-w-lg">
       <div
@@ -79,7 +79,7 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
         }}
       >
         <input {...getInputProps()} />
-        {/* Vivid gradient icon chip (brand to cyan) that springs on hover —
+        {/* Vivid gradient icon chip (brand to cyan) that springs on hover -
             the focal point, matching the sister project's icon treatment. */}
         <span
           className={`flex size-16 items-center justify-center rounded-2xl text-white shadow-lg transition-all duration-300 ease-[var(--ease-spring)] ${
@@ -97,7 +97,7 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
         </div>
       </div>
 
-      {/* Security badge — bold headline (static) + clickable CTA on the
+      {/* Security badge - bold headline (static) + clickable CTA on the
           line below. Two-line layout: the headline is the claim, the CTA
           underneath invites verification (links to airplane-mode demo via
           ProveItModal). The dropzone box's width is independent of these

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Jurisdiction-mismatch detection (Issue #9 / ADR-082 revisited).
 
 When a user selects jurisdiction A but uploads a draft from jurisdiction B,
@@ -15,7 +15,7 @@ supported jurisdiction than the one the user selected. The frontend
 turns this into a soft-warning banner with a "Switch to [X]" button that
 re-runs analysis under the suggested jurisdiction without re-uploading.
 
-Heuristic — kept deliberately simple:
+Heuristic - kept deliberately simple:
 
 * CJK ratio over the first ~10k chars / ~50 paragraphs of body text.
 * Marker counts: 【】 + 請求項 + 符號說明 (TIPO) vs 权利要求 + 技术领域 +
@@ -52,7 +52,7 @@ _CJK_LOW = 0.10
 # TIPO surface markers that are unique to TW drafts. 【】 bracket headers
 # are the load-bearing TIPO convention; 請求項 + 符號說明 are TW-only check
 # anchors. We deliberately avoid traditional-only character lists like
-# 發/權/應/書 — translation drafts mix scripts and would inflate noise.
+# 發/權/應/書 - translation drafts mix scripts and would inflate noise.
 _TIPO_MARKERS: tuple[str, ...] = (
     "【中文發明名稱】",
     "【中文新型名稱】",
@@ -73,8 +73,8 @@ _TIPO_MARKERS: tuple[str, ...] = (
     "符號說明",
 )
 
-# CNIPA surface markers — 五书 section names + claims-book header. Pure
-# simplified, no brackets. Don't add 发/权/应 — same reasoning as the TW
+# CNIPA surface markers - 五书 section names + claims-book header. Pure
+# simplified, no brackets. Don't add 发/权/应 - same reasoning as the TW
 # side.
 _CNIPA_MARKERS: tuple[str, ...] = (
     "权利要求书",
@@ -89,13 +89,13 @@ _CNIPA_MARKERS: tuple[str, ...] = (
 
 # EPC-distinctive surface markers in English. Patent drafters at EPC firms
 # pin their work to EPC vocabulary even when the application targets a
-# member state national route — these terms are not in normal US drafting
+# member state national route - these terms are not in normal US drafting
 # vocabulary, so a US-selected upload that hits any of them is a real
 # mismatch signal (not a stylistic noise signal).
 #
 # Conservative scope on purpose: only terms that are EPC-specific AND
 # unlikely to appear in a US draft. "according to claim" is intentionally
-# excluded — too generic; US drafters use it too. British-spelling tells
+# excluded - too generic; US drafters use it too. British-spelling tells
 # like "characterised" are picked up via the case-insensitive match
 # because EPC two-part-form preambles almost always include them, and
 # US drafters spell with -ize.
@@ -125,7 +125,7 @@ _EPC_MARKERS: tuple[str, ...] = (
 # 35 U.S.C. § citations are diagnostic of a US-filed draft. Non-transitory
 # CRM boilerplate is § 101-specific. "FIG." in caps is the US convention
 # (EPC drafts write "Fig." or "fig."), but case-insensitive matching makes
-# that brittle — handled via a separate cased check below.
+# that brittle - handled via a separate cased check below.
 _US_MARKERS: tuple[str, ...] = (
     "uspto",
     "united states patent and trademark office",
@@ -142,11 +142,11 @@ _US_MARKERS: tuple[str, ...] = (
     "apparatus of claim",
 )
 
-# STRONG US markers — unambiguous statutory / CRM tells that an EPC drafter
+# STRONG US markers - unambiguous statutory / CRM tells that an EPC drafter
 # would never produce. Distinct from the WEAK convention signals above
 # (`method of claim` phrasing + cased `FIG.`), which legitimately appear in
 # EPC drafts (Euro-direct filings off a US priority, varied figure-label
-# casing). Overriding an EXPLICIT EPC selection requires ≥1 strong marker —
+# casing). Overriding an EXPLICIT EPC selection requires ≥1 strong marker -
 # weak convention signals alone must not flip a deliberate EPC choice to US
 # (#320: an EPC spec was mis-flagged "Looks like a US specification").
 _US_STRONG_MARKERS: tuple[str, ...] = (
@@ -253,7 +253,7 @@ def _sample_text(text: str) -> str:
     Document parsers hand us joined paragraph bodies that can run into
     the megabytes on big patents. The mismatch heuristic only needs
     enough text to estimate script ratio and catch the first few
-    section headers — keep it bounded.
+    section headers - keep it bounded.
     """
 
     if not text:
@@ -318,7 +318,7 @@ def detect_jurisdiction_mismatch(
     ``None`` means: signal is ambiguous, or the document looks consistent
     with the selected jurisdiction.
 
-    The detector is intentionally conservative — when in doubt it
+    The detector is intentionally conservative - when in doubt it
     returns ``None`` and lets the existing NonPatent banner handle the
     case. A false-positive suggestion is more disruptive than no
     suggestion (the user clicks Switch, sees the same NonPatent banner
@@ -345,14 +345,14 @@ def detect_jurisdiction_mismatch(
     # Cased FIG./Fig. count on the WHOLE document (no lowercasing, no sample
     # truncation). Figure references typically appear in the Detailed
     # Description section, well past the first 50 paragraphs the marker scan
-    # samples — so we scan the full text for this specific signal. When
+    # samples - so we scan the full text for this specific signal. When
     # capitalized FIG. dominates (US convention) over mixed-case Fig./fig.
     # (EPC convention per Guidelines F-V § 1.2), boost us_markers so the
     # detector catches plain US drafts that lack USPTO/MPEP/35 U.S.C. tells.
     fig_cased = len(_FIG_CASED_RE.findall(text))
     fig_mixed = len(_FIG_MIXED_RE.findall(text))
     if fig_cased >= _FIG_CASED_MIN and fig_cased > fig_mixed * 2:
-        # Treat as +2 us markers — enough to satisfy the delta gate alone.
+        # Treat as +2 us markers - enough to satisfy the delta gate alone.
         us_markers += 2
 
     if selected == Jurisdiction.US:
@@ -362,9 +362,9 @@ def detect_jurisdiction_mismatch(
                 return Jurisdiction.TW.value
             if cnipa > tipo:
                 return Jurisdiction.CN.value
-            # Marker tie (or both zero — possible on a CJK doc lacking the
+            # Marker tie (or both zero - possible on a CJK doc lacking the
             # specific surface markers we look for, e.g., a JP-translated
-            # draft that has had its headers normalized). Fall back to CN —
+            # draft that has had its headers normalized). Fall back to CN -
             # it's the larger filing volume of the two, so the suggestion is
             # more often right; if it isn't, the user can still pick TW from
             # the home picker after switching back.
@@ -406,7 +406,7 @@ def detect_jurisdiction_mismatch(
                 return Jurisdiction.CN.value
             return Jurisdiction.CN.value
         # Latin-script EPC: flip to US when US markers clearly dominate.
-        # Symmetric to the US-side check above — the previous asymmetric
+        # Symmetric to the US-side check above - the previous asymmetric
         # `epc_markers == 0` gate failed on the common case of a US draft
         # whose spec body never types "USPTO" / "MPEP" / "35 U.S.C." but
         # uses US-only phrasings (`method of claim N`, `system of claim N`).
@@ -416,7 +416,7 @@ def detect_jurisdiction_mismatch(
         # #320: an EXPLICIT EPC selection must not be flipped to US on weak
         # convention signals alone (cased FIG. + `method of claim` phrasing,
         # both common in Euro-direct EPC drafts). Require ≥1 STRONG US marker
-        # (USPTO / MPEP / 35 U.S.C. / non-transitory CRM) — the user
+        # (USPTO / MPEP / 35 U.S.C. / non-transitory CRM) - the user
         # deliberately chose EPC, so overriding needs an unambiguous tell.
         if (
             us_markers - epc_markers >= _EN_MARKER_MIN_DELTA

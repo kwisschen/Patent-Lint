@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Abstract section analysis.
 
 Checks word count, structure, implied phrases, and improper wording per MPEP § 608.01(b).
@@ -54,7 +54,7 @@ def detect_implied_phrases(abstract_text: str) -> list[str]:
 
 # MPEP § 608.01(b): "the form and legal phraseology often used in patent
 # claims, such as 'means' and 'said,' should be avoided." MPEP names only
-# two explicit examples but the rule is clearly the class, not the list —
+# two explicit examples but the rule is clearly the class, not the list -
 # practitioner guidance (BlueIron IP, IPWatchdog, Patent Trademark Blog)
 # agrees that claim-transitional phrases ("comprising" and mutations),
 # claim modifiers ("wherein"), and claim-style archaic pronouns ("thereof,"

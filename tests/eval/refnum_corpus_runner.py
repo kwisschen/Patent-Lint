@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# refnum_corpus_runner.py — Engine 3 (reference-numeral consistency / D1) FP
+# refnum_corpus_runner.py - Engine 3 (reference-numeral consistency / D1) FP
 # characterization + DETERMINISTIC FN-guard (ADR-159 Path-to-80, Sweep 3).
 #
 # Unlike Engines 1/2 (antecedent / spec-support) the D1 reference-numeral check
@@ -16,12 +16,12 @@
 #   * runs check_numeral_consistency over the scraped Google-Patents spec bodies
 #     (tests/eval/{us,cn,tw}_descriptions.json, gitignored),
 #   * classifies every FIX-tier conflict as PROTECT (a structurally-plausible
-#     real D1 conflict — both names look like element nouns, both written
+#     real D1 conflict - both names look like element nouns, both written
 #     repeatedly) or OVERCAPTURE (>=1 name is a non-noun fragment / symbol),
 #   * the FN-GUARD is: a name-cleaning fix may silence OVERCAPTURE conflicts
 #     freely, but must NOT silence any PROTECT (pid, numeral). real_lost == 0.
 #
-# Workflow per fix (deterministic, FREE — no LLM):
+# Workflow per fix (deterministic, FREE - no LLM):
 #   python tests/eval/refnum_corpus_runner.py --juris US --snapshot /tmp/pre_us_refnum.json
 #   ... edit specification.py ...
 #   python tests/eval/refnum_corpus_runner.py --juris US --compare  /tmp/pre_us_refnum.json
@@ -34,7 +34,7 @@
 # NOT the doc-level check_numeral_consistency_tw. It therefore does NOT build a
 # TwPatentDocument and CANNOT exercise the TW 符號說明-anchoring path
 # (_tw_anchor_pairs_to_declared, which collapses body captures onto the declared
-# symbol-table name before collision detection — the #284/#244 FN-safe lever, and
+# symbol-table name before collision detection - the #284/#244 FN-safe lever, and
 # the site of the #414 reachable FN). The scraped Google-Patents descriptions have
 # no clean 符號說明 table to anchor against, so a doc-level TW mode would have no
 # corpus data to run on anyway. That path is gated SOLELY by the pytest controls
@@ -68,7 +68,7 @@ _END = re.compile(
     r"|Non-Patent Citations|Similar Documents|Priority And Related Applications)"
 )
 
-# CJK (CN/TW) body markers — the Google-Patents CN/TW description carries an
+# CJK (CN/TW) body markers - the Google-Patents CN/TW description carries an
 # English biblio header, then the CJK spec body from the first section heading.
 _SEC_CJK = re.compile(
     r"(技术领域|技術領域|背景技术|背景技術|发明内容|發明內容|具体实施|具體實施"
@@ -121,7 +121,7 @@ _CN_LEADING_CONNECTORS = frozenset(
 
 def _cn_name_is_element_noun(keyed_name: str) -> bool:
     """CJK plausibility: >=2 CJK chars, not led by a connector/particle, no
-    sentence-fragment marker. The independent FN-guard signal for CN/TW D1 —
+    sentence-fragment marker. The independent FN-guard signal for CN/TW D1 -
     a real element noun passes; connector-bled / clause-fragment captures fail."""
     _, head = _split_ordinal_key(keyed_name)
     head = head.strip()
@@ -136,7 +136,7 @@ def _cn_name_is_element_noun(keyed_name: str) -> bool:
 
 
 # Self-contained mirror of specification._is_plausible_element_name. NOT imported
-# from production — the FN-guard's `--snapshot` runs with specification.py
+# from production - the FN-guard's `--snapshot` runs with specification.py
 # STASHED to its pre-edit state (no predicate yet), so the runner must classify
 # independently. Kept in sync with the production predicate by hand.
 _CLAUSE_WORDS = frozenset({
@@ -156,7 +156,7 @@ _NONNOUN_VERB_HEADS = frozenset({
 
 def _head_is_nonnoun(w: str) -> bool:
     """True when the HEAD (last) token can never be an element-name noun.
-    Unambiguous signals only — curated verb/adverb sets + -ed participle + -ly
+    Unambiguous signals only - curated verb/adverb sets + -ed participle + -ly
     adverb. NO generic -ing / -s rule (those drop real nouns grating/winding/
     cladding/outputs/inputs → FN). Mirrors specification._d1_head_is_nonnoun."""
     w = w.lower().rstrip(".,;:")
@@ -176,11 +176,11 @@ def name_is_element_noun(keyed_name: str, juris: str = "US") -> bool:
     """Structural test: does this D1 element-name LOOK like a real element noun
     phrase (vs sentence-context over-capture)?
 
-    SAFE / conservative — returns False ONLY when the name is clearly NOT an
+    SAFE / conservative - returns False ONLY when the name is clearly NOT an
     element identity: empty, the HEAD is a non-noun (verb/gerund/adverb), or a
     CLAUSE marker (copula / not / that / which) sits anywhere in the phrase.
 
-    Deliberately does NOT reject past-participle / 3sg words in the BODY —
+    Deliberately does NOT reject past-participle / 3sg words in the BODY -
     those are usually adjectival modifiers of a real element ("integrated
     circuit", "curved surface", "printed circuit board"), so rejecting them
     would drop real conflicts (FN). Mirrors specification._is_plausible_element_name.
@@ -200,7 +200,7 @@ def name_is_element_noun(keyed_name: str, juris: str = "US") -> bool:
     return True
 
 
-# Known non-element symbol numerals (Engine-3 R2) — amino-acid mutations,
+# Known non-element symbol numerals (Engine-3 R2) - amino-acid mutations,
 # immunology/clinical biomarkers, X2X telecom abbreviations. A "conflict" on
 # one of these was never a real reference-designator D1, so removing it is the
 # intended symbol-denylist win and is excluded from the designator FN-gate.
@@ -254,7 +254,7 @@ def both_repeated(c: dict) -> bool:
     at least one outlier were each written >=2 times. A pure sentence-context
     over-capture is almost always a one-off (1x) fragment, so a conflict where
     BOTH names recur is a strong drafter-consistency signal of a real naming
-    inconsistency — silencing one is a likely FN regardless of how the verb
+    inconsistency - silencing one is a likely FN regardless of how the verb
     predicate classifies it. This is the guard's hard invariant, computed
     WITHOUT the name_is_element_noun predicate so it can't be defined away."""
     if c["canonical_count"] < 2:
@@ -274,7 +274,7 @@ def collect_conflicts(juris: str) -> list[tuple[str, dict]]:
 
     The FN-guard must track BOTH tiers: a name-cleaning fix often DEMOTES a
     weak conflict from FIX (asserted error) to REVIEW (advisory) by stripping
-    the junk outliers that made it look strong — that is a WIN (fewer false
+    the junk outliers that made it look strong - that is a WIN (fewer false
     assertions), not a removal. Tracking FIX-only would mis-count a demotion as
     a silenced conflict and falsely trip the guard."""
     descs = _load_descs(juris)
@@ -359,7 +359,7 @@ def main() -> int:
             # Scope: the guard protects ELECTRONIC reference designators. A
             # numeral that is a known non-element SYMBOL (amino-acid mutation,
             # immunology/clinical biomarker prefix, or X2X telecom abbreviation)
-            # was never a real D1 — removing it is the intended symbol-denylist
+            # was never a real D1 - removing it is the intended symbol-denylist
             # win, not a lost element conflict. Exclude from the FN gate. (US-only
             # symbol set; the CJK connector-dedup targets connector-bled names,
             # not symbols.)
@@ -399,7 +399,7 @@ def main() -> int:
             for k in sorted(set(noun_noun_lost) | set(strong_lost_designator)):
                 print(f"    {k}: {pre[k]['canonical']!r}({pre[k]['canonical_count']}) vs {pre[k]['outliers'][:5]}")
         fail = bool(noun_noun_lost) or bool(strong_lost_designator)
-        print(f"  GATE: {'FAIL — investigate above' if fail else 'PASS'}")
+        print(f"  GATE: {'FAIL - investigate above' if fail else 'PASS'}")
         return 1 if fail else 0
 
     if args.characterize:

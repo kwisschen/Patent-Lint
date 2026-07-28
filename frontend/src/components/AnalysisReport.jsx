@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 import { useState, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import RubricHero from './RubricHero'
@@ -90,7 +90,7 @@ function consolidateClaimsChecks(checks) {
         status: 'verify',
         message: `Preamble noun mismatch: ${count} dependent claim${count !== 1 ? 's' : ''} differ from Claim ${rootId}`,
         message_key: 'consolidation.nounMismatchSummary',
-        details: `Parent: '${parentNoun}' — Dependents: '${depNoun}'`,
+        details: `Parent: '${parentNoun}' - Dependents: '${depNoun}'`,
         details_key: 'details.preambleNounMismatchSummary',
         details_params: {
           count: String(count),
@@ -121,7 +121,7 @@ function consolidateClaimsChecks(checks) {
     // the same per-finding pinpoint data (term, did_you_mean, context
     // windows, etc.) as a direct report on the underlying card. Without
     // this, the consolidated row's report would carry only meta-fields
-    // (check_key, jurisdiction, locale, build) — useless for triage.
+    // (check_key, jurisdiction, locale, build) - useless for triage.
     // Pick the amend item if present (richer payload from the actual
     // walker findings), else fall back to the first verify item.
     const sourceItem = antecedentItems.find(c => c.status === 'amend') || antecedentItems[0]
@@ -130,7 +130,7 @@ function consolidateClaimsChecks(checks) {
       message: 'Missing antecedent basis detected.',
       // message_key matches the chosen status so locale rendering and
       // citation lookup line up. Was always `.verify` even when status
-      // was `.amend` — bug since this consolidation row was added.
+      // was `.amend` - bug since this consolidation row was added.
       message_key: worst === 'amend'
         ? 'check.claims.antecedentBasis.amend'
         : 'check.claims.antecedentBasis.verify',
@@ -169,7 +169,7 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
   // diagnosis when both fire (mismatch implies the NonPatent trigger
   // was caused by running the wrong-jurisdiction pipeline). When the
   // user clicks Switch, App.jsx re-runs analysis on the same file
-  // under the suggested jurisdiction — the component remounts with
+  // under the suggested jurisdiction - the component remounts with
   // fresh data so this state resets implicitly.
   const hasJurisdictionMismatch = data.jurisdiction_mismatch === true && Boolean(data.suggested_jurisdiction)
   const [dismissedMismatch, setDismissedMismatch] = useState(false)
@@ -268,7 +268,7 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
           // would otherwise fire next describes the same observation
           // reframed (the selected jurisdiction's markers are absent
           // BECAUSE the doc is from another jurisdiction) for
-          // content_missing / weak_signal reasons — suppress it.
+          // content_missing / weak_signal reasons - suppress it.
           // For cross_script_japanese / cross_script_korean keep
           // NonPatent: it surfaces an orthogonal script-level warning
           // (e.g., "this looks Japanese") that the Mismatch banner
@@ -277,7 +277,7 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
           if (reason === 'content_missing' || reason === 'weak_signal') {
             setShowResults(true)
           }
-          // Always reset cascade — if NonPatent still fires next, its
+          // Always reset cascade - if NonPatent still fires next, its
           // dismiss handler will redo it; the extra setState calls
           // are cheap and the unused mount/bar timers don't render.
           setMounted(false)
@@ -355,7 +355,7 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
       {/* Hero: rubric grade letter + score + status legend (replaces
           finding-count hero per the scoring repositioning). */}
       <div className="relative isolate" style={cascadeDelay(0)}>
-        {/* Soft colorful glow behind the grade hero — elevates the focal point
+        {/* Soft colorful glow behind the grade hero - elevates the focal point
             without touching the functional grade/status colors. */}
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute left-1/3 top-0 size-48 -translate-x-1/2 rounded-full bg-brand/15 blur-3xl motion-safe:animate-[node-glint_7s_ease-in-out_infinite]" />
@@ -377,7 +377,7 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
       <div style={cascadeDelay(4)}>
         {/* Key by draft identity so the per-session Review→Fix promotions in
             TriagePanel (index-keyed) reset on a new upload or jurisdiction
-            switch — stale indices would otherwise mis-map onto new findings. */}
+            switch - stale indices would otherwise mis-map onto new findings. */}
         <TriagePanel key={`triage-${filename || 'draft'}-${consolidatedData.jurisdiction}`} data={consolidatedData} />
       </div>
 
@@ -438,7 +438,7 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
         />
       </div>
 
-      {/* Contextual cross-product callout — once a draft is reviewed, the
+      {/* Contextual cross-product callout - once a draft is reviewed, the
           natural next milestone is filing and (eventually) an Office Action.
           Calm card, brand-tinted, points to the sister product PatentNode.
           Placed after the section detail so it reads as a "what's next"

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Section extraction for EPC (European Patent Convention) English drafts.
 
 EPC drafts follow the Rule 42(1) EPC structure for the description:
@@ -19,12 +19,12 @@ regex. v1 EPC extractor delegates to the US extractors for those overlaps
 and adds EPC-specific tuning where the conventions diverge.
 
 References:
-  Art. 78(1) EPC — required application contents
-  Rule 41(2) EPC — request-form requirements
-  Rule 42(1) EPC — description sub-sections
-  Rule 43 EPC — claims
-  Rule 46 EPC — drawings
-  Rule 47 EPC — abstract
+  Art. 78(1) EPC - required application contents
+  Rule 41(2) EPC - request-form requirements
+  Rule 42(1) EPC - description sub-sections
+  Rule 43 EPC - claims
+  Rule 46 EPC - drawings
+  Rule 47 EPC - abstract
   EPO Guidelines Part F-II § 4 (description); F-IV (claims)
 """
 
@@ -79,7 +79,7 @@ def extract_title_epc(full_text: str) -> str:
 def extract_claims_section_epc(full_text: str) -> str:
     """Extract the claims section per Rule 43 EPC.
 
-    Reuses the US claims extractor — same English claims-section headers
+    Reuses the US claims extractor - same English claims-section headers
     (CLAIMS, "What is claimed is:", etc.) are valid in EPC English drafts.
     """
     return us_sections.extract_claims_section(full_text)

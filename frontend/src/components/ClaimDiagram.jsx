@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, GitBranch } from 'lucide-react'
@@ -29,7 +29,7 @@ mermaid.initialize({
 
 // REMOVED 2026-05-01: a module-level IIFE used to call
 // `mermaid.render('init-check', 'flowchart TD\n  A["init"]')` to "force the
-// dynamic import" — but mermaid is statically imported at line 6 above, so
+// dynamic import" - but mermaid is statically imported at line 6 above, so
 // the bundle is already in the chunk. The IIFE was a no-op for the stated
 // purpose, AND on failure (or partial cleanup-miss in mermaid v11+ ID
 // naming), it left behind a visible "Syntax error in text" bomb-icon SVG
@@ -114,7 +114,7 @@ function readTokens(el) {
 
 // Appends gradient + shadow defs, restyles nodes/edges, adds draw-in animation.
 // Defs IDs are scoped by `suffix` so multiple diagrams on a page don't collide.
-// Tokens are resolved to literal hex at render-time via getComputedStyle —
+// Tokens are resolved to literal hex at render-time via getComputedStyle -
 // `var(--x)` inside inline SVG style attributes is flaky across engines.
 function enhanceSvg(svgEl, suffix, surfaceEl) {
   if (!svgEl || !surfaceEl) return
@@ -196,7 +196,7 @@ function enhanceSvg(svgEl, suffix, surfaceEl) {
         path.style.animation = `pl-diagram-draw ${EDGE_DRAW_DURATION_MS}ms cubic-bezier(0.22, 0.61, 0.36, 1) ${delay}ms forwards`
       }
     } catch {
-      // Unusual path shapes can throw on getTotalLength — skip animation for those.
+      // Unusual path shapes can throw on getTotalLength - skip animation for those.
     }
   })
 

@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tier-fire tests for the CN section-ID fallback chain.
 
 Three tiers must each fire on targeted synthetic ``DocxSection`` inputs.
 The assertion channel is
-``CnPatentDocument.section_source_strategies["claims"]`` — the
+``CnPatentDocument.section_source_strategies["claims"]`` - the
 walker-relevant strategy for Stage 2.
 
 Stage 1.5 deleted the ``template_substyle`` tier, so this file
@@ -27,7 +27,7 @@ def _section(header: str = "", paragraphs: list[str] | None = None,
 
 class TestBodyAnchorTierFires:
     """Paragraphs carry standalone 五书 anchors (权利要求书, spec sub-sec
-    headers) — Tier 1 must fire. Real CNIPA downloads take this path."""
+    headers) - Tier 1 must fire. Real CNIPA downloads take this path."""
 
     def test_body_anchor_fires_on_standalone_markers(self):
         sections = [
@@ -47,7 +47,7 @@ class TestBodyAnchorTierFires:
 
 
 class TestClaimDensityTierFires:
-    """No anchors at all — just a run of numbered claim paragraphs.
+    """No anchors at all - just a run of numbered claim paragraphs.
     Tier 2 must recover the claims span from pure density."""
 
     def test_claim_density_fires_on_anchor_stripped_input(self):
@@ -88,7 +88,7 @@ class TestPageHeaderTierFires:
 
 
 class TestNoTierFires:
-    """No claims anywhere — all strategies remain ``none``."""
+    """No claims anywhere - all strategies remain ``none``."""
 
     def test_empty_sections(self):
         doc = extract_cn_sections_from_docx([_section(paragraphs=[])])

@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# apply_proposed_labels.py — the automated labels feed for the recurring-FP
+# apply_proposed_labels.py - the automated labels feed for the recurring-FP
 # loop (ADR-159 #2).
 #
 # Takes a proposed_labels JSON from recurring_fp_loop.py and:
@@ -11,11 +11,11 @@
 #     low-risk verdicts (the two cross-family judges agreed, no Opus needed).
 #   * QUEUES everything else (legit_drafting_error, coverage_gap, ambig,
 #     diagnostic_mis_attribution, and any *split* walker_fp) to a
-#     `needs_review_<juris>_<stamp>.json` for human review — these are higher
+#     `needs_review_<juris>_<stamp>.json` for human review - these are higher
 #     stakes (a wrong `legit`/`protect` label blocks real fixes) and stay
 #     human-gated.
 #   * GATES: re-imports the corpus harness and reloads the merged gold to
-#     confirm it parses and the verdict count went up — a fix never lands
+#     confirm it parses and the verdict count went up - a fix never lands
 #     against a broken gold.
 #
 # Reversibility: the autoapply file is separate from the curated round-1 gold;

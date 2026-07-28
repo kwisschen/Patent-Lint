@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Shared language-script helpers for jurisdiction detection.
 
 Used by :func:`detect_patent_document` (US), :func:`detect_patent_document_cn`
@@ -14,11 +14,11 @@ from __future__ import annotations
 def is_cjk_char(ch: str) -> bool:
     """Return True if ``ch`` is a CJK-script character.
 
-    Includes CJK Unified Ideographs, CJK Extensions A–D, Hiragana, Katakana,
+    Includes CJK Unified Ideographs, CJK Extensions A-D, Hiragana, Katakana,
     Bopomofo, and fullwidth ASCII variants. Excludes ASCII-adjacent code
     points, half-width punctuation, and emoji. Preserved at its original
     scope because TIPO counts these (not Hangul) toward the 250-char
-    abstract limit — :func:`count_cjk_chars` and :func:`cjk_ratio` are
+    abstract limit - :func:`count_cjk_chars` and :func:`cjk_ratio` are
     load-bearing for that rule.
 
     For broader East-Asian script detection that also catches Korean
@@ -105,7 +105,7 @@ def contains_hangul(text: str) -> bool:
     """Return True if ``text`` contains at least one Hangul character.
 
     Strict presence check (not a ratio) because TW patents should contain
-    zero Korean script — a single Hangul character is enough to reject
+    zero Korean script - a single Hangul character is enough to reject
     the document as TW.
     """
     if not text:
@@ -117,7 +117,7 @@ def contains_hiragana_or_katakana(text: str) -> bool:
     """Return True if ``text`` contains at least one JP-specific kana.
 
     Strict presence check. Prefer :func:`jp_kana_ratio` when deciding
-    whether to reject a document as JP — real-world TW/CN drafts
+    whether to reject a document as JP - real-world TW/CN drafts
     translated from JP priority documents sometimes retain a handful
     of katakana for transliterated brand names or technical terms
     (< 0.5% of content). A ratio-aware check tolerates that while
@@ -197,7 +197,7 @@ def cjk_ratio(text: str) -> float:
     so the ratio reflects *content* script, not document padding. A document
     that is 100% CJK returns 1.0; a pure-ASCII document returns 0.0.
 
-    Does NOT count Hangul — see :func:`east_asian_ratio` for a broader
+    Does NOT count Hangul - see :func:`east_asian_ratio` for a broader
     measure that catches Korean patents too.
     """
     if not text:

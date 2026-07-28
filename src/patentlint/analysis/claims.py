@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Claim-level structural analysis.
 
 Checks for missing periods, extra periods, dependencies, similarity, sequentiality,
@@ -87,7 +87,7 @@ def find_multiple_dependents(claims: list[Claim]) -> list[int]:
 def find_chained_multi_dependents(claims: list[Claim]) -> list[int]:
     """35 U.S.C. § 112(e) prohibits a multi-dependent claim that depends on
     another multi-dependent claim. Returns the IDs of claims that violate
-    this rule — multi-dep claims whose chain includes another multi-dep.
+    this rule - multi-dep claims whose chain includes another multi-dep.
 
     Mirrors CN cn_claims::check_multi_multi_dep and TW tw_claims::
     check_multi_dep_on_multi_dep (专利法实施细则 §25 第3款 / 專利法施行細則 §18)."""
@@ -184,7 +184,7 @@ def check_excess_claims_count(claims: list[Claim]) -> list[CheckItem]:
             status="pass",
             message=(
                 f"No excess-claims fee triggers detected "
-                f"({total} total, {indep} independent — within "
+                f"({total} total, {indep} independent - within "
                 f"37 CFR 1.16(h)/(i) fee-free thresholds)."
             ),
             message_key="check.claims.excessClaims.pass",
@@ -248,7 +248,7 @@ _CATAPHORIC_LEADING = frozenset({"following"})
 # antecedent. Walk-time skip rather than extraction-time carve-out so
 # the heuristic stays narrow and inspectable.
 _MARKUSH_GROUP_TRAIL = re.compile(r"^\s+(?:consisting\s+of|of)\b", re.IGNORECASE)
-# R34 (2026-07-18, report #400): partitive trail after a pronoun head —
+# R34 (2026-07-18, report #400): partitive trail after a pronoun head -
 # `the switched one OF THE plurality of channels`. Requires a determiner
 # after `of` so a genuine compound (`the one of a kind marker`) is untouched.
 _PARTITIVE_OF_TRAIL = re.compile(
@@ -279,7 +279,7 @@ def _word_boundary_match(needle: str, haystack: str) -> bool:
     word sequence (case-insensitive, anchored on word boundaries).
 
     Used by the antecedent walker to suppress findings only when an
-    introduction and a reference share the same word sequence — short
+    introduction and a reference share the same word sequence - short
     introductions like 'common voltage' must NOT silently mask longer
     references like 'the common voltage difference calculation circuit'.
     """
@@ -323,13 +323,13 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
         is populated by the parser for body cross-refs of the form
         `the X according to claim N` (引用記載型式 incorporation-by-reference),
         but extending the chain to traverse those references blanket-grants
-        antecedent for ALL of claim N's intros — broader than the US/CN
+        antecedent for ALL of claim N's intros - broader than the US/CN
         doctrine, which says the cross-ref only provides antecedent for the
         SPECIFIC element X named in the cross-ref. Element-scoped chain
         traversal is a future ADR (separate PR); until that lands, the
         chain stays dependencies-only.
 
-        TW walker has the same field but uses broad chain extension —
+        TW walker has the same field but uses broad chain extension -
         permissible because TW practitioner convention treats 引用記載型式
         as wholesale incorporation. US/CN follow stricter MPEP / 审查指南
         readings.
@@ -354,7 +354,7 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
     # did-you-mean fallback when the ancestor-chain suggestion is None, so a
     # cross-branch intro (e.g., testspec9 c12 introduces "extending lines"
     # but c13 depends on c9) still surfaces as a hint. Emission decisions
-    # remain driven by the ancestor chain — a cross-branch term has no
+    # remain driven by the ancestor chain - a cross-branch term has no
     # antecedent basis under §112 ¶2 and stays flagged.
     all_intros_registry: dict[str, int] = {}
     for _c in sorted(claims, key=lambda x: x.id):
@@ -439,7 +439,7 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
         #
         # Three guards (audited against round-1 705-draft US corpus):
         #
-        #   1. Pattern A only — promoted heads come from
+        #   1. Pattern A only - promoted heads come from
         #      `extract_pattern_a_intros` (strict `a/an X` matches), NOT
         #      from `extract_bare_noun_intros` (comprising lists with
         #      gerund phrases like `collecting information`) or
@@ -449,14 +449,14 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
         #      where `information` was first introduced via the gerund
         #      `collecting information`, not via Pattern A).
         #
-        #   2. Multi-modifier ambiguity — if 2+ Pattern A intros share
+        #   2. Multi-modifier ambiguity - if 2+ Pattern A intros share
         #      the same last word (e.g., `first surface` + `second
         #      surface`), bare `surface` is statutorily ambiguous and
         #      MUST stay flagged. Preserves US7839645B2 c15 protect:true
         #      `the surface`.
         #
         #   3. Last-word floor of 4 chars + _SKIP_TERMS / _QUANTIFIER_STOPS
-        #      exclusion — prevents over-resolution on common short
+        #      exclusion - prevents over-resolution on common short
         #      ambiguous tokens (set/data/user/one/two).
         pattern_a_phrases: list[tuple[str, int]] = []
         for ancestor in chain:
@@ -490,7 +490,7 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
 
         # R40 (2026-05-04): leading-bigram registration with
         # participle-suffix gate. Phase A on the post-R36 corpus
-        # showed `aggregate metric` 75 wfp / 0 legit — parent intro
+        # showed `aggregate metric` 75 wfp / 0 legit - parent intro
         # `aggregate metric indicative` over-captures the trailing
         # `indicative` (an `-ive` participle) before hitting `of`
         # stop word. Bare reference `the aggregate metric` doesn't
@@ -556,7 +556,7 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                 raw_noun = f"{raw_noun} through {ext_m.group('head')}"
             # WS-A3 (2026-06-24, examiner-grounded): strip a trailing comparative
             # clause from the REFERENCE (`the first element other than …`, `the
-            # value greater than …`) — `than` is never a noun-phrase terminus.
+            # value greater than …`) - `than` is never a noun-phrase terminus.
             # Reference-side only (NOT in clean_noun_phrase) so it can't generalize
             # an intro and mask a real defect. FN-safe: 201 examiner-unconfirmed
             # corpus instances, 0 of 2,965 examiner-confirmed defects altered.
@@ -573,13 +573,13 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
             if term.lower() in _QUANTIFIER_STOPS:
                 continue
             # R38 (2026-07-23, reports #409/#414): cataphoric leading modifier
-            # ("the FOLLOWING steps:", "the FOLLOWING types") — a reference to the
+            # ("the FOLLOWING steps:", "the FOLLOWING types") - a reference to the
             # enumerated list that follows, not a missing antecedent.
             if term.split()[0].lower() in _CATAPHORIC_LEADING:
                 continue
             # R34 (2026-07-18, report #400): partitive pronoun. `the switched
             # one of the plurality of channels` heads on the PRONOUN `one`,
-            # not on an element — the element is whatever follows `of`, and it
+            # not on an element - the element is whatever follows `of`, and it
             # is checked independently by its own reference. The bare `the
             # one` case is already covered by `_QUANTIFIER_STOPS` above.
             #
@@ -587,27 +587,27 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
             # carries four confirmed §112(b) rejections whose term ends in a
             # singular `one` (`the respective one`, `the at least one`, `the
             # current one`, `the first one`). Every one of those modifiers is
-            # an ordinal/quantifier/deictic — NONE is a past participle. So
+            # an ordinal/quantifier/deictic - NONE is a past participle. So
             # the guard fires only for:
             #   * plural `ones`  (`the remaining ones`, `the different ones`)
             #   * singular `one` modified by a PAST PARTICIPLE (`the switched
-            #     one`, `the selected one`) — the participle names a selection
+            #     one`, `the selected one`) - the participle names a selection
             #     operation, which is unambiguously partitive.
             # Verified reachability: 0 of the 3,173 examiner-confirmed terms.
             if _is_partitive_pronoun_head(term) and (
                 _PARTITIVE_OF_TRAIL.match(claim_text_lower[m.end():])
             ):
                 continue
-            # Markush "the group consisting of A, B, C" — 'group' is the
+            # Markush "the group consisting of A, B, C" - 'group' is the
             # head of the Markush definition, not a missing antecedent.
             if term.lower() == "group" and _MARKUSH_GROUP_TRAIL.match(
                 claim_text_lower[m.end():]
             ):
                 continue
             # Primary: bidirectional word-boundary exact match.
-            # Fallback 1: ADR-095 Rule 3 analogue — number-agnostic key
+            # Fallback 1: ADR-095 Rule 3 analogue - number-agnostic key
             # match for plural-intro / singular-reference pairs.
-            # Fallback 2 (R42): multi-abbrev compound bridge — when the
+            # Fallback 2 (R42): multi-abbrev compound bridge - when the
             # reference is exactly N short uppercase-acronym words and
             # EVERY component is a registered abbreviation intro from
             # the chain (`MAC PDU` ref vs intros `MAC` + `PDU`), accept.
@@ -627,8 +627,8 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                     has_basis = True
 
             # Bare-noun introduction (R4, issues #71/#91/#92): a
-            # multi-word term first mentioned article-less — earlier in
-            # this claim, or in an ancestor — has antecedent basis by
+            # multi-word term first mentioned article-less - earlier in
+            # this claim, or in an ancestor - has antecedent basis by
             # implication (MPEP § 2173.05(e)). The intro-pattern
             # extractors only register quantified / framed intros, so
             # preamble terms and verb objects slip through.
@@ -669,7 +669,7 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                         # Quality threshold (#57): require Jaccard ≥ 2/3
                         # (≥2-of-3 token overlap), with a carveout admitting
                         # 0.5 ≤ score < 2/3 IFF stemming collapsed the
-                        # symmetric difference (stem_sym_diff < raw_sym_diff) —
+                        # symmetric difference (stem_sym_diff < raw_sym_diff) -
                         # pure morphological variants like protecting/protection
                         # or resister/resistor stay surfaced, while coincidental
                         # 2-of-4-token overlaps ("duty cycle threshold" ↔
@@ -712,7 +712,7 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                         # scan all-prior-claims registry for a cross-branch intro
                         # from an earlier-numbered claim. Promote when (a) no
                         # ancestor suggestion surfaced, OR (b) the cross-branch
-                        # candidate strictly outscores the ancestor pick — this
+                        # candidate strictly outscores the ancestor pick - this
                         # lets a Jaccard=1.0 cross-branch exact match override a
                         # loose ancestor-chain pairing (e.g. "duty cycle threshold"
                         # in c10 beats "current duty cycle" in c9 ancestor chain).
@@ -751,7 +751,7 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                                 # plus an exact-term-match check to render a
                                 # "term defined in claim N, not in dependency
                                 # chain" message instead of the generic
-                                # "Did you mean …?" DYM hint — the drafter
+                                # "Did you mean …?" DYM hint - the drafter
                                 # already knows the term; the real issue is the
                                 # dependency structure.
                                 suggested_match = {
@@ -759,11 +759,11 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                                     "claim_id": fb_cid,
                                     "cross_branch": True,
                                 }
-                        # Structural fingerprint (ADR-145) — surfaces walker
+                        # Structural fingerprint (ADR-145) - surfaces walker
                         # intro-pool + did-you-mean state. Counts + booleans
                         # only; no claim text, no noun content.
                         diagnostics = {
-                            "prefix": prefix,  # "the" or "said" — closed set
+                            "prefix": prefix,  # "the" or "said" - closed set
                             "term_charlen": len(term),
                             "intros_pool_size": len(intros_by_term),
                             "has_suggested_match": suggested_match is not None,
@@ -794,7 +794,7 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                         # claim? If so the introduction exists but in a
                         # shape the intro extractor missed (walker FP);
                         # if not, a genuine §112 gap. `ancestor_match_text`
-                        # stays in-process — the extractor windows it.
+                        # stays in-process - the extractor windows it.
                         anc_match_id, anc_match_text = first_ancestor_with_term(
                             chain, term
                         )
@@ -918,7 +918,7 @@ def _extract_head_noun(preamble_text: str) -> str | None:
     if m:
         text = text[:m.start()].strip()
 
-    # Take last meaningful word(s) — typically the head noun
+    # Take last meaningful word(s) - typically the head noun
     words = text.lower().split()
     if not words:
         return None
@@ -1110,7 +1110,7 @@ def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
 
         # §608.01(m) indefinite-article branch. Per MPEP 608.01(n)(III), a
         # dependent claim may introduce a new entity that incorporates its
-        # parent — in that case "A/An" is mandatory. Only flag when the dep
+        # parent - in that case "A/An" is mandatory. Only flag when the dep
         # head noun matches an immediate parent's head noun (i.e., same
         # entity, user typed the wrong article).
         if article.lower() in ("a", "an"):
@@ -1146,7 +1146,7 @@ def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
         ):
             continue
 
-        # No immediate parent matched — report against the first parent.
+        # No immediate parent matched - report against the first parent.
         p_noun, p_entity = parent_infos[0]
 
         if dep_entity != p_entity:
@@ -1189,7 +1189,7 @@ def check_preamble_consistency(claims: list[Claim]) -> list[CheckItem]:
         claims_str = ", ".join(str(i) for i in unclear_ids)
         results.append(CheckItem(
             status="verify",
-            message=f"{len(unclear_ids)} dependent claim(s) with an unrecognized preamble — couldn't verify preamble consistency (claims: {claims_str}).",
+            message=f"{len(unclear_ids)} dependent claim(s) with an unrecognized preamble - couldn't verify preamble consistency (claims: {claims_str}).",
             message_key="checks.preamble_parse_unclear",
             details=f"{len(unclear_ids)} claims",
             details_key="details.preambleParseUnclear",
@@ -1267,7 +1267,7 @@ def check_claim_transitions(claims: list[Claim]) -> list[CheckItem]:
                 # plurality of instructions that, when executed, cause the
                 # processor to:` (#213). The transition's role is to divide
                 # preamble from body, so it must appear BEFORE the first
-                # colon — scan only that span (avoids matching an incidental
+                # colon - scan only that span (avoids matching an incidental
                 # `having`/`including` inside the colon-introduced body).
                 pre_colon = claim.text.split(":", 1)[0]
                 has_transition = _TRANSITION_PHRASES.search(pre_colon)
@@ -1334,10 +1334,10 @@ _OMNIBUS_LANG = re.compile(
 def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
     """Detect special claim formats and emit actionable warnings.
 
-    Returns CheckItems only for detected formats — no PASS when nothing found.
+    Returns CheckItems only for detected formats - no PASS when nothing found.
 
     Checks:
-    1. Jepson claims — prior art concession warning (VERIFY)
+    1. Jepson claims - prior art concession warning (VERIFY)
     2. CRM claims missing "non-transitory" (AMEND)
     3. Markush groups with open transitional phrase (VERIFY)
     4. Omnibus claims (AMEND)
@@ -1345,12 +1345,12 @@ def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
     results: list[CheckItem] = []
 
     for claim in claims:
-        # 1. Jepson — independent only
+        # 1. Jepson - independent only
         if claim.independent and _JEPSON_SPECIAL.search(claim.text):
             results.append(CheckItem(
                 status="verify",
                 message=(
-                    f"Claim {claim.id} uses Jepson format — preamble elements "
+                    f"Claim {claim.id} uses Jepson format - preamble elements "
                     f"are treated as admitted prior art (MPEP § 2129)"
                 ),
                 message_key="claims.jepsonPriorArt",
@@ -1369,7 +1369,7 @@ def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
                 ),
             ))
 
-        # 2. CRM non-transitory — independent only
+        # 2. CRM non-transitory - independent only
         if claim.independent and _CRM_MEDIUM.search(claim.text):
             if not _NON_TRANSITORY.search(claim.text):
                 results.append(CheckItem(
@@ -1395,7 +1395,7 @@ def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
                     ),
                 ))
 
-        # 3. Markush — all claims
+        # 3. Markush - all claims
         markush_match = _MARKUSH_OPEN.search(claim.text)
         if markush_match:
             transition = markush_match.group(1)
@@ -1423,7 +1423,7 @@ def check_special_claim_formats(claims: list[Claim]) -> list[CheckItem]:
                 ),
             ))
 
-        # 4. Omnibus — all claims, requires short text + omnibus language
+        # 4. Omnibus - all claims, requires short text + omnibus language
         word_count = len(claim.text.split())
         omnibus_match = _OMNIBUS_LANG.search(claim.text)
         if word_count < 50 and omnibus_match:
@@ -1463,9 +1463,9 @@ def check_claim_punctuation(claims: list[Claim]) -> list[CheckItem]:
     """Check claim punctuation rules per MPEP § 608.01(m).
 
     Sub-checks:
-    1. Missing final period — every claim must end with a period
-    2. Extra periods — claims should not contain misplaced periods mid-claim
-    3. Wherein comma — 'wherein' clauses require correct comma placement
+    1. Missing final period - every claim must end with a period
+    2. Extra periods - claims should not contain misplaced periods mid-claim
+    3. Wherein comma - 'wherein' clauses require correct comma placement
 
     Emits individual AMEND/VERIFY per finding, or single PASS if all clean.
     """
@@ -1604,7 +1604,7 @@ def check_spec_support(
                 continue
 
             # R38 (2026-07-23, report #414): cataphoric leading modifier ("the
-            # following steps:") — a reference to the enumerated list, never a
+            # following steps:") - a reference to the enumerated list, never a
             # written-description-bearing element (mirror of the antecedent-side
             # guard). FN-safe: `following` is never the leading word of a real
             # element name.
@@ -1677,9 +1677,9 @@ def attach_cross_references(
     frontend can render a hint line:
 
     - ``cross_ref="spec_support"`` on antecedent findings → "Also flagged
-      for spec support — see § 112(a) card."
+      for spec support - see § 112(a) card."
     - ``cross_ref="antecedent"`` on spec-support findings → "Also flagged
-      for antecedent basis — see § 112(b) card."
+      for antecedent basis - see § 112(b) card."
 
     Mutates both lists in place. Comparison is case-insensitive on the
     bare term.

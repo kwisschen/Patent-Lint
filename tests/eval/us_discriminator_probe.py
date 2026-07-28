@@ -1,12 +1,12 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# us_discriminator_probe.py — WS-A4 (ADR-159 Path-to-80). The decisive FREE
+# us_discriminator_probe.py - WS-A4 (ADR-159 Path-to-80). The decisive FREE
 # experiment for the confidence DISCRIMINATOR: can ANY deterministic,
 # runtime-available feature set separate a benign antecedent reference from a
 # REAL §112 defect, using AUTHORITATIVE examiner labels (not the LLM gold)?
 #
-# Why this matters: PatentLint runtime is AI-free (ADR-158 — LLM at dev-time,
+# Why this matters: PatentLint runtime is AI-free (ADR-158 - LLM at dev-time,
 # distilled to deterministic Python). So the discriminator MUST be deterministic
 # runtime features. The recal-ceiling probe (LLM gold, 7 string features) and the
 # confidence-layer probe (full production confidence_score) both came out ≈ base
@@ -17,12 +17,12 @@
 # Label: positive = examiner-confirmed real defect (us_examiner_legit.json,
 #        term-level join, version-robust per WS-A3). negative = walker finding on
 #        an examiner-reviewed app the examiner did NOT flag (benign signal; PU
-#        caveat — examiner-absence != benign, so the negatives are noisy, which
+#        caveat - examiner-absence != benign, so the negatives are noisy, which
 #        only makes a real signal HARDER to hide: if features can't separate the
 #        clean positive subset from the rest, they carry no usable signal).
 # Restricted to OCR-surviving findings (a term OCR destroyed can't be matched).
 #
-# DATA: /tmp/odp_examiner_claims.json (EdgeXpert claims dump — see
+# DATA: /tmp/odp_examiner_claims.json (EdgeXpert claims dump - see
 #       ws_a3_examiner_join.py header to regenerate from the PA venv).
 #
 #   python3 tests/eval/us_discriminator_probe.py [--limit N]
@@ -76,7 +76,7 @@ def features(f: dict, claim_text: str) -> list:
     diag = f.get("diagnostics") or {}
     ct = claim_text.lower()
     # Does the head noun appear adjacent to a reference numeral (patent element
-    # identity signal — real elements get reference numbers; abstract refs don't)?
+    # identity signal - real elements get reference numbers; abstract refs don't)?
     head_refnum = 1 if head and re.search(
         re.escape(head) + r"\s+\(?\d{1,4}\)?\b", ct
     ) else 0

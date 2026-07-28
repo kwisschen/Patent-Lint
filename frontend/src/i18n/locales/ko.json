@@ -55,7 +55,7 @@
     "claimCategories": "청구항 유형",
     "method": "방법",
     "apparatus": "장치",
-    "outsideRange": "50–150 범위 밖",
+    "outsideRange": "50-150 범위 밖",
     "outsideRangeCn": "300자 초과",
     "outsideRangeTw": "250자 초과",
     "noParagraphs": "단락 번호 없음",
@@ -176,7 +176,7 @@
   },
   "footer": {
     "disclaimer": "본 보고서는 법률 자문에 해당하지 않습니다",
-    "builtBy": "© 2025–2026 Christopher Chen",
+    "builtBy": "© 2025-2026 Christopher Chen",
     "security": "보안",
     "about": "소개",
     "commercial": "기업 도입",
@@ -522,7 +522,7 @@
         "claimPeriods": "청구항 마침표 확인",
         "claimDependencies": "청구항 종속 관계 검증",
         "claimSequentiality": "청구항 번호 순차 확인",
-        "abstractWordCount": "요약서 단어 수 (50–150)",
+        "abstractWordCount": "요약서 단어 수 (50-150)",
         "abstractStructure": "요약서 단일 단락 및 유효한 결미",
         "figureSequential": "도면 번호 순차 확인",
         "singleFigure": "단일 도면 표기 (“The Figure”)",
@@ -808,7 +808,7 @@
     "restrictiveWordingSpec": "단락: {{list}}. 위 용어는 MPEP § 2173.05(b)에 따라 불명확하거나 범위를 제한하는 것으로 취급될 수 있습니다. 각 표시된 단락을 검토하여 해당 용어가 부당하게 범위를 제한하거나 불명확성을 초래하는지 확인하세요.",
     "paragraphNumberingMissing": "MPEP § 608.01(p)에 따라 [0001] 형식의 순차적 단락 번호를 추가하세요.",
     "paragraphEnding": "단락: {{list}}. MPEP § 608.01(p)에 따라 명세서의 각 단락은 마침표로 끝나야 합니다.",
-    "sequenceListingFix": "37 C.F.R. § 1.821–1.825에 따라 “Statement Regarding Sequence Listing” 섹션을 추가하세요.",
+    "sequenceListingFix": "37 C.F.R. § 1.821-1.825에 따라 “Statement Regarding Sequence Listing” 섹션을 추가하세요.",
     "crossReferenceCitations": "{{text}}. 출원번호가 정확하고 우선권 체인(계속출원, CIP, 가출원, 분할출원)이 완전한지 확인하세요.",
     "priorArtCitations": "{{text}}. 특허/공개번호가 정확한지 확인하세요. 선행 기술에 대한 기술(記述)은 심사 중 자인으로 취급될 수 있습니다.",
     "optionalSectionGuidance": "출원에 해당하는 경우 이 섹션을 포함하세요.",
@@ -958,7 +958,7 @@
     "titleMissing": "MPEP § 606 에 따라 모든 특허 출원은 발명의 명칭을 포함해야 합니다. 명세서 첫 부분에 명칭을 추가하세요.",
     "titleLength": "MPEP § 606 에 따라 발명의 명칭은 500자를 초과할 수 없습니다 (실제 {{count}}자). 명칭을 줄이세요.",
     "titleContent": "MPEP § 608.01 에 따라 발명의 명칭에 상표나 모델 번호를 포함할 수 없습니다. 해당 내용을 제거하세요.",
-    "titleWordCount": "MPEP § 606 에 따라 발명의 명칭은 간결하고 구체적이어야 합니다 (실제 {{count}}단어; 보통 2–7 단어). 축약을 고려하세요.",
+    "titleWordCount": "MPEP § 606 에 따라 발명의 명칭은 간결하고 구체적이어야 합니다 (실제 {{count}}단어; 보통 2-7 단어). 축약을 고려하세요.",
     "epc": {
       "orphanedBriefFigures": "도면: {{list}}. 「Detailed Description」에 해당 도면에 대한 참조를 추가하거나, 「Brief Description of Drawings」에서 제거하십시오(EPC 관용어).",
       "orphanedDetailedFigures": "도면: {{list}}. 「Brief Description of Drawings」에 해당 도면의 설명을 추가하거나, 「Detailed Description」에서 참조를 제거하십시오(EPC 관용어).",
@@ -1105,8 +1105,8 @@
         "pass": "요약서에서 암시적 문구가 발견되지 않았습니다."
       },
       "wordCount": {
-        "amend": "요약서 단어 수가 50–150 범위를 벗어납니다(MPEP § 608.01(b)).",
-        "pass": "요약서 단어 수가 50–150 범위 이내입니다."
+        "amend": "요약서 단어 수가 50-150 범위를 벗어납니다(MPEP § 608.01(b)).",
+        "pass": "요약서 단어 수가 50-150 범위 이내입니다."
       }
     },
     "drawings": {
@@ -1281,7 +1281,7 @@
         "wordCount": {
           "amend": "요약은 {{count}}단어로, Guidelines F-II § 2.3의 상한 150단어를 초과합니다.",
           "verify": "요약은 {{count}}단어로, Guidelines F-II § 2.3의 하한 50단어에 미달합니다.",
-          "pass": "요약 단어 수 관련 사항이 감지되지 않았습니다(Rule 47(2) EPC; 50–150단어)."
+          "pass": "요약 단어 수 관련 사항이 감지되지 않았습니다(Rule 47(2) EPC; 50-150단어)."
         }
       },
       "drawings": {
@@ -1461,7 +1461,7 @@
           "pass": "도면 {{count}}개가 검출되었습니다."
         },
         "figuresSequential": {
-          "pass": "도 1–{{found_max}}이(가) 순차적으로 번호 매겨져 있습니다.",
+          "pass": "도 1-{{found_max}}이(가) 순차적으로 번호 매겨져 있습니다.",
           "passNone": "도면이 검출되지 않았습니다.",
           "amend": "도면 번호가 순차적이지 않습니다. 누락: {{figure_list}}."
         },
@@ -1669,7 +1669,7 @@
           "pass": "도면 {{count}}개가 검출되었습니다."
         },
         "figuresSequential": {
-          "pass": "도 1–{{found_max}}이(가) 순차적으로 번호 매겨져 있습니다.",
+          "pass": "도 1-{{found_max}}이(가) 순차적으로 번호 매겨져 있습니다.",
           "passNone": "도면이 검출되지 않았습니다.",
           "amend": "도면 번호가 순차적이지 않습니다. 누락: {{figure_list}}."
         }
@@ -1923,7 +1923,7 @@
       "p1": "귀하는 다음 각 호에서 비롯되거나 관련된 청구, 손해, 손실, 책임, 비용 또는 경비(합리적인 변호사 보수를 포함합니다)에 대하여 Christopher Chen을 방어하고 면책하며 그에게 손해를 가하지 않을 것에 동의합니다: (가) 등록 변리사의 독립적 검증 없이 PatentLint의 출력을 이용한 행위; (나) 본 약관 또는 적용 법률(USPTO 37 CFR § 11 또는 귀하의 법역에 적용되는 동등한 직업윤리 규정을 포함하되 이에 한정되지 않습니다)의 위반; (다) 제3자의 지식재산권 기타 권리의 침해; 또는 (라) 귀하가 업로드 권한을 보유하지 않은 문서와 관련한 본 사이트 또는 본 소프트웨어의 이용.",
       "p2": "Christopher Chen은 본래 귀하에 의하여 면책되어야 할 사안에 대하여 독점적 방어 및 통제를 인수할 권리를 유보하며, 그 경우 귀하는 이용 가능한 방어 수단의 행사에 전적으로 협력합니다."
     },
-    "copyright": "Copyright © 2025–2026 Christopher Chen. All rights reserved.",
+    "copyright": "Copyright © 2025-2026 Christopher Chen. All rights reserved.",
     "crossLinks": "함께 참조: <1>개인정보 처리방침</1> · <3>보안</3>"
   },
   "privacy": {
@@ -2019,7 +2019,7 @@
       "name": "Christopher Chen",
       "emailLabel": "이메일:"
     },
-    "copyright": "Copyright © 2025–2026 Christopher Chen. All rights reserved.",
+    "copyright": "Copyright © 2025-2026 Christopher Chen. All rights reserved.",
     "crossLinks": "함께 참조: <1>이용약관</1> · <3>보안</3>"
   },
   "rubric": {

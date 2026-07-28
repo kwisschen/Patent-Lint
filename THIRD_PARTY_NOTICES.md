@@ -7,7 +7,7 @@ used under the terms of its own license; inclusion in this list does not
 imply endorsement by the original authors.
 
 Development-only dependencies (test runners, linters, build tools) are
-not listed here — they are not shipped with PatentLint to end users.
+not listed here - they are not shipped with PatentLint to end users.
 
 ## Python runtime dependencies
 

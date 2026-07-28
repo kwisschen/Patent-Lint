@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Scaffolding-stage assertions for the EPC pipeline.
 
 These tests do NOT exercise any real EPC check logic. They lock in that the
@@ -9,7 +9,7 @@ and that the empty-stub pipeline returns a well-formed ``AnalysisResult`` /
 sections, no findings) the moment the picker offers EPC.
 
 When real EPC checks ship per the implementation plan, these tests stay as
-the regression gate — every G-group commit should leave them passing.
+the regression gate - every G-group commit should leave them passing.
 """
 
 from __future__ import annotations
@@ -77,7 +77,7 @@ def test_epc_pipeline_attaches_rubric_grade():
     """EPC pipeline must attach a rubric_grade (Bug #1 regression).
 
     Pre-fix, _run_epc_pipeline created AnalysisResult without calling
-    _attach_rubric_grade — so the hero dashed out (no letter, no score)
+    _attach_rubric_grade - so the hero dashed out (no letter, no score)
     even on a draft with complete sections.
     """
     result = _run_epc_pipeline("any english text")

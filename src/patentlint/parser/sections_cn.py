@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""CN patent .docx section extraction — 五書模板 format."""
+# Copyright (c) 2025-2026 Christopher Chen
+"""CN patent .docx section extraction - 五書模板 format."""
 
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ from patentlint.parser.language import (
 )
 
 # ---------------------------------------------------------------------------
-# Header matching patterns — match Word section header text to document parts
+# Header matching patterns - match Word section header text to document parts
 # ---------------------------------------------------------------------------
 
 _HEADER_SPEC = re.compile(r"说明书(?!摘要|附图)")
@@ -31,14 +31,14 @@ _HEADER_SPEC = re.compile(r"说明书(?!摘要|附图)")
 # HEADER field (a clean section name, never claim body text), so admitting
 # the optional 书 here cannot mis-fire on an embedded `如权利要求1所述`
 # body reference. Root-causes #257 (requiredSections), #259 (title), #260
-# (claimReference — claims boundary was mislocated when the header missed).
+# (claimReference - claims boundary was mislocated when the header missed).
 _HEADER_CLAIMS = re.compile(r"权利要求书?")
 _HEADER_ABSTRACT = re.compile(r"说明书摘要|摘要(?!附图)")
 _HEADER_ABSTRACT_DRAWING = re.compile(r"摘要附图")
 _HEADER_DRAWINGS = re.compile(r"说明书附图")
 
 # ---------------------------------------------------------------------------
-# Spec sub-section header patterns — matched against body paragraph text
+# Spec sub-section header patterns - matched against body paragraph text
 # ---------------------------------------------------------------------------
 
 _SPEC_SUBSECTIONS = [
@@ -58,13 +58,13 @@ _SPEC_SUBSECTIONS = [
 ]
 
 # ---------------------------------------------------------------------------
-# Paragraph numbering detection — user-added numbering in CN .docx is an error
+# Paragraph numbering detection - user-added numbering in CN .docx is an error
 # ---------------------------------------------------------------------------
 
 _PARA_NUM_PATTERN = re.compile(r"^\[(\d{4})\]")
 
 # ---------------------------------------------------------------------------
-# INID cover-page markers — CNIPA publication exports (Google Patents .docx
+# INID cover-page markers - CNIPA publication exports (Google Patents .docx
 # downloads, official publication copies) embed the title at (54)发明名称
 # and the abstract at (57)摘要 on the INID cover page. Drafter-authoring
 # files (五书模板) have no INID cover. Used as a fallback when the
@@ -76,7 +76,7 @@ _INID_ABSTRACT_RE = re.compile(r"^\(57\)\s*摘要\s*$")
 _INID_CODE_RE = re.compile(r"^\(\d{2}\)")
 
 # ---------------------------------------------------------------------------
-# Body-anchor patterns — Phase 8c Tier 1 (ADR-109)
+# Body-anchor patterns - Phase 8c Tier 1 (ADR-109)
 # ---------------------------------------------------------------------------
 # Real CNIPA .docx downloads carry 五书 section titles as standalone body
 # paragraphs, not in Word page headers. Examples seen in the 10-fixture
@@ -99,7 +99,7 @@ _BA_ABSTRACT_RE = re.compile(r"^(?:说明书摘要|摘要)(?:\d+/\d+页)?$")
 _BA_ABSTRACT_DRAWING_RE = re.compile(r"^(?:说明书)?摘要附图(?:\d+/\d+页)?$")
 _BA_DRAWINGS_RE = re.compile(r"^(?:说明书)?附图(?:\d+/\d+页)?$")
 
-# Doc-page structural token guard — never treat these short fragments as
+# Doc-page structural token guard - never treat these short fragments as
 # section anchors even if their compact form happens to prefix-match a
 # 五书 name. (The XML <doc-page> content model is handled by xml_loader;
 # this guard is defensive for any docx that happens to embed such text.)
@@ -120,7 +120,7 @@ def _classify_body_anchor(text: str) -> str | None:
     compact = _compact(text)
     if not compact:
         return None
-    # Order matters — more-specific patterns before their superstrings.
+    # Order matters - more-specific patterns before their superstrings.
     if _BA_ABSTRACT_DRAWING_RE.match(compact):
         return "abstract_drawing"
     if _BA_ABSTRACT_RE.match(compact):
@@ -134,7 +134,7 @@ def _classify_body_anchor(text: str) -> str | None:
     return None
 
 
-# Claim-density tier — a contiguous run of paragraphs matching the CN
+# Claim-density tier - a contiguous run of paragraphs matching the CN
 # claim-start pattern (typed prefix OR w:numPr-backfilled) is likely the
 # claims section. Minimum density is 3 consecutive matches.
 _CLAIM_START_RE = re.compile(r"^\s*\d+\s*[.．。、]")
@@ -188,7 +188,7 @@ def _merge_publication_continuations(paragraphs: list[str]) -> list[str]:
     Gated on the presence of ``[NNNN]`` numbering: if no numbered
     paragraphs are found, the input is returned unchanged (drafter
     case). Orphan paragraphs before the first numbered paragraph are
-    preserved as-is — they may be sub-section headers or pre-content
+    preserved as-is - they may be sub-section headers or pre-content
     prose that the subsection splitter will handle.
     """
     if not any(_PARA_NUM_PATTERN.match(p) for p in paragraphs):
@@ -234,14 +234,14 @@ def _split_spec_subsections(
 
     Returns ``(subsections, section_order)``:
 
-    * ``subsections`` — dict with keys: technical_field, background, summary,
+    * ``subsections`` - dict with keys: technical_field, background, summary,
       drawings_description, detailed_description. Each value is a list of
       paragraph strings (excluding the header line itself).
-    * ``section_order`` — list of field-name keys in the order each header
+    * ``section_order`` - list of field-name keys in the order each header
       was first encountered in the document. First-occurrence only; repeated
       headers do not re-append. Feeds ``check_section_ordering``.
 
-    Publication-format continuation merge runs first (Phase 9 #69) —
+    Publication-format continuation merge runs first (Phase 9 #69) -
     orphan paragraphs from PDF-column fragmentation fold into their
     preceding ``[NNNN]`` paragraph before subsection classification.
     """
@@ -302,7 +302,7 @@ def _extract_inid_title_abstract(
     ``(57)摘要`` and runs until the next body anchor (权利要求书,
     说明书, 摘要附图, or another INID code line). Drafter-authoring
     五书模板 files have no INID cover, so this returns ``("", [])``
-    for those — the primary body-anchor / page-header path owns that
+    for those - the primary body-anchor / page-header path owns that
     case.
 
     Used only when the primary tiers leave title or abstract empty.
@@ -418,7 +418,7 @@ def classify_document_cn(paragraphs: list[str]) -> DetectionResult:
         return (False, DetectionReason.CROSS_SCRIPT_KOREAN)
 
     # --- Layer 2: TW 【】 section headers mean this isn't a CN draft ---
-    # Not a cross-script issue — both are zh, just different jurisdictions.
+    # Not a cross-script issue - both are zh, just different jurisdictions.
     # Banner copy ("does not match CN spec patterns") is truthful.
     if _TW_BRACKET_HEADER_RE.search(full_text):
         return (False, DetectionReason.CONTENT_MISSING)
@@ -451,7 +451,7 @@ def detect_patent_document_cn(paragraphs: list[str]) -> bool:
 def _collect_by_page_header(
     sections: list[DocxSection],
 ) -> tuple[list[str], list[str], list[str], list[bool]]:
-    """Drafter-authoring tier — classify Word sections by page-header text.
+    """Drafter-authoring tier - classify Word sections by page-header text.
 
     This is the tier the CNIPA 五书模板 (drafter-authoring template)
     exercises: the template is a single .docx with 5 Word sections whose
@@ -463,7 +463,7 @@ def _collect_by_page_header(
     publication exports (which carry page-less body anchors instead of
     true Word page headers), so the page-header tier rarely fired in
     corpus dogfood. The naming was reverse-calibrated against a publication
-    corpus; the authoring reality is the opposite — page-header is the
+    corpus; the authoring reality is the opposite - page-header is the
     primary drafter tier, body-anchor is the publication-recovery tier.
 
     Returns (spec_paragraphs, claims_paragraphs, abstract_paragraphs,
@@ -490,7 +490,7 @@ def _collect_by_page_header(
 def _collect_by_body_anchor(
     sections: list[DocxSection],
 ) -> tuple[list[str], list[str], list[str], list[bool], int]:
-    """Publication-recovery tier — walk flat paragraphs, classify by body anchors.
+    """Publication-recovery tier - walk flat paragraphs, classify by body anchors.
 
     Fires on Google-Patents-downloaded CNIPA publication exports where
     the 五书 part delimiters sit as standalone body paragraphs (often
@@ -528,7 +528,7 @@ def _collect_by_body_anchor(
     for para, has_numpr in zip(flat_paras, flat_numpr, strict=True):
         anchor = _classify_body_anchor(para)
         # Spec sub-section headers (技术领域 etc.) are an implicit
-        # spec anchor — they only appear inside the specification.
+        # spec anchor - they only appear inside the specification.
         sub_match = False
         for _, pat in _SPEC_SUBSECTIONS:
             if pat.match(para):
@@ -560,7 +560,7 @@ def _collect_by_body_anchor(
             # It also counts as an implicit "specification" anchor for
             # the ≥2-distinct-anchors promotion gate (real CNIPA
             # downloads have a 权利要求书 heading but no standalone
-            # 说明书 heading — the spec is identified by its sub-sections).
+            # 说明书 heading - the spec is identified by its sub-sections).
             if "specification" not in seen_anchors:
                 seen_anchors.add("specification")
                 anchor_count += 1
@@ -580,7 +580,7 @@ def _collect_by_body_anchor(
 def _collect_by_claim_density(
     sections: list[DocxSection],
 ) -> tuple[list[str], list[bool]]:
-    """Tier 3 — find the densest contiguous run of claim-start paragraphs.
+    """Tier 3 - find the densest contiguous run of claim-start paragraphs.
 
     Only returns the claims span; spec/abstract detection requires a
     structural anchor and is not recoverable from pure density.
@@ -603,7 +603,7 @@ def _collect_by_claim_density(
         # w:numPr auto-numbering.
         if _CLAIM_START_RE.match(flat_paras[i]) or flat_numpr[i]:
             j = i
-            # Extend run — include continuation (non-claim-start) paragraphs
+            # Extend run - include continuation (non-claim-start) paragraphs
             # between claim starts, but the run is bounded by the last
             # claim-start + 1 (we don't know where it ends without an anchor).
             last_claim_start = i
@@ -648,7 +648,7 @@ def _presplit_mid_paragraph(
     single continuation paragraph and its counter fails to increment;
     subsequent numPr claims then get mis-numbered.
 
-    Reuses ``_MID_PARAGRAPH_CLAIM_BOUNDARY`` from ``claims_cn`` — same
+    Reuses ``_MID_PARAGRAPH_CLAIM_BOUNDARY`` from ``claims_cn`` - same
     regex that R20 (``574e850``) applied at parse time. Running it here
     lets the backfill counter reset via the existing typed-prefix
     branch on the second chunk.
@@ -678,7 +678,7 @@ def _backfill_numpr_prefixes(paragraphs: list[str], numpr_flags: list[bool]) -> 
     lack a typed prefix.
 
     Mirrors ``load_docx_tw``'s behavior (ADR-109). The counter is
-    incremented for each claim start observed — either a typed-prefix
+    incremented for each claim start observed - either a typed-prefix
     paragraph or a numPr paragraph. Continuation paragraphs (no typed
     prefix, no numPr) are left untouched so the downstream claim parser
     attaches them to the preceding claim.
@@ -705,7 +705,7 @@ def _backfill_numpr_prefixes(paragraphs: list[str], numpr_flags: list[bool]) -> 
 def extract_cn_sections_from_docx(sections: list[DocxSection]) -> CnPatentDocument:
     """Extract CN patent document structure from Word sections.
 
-    Phase 8c (ADR-109) — three-tier section-ID fallback chain. The tier
+    Phase 8c (ADR-109) - three-tier section-ID fallback chain. The tier
     ordering (body_anchor tried first, page_header only if body_anchor
     fails) was reverse-calibrated against the 10-fixture Google-Patents-
     publication corpus and is NOT the authoring-format order. Verified
@@ -716,15 +716,15 @@ def extract_cn_sections_from_docx(sections: list[DocxSection]) -> CnPatentDocume
     only if a user-demand signal shows drafter-authoring files fail to
     parse due to spurious body-anchor matches (not observed to date).
 
-    1. **Tier 1 body_anchor** — flatten paragraphs across Word sections
+    1. **Tier 1 body_anchor** - flatten paragraphs across Word sections
        and classify by standalone 五书 markers (权利要求书, 说明书, etc.).
        Fires for Google-Patents-downloaded publication exports where the
        五书 titles appear as body paragraphs (often with ``N/M 页``
        pagination suffixes).
-    2. **Tier 2 claim_density** — if no structural anchor is found, scan
+    2. **Tier 2 claim_density** - if no structural anchor is found, scan
        for runs of ≥3 consecutive claim-start paragraphs. Recovers the
        claims span when body anchors have been stripped.
-    3. **Tier 3 page_header** — Word-page-header mapping. Fires for
+    3. **Tier 3 page_header** - Word-page-header mapping. Fires for
        CNIPA 五书模板 drafter-authoring files where the five parts are
        delimited by Word section page headers (the ``说明书摘要`` /
        ``摘要附图`` / ``权利要求书`` / ``说明书`` / ``说明书附图`` headers
@@ -767,7 +767,7 @@ def extract_cn_sections_from_docx(sections: list[DocxSection]) -> CnPatentDocume
         if ba_abstract:
             strategies["abstract"] = "body_anchor"
     elif ph_claims or ph_spec:
-        # Page-header branch — fires for 五书模板 Word exports where
+        # Page-header branch - fires for 五书模板 Word exports where
         # section titles live in page headers.
         spec_paragraphs = ph_spec
         claims_paragraphs = ph_claims
@@ -780,7 +780,7 @@ def extract_cn_sections_from_docx(sections: list[DocxSection]) -> CnPatentDocume
         if ph_abstract:
             strategies["abstract"] = "page_header"
     else:
-        # Tier 3 — claim-density heuristic recovers claims only.
+        # Tier 3 - claim-density heuristic recovers claims only.
         cd_claims, cd_numpr = _collect_by_claim_density(sections)
         if cd_claims:
             spec_paragraphs = ba_spec  # best-effort (may be empty)
@@ -829,7 +829,7 @@ def extract_cn_sections_from_docx(sections: list[DocxSection]) -> CnPatentDocume
     abstract_text = "\n".join(abstract_paragraphs).strip()
 
     # INID cover-page fallback (publication docs). Fires only when the
-    # primary tiers left title or abstract empty — drafter files never
+    # primary tiers left title or abstract empty - drafter files never
     # have an INID cover, so this is a no-op for them.
     if not title or not abstract_text:
         inid_title, inid_abstract = _extract_inid_title_abstract(sections)

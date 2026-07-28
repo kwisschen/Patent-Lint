@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Cluster-discovery tool for Phase 3 walker recall mining.
 
 Reads a `phase2b_results*.json` ensemble-verdict file, extracts every
@@ -8,10 +8,10 @@ the chain) or `walker_fp` (walker over-emitted), groups them by
 SIGNATURE (term-tail, term-prefix, structural shape, jurisdiction),
 and ranks clusters by:
 
-  - safe-silence ratio (wfp / (wfp + legit)) — clusters with high
+  - safe-silence ratio (wfp / (wfp + legit)) - clusters with high
     walker_fp + zero legit are safe to silence via narrow walker
-    guards (the methodology that drove R32–R48 commits)
-  - recall yield (coverage_gap count) — clusters where the walker
+    guards (the methodology that drove R32-R48 commits)
+  - recall yield (coverage_gap count) - clusters where the walker
     missed intros are mining targets for Phase 3 (extending intro
     extractors to recognize the missed pattern)
 
@@ -39,7 +39,7 @@ PATENTLINT_ROOT = Path("/Users/chrischen/Documents/Projects/Patent-Lint")
 sys.path.insert(0, str(PATENTLINT_ROOT / "src"))
 
 # Re-use the calibration tool's join logic (re-runs walker, joins by
-# (patent_id, claim_id, term)). This script is a sibling — adds cluster
+# (patent_id, claim_id, term)). This script is a sibling - adds cluster
 # signature extraction + ranking on top.
 from .phase2b_judging import (  # noqa: E402
     CORPUS_PARQUET_DIR,
@@ -48,7 +48,7 @@ from .phase2b_judging import (  # noqa: E402
 )
 
 
-# Cluster signatures — each finding is mapped to a tuple of signature
+# Cluster signatures - each finding is mapped to a tuple of signature
 # strings; clustering aggregates over these.
 def _term_tail_3(term: str) -> str:
     """Trailing 3 chars (CJK) or 3 token suffix (Latin)."""
@@ -159,7 +159,7 @@ def discover(verdicts_path: Path, top_n: int) -> dict:
             #   coverage_gap → CURRENT walker still missing the intro
             #     (whether or not the same term is emitted); always include.
             #   legit/ambig/diag_misattr + iss is None → walker silenced;
-            #     informational, not a mining target — skip.
+            #     informational, not a mining target - skip.
             #   legit/ambig/diag_misattr + iss not None → still emits;
             #     include for completeness baseline.
             if cat in ("walker_fp", "legit_drafting_error", "ambig",
@@ -167,7 +167,7 @@ def discover(verdicts_path: Path, top_n: int) -> dict:
                 if iss is None:
                     continue
 
-            # Three signature granularities for clustering — each finding
+            # Three signature granularities for clustering - each finding
             # contributes to all three.
             sigs = [
                 ("TAIL", juris, _term_tail_3(term)),
@@ -241,7 +241,7 @@ def render_report(result: dict) -> str:
         f"- Drafts with walker output: {result['drafts_with_walker_data']}\n"
     )
 
-    # Executive summary — quick view for triage
+    # Executive summary - quick view for triage
     safe_silence = result.get("safe_silence_clusters", [])
     recall_mining = result.get("recall_mining_clusters", [])
     total_safe_wfp = sum(c["walker_fp"] for c in safe_silence)
@@ -249,12 +249,12 @@ def render_report(result: dict) -> str:
     lines.append("\n## Executive summary\n")
     lines.append(
         f"- **{len(safe_silence)} safe-silence clusters** "
-        f"(≥10 wfp, 0 legit) — total {total_safe_wfp} walker_fp findings "
+        f"(≥10 wfp, 0 legit) - total {total_safe_wfp} walker_fp findings "
         f"that could be silenced without risk to legits"
     )
     lines.append(
         f"- **{len(recall_mining)} recall-mining clusters** "
-        f"(≥5 coverage_gap) — total {total_recall_coverage} coverage_gap "
+        f"(≥5 coverage_gap) - total {total_recall_coverage} coverage_gap "
         f"findings where walker missed a Pattern A/B variant"
     )
     if safe_silence:
@@ -275,7 +275,7 @@ def render_report(result: dict) -> str:
     lines.append("\n## Safe-silence targets (≥10 wfp, 0 legit)\n")
     lines.append(
         "Clusters where the walker over-emits with no risk to legit "
-        "findings. Methodology that drove R32–R48 commits.\n"
+        "findings. Methodology that drove R32-R48 commits.\n"
     )
     lines.append(
         "| sig_kind | juris | signature | wfp | legit | coverage | ambig |"

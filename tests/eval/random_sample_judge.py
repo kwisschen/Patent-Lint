@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Random uniform-sample judging for apples-to-apples corpus precision.
 
 Phase 2b's `phase2b_judging.py` samples weighted by walker-finding count
-(picks heavy-FP drafts preferentially) — useful for cluster discovery
+(picks heavy-FP drafts preferentially) - useful for cluster discovery
 but produces worst-case precision numbers. This script samples uniformly
 at random to match the CLAUDE.md baseline measurement methodology.
 

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Cross-family LLM ensemble for PatentLint triage + Step 0 calibration.
 
 Runs Haiku 4.5 + gpt-5-mini in parallel on a finding's diagnostic payload;
@@ -69,34 +69,34 @@ SYSTEM_PROMPT_ANTECEDENT = """You are triaging a finding from PatentLint's antec
 
 The walker fired because it believes the term, in its CONSTRUCTED reference form, lacks a proper prior INTRODUCTION in the same or ancestor claim. You must classify the finding into exactly one category based ONLY on the ~30-char vicinity context the diagnostic payload provides.
 
-CRITICAL — Chinese/CJK antecedent grammar:
+CRITICAL - Chinese/CJK antecedent grammar:
 
 INTRODUCING forms (the FIRST appearance of a noun; satisfies §112(b) / TW 專利法 §26 / CN 专利法 §26):
 - `一<noun>` / `一個<noun>` / `一種<noun>` / `多個<noun>` (CN+TW)  ← classic indefinite-article introducer
-- `<noun>` standing alone at the very start of claim 1's preamble (no determiner — bare-noun introduction)
+- `<noun>` standing alone at the very start of claim 1's preamble (no determiner - bare-noun introduction)
 - Coordination introductions: `具有X和Y` / `具有X以及Y` / `包括X、Y` (the head noun plus listed members; the LISTED member is introduced)
 
 REFERENCE forms (back-pointers to a prior introduction; do NOT introduce):
 - CN: `所述<noun>`, `該<noun>`
 - TW: `該<noun>`, `前述<noun>`, `所述<noun>` (rarer)
-- These imply "the aforementioned <noun>." If you see `所述X` in context_before, that indicates THE WALKER'S WHOLE FLAG IS the reference — it does NOT mean X was introduced. X must have been introduced ELSEWHERE (earlier in this claim, or in an ancestor claim) for the reference to be valid.
+- These imply "the aforementioned <noun>." If you see `所述X` in context_before, that indicates THE WALKER'S WHOLE FLAG IS the reference - it does NOT mean X was introduced. X must have been introduced ELSEWHERE (earlier in this claim, or in an ancestor claim) for the reference to be valid.
 
-The walker's `reference_form` field is what the walker constructed as the canonical "this is the reference shape" — usually `所述<term>` or `該<term>` or `前述<term>`. Seeing this same shape in context_before means you're looking at the reference itself, not a fresh introduction.
+The walker's `reference_form` field is what the walker constructed as the canonical "this is the reference shape" - usually `所述<term>` or `該<term>` or `前述<term>`. Seeing this same shape in context_before means you're looking at the reference itself, not a fresh introduction.
 
 Categories (pick exactly one):
 
 - walker_fp: Walker is wrong. Strong signals:
-  (a) `context_before` shows an INTRODUCING form (一<noun>/一個<noun>/coordination-introduced) of the term within the visible window — drafter DID introduce it, walker missed.
+  (a) `context_before` shows an INTRODUCING form (一<noun>/一個<noun>/coordination-introduced) of the term within the visible window - drafter DID introduce it, walker missed.
   (b) compound-noun mis-tokenization: walker's term is a fragment of a larger noun phrase that, taken whole, IS introduced.
-  (c) `reference_form` mismatch with surface text: walker emits `該X` but the surface clearly shows `一X` or bare `X` — walker tokenized wrong.
+  (c) `reference_form` mismatch with surface text: walker emits `該X` but the surface clearly shows `一X` or bare `X` - walker tokenized wrong.
 
-- coverage_gap: Walker correctly notes "no obvious antecedent in my pattern set" but the term IS introduced somewhere via a pattern the walker doesn't recognize (synonym, V-之-Y construction, conjunction-split intro `X和Y`, mathematical-symbol cross-reference). Walker capability gap, not drafting error. Note: you usually CAN'T see this from a 30-char window — only mark this if there's strong evidence of a recognizable-but-non-walker-supported intro.
+- coverage_gap: Walker correctly notes "no obvious antecedent in my pattern set" but the term IS introduced somewhere via a pattern the walker doesn't recognize (synonym, V-之-Y construction, conjunction-split intro `X和Y`, mathematical-symbol cross-reference). Walker capability gap, not drafting error. Note: you usually CAN'T see this from a 30-char window - only mark this if there's strong evidence of a recognizable-but-non-walker-supported intro.
 
-- legit_drafting_error: Drafter genuinely failed to introduce antecedent. The term appears with a reference form (`所述X`/`該X`/`前述X`) but no introducing form (`一X`/`一個X`/bare X) is visible in context_before. The walker's flag is correct. **Default for "context_before only shows reference markers like 所述/該/前述 immediately before the term"** — that's evidence of REFERENCE (reaffirming the walker's complaint), not of introduction.
+- legit_drafting_error: Drafter genuinely failed to introduce antecedent. The term appears with a reference form (`所述X`/`該X`/`前述X`) but no introducing form (`一X`/`一個X`/bare X) is visible in context_before. The walker's flag is correct. **Default for "context_before only shows reference markers like 所述/該/前述 immediately before the term"** - that's evidence of REFERENCE (reaffirming the walker's complaint), not of introduction.
 
 - diagnostic_mis_attribution: The `reference_form` doesn't actually appear in `context_before + term + context_after` at the indicated char_offset. Diagnostic extractor pointed at the wrong span.
 
-- ambig: 30-char window is genuinely insufficient AND no clear signal either way. Use sparingly. Note: simply not seeing the introduction in 30 chars doesn't make it ambig — for valid drafts, the introduction would still typically be reachable from the term, especially if `claim_id` is 1 (no ancestors).
+- ambig: 30-char window is genuinely insufficient AND no clear signal either way. Use sparingly. Note: simply not seeing the introduction in 30 chars doesn't make it ambig - for valid drafts, the introduction would still typically be reachable from the term, especially if `claim_id` is 1 (no ancestors).
 
 Return ONLY a JSON object: {"category": "...", "confidence": 0-100, "reasoning": "<1-2 sentences>"}"""
 
@@ -110,7 +110,7 @@ Categories (pick exactly one):
 
 - coverage_gap: Phrase IS present in the spec, but the walker's tier checks all missed it (e.g., spec uses synonym, abbreviation, character-variant the symbol table doesn't capture). Walker capability gap.
 
-- legit_drafting_error: Drafter introduced a claim-only term not supported by the spec — TW 專利法 §26 第3項 violation. The phrase is a substantive technical term (not a function-word fragment).
+- legit_drafting_error: Drafter introduced a claim-only term not supported by the spec - TW 專利法 §26 第3項 violation. The phrase is a substantive technical term (not a function-word fragment).
 
 - diagnostic_mis_attribution: The `phrase` field clearly doesn't match what the walker should have flagged given the context (e.g., the walker tokenized too aggressively or pointed at offsets that don't span the actual phrase).
 
@@ -152,7 +152,7 @@ def _format_finding_user_prompt(finding: dict, jurisdiction: str, check_class: s
     if check_class == "antecedentBasis":
         # Vicinity-window-only by default (matches production triage payload privacy contract).
         # Step 0 calibration showed full_claim_text REGRESSES protect:true accuracy
-        # because LLMs over-detect "antecedents" in wider context — domain-specific nuances
+        # because LLMs over-detect "antecedents" in wider context - domain-specific nuances
         # (compound nouns, temporal-clause bare nouns, X的Y constructions that don't
         # introduce X) trip up unconstrained judges. Vicinity window keeps them honest.
         return (

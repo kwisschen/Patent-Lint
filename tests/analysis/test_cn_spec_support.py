@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for CN specification-support analysis (专利法 §26 第4款).
 
 Mirrors tests/analysis/test_tw_spec_support.py with CN-specific cases:
   - Bare-numeral strip (CN-specific; TIPO universally parenthesizes)
-  - Disjunctive-conjunction split (X或Y → X, Y — CN-specific)
+  - Disjunctive-conjunction split (X或Y → X, Y - CN-specific)
   - Existential-verb leading rejects (设有/装有/配置有)
   - tw_contamination skip (该等/该些 parser artifacts not double-reported)
   - 3-tier matcher (no Tier 0 symbol-table whitelist)
@@ -79,7 +79,7 @@ class TestNormalizeForSpecSupportCn:
         assert _normalize_for_spec_support_cn("在所述容器本体") == "容器本体"
         # CN-specific prepositions (从/向/对 not in TW list). Use simple
         # 2-char nouns that the walker's normalization passes through
-        # cleanly — preposition strip is this helper's own concern; walker
+        # cleanly - preposition strip is this helper's own concern; walker
         # aggressiveness on compound nouns is tested separately.
         assert _normalize_for_spec_support_cn("从所述底座") == "底座"
         assert _normalize_for_spec_support_cn("向所述基板") == "基板"
@@ -177,7 +177,7 @@ class TestLeadingRejectCn:
         assert _has_leading_reject_cn("设置有第一凹槽") is True
 
     def test_suffix_only_leads_rejected(self):
-        # 部/端 appear only as noun suffixes — if at position 0, capture mid-compound
+        # 部/端 appear only as noun suffixes - if at position 0, capture mid-compound
         assert _has_leading_reject_cn("部底座") is True
         assert _has_leading_reject_cn("端元件") is True
 
@@ -222,12 +222,12 @@ class TestInteriorRejectCn:
         assert _has_interior_reject_cn("第一轴线相背地") is True
 
     def test_coupling_predicate_rejected(self):
-        """Parity mirror of TW #76 — `<verb>一<noun>` coupling predicate."""
+        """Parity mirror of TW #76 - `<verb>一<noun>` coupling predicate."""
         assert _has_interior_reject_cn("第一端耦接一输入电压") is True
         assert _has_interior_reject_cn("控制端连接一负载") is True
 
     def test_coupling_noun_compound_accepted(self):
-        """`连接器` / `耦合器` (no `一`) are real nouns — not rejected."""
+        """`连接器` / `耦合器` (no `一`) are real nouns - not rejected."""
         assert _has_interior_reject_cn("连接器") is False
         assert _has_interior_reject_cn("耦合器") is False
 
@@ -509,11 +509,11 @@ class TestCheckSpecSupportCn:
 
     def test_term_supported_only_by_background_is_flagged(self):
         """审查指南 §2.2.3: term supported only by 背景技术 is §26 第4款
-        violation — 背景技术 is prior-art context, not disclosure."""
+        violation - 背景技术 is prior-art context, not disclosure."""
         claim = _make_claim(1, "一种装置，包括第一特殊组件。")
         doc = _make_doc(
             claims=[claim],
-            # Term appears ONLY in 背景技术 — should still be flagged
+            # Term appears ONLY in 背景技术 - should still be flagged
             background=["现有技术中已知第一特殊组件的功能。"],
             detailed_description=["本发明的改进如下。"],
         )

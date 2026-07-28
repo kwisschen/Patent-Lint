@@ -1,7 +1,7 @@
 """CI-safe smoke test for the dev-time recurring-FP loop (ADR-159).
 
-The loop module imports with stdlib only (heavy deps — anthropic/openai/pyarrow
-— are lazy, behind the `eval` extra). These tests exercise the pure logic and
+The loop module imports with stdlib only (heavy deps - anthropic/openai/pyarrow
+are lazy, behind the `eval` extra). These tests exercise the pure logic and
 the graceful-degradation paths so the foundation can't silently rot, WITHOUT
 needing the corpus, the LLM SDKs, network, or gh.
 """
@@ -57,7 +57,7 @@ def test_parse_payload():
 
 def test_reports_mode_dry_run_degrades_without_gh(monkeypatch):
     """With no reachable tracker (gh absent / errors), the loop returns an
-    empty result rather than throwing — safe to run anywhere."""
+    empty result rather than throwing - safe to run anywhere."""
     mod = _load()
     monkeypatch.setattr(mod, "iter_open_reports", lambda limit: [])
     res = mod.run_reports_mode(limit=5, cost_cap=0, dry_run=True)

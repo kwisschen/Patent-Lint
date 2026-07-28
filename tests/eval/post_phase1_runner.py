@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Post-Phase-1 orchestrator.
 
 When the Phase 1 background re-judging run produces
@@ -86,7 +86,7 @@ def main() -> int:
 
     print(f"[3/3] Writing summary → {summary_md}")
     lines: list[str] = []
-    lines.append(f"# Post-Phase-1 analysis summary — {today}\n")
+    lines.append(f"# Post-Phase-1 analysis summary - {today}\n")
     lines.append(f"Source verdicts: `{verdicts_path}`\n")
     lines.append(f"- Drafts judged: {len(calib_result.get('per_jurisdiction', {}))}\n")
     lines.append("\n## Per-jurisdiction precision summary\n")
@@ -146,10 +146,10 @@ def main() -> int:
     lines.append(f"- Clusters JSON: `{cluster_json}`")
 
     lines.append("\n## Recommended next commits\n")
-    lines.append("1. **Phase 5 threshold calibration commit** — update `frontend/src/lib/confidenceTier.js::TIER_THRESHOLDS` per-jurisdiction with the suggested T_high values from the table above. Also update `analysis/utils.py::compute_confidence_score` if signal correlation analysis (see `feedback_target_metric_high_conf_bucket.md`) recommends signal direction flips.")
-    lines.append("2. **Phase 3 walker recall mining commits** — pick top 3-5 safe-silence clusters (≥10 wfp + 0 legit + currently emitted) from the cluster report. Each cluster gets one walker commit with full 4-gate validation. ADR-111 dual-labeling required for shifting changes.")
-    lines.append("3. **Phase 2 walker prefix-fallback tightening** — review cluster exemplars for over-bridge classes (short-Latin-uppercase + CJK residual; short intro + ≥2× longer reference). One commit per shape, ADR-111 dual-labeling.")
-    lines.append("4. **Phase 5 frontend tier rendering** — once thresholds are known and the formula is validated, integrate `confidenceTier` helper into `AntecedentBasisCard.jsx`. Add tier-disclosure UX (default-show high-conf, collapse medium under 'Less certain', hide low). Locale strings × 6 (en/de/zh-TW/zh-CN/ja/ko) per ADR-085 + ADR-144 native register.")
+    lines.append("1. **Phase 5 threshold calibration commit** - update `frontend/src/lib/confidenceTier.js::TIER_THRESHOLDS` per-jurisdiction with the suggested T_high values from the table above. Also update `analysis/utils.py::compute_confidence_score` if signal correlation analysis (see `feedback_target_metric_high_conf_bucket.md`) recommends signal direction flips.")
+    lines.append("2. **Phase 3 walker recall mining commits** - pick top 3-5 safe-silence clusters (≥10 wfp + 0 legit + currently emitted) from the cluster report. Each cluster gets one walker commit with full 4-gate validation. ADR-111 dual-labeling required for shifting changes.")
+    lines.append("3. **Phase 2 walker prefix-fallback tightening** - review cluster exemplars for over-bridge classes (short-Latin-uppercase + CJK residual; short intro + ≥2× longer reference). One commit per shape, ADR-111 dual-labeling.")
+    lines.append("4. **Phase 5 frontend tier rendering** - once thresholds are known and the formula is validated, integrate `confidenceTier` helper into `AntecedentBasisCard.jsx`. Add tier-disclosure UX (default-show high-conf, collapse medium under 'Less certain', hide low). Locale strings × 6 (en/de/zh-TW/zh-CN/ja/ko) per ADR-085 + ADR-144 native register.")
 
     lines.append("\n## Halt conditions to verify before next steps\n")
     lines.append("- [ ] Phase 1 cost stayed under $120 cap")

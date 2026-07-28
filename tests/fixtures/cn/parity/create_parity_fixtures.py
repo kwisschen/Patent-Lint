@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Regenerate Phase 8c synthetic CN parity fixtures.
 
 Both fixtures are committable (no real IP). Structure models the 五书
@@ -48,7 +48,7 @@ def _add_numbering_definitions(doc) -> int:
     etree.SubElement(lvl, f"{w}lvlText", attrib={f"{w}val": "%1."})
     etree.SubElement(lvl, f"{w}lvlJc", attrib={f"{w}val": "left"})
 
-    # Reorder: abstractNum must come before num per schema — newly added
+    # Reorder: abstractNum must come before num per schema - newly added
     # abstractNum is last; we'll move it to sit with the others.
     # python-docx's default template may not have a specific order, but
     # keeping newly-appended element at end is fine for most readers.
@@ -90,7 +90,7 @@ def _add_body_anchor(doc, text: str) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Pair A — apparatus_method_minimal (typed prefixes)
+# Pair A - apparatus_method_minimal (typed prefixes)
 # ---------------------------------------------------------------------------
 
 
@@ -102,7 +102,7 @@ PAIR_A_CLAIMS = [
     "5. 一种数据处理方法，包括：通过通信接口接收输入信号；通过处理器对所述输入信号进行处理；和将处理结果存储到存储器中。",
 ]
 
-# Claim body-only text (what the XML <claim-text> carries) — no "N. " prefix.
+# Claim body-only text (what the XML <claim-text> carries) - no "N. " prefix.
 PAIR_A_CLAIM_BODIES = [c.split(". ", 1)[1] for c in PAIR_A_CLAIMS]
 
 PAIR_A_SPEC = {
@@ -133,7 +133,7 @@ def build_pair_a_docx(path: Path) -> None:
     _add_body_anchor(doc, "说明书摘要")
     doc.add_paragraph(PAIR_A_ABSTRACT)
 
-    # Claims — typed prefix, no numPr
+    # Claims - typed prefix, no numPr
     _add_body_anchor(doc, "权利要求书")
     for claim in PAIR_A_CLAIMS:
         doc.add_paragraph(claim)
@@ -193,7 +193,7 @@ def build_pair_a_xml(path: Path) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Pair B — numbering_multidep_markush (w:numPr auto-numbering)
+# Pair B - numbering_multidep_markush (w:numPr auto-numbering)
 # ---------------------------------------------------------------------------
 
 
@@ -230,7 +230,7 @@ def build_pair_b_docx(path: Path) -> None:
     _add_body_anchor(doc, "说明书摘要")
     doc.add_paragraph(PAIR_B_ABSTRACT)
 
-    # Claims — w:numPr, NO typed prefix
+    # Claims - w:numPr, NO typed prefix
     _add_body_anchor(doc, "权利要求书")
     num_id = _add_numbering_definitions(doc)
     for claim in PAIR_B_CLAIMS:
@@ -256,12 +256,12 @@ def build_pair_b_docx(path: Path) -> None:
 
 def build_pair_b_xml(path: Path) -> None:
     claims_xml_parts: list[str] = []
-    # Claim 1 — independent with Markush group, nested claim-text
+    # Claim 1 - independent with Markush group, nested claim-text
     claims_xml_parts.append(
         '    <claim id="cl0001" num="0001" claim-type="independent">'
         f'<claim-text>{PAIR_B_CLAIMS[0]}</claim-text></claim>'
     )
-    # Claims 2, 3 — dependent on claim 1 via <claim-ref>
+    # Claims 2, 3 - dependent on claim 1 via <claim-ref>
     for i in (2, 3):
         body = PAIR_B_CLAIMS[i - 1]
         # Embed claim-ref for dep 1
@@ -273,7 +273,7 @@ def build_pair_b_xml(path: Path) -> None:
             f'    <claim id="cl{i:04d}" num="{i:04d}" claim-type="dependent">'
             f'<claim-text>{ref_text}</claim-text></claim>'
         )
-    # Claim 4 — multi-dependent on 1-3
+    # Claim 4 - multi-dependent on 1-3
     c4 = PAIR_B_CLAIMS[3].replace(
         "权利要求1至3中任一项",
         '<claim-ref idref="cl0001">权利要求1</claim-ref>至'

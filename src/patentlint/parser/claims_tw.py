@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""TW claim parser — extract claims from Taiwan patent .docx text."""
+# Copyright (c) 2025-2026 Christopher Chen
+"""TW claim parser - extract claims from Taiwan patent .docx text."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ _TW_CLAIM_NUM = re.compile(r"^[\s\u3000]*(\d+)\s*[.．]\s*", re.MULTILINE)
 # 如請求項1所記載之, 如請求項1所記載的 (JP-translation variants),
 # 如請求項1所揭示的, 如請求項1所描述之,
 # 如請求項1~3中任一項所述之, 如請求項1至3中任一項之
-# 依據請求項1所述之 / 根據請求項1所述之 — per TIPO 偵錯系統 (Table 1 #20)
+# 依據請求項1所述之 / 根據請求項1所述之 - per TIPO 偵錯系統 (Table 1 #20)
 # the three accepted dep openers are 如 / 依據 / 根據. Bare `請求項N所述的`
 # form (no verb) also appears in older filings. Matches the opener set
 # accepted by the CN parser (_CN_DEPENDENCY) for cross-jurisdiction parity.
@@ -59,7 +59,7 @@ _OR_NUMS = re.compile(r"(\d+)")
 # Independent-claim preamble: `一種X` / `一個X` at the start of the claim
 # body (after the "N. " number prefix). Per TIPO 專利法施行細則 §18, the
 # statutory marker of an independent claim is the preamble subject form,
-# not the absence of 如請求項N references — claims in 引用記載型式
+# not the absence of 如請求項N references - claims in 引用記載型式
 # (quoted-reference format) use `一種X，具備如請求項N所述的Y` to declare
 # a new invention subject X while incorporating claim N's Y by reference.
 _TW_INDEP_PREAMBLE = re.compile(r"^(?:一種|一個)\s*")
@@ -93,7 +93,7 @@ def parse_tw_claims(paragraphs: list[str]) -> list[Claim]:
     ``如請求項N`` references: claims in 引用記載型式 (quoted-reference
     format) have both a `一種X` preamble declaring a new subject AND a
     body-embedded `如請求項N所述的Y` that incorporates Y from claim N as a
-    sub-component. Such claims are independent per §18 — the embedded
+    sub-component. Such claims are independent per §18 - the embedded
     reference is incorporation-by-reference, not a dependency. Treating
     them as dependent produces spurious subject-consistency, dependency-
     format, and multi-dep flags.

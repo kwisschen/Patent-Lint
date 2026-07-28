@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Connection-relationship clarity check (TW + CN parity).
 
 TIPO 專利審查基準 第二篇第一章 §2.4 and CNIPA 审查指南 第二部分 第二章
 §3.2.1 + 专利法 §26.4 require independent apparatus/device/system claims
-to teach how their components are arranged structurally — listing parts
+to teach how their components are arranged structurally - listing parts
 without naming a connection between them is a clarity defect.
 
 This module implements the check once and exposes per-jurisdiction
@@ -15,13 +15,13 @@ Scope (carve-outs applied in order):
   1. Independent claims only (preamble starts with 一種/一個 or 一种/一个).
   2. Method claims excluded (preamble ends with 方法).
   3. Computer-readable medium / program claims excluded (TIPO/CNIPA
-     practice — non-structural subject matter).
+     practice - non-structural subject matter).
   4. Means-plus-function claims excluded (drafter intentionally omits
      structural detail; §112(f)-equivalent practice).
   5. Composition / mixture claims excluded (chemistry compositions list
      constituents rather than assembled parts; standard 重量份 format).
 
-Emit: ``status='verify'`` (clarity flag, not a hard rejection — drafter
+Emit: ``status='verify'`` (clarity flag, not a hard rejection - drafter
 may have intended composition-style enumeration that PatentLint cannot
 infer without the spec). One CheckItem per in-scope claim that lists
 ≥2 components without a connection verb anywhere in the body.
@@ -56,7 +56,7 @@ class ConnectionRelationshipsConfig:
     transition_re: re.Pattern[str]
     component_splitter_re: re.Pattern[str]
 
-    # Connection verbs — primary set is empirically grounded on the
+    # Connection verbs - primary set is empirically grounded on the
     # current real-corpus; extended set is the TIPO/CNIPA spec lexicon
     # (zero-hit on this corpus but legally grounded, retained
     # defensively against drafter style variation).
@@ -83,7 +83,7 @@ _TW_CONNECTION_CONFIG = ConnectionRelationshipsConfig(
     transition_re=re.compile(r"包括|包含|含有|具備|具有"),
     # Splits component-list tail. ；is the dominant separator in TIPO
     # practice; 、 / 及 / 與 / 和 / 以及 catch in-line lists. We
-    # deliberately exclude ， / , — those are intra-component clause
+    # deliberately exclude ， / , - those are intra-component clause
     # separators in TIPO drafting (e.g., "一第二手柄主體，與所述第
     # 一手柄主體互相連接").
     component_splitter_re=re.compile(r"；|;|、|及|與|和|以及"),
@@ -153,7 +153,7 @@ _CN_CONNECTION_CONFIG = ConnectionRelationshipsConfig(
 
 # Strip simple whitespace + leading paren-numerals from component
 # fragments before counting/sampling. Drafters wrap component intros in
-# (1) / (a) / 1. / etc. — the leading marker is not part of the noun.
+# (1) / (a) / 1. / etc. - the leading marker is not part of the noun.
 _LEADING_MARK_RE = re.compile(r"^[\s\u3000]*(?:[\(（][^\)）]{1,4}[\)）]|\d+[\.．、])\s*")
 _CJK_RE = re.compile(r"[\u4e00-\u9fff]")
 
@@ -245,14 +245,14 @@ def _extract_components(text: str, config: ConnectionRelationshipsConfig) -> lis
         # fragment) plus any leading whitespace.
         cleaned = fragment.lstrip(":：；; \t\u3000")
         cleaned = _LEADING_MARK_RE.sub("", cleaned).strip()
-        # Cut at the first sentence-ending mark — components are clauses,
+        # Cut at the first sentence-ending mark - components are clauses,
         # not whole paragraphs, and we don't want trailing 其中/wherein
         # discussion to merge into a "component".
         for sentinel in ("。", "．"):
             idx = cleaned.find(sentinel)
             if idx >= 0:
                 cleaned = cleaned[:idx]
-        # Skip continuation/qualification fragments — these are sub-clauses
+        # Skip continuation/qualification fragments - these are sub-clauses
         # describing function or context, not new components.
         if cleaned.startswith(_CONTINUATION_PREFIXES):
             continue
@@ -313,7 +313,7 @@ def _component_name(component_text: str) -> str:
 def _has_connection_verb(text: str, config: ConnectionRelationshipsConfig) -> bool:
     """Return True iff the claim body contains any primary or extended
     connection verb. Multi-character verbs are searched as substrings
-    (no tokenization needed — TIPO/CNIPA structural verbs are
+    (no tokenization needed - TIPO/CNIPA structural verbs are
     well-bounded surface forms).
     """
     for verb in config.primary_verbs:
@@ -337,7 +337,7 @@ def check_connection_relationships(
 
     Returns one ``CheckItem`` per flagged claim plus an aggregate ``pass``
     item when no claim trips the check (so the report always includes
-    the row). Out-of-scope claims contribute nothing — the pass tile
+    the row). Out-of-scope claims contribute nothing - the pass tile
     stays single regardless of how many compositions/method claims the
     document contains.
     """
@@ -369,7 +369,7 @@ def check_connection_relationships(
         for claim_id, count, sample_components in flagged
     ]
     # The extractor surfaces a per-claim `findings[]` so ReportModal
-    # payloads carry actionable detail (issue #48 — previously emitted
+    # payloads carry actionable detail (issue #48 - previously emitted
     # empty diagnostic trails). It takes the (claim_id, count, names)
     # triples; rebuild that view.
     extractor_input = [
@@ -380,7 +380,7 @@ def check_connection_relationships(
 
     items: list[CheckItem] = []
     for claim_id, count, sample_components, sample_names in flagged_with_names:
-        # English fallback message — locale templates render sample_names
+        # English fallback message - locale templates render sample_names
         # via the JS detailsFormatter for proper list-separator handling.
         names_inline = ", ".join(sample_names)
         if count > len(sample_names):

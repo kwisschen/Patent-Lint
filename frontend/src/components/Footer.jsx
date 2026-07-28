@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 /* global __BUILD_HASH__ */
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -20,7 +20,7 @@ export default function Footer() {
 
   // Footer is reserved for legal / product links. Personal-credibility
   // links (GitHub / LinkedIn) live on the AboutPage Background section
-  // alongside Email — that's where users go for that context.
+  // alongside Email - that's where users go for that context.
   const externalLinks = [
     { label: t('footer.feedback'), href: '#', onClick: handleFeedbackClick },
   ]
@@ -67,7 +67,7 @@ export default function Footer() {
               {label}
             </a>
           ))}
-          {/* Sister-product cross-link — funnels filed-application users to
+          {/* Sister-product cross-link - funnels filed-application users to
               PatentNode for OA responses. Brand-tinted + arrow so it reads
               as an outbound product pointer, not another legal link. */}
           <a

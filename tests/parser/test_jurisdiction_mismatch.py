@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for the jurisdiction-mismatch detector (Issue #9 / ADR-082).
 
 Covers the four mismatch directions plus the no-mismatch baselines.
-The detector is conservative — false positives are worse than no
+The detector is conservative - false positives are worse than no
 suggestion (they erode trust), so several tests verify the detector
 correctly returns ``None`` for ambiguous English drafts that contain
 trace CJK.
@@ -17,7 +17,7 @@ from patentlint.models import Jurisdiction
 from patentlint.parser.jurisdiction_mismatch import detect_jurisdiction_mismatch
 
 
-# A representative US (English) patent fragment — claims plus a paragraph
+# A representative US (English) patent fragment - claims plus a paragraph
 # of detailed description. Word count is high enough that the CJK ratio
 # stays safely below 10% even if a CJK term were transliterated.
 US_SAMPLE = """
@@ -39,7 +39,7 @@ in FIG. 1, a processor receives an input signal and generates an
 output signal in response thereto.
 """
 
-# Representative TW patent fragment — TIPO bracket headers + 請求項.
+# Representative TW patent fragment - TIPO bracket headers + 請求項.
 TW_SAMPLE = """
 【中文發明名稱】一種訊號處理裝置
 【技術領域】
@@ -60,7 +60,7 @@ TW_SAMPLE = """
 請求項2：如請求項1所述之訊號處理裝置，其中該處理器為微控制器。
 """
 
-# Representative CN patent fragment — 五书 section names, simplified.
+# Representative CN patent fragment - 五书 section names, simplified.
 CN_SAMPLE = """
 权利要求书
 
@@ -175,11 +175,11 @@ def test_tw_selected_epc_doc_suggests_epc():
 
 
 def test_epc_selected_us_doc_with_one_epc_mention_still_suggests_us():
-    """Asymmetric direction — US drafts that cite an EPC counterpart by
+    """Asymmetric direction - US drafts that cite an EPC counterpart by
     name (single mention) should NOT cause EPC → US suggestion to be
     silenced. The asymmetric gate requires us_markers - epc_markers >= 2
     AND epc_markers == 0; a single 'European Patent' mention in a
-    US-pattern draft puts epc_markers > 0 and stays at None — the
+    US-pattern draft puts epc_markers > 0 and stays at None - the
     conservative answer when both jurisdictions show signal."""
     text = US_SAMPLE + "\n\nThe European Patent Office published a counterpart."
     # us_markers should still be >= 2 (method of claim + non-transitory),
@@ -237,7 +237,7 @@ def test_whitespace_only_no_mismatch():
 
 
 def test_long_us_doc_truncated_correctly():
-    """Sample window is bounded — long US docs with CJK appendices past
+    """Sample window is bounded - long US docs with CJK appendices past
     the sample should still classify as US."""
     long_us = US_SAMPLE * 30  # >10k chars; CJK trailer is past the window
     long_us += "\n\n附录：" + "中文" * 5000
@@ -248,7 +248,7 @@ def test_long_us_doc_truncated_correctly():
 
 
 def test_us_selected_cjk_no_markers_falls_back_to_cn():
-    """Heavy CJK content but neither TIPO nor CNIPA markers present —
+    """Heavy CJK content but neither TIPO nor CNIPA markers present -
     detector falls back to CN suggestion (more common filing volume)."""
     text = "本发明描述一种新颖之装置。" * 50
     # Stripped of section headers, tied marker counts → CN fallback
@@ -257,7 +257,7 @@ def test_us_selected_cjk_no_markers_falls_back_to_cn():
 
 def test_cn_selected_traditional_chars_no_tipo_markers_no_mismatch():
     """A CN draft using a traditional character (e.g., quoting a TW
-    publication) but no TIPO bracket headers should NOT flip to TW —
+    publication) but no TIPO bracket headers should NOT flip to TW -
     we require positive marker evidence to disambiguate, not script
     flavor."""
     text = CN_SAMPLE + "\n\n参考臺灣發布之类似技术文献，本发明改良之。"

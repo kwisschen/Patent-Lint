@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown } from 'lucide-react'
@@ -8,9 +8,9 @@ import { StatusPill } from './ui/status-pill'
 import { FrostCard } from './ui/frost-card'
 
 // Map a letter grade to one of the existing status CSS-variable families
-// for the section pill — matches the RubricHero color logic.
+// for the section pill - matches the RubricHero color logic.
 function letterColorVar(letter) {
-  if (!letter || letter === '—') return 'var(--muted-foreground)'
+  if (!letter || letter === '-') return 'var(--muted-foreground)'
   if (letter.startsWith('A')) return 'var(--pass-border)'
   if (letter.startsWith('B') || letter.startsWith('C')) return 'var(--verify-border)'
   return 'var(--amend-border)' // D / F
@@ -22,7 +22,7 @@ export default function SectionPanel({
   defaultOpen = false,
   children,
   jurisdiction,
-  // Optional per-section rubric grade — when supplied, renders a pill
+  // Optional per-section rubric grade - when supplied, renders a pill
   // showing the section's grade letter to the left of the count badges.
   // When `applicable === false`, renders an "N/A" pill instead with a
   // tooltip explaining why (no drawings detected, etc.).

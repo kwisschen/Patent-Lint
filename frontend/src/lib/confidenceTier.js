@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 //
 // Confidence-tier helpers for the antecedent-basis findings UI.
 //
@@ -22,7 +22,7 @@
 // `tierForScore`. Until calibration commits land, all jurisdictions
 // share the same defaults.
 
-// Per-jurisdiction calibrated thresholds — POST-Phase-1 calibration
+// Per-jurisdiction calibrated thresholds - POST-Phase-1 calibration
 // against the supplement_v2 verdicts (605 weighted-sampled drafts on
 // post-R48 walker, 2026-05-05). Each T_HIGH is the threshold where
 // bucket precision peaks above the absolute baseline by the largest
@@ -81,7 +81,7 @@ export function isHighConfidence(score, jurisdiction = 'DEFAULT') {
 /**
  * Aggregate a group of findings (with `confidence_score` per finding)
  * to its representative tier. A group is considered "high" if ANY of
- * its findings is high-conf — the methodology assumes high-conf
+ * its findings is high-conf - the methodology assumes high-conf
  * findings dominate user attention, and a group with one strong signal
  * + several weaker ones should surface in the high tier.
  */

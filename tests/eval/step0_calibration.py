@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Step 0 calibration — round 1 §7 LLM-judge gating against PatentLint's hand-labeled corpus.
+# Copyright (c) 2025-2026 Christopher Chen
+"""Step 0 calibration - round 1 §7 LLM-judge gating against PatentLint's hand-labeled corpus.
 
 Stratified samples from CN + TW antecedent labels, runs the walker per fixture
 to recover claim_text + term offsets (so we can construct a 30-char vicinity
@@ -58,7 +58,7 @@ REPORT_PATH = CC_OUTPUT_DIR / "2026-05-02_step0-calibration-report.md"
 RESULTS_PATH = PATENTLINT_ROOT / "tests/eval/step0_results.json"
 
 # Sampling target (per jurisdiction).
-# 25 was too small after walker_no_longer_emits skips (~40% of sample skipped) —
+# 25 was too small after walker_no_longer_emits skips (~40% of sample skipped) -
 # 15 judged → n=8 protect:true → high run-to-run variance on T2 (37-75%).
 # Bumping to 60 raises judged-N to ~36 and tightens stratum coverage.
 SAMPLE_PER_JURISDICTION = 60
@@ -73,7 +73,7 @@ def map_label_to_ensemble(label_category: str) -> Optional[str]:
         return "coverage_gap"
     if label_category == "legit_drafting_error":
         return "legit_drafting_error"
-    # ambig, semantic_disjunction_deferred, unclassified — excluded
+    # ambig, semantic_disjunction_deferred, unclassified - excluded
     return None
 
 
@@ -182,7 +182,7 @@ def build_finding_dict_from_walker(issue: dict, window: int = 30) -> dict:
         "char_offset": offset,
         "context_before": before,
         "context_after": after,
-        "claim_text": claim_text,  # NEW — full claim text for the judge to read
+        "claim_text": claim_text,  # NEW - full claim text for the judge to read
         "claim_text_charlen": len(claim_text),
     }
 
@@ -216,7 +216,7 @@ async def calibrate_cn(
         except Exception as e:
             walker_outputs[fixture_key] = f"walker error: {e!r}"
 
-    # Phase 2: build the work list — (label, finding-or-skip-reason)
+    # Phase 2: build the work list - (label, finding-or-skip-reason)
     work: list[tuple[dict, dict | None, str | None]] = []  # (label, finding, skip_reason)
     for fixture_key, labels_in_fixture in by_fixture.items():
         out = walker_outputs[fixture_key]
@@ -361,7 +361,7 @@ def render_report(thresholds: dict, results: list[dict], elapsed_sec: float) -> 
     agree_dist = Counter(r["verdict"]["agreement_level"] for r in judged)
 
     lines = [
-        "# Step 0 Calibration Report — 2026-05-02",
+        "# Step 0 Calibration Report - 2026-05-02",
         "",
         f"**Elapsed:** {elapsed_sec:.1f}s. **Judged:** {len(judged)} findings. **Skipped:** {len(skipped)}.",
         "",
@@ -393,7 +393,7 @@ def render_report(thresholds: dict, results: list[dict], elapsed_sec: float) -> 
     elif pass_count >= 2:
         lines.append(f"**PROCEED WITH CAUTION.** {pass_count}/3 thresholds passed. Investigate the failure(s) below before committing to round 1; possibly adjust judge prompts or sample.")
     else:
-        lines.append(f"**FALL BACK** to programmatic mutators only ($30 cap). Only {pass_count}/3 thresholds passed — LLM judge ensemble not reliable enough for round 1 in current configuration.")
+        lines.append(f"**FALL BACK** to programmatic mutators only ($30 cap). Only {pass_count}/3 thresholds passed - LLM judge ensemble not reliable enough for round 1 in current configuration.")
 
     lines.extend([
         "",
@@ -413,7 +413,7 @@ def render_report(thresholds: dict, results: list[dict], elapsed_sec: float) -> 
         and r["verdict"]["final_category"] != r["ground_truth_mapped"]
     ]
     if not disagreements:
-        lines.append("_None — full ensemble/ground-truth alignment._")
+        lines.append("_None - full ensemble/ground-truth alignment._")
     else:
         lines.append(f"_{len(disagreements)} disagreements out of {len(judged)} judged._")
         lines.append("")
@@ -429,14 +429,14 @@ def render_report(thresholds: dict, results: list[dict], elapsed_sec: float) -> 
                 f"({lab['category']}) | `{v['final_category']}` | {first_reason} |"
             )
         if len(disagreements) > 20:
-            lines.append(f"| _...{len(disagreements)-20} more — see step0_results.json_ | | | | | |")
+            lines.append(f"| _...{len(disagreements)-20} more - see step0_results.json_ | | | | | |")
 
     if skipped:
         lines.extend([
             "",
             "## Skipped findings",
             "",
-            f"_{len(skipped)} labels skipped — most often because the walker no longer emits "
+            f"_{len(skipped)} labels skipped - most often because the walker no longer emits "
             f"that finding (R7+ post-label fixes shifted the walker output)._",
             "",
         ])
@@ -448,10 +448,10 @@ def render_report(thresholds: dict, results: list[dict], elapsed_sec: float) -> 
         "",
         "## Loose ends",
         "",
-        "- **TW labels not yet calibrated.** This run only sampled CN labels — TW walker uses a different module (`check_antecedent_basis`) and a different fixture path (`tests/fixtures/tw/local/`). Budget room exists; can extend in morning if time permits.",
-        "- **Ensemble's `walker_fp` is coarser than label categories.** Subcategory accuracy (over_capture vs trailing_residue vs fragment) not measured — only the binary walker-FP-vs-not signal.",
+        "- **TW labels not yet calibrated.** This run only sampled CN labels - TW walker uses a different module (`check_antecedent_basis`) and a different fixture path (`tests/fixtures/tw/local/`). Budget room exists; can extend in morning if time permits.",
+        "- **Ensemble's `walker_fp` is coarser than label categories.** Subcategory accuracy (over_capture vs trailing_residue vs fragment) not measured - only the binary walker-FP-vs-not signal.",
         "- **30-char window mimics production payload.** The walker exposes full `claim_text`; passing the full claim would improve accuracy but Step 0 should mirror production constraints to be a faithful preview.",
-        "- **Sonnet 4.6 tiebreaker counted in final_category** — Threshold 1 measures agreement BEFORE tiebreaker, so a high tiebreaker rate (lots of disagreements that Sonnet resolves) shows up as a low Threshold 1 score, even if the final result is correct.",
+        "- **Sonnet 4.6 tiebreaker counted in final_category** - Threshold 1 measures agreement BEFORE tiebreaker, so a high tiebreaker rate (lots of disagreements that Sonnet resolves) shows up as a low Threshold 1 score, even if the final result is correct.",
         "",
         f"_Full per-finding judgments: `{RESULTS_PATH}`_",
     ])

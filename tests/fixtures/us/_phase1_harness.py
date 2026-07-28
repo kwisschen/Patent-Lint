@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Phase 1 US antecedent walker labeled regression harness (bootstrap).
 
 Structural port of ``tests/fixtures/{cn,tw}/_phase{8c,8b}_harness.py``
@@ -14,14 +14,14 @@ adapted to the US bootstrap shape:
   ``scripts/bootstrap_us_labels.py``. Labels are seeded with
   ``confidence: phase2b_ensemble_confN`` and ``round: 0`` (sentinel for
   unmutated bootstrap state).
-* **Walker entry point** is ``check_antecedent_basis(claims)`` — takes
+* **Walker entry point** is ``check_antecedent_basis(claims)`` - takes
   ``list[Claim]`` directly (no UsPatentDocument wrapper).
 
 Three gates (parity with CN/TW):
 
-* ``unresolved_new`` — walker emitted a finding NOT in labels file.
-* ``unresolved_removed`` — labels file has finding walker no longer emits.
-* ``protect_violations`` — protect:true label silenced. HARD FAIL.
+* ``unresolved_new`` - walker emitted a finding NOT in labels file.
+* ``unresolved_removed`` - labels file has finding walker no longer emits.
+* ``protect_violations`` - protect:true label silenced. HARD FAIL.
 
 Standalone utility. Underscore-prefixed so pytest does not collect.
 
@@ -166,7 +166,7 @@ def main() -> int:
         print(
             f"- [{'PASS' if unresolved_removed == 0 else 'FAIL'}] "
             f"unresolved_removed: {unresolved_removed} "
-            f"(HALT if > 0; labels missing from walker — non-protected)"
+            f"(HALT if > 0; labels missing from walker - non-protected)"
         )
         print(
             f"- [{'PASS' if protect_violations == 0 else 'FAIL'}] "
@@ -175,7 +175,7 @@ def main() -> int:
         )
         print()
         if protect_violations > 0:
-            print("## Protect violations — HARD FAIL")
+            print("## Protect violations - HARD FAIL")
             print("| fixture | claim | term | category | notes |")
             print("|---|---|---|---|---|")
             for k in sorted(protected_drops)[:50]:

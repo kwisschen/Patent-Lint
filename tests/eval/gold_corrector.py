@@ -1,16 +1,16 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# gold_corrector.py — the autonomy keystone for the Zero-FP Sweep campaign
+# gold_corrector.py - the autonomy keystone for the Zero-FP Sweep campaign
 # (ADR-159).
 #
 # When `validate_fix.py --compare` reports `silenced_legit > 0`, a fix appears
-# to have silenced a finding the ensemble labeled `legit_drafting_error` — i.e.
+# to have silenced a finding the ensemble labeled `legit_drafting_error` - i.e.
 # an apparent FALSE NEGATIVE. Two things can cause that:
 #
 #   (1) the fix is genuinely too broad and silenced a real defect  → REAL FN,
 #       must narrow / revert (DR-1); OR
-#   (2) the ensemble MISLABELED a walker FP as legit — the term really IS
+#   (2) the ensemble MISLABELED a walker FP as legit - the term really IS
 #       introduced (an explicit Pattern-A article introduction sits before the
 #       reference) and the walker was right to (eventually) stop flagging it
 #       → VERIFIED GOLD ERROR, record in phase2b_results_<j>_corrections.json.
@@ -19,14 +19,14 @@
 # FNs away, this module makes the (1)-vs-(2) decision DETERMINISTIC: it runs a
 # conservative, high-precision Pattern-A intro-presence scan over the claim and
 # its ancestor chain. It is deliberately STRICTER and SIMPLER than the walker's
-# own intro logic — it must be an INDEPENDENT check (if it merely re-ran the
+# own intro logic - it must be an INDEPENDENT check (if it merely re-ran the
 # walker it would always agree and never surface a gold error). It only flips a
 # label when an explicit indefinite-article / "at least one" / "one or more"
 # introduction of the exact term is present.
 #
 # SAFETY CAP: if more than `cap` (default 5%) of a fix's silenced-legit findings
 # auto-correct as gold errors, that is evidence the FIX is wrong (silencing a
-# whole class of real defects), not that the gold is wrong en masse — HALT and
+# whole class of real defects), not that the gold is wrong en masse - HALT and
 # surface for human review. A single fix should at most mop up a stray mislabel.
 from __future__ import annotations
 
@@ -47,7 +47,7 @@ def _norm(s: str | None) -> str:
 
 # Explicit Pattern-A introduction prefixes. Indefinite article OR enumerated
 # "at least one" / "one or more" (MPEP § 2173.05(e) reasonably-ascertainable
-# introductions). `said`/`the`/`a plurality of` are deliberately EXCLUDED —
+# introductions). `said`/`the`/`a plurality of` are deliberately EXCLUDED -
 # `said`/`the` are references, and `a plurality of X` introduces X but the
 # captured term would be `plurality of X`, handled by the walker not here.
 _INTRO_TEMPLATES = (
@@ -75,7 +75,7 @@ def pattern_a_intro_present(
         return False, ""
     patterns = [re.compile(tmpl.format(t=re.escape(t))) for tmpl in _INTRO_TEMPLATES]
 
-    # Ancestors first — any intro there is unconditionally before the reference.
+    # Ancestors first - any intro there is unconditionally before the reference.
     for anc in ancestor_texts or []:
         h = _norm(anc)
         for rx in patterns:
@@ -83,7 +83,7 @@ def pattern_a_intro_present(
             if m:
                 return True, m.group(0)
 
-    # Same claim — intro must precede the reference position.
+    # Same claim - intro must precede the reference position.
     claim_h = _norm(claim_text)
     ref_h = _norm(reference_form) if reference_form else ""
     ref_pos = claim_h.find(ref_h) if ref_h else -1
@@ -97,7 +97,7 @@ def pattern_a_intro_present(
 # A captured term that itself contains a claim-reference fragment (`inclaim 1`,
 # `of claim 2`, `claim 3`) is a parse artifact: the walker swept a body
 # cross-reference into the element name. A whitespace-collapse / dependency fix
-# that re-parses the cross-reference SHIFTS that key away — the silence is a
+# that re-parses the cross-reference SHIFTS that key away - the silence is a
 # clean-up of garbage, never a real FN.
 _CLAIM_ARTIFACT_RE = re.compile(r"\b(?:in|of|to)?\s*claim\s*\d", re.IGNORECASE)
 
@@ -119,12 +119,12 @@ def ancestor_introduces(term: str, ancestor_texts: list[str]) -> tuple[bool, str
 
     A dependency-resolution fix (e.g. tolerating an `inclaim N` whitespace
     collapse so a dep-claim chains to its parent) can only SILENCE a finding
-    when the term resolves against a now-visible ANCESTOR introduction — absent
+    when the term resolves against a now-visible ANCESTOR introduction - absent
     any intro in scope, the walker still fires. So a silence whose term is
     introduced/mentioned in an ancestor claim is FN-safe by construction.
 
     This is a weak, INDEPENDENT presence check (the term, or its singular form,
-    appears in a parent claim) — it is NOT a re-implementation of the walker's
+    appears in a parent claim) - it is NOT a re-implementation of the walker's
     matching internals, and it never fires when the term is genuinely absent
     from every ancestor (a real FN). Singular/plural folding handles
     `the fiber optic modules` → `a fiber optic module`.
@@ -153,7 +153,7 @@ class CorrectionAudit:
     `fix_shape` scopes the cap: for a DEPENDENCY-RESOLUTION fix a high
     gold-error rate is INHERENT (the same broken chain that inflated walker_fp
     also biased the ensemble's legit judgments on those claims), so the 5% cap
-    would misfire — there the gate is simply `real_fns == 0`. For a TERM-SHAPE
+    would misfire - there the gate is simply `real_fns == 0`. For a TERM-SHAPE
     fix (trailing-trim / denylist add) nothing re-parents, so a high gold-error
     rate IS suspect and the cap stays armed.
     """
@@ -180,7 +180,7 @@ class CorrectionAudit:
         Any unexplained silence is a potential FN → halt regardless of shape.
         For a term-shape fix, an above-cap gold-error rate is also a halt (the
         FIX is likely over-broad). For a dependency-resolution fix the cap is
-        disabled — the gold-error rate is expected high and is structurally
+        disabled - the gold-error rate is expected high and is structurally
         explained.
         """
         if self.has_real_fns:

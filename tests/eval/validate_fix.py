@@ -1,20 +1,20 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# validate_fix.py — the FN-guarded self-audit harness for class fixes (ADR-159).
+# validate_fix.py - the FN-guarded self-audit harness for class fixes (ADR-159).
 #
 # A walker mechanism fix ends an FP class only if it (a) SILENCES the walker_fp
-# findings and (b) drops ZERO gold-`legit_drafting_error` findings — silencing a
+# findings and (b) drops ZERO gold-`legit_drafting_error` findings - silencing a
 # real defect is a false negative, the thing we must never do.
 #
-# Workflow per fix (all deterministic — NO LLM spend):
+# Workflow per fix (all deterministic - NO LLM spend):
 #   python tests/eval/validate_fix.py --juris TW --snapshot /tmp/pre_tw.json   # BEFORE edit
 #   ... edit the walker ...
 #   python tests/eval/validate_fix.py --juris TW --compare  /tmp/pre_tw.json   # AFTER edit
 #
 # The compare run prints the AccuracyReport. The RELIABILITY GATE is:
 #   silenced_legit == 0   AND   silenced_walker_fp > 0
-# If silenced_legit > 0 the fix injected FNs — revert and narrow.
+# If silenced_legit > 0 the fix injected FNs - revert and narrow.
 from __future__ import annotations
 
 import argparse

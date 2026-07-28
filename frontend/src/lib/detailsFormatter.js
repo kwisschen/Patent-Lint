@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 //
 // Shared formatter for check item details with structured payloads.
 //
@@ -98,7 +98,7 @@ function formatSampleNames(names, t, params) {
   return joined
 }
 
-// Figure reference inconsistency — two-direction mismatch
+// Figure reference inconsistency - two-direction mismatch
 function formatFigureRefInconsistency(data, t) {
   if (!data || typeof data !== "object") return ""
   const { only_drawings = [], only_embodiment = [], jurisdiction = "cn" } = data

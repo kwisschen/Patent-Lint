@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Generate synthetic TW patent .docx fixtures for testing."""
 
 from __future__ import annotations
@@ -185,13 +185,13 @@ def create_cross_category_dependent_tw() -> None:
         "【實施方式】",
         "本發明之諧波減速裝置包含波產生器、柔輪及第一剛輪。",
         "【申請專利範圍】",
-        # Claim 1 — root independent, introduces 波產生器 and 柔輪
+        # Claim 1 - root independent, introduces 波產生器 and 柔輪
         "1. 一種諧波減速裝置，包含一波產生器及一柔輪。",
-        # Claim 2 — dependent on 1, introduces 第一剛輪 (new component)
+        # Claim 2 - dependent on 1, introduces 第一剛輪 (new component)
         "2. 如請求項1所述之諧波減速裝置，其中更包含一第一剛輪，所述第一剛輪與該柔輪相嚙合。",
-        # Claim 3 — dependent on 2, references 第一剛輪 (defined in claim 2)
+        # Claim 3 - dependent on 2, references 第一剛輪 (defined in claim 2)
         "3. 如請求項2所述之諧波減速裝置，其中所述第一剛輪包含複數個齒狀結構。",
-        # Claim 4 — dependent on 3, references 齒狀結構 (plural intro in 3)
+        # Claim 4 - dependent on 3, references 齒狀結構 (plural intro in 3)
         "4. 如請求項3所述之諧波減速裝置，其中所述齒狀結構為漸開線齒形。",
         "【摘要】",
         "本發明提供一種諧波減速裝置。",

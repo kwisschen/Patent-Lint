@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Adversarial tests for section extraction — Phase 4 B6 audit."""
+# Copyright (c) 2025-2026 Christopher Chen
+"""Adversarial tests for section extraction - Phase 4 B6 audit."""
 
 import pytest
 from pathlib import Path
@@ -210,4 +210,4 @@ class TestStandaloneHeaderBoundary:
         from patentlint.parser.docx_loader import load_docx
         loaded = load_docx(str(TESTSPEC1))
         dd = extract_detailed_description_section(loaded.full_text)
-        assert len(dd) > 10000, f"DD only {len(dd)} chars — boundary likely wrong"
+        assert len(dd) > 10000, f"DD only {len(dd)} chars - boundary likely wrong"

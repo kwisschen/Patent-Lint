@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Tests for patentlint.parser.sections — direct port of Java characterization tests."""
+# Copyright (c) 2025-2026 Christopher Chen
+"""Tests for patentlint.parser.sections - direct port of Java characterization tests."""
 
 from patentlint.parser.sections import (
     extract_claims_section,
@@ -99,7 +99,7 @@ class TestDetectPatentDocument:
         """[NNNN] numbering alone no longer accepts (Phase 9 #74).
 
         The convention is shared across US, CN, JP, KO, and several
-        European patent offices — too ambiguous to anchor acceptance on.
+        European patent offices - too ambiguous to anchor acceptance on.
         A US patent without either an English section header or an
         English claim preamble must bypass the non-patent banner via
         the "Show Results Anyway" button.
@@ -126,7 +126,7 @@ class TestDetectPatentDocument:
         """CN publication export with [NNNN] numbering must not false-positive US.
 
         The CN [0001] paragraph-number convention shares bracket shape with
-        US [NNNN] numbering — the CJK short-circuit is what distinguishes.
+        US [NNNN] numbering - the CJK short-circuit is what distinguishes.
         """
         text = (
             "用于调整神经网络的方法和装置\n"

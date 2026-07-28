@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Patent document section extraction using regex patterns.
 
-All functions are pure — no side effects, no I/O.
+All functions are pure - no side effects, no I/O.
 Patterns validated against USPTO DOCX Section Headers (May 2022) and MPEP § 608.
 
 IMPORTANT: All section boundary patterns are anchored to standalone paragraph headers
@@ -321,7 +321,7 @@ def extract_title(full_text: str) -> str:
     """
     first_header = _ANY_SECTION_HEADER.search(full_text)
     candidate = full_text[:first_header.start()] if first_header else full_text
-    # Keep the last non-empty line of the pre-header block — patent filings
+    # Keep the last non-empty line of the pre-header block - patent filings
     # typically carry boilerplate / applicant identifiers above the title.
     lines = [ln.strip() for ln in candidate.splitlines() if ln.strip()]
     return lines[-1] if lines else ""
@@ -336,6 +336,6 @@ def detect_prior_art_citations(text: str) -> str:
     - Explicit references: U.S. Patent No. X,XXX,XXX
     - Generic long numeric sequences (original behavior preserved for backward compat)
     """
-    # Original pattern preserved — matches long numeric sequences
+    # Original pattern preserved - matches long numeric sequences
     matches = re.findall(r"(\d{1,9}(?:[/,.\-\s]?\d{1,9}){5,})", text)
     return ", ".join(m.strip() for m in matches)

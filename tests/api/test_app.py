@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for the FastAPI application.
 
 Uses FastAPI TestClient for endpoint testing with real .docx fixtures.
@@ -271,7 +271,7 @@ class TestReportEndpointLocale:
         )
         assert response.status_code == 200
         assert response.content[:4] == b"%PDF"
-        # PDFs compress text — length sanity check only. Substring
+        # PDFs compress text - length sanity check only. Substring
         # assertions on localized text would require a PDF parser.
         assert len(response.content) > 1000
 

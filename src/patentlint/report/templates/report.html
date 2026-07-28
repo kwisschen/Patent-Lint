@@ -24,7 +24,7 @@
     }
   }
 
-  /* Frost-glass surface tokens — weasyprint supports CSS3 fully (gradients,
+  /* Frost-glass surface tokens - weasyprint supports CSS3 fully (gradients,
      rgba, box-shadow) but NOT backdrop-filter (browser-only). Approximate
      the LiquidGlass aesthetic with translucent gradient + soft shadow +
      specular inner-light highlight. Print stays light-only by design
@@ -320,10 +320,10 @@
   /* Color scheme matches the web hero (--pass-border / --verify-border /
      --amend-border on light mode). PDF doesn't have dark mode, so
      light-mode hex values are the canonical reference. */
-  .cover .grade-letter.tier-a { color: #2563eb; }   /* blue — pass-border */
-  .cover .grade-letter.tier-bc { color: #16a34a; }  /* green — verify-border */
+  .cover .grade-letter.tier-a { color: #2563eb; }   /* blue - pass-border */
+  .cover .grade-letter.tier-bc { color: #16a34a; }  /* green - verify-border */
   .cover .grade-letter.tier-d,
-  .cover .grade-letter.tier-f { color: #dc2626; }   /* red — amend-border */
+  .cover .grade-letter.tier-f { color: #dc2626; }   /* red - amend-border */
   .cover .grade-letter.tier-na { color: #6b7280; }
   .cover .grade-score {
     font-size: 14pt;
@@ -433,7 +433,7 @@
       {%- endif %}
       {#- Standard US 12-tier letter map (no A+, matches rubric.py
           letter_for_score). #}
-      {%- set s_letter = '—' %}
+      {%- set s_letter = '-' %}
       {%- if sg.applicable %}
         {%- if sg.score >= 93 %}{%- set s_letter = 'A' %}
         {%- elif sg.score >= 90 %}{%- set s_letter = 'A-' %}
@@ -609,7 +609,7 @@
 {%- endif %}
 
 {# -- Antecedent Basis (in Claims section) -- #}
-{# C11: render the richer finding shape — reference_form (the actual    #}
+{# C11: render the richer finding shape - reference_form (the actual    #}
 {# 'the X' phrase as it appears in the claim), suggested_match did-     #}
 {# you-mean hint, and cross_ref pointer to the spec-support card. Each  #}
 {# finding gets its own row so per-finding hints have somewhere to     #}

@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Unit tests for the Phase 8c CN harness ADR-110 / ADR-111 divergences.
 
 Covers the two structural divergences from TW:
 
-* ADR-110 — strict category validation. Unknown category → exit 3.
-* ADR-111 — round field + bidirectional halt with per-round
+* ADR-110 - strict category validation. Unknown category → exit 3.
+* ADR-111 - round field + bidirectional halt with per-round
   resolved_by satisfaction. Protect_violations hard-fail without
   resolved_by escape hatch even when round matches.
 
@@ -246,7 +246,7 @@ def test_stale_round_does_not_satisfy_halt_for_unlabeled_key():
     ]
     doc = _labels_doc(labels, current_round=2)
     # Walker emits an unexpected key (F,9,z) that is NOT covered by any
-    # label — current_round_resolutions is empty, so halt fires.
+    # label - current_round_resolutions is empty, so halt fires.
     actual = _actual(
         [("F", 1, "a", "所述a"), ("F", 2, "b", "所述b"), ("F", 9, "z", "所述z")]
     )

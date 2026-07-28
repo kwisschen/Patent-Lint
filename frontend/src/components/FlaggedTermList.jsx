@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 //
-// Inline chip list for flagged tokens detected by walkers — restrictive
+// Inline chip list for flagged tokens detected by walkers - restrictive
 // wording, implied phrases, terminology leaks, commercial language, etc.
 // Consumes a structured items payload (details_params.flagged_phrases) and
 // renders each token as a small color-coded chip so the user sees WHICH
@@ -14,7 +14,7 @@
 //
 // Features:
 // - Hover tooltip surfaces location when item.location is set
-//   ("from paragraph 4", "from claim 8") — gives context without
+//   ("from paragraph 4", "from claim 8") - gives context without
 //   cluttering the chip text.
 // - Overflow truncation: cap at DEFAULT_MAX visible chips; render a
 //   "+N more" badge when more exist. Prevents UI explosion on

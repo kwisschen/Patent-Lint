@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Adversarial tests for claims parsing — Phase 4 B6 audit."""
+# Copyright (c) 2025-2026 Christopher Chen
+"""Adversarial tests for claims parsing - Phase 4 B6 audit."""
 
 from patentlint.models import Claim
 from patentlint.parser.claims import (

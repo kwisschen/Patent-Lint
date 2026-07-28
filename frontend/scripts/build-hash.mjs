@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 //
 // scripts/build-hash.mjs
 // Shared content-based build-hash computation. Used by both
@@ -14,7 +14,7 @@
 // Excludes:
 //   - node_modules, dist, .vite, __pycache__ (build artifacts)
 //   - hidden dotfiles
-//   - version.json (self-reference — this script writes it)
+//   - version.json (self-reference - this script writes it)
 //   - .DS_Store
 //
 // Effect: docs-only commits (README.md, etc.) do not change the hash,
@@ -54,7 +54,7 @@ function walkInputs(dir, frontendDir, inputs) {
 }
 
 // Root-level files that affect the production bundle but live outside
-// src/ or public/. vite.config.js is the load-bearing one — changing
+// src/ or public/. vite.config.js is the load-bearing one - changing
 // plugins / aliases / define values produces a different bundle.
 const ROOT_FILES = [
   'index.html',

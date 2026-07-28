@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Calibrate per-jurisdiction confidence-score thresholds against
 ensemble-verdict ground truth.
 
@@ -11,7 +11,7 @@ corpus drafts (so each finding carries the freshly-computed
 table per jurisdiction.
 
 The output is the calibration data for Phase 5 of the precision-push
-plan — pick the lowest threshold T_high per jurisdiction where
+plan - pick the lowest threshold T_high per jurisdiction where
 high-conf-bucket precision ≥ 70%.
 
 Usage:
@@ -30,7 +30,7 @@ from pathlib import Path
 PATENTLINT_ROOT = Path("/Users/chrischen/Documents/Projects/Patent-Lint")
 sys.path.insert(0, str(PATENTLINT_ROOT / "src"))
 
-# These imports load the production walker — `run_walker_on_draft`
+# These imports load the production walker - `run_walker_on_draft`
 # constructs the doc from corpus claims and runs `check_antecedent_basis*`
 # which now emits `confidence_score` on every issue.
 from .phase2b_judging import (  # noqa: E402
@@ -41,8 +41,8 @@ from .phase2b_judging import (  # noqa: E402
 
 # Threshold candidates. The v3 confidence formula (analysis/utils.py)
 # emits scores from baseline 50 with empirically-grounded ±15 adjustments,
-# so the meaningful range is roughly 25–80 with most findings clustering
-# 35–65. The plan's original 70-90 range was calibrated for the v1/v2
+# so the meaningful range is roughly 25-80 with most findings clustering
+# 35-65. The plan's original 70-90 range was calibrated for the v1/v2
 # formulas (baseline 80) and would show empty buckets on v3 data.
 # Cover the v3 distribution comprehensively + keep the original high
 # end for sanity-checking edge cases.
@@ -54,8 +54,8 @@ def _walker_key(claim_id: int, term: str, reference_form: str) -> tuple:
 
     Verdicts only carry (claim_id, term); walker issues carry
     (claim_id, term, reference_form). When multiple findings share
-    (claim_id, term) — e.g. two distinct reference forms `the X` and
-    `said X` — the walker has multiple findings but the verdict is one
+    (claim_id, term) - e.g. two distinct reference forms `the X` and
+    `said X` - the walker has multiple findings but the verdict is one
     judgment. Strategy: when joining, allow the verdict to apply to
     the highest-confidence walker finding for that (claim_id, term)
     pair. The remaining walker findings inherit the same verdict
@@ -228,7 +228,7 @@ def render_report(result: dict) -> str:
         if suggestions:
             best = min(suggestions, key=lambda r: r["threshold"])
             lines.append(
-                f"\n**Suggested T_high: {best['threshold']}** — "
+                f"\n**Suggested T_high: {best['threshold']}** - "
                 f"bucket precision {100*best['bucket_precision']:.1f}%, "
                 f"{best['bucket_size']} findings ({100*best['bucket_pct_of_total']:.0f}% of total).\n"
             )

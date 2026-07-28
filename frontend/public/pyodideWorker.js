@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 let pyodide = null;
 
 self.onmessage = async (event) => {
@@ -21,14 +21,14 @@ self.onmessage = async (event) => {
             });
 
             // Stage 2: Load pre-compiled WASM packages (micropip + pydantic).
-            // lxml is intentionally deferred — it's only needed for CNIPA XML/ZIP
+            // lxml is intentionally deferred - it's only needed for CNIPA XML/ZIP
             // uploads (a niche format <5% of users). DOCX inputs (the common case)
             // never need it. When a user uploads an XML/ZIP file, the analyze
             // handler below detects the extension and pulls lxml lazily before
             // calling into the Python pipeline. Saves ~1.7 MB raw / ~700 KB
             // compressed on first load for the typical DOCX user. Trust posture
             // unchanged: this is a static-library fetch from the same Pyodide
-            // CDN we already use at boot, not a file-upload path — the user's
+            // CDN we already use at boot, not a file-upload path - the user's
             // document never leaves their browser. (Same pattern as the existing
             // Noto Sans CJK font lazy-fetch on first localized-PDF export.)
             self.postMessage({ type: 'progress', stage: 'wasm_packages', percent: 40, message: 'Loading document parser...' });
@@ -67,7 +67,7 @@ self.onmessage = async (event) => {
             // Detection: filename extension is the primary signal; we also
             // sniff the first 5 bytes for "<?xml" as a defense for renamed
             // files. DOCX (= ZIP starting with "PK\x03\x04") is excluded from
-            // the lxml path even though it's technically a ZIP — CN's XML-in-
+            // the lxml path even though it's technically a ZIP - CN's XML-in-
             // ZIP wrapper has a different inner layout that the docx_loader
             // doesn't touch. Only Jurisdiction.CN + .xml or .zip extension
             // routes through xml_loader (per pipeline.py CN branch).

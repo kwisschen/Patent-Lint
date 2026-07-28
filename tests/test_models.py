@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Unit tests for patentlint.models."""
 
 from patentlint.models import AnalysisResult, CheckItem, Jurisdiction, ReportData
@@ -90,7 +90,7 @@ class TestUsFiguresSequentialAmend:
 
 
 class TestUsAbstractStructureAmendDiagnostics:
-    """Regression for the abstract.structure.amend diagnostic crash —
+    """Regression for the abstract.structure.amend diagnostic crash -
     ``_to_us_report_data`` referenced ``self.abstract_text`` before that
     field existed on ``AnalysisResult``, so any document with
     ``abstract_structure_good=False`` (extra paragraphs / invalid

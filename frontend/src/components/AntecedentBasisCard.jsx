@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListChecks, ChevronRight, Flag, Check, RotateCcw } from 'lucide-react'
@@ -72,7 +72,7 @@ function highlightTerms(text, terms) {
   // regex alternation is leftmost (first matching alternative wins),
   // not longest. Without this sort, a finding for `the two` would
   // shadow the longer `the two clamping members respectively move`
-  // finding — only the `the two` prefix would highlight, leaving the
+  // finding - only the `the two` prefix would highlight, leaving the
   // rest of the longer term unhighlighted. Same bug class for CJK.
   const byLengthDesc = (a, b) => b.length - a.length
   const sortedCjk = [...cjkParts].sort(byLengthDesc)
@@ -116,7 +116,7 @@ function highlightTerms(text, terms) {
 
 /**
  * Format a sorted list of claim IDs into a compact range string.
- * e.g. [2,3,4,5,8,10,11,12] → "Claims 2–5, 8, 10–12"
+ * e.g. [2,3,4,5,8,10,11,12] → "Claims 2-5, 8, 10-12"
  */
 function formatClaimRange(ids, t) {
   if (ids.length === 0) return ''
@@ -130,12 +130,12 @@ function formatClaimRange(ids, t) {
     if (ids[i] === end + 1) {
       end = ids[i]
     } else {
-      ranges.push(start === end ? `${start}` : `${start}–${end}`)
+      ranges.push(start === end ? `${start}` : `${start}-${end}`)
       start = ids[i]
       end = ids[i]
     }
   }
-  ranges.push(start === end ? `${start}` : `${start}–${end}`)
+  ranges.push(start === end ? `${start}` : `${start}-${end}`)
 
   return t('claimDiagram.claimsLabel', { range: ranges.join(', ') })
 }
@@ -164,7 +164,7 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
     // Mirror diagnostic_extractors.extract_antecedent_basis output shape so
     // the per-claim payload matches what the Python section-level extractor
     // produces, filtered to this claim only. Triage tooling already keys on
-    // `findings: [...]` — no special-case handling needed.
+    // `findings: [...]` - no special-case handling needed.
     const findingsList = claimFindings.slice(0, SAMPLE_SIZE).map((f) => {
       const { context_before, context_after, char_offset } = excerptAroundReference(
         claimText, f.term || '', f.reference_form || null)
@@ -236,7 +236,7 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
   }
   // Row badge counts findings (one per claim-term pair), not distinct terms.
   // A row that groups claims 1/2/3/5 all sharing the single term 該使用者介面
-  // represents 4 findings, not 1 — the header total must reconcile with the
+  // represents 4 findings, not 1 - the header total must reconcile with the
   // sum of row badges.
   const findingCount = findings.length
   const hasText = claimIds.some((id) => claimTextMap[id])
@@ -255,9 +255,9 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
       hintsByLabel[label].crossRef = 'spec_support'
     }
     // Candidate-introduction hint: the flagged term appears earlier in the
-    // SAME claim, article-less (or with an intro quantifier) — it may already
+    // SAME claim, article-less (or with an intro quantifier) - it may already
     // be introduced. Surfaced as a fact for the user to verify (self-
-    // classification), not a verdict — honors the §112 advisory framing.
+    // classification), not a verdict - honors the §112 advisory framing.
     if (!hintsByLabel[label].candidateIntro && f.term) {
       const ci = candidateIntroExcerpt(claimTextMap[f.claim_id] || '', f.term, f.reference_form)
       if (ci) hintsByLabel[label].candidateIntro = { ...ci, term: f.term }
@@ -267,11 +267,11 @@ function ClaimGroupRow({ claimIds, terms, findings, claimTextMap, t, i18n, juris
   // 2026-06-25: the per-finding "Higher confidence" badge was REMOVED. It
   // ranked findings by `confidence_score`, but the confidence discriminator was
   // subsequently proven dead (no deterministic runtime feature separates a
-  // benign §112 reference from a real defect — AUC ~0.60 with authoritative
+  // benign §112 reference from a real defect - AUC ~0.60 with authoritative
   // examiner labels + nonlinear models; see project_fp_class_campaign). Showing
   // a "Higher confidence" chip on advisory findings we cannot actually rank
   // projects false confidence and discourages the verification these heuristic
-  // findings require — the opposite of the advisory framing's intent.
+  // findings require - the opposite of the advisory framing's intent.
 
   return (
     <div className={`transition-opacity duration-200 ${reviewed ? 'opacity-55' : ''}`}>
@@ -443,7 +443,7 @@ export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }
   const { t, i18n } = useTranslation()
   // 2026-05-05: removed `highConfOnly` filter. Empirical measurement on
   // TW supplement_v2 showed the conf≥65 bucket is mildly walker-bug
-  // enriched (75.3% statutory precision vs 78.8% whole-corpus) — the
+  // enriched (75.3% statutory precision vs 78.8% whole-corpus) - the
   // filter was misleading users into a slightly worse subset at 96%
   // recall loss. Default-show-all is correct UX.
 
@@ -494,7 +494,7 @@ export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }
 
   const visibleGroups = groups
   // Stable per-group key (claim ids + term set) for the session-only review
-  // state. No persistence / no server — matches the no-upload trust model;
+  // state. No persistence / no server - matches the no-upload trust model;
   // refresh clears it.
   const groupKey = (g) => `${g.claimIds.join(',')}|${g.terms.join(' ')}`
   const [reviewed, setReviewed] = useState(() => new Set())
@@ -513,7 +513,7 @@ export default function AntecedentBasisCard({ issues, claimTrees, jurisdiction }
   // ── Section-level batch report ────────────────────────────────────────
   // Bundle every finding in the section into ONE report. NEUTRAL disposition:
   // a §112 section is a mix of real defects and FPs, so a blanket FP/TP verdict
-  // would poison the gold — the maintainer triages each finding on its merits.
+  // would poison the gold - the maintainer triages each finding on its merits.
   const { sendFeedback: sendBatchFeedback } = useFeedback()
   const [batchModalOpen, setBatchModalOpen] = useState(false)
   const BATCH_MAX = 25

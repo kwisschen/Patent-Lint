@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """TW cross-reference and drawings analysis checks.
 
 Two cross-reference checks and one internal figure count check
@@ -82,7 +82,7 @@ def check_symbol_vs_rep_drawing(doc: TwPatentDocument) -> list[CheckItem]:
                 # by the parser for each side so triage can immediately see
                 # whether the missing numerals are absent from the table or
                 # stored under a different key (range form, sub-suffix dash,
-                # etc.). Privacy-safe — numerals are digits/Latin only and
+                # etc.). Privacy-safe - numerals are digits/Latin only and
                 # never draft prose, mirroring the per-finding numeral field.
                 parsed_table_numerals_sample=[
                     e.numeral for e in doc.symbol_table[:10]
@@ -94,7 +94,7 @@ def check_symbol_vs_rep_drawing(doc: TwPatentDocument) -> list[CheckItem]:
                     {
                         "kind": m["kind"],
                         # Issue #49 (2026-05-15): include the actual numeral
-                        # string (privacy-safe — digits/Latin only, never
+                        # string (privacy-safe - digits/Latin only, never
                         # draft prose) so triage can verify which symbols
                         # were flagged. With only charlens, every short
                         # numeral looked identical.
@@ -196,7 +196,7 @@ def check_figures_sequential(doc: TwPatentDocument) -> list[CheckItem]:
             numbers.add(int(m.group(1)))
 
     if not numbers:
-        # Separate message key from the normal pass case — the `.pass`
+        # Separate message key from the normal pass case - the `.pass`
         # template interpolates `{{found_max}}` which we'd have nothing
         # to provide here, so sharing the key would render the raw
         # placeholder. `.passNone` has its own placeholder-free template.
@@ -232,7 +232,7 @@ def check_figures_sequential(doc: TwPatentDocument) -> list[CheckItem]:
 
     return [CheckItem(
         status="pass",
-        message=f"Figures 1–{max_n} are numbered sequentially.",
+        message=f"Figures 1-{max_n} are numbered sequentially.",
         message_key="check.tw.drawings.figuresSequential.pass",
         details_params={"found_max": str(max_n)},
         reference="專利審查基準",

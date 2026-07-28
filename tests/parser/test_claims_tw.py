@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for TW claim parser."""
 
 from __future__ import annotations
@@ -72,13 +72,13 @@ class TestClaimDependencyFixture:
         assert c.independent is True
 
     def test_claim_7_self_ref(self):
-        """Self-referencing claim — deps include self."""
+        """Self-referencing claim - deps include self."""
         c = self.claims[6]
         assert c.id == 7
         assert 7 in c.dependencies
 
     def test_claim_8_forward_ref(self):
-        """Forward-referencing claim — deps include higher number."""
+        """Forward-referencing claim - deps include higher number."""
         c = self.claims[7]
         assert c.id == 8
         assert 9 in c.dependencies
@@ -140,7 +140,7 @@ class TestParseTwClaimsUnit:
         assert claims == []
 
     def test_quoted_reference_independent_claim(self):
-        """引用記載型式: `一種X，具備如請求項N所述的Y` — independent per §18.
+        """引用記載型式: `一種X，具備如請求項N所述的Y` - independent per §18.
 
         The `如請求項N` in the body is incorporation-by-reference of a
         sub-component, not a claim dependency. Preamble `一種X` with a new

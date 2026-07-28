@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for `compute_confidence_score` v4 (R58).
 
 V4 weights are ML-distilled from logistic regression on 19,645
@@ -45,7 +45,7 @@ class TestConfidenceScore:
 
     def test_paren_penalty(self):
         # Paren-containing → -12 (mid-length 8 chars)
-        # `widget(120)` is 11 chars — in mid-length range +5, paren -12
+        # `widget(120)` is 11 chars - in mid-length range +5, paren -12
         # 50 + 5 (mid-len 5-10? no, 11 chars > 10) ... let me re-check.
         # term_len 11 → not 5-10, not >12 → no len bonus
         # paren -12 → 50 - 12 = 38
@@ -92,7 +92,7 @@ class TestConfidenceScore:
         )) == 50
 
     def test_term_in_spec_no_boost(self):
-        # R57c: term_in_spec REVERTED — empirical signal direction is
+        # R57c: term_in_spec REVERTED - empirical signal direction is
         # negative on supplement_v2; no score change.
         assert compute_confidence_score(**_baseline(term_in_spec=True)) == 55
 
@@ -142,7 +142,7 @@ class TestConfidenceScore:
         assert compute_confidence_score(**_baseline(term="widget(1)")) < baseline
         # acronym << baseline
         assert compute_confidence_score(**_baseline(term="MAC")) < baseline
-        # term_in_spec REVERTED to neutral (R57c) — no score change
+        # term_in_spec REVERTED to neutral (R57c) - no score change
         assert compute_confidence_score(**_baseline(term_in_spec=True)) == baseline
         # formal register > baseline
         assert compute_confidence_score(**_baseline(prefix="said")) > baseline

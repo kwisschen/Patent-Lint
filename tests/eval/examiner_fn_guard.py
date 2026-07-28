@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# examiner_fn_guard.py — the AUTHORITATIVE US FN-guard (ADR-159 Path-to-80).
+# examiner_fn_guard.py - the AUTHORITATIVE US FN-guard (ADR-159 Path-to-80).
 #
 # WHY THIS EXISTS: validate_fix.py guards against silencing LLM-gold
 # `legit_drafting_error` labels. This guards against silencing a defect a REAL
-# USPTO EXAMINER actually rejected under §112 — authoritative ground truth, and
+# USPTO EXAMINER actually rejected under §112 - authoritative ground truth, and
 # a strictly stronger bar. Two US classes (R33-gerund #336/#337 and
 # R34-switches #386/#401) sat blocked for weeks specifically because a
 # TERM-LEVEL check could not clear them and no runnable claim-level guard
@@ -20,7 +20,7 @@
 #
 # GATE: recalled_lost == 0. Exit code 1 on failure.
 #
-# PREREQ — the EdgeXpert claims dump (gitignored, local-only). EdgeXpert is a
+# PREREQ - the EdgeXpert claims dump (gitignored, local-only). EdgeXpert is a
 # Tailscale-reachable Postgres box. NOTE THE HOSTNAME TRAP: `edgexpert-ts` is an
 # ~/.ssh/config Host ALIAS, NOT a DNS name, so socket.create_connection on it
 # always fails with gaierror and reads as "box is down". The box answers on
@@ -104,7 +104,7 @@ def main() -> int:
     args = ap.parse_args()
 
     if not args.dump.exists():
-        print(f"FATAL: claims dump not found at {args.dump} — see the header for the pull.")
+        print(f"FATAL: claims dump not found at {args.dump} - see the header for the pull.")
         return 2
 
     cur = recalled_set(args.dump, args.limit)
@@ -126,7 +126,7 @@ def main() -> int:
         for sk, t in lost[:25]:
             print(f"        FN  {sk}  {t!r}")
         ok = not lost
-        print(f"  GATE: {'PASS' if ok else 'FAIL — do not ship'}")
+        print(f"  GATE: {'PASS' if ok else 'FAIL - do not ship'}")
         return 0 if ok else 1
 
     ap.error("pass --snapshot or --compare")

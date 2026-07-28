@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 
 // TODO: Browser compatibility verification before deployment (Phase 5)
 // Test PatentLint end-to-end (Pyodide load + analysis + PDF export) on:
@@ -23,7 +23,7 @@ import { composeEnterprise } from '../lib/feedback'
 import { useFeedback } from '../components/FeedbackPicker'
 
 /* ------------------------------------------------------------------ */
-/*  Section 1 — Hero                                                   */
+/*  Section 1 - Hero                                                   */
 /* ------------------------------------------------------------------ */
 
 function HeroSection({ onShowProveIt }) {
@@ -85,7 +85,7 @@ function HeroSection({ onShowProveIt }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Section 2 — Competitor Comparison Table                            */
+/*  Section 2 - Competitor Comparison Table                            */
 /* ------------------------------------------------------------------ */
 
 function ComparisonRow({ index, qKey }) {
@@ -181,7 +181,7 @@ function ComparisonSection() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Section 3 — Technical Details (collapsible)                        */
+/*  Section 3 - Technical Details (collapsible)                        */
 /* ------------------------------------------------------------------ */
 
 const techSections = [

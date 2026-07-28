@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """TW specification analysis checks.
 
 Ten pure functions checking Taiwan patent specification formatting
@@ -49,7 +49,7 @@ _VALID_ENDINGS = frozenset("。！？")
 
 _TRADEMARK_RE = re.compile(r"[®™©]")
 # Model-number pattern: ALL-CAPS alphanumeric tokens that look like product
-# codes (XY-1234, ABC-12A). No IGNORECASE — lowercase hyphenated words like
+# codes (XY-1234, ABC-12A). No IGNORECASE - lowercase hyphenated words like
 # "foo-22" or "usb-30" are not model numbers. No `\b` word boundaries
 # because TW titles often surround the code with CJK chars (一種XY-1234裝置),
 # and CJK chars are Unicode word-chars in Python's regex engine, which
@@ -62,7 +62,7 @@ _MODEL_NUMBER_RE = re.compile(
     r"(?![A-Za-z0-9])"
 )
 # Spec-body references to claims (prohibited per 施行細則 §17). Introducing
-# verb is not constrained — TIPO 偵錯系統 (Table 1 #20) accepts 如/依據/根據
+# verb is not constrained - TIPO 偵錯系統 (Table 1 #20) accepts 如/依據/根據
 # for dep-claim openers, so spec body may use any of them when referring
 # back to a claim. Connective accepts either 所(述|記載|揭示|描述) or bare
 # 之/的 (請求項N之X form). Distance-bounded (≤20 chars) to avoid FPs on
@@ -102,7 +102,7 @@ def _section_has_content(items: list) -> bool:
         return False
     if isinstance(items[0], str):
         return any(p.strip() for p in items)
-    # SymbolEntry list — non-empty means has content
+    # SymbolEntry list - non-empty means has content
     return True
 
 
@@ -115,7 +115,7 @@ def check_required_sections(doc: TwPatentDocument) -> list[CheckItem]:
     Covers the three top-level components a TIPO application requires per
     專利法 §25 第1項 (摘要 / 說明書 / 申請專利範圍) plus the 說明書
     subsections enumerated in 專利法施行細則 §17. The 【發明說明書】 /
-    【新型說明書】 wrapper header itself is intentionally not checked —
+    【新型說明書】 wrapper header itself is intentionally not checked -
     when subsection headers (【技術領域】 etc.) carry the content, the
     specification is present in substance even if the wrapper divider is
     omitted.
@@ -125,7 +125,7 @@ def check_required_sections(doc: TwPatentDocument) -> list[CheckItem]:
     # Top-level: 摘要 (required per 專利法 §25 第1項, format per §21).
     # Strict: the abstract HEADING must be present. The parser's 【中文】
     # text marker can populate ``abstract_text`` even when the drafter
-    # omitted 【摘要】 / 【發明摘要】 / 【新型摘要】 — that is itself a
+    # omitted 【摘要】 / 【發明摘要】 / 【新型摘要】 - that is itself a
     # §25 violation, so we key off the header-seen flag rather than the
     # content field.
     if not doc.abstract_header_seen or not doc.abstract_text.strip():
@@ -148,7 +148,7 @@ def check_required_sections(doc: TwPatentDocument) -> list[CheckItem]:
 
     # Conditional: 圖式簡單說明 + 符號說明 are required when drawings exist
     # (per 施行細則 §17 第1款 第5項 + 第7項). Use ``figure_refs`` (parsed
-    # from spec body) as the canonical signal that figures exist —
+    # from spec body) as the canonical signal that figures exist -
     # mirrors CN's approach at cn_specification.py and is robust to
     # the case where a user removes both 圖式簡單說明 AND 符號說明
     # while keeping figure references in 實施方式.
@@ -219,7 +219,7 @@ def check_required_sections(doc: TwPatentDocument) -> list[CheckItem]:
 def check_section_ordering(doc: TwPatentDocument) -> list[CheckItem]:
     """Verify sections appear in prescribed TIPO order.
 
-    Reads ``doc.section_order`` — the list of canonical body-section keys
+    Reads ``doc.section_order`` - the list of canonical body-section keys
     in the order the parser first encountered each 【】bracket header. A
     non-increasing canonical-index sequence indicates the drafter placed
     sections out of the 專利法施行細則 §17 order. Empty ``section_order``
@@ -337,7 +337,7 @@ def check_paragraph_numbering(doc: TwPatentDocument) -> list[CheckItem]:
 # sub-section labels like `【0003】[先前技術文獻]` are recognized as
 # structural labels, not prose paragraphs (R67, 2026-05-08). Without
 # the prefix gate, paragraphEnding fired on every numbered ASCII-bracket
-# sub-section label — bug class #8 from the real-drafter audit taxonomy.
+# sub-section label - bug class #8 from the real-drafter audit taxonomy.
 _BRACKET_SUBHEADING = re.compile(r"^(?:【\d{4}】\s*)?\[.+\]$")
 _SYMBOL_TABLE_ENTRY = re.compile(
     r"^[A-Za-z0-9~\-]+\s*(?:[‧·.…：:\t]\s*[‧·.…]*\s*|\s{2,}).+"
@@ -347,7 +347,7 @@ _SYMBOL_TABLE_ENTRY = re.compile(
 # starts with this marker, the sub-claim body may legitimately span multiple
 # Word paragraphs (intermediate lines ending with ，/、/；, closing line with 。).
 _BRACKET_CLAIM_MARKER = re.compile(r"^\[\d+\]")
-# R65 (2026-05-05): empty paragraph numbering markers — drafters use
+# R65 (2026-05-05): empty paragraph numbering markers - drafters use
 # `【NNNN】` alone as section spacers between content paragraphs (Word
 # auto-numbers carry, no body content). User-reported on 神秘黑屏哥.docx
 # c10 where `【0009】` was flagged for missing 。. These are structural,
@@ -359,7 +359,7 @@ _EMPTY_PARA_NUM_ONLY = re.compile(r"^【\d{4}】\s*$")
 # references (`美國專利第10256321號說明書`), not prose sentences;
 # drafters conventionally omit trailing 。 since the entry's natural
 # terminal is the publication number/identifier.
-# User-reported FP on 神秘黑屏哥.docx — paragraph 5 was a citation entry
+# User-reported FP on 神秘黑屏哥.docx - paragraph 5 was a citation entry
 # flagged for missing 。 under prose-paragraph rule. Pattern accepts an
 # optional 【NNNN】 prefix.
 _CITATION_PARA = re.compile(
@@ -367,7 +367,7 @@ _CITATION_PARA = re.compile(
 )
 # JP-translation-style section headings delimited by full-width angle
 # brackets, e.g. `＜＜1．　背景＞＞` / `＜2．1　詳細構成＞` (patentlint-reports#195,
-# build 1176cad2). These are section headers — they legitimately end with
+# build 1176cad2). These are section headers - they legitimately end with
 # the closing bracket ＞ (U+FF1E), not sentence punctuation. FN-safe: a
 # prose paragraph is never wrapped end-to-end in ＜…＞. Optional 【NNNN】
 # prefix accepted, mirroring the other structural-label patterns.
@@ -402,7 +402,7 @@ def check_paragraph_ending(doc: TwPatentDocument) -> list[CheckItem]:
 
     Relaxed sections (發明內容, 圖式簡單說明, 實施方式) also treat
     JP-translation-style `[N]`-numbered sub-claim groups as single logical
-    units — intermediate continuation paragraphs are skipped and only the
+    units - intermediate continuation paragraphs are skipped and only the
     closing paragraph of the unit (the one that ends with valid punctuation)
     is validated. A unit is opened by a paragraph starting with `[<digit>+]`
     that lacks a valid ending, and closed by the first subsequent paragraph
@@ -472,7 +472,7 @@ def check_paragraph_ending(doc: TwPatentDocument) -> list[CheckItem]:
                 # ``w:numPr`` because they wrap inside a single logical
                 # 【NNNN】 paragraph) carry word_number=None. Walk backward
                 # to the most recent non-None value so the flagged label
-                # matches the 【NNNN】 the drafter sees in Word — not an
+                # matches the 【NNNN】 the drafter sees in Word - not an
                 # internal ordinal that shifts on subsection boundaries.
                 label: int | str = ordinal
                 resolved_wn: str | None = None
@@ -733,7 +733,7 @@ def check_symbol_table_presence(doc: TwPatentDocument) -> list[CheckItem]:
     """Check 符號說明 presence when drawings exist.
 
     R65 (2026-05-05): now a no-op when ``check_required_sections`` would
-    already flag 符號說明 as missing — that condition is the strict
+    already flag 符號說明 as missing - that condition is the strict
     superset (drawings_exist = figure_refs OR drawings_description), and
     the user-reported duplicate FIX entries on 神秘黑屏哥.docx came from
     both checks firing simultaneously. ``check_required_sections`` is the
@@ -744,7 +744,7 @@ def check_symbol_table_presence(doc: TwPatentDocument) -> list[CheckItem]:
     symbol_missing = not _section_has_content(doc.symbol_table)
 
     if drawings_exist and symbol_missing:
-        # Duplicate of requiredSections.amend — suppress to avoid showing
+        # Duplicate of requiredSections.amend - suppress to avoid showing
         # two FIX entries for the same defect.
         return [CheckItem(
             status="pass",
@@ -845,17 +845,17 @@ def check_symbol_table_consistency(doc: TwPatentDocument) -> list[CheckItem]:
 # grounded in 原住民族傳統智慧創作保護條例). TIPO's PDF fig 31 shows example
 # hits (魯凱族, 部落, 阿美族, 卑南族, 達悟族) but doesn't publish its full
 # trigger list. The list below covers 原住民族委員會's 16 officially-
-# recognized peoples (high confidence — statutory indigenous status under
+# recognized peoples (high confidence - statutory indigenous status under
 # 原住民族基本法) plus the two generic terms TIPO surfaced in examples.
 #
 # NOT INCLUDED: the 10 unrecognized Pingpu peoples (阿立昆族, 貓霧拺族,
 # 巴賽族, 洪雅族, 噶哈巫族, 凱達格蘭族, 拍瀑拉族, 巴宰族, 猴猴族,
-# 道卡斯族) — they lack statutory indigenous status and their names
+# 道卡斯族) - they lack statutory indigenous status and their names
 # overlap more with ordinary usage, raising FP risk. If TIPO's real
 # trigger list is confirmed to include these, the tuple can be extended.
 # 雅美族 (older colonial-era name) and 達悟族 (modern official name) both
 # included since they name the same people and either can appear in drafts.
-# Advisory VERIFY — flags for drafter review; not a hard violation.
+# Advisory VERIFY - flags for drafter review; not a hard violation.
 _TW_INDIGENOUS_TERMS = (
     # 16 officially-recognized indigenous peoples
     "阿美族", "泰雅族", "排灣族", "布農族", "卑南族", "魯凱族", "鄒族",
@@ -869,7 +869,7 @@ _TW_INDIGENOUS_TERMS = (
 def check_indigenous_terms(doc: TwPatentDocument) -> list[CheckItem]:
     """Flag indigenous peoples terminology for drafter review.
 
-    Per TIPO 偵錯系統 Table 1 #19 + 原住民族傳統智慧創作保護條例 — TIPO's
+    Per TIPO 偵錯系統 Table 1 #19 + 原住民族傳統智慧創作保護條例 - TIPO's
     system surfaces indigenous-peoples references so applicants can verify
     their filing doesn't conflict with protected traditional creations.
     Advisory (VERIFY) rather than a hard rule violation.
@@ -908,7 +908,7 @@ def check_indigenous_terms(doc: TwPatentDocument) -> list[CheckItem]:
 
 
 # ── D1 + D3 reference symbol consistency (TW) ──────────────────────────
-# 專利法施行細則 §19 第2款 — 元件代表符號應一致 + 符號說明應載明圖式中所示之
+# 專利法施行細則 §19 第2款 - 元件代表符號應一致 + 符號說明應載明圖式中所示之
 # 主要元件代表符號. Two related checks:
 #
 #   D1: same numeral used with multiple disjoint element names → FIX
@@ -916,13 +916,13 @@ def check_indigenous_terms(doc: TwPatentDocument) -> list[CheckItem]:
 #   D3: numerals appearing in spec body but not declared in 符號說明 → FIX
 #       (drafter forgot to add element to symbol table)
 
-# Reuse the CN helpers — imports moved to top of file. Helpers are
+# Reuse the CN helpers - imports moved to top of file. Helpers are
 # Traditional/Simplified-agnostic since the comparison is char-based.
 
 
 def _tw_all_spec_text(doc) -> str:
     """Concatenate body sections for D1 scan (excludes title/claims/
-    abstract/symbol_table — those have their own checks).
+    abstract/symbol_table - those have their own checks).
     """
     parts: list[str] = []
     for section in (doc.technical_field, doc.prior_art, doc.disclosure,
@@ -934,7 +934,7 @@ def _tw_all_spec_text(doc) -> str:
 
 def _tw_declared_numeral_names(doc) -> dict:
     """Build {numeral: normalized declared element name} from the 符號說明
-    (+ 代表圖之符號簡單說明) — the drafter's authoritative numeral→element
+    (+ 代表圖之符號簡單說明) - the drafter's authoritative numeral→element
     table (專利法施行細則 §17 第1款第4目 / §19). This is ground truth the body
     D1 scan can anchor against: TW (unlike US/CN) declares the canonical name
     for every reference numeral, so an over-captured body variant can be
@@ -965,7 +965,7 @@ def _tw_anchor_pairs_to_declared(
     pairs: list[tuple[str, str]], declared: dict
 ) -> list[tuple[str, str]]:
     """Collapse a captured (numeral, name) to its 符號說明-declared name when
-    the capture CONTAINS or IS CONTAINED BY the declared name — i.e. the
+    the capture CONTAINS or IS CONTAINED BY the declared name - i.e. the
     capture is the declared element plus over-captured quantifier / verb-clause
     noise. Real reports this ends: `224 → 條所述導通線路 / 多條導通線路` (both
     contain declared `導通線路`); `R3 → KP可透過電阻 / 輸出端是以電阻` (both
@@ -1021,13 +1021,13 @@ def _tw_anchor_pairs_to_declared(
 
 
 def check_numeral_consistency_tw(doc: TwPatentDocument) -> list[CheckItem]:
-    """D1 — same numeral used with multiple disjoint element names.
+    """D1 - same numeral used with multiple disjoint element names.
 
-    Statutory: 專利法施行細則 §19 第2款 — 元件代表符號應一致.
+    Statutory: 專利法施行細則 §19 第2款 - 元件代表符號應一致.
     Same precision filters as CN/US: ≥3 total occurrences per numeral,
     ≥2 occurrences per candidate name, disjoint CJK char sets between
     at least one pair of names. TW additionally anchors body captures to the
-    declared 符號說明 table (FN-safe over-capture collapse — see
+    declared 符號說明 table (FN-safe over-capture collapse - see
     _tw_anchor_pairs_to_declared).
     """
     spec_text = _tw_all_spec_text(doc)
@@ -1064,7 +1064,7 @@ def check_numeral_consistency_tw(doc: TwPatentDocument) -> list[CheckItem]:
             reference="專利法施行細則 §19 第2款",
         )]
 
-    # ADVISORY re-tier (2026-06-25) — reference-numeral D1 is ~87% FP on real TW
+    # ADVISORY re-tier (2026-06-25) - reference-numeral D1 is ~87% FP on real TW
     # firm drafts with a semantic FP/real split; emit a single ADVISORY "verify"
     # item (zero grade via ADVISORY_REVIEW_KEYS), mirroring §112 (#314). Nothing
     # hidden → FN-safe.
@@ -1148,7 +1148,7 @@ def _build_tw_d1_check_item(
                         c["numeral"],
                         _cjk_format_d1_name_for_display(c["canonical"]),
                     ),
-                    # Outlier context — issue #47 (2026-05-15). Previously
+                    # Outlier context - issue #47 (2026-05-15). Previously
                     # only the canonical's context was surfaced, which made
                     # it impossible to tell from the issue body whether
                     # the outlier was (a) a drafter typo near the canonical
@@ -1177,15 +1177,15 @@ def _build_tw_d1_check_item(
 # in 實施方式 without declaring "102 housing" in 符號說明.
 #
 # Reverse direction (declared in 符號說明 but never used in spec) is
-# also a real defect (dead reference) but lower-precision — drafters
+# also a real defect (dead reference) but lower-precision - drafters
 # sometimes legitimately list elements shown in drawings without
 # describing them in detail. D3 implementation focuses on the high-
 # precision "used but not declared" direction.
 
 def check_symbol_table_coverage_tw(doc: TwPatentDocument) -> list[CheckItem]:
-    """D3 — numerals appearing in spec body but missing from 符號說明.
+    """D3 - numerals appearing in spec body but missing from 符號說明.
 
-    Statutory: 專利法施行細則 §19 第2款 — all reference symbols used in
+    Statutory: 專利法施行細則 §19 第2款 - all reference symbols used in
     the specification must be declared in 符號說明.
 
     No-ops if symbol_table is empty (separate check_symbol_table_presence
@@ -1232,10 +1232,10 @@ def check_symbol_table_coverage_tw(doc: TwPatentDocument) -> list[CheckItem]:
             piece = piece.strip()
             if not piece:
                 continue
-            # Add raw form — Latin-prefix matching ("S21" stays "S21")
+            # Add raw form - Latin-prefix matching ("S21" stays "S21")
             declared.add(piece)
             # Also add the canonical digit-only form (strip leading zeros
-            # and any letter prefix) — matches the canonicalization used
+            # and any letter prefix) - matches the canonicalization used
             # by extract_numeral_name_pairs which stores int-form digits.
             digits = "".join(c for c in piece if c.isdigit())
             if digits:
@@ -1245,7 +1245,7 @@ def check_symbol_table_coverage_tw(doc: TwPatentDocument) -> list[CheckItem]:
                     continue
 
     undeclared = sorted(num for num in used_numerals if num not in declared)
-    # Apply same precision filter as D1 — require ≥3 total occurrences
+    # Apply same precision filter as D1 - require ≥3 total occurrences
     # for digit refs (filters chemistry/range noise); ≥2 for Latin prefix.
     pair_counts: Counter = Counter(num for num, _ in pairs)
 
@@ -1256,7 +1256,7 @@ def check_symbol_table_coverage_tw(doc: TwPatentDocument) -> list[CheckItem]:
 
     # Suppression: if the captured name is ALREADY declared in
     # symbol_table for a DIFFERENT refnum, the drafter declared the
-    # element type — subsequent refnums are legit instances of that
+    # element type - subsequent refnums are legit instances of that
     # type (TIPO accepts this convention). Only flag refnums whose
     # captured name is unknown to the symbol table.
     declared_names: set[str] = {
@@ -1318,7 +1318,7 @@ def check_symbol_table_coverage_tw(doc: TwPatentDocument) -> list[CheckItem]:
     findings = sample
     # Inline message names the undeclared numerals + their captured noun
     # in a universal-locale format. Just the numeral and the captured
-    # name in quotes — the surrounding i18n template provides the
+    # name in quotes - the surrounding i18n template provides the
     # "reference symbol(s)" / "附圖標記" categorical word. ASCII parens +
     # `(+N more)` overflow read cleanly in en/de/zh/ja/ko alike; only
     # the CJK element name (which we cannot translate) carries source

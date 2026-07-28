@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for TW cross-reference and drawings checks (#31-33)."""
 
 from __future__ import annotations
@@ -104,7 +104,7 @@ class TestCheckSymbolVsRepDrawing:
 
 
 class TestCheckBracketFormat:
-    """Check #32: Section header bracket format — 專利法施行細則 §17."""
+    """Check #32: Section header bracket format - 專利法施行細則 §17."""
 
     def test_empty_list_passes(self):
         """No bracketless headers → PASS."""
@@ -151,7 +151,7 @@ class TestCheckBracketFormat:
 
     def test_flagged_phrases_items_surfaced(self):
         """Malformed header tokens surface as FlaggedTermList chips so the
-        user sees WHICH headers failed the 【】 bracket format — no
+        user sees WHICH headers failed the 【】 bracket format - no
         hardcoded example list in the template."""
         doc = TwPatentDocument(
             bracketless_section_headers=["先前技術", "[實施方式]", "(發明內容)"]

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """PatentLint data models.
 
 Pydantic models for structured patent analysis results.
@@ -25,7 +25,7 @@ def _dx(**kwargs: Any) -> dict[str, Any]:
 
 # Shape: '[N] → "word"\n              ' repeated. Parser surfaces the
 # (location, phrase) pairs so CheckItem emit sites can hand them to the
-# FlaggedTermList chip renderer. The location is int — paragraph or claim
+# FlaggedTermList chip renderer. The location is int - paragraph or claim
 # id depending on the emit site context.
 _FORMATTED_PHRASE_RE = re.compile(r'\[(\d+)\]\s+→\s+"([^"]+)"')
 
@@ -77,7 +77,7 @@ class Claim(BaseModel):
     ``dependencies`` tracks statutory parent-claim references derived from
     the **preamble** form (``如請求項N所述的X...``). ``quoted_references``
     tracks 引用記載型式 body-embedded references (``一種Y，具備如請求項
-    N所述的X``) — semantically incorporation-by-reference of claim N's
+    N所述的X``) - semantically incorporation-by-reference of claim N's
     sub-component definition, not a claim dependency. Keeping them in
     separate fields lets statutory checks (subject consistency, dependency
     format, multi-dep limits) key off ``dependencies`` while the antecedent
@@ -232,7 +232,7 @@ class TwPatentDocument(BaseModel):
     # (Phase 9 #66).
     section_order: list[str] = Field(default_factory=list)
     # Canonical TIPO section names that appeared without the required 【】
-    # brackets — either bare (先前技術 alone on a line) or in variant brackets
+    # brackets - either bare (先前技術 alone on a line) or in variant brackets
     # ([先前技術], 〔先前技術〕, (先前技術), （先前技術）). Populated by
     # ``extract_tw_sections``; consumed by ``check_bracket_format`` to surface
     # 專利法施行細則 §17 violations.
@@ -242,7 +242,7 @@ class TwPatentDocument(BaseModel):
     # parser still populated ``abstract_text`` via the 【中文】 text marker
     # or another fallback. Consumed by ``check_required_sections`` to
     # distinguish "摘要 content present because heading was there" from
-    # "摘要 content recovered via fallback — 專利法 §25 第1項 violation".
+    # "摘要 content recovered via fallback - 專利法 §25 第1項 violation".
     abstract_header_seen: bool = False
     # True when a claims heading (【申請專利範圍】 / 【發明申請專利範圍】 /
     # 【新型申請專利範圍】) was parsed. See ``abstract_header_seen``.
@@ -281,7 +281,7 @@ class CheckItem(BaseModel):
     reference: str | None = None
     # Structural diagnostic fingerprint surfaced in error-report emails so
     # the maintainer can identify walker parse paths without seeing claim
-    # content. Values must be str / int / bool — no claim text, no nouns,
+    # content. Values must be str / int / bool - no claim text, no nouns,
     # no verbs. Disclosed in Privacy §7 (error reports). Example:
     #   {"extraction_path": "fallthrough", "preamble_matched": False,
     #    "dep_subject_charlen": 13, "parent_subject_charlen": 3}
@@ -338,14 +338,14 @@ class ReportData(BaseModel):
     # Reason code describing why ``likely_patent`` was set the way it was
     # (see :class:`patentlint.parser.detection.DetectionReason`). Carries
     # forward to the frontend banner so copy can honestly describe what
-    # the detector actually checked — content-missing vs. cross-script
+    # the detector actually checked - content-missing vs. cross-script
     # vs. weak-signal. Default ``None`` keeps back-compat for constructors
     # that predate ADR-150.
     patent_detection_reason: str | None = None
     has_tracked_changes: bool = False
     has_scanned_fallback: bool = False
 
-    # Issue #9 / ADR-082 revisit — set to True when the document looks
+    # Issue #9 / ADR-082 revisit - set to True when the document looks
     # like a different supported jurisdiction than the one the user
     # selected (e.g., user picked US but uploaded a TW draft). The
     # frontend renders a soft-warning banner with a one-click "Switch
@@ -428,13 +428,13 @@ class RubricGrade(BaseModel):
     """Top-level scoring result for an analysis run.
 
     When ``completeness_gap`` is set, the draft is incomplete and
-    ``score`` / ``letter`` are placeholders — the UI surfaces a
+    ``score`` / ``letter`` are placeholders - the UI surfaces a
     "draft incomplete" state instead of the grade.
     """
 
     rubric_version: str = "1.0"
     score: int = 0  # 0-100 weighted overall (post-gate)
-    letter: str = "F"  # A / A- / B+ / B / B- / C+ / C / D / F (or "—" when ungraded)
+    letter: str = "F"  # A / A- / B+ / B / B- / C+ / C / D / F (or "-" when ungraded)
     cap_reason: str | None = None  # e.g., "1 FIX caps grade at B-"
     section_grades: list[SectionGrade] = Field(default_factory=list)
     impact_list: list[ImpactItem] = Field(default_factory=list)
@@ -499,10 +499,10 @@ class AnalysisResult(BaseModel):
     special_format_checks: list[CheckItem] = Field(default_factory=list)
     unsupported_terms: list[UnsupportedTerm] = Field(default_factory=list)
 
-    # Drawings — reference numerals
+    # Drawings - reference numerals
     reference_numerals: list[ReferenceNumeral] = Field(default_factory=list)
 
-    # Issue #2 & #3 — required sections + figure cross-references
+    # Issue #2 & #3 - required sections + figure cross-references
     required_sections_checks: list[CheckItem] = Field(default_factory=list)
     figure_xref_checks: list[CheckItem] = Field(default_factory=list)
 
@@ -545,16 +545,16 @@ class AnalysisResult(BaseModel):
     patent_detection_reason: str | None = None
     has_scanned_fallback: bool = False
 
-    # Issue #9 / ADR-082 revisit — see ReportData.jurisdiction_mismatch.
+    # Issue #9 / ADR-082 revisit - see ReportData.jurisdiction_mismatch.
     jurisdiction_mismatch: bool = False
     suggested_jurisdiction: str | None = None
 
-    # EPC v1 English-input gate — see ReportData.epc_unsupported_language.
+    # EPC v1 English-input gate - see ReportData.epc_unsupported_language.
     epc_unsupported_language: str | None = None
 
     # Abstract
     abstract_word_count: int = 0
-    # Raw abstract text — populated for US runs from the parser's
+    # Raw abstract text - populated for US runs from the parser's
     # ``abstract_section``. CN/TW carry their abstract text on
     # ``CnPatentDocument`` / ``TwPatentDocument`` (the doc-level model)
     # rather than here, so ``abstract_text`` on ``AnalysisResult`` is
@@ -562,7 +562,7 @@ class AnalysisResult(BaseModel):
     # ``_to_us_report_data`` (e.g., the abstract.structure.amend chip)
     # read from this field; the previous version assumed it existed
     # and crashed when ``abstract_structure_good`` was False (b447ab6
-    # / 1c35b54 ADR-145 sweep regression — see fix landed alongside
+    # / 1c35b54 ADR-145 sweep regression - see fix landed alongside
     # the ADR-082 revisit).
     abstract_text: str = ""
     abstract_structure_good: bool = True
@@ -584,7 +584,7 @@ class AnalysisResult(BaseModel):
     def to_report_data(self) -> ReportData:
         """Transform flat analysis fields into structured report data.
 
-        This is a presentation adapter — it does not change any existing
+        This is a presentation adapter - it does not change any existing
         fields or behavior.
         """
         if self.jurisdiction == Jurisdiction.CN:
@@ -757,7 +757,7 @@ class AnalysisResult(BaseModel):
                 ),
             ))
 
-        # Required sections checks (Issue #2) — moved to front of spec-structure
+        # Required sections checks (Issue #2) - moved to front of spec-structure
         # group per the document-order invariant (was mid-list; TW/CN already
         # emit these first).
         for rc in self.required_sections_checks:
@@ -820,7 +820,7 @@ class AnalysisResult(BaseModel):
 
         # --- Group 2: Spec content ---
         # Reference numeral consistency D1 (US, MPEP § 608.01(g)) emits
-        # first in SPEC_CONTENT — same canonical position (idx 15) as
+        # first in SPEC_CONTENT - same canonical position (idx 15) as
         # CN/TW so users see refnum-checks early regardless of jurisdiction.
         for nc in self.numeral_consistency_checks:
             spec_checks.append(nc)
@@ -887,7 +887,7 @@ class AnalysisResult(BaseModel):
             ))
 
         # Spec restrictive wording belongs to spec-content (not spec-structure)
-        # per the document-order invariant — was #2 in the legacy order.
+        # per the document-order invariant - was #2 in the legacy order.
         if self.improper_spec_paragraphs:
             spec_items = _parse_formatted_phrases(
                 self.improper_spec_phrases_formatted, kind="phrase"
@@ -920,7 +920,7 @@ class AnalysisResult(BaseModel):
             ))
 
         # Scope-limit wording (US, MPEP § 2111 + Phillips v. AWH).
-        # Sits next to restrictive-wording in the spec-content group —
+        # Sits next to restrictive-wording in the spec-content group -
         # both are drafting hygiene checks operating on spec body text.
         # Distinct from restrictiveWording: that targets MPEP § 2173.01
         # absolutes; this targets Phillips claim-construction risk.
@@ -986,7 +986,7 @@ class AnalysisResult(BaseModel):
         if self.multiple_dependent_claims:
             claims_checks.append(CheckItem(
                 status="verify",
-                message="Multiple-dependent claims found — review fees and chained-multi rule (MPEP § 608.01(n); § 112(e)).",
+                message="Multiple-dependent claims found - review fees and chained-multi rule (MPEP § 608.01(n); § 112(e)).",
                 message_key="check.claims.multipleDependent.verify",
                 details=f"Claims: {self.multiple_dependent_claims}",
                 details_key="details.multipleDependentClaims",
@@ -1008,7 +1008,7 @@ class AnalysisResult(BaseModel):
                 message_key="check.claims.multipleDependent.pass",
             ))
 
-        # § 112(e) chained-multi prohibition — a multi-dep claim cannot depend
+        # § 112(e) chained-multi prohibition - a multi-dep claim cannot depend
         # on another multi-dep claim. Unlike the informational multipleDependent
         # check, this is a real rule violation (FIX).
         if self.chained_multi_dep_claims:
@@ -1067,7 +1067,7 @@ class AnalysisResult(BaseModel):
         # --- G5: Claims cross-jurisdiction ---
         # Split into two category-specific checks (MPEP § 2173.01 restrictive
         # absolutes vs MPEP § 2173.05(b) indefinite/relative wording) so users
-        # see category-appropriate titles and chips — avoids the confusion of
+        # see category-appropriate titles and chips - avoids the confusion of
         # "can" appearing under a card titled "restrictive absolutes".
         if self.restrictive_absolute_claims:
             # kind="term": these flags are claim-scoped, so the FlaggedTermList
@@ -1147,8 +1147,8 @@ class AnalysisResult(BaseModel):
             ))
 
         # Excess-claims fee threshold (37 CFR 1.16(h)/(i)) emits last in G5
-        # at slot 85 — after restrictiveAbsolutes (80) + indefiniteWording (82)
-        # — mirroring CN/TW/EPC where excessClaims is the last cross-
+        # at slot 85 - after restrictiveAbsolutes (80) + indefiniteWording (82)
+        # - mirroring CN/TW/EPC where excessClaims is the last cross-
         # jurisdiction check. User-visible order is consistent across all 4.
         for ec in self.excess_claims_checks:
             claims_checks.append(ec)
@@ -1187,7 +1187,7 @@ class AnalysisResult(BaseModel):
             claims_checks.append(CheckItem(
                 # Advisory tier (ADR-159): the §112(b) antecedent walker is ~70%
                 # benign on real drafts and the FP/defect split is not
-                # deterministically recoverable (proven 5 ways — see
+                # deterministically recoverable (proven 5 ways - see
                 # tests/eval/EXAMINER_GROUND_TRUTH_FINDINGS.md). So it asserts
                 # nothing: "verify" status + a `.verify` key in
                 # rubric.ADVISORY_REVIEW_KEYS = visible "references to verify"
@@ -1211,7 +1211,7 @@ class AnalysisResult(BaseModel):
             from patentlint.diagnostic_extractors import extract_spec_support
             unique_phrases = sorted(set(ut.phrase for ut in self.unsupported_terms))
             claims_checks.append(CheckItem(
-                # Advisory tier (ADR-159) — same rationale as antecedent above:
+                # Advisory tier (ADR-159) - same rationale as antecedent above:
                 # the §112(a) spec-support walker is FP-heavy, so "verify"
                 # status + ADVISORY_REVIEW_KEYS membership = zero grade impact.
                 status="verify",
@@ -1268,7 +1268,7 @@ class AnalysisResult(BaseModel):
         if wc < 50 or wc > 150:
             abstract_checks.append(CheckItem(
                 status="amend",
-                message=f"Abstract word count ({wc}) is outside the 50–150 range.",
+                message=f"Abstract word count ({wc}) is outside the 50-150 range.",
                 message_key="check.abstract.wordCount.amend",
                 details_key="details.abstractWordCountFix",
                 diagnostics=_dx(
@@ -1281,7 +1281,7 @@ class AnalysisResult(BaseModel):
         else:
             abstract_checks.append(CheckItem(
                 status="pass",
-                message=f"Abstract word count ({wc}) is within the 50–150 range.",
+                message=f"Abstract word count ({wc}) is within the 50-150 range.",
                 message_key="check.abstract.wordCount.pass",
             ))
 

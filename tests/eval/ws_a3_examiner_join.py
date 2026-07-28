@@ -1,22 +1,22 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# ws_a3_examiner_join.py — WS-A3 (ADR-159 Path-to-80). Run the US antecedent
+# ws_a3_examiner_join.py - WS-A3 (ADR-159 Path-to-80). Run the US antecedent
 # walker on EdgeXpert ODP claims and join its findings to REAL examiner §112
 # antecedent-basis labels (tests/eval/us_examiner_legit.json, WS-A1) at the
-# TERM level (app, normalized-term) — version-robust, avoids the claim-number
+# TERM level (app, normalized-term) - version-robust, avoids the claim-number
 # 0%-overlap artifact.
 #
 # Two numbers come out:
 #   - true RECALL: of examiner-flagged terms that SURVIVE OCR in the claim text,
 #     how many did the walker also flag? (Did the walker catch real defects?)
 #   - examiner-confirmed RATE: of all walker findings on these apps, how many
-#     match an examiner term? (A benign-rate *signal* — but examiner-absence is
+#     match an examiner term? (A benign-rate *signal* - but examiner-absence is
 #     NOT proof of benign: examiners miss things / issues get amended out, so
 #     this BOUNDS rather than measures the FP rate. See PATH_TO_80_PLAN.md.)
 #
 # The OCR-survival ceiling is reported because a term the OCR destroyed
-# (`sul fu ric acid`) can never be matched — recall is measured against the
+# (`sul fu ric acid`) can never be matched - recall is measured against the
 # surviving subset, not the raw examiner set.
 #
 # DATA: claims_text lives in EdgeXpert Postgres (psycopg2, PA venv only). Pull a

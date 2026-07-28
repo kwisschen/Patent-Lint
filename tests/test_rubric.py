@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Tests for patentlint.rubric — the deterministic scoring rubric."""
+# Copyright (c) 2025-2026 Christopher Chen
+"""Tests for patentlint.rubric - the deterministic scoring rubric."""
 
 from __future__ import annotations
 
@@ -47,7 +47,7 @@ class TestPureHelpers:
         assert compute_section_score(0, 1) == 100 - REVIEW_DEDUCTION
 
     def test_section_score_floors_at_zero(self):
-        # 10 FIX would deduct 150 — must floor.
+        # 10 FIX would deduct 150 - must floor.
         assert compute_section_score(10, 0) == 0
 
     def test_letter_thresholds(self):
@@ -260,7 +260,7 @@ class TestComputeRubricGrade:
         )
         assert grade.completeness_gap is not None
         assert grade.completeness_gap.missing_sections == ["claims", "abstract"]
-        assert grade.letter == "—"
+        assert grade.letter == "-"
         assert not grade.is_complete
 
     def test_section_grades_include_all_5(self):
@@ -282,7 +282,7 @@ class TestComputeRubricGrade:
 
     def test_gate_only_surfaced_when_actually_capped(self):
         # 1 FIX in claims: section drops to 85, weighted contribution
-        # ~93 un-capped. Gate caps at 92 (B+) — actually binding, so
+        # ~93 un-capped. Gate caps at 92 (B+) - actually binding, so
         # cap_reason should surface.
         checks = [_check("amend", "check.claims.selfDependent.amend")]
         grade = compute_rubric_grade(
@@ -443,7 +443,7 @@ class TestRequiredSectionsRouting:
 class TestAdvisoryReviews:
     """Advisory REVIEW items are informational (cross-reference / prior-art
     citation / indigenous-term presence). They surface in the triage panel
-    but must NOT deduct from the rubric grade — drafters who legitimately
+    but must NOT deduct from the rubric grade - drafters who legitimately
     cite cross-references shouldn't see the grade drop."""
 
     def test_advisory_keys_set_nonempty(self):
@@ -498,7 +498,7 @@ class TestAdvisoryReviews:
             all_checks=checks,
             has_drawings=True,
         )
-        # Only the paragraph-ending item should land in the impact list — the
+        # Only the paragraph-ending item should land in the impact list - the
         # two advisory items are filtered out.
         keys_in_impact = {item.message_key for item in grade.impact_list}
         assert "check.spec.paragraphEnding.verify" in keys_in_impact
@@ -527,7 +527,7 @@ class TestAdvisoryReviews:
     def test_section_112_walker_checks_are_advisory(self):
         # ADR-159 advisory re-tier: antecedent basis (§112(b)) and spec support
         # (§112(a)) are FP-heavy and not deterministically separable, so they
-        # must carry ZERO grade impact in every jurisdiction — a draft whose
+        # must carry ZERO grade impact in every jurisdiction - a draft whose
         # only flags are §112 walker findings still scores 100 / grade A.
         from patentlint.rubric import ADVISORY_REVIEW_KEYS
         s112_keys = [

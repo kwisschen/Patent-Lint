@@ -55,7 +55,7 @@
     "claimCategories": "Claim Categories",
     "method": "method",
     "apparatus": "apparatus",
-    "outsideRange": "Outside 50–150 range",
+    "outsideRange": "Outside 50-150 range",
     "outsideRangeCn": "Exceeds 300 characters",
     "outsideRangeTw": "Exceeds 250 characters",
     "noParagraphs": "No numbering found",
@@ -137,13 +137,13 @@
     "nonPatentWarningEpc": "This document may not be a European patent specification",
     "nonPatentWarningDetailsEpc": "PatentLint is designed for patent application drafts. This file does not appear to contain standard European specification sections (Technical Field, Background Art, etc.), numbered claims, or paragraph numbering. Analysis results may not be meaningful for non-European or non-patent documents.",
     "nonPatentWarningEpcNonEnglishDe": "EPC v1 supports English-language drafts only",
-    "nonPatentWarningDetailsEpcNonEnglishDe": "PatentLint detected substantial German content in this file. EPC v1 currently checks English-language European patent specifications only — DE / FR check engines are on the roadmap. You can still view the results, but the findings may not be meaningful for a German draft.",
+    "nonPatentWarningDetailsEpcNonEnglishDe": "PatentLint detected substantial German content in this file. EPC v1 currently checks English-language European patent specifications only - DE / FR check engines are on the roadmap. You can still view the results, but the findings may not be meaningful for a German draft.",
     "nonPatentWarningEpcNonEnglishFr": "EPC v1 supports English-language drafts only",
-    "nonPatentWarningDetailsEpcNonEnglishFr": "PatentLint detected substantial French content in this file. EPC v1 currently checks English-language European patent specifications only — DE / FR check engines are on the roadmap. You can still view the results, but the findings may not be meaningful for a French draft.",
+    "nonPatentWarningDetailsEpcNonEnglishFr": "PatentLint detected substantial French content in this file. EPC v1 currently checks English-language European patent specifications only - DE / FR check engines are on the roadmap. You can still view the results, but the findings may not be meaningful for a French draft.",
     "nonPatentWarningCrossScriptJapanese": "This looks like a Japanese patent document",
-    "nonPatentWarningDetailsCrossScriptJapanese": "PatentLint detected substantial Japanese kana (hiragana or katakana) in this file. Japanese drafts aren't currently supported — this tool checks U.S., European (EPC English), Simplified Chinese, and Traditional Chinese patent specifications. You can still view the results, but the output may not be useful for a Japanese draft.",
+    "nonPatentWarningDetailsCrossScriptJapanese": "PatentLint detected substantial Japanese kana (hiragana or katakana) in this file. Japanese drafts aren't currently supported - this tool checks U.S., European (EPC English), Simplified Chinese, and Traditional Chinese patent specifications. You can still view the results, but the output may not be useful for a Japanese draft.",
     "nonPatentWarningCrossScriptKorean": "This looks like a Korean patent document",
-    "nonPatentWarningDetailsCrossScriptKorean": "PatentLint detected substantial Hangul content in this file. Korean drafts aren't currently supported — this tool checks U.S., European (EPC English), Simplified Chinese, and Traditional Chinese patent specifications. You can still view the results, but the output may not be useful for a Korean draft.",
+    "nonPatentWarningDetailsCrossScriptKorean": "PatentLint detected substantial Hangul content in this file. Korean drafts aren't currently supported - this tool checks U.S., European (EPC English), Simplified Chinese, and Traditional Chinese patent specifications. You can still view the results, but the output may not be useful for a Korean draft.",
     "showResultsAnyway": "Show results anyway",
     "trackedChangesWarning": "This document contains tracked changes, which may affect analysis accuracy. Accept or reject all changes in your word processor, then analyze again.",
     "analyzeAgain": "Analyze Again",
@@ -176,7 +176,7 @@
   },
   "footer": {
     "disclaimer": "Not legal advice",
-    "builtBy": "© 2025–2026 Christopher Chen",
+    "builtBy": "© 2025-2026 Christopher Chen",
     "security": "Security",
     "about": "About",
     "commercial": "Commercial",
@@ -214,18 +214,18 @@
       "clipboardDescription": "Paste into any email app and send to {{email}}."
     },
     "emailGreeting": "Hi Christopher,",
-    "bodyPlaceholder": "[In a sentence or two, tell us what's wrong with this finding — is this a false positive, a miscategorization, or did the check miss something? Do NOT paste claim text or any other draft content; the structured payload above is the only thing that should leave your device.]",
+    "bodyPlaceholder": "[In a sentence or two, tell us what's wrong with this finding - is this a false positive, a miscategorization, or did the check miss something? Do NOT paste claim text or any other draft content; the structured payload above is the only thing that should leave your device.]",
     "footerIntro": "I'd like to share some feedback about PatentLint.",
-    "footerPlaceholder": "[Anything you'd like to share — bug reports, feature requests, questions, or general comments. For bugs, a note on your browser and OS helps us reproduce. For features, one sentence on your use case goes a long way. You don't need to share any business-confidential information.]",
+    "footerPlaceholder": "[Anything you'd like to share - bug reports, feature requests, questions, or general comments. For bugs, a note on your browser and OS helps us reproduce. For features, one sentence on your use case goes a long way. You don't need to share any business-confidential information.]",
     "enterpriseIntro": "I'd like to inquire about enterprise deployment of PatentLint.",
     "builderIntro": "Wanted to reach out about PatentLint. Here's what I'd love to ask or share:",
-    "enterprisePlaceholder": "[Tell us about your deployment needs — firm or team size and practice area, regions you work in, approximate document volume, evaluation timeline, and any specific requirements (e.g., on-premises or air-gapped install for ITAR or data sovereignty, SSO integration, custom rule packs).]",
-    "builderPlaceholder": "[Anything you'd like to share — interest in working together, a collaboration idea, feedback on the project, a copy or terminology correction, or just a hello. This is the builder-contact channel; finding-level bug reports work better through the in-app \"Looks wrong?\" button.]",
+    "enterprisePlaceholder": "[Tell us about your deployment needs - firm or team size and practice area, regions you work in, approximate document volume, evaluation timeline, and any specific requirements (e.g., on-premises or air-gapped install for ITAR or data sovereignty, SSO integration, custom rule packs).]",
+    "builderPlaceholder": "[Anything you'd like to share - interest in working together, a collaboration idea, feedback on the project, a copy or terminology correction, or just a hello. This is the builder-contact channel; finding-level bug reports work better through the in-app \"Looks wrong?\" button.]",
     "email": {
-      "subjectFinding": "PatentLint feedback — {{checkKey}}",
+      "subjectFinding": "PatentLint feedback - {{checkKey}}",
       "subjectFooter": "PatentLint feedback",
       "subjectEnterprise": "PatentLint enterprise inquiry",
-      "subjectBuilder": "Hi there — about PatentLint",
+      "subjectBuilder": "Hi there - about PatentLint",
       "fieldColon": ": ",
       "fieldCheck": "Check",
       "fieldMessage": "Message",
@@ -290,25 +290,25 @@
       "fieldComponentCount": "Component count",
       "fieldTopOutlierContextExcerpt": "Outlier context",
       "fieldNumeral": "Numeral",
-      "diagnosticHeader": "Diagnostic trail (de-identified — see Privacy §6):",
+      "diagnosticHeader": "Diagnostic trail (de-identified - see Privacy §6):",
       "fieldDisposition": "Disposition"
     },
     "reportModal": {
       "title": "Send anonymous feedback?",
-      "body": "A small structured payload is sent to PatentLint over HTTPS so we can improve this check: counts, the flagged term or phrase, a short surrounding excerpt, and category labels. No full claim text, no full paragraphs, no email, no IP — and what you see below is exactly what we get.",
+      "body": "A small structured payload is sent to PatentLint over HTTPS so we can improve this check: counts, the flagged term or phrase, a short surrounding excerpt, and category labels. No full claim text, no full paragraphs, no email, no IP - and what you see below is exactly what we get.",
       "previewHeading": "Content to send:",
       "send": "Send anonymously",
       "cancel": "Cancel",
       "emailFallback": "Prefer email? Send via mailto instead",
-      "toastSuccess": "Thanks — feedback received.",
-      "toastFailure": "Couldn't send right now — try email instead.",
-      "deidNotice": "Your feedback can't be linked to your identity. No email, IP, or account info is recorded — only the de-identified fragments shown above are sent.",
+      "toastSuccess": "Thanks - feedback received.",
+      "toastFailure": "Couldn't send right now - try email instead.",
+      "deidNotice": "Your feedback can't be linked to your identity. No email, IP, or account info is recorded - only the de-identified fragments shown above are sent.",
       "commentLabel": "Anything to add? (optional)",
       "commentPlaceholder": "e.g. “This term is already disclosed in claim 1.” A short note helps when the details above aren’t enough.",
-      "commentNotice": "What you type here is sent as-is — avoid pasting confidential text.",
+      "commentNotice": "What you type here is sent as-is - avoid pasting confidential text.",
       "dispositionHeading": "Is this flag correct?",
       "perFindingHeading": "This report covers several flags. Mark each one.",
-      "dispositionWhy": "Either answer helps — confirming a correct catch or flagging a wrong one both improve the checker on real drafts.",
+      "dispositionWhy": "Either answer helps - confirming a correct catch or flagging a wrong one both improve the checker on real drafts.",
       "disposition": {
         "false_positive": {
           "label": "This flag is wrong",
@@ -316,10 +316,10 @@
         },
         "confirmed_defect": {
           "label": "This is a correct catch",
-          "hint": "The checker is right — a genuine issue to fix."
+          "hint": "The checker is right - a genuine issue to fix."
         }
       },
-      "batchNote": "Batch report: all {{count}} flagged item(s) in this section will be sent together for review. No per-item verdict is attached — each is assessed on its own."
+      "batchNote": "Batch report: all {{count}} flagged item(s) in this section will be sent together for review. No per-item verdict is attached - each is assessed on its own."
     }
   },
   "cta": {
@@ -338,8 +338,8 @@
       "showHighConf": "High confidence only ({{count}})"
     },
     "higherConfidenceBadge": "Higher confidence",
-    "higherConfidenceTitle": "This finding is ranked among the higher-confidence subset (measured ~66% precision on a labeled English corpus at this threshold, vs 38% baseline). Still verify against your draft — this is a ranking, not a guarantee.",
-    "advisorySubtitle": "Advisory — not graded. Confirm each reference traces back to an element introduced earlier.",
+    "higherConfidenceTitle": "This finding is ranked among the higher-confidence subset (measured ~66% precision on a labeled English corpus at this threshold, vs 38% baseline). Still verify against your draft - this is a ranking, not a guarantee.",
+    "advisorySubtitle": "Advisory - not graded. Confirm each reference traces back to an element introduced earlier.",
     "toVerify": "to verify",
     "allReviewedPill": "All reviewed",
     "reviewedCount": "{{count}} reviewed",
@@ -351,28 +351,28 @@
     "didYouMeanCrossBranch": "Did you mean *{{term}}* (introduced in claim {{claim_id}}, which is not in this claim's dependency chain)?",
     "crossBranchAntecedent": "Introduced in claim {{claim_id}}, which is not in this claim's dependency chain. Restructure the dependency or re-introduce the term with \"a\".",
     "crossRefSpecSupport": "Also flagged in the specification-support review below.",
-    "candidateIntroArticleLess": "*{{term}}* also appears earlier in this claim without an article — it may already be introduced; verify.",
-    "candidateIntroQuantifier": "*{{term}}* appears earlier in this claim with \"{{marker}}\" — it may already be introduced; verify."
+    "candidateIntroArticleLess": "*{{term}}* also appears earlier in this claim without an article - it may already be introduced; verify.",
+    "candidateIntroQuantifier": "*{{term}}* appears earlier in this claim with \"{{marker}}\" - it may already be introduced; verify."
   },
   "specSupport": {
     "title": "Specification Support Review",
     "items": "terms",
     "item": "term",
     "crossRefAntecedent": "Also flagged in the antecedent-basis review above.",
-    "advisorySubtitle": "Advisory — not graded. Confirm each claim term has written-description support in the specification."
+    "advisorySubtitle": "Advisory - not graded. Confirm each claim term has written-description support in the specification."
   },
   "triage": {
     "title": "Priority Summary",
     "amend": "Needs Fixing",
     "amendEmptyClean": "Nothing flagged to fix or review.",
-    "amendEmptyReview": "No required fixes flagged — see Needs Review below.",
+    "amendEmptyReview": "No required fixes flagged - see Needs Review below.",
     "promote": "Treat as fix",
     "promoteTitle": "Move this item up to Needs Fixing",
     "demote": "Move to review",
     "demoteTitle": "Move this item back to Needs Review",
     "promotedBadge": "Marked by you",
     "promotedNote": "You moved this item into Needs Fixing",
-    "promoteHint": "Decided a review item needs a fix? Use “Treat as fix” to move it into Needs Fixing — this organizes your worklist and doesn’t change the grade.",
+    "promoteHint": "Decided a review item needs a fix? Use “Treat as fix” to move it into Needs Fixing - this organizes your worklist and doesn’t change the grade.",
     "verify": "Needs Review",
     "verifyEmpty": "No items to review.",
     "pass": "Passed",
@@ -458,14 +458,14 @@
       },
       "q6": {
         "question": "What does it cost?",
-        "patentlint": "Free — no subscription, no usage limits.",
+        "patentlint": "Free - no subscription, no usage limits.",
         "addin": "Typically requires a paid license.",
         "cloud": "Typically requires a subscription."
       },
       "q7": {
         "question": "Is my patent text used for AI training?",
         "patentlint": "Never. All checks are deterministic rule-based pattern matching.",
-        "addin": "Depends on vendor — some send telemetry.",
+        "addin": "Depends on vendor - some send telemetry.",
         "cloud": "Often yes. Terms of service commonly reserve such rights."
       }
     },
@@ -489,7 +489,7 @@
   "about": {
     "productTitle": "What is PatentLint?",
     "productTagline": "A first-of-its-kind patent draft checker that runs offline in your browser.",
-    "productDesc1": "PatentLint runs entirely on your own device, catching issues for you before the examiner does. The webpage is just the entry point. Once loaded, PatentLint runs on your device like desktop software — you can disconnect from the internet and keep using it.",
+    "productDesc1": "PatentLint runs entirely on your own device, catching issues for you before the examiner does. The webpage is just the entry point. Once loaded, PatentLint runs on your device like desktop software - you can disconnect from the internet and keep using it.",
     "productDesc1b": "Drop a U.S., European, Chinese, or Taiwanese patent draft for an instant compliance report and grade on formal requirements. No uploads, no cloud processing, no AI.",
     "productDesc2": "PatentLint checks drafting rules from the USPTO (U.S.), EPO (Europe), CNIPA (China), and TIPO (Taiwan), detecting issues commonly flagged by examination standards, such as missing antecedent basis, incorrect claim structure, and restrictive wording.",
     "usptoTitle": "PatentLint vs. USPTO Patent Center",
@@ -498,7 +498,7 @@
       "title": "Interactive US patent analysis",
       "claimTree": {
         "title": "Claim tree + § 112 walker",
-        "description": "Dependency tree for multi-dependent and multi-independent claims, with a § 112 walker covering antecedent basis (b) and written-description support (a) — cross-linked when one term fails both."
+        "description": "Dependency tree for multi-dependent and multi-independent claims, with a § 112 walker covering antecedent basis (b) and written-description support (a) - cross-linked when one term fails both."
       },
       "specAbstract": {
         "title": "Specification & abstract structure",
@@ -522,7 +522,7 @@
         "claimPeriods": "Claims end with a period",
         "claimDependencies": "Claim dependency validation",
         "claimSequentiality": "Claim numbers sequential",
-        "abstractWordCount": "Abstract word count (50–150)",
+        "abstractWordCount": "Abstract word count (50-150)",
         "abstractStructure": "Abstract single paragraph, valid ending",
         "figureSequential": "Figure numbers sequential",
         "singleFigure": "Single-figure labeling (\"The Figure\")",
@@ -626,7 +626,7 @@
       "title": "Interactive TW patent analysis",
       "claimTree": {
         "title": "Claim tree + 先行詞 walker",
-        "description": "Full claim-chain BFS walker for 先行詞 and 說明書支持 (§26 第3項) — goes beyond TIPO 偵錯系統's 符號說明 lookup-table comparison to catch real drafting gaps in the chain."
+        "description": "Full claim-chain BFS walker for 先行詞 and 說明書支持 (§26 第3項) - goes beyond TIPO 偵錯系統's 符號說明 lookup-table comparison to catch real drafting gaps in the chain."
       },
       "specAbstract": {
         "title": "Specification & abstract structure",
@@ -634,7 +634,7 @@
       },
       "symbolTable": {
         "title": "符號說明 cross-check (TW-only)",
-        "description": "TW-only 符號說明 parsed and cross-checked against 實施方式, 圖式簡單說明, and 代表圖 — plus a coverage check that flags any reference symbol used in the spec body but missing from 符號說明 (施行細則 §19 第2款)."
+        "description": "TW-only 符號說明 parsed and cross-checked against 實施方式, 圖式簡單說明, and 代表圖 - plus a coverage check that flags any reference symbol used in the spec body but missing from 符號說明 (施行細則 §19 第2款)."
       }
     },
     "tw": {
@@ -669,7 +669,7 @@
       "multiDepOnMultiDep": "Multi-dep claim cannot depend on another multi-dep",
       "multiDepAlternative": "Multi-dep alternative form",
       "titleSubjectMatch": "Title matches independent claim subjects",
-      "antecedentBasis": "Antecedent basis (先行詞) — ancestor-chain walker",
+      "antecedentBasis": "Antecedent basis (先行詞) - ancestor-chain walker",
       "specSupport": "Specification support for claim terms (專利法 §26 第3項)",
       "charCount": "Abstract character count (≤250)",
       "titleMatch": "Title in abstract",
@@ -722,14 +722,14 @@
     "licenseNote": "PatentLint is free for individual use. The source is published on GitHub under PolyForm-Strict-1.0.0 (source-available).",
     "tableFootnote": "As of April 2026; both tools may continue to evolve.",
     "cnTableFootnote": "As of May 2026. PatentLint may continue to evolve.",
-    "twTableFootnote": "TIPO coverage audited against 專利申請文件輔助偵錯系統 — 功能介紹與使用指南 (2023.5.30 版). TIPO 偵錯系統 supports utility-model filings only; PatentLint supports both utility models and inventions. Both tools may continue to evolve.",
+    "twTableFootnote": "TIPO coverage audited against 專利申請文件輔助偵錯系統 - 功能介紹與使用指南 (2023.5.30 版). TIPO 偵錯系統 supports utility-model filings only; PatentLint supports both utility models and inventions. Both tools may continue to evolve.",
     "epcTitle": "PatentLint EPC Drafting Checks",
     "epcSubtitle": "{{count}} structural checks against EPC drafting rules (Art. 78 / Rule 41-47 + EPO Guidelines Part F).",
     "epcFeatures": {
       "title": "Interactive EPC patent analysis",
       "claimTree": {
         "title": "Claim tree + Art. 84 walker",
-        "description": "Dependency tree across claims with English antecedent-basis + spec-support walkers (Art. 84 EPC). EPC-specific dep-preamble forms — \"any preceding claim\", \"any one of claims N to M\" — are pre-stripped and expanded at parse time."
+        "description": "Dependency tree across claims with English antecedent-basis + spec-support walkers (Art. 84 EPC). EPC-specific dep-preamble forms - \"any preceding claim\", \"any one of claims N to M\" - are pre-stripped and expanded at parse time."
       },
       "specAbstract": {
         "title": "Specification & abstract structure",
@@ -752,7 +752,7 @@
       "paragraphNumbering": "Paragraph numbering (advisory)",
       "paragraphEnding": "Paragraph ending punctuation",
       "titleRequired": "Title required (Rule 41(2)(b) EPC)",
-      "titleContent": "Title content — no trademarks or model numbers (Guidelines F-II § 4)",
+      "titleContent": "Title content - no trademarks or model numbers (Guidelines F-II § 4)",
       "figureRefConsistency": "Figure reference consistency (Rule 46(2)(h) EPC)",
       "numeralConsistency": "Reference numeral consistency (Rule 43(7) + Rule 46(2)(h) EPC)",
       "claimReferenceInSpec": "No claim references in description (EPO Guidelines F-IV § 4.3)",
@@ -763,27 +763,27 @@
       "singleSentence": "Single sentence per claim (Rule 43(4) + Guidelines F-IV § 4.10)",
       "refSignsInParens": "Reference signs in parentheses (Rule 43(7) EPC)",
       "subjectConsistency": "Subject matter consistency (Guidelines F-IV § 3.4)",
-      "transitionPhrase": "Transitional phrase — comprising / consisting of / characterised in that (Guidelines F-IV § 4.13)",
+      "transitionPhrase": "Transitional phrase - comprising / consisting of / characterised in that (Guidelines F-IV § 4.13)",
       "claimsSpecReference": "Claims must not reference description / drawings (Rule 43(6) EPC)",
       "multiDepOnMultiDep": "Multi-dep cannot depend on another multi-dep (Rule 43(4) EPC)",
       "markushFormat": "Markush group format (Guidelines F-IV § 4.20)",
       "independentClaimCount": "Independent-claim count per category (Rule 43(2) + 43(3) EPC, advisory)",
       "twoPartForm": "Two-part form (Rule 43(1) EPC, advisory)",
-      "antecedentBasis": "Antecedent basis (先行詞 walker) — Art. 84 EPC + Guidelines F-IV § 4.5",
-      "specSupport": "Specification support — Art. 84 EPC (support requirement)",
+      "antecedentBasis": "Antecedent basis (先行詞 walker) - Art. 84 EPC + Guidelines F-IV § 4.5",
+      "specSupport": "Specification support - Art. 84 EPC (support requirement)",
       "restrictiveAbsolutes": "Restrictive absolutes (Guidelines F-IV § 4.7, advisory)",
       "indefiniteWording": "Indefinite / relative wording (Guidelines F-IV § 4.6, advisory)",
       "punctuation": "Claim punctuation (Guidelines F-IV § 4.10)",
       "figuresSequential": "Figures numbered sequentially (Rule 46(2)(a) EPC)",
       "singleFigureLabel": "Single-figure label form (Guidelines F-V § 1.2)",
       "priorArtLabeling": "Prior-art figure labeling (Rule 46(2)(h) EPC)",
-      "wordCount": "Abstract word count (50-150) — Rule 47(2) + Guidelines F-II § 2.3",
+      "wordCount": "Abstract word count (50-150) - Rule 47(2) + Guidelines F-II § 2.3",
       "titleMatch": "Abstract refers to the title's invention (Guidelines F-II § 2.3.5)",
       "claimReference": "Abstract does not reference specific claims (Guidelines F-II § 2.3.3)",
-      "structure": "Abstract structure — single paragraph, no claim-style phraseology, no merit language",
+      "structure": "Abstract structure - single paragraph, no claim-style phraseology, no merit language",
       "excessClaims": "Excess-claims fee threshold (Rule 45 EPC)",
       "meansPlusFunction": "Means-plus-function language (Guidelines F-IV § 6.5)",
-      "crmNonTransitory": "Computer-readable medium — non-transitory qualifier (Art. 52(2)(c))",
+      "crmNonTransitory": "Computer-readable medium - non-transitory qualifier (Art. 52(2)(c))",
       "omnibus": "Omnibus claims (Guidelines F-IV § 4.17)"
     },
     "epcTableFootnote": "As of May 2026. EPC support is in beta and currently checks English-language specifications. PatentLint may continue to evolve."
@@ -808,7 +808,7 @@
     "restrictiveWordingSpec": "Paragraphs: {{list}}. These terms may be treated as indefinite or limiting under MPEP § 2173.05(b). Review each flagged paragraph and consider whether the term unduly limits scope or introduces indefiniteness.",
     "paragraphNumberingMissing": "Add sequential [0001]-style numbering per MPEP § 608.01(p).",
     "paragraphEnding": "Paragraphs: {{list}}. Each specification paragraph must end with a period per MPEP § 608.01(p).",
-    "sequenceListingFix": "Add a \"Statement Regarding Sequence Listing\" section per 37 C.F.R. § 1.821–1.825.",
+    "sequenceListingFix": "Add a \"Statement Regarding Sequence Listing\" section per 37 C.F.R. § 1.821-1.825.",
     "crossReferenceCitations": "{{text}}. Verify serial numbers are correct and the priority chain is complete (continuations, CIPs, provisionals, divisionals).",
     "priorArtCitations": "{{text}}. Verify patent/publication numbers are accurate. Characterizations of prior art may be treated as admissions during prosecution.",
     "optionalSectionGuidance": "Include this section if applicable to your application.",
@@ -821,15 +821,15 @@
     "antecedentBasisTerms": "{{count}} potential antecedent basis issues across {{claims}} claims. Each definite reference (\"the X\" or \"said X\") must have a prior indefinite introduction (\"a X\" or \"an X\"). Missing antecedent basis may result in a § 112(b) indefiniteness rejection.",
     "preambleNounMismatch": "Claim {{claim}} depends on claim {{parent}}. Preamble noun differs: \"{{dependent}}\" vs parent \"{{independent}}\". May be acceptable if they refer to the same entity. Verify consistency.",
     "preambleNounMismatchSummary": "Claim {{rootId}} uses parent noun '{{parent}}'; dependent claim(s) {{depClaims}} use '{{dependent}}'. Verify whether these refer to the same entity or align the preamble nouns.",
-    "preambleIndefiniteArticle": "Claim {{claim}} depends on claim {{parent}}. The dependent preamble uses \"{{article}} {{noun}}\" — it should be \"The {{noun}}\" to refer back to the independent claim entity.",
+    "preambleIndefiniteArticle": "Claim {{claim}} depends on claim {{parent}}. The dependent preamble uses \"{{article}} {{noun}}\" - it should be \"The {{noun}}\" to refer back to the independent claim entity.",
     "preambleParseUnclear": "Claims: {{claims}}. The walker couldn't parse these dependent-claim preambles. MPEP § 608.01(n) compliant forms include: 'The X of claim N', 'The X according to claim N', 'The X as in claim N', 'The X as claimed in claim N', 'The X as recited in claim N', 'The X as set forth in claim N'. Verify manually, or report a bug if the preamble uses a standard MPEP form we haven't recognized.",
     "singleFigureFix": "Replace all instances of \"FIG. 1\" with \"The Figure\" or \"the drawing\" per MPEP § 608.02.",
     "drawingsPriorArt": "Figures depicting prior art must be designated with the legend \"Prior Art\" per MPEP § 608.02(g). Verify each prior art figure is correctly labeled.",
     "figuresSequentialFix": "Renumber figures in ascending order per MPEP § 608.02.",
     "orphanedBriefFigures": "Figures: {{list}}. Either add a reference to these figures in the Detailed Description or remove them from the Brief Description.",
     "orphanedDetailedFigures": "Figures: {{list}}. Either add a description for these figures in the Brief Description of Drawings or remove the reference from the Detailed Description.",
-    "legalPhraseologyAbstract": "Per MPEP § 608.01(b), the abstract should avoid \"the form and legal phraseology often used in patent claims\" — the manual names \"means\" and \"said,\" and practitioner guidance extends the class to transitional phrases (\"comprising,\" \"comprises,\" etc.), claim modifiers (\"wherein\"), and archaic claim-style pronouns (\"thereof,\" \"the same\"). Rephrase the flagged terms.",
-    "meritLanguageAbstract": "Per MPEP § 608.01(b), the abstract should not refer to purported merits of the invention — avoid evaluative adjectives (\"novel,\" \"innovative,\" \"unique,\" \"important,\" \"significant\") and self-referential phrasing (\"the present invention\"). Rephrase the flagged terms.",
+    "legalPhraseologyAbstract": "Per MPEP § 608.01(b), the abstract should avoid \"the form and legal phraseology often used in patent claims\" - the manual names \"means\" and \"said,\" and practitioner guidance extends the class to transitional phrases (\"comprising,\" \"comprises,\" etc.), claim modifiers (\"wherein\"), and archaic claim-style pronouns (\"thereof,\" \"the same\"). Rephrase the flagged terms.",
+    "meritLanguageAbstract": "Per MPEP § 608.01(b), the abstract should not refer to purported merits of the invention - avoid evaluative adjectives (\"novel,\" \"innovative,\" \"unique,\" \"important,\" \"significant\") and self-referential phrasing (\"the present invention\"). Rephrase the flagged terms.",
     "abstractStructureFix": "The abstract must be a single paragraph ending with a period, exclamation point, or question mark, and must appear as the last section of the specification per MPEP § 608.01(b).",
     "abstractImpliedPhrasesFix": "Per MPEP § 608.01(b), openers like \"This disclosure provides...\" or \"A method is provided...\" should be rewritten to describe the invention directly (e.g., \"A method that...\").",
     "abstractWordCountFix": "The abstract must be between 50 and 150 words per MPEP § 608.01(b). Revise to meet this range.",
@@ -854,7 +854,7 @@
       "subjectConsistencyParseUnclear": "These dependent claims use a preamble form the walker doesn't recognize. Accepted forms per 专利法实施细则 §25 include: 如权利要求N所述[的]X, 如权利要求N所记载[的]X, 如权利要求N[的]X. Verify manually, or report a bug if your preamble is CNIPA-compliant.",
       "transitionPhrase": "Per 审查指南, independent claims should contain a characterizing transition such as '其特征在于' to delineate known elements from novel features. Verify the flagged claims.",
       "twTerminology": "Taiwan (TIPO) patent terminology detected in CNIPA filing. CNIPA uses '权利要求' for claims. Replace all flagged instances.",
-      "claimsSpecReference": "Per 审查指南 第二部分第二章, claims must not reference the specification or drawings to define their scope. Claims must be self-contained — remove the flagged references.",
+      "claimsSpecReference": "Per 审查指南 第二部分第二章, claims must not reference the specification or drawings to define their scope. Claims must be self-contained - remove the flagged references.",
       "multiMultiDep": "Per 专利法实施细则 §25, a multiple-dependent claim must not serve as the basis for another multiple-dependent claim. Restructure the dependency chain.",
       "dependentOrdering": "Per 审查指南 第二部分第二章, all claims depending on an independent claim should appear consecutively before the next independent claim. Reorder claims.",
       "connectionRelationships": "Components flagged: {{sample_names}} ({{component_count}} total). Add a connection verb (e.g., 连接, 设置于, 耦接) describing how these components are structurally arranged.",
@@ -869,7 +869,7 @@
         "onlyEmbodiment": "Only cited in 具体实施方式: {{figs}}"
       },
       "pass": {
-        "multiMultiDep": "Per 专利法实施细则 §25, a multiple-dependent claim may not serve as a basis for another multiple-dependent claim — chained multi-multi references make scope indeterminate.",
+        "multiMultiDep": "Per 专利法实施细则 §25, a multiple-dependent claim may not serve as a basis for another multiple-dependent claim - chained multi-multi references make scope indeterminate.",
         "selfDependent": "Per 专利法实施细则 §25, a claim may not depend on itself; dependent claims must reference an earlier claim.",
         "forwardDependency": "Per 专利法实施细则 §25, a dependent claim may only reference earlier-numbered claims, not later ones.",
         "singleSentence": "Per 审查指南 第二部分第二章, each claim must be a single sentence ending in 。 to keep scope unambiguous.",
@@ -958,7 +958,7 @@
     "titleMissing": "Per MPEP § 606, every utility patent application must open with a title. Add a title to the specification header.",
     "titleLength": "Per MPEP § 606, the title must not exceed 500 characters ({{count}} found). Shorten the title.",
     "titleContent": "Per MPEP § 608.01, the title must not contain trademarks or model / product codes. Remove the prohibited content.",
-    "titleWordCount": "Per MPEP § 606, titles should be short and specific ({{count}} words found; 2–7 words is typical). Consider condensing the title.",
+    "titleWordCount": "Per MPEP § 606, titles should be short and specific ({{count}} words found; 2-7 words is typical). Consider condensing the title.",
     "epc": {
       "orphanedBriefFigures": "Figures: {{list}}. Either add a reference to these figures in the Detailed Description or remove them from the Brief Description of Drawings.",
       "orphanedDetailedFigures": "Figures: {{list}}. Either add a description for these figures in the Brief Description of Drawings or remove the reference from the Detailed Description.",
@@ -1003,11 +1003,11 @@
         "pass": "No sequence listing mismatch."
       },
       "crossReference": {
-        "verify": "Cross-reference section cites related applications — verify completeness.",
+        "verify": "Cross-reference section cites related applications - verify completeness.",
         "pass": "No cross-reference citations found."
       },
       "priorArt": {
-        "verify": "Background section cites prior art — review characterizations.",
+        "verify": "Background section cites prior art - review characterizations.",
         "pass": "No prior art citations found in background."
       },
       "drawings": "Drawings overview.",
@@ -1016,9 +1016,9 @@
       },
       "title": {
         "amendMissing": "Title is missing from specification (MPEP § 606).",
-        "amendLength": "Title has {{count}} characters — MPEP § 606 caps at 500 characters.",
+        "amendLength": "Title has {{count}} characters - MPEP § 606 caps at 500 characters.",
         "amendContent": "Prohibited content in title: {{title_prohibited_items}} (MPEP § 608.01).",
-        "verify": "Title has {{count}} words — MPEP § 606 recommends a short, specific title.",
+        "verify": "Title has {{count}} words - MPEP § 606 recommends a short, specific title.",
         "pass": "No prohibited title content detected (MPEP § 606 trademark / model-number patterns)."
       },
       "scopeLimitWording": {
@@ -1027,7 +1027,7 @@
       },
       "numeralConsistency": {
         "amend": "{{count}} reference numeral(s) used with multiple different element names. Examples: {{inline_summary}}",
-        "verify": "{{count}} reference numeral(s) with possibly inconsistent naming — please review. Examples: {{inline_summary}}",
+        "verify": "{{count}} reference numeral(s) with possibly inconsistent naming - please review. Examples: {{inline_summary}}",
         "pass": "Reference numerals consistently identify their elements."
       }
     },
@@ -1045,7 +1045,7 @@
         "pass": "No claim-sequence issues detected."
       },
       "multipleDependent": {
-        "verify": "Multiple-dependent claims found — review fees and chained-multi rule (MPEP § 608.01(n); § 112(e)).",
+        "verify": "Multiple-dependent claims found - review fees and chained-multi rule (MPEP § 608.01(n); § 112(e)).",
         "pass": "No multiple-dependent claims."
       },
       "chainedMultiDep": {
@@ -1053,7 +1053,7 @@
         "pass": "No chained multi-dependent claims."
       },
       "selfDependent": {
-        "amend": "Self-dependent claims found — a claim cannot depend on itself (§ 112(d)).",
+        "amend": "Self-dependent claims found - a claim cannot depend on itself (§ 112(d)).",
         "pass": "No self-dependent claims."
       },
       "missingPeriod": {
@@ -1075,8 +1075,8 @@
       },
       "antecedentBasis": {
         "pass": "No antecedent basis issues detected (§ 112(b)).",
-        "amend": "Possible missing antecedent basis — \"the X\" / \"said X\" may lack a prior \"a X\" introduction (§ 112(b)).",
-        "verify": "Antecedent basis — references to verify (§ 112(b)): confirm each “the X” / “said X” traces back to a prior “a X” introduction."
+        "amend": "Possible missing antecedent basis - \"the X\" / \"said X\" may lack a prior \"a X\" introduction (§ 112(b)).",
+        "verify": "Antecedent basis - references to verify (§ 112(b)): confirm each “the X” / “said X” traces back to a prior “a X” introduction."
       },
       "missingTransition": "Claim {{claimNumber}} is missing a transitional phrase (e.g., 'comprising', 'consisting of')",
       "missingTransitionDetails": "Claim {{claimNumber}} does not contain a recognized transitional phrase. Every claim must include a transitional phrase such as 'comprising', 'consisting of', 'consisting essentially of', 'including', 'containing', 'characterized by', or 'characterized in that' between the preamble and the claim body.",
@@ -1097,7 +1097,7 @@
         "pass": "No merit or self-referential language found in abstract."
       },
       "structure": {
-        "amend": "Abstract has extra paragraphs or non-terminal ending — Rule 47(2) practice is a single paragraph (MPEP § 608.01(b)).",
+        "amend": "Abstract has extra paragraphs or non-terminal ending - Rule 47(2) practice is a single paragraph (MPEP § 608.01(b)).",
         "pass": "Abstract is a single paragraph with valid ending."
       },
       "impliedPhrases": {
@@ -1105,8 +1105,8 @@
         "pass": "No implied phrases found in abstract."
       },
       "wordCount": {
-        "amend": "Abstract word count is outside the 50–150 range (MPEP § 608.01(b)).",
-        "pass": "Abstract word count is within the 50–150 range."
+        "amend": "Abstract word count is outside the 50-150 range (MPEP § 608.01(b)).",
+        "pass": "Abstract word count is within the 50-150 range."
       }
     },
     "drawings": {
@@ -1115,7 +1115,7 @@
         "pass": "Single-figure patent correctly labeled."
       },
       "priorArt": {
-        "verify": "Prior art references found in drawings description — verify figure labeling (MPEP § 608.02(g)).",
+        "verify": "Prior art references found in drawings description - verify figure labeling (MPEP § 608.02(g)).",
         "pass": "No prior art references in drawings description."
       },
       "sequential": {
@@ -1136,11 +1136,11 @@
           "pass": "No figure-reference inconsistencies detected between Brief Description of Drawings and Detailed Description."
         },
         "titleContent": {
-          "amend": "Title appears to contain prohibited content (trademark or model number) — EPO Guidelines F-II § 4 ask for a descriptive title of the invention.",
+          "amend": "Title appears to contain prohibited content (trademark or model number) - EPO Guidelines F-II § 4 ask for a descriptive title of the invention.",
           "pass": "No trademark or model-number tokens detected in title."
         },
         "claimReferenceInSpec": {
-          "amend": "Description references a specific claim ('{{detail}}') — Guidelines F-IV § 4.3 ask the description to stand on its own.",
+          "amend": "Description references a specific claim ('{{detail}}') - Guidelines F-IV § 4.3 ask the description to stand on its own.",
           "pass": "No description-side claim references detected (Guidelines F-IV § 4.3)."
         },
         "paragraphEnding": {
@@ -1148,8 +1148,8 @@
           "pass": "No paragraph-ending issues detected."
         },
         "paragraphNumbering": {
-          "verify": "Paragraph numbers detected but not strictly sequential — starting at [{{first}}], expected up to [{{expected}}]; found {{count}} numbers ending at [{{last}}] (Guidelines F-II § 4.5).",
-          "pass": "No paragraph-numbering issues detected — EPC does not mandate paragraph numbers (Guidelines F-II § 4.5)."
+          "verify": "Paragraph numbers detected but not strictly sequential - starting at [{{first}}], expected up to [{{expected}}]; found {{count}} numbers ending at [{{last}}] (Guidelines F-II § 4.5).",
+          "pass": "No paragraph-numbering issues detected - EPC does not mandate paragraph numbers (Guidelines F-II § 4.5)."
         },
         "requiredSections": {
           "amend": "Required sections appear to be missing per Art. 78(1) EPC: {{sections}}.",
@@ -1160,13 +1160,13 @@
           "pass": "No section-ordering issues detected (Rule 42(1) EPC)."
         },
         "titleRequired": {
-          "amend": "Title appears to be missing — Rule 41(2)(b) EPC asks for a title of the invention.",
+          "amend": "Title appears to be missing - Rule 41(2)(b) EPC asks for a title of the invention.",
           "verify": "Title appears unusually long ({{count}} characters); verify it identifies the invention concisely (Rule 41(2)(b) EPC).",
           "pass": "No title-presence issues detected (Rule 41(2)(b) EPC)."
         },
         "numeralConsistency": {
           "amend": "{{count}} reference numeral(s) used with multiple different element names (Rule 43(7) EPC; Rule 46(2)(h) EPC). Examples: {{inline_summary}}",
-          "verify": "{{count}} reference numeral(s) with possibly inconsistent naming — review per Rule 43(7) EPC + Rule 46(2)(h) EPC. Examples: {{inline_summary}}",
+          "verify": "{{count}} reference numeral(s) with possibly inconsistent naming - review per Rule 43(7) EPC + Rule 46(2)(h) EPC. Examples: {{inline_summary}}",
           "pass": "No reference-numeral consistency issues detected (Rule 43(7) EPC; Rule 46(2)(h) EPC)."
         }
       },
@@ -1184,7 +1184,7 @@
           "pass": "No excess-claims fee triggers detected (Rule 45 EPC: no more than 15 total claims)."
         },
         "dependencyFormat": {
-          "amend": "Claim(s) {{claims}} look dependent but do not explicitly reference a parent claim — Rule 43(4) EPC asks for explicit reference (e.g., 'according to claim N').",
+          "amend": "Claim(s) {{claims}} look dependent but do not explicitly reference a parent claim - Rule 43(4) EPC asks for explicit reference (e.g., 'according to claim N').",
           "pass": "No dependency-format issues detected (Rule 43(4) EPC)."
         },
         "forwardDependency": {
@@ -1200,7 +1200,7 @@
           "pass": "No Markush-format issues detected (Guidelines F-IV § 4.20)."
         },
         "multiDepOnMultiDep": {
-          "amend": "Claim(s) {{claims}} are multi-dependent claims that depend on another multi-dependent claim — Rule 43(4) EPC does not permit this.",
+          "amend": "Claim(s) {{claims}} are multi-dependent claims that depend on another multi-dependent claim - Rule 43(4) EPC does not permit this.",
           "pass": "No chained multi-dependent claims detected (Rule 43(4) EPC)."
         },
         "punctuation": {
@@ -1213,7 +1213,7 @@
           "pass": "No claim-punctuation issues detected (Guidelines F-IV § 4.10)."
         },
         "refSignsInParens": {
-          "verify": "Claim(s) {{claims}} contain bare numeral(s) not in parentheses — Rule 43(7) EPC prefers reference signs to be parenthesised.",
+          "verify": "Claim(s) {{claims}} contain bare numeral(s) not in parentheses - Rule 43(7) EPC prefers reference signs to be parenthesised.",
           "pass": "No reference-sign-parenthesisation issues detected (Rule 43(7) EPC)."
         },
         "restrictiveAbsolutes": {
@@ -1233,15 +1233,15 @@
           "pass": "No claim-sequence issues detected (Rule 43(5) EPC)."
         },
         "singleSentence": {
-          "verify": "Claim(s) {{claims}} appear to contain multiple sentences — Guidelines F-IV § 4.10 prefers one sentence per claim.",
+          "verify": "Claim(s) {{claims}} appear to contain multiple sentences - Guidelines F-IV § 4.10 prefers one sentence per claim.",
           "pass": "No multi-sentence claims detected (Guidelines F-IV § 4.10)."
         },
         "specReference": {
-          "amend": "Claim(s) {{claims}} reference the description or drawings — Rule 43(6) EPC asks claims to be self-contained.",
+          "amend": "Claim(s) {{claims}} reference the description or drawings - Rule 43(6) EPC asks claims to be self-contained.",
           "pass": "No spec/drawings references detected in claims (Rule 43(6) EPC)."
         },
         "subjectConsistency": {
-          "verify": "Claim(s) {{claims}} may have a subject that does not match the parent claim — verify per Guidelines F-IV § 3.4.",
+          "verify": "Claim(s) {{claims}} may have a subject that does not match the parent claim - verify per Guidelines F-IV § 3.4.",
           "pass": "No subject-consistency issues detected (Guidelines F-IV § 3.4)."
         },
         "transitionPhrase": {
@@ -1253,35 +1253,35 @@
           "pass": "No two-part-form issues detected (Rule 43(1) EPC)."
         },
         "meansPlusFunction": {
-          "verify": "Claim(s) {{claims}} use functional 'means for / step for' language — confirm Art. 84 EPC support and that the skilled person can identify the means without undue burden (Guidelines F-IV § 6.5).",
+          "verify": "Claim(s) {{claims}} use functional 'means for / step for' language - confirm Art. 84 EPC support and that the skilled person can identify the means without undue burden (Guidelines F-IV § 6.5).",
           "pass": "No functional 'means-plus-function' claim language detected."
         },
         "crmNonTransitory": {
-          "verify": "Claim(s) {{claims}} recite a computer-readable medium without the 'non-transitory' qualifier — confirm coverage of transitory signals is not unintended (Art. 52(2)(c) EPC; Guidelines G-II § 3.6).",
+          "verify": "Claim(s) {{claims}} recite a computer-readable medium without the 'non-transitory' qualifier - confirm coverage of transitory signals is not unintended (Art. 52(2)(c) EPC; Guidelines G-II § 3.6).",
           "pass": "No computer-readable medium claims missing the 'non-transitory' qualifier."
         },
         "omnibus": {
-          "amend": "Claim(s) {{claims}} appear to be omnibus — they reference the description or drawings instead of reciting features. Art. 84 EPC clarity objection is likely (Guidelines F-IV § 4.17).",
+          "amend": "Claim(s) {{claims}} appear to be omnibus - they reference the description or drawings instead of reciting features. Art. 84 EPC clarity objection is likely (Guidelines F-IV § 4.17).",
           "pass": "No omnibus claims detected."
         }
       },
       "abstract": {
         "titleMatch": {
-          "verify": "Abstract may not refer to the invention named in the title — no content-word overlap detected (Guidelines F-II § 2.3.5).",
+          "verify": "Abstract may not refer to the invention named in the title - no content-word overlap detected (Guidelines F-II § 2.3.5).",
           "pass": "Abstract references the title's invention."
         },
         "claimReference": {
-          "amend": "Abstract references specific claim(s) — Guidelines F-II § 2.3.3 require the abstract to be self-contained.",
+          "amend": "Abstract references specific claim(s) - Guidelines F-II § 2.3.3 require the abstract to be self-contained.",
           "pass": "Abstract does not reference specific claims."
         },
         "structure": {
-          "amend": "Abstract structure may not conform to Rule 47(2) EPC / Guidelines F-II § 2.3 — review for single-paragraph form, implied/boilerplate openers, claim-style legal phrasing, and merit/self-referential language.",
+          "amend": "Abstract structure may not conform to Rule 47(2) EPC / Guidelines F-II § 2.3 - review for single-paragraph form, implied/boilerplate openers, claim-style legal phrasing, and merit/self-referential language.",
           "pass": "No abstract-structure issues detected (Rule 47(2) EPC)."
         },
         "wordCount": {
           "amend": "Abstract is {{count}} words, exceeding the Guidelines F-II § 2.3 guide of 150 words maximum.",
           "verify": "Abstract is {{count}} words, below the Guidelines F-II § 2.3 guide of 50 words minimum.",
-          "pass": "No abstract-word-count issues detected (Rule 47(2) EPC; 50–150 words)."
+          "pass": "No abstract-word-count issues detected (Rule 47(2) EPC; 50-150 words)."
         }
       },
       "drawings": {
@@ -1293,7 +1293,7 @@
           "pass": "No figure-sequence issues detected (Rule 46(2)(a) EPC)."
         },
         "priorArtLabeling": {
-          "verify": "Drawings description references prior art — verify the figure(s) are labeled accordingly per Rule 46(2)(h) EPC.",
+          "verify": "Drawings description references prior art - verify the figure(s) are labeled accordingly per Rule 46(2)(h) EPC.",
           "pass": "No prior-art-labeling issues detected (Rule 46(2)(h) EPC)."
         },
         "singleFigureLabel": {
@@ -1317,9 +1317,9 @@
         },
         "paragraphNumbering": {
           "amendXml": "Non-sequential paragraph numbering ({{detail}}) (审查指南).",
-          "amendDocx": "Specification contains manually-added paragraph numbering — must be removed for CNIPA filing (审查指南).",
+          "amendDocx": "Specification contains manually-added paragraph numbering - must be removed for CNIPA filing (审查指南).",
           "pass": "Paragraph numbering sequential.",
-          "amendXmlGap": "Gap in paragraph numbering — {{prev}} followed by {{next}} (审查指南).",
+          "amendXmlGap": "Gap in paragraph numbering - {{prev}} followed by {{next}} (审查指南).",
           "amendXmlDuplicate": "{{count}} duplicate paragraph number(s): {{paragraphs}} (审查指南)."
         },
         "paragraphEnding": {
@@ -1331,7 +1331,7 @@
           "amend": "Inconsistent figure references: {{figure_ref_inconsistency}}"
         },
         "patentTypeTerminology": {
-          "verify": "'{{term}}' detected — verify this matches the filing type, invention vs. utility model (审查指南).",
+          "verify": "'{{term}}' detected - verify this matches the filing type, invention vs. utility model (审查指南).",
           "pass": "Patent-type terminology consistent."
         },
         "title": {
@@ -1346,7 +1346,7 @@
         },
         "numeralConsistency": {
           "amend": "{{count}} reference numeral(s) used with multiple different element names. Examples: {{inline_summary}} (实施细则 §21 第2款).",
-          "verify": "{{count}} reference numeral(s) with possibly inconsistent naming — please review. Examples: {{inline_summary}} (实施细则 §21 第2款).",
+          "verify": "{{count}} reference numeral(s) with possibly inconsistent naming - please review. Examples: {{inline_summary}} (实施细则 §21 第2款).",
           "pass": "Reference numerals consistently identify their components."
         }
       },
@@ -1380,14 +1380,14 @@
           "pass": "No subject-consistency issues detected between dependent claims and parents."
         },
         "subjectConsistencyParseUnclear": {
-          "verify": "{{count}} dependent claim(s) with an unrecognized preamble — couldn't verify subject consistency: {{claims}}."
+          "verify": "{{count}} dependent claim(s) with an unrecognized preamble - couldn't verify subject consistency: {{claims}}."
         },
         "transitionPhrase": {
           "verify": "{{count}} independent claim(s) may lack a transition phrase: {{claims}}.",
           "pass": "No missing-transition-phrase issues detected in independent claims."
         },
         "twTerminology": {
-          "amend": "TIPO terminology '请求项' detected — CNIPA filings must use '权利要求'.",
+          "amend": "TIPO terminology '请求项' detected - CNIPA filings must use '权利要求'.",
           "pass": "Claims use CNIPA terminology (权利要求)."
         },
         "specReference": {
@@ -1408,13 +1408,13 @@
         },
         "antecedentBasis": {
           "pass": "No antecedent-basis issues detected (审查指南).",
-          "amend": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 该/所述 reference without a prior introduction (e.g., 一 / 至少一 / 多个 + noun) (审查指南).",
-          "verify": "{{issue_count}} reference(s) in {{claims}} to verify for antecedent basis — confirm each 该/所述 reference traces back to a prior introduction (审查指南)."
+          "amend": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis - 该/所述 reference without a prior introduction (e.g., 一 / 至少一 / 多个 + noun) (审查指南).",
+          "verify": "{{issue_count}} reference(s) in {{claims}} to verify for antecedent basis - confirm each 该/所述 reference traces back to a prior introduction (审查指南)."
         },
         "specSupport": {
           "pass": "No unsupported claim terms detected (审查指南).",
-          "amend": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body (审查指南 第二部分第二章 §3.2.1).",
-          "verify": "{{issue_count}} claim term(s) in {{claims}} to verify for specification support — confirm each appears in the specification body (审查指南 第二部分第二章 §3.2.1)."
+          "amend": "{{issue_count}} term(s) in {{claims}} may lack specification support - claim noun phrase not found in the specification body (审查指南 第二部分第二章 §3.2.1).",
+          "verify": "{{issue_count}} claim term(s) in {{claims}} to verify for specification support - confirm each appears in the specification body (审查指南 第二部分第二章 §3.2.1)."
         },
         "omnibus": {
           "amend": "{{claims}}: claim references 说明书/附图 instead of reciting features (审查指南 第二部分第二章 §3.3).",
@@ -1433,7 +1433,7 @@
           "pass": "No excess-claims fee triggers detected (CNIPA 实施细则 §93: no more than 10 total claims)."
         },
         "crmNonTransitory": {
-          "amend": "Claim(s) {{claims}} recite a 计算机可读介质 without 非暂态 / 非暂时性. 专利法 §25 — transitory signals fall outside patentable subject matter; add the qualifier to confine the claim to non-transitory media.",
+          "amend": "Claim(s) {{claims}} recite a 计算机可读介质 without 非暂态 / 非暂时性. 专利法 §25 - transitory signals fall outside patentable subject matter; add the qualifier to confine the claim to non-transitory media.",
           "pass": "Computer-readable medium claims correctly include 非暂态 / 非暂时性."
         },
         "indefiniteWording": {
@@ -1461,12 +1461,12 @@
           "pass": "{{count}} figure(s) detected."
         },
         "figuresSequential": {
-          "pass": "Figures 1–{{found_max}} numbered sequentially.",
+          "pass": "Figures 1-{{found_max}} numbered sequentially.",
           "passNone": "No figures found.",
-          "amend": "Non-sequential figure numbering — missing: {{figure_list}}."
+          "amend": "Non-sequential figure numbering - missing: {{figure_list}}."
         },
         "priorArt": {
-          "verify": "Prior art references found in 附图说明 — verify figure labeling (审查指南 第一部分第一章 §4.2).",
+          "verify": "Prior art references found in 附图说明 - verify figure labeling (审查指南 第一部分第一章 §4.2).",
           "pass": "No prior art references found in 附图说明."
         }
       }
@@ -1483,7 +1483,7 @@
         },
         "paragraphNumbering": {
           "pass": "Paragraph numbering sequential (or absent).",
-          "amendGap": "Gap in paragraph numbering — 【{{prev}}】 followed by 【{{next}}】 (專利法施行細則 §17).",
+          "amendGap": "Gap in paragraph numbering - 【{{prev}}】 followed by 【{{next}}】 (專利法施行細則 §17).",
           "amendFormat": "{{count}} paragraph(s) not in 【NNNN】 format. Examples: {{examples}} (專利法施行細則 §17)."
         },
         "paragraphEnding": {
@@ -1495,7 +1495,7 @@
           "amend": "Inconsistent figure references: {{figure_ref_inconsistency}}"
         },
         "patentTypeTerminology": {
-          "verify": "Patent-type terminology mismatch detected — invention vs. utility model (專利審查基準).",
+          "verify": "Patent-type terminology mismatch detected - invention vs. utility model (專利審查基準).",
           "pass": "Patent-type terminology consistent."
         },
         "title": {
@@ -1516,12 +1516,12 @@
           "pass": "符號說明 entries consistent with 實施方式."
         },
         "indigenousTerms": {
-          "verify": "Indigenous peoples terminology found — verify compliance with 原住民族傳統智慧創作保護條例.",
+          "verify": "Indigenous peoples terminology found - verify compliance with 原住民族傳統智慧創作保護條例.",
           "pass": "No indigenous peoples terminology found."
         },
         "numeralConsistency": {
           "amend": "{{count}} reference symbol(s) used with multiple different element names. Examples: {{inline_summary}} (施行細則 §19 第2款).",
-          "verify": "{{count}} reference symbol(s) with possibly inconsistent naming — please review. Examples: {{inline_summary}} (施行細則 §19 第2款).",
+          "verify": "{{count}} reference symbol(s) with possibly inconsistent naming - please review. Examples: {{inline_summary}} (施行細則 §19 第2款).",
           "pass": "Reference symbols consistently identify their elements."
         },
         "symbolTableCoverage": {
@@ -1565,7 +1565,7 @@
           "pass": "No subject-consistency issues detected between dependent claims and parents."
         },
         "subjectConsistencyParseUnclear": {
-          "verify": "{{count}} dependent claim(s) with an unrecognized preamble — couldn't verify subject consistency: {{claims}}."
+          "verify": "{{count}} dependent claim(s) with an unrecognized preamble - couldn't verify subject consistency: {{claims}}."
         },
         "transitionPhrase": {
           "verify": "{{count}} independent claim(s) missing a transition phrase: {{claims}}.",
@@ -1602,13 +1602,13 @@
         },
         "antecedentBasis": {
           "pass": "No antecedent-basis issues detected.",
-          "amend": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis — 該/所述/前述 reference without a prior introduction (e.g., 一 / 至少一 / 複數個 + noun).",
-          "verify": "{{issue_count}} reference(s) in {{claims}} to verify for antecedent basis — confirm each 該/所述/前述 reference traces back to a prior introduction."
+          "amend": "{{issue_count}} term(s) in {{claims}} may lack antecedent basis - 該/所述/前述 reference without a prior introduction (e.g., 一 / 至少一 / 複數個 + noun).",
+          "verify": "{{issue_count}} reference(s) in {{claims}} to verify for antecedent basis - confirm each 該/所述/前述 reference traces back to a prior introduction."
         },
         "specSupport": {
           "pass": "No unsupported claim terms detected.",
-          "amend": "{{issue_count}} term(s) in {{claims}} may lack specification support — claim noun phrase not found in the specification body.",
-          "verify": "{{issue_count}} claim term(s) in {{claims}} to verify for specification support — confirm each appears in the specification body."
+          "amend": "{{issue_count}} term(s) in {{claims}} may lack specification support - claim noun phrase not found in the specification body.",
+          "verify": "{{issue_count}} claim term(s) in {{claims}} to verify for specification support - confirm each appears in the specification body."
         },
         "independentPreamble": {
           "pass": "No 「一種」-preamble issues detected in independent claims.",
@@ -1627,7 +1627,7 @@
           "pass": "No omnibus claims found."
         },
         "crmNonTransitory": {
-          "amend": "Claim(s) {{claims}} recite a 電腦可讀媒體 without the 非暫態 / 非暫時性 qualifier. 專利法 §21 — transitory signals fall outside eligible subject matter; add the qualifier to constrain the claim to non-transitory media.",
+          "amend": "Claim(s) {{claims}} recite a 電腦可讀媒體 without the 非暫態 / 非暫時性 qualifier. 專利法 §21 - transitory signals fall outside eligible subject matter; add the qualifier to constrain the claim to non-transitory media.",
           "pass": "Computer-readable medium claims correctly include 非暫態 / 非暫時性."
         },
         "indefiniteWording": {
@@ -1669,9 +1669,9 @@
           "pass": "{{count}} figure(s) detected."
         },
         "figuresSequential": {
-          "pass": "Figures 1–{{found_max}} numbered sequentially.",
+          "pass": "Figures 1-{{found_max}} numbered sequentially.",
           "passNone": "No figures found.",
-          "amend": "Non-sequential figure numbering — missing: {{figure_list}}."
+          "amend": "Non-sequential figure numbering - missing: {{figure_list}}."
         }
       }
     }
@@ -1682,7 +1682,7 @@
     "engine": "Loading analysis engine...",
     "patentlint": "Loading PatentLint...",
     "ready": "Analysis engine loaded",
-    "firstVisitHint": "First visit takes a few seconds — the engine caches after this",
+    "firstVisitHint": "First visit takes a few seconds - the engine caches after this",
     "offline_note": "Works offline after first load",
     "feature1_title": "No Upload. No Cloud Processing. No AI.",
     "feature1_desc": "Your confidential patent drafts never leave your device. Your file is never uploaded, and PatentLint doesn't even know who you are.",
@@ -1697,7 +1697,7 @@
   },
   "pdf": {
     "header": "PatentLint Analysis Report",
-    "headerTw": "PatentLint — Taiwan Patent Specification Report",
+    "headerTw": "PatentLint - Taiwan Patent Specification Report",
     "securityNote": "Analyzed on your device -- not uploaded to the cloud.",
     "amend": "Needs Fixing",
     "verify": "Needs Review",
@@ -1743,9 +1743,9 @@
     "preamble_cross_category_mismatch": "Cross-category preamble mismatch between dependent and independent claim (§ 112(d)).",
     "preamble_cross_category_pass": "Claim preambles are consistent.",
     "preamble_noun_mismatch": "Preamble noun differs between dependent and independent claim (MPEP § 608.01(m)).",
-    "preamble_indefinite_article": "Indefinite article in dependent claim preamble — should be 'The' (MPEP § 608.01(m)).",
+    "preamble_indefinite_article": "Indefinite article in dependent claim preamble - should be 'The' (MPEP § 608.01(m)).",
     "preamble_parse_unclear": "Couldn't verify preamble consistency for {{count}} dependent claim(s) with unrecognized preamble forms (MPEP § 608.01(n)).",
-    "spec_support_unsupported_terms": "Specification support — claim terms to verify (§ 112(a)): confirm each claim term has written-description support in the specification.",
+    "spec_support_unsupported_terms": "Specification support - claim terms to verify (§ 112(a)): confirm each claim term has written-description support in the specification.",
     "spec_support_pass": "All claim terms found in the specification (§ 112(a) written-description support).",
     "required_sections_pass": "All required sections per MPEP § 608.01(a) are present.",
     "required_sections_missing": "Missing required sections per MPEP § 608.01(a).",
@@ -1755,7 +1755,7 @@
     "figure_xref_orphaned_detailed": "Figure(s) referenced in Detailed Description but not described in Brief Description of Drawings (MPEP § 608.02)."
   },
   "claims": {
-    "jepsonPriorArt": "Claim {{claimNumber}} uses Jepson format — preamble elements are treated as admitted prior art (MPEP § 2129)",
+    "jepsonPriorArt": "Claim {{claimNumber}} uses Jepson format - preamble elements are treated as admitted prior art (MPEP § 2129)",
     "jepsonPriorArtDetails": "Claim {{claimNumber}} is drafted in Jepson format. Under MPEP § 2129, the elements recited in the preamble of a Jepson claim are treated as an implied admission that they are prior art. Verify that this admission is intentional.",
     "crmNonTransitory": "Claim {{claimNumber}}: computer-readable medium claim is missing 'non-transitory' qualifier",
     "crmNonTransitoryDetails": "Claim {{claimNumber}} recites a computer-readable medium without the 'non-transitory' qualifier. Without this qualifier, the claim covers transitory signals (e.g., carrier waves), which are not patent-eligible subject matter under 35 U.S.C. § 101. Add 'non-transitory' before the medium term.",
@@ -1810,7 +1810,7 @@
       "title": "The Site vs. the Software",
       "p1": "PatentLint has two forms:",
       "siteLabel": "The Site (patentlint.com).",
-      "siteDesc": "A hosted web application, free for individual practitioners' personal use. When you load a patent draft, analysis runs entirely in your browser via WebAssembly — your draft never leaves your device. PatentLint is operated by Christopher Chen as a personal project, not as a business entity.",
+      "siteDesc": "A hosted web application, free for individual practitioners' personal use. When you load a patent draft, analysis runs entirely in your browser via WebAssembly - your draft never leaves your device. PatentLint is operated by Christopher Chen as a personal project, not as a business entity.",
       "softwareLabel": "The Software.",
       "softwareDesc": "The underlying source code, source-available under PolyForm-Strict-1.0.0 (see § 4 for license terms).",
       "p2": "These Terms cover your use of both. Different rules apply depending on which you are using.",
@@ -1828,7 +1828,7 @@
       "maynot3": "Circumvent any rate limits or access controls.",
       "maynot4": "Use the Site to violate applicable patent, copyright, trade secret, or export-control law.",
       "p3": "By using the Site, you also represent and warrant that:",
-      "rep1": "You have all necessary rights, authority, and clearances to load the documents you analyze — including any confidentiality clearances required by your client engagement, applicable rules of professional conduct (including USPTO 37 CFR § 11.106 and any bar or patent-attorney association rules of your jurisdiction), or organizational policy.",
+      "rep1": "You have all necessary rights, authority, and clearances to load the documents you analyze - including any confidentiality clearances required by your client engagement, applicable rules of professional conduct (including USPTO 37 CFR § 11.106 and any bar or patent-attorney association rules of your jurisdiction), or organizational policy.",
       "rep2": "You have independently verified that PatentLint's architecture is appropriate for the sensitivity of those documents.",
       "rep3": "Your use of PatentLint complies with applicable law and professional rules."
     },
@@ -1839,7 +1839,7 @@
       "privacyLink": "See the <1>Privacy Policy</1> for the full data-handling disclosure."
     },
     "s4": {
-      "title": "The Software license — PolyForm-Strict-1.0.0",
+      "title": "The Software license - PolyForm-Strict-1.0.0",
       "p1": "The Software is source-available under PolyForm-Strict-1.0.0. The full license text is at <1>polyformproject.org/licenses/strict/1.0.0</1> and in the LICENSE file of the Software repository.",
       "permittedHeading": "Permitted uses of the Software:",
       "permitted1": "Reading and studying the source code.",
@@ -1860,9 +1860,9 @@
     "s6": {
       "title": "No legal advice",
       "p1": "PatentLint is an automated drafting aid. Its output is preliminary and not a substitute for review by a qualified patent professional. Nothing the Site produces constitutes legal advice. Do not rely solely on PatentLint output for patent prosecution, filing, or enforcement decisions.",
-      "p2": "Check categories include antecedent-basis analysis, specification-support analysis (US under § 112(a); EPC under Art. 84; CN under 专利法 §26 第4款; TW under 專利法 §26 第3項), section ordering, claim punctuation, and other rule-based verifications — these flag candidates for your review, not legal determinations.",
-      "p3": "An overall letter grade summarizes rule-based findings only — an A means PatentLint's catalog found no flagged issues, not that the draft is filing-ready.",
-      "p4": "You assume sole responsibility for verifying any PatentLint finding before acting on it. Using the Site or the Software does not create any client–attorney, agent, or fiduciary relationship between you and Christopher Chen."
+      "p2": "Check categories include antecedent-basis analysis, specification-support analysis (US under § 112(a); EPC under Art. 84; CN under 专利法 §26 第4款; TW under 專利法 §26 第3項), section ordering, claim punctuation, and other rule-based verifications - these flag candidates for your review, not legal determinations.",
+      "p3": "An overall letter grade summarizes rule-based findings only - an A means PatentLint's catalog found no flagged issues, not that the draft is filing-ready.",
+      "p4": "You assume sole responsibility for verifying any PatentLint finding before acting on it. Using the Site or the Software does not create any client-attorney, agent, or fiduciary relationship between you and Christopher Chen."
     },
     "s7": {
       "title": "Warranty disclaimer",
@@ -1871,7 +1871,7 @@
     },
     "s8": {
       "title": "Limitation of liability",
-      "p1": "To the maximum extent permitted by law, and regardless of the theory of liability (contract, tort including negligence, strict liability, statute, or otherwise), Christopher Chen shall not be liable for any indirect, incidental, special, consequential, exemplary, or punitive damages arising out of or relating to your use of the Site or the Software — including but not limited to loss of profits, revenue, data, business opportunities, or goodwill — even if advised of the possibility of such damages.",
+      "p1": "To the maximum extent permitted by law, and regardless of the theory of liability (contract, tort including negligence, strict liability, statute, or otherwise), Christopher Chen shall not be liable for any indirect, incidental, special, consequential, exemplary, or punitive damages arising out of or relating to your use of the Site or the Software - including but not limited to loss of profits, revenue, data, business opportunities, or goodwill - even if advised of the possibility of such damages.",
       "p2": "Subject to § 8(p3), Christopher Chen's aggregate liability for all claims arising out of or relating to the Site or the Software is capped at the greater of (i) the total fees you have paid to Christopher Chen in the twelve months preceding the claim, or (ii) US$100.",
       "p3": "Nothing in these Terms limits liability that cannot be limited by applicable law, or damages caused by Christopher Chen's fraud, willful misconduct, or gross negligence."
     },
@@ -1893,7 +1893,7 @@
     },
     "s12": {
       "title": "Anonymous error reports",
-      "p1": "If you click \"Send anonymously\" on a check, you give PatentLint permission to use the de-identified diagnostic payload to debug detection bugs and improve the catalog. You retain all rights to your patent draft, which stays on your device. Because reports cannot be linked back to you, we may not be able to follow up directly — but we read every report."
+      "p1": "If you click \"Send anonymously\" on a check, you give PatentLint permission to use the de-identified diagnostic payload to debug detection bugs and improve the catalog. You retain all rights to your patent draft, which stays on your device. Because reports cannot be linked back to you, we may not be able to follow up directly - but we read every report."
     },
     "s13": {
       "title": "General terms",
@@ -1922,27 +1922,27 @@
       "p1": "You agree to defend, indemnify, and hold Christopher Chen harmless from and against any claim, damages, losses, liabilities, costs, or expenses (including reasonable attorneys' fees) arising out of or related to: (a) your use of PatentLint output without independent verification by a registered patent practitioner; (b) your violation of these Terms or any applicable law (including without limitation USPTO 37 CFR § 11 or any equivalent rules of professional conduct in your jurisdiction); (c) your violation of any third party's intellectual property rights or other rights; or (d) your use of the Site or the Software in connection with any document you do not have authority to load.",
       "p2": "Christopher Chen reserves the right to assume the exclusive defense and control of any matter otherwise subject to indemnification by you, in which case you will cooperate fully in asserting any available defenses."
     },
-    "copyright": "Copyright © 2025–2026 Christopher Chen. All rights reserved.",
+    "copyright": "Copyright © 2025-2026 Christopher Chen. All rights reserved.",
     "crossLinks": "See also: <1>Privacy Policy</1> · <3>Security</3>"
   },
   "privacy": {
     "title": "Privacy Policy",
     "lastUpdated": "Last updated: May 12, 2026",
-    "intro": "This Privacy Policy describes how patentlint.com (the \"Site\") handles data when you visit. The PatentLint application collects nothing about you — no analytics, no trackers, no cookies. The only data flow is the standard web request metadata our hosting provider (Vercel) sees on every visit, as it does for any website.",
+    "intro": "This Privacy Policy describes how patentlint.com (the \"Site\") handles data when you visit. The PatentLint application collects nothing about you - no analytics, no trackers, no cookies. The only data flow is the standard web request metadata our hosting provider (Vercel) sees on every visit, as it does for any website.",
     "s1": {
       "title": "Introduction",
       "p1": "patentlint.com is a hosted web application operated by Christopher Chen. It runs PatentLint, a patent drafting checker that analyzes your file entirely in your browser using WebAssembly (Pyodide). The Site is served as static assets from Vercel, with a single Vercel Edge Function for the voluntary error-report endpoint described in § 6. There is no analysis server and no database. Your file content is never transmitted off your device.",
-      "p2": "This Privacy Policy applies to your interactions with the Site. It does not cover the PatentLint Software when you obtain the source code separately — that's covered by the Software license (PolyForm-Strict-1.0.0)."
+      "p2": "This Privacy Policy applies to your interactions with the Site. It does not cover the PatentLint Software when you obtain the source code separately - that's covered by the Software license (PolyForm-Strict-1.0.0)."
     },
     "s2": {
       "title": "Your patent drafts",
-      "p1": "Patent drafts you load into the Site never actually leave your device — the file stays in the browser tab and is processed there. Analysis runs on a Pyodide / WebAssembly engine in that tab. There is no server-side analysis path on patentlint.com; the Site is served as static assets, with a single voluntary error-report endpoint (§ 6) that runs only on explicit user submission.",
+      "p1": "Patent drafts you load into the Site never actually leave your device - the file stays in the browser tab and is processed there. Analysis runs on a Pyodide / WebAssembly engine in that tab. There is no server-side analysis path on patentlint.com; the Site is served as static assets, with a single voluntary error-report endpoint (§ 6) that runs only on explicit user submission.",
       "p2": "Specifically, this Site does not:",
       "never1": "Receive or transmit the content of your patent drafts.",
       "never2": "Store filenames, claim text, specification body, or any patent-specific data.",
       "never3": "Send draft content to any third party (including AI providers, OCR services, or document processors).",
-      "verify": "You can verify this in airplane mode — see the <1>Security</1> page for the live demonstration.",
-      "p3": "Scope of processing. PatentLint does not act as a \"data controller\" or \"data processor\" within the meaning of GDPR Art. 4(7)–(8), nor as a \"business\" within the meaning of CCPA/CPRA, with respect to the patent draft content you analyze. That content is processed entirely within your browser tab and is never transmitted to any PatentLint server. We act as a controller only with respect to (i) the voluntary diagnostic report you submit via the \"Send\" button, if you choose to submit one, and (ii) standard hosting metadata logged by our static-asset provider (see § 3)."
+      "verify": "You can verify this in airplane mode - see the <1>Security</1> page for the live demonstration.",
+      "p3": "Scope of processing. PatentLint does not act as a \"data controller\" or \"data processor\" within the meaning of GDPR Art. 4(7)-(8), nor as a \"business\" within the meaning of CCPA/CPRA, with respect to the patent draft content you analyze. That content is processed entirely within your browser tab and is never transmitted to any PatentLint server. We act as a controller only with respect to (i) the voluntary diagnostic report you submit via the \"Send\" button, if you choose to submit one, and (ii) standard hosting metadata logged by our static-asset provider (see § 3)."
     },
     "s3": {
       "title": "Vercel-edge hosting metadata",
@@ -1951,7 +1951,7 @@
       "log2": "Your browser's user-agent string.",
       "log3": "The URL path you requested and the HTTP response status.",
       "log4": "A timestamp.",
-      "p2": "This is the same metadata any web host receives — we do not augment it, enrich it, link it to identity, or use it for any analytics. Vercel retains its edge logs per its own published retention policy.",
+      "p2": "This is the same metadata any web host receives - we do not augment it, enrich it, link it to identity, or use it for any analytics. Vercel retains its edge logs per its own published retention policy.",
       "p3": "Under GDPR Art. 4(7) we are technically a data controller for this Vercel-edge processing. We don't access these logs in the ordinary course of operating the Site; we'd only consult them if investigating a security incident."
     },
     "s4": {
@@ -1970,10 +1970,10 @@
     },
     "s6": {
       "title": "Voluntary feedback",
-      "p1": "Each finding has a \"Report\" button. Clicking it opens a dialog that previews exactly what will be sent — nothing is hidden. The dialog also offers a \"Send by email\" alternative addressed to kwisschen@gmail.com if you would rather write more context yourself.",
-      "p2": "The anonymous payload contains counts, the specific term or phrase the rule flagged, a short surrounding excerpt, category labels (which check, which rule, which detection branch), and a few structural fingerprints — capped at five findings per report. It does not contain your full claim text, full paragraphs, file names, file metadata, your email, your name, or your IP.",
-      "p2b": "If you fill in the optional comment field in that dialog, your typed text is included in the report as-is — you control what goes into it. Treat anything you type there as visible to the maintainer; do not paste sensitive content.",
-      "p3": "When you click \"Send anonymously,\" your browser POSTs the payload over HTTPS to a Vercel Edge Function on patentlint.com, which creates an issue in a private GitHub Issues tracker that only the maintainer can access. The payload is intentionally de-identified before it leaves your browser (no IP, no email, no browser headers, no full claim text — see § 6 above) as an extra safeguard. Your IP and browser headers are not forwarded to GitHub.",
+      "p1": "Each finding has a \"Report\" button. Clicking it opens a dialog that previews exactly what will be sent - nothing is hidden. The dialog also offers a \"Send by email\" alternative addressed to kwisschen@gmail.com if you would rather write more context yourself.",
+      "p2": "The anonymous payload contains counts, the specific term or phrase the rule flagged, a short surrounding excerpt, category labels (which check, which rule, which detection branch), and a few structural fingerprints - capped at five findings per report. It does not contain your full claim text, full paragraphs, file names, file metadata, your email, your name, or your IP.",
+      "p2b": "If you fill in the optional comment field in that dialog, your typed text is included in the report as-is - you control what goes into it. Treat anything you type there as visible to the maintainer; do not paste sensitive content.",
+      "p3": "When you click \"Send anonymously,\" your browser POSTs the payload over HTTPS to a Vercel Edge Function on patentlint.com, which creates an issue in a private GitHub Issues tracker that only the maintainer can access. The payload is intentionally de-identified before it leaves your browser (no IP, no email, no browser headers, no full claim text - see § 6 above) as an extra safeguard. Your IP and browser headers are not forwarded to GitHub.",
       "p4": "If you use the email alternative instead, we receive whatever you write. To send pseudonymously, use an email-aliasing service (Apple Hide My Email, Gmail aliases, Firefox Relay, ProtonMail aliases); we do not correlate alias addresses with any other data. We use feedback only to fix bugs and reply to you, and we do not share it with third parties."
     },
     "s7": {
@@ -1982,11 +1982,11 @@
       "vercelLabel": "Vercel.",
       "vercel": "Hosts the static Site assets and the Pyodide wheel. Receives the standard web request metadata described in § 3.",
       "pyodideLabel": "Pyodide CDN.",
-      "pyodide": "On first visit, your browser fetches the Pyodide WebAssembly runtime from the Pyodide CDN (jsDelivr). After that, the runtime is cached locally and works offline. The lxml package is deferred and fetched from the same CDN only if you analyze a CNIPA XML or ZIP file — also cached locally after first fetch.",
+      "pyodide": "On first visit, your browser fetches the Pyodide WebAssembly runtime from the Pyodide CDN (jsDelivr). After that, the runtime is cached locally and works offline. The lxml package is deferred and fetched from the same CDN only if you analyze a CNIPA XML or ZIP file - also cached locally after first fetch.",
       "fontsLabel": "Google Fonts (CJK font, optional).",
       "fonts": "If you export a localized PDF in zh-TW / zh-CN / ja / ko, your browser fetches the corresponding Noto Sans CJK font from Google Fonts at PDF-export time. The font is cached after first fetch. English-locale PDFs do not fetch any font.",
       "githubLabel": "GitHub.",
-      "github": "Anonymous reports submitted via the \"Send\" button in the report dialog are forwarded by a Vercel Edge Function to a private GitHub Issues tracker that only the maintainer can access. The payload is intentionally de-identified before it leaves your browser (no IP, no email, no browser headers, no full claim text — see § 6) as an extra safeguard. Issues are stored under GitHub's own privacy policy.",
+      "github": "Anonymous reports submitted via the \"Send\" button in the report dialog are forwarded by a Vercel Edge Function to a private GitHub Issues tracker that only the maintainer can access. The payload is intentionally de-identified before it leaves your browser (no IP, no email, no browser headers, no full claim text - see § 6) as an extra safeguard. Issues are stored under GitHub's own privacy policy.",
       "p2": "We do not use any other third-party services. No CRM, no email-marketing platform, no support ticketing system, no third-party logging."
     },
     "s8": {
@@ -2017,7 +2017,7 @@
       "name": "Christopher Chen",
       "emailLabel": "Email:"
     },
-    "copyright": "Copyright © 2025–2026 Christopher Chen. All rights reserved.",
+    "copyright": "Copyright © 2025-2026 Christopher Chen. All rights reserved.",
     "crossLinks": "See also: <1>Terms of Service</1> · <3>Security</3>"
   },
   "rubric": {
@@ -2025,7 +2025,7 @@
       "line": "This grade only reflects PatentLint's check results, and is not a judgment on the draft's substantive content."
     },
     "completenessGate": {
-      "title": "Draft incomplete — grade unavailable",
+      "title": "Draft incomplete - grade unavailable",
       "missingSections": "Missing required sections: {{sections}}"
     },
     "section": {
@@ -2036,7 +2036,7 @@
       "antecedent_spec_support": "Antecedent + Spec Support",
       "title": "title",
       "notApplicable": "N/A",
-      "notApplicableTooltip": "No drawings detected — section not graded"
+      "notApplicableTooltip": "No drawings detected - section not graded"
     },
     "impactList": {
       "title": "Biggest-impact items",
@@ -2047,22 +2047,22 @@
     "gradePill": "{{letter}}",
     "page": {
       "title": "How PatentLint scores your draft",
-      "subtitle": "A deterministic rubric — no AI judgment, no machine learning.",
+      "subtitle": "A deterministic rubric - no AI judgment, no machine learning.",
       "weightsTitle": "Section weights",
       "weightsIntro": "Every check we run rolls into one of these five sections. Weights are fixed across US, EPC, CN, and TW filings.",
       "gateTitle": "How the FIX gate works",
-      "gateIntro": "FIX-level findings headline the grade. One FIX caps the grade at A-, regardless of how clean the rest of the draft is. This matches partner-triage reality — the question is always \"any blockers, then how clean?\"",
+      "gateIntro": "FIX-level findings headline the grade. One FIX caps the grade at A-, regardless of how clean the rest of the draft is. This matches partner-triage reality - the question is always \"any blockers, then how clean?\"",
       "gateRule": "{{count}} FIX → max {{letter}}",
       "conditionalTitle": "When sections are not applicable",
-      "conditionalIntro": "Two scenarios shape the Drawings section. First — when no drawings are detected (chemistry, methods, business processes), the section is marked N/A and its 10% weight redistributes proportionally across the other four sections; legitimately drawing-free drafts incur no penalty. Second — when drawings exist (FIG. references found in the body) but the Brief Description of Drawings section is missing, the resulting required-section FIX lands in the Drawings rubric so the section pill reflects the actual gap.",
+      "conditionalIntro": "Two scenarios shape the Drawings section. First - when no drawings are detected (chemistry, methods, business processes), the section is marked N/A and its 10% weight redistributes proportionally across the other four sections; legitimately drawing-free drafts incur no penalty. Second - when drawings exist (FIG. references found in the body) but the Brief Description of Drawings section is missing, the resulting required-section FIX lands in the Drawings rubric so the section pill reflects the actual gap.",
       "completenessTitle": "When the draft is incomplete",
       "completenessIntro": "When a universally-required section (title, claims, specification body, or abstract) is structurally empty, we do not emit a grade. An A grade on an empty draft would be misleading.",
       "trustTitle": "No AI judgment",
-      "trustIntro": "Every input to your grade is a FIX/REVIEW/PASS status set by a deterministic checker. Every output is a pure arithmetic aggregation. The same draft always gets the same grade. PatentLint never uploads your draft anywhere — analysis runs entirely in your browser.",
+      "trustIntro": "Every input to your grade is a FIX/REVIEW/PASS status set by a deterministic checker. Every output is a pure arithmetic aggregation. The same draft always gets the same grade. PatentLint never uploads your draft anywhere - analysis runs entirely in your browser.",
       "disclaimerTitle": "What an A grade does and does not mean",
       "disclaimerIntro": "An A grade means PatentLint's rule catalog raised no FIX-level findings. It does not mean your draft is filing-ready. Substantive review by a registered practitioner is still recommended.",
-      "reportTitle": "Help us improve — report misjudgments",
-      "reportIntro": "No checker is perfect. Walker-based checks (antecedent basis, specification support, figure references) carry a small false-positive risk; with grading now in place, a wrongly-flagged FIX can cost the draft a letter rank. The Report button on each triage item opens a dialog that previews exactly what will be sent — counts, the flagged term, a short surrounding excerpt, and category labels, capped at five findings — so we can pinpoint the bug from a de-identified payload."
+      "reportTitle": "Help us improve - report misjudgments",
+      "reportIntro": "No checker is perfect. Walker-based checks (antecedent basis, specification support, figure references) carry a small false-positive risk; with grading now in place, a wrongly-flagged FIX can cost the draft a letter rank. The Report button on each triage item opens a dialog that previews exactly what will be sent - counts, the flagged term, a short surrounding excerpt, and category labels, capped at five findings - so we can pinpoint the bug from a de-identified payload."
     },
     "howWeScore": "How we score →",
     "cover": {
@@ -2077,7 +2077,7 @@
     "expand": "Show outgoing data log",
     "collapse": "Hide outgoing data log",
     "endpointDesc": {
-      "report": "Anonymous error report — diagnostic trail only, no draft content."
+      "report": "Anonymous error report - diagnostic trail only, no draft content."
     }
   },
   "crossPromo": {

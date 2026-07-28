@@ -1,25 +1,25 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Shared detection-reason codes used by the three jurisdiction detectors.
 
 When :func:`detect_patent_document` / ``_cn`` / ``_tw`` rejects a document,
 the reason code carries forward to the frontend banner so the copy can
-honestly describe what happened — rather than the legacy behavior of
+honestly describe what happened - rather than the legacy behavior of
 always saying "no standard sections/claims/paragraphs found" regardless
 of whether the real trigger was content absence or cross-script
 contamination.
 
 Reason codes:
 
-- ``patent_detected`` — positive evidence found; not rejected.
-- ``content_missing`` — no positive evidence of any kind (no recognized
+- ``patent_detected`` - positive evidence found; not rejected.
+- ``content_missing`` - no positive evidence of any kind (no recognized
   section headers, no numbered claims, no paragraph numbering). The
   legacy banner copy was written for this case.
-- ``cross_script_japanese`` — enough JP-specific kana content to
+- ``cross_script_japanese`` - enough JP-specific kana content to
   conclude the document is Japanese (not a supported jurisdiction).
-- ``cross_script_korean`` — enough Hangul content to conclude the
+- ``cross_script_korean`` - enough Hangul content to conclude the
   document is Korean (not a supported jurisdiction).
-- ``weak_signal`` — ambiguous: some indicators present but below the
+- ``weak_signal`` - ambiguous: some indicators present but below the
   confidence threshold. Used when positive evidence is weak AND the
   cross-script ratio is non-zero but also below the rejection
   threshold.

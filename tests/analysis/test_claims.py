@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for patentlint.analysis.claims."""
 
 from patentlint.models import Claim
@@ -38,7 +38,7 @@ class TestChainedMultiDependents:
         assert find_chained_multi_dependents(claims) == []
 
     def test_single_multi_dep_no_chain(self):
-        # Claim 3 is multi-dep (depends on 1 or 2), but 1 and 2 are single-dep — no violation.
+        # Claim 3 is multi-dep (depends on 1 or 2), but 1 and 2 are single-dep - no violation.
         claims = [
             Claim(id=1, text="1. A method.", independent=True, method_claim=True),
             Claim(id=2, text="2. An apparatus.", independent=True, method_claim=False),
@@ -48,7 +48,7 @@ class TestChainedMultiDependents:
         assert find_chained_multi_dependents(claims) == []
 
     def test_chained_violation_detected(self):
-        # Claim 3 is multi-dep; claim 4 is multi-dep that depends on claim 3 — § 112(e) violation.
+        # Claim 3 is multi-dep; claim 4 is multi-dep that depends on claim 3 - § 112(e) violation.
         claims = [
             Claim(id=1, text="1. A method.", independent=True, method_claim=True),
             Claim(id=2, text="2. An apparatus.", independent=True, method_claim=False),
@@ -251,7 +251,7 @@ class TestMeansPlusFunction:
 
 class TestAntecedentBasis:
     def test_proper_basis(self):
-        """'a base' introduces, 'the base' references — no issue."""
+        """'a base' introduces, 'the base' references - no issue."""
         claims = [Claim(id=1, text="A widget comprising a base, wherein the base is flat.", independent=True, method_claim=False)]
         issues = check_antecedent_basis(claims)
         terms = [i["term"] for i in issues]
@@ -310,7 +310,7 @@ class TestAntecedentBasis:
     def test_bare_noun_introduction_same_claim(self):
         """R4 (issue #91): a multi-word term first mentioned article-less
         earlier in the SAME claim (preamble term / verb object) has
-        antecedent basis — MPEP § 2173.05(e)."""
+        antecedent basis - MPEP § 2173.05(e)."""
         claims = [
             Claim(
                 id=1, independent=True, dependencies=[], method_claim=False,
@@ -345,7 +345,7 @@ class TestAntecedentBasis:
 
     def test_bare_noun_intro_genuine_defect_still_flagged(self):
         """A genuinely-undefined multi-word term (no prior mention at all)
-        must still be flagged — the rescue requires a real prior occ."""
+        must still be flagged - the rescue requires a real prior occ."""
         claims = [
             Claim(id=1, independent=True, dependencies=[], method_claim=False,
                   text="An apparatus comprising a base."),
@@ -358,7 +358,7 @@ class TestAntecedentBasis:
         assert any("thermal relay module" in t for t in terms), terms
 
     def test_finite_verb_not_overcaptured_r3(self):
-        """R3 (issues #86–#89, #92): `presents` / `constitutes` / `flows`
+        """R3 (issues #86-#89, #92): `presents` / `constitutes` / `flows`
         / `uses` must terminate the noun-phrase capture, not bleed in."""
         claims = [
             Claim(
@@ -482,7 +482,7 @@ class TestAntecedentBasis:
         """R12 (issues #205 / #200 / #218 / #216-220): `depends` / `stores`
         (3sg verbs) and the temporal adverb `again` must terminate NP
         capture. `not` and `refers` were deliberately withheld
-        (legit_drift) — not covered here."""
+        (legit_drift) - not covered here."""
         claims = [
             Claim(
                 id=1,
@@ -513,7 +513,7 @@ class TestAntecedentBasis:
 
     def test_finite_verb_not_overcaptured_r13(self):
         """R13 (#204): `refers` (3sg) must terminate NP capture. `not` is
-        NOT a stop word — `the strand not conjugated to the label` is a
+        NOT a stop word - `the strand not conjugated to the label` is a
         legitimate negative-limitation noun phrase."""
         claims = [
             Claim(
@@ -527,7 +527,7 @@ class TestAntecedentBasis:
         for t in terms:
             assert "refers" not in t, f"`refers` bled into term: {t!r}"
         assert any("reference point" in t for t in terms), terms
-        # Guard: `not` is NOT a stop word — it survives NP capture (the term
+        # Guard: `not` is NOT a stop word - it survives NP capture (the term
         # retains `not`, rather than truncating to `strand`), so a
         # negative-limitation noun phrase is not split at `not`.
         from patentlint.analysis.utils import _DEFINITE_REF, clean_noun_phrase
@@ -539,7 +539,7 @@ class TestAntecedentBasis:
     def test_conditional_removes_stops_r26(self):
         """R26 (asymmetry probe): `conditional` (post-nominal predicative adj)
         and `removes` (3sg verb) terminate NP capture. `operative` is NOT a
-        stop (withheld — the functional `operative to <verb>` clause)."""
+        stop (withheld - the functional `operative to <verb>` clause)."""
         from patentlint.analysis.utils import _DEFINITE_REF, clean_noun_phrase
 
         def cap(text):
@@ -595,7 +595,7 @@ class TestAntecedentBasis:
         assert any("first extension arm" in p for p in phrases), phrases
 
     def test_accounts_for_verb_not_overcaptured_r5(self):
-        """R5 (issues #98 / #99): `<noun> accounts for X%` — `accounts` is a
+        """R5 (issues #98 / #99): `<noun> accounts for X%` - `accounts` is a
         3sg finite verb in this pattern and must terminate NP capture. The
         lookahead `accounts(?=\\s+for)` distinguishes the verb from the
         bare-noun usage tested separately below."""
@@ -620,7 +620,7 @@ class TestAntecedentBasis:
 
     def test_accounts_noun_usage_preserved_r5(self):
         """R5 negative-control: bare-noun `accounts` (`financial accounts`,
-        `accounts receivable`) must NOT be silenced — the verb-gating
+        `accounts receivable`) must NOT be silenced - the verb-gating
         lookahead `(?=\\s+for)` discriminates."""
         claims = [
             Claim(
@@ -637,13 +637,13 @@ class TestAntecedentBasis:
                 independent=False, dependencies=[1], method_claim=False,
             ),
         ]
-        # Resolves cleanly — intro `financial accounts` matches ref the same.
+        # Resolves cleanly - intro `financial accounts` matches ref the same.
         assert check_antecedent_basis(claims) == []
 
     def test_r39_gated_verb_prep_stops_not_overcaptured(self):
         """R39 (reports #444/#435/#436): `surround`/`takes`/`via` terminate NP
         capture in the verb/preposition reading (determiner/cardinal-gated)."""
-        # #444 — base-form `surround` (coordinate subject) + object determiner.
+        # #444 - base-form `surround` (coordinate subject) + object determiner.
         c = [
             Claim(id=18, text=(
                 "A power module comprising a first power converter, a first "
@@ -653,7 +653,7 @@ class TestAntecedentBasis:
             ), independent=True, method_claim=False),
         ]
         assert not any("surround" in i["term"] for i in check_antecedent_basis(c))
-        # #435 — `takes up` matrix verb.
+        # #435 - `takes up` matrix verb.
         c = [
             Claim(id=7, text="A bag comprising a stress buffer pattern.",
                   independent=True, method_claim=False),
@@ -663,7 +663,7 @@ class TestAntecedentBasis:
             ), independent=False, dependencies=[7], method_claim=False),
         ]
         assert not any("takes" in i["term"] for i in check_antecedent_basis(c))
-        # #436 — preposition `via` before a cardinal.
+        # #436 - preposition `via` before a cardinal.
         c = [
             Claim(id=10, text="A method comprising forming a bottom sealing structure.",
                   independent=True, method_claim=False),
@@ -687,7 +687,7 @@ class TestAntecedentBasis:
                   independent=False, dependencies=[1], method_claim=False),
         ]
         assert check_antecedent_basis(c) == []
-        # `via a <NP>` (article, not cardinal) is NOT gated — `via` stays in the
+        # `via a <NP>` (article, not cardinal) is NOT gated - `via` stays in the
         # captured reference (the gold-legit `the extracting performed via a …`
         # shape that validate_fix protects).
         c = [
@@ -724,7 +724,7 @@ class TestAntecedentBasis:
             ),
         ]
         terms = [i["term"] for i in check_antecedent_basis(claims)]
-        # NP span across U+2011 — emit full compounds, not truncated `large`/`medium`
+        # NP span across U+2011 - emit full compounds, not truncated `large`/`medium`
         assert all(t not in ("large", "medium") for t in terms), terms
         assert any("large‑size" in t for t in terms), terms
 
@@ -749,7 +749,7 @@ class TestAntecedentBasis:
         `at least one of A, B, and C` introduces each member as an
         antecedent under MPEP § 2173.05(e). Mirrors the silicon-carbide
         composite case where claim 1 says `at least one of silicon carbide,
-        alumina, and silica` — `the alumina` and `the silica` in dep
+        alumina, and silica` - `the alumina` and `the silica` in dep
         claims resolve cleanly."""
         claims = [
             Claim(
@@ -781,7 +781,7 @@ class TestAntecedentBasis:
         assert check_antecedent_basis(claims) == []
 
     def test_markush_one_of_no_at_least_r6(self):
-        """R6 — bare `one of A, B, and C` also triggers list-context
+        """R6 - bare `one of A, B, and C` also triggers list-context
         extraction. Common in shorter Markush expressions."""
         claims = [
             Claim(
@@ -802,7 +802,7 @@ class TestAntecedentBasis:
         assert "bone" not in terms, terms
 
     def test_one_or_more_of_intros_r6(self):
-        """R6 — `one or more of A, B, and C` variant."""
+        """R6 - `one or more of A, B, and C` variant."""
         claims = [
             Claim(
                 id=1,
@@ -876,7 +876,7 @@ class TestClaimTransitions:
         assert "1" in results[0].message
 
     def test_dependent_not_checked(self):
-        """Dependent claim with 'wherein' only — parent has 'comprising' → PASS."""
+        """Dependent claim with 'wherein' only - parent has 'comprising' → PASS."""
         claims = [
             Claim(id=1, text="A device comprising a base.", independent=True),
             Claim(id=2, text="The device of claim 1, wherein the base is flat.", independent=False, dependencies=[1]),
@@ -898,7 +898,7 @@ class TestClaimTransitions:
         still count. Previously the colon-gate suppressed the fallback and
         these were flagged as missing a transition."""
         claims = [
-            # #212 — `comprising performing, by a device, … processes:`
+            # #212 - `comprising performing, by a device, … processes:`
             Claim(
                 id=1,
                 text=(
@@ -908,7 +908,7 @@ class TestClaimTransitions:
                 ),
                 independent=True, method_claim=True,
             ),
-            # #213 — CRM `… medium comprising a plurality of instructions "
+            # #213 - CRM `… medium comprising a plurality of instructions "
             # that, when executed, cause the processor to:`
             Claim(
                 id=15,
@@ -1197,7 +1197,7 @@ class TestCounts:
 
 
 class TestR34ReferenceSideOverCapture:
-    """R34 (2026-07-18) — reports #391 / #397 / #400.
+    """R34 (2026-07-18) - reports #391 / #397 / #400.
 
     Three reference-side over-capture mechanisms. Each test pairs the FP that
     must be silenced with the FN-guard case that must keep firing.
@@ -1208,7 +1208,7 @@ class TestR34ReferenceSideOverCapture:
         return {f["term"] for f in check_antecedent_basis(claims)}
 
     def test_sandwich_finite_verb_gated_on_object_determiner(self):
-        """`the first die sandwich the first ...` — verb, not a `die sandwich`."""
+        """`the first die sandwich the first ...` - verb, not a `die sandwich`."""
         claims = [
             Claim(id=1, independent=True, text=(
                 "A package comprising a first die, a third die and a first "
@@ -1245,7 +1245,7 @@ class TestR34ReferenceSideOverCapture:
         assert "ports closely join" not in self._terms(claims)
 
     def test_ly_noun_is_not_treated_as_adverb(self):
-        """FN-guard: `assembly` ends in -ly but is a noun — must survive."""
+        """FN-guard: `assembly` ends in -ly but is a noun - must survive."""
         from patentlint.analysis.utils import strip_trailing_adverb
         assert strip_trailing_adverb("drive assembly") == "drive assembly"
         assert strip_trailing_adverb("power supply") == "power supply"
@@ -1272,7 +1272,7 @@ class TestR34ReferenceSideOverCapture:
             assert _is_partitive_pronoun_head(examiner_term) is False
 
 class TestR35SwitchesAndGerundHead:
-    """R35 (2026-07-20) — two US classes unblocked by the EdgeXpert examiner
+    """R35 (2026-07-20) - two US classes unblocked by the EdgeXpert examiner
     FN-guard (tests/eval/examiner_fn_guard.py). Both had been deferred for
     three sessions with the note "queued until the examiner guard is runnable".
     """

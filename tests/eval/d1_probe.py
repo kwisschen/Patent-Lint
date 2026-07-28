@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# d1_probe.py — cost-bounded LLM probe of the CN/TW reference-numeral (D1)
+# d1_probe.py - cost-bounded LLM probe of the CN/TW reference-numeral (D1)
 # false-positive rate, to quantify the addressable headroom of the paid
 # "CJK D1 judged gold" lever before committing to a larger judging run
 # (ADR-159 Path-to-80; user-authorized ~$3-5 probe, 2026-06-25).
@@ -32,7 +32,7 @@ SYSTEM = """You audit findings from PatentLint's D1 reference-numeral consistenc
 The check flagged a numeral because it found that numeral bound to MULTIPLE distinct captured "element names" in the spec. Your job: decide if that is a REAL inconsistency or a FALSE POSITIVE of the name-extraction.
 
 Verdicts (pick exactly one):
-- real_d1: the numeral genuinely labels TWO OR MORE DIFFERENT elements — a true drafting error/typo. Each name is a bona-fide element noun denoting a DIFFERENT thing (e.g. 馬達10 vs 電路10; 選擇邏輯塊 vs 選擇模式塊).
+- real_d1: the numeral genuinely labels TWO OR MORE DIFFERENT elements - a true drafting error/typo. Each name is a bona-fide element noun denoting a DIFFERENT thing (e.g. 馬達10 vs 電路10; 選擇邏輯塊 vs 選擇模式塊).
 - false_positive: at least one "name" is NOT a distinct element identity, so the flag should not fire. Causes: (a) a captured name is a sentence/clause fragment, verb phrase, or connector-bled form (e.g. 和缸/及缸/於缸 = the same 缸 with a stray 和/及/於; 在框/到軸; 分析在; 且在); (b) the names are mere variants/synonyms/abbreviations of the SAME element; (c) the numeral is not an element reference numeral at all (a method-step number Sxx, a time/quantity/measurement value, a date, a math variable, a bio/chemical symbol like CD3/K417T); (d) one name is a mis-tokenized fragment of a longer noun.
 - unsure: genuinely cannot tell from the given info.
 
@@ -79,7 +79,7 @@ def build_sample(juris: str, n_oc: int, n_protect: int):
             "canonical": c["canonical"], "canonical_count": c["canonical_count"],
             "outliers": [(o["name"], o["count"]) for o in c["outliers"][:6]],
         })
-    # deterministic stratified sample (stride, no RNG — Math.random is banned anyway)
+    # deterministic stratified sample (stride, no RNG - Math.random is banned anyway)
     oc = [r for r in rows if r["tag"] == "overcapture"]
     pr = [r for r in rows if r["tag"] == "protect"]
 
@@ -139,7 +139,7 @@ async def main_async(args):
     a_key, _ = load_keys()
     client = AsyncAnthropic(api_key=a_key)
     sample, n_oc_total, n_pr_total = build_sample(args.juris, args.n_oc, args.n_protect)
-    print(f"{args.juris} D1 FIX pool — overcapture-class={n_oc_total}  protect-class={n_pr_total}")
+    print(f"{args.juris} D1 FIX pool - overcapture-class={n_oc_total}  protect-class={n_pr_total}")
     print(f"judging {len(sample)} ({args.n_oc} overcapture + {args.n_protect} protect) with {SONNET}…")
     sem = asyncio.Semaphore(6)
     usage = {"in": 0, "out": 0}

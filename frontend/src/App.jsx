@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 import { useState, useCallback, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -67,7 +67,7 @@ function App() {
   // "PatentLint just touched the network when I gave it my draft").
   // The font is only consumed by PDF export. loadCjkFont in pdfExport.js
   // handles on-demand fetching the first time the user clicks Download
-  // PDF — covered by the existing "Generating..." button state. Cached
+  // PDF - covered by the existing "Generating..." button state. Cached
   // module-level after first download, so subsequent clicks are instant.
   const [homeState, setHomeState] = useState('idle')
   const [result, setResult] = useState(null)
@@ -150,7 +150,7 @@ function App() {
             <div className="mx-auto w-full max-w-5xl px-4 py-8">
               {homeState === 'idle' && (
                 <div className="relative isolate flex min-h-[40vh] flex-col items-center justify-center overflow-hidden sm:min-h-[60vh]">
-                  {/* Colorful animated backdrop — soft brand + accent glows that
+                  {/* Colorful animated backdrop - soft brand + accent glows that
                       breathe, matching the sister project's gradient mesh.
                       pointer-events-none + clipped so it never affects layout. */}
                   <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">

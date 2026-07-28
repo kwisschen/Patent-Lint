@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for noun phrase cleanup and capture width (Bugs 3, 5, 6b, 10, 11, 12)."""
 
 from patentlint.analysis.utils import (
@@ -15,7 +15,7 @@ def _ct(s: str) -> str:
 
 class TestComparativeTailStrip:
     """WS-A3 (examiner-grounded): a reference ending in `than` over-captured a
-    comparative clause. Strip it back to the head noun — reference-side only."""
+    comparative clause. Strip it back to the head noun - reference-side only."""
 
     def test_other_than(self):
         assert _ct("first element other than") == "first element"
@@ -281,7 +281,7 @@ class TestHyphenatedCompoundCapture:
         assert "cross-sectional area" in refs
 
     def test_prefix_fragment_not_captured(self):
-        """'multi' alone should NOT appear — full 'multi-stage' should."""
+        """'multi' alone should NOT appear - full 'multi-stage' should."""
         refs = extract_definite_refs("the multi-stage filter circuit is grounded")
         assert "multi" not in refs
 
@@ -309,7 +309,7 @@ class TestHyphenatedAntecedentBasis:
         assert "multi" not in terms
 
     def test_trailing_preposition_not_in_term(self):
-        """'alignment glass sheet along' — 'along' must not appear in stored term."""
+        """'alignment glass sheet along' - 'along' must not appear in stored term."""
         from patentlint.analysis.claims import check_antecedent_basis
         from patentlint.models import Claim
 
@@ -320,12 +320,12 @@ class TestHyphenatedAntecedentBasis:
         )]
         issues = check_antecedent_basis(claims)
         terms = [i["term"] for i in issues if i["claim_id"] == 7]
-        # "alignment glass sheet" should match intro — no issue reported
+        # "alignment glass sheet" should match intro - no issue reported
         assert "alignment glass sheet along" not in terms
         assert "alignment glass sheet" not in terms
 
     def test_trailing_between_not_in_term(self):
-        """'gap between' — 'between' must not appear in stored term."""
+        """'gap between' - 'between' must not appear in stored term."""
         from patentlint.analysis.claims import check_antecedent_basis
         from patentlint.models import Claim
 
@@ -562,7 +562,7 @@ class TestTrailingRelationalAdjectives:
 
 
 class TestRelationalAdjectivesPreservedInLeadingPosition:
-    """Leading and internal uses of the same adjectives must NOT be stripped —
+    """Leading and internal uses of the same adjectives must NOT be stripped -
     'opposite' at the start of 'opposite surface' is a legitimate modifier.
     The trailing-only strip only walks from the right end of the phrase."""
 

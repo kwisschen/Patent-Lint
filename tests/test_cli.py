@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for patentlint CLI."""
 
 import json
@@ -90,7 +90,7 @@ class TestAnalyzeCommand:
         docx_file = tmp_path / "test.docx"
         docx_file.touch()
 
-        # Clean result — all checks should pass
+        # Clean result - all checks should pass
         mock_result = _mock_result()
         mock_result.abstract_word_count = 80
         mock_result.paragraphs_sequential = True
@@ -178,7 +178,7 @@ class TestLocaleFlag:
         try:
             __import__("weasyprint")
         except ImportError:
-            pytest.skip("weasyprint not installed — skipping PDF locale test")
+            pytest.skip("weasyprint not installed - skipping PDF locale test")
 
         docx_file = tmp_path / "test.docx"
         docx_file.touch()

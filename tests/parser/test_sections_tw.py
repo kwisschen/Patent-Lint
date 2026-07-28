@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for TW section extraction from bracket-header .docx files."""
 
 from __future__ import annotations
@@ -156,7 +156,7 @@ class TestCountCjkChars:
         assert _count_cjk_chars("") == 0
 
     def test_with_numbers(self):
-        # ASCII digits are not CJK — only 元件 counted
+        # ASCII digits are not CJK - only 元件 counted
         assert _count_cjk_chars("元件10") == 2
 
 
@@ -478,7 +478,7 @@ class TestClaimBracketLabels:
     handles it identically to the standard inline-numbered format.
 
     TIPO 專利法施行細則 §18 第3款 only requires Arabic-numeral sequential
-    numbering — 【請求項N】 satisfies that, so the parser must accept it.
+    numbering - 【請求項N】 satisfies that, so the parser must accept it.
     """
 
     def test_claim_bracket_labels_with_inline_body(self):
@@ -569,7 +569,7 @@ class TestClaimBracketLabels:
         assert doc.claims[1].id == 2
 
     def test_pattern_variants_di_n_xiang(self):
-        """Variant: 【第N項】 (item-N) — alternate firm-variant style."""
+        """Variant: 【第N項】 (item-N) - alternate firm-variant style."""
         paragraphs = [
             "【申請專利範圍】",
             "【第1項】 一種半導體裝置。",
@@ -581,7 +581,7 @@ class TestClaimBracketLabels:
         assert doc.claims[1].id == 2
 
     def test_pattern_variants_quan_li_yao_qiu(self):
-        """Variant: 【權利要求N】 — TW translation of CN-style label."""
+        """Variant: 【權利要求N】 - TW translation of CN-style label."""
         paragraphs = [
             "【申請專利範圍】",
             "【權利要求1】 一種半導體裝置。",
@@ -591,7 +591,7 @@ class TestClaimBracketLabels:
         assert len(doc.claims) == 2
 
     def test_pattern_variants_whitespace_in_label(self):
-        """Variant: 【請求項 1】 / 【第 1 項】 — interior whitespace."""
+        """Variant: 【請求項 1】 / 【第 1 項】 - interior whitespace."""
         paragraphs = [
             "【申請專利範圍】",
             "【請求項 1】 一種半導體裝置。",
@@ -602,7 +602,7 @@ class TestClaimBracketLabels:
 
     def test_diagnostic_fields_track_bracket_label_failure(self):
         """When the bracket-label fix path triggers, diagnostic fields
-        reflect what the parser saw — useful for triage on future
+        reflect what the parser saw - useful for triage on future
         unhandled-pattern reports."""
         paragraphs = [
             "【申請專利範圍】",
@@ -610,12 +610,12 @@ class TestClaimBracketLabels:
             "【請求項2】 如請求項1所述之半導體裝置。",
         ]
         doc = extract_tw_sections(paragraphs)
-        # Path succeeded — claims parsed.
+        # Path succeeded - claims parsed.
         assert doc.claims_section_paragraph_count == 2  # 2 synthetic "N. body" entries
         # First paragraph in claims section is the synthetic "1. ..."
         # form (after the fix transformed 【請求項1】 inline).
         assert doc.claims_first_paragraph_starts_with_bracket is False
-        # No unhandled bracket headers — the fix recognized them all.
+        # No unhandled bracket headers - the fix recognized them all.
         assert doc.unknown_bracket_headers_in_claims == 0
 
     def test_diagnostic_fields_track_unhandled_pattern(self):
@@ -628,10 +628,10 @@ class TestClaimBracketLabels:
             "【附項2】 如請求項1所述之半導體裝置。",
         ]
         doc = extract_tw_sections(paragraphs)
-        # Claims didn't parse — but diagnostics tell the maintainer why.
+        # Claims didn't parse - but diagnostics tell the maintainer why.
         assert doc.claims_header_seen is True
         assert doc.claims_section_paragraph_count == 0  # nothing accumulated
-        # Two unknown bracket headers seen inside the claims section —
+        # Two unknown bracket headers seen inside the claims section -
         # the smoking gun for "drafter used a label format we don't
         # handle."
         assert doc.unknown_bracket_headers_in_claims == 2

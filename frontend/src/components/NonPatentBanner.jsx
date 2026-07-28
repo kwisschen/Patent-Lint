@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 import { useTranslation } from 'react-i18next'
 import { AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -8,7 +8,7 @@ import { FrostCard } from '@/components/ui/frost-card'
 // Banner copy is keyed off BOTH the selected jurisdiction and the actual
 // rejection reason (ADR-150). Pre-ADR-150 the banner always said "your
 // document doesn't have standard sections/claims/numbering" regardless
-// of whether detection actually checked any of that — so a document
+// of whether detection actually checked any of that - so a document
 // that happened to trip the cross-script short-circuit would be told
 // its sections were missing (a lie). Keying off the reason lets each
 // message honestly describe what the detector saw.

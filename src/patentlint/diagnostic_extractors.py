@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Per-check diagnostic extractors.
 
 Each function in this module produces a detailed-but-bounded
@@ -11,7 +11,7 @@ the GitHub issue body, and what scheduled triage automation reads via
 Design principles
 -----------------
 - **Pinpoint, not panorama**: per-finding fields tell us what term /
-  phrase / paragraph caused the check to fire — enough to reproduce
+  phrase / paragraph caused the check to fire - enough to reproduce
   locally without the user's draft.
 - **Top-N sample**: at most 5 findings per report. A check with 100
   matches sends 5 representatives + the aggregate count.
@@ -22,7 +22,7 @@ Design principles
   chars; Japanese mixes Han with kana inflection and long katakana
   technical terms (closer to Latin than Han); Hangul is syllabic.
   The ancestor-introduction excerpt uses a deliberately smaller second
-  tier (Latin 16 / JA 12 / Hangul 10 / Han 7) — it only needs to show
+  tier (Latin 16 / JA 12 / Hangul 10 / Han 7) - it only needs to show
   the introduction's grammatical shape, and it exposes a second
   claim's prose, so the window is held to the minimum. Never the whole
   claim text or paragraph. The user sees every fragment in the modal
@@ -76,7 +76,7 @@ CONTEXT_WINDOW_JA = 60
 CONTEXT_WINDOW_HANGUL = 45
 CONTEXT_WINDOW_HAN = 35
 
-# Ancestor-introduction excerpt windows — deliberately ~half the
+# Ancestor-introduction excerpt windows - deliberately ~half the
 # child-claim context window above. The ancestor excerpt exists only to
 # reveal the *shape* of the introduction: the token immediately before
 # the term (an article → recognized intro / back-ref; a verb → bare
@@ -112,15 +112,15 @@ def _context_window_for(text: str) -> int:
     #337, 2026-06-23); current values are the module constants below
     (Han 35 / JA 60 / Hangul 45 / Latin 80), tuned so each script holds
     roughly equivalent linguistic content:
-    - Han (zh-TW / zh-CN): 35 — each char ≈ 1 morpheme, very dense.
-    - Japanese: 60 — kana inflection + long katakana technical terms
+    - Han (zh-TW / zh-CN): 35 - each char ≈ 1 morpheme, very dense.
+    - Japanese: 60 - kana inflection + long katakana technical terms
       (e.g. インターフェース = 8 chars for one concept) inflate token
       count well beyond pure Han or Hangul, so JA needs more chars to
-      hold the same semantic content. Detected via kana presence —
+      hold the same semantic content. Detected via kana presence -
       CN/TW drafts virtually never contain hiragana/katakana, so even
       a few kana chars are a near-perfect Japanese signal.
-    - Hangul: 45 — syllabic blocks, denser than JA's mixed scripts.
-    - Latin (en/de): 80 — ~5 chars/word.
+    - Hangul: 45 - syllabic blocks, denser than JA's mixed scripts.
+    - Latin (en/de): 80 - ~5 chars/word.
 
     Detection is content-driven (reads ``text``), not UI-locale-driven:
     a US user analyzing a TW patent still gets the Han window because
@@ -171,7 +171,7 @@ def _excerpt_around(text: str, target: str, before: int | None = None, after: in
     occurrence of ``target`` inside ``text``. Window size is picked from
     the script of ``text`` when ``before``/``after`` are not given.
     ``case_insensitive`` locates the match without regard to case but
-    still slices the windows from the original-cased ``text`` — used for
+    still slices the windows from the original-cased ``text`` - used for
     the ancestor excerpt, where the walker's normalized (lowercased)
     term may not case-match the raw ancestor claim text.
     Returns all-None if not found or if either input is empty."""
@@ -196,19 +196,19 @@ def _excerpt_around_reference(
     before: int | None = None, after: int | None = None,
 ) -> tuple[str | None, str | None, int | None]:
     """Return (context_before, context_after, char_offset) anchored on the
-    FLAGGED REFERENCE occurrence of ``term`` — not its first mention.
+    FLAGGED REFERENCE occurrence of ``term`` - not its first mention.
 
     The §112(b) walker flags a *reference* (`所述X` / `the X`) that lacks an
     introduction. Anchoring the diagnostic on ``text.find(term)`` (the FIRST
     occurrence) is wrong: the first mention is frequently the introduction
     itself, so the trail showed the term being properly introduced while the
-    card claimed it was missing — confusing, and it hid that the flag was on a
+    card claimed it was missing - confusing, and it hid that the flag was on a
     later occurrence (reported on issues #265/#266/#267, all jurisdictions).
 
     Resolution order, jurisdiction-agnostic:
       1. locate ``reference_form`` (e.g. `所述預設方向` / `the skin`); anchor on
          the ``term`` inside it (the reference form ends with the bare term);
-      2. else fall back to the term's LAST occurrence (`rfind`) — the reference
+      2. else fall back to the term's LAST occurrence (`rfind`) - the reference
          is the later mention, never the first;
       3. else all-None.
     """
@@ -244,7 +244,7 @@ def _claim_preamble(claim_text: str | None, n: int = PREAMBLE_MAX) -> str | None
 
 
 # ---------------------------------------------------------------------------
-# Category A — Walker §112
+# Category A - Walker §112
 # ---------------------------------------------------------------------------
 
 
@@ -260,7 +260,7 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
         return {}
     sample = findings[:SAMPLE_SIZE]
     out_findings = []
-    # Body cross-references in this finding-set's claims — list of cited
+    # Body cross-references in this finding-set's claims - list of cited
     # claim numbers extracted from `the X according to claim N` /
     # `如請求項N所述的Y` body shapes. Surfaces #124 / #143-class cases
     # autonomously: triage can see whether the term has a possible
@@ -285,7 +285,7 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
         term = f.get("term") or ""
         claim_text = f.get("claim_text") or ""
         # Anchor the trail on the FLAGGED REFERENCE (所述X / the X), not the
-        # first mention (which is often the introduction) — issues #265/266/267.
+        # first mention (which is often the introduction) - issues #265/266/267.
         ctx_before, ctx_after, offset = _excerpt_around_reference(
             claim_text, term, f.get("reference_form"))
         suggested = f.get("suggested_match") or {}
@@ -293,13 +293,13 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
         # term in claim text. Tells me what stopped the NP capture and
         # whether a stop-word / boundary-set extension would fix it
         # (e.g., if next char is 又 / 從 / 之 / 'comprises' that's a
-        # missing exclusion). Privacy-safe — single CJK or ASCII char.
+        # missing exclusion). Privacy-safe - single CJK or ASCII char.
         np_boundary_char = None
         if offset is not None and isinstance(offset, int):
             end_pos = offset + len(term)
             if 0 <= end_pos < len(claim_text):
                 np_boundary_char = claim_text[end_pos]
-        # Leading reference-marker presence — surfaces 所述/前述/該/the/said
+        # Leading reference-marker presence - surfaces 所述/前述/該/the/said
         # immediately preceding the term, which informs whether the
         # walker captured a reference vs an article-less intro. Helps
         # classify possessive-intro (#134) / chain-inheritance (#124)
@@ -334,13 +334,13 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
         # appears in the claim text BEFORE the flagged reference. When
         # True, the term was almost certainly introduced earlier in the
         # SAME claim (article-less / bare-noun, or a verb-object intro)
-        # but in a shape the intro extractor missed — a walker FP, not a
+        # but in a shape the intro extractor missed - a walker FP, not a
         # genuine §112 gap. This is the same-claim sibling of
         # `term_in_ancestor_text` (which covers the parent/ancestor case),
         # and together they let triage classify the bare-noun /
         # ancestor-chain FP family from the payload alone. Reported users
         # said "same claim introduces X already" (#206/#207 US,
-        # #221/#224/#225 CN) — exactly this signal. Jurisdiction-agnostic:
+        # #221/#224/#225 CN) - exactly this signal. Jurisdiction-agnostic:
         # a substring scan over the de-identified claim_text the walker
         # already supplies (no new draft content reaches the payload).
         term_earlier_in_claim = False
@@ -358,7 +358,7 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
                 term_earlier_in_claim = term.lower() in haystack[:ref_pos]
         # Candidate-introduction excerpt (the self-sufficiency upgrade,
         # 2026-06-25). `term_earlier_in_claim` only says the term appears
-        # earlier — but the FP-vs-legit call hinges on HOW: an article-less
+        # earlier - but the FP-vs-legit call hinges on HOW: an article-less
         # earlier mention (`attached to skin` / `貼附於人體`) is a missed
         # bare-noun introduction (walker FP), whereas an earlier mention that
         # is ITSELF a reference (`the X` / `所述X`) or sits only inside a verb
@@ -366,7 +366,7 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
         # term occurs earlier, emit a SECOND bounded excerpt anchored on that
         # earliest occurrence + the marker immediately preceding it, so a
         # report self-classifies without the draft. Marker is reported as a
-        # FACT (not a verdict) — the article-less-vs-intro-quantifier-vs-
+        # FACT (not a verdict) - the article-less-vs-intro-quantifier-vs-
         # reference distinction is the classifier; the excerpt shows whether
         # the earliest mention is a bare noun or buried in a verb phrase.
         # Privacy §6: uses the smaller ancestor-sized window; same in-claim
@@ -416,12 +416,12 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
             "ref_marker_before": ref_marker_before,
             "body_cross_refs": body_cross_refs_per_claim.get(f.get("claim_id"), [])[:10],
             # Issue #70: which lookup produced the did-you-mean. A null
-            # `did_you_mean_claim_id` is ambiguous on its own — it means
+            # `did_you_mean_claim_id` is ambiguous on its own - it means
             # either a chain/morphological hit whose id wasn't threaded,
             # OR a 符號說明 (symbol-table) hit which has no claim id by
             # design. `did_you_mean_source` disambiguates: "symbol_table"
             # ⇒ the term is a declared element but has no claim-level
-            # intro (a legitimate §26 flag, not a walker FP — 符號說明 is
+            # intro (a legitimate §26 flag, not a walker FP - 符號說明 is
             # a lookup, never an antecedent-basis silencer); null ⇒
             # chain/morphological (and `did_you_mean_claim_id` is set).
             "did_you_mean_source": suggested.get("source") if isinstance(suggested, dict) else None,
@@ -432,11 +432,11 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
             "claim_text_charlen": len(claim_text) if claim_text else 0,
         }
         # Issue #70: TW walker tags each finding with `term_in_symbol_table`
-        # — whether the flagged term is a declared 符號說明 element. For a
+        # - whether the flagged term is a declared 符號說明 element. For a
         # parent-claim FP report this is the decisive classifier: a
         # declared element with no ancestor intro is a legitimate
         # claim-drafting flag, not a walker bug. TW-only (CN/US have no
-        # 符號說明) — surfaced only when the walker supplied it.
+        # 符號說明) - surfaced only when the walker supplied it.
         if "term_in_symbol_table" in f:
             out["term_in_symbol_table"] = bool(f.get("term_in_symbol_table"))
         # Parent-claim diagnostic. Emitted only when the walker supplied
@@ -444,7 +444,7 @@ def extract_antecedent_basis(findings: list[dict], total_claims: int) -> dict[st
         # `term_in_ancestor_text` is the bit that splits a walker FP
         # (term IS introduced in a parent claim but in a shape the intro
         # extractor missed) from a genuine §112 gap (term in no
-        # ancestor) — without it, an anonymous child-claim report cannot
+        # ancestor) - without it, an anonymous child-claim report cannot
         # be classified. The ancestor excerpt uses the deliberately
         # smaller _ancestor_window_for window; the full ancestor text
         # stays in-process and never reaches the payload.
@@ -495,7 +495,7 @@ def extract_spec_support(unsupported_terms, total_claims: int, spec_paragraph_co
                 "cross_ref": getattr(ut, "cross_ref", None),
             }
         phrase = ut_dict.get("phrase") or ""
-        # Phrase shape markers — surfacing without draft access whether
+        # Phrase shape markers - surfacing without draft access whether
         # the captured phrase shows leading-qualifier retention (so_shu)
         # or terminal compound-noun-suffix presence (so we can tell
         # whether normalize chain stripped the qualifier vs failed to,
@@ -526,7 +526,7 @@ def extract_spec_support(unsupported_terms, total_claims: int, spec_paragraph_co
 
 
 # ---------------------------------------------------------------------------
-# Category B — Regex match
+# Category B - Regex match
 # ---------------------------------------------------------------------------
 
 
@@ -536,8 +536,8 @@ def extract_regex_matches(pairs, claims, what: str = "match") -> dict[str, Any]:
     related claim_text lookup.
 
     ``pairs`` may be:
-      - list[tuple[int, str]] — claim_id + matched fragment
-      - list[int] — claim IDs only (we look up text from ``claims``)
+      - list[tuple[int, str]] - claim_id + matched fragment
+      - list[int] - claim IDs only (we look up text from ``claims``)
     ``claims`` is the analysis result's claims list (Pydantic Claim
     objects with .id and .text).
     """
@@ -556,7 +556,7 @@ def extract_regex_matches(pairs, claims, what: str = "match") -> dict[str, Any]:
         claim = claims_by_id.get(claim_id) if claim_id is not None else None
         claim_text = claim.text if claim is not None else ""
         if matched is None and claim_text:
-            # No specific match string — fall back to preamble excerpt.
+            # No specific match string - fall back to preamble excerpt.
             preamble = _claim_preamble(claim_text)
             out_findings.append({
                 "claim_id": claim_id,
@@ -585,7 +585,7 @@ def extract_regex_matches(pairs, claims, what: str = "match") -> dict[str, Any]:
 
 def extract_special_format(claim, kind: str) -> dict[str, Any]:
     """Single-claim special format detector (Jepson / CRM / Markush /
-    Omnibus / wherein-comma — these emit per-claim, not aggregated)."""
+    Omnibus / wherein-comma - these emit per-claim, not aggregated)."""
     text = getattr(claim, "text", "") or ""
     return {
         "flagged_claim_id": getattr(claim, "id", None),
@@ -596,7 +596,7 @@ def extract_special_format(claim, kind: str) -> dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
-# Category C — Parser boundary
+# Category C - Parser boundary
 # ---------------------------------------------------------------------------
 
 
@@ -626,7 +626,7 @@ def extract_paragraph_sequential(numbers: list[int], gap_index: int | None = Non
 
 def extract_required_sections(missing: list[str], detected_headers: list[str], canonical_order: list[str]) -> dict[str, Any]:
     """Required-sections check fingerprint. ``detected_headers`` is the
-    list of section header strings the parser actually saw — useful for
+    list of section header strings the parser actually saw - useful for
     spotting misnormalized headers (e.g. CN check seeing TW header)."""
     return {
         "missing_count": len(missing),
@@ -667,7 +667,7 @@ def extract_dependency_format(bad_claims: list[int], claims) -> dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
-# Category D — Closed-set state
+# Category D - Closed-set state
 # ---------------------------------------------------------------------------
 
 
@@ -690,7 +690,7 @@ def extract_no_paragraph_numbering(input_format: str, paragraph_count: int) -> d
 
 
 # ---------------------------------------------------------------------------
-# Category E — Claim-level structural
+# Category E - Claim-level structural
 # ---------------------------------------------------------------------------
 
 
@@ -699,7 +699,7 @@ def extract_connection_relationships(
     claims,
 ) -> dict[str, Any]:
     """Per-issue diagnostic fingerprint for connectionRelationships
-    (TW + CN). Issue #48 (2026-05-15) surfaced the gap — the check was
+    (TW + CN). Issue #48 (2026-05-15) surfaced the gap - the check was
     emitting bare top-level CheckItems with no `findings[]` payload, so
     reports landed with empty diagnostic trails and could not be
     triaged from the issue body alone.
@@ -714,7 +714,7 @@ def extract_connection_relationships(
       - per finding: claim_id, component_count, sample_count,
         sample_name_charlens, claim_text_charlen, plus the short
         sample_names (capped at 3, each truncated to MATCH_MAX) so
-        triage can quickly see WHAT was captured — drafter-real
+        triage can quickly see WHAT was captured - drafter-real
         components (drafter error) vs sub-clause fragments
         (walker over-capture).
     """
@@ -729,7 +729,7 @@ def extract_connection_relationships(
         # Cap the names list (so a 30-component claim doesn't ship 30
         # entries) and truncate each name for length-safety. The
         # _component_name helper already returns the short head, so
-        # most names are 2-15 CJK chars — MATCH_MAX is generous.
+        # most names are 2-15 CJK chars - MATCH_MAX is generous.
         sample_names_capped = list(sample_names[:3])
         out_findings.append({
             "claim_id": claim_id,
@@ -747,7 +747,7 @@ def extract_connection_relationships(
 
 
 def extract_claim_id_list(claim_ids: list[int], claims, reason_code: str | None = None) -> dict[str, Any]:
-    """Generic claim-ID-list extractor — multipleDependent, selfDependent,
+    """Generic claim-ID-list extractor - multipleDependent, selfDependent,
     chainedMultiDep, meansFunction, etc. Surfaces the IDs plus a short
     preamble excerpt of each flagged claim so a maintainer can see what
     the regex matched on."""

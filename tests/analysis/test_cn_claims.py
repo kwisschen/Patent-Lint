@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for patentlint.analysis.cn_claims."""
 
 from patentlint.analysis.cn_claims import (
@@ -25,7 +25,7 @@ from patentlint.models import Claim, CnPatentDocument
 
 
 class TestExtendNengCompoundCn:
-    """能量 / 能源 follow-gate — parity mirror of TW issue #75."""
+    """能量 / 能源 follow-gate - parity mirror of TW issue #75."""
 
     def test_energy_compound_reextended(self):
         assert _extend_neng_compound_cn("静电", 2, "静电能量大于一值") == ("静电能量", 4)
@@ -39,11 +39,11 @@ class TestExtendNengCompoundCn:
 
 
 class TestExtendShiCompoundCn:
-    """R47 时-compound follow-gate — timer/clock/period nouns truncated by
+    """R47 时-compound follow-gate - timer/clock/period nouns truncated by
     the _NOUN_CHARS_CN 时-exclusion (定时器→定, 录入时间项→录入)."""
 
     def test_timer_compound_reextended(self):
-        # 配置第一定时器，… — comma bounds the compound (real drafting shape).
+        # 配置第一定时器，… - comma bounds the compound (real drafting shape).
         from patentlint.analysis.cn_claims import _extend_shi_compound_cn
         assert _extend_shi_compound_cn("第一定", 3, "第一定时器，所述第一定时器") == (
             "第一定时器", 5
@@ -55,14 +55,14 @@ class TestExtendShiCompoundCn:
         assert noun == "录入时间项"
 
     def test_when_clause_shi_not_extended(self):
-        # 在X时， — 时 is followed by a comma/connective, never a noun
+        # 在X时， - 时 is followed by a comma/connective, never a noun
         # suffix → the follow-gate leaves the when-clause boundary intact.
         from patentlint.analysis.cn_claims import _extend_shi_compound_cn
         assert _extend_shi_compound_cn("监听", 2, "监听时，触发启动") == ("监听", 2)
 
 
 class TestExtendYingCompoundCn:
-    """R48 应-compound precursor-gate — reaction/effect/sense nouns truncated
+    """R48 应-compound precursor-gate - reaction/effect/sense nouns truncated
     by the _NOUN_CHARS_CN 应-exclusion (反应器→反, 晶化反应→晶化反)."""
 
     def test_reaction_compound_reextended(self):
@@ -77,18 +77,18 @@ class TestExtendYingCompoundCn:
         assert noun == "第一反应器"
 
     def test_gray_adverb_not_extended(self):
-        # 执行相应 — 相 is NOT in the precursor whitelist (相应 = adverb).
+        # 执行相应 - 相 is NOT in the precursor whitelist (相应 = adverb).
         from patentlint.analysis.cn_claims import _extend_ying_compound_cn
         assert _extend_ying_compound_cn("执行相", 3, "执行相应的操作") == ("执行相", 3)
 
     def test_modal_ying_not_extended(self):
-        # 系统应该 — 统 is not a reaction precursor → modal guard preserved.
+        # 系统应该 - 统 is not a reaction precursor → modal guard preserved.
         from patentlint.analysis.cn_claims import _extend_ying_compound_cn
         assert _extend_ying_compound_cn("系统", 2, "系统应该启动") == ("系统", 2)
 
 
 class TestLeadingQuantifierCapTruncationCn:
-    """R49 — _NOUN_CHARS_CN {2,12} cap truncates a long compound when a leading
+    """R49 - _NOUN_CHARS_CN {2,12} cap truncates a long compound when a leading
     quantifier eats the budget (一个或更多个便携式手持控制器→…控)."""
 
     def test_quantifier_inflated_compound_resolves(self):
@@ -209,7 +209,7 @@ class TestDependencyFormat:
         assert results[0].status == "pass"
 
     def test_multi_dep_huo_form_pass(self):
-        # 或 (or) alternative — common multi-dep form.
+        # 或 (or) alternative - common multi-dep form.
         doc = _cn_doc([
             _claim(1, "1. 一种装置。"),
             _claim(2, "2. 一种方法。"),
@@ -220,7 +220,7 @@ class TestDependencyFormat:
         assert results[0].status == "pass"
 
     def test_multi_dep_range_renyi_yi_xiang_pass(self):
-        # 根据权利要求X至Y中任意一项所述的 — range + 中任意一项
+        # 根据权利要求X至Y中任意一项所述的 - range + 中任意一项
         doc = _cn_doc([
             _claim(1, "1. 一种装置。"),
             _claim(2, "2. 装置2。"),
@@ -232,7 +232,7 @@ class TestDependencyFormat:
         assert results[0].status == "pass"
 
     def test_multi_dep_endash_range_pass(self):
-        # 根据权利要求1‑5任一项所述的 — non-breaking hyphen range, no 中
+        # 根据权利要求1‑5任一项所述的 - non-breaking hyphen range, no 中
         doc = _cn_doc([
             _claim(1, "1. 一种方法。"),
             _claim(2, "2. 方法2。"),
@@ -364,7 +364,7 @@ class TestRefNumeralParentheses:
 
     def test_latin_prefix_unbracketed_verify(self):
         """R1 / IC2 unbracketed Latin-prefix designators are 符号 under
-        实施细则 §22 — must be flagged in CN claims too."""
+        实施细则 §22 - must be flagged in CN claims too."""
         doc = _cn_doc([
             _claim(1, "1. 一种电路，包括一电阻R1和一晶体管Q2。"),
         ])
@@ -440,7 +440,7 @@ class TestSubjectNameConsistency:
         assert "44, 44" not in results[0].message
 
     def test_ji_zai_connective_pass(self):
-        """如权利要求1所记载的 — JP-translation form, mirrors TW bug fix."""
+        """如权利要求1所记载的 - JP-translation form, mirrors TW bug fix."""
         doc = _cn_doc([
             _claim(1, "1. 一种盖组件，其特征在于包括本体。"),
             _claim(2, "2. 如权利要求1所记载的盖组件，其特征在于还包括嵌合部。",
@@ -450,7 +450,7 @@ class TestSubjectNameConsistency:
         assert results[0].status == "pass"
 
     def test_gen_ju_ji_zai_de_pass(self):
-        """根据权利要求1所记载的 — JP-translation formal."""
+        """根据权利要求1所记载的 - JP-translation formal."""
         doc = _cn_doc([
             _claim(1, "1. 一种盖组件，其特征在于包括本体。"),
             _claim(2, "2. 根据权利要求1所记载的盖组件，其特征在于还包括嵌合部。",
@@ -460,7 +460,7 @@ class TestSubjectNameConsistency:
         assert results[0].status == "pass"
 
     def test_jie_shi_de_pass(self):
-        """根据权利要求1所揭示的 — formal alternative."""
+        """根据权利要求1所揭示的 - formal alternative."""
         doc = _cn_doc([
             _claim(1, "1. 一种盖组件，其特征在于包括本体。"),
             _claim(2, "2. 根据权利要求1所揭示的盖组件，其特征在于还包括嵌合部。",
@@ -573,7 +573,7 @@ class TestTwTerminology:
 
     def test_flagged_phrases_items_surfaced(self):
         """FlaggedTermList chips surface the actual detected TW terms and
-        the claims they were found in — previously the walker emitted only
+        the claims they were found in - previously the walker emitted only
         a boolean-ish finding with no token content."""
         doc = _cn_doc([
             _claim(1, "1. 一种装置。"),
@@ -711,7 +711,7 @@ class TestDependentOrdering:
 
 
 class TestDymQualityGate:
-    """R21 — `_dym_quality_reject_cn` filters out over-captured DYMs."""
+    """R21 - `_dym_quality_reject_cn` filters out over-captured DYMs."""
 
     def _reject(self, ref: str, dym: str) -> bool:
         from patentlint.analysis.cn_claims import _dym_quality_reject_cn
@@ -810,7 +810,7 @@ class TestMarkushOpenTransitionCn:
 
 
 class TestCnIndependentPreamble:
-    """审查指南 第二部分第二章 §3.1.1: advisory — indep claims conventionally
+    """审查指南 第二部分第二章 §3.1.1: advisory - indep claims conventionally
     open with 一种 (statute requires 主题名称, not literal 一种). Status is
     VERIFY (advisory), not AMEND (hard rule).
     """
@@ -873,10 +873,10 @@ class TestGarbageCaptureSweepR67:
     """R67 (2026-05-05) garbage-capture sweep on CN walker.
 
     Two safe fixes:
-    1. 具有 added to _LEADING_VERB_PREFIXES_CN — strips possession verb
+    1. 具有 added to _LEADING_VERB_PREFIXES_CN - strips possession verb
        prefix so `所述具有酸解离性基的结构单元` resolves on the head
        noun instead of emitting `具有酸解离性基` as a meaningless term.
-    2. 由 added to _NOUN_CHARS_CN regex boundary — prevents over-capture
+    2. 由 added to _NOUN_CHARS_CN regex boundary - prevents over-capture
        across `X由Y` ("X composed of Y") relational frames. CN112271269B
        previously emitted `交联网状结构由可交联配体` (the bare relational
        句); now emits `交联网状结构` (the actual antecedent term).
@@ -892,12 +892,12 @@ class TestGarbageCaptureSweepR67:
             ),
         ])
         issues = check_antecedent_basis_cn(doc)
-        # Walker should not surface `具有酸解离性基` as a reference term —
+        # Walker should not surface `具有酸解离性基` as a reference term -
         # 具有 is a verb, not part of an element name.
         assert not any("具有" in i["term"] for i in issues), issues
 
     def test_you_boundary_truncates_capture(self):
-        """所述<noun>由<another_noun> — capture stops before 由."""
+        """所述<noun>由<another_noun> - capture stops before 由."""
         from patentlint.analysis.cn_claims import check_antecedent_basis_cn
         doc = _cn_doc([
             _claim(
@@ -913,7 +913,7 @@ class TestGarbageCaptureSweepR67:
 
 
 class TestVerbOnlySuppressionR68:
-    """R68 (2026-05-06) — verb-only walker degenerate fragments.
+    """R68 (2026-05-06) - verb-only walker degenerate fragments.
 
     `所述确定` / `所述获得` / `所述进行` etc. surface when the walker
     regex stops at 的 or other boundary and the leading verb is left
@@ -956,7 +956,7 @@ class TestVerbOnlySuppressionR68:
 
 
 class TestTrailingLaiSuppressionR68:
-    """R68 (2026-05-06) — trailing 来 verb-particle strip.
+    """R68 (2026-05-06) - trailing 来 verb-particle strip.
 
     `所述<noun>来自X` constructions leave `<noun>来` as the term after
     walker captures past the regex boundary. 来 is a verb tail particle
@@ -972,14 +972,14 @@ class TestTrailingLaiSuppressionR68:
             ),
         ])
         issues = check_antecedent_basis_cn(doc)
-        # No emit with bare `测量值来` — strip 来 → 测量值, then test
+        # No emit with bare `测量值来` - strip 来 → 测量值, then test
         # against intros (not introduced as `一测量值` so emits as
         # `测量值` cleanly OR is silent if drafter introduces it elsewhere).
         for i in issues:
             assert not i["term"].endswith("来"), i
 
     def test_3char_trailing_lai_stripped_cn(self):
-        """3-char term ending in 来 — relaxed-guard set allows residual ≥ 2."""
+        """3-char term ending in 来 - relaxed-guard set allows residual ≥ 2."""
         from patentlint.analysis.cn_claims import check_antecedent_basis_cn
         doc = _cn_doc([
             _claim(
@@ -988,13 +988,13 @@ class TestTrailingLaiSuppressionR68:
             ),
         ])
         issues = check_antecedent_basis_cn(doc)
-        # `行为来` (3 chars) — strip 来 → `行为` (2 chars residual).
+        # `行为来` (3 chars) - strip 来 → `行为` (2 chars residual).
         # Either silenced or emitted as bare `行为`, never `行为来`.
         for i in issues:
             assert not i["term"].endswith("来"), i
 
     def test_direction_noun_xiang_not_stripped_cn(self):
-        """WS-B1: 向 is a bound noun suffix in direction nouns (方向/轴向/…) —
+        """WS-B1: 向 is a bound noun suffix in direction nouns (方向/轴向/…) -
         must NOT be stripped (was truncating 所述圆周方向 → 圆周方, a corpus FP)."""
         from patentlint.analysis.cn_claims import clean_noun_phrase_cn
         for noun in ("圆周方向", "第一方向", "第一取向", "轴向", "径向"):
@@ -1009,7 +1009,7 @@ class TestTrailingLaiSuppressionR68:
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# R35 — CN bare-noun-introduction rescue (mirror of TW R7)
+# R35 - CN bare-noun-introduction rescue (mirror of TW R7)
 # ─────────────────────────────────────────────────────────────────────────
 
 
@@ -1025,7 +1025,7 @@ class TestBareNounIntroductionCn:
         assert check_antecedent_basis_cn(doc) == []
 
     def test_存在_X_in_conditional_clause_resolves(self):
-        """在存在已知不良时…所述已知不良 — verb-object in 在…时 clause
+        """在存在已知不良时…所述已知不良 - verb-object in 在…时 clause
         (the CN110276410B BOE case that motivated R20 reversal)."""
         from patentlint.analysis.cn_claims import check_antecedent_basis_cn
         doc = _cn_doc([
@@ -1046,7 +1046,7 @@ class TestBareNounIntroductionCn:
 
     def test_compound_tail_still_flagged(self):
         """使用者介面-style: 接口 as tail of 图形接口 is NOT a bare intro
-        (guard a — whole-compound-boundary)."""
+        (guard a - whole-compound-boundary)."""
         from patentlint.analysis.cn_claims import check_antecedent_basis_cn
         doc = _cn_doc([
             _claim(1, "1. 一种方法，包括一程序。"),
@@ -1066,7 +1066,7 @@ class TestBareNounIntroductionCn:
         definite-reference 所述/前述/该 prefix + non-ordinal term)
         correctly identifies this as pure possessive (U盘 is a noun,
         not a verb/adjective phrase). Guard (b) on has_bare_noun_introduction_cn
-        is preserved separately for the bare-noun arm — see
+        is preserved separately for the bare-noun arm - see
         test_r36_possessive_de_still_rejected (which tests the bare-noun
         function directly)."""
         from patentlint.analysis.cn_claims import check_antecedent_basis_cn
@@ -1077,7 +1077,7 @@ class TestBareNounIntroductionCn:
         issues = check_antecedent_basis_cn(doc)
         assert not any(i["term"] == "标识数据" for i in issues), issues
 
-    # R37 (2026-06-01) — TW R9 parity. has_possessive_introduction_cn
+    # R37 (2026-06-01) - TW R9 parity. has_possessive_introduction_cn
     # closes the (所述|前述|该)<X>(的|之)<term> coverage gap for short
     # locative-attribute possessive intros (顶面/底面/侧面/端面).
     # Ordinal-led terms (第一X etc.) excluded to preserve R20 protect
@@ -1097,7 +1097,7 @@ class TestBareNounIntroductionCn:
         assert has_possessive_introduction_cn(text, [], "底面", ref) is True
 
     def test_r37_requires_definite_reference_marker(self):
-        # Negative control: 的 without 所述/前述/该 prefix — must reject.
+        # Negative control: 的 without 所述/前述/该 prefix - must reject.
         from patentlint.analysis.cn_claims import has_possessive_introduction_cn
         text = "具有第一晶体管的外观，且所述外观为平整。"
         ref = text.find("所述外观")
@@ -1135,7 +1135,7 @@ class TestBareNounHelperCn:
         assert has_bare_noun_introduction_cn(txt, [_claim(1, txt)], "输入信号", ro)
 
     def test_存在_in_conditional_clause_accepted(self):
-        """在检测对象存在X时 — verb-object regardless of conditional wrapper."""
+        """在检测对象存在X时 - verb-object regardless of conditional wrapper."""
         from patentlint.analysis.cn_claims import has_bare_noun_introduction_cn
         txt = "在检测对象存在已知不良时，抽取所述已知不良。"
         ro = txt.find("所述已知不良")
@@ -1161,7 +1161,7 @@ class TestBareNounHelperCn:
         ro = txt.find("所述轴承")
         assert not has_bare_noun_introduction_cn(txt, [_claim(1, txt)], "轴承", ro)
 
-    # R36 (2026-05-29) — issues #141 / #142. Drafter wrote
+    # R36 (2026-05-29) - issues #141 / #142. Drafter wrote
     # `限位于第三位置或第四位置二者之一` then referenced both `该第三位置`
     # and `该第四位置`. Three mechanisms cover the case: (a) locative verb
     # `位于` accepted as bare-intro context; (b) Markush enumerator `或`
@@ -1183,7 +1183,7 @@ class TestBareNounHelperCn:
     def test_r36_markush_closer_right_boundary(self):
         from patentlint.analysis.cn_claims import has_bare_noun_introduction_cn
         # Even with the `或` left-boundary acceptance, the right side of
-        # `第四位置` here is `二` — the Markush-closer carve-out lets it pass.
+        # `第四位置` here is `二` - the Markush-closer carve-out lets it pass.
         txt = "限位于第三位置或第四位置二者之一，并在该第四位置切换。"
         ro = txt.find("该第四位置")
         assert has_bare_noun_introduction_cn(txt, [_claim(1, txt)], "第四位置", ro)
@@ -1233,7 +1233,7 @@ class TestCnCrmNonTransitory:
         assert check_crm_non_transitory_cn(doc)[0].status == "amend"
 
     def test_media_alternative_媒体_amend(self):
-        """计算机可读媒体 (less common but accepted) — recognised."""
+        """计算机可读媒体 (less common but accepted) - recognised."""
         from patentlint.analysis.cn_claims import check_crm_non_transitory_cn
         doc = _cn_doc([_claim(1, "1. 一种计算机可读媒体，存储指令。")])
         assert check_crm_non_transitory_cn(doc)[0].status == "amend"
@@ -1274,7 +1274,7 @@ class TestCnIndefiniteWording:
 
 
 class TestR54TrailingAndInteriorVerbParity:
-    """R54 (2026-07-18) — TW R29 parity, verified latent on CN before mirroring."""
+    """R54 (2026-07-18) - TW R29 parity, verified latent on CN before mirroring."""
 
     def test_trailing_and_interior_verbs(self):
         from patentlint.analysis.cn_claims import clean_noun_phrase_cn as C

@@ -1,12 +1,12 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """EPC G1 spec-structure check tests.
 
 Synthetic fixtures cover the five G1 checks:
   - requiredSections  (Art. 78(1) + Rule 41 + Rule 42(1) EPC)
   - sectionOrdering   (Rule 42(1) EPC)
-  - paragraphNumbering (EPO Guidelines F-II § 4.5 — advisory)
-  - paragraphEnding   (drafting hygiene — REVIEW)
+  - paragraphNumbering (EPO Guidelines F-II § 4.5 - advisory)
+  - paragraphEnding   (drafting hygiene - REVIEW)
   - titleRequired     (Rule 41(2)(b) EPC)
 """
 
@@ -168,7 +168,7 @@ TECHNICAL FIELD
 
 [0001] First paragraph.
 
-[0003] Third paragraph — gap at 0002.
+[0003] Third paragraph - gap at 0002.
 
 [0004] Fourth paragraph.
 """
@@ -210,7 +210,7 @@ def test_g1_runner_emits_all_four_structure_checks():
 
 
 # ---------------------------------------------------------------------------
-# G2 (content) — figure-ref consistency, numeral consistency, claim-in-spec
+# G2 (content) - figure-ref consistency, numeral consistency, claim-in-spec
 # ---------------------------------------------------------------------------
 
 
@@ -242,7 +242,7 @@ def test_numeral_consistency_canonical_passes():
 
 
 def test_numeral_consistency_conflict_surfaces_advisory():
-    """Same numeral (10) attached to two disjoint element names — surfaced as an
+    """Same numeral (10) attached to two disjoint element names - surfaced as an
     advisory 'verify' item (D1 advisory re-tier, 2026-06-25), not an asserted
     'amend'. The conflict is still detected and shown; it just no longer affects
     the grade (EPC inherits the US re-tier). The US D1 detector

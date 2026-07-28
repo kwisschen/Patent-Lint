@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for the DOCX loader module.
 
 Creates minimal .docx files using python-docx as test fixtures.
@@ -91,7 +91,7 @@ def _create_numbered_patent_docx(path: Path, spec_paragraphs: list[str],
     # Claims header
     doc.add_paragraph("CLAIMS")
 
-    # Claim paragraphs (numbered — uses same numbering, counter resets via new numId)
+    # Claim paragraphs (numbered - uses same numbering, counter resets via new numId)
     # Create a second numbering for claims
     numbering_xml = doc.part.numbering_part._element
     abstract_num2 = OxmlElement("w:abstractNum")

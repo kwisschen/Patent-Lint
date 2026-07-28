@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Actionable errors for files PatentLint cannot analyze.
 
 Every one of these inputs used to fail with the same opaque python-docx
@@ -270,6 +270,6 @@ class TestErrorCodeI18nParity:
         """Repo-wide typography rule: no em dash or en dash in UI copy."""
         offenders = [
             key for key, text in self._input_errors(locale).items()
-            if "—" in text or "–" in text
+            if "\u2014" in text or "\u2013" in text
         ]
         assert not offenders, f"{locale}.json error.input has dash characters: {offenders}"

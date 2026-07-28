@@ -1,18 +1,18 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# cluster_fp_classes.py — turn labeled walker_fp INSTANCES into FP CLASSES
+# cluster_fp_classes.py - turn labeled walker_fp INSTANCES into FP CLASSES
 # (ADR-159, the class-not-instance layer).
 #
 # The instance labels (apply_proposed_labels.py) make a fix SAFE to validate;
 # they do not by themselves END a recurrence. A recurrence ends when the WALKER
 # MECHANISM behind a whole class of FPs is fixed (e.g. "strip quantifier+
-# classifier prefixes", "block verb-clause over-capture") — one code change that
+# classifier prefixes", "block verb-clause over-capture") - one code change that
 # kills every current AND future instance of that class.
 #
 # This groups confirmed walker_fp findings by their MECHANISM SIGNATURE (derived
 # from the captured term shape + the judge's rationale), so the output is a
-# ranked list of FP CLASSES — each a single walker-mechanism fix target with its
+# ranked list of FP CLASSES - each a single walker-mechanism fix target with its
 # instance count, draft spread, examples, and the likely code site. Feed the top
 # classes into /walker-round; the instance gold validates the mechanism fix
 # didn't regress.
@@ -80,12 +80,12 @@ def classify(term: str, reference_form: str, rationale: str) -> str:
 # Each class → the walker code site a maintainer should look at first.
 _FIX_SITE = {
     "ref_marker_bleed": "intro/refnum extractors: strip embedded 所述/該/前述 (cn_specification _CN_REF_PREFIXES; cn_claims ref-marker truncation; utils for US)",
-    "quantifier_classifier_prefix": "_CN_LEADING_QUANTIFIERS + the guarded classifier strip (cn_specification.py) — same mechanism as PR #294",
+    "quantifier_classifier_prefix": "_CN_LEADING_QUANTIFIERS + the guarded classifier strip (cn_specification.py) - same mechanism as PR #294",
     "verb_clause_overcapture": "noun-boundary lookahead: stop the capture at a content-verb follower (tw/cn_claims _STATE/_TRAILING sets; US _STOP_WORDS)",
-    "tokenization_fragment": "cjk_tokenize bigram split / _NP_CORE compound-noun synthesis — capture the whole head noun, not a fragment",
-    "single_word_bare_noun": "bare-noun-introduction single-word arm (has_bare_noun_introduction*) — the deferred US #265 / TW arm",
+    "tokenization_fragment": "cjk_tokenize bigram split / _NP_CORE compound-noun synthesis - capture the whole head noun, not a fragment",
+    "single_word_bare_noun": "bare-noun-introduction single-word arm (has_bare_noun_introduction*) - the deferred US #265 / TW arm",
     "missed_introduction": "intro-pattern coverage gap: the term IS introduced but the intro extractor doesn't register the shape",
-    "other": "needs manual inspection — no clean mechanism signature",
+    "other": "needs manual inspection - no clean mechanism signature",
 }
 
 
@@ -120,17 +120,17 @@ def main() -> int:
                                       "juris": p.get("jurisdiction"), "why": (p.get("rationale") or "")[:90]})
 
     ranked = sorted(classes.items(), key=lambda kv: -kv[1]["instances"])
-    print(f"# Walker-FP CLASSES across {len(files)} run(s) — {total_fp} walker_fp instances\n")
+    print(f"# Walker-FP CLASSES across {len(files)} run(s) - {total_fp} walker_fp instances\n")
     print(f"{'class':30} {'instances':>9} {'drafts':>7} {'juris':>8}")
     print("-" * 60)
     for cls, c in ranked:
         print(f"{cls:30} {c['instances']:>9} {len(c['drafts']):>7} {','.join(sorted(j or '?' for j in c['jurisdictions'])):>8}")
     print("\n## Per-class fix targets (one mechanism fix ends the whole class):\n")
     for cls, c in ranked:
-        print(f"### {cls}  —  {c['instances']} instances / {len(c['drafts'])} drafts / {','.join(sorted(j or '?' for j in c['jurisdictions']))}")
+        print(f"### {cls}  -  {c['instances']} instances / {len(c['drafts'])} drafts / {','.join(sorted(j or '?' for j in c['jurisdictions']))}")
         print(f"  FIX SITE: {_FIX_SITE.get(cls, '?')}")
         for ex in c["examples"]:
-            print(f"    e.g. [{ex['juris']}] term={ex['term']!r} ref={ex['ref']!r}  — {ex['why']}")
+            print(f"    e.g. [{ex['juris']}] term={ex['term']!r} ref={ex['ref']!r}  - {ex['why']}")
         print()
     return 0
 

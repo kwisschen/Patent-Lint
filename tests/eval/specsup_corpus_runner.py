@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# specsup_corpus_runner.py — Engine-2 (spec-support / §112(a) written-description)
+# specsup_corpus_runner.py - Engine-2 (spec-support / §112(a) written-description)
 # corpus FN-guard + characterizer (ADR-159, 2026-06-28).
 #
 # WHY: validate_fix.py measures the ANTECEDENT (§112(b)) walker. Spec-support is
@@ -16,11 +16,11 @@
 # KEY FINDING (2026-06-28): the TW spec-support coverb over-capture (#293-296,
 # 至一電容 / 向一第二網路 / 為一現場可編程邏輯閘陣列) is INERT. Cleaning the
 # inventory term (至一電容 -> 電容) changed 0 of 137 corpus findings (before ==
-# after) — the 3-tier fuzzy matcher (substring + word-window) already locates the
+# after) - the 3-tier fuzzy matcher (substring + word-window) already locates the
 # bare noun inside the coverb-leaked term against the spec, so the leak never
 # becomes a finding. This re-confirms the earlier "spec-support over-capture is
 # INERT" conclusion at corpus scale. Do NOT ship inventory-term cosmetic fixes
-# for spec-support — they reduce no FPs.
+# for spec-support - they reduce no FPs.
 #
 # USAGE:
 #   python tests/eval/specsup_corpus_runner.py --juris TW
@@ -66,7 +66,7 @@ def _build_doc_with_spec(record, juris: str, spec_text: str, harness):
         # CnPatentDocument's body field is `detailed_description`; there is no
         # `embodiments` field. Passing one silently dropped the spec (pydantic
         # ignores extras), so _collect_spec_text_cn saw an EMPTY spec and every
-        # claim term counted as unsupported — 58,943 findings over 1,025 drafts
+        # claim term counted as unsupported - 58,943 findings over 1,025 drafts
         # vs TW's 137, and a term written 7 times in the spec still "failed".
         # That made the CN no-growth gate VACUOUS (noise compared to noise).
         doc = CnPatentDocument(
@@ -80,7 +80,7 @@ def _build_doc_with_spec(record, juris: str, spec_text: str, harness):
 
 
 def _assert_spec_survived(doc, juris: str, spec_text: str) -> None:
-    """#413 non-vacuity guard — the durable fix for the class, not the instance.
+    """#413 non-vacuity guard - the durable fix for the class, not the instance.
 
     Both patent-document models use pydantic ``extra='ignore'``, so a wrong
     field name is dropped SILENTLY and the spec vanishes with no error. That is
@@ -102,7 +102,7 @@ def _assert_spec_survived(doc, juris: str, spec_text: str) -> None:
             f"specsup runner VACUITY GUARD ({juris}): the injected spec did not "
             f"survive into doc.{field} -> the collector (collected text is empty "
             f"while spec_text is non-empty). A field name was almost certainly "
-            f"dropped by pydantic extra='ignore' — the #413 failure mode. Any "
+            f"dropped by pydantic extra='ignore' - the #413 failure mode. Any "
             f"'no-growth' number from this runner in this state is vacuous."
         )
 

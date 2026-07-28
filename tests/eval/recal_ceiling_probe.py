@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# recal_ceiling_probe.py — the recalibration-CEILING experiment (ADR-159).
+# recal_ceiling_probe.py - the recalibration-CEILING experiment (ADR-159).
 #
 # Question: could RE-WEIGHTING compute_confidence_score (free, no new data)
 # reach the precision needed to demote FPs without dumping real defects? Fit an
@@ -10,7 +10,7 @@
 # the precision/legit-retention ceiling. If even the optimal model ≈ base rate,
 # the information is NOT in the available features → recalibration alone cannot
 # work; new information (spec-presence at runtime, richer judged features) is
-# required. (Empirically: US/TW/CN all ≈ base rate — see CONFIDENCE_LAYER_FINDINGS.md.)
+# required. (Empirically: US/TW/CN all ≈ base rate - see CONFIDENCE_LAYER_FINDINGS.md.)
 from __future__ import annotations
 
 import sys

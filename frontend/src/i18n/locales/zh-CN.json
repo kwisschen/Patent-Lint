@@ -55,7 +55,7 @@
     "claimCategories": "权项类别",
     "method": "方法",
     "apparatus": "装置",
-    "outsideRange": "超出 50–150 字范围",
+    "outsideRange": "超出 50-150 字范围",
     "outsideRangeCn": "超出300字上限",
     "outsideRangeTw": "超出250字上限",
     "noParagraphs": "未发现段落编号",
@@ -176,7 +176,7 @@
   },
   "footer": {
     "disclaimer": "本报告不构成法律意见",
-    "builtBy": "© 2025–2026 Christopher Chen",
+    "builtBy": "© 2025-2026 Christopher Chen",
     "security": "安全性",
     "about": "关于",
     "commercial": "企业方案",
@@ -522,7 +522,7 @@
         "claimPeriods": "权利要求以句号结尾",
         "claimDependencies": "权利要求从属关系验证",
         "claimSequentiality": "权利要求编号连续",
-        "abstractWordCount": "摘要字数（50–150）",
+        "abstractWordCount": "摘要字数（50-150）",
         "abstractStructure": "摘要为单一段落且结尾正确",
         "figureSequential": "附图编号连续",
         "singleFigure": "单一附图标注（「The Figure」）",
@@ -808,7 +808,7 @@
     "restrictiveWordingSpec": "段落：{{list}}。上列用语依 MPEP § 2173.05(b) 可能被视为不确定或限制范围。请检查各标记段落，考虑该用语是否过度限缩范围或引入不确定性。",
     "paragraphNumberingMissing": "请依 MPEP § 608.01(p) 添加 [0001] 格式的连续段落编号。",
     "paragraphEnding": "段落：{{list}}。说明书各段落须依 MPEP § 608.01(p) 以句号结尾。",
-    "sequenceListingFix": "请依 37 C.F.R. § 1.821–1.825 添加“Statement Regarding Sequence Listing”部分。",
+    "sequenceListingFix": "请依 37 C.F.R. § 1.821-1.825 添加“Statement Regarding Sequence Listing”部分。",
     "crossReferenceCitations": "{{text}}。请确认序列号正确，且优先权链完整（延续案、CIP、临时申请、分案）。",
     "priorArtCitations": "{{text}}。请确认专利/公开号准确。对现有技术的描述可能在审查中被视为自认。",
     "optionalSectionGuidance": "如适用于您的申请，请添加此部分。",
@@ -958,7 +958,7 @@
     "titleMissing": "依 MPEP § 606，每件发明专利申请均须载明发明名称。请于说明书首页加上发明名称。",
     "titleLength": "依 MPEP § 606，发明名称不得超过 500 字符（实际 {{count}} 字符）。请缩短名称。",
     "titleContent": "依 MPEP § 608.01，发明名称不得含商标或产品型号。请移除禁止内容。",
-    "titleWordCount": "依 MPEP § 606，发明名称宜简短明确（实际 {{count}} 词；通常 2–7 词为宜）。请考虑精简。",
+    "titleWordCount": "依 MPEP § 606，发明名称宜简短明确（实际 {{count}} 词；通常 2-7 词为宜）。请考虑精简。",
     "epc": {
       "orphanedBriefFigures": "附图：{{list}}。请于「Detailed Description」中新增对该等附图之引用，或自「Brief Description of Drawings」中移除（EPC 惯例用语）。",
       "orphanedDetailedFigures": "附图：{{list}}。请于「Brief Description of Drawings」中新增对该等附图之描述，或自「Detailed Description」中移除引用（EPC 惯例用语）。",
@@ -1105,8 +1105,8 @@
         "pass": "摘要未发现可省略的措辞。"
       },
       "wordCount": {
-        "amend": "摘要字数超出 50–150 字范围（MPEP § 608.01(b)）。",
-        "pass": "摘要字数在 50–150 字范围内。"
+        "amend": "摘要字数超出 50-150 字范围（MPEP § 608.01(b)）。",
+        "pass": "摘要字数在 50-150 字范围内。"
       }
     },
     "drawings": {
@@ -1281,7 +1281,7 @@
         "wordCount": {
           "amend": "摘要计 {{count}} 字，超过 Guidelines F-II § 2.3 上限 150 字。",
           "verify": "摘要计 {{count}} 字，低于 Guidelines F-II § 2.3 下限 50 字。",
-          "pass": "未检测到摘要字数问题（Rule 47(2) EPC；50–150 字）。"
+          "pass": "未检测到摘要字数问题（Rule 47(2) EPC；50-150 字）。"
         }
       },
       "drawings": {
@@ -1461,7 +1461,7 @@
           "pass": "共 {{count}} 张附图。"
         },
         "figuresSequential": {
-          "pass": "附图 1–{{found_max}} 编号连续。",
+          "pass": "附图 1-{{found_max}} 编号连续。",
           "passNone": "未找到附图。",
           "amend": "附图编号不连续，缺失：{{figure_list}}。"
         },
@@ -1669,7 +1669,7 @@
           "pass": "共 {{count}} 张图式。"
         },
         "figuresSequential": {
-          "pass": "图 1–{{found_max}} 编号连续。",
+          "pass": "图 1-{{found_max}} 编号连续。",
           "passNone": "未找到图式。",
           "amend": "图号不连续，缺失：{{figure_list}}。"
         }
@@ -1923,7 +1923,7 @@
       "p1": "您同意就下列事项所生或相关之任何主张、损害、损失、责任、成本或费用（包括合理之律师费用），代为抗辩、补偿并使 Christopher Chen 免受损害：(a) 您于未经注册之专利专业人士独立验证之情形下使用 PatentLint 之输出；(b) 您违反本条款或任何适用法律（包括但不限于 USPTO 37 CFR § 11 或您所属法域之同等专业行为规范）；(c) 您侵害任何第三方之知识产权或其他权利；或 (d) 您将本网站或本软件用于您并无权限载入之任何文件。",
       "p2": "Christopher Chen 保留就任何原应由您为补偿之事项，承担专属抗辩及控制之权利；于该情形下，您应就主张任何可用之抗辩予以充分配合。"
     },
-    "copyright": "Copyright © 2025–2026 Christopher Chen。保留一切权利。",
+    "copyright": "Copyright © 2025-2026 Christopher Chen。保留一切权利。",
     "crossLinks": "另请参阅：<1>隐私政策</1>・<3>安全性说明</3>"
   },
   "privacy": {
@@ -1944,7 +1944,7 @@
       "never2": "存储文件名、权利要求文字、说明书本文或任何专利相关数据。",
       "never3": "将说明书内容传送给任何第三方（包含 AI 服务、OCR 服务或文档处理服务）。",
       "verify": "您可于飞行模式下自行验证以上事项。详见<1>安全性说明</1>页面之即时演示。",
-      "p3": "处理范围。就您所分析之专利说明书内容，PatentLint 并非欧盟《一般数据保护条例》(GDPR) 第 4 条第 7–8 项所指之“数据控制者”或“数据处理者”，亦非美国加州《消费者隐私法》(CCPA)／《加州隐私权法》(CPRA) 所指之“商业实体”。该等内容全程于您之浏览器标签页内处理，不会传输至任何 PatentLint 服务器。我们仅就下列范围作为控制者：(i) 您主动点选“发送”按钮送出之自愿性诊断反馈；及 (ii) 我们之静态资产提供商所记录之标准托管元数据（详见 §3）。"
+      "p3": "处理范围。就您所分析之专利说明书内容，PatentLint 并非欧盟《一般数据保护条例》(GDPR) 第 4 条第 7-8 项所指之“数据控制者”或“数据处理者”，亦非美国加州《消费者隐私法》(CCPA)／《加州隐私权法》(CPRA) 所指之“商业实体”。该等内容全程于您之浏览器标签页内处理，不会传输至任何 PatentLint 服务器。我们仅就下列范围作为控制者：(i) 您主动点选“发送”按钮送出之自愿性诊断反馈；及 (ii) 我们之静态资产提供商所记录之标准托管元数据（详见 §3）。"
     },
     "s3": {
       "title": "Vercel 边缘托管之中介数据",
@@ -2019,7 +2019,7 @@
       "name": "Christopher Chen",
       "emailLabel": "电子邮件："
     },
-    "copyright": "Copyright © 2025–2026 Christopher Chen。保留一切权利。",
+    "copyright": "Copyright © 2025-2026 Christopher Chen。保留一切权利。",
     "crossLinks": "另请参阅：<1>服务条款</1>・<3>安全性说明</3>"
   },
   "rubric": {

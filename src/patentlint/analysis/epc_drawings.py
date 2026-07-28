@@ -1,21 +1,21 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """EPC drawings-level checks (G3 in the canonical 7-group order).
 
-  - check_figures_sequential_epc  — Rule 46(2)(a) EPC: figures numbered 1..N
+  - check_figures_sequential_epc  - Rule 46(2)(a) EPC: figures numbered 1..N
                                     without gaps
-  - check_single_figure_label_epc — Guidelines F-V § 1.2: single-figure
+  - check_single_figure_label_epc - Guidelines F-V § 1.2: single-figure
                                     drafts conventionally use "Fig." or
                                     "The figure" (EPC) rather than "FIG."
                                     (US). REVIEW-status advisory.
-  - check_prior_art_labeling_epc  — Rule 46(2)(h) EPC: figures depicting
+  - check_prior_art_labeling_epc  - Rule 46(2)(h) EPC: figures depicting
                                     prior art must be labeled accordingly.
                                     Flag when "prior art" / "conventional"
                                     keywords appear with a figure number
                                     in the brief description.
-  - check_figure_count_epc         — informational tile (not a failure check)
+  - check_figure_count_epc         - informational tile (not a failure check)
 
-Re-uses the US drawings helpers — figure regex is English-vocabulary and
+Re-uses the US drawings helpers - figure regex is English-vocabulary and
 works identically across US and EPC drafts. Statute references are
 re-mapped to EPC Rules / Guidelines.
 """
@@ -87,20 +87,20 @@ def check_single_figure_label_epc(full_text: str) -> list[CheckItem]:
     """Advisory check on single-figure label convention per Guidelines F-V § 1.2.
 
     EPC drafts conventionally use "Fig." (mixed case) or "The figure" when
-    only one figure exists. US drafters often write "FIG. 1" — the EPO
+    only one figure exists. US drafters often write "FIG. 1" - the EPO
     does not reject this but Guidelines F-V § 1.2 prefers the EPC form.
     REVIEW status: flagged for verification only, not an FIX.
     """
     if not is_single_figure(full_text):
         return [CheckItem(
             status="pass",
-            message="More than one figure detected — single-figure label check not applicable.",
+            message="More than one figure detected - single-figure label check not applicable.",
             message_key="check.epc.drawings.singleFigureLabel.pass",
             reference="EPO Guidelines F-V § 1.2",
         )]
 
     if not uses_wrong_label_for_single_figure(full_text):
-        # No figure-labelling form detected at all — flag in case the
+        # No figure-labelling form detected at all - flag in case the
         # drafter forgot to label the figure.
         return [CheckItem(
             status="verify",
@@ -109,7 +109,7 @@ def check_single_figure_label_epc(full_text: str) -> list[CheckItem]:
             reference="EPO Guidelines F-V § 1.2",
         )]
 
-    # Has a Fig.-style label — fine for EPC v1 (we don't currently
+    # Has a Fig.-style label - fine for EPC v1 (we don't currently
     # distinguish "FIG." from "Fig." for single-figure drafts).
     return [CheckItem(
         status="pass",
@@ -150,7 +150,7 @@ def check_prior_art_labeling_epc(full_text: str) -> list[CheckItem]:
         return [CheckItem(
             status="verify",
             message=(
-                "Drawings description references prior art — verify the figure(s) "
+                "Drawings description references prior art - verify the figure(s) "
                 "are labeled accordingly per Rule 46(2)(h) EPC."
             ),
             message_key="check.epc.drawings.priorArtLabeling.verify",

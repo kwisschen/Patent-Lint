@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""TW symbol table parser — 符號說明 and 代表圖之符號簡單說明."""
+# Copyright (c) 2025-2026 Christopher Chen
+"""TW symbol table parser - 符號說明 and 代表圖之符號簡單說明."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ from patentlint.models import SymbolEntry
 # The numeral group is a separator-joined list of alphanumeric tokens. The
 # list separators (、 , ，) may carry trailing whitespace, so comma-and-space
 # forms like `210, 220, 230` parse the same as the tight `210,220,230`
-# (issue #184 — drafters routinely space out enumerated reference numerals;
+# (issue #184 - drafters routinely space out enumerated reference numerals;
 # the old `[...、,，]+` class disallowed the interior space so `210, 220,
 # 230：欄位` was rejected wholesale and every numeral reported undeclared).
 # An individual token still cannot contain whitespace, so the trailing
@@ -28,14 +28,14 @@ TW_SYMBOL_PATTERN = re.compile(
 
 _NUMERAL_SEP_RE = re.compile(r"[、,，]")
 # Range form: pure-digit endpoints joined by ASCII tilde, FW tilde, or hyphen.
-# Hyphen-with-letter (43-a) is intentionally excluded — that's sub-suffix
+# Hyphen-with-letter (43-a) is intentionally excluded - that's sub-suffix
 # notation, not a range. Bounded to ≤30 expanded numerals to cap runaway
 # (mirrors the CN _CN_REFNUM_RANGE convention).
 _RANGE_RE = re.compile(r"^(\d+)\s*[~～\-]\s*(\d+)$")
 # Letter-prefixed ranges where the upper bound is the literal `n` / `N`
-# (drafter-shorthand for "and so on" — TIPO 符號說明 convention for
+# (drafter-shorthand for "and so on" - TIPO 符號說明 convention for
 # enumerated families: `PHA1~PHAn`, `PR1~PRn`, `L1~Ln`, `C1~Cn`).
-# Issue #159 — the symbol table declares `PR1~PRn` but spec uses `PR2`;
+# Issue #159 - the symbol table declares `PR1~PRn` but spec uses `PR2`;
 # the walker flagged PR2 as missing because the unbounded `n` end-marker
 # wasn't recognized. Expanded to a safe cap (_MAX_LETTER_RANGE_EXPAND)
 # so any `<prefix><k>` for 1 ≤ k ≤ cap is covered.

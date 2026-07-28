@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Phase 8b TW antecedent walker — strict_plural_reference_matching tests.
+# Copyright (c) 2025-2026 Christopher Chen
+"""Phase 8b TW antecedent walker - strict_plural_reference_matching tests.
 
 Per ADR-095, the walker treats plural reference forms (該等X / 該些X)
 as number-neutral by default: a singular intro 一X is an acceptable
@@ -53,7 +53,7 @@ def _claim(
 
 class TestStrictPluralEscapeHatch:
     def test_singular_intro_plural_reference_emits_in_strict(self):
-        """一齒輪 → 該等齒輪 — strict mode emits, default does not.
+        """一齒輪 → 該等齒輪 - strict mode emits, default does not.
 
         This is the canonical case the escape hatch was designed for: a
         plural reference (該等) where the antecedent introduced only a
@@ -75,7 +75,7 @@ class TestStrictPluralEscapeHatch:
         assert finding["reference_form"] == "該等齒輪"
 
     def test_singular_intro_該些_reference_emits_in_strict(self):
-        """該些 is the second plural marker — same escape-hatch behavior."""
+        """該些 is the second plural marker - same escape-hatch behavior."""
         doc = _make_doc([
             _claim(1, "1. 一種裝置，包含一電極。"),
             _claim(2, "2. 如請求項1所述之裝置，其中該些電極為陽極。",
@@ -89,7 +89,7 @@ class TestStrictPluralEscapeHatch:
         assert strict[0]["reference_form"] == "該些電極"
 
     def test_plural_intro_plural_reference_silent_in_strict(self):
-        """複數齒輪 → 該等齒輪 — both sides plural, strict must NOT fire.
+        """複數齒輪 → 該等齒輪 - both sides plural, strict must NOT fire.
 
         The escape hatch only flags singular→plural mismatches; matched
         plurality is the entire point of the strict mode and must pass.
@@ -104,7 +104,7 @@ class TestStrictPluralEscapeHatch:
         ) == []
 
     def test_plural_intro_singular_reference_silent_in_strict(self):
-        """複數齒輪 → 該齒輪 — singular reference under default tolerance.
+        """複數齒輪 → 該齒輪 - singular reference under default tolerance.
 
         Strict mode tightens plural references but does NOT tighten
         singular references against plural intros (the writer dropping
@@ -120,7 +120,7 @@ class TestStrictPluralEscapeHatch:
         ) == []
 
     def test_singular_intro_singular_reference_silent_in_strict(self):
-        """一齒輪 → 該齒輪 — neither marker plural, strict must NOT fire."""
+        """一齒輪 → 該齒輪 - neither marker plural, strict must NOT fire."""
         doc = _make_doc([
             _claim(1, "1. 一種裝置，包含一齒輪。"),
             _claim(2, "2. 如請求項1所述之裝置，其中該齒輪為金屬。",
@@ -132,7 +132,7 @@ class TestStrictPluralEscapeHatch:
 
     def test_unresolved_term_still_emits_in_strict(self):
         """When the term has no antecedent at all, strict mode emits the
-        same finding as default — strict only ADDS findings, never
+        same finding as default - strict only ADDS findings, never
         suppresses them.
         """
         doc = _make_doc([

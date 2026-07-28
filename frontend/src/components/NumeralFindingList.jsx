@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 //
-// Expandable list of numeral-conflict findings — used by D1
+// Expandable list of numeral-conflict findings - used by D1
 // (numeralConsistency) and D3 (symbolTableCoverage). The check message
 // caps inline preview at 3 entries with a "+N more" trailer; this
 // component lets users expand and see ALL findings in a structured

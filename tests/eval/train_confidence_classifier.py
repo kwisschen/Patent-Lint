@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Path 5 ML — train classifier to identify discriminating walker signals.
+# Copyright (c) 2025-2026 Christopher Chen
+"""Path 5 ML - train classifier to identify discriminating walker signals.
 
 Trains a sklearn DecisionTreeClassifier on the Phase 1 supplement_v2
 verdicts to identify which emit-time features best discriminate legit
@@ -10,8 +10,8 @@ drafting errors from walker FPs. Outputs:
 2. Top decision-tree splits (which thresholds matter)
 3. A recommendation block for `compute_confidence_score` updates
 
-CRITICAL — NEVER deploy the trained model at runtime. PatentLint's
-trust promise is "No upload / No cloud processing / No AI" — any
+CRITICAL - NEVER deploy the trained model at runtime. PatentLint's
+trust promise is "No upload / No cloud processing / No AI" - any
 ML inference at runtime would violate it. This script is OFFLINE
 TOOLING only. Output is human-reviewed walker code patches that
 encode learned thresholds as deterministic emit-time signals.

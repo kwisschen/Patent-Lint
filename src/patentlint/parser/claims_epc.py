@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Claim parser for EPC English drafts.
 
 EPC claim format under Rule 43 EPC:
@@ -94,7 +94,7 @@ def parse_dependencies_epc(
 
     deps: set[int] = set()
 
-    # "any preceding claim" — depends on all earlier claims
+    # "any preceding claim" - depends on all earlier claims
     if re.search(r"\bany\s+preceding\s+claim\b", text, re.IGNORECASE):
         deps.update(range(1, claim_number))
 
@@ -117,7 +117,7 @@ def parse_dependencies_epc(
         for n in re.findall(r"\d+", m.group(1)):
             deps.add(int(n))
 
-    # "claims N and M" / "claim N or M" — two-way alternation (pair form)
+    # "claims N and M" / "claim N or M" - two-way alternation (pair form)
     for m in re.finditer(
         r"\bclaims?\s+(\d+)\s*(?:and|or)\s*(?:claims?\s+)?(\d+)\b",
         text, re.IGNORECASE,

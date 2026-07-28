@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 //
 // Email picker modal + provider + hook. One shared modal lives at the
 // app root via <FeedbackProvider>; any component calls
@@ -13,9 +13,9 @@
 //   modal entirely). Maximum-frictionless UX for the common case.
 // - Three methods in V1: Gmail (compose URL), Outlook (compose URL),
 //   and Copy to clipboard. The clipboard path works for everyone
-//   regardless of email provider — universal escape hatch.
+//   regardless of email provider - universal escape hatch.
 // - Clipboard write also fires for Gmail / Outlook methods (silent
-//   safety net) — even a Gmail user who closes the tab by accident
+//   safety net) - even a Gmail user who closes the tab by accident
 //   can paste elsewhere.
 // - Preference persists in localStorage across tab sessions.
 import { createContext, useCallback, useContext, useState } from 'react'
@@ -41,29 +41,29 @@ const FeedbackContext = createContext(null)
 
 export function FeedbackProvider({ children }) {
   const { t } = useTranslation()
-  // `pending` is either null (no picker open) or `{ email, verb }` —
+  // `pending` is either null (no picker open) or `{ email, verb }` -
   // the composed email plus the action verb for button labels. verb is
   // 'report' for per-finding error flows, 'send' for footer feedback
   // and enterprise inquiries. Default 'send' if caller doesn't specify.
   const [pending, setPending] = useState(null)
-  // Unchecked by default — user opts in explicitly. Avoids accidentally
+  // Unchecked by default - user opts in explicitly. Avoids accidentally
   // locking users into a method they picked once but didn't love.
   const [remember, setRemember] = useState(false)
 
   // Dispatch + show a confirmation toast that surfaces the
   // clipboard-fallback path. Critical for `mailto:` on systems with no
   // registered protocol handler (e.g. Windows desktop without Outlook /
-  // Mail / Thunderbird) — anchor click silently no-ops, modal closes,
+  // Mail / Thunderbird) - anchor click silently no-ops, modal closes,
   // and without a toast the user has no signal that anything happened.
   // For `clipboard` method the toast is the only visible confirmation.
   // Gmail / Outlook web open in a new tab so the new-tab itself is the
-  // confirmation — toast still useful as a parallel signal that the
+  // confirmation - toast still useful as a parallel signal that the
   // body has been copied (in case the tab is closed accidentally).
   //
   // Persistence: `duration: Infinity` + `closeButton: true`. Realistic
   // user flow is "open my mail app, paste body, then come back here for
   // the maintainer's address." An auto-dismiss timer (any value) means
-  // the address can disappear before the user finishes pasting — bad
+  // the address can disappear before the user finishes pasting - bad
   // UX. The user explicitly closes the toast when done.
   //
   // No action button on purpose: an earlier "Copy address" button would

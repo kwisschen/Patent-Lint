@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for CN claim parser."""
 
 from __future__ import annotations
@@ -174,12 +174,12 @@ class TestDependencyRangeMultidep:
             "5. 根据权利要求1至5中任一项所述的装置。"
         )
         claims = parse_cn_claims_docx(text)
-        # Self-references stripped — claim 5 cannot depend on itself.
+        # Self-references stripped - claim 5 cannot depend on itself.
         assert claims[4].dependencies == [1, 2, 3, 4]
         assert claims[4].multiple_dependent is True
 
     def test_range_without_any_one(self):
-        # Some filings omit 任一项 — range still expands.
+        # Some filings omit 任一项 - range still expands.
         text = (
             "1. 一种装置。\n"
             "2. 如权利要求1所述的装置。\n"
@@ -236,7 +236,7 @@ class TestNonClaimTextNotMatched:
             "2. 如权利要求书所载的装置实施例。"
         )
         claims = parse_cn_claims_docx(text)
-        # Claim 2 has no numeric dependency — must parse as independent.
+        # Claim 2 has no numeric dependency - must parse as independent.
         assert claims[1].dependencies == []
         assert claims[1].independent is True
 
@@ -277,7 +277,7 @@ class TestMidParagraphClaimBoundary:
         assert claims[1].independent is True
 
 class TestBodyQuotedReference:
-    """引用記載型式 body-cross-ref recognition (CN) — mirror of TW's
+    """引用記載型式 body-cross-ref recognition (CN) - mirror of TW's
     Claim.quoted_references mechanism. Body refs like
     `如权利要求N所述的X` inside an independent claim body should populate
     quoted_references so the antecedent walker can chain via incorporation

@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """EPC abstract-level checks (G7 in the canonical 7-group order).
 
-  - check_abstract_word_count_epc   — Rule 47(2) EPC + Guidelines F-II § 2.3
+  - check_abstract_word_count_epc   - Rule 47(2) EPC + Guidelines F-II § 2.3
                                       (EPO practice: 50 to 150 words)
-  - check_abstract_structure_epc    — Rule 47(2) EPC: single paragraph, no
+  - check_abstract_structure_epc    - Rule 47(2) EPC: single paragraph, no
                                       commercial language, no implied phrases,
                                       no merit / self-referential claims
 
@@ -135,7 +135,7 @@ def check_abstract_structure_epc(abstract_text: str) -> list[CheckItem]:
       - Implied / boilerplate openers ("is provided", "are provided",
         "disclosure")
       - Claim-style legal phraseology ("means", "said", "comprising",
-        "wherein", "thereof", "the same") — Guidelines F-II § 2.3 echoes
+        "wherein", "thereof", "the same") - Guidelines F-II § 2.3 echoes
         the US prohibition against claim-style phrasing in abstracts
       - Merit / self-referential language ("novel", "innovative",
         "advantageous", "present invention", etc.)
@@ -156,7 +156,7 @@ def check_abstract_structure_epc(abstract_text: str) -> list[CheckItem]:
 
     issues: list[str] = []
 
-    # Single-paragraph check — count non-empty paragraphs in the body
+    # Single-paragraph check - count non-empty paragraphs in the body
     paragraphs = [p for p in body.split("\n\n") if p.strip()]
     if len(paragraphs) > 1:
         issues.append(f"abstract has {len(paragraphs)} paragraphs (Rule 47(2) practice: single paragraph)")
@@ -209,7 +209,7 @@ def check_abstract_title_match_epc(abstract_text: str, title: str) -> list[Check
     a strong signal of a wrong-file paste or a stale title. Detection is
     cheap: extract content words (length ≥ 4, not in stopwords) from the
     title and check whether any appear in the abstract body. A single
-    overlap is enough to pass — EPC drafters legitimately re-phrase the
+    overlap is enough to pass - EPC drafters legitimately re-phrase the
     title in the abstract.
 
     Status:
@@ -299,7 +299,7 @@ def check_abstract_claim_reference_epc(abstract_text: str) -> list[CheckItem]:
     return [CheckItem(
         status="amend",
         message=(
-            "Abstract references specific claim(s) (" + ", ".join(snippets) + ") — "
+            "Abstract references specific claim(s) (" + ", ".join(snippets) + ") - "
             "EPO Guidelines F-II § 2.3.3 require the abstract to be "
             "self-contained and not cross-reference claims by number."
         ),

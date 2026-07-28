@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AlertCircle, Search, CheckCircle, ChevronDown, MessageSquare, CornerDownRight, ArrowUp, Undo2 } from 'lucide-react'
@@ -26,20 +26,20 @@ function TriageItem({ check, t, i18n, compact, jurisdiction, canPromote, isPromo
   const msg = check.message_key && i18n.exists(check.message_key) ? formatDetails(check.message_key, check.details_params, t) : check.message
   const citation = getCitation(check.message_key) || check.reference || null
   const details = check.details_key && i18n.exists(check.details_key) ? formatDetails(check.details_key, check.details_params, t) : check.details
-  // Pass findings aren't reportable — nothing to diagnose when nothing
+  // Pass findings aren't reportable - nothing to diagnose when nothing
   // went wrong.
   const showReport = check.status !== 'pass'
 
   // §112 jump-to: the antecedent-basis and spec-support review lines are long,
   // dense sentences. Offer a polished one-click pill that jumps down to the
   // per-claim card instead of forcing the user to parse the description. Only
-  // on the verify/amend rows (the card — not a pass placeholder — is the target).
+  // on the verify/amend rows (the card - not a pass placeholder - is the target).
   const mk = check.message_key || ''
   const isAntecedent = /antecedentBasis/.test(mk)
   const isSpecSupport = mk === 'checks.spec_support_unsupported_terms' || /specSupport/.test(mk)
   // Only offer the jump when the target section/card actually renders for this
   // jurisdiction (the §112 container is gated on showClaimTree; the spec-support
-  // card additionally on supportsSpecSupport — currently true for US/EPC/TW/CN,
+  // card additionally on supportsSpecSupport - currently true for US/EPC/TW/CN,
   // but the guard keeps the pill honest if a future jurisdiction omits it).
   // Avoids a polished button that jumps to nothing.
   const jConfig = getJurisdictionConfig(jurisdiction)
@@ -150,7 +150,7 @@ function TriageItem({ check, t, i18n, compact, jurisdiction, canPromote, isPromo
             user can't already see. Suppress it when:
               - the jump pill already provides the affordance, or
               - it merely echoes claim numbers already in the message (the
-                "3, 8" / "7, 9" anti-pattern — many checks set
+                "3, 8" / "7, 9" anti-pattern - many checks set
                 details=", ".join(claim_ids), which duplicates "Claim(s) 3, 8…"), or
               - flagged_phrases pills already surface the offending content. */}
         {!compact && details && !jumpTarget
@@ -161,14 +161,14 @@ function TriageItem({ check, t, i18n, compact, jurisdiction, canPromote, isPromo
           </p>
         )}
       </div>
-      {/* Right-side action cluster — anchored to the row's right edge (and the
+      {/* Right-side action cluster - anchored to the row's right edge (and the
           bottom on mobile), so the Treat-as-fix / Move-to-review controls sit
           in a CONSISTENT position regardless of the left section/citation width
           or the message length. Promote/demote are always visible; the report
           button keeps its hover-reveal below them. */}
       {(canPromote || isPromoted || showReport) && (
         <div className="flex flex-row sm:flex-col items-start sm:items-end gap-1.5 shrink-0">
-          {/* Promote a Review item up to Needs Fixing — the user's own triage
+          {/* Promote a Review item up to Needs Fixing - the user's own triage
               call (a flag we surfaced for review may, on their reading, be a
               real defect). Grade-neutral: PatentLint's deterministic verdict is
               unchanged; this just reorganizes the user's worklist. */}
@@ -283,7 +283,7 @@ function TriageGroup({
 export default function TriagePanel({ data }) {
   const { t, i18n } = useTranslation()
   // User-promoted Review items (by stable _id). Session-scoped: a re-analysis
-  // remounts the panel and clears these. Grade-neutral — promotion reorganizes
+  // remounts the panel and clears these. Grade-neutral - promotion reorganizes
   // the user's worklist; it does NOT alter PatentLint's deterministic verdict.
   const [promoted, setPromoted] = useState(() => new Set())
 
@@ -336,7 +336,7 @@ export default function TriagePanel({ data }) {
           Icon={Icon}
           items={byStatus[status]}
           defaultOpen={
-            // FIX + REVIEW open by default — both feed the rubric grade,
+            // FIX + REVIEW open by default - both feed the rubric grade,
             // so they're load-bearing for the user's decision-making.
             // PASS stays collapsed (informational only).
             status === 'amend' || status === 'verify'
