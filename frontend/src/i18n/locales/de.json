@@ -159,6 +159,21 @@
     "label": "Prüfung",
     "engineNotReady": "Die Analyse-Engine von PatentLint ist noch nicht bereit. Bitte warten Sie, bis die Seite vollständig geladen ist, oder aktualisieren Sie und versuchen Sie es erneut."
   },
+  "error": {
+    "input": {
+      "legacy_doc": "Dies scheint eine Datei im alten .doc-Format zu sein. Öffnen Sie sie in Word, speichern Sie sie erneut als .docx und laden Sie sie dann erneut hoch.",
+      "encrypted_office": "Diese Datei ist kennwortgeschützt, ihr Text kann daher nicht gelesen werden. Heben Sie den Kennwortschutz in Word auf und laden Sie die Datei erneut hoch.",
+      "pdf_not_docx": "Dies ist eine PDF-Datei, keine Word-Datei. PatentLint prüft den .docx-Entwurf, den Sie in Word erstellen, bevor er für die Anmeldung umgewandelt wird.",
+      "rtf_not_docx": "Dies scheint eine RTF-Datei zu sein. Öffnen Sie sie in Word, speichern Sie sie erneut als .docx und laden Sie sie dann erneut hoch.",
+      "empty_file": "Diese Datei ist leer. Prüfen Sie, ob der Upload abgeschlossen wurde, und versuchen Sie es erneut.",
+      "not_word_package": "Dies ist eine Office- oder Zip-Datei, aber kein Word-Dokument. Prüfen Sie, ob Sie die .docx-Beschreibung hochgeladen haben.",
+      "unreadable_docx": "Diese Datei konnte nicht als .docx-Dokument gelesen werden. Sie ist möglicherweise beschädigt. Öffnen Sie sie in Word und speichern Sie sie erneut.",
+      "xml_not_patent": "Diese XML-Datei ist kein CNIPA-Patentdokument. Exportieren Sie die Anmelde-XML aus dem CNIPA-Editor und laden Sie diese hoch.",
+      "xml_malformed": "Diese XML-Datei konnte nicht gelesen werden. Sie ist möglicherweise unvollständig oder beschädigt.",
+      "zip_no_xml": "In diesem Zip-Paket wurde keine CNIPA-Patent-XML gefunden. Laden Sie das vom CNIPA-Editor erzeugte Zip-Paket oder die .xml-Datei direkt hoch.",
+      "zip_corrupt": "Diese Zip-Datei konnte nicht geöffnet werden. Sie ist möglicherweise beschädigt."
+    }
+  },
   "footer": {
     "disclaimer": "Keine Rechtsberatung",
     "builtBy": "© 2025–2026 Christopher Chen",

@@ -19,6 +19,7 @@ import PrivacyPage from './pages/PrivacyPage'
 import RubricPage from './pages/RubricPage'
 import { usePyodide } from './hooks/usePyodide'
 import { useUpdateCheck } from './hooks/useUpdateCheck'
+import { formatAnalysisError } from './lib/analysisError'
 import { Toaster } from './components/ui/sonner'
 import { downloadReport as downloadReportClient } from './lib/pdfExport'
 import { preloadMermaidChunks } from './lib/preloadMermaid'
@@ -97,7 +98,7 @@ function App() {
       setResult(data)
       setHomeState('results')
     } catch (err) {
-      setError(err.message)
+      setError(formatAnalysisError(err.message, t))
       setHomeState('idle')
     }
   }

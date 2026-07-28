@@ -18,6 +18,7 @@ from fastapi.responses import FileResponse, Response
 
 from patentlint.i18n import normalize_locale
 from patentlint.models import AnalysisResult, Jurisdiction
+from patentlint.parser.file_format import strip_error_code
 from patentlint.pipeline import analyze_bytes
 from patentlint.report.generator import render_pdf
 
@@ -58,7 +59,7 @@ async def _run_analysis_pipeline(
     try:
         return analyze_bytes(contents, upload_file.filename, jurisdiction=jurisdiction)
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=strip_error_code(e))
 
 
 @app.get("/api/health")

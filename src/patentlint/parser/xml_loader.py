@@ -10,6 +10,29 @@ import zipfile
 from lxml import etree
 
 from patentlint.models import Claim, CnPatentDocument, CnPatentType
+from patentlint.parser.file_format import raise_unsupported, unsupported
+
+# Element paths parse_cnipa_xml actually reads. If an XML carries none of
+# them the parser can only return an empty document, which used to surface
+# as a blank result screen with no error and no banner. Gating on the full
+# set (rather than on a root-tag whitelist) keeps every legitimate variant
+# working: CNIPA filing XML, unprefixed WIPO publication XML, and the
+# scanned doc-page fallback all match at least one.
+_PATENT_XML_SIGNALS = (
+    "description",
+    "cn-claims",
+    "claims",
+    "cn-abstract",
+    "abstract",
+    "doc-page",
+)
+
+
+def _looks_like_patent_xml(root) -> bool:
+    """True if the tree carries any element the CNIPA parser reads."""
+    if root.tag in _PATENT_XML_SIGNALS:
+        return True
+    return any(root.find(f".//{tag}") is not None for tag in _PATENT_XML_SIGNALS)
 
 # Map CNIPA filing-XML <description> child tags to CnPatentDocument
 # field names. Used by parse_cnipa_xml to populate section_order in
@@ -156,7 +179,14 @@ def parse_cnipa_xml(data: bytes) -> CnPatentDocument:
     Handles both cn- prefixed element names (filing XML) and unprefixed
     WIPO-standard names (publication XML) via fallback finds.
     """
-    root = etree.fromstring(data)
+    if not data.strip():
+        raise_unsupported("empty_file")
+    try:
+        root = etree.fromstring(data)
+    except etree.XMLSyntaxError as exc:
+        raise unsupported("xml_malformed") from exc
+    if not _looks_like_patent_xml(root):
+        raise_unsupported("xml_not_patent")
 
     # Detect doc-page fallback (scanned images, no structured text)
     has_doc_pages = root.find(".//doc-page") is not None
@@ -246,7 +276,11 @@ def extract_cn_xml_from_zip(data: bytes) -> tuple[bytes, str]:
 
     Raises ValueError if no matching XML found.
     """
-    with zipfile.ZipFile(io.BytesIO(data)) as zf:
+    try:
+        zf = zipfile.ZipFile(io.BytesIO(data))
+    except zipfile.BadZipFile as exc:
+        raise unsupported("zip_corrupt") from exc
+    with zf:
         for name in zf.namelist():
             if not name.lower().endswith(".xml"):
                 continue
@@ -257,5 +291,4 @@ def extract_cn_xml_from_zip(data: bytes) -> tuple[bytes, str]:
                 continue
             if root.tag in ("cn-application-body", "application-body"):
                 return xml_data, name
-    msg = "No cn-application-body XML found in zip"
-    raise ValueError(msg)
+    raise_unsupported("zip_no_xml")

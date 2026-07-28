@@ -17,6 +17,11 @@ from docx import Document
 from docx.oxml.ns import qn
 
 from patentlint.analysis.specification import detect_restrictive_wording, has_valid_ending
+from patentlint.parser.file_format import (
+    classify_docx_open_failure,
+    guard_word_bytes,
+    unsupported,
+)
 from patentlint.parser.sections import extract_description_of_drawings_section
 
 _INVISIBLE_CHARS = {
@@ -39,6 +44,22 @@ def _normalize_unicode(text: str) -> str:
     for src, dst in _INVISIBLE_CHARS.items():
         text = text.replace(src, dst)
     return text
+
+
+def _open_document(path: Path):
+    """Open a .docx with an actionable error when the file is not one.
+
+    Shared by all three loaders (US/EPC, TW, CN) so a renamed or protected
+    file reports the same remedy in every jurisdiction. python-docx reports
+    every container problem as ``Package not found``, so the format is
+    sniffed first and the failure classified after.
+    """
+    data = path.read_bytes()
+    guard_word_bytes(data)
+    try:
+        return Document(str(path))
+    except Exception as exc:
+        raise unsupported(classify_docx_open_failure(data)) from exc
 
 
 @dataclass
@@ -232,10 +253,7 @@ def load_docx(file_path: str | Path) -> LoadedDocument:
     if path.suffix.lower() != ".docx":
         raise ValueError(f"Not a .docx file: {path}")
 
-    try:
-        doc = Document(str(path))
-    except Exception as e:
-        raise ValueError(f"Invalid .docx file: {e}") from e
+    doc = _open_document(path)
 
     # Build full document text first (for section extraction)
     full_text_lines: list[str] = []
@@ -332,11 +350,7 @@ def load_docx_tw(file_path: str | Path) -> LoadedTwDocument:
         msg = f"Not a .docx file: {path}"
         raise ValueError(msg)
 
-    try:
-        doc = Document(str(path))
-    except Exception as exc:
-        msg = f"Failed to open .docx: {exc}"
-        raise ValueError(msg) from exc
+    doc = _open_document(path)
 
     # Claims section headers (same variants as sections_tw._SECTION_MAP)
     _TW_CLAIMS_HEADERS = {"申請專利範圍", "發明申請專利範圍", "新型申請專利範圍"}
@@ -431,11 +445,7 @@ def load_docx_cn(file_path: str | Path) -> LoadedCnDocument:
         msg = f"Not a .docx file: {path}"
         raise ValueError(msg)
 
-    try:
-        doc = Document(str(path))
-    except Exception as exc:
-        msg = f"Failed to open .docx: {exc}"
-        raise ValueError(msg) from exc
+    doc = _open_document(path)
 
     # Collect default header text for each Word section.
     # The 五書模板 uses different-first-page headers (first page empty,

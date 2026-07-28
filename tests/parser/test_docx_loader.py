@@ -143,7 +143,7 @@ class TestLoadDocxBasics:
     def test_invalid_docx(self, tmp_path):
         bad_file = tmp_path / "bad.docx"
         bad_file.write_bytes(b"not a zip file")
-        with pytest.raises(ValueError, match="Invalid .docx"):
+        with pytest.raises(ValueError, match=r"PL_ERR:unreadable_docx"):
             load_docx(bad_file)
 
     def test_simple_unnumbered_docx(self, tmp_path):
