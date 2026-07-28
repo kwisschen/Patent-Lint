@@ -97,8 +97,8 @@
     "allChecksPassed": "All checks passed."
   },
   "button": {
-    "downloadPdf": "Save PDF Report",
-    "newAnalysis": "New Analysis",
+    "downloadPdf": "Save PDF report",
+    "newAnalysis": "New analysis",
     "generating": "Saving..."
   },
   "diagram": {
@@ -158,6 +158,21 @@
     "analyzing": "Analyzing patent document...",
     "label": "Analysis",
     "engineNotReady": "PatentLint's analysis engine is still loading. Please wait for the page to finish loading, or refresh and try again."
+  },
+  "error": {
+    "input": {
+      "legacy_doc": "This looks like a legacy .doc file. Open it in Word and re-save it as .docx, then upload it again.",
+      "encrypted_office": "This file is password protected, so its text cannot be read. Remove the password in Word and upload it again.",
+      "pdf_not_docx": "This is a PDF, not a Word file. PatentLint checks the .docx draft you write in Word, before it is converted for filing.",
+      "rtf_not_docx": "This looks like an RTF file. Open it in Word and re-save it as .docx, then upload it again.",
+      "empty_file": "This file is empty. Check that the upload finished, then try again.",
+      "not_word_package": "This is an Office or Zip file, but not a Word document. Check that you uploaded the .docx specification.",
+      "unreadable_docx": "This file could not be read as a .docx document. It may be corrupted. Try opening it in Word and re-saving it.",
+      "xml_not_patent": "This XML file is not a CNIPA patent document. Export the filing XML from the CNIPA editor and upload that instead.",
+      "xml_malformed": "This XML file could not be parsed. It may be incomplete or corrupted.",
+      "zip_no_xml": "No CNIPA patent XML was found in this Zip package. Upload the Zip produced by the CNIPA editor, or the .xml file directly.",
+      "zip_corrupt": "This Zip file could not be opened. It may be corrupted."
+    }
   },
   "footer": {
     "disclaimer": "Not legal advice",

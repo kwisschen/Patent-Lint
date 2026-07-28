@@ -18,6 +18,7 @@ import click
 
 from patentlint.i18n import supported_locales
 from patentlint.models import Jurisdiction
+from patentlint.parser.file_format import strip_error_code
 from patentlint.pipeline import analyze_file
 
 EXIT_SUCCESS = 0
@@ -63,7 +64,7 @@ def analyze(file: str, fmt: str, output: str | None, jurisdiction: str, locale: 
     try:
         result = analyze_file(file, jurisdiction=j)
     except (FileNotFoundError, ValueError) as e:
-        click.echo(f"Error: {e}", err=True)
+        click.echo(f"Error: {strip_error_code(e)}", err=True)
         raise SystemExit(EXIT_ERROR)
 
     if fmt == "pdf":
@@ -138,7 +139,7 @@ def batch(directory: str, output: str, fmt: str, jurisdiction: str, locale: str)
             try:
                 result = analyze_file(str(docx_path), jurisdiction=j)
             except Exception as e:
-                click.echo(f"\nError processing {docx_path.name}: {e}", err=True)
+                click.echo(f"\nError processing {docx_path.name}: {strip_error_code(e)}", err=True)
                 has_errors = True
                 continue
 

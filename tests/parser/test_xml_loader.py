@@ -302,7 +302,7 @@ class TestZipNoXml:
 
     def test_no_xml(self):
         zip_data = _make_zip({"image.tif": b"\x00" * 10})
-        with pytest.raises(ValueError, match="No cn-application-body XML found"):
+        with pytest.raises(ValueError, match=r"PL_ERR:zip_no_xml"):
             extract_cn_xml_from_zip(zip_data)
 
 
@@ -312,7 +312,7 @@ class TestZipWrongRoot:
     def test_wrong_root(self):
         xml = b'<?xml version="1.0"?><other-document/>'
         zip_data = _make_zip({"doc.xml": xml})
-        with pytest.raises(ValueError, match="No cn-application-body XML found"):
+        with pytest.raises(ValueError, match=r"PL_ERR:zip_no_xml"):
             extract_cn_xml_from_zip(zip_data)
 
 

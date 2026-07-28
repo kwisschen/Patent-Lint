@@ -159,6 +159,21 @@
     "label": "分析結果",
     "engineNotReady": "PatentLint 分析引擎尚未就緒。請等待頁面載入完成，或重新整理後再試。"
   },
+  "error": {
+    "input": {
+      "legacy_doc": "這似乎是舊版 .doc 格式的檔案。請在 Word 中開啟，另存為 .docx 後重新上傳。",
+      "encrypted_office": "此檔案設有密碼保護，無法讀取內容。請在 Word 中移除密碼後重新上傳。",
+      "pdf_not_docx": "這是 PDF 檔，不是 Word 檔。PatentLint 檢查的是您在 Word 中撰寫，尚未轉檔送件的 .docx 稿件。",
+      "rtf_not_docx": "這似乎是 RTF 格式的檔案。請在 Word 中開啟，另存為 .docx 後重新上傳。",
+      "empty_file": "此檔案是空的。請確認上傳已完成後再試一次。",
+      "not_word_package": "這是 Office 或 Zip 檔，但不是 Word 文件。請確認您上傳的是 .docx 專利說明書。",
+      "unreadable_docx": "無法將此檔案讀取為 .docx 文件，檔案可能已毀損。請在 Word 中開啟並重新儲存。",
+      "xml_not_patent": "此 XML 檔不是 CNIPA 專利文件。請從 CNIPA 編輯器匯出申請 XML 後再上傳。",
+      "xml_malformed": "無法解析此 XML 檔，檔案可能不完整或已毀損。",
+      "zip_no_xml": "此 Zip 套件中找不到 CNIPA 專利 XML。請上傳 CNIPA 編輯器產生的 Zip，或直接上傳 .xml 檔。",
+      "zip_corrupt": "無法開啟此 Zip 檔，檔案可能已毀損。"
+    }
+  },
   "footer": {
     "disclaimer": "本報告不構成法律意見",
     "builtBy": "© 2025–2026 Christopher Chen",
