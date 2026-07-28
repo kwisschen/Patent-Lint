@@ -224,14 +224,16 @@ function App() {
                 )
               )}
 
+              {/* Matches DropZone's own reject message (plain centered text,
+                  no boxed banner). Both surfaces say the same thing: this
+                  file was rejected, here is why. Which one fires depends
+                  only on whether the extension or the magic bytes caught
+                  it, so they must not look like different classes of
+                  message. */}
               {error && (
-                <div className="mt-4 rounded-lg border p-4 text-sm" style={{
-                  borderColor: 'var(--amend-border)',
-                  backgroundColor: 'var(--amend-bg)',
-                  color: 'var(--amend-text)',
-                }}>
+                <p className="mt-4 text-center text-sm text-[var(--amend-text)]">
                   {error}
-                </div>
+                </p>
               )}
             </div>
           } />
