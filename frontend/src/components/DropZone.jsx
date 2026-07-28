@@ -5,6 +5,7 @@ import { useDropzone } from 'react-dropzone'
 import { FilePlus2, ShieldCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
+import { describeRejectedFile } from '../lib/analysisError'
 
 export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' }) {
   const { t } = useTranslation()
@@ -30,7 +31,15 @@ export default function DropZone({ onFile, onShowProveIt, jurisdiction = 'US' })
     } else if (rejectedFiles.length > 1) {
       setRejectMsg(t('dropzone.rejectMultiple'))
     } else {
-      setRejectMsg(t(jConfig.rejectKey))
+      // A file with a real .doc/.pdf/.rtf extension never reaches the engine
+      // (this filter rejects it first), so the magic-byte detection in
+      // parser/file_format.py cannot fire. Name the actual mistake here using
+      // the same error.input.* copy, and fall back to the generic message
+      // when the file is not one we recognise.
+      const specific = hasTypeError
+        ? describeRejectedFile(rejectedFiles[0]?.file, t)
+        : null
+      setRejectMsg(specific || t(jConfig.rejectKey))
     }
   }, [onFile, t, jConfig])
 
