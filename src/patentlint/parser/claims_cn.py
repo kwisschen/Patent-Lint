@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""CN claim parser — extract claims from Chinese patent .docx text."""
+# Copyright (c) 2025-2026 Christopher Chen
+"""CN claim parser - extract claims from Chinese patent .docx text."""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ _MID_PARAGRAPH_CLAIM_BOUNDARY = re.compile(
     r"(?=[一如根其权依包对将在本])"
 )
 
-# Dependency — covers all real-world CN dependent-claim forms:
+# Dependency - covers all real-world CN dependent-claim forms:
 #   prefix   : 如 | 根据 | 依据 | bare (dominant form in real CNIPA
 #              filings is 根据权利要求N所述的; bare form seen in older
 #              filings as 权利要求N的)
@@ -46,7 +46,7 @@ _NUMSPEC_SINGLE = r"\d+"
 _CN_DEPENDENCY = re.compile(
     # Introducing verb: CNIPA 审查指南 §3.3.1 canonical uses 根据; drafters
     # also use 如/依据/按照/依照/基于 or bare form. Match the full set rather
-    # than locking to a single verb — pair with the `_CN_DEPENDENCY` usage
+    # than locking to a single verb - pair with the `_CN_DEPENDENCY` usage
     # pattern (validator `_DEP_FORMAT_SINGLE` in analysis/cn_claims.py also
     # accepts the same range).
     r"(?:如|根据|依据|按照|依照|基于|依)?\s*权利要求\s*"
@@ -65,7 +65,7 @@ _CN_DEPENDENCY = re.compile(
 # `如任一前述权利要求所述` to depend on ALL prior claims (functionally
 # equivalent to listing 1..N-1). Without recognition, claims of this
 # shape parse as INDEPENDENT and downstream walker chain traversal
-# fails — surfaced on CN115023827A c3-c14 (10 claims chain-broken;
+# fails - surfaced on CN115023827A c3-c14 (10 claims chain-broken;
 # ~25 chain-broken walker_fp findings on `阴极材料涂层` / `阳极材料
 # 涂层` / `固体聚合物电解质涂层` etc.).
 #
@@ -96,13 +96,13 @@ def _expand_dependency_spec(spec: str) -> list[int]:
     - ``"1、2或3"``         → ``[1, 2, 3]``
     """
     s = re.sub(r"\s+", "", spec)
-    # Range form first — contains 至/到/- between the two numbers.
+    # Range form first - contains 至/到/- between the two numbers.
     m = re.match(r"^(\d+)[至到\-](\d+)(?:中?任[一意]项)?$", s)
     if m:
         a, b = int(m.group(1)), int(m.group(2))
         lo, hi = (a, b) if a <= b else (b, a)
         return list(range(lo, hi + 1))
-    # Enumeration / disjunction — split on 、 and 或.
+    # Enumeration / disjunction - split on 、 and 或.
     parts = re.split(r"[、,或]", s)
     return [int(p) for p in parts if p.isdigit()]
 
@@ -150,14 +150,14 @@ def parse_cn_claims_docx(text: str) -> list[Claim]:
         # parity, see claims_tw.py:120). Scans for `如/根据/依据/...
         # 权利要求N 所述[的]X` patterns anywhere in the body. Refs that
         # match the SAME _CN_DEPENDENCY pattern already used for the
-        # statutory dependency extraction above — but here we ALSO route
+        # statutory dependency extraction above - but here we ALSO route
         # them to quoted_references so the antecedent walker has the
         # incorporation signal explicitly. For backward-compatibility,
         # the broad `deps = ...` scan above continues to capture all body
-        # refs into dependencies as well — the walker dedup'es when
+        # refs into dependencies as well - the walker dedup'es when
         # building its chain queue, so the two lists may overlap without
         # double-traversal. Future ADR may split classification cleanly
-        # (preamble → dependencies, body → quoted_references) — this
+        # (preamble → dependencies, body → quoted_references) - this
         # populates quoted_references now so the walker is forward-ready.
         quoted_refs: list[int] = []
         for dep_match in _CN_DEPENDENCY.finditer(claim_text):

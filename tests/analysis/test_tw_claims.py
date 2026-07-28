@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for TW claims structural checks (Phase 7C-2, checks #11-19)."""
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ from patentlint.models import Claim, SymbolEntry, TwPatentDocument, TwPatentType
 
 
 class TestExtendShiYingCompoundTw:
-    """R19 時/應 compound follow-gates — timer/clock + effector/reactor nouns
+    """R19 時/應 compound follow-gates - timer/clock + effector/reactor nouns
     truncated by the _NOUN_CHARS 時/應 exclusions (定時器→定, 終端效應器→終端效).
     Traditional mirror of CN R47."""
 
@@ -39,7 +39,7 @@ class TestExtendShiYingCompoundTw:
         )
 
     def test_when_clause_shi_not_extended(self):
-        # 於X時， — 時 followed by a comma, not a noun suffix → unchanged.
+        # 於X時， - 時 followed by a comma, not a noun suffix → unchanged.
         assert _extend_shi_compound_tw("偵測", 2, "偵測時，觸發啟動") == ("偵測", 2)
 
     def test_effector_compound_reextended(self):
@@ -47,22 +47,22 @@ class TestExtendShiYingCompoundTw:
         assert noun == "終端效應器"
 
     def test_modal_ying_not_extended(self):
-        # 應該/應力 — 應 not followed by 器 AND 統 not a reaction precursor
+        # 應該/應力 - 應 not followed by 器 AND 統 not a reaction precursor
         # → the modal guard is preserved.
         assert _extend_ying_compound_tw("系統", 2, "系統應該啟動") == ("系統", 2)
 
     def test_terminal_reaction_precursor_reextended(self):
-        # R20 precursor arm: 去氫反應 (no 器 suffix) — 反 precursor extends.
+        # R20 precursor arm: 去氫反應 (no 器 suffix) - 反 precursor extends.
         noun, _ = _extend_ying_compound_tw("去氫反", 3, "去氫反應，溫度為")
         assert noun == "去氫反應"
 
     def test_clock_pulse_suffix_reextended(self):
-        # R22: 時脈 (clock) — 脈 added to the 時 follow-gate.
+        # R22: 時脈 (clock) - 脈 added to the 時 follow-gate.
         noun, _ = _extend_shi_compound_tw("關斷", 2, "關斷時脈信號，並且")
         assert noun.startswith("關斷時脈")
 
     def test_ying_machine_agent_suffix_reextended(self):
-        # R22: 應機 (machine) / 應者 (agent) — 機/者 added to the 應 follow-gate.
+        # R22: 應機 (machine) / 應者 (agent) - 機/者 added to the 應 follow-gate.
         assert _extend_ying_compound_tw("域自適", 3, "域自適應機，用於")[0] == (
             "域自適應機"
         )
@@ -368,7 +368,7 @@ class TestRefNumeralParens:
 
     def test_latin_prefix_unbracketed_amend(self):
         """LD1 / R1 / IC2 unbracketed Latin-prefix designators are still
-        符號 under 施行細則 §19 第3款 — must be flagged. Common in circuit
+        符號 under 施行細則 §19 第3款 - must be flagged. Common in circuit
         / semiconductor patents."""
         doc = _make_doc(claims=[
             _claim(1, "1. 一種電路，包含一電阻R1及一電晶體Q2。"),
@@ -411,7 +411,7 @@ class TestSubjectConsistency:
         assert result[0].details_params["claims"] == [2]
 
     def test_bare_之_format_pass(self):
-        """如請求項N之裝置 — bare 之 without 所述."""
+        """如請求項N之裝置 - bare 之 without 所述."""
         doc = _make_doc(claims=[
             _claim(1, "1. 一種裝置，其特徵在於包含一基座。"),
             _claim(2, "2. 如請求項1之裝置，其中該基座為金屬。",
@@ -574,7 +574,7 @@ class TestCnTerminology:
 
     def test_flagged_phrases_items_surfaced(self):
         """Verify the FlaggedTermList chip payload is emitted alongside the
-        legacy `detail` string — chips render the detected terms in the UI."""
+        legacy `detail` string - chips render the detected terms in the UI."""
         doc = _make_doc(claims=[
             _claim(1, "1. 一種裝置，如权利要求1所述，背景技术中提及。"),
         ])
@@ -876,7 +876,7 @@ class TestClaimsSymbolTableConsistency:
         assert result[0].status == "pass"
 
     def test_no_claims_numerals_pass(self):
-        """No claims means no claim numerals — early return pass."""
+        """No claims means no claim numerals - early return pass."""
         doc = _make_doc(
             claims=[],
             symbol_table=[SymbolEntry(numeral="101", name="基座")],
@@ -949,7 +949,7 @@ class TestClaimsSymbolTableConsistency:
 # ── Check 26: Antecedent Basis ────────────────────────────────────────────
 
 
-# TestAntecedentBasis removed in Phase 8b — the legacy check returned a
+# TestAntecedentBasis removed in Phase 8b - the legacy check returned a
 # CheckItem; the new BFS walker returns list[dict] of per-occurrence
 # findings. Walker tests live in tests/analysis/test_tw_walker.py.
 
@@ -958,7 +958,7 @@ class TestClaimsSymbolTableConsistency:
 
 
 class TestIndependentPreamble:
-    """TIPO 偵錯系統 Table 1 #20: advisory — indep claims conventionally
+    """TIPO 偵錯系統 Table 1 #20: advisory - indep claims conventionally
     open with 一種 (statute requires subject-matter name, not literal 一種).
     Status is VERIFY (advisory), not AMEND (hard rule).
     """
@@ -997,7 +997,7 @@ class TestIndependentPreamble:
         assert results[0].status == "verify"
 
     def test_dependent_claim_ignored(self):
-        """Dep claims open with 如/依據/根據, not 一種 — don't flag them here."""
+        """Dep claims open with 如/依據/根據, not 一種 - don't flag them here."""
         from patentlint.analysis.tw_claims import check_independent_preamble
         from patentlint.models import Claim
         doc = self._doc([
@@ -1010,7 +1010,7 @@ class TestIndependentPreamble:
 
 
 def test_claim_reference_enumeration_not_refnum_241():
-    """#241: `如請求項12或13的…` — the claim number 13 (after 或) must not be
+    """#241: `如請求項12或13的…` - the claim number 13 (after 或) must not be
     read as a bare reference numeral, while real element refnums and refnum
     LISTS (元件210、220) still flag."""
     from patentlint.analysis.tw_claims import check_ref_numeral_parens
@@ -1086,7 +1086,7 @@ class TestTwWalkerR14:
         return TwPatentDocument(claims=claims, input_format="google_patents_html")
 
     def test_paren_gloss_bleed_resolved(self):
-        # #245: 一中介片（interposer） … 所述中介片 — English gloss bled into the
+        # #245: 一中介片（interposer） … 所述中介片 - English gloss bled into the
         # intro; reference must still resolve.
         from patentlint.analysis.tw_claims import check_antecedent_basis
         doc = self._doc(
@@ -1115,7 +1115,7 @@ class TestTwWalkerR14:
 
 
 class TestR29StrandedRelationalHeadAndLexemeSplit:
-    """R29 (2026-07-18) — reports #389/#390, #394/#395, #396.
+    """R29 (2026-07-18) - reports #389/#390, #394/#395, #396.
 
     Each test pairs the FP that must be silenced with the FN-guard case that
     must survive.
@@ -1142,7 +1142,7 @@ class TestR29StrandedRelationalHeadAndLexemeSplit:
         assert clean_noun_phrase_tw("級距對應至該些通道") == "級距"
 
     def test_stranded_head_trim_is_greedy(self):
-        """相對應 is three characters — both 相 and 對 strand, so trim both."""
+        """相對應 is three characters - both 相 and 對 strand, so trim both."""
         from patentlint.analysis.tw_claims import _trim_dangling_ying_verb_head_tw
         text = "所述形狀因數相對應的第一區域"
         noun = "形狀因數相對"
@@ -1180,7 +1180,7 @@ class TestR29StrandedRelationalHeadAndLexemeSplit:
         assert S("該等元件") == "元件"
 
     def test_spec_support_inherits_the_verb_fix(self):
-        """Engine 2 delegates to clean_noun_phrase_tw — #396 fixed for free."""
+        """Engine 2 delegates to clean_noun_phrase_tw - #396 fixed for free."""
         from patentlint.analysis.tw_spec_support import (
             _normalize_for_spec_support_tw as N,
         )

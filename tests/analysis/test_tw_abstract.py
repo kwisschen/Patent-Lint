@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for TW abstract checks (#27-30)."""
 
 from __future__ import annotations
@@ -48,7 +48,7 @@ class TestCheckAbstractCharCount:
         assert result[0].status == "amend"
 
     def test_severity_is_amend(self):
-        """專利法施行細則 §21: 250-char limit is a hard statutory cap — must be FIX."""
+        """專利法施行細則 §21: 250-char limit is a hard statutory cap - must be FIX."""
         doc = TwPatentDocument(abstract_char_count=300)
         result = check_abstract_char_count(doc)
         assert result[0].status == "amend"
@@ -110,7 +110,7 @@ class TestCheckAbstractTitleMatch:
         assert result[0].message_key == "check.tw.abstract.titleMatch.verify"
 
     def test_compound_title_ji_both_halves_pass_compound(self):
-        """Real spec1 case: 蓋組件及帶蓋容器 — both halves appear in abstract."""
+        """Real spec1 case: 蓋組件及帶蓋容器 - both halves appear in abstract."""
         doc = TwPatentDocument(
             title="蓋組件及帶蓋容器",
             abstract_text="本發明提供一種蓋組件，適用於帶蓋容器的密封結構。",

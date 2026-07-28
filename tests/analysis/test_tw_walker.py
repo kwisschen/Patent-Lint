@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Phase 8b TW antecedent walker — BFS resolution tests.
+# Copyright (c) 2025-2026 Christopher Chen
+"""Phase 8b TW antecedent walker - BFS resolution tests.
 
 Covers exact-match resolution, number-neutral matching (ADR-095 Rule 3),
 multi-parent BFS traversal, cycle protection, and immediate-parent
@@ -95,7 +95,7 @@ class TestExactMatch:
         assert issues[0]["claim_text"] == "1. 一種裝置，其中該底座為金屬。"
 
     def test_dedup_within_claim(self):
-        """Same (term, reference_form) pair appearing twice — emit once."""
+        """Same (term, reference_form) pair appearing twice - emit once."""
         doc = _make_doc([
             _claim(1, "1. 一種裝置，該齒輪為金屬，該齒輪設有齒。"),
         ])
@@ -155,7 +155,7 @@ class TestReferenceFormPrefixes:
 
 class TestNumberNeutralMatching:
     def test_plural_intro_singular_reference(self):
-        """複數外齒狀結構 / 該外齒狀結構 — number-neutral, no finding."""
+        """複數外齒狀結構 / 該外齒狀結構 - number-neutral, no finding."""
         doc = _make_doc([
             _claim(1, "1. 一種裝置，包含複數外齒狀結構，該外齒狀結構為金屬。"),
         ])
@@ -168,7 +168,7 @@ class TestNumberNeutralMatching:
         assert check_antecedent_basis(doc) == []
 
     def test_singular_一個_intro_plural_reference(self):
-        """一個X / 該等X — both normalize to X."""
+        """一個X / 該等X - both normalize to X."""
         doc = _make_doc([
             _claim(1, "1. 一種裝置，包含一個齒輪，該等齒輪相互嚙合。"),
         ])
@@ -181,14 +181,14 @@ class TestNumberNeutralMatching:
         assert check_antecedent_basis(doc) == []
 
     def test_至少三個_intro_resolves(self):
-        """F4: generalized 至少N個 pattern — 至少三個軸承."""
+        """F4: generalized 至少N個 pattern - 至少三個軸承."""
         doc = _make_doc([
             _claim(1, "1. 一種裝置，包含至少三個軸承，所述軸承為密封式。"),
         ])
         assert check_antecedent_basis(doc) == []
 
     def test_至少四個_intro_resolves(self):
-        """F4: generalized 至少N個 pattern — 至少四個軸承."""
+        """F4: generalized 至少N個 pattern - 至少四個軸承."""
         doc = _make_doc([
             _claim(1, "1. 一種裝置，包含至少四個軸承，所述軸承為密封式。"),
         ])
@@ -245,7 +245,7 @@ class TestNumberNeutralMatching:
 
 class TestBFSAncestorChain:
     def test_multi_dep_collects_from_both_parents(self):
-        """如請求項1或3所述 — intro can come from claim 1 OR claim 3."""
+        """如請求項1或3所述 - intro can come from claim 1 OR claim 3."""
         doc = _make_doc([
             _claim(1, "1. 一種裝置，包含一基座。"),
             _claim(2, "2. 如請求項1所述之裝置，包含一馬達。",
@@ -282,7 +282,7 @@ class TestBFSAncestorChain:
         # Walker must terminate; the term 該基座 is still flagged
         # because the cycle prevents reaching claim 1.
         issues = check_antecedent_basis(doc)
-        # No assertion on count — only that the call returns.
+        # No assertion on count - only that the call returns.
         assert isinstance(issues, list)
 
     def test_get_ancestor_chain_helper_walks_bfs(self):
@@ -328,7 +328,7 @@ class TestCrossCategoryDependent:
     """The walker must resolve references across the FULL ancestor chain
     (ADR-092 binding), not just the immediate parent. Dependent claims
     that introduce new components and then reference them downstream
-    must NOT generate findings — the new components ARE introduced
+    must NOT generate findings - the new components ARE introduced
     somewhere in the chain.
 
     The synthetic fixture cross_category_dependent_tw.docx exercises a
@@ -356,7 +356,7 @@ class TestCrossCategoryDependent:
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# Regex invariants — pattern-level isolation tests
+# Regex invariants - pattern-level isolation tests
 # ─────────────────────────────────────────────────────────────────────────
 
 
@@ -402,7 +402,7 @@ class Test110P000633DeterminismCanary:
     """Scar-tissue test: the 110P000633 fixture exists as two files
     (..._FV.DOCX and ..._FV_1.DOCX) that have different .docx
     container metadata but character-identical claim text. The walker
-    MUST produce byte-identical findings when run against both files —
+    MUST produce byte-identical findings when run against both files -
     any divergence is a walker non-determinism bug, not a fixture
     difference.
 
@@ -444,7 +444,7 @@ class Test110P000633DeterminismCanary:
 
         # Assertion 2: sorted tuples byte-identical. Findings are dicts
         # (not dataclasses) so use dict-key access. ``suggested_match``
-        # is itself a dict|None — convert to a tuple for hashable
+        # is itself a dict|None - convert to a tuple for hashable
         # ordering.
         def _key(f: dict) -> tuple:
             sm = f["suggested_match"]
@@ -520,7 +520,7 @@ class TestWeightCompositionIntro:
 
     def test_multiple_weight_intros_all_resolved(self):
         """Multiple weight-composition nouns in claim 1, all referenced
-        in claim 2 — should produce 0 findings."""
+        in claim 2 - should produce 0 findings."""
         doc = _make_doc([
             _claim(
                 1,
@@ -572,7 +572,7 @@ class TestDefinitionalIntro:
         assert "第一剛輪" in nouns
 
     def test_稱為_introduces_noun(self):
-        """稱為 variant — forward-compat."""
+        """稱為 variant - forward-compat."""
         pairs = extract_introductions_tw(
             _claim(1, "1. 一種裝置，其元件稱為第一接頭。"),
         )
@@ -580,7 +580,7 @@ class TestDefinitionalIntro:
         assert "第一接頭" in nouns
 
     def test_表示為_introduces_noun(self):
-        """表示為 variant — forward-compat."""
+        """表示為 variant - forward-compat."""
         pairs = extract_introductions_tw(
             _claim(1, "1. 一種裝置，其長度表示為第一距離。"),
         )
@@ -589,7 +589,7 @@ class TestDefinitionalIntro:
 
     def test_antecedent_resolved_via_definitional_intro(self):
         """Claim 1 defines 第一長度(L1) via 定義為; claim 2 references
-        所述第一長度(L1) — 0 findings."""
+        所述第一長度(L1) - 0 findings."""
         doc = _make_doc([
             _claim(
                 1,
@@ -610,7 +610,7 @@ class TestDefinitionalIntro:
         )
 
     def test_protect_true_typo_persists(self):
-        """Protect:true gate — 定義為第二長度(L1) intro does NOT resolve
+        """Protect:true gate - 定義為第二長度(L1) intro does NOT resolve
         所述第二長度(L2) reference because (L1) ≠ (L2)."""
         doc = _make_doc([
             _claim(
@@ -633,7 +633,7 @@ class TestDefinitionalIntro:
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# F3: Post-processing — 一 splitting, ref-marker truncation, paren variant
+# F3: Post-processing - 一 splitting, ref-marker truncation, paren variant
 # ─────────────────────────────────────────────────────────────────────────
 
 
@@ -730,7 +730,7 @@ class TestPostProcessWordInternalYi:
     """Word-internal 一 (after 第/另/任/某/唯/同/單/統) is NOT split."""
 
     def test_另一端部_not_split(self):
-        """另一端部 — 一 after 另 is word-internal, no split."""
+        """另一端部 - 一 after 另 is word-internal, no split."""
         c = _claim(1, "1. 一種裝置，包含另一端部及一連接件。")
         pairs = extract_introductions_tw(c)
         normalized = {n for _, n in pairs}
@@ -739,7 +739,7 @@ class TestPostProcessWordInternalYi:
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# F3: Trailing verbs — 至, 依序, 擷取
+# F3: Trailing verbs - 至, 依序, 擷取
 # ─────────────────────────────────────────────────────────────────────────
 
 
@@ -756,7 +756,7 @@ class TestTrailingVerb至:
 
 
 class TestTrailingVerb不:
-    """#267: 不 (negation particle) in _TRAILING_VERB_DENYLIST — CN parity."""
+    """#267: 不 (negation particle) in _TRAILING_VERB_DENYLIST - CN parity."""
 
     def test_negation_bu_stripped(self):
         """所述哺乳類動物不包括人類 → references 哺乳類動物 (不 stripped, 包括
@@ -767,7 +767,7 @@ class TestTrailingVerb不:
 
     def test_bu_prefix_noun_not_stripped(self):
         """FN guard: 不 at position 0 (不鏽鋼/不織布) is protected by the
-        endswith position check — only a TRAILING 不 strips."""
+        endswith position check - only a TRAILING 不 strips."""
         from patentlint.analysis.tw_claims import normalize_reference_term
         assert normalize_reference_term("所述不鏽鋼") == "不鏽鋼"
         assert normalize_reference_term("所述不織布") == "不織布"
@@ -797,7 +797,7 @@ class TestTrailingVerb擷取:
         assert "影像擷取裝置" in nouns, f"Expected 影像擷取裝置 in {nouns}"
 
     def test_影像擷取_preserved(self):
-        """影像擷取 (4 chars) — residual 2 < 3, guard protects."""
+        """影像擷取 (4 chars) - residual 2 < 3, guard protects."""
         pairs = extract_introductions_tw(
             _claim(1, "1. 一種系統，包含一影像擷取。"),
         )
@@ -817,7 +817,7 @@ class TestTrailingVerb介:
         assert "第一夾角" in nouns, f"Expected 第一夾角 in {nouns}"
 
     def test_中介_not_stripped(self):
-        """中介裝置 — residual guard protects: 中 is 1 char < 3."""
+        """中介裝置 - residual guard protects: 中 is 1 char < 3."""
         pairs = extract_introductions_tw(
             _claim(1, "1. 一種系統，包含一中介裝置。"),
         )
@@ -825,7 +825,7 @@ class TestTrailingVerb介:
         assert "中介裝置" in nouns, f"Expected 中介裝置 in {nouns}"
 
     def test_antecedent_resolved_via_介_strip(self):
-        """Claim 1 一第一夾角介於...; claim 2 所述第一夾角 — 0 findings."""
+        """Claim 1 一第一夾角介於...; claim 2 所述第一夾角 - 0 findings."""
         doc = _make_doc([
             _claim(
                 1,
@@ -939,7 +939,7 @@ class TestSupplementaryIntrosF7a:
         """形成於所述環狀本體的外圍 → NOT captured by F7a (2 CJK chars).
 
         F5a captures 外圍 as a possessive sub-component of 環狀本體,
-        which is correct — 外圍 is a legitimate spatial component.
+        which is correct - 外圍 is a legitimate spatial component.
         """
         text = "形成於所述環狀本體的外圍"
         intros = extract_introductions_tw(_claim(1, text))
@@ -1169,7 +1169,7 @@ class TestSupplementaryIntrosF5a:
 
 
 class TestSupplementaryIntrosF5b:
-    """F5b: 一X(N)的Y — paren-numeral possessive."""
+    """F5b: 一X(N)的Y - paren-numeral possessive."""
 
     def test_yi_paren_possessive(self):
         """一容器本體(100)的開口部(120) → introduces 開口部."""
@@ -1217,7 +1217,7 @@ class TestSupplementaryIntrosF5b:
 class TestBugReportJPTranslatedCapAssembly:
     """Regression test for a 2026-04-24 bug report.
 
-    JP-translated TW patent — "一種蓋組件" cap assembly claim — introduces
+    JP-translated TW patent - "一種蓋組件" cap assembly claim - introduces
     elements bare (without 一) via participial/locative possessive patterns:
       - 配置在容器本體上部的開口部        → 容器本體 + 開口部
       - 具有…突出的環狀的嵌合壁部         → 嵌合壁部
@@ -1245,7 +1245,7 @@ class TestBugReportJPTranslatedCapAssembly:
     )
 
     def test_no_antecedent_findings(self):
-        """All 6 reported references resolve — zero findings."""
+        """All 6 reported references resolve - zero findings."""
         from patentlint.analysis.tw_claims import check_antecedent_basis
         from patentlint.models import (
             Claim,
@@ -1348,7 +1348,7 @@ class TestDepPreambleConnective:
         )
 
     def test_ji_zai_de(self):
-        """如請求項1所記載的 — JP-translation form, reporter's case."""
+        """如請求項1所記載的 - JP-translation form, reporter's case."""
         from patentlint.analysis.tw_claims import check_subject_consistency
 
         doc = self._build("如請求項1所記載的蓋組件")
@@ -1358,7 +1358,7 @@ class TestDepPreambleConnective:
         )
 
     def test_ji_zai_zhi(self):
-        """如請求項1所記載之 — JP-translation formal."""
+        """如請求項1所記載之 - JP-translation formal."""
         from patentlint.analysis.tw_claims import check_subject_consistency
 
         doc = self._build("如請求項1所記載之蓋組件")
@@ -1366,7 +1366,7 @@ class TestDepPreambleConnective:
         assert all(f.status == "pass" for f in findings)
 
     def test_jie_shi_de(self):
-        """如請求項1所揭示的 — formal alternative."""
+        """如請求項1所揭示的 - formal alternative."""
         from patentlint.analysis.tw_claims import check_subject_consistency
 
         doc = self._build("如請求項1所揭示的蓋組件")
@@ -1374,7 +1374,7 @@ class TestDepPreambleConnective:
         assert all(f.status == "pass" for f in findings)
 
     def test_miao_shu_zhi(self):
-        """如請求項1所描述之 — alternative."""
+        """如請求項1所描述之 - alternative."""
         from patentlint.analysis.tw_claims import check_subject_consistency
 
         doc = self._build("如請求項1所描述之蓋組件")
@@ -1382,7 +1382,7 @@ class TestDepPreambleConnective:
         assert all(f.status == "pass" for f in findings)
 
     def test_standard_suo_shu_de_still_works(self):
-        """如請求項1所述的 — TIPO-standard must still pass."""
+        """如請求項1所述的 - TIPO-standard must still pass."""
         from patentlint.analysis.tw_claims import check_subject_consistency
 
         doc = self._build("如請求項1所述的蓋組件")
@@ -1390,7 +1390,7 @@ class TestDepPreambleConnective:
         assert all(f.status == "pass" for f in findings)
 
     def test_bare_de_still_works(self):
-        """如請求項1的 — bare form."""
+        """如請求項1的 - bare form."""
         from patentlint.analysis.tw_claims import check_subject_consistency
 
         doc = self._build("如請求項1的蓋組件")
@@ -1398,7 +1398,7 @@ class TestDepPreambleConnective:
         assert all(f.status == "pass" for f in findings)
 
     def test_range_with_ji_zai(self):
-        """如請求項1至7中任一項所記載的 — multi-dep JP-translation form."""
+        """如請求項1至7中任一項所記載的 - multi-dep JP-translation form."""
         from patentlint.analysis.tw_claims import check_subject_consistency
 
         doc = self._build("如請求項1至7中任一項所記載的蓋組件")
@@ -1406,7 +1406,7 @@ class TestDepPreambleConnective:
         assert all(f.status == "pass" for f in findings)
 
     def test_spec_drawing_ref_ji_zai(self):
-        """如說明書所記載 — also forbidden, JP-translation of 如說明書所述."""
+        """如說明書所記載 - also forbidden, JP-translation of 如說明書所述."""
         from patentlint.analysis.tw_claims import check_spec_drawing_ref
         from patentlint.models import Claim, TwPatentDocument, TwPatentType
 
@@ -1590,7 +1590,7 @@ class TestAntecedentDiagnostics:
         assert dx["suggested_cross_branch"] is False
 
     def test_diagnostic_contains_no_claim_text(self):
-        """Fingerprint must never carry noun content — counts + booleans only."""
+        """Fingerprint must never carry noun content - counts + booleans only."""
         from patentlint.analysis.tw_claims import check_antecedent_basis
 
         doc = self._build([
@@ -1634,24 +1634,24 @@ class TestParenAbbrevR34:
         assert "UE" in intros, f"UE missing from {intros}"
 
     def test_full_width_paren_registers_abbrev(self):
-        """R34 — full-width 全角 parens register abbrev."""
+        """R34 - full-width 全角 parens register abbrev."""
         intros = self._intros("一種使用者設備（UE），包含一處理器。")
         assert "UE" in intros, f"UE missing from {intros}"
 
     def test_lowercase_ff_comma_uppercase_abbrev(self):
-        """R34 — `(user equipment, UE)` lowercase full form then UPPER abbrev."""
+        """R34 - `(user equipment, UE)` lowercase full form then UPPER abbrev."""
         intros = self._intros("一種使用者設備(user equipment, UE)，包含一處理器。")
         assert "UE" in intros, f"UE missing from {intros}"
 
     def test_full_width_paren_lowercase_ff_full_width_comma(self):
-        """R34 — full-width parens AND full-width comma combined."""
+        """R34 - full-width parens AND full-width comma combined."""
         intros = self._intros("一種使用者設備（user equipment，UE），包含。")
         assert "UE" in intros, f"UE missing from {intros}"
 
     def test_lone_paren_label_does_not_register(self):
         """(101) is an element label number, NOT a paren-abbrev intro."""
         intros = self._intros("一種裝置，包含一第一電極(101)。")
-        # Element label digits don't form an UPPER abbrev — should not register
+        # Element label digits don't form an UPPER abbrev - should not register
         assert "101" not in intros
 
 
@@ -1661,7 +1661,7 @@ class TestStateModifierCaptureExtensionR66:
     When walker captures `前述<state-modifier>` (e.g., `前述島狀`) and
     claim text continues `的<head_noun>`, extend the captured raw_noun
     to include `的<head>`. Without extension, the displayed reference_form
-    is the bare adjective `前述島狀` — meaningless to the drafter (`島狀`
+    is the bare adjective `前述島狀` - meaningless to the drafter (`島狀`
     is "island-shape", an adjective). With extension, the user sees the
     full `前述島狀的奈米片積層體` they actually wrote.
 
@@ -1670,17 +1670,17 @@ class TestStateModifierCaptureExtensionR66:
       - drafter introduces only `<head>` but references `<state>的<head>`
         → emits a real antecedent finding (the 神秘黑屏哥 c10 case)
 
-    Gated on _STATE_MODIFIER_SUFFIXES_TW (狀/形) — possessive frames
+    Gated on _STATE_MODIFIER_SUFFIXES_TW (狀/形) - possessive frames
     like `該電子裝置的一插槽` end in noun-class suffixes (置/部/料)
     that the gate excludes; capture stays at `該電子裝置`.
     """
 
     def test_state_modifier_capture_extends(self):
-        """`前述島狀的奈米片積層體` — capture extends past 的 to head noun.
+        """`前述島狀的奈米片積層體` - capture extends past 的 to head noun.
 
         Even though the head noun was introduced earlier (as 一奈米片積層體),
         the drafter's reference adds an extra `島狀的` qualifier that's
-        not in the intro form — a real antecedent issue. The walker
+        not in the intro form - a real antecedent issue. The walker
         should emit with the FULL state-modifier+head reference form so
         the user sees what they wrote.
         """
@@ -1716,10 +1716,10 @@ class TestStateModifierCaptureExtensionR66:
             ),
         ])
         issues = check_antecedent_basis(doc)
-        # Consistent intro+ref form — extended capture matches exactly.
+        # Consistent intro+ref form - extended capture matches exactly.
         # (Exact match depends on whether normalize_reference_term keeps
         # 的 in the interior; at minimum the extended capture should not
-        # over-emit, and the displayed term — if any — is the full form.)
+        # over-emit, and the displayed term - if any - is the full form.)
         relevant = [i for i in issues if "島狀" in i["term"]]
         for i in relevant:
             # If a finding does emit, its term must be the full extended
@@ -1727,7 +1727,7 @@ class TestStateModifierCaptureExtensionR66:
             assert i["term"] != "島狀", i
 
     def test_possessive_not_extended(self):
-        """該電子裝置的一插槽 — possessive frame; 電子裝置 ends in 置
+        """該電子裝置的一插槽 - possessive frame; 電子裝置 ends in 置
         (not 狀/形), so capture stays at 電子裝置. Walker emits as before.
 
         Regression for 110P000868US c1 protect:true label. The head noun
@@ -1751,7 +1751,7 @@ class TestStateModifierCaptureExtensionR66:
         assert finding["reference_form"] == "該電子裝置", finding
 
     def test_locative_possessive_not_extended(self):
-        """所述容納部的底面 — 容納部 ends in 部 (locative), not state suffix.
+        """所述容納部的底面 - 容納部 ends in 部 (locative), not state suffix.
 
         Regression for 110P000631US c1 protect:true label. Capture stays
         at 容納部; 底面 does not become part of the reference form.
@@ -1771,7 +1771,7 @@ class TestStateModifierCaptureExtensionR66:
         assert finding["reference_form"] == "所述容納部", finding
 
     def test_ordinal_state_modifier_not_extended(self):
-        """第一狀 (with 第 prefix) — gate excludes ordinal-prefixed state terms.
+        """第一狀 (with 第 prefix) - gate excludes ordinal-prefixed state terms.
 
         Defensive against ambiguous ordinal+state: 第一狀 could be an
         ordinal-typed reference (`first-class state`) rather than a
@@ -1793,7 +1793,7 @@ class TestStateModifierCaptureExtensionR66:
         assert finding["term"] == "第一狀", finding
 
     def test_xing_suffix_extends(self):
-        """前述環形的墊圈 — 形 suffix also enables capture extension."""
+        """前述環形的墊圈 - 形 suffix also enables capture extension."""
         doc = _make_doc([
             _claim(
                 1,
@@ -1812,7 +1812,7 @@ class TestStateModifierCaptureExtensionR66:
 
 
 class TestTrailingPrepositionStripR68c:
-    """R68c (2026-05-06) — trailing preposition strip (對/向/自).
+    """R68c (2026-05-06) - trailing preposition strip (對/向/自).
 
     Walker over-captures `<noun>對X` / `<noun>向X` / `<noun>各自` shapes;
     trailing preposition/pronoun particle should be stripped via
@@ -1851,7 +1851,7 @@ class TestTrailingPrepositionStripR68c:
             ),
         ])
         issues = check_antecedent_basis(doc)
-        # `所述方向` — drafter's reference; walker emits or not depending
+        # `所述方向` - drafter's reference; walker emits or not depending
         # on intro presence, but term should remain `方向` (not stripped to `方`)
         for i in issues:
             if "方向" in i.get("reference_form", "") or "方" == i["term"]:
@@ -1871,7 +1871,7 @@ class TestTrailingPrepositionStripR68c:
 
 
 class TestNengCompoundExtensionR68d:
-    """R68d (2026-05-06) — mid-能 compound noun extension.
+    """R68d (2026-05-06) - mid-能 compound noun extension.
 
     `<X>管理功` truncations from `<X>管理功能` are caused by 能 being
     excluded from _NOUN_CHARS to prevent aux-verb 能 over-capture.
@@ -1910,7 +1910,7 @@ class TestNengCompoundExtensionR68d:
             assert i["term"] != "高性", i
 
     def test_aux_neng_not_extended(self):
-        """`所述模組能執行X` — 模組 captured, 能 is aux-verb;
+        """`所述模組能執行X` - 模組 captured, 能 is aux-verb;
         模 is NOT a precursor → no extension."""
         doc = _make_doc([
             _claim(
@@ -1926,12 +1926,12 @@ class TestNengCompoundExtensionR68d:
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# R7 — bare-noun-introduction rescue
+# R7 - bare-noun-introduction rescue
 #
 # A multi-character noun first mentioned article-less (verb / coverb
 # object, clause item) establishes antecedent basis (MPEP § 2173.05(e);
 # TIPO § 26 第3項 clarity). Two CJK-aware guards prevent the rescue from
-# silencing real defects — the two bugs that halted the naive R5 port.
+# silencing real defects - the two bugs that halted the naive R5 port.
 # ─────────────────────────────────────────────────────────────────────────
 
 
@@ -1960,7 +1960,7 @@ class TestBareNounIntroduction:
         assert check_antecedent_basis(doc) == []
 
     def test_compound_tail_still_flagged(self):
-        """使用者介面 as the tail of 圖形使用者介面 is NOT a bare intro —
+        """使用者介面 as the tail of 圖形使用者介面 is NOT a bare intro -
         guard (a), the bug-1 case (110P000368)."""
         doc = _make_doc([
             _claim(1, "1. 一種方法，包含一程式。"),
@@ -1972,7 +1972,7 @@ class TestBareNounIntroduction:
         assert any(i["term"] == "使用者介面" for i in issues), issues
 
     def test_possessive_de_still_flagged(self):
-        """隨身碟的識別資料 is a possessive, not an introduction —
+        """隨身碟的識別資料 is a possessive, not an introduction -
         guard (b), the bug-2 case (110P000868)."""
         doc = _make_doc([
             _claim(1, "1. 一種裝置，包含一隨身碟，所述隨身碟的識別資料被儲存，"
@@ -1981,7 +1981,7 @@ class TestBareNounIntroduction:
         issues = check_antecedent_basis(doc)
         assert any(i["term"] == "識別資料" for i in issues), issues
 
-    # R8 (2026-06-01) — issues #104 / #105. Drafter introduced terms
+    # R8 (2026-06-01) - issues #104 / #105. Drafter introduced terms
     # article-less in patterns R7's verb-object arm didn't recognize:
     # #104 `係在半導體基板的一主面側...` (locative preposition 在 + bare
     # noun in claim 1 preamble); #105 `形成將犧牲片層與通道層...` (verb
@@ -1991,7 +1991,7 @@ class TestBareNounIntroduction:
     # registers as a valid bare-noun intro context.
 
     def test_r8_locative_preposition_zai_intro(self):
-        """係在X的Y... — 在 (locative preposition) before article-less
+        """係在X的Y... - 在 (locative preposition) before article-less
         noun establishes intro. Issue #104 reproduction."""
         doc = _make_doc([
             _claim(1, "1. 一種半導體裝置的製造方法，係在半導體基板的一主面側"
@@ -2002,7 +2002,7 @@ class TestBareNounIntroduction:
         assert not any(i["term"] == "半導體基板" for i in issues), issues
 
     def test_r8_ba_particle_bridges_verb_and_object(self):
-        """形成將X與Y... — 將 (BA-particle) bridges verb 形成 and bare
+        """形成將X與Y... - 將 (BA-particle) bridges verb 形成 and bare
         object 犧牲片層. Issue #105 reproduction."""
         doc = _make_doc([
             _claim(1, "1. 一種方法，包含形成將犧牲片層與通道層依此順序"
@@ -2014,7 +2014,7 @@ class TestBareNounIntroduction:
         assert not any(i["term"] == "犧牲片層" for i in issues), issues
 
     def test_r8_locative_verb_weiyu_intro(self):
-        """X位於Y... — 位於 (located at) is a TIPO locative verb;
+        """X位於Y... - 位於 (located at) is a TIPO locative verb;
         article-less X after it is intro. F11 parity with CN R36."""
         doc = _make_doc([
             _claim(1, "1. 一種裝置，包含一基板，所述基板位於電晶體之上方，"
@@ -2023,8 +2023,8 @@ class TestBareNounIntroduction:
         issues = check_antecedent_basis(doc)
         assert not any(i["term"] == "電晶體" for i in issues), issues
 
-    # R9 (2026-06-01) — issue #134. Drafter wrote
-    # `所述第二波長發光元件之頂面外露於所述反射層` in claim 8 — 頂面
+    # R9 (2026-06-01) - issue #134. Drafter wrote
+    # `所述第二波長發光元件之頂面外露於所述反射層` in claim 8 - 頂面
     # introduced article-less in possessive position
     # `所述<X>之<term>`. R7/R8 don't cover this because (a) 頂面 is
     # 2 chars (below the 4-char gate) and (b) `之` is rejected by
@@ -2035,7 +2035,7 @@ class TestBareNounIntroduction:
     # as unambiguous possessive (not verb-phrase relative clause).
 
     def test_r9_possessive_intro_short_locative(self):
-        """所述X之頂面 — 2-char locative attribute intro'd in possessive
+        """所述X之頂面 - 2-char locative attribute intro'd in possessive
         position. Issue #134 reproduction."""
         from patentlint.analysis.tw_claims import has_possessive_introduction_tw
         text = ("所述第二波長發光元件之頂面外露於所述反射層，"
@@ -2045,14 +2045,14 @@ class TestBareNounIntroduction:
         assert has_possessive_introduction_tw(text, [], "頂面", ref) is True
 
     def test_r9_possessive_intro_nested_zhong_zhi(self):
-        """所述X中之Y — nested possessive (X中之Y = "Y in X")."""
+        """所述X中之Y - nested possessive (X中之Y = "Y in X")."""
         from patentlint.analysis.tw_claims import has_possessive_introduction_tw
         text = "所述第一裝置中之控制器運行，並所述控制器執行任務。"
         ref = text.find("所述控制器執行")
         assert has_possessive_introduction_tw(text, [], "控制器", ref) is True
 
     def test_r9_requires_definite_reference_marker(self):
-        """Negative control: 之 without 所述/前述/該 marker before — must
+        """Negative control: 之 without 所述/前述/該 marker before - must
         reject. `<verb-phrase>之Y` is ambiguous relative-clause shape
         that the possessive arm explicitly does NOT accept."""
         from patentlint.analysis.tw_claims import has_possessive_introduction_tw
@@ -2084,13 +2084,13 @@ class TestBareNounIntroduction:
     def test_r8_possessive_zhi_still_rejected_by_guard_b(self):
         """Critical negative control: possessive 之 (the TW equivalent of
         possessive 的) before a noun must STILL reject bare-noun-intro
-        via guard (b). Direct unit test of _bare_noun_left_clean_tw —
+        via guard (b). Direct unit test of _bare_noun_left_clean_tw -
         full-walker integration may pick up the intro via other extractor
         paths (F-family), but the bare-noun-rescue must respect guard (b)
         to prevent silencing real §112(b) defects on relative-clause
         shapes when no other intro path applies."""
         from patentlint.analysis.tw_claims import _bare_noun_left_clean_tw
-        # `相關之犧牲片層` — possessive 之 immediately before noun
+        # `相關之犧牲片層` - possessive 之 immediately before noun
         text = "所述第三信號相關之犧牲片層為金屬。"
         idx = text.find("犧牲片層")
         assert _bare_noun_left_clean_tw(text, idx) is False, (
@@ -2117,21 +2117,21 @@ class TestBareNounHelper:
         assert has_bare_noun_introduction_tw(txt, [_claim(1, txt)], "輸入訊號", ro)
 
     def test_compound_tail_rejected(self):
-        """圖形使用者介面 — 使用者介面 is the compound tail (guard a)."""
+        """圖形使用者介面 - 使用者介面 is the compound tail (guard a)."""
         txt = "其中該程式形成一圖形使用者介面，並顯示於該使用者介面上。"
         ro = txt.find("該使用者介面")
         assert not has_bare_noun_introduction_tw(
             txt, [_claim(1, txt)], "使用者介面", ro)
 
     def test_possessive_de_rejected(self):
-        """隨身碟的識別資料 — 識別資料 is headed by 的 (guard b)."""
+        """隨身碟的識別資料 - 識別資料 is headed by 的 (guard b)."""
         txt = "所述隨身碟的識別資料被儲存，並讀取所述識別資料。"
         ro = txt.find("所述識別資料")
         assert not has_bare_noun_introduction_tw(
             txt, [_claim(1, txt)], "識別資料", ro)
 
     def test_short_term_below_gate(self):
-        """A 2-char term is too generic — below the ≥4-char gate."""
+        """A 2-char term is too generic - below the ≥4-char gate."""
         txt = "包含軸承，所述軸承轉動。"
         ro = txt.find("所述軸承")
         assert not has_bare_noun_introduction_tw(txt, [_claim(1, txt)], "軸承", ro)
@@ -2145,7 +2145,7 @@ class TestBareNounHelper:
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# TW special-format trio — Markush, Omnibus, CRM (gap-fill from audit)
+# TW special-format trio - Markush, Omnibus, CRM (gap-fill from audit)
 # ─────────────────────────────────────────────────────────────────────────
 
 

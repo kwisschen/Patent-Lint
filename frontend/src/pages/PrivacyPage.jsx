@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 //
-// /privacy — Privacy Policy for patentlint.com.
+// /privacy - Privacy Policy for patentlint.com.
 // Pairs with /terms. Both ship as part of ADR-139 (license migration
 // to PolyForm-Strict-1.0.0). Localized across en / de / zh-TW / zh-CN /
 // ja / ko via the shared frontend/src/i18n/locales bundles.
@@ -54,7 +54,7 @@ export default function PrivacyPage() {
         </ul>
         <p>
           <Trans i18nKey="privacy.s2.verify">
-            You can verify this in airplane mode — see the <Link to="/security">Security</Link> page for the live demonstration.
+            You can verify this in airplane mode - see the <Link to="/security">Security</Link> page for the live demonstration.
           </Trans>
         </p>
         <p>{t('privacy.s2.p3')}</p>

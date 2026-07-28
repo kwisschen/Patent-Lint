@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Phase 2a calibration — round 1 §4 prompt R&D against the 21 hand-labeled
+# Copyright (c) 2025-2026 Christopher Chen
+"""Phase 2a calibration - round 1 §4 prompt R&D against the 21 hand-labeled
 fixtures.
 
 Per `2026-05-02_cn-tw-small-corpus-design.md` §4:
@@ -112,7 +112,7 @@ def discover_tw_fixture_paths(labels: list[dict]) -> dict[str, Path]:
 
     TW labels reference fixtures by basename (e.g.,
     '110P000158US.JP.EPC派譯版-FV'). We look for .docx or .DOCX with that name.
-    Synthetic fixtures (tw_*) are not real .docx — skip them in the calibration.
+    Synthetic fixtures (tw_*) are not real .docx - skip them in the calibration.
     """
     out: dict[str, Path] = {}
     fixture_keys = {lab.get("fixture") for lab in labels if lab.get("fixture")}
@@ -502,7 +502,7 @@ def render_iteration_report(result: dict) -> str:
     def line(s: str = "") -> None:
         lines.append(s)
 
-    line(f"# Phase 2a Calibration — {result['iteration_label']}")
+    line(f"# Phase 2a Calibration - {result['iteration_label']}")
     line()
     line(f"**Elapsed:** {result['elapsed_sec']:.1f}s. "
          f"**Fixtures judged:** {result['fixtures_judged']}. "
@@ -541,7 +541,7 @@ def render_iteration_report(result: dict) -> str:
     line()
     if pass_count == 3:
         line(
-            "**SHIP — proceed to Phase 2b.** All three thresholds clear. "
+            "**SHIP - proceed to Phase 2b.** All three thresholds clear. "
             "Lock the system prompt; run Phase 2b on the 757-record corpus."
         )
     elif pass_count >= 1:
@@ -563,7 +563,7 @@ def render_iteration_report(result: dict) -> str:
     line("## Top disagreement clusters")
     line()
     if not result["disagreement_clusters"]:
-        line("No labeled-vs-ensemble disagreements found. (Surprising — check the harness.)")
+        line("No labeled-vs-ensemble disagreements found. (Surprising - check the harness.)")
     else:
         line("| Ground truth | Final verdict | Count | Sample fixture/term |")
         line("|---|---|---|---|")

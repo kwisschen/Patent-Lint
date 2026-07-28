@@ -1,16 +1,16 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Fetch description bodies for TW supplement_v2 patents from Google Patents.
 
 Path 1 of the TIPO-style hybrid antecedent measurement (2026-05-05).
 Earlier probe established Google Patents serves description body for TW
 patents under /zh and /en mode (we saw 14K-39K Chinese chars per page).
 Strict 符號說明 section markup is rare (only 1 of 6 sample patents had
-any marker) — we extract whole description text and let downstream
+any marker) - we extract whole description text and let downstream
 analysis compute term_in_description as the corpus-measurable signal.
 
 Output: ``tests/eval/tw_descriptions.json`` keyed by patent_id with
-``{"description": str, "symbol_table_text": str | None}``. Resumable —
+``{"description": str, "symbol_table_text": str | None}``. Resumable -
 existing entries are skipped.
 
 Usage::
@@ -50,7 +50,7 @@ def extract_description(html: str) -> tuple[str, str | None]:
     plain = re.sub(r"<[^>]+>", " ", html)
     plain = re.sub(r"\s+", " ", plain).strip()
 
-    # Try to isolate symbol table — common headings.
+    # Try to isolate symbol table - common headings.
     symbol_text: str | None = None
     for marker in (
         "【符號說明】",
@@ -129,7 +129,7 @@ def main() -> int:
         n_st = 0
         for i, pid in enumerate(pids):
             if pid in cache and "description" in cache[pid] and cache[pid]["description"]:
-                # Already fetched — re-extract symbol_table if missing
+                # Already fetched - re-extract symbol_table if missing
                 continue
             rec = fetch_one(client, pid, lang=lang)
             cache[pid] = rec

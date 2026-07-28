@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 //
-// /terms — Terms of Service for patentlint.com.
+// /terms - Terms of Service for patentlint.com.
 // Pairs with /privacy. Both ship as part of ADR-139 (license migration
 // to PolyForm-Strict-1.0.0). Localized across en / zh-TW / zh-CN /
 // ja / ko via the shared frontend/src/i18n/locales bundles.

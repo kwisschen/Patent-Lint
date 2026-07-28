@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Cross-jurisdiction discipline check.
 
 User-driven discipline (2026-06-01): every walker round should either
@@ -71,7 +71,7 @@ _SINGLE_JURIS_SCOPE_MARKERS = (
     r"defer(?:red)? (?:to|until)",
     r"no (?:CN|TW|US|EPC) report",
     r"(?:CN|TW|US|EPC) corpus (?:doesn't|does not) (?:currently )?have",
-    r"DR-1",  # empirical-grounding discipline — explicit defer
+    r"DR-1",  # empirical-grounding discipline - explicit defer
     r"specific to (?:US|CN|TW|EPC)",
 )
 _SINGLE_JURIS_SCOPE_RE = re.compile("|".join(_SINGLE_JURIS_SCOPE_MARKERS), re.IGNORECASE)
@@ -123,7 +123,7 @@ def test_recent_rounds_document_cross_jurisdiction_consideration():
             if not _has_cross_juris_consideration(description):
                 failures.append(
                     f"  {juris_key} :: round={r.get('round')} "
-                    f"name={r.get('name')!r} — description missing "
+                    f"name={r.get('name')!r} - description missing "
                     f"cross-jurisdiction markers AND single-juris-scope markers. "
                     f"Add a sentence about CN/TW/US/EPC analysis (or the explicit "
                     f"reason this round is single-jurisdiction)."

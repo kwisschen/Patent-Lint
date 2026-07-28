@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Audit CheckItem emit sites for params-template mismatch.
 
 Walks every Python file in src/patentlint/analysis and src/patentlint/models.py,
@@ -33,7 +33,7 @@ PLACEHOLDER_RE = re.compile(r"\{\{\s*([A-Za-z_][A-Za-z0-9_]*)\s*\}\}")
 
 # Keys recognized by frontend/src/lib/detailsFormatter.js's STRUCTURED_FORMATTERS
 # registry. These are pre-rendered before t() interpolation, so they satisfy a
-# same-named {{placeholder}} in the template via the formatter output — not as
+# same-named {{placeholder}} in the template via the formatter output - not as
 # a raw value. Treat their presence as "rendered" during the audit.
 STRUCTURED_FORMATTER_KEYS = {
     "numerals_with_locations",
@@ -52,7 +52,7 @@ STRUCTURED_FORMATTER_KEYS = {
     "symbol_mismatch_triples",
     "title_prohibited_items",
     "paragraph_format_violations",
-    # Part B forward-looking keys — structured flagged-term payloads emitted
+    # Part B forward-looking keys - structured flagged-term payloads emitted
     # now, rendered as chips by the FlaggedTermList component once Part B
     # lands.
     "flagged_phrases",
@@ -127,7 +127,7 @@ def _collect_dict_keys(value_node: ast.AST) -> set[str]:
                 keys.add(k.value)
         return keys
     if isinstance(value_node, ast.IfExp):
-        # `{...} if cond else None` — pull from the truthy branch.
+        # `{...} if cond else None` - pull from the truthy branch.
         return _collect_dict_keys(value_node.body)
     return set()
 
@@ -162,7 +162,7 @@ def main() -> int:
             # before t() is called, so a same-named {{placeholder}} in the
             # template is satisfied by the formatter output. Also treat the
             # registry keys as "always OK" when the template simply doesn't
-            # render them — they're intentional forward-looking payloads for
+            # render them - they're intentional forward-looking payloads for
             # Part B's chip rendering.
             not_rendered = (params_keys - placeholders) - STRUCTURED_FORMATTER_KEYS
             missing_from_params = placeholders - params_keys - STRUCTURED_FORMATTER_KEYS
@@ -187,8 +187,8 @@ def main() -> int:
     print("| file | line | message_key | details_key | params_not_rendered | template_missing_keys |")
     print("|---|---|---|---|---|---|")
     for file_, lineno, mkey, dkey, not_rendered, missing in mismatches:
-        nr = ", ".join(sorted(not_rendered)) or "—"
-        mk = ", ".join(sorted(missing)) or "—"
+        nr = ", ".join(sorted(not_rendered)) or "-"
+        mk = ", ".join(sorted(missing)) or "-"
         print(f"| {file_} | {lineno} | {mkey} | {dkey} | {nr} | {mk} |")
 
     return 1

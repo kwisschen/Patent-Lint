@@ -1,15 +1,15 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Classify TW walker_fp findings into over-capture vs trivially-amendable.
 
 The LLM ensemble flattens two structurally different classes into
 `walker_fp`:
 
-  1. **True walker over-capture** — captured text is a fragment, verb-
+  1. **True walker over-capture** - captured text is a fragment, verb-
      suffixed, or boundary-broken. Walker bug; should not have emitted.
      Drafter-amend likelihood: 0% (the text isn't a real element).
 
-  2. **Trivially-amendable defect** — captured text is a clean noun
+  2. **Trivially-amendable defect** - captured text is a clean noun
      phrase that's in spec/symbol_table but missing claim-level intro.
      Walker is correct under strict §26 第3項. Drafter-amend likelihood:
      ~100% (one-line fix: add `一X` to claim 1 preamble).
@@ -41,7 +41,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 # Trailing 1-char markers that almost always indicate over-capture.
 # 令 is intentionally EXCLUDED here even though it's a particle, because
-# 指令/命令 are common legitimate noun tails — flagging them inflates
+# 指令/命令 are common legitimate noun tails - flagging them inflates
 # the over-capture estimate. Real over-captures with 令 tail are caught
 # by the length-> 10 rule instead.
 _VERB_PARTICLES = ("係", "為", "具", "有", "於", "將", "由", "在", "可", "被", "作", "使", "即", "所")
@@ -51,7 +51,7 @@ _BOUNDARY_VERBS = ("讀", "寫", "送", "接", "連", "結", "處", "理", "形"
 def is_over_capture(term: str, in_desc: bool, in_st: bool) -> bool:
     """Heuristic: true iff the captured text looks like a walker bug.
 
-    Imperfect — false-positives on legitimate long compound nouns; false-
+    Imperfect - false-positives on legitimate long compound nouns; false-
     negatives when verb-noun ambiguity allows clean trailing pattern.
     Use as directional signal only, not as silencing trigger.
     """

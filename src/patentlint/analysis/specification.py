@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Specification section analysis.
 
 Checks paragraph endings, numbering sequentiality, restrictive wording,
@@ -28,7 +28,7 @@ from patentlint.models import CheckItem, ReferenceNumeral, SpecWordingResult
 # Deliberately narrower than the historical lexicon (Phase 9 #72b audit,
 # 2026-04-19): "invention", "particular", "specific", and "key" were
 # removed because they dominated the verify noise with non-narrowing
-# uses — "the invention relates to...", "a particular embodiment",
+# uses - "the invention relates to...", "a particular embodiment",
 # "a specific example", "key feature" are all standard drafting
 # conventions, not MPEP-flagged scope-narrowers.
 _RESTRICTIVE_WORDING = re.compile(
@@ -87,7 +87,7 @@ _REFNUM_AFTER_NOUN = re.compile(
     r"((?:[a-z]{2,15}\s+){0,3}[a-z]{2,15})"
     r"\s+"
     r"(\d{2,4}[a-z]?)"  # optional single-letter suffix: 10a, 10b
-    r"(?![\dA-Za-z])"   # no following digit/letter — anchored end
+    r"(?![\dA-Za-z])"   # no following digit/letter - anchored end
     r"(?!\.\d)"         # not followed by decimal point + digit
     r"(?![%％°])"         # not followed by % or degree
     # Reject sub-instance notation: drafter writes "21(0)" / "21(N)" /
@@ -100,7 +100,7 @@ _REFNUM_AFTER_NOUN = re.compile(
     # 116: wireless module`, the noun-before-numeral capture otherwise binds
     # entry k's name to entry k+1's numeral. A numeral immediately followed by
     # a colon is a legend KEY (numeral-first binding), so the preceding noun is
-    # a bled value — parity with the CJK fix (#334). FN-safe: `num:` is never an
+    # a bled value - parity with the CJK fix (#334). FN-safe: `num:` is never an
     # element-naming binding (legend / step / list context).
     r"(?!\s*:)",
     re.IGNORECASE,
@@ -122,7 +122,7 @@ _REFNUM_PARENS = re.compile(
 # The reference label MUST start with 1-5 uppercase letters, then 1-4
 # digits, with optional single-letter suffix (e.g., "R1a"). Pure digit
 # refs are handled by Pattern A above. Hyphenated forms ("LED-1") not
-# captured here — drafters typically don't hyphenate.
+# captured here - drafters typically don't hyphenate.
 #
 # Module-level (not IGNORECASE) so the [A-Z] requirement on the
 # prefix is enforced; the noun-phrase group uses an explicit case-
@@ -149,13 +149,13 @@ _REFNUM_LATIN_PAREN = re.compile(
     re.IGNORECASE,
 )
 
-# Latin-prefix denylist — common abbreviations / acronyms that look
+# Latin-prefix denylist - common abbreviations / acronyms that look
 # like reference designators but aren't. Filters obvious noise; extend
 # as new collisions surface.
 _LATIN_PREFIX_DENYLIST = frozenset({
-    "FIG",  # FIG.1 / FIG1 — figure references, not element refs
+    "FIG",  # FIG.1 / FIG1 - figure references, not element refs
     "FIGS",
-    "EQ",   # EQ1 — equation reference
+    "EQ",   # EQ1 - equation reference
     "VOL",
     "NO",
     "PG",
@@ -171,7 +171,7 @@ _LATIN_PREFIX_DENYLIST = frozenset({
     "RNA",
     # Country codes that prefix patent / publication numbers in cited-by
     # tables and bibliography sections (drafter doesn't bind a refnum to
-    # "US14123456" — that's a citation to a published US application).
+    # "US14123456" - that's a citation to a published US application).
     "US", "WO", "EP", "JP", "KR", "TW", "CN", "DE", "FR", "GB",
     "CA", "AU", "BR", "IN", "RU", "MX", "ES", "IT", "NL", "SE",
     "FI", "DK", "AT", "CH", "BE", "PT", "PL", "IL", "ZA",
@@ -188,7 +188,7 @@ _LATIN_PREFIX_DENYLIST = frozenset({
     "P2P", "B2B", "B2C",
     # X2X communication-mode abbreviations (device-/vehicle-to-X). Closed set
     # of telecom protocol terms discussed in prose; never drawing-element
-    # designators. (Engine-3 R2 — caught coincidentally by the AA-mutation
+    # designators. (Engine-3 R2 - caught coincidentally by the AA-mutation
     # pattern before it was restricted to multi-digit residue positions.)
     "D2D", "V2V", "V2I", "V2N", "V2P", "V2X", "V2G", "M2M",
     # Software / network / format acronyms
@@ -197,7 +197,7 @@ _LATIN_PREFIX_DENYLIST = frozenset({
     "RSA", "AES", "SHA", "MD5",
     # Pharmaceutical / biological gene + protein nomenclature that
     # follows [A-Z]{2,5}\d{1,3} format. These are official symbols
-    # (HER2, CDK4, EGFR, BRCA1, KRAS, etc.) — never refnums.
+    # (HER2, CDK4, EGFR, BRCA1, KRAS, etc.) - never refnums.
     "HER", "HER1", "HER2", "HER3", "HER4",
     "CDK", "CDK1", "CDK2", "CDK4", "CDK6", "CDK7", "CDK9",
     "EGFR", "VEGF", "VEGFR",
@@ -209,13 +209,13 @@ _LATIN_PREFIX_DENYLIST = frozenset({
     "RTK", "GPCR", "ATP", "ADP", "GTP", "CDP",
 })
 
-# Engine-3 R2 (ADR-159) — amino-acid substitution notation, e.g. K417T /
+# Engine-3 R2 (ADR-159) - amino-acid substitution notation, e.g. K417T /
 # D614G / E484K: a single IUPAC amino-acid code, a residue position, and a
 # single IUPAC amino-acid code. These are biology/clinical symbols, never
 # reference designators (real designators carry a LOWERCASE suffix, R1a). Two
 # guards keep it FN-safe: (1) the 20-letter IUPAC set (B/J/O/U/X/Z excluded)
 # spares real uppercase-suffixed labels such as U1A / Q2B; (2) the residue
-# position requires >=2 digits — real mutation positions are multi-digit
+# position requires >=2 digits - real mutation positions are multi-digit
 # (K417T, D614G, L234F), whereas single-digit X2X tokens (D2D / V2V / L1D /
 # I3C) are telecom/bus abbreviations that coincidentally use AA letters and
 # are handled by the explicit denylist instead, so a hypothetical 1-digit
@@ -224,7 +224,7 @@ _AA_MUTATION_RE = re.compile(r"^[ACDEFGHIKLMNPQRSTVWY]\d{2,4}[ACDEFGHIKLMNPQRSTV
 
 _LEADING_ALPHA_RE = re.compile(r"^[A-Z]+")
 
-# Engine-3 R2 — leading alpha prefixes of immunology / clinical biomarker
+# Engine-3 R2 - leading alpha prefixes of immunology / clinical biomarker
 # families (CD3, CD8, CD28, CLDN18, IGG4, IL7R, TNFα, IFNγ, HBA1C). These are
 # discussed throughout biotech specs in prose and mis-captured as Latin-prefix
 # reference designators; none labels a drawing element. Curated, FN-verified
@@ -256,7 +256,7 @@ _UNIT_PATTERN = re.compile(
     # match `Amperes` (the `(?![A-Za-z0-9])` boundary correctly stops it inside
     # the word), so `statically reserving 20 Amperes` left `20` as a phantom
     # reference numeral (mirror of the #312 spelled-out `degrees` fix). Both
-    # cases; longest-first. `amp`/`amps` are safe under the trailing boundary —
+    # cases; longest-first. `amp`/`amps` are safe under the trailing boundary -
     # `amplifier`/`ample` continue with an alnum char and do not match.
     r"|[Aa]mperes|[Aa]mpere|[Aa]mps|[Aa]mp"
     r"|kW|MW|GW|mW|µW|μW|W"
@@ -287,7 +287,7 @@ _UNIT_PATTERN = re.compile(
     r"|kJ|MJ|GJ|mJ|µJ|μJ|J"
     r"|kcal|cal|BTU|Wh|kWh|MWh"
     r"|eV|keV|MeV|GeV"
-    # kGy + MGy added 2026-05-15 (issue #39) — radiation-dose units with
+    # kGy + MGy added 2026-05-15 (issue #39) - radiation-dose units with
     # SI kilo / mega prefixes. The Gy / mGy / µGy entries below cover the
     # base + milli + micro prefixes; kGy is common in industrial
     # sterilization dosages; MGy in high-dose applications.
@@ -312,7 +312,7 @@ _UNIT_PATTERN = re.compile(
     # Issue #264: the trailing boundary was `\b`, which FAILS after a
     # punctuation-ending unit (`vol%` / `wt%` / `mol%` / bare `%`): `%` is a
     # non-word char, so there is no word boundary after it, and the whole
-    # unit match failed — `the main bag structure being 100 vol%` was NOT
+    # unit match failed - `the main bag structure being 100 vol%` was NOT
     # excluded and `100` was captured as a phantom refnum. A negative
     # lookahead for an alphanumeric continuation keeps the original intent
     # (don't let `m` match inside `meters`) while admitting units that end
@@ -350,7 +350,7 @@ def _is_year(num_str: str) -> bool:
 # so only the noun itself remains.
 # Trailing finite verbs / participles that a `<noun> <verb> <numeral>`
 # context bleeds into the element-name capture (issue #256). Curated to
-# unambiguous verb forms — none is ever an element-name noun (the `-ing`
+# unambiguous verb forms - none is ever an element-name noun (the `-ing`
 # *nouns* opening/coating/bearing/housing/coupling/spring/ring/wiring are
 # deliberately NOT here). Cross-CHECK mirror of the §112 _STOP_WORDS verbs.
 _D1_TRAILING_VERBS = frozenset({
@@ -387,7 +387,7 @@ _D1_LEADING_FUNCTION_WORDS = frozenset({
     "until", "since", "than",
     # Quantifier-comparison residues. `than` (above) handles `more than X`
     # but leaves `more` attached to the head-noun trail. Same for `at
-    # least` / `at most` patterns — `at` is a generic preposition so
+    # least` / `at most` patterns - `at` is a generic preposition so
     # we can't EXCLUDE the numeral entirely, but stripping `least` /
     # `most` / `more` / `less` from the head-noun trail collapses
     # `dose of at least` → `dose`. Issue #39 (2026-05-15).
@@ -443,7 +443,7 @@ _D1_LEADING_FUNCTION_WORDS = frozenset({
     "arrange", "arranges", "arranging", "arranged",
     "use", "uses", "using", "used",
     "also",
-    # Walker-derived parity (mirrors CN/TW _CN_FRAGMENT_MARKERS) —
+    # Walker-derived parity (mirrors CN/TW _CN_FRAGMENT_MARKERS) -
     # English equivalents that signal sentence-fragment captures.
     "based", "according",
     "obtained", "derived",
@@ -459,11 +459,11 @@ _D1_LEADING_FUNCTION_WORDS = frozenset({
     # Demonstrative position
     "type", "kind",
     # Context-only nouns that creep in via "with respect to N" / "in
-    # respect of N" / "such that N" / "ranges from N to" patterns —
+    # respect of N" / "such that N" / "ranges from N to" patterns -
     # pure noise as element identities, never real reference numerals.
     "respect", "regard", "regards", "case", "cases",
     # Plural-instance quantifier. "first resistor R1" and "a plurality
-    # of first resistors R1" are the SAME element — the numeral R1 is
+    # of first resistors R1" are the SAME element - the numeral R1 is
     # the identity; "plurality of" is a count descriptor, not part of
     # the name. Stripping it (paired with the plurality-aware
     # singularization in _d1_extract_ordinal_and_head) collapses the
@@ -484,7 +484,7 @@ def _d1_singularize(word: str) -> str:
     """Conservatively reduce a known-plural English noun to its singular.
 
     Called ONLY for the head noun of a `plurality of <plural-noun>`
-    phrase, where the noun is grammatically guaranteed plural — so the
+    phrase, where the noun is grammatically guaranteed plural - so the
     reduction is correct by construction, not a guess. Handles the
     regular -ies / sibilant -es / -s endings; leaves -ss words and very
     short tokens untouched. Issue #74 (2026-05-21).
@@ -513,7 +513,7 @@ def _d1_extract_ordinal_and_head(phrase: str) -> tuple[str, str]:
     """
     words = phrase.strip().lower().split()
     # When the phrase is a `plurality of <plural-noun>` descriptor, the
-    # head noun is guaranteed plural — flag it so the head's last word
+    # head noun is guaranteed plural - flag it so the head's last word
     # can be singularized after extraction, collapsing it onto the
     # singular-form occurrence of the same element. Issue #74.
     has_plurality = "plurality" in words
@@ -521,13 +521,13 @@ def _d1_extract_ordinal_and_head(phrase: str) -> tuple[str, str]:
     # below only removes tokens it enumerates, so an unrecognized verb/clause
     # ahead of the element ("normalize the difference D2", "amount corresponds
     # to the difference D2", "flowing through the filter inductor L1") blocks it
-    # and the whole clause is captured as the name — making one numeral look
+    # and the whole clause is captured as the name - making one numeral look
     # like it labels inconsistent elements. When an article (the/a/an/said) is
     # present, the element name is the noun phrase AFTER THE LAST article; the
     # text before it is sentential glue. FN-SAFE for D1 conflict detection: any
     # genuine distinguishing modifier sits AFTER the article ("the input valve"
     # vs "the output valve" keep input/output and stay distinct), so real
-    # §608.01(g) conflicts survive — only the leading clause is dropped.
+    # §608.01(g) conflicts survive - only the leading clause is dropped.
     _articles = ("the", "a", "an", "said")
     _last_art = max((i for i, w in enumerate(words) if w in _articles), default=-1)
     if 0 <= _last_art < len(words) - 1:
@@ -555,7 +555,7 @@ def _d1_extract_ordinal_and_head(phrase: str) -> tuple[str, str]:
     # defines 1114` / `a wall exceeding the opening 1114` captured
     # `body defines` / `wall exceeding` as the element name, making 1114
     # look like it denotes inconsistent elements. The head noun is the
-    # part BEFORE the verb. Curated to unambiguous verb forms only — never
+    # part BEFORE the verb. Curated to unambiguous verb forms only - never
     # element-name nouns (cf. the `-ing` nouns opening/coating/bearing/
     # housing/coupling/spring, which are deliberately excluded). Mirrors
     # the §112 _STOP_WORDS finite-verb family (cross-CHECK).
@@ -571,7 +571,7 @@ def _d1_extract_ordinal_and_head(phrase: str) -> tuple[str, str]:
 
 
 def _d1_head_noun(phrase: str) -> str:
-    """Backward-compatible head-noun extractor — strips ordinal too.
+    """Backward-compatible head-noun extractor - strips ordinal too.
     Preserves the older behavior for callers that don't need ordinal
     discrimination.
     """
@@ -583,7 +583,7 @@ def extract_numeral_name_pairs(
     spec_text: str,
 ) -> list[tuple[str, str]]:
     """Yield every `<head_noun, numeral>` pair from spec text (one per
-    occurrence — NOT aggregated).
+    occurrence - NOT aggregated).
 
     Used by check_numeral_consistency for D1 (same numeral → multiple
     different element names) detection. Different from
@@ -591,7 +591,7 @@ def extract_numeral_name_pairs(
     one canonical name per numeral and is used for completeness checks.
 
     Returns list of (numeral_str, head_noun) tuples in document order.
-    The numeral is a STRING — supports both pure-digit ("102") and
+    The numeral is a STRING - supports both pure-digit ("102") and
     Latin-prefix designators ("LD1", "HD2", "R1", "IC2", "Q1a") common
     in electronics/circuit patents. Pure-digit numerals are
     canonicalized to a string of just the digits ("102" not "0102").
@@ -644,7 +644,7 @@ def extract_numeral_name_pairs(
             pairs.append((canonical, keyed_name))
             seen_spans.add((m.start(2), m.end(2)))
 
-    # Latin-prefix patterns — captured AFTER digit patterns so spans
+    # Latin-prefix patterns - captured AFTER digit patterns so spans
     # like "switch 1024" (digit) take precedence over a hypothetical
     # mis-greedy Latin match.
     for pattern in [_REFNUM_LATIN_PREFIX, _REFNUM_LATIN_PAREN]:
@@ -665,7 +665,7 @@ def extract_numeral_name_pairs(
             if prefix in _LATIN_PREFIX_DENYLIST or ref in _LATIN_PREFIX_DENYLIST:
                 continue
             # Engine-3 R2 (ADR-159): amino-acid substitution notation
-            # (K417T, D614G, E484K) — single AA code + position + single AA
+            # (K417T, D614G, E484K) - single AA code + position + single AA
             # code, all from the 20-letter IUPAC set. A biology/clinical
             # symbol, never a reference designator (designators use a LOWERCASE
             # suffix, R1a). The AA-letter restriction keeps real uppercase-
@@ -740,7 +740,7 @@ def _content_words(name: str) -> set[str]:
     """Return content-word set of a name for D1 disjointness comparison.
 
     Strips short tokens (≤2 chars), filters English stopwords (the/of/
-    etc — connectives that carry no element-name meaning), and adds
+    etc - connectives that carry no element-name meaning), and adds
     singularized variants so plural-vs-singular doesn't create false
     D1 conflicts. Three plural rules (English):
       -ies → -y  (boundaries → boundary, switches→switch via -es path)
@@ -762,7 +762,7 @@ def _content_words(name: str) -> set[str]:
         # -es words tend to be shorter base nouns.
         if len(w) >= 6 and w.endswith("es"):
             out.add(w[:-2])
-        # -s → '': "condenser" / "lens" — only when stripped form ≥4
+        # -s → '': "condenser" / "lens" - only when stripped form ≥4
         # chars to avoid adding 3-char fragments.
         if (
             len(w) >= 5
@@ -784,7 +784,7 @@ def _split_ordinal_key(keyed: str) -> tuple[str, str]:
 
 def _is_parent_name_bleed(num: str, outlier_name: str, dom_name: dict[str, str]) -> bool:
     """True when ``outlier_name`` is the dominant name of a PARENT numeral whose
-    Latin-prefix designator is a strict prefix of ``num`` (R1 ⊂ R11) — a parent
+    Latin-prefix designator is a strict prefix of ``num`` (R1 ⊂ R11) - a parent
     element's name bled onto a hierarchical sub-element. Restricted to Latin-prefix
     children so pure-digit coincidences (10 ⊂ 100) are never treated as hierarchy.
     Gold-audited FN-safe (2026-06-25): drops hierarchical-bleed false positives
@@ -809,9 +809,9 @@ def _prune_fn_safe_outliers(outlier_records: list[dict], canonical_name: str) ->
     Validated against the LLM D1 gold set (2026-06-25, tests/eval/d1_prune_eval.py)
     with ZERO genuine catches hidden across 71 gold real_d1 (US 3 / CN 36 / TW 32).
     A SINGLE-occurrence outlier is dropped when it is either:
-      (a) an ordinal variant of the canonical — identical base noun, differing
-          only by ordinal ('first X' vs 'second X') — a tokenization bleed; or
-      (b) a substring/superstring of the canonical base — a fragment capture.
+      (a) an ordinal variant of the canonical - identical base noun, differing
+          only by ordinal ('first X' vs 'second X') - a tokenization bleed; or
+      (b) a substring/superstring of the canonical base - a fragment capture.
     The higher-yield mis-attribution rule (outlier == a neighbouring numeral's
     name) was REJECTED by the same gold: it hid 81% of genuine TW typos because a
     real cross-numeral typo is structurally identical to an extraction bleed."""
@@ -887,10 +887,10 @@ def _names_form_real_d1_conflict(names: list[str]) -> bool:
 
 
 def check_numeral_consistency(spec_text: str) -> list[CheckItem]:
-    """D1 — flag reference numerals that appear with multiple distinct
+    """D1 - flag reference numerals that appear with multiple distinct
     element names (e.g., "housing 102" and "container 102" both used).
 
-    Statutory: MPEP § 608.01(g) — "The same reference character should
+    Statutory: MPEP § 608.01(g) - "The same reference character should
     not be used to designate different elements." A real drafting error
     that's high-precision to detect: same numeral with two disjoint
     noun-phrase identities is virtually always a typo or copy-paste bug.
@@ -958,10 +958,10 @@ def check_numeral_consistency(spec_text: str) -> list[CheckItem]:
     # positive on REAL drafts (clean-DOCX probe, d1_probe.py), and the FP-vs-real
     # split is SEMANTIC (mis-attribution of a neighbouring numeral's element,
     # synonyms/variants of one element, ordinal variants) with NO deterministic
-    # separator — the same wall as §112. So D1 is no longer asserted as a graded
+    # separator - the same wall as §112. So D1 is no longer asserted as a graded
     # FIX; it is emitted as a single ADVISORY "to verify" item (zero grade impact
     # via rubric.ADVISORY_REVIEW_KEYS), mirroring the §112 re-tier (#314). Nothing
-    # is hidden — every conflict stays visible for the drafter to verify — so this
+    # is hidden - every conflict stays visible for the drafter to verify - so this
     # is FN-safe by construction. The per-finding `confidence` field still orders
     # the list (high-signal conflicts first).
     items: list[CheckItem] = []
@@ -992,7 +992,7 @@ def _build_d1_check_item(
     element name, the top outlier name, and a short context excerpt
     around the conflicting numeral (≤12 chars on each side). Anonymous
     error reports (issue #27, #28) returned only bare digits like
-    ``[10, 15, 30, 35]`` — useless for triage. With this enrichment a
+    ``[10, 15, 30, 35]`` - useless for triage. With this enrichment a
     reviewer can read the report and immediately see ``"#102: lens
     (5×) vs holder (2×); near …assembly of lens 102 within…"``.
     """
@@ -1046,7 +1046,7 @@ def _build_d1_check_item(
     message_prefix = (
         f"{len(conflicts)} reference numeral(s) inconsistently used."
         if is_fix
-        else f"{len(conflicts)} reference numeral(s) with possibly inconsistent naming — please review."
+        else f"{len(conflicts)} reference numeral(s) with possibly inconsistent naming - please review."
     )
     return CheckItem(
         status=status,
@@ -1073,12 +1073,12 @@ def _build_d1_check_item(
 #
 # Replaces the prior "≥2 per name + ≥3 total" precision-filter approach
 # which was the load-bearing source of false negatives: a single-
-# occurrence typo (the canonical D1 case — drafter changes ONE
+# occurrence typo (the canonical D1 case - drafter changes ONE
 # paragraph's numeral) was filtered out as noise.
 #
 # The new design is canonical-vs-outliers:
 #
-#   1. For each numeral, find the CANONICAL element name — the most
+#   1. For each numeral, find the CANONICAL element name - the most
 #      frequent name with at least N occurrences (3 for digit refs;
 #      2 for Latin-prefix refs).
 #   2. If no canonical exists (no name reaches the threshold), the
@@ -1086,10 +1086,10 @@ def _build_d1_check_item(
 #   3. For each OTHER name on that numeral (any occurrence count),
 #      emit if it represents a real conflict:
 #        Case A (instance collision): same head noun but different
-#          ordinal — drafter put same numeral on two distinct instances
+#          ordinal - drafter put same numeral on two distinct instances
 #          (first switch + third switch both labeled LD1).
 #        Case B (element collision): no shared content word with the
-#          canonical — drafter typo (motor 10 + circuit 10).
+#          canonical - drafter typo (motor 10 + circuit 10).
 #
 # Single-occurrence outliers ARE real bugs by this definition. Multi-
 # occurrence chemistry text doesn't form a canonical so it's ignored.
@@ -1173,7 +1173,7 @@ def _merge_suffix_clusters_us(name_counts: "Counter[str]") -> "Counter[str]":
     # Compare against BOTH raw and singularized forms of the shorter
     # surface so plural variants cluster: "terminal of the filter
     # capacitor" ends with " filter capacitor", which is the
-    # singularized form of "filter capacitors" — should union.
+    # singularized form of "filter capacitors" - should union.
     surfaces_sing = [_singularize_last_word(s) for s in surfaces]
 
     for i in range(n):
@@ -1195,7 +1195,7 @@ def _merge_suffix_clusters_us(name_counts: "Counter[str]") -> "Counter[str]":
 
     # Pick cluster rep = MOST FREQUENT (not shortest). Shortest-as-rep
     # would merge "control module" (10×) into bare "module" (1×) when
-    # both share suffix — losing the identifying modifier. Most-frequent
+    # both share suffix - losing the identifying modifier. Most-frequent
     # picks the form the drafter actually used; shortest is tiebreaker.
     cluster_rep_count: dict[int, int] = {}
     cluster_rep_name: dict[int, str] = {}
@@ -1224,7 +1224,7 @@ def _merge_suffix_clusters_us(name_counts: "Counter[str]") -> "Counter[str]":
     return merged
 
 
-# Clause markers — copula / auxiliary / relativizer / negator. None of these
+# Clause markers - copula / auxiliary / relativizer / negator. None of these
 # can appear inside a real compound element name, so their presence anywhere in
 # a captured "<noun> <numeral>" name means the capture over-ran into a sentence
 # clause ("be executed by processor 504", "suggestion is displayed 1308",
@@ -1242,11 +1242,11 @@ _D1_LY_NOUN_ALLOWLIST = frozenset({
 })
 
 # Curated -ing / base-form VERBS that over-capture as a D1 element-name head.
-# Empirical denylist (mirrors the _VERB_STOPS discipline) — each is a true verb
+# Empirical denylist (mirrors the _VERB_STOPS discipline) - each is a true verb
 # that is NEVER a patent element noun. CRITICAL: this is a CLOSED SET, NOT a
 # generic `-ing` rule. A generic `-ing`/`-s` rejection wrongly drops real patent
 # nouns (grating / winding / cladding / outputs / inputs) and silences genuine
-# D1 conflicts (FN) — e.g. `output grating` vs `second grating`, `waveguide
+# D1 conflicts (FN) - e.g. `output grating` vs `second grating`, `waveguide
 # inputs` vs `waveguide outputs`. So only listed verbs are rejected; -ing/-s
 # nouns pass.
 _D1_NONNOUN_VERB_HEADS = frozenset({
@@ -1262,7 +1262,7 @@ def _d1_head_is_nonnoun(word: str) -> bool:
     §112 walker's verb/adverb sets so the D1 element-name extractor and the
     antecedent/spec-support walkers agree on what counts as a noun (cross-CHECK).
 
-    Uses ONLY unambiguous signals — curated verb/adverb sets, the -ed participle
+    Uses ONLY unambiguous signals - curated verb/adverb sets, the -ed participle
     test, and -ly adverbs. It does NOT apply a generic `-ing` or 3rd-person-`-s`
     rule, because those wrongly reject real patent nouns (grating / winding /
     cladding / outputs / inputs), silencing genuine D1 conflicts (FN).
@@ -1298,7 +1298,7 @@ def _is_plausible_element_name(keyed_name: str) -> bool:
       * the HEAD (last word) is a verb / gerund / participle / adverb; or
       * a CLAUSE marker (copula / not / that / which) sits anywhere in the name.
 
-    Deliberately does NOT reject past-participle / 3sg words in the BODY —
+    Deliberately does NOT reject past-participle / 3sg words in the BODY -
     those are adjectival modifiers of real elements ("integrated circuit",
     "curved surface", "printed circuit board"); rejecting them would drop real
     conflicts (FN).
@@ -1323,12 +1323,12 @@ def _detect_d1_conflicts(
     dicts with case classification.
 
     Each conflict dict has:
-      'numeral': str — the reference numeral (digit or Latin-prefix)
-      'canonical': str — most-frequent ordinal-keyed name
+      'numeral': str - the reference numeral (digit or Latin-prefix)
+      'canonical': str - most-frequent ordinal-keyed name
       'canonical_count': int
-      'outliers': list[{'name': str, 'count': int}] — disjoint or
+      'outliers': list[{'name': str, 'count': int}] - disjoint or
                   ordinal-different names (the actual conflicts)
-      'case': 'instance' | 'element' — which D1 sub-case fired
+      'case': 'instance' | 'element' - which D1 sub-case fired
     """
     from collections import Counter
 
@@ -1336,7 +1336,7 @@ def _detect_d1_conflicts(
     for num, name in pairs:
         # Engine-3 over-capture guard (ADR-159): a name that is a verb /
         # gerund / adverb / clause fragment is sentence-context bleed, not an
-        # element identity — never let it seed or join a D1 conflict. FN-safe:
+        # element identity - never let it seed or join a D1 conflict. FN-safe:
         # a real D1 defect needs two distinct element NOUNS on one numeral, and
         # real element names pass _is_plausible_element_name.
         if not _is_plausible_element_name(name):
@@ -1348,7 +1348,7 @@ def _detect_d1_conflicts(
     for num in list(by_num_counts.keys()):
         by_num_counts[num] = _merge_suffix_clusters_us(by_num_counts[num])
 
-    # Dominant name per numeral — for parent-child prefix-bleed suppression
+    # Dominant name per numeral - for parent-child prefix-bleed suppression
     # (a Latin-prefix sub-element R11 is a child of R1; the parent's name bleeding
     # onto the child once is a part-whole reference, not a conflict).
     _dom_name: dict[str, str] = {
@@ -1373,7 +1373,7 @@ def _detect_d1_conflicts(
         # qualify as canonical for that numeral. Single-occurrence-only
         # captures (where every name is 1×) are mostly chemistry/range
         # noise and produce no canonical → no D1.
-        # Latin-prefix refs accept canonical=1 — they're structurally
+        # Latin-prefix refs accept canonical=1 - they're structurally
         # unique designators with much lower noise risk.
         canonical_threshold = 1 if _is_latin_prefix(num) else 2
 
@@ -1439,7 +1439,7 @@ def _detect_d1_conflicts(
 
             # Case B: distinguishing-word collision. Strict disjoint
             # missed cases like "voltage threshold setting circuit" vs
-            # "voltage difference calculating circuit" — they SHARE
+            # "voltage difference calculating circuit" - they SHARE
             # ("voltage", "circuit") yet identify completely different
             # parts. Real test: if BOTH names have words the OTHER lacks,
             # they're naming different elements.
@@ -1459,14 +1459,14 @@ def _detect_d1_conflicts(
 
         if outlier_records:
             # Confidence tier per outlier:
-            #   "fix"    — high-confidence drafter typo: outlier_count ≥
+            #   "fix"    - high-confidence drafter typo: outlier_count ≥
             #              2 (drafter wrote it consistently), OR shares
             #              content with canonical (typo / variant of
             #              same name), OR instance collision (case A).
-            #   "review" — low-confidence: 1× outlier with zero shared
+            #   "review" - low-confidence: 1× outlier with zero shared
             #              content vs strong canonical (≥10×). Likely
             #              sentence-fragment over-capture, but could be
-            #              real D1 — surface as REVIEW for user judgment.
+            #              real D1 - surface as REVIEW for user judgment.
             for o in outlier_records:
                 o_words = _content_words(
                     _split_ordinal_key(o["name"])[1]
@@ -1586,7 +1586,7 @@ def check_required_sections(full_text: str) -> list[CheckItem]:
     Brief Description of Drawings is conditionally required per
     37 CFR 1.74 ("when there are drawings, there shall be a brief
     description"). We detect drawings via figure references parsed
-    from the body — robust to the case where BDoD heading is removed
+    from the body - robust to the case where BDoD heading is removed
     while FIG. N references remain in the detailed description.
     """
     from patentlint.models import CheckItem
@@ -1623,12 +1623,12 @@ def check_required_sections(full_text: str) -> list[CheckItem]:
     }
 
     # 37 CFR 1.74: BDoD is conditional on drawings existing. Detect figure
-    # references anywhere in the spec body — this catches cases where the
+    # references anywhere in the spec body - this catches cases where the
     # BDoD heading is removed but FIG. 1 / FIG. 2 still appear in the
     # detailed description.
     drawings_exist = bool(_extract_figure_ids(full_text))
 
-    # Required sections — BDoD only required when drawings are present.
+    # Required sections - BDoD only required when drawings are present.
     required = [
         "Title of the Invention",
         "Background of the Invention",
@@ -1695,7 +1695,7 @@ def check_required_sections(full_text: str) -> list[CheckItem]:
 
 
 _TITLE_TRADEMARK_RE = re.compile(r"[®™©]")
-# Commercial / model-number pattern per MPEP § 608.01 — reject ALL-CAPS
+# Commercial / model-number pattern per MPEP § 608.01 - reject ALL-CAPS
 # alphanumeric tokens that look like product codes (e.g. "AB-123", "X-9000").
 _TITLE_MODEL_NUMBER_RE = re.compile(r"\b[A-Z]{2,}[- ]?\d{2,}[A-Z0-9\-]*\b")
 
@@ -1704,14 +1704,14 @@ _TITLE_MODEL_NUMBER_RE = re.compile(r"\b[A-Z]{2,}[- ]?\d{2,}[A-Z0-9\-]*\b")
 #
 # "The present invention" / "this invention" / "the invention" in spec body
 # can become a claim-scope limit under Phillips v. AWH Corp 415 F.3d 1303
-# (Fed. Cir. 2005) — the doctrine is that claims are interpreted in light
+# (Fed. Cir. 2005) - the doctrine is that claims are interpreted in light
 # of the spec, and statements characterizing "the present invention"
 # are read as defining the invention itself.
 #
 # Different surface + different doctrine from check_restrictive_wording
 # (which targets CLAIMS under MPEP § 2173.01 indefiniteness). No dupe.
 #
-# REVIEW level — advisory; many drafts use these phrases benignly. The
+# REVIEW level - advisory; many drafts use these phrases benignly. The
 # check surfaces the count + sample paragraph indices so the drafter
 # can review each occurrence and rephrase to "in some embodiments" /
 # "the disclosed [system/method]" / "implementations may" etc. where
@@ -1854,7 +1854,7 @@ def check_title(title: str) -> list[CheckItem]:
     if word_count > 15 and charlen <= 500 and not items:
         results.append(CheckItem(
             status="verify",
-            message=f"Title has {word_count} words — MPEP § 606 recommends a short, specific title.",
+            message=f"Title has {word_count} words - MPEP § 606 recommends a short, specific title.",
             message_key="check.spec.title.verify",
             details_key="details.titleWordCount",
             details_params={"count": word_count},

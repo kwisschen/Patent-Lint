@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """EPC G4 claims-structure check tests.
 
 Eight checks:
@@ -416,7 +416,7 @@ def test_indefinite_wording_verifies():
 
 
 def test_indefinite_wording_reuses_us_regex():
-    """EPC imports the US regex (self-syncing mirror) — new US tokens like
+    """EPC imports the US regex (self-syncing mirror) - new US tokens like
     `optionally` / `e.g.` are caught by EPC without a separate list."""
     from patentlint.analysis.epc_claims import check_indefinite_wording_epc
     claim = _make(1, "An apparatus wherein the plate is optionally coated, e.g., with paint.")
@@ -485,7 +485,7 @@ def test_g6_runner_emits_five_summary_checks():
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# EPC special-format trio — MPF, CRM, Omnibus (G5 cross-jurisdiction)
+# EPC special-format trio - MPF, CRM, Omnibus (G5 cross-jurisdiction)
 # ─────────────────────────────────────────────────────────────────────────
 
 

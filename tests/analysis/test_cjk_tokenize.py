@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for src/patentlint/analysis/cjk_tokenize.py (ADR-094)."""
 
 from __future__ import annotations
@@ -105,28 +105,28 @@ class TestKnownLimitsDocumented:
     """
 
     def test_verb_noun_distinction_limit_hanjinye(self):
-        """含浸液 / 含浸 — Jaccard 0.5 despite being a verb/noun pair."""
+        """含浸液 / 含浸 - Jaccard 0.5 despite being a verb/noun pair."""
         a = tokenize_tw("含浸液")
         b = tokenize_tw("含浸")
         assert jaccard(a, b) == pytest.approx(0.5)
 
     def test_component_assembly_distinction_limit_chilunxiang(self):
-        """齒輪 / 齒輪箱 — Jaccard 0.5 despite being a component/assembly pair."""
+        """齒輪 / 齒輪箱 - Jaccard 0.5 despite being a component/assembly pair."""
         a = tokenize_tw("齒輪")
         b = tokenize_tw("齒輪箱")
         # {"齒輪"} vs {"齒輪", "輪箱"} → 1/2
         assert jaccard(a, b) == pytest.approx(0.5)
 
     def test_lexically_disjoint_synonyms_limit(self):
-        """聚合物 / 共聚物 — Jaccard 0.0 despite being valid shared head."""
+        """聚合物 / 共聚物 - Jaccard 0.0 despite being valid shared head."""
         a = tokenize_tw("聚合物")  # {"聚合", "合物"}
         b = tokenize_tw("共聚物")  # {"共聚", "聚物"}
         # No overlap
         assert jaccard(a, b) == 0.0
 
     def test_unigram_fallback_disjoint(self):
-        """光 / 光線 — unigram fallback means 0.0 Jaccard."""
+        """光 / 光線 - unigram fallback means 0.0 Jaccard."""
         a = tokenize_tw("光")      # ["光"]
         b = tokenize_tw("光線")    # ["光線"]
-        # {"光"} vs {"光線"} — disjoint as sets of strings
+        # {"光"} vs {"光線"} - disjoint as sets of strings
         assert jaccard(a, b) == 0.0

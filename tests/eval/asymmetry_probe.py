@@ -1,15 +1,15 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# asymmetry_probe.py — the normalization-asymmetry FP miner (ADR-159, 2026-06-26).
+# asymmetry_probe.py - the normalization-asymmetry FP miner (ADR-159, 2026-06-26).
 #
 # WHY: the trailing-token cluster miner (trailing_token_miner.py) groups ALL
 # walker_fp by trailing token; its clean (legit==0) clusters are dominated by
 # NOUNS (missed-intro, the semantic wall). This probe finds a DIFFERENT, FN-SAFE
 # class: findings where `term` and `suggested_match.term` (did_you_mean) differ
 # ONLY by a strippable artifact (a trailing finite verb, a parenthetical gloss, a
-# quantifier). When they differ that way, the INTRODUCTION IS RIGHT THERE — the
-# walker captured it under a near-identical key — so resolving the normalization
+# quantifier). When they differ that way, the INTRODUCTION IS RIGHT THERE - the
+# walker captured it under a near-identical key - so resolving the normalization
 # gap silences the FP WITHOUT hiding a real defect. This reopened the US/TW/CN
 # over-capture lever for +226 antecedent FPs after trailing-verb mining was
 # "exhausted" (US R19-21, TW R14-15, CN R45).
@@ -18,7 +18,7 @@
 # batch the clean candidates into the relevant strip set (_STOP_WORDS for US,
 # _TRAILING_VERB_DENYLIST_{TW,CN}) → validate_fix.py auto-narrows to the
 # silenced_legit==0 subset. Truncation clusters (the LONGER form is the real
-# element, e.g. 控制器→控) are the FN-DELICATE under-capture class — NOT a
+# element, e.g. 控制器→控) are the FN-DELICATE under-capture class - NOT a
 # trailing-strip target; flagged separately as `trunc?`.
 from __future__ import annotations
 

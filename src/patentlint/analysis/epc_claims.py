@@ -1,29 +1,29 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """EPC claims-level checks (G4 + G5 + G6 in the canonical 7-group order).
 
-G4 (structure) — shipped:
-  - check_claims_sequential_epc       — Rule 43(5) EPC
-  - check_dependency_format_epc       — Rule 43(4) EPC
-  - check_self_dependent_epc          — basic logic
-  - check_forward_dependency_epc      — Rule 43(4) EPC implied
-  - check_single_sentence_per_claim_epc — Rule 43(4) + F-IV § 4.10
-  - check_reference_signs_in_parens_epc — Rule 43(7) EPC
-  - check_subject_consistency_epc     — Guidelines F-IV § 3.4
-  - check_transition_phrase_epc       — Guidelines F-IV § 4.13
+G4 (structure) - shipped:
+  - check_claims_sequential_epc       - Rule 43(5) EPC
+  - check_dependency_format_epc       - Rule 43(4) EPC
+  - check_self_dependent_epc          - basic logic
+  - check_forward_dependency_epc      - Rule 43(4) EPC implied
+  - check_single_sentence_per_claim_epc - Rule 43(4) + F-IV § 4.10
+  - check_reference_signs_in_parens_epc - Rule 43(7) EPC
+  - check_subject_consistency_epc     - Guidelines F-IV § 3.4
+  - check_transition_phrase_epc       - Guidelines F-IV § 4.13
 
-G5 (cross-jurisdiction / format guards) — pending:
-  - check_claims_spec_reference_epc   — Rule 43(6) EPC
-  - check_multi_dep_on_multi_dep_epc  — Rule 43(4) EPC
-  - check_markush_format_epc          — Guidelines F-IV § 4.20
-  - check_independent_claim_count_epc — Rule 43(2) + 43(3)
-  - check_two_part_form_epc           — Rule 43(1) advisory
+G5 (cross-jurisdiction / format guards) - pending:
+  - check_claims_spec_reference_epc   - Rule 43(6) EPC
+  - check_multi_dep_on_multi_dep_epc  - Rule 43(4) EPC
+  - check_markush_format_epc          - Guidelines F-IV § 4.20
+  - check_independent_claim_count_epc - Rule 43(2) + 43(3)
+  - check_two_part_form_epc           - Rule 43(1) advisory
 
-G6 (§ 112-equivalent, walker territory) — pending:
-  - check_antecedent_basis_epc        — Art. 84 + Guidelines F-IV § 4.5
-  - check_claim_punctuation_epc       — Guidelines F-IV § 4.10
-  - check_restrictive_absolutes_epc   — Guidelines F-IV § 4.7
-  - check_spec_support_epc            — Art. 84 (support)
+G6 (§ 112-equivalent, walker territory) - pending:
+  - check_antecedent_basis_epc        - Art. 84 + Guidelines F-IV § 4.5
+  - check_claim_punctuation_epc       - Guidelines F-IV § 4.10
+  - check_restrictive_absolutes_epc   - Guidelines F-IV § 4.7
+  - check_spec_support_epc            - Art. 84 (support)
 
 Walker checks (antecedentBasis + specSupport) ship as REVIEW status at v1
 per locked decision; ADR-154-style promotion to FIX only after FP rate
@@ -104,7 +104,7 @@ def check_dependency_format_epc(claims: list[Claim]) -> list[CheckItem]:
     """Verify dependent claims explicitly reference their parent per Rule 43(4) EPC.
 
     Any dependent claim (independent=False) with an empty dependency list
-    indicates the parser failed to find a "claim N" reference — likely a
+    indicates the parser failed to find a "claim N" reference - likely a
     malformed preamble. The parser already classifies via the dep-ref
     regex, so this check guards the contract: dependent ⇒ has parent(s).
     """
@@ -114,7 +114,7 @@ def check_dependency_format_epc(claims: list[Claim]) -> list[CheckItem]:
             status="amend",
             message=(
                 f"Claim(s) {', '.join(str(i) for i in bad)} look dependent but "
-                f"do not explicitly reference a parent claim — Rule 43(4) EPC "
+                f"do not explicitly reference a parent claim - Rule 43(4) EPC "
                 f"requires explicit reference (e.g., 'according to claim N')."
             ),
             message_key="check.epc.claims.dependencyFormat.amend",
@@ -220,7 +220,7 @@ def check_single_sentence_per_claim_epc(claims: list[Claim]) -> list[CheckItem]:
             status="verify",
             message=(
                 f"Claim(s) {', '.join(str(i) for i in bad)} appear to contain "
-                f"multiple sentences — Guidelines F-IV § 4.10 prefers one "
+                f"multiple sentences - Guidelines F-IV § 4.10 prefers one "
                 f"sentence per claim."
             ),
             message_key="check.epc.claims.singleSentence.verify",
@@ -277,7 +277,7 @@ def check_reference_signs_in_parens_epc(claims: list[Claim]) -> list[CheckItem]:
                 continue
             flagged.append({"claim_id": c.id, "token": token})
     if flagged:
-        # Only emit when we have at least one finding per claim — collapse
+        # Only emit when we have at least one finding per claim - collapse
         # duplicates for the message.
         flagged_claims = sorted({f["claim_id"] for f in flagged})
         # Surface the ACTUAL bare numerals as pills (not the claim numbers,
@@ -294,7 +294,7 @@ def check_reference_signs_in_parens_epc(claims: list[Claim]) -> list[CheckItem]:
             status="verify",
             message=(
                 f"Claim(s) {', '.join(str(i) for i in flagged_claims)} contain "
-                f"bare numeral(s) not in parentheses — Rule 43(7) EPC prefers "
+                f"bare numeral(s) not in parentheses - Rule 43(7) EPC prefers "
                 f"reference signs to be parenthesised."
             ),
             message_key="check.epc.claims.refSignsInParens.verify",
@@ -341,9 +341,9 @@ def check_subject_consistency_epc(claims: list[Claim]) -> list[CheckItem]:
 
     A dependent claim's preamble subject should match the parent claim
     (e.g., parent "An apparatus comprising..."; dep "The apparatus of
-    claim 1, wherein..." — match). Mismatches like dep "The method of
+    claim 1, wherein..." - match). Mismatches like dep "The method of
     claim 1" pointing to apparatus parent are real drafting errors.
-    REVIEW status — extraction is heuristic and FP on edge phrasings.
+    REVIEW status - extraction is heuristic and FP on edge phrasings.
     """
     by_id = {c.id: c for c in claims}
     bad: list[int] = []
@@ -363,7 +363,7 @@ def check_subject_consistency_epc(claims: list[Claim]) -> list[CheckItem]:
             if not parent_subject:
                 continue
             # Match if the dep subject head noun appears in the parent subject
-            # (or vice versa) — very loose to keep FP rate low at v1.
+            # (or vice versa) - very loose to keep FP rate low at v1.
             dep_head = dep_subject.split()[0] if dep_subject.split() else ""
             parent_head = parent_subject.split()[0] if parent_subject.split() else ""
             if dep_head and parent_head and (dep_head == parent_head or dep_head in parent_subject or parent_head in dep_subject):
@@ -376,7 +376,7 @@ def check_subject_consistency_epc(claims: list[Claim]) -> list[CheckItem]:
             status="verify",
             message=(
                 f"Claim(s) {', '.join(str(i) for i in bad)} may have a subject "
-                f"that does not match the parent claim — verify per Guidelines F-IV § 3.4."
+                f"that does not match the parent claim - verify per Guidelines F-IV § 3.4."
             ),
             message_key="check.epc.claims.subjectConsistency.verify",
             details_params={"claims": ", ".join(str(i) for i in bad)},
@@ -478,7 +478,7 @@ _MARKUSH_BAD_RE = re.compile(
 
 # Rule 43(1) two-part form: preamble + characterising portion. Detection
 # looks for either "characterised in that" or "characterised by"
-# anywhere in an independent claim. Advisory only — Rule 43(1) is
+# anywhere in an independent claim. Advisory only - Rule 43(1) is
 # "where appropriate", not mandatory.
 _TWO_PART_RE = re.compile(
     r"\bcharacter(?:i[sz]ed)\s+(?:in\s+that|by)\b",
@@ -504,7 +504,7 @@ def check_claims_spec_reference_epc(claims: list[Claim]) -> list[CheckItem]:
             status="amend",
             message=(
                 f"Claim(s) {', '.join(str(i) for i in flagged)} reference description "
-                f"or drawings — Rule 43(6) EPC requires claims to be self-contained."
+                f"or drawings - Rule 43(6) EPC requires claims to be self-contained."
             ),
             message_key="check.epc.claims.specReference.amend",
             details_params={"claims": ", ".join(str(i) for i in flagged)},
@@ -546,7 +546,7 @@ def check_multi_dep_on_multi_dep_epc(claims: list[Claim]) -> list[CheckItem]:
             status="amend",
             message=(
                 f"Claim(s) {', '.join(str(i) for i in bad)} are multi-dependent claims "
-                f"that depend on another multi-dependent claim — Rule 43(4) EPC prohibits this."
+                f"that depend on another multi-dependent claim - Rule 43(4) EPC prohibits this."
             ),
             message_key="check.epc.claims.multiDepOnMultiDep.amend",
             details_params={"claims": ", ".join(str(i) for i in bad)},
@@ -605,7 +605,7 @@ def check_markush_format_epc(claims: list[Claim]) -> list[CheckItem]:
 def check_means_plus_function_epc(claims: list[Claim]) -> list[CheckItem]:
     """Detect § 112(f)-style functional 'means/step/mechanism/module for X-ing' language.
 
-    EPO Guidelines F-IV § 6.5 — functional features are admissible only
+    EPO Guidelines F-IV § 6.5 - functional features are admissible only
     where the skilled person can identify means without undue burden,
     and Art. 84 EPC requires support and clarity for the function. The
     check emits VERIFY (advisory) rather than AMEND because functional
@@ -617,7 +617,7 @@ def check_means_plus_function_epc(claims: list[Claim]) -> list[CheckItem]:
             status="verify",
             message=(
                 f"Claim(s) {', '.join(str(i) for i in bad)} use functional "
-                f"'means for / step for' language — confirm Art. 84 support "
+                f"'means for / step for' language - confirm Art. 84 support "
                 f"and that the skilled person can identify the means without "
                 f"undue burden (Guidelines F-IV § 6.5)."
             ),
@@ -659,7 +659,7 @@ def check_crm_non_transitory_epc(claims: list[Claim]) -> list[CheckItem]:
             status="verify",
             message=(
                 f"Claim(s) {', '.join(str(i) for i in bad)} recite a computer-"
-                f"readable medium without the 'non-transitory' qualifier — "
+                f"readable medium without the 'non-transitory' qualifier - "
                 f"confirm coverage of transitory signals is not unintended "
                 f"(Art. 52(2)(c) EPC; Guidelines G-II § 3.6)."
             ),
@@ -683,7 +683,7 @@ def check_crm_non_transitory_epc(claims: list[Claim]) -> list[CheckItem]:
 def check_omnibus_claims_epc(claims: list[Claim]) -> list[CheckItem]:
     """Flag omnibus claims (reference description/drawings instead of features).
 
-    Art. 84 EPC + Guidelines F-IV § 4.17 — claims must define the matter
+    Art. 84 EPC + Guidelines F-IV § 4.17 - claims must define the matter
     for which protection is sought; references such as 'substantially as
     described' or 'as shown in the drawings' fail the clarity requirement.
     """
@@ -697,7 +697,7 @@ def check_omnibus_claims_epc(claims: list[Claim]) -> list[CheckItem]:
             status="amend",
             message=(
                 f"Claim(s) {', '.join(str(i) for i in bad)} appear to be "
-                f"omnibus — they reference the description or drawings "
+                f"omnibus - they reference the description or drawings "
                 f"instead of reciting features. Art. 84 EPC clarity objection "
                 f"is likely (Guidelines F-IV § 4.17)."
             ),
@@ -732,7 +732,7 @@ def check_excess_claims_count_epc(claims: list[Claim]) -> list[CheckItem]:
             status="pass",
             message=(
                 f"No excess-claims fee triggers detected "
-                f"({total} total — within Rule 45 EPC fee-free threshold of 15)."
+                f"({total} total - within Rule 45 EPC fee-free threshold of 15)."
             ),
             message_key="check.epc.claims.excessClaims.pass",
             reference="Rule 45 EPC; Rule 162(1) EPC",
@@ -775,7 +775,7 @@ def check_independent_claim_count_epc(claims: list[Claim]) -> list[CheckItem]:
     if len(independents) <= 1:
         return [CheckItem(
             status="pass",
-            message="Single independent claim — Rule 43(2) EPC satisfied.",
+            message="Single independent claim - Rule 43(2) EPC satisfied.",
             message_key="check.epc.claims.independentClaimCount.pass",
             reference="Rule 43(2) EPC",
         )]
@@ -812,13 +812,13 @@ def check_independent_claim_count_epc(claims: list[Claim]) -> list[CheckItem]:
 def check_two_part_form_epc(claims: list[Claim]) -> list[CheckItem]:
     """Advisory check on Rule 43(1) two-part form (where appropriate).
 
-    Rule 43(1) recommends — but does not require — the two-part form
+    Rule 43(1) recommends - but does not require - the two-part form
     (preamble + "characterised in that" + characterising portion) for
     independent claims defining an invention over closest prior art.
     Detection looks for the phrase in any independent claim. Status
     'pass' when ≥1 independent claim uses two-part form; 'verify' when
     no independent claim does (advisory: drafter may want to consider
-    it). Never 'amend' — Rule 43(1) is conditional.
+    it). Never 'amend' - Rule 43(1) is conditional.
     """
     independents = [c for c in claims if c.independent]
     if not independents:
@@ -854,7 +854,7 @@ def check_two_part_form_epc(claims: list[Claim]) -> list[CheckItem]:
 # ---------------------------------------------------------------------------
 
 
-# Restrictive absolutes in claims (Guidelines F-IV § 4.7 — terms that
+# Restrictive absolutes in claims (Guidelines F-IV § 4.7 - terms that
 # over-qualify a limitation can create indefiniteness). Mirrors the US
 # regex; EPO Guidelines align with MPEP § 2173.01 on this language.
 _EPC_RESTRICTIVE_ABS_RE = re.compile(
@@ -866,7 +866,7 @@ _EPC_RESTRICTIVE_ABS_RE = re.compile(
 def check_claim_punctuation_epc(claims: list[Claim]) -> list[CheckItem]:
     """Verify claim punctuation per Guidelines F-IV § 4.10.
 
-    Sub-checks (port from US claim-punctuation logic — English regex
+    Sub-checks (port from US claim-punctuation logic - English regex
     works identically):
       - Missing final period
       - Extra / misplaced periods inside the claim body
@@ -954,7 +954,7 @@ def check_indefinite_wording_epc(claims: list[Claim]) -> list[CheckItem]:
     """Advisory check on indefinite / relative / exemplary wording in claims
     per EPO Guidelines F-IV § 4.6 (relative terms) + Art. 84 (clarity).
 
-    REVIEW status — mirror of the US § 2173.05(b)/(d) check. Imports the US
+    REVIEW status - mirror of the US § 2173.05(b)/(d) check. Imports the US
     regex directly (not a copy) so the US↔EPC violation list stays in sync:
     any future addition to ``_INDEFINITE_WORDING_CLAIM_RE`` propagates to EPC
     automatically. Definiteness is examiner-judgment-in-context, so the matched
@@ -964,7 +964,7 @@ def check_indefinite_wording_epc(claims: list[Claim]) -> list[CheckItem]:
 
     # Collect the ACTUAL matched wording per claim, not just the claim IDs
     # (#311: emitting "7, 9" with no terms is useless). Mirrors the
-    # flagged_phrases surfacing US/CN/TW already do — the FlaggedTermList
+    # flagged_phrases surfacing US/CN/TW already do - the FlaggedTermList
     # component renders details_params.flagged_phrases.items.
     flagged: list[int] = []
     phrases: list[dict] = []
@@ -1015,7 +1015,7 @@ def check_antecedent_basis_epc(claims: list[Claim]) -> tuple[list[CheckItem], li
     claims. EPC-specific dep-preamble variants ("any preceding claim",
     "any one of claims N to M") are pre-stripped from each claim's text
     before walking so the US dep-preamble exclusion logic doesn't get
-    confused — they still inform the dependency graph via the parser.
+    confused - they still inform the dependency graph via the parser.
 
     Returns (summary CheckItem list, raw issues for AnalysisResult).
     """

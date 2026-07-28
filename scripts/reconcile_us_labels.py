@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Reconcile US labels file with current walker output.
 
 Walker has evolved since Phase 2b ran (R7+, R30, R31, R32). The
@@ -113,7 +113,7 @@ def main() -> None:
             'category': 'unclassified',
             'protect': False,
             'confidence': 'walker_drift_post_phase2b',
-            'notes': ('Stage 3 seed — walker emits this but Phase 2b ensemble '
+            'notes': ('Stage 3 seed - walker emits this but Phase 2b ensemble '
                       'did not classify (post-Phase 2b walker mechanism).'),
             'resolved_by': None,
             'round': 0,

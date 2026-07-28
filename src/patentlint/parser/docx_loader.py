@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """DOCX document loader using python-docx.
 
 Extracts numbered paragraphs from patent .docx files, tracking paragraph and claim
-numberings, missing endings, and restrictive wording — mirroring the Java
+numberings, missing endings, and restrictive wording - mirroring the Java
 PatentAnalyzer's loadDocxContent() and processParagraph() logic.
 """
 
@@ -157,7 +157,7 @@ def _extract_numpr_claim_number(paragraph) -> int | None:
 
     Returns ``1`` as a sentinel when auto-numbering is present so the caller
     can backfill a synthetic ``"N. "`` prefix using a running counter
-    (matching the TW/CN claim parser contract — both parsers rely on an
+    (matching the TW/CN claim parser contract - both parsers rely on an
     Arabic-numeral + period prefix at paragraph start). Returns ``None``
     when the paragraph has no ``w:numPr`` or an explicit ``numId="0"``
     (which Word treats as "no numbering").
@@ -168,7 +168,7 @@ def _extract_numpr_claim_number(paragraph) -> int | None:
     num_id = _get_paragraph_num_id(paragraph)
     if num_id is None:
         return None
-    # Sentinel value — the caller assigns the actual sequential claim
+    # Sentinel value - the caller assigns the actual sequential claim
     # number. Word's numbering-start XML is not consulted because CN/TW
     # claim lists routinely restart per page-break section, which produces
     # misleading start values.
@@ -471,7 +471,7 @@ def load_docx_cn(file_path: str | Path) -> LoadedCnDocument:
         text = _normalize_unicode(para.text).strip()
         if text:
             current_paras.append(text)
-            # Parallel numPr flag — used by sections_cn to backfill
+            # Parallel numPr flag - used by sections_cn to backfill
             # synthetic "N. " prefixes on claim paragraphs that lack a
             # typed number prefix (ADR-109).
             current_numpr.append(_extract_numpr_claim_number(para) is not None)

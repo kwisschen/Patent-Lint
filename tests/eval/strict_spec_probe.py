@@ -1,12 +1,12 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# strict_spec_probe.py — the "most FPs?" experiment (ADR-159 Path-to-80).
+# strict_spec_probe.py - the "most FPs?" experiment (ADR-159 Path-to-80).
 #
 # WS-E1 proved BOOLEAN term-in-spec is dead on US (100% of claim terms appear
 # somewhere in the 225k-char spec → no signal). This tests the STRICTER,
 # untested hypothesis: a benign antecedent reference is one whose element is
-# *properly defined* in the specification — introduced with an indefinite
+# *properly defined* in the specification - introduced with an indefinite
 # article AND/OR bound to a reference numeral (the patent-drafting marker of a
 # real, defined element). A genuine §112 defect is an element undefined
 # EVERYWHERE. If the strict signal separates them, demoting findings whose

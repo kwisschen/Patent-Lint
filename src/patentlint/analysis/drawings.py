@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Brief Description of Drawings analysis.
 
 Figure counting, sequential ordering, single-figure format, and prior art reference detection.
@@ -119,7 +119,7 @@ def compute_missing_figure_numbers(text: str) -> list[int]:
     Mirrors the CN ``check_figures_sequential`` shape (cn_abstract.py:129):
     collect parent numbers, compute ``range(1, max+1) - actual``. Sub-figure
     suffix ordering violations are handled by ``are_figures_sequential`` and
-    by ``compute_suffix_violations`` — this helper reports only the
+    by ``compute_suffix_violations`` - this helper reports only the
     parent-integer gap subset (e.g. FIG. 1, FIG. 3 → ``[2]``).
     """
     refs = extract_figure_references(text)
@@ -142,14 +142,14 @@ def compute_suffix_violations(text: str) -> list[dict]:
 
     Each violation is one of:
       * ``{"parent": int, "kind": "missing_suffix", "first": str, "second": str}``
-        — one side of a same-parent pair lacks a suffix
+        one side of a same-parent pair lacks a suffix
         (e.g. FIG. 1 → FIG. 1A or FIG. 1A → FIG. 1)
       * ``{"parent": int, "kind": "gap", "after": "A", "expected": "B", "got": "C"}``
-        — adjacent suffixes skip a letter
+        adjacent suffixes skip a letter
       * ``{"parent": int, "kind": "out_of_order", "after": "C", "got": "A"}``
-        — adjacent suffix goes backwards
+        adjacent suffix goes backwards
 
-    Structural metadata only — letters and integers, no draft content.
+    Structural metadata only - letters and integers, no draft content.
     """
     refs = extract_figure_references(text)
     violations: list[dict] = []
@@ -389,15 +389,15 @@ def contains_prior_art_references_cn(text: str) -> bool:
 
     CNIPA 审查指南 第一部分第一章 §4.2 requires prior-art figures to be
     labeled. Only flags when a prior-art marker (现有技术/已知技术/背景技术)
-    appears in proximity to a figure number (图N) — this excludes the
+    appears in proximity to a figure number (图N) - this excludes the
     common 附图说明 boilerplate preamble (``为了更清楚地说明本发明实施例或
     现有技术…``) which mentions 现有技术 conceptually without labeling
     any figure.
     """
     if not _PRIOR_ART_MARKER_CN.search(text):
         return False
-    # Check each paragraph independently so the boilerplate preamble — which
-    # mentions 现有技术 but references no specific figure — doesn't trigger.
+    # Check each paragraph independently so the boilerplate preamble - which
+    # mentions 现有技术 but references no specific figure - doesn't trigger.
     for para in text.split("\n"):
         if _PRIOR_ART_LABEL_CN.search(para):
             return True

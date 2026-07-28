@@ -1,4 +1,4 @@
-# PatentLint — Check Inventory
+# PatentLint - Check Inventory
 
 Complete inventory of every check implemented in PatentLint, organized by report section.
 
@@ -6,18 +6,18 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
-| Tracked changes | — | FIX | `check.spec.trackedChanges.amend` | Document contains tracked changes (revisions) |
+| Tracked changes | - | FIX | `check.spec.trackedChanges.amend` | Document contains tracked changes (revisions) |
 | Title requirements | MPEP § 606, § 608.01 | FIX / REVIEW / PASS | `check.spec.title` | Title ≤500 chars, no trademarks/model numbers; advisory warning if >15 words |
 | Restrictive wording | § 112(b), MPEP § 2111.01(II) | REVIEW / PASS | `check.spec.restrictiveWording` | MPEP 2111.01(II) narrowing language in spec paragraphs: always / never / must / solely / every / required / essential / critical / vital / necessary / imperative / indispensable (Phase 9 #72b) |
 | Paragraph sequential | § 608.01(p) | FIX / PASS | `check.spec.paragraphSequential` / `check.spec.paragraphSequential.missing` | Paragraph numbers are sequential; no paragraph numbering found (patent documents only) |
 | Paragraph ending | § 608.01(p) | REVIEW / PASS | `check.spec.paragraphEnding` | Paragraphs have valid ending punctuation (formatting hygiene; §608.01(p) governs numbering, not termination) |
 | Sequence listing | § 2422 | FIX / PASS | `check.spec.sequenceListing` | SEQ ID NO referenced but no sequence listing statement |
-| Cross-reference | § 608.01 | REVIEW / PASS | `check.spec.crossReference` | Cross-reference section cites related applications — verify completeness |
-| Prior art citations | § 608.01(c) | REVIEW / PASS | `check.spec.priorArt` | Background section cites prior art — review characterizations |
+| Cross-reference | § 608.01 | REVIEW / PASS | `check.spec.crossReference` | Cross-reference section cites related applications - verify completeness |
+| Prior art citations | § 608.01(c) | REVIEW / PASS | `check.spec.priorArt` | Background section cites prior art - review characterizations |
 | Required sections | § 608.01(a) | FIX / PASS | `checks.required_sections_missing` / `checks.required_sections_pass` | Required sections per MPEP § 608.01(a) are present |
 | Optional sections | § 608.01(a) | REVIEW | `checks.optional_section_missing` | Optional section not found (informational) |
-| Scope-limiting wording | MPEP § 2111; Phillips v. AWH 415 F.3d 1303 | REVIEW / PASS | `check.spec.scopeLimitWording` | "the (present) invention" / "this invention" in spec body — scope-limit risk under Phillips claim construction |
-| Reference numeral consistency (D1) | MPEP § 608.01(g) | FIX / PASS | `check.spec.numeralConsistency` | Same reference numeral used with multiple disjoint element names — drafter typo / copy-paste error |
+| Scope-limiting wording | MPEP § 2111; Phillips v. AWH 415 F.3d 1303 | REVIEW / PASS | `check.spec.scopeLimitWording` | "the (present) invention" / "this invention" in spec body - scope-limit risk under Phillips claim construction |
+| Reference numeral consistency (D1) | MPEP § 608.01(g) | FIX / PASS | `check.spec.numeralConsistency` | Same reference numeral used with multiple disjoint element names - drafter typo / copy-paste error |
 | Drawings overview † | § 608.02 | REVIEW / PASS | `check.spec.drawings` | Composite drawings summary (figures count, sequential, prior art, single-figure) |
 
 ## Claims
@@ -27,7 +27,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Restrictive absolutes | § 2173.01 | REVIEW / PASS | `check.claims.restrictiveAbsolutes` | Absolute terms (must, always, never, etc.) |
 | Indefinite wording | § 2173.05(b) | REVIEW / PASS | `check.claims.indefiniteWording` | Relative/indefinite terms (may, substantially, generally, etc.) |
 | Claims sequential | § 608.01(m) | FIX / PASS | `check.claims.sequential` | Claim numbers are sequential |
-| Multiple dependents | § 608.01(n) | REVIEW / PASS | `check.claims.multipleDependent` | Multiple-dependent claims found — fee + chain reminder |
+| Multiple dependents | § 608.01(n) | REVIEW / PASS | `check.claims.multipleDependent` | Multiple-dependent claims found - fee + chain reminder |
 | Chained multi-dep | § 112(e) | FIX / PASS | `check.claims.chainedMultiDep` | Multi-dep claim depending on another multi-dep claim |
 | Self-dependent | § 112(d) | FIX / PASS | `check.claims.selfDependent` | Self-dependent claims found |
 | Missing period | § 608.01(m) | FIX | `claims.missingPeriod` | Per-claim: claim does not end with a period |
@@ -39,21 +39,21 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Preamble consistency | § 608.01(m) / § 112(d) | FIX / REVIEW / PASS | `checks.preamble_*` | Dependent claim preambles match independent claim entity type |
 | Indefinite article | § 608.01(m) | FIX | `checks.preamble_indefinite_article` | Dependent claim uses "A"/"An" instead of "The" |
 | Transition phrase | § 112 | FIX / PASS | `check.claims.missingTransition` / `check.claims.transitionsPresent` | Every independent claim has a transitional phrase |
-| Jepson prior art | § 2129 | REVIEW | `claims.jepsonPriorArt` | Jepson format — preamble elements treated as admitted prior art |
+| Jepson prior art | § 2129 | REVIEW | `claims.jepsonPriorArt` | Jepson format - preamble elements treated as admitted prior art |
 | CRM non-transitory | § 101 | FIX | `claims.crmNonTransitory` | Computer-readable medium missing 'non-transitory' qualifier |
 | Markush transition | § 2117 | FIX | `claims.markushOpenTransition` | Markush group uses open-ended transition instead of 'consisting of' (improper Markush = substantive rejection on the merits per MPEP § 2117) |
 | Omnibus claim | § 112(b) | FIX | `claims.omnibusClaim` | Claim references description/drawings without specific features |
-| Special formats pass | — | PASS | `claims.specialFormatsPass` | No special claim format issues detected |
+| Special formats pass | - | PASS | `claims.specialFormatsPass` | No special claim format issues detected |
 | Spec support | § 112(a) | FIX / PASS | `checks.spec_support_unsupported_terms` / `checks.spec_support_pass` | Claim terms found/not found in specification (3-tier matching) |
 | Excess-claims fee threshold | 37 CFR 1.16(h)/(i) + 35 U.S.C. § 41(a)(2) | REVIEW / PASS | `check.claims.excessClaims` | Total claims > 20 or independent claims > 3 trigger USPTO per-claim fees |
-| Claims overview † | — | PASS | `check.claims.overview` | Summary: independent, dependent, and total claim counts |
+| Claims overview † | - | PASS | `check.claims.overview` | Summary: independent, dependent, and total claim counts |
 
 ## Brief Description of Drawings
 
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
 | Single-figure labeling | § 608.02 | FIX / PASS | `check.drawings.singleFigure` | Single-figure patent uses correct labeling ("The Figure") |
-| Prior art references | § 608.02 | REVIEW / PASS | `check.drawings.priorArt` | Prior art references found in drawings description — verify figure labeling |
+| Prior art references | § 608.02 | REVIEW / PASS | `check.drawings.priorArt` | Prior art references found in drawings description - verify figure labeling |
 | Figures sequential | § 608.02 | FIX / PASS | `check.drawings.sequential` | Figures are in sequential order |
 | Figure count † | § 608.02 | PASS | `check.drawings.count` | Number of figures found |
 | Cross-ref consistency | § 608.02 | FIX / PASS | `checks.figure_xref_*` | Figure references consistent between Brief Description and Detailed Description |
@@ -66,7 +66,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Merit language | § 608.01(b) | REVIEW / PASS | `check.abstract.meritLanguage` | Purported-merit or self-referential language (novel, innovative, present invention, etc.) |
 | Structure | § 608.01(b) | FIX / PASS | `check.abstract.structure` | Abstract is single paragraph with valid ending |
 | Implied phrases | § 608.01(b) | FIX / PASS | `check.abstract.impliedPhrases` | Abstract contains 'disclosure' or 'provided' |
-| Word count | § 608.01(b) | FIX / PASS | `check.abstract.wordCount` | Abstract word count within 50–150 range |
+| Word count | § 608.01(b) | FIX / PASS | `check.abstract.wordCount` | Abstract word count within 50-150 range |
 
 ---
 
@@ -80,7 +80,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
-| Tracked changes | — | FIX | `check.cn.spec.trackedChanges.amend` | Document contains tracked changes (revisions) |
+| Tracked changes | - | FIX | `check.cn.spec.trackedChanges.amend` | Document contains tracked changes (revisions) |
 | Required sections | 专利法实施细则 §20 | FIX / PASS | `check.cn.spec.requiredSections` | Required sections present (技术领域, 背景技术, 发明内容, 具体实施方式) |
 | Section ordering | 专利法实施细则 §20 | FIX / PASS | `check.cn.spec.sectionOrdering` | Sections in prescribed order |
 | Paragraph numbering | 审查指南 | FIX / PASS | `check.cn.spec.paragraphNumbering` | XML: sequential `<p num>` tags; docx: `[NNNN]` format present |
@@ -89,7 +89,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Patent type terminology | 审查指南 | REVIEW / PASS | `check.cn.spec.patentTypeTerminology` | 本发明 vs 本实用新型 consistency |
 | Title requirements | 审查指南 第一部分第一章 | FIX / PASS | `check.cn.spec.title` | Title ≤25 CJK chars, no trademarks/model numbers |
 | Spec must not reference claims | 专利法实施细则 §20 | FIX / PASS | `check.cn.spec.claimReference` | No 如权利要求N所述 in specification |
-| Reference numeral consistency (D1) | 专利法实施细则 §21 第2款; 审查指南 §3.3.1 | FIX / PASS | `check.cn.spec.numeralConsistency` | Same drawing reference (附图标记) used with multiple disjoint component names — 同一附图标记应当指代同一构件 |
+| Reference numeral consistency (D1) | 专利法实施细则 §21 第2款; 审查指南 §3.3.1 | FIX / PASS | `check.cn.spec.numeralConsistency` | Same drawing reference (附图标记) used with multiple disjoint component names - 同一附图标记应当指代同一构件 |
 
 ## CN Claims (权利要求)
 
@@ -104,25 +104,25 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Reference numeral parentheses | 审查指南 | REVIEW / PASS | `check.cn.claims.refNumeralParens` | Reference numerals in parentheses, e.g. (101) |
 | Subject name consistency | 审查指南 第二部分第二章 | REVIEW / PASS | `check.cn.claims.subjectConsistency` | Dependent claim subject matches parent |
 | Transition phrase | 审查指南 | REVIEW / PASS | `check.cn.claims.transitionPhrase` | Independent claims contain 其特征在于 |
-| TW terminology | — | FIX / PASS | `check.cn.claims.twTerminology` | Flags 请求项 (TIPO) vs 权利要求 (CNIPA) — jurisdictional contamination = filing-fatal |
+| TW terminology | - | FIX / PASS | `check.cn.claims.twTerminology` | Flags 请求项 (TIPO) vs 权利要求 (CNIPA) - jurisdictional contamination = filing-fatal |
 | Claims must not reference spec/drawings | 审查指南 第二部分第二章 | FIX / PASS | `check.cn.claims.specReference` | No references to 说明书 or 附图 in claims |
 | Multi-dep on multi-dep | 专利法实施细则 §25 第3款 | FIX / PASS | `check.cn.claims.multiMultiDep` | Multi-dep claim cannot reference another multi-dep |
 | Dependent claim ordering | 审查指南 第二部分第二章 | FIX / PASS | `check.cn.claims.dependentOrdering` | Dependents grouped after their independent claim |
 | Component connection relationships | 审查指南 §3.2.1 + 专利法 §26.4 | REVIEW / PASS | `check.cn.claims.connectionRelationships` | Independent device/system claims must describe how their listed components connect (carve-outs: method, CRM, MPF, composition) |
 | Antecedent basis (引用基础) | 审查指南 第二部分第二章 §3.2.2 | FIX / PASS | `check.cn.claims.antecedentBasis` | BFS ancestor-chain walker with cycle protection; char-bigram Jaccard tokenization with CJK ordinal guard pre-filter; did-you-mean suggestion layer on borderline misses |
-| Specification support (说明书支持) | 专利法 §26 第4款 + 审查指南 第二部分第二章 §3.2.1 | FIX / PASS | `check.cn.claims.specSupport` | 3-tier match (aggressively-normalized exact → raw exact → ±30-char CJK bigram window) for every claim intro against technical_field + summary + detailed_description (背景技术 excluded per §2.2.3 — prior-art context, not disclosure). Inventory hygiene: paren + bare-numeral reference strip, leading preposition strip (于/到/在/自/由/从/向/对), mid-phrase reference-prefix recovery, conjunction split including disjunctive 或 (X或Y → X, Y), length cap 12, existential-verb leading reject (设有/装有/配置有/设置有), CN-drafting trailing-token strip (之间/位于/构成/设置 etc.), tw_contamination skip (该等/该些 parser artifacts not double-reported) |
+| Specification support (说明书支持) | 专利法 §26 第4款 + 审查指南 第二部分第二章 §3.2.1 | FIX / PASS | `check.cn.claims.specSupport` | 3-tier match (aggressively-normalized exact → raw exact → ±30-char CJK bigram window) for every claim intro against technical_field + summary + detailed_description (背景技术 excluded per §2.2.3 - prior-art context, not disclosure). Inventory hygiene: paren + bare-numeral reference strip, leading preposition strip (于/到/在/自/由/从/向/对), mid-phrase reference-prefix recovery, conjunction split including disjunctive 或 (X或Y → X, Y), length cap 12, existential-verb leading reject (设有/装有/配置有/设置有), CN-drafting trailing-token strip (之间/位于/构成/设置 etc.), tw_contamination skip (该等/该些 parser artifacts not double-reported) |
 | Omnibus claim | 审查指南 第二部分第二章 §3.3 | FIX / PASS | `check.cn.claims.omnibus` | Claim references 说明书/附图 without reciting specific technical features |
-| Markush open transition | 审查指南 第二部分第十章 §9.3 | FIX / PASS | `check.cn.claims.markushOpenTransition` | Markush group uses 包括/具有/含有 instead of 组成的 (closed transition) — improper Markush = substantive rejection per §9.3 |
-| CRM non-transitory | 专利法 §25 + 审查指南 第二部分第九章 | FIX / PASS | `check.cn.claims.crmNonTransitory` | Independent claim to 计算机可读介质 / 存储介质 / 机器可读介质 missing 非暂态 / 非暂时性 qualifier — transitory signals fall outside §25 patentable subject matter |
+| Markush open transition | 审查指南 第二部分第十章 §9.3 | FIX / PASS | `check.cn.claims.markushOpenTransition` | Markush group uses 包括/具有/含有 instead of 组成的 (closed transition) - improper Markush = substantive rejection per §9.3 |
+| CRM non-transitory | 专利法 §25 + 审查指南 第二部分第九章 | FIX / PASS | `check.cn.claims.crmNonTransitory` | Independent claim to 计算机可读介质 / 存储介质 / 机器可读介质 missing 非暂态 / 非暂时性 qualifier - transitory signals fall outside §25 patentable subject matter |
 | Excess-claims fee threshold | 实施细则 §93 + CNIPA 收费办法 | REVIEW / PASS | `check.cn.claims.excessClaims` | Total claim count > 10 triggers CNIPA per-claim fee (¥150 per excess claim for invention patents) |
-| Indefinite wording | 审查指南 第二部分第二章 §3.2.2 (清楚) | REVIEW / PASS | `check.cn.claims.indefiniteWording` | Exemplary/preferential terms (例如, 诸如, 较佳, 优选) — conservative list; 等/约 excluded as corpus-noise. Mirror of US §2173.05(b)/(d) |
+| Indefinite wording | 审查指南 第二部分第二章 §3.2.2 (清楚) | REVIEW / PASS | `check.cn.claims.indefiniteWording` | Exemplary/preferential terms (例如, 诸如, 较佳, 优选) - conservative list; 等/约 excluded as corpus-noise. Mirror of US §2173.05(b)/(d) |
 
 ## CN Abstract (摘要)
 
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
 | Character count | 专利法实施细则 §26 | FIX / PASS | `check.cn.abstract.charCount` | Abstract ≤300 Chinese characters |
-| Title match | 审查指南 | REVIEW / PASS | `check.cn.abstract.titleMatch` | 发明名称 appears in abstract (compound titles split on 以及/及/和/与 — `passCompound` when all halves ≥2 CJK chars appear, Phase 9 #72a) |
+| Title match | 审查指南 | REVIEW / PASS | `check.cn.abstract.titleMatch` | 发明名称 appears in abstract (compound titles split on 以及/及/和/与 - `passCompound` when all halves ≥2 CJK chars appear, Phase 9 #72a) |
 | Commercial language | 专利法实施细则 §26 | FIX / PASS | `check.cn.abstract.commercialLanguage` | No 最优, 最佳, 世界领先, etc. |
 
 ## CN Drawings (附图)
@@ -130,7 +130,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
 | Figure count † | 审查指南 | PASS | `check.cn.drawings.figureCount` | Number of figures found |
-| Prior art references | 审查指南 第一部分第一章 §4.2 | REVIEW / PASS | `check.cn.drawings.priorArt` | Prior-art references found in 附图说明 — verify figure labeling |
+| Prior art references | 审查指南 第一部分第一章 §4.2 | REVIEW / PASS | `check.cn.drawings.priorArt` | Prior-art references found in 附图说明 - verify figure labeling |
 | Figures sequential | 审查指南 | FIX / PASS | `check.cn.drawings.figuresSequential` | Figure numbers form a contiguous 1..N set (sub-figure suffixes collapsed) |
 
 ---
@@ -147,7 +147,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Patent type terminology | 專利審查基準 | REVIEW / PASS | `check.tw.spec.patentTypeTerminology` | 本發明 vs 本新型 consistency |
 | Title requirements | 專利審查基準 | FIX / PASS | `check.tw.spec.title` | Title concise, no trademarks or model numbers |
 | Spec must not reference claims | 專利法施行細則 §17 | FIX / PASS | `check.tw.spec.claimReference` | No 如請求項N所述 in specification |
-| Reference symbol consistency (D1) | 專利法施行細則 §19 第2款 | FIX / PASS | `check.tw.spec.numeralConsistency` | Same reference symbol used with multiple disjoint element names — 同一代表符號應指稱同一元件 |
+| Reference symbol consistency (D1) | 專利法施行細則 §19 第2款 | FIX / PASS | `check.tw.spec.numeralConsistency` | Same reference symbol used with multiple disjoint element names - 同一代表符號應指稱同一元件 |
 | 符號說明 presence | 專利法施行細則 §17 | FIX / PASS | `check.tw.spec.symbolTablePresence` | 符號說明 required when 圖式簡單說明 exists |
 | 符號說明 numeral coverage (D3) | 專利法施行細則 §19 第2款 | FIX / PASS | `check.tw.spec.symbolTableCoverage` | All reference symbols used in spec body must be declared in 符號說明 |
 | 符號說明 vs spec consistency | 專利審查基準 | REVIEW / PASS | `check.tw.spec.symbolTableConsistency` | Symbols in 符號說明 appear in 實施方式 |
@@ -164,10 +164,10 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Circular dependency | 專利法施行細則 §18 | FIX / PASS | `check.tw.claims.circularDependency` | No circular dependency chains |
 | Forward dependency | 專利法施行細則 §18 | FIX / PASS | `check.tw.claims.forwardDependency` | Dependent claim only references preceding claims |
 | Single sentence | 專利法施行細則 §18 | FIX / PASS | `check.tw.claims.singleSentence` | Each claim has exactly one 。 at end |
-| Reference numerals in parentheses | 專利法施行細則 §19 第3款 | FIX / PASS | `check.tw.claims.refNumeralParens` | Reference numerals enclosed in parentheses — §19 第3款 mandates parens when numerals are used |
+| Reference numerals in parentheses | 專利法施行細則 §19 第3款 | FIX / PASS | `check.tw.claims.refNumeralParens` | Reference numerals enclosed in parentheses - §19 第3款 mandates parens when numerals are used |
 | Subject name consistency | 專利審查基準 | REVIEW / PASS | `check.tw.claims.subjectConsistency` | Dependent claim subject matches parent |
 | Transition phrase detection | 專利法施行細則 §20 | REVIEW / PASS | `check.tw.claims.transitionPhrase` | Independent claims contain 其特徵在於 or equivalent |
-| CN terminology flag | — | FIX / PASS | `check.tw.claims.cnTerminology` | Flags CNIPA terminology in TW document — jurisdictional contamination = filing-fatal |
+| CN terminology flag | - | FIX / PASS | `check.tw.claims.cnTerminology` | Flags CNIPA terminology in TW document - jurisdictional contamination = filing-fatal |
 | Claims must not reference spec/drawings | 專利法施行細則 §19 | FIX / PASS | `check.tw.claims.specDrawingRef` | No 如說明書所述, 如圖所示 in claims |
 | Multi-multi dependency prohibited | 專利法施行細則 §18 | FIX / PASS | `check.tw.claims.multiDepOnMultiDep` | Multi-dep cannot depend on another multi-dep |
 | Multi-dep alternative form | 專利法施行細則 §18 | FIX / PASS | `check.tw.claims.multiDepAlternative` | Multi-dep claims must use alternative form |
@@ -177,17 +177,17 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Specification support (說明書支持) | 專利法 §26 第3項 | FIX / PASS | `check.tw.claims.specSupport` | 4-tier match (symbol-table whitelist + representative-drawing symbols → aggressively-normalized exact → raw exact → ±30-char CJK bigram window) for every claim intro against technical_field + prior_art + disclosure + embodiment. Inventory-level hygiene: TIPO §19 trailing parenthetical reference numerals stripped, leading preposition strip (於/到/在/自/由), mid-phrase reference-prefix recovery, conjunction split (X及Y → X, Y), length cap 12, leading-verb + interior clause-marker reject (ADR-138) |
 | Component connection relationships | 專利審查基準 §2.4 | REVIEW / PASS | `check.tw.claims.connectionRelationships` | Independent apparatus/system claims must describe how their listed components are arranged (carve-outs: method, CRM, MPF, composition) |
 | Excess-claims fee threshold | 專利規費收取準則 §5 | REVIEW / PASS | `check.tw.claims.excessClaims` | Total claim count > 10 triggers TIPO per-claim fee (NT$800 per excess claim for invention patents) |
-| Indefinite wording | 專利審查基準 第二篇第一章 (明確) | REVIEW / PASS | `check.tw.claims.indefiniteWording` | Exemplary/preferential terms (例如, 諸如, 較佳, 優選) — conservative list; 等/約 excluded as corpus-noise. Mirror of US §2173.05(b)/(d) |
-| Markush open transition | 專利審查基準 第二篇第十章 | FIX / PASS | `check.tw.claims.markushOpenTransition` | Markush group uses 包括/具有/含有 instead of 組成 (closed transition) — improper Markush = substantive rejection on the merits |
+| Indefinite wording | 專利審查基準 第二篇第一章 (明確) | REVIEW / PASS | `check.tw.claims.indefiniteWording` | Exemplary/preferential terms (例如, 諸如, 較佳, 優選) - conservative list; 等/約 excluded as corpus-noise. Mirror of US §2173.05(b)/(d) |
+| Markush open transition | 專利審查基準 第二篇第十章 | FIX / PASS | `check.tw.claims.markushOpenTransition` | Markush group uses 包括/具有/含有 instead of 組成 (closed transition) - improper Markush = substantive rejection on the merits |
 | Omnibus claim | 專利法 §26 第3項 + 專利審查基準 | FIX / PASS | `check.tw.claims.omnibus` | Claim references 說明書/附圖 without reciting specific technical features |
-| CRM non-transitory | 專利法 §21 | FIX / PASS | `check.tw.claims.crmNonTransitory` | Independent claim to 電腦可讀媒體 / 儲存媒體 / 機器可讀媒體 missing 非暫態 / 非暫時性 qualifier — transitory signals fall outside §21 patentable subject matter |
+| CRM non-transitory | 專利法 §21 | FIX / PASS | `check.tw.claims.crmNonTransitory` | Independent claim to 電腦可讀媒體 / 儲存媒體 / 機器可讀媒體 missing 非暫態 / 非暫時性 qualifier - transitory signals fall outside §21 patentable subject matter |
 
 ## TW Abstract (摘要)
 
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
-| Character count | 專利法施行細則 §21 | FIX / PASS | `check.tw.abstract.charCount` | Abstract within 250 characters — §21 hard limit |
-| Title match | 專利審查基準 | REVIEW / PASS | `check.tw.abstract.titleMatch` | 發明名稱/新型名稱 appears in abstract (compound titles split on 以及/及/和/與 — `passCompound` when all halves ≥2 CJK chars appear, Phase 9 #72a) |
+| Character count | 專利法施行細則 §21 | FIX / PASS | `check.tw.abstract.charCount` | Abstract within 250 characters - §21 hard limit |
+| Title match | 專利審查基準 | REVIEW / PASS | `check.tw.abstract.titleMatch` | 發明名稱/新型名稱 appears in abstract (compound titles split on 以及/及/和/與 - `passCompound` when all halves ≥2 CJK chars appear, Phase 9 #72a) |
 | Commercial language | 專利法施行細則 §21 | FIX / PASS | `check.tw.abstract.commercialLanguage` | No 商業性宣傳用語 (最優, 最佳, 世界領先, etc.) |
 | Representative drawing | 專利法施行細則 §21 | REVIEW / PASS | `check.tw.abstract.representativeDrawing` | 代表圖 designation present when drawings exist |
 
@@ -196,7 +196,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Check | Reference | Severity | message_key | Description |
 |-------|-----------|----------|-------------|-------------|
 | 符號說明 vs 代表圖 consistency | 專利審查基準 | REVIEW / PASS | `check.tw.crossRef.symbolVsRepDrawing` | Symbols in 代表圖之符號簡單說明 match 符號說明 |
-| Section header bracket format | 專利法施行細則 §17 | FIX / PASS | `check.tw.crossRef.bracketFormat` | Section headers use proper 【】brackets — §17 strict bracket format |
+| Section header bracket format | 專利法施行細則 §17 | FIX / PASS | `check.tw.crossRef.bracketFormat` | Section headers use proper 【】brackets - §17 strict bracket format |
 
 ## TW Drawings (圖式)
 
@@ -211,7 +211,7 @@ Complete inventory of every check implemented in PatentLint, organized by report
 |-------|-----------|----------|-------------|-------------|
 | Required sections | Art. 78 + Rule 41 + Rule 42(1) EPC | FIX / PASS | `check.epc.spec.requiredSections` | Title, description (any Rule 42(1) sub-section), claims, abstract present |
 | Section ordering | Rule 42(1) EPC | FIX / PASS | `check.epc.spec.sectionOrdering` | Description sub-sections in (a) technical field → (b) background art → (c) summary → (d) drawings description → (e) detailed description order |
-| Paragraph numbering | EPO Guidelines F-II § 4.5 | REVIEW / PASS | `check.epc.spec.paragraphNumbering` | Sequential [NNNN]-style paragraph numbering when present (advisory — EPC does not mandate paragraph numbering) |
+| Paragraph numbering | EPO Guidelines F-II § 4.5 | REVIEW / PASS | `check.epc.spec.paragraphNumbering` | Sequential [NNNN]-style paragraph numbering when present (advisory - EPC does not mandate paragraph numbering) |
 | Paragraph ending | (drafting hygiene) | REVIEW / PASS | `check.epc.spec.paragraphEnding` | Description-body paragraphs end with standard terminal punctuation |
 | Title required | Rule 41(2)(b) EPC | FIX / VERIFY / PASS | `check.epc.spec.titleRequired` | Title present and concise (< 500 chars) |
 | Figure-reference consistency | Rule 46(2)(h) EPC | REVIEW / PASS | `check.epc.spec.figureRefConsistency` | Figures declared in brief description match figures referenced in detailed description |
@@ -244,14 +244,14 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Multi-dep on multi-dep | Rule 43(4) EPC | FIX / PASS | `check.epc.claims.multiDepOnMultiDep` | Multi-dependent claim cannot depend on another multi-dependent claim |
 | Markush format | EPO Guidelines F-IV § 4.20 | REVIEW / PASS | `check.epc.claims.markushFormat` | Markush groups use the closed "selected from the group consisting of" form |
 | Means-plus-function language | EPO Guidelines F-IV § 6.5 + Art. 84 EPC | REVIEW / PASS | `check.epc.claims.meansPlusFunction` | Functional 'means for / step for' language flagged for Art. 84 support and that the skilled person can identify the means without undue burden |
-| CRM non-transitory | Art. 52(2)(c) EPC + EPO Guidelines G-II § 3.6 | REVIEW / PASS | `check.epc.claims.crmNonTransitory` | Independent claim to computer-readable medium missing 'non-transitory' — transitory signals risk Art. 52(2) objection on technical-character grounds (T 0258/03) |
-| Omnibus claim | Art. 84 EPC + EPO Guidelines F-IV § 4.17 | FIX / PASS | `check.epc.claims.omnibus` | Claim references description/drawings ("substantially as shown / described") instead of reciting features — Art. 84 clarity objection |
+| CRM non-transitory | Art. 52(2)(c) EPC + EPO Guidelines G-II § 3.6 | REVIEW / PASS | `check.epc.claims.crmNonTransitory` | Independent claim to computer-readable medium missing 'non-transitory' - transitory signals risk Art. 52(2) objection on technical-character grounds (T 0258/03) |
+| Omnibus claim | Art. 84 EPC + EPO Guidelines F-IV § 4.17 | FIX / PASS | `check.epc.claims.omnibus` | Claim references description/drawings ("substantially as shown / described") instead of reciting features - Art. 84 clarity objection |
 | Independent-claim count | Rule 43(2) + Rule 43(3) EPC | REVIEW / PASS | `check.epc.claims.independentClaimCount` | One independent claim per category (advisory; Rule 43(3) exceptions not auto-detected) |
-| Two-part form | Rule 43(1) EPC | REVIEW / PASS | `check.epc.claims.twoPartForm` | Preamble + "characterised in that" form (advisory — Rule 43(1) is conditional) |
-| Antecedent basis (walker) | Art. 84 EPC + EPO Guidelines F-IV § 4.5 | REVIEW / PASS | `check.epc.claims.antecedentBasis` | "the X" without prior "a X" — walker port from US with EPC dep-preamble pre-stripping |
+| Two-part form | Rule 43(1) EPC | REVIEW / PASS | `check.epc.claims.twoPartForm` | Preamble + "characterised in that" form (advisory - Rule 43(1) is conditional) |
+| Antecedent basis (walker) | Art. 84 EPC + EPO Guidelines F-IV § 4.5 | REVIEW / PASS | `check.epc.claims.antecedentBasis` | "the X" without prior "a X" - walker port from US with EPC dep-preamble pre-stripping |
 | Specification support (walker) | Art. 84 EPC | REVIEW / PASS | `check.epc.claims.specSupport` | Claim terms supported by description body |
 | Restrictive absolutes | EPO Guidelines F-IV § 4.7 | REVIEW / PASS | `check.epc.claims.restrictiveAbsolutes` | Absolute terms (must, always, never, essential, etc.) flagged |
-| Indefinite wording | EPO Guidelines F-IV § 4.6 + Art. 84 EPC | REVIEW / PASS | `check.epc.claims.indefiniteWording` | Relative/indefinite/exemplary terms (may, substantially, such as, e.g., etc.) — mirror of US § 2173.05(b)/(d), shared regex |
+| Indefinite wording | EPO Guidelines F-IV § 4.6 + Art. 84 EPC | REVIEW / PASS | `check.epc.claims.indefiniteWording` | Relative/indefinite/exemplary terms (may, substantially, such as, e.g., etc.) - mirror of US § 2173.05(b)/(d), shared regex |
 | Claim punctuation | EPO Guidelines F-IV § 4.10 | FIX / PASS | `check.epc.claims.punctuation` | Each claim ends with a single period; no misplaced periods inside the body |
 | Excess-claims fee threshold | Rule 45 EPC + Rule 162(1) EPC | REVIEW / PASS | `check.epc.claims.excessClaims` | Total claim count > 15 triggers Rule 45 EPC per-claim fees (claims 16-50, higher rate 51+) |
 
@@ -274,9 +274,9 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 ---
 
-## Pre-analysis gate — jurisdiction detection
+## Pre-analysis gate - jurisdiction detection
 
-Before any check runs, every upload passes through a jurisdiction-aware document-type detector. When the detector rejects an input as "not a [selected jurisdiction] patent," the frontend renders `NonPatentBanner` with a "Show Results Anyway" bypass button — the detector is advisory, not a hard gate.
+Before any check runs, every upload passes through a jurisdiction-aware document-type detector. When the detector rejects an input as "not a [selected jurisdiction] patent," the frontend renders `NonPatentBanner` with a "Show Results Anyway" bypass button - the detector is advisory, not a hard gate.
 
 | Jurisdiction | Detector | Accepts | Rejects |
 |---|---|---|---|

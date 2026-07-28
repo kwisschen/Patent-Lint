@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 /* global __BUILD_HASH__ */
 import { useEffect, useRef } from 'react'
 import { toast } from 'sonner'
@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 // Session-scoped version-specific dismissal key. Stores the buildHash
 // that the user dismissed. The next time a check runs, we only suppress
-// the toast if the current server buildHash matches the dismissed one —
+// the toast if the current server buildHash matches the dismissed one -
 // so dismissing version Y doesn't silence a toast for version Z. Without
 // version-scoping, a single dismissal in the session permanently blocked
 // all future update prompts, which broke the update flow for anyone who
@@ -39,7 +39,7 @@ const TOAST_ID = 'patentlint-update-available'
 // tabs for <5 s can still click the "Check for updates" button to fire
 // manually).
 //
-// History: was 30 s — too long, demo verifiers alt-tabbing for 5-10 s
+// History: was 30 s - too long, demo verifiers alt-tabbing for 5-10 s
 // saw nothing fire and assumed the claim was wrong. An earlier 15 min
 // iteration failed entirely on Windows long-running tabs (users
 // switched back before the gap cleared).
@@ -52,7 +52,7 @@ const MIN_HIDDEN_MS_FOR_CHECK = 5 * 1000
  * Design notes:
  * - No polling, no background heartbeat. Version checks only fire on
  *   explicit user interaction (page load or tab focus) to preserve the
- *   zero-upload security story — a paranoid user watching DevTools will
+ *   zero-upload security story - a paranoid user watching DevTools will
  *   only see network activity when they actively engage with the site.
  * - Mount-time checks (initial load, reload) always fire. Locale-switch
  *   re-renders are gated by hasMountChecked so a pure UI-language change
@@ -75,7 +75,7 @@ export function useUpdateCheck() {
   // Tracks whether the mount-time check has already fired in this tab
   // session. Persists across effect re-runs (e.g., when [t] changes due
   // to a locale switch) so locale switching does NOT trigger a fresh
-  // network call — that would flicker the honest network indicator
+  // network call - that would flicker the honest network indicator
   // during a pure UI-language change and betray the trust property.
   const hasMountChecked = useRef(false)
   // Timestamp of the last visibility-hidden event. Used to measure how
@@ -87,7 +87,7 @@ export function useUpdateCheck() {
     // Scrub the ?_r=<ts> cache-bust query param that the Reload action
     // appends to the HTML document URL. Without this, the address bar
     // retains the timestamp after reload (bookmark-ugly, not a privacy
-    // concern — the ts is a pure cache-buster, same class as ?t=<ts> on
+    // concern - the ts is a pure cache-buster, same class as ?t=<ts> on
     // version.json). Runs unconditionally; cheap no-op when absent.
     if (typeof window !== 'undefined' && window.location.search.includes('_r=')) {
       const url = new URL(window.location.href)
@@ -96,7 +96,7 @@ export function useUpdateCheck() {
       window.history.replaceState({}, '', cleaned)
     }
 
-    // Skip in dev — version.json is only generated in production builds
+    // Skip in dev - version.json is only generated in production builds
     if (import.meta.env.DEV) return
 
     const dismissedFor = () => sessionStorage.getItem(DISMISSED_KEY) || ''
@@ -122,7 +122,7 @@ export function useUpdateCheck() {
         // within the last DISMISSAL_RESHOW_MS. After the grace period,
         // re-show so accidentally-dismissed updates don't silently hide.
         // A newer deploy breaks the suppression immediately via hash
-        // mismatch — the time window only affects "same hash" suppression.
+        // mismatch - the time window only affects "same hash" suppression.
         if (
           data.buildHash === dismissedFor() &&
           Date.now() - dismissedAtMs() < DISMISSAL_RESHOW_MS
@@ -134,7 +134,7 @@ export function useUpdateCheck() {
         // hash, not whatever the latest is at dismissal time (which
         // could race with a concurrent check).
         const targetHash = data.buildHash
-        // Sonner's onDismiss fires on ANY dismissal — including the
+        // Sonner's onDismiss fires on ANY dismissal - including the
         // action button click that triggers Reload. If we let onDismiss
         // unconditionally call recordDismissal, clicking Reload silently
         // stores the NEW hash as "dismissed", and a stale-HTML reload
@@ -153,7 +153,7 @@ export function useUpdateCheck() {
               // Force a fresh HTML fetch. window.location.reload() may
               // serve a cached document (browser or CDN edge), which
               // would re-execute the old bundle with the stale build
-              // hash baked in — the toast then reappears on the next
+              // hash baked in - the toast then reappears on the next
               // check. A replace() with a one-shot cache-bust query
               // forces the document request to bypass HTTP cache.
               const reloadWithCacheBust = () => {
@@ -193,14 +193,14 @@ export function useUpdateCheck() {
           },
         })
       } catch (e) {
-        // Silent fail — offline, version.json missing, CORS, etc.
+        // Silent fail - offline, version.json missing, CORS, etc.
       }
     }
 
     // Run on TRUE mount only. Initial load / reload starts a fresh React
     // tree, so hasMountChecked.current is false → check fires. Effect
     // re-runs from a locale switch (where [t] changed but the component
-    // didn't remount) hit the ref guard and skip — locale changes must
+    // didn't remount) hit the ref guard and skip - locale changes must
     // not trigger a network call, otherwise the network indicator would
     // flicker red on a pure UI-language change and mislead the user.
     if (!hasMountChecked.current) {
@@ -213,7 +213,7 @@ export function useUpdateCheck() {
     // the "I walked away and came back" case (push a deploy, wait for
     // CI, switch back → check fires → toast if mismatch) AND the demo
     // verification case (a hiring manager / patent attorney alt-tabs
-    // for 5-10 seconds to verify the trust-copy claim — at 5 s
+    // for 5-10 seconds to verify the trust-copy claim - at 5 s
     // threshold, that demo reliably fires). Sub-second tab-flips and
     // accidental focus loss stay silent (no flicker).
     const handleVisibilityChange = () => {
@@ -232,7 +232,7 @@ export function useUpdateCheck() {
 
     // bfcache-restoration handler. iOS WebKit (Safari + Chrome via WKWebView)
     // aggressively suspends backgrounded tabs and restores them from a page
-    // snapshot when reopened — bypassing both the mount-time check and, in
+    // snapshot when reopened - bypassing both the mount-time check and, in
     // some cases, the visibilitychange path. The user can sit on a stale
     // build for days, clicking the update toast without effect, because the
     // restored snapshot's reload navigation can itself be bfcache-restored.
@@ -240,12 +240,12 @@ export function useUpdateCheck() {
     // `pageshow` fires on every page display; the `persisted` flag is true
     // only when the page was restored from bfcache (vs. a fresh load). When
     // we detect that path, skip the toast UI entirely and force a hard
-    // reload if the build is stale — bfcache-restore is by definition "user
+    // reload if the build is stale - bfcache-restore is by definition "user
     // just reopened the tab," so they shouldn't have to manually click
     // through a toast that may itself be frozen in the snapshot.
     //
     // Scoped to bfcache-restore via `e.persisted`, so desktop / Android /
-    // any-browser back-button into a fresh page is a silent no-op — the
+    // any-browser back-button into a fresh page is a silent no-op - the
     // mount-time check handles those. This is the device-agnostic
     // alternative to `Cache-Control: no-store` (which would have killed
     // bfcache for every device, sacrificing the instant back-navigation

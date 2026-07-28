@@ -1,12 +1,12 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Gate 1 reproducer for tonight's walker_fp candidates from triage.
 
 Per `triage-report` skill §5b Gate 1: synthesize a minimal fixture from the
 diagnostic context windows, feed through the walker, check whether it
 reproduces the same finding shape (term + check_key + approximate offset).
 
-Tonight's targets — 4 unanimous walker_fp verdicts on TW spec_support and
+Tonight's targets - 4 unanimous walker_fp verdicts on TW spec_support and
 1 walker_fp on TW antecedentBasis from issues #19, #20, #21, #23, #24:
 
 specSupport function-word fragments (4 findings, 2 unique phrases):
@@ -72,7 +72,7 @@ TESTS = [
             ),
             make_claim(
                 5,
-                # The flagged phrase IS in this claim — context_after from the user "p型電晶體之閘極長度方向"
+                # The flagged phrase IS in this claim - context_after from the user "p型電晶體之閘極長度方向"
                 "如請求項1所述之半導體裝置，其中前述矽層被夾持，周端面構造成具有較前述矽層在前述p型電晶體之閘極長度方向。",
                 deps=[1],
             ),
@@ -118,7 +118,7 @@ TESTS = [
 
 
 def run_gate1():
-    print(f"\n{'='*70}\nGate 1 Reproducer — tonight's walker_fp candidates\n{'='*70}\n")
+    print(f"\n{'='*70}\nGate 1 Reproducer - tonight's walker_fp candidates\n{'='*70}\n")
     confirmed = []
     not_reproduced = []
 
@@ -173,7 +173,7 @@ def run_gate1():
     print(f"  TW spec_support confirmed walker_fps: {spec_support_confirmed}")
     print(f"  TW antecedent confirmed walker_fps: {antecedent_confirmed}")
     if spec_support_confirmed >= 3:
-        print("  ✅ TW spec_support meets ≥3 trigger threshold — walker-round invocation candidate")
+        print("  ✅ TW spec_support meets ≥3 trigger threshold - walker-round invocation candidate")
     if antecedent_confirmed >= 3:
         print("  ✅ TW antecedent meets ≥3 trigger threshold")
 

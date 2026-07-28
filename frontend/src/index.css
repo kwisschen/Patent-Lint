@@ -79,7 +79,7 @@
   --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
 
-  /* PatentLint status colors — match report.html exactly */
+  /* PatentLint status colors - match report.html exactly */
   --pass-text: #2563eb;
   --pass-bg: #dbeafe;
   --pass-border: #2563eb;
@@ -101,7 +101,7 @@
   --attention-mark-bg: #fde68a;
   --attention-mark-text: #78350f;
 
-  /* Claim diagram — 3-stop glass gradient + shadow (light)
+  /* Claim diagram - 3-stop glass gradient + shadow (light)
      start = top highlight, mid = body, end = deeper bottom tint. */
   --pl-indep-start: #f0f7ff;
   --pl-indep-mid: #dbeafe;
@@ -151,12 +151,12 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 
-  /* Frost surface system (light) — calibrated for professional-tool
+  /* Frost surface system (light) - calibrated for professional-tool
      register (Stripe Dashboard / Linear / GitHub level), not consumer-
      SaaS LiquidGlass maximalism. Resting tier reads as a clean card
      with subtle bg + thin border + soft shadow (no blur, no inner-
      light specular highlight). Elevated and hero tiers keep the glass
-     blur for emphasis. Tuned to reduce visual noise — patent attorneys
+     blur for emphasis. Tuned to reduce visual noise - patent attorneys
      spend hours reading dense text; calm chrome lets findings dominate. */
   --frost-resting-bg: rgba(255, 255, 255, 0.7);
   --frost-resting-border: rgba(15, 23, 42, 0.07);
@@ -177,7 +177,7 @@
     0 12px 24px rgba(15, 23, 42, 0.08);
   --frost-hero-inner-light: inset 0 1px 0 rgba(255, 255, 255, 0.7);
 
-  /* Status frost overlays — layered on top of --pass-bg / --verify-bg /
+  /* Status frost overlays - layered on top of --pass-bg / --verify-bg /
      --amend-bg / --attention-bg to give the colored chip a subtle glass
      sheen instead of a flat fill. */
   --pass-frost-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent);
@@ -185,7 +185,7 @@
   --amend-frost-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent);
   --attention-frost-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent);
 
-  /* Motion — durations to harmonize transitions across the design. */
+  /* Motion - durations to harmonize transitions across the design. */
   --motion-duration-fast: 150ms;
   --motion-duration-base: 250ms;
   --motion-duration-slow: 400ms;
@@ -236,7 +236,7 @@
   --attention-mark-bg: #78350f;
   --attention-mark-text: #fde68a;
 
-  /* Claim diagram — 3-stop glass gradient + shadow (dark)
+  /* Claim diagram - 3-stop glass gradient + shadow (dark)
      Top-edge highlight + blue-tinted body + deeper bottom stop so chips
      feel glassy and lifted rather than flat slate. */
   --pl-indep-start: #6688c9;
@@ -286,7 +286,7 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 
-  /* Frost surface system (dark) — same calm-professional register as
+  /* Frost surface system (dark) - same calm-professional register as
      light mode. Single-shadow on resting; multi-shadow on elevated/
      hero. Inner-light specular highlight reserved for hero tier. */
   --frost-resting-bg: rgba(30, 41, 59, 0.6);
@@ -338,7 +338,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Locale-specific CJK font stacks — pin each locale to its canonical
+  /* Locale-specific CJK font stacks - pin each locale to its canonical
      system CJK font so Windows/macOS/Linux render one typeface across
      all CJK glyphs instead of falling back per-character (the cause of
      "random weight" symptoms on Windows). */
@@ -462,7 +462,7 @@
   100% { left: 100%; }
 }
 
-/* Claim diagram — edge draw-in + node fade */
+/* Claim diagram - edge draw-in + node fade */
 @keyframes pl-diagram-draw {
   to { stroke-dashoffset: 0; }
 }
@@ -474,7 +474,7 @@
 
 .claim-diagram-surface svg { overflow: visible; }
 
-/* MPEP citation badges — slate/gray to avoid clashing with PASS blue */
+/* MPEP citation badges - slate/gray to avoid clashing with PASS blue */
 .citation-badge {
   background-color: #f1f5f9;
   color: #475569;
@@ -503,7 +503,7 @@
   [data-state] { break-inside: avoid; }
 }
 
-/* About page feature cards — staggered reveal + hover lift + diagonal sheen sweep */
+/* About page feature cards - staggered reveal + hover lift + diagonal sheen sweep */
 .feature-card {
   position: relative;
   overflow: hidden;
@@ -546,15 +546,15 @@
   opacity: 0.4;
 }
 
-/* Generic on-hover diagonal shine — apply to any surface that should
+/* Generic on-hover diagonal shine - apply to any surface that should
    sweep a highlight on hover/focus. Mirrors the about-page
    .feature-card__sheen pattern: same gradient stops, same timing,
    same blend modes, same opacity. The KEY detail is that feature-cards
-   use a COLORED sheen (per-accent rgba blue/red/teal at 22% alpha) —
+   use a COLORED sheen (per-accent rgba blue/red/teal at 22% alpha) -
    chromatic contrast is what makes the sweep visible on white bgs.
    Pure white sweeps on white bgs are nearly invisible.
 
-   Default shine color: brand blue (rgba(96, 165, 250, 0.22)) —
+   Default shine color: brand blue (rgba(96, 165, 250, 0.22)) -
    matches the US accent / primary brand color. Surfaces that want a
    different tint can override via the --shine-color CSS variable. */
 .shine-on-hover {
@@ -581,7 +581,7 @@
   opacity: 0.4;
 }
 
-/* Frost-blur utility classes — pair with --frost-*-bg backgrounds to give
+/* Frost-blur utility classes - pair with --frost-*-bg backgrounds to give
    surfaces an actual backdrop blur where supported. Browser-only effect;
    PDFs degrade gracefully to the gradient backgrounds. */
 .frost-blur-sm {
@@ -597,14 +597,14 @@
   -webkit-backdrop-filter: blur(20px);
 }
 
-/* Frost surface utility classes — Apple LiquidGlass language adapted for
+/* Frost surface utility classes - Apple LiquidGlass language adapted for
    web: blur intensity scales with surface tier so a results page with
    many simultaneous cards stays performant on weak GPUs and locked-down
    laptops, while heroes/overlays/banners/modals still get the full
    LiquidGlass treatment. Older browsers without backdrop-filter fall
    back via @supports rule below. */
 /* Resting tier: NO backdrop-filter. Reads as a clean card with subtle
-   bg + thin border + soft shadow — the Stripe Dashboard / Linear
+   bg + thin border + soft shadow - the Stripe Dashboard / Linear
    register. Routine cards (most surfaces on the results page) live
    here so the page stays calm. */
 .frost-card {
@@ -629,7 +629,7 @@
     inset 0 0 0 1px var(--frost-elevated-border);
   overflow: hidden;
 }
-/* Hero tier: peak glass — only the rubric grade hero + the popular
+/* Hero tier: peak glass - only the rubric grade hero + the popular
    pricing tier card use this. Inner-light highlight reserved for this
    tier so the bright top-edge feels distinctive instead of universal. */
 .frost-card-hero {
@@ -669,7 +669,7 @@
   }
 }
 
-/* Print + reduced-transparency fallbacks — backdrop-filter is GPU work
+/* Print + reduced-transparency fallbacks - backdrop-filter is GPU work
    that doesn't translate to print and can confuse users who explicitly
    ask for less translucency. Fall back to a solid surface in those modes. */
 @media print, (prefers-reduced-transparency) {
@@ -686,7 +686,7 @@
 }
 /* Interactive variant: subtle hover lift only (no shine sweep). The
    shine pattern is reserved for key CTAs (dropzone + primary button)
-   via the .shine-on-hover class — applying it to every interactive
+   via the .shine-on-hover class - applying it to every interactive
    card created visual noise that competed with content. */
 .frost-card-interactive {
   transition: transform var(--motion-duration-base) var(--ease-smooth),

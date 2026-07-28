@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation, Trans } from 'react-i18next'
 import { Check, Mail, ShieldCheck, Server, Github } from 'lucide-react'
@@ -65,7 +65,7 @@ function ProductStory({ t }) {
 // G1/G3 placement is grounded in USPTO Patent Center's documented DOCX validation
 // (DOCX_Feedback_Errors_and_Warnings.pdf + Sept 2025 User Guide): it catches
 // period-ending, capitalization, single-sentence, numbering, multiple dependency,
-// abstract word count, paragraph numbering, and section-heading detection — but
+// abstract word count, paragraph numbering, and section-heading detection - but
 // performs NO semantic § 112 analysis, figure cross-reference, or paragraph-
 // ending-punctuation checks. Items in G1 are shared; G3 is PatentLint-only.
 const GROUP1_CHECKS = [
@@ -80,14 +80,14 @@ const GROUP1_CHECKS = [
 ]
 
 const GROUP2_CHECKS = [
-  // Filing-format-specific checks (PDF / margins / typography) — outside the
+  // Filing-format-specific checks (PDF / margins / typography) - outside the
   // canonical 7-group ordering. Only rows confirmed in USPTO's authoritative
   // DOCX_Feedback_Errors_and_Warnings catalog are kept.
   // fontFamilyCheck = INVALID_FONT + INVALID_FONT_CHAR (font family not on
   // USPTO supported list, or character not renderable in current font).
   // Removed (Patent Center catalog has no entry):
-  //   - fontSizeCheck — INVALID_FONT validates family, not 12pt floor
-  //   - headerFooter  — only page-numbering is validated (already a row below)
+  //   - fontSizeCheck - INVALID_FONT validates family, not 12pt floor
+  //   - headerFooter  - only page-numbering is validated (already a row below)
   'pdfCompliance', 'marginCheck', 'fontFamilyCheck', 'lineSpacing',
   'pageNumbering', 'filingReceipt',
 ]
@@ -97,12 +97,12 @@ const GROUP3_CHECKS = [
   'specParaEndings',
   // Spec content (figure cross-reference + new D1 + scope-limit)
   'figureCrossRef', 'numeralConsistency', 'scopeLimitWording',
-  // Drawings (MPEP § 608.02 semantic rules — USPTO doesn't check pre-submission)
+  // Drawings (MPEP § 608.02 semantic rules - USPTO doesn't check pre-submission)
   'figureSequential', 'singleFigure', 'priorArtLabeling',
   // Claims structure (substantive half)
   'transitionPhrase',
   // Claims cross-jurisdiction (restrictive wording family + drafting-time fee
-  // advisory — Patent Center calculates excess-claims fee at filing submission,
+  // advisory - Patent Center calculates excess-claims fee at filing submission,
   // not at drafting time; PatentLint surfaces it pre-filing)
   'restrictiveWording', 'indefiniteTerms', 'excessClaims',
   // Claims §112 analysis
@@ -115,7 +115,7 @@ const GROUP3_CHECKS = [
 
 function CheckMark({ active, isPatentLint }) {
   if (!active) {
-    return <span className="inline-flex justify-center text-muted-foreground/40">—</span>
+    return <span className="inline-flex justify-center text-muted-foreground/40">-</span>
   }
   return (
     <Check
@@ -128,13 +128,13 @@ function CheckMark({ active, isPatentLint }) {
 
 // CN table: same canonical 7-group ordering within each tbody as US + TW.
 // Single-column "what PatentLint covers" framing (no public CNIPA pre-filing
-// debug system to compare against — CNIPA's WORD转XML编辑器 is filing-format
+// debug system to compare against - CNIPA's WORD转XML编辑器 is filing-format
 // only). Total 32 checks per CHECKS.md row count (excluding the † informational
 // figureCount row, which by US/TW convention also doesn't appear in the
 // marketing table).
 const CN_SPEC_CHECKS = [
   // G1 spec structure
-  'trackedChanges',                  // FIX (no statute — drafting hygiene)
+  'trackedChanges',                  // FIX (no statute - drafting hygiene)
   'requiredSections',                // 专利法实施细则 §17
   'sectionOrdering',                 // 专利法实施细则 §17
   'paragraphNumbering',              // 审查指南
@@ -160,7 +160,7 @@ const CN_CLAIMS_CHECKS = [
   'subjectNameConsistency',          // 审查指南 第二部分第二章
   'transitionPhrase',                // 审查指南
   // G5 claims cross-jurisdiction
-  'cnTwTerminology',                 // — (PatentLint guard against TIPO leakage)
+  'cnTwTerminology',                 // - (PatentLint guard against TIPO leakage)
   'claimsSpecReference',             // 审查指南 第二部分第二章
   'multiMultiDependency',            // 专利法实施细则 §22
   'connectionRelationships',         // 审查指南 §3.2.1 + 专利法 §26.4
@@ -186,9 +186,9 @@ const CN_DRAWINGS_CHECKS = [
   'figuresSequential',               // 审查指南
 ]
 
-// EPC table: single-column "what PatentLint covers" framing — no public
+// EPC table: single-column "what PatentLint covers" framing - no public
 // EPO pre-filing debug system to compare against (EPO Form 1001 is filing
-// metadata only). v1 beta — 30 user-facing checks; the figureCount † row
+// metadata only). v1 beta - 30 user-facing checks; the figureCount † row
 // is informational and excluded from the marketing table per US/CN/TW
 // convention. Statute pins on each row tie back to Art. 78 / Rule 41 /
 // Rule 42 / Rule 43 / Rule 46 / Rule 47 EPC and the EPO Guidelines for
@@ -454,9 +454,9 @@ function JurisdictionFeatureBlock({ t, jurisdiction, cardKeys }) {
 // TW table: two marketing buckets (Shared / PatentLint-only).
 // Within each bucket rows sort by the canonical 7-group document order.
 //
-// AUTHORITATIVE SOURCE for TIPO coverage: "專利申請文件輔助偵錯系統 —
+// AUTHORITATIVE SOURCE for TIPO coverage: "專利申請文件輔助偵錯系統 -
 // 功能介紹與使用指南" (2023.5.30 版, 專利行政企劃組 助理審查官 劉克群).
-// Table 1 lists 20 documented check families — each check below is mapped
+// Table 1 lists 20 documented check families - each check below is mapped
 // to the specific TIPO item number it corresponds to. G1 is direct evidence
 // from that table, not inference.
 const TW_GROUP1_CHECKS = [
@@ -467,9 +467,9 @@ const TW_GROUP1_CHECKS = [
   'symbolTableConsistency',      // TIPO #3  (新型內容/實施方式 vs 符號說明/代表圖符號簡單說明)
   'tipoIndigenous',              // TIPO #19 (原住民相關用語)
   // G4 claims-structure
-  'selfDependent',               // TIPO #5  (附屬項未依附在前 — self-dep 分支)
-  'circularDependency',          // TIPO #5  (附屬項未依附在前 — circular 分支)
-  'forwardDependency',           // TIPO #5  (附屬項未依附在前 — forward 分支)
+  'selfDependent',               // TIPO #5  (附屬項未依附在前 - self-dep 分支)
+  'circularDependency',          // TIPO #5  (附屬項未依附在前 - circular 分支)
+  'forwardDependency',           // TIPO #5  (附屬項未依附在前 - forward 分支)
   'singleSentence',              // TIPO #8  (獨立項/附屬項未以單句為之)
   'refNumeralParens',            // TIPO #9  (構件符號未全部置於括號內)
   'subjectConsistency',          // TIPO #10 (附屬項標的名稱 vs 所依附請求項標的名稱)
@@ -491,13 +491,13 @@ const TW_GROUP3_CHECKS = [
   'requiredSections', 'sectionOrdering', 'paragraphNumbering', 'paragraphEnding', 'bracketFormat',
   // G2 spec-content
   'title', 'claimReference',
-  // 符號說明 family — presence + D1 (consistency) + D3 (coverage)
+  // 符號說明 family - presence + D1 (consistency) + D3 (coverage)
   'symbolTablePresence', 'numeralConsistency', 'symbolTableCoverage',
   // G3 drawings
   'figuresSequential',
   // G4 claims-structure
   'sequential', 'transitionPhrase',
-  // G5 claims-cross-jurisdiction (specDrawingRef + 超項費 fee threshold —
+  // G5 claims-cross-jurisdiction (specDrawingRef + 超項費 fee threshold -
   // 偵錯系統 doesn't flag at drafting; TIPO e-filing calculates at submission)
   'specDrawingRef', 'excessClaims',
   // G6 claims §26 第3項 semantic walker analysis
@@ -653,7 +653,7 @@ function ComparisonTable({ t }) {
   // ComparisonTable section, a compact vertical picker fades in on the
   // right edge of the viewport. Click on a floating pill scrolls back to
   // the section top so the user sees the new tab's content from the start
-  // — not stranded mid-table from a different jurisdiction's row.
+  // - not stranded mid-table from a different jurisdiction's row.
   const [pickerInView, setPickerInView] = useState(true)
   const [sectionInView, setSectionInView] = useState(false)
   const pickerRef = useRef(null)
@@ -758,7 +758,7 @@ function ComparisonTable({ t }) {
         </>
       )}
 
-      {/* Floating jurisdiction picker — two breakpoint-specific variants:
+      {/* Floating jurisdiction picker - two breakpoint-specific variants:
             Desktop (md+): vertical pillar on the right edge, pills slide
               in from the right with a 60ms cascade
             Mobile (< md): horizontal capsule pinned at the top (above the
@@ -800,7 +800,7 @@ function ComparisonTable({ t }) {
         ))}
       </div>
 
-      {/* Mobile floating picker — pinned just below the sticky site header
+      {/* Mobile floating picker - pinned just below the sticky site header
           (h-14 = 56px, so top-16 = 64px gives an 8px gap below header).
           z-30 stays below the header's z-50 so modals layered above the
           header (z-50+) still render over this picker. Pills are 44×44px
@@ -1060,7 +1060,7 @@ function ArchitectureDiagram({ t }) {
 /* ────────────────────────────────────────────
    Section 4: Builder Story
    ──────────────────────────────────────────── */
-/* PatentNode brand mark — node-graph glyph ported from the PatentNode
+/* PatentNode brand mark - node-graph glyph ported from the PatentNode
    (Agentic Patent Analyst) design system (components/logo-icon.tsx).
    fill="currentColor" so it inherits the button's text color. */
 function PatentNodeGlyph({ size = 16 }) {
@@ -1083,11 +1083,11 @@ function BuilderStory({ t }) {
   const { sendFeedback } = useFeedback()
 
   // Email button routes through FeedbackPicker (composeBuilderContact)
-  // instead of a plain mailto: — gives users on locked-down work laptops
+  // instead of a plain mailto: - gives users on locked-down work laptops
   // without a default mail-client handler a working Gmail-web fallback.
   // GitHub stays a plain anchor (external URL); Email routes through the
   // FeedbackPicker. PatentNode is rendered separately as a gradient CTA
-  // below — it's a sister-product cross-link, not a neutral utility pill.
+  // below - it's a sister-product cross-link, not a neutral utility pill.
   const handleEmailClick = (e) => {
     e.preventDefault()
     sendFeedback(composeBuilderContact(t))
@@ -1147,7 +1147,7 @@ function BuilderStory({ t }) {
           )
         })}
         {/* Sister-product cross-link rendered as a gradient CTA with PatentNode's
-            own node mark — reads as a premium outbound product pointer rather
+            own node mark - reads as a premium outbound product pointer rather
             than another utility pill (brand→cyan matches the results cross-promo). */}
         <a
           href="https://patentnode.com"

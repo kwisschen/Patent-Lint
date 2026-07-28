@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Measure TIPO-authoritative <numeral, name> anchor signal on TW corpus.
 
-R61c follow-up — user pushback on R61b: 符號說明 should be used the way
+R61c follow-up - user pushback on R61b: 符號說明 should be used the way
 TIPO uses it (authoritative anchor on <numeral, name> pairs), not as a
 loose name-presence flag.
 
@@ -15,7 +15,7 @@ TIPO 偵錯系統 logic for antecedent (per 施行細則 §17 + 審查基準):
 Two signals computed per walker finding:
 
 1. ref_has_paren_numeral: reference_form contains `(<numeral>)` or
-   `（<numeral>）` — drafter attached an explicit numeric anchor.
+   `（<numeral>）` - drafter attached an explicit numeric anchor.
 2. anchored_in_symbol_table: ref has paren numeral AND
    <numeral, term-tail> matches a symbol_table entry.
 
@@ -104,10 +104,10 @@ def main() -> int:
     sv2_pids = {v["patent_id"] for v in sv2["verdicts"] if v.get("jurisdiction") == "TW"}
 
     # Bucket each finding into one of:
-    #  bare        — reference has no paren numeral
-    #  paren_anchor_ok — reference has paren numeral AND it matches an ST entry
+    #  bare        - reference has no paren numeral
+    #  paren_anchor_ok - reference has paren numeral AND it matches an ST entry
     #                   (numeral matches AND name shares ≥2 chars with term)
-    #  paren_anchor_mismatch — reference has paren numeral but no matching ST entry
+    #  paren_anchor_mismatch - reference has paren numeral but no matching ST entry
     by_bucket: dict[str, Counter] = defaultdict(Counter)
 
     for key in findings_set:
@@ -126,16 +126,16 @@ def main() -> int:
         if not st_name:
             by_bucket["paren_no_st_entry"][verdict] += 1
             continue
-        # Compare st_name to term — STRICT exact match after paren strip.
+        # Compare st_name to term - STRICT exact match after paren strip.
         # Looser matching (substring containment) caught a known legit
         # drafting error on 110P000631US c11 (`第一銜接部銜接(222)` vs
-        # ST `222:銜接部` — drafter misplaced numeral after verb), so
+        # ST `222:銜接部` - drafter misplaced numeral after verb), so
         # we use exact equality only. Authoritative TIPO use of 符號說明
-        # is "drafter wrote `該X(N)` and ST says `N: X`" — that's strict.
+        # is "drafter wrote `該X(N)` and ST says `N: X`" - that's strict.
         term_no_paren = _strip_paren(term)
         st_name_no_paren = _strip_paren(st_name)
         # Strip optional reference-form prefix (該/所述/前述) when present
-        # at start of term — walker emits raw extracted text.
+        # at start of term - walker emits raw extracted text.
         for prefix in ("該", "所述", "前述", "該等", "該些"):
             if term_no_paren.startswith(prefix):
                 term_no_paren = term_no_paren[len(prefix):]

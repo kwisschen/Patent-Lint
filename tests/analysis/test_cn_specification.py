@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for patentlint.analysis.cn_specification."""
 
 from patentlint.analysis.cn_specification import (
@@ -122,7 +122,7 @@ class TestRequiredSections:
     def test_abstract_via_inid_fallback_passes(self):
         """INID cover-page extraction populates abstract_text but leaves
         strategies["abstract"]="none". Treat as valid (publication
-        format) — flagging would false-positive on legitimate uploads."""
+        format) - flagging would false-positive on legitimate uploads."""
         doc = _make_cn_doc(section_source_strategies={
             "claims": "body_anchor",
             "specification": "body_anchor",
@@ -154,7 +154,7 @@ class TestSectionOrdering:
         assert results[0].message_key == "check.cn.spec.sectionOrdering.pass"
 
     def test_wrong_order_amend(self):
-        # 具体实施方式 encountered before 发明内容 — classic MPEP-ordered
+        # 具体实施方式 encountered before 发明内容 - classic MPEP-ordered
         # spec reused for CNIPA filing without reordering.
         doc = _make_cn_doc(
             section_order=[
@@ -184,7 +184,7 @@ class TestSectionOrdering:
 
     def test_missing_middle_section_passes(self):
         # Skipping a canonical section (here: summary) is not an ordering
-        # violation — required-sections check handles the absence.
+        # violation - required-sections check handles the absence.
         doc = _make_cn_doc(
             section_order=["technical_field", "background", "detailed_description"]
         )
@@ -327,7 +327,7 @@ class TestParagraphEnding:
         assert results[0].details_params["paragraphs"] == ["[0003]"]
 
     def test_strict_rejects_colon(self):
-        # 技术领域 is strict — colon not accepted even though relaxed
+        # 技术领域 is strict - colon not accepted even though relaxed
         # sections allow it.
         doc = _make_cn_doc(
             technical_field=["本发明涉及数据处理："],
@@ -338,7 +338,7 @@ class TestParagraphEnding:
         assert results[0].details_params["count"] == 1
 
     def test_strict_rejects_semicolon(self):
-        # 背景技术 is strict — semicolon not accepted.
+        # 背景技术 is strict - semicolon not accepted.
         doc = _make_cn_doc(
             technical_field=["技术领域段落。"],
             background=["现有技术存在问题；"],
@@ -348,7 +348,7 @@ class TestParagraphEnding:
         assert results[0].details_params["count"] == 1
 
     def test_relaxed_accepts_colon(self):
-        # 发明内容 is relaxed — colon accepted for step/list introductions.
+        # 发明内容 is relaxed - colon accepted for step/list introductions.
         doc = _make_cn_doc(
             summary=["本发明包括以下步骤："],
         )
@@ -356,7 +356,7 @@ class TestParagraphEnding:
         assert results[0].status == "pass"
 
     def test_relaxed_accepts_semicolon(self):
-        # 附图说明 is relaxed — semicolon accepted for enumeration items.
+        # 附图说明 is relaxed - semicolon accepted for enumeration items.
         doc = _make_cn_doc(
             drawings_description=["图1是本发明的流程图；"],
         )
@@ -364,7 +364,7 @@ class TestParagraphEnding:
         assert results[0].status == "pass"
 
     def test_relaxed_accepts_list_cap_yiji(self):
-        # 具体实施方式 is relaxed — ；以及 penultimate list item allowed.
+        # 具体实施方式 is relaxed - ；以及 penultimate list item allowed.
         doc = _make_cn_doc(
             detailed_description=["包括第一步骤；第二步骤；以及"],
         )
@@ -534,20 +534,20 @@ class TestSpecClaimReference:
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# R-refnum-2 — measurement-unit exclusion (issues #100/#101/#102)
+# R-refnum-2 - measurement-unit exclusion (issues #100/#101/#102)
 # ─────────────────────────────────────────────────────────────────────────
 
 
 class TestRefnumMeasurementExclusion:
     """The CJK refnum extractor must reject `\\d+\\s*<unit>` measurement
     patterns. Drafters write `平均粒徑可在10 μm至100 μm的範圍` (per #101
-    TW report) — the digits are measurement values, not component
+    TW report) - the digits are measurement values, not component
     reference numerals. Pre-fix the extractor captured `10` as a refnum
     paired with the clause-fragment `平均粒徑可在` as its "name."
     """
 
     def test_micro_meter_with_space_not_captured(self):
-        """Greek small letter mu (U+03BC) — `10 μm` with whitespace."""
+        """Greek small letter mu (U+03BC) - `10 μm` with whitespace."""
         from patentlint.analysis.cn_specification import (
             _cn_extract_numeral_name_pairs,
         )
@@ -555,7 +555,7 @@ class TestRefnumMeasurementExclusion:
         assert _cn_extract_numeral_name_pairs(text) == []
 
     def test_micro_meter_no_space_not_captured(self):
-        """`10μm` (no whitespace) — same exclusion via \\s* lookahead."""
+        """`10μm` (no whitespace) - same exclusion via \\s* lookahead."""
         from patentlint.analysis.cn_specification import (
             _cn_extract_numeral_name_pairs,
         )
@@ -563,7 +563,7 @@ class TestRefnumMeasurementExclusion:
         assert _cn_extract_numeral_name_pairs(text) == []
 
     def test_micro_sign_codepoint_also_excluded(self):
-        """Micro sign U+00B5 (`µ`) — visually identical to U+03BC,
+        """Micro sign U+00B5 (`µ`) - visually identical to U+03BC,
         sometimes used by drafters from copy/paste sources."""
         from patentlint.analysis.cn_specification import (
             _cn_extract_numeral_name_pairs,
@@ -572,7 +572,7 @@ class TestRefnumMeasurementExclusion:
         assert _cn_extract_numeral_name_pairs(text) == []
 
     def test_other_si_units_with_letter_excluded(self):
-        """`10 mm`, `100 nm`, `5 wt%` — pre-existing letter exclusion
+        """`10 mm`, `100 nm`, `5 wt%` - pre-existing letter exclusion
         works once \\s* lookahead is added."""
         from patentlint.analysis.cn_specification import (
             _cn_extract_numeral_name_pairs,
@@ -585,7 +585,7 @@ class TestRefnumMeasurementExclusion:
             assert _cn_extract_numeral_name_pairs(text) == [], text
 
     def test_real_refnum_still_captured(self):
-        """Negative control — real component refnums (`齒輪10`) must
+        """Negative control - real component refnums (`齒輪10`) must
         still be captured. The fix narrowly targets measurement contexts."""
         from patentlint.analysis.cn_specification import (
             _cn_extract_numeral_name_pairs,
@@ -610,12 +610,12 @@ class TestRefnumMeasurementExclusion:
             "至少一條串接線路": "串接線路",
         }.items():
             assert _cn_d1_head_noun(raw) == want, (raw, _cn_d1_head_noun(raw))
-        # FN guards — bare 條-initial nouns keep their 條 (no ref prefix follows)
+        # FN guards - bare 條-initial nouns keep their 條 (no ref prefix follows)
         for noun in ("條碼", "條紋", "條狀結構"):
             assert _cn_d1_head_noun(noun) == noun, noun
 
     def test_real_refnum_followed_by_measurement_unchanged(self):
-        """`齒輪10之直徑為10 μm` — first `10` (refnum) captured, second
+        """`齒輪10之直徑為10 μm` - first `10` (refnum) captured, second
         `10` (measurement) excluded."""
         from patentlint.analysis.cn_specification import (
             _cn_extract_numeral_name_pairs,
@@ -643,7 +643,7 @@ def test_cjk_single_char_unit_does_not_drop_refnum_266():
 
 
 def test_interior_conjunction_split_parity_242():
-    """#242: `係亦可為與步驟S50` — the ordinal-keyed head-noun extractor
+    """#242: `係亦可為與步驟S50` - the ordinal-keyed head-noun extractor
     must apply the same `<NP_A>與<NP_B>` conjunction split (#158) as the
     non-ordinal one. Result: `步驟` (then dropped as generic) → no phantom
     refnum for S50; and `散熱片與基板10` keeps the right element `基板`."""
@@ -714,31 +714,31 @@ class TestCnD1FnSafePrune:
 
     def test_prune_ordinal_variant_single_occurrence(self):
         from patentlint.analysis.cn_specification import _cn_prune_fn_safe_outliers
-        # '第二|外殼' (1x) vs canonical '第一|外殼' — same base noun, drop
+        # '第二|外殼' (1x) vs canonical '第一|外殼' - same base noun, drop
         assert _cn_prune_fn_safe_outliers(
             [{"name": "第二|外殼", "count": 1}], "第一|外殼") == []
 
     def test_prune_substring_fragment_single_occurrence(self):
         from patentlint.analysis.cn_specification import _cn_prune_fn_safe_outliers
-        # '容槽' (1x) is a substring of '軸承容槽' — fragment, drop
+        # '容槽' (1x) is a substring of '軸承容槽' - fragment, drop
         assert _cn_prune_fn_safe_outliers(
             [{"name": "|容槽", "count": 1}], "|軸承容槽") == []
 
     def test_prune_keeps_distinct_noun(self):
         from patentlint.analysis.cn_specification import _cn_prune_fn_safe_outliers
-        outs = [{"name": "|電極", "count": 1}]  # distinct element vs 阵列 — KEEP
+        outs = [{"name": "|電極", "count": 1}]  # distinct element vs 阵列 - KEEP
         assert _cn_prune_fn_safe_outliers(outs, "|阵列") == outs
 
     def test_prune_keeps_repeated_outlier(self):
         from patentlint.analysis.cn_specification import _cn_prune_fn_safe_outliers
-        outs = [{"name": "第二|外殼", "count": 2}]  # 2x, not a bleed — KEEP
+        outs = [{"name": "第二|外殼", "count": 2}]  # 2x, not a bleed - KEEP
         assert _cn_prune_fn_safe_outliers(outs, "第一|外殼") == outs
 
 
 class TestCnD1BioSymbolAndMutation:
     """Engine-3 R2 mirror (ADR-159): CJK D1 must not capture biology/clinical
     biomarker symbols or amino-acid mutation notation as Latin-prefix reference
-    designators — they are never drawing elements. Real designators (R1/IC2/
+    designators - they are never drawing elements. Real designators (R1/IC2/
     uppercase-suffix U1A, and 1-digit C2D) must still be captured. Covers CN
     AND TW (tw_specification reuses this extractor)."""
 

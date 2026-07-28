@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Bootstrap US antecedent labels file from Phase 2b ensemble verdicts.
 
 Produces ``tests/fixtures/us/antecedent_labels_us.json`` modelled after
@@ -85,12 +85,12 @@ def main() -> None:
         'created': datetime.now(timezone.utc).isoformat(),
         'source': 'tests/eval/phase2b_results_us.json',
         'source_phase': 'Phase 2b LLM ensemble (Sonnet 4.6 + gpt-5-mini + Opus 4.7 escalation)',
-        'phase2c_validation': '2026-05-03 — 15/15 Pass 1 (100%); 9/11 Pass 2 (82%)',
+        'phase2c_validation': '2026-05-03 - 15/15 Pass 1 (100%); 9/11 Pass 2 (82%)',
         'total_labeled': len(labels),
         'protect_count': protect_count,
         'category_counts': counts,
         'key_format': '(fixture=patent_id, claim_id, term, reference_form) tuple',
-        'note': ('US bootstrap — corpus-backed labels (no docx fixtures locally; '
+        'note': ('US bootstrap - corpus-backed labels (no docx fixtures locally; '
                  'fixture key == patent_id from Patent-Analyst-corpus parquet records). '
                  'Harness loads corpus via round1_corpus_harness.load_corpus("US").'),
     }

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for TW reference-term normalization helpers (ADR-095)."""
 
 from __future__ import annotations
@@ -18,12 +18,12 @@ from patentlint.analysis.tw_claims import (
 
 
 class TestExtendNengCompoundTw:
-    """能量 / 能源 follow-gate — issue #75. 能 is excluded from the
+    """能量 / 能源 follow-gate - issue #75. 能 is excluded from the
     _NOUN_CHARS class, so `<noun>能量` is cut at 能; the follow-gate
     re-extends when 能 is followed by the noun-forming 量 / 源."""
 
     def test_energy_compound_reextended(self):
-        # 靜電能量 — cut to 靜電 by the 能 exclusion; 電 is not a classic
+        # 靜電能量 - cut to 靜電 by the 能 exclusion; 電 is not a classic
         # 能-precursor, so only the 能量 follow-gate recovers it.
         assert _extend_neng_compound_tw("靜電", 2, "靜電能量大於一值") == ("靜電能量", 4)
 
@@ -31,12 +31,12 @@ class TestExtendNengCompoundTw:
         assert _extend_neng_compound_tw("靜電", 2, "靜電能源為主") == ("靜電能源", 4)
 
     def test_follow_gate_stops_before_comparison_verb(self):
-        # No greedy continuation — must not swallow the trailing 大 of 大於.
+        # No greedy continuation - must not swallow the trailing 大 of 大於.
         noun, _ = _extend_neng_compound_tw("放電", 2, "放電能量大於一門檻值")
         assert noun == "放電能量"
 
     def test_modal_neng_not_extended(self):
-        # 模組能控制 — 能 here is the modal "can"; not followed by 量/源
+        # 模組能控制 - 能 here is the modal "can"; not followed by 量/源
         # and 組 is not a precursor → no extension.
         assert _extend_neng_compound_tw("模組", 2, "模組能控制電流") == ("模組", 2)
 
@@ -53,7 +53,7 @@ class TestCleanNounPhraseTw:
         assert clean_noun_phrase_tw("動力輸出系統包含") == "動力輸出系統"
 
     def test_strips_preposition_verb_at_interior_boundary(self):
-        # 遊戲控制器通過第 — pre-2026-04-09 round 2, this returned
+        # 遊戲控制器通過第 - pre-2026-04-09 round 2, this returned
         # unchanged because clean_noun_phrase_tw only stripped trailing
         # tokens, and the trailing 第 didn't match any denylist entry.
         # Round 2 (Bug A1/C1 fix) added 通過 to _INTERIOR_VERB_BOUNDARIES
@@ -66,7 +66,7 @@ class TestCleanNounPhraseTw:
         assert clean_noun_phrase_tw("遊戲控制器通過") == "遊戲控制器"
 
     def test_strips_trailing_coverb_cong(self):
-        # Issue #75: `控制電流從所述控制節點流經` — walker over-captured
+        # Issue #75: `控制電流從所述控制節點流經` - walker over-captured
         # `控制電流從`; 從 ("from") is a coverb in suffix position and
         # strips to the clean head noun `控制電流`.
         assert clean_noun_phrase_tw("控制電流從") == "控制電流"
@@ -252,7 +252,7 @@ class TestTrailingStripPreservesLegitimate所Suffixes:
         """以前 (before) and 之前 (prior) must not over-strip to empty.
 
         These are rare in claim language but possible in method
-        claims describing temporal ordering. Edge cases — document
+        claims describing temporal ordering. Edge cases - document
         current behavior with the weaker assertion (len > 0) so the
         observed value goes in the writeup for review rather than
         forcing a specific output. Post-2026-04-09: 前 was removed
@@ -273,17 +273,17 @@ class TestTrailingStripPreservesLegitimate所Suffixes:
         accepted as known behavior. Compound prefixes like 前端 are
         unaffected because they don't end in 前.
         """
-        # 前端/前述/前方 end in 端/述/方 — not in the trailing-strip
+        # 前端/前述/前方 end in 端/述/方 - not in the trailing-strip
         # denylist, so the trailing-strip codepath doesn't touch them.
         assert clean_noun_phrase_tw("前端") == "前端"
         assert clean_noun_phrase_tw("前述") == "前述"
         assert clean_noun_phrase_tw("前方") == "前方"
-        # 以前/之前 over-strip to 1 char — accepted as known limit
+        # 以前/之前 over-strip to 1 char - accepted as known limit
         # for rare grammatical adverbs in claim text.
         assert clean_noun_phrase_tw("以前") == "以"
         assert clean_noun_phrase_tw("之前") == "之"
         # Fragment case: 齒輪前 (front-of-the-gear, captured fragment)
-        # strips to 齒輪 — the correct head noun for resolution.
+        # strips to 齒輪 - the correct head noun for resolution.
         assert clean_noun_phrase_tw("齒輪前") == "齒輪"
 
     def test_連接面_compound_preserved(self):

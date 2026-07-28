@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# parse_examiner_112.py — turn EdgeXpert's real examiner §112 office-action prose
+# parse_examiner_112.py - turn EdgeXpert's real examiner §112 office-action prose
 # into term-level antecedent-basis LEGIT labels (ADR-159, WS-A1). Examiner
 # rejections name the exact limitation ("insufficient antecedent basis for the
-# limitation 'the X'") — version-robust ground truth that sidesteps claim-number
+# limitation 'the X'") - version-robust ground truth that sidesteps claim-number
 # alignment. Restricted to the/said references (genuine antecedent-basis defects;
 # a/an are introductions). Output: tests/eval/us_examiner_legit.json (gitignored):
 #   { application_source_key: ["the x", "said y", ...] }

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """ReportData adapter parity canary (Phase 9 #41).
 
 Regression coverage for the CN ``antecedent_basis_issues`` silent-drop class
@@ -12,7 +12,7 @@ The per-jurisdiction forwarding map lives at the top of this module as
 explicit string constants. Adding a new list field to ``AnalysisResult`` or
 ``ReportData`` forces a contributor to either extend the relevant jurisdiction
 entry below (ship the forwarding) or document that the field is intentionally
-not forwarded — either way, this canary surfaces the decision rather than
+not forwarded - either way, this canary surfaces the decision rather than
 letting a silent drop reach users.
 """
 
@@ -278,7 +278,7 @@ class TestForwardMapsAreExhaustive:
         # Consumed into the US figures_sequential amend CheckItem's
         # details_params by _to_us_report_data; not a raw list on ReportData.
         "figures_missing",
-        # Same disposition as figures_missing — surfaced inside the US
+        # Same disposition as figures_missing - surfaced inside the US
         # figuresSequential amend CheckItem's diagnostic payload via
         # _to_us_report_data (suffix_violations field), not as a raw list
         # on ReportData. Added 2026-05-29 for issue #112 (suffix-ordering

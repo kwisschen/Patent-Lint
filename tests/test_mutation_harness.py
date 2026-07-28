@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Mutation harness — drafter-error pattern regression suite.
+# Copyright (c) 2025-2026 Christopher Chen
+"""Mutation harness - drafter-error pattern regression suite.
 
 Codifies the bug classes surfaced by Claire's `神秘黑屏哥.docx` real-drafter
-audit (R63–R66, 2026-05-05) as systematic regression tests. Each mutation
+audit (R63-R66, 2026-05-05) as systematic regression tests. Each mutation
 takes a base draft, programmatically injects a known drafter-error pattern,
 runs the analyzer, and asserts the expected behavior.
 
@@ -15,17 +15,17 @@ The 8 bug classes (per memory `feedback_real_drafter_drafts_have_different_bugs`
   4. Empty `【NNNN】` paragraph spacers
   5. Self-loop drafter typos (cN.deps == [N])
   6. Section-name aliases (背景技術 / 先前技術文獻 / 專利文獻 / 非專利文獻)
-  7. Locative bare-noun intros (`於X的一主面上` — drafter introduces X without
+  7. Locative bare-noun intros (`於X的一主面上` - drafter introduces X without
      `一` quantifier)
-  8. Modifier+noun references (R66 — `前述<state>的<head>` constructions)
+  8. Modifier+noun references (R66 - `前述<state>的<head>` constructions)
 
-Generalized aggressively — every mutation runs across multiple base drafts
+Generalized aggressively - every mutation runs across multiple base drafts
 where applicable, and is parametric so future bug classes plug in via the
 same shape. Per `feedback_future_proof_with_anti_overscope`: ship the
 minimum mechanism that captures EACH learned pattern; expand the matrix
 when a NEW firm-internal draft surfaces a NEW class.
 
-All mutations work from in-memory pydantic doc constructions — no real
+All mutations work from in-memory pydantic doc constructions - no real
 .docx files needed (firm-confidential drafts are gitignored). When a new
 real-drafter draft from Claire (or another firm) lands, run the
 analyzer + add a new mutation here that captures the new class.
@@ -93,7 +93,7 @@ def _cn_doc(claims: list[Claim]) -> CnPatentDocument:
     return CnPatentDocument(claims=claims)
 
 
-# Base drafts — the fixtures we mutate. Multiple bases ensure each pattern
+# Base drafts - the fixtures we mutate. Multiple bases ensure each pattern
 # is exercised across diverse claim shapes (independent-only, multi-dep,
 # method-claim, etc.).
 
@@ -138,7 +138,7 @@ BASE_CN_DRAFTS: list[Callable[[], list[Claim]]] = [
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# Bug class 1 — Older TIPO dep-format `如申請專利範圍第N項`
+# Bug class 1 - Older TIPO dep-format `如申請專利範圍第N項`
 # ─────────────────────────────────────────────────────────────────────────
 #
 # Surfaced by 神秘黑屏哥.docx via R62 commit 8043745. Pre-2018 TIPO firms
@@ -148,7 +148,7 @@ BASE_CN_DRAFTS: list[Callable[[], list[Claim]]] = [
 
 @pytest.mark.parametrize("base_idx", range(len(BASE_TW_DRAFTS)))
 def test_older_tw_dep_format_recognized(base_idx):
-    """Replace `如請求項N` with `如申請專利範圍第N項` — parser still sees
+    """Replace `如請求項N` with `如申請專利範圍第N項` - parser still sees
     the dependency, walker still resolves antecedent."""
     base = BASE_TW_DRAFTS[base_idx]()
     if len(base) < 2:
@@ -163,10 +163,10 @@ def test_older_tw_dep_format_recognized(base_idx):
             )
     doc = _tw_doc(base)
     # Walker emits no SPURIOUS findings (depending on base, may emit
-    # legit antecedent issues — but the dep relationship must still resolve)
+    # legit antecedent issues - but the dep relationship must still resolve)
     issues = check_antecedent_basis(doc)
     # The dep claim's references should not appear as walker_fp due to
-    # parser failing to recognize the parent — verify by checking that
+    # parser failing to recognize the parent - verify by checking that
     # any emitted finding doesn't have a `note: cleanup_empty` marker
     # (would indicate parser broke).
     for i in issues:
@@ -174,19 +174,19 @@ def test_older_tw_dep_format_recognized(base_idx):
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# Bug class 2 — Mixed Arabic/CJK ordinal style
+# Bug class 2 - Mixed Arabic/CJK ordinal style
 # ─────────────────────────────────────────────────────────────────────────
 #
-# Surfaced by 神秘黑屏哥 — drafter introduces `第1間隔件` (Arabic) and
+# Surfaced by 神秘黑屏哥 - drafter introduces `第1間隔件` (Arabic) and
 # references `前述第二間隔件` (CJK). Walker normalize must Arabic→CJK on
 # both intro and reference sides for symmetric matching. R63 fix.
 
 
 def test_arabic_to_cjk_ordinal_symmetry_tw():
-    """Drafter mixes 第1間隔件 (intro) with 前述第二間隔件 — should NOT
+    """Drafter mixes 第1間隔件 (intro) with 前述第二間隔件 - should NOT
     resolve (different ordinals); each must independently resolve only
     when normalize chains agree."""
-    # Intro 第1, ref 第一 (same ordinal, different script) — should resolve
+    # Intro 第1, ref 第一 (same ordinal, different script) - should resolve
     doc = _tw_doc([
         _claim(1, "1. 一種裝置，包含一第1間隔件，前述第一間隔件位於底部。"),
     ])
@@ -201,7 +201,7 @@ def test_arabic_to_cjk_ordinal_symmetry_tw():
 
 def test_arabic_to_cjk_ordinal_display_preserved_tw():
     """When drafter writes 第1, displayed reference_form must preserve
-    Arabic — walker normalizes only for matching."""
+    Arabic - walker normalizes only for matching."""
     doc = _tw_doc([
         _claim(1, "1. 一種裝置，包含一電極，前述第1電極不在分析範圍。"),
     ])
@@ -218,10 +218,10 @@ def test_arabic_to_cjk_ordinal_display_preserved_tw():
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# Bug class 3 — Bibliographic citation labels
+# Bug class 3 - Bibliographic citation labels
 # ─────────────────────────────────────────────────────────────────────────
 #
-# `[專利文獻N]X` / `[非專利文獻N]X` — drafters use these to list cited
+# `[專利文獻N]X` / `[非專利文獻N]X` - drafters use these to list cited
 # literature in 先前技術. R65 fix: paragraphEnding skips them since
 # they're bibliographic entries, not prose paragraphs.
 
@@ -262,7 +262,7 @@ def test_bibliographic_with_para_num_skipped_tw():
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# Bug class 4 — Empty 【NNNN】 paragraph spacers
+# Bug class 4 - Empty 【NNNN】 paragraph spacers
 # ─────────────────────────────────────────────────────────────────────────
 #
 # Drafters insert 【0009】 alone as a spacer between content paragraphs.
@@ -287,10 +287,10 @@ def test_empty_paragraph_number_marker_skipped_tw():
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# Bug class 5 — Self-loop drafter typos
+# Bug class 5 - Self-loop drafter typos
 # ─────────────────────────────────────────────────────────────────────────
 #
-# cN.deps == [N] — drafter typo. R65 fix: selfDep fires; circularDep
+# cN.deps == [N] - drafter typo. R65 fix: selfDep fires; circularDep
 # does NOT fire on direct self-loops (R65 dedup).
 
 
@@ -323,7 +323,7 @@ def test_self_loop_typo_caught_once_cn():
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# Bug class 6 — Section-name aliases
+# Bug class 6 - Section-name aliases
 # ─────────────────────────────────────────────────────────────────────────
 #
 # 背景技術 (alias for 先前技術), 先前技術文獻, 專利文獻, 非專利文獻 etc.
@@ -335,7 +335,7 @@ def test_self_loop_typo_caught_once_cn():
     "先前技術文獻",
 ])
 def test_section_alias_recognized_as_prior_art_tw(alias_section):
-    """Drafter uses 背景技術 instead of canonical 先前技術 — required-sections
+    """Drafter uses 背景技術 instead of canonical 先前技術 - required-sections
     check should not emit `prior_art missing`.
     """
     # Build a doc as if parser saw the alias: prior_art content present,
@@ -352,16 +352,16 @@ def test_section_alias_recognized_as_prior_art_tw(alias_section):
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# Bug class 7 — Locative bare-noun intros
+# Bug class 7 - Locative bare-noun intros
 # ─────────────────────────────────────────────────────────────────────────
 #
-# `於半導體基板的一主面上` — drafter introduces `半導體基板` inside a
+# `於半導體基板的一主面上` - drafter introduces `半導體基板` inside a
 # locative phrase, and references `前述半導體基板`. R64 F7d fix: walker
 # treats the locative-noun position as introducing the head noun.
 
 
 def test_locative_bare_noun_intro_resolves_tw():
-    """於X的一Y上 introducing X — `前述X` reference should resolve."""
+    """於X的一Y上 introducing X - `前述X` reference should resolve."""
     doc = _tw_doc([
         _claim(
             1,
@@ -375,10 +375,10 @@ def test_locative_bare_noun_intro_resolves_tw():
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# Bug class 8 — Modifier+noun references (R66)
+# Bug class 8 - Modifier+noun references (R66)
 # ─────────────────────────────────────────────────────────────────────────
 #
-# `前述島狀的奈米片積層體` — drafter references state-modifier+head form
+# `前述島狀的奈米片積層體` - drafter references state-modifier+head form
 # where head was introduced bare. R66 (revised 2026-05-05) fix: walker
 # captures the FULL form and emits a real antecedent finding so the user
 # sees the meaningful reference_form (not just `前述島狀`).
@@ -405,7 +405,7 @@ def test_state_modifier_capture_extends_tw():
 
 
 def test_possessive_capture_not_extended_tw():
-    """`該<noun-class>的一<another>` (possessive) — capture stays bare.
+    """`該<noun-class>的一<another>` (possessive) - capture stays bare.
 
     Suffix gate (狀/形) protects possessive frames where the FIRST noun is
     the actual reference and shouldn't be conflated with the head after 的.
@@ -445,7 +445,7 @@ def test_state_modifier_capture_extends_cn():
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# Generalized regression — any future bug class plugs in here
+# Generalized regression - any future bug class plugs in here
 # ─────────────────────────────────────────────────────────────────────────
 
 
@@ -495,7 +495,7 @@ class TestRealDrafterBaseline:
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# Mutation count check — ensure the harness doesn't silently drop
+# Mutation count check - ensure the harness doesn't silently drop
 # ─────────────────────────────────────────────────────────────────────────
 
 
@@ -506,8 +506,8 @@ def test_harness_covers_all_eight_bug_classes():
     or merged, update this count and the docstring at top of file.
     """
     src = open(__file__, encoding="utf-8").read()
-    # Count `# Bug class N —` markers
-    markers = re.findall(r"^# Bug class (\d+) —", src, re.M)
+    # Count `# Bug class N -` markers
+    markers = re.findall(r"^# Bug class (\d+) -", src, re.M)
     assert len(set(markers)) == 8, (
         f"Expected 8 bug class markers, found {len(set(markers))}: {markers}"
     )

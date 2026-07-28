@@ -21,7 +21,7 @@ jobs:
       - name: Install system deps
         run: |
           # Route around the Azure-hosted Ubuntu mirror when it's
-          # unhealthy — the ubuntu-latest runner defaults to
+          # unhealthy - the ubuntu-latest runner defaults to
           # azure.archive.ubuntu.com, which occasionally times out and
           # burns 20-30 minutes on apt-get retries before falling back
           # to the public archive. Force the public archive upfront, and
@@ -56,7 +56,7 @@ jobs:
 
       - name: Trust-observer invariant gate
         # Closes the `git commit --no-verify` loophole on the local
-        # pre-commit hook. Same script, same exit codes — a contributor
+        # pre-commit hook. Same script, same exit codes - a contributor
         # who skips the local hook still gets blocked at PR time.
         # See scripts/check_trust_observers.sh and frontend/src/lib/
         # trustObserver.js for rule + rationale.
@@ -69,7 +69,7 @@ jobs:
           npm run build
 
   wheel-verify:
-    # Phase 9 #40 — rebuild the Pyodide wheel on push and compare against
+    # Phase 9 #40 - rebuild the Pyodide wheel on push and compare against
     # the one committed under frontend/public/. Catches stale-wheel
     # commits that slipped past the pre-commit hook (Phase 9 #39) and
     # smoke-tests the analyzer over the committed synthetic CN fixtures.
@@ -86,7 +86,7 @@ jobs:
       - name: Install system deps
         run: |
           # Route around the Azure-hosted Ubuntu mirror when it's
-          # unhealthy — the ubuntu-latest runner defaults to
+          # unhealthy - the ubuntu-latest runner defaults to
           # azure.archive.ubuntu.com, which occasionally times out and
           # burns 20-30 minutes on apt-get retries before falling back
           # to the public archive. Force the public archive upfront, and
@@ -124,7 +124,7 @@ jobs:
           echo "Committed: $COMMITTED_SIZE bytes ($COMMITTED)"
           echo "Delta:     $DIFF bytes ($PCT%)"
           if [ "$PCT" -gt 10 ]; then
-            echo "::error::wheel size delta >10% — rebuild via 'cd frontend && npm run build:wheel'"
+            echo "::error::wheel size delta >10% - rebuild via 'cd frontend && npm run build:wheel'"
             exit 1
           fi
 
@@ -136,7 +136,7 @@ jobs:
           import sys, zipfile
           fresh = sorted(zipfile.ZipFile("$FRESH").namelist())
           committed = sorted(zipfile.ZipFile("$COMMITTED").namelist())
-          # Wheel metadata files vary per build — ignore for the file-list check.
+          # Wheel metadata files vary per build - ignore for the file-list check.
           def core(names):
               return [n for n in names if not n.endswith(("RECORD", "METADATA", "WHEEL"))]
           a, b = core(fresh), core(committed)

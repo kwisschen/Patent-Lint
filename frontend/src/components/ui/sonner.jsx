@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 import { Toaster as Sonner } from 'sonner'
 
 // Manual shadcn-style wrapper for Sonner. Uses PatentLint's --attention-*
 // CSS variables (amber/warm, already defined in index.css with dark-mode
-// overrides). Dark mode auto-adapts via the CSS variables — no theme prop
+// overrides). Dark mode auto-adapts via the CSS variables - no theme prop
 // needed. Not generated via `npx shadcn@latest add sonner` to avoid pulling
 // in next-themes or other unwanted dependencies.
 export function Toaster({ ...props }) {
@@ -23,7 +23,7 @@ export function Toaster({ ...props }) {
             'group-[.toast]:bg-[var(--attention-text)] group-[.toast]:text-[var(--attention-bg)] group-[.toast]:rounded-md group-[.toast]:px-3 group-[.toast]:py-1.5 group-[.toast]:font-medium group-[.toast]:text-sm group-[.toast]:ml-auto',
           cancelButton:
             'group-[.toast]:bg-transparent group-[.toast]:text-[var(--attention-text)] group-[.toast]:opacity-70 hover:group-[.toast]:opacity-100 group-[.toast]:px-3 group-[.toast]:py-1.5 group-[.toast]:text-sm',
-          // Monochrome close button — neutral B&W contrast against the
+          // Monochrome close button - neutral B&W contrast against the
           // warm/amber toast palette so it reads as a system control,
           // not part of the toast's content. Inverse colors auto-flip
           // between light and dark mode via CSS variables (foreground

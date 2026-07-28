@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Corpus-wide D1 mutation smoke test.
 
 Iterates every fixture × jurisdiction. For each, finds the strongest
@@ -14,7 +14,7 @@ codifying them prevents silent regression.
 
 Skips fixtures that don't have a strong-enough canonical (test6's
 SAG503A Latin-prefix entry, testspec4's resin system with only 3
-occurrences) — these can't host a meaningful mutation test.
+occurrences) - these can't host a meaningful mutation test.
 """
 from __future__ import annotations
 
@@ -42,9 +42,9 @@ from patentlint.analysis.cn_specification import (
 REPO = Path(__file__).resolve().parent.parent.parent
 FIXTURES_DIR = REPO / "tests" / "fixtures"
 
-# Per-fixture skip reasons — all are corpus issues, not algorithm bugs.
+# Per-fixture skip reasons - all are corpus issues, not algorithm bugs.
 KNOWN_SKIP = {
-    # Latin-prefix Sag503A — no plausible mutation target after our
+    # Latin-prefix Sag503A - no plausible mutation target after our
     # canonical-discovery heuristic; represents a 5%-noise edge case.
     "test6_chemistry_bare_noun_list.docx",
     # canonical "resin system" only 3 occurrences with awkward spacing

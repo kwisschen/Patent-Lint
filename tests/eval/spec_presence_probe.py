@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# spec_presence_probe.py — does the spec/abstract-presence signal discriminate
+# spec_presence_probe.py - does the spec/abstract-presence signal discriminate
 # antecedent FPs from real defects? (ADR-159, the #1 confidence-layer hypothesis.)
 #
 # Uses the corpus `abstract` as a (weaker) proxy for the dormant `term_in_spec`
 # signal: for each judged finding, is the term present in the abstract? Measures
 # P(legit | in) vs P(legit | out) and the demote-if-in trade. FINDING: the
-# signal does NOT transfer across jurisdictions — mildly right-direction on US,
+# signal does NOT transfer across jurisdictions - mildly right-direction on US,
 # COUNTERPRODUCTIVE on TW/CN. See CONFIDENCE_LAYER_FINDINGS.md.
 from __future__ import annotations
 

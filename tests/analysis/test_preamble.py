@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Tests for check_preamble_consistency — Phase 4 B1."""
+# Copyright (c) 2025-2026 Christopher Chen
+"""Tests for check_preamble_consistency - Phase 4 B1."""
 
 from pathlib import Path
 
@@ -138,7 +138,7 @@ class TestPreambleConsistency:
         assert all(r.status == "pass" for r in results)
 
     def test_multiple_independent_different_entities(self):
-        """Multiple independent claims with different entity types — normal and expected."""
+        """Multiple independent claims with different entity types - normal and expected."""
         claims = _make_claims(
             (1, "A device comprising: a widget.", True, False, []),
             (2, "The device of claim 1, further comprising a gadget.", False, False, [1]),

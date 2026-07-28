@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# trailing_token_miner.py — regenerate the over-capture cluster (ADR-159
+# trailing_token_miner.py - regenerate the over-capture cluster (ADR-159
 # Path-to-80). Run the antecedent walker over the full corpus, join each finding
 # to the ensemble gold verdict, and cluster gold-`walker_fp` findings by their
 # TRAILING token (last CJK char / last whitespace word). The trailing-token
@@ -10,7 +10,7 @@
 #
 #   python3 tests/eval/trailing_token_miner.py CN [--min 6]
 #
-# (ephemeral mining tool — the /tmp dumps it replaces were one-offs.)
+# (ephemeral mining tool - the /tmp dumps it replaces were one-offs.)
 from __future__ import annotations
 
 import argparse

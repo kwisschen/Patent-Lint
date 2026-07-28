@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChevronUp, ChevronDown } from 'lucide-react'
 import { subscribeOutgoing, getOutgoingHistory } from '../lib/outgoingRequests'
 
 // Persistent bottom-right widget surfacing outgoing-data network
-// calls (POST/PUT/etc.) only — never GET requests for asset loads,
+// calls (POST/PUT/etc.) only - never GET requests for asset loads,
 // version checks, or internal SPA navigation. The only thing that
 // can ever increment the counter is a network call that PatentLint
-// itself emits via outgoingRequests.emitOutgoing — currently only
+// itself emits via outgoingRequests.emitOutgoing - currently only
 // /api/report when the user clicks "Send anonymously" on a Report
 // modal. That's the trust property: surfaced network activity is
 // always activity the user themselves chose to initiate.
@@ -25,7 +25,7 @@ import { subscribeOutgoing, getOutgoingHistory } from '../lib/outgoingRequests'
 
 // Maps known endpoint paths to a localized description key. Renders
 // directly under the technical endpoint line so users seeing the bare
-// `/api/report` string understand WHAT it is in their language —
+// `/api/report` string understand WHAT it is in their language -
 // avoids "I just saw an English path go out, did my draft leak?"
 // panic when expanding the log after sending an anonymous report.
 const ENDPOINT_DESCRIPTION_KEYS = {
@@ -61,10 +61,10 @@ export default function NetworkWidget({ pyodideReady }) {
   if (!pyodideReady) return null
 
   // Outer wrapper owns the fixed positioning; inner uses frost-card for
-  // styling. Splitting these is load-bearing — `.frost-card` sets
+  // styling. Splitting these is load-bearing - `.frost-card` sets
   // `position: relative` (index.css:565), which on the same element as
   // Tailwind `fixed` wins on specificity and falls the widget back into
-  // document flow (renders below the footer on short pages — the bug we
+  // document flow (renders below the footer on short pages - the bug we
   // just shipped on b3be10e6).
   return (
     <div className="fixed bottom-4 right-4 z-30 max-w-[240px]">

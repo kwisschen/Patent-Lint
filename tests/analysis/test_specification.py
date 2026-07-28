@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for patentlint.analysis.specification."""
 
 from patentlint.analysis.specification import (
@@ -206,7 +206,7 @@ class TestRequiredSections:
         assert "Brief Description of the Drawings" not in amend[0].message
 
     def test_bdod_required_when_figures_referenced(self):
-        # Body mentions FIG. 1 but the BDoD heading is removed —
+        # Body mentions FIG. 1 but the BDoD heading is removed -
         # BDoD must surface as missing per 37 CFR 1.74.
         doc = (
             "TITLE OF THE INVENTION\nWidget With Base Plate\n\n"
@@ -350,7 +350,7 @@ class TestCheckTitle:
         )
 
     def test_short_title_no_verify(self):
-        # Five words — no warning.
+        # Five words - no warning.
         results = check_title("Method for Assembling a Widget")
         assert all(
             r.message_key != "check.spec.title.verify" for r in results
@@ -358,10 +358,10 @@ class TestCheckTitle:
 
 
 class TestScopeLimitWording:
-    """check_scope_limit_wording — MPEP § 2111 + Phillips v. AWH.
+    """check_scope_limit_wording - MPEP § 2111 + Phillips v. AWH.
 
     Detects "the (present) invention" / "this invention" in spec body
-    text. REVIEW-level — many drafts use these benignly; the check
+    text. REVIEW-level - many drafts use these benignly; the check
     surfaces count + samples for drafter triage.
     """
 
@@ -423,7 +423,7 @@ class TestScopeLimitWording:
         assert results[0].details_params["extra"] == 3
 
     def test_does_not_match_unrelated_invention_word(self):
-        """'inventions' (plural) is intentionally not matched — different
+        """'inventions' (plural) is intentionally not matched - different
         register; drafters don't use it as a scope-defining phrase."""
         from patentlint.analysis.specification import check_scope_limit_wording
         results = check_scope_limit_wording(
@@ -439,7 +439,7 @@ class TestScopeLimitWording:
 
 
 class TestNumeralConsistencyD1:
-    """check_numeral_consistency — MPEP § 608.01(g) D1.
+    """check_numeral_consistency - MPEP § 608.01(g) D1.
 
     Same numeral with multiple distinct element names = drafter copy-paste
     error. Same name with multiple numerals is permitted (legit multiple
@@ -474,7 +474,7 @@ class TestNumeralConsistencyD1:
             "The container 102 contains liquid. The container 102 is sealed."
         )
         # Advisory re-tier (2026-06-25): D1 surfaces as a non-graded "verify"
-        # item, not an asserted "amend" — measured ~87% FP on real drafts.
+        # item, not an asserted "amend" - measured ~87% FP on real drafts.
         assert results[0].status == "verify"
         assert results[0].message_key == "check.spec.numeralConsistency.verify"
         assert results[0].details_params["count"] == 1
@@ -489,7 +489,7 @@ class TestNumeralConsistencyD1:
         assert "container" in all_names
 
     def test_single_occurrence_alternate_filtered(self):
-        """One occurrence of an alternate name is regex noise — don't flag.
+        """One occurrence of an alternate name is regex noise - don't flag.
         Real D1 conflicts have both names appearing repeatedly."""
         from patentlint.analysis.specification import check_numeral_consistency
         results = check_numeral_consistency(
@@ -503,7 +503,7 @@ class TestNumeralConsistencyD1:
         """Numerals appearing <3 times total are likely measurements,
         not real reference numerals. Don't flag."""
         from patentlint.analysis.specification import check_numeral_consistency
-        # Each numeral appears only twice (1x each name) — below the
+        # Each numeral appears only twice (1x each name) - below the
         # ≥3-total threshold required for D1 emission
         results = check_numeral_consistency(
             "The housing 102 is heavy. The container 102 is light."
@@ -512,18 +512,18 @@ class TestNumeralConsistencyD1:
 
     def test_d2_same_name_different_numerals_does_not_fire(self):
         """Multiple physical instances of same element type get distinct
-        numerals — this is normal drafting and must NOT fire."""
+        numerals - this is normal drafting and must NOT fire."""
         from patentlint.analysis.specification import check_numeral_consistency
         results = check_numeral_consistency(
             "The pillar 4 supports the frame. The pillar 5 supports the wall. "
             "The pillar 6 supports the panel."
         )
-        # Three pillars with three numerals — each numeral has only one name
+        # Three pillars with three numerals - each numeral has only one name
         # ('pillar'). D1 doesn't fire.
         assert results[0].status == "pass"
 
     def test_multiple_conflicts(self):
-        """Two genuine D1 conflicts — each name repeated."""
+        """Two genuine D1 conflicts - each name repeated."""
         from patentlint.analysis.specification import check_numeral_consistency
         results = check_numeral_consistency(
             "The housing 102 is metal. The housing 102 is heavy. "
@@ -539,7 +539,7 @@ class TestNumeralConsistencyD1:
         pairs = extract_numeral_name_pairs(
             "The housing 102 is here. The housing 102 also appears again."
         )
-        # Two occurrences of (102, 'housing') — both kept
+        # Two occurrences of (102, 'housing') - both kept
         # Numerals are now strings (to support Latin-prefix refs like LD1)
         assert len(pairs) == 2
         assert all(p[0] == "102" and "housing" in p[1] for p in pairs)
@@ -573,11 +573,11 @@ class TestD1ElementNameOverCapture:
 
     def test_plausible_predicate_accepts_real_element_names(self):
         from patentlint.analysis.specification import _is_plausible_element_name
-        # Real element nouns — INCLUDING past-participle ADJECTIVE modifiers in
+        # Real element nouns - INCLUDING past-participle ADJECTIVE modifiers in
         # the body ("integrated"/"curved"/"printed"/"threaded") AND -ing / -s
         # patent nouns (grating / winding / cladding / outputs / inputs). A
         # generic -ing or -s rejection would drop these and silence genuine D1
-        # conflicts (FN) — e.g. "output grating" vs "second grating".
+        # conflicts (FN) - e.g. "output grating" vs "second grating".
         for ok in (
             "housing", "coupling", "vpn gateway", "time period", "sealing plate",
             "integrated circuit", "curved surface", "printed circuit board",
@@ -598,7 +598,7 @@ class TestD1ElementNameOverCapture:
             "The data is displaying 130 results."
         )
         results = check_numeral_consistency(spec)
-        # 'generated'/'displaying' are over-capture, not a second element name —
+        # 'generated'/'displaying' are over-capture, not a second element name -
         # the R1 filter must drop them so numeral 130 does not surface as a
         # conflict at all (not even as an advisory verify item).
         flagged = [
@@ -675,7 +675,7 @@ class TestD1ParentChildPrefixBleed:
     def test_pure_digit_prefix_not_treated_as_hierarchy(self):
         from patentlint.analysis.specification import _is_parent_name_bleed
         dom = {"10": "housing", "100": "circuit"}
-        # 10 ⊂ 100 is coincidence, not hierarchy — must NOT suppress
+        # 10 ⊂ 100 is coincidence, not hierarchy - must NOT suppress
         assert _is_parent_name_bleed("100", "housing", dom) is False
 
 
@@ -696,12 +696,12 @@ class TestD1FnSafePrune:
 
     def test_prune_keeps_distinct_noun(self):
         from patentlint.analysis.specification import _prune_fn_safe_outliers
-        outs = [{"name": "|bracket", "count": 1}]  # distinct element — FN-safe KEEP
+        outs = [{"name": "|bracket", "count": 1}]  # distinct element - FN-safe KEEP
         assert _prune_fn_safe_outliers(outs, "|motor") == outs
 
     def test_prune_keeps_repeated_outlier(self):
         from patentlint.analysis.specification import _prune_fn_safe_outliers
-        outs = [{"name": "second|switch", "count": 2}]  # 2x, not a bleed — KEEP
+        outs = [{"name": "second|switch", "count": 2}]  # 2x, not a bleed - KEEP
         assert _prune_fn_safe_outliers(outs, "first|switch") == outs
 
     def test_ordinal_variant_single_occurrence_pruned_end_to_end(self):
@@ -718,7 +718,7 @@ class TestD1BioSymbolAndMutation:
     """Engine-3 R2 (ADR-159): biology/clinical biomarker symbols and amino-acid
     substitution notation are mis-captured as Latin-prefix reference designators
     and over-flag D1. They are never drawing elements, so they must not enter
-    the numeral-name pair stream — while real electronic designators (R1, LD1,
+    the numeral-name pair stream - while real electronic designators (R1, LD1,
     IC2, and uppercase-suffixed U1A) must still be captured (FN-safety)."""
 
     def _nums(self, spec):
@@ -768,13 +768,13 @@ class TestD1BioSymbolAndMutation:
 
 
 class TestNumeralConsistencyD1Synthetic:
-    """Synthetic edge-case suite for D1 — covers cases from real drafter
+    """Synthetic edge-case suite for D1 - covers cases from real drafter
     feedback (Latin-prefix refs, single-occurrence typos, ordinal-instance
     collisions, letter-suffix preservation, suffix-cluster merging) so
     these defects don't silently regress."""
 
     def test_latin_prefix_collision(self):
-        """LD1 used with two disjoint elements — common in circuit
+        """LD1 used with two disjoint elements - common in circuit
         patents (low-bridge switch / high-bridge switch notation)."""
         from patentlint.analysis.specification import check_numeral_consistency
         results = check_numeral_consistency(
@@ -811,7 +811,7 @@ class TestNumeralConsistencyD1Synthetic:
         assert "calculating" in results[0].details_params["inline_summary"].lower()
 
     def test_letter_suffix_distinct(self):
-        """10a and 10b are sub-instance distinct refs — must not collapse
+        """10a and 10b are sub-instance distinct refs - must not collapse
         into '10' bucket."""
         from patentlint.analysis.specification import extract_numeral_name_pairs
         pairs = extract_numeral_name_pairs(
@@ -824,7 +824,7 @@ class TestNumeralConsistencyD1Synthetic:
         assert "10b" in nums
 
     def test_ordinal_instance_collision(self):
-        """First switch 30 vs third switch 30 — same head with different
+        """First switch 30 vs third switch 30 - same head with different
         ordinal = drafter assigned same numeral to two instances."""
         from patentlint.analysis.specification import check_numeral_consistency
         results = check_numeral_consistency(
@@ -871,14 +871,14 @@ class TestNumeralConsistencyD1Synthetic:
 
 
 class TestNumeralConsistencyD1CN:
-    """CJK D1 — same canonical+outliers semantics with iterative-strip
+    """CJK D1 - same canonical+outliers semantics with iterative-strip
     + suffix-cluster merge. These tests exercise CN/TW capture quirks."""
 
     def test_cn_iterative_strip_handles_compound_prefix(self):
         from patentlint.analysis.cn_specification import (
             _cn_d1_head_noun_with_ordinal,
         )
-        # 則是設置在第一手柄主體 — 4-layer prefix peel
+        # 則是設置在第一手柄主體 - 4-layer prefix peel
         assert _cn_d1_head_noun_with_ordinal(
             "則是設置在第一手柄主體"
         ) == "第一手柄主體"
@@ -899,12 +899,12 @@ class TestNumeralConsistencyD1CN:
         from patentlint.analysis.cn_specification import (
             _cn_d1_head_noun_with_ordinal,
         )
-        # 至圖, 和圖, 如圖 — ending in 圖/图 = figure context
+        # 至圖, 和圖, 如圖 - ending in 圖/图 = figure context
         assert _cn_d1_head_noun_with_ordinal("至圖") == ""
         assert _cn_d1_head_noun_with_ordinal("和圖") == ""
         assert _cn_d1_head_noun_with_ordinal("如圖") == ""
         assert _cn_d1_head_noun_with_ordinal("说明例如图") == ""
-        # Real elements ending in 圖 (示意圖) are also filtered — refnums
+        # Real elements ending in 圖 (示意圖) are also filtered - refnums
         # bound to "示意圖N" denote figure number, not element
         assert _cn_d1_head_noun_with_ordinal("示意圖") == ""
 
@@ -928,7 +928,7 @@ class TestNumeralConsistencyD1CN:
         assert c11[0]["case"] == "instance"
 
     def test_r67_interior_verb_split_issue_29_originals(self):
-        """R67 (issue #29) — the four literal over-captures from the
+        """R67 (issue #29) - the four literal over-captures from the
         user-reported fixture must each truncate to the bound noun.
 
         Drafter writes `當使用者踩踏踏板E10` (4×) + `端連接一踏板E10`
@@ -946,7 +946,7 @@ class TestNumeralConsistencyD1CN:
         assert _cn_d1_head_noun_with_ordinal("應設置於封閉空間") == "封閉空間"
 
     def test_r67_interior_verb_split_pattern_coverage(self):
-        """R67 — same bug class with mutated context. Per skill
+        """R67 - same bug class with mutated context. Per skill
         section 8 future-proofing: connection / spatial / form /
         reference / containment verbs all matching the
         `<adverb><verb><quantifier-or-prep><noun>` shape must split.
@@ -968,7 +968,7 @@ class TestNumeralConsistencyD1CN:
         assert _cn_d1_head_noun_with_ordinal("對應於前述基座的螺孔") == "螺孔"
 
     def test_r67_interior_verb_simplified_chinese_parity(self):
-        """R67 — Simplified-Chinese mirror of issue #29 originals.
+        """R67 - Simplified-Chinese mirror of issue #29 originals.
         CN drafters using Simplified character set get the same fix
         through the same shared helpers (cross-jurisdiction parity).
         """
@@ -979,7 +979,7 @@ class TestNumeralConsistencyD1CN:
         assert _cn_d1_head_noun_with_ordinal("端连接一踏板") == "踏板"
         assert _cn_d1_head_noun_with_ordinal("共同形成一封闭空间") == "封闭空间"
         assert _cn_d1_head_noun_with_ordinal("应设置于封闭空间") == "封闭空间"
-        # Simplified anti-corpus — verb root inside compound noun preserved
+        # Simplified anti-corpus - verb root inside compound noun preserved
         # (`第一连接器` ends in `器`; full chain through R67 split keeps it).
         # `形成部` standalone (3 chars) is collapsed by pre-existing
         # `_cn_strip_iterative` behavior unrelated to R67; the longer
@@ -988,7 +988,7 @@ class TestNumeralConsistencyD1CN:
         assert _cn_d1_head_noun_with_ordinal("组织图像形成部") == "组织图像形成部"
 
     def test_r67_interior_verb_preserves_compound_nouns(self):
-        """R67 — verb-root morphemes inside compound nouns must NOT
+        """R67 - verb-root morphemes inside compound nouns must NOT
         trigger split. Anti-corpus guard for the standard patent
         element-morpheme suffixes (器/件/體/座/面/部/腔/...).
         """
@@ -996,7 +996,7 @@ class TestNumeralConsistencyD1CN:
             _cn_d1_head_noun_with_ordinal,
             _cn_split_on_interior_verb,
         )
-        # The split helper alone — these are ≥4 chars so the helper runs.
+        # The split helper alone - these are ≥4 chars so the helper runs.
         # Each contains a verb compound followed by a noun-suffix char.
         for compound in [
             "第一連接器",      # 連接 + 器
@@ -1079,7 +1079,7 @@ def test_ampere_current_unit_excluded_from_refnums_434():
     ]
     assert extract_numeral_name_pairs("the housing 102 holds the lid") == [("102", "housing")]
     # End-to-end (the report scenario): `network 20` used consistently, with one
-    # `20 Amperes` measurement — no longer a D1 conflict.
+    # `20 Amperes` measurement - no longer a D1 conflict.
     assert check_numeral_consistency(
         "A network 20 connects the nodes. The network 20 routes packets. "
         "The network 20 has ports. The network 20 is redundant. The network 20 scales. "

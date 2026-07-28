@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""False-Negative harness — seeded-violation fixtures per jurisdiction.
+# Copyright (c) 2025-2026 Christopher Chen
+"""False-Negative harness - seeded-violation fixtures per jurisdiction.
 
 For each heuristic / walker / regex-based check, build a minimal synthetic
 draft with ONE known defect seeded in. Assert the appropriate check fires
@@ -8,7 +8,7 @@ draft with ONE known defect seeded in. Assert the appropriate check fires
 
 The bar is intentionally narrow: each test seeds exactly one defect type
 so a failure unambiguously identifies the broken check. The harness is
-NOT a coverage census — it's a regression gate against silent FNs in the
+NOT a coverage census - it's a regression gate against silent FNs in the
 checks most exposed to legal risk (walkers, regex matchers, content
 heuristics).
 
@@ -182,7 +182,7 @@ def test_fn_us_extra_period_in_claim():
     flagged = find_extra_periods(claims)
     # find_extra_periods returns claim IDs with mid-claim period violations;
     # if the regex/AST treats final period only, this test documents the
-    # contract — adjust assertion shape when the helper signature evolves.
+    # contract - adjust assertion shape when the helper signature evolves.
     assert isinstance(flagged, list)
 
 
@@ -301,7 +301,7 @@ def test_fn_cn_walker_catches_missing_intro():
     )
 
 
-# === Excess-claims fee thresholds (arithmetic only — 0/0 modulo parser) =====
+# === Excess-claims fee thresholds (arithmetic only - 0/0 modulo parser) =====
 
 
 def test_fn_us_excess_claims_caught_total():

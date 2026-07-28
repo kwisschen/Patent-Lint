@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 //
-// Phase A — i18n presence check.
+// Phase A - i18n presence check.
 //
 // Walks every leaf string key in frontend/src/i18n/locales/en.json and, for
 // each of zh-TW / zh-CN / ja / ko, reports three drift classes:
 //
-//   missing  — key present in EN but absent in the target locale.
-//   empty    — key present but value is "" (or whitespace only).
-//   identical— value character-for-character identical to EN. Often means
+//   missing  - key present in EN but absent in the target locale.
+//   empty    - key present but value is "" (or whitespace only).
+//   identical- value character-for-character identical to EN. Often means
 //              untranslated; sometimes legitimate (brand names, MPEP §
-//              anchors, Latin acronyms) — surface for review, don't
+//              anchors, Latin acronyms) - surface for review, don't
 //              auto-rewrite.
 //
-// Exits non-zero on any drift. Reporter only — does not mutate any locale
+// Exits non-zero on any drift. Reporter only - does not mutate any locale
 // file. Used to gate the 94-check locale audit (Phase C).
 //
 // Usage:
@@ -34,7 +34,7 @@ const TARGETS = ["de", "zh-TW", "zh-CN", "ja", "ko"];
 
 // Keys where EN-identical values are legitimate (brand names, proper nouns,
 // universal acronyms, punctuation shared across Latin scripts, or tech loan
-// words that German has absorbed identically — Duden-approved) per ADR-085
+// words that German has absorbed identically - Duden-approved) per ADR-085
 // and ADR-144. Each entry is a JSONPath-like string matching a leaf path.
 // Prefixes are matched with "startsWith" semantics so a subtree can be
 // exempted at once. Add a new entry when a future locale legitimately
@@ -49,7 +49,7 @@ const EN_IDENTICAL_ALLOWLIST = [
     "jurisdiction.tw",
     // Latin-cognate "Region" used identically in DE as geographic-territory label.
     "jurisdiction.label",
-    // Language endonyms — lang.* block holds each language's self-name
+    // Language endonyms - lang.* block holds each language's self-name
     // ("English", "简体中文", "日本語", "Deutsch", etc.) which is identical
     // across every locale file by convention.
     "lang",
@@ -68,7 +68,7 @@ const EN_IDENTICAL_ALLOWLIST = [
     "about.arch.optional",
     "details.citations",
     "details.rawText",
-    // Pure interpolation placeholders — no translatable text.
+    // Pure interpolation placeholders - no translatable text.
     "details.sectionName",
     "rubric.impactList.sectionLabel",
     "rubric.gradePill",
@@ -87,7 +87,7 @@ const EN_IDENTICAL_ALLOWLIST = [
     // DI-172 punctuation: Latin scripts use ": " with space; CJK uses "：".
     // Identical across EN/DE/KO is legitimate.
     "feedback.email.fieldColon",
-    // Tech loan words German/Latin-script locales use identically — Duden-approved
+    // Tech loan words German/Latin-script locales use identically - Duden-approved
     // and universal in native German UI copy (ADR-144: these ARE the native terms,
     // not lazy translations).
     "feedback.email.fieldDetails",
@@ -102,7 +102,7 @@ const EN_IDENTICAL_ALLOWLIST = [
     // KO renders this consistently with the surrounding KO description body
     // which also cites CN's Simplified form (五书模板, 段落编号) directly.
     "about.cnFeatures.dualPipeline.title",
-    // Latin-script punctuation conventions — CJK uses full-width variants.
+    // Latin-script punctuation conventions - CJK uses full-width variants.
     "punct.listSeparator",
     "punct.sentenceSeparator",
     "punct.ellipsis",
@@ -193,7 +193,7 @@ function printReport(locale, report, enLeafCount) {
 function main() {
     const en = loadLocale(BASE);
     const enLeaves = flatLeaves(en);
-    console.log(`i18n presence check — base: ${BASE} (${enLeaves.size} leaf keys)`);
+    console.log(`i18n presence check - base: ${BASE} (${enLeaves.size} leaf keys)`);
     console.log();
 
     let anyDrift = false;

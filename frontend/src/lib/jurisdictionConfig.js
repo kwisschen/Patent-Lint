@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 
 /**
  * Jurisdiction-specific configuration for frontend components.
@@ -74,9 +74,9 @@ const JURISDICTION_CONFIG = {
     section112TitleKey: 'section112.titleTw',
     section112PassKey: 'check.claims.antecedentBasis.pass',
     pdfHeaderKey: 'pdf.header',
-    // CN spec-support (说明书支持分析) — CN port of TW ADR-138 feature.
+    // CN spec-support (说明书支持分析) - CN port of TW ADR-138 feature.
     // Statute anchor: 专利法 §26 第4款 + 审查指南 第二部分第二章 §3.2.1.
-    // 3-tier matcher (no symbol-table whitelist — CN has no 符号说明).
+    // 3-tier matcher (no symbol-table whitelist - CN has no 符号说明).
     supportsSpecSupport: true,
     specSupportTitleKey: 'specSupport.title',
     specSupportPassKey: 'check.cn.claims.specSupport.pass',
@@ -139,11 +139,11 @@ const JURISDICTION_CONFIG = {
     specSupportReferenceCite: '專利法 §26 第3項',
   },
   EPC: {
-    // EPC English drafts share the US shape — Latin-script .docx, word-count
+    // EPC English drafts share the US shape - Latin-script .docx, word-count
     // abstract (50-150 per Rule 47(2) + EPO Guidelines F-II § 2.3), single
     // consolidated claims block. Statute pins differ (Art. 84 EPC / Rule 43
     // / Rule 46 / Rule 47) and the Section112 heading reads "Art. 84 EPC
-    // Analysis" rather than "§ 112 Analysis". v1 beta — frontend picker
+    // Analysis" rather than "§ 112 Analysis". v1 beta - frontend picker
     // shipped 2026-05-11; real-corpus walker FP tuning pending.
     acceptedFormats: {
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
@@ -179,12 +179,12 @@ const JURISDICTION_CONFIG = {
   },
 }
 
-// Purple for EPC — distinct from US blue, CN red, TW teal. Iteration
+// Purple for EPC - distinct from US blue, CN red, TW teal. Iteration
 // history: indigo (#4F46E5) sat only 23° in hue from US blue and read
 // as "another blue"; amber-700 (#B45309) sat only ~32° from CN red and
 // read as "warm-color sibling". Purple-700 (#7E22CE) sits 47° from US
 // blue (cool but distinctly purple, not blue), 90° from CN red, and
-// 95° from TW teal — visually distinct from all three on first glance.
+// 95° from TW teal - visually distinct from all three on first glance.
 // 7.05:1 contrast against white text (best of the four jurisdictions);
 // reads "formal / heraldic / legal" rather than warning-flavored.
 export const JURISDICTION_COLORS = {

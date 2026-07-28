@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 //
 // Anonymous error-report modal.
 //
@@ -37,7 +37,7 @@ import {
 } from '@/lib/feedback'
 
 // Faint red (false positive) / green (correct catch) tints carry the meaning
-// without X / check glyphs — cleaner and language-agnostic. The tint deepens +
+// without X / check glyphs - cleaner and language-agnostic. The tint deepens +
 // gains a ring when active. Shared by the single- and per-finding controls.
 function dispositionTint(d, active) {
   if (d === 'false_positive') {
@@ -69,13 +69,13 @@ export default function ReportModal({
   const [userComment, setUserComment] = useState('')
   // Disposition makes the feedback a first-class LABEL (ADR-159): the reporter
   // says whether this flag is a false positive or a confirmed real issue.
-  // Starts UNSET — the button now reads "Send feedback" (not "Looks wrong"),
+  // Starts UNSET - the button now reads "Send feedback" (not "Looks wrong"),
   // so we don't pre-bias toward false_positive; the reporter must choose, which
   // keeps the confirmed-catch (TP) gold honest.
   const [disposition, setDisposition] = useState(null)
 
   // A single §112 report bundles up to SAMPLE_SIZE findings, and one claim is
-  // routinely a MIX of real defects and FPs — so a single blanket verdict
+  // routinely a MIX of real defects and FPs - so a single blanket verdict
   // mislabels the set (the #373/#374 lossy-label gap). When there are ≥2
   // findings (and it isn't a section-level batch), collect a disposition PER
   // finding; the payload then carries each finding's own verdict and a 'mixed'
@@ -132,7 +132,7 @@ export default function ReportModal({
     [checkKey, jurisdiction, locale, diagnostics, userComment, disposition, perFinding, findingDispositions],
   )
 
-  // Preview omits the comment from the JSON-style list — it's rendered
+  // Preview omits the comment from the JSON-style list - it's rendered
   // separately in its own block so the user can see their input
   // verbatim (more honest than dropping it into a sorted key:value list).
   const entries = useMemo(
@@ -155,7 +155,7 @@ export default function ReportModal({
     setSubmitting(false)
     if (outcome?.ok) {
       setResult('success')
-      // Auto-close after a brief beat — long enough to register the success
+      // Auto-close after a brief beat - long enough to register the success
       // confirmation, short enough not to add perceptible latency.
       setTimeout(() => onOpenChange(false), 500)
     } else {
@@ -176,7 +176,7 @@ export default function ReportModal({
         {batchMode ? (
           // Batch (section-level) report: a single blanket FP/TP verdict would
           // mislabel the mixed real/false findings in a §112 section, so batch
-          // sends carry NO disposition — each finding is triaged on its merits.
+          // sends carry NO disposition - each finding is triaged on its merits.
           <div className="rounded-md border border-border/60 bg-muted/40 px-3 py-2 text-xs leading-snug text-muted-foreground">
             {t('feedback.reportModal.batchNote', { count: batchCount })}
           </div>

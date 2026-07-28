@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """i18n key coverage CI gate.
 
 Catches the bug class where Python emits a message_key / details_key
-that doesn't exist in `frontend/src/i18n/locales/en.json` — the frontend
+that doesn't exist in `frontend/src/i18n/locales/en.json` - the frontend
 then silently falls back to the English `message=` / `details=` field
 baked into Python source, leaking English UI into localized renderings.
 
@@ -15,7 +15,7 @@ Covers:
   - Literal `message_key="..."` and `details_key="..."` strings.
   - Runtime-rekeyed keys (when Python does `message_key.replace(...)`
     to map US helper output into another jurisdiction's namespace);
-    these are catalogued in RUNTIME_REKEYS below — keep this catalog
+    these are catalogued in RUNTIME_REKEYS below - keep this catalog
     in sync when adding new rekey logic.
   - F-string-suffix keys (`f"check.spec.X.{suffix}"`); the per-key
     suffix list F_SUFFIX_KEYS below enumerates known patterns.
@@ -133,7 +133,7 @@ def test_all_locales_have_the_same_keys_as_en():
     Cross-locale parity is the gate that prevents zh-TW (or any non-EN
     locale) from missing keys that en.json has. If en.json is the single
     source of truth, drift in non-en locales causes English fallback in
-    that locale only — same English-leak bug class.
+    that locale only - same English-leak bug class.
     """
     locales_dir = EN_JSON.parent
     en = json.loads(EN_JSON.read_text())
@@ -173,17 +173,22 @@ def _walk_leaves_with_paths(d, prefix=""):
         yield prefix, d
 
 
-def test_no_em_dashes_in_cjk_locales():
-    """CJK locales (zh-TW, zh-CN, ja, ko) must not contain U+2014 em dashes."""
+def test_no_em_dashes_in_any_locale():
+    """No locale may contain U+2014 em dashes or U+2013 en dashes.
+
+    Originally CJK-only. Widened to all six once en/de were swept clean,
+    because the house rule bans both characters everywhere, not just where
+    they collide with full-width punctuation.
+    """
     locales_dir = EN_JSON.parent
     failures = []
     for locale_file in sorted(locales_dir.glob("*.json")):
-        if locale_file.name not in CJK_LOCALE_FILES:
-            continue
         data = json.loads(locale_file.read_text())
         hits = []
         for path, val in _walk_leaves_with_paths(data):
-            if "—" in val:  # em dash
+            # Escapes, not literals: a repo-wide dash sweep would otherwise
+            # rewrite this detector into one that matches plain hyphens.
+            if "\u2014" in val or "\u2013" in val:
                 hits.append((path, val))
         if hits:
             failures.append(
@@ -194,7 +199,8 @@ def test_no_em_dashes_in_cjk_locales():
     if failures:
         pytest.fail(
             "\n".join(failures)
-            + "\n\nCJK convention: replace with 「：」 (definition / connector), "
-            "「（…）」 (apposition / parenthetical), or 「、」 (list separator). "
+            + "\n\nReplace with a plain '-', a colon, or parentheses. In CJK "
+            "locales prefer 「：」 (definition / connector), 「（…）」 "
+            "(apposition / parenthetical), or 「、」 (list separator). "
             "Project rule documented in CLAUDE.md."
         )

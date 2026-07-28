@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 //
 // Minimal pub-sub for tracking outgoing-data network calls.
 // Fired EXPLICITLY by code that POSTs/PUTs/etc. to a remote endpoint;
 // NOT a passive network observer. The deliberate "explicit emit"
 // design means we know exactly which calls qualify as outgoing data
-// and which are routine asset loads — no false positives from font
+// and which are routine asset loads - no false positives from font
 // fetches, version checks, or internal navigation.
 //
 // Convention: every fetch() with method !== 'GET' must be paired
@@ -19,7 +19,7 @@
 // every request including GETs (so the test button proves "yes the
 // observer catches things, now drop a file and see how nothing
 // fires"). The widget powered by this module shows only outgoing
-// data — the metric that actually matters for the trust claim.
+// data - the metric that actually matters for the trust claim.
 
 const listeners = new Set()
 const history = []

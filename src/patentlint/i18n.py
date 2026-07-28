@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""i18n helper — loads frontend locale JSON and provides translation.
+# Copyright (c) 2025-2026 Christopher Chen
+"""i18n helper - loads frontend locale JSON and provides translation.
 
 Single source of truth is ``frontend/src/i18n/locales/*.json``. In a
 built wheel, these files ship at ``patentlint/_locales/`` via hatchling
@@ -31,7 +31,7 @@ from typing import Any, Callable
 _SUPPORTED_LOCALES: tuple[str, ...] = ("en", "de", "zh-TW", "zh-CN", "ja", "ko")
 _DEFAULT_LOCALE: str = "en"
 
-# ``{{var}}`` interpolation. Identifiers only — no expressions, no
+# ``{{var}}`` interpolation. Identifiers only - no expressions, no
 # nesting. Whitespace inside the braces is tolerated.
 _INTERPOLATION_RE = re.compile(r"\{\{\s*([A-Za-z_][A-Za-z0-9_]*)\s*\}\}")
 
@@ -40,9 +40,9 @@ def _locale_dir() -> Path:
     """Resolve the directory containing locale JSON files.
 
     Order:
-    1. ``patentlint/_locales/`` — wheel location (populated by hatchling
+    1. ``patentlint/_locales/`` - wheel location (populated by hatchling
        force-include at build time).
-    2. ``<repo>/frontend/src/i18n/locales/`` — dev-tree source of truth.
+    2. ``<repo>/frontend/src/i18n/locales/`` - dev-tree source of truth.
     """
     packaged = Path(__file__).parent / "_locales"
     if packaged.is_dir():
@@ -77,7 +77,7 @@ def _resolve(bundle: dict, key: str) -> Any:
 
     Returns ``None`` if any segment is missing or if the path bottoms
     out at a non-string value. The caller decides what to do with a
-    ``None`` — typically fall back to ``en`` then to the raw key.
+    ``None`` - typically fall back to ``en`` then to the raw key.
     """
     cur: Any = bundle
     for part in key.split("."):
@@ -112,7 +112,7 @@ def translate(key: str, locale: str = _DEFAULT_LOCALE, /, **params: Any) -> str:
     Fallback chain:
       1. Requested locale.
       2. ``en`` (default locale).
-      3. Raw key — visible-on-missing is deliberate so translation gaps
+      3. Raw key - visible-on-missing is deliberate so translation gaps
          surface in QA instead of rendering as empty strings.
     """
     bundle = load_locale(locale)

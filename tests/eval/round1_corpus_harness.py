@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Round-1 corpus harness — runs walker on full corpus + joins to Phase 2b
+# Copyright (c) 2025-2026 Christopher Chen
+"""Round-1 corpus harness - runs walker on full corpus + joins to Phase 2b
 ensemble verdicts for accuracy measurement.
 
 Usage as a sim gate during walker mechanism development:
@@ -25,8 +25,8 @@ Accuracy metrics:
   silenced           = pre - post (finding existed, no longer fires)
   false_fires        = post - pre (new finding, didn't exist before)
   silenced_walker_fp = silenced ∩ ensemble verdict 'walker_fp' (GOOD)
-  silenced_coverage  = silenced ∩ 'coverage_gap' (GOOD — also walker miss)
-  silenced_legit     = silenced ∩ 'legit_drafting_error' (BAD — over-silenced)
+  silenced_coverage  = silenced ∩ 'coverage_gap' (GOOD - also walker miss)
+  silenced_legit     = silenced ∩ 'legit_drafting_error' (BAD - over-silenced)
   silenced_ambig     = silenced ∩ 'ambig' (neutral)
   silenced_unjudged  = silenced - any verdict (uncertain)
 
@@ -76,7 +76,7 @@ PHASE2B_RESULTS = {
     ],
 }
 
-# Claim parsing — call PRODUCTION parsers directly so corpus walker output
+# Claim parsing - call PRODUCTION parsers directly so corpus walker output
 # matches what real .docx ingestion would produce. Inline regex copies
 # diverged from production in three jurisdictions, systematically biasing
 # walker FP/precision metrics:
@@ -88,7 +88,7 @@ PHASE2B_RESULTS = {
 #       range/enumeration/disjunction expansions (`权利要求1至5中任一项`,
 #       `权利要求1、2或3`) so the walker reached only the first parent.
 #   TW: previous regex didn't model 引用記載型式 (`一種X，具備如請求項N
-#       所述的Y`) — those are statutorily INDEPENDENT (own preamble) but
+#       所述的Y`) - those are statutorily INDEPENDENT (own preamble) but
 #       still need chain traversal via `quoted_references`. The corpus
 #       harness misclassified them as dependent and dropped the
 #       quoted_references field, so the walker couldn't resolve intros
@@ -249,8 +249,8 @@ Silenced (bad) : {self.bad_silences}  ← MUST be near zero
 Silenced (other): {self.silenced_ambig + self.silenced_unjudged} ({self.silenced_ambig} ambig + {self.silenced_unjudged} unjudged)
 TOTAL silenced  : {self.silenced}
 
-False-fires (walker_fp): {self.false_fires_walker_fp}  (bug-class regression — new findings on terms ensemble already said are walker bugs)
-False-fires (legit)    : {self.false_fires_legit}  (these are GOOD — walker now flags real drafting errors)
+False-fires (walker_fp): {self.false_fires_walker_fp}  (bug-class regression - new findings on terms ensemble already said are walker bugs)
+False-fires (legit)    : {self.false_fires_legit}  (these are GOOD - walker now flags real drafting errors)
 False-fires (other)    : {self.false_fires_coverage + self.false_fires_unjudged}
 TOTAL false-fires      : {self.false_fires}
 """

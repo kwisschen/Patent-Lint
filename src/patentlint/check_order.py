@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Canonical check-emission order (ADR-149).
 
 Single source of truth for the order in which CheckItems appear in any
@@ -10,34 +10,34 @@ once with its (bucket, group, index-within-group).
 The seven canonical groups (1..7) match the document-order invariant in
 CLAUDE.md:
 
-  1. Spec structure     — required sections, section ordering,
+  1. Spec structure     - required sections, section ordering,
                           paragraph numbering, paragraph endings,
                           bracket format (TW 施行細則 §17).
-  2. Spec content       — figure-ref consistency, patent-type wording,
+  2. Spec content       - figure-ref consistency, patent-type wording,
                           title, claim-reference (forbidden), symbol
                           table (TW), plus US-specific filing content
                           (sequence listing, cross-reference, prior art,
                           spec restrictive wording, drawings overview),
                           and the TW symbol-vs-representative-drawing
                           cross-reference.
-  3. Drawings           — figure count, single-figure label, prior-art
+  3. Drawings           - figure count, single-figure label, prior-art
                           labeling, figures-sequential, figure x-ref.
-  4. Claims structure   — sequential numbering, dependency format,
+  4. Claims structure   - sequential numbering, dependency format,
                           self-dep, circular, forward-dep, single
                           sentence, ref numeral parens, subject
                           consistency, transition phrase, dependent
                           ordering, multiple-dependent (US).
-  5. Claims cross-jur.  — tw_terminology (CN), cn_terminology (TW),
+  5. Claims cross-jur.  - tw_terminology (CN), cn_terminology (TW),
                           claims_spec_reference / spec_drawing_ref,
                           multi-dep-on-multi-dep, multi-dep-alt,
                           title-subject-match, symbol-table
                           consistency (TW claims side), connection
                           relationships, claims restrictive wording.
-  6. Claims § 112       — means-plus-function, antecedent basis,
+  6. Claims § 112       - means-plus-function, antecedent basis,
                           spec support, preamble consistency, special
                           formats (Jepson / CRM / Markush / omnibus),
                           claim punctuation, claims overview summary.
-  7. Abstract           — word / char count, title match, commercial
+  7. Abstract           - word / char count, title match, commercial
                           language, restrictive wording, implied
                           phrases, structure, representative drawing.
 
@@ -160,7 +160,7 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.tw.spec.numeralConsistency.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
     "check.tw.spec.numeralConsistency.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
     "check.tw.spec.numeralConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 15),
-    # TW D3 — symbolTableCoverage sits between symbolTablePresence (50)
+    # TW D3 - symbolTableCoverage sits between symbolTablePresence (50)
     # and the ordering of subsequent checks, idx 55.
     "check.tw.spec.symbolTableCoverage.amend": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 55),
     "check.tw.spec.symbolTableCoverage.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 55),
@@ -170,7 +170,7 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.tw.spec.symbolTableConsistency.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 60),
     "check.tw.spec.symbolTableConsistency.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 60),
 
-    # TW-specific sensitive-terms advisory (原住民族傳統智慧創作保護條例) —
+    # TW-specific sensitive-terms advisory (原住民族傳統智慧創作保護條例) -
     # emits after the other spec-content checks so it doesn't intrude on
     # structural-error flow.
     "check.tw.spec.indigenousTerms.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 65),
@@ -188,13 +188,13 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.spec.priorArt.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 90),
     "check.spec.restrictiveWording.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 100),
     "check.spec.restrictiveWording.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 100),
-    # Scope-limit wording (Phillips v. AWH, MPEP § 2111) — sits immediately
+    # Scope-limit wording (Phillips v. AWH, MPEP § 2111) - sits immediately
     # after restrictiveWording in the spec-content group. Different
     # doctrine + surface from the claims-side restrictiveWording check;
     # see specification.py check_scope_limit_wording for rationale.
     "check.spec.scopeLimitWording.verify": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 105),
     "check.spec.scopeLimitWording.pass": (CheckBucket.SPEC, CheckGroup.SPEC_CONTENT, 105),
-    # Reference numeral consistency D1 (MPEP § 608.01(g)) — placed
+    # Reference numeral consistency D1 (MPEP § 608.01(g)) - placed
     # immediately after figureRefConsistency (idx 10) since both check
     # refnum usage in the spec. Consistent across US/CN/TW jurisdictions
     # so users see the same relative position regardless of jurisdiction.
@@ -251,7 +251,7 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.tw.claims.dependencyFormat.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 20),
     "check.tw.claims.dependencyFormat.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 20),
 
-    # Independent claim opening — advisory (VERIFY). Statute (施行細則 §18 /
+    # Independent claim opening - advisory (VERIFY). Statute (施行細則 §18 /
     # 实施细则 §22) requires preamble to state subject-matter name but does
     # NOT literally mandate 一種/一种; it's a strong practitioner convention
     # that TIPO 偵錯系統 + CNIPA 审查指南 §3.1.1 canonical examples follow.
@@ -337,7 +337,7 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.tw.claims.symbolTableConsistency.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 60),
     "check.tw.claims.symbolTableConsistency.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 60),
 
-    # Connection-relationships — CN + TW both emit last in cross-jurisdiction.
+    # Connection-relationships - CN + TW both emit last in cross-jurisdiction.
     "check.cn.claims.connectionRelationships.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 70),
     "check.cn.claims.connectionRelationships.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 70),
     "check.tw.claims.connectionRelationships.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 70),
@@ -385,7 +385,7 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "checks.preamble_noun_mismatch": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 40),
     "checks.preamble_parse_unclear": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 40),
 
-    # Special claim formats — MPEP §§ 2117 / 2129 / 2173.05(r), 35 U.S.C. §101 CRM.
+    # Special claim formats - MPEP §§ 2117 / 2129 / 2173.05(r), 35 U.S.C. §101 CRM.
     "claims.jepsonPriorArt": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
     "claims.crmNonTransitory": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
     "claims.markushOpenTransition": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
@@ -398,7 +398,7 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.cn.claims.crmNonTransitory.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
     "check.cn.claims.crmNonTransitory.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_SECTION_112, 50),
 
-    # TW special-format trio (markush + omnibus + CRM) — mirror of CN
+    # TW special-format trio (markush + omnibus + CRM) - mirror of CN
     # placement in CLAIMS_SECTION_112 at idx 50. Doctrinal anchors:
     # 專利審查基準 第二篇第十章 (markush) / 專利法 §26 第3項 (omnibus) /
     # 專利法 §21 (CRM eligibility).
@@ -455,7 +455,7 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.tw.abstract.representativeDrawing.verify": (CheckBucket.ABSTRACT, CheckGroup.ABSTRACT, 70),
 
     # =====================================================================
-    # EPC bucket assignments (v1 beta) — mirror US/CN/TW canonical idx
+    # EPC bucket assignments (v1 beta) - mirror US/CN/TW canonical idx
     # values for parallel keys. Anchors the rubric routing (every key
     # registered here ends up in the right RubricSection via
     # section_for_message_key); also documents the canonical group +
@@ -520,29 +520,29 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     "check.epc.claims.specReference.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 20),
     "check.epc.claims.multiDepOnMultiDep.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 30),
     "check.epc.claims.multiDepOnMultiDep.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 30),
-    # markushFormat (Guidelines F-IV § 4.20) — EPC treats Markush as a
+    # markushFormat (Guidelines F-IV § 4.20) - EPC treats Markush as a
     # format guard for closed groups. Sits in CROSS_JURISDICTION rather
     # than SECTION_112 (US convention) so the run_g5 runner stays
     # monotonic.
     "check.epc.claims.markushFormat.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 35),
     "check.epc.claims.markushFormat.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 35),
-    # meansPlusFunction (Guidelines F-IV § 6.5 + Art. 84) — functional
+    # meansPlusFunction (Guidelines F-IV § 6.5 + Art. 84) - functional
     # language is advisory under EPC (admissible when supported), so VERIFY
     # not AMEND. Slot 40 keeps the special-format cluster contiguous after
     # markush at 35.
     "check.epc.claims.meansPlusFunction.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 40),
     "check.epc.claims.meansPlusFunction.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 40),
-    # crmNonTransitory (Art. 52(2)(c) + Guidelines G-II § 3.6) — VERIFY
+    # crmNonTransitory (Art. 52(2)(c) + Guidelines G-II § 3.6) - VERIFY
     # because EPC has no strict 'non-transitory' requirement like USPTO §
     # 101, but transitory-signal coverage risks Art. 52(2) objection.
     "check.epc.claims.crmNonTransitory.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 45),
     "check.epc.claims.crmNonTransitory.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 45),
-    # omnibus (Art. 84 + Guidelines F-IV § 4.17) — AMEND because Art. 84
+    # omnibus (Art. 84 + Guidelines F-IV § 4.17) - AMEND because Art. 84
     # clarity objection is substantive, not advisory.
     "check.epc.claims.omnibus.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 50),
     "check.epc.claims.omnibus.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 50),
-    # EPC-specific advisories — independentClaimCount (Rule 43(2)+(3))
-    # and twoPartForm (Rule 43(1)) — get late CROSS_JURISDICTION idx
+    # EPC-specific advisories - independentClaimCount (Rule 43(2)+(3))
+    # and twoPartForm (Rule 43(1)) - get late CROSS_JURISDICTION idx
     # values so they emit after structural guards within the runner.
     "check.epc.claims.independentClaimCount.verify": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 75),
     "check.epc.claims.independentClaimCount.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_CROSS_JURISDICTION, 75),
@@ -587,7 +587,7 @@ def canonical_rank(message_key: str) -> tuple[CheckBucket, CheckGroup, int] | No
     """Return (bucket, group, idx) for a registered message_key, else None.
 
     A None return means the key is not registered in CANONICAL_CHECK_ORDER
-    — treat as a drift signal. The regression test in
+    treat as a drift signal. The regression test in
     tests/test_check_emission_order.py fails loudly on unregistered keys
     emitted by any pipeline, which forces new check families to be
     slotted into the canonical order before they can ship.

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Run the EPC walker against the corpus produced by epc_corpus_pull.py
 and produce a classification + threshold-calibration JSON.
 
@@ -15,7 +15,7 @@ Output: tests/fixtures/epc/local/walker_calibration.json with:
   - candidate threshold cutoffs at p25/p50/p75/p90 confidence
 
 This mirrors the CN/TW phase-2b calibration pattern but without
-LLM verdicts — the EPC walker FP rate measurement v1 only produces
+LLM verdicts - the EPC walker FP rate measurement v1 only produces
 the confidence-distribution surface, leaving verdict labels to a
 manual spot-check or a future LLM judge pass.
 
@@ -82,7 +82,7 @@ def classify_corpus(corpus_dir: Path) -> dict:
             "word_count": len(full_text.split()),
         }
 
-        # Confidence distribution for antecedent findings — used to
+        # Confidence distribution for antecedent findings - used to
         # calibrate TIER_THRESHOLDS.EPC
         for issue in ab_issues:
             if isinstance(issue, dict):
@@ -132,8 +132,8 @@ def classify_corpus(corpus_dir: Path) -> dict:
                 "p75": thresholds[2],
                 "p90": thresholds[3],
                 "recommended_TIER_THRESHOLDS_EPC": {
-                    "high": thresholds[2],   # p75 — top quartile
-                    "low": thresholds[0],    # p25 — exclude bottom
+                    "high": thresholds[2],   # p75 - top quartile
+                    "low": thresholds[0],    # p25 - exclude bottom
                 },
             }
 

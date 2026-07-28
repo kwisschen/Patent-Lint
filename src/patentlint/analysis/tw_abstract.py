@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """TW abstract analysis checks.
 
 Four pure functions checking Taiwan patent abstract formatting
@@ -70,7 +70,7 @@ def check_abstract_title_match(doc: TwPatentDocument) -> list[CheckItem]:
     if not abstract or not title:
         return [CheckItem(
             status="pass",
-            message="Abstract or title empty — skipping title match check.",
+            message="Abstract or title empty - skipping title match check.",
             message_key="check.tw.abstract.titleMatch.pass",
             reference="專利審查基準",
         )]
@@ -170,7 +170,7 @@ def check_representative_drawing(doc: TwPatentDocument) -> list[CheckItem]:
     if not has_drawings:
         return [CheckItem(
             status="pass",
-            message="No drawings — representative drawing not required.",
+            message="No drawings - representative drawing not required.",
             message_key="check.tw.abstract.representativeDrawing.pass",
             reference="專利法施行細則 §21",
         )]

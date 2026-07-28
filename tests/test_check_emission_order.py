@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Regression gates for the canonical check-emission order (ADR-149).
 
 Drift is caught two ways:
@@ -15,7 +15,7 @@ Drift is caught two ways:
    refactor that shuffles a check into the wrong canonical group fails
    this gate loudly.
 
-Covers all three jurisdictions (US / CN / TW) via the pass-path — the
+Covers all three jurisdictions (US / CN / TW) via the pass-path - the
 empty-fixture emit already exercises ~30+ CheckItems per pipeline, which
 is the coverage surface we care about for an ordering invariant.
 """
@@ -42,7 +42,7 @@ def _assert_all_registered(items: list[CheckItem], jurisdiction: str, bucket_nam
     """Every emitted CheckItem's message_key must be in CANONICAL_CHECK_ORDER."""
     unregistered = [c.message_key for c in items if canonical_rank(c.message_key) is None]
     assert not unregistered, (
-        f"{jurisdiction} {bucket_name}: unregistered message_keys emitted — "
+        f"{jurisdiction} {bucket_name}: unregistered message_keys emitted - "
         f"{unregistered}. Every emitted key must be registered in "
         f"src/patentlint/check_order.py (ADR-149). Either add the key to "
         f"CANONICAL_CHECK_ORDER with its canonical (bucket, group, idx), or "
@@ -92,7 +92,7 @@ class TestUsEmissionOrder:
     def test_us_required_sections_precedes_sequence_listing(self):
         # Specific document-order invariant: required-sections (G1) must
         # precede sequence-listing (G2). Preserved from the pre-ADR-149
-        # regression — gates the same invariant at a finer grain.
+        # regression - gates the same invariant at a finer grain.
         result = AnalysisResult(
             jurisdiction=Jurisdiction.US,
             likely_patent=True,
@@ -152,7 +152,7 @@ class TestEpcEmissionOrder:
     def test_epc_all_buckets_clean(self):
         from patentlint.pipeline import _run_epc_pipeline
 
-        # Minimal English text — pipeline will emit pass/amend/verify
+        # Minimal English text - pipeline will emit pass/amend/verify
         # checks across all 4 buckets. The monotonic gate validates
         # emission order; the registered-key gate validates that every
         # emitted message_key is in CANONICAL_CHECK_ORDER.

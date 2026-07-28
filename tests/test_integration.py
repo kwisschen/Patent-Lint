@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """End-to-end integration tests calling analyze_bytes() with full-structure .docx fixtures.
 
 Each fixture is built programmatically with python-docx. No binary .docx files are checked in.
@@ -140,11 +140,11 @@ def _doc_to_bytes(doc: Document) -> bytes:
 
 
 # ---------------------------------------------------------------------------
-# Fixture builders — TW
+# Fixture builders - TW
 # ---------------------------------------------------------------------------
 
 def _build_tw_invention_all_pass() -> bytes:
-    """Clean TW invention patent — zero AMEND/VERIFY expected."""
+    """Clean TW invention patent - zero AMEND/VERIFY expected."""
     doc = Document()
     lines = [
         "【發明名稱】",
@@ -194,7 +194,7 @@ def _build_tw_invention_all_pass() -> bytes:
 
 
 def _build_tw_utility_model_all_pass() -> bytes:
-    """Clean TW utility model patent — zero AMEND/VERIFY expected."""
+    """Clean TW utility model patent - zero AMEND/VERIFY expected."""
     doc = Document()
     lines = [
         "【新型名稱】",
@@ -274,7 +274,7 @@ def _build_tw_invention_multi_fail() -> bytes:
 
 
 def _build_cn_docx_all_pass() -> bytes:
-    """Clean CN patent in 五書模板 .docx format — zero AMEND/VERIFY expected."""
+    """Clean CN patent in 五書模板 .docx format - zero AMEND/VERIFY expected."""
     doc = Document()
 
     # Section 1: 说明书摘要
@@ -331,7 +331,7 @@ def _build_cn_docx_multi_fail() -> bytes:
     """CN patent with intentional errors to trigger multiple checks."""
     doc = Document()
 
-    # Section 1: 说明书摘要 — over 300 chars
+    # Section 1: 说明书摘要 - over 300 chars
     doc.add_paragraph(
         "本发明提供一种数据处理方法，包括数据预处理步骤和特征提取步骤，"
         "特征提取步骤采用深度学习模型，以提高数据分类的准确率和效率，"
@@ -344,7 +344,7 @@ def _build_cn_docx_multi_fail() -> bytes:
     # Section 2: 摘要附图 (empty)
     _add_cn_section_break(doc, "权利要求书")
 
-    # Section 3: 权利要求书 — gap (skips 4) + 请求项 terminology
+    # Section 3: 权利要求书 - gap (skips 4) + 请求项 terminology
     doc.add_paragraph("1. 一种数据处理方法，包括：")
     doc.add_paragraph("数据预处理步骤；及特征提取步骤；")
     doc.add_paragraph("其特征在于，所述特征提取步骤采用深度学习模型。")
@@ -354,7 +354,7 @@ def _build_cn_docx_multi_fail() -> bytes:
     doc.add_paragraph("5. 如请求项3所述的数据处理方法，其中所述模型训练步骤采用反向传播算法。")
     _add_cn_section_break(doc, "说明书")
 
-    # Section 4: 说明书 — missing 背景技术 + paragraph numbering + bad ending
+    # Section 4: 说明书 - missing 背景技术 + paragraph numbering + bad ending
     doc.add_paragraph("一种数据处理方法")  # title
     doc.add_paragraph("技术领域")
     doc.add_paragraph("[0001]本发明涉及数据处理方法。")  # user-added numbering
@@ -545,7 +545,7 @@ def _build_us_cluster1_defects() -> bytes:
         "comprising polyethylene, polypropylene, and polystyrene.",
         # Claim 4: Omnibus (short + omnibus language)
         "An apparatus substantially as shown in the drawings.",
-        # Claim 5: Wherein-comma violation ("wherein in response" — "in" requires comma after wherein)
+        # Claim 5: Wherein-comma violation ("wherein in response" - "in" requires comma after wherein)
         "The system of claim 2, wherein in response to receiving a signal, "
         "the cache memory stores the data.",
         # Claim 6: Extra periods (".." mid-claim)
@@ -586,7 +586,7 @@ def _build_us_cluster2_spec_defects() -> bytes:
         "DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS",
     }
 
-    # Pre-gap spec paragraphs — numId=1 counts 1, 2, 3. Deliberately omits
+    # Pre-gap spec paragraphs - numId=1 counts 1, 2, 3. Deliberately omits
     # BACKGROUND OF THE INVENTION to trigger the missing-required-section
     # check. Brief Description of Drawings mentions FIG. 1 and FIG. 2 to
     # set up the figure-xref orphan (only FIG. 1 will appear in the
@@ -614,7 +614,7 @@ def _build_us_cluster2_spec_defects() -> bytes:
         if num and text not in headers:
             _set_para_num(para, num)
 
-    # Post-gap spec paragraphs — numId=3 starts at 5, producing a gap from
+    # Post-gap spec paragraphs - numId=3 starts at 5, producing a gap from
     # 3 to 5. The detailed description only references FIG. 1, leaving
     # FIG. 2 orphaned vs. the Brief Description.
     doc.add_paragraph("DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS")
@@ -707,7 +707,7 @@ def _build_cn_amend_triggers() -> bytes:
     """Engineered CN patent triggering 2 AMEND-status checks.
 
     Phase E CN AMEND-triggers: commercial language in abstract (最佳) and
-    abstract over 300 characters. Section ordering is not exercised here —
+    abstract over 300 characters. Section ordering is not exercised here -
     see the note in test_cn_specification.py::TestSectionOrdering for the
     architectural limitation (CnPatentDocument stores sections by named
     field, so the check can never fail at the pipeline layer).
@@ -817,8 +817,8 @@ def _build_cn_drafter_realistic() -> bytes:
     Unlike the ``tests/fixtures/cn/local/*.docx`` corpus (all Google-
     Patents-downloaded publication docs with INID cover pages and PDF→
     Word conversion artifacts), this fixture represents what PatentLint's
-    primary user — a patent drafter preparing a 五书模板 Word file for
-    CNIPA filing — actually uploads. Expect: clean title + abstract
+    primary user - a patent drafter preparing a 五书模板 Word file for
+    CNIPA filing - actually uploads. Expect: clean title + abstract
     extraction, all five spec subsections populated, every CN check
     emitting a ``.pass`` finding (no ``.amend`` / ``.verify`` status).
 
@@ -889,7 +889,7 @@ def _build_cn_drafter_realistic() -> bytes:
     doc.add_paragraph(
         "下面结合附图和实施例对本发明作进一步说明。"
     )
-    doc.add_paragraph("图1")  # bare caption below figure image — should be skipped
+    doc.add_paragraph("图1")  # bare caption below figure image - should be skipped
     doc.add_paragraph(
         "如图1所示，本实施例的树脂组合物通过以下步骤制备："
     )
@@ -964,7 +964,7 @@ def _build_tw_section_ordering_violation() -> bytes:
         "【0001】本發明係關於一種散熱裝置。",
         "【先前技術】",
         "【0002】習知技術存在問題。",
-        # 實施方式 (idx 4) BEFORE 發明內容 (idx 2) — violation
+        # 實施方式 (idx 4) BEFORE 發明內容 (idx 2) - violation
         "【實施方式】",
         "【0003】請參閱第1圖，散熱裝置100包括一基座10。",
         "【發明內容】",
@@ -1007,7 +1007,7 @@ class TestTwInventionAllPass:
         )
         assert len(all_checks) > 0
         # §112 walker checks (antecedent + spec-support) are now advisory
-        # "verify" items (ADR-159), never "amend", so they don't appear here —
+        # "verify" items (ADR-159), never "amend", so they don't appear here -
         # the test intent ("no structural amends") holds without filtering.
         amend_items = [c for c in all_checks if c.status == "amend"]
         assert amend_items == [], f"Unexpected AMENDs: {[c.message_key for c in amend_items]}"
@@ -1024,7 +1024,7 @@ class TestTwInventionAllPass:
         result = analyze_bytes(
             _build_tw_invention_all_pass(), "tw_invention.docx", Jurisdiction.TW
         )
-        # Claim 5 is 引用記載型式 (quoted-reference independent) — preamble
+        # Claim 5 is 引用記載型式 (quoted-reference independent) - preamble
         # `一種散熱系統` declares a new subject; the body's `如請求項1所述
         # 之散熱裝置` is incorporation-by-reference, not dependency.
         # Claims 2/3/4 are true dependents.
@@ -1040,7 +1040,7 @@ class TestTwUtilityModelAllPass:
         assert result.jurisdiction == Jurisdiction.TW
         assert result.likely_patent is True
 
-        # Check patent_type via the parsed document — we verify by checking
+        # Check patent_type via the parsed document - we verify by checking
         # that 其改良在於 claims are accepted (no transition_phrase AMEND)
         all_checks = (
             result.tw_specification_checks
@@ -1049,7 +1049,7 @@ class TestTwUtilityModelAllPass:
             + result.tw_drawings_checks
         )
         # §112 walker checks (antecedent + spec-support) are now advisory
-        # "verify" items (ADR-159), never "amend", so they don't appear here —
+        # "verify" items (ADR-159), never "amend", so they don't appear here -
         # the test intent ("no structural amends") holds without filtering.
         amend_items = [c for c in all_checks if c.status == "amend"]
         assert amend_items == [], f"Unexpected AMENDs: {[c.message_key for c in amend_items]}"
@@ -1120,7 +1120,7 @@ class TestCnDocxAllPass:
         )
         assert len(all_checks) > 0
         # §112 walker checks (antecedent + spec-support) are now advisory
-        # "verify" items (ADR-159), never "amend", so they don't appear here —
+        # "verify" items (ADR-159), never "amend", so they don't appear here -
         # the test intent ("no structural amends") holds without filtering.
         amend_items = [c for c in all_checks if c.status == "amend"]
         assert amend_items == [], f"Unexpected AMENDs: {[c.message_key for c in amend_items]}"
@@ -1182,7 +1182,7 @@ class TestUsFullLength:
             + report.drawings_checks
         )
         # §112 walker checks (antecedent + spec-support) are now advisory
-        # "verify" items (ADR-159), never "amend", so they don't appear here —
+        # "verify" items (ADR-159), never "amend", so they don't appear here -
         # the test intent ("no structural amends") holds without filtering.
         amend_items = [c for c in all_checks if c.status == "amend"]
         assert amend_items == [], f"Unexpected AMENDs: {[c.message_key for c in amend_items]}"
@@ -1359,7 +1359,7 @@ class TestCnSectionOrderingViolation:
 
 
 class TestCnDrafterRealisticBaseline:
-    """Canonical drafter-format CN fixture — dogfood gate for non-walker checks.
+    """Canonical drafter-format CN fixture - dogfood gate for non-walker checks.
 
     The ``tests/fixtures/cn/local/*.docx`` corpus is Google-Patents-downloaded
     publication documents, not the drafter-format Word files PatentLint's
@@ -1369,7 +1369,7 @@ class TestCnDrafterRealisticBaseline:
     set to 五书 part names, title + subsection headers in 说明书 body,
     no INID cover). This class is the regression gate: if any CN check
     emits ``.amend`` or ``.verify`` on this clean baseline, that emission
-    is a bug — not a fixture gap.
+    is a bug - not a fixture gap.
     """
 
     def _result(self):
@@ -1434,7 +1434,7 @@ class TestCnDrafterRealisticBaseline:
 
     def test_zero_amend_findings(self):
         # The regression gate. Any amend on a clean drafter fixture is a
-        # bug — the fix-or-document decision belongs in a follow-up, not
+        # bug - the fix-or-document decision belongs in a follow-up, not
         # here.
         amend = [c for c in self._all_checks() if c.status == "amend"]
         assert not amend, (
@@ -1521,7 +1521,7 @@ class TestTwAntecedentBasisChain:
             if "antecedentBasis" in c.message_key
         ]
         assert len(ab_checks) > 0, "antecedentBasis check not found"
-        # Should be PASS or VERIFY (not AMEND) — all 該X have matching 一X introductions
+        # Should be PASS or VERIFY (not AMEND) - all 該X have matching 一X introductions
         for check in ab_checks:
             assert check.status != "amend", (
                 f"antecedentBasis should not be AMEND: {check.message_key} / {check.details}"
@@ -1655,7 +1655,7 @@ class TestTwSpecSupportIntegration:
 
     def test_symbol_table_term_tier0_pass(self):
         # Claim introduces 基座; spec has no 基座 prose, but symbol table
-        # declares 基座 at numeral 10 — Tier 0 short-circuits to PASS.
+        # declares 基座 at numeral 10 - Tier 0 short-circuits to PASS.
         data = _build_tw_minimal(
             claims_text=[
                 "1. 一種散熱裝置，包括：一基座。",
@@ -1686,7 +1686,7 @@ class TestTwSpecSupportIntegration:
     def test_cross_ref_pipeline_integration_no_crash(self):
         # attach_cross_references_tw is invoked in the pipeline. When no
         # (claim_id, normalized_term) overlaps, cross_ref stays None on
-        # both sides — the integration is that the call is wired without
+        # both sides - the integration is that the call is wired without
         # raising, and the cross_ref slot remains a valid schema slot.
         # Bidirectional semantics are covered by the unit tests
         # (TestAttachCrossReferencesTw).
@@ -1702,7 +1702,7 @@ class TestTwSpecSupportIntegration:
         # Pipeline ran to completion (attach_cross_references_tw didn't raise).
         assert result.unsupported_terms, "spec-support should flag 量子糾纏模組"
         for ut in result.unsupported_terms:
-            # cross_ref slot is a valid Optional[str] — either None or
+            # cross_ref slot is a valid Optional[str] - either None or
             # a "spec_support"/"antecedent" tag. On this fixture there is
             # no walker overlap so it stays None.
             assert ut.cross_ref is None or ut.cross_ref in ("antecedent", "spec_support")
@@ -1718,7 +1718,7 @@ class TestTwRealFixtureUtilityModel:
         with open(fpath, "rb") as f:
             data = f.read()
         result = analyze_bytes(data, fpath.name, Jurisdiction.TW)
-        # Check patent type via specification checks — utility model terms
+        # Check patent type via specification checks - utility model terms
         # should not trigger type terminology mismatch
         type_checks = [
             c for c in result.tw_specification_checks
@@ -1749,7 +1749,7 @@ def _build_epc_full_length() -> bytes:
         → DETAILED DESCRIPTION
     """
     doc = Document()
-    _add_us_numbering(doc)  # share the US numbering helper — same Word numbering shape
+    _add_us_numbering(doc)  # share the US numbering helper - same Word numbering shape
 
     headers = {
         "Adaptive Signal-Processing Apparatus for Communication Devices",
@@ -1854,7 +1854,7 @@ class TestEpcFullLength:
 
     def test_rubric_routing_buckets_populated(self):
         """The rubric routing should put EPC claims/drawings/abstract checks
-        in their respective rubric sections — not all in Specification.
+        in their respective rubric sections - not all in Specification.
         Regression guard for the rubric routing fix."""
         from patentlint.rubric import compute_rubric_grade, detect_has_drawings, flatten_checks_from_lists
         result = analyze_bytes(_build_epc_full_length(), "epc_patent.docx", Jurisdiction.EPC)
@@ -1880,7 +1880,7 @@ class TestEpcFullLength:
         assert len(applicable_sections) >= 4, (
             f"Expected ≥4 applicable rubric sections, got {len(applicable_sections)}"
         )
-        # Claims rubric section should have non-zero check counts — if
+        # Claims rubric section should have non-zero check counts - if
         # rubric routing was broken, all claims would have routed into
         # Specification and this would be zero.
         from patentlint.rubric import RubricSection
@@ -1889,7 +1889,7 @@ class TestEpcFullLength:
         total_claims_checks = claims_section.fix_count + claims_section.review_count + claims_section.pass_count
         assert total_claims_checks > 0, (
             f"CLAIMS rubric section is empty (fix={claims_section.fix_count}, "
-            f"review={claims_section.review_count}, pass={claims_section.pass_count}) — "
+            f"review={claims_section.review_count}, pass={claims_section.pass_count}) - "
             f"rubric routing for EPC checks is likely broken"
         )
 
@@ -1921,7 +1921,7 @@ class TestEpcFullLength:
         assert ab_ss is not None, "ANTECEDENT_SPEC_SUPPORT rubric section missing"
         total = ab_ss.fix_count + ab_ss.review_count + ab_ss.pass_count
         assert total >= 2, (
-            f"AB+SS rubric section has {total} checks — expected ≥2 "
+            f"AB+SS rubric section has {total} checks - expected ≥2 "
             f"(antecedent + spec_support). EPC walker routing is broken."
         )
 
@@ -1931,22 +1931,22 @@ def _build_epc_defective() -> bytes:
 
     Defects designed to trigger specific EPC checks:
       - Missing title (Rule 41(2)(b) violation)
-      - Out-of-order sections — BACKGROUND ART before TECHNICAL FIELD
+      - Out-of-order sections - BACKGROUND ART before TECHNICAL FIELD
         (Rule 42(1) violation)
-      - Section omission — no Abstract
-      - Figure gap — Fig. 1, Fig. 3, Fig. 4 (Rule 46(2)(a) violation)
-      - Bare numerals in claim body — "processor 12" without parens
+      - Section omission - no Abstract
+      - Figure gap - Fig. 1, Fig. 3, Fig. 4 (Rule 46(2)(a) violation)
+      - Bare numerals in claim body - "processor 12" without parens
         (Rule 43(7) violation)
-      - Forward dependency — claim 2 depends on claim 5
-      - Claim references spec body — "see paragraph 5" in claim
+      - Forward dependency - claim 2 depends on claim 5
+      - Claim references spec body - "see paragraph 5" in claim
         (Rule 43(6) violation)
-      - Description references claim — "as claimed in claim 1"
+      - Description references claim - "as claimed in claim 1"
         (EPO Guidelines F-IV § 4.3 violation)
     """
     doc = Document()
     _add_us_numbering(doc)
 
-    # NO title line — straight into a section header (out of order)
+    # NO title line - straight into a section header (out of order)
     headers = {
         "BACKGROUND ART",
         "TECHNICAL FIELD",
@@ -1989,7 +1989,7 @@ def _build_epc_defective() -> bytes:
 
 
 class TestEpcMultiDefect:
-    """Defective-EPC-fixture suite — verifies amend paths fire + grade drops."""
+    """Defective-EPC-fixture suite - verifies amend paths fire + grade drops."""
 
     def test_multiple_findings_emitted(self):
         result = analyze_bytes(_build_epc_defective(), "defective.docx", Jurisdiction.EPC)

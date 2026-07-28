@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ShieldCheck, FileSearch, Globe } from 'lucide-react'
@@ -97,7 +97,7 @@ export default function LoadingOnboard({ progress, onReady }) {
     >
       <div className="min-h-full flex items-center justify-center py-8 md:py-0 md:pb-[20vh]">
         <div className="flex flex-col items-center gap-6 max-w-md px-6 text-center">
-        {/* Logo — animated multi-hue gradient wordmark (sister-project parity) */}
+        {/* Logo - animated multi-hue gradient wordmark (sister-project parity) */}
         <h1 className="text-gradient-brand text-3xl font-bold tracking-tight">PatentLint</h1>
 
         {/* Progress bar */}
@@ -132,7 +132,7 @@ export default function LoadingOnboard({ progress, onReady }) {
           </p>
         </div>
 
-        {/* Feature list — time-staggered reveal */}
+        {/* Feature list - time-staggered reveal */}
         <div className="w-full flex flex-col gap-3 text-left">
           {FEATURES.map(({ icon: Icon, titleKey, descKey, chip }, i) => {
             const show = i < revealCount

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -65,7 +65,7 @@ export default function ProveItModal({ open, onOpenChange }) {
   const noActivityClearRef = useRef(null)
   const entryIdRef = useRef(0)
 
-  // Own local PerformanceObserver — starts fresh on mount
+  // Own local PerformanceObserver - starts fresh on mount
   useEffect(() => {
     if (!open) {
       setEntries([])
@@ -80,7 +80,7 @@ export default function ProveItModal({ open, onOpenChange }) {
     const observer = new PerformanceObserver((list) => {
       const newEntries = list.getEntries()
         .filter((e) => !e.name.includes('favicon.svg'))
-        // Centralized filter — see lib/trustObserver.js for invariant
+        // Centralized filter - see lib/trustObserver.js for invariant
         // and rationale. Drops file://, blob:, data:, and failed
         // fetches so the activity log only shows real network egress.
         .filter(isTrustRelevantResource)
@@ -120,7 +120,7 @@ export default function ProveItModal({ open, onOpenChange }) {
     clearTimeout(noActivityTimeoutRef.current)
     clearTimeout(noActivityClearRef.current)
     try {
-      // Fetch /version.json — the same endpoint the update check uses
+      // Fetch /version.json - the same endpoint the update check uses
       // when the tab returns from a ≥30s-hidden state. Reusing it in the
       // Prove It test means users see the EXACT request pattern they'll
       // later see in normal use, building recognition/trust instead of
@@ -128,13 +128,13 @@ export default function ProveItModal({ open, onOpenChange }) {
       //
       // The PerformanceObserver above catches the fetch automatically
       // and appends the entry to the log, so we DON'T manually push
-      // here — doing so would produce two rows per click (one from the
+      // here - doing so would produce two rows per click (one from the
       // observer, one manual). The old favicon path manually added
       // because the observer was filtering favicon.svg out; version.json
       // isn't filtered, so the observer is the single source of truth.
       await fetch(`/version.json?t=${Date.now()}`, { cache: 'no-store' })
     } catch {
-      // Offline — no entry added, which is correct
+      // Offline - no entry added, which is correct
     }
     setTestSent(true)
     setTimeout(() => setTestSent(false), 500)

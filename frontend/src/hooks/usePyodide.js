@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 /* global __BUILD_HASH__ */
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 // Between each real stage signal from the worker (15 / 40 / 65 / 85 / 100)
 // the bar sits at the same percent for as long as the underlying work
-// takes — loadPyodide in particular is a ~6MB WASM fetch + CPython init
+// takes - loadPyodide in particular is a ~6MB WASM fetch + CPython init
 // that can take 3-15s on a cold cache. A stuck bar reads as broken.
 // Solution: between stages, creep smoothly toward the next stage's
 // floor minus a small gap, using an ease-out curve sized to the typical
@@ -28,7 +28,7 @@ export function usePyodide() {
 
     useEffect(() => {
         // Cache-bust the worker URL too (not just the wheel) so users on a
-        // cached old worker get the new behavior — includes the creep
+        // cached old worker get the new behavior - includes the creep
         // logic itself once it ships entirely via the worker, but also
         // any future worker-side fixes.
         const worker = new Worker(`/pyodideWorker.js?b=${__BUILD_HASH__}`);

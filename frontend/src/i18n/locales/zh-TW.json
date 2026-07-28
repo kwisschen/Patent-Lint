@@ -55,7 +55,7 @@
     "claimCategories": "請求項類別",
     "method": "方法",
     "apparatus": "裝置",
-    "outsideRange": "超出 50–150 字範圍",
+    "outsideRange": "超出 50-150 字範圍",
     "outsideRangeCn": "超出300字上限",
     "outsideRangeTw": "超出250字上限",
     "noParagraphs": "未發現段落編號",
@@ -176,7 +176,7 @@
   },
   "footer": {
     "disclaimer": "本報告不構成法律意見",
-    "builtBy": "© 2025–2026 Christopher Chen",
+    "builtBy": "© 2025-2026 Christopher Chen",
     "security": "安全性",
     "about": "關於",
     "commercial": "企業方案",
@@ -522,7 +522,7 @@
         "claimPeriods": "請求項以句點結尾",
         "claimDependencies": "請求項附屬關係驗證",
         "claimSequentiality": "請求項編號連續",
-        "abstractWordCount": "摘要字數（50–150）",
+        "abstractWordCount": "摘要字數（50-150）",
         "abstractStructure": "摘要為單一段落且結尾正確",
         "figureSequential": "圖式編號連續",
         "singleFigure": "單一圖式標記（「The Figure」）",
@@ -808,7 +808,7 @@
     "restrictiveWordingSpec": "段落：{{list}}。上列用語依 MPEP § 2173.05(b) 可能被視為不明確或限制範圍。請檢視各標記段落，考量該用語是否不當限縮範圍或造成不明確。",
     "paragraphNumberingMissing": "請依 MPEP § 608.01(p) 新增 [0001] 格式的連續段落編號。",
     "paragraphEnding": "段落：{{list}}。說明書各段落須依 MPEP § 608.01(p) 以句號結尾。",
-    "sequenceListingFix": "請依 37 C.F.R. § 1.821–1.825 新增「Statement Regarding Sequence Listing」章節。",
+    "sequenceListingFix": "請依 37 C.F.R. § 1.821-1.825 新增「Statement Regarding Sequence Listing」章節。",
     "crossReferenceCitations": "{{text}}。請確認序號正確，且優先權鏈完整（延續案、CIP、臨時案、分割案）。",
     "priorArtCitations": "{{text}}。請確認專利／公開號碼正確。對先前技術的描述可能在審查中被視為自認。",
     "optionalSectionGuidance": "如適用於您的申請案，請加入此章節。",
@@ -958,7 +958,7 @@
     "titleMissing": "依 MPEP § 606，每件發明專利申請均須載明發明名稱。請於說明書首頁加上發明名稱。",
     "titleLength": "依 MPEP § 606，發明名稱不得超過 500 字元（實際 {{count}} 字元）。請縮短名稱。",
     "titleContent": "依 MPEP § 608.01，發明名稱不得含商標或產品型號。請移除禁止內容。",
-    "titleWordCount": "依 MPEP § 606，發明名稱宜簡短明確（實際 {{count}} 詞；通常 2–7 詞為宜）。請考慮精簡。",
+    "titleWordCount": "依 MPEP § 606，發明名稱宜簡短明確（實際 {{count}} 詞；通常 2-7 詞為宜）。請考慮精簡。",
     "epc": {
       "orphanedBriefFigures": "圖式：{{list}}。請於「Detailed Description」中新增對該等圖式之引用，或自「Brief Description of Drawings」中移除（EPC 慣例用語）。",
       "orphanedDetailedFigures": "圖式：{{list}}。請於「Brief Description of Drawings」中新增對該等圖式之描述，或自「Detailed Description」中移除引用（EPC 慣例用語）。",
@@ -1105,8 +1105,8 @@
         "pass": "摘要未發現可省略之詞語。"
       },
       "wordCount": {
-        "amend": "摘要字數超出 50–150 字範圍（MPEP § 608.01(b)）。",
-        "pass": "摘要字數在 50–150 字範圍內。"
+        "amend": "摘要字數超出 50-150 字範圍（MPEP § 608.01(b)）。",
+        "pass": "摘要字數在 50-150 字範圍內。"
       }
     },
     "drawings": {
@@ -1281,7 +1281,7 @@
         "wordCount": {
           "amend": "摘要計 {{count}} 字，超過 Guidelines F-II § 2.3 上限 150 字。",
           "verify": "摘要計 {{count}} 字，低於 Guidelines F-II § 2.3 下限 50 字。",
-          "pass": "未偵測到摘要字數問題（Rule 47(2) EPC；50–150 字）。"
+          "pass": "未偵測到摘要字數問題（Rule 47(2) EPC；50-150 字）。"
         }
       },
       "drawings": {
@@ -1461,7 +1461,7 @@
           "pass": "共 {{count}} 張附圖。"
         },
         "figuresSequential": {
-          "pass": "附圖 1–{{found_max}} 編號連續。",
+          "pass": "附圖 1-{{found_max}} 編號連續。",
           "passNone": "未找到附圖。",
           "amend": "附圖編號不連續，缺漏：{{figure_list}}。"
         },
@@ -1669,7 +1669,7 @@
           "pass": "共 {{count}} 張圖式。"
         },
         "figuresSequential": {
-          "pass": "圖 1–{{found_max}} 編號連續。",
+          "pass": "圖 1-{{found_max}} 編號連續。",
           "passNone": "未找到圖式。",
           "amend": "圖號不連續，缺漏：{{figure_list}}。"
         }
@@ -1923,7 +1923,7 @@
       "p1": "您同意就下列事項所生或相關之任何主張、損害、損失、責任、成本或費用（包括合理之律師費用），代為抗辯、補償並使 Christopher Chen 免受損害：(a) 您於未經登記之專利專業人士獨立驗證之情形下使用 PatentLint 之輸出；(b) 您違反本條款或任何適用法律（包括但不限於 USPTO 37 CFR § 11 或您所屬法域之同等專業行為規範）；(c) 您侵害任何第三方之智慧財產權或其他權利；或 (d) 您將本網站或本軟體用於您並無權限載入之任何文件。",
       "p2": "Christopher Chen 保留就任何原應由您為補償之事項，承擔專屬抗辯及控制之權利；於該情形下，您應就主張任何可用之抗辯予以充分配合。"
     },
-    "copyright": "Copyright © 2025–2026 Christopher Chen。保留一切權利。",
+    "copyright": "Copyright © 2025-2026 Christopher Chen。保留一切權利。",
     "crossLinks": "另請參閱：<1>隱私權政策</1>・<3>安全性說明</3>"
   },
   "privacy": {
@@ -2019,7 +2019,7 @@
       "name": "Christopher Chen",
       "emailLabel": "電子郵件："
     },
-    "copyright": "Copyright © 2025–2026 Christopher Chen。保留一切權利。",
+    "copyright": "Copyright © 2025-2026 Christopher Chen。保留一切權利。",
     "crossLinks": "另請參閱：<1>服務條款</1>・<3>安全性說明</3>"
   },
   "rubric": {

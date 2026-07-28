@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for TW specification-support analysis (ADR-138, 專利法 §26 第3項)."""
 
 from __future__ import annotations
@@ -160,7 +160,7 @@ class TestStripSpecSupportTrailingTokens:
         assert _strip_spec_support_trailing_tokens("相") == "相"
 
     # R7 (2026-05-29): comparison-verb trailing strips. Issues #106/
-    # #108/#130/#133 — `大於`/`小於` mirror the existing `超過` entry.
+    # #108/#130/#133 - `大於`/`小於` mirror the existing `超過` entry.
     def test_大於_stripped(self):
         assert _strip_spec_support_trailing_tokens("通道寬度大於") == "通道寬度"
 
@@ -179,7 +179,7 @@ class TestStripSpecSupportTrailingTokens:
         assert _strip_spec_support_trailing_tokens("夾持部共同地") == "夾持部"
 
     def test_可通訊地_adverb_stripped(self):
-        # #187 — once the adverb is stripped, the head noun matches the spec
+        # #187 - once the adverb is stripped, the head noun matches the spec
         # via substring even with an embedded reference numeral.
         assert (
             _strip_spec_support_trailing_tokens("檢體採集支援系統可通訊地")
@@ -193,7 +193,7 @@ class TestStripSpecSupportTrailingTokens:
         assert _strip_spec_support_trailing_tokens("第一外側壁不平行") == "第一外側壁"
 
     def test_2026_06_05_tokens_do_not_touch_legit_nouns(self):
-        """FN guard — real nouns ending in the same characters stay intact.
+        """FN guard - real nouns ending in the same characters stay intact.
         The adverb/verb tokens are multi-char and the verb fires only when
         the term ENDS in the verb, so 緊靠部/緊靠面 (ending 部/面) are safe."""
         for noun in ("土地", "基地", "場地", "緊靠部", "緊靠面", "平行板"):
@@ -289,7 +289,7 @@ class TestInteriorReject:
         assert _has_interior_reject("相互作用") is False  # FN guard
 
     def test_coupling_noun_compound_accepted(self):
-        """`耦接器` / `連接部` (no `一`) are real nouns — not rejected."""
+        """`耦接器` / `連接部` (no `一`) are real nouns - not rejected."""
         assert _has_interior_reject("耦接器") is False
         assert _has_interior_reject("連接部") is False
 
@@ -307,11 +307,11 @@ class TestSpecSupportMethodClauseFP:
         assert _strip_spec_support_trailing_tokens("兩端減薄") == "兩端"
 
     def test_prepositional_fragment_rejected(self):
-        # #69: `介由使用…` prepositional connector — leading reject.
+        # #69: `介由使用…` prepositional connector - leading reject.
         assert _has_leading_reject("介由使用半導體材料") is True
 
     def test_qizhong_fragment_rejected(self):
-        # #78: `中一個` stranded `其中一個` connective — leading reject.
+        # #78: `中一個` stranded `其中一個` connective - leading reject.
         assert _has_leading_reject("中一個") is True
 
 
@@ -423,7 +423,7 @@ class TestTier0SymbolTable:
         doc = _make_doc(
             claims=claims,
             symbol_table=[SymbolEntry(numeral="10", name="基板")],
-            # No body sections — Tier 0 should short-circuit before Tier 1.
+            # No body sections - Tier 0 should short-circuit before Tier 1.
         )
         result = check_spec_support_tw(doc)
         assert result == []
@@ -474,7 +474,7 @@ class TestTier3CharWindow:
         ) is True
 
     def test_bigrams_scattered_fail(self):
-        # Each bigram appears far apart — over 30 chars separation.
+        # Each bigram appears far apart - over 30 chars separation.
         spec = "第二" + "A" * 40 + "交線"
         assert _tier3_char_window("第二交線", spec) is False
 
@@ -612,7 +612,7 @@ class TestSpecSupportRound202607:
 
 
 class TestSpecSupportRoundR34:
-    """R34 TW spec-support over-capture round (#439/#440/#441/#442/#443) —
+    """R34 TW spec-support over-capture round (#439/#440/#441/#442/#443) -
     one firm drafter's planar-transformer draft."""
 
     def test_439_442_leading_baokuo_baohan(self):

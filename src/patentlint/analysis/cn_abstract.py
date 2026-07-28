@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """CN abstract and drawings analysis checks.
 
 Four pure functions checking Chinese patent abstract and drawings
@@ -66,7 +66,7 @@ def check_abstract_title_match(cn_doc: CnPatentDocument) -> list[CheckItem]:
     if not abstract:
         return [CheckItem(
             status="verify",
-            message="Abstract is empty — cannot verify title match.",
+            message="Abstract is empty - cannot verify title match.",
             message_key="check.cn.abstract.titleMatch.verify",
             details_key="details.cn.abstractTitleMatch",
             reference="审查指南",
@@ -198,7 +198,7 @@ def check_drawings_prior_art(cn_doc: CnPatentDocument) -> list[CheckItem]:
     if text and contains_prior_art_references_cn(text):
         return [CheckItem(
             status="verify",
-            message="Prior-art references found in 附图说明 — verify figure labeling.",
+            message="Prior-art references found in 附图说明 - verify figure labeling.",
             message_key="check.cn.drawings.priorArt.verify",
             reference="审查指南 第一部分第一章 §4.2",
             diagnostics=_dx(
@@ -246,7 +246,7 @@ def check_figures_sequential(cn_doc: CnPatentDocument) -> list[CheckItem]:
             numbers.add(int(m.group(1)))
 
     if not numbers:
-        # Separate message key from the normal pass case — the `.pass`
+        # Separate message key from the normal pass case - the `.pass`
         # template interpolates `{{found_max}}` which we'd have nothing
         # to provide here, so sharing the key would render the raw
         # placeholder. `.passNone` has its own placeholder-free template.
@@ -282,7 +282,7 @@ def check_figures_sequential(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
     return [CheckItem(
         status="pass",
-        message=f"Figures 1–{max_n} are numbered sequentially.",
+        message=f"Figures 1-{max_n} are numbered sequentially.",
         message_key="check.cn.drawings.figuresSequential.pass",
         details_params={"found_max": str(max_n)},
         reference="审查指南",

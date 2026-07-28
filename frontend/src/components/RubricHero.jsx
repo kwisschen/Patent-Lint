@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -11,7 +11,7 @@ import { FrostCard } from './ui/frost-card'
 // the donut arcs. Picked by tier rather than per-letter to keep visual
 // intent legible: A range = pass-blue, B/C = verify-green, D/F = amend-red.
 function letterColorVar(letter) {
-  if (!letter || letter === '—') return 'var(--muted-foreground)'
+  if (!letter || letter === '-') return 'var(--muted-foreground)'
   if (letter.startsWith('A')) return 'var(--pass-border)'
   if (letter.startsWith('B')) return 'var(--verify-border)'
   if (letter.startsWith('C')) return 'var(--verify-border)'
@@ -45,7 +45,7 @@ export default function RubricHero({ data, animate = false }) {
 
   const grade = data?.rubric_grade
 
-  // Completeness gate — no grade emitted, surface the gap.
+  // Completeness gate - no grade emitted, surface the gap.
   if (grade?.completeness_gap?.missing_sections?.length) {
     return <CompletenessGate missingSections={grade.completeness_gap.missing_sections} t={t} />
   }
@@ -81,7 +81,7 @@ export default function RubricHero({ data, animate = false }) {
   // Render each segment as a discrete SVG <path> arc rather than a full
   // <circle> with strokeDasharray. The dasharray approach left adjacent
   // segments meeting at sub-pixel boundaries that anti-aliased
-  // inconsistently — most visible as a jagged seam at the 12 o'clock
+  // inconsistently - most visible as a jagged seam at the 12 o'clock
   // wrap-around where AMEND ends and PASS begins. Explicit paths with
   // shared endpoint coordinates eliminate the alignment ambiguity.
   //
@@ -119,7 +119,7 @@ export default function RubricHero({ data, animate = false }) {
   const passCount = useCountUp(counts.pass, 600, animate)
   const countMap = { amend: amendCount, verify: verifyCount, pass: passCount }
 
-  const letter = grade?.letter || '—'
+  const letter = grade?.letter || '-'
   const score = grade?.score ?? 0
   const animatedScore = useCountUp(score, 600, animate)
   const letterColor = letterColorVar(letter)
@@ -162,7 +162,7 @@ export default function RubricHero({ data, animate = false }) {
         </div>
       </div>
 
-      {/* Status legend — preserves visibility of pass/review/fix counts. */}
+      {/* Status legend - preserves visibility of pass/review/fix counts. */}
       {segments.length > 0 && (
         <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs">
           {segments.map((seg) => (

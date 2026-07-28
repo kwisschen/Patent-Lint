@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# term_in_spec_probe.py — WS-E1 (ADR-159 Path-to-80). The proper version of
+# term_in_spec_probe.py - WS-E1 (ADR-159 Path-to-80). The proper version of
 # spec_presence_probe.py: instead of the weak `abstract` proxy, use the full
 # scraped SPECIFICATION (description body) on the 705-draft US gold corpus to
 # answer: does `term_in_spec` discriminate antecedent FPs from real §112(b)
@@ -84,7 +84,7 @@ def run(juris="US"):
           f"({100 * len(pids_with_spec) / max(1, len(pids_seen)):.1f}%)")
     print(f"  judged findings (wfp|legit): {judged}   no-spec dropped: {no_spec}")
     if not base_t:
-        print("  NO judged findings with spec — cannot measure.")
+        print("  NO judged findings with spec - cannot measure.")
         return
     print(f"  base P(legit) = {base_l}/{base_t} = {base_l / base_t:.3f}")
     print(f"  term     IN spec: n={n_in:5}  P(legit)={p_in:.3f}  (legit={l_in} wfp={w_in})")

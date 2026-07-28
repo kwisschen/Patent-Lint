@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""TW patent .docx section extraction — 【】bracket header format."""
+# Copyright (c) 2025-2026 Christopher Chen
+"""TW patent .docx section extraction - 【】bracket header format."""
 
 from __future__ import annotations
 
@@ -23,14 +23,14 @@ from patentlint.parser.language import (
 from patentlint.parser.symbol_table_tw import parse_tw_symbol_table
 
 # ---------------------------------------------------------------------------
-# Bracket header patterns — 【section_name】
+# Bracket header patterns - 【section_name】
 # ---------------------------------------------------------------------------
 
 # Match bracket headers but NOT paragraph numbers 【0001】
 _BRACKET_HEADER = re.compile(r"^【([^\d].+?)】(.*)$")
 
 # Firm-variant claim-number labels: 【請求項N】, 【請求N】, 【權利要求N】,
-# 【權利範圍N】, 【第N項】, etc. — used as inline claim numbering instead
+# 【權利範圍N】, 【第N項】, etc. - used as inline claim numbering instead
 # of standard `N.` / `N．` inline form. Not section headers; when
 # encountered inside the claims section, transform to standard
 # "N. <body>" so parse_tw_claims recognizes the claim. TIPO 專利法施行
@@ -95,7 +95,7 @@ _BODY_SECTION_KEYS: frozenset[str] = frozenset({
     "symbol_table",
 })
 
-# Headers to skip (not content sections — top-level dividers or English titles)
+# Headers to skip (not content sections - top-level dividers or English titles)
 _SKIP_HEADERS: set[str] = {
     "發明說明書",
     "新型說明書",
@@ -112,7 +112,7 @@ _UTILITY_MODEL_KEYWORDS = {"新型摘要", "新型說明書", "新型內容", "�
 # sections with `[]` brackets as a stylistic convention (organizing
 # patent vs non-patent citations under prior_art); strict §17 only
 # applies to MAIN section headers, not these citation sub-headers.
-# 背景技術 is intentionally NOT in this set — it's an alternate name
+# 背景技術 is intentionally NOT in this set - it's an alternate name
 # for 先前技術 (main section), so [背景技術] DOES warrant the bracket
 # fix.
 _SUB_SECTION_NAMES: frozenset[str] = frozenset({
@@ -124,7 +124,7 @@ _SUB_SECTION_NAMES: frozenset[str] = frozenset({
 # All canonical TIPO section names (for bracketless / variant-bracket detection).
 # Includes _SECTION_MAP keys (body sections, title, claims, abstract, etc.) plus
 # _SKIP_HEADERS (top-level dividers like 發明說明書) since those also must carry
-# 【】 per 專利法施行細則 §17. Sub-section names excluded — see _SUB_SECTION_NAMES.
+# 【】 per 專利法施行細則 §17. Sub-section names excluded - see _SUB_SECTION_NAMES.
 _CANONICAL_SECTION_NAMES: frozenset[str] = (
     (frozenset(_SECTION_MAP.keys()) | frozenset(_SKIP_HEADERS))
     - _SUB_SECTION_NAMES
@@ -149,7 +149,7 @@ _PARA_NUM_PATTERN = re.compile(r"^【(\d{4})】")
 # ---------------------------------------------------------------------------
 
 
-# Backwards-compat alias — callers and tests import _count_cjk_chars from
+# Backwards-compat alias - callers and tests import _count_cjk_chars from
 # this module. The canonical implementation lives in parser.language.
 _count_cjk_chars = count_cjk_chars
 
@@ -174,7 +174,7 @@ def _find_bracketless_section_headers(paragraphs: list[str]) -> list[str]:
         stripped = para.strip()
         if not stripped:
             continue
-        # Correctly bracketed 【<name>】... — main parser handles.
+        # Correctly bracketed 【<name>】... - main parser handles.
         if _BRACKET_HEADER.match(stripped):
             continue
         candidate: str | None = None
@@ -221,12 +221,12 @@ def classify_document_tw(paragraphs: list[str]) -> DetectionResult:
        (:data:`JP_KANA_REJECTION_RATIO` / :data:`HANGUL_REJECTION_RATIO`).
        A document with meaningful JP kana or KO Hangul content is
        rejected as the corresponding jurisdiction regardless of how
-       many 【】 bracket headers it carries — JPO patents also use
+       many 【】 bracket headers it carries - JPO patents also use
        【】 headers, so bracket count alone cannot distinguish TIPO
        from JPO; kana content does.
 
     2. Positive TW evidence wins AFTER cross-script clears. Single
-       【section-name】 header or single 請求項 mention is enough —
+       【section-name】 header or single 請求項 mention is enough -
        neither character is used by CN simplified or US. 【NNNN】
        paragraph numbers alone need ≥ 3 since the convention is
        shared with other jurisdictions.
@@ -334,13 +334,13 @@ def extract_tw_sections(
     claims_header_seen = False    # 【申請專利範圍】 / 【發明申請專利範圍】 / 【新型申請專利範圍】
     # True between a claims header and the NEXT known section header.
     # Distinct from `current_section == "claims"` because an unknown
-    # bracket header resets current_section to None — but conceptually
+    # bracket header resets current_section to None - but conceptually
     # we're still scanning claims-section text. This flag drives both
     # the claim-label recovery path AND the diagnostic counter.
     in_claims_scope = False
     # Diagnostic counter: 【...】 patterns rejected as unknown headers while
     # in_claims_scope. Non-zero signals an unhandled firm-variant claim
-    # label (issue #17 class) — surfaced in check_required_sections
+    # label (issue #17 class) - surfaced in check_required_sections
     # diagnostics so future triage doesn't need the user's actual draft
     # to identify the format.
     unknown_bracket_headers_in_claims = 0
@@ -356,7 +356,7 @@ def extract_tw_sections(
             header_text = m.group(1).strip()
             inline_text = m.group(2).strip()
 
-            # Handle 【中文】 — abstract text marker
+            # Handle 【中文】 - abstract text marker
             if header_text == "中文":
                 waiting_for_abstract_text = True
                 current_section = "abstract"
@@ -389,7 +389,7 @@ def extract_tw_sections(
                     claims_header_seen = True
                     in_claims_scope = True
                 else:
-                    # Any other known section header ends claims scope —
+                    # Any other known section header ends claims scope -
                     # subsequent unknown bracket headers don't count
                     # toward the claims-section diagnostic.
                     in_claims_scope = False
@@ -432,7 +432,7 @@ def extract_tw_sections(
                 # spot unhandled firm-variant labels.
                 unknown_bracket_headers_in_claims += 1
 
-            # Unknown header — stop accumulating into current section
+            # Unknown header - stop accumulating into current section
             current_section = None
             continue
 

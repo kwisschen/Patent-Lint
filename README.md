@@ -5,11 +5,11 @@
 [![Tests](https://img.shields.io/badge/tests-2560-brightgreen)](#)
 [![License: PolyForm-Strict-1.0.0](https://img.shields.io/badge/license-PolyForm--Strict--1.0.0-orange)](LICENSE)
 
-A patent draft checker that runs **entirely in your browser** — pure Python analysis engine compiled to WebAssembly via Pyodide.
+A patent draft checker that runs **entirely in your browser** - pure Python analysis engine compiled to WebAssembly via Pyodide.
 
 **No account. No install. No upload.**
 
-161 checks against USPTO MPEP, EPO Guidelines, CNIPA 审查指南, and TIPO 專利審查基準, covering U.S., European (EPC), Chinese, and Taiwanese patent application drafts. Your file never leaves your device — verifiable in airplane mode.
+161 checks against USPTO MPEP, EPO Guidelines, CNIPA 审查指南, and TIPO 專利審查基準, covering U.S., European (EPC), Chinese, and Taiwanese patent application drafts. Your file never leaves your device - verifiable in airplane mode.
 
 **[Try it →](https://patentlint.com)**
 
@@ -19,13 +19,13 @@ A patent draft checker that runs **entirely in your browser** — pure Python an
 - **2560 tests** passing on every commit; full pytest + ruff gate in CI
 - **6 UI languages** (English, German, Traditional + Simplified Chinese, Japanese, Korean) with locale-aware PDF generation
 - **Walker confidence signals** distilled offline from small sklearn classifiers + cloud-LLM ensemble judging on a public granted-patents corpus; the runtime is pure deterministic Python with no model file or AI inference
-- **Source-available** under [PolyForm-Strict-1.0.0](LICENSE) — free for individuals and for organizations evaluating the tool; commercial licensing handled on inquiry (see [Terms § 4](https://patentlint.com/terms))
+- **Source-available** under [PolyForm-Strict-1.0.0](LICENSE) - free for individuals and for organizations evaluating the tool; commercial licensing handled on inquiry (see [Terms § 4](https://patentlint.com/terms))
 
 ![PatentLint analysis results](https://patentlint.com/screenshot-hero.png)
 
 ### Zero-Trust Proof
 
-> Your documents never leave your browser — verifiable in airplane mode.
+> Your documents never leave your browser - verifiable in airplane mode.
 
 [Watch the demo →](https://patentlint.com/security)
 
@@ -34,8 +34,8 @@ A patent draft checker that runs **entirely in your browser** — pure Python an
 ## How It Works
 
 1. **Drop** a patent draft into the browser (.docx for US/TW/EPC, .docx/.xml/.zip for CN)
-2. **Analyze** — 161 checks run instantly via WebAssembly (no server, no upload)
-3. **Report** — download a PDF or copy a summary to clipboard
+2. **Analyze** - 161 checks run instantly via WebAssembly (no server, no upload)
+3. **Report** - download a PDF or copy a summary to clipboard
 
 ---
 
@@ -59,17 +59,17 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 |---------|--------|-----------|
 | **Specification** | Required sections, paragraph numbering, restrictive wording, sequence listing, prior art citations, figure cross-reference consistency | MPEP § 608.01(a)(m)(p), § 2173.01 |
 | **Drawings** | Figure count, sequential numbering, single-figure format, prior art labeling, reference numeral consistency (spec ↔ drawings) | MPEP § 608.02 |
-| **Claims** | Numbering, dependencies, periods, punctuation, indefinite terms, transitional phrases, means-plus-function (§ 112(f)), antecedent basis (§ 112(b)), preamble consistency (§ 112(d)), specification support (§ 112(a)), claim similarity, special formats (Jepson / CRM / Markush / omnibus), excess-claims fee threshold (37 CFR 1.16(h)/(i)) | 35 U.S.C. § 41(a)(2), § 101, § 112; 37 CFR 1.16; MPEP § 2117–2173 |
-| **Abstract** | Word count (50–150), single paragraph, legal phraseology, implied phrases, self-praising language | MPEP § 608.01(b) |
+| **Claims** | Numbering, dependencies, periods, punctuation, indefinite terms, transitional phrases, means-plus-function (§ 112(f)), antecedent basis (§ 112(b)), preamble consistency (§ 112(d)), specification support (§ 112(a)), claim similarity, special formats (Jepson / CRM / Markush / omnibus), excess-claims fee threshold (37 CFR 1.16(h)/(i)) | 35 U.S.C. § 41(a)(2), § 101, § 112; 37 CFR 1.16; MPEP § 2117-2173 |
+| **Abstract** | Word count (50-150), single paragraph, legal phraseology, implied phrases, self-praising language | MPEP § 608.01(b) |
 
-### European (EPC) Patent Applications — English drafts (34 checks, v1 beta)
+### European (EPC) Patent Applications - English drafts (34 checks, v1 beta)
 
 | Section | Checks | Reference |
 |---------|--------|-----------|
 | **Specification** | Required sections, section ordering (Rule 42(1) sub-section order), paragraph numbering (advisory), paragraph ending, title required, title content (no trademarks / model numbers), figure-reference consistency, reference-numeral consistency, claim-reference-in-spec | Art. 78 + Rule 41 + Rule 42 + Rule 43(7) + Rule 46(2)(h) EPC; Guidelines F-II § 4 + F-IV § 4.3 |
 | **Drawings** | Figures sequential, single-figure label, prior-art labeling, figure count | Rule 46(2)(a) + Rule 46(2)(h) EPC; Guidelines F-V § 1.2 |
-| **Claims** | Sequential numbering, dependency format, self/forward dependency, single sentence per claim, reference signs in parens, subject consistency, transitional phrase, claim-spec reference, multi-dep on multi-dep, Markush format, independent-claim count per category, two-part form (advisory), **antecedent basis — Art. 84 walker**, **specification support — Art. 84 walker**, restrictive absolutes, claim punctuation, excess-claims fee threshold (Rule 45 EPC) | Art. 84 EPC; Rule 43 + Rule 45 EPC; Guidelines F-IV § 3.4, § 4.5, § 4.7, § 4.10, § 4.13, § 4.20 |
-| **Abstract** | Word count (50–150), title-match, claim-reference, structure (single paragraph, no claim-style phraseology, no merit language) | Rule 47(2) EPC; Guidelines F-II § 2.3, § 2.3.3, § 2.3.5 |
+| **Claims** | Sequential numbering, dependency format, self/forward dependency, single sentence per claim, reference signs in parens, subject consistency, transitional phrase, claim-spec reference, multi-dep on multi-dep, Markush format, independent-claim count per category, two-part form (advisory), **antecedent basis - Art. 84 walker**, **specification support - Art. 84 walker**, restrictive absolutes, claim punctuation, excess-claims fee threshold (Rule 45 EPC) | Art. 84 EPC; Rule 43 + Rule 45 EPC; Guidelines F-IV § 3.4, § 4.5, § 4.7, § 4.10, § 4.13, § 4.20 |
+| **Abstract** | Word count (50-150), title-match, claim-reference, structure (single paragraph, no claim-style phraseology, no merit language) | Rule 47(2) EPC; Guidelines F-II § 2.3, § 2.3.3, § 2.3.5 |
 
 ### Chinese Patent Applications (34 checks)
 
@@ -85,7 +85,7 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 | Section | Checks | Reference |
 |---------|--------|-----------|
 | **Specification** | Required sections, section ordering, paragraph numbering (【NNNN】 format), paragraph ending, figure reference consistency, patent type terminology (本發明 vs 本新型), title, spec-claim references, 符號說明 presence + consistency, bracket format (【】) | 專利法施行細則 §17, 專利審查基準 |
-| **Claims** | Sequential, dependency format (§18), self / forward / circular dependency, single sentence (§18), reference numeral parens (§19), subject consistency, transition phrase (其特徵在於), CN-term contamination guard, spec/drawing refs, multi-dep on multi-dep, multi-dep alternative form, title-subject match, 符號說明 consistency, **antecedent basis (先行詞) — ancestor-chain walker**, **specification support (說明書支持) — §26 第3項**, connection relationships, 代表圖 vs 符號說明 consistency, excess-claims fee threshold (專利規費收取準則 §5) | 專利法 §26 第3項, 專利法施行細則 §17–§21, 專利規費收取準則 §5, 專利審查基準 |
+| **Claims** | Sequential, dependency format (§18), self / forward / circular dependency, single sentence (§18), reference numeral parens (§19), subject consistency, transition phrase (其特徵在於), CN-term contamination guard, spec/drawing refs, multi-dep on multi-dep, multi-dep alternative form, title-subject match, 符號說明 consistency, **antecedent basis (先行詞) - ancestor-chain walker**, **specification support (說明書支持) - §26 第3項**, connection relationships, 代表圖 vs 符號說明 consistency, excess-claims fee threshold (專利規費收取準則 §5) | 專利法 §26 第3項, 專利法施行細則 §17-§21, 專利規費收取準則 §5, 專利審查基準 |
 | **Abstract** | Character count (≤250), title match, commercial language, representative drawing (代表圖) designation | 專利法施行細則 §21 |
 | **Drawings** | Figures sequential, figure count | 專利法施行細則 §17 |
 
@@ -101,8 +101,8 @@ Full inventory: [CHECKS.md](CHECKS.md)
 
 | Tier | Analysis | PDF | Server? | Trust Model |
 |------|----------|-----|---------|-------------|
-| **Web** (default) | Pyodide/WASM in browser | pdfmake (client-side) | No — static hosting | Zero-trust: airplane mode verifiable |
-| **Docker** | Local FastAPI | weasyprint | Yes (your machine) | On-premise — commercial deployment requires a separate license |
+| **Web** (default) | Pyodide/WASM in browser | pdfmake (client-side) | No - static hosting | Zero-trust: airplane mode verifiable |
+| **Docker** | Local FastAPI | weasyprint | Yes (your machine) | On-premise - commercial deployment requires a separate license |
 | **Cloud API** (future) | Hosted FastAPI | weasyprint | Yes (our infra) | Process + discard |
 
 The Web tier on patentlint.com is free for individual evaluation. Building the Docker image from source for personal evaluation is permitted by the license; deploying it at a firm, company, or organization (including for client matters) requires a [separate commercial license](#license).
@@ -146,7 +146,7 @@ src/patentlint/
 ├── cli.py           # Click CLI (analyze, batch)
 ├── i18n.py          # Locale bundle loader + i18next-style translator
 ├── parser/          # Section extraction, claim parsing, .docx/.xml/.zip loading
-├── analysis/        # Rule checks (US + EPC + CN + TW) — all pure functions, independently testable
+├── analysis/        # Rule checks (US + EPC + CN + TW) - all pure functions, independently testable
 ├── report/          # PDF report generation (Jinja2 + weasyprint; locale-aware)
 └── api/             # FastAPI REST endpoints
 
@@ -155,10 +155,10 @@ frontend/
 ├── src/lib/         # pdfExport.js (client-side PDF via pdfmake), detailsFormatter.js
 ├── src/pages/       # SecurityPage, AboutPage, TermsPage, PrivacyPage, RubricPage
 ├── src/hooks/       # usePyodide, useNetworkMonitor
-└── src/i18n/        # Locale files (en, de, zh-TW, zh-CN, ja, ko) — shared with Python
+└── src/i18n/        # Locale files (en, de, zh-TW, zh-CN, ja, ko) - shared with Python
 ```
 
-The `parser/` and `analysis/` packages have **zero framework dependencies** — they run identically in Pyodide (browser), FastAPI (Docker), and Click (CLI). The same engine handles US, EPC, CN, and TW jurisdictions; `pipeline.py` routes to the appropriate parser and check modules.
+The `parser/` and `analysis/` packages have **zero framework dependencies** - they run identically in Pyodide (browser), FastAPI (Docker), and Click (CLI). The same engine handles US, EPC, CN, and TW jurisdictions; `pipeline.py` routes to the appropriate parser and check modules.
 
 ---
 
@@ -166,7 +166,7 @@ The `parser/` and `analysis/` packages have **zero framework dependencies** — 
 
 ### Web (recommended)
 
-Visit **[patentlint.com](https://patentlint.com)** — nothing to install.
+Visit **[patentlint.com](https://patentlint.com)** - nothing to install.
 
 ### Local Development
 
@@ -206,7 +206,7 @@ docker run -p 8000:8000 patentlint
 # → http://localhost:8000 (web UI + API)
 ```
 
-> For evaluation. Commercial deployment of the Docker / CLI / REST API tier at a firm, company, or organization (including for client work) requires a separate license — see [License](#license).
+> For evaluation. Commercial deployment of the Docker / CLI / REST API tier at a firm, company, or organization (including for client work) requires a separate license - see [License](#license).
 
 ### REST API
 
@@ -232,7 +232,7 @@ curl http://localhost:8000/api/health
 | CLI | Click |
 | Testing | pytest (2560 tests) |
 | CI/CD | GitHub Actions (test, lint, wheel-verify, docker) + Vercel auto-deploy |
-| i18n | react-i18next (English, Deutsch, 繁體中文, 简体中文, 日本語, 한국어) — shared locale bundles across frontend + weasyprint PDF |
+| i18n | react-i18next (English, Deutsch, 繁體中文, 简体中文, 日本語, 한국어) - shared locale bundles across frontend + weasyprint PDF |
 
 ---
 
@@ -259,7 +259,7 @@ This tool does not constitute legal advice. All findings should be reviewed by a
 
 ## License
 
-PatentLint is source-available under **PolyForm-Strict-1.0.0** — see [LICENSE](LICENSE) for the full terms.
+PatentLint is source-available under **PolyForm-Strict-1.0.0** - see [LICENSE](LICENSE) for the full terms.
 
 **Permitted uses:**
 
@@ -275,6 +275,6 @@ PatentLint is source-available under **PolyForm-Strict-1.0.0** — see [LICENSE]
 - Redistributing PatentLint (modified or unmodified)
 - Making changes or new works based on PatentLint
 
-The patentlint.com hosted service is free for individual evaluation. Commercial deployment or redistribution requires a separate license — [contact Christopher Chen](mailto:kwisschen@gmail.com) to discuss terms. See also the [Terms of Service](https://patentlint.com/terms) for the hosted site and the source-code license.
+The patentlint.com hosted service is free for individual evaluation. Commercial deployment or redistribution requires a separate license - [contact Christopher Chen](mailto:kwisschen@gmail.com) to discuss terms. See also the [Terms of Service](https://patentlint.com/terms) for the hosted site and the source-code license.
 
-Copyright © 2025–2026 Christopher Chen. All rights reserved.
+Copyright © 2025-2026 Christopher Chen. All rights reserved.

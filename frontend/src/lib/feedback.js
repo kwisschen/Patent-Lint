@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 /* global __BUILD_HASH__ */
 import { emitOutgoing } from './outgoingRequests'
 
@@ -11,14 +11,14 @@ export const MAINTAINER_EMAIL = 'kwisschen@gmail.com'
 //
 // Chosen over mailto: because mailto: requires an OS-level handler to
 // be registered + functional, which a meaningful fraction of users
-// (including the maintainer's own Windows setup) do not have — the
+// (including the maintainer's own Windows setup) do not have - the
 // dispatch chain silently fails with no user-visible error. An https://
 // URL bypasses the OS handler layer entirely; every browser opens it
 // as a regular webpage regardless of configuration.
 //
 // Preserves the PatentLint trust property ("indicator stays green"):
 // opening a new tab via window.open('https://...') causes the NEW tab
-// to fetch Gmail — PatentLint's tab makes zero network calls.
+// to fetch Gmail - PatentLint's tab makes zero network calls.
 // `useNetworkMonitor`'s PerformanceObserver is scoped to PatentLint's
 // tab and doesn't see the new tab's resources. Same handoff pattern as
 // mailto:, just to a URL instead of a protocol.
@@ -37,12 +37,12 @@ const OUTLOOK_COMPOSE_BASE = 'https://outlook.office.com/mail/deeplink/compose'
 const METHOD_KEY = 'patentlint:feedback-method'
 const VALID_METHODS = ['gmail', 'outlook', 'mailto', 'clipboard']
 
-// Coarse browser detection — major-family + version-family only. We don't
+// Coarse browser detection - major-family + version-family only. We don't
 // fingerprint precisely; the goal is "Safari 18 / Chrome 13x / Firefox 14x"
 // so a maintainer reading a stack of reports can spot browser-specific bugs.
 //
 // iOS variants come first because Apple requires all iOS browsers to use
-// WebKit — the UA reports CriOS / FxiOS / EdgiOS instead of Chrome /
+// WebKit - the UA reports CriOS / FxiOS / EdgiOS instead of Chrome /
 // Firefox / Edg, and they all end with "Safari/". Without iOS-specific
 // patterns, iPhone Chrome would fall through to "unknown" (no Chrome
 // token, no Version/Safari token).
@@ -159,7 +159,7 @@ export function excerptAroundReference(text, term, referenceForm) {
 // Candidate-introduction excerpt: when `term` appears EARLIER in the claim
 // than the flagged reference, return that earliest occurrence's context + the
 // marker immediately preceding it. Mirrors Python's intro_candidate_* fields
-// (diagnostic_extractors). The marker is a FACT, not a verdict — article_less /
+// (diagnostic_extractors). The marker is a FACT, not a verdict - article_less /
 // intro-quantifier (一/a) earlier mentions are candidate missed introductions
 // (likely FP); a reference marker (該/所述/the) means the earliest mention is
 // itself a reference (genuine gap). Returns null when there is no earlier
@@ -205,7 +205,7 @@ export function candidateIntroExcerpt(text, term, referenceForm) {
 // readable label even if a translation hasn't been added yet).
 //
 // Exported for ReportModal to render localized labels in its payload
-// preview — same labels users see in the modal show up in their email
+// preview - same labels users see in the modal show up in their email
 // client when they choose the mailto fallback.
 export const FIELD_LABEL_KEYS = {
   disposition: 'feedback.email.fieldDisposition',
@@ -276,7 +276,7 @@ export const FIELD_LABEL_KEYS = {
   orphans: 'feedback.email.fieldOrphans',
   brief_figs_sample: 'feedback.email.fieldBriefFigsSample',
   detailed_figs_sample: 'feedback.email.fieldDetailedFigsSample',
-  // Added 2026-05-15 with PR #54 + #56 diagnostic enrichments —
+  // Added 2026-05-15 with PR #54 + #56 diagnostic enrichments -
   // connection_relationships findings + numeralConsistency outlier
   // context + symbolVsRepDrawing numeral string. Without these, the
   // ReportModal preview rendered raw snake_case keys.
@@ -289,7 +289,7 @@ export const FIELD_LABEL_KEYS = {
 }
 
 // Format a key→value section as a localized "Label: value" stack. Drops
-// the previous space-padding hack — CJK glyphs render at ~2 monospace
+// the previous space-padding hack - CJK glyphs render at ~2 monospace
 // widths so character-count padding skewed visibly, and the colon line
 // is more scan-friendly than aligned columns anyway. Locale colon comes
 // from `feedback.email.fieldColon` (":" / "：" per script convention).
@@ -331,7 +331,7 @@ function buildOutlookUrl(subject, body) {
   return `${OUTLOOK_COMPOSE_BASE}?${params.toString()}`
 }
 
-// Build a mailto: URL. Used for the "Email app" picker option — on
+// Build a mailto: URL. Used for the "Email app" picker option - on
 // mobile (iOS / Android) this opens the user's default mail app with
 // pre-fill working correctly (unlike iOS Gmail-app handling of https
 // compose URLs, which ignores the `?view=cm&body=...` params). On
@@ -343,7 +343,7 @@ function buildMailtoUrl(subject, body) {
 
 // Dispatch a mailto: URL via a dynamically-created anchor click.
 // More reliable than window.location.href = 'mailto:...' for protocol
-// handlers — browsers treat anchor clicks within an onClick handler as
+// handlers - browsers treat anchor clicks within an onClick handler as
 // user-initiated, which protocol dispatch requires.
 function openMailto(url) {
   const a = document.createElement('a')
@@ -358,7 +358,7 @@ function openMailto(url) {
 // plain-text body. The URL opens Gmail pre-filled (works for Gmail users
 // out of the box, Google Workspace users whose domain uses Gmail, and
 // personal-Google-account users). The plain text gets copied to the
-// clipboard at send time as a universal fallback — corporate users with
+// clipboard at send time as a universal fallback - corporate users with
 // Outlook/Microsoft 365/other provider can close the Gmail tab and paste
 // into their own email. No mail provider is lucky enough to catch everyone,
 // so we give the user both paths and let them pick silently.
@@ -368,7 +368,7 @@ function openMailto(url) {
 // send. The "PatentLint" prefix is preserved across locales so the
 // maintainer's inbox filter still catches every report regardless of
 // the user's UI language.
-// An email's structured data. Not tied to any specific provider — the
+// An email's structured data. Not tied to any specific provider - the
 // send method decides at dispatch time which URL to open (or just copy
 // to clipboard). `subject` and `text` are used to build provider-
 // specific URLs on demand in dispatchFeedback().
@@ -392,7 +392,7 @@ export function setFeedbackMethod(method) {
   try {
     localStorage.setItem(METHOD_KEY, method)
   } catch {
-    // Private-mode / quota exceeded — silent fail; user just won't get
+    // Private-mode / quota exceeded - silent fail; user just won't get
     // persistence, which is acceptable degradation.
   }
 }
@@ -408,7 +408,7 @@ export function clearFeedbackMethod() {
 // Format the walker-diagnostic fingerprint as an indented block. Values
 // are coerced to compact strings (true/false for booleans, str for ints)
 // so the email body reads like a key/value ledger. Pure metadata by
-// design — no claim text, no nouns; disclosed in Privacy §7.
+// design - no claim text, no nouns; disclosed in Privacy §7.
 function formatDiagnostics(diagnostics, t) {
   if (!diagnostics || typeof diagnostics !== 'object') return ''
   const entries = Object.entries(diagnostics).filter(
@@ -424,7 +424,7 @@ function formatDiagnostics(diagnostics, t) {
   return [header, ...lines].join('\n')
 }
 
-// Compose per-finding feedback — finding fields + environment metadata
+// Compose per-finding feedback - finding fields + environment metadata
 // merged into one localized data block around a localized greeting +
 // placeholder. Walker diagnostics (optional) render as a separate
 // fingerprint block so the maintainer can identify the exact code path
@@ -437,7 +437,7 @@ export function composeFeedback(finding, t, { locale } = {}) {
   }
   const checkKey = finding.check_key || 'unknown'
   const subject = t('feedback.email.subjectFinding', { checkKey })
-  // Strip diagnostics from the main section — they render as their own
+  // Strip diagnostics from the main section - they render as their own
   // block below, not as an inline "diagnostics: [object]" row.
   const { diagnostics, ...findingCore } = finding
   const dataSection = formatSection({ ...findingCore, ...env }, t)
@@ -484,7 +484,7 @@ export function composeEnterprise(t) {
 }
 
 // Compose builder-bio contact (about-page personal Email button). Generic
-// scaffold for hiring inquiries / collaboration / feedback / hello —
+// scaffold for hiring inquiries / collaboration / feedback / hello -
 // routes through FeedbackPicker so users on locked-down work laptops
 // without a mailto handler still get a working Gmail-web fallback.
 export function composeBuilderContact(t) {
@@ -501,7 +501,7 @@ export function composeBuilderContact(t) {
 
 // Dispatch a composed email via the given method. Clipboard write is
 // always performed (silent fail) as a safety-net fallback regardless
-// of method — even a Gmail user can tab away and paste elsewhere if
+// of method - even a Gmail user can tab away and paste elsewhere if
 // the compose tab fails. Order matters: write clipboard BEFORE opening
 // the new tab, because window.open may steal focus and some browsers
 // require the original tab to be focused for clipboard writes.
@@ -534,7 +534,7 @@ export function dispatchFeedback(method, email) {
 // ---------------------------------------------------------------------------
 // Anonymous error-report endpoint (POST /api/report).
 //
-// Same-origin Edge Function (frontend/api/report.js) — no CORS, no
+// Same-origin Edge Function (frontend/api/report.js) - no CORS, no
 // env-var URL, no token in the bundle. The function forwards to
 // GitHub Issues on the Patent-Lint repo, where the maintainer (and
 // scheduled triage automation via `gh issue list --label report`) reads them.
@@ -546,7 +546,7 @@ export function dispatchFeedback(method, email) {
 //   anonymous endpoint: one same-origin POST; user reviews the
 //           exact payload in the modal preview before sending; no
 //           account, no email address required.
-// Both flows ship — modal defaults to anonymous, mailto is the
+// Both flows ship - modal defaults to anonymous, mailto is the
 // in-modal tertiary fallback.
 // ---------------------------------------------------------------------------
 
@@ -588,13 +588,13 @@ export function buildReportPayload({
     patentlint_build: buildHash(),
   }
   // ADR-159 advisory tier: a report carries the reporter's DISPOSITION so the
-  // §112 walker findings become first-class LABELS, not just bug reports —
+  // §112 walker findings become first-class LABELS, not just bug reports -
   // 'confirmed_defect' = the flag is a correct catch (a real-defect / TP label
   // for the gold corpus), 'false_positive' = the flag is wrong (a walker_fp
   // label). The intake (api/report.js) maps each to a GitHub label.
   //
   // A report carries up to SAMPLE_SIZE findings, and a single §112 claim is
-  // routinely a MIX of real defects and FPs — so one blanket disposition
+  // routinely a MIX of real defects and FPs - so one blanket disposition
   // mislabels the set (the #373/#374 lossy-label gap). When the caller supplies
   // PER-FINDING dispositions, attach each to its finding and derive the
   // report-level value as the aggregate (a real mix → 'mixed'); the maintainer
@@ -628,7 +628,7 @@ export function buildReportPayload({
   }
   // The user-comment field is the only payload field that carries
   // free-form, NOT-de-identified text from the user. Privacy §6 spells
-  // out the contract — empty / whitespace-only strings are dropped so
+  // out the contract - empty / whitespace-only strings are dropped so
   // the field never appears in the issue body unless the user actually
   // typed something.
   if (typeof userComment === 'string') {

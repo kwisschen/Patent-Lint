@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Phase 2b judging — round 1 §5 production pass.
+# Copyright (c) 2025-2026 Christopher Chen
+"""Phase 2b judging - round 1 §5 production pass.
 
 Reads the 757-record CN+TW corpus from
 `/Users/chrischen/Documents/Projects/Patent-Analyst-corpus/parquet/cn_tw_drafts/`,
@@ -67,7 +67,7 @@ REPORT_PATH = Path(
 # Mid-run cost guard. Per-draft cost projection (post-2026-05-03 with
 # proportional Opus + min_findings filter):
 # Sonnet ~$0.045, gpt-5-mini ~$0.005, Opus on ~30% of drafts ~$0.03
-# (proportional threshold = max(2, ceil(findings * 0.15)) — escalates only
+# (proportional threshold = max(2, ceil(findings * 0.15)) - escalates only
 # on substantive disagreement, not noise). Net ~$0.08/draft.
 COST_PER_DRAFT_EST = 0.08
 # Per Christopher's 2026-05-02 directive: do not cost-halt as long as
@@ -134,10 +134,10 @@ def build_doc_from_claims(
 
 def load_corpus_records(parquet_dir: Path) -> list[dict]:
     """Load all corpus records from the partitioned Parquet directory,
-    deduped by patent_id (keeping first occurrence — earliest ingest wins).
+    deduped by patent_id (keeping first occurrence - earliest ingest wins).
 
     Reads each Parquet file directly via `ParquetFile().read()` to avoid
-    pyarrow.dataset's Hive-partition auto-discovery — the `jurisdiction`
+    pyarrow.dataset's Hive-partition auto-discovery - the `jurisdiction`
     field is stored both in the Hive partition path AND in the row data,
     which collides on dataset merge.
 
@@ -239,7 +239,7 @@ def _weighted_sample_drafts(
     the R34 harness fix exposed the most new findings get highest
     selection probability.
 
-    Implementation: Efraimidis-Spirakis A-ES algorithm — for each item
+    Implementation: Efraimidis-Spirakis A-ES algorithm - for each item
     draw `key = -ln(uniform()) / weight`, then take the K items with
     SMALLEST key. Equivalent to weighted-without-replacement sampling
     in O(N log K). Pinned `seed` makes the run deterministic so a 5-
@@ -339,7 +339,7 @@ async def _run(
         records = records[:limit]
         print(f"Limited to first {limit} records")
 
-    # Phase A: walker pass (sequential, fast — the LLM calls dominate wall-clock)
+    # Phase A: walker pass (sequential, fast - the LLM calls dominate wall-clock)
     drafts_to_judge: list[tuple[dict, list[FindingInput], dict[int, str]]] = []
     walker_zero_count = 0
     walker_error_count = 0
@@ -357,7 +357,7 @@ async def _run(
             if not skip_walker_zero:
                 drafts_to_judge.append((rec, [], claim_texts))
             continue
-        # Lever 2: skip drafts with too few walker findings — low cluster
+        # Lever 2: skip drafts with too few walker findings - low cluster
         # signal at high per-draft cost. Drafts contribute weakly to walker-
         # round trigger evidence; trim cleanly.
         if len(issues) < min_findings:
@@ -377,7 +377,7 @@ async def _run(
         print("No drafts to judge; exiting.")
         return {"drafts_judged": 0, "verdicts": []}
 
-    # Stratified weighted sampling — when set, draws `target_per_jurisdiction`
+    # Stratified weighted sampling - when set, draws `target_per_jurisdiction`
     # drafts per jurisdiction with probability proportional to walker-finding
     # count. Pinned seed makes the pilot a deterministic prefix of the full
     # run; combine with `--limit` to take the prefix.
@@ -396,7 +396,7 @@ async def _run(
     # Phase B: LLM judging with mid-run halt.
     # Per-request timeout = 240s. Without an explicit timeout, a stuck
     # connection can wedge `asyncio.gather` forever (hit during 2026-05-05
-    # overnight run — first launch hung silently for 1h with no progress
+    # overnight run - first launch hung silently for 1h with no progress
     # because connections were established but no response packets flowed).
     # 240s is well above typical sonnet-4-6 latency for ~30K-token prompts
     # (10-60s) plus Anthropic's internal retries; setting it lower would
@@ -439,7 +439,7 @@ async def _run(
     )
 
     # Run all in chunks of PROGRESS_LOG_EVERY for periodic progress + cost-halt
-    # Effective halt threshold — CLI --cost-cap overrides COST_HALT_THRESHOLD.
+    # Effective halt threshold - CLI --cost-cap overrides COST_HALT_THRESHOLD.
     # Two halt triggers fire whichever comes first:
     #   (a) cumulative cost_actual > effective_cap (hard ceiling)
     #   (b) projected_total > effective_cap (early-warning extrapolation)
@@ -472,18 +472,18 @@ async def _run(
             f"cost=${cost_actual:.2f} (per-draft ${per_draft_cost:.4f}, "
             f"projected total ${projected_total:.2f}, cap ${effective_cap:.2f})"
         )
-        # Hard halt — cumulative cost exceeded cap.
+        # Hard halt - cumulative cost exceeded cap.
         if cost_actual > effective_cap:
             print(
-                f"  HALT — cumulative cost ${cost_actual:.2f} exceeded "
+                f"  HALT - cumulative cost ${cost_actual:.2f} exceeded "
                 f"cap ${effective_cap:.2f}. Stopping at {n_done} drafts."
             )
             halted = True
             break
-        # Early-warning halt — projected total exceeds cap.
+        # Early-warning halt - projected total exceeds cap.
         if projected_total > effective_cap:
             print(
-                f"  HALT — projected total ${projected_total:.2f} exceeds "
+                f"  HALT - projected total ${projected_total:.2f} exceeds "
                 f"cap ${effective_cap:.2f}. Stopping at {n_done} drafts."
             )
             halted = True
@@ -549,7 +549,7 @@ def render_report(result: dict) -> str:
     def line(s: str = "") -> None:
         lines.append(s)
 
-    line("# Phase 2b Judging Report — 2026-05-02")
+    line("# Phase 2b Judging Report - 2026-05-02")
     line()
     if result["halted"]:
         line("**STATUS: HALTED MID-RUN (cost trajectory exceeded threshold).**")
@@ -604,7 +604,7 @@ def render_report(result: dict) -> str:
          f"(out of {walker_fp_n} total walker_fp findings; sampling "
          f"stratified by jurisdiction × applicant_type). Confirm walker "
          f"FP rate before any walker-round trigger evidence ships.")
-    line("- Pass 2 (~50-75 min): sample 10-15 disagreement cases — "
+    line("- Pass 2 (~50-75 min): sample 10-15 disagreement cases - "
          "prioritize Opus-resolved drafts where Opus disagreed with "
          "both Sonnet and gpt-5-mini, and any case where the verdict "
          "would silence a `protect:true` ground-truth label "
@@ -664,7 +664,7 @@ def main() -> int:
                         help="Filter corpus to specific jurisdictions only.")
     parser.add_argument("--min-findings", type=int, default=3,
                         help="Skip drafts with fewer than N walker findings "
-                             "(Lever 2 — low cluster signal at high per-draft "
+                             "(Lever 2 - low cluster signal at high per-draft "
                              "cost).")
     parser.add_argument("--output-results", type=str, default=None,
                         help="Override results JSON output path.")
@@ -691,7 +691,7 @@ def main() -> int:
                              "None = take all post-filter drafts.")
     parser.add_argument("--sample-seed", type=int, default=20260505,
                         help="Random seed for weighted sampling (default "
-                             "20260505). Pinned for determinism — pilot runs "
+                             "20260505). Pinned for determinism - pilot runs "
                              "are strict prefixes of full runs given the "
                              "same seed + larger --target-per-jurisdiction.")
     args = parser.parse_args()

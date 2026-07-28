@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for src/patentlint/analysis/cjk_ordinal_guard.py."""
 
 from __future__ import annotations
@@ -20,14 +20,14 @@ class TestNumericOrdinal:
         assert ordinal_guard("第1電極", "第2電極") is True
 
     def test_same_ordinal_does_not_fire(self):
-        # 第一電極 vs 該第一電極 — same ordinal, different (optional) prefix.
+        # 第一電極 vs 該第一電極 - same ordinal, different (optional) prefix.
         # Guard must NOT fire; the prefix is a reference marker, not an
         # ordinal difference. (Note: 該 is stripped by the walker before
         # the guard sees the pair, so this tests the raw inputs anyway.)
         assert ordinal_guard("第一電極", "第一電極") is False
 
     def test_ordinal_prefix_on_one_side_only(self):
-        # 透明電極 (no ordinal) / 第一透明電極 (ordinal) — guard must not fire
+        # 透明電極 (no ordinal) / 第一透明電極 (ordinal) - guard must not fire
         assert ordinal_guard("透明電極", "第一透明電極") is False
 
     def test_ordinal_differs_but_suffix_differs_does_not_fire(self):
@@ -49,7 +49,7 @@ class TestPolarity:
         assert ordinal_guard("陽極", "電極") is False
 
     def test_same_polarity_different_suffix_does_not_fire(self):
-        # 陽極 / 陽極層 — same polarity, different suffix (not an ordinal pair)
+        # 陽極 / 陽極層 - same polarity, different suffix (not an ordinal pair)
         assert ordinal_guard("陽極", "陽極層") is False
 
 
@@ -61,7 +61,7 @@ class TestLatinLetterType:
         assert ordinal_guard("半導體", "P型半導體") is False
 
     def test_same_letter_different_suffix_does_not_fire(self):
-        # P型半導體 / P型矽半導體 — same letter type, different noun
+        # P型半導體 / P型矽半導體 - same letter type, different noun
         assert ordinal_guard("P型半導體", "P型矽半導體") is False
 
 
@@ -75,7 +75,7 @@ class TestDigitG:
 
 class TestBareReferenceFormsDoNotFire:
     def test_guang_vs_guangxian_does_not_fire(self):
-        # 光 / 光線 — not an ordinal pair
+        # 光 / 光線 - not an ordinal pair
         assert ordinal_guard("光", "光線") is False
 
     def test_identical_terms_do_not_fire(self):
@@ -166,7 +166,7 @@ class TestNormalizeArabicOrdinalToCjk:
 
     def test_paren_label_untouched(self):
         # Element labels in parens (101) lack a leading 第, so they
-        # must NOT be normalized — only the ordinal prefix is.
+        # must NOT be normalized - only the ordinal prefix is.
         assert normalize_arabic_ordinal_to_cjk("第1電極(101)") == "第一電極(101)"
         assert normalize_arabic_ordinal_to_cjk("第2端子（202）") == "第二端子（202）"
 
@@ -195,7 +195,7 @@ class TestNormalizeIntegration:
             normalize_candidate_intro,
             normalize_reference_term,
         )
-        # Same component — JP-translated style vs canonical TW style
+        # Same component - JP-translated style vs canonical TW style
         ref_arabic = normalize_reference_term("該第1電極")
         ref_cjk = normalize_reference_term("該第一電極")
         assert ref_arabic == ref_cjk

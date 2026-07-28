@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# fetch_corpus_descriptions.py — pull Google-Patents description bodies for the
+# fetch_corpus_descriptions.py - pull Google-Patents description bodies for the
 # FULL round-1 corpus (not just the supplement_v2 subset), so spec-support and
 # ref-numeral can be probed at corpus scale and `term_in_spec` activates for the
 # antecedent confidence signal. Reuses fetch_tw_descriptions' polite fetcher;
@@ -46,7 +46,7 @@ def run(juris, sleep=1.5):
             time.sleep(sleep)
     out.write_text(json.dumps(cache, ensure_ascii=False, indent=2))
     have = sum(1 for p in pids if (cache.get(p) or {}).get("description"))
-    print(f"[{juris}] DONE — corpus coverage {have}/{len(pids)}", flush=True)
+    print(f"[{juris}] DONE - corpus coverage {have}/{len(pids)}", flush=True)
 
 
 def main():

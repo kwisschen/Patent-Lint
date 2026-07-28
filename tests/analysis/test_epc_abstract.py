@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """EPC G7 abstract check tests.
 
 Word count (Rule 47(2) + Guidelines F-II § 2.3: 50-150 word range) and
@@ -150,7 +150,7 @@ def test_title_match_passes_when_abstract_empty():
 
 
 def test_title_match_only_stopword_title_passes():
-    """If the title is only stopwords, no overlap to compute — pass vacuously."""
+    """If the title is only stopwords, no overlap to compute - pass vacuously."""
     results = check_abstract_title_match_epc("Some abstract body.", "The And Of")
     assert len(results) == 1
     assert results[0].status == "pass"
@@ -187,8 +187,8 @@ def test_claim_reference_passes_on_empty_abstract():
 
 
 def test_claim_reference_does_not_match_generic_claim_word():
-    """'A claim should not be confused with X' shouldn't trigger — no number."""
+    """'A claim should not be confused with X' shouldn't trigger - no number."""
     abstract = "The improvement is a claim that the apparatus is novel."
     results = check_abstract_claim_reference_epc(abstract)
-    # No "claim N" pattern, only "a claim" — should pass.
+    # No "claim N" pattern, only "a claim" - should pass.
     assert results[0].status == "pass"

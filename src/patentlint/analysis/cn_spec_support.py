@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """CN specification-support analysis (说明书支持分析).
 
 Implements 专利法 §26 第4款 ("权利要求书应当以说明书为依据") and the
@@ -14,7 +14,7 @@ with three CN-specific adaptations:
      matcher without precision cost.
   2. **Excludes 背景技术 from spec_text.** 审查指南 §2.2.3 defines
      背景技术 as prior-art context, not disclosure of the invention.
-     §3.2.1 grounds support in "充分公开的内容" — sufficiently
+     §3.2.1 grounds support in "充分公开的内容" - sufficiently
      disclosed content. A claim term supported *only* by 背景技术 is
      not drafted as disclosed by the inventor; flagging it is the
      correct §26 第4款 behavior.
@@ -27,15 +27,15 @@ with three CN-specific adaptations:
 Emits ``UnsupportedTerm`` findings for each claim noun phrase that fails
 all three tiers:
 
-  Tier 1: aggressively-normalized exact substring — claim-side term
+  Tier 1: aggressively-normalized exact substring - claim-side term
     goes through ``_normalize_for_spec_support_cn`` (walker normalizer
     + leading preposition strip 于/到/在/自/由/从/向/对 + both paren
     and bare-numeral ref-numeral strip), then tested as a substring
     of spec_text.
-  Tier 2: raw-form exact substring — catches over-normalization cases
+  Tier 2: raw-form exact substring - catches over-normalization cases
     where the drafter's literal claim phrasing appears verbatim in
     the spec.
-  Tier 3: CJK character-window fallback — normalized term's bigrams
+  Tier 3: CJK character-window fallback - normalized term's bigrams
     must all co-occur within a ±30-char sliding window over spec_text.
 
 Spec_text composition: ``technical_field + summary + detailed_description``.
@@ -45,7 +45,7 @@ Excludes ``background`` (prior-art context, not disclosure),
 
 Claim-side inventory hygiene additionally skips terms flagged by the
 antecedent walker as ``category: "tw_contamination"`` (该等/该些 residue
-from 繁转简 conversion — those are parser-level artifacts, not native
+from 繁转简 conversion - those are parser-level artifacts, not native
 CN terms worth spec-support analysis).
 """
 
@@ -68,7 +68,7 @@ from patentlint.models import Claim, CnPatentDocument, UnsupportedTerm
 # in 审查指南 §3.1.1 canonical genus forms (一种X where X is 方法/装置/系统/
 # 设备/手段/步骤) + 技术方案 (the generic term 审查指南 uses throughout for
 # "the claimed invention"). Deliberately excludes 元件/组件/构件/部分/表面/
-# 部位/侧/面/结构 — these form legitimate compound terms (开口部, 底部,
+# 部位/侧/面/结构 - these form legitimate compound terms (开口部, 底部,
 # 第一表面, 连接结构) per TW audit #2 lesson.
 _CN_GENERIC_TERMS: frozenset[str] = frozenset({
     "系统",
@@ -80,7 +80,7 @@ _CN_GENERIC_TERMS: frozenset[str] = frozenset({
     "技术方案",
     # 单元 is bare-genus in CN drafting (drafters write 处理单元 / 存储单元
     # as compounds). Bare 单元 in inventory is walker stranding from
-    # patterns like 单元在第二X / 单元能够X — after interior reject + verb
+    # patterns like 单元在第二X / 单元能够X - after interior reject + verb
     # strip, the residue lands as bare 单元, which we reject here as too
     # broad to meaningfully spec-check (CN115485995B).
     "单元",
@@ -93,7 +93,7 @@ _CN_GENERIC_TERMS: frozenset[str] = frozenset({
 # 根据权利要求4至权利要求10 are also filtered.
 #
 # Excluded deliberately:
-#   - 所述 / 其中 — these are reference particles, not standalone noun
+#   - 所述 / 其中 - these are reference particles, not standalone noun
 #     phrases; walker should never emit them bare, and including here
 #     would mask a walker bug.
 _CN_BOILERPLATE_TERMS: frozenset[str] = frozenset({
@@ -114,15 +114,15 @@ _CN_BOILERPLATE_TERMS: frozenset[str] = frozenset({
     "如上所述",
     # CN claim-reference prefixes (parallel to TW 如请求项).
     # Bare 权利要求 catches walker leakage where 如/根据 was stripped
-    # upstream — appears in 5+ publication fixtures (CN112271269B,
+    # upstream - appears in 5+ publication fixtures (CN112271269B,
     # CN114357105B, CN115485995B, CN117427144B, CN120266060A).
     "如权利要求",
     "根据权利要求",
     "权利要求",
-    # Walker over-strip of 非瞬时性 (non-transitory) — drops 时性 leaving
+    # Walker over-strip of 非瞬时性 (non-transitory) - drops 时性 leaving
     # bare 非瞬 (CN115952274B). Length-2 fragment, never a real term.
     "非瞬",
-    # R67 (2026-05-08) — method-claim listing boilerplate. Universal
+    # R67 (2026-05-08) - method-claim listing boilerplate. Universal
     # "the following <X>" pattern. CN parity with TW filter.
     "下列步骤",
     "下列方法",
@@ -156,7 +156,7 @@ _CN_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # leading the verb phrase 电性连接 ("electrically connect") /
         # 电性耦接; the walker stops at 电性 before the excluded 连
         # (导电胶体电性 → 导电胶体). Never a noun terminus in CNIPA
-        # drafting — conductivity is 导电性 (导电+性), not bare 电性.
+        # drafting - conductivity is 导电性 (导电+性), not bare 电性.
         # Generalizing now (no CN report yet; zero CN corpus findings
         # contain 电性, so additive-only) per the standing CN↔TW mirror.
         "电性",
@@ -166,7 +166,7 @@ _CN_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         "构成", "组成", "形成", "制造",
         # Relational pairs
         "相连", "相接", "相对", "相邻",
-        # 2026-06-01 batch — adapter / fastener drafter spec-support
+        # 2026-06-01 batch - adapter / fastener drafter spec-support
         # over-captures: trailing 抵靠 (abut), 穿设 (set-through),
         # 分别穿过 (respectively pass-through). All verb-phrase tails
         # never noun-phrase termini in CNIPA drafting.
@@ -181,7 +181,7 @@ _CN_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # `以`. Drafter wrote `一基板以及一岛状...`, walker capture spanned
         # `包含一基板以及一岛状` (post-process produced multiple candidates
         # one of which terminated mid-conjunction). Bare `以` trailing
-        # is always a truncated preposition — `以` is never the terminus
+        # is always a truncated preposition - `以` is never the terminus
         # of a legitimate compound noun.
         "以及",
         "以",
@@ -190,15 +190,15 @@ _CN_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         "的第",
         "第",
         # 2026-05-21: parity mirror of the TW #77/#69 spec-support fix.
-        # `各` — distributive quantifier ("each"), never a noun terminus;
-        # `减薄` — process verb ("thin / reduce"), a predicate fragment.
+        # `各` - distributive quantifier ("each"), never a noun terminus;
+        # `减薄` - process verb ("thin / reduce"), a predicate fragment.
         "减薄",
         "各",
         # 2026-06-09 batch (USB-hub / display auto-config CN drafter, report
         # queue #228/#232/#233). `至该` ("to the …") is the goal-preposition
         # + demonstrative tail of `发送<X>指令至该显示器` clauses, captured
         # whole as `查询指令至该` / `启动指令至该` / `窗口指定指令至该`. Never a
-        # noun-phrase terminus — strips to the clean head `<X>指令`. 2-char
+        # noun-phrase terminus - strips to the clean head `<X>指令`. 2-char
         # so it can't fire mid-noun (夏至/冬至 end in 至, not 至该). Already
         # present as a LEADING reject; the trailing form is the new arm.
         "至该",
@@ -209,12 +209,12 @@ _CN_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
 
 # Leading verbal / clause-fragment prefixes. CN drafters use existential
 # verbs (设有/装有/备有/配置有/设置有) heavily for "is provided" /
-# "comprises" — pattern `在所述X上设置有Y` is canonical per 审查指南
+# "comprises" - pattern `在所述X上设置有Y` is canonical per 审查指南
 # §3.3 examples. Walker capture strand-shapes land at capture *start*;
 # stripping at leading-reject layer prevents inventory pollution.
 #
 # TW has nothing analogous because TIPO drafting prefers 具有/包含 over
-# existential 設有 constructions. Multi-char sequences only — single-char
+# existential 設有 constructions. Multi-char sequences only - single-char
 # leads can't be blanket-rejected without FN risk on compound nouns.
 _CN_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     # CN existential-verb prefixes (审查指南 §3.3 drafting conventions)
@@ -244,7 +244,7 @@ _CN_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     # and `以通过该传输接口发送…` (#234) are verb clauses captured at the
     # start, never noun phrases. Same 2-char `以<verb>` shape as 以使/以控/
     # 以从. Safe vs nouns: 以太网 (Ethernet) starts 以太, 以下步骤 starts
-    # 以下 — neither matches 以取/以通.
+    # 以下 - neither matches 以取/以通.
     "以取",
     "以通",
     # Direct parallels to TW audit tokens
@@ -254,13 +254,13 @@ _CN_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     "有计",  # 有计算机指令 (CN115952274B)
     "显示",
     "描述",
-    # Walker fragment from 如权利要求N项所述 — `项所` strands when 述
+    # Walker fragment from 如权利要求N项所述 - `项所` strands when 述
     # gets cut by interior boundary detection (CN114357105B claim 6).
     "项所",
-    # 2026-05-21: parity mirror of TW #78 — `中一` is a stranded
+    # 2026-05-21: parity mirror of TW #78 - `中一` is a stranded
     # `其中一(个)` connective fragment (walker dropped the leading 其).
     "中一",
-    # 2026-05-29 — issue #145. Drafter claim 10 preamble
+    # 2026-05-29 - issue #145. Drafter claim 10 preamble
     # `一种用于折叠支撑脚组件的折叠支撑脚` had `种用` over-captured: walker
     # strips the leading `一` quantifier and lands on `种` (kind), then
     # extends through `用` (used) before the `于` boundary cuts the
@@ -273,12 +273,12 @@ _CN_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
 # Characters that appear ONLY as noun suffixes in CN patent diction
 # (开口部, 顶端). When one appears at position 0 of a normalized term,
 # the walker captured a fragment starting mid-compound. Reject these
-# single-char leads. Dropped TW's 埠 — TIPO-specific for USB-shaped Latin
+# single-char leads. Dropped TW's 埠 - TIPO-specific for USB-shaped Latin
 # loanwords; CN uses 口 which has too many legitimate compound uses
 # (开口, 出口) to blanket-reject.
 _CN_SUFFIX_ONLY_LEADS: frozenset[str] = frozenset({"部", "端"})
 
-# Structural interior markers — substrings that, if present anywhere in
+# Structural interior markers - substrings that, if present anywhere in
 # a captured term, indicate it's a clause / verb-phrase / boilerplate
 # fragment, not a noun phrase. Comprehensive list grounded in CN claim-
 # drafting conventions (审查指南 §3) plus walker-fragment audit across the
@@ -291,7 +291,7 @@ _CN_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = (
     "超过",
     "超出",
     "彼此",
-    # Claim reference particles — 权利要求 anywhere in a captured term is
+    # Claim reference particles - 权利要求 anywhere in a captured term is
     # walker meta-reference leakage (e.g., "通信设备执行如权利要求",
     # "采用如权利要求1-9中任", "介质所在设备执行权利要求"). Affects 4+
     # fixtures (CN115485995B, CN112271269B, CN116662522B, CN114357105B).
@@ -308,9 +308,9 @@ _CN_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = (
     "用于",
     "以使",
     "以控",
-    # Locative + ordinal — CN drafters write "在第二起始时刻" etc.
+    # Locative + ordinal - CN drafters write "在第二起始时刻" etc.
     "在第",
-    # Genus + preposition stranding — walker capture lands on bare-genus
+    # Genus + preposition stranding - walker capture lands on bare-genus
     # plus stranded 在 (CN115485995B `单元在`). Each pattern catches the
     # walker artifact without affecting compound nouns.
     "单元在",
@@ -319,12 +319,12 @@ _CN_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = (
     # Preposition phrases (sequential / proximal)
     "沿远离",
     "沿靠近",
-    # Passive-marker constructions — `被进一步`, `被进行`, `被执行`. Bare
+    # Passive-marker constructions - `被进一步`, `被进行`, `被执行`. Bare
     # `被` excluded: too common in legitimate compound nouns
     # (e.g., 被覆层 / 被加热部).
     "被进",
     "被执行",
-    # 2026-05-21: parity mirror of TW #76 — a coupling/connection verb
+    # 2026-05-21: parity mirror of TW #76 - a coupling/connection verb
     # taking an indefinite object (`<verb>一<NOUN>`) is a relational
     # predicate, never a noun's name. Gated on `一` so real noun
     # compounds (连接器 / 耦合器, no `一`) stay inventoried.
@@ -332,7 +332,7 @@ _CN_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = (
     "耦合一",
     "连接一",
     # 2026-06-01 (issue #177): possession verb taking an indefinite object
-    # — `<noun>具有一<noun>` ("X has a Y") is a predication, never the
+    # - `<noun>具有一<noun>` ("X has a Y") is a predication, never the
     # name of a noun. Spec-support inventory walker captured the entire
     # span `间具有一锐角` (`间` locative + `具有一` possession + `锐角`)
     # as a duplicate intro alongside the clean `锐角`. The clean form
@@ -348,19 +348,19 @@ _CN_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = (
 # are CN-native prepositions absent from TW practice).
 _CN_LEADING_PREPOSITIONS: tuple[str, ...] = ("于", "到", "在", "自", "由", "从", "向", "对")
 
-# Reference numerals per 专利法实施细则 §21 — drafters inline element
+# Reference numerals per 专利法实施细则 §21 - drafters inline element
 # numerals like 底座(10). NON-ANCHORED to handle:
 #   (a) Trailing parens (底座(10) → 底座)
 #   (b) Interior parens when walker capture has trailing text
 #       (屏幕支撑组件(100)的Y → 屏幕支撑组件 after 的Y also strips)
 #   (c) Walker-truncated unbalanced parens (屏幕支撑组件(100 → 屏幕支撑组件)
-# Restricted inside-content to ASCII alnum + dashes — never CJK — so we
+# Restricted inside-content to ASCII alnum + dashes - never CJK - so we
 # don't accidentally strip parenthesized noun phrases like (展开状态).
 _PAREN_REF_NUMERAL_RE = re.compile(r"[（(]\s*[A-Za-z0-9\-—–]+\s*[）)]?")
 
 # Bare-numeral reference per CN-specific drafting. CN drafters sometimes
 # write 底座10 without parentheses (vs. TW's universal parenthesization
-# per 施行细则 §19). NON-ANCHORED — strips numerals after any CJK char
+# per 施行细则 §19). NON-ANCHORED - strips numerals after any CJK char
 # that isn't 第 (lookbehind gates against ordinals 第一/第二). Handles
 # both trailing (底座10 → 底座) and interior (底座10的位置 → 底座的位置).
 # Also handles bibliographic chemistry ranges 碳数～20 / X~30 by stripping
@@ -376,14 +376,14 @@ _BARE_REF_NUMERAL_CN_RE = re.compile(
 # both are within claim scope. TW audit didn't surface 或-split because
 # TIPO drafters prefer the word 或者 which is distinct.
 _CN_CONJUNCTIONS: tuple[str, ...] = ("以及", "及", "和", "与", "或")
-# #350 parity — bare quantifiers that, on the right of a conjunction with no
+# #350 parity - bare quantifiers that, on the right of a conjunction with no
 # noun after them, mark a walker-over-captured clause boundary (X 及 一个).
 _CN_BARE_QUANTIFIERS: frozenset[str] = frozenset({
     "一", "一个", "一种", "两", "二", "两个", "多个", "若干", "各", "至少一",
 })
 
 # Sliding-window size (in CJK characters) for Tier 3 proximity matching.
-# Same ±30-char width as TW — Chinese noun phrases are 2-4 chars; ±30
+# Same ±30-char width as TW - Chinese noun phrases are 2-4 chars; ±30
 # spans ~5-8 clauses of context, matching the granularity at which a
 # drafter would declare support for a compound term.
 _CHAR_WINDOW_SIZE: int = 30
@@ -394,11 +394,11 @@ _MIN_INVENTORY_LENGTH: int = 2
 
 # Maximum length (chars) for an inventory term. Captures beyond this
 # length are almost always walker clause artifacts rather than genuine
-# compound nouns. 10 chars is ~3-5 Chinese morphemes — long enough for
+# compound nouns. 10 chars is ~3-5 Chinese morphemes - long enough for
 # legitimate compound terms and short enough to reject full clauses.
 # CN tightened from TW's 12 because publication-fixture audit showed
 # 9-12-char clause leakage (法律知识领域中的知识内容 = 11,
-# 介质所在设备执行权利要求 = 12 — CN116662522B).
+# 介质所在设备执行权利要求 = 12 - CN116662522B).
 _MAX_INVENTORY_LENGTH: int = 10
 
 
@@ -415,7 +415,7 @@ def _normalize_for_spec_support_cn(
     Order:
         1. Strip trailing parenthetical reference numeral 专利法实施细则 §21
            (底座(10) → 底座).
-        2. Strip trailing bare reference numeral (底座10 → 底座) —
+        2. Strip trailing bare reference numeral (底座10 → 底座) -
            CN-specific; TW doesn't need this because TIPO drafters
            universally parenthesize per 施行细则 §19.
         3. Strip leading preposition (于/到/在/自/由/从/向/对).
@@ -429,7 +429,7 @@ def _normalize_for_spec_support_cn(
            longest-first).
         8. Re-strip trailing numerals exposed by the verb strip.
 
-    Spec-side text is NOT normalized — the match is asymmetric, so
+    Spec-side text is NOT normalized - the match is asymmetric, so
     "使用者界面" (claim) matches both "使用者界面" (bare) and
     "所述使用者界面" (prefixed) in the spec.
     """
@@ -451,7 +451,7 @@ def _normalize_for_spec_support_cn(
     )
     t = _strip_trailing_conjunction_cn(t)
     t = _strip_spec_support_trailing_tokens_cn(t)
-    # #321 parity — re-run the conjunction strip after the token strip: a token
+    # #321 parity - re-run the conjunction strip after the token strip: a token
     # strip can remove an intervening predicate/preposition and re-expose a
     # dangling coordinating conjunction (基部及位于 → 基部及 → 基部).
     t = _strip_trailing_conjunction_cn(t)
@@ -559,7 +559,7 @@ def _split_on_conjunction_cn(
     """Split a walker-captured conjunction phrase into constituent nouns.
 
     When a normalized intro spans ``X <conj> Y``, returns [X, Y]. Both
-    sides must be ≥ ``_MIN_INVENTORY_LENGTH`` chars — protects compound
+    sides must be ≥ ``_MIN_INVENTORY_LENGTH`` chars - protects compound
     nouns that happen to contain 及/和/与 as morphemes (rare in CN
     patent diction but possible).
     """
@@ -590,7 +590,7 @@ def _split_on_conjunction_cn(
                     strict_qualifier_matching=strict_qualifier_matching,
                 )
             )
-        # #350 parity — stranded leading-quantifier tail (X及一个): keep the left
+        # #350 parity - stranded leading-quantifier tail (X及一个): keep the left
         # noun, drop the tail. Gated on an EXACT bare-quantifier set (not a
         # blanket right<MIN test) so a short non-quantifier residue (基板及A)
         # stays whole.
@@ -606,12 +606,12 @@ def _collect_spec_text_cn(doc: CnPatentDocument) -> str:
     """Concatenate the body subsections used for CN spec-support matching.
 
     Includes: technical_field + summary + detailed_description.
-    Excludes: background (审查指南 §2.2.3 — prior-art context, not
+    Excludes: background (审查指南 §2.2.3 - prior-art context, not
     disclosure of the invention; a claim term supported only by
     背景技术 is itself a §26 第4款 violation), drawings_description
     (figure captions, FP risk), abstract_text (not written-description).
 
-    R67 (2026-05-08) — Arabic→CJK ordinal normalization applied so the
+    R67 (2026-05-08) - Arabic→CJK ordinal normalization applied so the
     Tier 1 / Tier 3 substring checks see the same ordinal form the
     claim-side normalize chain produces. Without this, drafter's
     `第1间隔件` in spec body misses against claim's normalized
@@ -635,7 +635,7 @@ def _build_inventory_cn(
 
     Returns a list of ``(claim_id, normalized_term)`` pairs. Terms
     flagged by the antecedent walker as ``category="tw_contamination"``
-    (该等/该些 residue from 繁转简 conversion) are skipped — they're
+    (该等/该些 residue from 繁转简 conversion) are skipped - they're
     parser-level artifacts, not native CN terms worth checking.
     """
     seen: dict[str, int] = {}
@@ -718,7 +718,7 @@ def check_spec_support_cn(
 
     Per 专利法 §26 第4款 + 审查指南 第二部分第二章 §3.2.1. Three tiers
     (see module docstring). Tier 0 (symbol-table whitelist) intentionally
-    absent — CN has no 符号说明 surface.
+    absent - CN has no 符号说明 surface.
 
     When ``antecedent_findings`` is provided, terms flagged with
     ``category="tw_contamination"`` are skipped from the inventory so

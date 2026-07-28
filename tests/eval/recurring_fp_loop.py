@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# recurring_fp_loop.py — the standing dev-time AI loop that stops walker
+# recurring_fp_loop.py - the standing dev-time AI loop that stops walker
 # false positives from recurring (ADR-159).
 #
 # WHY THIS EXISTS
@@ -16,19 +16,19 @@
 # tests/eval/ (ADR-158) and wiring it into a STANDING, repeatable pipeline
 # (the one-off "round 1" scripts never were). It has two modes:
 #
-#   corpus  — Grow the labeled fixture corpus. Run the production walker over
+#   corpus  - Grow the labeled fixture corpus. Run the production walker over
 #             PatentNode's real CN/TW/US Google-Patents drafts, LLM-judge each
 #             NEW finding (FP vs legit vs coverage-gap), and emit PROPOSED
 #             labels. More judged labels => /walker-round's drift gate finally
 #             has coverage => a fix provably sticks. This is the durable fix
 #             for recurrence.
-#   reports — Triage assist. For each open `report`, synthesize a minimal
+#   reports - Triage assist. For each open `report`, synthesize a minimal
 #             privacy-safe fixture from the de-identified context window,
 #             reproduce the finding through the walker, and LLM-judge it so
 #             the triage classification is automatic.
 #
 # HARD CONSTRAINTS (do not violate)
-#   * Dev-time only. Nothing here ships to PatentLint's runtime — the "No AI"
+#   * Dev-time only. Nothing here ships to PatentLint's runtime - the "No AI"
 #     trust badge is about runtime; this is the same posture as ADR-158.
 #   * Never persist raw user-draft content. `reports` mode works only from the
 #     de-identified payload window; `corpus` mode works only on PUBLIC
@@ -107,7 +107,7 @@ class ProposedLabel:
     verdict: str           # Category
     confidence: str        # 'per-draft-ensemble' | 'per-finding-ensemble' | 'dry-run-stub'
     proposed_action: str   # 'silence_fp' | 'protect' | 'needs_human'
-    agreement: str = "unknown"  # 'unanimous' | 'split' | 'unknown' — gates auto-apply (#2)
+    agreement: str = "unknown"  # 'unanimous' | 'split' | 'unknown' - gates auto-apply (#2)
     rationale: str = ""
 
 
@@ -218,7 +218,7 @@ async def _judge_batch(judges, items, cost_cap, start_cost):
 # ── Stage C: judge (real or dry-run stub) ──────────────────────────────────
 def _stub_verdict(term: str | None, reference_form: str | None) -> tuple[str, str]:
     """Deterministic offline heuristic standing in for the LLM ensemble in
-    --dry-run. NOT a substitute for the real judge — it just exercises the
+    --dry-run. NOT a substitute for the real judge - it just exercises the
     chain end-to-end for free. Heuristic mirrors the triage 'critical move':
     a captured term that looks like a verb-clause/over-capture (long, or the
     reference form embeds a quantifier/ref-prefix that the head noun
@@ -235,12 +235,12 @@ def _stub_verdict(term: str | None, reference_form: str | None) -> tuple[str, st
 def run_corpus_mode(jurisdiction: str, limit: int, cost_cap: float, dry_run: bool,
                     judge_mode: str = "per-draft") -> LoopResult:
     res = LoopResult(mode="corpus", jurisdiction=jurisdiction)
-    # Check corpus presence BEFORE importing the harness — the harness pulls
+    # Check corpus presence BEFORE importing the harness - the harness pulls
     # pyarrow (the [eval] extra), which CI's [dev] install doesn't have. When
     # the corpus is absent there's nothing to do anyway, so bail first. (This
     # is what failed PR #296's `test` job.)
     if not corpus_root().exists():
-        res.notes.append(f"corpus root absent: {corpus_root()} — skipping")
+        res.notes.append(f"corpus root absent: {corpus_root()} - skipping")
         return res
     h = _import_harness()
     records = h.load_corpus(jurisdiction)[: max(limit, 0) or None]
@@ -310,7 +310,7 @@ def _judge_per_draft(findings, claims_by_pid, jurisdiction, cost_cap, res):
     anth_key, oai_key = J.load_keys()
     # Per-jurisdiction system prompt. judge_draft DEFAULTS to the CN/TW prompt
     # (該/所述/前述); US §112(b) needs the English a/an/the prompt. Selecting the
-    # wrong one silently mis-judges every US draft — caught in the pre-run probe.
+    # wrong one silently mis-judges every US draft - caught in the pre-run probe.
     system_prompt = J.SYSTEM_PROMPT_US_V1 if jurisdiction == "US" else J.SYSTEM_PROMPT_V2
 
     async def run():
@@ -342,7 +342,7 @@ def _judge_per_draft(findings, claims_by_pid, jurisdiction, cost_cap, res):
                 # PER-FINDING agreement (not draft-level): a finding is
                 # 'unanimous' only when Sonnet AND gpt-5-mini independently gave
                 # the SAME category that became final. A draft-level proxy
-                # (disagreement_count==0) is too coarse — one disagreement on a
+                # (disagreement_count==0) is too coarse - one disagreement on a
                 # 14-finding US draft would wrongly taint all 14. Caught in probe.
                 def _cats(j):
                     return {(fv.claim_id, fv.term): fv.category for fv in (j.verdicts if j else [])}

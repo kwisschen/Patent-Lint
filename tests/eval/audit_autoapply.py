@@ -1,21 +1,21 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# audit_autoapply.py — FN-guard for the recurring-FP loop (ADR-159).
+# audit_autoapply.py - FN-guard for the recurring-FP loop (ADR-159).
 #
 # The auto-apply (apply_proposed_labels.py) accepts a finding when the two
 # cross-family judges (Sonnet + gpt-5-mini) UNANIMOUSLY call it a walker_fp.
-# But "two judges agreed" is not "two judges were right" — if BOTH mis-read a
+# But "two judges agreed" is not "two judges were right" - if BOTH mis-read a
 # real §112 antecedent-basis defect as a false positive, auto-applying it as
 # walker_fp would teach a future /walker-round to SILENCE a real defect. That
-# is a false NEGATIVE injected into the walker — the exact failure the
+# is a false NEGATIVE injected into the walker - the exact failure the
 # maintainer asked to guard against.
 #
 # This audit re-judges every auto-applied finding with an ADVERSARIAL SKEPTICAL
-# prompt (Sonnet 4.6 by default — the FN-guard's power is the inverted framing,
+# prompt (Sonnet 4.6 by default - the FN-guard's power is the inverted framing,
 # not model tier, so Opus would be ~5x the cost for no added value). The prompt
 # flips the prior: "two judges called these false positives; your job is to find
-# any that are actually REAL §112 defects — err toward flagging real defects."
+# any that are actually REAL §112 defects - err toward flagging real defects."
 # Any finding the audit does NOT also confirm as walker_fp is an FN risk and is
 # PULLED from the autoapply gold into a reversible quarantine.
 #   --model opus  is available for a stronger (costlier) pass when warranted.
@@ -33,7 +33,7 @@ from pathlib import Path
 THIS_DIR = Path(__file__).resolve().parent
 EST_PER_DRAFT = 0.02  # conservative Sonnet per-draft estimate for the cap
 
-# Adversarial framing — appended to the calibrated base prompt. Flips the prior
+# Adversarial framing - appended to the calibrated base prompt. Flips the prior
 # so the re-judge actively hunts FN risks instead of rubber-stamping the FP call.
 _ADVERSARIAL_SUFFIX = """
 
@@ -41,7 +41,7 @@ _ADVERSARIAL_SUFFIX = """
 Each finding below was already classified as a FALSE POSITIVE (walker_fp) by two
 other judges who agreed. Your job is the OPPOSITE check: scrutinise each one for
 whether it is actually a REAL §112 / §26 antecedent-basis DEFECT that the walker
-correctly caught. Err toward flagging a real defect — wrongly silencing a real
+correctly caught. Err toward flagging a real defect - wrongly silencing a real
 defect (a false negative) is worse than retaining an over-cautious label. Only
 output category "walker_fp" if you can point to the term's genuine introduction
 (Pattern A/B) earlier in the same claim or an ancestor; otherwise output
@@ -84,7 +84,7 @@ def audit(jurisdiction: str, cost_cap: float, model: str = "sonnet") -> dict:
         if fs:
             drafts.append((v.get("patent_id"), fs))
 
-    flips: list[dict] = []   # FN risks — Opus says NOT walker_fp
+    flips: list[dict] = []   # FN risks - Opus says NOT walker_fp
     confirmed = 0
     spent = 0.0
 
@@ -118,7 +118,7 @@ def audit(jurisdiction: str, cost_cap: float, model: str = "sonnet") -> dict:
                     cat = opus_cat.get(key)
                     if cat == "walker_fp":
                         confirmed += 1
-                    else:  # FN risk — Opus disagrees with the unanimous FP call
+                    else:  # FN risk - Opus disagrees with the unanimous FP call
                         flips.append({"patent_id": pid, "claim_id": f.get("claim_id"),
                                       "term": f.get("term"), "opus_verdict": cat or "missing"})
         finally:

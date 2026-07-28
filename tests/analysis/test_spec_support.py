@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Tests for check_spec_support — Phase 4 B3."""
+# Copyright (c) 2025-2026 Christopher Chen
+"""Tests for check_spec_support - Phase 4 B3."""
 
 from pathlib import Path
 
@@ -137,7 +137,7 @@ class TestSpecSupportTier2SlidingWindow:
     """Tier 2 must enforce stem proximity within a sliding window.
 
     Before this fix, Tier 2 used ``set.issubset()`` over a bag of stems
-    spanning the entire spec — any multi-word claim term whose individual
+    spanning the entire spec - any multi-word claim term whose individual
     stems each appeared somewhere passed silently, regardless of distance.
     """
 

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """TW spec-support drift-test harness (lightweight).
 
 Mirrors `_phase8b_harness.py` (antecedent walker) but for the spec-support
@@ -9,7 +9,7 @@ the spec-support FP drain accumulated in the report queue (#106, #108,
 #131, #132 pending).
 
 Differs from the antecedent harness in that there is no labels file with
-`protect:true` / `legit_drafting_error` categories — the spec-support
+`protect:true` / `legit_drafting_error` categories - the spec-support
 domain is simpler (no chain inheritance, no parallel-invention nuance).
 Drift detection compares current findings to a committed baseline:
 
@@ -29,9 +29,9 @@ Usage:
 
 Exit codes:
 
-  * 0 — drift gates pass (added == 0; removed counted but informational)
-  * 1 — added > 0 (HARD FAIL, regression)
-  * 3 — fixture index missing on disk
+  * 0 - drift gates pass (added == 0; removed counted but informational)
+  * 1 - added > 0 (HARD FAIL, regression)
+  * 3 - fixture index missing on disk
 """
 from __future__ import annotations
 
@@ -49,7 +49,7 @@ from patentlint.analysis.tw_spec_support import check_spec_support_tw  # noqa: E
 from patentlint.parser.docx_loader import load_docx_tw  # noqa: E402
 from patentlint.parser.sections_tw import extract_tw_sections  # noqa: E402
 
-# Re-use the antecedent harness's fixture index — same set of TW docx
+# Re-use the antecedent harness's fixture index - same set of TW docx
 # fixtures, same fixture-key scheme. Bootstrapping a separate index file
 # would diverge the two harnesses pointlessly.
 FIXTURE_INDEX = (
@@ -171,8 +171,8 @@ def _compare(index: dict, fmt: str) -> int:
         print(f"- commit: `{head}`")
         print(f"- baseline findings: {len(baseline_set)}")
         print(f"- current findings: {len(current_set)}")
-        print(f"- removed: **{len(removed)}** (silenced — review intent)")
-        print(f"- added: **{len(added)}** (regression — HARD FAIL if > 0)")
+        print(f"- removed: **{len(removed)}** (silenced - review intent)")
+        print(f"- added: **{len(added)}** (regression - HARD FAIL if > 0)")
         if removed:
             print("\n## Removed (sample)")
             for r in removed[:20]:

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Phase 8b TW antecedent walker labeled regression harness.
 
 Loads ``tests/fixtures/tw/antecedent_labels.json`` and runs
@@ -10,11 +10,11 @@ tuple.
 Two documented divergences from the original Phase 8b harness (both
 backported from the CN harness on 2026-04-16 per Phase 9 #18 + #19):
 
-* **ADR-110** — strict category validation. Unknown ``category`` values
+* **ADR-110** - strict category validation. Unknown ``category`` values
   exit 3 at load time. Original Phase 8b harness silently passed them
   through. Validator lives inside ``_check_structural_invariants_tw``.
 
-* **ADR-111** — ``round`` field + bidirectional halt with per-round
+* **ADR-111** - ``round`` field + bidirectional halt with per-round
   ``resolved_by`` satisfaction. Additions halt unless every new finding
   matches a current-round ``resolved_by``; unprotected drops halt unless
   every removed finding is resolved_by-tagged in any round.
@@ -35,10 +35,10 @@ Run from the project root::
 Exit codes
 ==========
 
-* 0 — all gates pass
-* 1 — protect_violations > 0 (HARD FAIL, no resolved_by escape hatch)
-* 2 — unresolved new/removed findings > 0 (HALT for labeling)
-* 3 — fixture or labels file missing, OR structural invariant violation
+* 0 - all gates pass
+* 1 - protect_violations > 0 (HARD FAIL, no resolved_by escape hatch)
+* 2 - unresolved new/removed findings > 0 (HALT for labeling)
+* 3 - fixture or labels file missing, OR structural invariant violation
       (includes unknown category id per ADR-110)
 """
 
@@ -415,7 +415,7 @@ def _render_markdown(
     else:
         out.append("None")
     out.append("")
-    out.append("## New findings (unlabeled) — HALT if unresolved")
+    out.append("## New findings (unlabeled) - HALT if unresolved")
     out.append("")
     if new_findings:
         out.append("| fixture | claim | term | ref_form | resolved? |")
@@ -449,7 +449,7 @@ def _render_markdown(
     else:
         out.append("None")
     out.append("")
-    out.append("## Protect violations — HARD FAIL if any")
+    out.append("## Protect violations - HARD FAIL if any")
     out.append("")
     if protect_violations:
         out.append("| fixture | claim | term | category | notes |")

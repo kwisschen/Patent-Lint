@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Regression tests grounded in TestSpec123.docx (user-supplied US fixture).
 
 The fixture lives in the user's iCloud Test Cases folder and is not
 committed. Tests skip gracefully when the file is absent so CI on other
 machines stays green. The test cases encode specific bug reports from
-the user's TIPO-attorney dog-fooder — keep these tests as targeted
+the user's TIPO-attorney dog-fooder - keep these tests as targeted
 regression gates when the fixture is available."""
 
 from pathlib import Path
@@ -61,7 +61,7 @@ class TestRelationalAdjectiveBleedFix:
 
     def test_antecedent_dym_no_opposite_bleed(self):
         """Antecedent-basis DYM suggestions must not point at 'X opposite'
-        as the did-you-mean target — the trailing adjective should be
+        as the did-you-mean target - the trailing adjective should be
         stripped before the suggestion is formed."""
         claims, _ = _load_testspec123()
         findings = check_antecedent_basis(claims)
@@ -115,7 +115,7 @@ class TestFlaggedPhrasesSurfacing:
         assert check.details_params is not None
         phrases = check.details_params.get("flagged_phrases")
         assert phrases is not None, (
-            "details_params.flagged_phrases missing on spec restrictiveWording — "
+            "details_params.flagged_phrases missing on spec restrictiveWording - "
             "FlaggedTermList chips won't render."
         )
         items = phrases.get("items")
@@ -146,7 +146,7 @@ class TestFlaggedPhrasesSurfacing:
             assert check.details_params is not None
             phrases = check.details_params.get("flagged_phrases")
             assert phrases is not None, (
-                f"details_params.flagged_phrases missing on {check.message_key} — "
+                f"details_params.flagged_phrases missing on {check.message_key} - "
                 f"FlaggedTermList chips won't render."
             )
             items = phrases.get("items")
@@ -203,7 +203,7 @@ class TestFlaggedPhrasesSurfacing:
 
 
 class TestParseFormattedPhrases:
-    """Unit tests for _parse_formatted_phrases — the shim that converts the
+    """Unit tests for _parse_formatted_phrases - the shim that converts the
     legacy '[N] → \"word\"\\n' formatted string into structured chip items."""
 
     def _parser(self):

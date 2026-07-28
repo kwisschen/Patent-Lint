@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for CNIPA filing XML parser."""
 
 from __future__ import annotations
@@ -16,12 +16,12 @@ FIXTURES = Path(__file__).parent.parent / "fixtures" / "cn"
 
 
 # ---------------------------------------------------------------------------
-# parse_cnipa_xml — file-based fixtures
+# parse_cnipa_xml - file-based fixtures
 # ---------------------------------------------------------------------------
 
 
 class TestMinimalPass:
-    """Tests against cn_minimal_pass.xml — a well-formed CNIPA filing."""
+    """Tests against cn_minimal_pass.xml - a well-formed CNIPA filing."""
 
     @pytest.fixture()
     def doc(self):
@@ -65,7 +65,7 @@ class TestMinimalPass:
 
 
 class TestDocPageFallback:
-    """Tests against cn_doc_page.xml — scanned-image fallback."""
+    """Tests against cn_doc_page.xml - scanned-image fallback."""
 
     @pytest.fixture()
     def doc(self):
@@ -82,7 +82,7 @@ class TestDocPageFallback:
 
 
 class TestWipoElementNames:
-    """Tests against cn_wipo_names.xml — unprefixed WIPO element names."""
+    """Tests against cn_wipo_names.xml - unprefixed WIPO element names."""
 
     @pytest.fixture()
     def doc(self):
@@ -104,7 +104,7 @@ class TestWipoElementNames:
 
 
 class TestRichInlineStripping:
-    """Tests against cn_rich_inline.xml — inline markup must be stripped."""
+    """Tests against cn_rich_inline.xml - inline markup must be stripped."""
 
     @pytest.fixture()
     def doc(self):
@@ -134,12 +134,12 @@ class TestRichInlineStripping:
 
 
 # ---------------------------------------------------------------------------
-# parse_cnipa_xml — inline XML tests
+# parse_cnipa_xml - inline XML tests
 # ---------------------------------------------------------------------------
 
 
 class TestEmptyDescription:
-    """XML with no <description> — claims and abstract still parsed."""
+    """XML with no <description> - claims and abstract still parsed."""
 
     def test_empty_description(self):
         xml = """\
@@ -212,7 +212,7 @@ class TestParagraphNumbersSequential:
 
 
 class TestParagraphNumbersWithGap:
-    """Paragraphs 0001, 0002, 0004 — gap at 3."""
+    """Paragraphs 0001, 0002, 0004 - gap at 3."""
 
     def test_gap(self):
         xml = """\
@@ -317,7 +317,7 @@ class TestZipWrongRoot:
 
 
 class TestZipMultipleXmlFindsCorrect:
-    """Zip with two XMLs — only the cn-application-body one is returned."""
+    """Zip with two XMLs - only the cn-application-body one is returned."""
 
     def test_finds_correct(self):
         wrong = b'<?xml version="1.0"?><other-doc/>'

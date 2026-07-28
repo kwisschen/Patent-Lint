@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Parity tests — CN .docx loader vs CNIPA XML loader.
+# Copyright (c) 2025-2026 Christopher Chen
+"""Parity tests - CN .docx loader vs CNIPA XML loader.
 
 Both loaders must produce matching claim counts and normalized claim text
 for the same patent content. Stage 1 of Phase 8c validates this on two
@@ -9,7 +9,7 @@ synthetic fixture pairs committed under ``tests/fixtures/cn/parity/``.
 The DTD ships with external-entity references (wipo.ent, sipo.ent, mathml
 subset) that the bundled build does not resolve, so ``xmllint
 --dtdvalid`` fails on a naked invocation. Structural assertions inside
-this test module stand in for DTD validation — required attributes,
+this test module stand in for DTD validation - required attributes,
 required top-level elements, and valid-claim-count are checked
 explicitly.
 """
@@ -72,7 +72,7 @@ def _load_xml_claims(xml_path: Path):
 
 
 def test_pair_a_apparatus_method_minimal_parity():
-    """Pair A — typed-prefix claims, body-anchor 五书 layout, 5 claims.
+    """Pair A - typed-prefix claims, body-anchor 五书 layout, 5 claims.
 
     Exercises Tier 1 (body-anchor) of the CN section-ID fallback chain
     and the ``^N.`` typed-prefix path of ``parse_cn_claims_docx``.
@@ -97,7 +97,7 @@ def test_pair_a_apparatus_method_minimal_parity():
 
 
 def test_pair_b_numbering_multidep_markush_parity():
-    """Pair B — w:numPr auto-numbering, Markush, multi-dep, 4 claims.
+    """Pair B - w:numPr auto-numbering, Markush, multi-dep, 4 claims.
 
     Exercises the ``_extract_numpr_claim_number`` backfill path in
     ``load_docx_cn``; claims have no typed ``N.`` prefix in the docx so
@@ -132,6 +132,6 @@ def test_doc_page_content_model_does_not_crash():
 
     assert cn_doc.has_doc_page_fallback is True
     assert cn_doc.input_format == "xml"
-    # Scanned filing has no structured text — all paragraph lists empty.
+    # Scanned filing has no structured text - all paragraph lists empty.
     assert cn_doc.claims == []
     assert cn_doc.technical_field == []

@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Generate synthetic CN patent .docx fixtures for tw_contamination coverage.
 
 Stage 3 deliverable: three committable docx files exercising the Q1
 该等 / 该些 rejection branch in ``check_antecedent_basis_cn``. These are
-the only docx fixtures that cover tw_contamination by construction —
+the only docx fixtures that cover tw_contamination by construction -
 the 10 real CN fixtures at ``tests/fixtures/cn/local/`` have zero such
 findings (the contamination prefixes do not appear in real CNIPA filings
 by definition).
@@ -15,12 +15,12 @@ Run from the project root::
 
 Outputs (all committed via explicit !gitignore exceptions):
 
-* tw_contamination_simple.docx  — 1 claim, 1 该等 reference
-* tw_contamination_plural.docx  — 1 claim, 1 该些 reference
-* tw_contamination_mixed.docx   — 2 claims: one with 该等, one clean
+* tw_contamination_simple.docx  - 1 claim, 1 该等 reference
+* tw_contamination_plural.docx  - 1 claim, 1 该些 reference
+* tw_contamination_mixed.docx   - 2 claims: one with 该等, one clean
 
 Structure mirrors ``tests/fixtures/cn/parity/create_parity_fixtures.py``
-— body-anchor 五书 layout (ADR-109): section titles appear as standalone
+body-anchor 五书 layout (ADR-109): section titles appear as standalone
 body paragraphs, not page headers.
 """
 
@@ -45,7 +45,7 @@ def _add_body_anchor(doc, text: str) -> None:
 def _build_docx(path: Path, title: str, claims: list[str]) -> None:
     """Assemble a minimal 五书 CN docx with the given claims.
 
-    The specification / abstract sections carry placeholder content — the
+    The specification / abstract sections carry placeholder content - the
     harness only exercises claim-side walker output, so the spec content
     is structural scaffolding to satisfy section ordering checks without
     being the focus.
@@ -63,7 +63,7 @@ def _build_docx(path: Path, title: str, claims: list[str]) -> None:
     _add_body_anchor(doc, "说明书摘要")
     doc.add_paragraph(f"本发明公开了{title}，用于演示tw_contamination检测。")
 
-    # Claims — typed prefix, no numPr
+    # Claims - typed prefix, no numPr
     _add_body_anchor(doc, "权利要求书")
     for claim in claims:
         doc.add_paragraph(claim)

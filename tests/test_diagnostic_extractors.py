@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Per-script context-window sanity for the report-modal preview.
 
 These values are a privacy-facing contract: the modal preview shows the
@@ -24,7 +24,7 @@ from patentlint.diagnostic_extractors import (
 
 class TestExcerptAnchorsOnReference:
     """The diagnostic trail must anchor on the FLAGGED REFERENCE (所述X / the X),
-    not the first mention (often the introduction) — issues #265/266/267."""
+    not the first mention (often the introduction) - issues #265/266/267."""
 
     def test_latin_anchors_on_reference_not_intro(self):
         # 'skin' introduced (bare) early, referenced as 'the skin' late.
@@ -66,11 +66,11 @@ class TestContextWindowForScript:
         assert _context_window_for("一种用户界面装置，包括所述用户装置。") == CONTEXT_WINDOW_HAN
 
     def test_japanese_kana_presence_wins(self):
-        # Mixed Han + kana — kana presence routes to JA window
+        # Mixed Han + kana - kana presence routes to JA window
         assert _context_window_for("ユーザインターフェースであって、前記ユーザ装置を備える。") == CONTEXT_WINDOW_JA
 
     def test_japanese_kanji_heavy_with_some_kana(self):
-        # Predominantly kanji but with hiragana particles — still JA
+        # Predominantly kanji but with hiragana particles - still JA
         assert _context_window_for("前記ユーザ装置を備えることを特徴とする。") == CONTEXT_WINDOW_JA
 
     def test_hangul_korean(self):
@@ -127,7 +127,7 @@ class TestExcerptHonorsPerScriptWindow:
 
 class TestAncestorWindowTier:
     """The ancestor-introduction excerpt uses a deliberately smaller
-    second window tier — it only reveals the introduction's grammatical
+    second window tier - it only reveals the introduction's grammatical
     shape and exposes a second claim's prose, so it must stay tight."""
 
     def test_ancestor_window_is_smaller_than_child(self):
@@ -140,7 +140,7 @@ class TestAncestorWindowTier:
 
 
 class TestAncestorBasisEnrichment:
-    """Parent-claim diagnostic on antecedent-basis findings — the bit
+    """Parent-claim diagnostic on antecedent-basis findings - the bit
     that splits a walker FP from a genuine §112 gap in an anonymous
     child-claim report."""
 
@@ -182,8 +182,8 @@ class TestAncestorBasisEnrichment:
         assert out["ancestor_context_before"] is None
 
     def test_full_ancestor_text_never_reaches_payload(self):
-        # Sentinel placed far from the term — well outside the bounded
-        # ancestor window — so a leak would mean the full text shipped.
+        # Sentinel placed far from the term - well outside the bounded
+        # ancestor window - so a leak would mean the full text shipped.
         secret = (
             "An ESD circuit SENTINEL_PROSE having very many intervening "
             "words of claim prose configured to control electrostatic energy."
@@ -198,7 +198,7 @@ class TestAncestorBasisEnrichment:
 
     def test_walker_without_ancestor_data_omits_block(self):
         # A walker finding that doesn't supply ancestor keys must not get a
-        # misleading term_in_ancestor_text:false — the block is omitted
+        # misleading term_in_ancestor_text:false - the block is omitted
         # entirely. (US/CN/TW walkers all supply the keys in production; a
         # bare synthetic finding here does not.)
         out = extract_antecedent_basis([self._finding()], total_claims=5)["findings"][0]
@@ -210,7 +210,7 @@ class TestTermEarlierInClaimEnrichment:
     """Same-claim earlier-introduction signal (2026-06-09). Splits a
     walker FP (term introduced earlier in the SAME claim, article-less /
     verb-object, but missed by the intro extractor) from a genuine §112
-    gap — the same-claim sibling of term_in_ancestor_text. Reported users
+    gap - the same-claim sibling of term_in_ancestor_text. Reported users
     said "same claim introduces X already" (#206/#207 US, #221/#224/#225
     CN)."""
 
@@ -345,7 +345,7 @@ class TestIntroCandidateExcerpt:
 
 
 class TestDidYouMeanSourceEnrichment:
-    """Issue #70: a null `did_you_mean_claim_id` is ambiguous — surface
+    """Issue #70: a null `did_you_mean_claim_id` is ambiguous - surface
     `did_you_mean_source` + `term_in_symbol_table` so a symbol-table hit
     is distinguishable from a chain/morphological hit."""
 
@@ -360,7 +360,7 @@ class TestDidYouMeanSourceEnrichment:
         return base
 
     def test_symbol_table_source_surfaced(self):
-        # The #70 shape: did-you-mean is an exact 符號說明 hit — no claim
+        # The #70 shape: did-you-mean is an exact 符號說明 hit - no claim
         # id by design. `did_you_mean_source` makes that legible.
         f = self._finding(
             suggested_match={
@@ -386,7 +386,7 @@ class TestDidYouMeanSourceEnrichment:
         assert out["term_in_symbol_table"] is False
 
     def test_non_tw_finding_omits_symbol_table_field(self):
-        # US/CN findings have no 符號說明 — the field is omitted, not False.
+        # US/CN findings have no 符號說明 - the field is omitted, not False.
         f = {
             "claim_id": 2, "term": "widget", "reference_form": "the widget",
             "claim_text": "The apparatus wherein the widget is blue.",

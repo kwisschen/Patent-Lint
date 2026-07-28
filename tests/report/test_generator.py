@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for PDF report generation."""
 
 import pytest
@@ -35,7 +35,7 @@ def sample_result():
         ),
     ]
     return AnalysisResult(
-        # Specification — some issues to trigger amend/verify
+        # Specification - some issues to trigger amend/verify
         paragraph_count=15,
         improper_spec_paragraphs=[3, 7],
         improper_spec_phrases_formatted='[3] -> "invention"\n              [7] -> "must"\n              ',
@@ -194,7 +194,7 @@ class TestToReportData:
 
 
 # ---------------------------------------------------------------------------
-# Locale sweep — verify every supported locale renders without raising and
+# Locale sweep - verify every supported locale renders without raising and
 # produces jurisdiction-appropriate copy.
 # ---------------------------------------------------------------------------
 
@@ -393,7 +393,7 @@ class TestLocalePdfBinary:
 
 class TestNoRawKeyLeaks:
     """Any ``key.not.found`` literal in rendered HTML means the template
-    referenced a locale key that doesn't exist in the bundle — surfaces
+    referenced a locale key that doesn't exist in the bundle - surfaces
     via the i18n helper's raw-key fallback.
     """
 
@@ -409,7 +409,7 @@ class TestNoRawKeyLeaks:
             # like ``pdf.header`` standalone, no <tag> wrapping.
             leaked = f">{prefix}"  # bare render attempt, not markup
             assert leaked not in html, (
-                f"{locale}: raw key leak containing {prefix!r} — check "
+                f"{locale}: raw key leak containing {prefix!r} - check "
                 "template references + locale coverage."
             )
 

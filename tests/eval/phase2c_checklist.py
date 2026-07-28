@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Phase 2c spot-check checklist generator.
 
 Reads Phase 2b results JSON(s), samples cases for Christopher/Claire review,
@@ -9,7 +9,7 @@ worked well for Phase 2a.
 
 Sample composition (per design Phase 2c):
 - Pass 1: 15 unanimous walker_fp verdicts (stratified by jurisdiction +
-  applicant_type) — quick rubber-stamp confirms walker FP rate
+  applicant_type) - quick rubber-stamp confirms walker FP rate
 - Pass 2: 10-15 high-impact disagreements:
     1. Opus-resolved drafts where Opus disagreed with both Sonnet AND gpt
     2. Cases where the verdict differs by jurisdiction or applicant-type
@@ -164,7 +164,7 @@ def sample_disagreements(
 
 def render_case(case: dict, idx: int, kind: str) -> str:
     lines = []
-    lines.append(f"## Case {idx}: {case['patent_id']} (claim {case['claim_id']}) — `{case['term']}`")
+    lines.append(f"## Case {idx}: {case['patent_id']} (claim {case['claim_id']}) - `{case['term']}`")
     lines.append(f"_(jurisdiction={case['jurisdiction']}, applicant_type={case['applicant_type']}, kind={kind})_")
     lines.append("")
     lines.append("**Walker finding:**")
@@ -177,10 +177,10 @@ def render_case(case: dict, idx: int, kind: str) -> str:
                  f"(Opus used: {case['used_opus']})")
     lines.append(f"**Final reasoning:** {case['final_reasoning']}")
     lines.append("")
-    lines.append(f"**Sonnet:** {case['sonnet_category']} — {case['sonnet_reasoning']}")
-    lines.append(f"**gpt-5-mini:** {case['gpt_category']} — {case['gpt_reasoning']}")
+    lines.append(f"**Sonnet:** {case['sonnet_category']} - {case['sonnet_reasoning']}")
+    lines.append(f"**gpt-5-mini:** {case['gpt_category']} - {case['gpt_reasoning']}")
     if case["opus_category"]:
-        lines.append(f"**Opus:** {case['opus_category']} — {case['opus_reasoning']}")
+        lines.append(f"**Opus:** {case['opus_category']} - {case['opus_reasoning']}")
     lines.append("")
     lines.append("**Christopher's verdict:** [ ] confirm  [ ] contest  [ ] ?  ")
     lines.append("**Note:**")
@@ -199,7 +199,7 @@ def main() -> int:
         nargs="+",
         type=Path,
         required=True,
-        help="Phase 2b results JSON file(s) — can pass multiple to combine.",
+        help="Phase 2b results JSON file(s) - can pass multiple to combine.",
     )
     parser.add_argument(
         "--output",
@@ -228,26 +228,26 @@ def main() -> int:
           f"{len(disagreements)} disagreements")
 
     lines: list[str] = []
-    lines.append(f"# Phase 2c Spot-Check Checklist — {args.label}")
+    lines.append(f"# Phase 2c Spot-Check Checklist - {args.label}")
     lines.append("")
     lines.append("**Date:** 2026-05-02")
-    lines.append("**For:** Christopher / Claire — round 1 walker-round trigger evidence sanity check.")
+    lines.append("**For:** Christopher / Claire - round 1 walker-round trigger evidence sanity check.")
     lines.append("")
     lines.append("**Mark each `[ ]`:**")
-    lines.append("- `[confirm]` Verdict is correct — ensemble was right")
-    lines.append("- `[contest]` Verdict is wrong — would silence/over-flag")
+    lines.append("- `[confirm]` Verdict is correct - ensemble was right")
+    lines.append("- `[contest]` Verdict is wrong - would silence/over-flag")
     lines.append("- `[?]` Genuinely ambiguous")
     lines.append("")
     lines.append("---")
     lines.append("")
-    lines.append(f"## Pass 1 — Unanimous walker_fp confirms ({len(unanimous)} cases)")
+    lines.append(f"## Pass 1 - Unanimous walker_fp confirms ({len(unanimous)} cases)")
     lines.append("")
     lines.append("Quick rubber-stamp pass. ≥80% confirm rate ships the entire walker_fp bucket to walker-round.")
     lines.append("")
     for i, c in enumerate(unanimous, 1):
         lines.append(render_case(c, i, "unanimous_walker_fp"))
     lines.append("")
-    lines.append(f"## Pass 2 — High-impact disagreements ({len(disagreements)} cases)")
+    lines.append(f"## Pass 2 - High-impact disagreements ({len(disagreements)} cases)")
     lines.append("")
     lines.append("Hand-picked: Opus-disputed (Tier 1) + Sonnet↔gpt disagreement (Tier 2).")
     lines.append("")
@@ -256,8 +256,8 @@ def main() -> int:
     lines.append("")
     lines.append("## Tally to compute when complete")
     lines.append("")
-    lines.append(f"- Pass 1: {len(unanimous)} cases — confirm: ___ / contest: ___ / ?: ___")
-    lines.append(f"- Pass 2: {len(disagreements)} cases — confirm: ___ / contest: ___ / ?: ___")
+    lines.append(f"- Pass 1: {len(unanimous)} cases - confirm: ___ / contest: ___ / ?: ___")
+    lines.append(f"- Pass 2: {len(disagreements)} cases - confirm: ___ / contest: ___ / ?: ___")
     lines.append("")
     lines.append("If Pass 2 contest rate >20%, trigger targeted re-judge (~$8-10).")
 

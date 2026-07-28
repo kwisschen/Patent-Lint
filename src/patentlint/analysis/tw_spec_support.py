@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """TW specification-support analysis (說明書支持分析).
 
 Implements 專利法 §26 第3項 ("申請專利範圍…必須為說明書所支持") and the
@@ -10,17 +10,17 @@ word-window machinery for CJK-appropriate matching (ADR-138).
 The check emits an ``UnsupportedTerm`` finding for each claim noun phrase
 that fails all four tiers:
 
-  Tier 0 (pre-check): symbol-table whitelist — term appears as a
+  Tier 0 (pre-check): symbol-table whitelist - term appears as a
     ``符號說明`` glossary entry (general table ∪ 代表圖之符號說明).
     Glossary entries are spec-supported by definition.
-  Tier 1: aggressively-normalized exact substring — claim-side term
+  Tier 1: aggressively-normalized exact substring - claim-side term
     goes through ``_normalize_for_spec_support_tw`` (walker normalizer
     + leading preposition strip 於/到/在/自/由), then tested as a
     substring of spec_text.
-  Tier 2: raw-form exact substring — catches over-normalization cases
+  Tier 2: raw-form exact substring - catches over-normalization cases
     where the drafter's literal claim phrasing (quantifier + noun)
     appears verbatim in the spec.
-  Tier 3: CJK character-window fallback — normalized term's bigrams
+  Tier 3: CJK character-window fallback - normalized term's bigrams
     must all co-occur within a ±30-char sliding window over spec_text.
     Fires on compound assembly patterns.
 
@@ -31,7 +31,7 @@ Tier 0), and ``abstract_text`` (not written-description per 專利審查基準).
 
 The claim-side normalizer is INDEPENDENT of walker-tuning flags
 (strict_plural_reference_matching, strict_qualifier_matching). Those
-flags tune back-reference matching precision — a different semantic
+flags tune back-reference matching precision - a different semantic
 axis from "is this term in the spec at all".
 """
 
@@ -76,7 +76,7 @@ _TW_BOILERPLATE_TERMS: frozenset[str] = frozenset({
     "上述",
     "如上所述",
     "如請求項",
-    # R67 (2026-05-08) — method-claim listing boilerplate. `下列步驟` /
+    # R67 (2026-05-08) - method-claim listing boilerplate. `下列步驟` /
     # `下列方法` / `下列特徵` are universal "the following <X>" patterns
     # that introduce a list, not a noun being claimed. Walker captures
     # them via the main intro pattern from `其包含下列步驟：...`.
@@ -90,7 +90,7 @@ _TW_BOILERPLATE_TERMS: frozenset[str] = frozenset({
     # spec-support boilerplate, not a referable noun phrase.
     "項所記載",
     "項記載",
-    # #334 — distributive quantifiers 每個 / 每一 ("each one"). Prefix-matched
+    # #334 - distributive quantifiers 每個 / 每一 ("each one"). Prefix-matched
     # (_is_boilerplate), so the bare residue AND a 每個X / 每一X back-reference
     # compound drop; the real head noun is separately inventoried via its own
     # 一X intro, so this cannot silence a genuine §26第3項 finding.
@@ -116,27 +116,27 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         "移動",
         "樞接",
         "超過",
-        # R7 trailing comparison verbs — mirror of 超過 (exceeds).
+        # R7 trailing comparison verbs - mirror of 超過 (exceeds).
         # Issues #106 (`有通道寬度大於`), #108 (`通道寬度大於`),
-        # #130 (`寬度小於`), #133 (`最大外徑大於`) — `大於`/`小於`
+        # #130 (`寬度小於`), #133 (`最大外徑大於`) - `大於`/`小於`
         # are unambiguous comparison verbs in TIPO drafting, never
         # noun-phrase termini. 專利法 §26 第3項 spec-support is for
         # noun phrases only.
         "大於",
         "小於",
-        # #343 — `達成` (achieve/accomplish), a predicate verb never a noun
+        # #343 - `達成` (achieve/accomplish), a predicate verb never a noun
         # terminus. 2-char, so (key=len desc) it is tried before the 1-char
         # `成`, which would otherwise leave the residual `導電材料達`.
         "達成",
         # R10 (2026-06-01): trailing process / locative verbs from issues
         # #111 (`主面側蝕刻` → strip `蝕刻`) and #129 (`位部沿` → strip `沿`).
         # 蝕刻 (etching) is a process verb, 沿 is a locative preposition
-        # ("along") — neither is a noun-phrase terminus in TIPO drafting.
+        # ("along") - neither is a noun-phrase terminus in TIPO drafting.
         # Anti-corpus checked: zero baseline findings on _spec_support_harness
         # end with either token.
         "蝕刻",
         "沿",
-        # R34 (#440) — `相鄰` ("adjacent to", a mutual-relation verb) trailing
+        # R34 (#440) - `相鄰` ("adjacent to", a mutual-relation verb) trailing
         # tail (第二次級繞組層相鄰設置 → 第二次級繞組層相鄰 after 設置 strip → strip
         # 相鄰). 2-char, tried before the 1-char `相` (which only fires when the
         # term ends in a bare `相`). FN-safe: no TIPO element name ends in 相鄰
@@ -151,13 +151,13 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # method-claim audit. Walker over-captures process descriptions
         # and locative phrases as "intros" then spec-support inventories
         # them as "missing from spec":
-        # - `而成` — process-result marker (`X部分而成` = "after X");
+        # - `而成` - process-result marker (`X部分而成` = "after X");
         #   never a noun. Strips `膜減少部分而成` → `膜減少部分`.
-        # - `部分而成` — longer variant; same pattern.
-        # - `面側` — locative-side suffix (`露出面側` = "exposed face side").
+        # - `部分而成` - longer variant; same pattern.
+        # - `面側` - locative-side suffix (`露出面側` = "exposed face side").
         #   Strips to leave residual `露出` which then fails leading reject.
         "部分而成",
-        # 2026-06-01 — issue #110. Drafter wrote `膜厚而成膜` (film
+        # 2026-06-01 - issue #110. Drafter wrote `膜厚而成膜` (film
         # thickness, formed by depositing film). Walker captured the
         # whole thing because the existing `而成` trailing-token doesn't
         # fire when extra chars follow (`而成` is interior here, not
@@ -170,7 +170,7 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # `第` without the trailing ordinal number. Drafter wrote
         # `相配合的第1散熱片` but the F-head/post-process path captured up
         # to `相配合的第` (digit `1` outside _NOUN_CHARS class). Bare `第`
-        # at the END of a captured term is always a truncated ordinal —
+        # at the END of a captured term is always a truncated ordinal -
         # 第 alone is never a legitimate noun-phrase terminus.
         "的第",
         "第",
@@ -182,14 +182,14 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # last in the longest-first iteration order.
         "以",
         # Issues #77 / #69 (2026-05-21): method-claim over-capture.
-        # - `各` — distributive quantifier ("each"); `電壓各到達門檻` →
+        # - `各` - distributive quantifier ("each"); `電壓各到達門檻` →
         #   walker captures `電壓各`. `各` is never a noun terminus; strip
         #   leaves the clean head noun `電壓`.
-        # - `減薄` — process verb ("thin / reduce"); `兩端減薄` is a
+        # - `減薄` - process verb ("thin / reduce"); `兩端減薄` is a
         #   predicate clause, never an element name.
         "減薄",
         "各",
-        # 2026-06-01 — issues #109 (`下部成` → strip `成`) and #132
+        # 2026-06-01 - issues #109 (`下部成` → strip `成`) and #132
         # (`軸上` → strip `上`). 成 = formation verb suffix
         # (`形成`/`構成`/`組成`); 上 = locative preposition ("on/above").
         # Both are single-char clause-boundary tokens that never form
@@ -200,7 +200,7 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # interior matches because those are part of longer compounds).
         "成",
         "上",
-        # 2026-06-01 — cross-jurisdiction parity with CN spec_support
+        # 2026-06-01 - cross-jurisdiction parity with CN spec_support
         # (CN PR #181 added 抵靠 / 穿设 / 穿過 / 分别穿过 from real CN
         # reports #174 / #175 / #176). All four are Traditional-form-
         # compatible perforation / abutment verbs commonly used in
@@ -208,7 +208,7 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # noun-suffix in TIPO patent diction (抵靠 is purely "abut
         # against"; 穿設 / 穿過 are perforation verbs; 分別穿過 is the
         # respectively-quantified verb phrase). Cross-jurisdiction
-        # parity per standing instruction — TW corpus doesn't have a
+        # parity per standing instruction - TW corpus doesn't have a
         # current report of this exact class, but generalizing now
         # closes the gap before it surfaces.
         "分別穿過",
@@ -218,19 +218,19 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # 2026-06-05 batch (battery-pack / JP-translated mechanical drafts,
         # report queue #187 / #193 / #194). Trailing verbal / adverbial
         # tails the walker over-captured past the head noun:
-        # - `共同地` / `可通訊地` — manner adverbs (X + 地 adverbial particle);
+        # - `共同地` / `可通訊地` - manner adverbs (X + 地 adverbial particle);
         #   never noun termini (`夾持部共同地` → `夾持部`, `檢體採集支援系統
         #   可通訊地` → `檢體採集支援系統`, which then matches the spec via
         #   substring even with an embedded reference numeral). Multi-char
         #   so they only fire on the exact adverb, not on any noun ending
         #   in 地 (土地/基地/場地 stay inventoried).
-        # - `緊靠` — abutment verb, same family as the existing `抵靠`
+        # - `緊靠` - abutment verb, same family as the existing `抵靠`
         #   (`夾持部緊靠` → `夾持部`). Fires only when the term ENDS in 緊靠
         #   (verb usage); a real `緊靠部`/`緊靠面` noun ends in 部/面 and is
         #   untouched.
-        # - `不平行` — negation + adjective predicate (`第一外側壁不平行` →
+        # - `不平行` - negation + adjective predicate (`第一外側壁不平行` →
         #   `第一外側壁`); never a noun's name.
-        # CN (Simplified) mirror deferred per DR-1 — no CN report of these
+        # CN (Simplified) mirror deferred per DR-1 - no CN report of these
         # tokens yet; CN↔TW spec-support mirroring has been report-driven
         # in both directions (CN #174/#175/#176 → TW 抵靠/穿設/穿過).
         "可通訊地",
@@ -240,41 +240,41 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # 2026-06-29 batch (super-sonic transducer draft, report #302/#303/
         # #304). Trailing tails the walker over-captured past the head noun
         # in 透過一<noun>電性連接 / X與Y之間 clauses:
-        # - `電性` — the leading bound morpheme of the verb phrase 電性連接
+        # - `電性` - the leading bound morpheme of the verb phrase 電性連接
         #   ("electrically connect") / 電性耦接; the walker stops at 電性
         #   before the excluded 連 (`導電膠體電性` → `導電膠體`,
         #   `另一導電膠體電性` → `另一導電膠體`). 電性 is never a noun-phrase
-        #   terminus in TIPO drafting — a conductivity noun is 導電性
+        #   terminus in TIPO drafting - a conductivity noun is 導電性
         #   (導電+性), not a bare trailing 電性. Anti-corpus: zero
         #   spec_support_baseline phrases end in or contain 電性.
-        # - `之間` — locative postposition ("between"); `第二表面之間` →
+        # - `之間` - locative postposition ("between"); `第二表面之間` →
         #   `第二表面`. Never a noun terminus. Anti-corpus clean.
         # `部分` (#305 `延伸部部分`) is handled by the verb-gated strip in
-        # _build_inventory (NOT here) — a real `X部分` portion-element would
+        # _build_inventory (NOT here) - a real `X部分` portion-element would
         # FN-drop in a blanket trailing strip; the FN-safe discriminator is
         # the FOLLOWING verb (部分延伸 = "partly extends"), visible only with
         # claim context.
         "電性",
         "之間",
-        # 2026-06-29 (report #294) — `的<positional-generic>` possessive tail.
+        # 2026-06-29 (report #294) - `的<positional-generic>` possessive tail.
         # `壓電材料層的周邊` → `壓電材料層` (環繞該壓電材料層的周邊 = "surround
         # the periphery of the piezo layer"; the element is 壓電材料層, 周邊 is
         # a generic position). 的+{周邊/周圍/外圍/邊緣/周緣/周側} are possessive
-        # + generic-positional nouns — never the claimed element themselves.
+        # + generic-positional nouns - never the claimed element themselves.
         # Conservative: only the clearly-positional generics (NOT 的表面/的底部
         # which can be claimed sub-elements). Anti-corpus: 0/77 baseline.
         "的周邊", "的周圍", "的外圍", "的邊緣", "的周緣", "的周側",
-        # 2026-07-01 (#315): 的末端 — possessive + positional generic ("the end
+        # 2026-07-01 (#315): 的末端 - possessive + positional generic ("the end
         # of X"; 鎖定部的末端 → 鎖定部). 末端 is a location point, never the
         # claimed element itself (those carry 端部/端子). Anti-corpus 0/77.
-        # `的外表面` (#317) NOT added — a surface can be a claimed structural
+        # `的外表面` (#317) NOT added - a surface can be a claimed structural
         # element; deferred as a maintainer call.
         "的末端",
         # 2026-06-30 batch (screen-bracket draft, reports #314/#317). FN-safe
         # subset of the over-capture cluster:
-        # - `連通於` / `固定於` — verb+於 predicate phrases (`外側且連通於`→外側,
+        # - `連通於` / `固定於` - verb+於 predicate phrases (`外側且連通於`→外側,
         #   `有固定於`→ dropped as <2-char noise). Never a noun-phrase terminus.
-        # - `且` — the conjunction "and/also" (`外側且` → 外側). Never ends an
+        # - `且` - the conjunction "and/also" (`外側且` → 外側). Never ends an
         #   element name; mirror of the existing 及/與/和 conjunction handling.
         # Anti-corpus: 0/77 baseline end in any. The rest of the cluster
         # (鄰近/轉動 noun-gray, 受/自/排 single-char needing residual guards,
@@ -282,8 +282,8 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # queued for a TW spec-support /walker-round (#315/#318/#319 + residuals).
         "連通於", "固定於", "且",
         # 2026-07-01 (#315): 分別 ("respectively/separately") is a pure manner
-        # adverb — never an element-name terminus. Anti-corpus 0/77. (The verb
-        # it modifies — 鄰近 etc. — is stripped first by the predicate verb-gate
+        # adverb - never an element-name terminus. Anti-corpus 0/77. (The verb
+        # it modifies - 鄰近 etc. - is stripped first by the predicate verb-gate
         # in _build_inventory, leaving 坡面分別 → strip 分別 here → 坡面.)
         "分別",
     ),
@@ -291,7 +291,7 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
     reverse=True,
 ))
 
-# Leading verbal prefixes observed in audit. Multi-char sequences only —
+# Leading verbal prefixes observed in audit. Multi-char sequences only -
 # single-char leads like 有/為 appear in legitimate compound nouns
 # (有機/為主) and can't be blanket-rejected without FN risk.
 _TW_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
@@ -308,11 +308,11 @@ _TW_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     "描述",
     "解鎖",
     "對該",
-    # R63 (2026-05-05) — verb-prefix walker captures from method claims
+    # R63 (2026-05-05) - verb-prefix walker captures from method claims
     # (神秘黑屏哥.docx audit). These are verbs that walker captured as
     # noun heads. Each is multi-char so unlike `有/為` they won't risk
     # blanket-rejecting valid compound nouns starting with the same char.
-    # Risk audit: 露出部 (exposed part) is a valid noun — but `露出部` is
+    # Risk audit: 露出部 (exposed part) is a valid noun - but `露出部` is
     # 3 chars, walker normalize would NOT yield bare `露出` (2 chars,
     # leading-reject below MIN length). So rejecting startswith("露出")
     # only fires on `露出X` where X is the over-capture continuation,
@@ -321,30 +321,30 @@ _TW_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     "膜減少",     # film-reduction process (verb compound)
     "回蝕",        # etch-back process verb
     # Issues #69 / #78 (2026-05-21):
-    # - `介由` — prepositional connector ("by way of / using");
+    # - `介由` - prepositional connector ("by way of / using");
     #   `介由使用半導體材料的犧牲膜` over-captured as an intro.
-    # - `中一` — stranded `其中一(個)` connective fragment; the walker
+    # - `中一` - stranded `其中一(個)` connective fragment; the walker
     #   dropped the leading `其`, leaving `中一個`. `中一` never leads a
     #   real TIPO noun (中央/中心 do not start `中一`).
     "介由",
     "中一",
-    # 2026-06-05 — issue #194. `其中兩個` with the leading `其` dropped by
+    # 2026-06-05 - issue #194. `其中兩個` with the leading `其` dropped by
     # the walker leaves `中兩個` (`相鄰的其中兩個第二外側壁` → walker captured
-    # `中兩個`). Mirror of `中一` above — `中兩` never leads a real TIPO noun
+    # `中兩個`). Mirror of `中一` above - `中兩` never leads a real TIPO noun
     # (中央/中心 do not start `中兩`).
     "中兩",
-    # 2026-06-11 — issue #246 (JP-translated 對位裝置 draft). `朝往` is an
+    # 2026-06-11 - issue #246 (JP-translated 對位裝置 draft). `朝往` is an
     # adverb ("toward / heading to"), captured standalone from
     # `朝往前述基板吸引前述光罩的吸引機構`. Never a noun; no real TIPO noun
     # starts `朝往` (朝向角度 starts 朝向, not 朝往).
     "朝往",
     # 2026-07 batch:
-    # - #333 `另外` — adverb/determiner ("besides / the other"), captured
+    # - #333 `另外` - adverb/determiner ("besides / the other"), captured
     #   standalone (`另外兩個`). Never leads a TIPO element name; the real head
     #   noun is separately inventoried.
-    # - #348 `以向` — 以-purpose + 向-coverb clause fragment (`以向一水體樣本`),
+    # - #348 `以向` - 以-purpose + 向-coverb clause fragment (`以向一水體樣本`),
     #   mirror of the existing 以控 / 以從. FN-safe: 以太網路 (Ethernet, 以太…)
-    #   and 向量 (vector, 向…) are unaffected — the reject is the 2-char lead.
+    #   and 向量 (vector, 向…) are unaffected - the reject is the 2-char lead.
     "另外",
     "以向",
 )
@@ -375,14 +375,14 @@ _TW_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = (
     "相配",
     # Issue #76 (2026-05-21): a coupling/connection verb taking an
     # indefinite object (`<verb>一<NOUN>`) is a relational predicate,
-    # never a noun's name — `第一端耦接一輸入電壓` over-captured whole.
+    # never a noun's name - `第一端耦接一輸入電壓` over-captured whole.
     # Gated on the `一` so a real noun compound (耦接器 / 連接部) whose
     # verb root is NOT followed by `一` stays inventoried.
     "耦接一",
     "耦合一",
     "連接一",
     "連結一",
-    # 2026-06-11 — issue #248. `面且互相正交` is a predicate clause
+    # 2026-06-11 - issue #248. `面且互相正交` is a predicate clause
     # ("...face, and mutually orthogonal..."); `互相` ("mutually") is an
     # adverb, never part of a noun's name. 互鎖 / 相互 are different
     # 2-char sequences, so a noun like 互鎖機構 / 相互作用 is unaffected.
@@ -391,12 +391,12 @@ _TW_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = (
 
 # Leading prepositions that survive walker normalization (audit #2 found
 # 於所述基板 / 到所述第一電子裝置 / 在X 等 as residues). Strip these
-# claim-side before the Tier 1 exact check. Spec-side text is unchanged —
+# claim-side before the Tier 1 exact check. Spec-side text is unchanged -
 # "使用者介面" as a claim term should match both bare "使用者介面" in
 # spec and "於該使用者介面上" in spec.
 _TW_LEADING_PREPOSITIONS: tuple[str, ...] = ("於", "到", "在", "自", "由")
 
-# Trailing parenthetical reference numerals per 專利法施行細則 §19 — drafters
+# Trailing parenthetical reference numerals per 專利法施行細則 §19 - drafters
 # inline element numerals like 容器本體(100), 第一長度(L1), 栓軸部(2212a)
 # directly in claim intros. These break exact-match against spec text where
 # the component is either bare (容器本體) or uses a different numeral
@@ -424,7 +424,7 @@ _MIN_INVENTORY_LENGTH: int = 2
 # Maximum length (chars) for an inventory term. Captures beyond this
 # length are almost always walker clause artifacts (e.g.
 # ``應用程式上設定其他該行動裝置或帳號``, 17 chars) rather than genuine
-# compound nouns. 12 chars is ~4-6 Chinese morphemes — long enough for
+# compound nouns. 12 chars is ~4-6 Chinese morphemes - long enough for
 # legitimate compound terms (第二外齒狀結構 = 7; 帶蓋容器 = 4) and short
 # enough to reject full clauses. Findings longer than this are silently
 # dropped from the inventory rather than emitted (the walker's antecedent
@@ -446,7 +446,7 @@ def _normalize_for_spec_support_tw(text: str) -> str:
         3. Run the walker normalizer (strip reference-form prefix +
            qualifier + quantifier + clean_noun_phrase_tw).
 
-    Spec-side text is NOT normalized — the match is asymmetric, so
+    Spec-side text is NOT normalized - the match is asymmetric, so
     "使用者介面" (claim) matches both "使用者介面" (bare) and
     "該使用者介面" (prefixed) in the spec.
     """
@@ -457,17 +457,17 @@ def _normalize_for_spec_support_tw(text: str) -> str:
         if t.startswith(prep) and len(t) > len(prep):
             t = t[len(prep):]
             break
-    # #344 — leading method-step verb 提供一X / 設置一X: drop the verb so the
+    # #344 - leading method-step verb 提供一X / 設置一X: drop the verb so the
     # 一-quantifier normalizer below recovers the head noun (提供一導線框架 →
     # 導線框架). Gated on the following 一 (the indefinite-article intro marker)
     # so the coverb 設置於 (→於) and genuine nouns 設置面 / 提供者 are untouched.
     # The head noun is independently inventoried via its own 一X intro, so this
-    # only removes a redundant duplicate entry — zero coverage loss.
+    # only removes a redundant duplicate entry - zero coverage loss.
     for verb in ("提供", "設置"):
         if t.startswith(verb + "一") and len(t) > len(verb):
             t = t[len(verb):]
             break
-    # R34 (#439/#442) — leading transitional verb 包括/包含 ("comprising/
+    # R34 (#439/#442) - leading transitional verb 包括/包含 ("comprising/
     # including"), a 連接詞 per TIPO §2.3.3 and never part of a noun's name. A
     # sub-element enumeration `一磁芯，包括一第一平板` over-captures the transition
     # into the term. Strip it so the 一-quantifier normalizer below recovers the
@@ -480,16 +480,16 @@ def _normalize_for_spec_support_tw(text: str) -> str:
             t = t[len(verb):]
             break
     t = normalize_reference_term(t)
-    # #351 — strip a leading reference marker that survived normalize (a leading
+    # #351 - strip a leading reference marker that survived normalize (a leading
     # distributive quantifier can block the position-0 reference-form strip,
     # stranding 所述 / 該 / 前述). A noun name never opens with a reference marker.
     for pfx in ("前述", "所述", "該"):
         if t.startswith(pfx) and len(t) > len(pfx):
             t = t[len(pfx):]
             break
-    # #342 (1) — de-yi possessive: X的一Y → Y (the head noun after 的一). The
+    # #342 (1) - de-yi possessive: X的一Y → Y (the head noun after 的一). The
     # walker over-captured the possessor + 的一; the claimed element is Y. Only
-    # exposes the real head — if Y were truly unsupported it would still flag.
+    # exposes the real head - if Y were truly unsupported it would still flag.
     if "的一" in t:
         suffix = t.rsplit("的一", 1)[1].strip()
         if len(suffix) >= _MIN_INVENTORY_LENGTH:
@@ -498,7 +498,7 @@ def _normalize_for_spec_support_tw(text: str) -> str:
     t = _strip_trailing_locative_clause(t)
     t = _strip_trailing_conjunction(t)
     t = _strip_spec_support_trailing_tokens(t)
-    # #321 — re-run the trailing-conjunction strip AFTER the trailing-token
+    # #321 - re-run the trailing-conjunction strip AFTER the trailing-token
     # strip: a token strip can remove an intervening predicate/preposition
     # (位於) and re-expose a dangling coordinating conjunction (鎖定部及位於 →
     # 鎖定部及) that the earlier pass could not reach. Collapses 鎖定部及 → 鎖定部,
@@ -508,7 +508,7 @@ def _normalize_for_spec_support_tw(text: str) -> str:
     # (栓軸部(2212a)樞接 → 栓軸部(2212a) after 樞接 strip, now the paren
     # is at end and can be removed).
     t = _TRAILING_REF_NUMERAL_RE.sub("", t).strip()
-    # #342 (2) — trailing cardinal measure: X<cardinal>個 → X (垂直堆疊晶粒組二個
+    # #342 (2) - trailing cardinal measure: X<cardinal>個 → X (垂直堆疊晶粒組二個
     # → 垂直堆疊晶粒組). A measure-word count is never part of an element name.
     # Guarded so the head remains an inventory-length noun (spares 整個/十字…
     # which do not end in <cardinal>個).
@@ -563,7 +563,7 @@ def _recover_from_midphrase_prefix(term: str) -> str:
 
     Walker captures sometimes land with 所述/該/前述 at an interior
     position (e.g. 有所述高亮度區域, 個所述電子元件, 解鎖指令至該通訊模組).
-    The walker's leading-prefix strip can't help these — it only looks at
+    The walker's leading-prefix strip can't help these - it only looks at
     position 0. Here we split at the LAST occurrence of a reference-form
     prefix and take the suffix (the noun that was being referenced).
 
@@ -592,7 +592,7 @@ def _strip_trailing_conjunction(term: str) -> str:
     return term
 
 
-# R34 (#443) — determiners that open a trailing locative predicate after an
+# R34 (#443) - determiners that open a trailing locative predicate after an
 # interior preposition 於/在. A noun's name never contains 於一/於該/在一/在該…;
 # such a span is always the locative clause `於一次側` / `在該表面上`.
 _TW_LOCATIVE_CLAUSE_DETERMINERS: frozenset[str] = frozenset(
@@ -620,7 +620,7 @@ def _strip_trailing_locative_clause(term: str) -> str:
     return term
 
 
-# #350 — bare quantifiers that, on the right of a conjunction with no noun
+# #350 - bare quantifiers that, on the right of a conjunction with no noun
 # after them, mark a walker-over-captured clause boundary (X 及 一個).
 _TW_BARE_QUANTIFIERS: frozenset[str] = frozenset({
     "一", "一個", "一種", "一對", "兩", "二", "兩個",
@@ -634,7 +634,7 @@ def _split_on_conjunction(term: str) -> list[str]:
     When a normalized intro spans ``X <conj> Y``, returns [X, Y]; for
     multi-conjunction phrases (``A及B以及C``) both sides are recursively
     split so the result is [A, B, C]. Only splits if BOTH sides are at
-    least ``_MIN_INVENTORY_LENGTH`` chars — protects compound nouns that
+    least ``_MIN_INVENTORY_LENGTH`` chars - protects compound nouns that
     happen to contain 及/和 as morphemes (rare in TW patent diction but
     possible).
 
@@ -653,7 +653,7 @@ def _split_on_conjunction(term: str) -> list[str]:
         right = normalize_reference_term(raw_right) if raw_right else raw_right
         if len(left) >= _MIN_INVENTORY_LENGTH and len(right) >= _MIN_INVENTORY_LENGTH:
             return _split_on_conjunction(left) + _split_on_conjunction(right)
-        # R34 (#441) — stranded SHORT left fragment: `區及一第二次級繞組` — the
+        # R34 (#441) - stranded SHORT left fragment: `區及一第二次級繞組` - the
         # walker stripped the verb `設置` from the element name `設置區`, stranding
         # a bare `區` before the coordinating `及`. A sub-_MIN left can never be a
         # real inventory term (the ≥2-char floor drops it regardless), so keep the
@@ -662,7 +662,7 @@ def _split_on_conjunction(term: str) -> list[str]:
         # term while recovering the coordinate noun the drafter actually wrote.
         if len(right) >= _MIN_INVENTORY_LENGTH and 0 < len(left) < _MIN_INVENTORY_LENGTH:
             return _split_on_conjunction(right)
-        # #350 — stranded leading-quantifier tail: `X及一個` / `X與複數` — the
+        # #350 - stranded leading-quantifier tail: `X及一個` / `X與複數` - the
         # walker over-captured a clause boundary, leaving a bare quantifier with
         # no noun on the right. Keep the left noun, drop the tail. Gated on an
         # EXACT bare-quantifier set (NOT a blanket right<MIN test): a short
@@ -677,15 +677,15 @@ def _collect_symbol_names(doc: TwPatentDocument) -> set[str]:
 
     Per the 2026-04-21 note: ``symbol_table`` is the general 符號說明
     glossary; ``representative_drawing_symbols`` is the 代表圖之符號說明
-    cover-page legend. Both are drafter-authored glossary declarations —
+    cover-page legend. Both are drafter-authored glossary declarations -
     terms listed there are spec-supported by definition.
 
-    R67 (2026-05-08) — Arabic→CJK ordinal normalization applied
+    R67 (2026-05-08) - Arabic→CJK ordinal normalization applied
     symmetrically with the claim-side normalize chain. Drafter writes
     `第1間隔件` in the symbol table; claim-side `normalize_reference_term`
     converts the dep claim's `前述第二間隔件` to `第一間隔件` / `第二間隔件`
     (CJK). Without the symbol-side normalize, Tier 0 missed every
-    Arabic-ordinal-named symbol entry — symmetric to R63's walker fix
+    Arabic-ordinal-named symbol entry - symmetric to R63's walker fix
     on the supplementary-intro path.
     """
     names: set[str] = set()
@@ -705,7 +705,7 @@ def _collect_spec_text(doc: TwPatentDocument) -> str:
     embodiment. Excludes drawings_description + symbol_table (handled
     separately) + abstract_text.
 
-    R67 (2026-05-08) — Arabic→CJK ordinal normalization applied so the
+    R67 (2026-05-08) - Arabic→CJK ordinal normalization applied so the
     Tier 1 / Tier 3 substring checks see the same ordinal form the
     claim-side normalize produces. Without this, drafter's `第1散熱片`
     in spec body misses against claim's normalized `第一散熱片`.
@@ -752,16 +752,16 @@ def _strip_trailing_bufen_before_verb(term: str, claim_text: str) -> str:
 # spec-support inventory when used verbally (#315/#317/#318/#319: 阻力墊片受…,
 # 位置轉動至…, 坡面…鄰近於…, 局部自…). A blanket strip would FN-drop a real
 # `X轉動` / `各自` noun, so we strip ONLY when the claim continues with a
-# preposition / coverb / 所述-reference — the unambiguous verbal signature.
+# preposition / coverb / 所述-reference - the unambiguous verbal signature.
 # A genuine noun ending in one of these is followed by a particle (的/，/。)
 # or another noun, never these markers, so it is left intact.
-# #335 — 內凹 ("recessed inward") is a stative verb in `…第二擋牆內凹形成`
+# #335 - 內凹 ("recessed inward") is a stative verb in `…第二擋牆內凹形成`
 # ("formed by … being recessed inward"), not part of the noun phrase.
 _TW_PREDICATE_TAILS: tuple[str, ...] = ("轉動", "鄰近", "連通", "內凹", "受", "自")
 _TW_PREDICATE_FOLLOW_MARKERS: tuple[str, ...] = (
     "至", "於", "到", "向", "在", "沿", "所述", "該", "予", "與", "和",
 )
-# #335 — formation verbs. A trailing predicate tail followed by one of these is
+# #335 - formation verbs. A trailing predicate tail followed by one of these is
 # verbal (`…內凹形成` = "formed by being recessed"). Kept as a dedicated tuple
 # (not merged into the preposition/coverb markers) to bound the strip's reach.
 _TW_FORMATION_FOLLOW_MARKERS: tuple[str, ...] = ("形成", "而成", "構成")
@@ -819,7 +819,7 @@ def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:
             # 部分 verb-gate (#292/#305): an over-capture ending in 部分 that is
             # immediately FOLLOWED by a content verb in the claim text is the
             # adverbial 部分 ("partly", e.g. 延伸部部分延伸 = "the extension partly
-            # extends") — strip it to recover the head noun (延伸部). FN-safe by
+            # extends") - strip it to recover the head noun (延伸部). FN-safe by
             # the verb-gate: a genuine `X部分` portion-element (第二外殼部分,
             # 最外側部分) is followed by a particle/noun/clause-end, NOT a verb,
             # so it is untouched (a blanket trailing strip would FN-drop those).
@@ -877,7 +877,7 @@ def _tier3_char_window(norm_term: str, spec_text: str) -> bool:
 
     Uses ``tokenize_tw`` (ADR-094 bigram contract). For single-char terms
     (tokenize_tw unigram fallback) this degrades to "unigram anywhere in
-    spec", which is equivalent to Tier 1 — so Tier 3 adds no false-passes
+    spec", which is equivalent to Tier 1 - so Tier 3 adds no false-passes
     for short terms.
     """
     term_tokens = set(tokenize_tw(norm_term))

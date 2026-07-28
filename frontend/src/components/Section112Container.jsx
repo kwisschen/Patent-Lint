@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 import { useTranslation } from 'react-i18next'
 import { CheckCircle } from 'lucide-react'
 import AntecedentBasisCard from './AntecedentBasisCard'
@@ -10,7 +10,7 @@ import { FrostCard } from './ui/frost-card'
 
 // Visual parallel to AntecedentBasisCard / SpecSupportCard, but in the
 // pass palette. Keeps both sub-checks visible as their own containers even
-// when clean — avoids the pass line appearing as a footnote under whichever
+// when clean - avoids the pass line appearing as a footnote under whichever
 // sibling card happens to have findings.
 function PassCard({ titleKey, messageKey }) {
   const { t, i18n } = useTranslation()
@@ -52,7 +52,7 @@ export default function Section112Container({
         <div className="flex-1 border-t border-border/50" />
       </div>
 
-      {/* Always-visible disclaimer — protects against user assuming the
+      {/* Always-visible disclaimer - protects against user assuming the
           analysis is comprehensive even when the card surface is empty.
           Same i18n key was previously only rendered inside AntecedentBasisCard
           (i.e. only when there were findings); moved here so it shows
@@ -74,7 +74,7 @@ export default function Section112Container({
 
       {/* Spec-support card. US/EPC/TW/CN all enable it (supportsSpecSupport).
           CN's ADR-138 gate (precision concerns on publication-doc fixtures) was
-          mooted by the #314 advisory re-tier — it surfaces "terms to verify"
+          mooted by the #314 advisory re-tier - it surfaces "terms to verify"
           with zero grade impact, so imprecision is bounded. */}
       {jConfig.supportsSpecSupport && (
         <div id="section112-specsupport" className="scroll-mt-20">

@@ -1,22 +1,22 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """EPC specification-level checks (G1 + G2 in the canonical 7-group order).
 
-G1 (structure) — shipped:
-  - check_required_sections_epc  — Art. 78(1) + Rule 41 + Rule 42(1) EPC
-  - check_section_ordering_epc   — Rule 42(1) EPC canonical order
-  - check_paragraph_numbering_epc — EPO Guidelines F-II § 4.5 (advisory)
-  - check_paragraph_ending_epc   — drafting hygiene (REVIEW status)
-  - check_title_required_epc     — Rule 41(2)(b) EPC
+G1 (structure) - shipped:
+  - check_required_sections_epc  - Art. 78(1) + Rule 41 + Rule 42(1) EPC
+  - check_section_ordering_epc   - Rule 42(1) EPC canonical order
+  - check_paragraph_numbering_epc - EPO Guidelines F-II § 4.5 (advisory)
+  - check_paragraph_ending_epc   - drafting hygiene (REVIEW status)
+  - check_title_required_epc     - Rule 41(2)(b) EPC
 
-G2 (content) — pending:
-  - check_figure_ref_consistency_epc — Rule 46(2)(h)
-  - check_numeral_consistency_epc    — Rule 46(2)(h) + Rule 43(7)
-  - check_claim_reference_in_spec_epc — Guidelines F-IV § 4.3
+G2 (content) - pending:
+  - check_figure_ref_consistency_epc - Rule 46(2)(h)
+  - check_numeral_consistency_epc    - Rule 46(2)(h) + Rule 43(7)
+  - check_claim_reference_in_spec_epc - Guidelines F-IV § 4.3
 
 Each check returns a list of CheckItem dicts following the same shape as
 the US / CN / TW jurisdictions. The walker-uncertainty hedge applies to
-the antecedent + spec-support walkers (G6, separate module) — these G1
+the antecedent + spec-support walkers (G6, separate module) - these G1
 structural checks are FIX-status because the Rule 42(1) requirement is
 unambiguous.
 """
@@ -46,9 +46,9 @@ from patentlint.parser.sections_epc import (
 _EPC_DESCRIPTION_ORDER = [
     "technical_field",       # Rule 42(1)(a)
     "background_art",        # Rule 42(1)(b)
-    "summary",               # Rule 42(1)(c) — disclosure of invention
-    "drawings_description",  # Rule 42(1)(d) — when drawings exist
-    "detailed_description",  # Rule 42(1)(e) — embodiments / ways of carrying out
+    "summary",               # Rule 42(1)(c) - disclosure of invention
+    "drawings_description",  # Rule 42(1)(d) - when drawings exist
+    "detailed_description",  # Rule 42(1)(e) - embodiments / ways of carrying out
 ]
 
 
@@ -64,12 +64,12 @@ def check_title_required_epc(full_text: str) -> list[CheckItem]:
     if not title:
         return [CheckItem(
             status="amend",
-            message="Title missing — EPC Rule 41(2)(b) requires a title of the invention.",
+            message="Title missing - EPC Rule 41(2)(b) requires a title of the invention.",
             message_key="check.epc.spec.titleRequired.amend",
             reference="Rule 41(2)(b) EPC",
             diagnostics=_dx(title_charlen=0),
         )]
-    # Sanity bound — a title shouldn't be a whole paragraph
+    # Sanity bound - a title shouldn't be a whole paragraph
     if len(title) > 500:
         return [CheckItem(
             status="verify",
@@ -97,7 +97,7 @@ def check_required_sections_epc(full_text: str) -> list[CheckItem]:
       - Abstract (Art. 78(1)(e) + Rule 47)
 
     Brief Description of the Drawings is conditionally required when the
-    draft contains drawings (Rule 46(2)(h) — the description shall briefly
+    draft contains drawings (Rule 46(2)(h) - the description shall briefly
     describe the figures). v1 detects drawings via the standalone heading
     presence; figure-text-anchored detection lands once the EPC fig-ref
     extractor ships in G2.
@@ -166,7 +166,7 @@ def check_required_sections_epc(full_text: str) -> list[CheckItem]:
 def check_section_ordering_epc(full_text: str) -> list[CheckItem]:
     """Verify description sub-sections appear in Rule 42(1) EPC canonical order.
 
-    Rule 42(1) lists the description sub-sections (a)–(e); EPC examiners
+    Rule 42(1) lists the description sub-sections (a)-(e); EPC examiners
     flag drafts whose headers run out of order. We collect the start
     position of each detected sub-section header and check that the
     sequence is monotonically non-decreasing in canonical order.
@@ -204,7 +204,7 @@ def check_section_ordering_epc(full_text: str) -> list[CheckItem]:
         starts["detailed_description"] = m.start()
 
     if len(starts) < 2:
-        # Not enough sub-sections to evaluate ordering — pass through.
+        # Not enough sub-sections to evaluate ordering - pass through.
         return [CheckItem(
             status="pass",
             message="Section ordering check skipped (insufficient sub-sections to evaluate).",
@@ -254,7 +254,7 @@ def check_paragraph_numbering_epc(full_text: str) -> list[CheckItem]:
     if not numbers:
         return [CheckItem(
             status="pass",
-            message="No paragraph numbering detected — EPC does not mandate paragraph numbers.",
+            message="No paragraph numbering detected - EPC does not mandate paragraph numbers.",
             message_key="check.epc.spec.paragraphNumbering.pass",
             reference="EPO Guidelines F-II § 4.5",
         )]
@@ -297,7 +297,7 @@ def check_paragraph_ending_epc(full_text: str) -> list[CheckItem]:
     No specific EPC rule mandates paragraph terminal punctuation. The
     check emits REVIEW status only and surfaces paragraphs whose final
     non-whitespace character isn't a standard terminator (. ! ? : ;).
-    Operates on the description body only — the title and claims have
+    Operates on the description body only - the title and claims have
     their own conventions and are excluded.
     """
     from patentlint.parser.sections_epc import extract_description_section_epc
@@ -363,7 +363,7 @@ def run_g1_spec_structure_checks(full_text: str) -> list[CheckItem]:
       4. paragraphEnding
 
     titleRequired emits in G2 (run_g2_spec_content_checks) per canonical
-    bucket placement — title is a G2 SPEC_CONTENT check.
+    bucket placement - title is a G2 SPEC_CONTENT check.
     """
     results: list[CheckItem] = []
     results.extend(check_required_sections_epc(full_text))
@@ -419,7 +419,7 @@ def check_figure_ref_consistency_epc(full_text: str) -> list[CheckItem]:
     if not results:
         return [CheckItem(
             status="pass",
-            message="No figure references detected — figure-reference consistency is vacuously satisfied.",
+            message="No figure references detected - figure-reference consistency is vacuously satisfied.",
             message_key="check.epc.spec.figureRefConsistency.pass",
             reference="Rule 46(2)(h) EPC",
         )]
@@ -517,7 +517,7 @@ def check_title_content_epc(full_text: str) -> list[CheckItem]:
             status="amend",
             message=(
                 "Title contains prohibited content (trademark or model "
-                "number) — EPO Guidelines F-II § 4 require a descriptive "
+                "number) - EPO Guidelines F-II § 4 require a descriptive "
                 "title of the invention."
             ),
             message_key="check.epc.spec.titleContent.amend",
@@ -543,7 +543,7 @@ def check_claim_reference_in_spec_epc(full_text: str) -> list[CheckItem]:
     """Flag spec text that references claims by number (Guidelines F-IV § 4.3).
 
     EPO examiners cite Guidelines F-IV § 4.3 against descriptions that
-    contain phrases like "as claimed in claim 5" — the description must
+    contain phrases like "as claimed in claim 5" - the description must
     stand on its own and not rely on the claims for clarity. Detection
     runs on the extracted description body so that the title and claims
     themselves are not scanned.
@@ -563,7 +563,7 @@ def check_claim_reference_in_spec_epc(full_text: str) -> list[CheckItem]:
         snippet = match.group()[:80]
         return [CheckItem(
             status="amend",
-            message="Description references a specific claim — Guidelines F-IV § 4.3 requires the description to stand on its own.",
+            message="Description references a specific claim - Guidelines F-IV § 4.3 requires the description to stand on its own.",
             message_key="check.epc.spec.claimReferenceInSpec.amend",
             details=snippet,
             details_key="details.epc.claimReferenceInSpec",
@@ -589,7 +589,7 @@ def run_g2_spec_content_checks(full_text: str) -> list[CheckItem]:
 
       1. figureRefConsistency (idx 10)
       2. numeralConsistency (idx 15)
-      3. titleRequired (idx 30) — emitted here, not in run_g1, to keep
+      3. titleRequired (idx 30) - emitted here, not in run_g1, to keep
          the spec_checks emission monotonic in canonical (group, idx)
       4. titleContent (idx 35)
       5. claimReferenceInSpec (idx 40)

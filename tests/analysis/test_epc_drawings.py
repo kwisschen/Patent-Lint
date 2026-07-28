@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """EPC G3 drawings check tests.
 
   - figuresSequential (Rule 46(2)(a) EPC)
-  - singleFigureLabel (Guidelines F-V § 1.2 — REVIEW status)
+  - singleFigureLabel (Guidelines F-V § 1.2 - REVIEW status)
   - priorArtLabeling  (Rule 46(2)(h) EPC)
   - figureCount       (informational)
 """
@@ -51,7 +51,7 @@ def test_figures_sequential_gap_amends():
     text = """BRIEF DESCRIPTION OF THE DRAWINGS
 
 Fig. 1 shows the apparatus.
-Fig. 3 shows the alternative — gap at Fig. 2.
+Fig. 3 shows the alternative - gap at Fig. 2.
 
 DETAILED DESCRIPTION OF THE EMBODIMENTS
 

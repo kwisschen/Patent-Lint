@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Real-drafter audit harness — bug-class regression gates for R63-R67 fixes.
+# Copyright (c) 2025-2026 Christopher Chen
+"""Real-drafter audit harness - bug-class regression gates for R63-R67 fixes.
 
 Programmatic .docx fixtures that each isolate one bug class from the
 real-drafter audit taxonomy (see memory
@@ -60,7 +60,7 @@ from patentlint.pipeline import analyze_bytes  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
-# Builder helpers (subset of tests/test_integration.py — kept self-contained
+# Builder helpers (subset of tests/test_integration.py - kept self-contained
 # so this module can be invoked from anywhere without test-suite imports).
 # ---------------------------------------------------------------------------
 
@@ -189,12 +189,12 @@ def _build_cn_minimal(
 
 
 # ---------------------------------------------------------------------------
-# Fixture builders — one per bug class
+# Fixture builders - one per bug class
 # ---------------------------------------------------------------------------
 
 
 def fixture_tw_older_dep_format() -> bytes:
-    """R62 (8043745) — older TIPO drafter dep form 如申請專利範圍第N項.
+    """R62 (8043745) - older TIPO drafter dep form 如申請專利範圍第N項.
 
     Pre-2018 TIPO drafts use this form instead of the modern
     如請求項N. The walker must parse it so dep-claim 2 inherits c1's
@@ -208,7 +208,7 @@ def fixture_tw_older_dep_format() -> bytes:
 
 
 def fixture_tw_arabic_cjk_ordinal_mix() -> bytes:
-    """R63 (e0635ca) + R64 (5cca2bb) — Arabic↔CJK ordinal symmetry.
+    """R63 (e0635ca) + R64 (5cca2bb) - Arabic↔CJK ordinal symmetry.
 
     Drafter introduces `一第1間隔件` / `一第2間隔件` in claim 1 (main
     intro path with 一 prefix, Arabic ordinals); dependent claim 2
@@ -238,12 +238,12 @@ def fixture_tw_arabic_cjk_ordinal_mix() -> bytes:
 
 
 def fixture_tw_citation_labels() -> bytes:
-    """R65 (745bfd0) + R67 (bracket-subheading prefix) — citation + sub-section
+    """R65 (745bfd0) + R67 (bracket-subheading prefix) - citation + sub-section
     labels in prior-art subsection.
 
     Drafters use TWO patterns under 【先前技術】:
       1. Sub-section labels like `[先前技術文獻]` (standalone bracket
-         label, no body content) — should be treated as structural
+         label, no body content) - should be treated as structural
          markers, not prose. Originally R65 only excluded these from
          bracketFormat's canonical-name comparison; the TW
          `_BRACKET_SUBHEADING` regex did NOT accept the `【NNNN】`
@@ -268,7 +268,7 @@ def fixture_tw_citation_labels() -> bytes:
 
 
 def fixture_tw_section_alias_background() -> bytes:
-    """R64 (5cca2bb) — drafter uses 【背景技術】 alias instead of 【先前技術】.
+    """R64 (5cca2bb) - drafter uses 【背景技術】 alias instead of 【先前技術】.
 
     Both should resolve to the prior_art subsection. requiredSections
     must report pass (the section IS present, just under an alias).
@@ -280,7 +280,7 @@ def fixture_tw_section_alias_background() -> bytes:
 
 
 def fixture_tw_locative_bare_noun_intro() -> bytes:
-    """R64 (5cca2bb F7d) — locative `於X的Y` supplementary intro.
+    """R64 (5cca2bb F7d) - locative `於X的Y` supplementary intro.
 
     Drafter introduces 半導體基板 via the locative phrase
     ``於半導體基板的一主面上`` rather than a quantifier-led clause
@@ -312,7 +312,7 @@ def fixture_tw_locative_bare_noun_intro() -> bytes:
 
 
 def fixture_tw_state_modifier_lookahead() -> bytes:
-    """R66 (22c8b80) + R67 (2026-05-08) — state-modifier symmetry.
+    """R66 (22c8b80) + R67 (2026-05-08) - state-modifier symmetry.
 
     Drafter introduces a state-modifier-qualified noun (`一島狀的奈米片
     積層體`) and references it in a dependent claim (`前述島狀的奈米片
@@ -323,7 +323,7 @@ def fixture_tw_state_modifier_lookahead() -> bytes:
 
     Without R67, the intro `一島狀的奈米片積層體` registered as bare
     `島狀` (intro pattern stops at 的) while the ref normalized to
-    `島狀的奈米片積層體` — asymmetric mismatch → emit. Per the symmetry-
+    `島狀的奈米片積層體` - asymmetric mismatch → emit. Per the symmetry-
     audit invariant (memory feedback_symmetry_audit_normalize_chains).
     """
     invention = [
@@ -351,7 +351,7 @@ def fixture_tw_state_modifier_lookahead() -> bytes:
 
 
 def fixture_cn_state_modifier_lookahead() -> bytes:
-    """R66 (22c8b80) + R67 (2026-05-08) CN port — state-modifier symmetry.
+    """R66 (22c8b80) + R67 (2026-05-08) CN port - state-modifier symmetry.
 
     CN parallel of `tw_state_modifier_lookahead` using Simplified state
     suffixes (状/形). Verifies the R67 intro-side extension was ported
@@ -389,19 +389,19 @@ def fixture_cn_state_modifier_lookahead() -> bytes:
 
 
 def fixture_tw_empty_paragraph_spacers() -> bytes:
-    """R65 (6f8adc2) — empty `【NNNN】` paragraph spacers skipped by ending check.
+    """R65 (6f8adc2) - empty `【NNNN】` paragraph spacers skipped by ending check.
 
     Drafters insert bare `【NNNN】` paragraphs as section spacers between
     prose paragraphs. The R65 fix recognizes these as empty spacers and
     skips them in the paragraph-ending check (no terminal-punctuation
     requirement on a marker that has no body content). Spacer is
     UNNUMBERED so it doesn't break the global paragraphNumbering
-    sequence — the actual fixture trigger is the bare 【NNNN】 form
+    sequence - the actual fixture trigger is the bare 【NNNN】 form
     appearing as a body paragraph.
     """
     prior_art = [
         "【0002】習知技術存在散熱不佳之問題。",
-        "【0003】",  # bare spacer — must be skipped by R65 + not break numbering
+        "【0003】",  # bare spacer - must be skipped by R65 + not break numbering
         "習知方案在高溫下效能下降。",
     ]
     claims = [
@@ -423,7 +423,7 @@ def fixture_tw_empty_paragraph_spacers() -> bytes:
 
 
 def fixture_tw_subsection_bracket_brackets() -> bytes:
-    """R65 (6f8adc2) — sub-section names not flagged by bracketFormat.
+    """R65 (6f8adc2) - sub-section names not flagged by bracketFormat.
 
     Drafters use `【先前技術文獻】`, `【專利文獻】`, `【非專利文獻】` as
     sub-section labels inside 先前技術. These are NOT canonical section
@@ -444,7 +444,7 @@ def fixture_tw_subsection_bracket_brackets() -> bytes:
 
 
 def fixture_cn_locative_bare_noun_intro() -> bytes:
-    """R7-extension (b5f3648) — CN port of the F7d locative pattern.
+    """R7-extension (b5f3648) - CN port of the F7d locative pattern.
 
     Mirror of `tw_locative_bare_noun_intro`: 于半导体基板的一主面侧.
     """
@@ -478,11 +478,11 @@ def fixture_cn_locative_bare_noun_intro() -> bytes:
 
 
 def fixture_tw_supplementary_intro_arabic_ordinals() -> bytes:
-    """R63 (e0635ca) — Arabic↔CJK normalize on the SUPPLEMENTARY intro path.
+    """R63 (e0635ca) - Arabic↔CJK normalize on the SUPPLEMENTARY intro path.
 
     Companion to `tw_arabic_cjk_ordinal_mix` which exercises the main
     intro path. R63's actual fix targets `_extract_supplementary_intros`
-    (F8 VP-modifier `相配合的Y` etc.) — without R63 the supplementary
+    (F8 VP-modifier `相配合的Y` etc.) - without R63 the supplementary
     path only ran `strip_leading_verb_tw` while the reference path ran
     the full normalize chain including Arabic→CJK. The asymmetry
     surfaced 12 walker FPs on Claire's 神秘黑屏哥.docx.
@@ -506,13 +506,13 @@ def fixture_tw_supplementary_intro_arabic_ordinals() -> bytes:
 
 
 def fixture_tw_self_loop_drafter_typo() -> bytes:
-    """R64 (5cca2bb) — chain-broken walker emit suppression on self-loop.
+    """R64 (5cca2bb) - chain-broken walker emit suppression on self-loop.
 
     Drafter accidentally writes `如請求項4所述之X` inside claim 4 itself
     (self-reference typo). The dependency chain is broken at claim 4.
     R64's chain-broken walker suppression: skip the antecedent walker
     when chain[-1].dependencies != [] (drafter self-loop or cycle
-    upstream) — dependent claim 5 should NOT cascade-emit walker
+    upstream) - dependent claim 5 should NOT cascade-emit walker
     findings inherited from the broken chain.
 
     Real defects on the fixture:
@@ -685,7 +685,7 @@ FIXTURES: list[FixtureSpec] = [
     ),
     FixtureSpec(
         name="tw_state_modifier_lookahead",
-        bug_class="State-modifier symmetry — intro-side lookahead",
+        bug_class="State-modifier symmetry - intro-side lookahead",
         fix_round="R66+R67",
         fix_sha="22c8b80+(this session)",
         jurisdiction=Jurisdiction.TW,
@@ -699,7 +699,7 @@ FIXTURES: list[FixtureSpec] = [
     ),
     FixtureSpec(
         name="cn_state_modifier_lookahead",
-        bug_class="CN port — state-modifier symmetry intro-side lookahead",
+        bug_class="CN port - state-modifier symmetry intro-side lookahead",
         fix_round="R66+R67",
         fix_sha="22c8b80+(this session)",
         jurisdiction=Jurisdiction.CN,
@@ -713,7 +713,7 @@ FIXTURES: list[FixtureSpec] = [
     ),
     FixtureSpec(
         name="tw_supplementary_intro_arabic_ordinals",
-        bug_class="R63 actual fix path — supplementary-intro Arabic→CJK",
+        bug_class="R63 actual fix path - supplementary-intro Arabic→CJK",
         fix_round="R63",
         fix_sha="e0635ca",
         jurisdiction=Jurisdiction.TW,
@@ -727,7 +727,7 @@ FIXTURES: list[FixtureSpec] = [
     ),
     FixtureSpec(
         name="tw_self_loop_drafter_typo",
-        bug_class="Self-loop drafter typo — chain-broken walker suppression",
+        bug_class="Self-loop drafter typo - chain-broken walker suppression",
         fix_round="R64",
         fix_sha="5cca2bb",
         jurisdiction=Jurisdiction.TW,
@@ -769,7 +769,7 @@ FIXTURES: list[FixtureSpec] = [
     ),
     FixtureSpec(
         name="cn_locative_bare_noun_intro",
-        bug_class="CN port — locative 于X的Y (R7-extension)",
+        bug_class="CN port - locative 于X的Y (R7-extension)",
         fix_round="R7-ext",
         fix_sha="b5f3648",
         jurisdiction=Jurisdiction.CN,
@@ -783,7 +783,7 @@ FIXTURES: list[FixtureSpec] = [
     ),
     FixtureSpec(
         name="cn_drafter_realistic_baseline",
-        bug_class="Canonical 五书模板 drafter format — all-clean reference point",
+        bug_class="Canonical 五书模板 drafter format - all-clean reference point",
         fix_round="ADR-141 baseline",
         fix_sha="7d59a5f",
         jurisdiction=Jurisdiction.CN,
@@ -837,7 +837,7 @@ def _matches(check_item, key_prefixes: tuple[str, ...]) -> bool:
 @dataclass
 class FixtureResult:
     spec: FixtureSpec
-    silenced_violations: list  # list[CheckItem] — should be empty
+    silenced_violations: list  # list[CheckItem] - should be empty
     expected_hits: dict  # key -> count
     all_findings: list
 
@@ -853,7 +853,7 @@ def run_fixture(spec: FixtureSpec) -> FixtureResult:
     silenced_violations = [c for c in findings if _matches(c, spec.silenced_keys)]
 
     # Expected check_keys: each prefix must have at least one matching
-    # finding (any status — we just want the check to fire).
+    # finding (any status - we just want the check to fire).
     expected_hits: dict[str, int] = {}
     for prefix in spec.expected_keys:
         # Match any status: convert ".pass" → ".", ".amend" → ".", etc.
@@ -874,8 +874,8 @@ def render_report(results: list[FixtureResult]) -> str:
     """Render a markdown report for the audit run."""
     out: list[str] = []
     today = date.today().isoformat()
-    out.append(f"# Real-drafter audit — {today}\n")
-    out.append("Per-bug-class regression gate covering R63–R66 walker / parser /")
+    out.append(f"# Real-drafter audit - {today}\n")
+    out.append("Per-bug-class regression gate covering R63-R66 walker / parser /")
     out.append("section-map fixes. Each fixture isolates one bug class from the")
     out.append("`feedback_real_drafter_drafts_have_different_bugs.md` taxonomy.\n")
 
@@ -902,7 +902,7 @@ def render_report(results: list[FixtureResult]) -> str:
     out.append("\n## Per-bug-class detail\n")
     for r in results:
         s = r.spec
-        out.append(f"### `{s.name}` — {s.bug_class}")
+        out.append(f"### `{s.name}` - {s.bug_class}")
         out.append(f"- Fix: {s.fix_round} commit `{s.fix_sha}`")
         out.append(f"- Jurisdiction: {s.jurisdiction.name}")
         out.append(f"- Total findings on fixture: {len(r.all_findings)}")
@@ -910,7 +910,7 @@ def render_report(results: list[FixtureResult]) -> str:
         out.append(f"- Silenced violations: {len(r.silenced_violations)}")
         if r.silenced_violations:
             for v in r.silenced_violations[:5]:
-                out.append(f"  - `{v.message_key}` — {v.message[:120]}")
+                out.append(f"  - `{v.message_key}` - {v.message[:120]}")
         out.append(f"- Expected keys: `{', '.join(s.expected_keys)}`")
         for k, count in r.expected_hits.items():
             out.append(f"  - `{k}` (any status): {count}")
@@ -928,7 +928,7 @@ def render_report(results: list[FixtureResult]) -> str:
     )
     out.append(
         "- A fixture's `expected_keys` list contains check_keys that should "
-        "still emit (any status) so we catch over-silencing — the check must "
+        "still emit (any status) so we catch over-silencing - the check must "
         "fire, just not with an amend/verify on the trigger pattern."
     )
     out.append(
@@ -941,7 +941,7 @@ def render_report(results: list[FixtureResult]) -> str:
 
 
 def main() -> int:
-    print(f"Real-drafter audit — running {len(FIXTURES)} fixtures...")
+    print(f"Real-drafter audit - running {len(FIXTURES)} fixtures...")
     results: list[FixtureResult] = []
     for spec in FIXTURES:
         try:

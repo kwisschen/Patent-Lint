@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FileSearch, ChevronRight, MessageSquare } from 'lucide-react'
@@ -14,7 +14,7 @@ function ClaimRow({ claimNumber, phrases, crossRefPhrases, claimText, jurisdicti
   const { t, i18n } = useTranslation()
   const { sendFeedback } = useFeedback()
   // Default-expanded so per-finding Report buttons surface without an
-  // extra click — matches AntecedentBasisCard sibling behavior.
+  // extra click - matches AntecedentBasisCard sibling behavior.
   const [expanded, setExpanded] = useState(true)
   const [reportModalOpen, setReportModalOpen] = useState(false)
   const hasCrossRef = crossRefPhrases.length > 0

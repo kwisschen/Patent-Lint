@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """CN specification analysis checks.
 
 Eight pure functions checking Chinese patent specification formatting
@@ -66,10 +66,10 @@ _NON_PROSE_BODY_PATTERNS = (
     re.compile(r"^\[[^\]]{1,20}\]\s*$"),
     # Angle-bracketed section marker
     re.compile(r"^[＜〈<][^＞〉>]+[＞〉>]\s*$"),
-    # Paren-wrapped (1-level nesting allowed) — (鎓盐化合物) / (鎓盐化合物(1))
+    # Paren-wrapped (1-level nesting allowed) - (鎓盐化合物) / (鎓盐化合物(1))
     re.compile(r"^\([^)]*(?:\([^)]*\)[^)]*)*\)\s*$"),
     re.compile(r"^（[^）]*(?:（[^）]*）[^）]*)*）\s*$"),
-    # Empty body after stripping [NNNN] prefix — standalone para-number
+    # Empty body after stripping [NNNN] prefix - standalone para-number
     # placeholder with no content is a structural marker.
     re.compile(r"^$"),
     # R65 (2026-05-05) TW parity: bibliographic citation paragraphs.
@@ -126,24 +126,24 @@ def check_required_sections(cn_doc: CnPatentDocument) -> list[CheckItem]:
     专利法 §26 第1款 (说明书 / 摘要 / 权利要求书) plus the 说明书
     subsections enumerated in 专利法实施细则 §20. When the drafter removes
     a 五书 header, the corresponding field extracts empty (or in some
-    cases is silently recovered by a parser fallback tier — see below).
+    cases is silently recovered by a parser fallback tier - see below).
 
     **Strict header detection.** ``cn_doc.section_source_strategies``
     records which parser tier resolved each top-level part:
 
-    * ``"body_anchor"`` / ``"page_header"`` — a real 五书 heading
+    * ``"body_anchor"`` / ``"page_header"`` - a real 五书 heading
       (``权利要求书`` / ``说明书摘要`` / ``说明书`` / page-header
       equivalent) was parsed in the document.
-    * ``"claim_density"`` — claims were RECOVERED from a contiguous run
+    * ``"claim_density"`` - claims were RECOVERED from a contiguous run
       of ``N. ...`` claim-start paragraphs because no ``权利要求书``
       anchor was found. This is parser robustness for malformed
       publications, but for a draft check it MUST be flagged: the
       drafter omitted the required heading.
-    * ``"none"`` — no source resolved that part.
+    * ``"none"`` - no source resolved that part.
 
     For 摘要 we additionally accept the publication-format INID
     fallback (``(57)摘要`` cover page) by checking ``abstract_text``
-    when strategies are silent — a downloaded publication is a valid
+    when strategies are silent - a downloaded publication is a valid
     input, and flagging the (57)摘要-only path would be a false
     positive against the publication-checking workflow.
     """
@@ -176,7 +176,7 @@ def check_required_sections(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
     # Top-level: 权利要求书 (required per 专利法 §26, format per §22).
     # Strict: require a real heading. claim_density recovery is parser
-    # robustness, not a substitute for the 权利要求书 anchor — flag.
+    # robustness, not a substitute for the 权利要求书 anchor - flag.
     claims_anchor = strategies.get("claims") in valid_anchor
     if not claims_anchor or not cn_doc.claims:
         missing.append("权利要求书")
@@ -206,7 +206,7 @@ def check_required_sections(cn_doc: CnPatentDocument) -> list[CheckItem]:
                 # the strategy detected them. claims_count=0 with a valid
                 # claims_strategy would point at a downstream parsing
                 # failure (e.g., unrecognized numbering format) rather
-                # than a missing-section defect — same bug class TW saw
+                # than a missing-section defect - same bug class TW saw
                 # with bracket-label firm variants.
                 claims_count=len(cn_doc.claims) if cn_doc.claims else 0,
             ),
@@ -225,7 +225,7 @@ def check_required_sections(cn_doc: CnPatentDocument) -> list[CheckItem]:
 def check_section_ordering(cn_doc: CnPatentDocument) -> list[CheckItem]:
     """Verify sections appear in canonical CNIPA order.
 
-    Reads ``cn_doc.section_order`` — the list of canonical field-name keys
+    Reads ``cn_doc.section_order`` - the list of canonical field-name keys
     in the order the parser first encountered each header. A non-increasing
     canonical-index sequence indicates the drafter placed sections out of
     the 专利法实施细则 §20 order (e.g., reusing an MPEP-ordered spec without
@@ -272,7 +272,7 @@ def check_paragraph_numbering(cn_doc: CnPatentDocument) -> list[CheckItem]:
     if cn_doc.input_format == "xml":
         nums = cn_doc.paragraph_numbers
         if nums:
-            # Duplicate detection runs BEFORE gap detection — a pattern like
+            # Duplicate detection runs BEFORE gap detection - a pattern like
             # [1, 2, 2, 3] otherwise fires .amendXmlGap with prev==next and
             # the .amendXmlDuplicate key becomes unreachable.
             counts = Counter(nums)
@@ -317,7 +317,7 @@ def check_paragraph_numbering(cn_doc: CnPatentDocument) -> list[CheckItem]:
         if cn_doc.has_paragraph_numbering:
             return [CheckItem(
                 status="amend",
-                message="Manual paragraph numbering found in .docx — CNIPA forbids this.",
+                message="Manual paragraph numbering found in .docx - CNIPA forbids this.",
                 message_key="check.cn.spec.paragraphNumbering.amendDocx",
                 details_key="details.cn.paragraphNumberingDocx",
                 reference="审查指南",
@@ -496,7 +496,7 @@ def check_patent_type_terminology(cn_doc: CnPatentDocument) -> list[CheckItem]:
     CN patent_type is inferred heuristically (whichever term dominates the
     spec body), so we can't gate on a declared type as TIPO does. Fall back
     to the mixed-usage signal: if BOTH families appear, something is
-    inconsistent — flag whichever is the minority.
+    inconsistent - flag whichever is the minority.
     """
     text = _all_spec_text(cn_doc)
     invention_terms = ("本发明", "此发明")
@@ -629,7 +629,7 @@ def check_title(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
 # ── Check 8 ──────────────────────────────────────────────────────────────
 
-# Spec-text references to claims (prohibited per 专利法实施细则 §20 —
+# Spec-text references to claims (prohibited per 专利法实施细则 §20 -
 # the specification must not describe the invention by reference to the
 # claims). The introducing verb is not constrained: CN drafters use
 # 根据/如/按照/依照/依据 + 权利要求N + 所述, or bare 权利要求N所述.
@@ -703,7 +703,7 @@ def check_spec_claim_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
 
 # ── D1 reference numeral consistency (CN) ──────────────────────────────
-# 专利法实施细则 §21 第2款 + 审查指南 §3.3.1 — 同一附图标记应当指代同一构件.
+# 专利法实施细则 §21 第2款 + 审查指南 §3.3.1 - 同一附图标记应当指代同一构件.
 # Same numeral must designate the same element. Different elements
 # require different numerals. Same name with different numerals is
 # permitted (multiple instances).
@@ -723,7 +723,7 @@ def check_spec_claim_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
 # Noun group: optional ASCII prefix + ≥2 CJK chars. Captures
 # semiconductor / electronics compound nouns like "n型電晶體" /
 # "p型區域" / "LED驅動器" / "USB介面" / "TFT基板" / "IGBT模組" intact
-# while REQUIRING the noun to end in a CJK character — otherwise
+# while REQUIRING the noun to end in a CJK character - otherwise
 # captures like "踩踏踏板E10" would split as noun="踏板E" + num="10"
 # instead of noun="踏板" + Latin-prefix-num="E10".
 # Format: 0-5 ASCII letters + 2-12 CJK chars (total length 2-17).
@@ -733,20 +733,20 @@ _CN_REFNUM_AFTER_NOUN = re.compile(
     rf"(?P<noun>{_CN_NOUN_GROUP})\s*(?P<num>\d{{2,4}}[a-z]?)"
     # Reject digits followed by another digit, decimal, percent, degree
     # signs (°/℃), Latin letter (mm/cm/μm/V/A/Hz/wt/etc.), or a range
-    # separator (~/～/至/到/-) — those are handled by _CN_REFNUM_RANGE.
+    # separator (~/～/至/到/-) - those are handled by _CN_REFNUM_RANGE.
     # R-refnum-2 (2026-05-26, issue #100/#101/#102): also reject when the
     # numeral is followed by optional whitespace + a unit indicator. Pre-fix,
     # `平均粒徑可在10 μm至100` captured `10` as a refnum because the lookahead
     # checked only the immediate next char (space) and `μ` was not in the unit
     # set. Add `\s*` to skip whitespace and `μµ` for Greek small letter mu
-    # (U+03BC) + micro sign (U+00B5) — drafters use either codepoint.
+    # (U+03BC) + micro sign (U+00B5) - drafters use either codepoint.
     r"(?!\s*[\d.%％°℃μµA-Za-z~～至到\-])"
-    # Reject sub-instance notation "21(0)" / "21(N)" / "21(N-1)" —
+    # Reject sub-instance notation "21(0)" / "21(N)" / "21(N-1)" -
     # parenthesized expression is the sub-index, not a separate refnum.
     r"(?!\([\dNn])"
     # Reject reference-sign LEGEND keys: in an inline list `115：第一控制模組
     # 116：第一無線通訊模組`, the noun-before-numeral regex otherwise binds
-    # entry k's name to entry k+1's numeral (`第一控制模組 116`) — the single
+    # entry k's name to entry k+1's numeral (`第一控制模組 116`) - the single
     # biggest source of TW D1 false positives (#265-270 root cause). A numeral
     # immediately followed by a colon is a legend KEY (numeral-first binding),
     # so the noun preceding it is a bled value, not this numeral's name. FN-safe:
@@ -759,7 +759,7 @@ _CN_REFNUM_PARENS = re.compile(
 )
 
 # Range refnum: drafter writes "隨身碟101~103" / "電池101至103" /
-# "感測器101-103" — same noun bound to ALL refnums in [start, end].
+# "感測器101-103" - same noun bound to ALL refnums in [start, end].
 # Match range separators ~ (ASCII), ～ (full-width tilde), 至, 到, 及,
 # and hyphen `-`. Cap range size at 30 to bound runaway-pattern risk.
 _CN_REFNUM_RANGE = re.compile(
@@ -795,7 +795,7 @@ def _cn_has_min_cjk(s: str, n: int = 2) -> bool:
 # Type-indicator characters that justify a single-letter ASCII prefix
 # in the captured noun (n型 / p型 / α形 / β狀). Without one of these
 # right after the single letter, the leading letter is more likely a
-# stray Latin label that bled into the noun (e.g., "F與兩剛輪" — F is a
+# stray Latin label that bled into the noun (e.g., "F與兩剛輪" - F is a
 # class label that doesn't belong in the noun "兩剛輪").
 _CN_ASCII_PREFIX_TYPE_INDICATORS = frozenset({
     "型", "形", "性", "狀", "状", "類", "类", "級", "级",
@@ -817,9 +817,9 @@ def _cn_strip_stray_ascii_prefix(s: str) -> str:
     # Single-letter ASCII prefix followed by type-indicator: keep
     if len(s) >= 2 and s[1] in _CN_ASCII_PREFIX_TYPE_INDICATORS:
         return s
-    # Otherwise the leading letter is stray — drop it
+    # Otherwise the leading letter is stray - drop it
     return s[1:]
-# Same denylist as US — figure refs / equation refs / standards
+# Same denylist as US - figure refs / equation refs / standards
 # acronyms that look like designators but aren't.
 _CN_LATIN_PREFIX_DENYLIST = frozenset({
     "FIG", "FIGS", "EQ", "VOL", "NO", "PG", "PCT", "USC", "USA",
@@ -859,7 +859,7 @@ _CN_LATIN_PREFIX_DENYLIST = frozenset({
     "RTK", "GPCR", "ATP", "ADP", "GTP", "CDP",
 })
 
-# Engine-3 R2 mirror (ADR-159) — amino-acid substitution notation (K417T /
+# Engine-3 R2 mirror (ADR-159) - amino-acid substitution notation (K417T /
 # D614G / L234F): IUPAC amino-acid letter + >=2-digit residue position + IUPAC
 # letter. A biology/clinical symbol, never a reference designator. The >=2-digit
 # guard + AA-letter set spare real uppercase-suffixed labels (U1A / C2D).
@@ -878,19 +878,19 @@ _CN_BIO_LEADING_PREFIXES = frozenset({
 # element name itself. Without stripping, "该外壳" and "外壳" would
 # appear as different names.
 _CN_REF_PREFIXES = ("该等", "所述的", "所述", "前述", "该", "本", "其")
-# Ordinal prefixes also strippable for D1 comparison — "第一外壳" and
+# Ordinal prefixes also strippable for D1 comparison - "第一外壳" and
 # "外壳" are the same head noun for D1 purposes (different INSTANCES
 # with their own numerals is the legitimate D2 case which D1 ignores).
 _CN_ORDINAL_RE = re.compile(r"^第[一二三四五六七八九十百零0-9]+")
 # Common quantifiers that may lead a captured noun phrase. Both Trad
-# and Simp variants. Bare "個" / "个" is also stripped — drafters write
+# and Simp variants. Bare "個" / "个" is also stripped - drafters write
 # "一個第一外齒狀結構" → after "一" strip + "個" strip → "第一外齒狀結構".
 _CN_LEADING_QUANTIFIERS = (
     # Quantifier + classifier (條/个) bigrams and at-least-N forms that
     # lead a captured noun (#213/#244): 多條導通線路 → 導通線路;
     # 兩個所述上側柱 → (兩個 strip) 所述上側柱 → (ref-prefix) 上側柱.
     # Listed FIRST so the longest form wins the prefix race over bare
-    # 每/多. Multi-char so FN-safe — none is ever a noun head (cf. bare
+    # 每/多. Multi-char so FN-safe - none is ever a noun head (cf. bare
     # 條, which starts 條碼/條紋 and is handled by a ref-guarded rule).
     "至少一條", "至少一条", "少一條", "少一条",
     "多條", "多条", "每條", "每条", "兩條", "两条",
@@ -906,7 +906,7 @@ _CN_LEADING_QUANTIFIERS = (
     "每個", "每个", "每一", "每",
     "各種", "各种", "各類", "各类", "各種類", "各种类",
     "若干", "數個", "数个", "一些",
-    # Bare measure word — "個X" / "个X" can leak when 一 was already stripped
+    # Bare measure word - "個X" / "个X" can leak when 一 was already stripped
     "個", "个",
 )
 # Leading verbs/particles/prepositions that creep into the captured noun
@@ -917,12 +917,12 @@ _CN_LEADING_VERBS_PARTICLES = (
     "之", "至", "由", "将", "將", "盖", "蓋", "介", "经", "經",
     "自", "于", "於", "在", "向", "对", "對", "较", "較", "因",
     "为", "為", "及", "并", "並", "以", "從", "从", "或",
-    "的", "得", "地",  # genitive / aspect particles — drafter writes "的X" / "得X"
+    "的", "得", "地",  # genitive / aspect particles - drafter writes "的X" / "得X"
     # Verb-fragment leading chars left when regex starts mid-compound
     # (e.g., "包括一X" → captured "括一X" → strip 括 → "一X" → strip 一 → "X").
     # These chars are never head-noun starts in TIPO/CNIPA patent diction.
     # IMPORTANT: do NOT include first-chars of multi-char verbs in
-    # _CN_LEADING_MULTI_CHAR_VERBS (連/接/設/控/形/通/結/耦) — particles
+    # _CN_LEADING_MULTI_CHAR_VERBS (連/接/設/控/形/通/結/耦) - particles
     # loop runs after multi-char-verb pass, so char-by-char stripping
     # would prevent the multi-char match on the next iteration.
     "括", "含", "與", "与", "和", "而", "且",
@@ -932,7 +932,7 @@ _CN_LEADING_VERBS_PARTICLES = (
     # Verb-aspect markers that bleed into mid-sentence captures
     # ("形成了像素界定層200" → 了像素界定層 → 像素界定層).
     "了", "著", "着",
-    # 待 = "until/wait for" — sentence-fragment marker
+    # 待 = "until/wait for" - sentence-fragment marker
     # ("待細胞密度達到X時" → 待細胞密度 with refnum after)
     "待",
     # Removed from particles (each is the first char of a compound noun
@@ -940,7 +940,7 @@ _CN_LEADING_VERBS_PARTICLES = (
     # 例), 持 (持有部), 傳 (傳輸器), 送 (送風口). Stripping them would
     # produce truncated head nouns like "用者裝置" / "輸器".
     # Conjunctive / aspectual sentence connectors. NOTE: do NOT include
-    # 所 here — it's the first char of ref-prefix 所述 and char-by-char
+    # 所 here - it's the first char of ref-prefix 所述 and char-by-char
     # stripping would consume 所 before ref-prefix has a chance to match
     # 所述, leaving "述X" residue.
     "則", "则", "也", "但", "此", "即", "是", "有", "再", "又",
@@ -951,7 +951,7 @@ _CN_LEADING_VERBS_PARTICLES = (
 # When a captured head noun reduces to one of these after stripping,
 # discard it as a real D1 candidate.
 _CN_NOISE_SINGLE_CHARS = frozenset({
-    # Simp + Trad parity — TW fixtures use Trad (對/時/內/於) while CN
+    # Simp + Trad parity - TW fixtures use Trad (對/時/內/於) while CN
     # uses Simp (对/时/内/于). Both must reject when residual collapses.
     "于", "於", "以", "对", "對", "时", "時",
     "中", "上", "下", "内", "內", "外",
@@ -967,38 +967,38 @@ _CN_NOISE_MULTI_CHAR = frozenset({
     "中的", "上的", "下的", "中之", "之中", "之內", "之内",
     "或者", "比如", "例如",
     "等等", "之外", "以外", "以内", "以內",
-    # Claim-reference nouns — "权利要求 32" / "申請專利範圍第N項" mean
+    # Claim-reference nouns - "权利要求 32" / "申請專利範圍第N項" mean
     # "claim N" / "claim of patent application", not element refnum N.
     # Mirrors the US "claim/claims" entry in _EXCLUDE_KEYWORDS. Full
     # Trad/Simp parity per Christopher's audit rule.
     "權利要求", "权利要求", "申請專利範圍", "申请专利范围",
     "請求項", "请求项", "權利", "权利",
-    # Step-reference nouns — "步驟S101" / "步驟 50" / "步骤 50" the
+    # Step-reference nouns - "步驟S101" / "步驟 50" / "步骤 50" the
     # captured noun "步驟" is a step label, not an element name.
     "步驟", "步骤",
-    # Chemistry / process / measurement context — exact-match rejection
+    # Chemistry / process / measurement context - exact-match rejection
     # so 反應器/反應槽 (real nouns) survive while 反應約/退火/合成例
     # (process narration) get filtered.
     "退火",                 # anneal (verb-only)
-    "反應約", "反应约",      # "react approximately X" — narration
+    "反應約", "反应约",      # "react approximately X" - narration
     "反應後", "反应后",      # "after reaction"
     "反應時", "反应时",      # "during reaction"
     "合成例",               # synthesis-example label (chemistry pattern)
     "對比例", "对比例",      # comparative-example label
     "實施例", "实施例",      # working-example label
-    "計算結果", "计算结果",  # "computation result" — typically narration
+    "計算結果", "计算结果",  # "computation result" - typically narration
     "結果呈現", "结果呈现",  # "result presentation"
-    "固體和", "固体和",      # "solid + ..." — narration
+    "固體和", "固体和",      # "solid + ..." - narration
     "PBS溶液", "DMSO溶液",   # chemistry reagent solutions
 })
 
 # Substring markers that flag a captured "noun" as a sentence fragment
 # rather than an element name. Drafter writes:
-#   "可以參考上述 S520" — refnum is a back-reference to a method step
-#   "執行上述 S510a" — same, action verb + back-ref
-#   "號可以通過功能擴充連接部 13" — sentence fragment with connector verb
+#   "可以參考上述 S520" - refnum is a back-reference to a method step
+#   "執行上述 S510a" - same, action verb + back-ref
+#   "號可以通過功能擴充連接部 13" - sentence fragment with connector verb
 # When these markers appear ANYWHERE in the post-strip residual, the
-# captured chunk is NOT identifying an element — drop the pair.
+# captured chunk is NOT identifying an element - drop the pair.
 #
 # Markers chosen for high specificity:
 #   上述/前述/後述/后述 = back-reference to prior text
@@ -1006,14 +1006,14 @@ _CN_NOISE_MULTI_CHAR = frozenset({
 #   可以 = modal aux verb
 #   執行/执行 = action verb in method-step contexts
 #   參考/参考 = reference verb
-#   所示 = "as shown" — figure reference
+#   所示 = "as shown" - figure reference
 #   用以/用於/用于 = purposive verb phrase
 #
 # The shorter markers (上述/前述/通過/可以) are unambiguous patent-spec
-# fragments — none of these substrings appear inside legitimate element
+# fragments - none of these substrings appear inside legitimate element
 # names in TIPO/CNIPA diction.
 _CN_FRAGMENT_MARKERS = (
-    # Back-reference language — "above-mentioned" / "aforementioned"
+    # Back-reference language - "above-mentioned" / "aforementioned"
     "上述", "前述", "後述", "后述",
     # Connector prepositions / aux verbs
     "通過", "通过",
@@ -1023,11 +1023,11 @@ _CN_FRAGMENT_MARKERS = (
     "所示", "如所",
     "用以", "用於", "用于",
     # === Walker-derived (tw_claims._F12_ADJ_REJECTS_TW + cn_claims
-    # _F12_ADJ_REJECTS_CN) — verbal phrases the walker rejects as
+    # _F12_ADJ_REJECTS_CN) - verbal phrases the walker rejects as
     # candidate head-noun. Same logic applies to D1: any post-strip
     # residual containing these is a sentence fragment, not a noun.
     # FULL Trad/Simp parity (Christopher's audit rule):
-    "進行", "进行",       # proceed / conduct — pure verbal in patent diction
+    "進行", "进行",       # proceed / conduct - pure verbal in patent diction
     "獲得", "获得",       # obtain
     "獲取", "获取",       # acquire
     "基於", "基于",       # based on
@@ -1040,14 +1040,14 @@ _CN_FRAGMENT_MARKERS = (
     "依據", "依据",       # in accordance with
 )
 
-# Mode-context phrase: "方式一下" / "方式二下" / "方式X下" — drafter
+# Mode-context phrase: "方式一下" / "方式二下" / "方式X下" - drafter
 # writes "in mode N: <action>", refnum follows 下 (under). The captured
 # chunk is contextual, not an element name. Match 方式 + CJK ordinal
 # (一/二/.../十) optionally followed by 下/中/裡.
 _CN_MODE_CONTEXT_RE = re.compile(r"方式[一二三四五六七八九十]+[下中裡里]?")
 
 
-# R67 (2026-05-08, issue #29) — interior-verb split.
+# R67 (2026-05-08, issue #29) - interior-verb split.
 #
 # Bug class: when a numeral is bound to a noun in patent-narrative
 # clause prose like `<adverb><verb-compound><noun>(numeral)`, the
@@ -1061,15 +1061,15 @@ _CN_MODE_CONTEXT_RE = re.compile(r"方式[一二三四五六七八九十]+[下�
 #
 # Same bug class manifests with any common patent-narrative verb in
 # the same shape. Per skill section 8 (DR-1 guard for question 1) the
-# extension below covers the whole bug class — connection / spatial /
+# extension below covers the whole bug class - connection / spatial /
 # form / containment / action verbs commonly preceding numeral-bound
-# elements in TIPO + CNIPA drafting — not just the literal four
+# elements in TIPO + CNIPA drafting - not just the literal four
 # observed.
 #
 # Conditional rule: split ONLY when the char immediately AFTER the
 # verb compound is NOT a noun-suffix. Real compound nouns containing
-# verb roots — `連接器` / `連接件` / `形成部` / `組織圖像形成部` /
-# `安裝座` / `對應點` / `容納腔` — attach the verb root as a morpheme
+# verb roots - `連接器` / `連接件` / `形成部` / `組織圖像形成部` /
+# `安裝座` / `對應點` / `容納腔` - attach the verb root as a morpheme
 # (verb + 器/件/部/座/點/腔 = noun). The noun-suffix preserve list
 # keeps those intact.
 #
@@ -1085,7 +1085,7 @@ _CN_INTERIOR_VERB_SPLIT_TARGETS: tuple[str, ...] = tuple(sorted(
         "形成",
         "設置", "设置",
         "設於", "设于",
-        # Connection family — extremely common in mechanical / electrical:
+        # Connection family - extremely common in mechanical / electrical:
         "接觸", "接触",
         "抵接",
         "樞接", "枢接",
@@ -1109,25 +1109,25 @@ _CN_INTERIOR_VERB_SPLIT_TARGETS: tuple[str, ...] = tuple(sorted(
         "包含",
         "包括",
         "具有",
-        # Signal-flow verbs added 2026-06-01 for issue #158 — drafter wrote
+        # Signal-flow verbs added 2026-06-01 for issue #158 - drafter wrote
         # `外部電路接收一斜波訊號RAMP1` and the element-name extractor
         # captured the entire 9-char clause. Splitting on 接收 takes the
         # right side `一斜波訊號`, which then strips `一` → clean `斜波訊號`.
-        # 輸出 (output) / 輸入 (input) added for symmetry — same shape
+        # 輸出 (output) / 輸入 (input) added for symmetry - same shape
         # (`<NP><verb><quantifier><actual-noun>`).
         "接收", "接收",
         "輸出", "输出",
         "輸入", "输入",
         "供應", "供应",
         # NOTE (2026-06-26): conduit/"via" verbs 透過/通過/是以 were trialed here
-        # for TW reports #284/#244 (`可透過電阻R3` → wanted `電阻`) but REVERTED —
+        # for TW reports #284/#244 (`可透過電阻R3` → wanted `電阻`) but REVERTED -
         # the refnum FN-guard (refnum_corpus_runner --juris TW) flagged 3 genuine
         # designator conflicts (`光耦合到光連接器` vs `透過光連接器` for one numeral):
         # the split is ASYMMETRIC (collapses the 透過-variant but not the 到-variant),
         # creating a NEW mismatch. The TW over-capture is instead ended FN-safely by
         # the 符號說明 declared-name anchoring in tw_specification (collapses ALL
         # containing-variants to the SAME declared element). A symmetric char-rule
-        # split would need 到/耦合 too — too broad to add without CJK gold.
+        # split would need 到/耦合 too - too broad to add without CJK gold.
     ),
     key=len,
     reverse=True,
@@ -1143,7 +1143,7 @@ _CN_NOUN_SUFFIX_PRESERVE: frozenset[str] = frozenset({
     "板", "孔", "槽", "面", "壁", "蓋", "盖", "圈",
     "環", "环", "套", "桿", "杆", "腔", "室",
     "殼", "壳", "架",
-    # Endpoint / locus suffixes (R67 expansion — connect/contact verbs
+    # Endpoint / locus suffixes (R67 expansion - connect/contact verbs
     # often produce <verb>+<endpoint> compound nouns: 接觸點 / 對應端 /
     # 抵接面 / 結合處 etc.)
     "端", "點", "点", "角", "邊", "边", "頭", "头",
@@ -1209,7 +1209,7 @@ def _cn_split_on_interior_conjunction(s: str) -> str:
 
 # Trailing verbs to strip from a captured noun before validation.
 # Mirrors tw_claims._TRAILING_VERB_DENYLIST + cn_claims
-# _TRAILING_VERB_DENYLIST_CN — verbs that can appear AT THE END of a
+# _TRAILING_VERB_DENYLIST_CN - verbs that can appear AT THE END of a
 # captured chunk because the regex pulled in the verb following the
 # noun head. Strip-then-check is safer than reject-the-whole-capture.
 # FULL Trad/Simp parity per Christopher's audit rule.
@@ -1235,7 +1235,7 @@ _CN_TRAILING_VERB_STRIP = (
 def _cn_strip_trailing_verb(s: str) -> str:
     """Strip trailing verbal fragment from a captured noun phrase.
 
-    Drafter writes "操作面進行 50" — captured "操作面進行" with 進行 as
+    Drafter writes "操作面進行 50" - captured "操作面進行" with 進行 as
     a trailing verb. Walker strips these via _TRAILING_VERB_DENYLIST;
     D1 mirrors the same logic. Loops until stable so chains like
     "X進行包含" peel layer-by-layer.
@@ -1270,15 +1270,15 @@ _CN_PROCESS_CONTEXT_TAILS = (
     "蒸馏", "蒸餾", "过滤", "過濾", "干燥", "乾燥", "混合",
     "包括", "包含", "构成", "構成",
     "对比例", "對比例",
-    # Measurement context — physical-property nouns (Simp + Trad)
+    # Measurement context - physical-property nouns (Simp + Trad)
     "厚度", "直径", "直徑", "长度", "長度", "宽度", "寬度",
     "高度", "深度", "重量", "质量", "質量",
     "波长", "波長", "频率", "頻率", "温度", "溫度",
     "压力", "壓力", "速度", "电压", "電壓", "电流", "電流", "功率",
     "时间", "時間", "次数", "次數",
-    # Chemistry continuation — connector words that creep into the tail
+    # Chemistry continuation - connector words that creep into the tail
     "并在", "並在", "并且", "並且", "与", "與", "及", "以及",
-    # Comparison operators / threshold language — strong measurement
+    # Comparison operators / threshold language - strong measurement
     # signal. "玻璃轉移溫度大於或等於 230" / "壓力小於 50" / etc.
     "大於", "大于", "小於", "小于", "等於", "等于",
     "大於或等於", "大于或等于", "小於或等於", "小于或等于",
@@ -1290,7 +1290,7 @@ _CN_PROCESS_CONTEXT_TAILS = (
     "高於", "高于", "低於", "低于",
     "超過", "超过", "達到", "达到",
     "範圍為", "范围为", "範圍是", "范围是",
-    # CJK measurement units — when captured as the tail, the numeral is
+    # CJK measurement units - when captured as the tail, the numeral is
     # almost certainly a measurement (10毫米 / 50微米 / 200克 / etc.).
     # Range form `毫米至` / `公分至` also caught. Full Trad/Simp parity.
     # Length
@@ -1344,7 +1344,7 @@ _CN_PROCESS_CONTEXT_TOKENS = (
     # reference numerals
     "重量份至", "重量份",
 )
-# Chemistry compound suffixes — captured names ending in these are
+# Chemistry compound suffixes - captured names ending in these are
 # almost certainly chemicals listed by weight/concentration in
 # chemistry/biology patents, not reference numerals to physical
 # elements. Empirically tuned against CN120266060A / CN117427144B.
@@ -1353,7 +1353,7 @@ _CN_CHEMISTRY_SUFFIXES = (
     "烷", "烃", "糖", "苷", "蛋白", "肽", "酶",
     "氢", "氧化物", "化合物", "树脂", "聚合物",
     "腈", "醛", "酐", "肼",  # additional chemistry suffixes
-    # Common chemical-element radicals — captured noun ending in these
+    # Common chemical-element radicals - captured noun ending in these
     # is usually a chemical compound mention, not a reference numeral
     "钠", "钾", "钙", "镁", "铁", "铝", "铜", "锌", "锂",
 )
@@ -1378,8 +1378,8 @@ def _cn_is_measurement_context(name: str) -> bool:
 #
 # Curated EXPLICITLY (not derived from `_CN_PROCESS_CONTEXT_TAILS`, which is
 # a broad process/connector set that also holds conjunctions like `以及` and
-# process phrases like `冷却至`/`高度` — those would FN-drop real refnums,
-# e.g. `服务器120以及…`). Multi-char measurement units ONLY — single-char
+# process phrases like `冷却至`/`高度` - those would FN-drop real refnums,
+# e.g. `服务器120以及…`). Multi-char measurement units ONLY - single-char
 # units (克/升/度/天/年/秒/倍) and single-char-base range forms (克至/升至)
 # are excluded because they collide with noun/verb starts (升起 rise, 克服
 # overcome, 度過 spend, 天線 antenna).
@@ -1419,9 +1419,9 @@ _CN_TAIL_MEASUREMENT_UNITS: tuple[str, ...] = tuple(sorted({
 }, key=len, reverse=True))
 
 
-# Single-char 度 (degree — angle/temperature) is a measurement unit, but the
+# Single-char 度 (degree - angle/temperature) is a measurement unit, but the
 # unit set above is deliberately multi-char to avoid single-char collisions.
-# 度 needs special handling: `90度` (90 degrees, #312/#313 — captured as a
+# 度 needs special handling: `90度` (90 degrees, #312/#313 - captured as a
 # phantom refnum 90 with names 轉動/大致) IS a measurement, but 度 also starts
 # non-unit compounds where it is NOT a unit. Treat digit+度 as a measurement
 # UNLESS 度 is immediately followed by one of these compound-formers.
@@ -1459,7 +1459,7 @@ _CN_INTERIOR_VERB_MARKERS = (
 def _cn_strip_interior_verb(s: str) -> str:
     """Cut on the LATEST interior verb-marker in a captured noun phrase.
 
-    Drafter writes "號可以通過功能擴充連接部 13" / "可以參考上述 S520" — the
+    Drafter writes "號可以通過功能擴充連接部 13" / "可以參考上述 S520" - the
     regex captures everything before the refnum, including the verbal
     predicate. The HEAD noun is what follows the LATEST verb marker
     (because the marker introduces an action/relationship leading to
@@ -1490,7 +1490,7 @@ def _cn_strip_post_de(s: str) -> str:
     """Strip the modifier-clause prefix from a captured noun phrase.
 
     Drafter writes "查詢得到的預覽影像N" / "標示的多個主題標籤連結N" /
-    "電池的供電裝置N" / "終端各種使用者裝置N" — the regex captures the
+    "電池的供電裝置N" / "終端各種使用者裝置N" - the regex captures the
     whole CJK run before the refnum, including a modifier marker
     (的/之) or interior quantifier (多個/各種/複數). The HEAD noun is
     the suffix after the LAST marker; everything before is a
@@ -1500,7 +1500,7 @@ def _cn_strip_post_de(s: str) -> str:
     Cuts on the LATEST occurrence of:
       - 的 / 之 (modifier markers)
       - any quantifier in _CN_LEADING_QUANTIFIERS that is ≥ 2 chars
-        (各種 / 多個 / 複數 / etc.) — these never appear inside a real
+        (各種 / 多個 / 複數 / etc.) - these never appear inside a real
         noun head, so taking their suffix is safe.
     Loops until stable so chains like "X的Y各種Z" peel layer-by-layer.
     """
@@ -1562,7 +1562,7 @@ def _cn_strip_iterative(s: str, allow_ordinal_break: bool = False) -> str:
                 s = s[len(q):]
                 break
         # Bare leading classifier 條/条 ONLY when immediately followed by a
-        # reference prefix (條所述X / 条所述X, #244) — safe because the noun
+        # reference prefix (條所述X / 条所述X, #244) - safe because the noun
         # heads 條碼/條紋/條狀 (bar-code/stripe/strip-shaped) are never
         # followed by 所述/該/前述. Bounded to the ref-prefix case so we
         # never FN-drop a genuine 條-initial element name.
@@ -1587,9 +1587,9 @@ def _cn_d1_head_noun(raw: str) -> str:
     s = _cn_strip_iterative(s, allow_ordinal_break=False)
     s = _cn_strip_post_de(s)
     s = _cn_strip_trailing_verb(s)
-    # R67 (2026-05-08, issue #29) — see `_cn_split_on_interior_verb`.
+    # R67 (2026-05-08, issue #29) - see `_cn_split_on_interior_verb`.
     s = _cn_split_on_interior_verb(s)
-    # 2026-06-01 — issue #158: `<NP_A>與<NP_B>` co-comparison conjunction.
+    # 2026-06-01 - issue #158: `<NP_A>與<NP_B>` co-comparison conjunction.
     # Walker captures the whole left context before a Latin numeral
     # (`誤差放大訊號與斜波訊號RAMP1`); split on the last 與/和/及 keeps
     # the actual numeral-bound element (`斜波訊號`).
@@ -1606,7 +1606,7 @@ def _cn_d1_head_noun(raw: str) -> str:
     if s in _CN_NOISE_MULTI_CHAR:
         return ""
     # Short tail-anchored figure-reference noise: "至圖" / "和圖" / "由圖" /
-    # "如圖" / "在圖" / "從圖" / "及圖" / "顯示圖" — drafter writes
+    # "如圖" / "在圖" / "從圖" / "及圖" / "顯示圖" - drafter writes
     # "...至圖11" / "如圖10所示" and the regex slurps the connector.
     # Trad+Simp 圖/图. Cap at 4 chars to avoid hitting real nouns like
     # "示意圖" (schematic) or "結構圖" (structural diagram) that may be
@@ -1614,16 +1614,16 @@ def _cn_d1_head_noun(raw: str) -> str:
     # Tail-anchored 圖/图 always rejects: any noun ending in 圖/图 is a
     # figure reference ("示意圖10" / "說明例如圖10" / "用于执行图3"), not an
     # element bound to a refnum. Drafter convention is "...圖N所示" / "如
-    # 圖N" / "見圖N" — refnum identifies the figure, not the noun.
+    # 圖N" / "見圖N" - refnum identifies the figure, not the noun.
     if s.endswith("圖") or s.endswith("图"):
         return ""
-    # Sentence-fragment rejection — see _CN_FRAGMENT_MARKERS docs.
+    # Sentence-fragment rejection - see _CN_FRAGMENT_MARKERS docs.
     if any(marker in s for marker in _CN_FRAGMENT_MARKERS):
         return ""
     return s
 
 
-# CJK ordinals — used for instance-collision detection (D1 case A).
+# CJK ordinals - used for instance-collision detection (D1 case A).
 _CN_ORDINAL_HEADS = ("第一", "第二", "第三", "第四", "第五", "第六",
                      "第七", "第八", "第九", "第十")
 
@@ -1640,13 +1640,13 @@ def _cn_extract_ordinal(name: str) -> tuple[str, str]:
 
 def _cn_extract_numeral_name_pairs(text: str) -> list[tuple[str, str]]:
     """Return per-occurrence (numeral_str, ordinal-keyed head_noun)
-    pairs from CN spec text. Numerals are STRINGS — supports both
+    pairs from CN spec text. Numerals are STRINGS - supports both
     digit-only ("100") and Latin-prefix ("CPU1", "R3") designators.
     """
     pairs: list[tuple[str, str]] = []
     seen_spans: set[tuple[int, int]] = set()
 
-    # Range pattern first — claims its span so the AFTER_NOUN pattern
+    # Range pattern first - claims its span so the AFTER_NOUN pattern
     # doesn't double-count the start/end refnums.
     for m in _CN_REFNUM_RANGE.finditer(text):
         span = (m.start(), m.end())
@@ -1753,11 +1753,11 @@ def _cn_extract_numeral_name_pairs(text: str) -> list[tuple[str, str]]:
 # Multi-char verbs that lead a captured noun phrase. "包括一基座" should
 # strip to "基座" so we don't think "包括一基座" is a distinct element name.
 # Both Trad + Simp variants. Empirically tuned against
-# tests/test_integration.py::TestTwInventionAllPass — invention_complete
+# tests/test_integration.py::TestTwInventionAllPass - invention_complete
 # fixture has "包括一基座" as a captured 包括-led noun phrase that needs
 # stripping to find the real head "基座".
 _CN_LEADING_MULTI_CHAR_VERBS_STRICT = (
-    # Verbs that are unambiguously verbal in patent diction — strip
+    # Verbs that are unambiguously verbal in patent diction - strip
     # whenever they lead a captured noun, regardless of residual length.
     # Inclusion / possession verbs (the most common D1-noise leaders)
     "包括", "包含", "含有",
@@ -1795,7 +1795,7 @@ _CN_LEADING_MULTI_CHAR_VERBS_GUARDED = (
     "結構", "结构", "磁性", "光學", "光学", "熱性", "热性",
 )
 
-# Backward-compat alias — the iterative stripper now consults two lists.
+# Backward-compat alias - the iterative stripper now consults two lists.
 _CN_LEADING_MULTI_CHAR_VERBS = (
     _CN_LEADING_MULTI_CHAR_VERBS_STRICT
     + _CN_LEADING_MULTI_CHAR_VERBS_GUARDED
@@ -1820,9 +1820,9 @@ def _cn_d1_head_noun_with_ordinal(raw: str) -> str:
     # Trailing-verb strip: "操作面進行" → "操作面". Mirrors walker
     # _TRAILING_VERB_DENYLIST logic.
     s = _cn_strip_trailing_verb(s)
-    # R67 (2026-05-08, issue #29) — see `_cn_split_on_interior_verb`.
+    # R67 (2026-05-08, issue #29) - see `_cn_split_on_interior_verb`.
     s = _cn_split_on_interior_verb(s)
-    # Issue #242: parity with `_cn_d1_head_noun` — the `<NP_A>與<NP_B>`
+    # Issue #242: parity with `_cn_d1_head_noun` - the `<NP_A>與<NP_B>`
     # conjunction split (#158) was wired into the non-ordinal head-noun
     # helper but NOT this ordinal-keyed one, so `係亦可為與步驟S50` kept the
     # `係亦可為與步驟` clause instead of cutting to `步驟` (then dropped as a
@@ -1842,16 +1842,16 @@ def _cn_d1_head_noun_with_ordinal(raw: str) -> str:
     # Tail-anchored 圖/图 always rejects: any noun ending in 圖/图 is a
     # figure reference ("示意圖10" / "說明例如圖10" / "用于执行图3"), not an
     # element bound to a refnum. Drafter convention is "...圖N所示" / "如
-    # 圖N" / "見圖N" — refnum identifies the figure, not the noun.
+    # 圖N" / "見圖N" - refnum identifies the figure, not the noun.
     if s.endswith("圖") or s.endswith("图"):
         return ""
-    # Sentence-fragment rejection: "執行上述", "可以參考上述", "通過X" —
+    # Sentence-fragment rejection: "執行上述", "可以參考上述", "通過X" -
     # presence of any back-reference marker / connector verb in the
     # residual means the captured chunk is a verbal predicate, not an
     # element name. Drop the pair entirely.
     if any(marker in s for marker in _CN_FRAGMENT_MARKERS):
         return ""
-    # Mode-context phrases: "方式一下" / "方式二下" — refnum is bound to
+    # Mode-context phrases: "方式一下" / "方式二下" - refnum is bound to
     # the action under that mode, not to "方式".
     if _CN_MODE_CONTEXT_RE.search(s):
         return ""
@@ -1874,7 +1874,7 @@ def _cn_split_ordinal_key(keyed: str) -> tuple[str, str]:
 
 def _cn_is_parent_name_bleed(num: str, outlier_name: str, dom_name: dict[str, str]) -> bool:
     """True when ``outlier_name`` is the dominant name of a PARENT numeral whose
-    Latin-prefix designator is a strict prefix of ``num`` — i.e. a parent
+    Latin-prefix designator is a strict prefix of ``num`` - i.e. a parent
     element's name bled onto a hierarchical sub-element (外端蓋 E714 → 外穿孔 E7141).
 
     Restricted to Latin-prefix children (``num`` starts with a letter): for these,
@@ -1902,10 +1902,10 @@ def _cn_prune_fn_safe_outliers(outlier_records: list[dict], canonical_name: str)
     Validated against the LLM D1 gold set (2026-06-25, tests/eval/d1_prune_eval.py)
     with ZERO genuine catches hidden across the CN (36) + TW (32) gold real_d1.
     A SINGLE-occurrence outlier is dropped when it is either (a) an ordinal
-    variant of the canonical (same base noun, different ordinal — a '第一X'/'第二X'
+    variant of the canonical (same base noun, different ordinal - a '第一X'/'第二X'
     tokenization bleed) or (b) a substring/superstring of the canonical base
     (a fragment capture). The higher-yield mis-attribution rule was REJECTED by
-    the same gold (it hid 81% of genuine TW typos — a real cross-numeral typo is
+    the same gold (it hid 81% of genuine TW typos - a real cross-numeral typo is
     structurally identical to a bleed)."""
     def _norm(keyed: str) -> str:
         return _cn_split_ordinal_key(keyed)[1].replace(" ", "")
@@ -1934,9 +1934,9 @@ def _cn_format_d1_name_for_display(keyed: str) -> str:
 def _cn_names_form_real_d1_conflict(names: list[str]) -> bool:
     """A list of (ordinal-keyed) names is a real D1 conflict if EITHER:
     (A) the same head noun appears with TWO OR MORE distinct CJK
-        ordinals (第一/第二/etc.) — same element type, different
+        ordinals (第一/第二/etc.) - same element type, different
         instance: drafter assigned same numeral to two distinct ones, OR
-    (B) two head nouns share NO CJK char — truly different elements
+    (B) two head nouns share NO CJK char - truly different elements
         sharing one numeral.
     """
     if len(names) < 2:
@@ -1972,10 +1972,10 @@ def _cn_names_form_real_d1_conflict(names: list[str]) -> bool:
 
 
 def check_numeral_consistency_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
-    """D1 — flag reference numerals appearing with multiple disjoint
+    """D1 - flag reference numerals appearing with multiple disjoint
     element names in CN specifications.
 
-    Statutory: 专利法实施细则 §21 第2款 + 审查指南 §3.3.1 —
+    Statutory: 专利法实施细则 §21 第2款 + 审查指南 §3.3.1 -
     同一附图标记应当指代同一构件.
 
     Same precision filters as US D1: ≥3 total occurrences, ≥2 per name,
@@ -2009,7 +2009,7 @@ def check_numeral_consistency_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
             reference="专利法实施细则 §21 第2款",
         )]
 
-    # ADVISORY re-tier (2026-06-25) — reference-numeral D1 is ~87% FP on real
+    # ADVISORY re-tier (2026-06-25) - reference-numeral D1 is ~87% FP on real
     # drafts with a semantic FP/real split (mis-attribution / synonym / ordinal
     # variant); emit a single ADVISORY "verify" item (zero grade via
     # ADVISORY_REVIEW_KEYS), mirroring §112 (#314). Nothing hidden → FN-safe.
@@ -2104,7 +2104,7 @@ def _build_cn_d1_check_item(
 
 # ── CN D1 detection core (canonical + outliers) ─────────────────────────
 #
-# Mirrors the US redesign in specification.py — see _detect_d1_conflicts
+# Mirrors the US redesign in specification.py - see _detect_d1_conflicts
 # there for full rationale.
 
 def _cn_is_latin_prefix(num: str) -> bool:
@@ -2145,7 +2145,7 @@ def _cn_merge_suffix_clusters(name_counts: "Counter[str]") -> "Counter[str]":
                 continue
             si, sj = surfaces[i], surfaces[j]
             if len(sj) >= 2 and si.endswith(sj):
-                # i's surface ends with j's — same noun, j is shorter root
+                # i's surface ends with j's - same noun, j is shorter root
                 union(i, j)
 
     # Pick cluster rep = MOST FREQUENT (not shortest). Earlier the
@@ -2194,7 +2194,7 @@ def _cn_detect_d1_conflicts(pairs: list[tuple[str, str]]) -> list[dict]:
     for num in list(by_num_counts.keys()):
         by_num_counts[num] = _cn_merge_suffix_clusters(by_num_counts[num])
 
-    # Dominant name per numeral — used for parent-child prefix-bleed suppression
+    # Dominant name per numeral - used for parent-child prefix-bleed suppression
     # (a sub-element's hierarchical designator E7141 is a child of E714; the
     # parent's name bleeding onto the child once is a part-whole reference, not a
     # naming conflict). See _cn_is_parent_name_bleed.
@@ -2231,15 +2231,15 @@ def _cn_detect_d1_conflicts(pairs: list[tuple[str, str]]) -> list[dict]:
         # Method-step labels (步骤/步驟 + designator, e.g. S7071/S8051) are
         # 专利法实施细则 §17 / 專利法施行細則 §17 process steps, NOT §19/§22
         # element reference symbols. The captured "name" is a verb-clause
-        # ending in 步骤/步驟 (可透過步驟 / 分別對步驟) — a step reference,
+        # ending in 步骤/步驟 (可透過步驟 / 分別對步驟) - a step reference,
         # never an element-symbol naming conflict. Skip the whole numeral
         # when its canonical name is a step reference. FN-safe: a drawing
         # element symbol's name never ends in 步骤/步驟. (TW report #284;
-        # CN parity free — shared detector.)
+        # CN parity free - shared detector.)
         if canonical_head.endswith(("步骤", "步驟")):
             continue
         canonical_chars = _cn_content_chars(canonical_head)
-        # Surface-form canonical (ordinal+head joined, no pipe encoding) —
+        # Surface-form canonical (ordinal+head joined, no pipe encoding) -
         # used for tail-anchor suppression of strip-residue outliers.
         canonical_surface = (canonical_ord or "") + canonical_head
 
@@ -2250,8 +2250,8 @@ def _cn_detect_d1_conflicts(pairs: list[tuple[str, str]]) -> list[dict]:
                 continue
             # Parent-child prefix bleed: a single-occurrence outlier that is the
             # dominant name of a numeral whose Latin-prefix designator is a
-            # strict prefix (parent) of this one — e.g. 外端蓋(E714) captured once
-            # on its sub-element 外穿孔(E7141) — is a part-whole hierarchical
+            # strict prefix (parent) of this one - e.g. 外端蓋(E714) captured once
+            # on its sub-element 外穿孔(E7141) - is a part-whole hierarchical
             # reference, not a naming conflict. Restricted to Latin-prefix
             # children so pure-digit neighbours (10 vs 100) are never treated as
             # parent/child. FN-safe: gold-audited, drops no genuine catch.
@@ -2313,9 +2313,9 @@ def _cn_detect_d1_conflicts(pairs: list[tuple[str, str]]) -> list[dict]:
 
         if outlier_records:
             # Confidence tier per outlier (mirrors US logic):
-            #   "fix"    — high-confidence drafter typo
-            #   "review" — 1× outlier with zero shared chars against a
-            #              strong canonical (≥10×) — likely sentence-
+            #   "fix"    - high-confidence drafter typo
+            #   "review" - 1× outlier with zero shared chars against a
+            #              strong canonical (≥10×) - likely sentence-
             #              fragment over-capture, but could be real D1.
             for o in outlier_records:
                 _, o_head = _cn_split_ordinal_key(o["name"])

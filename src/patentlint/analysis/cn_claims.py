@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """CN claims analysis checks.
 
 Twelve pure functions checking Chinese patent claim formatting
@@ -98,7 +98,7 @@ def check_claims_sequential(cn_doc: CnPatentDocument) -> list[CheckItem]:
 # CNIPA-standard is 所述 (per 专利法实施细则 §25 + CNIPA drafting examples).
 # JP-translation variants 所记载/所揭示/所描述 surface in CN patents translated
 # from Japanese originals; parse them tolerantly rather than flag them.
-# The trailing 的 is optional — CN drafters sometimes write 所述X (without 的)
+# The trailing 的 is optional - CN drafters sometimes write 所述X (without 的)
 # when X starts with a measure word or complex noun phrase.
 _CN_DEP_CONNECTIVE = r"所(?:述|记载|揭示|描述)的?"
 
@@ -110,14 +110,14 @@ _CN_DEP_CONNECTIVE = r"所(?:述|记载|揭示|描述)的?"
 # structure is: 权利要求 + digit + ... + 所述.
 _DEP_FORMAT_SINGLE = re.compile(r"权利要求\s*\d+[\s\S]*?" + _CN_DEP_CONNECTIVE)
 
-# Multi-dep alternative-reference forms (per 专利法实施细则 §25 第3款 —
+# Multi-dep alternative-reference forms (per 专利法实施细则 §25 第3款 -
 # multi-dep claims must use 择一方式 / alternative reference):
-#   (a) `权利要求1或2所述的` — 或 alternative
-#   (b) `权利要求1、2或3所述的` — 、 + 或 alternative
-#   (c) `权利要求1至3中任一项所述的` — range + 中任一项
-#   (d) `权利要求1至3任一项所述的` — range + 任一项 (no 中)
-#   (e) `权利要求10至12中任意一项所述的` — range + 中任意一项
-#   (f) `权利要求1-3任一项所述的` / `1~3` / `1‑5` (U+2010–U+2015 dashes)
+#   (a) `权利要求1或2所述的` - 或 alternative
+#   (b) `权利要求1、2或3所述的` - 、 + 或 alternative
+#   (c) `权利要求1至3中任一项所述的` - range + 中任一项
+#   (d) `权利要求1至3任一项所述的` - range + 任一项 (no 中)
+#   (e) `权利要求10至12中任意一项所述的` - range + 中任意一项
+#   (f) `权利要求1-3任一项所述的` / `1~3` / `1‑5` (U+2010-U+2015 dashes)
 # At least one alternative-reference marker (range-form OR or-form) is required.
 _CN_RANGE_SEPARATOR = r"(?:~|至|到|[‐-―\-])"
 _CN_ANY_ITEM_QUANTIFIER = r"任\s*(?:意\s*)?(?:一|何)?\s*项"
@@ -192,10 +192,10 @@ def check_dependency_format(cn_doc: CnPatentDocument) -> list[CheckItem]:
 # CONSERVATIVE list (2026-06-25, corpus-frequency-audited). Mirror of the US
 # § 2173.05(b)/(d) check at CJK-appropriate precision. Only the LOW-frequency,
 # high-confidence exemplary (例如/诸如) + preferential (较佳/优选) terms are
-# flagged. 等 and 约 are DELIBERATELY EXCLUDED — the real-corpus probe showed
+# flagged. 等 and 约 are DELIBERATELY EXCLUDED - the real-corpus probe showed
 # 等 in 16% of CN drafts (often legitimate: 等于/同等/等级/等等) and 约 in 12%
 # (measurement tolerances, definite when the spec supplies a standard), so
-# flagging them would be noise, not coverage. REVIEW tier — definiteness is
+# flagging them would be noise, not coverage. REVIEW tier - definiteness is
 # examiner-judgment-in-context, so the matched word is a flag, not a verdict.
 _INDEFINITE_WORDING_CN_RE = re.compile(r"例如|诸如|较佳|优选")
 
@@ -266,7 +266,7 @@ def check_excess_claims_count_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
     return [CheckItem(
         status="verify",
         message=(
-            f"权利要求总数 {total} 项，超过 CNIPA 之 10 项免费阈值 —— "
+            f"权利要求总数 {total} 项，超过 CNIPA 之 10 项免费阈值 -- "
             f"自第 11 项起每项加收超项费。请对照当前 CNIPA 收费办法核实规费。"
         ),
         message_key="check.cn.claims.excessClaims.verify",
@@ -310,7 +310,7 @@ def check_self_dependent(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
 
 # Strip the ``N. `` / ``N．`` / ``N、`` claim-number prefix before checking
-# preamble. Mirror of ``parser/claims_cn.py::_CN_CLAIM_NUM`` — keep the
+# preamble. Mirror of ``parser/claims_cn.py::_CN_CLAIM_NUM`` - keep the
 # terminator class in sync.
 _CN_CLAIM_NUM_PREFIX = re.compile(r"^[\s　]*\d+\s*[.．。、]\s*")
 
@@ -322,7 +322,7 @@ def check_independent_preamble(cn_doc: CnPatentDocument) -> list[CheckItem]:
     form in its examples, and CNIPA practitioner convention follows this.
     Note: 专利法实施细则 §24 (independent claim format) requires the
     preamble to state the 主题名称 (subject-matter name) but does NOT
-    literally mandate 一种 — other preambles that still name the
+    literally mandate 一种 - other preambles that still name the
     subject matter may satisfy the statute.
     Status is therefore VERIFY (advisory), not FIX.
 
@@ -509,7 +509,7 @@ _BARE_LATIN_REF = re.compile(
 
 
 def _ref_numeral_finding_diag_cn(cid: int, claims: list) -> dict:
-    """CN parallel of _ref_numeral_finding_diag_tw — adds context_after
+    """CN parallel of _ref_numeral_finding_diag_tw - adds context_after
     for self-diagnosing reports per R-refnum-1.
     """
     text = next((c.text for c in claims if c.id == cid), "") or ""
@@ -575,7 +575,7 @@ _LEADING_QUANTIFIER = re.compile(r"^(?:一种|一个|该|所述|所述的)\s*")
 # body-text 所述的 inside independent claims from hijacking extraction.
 # Trailing connective accepts 所(述|记载|揭示|描述)[的] + bare 的 (older form
 # 权利要求N的X). JP-translated CN patents keep 所记载 even though CNIPA-standard
-# is 所述 — parse the dep preamble tolerantly so subject extraction succeeds.
+# is 所述 - parse the dep preamble tolerantly so subject extraction succeeds.
 _DEP_PREAMBLE_CONNECTIVE_CN = r"(?:所(?:述|记载|揭示|描述)的?|的)?"
 _DEP_PREFIX_RE_CN = re.compile(
     # TW #328 parity (subject-extractor must agree with the dep parser): add
@@ -583,7 +583,7 @@ _DEP_PREFIX_RE_CN = re.compile(
     # `权利要求N所述的…` form routes to dep_prefix instead of a spurious
     # subjectConsistency parseUnclear. Advisory-tier check; the structural
     # 权利要求N + connective preamble is still required, so FN-safe. (The wider
-    # 按照 / 依照 / 基于 openers stay unrecognized here — no CN report, and one
+    # 按照 / 依照 / 基于 openers stay unrecognized here - no CN report, and one
     # is an intentional parseUnclear test fixture; add on report per DR-1.)
     r"^(?:如|根据|依据|依)?权利要求\s*\d+"
     r"(?:\s*(?:~|至|到)\s*\d+)?"
@@ -601,10 +601,10 @@ def _extract_subject_with_path(claim_text: str) -> tuple[str, str]:
     """Extract subject matter + provenance tag (CN mirror of TW helper).
 
     Returns (subject_text, extraction_path) where path is one of:
-      - ``"dep_prefix"``    — matched `_DEP_PREFIX_RE_CN`
-      - ``"indep_prefix"``  — matched `_INDEP_PREFIX_RE_CN`
-      - ``"subject_re"``    — legacy body-scan `所述的` match path
-      - ``"fallthrough"``   — no recognized preamble, returned raw text
+      - ``"dep_prefix"``    - matched `_DEP_PREFIX_RE_CN`
+      - ``"indep_prefix"``  - matched `_INDEP_PREFIX_RE_CN`
+      - ``"subject_re"``    - legacy body-scan `所述的` match path
+      - ``"fallthrough"``   - no recognized preamble, returned raw text
 
     Subject-consistency callers use the path to split genuine mismatches
     from parse-limit fall-throughs (see ADR-145).
@@ -637,7 +637,7 @@ def _extract_subject_with_path(claim_text: str) -> tuple[str, str]:
 
 
 def _extract_subject(claim_text: str) -> str:
-    """Back-compat wrapper — returns just the subject text."""
+    """Back-compat wrapper - returns just the subject text."""
     subject, _path = _extract_subject_with_path(claim_text)
     return subject
 
@@ -687,7 +687,7 @@ def check_subject_name_consistency(cn_doc: CnPatentDocument) -> list[CheckItem]:
         dep_subject = _normalize_subject(dep_raw)
         parent_subject = _normalize_subject(parent_raw)
 
-        # Parse-limit category — preamble didn't match a recognized shape.
+        # Parse-limit category - preamble didn't match a recognized shape.
         # ADR-145: emit parseUnclear instead of verify, so bug reports can
         # distinguish walker gaps from drafter-level mismatches.
         if dep_path == "fallthrough" or parent_path == "fallthrough":
@@ -735,7 +735,7 @@ def check_subject_name_consistency(cn_doc: CnPatentDocument) -> list[CheckItem]:
         claims_str = ", ".join(str(i) for i in unclear_ids)
         results.append(CheckItem(
             status="verify",
-            message=f"{len(unclear_ids)} dependent claim(s) with an unrecognized preamble — couldn't verify subject consistency (claims: {claims_str}).",
+            message=f"{len(unclear_ids)} dependent claim(s) with an unrecognized preamble - couldn't verify subject consistency (claims: {claims_str}).",
             message_key="check.cn.claims.subjectConsistencyParseUnclear.verify",
             details=f"{len(unclear_ids)} claims",
             details_key="details.cn.subjectConsistencyParseUnclear",
@@ -986,7 +986,7 @@ def check_dependent_ordering(cn_doc: CnPatentDocument) -> list[CheckItem]:
             reference="审查指南 第二部分第二章",
         )]
 
-    # For each independent claim, find the "group boundary" — the position
+    # For each independent claim, find the "group boundary" - the position
     # of the next independent claim. Any dependent that references the
     # earlier independent but appears after the next independent is out of order.
     claims_by_id = {c.id: c for c in claims}
@@ -1063,7 +1063,7 @@ def check_connection_relationships_cn(cn_doc: CnPatentDocument) -> list[CheckIte
 
 # Mirrors US ``_OMNIBUS_LANG``; CN-practitioner phrasings that reference
 # the description or drawings instead of reciting features. 审查指南
-# 第二部分第二章 §3.3 — claims must recite technical features, not
+# 第二部分第二章 §3.3 - claims must recite technical features, not
 # reference the specification.
 _OMNIBUS_LANG_CN = re.compile(
     r"如说明书(?:及附图)?(?:所述|所描述|所记载)"
@@ -1092,7 +1092,7 @@ def detect_omnibus_claims_cn(cn_doc: CnPatentDocument) -> list[int]:
 
 
 def check_omnibus_claims(cn_doc: CnPatentDocument) -> list[CheckItem]:
-    """Emit CheckItem for CN omnibus claims (FIX) — 审查指南 §3.3."""
+    """Emit CheckItem for CN omnibus claims (FIX) - 审查指南 §3.3."""
     ids = detect_omnibus_claims_cn(cn_doc)
     if ids:
         claims_str = ", ".join(str(i) for i in ids)
@@ -1124,7 +1124,7 @@ def check_omnibus_claims(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
 # ── Check 23 (Markush group open transition) ─────────────────────────────
 
-# CNIPA 审查指南 第二部分第十章 §9.3 — a Markush claim must use the closed
+# CNIPA 审查指南 第二部分第十章 §9.3 - a Markush claim must use the closed
 # transition 组成的 (e.g. 选自由...所组成的群组 / 选自由X、Y、Z组成的群组).
 # Open-ended variants (包括/具有/含有) are suspect.
 _MARKUSH_OPEN_CN = re.compile(
@@ -1149,7 +1149,7 @@ def check_markush_open_transition(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
     Improper Markush is a substantive rejection per 审查指南 第二部分第十章
     §9.3 (Markush requires 选自由...组成的 closed group), not a formal
-    correction — open transition triggers an examiner rejection on the
+    correction - open transition triggers an examiner rejection on the
     merits.
     """
     pairs = detect_markush_open_transition_cn(cn_doc)
@@ -1196,7 +1196,7 @@ def check_markush_open_transition(cn_doc: CnPatentDocument) -> list[CheckItem]:
 # qualifier may be read to cover transitory signals (carrier waves),
 # which fall outside patentable subject matter. CN drafters commonly
 # write 计算机可读介质 (介质 is CNIPA standard; 媒体 is rarer but
-# accepted) — both forms covered. Independent claims only — dep
+# accepted) - both forms covered. Independent claims only - dep
 # claims inherit medium type from the parent.
 
 _CRM_MEDIUM_CN = re.compile(
@@ -1250,19 +1250,19 @@ def check_crm_non_transitory_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
 
 
 # ─────────────────────────────────────────────────────────────────────────
-# Phase 8c Stage 2 — CN antecedent-basis BFS walker
+# Phase 8c Stage 2 - CN antecedent-basis BFS walker
 # ─────────────────────────────────────────────────────────────────────────
 #
-# Mechanical port of the TW walker (tw_claims.py lines 771–2390) with
+# Mechanical port of the TW walker (tw_claims.py lines 771-2390) with
 # TC→SC character swap per v2 swap table. Historical tuning rationale
 # lives in tw_claims.py; see ADR-095/096/097/098/099/100/101 for the
 # invariants preserved here. Phase 8c audit-locked divergences:
 #
 #   Q1: 该等 strict-rejected (tw_contamination finding category). The
-#       SC reference-prefix tuples omit 该等/该些 entirely — see Step 1
+#       SC reference-prefix tuples omit 该等/该些 entirely - see Step 1
 #       exception 4 of the Stage 2 port prompt.
 #   Q2: 朝向 retained in _INTERIOR_VERB_BOUNDARIES_CN (carried over by
-#       construction — already in TW set at tw_claims.py line 1319).
+#       construction - already in TW set at tw_claims.py line 1319).
 #   Q3: tuple dedup (normalized_term, normalized_reference_form) from
 #       day 1 (ADR-107). TW uses single-key; parity migration is a
 #       Phase 9 follow-up.
@@ -1274,7 +1274,7 @@ def check_crm_non_transitory_cn(cn_doc: CnPatentDocument) -> list[CheckItem]:
 # ── Walker normalization constants ───────────────────────────────────────
 
 # Noun exclusion class (mechanical TC→SC swap per v2 § 4).
-# R67 (2026-05-05) sweep: added 由 — relational verb ("composed of"); not
+# R67 (2026-05-05) sweep: added 由 - relational verb ("composed of"); not
 # a noun-internal char in patent claim diction. Empirical attestation:
 # CN112271269B c10 over-captured `交联网状结构由可交联配体` because regex
 # spanned 由. Compound nouns containing 由 (缘由/自由/由来/理由) are
@@ -1292,7 +1292,7 @@ _PAREN_NUM_TRAIL_RE_CN = re.compile(r"[(（][0-9A-Za-z]{1,5}$")
 # but cuts compound nouns (功能/性能/智能/换能器/官能基) mid-word. See
 # tw_claims.py R68d comment for full rationale + precursor whitelist.
 # CN-side mining (supplement_v2): 52 CN walker_fp where context_after
-# starts at 能 — confirms the over-cut class.
+# starts at 能 - confirms the over-cut class.
 _NENG_PRECURSORS_CN = (
     "功", "性", "效", "智", "动", "机", "官",
     "才", "本", "势", "万", "全", "异", "燃", "换",
@@ -1308,7 +1308,7 @@ def _extend_neng_compound_cn(
     """Mirror of _extend_neng_compound_tw with Simplified precursors.
 
     能量 / 能源 follow-gate (parity mirror of TW issue #75): 能 followed
-    by 量 or 源 is unambiguously the noun "energy" / "energy source" —
+    by 量 or 源 is unambiguously the noun "energy" / "energy source" -
     extend by exactly that 3-char compound (no greedy continuation).
     """
     if not raw_noun:
@@ -1339,10 +1339,10 @@ def _extend_neng_compound_cn(
 # nouns mid-word: 定时器→定, 第一定时器→第一定 (CN115701183B c13), 计时器,
 # 时钟/时序/时隙/时段/时刻/时延/时间. A when-clause 时 is ALWAYS followed by
 # punctuation or a verb/connective (，。；或则…), NEVER by a timer/clock/period
-# noun suffix — so gating the extension on the follow-char being such a suffix
+# noun suffix - so gating the extension on the follow-char being such a suffix
 # is FN-safe (mirrors the 能量/能源 follow-gate). The truncation class was
 # surfaced by the normalization-asymmetry probe (asymmetry_probe.py): term
-# 第一定 vs did_you_mean 第一定时器 — the intro is right there, only the
+# 第一定 vs did_you_mean 第一定时器 - the intro is right there, only the
 # reference truncated → FN-safe under-capture repair.
 _SHI_NOUN_SUFFIXES_CN = ("器", "钟", "序", "隙", "刻", "延", "段", "间")
 
@@ -1380,14 +1380,14 @@ def _extend_shi_compound_cn(
 # compound nouns mid-word: 晶化反应→晶化反, 水热反应→水热反, 第一反应器→第一反,
 # 效应器→效, 感应线圈→感. UNLIKE 时 (a clean follow-gate), 应 can be terminal
 # (反应) so a follow-char gate misses 反应; instead gate on the PRECURSOR char
-# (the char before 应) being a reaction/effect/sense/response root — those
+# (the char before 应) being a reaction/effect/sense/response root - those
 # precursors never precede the modal 应该/应当 (反应该/效应当 are not drafting
 # diction). Mirrors the _NENG_PRECURSORS_CN precursor arm. Surfaced by the
 # asymmetry probe (晶化反 vs did_you_mean 晶化反应). Precursor set is
-# CONSERVATIVE — only chars that form an unambiguous NOUN with 应:
+# CONSERVATIVE - only chars that form an unambiguous NOUN with 应:
 # 反应 (reaction), 效应 (effect), 感应 (induction), 响应 (response). The
 # gray verb/adverb roots 对应/相应 (correspondingly) / 顺应 / 呼应 / 适应 /
-# 供应 are EXCLUDED — `相` over-captured the adverb `执行相应` (CN115952274B
+# 供应 are EXCLUDED - `相` over-captured the adverb `执行相应` (CN115952274B
 # c1) in a first attempt; the FN-guard fixture harness caught it.
 _YING_PRECURSORS_CN = ("反", "效", "感", "响")
 
@@ -1430,7 +1430,7 @@ def _extend_ying_compound_cn(
 
 
 # R66 (revised 2026-05-05) TW parity: state-modifier capture extension.
-# Mirror of TW R66 capture-time fix — gated on Simplified state suffixes
+# Mirror of TW R66 capture-time fix - gated on Simplified state suffixes
 # 状/形. When raw_noun ends in such a suffix and `的<head>` follows,
 # extend the captured reference so the displayed reference_form is the
 # full `所述<state>的<head>` phrase rather than the bare adjective
@@ -1466,7 +1466,7 @@ _INTRO_MULTI_QUANTIFIERS_CN = (
     r"两(?![端侧])",
     r"[二三四五六七八九十]+个",
     "一个", "一种", "一对",
-    # R46 (2026-06-26): plural quantifier + MEASURE WORD (条/道) — Simplified
+    # R46 (2026-06-26): plural quantifier + MEASURE WORD (条/道) - Simplified
     # mirror of TW R16 (#288). 复数条<noun> / 多道<noun> captured 条<noun> (the
     # measure leaked) so 该<noun> never matched its intro. FN-safe by the
     # _NOUN_CHARS_CN {2,12} floor (复数条码→backtracks to 条码). Listed before
@@ -1500,7 +1500,7 @@ _INTRO_PATTERN_CN = re.compile(
     + f"({_NOUN_CHARS_CN})"
 )
 
-# Reference prefixes — Q1 strips 该等/该些 from CN tuples entirely.
+# Reference prefixes - Q1 strips 该等/该些 from CN tuples entirely.
 # The TC-contamination prefixes live only in check_antecedent_basis_cn
 # (see the Q1 tw_contamination rejection branch); no module-level
 # constant names them.
@@ -1514,7 +1514,7 @@ _REF_PATTERN_CAPTURE_CN = re.compile(
 )
 
 # Trailing-verb denylist (mechanical TC→SC swap; historical rationale in
-# tw_claims.py lines 869–990).
+# tw_claims.py lines 869-990).
 # Noun compounds ending in 匹配 that must survive the trailing-verb strip (see
 # the R53 guard at the strip site). 匹配 is noun-gray: it is a predicate in the
 # 与…相匹配 construction (strip) but the head of an element name in 阻抗匹配
@@ -1556,17 +1556,17 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # lacks bare 排列 entirely, so these compounds fix 间距间隔排列 WITHOUT
         # taking on the separate DR-1 question of whether bare 排列 is CN-safe.
         "间隔排列", "间隔设置", "间隔布置", "间隔配置", "间隔分布",
-        # === R52 (2026-07-13) — TW R27 parity (reports #354/#355, #366, #381-#384) ===
+        # === R52 (2026-07-13) - TW R27 parity (reports #354/#355, #366, #381-#384) ===
         # Trailing predicate verbs that bled into the captured term, orphaning
         # the bare-noun head. All verified LATENT on the CN side by direct probe
         # before the fix (clean_noun_phrase_cn left each over-capture intact), so
         # these are real parity bugs, not speculative mirrors. endswith strips, so
         # noun compounds that merely CONTAIN the verb are untouched (枢接部 does not
-        # END in 枢接). 运行 was ALREADY present on the CN side — the asymmetry ran the
+        # END in 枢接). 运行 was ALREADY present on the CN side - the asymmetry ran the
         # other way for that one, which is exactly what the parity check is for.
-        #   枢接 ("pivotally connect") — TW #354/#355.
-        #   拍摄 ("photograph") — TW #366.
-        #   催化下 — TW #381-#384: the verbal-locative frame 在<N><V>下 ("under the
+        #   枢接 ("pivotally connect") - TW #354/#355.
+        #   拍摄 ("photograph") - TW #366.
+        #   催化下 - TW #381-#384: the verbal-locative frame 在<N><V>下 ("under the
         #     <V> of <N>"). The strip must include the 下 because that is where the
         #     capture ends; a bare 催化 entry would never fire. The catalyst noun
         #     催化剂 is untouched (it does not end in 催化下).
@@ -1575,8 +1575,8 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "通过", "经由", "借由", "基于", "透过", "根据", "依据",
         # R45 (2026-06-26): trailing predicate verbs from the CN normalization-
         # asymmetry probe (intro keeps the clause verb; reference is clean).
-        # 引起/调整 mirror TW R15; 共混 (blend), 附接 (attach — mirrors TW R12),
-        # 配置成 (configured-as — the VERB construction, distinct from noun 配置).
+        # 引起/调整 mirror TW R15; 共混 (blend), 附接 (attach - mirrors TW R12),
+        # 配置成 (configured-as - the VERB construction, distinct from noun 配置).
         # Noun compounds carry these with a suffix (调整器/共混物/附接件), so the
         # endswith strip doesn't touch them. FN-guarded.
         "引起", "调整", "共混", "附接", "配置成",
@@ -1591,7 +1591,7 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "包", "通", "经", "借",
         "所", "前",
         "到", "出",
-        # 从: coverb "from" — cross-jurisdiction mirror of the TW #75
+        # 从: coverb "from" - cross-jurisdiction mirror of the TW #75
         # fix (PR #83). `<noun>从` over-capture; 从 is a coverb in suffix
         # position, never a noun terminus (从动 carries 从 at PREFIX).
         # Corpus-clean: CN phase-8c harness delta 0 vs pristine baseline.
@@ -1599,10 +1599,10 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "介",
         "位",
         "或",
-        # R62 (2026-05-05) ATTEMPTED but REVERTED — trailing 和/与/及 strip
+        # R62 (2026-05-05) ATTEMPTED but REVERTED - trailing 和/与/及 strip
         # caused 2 protect:true label silencing + 6 unresolved_removed in
         # the CN harness. The risk audit underestimated noun compounds
-        # ending in 和 (e.g., 总和 sum, 平和 balance, 缓和 mitigation) —
+        # ending in 和 (e.g., 总和 sum, 平和 balance, 缓和 mitigation) -
         # these ARE element-name candidates in chemistry/measurement
         # claims. Held off pending finer-grained guard (e.g., minimum
         # residual length + protected-suffix list) before re-attempting.
@@ -1616,9 +1616,9 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "至",
         "依序",
         "撷取",
-        # Stage 4 R1 D4a — ADR-100 pattern, CN-specific extensions
+        # Stage 4 R1 D4a - ADR-100 pattern, CN-specific extensions
         "相关", "有关",
-        # Phase 8c close-out R-CO-2 WQ1a — multi-char trailing verbs
+        # Phase 8c close-out R-CO-2 WQ1a - multi-char trailing verbs
         # Walker false positives where capture trails into a verb phrase.
         # Length-desc strip order: 联合训练 / 恢复运行 fire before bare 训练 / 运行.
         "联合训练", "恢复运行",
@@ -1627,13 +1627,13 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "运行", "执行", "确定", "提供", "匹配", "表征",
         "生成", "获取", "获得",
         "向",
-        # Phase 8c R9 — additional trailing verbs from re-sampling analysis
+        # Phase 8c R9 - additional trailing verbs from re-sampling analysis
         "针对", "支持", "调用", "采用", "作为",
         "对",
-        # Phase 8c R22 — single-char preposition residues from BYD-style
+        # Phase 8c R22 - single-char preposition residues from BYD-style
         # paren-numeral terms (从动凸轮(320)由, 凹部(322)沿, 辅助层沿).
         "由", "沿",
-        # Phase 8c R23 — multi-char trailing verbs from over_capture pool
+        # Phase 8c R23 - multi-char trailing verbs from over_capture pool
         # (77-active stratification). Compound-noun risk audited per token
         # against full corpus V+CJK matches; all dominated by particle/
         # determiner suffixes (所/时/的/方) that don't form noun compounds.
@@ -1641,24 +1641,24 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "体外培养", "胰蛋白酶消化", "铰接", "选自", "代替", "交联",
         "检查", "查询", "保存", "固定", "回复", "消化",
         "恢复",
-        # Phase 8c R24 — single-char trailing residues from over_capture
+        # Phase 8c R24 - single-char trailing residues from over_capture
         # pool (16 active labels post-R23). Compound-noun risk audited:
         # all noun compounds (作用/不良/相应/均匀/得到) appear at PREFIX
         # position in corpus; suffix-position usage is uniformly verb/
         # particle. All 16 emit-terms ending in these chars match the
         # 16 targets exactly (zero collateral).
         "作", "不", "相", "均", "得",
-        # === Phase 8c R7-port (2026-04-30) — TW Round 7 cross-port ===
+        # === Phase 8c R7-port (2026-04-30) - TW Round 7 cross-port ===
         # 较 (comparative verb), 厚膜化 (process verb-suffix). CN parity
         # for TW additions; CNIPA semiconductor drafters use these
         # identically. 0 active CN-label collisions; 比较/较量 etc.
         # protected via the existing residual ≥ 1 floor (2-char compounds
         # with 较 at position [-1] strip to 1 char, blocked).
         "较", "厚膜化",
-        # === R29 (2026-05-03) — round-1 corpus over-capture extensions ===
+        # === R29 (2026-05-03) - round-1 corpus over-capture extensions ===
         # Conservative extension only. Excludes verbs that double as common
         # noun endings (处理, 配置, 形成, 驱动, 存储, 传输, 连接, 选择,
-        # 标识, 识别) — those silenced legacy `处理器配置` protect:true
+        # 标识, 识别) - those silenced legacy `处理器配置` protect:true
         # label on tw_contamination_simple synthetic. Kept additions are
         # clearly-verb multi-char phrases without noun-suffix ambiguity.
         "围绕", "代表", "连同", "表示", "移动",
@@ -1667,7 +1667,7 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         "覆盖", "分离", "比较", "判断", "决定", "分析",
         "包括以下", "执行以下", "进行以下",
         "执行以下操作", "执行以下操",
-        # === R63 (2026-05-05) — TW parity port (神秘黑屏哥.docx audit) ===
+        # === R63 (2026-05-05) - TW parity port (神秘黑屏哥.docx audit) ===
         # `不同`/`仅` parity from TW. Pure adjective/adverb in both scripts.
         # CJK `不同` is identical between Simplified and Traditional;
         # `仅` is the SC form of TW `僅` (same meaning, "only/merely").
@@ -1677,7 +1677,7 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         #   adverb+verb, not nouns.
         # Min residual via R32 emit-time len < 2 filter.
         "不同", "仅",
-        # === R32 (2026-05-04) — passive trailing residue ===
+        # === R32 (2026-05-04) - passive trailing residue ===
         # 被: passive marker (`<noun>被<verb>`). Compound nouns ending in
         #   `被` are vanishingly rare in CN patent claims (棉被/被服 are
         #   household items, not patent terms). Empirically: walker emits
@@ -1692,24 +1692,24 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # (LLM ensemble Phase 2c verified). Reserved for a context-aware
         # mechanism (verb-mode vs noun-mode) outside R32 scope.
         '被',
-        # === R32 (2026-05-04) — verb-suffix trailing residues (CN parity) ===
+        # === R32 (2026-05-04) - verb-suffix trailing residues (CN parity) ===
         # Cluster-mined from round-1 CN corpus.
         '延伸',  # 51 walker_fp / 0 legit. (Risk audited per TW.)
         '指示',  # 42 walker_fp / 0 legit. Verb form ("indicate").
                 # NOTE: 指示牌 / 指示灯 noun compounds at PREFIX position.
-        # === R30 (2026-05-03) — sample-derived adverbial / adjectival trims
+        # === R30 (2026-05-03) - sample-derived adverbial / adjectival trims
         # 进一步: adverbial ("further"), fragment of 进一步包括/进一步具有.
         #   Multi-char so safe against noun compounds (第一步/一步走 unaffected).
         # 相关联: adjectival ("related/associated"), fragment of <noun>相关联的.
         #   Existing 相关 + 有关 catch 2-char form; 3-char form needs explicit.
         "进一步", "相关联",
-        # === R-batch-r3 (2026-06-01) — locative/positional verb trims
+        # === R-batch-r3 (2026-06-01) - locative/positional verb trims
         # 相邻: adjectival ("adjacent"). Never a noun-suffix in CN patent
-        #   diction — appears at PREFIX position in legitimate compounds
+        #   diction - appears at PREFIX position in legitimate compounds
         #   (相邻边缘 / 相邻区域 / 相邻通道). Closes tw_contamination
         #   over-capture `限位导槽分别相邻` → `限位导槽` (issue #171).
         "相邻",
-        # === R41 (2026-06-24) — examiner/gold-mined trailing-verb over-capture
+        # === R41 (2026-06-24) - examiner/gold-mined trailing-verb over-capture
         # batch. Mined from CN gold walker_fp over-capture cluster (2,129
         # no-intro over-captures; these verbs over-ran the head noun, e.g.
         # `换挡拨叉接合`/`开关断开`/`第一光束移动`). All are unambiguous VERBS in
@@ -1717,23 +1717,23 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # 联接器/穿刺针) so the bare 2-char verb only appears verb-mode at the
         # tail. The FN-guard (silenced_legit==0 over the CN gold) vets each;
         # gray noun-sense verbs (接触/存储/垂直/平行) were HELD OUT, and the
-        # FN-guard further removed 布置/接合/插入/对接/联接/卡合/贴合 — each
+        # FN-guard further removed 布置/接合/插入/对接/联接/卡合/贴合 - each
         # carries a real NOUN sense (布置=layout, 接合=joint, 插入=insertion,
         # 对接/联接=coupling/docking) that the LLM gold flagged as a legit head
         # noun, so stripping them silenced real defects (direct + intro-side
         # cascade). The surviving set is verb-only at the noun tail.
         "穿过", "断开", "切换", "前进", "对准", "穿刺", "嵌入",
-        # === R42 (2026-06-24) — second examiner/gold-mined trailing-verb
+        # === R42 (2026-06-24) - second examiner/gold-mined trailing-verb
         # over-capture batch (CN gold walker_fp, 2-char trailing cluster, each
         # legit==0 in the ensemble gold). Same discipline as R41: noun-sense
         # compounds carry a distinguishing suffix so the bare verb only appears
-        # verb-mode at the tail — 套设 (sleeve-FIT; the noun is 套筒/套件),
+        # verb-mode at the tail - 套设 (sleeve-FIT; the noun is 套筒/套件),
         # 靠近/接近 (approach; the noun 接近度 carries 度), 加入 (add/join),
         # 实施 (implement; the noun 实施例 carries 例), 指定 (designate).
         # Strong independent-NOUN-sense verbs were HELD OUT pre-guard on
         # noun-sense judgment (DR-1), even though the gold flags them clean:
-        # 偏移 (offset — a bare noun in 位置偏移), 关联 (association —
-        # 关联关系/关联性), 结合 (combination/junction — 结合部). And the
+        # 偏移 (offset - a bare noun in 位置偏移), 关联 (association -
+        # 关联关系/关联性), 结合 (combination/junction - 结合部). And the
         # FN-guard AUTO-NARROWED 混合 (mix): although no gold-legit reference
         # term ENDS in 混合, stripping it turned the intro-side `与氧源混合`
         # ("mixed with an oxygen source") into a false bare-noun intro of 氧源,
@@ -1741,14 +1741,14 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # (intro-cascade FN). The surviving set is verb-only at the noun tail
         # AND cascade-clean over the CN gold.
         "套设", "靠近", "接近", "加入", "实施", "指定",
-        # === R43 (2026-06-24) — third over-capture batch: relational/geometric
+        # === R43 (2026-06-24) - third over-capture batch: relational/geometric
         # PREDICATE verbs at the tail (CN gold 2-char trailing cluster, each
-        # legit==0). 垂直/平行 (perpendicular/parallel — `第三方向垂直`,
+        # legit==0). 垂直/平行 (perpendicular/parallel - `第三方向垂直`,
         # `输出轴线平行`; the noun senses 垂直度/平行度 carry 度 so the bare form
-        # is predicate-only at the tail — these were held conservatively in R41
-        # but the gold + geometry now clear them), 暴露 (exposed —
-        # `连接段至少部分暴露`), 啮合 (mesh/engage — `输入小齿轮啮合`),
-        # 保持 (maintain/hold — `屏蔽构件保持`; the noun 保持架 carries 架).
+        # is predicate-only at the tail - these were held conservatively in R41
+        # but the gold + geometry now clear them), 暴露 (exposed -
+        # `连接段至少部分暴露`), 啮合 (mesh/engage - `输入小齿轮啮合`),
+        # 保持 (maintain/hold - `屏蔽构件保持`; the noun 保持架 carries 架).
         # FN-guard auto-narrows any that silence gold-legit or cascade (cf. 混合).
         "垂直", "平行", "暴露", "啮合", "保持",
     ),
@@ -1762,27 +1762,27 @@ _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
 _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN: frozenset[str] = frozenset(
     {"所", "位", "中", "后", "用", "上", "内", "撷取", "对", "由", "沿",
      "作", "不", "相", "均", "得",
-     # === R7-port (2026-04-30) — TW R7 parity ===
+     # === R7-port (2026-04-30) - TW R7 parity ===
      # 使 (causative particle / verb fragment): residual ≥ 3 protects
      # 大使/天使/特使/使用 (all 2-char compounds, residual 1 < 3).
      "使",
-     # === R68 (2026-05-06) — supplement_v2 mining (TW parity) ===
+     # === R68 (2026-05-06) - supplement_v2 mining (TW parity) ===
      # 来: verb tail particle in `所述<noun>来自X` constructions.
      # 27 CN walker_fp findings end in 来 across supplement_v2.
      # See tw_claims.py R68 comment for full rationale.
      "来",
-     # 向: TW parity (CN 0 walker_fp this round but pre-emptive — CN
+     # 向: TW parity (CN 0 walker_fp this round but pre-emptive - CN
      # drafters share the same `<noun>向X` preposition pattern).
      # GUARDED below by _DIRECTION_STEM_BEFORE_XIANG_CN: 向 is a bound noun
      # suffix in 方向/轴向/径向/… (direction nouns), NOT a strippable
      # preposition. Without the guard, `所述圆周方向` truncates to `圆周方`
      # (CN117837052A c32, a real corpus walker_fp). WS-B1 (2026-06-24).
      "向",
-     # 自: TW parity (CN had 1 walker_fp, low signal — pre-emptive).
+     # 自: TW parity (CN had 1 walker_fp, low signal - pre-emptive).
      "自"}
 )
 
-# WS-B1 (2026-06-24) — direction-noun stems that bind 向 as a NOUN suffix
+# WS-B1 (2026-06-24) - direction-noun stems that bind 向 as a NOUN suffix
 # (方向/轴向/径向/横向/纵向/周向/切向/法向/侧向/竖向/斜向/单向/双向/同向/反向/
 # 正向/逆向/定向/指向/取向/转向/导向). When a captured term ends in `<stem>向`,
 # the 向 is part of the head noun and must NOT be stripped. Over-inclusion is
@@ -1793,7 +1793,7 @@ _DIRECTION_STEM_BEFORE_XIANG_CN: frozenset[str] = frozenset(
 )
 
 # Relaxed-guard subset (residual ≥ 2 instead of ≥ 3).
-# Stage 4 R1 D4a — relaxed residual ≥ 2 guard for 2-char-stem residue strip.
+# Stage 4 R1 D4a - relaxed residual ≥ 2 guard for 2-char-stem residue strip.
 # R22 adds 由/沿; R24 adds 作/不/相/均/得 (mirrors trailing-verb registration).
 # R68 (2026-05-06) adds 来 (TW parity).
 _NOUNLIKE_RELAXED_SUFFIXES_CN: frozenset[str] = frozenset(
@@ -1801,18 +1801,18 @@ _NOUNLIKE_RELAXED_SUFFIXES_CN: frozenset[str] = frozenset(
      "作", "不", "相", "均", "得", "来"}
 )
 
-# Phase 8c R22 — `中` very-relaxed (residual ≥ 1) for 2-char locative
+# Phase 8c R22 - `中` very-relaxed (residual ≥ 1) for 2-char locative
 # phrases like 组中. The post-strip 1-char residual is then filtered by
 # the `len(normalized_term) == 1` emit guard. Empirically scoped: only
 # 2 corpus terms (组中 ×2 in CN115952274B) hit this path.
 _NOUNLIKE_VERY_RELAXED_SUFFIXES_CN: frozenset[str] = frozenset({"中"})
 
-# Phase 8c R10 — char-exclusion residue map.
+# Phase 8c R10 - char-exclusion residue map.
 # Keys: residue chars left at end of terms because _NOUN_CHARS_CN excludes
 # the following char (于→基, 能→功, 应→响).  Values: minimum residual
 # length after stripping the residue char.
 _CHAR_EXCLUSION_RESIDUE_CN: dict[str, int] = {
-    '\u57fa': 3,  # 基 (from 基于) — guard ≥3 protects 培养基
+    '\u57fa': 3,  # 基 (from 基于) - guard ≥3 protects 培养基
     '\u54cd': 2,  # 响 (from 响应)
     '\u529f': 2,  # 功 (from 功能)
     '\u8f93': 2,  # 输 (from 输出 where 出 is in trailing denylist)
@@ -1845,7 +1845,7 @@ _LEADING_QUANTIFIER_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
         # 各 (compound noun usage like 各样本数据) which startswith() leaves
         # untouched.
         "各",
-        # === R30 (2026-05-03) — extended plural-quantifier bridging ===
+        # === R30 (2026-05-03) - extended plural-quantifier bridging ===
         # Phase 2c Refinement C: when a parent claim introduces `多个X` /
         # `若干X` and a dependent references `所述X` (singular), bridging via
         # symmetric strip is the right move per CN drafting practice. The
@@ -1869,7 +1869,7 @@ _REFERENCE_FORM_PREFIXES_CN: tuple[str, ...] = tuple(sorted(
     reverse=True,
 ))
 
-# Plural reference-form prefixes — Q1 excludes 该等/该些 from CN;
+# Plural reference-form prefixes - Q1 excludes 该等/该些 from CN;
 # the strict_plural_reference_matching escape hatch fires on the
 # remaining 前述/所述 plural markers.
 _PLURAL_REFERENCE_PREFIXES_CN: tuple[str, ...] = tuple(sorted(
@@ -1879,7 +1879,7 @@ _PLURAL_REFERENCE_PREFIXES_CN: tuple[str, ...] = tuple(sorted(
 ))
 
 # Interior-boundary tokens (mechanical TC→SC swap). See tw_claims.py
-# lines 1138–1331 for the historical risk-review rationale per verb.
+# lines 1138-1331 for the historical risk-review rationale per verb.
 _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
     (
         # === R57 (2026-07-23) - TW R32 parity (report #425, spec-support) ===
@@ -1891,11 +1891,11 @@ _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
         # === R54 (2026-07-18) - TW R29 parity (reports #394/#395/#396) ===
         # Interior counterparts of the R54 trailing strips; latent-verified.
         "随着", "满足下式", "满足下列", "满足以下", "满足如下",
-        # R52 (2026-07-13) — TW R27 parity (report #356). 排成 ("arranged into"):
+        # R52 (2026-07-13) - TW R27 parity (report #356). 排成 ("arranged into"):
         # an INTERIOR cut, not a trailing strip, because the over-capture has a
         # real noun BEHIND the verb (一列, "a row") that the endswith pass can
-        # never reach. Purely verbal — the arrangement nouns are 排列 / 阵列,
-        # neither of which contains 排成 — so no compound-noun risk.
+        # never reach. Purely verbal - the arrangement nouns are 排列 / 阵列,
+        # neither of which contains 排成 - so no compound-noun risk.
         "排成",
         "设有", "包含", "包括", "具有", "含有", "具备",
         "系为", "系于", "为", "是", "系",
@@ -1923,30 +1923,30 @@ _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
         "产生", "各地",
         "依序",
         "相互", "朝向",
-        # Stage 4 R2' D1a — 调出 cuts after 处理器指令 prefix (Huawei c3)
+        # Stage 4 R2' D1a - 调出 cuts after 处理器指令 prefix (Huawei c3)
         "调出",
-        # Phase 8c R8 — 进行 (carry out) appears mid-term in overcaptures
+        # Phase 8c R8 - 进行 (carry out) appears mid-term in overcaptures
         # like 第一设备进行第一信号 → should split to 第一设备.
         "进行",
-        # Phase 8c R12 — additional interior verb overcaptures
+        # Phase 8c R12 - additional interior verb overcaptures
         "需要", "发出", "符合",
-        # Phase 8c R23 — interior verb cuts from over_capture pool
+        # Phase 8c R23 - interior verb cuts from over_capture pool
         # (像素界定层限定有X, 处理单元周期性地或非周期, 滑块(230)可移动地设,
         # 初始地理预训练模型按照预, 处理器核运行客户端进程, 目标预训练模型采用预训练,
         # 实线边表征不同节点). Compound-noun risk audited per token.
         "限定有", "周期性地", "可移动地", "按照", "运行", "采用", "表征",
-        # === Phase 8c R7-port (2026-04-30) — TW Round 7 cross-port ===
+        # === Phase 8c R7-port (2026-04-30) - TW Round 7 cross-port ===
         # Process verbs that split mid-string captures cleanly in
         # semiconductor / mechanical claims. CN parity for the TW
         # additions in R7; same drafter conventions across jurisdictions.
         # Compound-noun risk: 夹持器/覆盖层/露出口 absent from CN corpus
         # per grep (verbs only, no compound-noun collision).
         "夹持", "覆盖", "露出",
-        # R47 (2026-06-26): Simplified mirror of TW R17 (#289/#280) — the clause
+        # R47 (2026-06-26): Simplified mirror of TW R17 (#289/#280) - the clause
         # verb bled into the captured 该<noun> reference. 贯穿/代入 are clean verbs;
         # 贯穿 is noun-suffix-guarded below (贯穿孔/贯穿部 compounds). 维持 (shipped
         # for TW) was WITHHELD for CN: validate_fix --juris CN caught it silencing
-        # a gold-legit (`所述机械臂臂身维持期望构型` — the cut reveals 机械臂臂身,
+        # a gold-legit (`所述机械臂臂身维持期望构型` - the cut reveals 机械臂臂身,
         # a possessive/bare-noun gray-zone reference the gold treats as a real
         # defect). Attorney-over-corpus discipline: withhold on conflict.
         "贯穿", "代入",
@@ -1955,14 +1955,14 @@ _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
     reverse=True,
 ))
 
-# Stage 4 R2' D3 — 1-char noun prefixes get a relaxed position gate
+# Stage 4 R2' D3 - 1-char noun prefixes get a relaxed position gate
 # (>= 1 instead of > 1) so interior-verb cuts can fire at idx 1. Without
 # this, captures like 边包括实线边 / L具有选自 can never be truncated.
 _ONE_CHAR_NOUN_PREFIXES_CN: frozenset[str] = frozenset(
     {"边", "面", "体", "键", "L", "X", "Y", "Z", "M", "N", "R"}
 )
 
-# Interior-cut exception set — mechanical TC→SC swap per v2 swap table;
+# Interior-cut exception set - mechanical TC→SC swap per v2 swap table;
 # compound-level re-seeding deferred to Stage 4.
 _INTERIOR_CUT_EXCEPTIONS_CN: frozenset[str] = frozenset({
     "连接器", "连接部", "连接端口", "连接点", "连接线",
@@ -1995,7 +1995,7 @@ _INTERIOR_CUT_EXCEPTIONS_CN: frozenset[str] = frozenset({
     "浏览器",
     "波产生器",
     "连接面", "第一连接面", "第二连接面",
-    # Stage 4 R2' D1a — Huawei CN113939805B 处理器指令 compound
+    # Stage 4 R2' D1a - Huawei CN113939805B 处理器指令 compound
     "第一处理器指令", "第二处理器指令",
 })
 
@@ -2046,7 +2046,7 @@ def clean_noun_phrase_cn(text: str) -> str:
         '决定', '感测', '侦测', '监测', '辨识', '识别', '解析',
         '处理', '控制', '驱动', '检出', '判定', '计算', '生成',
         '输出', '输入', '存储', '存取', '读取', '写入',
-        # R47 (2026-06-26): 贯穿 forms 贯穿孔 (through-hole) / 贯穿部 — the verb is
+        # R47 (2026-06-26): 贯穿 forms 贯穿孔 (through-hole) / 贯穿部 - the verb is
         # part of the element. Guarded so 该第二贯穿孔 is NOT cut to 第二 (TW R17
         # parity). The over-capture 该第一切槽贯穿 has no suffix after 贯穿 → cuts.
         '贯穿',
@@ -2061,23 +2061,23 @@ def clean_noun_phrase_cn(text: str) -> str:
             # compound (发射接收天线 / 接收天线 / 传送天线), not a clause boundary.
             # FN-safe: 天线 is unambiguously a noun head; the over-capture case
             # never has 天线 as the verb's next token. Prevents the truncation
-            # 发射接收天线 -> 发射. No CN report — free TW->CN parity (DR-1 exempt:
+            # 发射接收天线 -> 发射. No CN report - free TW->CN parity (DR-1 exempt:
             # identical structural bug on the shared normalizer design).
             if text[absolute_idx + len(verb):].startswith("天线"):
                 continue
-            # R52 (2026-07-13) — the TW R27 tail-compound guard (reports
+            # R52 (2026-07-13) - the TW R27 tail-compound guard (reports
             # #352/#353) was TRIALED HERE AND WITHHELD. It is genuinely latent on
             # CN (clean_noun_phrase_cn('对接连接器') -> '对接' truncates exactly as
             # TW did), but MEASURED on the CN corpus it is net-harmful: on
             # CN120359669A it correctly retires 6 truncation artifacts
-            # (所述插头 / 所述插座, which exist nowhere in the draft — the real
+            # (所述插头 / 所述插座, which exist nowhere in the draft - the real
             # references are 所述插头连接器 / 所述插座连接器) but ADDS 8 findings,
             # several malformed: 所述插头连接器(100)从插 and 所述插座连接器(200)移除.
             # Root cause: the CN noun capture admits the parenthesized reference
             # numeral and does not treat 从 as a boundary char (TW's _NOUN_CHARS
             # excludes 從), so the interior cut at 连接 had been silently acting as
             # a garbage collector for a capture-side defect. Removing the cut
-            # exposes it, trading 6 artifact findings for new FPs — so the CN
+            # exposes it, trading 6 artifact findings for new FPs - so the CN
             # mirror is BLOCKED ON a capture-side fix (strip the trailing
             # refnum-paren + add the 从 boundary), not on this guard. TW ships
             # alone; the CN capture fix is the tracked follow-up.
@@ -2093,7 +2093,7 @@ def clean_noun_phrase_cn(text: str) -> str:
             if earliest_idx is None or absolute_idx < earliest_idx:
                 earliest_idx = absolute_idx
 
-    # #339 CN parity (mirror of the TW 区分别 别-gate) — 区分别 is 区 (region-noun
+    # #339 CN parity (mirror of the TW 区分别 别-gate) - 区分别 is 区 (region-noun
     # suffix, 源极区/漏极区) + 分别 ("respectively"), NOT the verb 区分. Shift the
     # cut one char right so the region-noun 区 survives (第一源极区分别 →
     # 第一源极区). The genuine verb case 该地域区分 (no trailing 别) still cuts to 地域.
@@ -2114,17 +2114,17 @@ def clean_noun_phrase_cn(text: str) -> str:
             # WS-B1: 向 binds as a noun suffix in direction nouns (方向/轴向/…).
             if verb == "向" and current[-2] in _DIRECTION_STEM_BEFORE_XIANG_CN:
                 continue
-            # R53 (2026-07-13) — noun-compound guard for the trailing 匹配.
+            # R53 (2026-07-13) - noun-compound guard for the trailing 匹配.
             # The bare 匹配 strip is LOAD-BEARING (it is what recovers 策略 from
             # the very common 与…相匹配 predicate: 所述策略相匹配 -> 策略, gold-legit
-            # on CN105354747B c18/c45 — removing it was trialed this round and
+            # on CN105354747B c18/c45 - removing it was trialed this round and
             # measured net-harmful, re-introducing the 策略相匹配 over-capture).
             # But as an UNCONDITIONAL endswith strip it was also a latent FALSE
             # NEGATIVE that predates this round: 阻抗匹配 ("impedance matching") is
             # a real element name in RF drafts, so a genuine 所述阻抗匹配 antecedent
             # defect was truncated to 阻抗 and could never be flagged. Guarding the
             # noun compound keeps the predicate strip while closing the FN. TW never
-            # carried a bare 匹配 entry, so it has no equivalent exposure — the
+            # carried a bare 匹配 entry, so it has no equivalent exposure - the
             # standing cross-jurisdiction parity check is what surfaced this.
             if verb == "匹配" and current in _MATCH_NOUN_COMPOUNDS_CN:
                 continue
@@ -2143,7 +2143,7 @@ def clean_noun_phrase_cn(text: str) -> str:
         if not stripped:
             break
 
-    # Phase 8c R10 — char-exclusion residue repair.
+    # Phase 8c R10 - char-exclusion residue repair.
     # _NOUN_CHARS_CN excludes 于/能/应 etc., leaving half-compound residues
     # at the end of captured terms (e.g., 第一设备基 from 基于, 第一功 from
     # 功能, 第N响 from 响应).  Strip the residue char when it is NOT part
@@ -2247,7 +2247,7 @@ def strip_reference_form_prefix_cn(text: str) -> str:
 
 
 # Leading qualifier strip (relational + position qualifiers with
-# quantifier lookahead). See tw_claims.py lines 1580–1666 for rationale.
+# quantifier lookahead). See tw_claims.py lines 1580-1666 for rationale.
 _LEADING_RELATIONAL_QUALIFIERS_CN: tuple[str, ...] = (
     "对应地", "对应的", "对应",
     "相应地", "相应的", "相应",
@@ -2362,7 +2362,7 @@ def get_ancestor_chain_cn(claim: Claim, all_claims: list[Claim]) -> list[Claim]:
 
     Per ADR-092, the walker uses the FULL ancestor chain. Stage 1.5
     invariant: trusts ``parse_cn_claims_docx`` dependency shape verbatim
-    — no self-ref stripping, no spec expansion. Both already handled
+    no self-ref stripping, no spec expansion. Both already handled
     upstream at claims_cn.py:40-59 and claims_cn.py:90.
     """
     claims_by_id = {c.id: c for c in all_claims}
@@ -2370,11 +2370,11 @@ def get_ancestor_chain_cn(claim: Claim, all_claims: list[Claim]) -> list[Claim]:
     visited: set[int] = {claim.id}
     # Chain uses dependencies ONLY. Claim.quoted_references is populated
     # by the parser for body cross-refs (`如权利要求N所述的X`) but extending
-    # the chain blanket-grants antecedent for ALL of claim N's intros —
+    # the chain blanket-grants antecedent for ALL of claim N's intros -
     # broader than CNIPA 审查指南 § 3.3 cross-reference doctrine, which
     # says the body cross-ref provides antecedent only for the named
     # element X. Element-scoped chain traversal is a future ADR.
-    # See analysis/claims.py:_chain — same design choice.
+    # See analysis/claims.py:_chain - same design choice.
     queue: list[int] = list(claim.dependencies)
     while queue:
         parent_id = queue.pop(0)
@@ -2521,7 +2521,7 @@ def _strip_plating_prefix_cn(noun: str) -> str:
     m = _PLATING_ORDINAL_TAIL_CN.search(noun)
     return m.group(1) if m else noun
 
-# Phase 8c R14c.2 — F6 bare-noun relax.
+# Phase 8c R14c.2 - F6 bare-noun relax.
 # Adds a third capture arm: bare NP (≥3 CJK chars, no ordinal, no paren).
 # Gated by:
 #   - negative lookahead against _F12_ADJ_REJECTS_CN (rejects predicate-
@@ -2568,7 +2568,7 @@ _F11_COLON_LIST_ANCHOR_CN: re.Pattern[str] = re.compile(
 # previously dropped B and C because the capture stopped at first `；`.
 _F11_LIST_SPLIT_CN: re.Pattern[str] = re.compile(r'[、，,和与及]')
 
-# Phase 8c R14e — F11 no-colon extension. Matches no-colon enum lists
+# Phase 8c R14e - F11 no-colon extension. Matches no-colon enum lists
 # `(?:包括|包含|含有)(Y(?:、Y)+)` where ≥2 `、`-separated CJK elements
 # follow the verb directly. Mutually exclusive with the colon anchor
 # because the character after the verb must be CJK (not `：:`), and
@@ -2580,7 +2580,7 @@ _F11_NO_COLON_LIST_ANCHOR_CN: re.Pattern[str] = re.compile(
     r'([\u4e00-\u7683\u7685-\u9fff]{2,}(?:、[\u4e00-\u7683\u7685-\u9fff]{2,})+)'
 )
 
-# Phase 8c R14f — conjunction-split pass. Splits captured intros on
+# Phase 8c R14f - conjunction-split pass. Splits captured intros on
 # 和/与/及/以及 with ≥2 CJK chars each side, registering each element as
 # its own intro so downstream `所述X` / `所述Y` references can resolve
 # when the drafting captured the intro as `X和Y`. Applied as a final
@@ -2603,7 +2603,7 @@ _F13_LOCATIVE_SUFFIXES_CN: tuple[str, ...] = (
 
 # F14: V+有 noun-of-existence intro (Phase 9 #61).
 # Registers Y from `X形成有Y` / `X安装有Y` / `X存储有Y` as an intro. Gated on
-# a narrow verb set with empirically-clean captures — broader verbs (设置,
+# a narrow verb set with empirically-clean captures - broader verbs (设置,
 # 包含) add compound-noun FPs that the ADJ_REJECTS filter does not cover.
 # Reuses _F12_ADJ_REJECTS_CN (rejects 可/由/能 etc.) + _REF_PREFIX_SET_CN +
 # _BARE_ORDINAL_RE_CN + leading-conjunction reject (与/和/或).
@@ -2615,9 +2615,9 @@ _F14_LEADING_CONJ_CN: frozenset[str] = frozenset({'与', '和', '或'})
 
 # F12: copula + 基于/来自 intro family. Phase 8c R14d.
 # Three tiers to balance coverage vs. predicate-adjective false positives:
-#  - Tier A (unconditional): 转变为|变为|转为|划分为|分为 — always register RHS
-#    as intro. Risk is minimal — these verbs are only used for noun transitions.
-#  - Tier B (noun-gated): 基于|来自 — register RHS if ≥2 CJK and doesn't start
+#  - Tier A (unconditional): 转变为|变为|转为|划分为|分为 - always register RHS
+#    as intro. Risk is minimal - these verbs are only used for noun transitions.
+#  - Tier B (noun-gated): 基于|来自 - register RHS if ≥2 CJK and doesn't start
 #    with an adjectival/verb-phrase prefix (_F12_ADJ_REJECTS_CN).
 #  - Tier C (two-branch 为|是): (1) ordinal-prefix or paren-numeral RHS
 #    (unconditional); (2) bare-noun RHS ≥4 CJK with the same ADJ reject filter.
@@ -2646,7 +2646,7 @@ _F12_ADJ_REJECTS_CN: tuple[str, ...] = (
     '能够', '能', '会',
     '进行', '获得', '获取', '接收', '存储', '输出', '输入',
     '基于', '根据',
-    # === Phase 8c R7-port (2026-04-30) — TW R7 parity ===
+    # === Phase 8c R7-port (2026-04-30) - TW R7 parity ===
     # Copula / preposition / verb-prefix rejects for F6 bare-NP arm 3
     # and F12 Tier B emit. CN equivalents of TW's 係/是/為/較/對/在/將/
     # 藉/蝕. Mirror set with TW _F12_ADJ_REJECTS_TW so semiconductor /
@@ -2658,7 +2658,7 @@ _F12_ADJ_REJECTS_CN: tuple[str, ...] = (
 
 # F7d: participial `<tail>的Y` intro family. Phase 8c R14b.
 # Stative-participle tails that introduce a new noun Y after 的. Intentionally
-# narrow allowlist — DE_POSSESSIVE is heterogeneous and a broad `V的Y` regex
+# narrow allowlist - DE_POSSESSIVE is heterogeneous and a broad `V的Y` regex
 # would over-fire. Post-capture cleanup via clean_noun_phrase_cn handles
 # trailing-verb overcaptures (e.g., 训练目标进行训练 → 训练目标 via interior-verb
 # truncation at 进行 from R8).
@@ -2667,12 +2667,12 @@ _F7D_PARTICIPIAL_TAILS_CN: tuple[str, ...] = (
     '预设', '所需', '相关', '对应', '匹配',
     '得到', '制得', '执行', '制造', '相连',
     '生成', '连接', '形成', '组成',
-    # === R30 (2026-05-03) — extended participial tails from corpus ===
+    # === R30 (2026-05-03) - extended participial tails from corpus ===
     # Round-1 corpus walker_fps include patterns like
     # `<X>覆盖的Y`, `<X>构成的Y`, `<X>设置的Y`, `<X>包含的Y` that the
     # original F7d allowlist doesn't catch. Adding them is safe because:
     # (a) each is clearly a participial verb (not a noun), (b) the trailing
-    # 的 ensures Y is an attribute of X — registering Y as intro is correct
+    # 的 ensures Y is an attribute of X - registering Y as intro is correct
     # under §112(b) when X is in the chain.
     '覆盖', '构成', '设置', '配置', '安装',
     '提供', '获取', '获得', '产生',
@@ -2714,17 +2714,17 @@ _POSSESSIVE_VERB_DENYLIST_CN = {
 }
 
 
-# ── R7-port (2026-04-30) — CN architectural buildout for F14/F16/F17/F19/F20 ──
+# ── R7-port (2026-04-30) - CN architectural buildout for F14/F16/F17/F19/F20 ──
 # Mirror of TW R7's bare-modifier intro infrastructure. CN drafters use the
 # same structural patterns (locative left-side, verb-X-之/的-Y, instrumental
 # clauses) as TIPO drafters; the architectural divergence between CN and
 # TW walkers prior to R7 meant CN had no equivalent of these mechanisms.
-# This block adds them in advance — without waiting for a CN-side report —
+# This block adds them in advance - without waiting for a CN-side report -
 # so CNIPA semiconductor / process-method drafts get the same protection.
 
 # Component-suffix tail set for bare-noun intro emit gates. Mirrors TW
 # _F10_COMPONENT_SUFFIXES with CN-specific items (域 region, 极 electrode).
-# Single-char only — multi-char composites contribute their tail char which
+# Single-char only - multi-char composites contribute their tail char which
 # is already covered.
 _F10_COMPONENT_SUFFIXES_CN: tuple[str, ...] = (
     '部', '件', '体', '器', '阀', '板', '模', '组', '块', '片',
@@ -2733,7 +2733,7 @@ _F10_COMPONENT_SUFFIXES_CN: tuple[str, ...] = (
     '侧', '孔', '缝', '边', '顶', '底', '角', '心', '核', '机',
     '柜', '室', '槽', '线', '路', '池', '枢', '盖', '套', '罩',
     '网', '柱', '锥', '球',
-    # R7 (2026-04-30) — semiconductor + electronic claim element suffixes:
+    # R7 (2026-04-30) - semiconductor + electronic claim element suffixes:
     # 域 (region: n型区域, p型区域, 主动区域); 极 (electrode pole: 栅极,
     # 源极, 漏极, 集极, 射极)
     '域', '极',
@@ -2741,7 +2741,7 @@ _F10_COMPONENT_SUFFIXES_CN: tuple[str, ...] = (
 
 # Single-char component-suffix set for walk-back logic. F10's narrow
 # endswith gate uses _F10_COMPONENT_SUFFIXES_CN; walk-back uses this
-# wider set which includes 法 (method-claim head — `制造方法`).
+# wider set which includes 法 (method-claim head - `制造方法`).
 _F10_SINGLE_CHAR_SUFFIXES_CN: frozenset[str] = frozenset(
     _F10_COMPONENT_SUFFIXES_CN
 ) | {
@@ -2751,10 +2751,10 @@ _F10_SINGLE_CHAR_SUFFIXES_CN: frozenset[str] = frozenset(
     '法',
 }
 
-# Walk-back's discarded-suffix gate — only allow walk-back when the
+# Walk-back's discarded-suffix gate - only allow walk-back when the
 # discarded portion starts with one of these verb-tail-head characters
 # AND has length ≥ 2. Mirrors TW _F14_WALKBACK_VERB_HEADS_TW. CN
-# zh-Hans equivalents: 制 (制成, 所制), 经 (经由 — also covers traditional
+# zh-Hans equivalents: 制 (制成, 所制), 经 (经由 - also covers traditional
 # 經 in mixed-script).
 _F14_WALKBACK_VERB_HEADS_CN: tuple[str, ...] = (
     '所', '露', '形', '构', '组', '制', '经',
@@ -2777,7 +2777,7 @@ _F10_NOUN_REJECTS_CN: tuple[str, ...] = (
     '能够', '能', '会', '进行', '获得', '获取', '接收', '存储',
     '输出', '输入', '基于', '根据',
     '单一', '唯一',
-    # R7 — copula / preposition / verb-prefix rejects (zh-Hans equivalents
+    # R7 - copula / preposition / verb-prefix rejects (zh-Hans equivalents
     # of TW's 系/是/为/较/对/在/将/借/蚀)
     '系', '是', '为',
     '较', '对', '在',
@@ -2790,12 +2790,12 @@ _F10_NOUN_REJECTS_CN: tuple[str, ...] = (
 # R31 (2026-05-03): added 有 prefix. F-family captures of `设置有X` style
 # Pattern B intros leave `有X` after 设置 strip; the leading 有 should be
 # stripped to surface bare X. Residual ≥ 2 protects compound nouns
-# starting with 有 (有限/有机/有效) — those are 2-char with residual 0/1
+# starting with 有 (有限/有机/有效) - those are 2-char with residual 0/1
 # after strip, so still protected.
 _LEADING_VERB_PREFIXES_CN: tuple[str, ...] = tuple(sorted(
     (
         '形成', '制造', '有',
-        # R32 (2026-05-04): connective-verb prefixes — TW parity.
+        # R32 (2026-05-04): connective-verb prefixes - TW parity.
         # Empirical: `即根据各数字内容` / `使得各数字内容关联` shape leaks
         # into spec-support via shared extract_introductions_cn helper.
         # Multi-char longest-first.
@@ -2804,7 +2804,7 @@ _LEADING_VERB_PREFIXES_CN: tuple[str, ...] = tuple(sorted(
         '为了', '借以', '借由', '通过',
         '使得', '使其', '从而', '进而', '并且',
         '用以', '用于',
-        # R67 (2026-05-05) sweep: 具有 — possession verb ("X has Y").
+        # R67 (2026-05-05) sweep: 具有 - possession verb ("X has Y").
         # Drafters write `所述具有酸解离性基的结构单元` where the actual
         # antecedent is `结构单元` (or `酸解离性基`), not `具有酸解离性基`.
         # Residual ≥ 2 protects 具有 + 1-char compounds (none expected
@@ -2838,7 +2838,7 @@ def strip_leading_verb_cn(text: str) -> str:
 def _trim_capture_to_clean_noun_cn(text: str) -> str | None:
     """R7 (2026-04-30): walk back from end of `text` to the last component-
     suffix character and truncate; return ``None`` if hygiene gates fail.
-    Mirror of _trim_capture_to_clean_noun_tw — see that function for full
+    Mirror of _trim_capture_to_clean_noun_tw - see that function for full
     contract documentation.
     """
     if not text or len(text) < 2:
@@ -2869,7 +2869,7 @@ def _trim_capture_to_clean_noun_cn(text: str) -> str | None:
     return truncated
 
 
-# F14 — bare-modifier `之NOUN` intro (formal-register parallel to F10's
+# F14 - bare-modifier `之NOUN` intro (formal-register parallel to F10's
 # `的NOUN`). Less common in modern CN claims but appears in formal-register
 # / JP-translated CN drafts. Mixed-script noun class for semiconductor.
 _F14_BARE_ZHI_NOUN_RE_CN = re.compile(
@@ -2879,7 +2879,7 @@ _F14_BARE_ZHI_NOUN_RE_CN = re.compile(
     r'(?!' + _F14_NOUN_CLASS_CN + r')'
 )
 
-# F16 — locative left-side intro `(?:于|在)X[之的]Y`. Captures left-side X
+# F16 - locative left-side intro `(?:于|在)X[之的]Y`. Captures left-side X
 # (the new claim element introduced via locative phrase). CN uses both
 # 之 (formal) and 的 (modern) for the possessive marker.
 _F16_LOC_LEFT_INTRO_RE_CN = re.compile(
@@ -2889,7 +2889,7 @@ _F16_LOC_LEFT_INTRO_RE_CN = re.compile(
     r'[之的]'
 )
 
-# F17 — locative-internal `在X之间` / `在X之间` intro (zh-Hans uses 间).
+# F17 - locative-internal `在X之间` / `在X之间` intro (zh-Hans uses 间).
 _F17_LOC_INTERNAL_INTRO_RE_CN = re.compile(
     r'在'
     r'(?P<noun>' + _F14_NOUN_CLASS_CN + r'{2,8}'
@@ -2897,7 +2897,7 @@ _F17_LOC_INTERNAL_INTRO_RE_CN = re.compile(
     r'之间'
 )
 
-# F19 — `verb + X + [之的] + Y` left-side intro. F6 rejects this shape
+# F19 - `verb + X + [之的] + Y` left-side intro. F6 rejects this shape
 # via its `(?![的之])` trailing lookahead; F19 explicitly catches it.
 _F19_VERB_NP_ZHI_RE_CN = re.compile(
     r'(?:夹持|包含|包括|具有|含有|具备|设有|设置|配置|安装|装设|形成|构成|连接|连结|提供|构建)'
@@ -2906,14 +2906,14 @@ _F19_VERB_NP_ZHI_RE_CN = re.compile(
     r'[之的]'
 )
 
-# F20 — `(以|借由|透过|经由|将) X (verb)` instrumental/object intro.
+# F20 - `(以|借由|透过|经由|将) X (verb)` instrumental/object intro.
 # `以` excluded when followed by `及` (conjunction `以及`).
 # R41 (2026-05-04): added `将` (instrumental object marker, very
 # common in CN claims for `将<noun><verb>` constructions like
 # `将第一激发光输出`/`将信号发送`/`将数据传输`). Extended trailing-
 # verb list with output/send/transmit/etc. to cover the most common
 # 将-shape cases. Phase A on post-R36 corpus showed CN `发光` cluster
-# 48 wfp / 0 legit (top: `第二激发光` 14, `第一激发光` 13) — parent
+# 48 wfp / 0 legit (top: `第二激发光` 14, `第一激发光` 13) - parent
 # claim 1 introduces 第一激发光 via `将第一激发光输出` shape that
 # F20 didn't recognize.
 _F20_PREP_NP_VERB_RE_CN = re.compile(
@@ -2929,19 +2929,19 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
 
     Returns (original_span, normalized_term) pairs. Active families:
     F5a/F5b, F6, F7b/F7c/F7d, F11 (colon + no-colon), F12, F13. Uniform
-    ``clean_noun_phrase_cn`` cleanup. See tw_claims.py lines 1982–2099
+    ``clean_noun_phrase_cn`` cleanup. See tw_claims.py lines 1982-2099
     for per-family rationale. F7a/F8/F9 removed after zero-coverage
     R14 investigation confirmed CN corpus never exercises them.
     """
     results: list[tuple[str, str]] = []
 
-    # F7d (R64, 2026-05-05) TW parity: bare locative `于X的Y` — captures X.
+    # F7d (R64, 2026-05-05) TW parity: bare locative `于X的Y` - captures X.
     # Same scoping as TW F7d:
     #   1. 于 must follow a clause boundary or claim start
     #   2. X must be ≥ 3 CJK chars
     #   3. X must not start with reference prefix (前述/所述/该/该等/该些)
     # Conservative: CN drafters use 在X上 / 在X中 more than 于X的, so
-    # this pattern's hit rate may be low — but adding for cross-jurisdiction
+    # this pattern's hit rate may be low - but adding for cross-jurisdiction
     # symmetry with TW F7d (which surfaced the user-reported 半导体基板
     # missed-intro on 神秘黑屏哥.docx).
     _BARE_YU_X_DE_RE_CN = re.compile(
@@ -2958,7 +2958,7 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
             continue
         results.append((m.group(0), candidate))
 
-    # F7b: 一V的Y — participial
+    # F7b: 一V的Y - participial
     for m in _PARTICIPIAL_YI_DE_PATTERN_CN.finditer(text):
         noun = m.group(1)
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
@@ -2972,7 +2972,7 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
             continue
         results.append((m.group(0), normalized))
 
-    # F7c: 的第Y — post-的 ordinal noun
+    # F7c: 的第Y - post-的 ordinal noun
     for m in _POST_DE_ORDINAL_PATTERN_CN.finditer(text):
         noun = m.group(1)
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
@@ -2984,7 +2984,7 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
         results.append((m.group(0), normalized))
 
-    # F6: verb + Y — bare-after-verb
+    # F6: verb + Y - bare-after-verb
     for m in _BARE_AFTER_VERB_PATTERN_CN.finditer(text):
         noun = m.group(1)
         # R14c.2: bare-NP arm (no ordinal, no paren) is gated by
@@ -3020,7 +3020,7 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
                 continue
             results.append((m.group(0), normalized))
 
-    # F5b: 一X(N)的Y — intro with paren-numeral possessive
+    # F5b: 一X(N)的Y - intro with paren-numeral possessive
     for m in _YI_NOUN_PAREN_DE_PATTERN_CN.finditer(text):
         noun = m.group(1)
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
@@ -3035,7 +3035,7 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
             continue
         results.append((m.group(0), normalized))
 
-    # F11: list-after-包括 — colon-anchored preamble lists register each
+    # F11: list-after-包括 - colon-anchored preamble lists register each
     # element as a bare-noun intro. WQ8 / Phase 8c close-out R3.
     # R14e extends with a no-colon sibling pattern gated on ≥2 `、`-
     # separated elements.
@@ -3184,7 +3184,7 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
             continue
         results.append((m.group(0), normalized))
 
-    # === Phase 8c R7-port (2026-04-30) — TW R7 architectural buildout ===
+    # === Phase 8c R7-port (2026-04-30) - TW R7 architectural buildout ===
     # F14 (V之Y), F16 (locative left-side), F17 (locative-internal),
     # F19 (verb-X-之/的), F20 (instrumental). Mirror of TW R7 mechanisms.
     # All use _trim_capture_to_clean_noun_cn for hygiene.
@@ -3293,7 +3293,7 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
                 cleaned_subs.append((orig, sub))
     cleaned.extend(cleaned_subs)
 
-    # R31 second 的-split pass — handles X的Y的Z three-way splits.
+    # R31 second 的-split pass - handles X的Y的Z three-way splits.
     cleaned_subs2 = []
     for orig, norm in cleaned_subs:  # only re-split the newly added ones
         de_idx = norm.find('的')
@@ -3437,7 +3437,7 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
     # ALWAYS signal "<noun phrase><suffix><acronym>" pattern. Narrow
     # allowlist so we don't over-extract from random Chinese-Latin
     # neighbor pairs. Drafters universally use these CJK suffixes for
-    # functional/network entities — high precision.
+    # functional/network entities - high precision.
     _CN_FUNCTION_SUFFIXES = (
         r'功能|服务|系统|网络|设备|单元|协议|平面|层|消息|报文|网元|节点'
     )
@@ -3483,7 +3483,7 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
             seen_norms.add(x_term)
             extras.append((fv_m.group(0), x_term))
 
-    # R37 (2026-05-04): mirror of TW R37 F22 — list-item bare-noun
+    # R37 (2026-05-04): mirror of TW R37 F22 - list-item bare-noun
     # extraction WITHOUT colon trigger. CN parity: parent claim
     # introduces multiple components in `<verb><N1>、<N2>以及<N3>`
     # comma-list shape:
@@ -3493,7 +3493,7 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
     # with embedded Latin/digit/punctuation). Reference-prefix items
     # are skipped (they're not new intros).
     # R44 (2026-05-04): expand triggers to 具有/具备/设有/含有 BUT only
-    # when the captured list has >=2 commas (3+ items) — single-comma
+    # when the captured list has >=2 commas (3+ items) - single-comma
     # lists with these triggers were too noisy on R37/R38 gate-3
     # spec-support test. 3+ items strongly signal a list (not a
     # possessive or modifier sequence).
@@ -3554,13 +3554,13 @@ def extract_introductions_cn(
                 seen.add(normalized)
                 pairs.append((original, normalized))
 
-        # R67 (2026-05-08) — symmetric state-modifier+head-noun lookahead.
+        # R67 (2026-05-08) - symmetric state-modifier+head-noun lookahead.
         # CN parity with the TW R67 intro-side extension. Mirrors the
         # walker reference-side R66 logic so consistent intro+ref pairs
         # like `一岛状的纳米片积层体` ↔ `所述岛状的纳米片积层体` resolve
         # without spurious walker_fp. Also drops the bare state-modifier
         # form (e.g. `岛状`) from inventory once the extended form is
-        # captured — bare 岛状 alone is the modifier, not a claim noun.
+        # captured - bare 岛状 alone is the modifier, not a claim noun.
         if (
             bare_noun.endswith(_STATE_MODIFIER_SUFFIXES_CN)
             and not bare_noun.startswith("第")
@@ -3599,11 +3599,11 @@ def extract_introductions_cn(
 
     # R7 (2026-04-30): also apply strip_leading_verb_cn to supplementary
     # intros so a captured `制造方法` (from F14 on `之制造方法`) registers
-    # as `方法` after stripping the leading 制造 verb prefix — matching
+    # as `方法` after stripping the leading 制造 verb prefix - matching
     # the canonical method-claim head-noun reference `所述方法`.
     supplementary = _extract_supplementary_intros_cn(claim.text)
     for orig, norm in supplementary:
-        # R63 (2026-05-05) parity with TW — apply Arabic→CJK ordinal
+        # R63 (2026-05-05) parity with TW - apply Arabic→CJK ordinal
         # normalize so claim 1 supplementary intro `第1间隔件` registers
         # as `第一间隔件`, matching dep claim references that go through
         # `normalize_reference_term_cn` which already applies the convert.
@@ -3613,7 +3613,7 @@ def extract_introductions_cn(
         norm = strip_leading_verb_cn(norm)
         if not norm or norm in seen:
             continue
-        # R32 (2026-05-04): TW parity — drop intros with newline/colon
+        # R32 (2026-05-04): TW parity - drop intros with newline/colon
         # (capture crossed paragraph or label boundary). Spec-support
         # reads intros directly so guard at extraction time.
         if '\n' in norm or '：' in norm or ':' in norm:
@@ -3621,7 +3621,7 @@ def extract_introductions_cn(
         seen.add(norm)
         pairs.append((orig, norm))
 
-    # R32 (2026-05-04): F-head-indep — capture rightmost head noun from
+    # R32 (2026-05-04): F-head-indep - capture rightmost head noun from
     # `一种<modifier>的<HEAD>，` independent-claim preambles. CN parity
     # with TW R32. Default `_INTRO_PATTERN_CN` excludes `的` from the
     # noun class, so a long preamble like `用于X的Y的装置` only captures
@@ -3697,12 +3697,12 @@ _GENUS_PREAMBLE_RE_CN: re.Pattern[str] = re.compile(
 )
 
 
-# Phase 8c R22 — chemistry formula reference like 式(1) / 式(L-4) / 式(I).
+# Phase 8c R22 - chemistry formula reference like 式(1) / 式(L-4) / 式(I).
 # These are bibliographic-style references to formulae defined elsewhere in
 # the spec, not noun terms; missing-antecedent doesn't apply.
 _FORMULA_REFERENCE_RE_CN: re.Pattern[str] = re.compile(r"^式\([^)]+\)$")
 
-# Phase 8c R22 — verb-predicate term suppression. Walker captured a bare
+# Phase 8c R22 - verb-predicate term suppression. Walker captured a bare
 # verbal idiom (e.g., 安装有 from 使得安装有X的Y); the trailing-strip already
 # eliminated the noun head, leaving the pure predicate as the term.
 # R23 extends with cascade-product predicates from over_capture round
@@ -3710,7 +3710,7 @@ _FORMULA_REFERENCE_RE_CN: re.Pattern[str] = re.compile(r"^式\([^)]+\)$")
 _VERB_PREDICATE_TERMS_CN: frozenset[str] = frozenset({
     "安装有", "存储有", "形成有", "设置有",
     "加入", "加热沸腾",
-    # R68 (2026-05-06) — TW parity. Pure-action verbs from supplement_v2
+    # R68 (2026-05-06) - TW parity. Pure-action verbs from supplement_v2
     # walker_fp mining (n=6289 CN walker_fp): 确定 ~15, 进行 ~3, 获得,
     # 判断, 执行, 完成. Safe-suppress: drafters never use as standalone
     # noun antecedents; appear only in compounds (确定值/获得结果 etc.).
@@ -3724,12 +3724,12 @@ _BARE_ORDINAL_RE_CN: re.Pattern[str] = re.compile(
 )
 
 
-# Phase 8c R21 — DYM quality gate. Audit (docs/8c/suggested-match-audit.md,
+# Phase 8c R21 - DYM quality gate. Audit (docs/8c/suggested-match-audit.md,
 # Phase 9 #57) showed 85% of corpus DYMs have substring-relationship with
 # the reference; ~30% of those are over-captured garbage the walker's intro
 # extraction pool emitted as legitimate intros. These filters reject DYM
 # candidates the Jaccard loop already picked, without changing the finding
-# pool. Non-shifting — `suggested_match` is terminal-only.
+# pool. Non-shifting - `suggested_match` is terminal-only.
 _DYM_LEADING_REJECTS_CN: tuple[str, ...] = (
     "能够由", "响应于", "针对", "基于",
     "对", "从", "向", "为", "在",
@@ -3749,11 +3749,11 @@ def _dym_quality_reject_cn(ref: str, dym: str) -> bool:
     """True if DYM should be suppressed.
 
     Three filters:
-      1. `len(dym) > 2 * len(ref)` — disproportionate expansion.
-      2. DYM starts with a token in `_DYM_LEADING_REJECTS_CN` — walker
+      1. `len(dym) > 2 * len(ref)` - disproportionate expansion.
+      2. DYM starts with a token in `_DYM_LEADING_REJECTS_CN` - walker
          captured a prep/particle-headed fragment, not a clean NP.
       3. `ref in dym` strict substring AND the wrapping chars contain any
-         stop-particle — walker captured the ref + noise.
+         stop-particle - walker captured the ref + noise.
     """
     if len(dym) > 2 * len(ref):
         return True
@@ -3772,9 +3772,9 @@ def _dym_quality_reject_cn(ref: str, dym: str) -> bool:
 def _is_bare_genus_self_reference_cn(term: str, claim_text: str) -> bool:
     """Suppress bare-genus self-references in claim preambles (WQ5).
 
-    When the claim's preamble declares the genus as its subject — either
+    When the claim's preamble declares the genus as its subject - either
     the dependent form ``(如|根据)权利要求N所述的<genus>`` or the independent
-    form ``一种...<genus>，`` — a bare ``所述<genus>`` later in the body is
+    form ``一种...<genus>，`` - a bare ``所述<genus>`` later in the body is
     a trivial self-reference, not a missing antecedent. Phase 8c close-out
     R1.
     """
@@ -3783,7 +3783,7 @@ def _is_bare_genus_self_reference_cn(term: str, claim_text: str) -> bool:
     return bool(_GENUS_PREAMBLE_RE_CN.search(claim_text))
 
 
-# R35 (2026-05-23) — bare-noun-introduction rescue (CN mirror of TW R7
+# R35 (2026-05-23) - bare-noun-introduction rescue (CN mirror of TW R7
 # has_bare_noun_introduction_tw and US R4 utils.has_bare_noun_introduction).
 #
 # A multi-character noun first mentioned article-less -- as a verb or
@@ -3808,7 +3808,7 @@ _BARE_NOUN_INTRO_VERBS_CN: tuple[str, ...] = tuple(
         {v for v in _F6_VERB_ALT_CN.split("|") if v}
         | {"基于", "来自", "通过", "经由", "利用", "依据", "依"}
         # R36 (2026-05-29): include F11 locative verbs as bare-noun-intro
-        # contexts. Issues #141 / #142 — drafter wrote
+        # contexts. Issues #141 / #142 - drafter wrote
         # `限位于第三位置或第四位置二者之一` (constrained to be at position 3 or
         # position 4, one of the two). The `endswith(verb)` left-clean
         # check missed because `位于` / `设于` / `置于` etc. are the
@@ -3827,13 +3827,13 @@ _BARE_NOUN_BOUNDARY_CN: frozenset[str] = frozenset(
     set(_NOUN_CHARS_CN[_NOUN_CHARS_CN.index("s") + 1 : _NOUN_CHARS_CN.index("]")])
     # R36 (2026-05-29): 或 (or) is a Markush enumerator that separates
     # bare noun mentions in claim diction; never part of a noun's name.
-    # Issues #141 / #142 — drafter wrote `限位于第三位置或第四位置二者之一`;
+    # Issues #141 / #142 - drafter wrote `限位于第三位置或第四位置二者之一`;
     # without 或 in the boundary set, `_bare_noun_right_clean_cn`
     # treated `第三位置或...` as a longer compound and rejected the
     # bare intro.
     | {"或"}
     # R39 (2026-06-11): 至 (goal-preposition "to") terminates a verb-object
-    # bare-noun introduction. Issues #221/#222/#223 — drafter wrote
+    # bare-noun introduction. Issues #221/#222/#223 - drafter wrote
     # `通过该主机发送控制指令至该显示器`; the object `控制指令` is a complete
     # bare-noun intro, but without 至 in the boundary set
     # `_bare_noun_right_clean_cn` treated `控制指令至...` as a longer
@@ -3869,8 +3869,8 @@ def _bare_noun_left_clean_cn(text: str, i: int) -> bool:
     if c.isspace() or unicodedata.category(c)[0] == "P":
         return True  # clause boundary / enumeration item
     # R36 (2026-05-29): CJK noun-enumeration conjunctions ({或, 及, 与, 和})
-    # are clause boundaries — they introduce the next noun in a Markush
-    # `A或B`, `A、B及C`, etc. enumeration. Issues #141 / #142 — drafter
+    # are clause boundaries - they introduce the next noun in a Markush
+    # `A或B`, `A、B及C`, etc. enumeration. Issues #141 / #142 - drafter
     # wrote `限位于第三位置或第四位置二者之一`; the second mention `第四位置`
     # is preceded by `或` (CJK letter, not Unicode punctuation), so the
     # Unicode-category check above missed it.
@@ -3879,7 +3879,7 @@ def _bare_noun_left_clean_cn(text: str, i: int) -> bool:
     # even though they're in `_BARE_NOUN_BOUNDARY_CN`. They're possessive /
     # pronoun / passive markers that head relative clauses (e.g.
     # `所述X相关的Y` = "the Y related to X"), where Y is NOT a fresh bare
-    # intro — that's exactly the guard (b) the function docstring describes.
+    # intro - that's exactly the guard (b) the function docstring describes.
     # Accepting them would silence real §112(b) defects like
     # CN115485995B c82/c124's `第一训练信号` (R20 parallel-invention
     # drafter-error protect:true labels).
@@ -3895,7 +3895,7 @@ _BARE_NOUN_MARKUSH_CLOSERS_CN: tuple[str, ...] = ("二者", "三者", "四者", 
 
 # R36 (2026-05-29): CJK noun-enumeration conjunctions accepted as left
 # boundaries in `_bare_noun_left_clean_cn`. Strict subset of
-# `_BARE_NOUN_BOUNDARY_CN` — explicitly excludes 的 / 之 / 其 / 被 / 由
+# `_BARE_NOUN_BOUNDARY_CN` - explicitly excludes 的 / 之 / 其 / 被 / 由
 # (possessive / pronoun / passive markers) which head relative clauses
 # and must remain rejected per guard (b).
 _BARE_NOUN_ENUMERATORS_CN: frozenset[str] = frozenset({"或", "及", "与", "和"})
@@ -3906,8 +3906,8 @@ def _bare_noun_right_clean_cn(text: str, j: int) -> bool:
     if j >= len(text):
         return True
     # R36 (2026-05-29): Markush closers `N者` / `任一` mark the end of an
-    # `X或Y二者之一` enumeration — the term is the last enumeration item,
-    # not the head of a longer compound. Issues #141 / #142 — drafter
+    # `X或Y二者之一` enumeration - the term is the last enumeration item,
+    # not the head of a longer compound. Issues #141 / #142 - drafter
     # wrote `第三位置或第四位置二者之一`; without this carve-out the right
     # side of `第四位置` was `二` (CJK char, not a boundary), so the bare
     # intro was rejected. The closers are unambiguous Markush idioms;
@@ -3921,7 +3921,7 @@ def _bare_noun_right_clean_cn(text: str, j: int) -> bool:
 def has_possessive_introduction_cn(
     claim_text: str, chain: list, term: str, ref_offset: int
 ) -> bool:
-    """R37 (2026-06-01) — TW R9 parity (issue #134 generalization).
+    """R37 (2026-06-01) - TW R9 parity (issue #134 generalization).
 
     True if ``term`` appears earlier in possessive position
     ``(所述|前述|该)<X>(的|之)<term>``, where the genitive owner X is
@@ -3932,7 +3932,7 @@ def has_possessive_introduction_cn(
     - Accepts BOTH 的 (modern CNIPA standard) and 之 (classical /
       JP-translation variant) as genitive markers. TW uses 之
       predominantly; CN drafters split between 的 and 之.
-    - Markers ``所述`` / ``前述`` / ``该`` (CN simplified — TW equivalent
+    - Markers ``所述`` / ``前述`` / ``该`` (CN simplified - TW equivalent
       is ``該``).
 
     Differs from ``has_bare_noun_introduction_cn``:
@@ -3953,7 +3953,7 @@ def has_possessive_introduction_cn(
     if any(ch.isdigit() for ch in t) or "(" in t:
         return False
     # CN R37 narrowing: ordinal-led terms (第一X / 第二X / ...) are
-    # EXCLUDED. Doctrine is ambiguous — `所述X的第一Y` may be either
+    # EXCLUDED. Doctrine is ambiguous - `所述X的第一Y` may be either
     # (a) a definitional intro of "the first Y of X" in possessive
     # position, OR (b) a definite reference to a previously-introduced
     # "first Y" that strict §112(b) requires to have its own clean
@@ -3961,7 +3961,7 @@ def has_possessive_introduction_cn(
     # CN115485995B c82/c124's `所述第三信号相关的第一训练信号` is
     # marked protect:true as a real §112(b) defect). To preserve that
     # protect AND still cover the unambiguous locative-attribute
-    # pattern (顶面/底面/侧面/端面 — non-ordinal short nouns that R9 was
+    # pattern (顶面/底面/侧面/端面 - non-ordinal short nouns that R9 was
     # designed for), exclude terms starting with the 第 ordinal prefix.
     if t.startswith("第"):
         return False
@@ -3980,7 +3980,7 @@ def has_possessive_introduction_cn(
                 look_back = text[max(0, idx - 16):idx - 1]
                 if any(marker in look_back for marker in ("所述", "前述", "该")):
                     # Right-clean intentionally skipped (same rationale as
-                    # has_possessive_introduction_tw — verb-start chars
+                    # has_possessive_introduction_tw - verb-start chars
                     # would block legitimate intros of short locatives).
                     return True
             start = idx + 1
@@ -4083,7 +4083,7 @@ def check_antecedent_basis_cn(
             ):
                 intros_by_term.setdefault(normalized, (ancestor.id, depth))
 
-        # R32 (2026-05-04): Path A equivalent for CN — chain-level
+        # R32 (2026-05-04): Path A equivalent for CN - chain-level
         # ordinal-prefix bridging. Mirror of TW R32. Two guards:
         #   1. Multi-modifier ambiguity (no other 第N+suffix in chain).
         #   2. Prefix-conflict (suffix not followed by 1-3 CJK in claim
@@ -4133,7 +4133,7 @@ def check_antecedent_basis_cn(
         # Architectural mirror of R32 ordinal bridge + R52 TW:
         #   1. Multi-modifier ambiguity guard
         #   2. Conflict guard (HEAD already an intro)
-        #   3. Suffix allowlist — Simplified-script equivalents of TW R52
+        #   3. Suffix allowlist - Simplified-script equivalents of TW R52
         _R52_HEAD_SUFFIXES_CN = (
             # Pharma/chemistry (R52-CN original)
             "组合物", "化合物", "溶液", "溶剂", "配方",
@@ -4200,7 +4200,7 @@ def check_antecedent_basis_cn(
                     normalized_term or raw_noun, prefix
                 ),
                 # Q1 path is a rule-based detection of TC-plural prefixes
-                # (该等/该些) on a CN doc. Not pattern-based — the prefix
+                # (该等/该些) on a CN doc. Not pattern-based - the prefix
                 # alone is the violation under CNIPA审查指南 guidance to
                 # use 所述. Very rarely a false positive in practice;
                 # ship a fixed high confidence so the tier-display knob
@@ -4267,7 +4267,7 @@ def check_antecedent_basis_cn(
                         raw_noun = raw_noun + added
                         raw_noun_end += len(added)
 
-            # R66 (revised 2026-05-05): TW parity — state-modifier capture
+            # R66 (revised 2026-05-05): TW parity - state-modifier capture
             # extension. When raw_noun ends in 状/形 and `的<head>` follows,
             # extend capture so the displayed reference_form is the full
             # `所述<state>的<head>` phrase rather than the bare adjective.
@@ -4323,7 +4323,7 @@ def check_antecedent_basis_cn(
                         best_len = len(intro)
                         resolved_intro = intro
 
-            # R46 (2026-05-04): mirror of TW R46 — ordinal-prefix-to-
+            # R46 (2026-05-04): mirror of TW R46 - ordinal-prefix-to-
             # Latin-abbrev bridge. Reference `第N<X>` where X is short
             # uppercase Latin abbrev (2-5 chars) and `<X>` is registered
             # as an intro -> bridge. Common in CN 5G/wireless drafts.
@@ -4338,7 +4338,7 @@ def check_antecedent_basis_cn(
                     ):
                         resolved_intro = bare
 
-            # R29 (2026-05-03) — Resolution-side architectural mechanisms
+            # R29 (2026-05-03) - Resolution-side architectural mechanisms
             # (forward-prefix with boundary, symmetric clean, cross-branch
             # sibling, substring) all silenced protect:true legit_drafting
             # _error labels (parallel-invention drafter errors on
@@ -4419,7 +4419,7 @@ def check_antecedent_basis_cn(
             ):
                 suggested_match = None
 
-            # Phase 8c R21 — DYM quality gate
+            # Phase 8c R21 - DYM quality gate
             if (
                 suggested_match is not None
                 and _dym_quality_reject_cn(
@@ -4434,9 +4434,9 @@ def check_antecedent_basis_cn(
             if "权利要求" in normalized_term:
                 continue
 
-            # R32 (2026-05-04): TW parity — citation boilerplate filter
+            # R32 (2026-05-04): TW parity - citation boilerplate filter
             # (任一项 stranded after `权利要求` substring removal would
-            # otherwise pass — but multi-dep refs like `任一项所述的X`
+            # otherwise pass - but multi-dep refs like `任一项所述的X`
             # produce term=`任一项` directly when the dep regex misses).
             if "任一项" in normalized_term or "申请专利范围" in normalized_term:
                 continue
@@ -4444,7 +4444,7 @@ def check_antecedent_basis_cn(
             if len(normalized_term) == 1:
                 continue
 
-            # R32 (2026-05-04): TW parity — newline/colon filter. F-anchor
+            # R32 (2026-05-04): TW parity - newline/colon filter. F-anchor
             # captures crossing paragraph or label boundaries leak garbage
             # into spec-support too via shared extract_introductions_cn.
             if '\n' in normalized_term or '：' in normalized_term or ':' in normalized_term:
@@ -4456,7 +4456,7 @@ def check_antecedent_basis_cn(
             if _BARE_ORDINAL_RE_CN.match(normalized_term):
                 continue
 
-            # Phase 8c R22 — chemistry formula reference + verb-predicate suppression
+            # Phase 8c R22 - chemistry formula reference + verb-predicate suppression
             if _FORMULA_REFERENCE_RE_CN.match(normalized_term):
                 continue
 
@@ -4469,18 +4469,18 @@ def check_antecedent_basis_cn(
             # Walker capture without proper leading-quantifier strip leaves
             # the bare quantifier as the term. Mirror of TW
             # _BARE_QUANTIFIER_TERMS_TW filter. Surfaced via supplement_v2
-            # hand-verification — `多个` flagged on CN121219509A c10.
+            # hand-verification - `多个` flagged on CN121219509A c10.
             if normalized_term in {
                 "多个", "复数", "数个", "至少", "若干", "一些",
                 "多个个", "复数个",
             }:
                 continue
-            # R62: short residual structural fragments — single CJK char
+            # R62: short residual structural fragments - single CJK char
             # or 1-char Latin terms that escape the prefix-strip cascade.
             if len(normalized_term) < 2:
                 continue
 
-            # Structural fingerprint (ADR-145) — mirror of TW walker.
+            # Structural fingerprint (ADR-145) - mirror of TW walker.
             # No claim content; counts + booleans only.
             diagnostics = {
                 "prefix_charlen": len(prefix),
@@ -4511,7 +4511,7 @@ def check_antecedent_basis_cn(
             # does the flagged term appear verbatim in an ancestor claim?
             # If so the introduction exists but in a shape the intro
             # extractor missed (walker FP); if not, a genuine §112 gap.
-            # `ancestor_match_text` stays in-process — the extractor windows
+            # `ancestor_match_text` stays in-process - the extractor windows
             # it. Brings CN to parity with the US/TW antecedent walkers so
             # CN child-claim reports (#222/#223/#226) self-classify from the
             # payload via `term_in_ancestor_text`.

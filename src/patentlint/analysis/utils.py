@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Shared analysis utilities.
 
 Extracted from analysis/claims.py for reuse across multiple checks.
@@ -13,7 +13,7 @@ from typing import Any
 
 # ADR-145 diagnostic fingerprint helper. Every amend/verify CheckItem
 # emission carries a diagnostics dict so error-report emails contain a
-# consistent structural-metadata block across every check — no silent
+# consistent structural-metadata block across every check - no silent
 # "this one has a fingerprint, that one doesn't" UX. The helper drops
 # None values so call-sites can pass every candidate key unconditionally
 # without littering the output.
@@ -49,14 +49,14 @@ def numeral_context_excerpt(
 
     Returns None when no qualifying occurrence is found. Excerpt size
     is bounded (12 chars before + 12 chars after by default) to stay
-    within the "structural fingerprint" privacy boundary — same
+    within the "structural fingerprint" privacy boundary - same
     convention as `context_after` in `_ref_numeral_finding_diag` and
     other walker diagnostics. Newlines are collapsed so the excerpt
     fits on one report-payload line.
 
     Used by `numeralConsistency` (TW/CN/US) to enrich the diagnostic
     with an actual snippet of where the conflict occurred (R67
-    2026-05-08 — anonymous reports were emitting bare digits with
+    2026-05-08 - anonymous reports were emitting bare digits with
     no surrounding context, useless for triage).
     """
     if not spec_text or not numeral:
@@ -90,7 +90,7 @@ def annotate_term_in_spec(
     the document's specification body. When a flagged term ALSO appears
     in the description (technical field + background + summary +
     drawings description + detailed description / embodiment), the
-    drafter likely DID introduce the concept somewhere — even if the
+    drafter likely DID introduce the concept somewhere - even if the
     claim-chain walker can't resolve the back-reference. The spec match
     boosts confidence that the finding is a STYLISTIC issue (term
     introduced in spec but referenced in claims without parallel intro)
@@ -101,7 +101,7 @@ def annotate_term_in_spec(
     the field False; no score change.
     """
     # R57c (2026-05-05): annotated term_in_spec but did NOT mutate
-    # confidence_score — abstract proxy on supplement_v2 showed term_in_abs
+    # confidence_score - abstract proxy on supplement_v2 showed term_in_abs
     # was a slight negative signal for legit (in 13.4% / out 18.7%).
     #
     # R61c (2026-05-05 evening): Path 1 corpus measurement using FULL
@@ -114,7 +114,7 @@ def annotate_term_in_spec(
     #
     # Absence is the strong walker_fp signal (~−12pp from baseline).
     # Wire as a −15 confidence penalty when the term is missing from
-    # spec body — pushes walker over-captures out of the high-conf
+    # spec body - pushes walker over-captures out of the high-conf
     # bucket. Magnitude calibrated so the floor lands these findings
     # well below typical thresholds (~50 baseline → ~35 with penalty).
     #
@@ -127,14 +127,14 @@ def annotate_term_in_spec(
             f["term_in_spec"] = False
             # When we have NO spec text (e.g., parser-only fixture or
             # corpus record without description), don't apply penalty
-            # — the False here means "no signal", not "validated absent".
+            # - the False here means "no signal", not "validated absent".
         return
     for f in findings:
         term = (f.get("term") or "").strip()
         in_spec = bool(term) and term in spec_text
         f["term_in_spec"] = in_spec
         if not in_spec and "confidence_score" in f:
-            # Validated walker over-capture signal — push out of bucket.
+            # Validated walker over-capture signal - push out of bucket.
             f["confidence_score"] = max(0, f["confidence_score"] - 15)
 
 
@@ -142,10 +142,10 @@ def annotate_term_in_symbol_table(
     findings: list[dict],
     symbol_table_norms: set[str],
 ) -> None:
-    """Post-walker annotator — sets `term_in_symbol_table: bool` per finding.
+    """Post-walker annotator - sets `term_in_symbol_table: bool` per finding.
 
     R61b (2026-05-05): TIPO-style hybrid uses 符號說明 as a *lookup table*
-    (not a walker silencer — see ``feedback_no_symbol_table_antecedent_bridge.md``
+    (not a walker silencer - see ``feedback_no_symbol_table_antecedent_bridge.md``
     for why silencing was rejected). Drafter-declared element names in
     符號說明 are evidence the element exists; missing claim-chain intro
     on a declared element is more likely a real legit defect than walker
@@ -177,12 +177,12 @@ def make_document_dedup_key(term: str, reference_form: str) -> str:
 
     The walker emits at `(claim_id, term, reference_form)` granularity.
     Across N dependent claims that all reference `the X` when X has no
-    antecedent, N redundant findings fire — same logical defect, just
+    antecedent, N redundant findings fire - same logical defect, just
     surfaced in N claim contexts. Collapsing them at the display layer
     needs a stable key that ignores claim_id but preserves the
     (term, reference_form) pair, which IS the logical defect identity.
 
-    Format: ``"<term>|<reference_form>"`` — pipe-delimited so JSON-
+    Format: ``"<term>|<reference_form>"`` - pipe-delimited so JSON-
     serializable + readable in trace output. Whitespace-collapsed and
     case-folded for cross-claim equivalence under common stylistic
     drift (`said widget`, `said widget `, `Said widget`).
@@ -217,17 +217,17 @@ def _r59_ml_path_match(
     Trained sklearn DecisionTree (depth 8, min_leaf 30) on combined
     phase2b verdicts (55,503 labeled findings, 21.8% absolute precision).
     Identified 11 leaves with ≥50% precision (combined 70.4% precision
-    on 452 findings — at the 70%-bucket goal).
+    on 452 findings - at the 70%-bucket goal).
 
     Each leaf's decision path encoded as one branch below. Returns True
     if a finding's feature vector matches any high-precision leaf.
-    Pure deterministic Python — no model file shipped at runtime.
+    Pure deterministic Python - no model file shipped at runtime.
 
     Top-precision branches (top 4 of 11):
-      Leaf 264: 94.1% (n=68) — US, intros_pool>67, term_len>6, ref_len≤17
-      Leaf 255: 89.4% (n=47) — US, intros_pool 54-63, term_len 7-11, ref_len>14
-      Leaf 263: 74.2% (n=31) — US, intros_pool>67, term_len≤6, ref_len≤17
-      Leaf 261: 72.9% (n=48) — US, intros_pool 63-67, ref_len≤17
+      Leaf 264: 94.1% (n=68) - US, intros_pool>67, term_len>6, ref_len≤17
+      Leaf 255: 89.4% (n=47) - US, intros_pool 54-63, term_len 7-11, ref_len>14
+      Leaf 263: 74.2% (n=31) - US, intros_pool>67, term_len≤6, ref_len≤17
+      Leaf 261: 72.9% (n=48) - US, intros_pool 63-67, ref_len≤17
     """
     # R59c (2026-05-05): single robust ML-distilled path.
     # depth-4 DT, min_samples_leaf=200, ONE leaf passing strict
@@ -271,7 +271,7 @@ def _r59_ml_path_match(
         return True
     # CN/TW path REMOVED: holdout test showed in-sample 58.8% on TW leaf
     # 22 (the only non-US qualifying path) regressed to 5.7% on TEST
-    # data — the tree overfit. Keeping only US paths which retained
+    # data - the tree overfit. Keeping only US paths which retained
     # ~54.6% precision on test data (vs absolute 32%, +23pp lift).
     # CN/TW need their own per-juris model + stricter cross-validation
     # before any path encoding ships (R60 follow-up).
@@ -293,25 +293,25 @@ def compute_confidence_score(
     reference_form: str = "",
     jurisdiction: str = "",
 ) -> int:
-    """Confidence score (0–100) for an antecedent-basis finding.
+    """Confidence score (0-100) for an antecedent-basis finding.
 
     Computed at walker emit-time from signals available when the
-    finding fires. NOT a probability — a coarsely-calibrated ranking
+    finding fires. NOT a probability - a coarsely-calibrated ranking
     score for the user-facing tier-display knob (Phase 5 of the
     precision-push plan).
 
-    Formula evolution (in-source for transparency — calibration is a
+    Formula evolution (in-source for transparency - calibration is a
     research problem, the values are working hypotheses):
 
     - **v1** (shipped `c3b83f2`): baseline 80 + ±5 adjustments.
-      Pilot calibration showed 99% of findings clustered 75–90 with
+      Pilot calibration showed 99% of findings clustered 75-90 with
       no spread.
     - **v2** (shipped `24edd56`): baseline 50 + larger bonuses on
       "strong positive evidence" signals. Pilot showed meaningful
       spread BUT empirical signal-correlation analysis on the broad
       pre-R34 supplement data (CN 7556, US 13578, TW 5283 verdicts)
       revealed v2's positive signals are INVERSELY correlated with
-      `legit_drafting_error` — high-conf buckets had LOWER precision
+      `legit_drafting_error` - high-conf buckets had LOWER precision
       than absolute. v2 was push findings the wrong way.
     - **v3** (this version): empirically-grounded sign reversal. Each
       signal direction matches the broad-corpus correlation:
@@ -322,23 +322,23 @@ def compute_confidence_score(
 
     V3 signals (sign matches empirical correlation):
 
-    - **+8** very-short term (≤2 chars) — empirical +6.1pp lift; many
+    - **+8** very-short term (≤2 chars) - empirical +6.1pp lift; many
       single-char CJK component refs (該下/該上/該左/該右) ARE legit
       defects; intuition was wrong, data wins.
-    - **+10** suggested-match same-claim — kept positive (small
+    - **+10** suggested-match same-claim - kept positive (small
       negative correlation in data but theoretically a strong signal
       for stylistic-drift typos).
-    - **+5** suggested-match (any) with high Jaccard (≥0.75) — small
+    - **+5** suggested-match (any) with high Jaccard (≥0.75) - small
       positive on weak correlation.
-    - **−8** long term (≥8 chars) — empirical −12.6pp; catches walker
+    - **−8** long term (≥8 chars) - empirical −12.6pp; catches walker
       over-extraction past head noun.
-    - **−5** paren term (`X(YYY)` shape) — empirical −9.4pp; walker
+    - **−5** paren term (`X(YYY)` shape) - empirical −9.4pp; walker
       grabbing parenthetical context = over-extraction signal.
-    - **−15** short ASCII-uppercase (≤3 chars) — empirical −18.0pp;
+    - **−15** short ASCII-uppercase (≤3 chars) - empirical −18.0pp;
       Latin acronym over-bridge class (R34/R40/R41/R42 cluster).
-    - **−15** zero intros in chain — empirical −19.5pp; walker-parser
+    - **−15** zero intros in chain - empirical −19.5pp; walker-parser
       failure indicator, NOT a defect-strength signal as v2 assumed.
-    - **−10** suggested-match cross-branch only — chain-invalid by
+    - **−10** suggested-match cross-branch only - chain-invalid by
       strict §112(b) definition.
 
     NOT yet validated against post-R48 verdicts (Phase 1 supplement_v2
@@ -347,7 +347,7 @@ def compute_confidence_score(
 
     Clamped to [0, 100].
     """
-    # R58 (2026-05-05) — ML-distilled v4 weights. Logistic regression on
+    # R58 (2026-05-05) - ML-distilled v4 weights. Logistic regression on
     # 19,645 supplement_v2 labeled findings provides empirically-grounded
     # signal magnitudes (raw coefficients, original units):
     #     is_us:             +1.93   → score +25
@@ -375,10 +375,10 @@ def compute_confidence_score(
         score += 5  # mid-length terms = empirically more legit
     elif len(term_str) > 12:
         score -= 3  # very-long = walker over-capture
-    # Paren-containing — strong WFP per LR (-1.25/-0.87)
+    # Paren-containing - strong WFP per LR (-1.25/-0.87)
     if "(" in term_str or "（" in term_str:
         score -= 12
-    # Short ASCII-uppercase Latin — strongest WFP signal (LR -1.70)
+    # Short ASCII-uppercase Latin - strongest WFP signal (LR -1.70)
     if (
         term_str
         and len(term_str) <= 3
@@ -386,7 +386,7 @@ def compute_confidence_score(
         and term_str.isupper()
     ):
         score -= 18
-    # Ordinal-Chinese-prefix — counter-intuitive WFP signal (LR -0.48)
+    # Ordinal-Chinese-prefix - counter-intuitive WFP signal (LR -0.48)
     if _re.match(r'^第[一二三四五六七八九十百0-9]+', term_str):
         score -= 5
     # 2026-06-01 confidence-tuning: English-ordinal-led terms (`first X` /
@@ -396,7 +396,7 @@ def compute_confidence_score(
         score -= 10
     # 2026-06-01 confidence-tuning: single-word English terms (no
     # whitespace in term, no digit) are over-represented in walker_fp
-    # at high confidence (LR coef -0.49) — these are typically generic
+    # at high confidence (LR coef -0.49) - these are typically generic
     # domain nouns (cancer / instructions / operations / customers / data)
     # that get bound to refs but are spec-defined rather than claim-intro'd.
     # Gated by jurisdiction (US/EPC English) and digit-absence so CJK
@@ -409,7 +409,7 @@ def compute_confidence_score(
         and not any(c.isdigit() for c in term_str)
     ):
         score -= 5
-    # Empty intro pool — slight WFP signal
+    # Empty intro pool - slight WFP signal
     if intros_pool_size == 0:
         score -= 5
     # Suggested-match signals (LR + 0.33 for same_claim)
@@ -421,7 +421,7 @@ def compute_confidence_score(
             score += 8  # R58: stronger weight per LR
         if suggested_cross_branch and not suggested_same_claim:
             score -= 10
-    # Formal-register prefix — minor positive
+    # Formal-register prefix - minor positive
     if prefix and prefix.strip().lower() in _FORMAL_PREFIXES:
         score += 5
     # R57c (2026-05-05) REVERTED: term_in_spec was assumed +10 positive
@@ -432,7 +432,7 @@ def compute_confidence_score(
     # Kept the kwarg for forward compatibility but no score change.
     if term_in_spec:
         pass  # signal not currently used; placeholder for future training
-    # R61b (2026-05-05): TIPO-style 符號說明 lookup-table — empirically
+    # R61b (2026-05-05): TIPO-style 符號說明 lookup-table - empirically
     # NEUTRAL after corpus validation (Path 1 result, 2026-05-05).
     #
     # Initial direction (+5 boost) was based on local TW fixtures showing
@@ -489,7 +489,7 @@ def compute_confidence_score(
 # (issue #103 / spec extractor) previously had NP captures truncated at the
 # hyphen, emitting bare `large` / `channel layer` (1-3 token fragments) instead
 # of the full compound. Same `_WORD` is shared by US claims walker (this file)
-# and the spec numeralConsistency name extractor — one change covers both.
+# and the spec numeralConsistency name extractor - one change covers both.
 _WORD = r"\w+(?:[-\u2010\u2011]\w+)*"
 
 # Captures noun phrases (up to 6 words) after "the"/"said" or "a"/"an".
@@ -509,24 +509,24 @@ _STOP_WORDS = (
     # FPs in the US pool: `hardware input data comprises human interface`
     # captured whole). `meets` / `reaches` mirror the same N+V over-capture
     # (`confidence measurement meets`, `second node respectively reaches`).
-    # All are unambiguous verbs — never noun-phrase constituents.
+    # All are unambiguous verbs - never noun-phrase constituents.
     r"comprises|comprise|consists|consist|meets|reaches|"
     # R3 (2026-05-22): further finite 3sg verbs that bled into the NP
-    # capture across `<noun> <verb>` claim clauses — issues #86 (`the
+    # capture across `<noun> <verb>` claim clauses - issues #86 (`the
     # leakage inspection region presents`), #87 (`annular groove
     # constitutes`), #88 (`contact lens storage solution flows`),
     # #89 (`presents`), #92 (`control unit uses`). The walker's own
     # did-you-mean already names the clean head noun in every case.
     r"presents|constitutes|flows|uses|"
     # R7 (2026-05-29): finite-verb over-capture (drained from
-    # 2026-05-29 report queue — issues #120 `guiding pattern exceeds`,
+    # 2026-05-29 report queue - issues #120 `guiding pattern exceeds`,
     # #127 `second mounting portion extend`, #128 `encapsulation layer
     # jointly constitute`, #135 `second magnetic component stays`).
     # `exceeds` joins the existing `meets|reaches` measurement-comparison
     # family; `extend`/`constitute` cover the base-form gaps left by
     # R2/R3 (which seeded only the 3sg `extends`/`constitutes`); `stays`
     # is a positional verb common in mechanical claims. All four are
-    # unambiguous finite verbs in claim diction — MPEP § 2173.05(e)
+    # unambiguous finite verbs in claim diction - MPEP § 2173.05(e)
     # treats only noun phrases as §112(b) reference targets.
     r"exceeds|extend|constitute|stays|"
     # R8 (2026-06-01): clock-domain / PLL-class verbs surfaced by issue
@@ -534,11 +534,11 @@ _STOP_WORDS = (
     # successively approach`). `occur` / `approach` are unambiguous
     # event-domain verbs (different word from `occurring` gerund which
     # CAN be part of a compound noun like `non-naturally occurring
-    # pathogen` — word boundary semantics protect that). `successively`
+    # pathogen` - word boundary semantics protect that). `successively`
     # is added to _ADVERB_STOPS (trailing strip) to handle the adverb-
     # before-verb shape `<noun> successively <verb>`.
     r"occur|approach|"
-    # 2026-06-01 batch — additional finite verbs from US bulk-report
+    # 2026-06-01 batch - additional finite verbs from US bulk-report
     # batch (mechanical adapter / monitor mount drafter): `move`
     # (positional / kinematic verb), `complies` (3sg conformance
     # verb). Both unambiguous finite verbs in claim diction.
@@ -549,64 +549,64 @@ _STOP_WORDS = (
     # (#188 `pressing member passes`, #189 `clamping member passes`, #190
     # `first/second extension arm passes`); `correspond` is the base-form
     # gap left by the existing 3sg `corresponds` (#188 `two poles
-    # respectively correspond` — plural subject takes base form, mirror of
+    # respectively correspond` - plural subject takes base form, mirror of
     # R7's base-form `extend|constitute`). The intervening `respectively`
     # adverb is already stripped by `_ADVERB_STOPS`. Both unambiguous finite
-    # verbs in claim diction — MPEP § 2173.05(e) treats only noun phrases as
+    # verbs in claim diction - MPEP § 2173.05(e) treats only noun phrases as
     # §112(b) reference targets. Shared `_NP_CORE` covers the spec-support
     # extractor too (#192 same `<arm> passes` over-capture, cross-CHECK
-    # symmetry for free). No CN/TW report of the analogous verb yet —
+    # symmetry for free). No CN/TW report of the analogous verb yet -
     # deferred per DR-1 (CJK 穿經/穿過 is a single token, different shape).
     r"passes|correspond|"
     # R12 (2026-06-09): finite-verb over-capture from the 2026-06-09 US
     # report batch. `depends` (3sg, `the virtual plane depends on …` #205)
     # and `stores` (3sg, `the storage circuit further stores …` #200,
-    # `the host stores …` #218) are unambiguous matrix verbs — never noun
-    # termini in claim diction. `not` is NOT added — `the strand not
+    # `the host stores …` #218) are unambiguous matrix verbs - never noun
+    # termini in claim diction. `not` is NOT added - `the strand not
     # conjugated to the label` is a legitimate negative-limitation noun
     # phrase, so `not` has real NP uses (queued for a US walker-round).
     # Spec-support shares `_NP_CORE` (cross-CHECK covered for free). No
-    # CN/TW report of the analogous verbs — deferred per DR-1.
+    # CN/TW report of the analogous verbs - deferred per DR-1.
     r"depends|stores|"
-    # R13 (2026-06-09): `refers` (3sg) — `the reference point refers to a
+    # R13 (2026-06-09): `refers` (3sg) - `the reference point refers to a
     # center …` (#204) over-captured `reference point refers`. Unambiguous
     # finite verb (`X refers to Y`). The 4 active `particular zone refers`
     # labels that previously blocked this were re-triaged this round
     # (legit_drafting_error → walker_fp, DR-10): their own notes call them
     # "verb phrase fragment, not a noun" and the clean head `particular
-    # zone` is introduced via `a particular zone` (Pattern A) — so they
+    # zone` is introduced via `a particular zone` (Pattern A) - so they
     # were doubly mis-shaped corpus labels, not real §112 defects.
     r"refers|"
-    # R16 (2026-06-23, ADR-159 Zero-FP Sweep 1A): `conforms` (3sg) — the
+    # R16 (2026-06-23, ADR-159 Zero-FP Sweep 1A): `conforms` (3sg) - the
     # matrix verb in `the interface conforms to <standard>` (US9582415B2
     # c6/c7/c12/c13) over-captured `interface conforms`. Unambiguous finite
     # verb (`X conforms to Y`); no noun sense in claim diction. The clean head
     # `the interface` resolves to `an interface` (Pattern A, claim 1). The
     # base form `conform` and 3sg sibling are not added (no corpus signal);
-    # `replicates` was withheld — it carries a real biotech noun sense
+    # `replicates` was withheld - it carries a real biotech noun sense
     # (`triplicate replicates`), so it needs a gated round, not a bare add.
     # Shared `_NP_CORE` covers the spec-support extractor (cross-CHECK). EPC
-    # reuses the US walker. No CN/TW report — DR-1.
+    # reuses the US walker. No CN/TW report - DR-1.
     r"conforms|"
-    # R19 (2026-06-25, ADR-159): `follows` (3sg) — trailing finite verb surfaced
+    # R19 (2026-06-25, ADR-159): `follows` (3sg) - trailing finite verb surfaced
     # by the normalization-asymmetry probe (gold walker_fp where the bare-noun
     # intro already exists; the relative-clause verb bled into the reference,
     # e.g. `second field follows`). Unambiguous finite verb (`X follows Y`), no
     # claim noun sense; clean head resolves to its Pattern-A intro. FN-guarded
     # (validate_fix silenced_legit==0). The siblings `matches`/`fails`/`intends`
-    # were WITHHELD — each silenced gold-legit (`authentication data matches`,
+    # were WITHHELD - each silenced gold-legit (`authentication data matches`,
     # `usage fraction fails`, `customer intends`): the strip resolves a reference
     # the gold treats as a real §112 defect, and the deterministic gold-corrector
     # can't verify those overnight (need a gated round + claim read). Shared
-    # `_NP_CORE` → spec-support too. EPC reuses US. No CN/TW report — DR-1.
+    # `_NP_CORE` → spec-support too. EPC reuses US. No CN/TW report - DR-1.
     r"follows|"
     # R20 (2026-06-25, ADR-159): batch of trailing 3sg finite verbs from the
     # normalization-asymmetry probe (relative-clause matrix verbs that bled into
     # the captured reference; the bare-noun head already has its intro). Noun-gray
     # verbs (sets/interfaces/transforms/results) EXCLUDED per the campaign's
     # noun-sense caution. FN-guard auto-narrowed the batch: occurs/sends/remains/
-    # continues WITHHELD (each silenced gold-legit — e.g. `display area continues`,
-    # `unlicensed spectrum occurs` — resolving references the gold treats as real
+    # continues WITHHELD (each silenced gold-legit - e.g. `display area continues`,
+    # `unlicensed spectrum occurs` - resolving references the gold treats as real
     # defects; unverifiable overnight). Shipped subset = silenced_legit==0.
     r"differs|acts|equals|obtains|enters|"
     # R21 (2026-06-26, ADR-159): long-tail batch of trailing 3sg finite verbs
@@ -619,23 +619,23 @@ _STOP_WORDS = (
     r"denotes|derives|mismatches|deletes|arrives|manages|displaces|succeeds|"
     r"refuses|desires|"
     # R22 (2026-06-26, ADR-159): trailing finite verbs from the report-queue
-    # drain — #275 (`control circuit finds`), #287 (`first cutting grooves
+    # drain - #275 (`control circuit finds`), #287 (`first cutting grooves
     # penetrate`). `penetrate(s)` has no noun sense; `finds` noun-sense
     # (archaeological finds) is absent from claim corpora.
     r"finds|penetrate|penetrates|"
     # R23 (2026-06-26): `counts` (#276 `conversion circuit counts a coarse
-    # oscillation period`) — noun-gray (bit/pulse/vote counts are real elements),
+    # oscillation period`) - noun-gray (bit/pulse/vote counts are real elements),
     # so a bare stop silenced a gold-legit (caught by the FN-guard in R22).
     # Lookahead-gated like `accounts(?=\s+for)`: fire ONLY when followed by an
     # article/determiner (the verb-object pattern `counts a/an/the X`); the noun
     # usage (`the bit counts.` / `counts of …`) is unaffected.
     r"counts(?=\s+(?:a|an|the)\b)|"
-    # R25 (2026-06-26): `sent` (passive participle — `the dns response sent to …`)
+    # R25 (2026-06-26): `sent` (passive participle - `the dns response sent to …`)
     # and `prior` lookahead-gated to the relational `prior to` (so the `prior art`
     # noun is untouched). Both surfaced by the asymmetry probe; FN-guarded.
     r"sent|prior(?=\s+to\b)|"
     # R26 (2026-06-27, asymmetry probe): `removes` 3sg finite verb
-    # (`the second direction removes …`) — no noun sense in claim diction.
+    # (`the second direction removes …`) - no noun sense in claim diction.
     r"removes|"
     # R27 (2026-06-27, asymmetry probe): `intends`/`occurs` (pure 3sg verbs,
     # no noun sense) + lookahead-gated `matches`/`fails` (noun senses
@@ -644,13 +644,13 @@ _STOP_WORDS = (
     r"intends|occurs|matches(?=\s+(?:a|an|the)\b)|fails(?=\s+(?:to|a|an|the)\b)|"
     # R28 (2026-06-27, asymmetry probe): pure 3sg verbs sends/continues +
     # lookahead-gated `sets(?=\s+(?:a|an|the))` (the noun `data sets` is
-    # preserved). WITHHELD: `results` (`results in` ambiguous — verb vs noun
+    # preserved). WITHHELD: `results` (`results in` ambiguous - verb vs noun
     # `the results in the database`, 2 FNs); `remains` (interior `<nodes>
     # remains available` strips to an un-re-firing `second computing nodes`,
-    # 2 FNs — US10642603B2). FN-guarded.
+    # 2 FNs - US10642603B2). FN-guarded.
     r"sends|continues|sets(?=\s+(?:a|an|the)\b)|"
     # R29 (2026-06-28, asymmetry re-verify): base-form gaps left by the 3sg
-    # `executes`/`reflects` already in this set — plural/coordinate subjects
+    # `executes`/`reflects` already in this set - plural/coordinate subjects
     # take the base form (`the executable code execute`, `the certainty score
     # reflect`). Both are verb-only in claim diction (the nouns are
     # `execution`/`executable` and `reflection`), so no lookahead gate is
@@ -661,7 +661,7 @@ _STOP_WORDS = (
     # `charges`/`discharges` over-captured into the antecedent reference
     # (`the energy storage unit selectively charges`, `the energy storage
     # module discharges`). Both have noun senses (electric charges, the
-    # discharges), so they fire ONLY in the verb-coordination pattern —
+    # discharges), so they fire ONLY in the verb-coordination pattern -
     # `charges` solely before `or` (the `charges or discharges` battery
     # pair; `charges from/to the supplier/account` stays a noun),
     # `discharges` before or/to/from (rarely a noun). Never the `the
@@ -669,7 +669,7 @@ _STOP_WORDS = (
     # _ADVERB_STOPS member so the residue strips to the clean head.
     # FN-guarded (examiner 0, corpus silenced_legit 0).
     r"charges(?=\s+or\b)|discharges(?=\s+(?:or|to|from)\b)|"
-    # Issue #136 (2026-06-01): `face` is ambiguous noun/verb — legitimate
+    # Issue #136 (2026-06-01): `face` is ambiguous noun/verb - legitimate
     # noun in `terminal face` / `mounting face` / `contact face` etc.
     # but clearly the matrix verb in `the first magnetic bowl face toward
     # each other` (parallel `first`/`second` + `toward each other`
@@ -682,8 +682,8 @@ _STOP_WORDS = (
     # antecedent reference when a plural / coordinate subject takes the
     # base-form finite verb (`the two guiding slots respectively drive the
     # two guiding structures`; `the two swing arms swing on the side
-    # surface`). Both are noun-gray — `drive` is a noun in `disk drive` /
-    # `drive shaft` / `drive unit`; `swing` in `swing arm` — so a bare stop
+    # surface`). Both are noun-gray - `drive` is a noun in `disk drive` /
+    # `drive shaft` / `drive unit`; `swing` in `swing arm` - so a bare stop
     # is FN-unsafe. Lookahead-gated (mirrors `counts` / `face`): `drive`
     # fires ONLY in verb-object shape (followed by an object determiner),
     # `swing` ONLY before a spatial preposition (the `face` gate pattern).
@@ -692,7 +692,7 @@ _STOP_WORDS = (
     # `respectively` between subject and verb is already an _ADVERB_STOPS
     # member. FN-guarded (examiner 0, corpus silenced_legit 0). Shared
     # `_NP_CORE` covers the spec-support extractor (cross-CHECK). EPC reuses
-    # US. No CN/TW mirror (English-verb over-capture) — TW `對接` is a
+    # US. No CN/TW mirror (English-verb over-capture) - TW `對接` is a
     # separate interior-cut class (#330/#331).
     r"drive(?=\s+(?:a|an|the)\b)|swing(?=\s+(?:on|toward|towards|inward|outward|away)\b)|"
     # R39 (2026-07-24, reports #444/#435/#436): three noun-gray tokens that
@@ -709,7 +709,7 @@ _STOP_WORDS = (
     # - `via` (#436, `the bottom sealing structure via two sealing operations`):
     #   the preposition "by way of". `via` is ALSO a semiconductor element noun
     #   (`a conductive via`, `the first via`), so a bare stop would be an FN. It is
-    #   gated to a following CARDINAL only (`via two`, the reported shape) — NOT an
+    #   gated to a following CARDINAL only (`via two`, the reported shape) - NOT an
     #   article: the article form `<gerund> performed via a <NP>` is a gold-legit
     #   §112 reference (US20250377871A1 c15 `the extracting performed via a …`)
     #   that validate_fix flagged, so admitting `via a` would be an FN. The noun
@@ -718,7 +718,7 @@ _STOP_WORDS = (
     r"surround(?=\s+(?:a|an|the|each)\b)|"
     r"takes(?=\s+(?:up|a|an|the)\b)|"
     r"via(?=\s+(?:one|two|three|four|five|six|seven|eight|nine|ten)\b)|"
-    # R5 (2026-05-26): `accounts` as 3sg finite verb only — lookahead on
+    # R5 (2026-05-26): `accounts` as 3sg finite verb only - lookahead on
     # `\s+for` discriminates the `<noun> accounts for X` verb-object pattern
     # (#98 alumina, #99 silica) from the bare-noun usage (`financial accounts`,
     # `accounts receivable`) which active US labels confirm exists in corpus.
@@ -726,8 +726,8 @@ _STOP_WORDS = (
     # R33 (2026-07-13, report #374): interior verb terminator. `_STOP_WORDS` is
     # the ONLY interior cut the US NP capture has (the trailing cleaner in
     # `clean_noun_phrase` pops from the end and cannot reach a verb that has an
-    # object behind it). The base form `include` was missing — only the 3sg
-    # `includes` was a stop — so a plural subject ran the capture straight
+    # object behind it). The base form `include` was missing - only the 3sg
+    # `includes` was a stop - so a plural subject ran the capture straight
     # through into the object: `wherein the reaction condition data include feed
     # temperature, feed pressure…` captured `the reaction condition data include
     # feed temperature`. FN-safe as a bare stop: `include` has no noun sense in
@@ -736,14 +736,14 @@ _STOP_WORDS = (
     #
     # `using` was TRIALED IN THIS ROUND AND WITHHELD (reports #357/#364). It
     # cleanly recovers `the target zone` from `the target zone using another
-    # sensing data`, but validate_fix caught it silencing 2 gold-legit defects —
+    # sensing data`, but validate_fix caught it silencing 2 gold-legit defects -
     # `the resection using dynamic visualization data` (US11896442B2 c16) and
     # `the language model using textual data` (US20220309089A1 c7). Those are
     # structurally IDENTICAL to #357 (`the <head> using <NP>`), so no surface
     # gate can separate them. The cut is not what fails: it exposes an intro-side
     # gap (the bare head resolves against a bare-noun intro the ensemble does not
     # accept) that the over-capture had been accidentally masking. Shipping it
-    # would trade 2 real defects for the FP — an FN, which we never ship. The
+    # would trade 2 real defects for the FP - an FN, which we never ship. The
     # `using` class is therefore blocked on the intro side, not here.
     r"include|"
     r"adapted|arranged|coupled|connected|mounted|disposed|storing|determining|corresponding|"
@@ -778,7 +778,7 @@ _INDEFINITE_REF = re.compile(
 # Matches all standard patent element-introduction phrases:
 #   a/an X, at least one/a/an X, one or more X, a plurality of X,
 #   two/three/four X. Ordinals (first..tenth and beyond) are NOT consumed
-#   as a prefix — they fall through to the generic ``(?:a|an)\s+`` arm and
+#   as a prefix - they fall through to the generic ``(?:a|an)\s+`` arm and
 #   are picked up by ``_NP_CORE`` as the leading word of the captured noun
 #   phrase, so "a first engaging structure" yields the full phrase
 #   "first engaging structure" rather than dropping the ordinal.
@@ -789,7 +789,7 @@ _INTRO_PATTERNS = re.compile(
     r"|one\s+or\s+more\s+"                  # one or more widgets
     r"|a\s+plurality\s+of\s+"              # a plurality of widgets
     r"|(?:one|two|three|four|five|six|seven|eight|nine|ten|\d+)\s+"  # five widgets / 5 widgets
-    # R37 (2026-07-22): the `\d+` arm closes an internal asymmetry — the
+    # R37 (2026-07-22): the `\d+` arm closes an internal asymmetry - the
     # REFERENCE side (`_BARE_CARDINAL_TAIL` in claims.py) has long accepted a
     # bare `\d+` cardinal, but the INTRO side matched WORD cardinals only, so a
     # digit-quantified introduction (`comprising 2 ports`) registered `2 ports`
@@ -797,11 +797,11 @@ _INTRO_PATTERNS = re.compile(
     # missing antecedent (`two ports` resolves it, `2 ports` did not). Adding
     # the digit arm is INTRO-side and purely additive: it can only register
     # additional bare-noun introductions, never remove a finding-that-should-
-    # fire on the reference side. FN-safety is not merely "by construction" —
+    # fire on the reference side. FN-safety is not merely "by construction" -
     # a spurious intro (e.g. a measurement `5 volts`) could in principle silence
-    # a real defect — so it is MEASURED: the examiner FN-guard (recalled_lost==0)
+    # a real defect - so it is MEASURED: the examiner FN-guard (recalled_lost==0)
     # and validate_fix US (silenced_legit==0) both gate it.
-    # Generic a/an last — captures any following noun phrase, including
+    # Generic a/an last - captures any following noun phrase, including
     # ones that begin with an ordinal (first/second/.../tenth/...)
     r"|(?:a|an)\s+"                          # a widget, a first widget, an apparatus
     r")" + _NP_CAPTURE,
@@ -813,7 +813,7 @@ _INTRO_PATTERNS = re.compile(
 # Noun phrase trailing-word cleanup
 # ---------------------------------------------------------------------------
 
-# Adverbs and patent function words — always strip from phrase end
+# Adverbs and patent function words - always strip from phrase end
 _ADVERB_STOPS = {
     # Adverbs
     "further", "additionally", "generally", "respectively",
@@ -823,14 +823,14 @@ _ADVERB_STOPS = {
     "substantially", "essentially", "approximately",
     "typically", "normally", "merely", "primarily",
     # R8 (2026-06-01): sequential / iteration adverbs surfaced by #152
-    # (`phase-delayed clock signal successively approach` — `successively`
+    # (`phase-delayed clock signal successively approach` - `successively`
     # bled between noun head and trailing verb).
     "successively", "sequentially", "iteratively", "progressively",
     # R12 (2026-06-09): `again` is a temporal adverb that bled between the
     # noun head and a trailing infinitive in `transmit the control command
-    # again to cause …` (#216/#217/#219/#220 — `control command again` →
+    # again to cause …` (#216/#217/#219/#220 - `control command again` →
     # `control command`). Never a noun terminus. (`also` looked like the
-    # same shape but was NOT added — as an _ADVERB_STOPS member it strips on
+    # same shape but was NOT added - as an _ADVERB_STOPS member it strips on
     # the INTRO side too, spuriously introducing `players` from `players
     # also …` and legit_drifting 4 US labels; the `triple store also`
     # residue is dual-labeled instead.)
@@ -860,20 +860,20 @@ _VERB_STOPS = {
     "pushes", "pulls", "holds", "moves", "slides", "rotates",
     "engages", "extends", "receives", "supports", "contacts",
     "connects", "abuts", "faces", "carries", "covers",
-    # #327 — base-form 'abut' (plural/coordinate subjects take the base form:
+    # #327 - base-form 'abut' (plural/coordinate subjects take the base form:
     # "two ends of the elastic member respectively abut against ..."). The 3sg
     # 'abuts' was already stopped; 'abut' has no noun sense (the noun is
     # 'abutment'), so the whole-word strip is FN-safe and symmetric.
     "abut",
-    # R33 (2026-07-13, reports #362 + #375) — never-noun verb forms that
+    # R33 (2026-07-13, reports #362 + #375) - never-noun verb forms that
     # over-captured into the trailing position of a reference/intro:
-    #   enters / re-enters — `the sensing system re-enters the offline phase`
+    #   enters / re-enters - `the sensing system re-enters the offline phase`
     #     (the NP capture stops at the object determiner `the`, leaving the
     #     finite verb as the trailing token). No noun sense exists (the noun
     #     is `entry`/`entrance`), so a bare strip is FN-safe. `re-enters` is a
     #     single `_WORD` token (the pattern spans hyphens), so it needs its own
-    #     entry — the `enters` entry does NOT cover it.
-    #   built — irregular past participle, so it is invisible to the `-ed`
+    #     entry - the `enters` entry does NOT cover it.
+    #   built - irregular past participle, so it is invisible to the `-ed`
     #     heuristic in `_is_likely_past_participle` (that was the gap): the
     #     INTRO `a chemical theoretical model built by data fitting` captured
     #     `chemical theoretical model built`, which then failed to match the
@@ -888,7 +888,7 @@ _VERB_STOPS = {
     "encompasses", "contains", "produces", "creates", "maintains",
     "controls", "establishes", "represents", "surrounds", "overlaps",
     # Additional 3sg verb forms observed over-capturing NP boundaries in
-    # US fixtures (testspec2/3/6, test6, testspec9). Empirical denylist —
+    # US fixtures (testspec2/3/6, test6, testspec9). Empirical denylist -
     # each form verified against the fixture that surfaced it.
     "exhibit", "exhibits", "exhibited", "exhibiting",
     "compare", "compares", "compared", "comparing",
@@ -935,7 +935,7 @@ _TRAILING_FUNCTION_WORDS = {
     "where", "when", "while", "if", "so", "yet", "nor",
 }
 
-# Trailing bare cardinals — strip when the captured NP ends on a cardinal
+# Trailing bare cardinals - strip when the captured NP ends on a cardinal
 # because the regex bled past a verb+numeral chain (e.g. "respectively
 # define two"). Only applied when the phrase has additional tokens so a
 # standalone "two" / "three" captured from "the two" / "the three" is
@@ -1031,7 +1031,7 @@ _LY_NOUN_ALLOWLIST = {
 
 
 # Trailing distributive quantifiers ("the four unit regions each",
-# "the groups each having X") — these are post-modifier quantifiers, not part
+# "the groups each having X") - these are post-modifier quantifiers, not part
 # of the noun phrase. Stripping them bilaterally (intro + reference) dedups
 # distributive references against plain plural intros.
 _DISTRIBUTIVE_QUANTIFIERS = frozenset({"each", "both", "all", "every"})
@@ -1043,7 +1043,7 @@ def _is_trailing_distributive(word: str) -> bool:
 
 # Trailing arithmetic operators ("the current duty cycle minus an adjusted …",
 # "the first value plus …"). These are math operators / prepositions, not part
-# of the NP head. `over` omitted — commonly a spatial preposition in claims
+# of the NP head. `over` omitted - commonly a spatial preposition in claims
 # ("the layer over the substrate").
 _ARITHMETIC_OPERATORS = frozenset({"minus", "plus", "times", "divided", "modulo", "mod"})
 
@@ -1071,7 +1071,7 @@ _RELATIONAL_ADJ_STOPS = frozenset({
     "closer", "nearer", "farther",
     # R24 (2026-06-26, ADR-159): post-nominal adjectives in reduced relative
     # clauses that bled into the captured reference (`the transceiver different
-    # from …`, `the engine resident in …`, `the spool means movable to …`) — the
+    # from …`, `the engine resident in …`, `the spool means movable to …`) - the
     # bare-noun head already has its intro. Surfaced by the normalization-asymmetry
     # probe; FN-guarded by validate_fix. None is a noun head. `prior` (prior art) /
     # `used` (legit labels) / `also`/`only` (intro-side strip) deliberately held.
@@ -1084,13 +1084,13 @@ def _is_trailing_relational_adj(word: str) -> bool:
     return word in _RELATIONAL_ADJ_STOPS
 
 
-# Predicative post-nominal adjectives — they sit after the head noun as a
+# Predicative post-nominal adjectives - they sit after the head noun as a
 # reduced relative clause taking a preposition ("a first signal INDICATIVE of
 # X", "a product OPERABLE to Y", "a circuit RESPONSIVE to Z"). The intro
 # extractor over-captures them onto the noun ("first signal indicative") so a
 # later "the first signal" no longer matches → false positive (ADR-159
 # missed_introduction class; suggested_match='first signal indicative'). Strip
-# ONLY when trailing AFTER a head noun — clean_noun_phrase walks from the end
+# ONLY when trailing AFTER a head noun - clean_noun_phrase walks from the end
 # and a single-word NP falls back to the original, so a bare noun use is
 # preserved. Curated to clearly-adjectival -ive/-ble forms (never head nouns in
 # the trailing position); the corpus FN-guard (silenced_legit==0) gates this.
@@ -1099,12 +1099,12 @@ _POST_NOMINAL_PREDICATIVE_ADJ = frozenset({
     # DR-1: only the forms empirically driving corpus FPs + their unambiguous
     # -ive/-ble cousins. The broader set (representative/characteristic/
     # accessible/…) over-generalised intros and the corpus FN-guard caught it
-    # silencing 8 real `legit` defects — kept out. These remaining words are
+    # silencing 8 real `legit` defects - kept out. These remaining words are
     # never head nouns in the trailing position.
     "indicative", "operable", "responsive",
-    # R26 (2026-06-27, asymmetry probe): `conditional` (-al) — post-nominal
+    # R26 (2026-06-27, asymmetry probe): `conditional` (-al) - post-nominal
     # predicative adjective never used as a head noun in the trailing position
-    # (`trace enabler conditional`). `operative` WITHHELD — the FN-guard caught
+    # (`trace enabler conditional`). `operative` WITHHELD - the FN-guard caught
     # it silencing 2 gold-legit (`amplifier unit operative to amplify`, the
     # functional `operative to <verb>` clause that carries intro semantics like
     # `configured to`). FN-guarded (silenced_legit==0).
@@ -1171,7 +1171,7 @@ def _should_strip_trailing(word: str) -> bool:
 # (irregular past participles like `output`/`input`; verb/plural-noun pairs
 # like `range`/`ranges`). Strip from the trailing position of a captured NP
 # only when the source-text token immediately following the span is in the
-# complement set — that signals verb use ("the signals output TO the driver",
+# complement set - that signals verb use ("the signals output TO the driver",
 # "the agent ranges FROM X to Y"). Plain "the outputs" / "the temperature
 # ranges" (no following complement) keeps the head noun.
 _CONTEXTUAL_VERB_STOPS = {
@@ -1180,8 +1180,8 @@ _CONTEXTUAL_VERB_STOPS = {
     # R33 (2026-07-13, reports #362/#363): `scans` / `monitors` as 3sg finite
     # verbs (`the first sensing apparatus scans the target zone`; `the sensing
     # system monitors the target zone in real time`). Both are genuinely
-    # noun-gray — `scans` is a noun in `the CT scans`, `monitors` in `the
-    # display monitors` — so a bare `_VERB_STOPS` entry would be FN-unsafe.
+    # noun-gray - `scans` is a noun in `the CT scans`, `monitors` in `the
+    # display monitors` - so a bare `_VERB_STOPS` entry would be FN-unsafe.
     # Gated on a following object determiner, which is the verb-object shape:
     # the plural-noun reading is followed by a predicate (`the monitors are
     # coupled…`), never by `a`/`an`/`the`. Same gate as R32's `drive`.
@@ -1191,35 +1191,35 @@ _CONTEXTUAL_VERB_STOPS = {
     "monitors": frozenset({"a", "an", "the"}),
     # R34 (2026-07-18, reports #391 + #397): same 3sg/base-form finite-verb
     # shape as R33, gated identically on a following object determiner.
-    #   sandwich — `the third die and the first die sandwich the first
+    #   sandwich - `the third die and the first die sandwich the first
     #     sandwiching portion` (#391). Noun-gray: `a die sandwich` is a real
     #     stacked structure, so a bare `_VERB_STOPS` entry would be FN-unsafe.
     #     The noun reading is always followed by a predicate, never by
     #     `a`/`an`/`the`.
-    #   join — `to make one of the ports closely join the other of the ports`
+    #   join - `to make one of the ports closely join the other of the ports`
     #     (#397). Noun-gray in software claims (`the join operation`, `the
     #     join between the two tables`), where the following token is a noun
-    #     or preposition — never a bare object determiner.
+    #     or preposition - never a bare object determiner.
     "sandwich": frozenset({"a", "an", "the"}),
     "join":     frozenset({"a", "an", "the"}),
     # R36 (2026-07-22, private-tracker reports #427 + #409/#410): two more
     # base/3sg finite verbs that over-captured into the trailing position of a
     # REFERENCE noun phrase, gated identically on a following object determiner.
-    #   face — `the first active surface and the second active surface face the
+    #   face - `the first active surface and the second active surface face the
     #     lead frame` (#427). Genuinely noun-gray: `the mounting face`, `the
     #     die face` are real element names, so a bare `_VERB_STOPS` entry would
     #     be FN-unsafe. In the noun reading the trailing token is `of` / a
-    #     predicate / punctuation — never a bare object determiner, so the
+    #     predicate / punctuation - never a bare object determiner, so the
     #     `a`/`an`/`the` gate is disjoint. (The 3sg `faces` is already an
     #     unconditional `_VERB_STOPS` entry; base-form `face` takes a plural /
-    #     coordinate subject — `surface A and surface B face C` — exactly the
+    #     coordinate subject - `surface A and surface B face C` - exactly the
     #     `abut` situation from #327.)
-    #   pre-charges — `the inductor pre-charges the flying capacitor module`
+    #   pre-charges - `the inductor pre-charges the flying capacitor module`
     #     (#410); `the flying capacitor pre-charging method pre-charges the …`
     #     (#409). Hyphenated 3sg verb: `_is_likely_third_person_verb` misses it
     #     (its base `charges` is in `_ES_NOUNS`, and `-rges` is not a verb
     #     suffix), so it needs an explicit entry. Noun-gray (`the pre-charges of
-    #     the capacitors` is a plural noun), hence the determiner gate — the
+    #     the capacitors` is a plural noun), hence the determiner gate - the
     #     noun reading is followed by `of`, never by `a`/`an`/`the`.
     "face":        frozenset({"a", "an", "the"}),
     "pre-charges": frozenset({"a", "an", "the"}),
@@ -1239,12 +1239,12 @@ _NEXT_TWO_WORDS_RE = re.compile(
 # determiner, so the one-token gate above cannot reach them \u2014 but gating on
 # the bare preposition alone would be FN-unsafe.
 #
-# R35 (2026-07-20, reports #386/#401) — `switches` as a 3sg finite verb
+# R35 (2026-07-20, reports #386/#401) - `switches` as a 3sg finite verb
 # (`the selection line switches to the channel`). This was WITHHELD across
 # three sessions with the note "queued until the examiner FN-guard is
 # runnable", because the US examiner ground truth carries TWO confirmed
 # §112(b) rejections whose term is the plural NOUN `switches`
-# (`the main switches` — app 18599360; `the semi-conductor switches` —
+# (`the main switches` - app 18599360; `the semi-conductor switches` -
 # app 18573531), and a term-level check cannot clear them.
 #
 # UNBLOCKED. Both applications' claim text was pulled from EdgeXpert and read
@@ -1258,7 +1258,7 @@ _NEXT_TWO_WORDS_RE = re.compile(
 # So the two-token `to the` / `to a` / `to an` gate is provably disjoint from
 # both. The standing worry (`the main switches to the load`, a noun+PP reading
 # indistinguishable under fixed-width lookahead) is real in the abstract but
-# has ZERO instances in the authoritative ground truth — which is exactly the
+# has ZERO instances in the authoritative ground truth - which is exactly the
 # question only the DB could answer, and why the class waited for it.
 #
 # Verified with tests/eval/examiner_fn_guard.py (new this round): recalled
@@ -1319,7 +1319,7 @@ _TRAILING_ADVERB_STOPS = frozenset({
     # `the generating further comprises …` it heads the claim-transition
     # idiom rather than over-capturing. Measured on the US corpus it ends
     # ZERO FPs and merely re-keys 31 gerund-process-step findings from
-    # `generating further` to `generating` — churn that would need ADR-111
+    # `generating further` to `generating` - churn that would need ADR-111
     # dual-labeling for no precision gain, and that collides with the
     # DEFERRED R33-gerund class (#336/#337). DR-1: no report evidences it.
 })
@@ -1362,7 +1362,7 @@ def _is_trailing_variable_identifier(word: str, prev_word: str | None) -> bool:
 
 # Closed set of comparative words that precede `than` in a comparative clause.
 # Used ONLY when the term ends in `than` (see _strip_comparative_tail), so these
-# are removed strictly in the comparative context — a noun ending in "-er"
+# are removed strictly in the comparative context - a noun ending in "-er"
 # (layer/member/container) is never in this set, and `other`/`greater` survive
 # in non-comparative positions ("the other end", "the greater portion").
 _COMPARATIVE_TRAILING = frozenset({
@@ -1402,7 +1402,7 @@ def clean_noun_phrase(phrase: str) -> str:
     """Strip trailing verbs, adverbs, and function words from a noun phrase."""
     words = phrase.strip().split()
     # NOTE: the comparative-tail strip (_strip_comparative_tail) is deliberately
-    # NOT applied here — clean_noun_phrase cleans BOTH references and intros, and
+    # NOT applied here - clean_noun_phrase cleans BOTH references and intros, and
     # stripping `… larger than` from an INTRO (`an inner diameter larger than the
     # inner diameters …`) creates a too-general intro that spuriously resolves an
     # unrelated plural reference (a real FN; US7811436B2 c18). The comparative
@@ -1417,7 +1417,7 @@ def clean_noun_phrase(phrase: str) -> str:
             words.pop()
     while words:
         last = words[-1].lower().rstrip(".,;:")
-        # Trailing bare cardinal ("respectively define two") — strip only
+        # Trailing bare cardinal ("respectively define two") - strip only
         # when the phrase has other tokens, so standalone "two" captured
         # from "the two" survives to be handled by the walker's quantifier
         # stop-list.
@@ -1432,7 +1432,7 @@ def clean_noun_phrase(phrase: str) -> str:
         # cannot tell them apart, so apply this disambiguator: only strip
         # the -uts word when popping would leave a real noun behind. If
         # the remaining phrase would end on an article or preposition,
-        # the -uts word IS the head noun — keep it.
+        # the -uts word IS the head noun - keep it.
         candidate = words[-1].lower().rstrip(".,;:")
         if candidate.endswith("uts") and len(words) >= 2:
             prev = words[-2].lower().rstrip(".,;:")
@@ -1460,7 +1460,7 @@ def clean_noun_phrase(phrase: str) -> str:
 # Abbreviation pattern: "full term (ABBREV) trailing_noun"
 _ABBREVIATION_PATTERN = re.compile(
     r"\b(?:[a-z][\w-]*\s+){1,5}"    # 1-5 words before abbreviation
-    r"\(([A-Z]{2,}s?)\)\s*"         # (ABBREV) — 2+ uppercase letters, optional
+    r"\(([A-Z]{2,}s?)\)\s*"         # (ABBREV) - 2+ uppercase letters, optional
                                      # plural `s` (`(OIDs)`, `(CSSDs)`) so the
                                      # pluralized acronym `the oids` resolves
     r"(\w+)?",                        # optional trailing noun
@@ -1509,7 +1509,7 @@ _LIST_CONTEXT_PATTERN = re.compile(
     r"|consisting(?:\s+essentially)?\s+of"
     r"|selected\s+from(?:\s+the\s+group(?:\s+consisting\s+of)?)?"
     # R6 (2026-05-26, missed triage on #98/#99): Markush enumeration
-    # `(at\s+least\s+)?one\s+of A, B, and C` — claim 1 of the silicon-
+    # `(at\s+least\s+)?one\s+of A, B, and C` - claim 1 of the silicon-
     # carbide composite case introduces `alumina`/`silica` via the closed
     # Markush list `at least one of silicon carbide, alumina, and silica`.
     # Without this trigger, the list items are not registered as intros
@@ -1522,7 +1522,7 @@ _LIST_CONTEXT_PATTERN = re.compile(
     # list-context match failed and bare-noun-from-method-step
     # extraction missed all gerund-led intros. Audited 7 over-strict
     # judge protect:true labels (US12562966B2 c21-76 + US20230189199A1
-    # c4) — verified each has a gerund-step bare-noun intro in the
+    # c4) - verified each has a gerund-step bare-noun intro in the
     # SAME claim that this relax surfaces; demoted as
     # walker_fp.over_strict_judge_label in the labels file.
     r"(?P<list>(?:(?!\bwherein\b)[^.])+)",
@@ -1538,11 +1538,11 @@ _SEMICOLON_SPLIT = re.compile(r";")
 # items like `andprocessing logic` parse as bare-noun intro `processing
 # logic`. Per PDF-extract diagnostic on US round-1 corpus, `and<word>`
 # collapse occurs 2982 times; top: `andwherein` 532 / `anddetermining`
-# 183 / `andsaid` 113 — fixing it inside the list-context split is safe
+# 183 / `andsaid` 113 - fixing it inside the list-context split is safe
 # because `and` is always a list conjunction in that scope (never the
 # proper-name `Andrew` etc.).
 _LEADING_AND = re.compile(r"^\s*and(?:\s+|(?=[a-z]))", re.IGNORECASE)
-# Only ``a``/``an`` are stripped — list items starting with ``the`` are
+# Only ``a``/``an`` are stripped - list items starting with ``the`` are
 # back-references, not introductions, and must not be re-registered.
 _LEADING_ARTICLE = re.compile(r"^(?:a|an)\s+", re.IGNORECASE)
 _LIST_CONTEXT_BREAKER = re.compile(r"\bwherein\b", re.IGNORECASE)
@@ -1585,7 +1585,7 @@ def extract_method_step_intros(text: str) -> list[str]:
     return refs
 
 
-# R35 (2026-07-20, reports #336/#337) — the GERUND ITSELF as an intro.
+# R35 (2026-07-20, reports #336/#337) - the GERUND ITSELF as an intro.
 #
 # `extract_method_step_intros` above registers the gerund's OBJECT
 # (`bonding a first die` -> `first die`). It does not register the gerund, so a
@@ -1595,7 +1595,7 @@ def extract_method_step_intros(text: str) -> list[str]:
 #
 # THIS CLASS WAS BLOCKED FOR THREE SESSIONS on the examiner FN-guard, because
 # `us_examiner_legit.json` carries 24 single-word gerund terms that a
-# TERM-level check cannot clear — and, importantly, several are ordinary -ing
+# TERM-level check cannot clear - and, importantly, several are ordinary -ing
 # NOUNS rather than process gerunds: `the housing` (x3), `the opening` (x2),
 # `the winding`, `the beginning`, `the remaining`. Registering an intro for
 # those from an unrelated gerund use would silence a real examiner rejection.
@@ -1612,7 +1612,7 @@ def extract_method_step_intros(text: str) -> list[str]:
 # The second shape is the one that would endanger `the housing` / `the opening`,
 # and it is exactly what the position gate excludes. This also keeps clear of
 # the standing protect:true label US20240185203A1 c1 `the information`, which
-# is a real defect on the gerund's OBJECT (`collecting information`) — this
+# is a real defect on the gerund's OBJECT (`collecting information`) - this
 # extractor never registers the object, only the head.
 _GERUND_HEAD_STEP_RE = re.compile(
     r'(?:^|[;:]\s*|comprising\s*:?\s*|[\(\[]\s*[a-z0-9]+\s*[\)\]]\s*)'
@@ -1684,7 +1684,7 @@ def extract_having_bare_noun_intros(text: str) -> list[str]:
         cleaned = clean_noun_phrase(m.group(1).strip())
         if cleaned and len(cleaned) >= 4:
             # Drop spurious captures like 'been' / 'a slot' (already
-            # covered by Pattern A) — keep multi-word noun phrases.
+            # covered by Pattern A) - keep multi-word noun phrases.
             words = cleaned.split()
             if len(words) == 1 and words[0] in {'been', 'said', 'the'}:
                 continue
@@ -1716,7 +1716,7 @@ def extract_bare_noun_intros(text: str) -> list[str]:
            "selected from the group consisting of methanol, ethanol, and propanol"
 
        Each chemical name is an introduction. The bare ``group`` itself
-       should not be flagged as missing an antecedent — that false-positive
+       should not be flagged as missing an antecedent - that false-positive
        is handled at the walker level in commit 9b.
 
     The captured run is truncated at ``wherein`` so wherein-clauses do not
@@ -1769,7 +1769,7 @@ _DEFINITE_PRECEDER = re.compile(r"(?:\bthe|\bsaid)\s+$", re.IGNORECASE)
 # construction to introduce a named quantity together with its symbol
 # (e.g. "the equivalent object distance So is a distance calculated by…",
 # "the physical distance Dz is an actual distance from…"). The NP before
-# "is a/an" is the definiendum — register it as an implicit intro so
+# "is a/an" is the definiendum - register it as an implicit intro so
 # subsequent "the <NP>" references in the same claim (or descendants)
 # resolve without an explicit "a <NP>" precursor.
 _SELF_DEFINITION_RE = re.compile(
@@ -1836,7 +1836,7 @@ def extract_pattern_a_intros(text: str) -> list[str]:
     bare-noun-list intros, self-definition intros, and wherein-bare-subject
     intros. Used by the head-noun-from-intro mechanism in
     `check_antecedent_basis` so that promoted head nouns come ONLY from
-    explicitly-introduced (`a X for Y`) phrases — never from gerund-phrase
+    explicitly-introduced (`a X for Y`) phrases - never from gerund-phrase
     bare-noun-list captures (`collecting information` from a comprising
     list, which Phase 2c flagged as a real §112(b) defect to preserve).
     """
@@ -1868,7 +1868,7 @@ def _extract_wherein_bare_subject_intros(lowered: str) -> list[str]:
         if not cleaned or len(cleaned) < 3:
             continue
         # Reject single-token captures that look like placeholder letters
-        # ("p represents …") — any 1-2 char single word is a variable name,
+        # ("p represents …") - any 1-2 char single word is a variable name,
         # not an introduced element.
         words = cleaned.split()
         if len(words) == 1 and len(words[0]) <= 2:
@@ -1881,7 +1881,7 @@ def extract_introductions_permissive(text: str) -> list[str]:
     """Variant of extract_introductions used by the cross-claim fallback
     registry (Fix #47). When an intro match is filtered (preceded by
     ``the``/``said``), advances by a single char rather than consuming past
-    the match — so a later unfiltered trigger inside the filtered span
+    the match - so a later unfiltered trigger inside the filtered span
     (e.g. ``the two X ... two Y``) still surfaces. Emission-path extraction
     stays unchanged.
     """
@@ -1965,7 +1965,7 @@ def first_ancestor_with_term(chain: list, term: str) -> tuple[int | None, str | 
 
     ``chain`` is the ``[claim, ...ancestors]`` list the antecedent
     walkers build via ``get_ancestor_chain*``; index 0 (the claim
-    itself) is skipped — only parent claims are scanned. Match is
+    itself) is skipped - only parent claims are scanned. Match is
     case-insensitive substring.
 
     Returns ``(ancestor_claim_id, ancestor_claim_text)`` for the first
@@ -1998,22 +1998,22 @@ def has_bare_noun_introduction(
     "Introduced earlier" = a whole-phrase, article-less occurrence of
     ``term`` that precedes the reference in document order: in
     ``claim_text`` strictly before ``ref_offset``, or anywhere in an
-    ancestor claim (``chain[1:]`` — every ancestor is wholly earlier).
+    ancestor claim (``chain[1:]`` - every ancestor is wholly earlier).
 
     MPEP § 2173.05(e): antecedent basis need not be an explicit ``a/an``
-    — if the scope is reasonably ascertainable, ``the X`` after a prior
+    if the scope is reasonably ascertainable, ``the X`` after a prior
     article-less mention of the same specific term is not indefinite.
     The intro-pattern extractors only register quantified (``a X``,
     ``a plurality of X``) or framed introductions; they miss the
-    article-less first mention — a preamble term (``based on
+    article-less first mention - a preamble term (``based on
     ultra-wideband connection``) or a verb object (``generate real-time
     driving environment information``). This rescue closes that gap.
 
     Gated **multi-word** (≥2 whitespace tokens): a lone bare noun is too
     generic for an article-less occurrence to be a deliberate
     introduction. An occurrence preceded by ``the/said`` (a
-    back-reference) — or by ``a/an`` (a Pattern-A intro the extractors
-    already handle) — does not count; only a fresh article-less mention.
+    back-reference) - or by ``a/an`` (a Pattern-A intro the extractors
+    already handle) - does not count; only a fresh article-less mention.
     """
     t = (term or "").strip().lower()
     if not t or len(t.split()) < 2:

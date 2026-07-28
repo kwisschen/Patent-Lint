@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-// Copyright (c) 2025–2026 Christopher Chen
+// Copyright (c) 2025-2026 Christopher Chen
 //
 // Shared layout primitives for /terms and /privacy. Mirrors the
 // AboutPage / SecurityPage visual language: shadcn/ui + Tailwind
@@ -19,7 +19,7 @@ export function LegalPageContainer({ children }) {
   )
 }
 
-// Translation disclaimer banner — rendered only when a non-empty
+// Translation disclaimer banner - rendered only when a non-empty
 // `translationNote` key exists in the current locale. English locale
 // omits the key entirely; non-English locales carry a short note that
 // the English version is authoritative in case of translation drift.

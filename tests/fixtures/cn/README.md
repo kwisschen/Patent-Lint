@@ -23,9 +23,9 @@ cn/
 10 real CN fixtures and the 3 synthetic `tw_contamination` fixtures, then
 writes two JSON payloads:
 
-1. `local/baseline_phase8c.json` (gitignored) — fixture index with per-fixture
+1. `local/baseline_phase8c.json` (gitignored) - fixture index with per-fixture
    finding counts and claim counts.
-2. `antecedent_labels_cn.json` — schema v11 labels seed (committed).
+2. `antecedent_labels_cn.json` - schema v11 labels seed (committed).
 
 ### Labels-file guard
 
@@ -38,7 +38,7 @@ Stage 3 re-bootstrap.
 ### Per-finding `claim_text` (Phase 9 #29)
 
 Each label dict now carries a `claim_text` field containing the verbatim
-parsed claim body. This snapshot exists only on NEW captures — the existing
+parsed claim body. This snapshot exists only on NEW captures - the existing
 1507-entry committed labels file is unchanged by the Phase 9 #29 edit, so
 older entries have no `claim_text` until they're re-bootstrapped. Future
 walker investigations that want the source text for a finding can read it
@@ -54,6 +54,6 @@ python tests/fixtures/cn/local/_capture_baseline_cn.py
 # Single-fixture dry-run (never writes labels file).
 python tests/fixtures/cn/local/_capture_baseline_cn.py --fixture CN110276410B
 
-# Genuine Stage 3 re-bootstrap (destructive — replaces committed labels).
+# Genuine Stage 3 re-bootstrap (destructive - replaces committed labels).
 python tests/fixtures/cn/local/_capture_baseline_cn.py --bootstrap
 ```

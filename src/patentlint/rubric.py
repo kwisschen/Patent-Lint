@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Scoring rubric — converts FIX/REVIEW/PASS findings into a deterministic grade.
+# Copyright (c) 2025-2026 Christopher Chen
+"""Scoring rubric - converts FIX/REVIEW/PASS findings into a deterministic grade.
 
 Reads the existing 109-check catalog (no new rules added). Buckets each
 emitted CheckItem into one of 5 weighted sections, applies per-section
 deductions, then a FIX-count gate, and produces a letter grade.
 
 The rubric is deterministic: same draft always gets the same grade.
-There is no AI judgment — every input is the FIX/REVIEW/PASS status
+There is no AI judgment - every input is the FIX/REVIEW/PASS status
 already set by an existing checker, and every output is a pure
 arithmetic aggregation. This is the trust property that lets the
 "No AI" badge stand alongside a numeric/letter score.
@@ -18,12 +18,12 @@ redistributes proportionally across the other 4 sections.
 
 Gate: any FIX caps the grade at B-; multiple FIX cap progressively lower.
 Statutory issues always headline regardless of how polished other
-sections are — matches partner-triage reality ("any blockers? then how
+sections are - matches partner-triage reality ("any blockers? then how
 clean?").
 
 Completeness gap: when a universally-required section (title, claims,
 spec body, abstract) is structurally empty, no grade is emitted; the
-hero shows "Draft incomplete — grade unavailable" instead. An A grade
+hero shows "Draft incomplete - grade unavailable" instead. An A grade
 on an empty draft would be misleading and legally exposing.
 """
 
@@ -49,19 +49,19 @@ RUBRIC_VERSION = "1.0"
 FIX_DEDUCTION = 15
 REVIEW_DEDUCTION = 3
 
-# Threshold for "structurally empty" body — section header parsed but
+# Threshold for "structurally empty" body - section header parsed but
 # fewer than this many meaningful tokens (post-tokenization, post
 # header-echo strip). Tunable.
 EMPTY_TOKEN_THRESHOLD = 50
 
 
-# Advisory REVIEW keys — informational, not problem-indicating.
+# Advisory REVIEW keys - informational, not problem-indicating.
 #
 # These checks fire when the draft contains content that warrants
 # verification but isn't necessarily a defect: cross-references to
 # related applications, prior-art citations in background, indigenous-
 # terminology disclosure flags. A senior-attorney drafter who legitimately
-# cites cross-references and prior art shouldn't see the grade drop —
+# cites cross-references and prior art shouldn't see the grade drop -
 # the REVIEW status is a "please verify" prompt, not a problem flag.
 #
 # These items still display as REVIEW in the TriagePanel (so the user
@@ -72,24 +72,24 @@ EMPTY_TOKEN_THRESHOLD = 50
 # advisory-style check; the test gate ensures the rubric semantics stay
 # explicit.
 ADVISORY_REVIEW_KEYS: frozenset[str] = frozenset({
-    # US — informational / pre-existing prior-art context
+    # US - informational / pre-existing prior-art context
     "check.spec.crossReference.verify",
     "check.spec.priorArt.verify",
     "check.drawings.priorArt.verify",
-    # US — REVIEW kept after demotion but message is purely informational
+    # US - REVIEW kept after demotion but message is purely informational
     # (multi-dep claims are legal per § 608.01(n); fee + chain reminder)
     "check.claims.multipleDependent.verify",
-    # US — Jepson preamble = admitted prior art warning, not a defect
+    # US - Jepson preamble = admitted prior art warning, not a defect
     "claims.jepsonPriorArt",
     # CN
     "check.cn.drawings.priorArt.verify",
     # TW
     "check.tw.spec.indigenousTerms.verify",
-    # §112 walker checks — advisory re-tier (ADR-159). Antecedent basis
+    # §112 walker checks - advisory re-tier (ADR-159). Antecedent basis
     # (§112(b)) and spec support (§112(a)) are ~70% benign on real drafts and
     # the FP/defect split is NOT deterministically recoverable (proven 5 ways:
     # recal-ceiling, confidence-layer, examiner-label discriminator (AUC 0.60),
-    # nonlinear, and the strict-spec signal — see
+    # nonlinear, and the strict-spec signal - see
     # tests/eval/EXAMINER_GROUND_TRUTH_FINDINGS.md / CONFIDENCE_LAYER_FINDINGS.md).
     # Asserting a FIX (or even a −3 REVIEW) for a mostly-benign, undistinguishable
     # flag is dishonest scoring, so these surface as visible "references/terms to
@@ -103,12 +103,12 @@ ADVISORY_REVIEW_KEYS: frozenset[str] = frozenset({
     "check.tw.claims.specSupport.verify",
     "check.epc.claims.specSupport.verify",
     # Reference-numeral consistency (D1, MPEP § 608.01(g) / 实施细则 §21 / 施行細則
-    # §19 / Rule 43(7) EPC) — advisory re-tier (2026-06-25). Measured ~87% FP on
+    # §19 / Rule 43(7) EPC) - advisory re-tier (2026-06-25). Measured ~87% FP on
     # real drafts (clean-DOCX probe), and the FP-vs-real split is SEMANTIC
     # (mis-attribution of a neighbouring numeral's element, synonyms/variants of
-    # one element, ordinal variants) with no deterministic separator — the same
+    # one element, ordinal variants) with no deterministic separator - the same
     # wall as §112. Emitted as a single advisory "to verify" item with ZERO grade
-    # impact; every conflict stays visible (FN-safe — nothing hidden).
+    # impact; every conflict stays visible (FN-safe - nothing hidden).
     "check.spec.numeralConsistency.verify",
     "check.cn.spec.numeralConsistency.verify",
     "check.tw.spec.numeralConsistency.verify",
@@ -116,7 +116,7 @@ ADVISORY_REVIEW_KEYS: frozenset[str] = frozenset({
 })
 
 
-# Section weights — must sum to 100 (5 buckets, jurisdiction-uniform).
+# Section weights - must sum to 100 (5 buckets, jurisdiction-uniform).
 SECTION_WEIGHTS: dict[RubricSection, int] = {
     RubricSection.SPECIFICATION: 20,
     RubricSection.DRAWINGS: 10,
@@ -136,7 +136,7 @@ assert sum(SECTION_WEIGHTS.values()) == 100, "section weights must sum to 100"
 # against the runtime context (currently only "has_drawings").
 #
 # JP/KR onboard via additional entries here when those jurisdictions
-# come online — no code change needed.
+# come online - no code change needed.
 SECTION_APPLICABILITY: dict[Jurisdiction, dict[RubricSection, dict]] = {
     Jurisdiction.US: {
         RubricSection.SPECIFICATION: {"required": True},
@@ -207,7 +207,7 @@ _DRAWINGS_KEY_PREFIXES_FROM_OTHER_BUCKETS = (
 )
 
 
-# Required-sections check is monolithic — one CheckItem lists every
+# Required-sections check is monolithic - one CheckItem lists every
 # missing section by name. When the missing list is exclusively drawings-
 # related (BDoD or 符號說明), the FIX is conceptually a Drawings issue,
 # not a Spec issue, and routing it to the Drawings rubric category makes
@@ -245,7 +245,7 @@ def section_for_message_key(message_key: str) -> RubricSection:
     drawings-related labels).
     """
     if not message_key:
-        # Unkeyed CheckItem (defensive). Treat as SPEC — the conservative
+        # Unkeyed CheckItem (defensive). Treat as SPEC - the conservative
         # bucket since SPEC is the default landing for ungrouped findings.
         return RubricSection.SPECIFICATION
 
@@ -256,7 +256,7 @@ def section_for_message_key(message_key: str) -> RubricSection:
 
     entry = CANONICAL_CHECK_ORDER.get(message_key)
     if entry is None:
-        # Unregistered key — should never happen in practice (the
+        # Unregistered key - should never happen in practice (the
         # check_emission_order test gates this), but be tolerant.
         return RubricSection.SPECIFICATION
     bucket, _, _ = entry
@@ -274,7 +274,7 @@ def _is_drawings_only_required_sections(check: CheckItem) -> bool:
     drawings-related sections as missing (BDoD / 符號說明).
 
     Mixed-missing cases (BDoD + 技術領域 missing) return False so the
-    FIX stays in the SPEC rubric — losing the non-drawings signal by
+    FIX stays in the SPEC rubric - losing the non-drawings signal by
     routing to Drawings would be worse than the slight imprecision
     of leaving a drawings-tinged FIX in Spec.
     """
@@ -361,7 +361,7 @@ def gate_cap_for_fix_count(fix_count: int) -> tuple[int, str | None]:
     Smooth gradient: each FIX drops the grade one letter rank, so the
     relationship between FIX count and grade is approximately linear
     rather than catastrophic-on-the-first-FIX. Matches partner-triage
-    cadence — one issue is "good but has a problem", a few are "real
+    cadence - one issue is "good but has a problem", a few are "real
     concerns", many are "rework needed".
 
     Calibration revisited 2026-04-26 evening: the prior gate (1 FIX
@@ -458,7 +458,7 @@ def compute_rubric_grade(
         return RubricGrade(
             rubric_version=RUBRIC_VERSION,
             score=0,
-            letter="—",
+            letter="-",
             completeness_gap=completeness_gap,
         )
 
@@ -474,7 +474,7 @@ def compute_rubric_grade(
         if check.status == "amend":
             bucket_fix[section] += 1
         elif check.status == "verify":
-            # Advisory REVIEWs are informational only — counted as PASS for
+            # Advisory REVIEWs are informational only - counted as PASS for
             # grading purposes so they don't deduct. They still display as
             # REVIEW in the UI / PDF / triage list (the bucketing here is
             # purely for the score formula).
@@ -582,7 +582,7 @@ def _compute_impact_list(
     for check in all_checks:
         if check.status not in ("amend", "verify"):
             continue
-        # Advisory REVIEWs are informational — no deduction means no impact
+        # Advisory REVIEWs are informational - no deduction means no impact
         # delta means no entry on the lever-list.
         if check.status == "verify" and check.message_key in ADVISORY_REVIEW_KEYS:
             continue

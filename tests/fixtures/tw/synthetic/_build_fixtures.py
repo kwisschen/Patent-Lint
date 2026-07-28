@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Generate synthetic TW patent .docx fixtures for walker-mechanism coverage.
 
 Phase A2 deliverable: 9 committable .docx fixtures covering mechanism
@@ -14,23 +14,23 @@ Run from the project root::
 
 Outputs (all committed via explicit !gitignore exceptions):
 
-* tw_adversarial_negatives.docx   — MUST-FLAG claims; over-fit guardrail
-* tw_copula_tiers.docx            — F12 Tier A/B/C intros (C2)
-* tw_formula_reference.docx       — 式(X) expressions (C8)
-* tw_markush.docx                 — 選自由...所組成之群組 (domain)
-* tw_plural_prefix.docx           — TW-valid 該等/該些 (regression)
-* tw_quoted_reference.docx        — 引用記載型式 beyond 具備 (8287c24 regression)
-* tw_symbol_table.docx            — 符號說明 sub-figure notation (regression)
-* tw_jepson_two_part.docx         — 其特徵在於/其改良在於 (domain)
-* tw_dym_edge_cases.docx          — DYM quality-reject filter (B3)
+* tw_adversarial_negatives.docx   - MUST-FLAG claims; over-fit guardrail
+* tw_copula_tiers.docx            - F12 Tier A/B/C intros (C2)
+* tw_formula_reference.docx       - 式(X) expressions (C8)
+* tw_markush.docx                 - 選自由...所組成之群組 (domain)
+* tw_plural_prefix.docx           - TW-valid 該等/該些 (regression)
+* tw_quoted_reference.docx        - 引用記載型式 beyond 具備 (8287c24 regression)
+* tw_symbol_table.docx            - 符號說明 sub-figure notation (regression)
+* tw_jepson_two_part.docx         - 其特徵在於/其改良在於 (domain)
+* tw_dym_edge_cases.docx          - DYM quality-reject filter (B3)
 
 Anti-over-fit authoring discipline (plan Phase A2):
-1. Draft TW-first: claims conform to TIPO 專利法施行細則 §17–§21.
+1. Draft TW-first: claims conform to TIPO 專利法施行細則 §17-§21.
 2. ≥2 variant drafts per mechanism across ≥2 domains.
 3. Adversarial claims inline in each mechanism fixture where meaningful.
 4. tw_adversarial_negatives.docx is a global guardrail: no round may
    silence its findings without explicit re-triage.
-5. Build deterministically — python-docx default settings; same inputs
+5. Build deterministically - python-docx default settings; same inputs
    produce byte-identical outputs.
 """
 
@@ -61,7 +61,7 @@ def _build_docx(
 ) -> None:
     """Assemble a minimal TIPO-conforming TW .docx with 【】 bracket headers.
 
-    Spec sections beyond title / claims / abstract are scaffolding — the
+    Spec sections beyond title / claims / abstract are scaffolding - the
     harness exercises claim-side walker output, so scaffolding satisfies
     section ordering checks without being the focus.
     """
@@ -100,7 +100,7 @@ def _build_docx(
 
 
 # ---------------------------------------------------------------------------
-# Fixture 1: tw_adversarial_negatives.docx — MUST-FLAG guardrail
+# Fixture 1: tw_adversarial_negatives.docx - MUST-FLAG guardrail
 # ---------------------------------------------------------------------------
 # Claims contain genuine missing antecedents that no F-family port should
 # silence. Over-fit audit: if any C-round silences these findings, the
@@ -115,7 +115,7 @@ ADVERSARIAL_CLAIMS = [
 
 
 # ---------------------------------------------------------------------------
-# Fixture 2: tw_copula_tiers.docx — F12 Tier A/B/C
+# Fixture 2: tw_copula_tiers.docx - F12 Tier A/B/C
 # ---------------------------------------------------------------------------
 # Tier A (轉變為/變為): chemistry variant
 # Tier B (基於/來自): software variant
@@ -133,7 +133,7 @@ COPULA_TIERS_CLAIMS = [
 
 
 # ---------------------------------------------------------------------------
-# Fixture 3: tw_formula_reference.docx — 式(X) must NOT be flagged
+# Fixture 3: tw_formula_reference.docx - 式(X) must NOT be flagged
 # ---------------------------------------------------------------------------
 # Claims contain scientific-notation formula references. Walker should
 # suppress these in the antecedent-basis check (not referable entities).
@@ -147,7 +147,7 @@ FORMULA_REFERENCE_CLAIMS = [
 
 
 # ---------------------------------------------------------------------------
-# Fixture 4: tw_markush.docx — 選自由...所組成之群組
+# Fixture 4: tw_markush.docx - 選自由...所組成之群組
 # ---------------------------------------------------------------------------
 # Markush claim group. Chemistry compound + software enumeration variants.
 
@@ -160,7 +160,7 @@ MARKUSH_CLAIMS = [
 
 
 # ---------------------------------------------------------------------------
-# Fixture 5: tw_plural_prefix.docx — TW-valid 該等/該些
+# Fixture 5: tw_plural_prefix.docx - TW-valid 該等/該些
 # ---------------------------------------------------------------------------
 # Plural reference prefixes. Walker should NOT flag as tw_contamination
 # on the TW side (CN-only rejection). These are valid TIPO drafting.
@@ -174,7 +174,7 @@ PLURAL_PREFIX_CLAIMS = [
 
 
 # ---------------------------------------------------------------------------
-# Fixture 6: tw_quoted_reference.docx — 引用記載型式 variants
+# Fixture 6: tw_quoted_reference.docx - 引用記載型式 variants
 # ---------------------------------------------------------------------------
 # Regression for commit 8287c24. Claims 2/3/4 are independent (一種X
 # preamble) but body-embed 如請求項1 references via 執行/根據/實施.
@@ -190,7 +190,7 @@ QUOTED_REFERENCE_CLAIMS = [
 
 
 # ---------------------------------------------------------------------------
-# Fixture 7: tw_symbol_table.docx — 符號說明 sub-figure notation
+# Fixture 7: tw_symbol_table.docx - 符號說明 sub-figure notation
 # ---------------------------------------------------------------------------
 # Exercises check_claims_symbol_table_consistency. Claims reference
 # numerals appearing in 符號說明 with sub-figure notation (圖1A, 圖2(a)).
@@ -218,7 +218,7 @@ SYMBOL_TABLE_FIXTURE = {
 
 
 # ---------------------------------------------------------------------------
-# Fixture 8: tw_jepson_two_part.docx — 其特徵在於/其改良在於
+# Fixture 8: tw_jepson_two_part.docx - 其特徵在於/其改良在於
 # ---------------------------------------------------------------------------
 # Jepson-style two-part claims. Walker must recognize 其特徵在於 /
 # 其改良在於 as transition phrases and scope the body accordingly.
@@ -232,7 +232,7 @@ JEPSON_CLAIMS = [
 
 
 # ---------------------------------------------------------------------------
-# Fixture 9: tw_dym_edge_cases.docx — DYM quality-reject filter
+# Fixture 9: tw_dym_edge_cases.docx - DYM quality-reject filter
 # ---------------------------------------------------------------------------
 # B3 R21-analog test cases. Each claim pair: intro in one claim, ref
 # in another with a shape the DYM filter should suppress:

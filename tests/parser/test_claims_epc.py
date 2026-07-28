@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """EPC claim parser tests.
 
 Covers EPC-specific dependency phrasings:
@@ -132,7 +132,7 @@ def test_is_method_claim_epc():
 
 
 # ---------------------------------------------------------------------------
-# Edge cases — dependency parsing
+# Edge cases - dependency parsing
 # ---------------------------------------------------------------------------
 
 
@@ -145,7 +145,7 @@ def test_dep_with_capitalised_claim():
 def test_dep_inverted_range_does_not_crash():
     """A backward range like 'claims 5 to 2' is malformed input; parser must
     not crash. Specific behavior: range expansion is skipped (start > end);
-    the simple "claim N" fallback only catches "claim 5" — "2" remains an
+    the simple "claim N" fallback only catches "claim 5" - "2" remains an
     isolated number without a "claim" prefix, so it's not captured. This is
     acceptable for malformed input; the test guards against crashes."""
     deps = parse_dependencies_epc("according to claims 5 to 2", False, 6)
@@ -165,7 +165,7 @@ def test_any_preceding_on_claim_1_yields_empty():
 
 
 def test_three_way_alternation():
-    """'claim 1, 2 or 3' — common EPC alternation form."""
+    """'claim 1, 2 or 3' - common EPC alternation form."""
     # The current parser matches "claim N and/or M" as a pair, so three-way
     # alternation may collapse to the first pair. Verify the actual behaviour
     # so future parser improvements have a baseline to compare against.

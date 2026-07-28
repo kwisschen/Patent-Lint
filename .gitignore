@@ -68,6 +68,6 @@ tests/eval/proposed_labels/
 tests/eval/needs_review_*.json
 tests/eval/fn_quarantine_*.json
 tests/eval/us_examiner_legit.json
-# Ephemeral mining/feature caches (regenerable; large) — keep the scripts, drop the data
+# Ephemeral mining/feature caches (regenerable; large) - keep the scripts, drop the data
 tests/eval/_trailing_*.json
 tests/eval/_us_discriminator_cache.npz

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for TW specification analysis checks."""
 
 from __future__ import annotations
@@ -170,7 +170,7 @@ class TestSectionOrdering:
 
     def test_wrong_order_amend(self):
         # 實施方式 (embodiment, idx 4) encountered before 發明內容
-        # (disclosure, idx 2) — out of 專利法施行細則 §17 order.
+        # (disclosure, idx 2) - out of 專利法施行細則 §17 order.
         doc = _make_doc(
             section_order=[
                 "technical_field",
@@ -213,7 +213,7 @@ class TestSectionOrdering:
         assert items[0].status == "amend"
 
     def test_only_some_sections_present(self):
-        # technical_field (0), embodiment (4) — sorted → pass.
+        # technical_field (0), embodiment (4) - sorted → pass.
         doc = _make_doc(
             section_order=["technical_field", "embodiment"],
             prior_art=[],
@@ -321,7 +321,7 @@ class TestParagraphEnding:
         preceding 【NNNN】 unit (Word renders the prefix once, the
         drafter splits the logical paragraph across multiple Word
         paragraphs to wrap text). Labeling it with the parent's
-        word_number matches what the drafter sees in Word — using the
+        word_number matches what the drafter sees in Word - using the
         internal ordinal would surface a number the drafter cannot
         locate. (Wife's bug report 2026-04-21: 段落 4 was reported but
         the screenshot showed 0003 was the missing-period paragraph.)"""
@@ -331,7 +331,7 @@ class TestParagraphEnding:
             body_paragraph_word_numbers=["0005", None, "0006"],
         )
         items = check_paragraph_ending(doc)
-        # Both flagged paragraphs resolve to "0005" — the first is the
+        # Both flagged paragraphs resolve to "0005" - the first is the
         # parent 0005 itself; the second is an unnumbered continuation
         # that walks back to 0005.
         assert items[0].details_params["paragraphs"] == ["0005", "0005"]
@@ -380,7 +380,7 @@ class TestParagraphEnding:
     def test_angle_bracket_headings_skipped_195(self):
         """#195: JP-translation-style section headings delimited by full-width
         angle brackets (＜＜1．背景＞＞ / ＜2．1詳細構成＞) end with ＞, not sentence
-        punctuation — they're headers and must be exempt. A prose paragraph
+        punctuation - they're headers and must be exempt. A prose paragraph
         with an INLINE ＜…＞ is NOT a heading and stays checked."""
         from patentlint.analysis.tw_specification import _is_skip_paragraph_ending
         for h in ("＜＜1．　背景＞＞", "＜2．1　詳細構成＞", "【0016】＜＜1．背景＞＞"):
@@ -579,7 +579,7 @@ class TestSymbolTablePresence:
         """R65 (2026-05-05): symbolTablePresence now deduplicates against
         requiredSections.amend (which lists 符號說明 as missing when
         drawings exist). Both checks fired pre-R65 producing duplicate
-        FIX entries on user reports — confusing UX. The canonical
+        FIX entries on user reports - confusing UX. The canonical
         finding is requiredSections (broader statutory cite); this
         check passes when conditions overlap."""
         doc = _make_doc(
@@ -803,7 +803,7 @@ class TestNumeralConsistencySymbolTableAnchoring:
 
     When the 符號說明 declares a numeral's element, body captures that are the
     declared element plus over-captured quantifier/verb-clause noise collapse
-    back to the declared name — FN-safely (a genuinely different element name,
+    back to the declared name - FN-safely (a genuinely different element name,
     sharing no containment with the declared name, still fires).
     """
 
@@ -821,7 +821,7 @@ class TestNumeralConsistencySymbolTableAnchoring:
 
     def test_real_inconsistency_still_fires(self):
         # Negative control: numeral R3 declared 電阻 but body also names it 電容
-        # (a genuinely different element) — must still surface (FN-safety).
+        # (a genuinely different element) - must still surface (FN-safety).
         doc = _make_doc(
             embodiment=["電阻R3連接。電阻R3的兩端。又電容R3接地。電容R3充電。"],
             symbol_table=[SymbolEntry(numeral="R3", name="電阻")],

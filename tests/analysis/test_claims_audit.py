@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
-"""Adversarial tests for analysis/claims — Phase 4 B6 audit."""
+# Copyright (c) 2025-2026 Christopher Chen
+"""Adversarial tests for analysis/claims - Phase 4 B6 audit."""
 
 from patentlint.models import Claim
 from patentlint.analysis.claims import (
@@ -739,7 +739,7 @@ class TestAntecedentBasisDedup:
         assert 7 in claim_ids
 
     def test_findings_sorted_by_claim_then_term_then_form(self):
-        """Findings sorted by (claim_id, term, reference_form) — all three keys exercised."""
+        """Findings sorted by (claim_id, term, reference_form) - all three keys exercised."""
         claims = [
             # Claim 3 first in list (out of ID order), two terms: "widget" and "base"
             Claim(id=3, text="A device wherein the widget is red and said base is flat.", independent=True),
@@ -1018,14 +1018,14 @@ class TestUtsVerbSuffix:
         article or preposition.
         """
         from patentlint.analysis.utils import clean_noun_phrase
-        # Head-noun cases — preserved by the guard
+        # Head-noun cases - preserved by the guard
         assert clean_noun_phrase("the inputs") == "the inputs"
         assert clean_noun_phrase("the outputs") == "the outputs"
         assert clean_noun_phrase("said outputs") == "said outputs"
         assert clean_noun_phrase("plurality of outputs") == "plurality of outputs"
         assert clean_noun_phrase("a plurality of inputs") == "a plurality of inputs"
         assert clean_noun_phrase("outputs") == "outputs"
-        # Verb-form cases — still stripped (testspec5 regression guarded
+        # Verb-form cases - still stripped (testspec5 regression guarded
         # against by the asymmetric "preceder must be article/of" rule)
         assert clean_noun_phrase("the circuit outputs") == "the circuit"
         assert (
@@ -1099,7 +1099,7 @@ class TestAntecedentNumberNeutral:
 
         Claim 3 (independent) introduces 'widgets'. Claim 5 (independent,
         no dependency on claim 3) references 'the widget'. Claim 5 should
-        STILL produce a finding — the intro is not in its ancestor chain.
+        STILL produce a finding - the intro is not in its ancestor chain.
         """
         claims = [
             Claim(id=3, text="A system comprising a plurality of widgets.",
@@ -1175,7 +1175,7 @@ class TestAntecedentNumberNeutral:
         ]
         issues = check_antecedent_basis(claims)
         c2_terms = [i["term"] for i in issues if i["claim_id"] == 2]
-        # Must STILL be flagged — number normalization does not help here
+        # Must STILL be flagged - number normalization does not help here
         assert "power controlling circuit driver module" in c2_terms
         # suggested_match should point to 'power control circuit driver module' via Jaccard
         match_issue = next(

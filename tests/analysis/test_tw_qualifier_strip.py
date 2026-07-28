@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
-# Copyright (c) 2025–2026 Christopher Chen
+# Copyright (c) 2025-2026 Christopher Chen
 """Tests for the leading qualifier strip (ADR-095 addendum 2026-04-09)."""
 
 from __future__ import annotations
@@ -53,23 +53,23 @@ class TestPositionQualifierPreservation:
     """前/後 in compound nouns must NOT strip."""
 
     def test_qian_duan_preserved(self):
-        """前端 (front end) — 前 followed by 端, not a quantifier."""
+        """前端 (front end) - 前 followed by 端, not a quantifier."""
         assert strip_leading_qualifier("前端") == "前端"
 
     def test_qian_shu_preserved(self):
-        """前述 (aforementioned) — same."""
+        """前述 (aforementioned) - same."""
         assert strip_leading_qualifier("前述") == "前述"
 
     def test_qian_fang_preserved(self):
-        """前方 (front direction) — same."""
+        """前方 (front direction) - same."""
         assert strip_leading_qualifier("前方") == "前方"
 
     def test_hou_lun_preserved(self):
-        """後輪 (rear wheel) — 後 followed by 輪, not a quantifier."""
+        """後輪 (rear wheel) - 後 followed by 輪, not a quantifier."""
         assert strip_leading_qualifier("後輪") == "後輪"
 
     def test_hou_duan_preserved(self):
-        """後端 (rear end) — same."""
+        """後端 (rear end) - same."""
         assert strip_leading_qualifier("後端") == "後端"
 
 

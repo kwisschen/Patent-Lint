@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
 #
-# confidence_layer_probe.py — measure the confidence-display-layer lever
+# confidence_layer_probe.py - measure the confidence-display-layer lever
 # (ADR-159 portfolio, the FN-free path to high user-visible precision).
 #
 # For each jurisdiction: run the production walker over the corpus, capture
