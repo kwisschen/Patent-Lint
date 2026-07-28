@@ -31,8 +31,10 @@ from pathlib import Path
 
 import pytest
 
-EM_DASH = "—"
-EN_DASH = "–"
+# Escapes, not literals, so this gate does not flag its own source (and so
+# a future sweep cannot rewrite it into one that matches plain hyphens).
+EM_DASH = "\u2014"
+EN_DASH = "\u2013"
 
 REPO = Path(__file__).parent.parent
 
