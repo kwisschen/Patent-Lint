@@ -718,6 +718,42 @@ _STOP_WORDS = (
     r"surround(?=\s+(?:a|an|the|each)\b)|"
     r"takes(?=\s+(?:up|a|an|the)\b)|"
     r"via(?=\s+(?:one|two|three|four|five|six|seven|eight|nine|ten)\b)|"
+    # R40 (2026-08-01, reports #459/#461/#462/#475/#476/#477): matrix verbs
+    # from two drafters (an AI-healthcare system and a game-scoreboard system)
+    # that ran the NP capture straight through the subject into the predicate -
+    # `the server parses voiceprints`, `the game information display device
+    # emits a preset sound`. Split by noun-grayness, per the campaign rule that
+    # a noun-gray token gets a GATE and never a bare stop:
+    # - `parses` / `emits` / `lose`: no noun sense in patent diction (the nouns
+    #   are `parser`/`emission`/`loss`), so they are bare stops. `lose` is the
+    #   base form taken by the coordinate subject in `if the application and the
+    #   <device> lose connection` (#477) - a determiner gate could not fire
+    #   there because the object (`connection`) is bare.
+    # - `reviews`: noun-gray (`the peer reviews`, `the design reviews`), so it
+    #   is determiner-gated to the verb-object reading (#461 `reviews the care
+    #   instruction`), mirroring `counts`/`sets`.
+    # - `adds`: gated on a verb COORDINATION only (`adds or subtracts points`,
+    #   #475) - the `charges(?=\s+or)` gate shape from R30. The wider object-
+    #   determiner form was trialed and NARROWED OUT: it fires on `an adaptation
+    #   layer of the relay UE adds the packet header` (US20250294545A1 c8/c14),
+    #   and the resulting clean head `relay UE` is then eaten down to `relay` by
+    #   the pre-existing `_is_trailing_variable_identifier` guard, which cannot
+    #   tell the lowercased 3GPP acronym `ue` from a math variable like `vd`.
+    #   That traded 2 FPs for 2 differently-shaped FPs at net zero, so the gate
+    #   ships at the width the report actually evidences. The acronym-vs-variable
+    #   guard gap is real but pre-existing and separately masked - it needs its
+    #   own round with an all-caps discriminator, not a widened verb gate.
+    # - `fail`: the base-form gap left by the 3sg `fails`, which is already
+    #   gated above; gated identically so the two forms stay symmetric.
+    # Examiner FN-guard: 0 of the 3,173 examiner-confirmed §112 defect terms
+    # contain any of these six tokens, so none is reachable. Shared `_NP_CORE`
+    # covers the spec-support extractor (cross-CHECK) and EPC reuses the US
+    # walker. No CN/TW mirror - these are English-verb shapes; the CJK siblings
+    # from this same batch ship as TW R35 / CN R59.
+    r"parses|emits|lose|"
+    r"reviews(?=\s+(?:a|an|the)\b)|"
+    r"adds(?=\s+(?:or|and)\b)|"
+    r"fail(?=\s+(?:to|a|an|the)\b)|"
     # R5 (2026-05-26): `accounts` as 3sg finite verb only - lookahead on
     # `\s+for` discriminates the `<noun> accounts for X` verb-object pattern
     # (#98 alumina, #99 silica) from the bare-noun usage (`financial accounts`,
