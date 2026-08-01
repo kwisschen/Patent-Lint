@@ -128,6 +128,44 @@ class TestParseClaims:
         assert 1 in claims[2].dependencies
         assert claims[3].multiple_dependent is True
 
+    def test_bare_dependency_preamble_resolves(self):
+        # R40 (report #474): the drafter dropped the word "claim" from the
+        # dependency preamble. Before the fix these parsed INDEPENDENT, the
+        # ancestor chain came back empty, and every element introduced in the
+        # parent re-emitted as a spurious antecedent finding.
+        text = (
+            "1. A game information system comprising a start option.\n"
+            "2. The game information system according to 1, wherein the "
+            "start option is selected.\n"
+            "3. An automatic transmission as claimed in 1, wherein the "
+            "start option acts on a spool.\n"
+        )
+        claims = parse_claims(text)
+        assert claims[0].independent is True
+        for dependent in claims[1:]:
+            assert dependent.independent is False
+            assert 1 in dependent.dependencies
+        # The claim text itself is left verbatim - we detect the malformed
+        # preamble, we do not rewrite the drafter's words.
+        assert "according to 1," in claims[1].text
+
+    def test_bare_dependency_preamble_negative_controls(self):
+        # The bare form must not swallow a digit list or a measurement, since
+        # unlike the earlier whitespace repairs it flips `independent`.
+        text = (
+            "1. A system comprising a controller.\n"
+            "2. A system operating according to 1, 2, or 3 modes, comprising "
+            "a controller.\n"
+            "3. A method comprising adjusting a value according to 1 volt "
+            "applied to a node.\n"
+            "4. A method comprising calibrating a sensor, wherein the sensor "
+            "is trimmed according to 1, and then sealed.\n"
+        )
+        claims = parse_claims(text)
+        assert claims[1].independent is True, "digit list read as a dependency"
+        assert claims[2].independent is True, "measurement read as a dependency"
+        assert claims[3].independent is True, "mid-body match outside the preamble window"
+
 
 class TestIsMethodClaim:
     def test_method_before_comma(self):

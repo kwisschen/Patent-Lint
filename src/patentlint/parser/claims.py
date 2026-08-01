@@ -105,6 +105,56 @@ _CLAIM_NUM_BOUNDARY_FIX = re.compile(
     r"(\bclaims?\s+\d+)([a-zA-Z])", re.IGNORECASE
 )
 
+# R40 (2026-08-01, report #474): claim-word-less dependency preamble. The
+# drafter wrote `The game information system according to 1, wherein ...` -
+# a dependency preamble with the word `claim` dropped. `_DEP_REF` requires
+# the literal `claim`, so claim 6 parsed INDEPENDENT, its ancestor chain came
+# back empty, and every element introduced in claim 1 re-emitted as a §112(b)
+# finding: five spurious findings (`the application`, `the display surface`,
+# `the game information system`, `the portable electronic device`, `the start
+# option`) whose own did-you-mean named the identical term in claim 1. That
+# did_you_mean == term signature is the tell for a broken dependency link
+# rather than an over-capture.
+#
+# Same root cause and same FN-safe play as R15/R17/R35 (`ofclaim`/`inclaim`/
+# `claim 1wherein`): resolving a dependency only ADDS ancestor-intro coverage,
+# so it can only silence antecedent FPs, never hide a real missing antecedent.
+#
+# Two guards keep the bare form from over-matching, because unlike the earlier
+# whitespace repairs this one flips the `independent` classification that other
+# checks consume:
+#   1. The number must be followed by a clause boundary or `wherein` and must
+#      NOT open a digit list - so `operating according to 1, 2, or 3 modes`
+#      is not read as a dependency.
+#   2. The preamble must sit in the claim PREAMBLE, i.e. before the body
+#      begins at the first comma (falling back to a 100-character window when
+#      the claim has no comma at all). A dependent-claim preamble precedes the
+#      body by definition, so `... wherein the sensor is trimmed according to
+#      1, and then sealed` is correctly left alone. This guard only ever
+#      REMOVES matches, so it cannot manufacture a dependency.
+# The malformed dependency itself still surfaces through the dependency-format
+# check - this fix only stops it from cascading into the antecedent walker.
+_BARE_DEP_REF = re.compile(
+    r"\b(?:according\s+to|as\s+(?:recited|set\s+forth|defined|claimed)\s+in|"
+    r"in\s+accordance\s+with)\s+(\d{1,3})\s*"
+    r"(?=(?:[,;.](?!\s*\d)|\bwherein\b|$))",
+    re.IGNORECASE,
+)
+_BARE_DEP_PREAMBLE_WINDOW = 100
+
+
+def _bare_dep_refs(text: str) -> list[int]:
+    """Claim numbers from a dependency preamble that omitted the word `claim`."""
+    body_start = text.find(",")
+    if body_start == -1:
+        body_start = _BARE_DEP_PREAMBLE_WINDOW
+    return [
+        int(m.group(1))
+        for m in _BARE_DEP_REF.finditer(text)
+        if m.start() < body_start
+    ]
+
+
 # Pattern to detect multiple dependency
 _MULTIPLE_DEP = re.compile(
     r"claim(s)?\s+\d+\s*(to|and|or|-)\s*(claim(s)?\s+)?\d+",
@@ -197,6 +247,7 @@ def parse_dependencies(text: str, independent: bool, claim_number: int) -> list[
     dependencies = [
         int(m.group(1)) for m in re.finditer(r"\bclaims?\s*(\d+)\b", text, re.IGNORECASE)
     ]
+    dependencies.extend(_bare_dep_refs(text))
     return [d for d in dependencies if d != claim_number]
 
 
@@ -226,7 +277,9 @@ def parse_claims(claims_text: str) -> list[Claim]:
         )
         claim_text = _CLAIM_NUM_BOUNDARY_FIX.sub(r"\1 \2", claim_text)
 
-        independent = not _DEP_REF.search(claim_text)
+        independent = not (
+            _DEP_REF.search(claim_text) or _bare_dep_refs(claim_text)
+        )
         multiple_dependent = bool(_MULTIPLE_DEP.search(claim_text))
         method = is_method_claim(claim_text)
         dependencies = parse_dependencies(claim_text, independent, claim_number)
