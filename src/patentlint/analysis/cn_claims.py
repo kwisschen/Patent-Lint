@@ -1969,6 +1969,15 @@ _INTERIOR_CUT_EXCEPTIONS_CN: frozenset[str] = frozenset({
     "第一连接部", "第二连接部", "第三连接部",
     "电连接器", "电性连接部",
     "编码器", "解码器", "旋转编码器", "光学编码器",
+    # R59 (2026-08-01) MEASURED AND WITHHELD alongside its TW twin - selector
+    # compounds (选择器/数据选择器/多工器/选择电路/选择单元). 选择 is a
+    # _INTERIOR_VERB_BOUNDARIES_CN member, so `数据选择器` (a real CNIPA
+    # element name) is cut at its own noun head down to `数据` and a genuine
+    # `所述数据选择器` defect can never fire. Found by the FN-direction parity
+    # check, not by a report. Held for the same reason as TW - see the
+    # corresponding block in tw_claims.py: the truncation fix has to ship
+    # together with the bare-noun intro arm or it trades an invisible false
+    # negative for visible false positives.
     "识别码", "识别资料", "识别信息", "识别号", "识别子",
     "通讯模块", "通讯端口", "通讯单元", "通讯接口",
     "行动通讯模块", "无线通讯模块", "有线通讯模块",

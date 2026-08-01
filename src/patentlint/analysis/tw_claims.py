@@ -2397,6 +2397,65 @@ _REF_PATTERN_CAPTURE = re.compile(
 # ``sorted(..., key=len, reverse=True)`` is applied once at import time.
 _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
     (
+        # === R35 (2026-08-01, reports #466/#469/#473/#478/#479/#481/#485) ===
+        # Two firm drafters (a cationic-polymerisation chemistry draft and a
+        # game-scoreboard draft) plus the care-roster claims. Each token below
+        # bled into the captured intro or reference, orphaning the bare-noun
+        # head against its counterpart.
+        #
+        #   選自 ("is selected from", #473): the Markush frame
+        #     `所述苯乙烯單體選自於由苯乙烯、…所組成的群組` over-captured to
+        #     苯乙烯單體選自. 選自 is verb-only - no TIPO element name ends in
+        #     自 in this shape - so the endswith strip is unconditionally safe.
+        "選自",
+        #   載入 ("load", #479): `所述應用程式用以經由一可攜式電子裝置載入並執行`
+        #     over-captured the INTRO to 可攜式電子裝置載入, so the reference
+        #     所述可攜式電子裝置 found no intro. Verb-only in suffix position
+        #     (the noun is 載入量 / 載入模組, both with 載入 as a PREFIX, which
+        #     an endswith strip cannot reach).
+        "載入",
+        #   指派 ("assign", #466): `依照該班表指派中執行該照護指令的人員`
+        #     over-captured the reference to 班表指派.
+        "指派",
+        #   輔助建立 ("assists in establishing", #466 intro side + #469
+        #     spec-support): `依據該場域的一班表輔助建立該工作流程` over-captured
+        #     the intro to 班表輔助建立. Shipped as the two-verb COLLOCATION,
+        #     not as bare 輔助 or bare 建立: bare 輔助 would truncate real
+        #     element names ending in 輔助 (駕駛輔助 "driving assistance"), and
+        #     the collocation is FN-safe by construction - the same play as
+        #     R31's 彼此串接. Fixes both engines from one entry because the
+        #     spec-support normalizer delegates to clean_noun_phrase_tw.
+        "輔助建立",
+        #   斷開連線 ("disconnect", #481): `與運行有所述應用程式的所述可攜式電子
+        #     裝置斷開連線時` over-captured to 可攜式電子裝置斷開連線. Bare 斷開
+        #     is ALREADY a member, but the capture ends in the OBJECT 連線, so
+        #     the endswith strip could never reach it. Shipped as the
+        #     collocation rather than adding bare 連線, which is noun-gray -
+        #     網路連線 ("network connection") is a real element name, so a bare
+        #     連線 strip would be an invisible false negative. (Report #467's
+        #     verbal 一網路連線該伺服器 needs a following-determiner gate that
+        #     clean_noun_phrase_tw has no context for; deferred, see round_history.)
+        "斷開連線",
+        #   按壓 ("press", #485): `多個所述按鈕用以提供使用者按壓` over-captured
+        #     the spec-support phrase to 使用者按壓. Verb-only in suffix
+        #     position (the noun is 按壓力, with 按壓 as a prefix).
+        "按壓",
+        #   所傳 (#483/#484): the stranded head of 所傳遞, exactly the shape
+        #     R32 fixed for 所對/所對應. `多個所述比賽資訊顯示裝置所傳遞的所述
+        #     連接資訊` captures 比賽資訊顯示裝置所傳 because 遞 is excluded from
+        #     _NOUN_CHARS, so the scan halts mid-傳遞 leaving 所+傳 glued to the
+        #     noun. FN-safe for the same reason as 所對: the 所-suffix nouns are
+        #     場所/研究所/事務所, never X所傳.
+        "所傳",
+        #   較大/較小/較高/較低/較長/較短 (#478/#479): trailing comparatives.
+        #     `各個所述即時比賽資訊的所述比分總數是兩個所述即時隊伍分數的總和`
+        #     had its INTRO captured as 比分總數較大, so the reference
+        #     所述比分總數 found no intro. Shipped as the closed comparative set
+        #     rather than the single reported 較大: 較 is a comparative particle
+        #     and no TIPO element name ends in 較X, so the whole set is FN-safe
+        #     by construction. This completes an evidenced class morphologically;
+        #     it does not speculate a new bug class (DR-1).
+        "較大", "較小", "較高", "較低", "較長", "較短",
         # === R32 (2026-07-23, report #424, spec-support) ===
         # 所對 - the stranded head of 所對應 ("that which corresponds to").
         # `輸出電容所對應的所述輸出電壓` captures 電容所對 because 應 is excluded
@@ -3059,6 +3118,19 @@ _PLURAL_REFERENCE_PREFIXES: tuple[str, ...] = tuple(sorted(
 # Ordered longest-first so 設有/包含 strip before single-char tokens.
 _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
     (
+        # === R35 (2026-08-01, report #480) ===
+        # 傳遞一 ("transmits a") - the reference capture over-ran the noun into
+        # the verb 傳遞 AND its object: `所述應用程式能通過所述可攜式電子裝置傳遞
+        # 一訓練資訊至所述比賽資訊顯示裝置` captured 可攜式電子裝置傳遞一訓練, so
+        # the reference never matched its intro. A trailing strip cannot reach
+        # this one - the capture ends in the OBJECT (訓練), not the verb.
+        #
+        # Added as the verb+CARDINAL collocation, never bare 傳遞, which is
+        # noun-gray: 訊號傳遞路徑 / 傳遞機構 are real element names where 傳遞 is
+        # a noun-modifier FOLLOWED BY A NOUN, never by the cardinal 一. This is
+        # the CJK port of the R39 cardinal gate (`via <cardinal>`) and the same
+        # construction as R32's 控制多個 directly below.
+        "傳遞一",
         # === R32 (2026-07-23, report #425, spec-support) ===
         # 控制多個 ("control multiple") - the intro/inventory capture over-ran a
         # noun into the verb 控制 plus the quantifier 多個 of its object
@@ -3379,6 +3451,27 @@ _INTERIOR_CUT_EXCEPTIONS: frozenset[str] = frozenset({
 
     # Encoder / decoder
     "編碼器", "解碼器", "旋轉編碼器", "光學編碼器",
+
+    # R35 (2026-08-01) MEASURED AND WITHHELD - selector compounds
+    # (選擇器/資料選擇器/多工器/選擇電路/選擇單元).
+    #
+    # The defect is real: 選擇 is an _INTERIOR_VERB_BOUNDARIES member, so
+    # `資料選擇器` ("data selector" / multiplexer, a real TIPO element name)
+    # is cut at its own noun head down to `資料`, and a genuine
+    # `所述資料選擇器` defect can never fire. CN has the identical gap. It was
+    # found by the FN-direction parity check, not by a report - the profile
+    # of an over-broad strip, which suppresses findings so no user report can
+    # ever surface it.
+    #
+    # Declaring them here DOES fix the truncation, but validate_fix showed it
+    # then manufactures 5 findings on TWI524189B c7-c12: that draft introduces
+    # 資料選擇器 only BARE (claim 6, `其中，資料選擇器經由自主分析…`) and never
+    # with 一, so once the reference stops truncating to 資料 it no longer
+    # matches the 資料 intro it had been accidentally resolving against, and
+    # the bare-noun rescue does not cover claim 6's shape. Fixing the
+    # truncation therefore has to land TOGETHER WITH the bare-noun intro arm,
+    # or it trades an invisible FN for visible FPs. Held for its own round;
+    # no report evidences it, so DR-1 says do not ship it inside this one.
 
     # Identification compounds
     "識別碼", "識別資料", "識別資訊", "識別號", "識別子",

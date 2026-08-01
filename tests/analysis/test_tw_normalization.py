@@ -296,3 +296,67 @@ class TestTrailingStripPreservesLegitimate所Suffixes:
         assert clean_noun_phrase_tw("連接面") == "連接面"
         # Regression: 連接 as a verb should still cut
         assert clean_noun_phrase_tw("焊墊連接") == "焊墊"
+
+
+class TestR35TrailingVerbsAndComparatives:
+    """R35 (2026-08-01) - trailing verbs, comparatives, and stranded verb
+    heads drained from the 2026-07-28/31 report batch. Each pair below is
+    (the reported over-capture, an FN control that must stay intact).
+    """
+
+    def test_markush_selected_from_stripped(self):
+        # Report #473: 所述苯乙烯單體選自於由...所組成的群組
+        assert clean_noun_phrase_tw("苯乙烯單體選自") == "苯乙烯單體"
+
+    def test_load_verb_stripped(self):
+        # Report #479: 經由一可攜式電子裝置載入並執行 (intro side)
+        assert clean_noun_phrase_tw("可攜式電子裝置載入") == "可攜式電子裝置"
+
+    def test_assign_verb_stripped(self):
+        # Report #466: 依照該班表指派中執行該照護指令的人員
+        assert clean_noun_phrase_tw("班表指派") == "班表"
+
+    def test_auxiliary_establish_collocation_stripped(self):
+        # Reports #466 / #469: 依據該場域的一班表輔助建立該工作流程
+        assert clean_noun_phrase_tw("班表輔助建立") == "班表"
+
+    def test_bare_auxiliary_preserved(self):
+        # 輔助建立 ships as a collocation precisely so bare 輔助 stays a
+        # legal noun tail - 駕駛輔助 ("driving assistance") is a real element.
+        assert clean_noun_phrase_tw("駕駛輔助") == "駕駛輔助"
+
+    def test_disconnect_collocation_stripped(self):
+        # Report #481: 與...所述可攜式電子裝置斷開連線時
+        assert clean_noun_phrase_tw("可攜式電子裝置斷開連線") == "可攜式電子裝置"
+
+    def test_bare_connection_noun_preserved(self):
+        # 斷開連線 ships as a collocation so bare 連線 is never stripped -
+        # 網路連線 ("network connection") is a real element name, and a bare
+        # strip would be an invisible false negative.
+        assert clean_noun_phrase_tw("網路連線") == "網路連線"
+
+    def test_press_verb_stripped(self):
+        # Report #485: 多個所述按鈕用以提供使用者按壓
+        assert clean_noun_phrase_tw("使用者按壓") == "使用者"
+
+    def test_stranded_suo_chuan_head_stripped(self):
+        # Reports #483 / #484: 多個所述比賽資訊顯示裝置所傳遞的所述連接資訊.
+        # 遞 is excluded from _NOUN_CHARS so the scan halts mid-傳遞 and
+        # leaves 所+傳 glued to the noun - the R32 所對 shape.
+        assert clean_noun_phrase_tw("比賽資訊顯示裝置所傳") == "比賽資訊顯示裝置"
+
+    def test_trailing_comparatives_stripped(self):
+        # Reports #478 / #479: the intro captured as 比分總數較大.
+        assert clean_noun_phrase_tw("比分總數較大") == "比分總數"
+        for comparative in ("較小", "較高", "較低", "較長", "較短"):
+            assert clean_noun_phrase_tw(f"比分總數{comparative}") == "比分總數"
+
+    def test_transmit_cardinal_gated_interior_cut(self):
+        # Report #480: 通過所述可攜式電子裝置傳遞一訓練資訊至... - the capture
+        # ends in the verb's OBJECT, so only an interior cut can reach it.
+        assert clean_noun_phrase_tw("可攜式電子裝置傳遞一訓練") == "可攜式電子裝置"
+
+    def test_transmit_noun_compound_preserved(self):
+        # The cardinal gate is what keeps bare 傳遞 usable as a noun modifier.
+        assert clean_noun_phrase_tw("訊號傳遞路徑") == "訊號傳遞路徑"
+        assert clean_noun_phrase_tw("傳遞機構") == "傳遞機構"
