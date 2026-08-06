@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 58,
+    "current_round": 59,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -293,9 +293,22 @@
         ],
         "fixtures_silenced": 0,
         "shipped_at": "2026-07-23T00:00:00+00:00"
+      },
+      {
+        "round": 59,
+        "name": "r59_huozhe_markush_conjunction_and_jicheng",
+        "description": "Reports #448/#449 (集成) and #451/#454 (或者) - one CNIPA drafter's on-chip integrated WDM draft (片上集成波分复用器), the largest single CN report batch of the campaign. Two additions to _TRAILING_VERB_DENYLIST_CN, both reaching Engine 2 (spec-support) free because the CN spec-support normalizer delegates to clean_noun_phrase_cn. (1) 或者, the Markush alternation connective: bare 或 has been a member since R36, but the capture ends in 者 so the endswith strip could never reach it - the two-character form is the whole gap. Fires on the antecedent side (#451, 所述阵列波导光栅结构或者) and the spec-support side (#454, 数量或者). Pure conjunction, no noun sense, FN-safe. (2) 集成: 所述波分复用器集成于一光子集成电路芯片上 over-captured the reference so 所述波分复用器 never matched its intro 一种片上集成波分复用器. 于 is excluded from the CN noun chars, so the scan halts exactly at the verb and the capture always ends in 集成 - an endswith strip reaches it and no interior cut is needed. 集成 is a noun-MODIFIER in 集成电路 / 片上集成 where it is followed by its head noun and never sits at the tail, so those compounds are untouchable by an endswith strip (verified: 集成电路 / 大规模集成电路 / 片上集成波分复用器 all unchanged). GATES: validate_fix silenced_walker_fp=7, silenced_legit=0, false_fires_legit=0, and all 7 new keys are paired shifts on the same doc+claim (ZERO genuinely-new findings); fixture protect_violations=0, unresolved_new=0; specsup CN 336 and TW 138 both unchanged; pytest; ruff. NOT mirrored to TW: 或者/集成 are Simplified-side shapes with no TW report (DR-1), and the TW sibling strips from this same batch ship as TW R35. ALSO TRIAGED FROM THIS BATCH, not shipped: #455 (通道分别) is ALREADY resolved at HEAD - 分别 is an existing trailing member and both engines strip it, so that report predates the fix. #450-f1 (1dB带宽大, the stranded head of 大于) WITHHELD - a bare trailing 大 would truncate real compounds (功率放大 -> 功率放) and the residual guard does not separate them; needs the comparison-verb treatment TW gave 低於, measured separately. #452 (芯层) and #453 (所述波分复用器 abbreviated from 片上集成波分复用器) are the known relative-clause-intro and abbreviated-reference semantic residuals, advisory per #314.",
+        "user_attested_issues": [
+          448,
+          449,
+          451,
+          454
+        ],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-08-01T00:00:00+00:00"
       }
     ],
-    "last_updated": "2026-07-23T00:00:00+00:00",
+    "last_updated": "2026-08-01",
     "category_counts": {
       "unclassified": 1059,
       "miss_intro.coverage_gap": 250,
