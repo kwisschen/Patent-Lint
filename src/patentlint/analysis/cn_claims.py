@@ -1524,6 +1524,27 @@ _MATCH_NOUN_COMPOUNDS_CN: frozenset[str] = frozenset({"阻抗匹配"})
 
 _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
     (
+        # === R59 (2026-08-01, reports #448/#449/#451/#454) ===
+        # One CNIPA drafter's on-chip integrated WDM draft (片上集成波分复用器) -
+        # the largest single CN report batch the campaign has seen.
+        #
+        #   或者 ("or", #451 antecedent + #454 spec-support): the Markush
+        #     alternation connective, captured into the noun head in
+        #     `连接所述刻蚀衍射光栅结构、所述阵列波导光栅结构或者所述角度型多模干涉仪
+        #     结构` and in `所述第一输入波导的数量或者所述第二输入波导的数量`. Bare
+        #     或 has been a member since R36, but the capture ends in 者, so the
+        #     endswith strip could never reach it - the two-character form is the
+        #     whole gap. A pure conjunction with no noun sense; FN-safe.
+        "或者",
+        #   集成 ("integrated", #448/#449): `所述波分复用器集成于一光子集成电路芯片上`
+        #     over-captured the reference to 波分复用器集成, so 所述波分复用器 never
+        #     matched its intro 一种片上集成波分复用器. 于 is excluded from the CN
+        #     noun chars, so the scan halts exactly at the verb and the capture
+        #     always ends in 集成 - which is why an endswith strip reaches it and
+        #     an interior cut is unnecessary. 集成 is a noun-MODIFIER in 集成电路 /
+        #     片上集成, i.e. it is followed by its head noun there and never sits
+        #     at the tail, so the endswith strip cannot touch those compounds.
+        "集成",
         # === R57 (2026-07-23) - TW R32 parity (report #424, spec-support) ===
         # 所对 - the stranded head of 所对应 ("that which corresponds to").
         # Latent on CN, and the pre-existing bare-对 strip made it WORSE, not

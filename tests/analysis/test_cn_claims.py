@@ -1286,3 +1286,49 @@ class TestR54TrailingAndInteriorVerbParity:
         """FN-guard: a bare 满足 strip would truncate 'meets or exceeds'."""
         from patentlint.analysis.cn_claims import clean_noun_phrase_cn as C
         assert C("运行长度满足或超过所述阈值") == "运行长度满足或超过"
+
+
+class TestR59MarkushConjunctionAndIntegration:
+    """R59 (2026-08-01) - reports #448/#449/#451/#454 from one CNIPA
+    drafter's on-chip integrated WDM draft. Each fix is paired with the
+    FN control that decides its width.
+    """
+
+    def test_huozhe_markush_conjunction_stripped(self):
+        # Report #451: 连接所述刻蚀衍射光栅结构、所述阵列波导光栅结构或者所述...
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn as C
+        assert C("阵列波导光栅结构或者") == "阵列波导光栅结构"
+
+    def test_huozhe_reaches_spec_support(self):
+        # Report #454: 所述第一输入波导的数量或者所述第二输入波导的数量.
+        # The CN spec-support normalizer delegates to clean_noun_phrase_cn,
+        # so Engine 2 inherits the fix.
+        from patentlint.analysis.cn_spec_support import (
+            _normalize_for_spec_support_cn as N,
+        )
+        assert N("数量或者") == "数量"
+
+    def test_bare_huo_alone_could_not_reach_it(self):
+        # Bare 或 has been a member since R36; the capture ends in 者, which
+        # is why the two-character form was the whole gap.
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn as C
+        assert C("阵列波导光栅结构或") == "阵列波导光栅结构"
+
+    def test_or_gate_noun_preserved(self):
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn as C
+        assert C("或门") == "或门"
+
+    def test_integration_verb_stripped(self):
+        # Reports #448 / #449: 所述波分复用器集成于一光子集成电路芯片上.
+        # 于 is excluded from the CN noun chars, so the capture always ends
+        # exactly at the verb.
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn as C
+        assert C("波分复用器集成") == "波分复用器"
+
+    def test_integration_noun_modifier_preserved(self):
+        # 集成 is a noun-modifier in these compounds - followed by its head
+        # noun, never at the tail - so an endswith strip cannot reach them.
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn as C
+        assert C("集成电路") == "集成电路"
+        assert C("大规模集成电路") == "大规模集成电路"
+        assert C("片上集成波分复用器") == "片上集成波分复用器"
