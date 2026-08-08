@@ -2397,6 +2397,26 @@ _REF_PATTERN_CAPTURE = re.compile(
 # ``sorted(..., key=len, reverse=True)`` is applied once at import time.
 _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
     (
+        # === R36 (2026-08-08, reports #468/#493) ===
+        # One firm drafter's TW heat-dissipation-composite draft plus the
+        # smart-care claims. Each verb bled into the captured INTRO, so the
+        # matching 所述X reference found no introduction.
+        #
+        #   導入 ("lead in / introduce", #493): the method step
+        #     `將一彈性材料導入所述周緣區的孔隙內` captured the intro as
+        #     彈性材料導入, orphaning the reference 所述彈性材料. Verb-only in
+        #     suffix position - the noun readings are 導入部 / 導入端, where
+        #     導入 is a PREFIX that an endswith strip cannot reach.
+        "導入",
+        #   填入 ("fill in", #493): the sibling step
+        #     `將一散熱介面材料填入所述中央填充區的孔隙內` captured
+        #     散熱介面材料填入. Same shape and same FN argument as 導入
+        #     (填入 heads 填入孔 / 填入量, never terminates an element name).
+        "填入",
+        #   實現 ("realize / implement", #468): `該終端裝置的一處理器實現一
+        #     邊緣運算裝置` over-captured to 處理器實現. Verb-only - no TIPO
+        #     element name ends in 實現.
+        "實現",
         # === R35 (2026-08-01, reports #466/#469/#473/#478/#479/#481/#485) ===
         # Two firm drafters (a cationic-polymerisation chemistry draft and a
         # game-scoreboard draft) plus the care-roster claims. Each token below
@@ -3018,6 +3038,28 @@ _NOUNLIKE_SINGLE_CHAR_SUFFIXES: frozenset[str] = frozenset(
 # 2-char head (系統/區段/範圍). 中 standalone or as 2-char compound prefix
 # (中央/中文) is protected by the 0-position check (cut at idx > 1).
 _NOUNLIKE_RELAXED_SUFFIXES: frozenset[str] = frozenset({"上", "內", "中", "來"})
+
+# R36 (2026-08-08, report #492) - the closed set of TW nouns that genuinely
+# END in the nominalizer 所. Everywhere else a trailing 所 is the stranded
+# head of a 所V nominalization (X所構成 / X所述 / X所形成), where the verb's
+# second character is excluded from _NOUN_CHARS so the scan halts on the 所.
+# Replacing the old residual>=3 length heuristic with this lexeme set is a
+# strict FN improvement in BOTH directions: it fixes the reported FP
+# (一蓋體所構成的群組 captured 蓋體所, residual 2, so the reference 所述蓋體
+# found no intro) AND it stops the previous guard from silently truncating a
+# 4-char 所-noun (研究所 was protected at residual 2, but 國家研究所 - residual
+# 3 - was already being cut to 國家研究).
+# EXACT match, deliberately not endswith: the nominalizer 所 attaches to any
+# verb, so an endswith guard collides with ordinary claim prose. Measured -
+# an endswith version protected 輸出終端處所 (from `一輸出終端處所接收的…`,
+# i.e. 輸出終端處 + 所接收) because it happens to end in 處所, which stranded
+# the intro and MANUFACTURED 5 findings on TWI711261B. 磁場所產生 / 研究所示
+# are the same trap. Exact match reproduces the previous residual>=3 behaviour
+# for a qualified compound (國家研究所) while fixing the reported residual-2 FP.
+_SUO_FINAL_NOUNS_TW: frozenset[str] = frozenset({
+    "場所", "處所", "住所", "公所", "廁所",
+    "研究所", "事務所", "營業所", "避難所",
+})
 
 # ADR-095 Rule 2: leading quantifiers (stripped from both sides).
 # Ordered longest-first so 至少一個 is stripped as a single token before
@@ -3741,7 +3783,11 @@ def clean_noun_phrase_tw(text: str) -> str:
             # (their corpus count is 0) and position-0 compounds
             # (內側/上方, protected by the endswith position check) are
             # unaffected. See _NOUNLIKE_RELAXED_SUFFIXES for rationale.
-            if verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES:
+            if verb == "所":
+                # R36 (#492) - lexeme guard instead of a length heuristic.
+                if current in _SUO_FINAL_NOUNS_TW or (len(current) - 1) < 2:
+                    continue
+            elif verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES:
                 min_residual = 2 if verb in _NOUNLIKE_RELAXED_SUFFIXES else 3
                 if (len(current) - len(verb)) < min_residual:
                     continue
