@@ -347,6 +347,17 @@ _TW_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     #   and 向量 (vector, 向…) are unaffected - the reject is the 2-char lead.
     "另外",
     "以向",
+    # R36 (2026-08-08):
+    # - #467 `關於` - a preposition ("regarding / concerning"), captured whole
+    #   from `以形成關於該病患的照護指令`. The referenced noun is introduced
+    #   separately, so rejecting the fragment loses no coverage. No TIPO
+    #   element name opens with 關於 (關節/關聯 do not start 關於).
+    # - #482/#486 `有至少` - the residue of `包含有至少一連接器` after the R34
+    #   包含 strip. Pure quantifier scaffolding ("has at least one"), never an
+    #   element name. The 3-char lead keeps single-char 有 unconstrained, so
+    #   有機層 / 有效區 are unaffected.
+    "關於",
+    "有至少",
 )
 
 # Characters that appear ONLY as noun suffixes in TW patent diction
@@ -354,6 +365,51 @@ _TW_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
 # normalized term, the walker captured a fragment starting mid-compound.
 # Reject these single-char leads.
 _TW_SUFFIX_ONLY_LEADS: frozenset[str] = frozenset({"部", "端", "埠"})
+
+# R36 (2026-08-08) - leading fragments that are STRIPPED rather than rejected,
+# because a real element name follows them and must stay inventoried.
+# Each is residual-guarded at _MIN_INVENTORY_LENGTH, which is what makes the
+# strip FN-safe for the noun-gray members:
+#   者  (#495) - `至少一者形成外露表面` captured 者形成外露表面. 者 is a pure
+#       nominalizing suffix; no Chinese noun opens with it (使用者 / 業者 carry
+#       it at the tail), so a leading 者 is always a mid-lexeme cut.
+#   形成 (#495) - the verb "to form", exposed once the leading 者 is gone.
+#       The residual guard is the FN protection: the only 形成-initial noun in
+#       technical diction is 形成層, whose residual (層) is 1 char and so is
+#       left intact.
+#   且  (#496) - the coordinating conjunction, already a TRAILING token. As a
+#       LEAD it blocks the position-0 所述 strip, so the whole clause survives
+#       normalization (且所述彈性封邊部沿所述片). Stripping it first lets the
+#       existing reference-prefix strip reach the noun.
+_TW_SPEC_SUPPORT_LEADING_STRIPS: tuple[str, ...] = ("形成", "者", "且")
+
+# R36 (#482/#486) - the measure word 筆 ("<n> items of <record>"), stranded at
+# position 0 once the 至少一 quantifier is stripped (至少一筆比賽資料 ->
+# 筆比賽資料). Guarded by a closed set of 筆-INITIAL lexemes so a real element
+# name is never truncated: 筆記型電腦 ("laptop") is the one that matters in
+# patent diction, and 筆電 / 筆畫 / 筆順 / 筆芯 / 筆桿 / 筆尖 complete the class.
+_TW_BI_LEXEME_HEADS: frozenset[str] = frozenset(
+    {"記", "電", "畫", "順", "芯", "桿", "尖", "觸"}
+)
+
+# R36 (#483/#487) - `任` ("any") + a cardinal is a quantifier phrase, never an
+# element name (任兩個所述比賽資訊顯示裝置 captured 任兩個). Gated on the
+# cardinal so the very common noun 任務 ("task") - which the TW gold corpus
+# carries as a legit-drafting-error head (任務地圖模組, 任務執行範圍) - is
+# untouched, since 務 is not a cardinal.
+_TW_REN_QUANTIFIER_RE = re.compile(r"^任[一二兩三四五六七八九十]+個?")
+
+# R36 - INTERIOR cut tokens. Each marks the end of the noun, so the head
+# before it stays inventoried (cut, not reject).
+#   至少 (#494) - a quantifier adverb ("at least"), never part of an element
+#     name: 所述周界區的孔隙至少部分彼此連通 captured 孔隙至少部.
+#   用以 (#485-f3/#488-f2) - the purpose connective ("used to"), which opens a
+#     function clause: 多個所述按鈕用以提供使用者按壓 captured 按鈕用以提供使,
+#     ending in the 使 of the FOLLOWING word 使用者. A trailing strip cannot
+#     reach it - the capture ends in the clause's own object - so it needs an
+#     interior cut, the same diagnostic as R35's 傳遞一. FN-safe: 用以 is a
+#     two-morpheme connective and no element name contains it.
+_TW_SPEC_SUPPORT_INTERIOR_CUTS: tuple[str, ...] = ("至少", "用以")
 
 # Clause markers that signal the captured text is a comparison/relation
 # clause, not a noun phrase. Reject any term containing these as an
@@ -436,7 +492,7 @@ _MAX_INVENTORY_LENGTH: int = 12
 # --- Normalization helpers -------------------------------------------------
 
 
-def _normalize_for_spec_support_tw(text: str) -> str:
+def _normalize_for_spec_support_tw(text: str, claim_text: str = "") -> str:
     """Normalize a claim-side term for spec-support matching.
 
     Order:
@@ -453,6 +509,10 @@ def _normalize_for_spec_support_tw(text: str) -> str:
     if not text:
         return text
     t = _TRAILING_REF_NUMERAL_RE.sub("", text).strip()
+    # R36 - drop leading conjunction / nominalizer / quantifier fragments up
+    # front: a leading 且 otherwise blocks the position-0 reference-prefix
+    # strip below, so the whole clause survives normalization (#496).
+    t = _strip_leading_fragments(t)
     for prep in _TW_LEADING_PREPOSITIONS:
         if t.startswith(prep) and len(t) > len(prep):
             t = t[len(prep):]
@@ -494,6 +554,9 @@ def _normalize_for_spec_support_tw(text: str) -> str:
         suffix = t.rsplit("的一", 1)[1].strip()
         if len(suffix) >= _MIN_INVENTORY_LENGTH:
             t = normalize_reference_term(suffix)
+    # R36 - re-run after the reference-prefix strip: removing 所述/該 can
+    # expose a fragment that was not at position 0 before (#495).
+    t = _strip_leading_fragments(t)
     t = _recover_from_midphrase_prefix(t)
     t = _strip_trailing_locative_clause(t)
     t = _strip_trailing_conjunction(t)
@@ -515,6 +578,14 @@ def _normalize_for_spec_support_tw(text: str) -> str:
     measure_stripped = re.sub(r"[一二兩三四五六七八九十]+個$", "", t)
     if measure_stripped != t and len(measure_stripped) >= _MIN_INVENTORY_LENGTH:
         t = measure_stripped
+    # R36 (#494/#485) - truncate at an interior clause token, last so it runs
+    # on the fully-stripped head.
+    t = _cut_at_interior_token(t)
+    # R36 (#485/#488) - 用以 purpose-connective gate. Runs last because the
+    # trailing-token pass is what exposes the bare 用 (按鈕用以提供使 unwinds
+    # 使 -> 提供 -> 以 -> 按鈕用). Needs the claim text, so callers that have
+    # it pass it; the bare-term call sites in the tests keep the old signature.
+    t = _strip_trailing_yong_before_yi(t, claim_text)
     return t
 
 
@@ -530,6 +601,66 @@ def _strip_spec_support_trailing_tokens(term: str) -> str:
         if not stripped:
             break
     return term
+
+
+def _strip_leading_fragments(term: str) -> str:
+    """Strip leading conjunction / nominalizer / verb / quantifier fragments.
+
+    Iterative so a stacked lead unwinds in one pass (者 + 形成 in 者形成外露表面
+    -> 外露表面). Every strip is residual-guarded at ``_MIN_INVENTORY_LENGTH``,
+    which is what keeps the noun-gray members (形成層, 筆記型電腦) intact.
+    """
+    for _ in range(4):
+        before = term
+        for lead in _TW_SPEC_SUPPORT_LEADING_STRIPS:
+            if term.startswith(lead) and len(term) - len(lead) >= _MIN_INVENTORY_LENGTH:
+                term = term[len(lead):]
+                break
+        if (
+            term.startswith("筆")
+            and len(term) - 1 >= _MIN_INVENTORY_LENGTH
+            and term[1] not in _TW_BI_LEXEME_HEADS
+        ):
+            term = term[1:]
+        m = _TW_REN_QUANTIFIER_RE.match(term)
+        if m:
+            term = term[m.end():]
+        if term == before:
+            break
+    return term
+
+
+def _cut_at_interior_token(term: str) -> str:
+    """Truncate at the earliest interior clause token (至少 / 用以).
+
+    Gated on ``_MIN_INVENTORY_LENGTH`` chars of head before the cut so a
+    position-0 occurrence (which the leading path handles) is left alone.
+    """
+    cuts = [
+        idx for idx in (term.find(t) for t in _TW_SPEC_SUPPORT_INTERIOR_CUTS)
+        if idx >= _MIN_INVENTORY_LENGTH
+    ]
+    return term[: min(cuts)] if cuts else term
+
+
+def _strip_trailing_yong_before_yi(term: str, claim_text: str) -> str:
+    """Strip a trailing 用 when the claim continues with 以 (the 用以 frame).
+
+    `多個所述按鈕用以提供使用者按壓` captures 按鈕用: 以 is excluded from the
+    noun characters, so the scan halts on the 用 of the purpose connective 用以.
+    A blanket trailing-用 strip is FN-unsafe - the TW gold corpus carries
+    legit 弧作用 / 操作用 / 開口用 heads - so this is gated two ways: the claim
+    text must continue with 以, AND the term must not end in a lexicalized
+    用-final word. (#485/#488.)
+    """
+    if not term.endswith("用") or len(term) - 1 < _MIN_INVENTORY_LENGTH:
+        return term
+    if any(term.endswith(w) for w in _TW_YONG_FINAL_WORDS):
+        return term
+    pos = claim_text.find(term)
+    if pos < 0 or not claim_text[pos + len(term):].startswith("以"):
+        return term
+    return term[:-1]
 
 
 def _has_leading_reject(term: str) -> bool:
@@ -609,7 +740,11 @@ def _strip_trailing_locative_clause(term: str) -> str:
     head before the preposition being inventory-length so a leading-preposition
     residue (位於一表面 → 位, sub-_MIN) is left for the length filter, not emitted.
     """
-    for prep in ("於", "在"):
+    # R36 (#496) - 沿 ("along") joins 於/在: `彈性封邊部沿所述片狀載體的一厚度
+    # 方向` is the same coverb+determiner locative frame. FN-safe by the same
+    # determiner gate - a 沿-bearing noun (邊沿/前沿) is followed by a noun
+    # morpheme, never by 一/該/其/前/所/此/各.
+    for prep in ("於", "在", "沿"):
         idx = term.find(prep)
         if (
             idx >= _MIN_INVENTORY_LENGTH
@@ -758,6 +893,13 @@ def _strip_trailing_bufen_before_verb(term: str, claim_text: str) -> str:
 # #335 - 內凹 ("recessed inward") is a stative verb in `…第二擋牆內凹形成`
 # ("formed by … being recessed inward"), not part of the noun phrase.
 _TW_PREDICATE_TAILS: tuple[str, ...] = ("轉動", "鄰近", "連通", "內凹", "受", "自")
+# R36 (#485/#488) - lexicalized 用-final words. A term ending in one of these
+# is a noun or a settled verb compound, so the 用以 strip must not reach it.
+_TW_YONG_FINAL_WORDS: frozenset[str] = frozenset({
+    "作用", "使用", "應用", "利用", "運用", "採用", "套用", "適用",
+    "引用", "通用", "專用", "備用", "費用", "效用", "實用", "共用",
+    "公用", "兩用", "慣用", "沿用", "佔用", "選用",
+})
 _TW_PREDICATE_FOLLOW_MARKERS: tuple[str, ...] = (
     "至", "於", "到", "向", "在", "沿", "所述", "該", "予", "與", "和",
 )
@@ -789,6 +931,23 @@ def _strip_trailing_predicate_before_marker(term: str, claim_text: str) -> str:
             break
         term = term[: -len(hit)]
     return term
+
+
+def _spec_support_final_term_tw(orig: str, norm: str, claim_text: str) -> str:
+    """The ONE normalization chain from a raw intro to an inventory term.
+
+    Both the inventory builder and the Tier-2 raw-candidate index must run the
+    identical chain, or the same intro yields two different normalized keys and
+    Tier 2 looks up raw candidates that were filed under another key. That
+    asymmetry was latent until R36: the 至少 interior cut re-keyed one intro on
+    TW202243583A, stranding the raw span that had been carrying I311 past Tier 2.
+    See feedback_symmetry_audit_normalize_chains.
+    """
+    orig = _strip_trailing_bufen_before_verb(orig, claim_text)
+    norm = _strip_trailing_bufen_before_verb(norm, claim_text)
+    orig = _strip_trailing_predicate_before_marker(orig, claim_text)
+    norm = _strip_trailing_predicate_before_marker(norm, claim_text)
+    return _normalize_for_spec_support_tw(norm or orig, claim_text)
 
 
 def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:
@@ -823,18 +982,7 @@ def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:
             # the verb-gate: a genuine `X部分` portion-element (第二外殼部分,
             # 最外側部分) is followed by a particle/noun/clause-end, NOT a verb,
             # so it is untouched (a blanket trailing strip would FN-drop those).
-            orig = _strip_trailing_bufen_before_verb(orig, claim.text)
-            norm = _strip_trailing_bufen_before_verb(norm, claim.text)
-            # Gray-predicate verb-gate (#315/#317/#318/#319): strip a trailing
-            # 受/自/轉動/鄰近/連通 when the claim continues with a preposition/
-            # coverb marker (verbal signature); nominal forms (followed by 的)
-            # survive.
-            orig = _strip_trailing_predicate_before_marker(orig, claim.text)
-            norm = _strip_trailing_predicate_before_marker(norm, claim.text)
-            # Apply spec-support normalization (adds preposition +
-            # parenthetical-numeral strip over the walker's intro
-            # normalization).
-            root = _normalize_for_spec_support_tw(norm or orig)
+            root = _spec_support_final_term_tw(orig, norm, claim.text)
             if not root:
                 continue
             for final in _split_on_conjunction(root):
@@ -927,7 +1075,7 @@ def check_spec_support_tw(doc: TwPatentDocument) -> list[UnsupportedTerm]:
         for orig, norm in extract_introductions_tw(
             claim, suppress_dep_preamble=True
         ):
-            final = _normalize_for_spec_support_tw(norm or orig)
+            final = _spec_support_final_term_tw(orig, norm, claim.text)
             if not final:
                 continue
             raw_by_norm.setdefault(final, []).append(orig)

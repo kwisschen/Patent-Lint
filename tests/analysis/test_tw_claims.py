@@ -1155,6 +1155,26 @@ class TestR29StrandedRelationalHeadAndLexemeSplit:
         text = "所述對接部與所述殼體"
         assert _trim_dangling_ying_verb_head_tw("對接部", 5, text)[0] == "對接部"
 
+    def test_r36_trailing_verbs_and_stranded_suo(self):
+        """R36 (#468/#492/#493) - TW capture fixes shared by both engines."""
+        from patentlint.analysis.tw_claims import clean_noun_phrase_tw as clean
+
+        # #493 - the method-step verbs 導入 / 填入 bled into the INTRO, so the
+        # matching 所述X reference found no introduction.
+        assert clean("彈性材料導入") == "彈性材料"
+        assert clean("散熱介面材料填入") == "散熱介面材料"
+        # #468 - 實現 ("realize").
+        assert clean("處理器實現") == "處理器"
+        # #492 - a trailing 所 stranded from the 所V nominalization 所構成.
+        assert clean("蓋體所") == "蓋體"
+        assert clean("方法所") == "方法"
+        # FN-guards: the lexicalized 所-final nouns are protected by exact
+        # match. endswith was measured and REJECTED - it protected 輸出終端處所
+        # (輸出終端處 + 所接收) and manufactured 5 findings on TWI711261B.
+        assert clean("研究所") == "研究所"
+        assert clean("事務所") == "事務所"
+        assert clean("場所") == "場所"
+
     def test_trailing_and_interior_verbs(self):
         from patentlint.analysis.tw_claims import clean_noun_phrase_tw as C
         assert C("預定輸入電流值劃分為多個級距") == "預定輸入電流值"

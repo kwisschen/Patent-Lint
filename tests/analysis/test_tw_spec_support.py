@@ -646,6 +646,49 @@ class TestSpecSupportRoundR34:
         # gate (idx≥2, next char a determiner) leaves 內在電阻 intact.
         assert _normalize_for_spec_support_tw("內在電阻") == "內在電阻"
 
+    def test_r36_leading_fragment_strips(self):
+        # #495 - a leading nominalizer 者 (from 至少一者) plus the verb 形成
+        # unwind in one pass, leaving the real element name.
+        assert _normalize_for_spec_support_tw("者形成外露表面") == "外露表面"
+        # #496 - a leading 且 blocks the position-0 reference-prefix strip;
+        # removing it lets 所述 come off, and the 沿 locative clause is cut.
+        assert _normalize_for_spec_support_tw("且所述彈性封邊部沿所述片") == "彈性封邊部"
+        # #482/#486 - the measure word 筆 stranded by the 至少一 quantifier strip.
+        assert _normalize_for_spec_support_tw("筆比賽資料") == "比賽資料"
+        # #483/#487 - 任 + cardinal is quantifier scaffolding, never an element.
+        assert _normalize_for_spec_support_tw("任兩個") == ""
+        # FN-guards: the residual floor keeps 形成層 whole, the 筆-lexeme set
+        # keeps 筆記型電腦 whole, and 任務 has no cardinal after 任.
+        assert _normalize_for_spec_support_tw("形成層") == "形成層"
+        assert _normalize_for_spec_support_tw("筆記型電腦") == "筆記型電腦"
+        assert _normalize_for_spec_support_tw("任務地圖模組") == "任務地圖模組"
+
+    def test_r36_leading_rejects(self):
+        # #467 關於 (preposition) and #482/#486 有至少 (quantifier scaffolding).
+        assert _has_leading_reject("關於該病") is True
+        assert _has_leading_reject("有至少一") is True
+        # FN-guards: single-char 有 is still unconstrained.
+        assert _has_leading_reject("有機層") is False
+        assert _has_leading_reject("關節模組") is False
+
+    def test_r36_interior_cuts(self):
+        # #494 - 至少 is a quantifier adverb; the head before it is the element.
+        assert _normalize_for_spec_support_tw("孔隙至少部") == "孔隙"
+        # #485/#488 - 用以 opens a function clause; the capture ends in the
+        # clause's own object (使 of the following 使用者), so only an interior
+        # cut can reach it.
+        assert _normalize_for_spec_support_tw("按鈕用以提供使") == "按鈕"
+
+    def test_r36_yong_before_yi_gate(self):
+        # #485/#488 - a trailing 用 the noun scan glued on from 用以.
+        claim = "所述比賽資訊顯示裝置還包含多個按鈕，多個所述按鈕用以提供使用者按壓。"
+        assert _normalize_for_spec_support_tw("按鈕用", claim) == "按鈕"
+        # FN-guard 1: without the following 以 in the claim, no strip.
+        assert _normalize_for_spec_support_tw("按鈕用", "多個所述按鈕用於按壓。") == "按鈕用"
+        # FN-guard 2: a lexicalized 用-final word is never reached, even with
+        # a following 以 (the TW gold corpus carries 弧作用 as legit).
+        assert _normalize_for_spec_support_tw("弧作用", "該弧作用以產生電漿。") == "弧作用"
+
     def test_440_f1_TP_preserved(self):
         # The confirmed-defect finding (#440-f1) must still be inventoried.
         claim = _make_claim(
