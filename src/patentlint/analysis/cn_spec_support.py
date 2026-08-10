@@ -246,6 +246,13 @@ _CN_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     # 以从. Safe vs nouns: 以太网 (Ethernet) starts 以太, 以下步骤 starts
     # 以下 - neither matches 以取/以通.
     "以取",
+    # R60 (2026-08-10) - TW R37 #510 mirror. `配置以切换多个所述灯具` captures
+    # 以切换多个: the 以-purpose connective plus the head of the following verb,
+    # with no noun in the span. Same 2-char `以<verb>` shape as 以使 / 以控,
+    # which CN carries in BOTH the leading and interior sets - 以切 joins both
+    # for parity. Safe on the same argument: 以太网 (Ethernet) opens 以太, and
+    # 切换器 / 切换单元 as element heads do not open with 以.
+    "以切",
     "以通",
     # Direct parallels to TW audit tokens
     "有多",
@@ -308,6 +315,13 @@ _CN_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = (
     "用于",
     "以使",
     "以控",
+    # R60 (2026-08-10) - TW R37 #510 mirror. `配置以切换多个所述灯具` captures
+    # 以切换多个: the 以-purpose connective plus the head of the following
+    # verb, with no noun in the span. Same 2-char `以<verb>` shape as
+    # 以使 / 以控 above, and safe on the same argument - 以太网 (Ethernet)
+    # opens 以太, and 切换器 / 切换单元 as element heads do not open with 以.
+    # Reproduced on the CN normalizer before shipping, not assumed.
+    "以切",
     # Locative + ordinal - CN drafters write "在第二起始时刻" etc.
     "在第",
     # Genus + preposition stranding - walker capture lands on bare-genus
@@ -392,6 +406,53 @@ _CHAR_WINDOW_SIZE: int = 30
 # single-char residues.
 _MIN_INVENTORY_LENGTH: int = 2
 
+# R60 (2026-08-10) - TW R37 #508 / #511 mirror: interior TRANSFER COVERB +
+# determiner. `输出一第二电能至一耗电负载` captured 第二电能至一耗电负载 and
+# `提供一第一电能给一永磁马达` captured 第一电能给一永磁马达 - the coverb marks
+# the recipient, so a second complete noun phrase got glued onto the theme
+# noun. Both recipients are separately inventoried from their own intro, so
+# the cut loses no coverage. Verified to reproduce on the CN normalizer with
+# the same draft family that produced the TW reports.
+#
+# Gate is POSITIONAL, not lexical (the R41 -ward lesson): the coverb cuts only
+# when a DETERMINER follows, which is what opens a new noun phrase. In
+# compound position it is followed by its own head (补给站, 冬至日) and nothing
+# is cut.
+_CN_INTERIOR_COVERBS: tuple[str, ...] = ("至", "给")
+_CN_COVERB_DETERMINERS: tuple[str, ...] = ("一", "所述", "该")
+
+# R60 (2026-08-10) - TW R37 #509 mirror: INLINE element numerals on the SPEC
+# side. 专利法实施细则 §21 practice puts 元件符号 inline in the description
+# (`联轴器4的两端分别连接永磁同步电机2A`), which breaks both the exact-substring
+# tiers and the Tier-3 bigrams for a claim phrase written without the numeral.
+# The CN claim side already strips a trailing bare numeral
+# (``_BARE_REF_NUMERAL_CN_RE``); the spec side stripped nothing, so the
+# asymmetry was invisible until a drafter used the inline notation.
+#
+# Gated on a following STRUCTURAL character so the strip cannot JOIN two
+# adjacent annotated element names (`电机2固定座3` -> `电机固定座` would
+# manufacture support for a compound the spec never describes - a real
+# 专利法 §26(4) false negative). Additive fallback tier only.
+_CN_SPEC_INLINE_REF_NUMERAL_RE = re.compile(
+    r"(?<=[\u4e00-\u9fff])\d+[A-Za-z]?"
+    r"(?=[\u7684\u4e4b\u4e0e\u53ca\u548c\u3001\uff0c\u3002\uff1b\uff1a\uff09)\s]|$)"
+)
+
+
+def _cut_at_interior_coverb_cn(term: str) -> str:
+    """Truncate at an interior transfer coverb (至 / 给) that opens a new NP."""
+    for idx, ch in enumerate(term):
+        if ch not in _CN_INTERIOR_COVERBS or idx < _MIN_INVENTORY_LENGTH:
+            continue
+        if any(term[idx + 1:].startswith(d) for d in _CN_COVERB_DETERMINERS):
+            return term[:idx]
+    return term
+
+
+def _strip_inline_ref_numerals_cn(spec_text: str) -> str:
+    """Drop inline 元件符号 from CN spec text (联轴器4的两端 -> 联轴器的两端)."""
+    return _CN_SPEC_INLINE_REF_NUMERAL_RE.sub("", spec_text)
+
 # Maximum length (chars) for an inventory term. Captures beyond this
 # length are almost always walker clause artifacts rather than genuine
 # compound nouns. 10 chars is ~3-5 Chinese morphemes - long enough for
@@ -458,6 +519,8 @@ def _normalize_for_spec_support_cn(
     # Re-strip trailing numerals exposed by the verb strip.
     t = _PAREN_REF_NUMERAL_RE.sub("", t).strip()
     t = _BARE_REF_NUMERAL_CN_RE.sub("", t).strip()
+    # R60 - interior transfer coverb, last so it runs on the stripped head.
+    t = _cut_at_interior_coverb_cn(t)
     return t
 
 
@@ -734,6 +797,7 @@ def check_spec_support_cn(
     )
 
     spec_text = _collect_spec_text_cn(doc)
+    spec_text_bare = _strip_inline_ref_numerals_cn(spec_text)
     inventory = _build_inventory_cn(
         doc.claims,
         contamination_terms=contamination_terms,
@@ -774,6 +838,15 @@ def check_spec_support_cn(
         # Tier 3: CJK character-window fallback
         tiers.append("char_window")
         if _tier3_char_window(norm_term, spec_text):
+            continue
+
+        # Tier 4 (R60): retry Tiers 1 + 3 against spec text with inline
+        # 元件符号 removed. Strictly additive - runs only after the raw spec
+        # text has already failed, so it can never lose an existing match.
+        tiers.append("numeral_stripped")
+        if _tier1_normalized_exact(norm_term, spec_text_bare) or _tier3_char_window(
+            norm_term, spec_text_bare
+        ):
             continue
 
         unsupported.append(UnsupportedTerm(

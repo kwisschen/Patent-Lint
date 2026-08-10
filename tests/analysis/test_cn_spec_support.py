@@ -15,6 +15,8 @@ from __future__ import annotations
 
 from patentlint.analysis.cn_spec_support import (
     _build_inventory_cn,
+    _cut_at_interior_coverb_cn,
+    _strip_inline_ref_numerals_cn,
     _collect_spec_text_cn,
     _has_interior_reject_cn,
     _has_leading_conjunction_cn,
@@ -567,3 +569,43 @@ class TestAttachCrossReferencesCn:
         attach_cross_references_cn(antecedent_findings, unsupported)
         assert antecedent_findings[0]["cross_ref"] is None
         assert unsupported[0].cross_ref is None
+
+
+class TestSpecSupportRoundR60:
+    """R60 - cross-jurisdiction mirror of TW R37 (#508/#509/#510/#511)."""
+
+    def test_interior_coverb_cut(self):
+        # A transfer coverb followed by a determiner opens a second complete
+        # noun phrase; the head before it is the element being introduced.
+        assert _cut_at_interior_coverb_cn("第二电能至一耗电负载") == "第二电能"
+        assert _cut_at_interior_coverb_cn("第一电能给一永磁马达") == "第一电能"
+        assert _cut_at_interior_coverb_cn("电压至该模块") == "电压"
+        assert _cut_at_interior_coverb_cn("信号给所述天线") == "信号"
+
+    def test_interior_coverb_compound_guard(self):
+        # FN-guard: in compound position the coverb is followed by its own
+        # head, not a determiner, so nothing is cut.
+        assert _cut_at_interior_coverb_cn("补给站设置") == "补给站设置"
+        assert _cut_at_interior_coverb_cn("冬至日期") == "冬至日期"
+
+    def test_yiqie_leading_reject(self):
+        # `以切` joins the existing 以使 / 以控 2-char 以<verb> rejects.
+        # CN carries 以使 / 以控 in BOTH the leading and interior sets; 以切
+        # joins both for parity, so assert both predicates.
+        assert _has_leading_reject_cn("以切换多个") is True
+        assert _has_interior_reject_cn("配置以切换多个") is True
+        # FN-guard: 以太网 (Ethernet) opens 以太; 切换器 does not open with 以.
+        assert _has_leading_reject_cn("以太网接口") is False
+        assert _has_leading_reject_cn("切换器") is False
+
+    def test_spec_inline_ref_numerals(self):
+        assert (
+            _strip_inline_ref_numerals_cn("联轴器4的两端分别连接永磁同步电机2A。")
+            == "联轴器的两端分别连接永磁同步电机。"
+        )
+
+    def test_spec_inline_ref_numerals_structural_gate(self):
+        # FN-guard: never JOIN two adjacent annotated element names.
+        assert _strip_inline_ref_numerals_cn("电机2固定座3") == "电机2固定座"
+        assert _strip_inline_ref_numerals_cn("第1图显示") == "第1图显示"
+        assert _strip_inline_ref_numerals_cn("PM2.5传感器") == "PM2.5传感器"

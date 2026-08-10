@@ -16,7 +16,10 @@ from patentlint.analysis.tw_spec_support import (
     _split_on_conjunction,
     _strip_spec_support_trailing_tokens,
     _strip_trailing_conjunction,
+    _cut_at_interior_coverb,
+    _strip_inline_ref_numerals,
     _strip_trailing_predicate_before_marker,
+    _tier1_normalized_exact,
     _tier3_char_window,
     attach_cross_references_tw,
     check_spec_support_tw,
@@ -703,3 +706,61 @@ class TestSpecSupportRoundR34:
         assert "第一輔助初級繞組層" in inv
         # And the over-captures are gone.
         assert "第二次級繞組層相鄰" not in inv
+
+    def test_r37_interior_coverb_cut(self):
+        # #508 / #511 - a transfer coverb followed by a determiner opens a
+        # second complete noun phrase; the head before it is the element.
+        assert _normalize_for_spec_support_tw("第二電能至一耗電負載") == "第二電能"
+        assert _normalize_for_spec_support_tw("第一電能給一永磁馬達") == "第一電能"
+        # The 該 / 所述 determiners are reached by the cut itself, but end to
+        # end they are absorbed earlier by the mid-phrase prefix recovery
+        # (which takes the SUFFIX), so assert the gate directly.
+        assert _cut_at_interior_coverb("電壓至該模組") == "電壓"
+        assert _cut_at_interior_coverb("訊號給所述天線") == "訊號"
+        # FN-guard: in compound position the coverb is followed by its own
+        # head, not a determiner, so nothing is cut.
+        assert _cut_at_interior_coverb("補給站設置") == "補給站設置"
+        assert _cut_at_interior_coverb("冬至日期") == "冬至日期"
+        assert _normalize_for_spec_support_tw("冬至日期") == "冬至日期"
+        # ... and the 給 of a 給-final verb noun survives normalization whole.
+        assert _normalize_for_spec_support_tw("補給站設置") == "補給站"
+
+    def test_r37_interior_coverb_recipient_still_inventoried(self):
+        # The cut must not lose the recipient - it is separately inventoried
+        # from its own 一X introduction, which is what makes the cut safe.
+        claim = _make_claim(
+            1,
+            "一種不斷電設備，其包含：一發電機；所述發電機配置以根據所述第一動能"
+            "輸出一第二電能至一耗電負載。",
+        )
+        inv = [t for _, t in _build_inventory([claim])]
+        assert "第二電能至一耗電負載" not in inv
+        assert "第二電能" in inv
+        assert "耗電負載" in inv
+
+    def test_r37_yiqie_leading_reject(self):
+        # #510 - `以切` is the same 2-char 以<verb> shape as 以控 / 以從 / 以向.
+        assert _has_leading_reject("以切換多個") is True
+        # FN-guard: 以太網路 (Ethernet) opens 以太, not 以切.
+        assert _has_leading_reject("以太網路介面") is False
+        # FN-guard: a real 切換 element head does not open with 以.
+        assert _has_leading_reject("切換器") is False
+
+    def test_r37_spec_inline_ref_numerals(self):
+        # #509 - inline 元件符號 in the description broke the claim phrase at
+        # every tier, including Tier 3 (the digit breaks the 器的 / 的兩 bigrams).
+        spec = "永磁同步馬達2A電性連接於不連續直流電源1A，而聯軸器4的兩端分別連接永磁同步馬達2A以及直流發電機3A。"
+        assert _tier1_normalized_exact("聯軸器的兩端", spec) is False
+        assert _tier3_char_window("聯軸器的兩端", spec) is False
+        bare = _strip_inline_ref_numerals(spec)
+        assert _tier1_normalized_exact("聯軸器的兩端", bare) is True
+
+    def test_r37_spec_inline_ref_numerals_structural_gate(self):
+        # FN-guard: the strip must never JOIN two adjacent annotated element
+        # names - `馬達固定座` would manufacture support the spec never gives.
+        assert _strip_inline_ref_numerals("馬達2固定座3") == "馬達2固定座"
+        # A following structural character is what licenses the strip.
+        assert _strip_inline_ref_numerals("聯軸器4的兩端") == "聯軸器的兩端"
+        # Leaves figure labels and Latin-adjacent digits alone for free.
+        assert _strip_inline_ref_numerals("第1圖顯示") == "第1圖顯示"
+        assert _strip_inline_ref_numerals("PM2.5感測器") == "PM2.5感測器"
