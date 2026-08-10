@@ -687,7 +687,19 @@ class TestAntecedentBasis:
         assert heads("eject the gas conveyed by the gas conduit outward.") == [
             "gas conveyed", "gas conduit"
         ]
-        assert heads("moves the piston outward and downward") == ["piston"]
+        # R43 NARROWING: the conjunction/preposition follow-set was REMOVED after
+        # the authoritative examiner FN-guard showed it silencing three real §112
+        # rejections via the INTRO side (`walls extending upward from`, `an oxide
+        # layer outward of`, `slopes downward in`). Mid-clause adverbial use is now
+        # deliberately left alone - the gate is clause-final position only, which is
+        # what the report actually evidenced.
+        assert heads("moves the piston outward and downward") == ["piston outward"]
+        # (`a plurality of ...` is an indefinite intro, so _DEFINITE_REF only sees
+        # the trailing `the platform` - the point is that `upward from` no longer
+        # truncates anything.)
+        assert heads("a plurality of walls extending upward from the platform") == [
+            "platform"
+        ]
         # #489-f2 - matrix verb with a BARE object, so no determiner gate could fire.
         assert heads(
             "a portion of the thermal interface material enter pores of the region"

@@ -773,8 +773,25 @@ _STOP_WORDS = (
     #   ship together as one lexeme.
     # Examiner FN-guard: 0 of the 3,173 examiner-confirmed 112 defect terms
     # contains any of these tokens, so none is reachable.
-    r"(?:out|in|up|down|for|back|rear|side)wards?"
-    r"(?=\s*[.,;:]|\s+(?:and|or|from|to|toward|towards|through|into|beyond|so|thereby|in|at|of)\b)|"
+    # R43 (2026-08-10) - NARROWED from R41 after the authoritative examiner
+    # FN-guard finally ran (EdgeXpert had been unreachable when R41 shipped, so
+    # R41 went out on a static containment substitute). R41 admitted a following
+    # PREPOSITION or CONJUNCTION into the adverbial gate. That is FN-UNSAFE,
+    # because the token then also fires inside an INTRODUCTION clause and cleans
+    # the intro so a later reference resolves - silencing a real defect. It lost
+    # THREE examiner-confirmed §112 rejections:
+    #   18414664  `a plurality of walls extending upward from the platform`
+    #   18092162  `an oxide layer outward of the outermost one of ...`
+    #   18048099  `the annular ledge portion slopes downward in a direction ...`
+    # The static substitute could not see any of these: it asked whether the
+    # examiner TERM contains a -ward token (only 2 did, both attributive), but
+    # the silencing happens on the INTRO side, via a token in a different span.
+    # The reported case (#497 `eject the gas conveyed by the gas conduit
+    # outward.`) is followed by PUNCTUATION, so the gate is narrowed to exactly
+    # that: clause-final position only. Attributive use stays protected as
+    # before (followed by its head noun), and the adverbial-but-mid-clause use
+    # is now left alone rather than guessed at.
+    r"(?:out|in|up|down|for|back|rear|side)wards?(?=\s*[.,;:])|"
     r"enters?(?!\s+(?:key|button|keys|buttons))|"
     # R42 (2026-08-10, report #507): matrix verb `rotate` / `rotates`.
     # `wherein the permanent magnet motor rotates due to inertia` ran the NP
