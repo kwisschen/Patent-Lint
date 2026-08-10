@@ -694,6 +694,56 @@ class TestAntecedentBasis:
         ) == ["thermal interface material", "region"]
         assert heads("the data enters the buffer") == ["data", "buffer"]
 
+    def test_r42_suitable_and_rotates(self):
+        """R42 (#506/#507): trailing `suitable` + `rotate`/`rotates` matrix verb."""
+        from patentlint.analysis.utils import _DEFINITE_REF, extract_introductions
+
+        def heads(text):
+            return [m.group("noun") for m in _DEFINITE_REF.finditer(text)]
+
+        # #506 - the preamble frame `An <element> suitable for <use>, comprising:`
+        # must key the intro on the element, not on the adjective.
+        intros = list(extract_introductions(
+            "An uninterruptible power supply suitable for a discontinuous power "
+            "supply environment, comprising: a permanent magnet motor."
+        ))
+        assert "uninterruptible power supply" in intros
+        assert "uninterruptible power supply suitable" not in intros
+
+        # #507 - the matrix verb terminates the capture at the subject.
+        assert heads(
+            "wherein the permanent magnet motor rotates due to inertia"
+        ) == ["permanent magnet motor"]
+        assert heads("the drive member rotates one complete revolution") == [
+            "drive member"
+        ]
+
+    def test_r42_attributive_and_participle_preserved(self):
+        """R42 negative-controls - where a broader stop would have been an FN.
+
+        `suitable` is only ever popped from the END of a phrase, so the
+        attributive use survives (this covers the three examiner-confirmed
+        terms `the suitable antigen` / `the suitable substrate` / `the suitable
+        concentration of anti-ige`). The participle `rotating` is deliberately
+        NOT a stop - it is attributive in `the rotating shaft`."""
+        from patentlint.analysis.utils import _DEFINITE_REF, clean_noun_phrase
+
+        def heads(text):
+            return [m.group("noun") for m in _DEFINITE_REF.finditer(text)]
+
+        assert heads("the suitable antigen is bound") == ["suitable antigen"]
+        assert heads("the suitable substrate is coated") == ["suitable substrate"]
+        assert clean_noun_phrase("suitable concentration of anti-ige") == (
+            "suitable concentration of anti-ige"
+        )
+        # The participle keeps its head noun, and the finite form still cuts.
+        assert heads("the rotating shaft is coupled to the housing") == [
+            "rotating shaft", "housing"
+        ]
+        assert heads("the rotating drive member rotates two complete turns") == [
+            "rotating drive member"
+        ]
+
     def test_r41_attributive_and_noun_senses_preserved(self):
         """R41 negative-controls - this is where a BARE stop would have been an FN.
 

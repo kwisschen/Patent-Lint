@@ -776,6 +776,17 @@ _STOP_WORDS = (
     r"(?:out|in|up|down|for|back|rear|side)wards?"
     r"(?=\s*[.,;:]|\s+(?:and|or|from|to|toward|towards|through|into|beyond|so|thereby|in|at|of)\b)|"
     r"enters?(?!\s+(?:key|button|keys|buttons))|"
+    # R42 (2026-08-10, report #507): matrix verb `rotate` / `rotates`.
+    # `wherein the permanent magnet motor rotates due to inertia` ran the NP
+    # capture through the subject into the predicate and out the far side,
+    # emitting `the permanent magnet motor rotates due`. Bare stop, like R40's
+    # `parses` / `emits`: a determiner gate cannot fire (the complement is the
+    # preposition `due to`, not an object determiner), and neither finite form
+    # has a noun sense in patent diction - the nouns are `rotation` / `rotor` /
+    # `rotary`. Both finite forms ship together as one lexeme. The participle
+    # `rotating` is deliberately EXCLUDED: it is attributive in `the rotating
+    # shaft`, where a stop would truncate a real element name.
+    r"rotates?|"
     r"parses|emits|lose|"
     r"reviews(?=\s+(?:a|an|the)\b)|"
     r"adds(?=\s+(?:or|and)\b)|"
@@ -1171,6 +1182,15 @@ _POST_NOMINAL_PREDICATIVE_ADJ = frozenset({
     # functional `operative to <verb>` clause that carries intro semantics like
     # `configured to`). FN-guarded (silenced_legit==0).
     "conditional",
+    # R42 (2026-08-10, report #506): `suitable` - the post-nominal predicative
+    # adjective in the preamble frame `An <element> suitable for <use>,
+    # comprising:`. The intro extractor captured `uninterruptible power supply
+    # suitable`, so every later `the uninterruptible power supply` missed its
+    # introduction. Exactly the class this set exists for (`indicative of`,
+    # `operable to`, `responsive to`) and never a head noun in the trailing
+    # position; the attributive use (`a suitable material`) is unreachable
+    # because clean_noun_phrase only pops from the END of the phrase.
+    "suitable",
 })
 
 
