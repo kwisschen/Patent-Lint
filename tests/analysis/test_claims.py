@@ -674,6 +674,49 @@ class TestAntecedentBasis:
         ]
         assert not any("via" in i["term"] for i in check_antecedent_basis(c))
 
+    def test_r41_directional_adverb_and_enter(self):
+        """R41 (#489/#497/#499): trailing directional adverb + `enter` matrix verb."""
+        from patentlint.analysis.utils import _DEFINITE_REF
+
+        def heads(text):
+            return [m.group("noun") for m in _DEFINITE_REF.finditer(text)]
+
+        # #497/#499 - ADVERBIAL position: the stop fires, the head survives.
+        # (`gas conveyed` is a separate, pre-existing past-participle over-capture
+        # in the same span - not what this round touches.)
+        assert heads("eject the gas conveyed by the gas conduit outward.") == [
+            "gas conveyed", "gas conduit"
+        ]
+        assert heads("moves the piston outward and downward") == ["piston"]
+        # #489-f2 - matrix verb with a BARE object, so no determiner gate could fire.
+        assert heads(
+            "a portion of the thermal interface material enter pores of the region"
+        ) == ["thermal interface material", "region"]
+        assert heads("the data enters the buffer") == ["data", "buffer"]
+
+    def test_r41_attributive_and_noun_senses_preserved(self):
+        """R41 negative-controls - this is where a BARE stop would have been an FN.
+
+        In attributive position the -ward token is followed by its head noun, not
+        by punctuation or a conjunction, so the gate does not fire. Includes the
+        examiner-confirmed `the radially inward direction`."""
+        from patentlint.analysis.utils import _DEFINITE_REF
+
+        def heads(text):
+            return [m.group("noun") for m in _DEFINITE_REF.finditer(text)]
+
+        assert heads("the outward surface is flat") == ["outward surface"]
+        assert heads("the forward end of the shaft") == ["forward end", "shaft"]
+        assert heads("the downward force and the spring") == ["downward force", "spring"]
+        # Examiner-confirmed term (us_examiner_legit.json) - must stay whole.
+        assert heads("the radially inward direction of the hub") == [
+            "radially inward direction", "hub"
+        ]
+        # The fixed UI compound carved out of the `enter` stop - a bare stop was
+        # measured to drop this entirely.
+        assert heads("the enter key is pressed") == ["enter key"]
+        assert heads("the enter button") == ["enter button"]
+
     def test_r39_noun_senses_preserved(self):
         """R39 negative-controls: the noun senses are FN-safe.
         - `via` the semiconductor element (head, followed by a verb) is kept.

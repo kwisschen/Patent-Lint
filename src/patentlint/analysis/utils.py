@@ -750,6 +750,32 @@ _STOP_WORDS = (
     # covers the spec-support extractor (cross-CHECK) and EPC reuses the US
     # walker. No CN/TW mirror - these are English-verb shapes; the CJK siblings
     # from this same batch ship as TW R35 / CN R59.
+    # R41 (2026-08-08, reports #489/#497/#499): two shapes from one firm
+    # drafter's heat-dissipation / air-puff drafts.
+    # - Trailing DIRECTIONAL ADVERB (#497 antecedent + #499 spec-support, the
+    #   same span through both engines): `eject the gas conveyed by the gas
+    #   conduit outward.` captured `the gas conduit outward`. Shipped as the
+    #   closed -ward(s) paradigm rather than the single evidenced `outward`,
+    #   because every member is the same morphology and the gate is what makes
+    #   them FN-safe, not the individual word. The gate is ADVERBIAL POSITION:
+    #   the stop fires only when the token is followed by punctuation or a
+    #   conjunction / preposition. In ATTRIBUTIVE position (`the outward
+    #   surface`, `the forward end`, `a downward force`) the token is followed
+    #   by its head noun, so the gate does not fire and the compound is
+    #   captured whole - which is the FN a bare stop would have caused.
+    # - Matrix verb `enter` / `enters` (#489-f2): `a portion of the thermal
+    #   interface material enter pores of the boundary region` ran the capture
+    #   through the subject into the predicate. Bare stop, like R40's `lose`:
+    #   a determiner gate cannot fire because the object (`pores`) is bare, and
+    #   `enter` has no noun sense in patent diction (the nouns are `entry` /
+    #   `entrance`) EXCEPT the fixed UI compound `enter key` / `enter button`,
+    #   which is carved out by a closed negative lookahead. Both finite forms
+    #   ship together as one lexeme.
+    # Examiner FN-guard: 0 of the 3,173 examiner-confirmed 112 defect terms
+    # contains any of these tokens, so none is reachable.
+    r"(?:out|in|up|down|for|back|rear|side)wards?"
+    r"(?=\s*[.,;:]|\s+(?:and|or|from|to|toward|towards|through|into|beyond|so|thereby|in|at|of)\b)|"
+    r"enters?(?!\s+(?:key|button|keys|buttons))|"
     r"parses|emits|lose|"
     r"reviews(?=\s+(?:a|an|the)\b)|"
     r"adds(?=\s+(?:or|and)\b)|"
