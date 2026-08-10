@@ -67,13 +67,15 @@ _EPC_ANY_HEADER = re.compile(
 def extract_title_epc(full_text: str) -> str:
     """Extract the title of the invention per Rule 41(2)(b) EPC.
 
-    Uses the same heuristic as the US extractor: title is the last non-empty
-    line before the first recognised section header.
+    Uses the same heuristic as the US extractor, and now the same code: an
+    explicit ``TITLE:`` label wins, else the last non-empty line before the
+    first recognised header that is not a numbered body paragraph or a
+    document-level label. EPC drafts are English filings with the same
+    conventions, so report #457 applied here identically.
     """
     first_header = _EPC_ANY_HEADER.search(full_text)
     candidate = full_text[: first_header.start()] if first_header else full_text
-    lines = [ln.strip() for ln in candidate.splitlines() if ln.strip()]
-    return lines[-1] if lines else ""
+    return us_sections.select_title_line(candidate)
 
 
 def extract_claims_section_epc(full_text: str) -> str:

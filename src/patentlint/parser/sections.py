@@ -311,20 +311,84 @@ def detect_patent_document(full_text: str) -> bool:
     return is_patent
 
 
-def extract_title(full_text: str) -> str:
-    """Extract the patent title as text preceding the first section header.
+# Report #457 - an explicit `TITLE:` label. When the drafter labels the title,
+# that is the strongest signal available and beats every positional heuristic.
+# Both `TITLE: <title>` and a bare `TITLE` line followed by the title are used.
+# `TITLE OF THE INVENTION` is the common USPTO heading form, so the optional
+# `OF THE INVENTION` must be part of the LABEL - otherwise the capture group
+# returns "OF THE INVENTION" as the title.
+_TITLE_LABEL_RE = re.compile(
+    r"^[ \t]*TITLE(?:[ \t]+OF(?:[ \t]+THE)?[ \t]+INVENTION)?"
+    r"[ \t]*[:.\u2013-]?[ \t]*(.*)$",
+    re.IGNORECASE,
+)
 
-    Mirrors the heuristic already used inside ``check_required_sections``.
-    Titles are conventionally typeset above the first labeled section
-    (CROSS-REFERENCE, BACKGROUND, etc.). Returns the stripped text or ``""``
-    when no preceding text exists.
+# A numbered body paragraph - `[0001]`, `[1]`, `(0001)`. Never a title, so it
+# must not win the "last line before the first header" fallback (#457: the
+# priority cross-reference paragraph was being taken as a 46-word title and
+# then correctly-but-uselessly reported as wordy).
+_NUMBERED_PARAGRAPH_RE = re.compile(r"^[ \t]*[\[(]\s*\d{1,5}\s*[\])]")
+
+# Document-level labels that sit above the title in a filed specification.
+# They are not section headers (so `_ANY_SECTION_HEADER` does not stop on
+# them) but they are not the title either.
+_DOCUMENT_LABELS: frozenset[str] = frozenset({
+    "specification", "patent application", "utility patent application",
+    "patent", "application", "description", "provisional patent application",
+    "non-provisional patent application", "nonprovisional patent application",
+})
+
+
+def extract_title(full_text: str) -> str:
+    """Extract the patent title from the block preceding the first section header.
+
+    Resolution order:
+
+    1. An explicit ``TITLE:`` label anywhere in the pre-header block (the
+       drafter told us; #457).
+    2. The last non-empty line that is neither a numbered body paragraph nor a
+       document-level label. Patent filings carry boilerplate above the title,
+       which is why the scan runs from the bottom.
+    3. The last non-empty line, unfiltered - the pre-#457 behaviour, kept so a
+       document whose pre-header block is *entirely* filtered still yields
+       something rather than silently reporting an empty title.
     """
     first_header = _ANY_SECTION_HEADER.search(full_text)
     candidate = full_text[:first_header.start()] if first_header else full_text
-    # Keep the last non-empty line of the pre-header block - patent filings
-    # typically carry boilerplate / applicant identifiers above the title.
-    lines = [ln.strip() for ln in candidate.splitlines() if ln.strip()]
-    return lines[-1] if lines else ""
+    return select_title_line(candidate)
+
+
+def select_title_line(pre_header_block: str) -> str:
+    """Pick the title out of the text preceding the first section header.
+
+    Shared by the US and EPC extractors - both are English filings with the
+    same conventions, so the EPC one differs only in which header regex bounds
+    the block. See :func:`extract_title` for the resolution order.
+    """
+    lines = [ln.strip() for ln in pre_header_block.splitlines() if ln.strip()]
+    if not lines:
+        return ""
+
+    for i, line in enumerate(lines):
+        m = _TITLE_LABEL_RE.match(line)
+        if not m:
+            continue
+        labelled = m.group(1).strip()
+        if labelled:
+            return labelled
+        # Bare `TITLE` on its own line - the title is the next usable line.
+        for following in lines[i + 1:]:
+            if not _NUMBERED_PARAGRAPH_RE.match(following):
+                return following
+        break
+
+    for line in reversed(lines):
+        if _NUMBERED_PARAGRAPH_RE.match(line):
+            continue
+        if line.rstrip(":.").strip().lower() in _DOCUMENT_LABELS:
+            continue
+        return line
+    return lines[-1]
 
 
 def detect_prior_art_citations(text: str) -> str:
