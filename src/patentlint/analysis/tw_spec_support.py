@@ -347,6 +347,13 @@ _TW_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     #   and 向量 (vector, 向…) are unaffected - the reject is the 2-char lead.
     "另外",
     "以向",
+    # R37 (2026-08-10, #510) - `以切` (`配置以切換多個所述燈具` captured
+    #   以切換多個). Same 2-char `以<verb>` shape as 以控 / 以從 / 以向 / 以使:
+    #   the 以-purpose connective plus the head of the following verb, with no
+    #   noun anywhere in the span. FN-safe on the same argument as its
+    #   siblings - the reject is the 2-char lead, so 以太網路 (Ethernet) is
+    #   untouched, and 切換器 / 切換單元 as element heads do not open with 以.
+    "以切",
     # R36 (2026-08-08):
     # - #467 `關於` - a preposition ("regarding / concerning"), captured whole
     #   from `以形成關於該病患的照護指令`. The referenced noun is introduced
@@ -411,6 +418,25 @@ _TW_REN_QUANTIFIER_RE = re.compile(r"^任[一二兩三四五六七八九十]+個
 #     two-morpheme connective and no element name contains it.
 _TW_SPEC_SUPPORT_INTERIOR_CUTS: tuple[str, ...] = ("至少", "用以")
 
+# R37 (2026-08-10, #508 / #511) - interior TRANSFER COVERB + determiner.
+# `輸出一第二電能至一耗電負載` captured 第二電能至一耗電負載 and
+# `提供一第一電能給一永磁馬達` captured 第一電能給一永磁馬達: the coverb
+# marks the recipient, so the scan glued a second, complete noun phrase onto
+# the theme noun. Both recipients are separately inventoried from their own
+# 一X intro, so the cut loses no coverage.
+#
+# The gate is POSITIONAL, not lexical (the R41 -ward lesson): the coverb cuts
+# only when a DETERMINER follows, which is what opens a new noun phrase. In
+# compound position the coverb is followed by its own head (補給站, 冬至日)
+# and nothing is cut. A greedy leftward trim over 給-final verbs (供給/發給/
+# 傳至…, the #389 stranding trap) was built and then REMOVED as dead code:
+# probing the real capture shows the noun scan already halts at those verbs,
+# so `所述電源供給一電壓` never yields `電源供給一電壓` - it yields 電壓. The
+# only reachable shape is <noun> + coverb, which is exactly what the reports
+# carry, so no stranding case exists to guard.
+_TW_INTERIOR_COVERBS: tuple[str, ...] = ("至", "給")
+_TW_COVERB_DETERMINERS: tuple[str, ...] = ("一", "所述", "該")
+
 # Clause markers that signal the captured text is a comparison/relation
 # clause, not a noun phrase. Reject any term containing these as an
 # interior substring.
@@ -459,6 +485,34 @@ _TW_LEADING_PREPOSITIONS: tuple[str, ...] = ("於", "到", "在", "自", "由")
 # notation. Strip both full-width and half-width parens, with alnum / dash /
 # CJK dash inside.
 _TRAILING_REF_NUMERAL_RE = re.compile(r"[（(][\w\d\-—–]+[）)]\s*$")
+
+# R37 (2026-08-10, #509) - INLINE element numerals on the SPEC side.
+# 專利法施行細則 §17 drafting practice puts 元件符號 inline in the
+# description (`聯軸器4的兩端分別連接永磁同步馬達2A以及直流發電機3A`). A
+# claim phrase `聯軸器的兩端` then fails every tier: Tier 1/2 by exact
+# substring, and Tier 3 too, because the intervening `4` breaks the bigrams
+# `器的` / `的兩`. The claim side has stripped a TRAILING parenthetical
+# numeral since the original build; the spec side stripped nothing, so the
+# asymmetry was invisible until a drafter used the inline notation.
+#
+# Gated on a following STRUCTURAL character (particle / conjunction /
+# punctuation / end) rather than any character. That is what stops the strip
+# from JOINING two adjacent annotated element names: `馬達2固定座3` would
+# otherwise collapse to `馬達固定座` and manufacture support for a compound
+# the spec never describes - a real §26 第3項 false negative. It also leaves
+# 第1圖 alone for free (the `1` is followed by 圖, not a structural char).
+# Applied as an ADDITIVE fallback tier, never in place of the raw spec text,
+# so no match that succeeds today can be lost.
+_SPEC_INLINE_REF_NUMERAL_RE = re.compile(
+    r"(?<=[\u4e00-\u9fff])\d+[A-Za-z]?"
+    r"(?=[\u7684\u4e4b\u8207\u53ca\u548c\u3001\uff0c\u3002\uff1b\uff1a\uff09)\s]|$)"
+)
+
+
+def _strip_inline_ref_numerals(spec_text: str) -> str:
+    """Drop inline 元件符號 from spec text (聯軸器4的兩端 -> 聯軸器的兩端)."""
+    return _SPEC_INLINE_REF_NUMERAL_RE.sub("", spec_text)
+
 
 # Coordinating conjunctions that signal a walker-captured phrase spanning
 # multiple nouns. When an intro matches `X <conj> Y` shape, both X and Y
@@ -581,6 +635,8 @@ def _normalize_for_spec_support_tw(text: str, claim_text: str = "") -> str:
     # R36 (#494/#485) - truncate at an interior clause token, last so it runs
     # on the fully-stripped head.
     t = _cut_at_interior_token(t)
+    # R37 (#508/#511) - interior transfer coverb, same position as the R36 cut.
+    t = _cut_at_interior_coverb(t)
     # R36 (#485/#488) - 用以 purpose-connective gate. Runs last because the
     # trailing-token pass is what exposes the bare 用 (按鈕用以提供使 unwinds
     # 使 -> 提供 -> 以 -> 按鈕用). Needs the claim text, so callers that have
@@ -641,6 +697,23 @@ def _cut_at_interior_token(term: str) -> str:
         if idx >= _MIN_INVENTORY_LENGTH
     ]
     return term[: min(cuts)] if cuts else term
+
+
+def _cut_at_interior_coverb(term: str) -> str:
+    """Truncate at an interior transfer coverb (至 / 給) that opens a new NP.
+
+    Gated on a FOLLOWING determiner (一 / 所述 / 該) so the coverb only cuts
+    where it introduces a recipient, never where it sits inside a compound
+    (補給站 / 冬至日). Head must survive at ``_MIN_INVENTORY_LENGTH``. (R37,
+    #508 / #511.)
+    """
+    for idx, ch in enumerate(term):
+        if ch not in _TW_INTERIOR_COVERBS or idx < _MIN_INVENTORY_LENGTH:
+            continue
+        rest = term[idx + 1:]
+        if any(rest.startswith(det) for det in _TW_COVERB_DETERMINERS):
+            return term[:idx]
+    return term
 
 
 def _strip_trailing_yong_before_yi(term: str, claim_text: str) -> str:
@@ -1064,6 +1137,7 @@ def check_spec_support_tw(doc: TwPatentDocument) -> list[UnsupportedTerm]:
         return []
 
     spec_text = _collect_spec_text(doc)
+    spec_text_bare = _strip_inline_ref_numerals(spec_text)
     symbol_names = _collect_symbol_names(doc)
     inventory = _build_inventory(doc.claims)
 
@@ -1103,6 +1177,15 @@ def check_spec_support_tw(doc: TwPatentDocument) -> list[UnsupportedTerm]:
         # Tier 3: CJK character-window fallback
         tiers.append("char_window")
         if _tier3_char_window(norm_term, spec_text):
+            continue
+
+        # Tier 4 (R37, #509): retry Tiers 1 + 3 against spec text with inline
+        # 元件符號 removed. Strictly additive - runs only after the raw spec
+        # text has already failed, so it can never lose an existing match.
+        tiers.append("numeral_stripped")
+        if _tier1_normalized_exact(norm_term, spec_text_bare) or _tier3_char_window(
+            norm_term, spec_text_bare
+        ):
             continue
 
         unsupported.append(UnsupportedTerm(

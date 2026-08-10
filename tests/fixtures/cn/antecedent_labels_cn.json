@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 59,
+    "current_round": 60,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -306,6 +306,19 @@
         ],
         "fixtures_silenced": 0,
         "shipped_at": "2026-08-01T00:00:00+00:00"
+      },
+      {
+        "round": 60,
+        "name": "r60_interior_coverb_yiqie_spec_inline_refnum_tw_mirror",
+        "description": "Cross-jurisdiction MIRROR of TW R37 (#508 / #509 / #510 / #511) - no CN report of these shapes, but all three reproduce byte-for-byte on the CN normalizer, so the mirror ships under the standing cross-jurisdiction parity duty rather than waiting for a CN drafter to hit them. (1) Interior transfer coverb 至 / 给 + determiner (一 / 所述 / 该): 第二电能至一耗电负载 -> 第二电能, 第一电能给一永磁马达 -> 第一电能, positionally gated so 补给站 / 冬至日 are untouched. (2) `以切` leading reject, joining the existing 以使 / 以控 - safe on the same argument (以太网 opens 以太; 切换器 as an element head does not open with 以). (3) Spec-side inline 元件符号 strip as an additive Tier 4, structural-character gated. CN already stripped a trailing bare numeral on the CLAIM side (_BARE_REF_NUMERAL_CN_RE) while the spec side stripped nothing, so CN carried the same normalize-chain asymmetry TW did. FN-guard: validate_fix CN silenced_legit 0 / false-fires 0 (antecedent no-op); specsup_corpus_runner CN 336 -> 336 with an IDENTICAL finding set (corpus-silent).",
+        "user_attested_issues": [
+          508,
+          509,
+          510,
+          511
+        ],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-08-10T00:00:00+00:00"
       }
     ],
     "last_updated": "2026-08-01",
