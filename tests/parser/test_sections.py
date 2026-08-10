@@ -287,3 +287,82 @@ class TestDetectPriorArtCitations:
 
     def test_none(self):
         assert detect_prior_art_citations("Widgets have been known for a long time.") == ""
+
+
+class TestExtractTitle:
+    """Report #457 - the priority cross-reference paragraph was being taken as
+    the title (46 words) and then correctly-but-uselessly reported as wordy."""
+
+    _REPORTED = (
+        "SPECIFICATION\n"
+        "TITLE: ON-CHIP INTEGRATED WAVELENGTH DIVISION MULTIPLEXER AND "
+        "PHOTONIC INTEGRATED CIRCUIT CHIP\n"
+        "[0001]\tThis application claims priority to China Patent Application "
+        "No. 202420440975.5, filed with the China National Intellectual "
+        "Property Administration on March 7, 2024.\n"
+        "\nBACKGROUND\nSome background text.\n"
+    )
+
+    def test_457_explicit_title_label_wins(self):
+        from patentlint.parser.sections import extract_title
+
+        assert extract_title(self._REPORTED) == (
+            "ON-CHIP INTEGRATED WAVELENGTH DIVISION MULTIPLEXER AND "
+            "PHOTONIC INTEGRATED CIRCUIT CHIP"
+        )
+
+    def test_457_bare_title_label_takes_next_line(self):
+        from patentlint.parser.sections import extract_title
+
+        text = "SPECIFICATION\nTITLE\nWIDGET ASSEMBLY\n[0001] Priority.\n\nBACKGROUND\nx"
+        assert extract_title(text) == "WIDGET ASSEMBLY"
+
+    def test_457_title_of_the_invention_heading(self):
+        """`OF THE INVENTION` is part of the LABEL, not the title."""
+        from patentlint.parser.sections import extract_title
+
+        for heading in ("TITLE OF THE INVENTION", "TITLE OF INVENTION"):
+            text = f"{heading}\nSEMICONDUCTOR DEVICE\n\nBACKGROUND\nx"
+            assert extract_title(text) == "SEMICONDUCTOR DEVICE"
+        text = "TITLE OF INVENTION: SEMICONDUCTOR DEVICE\n\nBACKGROUND\nx"
+        assert extract_title(text) == "SEMICONDUCTOR DEVICE"
+
+    def test_457_numbered_paragraph_never_wins(self):
+        """No label at all - the numbered body paragraph is skipped and the
+        real title above it is taken."""
+        from patentlint.parser.sections import extract_title
+
+        text = "SPECIFICATION\nA WIDGET ASSEMBLY\n[0001] Priority.\n\nBACKGROUND\nx"
+        assert extract_title(text) == "A WIDGET ASSEMBLY"
+        text = "SPECIFICATION\nA WIDGET ASSEMBLY\n(0001) Priority.\n\nBACKGROUND\nx"
+        assert extract_title(text) == "A WIDGET ASSEMBLY"
+
+    def test_legacy_behaviour_preserved(self):
+        """Pre-#457 shapes must be unchanged - boilerplate above the title is
+        still skipped by scanning from the bottom."""
+        from patentlint.parser.sections import extract_title
+
+        text = "Attorney Docket No. 1234\nSEMICONDUCTOR DEVICE AND METHOD\n\nBACKGROUND\nx"
+        assert extract_title(text) == "SEMICONDUCTOR DEVICE AND METHOD"
+        assert extract_title("SEMICONDUCTOR DEVICE\n\nBACKGROUND\nx") == "SEMICONDUCTOR DEVICE"
+        assert extract_title("") == ""
+
+    def test_all_filtered_falls_back_to_last_line(self):
+        """A block that is ENTIRELY label + numbered paragraph still returns
+        something rather than silently reporting an empty title."""
+        from patentlint.parser.sections import extract_title
+
+        text = "SPECIFICATION\n[0001] Priority.\n\nBACKGROUND\nx"
+        assert extract_title(text) == "[0001] Priority."
+
+    def test_457_mirrored_to_epc(self):
+        """EPC drafts are English filings with the same conventions and now
+        share the same code path."""
+        from patentlint.parser.sections_epc import extract_title_epc
+
+        text = (
+            "SPECIFICATION\nTITLE: OPTICAL MULTIPLEXER\n"
+            "[0001] This application claims priority to EP 12345.\n"
+            "\nBACKGROUND ART\nx"
+        )
+        assert extract_title_epc(text) == "OPTICAL MULTIPLEXER"
