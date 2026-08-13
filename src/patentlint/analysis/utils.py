@@ -808,6 +808,42 @@ _STOP_WORDS = (
     r"reviews(?=\s+(?:a|an|the)\b)|"
     r"adds(?=\s+(?:or|and)\b)|"
     r"fail(?=\s+(?:to|a|an|the)\b)|"
+    # R44 (2026-08-13, reports #513/#514): three matrix verbs from one
+    # drafter's game-information-system family that ran the NP capture from
+    # the subject straight into the predicate - `the computer program product
+    # implements the ... method`, `the application runs on a portable
+    # electronic device`, `the identity verification process uploads the
+    # tactical board information`. All three are noun-gray in general English
+    # (farm `implements`, test `runs`, the `uploads`), so per the campaign
+    # rule none ships as a bare stop; each is gated to the reading the report
+    # evidences:
+    # - `implements`: object-determiner gate, plus `at least` (the same
+    #   verb-object shape with a quantified object - 6 corpus occurrences of
+    #   `<noun> which implements at least one …`, all verbal). The noun
+    #   reading is always a bare plural head (`the implements`), never
+    #   followed by a determiner.
+    # - `runs`: gated on `on` (the only complement attested in the corpus -
+    #   4 of 4 are `runs on`) plus an object determiner. The noun reading
+    #   (`the test runs`) is clause-final or takes a predicate, not `on`.
+    # - `uploads`: object-determiner gate. Absent from the 705-draft corpus
+    #   entirely, so the gate is what carries the FN-safety, not frequency.
+    # The base forms are deliberately NOT added - no report or corpus
+    # evidence of a coordinate/plural subject taking them, and R41 is the
+    # standing lesson against widening past the evidence.
+    # Examiner FN-guard: run for real against EdgeXpert (recall 1347, LOST 0).
+    # `generating` (#512, `the sharing permission generating real-time score
+    # information`) was TRIALED AND WITHHELD: it is attributive in 17 corpus
+    # occurrences of the identical `<noun> generating <noun>` shape
+    # (`magnetic field generating elements` x7, `magnetic field generating
+    # components` x5, `electromagnetic field generating components` x3,
+    # `control signal generating circuit` x2), where a stop truncates a real
+    # element name to its modifier. Attributive and predicative `generating`
+    # are both `<noun> generating <NP>` on the surface, so no lookahead can
+    # separate them - unlike the -ward class (R41/R43), the discriminator
+    # here is not positional.
+    r"implements(?=\s+(?:a|an|the|at\s+least)\b)|"
+    r"runs(?=\s+(?:on|a|an|the)\b)|"
+    r"uploads(?=\s+(?:a|an|the)\b)|"
     # R5 (2026-05-26): `accounts` as 3sg finite verb only - lookahead on
     # `\s+for` discriminates the `<noun> accounts for X` verb-object pattern
     # (#98 alumina, #99 silica) from the bare-noun usage (`financial accounts`,
