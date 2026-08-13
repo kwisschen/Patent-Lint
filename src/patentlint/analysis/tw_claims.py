@@ -2397,6 +2397,53 @@ _REF_PATTERN_CAPTURE = re.compile(
 # ``sorted(..., key=len, reverse=True)`` is applied once at import time.
 _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
     (
+        # === R38 (2026-08-13, reports #515/#516/#517/#526) ===
+        # Two drafts from the same intake batch (a game/tactical-board method
+        # and a pressure-sensing pad). Three trailing verbs that bled into the
+        # captured INTRO so the matching 所述X reference found no introduction.
+        #
+        #   啟動 ("activate", #515): `控制所述可攜式電子裝置的一收音單元啟動，
+        #     以錄製一環境音訊` captured the intro as 收音單元啟動. Verb-only in
+        #     SUFFIX position - the noun readings are 啟動裝置 / 啟動訊號 /
+        #     啟動器, where 啟動 is a PREFIX an endswith strip cannot reach.
+        "啟動",
+        #   重新啟動 + 已 - the #389 GREEDY-TRIM obligation for 啟動, and it is
+        #     not hypothetical: adding bare 啟動 alone cut INSIDE the four-
+        #     character verb 重新啟動 ("restart") and stranded its head, turning
+        #     TW202530976A c1/c18 `第一節點已重新啟動` into `第一節點已重新`
+        #     instead of 第一節點. Both tokens are needed - 重新啟動 for the
+        #     longer verb sharing the head, and the aspect particle 已 for the
+        #     residue behind it. 已 is never noun-final in Chinese (it is an
+        #     adverb/aspect marker); its 486 corpus occurrences are all PREFIX
+        #     position (該已解密資料 / 該設備已知), which an endswith strip
+        #     cannot reach. 重新啟動 heads compounds (所述重新啟動指令) but only
+        #     in prefix position, so the trailing strip leaves those intact too.
+        "重新啟動",
+        "已",
+        #   運作 ("operate", #526): `所述處理模組的至少一功能藉一外部電子裝置
+        #     運作` captured 外部電子裝置運作. Same shape - the noun readings
+        #     (運作模式 / 運作狀態) are all prefix position.
+        "運作",
+        #   給 ("give / to", #516 + #517): the transfer coverb, left STRANDED at
+        #     the end of the capture after the recipient clause was trimmed -
+        #     `並授予一分享權限給通過所述身分驗證程序的所述可攜式電子裝置` raw-
+        #     captured 一分享權限給通過所述身分驗, which the existing strips cut
+        #     back to 分享權限給, orphaning 所述分享權限 in two claims. This is
+        #     the #389 stranded-verb-head signature with a coverb instead of a
+        #     verb head, and the R37 interior-coverb cut cannot reach it (that
+        #     one is gated on a FOLLOWING determiner; here 給 is followed by the
+        #     verb 通過, and by the time the capture is normalized 給 is final).
+        #
+        #     給 IS noun-final in real TW element names, so the bare strip is
+        #     FN-unsafe and it carries a lexeme guard (_GEI_FINAL_NOUNS_TW),
+        #     measured from the TW corpus rather than guessed: 供給 (氣體供給,
+        #     前述供給) and 補給 (述之補給, 前述補給) both occur as referenced
+        #     element names. Every other 給-final bigram in the corpus is a
+        #     coverb reading (分配給 / 供應給 / 提供給 / 傳輸給 / 給予). This is
+        #     the R36 `所` treatment - an exact-lexeme guard, not a residual-
+        #     length heuristic, because a length rule cannot tell 氣體供給 from
+        #     分享權限給 (both 4 chars).
+        "給",
         # === R36 (2026-08-08, reports #468/#493) ===
         # One firm drafter's TW heat-dissipation-composite draft plus the
         # smart-care claims. Each verb bled into the captured INTRO, so the
@@ -3061,6 +3108,22 @@ _SUO_FINAL_NOUNS_TW: frozenset[str] = frozenset({
     "研究所", "事務所", "營業所", "避難所",
 })
 
+# R38 (2026-08-13, #516/#517) - bigrams in which 給 is the second half of a
+# noun rather than the transfer coverb, so the trailing-給 strip must not fire.
+# Measured from the TW corpus, not guessed: 供給 (氣體供給 x31, 前述供給 x27)
+# and 補給 (述之補給 x13, 前述補給 x6) are the only 給-final lexemes that occur
+# as REFERENCED element names; every other 給-final bigram there is a coverb
+# reading (分配給 / 供應給 / 提供給 / 傳輸給).
+#
+# This is an ENDSWITH guard where the #492 lesson prefers EXACT match, and the
+# reason it is safe here is a probe, not an argument: the collision would need
+# a capture ending in 供 or 補 immediately before the coverb (`X供` + `給`), and
+# the TW noun scan provably never emits one - it halts AT the two-character
+# verb 供給 / 補給 (the same probe that killed the R37 greedy leftward trim).
+# An exact-match guard would fail the real corpus case, because the protected
+# lexeme appears as the TAIL of a compound (氣體供給), not standing alone.
+_GEI_FINAL_NOUNS_TW: tuple[str, ...] = ("供給", "補給")
+
 # ADR-095 Rule 2: leading quantifiers (stripped from both sides).
 # Ordered longest-first so 至少一個 is stripped as a single token before
 # 至少一 is stripped.
@@ -3160,6 +3223,24 @@ _PLURAL_REFERENCE_PREFIXES: tuple[str, ...] = tuple(sorted(
 # Ordered longest-first so 設有/包含 strip before single-char tokens.
 _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
     (
+        # === R38 (2026-08-13, reports #524/#526) ===
+        # Two interior verbs whose OBJECT trails behind them, so a trailing
+        # strip cannot reach them - both ship as the verb+CARDINAL collocation
+        # (the R35 傳遞一 / R32 控制多個 shape), never bare.
+        #
+        #   超過一 ("exceeds a", #524): `並於所述對位溫度差值超過一對位溫差臨界
+        #     值時` captured 對位溫度差值超過一對位溫 (the 12-char noun-scan cap
+        #     truncated mid-object), so the reference never matched its intro.
+        #     超過 is verb-only in TIPO claim register, but the cardinal gate is
+        #     kept for parity with its class-mates and costs nothing.
+        "超過一",
+        #   藉一 ("by means of a", #526): the instrumental coverb 藉 opens a
+        #     complete second NP - `所述處理模組的至少一功能藉一外部電子裝置運作`
+        #     captured 功能藉一外部電子裝置運作 as one inventory phrase. Bare 藉
+        #     is already a TRAILING strip; the interior form needs the cardinal
+        #     gate because 藉 is the first half of 藉由 / 藉以, which the R37
+        #     leading-reject family already handles separately.
+        "藉一",
         # === R35 (2026-08-01, report #480) ===
         # 傳遞一 ("transmits a") - the reference capture over-ran the noun into
         # the verb 傳遞 AND its object: `所述應用程式能通過所述可攜式電子裝置傳遞
@@ -3786,6 +3867,11 @@ def clean_noun_phrase_tw(text: str) -> str:
             if verb == "所":
                 # R36 (#492) - lexeme guard instead of a length heuristic.
                 if current in _SUO_FINAL_NOUNS_TW or (len(current) - 1) < 2:
+                    continue
+            elif verb == "給":
+                # R38 (#516/#517) - lexeme guard: 給 is noun-final in 供給 /
+                # 補給, coverb everywhere else. See _GEI_FINAL_NOUNS_TW.
+                if current.endswith(_GEI_FINAL_NOUNS_TW) or (len(current) - 1) < 2:
                     continue
             elif verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES:
                 min_residual = 2 if verb in _NOUNLIKE_RELAXED_SUFFIXES else 3
