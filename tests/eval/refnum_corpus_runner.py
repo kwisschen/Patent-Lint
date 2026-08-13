@@ -26,6 +26,20 @@
 #   ... edit specification.py ...
 #   python tests/eval/refnum_corpus_runner.py --juris US --compare  /tmp/pre_us_refnum.json
 #
+# PRIME-SPLIT ACCOUNTING (2026-08-13, reports #445 / #447). A conflict key is
+# `pid|numeral`, so a fix that makes a PREVIOUSLY-INVISIBLE designator visible
+# CHANGES THE KEY and reads as a "removal" even though nothing was lost. That is
+# exactly what recognising primed designators does: `110` and `110'` are distinct
+# elements by drafting convention, so a conflict that existed only because the two
+# were merged SPLITS rather than disappears. This is the D1 analogue of an ADR-111
+# shift, and the guard has to know about it or it reports a false FN forever.
+#
+# So a removed conflict is classified as a PRIME SPLIT when the source document
+# genuinely contains that numeral carrying a prime suffix; splits are counted and
+# reported separately and excluded from the hard gates. Everything else still
+# counts as a loss. The criterion reads the DOCUMENT, not the fix, so it cannot be
+# gamed by a future change that merely stops emitting a conflict.
+#
 # --characterize dumps the FP pool by class for sweep planning.
 #
 # COVERAGE NOTE (explicit, per the #413/#414 gate-audit, 2026-07-22): this runner
@@ -369,6 +383,37 @@ def main() -> int:
             if not (name_is_element_noun(v["canonical"], juris) and v["canonical_count"] >= 2):
                 return False
             return any(name_is_element_noun(n, juris) and c >= 2 for n, c in v["outliers"])
+        # --- prime-split detection (see PRIME-SPLIT ACCOUNTING above) ---
+        _PRIME_CHARS = "'" + "\u2019\u2032\u2033"
+        _descs_cache = {}
+
+        def _doc_text(pid: str) -> str:
+            if not _descs_cache:
+                _descs_cache.update(_load_descs(juris))
+            v = _descs_cache.get(pid)
+            if v is None:
+                return ""
+            if isinstance(v, str):
+                return v
+            if isinstance(v, dict):
+                return "\n".join(x for x in v.values() if isinstance(x, str))
+            return "\n".join(map(str, v))
+
+        def _is_prime_split(k: str) -> bool:
+            """True if this numeral genuinely appears primed in the document."""
+            pid, numeral = k.split("|", 1)
+            digits = "".join(ch for ch in numeral if ch.isdigit())
+            if not digits:
+                return False
+            return re.search(
+                r"(?<!\d)" + re.escape(digits) + r"[a-z]?[" + _PRIME_CHARS + r"]",
+                _doc_text(pid),
+            ) is not None
+
+        prime_splits = [k for k in removed if _is_prime_split(k)]
+        split_set = set(prime_splits)
+        removed = removed - split_set
+
         noun_noun_lost = [k for k in removed if _real_d1_lost(k)]
         real_lost = [k for k in removed if pre[k]["tag"] == "protect"]
         # strong_real / both_repeated are INFORMATIONAL and computed WITHOUT the
@@ -389,6 +434,7 @@ def main() -> int:
         print(f"  FIX-tier reduction (false-assertion harm ended): {pre_fix - post_fix}")
         print(f"    ├─ demoted fix→review (still advisory): {len(demoted)}")
         print(f"    └─ truly removed (gone from both tiers): {len(removed)}")
+        print(f"    └─ prime SPLITS (n -> n + n', not a loss):  {len(prime_splits)}")
         print(f"  new conflicts: {len(added)}")
         print(f"  >>> designator noun↔noun-both-repeated removed (HARD GATE, MUST be 0): {len(noun_noun_lost)}")
         print(f"  >>> designator strong_real removed (HARD GATE, MUST be 0):           {len(strong_lost_designator)}")
