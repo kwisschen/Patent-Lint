@@ -593,7 +593,7 @@ def _normalize_for_spec_support_tw(text: str, claim_text: str = "") -> str:
         if t.startswith(verb) and len(t) > len(verb):
             t = t[len(verb):]
             break
-    t = normalize_reference_term(t)
+    t = normalize_reference_term(t, source_text=claim_text)
     # #351 - strip a leading reference marker that survived normalize (a leading
     # distributive quantifier can block the position-0 reference-form strip,
     # stranding 所述 / 該 / 前述). A noun name never opens with a reference marker.
