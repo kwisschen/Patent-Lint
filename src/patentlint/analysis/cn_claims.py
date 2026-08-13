@@ -1521,9 +1521,48 @@ _REF_PATTERN_CAPTURE_CN = re.compile(
 # (do not strip). Extend this set when a report attests another such compound.
 _MATCH_NOUN_COMPOUNDS_CN: frozenset[str] = frozenset({"阻抗匹配"})
 
+# R61 (2026-08-13) - CN mirror of _GEI_FINAL_NOUNS_TW: bigrams in which 给 is
+# the second half of a noun rather than the transfer coverb. Measured from the
+# CN corpus independently of TW: 电力供给 (x23) / 电源供给 (x10) are referenced
+# element names; every other 给-final bigram there is a coverb (发送给 /
+# 提供给 / 传递给). See the TW twin for why this is an endswith guard and not
+# the #492-preferred exact match - the protected lexeme appears as the TAIL of
+# a compound, and the colliding capture (one ending in bare 供 / 补) is
+# unreachable because the noun scan halts at the two-character verb.
+_GEI_FINAL_NOUNS_CN: tuple[str, ...] = ("供给", "补给")
+
 
 _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
     (
+        # === R61 (2026-08-13) - mirror of TW R38 (#515/#516/#517/#526) ===
+        # Every arm was REPRODUCED on the CN normalizer before mirroring, per the
+        # standing cross-jurisdiction duty - none was ported on the TW evidence
+        # alone.
+        #
+        #   启动 ("activate"): CN reproduces TW's shape exactly -
+        #     clean_noun_phrase_cn('收音单元启动') returned it unchanged. Prefix
+        #     position (启动装置 / 启动信号) is unreachable by an endswith strip.
+        "启动",
+        #   重新启动 + 已 - the #389 greedy-trim obligation, same as TW. Bare 启动
+        #     alone cuts inside the four-character verb 重新启动 and strands its
+        #     head. 已 is an aspect particle, never noun-final; CN's prefix uses
+        #     (所述已解密数据) are unreachable by an endswith strip. CN already
+        #     carries the sibling 恢复运行 for the same class.
+        "重新启动",
+        "已",
+        #   运作 ("operate"): CN was WORSE than TW here, not merely equal - it
+        #     already carried a bare 作 strip, so 外部电子装置运作 normalized to
+        #     外部电子装置运, stranding 运. This is a pre-existing stranded-head
+        #     defect the parity check surfaced; the two-character entry strips
+        #     greedily and recovers 外部电子装置.
+        "运作",
+        #   给 ("give / to"): the transfer coverb, stranded at the end of the
+        #     capture exactly as on TW (`一分享权限给通过所述身份验证程序的…`
+        #     captured 分享权限给). Carries the same lexeme guard as TW, and the
+        #     CN corpus independently justifies it: 电力供给 (x23) and 电源供给
+        #     (x10) are referenced element names, while every other 给-final
+        #     bigram there is a coverb reading (发送给 / 提供给 / 传递给).
+        "给",
         # === R59 (2026-08-01, reports #448/#449/#451/#454) ===
         # One CNIPA drafter's on-chip integrated WDM draft (片上集成波分复用器) -
         # the largest single CN report batch the campaign has seen.
@@ -1903,6 +1942,17 @@ _PLURAL_REFERENCE_PREFIXES_CN: tuple[str, ...] = tuple(sorted(
 # lines 1138-1331 for the historical risk-review rationale per verb.
 _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
     (
+        # === R61 (2026-08-13) - TW R38 parity (reports #524/#526) ===
+        # Both ship as the verb+CARDINAL collocation, never bare, matching the
+        # 控制多个 / 传递一 class directly below.
+        #   超过一 ("exceeds a"): latent-verified on the CN normalizer -
+        #     对位温度差值超过一对位温 came back unchanged. 3 corpus occurrences.
+        "超过一",
+        #   借一 ("by means of a"): the instrumental coverb. Bare 借 is already a
+        #     CN trailing strip; the interior form is a free parity add with 0
+        #     corpus occurrences today, so it is a no-op that closes the gap
+        #     before a CN draft hits it (the TW twin is report-evidenced).
+        "借一",
         # === R57 (2026-07-23) - TW R32 parity (report #425, spec-support) ===
         # 控制多个 ("control multiple") - latent on CN (the Simplified analog
         # 预充电阶段控制多个 over-captures identically). Full verb+quantifier
@@ -2157,6 +2207,11 @@ def clean_noun_phrase_cn(text: str) -> str:
             # carried a bare 匹配 entry, so it has no equivalent exposure - the
             # standing cross-jurisdiction parity check is what surfaced this.
             if verb == "匹配" and current in _MATCH_NOUN_COMPOUNDS_CN:
+                continue
+            # R61 (2026-08-13) - mirror of the TW R38 给 lexeme guard.
+            if verb == "给" and (
+                current.endswith(_GEI_FINAL_NOUNS_CN) or (len(current) - 1) < 2
+            ):
                 continue
             if verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN:
                 if verb in _NOUNLIKE_VERY_RELAXED_SUFFIXES_CN:
