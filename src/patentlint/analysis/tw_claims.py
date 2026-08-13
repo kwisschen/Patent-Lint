@@ -3939,7 +3939,48 @@ _LEADING_CONJ_RESIDUE_RE_TW: re.Pattern[str] = re.compile(
 )
 
 
-def strip_leading_quantifier(text: str) -> str:
+def _yidui_is_noun_initial_dui(text: str, source_text: str) -> bool:
+    """True if the 對 in a leading ``一對`` belongs to the NOUN, not to the
+    measure word 一對 ("a pair of").
+
+    The standing blocker from reports #330/#331: `一對接連接器` is
+    ``一`` + ``對接連接器`` ("a mating connector") while `一對接收器` is
+    ``一對`` + ``接收器`` ("a pair of receivers"), and the two are
+    character-for-character identical up to the split point. Both prior
+    triages concluded no LOCAL disambiguator exists without a 對X lexicon -
+    and a lexicon does not resolve it either, because 對接 is a real word in
+    both readings.
+
+    Report #527 supplies the disambiguator those triages did not have: the
+    DRAFTER'S OWN REFERENCE FORM, elsewhere in the same claim. A drafter who
+    means ``一`` + ``對位溫度差值`` later writes ``所述對位溫度差值`` - carrying
+    the 對 across into the definite reference - whereas a drafter who means
+    ``一對`` + ``接收器`` writes ``所述接收器`` or ``所述一對接收器``, never
+    ``所述對接收器``. So the gate is: strip only the ``一`` when the source
+    text attests a definite reference to ``對`` + the residual.
+
+    This is a RESTORE-WHAT-THE-DRAFTER-WROTE guard in the same family as
+    ``_DENG_HEADED_LEXEMES_TW``: it never invents a character, it only
+    declines to delete one the drafter used on both sides of the claim.
+    """
+    if not source_text or not text.startswith("一對") or len(text) <= 2:
+        return False
+    residual = text[2:]
+    # 該 is DELIBERATELY excluded, and this was measured, not assumed. `該對X`
+    # is the idiomatic anaphor for "that PAIR of X" - TWI861425B c1 writes
+    # `一對第一外殼角，該對第一外殼角被構造成…`, a genuine pair introduction
+    # followed by `該對` meaning the pair. Admitting 該 manufactured 16 unpaired
+    # findings across that draft's c10-c27. 所述 and 前述 are full determiner
+    # phrases ("said" / "aforesaid"); a measure word after them without a
+    # numeral is not the TIPO register, so `所述對X` reads unambiguously as
+    # 所述 + 對X.
+    return any(
+        f"{prefix}對{residual}" in source_text
+        for prefix in ("所述", "前述")
+    )
+
+
+def strip_leading_quantifier(text: str, *, source_text: str = "") -> str:
     """Strip one matching leading quantifier (ADR-095 Rule 2).
 
     Applied symmetrically to both reference terms and candidate intros
@@ -3963,10 +4004,16 @@ def strip_leading_quantifier(text: str) -> str:
     m = _AT_LEAST_N_PREFIX_RE_TW.match(text)
     if m and len(text) - m.end() >= 2:
         text = text[m.end():]
-    for q in _LEADING_QUANTIFIER_DENYLIST:
-        if text.startswith(q) and len(text) > len(q):
-            text = text[len(q):]
-            break
+    # R39 (#527) - 一對 disambiguation, gated on the drafter's own reference
+    # form. See _yidui_is_noun_initial_dui for why this is the first local
+    # disambiguator the #330/#331 blocker has had.
+    if _yidui_is_noun_initial_dui(text, source_text):
+        text = text[1:]
+    else:
+        for q in _LEADING_QUANTIFIER_DENYLIST:
+            if text.startswith(q) and len(text) > len(q):
+                text = text[len(q):]
+                break
     # R32: 其-possessive strip - applied last. Lookahead in the regex
     # ensures the trailing residual is ≥2 CJK so `其餘` (2 chars) is
     # protected (residual would be 1 char `餘` < 2).
@@ -4141,6 +4188,7 @@ def normalize_reference_term(
     text: str,
     *,
     strict_qualifier_matching: bool = False,
+    source_text: str = "",
 ) -> str:
     """Normalize a flagged reference term for antecedent matching.
 
@@ -4156,7 +4204,12 @@ def normalize_reference_term(
     t = strip_reference_form_prefix(t)
     t = strip_leading_qualifier(t, strict_qualifier_matching=strict_qualifier_matching)
     t = clean_noun_phrase_tw(t)
-    t = strip_leading_quantifier(t)
+    # source_text (R39, #527) is empty on the reference side proper - a
+    # reference opens with 所述/該/前述, which is stripped above, so a leading
+    # 一對 never survives to here. It is threaded for the SPEC-SUPPORT caller,
+    # which routes raw intro spans through this same chain and must apply the
+    # identical 一對 disambiguation or the two engines key one intro two ways.
+    t = strip_leading_quantifier(t, source_text=source_text)
     _pre_verb = t
     t = strip_leading_verb_tw(t)
     if t != _pre_verb:
@@ -4167,7 +4220,7 @@ def normalize_reference_term(
         # Deliberately CONDITIONAL on the verb strip having consumed something:
         # an unconditional second pass would double-strip stacked quantifiers,
         # which strip_leading_quantifier's non-iterative contract protects.
-        t = strip_leading_quantifier(t)
+        t = strip_leading_quantifier(t, source_text=source_text)
     return t
 
 
@@ -4175,6 +4228,7 @@ def normalize_candidate_intro(
     text: str,
     *,
     strict_qualifier_matching: bool = False,
+    source_text: str = "",
 ) -> str:
     """Normalize an introduction candidate for antecedent matching.
 
@@ -4200,7 +4254,11 @@ def normalize_candidate_intro(
     t = normalize_arabic_ordinal_to_cjk(text)
     t = strip_leading_qualifier(t, strict_qualifier_matching=strict_qualifier_matching)
     t = clean_noun_phrase_tw(t)
-    t = strip_leading_quantifier(t)
+    # source_text carries the claim body so the 一對 strip can consult the
+    # drafter's own reference form (R39, #527). Empty at call sites with no
+    # claim context (e.g. symbol-table names), which reproduces the old
+    # behaviour exactly.
+    t = strip_leading_quantifier(t, source_text=source_text)
     t = strip_reference_form_prefix(t)
     t = strip_leading_verb_tw(t)
     # #245: strip an inline English-word parenthetical gloss that bled into the
@@ -4970,6 +5028,31 @@ def _trim_capture_to_clean_noun_tw(text: str) -> str | None:
 # context permits, otherwise F10b's lazy emit fills the gap. Junk
 # captures are filtered by the same hygiene gate as F10.
 _F10B_SUFFIX_CHARSET = '[' + ''.join(sorted(_F10_SINGLE_CHAR_SUFFIXES_TW)) + ']'
+
+# R39 (2026-08-13, report #525) - WITHHELD, with the measurement.
+#
+# F10b matches LAZILY, so it stops at the first component-suffix character it
+# meets and can land MID-WORD: on `其相對應的位置座標得出一壓力分佈資訊` it emits
+# `位置座` (座 as in 底座 "base"), because 座標 ("coordinate") is a word whose
+# FIRST character is a component suffix. The truncated phrase then fires as an
+# unsupported spec-support term, since no specification contains `位置座`. That
+# much is real and reproduces.
+#
+# The obvious fix - reject the emit when the suffix character is followed by a
+# character that continues the word - was built, measured, and WITHHELD: it
+# MANUFACTURES a finding. On TW202301312A c8 the drafter introduces
+# `…顯示影像的顏色座標值` article-less and then references `所述顏色座標值`
+# five times. F10b's truncated `顏色座` was the ONLY intro the walker had for
+# that term, and it resolved the references by PREFIX. Deleting the truncation
+# deletes that accidental coverage and the references start firing - 1 unpaired
+# new finding, on a reference that has a perfectly good bare-noun antecedent.
+#
+# So the truncation is load-bearing by accident, and suppressing it is not the
+# fix. The real fix is to make F10b capture the WHOLE noun (`顏色座標值`,
+# `位置座標`), which means extending the component-suffix gate past mechanical
+# parts to value/attribute suffixes (值/標/率/度). That is a separate round with
+# its own FN measurement - the gate exists precisely to keep loose attribute
+# nouns out of the inventory, so widening it is not a one-line change.
 _F10B_BARE_DE_NOUN_RE = re.compile(
     r'的'
     r'(?P<noun>' + _CJK_NO_DE_ZHI_TW + r'{1,7}?'
@@ -5596,6 +5679,24 @@ def extract_introductions_tw(
         original = m.group(0)
         bare_noun = m.group(1)
 
+        # R39 (2026-08-13, report #527) - 一對 measure-word disambiguation.
+        # `_INTRO_MULTI_QUANTIFIERS` carries 一對 ("a pair of"), so the pattern
+        # splits 一對位溫度差值 as 一對 + 位溫度差值 when the drafter meant
+        # 一 + 對位溫度差值 ("an alignment temperature difference value"). The
+        # split happens HERE, in the match, which is why every earlier attempt
+        # aimed at the normalizer missed it. See _yidui_is_noun_initial_dui for
+        # why the drafter's own reference form is a sound disambiguator and why
+        # the #330/#331 blocker had none until this report.
+        # The `original == 一對 + bare_noun` test is load-bearing, not
+        # cosmetic: the matched SPAN starts with 一對 in both readings, so
+        # testing the span alone also fires when the pattern already split
+        # correctly as 一 + 對X, and then prepends a SECOND 對 (CN caught this
+        # as 对对象 on CN119343088A c14/c16). Only fire when the quantifier
+        # alternation actually consumed the 對.
+        if (original == "一對" + bare_noun
+                and _yidui_is_noun_initial_dui(original, claim.text)):
+            bare_noun = "對" + bare_noun
+
         # R29 (2026-07-18): SYMMETRY duty for the dangling-應 trim. The
         # reference side trims a stranded 對/相 left by the noun scan halting
         # mid-對應/相對應; the intro side must trim identically or the two
@@ -5615,6 +5716,7 @@ def extract_introductions_tw(
             normalized = normalize_candidate_intro(
                 candidate,
                 strict_qualifier_matching=strict_qualifier_matching,
+                source_text=claim.text,
             )
             if not normalized:
                 continue
@@ -5656,6 +5758,7 @@ def extract_introductions_tw(
                 extended_normalized = normalize_candidate_intro(
                     extended_bare,
                     strict_qualifier_matching=strict_qualifier_matching,
+                    source_text=claim.text,
                 )
                 if extended_normalized:
                     # Remove bare-modifier candidates from this match
@@ -5665,6 +5768,7 @@ def extract_introductions_tw(
                         cand_norm = normalize_candidate_intro(
                             cand,
                             strict_qualifier_matching=strict_qualifier_matching,
+                            source_text=claim.text,
                         )
                         if (
                             cand_norm

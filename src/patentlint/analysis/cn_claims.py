@@ -2296,6 +2296,30 @@ _LEADING_CONJ_RESIDUE_RE_CN: re.Pattern[str] = re.compile(
 )
 
 
+def _yidui_is_noun_initial_dui_cn(text: str, source_text: str) -> bool:
+    """CN mirror of ``_yidui_is_noun_initial_dui`` (CN R62 / TW R39, #527).
+
+    ``一对`` is registered as an intro measure word ("a pair of"), so the
+    pattern splits ``一对位温度差值`` as 一对 + 位温度差值 when the drafter meant
+    一 + 对位温度差值. Reproduced on the CN normalizer before mirroring, per the
+    standing cross-jurisdiction duty - CN is if anything MORE exposed than TW,
+    because 对 opens two of the highest-frequency lexemes in CNIPA claim
+    register (对象 "object", 对应 "corresponding"), so ``一对象…`` and
+    ``一对应…`` hit the identical false split.
+
+    Gate: the drafter's own definite reference form. 该 is excluded for the
+    same measured reason as TW's 該 - it is the idiomatic anaphor for "that
+    PAIR of X" and admitting it manufactured 16 findings on TWI861425B.
+    """
+    if not source_text or not text.startswith("一对") or len(text) <= 2:
+        return False
+    residual = text[2:]
+    return any(
+        f"{prefix}对{residual}" in source_text
+        for prefix in ("所述", "前述")
+    )
+
+
 def strip_leading_quantifier_cn(text: str) -> str:
     """Strip one matching leading quantifier (ADR-095 Rule 2).
 
@@ -3627,6 +3651,15 @@ def extract_introductions_cn(
     for m in _INTRO_PATTERN_CN.finditer(claim.text):
         original = m.group(0)
         bare_noun = m.group(1)
+        # R62 (2026-08-13) - TW R39 parity: 一对 measure-word disambiguation.
+        # The split happens HERE, in the match, not in the normalizer.
+        # `original == 一对 + bare_noun` is load-bearing - see the TW twin.
+        # Without it, `同一对象` (where the pattern correctly matched 一 +
+        # 对象) got a second 对 prepended, manufacturing 2 findings on
+        # CN119343088A c14/c16.
+        if (original == "一对" + bare_noun
+                and _yidui_is_noun_initial_dui_cn(original, claim.text)):
+            bare_noun = "对" + bare_noun
         candidates = _postprocess_intro_capture_cn(bare_noun, m, claim.text)
         for candidate in candidates:
             normalized = normalize_candidate_intro_cn(

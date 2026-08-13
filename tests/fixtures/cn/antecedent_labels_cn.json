@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 61,
+    "current_round": 62,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -324,6 +324,14 @@
         "round": 61,
         "name": "r61_tw_r38_parity_qidong_yunzuo_gei_chaoguo_jie",
         "description": "CN mirror of TW R38 (parity round; no CN report - every arm was REPRODUCED on the CN normalizer before mirroring, per the standing cross-jurisdiction duty). Trailing 启动 / 重新启动 / 已 / 运作 / 给 plus interior 超过一 / 借一. The parity check found CN was WORSE than TW on one arm rather than merely equal: CN already carried a bare 作 strip, so 外部电子装置运作 normalized to 外部电子装置运, stranding 运 - a pre-existing stranded-head defect that only the FN-direction parity sweep surfaces. 给 carries the CN twin of the TW lexeme guard (_GEI_FINAL_NOUNS_CN = 供给/补给), justified independently by the CN corpus (电力供给 x23, 电源供给 x10 are referenced element names). 借一 is a free forward-parity add with 0 corpus occurrences today. Gates: validate_fix CN silenced_legit 0, 30 gold walker_fp ended, UNPAIRED-NEW 0 (all 22 new keys are paired shifts on the same doc+claim); one ADR-111 shift dual-labelled (CN114616582A c2, 评估任务已 -> 评估任务 - a REAL defect, c2 introduces 认证任务 and references 所述评估任务, and the shift makes the emitted term strictly more correct); CN fixture harness 0/0/0; specsup_corpus_runner CN 336 -> 336 with an identical phrase set.",
+        "user_attested_issues": [],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-08-13T00:00:00+00:00"
+      },
+      {
+        "round": 62,
+        "name": "r62_tw_r39_parity_yidui_disambiguation",
+        "description": "CN mirror of TW R39 - the 一对 measure-word disambiguation (report #527, resolving the standing #330/#331 blocker). Reproduced on the CN normalizer before mirroring: 一对位温度差值 came back as 位温度差值. CN is MORE exposed than TW, because 对 opens 对象 (\"object\") and 对应 (\"corresponding\"), two of the highest-frequency lexemes in CNIPA claim register, so 一对象… and 一对应… hit the identical false split. Same gate as TW (所述对<residual> / 前述对<residual>, 该 excluded for the measured 该对 = \"that pair\" reason) and the same original == 一对 + bare_noun guard - which CN is in fact where the need for it was CAUGHT: without it, 同一对象 (already split correctly as 一 + 对象) got a second 对 prepended and manufactured 2 findings on CN119343088A c14/c16. Gates: validate_fix CN silenced_legit 0, UNPAIRED-NEW 0, corpus-silent; fixture harness 0/0/0; specsup_corpus_runner 336 -> 336 with an identical phrase set.",
         "user_attested_issues": [],
         "fixtures_silenced": 0,
         "shipped_at": "2026-08-13T00:00:00+00:00"
