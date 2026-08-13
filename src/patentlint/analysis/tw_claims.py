@@ -5029,30 +5029,51 @@ def _trim_capture_to_clean_noun_tw(text: str) -> str | None:
 # captures are filtered by the same hygiene gate as F10.
 _F10B_SUFFIX_CHARSET = '[' + ''.join(sorted(_F10_SINGLE_CHAR_SUFFIXES_TW)) + ']'
 
-# R39 (2026-08-13, report #525) - WITHHELD, with the measurement.
+# R40 (2026-08-13, report #525) - F10b mid-word suffix landing.
 #
-# F10b matches LAZILY, so it stops at the first component-suffix character it
-# meets and can land MID-WORD: on `其相對應的位置座標得出一壓力分佈資訊` it emits
-# `位置座` (座 as in 底座 "base"), because 座標 ("coordinate") is a word whose
-# FIRST character is a component suffix. The truncated phrase then fires as an
-# unsupported spec-support term, since no specification contains `位置座`. That
-# much is real and reproduces.
+# F10b matches LAZILY, so it stops at the FIRST component-suffix character it
+# meets and can land MID-WORD: on `其相對應的位置座標得出一壓力分佈資訊` it
+# emitted `位置座` (座 as in 底座 "base"), because 座標 ("coordinate") is a word
+# whose FIRST character is a component suffix. The truncated phrase then fired
+# as an unsupported spec-support term, since no specification contains `位置座`.
 #
-# The obvious fix - reject the emit when the suffix character is followed by a
-# character that continues the word - was built, measured, and WITHHELD: it
-# MANUFACTURES a finding. On TW202301312A c8 the drafter introduces
-# `…顯示影像的顏色座標值` article-less and then references `所述顏色座標值`
-# five times. F10b's truncated `顏色座` was the ONLY intro the walker had for
-# that term, and it resolved the references by PREFIX. Deleting the truncation
-# deletes that accidental coverage and the references start firing - 1 unpaired
-# new finding, on a reference that has a perfectly good bare-noun antecedent.
+# The fix EXTENDS the capture over the completed lexeme rather than REJECTING
+# it, and that distinction is the whole round. Rejecting was built first and
+# measured: it MANUFACTURES a finding, because on TW202301312A c8 the drafter
+# introduces `…顯示影像的顏色座標值` article-less and references
+# `所述顏色座標值` five times, and F10b's truncated `顏色座` was the ONLY intro
+# the walker had - it was resolving those references BY PREFIX. Deleting a dirty
+# capture deletes whatever it was accidentally covering; an under-capture fix
+# REMOVES an intro and is therefore FN-shaped, exactly like a permissive matcher.
+# Extending keeps the coverage (a longer prefix still resolves) AND cleans the
+# emitted term.
 #
-# So the truncation is load-bearing by accident, and suppressing it is not the
-# fix. The real fix is to make F10b capture the WHOLE noun (`顏色座標值`,
-# `位置座標`), which means extending the component-suffix gate past mechanical
-# parts to value/attribute suffixes (值/標/率/度). That is a separate round with
-# its own FN measurement - the gate exists precisely to keep loose attribute
-# nouns out of the inventory, so widening it is not a one-line change.
+# DELIBERATELY a single entry, on the _DENG_HEADED_LEXEMES_TW precedent: this is
+# a lexicon, so every member has to be paid for with report evidence. There is
+# no positional gate available - F10b exists PRECISELY to match where the
+# following character is CJK (`的半導體通道層交互積層`), so "reject when CJK
+# follows" would disable the pattern outright. The extension is bounded to the
+# lexeme itself and does NOT run on to the next boundary: `位置座標得出` would
+# otherwise swallow the verb (得 is not an excluded noun char, and the trailing
+# cleaner strands it as `位置座標得`).
+_F10B_SUFFIX_INITIAL_LEXEMES_TW: tuple[str, ...] = ("座標",)
+
+
+def _f10b_extend_over_lexeme_tw(noun: str, text: str, end: int) -> str:
+    """Extend a mid-word F10b capture over the lexeme it landed inside.
+
+    Returns ``noun`` unchanged when the capture ended at a real word boundary.
+    """
+    for lexeme in _F10B_SUFFIX_INITIAL_LEXEMES_TW:
+        head = lexeme[:1]
+        if not noun.endswith(head):
+            continue
+        tail = lexeme[1:]
+        if text[end:end + len(tail)] == tail:
+            return noun + tail
+    return noun
+
+
 _F10B_BARE_DE_NOUN_RE = re.compile(
     r'的'
     r'(?P<noun>' + _CJK_NO_DE_ZHI_TW + r'{1,7}?'
@@ -5286,6 +5307,14 @@ def _extract_supplementary_intros(
         if normalized.startswith(_REFERENCE_PREFIXES):
             continue
         if normalized.startswith(_F10_NOUN_REJECTS):
+            continue
+        # R40 (#525): the lazy match can stop INSIDE a word whose first
+        # character is a component suffix (座 of 座標). Extend over the lexeme
+        # before the emit gate; the extended form no longer ends in a component
+        # suffix, so it is emitted on the strength of the completed lexeme.
+        extended = _f10b_extend_over_lexeme_tw(normalized, text, m.end())
+        if extended != normalized:
+            results.append((m.group(0) + extended[len(normalized):], extended))
             continue
         if not normalized.endswith(_F10_COMPONENT_SUFFIXES):
             continue
