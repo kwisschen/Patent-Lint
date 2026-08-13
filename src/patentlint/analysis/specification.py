@@ -16,7 +16,10 @@ from patentlint.analysis.utils import (
     _VERB_STOPS,
     _ING_VERB_ONLY,
     _is_likely_past_participle,
-)
+
+    _D1_PRIME_CHARS,
+    _D1_PRIME_CLASS,
+    _canonicalize_d1_primes,)
 from patentlint.models import CheckItem, ReferenceNumeral, SpecWordingResult
 
 # Narrowing language per MPEP 2111.01(II): "critical, important, essential,
@@ -86,7 +89,7 @@ _REFNUM_AFTER_NOUN = re.compile(
     r"(?:(?:the|a|an|said|each|first|second|third|fourth|fifth)\s+)?"
     r"((?:[a-z]{2,15}\s+){0,3}[a-z]{2,15})"
     r"\s+"
-    r"(\d{2,4}[a-z]?)"  # optional single-letter suffix: 10a, 10b
+    r"(\d{2,4}[a-z]?" + _D1_PRIME_CLASS + r")"  # 10a, 10b, and 110' / 110′
     r"(?![\dA-Za-z])"   # no following digit/letter - anchored end
     r"(?!\.\d)"         # not followed by decimal point + digit
     r"(?![%％°])"         # not followed by % or degree
@@ -109,7 +112,7 @@ _REFNUM_AFTER_NOUN = re.compile(
 # Pattern B: parenthetical numeral: "base plate (102)" / "(10a)"
 _REFNUM_PARENS = re.compile(
     r"((?:[a-z]{2,15}\s+){0,3}[a-z]{2,15})"
-    r"\s*\((\d{2,4}[a-z]?)\)",
+    r"\s*\((\d{2,4}[a-z]?" + _D1_PRIME_CLASS + r")\)",
     re.IGNORECASE,
 )
 
@@ -623,8 +626,23 @@ def extract_numeral_name_pairs(
             before = spec_text[max(0, m.start() - 2):m.start()]
             if "[" in before:
                 continue
-            if len(num_str) >= 5:
+
+            # Long-token exclusion. Deliberately kept on the token MINUS any
+            # prime, which reproduces the previous behaviour EXACTLY for every
+            # unprimed form while letting `1234'` through. Widening it to count
+            # digits only was trialled and REVERTED: it also admitted `1950s`
+            # (a decade, `the 1950s`) as designator `1950s` on US20230382973A1.
+            # `1234a` therefore stays excluded exactly as before - that is a
+            # separate, unreported question and not this round's business.
+            if len(num_str.rstrip(_D1_PRIME_CHARS)) >= 5:
                 continue
+
+            digit_part = ""
+            for ch in num_str:
+                if ch.isdigit():
+                    digit_part += ch
+                else:
+                    break
 
             ordinal, head = _d1_extract_ordinal_and_head(noun)
             if not head:
@@ -633,13 +651,7 @@ def extract_numeral_name_pairs(
             # become distinct keys for D1 instance-collision detection.
             keyed_name = f"{ordinal}|{head}" if ordinal else head
             # Preserve letter suffix (10a vs 10b stay distinct).
-            digit_part = ""
-            for ch in num_str:
-                if ch.isdigit():
-                    digit_part += ch
-                else:
-                    break
-            suffix = num_str[len(digit_part):]
+            suffix = _canonicalize_d1_primes(num_str[len(digit_part):])
             canonical = f"{int(digit_part)}{suffix}" if digit_part else num_str
             pairs.append((canonical, keyed_name))
             seen_spans.add((m.start(2), m.end(2)))

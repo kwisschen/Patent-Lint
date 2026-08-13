@@ -2178,3 +2178,49 @@ def has_bare_noun_introduction(
             if not _ARTICLE_BEFORE_RE.search(atext[max(0, m.start() - 6): m.start()]):
                 return True
     return False
+
+
+# D1 primed reference numerals (2026-08-13, reports #445 sample 3 / #447).
+# By long-standing patent drafting convention a PRIMED designator (`110\'`) is a
+# DISTINCT element from its unprimed parent (`110`) - typically the same part in
+# a second embodiment or a mirrored assembly. The extractor was dropping the
+# prime, so `wavelength division multiplexing devices 110\'` clustered under
+# `110` alongside `wavelength division multiplexing structure 110` and read as
+# a §608.01(g) / 专利法实施细则 §21 inconsistency the drafter never committed.
+#
+# TWO codepoints are accepted, and the pair is chosen by MEASUREMENT, not by
+# typographic completeness: the ASCII apostrophe U+0027 and the right single
+# quotation mark U+2019, which is what Word autocorrect produces from it. Across
+# the three scraped corpora those two carry essentially all genuine designator
+# usage (US 705 + 217, CN 1029 + 1777, TW 1073 + 3000 occurrences), and neither
+# is ever a unit symbol.
+#
+# The typographically "correct" prime U+2032 and double prime U+2033 are
+# DELIBERATELY EXCLUDED, because in real drafting they are MEASUREMENT symbols
+# far more often than designators:
+#     `equilibrated for 30′ at RT`      30 MINUTES   (US20230382973A1, x12)
+#     `geocoordinates 41°04′`           arc-minutes
+#     `an order for a 40″`              40 INCHES
+# Admitting U+2032 manufactured exactly one new FIX-tier conflict on the US
+# corpus - `US20230382973A1|30\'`, a lab protocol\'s incubation time read as a
+# reference designator. They ARE used as designators too (CN `小型小区102′`,
+# TW `小細胞基地台102′`), so excluding them costs coverage - but those cases
+# collapse onto the unprimed parent exactly as they do today, which is the
+# status quo rather than a regression, whereas admitting them ships a new false
+# assertion. Revisit only with a left-context discriminator that separates a
+# measurement phrase from an element name.
+#
+# Prime COUNT is significant (`110\'` and `110\'\'` are different elements), so the
+# class matches up to two.
+#
+# FN-safety rests on REGEX BACKTRACKING, not on the charset: the possessive
+# `the housing 102\'s surface` first tries `102\'`, fails the trailing
+# `(?![\dA-Za-z])` anchor on the `s`, and backtracks to `102` - so a possessive
+# is still counted against its unprimed parent, as it must be.
+_D1_PRIME_CHARS = "\'\u2019"
+_D1_PRIME_CLASS = "[\'\u2019]{0,2}"
+
+
+def _canonicalize_d1_primes(suffix: str) -> str:
+    """Fold the accepted prime codepoints onto the ASCII apostrophe."""
+    return "".join("\'" if ch in _D1_PRIME_CHARS else ch for ch in suffix)

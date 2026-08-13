@@ -11,7 +11,12 @@ from __future__ import annotations
 import re
 from collections import Counter
 
-from patentlint.analysis.utils import _dx, numeral_context_excerpt
+from patentlint.analysis.utils import (
+    _D1_PRIME_CLASS,
+    _canonicalize_d1_primes,
+    _dx,
+    numeral_context_excerpt,
+)
 from patentlint.models import CheckItem, CnPatentDocument
 
 # Canonical section order per 专利法实施细则 §20
@@ -730,7 +735,7 @@ def check_spec_claim_reference(cn_doc: CnPatentDocument) -> list[CheckItem]:
 _CN_NOUN_GROUP = r"[A-Za-z]{0,5}[一-鿿]{2,12}"
 
 _CN_REFNUM_AFTER_NOUN = re.compile(
-    rf"(?P<noun>{_CN_NOUN_GROUP})\s*(?P<num>\d{{2,4}}[a-z]?)"
+    rf"(?P<noun>{_CN_NOUN_GROUP})\s*(?P<num>\d{{2,4}}[a-z]?{_D1_PRIME_CLASS})"
     # Reject digits followed by another digit, decimal, percent, degree
     # signs (°/℃), Latin letter (mm/cm/μm/V/A/Hz/wt/etc.), or a range
     # separator (~/～/至/到/-) - those are handled by _CN_REFNUM_RANGE.
@@ -755,7 +760,7 @@ _CN_REFNUM_AFTER_NOUN = re.compile(
     r"(?!\s*[：:])",
 )
 _CN_REFNUM_PARENS = re.compile(
-    rf"(?P<noun>{_CN_NOUN_GROUP})\s*[(（](?P<num>\d{{2,4}}[a-z]?)[)）]"
+    rf"(?P<noun>{_CN_NOUN_GROUP})\s*[(（](?P<num>\d{{2,4}}[a-z]?{_D1_PRIME_CLASS})[)）]"
 )
 
 # Range refnum: drafter writes "隨身碟101~103" / "電池101至103" /
@@ -1689,14 +1694,23 @@ def _cn_extract_numeral_name_pairs(text: str) -> list[tuple[str, str]]:
                 continue
             seen_spans.add(span)
             full_num = m.group("num")
-            digit_part = full_num.rstrip("abcdefghijklmnopqrstuvwxyz")
+            # Leading-digit scan rather than rstrip: the suffix can now carry
+            # a PRIME (110′), and rstrip only removes ASCII letters, so the
+            # old form would hand `110′` to int() and raise.
+            digit_part = ""
+            for ch in full_num:
+                if ch.isdigit():
+                    digit_part += ch
+                else:
+                    break
             if not digit_part:
                 continue
             if len(digit_part) >= 5:
                 continue
             # Preserve letter suffix so 10a, 10b, 10c stay distinct
-            # (drafter convention: same parent + sub-element disambig).
-            suffix = full_num[len(digit_part):]
+            # (drafter convention: same parent + sub-element disambig), and
+            # fold the prime codepoints so 110′ / 110’ / 110' cluster.
+            suffix = _canonicalize_d1_primes(full_num[len(digit_part):])
             num_str = f"{int(digit_part)}{suffix}"
             # Tail-measurement exclusion (#266): `10毫升` / `100 毫升` is a
             # measurement value, not a refnum. CJK mirror of the US
