@@ -764,3 +764,59 @@ class TestSpecSupportRoundR34:
         # Leaves figure labels and Latin-adjacent digits alone for free.
         assert _strip_inline_ref_numerals("第1圖顯示") == "第1圖顯示"
         assert _strip_inline_ref_numerals("PM2.5感測器") == "PM2.5感測器"
+
+
+class TestF10bMidWordSuffix:
+    """R40 (report #525) - the lazy `的NOUN` pattern landing inside a word.
+
+    F10b anchors on a mechanical-component suffix character and matches
+    lazily, so it stops at the FIRST one it meets. 座 ("base", as in 底座) is
+    such a suffix AND the first character of 座標 ("coordinate"), so the
+    capture landed mid-word and emitted `位置座` - a phrase no specification
+    contains, which then fired as an unsupported term.
+    """
+
+    def test_capture_extends_over_the_completed_lexeme(self):
+        from patentlint.analysis.tw_claims import _extract_supplementary_intros
+        text = "其相對應的位置座標得出一壓力分佈資訊"
+        norms = [n for _, n in _extract_supplementary_intros(text)]
+        assert "位置座標" in norms
+        assert "位置座" not in norms
+
+    def test_extension_is_bounded_to_the_lexeme(self):
+        """It must NOT run on to the next clause boundary.
+
+        得 is not an excluded noun character, so an unbounded extension would
+        swallow the verb 得出 and the trailing cleaner would strand it as
+        `位置座標得`.
+        """
+        from patentlint.analysis.tw_claims import _extract_supplementary_intros
+        norms = [n for _, n in _extract_supplementary_intros("其相對應的位置座標得出一壓力")]
+        assert norms == ["位置座標"], norms
+
+    def test_capture_at_a_real_boundary_is_untouched(self):
+        from patentlint.analysis.tw_claims import _extract_supplementary_intros
+        norms = [n for _, n in _extract_supplementary_intros("的底座設有一孔洞")]
+        assert "底座" in norms
+
+    def test_f10b_lazy_capture_still_works_where_it_was_designed_to(self):
+        """F10b exists to fire where the FOLLOWING text is CJK, so the guard
+        must not degrade into "reject when a CJK character follows"."""
+        from patentlint.analysis.tw_claims import _extract_supplementary_intros
+        norms = [n for _, n in _extract_supplementary_intros(
+            "藉由矽層夾持矽鍺層的半導體通道層交互積層")]
+        assert "半導體" in norms
+
+    def test_longer_form_still_covers_the_reference_by_prefix(self):
+        """The extension must not DELETE coverage.
+
+        Rejecting the truncated capture outright was measured and reverted:
+        on TW202301312A c8 `顏色座` was the only intro the walker had for
+        `所述顏色座標值` and was resolving it by prefix. The extended
+        `顏色座標` is a longer prefix, so the coverage survives.
+        """
+        from patentlint.analysis.tw_claims import _extract_supplementary_intros
+        norms = [n for _, n in _extract_supplementary_intros(
+            "因應於所述樣本畫素值而量測顯示影像的顏色座標值")]
+        assert "顏色座標" in norms
+        assert all("所述顏色座標值".startswith(n) or n != "顏色座" for n in norms)
