@@ -844,6 +844,27 @@ _STOP_WORDS = (
     r"implements(?=\s+(?:a|an|the|at\s+least)\b)|"
     r"runs(?=\s+(?:on|a|an|the)\b)|"
     r"uploads(?=\s+(?:a|an|the)\b)|"
+    # R45 (2026-08-17, private-tracker reports #549/#550), one drafter's
+    # motion-compensation method claims.
+    # - `acquires`: object-determiner gate. `before the image capturing device
+    #   acquires the plurality of images` over-captured to `the image capturing
+    #   device acquires`. ABSENT from the 705-draft corpus (0 occurrences) and
+    #   from all 1,843 examiner-confirmed terms, so it ships gated for parity
+    #   with its class-mates rather than because a noun reading was measured -
+    #   the same posture as R44's `uploads`.
+    # - `remains`: LOCATIVE-PREPOSITION gate, and the gate IS the fix. A bare
+    #   stop is a MEASURED WITHHOLD from R28 - it strips `<nodes> remains
+    #   available` to an un-re-firing `second computing nodes` (US10642603B2,
+    #   2 gold-legit). That FN shape is the STATIVE-ADJECTIVE complement, and
+    #   the corpus splits cleanly on it: 4 `remains available` / 3 `remains
+    #   authorized` / 2 `remains established` / 2 `remains closed` /
+    #   1 `remains enrolled` against 9 `remains in`. Gating on a following
+    #   locative preposition is therefore provably disjoint from every
+    #   measured FN, and it is the reported shape (`the global motion
+    #   compensation module remains in the activated state`). The plural-noun
+    #   reading (`the plant remains`) takes `of`, which is excluded.
+    r"acquires(?=\s+(?:a|an|the)\b)|"
+    r"remains(?=\s+in\b)|"
     # R5 (2026-05-26): `accounts` as 3sg finite verb only - lookahead on
     # `\s+for` discriminates the `<noun> accounts for X` verb-object pattern
     # (#98 alumina, #99 silica) from the bare-noun usage (`financial accounts`,
