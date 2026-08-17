@@ -388,7 +388,24 @@ _TW_SUFFIX_ONLY_LEADS: frozenset[str] = frozenset({"部", "端", "埠"})
 #       LEAD it blocks the position-0 所述 strip, so the whole clause survives
 #       normalization (且所述彈性封邊部沿所述片). Stripping it first lets the
 #       existing reference-prefix strip reach the noun.
-_TW_SPEC_SUPPORT_LEADING_STRIPS: tuple[str, ...] = ("形成", "者", "且")
+#   R42 (2026-08-17, report #543) - the INSTRUMENTAL COVERB class. The drafter
+#       writes a method step as `透過一人工智慧推論模組，推論各所述影像…`, and the
+#       coverb stayed glued to the element so the phrase could never match the
+#       specification. The reporter's ask was explicitly for the CLASS, not the
+#       one token, and the class is well defined: an instrumental coverb has NO
+#       noun reading at all in TIPO diction, unlike 依據 / 根據 / 基於, which are
+#       also nouns ("basis") and are deliberately EXCLUDED here. Each member is
+#       residual-guarded at _MIN_INVENTORY_LENGTH exactly like 形成, so a
+#       compound that merely starts with the same characters keeps its head
+#       (利用率 -> residual 1, left intact).
+#
+#       These already exist as ANTECEDENT-side leading strips
+#       (_LEADING_VERB_PREFIXES_TW carries 藉由 / 根據 / 基於); the spec-support
+#       side never got them, which is the same intro/reference asymmetry the
+#       symmetry audit keeps surfacing.
+_TW_SPEC_SUPPORT_LEADING_STRIPS: tuple[str, ...] = (
+    "形成", "者", "且", "透過", "通過", "經由", "藉由", "利用",
+)
 
 # R36 (#482/#486) - the measure word 筆 ("<n> items of <record>"), stranded at
 # position 0 once the 至少一 quantifier is stripped (至少一筆比賽資料 ->
