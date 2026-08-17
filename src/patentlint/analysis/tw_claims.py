@@ -3762,6 +3762,64 @@ _INTERIOR_CUT_EXCEPTIONS: frozenset[str] = frozenset({
     "感測器", "偵測器", "監測器",
     "光感測器", "溫度感測器", "壓力感測器", "影像感測器",
     "複數感測器", "複數控制器", "複數偵測器",
+
+    # === R43 (2026-08-17, reports #537/#538) - the DEVICE-NOUN HEAD class ===
+    # 神經網路處理器 was cut at its own noun head to 神經網路 and 中央處理器 to
+    # 中央, so `所述神經網路處理器` no longer matched its `一神經網路處理器` intro.
+    # The reporter's framing is the right one: 處理器 is a very basic element
+    # name, and patching one compound would be a symptom fix.
+    #
+    # Declaring the bare DEVICE-NOUN HEAD (not each modifier-prefixed form) is
+    # what makes this a class fix: the R27 tail-compound guard tests
+    # `_longest_protected_prefix(text[cut:])` and the remainder at the cut is
+    # always the bare head, so ONE entry covers unbounded modifiers - 處理器
+    # covers 神經網路處理器 / 數位訊號處理器 / 中央處理器 / 接收端處理器, 產生器
+    # covers 射頻產生器 / 脈衝產生器 / 訊號產生器 / 震動產生器, and so on. (The
+    # pre-existing 波產生器 / 複數控制器 style entries are exactly the
+    # per-compound patches this generalizes.)
+    #
+    # Every head below is ATTESTED as truncated in the 1,073-draft TW claim
+    # corpus - measured, not enumerated from the interior-verb list, which
+    # produces nonsense like 滿足下式器. FN-safe by the same argument as the R27
+    # guard it feeds: if the text starting AT the verb is a known device noun,
+    # the verb is noun-internal (the head of 處理器), not a clause boundary; a
+    # real clause boundary (底座設有一孔洞) has no declared compound at the cut.
+    # Every head was measured INDIVIDUALLY against the corpus (26 separate
+    # validate_fix + UNPAIRED-NEW runs); only the ones with 0 unpaired-new and
+    # 0 silenced-legit ship. Combined: 1 gold walker_fp ended, 0 legit, 0
+    # unpaired. They are corpus-quiet by design - an under-capture SUPPRESSES
+    # findings, so its cost is invisible FALSE NEGATIVES (a genuine
+    # `所述資料傳輸器` defect could never fire while the term truncated to
+    # `所述資料`), which is exactly the failure mode no user report can surface.
+    "傳輸器", "調整器", "掃描器", "暫存器", "計數器", "延遲器",
+    "多工器", "控制器", "電容器", "反射器", "偏振器", "偏光器",
+    "集電器", "估計器", "指示器", "攝影機", "收發機", "輸送機",
+    "處理單元",
+    # Verb-prefixed forms the head entry cannot reach: the interior cut fires on
+    # the LONGER verb (電性連接 / 感測), so the remainder starts BEFORE the head
+    # and the prefix walk never sees 連接器 / 放大器.
+    "電性連接器", "感測放大器",
+    #
+    # === MEASURED AND WITHHELD, per head, with the number that blocks it ===
+    # These are NOT unmeasured - each was run on its own and the collateral is
+    # its own, so the next round can attack them one at a time:
+    #   處理器      6 FPs ended, 14 UNPAIRED-NEW   <- reports #537/#538
+    #   驅動器      3 FPs ended,  7 UNPAIRED-NEW
+    #   顯示驅動器  0 FPs ended,  5 UNPAIRED-NEW
+    #   夾持器      0 FPs ended,  4 UNPAIRED-NEW
+    #   產生器      0 FPs ended,  1 UNPAIRED-NEW + 3 gold-legit ADR-111 shifts
+    # The blocker is NOT the exception itself - it is that the interior cut had
+    # been silently GARBAGE-COLLECTING other capture defects, so removing it
+    # exposes them. The trailing-parenthetical one was diagnosed and FIXED in
+    # R41; what remains are TRAILING RESIDUES that no strip currently reaches
+    # (`第一輸入序列來`, `第一處理器自`, `第一處理器通訊` on TW202533094A /
+    # TW202531254A). Fix those residues first, then re-measure these five - do
+    # not narrow the exception set further, the set is not the problem.
+    #
+    # 選擇器 / 資料選擇器 stay WITHHELD for a DIFFERENT, older reason - see the
+    # measured block above: declaring them fixes a real latent FN but
+    # manufactures 5 findings on TWI524189B c7-c12, and that trade only clears
+    # once the bare-noun intro arm ships. Re-measured this round; unchanged.
 })
 
 
@@ -3945,14 +4003,36 @@ def clean_noun_phrase_tw(text: str) -> str:
         # 該等第一切槽貫穿 has no suffix after 貫穿, so the cut still fires.
         '貫穿',
     }
+    # R43 (2026-08-17, reports #537/#538): when a candidate cut is VETOED by the
+    # R27 tail-compound guard, ADVANCE PAST THE COMPOUND and retry the same verb
+    # at its next occurrence, instead of dropping the verb entirely.
+    #
+    # The guard used to `continue`, and because the search is a per-verb `find`
+    # that only ever looks at the FIRST occurrence, a veto discarded that verb's
+    # only candidate and left every character after the compound uncut. So
+    # protecting a productive device-noun head made captures DIRTIER, not
+    # cleaner: `顯示驅動器積體電路控制…` kept its whole trailing clause because
+    # 驅動器 vetoed the cut outright. This mirrors what the position-0
+    # `protected_prefix_len` handling directly above already does - it does not
+    # abandon the search at a protected compound, it steps past it and keeps
+    # cutting.
+    #
+    # Deliberately NOT a full left-to-right rescan. That was built first and it
+    # also reaches a verb's later occurrences in cases the old position floor
+    # had been protecting by accident: `右感測部及左感測部` (a coordination of two
+    # element names) got cut at its SECOND 感測 to `右感測部及左`, and the two
+    # bounds tried to stop that (a whole-string length cap, then a
+    # verb+one-suffix tail test) traded 1 manufactured finding for 5 and then
+    # for 19. Retrying only the VETOED verb keeps first-occurrence semantics
+    # everywhere else, which is the behaviour every prior round was measured on.
     earliest_idx: int | None = None
     for verb in _INTERIOR_VERB_BOUNDARIES:
         idx = search_text.find(verb)
-        # Require ≥1 char before the verb in the search remainder (so
-        # the verb isn't at position 0 of the remainder), AND ≥2 chars
-        # total before the verb in the absolute original text.
-        if idx >= 0 and (idx + search_offset) > 1:
+        while idx >= 0:
             absolute_idx = idx + search_offset
+            # Require >= 2 chars before the verb in the absolute original text.
+            if absolute_idx <= 1:
+                break
             # #349 (2026-07-06): an interior verb immediately followed by the
             # device-noun 天線 is a noun-modifier of an antenna compound
             # (發射接收天線 / 接收天線 / 傳送天線), not a clause boundary. FN-safe:
@@ -3962,11 +4042,23 @@ def clean_noun_phrase_tw(text: str) -> str:
             # that surfaced as a spec-support FP (所述發射). Symmetric on the
             # intro + reference normalize paths, so antecedent matching is
             # unaffected. Mirrors the R31 noun-suffix guard for a 2-char suffix.
+            #
+            # R43 MEASURED AND WITHHELD: generalizing this to "any interior verb
+            # immediately followed by a DECLARED device noun is a noun-modifier"
+            # (so 顯示|驅動器 would survive without its own entry). It is wrong for
+            # the containment/copula class, which is precisely the class that
+            # takes a bare device noun as its direct object - `儲存裝置包括控制器`,
+            # `電氣或機械裝置包括感測器`, `產生模型包括編碼器`, `第一效能資訊包括
+            # 顯示裝置`, `輸送裝置為輸送機` all stopped being cut and surfaced as
+            # manufactured UNPAIRED-NEW findings. 天線 survives as a hard-coded
+            # guard because no verb reading of `接收天線` exists at all; the
+            # general form has no such argument. Verb-prefixed device compounds
+            # are therefore DECLARED individually in _INTERIOR_CUT_EXCEPTIONS.
             if text[absolute_idx + len(verb):].startswith("天線"):
-                continue
+                break
             # R41 (2026-08-17): 經 position guard - see _jing_cut_is_verbal_tw.
             if verb == "經" and not _jing_cut_is_verbal_tw(text, absolute_idx):
-                continue
+                break
             # R27 (2026-07-13, reports #352/#353): the cut lands on the HEAD of a
             # known compound noun. `_INTERIOR_CUT_EXCEPTIONS` was only ever
             # consulted as a PREFIX of the captured text, so a compound whose
@@ -3980,7 +4072,10 @@ def clean_noun_phrase_tw(text: str) -> str:
             # AT the verb is a known compound noun, the verb is noun-internal
             # (the head of 連接器 / 接收器 / 傳送器), not a clause boundary. A real
             # clause boundary (底座設有一孔洞) has no declared compound at the cut.
-            if _longest_protected_prefix(text[absolute_idx:]) > 0:
+            protected_len = _longest_protected_prefix(text[absolute_idx:])
+            if protected_len:
+                # R43: step past the compound and retry THIS verb behind it.
+                idx = search_text.find(verb, absolute_idx + protected_len - search_offset)
                 continue
             # R31 noun-compound guard (length-bounded):
             if (verb in _R31_NOUN_COMPOUND_VERBS_TW
@@ -3988,9 +4083,10 @@ def clean_noun_phrase_tw(text: str) -> str:
                 next_char_pos = absolute_idx + len(verb)
                 if (next_char_pos < len(text)
                         and text[next_char_pos] in _F10_SINGLE_CHAR_SUFFIXES_TW):
-                    continue  # 對象決定+部 etc. (text length ≤ 8)
+                    break  # 對象決定+部 etc. (text length <= 8)
             if earliest_idx is None or absolute_idx < earliest_idx:
                 earliest_idx = absolute_idx
+            break
 
     # R17 (2026-06-26): locative-before-verb cut. When the interior verb is
     # immediately preceded by a locative postposition (內/中) - i.e. the captured
