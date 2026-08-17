@@ -2915,6 +2915,46 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         # loop tries it) AND _NOUNLIKE_SINGLE_CHAR_SUFFIXES (residual ≥ 3
         # guard) - the exact dual-registration pattern of 位 (位於).
         "低",
+        # === R41 (2026-08-17, reports #531/#539/#542) - the V+於 STRANDING
+        # family. 於 is excluded from _NOUN_CHARS, so the noun scan halts AT
+        # it and leaves the verb's head glued to the captured noun. 低 (低於)
+        # above and 位 (位於) are the same shape; these are the three the
+        # 08-17 batch evidenced.
+        #
+        #   安裝 ("install", #542): `所述控制系統安裝於一無人機載具` captured
+        #     控制系統安裝. Multi-char and noun-clean at the TAIL - 安裝 is
+        #     productive only as a PREFIX (安裝端 / 安裝臂 / 安裝部 / 安裝面,
+        #     817 corpus occurrences, all followed by their head noun), which
+        #     an endswith strip cannot touch. No TIPO element name ends in 安裝.
+        "安裝",
+        #   屬 ("belong", from 屬於, #539): `所述背景類型屬於一低紋理背景`
+        #     captured 背景類型屬. NOT noun-clean - 金屬 ("metal") is the single
+        #     most common 屬-final lexeme in the corpus (128 of 252 noun-final
+        #     occurrences), and the residual guard alone is not enough:
+        #     `導電金屬` has residual 3 and would strip to 導電金. Carries the
+        #     R38 給 treatment - an exact lexeme guard measured from the corpus
+        #     (_SHU_FINAL_NOUNS_TW), not a length heuristic.
+        "屬",
+        #   小 (from 小於, #531) MEASURED AND WITHHELD. Same stranding shape,
+        #     but the comparison predicate 小於 sits behind SHORT head nouns
+        #     and drags in a whole verb family: a bare 小 strips `該差減小` to
+        #     `該差減` and `差不減小` to `差不減` (TWI710201B c1/c3/c6/c9, all
+        #     gold-legit - `該差` is a real undefined reference), and declaring
+        #     減小/縮小/變小 to fix the stranding then either erases the 1-char
+        #     head 差 outright or needs a residual floor that also blocks the
+        #     reported case. 大小 ("size", 244 corpus occurrences: 基準大小 /
+        #     輸出分成大小) is a further noun-final lexeme a length rule cannot
+        #     separate. Net at every floor tried: 29 walker_fp for 8 gold-legit
+        #     disturbed. Reopen only with a source gate on the following 於.
+        #
+        #     R29's GREEDY-TRIM lesson applies to 屬 - a 1-char strip strands
+        #     the head of the longer verb sharing it (`業者所專屬` ->
+        #     `業者所專`) - but the FN-safer resolution here is to PROTECT the
+        #     lexeme rather than declare it strippable: 附屬 / 專屬 / 隸屬 are
+        #     the drafter's own nominalized terms (`對該重新附屬的一指示`), so
+        #     stripping them emits a key that appears nowhere in the draft.
+        #     They live in _SHU_FINAL_NOUNS_TW instead, which both prevents the
+        #     stranding and keeps the finding on the term the drafter wrote.
     ),
     key=len,
     reverse=True,
@@ -3124,6 +3164,28 @@ _SUO_FINAL_NOUNS_TW: frozenset[str] = frozenset({
 # lexeme appears as the TAIL of a compound (氣體供給), not standing alone.
 _GEI_FINAL_NOUNS_TW: tuple[str, ...] = ("供給", "補給")
 
+# R41 (2026-08-17, #539) - 屬-final NOUN lexemes. Measured over the 1,073-draft
+# TW claim corpus at the positions where a capture can actually END (屬 followed
+# by a clause boundary): 金屬 128, 附屬 25, 所屬 19, 專屬 14, 隸屬 14, 菌屬 9.
+# 金屬 ("metal") and 菌屬 ("genus") are NOUNS. 附屬 / 專屬 / 隸屬 join them not
+# because they are nouns but because they are the drafter's own nominalized
+# lexemes - stripping the 屬 strands their head (`重新附`) and stripping the
+# whole verb emits `重新`, a key that appears nowhere in the draft. 所屬 is
+# deliberately ABSENT: `目標畫素資料所屬` strips cleanly through the existing
+# `所` entry. An exact-lexeme guard rather
+# than a residual-length one for the R36 `所` reason: 金屬 is 2 chars and the
+# default residual ≥ 3 already protects it, but `導電金屬` / `連接金屬` are not,
+# and a length rule cannot tell them from 背景類型屬.
+_SHU_FINAL_NOUNS_TW: tuple[str, ...] = ("金屬", "菌屬", "附屬", "專屬", "隸屬")
+
+# R41 (2026-08-17, #531) - 小-final NOUN lexemes, measured the same way:
+# 大小 244, 減小 79, 更小 57, 最小. Only 大小 ("size") heads a real element name
+# (基準大小 / 輸出分成大小 / 顆粒大小); the comparative fragments are what the
+# strip targets. 減小 / 最小 / 縮小 are 2 chars and covered by the residual ≥ 3
+# floor, so 大小 is the entry a length rule cannot reach.
+_XIAO_FINAL_NOUNS_TW: tuple[str, ...] = ("大小",)
+
+
 # ADR-095 Rule 2: leading quantifiers (stripped from both sides).
 # Ordered longest-first so 至少一個 is stripped as a single token before
 # 至少一 is stripped.
@@ -3241,6 +3303,20 @@ _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
         #     gate because 藉 is the first half of 藉由 / 藉以, which the R37
         #     leading-reject family already handles separately.
         "藉一",
+        # === R41 (2026-08-17, reports #533/#535) ===
+        #   經 ("undergoes / via") - `所述低介電損耗氫化樹脂係由一共聚物經氫化
+        #     反應而獲得` captured 共聚物經氫化反 as ONE intro, so claim 5's
+        #     `所述共聚物` had nothing to match. A trailing strip cannot reach
+        #     it (bare 經 IS already a trailing entry) because the capture ends
+        #     in the verb's OBJECT, not the verb - the R35 傳遞一 diagnostic.
+        #
+        #     經 is heavily noun-gray and the discriminator is POSITIONAL, so
+        #     it ships with _jing_cut_is_verbal_tw rather than bare: in TW claim
+        #     register 經 is a PASSIVE-ATTRIBUTIVE prefix at the head of the
+        #     term (經量化權重資訊 / 經壓縮輸入資料 / 經修飾 / 經富集 - 394 corpus
+        #     occurrences directly after 該, 295 after 其, 184 after 一) and a
+        #     VERB only after a complete noun (器經 227, 路經 114, 況經 103).
+        "經",
         # === R35 (2026-08-01, report #480) ===
         # 傳遞一 ("transmits a") - the reference capture over-ran the noun into
         # the verb 傳遞 AND its object: `所述應用程式能通過所述可攜式電子裝置傳遞
@@ -3689,6 +3765,109 @@ _INTERIOR_CUT_EXCEPTIONS: frozenset[str] = frozenset({
 })
 
 
+# R41 (2026-08-17): a parenthesized reference numeral / English gloss at the
+# END of a term. 專利法施行細則 §19 第3款 requires 元件符號 in parentheses, and
+# TIPO drafters use the same slot for a gloss, so the group annotates the
+# element and is not part of its name. Half-width AND full-width brackets -
+# the pre-existing F3 Rule 4 regex was half-width only, which is a coverage
+# gap on CJK drafts. The unterminated form is matched too, for the capture
+# that stopped inside the group (`柔性齒輪(26`).
+_TRAILING_PAREN_ANNOTATION_TW: re.Pattern[str] = re.compile(
+    r"[(\uff08][^()\uff08\uff09]*(?:[)\uff09]|$)$"
+)
+
+
+# R41 (2026-08-17, #533/#535): determiner-aware position guard for the 經
+# interior cut. Two narrowings, both forced by corpus measurement:
+#
+#  1. DETERMINER POSITION. `所述經量化權重資訊` puts 經 at absolute index 2, which
+#     clears the generic `> 1` floor, and cutting there would leave 所述 -
+#     destroying 26 occurrences of 經量化權重資訊 alone plus the whole
+#     經-participle paradigm (經壓縮 / 經修飾 / 經富集 / 經選擇 / 經培養). The verb
+#     reading needs a COMPLETE NOUN in front of it, so the floor is measured
+#     from AFTER the leading determiner, not from the start of the string.
+#  2. 神經. 神經 ("nerve / neural") is the most common 經-final lexeme in the
+#     corpus (936 TW / 267 CN occurrences) and narrowing 1 only saves it at
+#     index 0-1: `所述雙層神經網路` and `所述第一神經網路模型` put 神 well past the
+#     determiner, so the cut would emit 雙層神 / 第一神. An explicit lexeme check
+#     is required.
+_JING_DETERMINER_PREFIXES_TW: tuple[str, ...] = (
+    "所述的", "所述", "前述", "該等", "該些", "該", "一", "其", "此",
+)
+# 神 is the 經-final noun lexeme; 之 / 的 are GENITIVE PARTICLES, and a
+# participle after one is attributive, modifying the head noun that follows
+# (`…之間之經增強撓性區域` = "the enhanced-flexibility region between …"). Cutting
+# there left the junk phrase 第二換能器之間之 and grew TW spec-support by 3 on
+# TW202313138A - the SHARED cleaner is why Engine 2 sees it at all.
+_JING_NOUN_FINAL_CHARS_TW: frozenset[str] = frozenset({"神"})
+# GENITIVE PARTICLES reset the noun segment. `…之間之第一經增強撓性區域`
+# ("the first enhanced-flexibility region between …") is one NP whose head
+# noun starts after the last 之, so the participle test has to run on THAT
+# segment - measured from the string start it saw 8 chars of "noun" in front
+# of the 經 and cut, growing TW spec-support by 3 on TW202313138A (the
+# SHARED cleaner is why Engine 2 sees this at all).
+_JING_SEGMENT_RESET_TW: frozenset[str] = frozenset({"之", "的"})
+# 經-INITIAL noun lexemes. The preceding-char guard catches 神經 but not a
+# noun that STARTS with 經: `项目经理修改模块` ("project MANAGER module") was
+# cut to 项目, which then registered as a spurious intro and resolved
+# `所述项目状态` by prefix - silencing a REAL defect on CN111815283B c3. The
+# verb reading is always followed by a process verb (經氫化 / 經量化 /
+# 經壓縮 / 經由), so a closed noun set separates them cleanly.
+_JING_NOUN_INITIAL_NEXT_TW: frozenset[str] = frozenset(
+    "濟济理銷销驗验度緯纬費费營营典絡络"
+)
+# Ordinal OR bare cardinal+measure-word - both are head, not noun. Without
+# the cardinal arm `所述至少约3个经突变的…` cut to 至少3个 on CN101622274A.
+_JING_ORDINAL_RE_TW: re.Pattern[str] = re.compile(
+    r"(?:第[一二三四五六七八九十百0-9]+"
+    r"|(?:至少|至多|不超過|不超过)?(?:约|約|大约|大約)?[0-9一二三四五六七八九十百]+"
+    r"(?:个|個|條|条|種|种|者|次|項|项)?)"
+)
+
+
+def _jing_cut_is_verbal_tw(text: str, pos: int) -> bool:
+    """True iff the 經 at ``pos`` reads as a verb rather than a participle."""
+    if text[pos - 1:pos] in _JING_NOUN_FINAL_CHARS_TW:
+        return False
+    if text[pos + 1:pos + 2] in _JING_NOUN_INITIAL_NEXT_TW:
+        return False
+    seg_start = 0
+    for i in range(pos - 1, -1, -1):
+        if text[i] in _JING_SEGMENT_RESET_TW:
+            seg_start = i + 1
+            break
+    # Walk the LEADING FUNCTION-WORD ZONE - determiner, quantifier, ordinal and
+    # coverb/connective prefix, in any order and any number - then require >= 2
+    # chars of real noun in front of the 經. Doing this as one zone rather
+    # than as a fixed prefix list is what keeps the two sides SYMMETRIC: the
+    # reference `所述經X` and the intro `通過經X` /
+    # `使得經X` / `多個經X` all put the participle at the
+    # head of the noun, and a rule that saw only some of them cut the intro
+    # while leaving the reference alone, manufacturing findings out of matched
+    # pairs.
+    head = seg_start
+    for _ in range(6):
+        before = head
+        for prefix in _JING_DETERMINER_PREFIXES_TW:  # longest-first
+            if text.startswith(prefix, head):
+                head += len(prefix)
+                break
+        for quant in _LEADING_QUANTIFIER_DENYLIST:  # longest-first
+            if text.startswith(quant, head):
+                head += len(quant)
+                break
+        for lead in _LEADING_VERB_PREFIXES_TW:  # longest-first
+            if text.startswith(lead, head):
+                head += len(lead)
+                break
+        m_ord = _JING_ORDINAL_RE_TW.match(text, head)
+        if m_ord:
+            head = m_ord.end()
+        if head == before:
+            break
+    return (pos - head) >= 2
+
+
 def clean_noun_phrase_tw(text: str) -> str:
     """Strip trailing verbs and conjunction fragments from a TW reference term.
 
@@ -3785,6 +3964,9 @@ def clean_noun_phrase_tw(text: str) -> str:
             # unaffected. Mirrors the R31 noun-suffix guard for a 2-char suffix.
             if text[absolute_idx + len(verb):].startswith("天線"):
                 continue
+            # R41 (2026-08-17): 經 position guard - see _jing_cut_is_verbal_tw.
+            if verb == "經" and not _jing_cut_is_verbal_tw(text, absolute_idx):
+                continue
             # R27 (2026-07-13, reports #352/#353): the cut lands on the HEAD of a
             # known compound noun. `_INTERIOR_CUT_EXCEPTIONS` was only ever
             # consulted as a PREFIX of the captured text, so a compound whose
@@ -3872,6 +4054,14 @@ def clean_noun_phrase_tw(text: str) -> str:
                 # R38 (#516/#517) - lexeme guard: 給 is noun-final in 供給 /
                 # 補給, coverb everywhere else. See _GEI_FINAL_NOUNS_TW.
                 if current.endswith(_GEI_FINAL_NOUNS_TW) or (len(current) - 1) < 2:
+                    continue
+            elif verb == "屬":
+                # R41 (#539) - 屬 is noun-final only in 金屬 / 菌屬.
+                if current.endswith(_SHU_FINAL_NOUNS_TW) or (len(current) - 1) < 3:
+                    continue
+            elif verb == "小":
+                # R41 (#531) - 小 is noun-final only in 大小.
+                if current.endswith(_XIAO_FINAL_NOUNS_TW) or (len(current) - 1) < 3:
                     continue
             elif verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES:
                 min_residual = 2 if verb in _NOUNLIKE_RELAXED_SUFFIXES else 3
@@ -6595,14 +6785,38 @@ def check_antecedent_basis(
             resolved_intro: str | None = None
             if normalized_term in intros_by_term:
                 resolved_intro = normalized_term
-            elif not re.search(r"\([^)]+\)$", normalized_term):
+            elif not _TRAILING_PAREN_ANNOTATION_TW.search(normalized_term):
                 # Reference has no paren numeral - try matching against
                 # paren-stripped intro forms.
                 for intro in intros_by_term:
-                    stripped_intro = re.sub(r"\([^)]+\)$", "", intro)
+                    stripped_intro = _TRAILING_PAREN_ANNOTATION_TW.sub("", intro)
                     if stripped_intro != intro and stripped_intro == normalized_term:
                         resolved_intro = intro
                         break
+            else:
+                # R41 (2026-08-17): the MIRROR of F3 Rule 4, missing since the
+                # rule was written. Rule 4 resolves a bare reference against a
+                # paren-annotated intro; the other direction - an annotated
+                # reference `該氣囊(14)` against a bare intro `氣囊` - had no
+                # branch at all, so `所述設備(7.1)` / `該外波產生器(25)` /
+                # `該第一處理器(RISC-V)` could never match an intro the drafter
+                # wrote without the annotation (typically an article-less one
+                # picked up by the bare-noun rescue). 專利法施行細則 §19 第3款
+                # puts the 元件符號 in parentheses and it is not part of the
+                # element name, so the two spellings denote one element.
+                #
+                # The L1/L2 GUARD IS PRESERVED BY CONSTRUCTION, and it is why
+                # this is a match-site fix rather than a strip in
+                # clean_noun_phrase_tw: only intros carrying NO annotation are
+                # eligible here. When the intro has one it must still match
+                # EXACTLY (the branch above), so the fixture-protected
+                # `所述第二長度(L2)` vs `第二長度(L1)` typo and the misplaced
+                # numeral `所述第一銜接部銜接(222)` both keep firing. A cleaner
+                # strip was built first and broke both - it cannot see the
+                # counterpart, which is the whole discriminator.
+                stripped_ref = _TRAILING_PAREN_ANNOTATION_TW.sub("", normalized_term)
+                if len(stripped_ref) >= 2 and stripped_ref in intros_by_term:
+                    resolved_intro = stripped_ref
             if resolved_intro is None:
                 best_len = 0
                 for intro in intros_by_term:

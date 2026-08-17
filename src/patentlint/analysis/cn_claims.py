@@ -1531,9 +1531,29 @@ _MATCH_NOUN_COMPOUNDS_CN: frozenset[str] = frozenset({"阻抗匹配"})
 # unreachable because the noun scan halts at the two-character verb.
 _GEI_FINAL_NOUNS_CN: tuple[str, ...] = ("供给", "补给")
 
+# R63 (2026-08-17, TW R41 mirror of #539) - 属-final NOUN lexemes, measured over
+# the CN claim corpus at the positions where a capture can END: 金属 156 of 175,
+# 所属 18, 菌属 1. CN is MORE exposed than TW here (金属 is 89% of the noun-final
+# occurrences vs 51%), so the lexeme guard is load-bearing, not decorative.
+# 附属/专属/隶属 are TW-only lexemes with no CN corpus occurrences at a capture
+# boundary; TW protects them because the drafter nominalizes them there.
+_SHU_FINAL_NOUNS_CN: tuple[str, ...] = ("金属", "菌属")
+
 
 _TRAILING_VERB_DENYLIST_CN: tuple[str, ...] = tuple(sorted(
     (
+        # === R63 (2026-08-17) - TW R41 mirror, the V+于 STRANDING family.
+        # 于 is excluded from _NOUN_CHARS_CN exactly as 於 is on TW, so the same
+        # verbs strand. Both REPRODUCED on the CN normalizer first rather than
+        # being assumed: `所述背景类型属` and `所述控制系统安装` come back
+        # unchanged at HEAD.
+        #   安装 (from 安装于) - productive only as a PREFIX (安装端 / 安装臂 /
+        #     安装部, 889 corpus occurrences all followed by their head noun),
+        #     which an endswith strip cannot touch.
+        "安装",
+        #   属 (from 属于) - guarded by _SHU_FINAL_NOUNS_CN; a bare strip would
+        #     truncate 导电金属 to 导电金.
+        "属",
         # === R61 (2026-08-13) - mirror of TW R38 (#515/#516/#517/#526) ===
         # Every arm was REPRODUCED on the CN normalizer before mirroring, per the
         # standing cross-jurisdiction duty - none was ported on the TW evidence
@@ -1942,6 +1962,19 @@ _PLURAL_REFERENCE_PREFIXES_CN: tuple[str, ...] = tuple(sorted(
 # lines 1138-1331 for the historical risk-review rationale per verb.
 _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
     (
+        # === R63 (2026-08-17) - TW R41 mirror, reports #533/#535 ===
+        #   经 ("undergoes / via") - `一共聚物经氢化反应而获得` captured as ONE
+        #     intro so the later `所述共聚物` had nothing to match. Reproduced on
+        #     the CN normalizer at HEAD before mirroring. A trailing strip
+        #     cannot reach it (bare 经 IS already a CN trailing entry) - the
+        #     capture ends in the verb's OBJECT.
+        #
+        #     Ships with _jing_cut_is_verbal_cn, never bare: 经 is a
+        #     PASSIVE-ATTRIBUTIVE prefix at the head of a term and a VERB only
+        #     after a complete noun. CN measurement: 神经 267, 已经 130,
+        #     述经 110, 的经 98 - i.e. the participle reading dominates exactly
+        #     as on TW.
+        "经",
         # === R61 (2026-08-13) - TW R38 parity (reports #524/#526) ===
         # Both ship as the verb+CARDINAL collocation, never bare, matching the
         # 控制多个 / 传递一 class directly below.
@@ -2083,6 +2116,97 @@ _INTERIOR_CUT_EXCEPTIONS_CN: frozenset[str] = frozenset({
 # ── Walker normalization functions ───────────────────────────────────────
 
 
+# R63 (2026-08-17): parenthesized 附图标记 / gloss at the END of a term.
+# Half-width AND full-width brackets - CN drafts use （） heavily and the
+# pre-existing rule was half-width only, so `所述插头连接器（100）` was invisible
+# to it. The unterminated form is matched too (capture stopped inside).
+_TRAILING_PAREN_ANNOTATION_CN: re.Pattern[str] = re.compile(
+    r"[(\uff08][^()\uff08\uff09]*(?:[)\uff09]|$)$"
+)
+
+
+# R63 (2026-08-17, #533/#535): CN mirror of _jing_cut_is_verbal_tw. Same two
+# narrowings, both re-measured on the CN corpus: the participle reading sits at
+# the HEAD of the term (after any determiner / quantifier / ordinal), and 神经
+# ("nerve / neural", 267 occurrences) is the 经-final lexeme a position rule
+# alone cannot save once it sits past the determiner (`所述第一神经网络模型`).
+_JING_DETERMINER_PREFIXES_CN: tuple[str, ...] = (
+    "所述的", "所述", "前述", "该等", "该些", "该", "一", "其", "此",
+)
+# 神 is the 经-final noun lexeme; 之 / 的 are GENITIVE PARTICLES, and a
+# participle after one is attributive, modifying the head noun that follows
+# (`…之間之經增強撓性區域` = "the enhanced-flexibility region between …"). Cutting
+# there left the junk phrase 第二換能器之間之 and grew TW spec-support by 3 on
+# TW202313138A - the SHARED cleaner is why Engine 2 sees it at all.
+_JING_NOUN_FINAL_CHARS_CN: frozenset[str] = frozenset({"神"})
+# GENITIVE PARTICLES reset the noun segment. `…之間之第一经增強撓性區域`
+# ("the first enhanced-flexibility region between …") is one NP whose head
+# noun starts after the last 之, so the participle test has to run on THAT
+# segment - measured from the string start it saw 8 chars of "noun" in front
+# of the 经 and cut, growing TW spec-support by 3 on TW202313138A (the
+# SHARED cleaner is why Engine 2 sees this at all).
+_JING_SEGMENT_RESET_CN: frozenset[str] = frozenset({"之", "的"})
+# 经-INITIAL noun lexemes. The preceding-char guard catches 神经 but not a
+# noun that STARTS with 经: `项目经理修改模块` ("project MANAGER module") was
+# cut to 项目, which then registered as a spurious intro and resolved
+# `所述项目状态` by prefix - silencing a REAL defect on CN111815283B c3. The
+# verb reading is always followed by a process verb (经氫化 / 经量化 /
+# 经壓縮 / 经由), so a closed noun set separates them cleanly.
+_JING_NOUN_INITIAL_NEXT_CN: frozenset[str] = frozenset(
+    "濟济理銷销驗验度緯纬費费營营典絡络"
+)
+# Ordinal OR bare cardinal+measure-word - both are head, not noun. Without
+# the cardinal arm `所述至少约3个经突变的…` cut to 至少3个 on CN101622274A.
+_JING_ORDINAL_RE_CN: re.Pattern[str] = re.compile(
+    r"(?:第[一二三四五六七八九十百0-9]+"
+    r"|(?:至少|至多|不超過|不超过)?(?:约|約|大约|大約)?[0-9一二三四五六七八九十百]+"
+    r"(?:个|個|條|条|種|种|者|次|項|项)?)"
+)
+
+
+def _jing_cut_is_verbal_cn(text: str, pos: int) -> bool:
+    """True iff the 经 at ``pos`` reads as a verb rather than a participle."""
+    if text[pos - 1:pos] in _JING_NOUN_FINAL_CHARS_CN:
+        return False
+    if text[pos + 1:pos + 2] in _JING_NOUN_INITIAL_NEXT_CN:
+        return False
+    seg_start = 0
+    for i in range(pos - 1, -1, -1):
+        if text[i] in _JING_SEGMENT_RESET_CN:
+            seg_start = i + 1
+            break
+    # Walk the LEADING FUNCTION-WORD ZONE - determiner, quantifier, ordinal and
+    # coverb/connective prefix, in any order and any number - then require >= 2
+    # chars of real noun in front of the 经. Doing this as one zone rather
+    # than as a fixed prefix list is what keeps the two sides SYMMETRIC: the
+    # reference `所述经X` and the intro `通过经X` /
+    # `使得经X` / `多個经X` all put the participle at the
+    # head of the noun, and a rule that saw only some of them cut the intro
+    # while leaving the reference alone, manufacturing findings out of matched
+    # pairs.
+    head = seg_start
+    for _ in range(6):
+        before = head
+        for prefix in _JING_DETERMINER_PREFIXES_CN:  # longest-first
+            if text.startswith(prefix, head):
+                head += len(prefix)
+                break
+        for quant in _LEADING_QUANTIFIER_DENYLIST_CN:  # longest-first
+            if text.startswith(quant, head):
+                head += len(quant)
+                break
+        for lead in _LEADING_VERB_PREFIXES_CN:  # longest-first
+            if text.startswith(lead, head):
+                head += len(lead)
+                break
+        m_ord = _JING_ORDINAL_RE_CN.match(text, head)
+        if m_ord:
+            head = m_ord.end()
+        if head == before:
+            break
+    return (pos - head) >= 2
+
+
 def clean_noun_phrase_cn(text: str) -> str:
     """Strip trailing verbs and conjunction fragments from a CN reference term.
 
@@ -2144,6 +2268,9 @@ def clean_noun_phrase_cn(text: str) -> str:
             # 发射接收天线 -> 发射. No CN report - free TW->CN parity (DR-1 exempt:
             # identical structural bug on the shared normalizer design).
             if text[absolute_idx + len(verb):].startswith("天线"):
+                continue
+            # R63 (2026-08-17): 经 position guard - see _jing_cut_is_verbal_cn.
+            if verb == "经" and not _jing_cut_is_verbal_cn(text, absolute_idx):
                 continue
             # R52 (2026-07-13) - the TW R27 tail-compound guard (reports
             # #352/#353) was TRIALED HERE AND WITHHELD. It is genuinely latent on
@@ -2211,6 +2338,11 @@ def clean_noun_phrase_cn(text: str) -> str:
             # R61 (2026-08-13) - mirror of the TW R38 给 lexeme guard.
             if verb == "给" and (
                 current.endswith(_GEI_FINAL_NOUNS_CN) or (len(current) - 1) < 2
+            ):
+                continue
+            # R63 (2026-08-17) - mirror of the TW R41 属 lexeme guard.
+            if verb == "属" and (
+                current.endswith(_SHU_FINAL_NOUNS_CN) or (len(current) - 1) < 3
             ):
                 continue
             if verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN:
@@ -4424,12 +4556,27 @@ def check_antecedent_basis_cn(
             resolved_intro: str | None = None
             if normalized_term in intros_by_term:
                 resolved_intro = normalized_term
-            elif not re.search(r"\([^)]+\)$", normalized_term):
+            elif not _TRAILING_PAREN_ANNOTATION_CN.search(normalized_term):
                 for intro in intros_by_term:
-                    stripped_intro = re.sub(r"\([^)]+\)$", "", intro)
+                    stripped_intro = _TRAILING_PAREN_ANNOTATION_CN.sub("", intro)
                     if stripped_intro != intro and stripped_intro == normalized_term:
                         resolved_intro = intro
                         break
+            else:
+                # R63 (2026-08-17): CN mirror of TW R41 - the missing half of
+                # the paren-asymmetry rule. An annotated reference
+                # `所述设备(7.1)` / `所述消弧滑车(200)` against a bare intro the
+                # drafter wrote article-less had no branch, so it could never
+                # resolve. 专利法实施细则 §20 puts the 附图标记 in parentheses and
+                # it is not part of the element name.
+                #
+                # Same construction-level guard as TW: only intros carrying NO
+                # annotation are eligible, so a reference and an intro that
+                # BOTH carry one must still match exactly and a numeral typo
+                # keeps firing.
+                stripped_ref = _TRAILING_PAREN_ANNOTATION_CN.sub("", normalized_term)
+                if len(stripped_ref) >= 2 and stripped_ref in intros_by_term:
+                    resolved_intro = stripped_ref
             if resolved_intro is None:
                 best_len = 0
                 for intro in intros_by_term:
