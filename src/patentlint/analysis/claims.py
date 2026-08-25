@@ -868,6 +868,31 @@ _DEP_PREAMBLE = re.compile(
     # arose from dep-preamble detection failing → walker scanned the
     # preamble as body text and emitted `the method ofclaim 1` as a
     # bogus reference.
+    #
+    # R46 (2026-08-25, reports #603/#604/#605/#606/#607/#608): the CONNECTOR
+    # is optional. A drafter wrote `The command message exchanging method
+    # claim 10, further comprising ...`, dropping `according to`. This is the
+    # exact sibling of R40, which made the WORD `claim` optional in _DEP_REF
+    # after a drafter wrote `according to 1`; here the connector is dropped
+    # instead and `claim N` survives.
+    #
+    # The dependency itself already resolved - `_DEP_REF` is `claims?\s+\d+`
+    # and matched, so the claim parsed as dependent on 10 and inherited its
+    # ancestors. What FAILED is only this preamble exclusion, so the walker
+    # scanned the preamble as body text and emitted the reference
+    # `the command message exchanging method claim 10` - a string that
+    # appears nowhere in the draft. SIX reports (#603-#608, five antecedent
+    # plus one spec-support) trace to this one unexcluded preamble.
+    #
+    # FN-safety: the entity-consistency guard downstream is unchanged, so the
+    # exclusion still only applies when the preamble head matches the parent's
+    # head noun - a genuine entity mismatch (`The energy harvesting system
+    # claim 1` over an image-capturing parent) is still scanned and still
+    # flagged. And the reading is not new: `_DEP_REF` already committed this
+    # claim to depending on 10, so making the connector optional aligns the
+    # exclusion with a dependency the parser had already resolved rather than
+    # inventing one. The drafter's omission remains visible through the
+    # dependency-format check; the claim text is never rewritten.
     r"^(?:\d+\s*[.\-]?\s*)?(The|An?)\s+(.*?)\s+"
     r"(?:"
     r"of"
@@ -876,7 +901,7 @@ _DEP_PREAMBLE = re.compile(
     r"|as\s+claimed\s+in"
     r"|as\s+recited\s+in"
     r"|as\s+set\s+forth\s+in"
-    r")\s*claims?\s+(\d+)",
+    r")?\s*claims?\s+(\d+)",
     re.IGNORECASE,
 )
 
