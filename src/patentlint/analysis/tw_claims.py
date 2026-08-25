@@ -3003,6 +3003,59 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         # 消除, a cascade). The collocation reaches #580 and leaves #579-f2
         # open with its own number rather than trading an FN for it.
         "自動生成",
+        #
+        # === R45 (2026-08-25, report #556 end-to-end) - the V+於 family MINED
+        # rather than waited for. R44 shipped the members the reports named,
+        # but #556 was still not resolved END TO END: the REFERENCE cleaned to
+        # 置入方向 while the INTRODUCTION registered as 置入方向插設, because
+        # 插設於 strands its head exactly like 垂直於 does. A matched pair
+        # cleaned on one side only is the R29 desynchronization failure, and
+        # only an end-to-end reproducer shows it - the cleaner alone looked
+        # correct.
+        #
+        # So the corpus was mined for every 2-char head sitting immediately
+        # before 於 and each candidate measured individually. These five are
+        # the 0-unpaired/0-legit subset. Each is noun-clean at the TAIL because
+        # its noun sense is a PREFIX followed by a head noun (固定部 / 固定件,
+        # 設置面, 安置部) that an endswith strip cannot reach.
+        "插設", "設置", "安置", "固定",
+        #
+        # 儲存 (30 FPs) MEASURED CLEAN AND WITHHELD ANYWAY - the most useful
+        # result of this round. It passes EVERY corpus gate (0 silenced-legit,
+        # 0 UNPAIRED-NEW) and still causes a REAL FN, caught only by the
+        # hand-written fixture test test_possessive_de_still_flagged:
+        # `所述隨身碟的識別資料被儲存，並讀取所述識別資料` stops flagging
+        # 識別資料. The mechanism is the #525 lesson running in its
+        # FN-CAUSING direction. The span 所述隨身碟的識別資料被儲存 is
+        # registered as an introduction EITHER WAY - the possessive guard
+        # never rejected it - but while the capture stayed dirty it was keyed
+        # as 識別資料被儲存, which matches no reference, so a DIRTY CAPTURE WAS
+        # ACCIDENTALLY SUPPRESSING A BAD INTRO. Cleaning it lets the bad intro
+        # resolve a definite reference and silence a real defect.
+        # The underlying bug is intro-side and is the named next lever: a span
+        # opening with the definite determiner 所述 and containing the
+        # possessive 的 is a REFERENCE, not an introduction, and should never
+        # reach _record. Fixing that is a separate measured round; until then
+        # 儲存 stays out. NOTE FOR THE NEXT ROUND: the gold corpus did NOT
+        # catch this - only the unit test did.
+        #
+        # WITHHELD from the same mine, each with its own number - and the two
+        # largest are withheld for the SAME reason, which is not the obvious
+        # one. 耦接 (28 FPs) and 定位 (19 FPs) both measure 0 UNPAIRED-NEW, but
+        # each silences gold-legit findings that DO NOT CONTAIN the token at
+        # all: 第二端子 (TW202529383A c20) for 耦接, 第一/第二較長段
+        # (TW202211556A c7) for 定位. That is the 项目经理 shape from CN R63 -
+        # a newly-clean capture registers as a spurious INTRODUCTION and
+        # resolves a later reference by prefix, SILENCING A REAL DEFECT. An FP
+        # count cannot see it and neither can UNPAIRED-NEW; only reading the
+        # claim behind the silenced_legit can.
+        # 配置 (59 FPs) is blocked on both counts (6 legit + 2 unpaired) and is
+        # separately noun-gray (處理器配置), so it stays HELD as the R12 comment
+        # already records. 連接 (1 FP / 2 unpaired) is the noun-gray one the
+        # element names predict: 連接器 / 連接部. 形成 buys 0 FPs for 2 legit.
+        # 相對 / 對應 / 應用 measured 0 FPs AND have no report behind them, so
+        # they are omitted under DR-1 rather than shipped as free-looking
+        # morphology.
     ),
     key=len,
     reverse=True,
