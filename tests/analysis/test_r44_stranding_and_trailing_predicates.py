@@ -124,3 +124,53 @@ def test_object_final_captures_remain_open(term):
     so the gap stays visible in the next round.
     """
     assert clean_noun_phrase_tw(term) == term
+
+
+# ============================================================== TW R45
+# The V+於 family MINED rather than waited for, after #556 failed end to end.
+
+def test_556_resolves_end_to_end():
+    """R44 cleaned the REFERENCE but the finding survived on the INTRO side.
+
+    插設於 strands its head exactly like 垂直於, so the introduction registered
+    as 置入方向插設 while the reference cleaned to 置入方向 - a matched pair
+    cleaned on ONE SIDE ONLY (the R29 desynchronization failure). The isolated
+    cleaner looked correct; only this end-to-end reproducer showed it.
+    """
+    from patentlint.analysis.tw_claims import check_antecedent_basis
+    from patentlint.models import TwPatentDocument
+    from patentlint.parser.claims_tw import parse_tw_claims
+
+    parsed = parse_tw_claims([
+        "1. 一種密封型護目鏡，包含一支撐框架，沿一置入方向插設於一承載框體，及一扣合方向。",
+        "2. 如請求項1所述的密封型護目鏡，其中，所述置入方向垂直於所述扣合方向。",
+    ])
+    doc = TwPatentDocument(claims=parsed, input_format="google_patents_html")
+    findings = [f for f in check_antecedent_basis(doc)
+                if f.get("category") != "tw_contamination"]
+    assert findings == [], f"expected no findings, got {findings}"
+
+
+@pytest.mark.parametrize("term", [
+    "固定部", "固定件", "設置面", "安置部",
+])
+def test_r45_noun_prefix_senses_are_untouched(term):
+    assert clean_noun_phrase_tw(term) == term
+
+
+@pytest.mark.parametrize("token", ["耦接", "定位", "配置", "連接", "形成", "儲存"])
+def test_r45_withheld_members_stay_withheld(token):
+    """耦接 (28 FPs) and 定位 (19 FPs) look shippable and are NOT.
+
+    Both measure 0 UNPAIRED-NEW, yet each silences gold-legit findings that do
+    not contain the token at all (第二端子; 第一/第二較長段) - a newly-clean
+    capture registering as a spurious INTRODUCTION and resolving a later
+    reference by prefix, silencing a REAL defect. Re-open only by measuring
+    that cascade, not by re-arguing the FP count.
+
+    儲存 (30 FPs) is in the same class and is the sharpest case: it passes
+    EVERY corpus gate and is caught only by
+    ``TestBareNounIntroduction::test_possessive_de_still_flagged``. The gold
+    corpus cannot see this class - do not re-add it on a green corpus run.
+    """
+    assert token not in _TRAILING_VERB_DENYLIST
