@@ -2955,6 +2955,54 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         #     stripping them emits a key that appears nowhere in the draft.
         #     They live in _SHU_FINAL_NOUNS_TW instead, which both prevents the
         #     stranding and keeps the finding on the term the drafter wrote.
+        #
+        # === R44 (2026-08-25, reports #556/#558/#570/#579/#582/#584/#593-#598/
+        # #618-#628) - the V+於 STRANDING family continued, plus the plain
+        # trailing predicates from the same five-drafter batch. Every member
+        # below was measured INDIVIDUALLY with exception_head_bisect.py against
+        # a 17,678-finding TW baseline (lesson 6): all 22 at 0 unpaired-new and
+        # 0 silenced-legit, combined fp=32 / legit=0 / unpaired=0.
+        #
+        # --- V+於 stranding (於 is excluded from _NOUN_CHARS, so the scan halts
+        # AT it and leaves the verb head glued to the noun - the 低/位/安裝/屬
+        # shape). 垂直 (垂直於, #556 `置入方向垂直`) is the largest single member
+        # of this round at 12 FPs. 等 / 不等 (等於 / 不等於, #593-#598
+        # `占空比等`, `占空比不等`) are the comparison predicates.
+        "垂直", "等", "不等",
+        # 相等 / 同等 / 均等 carry the R29 GREEDY-TRIM duty for the 1-char 等:
+        # they are NOT independently evidenced FP sources (all three measure
+        # fp=0) but they share 等 as their head, and a bare 等 strip dismantles
+        # them one character at a time. Measured for real, not assumed - bare
+        # 等 strips `參考電壓實質上彼此不相等` to `…彼此不相` (TWI711261B c3).
+        # Longest-first ordering is what makes them protective, which is why
+        # this denylist is a length-sorted tuple and not a set.
+        "相等", "同等", "均等",
+        #
+        # --- plain trailing predicates. Each is a verb at the tail of the
+        # capture; the noun sense of every one is a PREFIX followed by its head
+        # noun (取得部 "acquisition unit" 62 corpus occurrences, 指定物, 動態範圍,
+        # 觸及率 62), which an endswith strip is structurally incapable of
+        # touching - the same argument that cleared 安裝 in R41.
+        "取得", "指定", "相連", "呈", "構成", "動態", "預測出", "等同",
+        # 相連接 / 所構成 are the greedy-trim siblings again: 相連 is followed by
+        # 接 in 16 of its 100 corpus occurrences (相連接) and 構成 is preceded by
+        # 所 in 409 of 761 (所構成), so without the longer member the capture
+        # ends one character past what the shorter one can reach.
+        "相連接", "所構成",
+        # 未落入 MUST precede 落入 in the strip order or `頻率未落入` (#597-f3)
+        # strips to the stranded `頻率未`; the length sort handles it.
+        "落入", "未落入",
+        # 未觸 (#558 `未觸及`) and 進一步限 (#618-f2 `電容式半導體結構進一步限`,
+        # #623) are capture-shaped fragments rather than whole lexemes - the
+        # noun scan already halted inside 觸及 / 限定, so the strip has to match
+        # what the capture actually ends in, not the dictionary form.
+        "觸及", "未觸", "進一步限",
+        # 自動生成 SHIPS but the bare 生成 is MEASURED AND WITHHELD (#579-f2
+        # `範本生成`): 4 FPs ended but 1 UNPAIRED-NEW (TWI811098B c13 emits the
+        # malformed `為多個相`) and 1 silenced gold-legit (TW202516840A c15
+        # 消除, a cascade). The collocation reaches #580 and leaves #579-f2
+        # open with its own number rather than trading an FN for it.
+        "自動生成",
     ),
     key=len,
     reverse=True,

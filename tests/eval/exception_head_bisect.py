@@ -58,6 +58,22 @@ _SET_ATTR = {
 }
 
 
+def _rebuild(original, members):
+    """Rebuild the patched set in the ORIGINAL container's shape.
+
+    The interior-cut exceptions are an unordered frozenset, but other walker
+    sets this probe can target are ORDERED and their order is load-bearing:
+    ``_TRAILING_VERB_DENYLIST`` is a tuple sorted longest-first because the
+    strip loop breaks on the first match, so 重新啟動 must be tried before
+    啟動 or the longer collocation is dismantled a character at a time.
+    Rebuilding an ordered set as a frozenset silently randomizes that and the
+    probe measures a walker nobody would ship. Preserve the container.
+    """
+    if isinstance(original, tuple):
+        return tuple(sorted(members, key=len, reverse=True))
+    return frozenset(members)
+
+
 def _walker_module(juris: str):
     if juris == "TW":
         from patentlint.analysis import tw_claims as mod
@@ -82,6 +98,10 @@ def main() -> int:
                     help="walker attribute to patch (default: the interior-cut exceptions)")
     ap.add_argument("--combined", action="store_true",
                     help="also measure every 0-unpaired member together")
+    ap.add_argument("--explain", action="store_true",
+                    help="for each BLOCKED member, print the silenced legit keys and "
+                         "the unpaired-new keys so the block can be diagnosed as an "
+                         "ADR-111 shift, a gold-correction, or a real FN")
     args = ap.parse_args()
 
     if args.withheld_r43:
@@ -96,17 +116,19 @@ def main() -> int:
 
     mod = _walker_module(args.juris)
     attr = args.set_attr or _SET_ATTR[args.juris]
-    original = frozenset(getattr(mod, attr))
+    original = getattr(mod, attr)
     # Measure against a set that has NONE of the candidates, so each row is that
     # member's own contribution rather than its contribution given the others.
-    without = original - set(candidates)
+    without = set(original) - set(candidates)
 
     base = {tuple(x) for x in json.loads(args.baseline.read_text())}
     records = h.load_corpus(args.juris)
     verdicts = h.load_ensemble_verdicts(args.juris)
 
-    def measure(members) -> tuple[int, int, int]:
-        setattr(mod, attr, frozenset(without | set(members)))
+    detail: dict[str, dict] = {}
+
+    def measure(members, label=None) -> tuple[int, int, int]:
+        setattr(mod, attr, _rebuild(original, without | set(members)))
         post = h.run_walker(records, args.juris)
         new_by, sil_by = collections.defaultdict(list), collections.defaultdict(list)
         for k in post - base:
@@ -117,6 +139,20 @@ def main() -> int:
         fp = sum(1 for k in base - post if verdicts.get(k) == "walker_fp")
         legit = sum(1 for k in base - post
                     if verdicts.get(k) == "legit_drafting_error")
+        if label is not None:
+            detail[label] = {
+                "legit": [k for k in base - post
+                          if verdicts.get(k) == "legit_drafting_error"],
+                "unpaired": [(key[0], key[1], t)
+                             for key, v in new_by.items() if key not in sil_by
+                             for t in v],
+                # paired shifts: same doc+claim silenced AND re-emitted, i.e. a
+                # re-keying rather than a resolution (lesson 3 - read silenced
+                # MINUS paired shifts, never silenced alone)
+                "paired": [(key[0], key[1], t)
+                           for key, v in new_by.items() if key in sil_by
+                           for t in v],
+            }
         return fp, legit, unpaired
 
     try:
@@ -124,7 +160,7 @@ def main() -> int:
               f"({len(candidates)} candidates, baseline {len(base)} findings) ===")
         results = {}
         for member in candidates:
-            results[member] = measure([member])
+            results[member] = measure([member], label=member)
             fp, legit, unpaired = results[member]
             verdict = ("CLEAN" if unpaired == 0 and legit == 0
                        else f"BLOCKED (unpaired={unpaired}, legit={legit})")
@@ -138,6 +174,19 @@ def main() -> int:
             print("WITHHOLD with the measurement:")
             for m, (fp, lg, up) in blocked.items():
                 print(f"  {m}: {fp} FPs ended / {up} UNPAIRED-NEW / {lg} legit")
+        if args.explain:
+            for m, (fp, lg, up) in results.items():
+                d = detail.get(m, {})
+                if not (d.get("legit") or d.get("unpaired") or d.get("paired")):
+                    continue
+                print(f"\n--- {m} ---")
+                for k in d.get("legit", []):
+                    print(f"  SILENCED-LEGIT  {k[0]} c{k[1]} {k[2]!r}")
+                for k in d.get("unpaired", []):
+                    print(f"  UNPAIRED-NEW    {k[0]} c{k[1]} {k[2]!r}")
+                for k in d.get("paired", []):
+                    print(f"  PAIRED-SHIFT    {k[0]} c{k[1]} {k[2]!r}")
+
         if args.combined and clean:
             fp, legit, unpaired = measure(clean)
             print(f"\nCOMBINED({len(clean)}): fp={fp} legit={legit} unpaired={unpaired}"
