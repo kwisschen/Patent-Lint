@@ -983,6 +983,53 @@ class AnalysisResult(BaseModel):
                 message_key="check.claims.sequential.pass",
             ))
 
+        # 37 CFR 1.75(c) / MPEP § 608.01(n) - dependent-claim cross-reference
+        # FORM. US R46 stopped the antecedent walker emitting a garbage term
+        # for `The X method claim 10`, which is correct, but that garbage term
+        # was the ONLY thing surfacing the drafter's malformed preamble - six
+        # reporters attested the defect was real. CN/TW/EPC each carry a
+        # dependencyFormat check; US did not. This closes that gap.
+        from patentlint.analysis.claims import find_malformed_dependency_claims
+        malformed_dep_claims = find_malformed_dependency_claims(self.claims)
+        if malformed_dep_claims:
+            claims_checks.append(CheckItem(
+                status="amend",
+                message=(
+                    "Dependent claim(s) do not use a recognized cross-reference "
+                    "form (37 CFR 1.75(c); MPEP § 608.01(n))."
+                ),
+                message_key="check.claims.dependencyFormat.amend",
+                details=f"Claims: {malformed_dep_claims}",
+                details_key="details.dependencyFormatClaims",
+                details_params={
+                    "count": len(malformed_dep_claims),
+                    "claims": malformed_dep_claims,
+                },
+                diagnostics=_dx(
+                    flagged_count=len(malformed_dep_claims),
+                    total_dependents=sum(
+                        1 for c in self.claims
+                        if not c.independent and c.dependencies
+                    ),
+                    flagged_claim_id=malformed_dep_claims[0],
+                    findings=[
+                        {
+                            "claim_id": cid,
+                            "preamble": (next(
+                                (c.text for c in self.claims if c.id == cid), ""
+                            ) or "")[:80],
+                        }
+                        for cid in malformed_dep_claims[:5]
+                    ],
+                ),
+            ))
+        else:
+            claims_checks.append(CheckItem(
+                status="pass",
+                message="All dependent claims use a recognized cross-reference form.",
+                message_key="check.claims.dependencyFormat.pass",
+            ))
+
         if self.multiple_dependent_claims:
             claims_checks.append(CheckItem(
                 status="verify",

@@ -965,7 +965,8 @@
       "claimReferenceInSpec": "明細書が請求項を参照しています：{{detail}}"
     },
     "numeralConsistency": "{{count}} 個の参照符号が不一致。例：{{inline_summary}}",
-    "scopeLimitWording": "{{count}} 件の限定的表現を検出しました。例：{{samples}}"
+    "scopeLimitWording": "{{count}} 件の限定的表現を検出しました。例：{{samples}}",
+    "dependencyFormatClaims": "37 CFR 1.75(c) により、従属請求項は明確な引用文言で先行する請求項を引用する必要があります（of claim N、according to claim N、as recited in claim N など）。項番号のみを記載し引用文言を欠く形式（例えば the method claim 10）は認められた引用形式ではありません。指摘された請求項をご確認ください。"
   },
   "common": {
     "close": "閉じる",
@@ -1085,6 +1086,10 @@
       "excessClaims": {
         "verify": "超過請求項手数料が発生する可能性があります（37 CFR 1.16(h)/(i)）。独立請求項 3 項超過分および総請求項 20 項超過分の出願料計算をご確認ください。",
         "pass": "超過請求項手数料の発生条件は検出されませんでした（37 CFR 1.16(h)/(i)：請求項総数 20 以下、かつ独立請求項 3 以下）。"
+      },
+      "dependencyFormat": {
+        "amend": "{{count}} 件の請求項で引用形式を認識できません: {{claims}}（37 CFR 1.75(c)、MPEP § 608.01(n)）。",
+        "pass": "従属請求項の引用形式に問題は検出されませんでした。"
       }
     },
     "abstract": {

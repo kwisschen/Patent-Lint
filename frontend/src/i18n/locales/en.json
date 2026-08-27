@@ -965,7 +965,8 @@
       "claimReferenceInSpec": "Description references a claim: {{detail}}"
     },
     "numeralConsistency": "{{count}} reference numeral(s) used inconsistently. Examples: {{inline_summary}}",
-    "scopeLimitWording": "{{count}} restrictive-wording occurrence(s) detected. Examples: {{samples}}"
+    "scopeLimitWording": "{{count}} restrictive-wording occurrence(s) detected. Examples: {{samples}}",
+    "dependencyFormatClaims": "Under 37 CFR 1.75(c), a dependent claim must refer back to a preceding claim by an explicit cross-reference (\"of claim N\", \"according to claim N\", \"as recited in claim N\"). A preamble that gives the claim number with no connecting phrase (for example \"the method claim 10\") is not a recognized form. Review the flagged claims."
   },
   "common": {
     "close": "Close",
@@ -1085,6 +1086,10 @@
       "excessClaims": {
         "verify": "Excess-claims fees may apply (37 CFR 1.16(h)/(i)). Verify your filing-fee calculation accounts for each independent claim above 3 and each total claim above 20.",
         "pass": "No excess-claims fee triggers detected (37 CFR 1.16(h)/(i): no more than 20 total claims and no more than 3 independent claims)."
+      },
+      "dependencyFormat": {
+        "amend": "Unrecognized dependency reference form in {{count}} claim(s): {{claims}} (37 CFR 1.75(c); MPEP § 608.01(n)).",
+        "pass": "No dependency-format issues detected."
       }
     },
     "abstract": {

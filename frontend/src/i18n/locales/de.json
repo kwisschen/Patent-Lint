@@ -965,7 +965,8 @@
       "claimReferenceInSpec": "Die Beschreibung verweist auf einen Anspruch: {{detail}}"
     },
     "numeralConsistency": "{{count}} inkonsistent verwendete Bezugszeichen. Beispiele: {{inline_summary}}",
-    "scopeLimitWording": "{{count}} einschränkende Formulierung(en) festgestellt. Beispiele: {{samples}}"
+    "scopeLimitWording": "{{count}} einschränkende Formulierung(en) festgestellt. Beispiele: {{samples}}",
+    "dependencyFormatClaims": "Nach 37 CFR 1.75(c) muss ein abhängiger Anspruch mit einer ausdrücklichen Bezugnahme auf einen vorhergehenden Anspruch zurückverweisen („of claim N“, „according to claim N“, „as recited in claim N“). Eine Präambel, die nur die Anspruchsnummer nennt, ohne verbindende Wendung (etwa „the method claim 10“), ist kein anerkanntes Format. Bitte prüfen Sie die markierten Ansprüche."
   },
   "common": {
     "close": "Schließen",
@@ -1085,6 +1086,10 @@
       "excessClaims": {
         "verify": "Mehrkosten für Ansprüche möglich (37 CFR 1.16(h)/(i)). Prüfen Sie Ihre Anmeldegebühr für jeden unabhängigen Anspruch über 3 sowie jeden Anspruch über 20.",
         "pass": "Keine Auslöser für Anspruchsgebühren festgestellt (37 CFR 1.16(h)/(i): höchstens 20 Ansprüche insgesamt und höchstens 3 unabhängige Ansprüche)."
+      },
+      "dependencyFormat": {
+        "amend": "Nicht erkanntes Rückbezugsformat in {{count}} Anspruch/Ansprüchen: {{claims}} (37 CFR 1.75(c); MPEP § 608.01(n)).",
+        "pass": "Keine Probleme mit dem Rückbezugsformat festgestellt."
       }
     },
     "abstract": {
