@@ -807,7 +807,7 @@
     "specSupportUnsupported": "Die hier gezeigten {{count}} Anspruchsbegriff(e) wurden im Beschreibungsteil nicht gefunden. Jeder Anspruchsbegriff sollte in der Beschreibung gestützt sein.",
     "restrictiveWordingSpec": "Absätze: {{list}}. Diese Begriffe können gemäß MPEP § 2173.05(b) als unklar oder einschränkend ausgelegt werden. Prüfen Sie jeden gekennzeichneten Absatz darauf, ob der Begriff den Schutzbereich übermäßig einschränkt oder Unklarheit erzeugt.",
     "paragraphNumberingMissing": "Fortlaufende [0001]-Nummerierung gemäß MPEP § 608.01(p) ergänzen.",
-    "paragraphEnding": "Absätze: {{list}}. Jeder Absatz der Beschreibung muss gemäß MPEP § 608.01(p) mit einem Punkt enden.",
+    "paragraphEnding": "Absätze: {{list}}. Jeden Absatz der Beschreibung mit einem Punkt zu beenden, ist eine Redaktionskonvention und keine Anforderung des USPTO; MPEP § 608.01 enthält keine Regel zur Absatzinterpunktion. Hinweis zur Einheitlichkeit, nicht zur Konformität.",
     "sequenceListingFix": "Fügen Sie einen Abschnitt „Statement Regarding Sequence Listing“ gemäß 37 C.F.R. § 1.821-1.825 hinzu.",
     "crossReferenceCitations": "{{text}}. Prüfen Sie, ob die Aktenzeichen korrekt sind und die Prioritätskette vollständig ist (Continuations, CIPs, Provisionals, Divisionals).",
     "priorArtCitations": "{{text}}. Prüfen Sie, ob Patent-/Veröffentlichungsnummern korrekt sind. Charakterisierungen des Stands der Technik können im Prüfungsverfahren als Zugeständnisse gewertet werden.",
@@ -997,7 +997,7 @@
       },
       "paragraphEnding": {
         "pass": "Keine Absatz-Endsatzzeichen-Probleme festgestellt.",
-        "verify": "Absätze mit ungültigen oder fehlenden Satzzeichen am Ende (MPEP § 608.01(p))."
+        "verify": "Absätze mit ungültigen oder fehlenden Satzzeichen am Ende."
       },
       "sequenceListing": {
         "amend": "SEQ ID NO referenziert, aber keine Sequenzprotokoll-Erklärung gefunden.",

@@ -807,7 +807,7 @@
     "specSupportUnsupported": "The {{count}} claim term(s) shown here were not found in the specification body. Each claim term should have written-description support.",
     "restrictiveWordingSpec": "Paragraphs: {{list}}. These terms may be treated as indefinite or limiting under MPEP § 2173.05(b). Review each flagged paragraph and consider whether the term unduly limits scope or introduces indefiniteness.",
     "paragraphNumberingMissing": "Add sequential [0001]-style numbering per MPEP § 608.01(p).",
-    "paragraphEnding": "Paragraphs: {{list}}. Each specification paragraph must end with a period per MPEP § 608.01(p).",
+    "paragraphEnding": "Paragraphs: {{list}}. Ending each specification paragraph with a period is a drafting convention rather than a USPTO requirement; MPEP § 608.01 sets no paragraph-punctuation rule. Flagged for consistency, not compliance.",
     "sequenceListingFix": "Add a \"Statement Regarding Sequence Listing\" section per 37 C.F.R. § 1.821-1.825.",
     "crossReferenceCitations": "{{text}}. Verify serial numbers are correct and the priority chain is complete (continuations, CIPs, provisionals, divisionals).",
     "priorArtCitations": "{{text}}. Verify patent/publication numbers are accurate. Characterizations of prior art may be treated as admissions during prosecution.",
@@ -997,7 +997,7 @@
       },
       "paragraphEnding": {
         "pass": "No paragraph-ending punctuation issues detected.",
-        "verify": "Paragraphs with invalid or missing ending punctuation (MPEP § 608.01(p))."
+        "verify": "Paragraphs with invalid or missing ending punctuation."
       },
       "sequenceListing": {
         "amend": "SEQ ID NO referenced but no sequence listing statement found.",
