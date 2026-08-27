@@ -14,7 +14,13 @@ import ReportModal from "./ReportModal"
 const CITATION_MAP = {
   'check.spec.restrictiveWording': '§ 112(b)',
   'check.spec.paragraphSequential': '§ 608.01(p)',
-  'check.spec.paragraphEnding': '§ 608.01(p)',
+  // paragraphEnding carries NO citation: verified against the primary
+  // source (report #600) that MPEP § 608.01 states no paragraph-punctuation
+  // requirement at all. It had cited § 608.01(p), which is Completeness of
+  // Specification. The reporter proposed § 608.01(m), which is Form of
+  // Claims and governs claims, not specification paragraphs. Both are wrong,
+  // so the badge is dropped rather than re-pinned - this is a drafting
+  // convention, and the AboutPage already labels the EPC twin as hygiene.
   'check.spec.sequenceListing': '§ 2422',
   'check.spec.crossReference': '§ 608.01',
   'check.spec.priorArt': '§ 608.01(c)',

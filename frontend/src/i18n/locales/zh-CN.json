@@ -807,7 +807,7 @@
     "specSupportUnsupported": "此处所示 {{count}} 个用语未于说明书中披露。各权利要求用语皆应获说明书支持。",
     "restrictiveWordingSpec": "段落：{{list}}。上列用语依 MPEP § 2173.05(b) 可能被视为不确定或限制范围。请检查各标记段落，考虑该用语是否过度限缩范围或引入不确定性。",
     "paragraphNumberingMissing": "请依 MPEP § 608.01(p) 添加 [0001] 格式的连续段落编号。",
-    "paragraphEnding": "段落：{{list}}。说明书各段落须依 MPEP § 608.01(p) 以句号结尾。",
+    "paragraphEnding": "段落：{{list}}。说明书各段落以句号结尾属撰稿惯例，并非 USPTO 的法定要求；MPEP § 608.01 未就段落标点作出规定。此处仅就一致性提示，不涉合规性。",
     "sequenceListingFix": "请依 37 C.F.R. § 1.821-1.825 添加“Statement Regarding Sequence Listing”部分。",
     "crossReferenceCitations": "{{text}}。请确认序列号正确，且优先权链完整（延续案、CIP、临时申请、分案）。",
     "priorArtCitations": "{{text}}。请确认专利/公开号准确。对现有技术的描述可能在审查中被视为自认。",
@@ -997,7 +997,7 @@
       },
       "paragraphEnding": {
         "pass": "未检测到段落结尾标点问题。",
-        "verify": "段落结尾标点符号无效或缺失（MPEP § 608.01(p)）。"
+        "verify": "段落结尾标点符号无效或缺失。"
       },
       "sequenceListing": {
         "amend": "引用了 SEQ ID NO，但缺少序列表声明。",

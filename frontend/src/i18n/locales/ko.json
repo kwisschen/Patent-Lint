@@ -807,7 +807,7 @@
     "specSupportUnsupported": "여기에 표시된 {{count}}건의 용어가 명세서 본문에서 확인되지 않았습니다. 각 청구항 용어는 명세서의 뒷받침이 필요합니다.",
     "restrictiveWordingSpec": "단락: {{list}}. 위 용어는 MPEP § 2173.05(b)에 따라 불명확하거나 범위를 제한하는 것으로 취급될 수 있습니다. 각 표시된 단락을 검토하여 해당 용어가 부당하게 범위를 제한하거나 불명확성을 초래하는지 확인하세요.",
     "paragraphNumberingMissing": "MPEP § 608.01(p)에 따라 [0001] 형식의 순차적 단락 번호를 추가하세요.",
-    "paragraphEnding": "단락: {{list}}. MPEP § 608.01(p)에 따라 명세서의 각 단락은 마침표로 끝나야 합니다.",
+    "paragraphEnding": "단락: {{list}}. 명세서의 각 단락을 마침표로 끝내는 것은 작성 관행이며 USPTO의 법정 요건이 아닙니다. MPEP § 608.01에는 단락 문장 부호에 관한 규정이 없습니다. 적법성이 아니라 일관성 차원의 지적입니다.",
     "sequenceListingFix": "37 C.F.R. § 1.821-1.825에 따라 “Statement Regarding Sequence Listing” 섹션을 추가하세요.",
     "crossReferenceCitations": "{{text}}. 출원번호가 정확하고 우선권 체인(계속출원, CIP, 가출원, 분할출원)이 완전한지 확인하세요.",
     "priorArtCitations": "{{text}}. 특허/공개번호가 정확한지 확인하세요. 선행 기술에 대한 기술(記述)은 심사 중 자인으로 취급될 수 있습니다.",
@@ -997,7 +997,7 @@
       },
       "paragraphEnding": {
         "pass": "단락 종결 구두점 관련 문제가 감지되지 않았습니다.",
-        "verify": "종료 부호가 유효하지 않거나 누락된 단락이 있습니다(MPEP § 608.01(p))."
+        "verify": "단락 끝 문장 부호가 유효하지 않거나 누락되었습니다."
       },
       "sequenceListing": {
         "amend": "SEQ ID NO가 참조되었으나 서열 목록 기재문이 발견되지 않았습니다.",

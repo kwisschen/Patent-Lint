@@ -796,6 +796,15 @@ class AnalysisResult(BaseModel):
                 message_key="check.spec.paragraphSequential.pass",
             ))
 
+        # Report #600 asked for a statute re-pin here, and checking the primary
+        # source showed BOTH candidates were wrong. This had cited MPEP
+        # § 608.01(p) (Completeness of Specification); the reporter proposed
+        # § 608.01(m) (Form of Claims), which governs claims, not specification
+        # paragraphs. MPEP § 608.01 states no paragraph-punctuation requirement
+        # at all - 37 CFR 1.52(b)(6) covers paragraph NUMBERING and says nothing
+        # about terminal punctuation. So the citation is dropped rather than
+        # re-pinned: this is a drafting convention, which is how the AboutPage
+        # already describes the EPC twin.
         if self.missing_ending_paragraphs:
             spec_checks.append(CheckItem(
                 status="verify",
