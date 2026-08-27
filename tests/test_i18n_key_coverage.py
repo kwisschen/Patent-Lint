@@ -35,6 +35,12 @@ import pytest
 REPO = Path(__file__).parent.parent
 ANALYSIS_DIR = REPO / "src" / "patentlint" / "analysis"
 PARSER_DIR = REPO / "src" / "patentlint" / "parser"
+# models.py is where EVERY US claims/spec check is emitted (the US path builds
+# its CheckItems in AnalysisResult, not in an analysis/ module). It was outside
+# this gate until 2026-08-28, so the US half of the check surface was ungated -
+# found while adding check.claims.dependencyFormat, which US had been missing
+# entirely while CN/TW/EPC all carried it.
+MODELS_PY = REPO / "src" / "patentlint" / "models.py"
 EN_JSON = REPO / "frontend" / "src" / "i18n" / "locales" / "en.json"
 
 # Map of (source_key_substring → target_key) for runtime rekeying.
@@ -80,7 +86,7 @@ def _collect_python_emits():
     det_keys = set()
     msg_literal_re = re.compile(r'message_key=["\']([^"\']+)["\']')
     det_literal_re = re.compile(r'details_key=["\']([^"\']+)["\']')
-    for src in [*ANALYSIS_DIR.rglob("*.py"), *PARSER_DIR.rglob("*.py")]:
+    for src in [*ANALYSIS_DIR.rglob("*.py"), *PARSER_DIR.rglob("*.py"), MODELS_PY]:
         text = src.read_text()
         for m in msg_literal_re.finditer(text):
             msg_keys.add(m.group(1))

@@ -105,6 +105,76 @@ def find_self_dependent_claims(claims: list[Claim]) -> list[int]:
     return [c.id for c in claims if c.id in c.dependencies]
 
 
+# US R46 follow-up (2026-08-28) - the dependency-FORMAT guard.
+#
+# 37 CFR 1.75(c) / MPEP § 608.01(n): a dependent claim must refer back to a
+# preceding claim, and the reference must be an explicit cross-reference.
+# `The command message exchanging method claim 10` drops the connector
+# entirely. The PARSER still resolves the parent (`_DEP_REF` matches a bare
+# `claim N`), so the claim is correctly classified dependent and nothing
+# downstream complains - the malformed preamble was only ever surfaced BY
+# ACCIDENT, through a garbage antecedent-basis term, and US R46 correctly
+# stopped emitting that. This check is what replaces the accident.
+#
+# Note this is deliberately NOT the EPC/TW shape of "dependent claim with no
+# resolved parent". That test is VACUOUS for this defect: the US parser
+# resolves `claim 10` fine, so a dependent-without-parent check passes on the
+# exact drafts six reporters attested. The check has to interrogate the FORM.
+#
+# Connectors below are the MPEP § 608.01(n) recognized cross-reference forms.
+_US_DEP_CONNECTIVE = (
+    r"(?:"
+    r"of|in|to|"
+    r"according\s+to|"
+    r"as\s+(?:in|claimed\s+in|recited\s+in|set\s+forth\s+in|defined\s+in|described\s+in)|"
+    r"claimed\s+in|recited\s+in|set\s+forth\s+in|defined\s+in|described\s+in|"
+    r"in\s+accordance\s+with|"
+    r"depending\s+(?:on|from)"
+    r")"
+)
+# Multiple-dependent lead-ins (`of any one of claims 1-5`).
+_US_DEP_QUANTIFIER = r"(?:any\s+(?:one\s+)?of\s+|either\s+of\s+|one\s+of\s+)?"
+
+# INVERTED form, admitted on measured evidence, not on principle: the corpus
+# carries `The method as claim 1 recites` 17 times in one draft (plus system /
+# CRM variants). The connector follows the claim number instead of preceding
+# it; the cross-reference is explicit, so it is well-formed.
+_US_DEP_INVERTED = (
+    r"\bas\s+claims?\s*\d+\s+"
+    r"(?:recites?|sets?\s+forth|describes?|defines?|claims?|states?)"
+)
+# ELIDED NOUN: `as claimed in 14` (US4763545A c17) omits the word `claim`.
+# Sloppy, but the connector IS present and the reference is unambiguous - it is
+# not the connector-less defect this check targets, so it is not flagged.
+_US_DEP_ELIDED_NOUN = (
+    r"\b(?:claimed|recited|set\s+forth|defined|described)\s+in\s+\d+\b"
+)
+
+_US_DEP_FORMAT = re.compile(
+    r"(?:\b" + _US_DEP_CONNECTIVE + r"\s+" + _US_DEP_QUANTIFIER + r"claims?\s*\d+)"
+    r"|(?:" + _US_DEP_INVERTED + r")"
+    r"|(?:" + _US_DEP_ELIDED_NOUN + r")",
+    re.IGNORECASE,
+)
+
+
+def find_malformed_dependency_claims(claims: list[Claim]) -> list[int]:
+    """Dependent claims whose cross-reference uses no recognized form.
+
+    Measured on the 705-draft US corpus: 12,186 dependent claims, ZERO
+    flagged after the inverted and elided-noun forms were admitted, while
+    both connector-less shapes from the R46 reports still flag. A format
+    guard that flags nothing real and nothing false is the bar here - the
+    check exists to surface a drafting defect, not to editorialize about
+    style.
+    """
+    return [
+        c.id for c in claims
+        if not c.independent and c.dependencies
+        and not _US_DEP_FORMAT.search(c.text)
+    ]
+
+
 def count_independent(claims: list[Claim]) -> int:
     return sum(1 for c in claims if c.independent)
 

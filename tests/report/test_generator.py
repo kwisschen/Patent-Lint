@@ -141,10 +141,12 @@ class TestToReportData:
 
     def test_claims_checks_count(self, sample_result):
         data = sample_result.to_report_data()
-        # 10 after the restrictiveWording split (restrictiveAbsolutes +
-        # indefiniteWording emit independently) and the chainedMultiDep
-        # addition (§ 112(e) detector). punctuation_checks empty by default.
-        assert len(data.claims_checks) == 10
+        # 11 after the restrictiveWording split (restrictiveAbsolutes +
+        # indefiniteWording emit independently), the chainedMultiDep
+        # addition (§ 112(e) detector), and dependencyFormat (37 CFR 1.75(c) /
+        # MPEP § 608.01(n)), which emits a pass row on every US analysis.
+        # punctuation_checks empty by default.
+        assert len(data.claims_checks) == 11
 
     def test_abstract_checks_count(self, sample_result):
         data = sample_result.to_report_data()

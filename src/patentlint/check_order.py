@@ -241,6 +241,8 @@ CANONICAL_CHECK_ORDER: dict[str, tuple[CheckBucket, CheckGroup, int]] = {
     # --- Group 4: Claims structure ---
     "check.claims.sequential.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 10),
     "check.claims.sequential.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 10),
+    "check.claims.dependencyFormat.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 20),
+    "check.claims.dependencyFormat.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 20),
     "check.cn.claims.sequential.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 10),
     "check.cn.claims.sequential.pass": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 10),
     "check.tw.claims.sequential.amend": (CheckBucket.CLAIMS, CheckGroup.CLAIMS_STRUCTURE, 10),

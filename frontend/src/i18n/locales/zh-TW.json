@@ -965,7 +965,8 @@
       "claimReferenceInSpec": "說明書引用請求項：{{detail}}"
     },
     "numeralConsistency": "{{count}} 個元件符號使用不一致。範例：{{inline_summary}}",
-    "scopeLimitWording": "偵測到 {{count}} 處限制性用語。範例：{{samples}}"
+    "scopeLimitWording": "偵測到 {{count}} 處限制性用語。範例：{{samples}}",
+    "dependencyFormatClaims": "依 37 CFR 1.75(c)，附屬項須以明確的引用用語回溯引用在先請求項（of claim N、according to claim N、as recited in claim N 等）。僅列出項次而未使用引用用語者（例如 the method claim 10），不屬於可辨識的引用格式，請檢視標示的請求項。"
   },
   "common": {
     "close": "關閉",
@@ -1085,6 +1086,10 @@
       "excessClaims": {
         "verify": "可能產生美國超項費（37 CFR 1.16(h)/(i)）：獨立項超過 3 項及總請求項超過 20 項各自加收費用。請核實申請費用計算。",
         "pass": "未偵測到美國超項費觸發條件（37 CFR 1.16(h)/(i)：總請求項不超過 20 項且獨立項不超過 3 項）。"
+      },
+      "dependencyFormat": {
+        "amend": "{{count}} 項請求項的引用格式無法辨識：{{claims}}（37 CFR 1.75(c)、MPEP § 608.01(n)）。",
+        "pass": "未發現附屬項引用格式問題。"
       }
     },
     "abstract": {

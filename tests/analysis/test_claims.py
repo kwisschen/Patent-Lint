@@ -9,6 +9,7 @@ from patentlint.analysis.claims import (
     find_missing_periods,
     has_extra_periods,
     find_self_dependent_claims,
+    find_malformed_dependency_claims,
     find_chained_multi_dependents,
     are_claims_sequential,
     get_last_sequential_index,
@@ -1435,3 +1436,56 @@ class TestR35SwitchesAndGerundHead:
         assert extract_gerund_head_intros(
             "an apparatus comprising a housing and an opening"
         ) == []
+
+
+class TestDependencyFormat:
+    """37 CFR 1.75(c) / MPEP § 608.01(n) - dependent-claim cross-reference form.
+
+    US R46 (#457) correctly stopped the antecedent walker emitting a garbage
+    term for the connector-less preamble `The X method claim 10`. That garbage
+    term was the ONLY thing surfacing the drafter's malformed preamble, and six
+    reporters attested the underlying defect was real, so removing it left the
+    defect surfaced nowhere for US while CN/TW/EPC each kept a dependencyFormat
+    check. These tests pin the replacement.
+    """
+
+    def test_connectorless_preamble_flagged(self):
+        # The exact shape from the six R46 reports: claim number present, no
+        # connecting phrase. The PARSER resolves the parent fine, which is why
+        # an EPC-style dependent-without-parent check would be VACUOUS here.
+        claims = parse_claims(
+            "1. A command message exchanging method, comprising: receiving a "
+            "command message.\n"
+            "10. The command message exchanging method of claim 1, further "
+            "comprising: logging the command message.\n"
+            "11. The command message exchanging method claim 10, wherein the "
+            "logging comprises storing a timestamp."
+        )
+        assert [c.id for c in claims if not c.independent] == [10, 11]
+        assert claims[2].dependencies == [10], "parser must still resolve the parent"
+        assert find_malformed_dependency_claims(claims) == [11]
+
+    def test_recognized_forms_not_flagged(self):
+        # MPEP § 608.01(n) cross-reference forms, plus the two forms admitted
+        # on measured corpus evidence (see find_malformed_dependency_claims).
+        for form in (
+            "The method of claim 1, wherein X is Y.",
+            "The method according to claim 1, wherein X is Y.",
+            "The method as recited in claim 1, wherein X is Y.",
+            "The method as claimed in claim 1, wherein X is Y.",
+            "The method as set forth in claim 1, wherein X is Y.",
+            "The method in accordance with claim 1, wherein X is Y.",
+            "The method of any one of claims 1-3, wherein X is Y.",
+            "The method as claim 1 recites, wherein X is Y.",
+        ):
+            claims = parse_claims(
+                "1. A method, comprising: doing a thing.\n2. " + form
+            )
+            assert find_malformed_dependency_claims(claims) == [], form
+
+    def test_independent_claims_never_flagged(self):
+        claims = parse_claims(
+            "1. A method, comprising: doing a thing.\n"
+            "2. An apparatus, comprising: a widget."
+        )
+        assert find_malformed_dependency_claims(claims) == []

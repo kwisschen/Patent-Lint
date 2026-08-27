@@ -965,7 +965,8 @@
       "claimReferenceInSpec": "명세서가 청구항을 참조합니다: {{detail}}"
     },
     "numeralConsistency": "{{count}}개의 부호 불일치. 예시: {{inline_summary}}",
-    "scopeLimitWording": "{{count}}건의 제한적 표현이 감지되었습니다. 예시: {{samples}}"
+    "scopeLimitWording": "{{count}}건의 제한적 표현이 감지되었습니다. 예시: {{samples}}",
+    "dependencyFormatClaims": "37 CFR 1.75(c)에 따라 종속항은 명확한 인용 문구로 선행 청구항을 인용해야 합니다(of claim N, according to claim N, as recited in claim N 등). 항 번호만 기재하고 인용 문구가 없는 형식(예: the method claim 10)은 인정되는 인용 형식이 아닙니다. 표시된 청구항을 확인하십시오."
   },
   "common": {
     "close": "닫기",
@@ -1085,6 +1086,10 @@
       "excessClaims": {
         "verify": "초과 청구항 수수료가 발생할 수 있습니다(37 CFR 1.16(h)/(i)). 독립항 3개 초과분 및 전체 청구항 20개 초과분에 대한 출원 수수료 계산을 확인하십시오.",
         "pass": "초과 청구항 수수료 발생 조건이 감지되지 않았습니다(37 CFR 1.16(h)/(i): 전체 청구항 20개 이하, 독립항 3개 이하)."
+      },
+      "dependencyFormat": {
+        "amend": "{{count}}개 청구항의 인용 형식을 인식할 수 없습니다: {{claims}} (37 CFR 1.75(c), MPEP § 608.01(n)).",
+        "pass": "종속항 인용 형식 문제가 발견되지 않았습니다."
       }
     },
     "abstract": {

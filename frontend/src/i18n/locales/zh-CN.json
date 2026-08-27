@@ -965,7 +965,8 @@
       "claimReferenceInSpec": "说明书引用权利要求：{{detail}}"
     },
     "numeralConsistency": "{{count}} 个元件符号使用不一致。范例：{{inline_summary}}",
-    "scopeLimitWording": "检测到 {{count}} 处限制性用语。范例：{{samples}}"
+    "scopeLimitWording": "检测到 {{count}} 处限制性用语。范例：{{samples}}",
+    "dependencyFormatClaims": "依 37 CFR 1.75(c)，从属权利要求须以明确的引用用语回引在先权利要求（of claim N、according to claim N、as recited in claim N 等）。仅写出项号而未使用引用用语者（例如 the method claim 10），不属于可识别的引用格式，请检视标示的权利要求。"
   },
   "common": {
     "close": "关闭",
@@ -1085,6 +1086,10 @@
       "excessClaims": {
         "verify": "可能产生美国超项费（37 CFR 1.16(h)/(i)）：独立项超过 3 项及总权利要求超过 20 项各自加收费用。请核实申请费用计算。",
         "pass": "未检测到美国超项费触发条件（37 CFR 1.16(h)/(i)：总权利要求不超过 20 项且独立项不超过 3 项）。"
+      },
+      "dependencyFormat": {
+        "amend": "{{count}} 项权利要求的引用格式无法识别：{{claims}}（37 CFR 1.75(c)、MPEP § 608.01(n)）。",
+        "pass": "未发现从属权利要求引用格式问题。"
       }
     },
     "abstract": {
