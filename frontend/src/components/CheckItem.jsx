@@ -78,13 +78,23 @@ export default function CheckItem({ status, message, message_key, details, detai
     setReportModalOpen(true)
   }
 
-  const handleAnonymousConfirm = (userComment) =>
+  // ReportModal calls onConfirm(comment, disposition, findingDispositions) and
+  // gates its own Send button on a disposition being chosen. Dropping the 2nd
+  // and 3rd arguments here made every CheckItem-routed report (D1
+  // numeralConsistency, paragraphEnding, symbolTableCoverage, and every other
+  // generic check) arrive with no disposition at all, so the reporter was
+  // required to pick a verdict that was then discarded on the wire and the
+  // issue landed with no TP/FP label - the ADR-159 label intake silently lost
+  // its input. SpecSupportCard has always threaded these through.
+  const handleAnonymousConfirm = (userComment, disposition, findingDispositions) =>
     sendReport({
       checkKey: message_key || 'generic',
       jurisdiction: jurisdiction || 'unknown',
       locale: i18n.language,
       diagnostics: diagnostics || {},
       userComment,
+      disposition,
+      findingDispositions,
     })
 
   const handleMailtoFallback = () => {

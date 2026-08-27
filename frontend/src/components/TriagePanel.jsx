@@ -62,13 +62,18 @@ function TriageItem({ check, t, i18n, compact, jurisdiction, canPromote, isPromo
     setReportModalOpen(true)
   }
 
-  const handleAnonymousConfirm = (userComment) =>
+  // Same contract as CheckItem: ReportModal passes the disposition (and the
+  // per-finding verdicts when a report carries >= 2 findings) as the 2nd and
+  // 3rd arguments. Dropping them discarded the reporter's verdict on the wire.
+  const handleAnonymousConfirm = (userComment, disposition, findingDispositions) =>
     sendReport({
       checkKey: check.message_key || 'generic',
       jurisdiction: jurisdiction || 'unknown',
       locale: i18n.language,
       diagnostics: check.diagnostics || {},
       userComment,
+      disposition,
+      findingDispositions,
     })
 
   const handleMailtoFallback = () => {
