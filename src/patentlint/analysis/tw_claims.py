@@ -2397,6 +2397,53 @@ _REF_PATTERN_CAPTURE = re.compile(
 # ``sorted(..., key=len, reverse=True)`` is applied once at import time.
 _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
     (
+        # === R46 (2026-08-28) - trailing predicates from the drained queue ===
+        # Nine reports on one draft (#630-#638) plus #645/#646/#647 and #662.
+        # Every member measured INDIVIDUALLY with exception_head_bisect.py
+        # against a 17,631-finding baseline, per the R43 member-by-member rule.
+        #
+        # READ THE HONEST YIELD, NOT THE RAW COUNT: of the 19 gold walker_fp
+        # this family silences, essentially ALL are PAIRED SHIFTS - the finding
+        # re-fires under the cleaned term rather than going away. The round's
+        # value is term QUALITY plus the reports it closes, not FP reduction.
+        #
+        #   即 ("namely/immediately", #630-#638): 4 findings, every one an
+        #     over-capture (容器即 / 行情國家即 / 點集合即). No TIPO element
+        #     name ends in 即; it is an adverb. The reported source is the
+        #     adverbial 即時 ("real-time") bleeding into the noun.
+        "即",
+        #   佔 ("occupies", #645/#646/#647): 0 corpus occurrences, so this is
+        #     report-evidenced only and measures as a no-op. Shipped because no
+        #     element name ends in 佔 (its noun use 佔比 is PREFIX position,
+        #     which an endswith strip cannot reach). Its sibling 大 of 高度差大
+        #     stays WITHHELD - it needs the comparison gate on a following 於,
+        #     not a bare strip, and bare 大 shatters 放大 / 增大.
+        "佔",
+        #   得 and its GREEDY-TRIM siblings. Bare 得 alone is NOT shippable and
+        #     this was measured, not reasoned: it cuts inside 使得 / 所得 / 求得
+        #     and strands their heads, turning 指令使得 into 指令使 and 發行端求得
+        #     into 發行端求 - dirtier than the bug. Longest-first ordering in this
+        #     length-sorted tuple is what makes the siblings protective.
+        #     使得 required a GOLD CORRECTION rather than a withhold: it silenced
+        #     主動模式操作 on TW202219926A c12, and the claim read shows claim 11
+        #     introduces 一主動模式 with the indefinite article and 操作 is the verb,
+        #     so the gold label sat on a walker artifact (outcome 3). Recorded in
+        #     phase2b_results_tw_corrections.json.
+        "使得",
+        "所得",
+        "求得",
+        "得",
+        #   #662 (trailing 製, from 以…材料製成) is WITHHELD, and the reason is
+        #     worth recording because the obvious fix is wrong twice over. Bare
+        #     製 cannot ship: it strips 脆衝寬度調製 (pulse-width MODULATION)
+        #     to 脆衝寬度調 and 複製 to a single character, both real noun heads
+        #     and both invisible FNs. The collocation 材料製 was built instead and
+        #     MEASURED as an OVER-STRIP: an endswith member removes the WHOLE
+        #     matched suffix, so 透明導電材料製 became 透明導電 when the
+        #     drafter's element is 透明導電材料 - which is exactly what the US
+        #     twin #659 captures. Reaching it needs a SOURCE-AWARE gate that drops
+        #     only the single 製 when the following character is 成, in the shape
+        #     of _trim_bufen_before_verb_tw, not a denylist member of any length.
         # === R38 (2026-08-13, reports #515/#516/#517/#526) ===
         # Two drafts from the same intake batch (a game/tactical-board method
         # and a pressure-sensing pad). Three trailing verbs that bled into the

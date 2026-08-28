@@ -119,6 +119,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Engine-2 spec-support corpus runner")
     ap.add_argument("--juris", required=True, choices=["TW", "CN"])
     ap.add_argument("--terms", action="store_true", help="dump finding terms")
+    ap.add_argument("--limit", type=int, default=0,
+                    help="cap the --terms dump (0 = all; the gate needs all)")
     ap.add_argument("--min-spec", type=int, default=2000,
                     help="skip drafts whose scraped spec is shorter than this")
     args = ap.parse_args()
@@ -160,7 +162,10 @@ def main() -> int:
     print(f"drafts measured : {drafts}  (skipped-on-error: {errors})")
     print(f"total findings  : {total}")
     if args.terms:
-        for pid, t in terms[:60]:
+        # The dump was truncated at 60 for years, which silently made the
+        # no-growth gate compare two TRUNCATED lists - a count equal to its own
+        # limit is a truncation, not a count. --limit 0 (the default) dumps all.
+        for pid, t in (terms if args.limit == 0 else terms[:args.limit]):
             print(f"  {pid}  {t!r}")
     return 0
 
