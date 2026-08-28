@@ -360,3 +360,38 @@ class TestR35TrailingVerbsAndComparatives:
         # The cardinal gate is what keeps bare 傳遞 usable as a noun modifier.
         assert clean_noun_phrase_tw("訊號傳遞路徑") == "訊號傳遞路徑"
         assert clean_noun_phrase_tw("傳遞機構") == "傳遞機構"
+
+    def test_r46_trailing_predicates_stripped(self):
+        # Reports #630-#638 (nine, one drafter), #645/#646/#647.
+        # 即 is the adverb of 即時 ("real-time") bleeding into the noun.
+        assert clean_noun_phrase_tw("影音內容即") == "影音內容"
+        assert clean_noun_phrase_tw("高度差佔") == "高度差"
+        assert clean_noun_phrase_tw("鋰源反應得") == "鋰源反應"
+
+    def test_r46_de_greedy_trim_siblings_ship_together(self):
+        # Bare 得 alone strands the head of 使得 / 所得 / 求得, which is DIRTIER
+        # than the bug it fixes (指令使得 -> 指令使). The denylist is a
+        # length-sorted tuple with break-on-first-match, so the longer members
+        # must be present AND must sort first. Measured, not reasoned.
+        assert clean_noun_phrase_tw("指令使得") == "指令"
+        assert clean_noun_phrase_tw("指令進一步使得") == "指令"
+        assert clean_noun_phrase_tw("發行端求得") == "發行端"
+        assert clean_noun_phrase_tw("壓粉體所得") == "壓粉體"
+
+    def test_r46_withheld_zhi_does_not_strip_noun_heads(self):
+        # #662 is WITHHELD. Pins BOTH failure modes so a later round cannot
+        # ship either quietly. Bare 製 would destroy real noun heads:
+        assert clean_noun_phrase_tw("脈衝寬度調製") == "脈衝寬度調製"  # modulation
+        assert clean_noun_phrase_tw("複製") == "複製"
+        # ...and the collocation 材料製 OVER-STRIPS, because an endswith member
+        # removes the whole matched suffix. The drafter's element is
+        # 透明導電材料 (the US twin #659 captures exactly that), so the correct
+        # fix drops only the single 製 before 成 and is not a denylist member.
+        assert clean_noun_phrase_tw("透明導電材料製") != "透明導電"
+
+    def test_r46_withheld_da_comparison_stays_unstripped(self):
+        # 大 of 高度差大 (#645/#646/#647) stays WITHHELD: reaching it needs the
+        # comparison gate on a following 於, not a bare trailing strip, which
+        # would shatter compounds like 增大. Pinned so the withhold is visible.
+        assert clean_noun_phrase_tw("高度差大") == "高度差大"
+        assert clean_noun_phrase_tw("訊號增大") == "訊號增大"
