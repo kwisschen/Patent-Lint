@@ -806,7 +806,7 @@
     "seeSection112": "Siehe § 112-Analyse unten für Details je Anspruch.",
     "specSupportUnsupported": "Die hier gezeigten {{count}} Anspruchsbegriff(e) wurden im Beschreibungsteil nicht gefunden. Jeder Anspruchsbegriff sollte in der Beschreibung gestützt sein.",
     "restrictiveWordingSpec": "Absätze: {{list}}. Diese Begriffe können gemäß MPEP § 2173.05(b) als unklar oder einschränkend ausgelegt werden. Prüfen Sie jeden gekennzeichneten Absatz darauf, ob der Begriff den Schutzbereich übermäßig einschränkt oder Unklarheit erzeugt.",
-    "paragraphNumberingMissing": "Fortlaufende [0001]-Nummerierung gemäß MPEP § 608.01(p) ergänzen.",
+    "paragraphNumberingMissing": "Eine [0001]-Nummerierung ist eine Formalie der Praxis, keine Pflicht des USPTO: nach 37 CFR 1.52(b)(6) ist die Absatznummerierung fakultativ und sollte, wenn verwendet, fortlaufend sein. Hinweis für die Änderungspraxis, nicht zur Konformität.",
     "paragraphEnding": "Absätze: {{list}}. Jeden Absatz der Beschreibung mit einem Punkt zu beenden, ist eine Redaktionskonvention und keine Anforderung des USPTO; MPEP § 608.01 enthält keine Regel zur Absatzinterpunktion. Hinweis zur Einheitlichkeit, nicht zur Konformität.",
     "sequenceListingFix": "Fügen Sie einen Abschnitt „Statement Regarding Sequence Listing“ gemäß 37 C.F.R. § 1.821-1.825 hinzu.",
     "crossReferenceCitations": "{{text}}. Prüfen Sie, ob die Aktenzeichen korrekt sind und die Prioritätskette vollständig ist (Continuations, CIPs, Provisionals, Divisionals).",
@@ -992,7 +992,7 @@
       },
       "paragraphSequential": {
         "missing": "Keine Absatznummerierung in der Beschreibung gefunden.",
-        "amend": "Absatznummern sind nicht fortlaufend (MPEP § 608.01(p)).",
+        "amend": "Absatznummern sind nicht fortlaufend (37 CFR 1.52(b)(6)).",
         "pass": "Keine Absatznummerierungs-Befunde festgestellt."
       },
       "paragraphEnding": {

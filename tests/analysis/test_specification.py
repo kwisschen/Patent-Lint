@@ -59,11 +59,17 @@ class TestParagraphSequentialCheck:
             None,
         )
 
-    def test_zero_paragraphs_patent_emits_amend(self):
+    def test_zero_paragraphs_patent_emits_review_not_fix(self):
+        # 37 CFR 1.52(b)(6) makes paragraph numbering OPTIONAL ("may be
+        # numbered"), so an unnumbered specification is compliant and must
+        # not take a FIX-tier grade deduction. 11.8% of real filed US
+        # applications (10,137 of 86,265 measured on EdgeXpert) carry no
+        # bracketed numbering at all. Pinned so a later round cannot quietly
+        # re-promote this to "amend".
         result = AnalysisResult(paragraph_count=0, likely_patent=True)
         check = self._get_paragraph_check(result)
         assert check is not None
-        assert check.status == "amend"
+        assert check.status == "verify"
         assert check.message_key == "check.spec.paragraphSequential.missing"
 
     def test_zero_paragraphs_non_patent_no_amend(self):

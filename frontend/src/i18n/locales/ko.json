@@ -806,7 +806,7 @@
     "seeSection112": "청구항별 세부 사항은 아래 § 112 분석을 참조하세요.",
     "specSupportUnsupported": "여기에 표시된 {{count}}건의 용어가 명세서 본문에서 확인되지 않았습니다. 각 청구항 용어는 명세서의 뒷받침이 필요합니다.",
     "restrictiveWordingSpec": "단락: {{list}}. 위 용어는 MPEP § 2173.05(b)에 따라 불명확하거나 범위를 제한하는 것으로 취급될 수 있습니다. 각 표시된 단락을 검토하여 해당 용어가 부당하게 범위를 제한하거나 불명확성을 초래하는지 확인하세요.",
-    "paragraphNumberingMissing": "MPEP § 608.01(p)에 따라 [0001] 형식의 순차적 단락 번호를 추가하세요.",
+    "paragraphNumberingMissing": "[0001] 형식의 단락 번호 부여는 실무 관행이며 USPTO의 요건은 아닙니다. 37 CFR 1.52(b)(6)은 단락 번호를 선택 사항으로 규정하고, 번호를 붙이는 경우 연속될 것을 요구합니다. 보정 실무를 위한 참고이며 방식 요건 지적이 아닙니다.",
     "paragraphEnding": "단락: {{list}}. 명세서의 각 단락을 마침표로 끝내는 것은 작성 관행이며 USPTO의 법정 요건이 아닙니다. MPEP § 608.01에는 단락 문장 부호에 관한 규정이 없습니다. 적법성이 아니라 일관성 차원의 지적입니다.",
     "sequenceListingFix": "37 C.F.R. § 1.821-1.825에 따라 “Statement Regarding Sequence Listing” 섹션을 추가하세요.",
     "crossReferenceCitations": "{{text}}. 출원번호가 정확하고 우선권 체인(계속출원, CIP, 가출원, 분할출원)이 완전한지 확인하세요.",
@@ -992,7 +992,7 @@
       },
       "paragraphSequential": {
         "missing": "명세서에서 단락 번호가 발견되지 않았습니다.",
-        "amend": "단락 번호가 순차적이지 않습니다(MPEP § 608.01(p)).",
+        "amend": "단락 번호가 순차적이지 않습니다(37 CFR 1.52(b)(6)).",
         "pass": "단락 번호 관련 사항이 감지되지 않았습니다."
       },
       "paragraphEnding": {
