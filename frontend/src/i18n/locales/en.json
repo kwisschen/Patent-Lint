@@ -806,7 +806,7 @@
     "seeSection112": "See § 112 Analysis below for per-claim detail.",
     "specSupportUnsupported": "The {{count}} claim term(s) shown here were not found in the specification body. Each claim term should have written-description support.",
     "restrictiveWordingSpec": "Paragraphs: {{list}}. These terms may be treated as indefinite or limiting under MPEP § 2173.05(b). Review each flagged paragraph and consider whether the term unduly limits scope or introduces indefiniteness.",
-    "paragraphNumberingMissing": "Add sequential [0001]-style numbering per MPEP § 608.01(p).",
+    "paragraphNumberingMissing": "Adding [0001]-style numbering is a drafting convention rather than a USPTO requirement: 37 CFR 1.52(b)(6) makes paragraph numbering optional and asks only that numbers, once used, run consecutively. Flagged for amendment practice, not compliance.",
     "paragraphEnding": "Paragraphs: {{list}}. Ending each specification paragraph with a period is a drafting convention rather than a USPTO requirement; MPEP § 608.01 sets no paragraph-punctuation rule. Flagged for consistency, not compliance.",
     "sequenceListingFix": "Add a \"Statement Regarding Sequence Listing\" section per 37 C.F.R. § 1.821-1.825.",
     "crossReferenceCitations": "{{text}}. Verify serial numbers are correct and the priority chain is complete (continuations, CIPs, provisionals, divisionals).",
@@ -992,7 +992,7 @@
       },
       "paragraphSequential": {
         "missing": "No paragraph numbering found in specification.",
-        "amend": "Paragraph numbers are not sequential (MPEP § 608.01(p)).",
+        "amend": "Paragraph numbers are not sequential (37 CFR 1.52(b)(6)).",
         "pass": "No paragraph-numbering issues detected."
       },
       "paragraphEnding": {

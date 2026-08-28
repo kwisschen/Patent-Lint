@@ -806,7 +806,7 @@
     "seeSection112": "详见下方 § 112 分析。",
     "specSupportUnsupported": "此处所示 {{count}} 个用语未于说明书中披露。各权利要求用语皆应获说明书支持。",
     "restrictiveWordingSpec": "段落：{{list}}。上列用语依 MPEP § 2173.05(b) 可能被视为不确定或限制范围。请检查各标记段落，考虑该用语是否过度限缩范围或引入不确定性。",
-    "paragraphNumberingMissing": "请依 MPEP § 608.01(p) 添加 [0001] 格式的连续段落编号。",
+    "paragraphNumberingMissing": "添加 [0001] 格式的段落编号属于起草惯例，而非 USPTO 的强制要求：37 CFR 1.52(b)(6) 规定段落编号可自行选择，若编号则应连续。此处仅供修改实务参考，并非形式缺陷。",
     "paragraphEnding": "段落：{{list}}。说明书各段落以句号结尾属撰稿惯例，并非 USPTO 的法定要求；MPEP § 608.01 未就段落标点作出规定。此处仅就一致性提示，不涉合规性。",
     "sequenceListingFix": "请依 37 C.F.R. § 1.821-1.825 添加“Statement Regarding Sequence Listing”部分。",
     "crossReferenceCitations": "{{text}}。请确认序列号正确，且优先权链完整（延续案、CIP、临时申请、分案）。",
@@ -992,7 +992,7 @@
       },
       "paragraphSequential": {
         "missing": "说明书中未发现段落编号。",
-        "amend": "段落编号不连续（MPEP § 608.01(p)）。",
+        "amend": "段落编号不连续（37 CFR 1.52(b)(6)）。",
         "pass": "未检测到段落编号问题。"
       },
       "paragraphEnding": {

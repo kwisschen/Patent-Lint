@@ -9,8 +9,8 @@ Complete inventory of every check implemented in PatentLint, organized by report
 | Tracked changes | - | FIX | `check.spec.trackedChanges.amend` | Document contains tracked changes (revisions) |
 | Title requirements | MPEP § 606, § 608.01 | FIX / REVIEW / PASS | `check.spec.title` | Title ≤500 chars, no trademarks/model numbers; advisory warning if >15 words |
 | Restrictive wording | § 112(b), MPEP § 2111.01(II) | REVIEW / PASS | `check.spec.restrictiveWording` | MPEP 2111.01(II) narrowing language in spec paragraphs: always / never / must / solely / every / required / essential / critical / vital / necessary / imperative / indispensable (Phase 9 #72b) |
-| Paragraph sequential | § 608.01(p) | FIX / PASS | `check.spec.paragraphSequential` / `check.spec.paragraphSequential.missing` | Paragraph numbers are sequential; no paragraph numbering found (patent documents only) |
-| Paragraph ending | § 608.01(p) | REVIEW / PASS | `check.spec.paragraphEnding` | Paragraphs have valid ending punctuation (formatting hygiene; §608.01(p) governs numbering, not termination) |
+| Paragraph sequential | 37 CFR 1.52(b)(6) | FIX / REVIEW / PASS | `check.spec.paragraphSequential` / `check.spec.paragraphSequential.missing` | Numbers present but not consecutive is FIX; no numbering at all is REVIEW, because 1.52(b)(6) makes numbering optional (patent documents only) |
+| Paragraph ending | none (drafting convention) | REVIEW / PASS | `check.spec.paragraphEnding` | Paragraphs have valid ending punctuation. MPEP § 608.01 states no paragraph-punctuation rule, so the citation was dropped rather than re-pinned |
 | Sequence listing | § 2422 | FIX / PASS | `check.spec.sequenceListing` | SEQ ID NO referenced but no sequence listing statement |
 | Cross-reference | § 608.01 | REVIEW / PASS | `check.spec.crossReference` | Cross-reference section cites related applications - verify completeness |
 | Prior art citations | § 608.01(c) | REVIEW / PASS | `check.spec.priorArt` | Background section cites prior art - review characterizations |
