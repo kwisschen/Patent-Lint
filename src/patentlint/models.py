@@ -763,9 +763,28 @@ class AnalysisResult(BaseModel):
         for rc in self.required_sections_checks:
             spec_checks.append(rc)
 
+        # Statute pin verified against the primary source (govinfo CFR XML),
+        # after #461 showed both citations previously used in this area were
+        # wrong. 37 CFR 1.52(b)(6) is the real authority for paragraph
+        # NUMBERING - MPEP § 608.01 quotes it, and § 608.01(p) (which this
+        # cited) is a different subject entirely. But the rule is PERMISSIVE
+        # about whether to number at all: paragraphs "may be numbered at the
+        # time the application is filed, and should be individually and
+        # consecutively numbered using Arabic numerals". So the two branches
+        # below are NOT the same kind of finding and must not share a tier.
+        #
+        # Absent numbering is compliant, so it is a REVIEW-tier drafting
+        # convention, not a FIX. Measured on EdgeXpert's real filed-application
+        # text (86,265 US applications with substantive spec text): 10,137
+        # (11.8%) present with no bracketed paragraph numbering of any form.
+        # That is ordinary practice, not a defect, and flagging it at FIX tier
+        # deducted from the grade of a compliant draft. Same treatment #461
+        # gave the paragraphEnding twin, and it brings US into line with the
+        # TW copy ("optional per 專利法施行細則 §17") and the EPC copy ("EPC
+        # does not mandate paragraph numbers") - US was the outlier.
         if self.paragraph_count == 0 and self.likely_patent:
             spec_checks.append(CheckItem(
-                status="amend",
+                status="verify",
                 message="No paragraph numbering found in specification.",
                 message_key="check.spec.paragraphSequential.missing",
                 details_key="details.paragraphNumberingMissing",
