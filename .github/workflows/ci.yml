@@ -68,6 +68,15 @@ jobs:
           npm ci
           npm run build
 
+      - name: Test
+        # Frontend tests landed 2026-08-28 after a dropped-argument bug
+        # discarded the verdict every reporter was required to enter, on 36
+        # reports, invisibly. Source-level contract tests; see
+        # frontend/src/__tests__/.
+        run: |
+          cd frontend
+          npm test
+
   wheel-verify:
     # Phase 9 #40 - rebuild the Pyodide wheel on push and compare against
     # the one committed under frontend/public/. Catches stale-wheel

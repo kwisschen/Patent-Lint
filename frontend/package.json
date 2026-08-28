@@ -13,6 +13,7 @@
     "build": "npm run build:wheel && npm run build:stats && npm run build:version && vite build",
     "build:vercel": "npm run build:stats && npm run build:version && vite build",
     "lint": "eslint .",
+    "test": "vitest run",
     "preview": "vite preview",
     "setup-hooks": "git -C .. config core.hooksPath .githooks",
     "i18n:check": "node ../scripts/i18n_presence_check.mjs"
@@ -40,10 +41,14 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.0",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^29.1.1",
     "tailwindcss": "^4.0.0",
-    "vite": "^6.0.0"
+    "vite": "^6.0.0",
+    "vitest": "^4.1.11"
   }
 }
