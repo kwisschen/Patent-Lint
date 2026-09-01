@@ -421,3 +421,26 @@ class TestR35TrailingVerbsAndComparatives:
         # FN-unsafe; only the interior conjunction cut ships.
         for term in ("以太網路控制器", "用戶介面", "取得部", "輸出電壓", "配置資訊"):
             assert clean_noun_phrase_tw(term) == term
+
+    def test_r47b_predicate_head_stripped(self):
+        # Report #692. 屬於 / 用於 / 基於 were ALREADY declared in
+        # _F10_NOUN_REJECTS, but only 2 of the 8 intro arms consult that set,
+        # so the 的-arms emitted 屬於一色相值區間 unchecked. A leading STRIP
+        # rather than a reject, because rejecting an intro can only ADD
+        # findings while stripping keeps the real noun.
+        assert clean_noun_phrase_tw("屬於一色相值區間") == "色相值區間"
+        assert clean_noun_phrase_tw("用於一顯示器") == "顯示器"
+        assert clean_noun_phrase_tw("位於一基板") == "基板"
+
+    def test_r47b_predicate_head_exact_match_protects_real_nouns(self):
+        # Exact 2-char lexeme matching is what makes the strip FN-safe:
+        # 屬性 is not 屬於, 位置 is not 位於, 用戶 is not 用於.
+        for term in ("屬性資料", "位置感測器", "用戶介面", "基板", "來源電極"):
+            assert clean_noun_phrase_tw(term) == term
+
+    def test_r47b_jingguo_stays_out_of_the_lexeme_set(self):
+        # 經過 was trialled and MEASURED OUT: 經過濾結果 is 經 + 過濾
+        # ("filtering"), not 經過 + 濾, and stripping it stranded 濾結果自 on
+        # three corpus findings. Pinned so a later round cannot re-add it
+        # as free-looking morphology.
+        assert clean_noun_phrase_tw("經過濾結果").startswith("經過濾")

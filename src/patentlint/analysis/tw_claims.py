@@ -4087,6 +4087,46 @@ def _jing_cut_is_verbal_tw(text: str, pos: int) -> bool:
     return (pos - head) >= 2
 
 
+# R47b (2026-09-01, report #692). Verb+preposition bound forms: a capture
+# that OPENS with one of these is a predicate, not an element name, because
+# no TIPO element name begins with V+於. 屬於 / 用於 / 基於 were ALREADY
+# declared in _F10_NOUN_REJECTS - but only 2 of the 8 intro arms consult that
+# set, so the `的`-arms (F5a/F5b/F7a-d) emitted 屬於一色相值區間 unchecked.
+# The half-implemented symmetry rule again: the declaration existed and its
+# comment read like a solved problem.
+#
+# Shipped as a leading STRIP rather than a REJECT, because rejecting an intro
+# can only ADD findings while stripping keeps the real noun (屬於一色相值區間
+# -> 色相值區間). Exact 2-char lexeme match is what makes it FN-safe: 屬性資料,
+# 位置感測器, 用戶介面, 基板, 根部, 來源電極 all survive untouched.
+# The CLOSED V+於 class only. 經過 / 來自 / 根據 were trialled and MEASURED
+# OUT: 經過 mis-splits 經過濾結果 (經 + 過濾 "filtering", not 經過 + 濾) and
+# stranded 濾結果自 on three corpus findings - the 一對 measure-word trap in a
+# new place. V+於 is safe because 於 binds the verb into a preposition phrase
+# that cannot open a noun, and the exact 2-char match keeps 屬性資料 /
+# 位置感測器 / 用戶介面 intact.
+_PREDICATE_HEAD_LEXEMES_TW: tuple[str, ...] = (
+    "\u5c6c\u65bc", "\u7528\u65bc", "\u57fa\u65bc", "\u4f4d\u65bc",
+    "\u95dc\u65bc",
+)
+_LEADING_QUANTIFIER_RE_TW = re.compile(
+    r'^[\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d\u5341]+'
+    r'(?:\u500b|\u689d|\u9053|\u7d44|\u7a2e|\u8005)?'
+)
+
+
+def _strip_predicate_head_tw(text: str) -> str:
+    """Drop a leading verb+preposition bound form and any quantifier behind it."""
+    for head in _PREDICATE_HEAD_LEXEMES_TW:
+        if text.startswith(head) and len(text) > len(head) + 1:
+            rest = text[len(head):]
+            m = _LEADING_QUANTIFIER_RE_TW.match(rest)
+            if m and len(rest) > m.end():
+                rest = rest[m.end():]
+            return rest
+    return text
+
+
 def clean_noun_phrase_tw(text: str) -> str:
     """Strip trailing verbs and conjunction fragments from a TW reference term.
 
@@ -4115,6 +4155,7 @@ def clean_noun_phrase_tw(text: str) -> str:
     fragments produce mismatches at comparison time and are surfaced via
     the did-you-mean hint if similarity is high enough.
     """
+    text = _strip_predicate_head_tw(text)
     if not text:
         return text
 
