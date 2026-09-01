@@ -2112,5 +2112,31 @@
     "checks": {
       "spec_support_unsupported_terms": "A claim term should also appear in the description, so the specification shows the applicant possessed what is claimed."
     }
+  },
+  "tooltip": {
+    "status": {
+      "amend": "A rule in the catalog matched this text. Read the finding and amend if you agree - PatentLint detects patterns, it does not judge substance.",
+      "verify": "A pattern worth a second look. Whether it needs changing is a drafting judgment the checker cannot settle for you.",
+      "pass": "Nothing of this kind was detected. A clean result is a text check, not an opinion on the draft."
+    },
+    "citation": {
+      "112a": "35 U.S.C. § 112(a) - written description, enablement and best mode",
+      "112b": "35 U.S.C. § 112(b) - claims must particularly point out and distinctly claim the invention",
+      "112d": "35 U.S.C. § 112(d) - a dependent claim must refer to a preceding claim and further limit it",
+      "112f": "35 U.S.C. § 112(f) - means-plus-function elements, read on the structure disclosed in the description",
+      "101": "35 U.S.C. § 101 - patent-eligible subject matter",
+      "cfr1526": "37 CFR 1.52(b)(6) - paragraph numbering in the specification - permitted, not required",
+      "60801": "MPEP § 608.01 - Specification",
+      "60801b": "MPEP § 608.01(b) - Abstract of the Disclosure",
+      "60801c": "MPEP § 608.01(c) - Background of the Invention",
+      "60801m": "MPEP § 608.01(m) - Form of Claims",
+      "60801n": "MPEP § 608.01(n) - Dependent Claims",
+      "60802": "MPEP § 608.02 - Drawing",
+      "2117": "MPEP § 2117 - Markush Claims",
+      "2129": "MPEP § 2129 - Admissions as Prior Art",
+      "217301": "MPEP § 2173.01 - Interpreting the Claims",
+      "217305b": "MPEP § 2173.05(b) - Relative Terminology",
+      "2422": "MPEP § 2422 - nucleotide and amino acid sequence disclosures (WIPO ST.25)"
+    }
   }
 }

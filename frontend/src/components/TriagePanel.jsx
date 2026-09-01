@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AlertCircle, Search, CheckCircle, ChevronDown, MessageSquare, CornerDownRight, ArrowUp, Undo2 } from 'lucide-react'
-import { getCitation } from './CheckItem'
+import { getCitation, getCitationTooltipKey } from './CheckItem'
+import InfoTooltip from './ui/info-tooltip'
 import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
 import { formatDetails } from '../lib/detailsFormatter'
 import { composeFeedback, sendReport } from '../lib/feedback'
@@ -25,6 +26,11 @@ function TriageItem({ check, t, i18n, compact, jurisdiction, canPromote, isPromo
   const [reportModalOpen, setReportModalOpen] = useState(false)
   const msg = check.message_key && i18n.exists(check.message_key) ? formatDetails(check.message_key, check.details_params, t) : check.message
   const citation = getCitation(check.message_key) || check.reference || null
+  // Same citation explainer as CheckItem - the triage worklist is where most
+  // readers actually work through findings, so the badge has to be legible
+  // here too, not only in the per-section view.
+  const citationTipKey = getCitationTooltipKey(citation)
+  const citationTip = citationTipKey && i18n.exists(citationTipKey) ? t(citationTipKey) : null
   const details = check.details_key && i18n.exists(check.details_key) ? formatDetails(check.details_key, check.details_params, t) : check.details
   // Pass findings aren't reportable - nothing to diagnose when nothing
   // went wrong.
@@ -104,9 +110,16 @@ function TriageItem({ check, t, i18n, compact, jurisdiction, canPromote, isPromo
           {check.section}
         </span>
         {citation && (
-          <span className="citation-badge rounded px-1.5 py-0.5 text-[11px] font-mono leading-none">
-            {citation}
-          </span>
+          <InfoTooltip label={citationTip}>
+            <span
+              className={
+                "citation-badge rounded px-1.5 py-0.5 text-[11px] font-mono leading-none"
+                + (citationTip ? " underline decoration-dotted underline-offset-[3px] decoration-muted-foreground/60" : "")
+              }
+            >
+              {citation}
+            </span>
+          </InfoTooltip>
         )}
       </div>
       <div className="min-w-0 flex-1 w-full">
