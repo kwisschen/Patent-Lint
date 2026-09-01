@@ -876,7 +876,7 @@
         "transitionPhrase": "Per 审查指南, an independent claim should contain a two-part transition (e.g. 其特征在于) separating the preamble (prior art) from the characterizing part (novel features)."
       },
       "independentPreamble": "审查指南 第二部分第二章 §3.1.1 uses 一种X as the canonical form; 专利法实施细则 §24 requires the preamble to state the 主题名称 (subject-matter name) but does not literally mandate 一种. Consider rewriting to the 一种X form.",
-      "numeralConsistency": "{{count}} reference numeral(s) used inconsistently. Examples: {{inline_summary}}",
+      "numeralConsistency": "{{count}} reference numeral(s) used inconsistently.",
       "markushOpenTransition": "Claim(s) {{claims}} use open-ended Markush transitions ({{transitions}}); switch to the closed form 「组成的」 per 审查指南 §9.3.",
       "omnibusClaims": "Claim(s) {{claims}} are omnibus-style (reference description/drawings instead of features); rewrite per 审查指南 §3.3.",
       "crmNonTransitory": "Claim(s) {{claims}} recite a computer-readable medium without 非暂态. Add the 非暂态 / 非暂时性 qualifier to confine the claim to non-transitory media and avoid §25 subject-matter issues (审查指南 第二部分第九章).",
@@ -940,8 +940,8 @@
       "singleSentenceMultiSentence": "Per 專利法施行細則 §18, each claim must be one sentence with exactly one 。 at the end. Remove mid-claim 。 or restructure the flagged claims.",
       "independentPreamble": "TIPO 偵錯系統 flags this as a convention error. 專利法施行細則 §18 + 專利審查基準 require the preamble to state the 標的名稱 (subject-matter name) but do not literally mandate 「一種」. Consider rewriting to the 一種X form if that matches the invention.",
       "indigenousTerms": "Terms: {{terms}}. Per 原住民族傳統智慧創作保護條例, verify the filing does not conflict with protected traditional creations.",
-      "numeralConsistency": "{{count}} reference symbol(s) used inconsistently. Examples: {{inline_summary}}",
-      "symbolTableCoverage": "{{count}} element(s) covering {{refnum_count}} reference symbol(s) missing from 符號說明: {{inline_summary}}",
+      "numeralConsistency": "{{count}} reference symbol(s) used inconsistently.",
+      "symbolTableCoverage": "{{count}} element(s) covering {{refnum_count}} reference symbol(s) missing from 符號說明.",
       "markushOpenTransition": "Claim(s) {{claims}} use open-ended Markush transitions ({{transitions}}); switch to the closed form 選自由…組成的群組 per 專利審查基準 第二篇第十章.",
       "omnibusClaims": "Claim(s) {{claims}} are omnibus-style (reference 說明書/附圖 instead of features). Recite the technical features expressly to satisfy 專利法 §26 第3項.",
       "crmNonTransitory": "Claim(s) {{claims}} recite a computer-readable medium without 非暫態. Add the 非暫態 / 非暫時性 qualifier to confine the claim to non-transitory media and avoid §21 eligibility issues.",
@@ -964,7 +964,7 @@
       "orphanedDetailedFigures": "Figures: {{list}}. Either add a description for these figures in the Brief Description of Drawings or remove the reference from the Detailed Description.",
       "claimReferenceInSpec": "Description references a claim: {{detail}}"
     },
-    "numeralConsistency": "{{count}} reference numeral(s) used inconsistently. Examples: {{inline_summary}}",
+    "numeralConsistency": "{{count}} reference numeral(s) used inconsistently.",
     "scopeLimitWording": "{{count}} restrictive-wording occurrence(s) detected. Examples: {{samples}}",
     "dependencyFormatClaims": "Under 37 CFR 1.75(c), a dependent claim must refer back to a preceding claim by an explicit cross-reference (\"of claim N\", \"according to claim N\", \"as recited in claim N\"). A preamble that gives the claim number with no connecting phrase (for example \"the method claim 10\") is not a recognized form. Review the flagged claims."
   },
@@ -1027,8 +1027,8 @@
         "pass": "No scope-limiting phrases detected in specification."
       },
       "numeralConsistency": {
-        "amend": "{{count}} reference numeral(s) used with multiple different element names. Examples: {{inline_summary}}",
-        "verify": "{{count}} reference numeral(s) with possibly inconsistent naming - please review. Examples: {{inline_summary}}",
+        "amend": "{{count}} reference numeral(s) used with multiple different element names.",
+        "verify": "{{count}} reference numeral(s) with possibly inconsistent naming - please review.",
         "pass": "Reference numerals consistently identify their elements."
       }
     },
@@ -1170,8 +1170,8 @@
           "pass": "No title-presence issues detected (Rule 41(2)(b) EPC)."
         },
         "numeralConsistency": {
-          "amend": "{{count}} reference numeral(s) used with multiple different element names (Rule 43(7) EPC; Rule 46(2)(h) EPC). Examples: {{inline_summary}}",
-          "verify": "{{count}} reference numeral(s) with possibly inconsistent naming - review per Rule 43(7) EPC + Rule 46(2)(h) EPC. Examples: {{inline_summary}}",
+          "amend": "{{count}} reference numeral(s) used with multiple different element names (Rule 43(7) EPC; Rule 46(2)(h) EPC).",
+          "verify": "{{count}} reference numeral(s) with possibly inconsistent naming - review per Rule 43(7) EPC + Rule 46(2)(h) EPC.",
           "pass": "No reference-numeral consistency issues detected (Rule 43(7) EPC; Rule 46(2)(h) EPC)."
         }
       },
@@ -1350,8 +1350,8 @@
           "pass": "Specification does not reference the claims."
         },
         "numeralConsistency": {
-          "amend": "{{count}} reference numeral(s) used with multiple different element names. Examples: {{inline_summary}} (实施细则 §21 第2款).",
-          "verify": "{{count}} reference numeral(s) with possibly inconsistent naming - please review. Examples: {{inline_summary}} (实施细则 §21 第2款).",
+          "amend": "{{count}} reference numeral(s) used with multiple different element names (实施细则 §21 第2款).",
+          "verify": "{{count}} reference numeral(s) with possibly inconsistent naming - please review (实施细则 §21 第2款).",
           "pass": "Reference numerals consistently identify their components."
         }
       },
@@ -1525,12 +1525,12 @@
           "pass": "No indigenous peoples terminology found."
         },
         "numeralConsistency": {
-          "amend": "{{count}} reference symbol(s) used with multiple different element names. Examples: {{inline_summary}} (施行細則 §19 第2款).",
-          "verify": "{{count}} reference symbol(s) with possibly inconsistent naming - please review. Examples: {{inline_summary}} (施行細則 §19 第2款).",
+          "amend": "{{count}} reference symbol(s) used with multiple different element names (施行細則 §19 第2款).",
+          "verify": "{{count}} reference symbol(s) with possibly inconsistent naming - please review (施行細則 §19 第2款).",
           "pass": "Reference symbols consistently identify their elements."
         },
         "symbolTableCoverage": {
-          "amend": "{{count}} element(s) covering {{refnum_count}} reference symbol(s) missing from 符號說明: {{inline_summary}}",
+          "amend": "{{count}} element(s) covering {{refnum_count}} reference symbol(s) missing from 符號說明.",
           "pass": "No symbol-table coverage issues detected."
         }
       },

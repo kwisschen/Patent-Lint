@@ -192,9 +192,13 @@ export default function CheckItem({ status, message, message_key, details, detai
   // ABOVE the message so the message body can use full row width
   // (otherwise the message wraps in a narrow right-side column). On
   // larger screens, keep the inline-row layout for compactness.
-  const isExpandableD1D3 =
+  // The numeral table is the PRIMARY presentation of these findings, not an
+  // overflow affordance, so it renders at any count. It used to be gated above
+  // 3, which meant a draft with one or two conflicts got the run-on sentence
+  // and no table at all.
+  const hasNumeralTable =
     Array.isArray(details_params?.findings)
-    && details_params.findings.length > 3
+    && details_params.findings.length > 0
     && (message_key?.includes('numeralConsistency')
         || message_key?.includes('symbolTableCoverage'))
 
@@ -267,14 +271,16 @@ export default function CheckItem({ status, message, message_key, details, detai
           className="mt-1 sm:ml-[52px]"
         />
       )}
-      {isExpandableD1D3 && (
+      {hasNumeralTable && (
         <NumeralFindingList
           findings={details_params.findings}
           status={status}
           className="sm:ml-[52px]"
         />
       )}
-      {displayDetails && (
+      {/* The numeral table already states every numeral, name and count, so
+          the detail sentence beneath it only repeated the message. */}
+      {displayDetails && !hasNumeralTable && (
         <p className="text-xs text-muted-foreground mt-1 sm:ml-[52px]">{displayDetails}</p>
       )}
       {explainText && (

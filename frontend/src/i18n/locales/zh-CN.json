@@ -876,7 +876,7 @@
         "transitionPhrase": "依审查指南，独立权利要求应包含「其特征在于」等特征部分连接词，用于区分前序部分（现有技术）与特征部分（新颖要素）。"
       },
       "independentPreamble": "审查指南 第二部分第二章 §3.1.1 范例用「一种X」写法；专利法实施细则 §24 仅要求载明主题名称，并未强制「一种」字样。若合于发明型态，可改写为「一种X」。",
-      "numeralConsistency": "{{count}} 个附图标记使用不一致。范例：{{inline_summary}}",
+      "numeralConsistency": "{{count}} 个附图标记使用不一致。",
       "markushOpenTransition": "权利要求 {{claims}} 使用开放式 Markush 连接词（{{transitions}}）；请依审查指南 §9.3 改为封闭式「组成的」。",
       "omnibusClaims": "权利要求 {{claims}} 为综合式（引用说明书／附图而非技术特征）；请依审查指南 §3.3 改写。",
       "crmNonTransitory": "权利要求 {{claims}} 为未限定“非暂态”的计算机可读介质权利要求；请加注“非暂态”/“非暂时性”以限定为非暂时性介质，避免 §25 客体适格性问题（审查指南 第二部分第九章）。",
@@ -940,8 +940,8 @@
       "singleSentenceMultiSentence": "依專利法施行細則 §18，每一请求项须为单句，仅于末尾有一个句号（。）。请移除句中之句号或重新拆分标记之请求项。",
       "independentPreamble": "TIPO 偵錯系統将此列为惯例错误。專利法施行細則 §18 与專利審查基準要求前序部分载明标的名称，并未强制使用「一種」字样。若合于发明型态，可改写为「一種X」。",
       "indigenousTerms": "用语：{{terms}}。依《原住民族傳統智慧創作保護條例》，请确认本申请未与受保护的传统智慧创作冲突。",
-      "numeralConsistency": "{{count}} 个元件符号使用不一致。范例：{{inline_summary}}",
-      "symbolTableCoverage": "{{count}} 个元件（共 {{refnum_count}} 个元件符号）未列于 符號說明 中：{{inline_summary}}",
+      "numeralConsistency": "{{count}} 个元件符号使用不一致。",
+      "symbolTableCoverage": "{{count}} 个元件（共 {{refnum_count}} 个元件符号）未列于 符號說明 中。",
       "markushOpenTransition": "权利要求 {{claims}} 使用马库什式开放性连接词（{{transitions}}）；请改采封闭式「選自由…組成的群組」形式（專利審查基準 第二篇第十章）。",
       "omnibusClaims": "权利要求 {{claims}} 为概括式权利要求（参考说明书/附图而非技术特征）；请明确记载技术特征以符合 專利法 §26 第3項。",
       "crmNonTransitory": "权利要求 {{claims}} 为未限定「非暫態」的电脑可读媒体权利要求；请加注「非暫態」/「非暫時性」以限定为非暂时性媒体，避免 §21 适格性疑虑。",
@@ -964,7 +964,7 @@
       "orphanedDetailedFigures": "附图：{{list}}。请于「Brief Description of Drawings」中新增对该等附图之描述，或自「Detailed Description」中移除引用（EPC 惯例用语）。",
       "claimReferenceInSpec": "说明书引用权利要求：{{detail}}"
     },
-    "numeralConsistency": "{{count}} 个元件符号使用不一致。范例：{{inline_summary}}",
+    "numeralConsistency": "{{count}} 个元件符号使用不一致。",
     "scopeLimitWording": "检测到 {{count}} 处限制性用语。范例：{{samples}}",
     "dependencyFormatClaims": "依 37 CFR 1.75(c)，从属权利要求须以明确的引用用语回引在先权利要求（of claim N、according to claim N、as recited in claim N 等）。仅写出项号而未使用引用用语者（例如 the method claim 10），不属于可识别的引用格式，请检视标示的权利要求。"
   },
@@ -1027,8 +1027,8 @@
         "pass": "说明书中未检测到限制权利要求范围的表述。"
       },
       "numeralConsistency": {
-        "amend": "{{count}} 个元件符号被用于指代多个不同的构件名称。范例：{{inline_summary}}",
-        "verify": "{{count}} 个元件符号可能使用不一致，建议复查。范例：{{inline_summary}}",
+        "amend": "{{count}} 个元件符号被用于指代多个不同的构件名称。",
+        "verify": "{{count}} 个元件符号可能使用不一致，建议复查。",
         "pass": "元件符号与所指代构件名称一致。"
       }
     },
@@ -1170,8 +1170,8 @@
           "pass": "未检测到发明名称缺漏（Rule 41(2)(b) EPC）。"
         },
         "numeralConsistency": {
-          "amend": "{{count}} 个元件符号用于指代多个不同的元件名称（Rule 43(7) EPC；Rule 46(2)(h) EPC）。范例：{{inline_summary}}",
-          "verify": "{{count}} 个元件符号可能使用不一致，建议依 Rule 43(7) EPC + Rule 46(2)(h) EPC 复查。范例：{{inline_summary}}",
+          "amend": "{{count}} 个元件符号用于指代多个不同的元件名称（Rule 43(7) EPC；Rule 46(2)(h) EPC）。",
+          "verify": "{{count}} 个元件符号可能使用不一致，建议依 Rule 43(7) EPC + Rule 46(2)(h) EPC 复查。",
           "pass": "未检测到元件符号一致性问题（Rule 43(7) EPC；Rule 46(2)(h) EPC）。"
         }
       },
@@ -1350,8 +1350,8 @@
           "pass": "说明书未引用权利要求。"
         },
         "numeralConsistency": {
-          "amend": "{{count}} 个附图标记被用于指代多个不同的构件名称。范例：{{inline_summary}}（专利法实施细则 §21 第2款）。",
-          "verify": "{{count}} 个附图标记可能使用不一致，建议复查。范例：{{inline_summary}}（专利法实施细则 §21 第2款）。",
+          "amend": "{{count}} 个附图标记被用于指代多个不同的构件名称（专利法实施细则 §21 第2款）。",
+          "verify": "{{count}} 个附图标记可能使用不一致，建议复查（专利法实施细则 §21 第2款）。",
           "pass": "附图标记与所指代构件名称一致。"
         }
       },
@@ -1525,12 +1525,12 @@
           "pass": "未发现原住民相关用语。"
         },
         "numeralConsistency": {
-          "amend": "{{count}} 个元件符号被用于指代多个不同的元件名称。范例：{{inline_summary}}（专利法施行细则 §19 第2款）。",
-          "verify": "{{count}} 个元件符号可能使用不一致，建议复查。范例：{{inline_summary}}（专利法施行细则 §19 第2款）。",
+          "amend": "{{count}} 个元件符号被用于指代多个不同的元件名称（专利法施行细则 §19 第2款）。",
+          "verify": "{{count}} 个元件符号可能使用不一致，建议复查（专利法施行细则 §19 第2款）。",
           "pass": "元件代表符號與所指稱元件名稱一致。"
         },
         "symbolTableCoverage": {
-          "amend": "{{count}} 个元件（共 {{refnum_count}} 个元件符号）未列于 符號說明 中：{{inline_summary}}",
+          "amend": "{{count}} 个元件（共 {{refnum_count}} 个元件符号）未列于 符號說明 中。",
           "pass": "未检测到符号说明涵盖问题。"
         }
       },
