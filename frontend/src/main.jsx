@@ -7,11 +7,14 @@ import '@fontsource-variable/geist'
 import './i18n'
 import './index.css'
 import App from './App.jsx'
+import { InfoTooltipProvider } from './components/ui/info-tooltip'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <InfoTooltipProvider>
+        <App />
+      </InfoTooltipProvider>
     </BrowserRouter>
   </StrictMode>,
 )

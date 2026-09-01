@@ -2112,5 +2112,31 @@
     "checks": {
       "spec_support_unsupported_terms": "Ein Anspruchsbegriff sollte auch in der Beschreibung vorkommen, damit diese den Besitz der beanspruchten Lehre belegt."
     }
+  },
+  "tooltip": {
+    "status": {
+      "amend": "Eine Regel des Katalogs hat hier angeschlagen. Prüfen Sie den Befund und korrigieren Sie, wenn Sie ihm folgen - PatentLint erkennt Textmuster und beurteilt keine Sachfragen.",
+      "verify": "Ein Muster, das eine zweite Durchsicht verdient. Ob eine Änderung nötig ist, bleibt eine Frage der Anmeldungsfassung.",
+      "pass": "Nichts dieser Art erkannt. Das ist eine Textprüfung, kein Urteil über die Anmeldung."
+    },
+    "citation": {
+      "112a": "35 U.S.C. § 112(a) - schriftliche Beschreibung, Ausführbarkeit und beste Ausführungsart",
+      "112b": "35 U.S.C. § 112(b) - Ansprüche müssen die Erfindung deutlich und präzise angeben",
+      "112d": "35 U.S.C. § 112(d) - ein abhängiger Anspruch muss auf einen vorangehenden Anspruch Bezug nehmen und ihn weiter einschränken",
+      "112f": "35 U.S.C. § 112(f) - Mittel-plus-Funktion-Merkmale, ausgelegt anhand der in der Beschreibung offenbarten Struktur",
+      "101": "35 U.S.C. § 101 - patentfähiger Gegenstand",
+      "cfr1526": "37 CFR 1.52(b)(6) - Absatznummerierung der Beschreibung - zulässig, nicht vorgeschrieben",
+      "60801": "MPEP § 608.01 - Beschreibung",
+      "60801b": "MPEP § 608.01(b) - Zusammenfassung",
+      "60801c": "MPEP § 608.01(c) - Stand der Technik",
+      "60801m": "MPEP § 608.01(m) - Form der Ansprüche",
+      "60801n": "MPEP § 608.01(n) - Abhängige Ansprüche",
+      "60802": "MPEP § 608.02 - Zeichnungen",
+      "2117": "MPEP § 2117 - Markush-Ansprüche",
+      "2129": "MPEP § 2129 - Zugeständnisse als Stand der Technik",
+      "217301": "MPEP § 2173.01 - Auslegung der Ansprüche",
+      "217305b": "MPEP § 2173.05(b) - Relative Begriffe",
+      "2422": "MPEP § 2422 - Nukleotid- und Aminosäuresequenzen (WIPO ST.25)"
+    }
   }
 }

@@ -10,6 +10,7 @@ import { useFeedback } from "./FeedbackPicker"
 import FlaggedTermList from "./FlaggedTermList"
 import NumeralFindingList from "./NumeralFindingList"
 import ReportModal from "./ReportModal"
+import InfoTooltip from "./ui/info-tooltip"
 
 const CITATION_MAP = {
   'check.spec.restrictiveWording': '§ 112(b)',
@@ -68,6 +69,47 @@ const CITATION_MAP = {
   'check.drawings.count': '§ 608.02',
 }
 
+// Citation badges are bare section numbers - `§ 112(b)`, `§ 2129`, `§ 101` -
+// which say nothing on their own to a reader who does not already know the
+// number. This maps the badge text to a `tooltip.citation.*` key carrying the
+// instrument and the section's subject.
+//
+// SCOPED TO THE US SHORTHAND ON PURPOSE. The CN / TW / EPC references this
+// component also renders already name their instrument (`專利法施行細則 §18`,
+// `Rule 43(4) EPC`, `EPO Guidelines F-II § 2.3`), so a tooltip there would
+// restate what is already on screen. A citation with no entry renders exactly
+// as before, with no trigger and no affordance.
+//
+// Every title below was verified against the USPTO primary source rather than
+// recalled - this file has already shipped a wrong citation twice (#464, #600).
+const CITATION_TOOLTIP_KEY = {
+  '35 U.S.C. \u00a7 112(a)': '112a',
+  '\u00a7 112(a)': '112a',
+  '\u00a7 112(b)': '112b',
+  '\u00a7 112(d)': '112d',
+  '\u00a7 112(f)': '112f',
+  '\u00a7 101': '101',
+  '37 CFR 1.52(b)(6)': 'cfr1526',
+  '\u00a7 608.01': '60801',
+  '\u00a7 608.01(b)': '60801b',
+  '\u00a7 608.01(c)': '60801c',
+  '\u00a7 608.01(m)': '60801m',
+  '\u00a7 608.01(n)': '60801n',
+  '\u00a7 608.02': '60802',
+  '\u00a7 2117': '2117',
+  '\u00a7 2129': '2129',
+  '\u00a7 2173.01': '217301',
+  '\u00a7 2173.05(b)': '217305b',
+  '\u00a7 2422': '2422',
+}
+
+function getCitationTooltipKey(citation) {
+  const slug = citation && CITATION_TOOLTIP_KEY[citation.trim()]
+  return slug ? `tooltip.citation.${slug}` : null
+}
+
+export { getCitationTooltipKey }
+
 // Optional plain-language explainer for a check, keyed `explain.<base>` where
 // <base> is the message key with its .pass/.verify/.amend suffix stripped.
 // Exists because several checks are correct but opaque without domain context:
@@ -100,6 +142,10 @@ export default function CheckItem({ status, message, message_key, details, detai
   const citation = getCitation(message_key) || reference || null
   const explainKey = getExplainKey(message_key)
   const explainText = explainKey && i18n.exists(explainKey) ? t(explainKey) : null
+  const statusTipKey = `tooltip.status.${status}`
+  const statusTip = i18n.exists(statusTipKey) ? t(statusTipKey) : null
+  const citationTipKey = getCitationTooltipKey(citation)
+  const citationTip = citationTipKey && i18n.exists(citationTipKey) ? t(citationTipKey) : null
 
   const handleReport = () => {
     setReportModalOpen(true)
@@ -159,19 +205,28 @@ export default function CheckItem({ status, message, message_key, details, detai
     >
       <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2">
         <div className="flex items-center gap-2 shrink-0">
-          <span
-            className="inline-block rounded px-1.5 py-0.5 text-[10px] font-bold uppercase leading-none"
-            style={{
-              backgroundColor: `var(--${status}-bg)`,
-              color: `var(--${status}-tag-text)`,
-            }}
-          >
-            {t(`status.${status}`)}
-          </span>
-          {citation && (
-            <span className="citation-badge inline-block rounded px-1.5 py-0.5 text-[11px] font-mono leading-none">
-              {citation}
+          <InfoTooltip label={statusTip}>
+            <span
+              className="inline-block rounded px-1.5 py-0.5 text-[10px] font-bold uppercase leading-none"
+              style={{
+                backgroundColor: `var(--${status}-bg)`,
+                color: `var(--${status}-tag-text)`,
+              }}
+            >
+              {t(`status.${status}`)}
             </span>
+          </InfoTooltip>
+          {citation && (
+            <InfoTooltip label={citationTip}>
+              <span
+                className={
+                  "citation-badge inline-block rounded px-1.5 py-0.5 text-[11px] font-mono leading-none"
+                  + (citationTip ? " underline decoration-dotted underline-offset-[3px] decoration-muted-foreground/60" : "")
+                }
+              >
+                {citation}
+              </span>
+            </InfoTooltip>
           )}
         </div>
         <span className="text-sm flex-1 min-w-0">{displayMessage}</span>
