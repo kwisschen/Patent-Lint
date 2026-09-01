@@ -175,6 +175,29 @@ function formatParagraphFormatViolations(data, t) {
 }
 
 // Registry of structured field names to their formatters.
+/**
+ * Render `[{phrase, context}]` restrictive-wording samples.
+ *
+ * `check.spec.scopeLimitWording` emits this shape but was never registered
+ * here, so `details.scopeLimitWording` interpolated the raw array and the
+ * check shipped reading `Examples: [object Object]` to users. i18next
+ * stringifies objects; it does not warn. The formatter mechanism for exactly
+ * this problem already existed - the check simply was not wired into it.
+ *
+ * Shows the flagged phrase in quotes; the surrounding context is already
+ * carried by the chip list above the text, so repeating it here would only
+ * lengthen an already dense line.
+ */
+function formatWordingSamples(arr, t) {
+  if (!Array.isArray(arr) || arr.length === 0) return ""
+  const shown = arr
+    .map((s) => (typeof s === "string" ? s : s && s.phrase))
+    .filter(Boolean)
+    .map((phrase) => `"${phrase}"`)
+  return shown.join(t("punct.listSeparator"))
+}
+
+
 const STRUCTURED_FORMATTERS = {
   numerals_with_locations: formatNumeralsWithLocations,
   figures_with_locations: formatFiguresWithLocations,
@@ -194,6 +217,7 @@ const STRUCTURED_FORMATTERS = {
   symbol_mismatch_triples: formatSymbolMismatchTriples,
   title_prohibited_items: formatTitleProhibitedItems,
   paragraph_format_violations: formatParagraphFormatViolations,
+  samples: formatWordingSamples,
 }
 
 // Fields whose formatter accepts a plain array (legacy shape).
@@ -208,6 +232,7 @@ const ARRAY_FORMATTER_FIELDS = new Set([
   "claims",
   "paragraphs",
   "sample_names",
+  "samples",
 ])
 
 /**

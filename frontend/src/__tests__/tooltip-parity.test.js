@@ -83,3 +83,40 @@ describe('tooltip namespace', () => {
     }
   })
 })
+
+// The grade breakdown copy has the same contract: present in every locale, and
+// never the English string carried through.
+describe('rubric.breakdown namespace', () => {
+  const enBd = flatten((en.rubric || {}).breakdown || {})
+  const enKeys = Object.keys(enBd)
+
+  it('exists', () => {
+    expect(enKeys.sort()).toEqual(['capped', 'note', 'title', 'weight'])
+  })
+
+  it.each(Object.keys(LOCALES))('%s has every breakdown key', (loc) => {
+    const got = Object.keys(flatten((LOCALES[loc].rubric || {}).breakdown || {}))
+    expect(got.sort()).toEqual(enKeys.sort())
+  })
+
+  it.each(Object.keys(LOCALES))('%s breakdown copy is not the English string', (loc) => {
+    const other = flatten((LOCALES[loc].rubric || {}).breakdown || {})
+    // `weight` is "{{weight}}%" in every locale by design - a percent sign is
+    // not language-specific - so it is excluded from the authored-copy check.
+    const identical = enKeys
+      .filter((k) => k !== 'weight')
+      .filter((k) => other[k] === enBd[k])
+    expect(identical).toEqual([])
+  })
+
+  it('the capped sentence is rebuilt from structured data, not the English cap_reason', () => {
+    // rubric.py emits cap_reason as a hardcoded English string ("6 FIX cap
+    // grade at D+"). Interpolating it would leak English into five locales, so
+    // the template must take count + letter and build its own sentence.
+    for (const [loc, data] of Object.entries({ en, ...LOCALES })) {
+      const capped = ((data.rubric || {}).breakdown || {}).capped || ''
+      expect(capped, `${loc}.capped`).toContain('{{count}}')
+      expect(capped, `${loc}.capped`).toContain('{{letter}}')
+    }
+  })
+})

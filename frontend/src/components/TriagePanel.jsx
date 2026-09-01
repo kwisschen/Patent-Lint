@@ -2,7 +2,7 @@
 // Copyright (c) 2025-2026 Christopher Chen
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AlertCircle, Search, CheckCircle, ChevronDown, MessageSquare, CornerDownRight, ArrowUp, Undo2 } from 'lucide-react'
+import { AlertCircle, Search, CheckCircle, ChevronDown, MessageSquare, CornerDownRight, ArrowUp, Undo2, HelpCircle } from 'lucide-react'
 import { getCitation, getCitationTooltipKey } from './CheckItem'
 import InfoTooltip from './ui/info-tooltip'
 import { getJurisdictionConfig } from '../lib/jurisdictionConfig'
@@ -105,15 +105,21 @@ function TriageItem({ check, t, i18n, compact, jurisdiction, canPromote, isPromo
   // screens, keep them inline-left for compactness.
   return (
     <div className="flex flex-col sm:flex-row items-start gap-1 sm:gap-2 py-1.5 px-3 group">
-      <div className="flex items-center gap-2 shrink-0">
-        <span className="text-[11px] text-muted-foreground">
+      {/* Fixed-width on sm+ so every message in the list starts at the same
+          x. Without it a long citation (`MPEP § 2111; Phillips v. AWH Corp
+          415 F.3d 1303`) pushes its own message ~180px right of its
+          neighbours and the worklist loses its left edge. The badge wraps
+          inside the column rather than truncating - a citation the reader
+          cannot finish reading is worse than one on two lines. */}
+      <div className="flex items-start gap-2 shrink-0 sm:w-56">
+        <span className="text-[11px] text-muted-foreground shrink-0 pt-px">
           {check.section}
         </span>
         {citation && (
           <InfoTooltip label={citationTip}>
             <span
               className={
-                "citation-badge rounded px-1.5 py-0.5 text-[11px] font-mono leading-none"
+                "citation-badge rounded px-1.5 py-0.5 text-[11px] font-mono leading-tight break-words text-left"
                 + (citationTip ? " underline decoration-dotted underline-offset-[3px] decoration-muted-foreground/60" : "")
               }
             >
@@ -223,7 +229,11 @@ function TriageItem({ check, t, i18n, compact, jurisdiction, canPromote, isPromo
                 onClick={handleReport}
                 title={t('feedback.reportProblem')}
                 aria-label={t('feedback.reportProblem')}
-                className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
+                // `opacity-0` alone hid this on TOUCH devices, which never
+                // fire hover - the control was unreachable on a phone. Gate the
+                // hiding on hover capability so touch keeps it visible, and add
+                // group-focus-within so keyboard users reveal it by tabbing in.
+                className="[@media(hover:hover)]:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 transition-opacity"
               >
                 <MessageSquare />
                 <span className="hidden sm:inline">{t('feedback.report')}</span>
@@ -254,12 +264,21 @@ function TriageGroup({
   const count = items.length
   const compact = status === 'pass'
 
+  const statusTipKey = `tooltip.status.${status}`
+  const statusTip = i18n.exists(statusTipKey) ? t(statusTipKey) : null
+
   return (
     <FrostCard tier="resting" accent={status} className="overflow-visible">
+      {/* The header row is a flex CONTAINER rather than a bare button, because
+          the explainer trigger is itself a button and a button cannot nest
+          inside one. Background moves here so the header looks unchanged. */}
+      <div
+        className="flex w-full items-center"
+        style={{ backgroundColor: `var(--${status}-bg)`, color: `var(--${status}-tag-text)` }}
+      >
       <button
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center gap-3 px-4 py-3 pl-5 text-left transition-colors duration-[var(--motion-duration-fast)] hover:bg-foreground/[0.02]"
-        style={{ backgroundColor: `var(--${status}-bg)`, color: `var(--${status}-tag-text)` }}
+        className="flex flex-1 min-w-0 items-center gap-3 px-4 py-3 pl-5 text-left transition-colors duration-[var(--motion-duration-fast)] hover:bg-foreground/[0.02]"
         aria-expanded={open}
       >
         <Icon className="h-5 w-5 shrink-0" style={{ color: `var(--${status}-text)` }} />
@@ -272,6 +291,18 @@ function TriageGroup({
           style={{ color: `var(--${status}-text)` }}
         />
       </button>
+      {/* Says what the bucket MEANS and what is expected of the reader. The
+          worklist starts here, so it is the first place the question comes up
+          - the per-row pills carry the same copy in the section view. */}
+      {statusTip && (
+        <InfoTooltip label={statusTip} side="bottom" align="end" className="mr-4 shrink-0 p-1">
+          <HelpCircle
+            className="h-4 w-4 opacity-60"
+            style={{ color: `var(--${status}-text)` }}
+          />
+        </InfoTooltip>
+      )}
+      </div>
       {open && (
         <div className="border-t border-border/40 p-1 animate-in fade-in-0 slide-in-from-top-1 duration-[var(--motion-duration-base)]">
           {count === 0 && emptyMessage ? (

@@ -36,6 +36,12 @@ export default function InfoTooltip({
   children,
   className,
   side = "top",
+  // Which edge of the trigger the popup grows from. `start` suits the
+  // left-pinned status pills and citation badges; a trigger pinned to the
+  // RIGHT of its row needs `end`, or the popup runs off the viewport - the
+  // same clipping bug as the centred default, mirrored. Passed explicitly
+  // rather than guessed, because only the caller knows where it sits.
+  align = "start",
   triggerProps = {},
 }) {
   const [open, setOpen] = React.useState(false)
@@ -79,7 +85,7 @@ export default function InfoTooltip({
           // at the trigger's own left edge makes it grow rightwards into the
           // row instead. `collisionPadding` keeps it off the window edge on the
           // narrow-viewport layout.
-          align="start"
+          align={align}
           collisionPadding={8}
           className="z-50"
         >

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 // Copyright (c) 2025-2026 Christopher Chen
 import { useState, useEffect } from 'react'
+import { letterForScore } from '../lib/gradeScale'
+import GradeBreakdown from './GradeBreakdown'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useCountUp } from '../hooks/useCountUp'
@@ -119,9 +121,23 @@ export default function RubricHero({ data, animate = false }) {
   const passCount = useCountUp(counts.pass, 600, animate)
   const countMap = { amend: amendCount, verify: verifyCount, pass: passCount }
 
-  const letter = grade?.letter || '-'
+  const finalLetter = grade?.letter || '-'
   const score = grade?.score ?? 0
   const animatedScore = useCountUp(score, 600, animate)
+  // The letter tracks the counting number instead of jumping straight to the
+  // final grade. Previously the hero rendered the FINAL letter beside an
+  // INTERMEDIATE score for the whole 600ms count-up, so a reader glancing
+  // early saw `D+` next to `3 / 100` - two numbers that cannot both be true.
+  // Deriving it from the animated score keeps the pair consistent at every
+  // frame; it settles on exactly `grade.letter` because lib/gradeScale mirrors
+  // rubric.py, and we fall back to the backend letter once the count is done
+  // so the displayed grade is always the authoritative one.
+  const letter =
+    grade == null
+      ? finalLetter
+      : animatedScore >= score
+        ? finalLetter
+        : letterForScore(animatedScore)
   const letterColor = letterColorVar(letter)
 
   return (
@@ -177,6 +193,10 @@ export default function RubricHero({ data, animate = false }) {
           ))}
         </div>
       )}
+
+      {/* Inline answer to "why this grade" - the weighted sections and the
+          FIX cap. See GradeBreakdown for why the cap needed surfacing. */}
+      <GradeBreakdown grade={grade} />
 
       <div className="w-full border-t border-border/40" aria-hidden="true" />
 
