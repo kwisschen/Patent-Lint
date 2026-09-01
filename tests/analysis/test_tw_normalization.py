@@ -395,3 +395,29 @@ class TestR35TrailingVerbsAndComparatives:
         # would shatter compounds like 增大. Pinned so the withhold is visible.
         assert clean_noun_phrase_tw("高度差大") == "高度差大"
         assert clean_noun_phrase_tw("訊號增大") == "訊號增大"
+
+    def test_r47_structural_conjunction_cut(self):
+        # Reports #676 (spec-support) and #639/#640/#663. 且 is a coordinating
+        # conjunction and cannot be noun-internal: measured across 7,367 corpus
+        # occurrences it is followed only by function words, and ZERO emitted
+        # antecedent terms contain it. A capture running through it has crossed
+        # a clause boundary.
+        assert clean_noun_phrase_tw("漸縮部且容置於") == "漸縮部"
+        assert clean_noun_phrase_tw("基板上且電性絕緣") == "基板"
+
+    def test_r47_conjunction_siblings_stay_withheld(self):
+        # 並 is NOT safe and this was measured, not assumed: 並聯 ("parallel
+        # connection") occurs 118 times in the corpus, plus 並列 and 並排.
+        # 而/又/亦/皆/逐 have no report behind them and 逐漸/逐出 exist, so they
+        # are held under DR-1. Pinned so a later round cannot widen the cut
+        # to the whole conjunction class without re-measuring.
+        assert clean_noun_phrase_tw("並聯電阻") == "並聯電阻"
+        assert clean_noun_phrase_tw("逐漸變小部") == "逐漸變小部"
+
+    def test_r47_leading_noun_initial_chars_preserved(self):
+        # The blanket leading-strip prototype was REJECTED for damaging these:
+        # 以 opens 以太網路 (Ethernet), 用 opens 用戶 (user), 取 opens 取得部,
+        # 輸出 opens 輸出電壓. A leading-position strip on single characters is
+        # FN-unsafe; only the interior conjunction cut ships.
+        for term in ("以太網路控制器", "用戶介面", "取得部", "輸出電壓", "配置資訊"):
+            assert clean_noun_phrase_tw(term) == term

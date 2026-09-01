@@ -1962,6 +1962,20 @@ _PLURAL_REFERENCE_PREFIXES_CN: tuple[str, ...] = tuple(sorted(
 # lines 1138-1331 for the historical risk-review rationale per verb.
 _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
     (
+        # === R64 (2026-09-01) - TW R47 mirror, found by the NEW term-quality
+        # gate rather than by a CN report ===
+        # 且 is a coordinating conjunction and cannot be noun-internal: measured
+        # across 5,530 CN corpus occurrences it is followed only by function
+        # words (且所 1123, 且其 1055, 且在 278), and ZERO emitted CN antecedent
+        # terms contain it. The TW half was driven by reports #676/#639/#640/
+        # #663; the CN half had NO report behind it and was invisible until the
+        # term-quality gate shipped in the same round surfaced 9 structurally
+        # bad CN spec-support terms (等于m并且小于, 并且在, 并且当, 等于℃且小于).
+        # That is the gate paying for itself on its first run.
+        #
+        # 并 (Simplified 並) is NOT included - 并联 "parallel connection" is a
+        # real compound, exactly as on the TW side.
+        "\u4e14",
         # === R63 (2026-08-17) - TW R41 mirror, reports #533/#535 ===
         #   经 ("undergoes / via") - `一共聚物经氢化反应而获得` captured as ONE
         #     intro so the later `所述共聚物` had nothing to match. Reproduced on

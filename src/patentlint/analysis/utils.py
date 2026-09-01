@@ -1249,6 +1249,14 @@ _POST_NOMINAL_PREDICATIVE_ADJ = frozenset({
     # silencing 8 real `legit` defects - kept out. These remaining words are
     # never head nouns in the trailing position.
     "indicative", "operable", "responsive",
+    # R47 (2026-09-01, reports #681/#682 antecedent + #688/#689 spec-support -
+    # the SAME over-capture surfacing in both engines on one draft). `the local
+    # statistical values RESPECTIVE TO all of the analysis blocks` is the exact
+    # reduced-relative shape this set exists for: adjective + preposition. Safe
+    # by the same argument as its neighbours - `respective` is prenominal in
+    # ordinary use (`the respective blocks`) and is never a head noun in the
+    # TRAILING position, which is the only place clean_noun_phrase strips it.
+    "respective",
     # R26 (2026-06-27, asymmetry probe): `conditional` (-al) - post-nominal
     # predicative adjective never used as a head noun in the trailing position
     # (`trace enabler conditional`). `operative` WITHHELD - the FN-guard caught
