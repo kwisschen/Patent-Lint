@@ -192,17 +192,26 @@ def _term_defects(juris: str, term: str) -> list[str]:
     return out
 
 
-# Known residuals as of 2026-09-01 (TW R47 / CN R64). A gate that is
-# permanently red gets ignored, so the bar is "no MORE than this", and every
-# member is a documented withhold rather than an unexamined failure:
-#   TW 1 - 並包含一組n-1個二極體. 並 cannot be cut (並聯 "parallel connection"
-#          occurs 118x, plus 並列 / 並排), so this one needs a lexeme-gated
-#          cut, not the bare conjunction cut that shipped.
-#   CN 5 - 并且-initial captures (并且在 / 并且当 / 并且-). Cutting at 且 leaves
-#          a single character, below the 2-char floor, so the capture falls
-#          back uncut. Needs the leading-conjunction strip, a separate class.
-# RAISING EITHER NUMBER IS A REGRESSION. Lowering one is the next round's win.
-_EXPECTED_BAD = {"TW": 1, "CN": 5, "US": 0}
+# Known residuals, updated 2026-09-01 after TW R52 / CN R65 (the lexeme-gated
+# leading-conjunction reject). A gate that is permanently red gets ignored, so
+# the bar is "no MORE than this", and every member is a documented withhold
+# rather than an unexamined failure:
+#   TW 0 - was 1 (並包含一組n-1個二極體). CLOSED by R52: the residual's own note
+#          asked for a lexeme-gated cut rather than the bare conjunction cut,
+#          and that is what shipped - a leading 並 is the connective unless the
+#          two-char prefix is 並聯 / 並列 / 並排 / 並行.
+#   CN 2 - was 5. The three 并且-initial captures (并且在 / 并且当 / 并且-) are
+#          CLOSED by R65, the mirror of R52. The two survivors are a DIFFERENT
+#          class: Fi逐元素点乘 / Vi逐元素点乘 (CN119141528A c2) are a Latin
+#          variable name followed by a verb phrase (点乘 = "dot multiply"), so
+#          the real element is the bare variable. Note the gate's reason string
+#          ("contains the conjunction 逐") is imprecise here - 逐元素 is the
+#          adverbial "element-wise", not a conjunction - but the TERM is bad
+#          either way, on the verb. Withheld: no report, and a 点乘 trailing
+#          strip would be a domain-specific member rather than a mechanism.
+#   US 0 - the arm became reachable 2026-09-01; first run was already clean.
+# RAISING ANY NUMBER IS A REGRESSION. Lowering one is the next round's win.
+_EXPECTED_BAD = {"TW": 0, "CN": 2, "US": 0}
 
 
 def _report_term_quality(juris: str, terms) -> int:
