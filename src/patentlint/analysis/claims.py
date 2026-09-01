@@ -16,6 +16,7 @@ from patentlint.analysis.utils import (
     _DEFINITE_REF, _QUANTIFIER_STOPS, _dx,
     extract_introductions, extract_introductions_permissive,
     extract_pattern_a_intros,
+    pattern_a_intro_offsets,
     extract_abbreviation_intros, clean_noun_phrase, _strip_comparative_tail,
     compute_confidence_score, make_document_dedup_key,
     strip_contextual_verb, strip_trailing_adverb, token_set_jaccard,
@@ -360,6 +361,36 @@ def _word_boundary_match(needle: str, haystack: str) -> bool:
     return re.search(pattern, haystack, re.IGNORECASE) is not None
 
 
+# US R48 (2026-09-01, report #677) - ANTECEDENT BASIS MUST PRECEDE THE REFERENCE.
+# Introductions were pooled per claim with no notion of position, so an
+# introduction appearing LATER in the same claim satisfied an EARLIER definite
+# reference. The reporter's case: claim 9 writes `a ratio of THE VOLUME of the
+# tuning channel to A VOLUME of the first chamber`, and its own later `a volume`
+# resolved the earlier `the volume` - so nothing flagged, though claim 1 never
+# recites a volume at all. Under MPEP 2173.05(e) the basis must be established
+# before the reference, not after it.
+#
+# Isolated by elimination rather than assumed: deleting the sibling claim 8
+# changed nothing, and removing only the LATER `a volume` made the finding
+# appear. The sibling claim was never the cause.
+#
+# SCOPE - narrow on purpose, because vetoing a basis ADDS findings:
+#   * ancestor-supplied basis is positionally unconditional and never vetoed;
+#   * only PATTERN A introductions (`a X` / `an X` / `at least one X`) carry
+#     trustworthy offsets, via `pattern_a_intro_offsets`;
+#   * a term reachable through any OTHER arm (bare-noun list, gerund head,
+#     self-definition, abbreviation) is left alone - those arms have no offset
+#     and guessing one is what broke the two earlier attempts;
+#   * a veto still falls through to `has_bare_noun_introduction`, which has
+#     always been positional, so an article-less earlier mention rescues it.
+#
+# Two earlier designs were measured and discarded, both by the corpus rather
+# than by inspection: a hand-written determiner regex accepted `an electrolyte
+# salt` as introducing `electrolyte` and missed the `andan` PDF collapse; and
+# re-running the extractor over the truncated prefix destroyed `comprising:`
+# list context, adding 1,577 findings of which 228 were known walker FPs.
+
+
 def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
     """Check claims for antecedent basis issues.
 
@@ -619,6 +650,13 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
 
         # Find definite references ("the X" and "said X") in this claim
         seen: set[tuple[str, str]] = set()
+        # R48: Pattern A intro offsets for THIS claim, plus the set of intros
+        # reachable only through arms that carry no offset (those are never
+        # vetoed). Computed once per claim, not per reference.
+        pattern_a_offsets = pattern_a_intro_offsets(claim_text_lower)
+        non_pattern_a_intros = set(
+            extract_introductions(claim_text_lower)
+        ) - set(pattern_a_offsets)
         for m in _DEFINITE_REF.finditer(body_scan_text):
             raw_noun = m.group("noun").strip()
             ext_m = _THROUGH_HOLE_CONTINUATION.match(body_scan_text[m.end():])
@@ -695,6 +733,41 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                     and all(w in abbrev_intros for w in term_words)
                 ):
                     has_basis = True
+
+            # US R48 (report #677): basis must PRECEDE the reference.
+            #
+            # NEVER veto inside the dependent-claim PREAMBLE. `The antibody ...
+            # of claim 1` is a back-reference to the parent by construction, so
+            # its position within the claim carries no antecedent meaning. The
+            # preamble is normally masked out of the body scan, but only when
+            # its head noun matches the parent's; US12060411B2 c4 (`The antibody
+            # or antigen-binding fragment thereof of claim 1`) fails that head
+            # match, so without this guard the veto manufactured a finding on a
+            # perfectly ordinary dependent preamble.
+            in_dep_preamble = bool(dep_m) and m.start() < dep_m.end()
+            if has_basis and not in_dep_preamble:
+                exact_matching = [
+                    intro for intro in intros
+                    if _word_boundary_match(intro, term)
+                    and _word_boundary_match(term, intro)
+                ]
+                number_key_owner = intros_by_number_key.get(en_number_key(term))
+                ancestor_basis = any(
+                    intros_by_term.get(i) != claim.id for i in exact_matching
+                ) or (
+                    number_key_owner is not None and number_key_owner != claim.id
+                )
+                if exact_matching and not ancestor_basis:
+                    # Every basis must be a Pattern A intro we can locate, and
+                    # every located occurrence must sit after the reference.
+                    if all(i in pattern_a_offsets for i in exact_matching) and not any(
+                        i in non_pattern_a_intros for i in exact_matching
+                    ):
+                        if all(
+                            min(pattern_a_offsets[i]) > m.start()
+                            for i in exact_matching
+                        ):
+                            has_basis = False
 
             # Bare-noun introduction (R4, issues #71/#91/#92): a
             # multi-word term first mentioned article-less - earlier in

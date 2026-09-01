@@ -2020,6 +2020,34 @@ def extract_introductions(text: str) -> list[str]:
     return refs
 
 
+def pattern_a_intro_offsets(text: str) -> dict[str, list[int]]:
+    """Pattern A intros WITH their offsets: {cleaned phrase: [start, ...]}.
+
+    Offset-carrying twin of `extract_pattern_a_intros`, added for US R48
+    (report #677), which has to know whether an introduction sits before or
+    after a reference in the same claim. It deliberately mirrors that function
+    line for line - same pattern, same definite-preceder guard, same cleaner -
+    so the two cannot drift apart.
+
+    An earlier attempt derived position by re-running the extractor over the
+    TRUNCATED text before the reference. That was wrong in a way the corpus
+    caught loudly (+1,577 findings, 228 of them on known walker FPs): cutting
+    a claim mid-list destroys the `comprising: ...` list context the bare-noun
+    arm depends on, so intros disappeared for reasons that had nothing to do
+    with position. Read offsets from the match; never infer them by truncating.
+    """
+    lowered = text.lower()
+    out: dict[str, list[int]] = {}
+    for m in _INTRO_PATTERNS.finditer(lowered):
+        preceding = lowered[max(0, m.start() - 8) : m.start()]
+        if _DEFINITE_PRECEDER.search(preceding):
+            continue
+        cleaned = clean_noun_phrase(m.group(1).strip())
+        if cleaned:
+            out.setdefault(cleaned, []).append(m.start())
+    return out
+
+
 def extract_pattern_a_intros(text: str) -> list[str]:
     """Extract ONLY Pattern A intros (a/an + noun, plurality of, etc.).
 
