@@ -13,7 +13,13 @@ import ReportModal from "./ReportModal"
 
 const CITATION_MAP = {
   'check.spec.restrictiveWording': '§ 112(b)',
-  'check.spec.paragraphSequential': '§ 608.01(p)',
+  // Re-pinned in #464 after verifying the primary source: MPEP § 608.01
+  // quotes 37 CFR 1.52(b)(6) for paragraph numbering, and § 608.01(p) is a
+  // different subject entirely. This badge kept showing the old citation
+  // after that PR corrected models.py, the six locale files and CHECKS.md -
+  // a fourth surface nobody thought to grep. Cross-check every citation
+  // surface when re-pinning one.
+  'check.spec.paragraphSequential': '37 CFR 1.52(b)(6)',
   // paragraphEnding carries NO citation: verified against the primary
   // source (report #600) that MPEP § 608.01 states no paragraph-punctuation
   // requirement at all. It had cited § 608.01(p), which is Completeness of
@@ -62,6 +68,19 @@ const CITATION_MAP = {
   'check.drawings.count': '§ 608.02',
 }
 
+// Optional plain-language explainer for a check, keyed `explain.<base>` where
+// <base> is the message key with its .pass/.verify/.amend suffix stripped.
+// Exists because several checks are correct but opaque without domain context:
+// "No special claim format issues detected" does not tell a drafter WHICH
+// formats were examined. Purely additive - a check with no explain key renders
+// exactly as before.
+function getExplainKey(messageKey) {
+  if (!messageKey) return null
+  return `explain.${messageKey.replace(/\.(pass|verify|amend|missing)$/, '')}`
+}
+
+export { getExplainKey }
+
 function getCitation(messageKey) {
   if (!messageKey) return null
   // Try exact match first, then strip .pass/.verify/.amend suffix
@@ -79,6 +98,8 @@ export default function CheckItem({ status, message, message_key, details, detai
   const displayMessage = message_key && i18n.exists(message_key) ? formatDetails(message_key, details_params, t) : message
   const displayDetails = details_key && i18n.exists(details_key) ? formatDetails(details_key, details_params, t) : details
   const citation = getCitation(message_key) || reference || null
+  const explainKey = getExplainKey(message_key)
+  const explainText = explainKey && i18n.exists(explainKey) ? t(explainKey) : null
 
   const handleReport = () => {
     setReportModalOpen(true)
@@ -192,6 +213,11 @@ export default function CheckItem({ status, message, message_key, details, detai
       )}
       {displayDetails && (
         <p className="text-xs text-muted-foreground mt-1 sm:ml-[52px]">{displayDetails}</p>
+      )}
+      {explainText && (
+        <p className="text-xs text-muted-foreground/80 mt-1 sm:ml-[52px] italic">
+          {explainText}
+        </p>
       )}
     </div>
   )
