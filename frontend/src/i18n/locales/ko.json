@@ -876,7 +876,7 @@
         "transitionPhrase": "심사지남에 따라, 독립 청구항은 '其特征在于' 등 2부 형식의 연결어를 포함하여 전제부(선행기술)와 특징부(신규 요소)를 구분해야 합니다."
       },
       "independentPreamble": "审查指南 第二部分第二章 §3.1.1 은 「一种X」 를 표준형 예시로 제시합니다; 实施细则 §22 는 主题名称 의 기재만 요구하며 「一种」 문구를 명시적으로 강제하지는 않습니다. 발명 유형에 부합한다면 「一种X」 형식으로 재작성을 검토하세요.",
-      "numeralConsistency": "{{count}}개의 부호 불일치. 예시: {{inline_summary}}",
+      "numeralConsistency": "{{count}}개의 부호 불일치.",
       "markushOpenTransition": "청구항 {{claims}}이(가) 개방형 Markush 연결어({{transitions}})를 사용합니다. 审查指南 §9.3에 따라 폐쇄형 「组成的」으로 변경하십시오.",
       "omnibusClaims": "청구항 {{claims}}은(는) 포괄적 청구항(특징 대신 명세서/도면 참조)입니다. 审查指南 §3.3에 따라 다시 작성하십시오.",
       "crmNonTransitory": "청구항 {{claims}}이(가) 非暂态 없이 컴퓨터 판독 가능 매체를 청구합니다. 非暂态 / 非暂时性 한정을 추가하여 비일시적 매체로 한정하고 §25 대상 적격성 문제를 피하세요(审查指南 第二部分第九章).",
@@ -940,8 +940,8 @@
       "singleSentenceMultiSentence": "專利法施行細則 §18에 따라 각 請求項은 끝에 마침표(。)가 하나만 있는 단일 문장이어야 합니다. 중간의 마침표를 제거하거나 표시된 請求項을 분할하십시오.",
       "independentPreamble": "TIPO 偵錯系統은 관례 위반으로 표시합니다. 專利法施行細則 §18 과 專利審査基準은 전제부에 標的名稱 을 기재할 것을 요구하지만 「一種」 문구를 명시적으로 강제하지는 않습니다. 발명 유형에 부합한다면 「一種X」 형식으로 재작성을 검토하세요.",
       "indigenousTerms": "용어: {{terms}}. 原住民族傳統智慧創作保護條例 에 따라 본 출원이 보호받는 전통 지식 창작물과 상충하지 않는지 확인하세요.",
-      "numeralConsistency": "{{count}}개의 부호 불일치. 예시: {{inline_summary}}",
-      "symbolTableCoverage": "{{count}}개의 구성요소(부호 {{refnum_count}}개)가 符號說明에 기재되지 않았습니다. 예시: {{inline_summary}}",
+      "numeralConsistency": "{{count}}개의 부호 불일치.",
+      "symbolTableCoverage": "{{count}}개의 구성요소(부호 {{refnum_count}}개)가 符號說明에 기재되지 않았습니다.",
       "markushOpenTransition": "청구항 {{claims}}이(가) 개방형 마쿠시 전이어({{transitions}})를 사용합니다. 폐쇄형 選自由…組成的群組 형식으로 변경하세요(專利審查基準 第二篇第十章).",
       "omnibusClaims": "청구항 {{claims}}이(가) 옴니버스 형식입니다(구성요소 대신 說明書/附圖 참조). 기술적 특징을 명시적으로 기재하여 專利法 §26 第3項 을 충족하세요.",
       "crmNonTransitory": "청구항 {{claims}}이(가) 非暫態 없이 컴퓨터 판독 가능 매체를 청구합니다. 非暫態 / 非暫時性 한정을 추가하여 비일시적 매체로 한정하고 §21 적격성 문제를 피하세요.",
@@ -964,7 +964,7 @@
       "orphanedDetailedFigures": "도면: {{list}}. 「Brief Description of Drawings」에 해당 도면의 설명을 추가하거나, 「Detailed Description」에서 참조를 제거하십시오(EPC 관용어).",
       "claimReferenceInSpec": "명세서가 청구항을 참조합니다: {{detail}}"
     },
-    "numeralConsistency": "{{count}}개의 부호 불일치. 예시: {{inline_summary}}",
+    "numeralConsistency": "{{count}}개의 부호 불일치.",
     "scopeLimitWording": "{{count}}건의 제한적 표현이 감지되었습니다. 예시: {{samples}}",
     "dependencyFormatClaims": "37 CFR 1.75(c)에 따라 종속항은 명확한 인용 문구로 선행 청구항을 인용해야 합니다(of claim N, according to claim N, as recited in claim N 등). 항 번호만 기재하고 인용 문구가 없는 형식(예: the method claim 10)은 인정되는 인용 형식이 아닙니다. 표시된 청구항을 확인하십시오."
   },
@@ -1027,8 +1027,8 @@
         "pass": "명세서에서 청구범위를 한정할 수 있는 표현이 검출되지 않았습니다."
       },
       "numeralConsistency": {
-        "amend": "{{count}}개의 도면 부호가 서로 다른 구성요소 이름에 사용되었습니다. 예시: {{inline_summary}}",
-        "verify": "{{count}}개의 도면 부호에서 명명이 일관되지 않을 수 있어 확인이 필요합니다. 예시: {{inline_summary}}",
+        "amend": "{{count}}개의 도면 부호가 서로 다른 구성요소 이름에 사용되었습니다.",
+        "verify": "{{count}}개의 도면 부호에서 명명이 일관되지 않을 수 있어 확인이 필요합니다.",
         "pass": "도면 부호가 구성요소를 일관되게 식별합니다."
       }
     },
@@ -1170,8 +1170,8 @@
           "pass": "발명의 명칭 누락이 감지되지 않았습니다(Rule 41(2)(b) EPC)."
         },
         "numeralConsistency": {
-          "amend": "{{count}}개의 부호가 서로 다른 구성요소 이름에 사용되고 있습니다(Rule 43(7) EPC; Rule 46(2)(h) EPC). 예시: {{inline_summary}}",
-          "verify": "{{count}}개의 부호에서 명칭이 일치하지 않을 가능성이 있습니다. Rule 43(7) EPC + Rule 46(2)(h) EPC에 따라 검토하십시오. 예시: {{inline_summary}}",
+          "amend": "{{count}}개의 부호가 서로 다른 구성요소 이름에 사용되고 있습니다(Rule 43(7) EPC; Rule 46(2)(h) EPC).",
+          "verify": "{{count}}개의 부호에서 명칭이 일치하지 않을 가능성이 있습니다. Rule 43(7) EPC + Rule 46(2)(h) EPC에 따라 검토하십시오.",
           "pass": "부호 일치성 관련 사항이 감지되지 않았습니다(Rule 43(7) EPC; Rule 46(2)(h) EPC)."
         }
       },
@@ -1350,8 +1350,8 @@
           "pass": "명세서가 청구항을 참조하지 않습니다."
         },
         "numeralConsistency": {
-          "amend": "{{count}}개의 도면 부호가 서로 다른 구성요소 이름에 사용되었습니다. 예시: {{inline_summary}}(专利法实施细则 §21 第2款).",
-          "verify": "{{count}}개의 도면 부호에서 명명이 일관되지 않을 수 있어 확인이 필요합니다. 예시: {{inline_summary}}(专利法实施细则 §21 第2款).",
+          "amend": "{{count}}개의 도면 부호가 서로 다른 구성요소 이름에 사용되었습니다(专利法实施细则 §21 第2款).",
+          "verify": "{{count}}개의 도면 부호에서 명명이 일관되지 않을 수 있어 확인이 필요합니다(专利法实施细则 §21 第2款).",
           "pass": "도면 부호가 구성요소를 일관되게 식별합니다."
         }
       },
@@ -1525,12 +1525,12 @@
           "pass": "원주민 관련 용어가 발견되지 않았습니다."
         },
         "numeralConsistency": {
-          "amend": "{{count}}개의 부호가 서로 다른 요소 이름에 사용되었습니다. 예시: {{inline_summary}}(專利法施行細則 §19 第2款).",
-          "verify": "{{count}}개의 부호에서 명명이 일관되지 않을 수 있어 확인이 필요합니다. 예시: {{inline_summary}}(專利法施行細則 §19 第2款).",
+          "amend": "{{count}}개의 부호가 서로 다른 요소 이름에 사용되었습니다(專利法施行細則 §19 第2款).",
+          "verify": "{{count}}개의 부호에서 명명이 일관되지 않을 수 있어 확인이 필요합니다(專利法施行細則 §19 第2款).",
           "pass": "부호가 요소를 일관되게 식별합니다."
         },
         "symbolTableCoverage": {
-          "amend": "{{count}}개의 구성요소(부호 {{refnum_count}}개)가 符號說明에 기재되지 않았습니다. 예시: {{inline_summary}}",
+          "amend": "{{count}}개의 구성요소(부호 {{refnum_count}}개)가 符號說明에 기재되지 않았습니다.",
           "pass": "符號說明 포괄성 관련 사항이 감지되지 않았습니다."
         }
       },

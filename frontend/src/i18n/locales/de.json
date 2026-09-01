@@ -876,7 +876,7 @@
         "transitionPhrase": "Gemäß 审查指南 sollte ein unabhängiger Anspruch einen zweiteiligen Übergang (z. B. 其特征在于) enthalten, der den Oberbegriff (Stand der Technik) vom kennzeichnenden Teil (neuartige Merkmale) trennt."
       },
       "independentPreamble": "审查指南 第二部分第二章 §3.1.1 verwendet 一种X als Standardform; 专利法实施细则 §24 verlangt die Nennung des 主题名称, nicht wörtlich „一种\". Nach 一种X umformulieren.",
-      "numeralConsistency": "{{count}} inkonsistent verwendete Bezugszeichen. Beispiele: {{inline_summary}}",
+      "numeralConsistency": "{{count}} inkonsistent verwendete Bezugszeichen.",
       "markushOpenTransition": "Anspruch/Ansprüche {{claims}} verwenden offene Markush-Übergänge ({{transitions}}); auf die geschlossene Form 「组成的」 gemäß 审查指南 §9.3 umstellen.",
       "omnibusClaims": "Anspruch/Ansprüche {{claims}} sind Omnibus-Ansprüche (Bezug auf Beschreibung/Zeichnungen statt Merkmale); umformulieren gemäß 审查指南 §3.3.",
       "crmNonTransitory": "Anspruch/Ansprüche {{claims}} beanspruchen ein computerlesbares Medium ohne 非暂态. Den Zusatz 非暂态 / 非暂时性 einfügen, um den Anspruch auf nichtflüchtige Medien zu beschränken und §25-Patentierbarkeitsprobleme zu vermeiden (审查指南 第二部分第九章).",
@@ -940,8 +940,8 @@
       "singleSentenceMultiSentence": "Gemäß 專利法施行細則 §18 muss jeder Anspruch ein Satz mit genau einem 。 am Ende sein. Entfernen Sie Punkte innerhalb des Anspruchs oder strukturieren Sie die gekennzeichneten Ansprüche um.",
       "independentPreamble": "Das TIPO 偵錯系統 markiert dies als Konventionsfehler. 專利法施行細則 §18 + 專利審查基準 verlangen, dass die Präambel den 標的名稱 (Bezeichnung des Anspruchsgegenstands) nennt, schreiben jedoch nicht wörtlich „一種\" vor. Nach 一種X umformulieren, sofern dies zum Erfindungsgegenstand passt.",
       "indigenousTerms": "Begriffe: {{terms}}. Gemäß 原住民族傳統智慧創作保護條例 prüfen, ob die Anmeldung geschützten traditionellen Schöpfungen nicht widerspricht.",
-      "numeralConsistency": "{{count}} inkonsistent verwendete Bezugszeichen. Beispiele: {{inline_summary}}",
-      "symbolTableCoverage": "{{count}} Element(e) für {{refnum_count}} Bezugszeichen fehlen in 符號說明: {{inline_summary}}",
+      "numeralConsistency": "{{count}} inkonsistent verwendete Bezugszeichen.",
+      "symbolTableCoverage": "{{count}} Element(e) für {{refnum_count}} Bezugszeichen fehlen in 符號說明.",
       "markushOpenTransition": "Anspruch/Ansprüche {{claims}} verwenden offene Markush-Übergänge ({{transitions}}); wechseln Sie zur geschlossenen Form 選自由…組成的群組 (TIPO-Prüfungsrichtlinien 第二篇第十章).",
       "omnibusClaims": "Anspruch/Ansprüche {{claims}} sind als Omnibus-Ansprüche formuliert (verweisen auf 說明書/附圖 statt Merkmale). Merkmale ausdrücklich nennen, um Patentgesetz §26 第3項 zu erfüllen.",
       "crmNonTransitory": "Anspruch/Ansprüche {{claims}} beanspruchen ein computerlesbares Medium ohne 非暫態. Den Zusatz 非暫態 / 非暫時性 einfügen, um den Anspruch auf nichtflüchtige Medien zu beschränken und §21-Patentierbarkeitsprobleme zu vermeiden.",
@@ -964,7 +964,7 @@
       "orphanedDetailedFigures": "Figuren: {{list}}. Fügen Sie entweder eine Beschreibung dieser Figuren in der Kurzbeschreibung der Zeichnungen hinzu oder entfernen Sie den Verweis aus der ausführlichen Beschreibung (gemäß EPC-Konvention).",
       "claimReferenceInSpec": "Die Beschreibung verweist auf einen Anspruch: {{detail}}"
     },
-    "numeralConsistency": "{{count}} inkonsistent verwendete Bezugszeichen. Beispiele: {{inline_summary}}",
+    "numeralConsistency": "{{count}} inkonsistent verwendete Bezugszeichen.",
     "scopeLimitWording": "{{count}} einschränkende Formulierung(en) festgestellt. Beispiele: {{samples}}",
     "dependencyFormatClaims": "Nach 37 CFR 1.75(c) muss ein abhängiger Anspruch mit einer ausdrücklichen Bezugnahme auf einen vorhergehenden Anspruch zurückverweisen („of claim N“, „according to claim N“, „as recited in claim N“). Eine Präambel, die nur die Anspruchsnummer nennt, ohne verbindende Wendung (etwa „the method claim 10“), ist kein anerkanntes Format. Bitte prüfen Sie die markierten Ansprüche."
   },
@@ -1027,8 +1027,8 @@
         "pass": "Keine anspruchsbeschränkenden Formulierungen in der Beschreibung gefunden."
       },
       "numeralConsistency": {
-        "amend": "{{count}} Bezugszeichen mit mehreren unterschiedlichen Elementbezeichnungen verwendet. Beispiele: {{inline_summary}}",
-        "verify": "{{count}} Bezugszeichen mit möglicherweise inkonsistenter Benennung - bitte prüfen. Beispiele: {{inline_summary}}",
+        "amend": "{{count}} Bezugszeichen mit mehreren unterschiedlichen Elementbezeichnungen verwendet.",
+        "verify": "{{count}} Bezugszeichen mit möglicherweise inkonsistenter Benennung - bitte prüfen.",
         "pass": "Bezugszeichen identifizieren ihre Elemente konsistent."
       }
     },
@@ -1170,8 +1170,8 @@
           "pass": "Keine Titel-Befunde festgestellt (Regel 41(2)(b) EPÜ)."
         },
         "numeralConsistency": {
-          "amend": "{{count}} Bezugszeichen für mehrere unterschiedliche Elementnamen verwendet (Regel 43(7) EPÜ; Regel 46(2)(h) EPÜ). Beispiele: {{inline_summary}}",
-          "verify": "{{count}} Bezugszeichen mit möglicherweise inkonsistenter Benennung - prüfen nach Regel 43(7) EPÜ + Regel 46(2)(h) EPÜ. Beispiele: {{inline_summary}}",
+          "amend": "{{count}} Bezugszeichen für mehrere unterschiedliche Elementnamen verwendet (Regel 43(7) EPÜ; Regel 46(2)(h) EPÜ).",
+          "verify": "{{count}} Bezugszeichen mit möglicherweise inkonsistenter Benennung - prüfen nach Regel 43(7) EPÜ + Regel 46(2)(h) EPÜ.",
           "pass": "Keine Befunde zur Bezugszeichen-Konsistenz festgestellt (Regel 43(7) EPÜ; Regel 46(2)(h) EPÜ)."
         }
       },
@@ -1350,8 +1350,8 @@
           "pass": "Beschreibung verweist nicht auf die Ansprüche."
         },
         "numeralConsistency": {
-          "amend": "{{count}} Bezugszeichen wurden mit mehreren unterschiedlichen Elementbezeichnungen verwendet. Beispiele: {{inline_summary}} (实施细则 §21 第2款).",
-          "verify": "{{count}} Bezugszeichen mit möglicherweise inkonsistenter Benennung - bitte prüfen. Beispiele: {{inline_summary}} (实施细则 §21 第2款).",
+          "amend": "{{count}} Bezugszeichen wurden mit mehreren unterschiedlichen Elementbezeichnungen verwendet (实施细则 §21 第2款).",
+          "verify": "{{count}} Bezugszeichen mit möglicherweise inkonsistenter Benennung - bitte prüfen (实施细则 §21 第2款).",
           "pass": "Bezugszeichen identifizieren die Bauteile konsistent."
         }
       },
@@ -1525,12 +1525,12 @@
           "pass": "Keine indigene Terminologie gefunden."
         },
         "numeralConsistency": {
-          "amend": "{{count}} Bezugssymbole wurden mit mehreren unterschiedlichen Elementbezeichnungen verwendet. Beispiele: {{inline_summary}} (施行細則 §19 第2款).",
-          "verify": "{{count}} Bezugssymbole mit möglicherweise inkonsistenter Benennung - bitte prüfen. Beispiele: {{inline_summary}} (施行細則 §19 第2款).",
+          "amend": "{{count}} Bezugssymbole wurden mit mehreren unterschiedlichen Elementbezeichnungen verwendet (施行細則 §19 第2款).",
+          "verify": "{{count}} Bezugssymbole mit möglicherweise inkonsistenter Benennung - bitte prüfen (施行細則 §19 第2款).",
           "pass": "Bezugssymbole identifizieren die Elemente konsistent."
         },
         "symbolTableCoverage": {
-          "amend": "{{count}} Element(e) für {{refnum_count}} Bezugssymbol(e) fehlen in 符號說明: {{inline_summary}}",
+          "amend": "{{count}} Element(e) für {{refnum_count}} Bezugssymbol(e) fehlen in 符號說明.",
           "pass": "Keine Lücken bei der Symboltabellen-Abdeckung festgestellt."
         }
       },

@@ -876,7 +876,7 @@
         "transitionPhrase": "審査指南により、独立請求項には「其特征在于」などの二部形式の移行句を含め、前書き（従来技術）と特徴部（新規要素）を区別する必要があります。"
       },
       "independentPreamble": "审查指南 第二部分第二章 §3.1.1 は「一种X」を標準形として例示しています；实施细则 §22 は主题名称 の記載のみを要求し、「一种」の字句を明示的には強制していません。発明の態様に合えば「一种X」形式への書換えをご検討ください。",
-      "numeralConsistency": "{{count}} 個の参照符号が不一致。例：{{inline_summary}}",
+      "numeralConsistency": "{{count}} 個の参照符号が不一致。",
       "markushOpenTransition": "請求項 {{claims}} で開放式の Markush 連結語（{{transitions}}）が使用されています。审查指南 §9.3 により閉鎖式「组成的」に変更してください。",
       "omnibusClaims": "請求項 {{claims}} は包括的請求項（明細書／図面を参照し特徴を直接記載していない）です。审查指南 §3.3 により書き直してください。",
       "crmNonTransitory": "クレーム {{claims}} は 非暂态 のないコンピュータ可読媒体を記載しています。非暂态 / 非暂时性 を付加して非一時的媒体に限定し、§25 対象適格性問題を回避してください（审查指南 第二部分第九章）。",
@@ -940,8 +940,8 @@
       "singleSentenceMultiSentence": "專利法施行細則 §18により、各請求項は末尾に句点（。）が1つだけの単文である必要があります。途中の句点を削除するか、該当する請求項を分割してください。",
       "independentPreamble": "TIPO 偵錯系統は慣行違反として検出します。專利法施行細則 §18 と專利審查基準 は前文に標的名稱 を記載することを要求しますが、「一種」の字句を明示的に強制しているわけではありません。発明の態様に合えば「一種X」形式への書換えをご検討ください。",
       "indigenousTerms": "用語：{{terms}}。原住民族傳統智慧創作保護條例により、本出願が保護された伝統的創作と抵触しないかご確認ください。",
-      "numeralConsistency": "{{count}} 個の参照符号が不一致。例：{{inline_summary}}",
-      "symbolTableCoverage": "{{count}} 個の要素（参照符号 {{refnum_count}} 個）が 符號說明 に記載されていません。例：{{inline_summary}}",
+      "numeralConsistency": "{{count}} 個の参照符号が不一致。",
+      "symbolTableCoverage": "{{count}} 個の要素（参照符号 {{refnum_count}} 個）が 符號說明 に記載されていません。",
       "markushOpenTransition": "クレーム {{claims}} はオープンなマーカッシュ移行語（{{transitions}}）を使用しています。クローズドな 選自由…組成的群組 形式に変更してください（專利審查基準 第二篇第十章）。",
       "omnibusClaims": "クレーム {{claims}} はオムニバス形式（構成要素ではなく 說明書/附圖 を参照）です。技術的特徴を明示的に記載して 專利法 §26 第3項 を充足してください。",
       "crmNonTransitory": "クレーム {{claims}} は 非暫態 のないコンピュータ可読媒体を記載しています。非暫態 / 非暫時性 を付加して非一時的媒体に限定し、§21 適格性問題を回避してください。",
@@ -964,7 +964,7 @@
       "orphanedDetailedFigures": "図面：{{list}}。「Brief Description of Drawings」に該当図面の説明を追加するか、「Detailed Description」から参照を削除してください（EPC 慣用語）。",
       "claimReferenceInSpec": "明細書が請求項を参照しています：{{detail}}"
     },
-    "numeralConsistency": "{{count}} 個の参照符号が不一致。例：{{inline_summary}}",
+    "numeralConsistency": "{{count}} 個の参照符号が不一致。",
     "scopeLimitWording": "{{count}} 件の限定的表現を検出しました。例：{{samples}}",
     "dependencyFormatClaims": "37 CFR 1.75(c) により、従属請求項は明確な引用文言で先行する請求項を引用する必要があります（of claim N、according to claim N、as recited in claim N など）。項番号のみを記載し引用文言を欠く形式（例えば the method claim 10）は認められた引用形式ではありません。指摘された請求項をご確認ください。"
   },
@@ -1027,8 +1027,8 @@
         "pass": "明細書にクレーム範囲を限定し得る表現は検出されませんでした。"
       },
       "numeralConsistency": {
-        "amend": "{{count}} 個の参照符号が複数の異なる要素名に使用されています。例：{{inline_summary}}",
-        "verify": "{{count}} 個の参照符号で命名の不一致が疑われます。確認してください。例：{{inline_summary}}",
+        "amend": "{{count}} 個の参照符号が複数の異なる要素名に使用されています。",
+        "verify": "{{count}} 個の参照符号で命名の不一致が疑われます。確認してください。",
         "pass": "参照符号は要素を一貫して識別しています。"
       }
     },
@@ -1170,8 +1170,8 @@
           "pass": "発明の名称の欠落は検出されませんでした（Rule 41(2)(b) EPC）。"
         },
         "numeralConsistency": {
-          "amend": "{{count}} 個の参照符号が複数の異なる要素名に使用されています（Rule 43(7) EPC；Rule 46(2)(h) EPC）。例：{{inline_summary}}",
-          "verify": "{{count}} 個の参照符号で名称が一致しない可能性があります。Rule 43(7) EPC + Rule 46(2)(h) EPC によりご確認ください。例：{{inline_summary}}",
+          "amend": "{{count}} 個の参照符号が複数の異なる要素名に使用されています（Rule 43(7) EPC；Rule 46(2)(h) EPC）。",
+          "verify": "{{count}} 個の参照符号で名称が一致しない可能性があります。Rule 43(7) EPC + Rule 46(2)(h) EPC によりご確認ください。",
           "pass": "参照符号の一致性に関する所見は検出されませんでした（Rule 43(7) EPC；Rule 46(2)(h) EPC）。"
         }
       },
@@ -1350,8 +1350,8 @@
           "pass": "明細書は請求項を引用していません。"
         },
         "numeralConsistency": {
-          "amend": "{{count}} 個の参照符号が複数の異なる構成要素名に使用されています。例：{{inline_summary}}（专利法实施细则 §21 第2款）。",
-          "verify": "{{count}} 個の参照符号で命名の不一致が疑われます。確認してください。例：{{inline_summary}}（专利法实施细则 §21 第2款）。",
+          "amend": "{{count}} 個の参照符号が複数の異なる構成要素名に使用されています（专利法实施细则 §21 第2款）。",
+          "verify": "{{count}} 個の参照符号で命名の不一致が疑われます。確認してください（专利法实施细则 §21 第2款）。",
           "pass": "参照符号は構成要素を一貫して識別しています。"
         }
       },
@@ -1525,12 +1525,12 @@
           "pass": "原住民関連用語は見つかりませんでした。"
         },
         "numeralConsistency": {
-          "amend": "{{count}} 個の参照符号が複数の異なる要素名に使用されています。例：{{inline_summary}}（專利法施行細則 §19 第2款）。",
-          "verify": "{{count}} 個の参照符号で命名の不一致が疑われます。確認してください。例：{{inline_summary}}（專利法施行細則 §19 第2款）。",
+          "amend": "{{count}} 個の参照符号が複数の異なる要素名に使用されています（專利法施行細則 §19 第2款）。",
+          "verify": "{{count}} 個の参照符号で命名の不一致が疑われます。確認してください（專利法施行細則 §19 第2款）。",
           "pass": "参照符号は要素を一貫して識別しています。"
         },
         "symbolTableCoverage": {
-          "amend": "{{count}} 個の要素（参照符号 {{refnum_count}} 個）が 符號說明 に記載されていません。例：{{inline_summary}}",
+          "amend": "{{count}} 個の要素（参照符号 {{refnum_count}} 個）が 符號說明 に記載されていません。",
           "pass": "符號說明 の網羅性に関する所見は検出されませんでした。"
         }
       },

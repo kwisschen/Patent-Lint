@@ -256,7 +256,11 @@ const MAX_PDF_FINDINGS = 30
 
 function numeralFindingsRow(details_params, status, fontName) {
   const findings = details_params?.findings
-  if (!Array.isArray(findings) || findings.length <= 3) return null
+  // Was gated at `> 3`, which was survivable only while the message carried an
+  // inline example dump. The message no longer does - the structured listing is
+  // the sole presentation now - so gating here would silently DROP the findings
+  // from the PDF whenever a draft had three or fewer conflicts.
+  if (!Array.isArray(findings) || findings.length === 0) return null
   const total = findings.length
   const cap = Math.min(MAX_PDF_FINDINGS, total)
   const visible = findings.slice(0, cap)
@@ -538,9 +542,17 @@ function buildSectionChecks(sections, t, fontName) {
       // Suppress the detail line when it merely echoes claim numbers already in
       // the message (the "3, 8" / "7, 9" anti-pattern) or when the chip row
       // already surfaces the offending content - mirrors the TriagePanel guard.
+      const numeralRowRendered = Boolean(item.message_key
+        && (item.message_key.includes("numeralConsistency")
+            || item.message_key.includes("symbolTableCoverage"))
+        && Array.isArray(item.details_params?.findings)
+        && item.details_params.findings.length > 0)
       const detailRedundant = detailText && (
         (typeof msg === 'string' && msg.includes(String(detailText).trim()))
         || item.details_params?.flagged_phrases?.items?.length > 0
+        // The numeral listing above already states every numeral, name and
+        // count; the detail sentence only restates the message's count.
+        || numeralRowRendered
       )
       if (detailText && !detailRedundant) {
         content.push({

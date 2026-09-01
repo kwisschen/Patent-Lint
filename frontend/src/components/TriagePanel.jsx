@@ -23,6 +23,13 @@ const GROUP_CONFIG = [
 
 function TriageItem({ check, t, i18n, compact, jurisdiction, canPromote, isPromoted, onPromote, onDemote }) {
   const { sendFeedback } = useFeedback()
+  // See CheckItem: the numeral table is the primary presentation, so it is not
+  // gated on a count, and the detail sentence it replaces is suppressed.
+  const hasNumeralTable =
+    Array.isArray(check.details_params?.findings)
+    && check.details_params.findings.length > 0
+    && (check.message_key?.includes('numeralConsistency')
+        || check.message_key?.includes('symbolTableCoverage'))
   const [reportModalOpen, setReportModalOpen] = useState(false)
   const msg = check.message_key && i18n.exists(check.message_key) ? formatDetails(check.message_key, check.details_params, t) : check.message
   const citation = getCitation(check.message_key) || check.reference || null
@@ -161,10 +168,7 @@ function TriageItem({ check, t, i18n, compact, jurisdiction, canPromote, isPromo
             className="mt-0.5"
           />
         )}
-        {!compact && Array.isArray(check.details_params?.findings)
-            && check.details_params.findings.length > 3
-            && (check.message_key?.includes("numeralConsistency")
-                || check.message_key?.includes("symbolTableCoverage")) && (
+        {!compact && hasNumeralTable && (
           <NumeralFindingList
             findings={check.details_params.findings}
             status={check.status}
@@ -177,7 +181,7 @@ function TriageItem({ check, t, i18n, compact, jurisdiction, canPromote, isPromo
                 "3, 8" / "7, 9" anti-pattern - many checks set
                 details=", ".join(claim_ids), which duplicates "Claim(s) 3, 8…"), or
               - flagged_phrases pills already surface the offending content. */}
-        {!compact && details && !jumpTarget
+        {!compact && details && !jumpTarget && !hasNumeralTable
           && !(typeof msg === 'string' && msg.includes(String(details).trim()))
           && !(check.details_params?.flagged_phrases?.items?.length > 0) && (
           <p className="text-xs text-muted-foreground mt-0.5">
