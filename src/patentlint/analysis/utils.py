@@ -1280,6 +1280,32 @@ def _is_trailing_predicative_adj(word: str) -> bool:
     return word in _POST_NOMINAL_PREDICATIVE_ADJ
 
 
+# US R47b (2026-09-01, report #683 finding [1]) - POSITIONAL SUPERLATIVES.
+# The trailing-strip cascade already handles the reduced-relative post-modifier
+# `<noun> located <adverb>`: `located` is a past participle and `radially` is an
+# -ly adverb, so both strip. `an edge band region located radially outermost`
+# nevertheless survived intact, because the cascade walks from the END and the
+# FIRST word it meets is `outermost` - one unhandled token blocks every strip
+# behind it, and the intro registered as `edge band region located radially
+# outermost` so the drafter's own `the edge band region` no longer matched.
+#
+# `-most` is a CLOSED morphological class of positional superlatives
+# (outermost / topmost / bottommost / innermost / uppermost / leftmost …) with
+# no noun members in English, and the gate is POSITIONAL exactly as the R41
+# `-ward` gate is: attributive use (`the topmost conductive coil`) is followed
+# by its head noun, so the trailing walk never reaches it. MEASURED on the US
+# corpus: 41 `-most` occurrences, ALL 41 attributive (every one followed by a
+# head noun), and ZERO intro captures end in a `-most` word - so this measures
+# as a no-op on the corpus and its whole value is the reported end-to-end fix.
+#
+# `-est` superlatives are NOT included: no report evidences them (DR-1) and the
+# suffix collides with real nouns (crest, chest, forest, request, interest,
+# harvest, manifest), so the morphological argument that makes `-most` safe
+# does not carry over.
+def _is_trailing_positional_superlative(word: str) -> bool:
+    return len(word) >= 6 and word.endswith("most")
+
+
 def _is_trailing_ly_adverb(word: str) -> bool:
     """Detect -ly adverbs that terminate over-captured NPs.
 
@@ -1323,6 +1349,7 @@ def _should_strip_trailing(word: str) -> bool:
         or _is_trailing_arithmetic(w)
         or _is_trailing_relational_adj(w)
         or _is_trailing_predicative_adj(w)
+        or _is_trailing_positional_superlative(w)
     ):
         return True
     # Strip trailing -ing verbs/gerunds (mirrors single-word rejection at clean_noun_phrase)
