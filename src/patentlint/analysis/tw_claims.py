@@ -6168,6 +6168,70 @@ def _extract_supplementary_intros(
     return combined
 
 
+# R49 (2026-09-01, report #691) - STRANDED-DETERMINER TAIL.
+# A capture ending in a bare quantifier numeral is never a complete noun
+# phrase: in Chinese the numeral is a DETERMINER that precedes its noun, so
+# a capture ending on one has cut between the determiner and the noun it
+# introduces. `經配置以擷取一輸入影像` emitted the intro `以擷取一` - a coverb,
+# a verb and the determiner of the NEXT element - while the real element
+# `一輸入影像` is captured separately by the quantifier arm, so rejecting the
+# fragment loses no coverage.
+#
+# This is the emit-side hygiene gate the F6/F10/supplementary/F-head arms
+# never shared: it is applied ONCE at the return of extract_introductions_tw
+# so every arm gets it, rather than as another per-arm denylist member.
+#
+# MEASURED against the TW corpus before shipping (1,073 drafts): the family
+# is 1,610 emissions, of which the two protected shapes below account for
+# 1,314 and the remaining 296 (191 distinct) were read one by one - every
+# single one is a clause fragment (訊號至一, 執行一, 提供一, 沿著一, 器是一),
+# with zero real element names.
+#
+# NOT MIRRORED TO CN, and the measurement is why: CN drafters genuinely name
+# elements with a trailing numeral (密封圈一, 推动源二, 联动件一, 转动环一,
+# 步骤二..步骤六). CN's candidate set is 83 emissions / 56 distinct and at
+# least 11 of those distinct terms are real element names, so the same rule
+# would destroy them. CN also has no report for this class (DR-1). CN stays
+# withheld WITH ITS NUMBER rather than mirrored blind.
+_STRANDED_QUANTIFIER_NUMERALS_TW = "一二三四五六七八九十"
+
+# `第N` is an ORDINAL, not a stranded determiner. R43 established that a
+# truncated `第一` intro is accidentally load-bearing (cutting to it silenced
+# 3 gold-legit), so it is protected here by construction: 1,137 of the 1,610.
+_ORDINAL_TAIL_RE_TW = re.compile(r"第[一二三四五六七八九十\d]+$")
+
+# Quantifier idioms whose numeral is the lexical head, not a determiner
+# (至少一 "at least one", 唯一 "sole", 每一 "each"). 177 emissions. These are
+# not element names either, but they can resolve a reference by prefix, so
+# they are held rather than swept in with the fragments - a separate class
+# with its own number, not a free rider on this one.
+_QUANTIFIER_IDIOM_TAILS_TW: tuple[str, ...] = (
+    "至少一", "至少之一", "至少其一", "其中之一", "之一", "其一",
+    "每一", "另一", "任一", "唯一", "單一", "統一", "同一", "擇一", "合一",
+)
+
+# Numbered STEP LABELS are real terms whose trailing numeral is the label,
+# not a determiner. TW's own corpus has zero of these (TW drafters write
+# 第一步驟 / 步驟S1), so this protection is grounded in the CN corpus, where
+# the identical convention is attested 17 times (步骤二..步骤六) - the same
+# linguistic convention in the same script, which is evidence, not a guess.
+# Costs 0 TW emissions as measured; guards a real FN if a TW drafter uses it.
+_LABEL_HEAD_TAILS_TW: tuple[str, ...] = ("步驟", "步骤")
+
+
+def _has_stranded_determiner_tail_tw(term: str) -> bool:
+    """True when `term` ends on a determiner numeral belonging to a following noun."""
+    if not term or term[-1] not in _STRANDED_QUANTIFIER_NUMERALS_TW:
+        return False
+    if _ORDINAL_TAIL_RE_TW.search(term):
+        return False
+    if term.endswith(_QUANTIFIER_IDIOM_TAILS_TW):
+        return False
+    if term[:-1].endswith(_LABEL_HEAD_TAILS_TW):
+        return False
+    return True
+
+
 def extract_introductions_tw(
     claim: Claim,
     *,
@@ -6401,6 +6465,13 @@ def extract_introductions_tw(
             continue
         seen.add(head)
         pairs.append((m.group(0), head))
+
+    # R49: shared emit-side hygiene - see _has_stranded_determiner_tail_tw.
+    # Applied here, at the single choke point, so every arm above is covered.
+    pairs = [
+        (orig, norm) for (orig, norm) in pairs
+        if not _has_stranded_determiner_tail_tw(norm)
+    ]
 
     return pairs
 
