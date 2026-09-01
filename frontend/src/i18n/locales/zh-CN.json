@@ -2091,5 +2091,28 @@
     "oaTitle": "有待处理的审查意见（OA）吗？",
     "oaBody": "PatentNode 会解读审查意见，为您起草权利要求修改与意见陈述，并撰写分析报告。",
     "oaCta": "试用 PatentNode"
+  },
+  "explain": {
+    "claims": {
+      "specialFormatsPass": "涵盖马库什组、计算机可读介质（Beauregard）权利要求、耶普森两段式以及概括引用式权利要求。",
+      "markushOpenTransition": "马库什组是穷举列举备选方案，因此应使用封闭式的 consisting of；开放式过渡词会使该组不受限定。",
+      "crmNonTransitory": "缺少 non-transitory 时，介质权利要求会覆盖信号本身，而信号本身不属于可授权的客体。",
+      "jepsonPriorArt": "在耶普森式写法中，the improvement comprising 之前的内容会被视为对现有技术的自认。",
+      "omnibusClaim": "仅引用说明书或附图而不记载技术特征的权利要求，无法自行确定保护范围。"
+    },
+    "check": {
+      "claims": {
+        "multipleDependent": "多项从属权利要求按其引用的每一项分别计费，且不得再被另一项多项从属权利要求引用。",
+        "antecedentBasis": "每个 the X 都应能追溯到本项或所引用项中在先出现的 a X。此处为启发式检测，请结合上下文逐一核对。"
+      },
+      "spec": {
+        "restrictiveWording": "必须、始终、必不可少等措辞，可能被解释为将权利要求限定于所记载的具体实施方式。",
+        "paragraphSequential": "段落编号可自行选择。建议编号，因为修改文本和答复审查意见时需要引用段落编号。",
+        "numeralConsistency": "同一附图标记在说明书和附图中应始终指向同一个部件。"
+      }
+    },
+    "checks": {
+      "spec_support_unsupported_terms": "权利要求中的用语也应在说明书中出现，以表明申请人在申请时已掌握所要求保护的技术方案。"
+    }
   }
 }

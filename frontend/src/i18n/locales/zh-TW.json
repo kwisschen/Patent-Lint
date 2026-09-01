@@ -2091,5 +2091,28 @@
     "oaTitle": "有尚未處理的審查意見（OA）嗎？",
     "oaBody": "讓 PatentNode 替您解讀核駁理由，草擬請求項修正與答辯主張，並撰寫分析報告。",
     "oaCta": "試用 PatentNode"
+  },
+  "explain": {
+    "claims": {
+      "specialFormatsPass": "涵蓋馬庫西群組、電腦可讀取媒體（Beauregard）請求項、吉普森兩段式以及概括引用式請求項。",
+      "markushOpenTransition": "馬庫西群組係窮舉列舉各選項，故應使用封閉式的 consisting of；開放式連接詞會使該群組不受限定。",
+      "crmNonTransitory": "未記載 non-transitory 時，媒體請求項將涵蓋訊號本身，而訊號本身不屬於可准予專利之標的。",
+      "jepsonPriorArt": "吉普森式寫法中，the improvement comprising 之前的內容會被視為對先前技術的自認。",
+      "omnibusClaim": "僅引用說明書或圖式而未記載技術特徵的請求項，無法自行界定其權利範圍。"
+    },
+    "check": {
+      "claims": {
+        "multipleDependent": "多項附屬請求項係按其所依附的各項分別計費，且不得再為另一多項附屬請求項所依附。",
+        "antecedentBasis": "每一個 the X 都應可追溯至同項或所依附項中在先出現的 a X。此處為推定式偵測，請併同前後文逐一確認。"
+      },
+      "spec": {
+        "restrictiveWording": "必須、始終、不可或缺等用語，可能被解釋為將請求項限縮於所記載的實施方式。",
+        "paragraphSequential": "段落編號得自行選擇。建議編號，因為提出修正與答辯時須引用段落編號。",
+        "numeralConsistency": "同一元件符號於說明書與圖式中應始終指稱同一元件。"
+      }
+    },
+    "checks": {
+      "spec_support_unsupported_terms": "請求項用語亦應見於說明書，以表明申請人於申請時已擁有所請求保護的發明。"
+    }
   }
 }

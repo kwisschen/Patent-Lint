@@ -3433,6 +3433,19 @@ _PLURAL_REFERENCE_PREFIXES: tuple[str, ...] = tuple(sorted(
 # Ordered longest-first so 設有/包含 strip before single-char tokens.
 _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
     (
+        # === R47 (2026-09-01, reports #676 / #639 / #640 / #663) ===
+        # THE STRUCTURAL-CONJUNCTION CUT. 且 is a coordinating conjunction and
+        # cannot be noun-internal: measured across 7,367 corpus occurrences it
+        # is followed only by function words (且該 1254, 且其 909, 且所 429),
+        # and ZERO emitted antecedent terms contain it. So a capture that ran
+        # through 且 has crossed a clause boundary - 漸縮部且容置於 (#676),
+        # 基板上且電性絕緣 (#639/#640/#663).
+        #
+        # DELIBERATELY 且 ALONE, and the siblings were measured not assumed:
+        # 並 is NOT safe (並聯 "parallel connection" appears 118 times, plus
+        # 並列 and 並排), and 而/又/亦/皆/逐 have no report behind them and
+        # 逐漸/逐出 exist, so they are held under DR-1.
+        "\u4e14",
         # === R38 (2026-08-13, reports #524/#526) ===
         # Two interior verbs whose OBJECT trails behind them, so a trailing
         # strip cannot reach them - both ship as the verb+CARDINAL collocation
@@ -5878,6 +5891,26 @@ def _extract_supplementary_intros(
         cleaned_norm = clean_noun_phrase_tw(norm)
         if cleaned_norm and len(cleaned_norm) >= 2:
             cleaned.append((orig, cleaned_norm))
+        # R47 (2026-09-01): the structural-conjunction cut shortens the emitted
+        # TERM, which is what the reporter sees - but on the INTRO side a
+        # shortened capture can DROP coverage the dirty one was providing by
+        # accident (the #525 dirty-capture-is-load-bearing lesson). On
+        # TW202527391A the capture 基板且與對接連接器嵌合者 was the only thing
+        # resolving 前述對接連接器, whose first mention is the article-less
+        # 與對接連接器嵌合者 - valid under 專利審查基準, and report #568's
+        # long-standing intro-side residual. Cutting at 且 alone MANUFACTURED
+        # 2 findings there, measured.
+        #
+        # Intros are ADDITIVE - they only ever resolve references - so keeping
+        # the pre-cut capture ALONGSIDE the cut one cannot manufacture a
+        # finding by construction, while the emitted term still gets clean.
+        # NARROWED, and the blanket form was MEASURED first: preserving the
+        # pre-cut capture for EVERY cleaner difference silenced 14 gold-legit
+        # findings, because it re-registers every dirty capture as an intro and
+        # those phantom intros resolve real defects. Only the 且 cut this round
+        # introduces is preserved.
+        if "\u4e14" in norm and cleaned_norm != norm and len(norm) >= 2:
+            cleaned.append((orig, norm))
 
     # Phase B4 - R14f-analog conjunction-split: for each cleaned intro
     # containing 以及/和/與/及 with ≥2 CJK chars on each side, register

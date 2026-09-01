@@ -472,6 +472,21 @@ class TestCleanNounPhraseInAntecedentBasis:
         assert "users' devices" not in terms
 
 
+    def test_r47_trailing_respective_stripped(self):
+        """Reports #681/#682 (antecedent) + #688/#689 (spec-support), one draft.
+
+        `the local statistical values RESPECTIVE TO all of the analysis blocks`
+        is the reduced-relative shape _POST_NOMINAL_PREDICATIVE_ADJ exists for:
+        adjective + preposition. `respective` is prenominal in ordinary use and
+        is never a head noun in the trailing position.
+        """
+        from patentlint.analysis.utils import clean_noun_phrase
+        assert clean_noun_phrase(
+            "local statistical values respective"
+        ) == "local statistical values"
+        # Prenominal use must survive - the strip is trailing-position only.
+        assert clean_noun_phrase("respective blocks") == "respective blocks"
+
 class TestQuantifierStops:
     """Bug 10: Standalone quantifiers/pronouns should not be flagged."""
 

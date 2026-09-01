@@ -2089,5 +2089,28 @@
     "oaTitle": "Bescheid erhalten?",
     "oaBody": "PatentNode analysiert den Bescheid, entwirft Ihre Anspruchsänderungen und Argumente und erstellt den Analysebericht.",
     "oaCta": "PatentNode testen"
+  },
+  "explain": {
+    "claims": {
+      "specialFormatsPass": "Geprüft werden Markush-Gruppen, Ansprüche auf computerlesbare Medien (Beauregard), die zweiteilige Jepson-Form sowie Omnibus-Ansprüche.",
+      "markushOpenTransition": "Eine Markush-Gruppe zählt Alternativen abschließend auf und verlangt daher \"consisting of\". Eine offene Überleitung lässt die Gruppe unbegrenzt.",
+      "crmNonTransitory": "Ohne \"non-transitory\" erfasst ein Medienanspruch auch das Signal als solches, das dem Patentschutz nicht zugänglich ist.",
+      "jepsonPriorArt": "In der Jepson-Form gilt alles vor \"the improvement comprising\" als Zugeständnis von Stand der Technik.",
+      "omnibusClaim": "Ein Anspruch, der auf Beschreibung oder Zeichnungen verweist statt Merkmale zu nennen, bestimmt seinen Schutzbereich nicht selbst."
+    },
+    "check": {
+      "claims": {
+        "multipleDependent": "Ein mehrfach abhängiger Anspruch wird gebührenrechtlich wie jeder in Bezug genommene Anspruch gezählt und kann selbst nicht Grundlage eines weiteren mehrfach abhängigen Anspruchs sein.",
+        "antecedentBasis": "Jedes \"the X\" sollte auf ein früheres \"a X\" im selben oder im übergeordneten Anspruch zurückgehen. Heuristische Erkennung, daher jede Fundstelle im Zusammenhang prüfen."
+      },
+      "spec": {
+        "restrictiveWording": "Formulierungen wie \"muss\", \"stets\" oder \"wesentlich\" können die Ansprüche auf das beschriebene Ausführungsbeispiel verengen.",
+        "paragraphSequential": "Die Absatznummerierung ist fakultativ. Sie empfiehlt sich, weil Änderungen und Bescheidserwiderungen auf Absatznummern Bezug nehmen.",
+        "numeralConsistency": "Ein Bezugszeichen sollte in Beschreibung und Zeichnungen durchgängig dasselbe Bauteil bezeichnen."
+      }
+    },
+    "checks": {
+      "spec_support_unsupported_terms": "Ein Anspruchsbegriff sollte auch in der Beschreibung vorkommen, damit diese den Besitz der beanspruchten Lehre belegt."
+    }
   }
 }

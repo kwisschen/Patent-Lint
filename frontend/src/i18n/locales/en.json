@@ -2089,5 +2089,28 @@
     "oaTitle": "Got a pending Office Action?",
     "oaBody": "PatentNode reads the rejection, drafts your claim amendments and arguments, and writes the analysis report.",
     "oaCta": "Try PatentNode"
+  },
+  "explain": {
+    "claims": {
+      "specialFormatsPass": "Covers Markush groups, computer-readable medium (Beauregard) claims, Jepson two-part form, and omnibus claims.",
+      "markushOpenTransition": "A Markush group lists alternatives, so it takes the closed \"consisting of\". An open transition leaves the group unbounded.",
+      "crmNonTransitory": "Without \"non-transitory\", a medium claim reads on a signal per se, which is not patentable subject matter.",
+      "jepsonPriorArt": "In Jepson form everything before \"the improvement comprising\" is read as an admission of prior art.",
+      "omnibusClaim": "A claim that points to the description or drawings instead of reciting structure does not define its own scope."
+    },
+    "check": {
+      "claims": {
+        "multipleDependent": "A multiple-dependent claim is charged as though it were every claim it refers to, and it cannot itself serve as a basis for another multiple-dependent claim.",
+        "antecedentBasis": "Every \"the X\" should trace back to an earlier \"a X\" in the same claim or a claim it depends from. Heuristic detection, so read each one in context."
+      },
+      "spec": {
+        "restrictiveWording": "Words such as \"must\", \"always\" or \"essential\" can be read as limiting the claims to the described embodiment.",
+        "paragraphSequential": "Numbering paragraphs is optional. It is worth doing because amendments and office-action responses cite paragraph numbers.",
+        "numeralConsistency": "One reference numeral should name one element throughout the description and drawings."
+      }
+    },
+    "checks": {
+      "spec_support_unsupported_terms": "A claim term should also appear in the description, so the specification shows the applicant possessed what is claimed."
+    }
   }
 }

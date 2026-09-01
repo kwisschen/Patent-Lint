@@ -2091,5 +2091,28 @@
     "oaTitle": "대응이 필요한 거절이유통지가 있으신가요?",
     "oaBody": "PatentNode가 거절이유를 분석하고 보정서·의견서 초안과 분석 보고서를 작성합니다.",
     "oaCta": "PatentNode 사용해 보기"
+  },
+  "explain": {
+    "claims": {
+      "specialFormatsPass": "마쿠쉬 형식, 컴퓨터 판독 가능 매체(뷰리가드) 청구항, 젭슨형 2부 형식, 옴니버스 청구항을 대상으로 합니다.",
+      "markushOpenTransition": "마쿠쉬 형식은 선택지를 한정 열거하므로 닫힌 \"consisting of\"를 씁니다. 열린 전이부를 쓰면 그 군이 한정되지 않습니다.",
+      "crmNonTransitory": "\"non-transitory\"가 없으면 매체 청구항이 신호 자체를 포함하게 되어 특허 보호 대상에서 벗어납니다.",
+      "jepsonPriorArt": "젭슨형에서는 \"the improvement comprising\" 앞의 기재가 선행기술의 자인으로 취급됩니다.",
+      "omnibusClaim": "구성을 기재하지 않고 명세서나 도면을 인용하는 청구항은 스스로 권리범위를 특정하지 못합니다."
+    },
+    "check": {
+      "claims": {
+        "multipleDependent": "다중 종속항은 인용하는 각 청구항으로 보아 수수료가 산정되며, 다시 다른 다중 종속항의 인용 대상이 될 수 없습니다.",
+        "antecedentBasis": "\"the X\"는 같은 항이나 인용한 항의 앞선 \"a X\"에 대응해야 합니다. 추정에 의한 검출이므로 문맥과 함께 확인하시기 바랍니다."
+      },
+      "spec": {
+        "restrictiveWording": "\"반드시\", \"항상\", \"필수적\" 같은 표현은 청구범위를 기재된 실시예로 한정하여 해석될 수 있습니다.",
+        "paragraphSequential": "단락 번호 부여는 선택 사항입니다. 보정서와 의견서에서 단락 번호를 인용하므로 붙여 두면 실무상 편리합니다.",
+        "numeralConsistency": "하나의 도면부호는 명세서와 도면 전체에서 같은 구성요소를 가리켜야 합니다."
+      }
+    },
+    "checks": {
+      "spec_support_unsupported_terms": "청구항 용어는 명세서에도 나타나 출원인이 청구한 발명을 보유하고 있었음을 뒷받침해야 합니다."
+    }
   }
 }
