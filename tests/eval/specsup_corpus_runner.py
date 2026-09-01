@@ -27,6 +27,11 @@
 # values respective` is a visible defect at 137 findings just as much as at 138,
 # and four reports in one week (#676 / #691 / #692 TW, #688 / #689 US) say so.
 #
+# US WAS DECLARED BUT UNREACHABLE until 2026-09-01: `_PREDICATE_TAILS_US`,
+# the US branch of `_term_defects`, and `_EXPECTED_BAD['US']` all existed,
+# while `--juris` accepted only TW/CN - three declarations, no reachable arm,
+# on the very engine that produced reports #688/#689. Wired up here.
+#
 # So: a count-based no-growth gate CANNOT see this class in either direction.
 # That is why `--quality` exists below. Run BOTH. The count gate answers "did I
 # manufacture findings"; the quality gate answers "are the terms I emit
@@ -84,6 +89,13 @@ def _build_doc_with_spec(record, juris: str, spec_text: str, harness):
             title="x", claims=base.claims, technical_field=[], background=[],
             summary=[], detailed_description=[spec_text],
         )
+    elif juris == "US":
+        # `_build_doc` returns a LIST of Claim for US (no document wrapper),
+        # and check_spec_support takes (claims, spec_text) directly. Returned
+        # as a pair so the run loop stays uniform; _assert_spec_survived is
+        # skipped because there is no document field for the spec to be
+        # dropped from - the text is passed straight to the checker.
+        return (base, spec_text)
     else:
         raise SystemExit(f"unsupported juris {juris}")
     _assert_spec_survived(doc, juris, spec_text)
@@ -122,6 +134,11 @@ def _checker(juris: str):
     if juris == "TW":
         from patentlint.analysis.tw_spec_support import check_spec_support_tw
         return check_spec_support_tw
+    if juris == "US":
+        # US takes (claims, spec_text) rather than a document - see
+        # _build_doc_with_spec, which returns that pair for US.
+        from patentlint.analysis.claims import check_spec_support
+        return lambda pair: check_spec_support(pair[0], pair[1])
     from patentlint.analysis.cn_spec_support import check_spec_support_cn
     return check_spec_support_cn
 
@@ -212,7 +229,7 @@ def _report_term_quality(juris: str, terms) -> int:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Engine-2 spec-support corpus runner")
-    ap.add_argument("--juris", required=True, choices=["TW", "CN"])
+    ap.add_argument("--juris", required=True, choices=["TW", "CN", "US"])
     ap.add_argument("--terms", action="store_true", help="dump finding terms")
     ap.add_argument("--limit", type=int, default=0,
                     help="cap the --terms dump (0 = all; the gate needs all)")
