@@ -2074,6 +2074,12 @@
       "tableSection": "Abschnitt",
       "tableGrade": "Note",
       "tableWeight": "Gewichtung"
+    },
+    "breakdown": {
+      "title": "Wie diese Note zustande kommt",
+      "weight": "{{weight}}%",
+      "capped": "Gedeckelt: {{count}} KORRIGIEREN-Befund(e) halten die Note bei {{letter}} und damit unter dem gewichteten Mittel der Abschnitte oben.",
+      "note": "Zuerst werden die Abschnitte gewichtet, dann greift die KORRIGIEREN-Grenze. Ein behobener Befund kann die Deckelung aufheben."
     }
   },
   "widget": {

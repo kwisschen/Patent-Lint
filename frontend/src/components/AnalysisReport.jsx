@@ -7,6 +7,7 @@ import SectionHealthBars from './SectionHealthBars'
 import SummaryBar from './SummaryBar'
 import TriagePanel from './TriagePanel'
 import SectionPanel from './SectionPanel'
+import { letterForSectionGrade } from '../lib/gradeScale'
 import ClaimTree from './ClaimTree'
 import ClaimDiagram from './ClaimDiagram'
 import AntecedentBasisCard from './AntecedentBasisCard'
@@ -205,23 +206,9 @@ export default function AnalysisReport({ data, filename, onDownloadPdf, onReset,
   const sectionGradeFor = (sectionId) => {
     return data.rubric_grade?.section_grades?.find((sg) => sg.section === sectionId) || null
   }
-  // Standard US 12-tier letter map (no A+, matches rubric.py letter_for_score).
-  const letterFromScore = (sg) => {
-    if (!sg || !sg.applicable) return null
-    const s = sg.score
-    if (s >= 93) return 'A'
-    if (s >= 90) return 'A-'
-    if (s >= 87) return 'B+'
-    if (s >= 83) return 'B'
-    if (s >= 80) return 'B-'
-    if (s >= 77) return 'C+'
-    if (s >= 73) return 'C'
-    if (s >= 70) return 'C-'
-    if (s >= 67) return 'D+'
-    if (s >= 63) return 'D'
-    if (s >= 60) return 'D-'
-    return 'F'
-  }
+  // Letter map lives in lib/gradeScale so the PDF, the hero and this panel
+  // cannot drift apart. See that file for why.
+  const letterFromScore = letterForSectionGrade
 
   const consolidatedData = useMemo(() => ({
     ...data,

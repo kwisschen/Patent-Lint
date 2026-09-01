@@ -5,6 +5,7 @@ import pdfMake from 'pdfmake/build/pdfmake'
 import pdfFonts from 'pdfmake/build/vfs_fonts'
 import { formatDetails } from './detailsFormatter'
 import { CHECKS_RAW } from '../generated/stats'
+import { letterForSectionGrade } from './gradeScale'
 
 // Register bundled Roboto fonts into pdfmake's internal VirtualFileSystem.
 // In module/bundler context, vfs_fonts.js does NOT auto-register - we must
@@ -572,21 +573,10 @@ function gradeColor(letter) {
 }
 
 // Standard US 12-tier letter map (no A+, matches rubric.py letter_for_score).
-function letterFromScore(score, applicable) {
-  if (!applicable) return null
-  if (score >= 93) return 'A'
-  if (score >= 90) return 'A-'
-  if (score >= 87) return 'B+'
-  if (score >= 83) return 'B'
-  if (score >= 80) return 'B-'
-  if (score >= 77) return 'C+'
-  if (score >= 73) return 'C'
-  if (score >= 70) return 'C-'
-  if (score >= 67) return 'D+'
-  if (score >= 63) return 'D'
-  if (score >= 60) return 'D-'
-  return 'F'
-}
+// Re-exported from lib/gradeScale so the PDF and the on-screen grade cannot
+// disagree about where a band starts.
+const letterFromScore = (score, applicable) =>
+  letterForSectionGrade({ score, applicable })
 
 // Cover treatment: NO container/wrapper around the rubric. Letter grade
 // sits cleanly on the page (filing-cover-sheet convention - paper +

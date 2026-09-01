@@ -2074,6 +2074,12 @@
       "tableSection": "Section",
       "tableGrade": "Grade",
       "tableWeight": "Weight"
+    },
+    "breakdown": {
+      "title": "Why this grade",
+      "weight": "{{weight}}%",
+      "capped": "Capped: {{count}} FIX finding(s) hold this at {{letter}}, below the weighted average of the sections above.",
+      "note": "Sections are weighted, then the FIX gate applies. Resolving a FIX can lift the cap."
     }
   },
   "widget": {

@@ -2076,6 +2076,12 @@
       "tableSection": "章节",
       "tableGrade": "评等",
       "tableWeight": "权重"
+    },
+    "breakdown": {
+      "title": "评级如何计算",
+      "weight": "{{weight}}%",
+      "capped": "已设上限：{{count}} 项「修正」使评级停在 {{letter}}，低于上方各节加权后的分数。",
+      "note": "先按各节权重加权，再套用「修正」上限规则；解决一项修正即可能解除上限。"
     }
   },
   "widget": {

@@ -203,8 +203,11 @@ export default function CheckItem({ status, message, message_key, details, detai
       className="py-2 px-3 border-l-[3px]"
       style={{ borderLeftColor: `var(--${status}-border)` }}
     >
-      <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2">
-        <div className="flex items-center gap-2 shrink-0">
+      <div className="group flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2">
+        {/* Fixed-width on sm+ for the same reason as TriagePanel: a long
+            citation otherwise shoves its message out of line with every other
+            row in the section. See that component for the full rationale. */}
+        <div className="flex items-start gap-2 shrink-0 sm:w-56">
           <InfoTooltip label={statusTip}>
             <span
               className="inline-block rounded px-1.5 py-0.5 text-[10px] font-bold uppercase leading-none"
@@ -220,7 +223,7 @@ export default function CheckItem({ status, message, message_key, details, detai
             <InfoTooltip label={citationTip}>
               <span
                 className={
-                  "citation-badge inline-block rounded px-1.5 py-0.5 text-[11px] font-mono leading-none"
+                  "citation-badge inline-block rounded px-1.5 py-0.5 text-[11px] font-mono leading-tight break-words text-left"
                   + (citationTip ? " underline decoration-dotted underline-offset-[3px] decoration-muted-foreground/60" : "")
                 }
               >
@@ -236,7 +239,12 @@ export default function CheckItem({ status, message, message_key, details, detai
           onClick={handleReport}
           title={t('feedback.reportProblem')}
           aria-label={t('feedback.reportProblem')}
-          className="shrink-0 self-start sm:self-auto"
+          // Quiet by default on hover-capable devices so a screenful of PASS
+          // rows is not a column of repeated buttons; revealed on row hover or
+          // keyboard focus. Touch devices keep it visible (they have no hover),
+          // and opacity leaves it in the accessibility tree either way, so a
+          // screen reader still reaches it.
+          className={"shrink-0 self-start sm:self-auto " + "[@media(hover:hover)]:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 transition-opacity"}
         >
           <MessageSquare />
           <span className="hidden sm:inline">{t('feedback.report')}</span>

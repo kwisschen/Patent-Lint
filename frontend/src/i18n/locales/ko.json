@@ -2076,6 +2076,12 @@
       "tableSection": "섹션",
       "tableGrade": "등급",
       "tableWeight": "가중치"
+    },
+    "breakdown": {
+      "title": "이 등급의 산출 근거",
+      "weight": "{{weight}}%",
+      "capped": "상한 적용: 「수정」 {{count}}건으로 인해 {{letter}}에서 멈췄으며, 위 각 항목의 가중 평균보다 낮습니다.",
+      "note": "각 항목을 가중한 뒤 「수정」 상한 규칙을 적용합니다. 수정 1건을 해소하면 상한이 풀릴 수 있습니다."
     }
   },
   "widget": {

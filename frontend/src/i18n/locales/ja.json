@@ -2076,6 +2076,12 @@
       "tableSection": "章",
       "tableGrade": "評価",
       "tableWeight": "重み"
+    },
+    "breakdown": {
+      "title": "この評価の内訳",
+      "weight": "{{weight}}%",
+      "capped": "上限適用：{{count}} 件の「修正」により {{letter}} で頭打ちとなり、上記各項の加重平均を下回っています。",
+      "note": "各項を加重したうえで「修正」の上限規則を適用します。修正を1件解消すると上限が外れることがあります。"
     }
   },
   "widget": {
