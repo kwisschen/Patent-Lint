@@ -61,3 +61,23 @@ def test_tw_and_cn_classifiers_still_see_their_classes() -> None:
     assert _term_defects("TW", "以擷取一")      # 以擷取一
     assert _term_defects("TW", "屬於一色相值區間")
     assert _term_defects("TW", "漸縮部且容置於")
+
+
+# --- Engine 1 (antecedent walker) shares the SAME classifier ---------------
+
+def test_engine1_gate_reuses_the_engine2_classifier() -> None:
+    """The two engines must not develop separate notions of 'not a noun phrase'.
+
+    `walker_term_quality` imports `_term_defects` rather than copying it. The
+    US R48 round was a lesson in what re-implementing a sibling's logic costs.
+    """
+    from eval import walker_term_quality as w1
+    src = Path(w1.__file__).read_text(encoding="utf-8")
+    assert "from eval.specsup_corpus_runner import _term_defects" in src
+    assert "def _term_defects" not in src, "classifier was copied, not imported"
+
+
+def test_engine1_residual_pins_exist_for_every_jurisdiction() -> None:
+    from eval.walker_term_quality import _EXPECTED_BAD_ENGINE1
+    assert set(_EXPECTED_BAD_ENGINE1) == {"TW", "CN", "US"}
+    assert all(v >= 0 for v in _EXPECTED_BAD_ENGINE1.values())
