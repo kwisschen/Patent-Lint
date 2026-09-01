@@ -558,6 +558,33 @@ def _has_interior_reject_cn(term: str) -> bool:
     return any(marker in term for marker in _CN_SPEC_SUPPORT_INTERIOR_REJECTS)
 
 
+# R65 (2026-09-01) - LEXEME-GATED LEADING 并, the CN half of TW R52.
+# `_CN_CONJUNCTIONS` models coordinating conjunctions but holds only
+# ("以及", "及", "和", "与", "或") - 并且 was never a member, so three of the
+# five documented Engine-2 quality residuals (并且在 / 并且当 / 并且-) opened
+# with a clause connective and were inventoried as element names.
+#
+# Bare 并 cannot be cut for the same reason bare 並 cannot on TW: 并联 occurs
+# 81x. Measured on the CN corpus, 并 + next character: 并且 4,328 · 并将 167 ·
+# 并在 125 · 并与 103 · 并通 81 · 并联 81 · 并入 64 … everything frequent
+# except 并联 / 并列 / 并排 / 并行 is 并 + a VERB.
+#
+# Kept as its own predicate rather than added to `_CN_CONJUNCTIONS`, because
+# that tuple is also consumed by `_split_on_conjunction_cn` and
+# `_strip_trailing_conjunction_cn`, where a new member would silently change
+# splitting behaviour. ENGINE 2 ONLY, same as the TW half.
+_CN_CONJ_NOUN_LEXEMES: tuple[str, ...] = (
+    "\u5e76\u8054", "\u5e76\u5217", "\u5e76\u6392", "\u5e76\u884c",
+)
+
+
+def _has_leading_conj_bing_cn(term: str) -> bool:
+    """True when the term opens with the connective 并 rather than a 并-noun."""
+    if not term.startswith("\u5e76") or len(term) < 3:
+        return False
+    return not term.startswith(_CN_CONJ_NOUN_LEXEMES)
+
+
 def _has_leading_conjunction_cn(term: str) -> bool:
     """True if the term starts with a CN conjunction.
 
@@ -725,6 +752,9 @@ def _build_inventory_cn(
                 if _has_leading_reject_cn(final) or _has_interior_reject_cn(final):
                     continue
                 if _has_leading_conjunction_cn(final):
+                    continue
+                # R65: lexeme-gated leading 并 (并 + verb).
+                if _has_leading_conj_bing_cn(final):
                     continue
                 if final in _CN_GENERIC_TERMS or _is_boilerplate_cn(final):
                     continue

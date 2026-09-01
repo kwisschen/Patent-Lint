@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 64,
+    "current_round": 65,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -356,6 +356,18 @@
         "shipped_at": "2026-09-01T10:32:02+0800",
         "user_attested_issues": [],
         "fixtures_silenced": 0
+      },
+      {
+        "round": 65,
+        "name": "r65_leading_conjunction_lexeme_gate",
+        "description": "CN R65 - LEXEME-GATED LEADING 并, the mirror of TW R52, spec-support only. `_CN_CONJUNCTIONS` models coordinating conjunctions but held only (以及, 及, 和, 与, 或); 并且 was never a member, so THREE of the five documented Engine-2 quality residuals (并且在 / 并且当 / 并且-) opened with a clause connective and were inventoried as element names. Bare 并 cannot be cut for the same reason bare 並 cannot: 并联 occurs 81x. MEASURED, 并 + next character: 并且 4,328 / 并将 167 / 并在 125 / 并与 103 / 并通 81 / 并联 81 - everything frequent except 并联/并列/并排/并行 is 并 + a VERB. Kept as its own predicate rather than added to `_CN_CONJUNCTIONS`, because that tuple is also consumed by _split_on_conjunction_cn and _strip_trailing_conjunction_cn where a new member would silently change splitting. ENGINE 2 ONLY and VERIFIED: validate_fix CN is an exact no-op (14422 findings, 0 silenced, 0 false-fires). Yield: spec-support 334 -> 331 findings and the term-quality residual 5 -> 2, so _EXPECTED_BAD['CN'] drops to 2. The two survivors are a DIFFERENT class and withheld with their reason: Fi逐元素点乘 / Vi逐元素点乘 are a Latin variable plus a verb phrase (点乘 = dot multiply); no report, and a 点乘 trailing strip would be a domain-specific member rather than a mechanism.",
+        "user_attested_issues": [
+          676,
+          691,
+          692
+        ],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-09-01T14:00:00+08:00"
       }
     ],
     "last_updated": "2026-08-01",

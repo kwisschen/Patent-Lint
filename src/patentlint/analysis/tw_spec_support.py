@@ -753,6 +753,37 @@ def _strip_trailing_yong_before_yi(term: str, claim_text: str) -> str:
     return term[:-1]
 
 
+# R52 (2026-09-01) - LEXEME-GATED LEADING CONJUNCTION.
+# The Engine-2 term-quality gate has carried `並包含一組n-1個二極體` as a
+# documented residual since #467, with the reason written next to it: 並 cannot
+# be cut bare, because 並聯 ("parallel connection") occurs 118x in the corpus
+# plus 並列 / 並排, so the structural-conjunction cut that shipped for 且 is
+# unsafe here. What it needs is a LEXEME-GATED cut, and that is this.
+#
+# Measured on the TW corpus, 並 + next character: 並且 2,005 · 並將 169 ·
+# 並聯 117 · 並在 115 · 並使 88 · 並與 63 · 並配 59 · 並輸 55 · 並具 53 …
+# Every frequent bigram except 並聯 / 並列 / 並排 is 並 + a VERB, i.e. the
+# clause connective. So a leading 並 is a conjunction unless the two-character
+# prefix is one of the noun-forming lexemes - which are exactly the ones the
+# quality gate already had to carve out for itself.
+#
+# ENGINE 2 ONLY, deliberately. A leading reject removes an inventory term, so
+# on the spec-support side it can only remove a finding (an FP); routing it
+# through the shared `clean_noun_phrase_tw` would also strip Engine-1 intros
+# and could manufacture antecedent findings. Same reasoning as the existing
+# `_TW_SPEC_SUPPORT_LEADING_REJECTS` list this sits beside.
+_TW_CONJ_NOUN_LEXEMES: tuple[str, ...] = (
+    "\u4e26\u806f", "\u4e26\u5217", "\u4e26\u6392", "\u4e26\u884c",
+)
+
+
+def _has_leading_conjunction_tw(term: str) -> bool:
+    """True when the term opens with the connective 並 rather than a 並-noun."""
+    if not term.startswith("\u4e26") or len(term) < 3:
+        return False
+    return not term.startswith(_TW_CONJ_NOUN_LEXEMES)
+
+
 def _has_leading_reject(term: str) -> bool:
     """True if the term starts with a known verbal/clause-fragment prefix."""
     if not term:
@@ -1081,6 +1112,9 @@ def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:
                 if len(final) > _MAX_INVENTORY_LENGTH:
                     continue
                 if _has_leading_reject(final) or _has_interior_reject(final):
+                    continue
+                # R52: lexeme-gated leading conjunction (並 + verb).
+                if _has_leading_conjunction_tw(final):
                     continue
                 if final in _TW_GENERIC_TERMS or _is_boilerplate(final):
                     continue
