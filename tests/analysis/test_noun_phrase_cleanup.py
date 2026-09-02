@@ -5,7 +5,7 @@
 from patentlint.analysis.utils import (
     clean_noun_phrase, extract_noun_phrases, extract_abbreviation_intros,
     extract_definite_refs, extract_introductions, extract_bare_noun_intros,
-    _strip_comparative_tail,
+    gerund_display_head, _strip_comparative_tail,
 )
 
 
@@ -595,3 +595,67 @@ class TestRelationalAdjectivesPreservedInLeadingPosition:
 
     def test_coaxial_leading(self):
         assert clean_noun_phrase("coaxial cable") == "coaxial cable"
+
+
+# ---------------------------------------------------------------------------
+# Engine-1 REFERENCE-SIDE DISPLAY cleanup (2026-09-02, reports #676/#681/#688).
+#
+# `clean_noun_phrase` falls back to the RAW capture when every token strips
+# away, so the drafter's whole predicate was emitted as the element name.
+# `gerund_display_head` cleans that for DISPLAY only. Each control below is a
+# design that was implemented and MEASURED before this one shipped, so these
+# are regression pins on real failures, not hypotheticals.
+# ---------------------------------------------------------------------------
+class TestGerundDisplayHead:
+    def test_cleans_the_reported_class(self):
+        # `the monitoring operable to predict ...` (US8706518B2), 22 findings -
+        # the whole US Engine-1 pin apart from `respective`.
+        assert gerund_display_head("monitoring operable") == "monitoring"
+        assert gerund_display_head("comparing indicating") == "comparing"
+        assert gerund_display_head("generating further") == "generating"
+        assert gerund_display_head("closing thereof") == "closing"
+
+    def test_keeps_a_verb_ambiguous_noun_head(self):
+        # THE EXAMINER FN-GUARD CAUGHT THIS ONE. `_should_strip_trailing`
+        # returns True for the verb-ambiguous noun `speed`, so an earlier
+        # design that trusted "the strip loop consumed everything" emitted
+        # `moving` and LOST a real USPTO examiner 112 rejection on app
+        # 18613510. The head must be re-earned, never inherited.
+        assert gerund_display_head("moving speed") == ""
+
+    def test_keeps_real_element_names(self):
+        # A gerund followed by a NOUN is a normal element name, not a
+        # predicate. `bonding adhesive` also pins why the `-ive`/`-ed`
+        # morphological shortcuts were rejected: `adhesive` and `speed` both
+        # look adjectival by suffix and are nouns.
+        for term in ("processing unit", "driving unit", "bonding adhesive"):
+            assert gerund_display_head(term) == ""
+
+    def test_keeps_terms_damaged_by_a_second_cleaning_pass(self):
+        # Re-running `clean_noun_phrase` over its own output is NOT idempotent:
+        # its pre-loop 1-2 char variable-identifier strip fires on the already
+        # cleaned term. Measured damage: `remote ue` -> `remote` (9 findings),
+        # `wlan ap` -> `wlan` (4), `relay ue` -> `relay` (4).
+        for term in ("remote ue", "wlan ap", "relay ue", "second ue"):
+            assert gerund_display_head(term) == ""
+
+    def test_leading_adjective_is_not_a_gerund_head(self):
+        # `the respective said intake and said exhaust ports` - the adjective
+        # LEADS and the capture truncated before its head, so there is no noun
+        # to fall back to. These are the 6 remaining US pinned residuals and
+        # cleaning is deliberately not the lever.
+        for term in ("respective one", "respective grouping", "respective"):
+            assert gerund_display_head(term) == ""
+
+    def test_single_word_capture_is_untouched(self):
+        # Gated on a MULTI-word capture so single-word captures keep the
+        # intro-side behaviour exactly and no finding can be added.
+        assert gerund_display_head("monitoring") == ""
+        assert gerund_display_head("respective") == ""
+
+    def test_intro_side_contract_is_unchanged(self):
+        # The intro side must still REJECT a bare gerund - a gerund must never
+        # BECOME an antecedent - and must still fall back to the raw capture.
+        from patentlint.analysis.utils import clean_noun_phrase
+        assert clean_noun_phrase("monitoring") == ""
+        assert clean_noun_phrase("monitoring operable") == "monitoring operable"

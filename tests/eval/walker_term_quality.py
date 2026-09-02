@@ -48,25 +48,22 @@ THIS_DIR = Path(__file__).resolve().parent
 #           which R49 deliberately did not touch.
 #   CN 35 - the same two shapes. CN is additionally why R49 was not mirrored:
 #           CN drafters name elements with a trailing numeral (密封圈一).
-#   US 28 - exactly two terms, and the fix for them is MEASURED AND WITHHELD.
-#           `monitoring operable` (22x) is a cleaner defect, not a missing
-#           rule: stripping `operable` leaves the -ing word `monitoring`,
-#           stripping that empties the phrase, and clean_noun_phrase then falls
-#           back to the ORIGINAL rather than the last surviving token.
-#           Rejecting such a capture outright was measured twice - the broad
-#           form (never strip to empty) silenced 19 gold-legit findings, and
-#           the narrow form (reject only when the emptying token is a gerund)
-#           still silenced 12 for 30 FPs ended. Reading those 12 shows why, and
-#           it is the #603-#607 lesson again: they are REAL defects surfaced
-#           THROUGH a garbage term - `the comparing indicating`, `the powering
-#           up`, `the communicating further communicates`. Dropping the finding
-#           loses the defect. The correct fix cleans the TERM while KEEPING the
+#   US  6 - was 28, lowered 2026-09-02 when the `monitoring operable` class
+#           (22 of the 28) SHIPPED as `gerund_display_head`. The withhold note
+#           this replaces said the fix "cleans the TERM while KEEPING the
 #           finding, which means separating the intro-side single-word gerund
-#           rejection from the reference-side display - a larger change than
-#           this gate, and its own round. `respective` (6x) is a bare
-#           predicative adjective standing alone, which no trailing strip can
-#           reach because there is nothing behind it.
-_EXPECTED_BAD_ENGINE1: dict[str, int] = {"TW": 54, "CN": 35, "US": 28}
+#           rejection from the reference-side display" - that is exactly what
+#           shipped, applied at the EMISSION site in claims.py so resolution,
+#           dedup and the ancestor diagnostic keep the RAW term. Measured: 67
+#           renames, finding count 10839 -> 10839, 0 claims with a count
+#           change, 0 unpaired-new, examiner guard 1377 -> 1377 LOST 0.
+#           The 6 survivors are the bare `respective` captures (`the respective
+#           said intake and said exhaust ports`), a DIFFERENT shape: the
+#           adjective LEADS and the capture truncated before its head, so there
+#           is no noun anywhere in the term to fall back to. No trailing strip
+#           can reach it and cleaning is not the lever - it needs the capture
+#           widened, which is its own round.
+_EXPECTED_BAD_ENGINE1: dict[str, int] = {"TW": 54, "CN": 35, "US": 6}
 
 
 def main() -> int:
