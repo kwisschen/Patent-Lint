@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
-import { statSync } from 'fs'
+import { statSync, createReadStream } from 'fs'
 import { computeContentBuildHash } from './scripts/build-hash.mjs'
 
 // Compute build hash. In production (CI builds, deploys), use a content-
@@ -34,8 +34,47 @@ const buildHash = (() => {
   }
 })()
 
+// Expose the repo root to the DEV-only fixture loader used by the viewport
+// harness, so it can fetch tests/fixtures/* through Vite's /@fs/ route without
+// anything being copied into public/ or bundled.
+const REPO_ROOT = path.resolve(__dirname, '..')
+
+// DEV-ONLY fixture route for the viewport harness (/__viewports). Serves
+// tests/fixtures/<name> at /__fixtures/<name>.
+//
+// A middleware rather than Vite's /@fs/ route: /@fs needs an absolute path
+// baked into the client, and `define` does NOT substitute into
+// `import.meta.env.*` in dev, so that approach silently fetched a bogus path.
+// `apply: 'serve'` means it cannot exist in a build at all - there is no guard
+// to get wrong. Filename is restricted to a bare name so the route can never
+// walk out of the fixtures directory.
+function devFixtureRoute() {
+  return {
+    name: 'patentlint-dev-fixtures',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use('/__fixtures/', (req, res, next) => {
+        const name = decodeURIComponent((req.url || '').replace(/^\//, '').split('?')[0])
+        if (!/^[\w.-]+$/.test(name) || name.includes('..')) return next()
+        const file = path.join(REPO_ROOT, 'tests', 'fixtures', name)
+        if (!file.startsWith(path.join(REPO_ROOT, 'tests', 'fixtures'))) return next()
+        try {
+          statSync(file)
+        } catch {
+          return next()
+        }
+        res.setHeader(
+          'Content-Type',
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        )
+        createReadStream(file).pipe(res)
+      })
+    },
+  }
+}
+
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [devFixtureRoute(), react(), tailwindcss()],
   define: {
     __BUILD_HASH__: JSON.stringify(buildHash),
   },
