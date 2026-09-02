@@ -17,7 +17,8 @@ from patentlint.analysis.utils import (
     extract_introductions, extract_introductions_permissive,
     extract_pattern_a_intros,
     pattern_a_intro_offsets,
-    extract_abbreviation_intros, clean_noun_phrase, _strip_comparative_tail,
+    extract_abbreviation_intros, clean_noun_phrase, gerund_display_head,
+    _strip_comparative_tail,
     compute_confidence_score, make_document_dedup_key,
     strip_contextual_verb, strip_trailing_adverb, token_set_jaccard,
     _is_likely_past_participle,
@@ -941,10 +942,31 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                         anc_match_id, anc_match_text = first_ancestor_with_term(
                             chain, term
                         )
+                        # DISPLAY-ONLY term cleanup (2026-09-02, reports
+                        # #676/#681/#688). See `gerund_display_head` for why
+                        # this is applied HERE and nowhere else: resolution,
+                        # the `seen` dedup, the document dedup key and the
+                        # ancestor diagnostic all keep the RAW term, so the
+                        # finding COUNT is provably unchanged and only what the
+                        # reporter reads gets cleaner.
+                        #
+                        # BOTH emitted fields are cleaned, because the surfaces
+                        # the reporter actually sees render `reference_form`
+                        # and fall back to `term`, never the other way round
+                        # (AntecedentBasisCard `f.reference_form || f.term`,
+                        # ReportModal, and the PDF export). Cleaning `term`
+                        # alone would have been invisible in the UI, the report
+                        # payload and the PDF - i.e. invisible to exactly the
+                        # people who filed these reports.
+                        display_term = gerund_display_head(term) or term
+                        display_reference_form = (
+                            f"{prefix} {display_term}"
+                            if display_term != term else reference_form
+                        )
                         issues.append({
                             "claim_id": claim.id,
-                            "term": term,
-                            "reference_form": reference_form,
+                            "term": display_term,
+                            "reference_form": display_reference_form,
                             "claim_text": claim.text,
                             "suggested_match": suggested_match,
                             "cross_ref": None,

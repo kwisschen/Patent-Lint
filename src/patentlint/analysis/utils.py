@@ -1589,6 +1589,78 @@ def _strip_comparative_tail(words: list[str]) -> list[str]:
     return out if out else words
 
 
+# Post-modifier tokens that may follow a gerund head in a definite reference
+# and can NEVER themselves be the head noun. The five adjectives are exactly
+# the closed predicative-adjective class the Engine-2/Engine-1 term-quality
+# gate flags (`_PREDICATE_TAILS_US`), which is what makes this the measured
+# class rather than a guess; the three adverbials are the connectives that
+# showed up beside them in the US corpus.
+_DISPLAY_POST_MODIFIERS = frozenset({
+    "operable", "configured", "responsive", "indicative", "respective",
+    "further", "thereof", "via",
+})
+
+
+def gerund_display_head(phrase: str) -> str:
+    """The gerund head of `phrase` when everything after it is a post-modifier.
+
+    REFERENCE-SIDE DISPLAY ONLY (2026-09-02, reports #676/#681/#688 - all
+    complaints about the emitted TERM, not the count). When every token of a
+    capture strips away, `clean_noun_phrase` falls back to the RAW capture, so
+    the drafter's whole predicate is shown as the element name: `the monitoring
+    operable to predict ...` was reported as `monitoring operable` 22x on
+    US8706518B2.
+
+    Returns "" for everything it is not certain about, which leaves the
+    caller's term untouched. THREE wider designs were implemented and MEASURED
+    first, and every one of them was wrong:
+
+    * Cleaning the term used for RESOLUTION silenced 3 gold-legit findings
+      (US10977324B2 c2/c13/c18) - the cleaned head `comparing` matches the
+      claim's own `comparing ...` step intro, so the finding resolved away.
+    * Re-running `clean_noun_phrase` over its own output is NOT idempotent:
+      its pre-loop 1-2 char variable-identifier strip then fires on the
+      already-cleaned term and destroys REAL element names - `remote ue` ->
+      `remote`, `wlan ap` -> `wlan`, `relay ue` -> `relay`.
+    * Trusting "the strip loop consumed the whole phrase" as the signal is
+      ALSO wrong, and the examiner FN-guard is what caught it: the loop strips
+      verb-ambiguous nouns, `_should_strip_trailing("speed")` is True, so
+      `moving speed` emptied and this helper emitted `moving` - losing a REAL
+      USPTO examiner §112 rejection on app 18613510. `clean_noun_phrase` falls
+      back to the raw phrase in exactly that situation BECAUSE the loop cannot
+      be trusted when it consumes everything, and inheriting that fallback's
+      input without re-earning it inherits the bug.
+
+    So the gate is positive, not residual: the head must be the gerund the
+    intro side rejects, and EVERY following token must be a known post-modifier
+    - a closed predicative-adjective set, a short adverbial set, or another
+    gerund. A noun head like `speed`, `unit` or `adhesive` fails it, so the
+    caller keeps the drafter's words.
+    """
+    words = phrase.strip().split()
+    if len(words) < 2:
+        # A single-word capture keeps the intro-side behaviour exactly, so no
+        # finding can change shape here.
+        return ""
+
+    def _is_rejected_gerund(tok: str) -> bool:
+        # The intro side's own notion, reused rather than restated, so the two
+        # cannot drift: a bare gerund must never BECOME an antecedent.
+        return tok in _ING_VERB_ONLY or (
+            tok.endswith("ing") and len(tok) >= 6 and tok not in _ING_NOUNS
+        )
+
+    head = words[0]
+    if not _is_rejected_gerund(head.lower().rstrip(".,;:")):
+        return ""
+    for tok in words[1:]:
+        low = tok.lower().rstrip(".,;:")
+        if low in _DISPLAY_POST_MODIFIERS or _is_rejected_gerund(low):
+            continue
+        return ""
+    return head
+
+
 def clean_noun_phrase(phrase: str) -> str:
     """Strip trailing verbs, adverbs, and function words from a noun phrase."""
     words = phrase.strip().split()
