@@ -1,0 +1,1160 @@
+{
+  "verdicts": [
+    {
+      "patent_id": "US11868265B2",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "intro 'a persistent cache flush handler' exists in c1 (invokes a ...); ensemble mislabeled this FP as legit. Verified by reading the claim 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "persistent cache flush handler",
+            "reference_form": "the persistent cache flush handler"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20250157709A1",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: a power supply circuit. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "power supply circuit",
+            "reference_form": "the power supply circuit"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20200371293A1",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: ancestor-introduces:coupler. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "coupler",
+            "reference_form": "the coupler"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US10096069B1",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: a modified hyperlink element. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 21,
+            "term": "modified hyperlink element",
+            "reference_form": "the modified hyperlink element"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20240423491A1",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: ancestor-introduces:heart rate. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 19,
+            "term": "heart rate",
+            "reference_form": "the heart rate"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20250157709A1",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: a power supply circuit. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "power supply circuit",
+            "reference_form": "the power supply circuit"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US12192120B2",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: ancestor-introduces:data insufficiency remediation rules. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 14,
+            "term": "data insufficiency remediation rules",
+            "reference_form": "the data insufficiency remediation rules"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20210105435A1",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: parse-artifact-shift. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 10,
+            "term": "enterprise inclaim 1",
+            "reference_form": "the enterprise inclaim 1"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20210103948A1",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: a display. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 13,
+            "term": "display",
+            "reference_form": "the display"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20250054030A1",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: ancestor-introduces:donation. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "donations",
+            "reference_form": "the donations"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US11250448B2",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: an identified event. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "identified event",
+            "reference_form": "the identified event"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US11093601B2",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: a signature. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 13,
+            "term": "signature",
+            "reference_form": "the signature"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US11428868B2",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: ancestor-introduces:coupler. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "coupler",
+            "reference_form": "the coupler"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20130109622A1",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: a sidechain-protected resin-bound peptide. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 17,
+            "term": "sidechain-protected resin-bound peptide",
+            "reference_form": "the sidechain-protected resin-bound peptide"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US12192120B2",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: ancestor-introduces:data insufficiency remediation rules. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 7,
+            "term": "data insufficiency remediation rules",
+            "reference_form": "the data insufficiency remediation rules"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US10861041B2",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: ancestor-introduces:transaction data. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 20,
+            "term": "transaction data",
+            "reference_form": "the transaction data"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US11093601B2",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: ancestor-introduces:program code. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "program code",
+            "reference_form": "the program code"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US11144631B2",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: one or more agent. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "agent",
+            "reference_form": "the agent"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20250054030A1",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: ancestor-introduces:donation. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 14,
+            "term": "donations",
+            "reference_form": "the donations"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20220003955A1",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: ancestor-introduces:fiber optic module. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 8,
+            "term": "fiber optic modules",
+            "reference_form": "the fiber optic modules"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20220391940A1",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: a display. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 20,
+            "term": "display",
+            "reference_form": "the display"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US10122117B2",
+      "jurisdiction": "US",
+      "source": "verified-correction-r15-inclaim",
+      "_note": "ensemble labeled legit under the BROKEN dependency chain (inclaim N collapse classified the dep-claim as independent -> ancestor intros hidden). Fix-shape-aware gold-corrector (ADR-159) deterministically confirmed FN-safe: a top end. Verified 2026-06-23.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "top end",
+            "reference_form": "the top end"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20240413554A1",
+      "jurisdiction": "US",
+      "source": "WS-A3 comparative-tail strip gold-error correction (2026-06-24)",
+      "_note": "`the second center-to-center pitch less than` is a comparative-tail OVER-CAPTURE, not a real defect: claim 16 introduces `a second center-to-center pitch` (Pattern-A), so the clean reference `the second center-to-center pitch` has antecedent basis. Ensemble mislabeled the fragment legit_drafting_error; corrected to walker_fp.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "second center-to-center pitch less than",
+            "reference_form": "the second center-to-center pitch less than"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US11900449B2",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "intro 'a second website separate from the issuer website' exists in c6/c12 (...from a second website separate from the issuer website...); the reference 'the second website' (a webpage of the second website) therefore HAS antecedent basis. The ensemble mislabeled it legit because the over-captured intro 'second website separate' did not match the bare reference. R24's `separate` relational-adjective strip normalizes both sides → resolves. Verified by reading the claim 2026-06-26 (attorney-over-corpus).",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "second website",
+            "reference_form": "the second website"
+          },
+          {
+            "claim_id": 12,
+            "term": "second website",
+            "reference_form": "the second website"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US11813120B2",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "intro 'a surgical site' exists in c1/c2/c3/c6/c7/c9/c16; reference 'the surgical site prior to ...' (c6/c10) HAS antecedent — the over-capture 'surgical site prior' (temporal 'prior to' modifier) was the only reason it flagged. R25 prior(?=\\s+to) strip resolves. Read the claim 2026-06-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "surgical site prior",
+            "reference_form": "the surgical site prior"
+          },
+          {
+            "claim_id": 10,
+            "term": "surgical site prior",
+            "reference_form": "the surgical site prior"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US11134427B2",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "intro 'a first indication message sent by one of the first base...' exists in c6/c13; reference 'the first indication message' HAS antecedent — the over-capture 'first indication message sent' was the only reason it flagged. R25 sent-strip resolves. Read the claim 2026-06-26.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "first indication message",
+            "reference_form": "the first indication message"
+          },
+          {
+            "claim_id": 13,
+            "term": "first indication message",
+            "reference_form": "the first indication message"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US11315069B2",
+      "jurisdiction": "US",
+      "source": "R27 intends/occurs/matches/fails over-capture — gold-correction (2026-06-27)",
+      "_note": "`third customer` is introduced (`a/an third customer`); the over-captured `third customer intends` was a walker_fp. Pure-FP gold-correction (R27).",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "third customer intends",
+            "reference_form": "the third customer intends"
+          },
+          {
+            "claim_id": 10,
+            "term": "third customer intends",
+            "reference_form": "the third customer intends"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20250341978A1",
+      "jurisdiction": "US",
+      "source": "R27 intends/occurs/matches/fails over-capture — gold-correction (2026-06-27)",
+      "_note": "`usage fraction` is introduced (`a/an usage fraction`); the over-captured `usage fraction fails` (fails-to verb) was a walker_fp. Pure-FP gold-correction (R27).",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 11,
+            "term": "usage fraction fails",
+            "reference_form": "the usage fraction fails"
+          },
+          {
+            "claim_id": 18,
+            "term": "usage fraction fails",
+            "reference_form": "the usage fraction fails"
+          },
+          {
+            "claim_id": 19,
+            "term": "usage fraction fails",
+            "reference_form": "the usage fraction fails"
+          },
+          {
+            "claim_id": 2,
+            "term": "usage fraction fails",
+            "reference_form": "the usage fraction fails"
+          },
+          {
+            "claim_id": 10,
+            "term": "usage fraction fails",
+            "reference_form": "the usage fraction fails"
+          },
+          {
+            "claim_id": 3,
+            "term": "usage fraction fails",
+            "reference_form": "the usage fraction fails"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US11337197B2",
+      "jurisdiction": "US",
+      "source": "R27 intends/occurs/matches/fails over-capture — gold-correction (2026-06-27)",
+      "_note": "`unlicensed spectrum occurs` truncated artifact; `unlicensed spectrum` re-fires under the corrected term (no a/an intro) → ADR-111 shift dual-label (R27).",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 11,
+            "term": "unlicensed spectrum occurs",
+            "reference_form": "the unlicensed spectrum occurs"
+          },
+          {
+            "claim_id": 11,
+            "term": "unlicensed spectrum",
+            "reference_form": "the unlicensed spectrum"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US10790058B2",
+      "jurisdiction": "US",
+      "source": "R28 sends/continues over-capture — gold-correction (2026-06-27)",
+      "_note": "over-captured verb form(s) (continues/sends); base term introduced or re-fires under the corrected term (R28).",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 11,
+            "term": "patient monitoring device continues",
+            "reference_form": "the patient monitoring device continues"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US11287967B2",
+      "jurisdiction": "US",
+      "source": "R28 sends/continues over-capture — gold-correction (2026-06-27)",
+      "_note": "over-captured verb form(s) (continues/sends); base term introduced or re-fires under the corrected term (R28).",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "display area continues",
+            "reference_form": "the display area continues"
+          },
+          {
+            "claim_id": 19,
+            "term": "display area continues",
+            "reference_form": "the display area continues"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20250014131A1",
+      "jurisdiction": "US",
+      "source": "R28 sends/continues over-capture — gold-correction (2026-06-27)",
+      "_note": "`cloud service application sends` → the artifact is walker_fp; `cloud service application` re-fires under the corrected term (ADR-111 shift, R28).",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "cloud service application sends",
+            "reference_form": "the cloud service application sends"
+          },
+          {
+            "claim_id": 1,
+            "term": "cloud service application",
+            "reference_form": "the cloud service application"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US10264140B2",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "R34 (2026-07-18): 'remaining ones' is a WALKER ARTIFACT, not an element. The sole occurrence in the claims blob is inside the partitive 'the remaining ones OF THE plurality of wireless communication devices' (zero bare occurrences), and the antecedent set 'a plurality of wireless communication devices' IS introduced in the c22 preamble. MPEP 2173.05(e): a partitive reference to a subset of a properly introduced plurality has antecedent basis. The four genuinely-arguable c22 defects (the first wireless device / the other wireless communication devices / the peer-to-peer network / the first wireless communication device) all still fire post-fix. Ensemble mislabeled this FP as legit. Verified by reading the claim.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 22,
+            "term": "remaining ones",
+            "reference_form": "the remaining ones"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US10356704B2",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "cataphoric 'the following <list-noun>' - a text-position reference to the enumerated list, never a material element (attorney reports #409/#414, MPEP 2173.05(e)); the LLM ensemble over-labeled it legit_drafting_error. 0 of these are examiner-confirmed (us_examiner_legit has ZERO following/above/below-headed terms). Corrected 2026-07-23 for R38.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 7,
+            "term": "following information",
+            "reference_form": "the following information"
+          },
+          {
+            "claim_id": 14,
+            "term": "following information",
+            "reference_form": "the following information"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US10420004B2",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "cataphoric 'the following <list-noun>' - a text-position reference to the enumerated list, never a material element (attorney reports #409/#414, MPEP 2173.05(e)); the LLM ensemble over-labeled it legit_drafting_error. 0 of these are examiner-confirmed (us_examiner_legit has ZERO following/above/below-headed terms). Corrected 2026-07-23 for R38.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "following parameters",
+            "reference_form": "the following parameters"
+          },
+          {
+            "claim_id": 13,
+            "term": "following parameters",
+            "reference_form": "the following parameters"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US11559807B2",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "cataphoric 'the following <list-noun>' - a text-position reference to the enumerated list, never a material element (attorney reports #409/#414, MPEP 2173.05(e)); the LLM ensemble over-labeled it legit_drafting_error. 0 of these are examiner-confirmed (us_examiner_legit has ZERO following/above/below-headed terms). Corrected 2026-07-23 for R38.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "following functions",
+            "reference_form": "the following functions"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US11941597B2",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "cataphoric 'the following <list-noun>' - a text-position reference to the enumerated list, never a material element (attorney reports #409/#414, MPEP 2173.05(e)); the LLM ensemble over-labeled it legit_drafting_error. 0 of these are examiner-confirmed (us_examiner_legit has ZERO following/above/below-headed terms). Corrected 2026-07-23 for R38.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 7,
+            "term": "following metrics",
+            "reference_form": "the following metrics"
+          },
+          {
+            "claim_id": 14,
+            "term": "following metrics",
+            "reference_form": "the following metrics"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20080177558A1",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "cataphoric 'the following <list-noun>' - a text-position reference to the enumerated list, never a material element (attorney reports #409/#414, MPEP 2173.05(e)); the LLM ensemble over-labeled it legit_drafting_error. 0 of these are examiner-confirmed (us_examiner_legit has ZERO following/above/below-headed terms). Corrected 2026-07-23 for R38.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 8,
+            "term": "following types",
+            "reference_form": "the following types"
+          },
+          {
+            "claim_id": 22,
+            "term": "following types",
+            "reference_form": "the following types"
+          },
+          {
+            "claim_id": 25,
+            "term": "following parties",
+            "reference_form": "the following parties"
+          },
+          {
+            "claim_id": 26,
+            "term": "following types",
+            "reference_form": "the following types"
+          },
+          {
+            "claim_id": 34,
+            "term": "following type",
+            "reference_form": "the following type"
+          },
+          {
+            "claim_id": 50,
+            "term": "following type",
+            "reference_form": "the following type"
+          },
+          {
+            "claim_id": 51,
+            "term": "following types",
+            "reference_form": "the following types"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20080228607A1",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "cataphoric 'the following <list-noun>' - a text-position reference to the enumerated list, never a material element (attorney reports #409/#414, MPEP 2173.05(e)); the LLM ensemble over-labeled it legit_drafting_error. 0 of these are examiner-confirmed (us_examiner_legit has ZERO following/above/below-headed terms). Corrected 2026-07-23 for R38.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 8,
+            "term": "following types",
+            "reference_form": "the following types"
+          },
+          {
+            "claim_id": 13,
+            "term": "following types",
+            "reference_form": "the following types"
+          },
+          {
+            "claim_id": 20,
+            "term": "following types",
+            "reference_form": "the following types"
+          },
+          {
+            "claim_id": 21,
+            "term": "following parties",
+            "reference_form": "the following parties"
+          },
+          {
+            "claim_id": 22,
+            "term": "following types",
+            "reference_form": "the following types"
+          },
+          {
+            "claim_id": 28,
+            "term": "following types",
+            "reference_form": "the following types"
+          },
+          {
+            "claim_id": 47,
+            "term": "following type",
+            "reference_form": "the following type"
+          },
+          {
+            "claim_id": 48,
+            "term": "following types",
+            "reference_form": "the following types"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20090043683A1",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "cataphoric 'the following <list-noun>' - a text-position reference to the enumerated list, never a material element (attorney reports #409/#414, MPEP 2173.05(e)); the LLM ensemble over-labeled it legit_drafting_error. 0 of these are examiner-confirmed (us_examiner_legit has ZERO following/above/below-headed terms). Corrected 2026-07-23 for R38.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 11,
+            "term": "following consequences",
+            "reference_form": "the following consequences"
+          },
+          {
+            "claim_id": 27,
+            "term": "following consequences",
+            "reference_form": "the following consequences"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20190335390A1",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "cataphoric 'the following <list-noun>' - a text-position reference to the enumerated list, never a material element (attorney reports #409/#414, MPEP 2173.05(e)); the LLM ensemble over-labeled it legit_drafting_error. 0 of these are examiner-confirmed (us_examiner_legit has ZERO following/above/below-headed terms). Corrected 2026-07-23 for R38.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "following information",
+            "reference_form": "the following information"
+          },
+          {
+            "claim_id": 9,
+            "term": "following information",
+            "reference_form": "the following information"
+          },
+          {
+            "claim_id": 16,
+            "term": "following information",
+            "reference_form": "the following information"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20200334129A1",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "cataphoric 'the following <list-noun>' - a text-position reference to the enumerated list, never a material element (attorney reports #409/#414, MPEP 2173.05(e)); the LLM ensemble over-labeled it legit_drafting_error. 0 of these are examiner-confirmed (us_examiner_legit has ZERO following/above/below-headed terms). Corrected 2026-07-23 for R38.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 7,
+            "term": "following criteria",
+            "reference_form": "the following criteria"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20230020839A1",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "cataphoric 'the following <list-noun>' - a text-position reference to the enumerated list, never a material element (attorney reports #409/#414, MPEP 2173.05(e)); the LLM ensemble over-labeled it legit_drafting_error. 0 of these are examiner-confirmed (us_examiner_legit has ZERO following/above/below-headed terms). Corrected 2026-07-23 for R38.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 7,
+            "term": "following metrics",
+            "reference_form": "the following metrics"
+          },
+          {
+            "claim_id": 14,
+            "term": "following metrics",
+            "reference_form": "the following metrics"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US20240179786A1",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "cataphoric 'the following <list-noun>' - a text-position reference to the enumerated list, never a material element (attorney reports #409/#414, MPEP 2173.05(e)); the LLM ensemble over-labeled it legit_drafting_error. 0 of these are examiner-confirmed (us_examiner_legit has ZERO following/above/below-headed terms). Corrected 2026-07-23 for R38.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 6,
+            "term": "following conditions",
+            "reference_form": "the following conditions"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US7964172B2",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "cataphoric 'the following <list-noun>' - a text-position reference to the enumerated list, never a material element (attorney reports #409/#414, MPEP 2173.05(e)); the LLM ensemble over-labeled it legit_drafting_error. 0 of these are examiner-confirmed (us_examiner_legit has ZERO following/above/below-headed terms). Corrected 2026-07-23 for R38.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "following steps",
+            "reference_form": "the following steps"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    }
+  ]
+}

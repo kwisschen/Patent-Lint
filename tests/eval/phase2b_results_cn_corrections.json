@@ -1,0 +1,268 @@
+{
+  "verdicts": [
+    {
+      "patent_id": "CN106935384B",
+      "jurisdiction": "CN",
+      "source": "WS-B1 direction-noun (向) shift correction (2026-06-24)",
+      "_note": "圆周方向-class truncation fix shifts the defect from the truncated artifact 第一方 to the correct term 第一方向 (still a real antecedent defect, re-fires). ADR-111 dual-label.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "第一方",
+            "reference_form": "所述第一方"
+          },
+          {
+            "claim_id": 5,
+            "term": "第一方向",
+            "reference_form": "所述第一方向"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN114530735A",
+      "jurisdiction": "CN",
+      "source": "WS-B1 direction-noun (向) shift correction (2026-06-24)",
+      "_note": "第一取向 (orientation) truncated to 第一取; 取 is a direction-noun stem. Defect re-fires under the corrected term in c1 and c11. ADR-111 dual-label.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "第一取",
+            "reference_form": "所述第一取"
+          },
+          {
+            "claim_id": 1,
+            "term": "第一取向",
+            "reference_form": "所述第一取向"
+          },
+          {
+            "claim_id": 11,
+            "term": "第一取",
+            "reference_form": "所述第一取"
+          },
+          {
+            "claim_id": 11,
+            "term": "第一取向",
+            "reference_form": "所述第一取向"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116439725A",
+      "jurisdiction": "CN",
+      "source": "R47 时-compound truncation fix — pure-FP correction (2026-06-27)",
+      "_note": "定时器/时间-class: _NOUN_CHARS_CN excludes 时 -> 所述起始时间 truncated to 所述起始. 起始时间 IS introduced bare ('以预设时间点作为起始时间' -- the 作为-object), so the full ref resolves and the truncated artifact 所述起始 was a walker_fp. 预设 likewise truncated from 所述预设时间点 / 所述预设单位时长 (re-fires under the fuller term, still shown to the user).",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "起始",
+            "reference_form": "所述起始"
+          },
+          {
+            "claim_id": 2,
+            "term": "预设",
+            "reference_form": "所述预设"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116072034A",
+      "jurisdiction": "CN",
+      "source": "R47 时-compound truncation fix — pure-FP correction (2026-06-27)",
+      "_note": "时段-class: 所述有效时段期间 / 所述空白时段期间 truncated to 所述有效 / 所述空白 at the excluded 时. 有效时段期间 resolves (bare first occurrence '在有效时段期间' recognized as intro); 空白时段期间 re-fires under the fuller term (missed bare intro, still shown). The truncated 2-char artifacts are walker_fp.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 10,
+            "term": "有效",
+            "reference_form": "所述有效"
+          },
+          {
+            "claim_id": 11,
+            "term": "空白",
+            "reference_form": "所述空白"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN120389592A",
+      "jurisdiction": "CN",
+      "source": "R47 时-compound truncation fix — shift correction (2026-06-27)",
+      "_note": "所述初始时间 / 所述最终时间 truncated to 所述初始 / 所述最终 at the excluded 时. Both compounds appear ONLY as 所述X references (no intro in c3 or ancestor c1) -> genuine antecedent defects that re-fire under the corrected fuller term. ADR-111 dual-label: truncated artifact=walker_fp, fuller term=legit_drafting_error.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "初始",
+            "reference_form": "所述初始"
+          },
+          {
+            "claim_id": 3,
+            "term": "初始时间",
+            "reference_form": "所述初始时间"
+          },
+          {
+            "claim_id": 3,
+            "term": "最终",
+            "reference_form": "所述最终"
+          },
+          {
+            "claim_id": 3,
+            "term": "最终时间",
+            "reference_form": "所述最终时间"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "legit_drafting_error"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN116443934A",
+      "jurisdiction": "CN",
+      "source": "R47 时-compound truncation fix — shift correction (2026-06-27)",
+      "_note": "所述加热时间 truncated to 所述加热 at the excluded 时. 加热时间 appears only as 所述加热时间 (no intro in c9 or ancestor c1) -> genuine antecedent defect re-firing under the corrected fuller term. ADR-111 dual-label.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "加热",
+            "reference_form": "所述加热"
+          },
+          {
+            "claim_id": 9,
+            "term": "加热时间",
+            "reference_form": "所述加热时间"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN114616582A",
+      "jurisdiction": "CN",
+      "source": "R61 已 trailing-strip - ADR-111 shift dual-label (2026-08-13)",
+      "_note": "The R61 已 aspect-particle strip (the greedy-trim companion to 启动, mirrored from TW R38) shifts this c2 finding from 评估任务已 to 评估任务 on the SAME claim. The defect is REAL and is preserved: claim 2 introduces 认证任务 (authentication task) and then references 所述评估任务 (evaluation task), which has no antecedent anywhere in c1 or c2 - a genuine 专利法实施细则 antecedent defect. The shift makes the emitted term strictly more correct: 所述评估任务 is exactly the reference form the drafter wrote, where 评估任务已 was a dirty capture carrying the aspect marker.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "评估任务已",
+            "reference_form": "所述评估任务已"
+          },
+          {
+            "claim_id": 2,
+            "term": "评估任务",
+            "reference_form": "所述评估任务"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN119853442A",
+      "jurisdiction": "CN",
+      "source": "verified-correction-r63-paren",
+      "_note": "GOLD LABEL ON AN OVER-STRICT READING. c4 introduces the element article-less in item (a) - '所述输入电压端子被配置成耦接至电压源' - and then references '来自所述电压源的输入电压'. The article-less first mention is a valid introduction under 审查指南 第二部分第二章 3.2.2, so the reference has antecedent basis. The R63 paren-asymmetry mirror lets the two spellings meet. Same on c5/c9. Claim read 2026-08-17.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 4,
+            "term": "电压源",
+            "reference_form": "所述电压源"
+          },
+          {
+            "claim_id": 5,
+            "term": "电压源",
+            "reference_form": "所述电压源"
+          },
+          {
+            "claim_id": 9,
+            "term": "电压源",
+            "reference_form": "所述电压源"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    }
+  ]
+}
