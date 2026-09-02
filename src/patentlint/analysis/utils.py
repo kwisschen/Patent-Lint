@@ -1595,8 +1595,15 @@ def _strip_comparative_tail(words: list[str]) -> list[str]:
 # gate flags (`_PREDICATE_TAILS_US`), which is what makes this the measured
 # class rather than a guess; the three adverbials are the connectives that
 # showed up beside them in the US corpus.
-_DISPLAY_POST_MODIFIERS = frozenset({
+# The closed predicative/distributive adjective class. These can post-modify a
+# noun (`the monitoring operable to ...`) or select over one (`the respective
+# said intake and said exhaust ports`), but NONE of them can be the head noun
+# itself, which is what makes the set usable in both places below.
+_PREDICATIVE_ADJECTIVES = frozenset({
     "operable", "configured", "responsive", "indicative", "respective",
+})
+
+_DISPLAY_POST_MODIFIERS = _PREDICATIVE_ADJECTIVES | frozenset({
     "further", "thereof", "via",
 })
 

@@ -18,7 +18,7 @@ from patentlint.analysis.utils import (
     extract_pattern_a_intros,
     pattern_a_intro_offsets,
     extract_abbreviation_intros, clean_noun_phrase, gerund_display_head,
-    _strip_comparative_tail,
+    _PREDICATIVE_ADJECTIVES, _strip_comparative_tail,
     compute_confidence_score, make_document_dedup_key,
     strip_contextual_verb, strip_trailing_adverb, token_set_jaccard,
     _is_likely_past_participle,
@@ -392,6 +392,13 @@ def _word_boundary_match(needle: str, haystack: str) -> bool:
 # list context, adding 1,577 findings of which 228 were known walker FPs.
 
 
+# R50: what must follow a bare selector for the capture to be a TRUNCATION -
+# a determiner or quantifier opening the noun phrase the selector modifies.
+_TRUNCATED_SELECTOR_TRAIL = re.compile(
+    r"\s+(?:said|the|an?|each|every|both|all|at\s+least|one\s+of)\b"
+)
+
+
 def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
     """Check claims for antecedent basis issues.
 
@@ -680,6 +687,34 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                 continue
             # Skip standalone quantifiers/pronouns ("the one", "the another")
             if term.lower() in _QUANTIFIER_STOPS:
+                continue
+            # R50 (2026-09-02): bare DISTRIBUTIVE SELECTOR, not an element.
+            # `a sealing apparatus around the respective said intake and said
+            # exhaust ports` and `... from the respective at least one of the
+            # original source and the potential relay device` both capture the
+            # single word `respective`, because the noun scan stops at the
+            # determiner that follows. `the` attaches to the noun phrase, not
+            # to the selector, so the selector can never carry an antecedent of
+            # its own - and the real head IS checked, by its own reference: all
+            # 6 corpus occurrences sit in a claim where the walker separately
+            # flags `intake` or `relay`. So this drops a truncation artifact,
+            # never a defect.
+            #
+            # ATTORNEY READ (Christopher, 2026-09-02) - the ensemble labelled
+            # the IDENTICAL construction both ways, `walker_fp` on US11492933B2
+            # and `legit_drafting_error` on US11522827B2, and the legit
+            # rationale contradicts itself: it concedes `respective` is an
+            # enumerator/selector and then faults it for lacking an
+            # "independent antecedent introduction". Attorney-over-corpus
+            # applies; the 3 legit labels are gold-corrected with this note.
+            #
+            # Gated on a FOLLOWING DETERMINER so it fires only where the head
+            # demonstrably continues past the capture - the truncation is
+            # evidenced, not assumed.
+            if (
+                term.lower() in _PREDICATIVE_ADJECTIVES
+                and _TRUNCATED_SELECTOR_TRAIL.match(claim_text_lower[m.end():])
+            ):
                 continue
             # R38 (2026-07-23, reports #409/#414): cataphoric leading modifier
             # ("the FOLLOWING steps:", "the FOLLOWING types") - a reference to the

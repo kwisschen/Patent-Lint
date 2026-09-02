@@ -1155,6 +1155,66 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "US11522827B2",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "ATTORNEY READ (Christopher, 2026-09-02): bare `respective` is a DISTRIBUTIVE SELECTOR and needs no antecedent of its own - `the` attaches to the noun phrase it modifies (`the respective at least one of the original source and the potential relay device`), not to the selector. The ensemble labelled the IDENTICAL construction both ways: walker_fp on US11492933B2 c8/c11/c12 (\"'the respective' is an enumerator/selector, not a noun reference\") and legit_drafting_error here, on a rationale that contradicts itself - it concedes the selector reading and then faults it for lacking an \"independent antecedent introduction\". Attorney-over-corpus applies. No defect is lost: the walker separately flags the real head in this very claim (`relay` / `instructions` / `operations`). Silenced by US R50.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "respective",
+            "reference_form": "the respective"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US11522827B2",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "ATTORNEY READ (Christopher, 2026-09-02): bare `respective` is a DISTRIBUTIVE SELECTOR and needs no antecedent of its own - `the` attaches to the noun phrase it modifies (`the respective at least one of the original source and the potential relay device`), not to the selector. The ensemble labelled the IDENTICAL construction both ways: walker_fp on US11492933B2 c8/c11/c12 (\"'the respective' is an enumerator/selector, not a noun reference\") and legit_drafting_error here, on a rationale that contradicts itself - it concedes the selector reading and then faults it for lacking an \"independent antecedent introduction\". Attorney-over-corpus applies. No defect is lost: the walker separately flags the real head in this very claim (`relay` / `instructions` / `operations`). Silenced by US R50.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "respective",
+            "reference_form": "the respective"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "US11522827B2",
+      "jurisdiction": "US",
+      "source": "verified-correction",
+      "_note": "ATTORNEY READ (Christopher, 2026-09-02): bare `respective` is a DISTRIBUTIVE SELECTOR and needs no antecedent of its own - `the` attaches to the noun phrase it modifies (`the respective at least one of the original source and the potential relay device`), not to the selector. The ensemble labelled the IDENTICAL construction both ways: walker_fp on US11492933B2 c8/c11/c12 (\"'the respective' is an enumerator/selector, not a noun reference\") and legit_drafting_error here, on a rationale that contradicts itself - it concedes the selector reading and then faults it for lacking an \"independent antecedent introduction\". Attorney-over-corpus applies. No defect is lost: the walker separately flags the real head in this very claim (`relay` / `instructions` / `operations`). Silenced by US R50.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 18,
+            "term": "respective",
+            "reference_form": "the respective"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }
