@@ -1,0 +1,624 @@
+{
+  "verdicts": [
+    {
+      "patent_id": "TWM660802U",
+      "jurisdiction": "TW",
+      "source": "verified-correction-r13-pailie",
+      "_note": "Claim 1 introduces 第二方向 article-less in '該複數個接觸件係沿與該第一方向垂直的第二方向排列' (first mention, ordinal 第二; MPEP 2173.05(e) / 專利審查基準 §26 第3項), then properly references '與該第二方向平行的樞軸部'. The ensemble mislabeled 該第二方向 as a legit drafting error because the SAME 排列 over-capture bug (the intro captured as 第二方向排列, not 第二方向) hid the antecedent from it. The R13 trailing-strip of 排列 corrects both the walker and reveals this mislabel. Verified by reading the claim 2026-06-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "第二方向",
+            "reference_form": "該第二方向"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202336896A",
+      "jurisdiction": "TW",
+      "source": "R19 應-compound truncation fix — pure-FP correction (2026-06-27)",
+      "_note": "終端效應器 (end-effector): _NOUN_CHARS (TW) excludes 應 (modal guard) -> 該終端效應器 truncated to 該終端效 at the 應. 終端效應器 IS introduced bare earlier in each claim ('引發實質地無震動的終端效應器' / '反應台板包括分別的終端效應器'), so the full reference resolves; the truncated 該終端效 artifact was a walker_fp. The R19 _extend_ying_compound_tw extension (應器 follow-gate) corrects the capture and reveals these 4 mislabels (c18/39/57/78). Verified by reading the claim 2026-06-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 18,
+            "term": "終端效",
+            "reference_form": "該終端效"
+          },
+          {
+            "claim_id": 39,
+            "term": "終端效",
+            "reference_form": "該終端效"
+          },
+          {
+            "claim_id": 57,
+            "term": "終端效",
+            "reference_form": "該終端效"
+          },
+          {
+            "claim_id": 78,
+            "term": "終端效",
+            "reference_form": "該終端效"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202428739A",
+      "jurisdiction": "TW",
+      "source": "R20 應-compound precursor truncation fix — shift correction (2026-06-27)",
+      "_note": "該總炭氣化反應壓力 truncated to 該總炭氣化反 at the excluded 應 (反 precursor → 反應壓力 = reaction pressure). 總炭氣化反應壓力 appears only as 該總炭氣化反應壓力 (no bare intro) -> genuine antecedent defect re-firing under the corrected fuller term. ADR-111 dual-label: truncated artifact=walker_fp, fuller term=legit_drafting_error.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 8,
+            "term": "總炭氣化反",
+            "reference_form": "該總炭氣化反"
+          },
+          {
+            "claim_id": 8,
+            "term": "總炭氣化反應壓力",
+            "reference_form": "該總炭氣化反應壓力"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202305778A",
+      "jurisdiction": "TW",
+      "source": "R22 時脈/應機/應者 follow-gate truncation fix — pure-FP correction (2026-06-27)",
+      "_note": "關斷時脈信號 (turn-off clock signal) introduced bare (將接通時脈信號或關斷時脈信號…, c1/c7/c10/c15); _NOUN_CHARS excludes 時 so 所述關斷時脈信號 truncated to 關斷 at 時. The R22 脈 suffix (時脈=clock) extends the capture to the full compound; the truncated 關斷 artifacts were walker_fp (the fuller term is introduced bare). Verified by reading the claim 2026-06-27.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 17,
+            "term": "關斷",
+            "reference_form": "所述關斷"
+          },
+          {
+            "claim_id": 7,
+            "term": "關斷",
+            "reference_form": "所述關斷"
+          },
+          {
+            "claim_id": 15,
+            "term": "關斷",
+            "reference_form": "所述關斷"
+          },
+          {
+            "claim_id": 10,
+            "term": "關斷",
+            "reference_form": "所述關斷"
+          },
+          {
+            "claim_id": 20,
+            "term": "關斷",
+            "reference_form": "所述關斷"
+          },
+          {
+            "claim_id": 8,
+            "term": "關斷",
+            "reference_form": "所述關斷"
+          },
+          {
+            "claim_id": 9,
+            "term": "關斷",
+            "reference_form": "所述關斷"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202234811A",
+      "jurisdiction": "TW",
+      "source": "verified-correction-r-low-comparison",
+      "_note": "Claim 1 introduces 電流 article-less in '監視耦合到該AC輸出匯流排的一LLC諧振槽中的電流' (bare-noun intro, object of 監視; MPEP 2173.05(e) / 專利審查基準 §26 第3項), then references '當該電流降至低於一輕載或空載臨限值時'. The ensemble mislabeled 該電流降至低 as a legit drafting error because the 低於-truncation over-capture (該電流 captured as 該電流降至低) hid the antecedent — the 3 structurally-identical siblings (量降低至低/入口冷卻至低/第一等級鋰鹽低) were correctly labeled walker_fp. The 低 trailing-strip (dual-registered like 位/位於) corrects the walker and reveals this mislabel. Verified by reading the claim 2026-06-29.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "電流降至低",
+            "reference_form": "該電流降至低"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202045215A",
+      "jurisdiction": "TW",
+      "source": "verified-correction",
+      "_note": "R27 (2026-07-13): the emitted reference 該資訊 does not exist in the draft - TW202045215A c15 reads 該資訊偵測器 (the information detector), which the interior cut truncated at the verb 偵測 even though 偵測器 is a declared compound noun. The finding AS EMITTED was therefore a walker artifact. The underlying defect is REAL and is preserved as the paired legit_drafting_error entry on 該資訊偵測器 below (ADR-111 dual-labeling of a shifting fix). Verified by reading the claim 2026-07-13: 資訊偵測器 occurs exactly once, definite (該), never introduced.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "資訊",
+            "reference_form": "該資訊"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202045215A",
+      "jurisdiction": "TW",
+      "source": "verified-correction",
+      "_note": "R27 (2026-07-13): the correctly-formed shape of the defect previously mis-emitted as 該資訊 (see the paired walker_fp entry). 資訊偵測器 occurs exactly once in TW202045215A, definite (該資訊偵測器), with no antecedent introduction anywhere in the claim set - a real 專利法施行細則 §18 / 專利審查基準 §2.3 antecedent-basis defect. Labeled legit so the FN-guard protects it against future relaxations.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "資訊偵測器",
+            "reference_form": "該資訊偵測器"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202341603A",
+      "jurisdiction": "TW",
+      "source": "verified-correction",
+      "_note": "R29 (2026-07-18): the term IS article-less introduced in the ancestor claim - '...在降壓-升壓模式下基於第三切換操作對所述電池進行充電...'. The left boundary is the coverb 基於 (already in _BARE_NOUN_INTRO_VERBS_TW) and the right boundary is the preposition 對 followed by the determiner 所述, which cannot continue a noun compound - so this is a genuine bare-noun introduction and 所述第三切換操作 has a 先行詞. has_bare_noun_introduction_tw was previously blind to it only because guard (a) treated the prepositional 對 as a compounding character. The six other genuinely-arguable c18 findings still fire post-fix. Ensemble label is over-strict. TIPO 專利審查基準 第二篇第九章 (§26 第2項). Verified by reading the claim.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 18,
+            "term": "第三切換操作",
+            "reference_form": "所述第三切換操作"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202548605A",
+      "jurisdiction": "TW",
+      "source": "R35 載入 trailing-verb strip - ADR-111 shift dual-label (2026-08-01)",
+      "_note": "ADR-111 SHIFT, not a false negative. R35 added the trailing verb 載入 to _TRAILING_VERB_DENYLIST, so the walker stopped emitting the artifact shape 該專家模型載入 and now emits 該專家模型 on the SAME claim (validate_fix: one silenced_legit paired with one added key at TW202548605A c10). The old shape is a walker artifact - 專家模型載入 occurs nowhere in the draft as an element name. The defect itself is REAL and survives under the corrected term: the draft names the element 該專家機器學習模型 throughout and abbreviates it to 該專家模型 exactly once (`從該專家模型載入`), definite on first and only use, never introduced. Inconsistent-terminology antecedent defect under 專利法施行細則 §18 / 專利審查基準 §26 第3項. Dual-labeled per ADR-111: old shape walker_fp, new shape legit_drafting_error, same round. Verified by reading the claim 2026-08-01.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 10,
+            "term": "專家模型載入",
+            "reference_form": "該專家模型載入"
+          },
+          {
+            "claim_id": 10,
+            "term": "專家模型",
+            "reference_form": "該專家模型"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202432467A",
+      "jurisdiction": "TW",
+      "source": "verified-correction-r36-stranded-suo",
+      "_note": "R36 (#492) ADR-111 dual-label. The trailing stranded-所 strip re-shapes the REFERENCE capture (該灰中所 -> 該灰中, 所述入口所 -> 所述入口, 所述出口所 -> 所述出口). Both shapes are walker artifacts of the same underlying FP: on these drafts the 所 sits on the reference side while the intro carries a different artifact (一入口用於… captures 入口用), so the finding SHIFTS rather than resolving. The old shape is already labelled walker_fp; the new shape is labelled walker_fp too - this is NOT a promotion to legit. Follow-up lever: the intro-side trailing 用 in 用於 / 用以 needs the same source-gated treatment the spec-support engine got in R36, at the four capture consumers.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "灰中",
+            "reference_form": "該灰中"
+          },
+          {
+            "claim_id": 12,
+            "term": "灰中",
+            "reference_form": "該灰中"
+          },
+          {
+            "claim_id": 16,
+            "term": "灰中",
+            "reference_form": "該灰中"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202541347A",
+      "jurisdiction": "TW",
+      "source": "verified-correction-r36-stranded-suo",
+      "_note": "R36 (#492) ADR-111 dual-label. The trailing stranded-所 strip re-shapes the REFERENCE capture (該灰中所 -> 該灰中, 所述入口所 -> 所述入口, 所述出口所 -> 所述出口). Both shapes are walker artifacts of the same underlying FP: on these drafts the 所 sits on the reference side while the intro carries a different artifact (一入口用於… captures 入口用), so the finding SHIFTS rather than resolving. The old shape is already labelled walker_fp; the new shape is labelled walker_fp too - this is NOT a promotion to legit. Follow-up lever: the intro-side trailing 用 in 用於 / 用以 needs the same source-gated treatment the spec-support engine got in R36, at the four capture consumers.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "入口",
+            "reference_form": "所述入口"
+          },
+          {
+            "claim_id": 1,
+            "term": "出口",
+            "reference_form": "所述出口"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202234811A",
+      "jurisdiction": "TW",
+      "source": "R38 超過一 interior-verb cut - ADR-111 shift dual-label (2026-08-13)",
+      "_note": "The R38 超過一 interior cut (report #524) shifts this c10 finding from the over-captured artifact 電壓上升超過一輕載或空載 to the cleaner 電壓上升 on the SAME claim - the reference is still flagged, so no defect is lost. Verified by reading claim 10: `該輸出模組中之一者中的該電壓上升超過一輕載或空載臨限值時`, where the 12-char noun-scan cap had truncated the capture mid-object. The new key inherits the ensemble's legit verdict CONSERVATIVELY - note that the sibling correction on c1 of this same patent (verified-correction-r-low-comparison, 該電流降至低) found the structurally identical bare-noun intro `...中的電流` and re-labelled it walker_fp, so 該電壓上升 may well be the same mislabel. That is deliberately NOT asserted here: it would be a merits correction this round does not need, and keeping the legit label keeps the FN-guard's protection alive at the new key.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 10,
+            "term": "電壓上升超過一輕載或空載",
+            "reference_form": "該電壓上升超過一輕載或空載"
+          },
+          {
+            "claim_id": 10,
+            "term": "電壓上升",
+            "reference_form": "該電壓上升"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW201728933A",
+      "jurisdiction": "TW",
+      "source": "verified-correction-r41-anzhuang",
+      "_note": "ADR-111 SHIFT. The R41 trailing 安裝 strip re-keys this finding from the artifact term 連接器殼體中安裝 (which appears nowhere in the draft) to the clean 連接器殼體 on the SAME claim. The DEFECT IS REAL and still fires under the corrected term: c13 introduces 一殼體 and then references 該連接器殼體, a different element name. Dual-labelled - old artifact key walker_fp, the finding survives as legit under 連接器殼體. Claim read 2026-08-17.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 13,
+            "term": "連接器殼體中安裝",
+            "reference_form": "該連接器殼體中安裝"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202225689A",
+      "jurisdiction": "TW",
+      "source": "verified-correction-r41-jing",
+      "_note": "GOLD LABEL ON A WALKER ARTIFACT. The term 器具經配置使得當 exists nowhere in the draft - it is the pre-R41 over-capture that ran the 經 clause into the noun. c63 introduces the element article-less ('設置於該外殼的孔，其用於接收經配置以收集生物樣本的器具') and every later 該器具 references it, so under the corrected term 器具 the reference HAS antecedent basis (審查基準 §26; article-less first mention is a valid introduction, which is why the bare-noun rescue exists). Same on c79/c80. Claim read 2026-08-17.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 63,
+            "term": "器具經配置使得當",
+            "reference_form": "該器具經配置使得當"
+          },
+          {
+            "claim_id": 79,
+            "term": "器具經配置使得當",
+            "reference_form": "該器具經配置使得當"
+          },
+          {
+            "claim_id": 80,
+            "term": "器具經配置使得當",
+            "reference_form": "該器具經配置使得當"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI848261B",
+      "jurisdiction": "TW",
+      "source": "verified-correction-r44-chuizhi",
+      "_note": "ADR-111 SHIFT + GOLD LABEL ON A WALKER ARTIFACT. The term 第二方向垂直 exists nowhere in the draft - it is the pre-R44 V+於 stranding, where 於 is excluded from _NOUN_CHARS so the scan halts AT it and leaves the verb head 垂直 (of 垂直於) glued to the noun. Claim 1 introduces the element article-less in the locative frame '在第二方向上絕大部分重疊' and the very next span references it as '所述第二方向垂直於所述第一方向', so under the corrected term 第二方向 the reference HAS antecedent basis (審查基準 §2.6; an article-less first mention is a valid introduction, which is why the bare-noun rescue exists). The shifted key 第二方向 is still emitted because the bare-noun LOCATIVE-FRAME intro arm (在X上/在X下) is a separately-tracked withheld class, so it is labelled walker_fp under that class rather than legit. Claim read 2026-08-25.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 1,
+            "term": "第二方向垂直",
+            "reference_form": "所述第二方向垂直"
+          },
+          {
+            "claim_id": 1,
+            "term": "第二方向",
+            "reference_form": "所述第二方向"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202219926A",
+      "jurisdiction": "TW",
+      "source": "verified-correction-r46-shide",
+      "_note": "GOLD LABEL ON A WALKER ARTIFACT (outcome 3). The ensemble labelled 主動模式操作 legit_drafting_error, but that string is not an element the drafter ever wrote - it is the element 主動模式 plus the VERB 操作 (\"operates in an active mode\"). Claim 11 introduces it with the indefinite article in 以一主動模式操作使得…, alongside its siblings 以一第一邊沿模式操作 and 以一第二邊沿模式操作, and claim 12 references 以該主動模式操作的…. So 該主動模式 HAS antecedent basis and the finding is a walker over-capture, not a §112(b) defect. Both sides over-capture; the finding fires only because the INTRO side captured further (through 使得) than the reference side, the R29 desynchronization shape. Confirmed by counting: 主動模式 occurs twice in the claims blob and BOTH occurrences sit inside 主動模式操作, i.e. the drafter never uses 主動模式操作 as a noun. Claim read 2026-08-28 (TW R46).",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 12,
+            "term": "主動模式操作",
+            "reference_form": "該主動模式操作"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202222015A",
+      "jurisdiction": "TW",
+      "source": "verified-correction-r46-oujie-claimread",
+      "_note": "ADR-111 SHIFT, not an FN - the claim read Christopher delegated (2026-08-28). 耦接 was withheld in R45 on THREE silenced gold-legit; two of them are this draft's c2/c16 and they are shifts, which takes 耦接 from 3 blockers to 1. The text is 其中該驅動電源的該負端耦接該輸出電壓 = 'wherein the NEGATIVE TERMINAL of the driving power supply COUPLES TO the output voltage'. So the element is 負端 and 耦接 is the VERB; 負端耦接 is an over-capture the drafter never wrote. Under the corrected term the defect is REAL and still fires: 負端 occurs 9 times, 8 as the definite 該負端 and one as 之負端, with ZERO indefinite 一負端 introductions (its sibling 正端 is the same, 4 occurrences all 該正端, zero 一正端), so the definite references have no antecedent. Confirmed by the outcome-2 diagnostic rather than by reading alone: adding 耦接 to the trailing denylist REMOVES 負端耦接 and ADDS 負端 on the same claims, and an added key on the same claim is a shift. The REMAINING blocker for 耦接 is TW202529383A c20 第二端子, which does NOT contain the token and adds nothing when 耦接 is stripped - the spurious-intro cascade, the same class as 儲存, and it is intro-side.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "負端耦接",
+            "reference_form": "該負端耦接"
+          },
+          {
+            "claim_id": 2,
+            "term": "負端",
+            "reference_form": "該負端"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202222015A",
+      "jurisdiction": "TW",
+      "source": "verified-correction-r46-oujie-claimread",
+      "_note": "ADR-111 SHIFT, not an FN - the claim read Christopher delegated (2026-08-28). 耦接 was withheld in R45 on THREE silenced gold-legit; two of them are this draft's c2/c16 and they are shifts, which takes 耦接 from 3 blockers to 1. The text is 其中該驅動電源的該負端耦接該輸出電壓 = 'wherein the NEGATIVE TERMINAL of the driving power supply COUPLES TO the output voltage'. So the element is 負端 and 耦接 is the VERB; 負端耦接 is an over-capture the drafter never wrote. Under the corrected term the defect is REAL and still fires: 負端 occurs 9 times, 8 as the definite 該負端 and one as 之負端, with ZERO indefinite 一負端 introductions (its sibling 正端 is the same, 4 occurrences all 該正端, zero 一正端), so the definite references have no antecedent. Confirmed by the outcome-2 diagnostic rather than by reading alone: adding 耦接 to the trailing denylist REMOVES 負端耦接 and ADDS 負端 on the same claims, and an added key on the same claim is a shift. The REMAINING blocker for 耦接 is TW202529383A c20 第二端子, which does NOT contain the token and adds nothing when 耦接 is stripped - the spurious-intro cascade, the same class as 儲存, and it is intro-side.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "負端耦接",
+            "reference_form": "該負端耦接"
+          },
+          {
+            "claim_id": 16,
+            "term": "負端",
+            "reference_form": "該負端"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202206813A",
+      "jurisdiction": "TW",
+      "source": "verified-correction-r53-definitional-frame",
+      "_note": "R53 definitional frame (reports #490/#491). The claim DEFINES the term in place - '該相固化基材被構成為由相固化單元形成，該相固化單元包含…' - and then refers back to it with 所述/該. The predicate complement is article-less, so no intro arm saw it and the ensemble read the back-reference as a missing antecedent. Christopher's attorney read (2026-09-02) confirms BOTH the copula (為/係/是) and the formation (由…形成/構成/組成) frames give antecedent basis under 專利法 §26第2項 / 專利審查基準 第二篇第九章: the definition is recited in the claim itself. Verified by reading the claim 2026-09-02.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 2,
+            "term": "相固化單元",
+            "reference_form": "該相固化單元"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202206813A",
+      "jurisdiction": "TW",
+      "source": "verified-correction-r53-definitional-frame",
+      "_note": "R53 definitional frame (reports #490/#491). The claim DEFINES the term in place - '該相固化基材被構成為由相固化單元形成，該相固化單元包含…' - and then refers back to it with 所述/該. The predicate complement is article-less, so no intro arm saw it and the ensemble read the back-reference as a missing antecedent. Christopher's attorney read (2026-09-02) confirms BOTH the copula (為/係/是) and the formation (由…形成/構成/組成) frames give antecedent basis under 專利法 §26第2項 / 專利審查基準 第二篇第九章: the definition is recited in the claim itself. Verified by reading the claim 2026-09-02.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 19,
+            "term": "相固化單元",
+            "reference_form": "該相固化單元"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202206813A",
+      "jurisdiction": "TW",
+      "source": "verified-correction-r53-definitional-frame-chain",
+      "_note": "R53 definitional frame, inherited through the dependency chain. This claim contains no frame of its own, but its ancestor chain (5 → 4 → 2 → 1) reaches claim 2, which defines the term in place. A dependent claim inherits its parent's introductions, so the back-reference has antecedent basis. Chain verified against the parsed dependencies 2026-09-02, not assumed.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "相固化單元",
+            "reference_form": "該相固化單元"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202206813A",
+      "jurisdiction": "TW",
+      "source": "verified-correction-r53-definitional-frame-chain",
+      "_note": "R53 definitional frame, inherited through the dependency chain. This claim contains no frame of its own, but its ancestor chain (22 → 21 → 19 → 18) reaches claim 19, which defines the term in place. A dependent claim inherits its parent's introductions, so the back-reference has antecedent basis. Chain verified against the parsed dependencies 2026-09-02, not assumed.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 22,
+            "term": "相固化單元",
+            "reference_form": "該相固化單元"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TW202340298A",
+      "jurisdiction": "TW",
+      "source": "verified-correction-r53-definitional-frame",
+      "_note": "R53 definitional frame (reports #490/#491). The claim DEFINES the term in place - '該含硫醇聚合物由單體混合物形成，該單體混合物包含：含硫醇化合物；及異氰酸酯' - and then refers back to it with 所述/該. The predicate complement is article-less, so no intro arm saw it and the ensemble read the back-reference as a missing antecedent. Christopher's attorney read (2026-09-02) confirms BOTH the copula (為/係/是) and the formation (由…形成/構成/組成) frames give antecedent basis under 專利法 §26第2項 / 專利審查基準 第二篇第九章: the definition is recited in the claim itself. Verified by reading the claim 2026-09-02.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 3,
+            "term": "單體混合物",
+            "reference_form": "該單體混合物"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    }
+  ]
+}

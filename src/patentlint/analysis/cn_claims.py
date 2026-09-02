@@ -3786,6 +3786,27 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
     return cleaned + extras
 
 
+# CN R66 (2026-09-02) - DEFINITIONAL FRAME, the mirror of TW R53.
+# Same construction, same discriminator, confirmed present in the CN corpus
+# before porting rather than assumed: 26 occurrences across 25 drafts, every
+# one a real definition -
+#   所述导体是扁平导线，所述扁平导线…
+#   所述雷达为激光雷达，所述激光雷达…
+#   所述第一单向离合器为被动单向离合器，所述被动单向离合器…
+# The predicate complement is article-less, so no intro arm sees it and the
+# drafter's own back-reference flags. See tw_claims._DEFINITIONAL_FRAME_RE_TW
+# for the full rationale, including why a bare 为/系/是/由 pattern is unusable
+# and why the drafter's own re-reference is the guard.
+_DEFINITIONAL_FRAME_RE_CN = re.compile(
+    "(?:" + "|".join(_REFERENCE_PREFIXES_CN) + ")" + r'[\u4e00-\u9fff]{2,12}'
+    r'(?:\u4e3a|\u7cfb|\u662f|\u7531)'
+    r'(?P<y>[\u4e00-\u9fff]{2,12})'
+    r'(?:\u5f62\u6210|\u6784\u6210|\u5236\u6210|\u7ec4\u6210)?'
+    r'[\uff0c,\u3002\uff1b;]\s*'
+    + "(?:" + "|".join(_REFERENCE_PREFIXES_CN) + ")" + r'(?P=y)'
+)
+
+
 def extract_introductions_cn(
     claim: Claim,
     *,
@@ -3905,6 +3926,18 @@ def extract_introductions_cn(
             continue
         seen.add(head)
         pairs.append((m.group(0), head))
+
+    # CN R66: definitional frame - see _DEFINITIONAL_FRAME_RE_CN.
+    for m in _DEFINITIONAL_FRAME_RE_CN.finditer(claim.text):
+        y_raw = m.group('y')
+        y_norm = normalize_candidate_intro_cn(
+            y_raw,
+            strict_qualifier_matching=strict_qualifier_matching,
+        )
+        for candidate in (y_norm, y_raw):
+            if candidate and candidate not in seen:
+                seen.add(candidate)
+                pairs.append((m.group(0), candidate))
 
     return pairs
 

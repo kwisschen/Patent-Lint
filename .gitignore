@@ -59,6 +59,14 @@ smoke-test-pyodide.html
 temp/
 # Auto-generated analysis artifacts (regenerable via tests.eval.post_phase1_runner)
 tests/eval/phase2b_results*.json
+# ...but the *_corrections.json files are NOT auto-generated and NOT
+# regenerable: they are hand-curated verdicts, several of them Christopher's
+# own attorney reads overriding an over-strict ensemble label, and each carries
+# the claim reading that justifies it. They were only ignored because the glob
+# above swept them up. Untracked, they exist on one machine, no other session
+# or CI run can reproduce a gate that depends on them, and losing that laptop
+# loses the legal judgement. ~80KB total.
+!tests/eval/phase2b_results_*_corrections.json
 tests/eval/d1_probe_*.json
 tests/eval/d1_local_*.json
 tests/eval/tw_descriptions.json

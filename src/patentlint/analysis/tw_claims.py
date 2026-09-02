@@ -2371,6 +2371,8 @@ _INTRO_PATTERN = re.compile(
 # with named groups so the walker can preserve the original prefix when
 # constructing finding records.
 _REFERENCE_PREFIXES = ("該等", "該些", "所述", "前述", "該")
+_REF_PREFIX_ALT_TW = "(?:" + "|".join(_REFERENCE_PREFIXES) + ")"
+
 _REF_PATTERN_CAPTURE = re.compile(
     r"(?P<prefix>" + "|".join(_REFERENCE_PREFIXES) + r")"
     + f"(?P<noun>{_NOUN_CHARS})"
@@ -6232,6 +6234,42 @@ def _has_stranded_determiner_tail_tw(term: str) -> bool:
     return True
 
 
+# R53 (2026-09-02, reports #490 / #491) - DEFINITIONAL FRAME.
+# A drafter names an element, then immediately defines what it IS and carries
+# on referring to the definition:
+#
+#   所述片狀載體為多孔金屬載體，所述多孔金屬載體包括泡沫銅…      (#490, copula)
+#   所述彈性封邊部由高分子彈性體形成，所述高分子彈性體包含橡膠…   (#491, formation)
+#
+# The predicate complement (`多孔金屬載體`, `高分子彈性體`) is article-less, so
+# NO intro arm saw it at all - not F5a, not F6, not F10 - and the drafter's own
+# `所述…` back-reference flagged. Both reporters said the same thing: "introduced
+# by its own context before". Christopher's attorney read (2026-09-02) confirms
+# BOTH forms give antecedent basis: the copula asserts identity and the
+# formation clause names the material the element is made of, and in each case
+# the definition is right there in the claim.
+#
+# THE DISCRIMINATOR IS THE DRAFTER'S OWN RE-REFERENCE, not the frame. A bare
+# `為`/`係`/`由` pattern is hopeless here - the TW corpus has 1,389 `為`, 783
+# `係` and 650 `是` hits, almost all of them noise (`該手指觸碰為有效時`,
+# `該顯示部分轉變為一喚醒狀態`, `是否`, the Markush `選自由…所組成`). Requiring
+# that the SAME string reappear immediately as `所述Y` collapses that to 35
+# occurrences over 18 drafts with zero noise, every one a real definition. This
+# is the `一對` play from R39: restore-what-the-drafter-wrote guards are strong
+# because they never invent a term, and the claim validates itself.
+#
+# X is deliberately loose (the noun class absorbs `係經組配`, `被形成`), because
+# the guard does not rest on X - it rests on Y being re-referenced.
+_DEFINITIONAL_FRAME_RE_TW = re.compile(
+    _REF_PREFIX_ALT_TW + r'[\u4e00-\u9fff]{2,12}'
+    r'(?:\u70ba|\u4fc2|\u662f|\u7531)'
+    r'(?P<y>[\u4e00-\u9fff]{2,12})'
+    r'(?:\u5f62\u6210|\u69cb\u6210|\u88fd\u6210|\u7d44\u6210)?'
+    r'[\uff0c,\u3002\uff1b;]\s*'
+    + _REF_PREFIX_ALT_TW + r'(?P=y)'
+)
+
+
 def extract_introductions_tw(
     claim: Claim,
     *,
@@ -6465,6 +6503,19 @@ def extract_introductions_tw(
             continue
         seen.add(head)
         pairs.append((m.group(0), head))
+
+    # R53: definitional frame - see _DEFINITIONAL_FRAME_RE_TW.
+    for m in _DEFINITIONAL_FRAME_RE_TW.finditer(claim.text):
+        y_raw = m.group('y')
+        y_norm = normalize_candidate_intro(
+            y_raw,
+            strict_qualifier_matching=strict_qualifier_matching,
+            source_text=claim.text,
+        )
+        for candidate in (y_norm, y_raw):
+            if candidate and candidate not in seen:
+                seen.add(candidate)
+                pairs.append((m.group(0), candidate))
 
     # R49: shared emit-side hygiene - see _has_stranded_determiner_tail_tw.
     # Applied here, at the single choke point, so every arm above is covered.
