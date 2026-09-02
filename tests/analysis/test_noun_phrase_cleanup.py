@@ -659,3 +659,62 @@ class TestGerundDisplayHead:
         from patentlint.analysis.utils import clean_noun_phrase
         assert clean_noun_phrase("monitoring") == ""
         assert clean_noun_phrase("monitoring operable") == "monitoring operable"
+
+
+class TestBareDistributiveSelector:
+    """US R50 - a bare selector is not an element reference.
+
+    `a sealing apparatus around the respective said intake and said exhaust
+    ports` captures the single word `respective`, because the noun scan stops
+    at the determiner that follows. `the` attaches to the noun phrase, not to
+    the selector, so the selector can never carry an antecedent of its own.
+    ATTORNEY READ (Christopher, 2026-09-02): silence it - and no defect is
+    lost, because the real head is flagged by its own reference.
+    """
+
+    def _terms(self, text):
+        from patentlint.models import Claim
+        from patentlint.analysis.claims import check_antecedent_basis
+        claims = [Claim(id="1", text=text, independent=True, dependencies=[])]
+        return {f["term"] for f in check_antecedent_basis(claims)}
+
+    def test_selector_before_said_is_not_a_reference(self):
+        terms = self._terms(
+            "A valve system comprising a housing configured to retain a sealing "
+            "apparatus around the respective said intake and said exhaust ports."
+        )
+        assert "respective" not in terms
+
+    def test_selector_before_at_least_one_of_is_not_a_reference(self):
+        terms = self._terms(
+            "A method comprising receiving a third information element from the "
+            "respective at least one of the original source and the potential "
+            "relay device."
+        )
+        assert "respective" not in terms
+
+    def test_the_real_head_is_still_flagged(self):
+        # The guard drops a truncation artifact, never the defect: the element
+        # the selector modifies is checked by its own reference.
+        terms = self._terms(
+            "A valve system comprising a housing configured to retain a sealing "
+            "apparatus around the respective said intake and said exhaust ports."
+        )
+        assert terms, "dropping the selector must not empty the claim's findings"
+
+    def test_selector_without_a_following_determiner_is_untouched(self):
+        # The guard is gated on evidence that the head continues past the
+        # capture. With no determiner following, nothing is assumed.
+        from patentlint.analysis.claims import _TRUNCATED_SELECTOR_TRAIL
+        assert _TRUNCATED_SELECTOR_TRAIL.match(" said intake and said exhaust")
+        assert _TRUNCATED_SELECTOR_TRAIL.match(" at least one of the source")
+        assert not _TRUNCATED_SELECTOR_TRAIL.match(" ports of the housing")
+
+    def test_predicative_adjective_set_is_shared_not_duplicated(self):
+        # R50 reuses the closed set R49 factored out, so this is not a new
+        # one-member denylist and the two cannot drift.
+        from patentlint.analysis.utils import (
+            _PREDICATIVE_ADJECTIVES, _DISPLAY_POST_MODIFIERS,
+        )
+        assert "respective" in _PREDICATIVE_ADJECTIVES
+        assert _PREDICATIVE_ADJECTIVES <= _DISPLAY_POST_MODIFIERS

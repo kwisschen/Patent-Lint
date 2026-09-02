@@ -48,7 +48,12 @@ THIS_DIR = Path(__file__).resolve().parent
 #           which R49 deliberately did not touch.
 #   CN 35 - the same two shapes. CN is additionally why R49 was not mirrored:
 #           CN drafters name elements with a trailing numeral (密封圈一).
-#   US  6 - was 28, lowered 2026-09-02 when the `monitoring operable` class
+#   US  0 - CLOSED 2026-09-02. The class is gone in two rounds: R49 cleaned the
+#           `monitoring operable` shape (22 of 28) and R50 dropped the 6 bare
+#           `respective` selectors. See the round_history entries; the R50 half
+#           needed an attorney read because the ensemble had labelled the same
+#           construction both ways.
+#   (was) 6 - was 28, lowered 2026-09-02 when the `monitoring operable` class
 #           (22 of the 28) SHIPPED as `gerund_display_head`. The withhold note
 #           this replaces said the fix "cleans the TERM while KEEPING the
 #           finding, which means separating the intro-side single-word gerund
@@ -63,7 +68,7 @@ THIS_DIR = Path(__file__).resolve().parent
 #           is no noun anywhere in the term to fall back to. No trailing strip
 #           can reach it and cleaning is not the lever - it needs the capture
 #           widened, which is its own round.
-_EXPECTED_BAD_ENGINE1: dict[str, int] = {"TW": 54, "CN": 35, "US": 6}
+_EXPECTED_BAD_ENGINE1: dict[str, int] = {"TW": 54, "CN": 35, "US": 0}
 
 
 def main() -> int:
