@@ -17,6 +17,7 @@ import AboutPage from './pages/AboutPage'
 import TermsPage from './pages/TermsPage'
 import PrivacyPage from './pages/PrivacyPage'
 import RubricPage from './pages/RubricPage'
+import ViewportHarness from './pages/ViewportHarness'
 import { usePyodide } from './hooks/usePyodide'
 import { useUpdateCheck } from './hooks/useUpdateCheck'
 import { formatAnalysisError } from './lib/analysisError'
@@ -80,6 +81,40 @@ function App() {
   // jurisdiction without forcing the user to re-upload. When provided
   // we also commit the new jurisdiction to App state so the picker
   // reflects what was actually analyzed.
+  // DEV-ONLY: `?fixture=<name>` auto-loads a repo fixture so the viewport
+  // harness can show the actual REPORT at every width, not just the empty
+  // drop zone. A harness that only ever renders the landing page is half a
+  // harness - the layouts worth checking are in the findings list.
+  //
+  // Served by a dev-only Vite middleware (see vite.config devFixtureRoute),
+  // so nothing is bundled and nothing ships: the middleware is `apply: 'serve'`
+  // and this effect sits behind `import.meta.env.DEV`, statically false in a
+  // production build. Failures are logged and ignored - this
+  // is a debug convenience, never a code path a user can reach.
+  useEffect(() => {
+    if (!import.meta.env.DEV || !pyodide.ready) return
+    const name = new URLSearchParams(window.location.search).get('fixture')
+    if (!name || !/^[\w.-]+$/.test(name)) return
+    let cancelled = false
+    ;(async () => {
+      try {
+        const res = await fetch(`/__fixtures/${name}`)
+        if (!res.ok) throw new Error(`fixture ${name}: ${res.status}`)
+        const blob = await res.blob()
+        if (cancelled) return
+        // The MIME type matters: `new File([blob], name)` alone yields an
+        // empty type and the docx reader rejects it as corrupt.
+        handleFile(new File([blob], name, {
+          type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        }))
+      } catch (err) {
+        console.warn('[viewport-harness] fixture load failed', err)
+      }
+    })()
+    return () => { cancelled = true }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pyodide.ready])
+
   const handleFile = async (uploadedFile, jurisdictionOverride) => {
     setFile(uploadedFile)
     setError(null)
@@ -250,6 +285,12 @@ function App() {
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/rubric" element={<RubricPage />} />
+          {/* Dev-only viewport harness. Guarded so it is never reachable in
+              the production bundle - PatentLint's claim is that nothing runs
+              but the analysis, and a debug surface must not ship with it. */}
+          {import.meta.env.DEV && (
+            <Route path="/__viewports" element={<ViewportHarness />} />
+          )}
         </Routes>
       </Layout>
 
