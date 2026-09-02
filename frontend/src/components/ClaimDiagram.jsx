@@ -2,7 +2,8 @@
 // Copyright (c) 2025-2026 Christopher Chen
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ChevronDown, GitBranch } from 'lucide-react'
+import { ChevronDown, GitBranch, ZoomIn, ZoomOut, Maximize2, Minimize2, Scan } from 'lucide-react'
+import { createPortal } from 'react-dom'
 import mermaid from 'mermaid'
 
 let renderCounter = 0
@@ -37,6 +38,24 @@ mermaid.initialize({
 // diagram is needed). User saw it on iPhone Safari prod build 6746b7d.
 // First ClaimDiagram render below works fine without pre-warming because
 // mermaid is already loaded statically.
+
+function ZoomControl({ onClick, disabled, label, children }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      title={label}
+      aria-label={label}
+      className="rounded p-1 text-muted-foreground transition-colors hover:bg-foreground/[0.06]
+                 hover:text-foreground disabled:pointer-events-none disabled:opacity-40
+                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
+    >
+      {children}
+    </button>
+  )
+}
+
 
 function buildMermaidSyntax(claimTrees, t) {
   const lines = [
@@ -272,6 +291,52 @@ export default function ClaimDiagram({ claimTrees }) {
     return () => observer.disconnect()
   }, [showDiagram, renderDiagram])
 
+  // Zoom. Mermaid caps the rendered SVG at 100% of its container, so a wide
+  // dependency tree is shrunk until the node labels are unreadable - the
+  // diagram was legible only for small claim sets. The SVG is vector, so
+  // scaling its width past the container costs nothing in sharpness; the
+  // surface already scrolls horizontally.
+  const ZOOM_STEPS = [0.75, 1, 1.25, 1.5, 2, 3]
+  const [zoom, setZoom] = useState(1)
+  const [expanded, setExpanded] = useState(false)
+
+  // Apply zoom by setting the SVG width and clearing the max-width mermaid
+  // bakes in. Done as an effect rather than at render time because the SVG is
+  // injected via innerHTML and replaced on every re-render (theme toggle).
+  useEffect(() => {
+    const svg = containerRef.current?.querySelector('svg')
+    if (!svg) return
+    svg.style.maxWidth = 'none'
+    svg.style.width = `${zoom * 100}%`
+    svg.style.height = 'auto'
+  }, [zoom, showDiagram, expanded, claimTrees])
+
+  // Going full screen moves the surface into a PORTAL, so React remounts the
+  // container div and the innerHTML-injected SVG is lost with it. Re-render on
+  // the toggle rather than trying to move the DOM node by hand.
+  const didMountExpand = useRef(false)
+  useEffect(() => {
+    if (!showDiagram) return
+    if (!didMountExpand.current) { didMountExpand.current = true; return }
+    renderDiagram()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expanded])
+
+  // Escape leaves full screen - a fullscreen surface with no keyboard exit is
+  // a trap for anyone not using a mouse.
+  useEffect(() => {
+    if (!expanded) return
+    const onKey = (e) => { if (e.key === 'Escape') setExpanded(false) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [expanded])
+
+  const stepZoom = (dir) => {
+    const i = ZOOM_STEPS.indexOf(zoom)
+    const next = i === -1 ? 1 : Math.min(ZOOM_STEPS.length - 1, Math.max(0, i + dir))
+    setZoom(ZOOM_STEPS[next])
+  }
+
   if (!claimTrees || claimTrees.length === 0) return null
 
   return (
@@ -284,12 +349,69 @@ export default function ClaimDiagram({ claimTrees }) {
         <span>{showDiagram ? t('diagram.hide') : t('diagram.show')}</span>
         <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${showDiagram ? 'rotate-180' : ''}`} />
       </button>
-      {showDiagram && (
-        <div
-          ref={containerRef}
-          className="claim-diagram-surface mt-3 overflow-x-auto rounded-lg border bg-card p-4 [&_svg]:mx-auto animate-in fade-in-0 slide-in-from-top-1 duration-300"
-        />
-      )}
+      {showDiagram && (() => {
+        const panel = (
+          <>
+          {expanded && (
+            <div
+              className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+              onClick={() => setExpanded(false)}
+              aria-hidden
+            />
+          )}
+          <div className={expanded
+            ? 'fixed inset-3 z-50 flex flex-col rounded-lg border bg-card shadow-xl sm:inset-6'
+            : 'mt-3'}>
+            <div className="flex items-center gap-1 px-2 py-1.5">
+              <ZoomControl
+                onClick={() => stepZoom(-1)}
+                disabled={zoom === ZOOM_STEPS[0]}
+                label={t('diagram.zoomOut')}
+              >
+                <ZoomOut className="h-3.5 w-3.5" />
+              </ZoomControl>
+              <span className="min-w-[3.5rem] text-center text-[11px] tabular-nums text-muted-foreground">
+                {t('diagram.zoomLevel', { pct: Math.round(zoom * 100) })}
+              </span>
+              <ZoomControl
+                onClick={() => stepZoom(1)}
+                disabled={zoom === ZOOM_STEPS[ZOOM_STEPS.length - 1]}
+                label={t('diagram.zoomIn')}
+              >
+                <ZoomIn className="h-3.5 w-3.5" />
+              </ZoomControl>
+              <ZoomControl onClick={() => setZoom(1)} label={t('diagram.fit')}>
+                <Scan className="h-3.5 w-3.5" />
+              </ZoomControl>
+              <div className="flex-1" />
+              <ZoomControl
+                onClick={() => setExpanded((v) => !v)}
+                label={expanded ? t('diagram.collapse') : t('diagram.expand')}
+              >
+                {expanded
+                  ? <Minimize2 className="h-3.5 w-3.5" />
+                  : <Maximize2 className="h-3.5 w-3.5" />}
+              </ZoomControl>
+            </div>
+            <div
+              ref={containerRef}
+              className={
+                'claim-diagram-surface overflow-auto rounded-lg border bg-card p-4 '
+                + '[&_svg]:mx-auto animate-in fade-in-0 slide-in-from-top-1 duration-300 '
+                + (expanded ? 'min-h-0 flex-1' : '')
+              }
+            />
+          </div>
+          </>
+        )
+        // PORTAL when expanded. An ancestor in AnalysisReport carries
+        // `transform: translateY(0) scale(1)` for its entrance cascade, and a
+        // non-none transform makes that element the containing block for
+        // `position: fixed` AND traps z-index in its stacking context - so the
+        // full-screen panel rendered UNDERNEATH the rest of the report. Only
+        // escaping to document.body fixes it; a bigger z-index cannot.
+        return expanded ? createPortal(panel, document.body) : panel
+      })()}
     </div>
   )
 }

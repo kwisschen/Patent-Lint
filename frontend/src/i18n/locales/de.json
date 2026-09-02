@@ -103,7 +103,13 @@
   },
   "diagram": {
     "show": "Diagramm einblenden",
-    "hide": "Diagramm ausblenden"
+    "hide": "Diagramm ausblenden",
+    "zoomIn": "Vergrößern",
+    "zoomOut": "Verkleinern",
+    "fit": "Breite anpassen",
+    "expand": "Vollbild",
+    "collapse": "Vollbild beenden",
+    "zoomLevel": "{{pct}}%"
   },
   "claimDiagram": {
     "renderError": "Diagramm konnte nicht erstellt werden",

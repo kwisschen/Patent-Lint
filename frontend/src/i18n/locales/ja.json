@@ -103,7 +103,13 @@
   },
   "diagram": {
     "show": "図表を表示",
-    "hide": "図表を非表示"
+    "hide": "図表を非表示",
+    "zoomIn": "拡大",
+    "zoomOut": "縮小",
+    "fit": "幅に合わせる",
+    "expand": "全画面",
+    "collapse": "全画面を終了",
+    "zoomLevel": "{{pct}}%"
   },
   "claimDiagram": {
     "renderError": "図を表示できませんでした",

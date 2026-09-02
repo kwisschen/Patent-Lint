@@ -103,7 +103,13 @@
   },
   "diagram": {
     "show": "顯示圖表",
-    "hide": "隱藏圖表"
+    "hide": "隱藏圖表",
+    "zoomIn": "放大",
+    "zoomOut": "縮小",
+    "fit": "符合寬度",
+    "expand": "全螢幕",
+    "collapse": "離開全螢幕",
+    "zoomLevel": "{{pct}}%"
   },
   "claimDiagram": {
     "renderError": "無法繪製圖表",

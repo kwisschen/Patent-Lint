@@ -103,7 +103,13 @@
   },
   "diagram": {
     "show": "Show Diagram",
-    "hide": "Hide Diagram"
+    "hide": "Hide Diagram",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "fit": "Fit to width",
+    "expand": "Full screen",
+    "collapse": "Exit full screen",
+    "zoomLevel": "{{pct}}%"
   },
   "claimDiagram": {
     "renderError": "Could not render diagram",
