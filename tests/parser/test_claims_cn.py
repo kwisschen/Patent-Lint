@@ -323,8 +323,8 @@ class TestDecimalIsNotAClaimNumber:
 
     def test_decimal_does_not_create_claim_zero(self):
         claims = self._parse(
-            "1. 一种低损耗低膨胀的玻纤组合物，包含：\n"
-            "0.01 wt%至2 wt%之改质无机粒子。\n"
+            "1. 一种组合物，包含：\n"
+            "0.01 wt%至2 wt%之第二材料。\n"
             "2. 根据权利要求1所述的组合物。"
         )
         assert "0" not in {str(c.id) for c in claims}
