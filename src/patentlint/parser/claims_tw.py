@@ -12,7 +12,7 @@ from patentlint.models import Claim
 # The period must NOT be immediately followed by a digit. Without that guard
 # a DECIMAL at the start of a line is read as a claim number (reports #707 /
 # #708 / #709, all three complaining about a "claim 0"): a component line
-# `0.01 wt%至2 wt%之改質無機粒子` matches `(\d+)` = 0 and `[.．]` = `.`, which
+# `0.01 wt%至2 wt%之第二材料` matches `(\d+)` = 0 and `[.．]` = `.`, which
 # both invents claim 0 AND truncates the real claim, so every element after
 # the decimal loses its introduction and cascades antecedent-basis FPs.
 # The guard is deliberately tight: it fires only when the digit is

@@ -235,7 +235,7 @@ class TestDecimalIsNotAClaimNumber:
     """Reports #707 / #708 / #709 - all three complained about a "claim 0".
 
     `_TW_CLAIM_NUM` matched `(\\d+)` then `[.．]` with `re.MULTILINE`, so a
-    component line like `0.01 wt%至2 wt%之改質無機粒子` was read as claim number 0.
+    component line like `0.01 wt%至2 wt%之第二材料` was read as claim number 0.
     That both INVENTED a claim 0 and TRUNCATED the real claim, so every element
     recited after the decimal lost its introduction and cascaded
     antecedent-basis false positives. The US splitter never had this bug because
