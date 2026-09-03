@@ -8,6 +8,9 @@ Extracted from analysis/claims.py for reuse across multiple checks.
 from __future__ import annotations
 
 import re
+from functools import lru_cache
+
+import snowballstemmer as _sb_utils
 from typing import Any
 
 
@@ -1128,13 +1131,60 @@ _QUANTIFIER_STOPS = {
 }
 
 
+_ED_STEMMER = _sb_utils.stemmer("english")
+
+
+@lru_cache(maxsize=8192)
+def _stem_word(word: str) -> str:
+    """Snowball stem of a single word, cached - `_should_strip_trailing` is hot."""
+    return _ED_STEMMER.stemWords([word])[0]
+
+
+# R52 (2026-09-03, reports #716/#717/#718): verbs whose BASE FORM ends in `ed`.
+# The stemmer test below correctly says the `ed` is not a suffix on these, which
+# is true and still the wrong answer for a TRAILING token - they are verbs, so
+# they belong in the verb sets rather than in the noun exception. Measured, not
+# guessed: these are the only three the mechanism misclassifies across 1,500
+# corpus drafts (`exceed` 15, `proceed` 3, `freed` 3, against `speed` 307).
+_ED_STEM_VERBS = frozenset({"exceed", "proceed", "freed"})
+
+
+@lru_cache(maxsize=4096)
 def _is_likely_past_participle(word: str) -> bool:
-    """Detect -ed words that are likely verbs/participles, not nouns."""
+    """Detect -ed words that are likely verbs/participles, not nouns.
+
+    R52 (2026-09-03, reports #716/#717/#718). The old test was
+    `len(word) >= 5`, a pure length heuristic, and it misfired on any noun whose
+    stem simply ends in `ed`: `the rotational speed of the motor` was emitted as
+    the term **`rotational`**, a bare adjective, because `speed` was stripped as
+    a participle. That is also what cost a real USPTO examiner rejection earlier
+    the same day - `the moving speed`, app 18613510 - and `moving speed` only
+    survived by accident, because stripping it emptied the phrase and hit the
+    raw-capture fallback while `rotational speed` did not.
+    
+    THE DISCRIMINATOR IS MORPHOLOGICAL, NOT A WORD LIST: a real participle has a
+    verb stem once `-ed` comes off (`received` -> `receiv`), while in a noun like
+    `speed` the `ed` is not a suffix at all and the stemmer leaves it whole. The
+    Snowball stemmer already ships (check_spec_support uses it) and separates the
+    two perfectly on the words that matter: 17/17 nouns and 17/17 participles in
+    a hand-built control set, and across 1,500 corpus drafts it newly protects
+    exactly FOUR distinct words - `speed`, plus the three base-form verbs pulled
+    out into `_ED_STEM_VERBS` above.
+
+    `_ED_NOUNS` stays as an explicit override for anything the stemmer gets
+    wrong; it no longer has to carry the whole class one member at a time.
+    """
     if not word.endswith("ed"):
         return False
     if word in _ED_NOUNS:
         return False
-    return len(word) >= 5
+    if word in _ED_STEM_VERBS:
+        return True
+    if len(word) < 5:
+        return False
+    # `ed` is a real suffix only if removing it leaves a stem the stemmer
+    # recognises - i.e. the stemmer itself shortened the word.
+    return _stem_word(word) != word
 
 
 # Known -es words that are nouns, not 3rd-person verbs
@@ -1785,6 +1835,27 @@ def clean_noun_phrase(phrase: str) -> str:
             # Standalone 'outputs' / 'inputs' is also a head noun, not a verb.
             break
         words.pop()
+    # R52 (2026-09-03): a protected noun can be a VERB'S OBJECT, and protecting
+    # it must not shield the verb behind it. Once the `-ed` morphology rule
+    # stopped stripping `speed`, the loop halted there and emitted
+    # `second planetary gear set reduces speed` (US9353842B2 c5) - the R47
+    # "one unhandled token blocks the rest" shape, arriving through a fix.
+    #
+    # The discriminator is the PRECEDING token, and it has to be narrower than
+    # "strippable": `moving speed` is an examiner-confirmed real element
+    # (app 18613510) and `moving` IS strippable. A 3sg FINITE verb is the
+    # separating feature - `reduces` / `increases` yes, `moving` / `rotational`
+    # / `constant` / `engine` no - so the object is cut only behind a finite
+    # verb, and the adjective and gerund readings are untouched.
+    while len(words) >= 2:
+        last = words[-1].lower().rstrip(".,;:")
+        prev = words[-2].lower().rstrip(".,;:")
+        if last in _ED_NOUNS or (last.endswith("ed") and _stem_word(last) == last):
+            if _is_likely_third_person_verb(prev) or prev in _VERB_STOPS:
+                words.pop()
+                words.pop()
+                continue
+        break
     # Strip possessives: "device's" → "device", "users'" → "users"
     words = [w.replace("\u2019s", "").replace("'s", "").rstrip("\u2019'") for w in words]
     # Remove any tokens that became empty after stripping

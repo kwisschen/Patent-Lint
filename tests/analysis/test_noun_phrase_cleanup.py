@@ -794,3 +794,60 @@ class TestUsR51TrailingOvercaptures:
         # a following clause boundary, which noun lists produce too.
         assert clean_noun_phrase("dead time ends") == "dead time ends"
         assert clean_noun_phrase("opposite ends") == "opposite ends"
+
+
+class TestEdMorphologyNotLength:
+    """US R52 (reports #716/#717/#718) - `-ed` is a suffix only when it strips.
+
+    `the rotational speed of the motor` was emitted as the bare adjective
+    `rotational`, because `_is_likely_past_participle` was a pure length
+    heuristic (`len >= 5`) and `speed` ends in `ed`. The same rule cost a real
+    USPTO examiner rejection earlier the same day (`the moving speed`,
+    app 18613510) - and `moving speed` had only survived by ACCIDENT, because
+    stripping it emptied the phrase and hit the raw-capture fallback while
+    `rotational speed` did not.
+    """
+
+    def test_the_reported_class(self):
+        assert clean_noun_phrase("rotational speed") == "rotational speed"
+
+    def test_the_examiner_confirmed_element_is_protected(self):
+        assert clean_noun_phrase("moving speed") == "moving speed"
+
+    def test_participles_still_strip(self):
+        # The mechanism must not go soft on real participles.
+        assert clean_noun_phrase("signal received") == "signal"
+        assert clean_noun_phrase("circuit coupled") == "circuit"
+        assert clean_noun_phrase("value predetermined") == "value"
+
+    def test_the_discriminator_is_the_stemmer_not_a_word_list(self):
+        # A real participle has a verb stem once `-ed` comes off; in `speed`
+        # the `ed` is not a suffix at all. Measured 17/17 both ways on a control
+        # set, and across 1,500 corpus drafts it newly protects exactly four
+        # distinct words.
+        from patentlint.analysis.utils import _is_likely_past_participle as pp
+        for noun in ("speed", "feed", "seed", "need", "weed", "breed"):
+            assert not pp(noun), noun
+        for part in ("received", "configured", "generated", "transmitted"):
+            assert pp(part), part
+
+    def test_base_form_verbs_ending_in_ed_still_strip(self):
+        # The stemmer correctly says the `ed` is not a suffix on these, which is
+        # true and still the wrong answer for a trailing token - they are verbs.
+        from patentlint.analysis.utils import _is_likely_past_participle as pp
+        for verb in ("exceed", "proceed", "freed"):
+            assert pp(verb), verb
+
+    def test_a_protected_noun_does_not_shield_the_verb_behind_it(self):
+        # R47 shape arriving through a fix: once `speed` stopped stripping, the
+        # loop halted there and emitted the whole predicate. A protected noun
+        # preceded by a 3sg FINITE verb is that verb's object.
+        assert clean_noun_phrase(
+            "second planetary gear set reduces speed") == "second planetary gear set"
+
+    def test_but_only_behind_a_FINITE_verb(self):
+        # `moving` is strippable too, so "strippable preceder" would have
+        # destroyed the examiner-confirmed element. Only a finite verb cuts.
+        assert clean_noun_phrase("moving speed") == "moving speed"
+        assert clean_noun_phrase("constant speed") == "constant speed"
+        assert clean_noun_phrase("engine speed") == "engine speed"
