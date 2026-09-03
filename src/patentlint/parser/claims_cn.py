@@ -12,7 +12,14 @@ from patentlint.models import Claim
 # The 顿号 (U+3001) terminator is common in firm-template CN drafts even
 # though 专利法实施细则 §22 only mandates Arabic numerals (no fixed
 # terminator).
-_CN_CLAIM_NUM = re.compile(r"^[\s\u3000]*(\d+)\s*[.．。、]\s*", re.MULTILINE)
+# Mirror of the TW decimal guard - see claims_tw.py. Scoped to the DOT forms
+# only, because a decimal is written `.` / `．` and never `。` / `、`, so the
+# CJK enumeration punctuation keeps its old behaviour. CN had ZERO corpus
+# occurrences when this shipped (TW had 14 across 4 drafts), so this is a
+# parity fix against a latent defect rather than a measured one - the
+# pattern is character-for-character the same and the next CN draft with a
+# line-initial decimal would hit it.
+_CN_CLAIM_NUM = re.compile(r"^[\s\u3000]*(\d+)\s*(?:[.．](?!\d)|[。、])\s*", re.MULTILINE)
 
 # Mid-paragraph claim boundary: drafters sometimes pack two claims into one
 # Word paragraph (no newline between them). Preprocessing inserts a newline

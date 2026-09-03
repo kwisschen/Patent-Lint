@@ -307,3 +307,30 @@ class TestBodyQuotedReference:
         c5 = next(c for c in claims if c.id == 5)
         assert 5 not in c5.quoted_references
 
+
+
+class TestDecimalIsNotAClaimNumber:
+    """CN mirror of the TW decimal guard (reports #707 / #708 / #709).
+
+    CN had ZERO corpus occurrences when this shipped (TW had 14 across 4
+    drafts), so it is a parity fix against a latent defect - the pattern is
+    character-for-character the same. Scoped to the DOT forms only, because a
+    decimal is written `.` / `．` and never `。` / `、`.
+    """
+
+    def _parse(self, text):
+        return parse_cn_claims_docx(text)
+
+    def test_decimal_does_not_create_claim_zero(self):
+        claims = self._parse(
+            "1. 一种低损耗低膨胀的玻纤组合物，包含：\n"
+            "0.01 wt%至2 wt%之改质无机粒子。\n"
+            "2. 根据权利要求1所述的组合物。"
+        )
+        assert "0" not in {str(c.id) for c in claims}
+        assert {str(c.id) for c in claims} == {"1", "2"}
+
+    def test_cjk_enumeration_punctuation_still_parses(self):
+        # 、 and 。 are untouched by the guard - they can never open a decimal.
+        claims = self._parse("1、一种组合物。\n2、根据权利要求1所述的组合物。")
+        assert {str(c.id) for c in claims} == {"1", "2"}
