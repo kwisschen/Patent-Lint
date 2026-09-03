@@ -9,7 +9,17 @@ import re
 from patentlint.models import Claim
 
 # Claim number: "1." or "1．" at start of line (possibly with leading whitespace)
-_TW_CLAIM_NUM = re.compile(r"^[\s\u3000]*(\d+)\s*[.．]\s*", re.MULTILINE)
+# The period must NOT be immediately followed by a digit. Without that guard
+# a DECIMAL at the start of a line is read as a claim number (reports #707 /
+# #708 / #709, all three complaining about a "claim 0"): a component line
+# `0.01 wt%至2 wt%之改質無機粒子` matches `(\d+)` = 0 and `[.．]` = `.`, which
+# both invents claim 0 AND truncates the real claim, so every element after
+# the decimal loses its introduction and cascades antecedent-basis FPs.
+# The guard is deliberately tight: it fires only when the digit is
+# IMMEDIATELY adjacent, so a genuine `10. 5 wt%的…` still parses as claim 10.
+# This is the guard the US splitter has always had - its lookahead requires
+# `\d{1,3}\.\s`, which is why US never had this bug.
+_TW_CLAIM_NUM = re.compile(r"^[\s\u3000]*(\d+)\s*[.．](?!\d)\s*", re.MULTILINE)
 
 # Dependency patterns:
 # 如請求項1所述之, 如請求項1所述的, 如請求項1之, 如請求項1或2之,

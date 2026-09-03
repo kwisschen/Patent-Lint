@@ -78,14 +78,41 @@ def main() -> int:
     # A finding is PAIRED when something was silenced on the same doc+claim -
     # i.e. the fix relocated it rather than inventing it.
     silenced_sites = {(k[0], k[1]) for k in silenced}
-    unpaired = sorted(k for k in new if (k[0], k[1]) not in silenced_sites)
     paired = sorted(k for k in new if (k[0], k[1]) in silenced_sites)
+    rest = [k for k in new if (k[0], k[1]) not in silenced_sites]
+
+    # RE-ATTRIBUTION (2026-09-03). A PARSER fix changes `claim_id` itself, so a
+    # finding that merely MOVED to its correct claim is unpaired on (doc, claim)
+    # and reads as a manufacture. That is this probe's version of the D1
+    # "a guard keyed on an IDENTITY cannot see a SPLIT" lesson, and the answer is
+    # the same: teach the guard the shape rather than override it in a PR body.
+    #
+    # The criterion is strict, so it cannot be used to wave through a real
+    # manufacture: the identical (term, reference_form) must have been SILENCED
+    # somewhere else in the SAME document. That is a move, not an invention -
+    # the reader was already being shown this term on this draft. Anything else
+    # stays UNPAIRED and still fails the gate.
+    #
+    # Found by the decimal claim-number fix (#707/#708/#709): dropping a phantom
+    # "claim 0" moved 5 findings onto the real claims they belong to, while
+    # 0 terms were new to the document.
+    silenced_moves = {(k[0], k[2], k[3]) for k in silenced}
+    reattributed = sorted(k for k in rest if (k[0], k[2], k[3]) in silenced_moves)
+    unpaired = sorted(k for k in rest if (k[0], k[2], k[3]) not in silenced_moves)
 
     print(f"=== UNPAIRED-NEW gate ({args.juris}) ===")
     print(f"  silenced        : {len(silenced)}")
     print(f"  new             : {len(new)}")
     print(f"    ├─ paired shifts (same doc+claim, ADR-111): {len(paired)}")
+    print(f"    ├─ re-attributed (same doc+term, new claim): {len(reattributed)}")
     print(f"    └─ UNPAIRED (HARD GATE, MUST be 0)        : {len(unpaired)}")
+
+    for key in reattributed[: args.show]:
+        olds = [s for s in silenced if (s[0], s[2], s[3]) == (key[0], key[2], key[3])]
+        print(
+            f"     RE-ATTRIBUTED {key[2]!r} -> claim {key[1]}  "
+            f"(was claim {[o[1] for o in olds]})"
+        )
 
     for key in unpaired[: args.show]:
         print(f"     UNPAIRED + [{verdicts.get(key)}] {key}")

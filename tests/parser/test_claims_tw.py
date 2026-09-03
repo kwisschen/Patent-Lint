@@ -229,3 +229,46 @@ class TestParseTwClaimsUnit:
         ])
         assert claims[1].dependencies == [1]
         assert claims[1].independent is False
+
+
+class TestDecimalIsNotAClaimNumber:
+    """Reports #707 / #708 / #709 - all three complained about a "claim 0".
+
+    `_TW_CLAIM_NUM` matched `(\\d+)` then `[.．]` with `re.MULTILINE`, so a
+    component line like `0.01 wt%至2 wt%之改質無機粒子` was read as claim number 0.
+    That both INVENTED a claim 0 and TRUNCATED the real claim, so every element
+    recited after the decimal lost its introduction and cascaded
+    antecedent-basis false positives. The US splitter never had this bug because
+    its lookahead requires `\\d{1,3}\\.\\s`.
+    """
+
+    CLAIMS = (
+        "1. 一種低損耗低膨脹的玻纖組成物，所述低損耗低膨脹的玻纖組成物包含：\n"
+        "56 wt%至63 wt%之二氧化矽；\n"
+        "0.01 wt%至2 wt%之改質無機粒子，其中所述改質無機粒子包括含有氮化硼的無機粒子。\n"
+        "2. 如請求項1所述的低損耗低膨脹的玻纖組成物，其中所述改質無機粒子為片狀粒子。"
+    )
+
+    def _parse(self, text):
+        return parse_tw_claims([ln for ln in text.split("\n") if ln.strip()])
+
+    def test_decimal_does_not_create_claim_zero(self):
+        claims = self._parse(self.CLAIMS)
+        assert "0" not in {str(c.id) for c in claims}
+
+    def test_the_real_claim_is_not_truncated(self):
+        # The cascade came from truncation, not from the phantom claim: the
+        # element recited AFTER the decimal must stay in claim 1, or its
+        # introduction is lost and every later reference to it is flagged.
+        claims = self._parse(self.CLAIMS)
+        c1 = next(c for c in claims if str(c.id) == "1")
+        assert "改質無機粒子" in c1.text
+
+    def test_two_claims_parse(self):
+        assert {str(c.id) for c in self._parse(self.CLAIMS)} == {"1", "2"}
+
+    def test_a_claim_number_followed_by_a_spaced_numeral_still_parses(self):
+        # The guard is deliberately tight - it fires only on an IMMEDIATELY
+        # adjacent digit - so a claim whose body opens with a number survives.
+        claims = self._parse("10. 5 wt%之二氧化矽的實施例。")
+        assert [str(c.id) for c in claims] == ["10"]
