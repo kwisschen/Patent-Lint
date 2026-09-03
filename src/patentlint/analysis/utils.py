@@ -2210,6 +2210,46 @@ _WHEREIN_BARE_SUBJECT_RE = re.compile(
 )
 
 
+def extract_contextual_cleaned_intros(text: str) -> list[str]:
+    """Intro forms as they read once the CONTEXTUAL verb stop is applied.
+
+    Only phrases the strip actually changes are returned, so this is a small
+    supplementary index rather than a second copy of `extract_introductions`.
+
+    WHY IT IS A SEPARATE INDEX AND NOT A CLEANUP IN PLACE (reports #714/#715).
+    `detect a main control command signal OUTPUT BY an external main control
+    circuit` registers the intro `main control command signal output`, so the
+    dependent claim's clean `the main control command signal` matches nothing.
+    The reference side has always applied `strip_contextual_verb` right after
+    `clean_noun_phrase`; the intro side never did.
+
+    Adding that call to `extract_introductions` was implemented and MEASURED on
+    2026-09-03, and it MANUFACTURED 22 findings: it cleans the INTRO of a pair
+    whose REFERENCE over-captures identically, so references that used to match
+    their equally-dirty intro stop matching. That is the R29 desynchronization
+    failure - a matched pair must be cleaned on both sides or neither.
+
+    So the fix moves a layer up, to the MATCH SITE, as an ADDITIVE tier (the
+    #509 rule): the raw intro keeps resolving exactly what it resolves today,
+    and this index is consulted ONLY after every existing tier has failed. An
+    additive tier can only ever SILENCE, never manufacture, which is precisely
+    the property the in-place version lacked.
+    """
+    lowered = text.lower()
+    out: list[str] = []
+    for m in _INTRO_PATTERNS.finditer(lowered):
+        preceding = lowered[max(0, m.start() - 8) : m.start()]
+        if _DEFINITE_PRECEDER.search(preceding):
+            continue
+        cleaned = clean_noun_phrase(m.group(1).strip())
+        if not cleaned:
+            continue
+        stripped = strip_contextual_verb(cleaned, lowered[m.end():])
+        if stripped and stripped != cleaned:
+            out.append(stripped)
+    return out
+
+
 def extract_introductions(text: str) -> list[str]:
     """Extract all element-introduction noun phrases from patent text.
 

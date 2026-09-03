@@ -20,6 +20,7 @@ from patentlint.analysis.utils import (
     extract_abbreviation_intros, clean_noun_phrase, gerund_display_head,
     _PREDICATIVE_ADJECTIVES, _strip_comparative_tail,
     _strip_measurement_condition_tail, strip_display_negation,
+    extract_contextual_cleaned_intros,
     compute_confidence_score, make_document_dedup_key,
     strip_contextual_verb, strip_trailing_adverb, token_set_jaccard,
     _is_likely_past_participle,
@@ -528,10 +529,20 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
             if existing is None or ancestor_id < existing:
                 intros_by_term[phrase] = ancestor_id
 
+        # R53 (2026-09-04, reports #714/#715): supplementary index of intros as
+        # they read once the CONTEXTUAL verb stop is applied. Kept SEPARATE from
+        # `intros_by_term` and consulted only after every existing tier fails -
+        # see `extract_contextual_cleaned_intros` for why cleaning the intro in
+        # place manufactured 22 findings.
+        contextual_cleaned_intros: set[str] = set()
+
         for ancestor in chain:
             ancestor_lower = ancestor.text.lower()
             for phrase in extract_introductions(ancestor_lower):
                 _record(phrase, ancestor.id)
+            contextual_cleaned_intros.update(
+                extract_contextual_cleaned_intros(ancestor_lower)
+            )
             for abbrev_intro in extract_abbreviation_intros(ancestor.text):
                 _record(abbrev_intro, ancestor.id)
                 # Bare lowercase abbrev (no trailing word) → confirmed
@@ -778,6 +789,15 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                     and all(w in abbrev_intros for w in term_words)
                 ):
                     has_basis = True
+
+            # R53 (2026-09-04, reports #714/#715): LAST tier, additive by
+            # construction. The drafter introduced the element and the intro
+            # extractor over-captured the following verb (`a main control
+            # command signal OUTPUT BY ...`), so the clean reference matched
+            # nothing. Runs only once every tier above has already failed, so it
+            # can silence a false positive but can never manufacture one.
+            if not has_basis and term in contextual_cleaned_intros:
+                has_basis = True
 
             # US R48 (report #677): basis must PRECEDE the reference.
             #

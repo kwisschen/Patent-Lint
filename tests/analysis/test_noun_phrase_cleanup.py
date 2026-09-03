@@ -851,3 +851,46 @@ class TestEdMorphologyNotLength:
         assert clean_noun_phrase("moving speed") == "moving speed"
         assert clean_noun_phrase("constant speed") == "constant speed"
         assert clean_noun_phrase("engine speed") == "engine speed"
+
+
+class TestContextualCleanedIntroTier:
+    """US R53 (reports #714/#715) - the intro/reference symmetry gap, fixed a layer up.
+
+    The reference side has always applied `strip_contextual_verb` after
+    `clean_noun_phrase`; the intro side never did, so `detect a main control
+    command signal OUTPUT BY ...` registered the intro `main control command
+    signal output` and the dependent claim's clean reference matched nothing.
+    """
+
+    def test_the_supplementary_index_returns_only_changed_forms(self):
+        from patentlint.analysis.utils import extract_contextual_cleaned_intros as ex
+        got = ex("detect a main control command signal output by an external circuit.")
+        assert "main control command signal" in got
+        # Only phrases the strip actually changes are indexed - this is a small
+        # supplementary index, not a second copy of extract_introductions.
+        assert "external circuit" not in got
+
+    def test_the_report_resolves_end_to_end(self):
+        from patentlint.models import Claim
+        from patentlint.analysis.claims import check_antecedent_basis
+        parent = ("A motor driver comprising a detection circuit, wherein the detection "
+                  "circuit is configured to detect a main control command signal output "
+                  "by an external main control circuit to output a command detected signal.")
+        dep = ("The motor driver according to claim 7, wherein the main control command "
+               "signal includes a pulse width modulation signal.")
+        res = check_antecedent_basis([
+            Claim(id="7", text=parent, independent=True, dependencies=[]),
+            Claim(id="8", text=dep, independent=False, dependencies=[7]),
+        ])
+        assert not [f for f in res if f["term"] == "main control command signal"]
+
+    def test_the_raw_intro_is_left_alone(self):
+        # THE POINT OF THE DESIGN. Cleaning the intro IN PLACE was measured and
+        # manufactured 22 findings, because it cleans the intro of a pair whose
+        # reference over-captures identically (the R29 desynchronization
+        # failure). The raw intro must still be exactly what it was, so that
+        # everything it resolves today keeps resolving.
+        from patentlint.analysis.claims import extract_introductions
+        intros = extract_introductions(
+            "detect a main control command signal output by an external circuit.")
+        assert "main control command signal output" in intros
