@@ -1205,3 +1205,41 @@ class TestR29StrandedRelationalHeadAndLexemeSplit:
             _normalize_for_spec_support_tw as N,
         )
         assert N("柱鏡焦度隨著一方") == "柱鏡焦度"
+
+
+class TestQuantityDeIntroduction:
+    """TW R54 (report #709) - a quantity-之 recital IS an introduction.
+
+    TW composition claims introduce a constituent by reciting how much of it is
+    present (`56 wt%之二氧化矽`). No intro arm saw that shape - the quantifier
+    arms want 一/複數個 and the possessive arms want 所述X的Y - so the drafter's
+    later `所述二氧化矽` never resolved and every constituent of a composition
+    claim was flagged.
+    """
+
+    @staticmethod
+    def _intros(body):
+        from patentlint.parser.claims_tw import parse_tw_claims
+        from patentlint.analysis.tw_claims import extract_introductions_tw
+        claim = parse_tw_claims(["1. " + body])[0]
+        return {n for _, n in extract_introductions_tw(claim, suppress_dep_preamble=True)}
+
+    def test_percentage_recital_introduces_the_constituent(self):
+        assert "二氧化矽" in self._intros("一種組成物，包含：56 wt%之二氧化矽。")
+
+    def test_range_recital_introduces_the_constituent(self):
+        assert "第二材料" in self._intros("一種組成物，包含：0.01 wt%至2 wt%之第二材料。")
+
+    def test_cjk_weight_percent_is_covered(self):
+        assert "錫鹽" in self._intros("一種組成物，包含：30重量%之錫鹽。")
+
+    def test_a_leading_quantifier_on_the_complement_is_stripped(self):
+        # `30%之一平均光學反射率` - the complement carries its own 一, and the
+        # element is the head, not the quantifier.
+        assert "平均光學反射率" in self._intros("一種膜，具有至少30%之一平均光學反射率。")
+
+    def test_zhijian_is_between_not_a_possessive(self):
+        # `之間` means "between". Registering `間的一距離` would be a bogus intro
+        # that could resolve an unrelated reference - the FN direction.
+        intros = self._intros("一種裝置，其具有介於20%與50%之間的一距離。")
+        assert not any(i.startswith("間") for i in intros)

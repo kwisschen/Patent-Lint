@@ -6234,6 +6234,29 @@ def _has_stranded_determiner_tail_tw(term: str) -> bool:
     return True
 
 
+# R54 (2026-09-03, report #709) - QUANTITY-之 INTRODUCTION.
+# TW composition claims introduce a constituent by reciting how much of it is
+# present: `所述組成物包含：56 wt%至63 wt%之二氧化矽；0.01 wt%至2 wt%之改質無機
+# 粒子`. That IS the introduction - the drafter then refers to `所述改質無機
+# 粒子` - but no intro arm saw it, because the quantifier arms want 一/複數個
+# and the possessive arms want 所述X的Y. The reference therefore never
+# resolved and every constituent of a composition claim was flagged.
+#
+# Two exclusions, both from measuring the raw shape over the corpus (217 raw
+# occurrences / 32 drafts) rather than from intuition:
+#   * `之間` is "between", not a possessive - `介於20%與50%之間的一距離` must
+#     not register `間的一距離`. Hence the negative lookahead.
+#   * the complement often opens with its own quantifier (`30%之一平均光學
+#     反射率`), so a leading 一/該/所述 is stripped and the real head kept.
+# Everything else rides the shared emit-side hygiene at the return of
+# extract_introductions_tw, which is what rejects the verb-phrase noise
+# (`…量之存在`) this pattern would otherwise pick up.
+_QUANTITY_DE_INTRO_RE_TW = re.compile(
+    r"\d[\d.]*\s*(?:wt|vol|mol|重量|體積|莫耳)?\s*[%％]\s*之(?!間)"
+    r"[一該]?(?:所述)?(?P<y>[\u4e00-\u9fff]{2,12})"
+)
+
+
 # R53 (2026-09-02, reports #490 / #491) - DEFINITIONAL FRAME.
 # A drafter names an element, then immediately defines what it IS and carries
 # on referring to the definition:
@@ -6506,6 +6529,19 @@ def extract_introductions_tw(
 
     # R53: definitional frame - see _DEFINITIONAL_FRAME_RE_TW.
     for m in _DEFINITIONAL_FRAME_RE_TW.finditer(claim.text):
+        y_raw = m.group('y')
+        y_norm = normalize_candidate_intro(
+            y_raw,
+            strict_qualifier_matching=strict_qualifier_matching,
+            source_text=claim.text,
+        )
+        for candidate in (y_norm, y_raw):
+            if candidate and candidate not in seen:
+                seen.add(candidate)
+                pairs.append((m.group(0), candidate))
+
+    # R54: quantity-之 introduction - see _QUANTITY_DE_INTRO_RE_TW.
+    for m in _QUANTITY_DE_INTRO_RE_TW.finditer(claim.text):
         y_raw = m.group('y')
         y_norm = normalize_candidate_intro(
             y_raw,
