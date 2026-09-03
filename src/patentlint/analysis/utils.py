@@ -993,6 +993,20 @@ _ADVERB_STOPS = {
 
 # Universal patent verbs (appear in every technology area)
 _VERB_STOPS = {
+    # R51 (2026-09-03, reports #694/#695 antecedent, #697/#699/#704
+    # spec-support): two 3sg finite verbs that over-captured into the trailing
+    # position - `a current of the motor DECAYS during the dead time`, `after a
+    # preset decay time ELAPSES from an end time point`.
+    #
+    # UNCONDITIONAL rather than `_CONTEXTUAL_VERB_STOPS`, for two measured
+    # reasons. (a) Neither is noun-gray in practice: scanning 1,200 corpus
+    # drafts for a determiner-preceded occurrence returns ZERO for each, unlike
+    # `drives` (24) which is why THAT one stays gated below. (b) The contextual
+    # mechanism is REFERENCE-side only, and #697/#699/#704 are spec-support
+    # reports - Engine 2 reaches the phrase through `extract_noun_phrases`,
+    # which has no following-text argument, so a gated entry could not have
+    # fixed the class the reporter actually filed.
+    "decays", "elapses",
     # Be/have
     "is", "are", "was", "were", "has", "have", "had", "being",
     # Universal patent-drafting verbs (base / -s / -ed / -ing where unambiguous)
@@ -1414,6 +1428,14 @@ _CONTEXTUAL_VERB_STOPS = {
     #     noun reading is followed by `of`, never by `a`/`an`/`the`.
     "face":        frozenset({"a", "an", "the"}),
     "pre-charges": frozenset({"a", "an", "the"}),
+    # R51 (2026-09-03, report #695): `such that the output stage circuit DRIVES
+    # a motor`. Gated, not unconditional, and the corpus says why: `drives` has
+    # 24 determiner-preceded occurrences across 1,200 drafts (the plural noun -
+    # disk drives, belt drives), against ZERO for the `decays`/`elapses` pair
+    # added to `_VERB_STOPS` above. Same object-determiner gate as R32's base
+    # form `drive`, and disjoint from the noun reading, which is followed by
+    # `of` / a predicate / punctuation.
+    "drives":      frozenset({"a", "an", "the"}),
     "range":   frozenset({"from", "between", "to", "over", "in", "through"}),
     "ranges":  frozenset({"from", "between", "to", "over", "in", "through"}),
     "ranged":  frozenset({"from", "between", "to", "over", "in", "through"}),
@@ -1571,6 +1593,32 @@ _COMPARATIVE_COPULA = frozenset({
 })
 
 
+# R51 (2026-09-03, reports #705/#706): a trailing MEASUREMENT CONDITION.
+# `a dielectric loss of the glass fiber material UNDER 10 GHZ is between …`
+# captured `glass fiber material under 10 ghz`. The condition states the
+# operating point at which a property is measured; it is never part of the
+# element name.
+#
+# Gated on a NUMERAL immediately after the preposition, which is what keeps it
+# off `the device under test` / `the layer under the substrate` - a real
+# element name in both, and `under` alone could not tell them apart. That gate
+# is self-validating: the drafter's own digits mark the condition.
+_MEASUREMENT_CONDITION_PREPS = frozenset({
+    "under", "over", "above", "below", "at", "within", "beyond", "near",
+})
+
+
+def _strip_measurement_condition_tail(words: list[str]) -> list[str]:
+    """Strip a trailing `<prep> <number> <unit>` measurement condition."""
+    for i in range(len(words) - 2, 0, -1):
+        if (
+            words[i].lower().rstrip(".,;:") in _MEASUREMENT_CONDITION_PREPS
+            and words[i + 1][:1].isdigit()
+        ):
+            return words[:i]
+    return words
+
+
 def _strip_comparative_tail(words: list[str]) -> list[str]:
     """Strip a trailing comparative clause when the phrase ends in `than`.
 
@@ -1606,6 +1654,31 @@ _PREDICATIVE_ADJECTIVES = frozenset({
 _DISPLAY_POST_MODIFIERS = _PREDICATIVE_ADJECTIVES | frozenset({
     "further", "thereof", "via",
 })
+
+
+def strip_display_negation(phrase: str) -> str:
+    """Drop a trailing `not` for DISPLAY, or return "" when there is none.
+
+    Report #693: `instruct the driving circuit to drive the output stage circuit
+    NOT to commutate the motor` was reported with the term `output stage circuit
+    not`. `not` is a reduced-relative marker (`the strand [that is] NOT
+    conjugated to …`), never a noun head in trailing position.
+
+    DISPLAY ONLY, and the corpus is why. Shipping it as an ordinary
+    `_TRAILING_FUNCTION_WORDS` entry was measured first and silenced SIX
+    gold-legit findings, because the shortened term then RESOLVES: `scheduling
+    pdcch not` -> `scheduling pdcch`, and claim 5 recites `a scheduling PDCCH`,
+    so the finding disappears. Four of those six are arguably FPs the gold
+    labelled too strictly, but two (`strand not` on US11072816B2, where claim 1
+    recites `only one strand` / `the unattached strand`) sit in a genuine gray
+    zone under MPEP 2173.05(e). Silencing a finding on a gray-zone reading is
+    not a call to make from a strip list, and the reporter's complaint was the
+    TERM, so the term is what changes: the finding is preserved exactly.
+    """
+    words = phrase.strip().split()
+    if len(words) < 2 or words[-1].lower().rstrip(".,;:") != "not":
+        return ""
+    return " ".join(words[:-1])
 
 
 def gerund_display_head(phrase: str) -> str:
