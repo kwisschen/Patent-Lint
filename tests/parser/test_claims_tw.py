@@ -242,11 +242,15 @@ class TestDecimalIsNotAClaimNumber:
     its lookahead requires `\\d{1,3}\\.\\s`.
     """
 
+    # SYNTHETIC. The shape is what matters - a line-initial decimal inside a
+    # composition claim - so this is written from scratch with generic element
+    # names rather than lifted from the report payload (Privacy 6: no draft
+    # content in the public repo).
     CLAIMS = (
-        "1. 一種低損耗低膨脹的玻纖組成物，所述低損耗低膨脹的玻纖組成物包含：\n"
-        "56 wt%至63 wt%之二氧化矽；\n"
-        "0.01 wt%至2 wt%之改質無機粒子，其中所述改質無機粒子包括含有氮化硼的無機粒子。\n"
-        "2. 如請求項1所述的低損耗低膨脹的玻纖組成物，其中所述改質無機粒子為片狀粒子。"
+        "1. 一種組成物，所述組成物包含：\n"
+        "60 wt%至70 wt%之第一材料；\n"
+        "0.01 wt%至2 wt%之第二材料，其中所述第二材料包括一添加劑。\n"
+        "2. 如請求項1所述的組成物，其中所述第二材料為片狀粒子。"
     )
 
     def _parse(self, text):
@@ -262,7 +266,7 @@ class TestDecimalIsNotAClaimNumber:
         # introduction is lost and every later reference to it is flagged.
         claims = self._parse(self.CLAIMS)
         c1 = next(c for c in claims if str(c.id) == "1")
-        assert "改質無機粒子" in c1.text
+        assert "第二材料" in c1.text
 
     def test_two_claims_parse(self):
         assert {str(c.id) for c in self._parse(self.CLAIMS)} == {"1", "2"}
