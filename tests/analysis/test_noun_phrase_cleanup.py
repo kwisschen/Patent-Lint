@@ -718,3 +718,79 @@ class TestBareDistributiveSelector:
         )
         assert "respective" in _PREDICATIVE_ADJECTIVES
         assert _PREDICATIVE_ADJECTIVES <= _DISPLAY_POST_MODIFIERS
+
+
+class TestUsR51TrailingOvercaptures:
+    """US R51 - four over-capture classes from the 2026-09-03 report batch.
+
+    Each fix is shaped by what the CORPUS says about the token, not by the
+    token's part of speech in the abstract.
+    """
+
+    def test_unconditional_verb_stops_are_not_noun_gray(self):
+        # reports #694/#695 (antecedent) and #697/#699/#704 (spec-support).
+        # `decays` / `elapses` measure ZERO determiner-preceded occurrences
+        # across 1,200 corpus drafts, which is what makes an unconditional stop
+        # safe - and unconditional is REQUIRED, because spec-support reaches the
+        # phrase through `extract_noun_phrases`, which has no following text.
+        assert clean_noun_phrase("motor decays") == "motor"
+        assert clean_noun_phrase("preset decay time elapses") == "preset decay time"
+
+    def test_spec_support_sees_the_fix_too(self):
+        # The reporter's point on #704: `preset decay time` would have been a
+        # correct catch had the term not been miscaptured.
+        from patentlint.analysis.utils import extract_noun_phrases
+        phrases = extract_noun_phrases(
+            "detecting the current of the motor after a preset decay time "
+            "elapses from an end time point of the dead time."
+        )
+        assert "preset decay time" in phrases
+        assert "preset decay time elapses" not in phrases
+
+    def test_drives_is_gated_because_it_IS_noun_gray(self):
+        # report #695. `drives` has 24 determiner-preceded corpus occurrences
+        # (disk drives, belt drives), so it takes the R32/R33 object-determiner
+        # gate rather than an unconditional stop.
+        from patentlint.analysis.utils import strip_contextual_verb
+        assert strip_contextual_verb(
+            "output stage circuit drives", " a motor; controlling"
+        ) == "output stage circuit"
+        # the plural-noun reading is followed by `of` / a predicate, never a
+        # bare object determiner
+        assert strip_contextual_verb("optical drives", " of the array") == "optical drives"
+        assert strip_contextual_verb("the drives", " are coupled") == "the drives"
+
+    def test_measurement_condition_tail(self):
+        # reports #705/#706: `a dielectric loss of the glass fiber material
+        # under 10 GHz is between 0.0005 and 0.0020`.
+        from patentlint.analysis.utils import _strip_measurement_condition_tail as strip
+        assert strip("glass fiber material under 10 ghz".split()) == [
+            "glass", "fiber", "material"]
+        assert strip("signal above 1 ghz".split()) == ["signal"]
+
+    def test_measurement_gate_needs_a_NUMERAL(self):
+        # The numeral is the whole discriminator: without it, `under` cannot be
+        # told apart from a real element name.
+        from patentlint.analysis.utils import _strip_measurement_condition_tail as strip
+        for term in ("device under test", "layer under the substrate",
+                     "coating over the electrode"):
+            assert strip(term.split()) == term.split()
+
+    def test_trailing_not_is_DISPLAY_only(self):
+        # report #693. Shipping `not` as an ordinary trailing stop was measured
+        # first and silenced SIX gold-legit findings, because the shortened term
+        # then resolves. Resolution must be untouched; only the emitted term
+        # changes.
+        from patentlint.analysis.utils import strip_display_negation
+        assert clean_noun_phrase("output stage circuit not") == "output stage circuit not"
+        assert strip_display_negation("output stage circuit not") == "output stage circuit"
+        assert strip_display_negation("scheduling pdcch not") == "scheduling pdcch"
+        assert strip_display_negation("not") == ""
+
+    def test_ends_is_withheld_because_it_is_strongly_noun_gray(self):
+        # WITHHELD WITH ITS NUMBER: `ends` has 50 determiner-preceded corpus
+        # occurrences, 40 of them followed by `of` - the plural noun `the ends
+        # of the shaft`. The verb reading in #694/#695 is distinguished only by
+        # a following clause boundary, which noun lists produce too.
+        assert clean_noun_phrase("dead time ends") == "dead time ends"
+        assert clean_noun_phrase("opposite ends") == "opposite ends"

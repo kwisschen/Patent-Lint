@@ -19,6 +19,7 @@ from patentlint.analysis.utils import (
     pattern_a_intro_offsets,
     extract_abbreviation_intros, clean_noun_phrase, gerund_display_head,
     _PREDICATIVE_ADJECTIVES, _strip_comparative_tail,
+    _strip_measurement_condition_tail, strip_display_negation,
     compute_confidence_score, make_document_dedup_key,
     strip_contextual_verb, strip_trailing_adverb, token_set_jaccard,
     _is_likely_past_participle,
@@ -677,6 +678,14 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
             # an intro and mask a real defect. FN-safe: 201 examiner-unconfirmed
             # corpus instances, 0 of 2,965 examiner-confirmed defects altered.
             raw_noun = " ".join(_strip_comparative_tail(raw_noun.split())) or raw_noun
+            # R51 (2026-09-03, reports #705/#706): drop a trailing measurement
+            # CONDITION (`the glass fiber material under 10 GHz`). Reference-side
+            # only, same rationale as the comparative strip above: an intro-side
+            # version could generalize an introduction and mask a real defect.
+            raw_noun = (
+                " ".join(_strip_measurement_condition_tail(raw_noun.split()))
+                or raw_noun
+            )
             term = clean_noun_phrase(raw_noun)
             term = strip_contextual_verb(term, claim_text_lower[m.end():])
             # R34 (2026-07-18, report #397): drop a trailing manner adverb
@@ -993,7 +1002,11 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                         # alone would have been invisible in the UI, the report
                         # payload and the PDF - i.e. invisible to exactly the
                         # people who filed these reports.
-                        display_term = gerund_display_head(term) or term
+                        display_term = (
+                            gerund_display_head(term)
+                            or strip_display_negation(term)
+                            or term
+                        )
                         display_reference_form = (
                             f"{prefix} {display_term}"
                             if display_term != term else reference_form
