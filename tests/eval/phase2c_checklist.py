@@ -24,9 +24,7 @@ import random
 from collections import Counter, defaultdict
 from pathlib import Path
 
-CC_OUTPUT_DIR = Path(
-    "/Users/chrischen/Library/Mobile Documents/com~apple~CloudDocs/CC Output"
-)
+CC_OUTPUT_DIR = Path.home() / "Library/Mobile Documents/com~apple~CloudDocs" / "CC Output"
 
 
 def load_verdicts(paths: list[Path]) -> list[dict]:

@@ -24,7 +24,7 @@
 # Tailscale-reachable Postgres box. NOTE THE HOSTNAME TRAP: `edgexpert-ts` is an
 # ~/.ssh/config Host ALIAS, NOT a DNS name, so socket.create_connection on it
 # always fails with gaierror and reads as "box is down". The box answers on
-# 100.73.179.83 (MagicDNS name `edgexpert-3cae`). Probe the IP, never the alias.
+# its Tailscale IP (set PATENTLINT_EXAMINER_DB_HOST; the MagicDNS name also resolves). Probe the IP, never the alias.
 #
 #   cd ~/Documents/Projects/Patent-Analyst && python3 -c "
 #   import json,psycopg2

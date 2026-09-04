@@ -31,7 +31,7 @@ from .llm_judges import (
 )
 
 
-PATENTLINT_ROOT = Path("/Users/chrischen/Documents/Projects/Patent-Lint")
+PATENTLINT_ROOT = Path(__file__).resolve().parents[2]
 CN_LABELS = PATENTLINT_ROOT / "tests/fixtures/cn/antecedent_labels_cn.json"
 TW_LABELS = PATENTLINT_ROOT / "tests/fixtures/tw/antecedent_labels.json"
 

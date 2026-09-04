@@ -23,7 +23,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-PATENTLINT_ROOT = Path("/Users/chrischen/Documents/Projects/Patent-Lint")
+PATENTLINT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PATENTLINT_ROOT / "src"))
 
 from patentlint.analysis.tw_claims import check_antecedent_basis  # noqa: E402

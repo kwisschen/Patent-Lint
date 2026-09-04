@@ -34,7 +34,7 @@ from anthropic import AsyncAnthropic
 from openai import AsyncOpenAI
 
 # Allow direct import from PatentLint src
-PATENTLINT_ROOT = Path("/Users/chrischen/Documents/Projects/Patent-Lint")
+PATENTLINT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PATENTLINT_ROOT / "src"))
 
 from patentlint.analysis.cn_claims import check_antecedent_basis_cn  # noqa: E402
@@ -51,9 +51,7 @@ CN_LABELS = PATENTLINT_ROOT / "tests/fixtures/cn/antecedent_labels_cn.json"
 CN_BASELINE = PATENTLINT_ROOT / "tests/fixtures/cn/local/baseline_phase8c.json"
 TW_LABELS = PATENTLINT_ROOT / "tests/fixtures/tw/antecedent_labels.json"
 
-CC_OUTPUT_DIR = Path(
-    "/Users/chrischen/Library/Mobile Documents/com~apple~CloudDocs/CC Output"
-)
+CC_OUTPUT_DIR = Path.home() / "Library/Mobile Documents/com~apple~CloudDocs" / "CC Output"
 REPORT_PATH = CC_OUTPUT_DIR / "2026-05-02_step0-calibration-report.md"
 RESULTS_PATH = PATENTLINT_ROOT / "tests/eval/step0_results.json"
 

@@ -3,7 +3,7 @@
 """Phase 2b judging - round 1 §5 production pass.
 
 Reads the 757-record CN+TW corpus from
-`/Users/chrischen/Documents/Projects/Patent-Analyst-corpus/parquet/cn_tw_drafts/`,
+`../Patent-Analyst-corpus/parquet/cn_tw_drafts/` (resolved from the repo root),
 constructs minimal CnPatentDocument / TwPatentDocument objects from the
 Parquet-stored claim lists, runs the antecedent walker per draft, then
 calls per_draft_judge.judge_draft() on every draft with ≥1 walker finding.
@@ -37,7 +37,7 @@ import pyarrow.parquet as pq
 from anthropic import AsyncAnthropic
 from openai import AsyncOpenAI
 
-PATENTLINT_ROOT = Path("/Users/chrischen/Documents/Projects/Patent-Lint")
+PATENTLINT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PATENTLINT_ROOT / "src"))
 
 from patentlint.analysis.cn_claims import check_antecedent_basis_cn  # noqa: E402
@@ -56,11 +56,11 @@ from .per_draft_judge import (  # noqa: E402
 )
 
 CORPUS_PARQUET_DIR = Path(
-    "/Users/chrischen/Documents/Projects/Patent-Analyst-corpus/parquet/cn_tw_drafts"
+    Path(__file__).resolve().parents[2].parent / "Patent-Analyst-corpus" / "parquet" / "cn_tw_drafts"
 )
 RESULTS_PATH = PATENTLINT_ROOT / "tests/eval/phase2b_results.json"
 REPORT_PATH = Path(
-    "/Users/chrischen/Library/Mobile Documents/com~apple~CloudDocs/CC Output"
+    Path.home() / "Library/Mobile Documents/com~apple~CloudDocs" / "CC Output"
     "/2026-05-02_phase2b-judge-report.md"
 )
 

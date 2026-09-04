@@ -629,9 +629,9 @@
     inset 0 0 0 1px var(--frost-elevated-border);
   overflow: hidden;
 }
-/* Hero tier: peak glass - only the rubric grade hero + the popular
-   pricing tier card use this. Inner-light highlight reserved for this
-   tier so the bright top-edge feels distinctive instead of universal. */
+/* Hero tier: peak glass - reserved for the rubric grade hero. The
+   inner-light highlight stays exclusive to this tier so the bright
+   top-edge feels distinctive instead of universal. */
 .frost-card-hero {
   position: relative;
   border-radius: var(--radius-xl);
