@@ -1243,3 +1243,54 @@ class TestQuantityDeIntroduction:
         # that could resolve an unrelated reference - the FN direction.
         intros = self._intros("一種裝置，其具有介於20%與50%之間的一距離。")
         assert not any(i.startswith("間") for i in intros)
+
+
+class TestObjectDeterminerCleanedIntroTier:
+    """TW R56 (report #700) - TW mirror of US R53's additive match-site tier.
+
+    `控制一驅動電路驅動一輸出級電路` registers the intro `驅動電路驅動`: the arm ran
+    across the verb into the next element, so the drafter's clean `所述驅動電路`
+    matched nothing. The verb cannot be stripped in place - 驅動 / 偵測 / 控制 /
+    輸出 are all noun-gray in TW - so it ships as an index consulted only after
+    every existing tier fails.
+    """
+
+    @staticmethod
+    def _doc(paras):
+        from patentlint.parser.claims_tw import parse_tw_claims
+        from patentlint.models import TwPatentDocument
+        return TwPatentDocument(claims=parse_tw_claims(paras),
+                                input_format="google_patents_html")
+
+    def test_the_report_resolves(self):
+        from patentlint.analysis.tw_claims import check_antecedent_basis
+        doc = self._doc([
+            "1. 一種方法，利用一控制電路，控制一驅動電路驅動一輸出級電路。",
+            "2. 如請求項1所述的方法，控制所述驅動電路。",
+        ])
+        assert not [f for f in check_antecedent_basis(doc) if f["term"] == "驅動電路"]
+
+    def test_the_index_needs_a_determiner_on_BOTH_sides(self):
+        # MEASURED: the after-side gate alone silenced a gold-legit finding.
+        # `接收補給位於前述貨架` has a real verb tail (位於) and a real determiner
+        # after it, but its stem 補給 is a FRAGMENT of 補給輔助機器人 - indexing it
+        # resolved an unrelated 前述補給. A genuine over-capture opens with a
+        # determiner too.
+        from patentlint.parser.claims_tw import parse_tw_claims
+        from patentlint.analysis.tw_claims import (
+            extract_object_determiner_cleaned_intros_tw as idx,
+        )
+        good = parse_tw_claims(["1. 一種方法，控制一驅動電路驅動一輸出級電路。"])[0]
+        assert "驅動電路" in idx(good)
+        bad = parse_tw_claims(["1. 一種補給輔助機器人，接收補給位於前述貨架上。"])[0]
+        assert "補給" not in idx(bad)
+
+    def test_the_raw_intro_is_left_alone(self):
+        # The point of the design: an in-place strip of a noun-gray verb would
+        # destroy real element names, so the raw intro must be untouched and the
+        # index consulted only as a last resort.
+        from patentlint.parser.claims_tw import parse_tw_claims
+        from patentlint.analysis.tw_claims import extract_introductions_tw
+        c = parse_tw_claims(["1. 一種方法，控制一驅動電路驅動一輸出級電路。"])[0]
+        intros = {n for _, n in extract_introductions_tw(c, suppress_dep_preamble=True)}
+        assert "驅動電路驅動" in intros
