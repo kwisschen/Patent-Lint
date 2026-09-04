@@ -22,6 +22,7 @@ from patentlint.analysis import tw_claims as tw_claims_analysis
 from patentlint.analysis import tw_cross_reference as tw_cross_ref_analysis
 from patentlint.analysis import tw_spec_support as tw_spec_support_analysis
 from patentlint.analysis import tw_specification as tw_spec_analysis
+from patentlint.profile import suppress_antecedent, suppress_spec_support
 from patentlint.models import AnalysisResult, CheckItem, CnPatentDocument, Jurisdiction, TwPatentDocument
 from patentlint.parser import claims as claims_parser
 from patentlint.parser import sections
@@ -269,6 +270,7 @@ def _run_cn_pipeline(
         + list(cn_doc.detailed_description)
     )
     annotate_term_in_spec(cn_antecedent_basis, cn_spec_text)
+    cn_antecedent_basis = suppress_antecedent(cn_antecedent_basis, "CN")
     if cn_antecedent_basis:
         from patentlint.diagnostic_extractors import extract_antecedent_basis
         issue_count = len(cn_antecedent_basis)
@@ -312,6 +314,7 @@ def _run_cn_pipeline(
         antecedent_findings=cn_antecedent_basis,
         strict_qualifier_matching=strict_qualifier_matching,
     )
+    cn_unsupported_terms = suppress_spec_support(cn_unsupported_terms, "CN")
     # Cross-ref link: same (claim_id, term) appearing in both walkers
     # gets annotated so the Section112 frontend renders sibling-check
     # hints (§26 第2款/第3款 ↔ §26 第4款 equivalents in CNIPA terms).
@@ -475,7 +478,9 @@ def _run_pipeline(
         # confidence penalty when the term is missing from spec body.
         from patentlint.analysis.utils import annotate_term_in_spec
         annotate_term_in_spec(antecedent_basis, spec_text)
+        antecedent_basis = suppress_antecedent(antecedent_basis, "US")
         unsupported_terms = claims_analysis.check_spec_support(claims, spec_text)
+        unsupported_terms = suppress_spec_support(unsupported_terms, "US")
         # ADR-091 (Option Y): both checks emit independently; compute the
         # cross-reference set so the frontend can render hint lines linking
         # related findings rather than silently hiding one branch.
@@ -734,6 +739,7 @@ def _run_tw_pipeline(
         + list(tw_doc.embodiment)
     )
     annotate_term_in_spec(tw_antecedent_basis, tw_spec_text)
+    tw_antecedent_basis = suppress_antecedent(tw_antecedent_basis, "TW")
 
     # ADR-138: TW specification-support check (專利法 §26 第3項).
     # Emits UnsupportedTerm findings for claim noun phrases that fail
@@ -741,6 +747,7 @@ def _run_tw_pipeline(
     # char-window). Walker-tuning flags intentionally NOT forwarded -
     # spec-support normalization is a separate semantic axis.
     tw_unsupported_terms = tw_spec_support_analysis.check_spec_support_tw(tw_doc)
+    tw_unsupported_terms = suppress_spec_support(tw_unsupported_terms, "TW")
     # ADR-138 supersedes ADR-091's "TW cross_ref expected to remain null"
     # - populate cross_ref on overlapping (claim_id, term) pairs so the
     # Section112 frontend cards render sibling-check hint lines.
