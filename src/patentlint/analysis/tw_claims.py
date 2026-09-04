@@ -6840,6 +6840,73 @@ def has_bare_noun_introduction_tw(
     return False
 
 
+# R56 (2026-09-04, report #700) - OBJECT-DETERMINER CLEANED INTRO INDEX.
+# TW mirror of US R53. `控制一驅動電路驅動一輸出級電路` registers the intro
+# `驅動電路驅動`: the arm ran across the verb into the next element, so the
+# drafter's own clean `所述驅動電路` matched nothing. The payload's
+# `did_you_mean` named the over-captured intro exactly.
+#
+# The verb cannot be stripped IN PLACE. 驅動 / 偵測 / 控制 / 輸出 are all
+# noun-gray in TW (驅動電路, 偵測電路, 控制電路, 輸出級電路), which is exactly
+# why none of them is in `_TRAILING_VERB_DENYLIST` and why this class has never
+# shipped. Two candidate discriminators were MEASURED over 600 corpus drafts:
+#   * the drafter's own re-reference of the stem - DEAD. The tails are
+#     overwhelmingly NOUN HEADS (電路 366, 表面 348, 元件 285, 訊號 243), so
+#     stripping would index 控制 / 第一 / 顯示 and resolve unrelated references.
+#   * the capture being IMMEDIATELY followed by a determiner - GOOD. That is the
+#     TW analogue of the US object-determiner gate: it means the tail took the
+#     next element as its OBJECT. The top tails become verbs (耦接 38, 指示 30,
+#     耦合 27, 結合 25, 穿過 20, 判定 18, 施加 16, 圍繞 13).
+#
+# It ships as an ADDITIVE INDEX, never an in-place strip, which is what makes an
+# aggressive cut safe: the raw intro is untouched, the index is consulted only
+# after every existing tier has failed, so it can only SILENCE and UNPAIRED-NEW
+# is 0 by construction. The residual noise the positional gate lets through
+# (訊息 18, 波形 14 are nouns, not verbs) can therefore only ever silence a
+# reference matching the stem EXACTLY, and that is what `silenced_legit` gates.
+_OBJECT_DETERMINERS_TW: tuple[str, ...] = (
+    "所述", "前述", "至少一", "複數", "每一", "該", "一",
+)
+
+
+def extract_object_determiner_cleaned_intros_tw(claim) -> set[str]:
+    """Intro stems left when a capture ran across a verb into the next element."""
+    out: set[str] = set()
+    text = claim.text
+    for orig, norm in extract_introductions_tw(claim, suppress_dep_preamble=True):
+        if not norm or len(norm) < 4:
+            continue
+        # The determiner usually sits INSIDE the raw span, because the arm ran
+        # across the verb and swallowed its object (`一驅動電路驅動一輸出級電路`).
+        # Look immediately after the NORMALIZED term within the span first, and
+        # fall back to the text after the span for arms that stop earlier.
+        j = orig.find(norm)
+        if j >= 0:
+            # The stem must ALSO open with a determiner. Measured: the
+            # after-side gate alone silenced a gold-legit finding, because
+            # `接收補給位於前述貨架` has a real verb tail (位於) and a real
+            # determiner after it, yet its stem `補給` is a FRAGMENT of the
+            # compound 補給輔助機器人 - and indexing that fragment resolved an
+            # unrelated `前述補給`. A genuine over-capture of the #700 shape has
+            # a determiner on BOTH sides (`一` 驅動電路 驅動 `一`), because the
+            # arm started at a real element introduction and ran across the verb
+            # into the next one.
+            if not orig[:j].endswith(_OBJECT_DETERMINERS_TW):
+                continue
+            following = orig[j + len(norm): j + len(norm) + 4]
+        else:
+            idx = text.find(orig)
+            if idx < 0:
+                continue
+            following = text[idx + len(orig): idx + len(orig) + 4]
+        if not following.startswith(_OBJECT_DETERMINERS_TW):
+            continue
+        stem = norm[:-2]
+        if len(stem) >= 2:
+            out.add(stem)
+    return out
+
+
 def check_antecedent_basis(
     doc: TwPatentDocument,
     *,
@@ -6960,7 +7027,12 @@ def check_antecedent_basis(
         # tiebreaker so when two candidates score identically the nearer
         # ancestor wins.
         intros_by_term: dict[str, tuple[int, int]] = {}
+        # R56: supplementary object-determiner-cleaned index for this chain.
+        od_cleaned_intros: set[str] = set()
         for depth, ancestor in enumerate(chain):
+            od_cleaned_intros.update(
+                extract_object_determiner_cleaned_intros_tw(ancestor)
+            )
             for _, normalized in extract_introductions_tw(
                 ancestor,
                 strict_qualifier_matching=strict_qualifier_matching,
@@ -7331,6 +7403,14 @@ def check_antecedent_basis(
             # (MPEP s 2173.05(e) / TIPO s 26 clarity). The intro
             # extractors miss article-less data / attribute nouns; this
             # closes the gap. See has_bare_noun_introduction_tw.
+            # R56 (2026-09-04, report #700): LAST tier, additive by
+            # construction - see extract_object_determiner_cleaned_intros_tw.
+            # The drafter introduced the element and the intro arm ran across
+            # the following verb into the next element, so the clean reference
+            # matched nothing. Runs only after every tier above has failed.
+            if resolved_intro is None and normalized_term in od_cleaned_intros:
+                resolved_intro = normalized_term
+
             if resolved_intro is None and has_bare_noun_introduction_tw(
                 claim.text, chain, normalized_term, m.start()
             ):
