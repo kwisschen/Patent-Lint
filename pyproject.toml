@@ -52,6 +52,12 @@ eval = [
     "anthropic>=0.40",
     "openai>=1.40",
     "pyarrow>=15",
+    # CJK word segmentation for the Engine-1 mid-word-truncation gate.
+    # Dev-time ONLY and never imported by src/, so the runtime stays AI-free
+    # and the Pyodide wheel is unaffected. The gate SKIPS with a notice when
+    # this is absent. Pinned exactly: a segmenter revision moves every count
+    # the gate is pinned against.
+    "jieba==0.42.1",
 ]
 all = ["patentlint[api,dev]"]
 

@@ -31,6 +31,42 @@
 #
 # GATE: bad occurrences must not EXCEED the pinned residual. Lowering a pin is
 # the next round's win; raising one is a regression.
+#
+# ── SECOND DEFECT FAMILY, ADDED 2026-09-07: MID-WORD TRUNCATION ──────────────
+#
+# The string classifier above is a LEXICON: it knows conjunctions, leading
+# predicate heads and bare-quantifier tails. It is therefore structurally blind
+# to the single largest remaining CJK defect - a capture that stops INSIDE a
+# word. `电压箝` (cutting 箝位), `类人行` (cutting 行为), `推车重新定` (cutting
+# 定位) are not noun phrases, and no denylist can ever say so, because the
+# defect is not a token that should have been stripped - it is a BOUNDARY that
+# does not exist.
+#
+# HOW BADLY THE LEXICON UNDER-COUNTS: it reports 35 bad terms on CN and 54 on
+# TW. Segmentation finds 1,070 and 1,209. That is ~30x on CN and ~22x on TW,
+# and 554 CN / 530 TW of them carry a gold `walker_fp` verdict - a class of
+# roughly the size of the campaign's entire honest cumulative, sitting unwatched
+# because the instrument could not see it.
+#
+# WHY A SEGMENTER AND NOT ANOTHER RULE. Two string detectors were built and
+# MEASURED first, and both failed on the same wall. "The term never stands alone
+# in the document" flags a real element followed by a VERB (`远程设备传输`,
+# `第一設定使用`) at a ~25-30% false-positive rate. "A determiner-marked longer
+# form exists" flags 93% of all findings, because the extension matches verbs
+# and conjunctions too (`所述顶部和底部限定`). Both reduce to asking whether the
+# next character continues a noun or starts a predicate, which is exactly the
+# question a segmenter answers and a lexicon cannot. The campaign has this
+# lesson already: "if the honest answer is the semantics of the head, there is
+# no gate."
+#
+# jieba is DEV-TIME ONLY and OPTIONAL. It is never imported by `src/`, so the
+# runtime stays AI-free and dependency-free and the Pyodide wheel is untouched.
+# When it is absent this arm SKIPS with a notice rather than failing, matching
+# how the corpus runners already behave without their local-only data. The
+# version is pinned, because a segmenter revision would move every count.
+#
+# US is deliberately excluded: English is space-delimited, so the class cannot
+# occur and a segmenter would only add noise.
 from __future__ import annotations
 
 import argparse
@@ -85,6 +121,81 @@ THIS_DIR = Path(__file__).resolve().parent
 # RAISING ANY NUMBER IS A REGRESSION. Lowering one is the next round's win.
 _EXPECTED_BAD_ENGINE1: dict[str, int] = {"TW": 54, "CN": 35, "US": 0}
 
+# Mid-word truncation residuals, re-derived 2026-09-07 with jieba 0.42.1.
+# These are a BASELINE to drive DOWN, not an accepted state: each one is a
+# capture that stopped inside a word. US is absent by construction (see header).
+_EXPECTED_MIDWORD: dict[str, int] = {"TW": 1209, "CN": 1070}
+
+
+def _load_segmenter():
+    """Return a deterministic CJK cut() or None. Dev-time only, never src/."""
+    try:
+        import logging
+
+        import jieba
+    except ImportError:
+        return None
+    jieba.setLogLevel(logging.ERROR)
+    jieba.initialize()
+    return jieba.cut
+
+
+def _ends_midword(term: str, text: str, cut) -> bool:
+    """True when EVERY occurrence of ``term`` in ``text`` ends inside a word.
+
+    One clean occurrence is enough to acquit the term: a drafter who writes the
+    element followed by punctuation or a particle anywhere in the document has
+    shown where its boundary is. Requiring ALL occurrences to be mid-word is
+    what keeps a real name that merely happens to precede a verb out of the
+    count - that was the 25-30% false-positive mode of the string detector this
+    replaces.
+    """
+    import re as _re
+
+    starts = [m.start() for m in _re.finditer(_re.escape(term), text)]
+    if not starts:
+        return False
+    for i in starts:
+        window = text[i:i + len(term) + 8]
+        pos = 0
+        straddled = False
+        for tok in cut(window):
+            if pos < len(term) < pos + len(tok):
+                straddled = True
+                break
+            pos += len(tok)
+            if pos >= len(term):
+                break
+        if not straddled:
+            return False
+    return True
+
+
+def _midword_arm(juris, findings, records, cut, show):
+    """The mid-word truncation arm. Returns True on FAIL."""
+    text = {r["patent_id"]: "\n".join(r.get("claims") or []) for r in records}
+    bad: collections.Counter = collections.Counter()
+    for key in findings:
+        doc = text.get(key[0])
+        if doc and _ends_midword(key[2], doc, cut):
+            bad[key[2]] += 1
+    occurrences = sum(bad.values())
+    pinned = _EXPECTED_MIDWORD.get(juris, 0)
+    print(f"\n=== ENGINE-1 MID-WORD TRUNCATION gate ({juris}) ===")
+    print(f"  findings emitted     : {len(findings)}")
+    print(f"  ends INSIDE a word   : {occurrences}"
+          f"  ({len(bad)} distinct; pinned residual: {pinned})")
+    for term, n in bad.most_common(show):
+        print(f"    {n:4d}  {term!r}")
+    if occurrences > pinned:
+        print(f"  GATE: FAIL - {occurrences - pinned} MORE than the pinned residual.")
+        return True
+    if occurrences < pinned:
+        print(f"  ** IMPROVED: {pinned - occurrences} fewer than pinned - "
+              f"lower _EXPECTED_MIDWORD['{juris}'] to {occurrences}. **")
+    print("  GATE: PASS")
+    return False
+
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Engine-1 walker term-quality gate")
@@ -101,8 +212,11 @@ def main() -> int:
     jurisdictions = ["TW", "CN", "US"] if args.juris == "ALL" else [args.juris]
     failed = False
 
+    cut = _load_segmenter()
+
     for juris in jurisdictions:
-        findings = run_walker(load_corpus(juris), juris)
+        records = load_corpus(juris)
+        findings = run_walker(records, juris)
         bad: collections.Counter = collections.Counter()
         for key in findings:
             term = key[2]
@@ -128,6 +242,16 @@ def main() -> int:
             print("  GATE: PASS")
         else:
             print("  GATE: PASS")
+
+        # Second arm: mid-word truncation. CJK only, and only when the
+        # dev-time segmenter is installed.
+        if juris in _EXPECTED_MIDWORD:
+            if cut is None:
+                print(f"\n=== ENGINE-1 MID-WORD TRUNCATION gate ({juris}) ===")
+                print("  SKIPPED - the dev-time segmenter is not installed.")
+                print('  Install it with:  pip install -e ".[eval]"')
+            elif _midword_arm(juris, findings, records, cut, args.show):
+                failed = True
 
     return 1 if failed else 0
 
