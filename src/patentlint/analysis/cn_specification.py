@@ -774,13 +774,23 @@ _CN_REFNUM_RANGE = re.compile(
     r"(?P<end>\d{2,4})"
     r"(?!\s*[\d.%％°℃μµA-Za-z])",  # R-refnum-2: \s* + μµ (issue #100-#102)
 )
+# A PRIMED designator is a distinct element by drafting convention (D1' is not
+# D1), and the numeric patterns above have carried `_D1_PRIME_CLASS` since the
+# 2026-08-13 prime work. The LATIN designator patterns did not, so a drafter who
+# names `<element>D1` and its counterpart `<element>D1'` had both folded onto
+# `D1` - which then reads as one numeral carrying two different element names and
+# fires a spurious instance collision. The prime class is deliberately the same
+# measured one (U+0027 and U+2019 only): U+2032/U+2033 are measurement symbols
+# far more often than designators, so admitting them manufactures conflicts.
 _CN_REFNUM_LATIN = re.compile(
-    rf"(?P<noun>{_CN_NOUN_GROUP})\s*(?P<num>[A-Z]{{1,5}}\d{{1,4}}[a-zA-Z]?)"
+    rf"(?P<noun>{_CN_NOUN_GROUP})\s*"
+    rf"(?P<num>[A-Z]{{1,5}}\d{{1,4}}[a-zA-Z]?{_D1_PRIME_CLASS})"
     r"(?![A-Za-z0-9])"
     r"(?!\([\dNn])"
 )
 _CN_REFNUM_LATIN_PARENS = re.compile(
-    rf"(?P<noun>{_CN_NOUN_GROUP})\s*[(（](?P<num>[A-Z]{{1,5}}\d{{1,4}}[a-zA-Z]?)[)）]"
+    rf"(?P<noun>{_CN_NOUN_GROUP})\s*"
+    rf"[(（](?P<num>[A-Z]{{1,5}}\d{{1,4}}[a-zA-Z]?{_D1_PRIME_CLASS})[)）]"
 )
 
 
@@ -1750,7 +1760,10 @@ def _cn_extract_numeral_name_pairs(text: str) -> list[tuple[str, str]]:
             _lead = _CN_LEADING_ALPHA_RE.match(ref_upper)
             if _lead and _lead.group() in _CN_BIO_LEADING_PREFIXES:
                 continue
-            ref = ref_upper  # normalize Latin-prefix refnum case
+            # Normalize Latin-prefix refnum case, then fold the prime
+            # codepoints so D1' and D1’ cluster as one designator -
+            # the same folding the digit branch above applies.
+            ref = _canonicalize_d1_primes(ref_upper)
             raw_noun = m.group("noun")
             if not _cn_has_min_cjk(raw_noun, 2):
                 continue
