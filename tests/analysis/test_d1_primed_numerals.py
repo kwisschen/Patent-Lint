@@ -114,3 +114,40 @@ class TestPrimedDesignatorsCN:
     def test_letter_suffix_still_works(self):
         pairs = dict(_cn_extract_numeral_name_pairs("导光板501a设于壳体。"))
         assert "501a" in pairs
+
+
+class TestPrimedLatinDesignators:
+    """A prime on a LATIN designator (D1' vs D1) was silently dropped.
+
+    The numeric patterns have carried the prime class since the primed-numeral
+    work; the Latin designator patterns did not. A drafter naming an element
+    `<name>D1` and its counterpart `<name>D1'` therefore had both folded onto
+    `D1`, which then looked like one designator carrying two different element
+    names and fired a spurious instance collision. A half-implemented symmetry
+    rule is worse than an absent one, because its comment says it is handled.
+
+    Fixtures are SYNTHESISED with generic element names.
+    """
+
+    def test_primed_latin_designator_is_distinct_from_its_parent(self):
+        text = (
+            "\u7528\u4ee5\u63a5\u6536\u548c\u8f49\u63db\u7b2c\u4e00\u8a0a\u865fS1"
+            "\u70ba\u7b2c\u4e00\u53cd\u5411\u8a0a\u865fS1" + RSQUO + "\u3002"
+        )
+        nums = [n for n, _ in _cn_extract_numeral_name_pairs(text)]
+        assert "S1" in nums
+        assert "S1" + APOS in nums, "the primed Latin designator folded onto its parent"
+
+    def test_latin_prime_codepoints_fold_together(self):
+        for ch in (APOS, RSQUO):
+            text = "\u7b2c\u4e8c\u8a0a\u865fS1" + ch + "\u3002"
+            nums = [n for n, _ in _cn_extract_numeral_name_pairs(text)]
+            assert nums == ["S1" + APOS], f"{ch!r} did not fold onto the apostrophe"
+
+    def test_unprimed_latin_designator_is_unchanged(self):
+        nums = [n for n, _ in _cn_extract_numeral_name_pairs("\u7b2c\u4e00\u96fb\u5bb9C12\u3002")]
+        assert nums == ["C12"]
+
+    def test_multi_letter_prefix_designator_still_works(self):
+        nums = [n for n, _ in _cn_extract_numeral_name_pairs("\u7b2c\u4e00\u5143\u4ef6LD1\u3002")]
+        assert nums == ["LD1"]
