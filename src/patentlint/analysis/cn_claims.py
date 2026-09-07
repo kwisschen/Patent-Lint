@@ -1898,6 +1898,30 @@ _CHAR_EXCLUSION_RESIDUE_CN: dict[str, int] = {
     '\u8f93': 2,  # 输 (from 输出 where 出 is in trailing denylist)
 }
 
+# CN R68 (2026-09-07) - noun compounds ending in 位, which the bare trailing
+# 位 strip was destroying. 位 is a verb in 位于 ("is located at") and a NOUN
+# SUFFIX in 部位 / 相位 / 电位 / 单位 - the same noun-gray shape as the 匹配
+# entry, and the same latent FALSE NEGATIVE: a genuine 所述治疗部位 antecedent
+# defect was truncated to 治疗部 and could never be flagged.
+#
+# The only thing between the strip and these nouns was a RESIDUAL LENGTH
+# heuristic (>= 3), which is not a judgement about wordhood at all - 治疗部位
+# is four characters, so it cleared the bar and lost its head. That is the
+# US R52 `-ed` lesson in CN: a length test standing in for a lexical one.
+#
+# Members are CORPUS-ATTESTED, mined by anchoring on the drafter's OWN
+# determiner or reference marking, which is what proves the form is an element
+# name rather than a predicate. Removing the bare entry outright was measured
+# FIRST and reverted: it silenced 7 gold-legit findings, and NONE of the seven
+# terms contains 位 - the token-absent signature of the spurious-intro
+# cascade. Guarding the compound keeps the 位于 predicate strip and closes
+# the false negative.
+_WEI_NOUN_COMPOUNDS_CN: tuple[str, ...] = (
+    "相位", "部位", "单位", "电位", "移位", "栏位",
+    "限位", "箝位", "定位", "置位", "挡位",
+)
+
+
 # Chemistry chars that legitimately precede 基 (functional-group suffix).
 # When the char before 基 is in this set, 基 is a noun, not a verb residue.
 _CHEMISTRY_BEFORE_JI_CN: frozenset[str] = frozenset(
@@ -2358,6 +2382,11 @@ def clean_noun_phrase_cn(text: str) -> str:
             if verb == "属" and (
                 current.endswith(_SHU_FINAL_NOUNS_CN) or (len(current) - 1) < 3
             ):
+                continue
+            # CN R68 - noun-compound guard for the trailing 位.
+            # See _WEI_NOUN_COMPOUNDS_CN: the bare strip was a latent FN
+            # held back only by a residual-length heuristic.
+            if verb == "位" and current.endswith(_WEI_NOUN_COMPOUNDS_CN):
                 continue
             if verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN:
                 if verb in _NOUNLIKE_VERY_RELAXED_SUFFIXES_CN:
