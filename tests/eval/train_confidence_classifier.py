@@ -29,7 +29,7 @@ from pathlib import Path
 
 import numpy as np
 
-PATENTLINT_ROOT = Path("/Users/chrischen/Documents/Projects/Patent-Lint")
+PATENTLINT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PATENTLINT_ROOT / "src"))
 sys.path.insert(0, str(PATENTLINT_ROOT))
 

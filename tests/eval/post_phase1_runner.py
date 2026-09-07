@@ -31,10 +31,8 @@ import sys
 from datetime import date
 from pathlib import Path
 
-PATENTLINT_ROOT = Path("/Users/chrischen/Documents/Projects/Patent-Lint")
-ICLOUD_OUT = Path(
-    "/Users/chrischen/Library/Mobile Documents/com~apple~CloudDocs/CC Output"
-)
+PATENTLINT_ROOT = Path(__file__).resolve().parents[2]
+ICLOUD_OUT = Path.home() / "Library/Mobile Documents/com~apple~CloudDocs" / "CC Output"
 
 
 def main() -> int:

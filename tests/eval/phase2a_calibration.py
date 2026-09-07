@@ -34,7 +34,7 @@ from typing import Optional
 from anthropic import AsyncAnthropic
 from openai import AsyncOpenAI
 
-PATENTLINT_ROOT = Path("/Users/chrischen/Documents/Projects/Patent-Lint")
+PATENTLINT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PATENTLINT_ROOT / "src"))
 
 from patentlint.analysis.cn_claims import check_antecedent_basis_cn  # noqa: E402
@@ -58,9 +58,7 @@ CN_BASELINE = PATENTLINT_ROOT / "tests/fixtures/cn/local/baseline_phase8c.json"
 TW_LABELS = PATENTLINT_ROOT / "tests/fixtures/tw/antecedent_labels.json"
 TW_FIXTURES_DIR = PATENTLINT_ROOT / "tests/fixtures/tw/local"
 
-CC_OUTPUT_DIR = Path(
-    "/Users/chrischen/Library/Mobile Documents/com~apple~CloudDocs/CC Output"
-)
+CC_OUTPUT_DIR = Path.home() / "Library/Mobile Documents/com~apple~CloudDocs" / "CC Output"
 
 
 # ---------- label utilities ----------

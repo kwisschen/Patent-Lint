@@ -1211,9 +1211,9 @@ class TestQuantityDeIntroduction:
     """TW R54 (report #709) - a quantity-之 recital IS an introduction.
 
     TW composition claims introduce a constituent by reciting how much of it is
-    present (`56 wt%之二氧化矽`). No intro arm saw that shape - the quantifier
+    present (`56 wt%之第一材料`). No intro arm saw that shape - the quantifier
     arms want 一/複數個 and the possessive arms want 所述X的Y - so the drafter's
-    later `所述二氧化矽` never resolved and every constituent of a composition
+    later `所述第一材料` never resolved and every constituent of a composition
     claim was flagged.
     """
 
@@ -1225,7 +1225,7 @@ class TestQuantityDeIntroduction:
         return {n for _, n in extract_introductions_tw(claim, suppress_dep_preamble=True)}
 
     def test_percentage_recital_introduces_the_constituent(self):
-        assert "二氧化矽" in self._intros("一種組成物，包含：56 wt%之二氧化矽。")
+        assert "第一材料" in self._intros("一種組成物，包含：56 wt%之第一材料。")
 
     def test_range_recital_introduces_the_constituent(self):
         assert "第二材料" in self._intros("一種組成物，包含：0.01 wt%至2 wt%之第二材料。")
@@ -1234,9 +1234,9 @@ class TestQuantityDeIntroduction:
         assert "錫鹽" in self._intros("一種組成物，包含：30重量%之錫鹽。")
 
     def test_a_leading_quantifier_on_the_complement_is_stripped(self):
-        # `30%之一平均光學反射率` - the complement carries its own 一, and the
+        # `30%之一平均反射率` - the complement carries its own 一, and the
         # element is the head, not the quantifier.
-        assert "平均光學反射率" in self._intros("一種膜，具有至少30%之一平均光學反射率。")
+        assert "平均反射率" in self._intros("一種膜，具有至少30%之一平均反射率。")
 
     def test_zhijian_is_between_not_a_possessive(self):
         # `之間` means "between". Registering `間的一距離` would be a bogus intro

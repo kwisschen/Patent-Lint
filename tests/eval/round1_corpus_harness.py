@@ -43,10 +43,10 @@ from typing import Iterable
 
 import pyarrow.parquet as pq
 
-PROJECT_ROOT = Path('/Users/chrischen/Documents/Projects/Patent-Lint')
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT / 'src'))
 
-CORPUS_ROOT = Path('/Users/chrischen/Documents/Projects/Patent-Analyst-corpus/parquet/cn_tw_drafts')
+CORPUS_ROOT = Path(Path(__file__).resolve().parents[2].parent / "Patent-Analyst-corpus" / "parquet" / "cn_tw_drafts")
 PHASE2B_RESULTS = {
     'CN': [
         PROJECT_ROOT / 'tests/eval/phase2b_results.json',

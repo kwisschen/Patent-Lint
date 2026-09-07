@@ -6236,9 +6236,9 @@ def _has_stranded_determiner_tail_tw(term: str) -> bool:
 
 # R54 (2026-09-03, report #709) - QUANTITY-之 INTRODUCTION.
 # TW composition claims introduce a constituent by reciting how much of it is
-# present: `所述組成物包含：56 wt%至63 wt%之二氧化矽；0.01 wt%至2 wt%之改質無機
-# 粒子`. That IS the introduction - the drafter then refers to `所述改質無機
-# 粒子` - but no intro arm saw it, because the quantifier arms want 一/複數個
+# present: `所述組成物包含：56 wt%至63 wt%之第一材料；0.01 wt%至2 wt%之第二材
+# 料`. That IS the introduction - the drafter then refers to `所述第二材
+# 料` - but no intro arm saw it, because the quantifier arms want 一/複數個
 # and the possessive arms want 所述X的Y. The reference therefore never
 # resolved and every constituent of a composition claim was flagged.
 #

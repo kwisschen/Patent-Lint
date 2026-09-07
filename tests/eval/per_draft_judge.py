@@ -34,7 +34,7 @@ from pathlib import Path
 from anthropic import AsyncAnthropic
 from openai import AsyncOpenAI
 
-ANALYST_ENV = Path("/Users/chrischen/Documents/Projects/Patent-Analyst/.env")
+ANALYST_ENV = Path(__file__).resolve().parents[3] / "Patent-Analyst" / ".env"
 
 SONNET = "claude-sonnet-4-6"
 OPUS = "claude-opus-4-7"

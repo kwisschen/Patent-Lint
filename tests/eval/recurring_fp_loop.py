@@ -72,9 +72,9 @@ from pathlib import Path
 THIS_DIR = Path(__file__).resolve().parent
 REPO_ROOT = THIS_DIR.parent.parent
 
-DEFAULT_ANALYST_ENV = Path("/Users/chrischen/Documents/Projects/Patent-Analyst/.env")
+DEFAULT_ANALYST_ENV = Path(__file__).resolve().parents[3] / "Patent-Analyst" / ".env"
 DEFAULT_CORPUS_ROOT = Path(
-    "/Users/chrischen/Documents/Projects/Patent-Analyst-corpus/parquet/cn_tw_drafts"
+    Path(__file__).resolve().parents[2].parent / "Patent-Analyst-corpus" / "parquet" / "cn_tw_drafts"
 )
 
 

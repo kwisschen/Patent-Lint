@@ -15,7 +15,7 @@
 #
 # WHY THIS EXISTS. The pull used to be a copy-paste snippet in the
 # examiner_fn_guard.py header that connected straight to
-# ``100.73.179.83:5432``. That direct connection has failed in FIVE separate
+# ``<host>:5432``. That direct connection has failed in FIVE separate
 # sessions (2026-07-13, 07-19, 07-20, 08-08, 08-10), and each time it blocked
 # the authoritative US FN-guard - twice badly enough that a walker round
 # (US R41, US R42) shipped on a weaker static substitute instead.
@@ -47,13 +47,15 @@ import json
 import subprocess
 import sys
 import time
+import os
 from pathlib import Path
 
 DEFAULT_ENV = Path.home() / "Documents/Projects/Patent-Analyst/.env"
 DEFAULT_OUT = Path("/tmp/odp_examiner_claims.json")
 EXAM_JSON = Path(__file__).resolve().parent / "us_examiner_legit.json"
 
-SSH_HOST = "edgexpert-ts"  # the ~/.ssh/config alias - correct for ssh, NOT for socket connects
+SSH_HOST = os.environ.get("PATENTLINT_EXAMINER_SSH_HOST", "edgexpert-ts")
+# An ~/.ssh/config Host ALIAS - correct for ssh, NEVER for socket connects.
 REMOTE_PG = "127.0.0.1:5432"
 LOCAL_PORT = 15432
 

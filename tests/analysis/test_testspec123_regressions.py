@@ -10,6 +10,8 @@ regression gates when the fixture is available."""
 
 from pathlib import Path
 
+import os
+
 import pytest
 
 from patentlint.analysis.claims import check_antecedent_basis, check_spec_support
@@ -18,9 +20,16 @@ from patentlint.parser.claims import parse_claims
 from patentlint.parser.docx_loader import load_docx
 
 
+# Local-only fixture, deliberately not committed. Point PATENTLINT_TESTSPEC123
+# at a copy to enable these tests; they skip when it is absent, which is always
+# the case in CI.
 TESTSPEC123_PATH = Path(
-    "/Users/chrischen/Library/Mobile Documents/com~apple~CloudDocs/"
-    "Documents/Test Cases/us/TestSpec123.docx"
+    os.environ.get(
+        "PATENTLINT_TESTSPEC123",
+        Path.home()
+        / "Library/Mobile Documents/com~apple~CloudDocs"
+        / "Documents/Test Cases/us/TestSpec123.docx",
+    )
 )
 
 

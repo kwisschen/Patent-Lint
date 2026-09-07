@@ -274,5 +274,5 @@ class TestDecimalIsNotAClaimNumber:
     def test_a_claim_number_followed_by_a_spaced_numeral_still_parses(self):
         # The guard is deliberately tight - it fires only on an IMMEDIATELY
         # adjacent digit - so a claim whose body opens with a number survives.
-        claims = self._parse("10. 5 wt%之二氧化矽的實施例。")
+        claims = self._parse("10. 5 wt%之第一材料的實施例。")
         assert [str(c.id) for c in claims] == ["10"]

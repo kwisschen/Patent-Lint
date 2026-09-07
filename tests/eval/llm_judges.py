@@ -21,7 +21,7 @@ from typing import Literal
 from anthropic import AsyncAnthropic
 from openai import AsyncOpenAI
 
-ANALYST_ENV = Path("/Users/chrischen/Documents/Projects/Patent-Analyst/.env")
+ANALYST_ENV = Path(__file__).resolve().parents[3] / "Patent-Analyst" / ".env"
 
 HAIKU = "claude-haiku-4-5-20251001"
 SONNET = "claude-sonnet-4-6"
