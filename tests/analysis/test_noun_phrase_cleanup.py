@@ -894,3 +894,47 @@ class TestContextualCleanedIntroTier:
         intros = extract_introductions(
             "detect a main control command signal output by an external circuit.")
         assert "main control command signal output" in intros
+
+
+class TestUsR54Clamps:
+    """US R54 - `clamps` as a 3sg finite verb (report #746).
+
+    The interesting part of this one is WHERE the evidence came from. The walker
+    corpus contains `clamps` ZERO times across its 705 US drafts (clamp 58,
+    clamping 23, clamped 2), so it can price neither the win nor the risk. The
+    EXAMINER dump can, and it settles the gate 7 for 7: every verb reading is
+    followed by `the`, every noun reading by `or`.
+
+    All claim text here is synthesised.
+    """
+
+    def test_verb_reading_strips_on_the_object_determiner(self):
+        from patentlint.analysis.utils import strip_contextual_verb
+
+        assert strip_contextual_verb(
+            "clamping mechanism clamps", " the first element, the second"
+        ) == "clamping mechanism"
+        assert strip_contextual_verb(
+            "second electrode plate clamps", " the first slot"
+        ) == "second electrode plate"
+
+    def test_plural_noun_reading_survives(self):
+        """The four examiner noun readings are all followed by `or`, never by a
+        determiner, so the gate is disjoint from every measured FN."""
+        from patentlint.analysis.utils import strip_contextual_verb
+
+        assert strip_contextual_verb("rail clamps", " or diodes") == "rail clamps"
+        assert strip_contextual_verb("clips, clamps", " or magnets") == "clips, clamps"
+        assert strip_contextual_verb("first clamps", " of the assembly") == "first clamps"
+
+    def test_mps_is_not_taught_to_the_unconditional_detector(self):
+        """WHY THIS IS A GATED ENTRY AND NOT A SUFFIX. `_is_likely_third_person_verb`
+        is unconditional, and `-mps` is dominated by nouns in patent prose. If a
+        later round adds the suffix, these break - which is the point."""
+        from patentlint.analysis.utils import _is_likely_third_person_verb
+
+        assert _is_likely_third_person_verb("clamps") is False
+        for noun in ("pumps", "lamps", "ramps", "stamps"):
+            assert _is_likely_third_person_verb(noun) is False, noun
+            assert clean_noun_phrase(f"first {noun}") == f"first {noun}"
+
