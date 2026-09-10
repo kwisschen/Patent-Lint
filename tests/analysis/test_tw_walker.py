@@ -2338,3 +2338,52 @@ class TestR59TigongDeterminerGate:
 
         assert C("該第一模組提供該第一訊號") == "該第一模組提供該第一訊號"
 
+
+class TestR60SpecSupportTrailingCluster:
+    """TW R60 - trailing predicates from the #754-#759 spec-support cluster.
+
+    These reach BOTH engines, because `_normalize_for_spec_support_tw`
+    delegates to `clean_noun_phrase_tw` - which is why a spec-support report is
+    fixed by a trailing-denylist entry at all.
+
+    All claim text here is synthesised.
+    """
+
+    def test_cluster_members_strip(self):
+        from patentlint.analysis.tw_claims import clean_noun_phrase_tw as C
+
+        assert C("第一機構能以") == "第一機構"
+        assert C("第一機構轉動") == "第一機構"
+        assert C("第一入射角投射") == "第一入射角"
+        assert C("局部穿設於") == "局部"
+        assert C("第一元件落在") == "第一元件"
+
+    def test_共同_is_withheld_with_its_number(self):
+        """WITHHELD, pinned. The reporter is right that 共同 is an adverb and
+        never part of a term, and the raw corpus agreed - 181 occurrences, ZERO
+        followed by a determiner. The MEASUREMENT disagreed: it ends 1 finding
+        and silences 1 gold-legit on TW202234109A c15, where a real defect is
+        surfaced through the dirty term 震盪致動器共同. A correct-looking token
+        can still be carrying a real finding."""
+        from patentlint.analysis.tw_claims import clean_noun_phrase_tw as C
+
+        assert C("第一夾爪共同") == "第一夾爪共同"
+
+    def test_用來_is_withheld_pending_the_位_fix(self):
+        """WITHHELD, pinned. It ends ZERO findings and creates one: stripping it
+        exposes the PRE-EXISTING bare 位 in this same denylist, which then takes
+        定位 apart (`所追蹤定位用來基` -> `所追蹤定`). Shippable once the TW 位
+        mirror of CN R68 lands, and not before."""
+        from patentlint.analysis.tw_claims import clean_noun_phrase_tw as C
+
+        assert C("所追蹤定位用來基") == "所追蹤定位用來基"
+
+    def test_能_is_not_a_bare_member_because_of_功能(self):
+        """WITHHELD, pinned. A bare 能 is the second character of 功能 and a bare
+        stop emitted 統一資料管理功 / 各別機器學習功 / PCIe功 across four drafts -
+        the R57 出 lesson on a different character. It needs a lexeme guard, not
+        a denylist line."""
+        from patentlint.analysis.tw_claims import clean_noun_phrase_tw as C
+
+        assert C("統一資料管理功能") == "統一資料管理功能"
+
