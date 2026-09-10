@@ -1898,6 +1898,59 @@ _CHAR_EXCLUSION_RESIDUE_CN: dict[str, int] = {
     '\u8f93': 2,  # 输 (from 输出 where 出 is in trailing denylist)
 }
 
+# CN R68 (2026-09-07) - noun compounds ending in 位, which the bare trailing
+# 位 strip was destroying. 位 is a verb in 位于 ("is located at") and a NOUN
+# SUFFIX in 部位 / 相位 / 电位 / 单位 - the same noun-gray shape as the 匹配
+# entry, and the same latent FALSE NEGATIVE: a genuine 所述治疗部位 antecedent
+# defect was truncated to 治疗部 and could never be flagged.
+#
+# The only thing between the strip and these nouns was a RESIDUAL LENGTH
+# heuristic (>= 3), which is not a judgement about wordhood at all - 治疗部位
+# is four characters, so it cleared the bar and lost its head. That is the
+# US R52 `-ed` lesson in CN: a length test standing in for a lexical one.
+#
+# Members are CORPUS-ATTESTED, mined by anchoring on the drafter's OWN
+# determiner or reference marking, which is what proves the form is an element
+# name rather than a predicate. Removing the bare entry outright was measured
+# FIRST and reverted: it silenced 7 gold-legit findings, and NONE of the seven
+# terms contains 位 - the token-absent signature of the spurious-intro
+# cascade. Guarding the compound keeps the 位于 predicate strip and closes
+# the false negative.
+#
+# R43 MEMBER-BY-MEMBER BISECT (2026-09-10). Eleven candidates were measured as
+# eleven separate validate_fix runs against the 14,419-finding CN baseline.
+# NINE ARE CLEAN AND SHIP. TWO ARE WITHHELD, FOR DIFFERENT REASONS, AND THE
+# REASONS ARE THE REUSABLE PART:
+#
+#   置位 - 3 ended, 1 gold-legit silenced. It is NOT a word here. The claim
+#     reads `所述输出轴装置位于所述封壳…` - the element name is 输出轴装置
+#     and the verb is 位于, so `endswith("置位")` matches 装置 + 位 across a
+#     boundary THAT DOES NOT EXIST. A segmenter confirms it independently:
+#     of 20 corpus occurrences only 2 are a real word and 18 are this exact
+#     artefact. Two instruments, one answer. A 位-final guard mined by string
+#     matching will always admit members like this, so the segmenter check is
+#     now part of mining, not an afterthought.
+#
+#   相位 - 12 ended, 0 gold walker_fp, 3 UNPAIRED. This one IS a real word
+#     (226 of 246 occurrences segment as one token) and the guard is correct;
+#     it simply exposes three ARTICLE-LESS INTRODUCTIONS that the truncation
+#     had been covering by accident - `提供第一相位…所述第一相位`, where the
+#     drafter introduces the element bare. That is the #525 dirty-capture-is-
+#     load-bearing shape, and the article-less class is separately MEASURED
+#     UNREACHABLE (the blanket rule ends 4,207 FPs and causes 1,539 FNs). So
+#     it is withheld on the trade, not on the mechanism: 12 ended, none of
+#     them gold, against 3 manufactured. Re-open it only together with the
+#     article-less class, never on its own.
+#
+# 栏位 (34/34) and 限位 (142/144) fire ZERO times on this corpus. They ship on
+# the segmenter evidence that they are unambiguous words, and are recorded here
+# as UNMEASURED rather than as proven-safe.
+_WEI_NOUN_COMPOUNDS_CN: tuple[str, ...] = (
+    "部位", "单位", "电位", "移位", "栏位",
+    "限位", "箝位", "定位", "挡位",
+)
+
+
 # Chemistry chars that legitimately precede 基 (functional-group suffix).
 # When the char before 基 is in this set, 基 is a noun, not a verb residue.
 _CHEMISTRY_BEFORE_JI_CN: frozenset[str] = frozenset(
@@ -2358,6 +2411,11 @@ def clean_noun_phrase_cn(text: str) -> str:
             if verb == "属" and (
                 current.endswith(_SHU_FINAL_NOUNS_CN) or (len(current) - 1) < 3
             ):
+                continue
+            # CN R68 - noun-compound guard for the trailing 位.
+            # See _WEI_NOUN_COMPOUNDS_CN: the bare strip was a latent FN
+            # held back only by a residual-length heuristic.
+            if verb == "位" and current.endswith(_WEI_NOUN_COMPOUNDS_CN):
                 continue
             if verb in _NOUNLIKE_SINGLE_CHAR_SUFFIXES_CN:
                 if verb in _NOUNLIKE_VERY_RELAXED_SUFFIXES_CN:
