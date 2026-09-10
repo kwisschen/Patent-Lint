@@ -1443,6 +1443,30 @@ _CONTEXTUAL_VERB_STOPS = {
     # (`_is_likely_third_person_verb` cannot reach either: `scans` is below its
     # 6-char floor, and `-ors` is not one of its verb suffixes.)
     "scans":    frozenset({"a", "an", "the"}),
+    # R54 (2026-09-10, report #746): `clamps` as a 3sg finite verb
+    # (`when the clamping mechanism clamps the wafer, ...`). Same treatment as
+    # `scans` / `monitors` above, and for the same reason - it is noun-gray,
+    # `the clamps` being an ordinary plural in mechanical claims.
+    #
+    # `_is_likely_third_person_verb` cannot reach it and MUST NOT be taught to:
+    # `clamps` clears its 6-char floor but ends in `-mps`, and that suffix is
+    # dominated by NOUNS in patent prose (pumps, lamps, ramps, stamps). The
+    # detector is unconditional, so a `-mps` entry there would strip real
+    # element heads. The list's own comment already defers `-its`/`-rns`/`-ops`;
+    # this is the same wall, and it is not a coverage gap that can be closed -
+    # English does not distinguish a 3sg verb from a plural noun
+    # morphologically, so the R52 stemmer trick has no purchase here either.
+    # The ONLY discriminator is positional, which is exactly what this table is.
+    #
+    # THE WALKER CORPUS CANNOT PRICE THIS: `clamps` occurs ZERO times across its
+    # 705 US drafts (clamp 58 / clamping 23 / clamped 2). The EXAMINER dump can,
+    # and it settles the gate 7 for 7: the three verb readings are each followed
+    # by `the` (`... plate clamps the clamping slot`, `... shell that clamps the
+    # rotating plastic column`, `... configured to clamp clamps the radiator`),
+    # and all four noun readings are followed by `or` (`clips, clamps or
+    # magnets`; `rail clamps or ESD diodes` x3). No determiner appears after a
+    # single noun reading, so the gate is disjoint from every measured FN.
+    "clamps":   frozenset({"a", "an", "the"}),
     "monitors": frozenset({"a", "an", "the"}),
     # R34 (2026-07-18, reports #391 + #397): same 3sg/base-form finite-verb
     # shape as R33, gated identically on a following object determiner.
