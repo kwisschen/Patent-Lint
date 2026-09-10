@@ -1332,3 +1332,52 @@ class TestR59MarkushConjunctionAndIntegration:
         assert C("集成电路") == "集成电路"
         assert C("大规模集成电路") == "大规模集成电路"
         assert C("片上集成波分复用器") == "片上集成波分复用器"
+
+
+class TestR68WeiNounCompoundGuard:
+    """CN R68 - the bare trailing 位 was destroying real element names.
+
+    位 is a verb in 位于 and a NOUN SUFFIX in 部位 / 电位 / 单位 / 挡位. The only
+    thing standing between the strip and those nouns was a residual LENGTH
+    heuristic, which is not a judgement about wordhood at all: 治疗部位 is four
+    characters, cleared the bar, and lost its head. That is the US R52 `-ed`
+    lesson in CN, and it was a latent FALSE NEGATIVE - a genuine 所述治疗部位
+    defect was truncated to 治疗部 and could never be flagged.
+
+    All claim text here is synthesised.
+    """
+
+    def test_noun_compound_keeps_its_head(self):
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn as C
+
+        assert C("治疗部位") == "治疗部位"
+        assert C("第一电位") == "第一电位"
+        assert C("第一挡位") == "第一挡位"
+        assert C("第一定位") == "第一定位"
+
+    def test_the_位于_predicate_still_strips(self):
+        """The guard must not cost the verb strip it was protecting."""
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn as C
+
+        assert C("第一部件位") == "第一部件"
+
+    def test_置位_is_a_boundary_that_does_not_exist(self):
+        """WITHHELD MEMBER, pinned. `所述输出轴装置位于…` is 输出轴装置 + 位于,
+        so an endswith("置位") guard matches 装置 + 位 across a boundary that is
+        not there. It silenced a real defect on CN119698527A c9, and a segmenter
+        says only 2 of its 20 corpus occurrences are a real word. If a later
+        round adds it, this test fails and the measurement has to be redone."""
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn as C
+
+        assert C("所述输出轴装置位") == "所述输出轴装置"
+
+    def test_相位_is_withheld_on_the_trade_not_the_mechanism(self):
+        """WITHHELD MEMBER, pinned. 相位 IS a real word (226 of 246 occurrences
+        segment as one token), but guarding it exposes three ARTICLE-LESS
+        introductions the truncation was covering by accident - the #525 shape.
+        12 ended, none of them gold, against 3 manufactured. Re-open only with
+        the article-less class."""
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn as C
+
+        assert C("第一相位") == "第一"
+

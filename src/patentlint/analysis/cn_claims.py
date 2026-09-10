@@ -1916,9 +1916,38 @@ _CHAR_EXCLUSION_RESIDUE_CN: dict[str, int] = {
 # terms contains 位 - the token-absent signature of the spurious-intro
 # cascade. Guarding the compound keeps the 位于 predicate strip and closes
 # the false negative.
+#
+# R43 MEMBER-BY-MEMBER BISECT (2026-09-10). Eleven candidates were measured as
+# eleven separate validate_fix runs against the 14,419-finding CN baseline.
+# NINE ARE CLEAN AND SHIP. TWO ARE WITHHELD, FOR DIFFERENT REASONS, AND THE
+# REASONS ARE THE REUSABLE PART:
+#
+#   置位 - 3 ended, 1 gold-legit silenced. It is NOT a word here. The claim
+#     reads `所述输出轴装置位于所述封壳…` - the element name is 输出轴装置
+#     and the verb is 位于, so `endswith("置位")` matches 装置 + 位 across a
+#     boundary THAT DOES NOT EXIST. A segmenter confirms it independently:
+#     of 20 corpus occurrences only 2 are a real word and 18 are this exact
+#     artefact. Two instruments, one answer. A 位-final guard mined by string
+#     matching will always admit members like this, so the segmenter check is
+#     now part of mining, not an afterthought.
+#
+#   相位 - 12 ended, 0 gold walker_fp, 3 UNPAIRED. This one IS a real word
+#     (226 of 246 occurrences segment as one token) and the guard is correct;
+#     it simply exposes three ARTICLE-LESS INTRODUCTIONS that the truncation
+#     had been covering by accident - `提供第一相位…所述第一相位`, where the
+#     drafter introduces the element bare. That is the #525 dirty-capture-is-
+#     load-bearing shape, and the article-less class is separately MEASURED
+#     UNREACHABLE (the blanket rule ends 4,207 FPs and causes 1,539 FNs). So
+#     it is withheld on the trade, not on the mechanism: 12 ended, none of
+#     them gold, against 3 manufactured. Re-open it only together with the
+#     article-less class, never on its own.
+#
+# 栏位 (34/34) and 限位 (142/144) fire ZERO times on this corpus. They ship on
+# the segmenter evidence that they are unambiguous words, and are recorded here
+# as UNMEASURED rather than as proven-safe.
 _WEI_NOUN_COMPOUNDS_CN: tuple[str, ...] = (
-    "相位", "部位", "单位", "电位", "移位", "栏位",
-    "限位", "箝位", "定位", "置位", "挡位",
+    "部位", "单位", "电位", "移位", "栏位",
+    "限位", "箝位", "定位", "挡位",
 )
 
 
