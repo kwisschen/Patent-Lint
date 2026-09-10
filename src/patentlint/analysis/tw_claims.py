@@ -2760,6 +2760,31 @@ _TRAILING_VERB_DENYLIST: tuple[str, ...] = tuple(sorted(
         # Chinese, not a suffix (see the comment on the constant).
         "所", "前",
         # Resultative particles (added 2026-04-09)
+        #
+        # R57 (2026-09-10) - THE BARE PARTICLE CUTS EVERY V+RESULTATIVE
+        # COMPOUND IN HALF. `出` was added here with no guard at all, and the
+        # strip loop takes exactly one character, so `一晶圓進出` emitted
+        # `晶圓進` and `一預設方向發出` emitted `預設方向發` - a stranded verb
+        # head, the #389 signature, and the reference `所述晶圓` then matched
+        # nothing. Eight reports in one queue drain were this.
+        #
+        # The two-character members below sit BEFORE the bare particle because
+        # the tuple is length-sorted and the loop breaks on first match, so the
+        # whole word strips and the residual is the real element name. That is
+        # the mechanism the length-sort exists for; it is not a 192nd symptom
+        # entry. Every member is corpus-attested in TRAILING position (the
+        # count is findings the bare strip was cutting, not raw text hits).
+        #
+        # NOT ADDED, WITH THEIR NUMBERS: 輸出 (45), 突出 (5), 凸出 (1) are
+        # noun-gray - 輸出 is a bare element name 2,963 times in this corpus
+        # (輸出端 / 輸出訊號 / 該輸出). Removing the cut for them was measured
+        # and costs a real FN: on TW202349274A c17 the drafter recites
+        # `一…的輸出` and then `該等輸出`, and the longer capture resolves it,
+        # while the IDENTICAL defect on the parallel `輸入` still fires. A
+        # round that silences one half of a symmetric pair is not shippable.
+        # Those three are withheld here and carry that measurement.
+        "送出", "列出", "發出", "排出", "拉出", "取出", "讀出",
+        "超出", "導出", "指出", "析出", "噴出", "進出", "流出", "離出",
         "到", "出",
         # 從: coverb "from" (issue #75, 2026-05-21). `控制電流從所述
         # 控制節點流經` → walker over-captured `控制電流從`; the real
