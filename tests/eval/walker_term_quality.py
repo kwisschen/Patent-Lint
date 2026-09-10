@@ -119,12 +119,15 @@ THIS_DIR = Path(__file__).resolve().parent
 #       phrase". A gate that is permanently red gets ignored, so it stays out.
 #
 # RAISING ANY NUMBER IS A REGRESSION. Lowering one is the next round's win.
-_EXPECTED_BAD_ENGINE1: dict[str, int] = {"TW": 54, "CN": 35, "US": 0}
+_EXPECTED_BAD_ENGINE1: dict[str, int] = {"TW": 54, "CN": 33, "US": 0}
 
 # Mid-word truncation residuals, re-derived 2026-09-07 with jieba 0.42.1.
 # These are a BASELINE to drive DOWN, not an accepted state: each one is a
 # capture that stopped inside a word. US is absent by construction (see header).
-_EXPECTED_MIDWORD: dict[str, int] = {"TW": 1209, "CN": 1070}
+# RATCHETED 2026-09-10 after TW R57/R59 and CN R68/R69: TW 1209 -> 1155,
+# CN 1070 -> 995. Lowering the pin after an improvement is what makes it a
+# ratchet - left at the old value, a later regression back to 1209 would pass.
+_EXPECTED_MIDWORD: dict[str, int] = {"TW": 1155, "CN": 995}
 
 
 def _load_segmenter():

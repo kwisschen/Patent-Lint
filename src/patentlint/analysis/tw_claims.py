@@ -3562,6 +3562,38 @@ _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
         # locative-gated shape of R17's locative-before-verb cut, and it is the
         # extension point for any future noun-gray verb of the same class.
         "中匹配", "內匹配",
+        # === R59 (2026-09-10, report #744) ===
+        # 提供X where X is an OBJECT DETERMINER. Same locative-gated shape as
+        # 中匹配 above, which its comment already names as the extension point
+        # for a noun-gray verb - this is the first use of that invitation.
+        #
+        # The reporter's capture carried TWO element names either side of the
+        # verb 提供. A BARE 提供 boundary is a false negative and the corpus says
+        # so loudly: 提供者 (54) is a real element head in TW, and the trap is
+        # bigger than that one word - 提供方 occurs 58 times and EVERY SINGLE ONE
+        # is 提供方法 ("provide a method"), a verb reading, so a noun-compound
+        # exception list built from the frequent suffixes would have protected a
+        # verb. 提供商 is 9, one of which is 提供商品. That is the #492 lesson:
+        # ask whether a compound plus the guarded token can ACCIDENTALLY SPELL a
+        # member of your guard set.
+        #
+        # Gating on the FOLLOWING DETERMINER sidesteps the whole question. The
+        # verb reading is 提供 + <determiner> + object; the noun readings
+        # (提供者 / 提供方法 / 提供商) contain no determiner, so they cannot match
+        # the token at all. FN-safety is BY CONSTRUCTION rather than by a list
+        # that has to stay complete. 的 is deliberately EXCLUDED: `X提供的Y` is a
+        # relative clause whose head is Y, so cutting there would discard the
+        # real element name rather than the verb.
+        # WITHHELD WITH ITS NUMBER: "提供該". Measured alone it ends 2 findings,
+        # NEITHER of them a gold walker_fp, and silences 2 gold-legit on
+        # TW202509719A c3/c13. The mechanism is the CN R68 相位 shape: the
+        # drafter writes `基於預定準則提供該...` with the criterion introduced
+        # ARTICLE-LESS, so the cleaner capture becomes a valid introduction and
+        # resolves `該預定準則`. The article-less class is separately measured
+        # unreachable, so this is withheld on the trade, not the mechanism.
+        # The reported reference (#744) needs 提供一 and is unaffected.
+        "提供一", "提供所述", "提供前述", "提供至", "提供給",
+        "提供複數", "提供多個",
         # === R27 (2026-07-13, report #356) ===
         # 排成: arrangement verb ("arranged into"). The intro
         # `多個所述齒條沿一直線方向排成一列` over-captured to 直線方向排成一列,

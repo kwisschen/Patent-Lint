@@ -2295,3 +2295,46 @@ class TestR57StrandedResultative:
         assert clean_noun_phrase_tw("第一通訊指示出") == "第一通訊指示"
         assert clean_noun_phrase_tw("第一資料特定出") == "第一資料特定"
 
+
+class TestR59TigongDeterminerGate:
+    """TW R59 - the interior verb 提供, gated on a following object determiner.
+
+    The reporter's capture (#744) carried TWO element names either side of the
+    verb. A BARE 提供 boundary is a false negative, and the corpus says so more
+    loudly than the handoff did: 提供者 is 54, but 提供方 is 58 and EVERY ONE of
+    those is 提供方法 ("provide a method"), a verb reading. A noun-compound
+    exception list mined from the frequent suffixes would therefore have
+    protected a verb - the #492 "can a compound accidentally SPELL a member of
+    your guard set" trap.
+
+    Gating on the FOLLOWING DETERMINER sidesteps the question entirely: the noun
+    readings carry no determiner, so they cannot match the token. FN-safety is
+    by construction rather than by a list that has to stay complete.
+
+    All claim text here is synthesised.
+    """
+
+    def test_the_verb_reading_cuts(self):
+        from patentlint.analysis.tw_claims import clean_noun_phrase_tw as C
+
+        assert C("該第一電壓提供一第一電流") == "該第一電壓"
+        assert C("該第一單元提供至該第二單元") == "該第一單元"
+
+    def test_the_noun_readings_are_untouched(self):
+        from patentlint.analysis.tw_claims import clean_noun_phrase_tw as C
+
+        assert C("一服務提供者") == "一服務提供者"
+        assert C("所述服務提供者的識別碼") == "所述服務提供者的識別碼"
+        assert C("一種提供方法") == "一種提供方法"
+        assert C("該伺服器提供商") == "該伺服器提供商"
+
+    def test_提供該_is_withheld_with_its_number(self):
+        """WITHHELD MEMBER, pinned. Measured alone it ends 2 findings, NEITHER a
+        gold walker_fp, and silences 2 gold-legit on TW202509719A c3/c13, where
+        the drafter introduces the element ARTICLE-LESS and the cleaner capture
+        then becomes a valid introduction. Same shape as CN R68's 相位. If a
+        later round adds it, this test fails and the measurement must be redone."""
+        from patentlint.analysis.tw_claims import clean_noun_phrase_tw as C
+
+        assert C("該第一模組提供該第一訊號") == "該第一模組提供該第一訊號"
+

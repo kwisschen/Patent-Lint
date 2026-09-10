@@ -2015,6 +2015,16 @@ _PLURAL_REFERENCE_PREFIXES_CN: tuple[str, ...] = tuple(sorted(
 # lines 1138-1331 for the historical risk-review rationale per verb.
 _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
     (
+        # === R69 (2026-09-10, TW R59 mirror, report #744) ===
+        # 提供X where X is an OBJECT DETERMINER. See the TW comment for the full
+        # rationale. The CN numbers are DIFFERENT and that is why the mirror is
+        # measured rather than copied: TW's dominant noun head is 提供者 (54),
+        # CN's is 提供商 (100 vs 提供者 at 2). A guard list mined on one side
+        # would have been wrong on the other; the determiner gate is insensitive
+        # to which noun head a jurisdiction prefers, because none of them carries
+        # a determiner. 的 excluded for the same reason as TW.
+        "提供一", "提供该", "提供所述", "提供第", "提供至", "提供给",
+        "提供多个", "提供两个",
         # === R64 (2026-09-01) - TW R47 mirror, found by the NEW term-quality
         # gate rather than by a CN report ===
         # 且 is a coordinating conjunction and cannot be noun-internal: measured

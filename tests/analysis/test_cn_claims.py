@@ -1381,3 +1381,35 @@ class TestR68WeiNounCompoundGuard:
 
         assert C("第一相位") == "第一"
 
+
+class TestR69TigongDeterminerGate:
+    """CN R69 - TW R59 mirror: the interior verb 提供 gated on a determiner.
+
+    The mirror is MEASURED, not copied, and the numbers are why: TW's dominant
+    noun head is 提供者 (54 vs CN's 2), CN's is 提供商 (100 vs TW's 9). A guard
+    list mined on either side would have been wrong on the other. The determiner
+    gate is insensitive to which noun head a jurisdiction prefers, because none
+    of them carries a determiner.
+
+    All claim text here is synthesised.
+    """
+
+    def test_the_verb_reading_cuts(self):
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn as C
+
+        assert C("所述第一电压提供一第一电流") == "所述第一电压"
+
+    def test_the_noun_readings_are_untouched(self):
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn as C
+
+        assert C("一种服务提供商") == "一种服务提供商"
+        assert C("一种提供方法") == "一种提供方法"
+
+    def test_de_is_excluded_because_the_head_is_on_the_RIGHT(self):
+        """`X提供的Y` is a relative clause whose head noun is Y, so cutting at
+        提供的 would discard the real element name rather than the verb. 的 is
+        the most frequent follower in CN (178), so excluding it is load-bearing."""
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn as C
+
+        assert C("所述服务器提供的数据") == "所述服务器提供的数据"
+
