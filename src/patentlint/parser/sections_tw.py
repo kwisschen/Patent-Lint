@@ -27,6 +27,10 @@ from patentlint.parser.symbol_table_tw import parse_tw_symbol_table
 # ---------------------------------------------------------------------------
 
 # Match bracket headers but NOT paragraph numbers 【0001】
+# Whitespace a drafter may type between the characters of a letter-spaced
+# bracket header. Mirrors _HEADER_SEPARATORS in sections_cn.py.
+_HEADER_SEPARATORS_TW = re.compile(r"[\s\u3000\u00a0\u2000-\u200b\ufeff]+")
+
 _BRACKET_HEADER = re.compile(r"^【([^\d].+?)】(.*)$")
 
 # Firm-variant claim-number labels: 【請求項N】, 【請求N】, 【權利要求N】,
@@ -353,7 +357,14 @@ def extract_tw_sections(
         # Check for bracket header
         m = _BRACKET_HEADER.match(stripped)
         if m:
-            header_text = m.group(1).strip()
+            # CN parity (same round): the section lookups below are EXACT
+            # matches against closed key sets, and a drafter who justifies a
+            # bracket header by typing separators rather than by setting
+            # 分散對齊 produces a label none of them can see. None of the 34
+            # keys contains whitespace, so removing it from the lookup input
+            # cannot break a header that resolves today - it can only
+            # recover one that does not.
+            header_text = _HEADER_SEPARATORS_TW.sub("", m.group(1))
             inline_text = m.group(2).strip()
 
             # Handle 【中文】 - abstract text marker

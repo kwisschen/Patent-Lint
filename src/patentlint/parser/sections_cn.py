@@ -35,6 +35,11 @@ _HEADER_SPEC = re.compile(r"说明书(?!摘要|附图)")
 _HEADER_CLAIMS = re.compile(r"权利要求书?")
 _HEADER_ABSTRACT = re.compile(r"说明书摘要|摘要(?!附图)")
 _HEADER_ABSTRACT_DRAWING = re.compile(r"摘要附图")
+
+# Whitespace a drafter may type between the characters of a letter-spaced
+# part title. Covers ASCII space/tab, the ideographic space U+3000, and the
+# rest of the Unicode space separators Word inserts.
+_HEADER_SEPARATORS = re.compile(r"[\s\u3000\u00a0\u2000-\u200b\ufeff]+")
 _HEADER_DRAWINGS = re.compile(r"说明书附图")
 
 # ---------------------------------------------------------------------------
@@ -153,7 +158,30 @@ _FIGURE_REF_PATTERN = re.compile(r"图\s*(\d+[a-zA-Z]?)")
 
 
 def _identify_section(header_text: str) -> str | None:
-    """Identify which CN patent document part a Word section header corresponds to."""
+    """Identify which CN patent document part a Word section header corresponds to.
+
+    Whitespace inside the header is removed before matching. CNIPA filing
+    templates routinely letter-space the short part titles for visual
+    justification, and a drafter who does that by typing separators rather
+    than by setting 分散对齐 produces a header the part patterns cannot see
+    (``\u6743 \u5229 \u8981 \u6c42 \u4e66`` matched nothing while the unspaced form
+    matched). The page-header tier is the PRIMARY drafter tier, so a miss
+    here drops the whole document to the publication-recovery tiers: the
+    claims fall through to ``claim_density`` and the abstract resolves to
+    nothing, which surfaces to the drafter as ``requiredSections`` naming
+    two parts their document plainly contains.
+
+    Stripping is safe in both directions. It can only make the header text
+    MORE contiguous, so a header that resolves today resolves to the same
+    part (the separators sit between the part-name characters, never inside
+    the pagination suffix that the patterns already tolerate). The one case
+    where the answer changes is a spaced ``\u6458\u8981\u9644\u56fe``, which
+    stops resolving as the abstract and starts resolving as the
+    abstract-drawing part - the correct answer, not a regression.
+    """
+    if not header_text:
+        return None
+    header_text = _HEADER_SEPARATORS.sub("", header_text)
     if not header_text:
         return None
     # Order matters: check more specific patterns before less specific

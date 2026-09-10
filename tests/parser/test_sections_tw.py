@@ -635,3 +635,49 @@ class TestClaimBracketLabels:
         # the smoking gun for "drafter used a label format we don't
         # handle."
         assert doc.unknown_bracket_headers_in_claims == 2
+
+
+class TestLetterSpacedBracketHeaders:
+    """CN parity: a bracket header whose characters the drafter separated
+    by hand must still resolve.
+
+    The section lookups are exact matches against closed key sets, so a
+    typed-in separator made the whole label invisible: the claims section
+    was never entered and the title never captured. None of the 34 keys
+    contains whitespace, so the normalisation cannot break a header that
+    already resolves.
+    """
+
+    def test_ascii_spaced_headers_resolve(self):
+        paragraphs = [
+            "【發 明 名 稱】",
+            "一種第一裝置",
+            "【申 請 專 利 範 圍】",
+            "1. 一種第一裝置，包括一第一元件。",
+            "2. 如請求項1所述之第一裝置，更包括一第二元件。",
+        ]
+        doc = extract_tw_sections(paragraphs)
+        assert doc.claims_header_seen is True
+        assert len(doc.claims) == 2
+        assert doc.title == "一種第一裝置"
+
+    def test_ideographic_spaced_headers_resolve(self):
+        """U+3000 is what a CJK IME produces, so it is the likelier form."""
+        paragraphs = [
+            "【申\u3000請\u3000專\u3000利\u3000範\u3000圍】",
+            "1. 一種第二裝置，包括一第三元件。",
+            "2. 如請求項1所述之第二裝置，更包括一第四元件。",
+        ]
+        doc = extract_tw_sections(paragraphs)
+        assert doc.claims_header_seen is True
+        assert len(doc.claims) == 2
+
+    def test_unspaced_headers_are_unchanged(self):
+        """Control - the normalisation must not disturb the ordinary form."""
+        paragraphs = [
+            "【申請專利範圍】",
+            "1. 一種第三裝置，包括一第五元件。",
+        ]
+        doc = extract_tw_sections(paragraphs)
+        assert doc.claims_header_seen is True
+        assert len(doc.claims) == 1
