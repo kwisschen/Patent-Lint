@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 68,
+    "current_round": 69,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -399,6 +399,16 @@
         "user_attested_issues": [],
         "fixtures_silenced": 0,
         "shipped_at": "2026-09-10T07:11:07.347707+00:00"
+      },
+      {
+        "round": 69,
+        "name": "r69_tigong_determiner_gate",
+        "description": "CN R69 (TW R59 mirror, report #744) - the interior verb 提供 gated on a following object determiner. MIRRORED BY MEASUREMENT, NOT COPIED, and the numbers are the reason: TW's dominant noun head is 提供者 (54 vs CN's 2) while CN's is 提供商 (100 vs TW's 9), so a noun-compound guard list mined on either side would have been WRONG on the other. The determiner gate is insensitive to which noun head a jurisdiction prefers, because none of them carries a determiner - which is exactly why it transfers where a lexicon would not. 的 EXCLUDED (178 CN occurrences, the most frequent follower): `X提供的Y` is a relative clause whose head noun is Y, so cutting there would discard the real element name rather than the verb. All 8 CN members measured CLEAN together, unlike TW where 提供該 had to be withheld. Gates: 14402 -> 14385, 12 walker_fp silenced, silenced_legit 0, UNPAIRED 0, honest yield 17 (20 silenced minus 3 paired).",
+        "user_attested_issues": [
+          "#744"
+        ],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-09-10T08:47:58.488830+00:00"
       }
     ],
     "last_updated": "2026-08-01",
