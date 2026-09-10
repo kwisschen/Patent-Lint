@@ -938,3 +938,38 @@ class TestUsR54Clamps:
             assert _is_likely_third_person_verb(noun) is False, noun
             assert clean_noun_phrase(f"first {noun}") == f"first {noun}"
 
+
+class TestUsR55IrregularParticiples:
+    """US R55 - the English irregular past-participle paradigm (report #762).
+
+    `_is_likely_past_participle` keys on the `-ed` suffix, so the entire
+    irregular paradigm was invisible to it. These are common, not exotic:
+    across 705 US drafts, given 175, driven 71, written 50, taken 22, known 18,
+    shown 15.
+
+    All claim text here is synthesised.
+    """
+
+    def test_irregular_participles_strip(self):
+        assert clean_noun_phrase("pushing rod driven") == "pushing rod"
+        assert clean_noun_phrase("the data written") == "the data"
+        assert clean_noun_phrase("threshold given") == "threshold"
+        assert clean_noun_phrase("first surface known") == "first surface"
+
+    def test_taken_and_shown_are_withheld_with_their_numbers(self):
+        """WITHHELD MEMBERS, pinned. Measured individually against a
+        10,828-finding baseline: `taken` ends 4 and silences 2 gold-legit,
+        `shown` ends 1 and silences 1. In both the participle heads a REDUCED
+        RELATIVE that is the drafter's actual element name, so stripping it lets
+        the bare noun match an earlier intro and silences a real defect. One of
+        `taken`'s two is TOKEN-ABSENT (`the network path`) - the spurious-intro
+        cascade. If a later round adds either, this test fails."""
+        assert clean_noun_phrase("the action taken") == "the action taken"
+        assert clean_noun_phrase("the sequence shown") == "the sequence shown"
+
+    def test_base_form_ambiguous_participles_are_excluded(self):
+        """`set` / `put` / `read` / `cut` have a participle identical to the base
+        form and to a common noun, so a TRAILING strip cannot tell them apart."""
+        for w in ("set", "put", "read", "cut", "hit"):
+            assert clean_noun_phrase(f"the offset {w}") == f"the offset {w}", w
+
