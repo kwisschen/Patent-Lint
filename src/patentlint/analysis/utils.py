@@ -1149,6 +1149,42 @@ def _stem_word(word: str) -> str:
 _ED_STEM_VERBS = frozenset({"exceed", "proceed", "freed"})
 
 
+# R55 (2026-09-10, report #762) - ENGLISH IRREGULAR PAST PARTICIPLES.
+#
+# `_is_likely_past_participle` keys on `-ed`, so the entire irregular paradigm
+# was invisible to it: `the pushing rod driven by the actuator` kept the
+# participle in the term. These are common, not exotic - corpus counts across
+# 705 US drafts: given 175, driven 71, written 50, taken 22, known 18, shown 15.
+#
+# THIS IS A CLOSED MORPHOLOGICAL CLASS, NOT A GROWING DENYLIST. English has a
+# finite irregular paradigm; listing it is the same move R52 made when it
+# replaced a length heuristic with the stemmer, applied to the words the
+# stemmer cannot reach because their suffix is not `-ed` at all.
+#
+# Members are restricted to forms that are UNAMBIGUOUSLY participial in
+# trailing position. Deliberately EXCLUDED: `set`, `put`, `cut`, `hit`, `let`,
+# `read`, `cost`, `spread` - their participle is identical to the base form and
+# to a common noun (`the offset set`, `the data read`), so a trailing strip
+# cannot tell them apart. `made`, `held`, `sent`, `built`, `kept`, `left`,
+# `found`, `bound` end in `d`/`t` and are already reachable or ambiguous
+# (`left` is a position, `found` is in `foundry` prose), so they stay out too.
+# WITHHELD WITH THEIR NUMBERS, measured individually against a 10,828-finding
+# baseline: `taken` (4 ended, 2 gold-legit silenced) and `shown` (1 ended, 1
+# gold-legit silenced). In both, the participle heads a REDUCED RELATIVE that is
+# the drafter's actual element name - `the action taken`, `the sequence shown` -
+# so stripping it lets the bare noun match an earlier intro and silences a real
+# defect. One of `taken`'s two is TOKEN-ABSENT (`the network path`, which
+# contains no participle at all), the spurious-intro cascade signature.
+# `written` is the productive member of the class on its own: 17 FPs ended, zero
+# gold-legit, zero unpaired.
+_IRREGULAR_PARTICIPLES: frozenset[str] = frozenset({
+    "driven", "written", "given", "known", "seen",
+    "drawn", "grown", "thrown", "worn", "borne", "chosen", "frozen",
+    "spoken", "broken", "woven", "sewn", "blown", "flown", "risen",
+    "fallen", "hidden", "ridden", "proven", "graven",
+})
+
+
 @lru_cache(maxsize=4096)
 def _is_likely_past_participle(word: str) -> bool:
     """Detect -ed words that are likely verbs/participles, not nouns.
@@ -1174,6 +1210,8 @@ def _is_likely_past_participle(word: str) -> bool:
     `_ED_NOUNS` stays as an explicit override for anything the stemmer gets
     wrong; it no longer has to carry the whole class one member at a time.
     """
+    if word in _IRREGULAR_PARTICIPLES:
+        return True
     if not word.endswith("ed"):
         return False
     if word in _ED_NOUNS:
