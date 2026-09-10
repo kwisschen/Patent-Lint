@@ -3562,6 +3562,33 @@ _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
         # locative-gated shape of R17's locative-before-verb cut, and it is the
         # extension point for any future noun-gray verb of the same class.
         "中匹配", "內匹配",
+        # === R60 (2026-09-10, reports #751 #754-#759) ===
+        # Trailing predicates from the spec-support cluster in one queue drain.
+        # These reach BOTH engines because `_normalize_for_spec_support_tw`
+        # delegates to `clean_noun_phrase_tw`, which is why a spec-support report
+        # is fixed by a trailing-denylist entry at all.
+        #
+        # Each was measured INDIVIDUALLY (R43 rule) against a 17,456-finding
+        # baseline. WITHHELD WITH ITS NUMBER: 共同 - the reporter is right that it
+        # is an adverb and never a term, and the raw corpus agreed (181
+        # occurrences, ZERO followed by a determiner), but the MEASUREMENT
+        # disagreed: it ends 1 finding and silences 1 gold-legit on TW202234109A
+        # c15, where the real defect is surfaced through the dirty term
+        # `震盪致動器共同`. A correct-looking token can still be carrying a real
+        # finding - price it rather than trusting the part of speech.
+        #
+        # 能 is NOT here and must not be added bare: it is the second character
+        # of 功能, and a bare stop emitted 統一資料管理功 / 各別機器學習功 /
+        # PCIe功 across four drafts. That is the R57 出 lesson on a different
+        # character; it needs a 功能-style lexeme guard, not a denylist line.
+        # WITHHELD WITH ITS NUMBER: 用來. It ends ZERO findings, so it has no
+        # measurable value, and it creates one: `所追蹤定位用來基` becomes
+        # `所追蹤定`. The cut is not 用來's own doing - stripping it exposes the
+        # PRE-EXISTING bare 位 in this same denylist, which then takes 定位 apart
+        # exactly as CN R68 documented for 治疗部位. So this member becomes
+        # shippable once the TW 位 mirror lands, and not before. Found by reading
+        # the UNPAIRED-NEW paired-shift list; every total said CLEAN.
+        "能以", "轉動", "投射", "穿設於", "落在",
         # === R59 (2026-09-10, report #744) ===
         # 提供X where X is an OBJECT DETERMINER. Same locative-gated shape as
         # 中匹配 above, which its comment already names as the extension point
