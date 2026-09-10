@@ -2224,3 +2224,74 @@ class TestTwCrmNonTransitory:
         from patentlint.analysis.tw_claims import check_crm_non_transitory_tw
         doc = self._doc([_claim(1, "1. 一種機器可讀媒體，其儲存指令。")])
         assert check_crm_non_transitory_tw(doc)[0].status == "amend"
+
+
+class TestR57StrandedResultative:
+    """R57 - a bare resultative particle must not cut V+出 in half.
+
+    `出` was a bare denylist member with no guard, and the strip loop takes
+    exactly one character, so an introduction reading `...一<noun>進出`
+    registered as `<noun>進` and the later `所述<noun>` matched nothing. Eight
+    reports in one queue drain were this one mechanism. The two-character
+    members sit before the bare particle in the length-sorted tuple, so the
+    whole word strips and the residual is the element name.
+
+    All claim text here is synthesised.
+    """
+
+    def _doc(self, claims):
+        return TwPatentDocument(
+            patent_type=TwPatentType.INVENTION,
+            title="一種裝置",
+            claims=claims,
+        )
+
+    def test_intro_stranded_by_進出_resolves_a_later_reference(self):
+        doc = self._doc([
+            _claim(1, "1. 一種第一系統，包括：一承載座，能讓一第一元件進出；"
+                      "其中，所述第一元件具有一第一表面。"),
+            _claim(2, "2. 如請求項1所述的第一系統，其中，所述第一元件的所述第一表面朝上。",
+                   independent=False, deps=[1]),
+        ])
+        assert check_antecedent_basis(doc) == []
+
+    def test_intro_stranded_by_發出_resolves_in_the_same_claim(self):
+        doc = self._doc([
+            _claim(1, "1. 一種第二系統，包括：一光發射器，能沿一第一方向發出一第一光束；"
+                      "及一反射鏡，設置在所述第一方向上。"),
+        ])
+        assert check_antecedent_basis(doc) == []
+
+    def test_whole_word_strips_not_one_character(self):
+        from patentlint.analysis.tw_claims import clean_noun_phrase_tw
+
+        assert clean_noun_phrase_tw("一第一元件進出") == "一第一元件"
+        assert clean_noun_phrase_tw("第一方向發出") == "第一方向"
+        assert clean_noun_phrase_tw("第一光源送出") == "第一光源"
+
+    def test_bare_particle_still_strips_when_出_stands_alone(self):
+        """Control - 出 after a complete noun is a real trailing verb and the
+        bare member must keep handling it (本體 + 出, not 體出)."""
+        from patentlint.analysis.tw_claims import clean_noun_phrase_tw
+
+        assert clean_noun_phrase_tw("第一本體出") == "第一本體"
+
+    def test_withheld_noun_gray_compounds_are_untouched(self):
+        """輸出 / 突出 / 凸出 are NOT members - they are noun-gray and removing
+        the cut for them was measured to cost a real FN. Pinning the current
+        behaviour so a later round cannot widen the class silently without
+        re-running that measurement."""
+        from patentlint.analysis.tw_claims import clean_noun_phrase_tw
+
+        assert clean_noun_phrase_tw("第一訊號輸出") == "第一訊號輸"
+
+    def test_members_do_not_cut_a_preceding_compound(self):
+        """The six candidates that turned a CLEAN term into a mid-word cut
+        were dropped: 計算/指示/反映/後退/特定/判別 all already strip correctly
+        under the bare particle, and a two-character member would eat their
+        heads."""
+        from patentlint.analysis.tw_claims import clean_noun_phrase_tw
+
+        assert clean_noun_phrase_tw("第一通訊指示出") == "第一通訊指示"
+        assert clean_noun_phrase_tw("第一資料特定出") == "第一資料特定"
+
