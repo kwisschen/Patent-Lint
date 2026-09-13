@@ -2387,3 +2387,74 @@ class TestR60SpecSupportTrailingCluster:
 
         assert C("統一資料管理功能") == "統一資料管理功能"
 
+
+class TestR61MethodStepAncestor:
+    """TW R61 - a numbered method STEP is not an independent claim, for
+    antecedent purposes (reports #727-#733).
+
+    A drafter who writes `一種控制方法，…包括以下步驟：` and then numbers the
+    steps 19., 20., … produces units the splitter reads as independent claims.
+    They carry no dependency phrase, so their ancestor chain is EMPTY
+    (`intros_pool_size: 0` in the payloads) and every `所述X` cascades.
+
+    THE PARSE IS DELIBERATELY LEFT ALONE - the drafting error is real and is
+    already surfaced by `independentPreamble`, `transitionPhrase` and
+    `singleSentence`, so rewriting the split would hide a defect the drafter
+    should see and would move claim ids. Only the antecedent walker changes.
+
+    All claim text here is synthesised.
+    """
+
+    def _doc(self, paras):
+        from patentlint.parser.claims_tw import parse_tw_claims
+        return TwPatentDocument(claims=parse_tw_claims(paras))
+
+    def test_numbered_steps_inherit_the_opening_claim(self):
+        doc = self._doc([
+            "18. 一種控制方法，應用於一裝置，所述裝置包含一驅動電路、一上橋開關、"
+            "一輸出電路以及一第一節點，所述控制方法包括以下步驟：",
+            "19. 利用所述驅動電路，驅動所述上橋開關；",
+            "20. 利用所述輸出電路，依據所述第一節點的電壓以產生一輸出電壓；",
+        ])
+        assert check_antecedent_basis(doc) == []
+
+    def test_the_walk_back_reaches_past_an_intervening_step(self):
+        """Claim 20's predecessor is 19, which is itself a step ending in a
+        semicolon - the walk-back has to find the claim that OPENED the list."""
+        doc = self._doc([
+            "18. 一種控制方法，所述控制方法包括以下步驟：",
+            "19. 提供一第一元件；",
+            "20. 移動所述第一元件；",
+        ])
+        assert check_antecedent_basis(doc) == []
+
+    def test_a_unit_with_a_preamble_is_never_a_step(self):
+        """CONTROL, and the one the corpus actually caught. On TWI501526B claim
+        8 ends in a colon because it announces an equation, and claim 9 is a
+        SEPARATE `一種半導體裝置` independent claim. Without this guard claim 9
+        inherited claim 8's inventory - the exact false negative the round
+        exists to avoid. Found by reading the silenced findings, not by the
+        gate, which passed at silenced_legit 0."""
+        doc = self._doc([
+            "8. 一種半導體裝置，包含一控制電路，其滿足下列方程式：",
+            "9. 一種半導體裝置，包含：所述控制電路的輸出。",
+        ])
+        terms = {f["term"] if isinstance(f, dict) else f.term
+                 for f in check_antecedent_basis(doc)}
+        assert "控制電路" in terms
+
+    def test_a_real_independent_claim_after_no_colon_still_flags(self):
+        doc = self._doc([
+            "1. 一種裝置，包括一第一元件。",
+            "2. 一種方法，其使用所述第二元件。",
+        ])
+        assert check_antecedent_basis(doc) != []
+
+    def test_an_intervening_dependent_claim_stops_the_walk_back(self):
+        doc = self._doc([
+            "1. 一種裝置，包括一第一元件。",
+            "2. 如請求項1所述的裝置，其中所述第一元件為金屬。",
+            "3. 一種方法，其使用所述第三元件。",
+        ])
+        assert check_antecedent_basis(doc) != []
+
