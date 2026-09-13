@@ -4885,6 +4885,19 @@ def detect_plural_reference(text: str) -> bool:
     return any(text.startswith(p) for p in _PLURAL_REFERENCE_PREFIXES)
 
 
+# R61 - a claim whose body ends at a colon announced a list and was then cut
+# off by a spurious claim-number split. Trailing whitespace tolerated.
+_CONTINUES_A_STEP_LIST_TW = re.compile(r"[：:]\s*$")
+
+# Bound on the walk-back, so a draft with no colon anywhere cannot make this
+# a quadratic scan of the whole claim set.
+_STEP_LIST_LOOKBACK_TW = 30
+
+# A TIPO claim preamble. Its presence means the unit is a claim in its own
+# right, whatever the numbering says, so it can never be a step.
+_HAS_PREAMBLE_TW = re.compile(r"一種|一种")
+
+
 def get_ancestor_chain_tw(claim: Claim, all_claims: list[Claim]) -> list[Claim]:
     """Return [claim, ...ancestors] walking the full multi-parent BFS.
 
@@ -4909,6 +4922,61 @@ def get_ancestor_chain_tw(claim: Claim, all_claims: list[Claim]) -> list[Claim]:
     chain: list[Claim] = [claim]
     visited: set[int] = {claim.id}
     queue: list[int] = list(claim.dependencies) + list(claim.quoted_references)
+    # R61 (2026-09-13, reports #727-#733) - A NUMBERED METHOD STEP IS NOT AN
+    # INDEPENDENT CLAIM, FOR ANTECEDENT PURPOSES.
+    #
+    # A drafter who writes `18. 一種控制方法，…包括以下步驟：` and then numbers
+    # the steps 19., 20., … produces units the splitter reads as independent
+    # claims. They carry no dependency phrase, so their ancestor chain is EMPTY
+    # (`intros_pool_size: 0` in the payloads) and EVERY `所述X` in them cascades
+    # as a missing antecedent. Seven reports were this one cascade.
+    #
+    # THE PARSE IS LEFT ALONE ON PURPOSE. The drafting error is real and is
+    # ALREADY SURFACED three ways - `independentPreamble` and `transitionPhrase`
+    # both flag the step-claims, and `singleSentence` flags the missing period -
+    # so rewriting the split would HIDE a defect the drafter should see, and
+    # would move claim ids (ADR-111 re-attribution) and flip the `independent`
+    # flag that other checks consume. Only the antecedent cascade is wrong, so
+    # only the antecedent walker is changed.
+    #
+    # The gate is the PREVIOUS claim ending in a colon, which means its own body
+    # was cut off by the spurious split. That is a precise signal: exactly 7 of
+    # 25,393 TW corpus claims end that way (0.028%), and all 7 are formula or
+    # Markush recitals, not step lists. Adding an ancestor can only ADD intro
+    # coverage, so this direction can only silence - which is why the gate has
+    # to be this narrow, and why `silenced_legit` is the number that matters.
+    # The walk-back has to find the claim that OPENED the list, not just the
+    # immediate predecessor: in a run of steps 19, 20, 21 the predecessor of 20
+    # is 19, which is itself a step and ends in a semicolon. Intervening steps
+    # join the chain too, since they are all one logical claim. The walk stops
+    # at any unit carrying a real dependency - a genuine dependent claim between
+    # here and the colon means this is not a step list.
+    # A unit carrying a real PREAMBLE is never a step, however it is numbered.
+    # Without this the rule fired on TWI501526B, where claim 8 ends in a colon
+    # because it announces an equation and claim 9 is a SEPARATE
+    # `一種半導體裝置，包含：` independent claim - it made claim 9 inherit
+    # claim 8's inventory, which is exactly the false negative this gate exists
+    # to avoid. Caught by reading the two silenced findings rather than by the
+    # gate, which passed at silenced_legit 0.
+    if (not claim.dependencies and not claim.quoted_references
+            and not _HAS_PREAMBLE_TW.search((claim.text or "")[:40])):
+        opener_id: int | None = None
+        intervening: list[int] = []
+        earlier = sorted(
+            (c for c in all_claims if c.id < claim.id),
+            key=lambda c: c.id,
+            reverse=True,
+        )
+        for candidate in earlier[:_STEP_LIST_LOOKBACK_TW]:
+            if _CONTINUES_A_STEP_LIST_TW.search(candidate.text or ""):
+                opener_id = candidate.id
+                break
+            if candidate.dependencies or candidate.quoted_references:
+                break
+            intervening.append(candidate.id)
+        if opener_id is not None:
+            queue.append(opener_id)
+            queue.extend(intervening)
     while queue:
         parent_id = queue.pop(0)
         if parent_id in visited:
