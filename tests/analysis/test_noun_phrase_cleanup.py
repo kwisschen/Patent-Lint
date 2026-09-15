@@ -5,7 +5,7 @@
 from patentlint.analysis.utils import (
     clean_noun_phrase, extract_noun_phrases, extract_abbreviation_intros,
     extract_definite_refs, extract_introductions, extract_bare_noun_intros,
-    gerund_display_head, _strip_comparative_tail,
+    gerund_display_head, _strip_comparative_tail, strip_trailing_adverb,
 )
 
 
@@ -973,3 +973,77 @@ class TestUsR55IrregularParticiples:
         for w in ("set", "put", "read", "cut", "hit"):
             assert clean_noun_phrase(f"the offset {w}") == f"the offset {w}", w
 
+
+
+class TestUsR56ObjectAndAdverbTails:
+    """US R56 - three over-captures from reports #761/#780, #762 [2]/#781, #783.
+
+    All claim text here is synthesised; none of it is taken from a report.
+    """
+
+    @staticmethod
+    def _terms(*texts):
+        from patentlint.analysis.claims import check_antecedent_basis
+        from patentlint.models import Claim
+
+        claims = [
+            Claim(id=i, text=t, independent=i == 1, dependencies=[] if i == 1 else [1])
+            for i, t in enumerate(texts, start=1)
+        ]
+        return sorted(f["term"] for f in check_antecedent_basis(claims))
+
+    def test_verb_before_bare_cardinal_object_is_cut(self):
+        """#783: the noun scan halts at an article but not at a bare cardinal,
+        so `covers one portion` ran through the verb. `covers a portion` never
+        had the bug, which is why the verb list was not the gap."""
+        assert clean_noun_phrase("lid member covers one portion") == "lid member"
+        assert clean_noun_phrase("lid member covers another portion") == "lid member"
+        assert clean_noun_phrase("lid member covers two portions") == "lid member"
+        assert self._terms(
+            "A box, comprising: a base having a plurality of openings; and a lid member, "
+            "wherein the lid member covers one portion of the openings."
+        ) == []
+
+    def test_floating_quantifier_after_plural_subject_is_not_cut(self):
+        """`each` / `both` / `all` float after a plural SUBJECT, where the word
+        before them is the head noun - so they are excluded from the cut."""
+        assert clean_noun_phrase("side covers each hinge") == "side covers each hinge"
+
+    def test_adverb_then_bare_verb_tail_is_stripped(self):
+        """#762 [2] / #781: an adverb cannot premodify a head noun, so the word
+        after it at the end of a noun phrase is a predicate."""
+        assert strip_trailing_adverb("second rail radially pass") == "second rail"
+        assert strip_trailing_adverb("output port partially overlap") == "output port"
+        assert self._terms(
+            "A frame, comprising: a hub; a first rail; and a second rail, "
+            "wherein the first rail and the second rail radially pass through the hub."
+        ) == []
+
+    def test_noun_after_an_ly_word_is_not_stripped(self):
+        """The gate is the curated adverb set, never a bare `-ly` suffix."""
+        assert strip_trailing_adverb("the monthly fee") == "the monthly fee"
+        assert strip_trailing_adverb("substantially planar surface") == "substantially planar surface"
+
+    def test_numeric_comparative_intro_resolves_through_the_additive_index(self):
+        """#761 / #780: `a first tilt angle less than 45 degrees` registered
+        `first tilt angle less than 45`. Resolved in the ADDITIVE index only."""
+        from patentlint.analysis.utils import extract_contextual_cleaned_intros
+
+        assert "first tilt angle" in extract_contextual_cleaned_intros(
+            "a first tilt angle less than 45 degrees relative to the base"
+        )
+        assert self._terms(
+            "A mount, comprising: a base; and a bracket having a first tilt angle "
+            "less than 45 degrees relative to the base.",
+            "The mount of claim 1, wherein the first tilt angle is between 10 degrees and 30 degrees.",
+        ) == []
+
+    def test_comparative_against_an_element_is_not_generalised(self):
+        """The US7811436B2 c18 FN that kept the comparative strip off the intro
+        side: `larger than the inner diameters` compares against an ELEMENT, so
+        no generalised intro is added for it. The digit is the whole gate."""
+        from patentlint.analysis.utils import extract_contextual_cleaned_intros
+
+        assert "inner diameter" not in extract_contextual_cleaned_intros(
+            "an inner diameter larger than the inner diameters of the tubes"
+        )

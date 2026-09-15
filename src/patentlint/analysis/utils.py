@@ -1650,16 +1650,40 @@ _TRAILING_ADVERB_STOPS = frozenset({
 })
 
 
+# US R56 (2026-09-16, reports #762 [2] / #781): directional -ly adverbs, the
+# geometry-claim siblings of the manner adverbs above. Closed morphological
+# class, completed rather than grown one word per report.
+_DIRECTIONAL_ADVERB_STOPS = frozenset({
+    "perpendicularly", "vertically", "horizontally", "radially", "axially",
+    "laterally", "longitudinally", "obliquely", "diagonally", "transversely",
+    "coaxially", "concentrically", "orthogonally", "tangentially",
+    "circumferentially",
+})
+
+
 def strip_trailing_adverb(term: str) -> str:
     """Strip a trailing manner adverb from an over-captured reference phrase.
 
     Requires at least one remaining token so a standalone adverb capture is
     left untouched for the existing short-residual guards to reject.
+
+    US R56 (#762 [2] / #781): also strip `<adverb> <bare verb>` at the tail.
+    `the second rail radially pass through the hub` captured
+    `second rail radially pass`: the noun scan halts at `through`, and
+    `pass` is not a strippable token (it is noun-gray - `the first pass`), so
+    the adverb never reached the trailing position. The discriminator is the
+    ADVERB, not the verb: an adverb cannot premodify a head noun, so whatever
+    directly follows it at the end of a noun phrase is a predicate. Gated on
+    the curated adverb sets only, never on a bare `-ly` suffix, because
+    `monthly fee` / `early stage` / `family member` put a noun after `-ly`.
     """
     if not term:
         return term
     words = term.split()
-    while len(words) > 1 and words[-1].lower().rstrip(".,;:") in _TRAILING_ADVERB_STOPS:
+    adverbs = _TRAILING_ADVERB_STOPS | _DIRECTIONAL_ADVERB_STOPS
+    if len(words) >= 3 and words[-2].lower().rstrip(".,;:") in adverbs:
+        words = words[:-2]
+    while len(words) > 1 and words[-1].lower().rstrip(".,;:") in adverbs:
         words = words[:-1]
     return " ".join(words)
 
@@ -1918,6 +1942,24 @@ def clean_noun_phrase(phrase: str) -> str:
                 words.pop()
                 continue
         break
+    # US R56 (2026-09-16, report #783): a finite verb whose OBJECT has no
+    # article. `the lid member covers one portion of the openings` captured
+    # `lid member covers one portion`, because the noun scan halts at an article
+    # but not at a bare cardinal - with `covers a portion` the scan stops at `a`
+    # and the trailing `covers` strips correctly, so the verb list was never
+    # the gap. A trailing strip cannot reach a verb that is no longer last.
+    #
+    # Cut at the verb only when (a) it is an EXPLICIT `_VERB_STOPS` member,
+    # already vetted as never heading an element, never the suffix heuristic,
+    # and (b) the next token is a bare cardinal or `another`. NOT `each` /
+    # `both` / `all`: those float after a plural SUBJECT (`the side covers
+    # each include a hinge`), where the word before them is the head noun.
+    for i in range(1, len(words) - 1):
+        verb = words[i].lower().rstrip(".,;:")
+        nxt = words[i + 1].lower().rstrip(".,;:")
+        if verb in _VERB_STOPS and (nxt in _TRAILING_CARDINAL_STOPS or nxt == "another"):
+            words = words[:i]
+            break
     # Strip possessives: "device's" → "device", "users'" → "users"
     words = [w.replace("\u2019s", "").replace("'s", "").rstrip("\u2019'") for w in words]
     # Remove any tokens that became empty after stripping
@@ -2309,7 +2351,37 @@ def extract_contextual_cleaned_intros(text: str) -> list[str]:
         stripped = strip_contextual_verb(cleaned, lowered[m.end():])
         if stripped and stripped != cleaned:
             out.append(stripped)
+        # US R56 (2026-09-16, reports #761 / #780): a comparative against a
+        # NUMERAL. `a first tilt angle less than 45 degrees` registers
+        # the intro `first tilt angle less than 45`, so the dependent
+        # claim's `the first tilt angle` matches nothing. Here, in the
+        # additive index, and not in `clean_noun_phrase`, for two measured
+        # reasons: the intro-side comparative strip was withheld because
+        # `an inner diameter larger than the inner diameters ...` then
+        # resolved an unrelated reference (US7811436B2 c18), and an in-place
+        # intro clean desynchronizes identically dirty pairs (R53). The digit
+        # after `than` is the drafter's own mark that the complement is a
+        # value, which is exactly what separates it from that FN.
+        numeric = _strip_numeric_comparative_tail(cleaned.split())
+        if numeric and numeric != cleaned.split():
+            out.append(" ".join(numeric))
     return out
+
+
+_COMPARATIVE_HEDGES = frozenset({"about", "approximately", "substantially", "or", "equal", "to"})
+
+
+def _strip_numeric_comparative_tail(words: list[str]) -> list[str]:
+    """Drop `<comparative> than [or equal to] <numeral> ...` from the tail."""
+    for i in range(1, len(words) - 2):
+        if (
+            words[i] in _COMPARATIVE_TRAILING
+            and words[i + 1] == "than"
+        ):
+            rest = [w for w in words[i + 2:] if w not in _COMPARATIVE_HEDGES]
+            if rest and rest[0][:1].isdigit():
+                return words[:i]
+    return words
 
 
 def extract_introductions(text: str) -> list[str]:
