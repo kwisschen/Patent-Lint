@@ -54,6 +54,16 @@ BANNED_HASHES: frozenset[str] = frozenset({
     "a79311bc5ea5b7179f8eaba24d0c26770c3a6253ef0a1f744b0f30194f4dde04",
     "91c793ab24563eea3c858de0aee3e310613167594d73aad82213b0038379b0a2",
     "baa4f8a4f4e124a3f15a125ff2dbcacfab6e34f25c251646334b73fddd2db2d3",
+    # 2026-09-16, the #771-#788 batch (TW R62): seven fragments from one
+    # reporter's two drafts, kept out of the code comments, tests and
+    # round_history that the fix would otherwise have quoted.
+    "ed6d266ee87a83d63c1574cdb311aebd23d6e9a64d7eb32ae885e745a795b75b",
+    "24f071eb7dd2be9e0c24704a9c6767d7e7794b4dafe6cc01062c32871268d3a4",
+    "e788f83f5acf7df1619d8b00db04c0628d4501d4fb8c1f4341c6bfa2c4f34cea",
+    "32404e3735ddbf5223ac74e62e3b0781d2f77e63d405a1efa3a4eb9050bf1d74",
+    "64b80ecf26e8db8ba4717fa4e29414e78b62d1c082e9e3b020790e9542aea942",
+    "dd38c8e169e4f70963454cb04e25456e3c7ae80c69d12fe9d39d2542bbf17b29",
+    "50effba522a950bc88d128adfdf3fb75e1e5e3e32f84009b159a6f718b50d8b7",
 })
 
 # Window sizes to test, derived from the banned fragments' own lengths. Keeping

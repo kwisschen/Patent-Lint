@@ -2363,7 +2363,7 @@ _INTRO_PATTERN = re.compile(
     r"(?:"
     + _WEIGHT_COMPOSITION_PREFIX
     + r"|" + _DEFINITIONAL_PREFIX
-    + r"|(?:" + "|".join(_INTRO_MULTI_QUANTIFIERS) + r"|(?<!第)一(?![同體])))"
+    + r"|(?:" + "|".join(_INTRO_MULTI_QUANTIFIERS) + r"|(?<!第)(?!(?<=進)一步)一(?![同體])))"
     + f"({_NOUN_CHARS})"
 )
 
@@ -3473,6 +3473,22 @@ _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
         # 並列 and 並排), and 而/又/亦/皆/逐 have no report behind them and
         # 逐漸/逐出 exist, so they are held under DR-1.
         "\u4e14",
+        # === TW R62 (2026-09-16, reports #771-#777 / #785) ===
+        # 並 and 而, the two siblings R47 held back, now each have reports and a
+        # measurement. The REFERENCE capture has always halted at both (they are
+        # excluded from _NOUN_CHARS), so a reference never reaches this cut and
+        # the change is a no-op on that side by construction. What it fixes is
+        # every OTHER producer of a span - the F5a possessive arm, whose Y is an
+        # unbounded run, and the spec-support inventory built on the intros:
+        # `所述元件的第一訊號並據以判斷` keyed its intro as `第一訊號並據以` while the
+        # reference `所述第一訊號並據以` keyed as `第一訊號`, so the pair never met
+        # (#771-#777); `設置於所述第一區段而覆蓋` emitted `第一區段而` (#785).
+        #
+        # 並 is cut only when it is NOT the head of a closed 並-compound - see
+        # _BING_COMPOUND_SECONDS_TW, mined from 3,872 corpus bigrams. 而 heads
+        # no noun at all; the adverbs it closes (進而/從而/因而/然而/反而/繼而)
+        # move the cut one character left, see _ER_ADVERB_HEADS_TW.
+        "\u4e26", "\u800c",
         # === R38 (2026-08-13, reports #524/#526) ===
         # Two interior verbs whose OBJECT trails behind them, so a trailing
         # strip cannot reach them - both ship as the verb+CARDINAL collocation
@@ -4347,6 +4363,19 @@ def clean_noun_phrase_tw(text: str) -> str:
             # R41 (2026-08-17): 經 position guard - see _jing_cut_is_verbal_tw.
             if verb == "經" and not _jing_cut_is_verbal_tw(text, absolute_idx):
                 break
+            # TW R62: 並 heading a closed compound (並聯/並排/...) is noun-
+            # internal. Retry the next 並 rather than abandoning the verb, for
+            # the R43 reason: a veto must not leave a later conjunction uncut.
+            if (verb == "並"
+                    and text[absolute_idx + 1:absolute_idx + 2] in _BING_COMPOUND_SECONDS_TW):
+                idx = search_text.find(verb, idx + 1)
+                continue
+            # TW R62: cut BEFORE the adverb head of 進而/從而/..., or the head is
+            # stranded on the noun (`第一部分進` is dirtier than the capture).
+            if verb == "而" and text[absolute_idx - 1] in _ER_ADVERB_HEADS_TW:
+                if absolute_idx - 1 <= 1:
+                    break
+                absolute_idx -= 1
             # R27 (2026-07-13, reports #352/#353): the cut lands on the HEAD of a
             # known compound noun. `_INTERIOR_CUT_EXCEPTIONS` was only ever
             # consulted as a PREFIX of the captured text, so a compound whose
@@ -4513,6 +4542,27 @@ _LEADING_CONJ_RESIDUE_RE_TW: re.Pattern[str] = re.compile(
 )
 
 
+_DUI_LEXEME_SECONDS_TW: frozenset[str] = frozenset("稱象話")
+
+# TW R62: second characters that make a leading 並 part of a WORD rather than
+# the conjunction "and". Mined from the TW corpus (3,872 並X bigrams): the
+# noun-internal readings are 並聯 (118), 並排 (13) and the closed parallel/
+# juxtaposition family below. Everything else that follows 並 (且 2005, 將 169,
+# 在 115, 使 88, 與 63, 配 59, 據 ...) opens a predicate. 並非 is deliberately
+# NOT here: it is the conjunction + negation, and cutting at it is correct.
+_BING_COMPOUND_SECONDS_TW: frozenset[str] = frozenset("聯列排行接存置網")
+
+# TW R62: device-noun heads that turn a leading 夾持 into the noun "clamping X".
+_JIACHI_DEVICE_HEADS_TW: tuple[str, ...] = (
+    "機構", "裝置", "單元", "模組", "組件", "結構", "器", "件", "部", "臂",
+    "爪", "頭", "座", "具", "手", "機", "片", "塊", "板",
+)
+
+# TW R62: the first characters of the connective adverbs that END in 而
+# (進而 118 / 從而 114 corpus occurrences, plus 因而/然而/反而/繼而).
+_ER_ADVERB_HEADS_TW: frozenset[str] = frozenset("進從因然反繼")
+
+
 def _yidui_is_noun_initial_dui(text: str, source_text: str) -> bool:
     """True if the 對 in a leading ``一對`` belongs to the NOUN, not to the
     measure word 一對 ("a pair of").
@@ -4537,9 +4587,22 @@ def _yidui_is_noun_initial_dui(text: str, source_text: str) -> bool:
     ``_DENG_HEADED_LEXEMES_TW``: it never invents a character, it only
     declines to delete one the drafter used on both sides of the claim.
     """
-    if not source_text or not text.startswith("一對") or len(text) <= 2:
+    if not text.startswith("一對") or len(text) <= 2:
         return False
     residual = text[2:]
+    # TW R62: a closed set of 對-initial LEXEMES in which the 對 cannot be the
+    # measure word, so no reference form is needed to decide. `一對稱接觸介面`
+    # is "a SYMMETRIC contact interface"; nothing reads as "a pair of 稱…".
+    # This case was hidden until R62 by the 進一步 bug, which re-extracted the
+    # noun on a path that bypassed the 一對 alternation - fixing 進一步 exposed
+    # it as 2 manufactured findings (`該對稱接觸介面`, a drafter who writes 該,
+    # which the reference-form gate below deliberately does not admit).
+    # Measured bigram by bigram, and deliberately NOT 對數 (`一對數值` really is
+    # "a pair of values"), 對角 (`一對角部`, a pair of corners) or 對立.
+    if text[2] in _DUI_LEXEME_SECONDS_TW:
+        return True
+    if not source_text:
+        return False
     # 該 is DELIBERATELY excluded, and this was measured, not assumed. `該對X`
     # is the idiomatic anaphor for "that PAIR of X" - TWI861425B c1 writes
     # `一對第一外殼角，該對第一外殼角被構造成…`, a genuine pair introduction
@@ -4996,6 +5059,29 @@ def get_ancestor_chain_tw(claim: Claim, all_claims: list[Claim]) -> list[Claim]:
 # quantifier prefixes where 一 is bound to the preceding morpheme).
 _WORD_INTERNAL_YI_PREDECESSORS = frozenset("第另任某唯同單統")
 
+
+def _yi_is_word_internal_tw(text: str, idx: int) -> bool:
+    """True if the 一 at ``text[idx]`` belongs to a word rather than being an
+    indefinite article that opens a new introduction.
+
+    TW R62 (reports #784/#787/#788): the adverb 進一步 ("further") carries a
+    一 that every consumer read as an article. The intro regex started a match
+    ON it (2,102 matches across the TW corpus), so `進一步具有一第二擋牆`
+    captured `一步具有一第二擋牆`, swallowed the real `一第二擋牆` intro in
+    the same span, and registered `步具有一…` instead. It is checked as the
+    LEXEME 進一步, never as a bare 進 predecessor, because `前進一段距離`
+    ("advance a distance") has a genuine article after 進.
+
+    One predicate for all three consumers (the regex lookaround mirrors it,
+    Rule 2 splitting and the Rule 1a rescan call it), so a matched
+    intro/reference pair cannot be split differently at different sites.
+    """
+    if idx <= 0 or text[idx] != "一":
+        return False
+    if text[idx - 1] in _WORD_INTERNAL_YI_PREDECESSORS:
+        return True
+    return text[idx - 1] == "進" and text[idx + 1:idx + 2] == "步"
+
 # Regex for capturing the noun after a split 一 position, using the same
 # character class as _NOUN_CHARS but as a standalone pattern.
 _SPLIT_YI_NOUN_RE = re.compile(r"一(" + _NOUN_CHARS + r")")
@@ -5081,8 +5167,7 @@ def _postprocess_intro_capture(
     # Find the first non-word-internal 一
     split_pos: int | None = None
     for pos in yi_positions:
-        preceding_char = bare_noun[pos - 1]
-        if preceding_char not in _WORD_INTERNAL_YI_PREDECESSORS:
+        if not _yi_is_word_internal_tw(bare_noun, pos):
             split_pos = pos
             break
 
@@ -5133,7 +5218,7 @@ def _rescan_for_yi(
         if i == 0:
             continue
         # Skip word-internal 一 (preceded by 第/另/etc.)
-        if full_span[i - 1] in _WORD_INTERNAL_YI_PREDECESSORS:
+        if _yi_is_word_internal_tw(full_span, i):
             continue
         # Extract noun after this 一 from the claim text
         abs_pos = span_start + i
@@ -5159,6 +5244,12 @@ _VP_MODIFIER_PATTERN = re.compile(
 
 # CJK char class excluding 的 (U+7684) - prevents captures spanning through 的
 _CJK_NO_DE = r'[\u4e00-\u7683\u7685-\u9fff]'
+
+# TW R62: the "further comprising" idiom opening an article-less element.
+_JINYIBU_INTRO_RE_TW: re.Pattern[str] = re.compile(
+    r'進一步(?:包含|包括|具有|含有|具備|設有|設置有)'
+    r'(' + _CJK_NO_DE + r'{2,12})'
+)
 
 _PARTICIPIAL_YI_DE_PATTERN = re.compile(
     r'一[\u4e00-\u9fff]+?的(' + _CJK_NO_DE + r'{2,}(?:\([A-Za-z0-9]+\))?)'
@@ -5197,8 +5288,11 @@ _F6_VERB_ALT_TW = (
     # R7 (2026-04-30): 夾持 added - mechanical-clamp verb common in
     # semiconductor process claims (`夾持矽鍺層之n型通道層`,
     # `藉由矽層夾持矽鍺層的半導體通道層`). Captures the object NP via
-    # arm 3. 夾持器 / 夾持機構 absent from TW corpus per grep - no
-    # compound-noun collision.
+    # arm 3. (The note that stood here - "夾持器 / 夾持機構 absent from TW
+    # corpus per grep - no compound-noun collision" - was true of the corpus
+    # and false of real drafts: report #782 is `所述夾持臂`. The collision is
+    # now closed positionally for every F6 verb, see the determiner guard at
+    # the emit site, rather than by the corpus not happening to contain it.)
     r'|夾持'
     # NOTE: 使用 intentionally omitted from TW port. TW corpus contains
     # compound nouns 使用者介面 (GUI), 使用者, 使用期限 that the CN-ported
@@ -5845,12 +5939,49 @@ def _extract_supplementary_intros(
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
         results.append((m.group(0), normalized))
 
+    # TW R62: article-less introduction after 進一步<transitional verb>. The
+    # compensating arm for the 進一步 repair, and it ships WITH it rather than
+    # after a report, because the CN mirror measured the harm directly: on the
+    # CN corpus `其进一步包含溶剂` introduces 溶剂 with no quantifier, the broken
+    # capture was the only thing registering it, and removing the break without
+    # this arm manufactured 4 findings. CJK has no articles, so a first mention
+    # after the "further comprising" idiom is a real introduction.
+    for m in _JINYIBU_INTRO_RE_TW.finditer(text):
+        noun = m.group(1)
+        if noun.startswith(_REFERENCE_PREFIXES) or noun.startswith(_F12_ADJ_REJECTS_TW):
+            continue
+        results.append((m.group(0), re.sub(r'\([A-Za-z0-9]+\)', '', noun)))
+
     # F6: 具有/設置/形成/... + Y - bare-after-verb intro
     # R14c.2: arm 3 (bare NP, no ordinal, no paren) is gated by
     # _F12_ADJ_REJECTS_TW startswith to suppress predicate-adjective
     # and verb-phrase heads (可/經過/具有/能夠/用於/基於/根據).
     for m in _BARE_AFTER_VERB_PATTERN.finditer(text):
         noun = m.group(1)
+        # TW R62 (report #782): 夾持 directly followed by a device-noun head is
+        # the NOUN "clamping <device>" (夾持機構 / 夾持器 / 夾持臂), never the verb
+        # "clamp <object>". `所述夾持臂能用來夾持於一基板` registered the
+        # fragments `臂能` / `臂能用來` as introductions, which spec-support
+        # then emitted. This is exactly the collision the note on 夾持 in
+        # _F6_VERB_ALT_TW ruled out because the corpus lacked it.
+        #
+        # MEASURED AND WITHHELD, the general form: skip ANY F6 trigger directly
+        # after a determiner (所述/該/前述/...). It manufactured 21 findings,
+        # because the dirty capture is load-bearing in two real shapes - a
+        # determiner governing a relative clause (`該具有抗反射結構之面`), and
+        # an article-less second conjunct that only this span registers
+        # (`所述輸入節點與第一節點之間` -> 第一節點). Pinned by a test.
+        if (m.group(0).startswith("夾持")
+                and noun.startswith(_JIACHI_DEVICE_HEADS_TW)):
+            continue
+        # TW R62 (report #779): arm 3 opening on the purpose coverb 以 is the
+        # verb's complement clause, not its object - `配置以在一空白時間內`
+        # ("configured TO, within a dead time"), `包括以下步驟`. 1,825 corpus
+        # emits over 299 drafts, and 以 heads no TW element name except the
+        # loan 以太 (Ethernet), which is exempt.
+        if (not noun.startswith('第') and '(' not in noun
+                and noun.startswith("以") and not noun.startswith("以太")):
+            continue
         if (not noun.startswith('第')
                 and '(' not in noun
                 and noun.startswith(_F12_ADJ_REJECTS_TW)):
@@ -5987,6 +6118,14 @@ def _extract_supplementary_intros(
     # → REJECT) which the old endswith-only gate let through.
     for m in _F14_BARE_ZHI_NOUN_RE.finditer(text):
         noun = m.group('noun')
+        # TW R62 (report #786): 之間 is the locative "between", never 之 + a
+        # noun, so a capture that opens on its orphaned 間 is the predicate
+        # after the locative frame (`之間定義有一第二槽室`). Every one of the
+        # 22 corpus captures that survived the walk-back was that shape
+        # (`間形成一氧化物釋放層`, `間具有至少一間隔組件`). 之間隔 / 之間隙 /
+        # 之間距 ARE 之 + noun, so those second characters are exempt.
+        if noun.startswith("間") and noun[1:2] not in ("隔", "隙", "距"):
+            continue
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
         trimmed = _trim_capture_to_clean_noun_tw(normalized)
         if trimmed is None:
