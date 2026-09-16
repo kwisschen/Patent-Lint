@@ -1496,7 +1496,7 @@ _INTRO_PATTERN_CN = re.compile(
     r"(?:"
     + _WEIGHT_COMPOSITION_PREFIX_CN
     + r"|" + _DEFINITIONAL_PREFIX_CN
-    + r"|(?:" + "|".join(_INTRO_MULTI_QUANTIFIERS_CN) + r"|(?<!第)一(?![同体])))"
+    + r"|(?:" + "|".join(_INTRO_MULTI_QUANTIFIERS_CN) + r"|(?<!第)(?!(?<=进)一步)一(?![同体])))"
     + f"({_NOUN_CHARS_CN})"
 )
 
@@ -2039,6 +2039,20 @@ _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
         # 并 (Simplified 並) is NOT included - 并联 "parallel connection" is a
         # real compound, exactly as on the TW side.
         "\u4e14",
+        # === CN R70 (2026-09-16): 并 and 而 MEASURED AND WITHHELD ===
+        # TW R62 ships both as interior clause cuts. The CN port is NET-HARMFUL
+        # and is not made, which is the standing TW->CN lesson rather than a
+        # surprise. Measured individually against a 14,385-finding baseline:
+        #   并  16 walker_fp ended, 1 gold-legit SILENCED
+        #   而  10 walker_fp ended (+1 coverage), 4 gold-legit SILENCED
+        # The mechanism is the same in every case and it is a real FN, not a
+        # mislabel: the cut leaves a TWO-CHARACTER stem that the prefix fallback
+        # then matches to a longer element - `结合` resolving 所述结合点
+        # (CN113376364B c124), `操作` resolving 所述操作杆 (CN115023785A c5/c7).
+        # Neither stem can be rejected lexically: 操作 ("operation") and 结合
+        # ("binding") are ordinary CN nouns and are in neither the trailing nor
+        # the interior verb set. CN needs a resolution-side guard on short stems
+        # before this class can ship; a test pins the withhold.
         # === R63 (2026-08-17) - TW R41 mirror, reports #533/#535 ===
         #   经 ("undergoes / via") - `一共聚物经氢化反应而获得` captured as ONE
         #     intro so the later `所述共聚物` had nothing to match. Reproduced on
@@ -2335,8 +2349,22 @@ def clean_noun_phrase_cn(text: str) -> str:
     earliest_idx: int | None = None
     for verb in _INTERIOR_VERB_BOUNDARIES_CN:
         idx = search_text.find(verb)
+        # CN R70 (mirror of TW R62): 并 heading a closed compound (并联/并排/...)
+        # is noun-internal, so retry the NEXT 并 rather than abandoning the verb.
+        # 并入 ("merge into", 64 corpus occurrences) is deliberately NOT guarded:
+        # it is a verb, and cutting at it is correct.
+        while (verb == "并" and idx >= 0
+               and text[idx + search_offset + 1:idx + search_offset + 2]
+               in _BING_COMPOUND_SECONDS_CN):
+            idx = search_text.find(verb, idx + 1)
         if idx >= 0 and (idx + search_offset) >= min_absolute_idx:
             absolute_idx = idx + search_offset
+            # CN R70: cut BEFORE the adverb head of 从而 (311) / 进而 (26) /
+            # 因而 / 然而 / 反而 / 继而, or the head is stranded on the noun.
+            if verb == "而" and text[absolute_idx - 1] in _ER_ADVERB_HEADS_CN:
+                if absolute_idx - 1 < max(min_absolute_idx, 2):
+                    continue
+                absolute_idx -= 1
             # #349 CN parity (mirror of TW): an interior verb immediately
             # followed by the device-noun 天线 is a noun-modifier of an antenna
             # compound (发射接收天线 / 接收天线 / 传送天线), not a clause boundary.
@@ -2510,6 +2538,19 @@ _LEADING_CONJ_RESIDUE_RE_CN: re.Pattern[str] = re.compile(
 )
 
 
+_DUI_LEXEME_SECONDS_CN: frozenset[str] = frozenset("称象话")
+
+# CN R70: second characters that make a leading 并 part of a WORD. Mined from
+# the CN corpus (6,489 并X bigrams): 并联 81, 并行 31, plus the closed
+# parallel/juxtaposition family. 并且 (4,328), 并将, 并在, 并入 open predicates.
+_BING_COMPOUND_SECONDS_CN: frozenset[str] = frozenset("联列排行接存置网")
+
+# CN R70: first characters of the connective adverbs ending in 而 (从而 311,
+# 进而 26, plus 因而/然而/反而/继而).
+_ER_ADVERB_HEADS_CN: frozenset[str] = frozenset("进从因然反继")
+
+
+
 def _yidui_is_noun_initial_dui_cn(text: str, source_text: str) -> bool:
     """CN mirror of ``_yidui_is_noun_initial_dui`` (CN R62 / TW R39, #527).
 
@@ -2525,9 +2566,16 @@ def _yidui_is_noun_initial_dui_cn(text: str, source_text: str) -> bool:
     same measured reason as TW's 該 - it is the idiomatic anaphor for "that
     PAIR of X" and admitting it manufactured 16 findings on TWI861425B.
     """
-    if not source_text or not text.startswith("一对") or len(text) <= 2:
+    if not text.startswith("一对") or len(text) <= 2:
         return False
     residual = text[2:]
+    # CN R70 mirror of TW R62: 对-initial lexemes in which 对 cannot be the
+    # measure word (对称 symmetric, 对象 object, 对话 dialog). Not 对数
+    # (`一对数值` is "a pair of values"), 对角 or 对立.
+    if text[2] in _DUI_LEXEME_SECONDS_CN:
+        return True
+    if not source_text:
+        return False
     return any(
         f"{prefix}对{residual}" in source_text
         for prefix in ("所述", "前述")
@@ -2716,6 +2764,20 @@ def get_ancestor_chain_cn(claim: Claim, all_claims: list[Claim]) -> list[Claim]:
 # corpus tuning whether it surfaces 独一X patterns as word-internal.
 _WORD_INTERNAL_YI_PREDECESSORS_CN = frozenset("第另任某唯同单统独")
 
+
+def _yi_is_word_internal_cn(text: str, idx: int) -> bool:
+    """CN R70 mirror of ``_yi_is_word_internal_tw`` (TW R62, reports #784/#787/#788).
+
+    The 一 of the adverb 进一步 ("further") is not an article. Checked as the
+    LEXEME, never as a bare 进 predecessor (`前进一段距离` has a real article).
+    Present in CN at volume before mirroring: 772 intro matches started on it.
+    """
+    if idx <= 0 or text[idx] != "一":
+        return False
+    if text[idx - 1] in _WORD_INTERNAL_YI_PREDECESSORS_CN:
+        return True
+    return text[idx - 1] == "进" and text[idx + 1:idx + 2] == "步"
+
 _SPLIT_YI_NOUN_RE_CN = re.compile(r"一(" + _NOUN_CHARS_CN + r")")
 
 
@@ -2757,8 +2819,7 @@ def _postprocess_intro_capture_cn(
 
     split_pos: int | None = None
     for pos in yi_positions:
-        preceding_char = bare_noun[pos - 1]
-        if preceding_char not in _WORD_INTERNAL_YI_PREDECESSORS_CN:
+        if not _yi_is_word_internal_cn(bare_noun, pos):
             split_pos = pos
             break
 
@@ -2792,7 +2853,7 @@ def _rescan_for_yi_cn(
             continue
         if i == 0:
             continue
-        if full_span[i - 1] in _WORD_INTERNAL_YI_PREDECESSORS_CN:
+        if _yi_is_word_internal_cn(full_span, i):
             continue
         abs_pos = span_start + i
         remaining = claim_text[abs_pos:]
@@ -2812,6 +2873,14 @@ def _rescan_for_yi_cn(
 
 # CJK char class excluding 的 (U+7684); jurisdiction-invariant.
 _CJK_NO_DE_CN = r'[\u4e00-\u7683\u7685-\u9fff]'
+
+# CN R70: the "further comprising" idiom that opens an article-less element in
+# a dependent claim.
+_JINYIBU_INTRO_RE_CN: re.Pattern[str] = re.compile(
+    r'进一步(?:包含|包括|具有|含有|具备|设有|设置有)'
+    r'(' + _CJK_NO_DE_CN + r'{2,12})'
+)
+
 # F6-specific: also excludes 之 (U+4E4B) to prevent captures extending into
 # temporal markers like 之后/之前. Removes the need for (?![的之]) lookahead
 # which caused backtracking truncation before 的.
@@ -3308,6 +3377,20 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
         results.append((m.group(0), normalized))
 
     # F6: verb + Y - bare-after-verb
+    # CN R70: article-less introduction after 进一步<transitional verb>. The
+    # compensating arm for the 进一步 repair above, and it is REQUIRED, not
+    # optional: `其进一步包含溶剂` (CN119421888A c6) introduces 溶剂 with no
+    # quantifier at all, and the bug being fixed was the only thing registering
+    # it - as the garbage key `步包含溶剂`, which covered `所述溶剂` by
+    # containment. Removing the garbage without this arm manufactured 4
+    # findings on exactly that draft. Chinese has no articles, so a first
+    # mention after the "further comprising" idiom is a real introduction.
+    for m in _JINYIBU_INTRO_RE_CN.finditer(text):
+        noun = m.group(1)
+        if noun.startswith(_REF_PREFIX_SET_CN) or noun.startswith(_F12_ADJ_REJECTS_CN):
+            continue
+        results.append((m.group(0), re.sub(r'\([A-Za-z0-9]+\)', '', noun)))
+
     for m in _BARE_AFTER_VERB_PATTERN_CN.finditer(text):
         noun = m.group(1)
         # R14c.2: bare-NP arm (no ordinal, no paren) is gated by
@@ -3316,6 +3399,19 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
         if (not noun.startswith('第')
                 and '(' not in noun
                 and noun.startswith(_F12_ADJ_REJECTS_CN)):
+            continue
+        # CN R70: the TW R62 夹持 device-noun guard is NOT mirrored, and the
+        # reason is worth recording rather than leaving as an omission: the CN
+        # F6 arm does not reach the shape at all. `所述夹持机构能用来…` yields NO
+        # F6 match on CN (checked directly), so a guard here would be dead code
+        # carrying its own FN surface - the #508/#511 probe-before-you-guard
+        # lesson. A test pins the absence so a later mirror sweep does not add
+        # it blind.
+        # CN R70 mirror of TW R62 (#779): arm 3 opening on the purpose coverb
+        # 以 is the verb's complement clause, not its object (包括以下各项).
+        # 630 corpus emits; 以 heads no CN element name except the loan 以太.
+        if (not noun.startswith('第') and '(' not in noun
+                and noun.startswith("以") and not noun.startswith("以太")):
             continue
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
         results.append((m.group(0), normalized))
@@ -3515,6 +3611,12 @@ def _extract_supplementary_intros_cn(text: str) -> list[tuple[str, str]]:
     # F14: bare-modifier `之NOUN` intro (formal-register parallel to F10).
     for m in _F14_BARE_ZHI_NOUN_RE_CN.finditer(text):
         noun = m.group('noun')
+        # CN R70 mirror of TW R62 (#786): 之间 is the locative "between", never
+        # 之 + a noun, so a capture opening on its orphaned 间 is the predicate
+        # after the locative frame. Present in CN at volume before mirroring:
+        # 723 corpus captures. 之间隔 / 之间隙 / 之间距 ARE 之 + noun.
+        if noun.startswith("间") and noun[1:2] not in ("隔", "隙", "距"):
+            continue
         normalized = re.sub(r'\([A-Za-z0-9]+\)', '', noun)
         trimmed = _trim_capture_to_clean_noun_cn(normalized)
         if trimmed is None:

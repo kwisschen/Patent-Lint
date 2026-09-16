@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 69,
+    "current_round": 70,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -409,6 +409,14 @@
         ],
         "fixtures_silenced": 0,
         "shipped_at": "2026-09-10T08:47:58.488830+00:00"
+      },
+      {
+        "round": 70,
+        "name": "r70_intro_capture_boundaries_tw_mirror",
+        "description": "CN R70 - the TW R62 mirror, and the parts of it that CN must NOT take. Every arm was confirmed PRESENT in the CN corpus and measured on it BEFORE porting, per the standing do-not-blind-mirror rule. SHIPPED: (1) the 一 of 进一步 is not an article - the intro regex started a match ON it 772 times, and the over-long span swallowed the real 一X intro beside it; checked as the LEXEME (前进一段距离 has a real article) through one predicate shared by the regex, Rule-2 splitting and the Rule-1a rescan. (2) Its COMPENSATING ARM, which is where CN paid for TW's round: `其进一步包含溶剂` (CN119421888A c6) introduces 溶剂 with no quantifier at all, the broken capture was the only thing registering it (as the garbage key 步包含溶剂, covering 所述溶剂 by containment), and removing the break WITHOUT the arm MANUFACTURED 4 findings on that draft. CJK has no articles, so a first mention after the idiom is a real introduction - TW took this arm back from CN in the same session. (3) 对称/对象/对话 as 对-initial LEXEMES where 对 cannot be the measure word (not 对数: `一对数值` really is a pair of values). (4) 之间 is a locative, never a genitive - 723 corpus captures opened on its orphaned 间. (5) F6 arm 3 does not open on the purpose coverb 以 - 630 corpus emits; 以 heads no CN element name but the loan 以太. WITHHELD WITH THEIR NUMBERS, pinned by a test: the 并 and 而 INTERIOR CUTS that TW R62 ships. Measured individually against a 14,385-finding baseline: 并 ends 16 walker_fp and SILENCES 1 gold-legit; 而 ends 10 (+1 coverage) and SILENCES 4. Every one is a real FN rather than a mislabel, and by one mechanism: the cut leaves a TWO-CHARACTER stem that the prefix fallback then matches to a longer element - 结合 resolving 所述结合点 (CN113376364B c124), 操作 resolving 所述操作杆 (CN115023785A c5/c7). Neither stem is rejectable lexically (操作 and 结合 are ordinary CN nouns, in neither the trailing nor the interior verb set), so CN needs a RESOLUTION-side guard on short stems before this class can ship. NOT MIRRORED AT ALL: the TW 夹持 device-noun guard - the CN F6 arm does not match that shape, so a guard would be dead code carrying its own FN surface; a test pins the absence. GATES: 14385 -> 14373, 2 walker_fp silenced, silenced_legit 0, 10 unjudged silenced, UNPAIRED-NEW 0 (zero new keys). Spec-support 331 -> 329 (both removed terms re-checked: 马达组件 and N2 are still inventoried through other arms and both appear in their specs 28 and 11 times). Engine-1 CN term quality 33 unchanged, mid-word truncation 995 unchanged, both PASS.",
+        "user_attested_issues": [],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-09-16T00:32:00.164017+00:00"
       }
     ],
     "last_updated": "2026-08-01",
