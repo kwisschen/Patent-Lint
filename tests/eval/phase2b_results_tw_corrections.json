@@ -619,6 +619,26 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TW202436973A",
+      "jurisdiction": "TW",
+      "source": "verified-correction-r62-bing-er (attorney read, Christopher, 2026-09-16)",
+      "_note": "Claim 8 introduces 第三訊號 and claim 9 introduces 第四訊號 through the CHARACTER-IDENTICAL construction '基於由所述畫素驅動器積體電路產生的第N訊號而…', each before the reference '產生所述第三訊號及所述第四訊號'. The ensemble labelled 第三訊號 walker_fp and 第四訊號 legit_drafting_error - the same construction judged both ways in one draft, which is itself evidence the label is over-strict (the R50 attorney trigger). CJK has no articles, so a first mention in the 同一claim 的 verb-object frame provides antecedent basis; 專利法 §26 第2項. The R62 interior cut at 而 cleans the intro from '第四訊號而' to '第四訊號', which is what exposed the inconsistency. Attorney read by Christopher 2026-09-16.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 9,
+            "term": "第四訊號",
+            "reference_form": "所述第四訊號"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

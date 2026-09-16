@@ -1294,3 +1294,136 @@ class TestObjectDeterminerCleanedIntroTier:
         c = parse_tw_claims(["1. 一種方法，控制一驅動電路驅動一輸出級電路。"])[0]
         intros = {n for _, n in extract_introductions_tw(c, suppress_dep_preamble=True)}
         assert "驅動電路驅動" in intros
+
+
+class TestTwR62IntroBoundaries:
+    """TW R62 - intro-capture boundaries (reports #771-#779, #782, #784-#788).
+
+    Every claim string here is SYNTHESISED. None of it is a reporter's text.
+    """
+
+    @staticmethod
+    def _doc(*claims):
+        from patentlint.models import Claim, TwPatentDocument, TwPatentType
+        return TwPatentDocument(
+            patent_type=TwPatentType.INVENTION, title="一種裝置",
+            technical_field=["x"], prior_art=["x"], disclosure=["x"],
+            embodiment=["x"],
+            claims=[
+                Claim(id=i, text=t, independent=i == 1,
+                      dependencies=[] if i == 1 else [1])
+                for i, t in enumerate(claims, start=1)
+            ],
+        )
+
+    @staticmethod
+    def _terms(doc):
+        from patentlint.analysis.tw_claims import check_antecedent_basis
+        return sorted(f["term"] for f in check_antecedent_basis(doc))
+
+    @staticmethod
+    def _intros(text):
+        from patentlint.analysis.tw_claims import extract_introductions_tw
+        from patentlint.models import Claim
+        return {n for _, n in extract_introductions_tw(
+            Claim(id=1, text=text, independent=True, dependencies=[]))}
+
+    # -- 進一步: the 一 of the adverb is not an article -------------------
+    def test_jinyibu_yi_is_word_internal(self):
+        """#784/#787/#788: the intro regex started a match ON the 一 of 進一步,
+        so the real `一第二擋牆` intro was swallowed by the over-long span."""
+        assert "第二擋牆" in self._intros("所述基座的另一側進一步具有一第二擋牆。")
+        assert self._terms(self._doc(
+            "一種裝置，包含一基座及一蓋板，所述基座具有一側及另一側。",
+            "如請求項1所述的裝置，其中，所述基座的所述另一側進一步具有一第二擋牆，"
+            "所述第二擋牆位於所述蓋板下方。",
+        )) == []
+
+    def test_a_real_article_after_jin_still_splits(self):
+        """Checked as the LEXEME 進一步, never as a bare 進 predecessor:
+        `前進一段距離` has a genuine article after 進."""
+        assert "段距離" in self._intros("所述滑塊前進一段距離。") or \
+               "距離" in self._intros("所述滑塊前進一段距離。")
+
+    def test_jinyibu_article_less_intro_is_registered(self):
+        """The compensating arm. CJK has no articles, so a first mention after
+        the 進一步 idiom is a real introduction - without this the repair above
+        removes the only thing registering it (measured on CN: 4 manufactured)."""
+        assert "溶劑" in self._intros("如請求項2所述的組合物，其進一步包含溶劑。")
+        assert self._terms(self._doc(
+            "一種組合物，包含一活性成分。",
+            "如請求項1所述的組合物，其進一步包含溶劑，其中所述溶劑為丙二醇。",
+        )) == []
+
+    def test_dui_lexeme_is_not_the_measure_word(self):
+        """Exposed by the 進一步 repair: `一對稱接觸介面` is 一 + 對稱接觸介面,
+        and the drafter writes 該對稱…, which the reference-form gate does not
+        admit. 對數 / 對角 stay out - `一對數值` really is "a pair of values"."""
+        from patentlint.analysis.tw_claims import strip_leading_quantifier
+        assert strip_leading_quantifier("一對稱接觸介面", source_text="") == "對稱接觸介面"
+        assert strip_leading_quantifier("一對象資料", source_text="") == "對象資料"
+        assert strip_leading_quantifier("一對接收器", source_text="") == "接收器"
+        assert strip_leading_quantifier("一對數值", source_text="") == "數值"
+
+    # -- 並 / 而 as interior clause boundaries ----------------------------
+    def test_bing_and_er_are_clause_boundaries(self):
+        """#771-#777, #785: the REFERENCE capture has always halted at 並 and 而
+        (both are excluded from the noun scan), so only the intro side kept
+        running through them and the two sides could never meet."""
+        from patentlint.analysis.tw_claims import clean_noun_phrase_tw
+        assert clean_noun_phrase_tw("第一訊號並據以判斷") == "第一訊號"
+        assert clean_noun_phrase_tw("第一區段而覆蓋所述開孔") == "第一區段"
+
+    def test_bing_compound_and_er_adverb_head_are_protected(self):
+        """並聯 is a word (118 corpus occurrences); the adverbs ending in 而
+        (進而/從而/...) must be cut at their HEAD or the head is stranded."""
+        from patentlint.analysis.tw_claims import clean_noun_phrase_tw
+        assert clean_noun_phrase_tw("第一並聯電阻") == "第一並聯電阻"
+        assert clean_noun_phrase_tw("第一部分進而延伸") == "第一部分"
+
+    # -- 之間 is a locative, not a genitive -------------------------------
+    def test_zhijian_orphan_is_rejected(self):
+        """#786: the F14 `之X` arm opened on the orphaned 間 of 之間 and ran
+        through the predicate into the next element."""
+        assert not any(
+            n.startswith("間") for n in
+            self._intros("所述支撐件於所述第一擋牆及所述第二擋牆之間定義有一第二槽室。")
+        )
+        assert "第二槽室" in self._intros(
+            "所述支撐件於所述第一擋牆及所述第二擋牆之間定義有一第二槽室。")
+
+    def test_zhijianxi_is_still_a_noun(self):
+        """之間隔 / 之間隙 / 之間距 ARE 之 + noun, so they stay."""
+        assert "間隙" in self._intros("所述第一板與所述第二板之間隙大於一預定值。") or \
+               "間隙" in self._intros("一間隙形成於所述第一板與所述第二板之間。")
+
+    # -- F6 verb triggers that are really noun heads ----------------------
+    def test_jiachi_device_noun_is_not_a_verb(self):
+        """#782: `所述夾持臂能用來…` registered the fragments `機構能` /
+        `機構能用來`. This is exactly the collision the note on 夾持 in the F6
+        verb list ruled out because the corpus did not happen to contain it."""
+        intros = self._intros("所述夾持臂能用來夾持於一晶圓。")
+        assert not any(n.startswith("機構") for n in intros)
+
+    def test_jiachi_as_a_real_verb_still_introduces(self):
+        intros = self._intros("所述機械手臂夾持一第一基板。")
+        assert "第一基板" in intros
+
+    def test_f6_arm3_does_not_open_on_the_purpose_coverb(self):
+        """#779: `配置以在一空白時間內` is the verb's complement clause, not its
+        object. 1,825 corpus emits; 以 heads no TW element name except 以太."""
+        assert not any(
+            n.startswith("以") for n in
+            self._intros("所述偵測電路配置以在一空白時間內取得一第一電壓。")
+        )
+        assert "一以太網路介面" in self._intros("所述裝置包含一以太網路介面。")
+
+    def test_broad_f6_determiner_guard_stays_withheld(self):
+        """WITHHELD WITH ITS NUMBER, pinned so a later round cannot re-add it
+        without redoing the work: skipping ANY F6 trigger that follows a
+        determiner manufactured 21 findings. A determiner CAN govern a relative
+        clause in Chinese (`該具有抗反射結構之面`), and an article-less second
+        conjunct is often registered only by that span (`所述輸入節點與第一節點
+        之間` -> 第一節點). If a later round adds the broad form, this fails."""
+        assert "節點與第一節" in self._intros(
+            "所述第一電晶體被耦接在所述輸入節點與第一節點之間。")
