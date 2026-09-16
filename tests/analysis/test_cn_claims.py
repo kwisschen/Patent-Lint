@@ -1413,3 +1413,77 @@ class TestR69TigongDeterminerGate:
 
         assert C("所述服务器提供的数据") == "所述服务器提供的数据"
 
+
+
+class TestCnR70IntroBoundaries:
+    """CN R70 - the TW R62 mirror, each arm measured on the CN corpus first.
+
+    All claim text here is SYNTHESISED.
+    """
+
+    @staticmethod
+    def _intros(text):
+        from patentlint.analysis.cn_claims import extract_introductions_cn
+        from patentlint.models import Claim
+        return {n for _, n in extract_introductions_cn(
+            Claim(id=1, text=text, independent=True, dependencies=[]))}
+
+    def test_jinyibu_yi_is_word_internal(self):
+        """772 CN intro matches started on the 一 of 进一步."""
+        assert "第二挡墙" in self._intros("所述支撑件的另一侧进一步具有一第二挡墙。")
+
+    def test_a_real_article_after_jin_still_splits(self):
+        assert self._intros("所述滑块前进一段距离。")
+
+    def test_jinyibu_article_less_intro_is_registered(self):
+        """The compensating arm. Without it the repair above manufactured 4
+        findings on CN119421888A, where `其进一步包含溶剂` is the only mention."""
+        assert "溶剂" in self._intros("根据权利要求2所述的组合物，其进一步包含溶剂。")
+        assert not self._intros("其进一步包含所述溶剂。")
+
+    def test_dui_lexeme_is_not_the_measure_word(self):
+        from patentlint.analysis.cn_claims import _yidui_is_noun_initial_dui_cn
+        assert _yidui_is_noun_initial_dui_cn("一对称接触界面", "") is True
+        assert _yidui_is_noun_initial_dui_cn("一对象数据", "") is True
+        assert _yidui_is_noun_initial_dui_cn("一对接收器", "") is False
+        assert _yidui_is_noun_initial_dui_cn("一对数值", "") is False
+
+    def test_zhijian_orphan_is_rejected(self):
+        """723 corpus captures opened on the orphaned 间 of 之间."""
+        intros = self._intros("所述支撑件于所述第一挡墙及所述第二挡墙之间限定有一第二槽室。")
+        assert not any(n.startswith("间") for n in intros)
+        assert "第二槽室" in intros
+
+    def test_f6_arm3_does_not_open_on_the_purpose_coverb(self):
+        """630 corpus emits; 以 heads no CN element name except the loan 以太."""
+        assert not any(
+            n.startswith("以") for n in
+            self._intros("所述检测电路配置以在一空白时间内取得一第一电压。")
+        )
+        assert "一以太网络接口" in self._intros("所述装置包含一以太网络接口。")
+
+    def test_jiachi_guard_is_deliberately_not_mirrored(self):
+        """TW R62 guards 夹持 + device-noun head (report #782). CN does NOT need
+        it: the CN F6 arm never matches that shape, so a guard would be dead
+        code carrying its own FN surface. Pinned so a later mirror sweep does
+        not add it blind - if CN's F6 arm ever starts matching here, this fails
+        and the guard becomes warranted."""
+        from patentlint.analysis.cn_claims import _BARE_AFTER_VERB_PATTERN_CN
+        assert not list(_BARE_AFTER_VERB_PATTERN_CN.finditer("所述夹持机构能用来夹持于所述晶圆。"))
+        assert "第一基板" in self._intros("所述机械手臂夹持一第一基板。")
+
+    def test_bing_and_er_interior_cuts_stay_withheld(self):
+        """WITHHELD WITH THEIR NUMBERS, pinned. TW R62 ships 並 and 而 as
+        interior cuts; the CN port is net-harmful and is not made.
+
+        并: 16 walker_fp ended, 1 gold-legit SILENCED.
+        而: 10 walker_fp ended (+1 coverage), 4 gold-legit SILENCED.
+
+        The mechanism is a real FN every time, not a mislabel: the cut leaves a
+        TWO-CHARACTER stem that the prefix fallback matches to a longer element
+        (`结合` resolving 所述结合点; `操作` resolving 所述操作杆). Neither stem is
+        rejectable lexically - both are ordinary CN nouns. CN needs a
+        resolution-side guard on short stems before this class can ship."""
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn
+        assert clean_noun_phrase_cn("第一信号并据以判断") == "第一信号并据以"
+        assert clean_noun_phrase_cn("第一区段而覆盖所述开孔") == "第一区段而"
