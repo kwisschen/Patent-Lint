@@ -27,6 +27,31 @@ WHEEL=$(ls frontend/public/patentlint-*.whl 2>/dev/null | head -n 1)
 
 if [ -n "$WHEEL" ]; then
     NEWER=$(find src/patentlint -name '*.py' -type f -newer "$WHEEL" 2>/dev/null | head -n 3)
+    # ⭐ mtime is a PROXY for staleness, and it is wrong often enough to matter: a checkout, a
+    # formatter, or simply writing the source in the same second as the wheel makes `find -newer`
+    # true while the wheel's CONTENTS are identical. That blocked a README-only commit on
+    # 2026-09-17 with every one of the 53 modules byte-identical inside the wheel. So when the
+    # cheap check trips, ask the real question before refusing: does the wheel actually differ
+    # from the sources? Only a CONTENT difference is staleness.
+    if [ -n "$NEWER" ] && command -v python3 >/dev/null 2>&1; then
+        if python3 - "$WHEEL" <<'PYEOF' >/dev/null 2>&1
+import hashlib, pathlib, sys, zipfile
+z = zipfile.ZipFile(sys.argv[1])
+names = set(z.namelist())
+for src in pathlib.Path("src/patentlint").rglob("*.py"):
+    rel = "patentlint/" + str(src.relative_to("src/patentlint")).replace("\\", "/")
+    if rel not in names:
+        sys.exit(1)
+    if hashlib.sha256(z.read(rel)).hexdigest() != hashlib.sha256(src.read_bytes()).hexdigest():
+        sys.exit(1)
+sys.exit(0)
+PYEOF
+        then
+            echo "[pre-commit] wheel mtime is older than a source file, but every module inside" >&2
+            echo "             it is byte-identical - not stale, continuing." >&2
+            NEWER=""
+        fi
+    fi
     if [ -n "$NEWER" ]; then
         echo "" >&2
         echo "[pre-commit] src/patentlint/ sources are newer than the committed wheel:" >&2
