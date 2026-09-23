@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml/badge.svg)](https://github.com/kwisschen/Patent-Lint/actions/workflows/ci.yml)
 [![Live Demo](https://img.shields.io/badge/demo-patentlint.com-blue)](https://patentlint.com)
-[![Tests](https://img.shields.io/badge/tests-2560-brightgreen)](#)
+[![Tests](https://img.shields.io/badge/tests-3%2C200%2B-brightgreen)](#)
 [![License: PolyForm-Strict-1.0.0](https://img.shields.io/badge/license-PolyForm--Strict--1.0.0-orange)](LICENSE)
 
 A patent draft checker that runs **entirely in your browser** - pure Python analysis engine compiled to WebAssembly via Pyodide.
@@ -16,7 +16,7 @@ A patent draft checker that runs **entirely in your browser** - pure Python anal
 ## Status
 
 - **Check catalog**: 43 U.S. + 38 EPC + 36 CN + 44 TW = 161 deterministic checks; per-jurisdiction breakdown in [CHECKS.md](CHECKS.md)
-- **2560 tests** passing on every commit; full pytest + ruff gate in CI
+- **3,200+ tests** passing on every commit; full pytest + ruff gate in CI
 - **6 UI languages** (English, German, Traditional + Simplified Chinese, Japanese, Korean) with locale-aware PDF generation
 - **Walker confidence signals** distilled offline from small sklearn classifiers + cloud-LLM ensemble judging on a public granted-patents corpus; the runtime is pure deterministic Python with no model file or AI inference
 - **Source-available** under [PolyForm-Strict-1.0.0](LICENSE) - free for individuals and for organizations evaluating the tool; commercial licensing handled on inquiry (see [Terms § 4](https://patentlint.com/terms))
@@ -175,7 +175,7 @@ Visit **[patentlint.com](https://patentlint.com)** - nothing to install.
 ```bash
 # Backend
 pip install -e ".[api,dev]"
-pytest -v                    # 2560 tests
+pytest -v                    # 3,200+ tests
 uvicorn patentlint.api.app:app --port 8000 --reload
 
 # Frontend (separate terminal)
@@ -230,7 +230,7 @@ curl http://localhost:8000/api/health
 | Frontend | React 18, Vite 6, Tailwind CSS v4, shadcn/ui |
 | PDF | pdfmake (web) · weasyprint (Docker/CLI) |
 | CLI | Click |
-| Testing | pytest (2560 tests) |
+| Testing | pytest (3,200+ tests) |
 | CI/CD | GitHub Actions (test, lint, wheel-verify, docker) + Vercel auto-deploy |
 | i18n | react-i18next (English, Deutsch, 繁體中文, 简体中文, 日本語, 한국어) - shared locale bundles across frontend + weasyprint PDF |
 
