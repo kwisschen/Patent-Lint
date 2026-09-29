@@ -1166,7 +1166,7 @@ class TestUsR58SubordinateClauseFinalVerb:
         it needs a verb, so it is the verb."""
         assert self._terms(
             "1. A method, comprising: providing a bus voltage; and when the bus "
-            "voltage drops, reducing a supply power."
+            "voltage drops, throttling a pump."
         ) == []
 
     def test_preposition_subordinators_are_excluded(self):
@@ -1180,7 +1180,7 @@ class TestUsR58SubordinateClauseFinalVerb:
         """Resolves only against a registered introduction, so a reference with
         no antecedent is still reported (the real defect is preserved)."""
         assert self._terms(
-            "1. A method, comprising, when the bus voltage drops, reducing a supply power."
+            "1. A method, comprising, when the bus voltage drops, throttling a pump."
         ) == ["bus voltage drops"]
         assert self._terms(
             "1. A system comprising a chamber pressure sensor, wherein if the chamber "

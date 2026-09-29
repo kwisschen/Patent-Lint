@@ -1642,8 +1642,7 @@ _CONTEXTUAL_VERB_STOPS_2W: dict[str, frozenset[str]] = {
 
 
 # US R58 (2026-09-29, report #823): a verb at the END of a subordinate clause.
-# `when the output voltage drops, reducing ...` captured `output voltage
-# drops`. `drops` is noun-gray (`linear voltage drops.`), and both readings are
+# `when the bus voltage drops, ...` captured `bus voltage drops`. `drops` is noun-gray (`linear voltage drops.`), and both readings are
 # followed by the same punctuation, so no lookahead can separate them - which
 # is why R57 withheld it. The discriminator is the clause, not the word: a
 # clause opened by a pure subordinator (when / if / once / unless / while /
