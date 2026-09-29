@@ -266,9 +266,9 @@ Complete inventory of every check implemented in PatentLint, organized by report
 
 ---
 
-**Total checks: 154** (43 US + 35 EPC + 35 CN + 41 TW; † summary rows excluded)
+**Total checks: 161** (43 US + 38 EPC + 36 CN + 44 TW; † summary rows and pre-analysis gates excluded)
 
-> Note: this footer's per-jurisdiction tally has drifted from the README catalog count (which tracks 161). The footer reflects mechanical per-row deltas; a full recount/reconciliation against `check_order.py` (the source of truth) is a separate documentation pass.
+> This total, the README catalogue and the site's stat card are all derived from the tables above by one rule (`frontend/scripts/emit-stats.mjs`), and `tests/test_check_catalogue_count.py` fails if any advertised copy drifts from it.
 
 † Internal: not rendered as a CheckItem card in the web UI or PDF report. Used for stats aggregation and CLI output only.
 
