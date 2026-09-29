@@ -2458,3 +2458,30 @@ class TestR61MethodStepAncestor:
         ])
         assert check_antecedent_basis(doc) != []
 
+
+
+class TestTwSuoshuDengPlural:
+    """#792 (attorney read 2026-09-30): 所述等 is a plural 'the said', the 所述
+    counterpart of 該等. All claim text here is synthesised."""
+
+    @staticmethod
+    def _findings(text):
+        from patentlint.analysis.tw_claims import check_antecedent_basis
+        from patentlint.models import Claim, TwPatentDocument
+
+        doc = TwPatentDocument(claims=[Claim(id=1, text=text, independent=True, dependencies=[])])
+        return [(f["term"], f["reference_form"]) for f in check_antecedent_basis(doc)]
+
+    def test_suoshu_deng_resolves_against_the_plural_introduction(self):
+        assert self._findings("1. 一種元件，包括：多個凹槽，且相鄰之所述等凹槽之間存在一接觸區。") == []
+
+    def test_an_undeclared_element_still_flags_under_its_real_name(self):
+        assert self._findings("1. 一種元件，包括：一基板，且相鄰之所述等凹槽之間存在一接觸區。") == [
+            ("凹槽", "所述等凹槽")
+        ]
+
+    def test_deng_headed_lexeme_is_not_swallowed(self):
+        """Same guard as 該等: 所述等效電阻 is 所述 + 等效電阻."""
+        from patentlint.analysis.tw_claims import strip_reference_form_prefix
+
+        assert strip_reference_form_prefix("所述等效電阻") == "等效電阻"
