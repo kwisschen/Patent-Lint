@@ -820,3 +820,57 @@ class TestF10bMidWordSuffix:
             "因應於所述樣本畫素值而量測顯示影像的顏色座標值")]
         assert "顏色座標" in norms
         assert all("所述顏色座標值".startswith(n) or n != "顏色座" for n in norms)
+
+
+class TestTwSpecSupportClauseFragments:
+    """TW R63 (reports #794 #795 #802 #818-#822): clause fragments handed to
+    spec-support as terms. All claim text here is synthesised."""
+
+    @staticmethod
+    def _inventory(text):
+        from patentlint.analysis.tw_spec_support import _build_inventory
+        from patentlint.models import Claim
+
+        return {t for _, t in _build_inventory(
+            [Claim(id=1, text="1. 一種裝置，包括：" + text, independent=True, dependencies=[])]
+        )}
+
+    def test_coverb_article_complement_is_not_a_term(self):
+        inv = self._inventory("一第一電晶體，所述第一電晶體的汲極連接至一線圈的第一端。")
+        assert not any(t.startswith("至一") for t in inv), inv
+
+    def test_embedded_suoshu_is_not_a_term(self):
+        inv = self._inventory("一輸出端子；一感測電路，連接至所述輸出端子。")
+        assert not any("所述" in t for t in inv), inv
+
+    def test_when_then_tail_is_stripped(self):
+        """The fragment arises when the F6 arm keys on a verb INSIDE a noun
+        (`輸入` in `主輸入基準流量`) and runs past `時將`."""
+        inv = self._inventory(
+            "一閥門；一主輸入流量；一主輸入基準流量，並在所述主輸入流量大於所述主輸入基準流量時將所述閥門關閉。"
+        )
+        assert not any(t.endswith("時將") for t in inv), inv
+
+    def test_comparison_tail_is_stripped(self):
+        inv = self._inventory(
+            "多個第一導線；多個第二導線，其中，各所述第一導線的線寬不同於相連接的所述第二導線的線寬。"
+        )
+        assert not any(t.endswith("不同於") for t in inv), inv
+
+    def test_temporal_hou_is_stripped(self):
+        inv = self._inventory("一處理電路，配置以將所述輸入電壓進行濾波後產生一濾波電壓。")
+        assert "濾波後" not in inv, inv
+
+    def test_quantified_backreference_is_not_an_introduction(self):
+        """`兩個所述卡勾…` refers back to `兩個卡勾`; it inherits that intro."""
+        inv = self._inventory("一底座；一支架，具有兩個卡勾，兩個所述卡勾位於所述底座的相反兩側。")
+        assert "卡勾位" not in inv and "卡勾" in inv, inv
+
+    def test_directional_manner_tail_is_cut(self):
+        inv = self._inventory("一殼體；一加強肋，並且所述加強肋於所述殼體的轉角處由內朝外沖壓所形成。")
+        assert not any("由內朝外" in t for t in inv), inv
+
+    def test_real_terms_the_rules_must_keep(self):
+        """`時` alone, 至少, and 並聯 are ordinary term material."""
+        inv = self._inventory("一計時電路；至少一個感測器；一並聯電路。")
+        assert {"計時電路", "感測器", "並聯電路"} <= inv, inv
