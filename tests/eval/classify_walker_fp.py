@@ -11,7 +11,7 @@ The LLM ensemble flattens two structurally different classes into
 
   2. **Trivially-amendable defect** - captured text is a clean noun
      phrase that's in spec/symbol_table but missing claim-level intro.
-     Walker is correct under strict §26 第3項. Drafter-amend likelihood:
+     Walker is correct under strict §26 第2項. Drafter-amend likelihood:
      ~100% (one-line fix: add `一X` to claim 1 preamble).
 
 Eliminating only class 1 is the actual precision goal. Silencing class 2
@@ -132,7 +132,7 @@ def main() -> int:
     print(f"TW supplement_v2 walker_fp findings: {total}")
     print(f"  TRUE OVER-CAPTURE (walker-tighten target): "
           f"{over_capture} ({100*over_capture/max(total,1):.1f}%)")
-    print(f"  TRIVIALLY AMENDABLE (real defect under §26 第3項): "
+    print(f"  TRIVIALLY AMENDABLE (real defect under §26 第2項): "
           f"{trivially_amendable} ({100*trivially_amendable/max(total,1):.1f}%)")
     print()
     print("Top trailing-2 patterns in over-capture set:")

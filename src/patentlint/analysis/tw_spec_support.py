@@ -2,7 +2,7 @@
 # Copyright (c) 2025-2026 Christopher Chen
 """TW specification-support analysis (說明書支持分析).
 
-Implements 專利法 §26 第3項 ("申請專利範圍…必須為說明書所支持") and the
+Implements 專利法 §26 第2項 ("申請專利範圍…必須為說明書所支持") and the
 corresponding 專利審查基準 examination guideline. Mirrors the US §112(a)
 ``check_spec_support`` at ``analysis/claims.py:998`` but swaps the English
 word-window machinery for CJK-appropriate matching (ADR-138).
@@ -93,7 +93,7 @@ _TW_BOILERPLATE_TERMS: frozenset[str] = frozenset({
     # #334 - distributive quantifiers 每個 / 每一 ("each one"). Prefix-matched
     # (_is_boilerplate), so the bare residue AND a 每個X / 每一X back-reference
     # compound drop; the real head noun is separately inventoried via its own
-    # 一X intro, so this cannot silence a genuine §26第3項 finding.
+    # 一X intro, so this cannot silence a genuine §26第2項 finding.
     "每個",
     "每一",
 })
@@ -120,7 +120,7 @@ _TW_SPEC_SUPPORT_TRAILING_TOKENS: tuple[str, ...] = tuple(sorted(
         # Issues #106 (`有通道寬度大於`), #108 (`通道寬度大於`),
         # #130 (`寬度小於`), #133 (`最大外徑大於`) - `大於`/`小於`
         # are unambiguous comparison verbs in TIPO drafting, never
-        # noun-phrase termini. 專利法 §26 第3項 spec-support is for
+        # noun-phrase termini. 專利法 §26 第2項 spec-support is for
         # noun phrases only.
         "大於",
         "小於",
@@ -516,7 +516,7 @@ _TRAILING_REF_NUMERAL_RE = re.compile(r"[（(][\w\d\-—–]+[）)]\s*$")
 # punctuation / end) rather than any character. That is what stops the strip
 # from JOINING two adjacent annotated element names: `馬達2固定座3` would
 # otherwise collapse to `馬達固定座` and manufacture support for a compound
-# the spec never describes - a real §26 第3項 false negative. It also leaves
+# the spec never describes - a real §26 第2項 false negative. It also leaves
 # 第1圖 alone for free (the `1` is followed by 圖, not a structural char).
 # Applied as an ADDITIVE fallback tier, never in place of the raw spec text,
 # so no match that succeeds today can be lost.
@@ -1231,7 +1231,7 @@ def _tier3_char_window(norm_term: str, spec_text: str) -> bool:
 def check_spec_support_tw(doc: TwPatentDocument) -> list[UnsupportedTerm]:
     """Check that claim noun phrases have support in the TIPO specification.
 
-    Per 專利法 §26 第3項 + 專利審查基準. Four tiers (see module docstring).
+    Per 專利法 §26 第2項 + 專利審查基準. Four tiers (see module docstring).
 
     Emits ``UnsupportedTerm`` only when all tiers fail. The
     ``tiers_checked`` field records which tiers ran, useful for

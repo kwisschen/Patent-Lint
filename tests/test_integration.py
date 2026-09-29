@@ -1629,7 +1629,7 @@ class TestTwSpecSupportIntegration:
         ]
         assert len(spec_support_checks) == 1
         assert spec_support_checks[0].status == "pass"
-        assert spec_support_checks[0].reference == "專利法 §26 第3項"
+        assert spec_support_checks[0].reference == "專利法 §26 第2項"
 
     def test_unsupported_claim_term_flagged(self):
         # Claim introduces 量子糾纏模組, which is nowhere in the spec.

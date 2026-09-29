@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LicenseRef-PolyForm-Strict-1.0.0
 # Copyright (c) 2025-2026 Christopher Chen
-"""Tests for TW specification-support analysis (ADR-138, 專利法 §26 第3項)."""
+"""Tests for TW specification-support analysis (ADR-138, 專利法 §26 第2項)."""
 
 from __future__ import annotations
 

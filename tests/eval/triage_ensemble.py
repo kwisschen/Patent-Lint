@@ -210,9 +210,9 @@ def format_comment_modern(
 
     # Gate 3
     if check_class == "antecedentBasis" and jurisdiction.upper() == "TW":
-        statute = "TW 專利法 §26 第3項 + 專利審查基準 第二篇第一章 §1.2 (claim language clarity / antecedent basis)"
+        statute = "TW 專利法 §26 第2項 + 專利審查基準 第二篇第一章 §1.2 (claim language clarity / antecedent basis)"
     elif check_class == "specSupport" and jurisdiction.upper() == "TW":
-        statute = "TW 專利法 §26 第3項 (申請專利範圍應為說明書所支持) + 專利審查基準 第二篇第一章 §2.1"
+        statute = "TW 專利法 §26 第2項 (申請專利範圍應為說明書所支持) + 專利審查基準 第二篇第一章 §2.1"
     elif check_class == "antecedentBasis" and jurisdiction.upper() == "CN":
         statute = "CN 专利法 §26 第4款 + 审查指南 第二部分第二章 §3.2.1"
     else:

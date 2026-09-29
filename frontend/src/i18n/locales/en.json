@@ -130,7 +130,7 @@
   "section112": {
     "title": "§ 112 Analysis",
     "titleTw": "Antecedent Basis Analysis",
-    "titleTwSpec": "§ 26(3) Analysis",
+    "titleTwSpec": "§ 26(2) Analysis",
     "titleEpc": "Art. 84 EPC Analysis"
   },
   "results": {
@@ -632,7 +632,7 @@
       "title": "Interactive TW patent analysis",
       "claimTree": {
         "title": "Claim tree + 先行詞 walker",
-        "description": "Full claim-chain BFS walker for 先行詞 and 說明書支持 (§26 第3項) - goes beyond TIPO 偵錯系統's 符號說明 lookup-table comparison to catch real drafting gaps in the chain."
+        "description": "Full claim-chain BFS walker for 先行詞 and 說明書支持 (§26 第2項) - goes beyond TIPO 偵錯系統's 符號說明 lookup-table comparison to catch real drafting gaps in the chain."
       },
       "specAbstract": {
         "title": "Specification & abstract structure",
@@ -676,7 +676,7 @@
       "multiDepAlternative": "Multi-dep alternative form",
       "titleSubjectMatch": "Title matches independent claim subjects",
       "antecedentBasis": "Antecedent basis (先行詞) - ancestor-chain walker",
-      "specSupport": "Specification support for claim terms (專利法 §26 第3項)",
+      "specSupport": "Specification support for claim terms (專利法 §26 第2項)",
       "charCount": "Abstract character count (≤250)",
       "titleMatch": "Title in abstract",
       "commercialLanguage": "Commercial language",
@@ -691,7 +691,7 @@
       "symbolTableCoverage": "All used symbols declared in 符號說明 (施行細則 §19)",
       "excessClaims": "Excess-claims fee threshold (專利規費收取準則 §5)",
       "markushOpenTransition": "Markush group transition (專利審查基準 第二篇第十章)",
-      "omnibus": "Omnibus claim (專利法 §26 第3項)",
+      "omnibus": "Omnibus claim (專利法 §26 第2項)",
       "crmNonTransitory": "Computer-readable medium 非暫態 qualifier (專利法 §21)"
     },
     "stats": {
@@ -949,7 +949,7 @@
       "numeralConsistency": "{{count}} reference symbol(s) used inconsistently.",
       "symbolTableCoverage": "{{count}} element(s) covering {{refnum_count}} reference symbol(s) missing from 符號說明.",
       "markushOpenTransition": "Claim(s) {{claims}} use open-ended Markush transitions ({{transitions}}); switch to the closed form 選自由…組成的群組 per 專利審查基準 第二篇第十章.",
-      "omnibusClaims": "Claim(s) {{claims}} are omnibus-style (reference 說明書/附圖 instead of features). Recite the technical features expressly to satisfy 專利法 §26 第3項.",
+      "omnibusClaims": "Claim(s) {{claims}} are omnibus-style (reference 說明書/附圖 instead of features). Recite the technical features expressly to satisfy 專利法 §26 第2項.",
       "crmNonTransitory": "Claim(s) {{claims}} recite a computer-readable medium without 非暫態. Add the 非暫態 / 非暫時性 qualifier to confine the claim to non-transitory media and avoid §21 eligibility issues.",
       "indefiniteWordingClaims": "Claims: {{list}}. Exemplary or preferential terms such as 例如 / 諸如 / 較佳 / 優選 leave claim scope unclear. Per 專利審查基準, review each flagged term and replace with a precise limitation or remove if unnecessary."
     },
@@ -1634,7 +1634,7 @@
           "pass": "Markush groups use the closed transition 組成."
         },
         "omnibus": {
-          "amend": "Claim(s) {{claims}} reference 說明書/附圖 instead of reciting features (omnibus). 專利法 §26 第3項 clarity objection likely.",
+          "amend": "Claim(s) {{claims}} reference 說明書/附圖 instead of reciting features (omnibus). 專利法 §26 第2項 clarity objection likely.",
           "pass": "No omnibus claims found."
         },
         "crmNonTransitory": {
@@ -1871,7 +1871,7 @@
     "s6": {
       "title": "No legal advice",
       "p1": "PatentLint is an automated drafting aid. Its output is preliminary and not a substitute for review by a qualified patent professional. Nothing the Site produces constitutes legal advice. Do not rely solely on PatentLint output for patent prosecution, filing, or enforcement decisions.",
-      "p2": "Check categories include antecedent-basis analysis, specification-support analysis (US under § 112(a); EPC under Art. 84; CN under 专利法 §26 第4款; TW under 專利法 §26 第3項), section ordering, claim punctuation, and other rule-based verifications - these flag candidates for your review, not legal determinations.",
+      "p2": "Check categories include antecedent-basis analysis, specification-support analysis (US under § 112(a); EPC under Art. 84; CN under 专利法 §26 第4款; TW under 專利法 §26 第2項), section ordering, claim punctuation, and other rule-based verifications - these flag candidates for your review, not legal determinations.",
       "p3": "An overall letter grade summarizes rule-based findings only - an A means PatentLint's catalog found no flagged issues, not that the draft is filing-ready.",
       "p4": "You assume sole responsibility for verifying any PatentLint finding before acting on it. Using the Site or the Software does not create any client-attorney, agent, or fiduciary relationship between you and Christopher Chen."
     },
