@@ -1641,6 +1641,42 @@ _CONTEXTUAL_VERB_STOPS_2W: dict[str, frozenset[str]] = {
 }
 
 
+# US R58 (2026-09-29, report #823): a verb at the END of a subordinate clause.
+# `when the output voltage drops, reducing ...` captured `output voltage
+# drops`. `drops` is noun-gray (`linear voltage drops.`), and both readings are
+# followed by the same punctuation, so no lookahead can separate them - which
+# is why R57 withheld it. The discriminator is the clause, not the word: a
+# clause opened by a pure subordinator (when / if / once / unless / while /
+# wherein / whereby) needs a finite verb, so when it ENDS right after the
+# `-s` word, that word is the verb. `before` / `after` / `until` / `as` are
+# excluded because they are also prepositions, where the noun reading is
+# grammatical (`before the voltage drops, ...`).
+#
+# Consumed ONLY as a last-resort resolution tier (see claims.py), and only
+# when the stem is itself a registered introduction, so it can never turn a
+# resolving reference into a finding.
+_SUBORDINATOR_BEFORE_REF = re.compile(
+    r"\b(?:when|whenever|if|once|unless|while|wherein|whereby)\s+$"
+)
+_CLAUSE_END_AFTER_REF = re.compile(r"^\s*[,;.:]")
+
+
+def subordinate_clause_final_verb_stem(term: str, preceding: str, following: str) -> str:
+    """Return ``term`` minus a clause-final ``-s`` verb, or "" when the shape does not apply."""
+    words = term.split()
+    if len(words) < 2:
+        return ""
+    last = words[-1]
+    # Singular nouns ending in s (glass, bus, apparatus, axis, basis).
+    if len(last) < 4 or not last.endswith("s") or last.endswith(("ss", "us", "is")):
+        return ""
+    if not _SUBORDINATOR_BEFORE_REF.search(preceding):
+        return ""
+    if not _CLAUSE_END_AFTER_REF.match(following):
+        return ""
+    return " ".join(words[:-1])
+
+
 def strip_contextual_verb(term: str, following_text: str) -> str:
     """Strip a trailing ambiguous verb form when following text confirms verb use.
 

@@ -21,6 +21,7 @@ from patentlint.analysis.utils import (
     _PREDICATIVE_ADJECTIVES, _strip_comparative_tail,
     _strip_measurement_condition_tail, strip_display_negation,
     extract_contextual_cleaned_intros,
+    subordinate_clause_final_verb_stem,
     compute_confidence_score, make_document_dedup_key,
     strip_contextual_verb, strip_trailing_adverb, token_set_jaccard,
     _is_likely_past_participle,
@@ -798,6 +799,19 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
             # can silence a false positive but can never manufacture one.
             if not has_basis and term in contextual_cleaned_intros:
                 has_basis = True
+
+            # US R58 (report #823): a verb at the end of a subordinate clause
+            # (`when the output voltage drops, ...`). Last tier, and it resolves
+            # only against the drafter's own introduction of the stem, so it can
+            # silence a false positive but never manufacture a finding. See
+            # `subordinate_clause_final_verb_stem` for why the clause, not the
+            # word, is the discriminator.
+            if not has_basis:
+                stem = subordinate_clause_final_verb_stem(
+                    term, claim_text_lower[:m.start()], claim_text_lower[m.end():]
+                )
+                if stem and stem in intros:
+                    has_basis = True
 
             # US R48 (report #677): basis must PRECEDE the reference.
             #
