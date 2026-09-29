@@ -3418,8 +3418,11 @@ _LEADING_QUANTIFIER_DENYLIST: tuple[str, ...] = tuple(sorted(
 # strips these before applying the leading-quantifier pass, so 該第一電極
 # becomes 第一電極 (quantifier strip leaves 第一電極 since 第一 is not in
 # _LEADING_QUANTIFIER_DENYLIST - ordinals are part of the head noun).
+# 所述等 (report #792, attorney read 2026-09-30): a plural "the said", the
+# 所述 counterpart of 該等. 0 occurrences in the 1,073-draft TW corpus, so it is
+# carried here for the drafter who writes it, not because the corpus needs it.
 _REFERENCE_FORM_PREFIXES: tuple[str, ...] = tuple(sorted(
-    ("該等", "該些", "所述", "前述", "該"),
+    ("所述等", "該等", "該些", "所述", "前述", "該"),
     key=len,
     reverse=True,
 ))
@@ -3429,7 +3432,7 @@ _REFERENCE_FORM_PREFIXES: tuple[str, ...] = tuple(sorted(
 # strict_plural_reference_matching escape hatch (default False per
 # ADR-095) and by the ``detect_plural_reference`` helper below.
 _PLURAL_REFERENCE_PREFIXES: tuple[str, ...] = tuple(sorted(
-    ("該等", "該些", "前述複數", "所述複數", "所述多個"),
+    ("所述等", "該等", "該些", "前述複數", "所述複數", "所述多個"),
     key=len,
     reverse=True,
 ))
@@ -4679,7 +4682,7 @@ def strip_reference_form_prefix(text: str) -> str:
             # drafter never wrote, which then cannot match its own
             # introduction 一等效球面焦度. Restore the 等 and treat the
             # prefix as the singular 該.
-            if prefix == "該等" and (
+            if prefix in ("該等", "所述等") and (
                 ("等" + residual[:1]) in _DENG_HEADED_LEXEMES_TW
             ):
                 return "等" + residual
@@ -7609,6 +7612,11 @@ def check_antecedent_basis(
             display_prefix = prefix
             if prefix == "該等" and display_term.startswith("等"):
                 display_prefix = "該"
+            # #792: the regex prefix is 所述, and the plural 等 rides on the
+            # noun; show the drafter's 所述等 when normalization consumed it.
+            elif (prefix == "所述" and raw_noun.startswith("等")
+                  and not display_term.startswith("等")):
+                display_prefix = "所述等"
             reference_form = f"{display_prefix}{display_term}"
 
             # Resolution order:
