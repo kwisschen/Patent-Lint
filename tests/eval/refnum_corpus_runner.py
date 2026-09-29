@@ -133,6 +133,76 @@ _CN_LEADING_CONNECTORS = frozenset(
 )
 
 
+# Reports #796 / #800 - self-contained mirror of production's
+# `_cn_cut_embedded_determiner` (the runner never imports production, see the
+# note on `_CLAUSE_WORDS`). A determiner past position 0 proves the captured
+# name ran over into the clause before the element.
+_CN_EMBEDDED_DETERMINERS = ("所述的", "所述")
+_CN_COVERB_ARTICLE = re.compile(r"[至到]一(?!個|个|種|种|起|體|体|樣|样|般|致|定)")
+
+
+def _cn_cut_embedded_determiner(s: str) -> str:
+    if any(mk in s for mk in _CN_FRAGMENT_MARKERS):
+        return s
+    cut = -1
+    for d in _CN_EMBEDDED_DETERMINERS:
+        idx = s.rfind(d)
+        if idx > 0 and idx + len(d) > cut:
+            cut = idx + len(d)
+    for m in _CN_COVERB_ARTICLE.finditer(s):
+        if m.start() > 0 and m.end() > cut:
+            cut = m.end()
+    if cut <= 0 or len(s) - cut < 2:
+        return s
+    return s[cut:]
+
+
+def _one_suffix_cluster(surfaces: list[str]) -> bool:
+    """Mirror of production `_cn_merge_suffix_clusters`: union A with B when A
+    ends with B (B >= 2 chars). True when every surface lands in ONE cluster."""
+    parent = list(range(len(surfaces)))
+
+    def find(i: int) -> int:
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+
+    for i, a in enumerate(surfaces):
+        for j, b in enumerate(surfaces):
+            if i != j and len(b) >= 2 and a.endswith(b):
+                parent[find(i)] = find(j)
+    return len({find(i) for i in range(len(surfaces))}) == 1
+
+
+def _cn_fragment_only(names: list[str]) -> bool:
+    """True when a determiner cut changes some name AND the cut names all fall
+    in one production suffix cluster: the "conflict" was fragments disagreeing
+    about the clause around ONE element. One predicate for every consumer, so
+    `classify_conflict` and the hard gate cannot judge the same conflict
+    differently."""
+    cut = [_cn_cut_keyed(n) for n in names]
+    return any(c != n for c, n in zip(cut, names)) and _one_suffix_cluster(
+        [_surface(c) for c in cut]
+    )
+
+
+def _cn_cut_keyed(keyed_name: str) -> str:
+    ordinal, head = _split_ordinal_key(keyed_name)
+    head = _cn_cut_embedded_determiner(head.strip())
+    return f"{ordinal}|{head}" if ordinal else head
+
+
+def _surface(keyed_name: str) -> str:
+    ordinal, head = _split_ordinal_key(keyed_name)
+    return (ordinal or "") + head
+
+
+_CN_APPROXIMATION_TAILS = tuple(
+    f"{lead}{yue}" for lead in "的到至为為在于於是达達有大" for yue in "约約"
+)
+
+
 def _cn_name_is_element_noun(keyed_name: str) -> bool:
     """CJK plausibility: >=2 CJK chars, not led by a connector/particle, no
     sentence-fragment marker. The independent FN-guard signal for CN/TW D1 -
@@ -145,6 +215,11 @@ def _cn_name_is_element_noun(keyed_name: str) -> bool:
     if head[0] in _CN_LEADING_CONNECTORS:
         return False
     if any(mk in head for mk in _CN_FRAGMENT_MARKERS):
+        return False
+    # `...到约` / `...的约` put the numeral after 约 ("about"): a measured
+    # quantity, never an element name. Mirror of production
+    # `_CN_APPROXIMATION_TAILS` (exact bigrams, so 合约 / 条约 are untouched).
+    if head.endswith(_CN_APPROXIMATION_TAILS):
         return False
     return True
 
@@ -240,10 +315,23 @@ def classify_conflict(c: dict, juris: str = "US") -> str:
     PROTECT requires: canonical is an element noun AND >=1 outlier is an
     element noun AND they genuinely differ. Everything else is OVERCAPTURE.
     """
-    if not name_is_element_noun(c["canonical"], juris):
+    canonical = c["canonical"]
+    outliers = [o["name"] for o in c["outliers"]]
+    if juris != "US":
+        # Judge the names as production now normalizes them (#796 / #800):
+        # cut an embedded-determiner overrun, then apply production's
+        # suffix-cluster equivalence (`_cn_merge_suffix_clusters`). A conflict
+        # whose cut names all fall in ONE suffix cluster was fragment-only;
+        # otherwise the noun test runs on the CUT names, so a real conflict
+        # hiding behind a fragment (`闭锁钩` vs `当所述闭锁沟`) stays protected.
+        if _cn_fragment_only([canonical, *outliers]):
+            return "overcapture"
+        canonical = _cn_cut_keyed(canonical)
+        outliers = [_cn_cut_keyed(n) for n in outliers]
+    if not name_is_element_noun(canonical, juris):
         return "overcapture"
-    for o in c["outliers"]:
-        if name_is_element_noun(o["name"], juris):
+    for name in outliers:
+        if name_is_element_noun(name, juris):
             return "protect"
     return "overcapture"
 
@@ -258,7 +346,8 @@ def is_strong_real(c: dict, juris: str = "US") -> bool:
     if c["canonical_count"] < 3:
         return False
     for o in c["outliers"]:
-        if o["count"] >= 2 and name_is_element_noun(o["name"], juris):
+        name = _cn_cut_keyed(o["name"]) if juris != "US" else o["name"]
+        if o["count"] >= 2 and name_is_element_noun(name, juris):
             return True
     return False
 
@@ -380,9 +469,15 @@ def main() -> int:
             numeral = k.split("|", 1)[1]
             if _is_known_nonelement_symbol(numeral):
                 return False
-            if not (name_is_element_noun(v["canonical"], juris) and v["canonical_count"] >= 2):
+            canonical, outliers = v["canonical"], list(v["outliers"])
+            if juris != "US":
+                if _cn_fragment_only([canonical, *(n for n, _ in outliers)]):
+                    return False
+                canonical = _cn_cut_keyed(canonical)
+                outliers = [(_cn_cut_keyed(n), c) for n, c in outliers]
+            if not (name_is_element_noun(canonical, juris) and v["canonical_count"] >= 2):
                 return False
-            return any(name_is_element_noun(n, juris) and c >= 2 for n, c in v["outliers"])
+            return any(name_is_element_noun(n, juris) and c >= 2 for n, c in outliers)
         # --- prime-split detection (see PRIME-SPLIT ACCOUNTING above) ---
         _PRIME_CHARS = "'" + "\u2019\u2032\u2033"
         _descs_cache = {}
