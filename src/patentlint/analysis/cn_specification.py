@@ -1374,11 +1374,23 @@ _CN_CHEMISTRY_SUFFIXES = (
 )
 
 
+# Approximation tails: `...到约25%` / `...的约25` put the numeral after 约
+# ("about"), so it is a QUANTITY, never a reference designator. Exact bigrams
+# of a function character + 约, so a content compound ending in 约 (合约 smart
+# contract, 条约, 契约, 节约) is never matched. Surfaced by the #796 / #800
+# determiner cut, which exposed `活性成分的约` beside `到约` for one numeral.
+_CN_APPROXIMATION_TAILS: tuple[str, ...] = tuple(
+    f"{lead}{yue}" for lead in "的到至为為在于於是达達有大" for yue in "约約"
+)
+
+
 def _cn_is_measurement_context(name: str) -> bool:
     """True if the captured noun phrase looks like measurement / process
     context (chemistry/biology drafting), not a reference numeral.
     """
     if name.endswith(_CN_PROCESS_CONTEXT_TAILS):
+        return True
+    if name.endswith(_CN_APPROXIMATION_TAILS):
         return True
     if name.endswith(_CN_CHEMISTRY_SUFFIXES):
         return True
@@ -1594,11 +1606,49 @@ def _cn_strip_iterative(s: str, allow_ordinal_break: bool = False) -> str:
     return s
 
 
+# Reports #796 / #800 (TW numeralConsistency): a determiner INSIDE a captured
+# name proves the capture ran past the element into the clause before it.
+# `...返回至所述第一延展位置P1` and `...移動至一第一延展位置P1` both label the
+# same element, but were keyed as two different names (one carrying
+# `返回至所述`, the other `移動至一`), so D1 reported a phantom conflict. 所述
+# always OPENS a mention, and 一 after the coverb 至 / 到 is the article of the
+# next noun, so everything up to them is clause, not name. CUT rather than
+# drop: the numeral does label the element after the determiner, and keeping it
+# is what lets a real conflict on that element still surface. Only 所述 and
+# coverb + 一: a bare 該/该 is left alone because 應該 ("should") would be cut,
+# and 前述 keeps its existing fragment-drop behaviour.
+_CN_EMBEDDED_DETERMINERS = ("所述的", "所述")
+_CN_COVERB_ARTICLE_RE = re.compile(r"[至到]一(?!個|个|種|种|起|體|体|樣|样|般|致|定)")
+
+
+def _cn_cut_embedded_determiner(s: str) -> str:
+    """Keep only what follows the LAST determiner embedded past position 0.
+
+    Never cuts a name that carries a fragment marker (通過 / 用於 / ...): that
+    name is dropped whole further down, and cutting would strip the marker
+    and rescue its garbage tail (`...通过所述孔进入插座` -> `孔进入插座`).
+    """
+    if any(mk in s for mk in _CN_FRAGMENT_MARKERS):
+        return s
+    cut = -1
+    for d in _CN_EMBEDDED_DETERMINERS:
+        idx = s.rfind(d)
+        if idx > 0 and idx + len(d) > cut:
+            cut = idx + len(d)
+    for m in _CN_COVERB_ARTICLE_RE.finditer(s):
+        if m.start() > 0 and m.end() > cut:
+            cut = m.end()
+    if cut <= 0 or len(s) - cut < 2:
+        return s
+    return s[cut:]
+
+
 def _cn_d1_head_noun(raw: str) -> str:
     """Strip reference-form prefixes + ordinals + quantifiers from a
     captured CJK noun phrase to get the bare head noun for D1 dedup."""
     s = raw.strip()
     s = _cn_strip_stray_ascii_prefix(s)
+    s = _cn_cut_embedded_determiner(s)
     s = _cn_strip_iterative(s, allow_ordinal_break=False)
     s = _cn_strip_post_de(s)
     s = _cn_strip_trailing_verb(s)
@@ -1838,6 +1888,7 @@ def _cn_d1_head_noun_with_ordinal(raw: str) -> str:
     # Single-letter ASCII prefix that isn't part of compound noun:
     # "F與兩剛輪" → "與兩剛輪" so subsequent strips can clean further.
     s = _cn_strip_stray_ascii_prefix(s)
+    s = _cn_cut_embedded_determiner(s)
     s = _cn_strip_iterative(s, allow_ordinal_break=True)
     # Post-的/之 strip: "查詢得到的預覽影像" → "預覽影像", "電池的供電
     # 裝置" → "供電裝置". Cuts the modifier-clause prefix when a ≥ 2-char
