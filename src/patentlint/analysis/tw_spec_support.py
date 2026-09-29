@@ -1054,6 +1054,58 @@ def _strip_trailing_predicate_before_marker(term: str, claim_text: str) -> str:
     return term
 
 
+# Reports #794 #795 #802 #818-#822 (2026-09-29): clause fragments the intro
+# extractor hands to spec-support as "terms". Each rule is gated on a shape an
+# element name cannot have, and applied HERE, in the one chain both the
+# inventory and the Tier-2 raw index run, so the antecedent walker (which
+# shares the extractor) is untouched by construction.
+#
+# Why these could not be priced before (#720-#724 withheld at "zero on the
+# corpus"): the shapes are NOT rare in the inventory (a census found 122 / 95 /
+# 18 / 140 hits), but on corpus drafts the Tier-3 character window absorbs them
+# because the fragment appears verbatim in the specification. They fire only on
+# drafts whose specification words it differently, which is the reporters'
+# case. So the finding set measures zero while the inventory does not.
+_SS_BACKREF_QUANT_TW = re.compile(
+    r"(?:至少)?(?:[一二兩三四五六七八九十]|多|複數|數|各|每)個?(?:所述|該等|該些|該|前述)"
+)
+_SS_DIRECTIONAL_MANNER_TW = re.compile(r"由[外內上下左右前後][朝向往至]")
+_SS_FRAGMENT_MEMBERS_TW = frozenset({
+    "quantified_backref", "embedded_suoshu", "coverb_article",
+    "temporal_hou", "comparison_yu", "shi_jiang", "directional_manner",
+})
+
+
+def _drop_clause_fragment_tw(orig: str, term: str) -> str:
+    """Return ``term`` cleaned of a clause fragment, or "" when it is not a term."""
+    m = _SS_FRAGMENT_MEMBERS_TW
+    if not term:
+        return term
+    # A quantified BACK-REFERENCE (`兩個所述卡勾…`): the element was introduced
+    # elsewhere and, per `_build_inventory`, inherits that intro's outcome.
+    if "quantified_backref" in m and _SS_BACKREF_QUANT_TW.match(orig):
+        return ""
+    # 所述 always OPENS a mention, so inside a term it proves an over-run
+    # (`從所述`, `有所述空`).
+    if "embedded_suoshu" in m and "所述" in term:
+        return ""
+    # Coverb + article (`至一線` from `連接至一線圈`): the noun after 一 is a new
+    # element, captured by its own arm; this span is the verb's complement.
+    if "coverb_article" in m and re.match(r"[至到]一", term):
+        return ""
+    if "temporal_hou" in m and len(term) >= 3 and term.endswith("後"):
+        term = term[:-1]  # `濾波後` ("after filtering") -> `濾波`
+    if "comparison_yu" in m and term.endswith(("不同於", "相同於")):
+        term = term[:-3]  # `線寬不同於` -> `線寬`
+    if "shi_jiang" in m and term.endswith("時將"):
+        term = term[:-2]  # `基準流量時將` ("when ... then") -> `基準流量`
+    if "directional_manner" in m:
+        d = _SS_DIRECTIONAL_MANNER_TW.search(term)
+        if d and d.start() >= 2:
+            term = term[: d.start()]  # `轉角處由內朝外沖壓` -> `轉角處`
+    return term if len(term) >= 2 else ""
+
+
 def _spec_support_final_term_tw(orig: str, norm: str, claim_text: str) -> str:
     """The ONE normalization chain from a raw intro to an inventory term.
 
@@ -1068,7 +1120,8 @@ def _spec_support_final_term_tw(orig: str, norm: str, claim_text: str) -> str:
     norm = _strip_trailing_bufen_before_verb(norm, claim_text)
     orig = _strip_trailing_predicate_before_marker(orig, claim_text)
     norm = _strip_trailing_predicate_before_marker(norm, claim_text)
-    return _normalize_for_spec_support_tw(norm or orig, claim_text)
+    term = _normalize_for_spec_support_tw(norm or orig, claim_text)
+    return _drop_clause_fragment_tw(orig, term)
 
 
 def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:
