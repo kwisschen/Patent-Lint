@@ -1692,7 +1692,7 @@ def check_connection_relationships_tw(doc: TwPatentDocument) -> list[CheckItem]:
 # Omnibus, CRM). Doctrinal anchors:
 #   - Markush:  TIPO 專利審查基準 第二篇第十章 (closed group requirement
 #               mirrors CNIPA 审查指南 第二部分第十章 §9.3).
-#   - Omnibus:  專利法 §26 第3項 (clarity) + 專利審查基準 §3.5 - claims
+#   - Omnibus:  專利法 §26 第2項 (clarity) + 專利審查基準 §3.5 - claims
 #               must recite features, not reference the spec or drawings.
 #   - CRM:      專利法 §21 (eligible subject matter) - claims to a 電腦
 #               可讀媒體 without 非暫態 / 非暫時性 risk covering transitory
@@ -1788,7 +1788,7 @@ def detect_omnibus_claims_tw(doc: TwPatentDocument) -> list[int]:
 
 
 def check_omnibus_claims_tw(doc: TwPatentDocument) -> list[CheckItem]:
-    """Emit CheckItem for TW omnibus claims (FIX) - 專利法 §26 第3項."""
+    """Emit CheckItem for TW omnibus claims (FIX) - 專利法 §26 第2項."""
     ids = detect_omnibus_claims_tw(doc)
     if ids:
         claims_str = ", ".join(str(i) for i in ids)
@@ -1799,7 +1799,7 @@ def check_omnibus_claims_tw(doc: TwPatentDocument) -> list[CheckItem]:
             details=claims_str,
             details_key="details.tw.omnibusClaims",
             details_params={"claims": ids},
-            reference="專利法 §26 第3項; 專利審查基準 第二篇",
+            reference="專利法 §26 第2項; 專利審查基準 第二篇",
             diagnostics=_dx(
                 flagged_count=len(ids),
                 total_claims=len(doc.claims),
@@ -1814,7 +1814,7 @@ def check_omnibus_claims_tw(doc: TwPatentDocument) -> list[CheckItem]:
         status="pass",
         message="No omnibus claims found.",
         message_key="check.tw.claims.omnibus.pass",
-        reference="專利法 §26 第3項",
+        reference="專利法 §26 第2項",
     )]
 
 
@@ -2338,7 +2338,7 @@ _INTRO_MULTI_QUANTIFIERS = (
     # fails the ≥2 capture, so the regex backtracks to bare 複數 and captures the
     # real 2-char noun (條碼/道路) - no false intro. Listed before 複數個/複數/多個
     # so the longer measure-bearing token wins the ordered alternation. MPEP
-    # §2173.05(e) / 專利法 §26 第3項 - article-less plural first mention = basis.
+    # §2173.05(e) / 專利法 §26 第2項 - article-less plural first mention = basis.
     "複數條", "複數道", "多條", "多道", "數條", "數道",
     "複數個", "多個", "數個",
     "複數",
@@ -7025,7 +7025,7 @@ def has_possessive_introduction_tw(
     article-less as the said-element's attribute. Later ``所述頂面``
     references resolve via this intro.
 
-    Statute pin: TIPO 專利法 §26 第3項 "明確" antecedent standard;
+    Statute pin: TIPO 專利法 §26 第2項 "明確" antecedent standard;
     MPEP § 2173.05(e) "reasonably ascertainable" equivalent. The
     possessive-position first mention of a known entity's attribute
     is a recognized intro form across both jurisdictions.
@@ -7039,7 +7039,7 @@ def has_possessive_introduction_tw(
     # 第二X / ...) are EXCLUDED. Doctrine is ambiguous - `所述X之第一Y`
     # may be either (a) a definitional intro of the first Y of X, OR
     # (b) a definite reference to a previously-introduced "first Y"
-    # that strict §26 第3項 requires to have its own clean intro. CN
+    # that strict §26 第2項 requires to have its own clean intro. CN
     # corpus has documented protect:true labels under reading (b) (e.g.,
     # CN115485995B c82/c124 - `所述第三信号相关的第一训练信号`); TW
     # corpus doesn't currently have evidence either way, so apply the
@@ -7254,7 +7254,7 @@ def check_antecedent_basis(
     #
     # NOT a walker silencer - see ``feedback_no_symbol_table_antecedent_bridge.md``.
     # symbol_table presence does not substitute for claim-level antecedent
-    # under §26 第3項. Hand-labeled local fixtures show 9/9 in_st findings
+    # under §26 第2項. Hand-labeled local fixtures show 9/9 in_st findings
     # are legit defects, so the boost direction is empirically validated.
     symbol_table_norms: set[str] = set()
     symbol_table_lookup: dict[str, str] = {}  # normalized → original name
@@ -7936,7 +7936,7 @@ def check_antecedent_basis(
             # Parent-claim diagnostic enrichment: does the flagged term
             # appear verbatim in an ancestor claim? If so the
             # introduction exists but in a shape the intro extractor
-            # missed (walker FP); if not, a genuine §26 第3項 gap.
+            # missed (walker FP); if not, a genuine §26 第2項 gap.
             # `ancestor_match_text` stays in-process - the diagnostic
             # extractor windows it down before it reaches the payload.
             anc_match_id, anc_match_text = first_ancestor_with_term(

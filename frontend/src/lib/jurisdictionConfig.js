@@ -109,7 +109,7 @@ const JURISDICTION_CONFIG = {
     drawingsShortKey: 'section.tw.drawingsShort',
     abstractSectionKey: 'section.tw.abstract',
     // ADR-138 follow-up: the container now holds two cards
-    // (先行詞 + 說明書支持), both sub-requirements of 專利法 §26 第3項.
+    // (先行詞 + 說明書支持), both sub-requirements of 專利法 §26 第2項.
     // Switched from 先行詞分析 (accurate only for antecedent-only) to
     // a statute-level umbrella matching the US "§ 112 Analysis" pattern.
     section112TitleKey: 'section112.titleTwSpec',
@@ -132,11 +132,11 @@ const JURISDICTION_CONFIG = {
     // card under Section112Container alongside 先行詞分析. specSupport.title
     // is jurisdiction-neutral across the 5 locales; specSupportPassKey points
     // at a TW-native pass message introduced alongside i18n cleanup in the
-    // following commit (authority cite: 專利法 §26 第3項, not § 112(a)).
+    // following commit (authority cite: 專利法 §26 第2項, not § 112(a)).
     supportsSpecSupport: true,
     specSupportTitleKey: 'specSupport.title',
     specSupportPassKey: 'check.tw.claims.specSupport.pass',
-    specSupportReferenceCite: '專利法 §26 第3項',
+    specSupportReferenceCite: '專利法 §26 第2項',
   },
   EPC: {
     // EPC English drafts share the US shape - Latin-script .docx, word-count

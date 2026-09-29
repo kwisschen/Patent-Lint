@@ -110,7 +110,7 @@ Categories (pick exactly one):
 
 - coverage_gap: Phrase IS present in the spec, but the walker's tier checks all missed it (e.g., spec uses synonym, abbreviation, character-variant the symbol table doesn't capture). Walker capability gap.
 
-- legit_drafting_error: Drafter introduced a claim-only term not supported by the spec - TW 專利法 §26 第3項 violation. The phrase is a substantive technical term (not a function-word fragment).
+- legit_drafting_error: Drafter introduced a claim-only term not supported by the spec - TW 專利法 §26 第2項 violation. The phrase is a substantive technical term (not a function-word fragment).
 
 - diagnostic_mis_attribution: The `phrase` field clearly doesn't match what the walker should have flagged given the context (e.g., the walker tokenized too aggressively or pointed at offsets that don't span the actual phrase).
 

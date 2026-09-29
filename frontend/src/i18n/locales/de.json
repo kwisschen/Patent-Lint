@@ -130,7 +130,7 @@
   "section112": {
     "title": "§ 112 Analyse",
     "titleTw": "Rückbezugs-Analyse",
-    "titleTwSpec": "§ 26(3) Analyse",
+    "titleTwSpec": "§ 26(2) Analyse",
     "titleEpc": "Art. 84 EPÜ - Analyse"
   },
   "results": {
@@ -631,7 +631,7 @@
     "twFeatures": {
       "title": "Interaktive Prüfung von TW-Patentanmeldungen",
       "claimTree": {
-        "title": "Anspruchsbaum & § 26(3)-Walker",
+        "title": "Anspruchsbaum & § 26(2)-Walker",
         "description": "Vollständiger Anspruchsketten-BFS-Walker für 先行詞 (Rückbezug) und 說明書支持 (Stützung) - geht über den 符號說明-Lookup-Vergleich des TIPO 偵錯系統 hinaus und erkennt echte Drafting-Lücken in der Kette."
       },
       "specAbstract": {
@@ -676,7 +676,7 @@
       "multiDepAlternative": "Mehrfach abhängiger Anspruch in alternativer Form",
       "titleSubjectMatch": "Titel entspricht den Gegenständen der unabhängigen Ansprüche",
       "antecedentBasis": "Rückbezug (先行詞) - Vorfahrenketten-Walker",
-      "specSupport": "Stützung der Anspruchsbegriffe in der Beschreibung (專利法 §26 第3項)",
+      "specSupport": "Stützung der Anspruchsbegriffe in der Beschreibung (專利法 §26 第2項)",
       "charCount": "Zeichenzahl der Zusammenfassung (≤250)",
       "titleMatch": "Titel in der Zusammenfassung",
       "commercialLanguage": "Werbesprache",
@@ -691,7 +691,7 @@
       "symbolTableCoverage": "Alle verwendeten Symbole im 符號說明 deklariert (施行細則 §19)",
       "excessClaims": "Anspruchsgebühren-Schwelle (Patentgebührenverordnung §5, TIPO)",
       "markushOpenTransition": "Markush-Übergangsformulierung (TIPO-Prüfungsrichtlinien 第二篇第十章)",
-      "omnibus": "Omnibus-Ansprüche (Patentgesetz §26 第3項)",
+      "omnibus": "Omnibus-Ansprüche (Patentgesetz §26 第2項)",
       "crmNonTransitory": "Computerlesbares Medium 非暫態-Zusatz (Patentgesetz §21)"
     },
     "stats": {
@@ -949,7 +949,7 @@
       "numeralConsistency": "{{count}} inkonsistent verwendete Bezugszeichen.",
       "symbolTableCoverage": "{{count}} Element(e) für {{refnum_count}} Bezugszeichen fehlen in 符號說明.",
       "markushOpenTransition": "Anspruch/Ansprüche {{claims}} verwenden offene Markush-Übergänge ({{transitions}}); wechseln Sie zur geschlossenen Form 選自由…組成的群組 (TIPO-Prüfungsrichtlinien 第二篇第十章).",
-      "omnibusClaims": "Anspruch/Ansprüche {{claims}} sind als Omnibus-Ansprüche formuliert (verweisen auf 說明書/附圖 statt Merkmale). Merkmale ausdrücklich nennen, um Patentgesetz §26 第3項 zu erfüllen.",
+      "omnibusClaims": "Anspruch/Ansprüche {{claims}} sind als Omnibus-Ansprüche formuliert (verweisen auf 說明書/附圖 statt Merkmale). Merkmale ausdrücklich nennen, um Patentgesetz §26 第2項 zu erfüllen.",
       "crmNonTransitory": "Anspruch/Ansprüche {{claims}} beanspruchen ein computerlesbares Medium ohne 非暫態. Den Zusatz 非暫態 / 非暫時性 einfügen, um den Anspruch auf nichtflüchtige Medien zu beschränken und §21-Patentierbarkeitsprobleme zu vermeiden.",
       "indefiniteWordingClaims": "Ansprüche: {{list}}. Beispielhafte oder bevorzugende Begriffe wie 例如 / 諸如 / 較佳 / 優選 lassen den Anspruchsumfang unklar. Nach 專利審查基準 jeden markierten Begriff prüfen und durch eine präzise Angabe ersetzen oder streichen, falls nicht erforderlich."
     },
@@ -1634,7 +1634,7 @@
           "pass": "Markush-Gruppen verwenden die geschlossene Übergangsformulierung 組成."
         },
         "omnibus": {
-          "amend": "Anspruch/Ansprüche {{claims}} verweisen auf 說明書/附圖 anstatt Merkmale zu nennen (Omnibus-Anspruch). Klarheitseinwand nach Patentgesetz §26 第3項 wahrscheinlich.",
+          "amend": "Anspruch/Ansprüche {{claims}} verweisen auf 說明書/附圖 anstatt Merkmale zu nennen (Omnibus-Anspruch). Klarheitseinwand nach Patentgesetz §26 第2項 wahrscheinlich.",
           "pass": "Keine Omnibus-Ansprüche festgestellt."
         },
         "crmNonTransitory": {
@@ -1871,7 +1871,7 @@
     "s6": {
       "title": "Keine Rechtsberatung",
       "p1": "PatentLint ist eine automatisierte Ausarbeitungshilfe. Ihre Ausgabe ist vorläufig und ersetzt nicht die Prüfung durch einen qualifizierten Patentprofi. Nichts, was die Website ausgibt, stellt Rechtsberatung dar. Verlassen Sie sich bei Entscheidungen zu Patentverfahren, Einreichung oder Durchsetzung nicht allein auf PatentLint-Ausgaben.",
-      "p2": "Zu den Prüfkategorien zählen Rückbezugs-Analyse, Stützungs-Prüfung der Beschreibung (USA nach § 112(a); EPÜ nach Art. 84; CN nach 专利法 §26 第4款; TW nach 專利法 §26 第3項), Abschnittsreihenfolge, Anspruchs-Interpunktion und weitere regelbasierte Verifikationen - diese markieren Kandidaten für Ihre Prüfung, keine rechtlichen Feststellungen.",
+      "p2": "Zu den Prüfkategorien zählen Rückbezugs-Analyse, Stützungs-Prüfung der Beschreibung (USA nach § 112(a); EPÜ nach Art. 84; CN nach 专利法 §26 第4款; TW nach 專利法 §26 第2項), Abschnittsreihenfolge, Anspruchs-Interpunktion und weitere regelbasierte Verifikationen - diese markieren Kandidaten für Ihre Prüfung, keine rechtlichen Feststellungen.",
       "p3": "Ein Gesamtbuchstabenwert fasst nur regelbasierte Befunde zusammen - ein A bedeutet, dass der PatentLint-Katalog keine Auffälligkeiten gefunden hat, nicht dass der Entwurf einreichungsbereit ist.",
       "p4": "Sie übernehmen die alleinige Verantwortung für die Überprüfung jedes PatentLint-Befunds, bevor Sie darauf reagieren. Durch die Nutzung der Website oder der Software entsteht zwischen Ihnen und Christopher Chen kein Mandantenverhältnis, kein Vertretungsverhältnis und kein Treuhandverhältnis."
     },

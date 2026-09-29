@@ -1930,7 +1930,7 @@ class TestNengCompoundExtensionR68d:
 #
 # A multi-character noun first mentioned article-less (verb / coverb
 # object, clause item) establishes antecedent basis (MPEP § 2173.05(e);
-# TIPO § 26 第3項 clarity). Two CJK-aware guards prevent the rescue from
+# TIPO § 26 第2項 clarity). Two CJK-aware guards prevent the rescue from
 # silencing real defects - the two bugs that halted the naive R5 port.
 # ─────────────────────────────────────────────────────────────────────────
 

@@ -4,7 +4,7 @@
       "patent_id": "TWM660802U",
       "jurisdiction": "TW",
       "source": "verified-correction-r13-pailie",
-      "_note": "Claim 1 introduces 第二方向 article-less in '該複數個接觸件係沿與該第一方向垂直的第二方向排列' (first mention, ordinal 第二; MPEP 2173.05(e) / 專利審查基準 §26 第3項), then properly references '與該第二方向平行的樞軸部'. The ensemble mislabeled 該第二方向 as a legit drafting error because the SAME 排列 over-capture bug (the intro captured as 第二方向排列, not 第二方向) hid the antecedent from it. The R13 trailing-strip of 排列 corrects both the walker and reveals this mislabel. Verified by reading the claim 2026-06-25.",
+      "_note": "Claim 1 introduces 第二方向 article-less in '該複數個接觸件係沿與該第一方向垂直的第二方向排列' (first mention, ordinal 第二; MPEP 2173.05(e) / 專利審查基準 §26 第2項), then properly references '與該第二方向平行的樞軸部'. The ensemble mislabeled 該第二方向 as a legit drafting error because the SAME 排列 over-capture bug (the intro captured as 第二方向排列, not 第二方向) hid the antecedent from it. The R13 trailing-strip of 排列 corrects both the walker and reveals this mislabel. Verified by reading the claim 2026-06-25.",
       "ensemble": {
         "findings": [
           {
@@ -23,7 +23,7 @@
     {
       "patent_id": "TW202336896A",
       "jurisdiction": "TW",
-      "source": "R19 應-compound truncation fix — pure-FP correction (2026-06-27)",
+      "source": "R19 應-compound truncation fix - pure-FP correction (2026-06-27)",
       "_note": "終端效應器 (end-effector): _NOUN_CHARS (TW) excludes 應 (modal guard) -> 該終端效應器 truncated to 該終端效 at the 應. 終端效應器 IS introduced bare earlier in each claim ('引發實質地無震動的終端效應器' / '反應台板包括分別的終端效應器'), so the full reference resolves; the truncated 該終端效 artifact was a walker_fp. The R19 _extend_ying_compound_tw extension (應器 follow-gate) corrects the capture and reveals these 4 mislabels (c18/39/57/78). Verified by reading the claim 2026-06-27.",
       "ensemble": {
         "findings": [
@@ -67,7 +67,7 @@
     {
       "patent_id": "TW202428739A",
       "jurisdiction": "TW",
-      "source": "R20 應-compound precursor truncation fix — shift correction (2026-06-27)",
+      "source": "R20 應-compound precursor truncation fix - shift correction (2026-06-27)",
       "_note": "該總炭氣化反應壓力 truncated to 該總炭氣化反 at the excluded 應 (反 precursor → 反應壓力 = reaction pressure). 總炭氣化反應壓力 appears only as 該總炭氣化反應壓力 (no bare intro) -> genuine antecedent defect re-firing under the corrected fuller term. ADR-111 dual-label: truncated artifact=walker_fp, fuller term=legit_drafting_error.",
       "ensemble": {
         "findings": [
@@ -95,7 +95,7 @@
     {
       "patent_id": "TW202305778A",
       "jurisdiction": "TW",
-      "source": "R22 時脈/應機/應者 follow-gate truncation fix — pure-FP correction (2026-06-27)",
+      "source": "R22 時脈/應機/應者 follow-gate truncation fix - pure-FP correction (2026-06-27)",
       "_note": "關斷時脈信號 (turn-off clock signal) introduced bare (將接通時脈信號或關斷時脈信號…, c1/c7/c10/c15); _NOUN_CHARS excludes 時 so 所述關斷時脈信號 truncated to 關斷 at 時. The R22 脈 suffix (時脈=clock) extends the capture to the full compound; the truncated 關斷 artifacts were walker_fp (the fuller term is introduced bare). Verified by reading the claim 2026-06-27.",
       "ensemble": {
         "findings": [
@@ -164,7 +164,7 @@
       "patent_id": "TW202234811A",
       "jurisdiction": "TW",
       "source": "verified-correction-r-low-comparison",
-      "_note": "Claim 1 introduces 電流 article-less in '監視耦合到該AC輸出匯流排的一LLC諧振槽中的電流' (bare-noun intro, object of 監視; MPEP 2173.05(e) / 專利審查基準 §26 第3項), then references '當該電流降至低於一輕載或空載臨限值時'. The ensemble mislabeled 該電流降至低 as a legit drafting error because the 低於-truncation over-capture (該電流 captured as 該電流降至低) hid the antecedent — the 3 structurally-identical siblings (量降低至低/入口冷卻至低/第一等級鋰鹽低) were correctly labeled walker_fp. The 低 trailing-strip (dual-registered like 位/位於) corrects the walker and reveals this mislabel. Verified by reading the claim 2026-06-29.",
+      "_note": "Claim 1 introduces 電流 article-less in '監視耦合到該AC輸出匯流排的一LLC諧振槽中的電流' (bare-noun intro, object of 監視; MPEP 2173.05(e) / 專利審查基準 §26 第2項), then references '當該電流降至低於一輕載或空載臨限值時'. The ensemble mislabeled 該電流降至低 as a legit drafting error because the 低於-truncation over-capture (該電流 captured as 該電流降至低) hid the antecedent - the 3 structurally-identical siblings (量降低至低/入口冷卻至低/第一等級鋰鹽低) were correctly labeled walker_fp. The 低 trailing-strip (dual-registered like 位/位於) corrects the walker and reveals this mislabel. Verified by reading the claim 2026-06-29.",
       "ensemble": {
         "findings": [
           {
@@ -244,7 +244,7 @@
       "patent_id": "TW202548605A",
       "jurisdiction": "TW",
       "source": "R35 載入 trailing-verb strip - ADR-111 shift dual-label (2026-08-01)",
-      "_note": "ADR-111 SHIFT, not a false negative. R35 added the trailing verb 載入 to _TRAILING_VERB_DENYLIST, so the walker stopped emitting the artifact shape 該專家模型載入 and now emits 該專家模型 on the SAME claim (validate_fix: one silenced_legit paired with one added key at TW202548605A c10). The old shape is a walker artifact - 專家模型載入 occurs nowhere in the draft as an element name. The defect itself is REAL and survives under the corrected term: the draft names the element 該專家機器學習模型 throughout and abbreviates it to 該專家模型 exactly once (`從該專家模型載入`), definite on first and only use, never introduced. Inconsistent-terminology antecedent defect under 專利法施行細則 §18 / 專利審查基準 §26 第3項. Dual-labeled per ADR-111: old shape walker_fp, new shape legit_drafting_error, same round. Verified by reading the claim 2026-08-01.",
+      "_note": "ADR-111 SHIFT, not a false negative. R35 added the trailing verb 載入 to _TRAILING_VERB_DENYLIST, so the walker stopped emitting the artifact shape 該專家模型載入 and now emits 該專家模型 on the SAME claim (validate_fix: one silenced_legit paired with one added key at TW202548605A c10). The old shape is a walker artifact - 專家模型載入 occurs nowhere in the draft as an element name. The defect itself is REAL and survives under the corrected term: the draft names the element 該專家機器學習模型 throughout and abbreviates it to 該專家模型 exactly once (`從該專家模型載入`), definite on first and only use, never introduced. Inconsistent-terminology antecedent defect under 專利法施行細則 §18 / 專利審查基準 §26 第2項. Dual-labeled per ADR-111: old shape walker_fp, new shape legit_drafting_error, same round. Verified by reading the claim 2026-08-01.",
       "ensemble": {
         "findings": [
           {

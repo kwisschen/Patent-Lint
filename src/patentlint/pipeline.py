@@ -735,7 +735,7 @@ def _run_tw_pipeline(
     )
     annotate_term_in_spec(tw_antecedent_basis, tw_spec_text)
 
-    # ADR-138: TW specification-support check (專利法 §26 第3項).
+    # ADR-138: TW specification-support check (專利法 §26 第2項).
     # Emits UnsupportedTerm findings for claim noun phrases that fail
     # the 4-tier match (symbol table / normalized exact / raw exact /
     # char-window). Walker-tuning flags intentionally NOT forwarded -
@@ -750,7 +750,7 @@ def _run_tw_pipeline(
     )
     # Emit antecedent tile BEFORE spec-support tile so the summary-grid
     # ordering matches Section112Container (antecedent card renders first,
-    # spec-support card renders below). Both cite 專利法 §26 第3項 - they
+    # spec-support card renders below). Both cite 專利法 §26 第2項 - they
     # are sibling sub-requirements under the same statute clause
     # (ADR-138), so the umbrella heading + the two tiles carry a single
     # coherent citation.
@@ -773,7 +773,7 @@ def _run_tw_pipeline(
                     "claim_count": claim_count,
                     "claims": claim_ids,
                 },
-                reference="專利法 §26 第3項",
+                reference="專利法 §26 第2項",
                 diagnostics=extract_antecedent_basis(tw_antecedent_basis, len(tw_doc.claims)),
             )
         ]
@@ -783,7 +783,7 @@ def _run_tw_pipeline(
                 status="pass",
                 message="All referenced terms have antecedent basis.",
                 message_key="check.tw.claims.antecedentBasis.pass",
-                reference="專利法 §26 第3項",
+                reference="專利法 §26 第2項",
             )
         ]
     if tw_unsupported_terms:
@@ -808,7 +808,7 @@ def _run_tw_pipeline(
                     "claim_count": claim_count,
                     "claims": claim_ids,
                 },
-                reference="專利法 §26 第3項",
+                reference="專利法 §26 第2項",
                 diagnostics=extract_spec_support(
                     tw_unsupported_terms,
                     total_claims=len(tw_doc.claims),
@@ -822,7 +822,7 @@ def _run_tw_pipeline(
                 status="pass",
                 message="All claim terms supported by the specification.",
                 message_key="check.tw.claims.specSupport.pass",
-                reference="專利法 §26 第3項",
+                reference="專利法 §26 第2項",
             )
         ]
 

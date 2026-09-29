@@ -500,7 +500,7 @@ const TW_GROUP3_CHECKS = [
   // G5 claims-cross-jurisdiction (specDrawingRef + 超項費 fee threshold -
   // 偵錯系統 doesn't flag at drafting; TIPO e-filing calculates at submission)
   'specDrawingRef', 'excessClaims',
-  // G6 claims §26 第3項 semantic walker analysis
+  // G6 claims §26 第2項 semantic walker analysis
   'specSupport',
   // G6 special-format trio (專利審查基準 + 專利法 §21/§26)
   'markushOpenTransition', 'omnibus', 'crmNonTransitory',
