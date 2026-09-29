@@ -49,6 +49,9 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 # SHA-256 of NFKC-normalised fragments taken from reporters' unfiled drafts and
 # since scrubbed. Plaintext deliberately absent; see the module docstring.
 BANNED_HASHES: frozenset[str] = frozenset({
+    # 2026-09-29, reports #796 / #800 (TW D1): an element name quoted into a
+    # shipped source comment while fixing the report.
+    "4841f318b5bfa960370c76c9dbc70bfce4e010d374011c955470e3ffe441f292",
     "b473ce47e4760ed4766b6dcb43e56eb5bec5e084e78cdc2469a21f7c2b8bab7b",
     "072a9f08f4afab6f3f725465b4a19cc42873f7c3d4454857498b85d1f46c2f2f",
     "a79311bc5ea5b7179f8eaba24d0c26770c3a6253ef0a1f744b0f30194f4dde04",

@@ -1608,7 +1608,7 @@ def _cn_strip_iterative(s: str, allow_ordinal_break: bool = False) -> str:
 
 # Reports #796 / #800 (TW numeralConsistency): a determiner INSIDE a captured
 # name proves the capture ran past the element into the clause before it.
-# `...返回至所述第一延展位置P1` and `...移動至一第一延展位置P1` both label the
+# `...返回至所述第一鎖定位置P1` and `...移動至一第一鎖定位置P1` both label the
 # same element, but were keyed as two different names (one carrying
 # `返回至所述`, the other `移動至一`), so D1 reported a phantom conflict. 所述
 # always OPENS a mention, and 一 after the coverb 至 / 到 is the article of the

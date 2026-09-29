@@ -801,7 +801,7 @@ def check_antecedent_basis(claims: list[Claim]) -> list[dict]:
                 has_basis = True
 
             # US R58 (report #823): a verb at the end of a subordinate clause
-            # (`when the output voltage drops, ...`). Last tier, and it resolves
+            # (`when the bus voltage drops, ...`). Last tier, and it resolves
             # only against the drafter's own introduction of the stem, so it can
             # silence a false positive but never manufacture a finding. See
             # `subordinate_clause_final_verb_stem` for why the clause, not the
