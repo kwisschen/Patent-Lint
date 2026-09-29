@@ -1096,14 +1096,18 @@ class TestUsR57FiniteVerbsAndPredicateTails:
             "a complementary transistor pair coupled to the output"
         )
 
-    def test_drops_is_withheld_and_still_flags(self):
-        """WITHHELD WITH ITS NUMBER (#823): `drops` is a noun in both corpus
-        uses (`voltage drops.`), followed by the same punctuation as the verb,
-        so no lookahead separates them. Pinned so a later round cannot widen
-        the class silently."""
+    def test_drops_is_withheld_from_the_capture_stops(self):
+        """WITHHELD WITH ITS NUMBER as a capture stop (#823): `drops` is a noun
+        in both corpus uses (`voltage drops.`), followed by the same punctuation
+        as the verb, so no LOOKAHEAD separates them. The reported shape is closed
+        instead by the R58 subordinate-clause tier; outside a pure subordinate
+        clause it still flags. Pinned so a later round cannot widen it silently."""
+        assert "linear voltage drops" in extract_noun_phrases(
+            "the linear voltage drops of the circuit"
+        )
         assert self._terms(
-            "A method, comprising: providing a bus voltage; and "
-            "when the bus voltage drops, reducing a supply power."
+            "A method, comprising: providing a bus voltage; and reducing a supply "
+            "power as the bus voltage drops."
         ) == [(1, "bus voltage drops")]
 
     def test_predicative_complementary_is_not_part_of_the_intro(self):
@@ -1141,3 +1145,44 @@ class TestUsR57FiniteVerbsAndPredicateTails:
             "larger than the inner diameter of the separation passage.",
             "The apparatus of claim 2, wherein the inner diameter is uniform.",
         ) == [(2, "inner diameter"), (3, "inner diameter")]
+
+
+class TestUsR58SubordinateClauseFinalVerb:
+    """US R58 - report #823. All claim text here is synthesised."""
+
+    @staticmethod
+    def _terms(text):
+        from patentlint.analysis.claims import check_antecedent_basis
+        from patentlint.models import Claim
+
+        return sorted(
+            f["term"] for f in check_antecedent_basis(
+                [Claim(id=1, text=text, independent=True, dependencies=[])]
+            )
+        )
+
+    def test_clause_final_verb_resolves_against_the_drafters_intro(self):
+        """#823: `drops` is noun-gray, but a `when` clause ending right after
+        it needs a verb, so it is the verb."""
+        assert self._terms(
+            "1. A method, comprising: providing a bus voltage; and when the bus "
+            "voltage drops, reducing a supply power."
+        ) == []
+
+    def test_preposition_subordinators_are_excluded(self):
+        """`before the line voltage drops, ...` has a grammatical noun reading."""
+        assert self._terms(
+            "1. A method, comprising: measuring a line voltage; and before the line "
+            "voltage drops, storing a value."
+        ) == ["line voltage drops"]
+
+    def test_undeclared_stem_still_flags(self):
+        """Resolves only against a registered introduction, so a reference with
+        no antecedent is still reported (the real defect is preserved)."""
+        assert self._terms(
+            "1. A method, comprising, when the bus voltage drops, reducing a supply power."
+        ) == ["bus voltage drops"]
+        assert self._terms(
+            "1. A system comprising a chamber pressure sensor, wherein if the chamber "
+            "pressure rises; a valve opens."
+        ) == ["chamber pressure rises"]
