@@ -112,11 +112,23 @@ function contextWindowFor(text) {
 // Locate first occurrence of `target` inside `text` and return excerpt
 // data: { context_before, context_after, char_offset }. Mirrors Python's
 // `_excerpt_around`. All-null if not found or empty.
+//
+// Exact match first, then a case-insensitive fallback (report #809). The
+// spec-support engine lowercases its phrases, so a claim reciting an acronym
+// (`a logical NAND gate`) never matched `logical nand` and every such report
+// arrived with no context at all. Python's `_excerpt_around` has carried a
+// `case_insensitive` mode for the same reason; this is its mirror. The
+// fallback only runs when lowercasing keeps the length, so the offset it
+// finds is valid in the original-cased text.
 export function excerptAround(text, target) {
   if (!text || !target) {
     return { context_before: null, context_after: null, char_offset: null }
   }
-  const idx = text.indexOf(target)
+  let idx = text.indexOf(target)
+  if (idx < 0) {
+    const lower = text.toLowerCase()
+    if (lower.length === text.length) idx = lower.indexOf(target.toLowerCase())
+  }
   if (idx < 0) {
     return { context_before: null, context_after: null, char_offset: null }
   }
