@@ -1047,3 +1047,97 @@ class TestUsR56ObjectAndAdverbTails:
         assert "inner diameter" not in extract_contextual_cleaned_intros(
             "an inner diameter larger than the inner diameters of the tubes"
         )
+
+
+class TestUsR57FiniteVerbsAndPredicateTails:
+    """US R57 - reports #789 #793 #797 #798 #799 #801 #803-#808.
+
+    All claim text here is synthesised; none of it is taken from a report.
+    """
+
+    @staticmethod
+    def _terms(*texts):
+        from patentlint.analysis.claims import check_antecedent_basis
+        from patentlint.models import Claim
+
+        claims = [
+            Claim(id=i, text=t, independent=i == 1, dependencies=[] if i == 1 else [i - 1])
+            for i, t in enumerate(texts, start=1)
+        ]
+        return sorted((f["claim_id"], f["term"]) for f in check_antecedent_basis(claims))
+
+    def test_finite_verbs_no_longer_captured_into_the_reference(self):
+        cases = [
+            "A bracket, comprising: a latch tab; and a stop ridge, "
+            "wherein the latch tab presses against the stop ridge.",
+            "A rail set, comprising: a first carriage; and a second carriage, "
+            "wherein the first carriage brings the second carriage to move together.",
+            "A rail set, comprising: a first carriage, "
+            "wherein the first carriage returns to an extended position.",
+            "A comparator circuit, comprising: a shifting stage; and a sense voltage, "
+            "wherein the shifting stage shifts down the sense voltage.",
+            "A plate, comprising: an inner stud; and an outer stud, "
+            "wherein the inner stud and the outer stud respectively protrude out of an aperture.",
+            "A method, comprising: forming a doped region; and heating, so that a "
+            "plurality of ions in the doped region diffuse in a horizontal direction.",
+            "A sensor, comprising: a detector, wherein the detector senses ultraviolet energy.",
+        ]
+        for text in cases:
+            assert self._terms(text) == [], text
+
+    def test_noun_readings_the_gates_must_preserve(self):
+        """Each gate excludes the follower its NOUN reading takes."""
+        assert "phase shifts" in extract_noun_phrases("the phase shifts of the carrier signal")
+        assert "printing presses" in extract_noun_phrases("the printing presses of the plant")
+        assert "tax returns" in extract_noun_phrases("the tax returns of the user")
+        assert "tactile senses" in extract_noun_phrases("the tactile senses of the operator")
+        assert "diffuse reflector" in extract_introductions("a diffuse reflector mounted on the base")
+        assert "complementary transistor pair" in extract_introductions(
+            "a complementary transistor pair coupled to the output"
+        )
+
+    def test_drops_is_withheld_and_still_flags(self):
+        """WITHHELD WITH ITS NUMBER (#823): `drops` is a noun in both corpus
+        uses (`voltage drops.`), followed by the same punctuation as the verb,
+        so no lookahead separates them. Pinned so a later round cannot widen
+        the class silently."""
+        assert self._terms(
+            "A method, comprising: providing a bus voltage; and "
+            "when the bus voltage drops, reducing a supply power."
+        ) == [(1, "bus voltage drops")]
+
+    def test_predicative_complementary_is_not_part_of_the_intro(self):
+        """#807 / #808: `a second signal complementary to each other`."""
+        assert "second gate signal" in extract_introductions(
+            "a first gate signal and a second gate signal complementary to each other"
+        )
+        assert self._terms(
+            "A driver, comprising: an output stage to output a gate signal and an "
+            "inverted gate signal complementary to each other, wherein a switch "
+            "is controlled by the gate signal and the inverted gate signal."
+        ) == []
+
+    def test_nominal_comparative_intro_resolves_through_the_additive_index(self):
+        """#803 / #804 / #805: `a second threshold lower than the first
+        threshold` registered `second threshold lower than`."""
+        from patentlint.analysis.utils import extract_contextual_cleaned_intros
+
+        assert "second threshold" in extract_contextual_cleaned_intros(
+            "a second threshold lower than the first threshold"
+        )
+        assert self._terms(
+            "A circuit, comprising: a comparator to receive a first threshold and a "
+            "second threshold lower than the first threshold, wherein the "
+            "comparator couples the second threshold to an output."
+        ) == []
+
+    def test_comparative_whose_complement_names_the_same_element_stays_flagged(self):
+        """The US7811436B2 c18 shape: the complement repeats the stripped
+        intro, so resolving through it would silence two real defects (the
+        complement's own reference, and a later ambiguous one)."""
+        assert self._terms(
+            "An apparatus, comprising: a transport passage; and a separation passage.",
+            "The apparatus of claim 1, wherein the transport passage has an inner diameter "
+            "larger than the inner diameter of the separation passage.",
+            "The apparatus of claim 2, wherein the inner diameter is uniform.",
+        ) == [(2, "inner diameter"), (3, "inner diameter")]

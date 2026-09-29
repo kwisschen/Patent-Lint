@@ -868,6 +868,50 @@ _STOP_WORDS = (
     #   reading (`the plant remains`) takes `of`, which is excluded.
     r"acquires(?=\s+(?:a|an|the)\b)|"
     r"remains(?=\s+in\b)|"
+    # US R57 (2026-09-29, private-tracker reports #789 #793 #797 #798 #799 #801
+    # #805 #806): finite verbs the capture ran into, one drafter-independent
+    # class across three drafts. Placed HERE, in the shared capture core, and
+    # not in the trailing cleaner, because `_NP_CORE` feeds BOTH the reference
+    # regex and the intro patterns: a stop here halts a matched intro/reference
+    # pair identically, so it cannot desynchronize one (the R29/R52 failure).
+    #
+    # English does not separate a 3sg verb from a plural noun by morphology
+    # (see `clamps` in `_CONTEXTUAL_VERB_STOPS`), so each member is gated by
+    # its own MEASURED profile - determiner-preceded occurrences across the
+    # 2,807-draft walker corpus, then the contexts READ, not totalled:
+    # - `presses` / `brings` / `returns`: every corpus use is a verb, but all
+    #   three have ordinary noun senses (printing presses, tax returns), so
+    #   they ship gated on the verb-complement shape, excluding `of`.
+    # - `shifts`: NOUN-GRAY in the corpus itself (`distributional shifts of
+    #   training data`), so gated on a particle or an object determiner; the
+    #   noun reading takes `of` / `in`, both excluded.
+    # - `senses`: every use is a verb, and it takes a BARE object
+    #   (`the detector senses ultraviolet energy`), so an object-determiner
+    #   gate would miss the class. Gated NEGATIVELY instead: blocked before the
+    #   followers a plural noun takes (punctuation, `of`, `and`, a copula).
+    # - `protrude` / `protrudes`: no noun or adjective sense in English, so the
+    #   paradigm ships as a pair.
+    # - `diffuse`: an ADJECTIVE in every corpus hit (`a diffuse optical flow
+    #   sensor`), always followed by its head noun; the verb takes a
+    #   preposition, which is the gate.
+    # WITHHELD WITH ITS NUMBER: `drops` (#823). Both corpus uses are nouns
+    # (`linear voltage drops.`, `microfluidic drops, or`), followed by the
+    # same punctuation as the reported verb (`when the bus voltage drops,`),
+    # so no lookahead separates them.
+    r"presses(?=\s+(?:against|on|onto|into|down|a|an|the)\b)|"
+    r"brings(?=\s+(?:a|an|the|about|into|together|back)\b)|"
+    r"returns(?=\s+(?:to|a|an|the)\b)|"
+    r"shifts(?=\s+(?:down|up|a|an|the)\b)|"
+    r"senses(?!\s*[.,;:)]|\s+(?:of|and|or|is|are|was|were)\b)|"
+    r"protrudes?|"
+    r"diffuse(?=\s+(?:in|into|through|from|to|toward|towards|out|across|along|within)\b)|"
+    # US R57 (reports #807 / #808): the predicative adjective `complementary`
+    # (`a first signal and a second signal complementary to each other`). The
+    # intro over-captured it, so the drafter's own `the second signal` resolved
+    # nothing. Positional, like the -ward class: the attributive reading
+    # (`a complementary metal oxide semiconductor`) is followed by its head
+    # noun; the predicative one by `to` / `with`, which is the gate.
+    r"complementary(?=\s+(?:to|with)\b)|"
     # R5 (2026-05-26): `accounts` as 3sg finite verb only - lookahead on
     # `\s+for` discriminates the `<noun> accounts for X` verb-object pattern
     # (#98 alumina, #99 silica) from the bare-noun usage (`financial accounts`,
@@ -2365,10 +2409,46 @@ def extract_contextual_cleaned_intros(text: str) -> list[str]:
         numeric = _strip_numeric_comparative_tail(cleaned.split())
         if numeric and numeric != cleaned.split():
             out.append(" ".join(numeric))
+        # US R57 (reports #803 / #804 / #805): the same comparative against a
+        # NOUN PHRASE. `a second threshold lower than the first threshold`
+        # registered `second threshold lower than`, so the drafter's own
+        # `the second threshold` matched nothing. The
+        # US7811436B2 c18 FN that blocked the in-place strip had a specific
+        # shape: the COMPLEMENT named the same element as the stripped intro
+        # (`an inner diameter larger than the inner diameters of ...`), so the
+        # cleaned intro resolved the complement's own reference. Gated on
+        # exactly that: skip when the complement's number key equals the
+        # stripped intro's.
+        nominal = _strip_nominal_comparative_tail(cleaned.split(), lowered[m.end():])
+        if nominal:
+            out.append(nominal)
     return out
 
 
 _COMPARATIVE_HEDGES = frozenset({"about", "approximately", "substantially", "or", "equal", "to"})
+
+
+_COMPARATIVE_COMPLEMENT_NP = re.compile(rf"\s*(?:the|said|a|an)\s+({_NP_CORE})")
+
+
+def _strip_nominal_comparative_tail(words: list[str], following: str) -> str:
+    """Drop `<comparative> than` when the complement names a DIFFERENT element.
+
+    Returns the stripped intro, or "" when the shape does not apply or the
+    complement shares the stripped intro's number key (the US7811436B2 FN).
+    """
+    from patentlint.analysis.en_normalize import en_number_key
+
+    if len(words) < 3 or words[-1] != "than" or words[-2] not in _COMPARATIVE_TRAILING:
+        return ""
+    m = _COMPARATIVE_COMPLEMENT_NP.match(following)
+    if not m:
+        return ""
+    stem = " ".join(words[:-2])
+    complement = clean_noun_phrase(m.group(1))
+    if not complement or en_number_key(complement) == en_number_key(stem):
+        return ""
+    return stem
 
 
 def _strip_numeric_comparative_tail(words: list[str]) -> list[str]:
