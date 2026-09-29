@@ -51,7 +51,7 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 
 161 automated checks across four jurisdictions, each classified as **PASS**, **REVIEW**, or **FIX**.
 
-> **EPC support is v1 beta.** The full 34-check EPC catalog runs end-to-end via CLI and REST API. The frontend jurisdiction picker integration shipped 2026-05-11; real-corpus FP tuning calibrated against 174 EP-A1 drafts pulled via the EPO OPS API.
+> **EPC support is v1 beta.** The full 38-check EPC catalog runs end-to-end via CLI and REST API. The frontend jurisdiction picker integration shipped 2026-05-11; real-corpus FP tuning calibrated against 174 EP-A1 drafts pulled via the EPO OPS API.
 
 ### U.S. Patent Applications (43 checks)
 
@@ -62,7 +62,7 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 | **Claims** | Numbering, dependencies, periods, punctuation, indefinite terms, transitional phrases, means-plus-function (§ 112(f)), antecedent basis (§ 112(b)), preamble consistency (§ 112(d)), specification support (§ 112(a)), claim similarity, special formats (Jepson / CRM / Markush / omnibus), excess-claims fee threshold (37 CFR 1.16(h)/(i)) | 35 U.S.C. § 41(a)(2), § 101, § 112; 37 CFR 1.16; MPEP § 2117-2173 |
 | **Abstract** | Word count (50-150), single paragraph, legal phraseology, implied phrases, self-praising language | MPEP § 608.01(b) |
 
-### European (EPC) Patent Applications - English drafts (34 checks, v1 beta)
+### European (EPC) Patent Applications - English drafts (38 checks, v1 beta)
 
 | Section | Checks | Reference |
 |---------|--------|-----------|
@@ -71,7 +71,7 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 | **Claims** | Sequential numbering, dependency format, self/forward dependency, single sentence per claim, reference signs in parens, subject consistency, transitional phrase, claim-spec reference, multi-dep on multi-dep, Markush format, independent-claim count per category, two-part form (advisory), **antecedent basis - Art. 84 walker**, **specification support - Art. 84 walker**, restrictive absolutes, claim punctuation, excess-claims fee threshold (Rule 45 EPC) | Art. 84 EPC; Rule 43 + Rule 45 EPC; Guidelines F-IV § 3.4, § 4.5, § 4.7, § 4.10, § 4.13, § 4.20 |
 | **Abstract** | Word count (50-150), title-match, claim-reference, structure (single paragraph, no claim-style phraseology, no merit language) | Rule 47(2) EPC; Guidelines F-II § 2.3, § 2.3.3, § 2.3.5 |
 
-### Chinese Patent Applications (34 checks)
+### Chinese Patent Applications (36 checks)
 
 | Section | Checks | Reference |
 |---------|--------|-----------|
@@ -80,7 +80,7 @@ PatentLint's analysis engine is compiled to WebAssembly and runs entirely in you
 | **Abstract** | Character count (≤300), title match, commercial language | 专利法实施细则 §23 |
 | **Drawings** | Figures sequential, figure count | 审查指南 |
 
-### Taiwanese Patent Applications (40 checks)
+### Taiwanese Patent Applications (44 checks)
 
 | Section | Checks | Reference |
 |---------|--------|-----------|
