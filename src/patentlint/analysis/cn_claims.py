@@ -2298,6 +2298,14 @@ def _jing_cut_is_verbal_cn(text: str, pos: int) -> bool:
     return (pos - head) >= 2
 
 
+# Measurement hook (2026-10-06): called with (intro, reference_term, claim_id)
+# whenever a reference resolves ONLY through the longest-intro-PREFIX fallback.
+# None in production, so it costs one comparison. tests/eval/cn_short_stem_probe.py
+# sets it to size the short-stem class the next CN round targets (a 2-char stem
+# such as 电路 resolving 所述电路板). Never set it from shipped code.
+_PREFIX_FALLBACK_OBSERVER = None
+
+
 def clean_noun_phrase_cn(text: str) -> str:
     """Strip trailing verbs and conjunction fragments from a CN reference term.
 
@@ -4804,6 +4812,11 @@ def check_antecedent_basis_cn(
                     ):
                         best_len = len(intro)
                         resolved_intro = intro
+                if (
+                    resolved_intro is not None
+                    and _PREFIX_FALLBACK_OBSERVER is not None
+                ):
+                    _PREFIX_FALLBACK_OBSERVER(resolved_intro, normalized_term, claim.id)
 
             # R46 (2026-05-04): mirror of TW R46 - ordinal-prefix-to-
             # Latin-abbrev bridge. Reference `第N<X>` where X is short
