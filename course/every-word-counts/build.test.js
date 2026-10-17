@@ -144,7 +144,7 @@ for (const slug of [...ROUTES, '404']) {
     })
 
     it('uses no em or en dashes', () => {
-      assert.doesNotMatch(html, /[–—]/)
+      assert.doesNotMatch(html, /[\u2013\u2014]/)
     })
   })
 }
