@@ -3,17 +3,16 @@
 //
 // Static generator for the "Every Word Counts" course skeleton.
 //
-//   node course/every-word-counts/build.mjs [outDir]
+//   node every-word-counts/build.mjs [siteDir]     (run from course/)
 //
-// Writes plain HTML/CSS/JS to outDir (default: dist/learn/every-word-counts,
-// relative to frontend/). It runs AFTER `vite build` and shares nothing with
-// the PatentLint app: no React, no app CSS, no app state, no analytics. Vercel
-// serves these files before the SPA rewrite, so the product never sees them.
-// Course files live outside src/ and public/, so editing them does not change
-// the product's content build hash either.
+// Writes the whole site into siteDir (default: course/dist): the course under
+// siteDir/every-word-counts/ and a site-wide 404.html. course/ is its own
+// Vercel project served at https://learn.patentlint.com, a separate origin from
+// the PatentLint product: separate deploys, rollbacks, headers and browser
+// storage. Nothing in frontend/ imports, builds or serves any of this.
 //
-// Zero dependencies on purpose: a course change cannot pull a package into the
-// product's lockfile.
+// The build uses only Node built-ins, so the Vercel build installs nothing and
+// a registry outage cannot block a course deploy.
 
 import { createHash } from 'node:crypto'
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
@@ -22,11 +21,15 @@ import { fileURLToPath } from 'node:url'
 import { EXTRAS, PARTS } from './pages.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
-const frontendDir = resolve(here, '..', '..')
+const courseDir = resolve(here, '..')
 
-// The public URL prefix. Moving the course to a subdomain later means changing
-// this one value (to '/') and the output directory.
-export const ROOT = '/learn/every-word-counts/'
+// FROZEN FOR THE SEMESTER. https://learn.patentlint.com/every-word-counts/ is
+// registered with the course as its final URL, and every route below it is
+// linked from outside. build.test.js pins ROOT and the route list; changing
+// either breaks published links.
+export const SITE = 'https://learn.patentlint.com'
+export const DIR = 'every-word-counts'
+export const ROOT = `/${DIR}/`
 
 const STRINGS = JSON.parse(readFileSync(join(here, 'strings.json'), 'utf8'))
 const EN = STRINGS.en
@@ -81,6 +84,7 @@ function layout({ slug, title, main, assets }) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>${esc(title)} | Every Word Counts</title>
+<link rel="icon" href="${ROOT}favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="${ROOT}course.css?v=${assets.css}">
 <script src="${ROOT}course.js?v=${assets.js}" defer></script>
 </head>
@@ -173,7 +177,17 @@ ${next ? pagerLink(next, 'next') : pagerLink({ slug: '', key: 'home' }, 'next')}
 
 const hash = (s) => createHash('sha256').update(s).digest('hex').slice(0, 8)
 
-export function build(outDir) {
+// The course's own tab icon: a teal page with a folded corner. Never the
+// product's favicon.
+const FAVICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M6 2h14l6 6v22H6z" fill="#146157"/><path d="M20 2v6h6" fill="#299e8f"/><path d="M10 14h12M10 19h12M10 24h8" stroke="#fff" stroke-width="2"/></svg>
+`
+
+const notFoundMain = () => `<h1>Page not found</h1>
+<p>This page does not exist. It may have moved while the course is in development.</p>
+<p><a href="${ROOT}">${t('home')}</a></p>`
+
+export function build(siteDir) {
+  const outDir = join(siteDir, DIR)
   const css = readFileSync(join(here, 'course.css'), 'utf8')
   // The client script gets the whole strings file inlined, so the toggle needs
   // no second request and strings.json stays the single source of truth.
@@ -184,10 +198,12 @@ export function build(outDir) {
   if (js.includes('/*__STRINGS__*/')) throw new Error('course.js strings marker not replaced')
   const assets = { css: hash(css), js: hash(js) }
 
-  rmSync(outDir, { recursive: true, force: true })
+  rmSync(siteDir, { recursive: true, force: true })
   mkdirSync(outDir, { recursive: true })
   writeFileSync(join(outDir, 'course.css'), css)
   writeFileSync(join(outDir, 'course.js'), js)
+  writeFileSync(join(outDir, 'favicon.svg'), FAVICON)
+  writeFileSync(join(siteDir, '404.html'), layout({ slug: null, title: 'Page not found', main: notFoundMain(), assets }))
 
   const pages = [{ slug: '', title: EN.home, main: homeMain() }]
   PARTS.forEach((p, i) => pages.push({ slug: p.slug, title: EN[p.key], main: partMain(p, i) }))
@@ -205,7 +221,7 @@ export function build(outDir) {
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const out = resolve(frontendDir, process.argv[2] || 'dist/learn/every-word-counts')
-  const slugs = build(out)
-  console.log(`course: wrote ${slugs.length} pages to ${out}`)
+  const site = resolve(courseDir, process.argv[2] || 'dist')
+  const slugs = build(site)
+  console.log(`course: wrote ${slugs.length} pages to ${join(site, DIR)}`)
 }
