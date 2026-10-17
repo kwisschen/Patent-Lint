@@ -1,0 +1,17 @@
+{
+  "name": "patentlint-learn",
+  "private": true,
+  "version": "1.0.0",
+  "license": "LicenseRef-PolyForm-Strict-1.0.0",
+  "author": "Christopher Chen",
+  "description": "Course site served at https://learn.patentlint.com. Separate from the PatentLint product in frontend/.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "node every-word-counts/build.mjs",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "jsdom": "29.1.1"
+  }
+}

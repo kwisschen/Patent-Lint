@@ -1,0 +1,31 @@
+# Course site (https://learn.patentlint.com), built from course/.
+# Separate from the product's CI on purpose: the product's jobs never build or
+# test the course, and this job never builds or tests the product.
+name: Course
+
+on:
+  push:
+    branches: [main]
+    paths: ['course/**', '.github/workflows/course.yml']
+  pull_request:
+    paths: ['course/**', '.github/workflows/course.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  course:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: course
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: course/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
