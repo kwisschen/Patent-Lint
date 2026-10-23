@@ -267,6 +267,9 @@ _CN_SPEC_SUPPORT_LEADING_REJECTS: tuple[str, ...] = (
     # 2026-05-21: parity mirror of TW #78 - `中一` is a stranded
     # `其中一(个)` connective fragment (walker dropped the leading 其).
     "中一",
+    # CN R71 (#879) - the same fragment from 其中之一 / 其中另一, and the
+    # parity mirror of TW `中兩` (#194). None of 中之 / 中另 / 中两 opens a noun.
+    "中之", "中另", "中两",
     # 2026-05-29 - issue #145. Drafter claim 10 preamble
     # `一种用于折叠支撑脚组件的折叠支撑脚` had `种用` over-captured: walker
     # strips the leading `一` quantifier and lands on `种` (kind), then
@@ -360,7 +363,8 @@ _CN_SPEC_SUPPORT_INTERIOR_REJECTS: tuple[str, ...] = (
 # TW's 於/到/在/自/由 direct-converted, plus CN-specific 从/向/对 (CN
 # drafters use 从所述X frequently where TW uses 自; 向所述 and 对所述
 # are CN-native prepositions absent from TW practice).
-_CN_LEADING_PREPOSITIONS: tuple[str, ...] = ("于", "到", "在", "自", "由", "从", "向", "对")
+# 作为 ("as") is the coverb of 其中另一作为X; CN R71 (#879), mirror of TW R65.
+_CN_LEADING_PREPOSITIONS: tuple[str, ...] = ("作为", "于", "到", "在", "自", "由", "从", "向", "对")
 
 # Reference numerals per 专利法实施细则 §21 - drafters inline element
 # numerals like 底座(10). NON-ANCHORED to handle:

@@ -3891,10 +3891,29 @@ _INTERIOR_VERB_BOUNDARIES: tuple[str, ...] = tuple(sorted(
         # 儲存 (儲存器), 認證 (認證單元), 銜接 (第一銜接部)
         # These are caught by their LONGER multi-char forms above
         # (傳送接收到, 連接一第一電子裝, etc.) which are unambiguous.
+        # TW R65 (mirror of CN R71) - 建立 ("establish") over-captured after a
+        # complete noun phrase (與一基站建立支援…). Noun-gray: it heads 建立請求,
+        # so the cut is gated on _JIANLI_NOUN_HEADS_TW below.
+        "建立",
     ),
     key=len,
     reverse=True,
 ))
+
+# TW R65 - nouns 建立 heads as a compound (連線建立請求). The interior cut skips
+# 建立 when one of these follows. Measured over TW claims: 建立請求 22 (every
+# other follower is a verb object); the rest mirror CN R71's measured set
+# (請求/響應/訊息/模組/信令/完成) plus the device-noun heads.
+# Trailing-denylist collocations that end in 建立; the interior cut moves to
+# their start so it never strands their head.
+_JIANLI_COLLOCATIONS_TW: tuple[str, ...] = tuple(
+    v for v in _TRAILING_VERB_DENYLIST if v.endswith("建立") and len(v) > 2
+)
+
+_JIANLI_NOUN_HEADS_TW: tuple[str, ...] = (
+    "請求", "響應", "回應", "訊息", "消息", "模組", "信令", "完成",
+    "單元", "器", "部", "電路", "裝置", "程式", "元件", "組件",
+)
 
 
 # Exception set: compound nouns containing interior-verb tokens that
@@ -4363,6 +4382,17 @@ def clean_noun_phrase_tw(text: str) -> str:
             # are therefore DECLARED individually in _INTERIOR_CUT_EXCEPTIONS.
             if text[absolute_idx + len(verb):].startswith("天線"):
                 break
+            if verb == "建立" and text[absolute_idx + 2:].startswith(_JIANLI_NOUN_HEADS_TW):
+                break
+            # A trailing collocation ending in 建立 (輔助建立, #466/#469) must be
+            # cut whole, or the head 輔助 is stranded - 駕駛輔助 keeps bare 輔助
+            # legal, so the trailing strip will not remove it afterwards.
+            if verb == "建立":
+                for coll in _JIANLI_COLLOCATIONS_TW:
+                    if (text[:absolute_idx + 2].endswith(coll)
+                            and absolute_idx + 2 - len(coll) >= 1):
+                        absolute_idx = absolute_idx + 2 - len(coll)
+                        break
             # R41 (2026-08-17): 經 position guard - see _jing_cut_is_verbal_tw.
             if verb == "經" and not _jing_cut_is_verbal_tw(text, absolute_idx):
                 break

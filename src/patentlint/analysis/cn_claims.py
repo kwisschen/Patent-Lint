@@ -2145,10 +2145,24 @@ _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
         # a possessive/bare-noun gray-zone reference the gold treats as a real
         # defect). Attorney-over-corpus discipline: withhold on conflict.
         "贯穿", "代入",
+        # CN R71 - 建立 ("establish") over-captured after a complete noun
+        # phrase (所述外接装置建立数据链路). Noun-gray: it heads 建立模块 in the
+        # corpus, so the cut is gated on _JIANLI_NOUN_HEADS_CN below.
+        "建立",
     ),
     key=len,
     reverse=True,
 ))
+
+# CN R71 - nouns 建立 heads as a compound (会话建立模块, RRC建立消息). The
+# interior cut skips 建立 when one of these follows, so only the clause verb is
+# cut. Measured over CN claims: 建立请求 30, 建立响应 21, 建立消息 15, 建立模块
+# 10, 建立信令 2, 建立完成(消息) 2; the device-noun heads are the ones the R31
+# guard protects.
+_JIANLI_NOUN_HEADS_CN: tuple[str, ...] = (
+    "请求", "响应", "消息", "模块", "信令", "完成",
+    "单元", "器", "部", "电路", "装置", "程序", "组件",
+)
 
 # Stage 4 R2' D3 - 1-char noun prefixes get a relaxed position gate
 # (>= 1 instead of > 1) so interior-verb cuts can fire at idx 1. Without
@@ -2306,7 +2320,7 @@ def _jing_cut_is_verbal_cn(text: str, pos: int) -> bool:
 _PREFIX_FALLBACK_OBSERVER = None
 
 
-def clean_noun_phrase_cn(text: str) -> str:
+def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> str:
     """Strip trailing verbs and conjunction fragments from a CN reference term.
 
     Two-phase cleanup mirroring ``clean_noun_phrase_tw``:
@@ -2314,6 +2328,13 @@ def clean_noun_phrase_cn(text: str) -> str:
       2. Trailing-verb stripping (iterative, with residual guards).
 
     See tw_claims.py::clean_noun_phrase_tw for the full rationale.
+
+    ``protect_tail_compounds`` (CN R71) skips an interior cut whose verb heads
+    a declared compound (连接 in 电脑连接器) and retries the verb behind it -
+    the TW R27 + R43 guard. It is OFF on every in-place path: the CN capture
+    still admits refnum parens and trailing verbs that the cut has been
+    collecting, so protecting in place exposes them. The walker uses it only
+    in the last-resort exact-match tier (see check_antecedent_basis_cn).
     """
     if not text:
         return text
@@ -2361,10 +2382,18 @@ def clean_noun_phrase_cn(text: str) -> str:
         # is noun-internal, so retry the NEXT 并 rather than abandoning the verb.
         # 并入 ("merge into", 64 corpus occurrences) is deliberately NOT guarded:
         # it is a verb, and cutting at it is correct.
-        while (verb == "并" and idx >= 0
-               and text[idx + search_offset + 1:idx + search_offset + 2]
-               in _BING_COMPOUND_SECONDS_CN):
-            idx = search_text.find(verb, idx + 1)
+        while idx >= 0:
+            if (verb == "并"
+                    and text[idx + search_offset + 1:idx + search_offset + 2]
+                    in _BING_COMPOUND_SECONDS_CN):
+                idx = search_text.find(verb, idx + 1)
+                continue
+            if protect_tail_compounds:
+                protected_len = _longest_protected_prefix(text[idx + search_offset:])
+                if protected_len:
+                    idx = search_text.find(verb, idx + protected_len)
+                    continue
+            break
         if idx >= 0 and (idx + search_offset) >= min_absolute_idx:
             absolute_idx = idx + search_offset
             # CN R70: cut BEFORE the adverb head of 从而 (311) / 进而 (26) /
@@ -2381,6 +2410,8 @@ def clean_noun_phrase_cn(text: str) -> str:
             # 发射接收天线 -> 发射. No CN report - free TW->CN parity (DR-1 exempt:
             # identical structural bug on the shared normalizer design).
             if text[absolute_idx + len(verb):].startswith("天线"):
+                continue
+            if verb == "建立" and text[absolute_idx + 2:].startswith(_JIANLI_NOUN_HEADS_CN):
                 continue
             # R63 (2026-08-17): 经 position guard - see _jing_cut_is_verbal_cn.
             if verb == "经" and not _jing_cut_is_verbal_cn(text, absolute_idx):
@@ -2675,6 +2706,7 @@ def normalize_reference_term_cn(
     text: str,
     *,
     strict_qualifier_matching: bool = False,
+    protect_tail_compounds: bool = False,
 ) -> str:
     """Normalize a flagged reference term for antecedent matching.
 
@@ -2689,7 +2721,7 @@ def normalize_reference_term_cn(
     t = normalize_arabic_ordinal_to_cjk(text)
     t = strip_reference_form_prefix_cn(t)
     t = strip_leading_qualifier_cn(t, strict_qualifier_matching=strict_qualifier_matching)
-    t = clean_noun_phrase_cn(t)
+    t = clean_noun_phrase_cn(t, protect_tail_compounds=protect_tail_compounds)
     t = strip_leading_quantifier_cn(t)
     t = strip_leading_verb_cn(t)
     # R31 (2026-05-03): re-run reference-prefix strip after verb strip,
@@ -4859,6 +4891,29 @@ def check_antecedent_basis_cn(
                 claim.text, chain, normalized_term, m.start()
             ):
                 continue
+            # CN R71 - last-resort tier, the tail-compound mirror of TW R27/R43.
+            # The interior cut reads 连接 in 所述电脑连接器 as a verb and keeps
+            # 电脑, while the introduction 包含电脑连接器 registers whole, so the
+            # pair never matches. Re-normalize with the compound protected and
+            # accept only an EXACT introduction: the tier runs after every other
+            # path has failed, so it can only silence, and the exact match means
+            # a dirty tail the protection exposes (触头(100)解) never resolves.
+            # The protected form must EXTEND the default one - the tier restores
+            # a tail the cut removed, nothing else. Otherwise a quantifier-led
+            # 所述至少三个连接器接收通道 (default 至少三个) re-normalizes to the
+            # bare 连接器 and resolves against a different element.
+            if resolved_intro is None:
+                protected_term = normalize_reference_term_cn(
+                    full_ref,
+                    strict_qualifier_matching=strict_qualifier_matching,
+                    protect_tail_compounds=True,
+                )
+                if (
+                    len(protected_term) > len(normalized_term)
+                    and protected_term.startswith(normalized_term)
+                    and protected_term in intros_by_term
+                ):
+                    continue
 
             if resolved_intro is not None:
                 if not strict_plural_reference_matching:
