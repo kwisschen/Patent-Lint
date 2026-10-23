@@ -2039,20 +2039,16 @@ _INTERIOR_VERB_BOUNDARIES_CN: tuple[str, ...] = tuple(sorted(
         # 并 (Simplified 並) is NOT included - 并联 "parallel connection" is a
         # real compound, exactly as on the TW side.
         "\u4e14",
-        # === CN R70 (2026-09-16): 并 and 而 MEASURED AND WITHHELD ===
-        # TW R62 ships both as interior clause cuts. The CN port is NET-HARMFUL
-        # and is not made, which is the standing TW->CN lesson rather than a
-        # surprise. Measured individually against a 14,385-finding baseline:
-        #   并  16 walker_fp ended, 1 gold-legit SILENCED
-        #   而  10 walker_fp ended (+1 coverage), 4 gold-legit SILENCED
-        # The mechanism is the same in every case and it is a real FN, not a
-        # mislabel: the cut leaves a TWO-CHARACTER stem that the prefix fallback
-        # then matches to a longer element - `结合` resolving 所述结合点
-        # (CN113376364B c124), `操作` resolving 所述操作杆 (CN115023785A c5/c7).
-        # Neither stem can be rejected lexically: 操作 ("operation") and 结合
-        # ("binding") are ordinary CN nouns and are in neither the trailing nor
-        # the interior verb set. CN needs a resolution-side guard on short stems
-        # before this class can ship; a test pins the withhold.
+        # === CN R70 withheld, CN R72 (2026-10-24) ships: 并 and 而 ===
+        # TW R62's interior cuts. R70 measured them net-harmful (并 16 FP / 1
+        # legit, 而 10 FP / 4 legit): a cut can leave a 2-char stem (`结合`,
+        # `操作`) that the prefix fallback matched to a longer element. R72 adds
+        # the resolution-side guard (_short_stem_opens_compound_cn) and, per
+        # Christopher's 2026-10-23 ruling that an article-less earlier mention
+        # is an introduction, re-read the five silenced gold-legit as gold
+        # errors. Together: 31 walker_fp + 1 coverage ended, 0 legit, 1 real
+        # defect surfaced. Ring-fusion 并 (苯并咪唑) is vetoed at the cut.
+        "\u5e76", "\u800c",
         # === R63 (2026-08-17) - TW R41 mirror, reports #533/#535 ===
         #   经 ("undergoes / via") - `一共聚物经氢化反应而获得` captured as ONE
         #     intro so the later `所述共聚物` had nothing to match. Reproduced on
@@ -2320,6 +2316,58 @@ def _jing_cut_is_verbal_cn(text: str, pos: int) -> bool:
 _PREFIX_FALLBACK_OBSERVER = None
 
 
+def _short_stem_opens_compound_cn(stem: str, reference: str) -> bool:
+    """True when a 2-char prefix-fallback stem would resolve a DIFFERENT element.
+
+    CN R72. The fallback resolves a reference by the longest introduction that
+    is its prefix, which is right when the rest is an over-captured tail
+    (所述支架设置 -> 支架) and wrong when the rest continues a noun: 电路 resolving
+    所述电路板, 结合 resolving 所述结合点. With a two-character stem the next
+    character decides it - a noun suffix makes the reference a longer compound
+    naming another element, so the fallback must not silence it.
+
+    Only the stem + ONE character shape: on a longer reference a suffix
+    character often opens a verb or adverb instead (底座枢转, 基座线性平移,
+    绕组组装), and guarding those re-fired gold walker FPs.
+
+    A POSITIONAL suffix does not name another element: every element has a
+    side, a face, an edge, a top and a bottom, so 所述凹部侧 keeps its basis in
+    凹部 (the CN form of "the surface of X"). Guarding them manufactured two
+    findings, one of them from the verb 面对 (所述边缘面对).
+    """
+    return (
+        len(stem) == 2
+        and len(reference) == 3
+        and reference[2] in _F10_SINGLE_CHAR_SUFFIXES_CN
+        and reference[2] not in _POSITIONAL_SUFFIXES_CN
+    )
+
+
+# CN R72: suffixes naming a location every element inherently has.
+_POSITIONAL_SUFFIXES_CN: frozenset[str] = frozenset("侧面边顶底")
+
+
+_REFERENCE_MARKERS_CN: tuple[str, ...] = ("所述", "该", "前述")
+
+
+def _mentioned_before_cn(term: str, chain, claim, ref_start: int) -> bool:
+    """True when ``term`` occurs earlier in the chain without a reference marker.
+
+    CN R72. Such a mention (围绕副轴线旋转, 通过操作杆的操作) is an article-less
+    introduction the gold accepts but no intro arm captures; a short stem had
+    been covering it by accident, so the short-stem guard stands down there.
+    """
+    texts = [c.text for c in chain if c.id != claim.id] + [claim.text[:ref_start]]
+    for text in texts:
+        start = text.find(term)
+        while start >= 0:
+            if not text[:start].endswith(_REFERENCE_MARKERS_CN):
+                return True
+            start = text.find(term, start + 1)
+    return False
+
+
+
 def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> str:
     """Strip trailing verbs and conjunction fragments from a CN reference term.
 
@@ -2384,8 +2432,9 @@ def clean_noun_phrase_cn(text: str, *, protect_tail_compounds: bool = False) -> 
         # it is a verb, and cutting at it is correct.
         while idx >= 0:
             if (verb == "并"
-                    and text[idx + search_offset + 1:idx + search_offset + 2]
-                    in _BING_COMPOUND_SECONDS_CN):
+                    and (text[idx + search_offset + 1:idx + search_offset + 2]
+                         in _BING_COMPOUND_SECONDS_CN
+                         or _bing_is_ring_fusion_cn(text, idx + search_offset))):
                 idx = search_text.find(verb, idx + 1)
                 continue
             if protect_tail_compounds:
@@ -2583,6 +2632,20 @@ _DUI_LEXEME_SECONDS_CN: frozenset[str] = frozenset("称象话")
 # the CN corpus (6,489 并X bigrams): 并联 81, 并行 31, plus the closed
 # parallel/juxtaposition family. 并且 (4,328), 并将, 并在, 并入 open predicates.
 _BING_COMPOUND_SECONDS_CN: frozenset[str] = frozenset("联列排行接存置网")
+
+# CN R72: in chemical nomenclature 并 is the ring-FUSION infix, not "and":
+# 二苯并[1,4]二噁英, 吡啶并[2,3-d], 苯并咪唑. Mined from the CN corpus (6,492 并):
+# the fused reading is always preceded by a ring-name character or followed by
+# a fusion locant `[` (32), and the conjunction is never followed by `[`.
+_RING_FUSION_HEADS_CN: frozenset[str] = frozenset("苯唑啶嗪吩喃咯萘喹嘧吲")
+
+
+def _bing_is_ring_fusion_cn(text: str, pos: int) -> bool:
+    """True when the 并 at ``pos`` fuses two ring names rather than two clauses."""
+    return (
+        (pos > 0 and text[pos - 1] in _RING_FUSION_HEADS_CN)
+        or text[pos + 1:pos + 2] == "["
+    )
 
 # CN R70: first characters of the connective adverbs ending in 而 (从而 311,
 # 进而 26, plus 因而/然而/反而/继而).
@@ -4841,6 +4904,12 @@ def check_antecedent_basis_cn(
                         len(intro) >= 2
                         and len(intro) > best_len
                         and normalized_term.startswith(intro)
+                        and not (
+                            _short_stem_opens_compound_cn(intro, normalized_term)
+                            and not _mentioned_before_cn(
+                                normalized_term, chain, claim, m.start()
+                            )
+                        )
                     ):
                         best_len = len(intro)
                         resolved_intro = intro
