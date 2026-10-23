@@ -1,7 +1,7 @@
 {
   "metadata": {
     "schema_version": "v11",
-    "current_round": 71,
+    "current_round": 72,
     "created": "2026-04-13T02:51:39.387412+00:00",
     "source_commit": "aa772150095cde9858e548468516ef52fa8744e6",
     "source_baseline": "tests/fixtures/cn/local/baseline_phase8c.json",
@@ -431,6 +431,14 @@
         ],
         "fixtures_silenced": 0,
         "shipped_at": "2026-10-23T10:15:36.928792+00:00"
+      },
+      {
+        "round": 72,
+        "name": "r72_short_stem_guard_and_bing_er",
+        "description": "CN R72 (wave B item 1; no new report, unblocks the R70 withhold). (1) Resolution-side short-stem guard: a 2-char prefix-fallback stem may not resolve stem + ONE noun-suffix char (所述混合器 against the verb stem 混合), with two stand-downs: the full term mentioned article-less earlier in the chain is an introduction (Christopher's 2026-10-23 ruling), and a POSITIONAL suffix (侧/面/边/顶/底) names a location every element has. Guard alone: +1 finding, a real defect (CN120883378A c11, gold-labelled legit). Without the positional stand-down it manufactured 凹部侧 and 边缘面(对). (2) 并 and 而 join the interior verb boundaries (TW R62 mirror), with a ring-fusion veto for chemical names (苯并咪唑, 二苯并[1,4]). The five gold-legit R70 silenced (结合点 c124, 操作杆 c5/c7, 第二/第四长度 c7/c8) were re-read as gold errors under the ruling and corrected. Gate: 31 walker_fp + 1 coverage ended, 0 legit silenced, 0 paired shifts, UNPAIRED-NEW 1 (the real defect). CN spec-support: no-op (246 -> 246 on the corrected runner).",
+        "user_attested_issues": [],
+        "fixtures_silenced": 0,
+        "shipped_at": "2026-10-23T15:30:50.129795+00:00"
       }
     ],
     "last_updated": "2026-08-01",

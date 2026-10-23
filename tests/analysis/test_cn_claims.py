@@ -1472,18 +1472,55 @@ class TestCnR70IntroBoundaries:
         assert not list(_BARE_AFTER_VERB_PATTERN_CN.finditer("所述夹持机构能用来夹持于所述晶圆。"))
         assert "第一基板" in self._intros("所述机械手臂夹持一第一基板。")
 
-    def test_bing_and_er_interior_cuts_stay_withheld(self):
-        """WITHHELD WITH THEIR NUMBERS, pinned. TW R62 ships 並 and 而 as
-        interior cuts; the CN port is net-harmful and is not made.
-
-        并: 16 walker_fp ended, 1 gold-legit SILENCED.
-        而: 10 walker_fp ended (+1 coverage), 4 gold-legit SILENCED.
-
-        The mechanism is a real FN every time, not a mislabel: the cut leaves a
-        TWO-CHARACTER stem that the prefix fallback matches to a longer element
-        (`结合` resolving 所述结合点; `操作` resolving 所述操作杆). Neither stem is
-        rejectable lexically - both are ordinary CN nouns. CN needs a
-        resolution-side guard on short stems before this class can ship."""
+    def test_bing_and_er_are_interior_cuts(self):
+        """CN R72 ships the TW R62 cuts that R70 withheld (并 16 FP / 1 legit,
+        而 10 FP / 4 legit). The five silenced gold-legit were gold errors under
+        the 2026-10-23 ruling that an article-less earlier mention introduces
+        the element; the short-stem guard below closes the real FN path."""
         from patentlint.analysis.cn_claims import clean_noun_phrase_cn
-        assert clean_noun_phrase_cn("第一信号并据以判断") == "第一信号并据以"
-        assert clean_noun_phrase_cn("第一区段而覆盖所述开孔") == "第一区段而"
+        assert clean_noun_phrase_cn("第一信号并据以判断") == "第一信号"
+        assert clean_noun_phrase_cn("第一区段而覆盖所述开孔") == "第一区段"
+        assert clean_noun_phrase_cn("第一并联电阻") == "第一并联电阻"
+        assert clean_noun_phrase_cn("第一部分进而延伸") == "第一部分"
+
+    def test_bing_ring_fusion_infix_is_not_cut(self):
+        """In chemical nomenclature 并 fuses two ring names (苯并咪唑, 吡啶并[2,3-d]);
+        cutting there split a compound name into a phantom spec-support term."""
+        from patentlint.analysis.cn_claims import clean_noun_phrase_cn
+        assert clean_noun_phrase_cn("聚苯并咪唑") == "聚苯并咪唑"
+        assert clean_noun_phrase_cn("二苯并[1,4]二噁英") == "二苯并[1,4]二噁英"
+
+
+class TestShortStemGuardCn:
+    """CN R72 - a 2-char prefix-fallback stem may not resolve stem + ONE noun
+    suffix (所述混合器 against the verb 混合), unless the full term was mentioned
+    article-less earlier in the chain, which is an introduction (Christopher's
+    2026-10-23 ruling), or the suffix is positional (侧/面/边/顶/底)."""
+
+    @staticmethod
+    def _flagged(claims):
+        from patentlint.analysis.cn_claims import check_antecedent_basis_cn
+        return {f["term"] for f in check_antecedent_basis_cn(_cn_doc(claims))}
+
+    def test_stem_plus_suffix_with_no_intro_is_flagged(self):
+        flagged = self._flagged([
+            _claim(1, "1.一种方法，包括：将粘合剂与导电材料混合以产生第一共混物；以及混合所述第一共混物。"),
+            _claim(2, "2.根据权利要求1所述的方法，其中所述混合器是行星式共混器。",
+                   independent=False, dependencies=[1]),
+        ])
+        assert "混合器" in flagged
+
+    def test_article_less_earlier_mention_is_an_introduction(self):
+        flagged = self._flagged([
+            _claim(1, "1.一种开关模块，具备：杆开关，其能够通过操作杆的操作而对设备进行操作。"),
+            _claim(2, "2.根据权利要求1所述的开关模块，其中所述操作杆构成为前端部旋转。",
+                   independent=False, dependencies=[1]),
+        ])
+        assert "操作杆" not in flagged
+
+    def test_positional_suffix_keeps_its_basis(self):
+        flagged = self._flagged([
+            _claim(1, "1.一种壳体，包括一个凹部，以及一个设置于所述凹部侧的盖板。"),
+        ])
+        assert "凹部侧" not in flagged
+

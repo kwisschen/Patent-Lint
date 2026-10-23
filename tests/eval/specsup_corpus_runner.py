@@ -45,6 +45,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -57,6 +58,22 @@ def _load_descriptions(juris: str) -> dict:
         print(f"FATAL: scraped spec not found at {path} (gitignored, local-only)")
         sys.exit(2)
     return json.loads(path.read_text())
+
+
+# The scraped spec renders an HTML subscript as a SPACE-separated run: the
+# drafter's `V<sub>in</sub>` arrives as `V in`, `T<sub>s</sub>` as `T s`,
+# `Δ<sub>1</sub>` as `Δ 1`. A DOCX joins the same runs (`Vin`), so the product
+# never sees the space, but the runner did: on 2026-10-24 65 of 332 CN
+# spec-support findings were a claim symbol (`输入电压Vin`, `折射率Δ1`) whose
+# spec occurrence had been split this way. Rejoin a single symbol letter that
+# follows a non-Latin character with the short run after it.
+_SCRAPED_SUBSCRIPT_RE = re.compile(
+    r"(?<=[^A-Za-z0-9\s])([A-Za-z\u0370-\u03ff]) ([A-Za-z0-9]{1,3})(?=[^A-Za-z0-9]|$)"
+)
+
+
+def _rejoin_scraped_subscripts(spec: str) -> str:
+    return _SCRAPED_SUBSCRIPT_RE.sub(r"\1\2", spec)
 
 
 def _build_doc_with_spec(record, juris: str, spec_text: str, harness):
@@ -264,7 +281,8 @@ def main() -> int:
         entry = desc.get(pid)
         if not entry:
             continue
-        spec = (entry.get("description") if isinstance(entry, dict) else entry) or ""
+        spec = _rejoin_scraped_subscripts(
+            (entry.get("description") if isinstance(entry, dict) else entry) or "")
         if len(spec) < args.min_spec:
             continue
         doc = _build_doc_with_spec(r, args.juris, spec, h)

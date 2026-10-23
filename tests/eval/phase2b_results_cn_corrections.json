@@ -263,6 +263,102 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "CN115023785A",
+      "jurisdiction": "CN",
+      "source": "verified-correction-r72-article-less-intro",
+      "_note": "Christopher's ruling 2026-10-23: in CN an article-less earlier mention in the chain is an introduction. c1 reads 通过操作杆的操作, so 所述操作杆 in c5/c7 has basis. Surfaced by the R72 而 cut, which now leaves 操作 as an over-captured stem the short-stem guard declines; the reference resolves through the article-less mention. Claim read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 5,
+            "term": "操作杆",
+            "reference_form": "所述操作杆"
+          },
+          {
+            "claim_id": 7,
+            "term": "操作杆",
+            "reference_form": "所述操作杆"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN113376364B",
+      "jurisdiction": "CN",
+      "source": "verified-correction-r72-article-less-intro",
+      "_note": "c122 introduces the element as 具有预定面积和结合并固定目标实体的结合点 (relative-clause intro, bare-noun arm 3, which no intro arm captures yet) and c123 mentions 结合点 article-less, so 所述结合点 in c124 has basis. Claim read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 124,
+            "term": "结合点",
+            "reference_form": "所述结合点"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN121487812A",
+      "jurisdiction": "CN",
+      "source": "verified-correction-r72-article-less-intro",
+      "_note": "Each claim first says 延伸相应的第二长度 / 相应的第四长度, an article-less introduction under the 2026-10-23 ruling, before 所述第二长度 / 所述第四长度 in the same claim. The R72 而 cut lets that intro be captured cleanly. Claim read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 7,
+            "term": "第二长度",
+            "reference_form": "所述第二长度"
+          },
+          {
+            "claim_id": 8,
+            "term": "第四长度",
+            "reference_form": "所述第四长度"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          },
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "CN120883378A",
+      "jurisdiction": "CN",
+      "source": "verified-correction-r72-short-stem-guard",
+      "_note": "A REAL defect the prefix fallback had been hiding: c11 (dependent on c1) refers to 所述混合器, and nothing in c1 introduces a mixer; the fallback resolved it against the 2-char stem 混合 from the verb 混合 (to mix). The R72 short-stem guard surfaces it. Claim read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 11,
+            "term": "混合器",
+            "reference_form": "所述混合器"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "legit_drafting_error"
+          }
+        ]
+      }
     }
   ]
 }
