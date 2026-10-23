@@ -639,6 +639,46 @@
           }
         ]
       }
+    },
+    {
+      "patent_id": "TW202541415A",
+      "jurisdiction": "TW",
+      "source": "verified-correction-tw-r66-predicate-tail",
+      "_note": "c16 introduces the substrate with the quantifier 一 (將一基板安放於該基板支撐件上) before the later 該基板; the intro capture ran into the verb 安放 so the clean reference matched nothing. Basis exists (專利法 §26 第2項). Claim read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 16,
+            "term": "基板",
+            "reference_form": "該基板"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
+    },
+    {
+      "patent_id": "TWI907449B",
+      "jurisdiction": "TW",
+      "source": "verified-correction-tw-r66-predicate-tail",
+      "_note": "c15 introduces 第一端 as 該鎖定臂之一第一端 (quantifier 一 directly before it) before the later 該鎖定臂之該第一端; the capture ran into the verb 接觸. Basis exists. Claim read 2026-10-24.",
+      "ensemble": {
+        "findings": [
+          {
+            "claim_id": 15,
+            "term": "第一端",
+            "reference_form": "該第一端"
+          }
+        ],
+        "final_verdicts": [
+          {
+            "category": "walker_fp"
+          }
+        ]
+      }
     }
   ]
 }

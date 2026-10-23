@@ -7193,6 +7193,103 @@ _OBJECT_DETERMINERS_TW: tuple[str, ...] = (
 )
 
 
+# TW R66 (2026-10-24, wave B) - PREDICATE-TAIL INTRO TIER.
+# Twenty-nine TW reports named a dozen different strings and were one SIDE:
+# the INTRODUCTION capture ran past its head into a predicate (`兩側外露於`,
+# `第一推力自`, `警示訊號至一顯示面板`, `低電位對`, `待機模式下`), so the
+# drafter's clean `所述<head>` matched nothing. The reference already tells us
+# where the head ends; what has to be shown is that the rest of the intro is a
+# predicate. Three positional signals, no verb list:
+#   * a single coverb (自/至/向/往/給, and 對 outside 對應/對位/對稱/...);
+#   * a single locative postposition (下/中/內/上);
+#   * a predicate of at most two characters that takes an OBJECT at once
+#     (一/所述/該/其/...) or ends in 於.
+# And the intro itself must be a real introduction - a quantifier immediately
+# before it, or a possessive whose possessor is introduced. Measured without
+# that check, dirty captures of bare relative clauses (相對應的程式資料向...)
+# turned into introductions and silenced 8 gold-legit findings: the dirty
+# capture had been accidentally keeping a non-introduction out.
+# Additive: it runs only after the exact, prefix and R56 tiers have failed, so
+# it can only silence; a coordinator (或/與/及) or punctuation never counts as a
+# predicate. Measured: 75 walker_fp + 1 coverage ended, 0 new findings, 2 gold
+# labels corrected (both plain 一 introductions).
+_PREDICATE_OBJECT_OPENERS_TW: tuple[str, ...] = (
+    "所述", "前述", "至少一", "複數", "每一", "該", "其", "一",
+)
+_LOCATIVE_POSTPOSITIONS_TW: frozenset[str] = frozenset("下中內上")
+_COVERBS_TW: frozenset[str] = frozenset("自至向往給對")
+_DUI_LEXEME_CHARS_TW: frozenset[str] = frozenset("應位稱接齊準象話")
+
+
+def _intro_opens_as_introduction_tw(text: str, pos: int, intros_by_term) -> bool:
+    """True when the mention of an intro at ``pos`` is a real introduction.
+
+    What sits IMMEDIATELY before it decides: a quantifier (一 / 複數 / 兩個, not
+    the 一 of 進一步 or 統一), or a possessive whose possessor is itself an
+    introduced element (所述絕緣部的兩端). A bare relative clause (相對應的程式
+    資料) is not an introduction in TW, and a dirty capture of one must not
+    become one here.
+    """
+    before = text[max(0, pos - 16):pos]
+    for q in _INTRO_QUANTIFIER_OPENERS_TW:
+        if before.endswith(q):
+            lead = before[: len(before) - len(q)]
+            return not lead or lead[-1] not in "進統唯同單第萬"
+    # Ordinal-led possessives stay out, as in R9: `所述X之第一Y` may be a
+    # definite reference to a "first Y" that needs its own introduction.
+    if before.endswith(("的", "之")) and not text.startswith("第", pos):
+        for det in ("所述", "前述", "該"):
+            k = before.rfind(det)
+            if k >= 0 and before[k + len(det):-1] in intros_by_term:
+                return True
+    return False
+
+
+_INTRO_QUANTIFIER_OPENERS_TW: tuple[str, ...] = (
+    "至少一", "複數個", "複數", "多個", "兩個", "數個", "每一", "若干", "一",
+)
+_TAIL_STOP_CHARS_TW = frozenset("或與及和、，。；：的之")
+
+
+def _predicate_tail_intro_tw(term, intros_by_term, chain, claim, ref_start):
+    """The introduction that is ``term`` plus a predicate tail, if any.
+
+    Same-claim intros count only when they precede the reference.
+    """
+    if len(term) < 2:
+        return None
+    by_id = {c.id: c for c in chain}
+    for intro, (ancestor_id, _depth) in intros_by_term.items():
+        if len(intro) <= len(term) or not intro.startswith(term):
+            continue
+        source = by_id.get(ancestor_id)
+        if source is None:
+            continue
+        pos = source.text.find(intro)
+        if pos < 0:
+            continue
+        if ancestor_id == claim.id and pos >= ref_start:
+            continue
+        rem = intro[len(term):]
+        if rem[0] in _TAIL_STOP_CHARS_TW:
+            continue
+        tail = rem + source.text[pos + len(intro): pos + len(intro) + 4]
+        hit = rem in _LOCATIVE_POSTPOSITIONS_TW or (
+            rem[0] in _COVERBS_TW
+            and not (rem[0] == "對" and rem[1:2] in _DUI_LEXEME_CHARS_TW)
+        )
+        if not hit:
+            for k in (1, 2):
+                if any(ch in _TAIL_STOP_CHARS_TW for ch in tail[:k]):
+                    break
+                if tail[k:].startswith(_PREDICATE_OBJECT_OPENERS_TW) or tail[k:k + 1] == "於":
+                    hit = True
+                    break
+        if hit and _intro_opens_as_introduction_tw(source.text, pos, intros_by_term):
+            return intro
+    return None
+
+
 def extract_object_determiner_cleaned_intros_tw(claim) -> set[str]:
     """Intro stems left when a capture ran across a verb into the next element."""
     out: set[str] = set()
@@ -7739,6 +7836,12 @@ def check_antecedent_basis(
             # matched nothing. Runs only after every tier above has failed.
             if resolved_intro is None and normalized_term in od_cleaned_intros:
                 resolved_intro = normalized_term
+
+            # TW R66: an intro that is the term plus a predicate tail.
+            if resolved_intro is None:
+                resolved_intro = _predicate_tail_intro_tw(
+                    normalized_term, intros_by_term, chain, claim, m.start()
+                )
 
             if resolved_intro is None and has_bare_noun_introduction_tw(
                 claim.text, chain, normalized_term, m.start()
