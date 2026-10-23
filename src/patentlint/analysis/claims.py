@@ -6,6 +6,7 @@ Checks for missing periods, extra periods, dependencies, similarity, sequentiali
 preamble consistency, and spec support.
 """
 
+import heapq
 import re
 from typing import Any, Optional
 
@@ -1947,6 +1948,77 @@ _BOILERPLATE_TERMS = {
 WINDOW_SIZE = 10
 
 
+# Spec-support phrase hygiene (US, wave B). `only` never ends an element name
+# (#944: `the third switch only when ...`), and a mid-phrase `further` is the
+# adverb of a predicate the capture ran into (#887: `the instructions further
+# cause`); as an adjective it LEADS the noun (`a further layer`).
+def _trim_spec_support_predicate_tail(phrase: str) -> str:
+    words = phrase.split()
+    lowered = [w.lower() for w in words]
+    if "further" in lowered[1:]:
+        words = words[:lowered.index("further", 1)]
+    elif len(words) > 1 and lowered[-1] == "only" and lowered[-2] != "read":
+        words = words[:-1]
+    return " ".join(words)
+
+
+_POSITIONAL_PARTITIVE_WORDS = frozenset({
+    "last", "preceding", "previous", "next", "subsequent", "succeeding",
+    "former", "latter", "remaining", "other", "another", "same",
+})
+_PARTITIVE_ONE_OF = re.compile(
+    r"\s+(?:ones?\s+)?of\s+(?:the|a|an|said|these|those|each)\b"
+)
+
+
+def _is_positional_partitive(phrase_lower: str, body_lower: str) -> bool:
+    """`a last one of the plurality of X`: the phrase is only a position."""
+    words = phrase_lower.split()
+    if words and words[-1] in ("one", "ones"):
+        words = words[:-1]
+    if not words or not all(w in _POSITIONAL_PARTITIVE_WORDS for w in words):
+        return False
+    for m in re.finditer(r"\b" + re.escape(phrase_lower) + r"\b", body_lower):
+        if _PARTITIVE_ONE_OF.match(body_lower, m.end()):
+            return True
+    return False
+
+
+def _stems_within_window(
+    phrase_words: list[str],
+    phrase_stems: list[str],
+    stem_positions: dict[str, list[tuple[int, str]]],
+    window_size: int,
+) -> bool:
+    """Tier 2: every phrase word has an INFLECTION of itself in one window.
+
+    The stem must match and the spec word may differ from the claim word by at
+    most two characters (terminal/terminals, detect/detected). Report #880: a
+    bare stem match let a `connect terminal` borrow support from `a connection
+    unit having an input terminal` (synthetic shape) - connection is a
+    different word, not a form of connect, and the term was unsupported.
+    """
+    lists = []
+    for word, stem in zip(phrase_words, phrase_stems):
+        hits = [i for i, w in stem_positions.get(stem, ()) if abs(len(w) - len(word)) <= 2]
+        if not hits:
+            return False
+        lists.append(hits)
+    # Smallest range holding one position from every list (sorted inputs).
+    heap = [(positions[0], k, 0) for k, positions in enumerate(lists)]
+    heapq.heapify(heap)
+    high = max(positions[0] for positions in lists)
+    while True:
+        low, k, j = heapq.heappop(heap)
+        if high - low < window_size:
+            return True
+        if j + 1 == len(lists[k]):
+            return False
+        nxt = lists[k][j + 1]
+        high = max(high, nxt)
+        heapq.heappush(heap, (nxt, k, j + 1))
+
+
 def check_spec_support(
     claims: list[Claim],
     spec_text: str,
@@ -1970,6 +2042,9 @@ def check_spec_support(
     # the Tier 2 sliding window can enforce proximity rather than checking
     # set membership across the entire spec.
     spec_stems = list(_stemmer.stemWords(spec_words))
+    stem_positions: dict[str, list[tuple[int, str]]] = {}
+    for idx, (word, stem) in enumerate(zip(spec_words, spec_stems)):
+        stem_positions.setdefault(stem, []).append((idx, word))
 
     unsupported: list[UnsupportedTerm] = []
 
@@ -1983,9 +2058,24 @@ def check_spec_support(
             body = claim.text
 
         phrases = extract_noun_phrases(body)
+        body_lower = body.lower()
 
         for phrase in phrases:
+            phrase = _trim_spec_support_predicate_tail(phrase)
             phrase_lower = phrase.lower()
+            if not phrase_lower:
+                continue
+
+            # Mirrors of two antecedent-side guards (reports #890, #921/#922):
+            # the Markush head `the group consisting of` and a positional
+            # partitive (`a last one of the plurality of X`) name no element,
+            # so there is nothing for the description to support.
+            if phrase_lower == "group" and re.search(
+                r"\bgroup\s+(?:consisting\s+of|of)\b", body_lower
+            ):
+                continue
+            if _is_positional_partitive(phrase_lower, body_lower):
+                continue
 
             # Skip generic/boilerplate terms
             if phrase_lower in _GENERIC_TERMS or phrase_lower in _BOILERPLATE_TERMS:
@@ -2018,16 +2108,10 @@ def check_spec_support(
             tiers_checked.append("stemmed")
             phrase_stems = list(_stemmer.stemWords(phrase_lower.split()))
             if phrase_stems:
-                phrase_stem_set = set(phrase_stems)
                 window_size = max(len(phrase_stems), WINDOW_SIZE)
-                stem_loop_end = max(1, len(spec_stems) - window_size + 1)
-                found_stem_window = False
-                for i in range(stem_loop_end):
-                    window = set(spec_stems[i:i + window_size])
-                    if phrase_stem_set.issubset(window):
-                        found_stem_window = True
-                        break
-                if found_stem_window:
+                if _stems_within_window(
+                    phrase_lower.split(), phrase_stems, stem_positions, window_size
+                ):
                     continue
 
             # Tier 3: Word window (all words appear within WINDOW_SIZE-word window)
