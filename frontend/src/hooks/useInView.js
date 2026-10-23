@@ -2,7 +2,7 @@
 // Copyright (c) 2025-2026 Christopher Chen
 import { useState, useEffect, useRef } from 'react';
 
-export function useInView(options = {}) {
+export function useInView() {
   const ref = useRef(null);
   const [isInView, setIsInView] = useState(false);
 
@@ -15,7 +15,7 @@ export function useInView(options = {}) {
         setIsInView(true);
         observer.unobserve(element);
       }
-    }, { threshold: 0.1, ...options });
+    }, { threshold: 0.1 });
 
     observer.observe(element);
     return () => observer.disconnect();

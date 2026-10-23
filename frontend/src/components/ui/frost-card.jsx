@@ -72,4 +72,4 @@ function FrostCard({
   )
 }
 
-export { FrostCard, frostCardVariants }
+export { FrostCard }

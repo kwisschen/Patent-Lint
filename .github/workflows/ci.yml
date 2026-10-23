@@ -68,6 +68,15 @@ jobs:
           npm ci
           npm run build
 
+      - name: Lint
+        # ESLint was configured but never installed until 2026-10-23, so
+        # `npm run lint` could not run and two components shipped with hooks
+        # after an early return (a crash once a card went from empty to
+        # populated). It gates now.
+        run: |
+          cd frontend
+          npm run lint
+
       - name: Test
         # Frontend tests landed 2026-08-28 after a dropped-argument bug
         # discarded the verdict every reporter was required to enter, on 36

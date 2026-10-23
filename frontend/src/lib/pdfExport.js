@@ -733,63 +733,6 @@ function buildRubricCover(rubricGrade, t, fontName, checkByKey = {}) {
   return cover
 }
 
-function buildClaimTable(claimTrees, t) {
-  if (!claimTrees || claimTrees.length === 0) return []
-
-  const content = [accentedHeader(t('pdf.claimDependency'), '#64748b', undefined)]
-
-  const labelKey = (label) => label === 'Method Claims'
-    ? 'tree.methodClaims'
-    : label === 'Claims'
-      ? 'tree.claims'
-      : 'tree.apparatusClaims'
-
-  for (const group of claimTrees) {
-    content.push({
-      text: t(labelKey(group.label)),
-      bold: true,
-      fontSize: 12,
-      margin: [0, 10, 0, 6],
-      color: '#1e293b',
-    })
-
-    const body = [
-      [
-        { text: t('pdf.claimNumber'), bold: true, fillColor: '#f3f4f6' },
-        { text: t('pdf.claimType'), bold: true, fillColor: '#f3f4f6' },
-        { text: t('pdf.dependencyChain'), bold: true, fillColor: '#f3f4f6' },
-        { text: t('pdf.claimText'), bold: true, fillColor: '#f3f4f6' },
-      ],
-    ]
-
-    for (const row of group.rows) {
-      const text = sanitizeText(row.claim_text || '')
-      const truncated = text.length > 100 ? text.slice(0, 100) + '...' : text
-      body.push([
-        { text: String(row.claim_id), fontSize: 9 },
-        { text: row.claim_type, fontSize: 9 },
-        { text: sanitizeText(row.chain), fontSize: 9 },
-        { text: truncated, fontSize: 8, color: '#555555' },
-      ])
-    }
-
-    content.push({
-      table: {
-        headerRows: 1,
-        widths: [35, 65, 'auto', '*'],
-        body,
-      },
-      layout: {
-        hLineWidth: () => 0.5,
-        vLineWidth: () => 0.5,
-        hLineColor: () => '#d1d5db',
-        vLineColor: () => '#d1d5db',
-      },
-    })
-  }
-  return content
-}
-
 function buildAntecedentBasis(issues, t, fontName) {
   if (!issues || issues.length === 0) return []
   // The term / reference_form / did-you-mean cells carry CJK glyphs (該X, 導電膠體,

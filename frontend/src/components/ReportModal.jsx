@@ -86,6 +86,10 @@ export default function ReportModal({
 
   useEffect(() => {
     if (open) {
+      // Reset the form on each open. A keyed remount from every caller would
+      // also do it, but this modal carries the report payload contract, so
+      // the reset stays in one place.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSubmitting(false)
       setResult(null)
       setUserComment('')

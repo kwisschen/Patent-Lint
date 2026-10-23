@@ -28,4 +28,18 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
+  // Node, not the browser: the Vercel function, the Vite config and the
+  // build scripts.
+  {
+    files: ['api/**/*.js', 'scripts/**/*.{js,mjs}', 'vite.config.js'],
+    languageOptions: { globals: globals.node },
+  },
+  // The Pyodide web worker: worker scope, plus the loader that
+  // importScripts() brings in from the CDN.
+  {
+    files: ['public/pyodideWorker.js'],
+    languageOptions: {
+      globals: { ...globals.worker, loadPyodide: 'readonly' },
+    },
+  },
 ])
