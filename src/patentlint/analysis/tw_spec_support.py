@@ -41,6 +41,7 @@ import re
 
 from patentlint.analysis.cjk_tokenize import tokenize_tw
 from patentlint.analysis.tw_claims import (
+    _F10_SINGLE_CHAR_SUFFIXES_TW,
     extract_introductions_tw,
     normalize_arabic_ordinal_to_cjk,
     normalize_reference_term,
@@ -1129,6 +1130,33 @@ def _spec_support_final_term_tw(orig: str, norm: str, claim_text: str) -> str:
     return _drop_clause_fragment_tw(orig, term)
 
 
+def _starts_inside_compound_tw(orig: str, norm: str) -> bool:
+    """TW R67 (reports #843-#850): the intro opened INSIDE a compound noun.
+
+    The bare verb-object arm read the 連接 of 所述訊號連接器為一母座 as a verb
+    and registered its "object" 器為一母座, which spec-support emitted as a
+    term. The tell is positional: the arm's opening verb is glued to a noun
+    character before it, and what it left starts with a component suffix
+    (器 / 柱 / 件 ...). Spec-support only - on the antecedent side the same
+    spans are load-bearing introductions (dropping them there manufactured 51
+    findings), and an inventory drop can only remove a phrase, never add one.
+    """
+    return (
+        bool(norm)
+        and norm[0] in _F10_SINGLE_CHAR_SUFFIXES_TW
+        and orig[:2] in _COMPOUND_HEAD_VERBS_TW
+        and orig == orig[:2] + norm
+    )
+
+
+# Verbs that head connector-family compounds (連接器 / 連接柱 / 連結件). A
+# census over 136k TW intros showed a purely positional test also drops real
+# objects of ordinary verbs (絕緣本體包括頂壁和底壁), so the verb itself must be
+# one that forms such compounds; whatever it leaves behind (器..., 柱...) is a
+# fragment whatever precedes it.
+_COMPOUND_HEAD_VERBS_TW: frozenset[str] = frozenset({"連接", "連結"})
+
+
 def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:
     """Build deduped claim-term inventory from intros across all claims.
 
@@ -1161,6 +1189,8 @@ def _build_inventory(claims: list[Claim]) -> list[tuple[str, str]]:
             # the verb-gate: a genuine `X部分` portion-element (第二外殼部分,
             # 最外側部分) is followed by a particle/noun/clause-end, NOT a verb,
             # so it is untouched (a blanket trailing strip would FN-drop those).
+            if _starts_inside_compound_tw(orig, norm):
+                continue
             root = _spec_support_final_term_tw(orig, norm, claim.text)
             if not root:
                 continue
