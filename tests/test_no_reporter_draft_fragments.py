@@ -67,6 +67,11 @@ BANNED_HASHES: frozenset[str] = frozenset({
     "64b80ecf26e8db8ba4717fa4e29414e78b62d1c082e9e3b020790e9542aea942",
     "dd38c8e169e4f70963454cb04e25456e3c7ae80c69d12fe9d39d2542bbf17b29",
     "50effba522a950bc88d128adfdf3fb75e1e5e3e32f84009b159a6f718b50d8b7",
+    # wave B (2026-10-24): four windows scrubbed before push.
+    "86a0be339b0ce34a7446a3174c04d755683aa053bdccf42cfcff9e295600420d",
+    "35ddc2cf26d656e1c92e233cc7f4dbcc94afe339a259020586dcb505c6377d92",
+    "c8e575edda35d41fc9fc4fd2062e93652434b4e7926708845f45a61ebf800b7b",
+    "c4c1084384bfefc464f8fdb709666f0336311eeaa0c73592a8a350bb87c580a9",
 })
 
 # Window sizes to test, derived from the banned fragments' own lengths. Keeping
