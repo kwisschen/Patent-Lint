@@ -395,3 +395,23 @@ class TestDidYouMeanSourceEnrichment:
         out = extract_antecedent_basis([f], total_claims=5)["findings"][0]
         assert "term_in_symbol_table" not in out
         assert out["did_you_mean_source"] is None
+
+
+def test_numeral_excerpt_prefers_the_occurrence_the_name_labels():
+    """The canonical and outlier excerpts of one D1 conflict must differ when
+    the outlier is written beside the numeral elsewhere. The ±30-char window
+    alone matched the outlier name where it labels a DIFFERENT numeral next
+    to the canonical occurrence, so both excerpts came back identical."""
+    from patentlint.analysis.utils import numeral_context_excerpt
+
+    spec = (
+        "第二模組100所連接的一主機200所傳遞的一訊號201。"
+        "此外，該第二模組200設置於一殼體300內。"
+    )
+    canonical = numeral_context_excerpt(spec, "200", "主機")
+    outlier = numeral_context_excerpt(spec, "200", "第二模組")
+    assert "主機200" in canonical
+    assert "第二模組200" in outlier
+    assert canonical != outlier
+    # No adjacent pairing anywhere: the ±30 window still applies.
+    assert "200" in numeral_context_excerpt(spec, "200", "訊號")
